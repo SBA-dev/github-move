@@ -1,0 +1,597 @@
+<title>Le Royaume d'Additia</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Andika:wght@400;700&family=Berkshire+Swash&display=swap">
+<style>
+/* Layout : un livre de contes nocturne ; chaque chapitre est un parchemin posé sur le ciel étoilé.
+   Les trois colonnes de l'addition sont les trois tours du château (C vert, D rose, U bleu). */
+:root {
+  --night: #15123a;
+  --night-2: #2b2266;
+  --gold: #f7cc4f;
+  --star: #fff6d6;
+  --ink: #fbf6ea;
+  --muted: #cbc4ec;
+  --parchment: #faf1dc;
+  --parchment-edge: #e6d3a6;
+  --brown: #3d2b1c;
+  --brown-soft: #7a6347;
+  --u: #2a63d4;  --u-sky: #8cc8ff;
+  --d: #c8245e;  --d-sky: #ff9cbc;
+  --c: #1f8a4c;  --c-sky: #93e3ad;
+  --ok: #1d7f52; --ok-soft: #dcf3e4;
+  --ko: #b34a0c; --ko-soft: #fde6d4;
+  --font-tale: "Berkshire Swash", "Georgia", serif;
+  --font-body: "Andika", "Trebuchet MS", "Segoe UI", sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { background: var(--night); }
+body {
+  background: radial-gradient(120% 70% at 50% 0%, var(--night-2), var(--night) 70%) fixed, var(--night);
+  color: var(--ink); font-family: var(--font-body); font-size: 17px; line-height: 1.5;
+}
+.sky { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+.sky i { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: var(--star); opacity: .5; animation: twinkle 3s ease-in-out infinite; }
+@keyframes twinkle { 50% { opacity: .1; transform: scale(.6); } }
+
+.page {
+  position: relative; z-index: 1; max-width: 800px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 24px 72px; display: grid; gap: 34px;
+}
+h1, h2 { font-family: var(--font-tale); font-weight: 400; margin: 0; line-height: 1.15; text-wrap: balance; }
+h1 { font-size: clamp(36px, 8vw, 58px); color: var(--gold); text-shadow: 0 2px 18px color-mix(in srgb, var(--gold) 45%, transparent); }
+h2 { font-size: clamp(25px, 5vw, 32px); color: var(--brown); }
+p { margin: 0; }
+
+/* ---------- Ouverture ---------- */
+.hero { display: grid; gap: 14px; justify-items: center; text-align: center; }
+.kicker { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+.castle { width: min(100%, 520px); height: auto; overflow: visible; }
+.castle .lbl { font-family: var(--font-body); font-weight: 700; font-size: 22px; fill: var(--night); }
+.castle .win { fill: var(--gold); animation: glow 2.6s ease-in-out infinite; }
+@keyframes glow { 50% { opacity: .55; } }
+
+.tale { display: flex; gap: 14px; align-items: flex-end; text-align: left; max-width: 640px; }
+.fairy { width: 88px; flex: none; animation: float 4s ease-in-out infinite; }
+@keyframes float { 50% { transform: translateY(-8px); } }
+.bubble {
+  background: var(--parchment); color: var(--brown); border-radius: 18px 18px 18px 4px;
+  padding: 12px 16px; font-size: 18px; min-width: 0;
+}
+.bubble b { color: var(--d); }
+
+.towers-legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 18px; font-size: 15px; color: var(--muted); }
+.towers-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.towers-legend i { width: 13px; height: 13px; border-radius: 3px; display: inline-block; }
+
+/* ---------- Parchemins ---------- */
+.scroll {
+  background: var(--parchment); color: var(--brown);
+  border-radius: 16px; border: 2px solid var(--parchment-edge);
+  box-shadow: 0 10px 40px rgba(0,0,0,.35), inset 0 0 40px color-mix(in srgb, var(--parchment-edge) 55%, transparent);
+  padding: 22px; display: grid; gap: 16px; position: relative;
+}
+.chapter { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; color: var(--brown-soft); display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.story { font-size: 18px; max-width: 62ch; }
+.story b { font-size: 21px; white-space: nowrap; }
+
+details.ref { color: var(--muted); font-size: 15px; max-width: 640px; text-align: left; }
+details.ref summary { cursor: pointer; color: var(--gold); font-weight: 700; }
+details.ref blockquote { margin: 8px 0 0; display: grid; gap: 6px; }
+details.ref cite { font-style: normal; font-size: 13px; }
+
+/* ---------- Démonstration : perles et colliers ---------- */
+.demo { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+@media (max-width: 640px) { .demo { grid-template-columns: minmax(0, 1fr); } }
+.vault { display: grid; grid-template-columns: 1fr 1fr; border-radius: 12px; overflow: hidden; min-height: 230px; border: 2px solid var(--parchment-edge); }
+.vault .col { padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+.vault .col-title { font-weight: 700; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; }
+.vault .col-d { background: color-mix(in srgb, var(--d-sky) 28%, var(--parchment)); } .vault .col-d .col-title { color: var(--d); }
+.vault .col-u { background: color-mix(in srgb, var(--u-sky) 30%, var(--parchment)); border-left: 2px dashed var(--parchment-edge); } .vault .col-u .col-title { color: var(--u); }
+.group { display: flex; flex-wrap: wrap; gap: 5px; align-items: flex-end; padding: 6px; border-radius: 10px; animation: pop .4s ease both; }
+.group .tag { width: 100%; font-size: 13px; color: var(--brown-soft); }
+.group.circled { outline: 2px dashed var(--d); outline-offset: 2px; }
+.pearl { width: 13px; height: 13px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fff 0 18%, var(--u-sky) 40%, var(--u) 100%); }
+.necklace { width: 13px; height: 74px; border-radius: 7px; background:
+  radial-gradient(circle at 50% 50%, #fff 0 15%, var(--d-sky) 38%, var(--d) 70%, transparent 72%) 0 0 / 13px 7.4px repeat-y; }
+.necklace.new { filter: drop-shadow(0 0 6px var(--gold)); outline: 2px solid var(--gold); outline-offset: 2px; }
+@keyframes pop { from { opacity: .2; transform: translateY(6px) scale(.96); } to { opacity: 1; transform: none; } }
+
+.demo-side { display: grid; gap: 14px; justify-items: start; }
+.step-text { min-height: 6em; font-size: 18px; }
+.step-text strong { color: var(--d); }
+.stepper { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.dots { display: flex; gap: 6px; }
+.dots i { width: 10px; height: 10px; clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); background: var(--parchment-edge); }
+.dots i.on { background: var(--gold); }
+
+/* ---------- Grille d'opération (parchemin quadrillé) ---------- */
+.op {
+  --cell: 46px; display: inline-grid; grid-auto-rows: var(--cell);
+  background-color: #fffaf0;
+  background-image: linear-gradient(var(--parchment-edge) 1px, transparent 1px), linear-gradient(90deg, var(--parchment-edge) 1px, transparent 1px);
+  background-size: var(--cell) var(--cell); border: 1px solid var(--parchment-edge); border-radius: 4px;
+  font-variant-numeric: tabular-nums; color: var(--brown);
+}
+.op.small { --cell: 34px; }
+.op .cell { width: var(--cell); height: var(--cell); display: grid; place-items: center; font-size: calc(var(--cell) * .62); }
+.op .hdr { font-weight: 700; font-size: calc(var(--cell) * .4); }
+.op .hdr.c { color: var(--c); } .op .hdr.d { color: var(--d); } .op .hdr.u { color: var(--u); }
+.op .carry { font-size: calc(var(--cell) * .42); color: var(--d); align-items: end; }
+.op .total-line { border-top: 3px solid var(--brown); }
+.op .hl { background: color-mix(in srgb, var(--gold) 35%, transparent); }
+.op input {
+  width: calc(var(--cell) - 8px); height: calc(var(--cell) - 8px); padding: 0;
+  font: inherit; font-family: var(--font-body); text-align: center; color: var(--brown);
+  background: #fffdf7; border: 2px solid var(--parchment-edge); border-radius: 8px;
+}
+.op .carry input { width: calc(var(--cell) - 16px); height: calc(var(--cell) - 18px); color: var(--d); border-style: dashed; border-color: var(--d-sky); font-size: inherit; }
+.op input:focus-visible { outline: 3px solid var(--gold); outline-offset: 1px; }
+.op input.good { border-color: var(--ok); background: var(--ok-soft); }
+.op input.bad { border-color: var(--ko); background: var(--ko-soft); }
+.op-wrap { overflow-x: auto; padding: 2px; }
+
+/* ---------- Quêtes ---------- */
+.choices { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 560px) { .choices { grid-template-columns: minmax(0, 1fr); } }
+.choice { display: grid; justify-items: center; gap: 8px; padding: 12px; cursor: pointer; font: inherit; color: var(--brown);
+  background: #fff8e8; border: 2px solid var(--parchment-edge); border-radius: 12px; }
+.choice:hover { border-color: var(--brown-soft); }
+.choice:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+.choice .letter { font-family: var(--font-tale); font-size: 19px; }
+.choice.good { border-color: var(--ok); background: var(--ok-soft); }
+.choice.bad { border-color: var(--ko); background: var(--ko-soft); }
+.work { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; }
+.work .hint { flex: 1 1 220px; min-width: 0; color: var(--brown-soft); font-size: 15px; display: grid; gap: 6px; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; }
+button.btn { font: inherit; font-weight: 700; cursor: pointer; border-radius: 999px; padding: 9px 18px;
+  border: 2px solid var(--brown); background: var(--brown); color: var(--parchment); }
+button.btn.ghost { background: transparent; color: var(--brown); }
+button.btn:disabled { opacity: .4; cursor: default; }
+button.btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+.feedback { border-radius: 12px; padding: 10px 14px; font-size: 17px; }
+.feedback:empty { display: none; }
+.feedback.ok { background: var(--ok-soft); color: var(--ok); border: 1.5px solid var(--ok); }
+.feedback.ko { background: var(--ko-soft); color: var(--ko); border: 1.5px solid var(--ko); }
+
+/* ---------- Étoiles et récompense ---------- */
+.quest-head { display: grid; gap: 8px; justify-items: center; text-align: center; }
+.quest-head h2 { color: var(--gold); }
+.quest-head p { color: var(--muted); max-width: 56ch; }
+.stars { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.badge { display: inline-flex; align-items: center; gap: 8px; padding: 5px 14px; border-radius: 999px; border: 1.5px solid color-mix(in srgb, var(--muted) 50%, transparent); color: var(--muted); font-size: 15px; }
+.badge svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; }
+.badge.won { border-color: var(--gold); color: var(--gold); }
+.badge.won svg { fill: currentColor; }
+.crown { text-align: center; display: grid; gap: 8px; justify-items: center; padding: 22px; border-radius: 18px;
+  border: 2px solid var(--gold); background: color-mix(in srgb, var(--gold) 12%, transparent); }
+.crown h2 { color: var(--gold); }
+.crown p { color: var(--ink); }
+
+.spark { position: fixed; pointer-events: none; z-index: 20; width: 14px; height: 14px; background: var(--gold);
+  clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  animation: burst .9s ease-out forwards; }
+@keyframes burst { to { transform: translate(var(--dx), var(--dy)) rotate(160deg) scale(.3); opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .sky i, .fairy, .castle .win, .group { animation: none; }
+  .spark { display: none; }
+}
+</style>
+
+<div class="sky" id="sky" aria-hidden="true"></div>
+<div class="page">
+
+  <header class="hero">
+    <span class="kicker">Une leçon de mathématiques · CP et CE1</span>
+    <h1>Le Royaume d'Additia</h1>
+    <svg class="castle" viewBox="0 -32 520 282" role="img" aria-label="Le château d'Additia et ses trois tours : la tour des Centaines, la tour des Dizaines et la tour des Unités">
+      <defs>
+        <linearGradient id="hill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#3a2f7a"/><stop offset="1" stop-color="#15123a"/></linearGradient>
+      </defs>
+      <circle cx="455" cy="48" r="26" fill="#fff6d6"/><circle cx="467" cy="40" r="24" fill="#2b2266"/>
+      <path d="M0 250 C120 190 400 190 520 250 Z" fill="url(#hill)"/>
+      <rect x="120" y="150" width="280" height="80" fill="#e9dcc0"/>
+      <path d="M120 150 h20 v-12 h20 v12 h20 v-12 h20 v12 h20 v-12 h20 v12 h20 v-12 h20 v12 h20 v-12 h20 v12 h20 v-12 h20 v12 h20 v-12 h20 v12 z" fill="#e9dcc0"/>
+      <path d="M240 230 v-38 a20 20 0 0 1 40 0 v38 z" fill="#3d2b1c"/>
+      <!-- tour des Centaines -->
+      <rect x="70" y="90" width="80" height="140" fill="#93e3ad"/>
+      <path d="M60 92 L110 18 L160 92 Z" fill="#1f8a4c"/>
+      <rect class="win" x="100" y="120" width="20" height="28" rx="10"/>
+      <text class="lbl" x="110" y="200" text-anchor="middle">C</text>
+      <!-- tour des Dizaines -->
+      <rect x="215" y="62" width="90" height="100" fill="#ff9cbc"/>
+      <path d="M205 64 L260 -8 L315 64 Z" fill="#c8245e"/>
+      <path d="M260 -8 v-16 l22 7 l-22 7" fill="#f7cc4f"/>
+      <rect class="win" x="250" y="88" width="20" height="28" rx="10" style="animation-delay:.8s"/>
+      <text class="lbl" x="260" y="148" text-anchor="middle">D</text>
+      <!-- tour des Unités -->
+      <rect x="370" y="90" width="80" height="140" fill="#8cc8ff"/>
+      <path d="M360 92 L410 18 L460 92 Z" fill="#2a63d4"/>
+      <rect class="win" x="400" y="120" width="20" height="28" rx="10" style="animation-delay:1.6s"/>
+      <text class="lbl" x="410" y="200" text-anchor="middle">U</text>
+    </svg>
+
+    <div class="tale">
+      <svg class="fairy" viewBox="0 0 90 110" aria-hidden="true">
+        <ellipse cx="28" cy="52" rx="20" ry="28" fill="#bfe6ff" opacity=".75" transform="rotate(-20 28 52)"/>
+        <ellipse cx="62" cy="52" rx="20" ry="28" fill="#bfe6ff" opacity=".75" transform="rotate(20 62 52)"/>
+        <path d="M45 50 L66 100 H24 Z" fill="#ff9cbc"/>
+        <circle cx="45" cy="38" r="15" fill="#ffd9b8"/>
+        <path d="M29 36 C30 18 60 16 61 36 C56 28 36 27 29 36 Z" fill="#f7cc4f"/>
+        <circle cx="40" cy="39" r="2" fill="#3d2b1c"/><circle cx="51" cy="39" r="2" fill="#3d2b1c"/>
+        <path d="M41 45 Q45.5 49 50 45" stroke="#3d2b1c" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+        <path d="M60 64 L80 34" stroke="#f7cc4f" stroke-width="3" stroke-linecap="round"/>
+        <path d="M80 22 l3.5 8 8.5 .6 -6.5 5.5 2 8.3 -7.5 -4.5 -7.5 4.5 2 -8.3 -6.5 -5.5 8.5 -.6 z" fill="#f7cc4f"/>
+      </svg>
+      <p class="bubble">Bonjour, je suis <b>Lumi</b>, la fée des nombres ! Dans notre château, chaque chiffre habite dans sa tour : la tour des <b style="color:var(--u)">Unités</b>, la tour des <b>Dizaines</b> et la tour des <b style="color:var(--c)">Centaines</b>. Aide-moi à ranger le trésor du royaume !</p>
+    </div>
+
+    <details class="ref">
+      <summary>Ce que dit le programme officiel</summary>
+      <blockquote>
+        <p><b>CP</b> : « L'élève sait poser une addition de deux ou trois nombres à un ou deux chiffres, en positionnant les unités sous les unités, les dizaines sous les dizaines, et en calculer le résultat. Par exemple, 45 + 37 ou 28 + 8 + 56. »</p>
+        <p><b>CE1</b> : « L'élève sait poser une addition de deux ou de trois nombres à un, deux ou trois chiffres […] et en calculer le résultat. Par exemple, 245 + 437 ou 218 + 48 ou encore 76 + 7 + 568. »</p>
+        <cite>Programme de mathématiques du cycle 2, BO n° 41 du 31 octobre 2024.</cite>
+      </blockquote>
+    </details>
+  </header>
+
+  <section class="scroll" aria-labelledby="t-demo">
+    <div class="chapter"><span>Chapitre 1</span><span>La leçon de Lumi</span></div>
+    <h2 id="t-demo">Le secret des perles magiques</h2>
+    <p class="story">Au royaume, une <b style="color:var(--u)">perle</b> vaut 1. Quand on a 10 perles, Lumi les enfile en un <b style="color:var(--d)">collier</b>, qui vaut 10. Regarde-la calculer <b>45 + 37</b>.</p>
+    <div class="demo">
+      <div class="vault" aria-hidden="true">
+        <div class="col col-d"><span class="col-title">Tour des Dizaines</span><div id="zone-d" style="display:grid;gap:8px"></div></div>
+        <div class="col col-u"><span class="col-title">Tour des Unités</span><div id="zone-u" style="display:grid;gap:8px"></div></div>
+      </div>
+      <div class="demo-side">
+        <div class="op-wrap"><div class="op" id="demo-op"></div></div>
+        <p class="step-text" id="step-text" aria-live="polite"></p>
+        <div class="stepper">
+          <button class="btn ghost" id="prev" type="button">Retour</button>
+          <button class="btn" id="next" type="button">Suite de l'histoire</button>
+          <div class="dots" id="dots"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="quest-head">
+    <h2>Les trois quêtes</h2>
+    <p>Réussis chaque quête pour gagner une étoile. Avec les trois étoiles, tu deviens Gardien ou Gardienne des Additions !</p>
+    <div class="stars" id="progress"></div>
+  </div>
+
+  <section class="scroll" aria-labelledby="t-q1">
+    <div class="chapter"><span>Chapitre 2 · Quête 1</span><span>CP</span></div>
+    <h2 id="t-q1">Le parchemin bien rangé</h2>
+    <p class="story">Le hibou messager a apporté trois parchemins pour calculer <b id="ex1-q"></b>. Un seul range chaque chiffre dans la bonne tour. Lequel ?</p>
+    <div class="choices" id="ex1-choices"></div>
+    <div class="feedback" id="ex1-fb" aria-live="polite"></div>
+    <div class="actions"><button class="btn ghost" type="button" id="ex1-new">Autres parchemins</button></div>
+  </section>
+
+  <section class="scroll" aria-labelledby="t-q2">
+    <div class="chapter"><span>Chapitre 3 · Quête 2</span><span>CP</span></div>
+    <h2 id="t-q2">La potion de la retenue</h2>
+    <p class="story">Le magicien prépare une potion : il lui faut <b id="ex2-q"></b> gouttes d'étoile. Calcule le total, et écris la retenue dans la petite case pointillée.</p>
+    <div class="work">
+      <div class="op-wrap"><div class="op" id="ex2-op"></div></div>
+      <div class="hint"><span>1. Additionne d'abord la tour des Unités.</span><span>2. 10 ou plus ? Garde les unités, et envoie la dizaine en retenue.</span><span>3. Additionne la tour des Dizaines avec la retenue.</span></div>
+    </div>
+    <div class="feedback" id="ex2-fb" aria-live="polite"></div>
+    <div class="actions"><button class="btn" type="button" id="ex2-check">Lancer le sort</button><button class="btn ghost" type="button" id="ex2-new">Une autre potion</button></div>
+  </section>
+
+  <section class="scroll" aria-labelledby="t-q3">
+    <div class="chapter"><span>Chapitre 4 · Quête 3</span><span>CE1</span></div>
+    <h2 id="t-q3">Le trésor du dragon Pistache</h2>
+    <p class="story" id="ex3-q"></p>
+    <div class="work">
+      <div class="op-wrap"><div class="op" id="ex3-op"></div></div>
+      <div class="hint"><span>Écris chaque nombre sur une ligne, chaque chiffre dans sa tour.</span><span>Laisse vide une case qui n'a pas de chiffre.</span><span>Puis calcule en commençant par les Unités.</span></div>
+    </div>
+    <div class="feedback" id="ex3-fb" aria-live="polite"></div>
+    <div class="actions"><button class="btn" type="button" id="ex3-check">Ouvrir le coffre</button><button class="btn ghost" type="button" id="ex3-new">Un autre trésor</button></div>
+  </section>
+
+  <div class="crown" id="crown" hidden>
+    <h2>Bravo, Gardien ou Gardienne des Additions !</h2>
+    <p>Tu as gagné les trois étoiles. Lumi et tout le royaume d'Additia te disent merci !</p>
+  </div>
+</div>
+
+<script>
+/* Ciel étoilé décoratif */
+(() => {
+  const sky = document.getElementById('sky');
+  for (let i = 0; i < 70; i++) {
+    const s = document.createElement('i');
+    s.style.left = Math.random() * 100 + '%'; s.style.top = Math.random() * 100 + '%';
+    s.style.animationDelay = (Math.random() * 3).toFixed(2) + 's';
+    if (Math.random() < .2) { s.style.width = s.style.height = '4px'; }
+    sky.append(s);
+  }
+})();
+
+const RANKS = ['c', 'd', 'u'];
+const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = rnd(0, i); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
+const rankName = r => ({ c: 'centaines', d: 'dizaines', u: 'unités' })[r];
+const pad = (n, w) => String(n).padStart(w, ' ').split('').map(ch => ch === ' ' ? '' : ch);
+
+/* Grille d'opération : ncols colonnes de chiffres (2 = D U, 3 = C D U), lignes décrites de haut en bas. */
+function renderOp(host, ncols, rows, opts = {}) {
+  host.innerHTML = '';
+  host.style.gridTemplateColumns = `repeat(${ncols + 1}, var(--cell))`;
+  host.classList.toggle('small', !!opts.small);
+  const ranks = RANKS.slice(3 - ncols);
+  const refs = { carry: [], nums: [], res: [] };
+  rows.forEach(row => {
+    const signCell = el('div', 'cell');
+    if (row.kind === 'num' && row.sign) signCell.textContent = '+';
+    if (row.kind === 'res') signCell.classList.add('total-line');
+    host.append(signCell);
+    const line = [];
+    for (let c = 0; c < ncols; c++) {
+      const cell = el('div', 'cell');
+      if (row.kind === 'hdr') { cell.classList.add('hdr', ranks[c]); cell.textContent = ranks[c].toUpperCase(); }
+      if (row.kind === 'carry') {
+        cell.classList.add('carry');
+        if (row.inputs && c < ncols - 1) line[c] = addInput(cell, `${opts.id}-r${c}`, 'retenue au-dessus des ' + rankName(ranks[c]));
+        else if (row.values && row.values[c]) cell.textContent = row.values[c];
+      }
+      if (row.kind === 'num') {
+        if (row.inputs) line[c] = addInput(cell, `${opts.id}-n${refs.nums.length}c${c}`, `nombre ${refs.nums.length + 1}, ${rankName(ranks[c])}`);
+        else cell.textContent = row.digits[c] || '';
+      }
+      if (row.kind === 'res') {
+        cell.classList.add('total-line');
+        if (row.inputs) line[c] = addInput(cell, `${opts.id}-s${c}`, 'résultat, ' + rankName(ranks[c]));
+        else cell.textContent = (row.values && row.values[c]) || '';
+      }
+      if (opts.highlight === c && row.kind !== 'hdr') cell.classList.add('hl');
+      host.append(cell);
+    }
+    if (row.kind === 'carry') refs.carry = line;
+    if (row.kind === 'num') refs.nums.push(line);
+    if (row.kind === 'res') refs.res = line;
+  });
+  return refs;
+}
+function addInput(cell, id, label) {
+  const i = el('input');
+  i.id = id; i.inputMode = 'numeric'; i.maxLength = 1; i.autocomplete = 'off'; i.setAttribute('aria-label', label);
+  cell.append(i);
+  return i;
+}
+/* Un chiffre par case, puis passage automatique à la case suivante. */
+function wireOrder(order) {
+  order.forEach((inp, k) => {
+    inp.addEventListener('input', () => {
+      inp.value = inp.value.replace(/\D/g, '').slice(-1);
+      inp.classList.remove('good', 'bad');
+      if (inp.value && order[k + 1]) order[k + 1].focus();
+    });
+    inp.addEventListener('keydown', e => {
+      if (e.key === 'Backspace' && !inp.value && order[k - 1]) { e.preventDefault(); order[k - 1].focus(); order[k - 1].value = ''; }
+    });
+  });
+}
+
+/* Pluie d'étoiles autour d'un élément */
+function sparkle(target) {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const r = target.getBoundingClientRect();
+  for (let i = 0; i < 16; i++) {
+    const s = el('i', 'spark');
+    const a = (i / 16) * Math.PI * 2, d = 50 + Math.random() * 70;
+    s.style.left = r.left + r.width / 2 + 'px'; s.style.top = r.top + r.height / 2 + 'px';
+    s.style.setProperty('--dx', Math.cos(a) * d + 'px'); s.style.setProperty('--dy', Math.sin(a) * d + 'px');
+    document.body.append(s);
+    setTimeout(() => s.remove(), 1000);
+  }
+}
+
+/* ---------- Chapitre 1 : 45 + 37 avec perles et colliers ---------- */
+const STEPS = [
+  { text: 'Le trésor contient <strong>45</strong> perles et <strong>37</strong> perles. 45, c\'est 4 colliers et 5 perles. 37, c\'est 3 colliers et 7 perles.',
+    d: [['45', 4], ['37', 3]], u: [['45', 5], ['37', 7]], op: null },
+  { text: 'Lumi <strong>pose</strong> l\'addition : chaque chiffre dans sa tour. Les unités sous les unités, les dizaines sous les dizaines.',
+    d: [['45', 4], ['37', 3]], u: [['45', 5], ['37', 7]], op: {} },
+  { text: 'On commence toujours par la <strong>tour des Unités</strong> : 5 + 7 = 12 perles.',
+    d: [['45', 4], ['37', 3]], uAll: 12, op: { hl: 1 } },
+  { text: 'Abracadabra ! Avec 10 perles, Lumi enfile <strong>un collier</strong>. Il reste 2 perles. Elle écrit 2, et envoie le collier en haut de la tour des Dizaines : c\'est la <strong>retenue</strong>.',
+    dAll: 7, dNew: 1, uAll: 2, op: { hl: 1, carry: '1', u: '2' } },
+  { text: 'Dans la <strong>tour des Dizaines</strong>, on compte tous les colliers, sans oublier la retenue : 1 + 4 + 3 = 8.',
+    dAll: 7, dNew: 1, uAll: 2, op: { hl: 0, carry: '1', u: '2', d: '8' } },
+  { text: '<strong>45 + 37 = 82</strong> : 8 colliers et 2 perles ! Lumi vérifie : c\'est un peu moins que 50 + 40 = 90. Le compte est bon.',
+    dAll: 8, uAll: 2, op: { carry: '1', u: '2', d: '8' } },
+];
+let step = 0;
+function group(kind, n, tag, extra) {
+  const g = el('div', 'group' + (extra?.circled ? ' circled' : ''));
+  if (tag) g.append(el('span', 'tag', tag));
+  for (let i = 0; i < n; i++) {
+    const b = el('i', kind === 'd' ? 'necklace' : 'pearl');
+    if (extra?.newFrom != null && i >= extra.newFrom) b.classList.add('new');
+    g.append(b);
+  }
+  return g;
+}
+function renderDemo() {
+  const s = STEPS[step];
+  const zd = document.getElementById('zone-d'), zu = document.getElementById('zone-u');
+  zd.innerHTML = ''; zu.innerHTML = '';
+  if (s.d) s.d.forEach(([t, n]) => zd.append(group('d', n, t)));
+  if (s.dAll != null) { const tot = s.dAll + (s.dNew || 0); zd.append(group('d', tot, tot + ' colliers', { newFrom: s.dNew ? s.dAll : null })); }
+  if (s.u) s.u.forEach(([t, n]) => zu.append(group('u', n, t)));
+  if (s.uAll != null) {
+    if (s.uAll >= 10) { zu.append(group('u', 10, '10 perles = 1 collier', { circled: true })); zu.append(group('u', s.uAll - 10, 'reste ' + (s.uAll - 10))); }
+    else zu.append(group('u', s.uAll, s.uAll + ' perles'));
+  }
+  const op = document.getElementById('demo-op');
+  if (!s.op) op.style.display = 'none';
+  else {
+    op.style.display = '';
+    renderOp(op, 2, [
+      { kind: 'hdr' }, { kind: 'carry', values: [s.op.carry || '', ''] },
+      { kind: 'num', digits: ['4', '5'] }, { kind: 'num', digits: ['3', '7'], sign: true },
+      { kind: 'res', values: [s.op.d || '', s.op.u || ''] },
+    ], { highlight: s.op.hl, id: 'demo' });
+  }
+  document.getElementById('step-text').innerHTML = s.text;
+  document.getElementById('prev').disabled = step === 0;
+  document.getElementById('next').textContent = step === STEPS.length - 1 ? 'Relire l\'histoire' : 'Suite de l\'histoire';
+  document.getElementById('dots').innerHTML = STEPS.map((_, i) => `<i class="${i <= step ? 'on' : ''}"></i>`).join('');
+}
+document.getElementById('next').onclick = () => { step = step === STEPS.length - 1 ? 0 : step + 1; renderDemo(); };
+document.getElementById('prev').onclick = () => { if (step > 0) { step--; renderDemo(); } };
+renderDemo();
+
+/* ---------- Étoiles gagnées ---------- */
+const BADGES = ['Le parchemin', 'La potion', 'Le trésor'];
+const won = [false, false, false];
+const STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg>';
+function renderProgress() {
+  document.getElementById('progress').innerHTML = BADGES.map((b, i) =>
+    `<span class="badge ${won[i] ? 'won' : ''}">${STAR}${b}${won[i] ? ' : étoile gagnée' : ''}</span>`).join('');
+  document.getElementById('crown').hidden = !won.every(Boolean);
+}
+function win(i, fbId) {
+  const first = !won[i];
+  won[i] = true; renderProgress();
+  sparkle(document.getElementById(fbId));
+  if (first && won.every(Boolean)) setTimeout(() => sparkle(document.getElementById('crown')), 300);
+}
+renderProgress();
+function setFb(id, ok, msg) { const f = document.getElementById(id); f.className = 'feedback ' + (ok ? 'ok' : 'ko'); f.textContent = msg; }
+function clearFb(id) { const f = document.getElementById(id); f.className = 'feedback'; f.textContent = ''; }
+
+/* ---------- Quête 1 : le parchemin bien rangé (a + b + c, CP) ---------- */
+function newEx1() {
+  clearFb('ex1-fb');
+  const a = rnd(12, 49), b = rnd(3, 9), c = rnd(21, 69);
+  document.getElementById('ex1-q').textContent = `${a} + ${b} + ${c}`;
+  const right = n => pad(n, 3);
+  const left = n => { const s = String(n).split(''); while (s.length < 3) s.push(''); return s; };
+  const layouts = shuffle([
+    { ok: true, rows: [right(a), right(b), right(c)] },
+    { ok: false, why: `Oups ! Le ${b} est entré dans la tour des Dizaines, alors que c'est un chiffre des Unités.`, rows: [right(a), ['', String(b), ''], right(c)] },
+    { ok: false, why: 'Oups ! Les nombres sont collés à gauche : les unités ne sont plus dans la tour des Unités.', rows: [left(a), left(b), left(c)] },
+  ]);
+  const host = document.getElementById('ex1-choices');
+  host.innerHTML = '';
+  layouts.forEach((L, i) => {
+    const btn = el('button', 'choice'); btn.type = 'button';
+    btn.append(el('span', 'letter', 'Parchemin ' + 'ABC'[i]));
+    const op = el('div', 'op small');
+    renderOp(op, 3, [{ kind: 'hdr' }, { kind: 'num', digits: L.rows[0] }, { kind: 'num', digits: L.rows[1] }, { kind: 'num', digits: L.rows[2], sign: true }, { kind: 'res', values: [] }], { small: true, id: 'ex1-' + i });
+    btn.append(op);
+    btn.onclick = () => {
+      host.querySelectorAll('.choice').forEach(x => x.classList.remove('good', 'bad'));
+      if (L.ok) {
+        btn.classList.add('good');
+        setFb('ex1-fb', true, `Bravo ! Chaque chiffre est dans sa tour. Et le total : ${a} + ${b} + ${c} = ${a + b + c}.`);
+        win(0, 'ex1-fb');
+      } else {
+        btn.classList.add('bad');
+        setFb('ex1-fb', false, L.why + ' Essaie un autre parchemin.');
+      }
+    };
+    host.append(btn);
+  });
+}
+document.getElementById('ex1-new').onclick = newEx1;
+newEx1();
+
+/* ---------- Quête 2 : la potion de la retenue (2 chiffres + 2 chiffres, CP) ---------- */
+let ex2 = null;
+function newEx2() {
+  clearFb('ex2-fb');
+  let a, b;
+  do { a = rnd(15, 68); b = rnd(14, 59); } while ((a % 10) + (b % 10) < 10 || a + b > 99);
+  document.getElementById('ex2-q').textContent = `${a} + ${b}`;
+  const refs = renderOp(document.getElementById('ex2-op'), 2, [
+    { kind: 'hdr' }, { kind: 'carry', inputs: true }, { kind: 'num', digits: pad(a, 2) }, { kind: 'num', digits: pad(b, 2), sign: true }, { kind: 'res', inputs: true },
+  ], { id: 'ex2' });
+  wireOrder([refs.res[1], refs.carry[0], refs.res[0]]);
+  ex2 = { a, b, refs };
+}
+document.getElementById('ex2-check').onclick = () => {
+  const { a, b, refs } = ex2;
+  const uSum = (a % 10) + (b % 10), sum = a + b;
+  const gotU = refs.res[1].value, gotD = refs.res[0].value, gotR = refs.carry[0].value;
+  const okU = gotU === String(sum % 10), okD = gotD === String(Math.floor(sum / 10));
+  refs.res[1].classList.toggle('good', okU); refs.res[1].classList.toggle('bad', !okU);
+  refs.res[0].classList.toggle('good', okD); refs.res[0].classList.toggle('bad', !okD);
+  if (gotR) { refs.carry[0].classList.toggle('good', gotR === '1'); refs.carry[0].classList.toggle('bad', gotR !== '1'); }
+  if (!gotU || !gotD) return setFb('ex2-fb', false, 'Remplis les cases du résultat, en commençant par la tour des Unités.');
+  if (!okU) return setFb('ex2-fb', false, `La potion fait des bulles ! Regarde les unités : ${a % 10} + ${b % 10} = ${uSum}. Quel chiffre garde la tour des Unités ?`);
+  if (!okD && gotD === String(Math.floor(a / 10) + Math.floor(b / 10))) return setFb('ex2-fb', false, `Presque ! ${uSum} perles, c'est 1 collier et ${uSum - 10} perles. As-tu pensé à la retenue ?`);
+  if (!okD) return setFb('ex2-fb', false, `Compte les dizaines : la retenue 1 + ${Math.floor(a / 10)} + ${Math.floor(b / 10)}.`);
+  setFb('ex2-fb', true, `Le sort fonctionne ! ${a} + ${b} = ${sum} gouttes d'étoile.`);
+  win(1, 'ex2-fb');
+};
+document.getElementById('ex2-new').onclick = newEx2;
+newEx2();
+
+/* ---------- Quête 3 : le trésor du dragon (3 chiffres + 2 chiffres, CE1) ---------- */
+const STORIES = [
+  (a, b) => ({ q: `Le gentil dragon Pistache garde <b>${a}</b> pièces d'or dans son coffre. Le roi lui en offre <b>${b}</b>. Combien de pièces Pistache a-t-il maintenant ? Pose l'addition dans le parchemin.`, r: s => `Pistache a maintenant ${s} pièces d'or !` }),
+  (a, b) => ({ q: `Pistache a ramassé <b>${a}</b> pommes dorées dans la forêt, puis <b>${b}</b> au bord du lac. Combien de pommes a-t-il en tout ? Pose l'addition dans le parchemin.`, r: s => `Pistache a ${s} pommes dorées en tout !` }),
+  (a, b) => ({ q: `Au bal du château, <b>${a}</b> invités sont arrivés en carrosse et <b>${b}</b> à dos de licorne. Combien d'invités y a-t-il en tout ? Pose l'addition dans le parchemin.`, r: s => `Il y a ${s} invités au bal !` }),
+];
+let ex3 = null;
+function newEx3() {
+  clearFb('ex3-fb');
+  let a, b;
+  do { a = rnd(105, 489); b = rnd(13, 89); } while ((a % 10) + (b % 10) < 10);
+  const story = STORIES[rnd(0, STORIES.length - 1)](a, b);
+  document.getElementById('ex3-q').innerHTML = story.q;
+  const refs = renderOp(document.getElementById('ex3-op'), 3, [
+    { kind: 'hdr' }, { kind: 'carry', inputs: true }, { kind: 'num', inputs: true }, { kind: 'num', inputs: true, sign: true }, { kind: 'res', inputs: true },
+  ], { id: 'ex3' });
+  wireOrder([...refs.nums[0], ...refs.nums[1], refs.res[2], refs.carry[1], refs.res[1], refs.carry[0], refs.res[0]]);
+  ex3 = { a, b, refs, story };
+}
+document.getElementById('ex3-check').onclick = () => {
+  const { a, b, refs, story } = ex3;
+  /* Une case vide attendue accepte aussi un 0 écrit devant le nombre. */
+  const cellOk = (got, want) => got === want || (want === '' && got === '0');
+  const placed = (line, n) => { const want = pad(n, 3); return line.every((inp, c) => cellOk(inp.value, want[c])); };
+  const okA = placed(refs.nums[0], a), okB = placed(refs.nums[1], b);
+  [[refs.nums[0], okA], [refs.nums[1], okB]].forEach(([line, ok]) => line.forEach(i => { i.classList.toggle('good', ok); i.classList.toggle('bad', !ok); }));
+  if (!okA) return setFb('ex3-fb', false, `Le nombre ${a} n'est pas bien rangé. Unités dans la tour U, dizaines dans la tour D, centaines dans la tour C.`);
+  if (!okB) {
+    const shifted = refs.nums[1][0].value === String(b)[0] && refs.nums[1][1].value === String(b)[1];
+    return setFb('ex3-fb', false, shifted
+      ? `Le ${b} s'est trompé de tours ! Il n'a pas de centaines : son ${String(b)[1]} va dans la tour des Unités.`
+      : `Le nombre ${b} n'est pas bien rangé. Les unités vont sous les unités.`);
+  }
+  const sum = a + b, want = pad(sum, 3);
+  let allOk = true, firstBad = -1;
+  for (let c = 2; c >= 0; c--) {
+    const ok = cellOk(refs.res[c].value, want[c]);
+    refs.res[c].classList.toggle('good', ok); refs.res[c].classList.toggle('bad', !ok);
+    if (!ok && firstBad < 0) firstBad = c;
+    allOk = allOk && ok;
+  }
+  if (!allOk) {
+    let msg = `Le coffre reste fermé. Vérifie la tour des ${['Centaines', 'Dizaines', 'Unités'][firstBad]}.`;
+    if (firstBad === 1 && (a % 10) + (b % 10) >= 10 && !refs.carry[1].value) msg += ' Les unités dépassent 9 : n\'oublie pas la retenue.';
+    return setFb('ex3-fb', false, msg);
+  }
+  setFb('ex3-fb', true, `Le coffre s'ouvre ! ${a} + ${b} = ${sum}. ${story.r(sum)}`);
+  win(2, 'ex3-fb');
+};
+document.getElementById('ex3-new').onclick = newEx3;
+newEx3();
+</script>
