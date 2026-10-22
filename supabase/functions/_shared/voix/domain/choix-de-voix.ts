@@ -18,3 +18,28 @@ export function choisirVoix(
   const scoreMinimal = scoreDeLaVoix(meilleure) - ECART_DE_SCORE_TOLERE;
   return [meilleure, ...autres].find((v) => motif.test(v.nom) && scoreDeLaVoix(v) >= scoreMinimal) ?? meilleure;
 }
+
+export const CARACTERE_LANGUE_ETRANGERE: CaractereDeLaVoix = {
+  sexe: "feminine",
+  hauteur: 1.05,
+  rythme: 0.95,
+};
+
+const BONUS_NOM_NATUREL = 10;
+const BONUS_LANGUE_EXACTE = 5;
+
+function scoreDeLaVoixEtrangere(voix: VoixDisponible, langue: string): number {
+  const bonusNom = /natural|neural|online|premium|enhanced|google/i.test(voix.nom) ? BONUS_NOM_NATUREL : 0;
+  const bonusLangue = voix.langue.toLowerCase() === langue.toLowerCase() ? BONUS_LANGUE_EXACTE : 0;
+  return bonusNom + bonusLangue;
+}
+
+export function choisirVoixDeLangue(
+  voix: readonly VoixDisponible[],
+  langue: string,
+): VoixDisponible | undefined {
+  const codeDeLangue = langue.slice(0, 2).toLowerCase();
+  return voix
+    .filter((v) => v.langue.toLowerCase().startsWith(codeDeLangue))
+    .sort((a, b) => scoreDeLaVoixEtrangere(b, langue) - scoreDeLaVoixEtrangere(a, langue))[0];
+}
