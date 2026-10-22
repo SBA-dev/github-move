@@ -14,8 +14,8 @@ const amelie: VoixDisponible = { nom: "Amélie", langue: "fr-CA" };
 const espeak: VoixDisponible = { nom: "eSpeak French", langue: "fr-FR" };
 const samantha: VoixDisponible = { nom: "Samantha", langue: "en-US" };
 
-Deno.test("une voix fr-FR au nom « Online (Natural) » vaut 110 points", () => {
-  assertEquals(scoreDeLaVoix(denise), 110);
+Deno.test("une voix fr-FR au nom « Online (Natural) » vaut 70 points", () => {
+  assertEquals(scoreDeLaVoix(denise), 70);
 });
 
 Deno.test("une voix fr-FR au nom ordinaire vaut 30 points", () => {
