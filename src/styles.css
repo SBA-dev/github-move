@@ -1,17 +1,11 @@
 :root {
   --fond: #f6f1e7;
   --texte: #1f2a1f;
-  --principal: #24452c;
+  --accent: #c9452f;
+  --accent-fonce: #9e3322;
   font-family: system-ui, sans-serif;
   color: var(--texte);
   background: var(--fond);
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --fond: #162a1d;
-    --texte: #eef3ec;
-    --principal: #ffd36b;
-  }
 }
 * { box-sizing: border-box; }
 body {
@@ -19,9 +13,72 @@ body {
   min-height: 100svh;
   background: var(--fond);
 }
-.accueil {
+.application {
+  position: relative;
+  min-height: 100svh;
+  overflow-x: clip;
+}
+.paysage {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+.paysage svg { width: 100%; height: 100%; display: block; }
+.en-tete, .ecran { position: relative; z-index: 1; }
+.en-tete {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px max(12px, env(safe-area-inset-right)) 8px max(12px, env(safe-area-inset-left));
+}
+.nom-application { margin: 0; font-size: 1.5rem; }
+.outils { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+button {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 22px;
+  font: inherit;
+  font-weight: 700;
+  color: #fff;
+  background: var(--accent);
+  cursor: pointer;
+}
+button:hover { background: var(--accent-fonce); }
+button[aria-pressed="false"] { background: var(--accent-fonce); opacity: .8; }
+.nom-application button { font-size: inherit; }
+.enfant {
+  padding: 10px 14px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, .85);
+  font-weight: 700;
+}
+.ecran {
   max-width: 960px;
   margin: 0 auto;
-  padding: 24px max(16px, env(safe-area-inset-right)) 24px max(16px, env(safe-area-inset-left));
+  padding: 16px max(16px, env(safe-area-inset-right)) 24px max(16px, env(safe-area-inset-left));
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  text-align: center;
 }
-.accueil h1 { color: var(--principal); }
+.personnage-guide { width: min(200px, 50vw); }
+.personnage-guide svg { width: 100%; height: auto; display: block; }
+.demonstration { display: grid; justify-items: center; gap: 12px; max-width: 100%; }
+.guide-et-parole { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; }
+.bulle:empty { display: none; }
+.bulle {
+  padding: 12px 18px;
+  border-radius: 22px;
+  background: #fff;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+.consigne { font-size: 1.5rem; font-weight: 700; margin: 0; background: rgba(255, 255, 255, .85); padding: 10px 16px; border-radius: 16px; }
+.reponses { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
