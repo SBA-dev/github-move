@@ -147,3 +147,63 @@ Deno.test("le mot prononcé est signalé pendant la lecture, puis la fin de la l
 
   assertEquals(signaux, [0, 1, 2, 3, "fin"]);
 });
+
+function signauxDeMots(
+  affiche: string,
+  annonces: Array<{ phrase: number; position: number }>,
+) {
+  const { lecture, lecteur } = uneLecture();
+  lecteur.prononcerLesMots(...annonces);
+  const rangs: number[] = [];
+  return lecture.lire(affiche, { onMot: (rang) => rangs.push(rang) }).then(() => rangs);
+}
+
+Deno.test("un trou de soulignés dit en silence ne surligne aucun mot et ne décale pas les rangs", async () => {
+  // texte lu : « Le chat ... » / « du lait. »
+  const rangs = await signauxDeMots("Le chat ___ du lait.", [
+    { phrase: 0, position: 0 },
+    { phrase: 0, position: 3 },
+    { phrase: 0, position: 8 },
+    { phrase: 1, position: 0 },
+    { phrase: 1, position: 3 },
+  ]);
+
+  assertEquals(rangs, [0, 1, 2, 3]);
+});
+
+Deno.test("les rangs continuent d'une phrase à l'autre et la ponctuation isolée ne surligne rien", async () => {
+  // texte lu : « Bravo ! » / « Encore une. »
+  const rangs = await signauxDeMots("Bravo ! Encore une.", [
+    { phrase: 0, position: 0 },
+    { phrase: 0, position: 6 },
+    { phrase: 1, position: 0 },
+    { phrase: 1, position: 7 },
+  ]);
+
+  assertEquals(rangs, [0, 1, 2]);
+});
+
+Deno.test("« plus » et « égale » dits pour « 3 + 4 = 7 » ne surlignent aucun mot affiché", async () => {
+  // texte lu : « 3 plus 4 égale 7 »
+  const rangs = await signauxDeMots("3 + 4 = 7", [
+    { phrase: 0, position: 0 },
+    { phrase: 0, position: 2 },
+    { phrase: 0, position: 7 },
+    { phrase: 0, position: 9 },
+    { phrase: 0, position: 15 },
+  ]);
+
+  assertEquals(rangs, [0, 1, 2]);
+});
+
+Deno.test("le mot unique « 3+4=7 » reste surligné pendant toute sa lecture", async () => {
+  const rangs = await signauxDeMots("3+4=7", [
+    { phrase: 0, position: 0 },
+    { phrase: 0, position: 2 },
+    { phrase: 0, position: 7 },
+    { phrase: 0, position: 9 },
+    { phrase: 0, position: 15 },
+  ]);
+
+  assertEquals([...new Set(rangs)], [0]);
+});
