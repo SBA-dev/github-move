@@ -38,56 +38,109 @@ const WORLDS = {
 };
 let W = WORLDS.princesse;
 
-const MOUTHS = `<path class="m-happy" d="M41 45 Q45.5 49 50 45" stroke="#3d2b1c" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-  <path class="m-think" d="M41.5 46.5 Q45.5 44.5 49.5 46.5" stroke="#3d2b1c" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-  <path class="m-cheer" d="M40 44 Q45.5 53 51 44 Z" fill="#3d2b1c"/>`;
+/* Couleurs du paysage et couleur principale de chaque univers (texte blanc lisible dessus). */
+const PALETTES = {
+  animaux: { sky: ['#BFE5FF', '#FFF3DF'], far: '#B8CCE8', hills: ['#A8D9A4', '#6CBF84', '#3F9A63'], tree: '#2E7E52', sun: '#FFD978', accent: '#C9452F', deep: '#9E3322' },
+  princesse: { sky: ['#E7D9FF', '#FFE6F1'], far: '#D7C8F0', hills: ['#F2C9E4', '#D8A6E3', '#A97FD6'], tree: '#7E56BC', sun: '#FFE3F0', accent: '#A23BB8', deep: '#7C2690' },
+  sports: { sky: ['#BDE3FF', '#F0FAFF'], far: '#BFD7EE', hills: ['#A5DE8F', '#63C46A', '#2F9A4C'], tree: '#237A3B', sun: '#FFF0A0', accent: '#1F63D8', deep: '#164BA8' },
+  police: { sky: ['#C9D6FF', '#EEF2FF'], far: '#B6C3E6', hills: ['#B9C9EC', '#8AA2DA', '#5A75BF'], tree: '#41589E', sun: '#FFFFFF', accent: '#3450C8', deep: '#253B9C' },
+  pompier: { sky: ['#FFC9A8', '#FFF0D9'], far: '#F3C2A6', hills: ['#F2C08F', '#E39561', '#C06A3E'], tree: '#9C4A2A', sun: '#FFE08A', accent: '#C2341B', deep: '#931F0C' },
+  danse: { sky: ['#F3D2FF', '#FFF0F7'], far: '#E6C8F2', hills: ['#F4BEDD', '#DE93C8', '#B565AE'], tree: '#934C94', sun: '#FFE7F4', accent: '#7A35C8', deep: '#5A1F9E' },
+};
+const worldKey = (w = W) => Object.keys(WORLDS).find(k => WORLDS[k] === w) || 'animaux';
+function sceneryHTML(pal) {
+  return `<svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <defs><linearGradient id="sc-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${pal.sky[0]}"/><stop offset=".75" stop-color="${pal.sky[1]}"/></linearGradient>
+      <radialGradient id="sc-sun"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".55" stop-color="${pal.sun}"/><stop offset="1" stop-color="${pal.sun}" stop-opacity="0"/></radialGradient></defs>
+    <rect width="1200" height="800" fill="url(#sc-sky)"/>
+    <circle cx="960" cy="170" r="150" fill="url(#sc-sun)"/>
+    <g fill="#FFFFFF" opacity=".85"><ellipse cx="210" cy="140" rx="74" ry="22"/><ellipse cx="250" cy="125" rx="46" ry="27"/><ellipse cx="650" cy="96" rx="60" ry="18"/><ellipse cx="684" cy="84" rx="36" ry="22"/></g>
+    <path d="M0 380 L120 270 L210 340 L330 230 L470 350 L560 290 L700 360 L820 260 L960 350 L1060 300 L1200 360 V800 H0 Z" fill="${pal.far}" opacity=".7"/>
+    <path d="M0 450 C180 380 320 440 480 410 C650 375 820 440 980 400 C1080 375 1140 390 1200 400 V800 H0 Z" fill="${pal.hills[0]}"/>
+    <path d="M0 540 C160 490 300 540 470 515 C660 485 860 560 1200 500 V800 H0 Z" fill="${pal.hills[1]}"/>
+    <path d="M0 660 C200 610 420 670 640 635 C860 600 1020 660 1200 630 V800 H0 Z" fill="${pal.hills[2]}"/>
+    <g fill="${pal.tree}"><circle cx="90" cy="580" r="34"/><circle cx="125" cy="595" r="26"/><circle cx="1090" cy="560" r="40"/><circle cx="1130" cy="580" r="28"/></g>
+  </svg>`;
+}
+/* Applique l'univers : paysage et couleur principale. */
+function applyWorld(world = W) {
+  const pal = PALETTES[worldKey(world)];
+  document.documentElement.style.setProperty('--accent', pal.accent);
+  document.documentElement.style.setProperty('--accent-deep', pal.deep);
+  $('#scenery').innerHTML = sceneryHTML(pal);
+}
+let gid = 0;
 function guideSVG(look) {
+  const k = 'g' + (++gid);
   if (look.animal === 'squirrel') {
-    return `<svg class="lumi" viewBox="0 0 90 110" aria-hidden="true">
-      <path d="M62 96 C92 90 92 40 70 30 C84 50 70 70 58 70 Z" fill="#c9773a"/>
-      <ellipse cx="45" cy="78" rx="18" ry="22" fill="#d98c4a"/><ellipse cx="45" cy="82" rx="10" ry="14" fill="#f6d9b0"/>
-      <path d="M32 26 l-4 -14 l12 9 Z M58 26 l4 -14 l-12 9 Z" fill="#c9773a"/>
-      <circle cx="45" cy="40" r="17" fill="#d98c4a"/><ellipse cx="45" cy="46" rx="10" ry="7" fill="#f6d9b0"/>
-      <circle cx="40" cy="38" r="2.2" fill="#3d2b1c"/><circle cx="51" cy="38" r="2.2" fill="#3d2b1c"/><circle cx="45.5" cy="42" r="1.8" fill="#3d2b1c"/>
-      ${MOUTHS}<ellipse cx="45" cy="100" rx="7" ry="5" fill="#8a5a2b"/></svg>`;
+    return `<svg class="lumi" viewBox="0 0 200 200" aria-hidden="true">
+      <defs>
+        <radialGradient id="${k}f" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#FFC28A"/><stop offset=".6" stop-color="#F48C3C"/><stop offset="1" stop-color="#C9601C"/></radialGradient>
+        <radialGradient id="${k}b" cx="40%" cy="30%" r="70%"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#FFE0BF"/></radialGradient>
+      </defs>
+      <path d="M138 176 C206 160 200 60 150 48 C176 86 150 120 126 122 Z" fill="url(#${k}f)"/>
+      <ellipse cx="96" cy="150" rx="44" ry="46" fill="url(#${k}f)"/><ellipse cx="96" cy="160" rx="26" ry="30" fill="url(#${k}b)"/>
+      <path d="M60 58 L52 18 L86 44 Z M132 58 L140 18 L106 44 Z" fill="url(#${k}f)"/>
+      <path d="M64 50 L60 30 L78 44 Z M128 50 L132 30 L114 44 Z" fill="#FFB3C7"/>
+      <circle cx="96" cy="84" r="46" fill="url(#${k}f)"/><ellipse cx="96" cy="100" rx="28" ry="20" fill="url(#${k}b)"/>
+      <ellipse cx="78" cy="80" rx="9" ry="11" fill="#1B1530"/><ellipse cx="114" cy="80" rx="9" ry="11" fill="#1B1530"/>
+      <circle cx="81" cy="76" r="3.4" fill="#FFFFFF"/><circle cx="117" cy="76" r="3.4" fill="#FFFFFF"/>
+      <ellipse cx="96" cy="94" rx="6" ry="4.5" fill="#5B2C1A"/>
+      <ellipse cx="66" cy="98" rx="8" ry="5" fill="#FF8FA8" opacity=".55"/><ellipse cx="126" cy="98" rx="8" ry="5" fill="#FF8FA8" opacity=".55"/>
+      <path class="m-happy" d="M86 103 Q96 113 106 103" stroke="#5B2C1A" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <path class="m-think" d="M88 107 Q96 103 104 107" stroke="#5B2C1A" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <path class="m-cheer" d="M84 101 Q96 121 108 101 Z" fill="#5B2C1A"/></svg>`;
   }
   const hats = {
-    tiara: '<path d="M33 24 l4 -8 l4 6 l4 -9 l4 9 l4 -6 l4 8 Z" fill="#f7cc4f"/>',
-    cap: '<path d="M30 30 Q31 16 46 16 Q60 16 61 30 Z" fill="#c8245e"/><path d="M58 29 h14 q2 0 0 3 h-14 Z" fill="#c8245e"/>',
-    police: '<path d="M29 29 Q30 17 46 17 Q61 17 62 29 Z" fill="#1c2b5e"/><rect x="28" y="27" width="35" height="5" rx="2" fill="#0f1a3d"/><circle cx="45.5" cy="22" r="3.5" fill="#f7cc4f"/>',
-    helmet: '<path d="M28 32 Q28 12 46 12 Q63 12 63 32 Z" fill="#e0b21f"/><path d="M24 31 h44 q3 0 0 4 h-44 q-3 0 0 -4 Z" fill="#c99a1c"/><rect x="42" y="14" width="7" height="12" rx="2" fill="#d23a2a"/>',
+    tiara: '<path d="M33 24 l4 -8 l4 6 l4 -9 l4 9 l4 -6 l4 8 Z" fill="#FFC93C"/>',
+    cap: '<path d="M30 30 Q31 16 46 16 Q60 16 61 30 Z" fill="#E8604C"/><path d="M58 29 h14 q2 0 0 3 h-14 Z" fill="#C24432"/>',
+    police: '<path d="M29 29 Q30 17 46 17 Q61 17 62 29 Z" fill="#26397A"/><rect x="28" y="27" width="35" height="5" rx="2" fill="#16245A"/><circle cx="45.5" cy="22" r="3.5" fill="#FFC93C"/>',
+    helmet: '<path d="M28 32 Q28 12 46 12 Q63 12 63 32 Z" fill="#F2C230"/><path d="M24 31 h44 q3 0 0 4 h-44 q-3 0 0 -4 Z" fill="#D9A21C"/><rect x="42" y="14" width="7" height="12" rx="2" fill="#D9381E"/>',
   };
   const props = {
-    wand: '<path d="M60 64 L80 34" stroke="#f7cc4f" stroke-width="3" stroke-linecap="round"/><path d="M80 22 l3.5 8 8.5 .6 -6.5 5.5 2 8.3 -7.5 -4.5 -7.5 4.5 2 -8.3 -6.5 -5.5 8.5 -.6 z" fill="#f7cc4f"/>',
-    ball: '<circle cx="76" cy="84" r="10" fill="#fff"/><path d="M76 74 l4 6 -4 4 -4 -4 z" fill="#3d2b1c"/>',
-    badge: '<path d="M45 60 l3 6 6 1 -4.5 4 1 6 -5.5 -3 -5.5 3 1 -6 -4.5 -4 6 -1 z" fill="#f7cc4f"/>',
-    hose: '<path d="M60 70 q18 0 20 -20" stroke="#5a5a5a" stroke-width="5" fill="none" stroke-linecap="round"/><circle cx="82" cy="44" r="2.5" fill="#9ccfff"/><circle cx="86" cy="38" r="2" fill="#9ccfff"/>',
-    ribbon: '<path d="M62 64 q14 -20 4 -34 q-10 -12 6 -20" stroke="#ff9cbc" stroke-width="3" fill="none" stroke-linecap="round"/>',
+    wand: '<path d="M60 64 L80 34" stroke="#FFC93C" stroke-width="3" stroke-linecap="round"/><path d="M80 22 l3.5 8 8.5 .6 -6.5 5.5 2 8.3 -7.5 -4.5 -7.5 4.5 2 -8.3 -6.5 -5.5 8.5 -.6 z" fill="#FFC93C"/>',
+    ball: '<circle cx="76" cy="86" r="10" fill="#FFFFFF" stroke="#D5E2DC"/><path d="M76 76 l4 6 -4 4 -4 -4 z" fill="#17302A"/>',
+    badge: '<path d="M45 62 l3 6 6 1 -4.5 4 1 6 -5.5 -3 -5.5 3 1 -6 -4.5 -4 6 -1 z" fill="#FFC93C"/>',
+    hose: '<path d="M60 70 q18 0 20 -20" stroke="#5A5A5A" stroke-width="5" fill="none" stroke-linecap="round"/><circle cx="82" cy="44" r="2.5" fill="#9CCFFF"/><circle cx="86" cy="38" r="2" fill="#9CCFFF"/>',
+    ribbon: '<path d="M62 64 q14 -20 4 -34 q-10 -12 6 -20" stroke="#FF8FB8" stroke-width="3" fill="none" stroke-linecap="round"/>',
   };
   return `<svg class="lumi" viewBox="0 0 90 110" aria-hidden="true">
-    ${look.wings ? '<ellipse cx="28" cy="52" rx="20" ry="28" fill="#bfe6ff" opacity=".75" transform="rotate(-20 28 52)"/><ellipse cx="62" cy="52" rx="20" ry="28" fill="#bfe6ff" opacity=".75" transform="rotate(20 62 52)"/>' : ''}
-    <path d="M45 50 L66 100 H24 Z" fill="${look.body}"/>
+    <defs>
+      <radialGradient id="${k}s" cx="38%" cy="32%" r="75%"><stop offset="0" stop-color="#FFFFFF" stop-opacity=".55"/><stop offset=".35" stop-color="${look.skin}"/><stop offset="1" stop-color="${look.skin}"/></radialGradient>
+      <linearGradient id="${k}c" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFFFFF" stop-opacity=".35"/><stop offset=".4" stop-color="${look.body}"/><stop offset="1" stop-color="${look.body}"/></linearGradient>
+    </defs>
+    ${look.wings ? '<ellipse cx="28" cy="52" rx="20" ry="28" fill="#CFEAFF" opacity=".8" transform="rotate(-20 28 52)"/><ellipse cx="62" cy="52" rx="20" ry="28" fill="#CFEAFF" opacity=".8" transform="rotate(20 62 52)"/>' : ''}
+    <path d="M45 50 Q66 70 68 100 H22 Q24 70 45 50 Z" fill="url(#${k}c)"/>
     ${look.hat === 'bun' ? `<circle cx="45.5" cy="17" r="8" fill="${look.hair}"/>` : ''}
-    <circle cx="45" cy="38" r="15" fill="${look.skin}"/>
-    <path d="M29 36 C30 18 60 16 61 36 C56 28 36 27 29 36 Z" fill="${look.hair}"/>
+    <circle cx="45" cy="38" r="16" fill="url(#${k}s)"/>
+    <path d="M28 37 C29 17 61 15 62 37 C57 28 35 27 28 37 Z" fill="${look.hair}"/>
     ${hats[look.hat] || ''}
-    <circle cx="40" cy="39" r="2" fill="#3d2b1c"/><circle cx="51" cy="39" r="2" fill="#3d2b1c"/>
-    ${MOUTHS}${props[look.prop] || ''}</svg>`;
+    <ellipse cx="39.5" cy="39" rx="2.6" ry="3.2" fill="#1B1530"/><ellipse cx="51" cy="39" rx="2.6" ry="3.2" fill="#1B1530"/>
+    <circle cx="40.4" cy="38" r=".9" fill="#FFFFFF"/><circle cx="51.9" cy="38" r=".9" fill="#FFFFFF"/>
+    <ellipse cx="35" cy="44" rx="3" ry="1.8" fill="#FF8FA8" opacity=".5"/><ellipse cx="56" cy="44" rx="3" ry="1.8" fill="#FF8FA8" opacity=".5"/>
+    <path class="m-happy" d="M41 45 Q45.5 49 50 45" stroke="#5B2C1A" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    <path class="m-think" d="M41.5 46.5 Q45.5 44.5 49.5 46.5" stroke="#5B2C1A" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    <path class="m-cheer" d="M40 44 Q45.5 53 51 44 Z" fill="#5B2C1A"/>
+    ${props[look.prop] || ''}</svg>`;
 }
-const guideEl = (world = W) => { const t = document.createElement('template'); t.innerHTML = guideSVG(world.guide.look).trim(); return t.content.firstElementChild; };
+const svgEl = html => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; };
+const guideEl = (world = W) => svgEl(guideSVG(world.guide.look));
+/* Étoile en relief (récompenses). */
+const STAR3D = on => { const k = 'st' + (++gid); return `<svg viewBox="0 0 100 100" aria-hidden="true" class="${on ? 'on' : ''}"><defs><radialGradient id="${k}" cx="35%" cy="28%" r="80%"><stop offset="0" stop-color="#FFF6C2"/><stop offset=".55" stop-color="#FFC93C"/><stop offset="1" stop-color="#E88A00"/></radialGradient></defs>
+  <path d="M50 8 C54 8 56 28 62 32 C68 36 90 34 92 38 C94 42 76 54 74 60 C72 66 82 86 78 90 C74 94 56 80 50 80 C44 80 26 94 22 90 C18 86 28 66 26 60 C24 54 6 42 8 38 C10 34 32 36 38 32 C44 28 46 8 50 8 Z" fill="${on ? `url(#${k})` : 'rgba(255,255,255,.7)'}"/>${on ? '<ellipse cx="40" cy="34" rx="10" ry="6" fill="#FFFFFF" opacity=".5" transform="rotate(-30 40 34)"/>' : ''}</svg>`; };
 function vesselSVG(kind, color) {
   const outline = {
     cauldron: 'M28 72 Q28 168 100 168 Q172 168 172 72 Z', bowl: 'M14 96 Q24 168 100 168 Q176 168 186 96 Z',
     trophy: 'M44 40 H156 Q156 128 100 132 Q44 128 44 40 Z', tank: 'M30 50 H170 Q182 50 182 62 V156 Q182 168 170 168 H30 Q18 168 18 156 V62 Q18 50 30 50 Z',
   }[kind];
   const extra = {
-    cauldron: '<ellipse cx="100" cy="72" rx="76" ry="14" fill="none" stroke="#8a78c6" stroke-width="7"/>',
+    cauldron: '<ellipse cx="100" cy="72" rx="76" ry="14" fill="none" stroke="#FFFFFF" stroke-width="7"/>',
     bowl: '<ellipse cx="100" cy="96" rx="88" ry="12" fill="none" stroke="#c99a1c" stroke-width="6"/>',
     trophy: '<path d="M44 52 Q14 52 20 80 Q26 100 50 100 M156 52 Q186 52 180 80 Q174 100 150 100" stroke="#c99a1c" stroke-width="7" fill="none"/><rect x="92" y="132" width="16" height="26" fill="#c99a1c"/><rect x="66" y="158" width="68" height="18" rx="4" fill="#c99a1c"/>',
     tank: '<rect x="90" y="36" width="20" height="16" rx="4" fill="#8890a8"/>',
   }[kind];
   return `<svg class="vessel" viewBox="0 0 200 190" aria-hidden="true"><defs><clipPath id="vclip"><path d="${outline}"/></clipPath></defs>
-    <path d="${outline}" fill="#2a2440" stroke="#8a78c6" stroke-width="3"/>
+    <path d="${outline}" fill="rgba(255,255,255,.7)" stroke="#FFFFFF" stroke-width="4"/>
     <rect class="liquid" x="10" y="30" width="180" height="140" clip-path="url(#vclip)" fill="${color}"/>${extra}</svg>`;
 }
 
@@ -220,7 +273,7 @@ function speak(html, { rate = 1, voice = null, style = null } = {}) {
 }
 function hush() { clearTimeout(speakTimer); try { speechSynthesis.cancel(); } catch (e) {} }
 function toast(msg) { const t = el('div', 'toast'); t.textContent = msg; t.setAttribute('role', 'status'); document.body.append(t); setTimeout(() => t.remove(), 6000); }
-function renderSound() { const b = $('#sound'); b.setAttribute('aria-pressed', String(soundOn)); b.innerHTML = (soundOn ? SPEAKER : MUTED) + (soundOn ? 'Son' : 'Muet'); }
+function renderSound() { const b = $('#sound'); b.setAttribute('aria-pressed', String(soundOn)); b.innerHTML = (soundOn ? SPEAKER : MUTED) + `<span class="lbl">${soundOn ? 'Son' : 'Muet'}</span>`; b.setAttribute('aria-label', soundOn ? 'Son activé' : 'Son coupé'); }
 $('#sound').onclick = () => {
   soundOn = !soundOn; try { localStorage.setItem('ecole-son', soundOn ? '1' : '0'); } catch (e) {}
   renderSound();
@@ -309,7 +362,7 @@ function screen(back = null) {
 $('#back').onclick = () => backTo && backTo();
 $('#home').onclick = () => showHome();
 function setChild(c) {
-  child = c; W = WORLDS[c?.univers] || WORLDS.princesse;
+  child = c; W = WORLDS[c?.univers] || WORLDS.animaux; applyWorld(W);
   const who = $('#who'); who.hidden = !c; if (c) who.textContent = `${c.prenom} · ${c.niveau}`;
 }
 
@@ -319,35 +372,37 @@ function showHome() {
   const v = screen();
   const kids = Store.children();
   const wrap = el('div', 'panel');
-  wrap.append(el('h1', 'h-title', 'L\'École d\'Additia'), el('p', 'sub', 'Réviser le programme du CP au CM2, en jouant dans l\'univers de son choix.'));
+  const head = el('div', 'glass on-scene panel'); head.style.gap = '4px';
+  head.append(el('h1', 'h-title', 'L\'École d\'Additia'), el('p', 'sub', 'Réviser le programme du CP au CM2, en jouant dans l\'univers de son choix.'));
+  wrap.append(head);
   if (!kids.length) {
     const box = el('div', 'welcome');
-    box.append(guideEl(WORLDS.princesse));
+    box.append(guideEl(WORLDS.animaux));
     const p = el('div', 'parch');
     p.append(el('p', '', 'Bonjour ! Pour commencer, crée le profil de l\'enfant qui va jouer. Tu pourras en ajouter d\'autres ensuite.'));
-    p.append(childForm(null, c => { setChild(c); showMap(); }));
+    p.append(childForm(null, c => { setChild(c); showMap('accueil'); }));
     box.append(p); wrap.append(box);
   } else {
-    wrap.append(el('h2', 'sub', 'Qui joue aujourd\'hui ?'));
+    const q = el('h2', 'on-scene', 'Qui joue aujourd\'hui ?'); q.style.fontSize = '24px'; wrap.append(q);
     const grid = el('div', 'profiles');
     kids.forEach(k => {
       const b = el('button', 'profile'); b.type = 'button';
-      b.append(guideEl(WORLDS[k.univers] || WORLDS.princesse));
+      b.append(guideEl(WORLDS[k.univers] || WORLDS.animaux));
       const n = el('b'); n.textContent = k.prenom; b.append(n);
-      const s = el('small'); s.textContent = `${k.niveau} · ${(WORLDS[k.univers] || WORLDS.princesse).label}`; b.append(s);
-      b.onclick = () => { audio(); setChild(k); showMap(); speak(`Bonjour ${k.prenom} !`); };
+      const s = el('small'); s.textContent = `${k.niveau} · ${(WORLDS[k.univers] || WORLDS.animaux).label}`; b.append(s);
+      b.onclick = () => { audio(); setChild(k); showMap('accueil'); speak(`Bonjour ${k.prenom} !`); };
       grid.append(b);
     });
     const add = el('button', 'profile add', '<b>+</b><small>Ajouter un enfant</small>'); add.type = 'button';
     add.onclick = () => {
       const v2 = screen(showHome); const p = el('div', 'parch panel');
-      p.append(el('h2', '', 'Nouveau profil')); p.append(childForm(null, c => { setChild(c); showMap(); }));
+      p.append(el('h2', '', 'Nouveau profil')); p.append(childForm(null, c => { setChild(c); showMap('accueil'); }));
       v2.append(p);
     };
     grid.append(add);
     wrap.append(grid);
   }
-  wrap.append(el('p', 'note', Store.mode === 'cloud'
+  wrap.append(el('p', 'note on-scene', Store.mode === 'cloud'
     ? 'Les profils et la progression sont enregistrés dans ton compte : tu les retrouves sur tous tes appareils.'
     : 'Les profils et la progression sont enregistrés sur cet appareil.'));
   v.append(wrap);
@@ -356,7 +411,7 @@ function childForm(existing, done) {
   const f = el('form', 'form');
   f.innerHTML = `<label>Prénom<input id="f-prenom" maxlength="20" required autocomplete="off"></label>
     <div class="row"><label>Classe<select id="f-niveau">${LEVELS.map(l => `<option>${l}</option>`).join('')}</select></label>
-    <label>Univers<select id="f-univers">${Object.entries(WORLDS).map(([k, w]) => `<option value="${k}">${w.label}</option>`).join('')}</select></label></div>
+    <label>Univers<select id="f-univers">${Object.entries(WORLDS).map(([k, w]) => `<option value="${k}"${k === 'animaux' ? ' selected' : ''}>${w.label}</option>`).join('')}</select></label></div>
     <button class="btn" type="submit">${existing ? 'Enregistrer' : 'C\'est parti !'}</button>`;
   if (existing) { f.querySelector('#f-prenom').value = existing.prenom; f.querySelector('#f-niveau').value = existing.niveau; f.querySelector('#f-univers').value = existing.univers; }
   f.onsubmit = async e => {
@@ -387,75 +442,153 @@ function lessonCard(l, { locked = false, next = false, revision = false } = {}) 
   b.onclick = () => showLesson(l);
   return b;
 }
-let mapTab = 'parcours';
-function showMap() {
+const SUBJ_ICON = {
+  francais: { color: '#D2477A', html: 'Aa' },
+  maths: { color: '#2F6FD1', html: '1+2' },
+  emc: { color: '#2E8656', html: '<svg viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.4"/><path d="M3.5 19c.6-3 2.8-5 5.5-5s4.9 2 5.5 5M15 14.5c2.3 0 4.2 1.6 4.8 4.5"/></svg>' },
+};
+const icoHTML = m => `<span class="ico" style="background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.55), ${SUBJ_ICON[m].color} 60%); box-shadow: 0 12px 18px -8px ${SUBJ_ICON[m].color}, inset 0 -4px 8px rgba(0,0,0,.18)">${SUBJ_ICON[m].html}</span>`;
+const ICON = {
+  home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7v9H4z"/></svg>',
+  path: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z"/><path d="M9 4v14M15 6v14"/></svg>',
+  grid: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="2"/><rect x="13" y="4" width="7" height="7" rx="2"/><rect x="4" y="13" width="7" height="7" rx="2"/><rect x="13" y="13" width="7" height="7" rx="2"/></svg>',
+  check: '<svg viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  play: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="#FFFFFF"/></svg>',
+  lock: '<svg viewBox="0 0 24 24" fill="none" stroke="#4A6159" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
+  book: '<svg viewBox="0 0 24 24" fill="none" stroke="#4A6159" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/></svg>',
+};
+/* Le parcours d'une matière : leçons jusqu'au niveau de l'enfant, dans l'ordre des connaissances.
+   Les classes précédentes restent ouvertes (révisions) ; celles de sa classe s'ouvrent une à une. */
+function subjectPath(m) {
+  const list = allLessons().filter(l => l.matiere === m && levelRank(l.niveau) <= levelRank(child.niveau))
+    .sort((a, b) => levelRank(a.niveau) - levelRank(b.niveau) || (a.ordre || 0) - (b.ordre || 0));
+  let open = true, nextMarked = false;
+  return list.map(l => {
+    const done = (progOf(l.id)?.etoiles || 0) > 0, chained = l.niveau === child.niveau;
+    const next = open && !done && !nextMarked && chained;
+    const item = { l, done, next, locked: chained && !open && !done, revision: !chained };
+    if (next) nextMarked = true;
+    if (chained && !done) open = false;
+    return item;
+  });
+}
+function nextLesson() {
+  for (const m of Object.keys(SUBJECTS)) { const n = subjectPath(m).find(x => x.next); if (n) return n.l; }
+  for (const m of Object.keys(SUBJECTS)) { const n = subjectPath(m).find(x => !x.done && !x.locked); if (n) return n.l; }
+  return null;
+}
+let mapTab = 'accueil';
+function showMap(tab) {
+  if (typeof tab !== 'string') tab = mapTab;
+  mapTab = tab;
   const v = screen(showHome);
   const wrap = el('div', 'panel');
-  const hello = el('div', 'welcome'); hello.append(guideEl());
-  const p = el('div', 'parch');
-  const doneCount = Store.progress(child._id).filter(x => x.etoiles).length;
-  p.innerHTML = '<p></p>';
-  p.querySelector('p').textContent = `Bienvenue dans ${W.realm}, ${child.prenom} ! Je suis ${W.guide.name}, ${W.guide.title}. ${doneCount ? `Tu as déjà réussi ${doneCount} leçon${doneCount > 1 ? 's' : ''}.` : 'Commence ton parcours, ou choisis une leçon.'}`;
-  hello.append(p); wrap.append(hello);
-  const tabs = el('div', 'tabs'); tabs.setAttribute('role', 'tablist');
-  const body = el('div', 'panel');
-  [['parcours', 'Mon parcours'], ['libre', 'Je choisis']].forEach(([k, t]) => {
-    const b = el('button', 'tab', t); b.type = 'button'; b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', String(mapTab === k));
-    b.onclick = () => { mapTab = k; tabs.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', String(x === b))); render(); };
-    tabs.append(b);
-  });
-  wrap.append(tabs, body);
-  function render() {
-    body.innerHTML = '';
-    if (mapTab === 'parcours') {
-      /* Parcours : par matière, les leçons jusqu'au niveau de l'enfant, dans l'ordre des connaissances.
-         Une leçon s'ouvre quand la précédente est réussie. */
-      Object.entries(SUBJECTS).forEach(([m, name]) => {
-        const list = allLessons().filter(l => l.matiere === m && levelRank(l.niveau) <= levelRank(child.niveau))
-          .sort((a, b) => levelRank(a.niveau) - levelRank(b.niveau) || (a.ordre || 0) - (b.ordre || 0));
-        if (!list.length) return;
-        const sec = el('section', 'subject'); sec.append(el('h3', '', esc(name)));
-        const trail = el('div', 'trail');
-        /* Les leçons des classes précédentes restent ouvertes (révisions) ; celles de la classe de
-           l'enfant s'ouvrent une à une, dans l'ordre des connaissances. */
-        let open = true, nextMarked = false;
-        list.forEach(l => {
-          const done = (progOf(l.id)?.etoiles || 0) > 0;
-          const chained = l.niveau === child.niveau;
-          const next = open && !done && !nextMarked && chained;
-          trail.append(lessonCard(l, { locked: chained && !open && !done, next, revision: !chained }));
-          if (next) nextMarked = true;
-          if (chained && !done) open = false;
-        });
-        sec.append(trail); body.append(sec);
-      });
-      if (!body.children.length) body.append(el('p', 'sub', 'Aucune leçon pour ce niveau pour l\'instant. Un adulte peut en créer dans l\'espace adulte.'));
-    } else {
-      const filters = el('div', 'filters');
-      const selM = el('select', ''); selM.innerHTML = `<option value="">Toutes les matières</option>${Object.entries(SUBJECTS).map(([k, n]) => `<option value="${k}">${n}</option>`).join('')}`;
-      const selL = el('select', ''); selL.innerHTML = `<option value="">Tous les niveaux</option>${LEVELS.map(l => `<option>${l}</option>`).join('')}`;
-      [selM, selL].forEach(s => { s.className = 'pill'; s.onchange = draw; filters.append(s); });
-      selM.setAttribute('aria-label', 'Matière'); selL.setAttribute('aria-label', 'Niveau');
-      const grid = el('div', 'grid-lessons');
-      body.append(filters, grid);
-      function draw() {
-        grid.innerHTML = '';
-        allLessons().filter(l => (!selM.value || l.matiere === selM.value) && (!selL.value || l.niveau === selL.value))
-          .sort((a, b) => (b.perso ? 1 : 0) - (a.perso ? 1 : 0) || levelRank(a.niveau) - levelRank(b.niveau) || (a.ordre || 0) - (b.ordre || 0))
-          .forEach(l => grid.append(lessonCard(l)));
-      }
-      draw();
-    }
-  }
-  render();
   v.append(wrap);
+  const dock = el('nav', 'dock'); dock.setAttribute('aria-label', 'Navigation');
+  [['accueil', 'Accueil', ICON.home], ['parcours', 'Mon parcours', ICON.path], ['libre', 'Toutes les leçons', ICON.grid]].forEach(([k, t, ic]) => {
+    const b = el('button', '', `${ic}<span>${t}</span>`); b.type = 'button'; b.setAttribute('aria-label', t);
+    if (k === tab) b.setAttribute('aria-current', 'page');
+    b.onclick = () => showMap(k);
+    dock.append(b);
+  });
+  v.append(dock);
+
+  if (tab === 'accueil') {
+    const hello = el('div', 'hello on-scene');
+    hello.style.justifySelf = 'stretch';
+    const d = new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+    hello.innerHTML = `<div><span class="date"></span><h1></h1></div>`;
+    hello.querySelector('.date').textContent = cap(d);
+    hello.querySelector('h1').textContent = `Bonjour ${child.prenom} !`;
+    wrap.append(hello);
+    const bento = el('div', 'bento');
+    /* Grande carte : la prochaine leçon du parcours. */
+    const nl = nextLesson();
+    const hero = el('section', 'hero');
+    const txt = el('div', 'txt');
+    if (nl) {
+      const p = progOf(nl.id);
+      txt.innerHTML = `<span class="tag"></span><h2></h2><p></p>`;
+      txt.querySelector('.tag').textContent = `${SUBJECTS[nl.matiere]} · ${nl.niveau}`;
+      txt.querySelector('h2').textContent = nl.titre;
+      txt.querySelector('p').textContent = p ? `Déjà ${p.etoiles} étoile${p.etoiles > 1 ? 's' : ''} sur 3` : `${W.guide.name} t'attend pour une nouvelle leçon.`;
+      const go = el('button', 'go', `${ICON.play.replace('#FFFFFF', 'currentColor')}${p ? 'Continuer' : 'Commencer'}`); go.type = 'button';
+      go.querySelector('svg').style.width = '22px'; go.onclick = () => showLesson(nl);
+      txt.append(go);
+    } else {
+      txt.innerHTML = '<span class="tag">Bravo !</span><h2>Tu as fini ton parcours</h2><p>Rejoue tes leçons préférées pour gagner toutes les étoiles.</p>';
+    }
+    hero.append(txt, guideEl());
+    bento.append(hero);
+    /* Objectif du jour : deux leçons jouées aujourd'hui. */
+    const today = new Date().toDateString();
+    const played = Store.progress(child._id).filter(x => x.maj && new Date(x.maj).toDateString() === today).length;
+    const goal = el('section', 'tile goal');
+    goal.innerHTML = `<div><span class="sm" style="color:var(--accent-deep);font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:13px">Objectif du jour</span><b></b></div>
+      <svg width="110" height="86" viewBox="0 0 140 110" aria-hidden="true" style="align-self:center"><ellipse cx="70" cy="102" rx="52" ry="7" fill="#17302A" opacity=".12"/><rect x="20" y="46" width="100" height="54" rx="14" fill="#9C5A33"/><path d="M20 52 Q20 18 70 18 Q120 18 120 52 Z" fill="#C07C4A"/><rect x="20" y="46" width="100" height="10" fill="#FFC93C"/><rect x="60" y="44" width="20" height="24" rx="6" fill="#FFC93C"/></svg>
+      <div style="display:grid;gap:6px"><div class="bar"><i></i></div><span class="sm"></span></div>`;
+    goal.querySelector('b').textContent = 'Joue 2 leçons aujourd\'hui';
+    goal.querySelector('.bar i').style.width = Math.min(100, played * 50) + '%';
+    goal.querySelectorAll('.sm')[1].textContent = played >= 2 ? 'Objectif atteint, bravo !' : `${played} sur 2`;
+    bento.append(goal);
+    /* Une tuile par matière. */
+    Object.entries(SUBJECTS).forEach(([m, name]) => {
+      const items = subjectPath(m);
+      if (!items.length) return;
+      const t = el('button', 'tile'); t.type = 'button';
+      t.innerHTML = `${icoHTML(m)}<div><b></b><span class="sm"></span></div>`;
+      t.querySelector('b').textContent = name.replace(' (EMC)', '');
+      t.querySelector('.sm').textContent = `${items.filter(x => x.done).length} leçon${items.filter(x => x.done).length > 1 ? 's' : ''} réussie${items.filter(x => x.done).length > 1 ? 's' : ''} sur ${items.length}`;
+      t.onclick = () => showMap('parcours');
+      bento.append(t);
+    });
+    wrap.append(bento);
+  } else if (tab === 'parcours') {
+    Object.entries(SUBJECTS).forEach(([m, name]) => {
+      const items = subjectPath(m);
+      if (!items.length) return;
+      const sec = el('section', 'subject glass');
+      const h = el('h3', '', icoHTML(m)); h.append(document.createTextNode(name)); sec.append(h);
+      const path = el('div', 'path');
+      items.forEach(({ l, done, next, locked, revision }) => {
+        const b = el('button', 'step' + (done ? ' done' : next ? ' next' : '')); b.type = 'button';
+        const icon = done ? ICON.check : next ? ICON.play : locked ? ICON.lock : ICON.book;
+        b.innerHTML = `<span class="dot">${icon}</span><span class="t"></span><span class="st"></span>`;
+        b.querySelector('.t').textContent = l.titre;
+        const p = progOf(l.id);
+        b.querySelector('.st').textContent = locked ? 'Plus tard' : done ? '★'.repeat(p?.etoiles || 0) : next ? 'À toi !' : revision ? 'Révision' : 'À découvrir';
+        if (l.perso) b.prepend(Object.assign(el('span', 'mine'), { textContent: 'Pour toi' }));
+        b.setAttribute('aria-label', `${l.titre} : ${b.querySelector('.st').textContent}`);
+        if (locked) b.disabled = true; else b.onclick = () => showLesson(l);
+        path.append(b);
+      });
+      sec.append(path); wrap.append(sec);
+      requestAnimationFrame(() => { const n = path.querySelector('.next'); if (n) path.scrollLeft = n.offsetLeft - 40; });
+    });
+    if (!wrap.children.length) wrap.append(el('p', 'sub on-scene', 'Aucune leçon pour ce niveau pour l\'instant. Un adulte peut en créer dans l\'espace adulte.'));
+  } else {
+    const filters = el('div', 'filters');
+    const selM = el('select', ''); selM.innerHTML = `<option value="">Toutes les matières</option>${Object.entries(SUBJECTS).map(([k, n]) => `<option value="${k}">${n}</option>`).join('')}`;
+    const selL = el('select', ''); selL.innerHTML = `<option value="">Tous les niveaux</option>${LEVELS.map(l => `<option>${l}</option>`).join('')}`;
+    [selM, selL].forEach(x => { x.className = 'pill'; x.onchange = draw; filters.append(x); });
+    selM.setAttribute('aria-label', 'Matière'); selL.setAttribute('aria-label', 'Niveau');
+    const grid = el('div', 'grid-lessons');
+    wrap.append(filters, grid);
+    function draw() {
+      grid.innerHTML = '';
+      allLessons().filter(l => (!selM.value || l.matiere === selM.value) && (!selL.value || l.niveau === selL.value))
+        .sort((a, b) => (b.perso ? 1 : 0) - (a.perso ? 1 : 0) || levelRank(a.niveau) - levelRank(b.niveau) || (a.ordre || 0) - (b.ordre || 0))
+        .forEach(l => grid.append(lessonCard(l)));
+    }
+    draw();
+  }
 }
 
 /* ================= Joueur de leçon ================= */
 let S = null;
 function sceneShell(title, level, back) {
   const v = screen(back);
-  const sc = el('section', 'scene'); sc.style.setProperty('--scene-bg', W.bg);
+  const sc = el('section', 'scene');
   sc.innerHTML = `<div class="scene-head"><h2></h2><span class="lv"></span></div><div class="dialog"></div>
     <div class="arena"><div class="stage"><div class="board"></div><div class="side"></div></div><div class="play"></div></div>`;
   sc.querySelector('h2').textContent = title; sc.querySelector('.lv').textContent = level;
@@ -659,12 +792,15 @@ const RUNNERS = {
   },
   async classer(ex, T) {
     S.board.innerHTML = '';
-    const colors = [['#ffa5c2', '#c8245e'], ['#9ccfff', '#2a63d4'], ['#9de6b5', '#1f8a4c'], ['#ffd36b', '#c99a1c']];
+    const colors = [['#E86A8A', '#C94C6E', '#FFF4F0'], ['#4C8FF5', '#2F6FD1', '#F2F8FF'], ['#F2A33A', '#D1831C', '#FFF8EC'], ['#4FB37A', '#2E8656', '#F0FAF3']];
     const houses = el('div', 'houses');
     const targets = ex.groupes.map((g, i) => {
-      const [sky, roof] = colors[i % colors.length];
-      const h = el('div', 'house'); h.style.background = sky; h.dataset.g = g.id;
-      h.innerHTML = `<div class="roof" style="background:${roof}"></div><div class="name"></div><div class="in"></div>`;
+      const [roof, shade, wall] = colors[i % colors.length];
+      const h = el('div', 'house'); h.dataset.g = g.id;
+      h.innerHTML = `<svg class="cottage" viewBox="0 0 250 150" aria-hidden="true"><path d="M20 70 L125 8 L230 70 Z" fill="${roof}"/><path d="M125 8 L230 70 L200 70 L125 26 Z" fill="${shade}"/>
+        <rect x="38" y="66" width="174" height="84" rx="8" fill="${wall}"/><rect x="104" y="96" width="42" height="54" rx="20" fill="${shade}"/>
+        <rect x="60" y="88" width="30" height="26" rx="6" fill="#BFE5FF"/><rect x="160" y="88" width="30" height="26" rx="6" fill="#BFE5FF"/></svg>
+        <div class="hbody"><div class="name"></div><div class="in"></div></div>`;
       h.querySelector('.name').textContent = g.nom; houses.append(h); return h;
     });
     S.board.append(houses);
@@ -896,7 +1032,7 @@ function fillNumber(T, row, n) { const ds = String(n).split(''), off = T.ranks.l
 /* ---------- Page d'une leçon : choisir un exercice ou tout faire ---------- */
 function showLesson(l) {
   const v = screen(showMap);
-  const sc = el('section', 'scene'); sc.style.setProperty('--scene-bg', W.bg);
+  const sc = el('section', 'scene');
   sc.innerHTML = `<div class="scene-head"><h2></h2><span class="lv"></span></div>`;
   sc.querySelector('h2').textContent = l.titre; sc.querySelector('.lv').textContent = `${l.niveau} · ${SUBJECTS[l.matiere] || ''}`;
   const d = el('div', 'dialog'); d.append(guideEl());
@@ -961,7 +1097,7 @@ async function playLesson(l, only) {
     parType: T.byType, maj: Date.now(),
   });
   S.play.innerHTML = '';
-  const m = el('div', 'medal', `<div class="big-stars">${[0, 1, 2].map(i => STAR.replace('<svg', `<svg class="${i < stars ? 'on' : ''}"`)).join('')}</div><div class="row"></div>`);
+  const m = el('div', 'medal', `<div class="big-stars">${[0, 1, 2].map(i => STAR3D(i < stars)).join('')}</div><div class="row"></div>`);
   const back = el('button', 'btn', 'Retour à la carte'); back.type = 'button'; back.onclick = showMap;
   const again = el('button', 'btn ghost', 'Rejouer'); again.type = 'button'; again.onclick = () => playLesson(l, only);
   m.querySelector('.row').append(back, again);
@@ -1354,14 +1490,8 @@ function generateLocally(text, niveau, matiere, types) {
 }
 
 /* ================= Démarrage ================= */
-(() => {
-  const sky = $('#sky');
-  for (let i = 0; i < 70; i++) {
-    const s = el('i'); s.style.left = Math.random() * 100 + '%'; s.style.top = Math.random() * 100 + '%';
-    s.style.animationDelay = (Math.random() * 3).toFixed(2) + 's'; if (Math.random() < .2) s.style.width = s.style.height = '4px';
-    sky.append(s);
-  }
-})();
+applyWorld(WORLDS.animaux);
+{ const logo = svgEl(guideSVG({ animal: 'squirrel' })); logo.setAttribute('class', 'logo'); $('#logo').append(logo); }
 renderSound();
 $('#view').append(el('p', 'sub', 'Chargement…'));
 Promise.all([loadData(), Store.init()]).then(showHome);
