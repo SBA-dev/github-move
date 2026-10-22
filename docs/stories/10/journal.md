@@ -5,3 +5,4 @@
 - 21:05 · Étape 1 : délégation à `domain-modeler`.
 - 21:13 · Modèle écrit (`docs/stories/10/domain-model.md`). Étape 2 : délégation à `po-acceptance`.
 - 21:18 · Étape 2 : scénarios écrits par `po-acceptance`, syntaxe vérifiée par `npx bddgen`. ⛔ Validation humaine n°1 demandée pour tout le lot 2.
+- 21:43 · Validation n°1 : « OK » du PO pour les propositions du lot (`docs/stories/lot-2-decisions.md`, décision 0009). Mise à jour du modèle et des scénarios.
