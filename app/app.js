@@ -136,30 +136,73 @@ const sfx = {
   magic() { [523, 659, 784, 1046, 1319, 1568].forEach((f, i) => tone(f, i * .06, .4, 'sine', .07)); },
   star() { [523, 659, 784, 1046, 784, 1046, 1319].forEach((f, i) => tone(f, i * .1, .45, 'triangle', .09)); },
 };
-let frVoice = null;
-function pickVoice() { try { const vs = speechSynthesis.getVoices(); frVoice = vs.find(v => /^fr(-|_)FR/i.test(v.lang)) || vs.find(v => /^fr/i.test(v.lang)) || null; } catch (e) {} }
+/* Voix : on choisit la voix française la plus naturelle de l'appareil (voix « Natural »,
+   « Premium », « améliorée »…), puis chaque guide lui donne son caractère : voix féminine ou
+   masculine, hauteur, rythme et petites expressions à lui. */
+const VOICE_STYLE = {
+  princesse: { sexe: 'f', pitch: 1.25, rate: 1.0, cri: ['Abracadabra !', 'Par ma baguette, bravo !', 'Magique !'] },
+  animaux: { sexe: 'f', pitch: 1.45, rate: 1.08, cri: ['Youpi !', 'Hop hop hop, bravo !', 'Trop fort, ça !'] },
+  sports: { sexe: 'm', pitch: 1.05, rate: 1.07, cri: ['Allez, on y va !', 'Et c\'est le but !', 'Quelle équipe !'] },
+  police: { sexe: 'f', pitch: 1.05, rate: 1.0, cri: ['Enquête résolue !', 'Bien vu, détective !', 'Affaire classée !'] },
+  pompier: { sexe: 'm', pitch: .95, rate: 1.0, cri: ['Mission accomplie !', 'Pin-pon, bravo !', 'Sauvetage réussi !'] },
+  danse: { sexe: 'f', pitch: 1.2, rate: 1.02, cri: ['Et hop, une pirouette !', 'En rythme, bravo !', 'Quelle grâce !'] },
+};
+const FEMALE = /am[eé]lie|audrey|aur[eé]lie|marie|denise|eloise|vivienne|brigitte|c[eé]line|julie|hortense|l[eé]a\b|virginie|sylvie|jos[eé]phine|coralie|jacqueline|yvette|charlotte|ariane|juliette|chantal|female|femme/i;
+const MALE = /thomas|henri|r[eé]my|paul|nicolas|daniel|j[eé]r[oô]me|antoine|claude|alain|fabrice|jean|maurice|yves|guillaume|mathieu|\bmale\b|homme/i;
 const canSpeak = 'speechSynthesis' in window;
-if (canSpeak) { pickVoice(); try { speechSynthesis.onvoiceschanged = pickVoice; } catch (e) {} }
-const toSpeech = html => String(html).replace(/<[^>]+>/g, ' ').replace(/&[a-z]+;/g, ' ').replace(/\+/g, ' plus ').replace(/=/g, ' égale ').replace(/_{2,}/g, ' ... ').replace(/\s+/g, ' ').trim();
+let voices = [];
+function voiceScore(v) {
+  let s; const n = v.name || '';
+  if (/^fr(-|_)FR/i.test(v.lang)) s = 30; else if (/^fr/i.test(v.lang)) s = 20; else return -1;
+  if (/natural|neural|online/i.test(n)) s += 40;
+  if (/premium/i.test(n)) s += 35;
+  if (/enhanced|am[eé]lior/i.test(n)) s += 30;
+  if (/google/i.test(n)) s += 20;
+  if (/compact|espeak|robot/i.test(n)) s -= 30;
+  return s;
+}
+function loadVoices() { try { voices = speechSynthesis.getVoices().filter(v => voiceScore(v) >= 0).sort((a, b) => voiceScore(b) - voiceScore(a)); } catch (e) { voices = []; } }
+if (canSpeak) { loadVoices(); try { speechSynthesis.onvoiceschanged = loadVoices; } catch (e) {} }
+const styleNow = () => VOICE_STYLE[Object.keys(WORLDS).find(k => WORLDS[k] === W)] || VOICE_STYLE.princesse;
+function voiceFor(style) {
+  if (!voices.length) loadVoices();
+  let pref = null; try { pref = localStorage.getItem('ecole-voix'); } catch (e) {}
+  if (pref) { const v = voices.find(x => x.name === pref); if (v) return v; }
+  const want = style.sexe === 'm' ? MALE : FEMALE;
+  const best = voices[0];
+  return (best && voices.find(v => want.test(v.name) && voiceScore(v) >= voiceScore(best) - 15)) || best || null;
+}
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const PRAISE = ['Bravo !', 'Super !', 'Ouah, bien joué !', 'Exactement !', 'Génial !', 'Tu gères !', 'Parfait !', 'Oui, c\'est ça !'];
+const OOPS = ['Oups, presque !', 'Hmm, pas tout à fait…', 'Pas grave, on réessaie !', 'Ah, celle-là est piégeuse !', 'Presque ! Regarde bien.'];
+const praise = () => Math.random() < .35 ? pick(styleNow().cri) : pick(PRAISE);
+const oops = () => pick(OOPS);
+const toSpeech = html => String(html).replace(/<[^>]+>/g, ' ').replace(/&[a-z]+;/g, ' ').replace(/\+/g, ' plus ').replace(/=/g, ' égale ').replace(/_{2,}/g, ' ... ').replace(/[«»]/g, ' ').replace(/\s+/g, ' ').trim();
 let speakTimer = null, voiceWarned = false;
-/* Lecture phrase par phrase (certains navigateurs coupent les textes longs). Renvoie une promesse
+/* Lecture phrase par phrase (certains navigateurs coupent les textes longs), avec une intonation
+   qui varie un peu d'une phrase à l'autre pour éviter l'effet monocorde. Renvoie une promesse
    résolue à la fin de la lecture, ou après une durée estimée si la voix n'est pas disponible. */
-function speak(html, { rate = .95 } = {}) {
+function speak(html, { rate = 1, voice = null, style = null } = {}) {
   const text = toSpeech(html);
   const estimate = Math.max(1200, text.length * 70);
-  if (!soundOn || !canSpeak || !text) return new Promise(r => setTimeout(r, soundOn ? 0 : 0));
+  if (!soundOn || !canSpeak || !text) return new Promise(r => setTimeout(r, 0));
   clearTimeout(speakTimer);
   try { speechSynthesis.cancel(); } catch (e) {}
   const parts = text.split(/(?<=[.!?…:])\s+/).filter(Boolean);
+  const st = style || styleNow(), v = voice || voiceFor(st);
+  /* Une voix d'homme manque pour un guide masculin : on grave un peu la voix disponible. */
+  const basePitch = st.sexe === 'm' && v && !MALE.test(v.name) ? st.pitch - .25 : st.pitch;
   return new Promise(resolve => {
     let done = false; const finish = () => { if (!done) { done = true; resolve(); } };
     setTimeout(finish, estimate * 1.6 + 2500);
     speakTimer = setTimeout(() => {
       try {
-        if (!frVoice) pickVoice();
         parts.forEach((t, i) => {
           const u = new SpeechSynthesisUtterance(t);
-          u.lang = 'fr-FR'; if (frVoice) u.voice = frVoice; u.rate = rate; u.pitch = 1.12; u.volume = 1;
+          u.lang = v?.lang || 'fr-FR'; if (v) u.voice = v;
+          u.rate = Math.min(1.4, st.rate * rate);
+          u.pitch = Math.max(.5, Math.min(2, basePitch + (/[!]$/.test(t) ? .08 : 0) + (Math.random() - .5) * .06));
+          u.volume = 1;
           if (i === parts.length - 1) u.onend = finish;
           u.onerror = e => {
             finish();
@@ -610,8 +653,8 @@ const RUNNERS = {
     for (const q of ex.questions) {
       S.board.innerHTML = ''; const c = el('div', 'card big'); c.textContent = q.question; S.board.append(c);
       await say(esc(q.question));
-      await choose(q.choix, q.reponse, () => { T.err('bulles'); say(esc(q.aide || 'Ce n\'est pas cette bulle. Réfléchis encore !'), 'think'); });
-      T.ok('bulles'); say('Bravo !', 'cheer');
+      await choose(q.choix, q.reponse, () => { T.err('bulles'); say(`${oops()} ${esc(q.aide || 'Essaie une autre bulle.')}`, 'think'); });
+      T.ok('bulles'); say(praise(), 'cheer');
     }
   },
   async classer(ex, T) {
@@ -628,8 +671,8 @@ const RUNNERS = {
     await say(esc(ex.consigne || 'Range chaque étiquette dans la bonne maison.') + ' Fais glisser chaque étiquette, ou touche-la puis touche une maison.');
     const nameOf = id => ex.groupes.find(g => g.id === id)?.nom || '';
     await placeTags(shuffle(ex.items), targets, (it, t) => t.dataset.g === String(it.groupe),
-      (it, t) => { const s = el('span'); s.textContent = it.texte; t.querySelector('.in').append(s); T.ok('classer'); },
-      (it, t) => { T.err('classer'); say(esc(it.aide || `« ${it.texte} » ne va pas dans la maison « ${nameOf(t.dataset.g)} ». Réfléchis encore !`), 'think'); });
+      (it, t) => { const s = el('span'); s.textContent = it.texte; t.querySelector('.in').append(s); T.ok('classer'); if (Math.random() < .5) say(praise(), 'cheer'); },
+      (it, t) => { T.err('classer'); say(`${oops()} ${esc(it.aide || `« ${it.texte} » n'habite pas dans la maison « ${nameOf(t.dataset.g)} ». Essaie une autre maison.`)}`, 'think'); });
   },
   async dictee(ex, T) {
     for (const m of ex.mots) {
@@ -647,7 +690,7 @@ const RUNNERS = {
         c._ch = ch; slots.append(c); return c;
       });
       S.board.append(hear, slots);
-      const dictate = () => say(`Écoute bien : <b>${esc(word)}</b>. ${m.phrase ? esc(m.phrase) + ' ' : ''}Écris : ${esc(word)}.`);
+      const dictate = async () => { await say(`Écoute bien… <b>${esc(word)}</b>. ${m.phrase ? esc(m.phrase) + ' ' : ''}À toi d'écrire :`); if (S) speak(word, { rate: .8 }); };
       again.onclick = dictate;
       peek.onclick = () => { const c = el('div', 'card big'); c.textContent = word; S.board.append(c); setTimeout(() => c.remove(), 2200); T.err('dictee'); };
       dictate();
@@ -679,14 +722,14 @@ const RUNNERS = {
           if (firstBad < 0) { fillable.forEach(c => c.classList.add('good')); sfx.ok(); sparkle(slots, 12); T.ok('dictee'); setTimeout(res, 600); return; }
           T.err('dictee'); sfx.no();
           got.forEach((g, i) => fillable[i].classList.toggle('bad', g !== want[i]));
-          say(`Presque ! Regarde les lettres en rouge, et écoute encore : <b>${esc(word)}</b>.`, 'think');
+          say(`${oops()} Regarde les lettres en rouge, et écoute encore : <b>${esc(word)}</b>.`, 'think');
           setTimeout(() => {
             while (typed.length > firstBad) { const b = typed.pop(); b.disabled = false; fillable[typed.length].innerHTML = ''; }
             fillable.forEach(c => c.classList.remove('bad'));
           }, 1300);
         }
       }));
-      say(`Bravo, ${esc(word)} est bien écrit !`, 'cheer');
+      say(`${praise()} « ${esc(word)} » est bien écrit !`, 'cheer');
       await wait(700);
     }
   },
@@ -699,8 +742,8 @@ const RUNNERS = {
     let next = 0;
     const tags = ex.elements.map((t, i) => ({ texte: t, i }));
     await placeTags(shuffle(tags), [list], tag => tag.i === next,
-      tag => { slots[next].textContent = tag.texte; slots[next].classList.add('filled'); next++; T.ok('ordre'); if (next < slots.length) say(`Bien ! Et ensuite ?`); },
-      () => { T.err('ordre'); say(next === 0 ? 'Ce n\'est pas le début. Lequel vient en premier ?' : 'Pas encore celui-là. Lequel vient juste après ?', 'think'); },
+      tag => { slots[next].textContent = tag.texte; slots[next].classList.add('filled'); next++; T.ok('ordre'); if (next < slots.length) say(pick(['Oui ! Et après ?', 'Bien ! Et ensuite ?', 'Super ! La suite ?'])); },
+      () => { T.err('ordre'); say(next === 0 ? `${oops()} Ce n'est pas le début. Lequel vient en premier ?` : `${oops()} Pas encore celui-là. Lequel vient juste après ?`, 'think'); },
       label || '');
   },
   async trous(ex, T) {
@@ -718,10 +761,10 @@ const RUNNERS = {
     for (let i = 0; i < answers.length; i++) {
       gaps.forEach((g, k) => g.classList.toggle('now', k === i));
       const others = shuffle([...(ex.distracteurs || []), ...answers.filter(a => a !== answers[i])]).filter(o => norm(o) !== norm(answers[i])).slice(0, 2);
-      await choose([answers[i], ...others], answers[i], () => { T.err('trous'); say('Relis la phrase en entier : quel mot va bien ?', 'think'); });
-      gaps[i].textContent = answers[i]; gaps[i].classList.remove('now'); T.ok('trous');
+      await choose([answers[i], ...others], answers[i], () => { T.err('trous'); say(`${oops()} Relis la phrase en entier : quel mot va bien ?`, 'think'); });
+      gaps[i].textContent = answers[i]; gaps[i].classList.remove('now'); T.ok('trous'); if (i < answers.length - 1) say(praise(), 'cheer');
     }
-    say('Le texte est complet !', 'cheer'); await wait(600);
+    say(`${praise()} Le texte est complet !`, 'cheer'); await wait(600);
   },
   async conjugaison(ex, T) {
     S.board.innerHTML = '';
@@ -736,16 +779,16 @@ const RUNNERS = {
       cells.forEach((c, k) => c.classList.toggle('now', k === i));
       const others = shuffle([...new Set([...forms, ...(ex.distracteurs || [])])].filter(x => x !== f.forme)).slice(0, 2);
       say(`${esc(f.pronom)} … ?`);
-      await choose([f.forme, ...others], f.forme, () => { T.err('conjugaison'); say(`Écoute bien : avec « ${esc(f.pronom)} », quelle forme va ?`, 'think'); });
+      await choose([f.forme, ...others], f.forme, () => { T.err('conjugaison'); say(`${oops()} Avec « ${esc(f.pronom)} », quelle forme va ?`, 'think'); });
       cells[i].textContent = f.forme; cells[i].classList.remove('now'); T.ok('conjugaison');
     }
-    say(`Bravo, tu sais conjuguer ${esc(ex.verbe)} !`, 'cheer'); await wait(700);
+    say(`${praise()} Tu sais conjuguer ${esc(ex.verbe)} !`, 'cheer'); await wait(700);
   },
   async lecture(ex, T) {
     S.board.innerHTML = '';
     if (ex.titre) S.board.append(Object.assign(el('div', 'card big'), { textContent: ex.titre }));
     const card = el('div', 'card'); card.textContent = ex.texte; S.board.append(card);
-    say('Écoute bien ce texte. Tu peux aussi le lire avec moi.');
+    say('Installe-toi bien, j\'ai une petite histoire. Tu peux lire avec moi !');
     await wait(1200);
     await speak(ex.texte);
     await cont('J\'ai écouté');
@@ -758,10 +801,10 @@ const RUNNERS = {
     if (ex.titre) box.append(Object.assign(el('b'), { textContent: ex.titre + (ex.auteur ? ` — ${ex.auteur}` : '') }));
     const lines = vers.map(t => { const d = el('div', 'v'); d.textContent = t; box.append(d); return d; });
     S.board.append(box);
-    await say('Écoute bien, vers par vers. Ensuite, redis-les avec moi.');
+    await say('Écoute bien, je te le dis vers par vers. Ensuite, tu le redis avec moi !');
     for (let i = 0; i < lines.length; i++) { lines.forEach((l, k) => l.classList.toggle('now', k === i)); await speak(vers[i], { rate: .85 }); await wait(250); }
     lines.forEach(l => l.classList.remove('now'));
-    await say('Maintenant, redis tout le texte à voix haute, sans te presser. Quand tu es prêt, on joue !');
+    await say('À toi ! Redis tout le texte à voix haute, tranquillement. Quand c\'est bon, on joue !');
     await cont('Je suis prêt');
     /* Remettre les vers dans l'ordre. */
     await RUNNERS.ordre({ elements: vers, consigne: 'Remets les vers dans l\'ordre.' }, { ok: () => T.ok('memoriser'), err: () => T.err('memoriser') });
@@ -806,7 +849,7 @@ const RUNNERS = {
           focusCol(Tw, c);
           const expr = [...(carry ? [carry] : []), ...ds].join(' + ');
           await say(`Maison des ${RNC[Tw.ranks[c]]}${carry ? ', sans oublier la retenue' : ''} : combien font ${expr} ?`);
-          const onWrong = v => { T.err('addition-calculer'); say(carry && +v === s - carry ? 'Tu as oublié la retenue, tout en haut de la maison !' : `Compte doucement : ${expr}.`, 'think'); };
+          const onWrong = v => { T.err('addition-calculer'); say(carry && +v === s - carry ? `${oops()} Tu as oublié la retenue, tout en haut de la maison !` : `${oops()} Compte doucement : ${expr}.`, 'think'); };
           if (useKeypad) await keypad(s, onWrong);
           else await choose([s, s + 1, Math.max(0, s - 1), s >= 10 ? s - 10 : s + 2], s, onWrong);
           T.ok('addition-calculer');
@@ -820,7 +863,7 @@ const RUNNERS = {
         }
         focusCol(Tw, null);
       }
-      await say(`${nums.join(' + ')} = ${sum}. Bravo !`, 'cheer');
+      await say(`${nums.join(' + ')} = ${sum}. ${praise()}`, 'cheer');
       await wait(900);
     }
   },
@@ -858,7 +901,7 @@ function showLesson(l) {
   sc.querySelector('h2').textContent = l.titre; sc.querySelector('.lv').textContent = `${l.niveau} · ${SUBJECTS[l.matiere] || ''}`;
   const d = el('div', 'dialog'); d.append(guideEl());
   const p = el('div', 'parch speech'); p.innerHTML = '<p class="txt"></p>';
-  p.querySelector('.txt').textContent = `${child.prenom}, je vais d'abord t'expliquer la leçon, puis tu joueras. Tu peux aussi choisir un seul jeu.`;
+  p.querySelector('.txt').textContent = `Coucou ${child.prenom} ! Je t'explique la leçon en deux minutes, et après, on joue. Tu peux aussi choisir directement un jeu.`;
   d.append(p); sc.append(d);
   const acts = el('div', 'arena');
   const all = el('button', 'btn', 'Leçon et tous les jeux'); all.type = 'button'; all.onclick = () => playLesson(l, null);
@@ -901,11 +944,11 @@ async function playLesson(l, only) {
       if (step.exemples?.length) await speak(step.exemples.join('. '));
       await cont();
     }
-    await say('À toi de jouer maintenant !', 'cheer');
+    await say(pick(['À toi de jouer maintenant !', 'C\'est parti, à toi !', 'Prêt ? On joue !']), 'cheer');
   }
   for (const ex of exercises) {
     S.board.innerHTML = ''; S.play.innerHTML = '';
-    if (exercises.length > 1 && ex.titre) { await say(`Jeu : <b>${esc(ex.titre)}</b>.`); await wait(500); }
+    if (exercises.length > 1 && ex.titre) { await say(`${pick(['Nouveau défi', 'Jeu suivant', 'Place au jeu'])} : <b>${esc(ex.titre)}</b> !`); await wait(400); }
     const runner = RUNNERS[ex.type];
     if (runner) await runner(ex, T);
   }
@@ -923,7 +966,7 @@ async function playLesson(l, only) {
   const again = el('button', 'btn ghost', 'Rejouer'); again.type = 'button'; again.onclick = () => playLesson(l, only);
   m.querySelector('.row').append(back, again);
   S.play.append(m); sfx.star(); sparkle(m, 24); back.focus({ preventScroll: true }); revealPlay();
-  say(stars === 3 ? `Parfait, ${esc(child.prenom)} ! Trois étoiles !` : `Bravo, ${esc(child.prenom)} ! Tu gagnes ${stars} étoile${stars > 1 ? 's' : ''}. Rejoue pour en gagner plus !`, 'cheer');
+  say(stars === 3 ? `${pick(styleNow().cri)} Trois étoiles, ${esc(child.prenom)} ! Tu es incroyable !` : `${praise()} Tu gagnes ${stars} étoile${stars > 1 ? 's' : ''}, ${esc(child.prenom)}. Tu rejoues pour aller chercher les autres ?`, 'cheer');
 }
 
 /* ================= Espace adulte ================= */
@@ -949,12 +992,12 @@ function showAdult(tab = 'suivi') {
     : 'Les données sont enregistrées sur cet appareil seulement (ouvre l\'application depuis ton compte claude.ai pour les retrouver partout).'));
   const tabs = el('div', 'tabs'); tabs.style.justifyContent = 'flex-start';
   const body = el('div', 'panel');
-  [['suivi', 'Suivi'], ['profils', 'Profils'], ['creer', 'Créer une leçon'], ['lecons', 'Mes leçons']].forEach(([k, t]) => {
+  [['suivi', 'Suivi'], ['profils', 'Profils'], ['creer', 'Créer une leçon'], ['lecons', 'Mes leçons'], ['voix', 'Voix']].forEach(([k, t]) => {
     const b = el('button', 'tab', t); b.type = 'button'; b.setAttribute('aria-selected', String(tab === k));
     b.onclick = () => showAdult(k); tabs.append(b);
   });
   wrap.append(tabs, body); v.append(wrap);
-  ({ suivi: adultSuivi, profils: adultProfils, creer: adultCreer, lecons: adultLecons })[tab](body);
+  ({ suivi: adultSuivi, profils: adultProfils, creer: adultCreer, lecons: adultLecons, voix: adultVoix })[tab](body);
 }
 function adultSuivi(body) {
   const kids = Store.children();
@@ -1013,6 +1056,42 @@ function adultLecons(body) {
     del.onclick = () => { if (del.dataset.confirm) Store.del(l._doc).then(() => showAdult('lecons')); else { del.dataset.confirm = '1'; del.textContent = 'Confirmer la suppression'; } };
     box.append(del); body.append(box);
   });
+}
+
+/* ---------- Choisir la voix des guides ---------- */
+function adultVoix(body) {
+  loadVoices();
+  const p = el('div', 'parch');
+  p.innerHTML = `<h3>La voix des guides</h3>
+    <p class="note">L'application utilise les voix installées sur cet appareil. Elle choisit automatiquement la plus naturelle, puis chaque guide lui donne son caractère (plus aiguë pour l'écureuil, plus grave pour le capitaine pompier…). Tu peux aussi imposer une voix.</p>`;
+  let pref = ''; try { pref = localStorage.getItem('ecole-voix') || ''; } catch (e) {}
+  const list = el('div', 'form');
+  const row = (name, label, note) => {
+    const r = el('div', 'row');
+    const l = el('label'); l.style.flexDirection = 'row'; l.style.alignItems = 'center'; l.style.gap = '8px';
+    const radio = el('input'); radio.type = 'radio'; radio.name = 'voix'; radio.value = name; radio.checked = pref === name; radio.style.width = 'auto';
+    radio.onchange = () => { try { name ? localStorage.setItem('ecole-voix', name) : localStorage.removeItem('ecole-voix'); } catch (e) {} };
+    l.append(radio, document.createTextNode(label));
+    if (note) { const n = el('span', 'note'); n.textContent = note; l.append(n); }
+    const test = el('button', 'btn small ghost', 'Écouter'); test.type = 'button'; test.style.color = 'var(--brown)'; test.style.borderColor = 'var(--brown-soft)';
+    test.onclick = () => {
+      unlocked = false; unlockAudio();
+      const v = name ? voices.find(x => x.name === name) : null;
+      speak(`Coucou ! Je suis ${W.guide.name}. On apprend en s'amusant ? Youpi !`, { voice: v });
+    };
+    r.append(l, test); list.append(r);
+  };
+  row('', 'Automatique (recommandé)', voices[0] ? `actuellement : ${voices[0].name}` : '');
+  voices.forEach((v, i) => row(v.name, v.name, voiceScore(v) >= 60 ? '· très naturelle' : i === 0 ? '· la meilleure ici' : ''));
+  p.append(list);
+  if (!voices.length) p.append(el('p', 'warn', canSpeak ? 'Aucune voix française trouvée sur cet appareil : installe-en une (voir ci-dessous), puis recharge la page.' : 'Ce navigateur ne sait pas lire à voix haute.'));
+  const tips = el('div', 'note');
+  tips.innerHTML = `<p><b>Pour des voix plus naturelles :</b></p>
+    <p>• <b>iPad / iPhone</b> : Réglages › Accessibilité › Contenu énoncé › Voix › Français › télécharger « Amélie (Premium) » ou « Audrey (améliorée) ».</p>
+    <p>• <b>Tablette Android</b> : Paramètres › Accessibilité › Synthèse vocale › moteur Google › installer les voix françaises « haute qualité ».</p>
+    <p>• <b>Ordinateur</b> : le navigateur Microsoft Edge propose des voix « Natural » très réalistes (Denise, Eloise, Henri…) ; Chrome propose « Google français ».</p>`;
+  p.append(tips);
+  body.append(p);
 }
 
 /* ---------- Créer une leçon à partir d'un texte ---------- */
