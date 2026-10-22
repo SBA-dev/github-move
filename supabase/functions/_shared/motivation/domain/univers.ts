@@ -23,6 +23,7 @@ const UNIVERS_PAR_DEFAUT: Univers = {
     nom: "Noisette",
     titre: "l'écureuil savant",
     expressions: ["Youpi !", "Hop hop hop, bravo !", "Trop fort, ça !"],
+    caractere: { sexe: "feminine", hauteur: 1.45, rythme: 1.08 },
   },
 };
 
@@ -35,6 +36,7 @@ export const UNIVERS: readonly Univers[] = [
       nom: "Lumi",
       titre: "la fée des nombres et des mots",
       expressions: ["Abracadabra !", "Par ma baguette, bravo !", "Magique !"],
+      caractere: { sexe: "feminine", hauteur: 1.25, rythme: 1.0 },
     },
   },
   UNIVERS_PAR_DEFAUT,
@@ -46,6 +48,7 @@ export const UNIVERS: readonly Univers[] = [
       nom: "Coach Léo",
       titre: "l'entraîneur des champions",
       expressions: ["Allez, on y va !", "Et c'est le but !", "Quelle équipe !"],
+      caractere: { sexe: "masculine", hauteur: 1.05, rythme: 1.07 },
     },
   },
   {
@@ -56,6 +59,7 @@ export const UNIVERS: readonly Univers[] = [
       nom: "Agente Mila",
       titre: "la policière détective",
       expressions: ["Enquête résolue !", "Bien vu, détective !", "Affaire classée !"],
+      caractere: { sexe: "feminine", hauteur: 1.05, rythme: 1.0 },
     },
   },
   {
@@ -66,6 +70,7 @@ export const UNIVERS: readonly Univers[] = [
       nom: "Capitaine Sam",
       titre: "le pompier courageux",
       expressions: ["Mission accomplie !", "Pin-pon, bravo !", "Sauvetage réussi !"],
+      caractere: { sexe: "masculine", hauteur: 0.95, rythme: 1.0 },
     },
   },
   {
@@ -76,6 +81,7 @@ export const UNIVERS: readonly Univers[] = [
       nom: "Lili",
       titre: "la danseuse étoile",
       expressions: ["Et hop, une pirouette !", "En rythme, bravo !", "Quelle grâce !"],
+      caractere: { sexe: "feminine", hauteur: 1.2, rythme: 1.02 },
     },
   },
 ];
