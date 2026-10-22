@@ -1,11 +1,13 @@
 import { createHash } from "node:crypto";
-import { readFileSync, writeFileSync } from "node:fs";
+import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import type { Plugin } from "vite";
 
 const BIBLIOTHEQUE_SOURCE = "app/bibliotheque.json";
 const CHEMIN_BIBLIOTHEQUE = "/bibliotheque.json";
 const MANIFESTE = "public/manifest.webmanifest";
+const PAGE_D_ACCUEIL = "index.html";
+const DOSSIER_DES_ICONES = "public/icones";
 const VERSION_A_REMPLACER = /const VERSION = "[^"]*";/;
 const FICHIERS_A_REMPLACER = /const FICHIERS_DU_BUILD = \[[^\]]*\];/;
 
@@ -13,6 +15,11 @@ function empreinte(...contenus: readonly (string | Buffer)[]): string {
   const hash = createHash("sha256");
   for (const contenu of contenus) hash.update(contenu);
   return hash.digest("hex").slice(0, 12);
+}
+
+function icones(racine: string): Buffer[] {
+  const dossier = join(racine, DOSSIER_DES_ICONES);
+  return readdirSync(dossier).sort().map((nom) => readFileSync(join(dossier, nom)));
 }
 
 /**
@@ -46,6 +53,8 @@ export function pwa(): Plugin {
       const version = empreinte(
         modele,
         readFileSync(join(racine, MANIFESTE)),
+        readFileSync(join(racine, PAGE_D_ACCUEIL)),
+        ...icones(racine),
         readFileSync(join(racine, BIBLIOTHEQUE_SOURCE)),
         fichiersDuBuild.join("\n"),
       );
