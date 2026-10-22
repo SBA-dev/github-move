@@ -476,9 +476,10 @@ function childForm(existing, done) {
   f.innerHTML = `<label>Prénom<input id="f-prenom" maxlength="20" required autocomplete="off"></label>
     <div class="row"><label>Classe<select id="f-niveau">${LEVELS.map(l => `<option>${l}</option>`).join('')}</select></label>
     <label>Univers<select id="f-univers">${Object.entries(WORLDS).map(([k, w]) => `<option value="${k}"${k === 'animaux' ? ' selected' : ''}>${w.label}</option>`).join('')}</select></label></div>
-    <details class="settings"><summary>Réglages pour l'adulte (lecture, clavier, temps d'écran, langue)</summary>
+    <details class="settings"><summary>Réglages pour l'adulte (parcours, lecture, clavier, temps d'écran, langue)</summary>
       <label class="check"><input type="checkbox" id="f-dys"> Mode dys : texte espacé, syllabes en couleurs alternées</label>
       <label class="check"><input type="checkbox" id="f-lire"> Tout lire à voix haute (aussi les réponses proposées)</label>
+      <label class="check"><input type="checkbox" id="f-libre"> Parcours libre : toutes les leçons ouvertes (l'ordre conseillé reste affiché)</label>
       <div class="row"><label>Clavier des dictées<select id="f-clavier"><option value="auto">Automatique (lettres du mot jusqu'au CE1)</option><option value="lettres">Lettres du mot seulement</option><option value="complet">Clavier complet</option></select></label>
       <label>Temps d'écran par jour<select id="f-temps"><option value="0">Sans limite</option>${[10, 15, 20, 30, 45, 60].map(n => `<option value="${n}">${n} minutes</option>`).join('')}</select></label></div>
       <label>Traduire les consignes pour le parent<select id="f-langue">${LANGUES.map(l => `<option value="${l}">${l ? cap(l) : 'Non'}</option>`).join('')}</select></label>
@@ -487,7 +488,7 @@ function childForm(existing, done) {
   const q = s => f.querySelector(s);
   if (existing) {
     q('#f-prenom').value = existing.prenom; q('#f-niveau').value = existing.niveau; q('#f-univers').value = existing.univers;
-    q('#f-dys').checked = !!existing.dys; q('#f-lire').checked = !!existing.toutLire; q('#f-clavier').value = existing.clavier || 'auto';
+    q('#f-dys').checked = !!existing.dys; q('#f-lire').checked = !!existing.toutLire; q('#f-libre').checked = !!existing.libre; q('#f-clavier').value = existing.clavier || 'auto';
     q('#f-temps').value = String(existing.tempsMax || 0); q('#f-langue').value = existing.langueParent || '';
   }
   f.onsubmit = async e => {
@@ -497,7 +498,7 @@ function childForm(existing, done) {
     const id = existing ? existing._id : 'enfant_' + uid();
     const { _id, ...old } = existing || {};
     const data = { ...old, kind: 'enfant', id, prenom, niveau: q('#f-niveau').value, univers: q('#f-univers').value, cree: existing?.cree || Date.now(),
-      dys: q('#f-dys').checked, toutLire: q('#f-lire').checked, clavier: q('#f-clavier').value, tempsMax: +q('#f-temps').value, langueParent: q('#f-langue').value };
+      dys: q('#f-dys').checked, toutLire: q('#f-lire').checked, libre: q('#f-libre').checked, clavier: q('#f-clavier').value, tempsMax: +q('#f-temps').value, langueParent: q('#f-langue').value };
     q('button[type=submit]').disabled = true;
     await Store.put(id, data); audio(); sfx.magic();
     done({ ...data, _id: id });
@@ -549,7 +550,7 @@ function subjectPath(m) {
   return list.map(l => {
     const done = (progOf(l.id)?.etoiles || 0) > 0, chained = l.niveau === child.niveau;
     const next = open && !done && !nextMarked && chained;
-    const item = { l, done, next, locked: chained && !open && !done, revision: !chained };
+    const item = { l, done, next, locked: chained && !open && !done && !child.libre, revision: !chained };
     if (next) nextMarked = true;
     if (chained && !done) open = false;
     return item;
