@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Application } from "./Application.tsx";
+import { enregistrerLeServiceWorker } from "./installation/index.ts";
 import "./styles.css";
 
 const racine = document.getElementById("racine");
@@ -11,3 +12,5 @@ createRoot(racine).render(
     <Application />
   </StrictMode>,
 );
+
+enregistrerLeServiceWorker();
