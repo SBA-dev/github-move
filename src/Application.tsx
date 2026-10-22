@@ -53,8 +53,8 @@ export function Application() {
         />
         <main className="ecran">
           <div role="status" className="voix-bloquee">
-            {voix.nomDuGuideDeLaVoixBloquee &&
-              `La voix de ${voix.nomDuGuideDeLaVoixBloquee} est bloquée par ce navigateur. Touche « Réécouter » pour réessayer, ou lis avec un adulte.`}
+            {voix.nomDuPersonnageGuideDeLaVoixBloquee &&
+              `La voix de ${voix.nomDuPersonnageGuideDeLaVoixBloquee} est bloquée par ce navigateur. Touche « Réécouter » pour réessayer, ou lis avec un adulte.`}
           </div>
           {ecran === "accueil" && (
             <>

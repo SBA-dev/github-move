@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   HUMEUR_PAR_DEFAUT,
   type Parole,
@@ -24,7 +24,7 @@ export function PageDemonstration({ univers, voix }: Props) {
   const humeur = reaction?.humeur ?? HUMEUR_PAR_DEFAUT;
   const parole: Parole | undefined = reaction?.parole;
 
-  function lireLaConsigne() {
+  const lireLaConsigne = useCallback(() => {
     const numero = ++derniereLecture.current;
     const estLaDerniere = () => numero === derniereLecture.current;
     setRangDuMotPrononce(undefined);
@@ -33,12 +33,12 @@ export function PageDemonstration({ univers, voix }: Props) {
       onMot: (rang) => estLaDerniere() && setRangDuMotPrononce(rang),
       onFin: () => estLaDerniere() && setRangDuMotPrononce(undefined),
     });
-  }
+  }, [lire, consigne]);
 
   useEffect(() => {
     lireLaConsigne();
     return couperLaVoix;
-  }, []);
+  }, [lireLaConsigne, couperLaVoix]);
 
   function repondre(juste: boolean) {
     setReaction(reagirALaReponse(juste, univers.personnageGuide, hasardDuNavigateur));

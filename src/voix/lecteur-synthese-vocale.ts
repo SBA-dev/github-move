@@ -8,8 +8,7 @@ const COEFFICIENT_DE_SECURITE = 1.6;
 const ERREURS_D_ARRET_VOLONTAIRE = ["interrupted", "canceled"];
 
 export function syntheseVocale(): SpeechSynthesis | undefined {
-  const synthese: SpeechSynthesis | undefined = "speechSynthesis" in globalThis ? globalThis.speechSynthesis : undefined;
-  return synthese ?? undefined;
+  return "speechSynthesis" in globalThis ? globalThis.speechSynthesis : undefined;
 }
 
 function delaiDeSecurite(lecture: LectureDemandee): number {
@@ -35,12 +34,16 @@ export class LecteurSyntheseVocale implements LecteurAVoixHaute {
         if (erreur) reject(erreur);
         else resolve();
       };
-      this.terminerLaLectureEnCours = () => terminer();
-      minuteries.push(setTimeout(terminer, delaiDeSecurite(lecture)));
+      this.terminerLaLectureEnCours = terminer;
+      minuteries.push(setTimeout(() => {
+        this.annulerLaSynthese();
+        terminer();
+      }, delaiDeSecurite(lecture)));
       minuteries.push(setTimeout(() => {
         try {
           this.parler(synthese, lecture, terminer);
         } catch {
+          this.annulerLaSynthese();
           terminer();
         }
       }, DELAI_AVANT_DE_PARLER_MS));
@@ -49,6 +52,10 @@ export class LecteurSyntheseVocale implements LecteurAVoixHaute {
 
   arreter(): void {
     this.terminerLaLectureEnCours?.();
+    this.annulerLaSynthese();
+  }
+
+  private annulerLaSynthese(): void {
     try {
       syntheseVocale()?.cancel();
     } catch {
@@ -72,7 +79,9 @@ export class LecteurSyntheseVocale implements LecteurAVoixHaute {
       };
       if (rang === lecture.phrases.length - 1) enonce.onend = () => terminer();
       enonce.onerror = (evenement) => {
-        terminer(ERREURS_D_ARRET_VOLONTAIRE.includes(evenement.error) ? undefined : new VoixBloquee());
+        if (ERREURS_D_ARRET_VOLONTAIRE.includes(evenement.error)) return terminer();
+        this.annulerLaSynthese();
+        terminer(new VoixBloquee());
       };
       synthese.speak(enonce);
     });

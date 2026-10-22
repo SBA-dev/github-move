@@ -11,28 +11,28 @@ export type OptionsDeLecture = Parameters<LectureAVoixHaute["lire"]>[1];
 
 export type Voix = {
   readonly son: EtatDuSon;
-  readonly nomDuGuideDeLaVoixBloquee: string | undefined;
+  readonly nomDuPersonnageGuideDeLaVoixBloquee: string | undefined;
   readonly lire: (texte: string, options?: OptionsDeLecture) => Promise<void>;
   readonly couperLaVoix: () => void;
   readonly basculerLeSon: () => void;
 };
 
 export function useVoix(personnageGuide: PersonnageGuide): Voix {
-  const guide = useRef(personnageGuide);
+  const personnageGuideEnCours = useRef(personnageGuide);
   useLayoutEffect(() => {
-    guide.current = personnageGuide;
+    personnageGuideEnCours.current = personnageGuide;
   });
   const [son, setSon] = useState(lireLEtatDuSon);
-  const [nomDuGuideDeLaVoixBloquee, setNomDuGuideDeLaVoixBloquee] = useState<string | undefined>();
+  const [nomDuPersonnageGuideDeLaVoixBloquee, setNomDuPersonnageGuideDeLaVoixBloquee] = useState<string | undefined>();
   const [deverrouillage] = useState(() => new DeverrouillageAudio());
   const [lecture] = useState(() =>
     new LectureAVoixHaute({
       lecteur: new LecteurSyntheseVocale(),
       voixDeLAppareil: new VoixDeLAppareilNavigateur(),
       hasard: hasardDuNavigateur,
-      caractereDuPersonnageGuide: () => guide.current.caractere,
+      caractereDuPersonnageGuide: () => personnageGuideEnCours.current.caractere,
       etatInitial: son,
-      onVoixBloquee: () => setNomDuGuideDeLaVoixBloquee(guide.current.nom),
+      onVoixBloquee: () => setNomDuPersonnageGuideDeLaVoixBloquee(personnageGuideEnCours.current.nom),
     })
   );
 
@@ -42,7 +42,7 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
   }, [son, deverrouillage]);
 
   const lire = useCallback((texte: string, options?: OptionsDeLecture) => {
-    setNomDuGuideDeLaVoixBloquee(undefined);
+    setNomDuPersonnageGuideDeLaVoixBloquee(undefined);
     return lecture.lire(texte, options);
   }, [lecture]);
 
@@ -58,8 +58,8 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
       return;
     }
     deverrouillage.deverrouiller();
-    void lecture.remettreLeSon(presentationAuRetourDuSon(guide.current));
+    void lecture.remettreLeSon(presentationAuRetourDuSon(personnageGuideEnCours.current));
   }, [son, lecture, deverrouillage]);
 
-  return { son, nomDuGuideDeLaVoixBloquee, lire, couperLaVoix, basculerLeSon };
+  return { son, nomDuPersonnageGuideDeLaVoixBloquee, lire, couperLaVoix, basculerLeSon };
 }
