@@ -57,6 +57,23 @@ Deno.test("chaque univers a son libellé, son royaume et son personnage guide (n
   }
 });
 
+Deno.test("un univers inconnu ou absent donne Animaux de la forêt, avec Noisette", () => {
+  // Arrange
+  const clesSansUniversConnu: (string | undefined)[] = [undefined, "pirates"];
+
+  for (const cle of clesSansUniversConnu) {
+    // Act
+    const univers = universDe(cle);
+
+    // Assert
+    assertObjectMatch(univers, {
+      cle: "animaux",
+      libelle: "Animaux de la forêt",
+      personnageGuide: { nom: "Noisette" },
+    });
+  }
+});
+
 Deno.test("il y a exactement six univers", () => {
   assertEquals(UNIVERS.length, 6);
 });
