@@ -54,7 +54,8 @@ L'application fonctionne et est publiée comme artifact claude.ai. Elle comprend
 - [ ] Compléter `tests/legacy/` avec les scripts de vérification utilisés jusqu'ici (parcours des 265 leçons, profils, révisions, espace parent). Deux premiers tests de caractérisation y sont déjà.
 - [x] Lot 1 (Socle) : issues #5 (connexion du parent), #6 (univers et personnage guide), #7 (voix), #8 (PWA installable), label `reecriture`.
   - Modèles de domaine (#5 à #7) et critères d'acceptance (#5 à #8) écrits, glossaire et context map complétés.
-  - **En attente : validation des scénarios du lot 1 par le PO** (questions ouvertes dans `docs/stories/<n>/acceptance.md`).
+  - Scénarios **validés par le PO** (`docs/stories/lot-1-decisions.md`, décision 0007). Questions restantes non bloquantes dans `docs/stories/<n>/acceptance.md`.
+  - Prochaine étape : boucle TDD, en commençant par #6 et #7 (domaine pur, sans Supabase), puis #8, puis #5 (qui a besoin du projet Supabase).
   - Première vérification Supabase (`npx supabase link`) non faite : les secrets `SUPABASE_*` n'étaient pas présents dans la session.
 - [ ] Lots 2 à 7 : issues à écrire.
 
