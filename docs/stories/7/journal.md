@@ -5,3 +5,6 @@
 - 15:57 · Étape 2 : critères d'acceptance écrits par `po-acceptance` (`features/7-*.feature`, `docs/stories/7/acceptance.md`). Syntaxe vérifiée par `npx bddgen` (étapes à écrire par `e2e-tester`).
 - 15:57 · ⛔ Validation humaine n°1 demandée pour tout le lot 1 (décision de démarrage n°2).
 - 16:09 · Validation n°1 : « OK » du PO pour les propositions du lot (détail dans `docs/stories/lot-1-decisions.md`). Modèle et scénarios mis à jour. Questions restantes non bloquantes, listées dans `acceptance.md`.
+- 16:41 · Étape 3 : boucle TDD lancée (« ok » du PO). Comportements : caractère de la voix de chaque personnage guide ; nettoyage du texte ; découpage en phrases ; score et tri des voix françaises ; choix de la voix automatique ; voix d'une autre langue ; réglage des phrases.
+- 16:41 · Arbitrage de l'orchestrateur (questions 3 et 5 du modèle) : `CaractereDeLaVoix` est publié par le sous-domaine générique Voix (amont) et importé par Motivation, plutôt que l'inverse : un sous-domaine générique ne dépend pas d'un contexte métier. Voix déclare sa propre interface `Hasard` (même forme que celle de Motivation) pour ne dépendre de rien.
+- 16:43 · Cycle 1 (caractère de la voix) : red 6179c63, green 7d926c4, refactor ef57299. Au passage : les steps E2E de #6 cassaient `tsc` (corrigé, 6e3e0d4).
