@@ -7,9 +7,9 @@ Modèle du domaine : `docs/stories/14/domain-model.md` (contexte **Famille**, st
 
 En tant que **parent**, je veux **exporter les données du profil** de mon enfant, puis pouvoir **supprimer ce profil** et tout ce qui le concerne, afin de garder la maîtrise des données de mon enfant (CLAUDE.md, RGPD : « le parent peut exporter et supprimer toutes les données d'un profil »).
 
-Comportement actuel (`app/`, `adultProfils`) : onglet « Profils », « Supprimer ce profil », puis un second toucher sur « Confirmer : supprimer Léa et sa progression ». Suppression immédiate et définitive. Pas d'export. Ces points donnent les premiers exemples (confirmation en deux temps, suppression définitive). Les écarts voulus (export, effacement sur tous les appareils et dans Storage) viennent de l'issue.
+Comportement actuel (`app/`, `adultProfils`) : onglet « Profils », « Supprimer ce profil », puis un second toucher sur « Confirmer : supprimer Léa et sa progression ». Suppression immédiate et définitive. Pas d'export. Ces points donnent les premiers exemples (confirmation en deux temps, suppression définitive) et sont gardés (décision n°9, proposition M6 appliquée). Les écarts voulus (avertissement qui propose l'export, export JSON, effacement sur tous les appareils et dans Storage) viennent de l'issue et de la validation n°1.
 
-Vocabulaire : les scénarios disent **suppression du profil**, **export des données du profil**, **profil enfant**, **parent rattaché**, **réglages**, **lien d'invitation**, **« Qui joue ? »**, **espace parent** (glossaire). Ils n'emploient pas « progression » (question n°7 du modèle) ni « détacher » (question n°1 du modèle).
+Vocabulaire : les scénarios disent **suppression du profil**, **export des données du profil**, **profil enfant**, **parent rattaché**, **réglages**, **lien d'invitation**, **« Qui joue ? »**, **espace parent** (glossaire). Ils n'emploient pas « progression » (mot d'interface, hors glossaire) ni « détacher » (synonyme interdit : la suppression vaut pour les deux parents).
 
 ## Périmètre au lot 2, et stories suivantes
 
@@ -21,40 +21,57 @@ Au lot 2, les seules données d'un profil enfant sont celles de Famille : **le p
 
 | # | Règle | Scénarios |
 |---|---|---|
-| 1 | Rien n'est supprimé sans la confirmation du parent | Paul supprime le profil enfant de Léa après avoir confirmé · Avant de confirmer, Paul est prévenu que la suppression est définitive (`@a-valider`, modèle n°3 et n°6) · Avant de confirmer, Paul se voit proposer d'exporter les données de Léa (`@a-valider`, question 1) · Sans confirmation, rien n'est supprimé (Paul renonce, Paul quitte l'espace parent) · Sans réseau, la suppression n'est pas faite et Paul en est informé (`@a-valider`, question 2) |
-| 2 | Après la suppression, plus rien du profil n'existe, sur aucun appareil | Léa disparaît de « Qui joue ? » sur les autres appareils de Paul · Le profil enfant de Léa ne revient pas sur la tablette, même sans réseau · Un nouveau profil du même prénom ne retrouve rien de l'ancien · Le lien d'invitation d'un profil supprimé ne marche plus |
-| 3 | Supprimer un profil ne touche ni le parent, ni ses autres profils enfants | Tom garde son profil et ses réglages quand Paul supprime celui de Léa · Paul reste connecté après avoir supprimé un profil · Après la suppression de son seul profil enfant, Paul retrouve un espace parent vide (`@a-valider`, question 3) |
-| 4 | Quand deux parents suivent un profil, sa suppression vaut pour les deux (à valider) | Paul supprime le profil enfant de Léa, que Marie suit aussi (`@a-valider`, modèle n°1) · Avant de confirmer, Paul est prévenu que l'autre parent ne verra plus Léa (`@a-valider`, modèle n°1) |
-| 5 | L'export contient tout ce que l'application garde sur le profil, et rien sur d'autres enfants | Paul exporte les données de Léa dans un fichier lisible · L'export indique les parents rattachés à Léa (`@a-valider`, modèle n°5) · L'export indique l'invitation en attente pour Léa, sans son lien d'invitation (`@a-valider`, question 4) · L'export de Léa ne contient rien sur Tom · Marie, second parent rattaché, exporte aussi les données de Léa |
+| 1 | Rien n'est supprimé sans un avertissement, puis la confirmation du parent | Paul supprime le profil enfant de Léa après avoir confirmé · Avant de confirmer, Paul est prévenu que la suppression est définitive · Avant de confirmer, Paul se voit proposer d'exporter les données de Léa · Paul exporte les données de Léa depuis l'avertissement, et peut encore confirmer · Sans confirmation, rien n'est supprimé (Paul renonce, Paul quitte l'espace parent) · Sans réseau, la suppression n'est pas faite et Paul en est informé |
+| 2 | Après la suppression, immédiate et définitive, plus rien du profil n'existe, sur aucun appareil | Léa disparaît de « Qui joue ? » sur les autres appareils de Paul · Léa, qui joue sur le téléphone, revient à « Qui joue ? » dès la suppression de son profil · Le profil enfant de Léa ne revient pas sur la tablette, même sans réseau · Un nouveau profil du même prénom ne retrouve rien de l'ancien · Le lien d'invitation d'un profil supprimé ne marche plus |
+| 3 | Supprimer un profil ne touche ni le parent, ni ses autres profils enfants | Tom garde son profil et ses réglages quand Paul supprime celui de Léa · Paul reste connecté après avoir supprimé un profil · Après la suppression de son seul profil enfant, Paul retrouve un espace parent vide |
+| 4 | Quand deux parents suivent un profil, chacun peut le supprimer, et la suppression vaut pour les deux | Paul supprime le profil enfant de Léa, que Marie suit aussi · Marie, second parent rattaché, supprime aussi le profil enfant de Léa · Avant de confirmer, Paul est prévenu que l'autre parent ne verra plus Léa |
+| 5 | L'export est un fichier JSON lisible qui contient tout ce que l'application garde sur le profil, et rien sur d'autres enfants | Paul exporte les données de Léa dans un fichier JSON lisible · Le fichier exporté porte le prénom de l'enfant et la date du jour · L'export indique les parents rattachés à Léa · L'export indique l'invitation en attente pour Léa, sans son lien d'invitation · L'export de Léa ne contient rien sur Tom · Marie, second parent rattaché, exporte aussi les données de Léa · Sans réseau, l'export n'est pas fait et Paul en est informé |
 | 6 | Seul un parent rattaché, depuis l'espace parent, peut supprimer ou exporter un profil | Claire, d'une autre famille, ne peut pas supprimer le profil enfant de Léa (`@acces`) · Claire, d'une autre famille, ne peut pas exporter les données de Léa (`@acces`) · Sans connexion du parent, personne ne peut supprimer / exporter (`@acces`) · En dehors de l'espace parent, ni la suppression ni l'export ne sont proposés (`@acces`) |
 
-Total : 6 règles, 23 scénarios (25 cas exécutés avec les exemples des deux plans).
+Total : 6 règles, 28 scénarios (30 cas exécutés avec les exemples des deux plans). Aucun scénario `@a-valider`.
 
-Étapes reprises des autres stories : « Paul est rattaché au profil enfant de Léa », « Paul est dans l'espace parent », « Paul quitte l'espace parent », « Paul crée le profil enfant "Léa" de niveau CE1 dans l'univers « Danse » », « Léa choisit son profil enfant dans « Qui joue ? » », « Claire est informée que ce profil enfant est introuvable » (#11) ; « Paul a créé un lien d'invitation pour Léa », « Marie est rattachée au profil enfant de Léa », « Marie ouvre le lien d'invitation », « Marie est informée que cette invitation ne marche plus » (#13) ; « Paul est connecté sur la tablette et sur le téléphone », « Paul est toujours connecté sur la tablette », « il voit l'espace parent, sans aucun profil enfant », « personne n'est connecté sur la tablette » (#5) ; « le réseau est coupé », « Savanturier a été fermé sur la tablette », « j'ouvre Savanturier » (#8, #0).
+Étapes reprises des autres stories : « Paul est rattaché au profil enfant de Léa », « Paul est dans l'espace parent », « Paul quitte l'espace parent », « Paul crée le profil enfant "Léa" de niveau CE1 dans l'univers « Danse » », « Léa choisit son profil enfant dans « Qui joue ? » », « Claire est informée que ce profil enfant est introuvable » (#11) ; « Paul a créé un lien d'invitation pour Léa », « Marie est rattachée au profil enfant de Léa », « Marie ouvre le lien d'invitation », « Marie est informée que cette invitation ne marche plus » (#13) ; « Léa joue sur le téléphone » (#12) ; « Paul est connecté sur la tablette et sur le téléphone », « Paul est toujours connecté sur la tablette », « il voit l'espace parent, sans aucun profil enfant », « personne n'est connecté sur la tablette » (#5) ; « le réseau est coupé », « Savanturier a été fermé sur la tablette », « j'ouvre Savanturier » (#8, #0). Étape nouvelle : « nous sommes le 22 octobre 2026 » (date du jour fixée par le test, pour le nom du fichier).
 
-Droits d'accès (`@acces`) : un parent d'une autre famille ne peut ni supprimer ni exporter le profil de Léa, et ne sait même pas qu'il existe (même réponse que dans #11) ; sans connexion du parent, rien n'est possible ; l'enfant, hors de l'espace parent, ne se voit proposer ni la suppression ni l'export. Ces scénarios vérifient la policy de suppression de `profils_enfants` et les policies de lecture utilisées par l'export.
+Droits d'accès (`@acces`) : un parent d'une autre famille ne peut ni supprimer ni exporter le profil de Léa, et ne sait même pas qu'il existe (même réponse que dans #11) ; sans connexion du parent, rien n'est possible ; l'enfant, hors de l'espace parent, ne se voit proposer ni la suppression ni l'export. Les deux parents rattachés ont les mêmes droits (décision n°1, règle 4). Ces scénarios vérifient la policy de suppression de `profils_enfants` et les policies de lecture utilisées par l'export.
 
 Données de test : prénoms fictifs, adresses en `@exemple.test`. Le contenu du fichier exporté est lu par le test après téléchargement.
 
 ## Hors périmètre
 
 - Les données de l'enfant des lots suivants (Apprentissage, Motivation, Accompagnement, Storage) : chaque story les ajoute à l'export et à la suppression (voir plus haut).
-- La suppression du compte du parent et de son adresse e-mail (question n°4 du modèle) : aucun scénario tant qu'elle n'est pas tranchée.
-- Le retrait d'un parent d'un profil (« détacher », `RetirerUnParent`, #13) : ce n'est pas une suppression.
-- Un délai de récupération après la suppression (question n°3 du modèle) : les scénarios supposent une suppression immédiate et définitive, comme aujourd'hui.
-- Les copies de sauvegarde de l'hébergeur (question n°8 du modèle).
-- L'export de tous les profils d'un parent en une fois (question n°10 du modèle).
-- Le sort des résultats faits hors ligne pour un profil supprimé ailleurs (question n°11 du modèle) : il n'y en a pas avant le lot 7.
-- Le format exact du fichier (question n°2 du modèle) : les scénarios disent « un fichier lisible ».
+- La suppression du compte du parent et de son adresse e-mail : renvoyée à une story à part (décision n°9).
+- Le retrait d'un parent d'un profil (« détacher ») : il n'existe pas dans ce lot (décision n°1) ; ce n'est jamais une suppression.
+- Un délai de récupération après la suppression : il n'y en a pas, la suppression est immédiate et définitive (décision n°9).
+- Une suppression ou un export mis en attente sans réseau : les deux sont refusés avec un message (décision n°9).
+- Les copies de sauvegarde de l'hébergeur (question ouverte n°2).
+- L'export de tous les profils d'un parent en une fois (question ouverte n°4).
+- Le sort des résultats faits hors ligne pour un profil supprimé ailleurs : jetés sans message à la synchronisation, scénario à écrire au lot 7.
+
+## Décisions
+
+Validation n°1 du lot 2 par le PO, le 2026-10-22 (`docs/stories/lot-2-decisions.md`). « Tranchée » = réponse explicite du PO ; « proposition appliquée » = la proposition déjà faite est retenue.
+
+| Question | Réponse | Source |
+|---|---|---|
+| 1. Export proposé au moment de la suppression | **Oui**, dans l'avertissement, avant la confirmation. Scénarios « Avant de confirmer, Paul se voit proposer d'exporter… » et « Paul exporte les données de Léa depuis l'avertissement… ». | Tranchée, décision n°9 |
+| 2. Sans réseau | Suppression **refusée avec un message**, rien n'est mis en attente. Même règle pour l'export (scénario ajouté). | Tranchée, décision n°9 (export : proposition appliquée) |
+| 3. Après la suppression du dernier profil | Espace parent vide. | Proposition appliquée |
+| 4. Invitation en attente dans l'export | Son état et sa date, sans lien ni jeton d'invitation. | Proposition appliquée |
+| 5. Enfant qui joue sur un autre appareil | Retour immédiat à « Qui joue ? » (scénario ajouté). | Proposition appliquée |
+| 7. Nom et format du fichier | Fichier **JSON lisible**, nommé `savanturier-<prénom>-<date>`, par exemple `savanturier-lea-2026-10-22` (scénario ajouté). | Tranchée, décision n°10 |
+| Modèle M1. Profil à deux parents | Chacun peut le supprimer ; il disparaît pour les deux, après un avertissement (scénario « Marie… supprime aussi… » ajouté). | Tranchée, décision n°1 |
+| Modèle M3. Délai de récupération | Aucun : suppression immédiate et définitive. | Tranchée, décision n°9 |
+| Modèle M4. Compte du parent | Story à part. | Tranchée, décision n°9 |
+| Modèle M5. Adresse e-mail de l'autre parent dans l'export | Jamais. | Tranchée, décision n°3 |
+| 6 (en partie) / Modèle M6. Texte de confirmation | « Confirmer : supprimer Léa et sa progression », par un second toucher, après l'avertissement. | Proposition appliquée |
 
 ## Questions ouvertes
 
-Les questions n°1 à n°11 du modèle (`docs/stories/14/domain-model.md`) restent ouvertes ; elles ne sont pas répétées ici. Les scénarios qui en dépendent sont marqués `@a-valider` (voir le tableau). Questions nouvelles :
+Aucune n'est bloquante ; aucun scénario n'en dépend. Numéros repris de `docs/stories/14/domain-model.md`.
 
-1. L'export est-il **proposé au moment de la suppression**, avant la confirmation (oui), ou seulement disponible à part dans l'espace parent (non) ? Scénario `@a-valider` « Avant de confirmer, Paul se voit proposer d'exporter les données de Léa ».
-2. **Sans réseau**, la suppression est-elle refusée avec un message (oui), ou mise en attente et faite à la prochaine connexion (non) ? Même question pour l'export. Scénario `@a-valider` « Sans réseau, la suppression n'est pas faite et Paul en est informé ».
-3. Après la suppression du **dernier profil** de Paul, où arrive-t-il : dans l'espace parent vide (oui), ou directement sur la création d'un profil enfant, comme à la première connexion (#11, non) ? Scénario `@a-valider`.
-4. L'export d'une **invitation en attente** contient-il seulement son état et sa date, sans le lien d'invitation ni le jeton d'invitation (oui) ? Scénario `@a-valider`.
-5. Si un **enfant joue** sur le téléphone au moment où son profil est supprimé depuis la tablette, que voit-il : retour immédiat à « Qui joue ? » (oui), ou à la prochaine ouverture seulement (non) ? Aucun scénario écrit.
-6. **Textes exacts** vus par le parent : confirmation (« Confirmer : supprimer Léa et sa progression » ou autre, modèle n°6), message après la suppression, avertissement à deux parents, échec sans réseau. Les scénarios ne décrivent que le sens.
-7. **Nom du fichier** exporté (par exemple « savanturier-lea-2026-10-22 ») et indication de sa date dans le fichier : à fixer avec le format (modèle n°2).
+1. L'export contient-il l'**adresse e-mail du parent qui exporte** (oui / non) ? Celle de l'autre parent n'y est jamais.
+2. Faut-il **dire au parent** que les copies de sauvegarde de l'hébergeur disparaissent dans un délai (oui / non) ?
+3. Garde-t-on une **trace** qu'un profil a été supprimé ou exporté (date, parent), sans aucune donnée de l'enfant (oui / non) ?
+4. Faut-il pouvoir **exporter tous les profils** d'un parent en une fois (oui / non) ?
+5. **Textes exacts** du message après la suppression, de l'avertissement (définitif, export proposé, « Marie ne verra plus Léa. ») et des refus sans réseau (suppression, export) ? Les scénarios ne décrivent que le sens.
+6. « **Avertissement de suppression** » : terme du glossaire (oui), ou simple écran d'interface (non) ?
