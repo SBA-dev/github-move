@@ -115,7 +115,7 @@ Il n'y a **pas d'agrégat** : rien n'est enregistré côté serveur. Son/Muet es
 | Élément | Règle |
 |---|---|
 | `TexteALire` | Nettoyage et découpage décrits plus haut. Un texte vide après nettoyage n'est pas lu. |
-| `CaractereDeLaVoix` | Sexe de la voix, hauteur, rythme (valeurs du tableau). Fourni par le personnage guide (Motivation). |
+| `CaractereDeLaVoix` | Sexe de la voix, hauteur, rythme (valeurs du tableau). Défini par Voix, valeurs fournies par le personnage guide (Motivation), décision 0008. |
 | `VoixDisponible` | Nom et langue. `score()` selon les règles du legacy ; score négatif = voix non française, exclue. Féminine ou masculine reconnue par le prénom. |
 | `ReglageDePhrase` | Hauteur dans [0,5 ; 2], rythme au plus 1,4. |
 
@@ -183,7 +183,7 @@ supabase/functions/_shared/voix/          # sous-domaine Voix (décision 0007)
   test_utils/
     voix-en-memoire.ts
 supabase/functions/_shared/motivation/domain/
-  caractere-de-la-voix.ts      # type CaractereDeLaVoix, défini par Motivation
+  (caractere-de-la-voix.ts est dans voix/domain/, décision 0008)
   personnage-guide.ts          # chaque personnage guide porte son CaractereDeLaVoix (story #6)
 src/voix/                      # adaptateurs speechSynthesis et Math.random, déverrouillage audio, mémorisation Son/Muet sur l'appareil
 ```

@@ -62,7 +62,7 @@ Le glossaire garde l'orthographe française.
 | Félicitation (à valider) | Phrase qui salue une bonne réponse : une félicitation commune (« Bravo ! ») ou une expression du personnage guide. | Motivation | compliment, praise |
 | Expression du personnage guide (à valider) | Félicitation propre à un personnage guide (Noisette : « Youpi ! »). | Motivation | cri, réplique |
 | Encouragement (à valider) | Phrase dite après une erreur, jamais punitive (« Pas grave, on réessaie ! »). | Motivation | reproche, oops |
-| Caractère de la voix (à valider) | Voix féminine ou masculine, hauteur et rythme propres à un personnage guide. Défini par Motivation, lu par le sous-domaine Voix. | Motivation | style, timbre, sexe de la voix |
+| Caractère de la voix (à valider) | Voix féminine ou masculine, hauteur et rythme propres à un personnage guide. Sa forme est définie par le sous-domaine Voix, ses valeurs sont fournies par Motivation pour chaque personnage guide (décision 0008). | Motivation | style, timbre, sexe de la voix |
 
 ## Famille
 
