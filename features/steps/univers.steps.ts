@@ -210,7 +210,7 @@ Then(/^(.+) réfléchit en penchant la tête$/, async ({ page }, nom: string) =>
 // --- Alors : paroles
 
 function listeDe(texte: string): string[] {
-  return [...texte.matchAll(/« (.+?) »/g)].map((m) => m[1]);
+  return [...texte.matchAll(/« (.+?) »/g)].flatMap((m) => (m[1] === undefined ? [] : [m[1]]));
 }
 
 const FELICITATIONS_COMMUNES = ["Bravo !", "Super !", "Ouah, bien joué !", "Exactement !", "Génial !", "Tu gères !", "Parfait !", "Oui, c'est ça !"];
@@ -225,8 +225,8 @@ const EXPRESSIONS_PAR_PERSONNAGE: Readonly<Record<string, readonly string[]>> = 
 };
 
 Then(
-  /^(.+) dit une félicitation commune ou l'une de ses expressions : (.+)$/,
-  async ({ page }, nom: string, expressions: string) => {
+  /^(?:.+) dit une félicitation commune ou l'une de ses expressions : (.+)$/,
+  async ({ page }, expressions: string) => {
     const propres = listeDe(expressions);
     const parole = page.getByTestId("parole");
     await expect(parole).toHaveAttribute("data-nature", "felicitation");
@@ -342,5 +342,5 @@ Then(/^rien ne bouge dans le paysage ni chez (.+)$/, async ({ page }, nom: strin
   const delai = await page.evaluate(() => new Promise<number>((r) => requestAnimationFrame(() => setTimeout(() => r(0), 600))));
   expect(delai).toBe(0);
   const apres = await Promise.all(zones.map((zone) => zone.screenshot({ animations: "allow" })));
-  avant.forEach((image, i) => expect(apres[i].equals(image)).toBe(true));
+  avant.forEach((image, i) => expect(apres[i]?.equals(image)).toBe(true));
 });
