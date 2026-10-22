@@ -4,6 +4,7 @@ import { universDe } from "@domain/motivation";
 import { chargerProfilPrepare, PAGE_DEMONSTRATION_DISPONIBLE, PageDemonstration } from "./demonstration/disponibilite.ts";
 import type { ProfilPrepare } from "./demonstration/profil-prepare.ts";
 import { EnTete } from "./en-tete/EnTete.tsx";
+import { AideEcranDAccueil } from "./installation/index.ts";
 import { useNavigation } from "./navigation.ts";
 import { useVoix } from "./voix/index.ts";
 import { PALETTES, Paysage, PersonnageGuide } from "./univers/index.ts";
@@ -60,6 +61,7 @@ export function Application() {
             <>
               <p>Réviser le programme du CP au CM2, en jouant.</p>
               <PersonnageGuide univers={univers} humeur="content" />
+              <AideEcranDAccueil />
             </>
           )}
           {ecran === "demonstration" && PageDemonstration && profilCharge && (
