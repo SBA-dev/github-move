@@ -46,14 +46,19 @@ Fonctionnalité: Créer et modifier un profil enfant, et choisir qui joue
       Alors on lui demande le prénom, la classe et l'univers de l'enfant
       Mais jamais d'adresse e-mail, de mot de passe ni de date de naissance
 
-    @a-valider
     Scénario: Deux profils enfants du même parent peuvent avoir le même prénom
       Étant donné que Paul est rattaché au profil enfant "Léa" de niveau CE1
       Et que Paul est dans l'espace parent
       Quand Paul crée le profil enfant "Léa" de niveau CP dans l'univers « Police »
       Alors « Qui joue ? » montre deux profils enfants « Léa », l'un en « CE1 · Animaux de la forêt », l'autre en « CP · Police »
 
-  Règle: Le prénom est obligatoire et fait au plus 20 caractères, sans les espaces autour
+    Scénario: Il n'y a pas de nombre maximal de profils enfants
+      Étant donné que Paul est rattaché à 10 profils enfants
+      Et que Paul est dans l'espace parent
+      Quand Paul crée le profil enfant "Inès" de niveau CM2 dans l'univers « Princesses et fées »
+      Alors « Qui joue ? » montre 11 profils enfants, dont celui d'Inès avec « CM2 · Princesses et fées »
+
+  Règle: Le prénom est obligatoire, sans les espaces autour, et il est coupé à 20 caractères
 
     Plan du Scénario: Le prénom « <prénom> » (<cas>) est accepté tel quel
       Étant donné que Paul est connecté sur la tablette
@@ -73,14 +78,12 @@ Fonctionnalité: Créer et modifier un profil enfant, et choisir qui joue
       Quand Paul crée le profil enfant "  Léa  " de niveau CE2 dans l'univers « Pompiers »
       Alors le profil enfant de Léa apparaît dans « Qui joue ? » avec « CE2 · Pompiers »
 
-    @a-valider
     Scénario: Un prénom de plus de 20 caractères est coupé à 20 caractères
       Étant donné que Paul est connecté sur la tablette
       Et que Paul est dans l'espace parent
       Quand Paul crée le profil enfant "Marie-Anne-Charlottes" de niveau CE2 dans l'univers « Pompiers »
       Alors le profil enfant de Marie-Anne-Charlotte apparaît dans « Qui joue ? » avec « CE2 · Pompiers »
 
-    @a-valider
     Scénario: Un prénom vide est refusé avec un message
       Étant donné que Paul est connecté sur la tablette
       Et que Paul est dans l'espace parent
@@ -88,7 +91,6 @@ Fonctionnalité: Créer et modifier un profil enfant, et choisir qui joue
       Alors Paul est informé que le prénom de l'enfant est obligatoire
       Et aucun nouveau profil enfant n'apparaît dans « Qui joue ? »
 
-    @a-valider
     Scénario: Un prénom fait seulement d'espaces est refusé avec un message
       Étant donné que Paul est connecté sur la tablette
       Et que Paul est dans l'espace parent
@@ -123,7 +125,6 @@ Fonctionnalité: Créer et modifier un profil enfant, et choisir qui joue
       Quand Paul ouvre « Qui joue ? » sur le téléphone
       Alors le profil enfant de Léa apparaît dans « Qui joue ? » avec « CE2 · Animaux de la forêt »
 
-    @a-valider
     Scénario: Vider le prénom d'un profil enfant est refusé, et le prénom d'avant reste
       Étant donné que Paul est rattaché au profil enfant "Léa" de niveau CE1
       Et que Paul est dans l'espace parent
@@ -155,7 +156,6 @@ Fonctionnalité: Créer et modifier un profil enfant, et choisir qui joue
       Alors elle voit Lili dans le paysage de l'univers « Danse »
       Et l'en-tête affiche « Léa · CE1 »
 
-    @a-valider
     Scénario: À la réouverture de Savanturier, on repasse par « Qui joue ? »
       Étant donné que Léa a choisi son profil enfant dans « Qui joue ? »
       Et que Savanturier a été fermé sur la tablette
@@ -172,7 +172,7 @@ Fonctionnalité: Créer et modifier un profil enfant, et choisir qui joue
 
   Règle: Créer et modifier un profil enfant passent par l'espace parent, choisir qui joue reste à la portée de l'enfant
 
-    @acces @a-valider
+    @acces
     Scénario: Ajouter un enfant depuis « Qui joue ? » demande le contrôle parental
       Étant donné que Paul a créé le profil enfant "Léa" de niveau CE1 dans l'univers « Danse »
       Et que « Qui joue ? » est affiché sur la tablette
@@ -193,7 +193,6 @@ Fonctionnalité: Créer et modifier un profil enfant, et choisir qui joue
       Alors aucune question du contrôle parental n'est posée
       Et elle voit Lili dans le paysage de l'univers « Danse »
 
-    @a-valider
     Scénario: Sans profil enfant, Noisette invite Paul à créer le premier dans l'espace parent
       Étant donné qu'aucun parent n'utilise l'adresse "paul@exemple.test"
       Et que Paul a demandé un lien de connexion pour "paul@exemple.test" sur la tablette
