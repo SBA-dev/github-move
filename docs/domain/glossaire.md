@@ -55,6 +55,12 @@ Le glossaire garde l'orthographe française.
 | Badge (à valider) | Récompense liée à une compétence, gagnée avec au moins 2 étoiles sur la leçon. | Motivation | trophée, médaille |
 | Cabane (à valider) | Décor que l'enfant remplit d'objets débloqués par paliers d'étoiles (3, 6, 10… 75). | Motivation | maison, collection |
 | Épisode (à valider) | Chapitre de l'histoire de l'univers. Un nouvel épisode s'ouvre à chaque jour de séance. | Motivation | chapitre, histoire, niveau |
+| Royaume (à valider) | Lieu de l'univers où vit le personnage guide (« la Forêt des Savanturiers »). | Motivation | monde, pays |
+| Humeur du personnage guide (à valider) | Attitude montrée par le personnage guide : `content` (par défaut), `reflechit` (après une erreur, il penche la tête), `applaudit` (il saute). | Motivation | émotion, état, mood |
+| Félicitation (à valider) | Phrase qui salue une bonne réponse : une félicitation commune (« Bravo ! ») ou une expression du personnage guide. | Motivation | compliment, praise |
+| Expression du personnage guide (à valider) | Félicitation propre à un personnage guide (Noisette : « Youpi ! »). | Motivation | cri, réplique |
+| Encouragement (à valider) | Phrase dite après une erreur, jamais punitive (« Pas grave, on réessaie ! »). | Motivation | reproche, oops |
+| Caractère de la voix (à valider) | Voix féminine ou masculine, hauteur et rythme propres à un personnage guide. | Motivation | style, timbre |
 
 ## Famille
 
@@ -67,6 +73,10 @@ Le glossaire garde l'orthographe française.
 | Réglages (à valider) | Préférences d'un profil enfant : mode dys, tout lire à voix haute, parcours libre, clavier, langue du parent. | Famille | paramètres, options |
 | Mode dys | Réglage qui adapte l'affichage pour les enfants dyslexiques (police, espacement). | Famille | mode dyslexie, accessibilité |
 | Contrôle parental (à valider) | Question à laquelle seul un adulte sait répondre, qui protège l'espace parent. | Famille | code, verrou, mot de passe |
+| Connexion du parent (à valider) | État d'un appareil sur lequel un parent est reconnu. Elle reste ouverte jusqu'à la déconnexion. | Famille | session, login |
+| Lien de connexion (à valider) | Lien à usage unique, envoyé par e-mail au parent, qui ouvre la connexion du parent. L'interface peut dire « lien magique ». | Famille | lien (seul), code, mot de passe |
+| Déconnexion (à valider) | Fin de la connexion du parent sur un appareil. Plus aucune donnée de la famille n'y reste visible. | Famille | logout |
+| Appareil (à valider) | Tablette, téléphone ou ordinateur où l'application est ouverte. Certaines préférences y sont mémorisées (son, voix imposée). | Famille (utilisé partout) | device, navigateur, poste |
 
 ## Accompagnement
 
@@ -80,6 +90,15 @@ Le glossaire garde l'orthographe française.
 | Mots de la semaine | Devoir qui prépare une dictée : une liste de mots et une date de dictée. Chaque jour, l'entraînement en propose 5. | Accompagnement | dictée de la semaine, liste de mots |
 | Leçon personnelle (à valider) | Leçon créée par un parent à partir de son propre texte ou d'une photo, avec l'aide de l'IA. Elle n'est visible que dans sa famille. | Accompagnement | leçon custom, leçon adulte |
 | Enregistrement de lecture (à valider) | Audio de l'enfant qui lit à voix haute, écoutable par le parent. Il expire au bout de 30 jours. | Accompagnement | audio, voix, fichier |
+
+## Voix (proposition de sous-domaine, à valider)
+
+| Terme | Définition | Contexte | Synonymes interdits |
+|---|---|---|---|
+| Lecture à voix haute (à valider) | Le personnage guide lit un texte, phrase par phrase, en surlignant le mot lu. | Voix (proposition) | synthèse, TTS |
+| Voix automatique (à valider) | Choix par défaut : la voix française la plus naturelle de l'appareil, adaptée au caractère de la voix du personnage guide. | Voix (proposition) | voix par défaut |
+| Voix imposée (à valider) | Voix de l'appareil choisie par le parent à la place de la voix automatique. | Voix (proposition) | voix préférée, voix forcée |
+| Muet (à valider) | Choix de l'appareil qui coupe la voix et les effets sonores. Son contraire est « Son ». | Voix (proposition) | silencieux, mute |
 
 ## Décisions
 
@@ -96,6 +115,11 @@ Le glossaire garde l'orthographe française.
 
 1. **« Étoile »** est aussi le nom de l'« Étoile du savoir » dans l'histoire. Proposition : **Étoile** reste la récompense. L'objet de l'histoire n'est pas un terme du domaine.
 2. **« Test »** : on dit toujours **Test de départ**, pour ne pas confondre avec les tests logiciels.
+3. **« Compte »** (story #5) : c'est un synonyme interdit de **Parent**, mais le legacy dit « ton compte ». Proposition : dans le domaine on dit **Parent** et **Connexion du parent** ; l'interface peut dire « ton compte ».
+4. **« Session »** (story #5) : l'issue dit « la session reste ouverte », mais « session » est un synonyme interdit de **Séance**. Proposition : « la connexion reste ouverte ».
+5. **« Lien magique »** (story #5) : « lien » est un synonyme interdit de **Rattachement**. Proposition : **Lien de connexion** dans le domaine.
+6. **« Voix »** (story #7) : c'est un synonyme interdit de **Enregistrement de lecture**. Proposition : « voix » désigne la voix de synthèse ; l'audio de l'enfant reste un enregistrement de lecture.
+7. **« Monde »** (story #6) : synonyme interdit de **Univers**, mais le design s'appelle « Monde vivant ». Proposition : « Monde vivant » est le nom du style graphique, pas un terme du domaine.
 
 ## Questions ouvertes (pour `domain-modeler`, story de rattachement)
 
