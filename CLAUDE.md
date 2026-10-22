@@ -98,13 +98,14 @@ Le **domaine ne dépend de rien**.
 - **Catalogue pédagogique** : programmes, leçons de la bibliothèque, exercices, compétences
 - **Apprentissage** : séances, réponses, étoiles, parcours, test de départ, révisions
 - **Motivation** : série, badges, cabane, épisodes, univers. Contexte **à part** : il réagit aux séances terminées et ne modifie jamais une note.
-- **Famille** : compte famille, parent, profils enfants, réglages, contrôle parental
+- **Famille** : parents, profils enfants, rattachements et invitations, réglages, contrôle parental
 - **Accompagnement** : suivi, rapport de la semaine, devoirs (leçon à faire, mots de la semaine), enregistrements de lecture, leçons personnelles
 
 ## Langage ubiquitaire
 
 Décisions déjà prises, à respecter partout (code, interface, scénarios) :
 - **Parent** est le seul rôle adulte (pas d'enseignant). L'interface dit « Espace parent ».
+- Un parent ne voit **que les enfants auxquels il est rattaché**. Un profil enfant a un ou deux parents. Le second se rattache par un lien d'invitation.
 - **Personnage guide** (Noisette, Lumi…) et **Guide fondamental** (guide Eduscol) : jamais « guide » seul.
 - Une leçon est **réussie** à 1 étoile (elle ouvre la suivante) et **acquise** à 2 étoiles (compétence et badge).
 - **Pas de temps d'écran** : l'application ne limite pas la durée de jeu.
@@ -136,7 +137,7 @@ Décisions déjà prises, à respecter partout (code, interface, scénarios) :
 ## Données d'enfants (RGPD)
 
 - Hébergement **dans l'UE** (projet Supabase en région Francfort, fonctions dans une région européenne).
-- Seul le **parent** a un compte. L'enfant est un profil rattaché au parent : prénom ou pseudo et classe, sans e-mail, sans mot de passe, sans date de naissance complète.
+- Seul le **parent** a un compte. L'enfant est un profil rattaché à un ou deux parents : prénom ou pseudo et classe, sans e-mail, sans mot de passe, sans date de naissance complète.
 - Minimisation : on ne stocke que ce qui sert à l'apprentissage ou au suivi parental.
 - Les enregistrements de voix de l'enfant expirent automatiquement après 30 jours.
 - Le parent peut exporter et supprimer toutes les données d'un profil.

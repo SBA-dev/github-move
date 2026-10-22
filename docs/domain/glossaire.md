@@ -60,8 +60,9 @@ Le glossaire garde l'orthographe française.
 
 | Terme | Définition | Contexte | Synonymes interdits |
 |---|---|---|---|
-| Parent | Adulte titulaire du compte. Il crée et règle les profils enfants, donne les devoirs et consulte le suivi. Il n'y a pas d'autre rôle adulte. | Famille | utilisateur, adulte, enseignant, tuteur, compte |
-| Compte famille (à valider) | Compte du parent, auquel sont rattachés les profils enfants. | Famille | compte utilisateur |
+| Parent | Adulte qui a un compte et qui est rattaché à un ou plusieurs profils enfants. Il crée et règle les profils, donne les devoirs et consulte le suivi. Il ne voit **que les enfants auxquels il est rattaché**. Il n'y a pas d'autre rôle adulte. | Famille | utilisateur, adulte, enseignant, tuteur, compte |
+| Rattachement (à valider) | Lien entre un parent et un profil enfant, qui donne au parent l'accès à ce profil. Un profil enfant a **un ou deux parents**. | Famille | partage, lien, accès |
+| Invitation (à valider) | Lien communiqué par un parent pour qu'un second parent se rattache à un profil enfant. | Famille | code, parrainage |
 | Profil enfant | Enfant qui apprend : prénom ou pseudo, niveau, univers et réglages. Il n'a ni compte, ni e-mail, ni mot de passe. | Famille | élève, utilisateur, joueur, compte enfant |
 | Réglages (à valider) | Préférences d'un profil enfant : mode dys, tout lire à voix haute, parcours libre, clavier, langue du parent. | Famille | paramètres, options |
 | Mode dys | Réglage qui adapte l'affichage pour les enfants dyslexiques (police, espacement). | Famille | mode dyslexie, accessibilité |
@@ -89,8 +90,15 @@ Le glossaire garde l'orthographe française.
 5. Les **leçons personnelles** appartiennent au contexte Accompagnement.
 6. **Motivation** est un contexte à part : il réagit aux séances terminées et ne modifie jamais une note.
 7. **Pas de temps d'écran** : l'application ne limite pas la durée de jeu. Le terme n'existe pas dans le domaine.
+8. **Accès** : un parent ne voit que les profils enfants auxquels il est rattaché. Un profil enfant peut avoir deux parents. Le second parent se rattache par un lien d'invitation communiqué par le premier.
 
 ## Conflits à trancher
 
 1. **« Étoile »** est aussi le nom de l'« Étoile du savoir » dans l'histoire. Proposition : **Étoile** reste la récompense. L'objet de l'histoire n'est pas un terme du domaine.
 2. **« Test »** : on dit toujours **Test de départ**, pour ne pas confondre avec les tests logiciels.
+
+## Questions ouvertes (pour `domain-modeler`, story de rattachement)
+
+1. Les deux parents d'un enfant ont-ils les mêmes droits (par exemple supprimer le profil, retirer l'autre parent) ?
+2. Combien de temps une invitation reste-t-elle valable, et sert-elle une seule fois ?
+3. Deux parents rattachés au même enfant voient-ils aussi leurs autres enfants respectifs ? (Proposition : non. Chaque rattachement est propre à un enfant, ce qui convient aussi aux parents séparés.)

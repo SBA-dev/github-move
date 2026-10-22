@@ -24,7 +24,7 @@ Chaque story devient une issue GitHub avec le label `reecriture`.
 | Lot | Stories |
 |---|---|
 | 1. Socle | Connexion du parent · Design, univers et personnage guide · Voix (lecture à voix haute) · PWA installable |
-| 2. Famille | Créer et modifier un profil enfant · Réglages (mode dys, tout lire, parcours libre, clavier, langue du parent) · Contrôle parental de l'espace parent · Supprimer un profil et ses données |
+| 2. Famille | Créer et modifier un profil enfant · Inviter un second parent (rattachement par lien) · Réglages (mode dys, tout lire, parcours libre, clavier, langue du parent) · Contrôle parental de l'espace parent · Supprimer un profil et ses données |
 | 3. Jouer une leçon | Étapes lues puis exercices · Exercices à choix (bulles, lecture, écoute) · Classer, ordre, trous · Dictée, conjugaison · Calcul, fluence, addition posée · Boîte, barres · Mémoriser une poésie · Aide et « Je ne sais pas » · Étoiles et écran de fin |
 | 4. Parcours | Parcours par matière et verrous · Parcours libre et leçons des classes d'avant · Test de départ · Révisions des erreurs · Écran « Aujourd'hui » |
 | 5. Motivation | Série · Badges et compétences · Cabane · Épisodes de l'histoire |
@@ -33,15 +33,15 @@ Chaque story devient une issue GitHub avec le label `reecriture`.
 
 ## Décisions de démarrage
 
-Propositions faites au PO. Le statut indique ce qui est confirmé.
+Toutes confirmées par le PO le 2026-10-22.
 
 | # | Sujet | Proposition | Statut |
 |---|---|---|---|
-| 1 | Qui écrit les stories de la réécriture | Claude crée les issues (label `reecriture`) à partir du code actuel | à confirmer |
-| 2 | Validation des scénarios | Par lot (5 à 6 validations) plutôt qu'à chaque story | à confirmer |
+| 1 | Qui écrit les stories de la réécriture | Claude crée les issues (label `reecriture`) à partir du code actuel | **confirmé** |
+| 2 | Validation des scénarios | Par lot (5 à 6 validations) plutôt qu'à chaque story | **confirmé** |
 | 3 | Base Supabase | Projet de dev gratuit à Francfort | **confirmé** |
-| 4 | Branches et PR | Une branche et une PR par story (`feature/<n>-…`), et une branche `main` comme base | à confirmer |
-| 5 | Connexion du parent | Lien magique par e-mail, et la question de multiplication gardée pour l'espace parent | à confirmer |
-| 6 | Services payants | Plus tard : clé API Claude (leçons personnelles par IA) et voix neuronale. En attendant : générateurs locaux et voix du navigateur | à confirmer |
-| 7 | Données existantes | Pas de migration : on repart de zéro | à confirmer |
-| 8 | Design | Univers visuel actuel (« Monde vivant », 6 univers), animé comme la maquette de l'option 1 | à confirmer |
+| 4 | Branches et PR | Une branche et une PR par story (`feature/<n>-…`), avec `main` comme base. `main` est créée. La définir comme branche par défaut se fait dans les réglages GitHub, par le PO | **confirmé** |
+| 5 | Connexion et accès des parents | Connexion par lien magique reçu par e-mail. Un parent ne voit que les enfants auxquels il est rattaché. Un enfant peut avoir deux parents : le second se rattache par un lien d'invitation communiqué par le premier. La question de multiplication reste à l'entrée de l'espace parent | **confirmé** (questions de détail dans le glossaire) |
+| 6 | Services payants | Plus tard : clé API Claude (leçons personnelles par IA) et voix neuronale. En attendant : générateurs locaux et voix du navigateur | **confirmé** |
+| 7 | Données existantes | Pas de migration : on repart de zéro | **confirmé** |
+| 8 | Design | Univers visuel actuel (« Monde vivant », 6 univers), animé comme la maquette de l'option 1 | **confirmé** |
