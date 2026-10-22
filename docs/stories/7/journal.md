@@ -9,3 +9,4 @@
 - 16:41 · Arbitrage de l'orchestrateur (questions 3 et 5 du modèle) : `CaractereDeLaVoix` est publié par le sous-domaine générique Voix (amont) et importé par Motivation, plutôt que l'inverse : un sous-domaine générique ne dépend pas d'un contexte métier. Voix déclare sa propre interface `Hasard` (même forme que celle de Motivation) pour ne dépendre de rien.
 - 16:43 · Cycle 1 (caractère de la voix) : red 6179c63, green 7d926c4, refactor ef57299. Au passage : les steps E2E de #6 cassaient `tsc` (corrigé, 6e3e0d4).
 - 16:44 · Cycle 2 (texte à lire) : red bb50e94, green 6386326.
+- 16:46 · Cycle 3 (score, tri, choix de la voix) : red 5f84443 et 9a90a19, correction de l'exemple de score (70 et non 110, erreur de consigne de l'orchestrateur) c712373, green 4d04893 et suivant. 62 tests.
