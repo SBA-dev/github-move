@@ -53,9 +53,7 @@ for (const [cle, expressions] of expressionsAttendues) {
   const personnageGuide = universDe(cle).personnageGuide;
 
   Deno.test(`${personnageGuide.nom} a ses trois expressions, mot pour mot`, () => {
-    const textes = [0, 0.4, 0.99].map((second) =>
-      feliciter(personnageGuide, hasardFixe(0, second)).texte
-    );
+    const textes = [0, 0.4, 0.99].map((second) => feliciter(personnageGuide, hasardFixe(0, second)).texte);
 
     assertEquals(textes, expressions);
   });
@@ -75,9 +73,7 @@ for (const [cle, expressions] of expressionsAttendues) {
 }
 
 Deno.test("les huit félicitations communes sont tirées mot pour mot", () => {
-  const textes = felicitationsCommunes.map((_, i) =>
-    feliciter(noisette, hasardFixe(0.5, (i + 0.5) / 8)).texte
-  );
+  const textes = felicitationsCommunes.map((_, i) => feliciter(noisette, hasardFixe(0.5, (i + 0.5) / 8)).texte);
 
   assertEquals(textes, felicitationsCommunes);
 });
