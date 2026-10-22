@@ -6,10 +6,14 @@
 
 Relations :
 - **Famille → Motivation** : le profil enfant garde la **clé** de l'univers choisi (le choix est dans le lot 2). Motivation fournit le catalogue des univers et retrouve un univers à partir de sa clé. Référence par identifiant (la clé), jamais par objet.
-- **Motivation → Apprentissage** (nouvelle relation proposée) : pendant une séance, l'écran fait parler le personnage guide (félicitation après une bonne réponse, encouragement après une erreur). Apprentissage décide si la réponse est juste. Motivation fournit seulement les mots et l'humeur. Mécanisme : appel en lecture au domaine de Motivation, depuis le front.
-- **Motivation → Voix** (story #7) : le personnage guide donne son **caractère de la voix**.
+- **Motivation → Apprentissage** (relation retenue, voir Décisions) : pendant une séance, l'écran fait parler le personnage guide (félicitation après une bonne réponse, encouragement après une erreur). Apprentissage décide si la réponse est juste. Motivation fournit seulement les mots et l'humeur. Mécanisme : appel en lecture au domaine de Motivation, depuis le front.
+- **Motivation → Voix** (story #7, sous-domaine décidé, décision 0007) : le personnage guide donne son **caractère de la voix**.
 
 Ce qui n'est **pas** du domaine : paysage (ciel, collines, arbres, soleil), couleurs, dessin du personnage guide, animations, en-tête. C'est de la présentation dans `src/`, rangée par clé d'univers.
+
+Référence visuelle et animation (décision n°9) : l'artifact « Savanturier Web animé », démo de l'option 1 de la décision 0001 (https://claude.ai/artifact/GQyTR5c5mY33qo4pv3KVEe). Le personnage guide reste **dessiné en SVG et animé avec Motion** (respiration, clignement, saut de joie, tête penchée).
+
+Vérification au lot 1 (décision n°1) : une **page de démonstration réservée aux tests** montre une consigne, les humeurs du personnage guide, ses félicitations et ses encouragements. Elle est retirée au lot 3, quand les exercices la remplacent. Elle n'est pas un concept du domaine.
 
 ### Comportement actuel (`app/`)
 
@@ -28,12 +32,12 @@ Ce qui n'est **pas** du domaine : paysage (ciel, collines, arbres, soleil), coul
 | Univers | au glossaire (confirmé) | Clés : `princesse`, `animaux`, `sports`, `police`, `pompier`, `danse`. |
 | Personnage guide | au glossaire (confirmé) | Le code legacy dit `guide` seul (`W.guide`) : à ne pas reprendre. |
 | Royaume | **nouveau** (à valider) | Lieu de l'univers où vit le personnage guide (« la Forêt des Savanturiers »). |
-| Titre du personnage guide | **nouveau** (à valider) | Qualité qui suit le nom (« l'écureuil savant »). |
+| Titre du personnage guide | **nouveau** (à valider) | Qualité qui suit le nom (« l'écureuil savant »). Ajouté au glossaire. |
 | Humeur du personnage guide | **nouveau** (à valider) | `content`, `reflechit`, `applaudit`. |
 | Félicitation | **nouveau** (à valider) | Phrase qui salue une bonne réponse. Commune ou propre au personnage guide. |
 | Expression du personnage guide | **nouveau** (à valider) | Félicitation propre à un personnage guide (« Youpi ! »). Le legacy dit `cri`. |
 | Encouragement | **nouveau** (à valider) | Phrase dite après une erreur, jamais punitive (« Pas grave, on réessaie ! »). |
-| Paysage | **nouveau** (à valider), hors domaine | Décor de fond propre à l'univers. Présentation seulement. |
+| Paysage | hors domaine | Décor de fond propre à l'univers. Présentation seulement, pas d'entrée au glossaire (voir Décisions). |
 | « thème », « monde » | **en conflit** | Synonymes interdits de Univers, mais le legacy dit `WORLDS` et l'issue « Monde vivant » (nom du style graphique). On garde « Monde vivant » comme nom du design, pas comme terme du domaine. |
 
 ## Modèle
@@ -100,11 +104,12 @@ Il n'y a **pas d'agrégat** dans cette story : aucun état ne change, rien n'est
 | Fonction | Règle tirée du legacy |
 |---|---|
 | `universDe(cle)` | Clé inconnue → `animaux`. |
-| `feliciter(personnageGuide, hasard)` | Avec une probabilité de 0,35, une expression du personnage guide ; sinon une félicitation commune. Chaque tirage est uniforme dans sa liste. |
+| `feliciter(personnageGuide, hasard)` | Avec une probabilité de 0,35, une expression du personnage guide ; sinon une félicitation commune. Chaque tirage est uniforme dans sa liste. Textes repris mot pour mot du legacy. |
+| `presentationAuRetourDuSon(personnageGuide)` | « Je t'entends ! Je suis <nom du personnage guide>. » (texte du legacy, le personnage guide dit son propre nom). Lu par Voix (story #7). |
 | `encourager(hasard)` | Un encouragement tiré uniformément. |
-| `humeurApresReponse(juste)` | Réponse juste → `applaudit`, réponse fausse → `reflechit` (question n°4 : est-ce une règle ?). |
+| `humeurApresReponse(juste)` | Réponse juste → `applaudit`, réponse fausse → `reflechit`, **toujours** (écart voulu avec l'exercice « classer » du legacy, voir Décisions). |
 
-Le hasard passe par le port `Hasard` (décision 0003) pour que les tests restent déterministes.
+Le hasard passe par le port `Hasard` (décision 0003). Son interface est déclarée dans `motivation/domain/` et exportée par `@domain/motivation` (décision 0007) ; l'adaptateur (`Math.random`) vit dans `src/`.
 
 ### Commandes, événements, erreurs
 
@@ -117,13 +122,15 @@ Le hasard passe par le port `Hasard` (décision 0003) pour que les tests restent
 2. L'univers ne change que l'habillage : ni les consignes, ni les exercices, ni la correction, ni les étoiles. Les couleurs des colonnes de calcul (C vert, D rose, U bleu) sont les mêmes dans tous les univers.
 3. Un profil sans univers connu joue dans `animaux`, avec Noisette.
 4. Une félicitation est soit une expression du personnage guide en cours, soit une félicitation commune, jamais l'expression d'un autre personnage guide.
-5. Un encouragement n'est jamais punitif.
+5. Après une bonne réponse le personnage guide applaudit toujours ; après une erreur il réfléchit toujours.
+6. Un encouragement n'est jamais punitif.
+7. Les félicitations communes, les encouragements et les expressions de chaque personnage guide sont ceux du legacy, mot pour mot.
 
 ## Partage avec le front
 
-Tout le domaine de cette story sert au front, y compris hors ligne : catalogue des univers, `universDe`, `feliciter`, `encourager`, humeurs. Il est exposé par `@domain/motivation`.
+Tout le domaine de cette story sert au front, y compris hors ligne : catalogue des univers, `universDe`, `feliciter`, `encourager`, humeurs, interface `Hasard`. Il est exposé par `@domain/motivation`.
 
-Reste dans `src/` (présentation, aucune règle) : paysage et couleurs (`PALETTES`), dessin du personnage guide et de ses trois humeurs, animations Motion (réduites avec `prefers-reduced-motion`), en-tête (logo, prénom et niveau de l'enfant, Son/Muet, Retour, espace parent).
+Reste dans `src/` (présentation, aucune règle) : paysage et couleurs (`PALETTES`), dessin SVG du personnage guide et de ses trois humeurs, animations Motion (avec `prefers-reduced-motion`, il ne saute plus et ne penche plus la tête, mais son visage montre encore l'humeur), page de démonstration du lot 1, en-tête (logo, prénom et niveau de l'enfant, Son/Muet, Retour, espace parent).
 
 ## Données d'enfants
 
@@ -136,9 +143,9 @@ supabase/functions/_shared/motivation/
   domain/
     univers.ts                 # CleUnivers, Univers, catalogue des 6 univers, universDe
     personnage-guide.ts        # PersonnageGuide
-    humeur.ts                  # Humeur, humeurApresReponse (si question n°4 = oui)
+    humeur.ts                  # Humeur, humeurApresReponse
     paroles.ts                 # Felicitation, Encouragement, feliciter, encourager
-    hasard.ts                  # interface Hasard (si le port est défini dans le domaine, voir question n°7)
+    hasard.ts                  # interface Hasard (décision 0007)
     index.ts                   # exporte le domaine pour @domain/motivation
   test_utils/
     hasard-fixe.ts
@@ -146,14 +153,36 @@ src/
   univers/                     # paysages, couleurs, dessins des personnages guides (présentation)
 ```
 
+## Décisions
+
+Validation n°1 du lot 1 par le PO, le 2026-10-22 (`docs/stories/lot-1-decisions.md`). « Tranchée » = réponse explicite du PO ; « proposition appliquée » = question de détail qui suit la proposition déjà faite (règle générale de la validation).
+
+Numéros d'origine : « M » = ancienne liste du modèle, « A » = `docs/stories/6/acceptance.md`.
+
+| Question | Réponse | Source |
+|---|---|---|
+| M1. Maquette à reproduire | L'artifact « Savanturier Web animé » (démo de l'option 1 de la décision 0001), pas les fichiers de `prototype/`. | Tranchée, décision n°9 |
+| M2. SVG ou Rive/Lottie ? | **SVG animé avec Motion**. Rive pourra venir plus tard, par une nouvelle décision. | Tranchée, décision n°9 |
+| M6. Textes repris mot pour mot ? | **Oui** : félicitations communes, encouragements, expressions de chaque personnage guide, présentation au retour du son. | Tranchée, décision n°3 |
+| M7. Interface `Hasard` dans `domain/` ? | **Oui**. | Tranchée, décision n°4 et décision 0007 |
+| A1. Humeurs et paroles observables au lot 1 | Une **page de démonstration réservée aux tests**, retirée au lot 3. | Tranchée, décision n°1 |
+| A2. Entrée dans l'univers au lot 1 | Profils enfants **préparés pour les tests** ; « Qui joue ? » arrive au lot 2. | Tranchée, décision n°2 |
+| A6. Présentation au retour du son | **Oui**, avec le nom du personnage guide en cours (« Je suis Capitaine Sam. »). | Tranchée, décision n°3 |
+| M3. Univers inconnu | `animaux` (Noisette), **sans message**. | Proposition appliquée (scénario `@a-valider`) |
+| M4. Toujours applaudir / réfléchir ? | **Toujours**, y compris dans « classer » (écart voulu avec le legacy). | Proposition appliquée (scénarios `@a-valider`) |
+| M5. Proportion des expressions | **35 %** des félicitations, comme le legacy. | Proposition appliquée (modèle) |
+| M8 / A3 (en partie). Royaume et titre | Gardés comme termes `(à valider)` du glossaire ; le personnage guide se présente avec son titre et son royaume. | Proposition appliquée (modèle, scénario `@a-valider`) |
+| M9. Faire parler le personnage guide dans Motivation | **Oui** : Apprentissage fournit seulement « réponse juste / fausse ». Relation ajoutée à la context map. | Proposition appliquée (modèle) |
+| A1 (suite). Couleurs des colonnes de calcul | Vérifiées au **lot 3**, avec l'addition posée (la page de démonstration ne montre pas de calcul). | Proposition appliquée (`acceptance.md`, option a) |
+| A5. Mouvements réduits | Le visage change encore (sourit, réfléchit) : seul signe de l'humeur. | Proposition appliquée (scénarios `@a-valider`) |
+| A8 (en partie). « paysage », « couleur principale », « en-tête », « mouvements réduits » | Termes d'interface, **hors glossaire**. | Proposition appliquée (modèle : présentation hors domaine) |
+
 ## Questions ouvertes
 
-1. Où se trouve la maquette de l'option 1 à reproduire ? (`prototype/` contient `addition-en-colonnes.html` et `royaume-des-additions.html` : est-ce l'une d'elles ? oui / non)
-2. Le personnage guide reste-t-il dessiné en SVG (oui), ou passe-t-on à Rive/Lottie (non) ?
-3. Un profil dont l'univers est inconnu joue-t-il toujours dans `animaux`, sans prévenir le parent ? (oui / non)
-4. Le personnage guide doit-il **toujours** applaudir après une bonne réponse et réfléchir après une erreur ? Aujourd'hui, dans l'exercice « classer », il ne félicite qu'une bonne réponse sur deux. (toujours / comme aujourd'hui)
-5. Garde-t-on la proportion actuelle : un peu plus d'une félicitation sur trois (35 %) est une expression du personnage guide ? (oui / non ; sinon, quelle proportion ?)
-6. Les listes de félicitations communes (`PRAISE`), d'encouragements (`OOPS`) et d'expressions de chaque personnage guide sont-elles reprises **mot pour mot** ? (oui / non)
-7. L'interface `Hasard` peut-elle être déclarée dans `domain/` pour que le front l'utilise (le front n'importe pas `application/`) ? (oui / non ; choix d'architecture, une décision à ajouter dans `docs/decisions/` si oui)
-8. Le **royaume** et le **titre** du personnage guide sont-ils des termes à garder dans le glossaire (oui), ou seulement des textes d'affichage (non) ?
-9. Est-il juste de ranger « faire parler le personnage guide pendant une séance » dans Motivation, Apprentissage ne fournissant que « réponse juste / fausse » ? (oui / non)
+Aucune n'est bloquante pour la story.
+
+1. (ancienne A3, suite) **Où et avec quels mots** le personnage guide se présente-t-il avec son titre et son royaume ? Le legacy ne l'affiche nulle part. Proposition de texte à valider par un exemple : « Je suis Noisette, l'écureuil savant de la Forêt des Savanturiers. », sur la page de démonstration au lot 1, puis à l'accueil.
+2. (ancienne A4) **Accueil sans profil enfant** : comme le legacy, l'accueil repasse-t-il dans l'univers « Animaux de la forêt » même si l'enfant jouait dans un autre univers ? (oui / non ; sinon, l'accueil garde l'univers du dernier enfant). À trancher avec « Qui joue ? » (lot 2).
+3. (ancienne A7) **Retour dans l'en-tête** : sur quels écrans du lot 1 apparaît-il ? (par exemple : partout sauf l'accueil et l'écran de connexion)
+4. (ancienne A8, suite) « **accueil** » : est-ce l'écran « Aujourd'hui » du lot 4 ? (même question que la n°7 de la story #8)
+5. (ancienne A8, suite) « **colonnes de calcul** » (centaines, dizaines, unités) : faut-il un terme du glossaire ? (oui / non ; à trancher au lot 3)
