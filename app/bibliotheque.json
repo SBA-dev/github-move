@@ -7185,81 +7185,405 @@
   "genere": true
  },
  {
-  "id": "ma-cp-dizaines-unites",
+  "id": "ma-cp-boite-ajouter",
   "matiere": "maths",
   "niveau": "CP",
-  "titre": "Dizaines et unités",
-  "ordre": 5,
+  "titre": "La boîte à jetons : ajouter",
+  "ordre": 10,
   "programme": {
-   "section": "c2-mathematiques-cp-les-nombres-entiers",
-   "citation": "Il verbalise sous la forme : « Trois dizaines et quatre unités, cela fait trente-quatre » ou « Trente plus quatre, cela fait trente- quatre », ou éventuellement, il compte de dix en dix, puis de un en un : « dix, vingt, trente, trente-et-un, trente-deux, trente-trois et trente-quatre »."
+   "section": "c2-mathematiques-cp-les-quatre-operations",
+   "citation": "Les quatre opérations sont mobilisées au CP lors de la résolution de problèmes qui fournit un cadre permettant de donner du sens aux opérations."
   },
   "lecon": [
    {
-    "texte": "Dix unités, c'est une dizaine. Dans 34, il y a 3 dizaines et 4 unités.",
+    "texte": "Je vais mettre des jetons dans une boîte, puis la fermer. Tu ne pourras plus les voir : il faudra trouver combien il y en a dans ta tête.",
+    "exemples": []
+   },
+   {
+    "texte": "Pour trouver, tu peux compter sur tes doigts, mettre le premier nombre dans ta tête et avancer, ou utiliser un calcul que tu connais.",
     "exemples": [
-     "34 = 3 dizaines et 4 unités"
+     "4 dans ma tête… 5, 6, 7"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "boite",
+    "titre": "Combien dans la boîte ?",
+    "items": [
+     {
+      "a": 4,
+      "op": "+",
+      "b": 3
+     },
+     {
+      "a": 5,
+      "op": "+",
+      "b": 2
+     },
+     {
+      "a": 3,
+      "op": "+",
+      "b": 3
+     },
+     {
+      "a": 6,
+      "op": "+",
+      "b": 4
+     },
+     {
+      "a": 2,
+      "op": "+",
+      "b": 7
+     }
+    ]
+   }
+  ],
+  "competence": "Je prévois combien il y a de jetons dans la boîte",
+  "guide": {
+   "titre": "Pour enseigner les nombres, le calcul et la résolution de problèmes au CP",
+   "page": 53,
+   "extrait": "La situation de la boîte est une situation de référence pour enseigner ce passage du comptage au calcul dès la première période du CP.",
+   "fichier": "sources/guides/guide-pour-enseigner-les-nombres-le-calcul-et-la-resolution-de-problemes-au-cp-68664.pdf"
+  },
+  "genere": true
+ },
+ {
+  "id": "ma-cp-boite-retirer",
+  "matiere": "maths",
+  "niveau": "CP",
+  "titre": "La boîte à jetons : retirer",
+  "ordre": 12,
+  "programme": {
+   "section": "c2-mathematiques-cp-les-quatre-operations",
+   "citation": "La soustraction est comprise par l’élève comme l’opération inverse de l’addition."
+  },
+  "lecon": [
+   {
+    "texte": "Cette fois, je mets des jetons dans la boîte, puis j'en retire quelques-uns.",
+    "exemples": []
+   },
+   {
+    "texte": "Pour trouver combien il en reste, tu peux partir du grand nombre et reculer.",
+    "exemples": [
+     "8… 7, 6, 5"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "boite",
+    "titre": "Combien en reste-t-il ?",
+    "items": [
+     {
+      "a": 8,
+      "op": "-",
+      "b": 3
+     },
+     {
+      "a": 6,
+      "op": "-",
+      "b": 2
+     },
+     {
+      "a": 10,
+      "op": "-",
+      "b": 4
+     },
+     {
+      "a": 7,
+      "op": "-",
+      "b": 7
+     },
+     {
+      "a": 9,
+      "op": "-",
+      "b": 5
+     }
+    ]
+   }
+  ],
+  "competence": "Je prévois combien il reste de jetons",
+  "guide": {
+   "titre": "Pour enseigner les nombres, le calcul et la résolution de problèmes au CP",
+   "page": 55,
+   "extrait": "En termes de progression sur les types de problèmes, la situation de la boîte est proposée dès le début de CP dans des situations d’ajout et de retrait de jetons, avec recherche de la quantité finale.",
+   "fichier": "sources/guides/guide-pour-enseigner-les-nombres-le-calcul-et-la-resolution-de-problemes-au-cp-68664.pdf"
+  },
+  "genere": true
+ },
+ {
+  "id": "ma-cp-suivants",
+  "matiere": "maths",
+  "niveau": "CP",
+  "titre": "Ajouter 1, ajouter 2",
+  "ordre": 14,
+  "programme": {
+   "section": "c2-mathematiques-cp-utiliser-ses-connaissances-en-numeration-pour-calculer-mentalement",
+   "citation": "L’élève sait que, pour soustraire 2 à un nombre, il peut soustraire 1 et encore 1."
+  },
+  "lecon": [
+   {
+    "texte": "Ajouter 1, c'est dire le nombre suivant : 4 plus 1, c'est celui qui vient après 4, c'est 5.",
+    "exemples": [
+     "4 + 1 = 5",
+     "9 + 1 = 10"
     ]
    },
    {
-    "texte": "Le chiffre de gauche compte les dizaines, le chiffre de droite compte les unités.",
+    "texte": "Ajouter 2, c'est avancer de deux : 6 + 2, c'est 7, puis 8.",
+    "exemples": [
+     "6 + 2 = 8"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "calcul",
+    "titre": "Le nombre suivant",
+    "operations": [
+     {
+      "q": "4 + 1",
+      "r": 5
+     },
+     {
+      "q": "9 + 1",
+      "r": 10
+     },
+     {
+      "q": "12 + 1",
+      "r": 13
+     },
+     {
+      "q": "19 + 1",
+      "r": 20
+     },
+     {
+      "q": "6 + 2",
+      "r": 8
+     },
+     {
+      "q": "15 + 2",
+      "r": 17
+     }
+    ]
+   },
+   {
+    "type": "fluence",
+    "titre": "Calcul rapide : + 1 et + 2",
+    "duree": 45,
+    "generateur": {
+     "op": "+",
+     "a": [
+      1,
+      28
+     ],
+     "b": [
+      1,
+      2
+     ]
+    }
+   }
+  ],
+  "competence": "J'ajoute 1 et 2 sans compter sur mes doigts",
+  "guide": {
+   "titre": "Pour enseigner les nombres, le calcul et la résolution de problèmes au CP",
+   "page": 62,
+   "extrait": "Il s’agit dans un premier temps d’expliciter le fait qu’« ajouter un » revient à dire le suivant",
+   "fichier": "sources/guides/guide-pour-enseigner-les-nombres-le-calcul-et-la-resolution-de-problemes-au-cp-68664.pdf"
+  },
+  "genere": true
+ },
+ {
+  "id": "ma-cp-dix-plus",
+  "matiere": "maths",
+  "niveau": "CP",
+  "titre": "Dix plus un nombre",
+  "ordre": 16,
+  "programme": {
+   "section": "c2-mathematiques-cp-les-nombres-entiers",
+   "citation": "Face à une collection composée de trois barres de dix cubes et quatre cubes isolés, l’élève reconnait qu’il y a trente-quatre cubes."
+  },
+  "lecon": [
+   {
+    "texte": "Dix plus sept, ça fait dix-sept : on l'entend dans le nom du nombre ! 10 + 7 = 17.",
+    "exemples": [
+     "10 + 7 = 17",
+     "10 + 9 = 19"
+    ]
+   },
+   {
+    "texte": "Attention : onze, douze, treize, quatorze, quinze et seize ne s'entendent pas comme « dix-un » ou « dix-deux ». Mais 10 + 1 = 11, 10 + 2 = 12.",
+    "exemples": [
+     "10 + 1 = 11",
+     "10 + 6 = 16"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "calcul",
+    "titre": "Dix et encore…",
+    "operations": [
+     {
+      "q": "10 + 7",
+      "r": 17
+     },
+     {
+      "q": "10 + 3",
+      "r": 13
+     },
+     {
+      "q": "2 + 10",
+      "r": 12
+     },
+     {
+      "q": "10 + 5",
+      "r": 15
+     },
+     {
+      "q": "10 + 9",
+      "r": 19
+     },
+     {
+      "q": "6 + 10",
+      "r": 16
+     }
+    ]
+   },
+   {
+    "type": "bulles",
+    "titre": "Le nom du nombre",
+    "questions": [
+     {
+      "question": "Dix-huit, c'est…",
+      "choix": [
+       "10 + 8",
+       "10 + 18",
+       "8 + 1"
+      ],
+      "reponse": "10 + 8"
+     },
+     {
+      "question": "Quatorze, c'est…",
+      "choix": [
+       "10 + 4",
+       "10 + 14",
+       "4 + 1"
+      ],
+      "reponse": "10 + 4"
+     },
+     {
+      "question": "Douze, c'est…",
+      "choix": [
+       "10 + 2",
+       "1 + 2",
+       "10 + 12"
+      ],
+      "reponse": "10 + 2"
+     }
+    ]
+   }
+  ],
+  "competence": "Je calcule 10 + un nombre",
+  "guide": {
+   "titre": "Pour enseigner les nombres, le calcul et la résolution de problèmes au CP",
+   "page": 62,
+   "extrait": "Il s’agit de comprendre que « deux plus dix égal douze » s’écrit 2 + 10 = 12.",
+   "fichier": "sources/guides/guide-pour-enseigner-les-nombres-le-calcul-et-la-resolution-de-problemes-au-cp-68664.pdf"
+  },
+  "genere": true
+ },
+ {
+  "id": "ma-cp-doubles",
+  "matiere": "maths",
+  "niveau": "CP",
+  "titre": "Les doubles",
+  "ordre": 18,
+  "programme": {
+   "section": "c2-mathematiques-cp-memoriser-des-faits-numeriques",
+   "citation": "L’élève sait ainsi compléter des « égalités à trou » du type : double de 40 = … ;"
+  },
+  "lecon": [
+   {
+    "texte": "Le double d'un nombre, c'est ce nombre deux fois : le double de 4, c'est 4 + 4 = 8. On dit aussi « 2 fois 4 ».",
+    "exemples": [
+     "4 + 4 = 8",
+     "5 + 5 = 10"
+    ]
+   },
+   {
+    "texte": "Les doubles se retiennent bien : on va les apprendre par cœur.",
     "exemples": []
    }
   ],
   "exercices": [
    {
-    "type": "bulles",
-    "titre": "Dizaines et unités",
-    "questions": [
+    "type": "calcul",
+    "titre": "Les doubles",
+    "operations": [
      {
-      "question": "Combien de dizaines dans 47 ?",
-      "choix": [
-       "4",
-       "7",
-       "11"
-      ],
-      "reponse": "4"
+      "q": "2 + 2",
+      "r": 4
      },
      {
-      "question": "Combien d'unités dans 52 ?",
-      "choix": [
-       "2",
-       "5",
-       "7"
-      ],
-      "reponse": "2"
+      "q": "3 + 3",
+      "r": 6
      },
      {
-      "question": "3 dizaines et 6 unités, c'est…",
-      "choix": [
-       "36",
-       "63",
-       "9"
-      ],
-      "reponse": "36"
+      "q": "5 + 5",
+      "r": 10
      },
      {
-      "question": "Quel nombre a 8 dizaines et 0 unité ?",
-      "choix": [
-       "80",
-       "8",
-       "18"
-      ],
-      "reponse": "80"
+      "q": "4 + 4",
+      "r": 8
      },
      {
-      "question": "Combien de dizaines dans 90 ?",
-      "choix": [
-       "9",
-       "0",
-       "90"
-      ],
-      "reponse": "9"
+      "q": "6 + 6",
+      "r": 12
+     },
+     {
+      "q": "7 + 7",
+      "r": 14
+     },
+     {
+      "q": "8 + 8",
+      "r": 16
+     },
+     {
+      "q": "9 + 9",
+      "r": 18
+     },
+     {
+      "q": "10 + 10",
+      "r": 20
      }
     ]
+   },
+   {
+    "type": "fluence",
+    "titre": "Calcul rapide : les doubles",
+    "duree": 45,
+    "generateur": {
+     "op": "×",
+     "a": [
+      1,
+      10
+     ],
+     "b": [
+      2,
+      2
+     ]
+    }
    }
   ],
-  "competence": "Je connais les dizaines et les unités",
+  "competence": "Je connais les doubles par cœur",
+  "guide": {
+   "titre": "Pour enseigner les nombres, le calcul et la résolution de problèmes au CP",
+   "page": 62,
+   "extrait": "Les doubles sont des faits numériques rappelés de façon plus sûre et plus rapide que les autres résultats.",
+   "fichier": "sources/guides/guide-pour-enseigner-les-nombres-le-calcul-et-la-resolution-de-problemes-au-cp-68664.pdf"
+  },
   "genere": true
  },
  {
@@ -7267,42 +7591,79 @@
   "matiere": "maths",
   "niveau": "CP",
   "titre": "Les compléments à 10",
-  "ordre": 8,
+  "ordre": 20,
   "programme": {
    "section": "c2-mathematiques-cp-memoriser-des-faits-numeriques",
-   "citation": "A + B = C ou C = A + B, où A et B sont des nombres entiers compris entre 0 et 10 et où les deux autres nombres de l’égalité sont connus."
+   "citation": "L’élève peut ainsi compléter des « égalités à trou » du type : 4 + … = 12 ;"
   },
   "lecon": [
    {
-    "texte": "Pour faire 10, je cherche ce qui manque : 7 et 3 font 10.",
+    "texte": "Combien faut-il ajouter à 7 pour avoir 10 ? Il faut 3, car 7 + 3 = 10. Avec mes deux mains, je vois les 10 doigts.",
     "exemples": [
-     "7 + 3",
-     "6 + 4",
-     "8 + 2"
+     "7 + 3 = 10",
+     "6 + 4 = 10",
+     "8 + 2 = 10"
     ]
    },
    {
-    "texte": "Avec mes deux mains, j'ai 10 doigts : ça m'aide à trouver.",
-    "exemples": []
+    "texte": "Et si je retire 3 à 10, il reste 7 : 10 − 3 = 7. C'est la même famille de nombres.",
+    "exemples": [
+     "10 − 3 = 7"
+    ]
    }
   ],
   "exercices": [
    {
     "type": "calcul",
-    "titre": "Combien pour faire 10 ?",
-    "generateur": {
-     "combien": 6,
-     "op": "complement",
-     "a": [
-      1,
-      9
-     ],
-     "cible": 10
-    }
+    "titre": "Pour faire 10",
+    "operations": [
+     {
+      "q": "3 + … = 10",
+      "r": 7
+     },
+     {
+      "q": "8 + … = 10",
+      "r": 2
+     },
+     {
+      "q": "5 + … = 10",
+      "r": 5
+     },
+     {
+      "q": "1 + … = 10",
+      "r": 9
+     },
+     {
+      "q": "6 + … = 10",
+      "r": 4
+     }
+    ]
+   },
+   {
+    "type": "calcul",
+    "titre": "10 moins…",
+    "operations": [
+     {
+      "q": "10 − 3",
+      "r": 7
+     },
+     {
+      "q": "10 − 8",
+      "r": 2
+     },
+     {
+      "q": "10 − 4",
+      "r": 6
+     },
+     {
+      "q": "10 − 1",
+      "r": 9
+     }
+    ]
    },
    {
     "type": "fluence",
-    "titre": "Compléments à 10 en rafale",
+    "titre": "Calcul rapide : compléments à 10",
     "duree": 45,
     "generateur": {
      "op": "complement",
@@ -7315,467 +7676,250 @@
    }
   ],
   "competence": "Je connais les compléments à 10",
+  "guide": {
+   "titre": "Pour enseigner les nombres, le calcul et la résolution de problèmes au CP",
+   "page": 63,
+   "extrait": "Comme pour les doubles, il faut installer cette connaissance et l’entraîner tout au long de l’année de CP.",
+   "fichier": "sources/guides/guide-pour-enseigner-les-nombres-le-calcul-et-la-resolution-de-problemes-au-cp-68664.pdf"
+  },
   "genere": true
  },
  {
-  "id": "ma-cp-addition-posee",
+  "id": "ma-cp-decompositions",
   "matiere": "maths",
   "niveau": "CP",
-  "titre": "Poser une addition en colonnes",
-  "ordre": 10,
+  "titre": "Décomposer les nombres jusqu'à 10",
+  "ordre": 22,
   "programme": {
-   "section": "c2-mathematiques-cp-les-quatre-operations",
-   "citation": "L’élève sait poser une addition de deux ou trois nombres à un ou deux chiffres, en positionnant les unités sous les unités, les dizaines sous les dizaines, et en calculer le résultat. Par exemple, 45 + 37 ou 28 + 8 + 56."
+   "section": "c2-mathematiques-cp-memoriser-des-faits-numeriques",
+   "citation": "A + B = C ou C = A + B, où A et B sont des nombres entiers compris entre 0 et 10 et où les deux autres nombres de l’égalité sont connus."
   },
   "lecon": [
    {
-    "texte": "Dans un nombre à deux chiffres, le chiffre de droite compte les unités, et le chiffre de gauche compte les dizaines.",
+    "texte": "Un nombre peut se casser de plusieurs façons : 9, c'est 5 + 4, mais aussi 6 + 3, 7 + 2, 8 + 1.",
     "exemples": [
-     "45 : 4 dizaines et 5 unités"
-    ]
-   },
-   {
-    "texte": "Pour poser une addition, on range les unités sous les unités et les dizaines sous les dizaines.",
-    "exemples": [
-     "45 + 37 : le 5 et le 7 dans la maison des Unités"
-    ]
-   },
-   {
-    "texte": "On calcule toujours en commençant par les unités. Si on trouve 10 ou plus, on garde les unités et la dizaine monte en retenue.",
-    "exemples": [
-     "5 + 7 = 12 : j'écris 2 et je retiens 1"
-    ]
-   }
-  ],
-  "exercices": [
-   {
-    "type": "addition",
-    "titre": "La leçon en action : 45 + 37",
-    "operations": [
-     [
-      45,
-      37
-     ]
-    ],
-    "etapes": [
-     "poser",
-     "calculer"
-    ]
-   },
-   {
-    "type": "addition",
-    "titre": "Poser comme un champion",
-    "operations": [
-     [
-      28,
-      8,
-      56
-     ],
-     [
-      63,
-      9
-     ],
-     [
-      34,
-      52
-     ]
-    ],
-    "etapes": [
-     "poser"
-    ]
-   },
-   {
-    "type": "addition",
-    "titre": "Calculer avec la retenue",
-    "generateur": {
-     "nombres": 2,
-     "min": 15,
-     "max": 59,
-     "retenue": true,
-     "combien": 3
-    },
-    "etapes": [
-     "calculer"
-    ]
-   }
-  ]
- },
- {
-  "id": "ma-cp-additions-20",
-  "matiere": "maths",
-  "niveau": "CP",
-  "titre": "Additions jusqu'à 20",
-  "ordre": 12,
-  "programme": {
-   "section": "c2-mathematiques-cp-le-calcul-mental",
-   "citation": "L’enseignement du calcul mental au cycle 2 est constitué de trois types d’apprentissages : "
-  },
-  "lecon": [
-   {
-    "texte": "Pour additionner, je pars du plus grand nombre et j'avance : 8 + 3, je pars de 8 : 9, 10, 11.",
-    "exemples": [
-     "8 + 3 = 11"
-    ]
-   },
-   {
-    "texte": "Je connais les doubles : 5 + 5 = 10, 6 + 6 = 12.",
-    "exemples": [
-     "5 + 5 = 10",
-     "6 + 6 = 12"
+     "9 = 5 + 4",
+     "9 = 6 + 3",
+     "9 = 8 + 1"
     ]
    }
   ],
   "exercices": [
    {
     "type": "calcul",
-    "titre": "Calcule",
-    "generateur": {
-     "combien": 6,
-     "op": "+",
-     "a": [
-      2,
-      10
-     ],
-     "b": [
-      1,
-      9
-     ]
-    }
-   },
-   {
-    "type": "fluence",
-    "titre": "Calcul rapide : additions",
-    "duree": 60,
-    "generateur": {
-     "op": "+",
-     "a": [
-      1,
-      10
-     ],
-     "b": [
-      1,
-      10
-     ]
-    }
-   }
-  ],
-  "competence": "J'additionne jusqu'à 20",
-  "genere": true
- },
- {
-  "id": "ma-cp-soustractions",
-  "matiere": "maths",
-  "niveau": "CP",
-  "titre": "Retirer : la soustraction",
-  "ordre": 15,
-  "programme": {
-   "section": "c2-mathematiques-cp-les-quatre-operations",
-   "citation": "L’élève comprend que l’ordre des termes n’a pas d’importance pour l’addition, mais qu’il n’en est pas de même pour la soustraction."
-  },
-  "lecon": [
-   {
-    "texte": "Soustraire, c'est retirer. J'ai 9 billes, j'en perds 3 : il m'en reste 6. On écrit 9 − 3 = 6.",
-    "exemples": [
-     "9 − 3 = 6"
-    ]
-   },
-   {
-    "texte": "Je peux reculer sur la file des nombres : 9, puis 8, 7, 6.",
-    "exemples": []
-   }
-  ],
-  "exercices": [
-   {
-    "type": "calcul",
-    "titre": "Combien en reste-t-il ?",
+    "titre": "Complète",
     "operations": [
      {
-      "q": "7 − 2",
-      "r": 5
-     },
-     {
-      "q": "10 − 4",
-      "r": 6
-     },
-     {
-      "q": "9 − 5",
+      "q": "9 = 5 + …",
       "r": 4
      },
      {
-      "q": "8 − 8",
-      "r": 0
+      "q": "7 = 3 + …",
+      "r": 4
      },
      {
-      "q": "12 − 2",
-      "r": 10
-     },
-     {
-      "q": "15 − 5",
-      "r": 10
-     }
-    ]
-   },
-   {
-    "type": "bulles",
-    "titre": "Petits problèmes",
-    "questions": [
-     {
-      "question": "Léo a 8 bonbons. Il en mange 3. Combien lui en reste-t-il ?",
-      "choix": [
-       "5",
-       "11",
-       "3"
-      ],
-      "reponse": "5"
-     },
-     {
-      "question": "Il y a 10 oiseaux sur un fil. 4 s'envolent. Combien en reste-t-il ?",
-      "choix": [
-       "6",
-       "14",
-       "4"
-      ],
-      "reponse": "6"
-     }
-    ]
-   }
-  ],
-  "competence": "Je sais soustraire de petits nombres",
-  "genere": true
- },
- {
-  "id": "ma-cp-ajouter-10",
-  "matiere": "maths",
-  "niveau": "CP",
-  "titre": "Ajouter ou retirer 10",
-  "ordre": 18,
-  "programme": {
-   "section": "c2-mathematiques-cp-utiliser-ses-connaissances-en-numeration-pour-calculer-mentalement",
-   "citation": "L’élève sait qu’ajouter 10 à un nombre, c’est ajouter une dizaine, et que soustraire 10 à un nombre."
-  },
-  "lecon": [
-   {
-    "texte": "Ajouter 10, c'est ajouter une dizaine : le chiffre des dizaines augmente de 1, celui des unités ne bouge pas.",
-    "exemples": [
-     "23 + 10 = 33",
-     "45 + 10 = 55"
-    ]
-   },
-   {
-    "texte": "Retirer 10, c'est enlever une dizaine.",
-    "exemples": [
-     "36 − 10 = 26"
-    ]
-   }
-  ],
-  "exercices": [
-   {
-    "type": "calcul",
-    "titre": "Une dizaine de plus ou de moins",
-    "operations": [
-     {
-      "q": "23 + 10",
-      "r": 33
-     },
-     {
-      "q": "41 + 10",
-      "r": 51
-     },
-     {
-      "q": "36 − 10",
-      "r": 26
-     },
-     {
-      "q": "70 + 10",
-      "r": 80
-     },
-     {
-      "q": "58 − 10",
-      "r": 48
-     },
-     {
-      "q": "19 + 10",
-      "r": 29
-     }
-    ]
-   },
-   {
-    "type": "fluence",
-    "titre": "Calcul rapide : + 10",
-    "duree": 45,
-    "generateur": {
-     "op": "+",
-     "a": [
-      10,
-      80
-     ],
-     "b": [
-      10,
-      10
-     ]
-    }
-   }
-  ],
-  "competence": "J'ajoute et je retire 10 de tête",
-  "genere": true
- },
- {
-  "id": "ma-cp-dizaine-superieure",
-  "matiere": "maths",
-  "niveau": "CP",
-  "titre": "Aller à la dizaine, ajouter 9",
-  "ordre": 20,
-  "programme": {
-   "section": "c2-mathematiques-cp-apprendre-des-procedures-de-calcul-mental",
-   "citation": "L’élève sait que, pour ajouter 9 à un nombre, il peut ajouter 10 puis soustraire 1."
-  },
-  "lecon": [
-   {
-    "texte": "Pour aller de 74 à 80, je regarde les unités : de 4 à 10, il manque 6. Donc 74 + 6 = 80.",
-    "exemples": [
-     "74 + 6 = 80"
-    ]
-   },
-   {
-    "texte": "Pour ajouter 9, j'ajoute 10 puis je retire 1 : 25 + 9 = 35 − 1 = 34.",
-    "exemples": [
-     "25 + 9 = 34"
-    ]
-   }
-  ],
-  "exercices": [
-   {
-    "type": "calcul",
-    "titre": "Jusqu'à la dizaine",
-    "operations": [
-     {
-      "q": "74 + … = 80",
-      "r": 6,
-      "aide": "De 4 à 10, il manque 6."
-     },
-     {
-      "q": "38 + … = 40",
+      "q": "8 = 6 + …",
       "r": 2
      },
      {
-      "q": "51 + … = 60",
-      "r": 9
+      "q": "6 = 1 + …",
+      "r": 5
      },
      {
-      "q": "27 + … = 30",
+      "q": "10 = 7 + …",
+      "r": 3
+     },
+     {
+      "q": "5 = 2 + …",
       "r": 3
      }
     ]
    },
    {
-    "type": "calcul",
-    "titre": "Ajouter 9",
-    "operations": [
+    "type": "bulles",
+    "titre": "Laquelle fait 8 ?",
+    "questions": [
      {
-      "q": "25 + 9",
-      "r": 34,
-      "aide": "25 + 10 = 35, puis 35 − 1."
+      "question": "Quelle addition fait 8 ?",
+      "choix": [
+       "5 + 3",
+       "4 + 3",
+       "6 + 3"
+      ],
+      "reponse": "5 + 3"
      },
      {
-      "q": "40 + 9",
-      "r": 49
+      "question": "Quelle addition fait 6 ?",
+      "choix": [
+       "4 + 2",
+       "3 + 4",
+       "5 + 2"
+      ],
+      "reponse": "4 + 2"
      },
      {
-      "q": "13 + 9",
-      "r": 22
-     },
-     {
-      "q": "36 + 9",
-      "r": 45
+      "question": "Quelle addition fait 9 ?",
+      "choix": [
+       "7 + 2",
+       "6 + 2",
+       "8 + 2"
+      ],
+      "reponse": "7 + 2"
      }
     ]
    }
   ],
-  "competence": "J'ajoute 9 et je vais à la dizaine de tête",
+  "competence": "Je décompose les nombres jusqu'à 10",
+  "guide": {
+   "titre": "Pour enseigner les nombres, le calcul et la résolution de problèmes au CP",
+   "page": 53,
+   "extrait": "composer / décomposer les nombres jusqu’à 10, ce qui représente une première étape vers la mémorisation des tables d’addition.",
+   "fichier": "sources/guides/guide-pour-enseigner-les-nombres-le-calcul-et-la-resolution-de-problemes-au-cp-68664.pdf"
+  },
   "genere": true
  },
  {
-  "id": "ma-cp-comparer",
+  "id": "ma-cp-parties-tout",
   "matiere": "maths",
   "niveau": "CP",
-  "titre": "Comparer les nombres",
-  "ordre": 22,
+  "titre": "Problèmes : le tout et les parties",
+  "ordre": 26,
   "programme": {
-   "section": "c2-mathematiques-cp-les-nombres-entiers",
-   "citation": "L’élève sait comparer deux nombres"
+   "section": "c2-mathematiques-cp-la-resolution-de-problemes",
+   "citation": "La phase « Modéliser » conduit l’élève à identifier la ou les opérations qu’il va devoir effectuer pour trouver le résultat cherché."
   },
   "lecon": [
    {
-    "texte": "Pour comparer deux nombres, je regarde d'abord les dizaines : 42 est plus grand que 38.",
+    "texte": "Pour comprendre un problème, on peut le dessiner avec des rectangles : deux parties, et au-dessus, le tout.",
     "exemples": [
-     "42 > 38"
+     "4 pommes rouges + 2 pommes vertes = 6 pommes"
     ]
    },
    {
-    "texte": "Le signe « plus petit que » s'écrit <, et « plus grand que » s'écrit >. La pointe montre le plus petit.",
-    "exemples": [
-     "3 < 7",
-     "9 > 2"
-    ]
+    "texte": "Le point d'interrogation montre ce qu'on cherche. Si on cherche le tout, on ajoute. Si on cherche une partie, on retire l'autre partie du tout.",
+    "exemples": []
    }
   ],
   "exercices": [
    {
-    "type": "bulles",
-    "titre": "Le plus grand",
-    "questions": [
+    "type": "barres",
+    "titre": "Le tout ou une partie ?",
+    "items": [
      {
-      "question": "Quel est le plus grand nombre ?",
-      "choix": [
-       "61",
-       "16",
-       "56"
+      "enonce": "Au marché, j'achète 4 pommes rouges et 2 pommes vertes. Combien ai-je de pommes ?",
+      "parties": [
+       4,
+       2
       ],
-      "reponse": "61"
+      "tout": null,
+      "phrase": "J'ai {r} pommes."
      },
      {
-      "question": "Quel est le plus petit nombre ?",
-      "choix": [
-       "29",
-       "92",
-       "39"
+      "enonce": "Dans la cour, il y a 5 filles et 3 garçons. Combien d'enfants y a-t-il ?",
+      "parties": [
+       5,
+       3
       ],
-      "reponse": "29"
+      "tout": null
      },
      {
-      "question": "12 … 21 : quel signe ?",
-      "choix": [
-       "<",
-       ">",
-       "="
+      "enonce": "Lina a 9 crayons : 6 sont rouges, les autres sont bleus. Combien de crayons bleus ?",
+      "parties": [
+       6,
+       null
       ],
-      "reponse": "<"
+      "tout": 9,
+      "aide": "On connaît le tout, 9, et une partie, 6. On cherche l'autre partie."
      },
      {
-      "question": "50 … 45 : quel signe ?",
-      "choix": [
-       ">",
-       "<",
-       "="
+      "enonce": "Il y a 8 oiseaux sur l'arbre : 3 sont noirs, les autres sont blancs. Combien d'oiseaux blancs ?",
+      "parties": [
+       3,
+       null
       ],
-      "reponse": ">"
+      "tout": 8
      }
-    ]
-   },
-   {
-    "type": "ordre",
-    "titre": "Du plus petit au plus grand",
-    "consigne": "Range ces nombres du plus petit au plus grand.",
-    "elements": [
-     "8",
-     "15",
-     "27",
-     "51",
-     "70"
     ]
    }
   ],
-  "competence": "Je compare et je range les nombres",
+  "competence": "Je résous un problème de parties et de tout",
+  "guide": {
+   "titre": "Pour enseigner les nombres, le calcul et la résolution de problèmes au CP",
+   "page": 144,
+   "extrait": "Problèmes de parties-tout avec recherche du tout (nombres inférieurs à 10 pour chacune des parties).",
+   "fichier": "sources/guides/guide-pour-enseigner-les-nombres-le-calcul-et-la-resolution-de-problemes-au-cp-68664.pdf"
+  },
+  "genere": true
+ },
+ {
+  "id": "ma-cp-transformation",
+  "matiere": "maths",
+  "niveau": "CP",
+  "titre": "Problèmes : ça augmente, ça diminue",
+  "ordre": 28,
+  "programme": {
+   "section": "c2-mathematiques-cp-la-resolution-de-problemes",
+   "citation": "Pour être en mesure de résoudre un problème, l’élève doit avoir saisi finement à la fois le sens de l’énoncé et celui de la question posée."
+  },
+  "lecon": [
+   {
+    "texte": "Dans certains problèmes, une quantité change : on gagne, on perd, on ajoute, on enlève.",
+    "exemples": []
+   },
+   {
+    "texte": "Je me demande : à la fin, est-ce qu'il y en a plus, ou moins ?",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "barres",
+    "titre": "Combien à la fin ?",
+    "items": [
+     {
+      "enonce": "Tom a 6 billes. Il en gagne 3 à la récréation. Combien en a-t-il maintenant ?",
+      "parties": [
+       6,
+       3
+      ],
+      "tout": null,
+      "aide": "Il gagne des billes : il en a plus à la fin."
+     },
+     {
+      "enonce": "Il y a 9 gâteaux dans l'assiette. Les enfants en mangent 4. Combien en reste-t-il ?",
+      "parties": [
+       4,
+       null
+      ],
+      "tout": 9,
+      "aide": "On en mange : il en reste moins. 9, c'est 4 et combien ?"
+     },
+     {
+      "enonce": "Dans le bus, il y a 7 personnes. 2 personnes montent. Combien y a-t-il de personnes ?",
+      "parties": [
+       7,
+       2
+      ],
+      "tout": null
+     },
+     {
+      "enonce": "Zoé a 10 autocollants. Elle en donne 3 à son frère. Combien lui en reste-t-il ?",
+      "parties": [
+       3,
+       null
+      ],
+      "tout": 10
+     }
+    ]
+   }
+  ],
+  "competence": "Je résous un problème où une quantité augmente ou diminue",
+  "guide": {
+   "titre": "Pour enseigner les nombres, le calcul et la résolution de problèmes au CP",
+   "page": 144,
+   "extrait": "Problèmes de transformation (positive ou négative) avec recherche de la quantité finale (nombres inférieurs à 10 pour chacune des parties).",
+   "fichier": "sources/guides/guide-pour-enseigner-les-nombres-le-calcul-et-la-resolution-de-problemes-au-cp-68664.pdf"
+  },
   "genere": true
  },
  {
@@ -7847,6 +7991,108 @@
    }
   ],
   "competence": "Je compte avec des euros",
+  "genere": true
+ },
+ {
+  "id": "ma-cp-signe-egal",
+  "matiere": "maths",
+  "niveau": "CP",
+  "titre": "Le signe =",
+  "ordre": 30,
+  "programme": {
+   "section": "c2-mathematiques-cp-les-quatre-operations",
+   "citation": "L’élève sait que le symbole « = » ne peut être placé qu’entre deux termes égaux."
+  },
+  "lecon": [
+   {
+    "texte": "Le signe = veut dire « c'est pareil ». 5 + 3 = 8, mais aussi 8 = 5 + 3 : les deux côtés valent la même chose.",
+    "exemples": [
+     "5 + 3 = 8",
+     "8 = 5 + 3"
+    ]
+   },
+   {
+    "texte": "On peut aussi écrire 4 + 2 + 2 = 8 : on peut ajouter plus de deux nombres.",
+    "exemples": [
+     "4 + 2 + 2 = 8"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Vrai ou faux ?",
+    "questions": [
+     {
+      "question": "8 = 5 + 3",
+      "choix": [
+       "Vrai",
+       "Faux"
+      ],
+      "reponse": "Vrai"
+     },
+     {
+      "question": "4 + 2 + 2 = 8",
+      "choix": [
+       "Vrai",
+       "Faux"
+      ],
+      "reponse": "Vrai"
+     },
+     {
+      "question": "7 = 4 + 4",
+      "choix": [
+       "Faux",
+       "Vrai"
+      ],
+      "reponse": "Faux",
+      "aide": "4 + 4 = 8, pas 7."
+     },
+     {
+      "question": "6 + 1 = 1 + 6",
+      "choix": [
+       "Vrai",
+       "Faux"
+      ],
+      "reponse": "Vrai",
+      "aide": "On peut changer l'ordre des nombres dans une addition."
+     },
+     {
+      "question": "10 = 6 + 4",
+      "choix": [
+       "Vrai",
+       "Faux"
+      ],
+      "reponse": "Vrai"
+     }
+    ]
+   },
+   {
+    "type": "calcul",
+    "titre": "Complète l'égalité",
+    "operations": [
+     {
+      "q": "9 = 4 + …",
+      "r": 5
+     },
+     {
+      "q": "… = 3 + 3 + 2",
+      "r": 8
+     },
+     {
+      "q": "7 + 2 = 5 + …",
+      "r": 4
+     }
+    ]
+   }
+  ],
+  "competence": "Je comprends le signe =",
+  "guide": {
+   "titre": "Pour enseigner les nombres, le calcul et la résolution de problèmes au CP",
+   "page": 57,
+   "extrait": "l’utilisation du signe « = » dans les deux sens : 5 + 3 = 8 mais aussi 8 = 5 + 3",
+   "fichier": "sources/guides/guide-pour-enseigner-les-nombres-le-calcul-et-la-resolution-de-problemes-au-cp-68664.pdf"
+  },
   "genere": true
  },
  {
@@ -7999,6 +8245,113 @@
   "genere": true
  },
  {
+  "id": "ma-cp-dizaines-unites",
+  "matiere": "maths",
+  "niveau": "CP",
+  "titre": "Dizaines et unités",
+  "ordre": 38,
+  "programme": {
+   "section": "c2-mathematiques-cp-les-nombres-entiers",
+   "citation": "Il verbalise sous la forme : « Trois dizaines et quatre unités, cela fait trente-quatre » ou « Trente plus quatre, cela fait trente- quatre », ou éventuellement, il compte de dix en dix, puis de un en un : « dix, vingt, trente, trente-et-un, trente-deux, trente-trois et trente-quatre »."
+  },
+  "lecon": [
+   {
+    "texte": "Dix unités, c'est une dizaine. 45, c'est 4 dizaines et 5 unités : 4 fois 10, plus 5.",
+    "exemples": [
+     "45 = 4 dizaines et 5 unités",
+     "45 = 40 + 5"
+    ]
+   },
+   {
+    "texte": "Le chiffre de gauche compte les dizaines, le chiffre de droite compte les unités.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Dizaines et unités",
+    "questions": [
+     {
+      "question": "Combien de dizaines dans 47 ?",
+      "choix": [
+       "4",
+       "7",
+       "11"
+      ],
+      "reponse": "4"
+     },
+     {
+      "question": "Combien d'unités dans 52 ?",
+      "choix": [
+       "2",
+       "5",
+       "7"
+      ],
+      "reponse": "2"
+     },
+     {
+      "question": "3 dizaines et 6 unités, c'est…",
+      "choix": [
+       "36",
+       "63",
+       "9"
+      ],
+      "reponse": "36"
+     },
+     {
+      "question": "4 fois 10, plus 5, c'est…",
+      "choix": [
+       "45",
+       "54",
+       "9"
+      ],
+      "reponse": "45"
+     },
+     {
+      "question": "Combien de dizaines dans 90 ?",
+      "choix": [
+       "9",
+       "0",
+       "90"
+      ],
+      "reponse": "9"
+     }
+    ]
+   },
+   {
+    "type": "calcul",
+    "titre": "Complète",
+    "operations": [
+     {
+      "q": "40 + 5",
+      "r": 45
+     },
+     {
+      "q": "70 + 3",
+      "r": 73
+     },
+     {
+      "q": "20 + 8",
+      "r": 28
+     },
+     {
+      "q": "60 + 0",
+      "r": 60
+     }
+    ]
+   }
+  ],
+  "competence": "Je connais les dizaines et les unités",
+  "guide": {
+   "titre": "Pour enseigner les nombres, le calcul et la résolution de problèmes au CP",
+   "page": 58,
+   "extrait": "et de la même manière, 45, c’est 4 fois 10 plus 5.",
+   "fichier": "sources/guides/guide-pour-enseigner-les-nombres-le-calcul-et-la-resolution-de-problemes-au-cp-68664.pdf"
+  },
+  "genere": true
+ },
+ {
   "id": "ma-cp-formes",
   "matiere": "maths",
   "niveau": "CP",
@@ -8111,6 +8464,110 @@
   "genere": true
  },
  {
+  "id": "ma-cp-nombres-100",
+  "matiere": "maths",
+  "niveau": "CP",
+  "titre": "Compter jusqu'à 100",
+  "ordre": 40,
+  "programme": {
+   "section": "c2-mathematiques-cp-les-nombres-entiers",
+   "citation": "L’élève sait compter, à l’oral et à l’écrit, de un en un, de deux en deux et de dix en dix"
+  },
+  "lecon": [
+   {
+    "texte": "Je compte de dix en dix : dix, vingt, trente, quarante, cinquante, soixante, soixante-dix, quatre-vingts, quatre-vingt-dix, cent.",
+    "exemples": [
+     "10, 20, 30… 100"
+    ]
+   },
+   {
+    "texte": "Pour comparer deux nombres, je regarde d'abord les dizaines : 42 est plus grand que 38. Le signe < veut dire « plus petit que ».",
+    "exemples": [
+     "42 > 38",
+     "38 < 42"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "ordre",
+    "titre": "De dix en dix",
+    "consigne": "Remets les nombres dans l'ordre.",
+    "elements": [
+     "10",
+     "20",
+     "30",
+     "40",
+     "50",
+     "60",
+     "70",
+     "80",
+     "90",
+     "100"
+    ]
+   },
+   {
+    "type": "bulles",
+    "titre": "Comparer",
+    "questions": [
+     {
+      "question": "Quel est le plus grand nombre ?",
+      "choix": [
+       "61",
+       "16",
+       "56"
+      ],
+      "reponse": "61"
+     },
+     {
+      "question": "Quel nombre vient juste après 39 ?",
+      "choix": [
+       "40",
+       "30",
+       "310"
+      ],
+      "reponse": "40"
+     },
+     {
+      "question": "12 … 21 : quel signe ?",
+      "choix": [
+       "<",
+       ">",
+       "="
+      ],
+      "reponse": "<"
+     },
+     {
+      "question": "Soixante-dix, c'est…",
+      "choix": [
+       "70",
+       "60",
+       "17"
+      ],
+      "reponse": "70"
+     },
+     {
+      "question": "Quatre-vingt-dix, c'est…",
+      "choix": [
+       "90",
+       "80",
+       "49"
+      ],
+      "reponse": "90"
+     }
+    ]
+   }
+  ],
+  "competence": "Je compte et je compare jusqu'à 100",
+  "guide": {
+   "titre": "Pour enseigner les nombres, le calcul et la résolution de problèmes au CP",
+   "page": 145,
+   "extrait": "Comptine de dix en dix (dix, vingt, etc.).",
+   "fichier": "sources/guides/guide-pour-enseigner-les-nombres-le-calcul-et-la-resolution-de-problemes-au-cp-68664.pdf"
+  },
+  "genere": true
+ },
+ {
   "id": "ma-cp-solides",
   "matiere": "maths",
   "niveau": "CP",
@@ -8205,6 +8662,69 @@
   "genere": true
  },
  {
+  "id": "ma-cp-presque-doubles",
+  "matiere": "maths",
+  "niveau": "CP",
+  "titre": "Les presque-doubles",
+  "ordre": 44,
+  "programme": {
+   "section": "c2-mathematiques-cp-le-calcul-mental",
+   "citation": "L’enseignement du calcul mental au cycle 2 est constitué de trois types d’apprentissages :"
+  },
+  "lecon": [
+   {
+    "texte": "Pour 6 + 5, je pense au double 6 + 6 = 12, puis j'enlève 1 : 11. Ou bien 5 + 5 = 10, et encore 1 : 11.",
+    "exemples": [
+     "6 + 5 = 6 + 6 − 1 = 11",
+     "6 + 5 = 5 + 5 + 1 = 11"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "calcul",
+    "titre": "Avec les doubles",
+    "operations": [
+     {
+      "q": "6 + 5",
+      "r": 11,
+      "aide": "6 + 6 = 12, puis 12 − 1."
+     },
+     {
+      "q": "4 + 5",
+      "r": 9,
+      "aide": "4 + 4 = 8, et encore 1."
+     },
+     {
+      "q": "7 + 8",
+      "r": 15,
+      "aide": "7 + 7 = 14, et encore 1."
+     },
+     {
+      "q": "8 + 9",
+      "r": 17
+     },
+     {
+      "q": "6 + 7",
+      "r": 13
+     },
+     {
+      "q": "3 + 4",
+      "r": 7
+     }
+    ]
+   }
+  ],
+  "competence": "J'utilise les doubles pour calculer",
+  "guide": {
+   "titre": "Pour enseigner les nombres, le calcul et la résolution de problèmes au CP",
+   "page": 63,
+   "extrait": "Une fois les doubles installés, il est intéressant d’utiliser ces résultats pour calculer les presque-doubles.",
+   "fichier": "sources/guides/guide-pour-enseigner-les-nombres-le-calcul-et-la-resolution-de-problemes-au-cp-68664.pdf"
+  },
+  "genere": true
+ },
+ {
   "id": "ma-cp-reperage-espace",
   "matiere": "maths",
   "niveau": "CP",
@@ -8270,6 +8790,173 @@
    }
   ],
   "competence": "Je dis où se trouve un objet",
+  "genere": true
+ },
+ {
+  "id": "ma-cp-passage-par-10",
+  "matiere": "maths",
+  "niveau": "CP",
+  "titre": "Passer par 10",
+  "ordre": 46,
+  "programme": {
+   "section": "c2-mathematiques-cp-apprendre-des-procedures-de-calcul-mental",
+   "citation": "Le complément à 10 de 4 est 6."
+  },
+  "lecon": [
+   {
+    "texte": "Pour 8 + 5 : je complète 8 pour aller à 10, il faut 2. Il reste 3 dans le 5. Donc 10 + 3 = 13.",
+    "exemples": [
+     "8 + 5 = 8 + 2 + 3 = 13"
+    ]
+   },
+   {
+    "texte": "Pour 7 + 5 : 7 + 3 = 10, et encore 2, ça fait 12.",
+    "exemples": [
+     "7 + 5 = 12"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "calcul",
+    "titre": "Passe par 10",
+    "operations": [
+     {
+      "q": "8 + 5",
+      "r": 13,
+      "aide": "8 + 2 = 10, puis + 3."
+     },
+     {
+      "q": "9 + 4",
+      "r": 13,
+      "aide": "9 + 1 = 10, puis + 3."
+     },
+     {
+      "q": "7 + 5",
+      "r": 12,
+      "aide": "7 + 3 = 10, puis + 2."
+     },
+     {
+      "q": "6 + 8",
+      "r": 14
+     },
+     {
+      "q": "9 + 6",
+      "r": 15
+     },
+     {
+      "q": "8 + 7",
+      "r": 15
+     }
+    ]
+   },
+   {
+    "type": "fluence",
+    "titre": "Calcul rapide : tables d'addition",
+    "duree": 60,
+    "generateur": {
+     "op": "+",
+     "a": [
+      2,
+      9
+     ],
+     "b": [
+      2,
+      9
+     ]
+    }
+   }
+  ],
+  "competence": "Je passe par 10 pour calculer",
+  "guide": {
+   "titre": "Pour enseigner les nombres, le calcul et la résolution de problèmes au CP",
+   "page": 63,
+   "extrait": "Par exemple, le calcul de 8 + 5 s’appuie sur 8 + 2 = 10 et sur 5 = 2 + 3, pour finalement conduire à 10 + 3 = 13.",
+   "fichier": "sources/guides/guide-pour-enseigner-les-nombres-le-calcul-et-la-resolution-de-problemes-au-cp-68664.pdf"
+  },
+  "genere": true
+ },
+ {
+  "id": "ma-cp-ajouter-dizaines",
+  "matiere": "maths",
+  "niveau": "CP",
+  "titre": "Ajouter et retirer des dizaines",
+  "ordre": 48,
+  "programme": {
+   "section": "c2-mathematiques-cp-utiliser-ses-connaissances-en-numeration-pour-calculer-mentalement",
+   "citation": "L’élève sait qu’ajouter 10 à un nombre, c’est ajouter une dizaine, et que soustraire 10 à un nombre."
+  },
+  "lecon": [
+   {
+    "texte": "Ajouter 10, c'est ajouter une dizaine : 23 + 10 = 33. Le chiffre des unités ne bouge pas.",
+    "exemples": [
+     "23 + 10 = 33",
+     "45 − 10 = 35"
+    ]
+   },
+   {
+    "texte": "40 + 30, c'est 4 dizaines + 3 dizaines = 7 dizaines : 70.",
+    "exemples": [
+     "40 + 30 = 70",
+     "45 − 30 = 15"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "calcul",
+    "titre": "Des dizaines",
+    "operations": [
+     {
+      "q": "23 + 10",
+      "r": 33
+     },
+     {
+      "q": "58 − 10",
+      "r": 48
+     },
+     {
+      "q": "40 + 30",
+      "r": 70
+     },
+     {
+      "q": "45 − 30",
+      "r": 15
+     },
+     {
+      "q": "60 + 20",
+      "r": 80
+     },
+     {
+      "q": "37 + 20",
+      "r": 57
+     }
+    ]
+   },
+   {
+    "type": "fluence",
+    "titre": "Calcul rapide : + 10",
+    "duree": 45,
+    "generateur": {
+     "op": "+",
+     "a": [
+      10,
+      80
+     ],
+     "b": [
+      10,
+      10
+     ]
+    }
+   }
+  ],
+  "competence": "J'ajoute et je retire des dizaines de tête",
+  "guide": {
+   "titre": "Pour enseigner les nombres, le calcul et la résolution de problèmes au CP",
+   "page": 146,
+   "extrait": "Addition et soustraction de dizaines entières (40 + 30 ; 45 − 30) – nombres jusqu’à 100.",
+   "fichier": "sources/guides/guide-pour-enseigner-les-nombres-le-calcul-et-la-resolution-de-problemes-au-cp-68664.pdf"
+  },
   "genere": true
  },
  {
@@ -8358,6 +9045,150 @@
   "genere": true
  },
  {
+  "id": "ma-cp-ajouter-9",
+  "matiere": "maths",
+  "niveau": "CP",
+  "titre": "Ajouter 9",
+  "ordre": 50,
+  "programme": {
+   "section": "c2-mathematiques-cp-apprendre-des-procedures-de-calcul-mental",
+   "citation": "L’élève sait que, pour ajouter 9 à un nombre, il peut ajouter 10 puis soustraire 1."
+  },
+  "lecon": [
+   {
+    "texte": "Si le nombre finit par 0 : j'ajoute les 9 unités. 20 + 9 = 29.",
+    "exemples": [
+     "20 + 9 = 29"
+    ]
+   },
+   {
+    "texte": "S'il finit par 1 : 1 + 9 = 10. 31 + 9 = 40.",
+    "exemples": [
+     "31 + 9 = 40"
+    ]
+   },
+   {
+    "texte": "Sinon : j'ajoute 10, puis j'enlève 1. 47 + 9 = 57 − 1 = 56.",
+    "exemples": [
+     "47 + 9 = 56"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "calcul",
+    "titre": "Ajoute 9",
+    "operations": [
+     {
+      "q": "20 + 9",
+      "r": 29
+     },
+     {
+      "q": "31 + 9",
+      "r": 40,
+      "aide": "1 + 9 = 10 : ça fait une dizaine de plus."
+     },
+     {
+      "q": "47 + 9",
+      "r": 56,
+      "aide": "47 + 10 = 57, puis − 1."
+     },
+     {
+      "q": "26 + 9",
+      "r": 35
+     },
+     {
+      "q": "50 + 9",
+      "r": 59
+     },
+     {
+      "q": "63 + 9",
+      "r": 72
+     }
+    ]
+   }
+  ],
+  "competence": "J'ajoute 9 de tête",
+  "guide": {
+   "titre": "Pour enseigner les nombres, le calcul et la résolution de problèmes au CP",
+   "page": 66,
+   "extrait": "dans les autres cas, on peut faire « + 10 − 1 » : 47 + 9 = 47 + 10 − 1 = 57 − 1 = 56.",
+   "fichier": "sources/guides/guide-pour-enseigner-les-nombres-le-calcul-et-la-resolution-de-problemes-au-cp-68664.pdf"
+  },
+  "genere": true
+ },
+ {
+  "id": "ma-cp-calcul-en-ligne",
+  "matiere": "maths",
+  "niveau": "CP",
+  "titre": "Calculer en ligne",
+  "ordre": 54,
+  "programme": {
+   "section": "c2-mathematiques-cp-apprendre-des-procedures-de-calcul-mental",
+   "citation": "Sur son ardoise, l’élève peut simplement écrire le résultat intermédiaire permettant d’alléger sa mémoire de travail."
+  },
+  "lecon": [
+   {
+    "texte": "Calculer en ligne, c'est écrire les étapes pour aider sa mémoire : 35 + 4, je garde les 3 dizaines et j'ajoute les unités : 39.",
+    "exemples": [
+     "35 + 4 = 39"
+    ]
+   },
+   {
+    "texte": "Pour 37 + 53 : 30 + 50 = 80, et 7 + 3 = 10. 80 + 10 = 90.",
+    "exemples": [
+     "37 + 53 = 90"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "calcul",
+    "titre": "Calcule en ligne",
+    "operations": [
+     {
+      "q": "35 + 4",
+      "r": 39
+     },
+     {
+      "q": "72 + 5",
+      "r": 77
+     },
+     {
+      "q": "84 − 12",
+      "r": 72
+     },
+     {
+      "q": "78 − 5",
+      "r": 73
+     },
+     {
+      "q": "37 + 53",
+      "r": 90,
+      "aide": "30 + 50 = 80, 7 + 3 = 10."
+     },
+     {
+      "q": "15 − 6",
+      "r": 9,
+      "aide": "15 − 5 = 10, puis − 1."
+     },
+     {
+      "q": "13 − 5",
+      "r": 8
+     }
+    ]
+   }
+  ],
+  "competence": "Je calcule en ligne",
+  "guide": {
+   "titre": "Pour enseigner les nombres, le calcul et la résolution de problèmes au CP",
+   "page": 64,
+   "extrait": "Le calcul en ligne est donc une modalité de calcul proche du calcul mental, pour laquelle un écrit vient soutenir la mémoire de travail.",
+   "fichier": "sources/guides/guide-pour-enseigner-les-nombres-le-calcul-et-la-resolution-de-problemes-au-cp-68664.pdf"
+  },
+  "genere": true
+ },
+ {
   "id": "ma-cp-tableau",
   "matiere": "maths",
   "niveau": "CP",
@@ -8425,69 +9256,425 @@
   "genere": true
  },
  {
-  "id": "ma-cp-problemes",
+  "id": "ma-cp-addition-posee",
   "matiere": "maths",
   "niveau": "CP",
-  "titre": "Petits problèmes",
-  "ordre": 60,
+  "titre": "Poser une addition en colonnes",
+  "ordre": 57,
   "programme": {
-   "section": "c2-mathematiques-cp-la-resolution-de-problemes",
-   "citation": "L’élève sait résoudre des problèmes de parties-tout en une étape"
+   "section": "c2-mathematiques-cp-les-quatre-operations",
+   "citation": "L’élève sait poser une addition de deux ou trois nombres à un ou deux chiffres, en positionnant les unités sous les unités, les dizaines sous les dizaines, et en calculer le résultat. Par exemple, 45 + 37 ou 28 + 8 + 56."
   },
   "lecon": [
    {
-    "texte": "Pour résoudre un problème, j'écoute bien l'histoire, puis je me demande : est-ce que ça augmente, ou est-ce que ça diminue ?",
+    "texte": "Dans un nombre à deux chiffres, le chiffre de droite compte les unités, et le chiffre de gauche compte les dizaines.",
+    "exemples": [
+     "45 : 4 dizaines et 5 unités"
+    ]
+   },
+   {
+    "texte": "Pour poser une addition, on range les unités sous les unités et les dizaines sous les dizaines.",
+    "exemples": [
+     "45 + 37 : le 5 et le 7 dans la maison des Unités"
+    ]
+   },
+   {
+    "texte": "On calcule toujours en commençant par les unités. Si on trouve 10 ou plus, on garde les unités et la dizaine monte en retenue.",
+    "exemples": [
+     "5 + 7 = 12 : j'écris 2 et je retiens 1"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "addition",
+    "titre": "La leçon en action : 45 + 37",
+    "operations": [
+     [
+      45,
+      37
+     ]
+    ],
+    "etapes": [
+     "poser",
+     "calculer"
+    ]
+   },
+   {
+    "type": "addition",
+    "titre": "Poser comme un champion",
+    "operations": [
+     [
+      28,
+      8,
+      56
+     ],
+     [
+      63,
+      9
+     ],
+     [
+      34,
+      52
+     ]
+    ],
+    "etapes": [
+     "poser"
+    ]
+   },
+   {
+    "type": "addition",
+    "titre": "Calculer avec la retenue",
+    "generateur": {
+     "nombres": 2,
+     "min": 15,
+     "max": 59,
+     "retenue": true,
+     "combien": 3
+    },
+    "etapes": [
+     "calculer"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "ma-cp-moities",
+  "matiere": "maths",
+  "niveau": "CP",
+  "titre": "Doubles des dizaines et moitiés",
+  "ordre": 60,
+  "programme": {
+   "section": "c2-mathematiques-cp-memoriser-des-faits-numeriques",
+   "citation": "L’élève sait donner oralement ou par écrit : moitiés de nombres usuels."
+  },
+  "lecon": [
+   {
+    "texte": "Le double de 20, c'est 40. La moitié de 18, c'est 9, car 9 + 9 = 18.",
+    "exemples": [
+     "20 + 20 = 40",
+     "moitié de 18 = 9"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "calcul",
+    "titre": "Doubles et moitiés",
+    "operations": [
+     {
+      "q": "20 + 20",
+      "r": 40
+     },
+     {
+      "q": "30 + 30",
+      "r": 60
+     },
+     {
+      "q": "50 + 50",
+      "r": 100
+     },
+     {
+      "q": "Moitié de 10",
+      "r": 5
+     },
+     {
+      "q": "Moitié de 18",
+      "r": 9
+     },
+     {
+      "q": "Moitié de 14",
+      "r": 7
+     }
+    ]
+   }
+  ],
+  "competence": "Je connais les moitiés et les doubles des dizaines",
+  "guide": {
+   "titre": "Pour enseigner les nombres, le calcul et la résolution de problèmes au CP",
+   "page": 146,
+   "extrait": "Moitié des nombres pairs (nombres jusqu’à 20).",
+   "fichier": "sources/guides/guide-pour-enseigner-les-nombres-le-calcul-et-la-resolution-de-problemes-au-cp-68664.pdf"
+  },
+  "genere": true
+ },
+ {
+  "id": "ma-cp-estimer",
+  "matiere": "maths",
+  "niveau": "CP",
+  "titre": "Le nombre le plus proche",
+  "ordre": 62,
+  "programme": {
+   "section": "c2-mathematiques-cp-la-resolution-de-problemes",
+   "citation": "Cette attitude se manifeste notamment par des questions du type : « Le nombre de jetons rouges trouvé est inférieur au nombre de jetons verts, est-ce possible ?"
+  },
+  "lecon": [
+   {
+    "texte": "Avant de calculer, je peux estimer : le résultat est-il plutôt près de 20, de 30 ou de 40 ?",
     "exemples": []
    }
   ],
   "exercices": [
    {
     "type": "bulles",
-    "titre": "Résous le problème",
+    "titre": "Quel est le nombre le plus proche ?",
     "questions": [
      {
-      "question": "Emma a 5 crayons. Son papi lui en donne 4. Combien en a-t-elle ?",
+      "question": "17 + 4 est plus proche de…",
       "choix": [
-       "9",
-       "1",
-       "54"
+       "20",
+       "30",
+       "40"
       ],
-      "reponse": "9",
-      "aide": "Elle en reçoit : ça augmente. 5 + 4."
+      "reponse": "20"
      },
      {
-      "question": "Dans le bus, il y a 12 enfants. 2 descendent. Combien en reste-t-il ?",
+      "question": "17 − 5 est plus proche de…",
       "choix": [
        "10",
-       "14",
-       "2"
+       "20",
+       "30"
       ],
-      "reponse": "10",
-      "aide": "Des enfants descendent : ça diminue. 12 − 2."
+      "reponse": "10"
      },
      {
-      "question": "J'ai 3 boîtes de 2 œufs. Combien d'œufs en tout ?",
+      "question": "35 + 27 est plus proche de…",
       "choix": [
-       "6",
-       "5",
-       "32"
+       "60",
+       "40",
+       "50"
       ],
-      "reponse": "6",
-      "aide": "2 + 2 + 2."
+      "reponse": "60"
      },
      {
-      "question": "Il y a 6 enfants et 8 chaises. Combien de chaises restent vides ?",
+      "question": "J'ai 30 €. Je veux un gâteau à 15 € et un autre à 17 €. Ai-je assez d'argent ?",
       "choix": [
-       "2",
-       "14",
-       "6"
+       "Non",
+       "Oui"
       ],
-      "reponse": "2"
+      "reponse": "Non",
+      "aide": "15 + 17, c'est plus que 30."
+     },
+     {
+      "question": "Il y a 27 élèves. S'il en arrive 5 nouveaux, seront-ils plus de 30 ?",
+      "choix": [
+       "Oui",
+       "Non"
+      ],
+      "reponse": "Oui"
      }
     ]
    }
   ],
-  "competence": "Je résous de petits problèmes",
+  "competence": "J'estime un résultat",
+  "guide": {
+   "titre": "Pour enseigner les nombres, le calcul et la résolution de problèmes au CP",
+   "page": 67,
+   "extrait": "Les premiers exercices de calculs approchés peuvent être centrés sur la détermination du choix d’un ou plusieurs résultats plausibles parmi un ensemble de résultats fournis.",
+   "fichier": "sources/guides/guide-pour-enseigner-les-nombres-le-calcul-et-la-resolution-de-problemes-au-cp-68664.pdf"
+  },
+  "genere": true
+ },
+ {
+  "id": "ma-cp-transformation-2",
+  "matiere": "maths",
+  "niveau": "CP",
+  "titre": "Problèmes : retrouver le début",
+  "ordre": 64,
+  "programme": {
+   "section": "c2-mathematiques-cp-la-resolution-de-problemes",
+   "citation": "Combien y avait-il de bonbons dans la boite avant que j’en mange ?"
+  },
+  "lecon": [
+   {
+    "texte": "Parfois, on connaît la fin d'une histoire et on cherche ce qui s'est passé, ou ce qu'il y avait au début.",
+    "exemples": []
+   },
+   {
+    "texte": "Le schéma m'aide : je repère où est le point d'interrogation.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "barres",
+    "titre": "Que s'est-il passé ?",
+    "items": [
+     {
+      "enonce": "Léo avait 5 images. Maintenant, il en a 12. Combien d'images a-t-il gagnées ?",
+      "parties": [
+       5,
+       null
+      ],
+      "tout": 12,
+      "aide": "12, c'est 5 et combien ?"
+     },
+     {
+      "enonce": "Nina a perdu 4 billes. Il lui en reste 9. Combien en avait-elle au début ?",
+      "parties": [
+       4,
+       9
+      ],
+      "tout": null,
+      "aide": "Au début, elle avait les billes perdues et celles qui restent."
+     },
+     {
+      "enonce": "Il y avait 15 poissons dans l'aquarium. Il en reste 11. Combien de poissons a-t-on donnés ?",
+      "parties": [
+       11,
+       null
+      ],
+      "tout": 15
+     },
+     {
+      "enonce": "Paul a 8 cartes. Il en gagne 5, puis encore 3. Combien en a-t-il à la fin ?",
+      "parties": [
+       8,
+       8
+      ],
+      "tout": null,
+      "aide": "Il gagne 5 puis 3 : en tout, il gagne 8 cartes."
+     }
+    ]
+   }
+  ],
+  "competence": "Je résous des problèmes où l'on cherche le début ou le changement",
+  "guide": {
+   "titre": "Pour enseigner les nombres, le calcul et la résolution de problèmes au CP",
+   "page": 147,
+   "extrait": "problèmes de transformation (positive ou négative) avec recherche de l’état initial (périodes 4 ou 5)",
+   "fichier": "sources/guides/guide-pour-enseigner-les-nombres-le-calcul-et-la-resolution-de-problemes-au-cp-68664.pdf"
+  },
+  "genere": true
+ },
+ {
+  "id": "ma-cp-comparaison",
+  "matiere": "maths",
+  "niveau": "CP",
+  "titre": "Problèmes : combien de plus ?",
+  "ordre": 66,
+  "programme": {
+   "section": "c2-mathematiques-cp-les-nombres-entiers",
+   "citation": "L’élève comprend et utilise les expressions : égal à, autant que, plus que, plus grand que,"
+  },
+  "lecon": [
+   {
+    "texte": "Pour comparer, je dessine deux barres : une longue, une courte. La différence, c'est le morceau en plus.",
+    "exemples": [
+     "Léo 37, Lucie 43 : Lucie en a 6 de plus"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "barres",
+    "titre": "Combien de plus ?",
+    "items": [
+     {
+      "type": "comparaison",
+      "enonce": "Léo a 37 billes, Lucie en a 43. Combien Lucie a-t-elle de billes de plus que Léo ?",
+      "grand": 43,
+      "petit": 37,
+      "ecart": null,
+      "noms": [
+       "Lucie",
+       "Léo"
+      ]
+     },
+     {
+      "type": "comparaison",
+      "enonce": "Sam a 9 ans. Sa sœur a 4 ans de plus. Quel âge a sa sœur ?",
+      "grand": null,
+      "petit": 9,
+      "ecart": 4,
+      "noms": [
+       "sa sœur",
+       "Sam"
+      ]
+     },
+     {
+      "type": "comparaison",
+      "enonce": "Une tour a 15 cubes. Une autre a 6 cubes de moins. Combien de cubes a l'autre tour ?",
+      "grand": 15,
+      "petit": null,
+      "ecart": 6,
+      "noms": [
+       "tour 1",
+       "tour 2"
+      ]
+     }
+    ]
+   }
+  ],
+  "competence": "Je compare deux quantités",
+  "guide": {
+   "titre": "Pour enseigner les nombres, le calcul et la résolution de problèmes au CP",
+   "page": 147,
+   "extrait": "problèmes de comparaison, le critère de comparaison étant connu (périodes 4 ou 5).",
+   "fichier": "sources/guides/guide-pour-enseigner-les-nombres-le-calcul-et-la-resolution-de-problemes-au-cp-68664.pdf"
+  },
+  "genere": true
+ },
+ {
+  "id": "ma-cp-fois-partage",
+  "matiere": "maths",
+  "niveau": "CP",
+  "titre": "Plusieurs fois, partager",
+  "ordre": 68,
+  "programme": {
+   "section": "c2-mathematiques-cp-les-quatre-operations",
+   "citation": "L’élève comprend et utilise le mot « fois » dans le cadre d’additions itérées."
+  },
+  "lecon": [
+   {
+    "texte": "Quand on a plusieurs fois la même quantité, on peut ajouter : 4 sacs de 5 pommes, c'est 5 + 5 + 5 + 5 = 20. On dit « 4 fois 5 ».",
+    "exemples": [
+     "5 + 5 + 5 + 5 = 20"
+    ]
+   },
+   {
+    "texte": "Partager, c'est donner la même chose à chacun.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "barres",
+    "titre": "Fois et partage",
+    "items": [
+     {
+      "type": "parts",
+      "enonce": "On remplit 4 sacs avec 5 pommes chacun. Combien faut-il de pommes ?",
+      "nb": 4,
+      "valeur": 5,
+      "total": null
+     },
+     {
+      "type": "parts",
+      "enonce": "Trois enfants se partagent une tablette de chocolat de 12 carreaux. Combien de carreaux aura chaque enfant ?",
+      "nb": 3,
+      "valeur": null,
+      "total": 12,
+      "aide": "Partage les 12 carreaux en 3 parts égales."
+     },
+     {
+      "type": "parts",
+      "enonce": "Il y a 18 élèves. On fait des équipes de 3 élèves. Combien y aura-t-il d'équipes ?",
+      "nb": null,
+      "valeur": 3,
+      "total": 18,
+      "aide": "Combien de fois 3 dans 18 ? Compte 3, 6, 9…"
+     }
+    ]
+   }
+  ],
+  "competence": "Je résous des problèmes de fois et de partage",
+  "guide": {
+   "titre": "Pour enseigner les nombres, le calcul et la résolution de problèmes au CP",
+   "page": 58,
+   "extrait": "Problème 1 : « On remplit 4 sacs avec 5 pommes chacun. Combien faut-il de pommes ? »",
+   "fichier": "sources/guides/guide-pour-enseigner-les-nombres-le-calcul-et-la-resolution-de-problemes-au-cp-68664.pdf"
+  },
   "genere": true
  },
  {

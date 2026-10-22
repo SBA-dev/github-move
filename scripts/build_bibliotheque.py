@@ -19,11 +19,46 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 LIB = ROOT / "app" / "bibliotheque.json"
 INDEX = {e["id"]: e for e in json.loads((ROOT / "app" / "programmes-index.json").read_text(encoding="utf-8"))}
-MODULES = ["francais", "francais2", "maths", "maths2", "sciences", "histoire", "anglais"]
+ORDRES = {"ma-cp-addition-posee": 57}   # leçons écrites à la main, replacées dans la progression du guide
+MODULES = ["francais", "francais2", "maths", "maths2", "maths_cp", "sciences", "histoire", "anglais"]
 
 
 def norm(s):
     return unicodedata.normalize("NFKD", s.lower()).encode("ascii", "ignore").decode()
+
+
+GUIDES = {
+    "cp-maths": ("Pour enseigner les nombres, le calcul et la résolution de problèmes au CP", "guide-pour-enseigner-les-nombres-le-calcul-et-la-resolution-de-problemes-au-cp-68664"),
+    "cp-lecture": ("Pour enseigner la lecture et l'écriture au CP", "guide-pour-enseigner-la-lecture-et-l-ecriture-au-cp-67854"),
+    "ce1-lecture": ("Pour enseigner la lecture et l'écriture au CE1", "guide-pour-enseigner-la-lecture-et-l-ecriture-au-ce1-67857"),
+    "cm-problemes": ("La résolution de problèmes mathématiques au cours moyen", "guide-resolution-de-problemes-cours-moyen-90990"),
+    "cm-comprehension": ("La compréhension au cours moyen", "guide-la-comprehension-au-cours-moyen-91725"),
+    "c3-ecriture": ("L'écriture au cycle 3", "men-guide-ecriture-cycle-3-130201"),
+    "grammaire": ("La grammaire du français, du CP à la 6e", "guide-la-grammaire-du-francais-du-cp-la-6e-97251"),
+    "terminologie": ("La grammaire du français : terminologie grammaticale", "guide-la-grammaire-du-francais-terminologie-grammaticale-67998"),
+}
+_pages = {}
+
+
+def _plat(t):
+    t = re.sub(r"\u00ad\s*", "", t)   # césures douces de fin de ligne
+    return re.sub(r"\s+", " ", t.replace("\u00a0", " ").replace("\u202f", " ")).strip()
+
+
+def guide_ref(cle, passage):
+    """Passage d'un guide fondamental d'Eduscol, vérifié mot pour mot, avec son numéro de page dans le PDF."""
+    titre, stem = GUIDES[cle]
+    if stem not in _pages:
+        _pages[stem] = [_plat(p) for p in (ROOT / "sources" / "texte" / "guides" / f"{stem}.txt").read_text(encoding="utf-8").split("\f")]
+    cherche = _plat(passage)
+    pages = _pages[stem]
+    for i, p in enumerate(pages):
+        if cherche in p:
+            return {"titre": titre, "page": i + 1, "extrait": cherche, "fichier": f"sources/guides/{stem}.pdf"}
+    for i in range(len(pages) - 1):
+        if cherche in pages[i] + " " + pages[i + 1]:
+            return {"titre": titre, "page": i + 1, "extrait": cherche, "fichier": f"sources/guides/{stem}.pdf"}
+    raise SystemExit(f"passage introuvable dans le guide {cle} : {passage}")
 
 
 def propre(p):
@@ -51,7 +86,7 @@ def citation(section, mots):
 ERREURS = []
 
 
-def lecon(id, matiere, niveau, titre, ordre, section, cite, etapes, exercices, competence=None, citation_exacte=None):
+def lecon(id, matiere, niveau, titre, ordre, section, cite, etapes, exercices, competence=None, citation_exacte=None, guide=None):
     try:
         if section not in INDEX:
             raise SystemExit(f"section inconnue {section}")
@@ -72,6 +107,11 @@ def lecon(id, matiere, niveau, titre, ordre, section, cite, etapes, exercices, c
          "exercices": exercices}
     if competence:
         l["competence"] = competence
+    if guide:
+        try:
+            l["guide"] = guide_ref(*guide)
+        except SystemExit as e:
+            ERREURS.append(f"{id} : {e}")
     return l
 
 
@@ -129,6 +169,16 @@ def addition(titre, operations, etapes=("poser", "calculer")):
     return {"type": "addition", "titre": titre, "operations": operations, "etapes": list(etapes)}
 
 
+def boite(titre, items):
+    """items : (a, b) pour ajouter, (a, "-", b) pour retirer."""
+    return {"type": "boite", "titre": titre, "items": [{"a": i[0], "op": "-", "b": i[2]} if len(i) == 3 else {"a": i[0], "op": "+", "b": i[1]} for i in items]}
+
+
+def barres(titre, items):
+    """items : dicts {enonce, type?, parties/tout | grand/petit/ecart/noms | nb/valeur/total, aide?, phrase?} — None = ce qu'on cherche."""
+    return {"type": "barres", "titre": titre, "items": items}
+
+
 def ecoute(titre, items, langue="en-GB"):
     """items : (mot anglais, bonne traduction, autres choix…)"""
     return {"type": "ecoute", "titre": titre, "langue": langue, "items": [
@@ -150,6 +200,9 @@ def main():
     import build_bibliotheque as bb   # les leçons sont construites par ce module importé
     if bb.ERREURS:
         raise SystemExit("\n".join(bb.ERREURS))
+    for l in lessons:
+        if l["id"] in ORDRES:
+            l["ordre"] = ORDRES[l["id"]]
     ids = [l["id"] for l in lessons]
     dup = {i for i in ids if ids.count(i) > 1}
     if dup:

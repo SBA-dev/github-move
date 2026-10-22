@@ -7,20 +7,6 @@ C3 = "c3-mathematiques-{}-{}"
 
 LECONS = [
     # ---------------- CP ----------------
-    lecon("ma-cp-ajouter-10", M, "CP", "Ajouter ou retirer 10", 18, C2.format("cp", "utiliser-ses-connaissances-en-numeration-pour-calculer-mentalement"),
-          ["dizaine"],
-          [("Ajouter 10, c'est ajouter une dizaine : le chiffre des dizaines augmente de 1, celui des unités ne bouge pas.", ["23 + 10 = 33", "45 + 10 = 55"]),
-           ("Retirer 10, c'est enlever une dizaine.", ["36 − 10 = 26"])],
-          [calcul("Une dizaine de plus ou de moins", [("23 + 10", 33), ("41 + 10", 51), ("36 − 10", 26), ("70 + 10", 80), ("58 − 10", 48), ("19 + 10", 29)]),
-           fluence("Calcul rapide : + 10", duree=45, op="+", a=[10, 80], b=[10, 10])],
-          competence="J'ajoute et je retire 10 de tête"),
-    lecon("ma-cp-dizaine-superieure", M, "CP", "Aller à la dizaine, ajouter 9", 20, C2.format("cp", "apprendre-des-procedures-de-calcul-mental"),
-          ["ajouter 9"],
-          [("Pour aller de 74 à 80, je regarde les unités : de 4 à 10, il manque 6. Donc 74 + 6 = 80.", ["74 + 6 = 80"]),
-           ("Pour ajouter 9, j'ajoute 10 puis je retire 1 : 25 + 9 = 35 − 1 = 34.", ["25 + 9 = 34"])],
-          [calcul("Jusqu'à la dizaine", [("74 + … = 80", 6, "De 4 à 10, il manque 6."), ("38 + … = 40", 2), ("51 + … = 60", 9), ("27 + … = 30", 3)]),
-           calcul("Ajouter 9", [("25 + 9", 34, "25 + 10 = 35, puis 35 − 1."), ("40 + 9", 49), ("13 + 9", 22), ("36 + 9", 45)])],
-          competence="J'ajoute 9 et je vais à la dizaine de tête", citation_exacte='L’élève sait que, pour ajouter 9 à un nombre, il peut ajouter 10 puis soustraire 1.'),
     lecon("ma-cp-longueurs", M, "CP", "Plus long, plus court", 32, C2.format("cp", "les-longueurs"),
           ["longueur", "comparer"],
           [("Pour comparer deux longueurs, je mets les objets côte à côte, en partant de la même ligne.", ["un crayon et une gomme"]),

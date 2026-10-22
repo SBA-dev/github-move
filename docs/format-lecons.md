@@ -35,6 +35,7 @@ Le moteur affiche n'importe quelle leçon dans l'univers choisi par l'enfant (pr
 | `lecon` | Étapes de la leçon, lues à voix haute par le guide avant les exercices |
 | `exercices` | Liste d'exercices. L'enfant peut tous les faire à la suite, ou en choisir un |
 | `competence` | Facultatif : le nom du badge gagné avec 2 étoiles (« Je connais les tables de 3 et de 4 ») |
+| `guide` | Facultatif : `{titre, page, extrait, fichier}`, le passage d'un guide fondamental d'Eduscol sur lequel s'appuie la leçon (vérifié mot pour mot par le script, voir ci-dessous) |
 
 ## Types d'exercices
 
@@ -52,6 +53,8 @@ Le moteur affiche n'importe quelle leçon dans l'univers choisi par l'enfant (pr
 | `calcul` | Calculer, avec le clavier de cristaux (bulles au CP) | `operations: [{q: "12 − 5", r: 7, aide?}]` ou `generateur: {op: "+"\|"-"\|"×"\|":"\|"complement", a: [min, max], b: [min, max], combien, cible?}` |
 | `fluence` | Calcul rapide chronométré, avec un record personnel | `duree` (secondes), `generateur` (comme `calcul`) |
 | `ecoute` | Écouter un mot ou une phrase dite par une voix anglaise, puis choisir sa traduction | `langue: "en-GB"`, `items: [{dire, question, choix[], reponse}]` |
+| `boite` | La boîte à jetons : des jetons entrent (ou sortent) d'une boîte fermée, l'enfant prévoit combien il y en a, puis on ouvre pour vérifier | `items: [{a, op: "+"\|"-", b}]` |
+| `barres` | Problème illustré par un schéma en barres ; le « ? » montre ce qu'on cherche | `items: [{enonce, parties: [a, b], tout}]` (une valeur `null`), ou `type: "comparaison"` avec `grand, petit, ecart, noms`, ou `type: "parts"` avec `nb, valeur, total` |
 
 Les réponses sont toujours vérifiées par l'application ; l'aide (`aide`) est lue par le guide après une erreur, ou quand l'enfant touche « Je ne sais pas ».
 
@@ -67,6 +70,8 @@ python3 scripts/build_bibliotheque.py    # leçons -> app/bibliotheque.json
 ```
 
 La citation du programme n'est jamais tapée à la main : le script choisit, dans le texte officiel de la section, la phrase lisible qui contient les mots-clés de la leçon, ou vérifie que le passage choisi (`citation_exacte`) figure mot pour mot dans ce texte. Il s'arrête si une section n'existe pas, ne couvre pas le niveau, ou si une réponse ne fait pas partie des choix. Les leçons écrites directement dans `bibliotheque.json` (sans `"genere": true`) sont conservées telles quelles.
+
+Les leçons peuvent aussi s'appuyer sur un guide fondamental d'Eduscol (`sources/guides/`, texte extrait dans `sources/texte/guides/`) : le paramètre `guide=(clé, passage)` vérifie que le passage figure mot pour mot dans le guide et retrouve sa page. Les mathématiques du CP (`scripts/lecons/maths_cp.py`) suivent ainsi la progression du guide « Pour enseigner les nombres, le calcul et la résolution de problèmes au CP ».
 
 Certains programmes (cycle 2 surtout) sont des tableaux à deux colonnes dans le PDF : leur texte extrait mélange parfois les deux colonnes. C'est pourquoi le script écarte les phrases où deux colonnes se mélangent, et pourquoi quelques leçons donnent un passage choisi à la main.
 

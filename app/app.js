@@ -1749,6 +1749,11 @@ function showLesson(l) {
     const det = el('details', 'note'); det.innerHTML = '<summary>Pour les adultes : ce que dit le programme</summary>';
     const q = el('blockquote'); q.textContent = l.programme?.citation || ''; det.append(q);
     if (sec) det.append(Object.assign(el('p'), { textContent: `${sec.source.texte}, ${sec.source.bo} — ${sec.domaine} › ${sec.section} (${sec.niveaux.join(', ')})` }));
+    if (l.guide) {
+      det.append(Object.assign(el('p'), { innerHTML: '<b>Ce que conseille le guide</b>' }));
+      const g = el('blockquote'); g.textContent = l.guide.extrait; det.append(g);
+      det.append(Object.assign(el('p'), { textContent: `Guide fondamental « ${l.guide.titre} » (Eduscol), page ${l.guide.page}.` }));
+    }
     acts.append(det);
   }
   sc.append(acts); v.append(sc);
