@@ -10,3 +10,4 @@
 - 16:24 · Cycle 2 (univers par défaut) : red 4ad448d, green 5a705b5, refactor 1d2dd0a.
 - 16:25 · Cycle 3 (humeurs) : red 2de642d, green 43a6f6e (pas de refactor nécessaire).
 - 16:26 · Cycle 4 (félicitations) : red 118ea56, green 56e5739. Écart au modèle : `expressions` en `readonly string[]` (évite un import circulaire). Un `throw` non exigé par un test pour un tirage hors [0,1[ : à signaler à la review.
+- 16:27 · Cycle 5 (encouragements, présentations) : red 84bbbf1, green 8964eab. 34 tests verts. Domaine de #6 terminé.
