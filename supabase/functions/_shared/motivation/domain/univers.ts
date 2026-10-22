@@ -57,6 +57,7 @@ export const UNIVERS: readonly Univers[] = [
   },
 ];
 
-export function universDe(cle: CleUnivers): Univers {
-  return UNIVERS.find((univers) => univers.cle === cle)!;
+export function universDe(cle: string | undefined): Univers {
+  return UNIVERS.find((univers) => univers.cle === cle) ??
+    UNIVERS.find((univers) => univers.cle === "animaux")!;
 }
