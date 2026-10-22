@@ -1,5 +1,5 @@
 # language: fr
-@issue-8 @wip
+@issue-8
 Fonctionnalité: Installer Savanturier comme une application
   En tant que parent
   Je veux installer Savanturier sur l'écran d'accueil de la tablette ou du téléphone

@@ -58,7 +58,10 @@ L'application fonctionne et est publiée comme artifact claude.ai. Elle comprend
   - **#6 livrée sur la branche** : domaine `motivation` (40 tests Deno), front (paysages, personnages guides SVG animés avec Motion, en-tête, page `/demonstration` réservée aux tests), review approuvée, E2E 82/82. PR pas encore ouverte.
   - **#7 livrée sur la branche** : sous-domaine `voix` (103 tests Deno au total), lecture à voix haute des consignes avec le caractère de chaque personnage guide, surlignage du mot prononcé, Son/Muet mémorisé sur l'appareil, voix bloquée signalée une fois ; décision 0008 ; deux reviews (la première À CORRIGER) ; E2E 140/140 avec #6 et le socle. PR pas encore ouverte.
   - À reprendre plus tard (non bloquant, voir `docs/stories/7/journal.md`) : consignes avec balises à attributs, coupure de Chrome après 15 s de lecture, blocage silencieux sur iOS, entités HTML numériques, message « Réécouter » hors de la page de la consigne.
-  - Prochaines étapes : #8 (PWA), puis #5 (connexion, qui a besoin du projet Supabase).
+  - **#8 livrée sur la branche** : manifeste, icônes, service worker (coquille et bibliothèque hors ligne, nouvelle version au lancement suivant), aide iPad/iPhone ; E2E sur le build de production (`playwright.pwa.config.ts`) 28/28 ; deux reviews (la première À CORRIGER).
+  - **PR du lot 1 ouverte** (#6, #7, #8) : https://github.com/SBA-dev/github-move/pull/9, en attente du merge par le PO.
+  - À reprendre plus tard pour la PWA : fichier chargé à la demande après activation d'une nouvelle version (à traiter avant le premier écran `lazy` en production), délai maximal du réseau d'abord, tests de la réponse en erreur, exemples iPhone et Mac de bureau.
+  - Prochaine étape : #5 (connexion du parent), qui a besoin du projet Supabase : ajouter les secrets `SUPABASE_*` à l'environnement cloud, puis ouvrir une nouvelle session.
   - À retirer plus tard : la page `/demonstration` et le profil préparé en `localStorage` (lots 2 et 3).
   - Première vérification Supabase (`npx supabase link`) non faite : les secrets `SUPABASE_*` n'étaient pas présents dans la session.
 - [ ] Lots 2 à 7 : issues à écrire.
