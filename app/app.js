@@ -649,10 +649,12 @@ function showTrophees(wrap) {
   }
 }
 
-let mapTab = 'accueil';
-function showMap(tab) {
+const SHORT_SUBJ = { francais: 'Français', maths: 'Maths', sciences: 'Sciences', histoire: 'Histoire-géo', anglais: 'Anglais', emc: 'Vivre ensemble' };
+let mapTab = 'accueil', mapSubject = 'francais';
+function showMap(tab, subject) {
   if (typeof tab !== 'string') tab = mapTab;
   mapTab = tab;
+  if (subject) mapSubject = subject;
   if (checkTime()) return;
   const v = screen(showHome);
   const wrap = el('div', 'panel');
@@ -717,33 +719,56 @@ function showMap(tab) {
       t.innerHTML = `${icoHTML(m)}<div><b></b><span class="sm"></span></div>`;
       t.querySelector('b').textContent = name.replace(' (EMC)', '');
       t.querySelector('.sm').textContent = `${items.filter(x => x.done).length} leçon${items.filter(x => x.done).length > 1 ? 's' : ''} réussie${items.filter(x => x.done).length > 1 ? 's' : ''} sur ${items.length}`;
-      t.onclick = () => showMap('parcours');
+      t.onclick = () => showMap('parcours', m);
       bento.append(t);
     });
     wrap.append(bento);
   } else if (tab === 'parcours') {
-    Object.entries(SUBJECTS).forEach(([m, name]) => {
-      const items = subjectPath(m);
-      if (!items.length) return;
-      const sec = el('section', 'subject glass');
-      const h = el('h3', '', icoHTML(m)); h.append(document.createTextNode(name)); sec.append(h);
-      const path = el('div', 'path');
-      items.forEach(({ l, done, next, locked, revision }) => {
-        const b = el('button', 'step' + (done ? ' done' : next ? ' next' : '')); b.type = 'button';
-        const icon = done ? ICON.check : next ? ICON.play : locked ? ICON.lock : ICON.book;
-        b.innerHTML = `<span class="dot">${icon}</span><span class="t"></span><span class="st"></span>`;
-        b.querySelector('.t').textContent = l.titre;
-        const p = progOf(l.id);
-        b.querySelector('.st').textContent = locked ? 'Plus tard' : done ? '★'.repeat(p?.etoiles || 0) : next ? 'À toi !' : revision ? 'Révision' : 'À découvrir';
-        if (l.perso) b.prepend(Object.assign(el('span', 'mine'), { textContent: 'Pour toi' }));
-        b.setAttribute('aria-label', `${l.titre} : ${b.querySelector('.st').textContent}`);
-        if (locked) b.disabled = true; else b.onclick = () => showLesson(l);
-        path.append(b);
-      });
-      sec.append(path); wrap.append(sec);
-      requestAnimationFrame(() => { const n = path.querySelector('.next'); if (n) path.scrollLeft = n.offsetLeft - 40; });
+    /* Une seule matière à la fois : onglets en haut, puis le chemin de la classe, puis les révisions. */
+    const subs = Object.keys(SUBJECTS).filter(m => subjectPath(m).length);
+    if (!subs.includes(mapSubject)) mapSubject = subs[0];
+    if (!subs.length) { wrap.append(el('p', 'sub on-scene', 'Aucune leçon pour ce niveau pour l\'instant. Un adulte peut en créer dans l\'espace adulte.')); return; }
+    const tabsS = el('div', 'subj-tabs'); tabsS.setAttribute('role', 'tablist');
+    subs.forEach(m => {
+      const b = el('button', 'subj-tab', `${icoHTML(m)}<span></span>`); b.type = 'button'; b.setAttribute('role', 'tab');
+      b.querySelector('span:last-child').textContent = SHORT_SUBJ[m] || SUBJECTS[m];
+      b.setAttribute('aria-selected', String(m === mapSubject));
+      b.onclick = () => showMap('parcours', m);
+      tabsS.append(b);
     });
-    if (!wrap.children.length) wrap.append(el('p', 'sub on-scene', 'Aucune leçon pour ce niveau pour l\'instant. Un adulte peut en créer dans l\'espace adulte.'));
+    wrap.append(tabsS);
+    const items = subjectPath(mapSubject), cur = items.filter(x => !x.revision), rev = items.filter(x => x.revision);
+    const sec = el('section', 'subject glass');
+    const h = el('h3', '', icoHTML(mapSubject)); h.append(document.createTextNode(`${SUBJECTS[mapSubject]} · ${child.niveau}`)); sec.append(h);
+    const nDone = cur.filter(x => x.done).length;
+    const prog = el('div', 'path-progress', `<div class="bar"><i></i></div><span class="sm"></span>`);
+    prog.querySelector('i').style.width = (cur.length ? nDone / cur.length * 100 : 0) + '%';
+    prog.querySelector('.sm').textContent = cur.length ? `${nDone} leçon${nDone > 1 ? 's' : ''} réussie${nDone > 1 ? 's' : ''} sur ${cur.length}` : 'Pas encore de leçon de ta classe dans cette matière.';
+    sec.append(prog);
+    const stepEl = ({ l, done, next, locked, revision }, i) => {
+      const b = el('button', 'step' + (done ? ' done' : next ? ' next' : '') + (locked ? ' locked' : '')); b.type = 'button';
+      const icon = done ? ICON.check : next ? ICON.play : locked ? ICON.lock : ICON.book;
+      b.innerHTML = `<span class="dot">${icon}</span><span class="txt"><span class="num"></span><span class="t"></span><span class="stat"></span></span>`;
+      b.querySelector('.num').textContent = revision ? l.niveau : `Étape ${i + 1}`;
+      b.querySelector('.t').textContent = l.titre;
+      const p = progOf(l.id);
+      b.querySelector('.stat').textContent = locked ? 'Plus tard' : done ? '★'.repeat(p?.etoiles || 0) || 'Acquise' : next ? 'À toi !' : revision ? 'Révision' : 'À découvrir';
+      if (l.perso) b.querySelector('.txt').prepend(Object.assign(el('span', 'mine'), { textContent: 'Pour toi' }));
+      b.setAttribute('aria-label', `${l.titre} : ${b.querySelector('.stat').textContent}`);
+      if (locked) b.disabled = true; else b.onclick = () => showLesson(l);
+      return b;
+    };
+    const path = el('div', 'path');
+    cur.forEach((x, i) => path.append(stepEl(x, i)));
+    sec.append(path);
+    if (rev.length) {
+      const det = el('details', 'revisions');
+      det.innerHTML = `<summary>Revoir les classes d'avant (${rev.length} leçon${rev.length > 1 ? 's' : ''})</summary>`;
+      const g = el('div', 'path'); rev.forEach((x, i) => g.append(stepEl(x, i))); det.append(g);
+      sec.append(det);
+    }
+    wrap.append(sec);
+    requestAnimationFrame(() => path.querySelector('.next')?.scrollIntoView({ block: 'nearest', behavior: 'auto' }));
   } else if (tab === 'trophees') {
     showTrophees(wrap);
   } else {
