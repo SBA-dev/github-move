@@ -52,12 +52,11 @@ L'application fonctionne et est publiée comme artifact claude.ai. Elle comprend
   - `.env.example` et `.gitignore`.
 - [x] Test de contrat de `app/bibliotheque.json` (`scripts/tests/test_bibliotheque.py`, 1 326 cas). Il a révélé 3 paires de leçons de maths du CP avec le même ordre : c'est corrigé.
 - [ ] Compléter `tests/legacy/` avec les scripts de vérification utilisés jusqu'ici (parcours des 265 leçons, profils, révisions, espace parent). Deux premiers tests de caractérisation y sont déjà.
-- [ ] Écrire les premières issues GitHub. Ordre proposé :
-  1. Compte famille et profil enfant
-  2. Jouer une leçon et gagner des étoiles
-  3. Parcours et verrous
-  4. Motivation
-  5. Accompagnement
+- [x] Lot 1 (Socle) : issues #5 (connexion du parent), #6 (univers et personnage guide), #7 (voix), #8 (PWA installable), label `reecriture`.
+  - Modèles de domaine (#5 à #7) et critères d'acceptance (#5 à #8) écrits, glossaire et context map complétés.
+  - **En attente : validation des scénarios du lot 1 par le PO** (questions ouvertes dans `docs/stories/<n>/acceptance.md`).
+  - Première vérification Supabase (`npx supabase link`) non faite : les secrets `SUPABASE_*` n'étaient pas présents dans la session.
+- [ ] Lots 2 à 7 : issues à écrire.
 
 ### 2. Contenu : lecture et écriture au CP (commencé, pas encore livré)
 
