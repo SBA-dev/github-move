@@ -25,14 +25,14 @@ Entrée : le chemin d'un test rouge.
 2. Écris le **code le plus simple** qui le fait passer, **au bon endroit** de l'architecture (domain, application ou infrastructure).
    Dans `domain/` : TypeScript pur, imports relatifs avec l'extension `.ts`, aucun import `jsr:`/`npm:`, pour que le front puisse aussi l'importer.
    Renvoyer une constante est acceptable si un seul exemple l'exige : le test suivant forcera la généralisation.
-3. Lance `deno test supabase/functions/`. **Toute la suite** doit être verte, pas seulement le nouveau test.
+3. Lance `deno test --permit-no-files supabase/functions/`. **Toute la suite** doit être verte, pas seulement le nouveau test.
    Pour un test du pipeline de contenu (`scripts/tests/`), lance `python3 -m pytest scripts/tests`, puis regénère la bibliothèque (`python3 scripts/build_bibliotheque.py`) : le build doit passer.
 4. Commite : `feat(#<n>): <comportement>`
 
 **REFACTOR**
 5. Avec tous les tests au vert, améliore le code : duplication, nommage conforme au glossaire, extraction de value objects, fonctions trop longues, primitives obsession.
    Tu peux aussi améliorer **la lisibilité** du code de test (helpers, builders dans `test_utils/`), mais **jamais ce qu'il vérifie**.
-6. Lance `deno test supabase/functions/`, `deno lint supabase/functions/` et `deno fmt supabase/functions/`.
+6. Lance `deno test --permit-no-files supabase/functions/`, `deno lint --permit-no-files supabase/functions/` et `deno fmt supabase/functions/`.
 7. Commite : `refactor(#<n>): <quoi>`. S'il n'y a rien à refactorer, dis-le explicitement et justifie.
 
 ## Mode 2 : CÂBLAGE (seulement quand l'orchestrateur le demande)

@@ -47,7 +47,7 @@ Découpe les scénarios validés en une **liste ordonnée de comportements unita
 
 Pour **chaque** comportement :
 1. Délègue à `test-writer` (phase RED). Vérifie toi-même que `deno test <fichier>` **échoue** (`python3 -m pytest <fichier>` pour un test du pipeline de contenu).
-2. Délègue à `implementer` (GREEN + REFACTOR). Vérifie toi-même que `deno test supabase/functions/` est **entièrement vert** (et `python3 -m pytest scripts/tests` si `scripts/` a changé).
+2. Délègue à `implementer` (GREEN + REFACTOR). Vérifie toi-même que `deno test --permit-no-files supabase/functions/` est **entièrement vert** (et `python3 -m pytest scripts/tests` si `scripts/` a changé).
 3. Si `implementer` conteste un test, transmets son argument à `test-writer` (1 aller-retour). Si le désaccord persiste, **escalade vers moi**.
 
 Ensuite, délègue à `implementer` en **mode CÂBLAGE** :

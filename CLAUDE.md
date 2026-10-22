@@ -41,9 +41,10 @@ Règles de cohabitation :
 | Nouvelle migration | `supabase migration new <nom>` |
 | Servir les Edge Functions | `supabase functions serve` |
 | Lancer le front | `npm run dev` (http://localhost:5173) |
-| Tests unitaires | `deno test supabase/functions/` |
-| Lint / format | `deno lint supabase/functions/ && deno fmt --check supabase/functions/` |
+| Tests unitaires | `deno test --permit-no-files supabase/functions/` |
+| Lint / format | `deno lint --permit-no-files supabase/functions/ && deno fmt --check --permit-no-files supabase/functions/` |
 | Typecheck du front | `npx tsc --noEmit` |
+| Build du front | `npm run build` |
 | Tests E2E d'une story | `npx bddgen && npx playwright test --grep @issue-<n>` |
 | Tous les tests E2E | `npx bddgen && npx playwright test` |
 | Regénérer la bibliothèque | `python3 scripts/build_bibliotheque.py` |
@@ -54,6 +55,8 @@ Règles de cohabitation :
 
 > ⚠️ Tous les agents se fient à ce tableau. Tenez-le à jour quand un script change.
 > Dans un conteneur cloud, Chromium est déjà installé : Playwright le trouve via `PLAYWRIGHT_BROWSERS_PATH`. Ne lancez jamais `playwright install`.
+> Le hook `.claude/hooks/session-start.sh` installe Deno, pytest et les dépendances npm (dont la CLI Supabase : `npx supabase …`) au démarrage de chaque session cloud.
+> `supabase start` a besoin de Docker. Le conteneur cloud n'a pas de démon Docker : les scénarios qui touchent Supabase se lancent en local, ou dans un environnement qui fournit Docker.
 
 ## Architecture (hexagonale, DDD)
 
@@ -87,7 +90,7 @@ app/                               # legacy (voir plus haut)
 Le **domaine ne dépend de rien**.
 
 **Domaine partagé avec le front** : l'enfant doit pouvoir faire ses exercices hors ligne. Corriger une réponse, calculer les étoiles ou faire avancer le parcours doit donc fonctionner aussi dans le navigateur.
-- Le front **importe le code de `domain/`** (TypeScript pur) via un alias Vite (`@domain/<contexte>`). Il ne réécrit jamais une règle.
+- Le front **importe le code de `domain/`** (TypeScript pur) via l'alias `@domain/<contexte>`, qui pointe sur `supabase/functions/_shared/<contexte>/domain/index.ts` (configuré dans `vite.config.ts` et `tsconfig.json`). Chaque contexte expose donc son domaine par ce fichier `index.ts`. Le front ne réécrit jamais une règle.
 - React ne contient aucune règle métier. Il appelle le domaine ou une Edge Function et affiche le résultat.
 - Le serveur reste la source de vérité. Les résultats faits hors ligne sont revalidés par le cas d'usage à la synchronisation.
 

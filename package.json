@@ -1,0 +1,31 @@
+{
+  "name": "savanturier",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test:e2e": "bddgen && playwright test",
+    "test:legacy": "playwright test -c playwright.legacy.config.ts"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.118.0",
+    "motion": "^14.6.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "@types/node": "^26.6.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "playwright-bdd": "^9.2.1",
+    "supabase": "^2.121.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5"
+  }
+}

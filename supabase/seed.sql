@@ -1,0 +1,1 @@
+-- Données de démarrage pour `supabase db reset` (comptes et profils fictifs uniquement).

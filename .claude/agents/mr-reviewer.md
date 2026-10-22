@@ -21,7 +21,7 @@ Lis :
 1. **Vue d'ensemble** sur la branche de base `<base>` fournie par l'orchestrateur (par défaut, la branche par défaut du dépôt) :
    `git log origin/<base>..HEAD --oneline`, `git diff origin/<base>...HEAD --stat`, puis `git diff origin/<base>...HEAD`
 2. **Vérification automatique** :
-   `deno test supabase/functions/`, `deno lint supabase/functions/`, `deno fmt --check supabase/functions/`
+   `deno test --permit-no-files supabase/functions/`, `deno lint --permit-no-files supabase/functions/`, `deno fmt --check --permit-no-files supabase/functions/`
 3. **Analyse**, axe par axe :
 
    **Conformité fonctionnelle**

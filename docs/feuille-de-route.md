@@ -38,16 +38,18 @@ L'application fonctionne et est publiée comme artifact claude.ai. Elle comprend
 
 ### 1. Préparer le terrain de la nouvelle application
 
-- [ ] Installer **Deno** et la **CLI Supabase** dans l'environnement (script de configuration de l'environnement cloud).
-- [ ] Créer une branche **`main`** et en faire la branche par défaut du dépôt.
-- [ ] Créer le squelette :
-  - `package.json`, Vite + React + TypeScript, alias `@domain` ;
+- [x] Deno, pytest et les dépendances npm (dont la CLI Supabase) sont installés à chaque session cloud par `.claude/hooks/session-start.sh`.
+- [ ] **Docker** pour `supabase start` : absent du conteneur cloud. À lancer en local, ou à fournir par l'environnement, avant la première story qui touche la base.
+- [ ] Créer une branche **`main`** et en faire la branche par défaut du dépôt (réglage GitHub, à faire par le propriétaire du dépôt).
+- [x] Squelette créé et vérifié :
+  - Vite + React 19 + TypeScript strict + Motion, alias `@domain/<contexte>` ;
   - `deno.json` ;
-  - `supabase/` (config, `functions/_shared/`) ;
-  - `features/` ;
-  - `playwright.config.ts` et `playwright.legacy.config.ts`.
-- [ ] Mettre en place un test de schéma de `app/bibliotheque.json` et un premier test pytest du pipeline (`scripts/tests/`).
-- [ ] Reprendre dans `tests/legacy/` les scripts Playwright de vérification utilisés jusqu'ici. Ils parcourent les 265 leçons sans erreur, et ne sont pas encore dans le dépôt.
+  - `supabase/` (config initialisée, `migrations/`, `functions/_shared/`, `seed.sql`) ;
+  - `features/` avec un scénario de socle vert sur tablette et téléphone ;
+  - `playwright.config.ts` (playwright-bdd) et `playwright.legacy.config.ts` ;
+  - `.env.example` et `.gitignore`.
+- [x] Test de contrat de `app/bibliotheque.json` (`scripts/tests/test_bibliotheque.py`, 1 326 cas). Il a révélé 3 paires de leçons de maths du CP avec le même ordre : c'est corrigé.
+- [ ] Compléter `tests/legacy/` avec les scripts de vérification utilisés jusqu'ici (parcours des 265 leçons, profils, révisions, espace parent). Deux premiers tests de caractérisation y sont déjà.
 - [ ] Écrire les premières issues GitHub. Ordre proposé :
   1. Compte famille et profil enfant
   2. Jouer une leçon et gagner des étoiles

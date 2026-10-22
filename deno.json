@@ -1,0 +1,6 @@
+{
+  "compilerOptions": { "strict": true },
+  "lint": { "include": ["supabase/functions/"] },
+  "fmt": { "include": ["supabase/functions/"], "lineWidth": 120 },
+  "test": { "include": ["supabase/functions/"] }
+}
