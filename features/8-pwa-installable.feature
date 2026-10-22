@@ -31,7 +31,6 @@ Fonctionnalité: Installer Savanturier comme une application
       Quand Savanturier a fini de se charger
       Alors Paul voit comment ajouter Savanturier à l'écran d'accueil de son iPad
 
-    @a-valider
     Scénario: Une fois Savanturier ajouté à l'écran d'accueil de l'iPad, l'aide n'apparaît plus
       Étant donné que Paul a ajouté Savanturier à l'écran d'accueil de son iPad
       Quand Léa ouvre Savanturier depuis l'écran d'accueil de l'iPad
