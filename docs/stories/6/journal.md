@@ -12,3 +12,4 @@
 - 16:26 · Cycle 4 (félicitations) : red 118ea56, green 56e5739. Écart au modèle : `expressions` en `readonly string[]` (évite un import circulaire). Un `throw` non exigé par un test pour un tirage hors [0,1[ : à signaler à la review.
 - 16:27 · Cycle 5 (encouragements, présentations) : red 84bbbf1, green 8964eab. 34 tests verts. Domaine de #6 terminé.
 - 16:30 · Étape 3 (câblage) : délégué à `implementer`. Choix de l'orchestrateur, en application des décisions 1 et 2 : page `/demonstration` disponible seulement en dev ou avec `VITE_PAGE_DEMONSTRATION=1`, profil préparé lu dans `localStorage` (`savanturier:profil-prepare`), retiré au lot 2 ou 3.
+- 16:30 · Câblage : daa1a95, d13dfcd. tsc, build, 34 tests Deno et socle E2E verts. Étape 4 : review.
