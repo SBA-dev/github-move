@@ -11,3 +11,4 @@
 - 16:44 · Cycle 2 (texte à lire) : red bb50e94, green 6386326.
 - 16:46 · Cycle 3 (score, tri, choix de la voix) : red 5f84443 et 9a90a19, correction de l'exemple de score (70 et non 110, erreur de consigne de l'orchestrateur) c712373, green 4d04893 et suivant. 62 tests.
 - 16:48 · Cycle 4 (voix d'une autre langue, réglage des phrases) : red 4583f3e et 6be334f, green 1c78d97 et d2e2d88. 79 tests. Cycle 5 décidé : les règles Muet, une seule lecture à la fois et voix bloquée signalée une fois vont dans le domaine (service `LectureAVoixHaute` sur le port `LecteurAVoixHaute`), pas dans React.
+- 16:50 · Cycle 5 (service de lecture à voix haute) : red 5a60cf6, green 1ab1dd4. 89 tests. Domaine de #7 terminé.
