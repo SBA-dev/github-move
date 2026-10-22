@@ -7,7 +7,8 @@ Fonctionnalité: Réglages d'un profil enfant
 
   Les effets du parcours libre (lot 4), du clavier des dictées (lot 3) et de la langue du parent (lot 6)
   arrivent avec leurs écrans : ici, ces réglages sont seulement enregistrés et retrouvés.
-  Jusqu'au lot 3, les consignes s'affichent sur la page de démonstration.
+  Jusqu'au lot 3, les consignes s'affichent sur la page de démonstration, qui propose trois choix (« ami », « lune », « chat »)
+  pour vérifier « tout lire à voix haute ». Les réglages suivent le profil enfant, jamais l'appareil.
 
   Règle: Un profil enfant a toujours ses cinq réglages ; sans choix du parent, ils ont leurs valeurs par défaut
 
@@ -57,7 +58,6 @@ Fonctionnalité: Réglages d'un profil enfant
       Quand Paul ouvre les réglages de Léa
       Alors le clavier des dictées propose « automatique », « lettres du mot seulement » et « clavier complet »
 
-    @a-valider
     Scénario: La langue du parent se choisit parmi les vingt langues proposées, ou aucune
       Étant donné que Paul est rattaché au profil enfant de Léa
       Et que Paul est dans l'espace parent
@@ -80,7 +80,7 @@ Fonctionnalité: Réglages d'un profil enfant
 
   Règle: Seul un parent rattaché au profil voit et change ses réglages
 
-    @acces @a-valider
+    @acces
     Scénario: Le second parent rattaché change aussi les réglages
       Étant donné que Paul est rattaché au profil enfant de Léa
       Et que Marie est rattachée au profil enfant de Léa
@@ -122,11 +122,11 @@ Fonctionnalité: Réglages d'un profil enfant
 
   Règle: Le mode dys adapte l'affichage du texte quand le profil en cours l'a choisi
 
-    Scénario: Avec le mode dys, la consigne s'affiche avec la police de lecture et un texte espacé
+    Scénario: Avec le mode dys, la consigne s'affiche en police Andika et avec un texte espacé
       Étant donné que Paul a réglé « mode dys » sur « oui » pour Léa
       Et que Léa est sur la page de démonstration
       Quand la consigne « Trouve le mot qui commence par le son [a]. » s'affiche
-      Alors Léa voit la consigne « Trouve le mot qui commence par le son [a]. » en mode dys : police de lecture, lettres, mots et lignes espacés
+      Alors Léa voit la consigne « Trouve le mot qui commence par le son [a]. » en mode dys : police Andika, lettres, mots et lignes espacés
 
     Scénario: Sans le mode dys, la consigne s'affiche comme d'habitude
       Étant donné que le réglage « mode dys » de Léa est sur « non »
@@ -142,7 +142,6 @@ Fonctionnalité: Réglages d'un profil enfant
       Quand Léa donne une bonne réponse sur la page de démonstration
       Alors la félicitation de Noisette s'affiche en mode dys
 
-    @a-valider
     Scénario: Avec le mode dys, les syllabes des mots de plus de trois lettres sont en couleurs alternées
       Étant donné que Paul a réglé « mode dys » sur « oui » pour Léa
       Et que Léa est sur la page de démonstration
@@ -160,8 +159,15 @@ Fonctionnalité: Réglages d'un profil enfant
       Étant donné que Paul a réglé « mode dys » sur « oui » pour Léa
       Et que le réglage « mode dys » de Tom est sur « non »
       Et que Léa a joué sur la tablette
-      Quand Tom commence à jouer sur la tablette
+      Quand Tom choisit son profil enfant dans « Qui joue ? » sur la tablette
       Alors Tom voit la consigne de la page de démonstration sans le mode dys
+
+    Scénario: Un réglage changé pendant que Léa joue s'applique au prochain choix de son profil
+      Étant donné que Léa joue sur la tablette sans le mode dys
+      Et que Paul a ensuite réglé « mode dys » sur « oui » pour Léa sur le téléphone
+      Et que Léa est revenue sur « Qui joue ? » sur la tablette
+      Quand Léa choisit son profil enfant dans « Qui joue ? »
+      Alors Léa voit la consigne de la page de démonstration en mode dys
 
     Scénario: Le mode dys réglé sur la tablette s'applique quand Léa joue sur le téléphone
       Étant donné que Paul a réglé « mode dys » sur « oui » pour Léa sur la tablette
@@ -183,54 +189,42 @@ Fonctionnalité: Réglages d'un profil enfant
       Alors Léa voit la consigne de la page de démonstration en mode dys
       Et la page tient dans la largeur de l'écran
 
-  Règle: Avec « tout lire à voix haute », le personnage guide lit aussi la salutation et les choix proposés
+  Règle: Avec « tout lire à voix haute », le personnage guide lit aussi les choix proposés
 
-    @a-valider
     Scénario: Avec « tout lire à voix haute », les choix proposés sont lus après la consigne
       Étant donné que Paul a réglé « tout lire à voix haute » sur « oui » pour Léa
-      Et que Léa a choisi l'univers animaux
+      Et que Léa a un profil enfant préparé dans l'univers « Animaux de la forêt »
       Et que la page de démonstration propose les choix « ami », « lune » et « chat »
       Quand la consigne « Trouve le mot qui commence par le son [a]. » s'affiche
       Alors Léa entend Noisette lire « Trouve le mot qui commence par le son [a]. »
       Et Léa entend ensuite Noisette dire « Est-ce ami, lune, ou chat ? »
 
-    @a-valider
     Scénario: Avec deux choix proposés, la question n'a que deux choix
       Étant donné que Paul a réglé « tout lire à voix haute » sur « oui » pour Léa
-      Et que Léa a choisi l'univers animaux
+      Et que Léa a un profil enfant préparé dans l'univers « Animaux de la forêt »
       Et que la page de démonstration propose les choix « ami » et « lune »
       Quand la consigne « Trouve le mot qui commence par le son [a]. » s'affiche
       Alors Léa entend ensuite Noisette dire « Est-ce ami, ou lune ? »
 
-    @a-valider
     Scénario: Avec un seul choix proposé, seule la consigne est lue
       Étant donné que Paul a réglé « tout lire à voix haute » sur « oui » pour Léa
-      Et que Léa a choisi l'univers animaux
+      Et que Léa a un profil enfant préparé dans l'univers « Animaux de la forêt »
       Et que la page de démonstration propose le seul choix « ami »
       Quand la consigne « Trouve le mot qui commence par le son [a]. » s'affiche
       Alors Léa entend Noisette lire « Trouve le mot qui commence par le son [a]. »
       Mais Léa n'entend aucun choix proposé
 
-    @a-valider
     Scénario: Sans « tout lire à voix haute », la consigne est lue mais pas les choix proposés
       Étant donné que le réglage « tout lire à voix haute » de Léa est sur « non »
-      Et que Léa a choisi l'univers animaux
+      Et que Léa a un profil enfant préparé dans l'univers « Animaux de la forêt »
       Et que la page de démonstration propose les choix « ami », « lune » et « chat »
       Quand la consigne « Trouve le mot qui commence par le son [a]. » s'affiche
       Alors Léa entend Noisette lire « Trouve le mot qui commence par le son [a]. »
       Mais Léa n'entend aucun choix proposé
 
-    @a-valider
     Scénario: En Muet, « tout lire à voix haute » ne fait rien lire
       Étant donné que Paul a réglé « tout lire à voix haute » sur « oui » pour Léa
       Et que la tablette est en Muet
       Et que la page de démonstration propose les choix « ami », « lune » et « chat »
       Quand la consigne « Trouve le mot qui commence par le son [a]. » s'affiche
       Alors Léa n'entend rien
-
-    @a-valider
-    Scénario: Avec « tout lire à voix haute », le personnage guide salue l'enfant
-      Étant donné que Paul a réglé « tout lire à voix haute » sur « oui » pour Léa
-      Et que Léa a choisi l'univers animaux
-      Quand Léa commence à jouer
-      Alors Léa entend Noisette dire « Bonjour Léa ! »
