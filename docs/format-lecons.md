@@ -3,9 +3,9 @@
 Chaque leçon est un objet JSON. La même structure sert pour :
 
 - la **bibliothèque** préparée à partir des programmes officiels (`app/bibliotheque.json`) ;
-- les **leçons créées par un adulte** à partir de son propre texte (générées par l'IA, ou par les générateurs locaux de l'application).
+- les **leçons personnelles**, créées par un parent à partir de son propre texte (générées par l'IA, ou par les générateurs locaux de l'application).
 
-Le moteur affiche n'importe quelle leçon dans l'univers choisi par l'enfant (princesses, animaux, sports, police, pompiers, danse). L'univers ne change que l'habillage : le guide, le décor et les récompenses. Le contenu pédagogique reste identique.
+Le moteur affiche n'importe quelle leçon dans l'univers choisi par l'enfant (princesses, animaux, sports, police, pompiers, danse). L'univers ne change que l'habillage : le personnage guide, le décor et les récompenses. Le contenu pédagogique reste identique.
 
 ```json
 {
@@ -32,7 +32,7 @@ Le moteur affiche n'importe quelle leçon dans l'univers choisi par l'enfant (pr
 | `ordre` | Position dans le **parcours** de la matière : une leçon s'ouvre quand la précédente est réussie |
 | `programme.section` | Identifiant d'une section de `app/programmes-index.json` (généré par `scripts/index_programmes.py`) |
 | `programme.citation` | Phrase recopiée mot pour mot du texte officiel |
-| `lecon` | Étapes de la leçon, lues à voix haute par le guide avant les exercices |
+| `lecon` | Étapes de la leçon, lues à voix haute par le personnage guide avant les exercices |
 | `exercices` | Liste d'exercices. L'enfant peut tous les faire à la suite, ou en choisir un |
 | `competence` | Facultatif : le nom du badge gagné avec 2 étoiles (« Je connais les tables de 3 et de 4 ») |
 | `guide` | Facultatif : `{titre, page, extrait, fichier}`, le passage d'un guide fondamental d'Eduscol sur lequel s'appuie la leçon (vérifié mot pour mot par le script, voir ci-dessous) |
@@ -47,7 +47,7 @@ Le moteur affiche n'importe quelle leçon dans l'univers choisi par l'enfant (pr
 | `ordre` | Toucher les étiquettes dans le bon ordre | `consigne, elements[]` (dans l'ordre correct) |
 | `trous` | Compléter un texte, trou par trou, avec des bulles | `consigne, texte` (mots à trouver entre crochets : `Au clair de la [lune]`), `distracteurs[]` |
 | `conjugaison` | Choisir la bonne forme pour chaque personne | `verbe, temps, formes: [{pronom, forme}], distracteurs?[]` |
-| `lecture` | Écouter un texte lu par le guide, puis répondre | `titre, texte, questions: [{question, choix[], reponse}]` |
+| `lecture` | Écouter un texte lu par le personnage guide, puis répondre | `titre, texte, questions: [{question, choix[], reponse}]` |
 | `memoriser` | Écouter vers par vers, remettre les vers dans l'ordre, retrouver les mots cachés | `titre, auteur?, vers[]` |
 | `addition` | Poser l'addition dans les maisons, puis la calculer colonne par colonne | `operations: [[a, b], ...]` ou `generateur: {nombres, min, max, retenue}`, `etapes: ["poser", "calculer"]` |
 | `calcul` | Calculer, avec le clavier de cristaux (bulles au CP) | `operations: [{q: "12 − 5", r: 7, aide?}]` ou `generateur: {op: "+"\|"-"\|"×"\|":"\|"complement", a: [min, max], b: [min, max], combien, cible?}` |
@@ -56,7 +56,7 @@ Le moteur affiche n'importe quelle leçon dans l'univers choisi par l'enfant (pr
 | `boite` | La boîte à jetons : des jetons entrent (ou sortent) d'une boîte fermée, l'enfant prévoit combien il y en a, puis on ouvre pour vérifier | `items: [{a, op: "+"\|"-", b}]` |
 | `barres` | Problème illustré par un schéma en barres ; le « ? » montre ce qu'on cherche | `items: [{enonce, parties: [a, b], tout}]` (une valeur `null`), ou `type: "comparaison"` avec `grand, petit, ecart, noms`, ou `type: "parts"` avec `nb, valeur, total` |
 
-Les réponses sont toujours vérifiées par l'application ; l'aide (`aide`) est lue par le guide après une erreur, ou quand l'enfant touche « Je ne sais pas ».
+Les réponses sont toujours vérifiées par l'application ; l'aide (`aide`) est lue par le personnage guide après une erreur, ou quand l'enfant touche « Je ne sais pas ».
 
 Pour une dictée, les mots dictés n'apparaissent jamais à l'écran : ils sont seulement dits à voix haute. Ils ne doivent donc pas figurer non plus dans la leçon ni dans ses exemples.
 
@@ -75,9 +75,9 @@ Les leçons peuvent aussi s'appuyer sur un guide fondamental d'Eduscol (`sources
 
 Certains programmes (cycle 2 surtout) sont des tableaux à deux colonnes dans le PDF : leur texte extrait mélange parfois les deux colonnes. C'est pourquoi le script écarte les phrases où deux colonnes se mélangent, et pourquoi quelques leçons donnent un passage choisi à la main.
 
-## Création à partir d'un texte (espace adulte)
+## Création à partir d'un texte (espace parent)
 
-1. L'adulte colle un texte (liste de mots, poésie, chanson, texte sur un métier, liste de verbes…), choisit le niveau et, s'il le souhaite, les types d'exercices.
+1. Le parent colle un texte (liste de mots, poésie, chanson, texte sur un métier, liste de verbes…), choisit le niveau et, s'il le souhaite, les types d'exercices.
 2. L'application présélectionne les sections du programme les plus proches (mots en commun, niveau).
 3. L'IA reçoit le texte, ces sections et ce format. Elle renvoie une leçon dont `programme.section` est l'une des sections fournies, et dont la citation est recopiée du texte officiel.
 4. L'application vérifie la leçon (types connus, réponses présentes parmi les choix, section existante) avant de l'enregistrer.

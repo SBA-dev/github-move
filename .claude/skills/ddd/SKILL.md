@@ -24,9 +24,12 @@ description: Domain-Driven Design stratégique et tactique adapté au projet (Ty
 
 ### Savanturier : point de départ
 
-Les pistes de contextes sont listées dans `CLAUDE.md` : Catalogue pédagogique, Apprentissage, Motivation, Famille, Accompagnement. `domain-modeler` les confirme ou les corrige dans `docs/domain/context-map.md`. Relations déjà connues :
+Les contextes sont décidés dans `docs/domain/context-map.md` : Catalogue pédagogique, Apprentissage, Motivation (à part), Famille, Accompagnement. `domain-modeler` les complète à chaque story et signale tout besoin de les redécouper. Relations clés :
 - **Programmes officiels et guides Eduscol → Catalogue pédagogique** : *Conformist*. On reprend leurs termes et leur découpage, sans les réinterpréter.
 - **Format JSON des leçons** (`docs/format-lecons.md`) : *Published Language* entre le pipeline de contenu (`scripts/`) et les contextes qui lisent les leçons. Le domaine le lit via un mapper dans `infrastructure/`.
+- **Apprentissage → Motivation** et **Apprentissage → Accompagnement** : par **événements** (`SeanceTerminee`, `LeconAcquise`, à valider). Apprentissage ne connaît ni les badges ni la cabane.
+- **Accompagnement → Apprentissage** : les devoirs et les leçons personnelles sont fournis à Apprentissage, qui les joue comme les leçons de la bibliothèque.
+- **API Claude → Accompagnement** : *Anti-Corruption Layer*. La réponse de l'IA est validée puis traduite en leçon avant d'entrer dans le domaine.
 - **Application legacy (`app/`)** : *Anti-Corruption Layer* obligatoire. Une donnée reprise du legacy (profils, progression stockés par l'artifact) passe par un traducteur, jamais directement dans le domaine.
 
 ## 2. Où mettre quoi

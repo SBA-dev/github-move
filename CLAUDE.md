@@ -91,12 +91,20 @@ Le **domaine ne dépend de rien**.
 - React ne contient aucune règle métier. Il appelle le domaine ou une Edge Function et affiche le résultat.
 - Le serveur reste la source de vérité. Les résultats faits hors ligne sont revalidés par le cas d'usage à la synchronisation.
 
-**Pistes de bounded contexts** (à confirmer par `domain-modeler` dans `docs/domain/context-map.md`) :
-Catalogue pédagogique (programmes, leçons, exercices), Apprentissage (séances, réponses, parcours, révisions),
-Motivation (étoiles, badges, cabane, épisodes), Famille (compte parent, profils enfants, réglages),
-Accompagnement (suivi, devoirs, rapports aux parents).
+**Bounded contexts** (détail et relations dans `docs/domain/context-map.md`) :
+- **Catalogue pédagogique** : programmes, leçons de la bibliothèque, exercices, compétences
+- **Apprentissage** : séances, réponses, étoiles, parcours, test de départ, révisions
+- **Motivation** : série, badges, cabane, épisodes, univers. Contexte **à part** : il réagit aux séances terminées et ne modifie jamais une note.
+- **Famille** : compte famille, parent, profils enfants, réglages, contrôle parental
+- **Accompagnement** : suivi, rapport de la semaine, devoirs (leçon à faire, mots de la semaine), enregistrements de lecture, leçons personnelles
 
 ## Langage ubiquitaire
+
+Décisions déjà prises, à respecter partout (code, interface, scénarios) :
+- **Parent** est le seul rôle adulte (pas d'enseignant). L'interface dit « Espace parent ».
+- **Personnage guide** (Noisette, Lumi…) et **Guide fondamental** (guide Eduscol) : jamais « guide » seul.
+- Une leçon est **réussie** à 1 étoile (elle ouvre la suivante) et **acquise** à 2 étoiles (compétence et badge).
+- **Pas de temps d'écran** : l'application ne limite pas la durée de jeu.
 
 - Le glossaire de référence est `docs/domain/glossaire.md`.
 - On utilise **exactement** ces termes dans le code, les tests, les scénarios et les commits.
@@ -148,6 +156,11 @@ Accompagnement (suivi, devoirs, rapports aux parents).
 - Les cibles tactiles mesurent au moins 44 px. L'interface s'utilise sans clavier sur tablette et au clavier sur ordinateur.
 - L'interface tient à 360 px de large, sans défilement horizontal.
 - Un retour d'erreur n'est jamais punitif : un encouragement, puis une nouvelle chance.
+
+## Décisions et feuille de route
+
+- Les décisions d'architecture sont dans `docs/decisions/` (une par fichier, numérotées). On en ajoute une à chaque choix structurant, plutôt que de modifier une décision passée.
+- L'état du projet et les prochaines étapes sont dans `docs/feuille-de-route.md`. On le met à jour à la fin de chaque session de travail.
 
 ## Skills du projet
 
