@@ -32,7 +32,7 @@ flowchart LR
   Famille -- "Customer/Supplier (profil, niveau, réglages)" --> Apprentissage
   Apprentissage -- "événements" --> Motivation
   Apprentissage -- "événements" --> Accompagnement
-  Accompagnement -- "Customer/Supplier (devoirs, leçons personnelles)" --> Catalogue
+  Accompagnement -- "Customer/Supplier (devoirs, leçons personnelles)" --> Apprentissage
   Claude[API Claude] -- "ACL" --> Accompagnement
   Legacy[Application legacy] -- "ACL" --> Famille
   Legacy -- "ACL" --> Apprentissage
@@ -46,12 +46,15 @@ flowchart LR
 | Famille | Apprentissage | Customer/Supplier | Appel en lecture : niveau et réglages du profil enfant (parcours libre, temps d'écran) |
 | Apprentissage | Motivation | Événements | `SeanceTerminee` et `LeconAcquise` (à valider), qui font avancer la série, les badges, la cabane et les épisodes |
 | Apprentissage | Accompagnement | Événements | `SeanceTerminee` (à valider) alimente le suivi et le rapport de la semaine |
-| Accompagnement | Catalogue pédagogique | Customer/Supplier | Une leçon personnelle validée par le parent rejoint le catalogue de la famille |
+| Accompagnement | Apprentissage | Customer/Supplier | Appel en lecture : les devoirs du jour et les leçons personnelles de la famille, que l'enfant joue comme les autres leçons |
 | API Claude | Accompagnement | Anti-Corruption Layer | Port `GenerateurDeLecon` (à valider) : la réponse de l'IA est validée et traduite en leçon avant d'entrer dans le domaine |
 | Application legacy | Famille, Apprentissage | Anti-Corruption Layer | Traducteur de migration ponctuel : profils et progression de l'artifact → agrégats du domaine |
 
+## Décisions
+
+- Les leçons personnelles appartiennent à Accompagnement. Elles respectent le même format JSON que la bibliothèque, pour qu'Apprentissage les joue de la même façon.
+
 ## Questions ouvertes
 
-1. Les leçons personnelles appartiennent-elles au Catalogue (comme les leçons de la bibliothèque, mais privées à une famille) ou restent-elles dans Accompagnement ?
-2. La Motivation est-elle un contexte à part, ou une partie de l'Apprentissage ? Elle n'a pas de règle propre en dehors des seuils.
-3. Le temps d'écran relève-t-il de Famille (règle fixée par le parent) ou d'Apprentissage (il interrompt une séance) ?
+1. La Motivation est-elle un contexte à part, ou une partie de l'Apprentissage ? Elle n'a pas de règle propre en dehors des seuils.
+2. Le temps d'écran relève-t-il de Famille (règle fixée par le parent) ou d'Apprentissage (il interrompt une séance) ?
