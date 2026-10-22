@@ -61,7 +61,8 @@ L'application fonctionne et est publiée comme artifact claude.ai. Elle comprend
   - **#8 livrée sur la branche** : manifeste, icônes, service worker (coquille et bibliothèque hors ligne, nouvelle version au lancement suivant), aide iPad/iPhone ; E2E sur le build de production (`playwright.pwa.config.ts`) 28/28 ; deux reviews (la première À CORRIGER).
   - **PR du lot 1 ouverte** (#6, #7, #8) : https://github.com/SBA-dev/github-move/pull/9, en attente du merge par le PO.
   - À reprendre plus tard pour la PWA : fichier chargé à la demande après activation d'une nouvelle version (à traiter avant le premier écran `lazy` en production), délai maximal du réseau d'abord, tests de la réponse en erreur, exemples iPhone et Mac de bureau.
-  - Prochaine étape : #5 (connexion du parent), qui a besoin du projet Supabase : ajouter les secrets `SUPABASE_*` à l'environnement cloud, puis ouvrir une nouvelle session.
+  - **#5 commencée** sur `feature/5-connexion-du-parent` (partie de la branche du lot 1) : domaine `famille` (adresse e-mail, code de connexion, demander un lien, ouvrir la connexion avec le code, se déconnecter), 128 tests Deno au total.
+  - Pour finir #5 : ajouter `SUPABASE_URL`, `SUPABASE_ANON_KEY` et `SUPABASE_ACCESS_TOKEN` à l'environnement cloud (seul `SUPABASE_DB_PASSWORD` est présent), puis ouvrir une nouvelle session ; puis adaptateur Supabase Auth, écran de connexion, E2E. Après le merge de la PR #9, remettre la branche sur `main`.
   - À retirer plus tard : la page `/demonstration` et le profil préparé en `localStorage` (lots 2 et 3).
   - Première vérification Supabase (`npx supabase link`) non faite : les secrets `SUPABASE_*` n'étaient pas présents dans la session.
 - [ ] Lots 2 à 7 : issues à écrire.
