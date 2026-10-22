@@ -33,3 +33,16 @@ export function voixFrancaisesTriees(
     .filter(estFrancaise)
     .sort((a, b) => scoreDeLaVoix(b) - scoreDeLaVoix(a));
 }
+
+const VOIX_FEMININE =
+  /am[eé]lie|audrey|aur[eé]lie|marie|denise|eloise|vivienne|brigitte|c[eé]line|julie|hortense|l[eé]a\b|virginie|sylvie|jos[eé]phine|coralie|jacqueline|yvette|charlotte|ariane|juliette|chantal|female|femme/i;
+const VOIX_MASCULINE =
+  /thomas|henri|r[eé]my|paul|nicolas|daniel|j[eé]r[oô]me|antoine|claude|alain|fabrice|jean|maurice|yves|guillaume|mathieu|\bmale\b|homme/i;
+
+export function estFeminine(voix: VoixDisponible): boolean {
+  return VOIX_FEMININE.test(voix.nom);
+}
+
+export function estMasculine(voix: VoixDisponible): boolean {
+  return VOIX_MASCULINE.test(voix.nom);
+}
