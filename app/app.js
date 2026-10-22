@@ -480,8 +480,7 @@ function childForm(existing, done) {
       <label class="check"><input type="checkbox" id="f-dys"> Mode dys : texte espacé, syllabes en couleurs alternées</label>
       <label class="check"><input type="checkbox" id="f-lire"> Tout lire à voix haute (aussi les réponses proposées)</label>
       <label class="check"><input type="checkbox" id="f-libre"> Parcours libre : toutes les leçons ouvertes (l'ordre conseillé reste affiché)</label>
-      <div class="row"><label>Clavier des dictées<select id="f-clavier"><option value="auto">Automatique (lettres du mot jusqu'au CE1)</option><option value="lettres">Lettres du mot seulement</option><option value="complet">Clavier complet</option></select></label>
-      <label>Temps d'écran par jour<select id="f-temps"><option value="0">Sans limite</option>${[10, 15, 20, 30, 45, 60].map(n => `<option value="${n}">${n} minutes</option>`).join('')}</select></label></div>
+      <div class="row"><label>Clavier des dictées<select id="f-clavier"><option value="auto">Automatique (lettres du mot jusqu'au CE1)</option><option value="lettres">Lettres du mot seulement</option><option value="complet">Clavier complet</option></select></label></div>
       <label>Traduire les consignes pour le parent<select id="f-langue">${LANGUES.map(l => `<option value="${l}">${l ? cap(l) : 'Non'}</option>`).join('')}</select></label>
     </details>
     <button class="btn" type="submit">${existing ? 'Enregistrer' : 'C\'est parti !'}</button>`;
@@ -489,16 +488,16 @@ function childForm(existing, done) {
   if (existing) {
     q('#f-prenom').value = existing.prenom; q('#f-niveau').value = existing.niveau; q('#f-univers').value = existing.univers;
     q('#f-dys').checked = !!existing.dys; q('#f-lire').checked = !!existing.toutLire; q('#f-libre').checked = !!existing.libre; q('#f-clavier').value = existing.clavier || 'auto';
-    q('#f-temps').value = String(existing.tempsMax || 0); q('#f-langue').value = existing.langueParent || '';
+    q('#f-langue').value = existing.langueParent || '';
   }
   f.onsubmit = async e => {
     e.preventDefault();
     const prenom = q('#f-prenom').value.trim().slice(0, 20);
     if (!prenom) return;
     const id = existing ? existing._id : 'enfant_' + uid();
-    const { _id, ...old } = existing || {};
+    const { _id, tempsMax, ...old } = existing || {};
     const data = { ...old, kind: 'enfant', id, prenom, niveau: q('#f-niveau').value, univers: q('#f-univers').value, cree: existing?.cree || Date.now(),
-      dys: q('#f-dys').checked, toutLire: q('#f-lire').checked, libre: q('#f-libre').checked, clavier: q('#f-clavier').value, tempsMax: +q('#f-temps').value, langueParent: q('#f-langue').value };
+      dys: q('#f-dys').checked, toutLire: q('#f-lire').checked, libre: q('#f-libre').checked, clavier: q('#f-clavier').value, langueParent: q('#f-langue').value };
     q('button[type=submit]').disabled = true;
     await Store.put(id, data); audio(); sfx.magic();
     done({ ...data, _id: id });
@@ -656,7 +655,6 @@ function showMap(tab, subject) {
   if (typeof tab !== 'string') tab = mapTab;
   mapTab = tab;
   if (subject) mapSubject = subject;
-  if (checkTime()) return;
   const v = screen(showHome);
   const wrap = el('div', 'panel');
   v.append(wrap);
@@ -862,7 +860,7 @@ function fly(fromEl, toEl, html) {
 }
 
 /* Réglages de l'enfant en cours (définis par l'adulte dans son profil). */
-const prefs = () => ({ dys: !!child?.dys, toutLire: !!child?.toutLire, clavier: child?.clavier || 'auto', tempsMax: +child?.tempsMax || 0, langue: child?.langueParent || '' });
+const prefs = () => ({ dys: !!child?.dys, toutLire: !!child?.toutLire, clavier: child?.clavier || 'auto', langue: child?.langueParent || '' });
 
 /* Bulles : l'enfant éclate la bonne réponse.
    - « Je ne sais pas » : le guide explique, la bonne bulle brille, les autres disparaissent ;
@@ -1039,7 +1037,6 @@ const Days = {
   doc() { const k = this.key(); return (Store.docs[k] ||= { kind: 'jours', enfant: child._id, dates: {}, sessions: 0 }); },
   addSession() { const d = this.doc(); const t = (d.dates[today()] ||= { min: 0, sessions: 0 }); t.sessions++; d.sessions = (d.sessions || 0) + 1; return Store.put(this.key(), d); },
   addSeconds(sec) { const d = this.doc(); const t = (d.dates[today()] ||= { min: 0, sessions: 0 }); t.min = Math.round((t.min + sec / 60) * 10) / 10; },
-  minutesToday() { return Store.docs[`jours_${child._id}`]?.dates?.[today()]?.min || 0; },
   streak() {
     const dates = Store.docs[`jours_${child?._id}`]?.dates || {};
     const has = k => (dates[k]?.sessions || 0) > 0;
@@ -1721,7 +1718,6 @@ function fillNumber(T, row, n) { const ds = String(n).split(''), off = T.ranks.l
 
 /* ---------- Page d'une leçon : choisir un exercice ou tout faire ---------- */
 function showLesson(l) {
-  if (checkTime()) return;
   const v = screen(showMap);
   const sc = el('section', 'scene');
   sc.innerHTML = `<div class="scene-head"><h2></h2><span class="lv"></span></div>`;
@@ -1793,7 +1789,7 @@ const EPISODES = [
 const episodesOpen = () => Math.min(EPISODES.length, Store.docs[`jours_${child._id}`]?.sessions || 0);
 const badgesOf = () => Store.progress(child._id).filter(p => !p.test && (p.etoiles || 0) >= 2).map(p => { const l = lessonById(p.lecon); return { lid: p.lecon, matiere: p.matiere, nom: l?.competence || `Je sais : ${p.titre}` }; });
 
-/* ---------- Temps d'écran : l'adulte fixe un temps par jour ; une pause s'affiche ensuite ---------- */
+/* ---------- Temps de jeu : compté pour le rapport de la semaine du parent (aucune limite) ---------- */
 let clock = null, clockN = 0;
 function startClock() {
   clearInterval(clock); if (!child) return;
@@ -1801,11 +1797,8 @@ function startClock() {
     if (!child || document.hidden) return;
     Days.addSeconds(15);
     if (++clockN % 4 === 0) Store.put(Days.key(), Days.doc());
-    if (!S) checkTime();
   }, 15000);
 }
-const timeLeft = () => { const p = prefs(); if (!p.tempsMax) return Infinity; const d = Days.doc().dates[today()] || {}; return p.tempsMax + (d.bonus || 0) - (d.min || 0); };
-function checkTime() { if (child && timeLeft() <= 0) { showPause(); return true; } return false; }
 /* Petite question pour les adultes (multiplication), réutilisée partout. */
 function gateForm(onOk, label = 'Entrer') {
   const a = rnd(6, 9), b = rnd(6, 9);
@@ -1814,19 +1807,6 @@ function gateForm(onOk, label = 'Entrer') {
   box.querySelector('button').textContent = label;
   box.querySelector('#gate').onsubmit = e => { e.preventDefault(); if (+box.querySelector('#gate-in').value === a * b) onOk(); else box.querySelector('#gate-msg').hidden = false; };
   return box;
-}
-function showPause() {
-  const v = screen(showHome);
-  const box = el('div', 'welcome');
-  box.append(guideEl());
-  const p = el('div', 'parch');
-  p.append(el('h2', '', 'C\'est l\'heure de la pause !'));
-  const t = el('p'); t.textContent = `Tu as bien travaillé aujourd'hui, ${child.prenom}. ${W.guide.name} va se reposer aussi. Va jouer dehors, dessiner ou lire une histoire, et on se retrouve demain !`;
-  p.append(t);
-  const more = el('details', 'note'); more.innerHTML = '<summary>Un adulte peut donner 10 minutes de plus</summary>';
-  more.append(gateForm(async () => { const d = (Days.doc().dates[today()] ||= { min: 0, sessions: 0 }); d.bonus = (d.bonus || 0) + 10; await Store.put(Days.key(), Days.doc()); showMap('accueil'); }, 'Donner 10 minutes'));
-  p.append(more); box.append(p); v.append(box);
-  speak(t.textContent);
 }
 
 /* ---------- Leçons spéciales : révision des erreurs, test de départ, mots de la semaine ---------- */
@@ -1878,7 +1858,6 @@ function playSemaine() {
 }
 
 async function playLesson(l, only) {
-  if (!l.special && checkTime()) return;
   curLesson = l;
   const exercises = only == null ? l.exercices : [l.exercices[only]];
   sceneShell(l.titre, l.sous || `${l.niveau} · ${SUBJECTS[l.matiere] || ''}`, l.special ? () => showMap('accueil') : () => showLesson(l));

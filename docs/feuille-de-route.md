@@ -95,6 +95,6 @@ On suit le guide fondamental « Pour enseigner la lecture et l'écriture au CP �
 - placer les autres leçons de français du CP après la progression de décodage ;
 - puis faire la lecture au CE1.
 
-### 3. En attente d'une décision du PO
+### 3. Fait récemment
 
-- [ ] Retirer le réglage « temps d'écran » et l'écran de pause de `app/` (voir décision 0005).
+- [x] Réglage « temps d'écran » et écran de pause retirés de `app/` (décision 0005).

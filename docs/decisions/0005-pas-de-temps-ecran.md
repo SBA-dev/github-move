@@ -13,4 +13,5 @@ L'application actuelle propose un réglage « temps d'écran maximum » par jour
 ## Conséquences
 
 - Aucun contexte ne porte de limite de durée de jeu.
-- Le réglage existe encore dans `app/` (legacy). Il n'est pas repris dans la nouvelle application. Son retrait de `app/` attend la décision du PO (voir `docs/feuille-de-route.md`).
+- Le réglage, l'écran de pause et les « 10 minutes de plus » ont été retirés de `app/` (legacy), et ne seront pas repris dans la nouvelle application.
+- Le temps joué reste compté, seulement pour informer le parent dans le rapport de la semaine (« environ 25 minutes »). Ce n'est pas une limite.
