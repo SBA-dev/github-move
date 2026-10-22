@@ -8,3 +8,4 @@
 - 16:21 · Étape 3 : boucle TDD lancée (« ok » du PO). Comportements : catalogue des univers ; clé inconnue → animaux ; humeurs ; feliciter ; encourager et présentations. Le caractère de la voix est laissé à #7.
 - 16:23 · Cycle 1 (catalogue des univers) : red b9e06a5, green 05b136c. Outillage : import map `@std/assert` versionnée dans `deno.json` (le lint refusait l'import `jsr:` sans version).
 - 16:24 · Cycle 2 (univers par défaut) : red 4ad448d, green 5a705b5, refactor 1d2dd0a.
+- 16:25 · Cycle 3 (humeurs) : red 2de642d, green 43a6f6e (pas de refactor nécessaire).
