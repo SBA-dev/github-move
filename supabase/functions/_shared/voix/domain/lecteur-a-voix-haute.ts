@@ -5,6 +5,7 @@ export type LectureDemandee = {
   readonly voix: VoixDisponible | undefined;
   readonly langue: string;
   readonly phrases: readonly ReglageDePhrase[];
+  readonly onMot?: (phrase: number, position: number) => void;
 };
 
 export interface LecteurAVoixHaute {

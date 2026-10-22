@@ -22,6 +22,22 @@ export type DependancesDeLectureAVoixHaute = {
   readonly onVoixBloquee: () => void;
 };
 
+function debutsDesMots(phrase: string): number[] {
+  return [...phrase.matchAll(/\S+/g)].map((mot) => mot.index);
+}
+
+function rangDesMots(
+  phrases: readonly string[],
+  onMot: (rang: number) => void,
+): (phrase: number, position: number) => void {
+  const debuts = phrases.map(debutsDesMots);
+  const motsAvant = debuts.map((_, i) => debuts.slice(0, i).reduce((total, d) => total + d.length, 0));
+  return (phrase, position) => {
+    const dansLaPhrase = debuts[phrase].filter((debut) => debut <= position).length - 1;
+    onMot(motsAvant[phrase] + Math.max(0, dansLaPhrase));
+  };
+}
+
 export class LectureAVoixHaute {
   private etat: EtatDuSon;
   private voixBloqueeSignalee = false;
@@ -30,7 +46,10 @@ export class LectureAVoixHaute {
     this.etat = dependances.etatInitial;
   }
 
-  async lire(brut: string, options: { langue?: string } = {}): Promise<void> {
+  async lire(
+    brut: string,
+    options: { langue?: string; onMot?: (rang: number) => void; onFin?: () => void } = {},
+  ): Promise<void> {
     if (this.etat === "muet") return;
     const texte = texteALire(brut);
     if (!texte) return;
@@ -44,9 +63,12 @@ export class LectureAVoixHaute {
         voix,
         langue,
         phrases: reglerPhrases(texte, caractere, voix, RYTHME_NORMAL, hasard),
+        ...(options.onMot && { onMot: rangDesMots(texte.phrases, options.onMot) }),
       });
     } catch (erreur) {
       this.absorber(erreur);
+    } finally {
+      options.onFin?.();
     }
   }
 
