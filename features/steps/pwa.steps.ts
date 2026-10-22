@@ -26,7 +26,14 @@ async function emulerNavigateur(page: Page, userAgent: string) {
 }
 
 const tabletteAndroid = () => devices["Galaxy Tab S4"].userAgent;
-const safariIpad = () => devices["iPad (gen 7)"].userAgent;
+// Depuis iPadOS 13, Safari se présente comme un Mac ; seul maxTouchPoints trahit l'écran tactile.
+const USER_AGENT_SAFARI_IPAD =
+  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15";
+
+async function emulerSafariIpad(page: Page) {
+  await emulerNavigateur(page, USER_AGENT_SAFARI_IPAD);
+  await page.addInitScript(() => Object.defineProperty(Navigator.prototype, "maxTouchPoints", { get: () => 5 }));
+}
 
 // --- Service worker
 
@@ -118,7 +125,7 @@ Given("Paul ouvre Savanturier dans le navigateur de sa tablette Android", async 
 });
 
 Given("Paul ouvre Savanturier dans Safari sur son iPad", async ({ page }) => {
-  await emulerNavigateur(page, safariIpad());
+  await emulerSafariIpad(page);
   await page.goto("/");
 });
 
@@ -135,7 +142,7 @@ Given("Paul a installé Savanturier sur un téléphone de {int} px de large", as
 });
 
 Given("Paul a ajouté Savanturier à l'écran d'accueil de son iPad", async ({ page }) => {
-  await emulerNavigateur(page, safariIpad());
+  await emulerSafariIpad(page);
   // Safari expose navigator.standalone === true quand l'application est ouverte depuis l'écran d'accueil.
   await page.addInitScript(() => Object.defineProperty(navigator, "standalone", { value: true }));
   await page.goto("/");
@@ -250,6 +257,8 @@ Then("Paul voit comment ajouter Savanturier à l'écran d'accueil de son iPad", 
   await expect(aide).toBeVisible();
   await expect(aide).toContainText("Partager");
   await expect(aide).toContainText(/Sur l['’]écran d['’]accueil/);
+  const debordement = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+  expect(debordement, "la page tient dans la largeur de l'écran").toBeLessThanOrEqual(0);
 });
 
 Then("aucune aide pour ajouter Savanturier à l'écran d'accueil n'apparaît", async ({ page }) => {
