@@ -10,6 +10,7 @@ export function textePrononce(brut: string): string {
     .replace(/\+/g, " plus ")
     .replace(/=/g, " égale ")
     .replace(/_{2,}/g, " ... ")
+    .replace(/\s*»(?=[.,!?…])/g, "")
     .replace(/[«»]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
