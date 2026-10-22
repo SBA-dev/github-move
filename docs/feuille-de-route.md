@@ -56,7 +56,9 @@ L'application fonctionne et est publiée comme artifact claude.ai. Elle comprend
   - Modèles de domaine (#5 à #7) et critères d'acceptance (#5 à #8) écrits, glossaire et context map complétés.
   - Scénarios **validés par le PO** (`docs/stories/lot-1-decisions.md`, décision 0007). Questions restantes non bloquantes dans `docs/stories/<n>/acceptance.md`.
   - **#6 livrée sur la branche** : domaine `motivation` (40 tests Deno), front (paysages, personnages guides SVG animés avec Motion, en-tête, page `/demonstration` réservée aux tests), review approuvée, E2E 82/82. PR pas encore ouverte.
-  - Prochaines étapes : #7 (voix), puis #8 (PWA), puis #5 (connexion, qui a besoin du projet Supabase).
+  - **#7 livrée sur la branche** : sous-domaine `voix` (103 tests Deno au total), lecture à voix haute des consignes avec le caractère de chaque personnage guide, surlignage du mot prononcé, Son/Muet mémorisé sur l'appareil, voix bloquée signalée une fois ; décision 0008 ; deux reviews (la première À CORRIGER) ; E2E 140/140 avec #6 et le socle. PR pas encore ouverte.
+  - À reprendre plus tard (non bloquant, voir `docs/stories/7/journal.md`) : consignes avec balises à attributs, coupure de Chrome après 15 s de lecture, blocage silencieux sur iOS, entités HTML numériques, message « Réécouter » hors de la page de la consigne.
+  - Prochaines étapes : #8 (PWA), puis #5 (connexion, qui a besoin du projet Supabase).
   - À retirer plus tard : la page `/demonstration` et le profil préparé en `localStorage` (lots 2 et 3).
   - Première vérification Supabase (`npx supabase link`) non faite : les secrets `SUPABASE_*` n'étaient pas présents dans la session.
 - [ ] Lots 2 à 7 : issues à écrire.

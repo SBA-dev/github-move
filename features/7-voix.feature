@@ -1,5 +1,5 @@
 # language: fr
-@issue-7 @wip
+@issue-7
 Fonctionnalité: Lecture à voix haute par le personnage guide
   En tant qu'enfant qui ne lit pas encore bien
   Je veux que le personnage guide me lise les consignes à voix haute
