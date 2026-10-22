@@ -1476,14 +1476,15 @@ const RUNNERS = {
     const pad = levelRank(child?.niveau || 'CP') >= 1;
     for (const o of calculOps(ex)) {
       S.board.innerHTML = '';
-      const c = el('div', 'card big calc'); c.textContent = o.q.includes('…') ? o.q : `${o.q} = ?`; S.board.append(c);
-      await say(`Combien font ${esc(o.q.replace('…', 'combien'))} ?`);
+      const isOp = /\d\s*[+−×:]\s*\d|…/.test(o.q), spoken = o.q.replace(/−/g, ' moins ').replace(/×/g, ' fois ').replace(/ : /g, ' divisé par ').replace('…', 'combien');
+      const c = el('div', 'card big calc'); c.textContent = !isOp ? `${o.q} ?` : o.q.includes('…') ? o.q : `${o.q} = ?`; S.board.append(c);
+      await say(isOp ? `Combien font ${esc(spoken)} ?` : `${esc(o.q)} : combien ?`);
       const k = 'n:' + o.q, item = { type: 'calcul', operations: [o] }, help = o.aide || tipFor(o.q);
       const mark = () => { T.err('calcul'); remember(k, item); };
       const onWrong = () => { mark(); say(`${oops()} ${esc(help)}`, 'think'); };
       if (pad) await keypad(o.r, onWrong, { help, onHelp: mark });
       else await choose([o.r, o.r + 1, Math.max(0, o.r - 1), o.r + 2], o.r, onWrong, { help, onHelp: mark });
-      c.textContent = `${o.q.replace('…', o.r)}${o.q.includes('…') ? '' : ' = ' + o.r}`;
+      c.textContent = !isOp ? `${o.q} : ${o.r}` : `${o.q.replace('…', o.r)}${o.q.includes('…') ? '' : ' = ' + o.r}`;
       T.ok('calcul'); say(praise(), 'cheer'); await wait(500);
     }
   },

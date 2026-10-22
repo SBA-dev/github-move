@@ -27,13 +27,14 @@ Le moteur affiche n'importe quelle leçon dans l'univers choisi par l'enfant (pr
 
 | Champ | Rôle |
 |---|---|
-| `matiere` | `francais`, `maths` ou `emc` |
+| `matiere` | `francais`, `maths`, `sciences`, `histoire` (histoire et géographie), `anglais` ou `emc` |
 | `niveau` | `CP`, `CE1`, `CE2`, `CM1` ou `CM2` |
 | `ordre` | Position dans le **parcours** de la matière : une leçon s'ouvre quand la précédente est réussie |
 | `programme.section` | Identifiant d'une section de `app/programmes-index.json` (généré par `scripts/index_programmes.py`) |
 | `programme.citation` | Phrase recopiée mot pour mot du texte officiel |
 | `lecon` | Étapes de la leçon, lues à voix haute par le guide avant les exercices |
 | `exercices` | Liste d'exercices. L'enfant peut tous les faire à la suite, ou en choisir un |
+| `competence` | Facultatif : le nom du badge gagné avec 2 étoiles (« Je connais les tables de 3 et de 4 ») |
 
 ## Types d'exercices
 
@@ -48,8 +49,26 @@ Le moteur affiche n'importe quelle leçon dans l'univers choisi par l'enfant (pr
 | `lecture` | Écouter un texte lu par le guide, puis répondre | `titre, texte, questions: [{question, choix[], reponse}]` |
 | `memoriser` | Écouter vers par vers, remettre les vers dans l'ordre, retrouver les mots cachés | `titre, auteur?, vers[]` |
 | `addition` | Poser l'addition dans les maisons, puis la calculer colonne par colonne | `operations: [[a, b], ...]` ou `generateur: {nombres, min, max, retenue}`, `etapes: ["poser", "calculer"]` |
+| `calcul` | Calculer, avec le clavier de cristaux (bulles au CP) | `operations: [{q: "12 − 5", r: 7, aide?}]` ou `generateur: {op: "+"\|"-"\|"×"\|":"\|"complement", a: [min, max], b: [min, max], combien, cible?}` |
+| `fluence` | Calcul rapide chronométré, avec un record personnel | `duree` (secondes), `generateur` (comme `calcul`) |
+| `ecoute` | Écouter un mot ou une phrase dite par une voix anglaise, puis choisir sa traduction | `langue: "en-GB"`, `items: [{dire, question, choix[], reponse}]` |
 
-Les réponses sont toujours vérifiées par l'application ; l'aide (`aide`) est lue par le guide après une erreur.
+Les réponses sont toujours vérifiées par l'application ; l'aide (`aide`) est lue par le guide après une erreur, ou quand l'enfant touche « Je ne sais pas ».
+
+Pour une dictée, les mots dictés n'apparaissent jamais à l'écran : ils sont seulement dits à voix haute. Ils ne doivent donc pas figurer non plus dans la leçon ni dans ses exemples.
+
+## La bibliothèque
+
+`app/bibliotheque.json` est construite par `scripts/build_bibliotheque.py` à partir des leçons écrites dans `scripts/lecons/` (un fichier par matière), après `scripts/index_programmes.py` :
+
+```sh
+python3 scripts/index_programmes.py      # sections des programmes -> app/programmes-index.json
+python3 scripts/build_bibliotheque.py    # leçons -> app/bibliotheque.json
+```
+
+La citation du programme n'est jamais tapée à la main : le script choisit, dans le texte officiel de la section, la phrase lisible qui contient les mots-clés de la leçon, ou vérifie que le passage choisi (`citation_exacte`) figure mot pour mot dans ce texte. Il s'arrête si une section n'existe pas, ne couvre pas le niveau, ou si une réponse ne fait pas partie des choix. Les leçons écrites directement dans `bibliotheque.json` (sans `"genere": true`) sont conservées telles quelles.
+
+Certains programmes (cycle 2 surtout) sont des tableaux à deux colonnes dans le PDF : leur texte extrait mélange parfois les deux colonnes. C'est pourquoi le script écarte les phrases où deux colonnes se mélangent, et pourquoi quelques leçons donnent un passage choisi à la main.
 
 ## Création à partir d'un texte (espace adulte)
 

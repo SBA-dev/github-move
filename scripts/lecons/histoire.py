@@ -1,0 +1,228 @@
+"""Leçons d'histoire et de géographie, du CP au CM2."""
+from build_bibliotheque import lecon, bulles, classer, ordre, lecture, trous
+
+H = "histoire"
+C2 = "c2-histoire-geographie-{}-{}"
+C3 = "c3-histoire-geographie-{}-{}"
+
+LECONS = [
+    # ---------------- CP ----------------
+    lecon("hg-cp-saisons", H, "CP", "Les saisons", 10, C2.format("cp", "theme-1-les-manifestations-naturelles-du-temps"),
+          ["saisons", "jour", "nuit"],
+          [("Une année a quatre saisons : le printemps, l'été, l'automne et l'hiver.", ["printemps", "été", "automne", "hiver"]),
+           "En été, il fait chaud et les jours sont longs. En hiver, il fait froid et la nuit tombe tôt."],
+          [ordre("Les saisons dans l'ordre", "Remets les saisons dans l'ordre, en commençant par le printemps.", ["le printemps", "l'été", "l'automne", "l'hiver"]),
+           classer("Quelle saison ?", "Range chaque image dans sa saison.", {
+               "Été": ["la baignade à la mer", "les glaces"], "Hiver": ["la neige", "le bonhomme de neige"],
+               "Automne": ["les feuilles qui tombent", "les champignons"], "Printemps": ["les fleurs qui poussent", "les bourgeons"]})],
+          competence="Je connais les saisons"),
+    lecon("hg-cp-mois", H, "CP", "Les mois de l'année", 20, C2.format("cp", "theme-2-les-representations-humaines-du-temps"),
+          ["calendrier", "mois"],
+          [("Une année a douze mois. On les lit sur le calendrier.", ["janvier", "février", "mars"]),
+           "L'année commence en janvier et finit en décembre."],
+          [ordre("Les six premiers mois", "Remets les mois dans l'ordre.", ["janvier", "février", "mars", "avril", "mai", "juin"]),
+           ordre("Les six derniers mois", "Remets les mois dans l'ordre.", ["juillet", "août", "septembre", "octobre", "novembre", "décembre"]),
+           bulles("Le calendrier", [
+               ("Combien y a-t-il de mois dans une année ?", ["12", "7", "4"]),
+               ("Quel mois vient après mars ?", ["avril", "février", "mai"]),
+               ("En quel mois fête-t-on Noël ?", ["décembre", "janvier", "juillet"])])],
+          competence="Je connais les mois de l'année"),
+    lecon("hg-cp-plan-ecole", H, "CP", "Se repérer autour de l'école", 30, C2.format("cp", "theme-1-autour-de-lecole-trois-periodes"),
+          ["plan", "école", "repérer"],
+          [("Un plan, c'est un dessin vu d'en haut, comme le voit un oiseau.", ["vu d'en haut"]),
+           ("Pour se repérer, on utilise des mots : devant, derrière, à gauche, à droite, à côté de.", ["devant", "derrière", "à gauche", "à droite"])],
+          [bulles("Où est-ce ?", [
+              ("Sur un plan, l'école est vue…", ["d'en haut", "de côté", "de dessous"]),
+              ("Face au tableau, la porte est à ma gauche. Si je me retourne, la porte est à ma…", ["droite", "gauche", "tête"]),
+              ("Le tableau est devant les élèves. Les élèves sont donc… le tableau.", ["face à", "derrière", "sous"]),
+              ("Qu'est-ce qui aide à traverser la rue ?", ["le passage piéton", "le trottoir d'en face", "le parking"])])],
+          competence="Je me repère sur un plan"),
+
+    # ---------------- CE1 ----------------
+    lecon("hg-ce1-generations", H, "CE1", "Les générations", 10, C2.format("ce1", "theme-1-du-passe-proche-au-passe-lointain"),
+          ["générations", "passé"],
+          [("Mes grands-parents sont nés avant mes parents, et mes parents avant moi. Chaque étape est une génération.", ["grands-parents", "parents", "moi"]),
+           "Autrefois, il n'y avait ni téléphone portable, ni ordinateur dans les maisons."],
+          [ordre("Du plus ancien au plus récent", "Range du plus âgé au plus jeune.", ["mes arrière-grands-parents", "mes grands-parents", "mes parents", "moi"]),
+           classer("Autrefois ou aujourd'hui ?", "Range chaque objet.", {
+               "Autrefois": ["le lavoir", "la machine à écrire", "la lampe à pétrole"], "Aujourd'hui": ["la tablette", "le lave-linge", "le téléphone portable"]})],
+          competence="Je situe les générations dans le temps"),
+    lecon("hg-ce1-periodes", H, "CE1", "Les grandes périodes de l'histoire", 20, C2.format("ce1", "theme-2-les-grandes-periodes-de-lhistoire"),
+          ["repères temporels"],
+          [("Les historiens découpent le passé en grandes périodes : la Préhistoire, l'Antiquité, le Moyen Âge, les Temps modernes et l'époque contemporaine.", ["Préhistoire", "Antiquité", "Moyen Âge"]),
+           "L'invention de l'écriture marque la fin de la Préhistoire."],
+          [ordre("La frise du temps", "Remets les périodes dans l'ordre, de la plus ancienne à la plus récente.", ["la Préhistoire", "l'Antiquité", "le Moyen Âge", "les Temps modernes", "l'époque contemporaine"]),
+           bulles("Quelle période ?", [
+               ("Les hommes vivaient dans des grottes et chassaient le mammouth pendant…", ["la Préhistoire", "le Moyen Âge", "l'époque contemporaine"]),
+               ("Les chevaliers et les châteaux forts, c'est…", ["le Moyen Âge", "la Préhistoire", "l'Antiquité"]),
+               ("Quelle invention marque la fin de la Préhistoire ?", ["l'écriture", "la roue", "le feu"])])],
+          competence="Je connais les grandes périodes de l'histoire"),
+    lecon("hg-ce1-continents", H, "CE1", "Continents et océans", 30, C2.format("ce1", "theme-1-la-terre-est-peuplee-une-ou-deux-periodes"),
+          ["Où les êtres humains vivent-ils dans le monde"],
+          [("La Terre est couverte surtout d'eau : les océans. Les grandes terres s'appellent les continents.", ["océans", "continents"]),
+           ("Les continents sont l'Europe, l'Afrique, l'Asie, l'Amérique, l'Océanie et l'Antarctique.", ["Europe", "Afrique", "Asie", "Amérique", "Océanie", "Antarctique"])],
+          [bulles("La Terre", [
+              ("Sur quel continent est la France ?", ["l'Europe", "l'Afrique", "l'Asie"]),
+              ("Quel est le plus grand océan ?", ["le Pacifique", "l'Atlantique", "l'océan Indien"]),
+              ("Sur quel continent vivent les manchots, tout au sud ?", ["l'Antarctique", "l'Europe", "l'Afrique"]),
+              ("La Terre est surtout couverte de…", ["mers et océans", "forêts", "déserts"])]),
+           classer("Continent ou océan ?", "Range chaque nom.", {
+               "Continent": ["l'Afrique", "l'Asie", "l'Amérique"], "Océan": ["l'Atlantique", "le Pacifique", "l'océan Indien"]})],
+          competence="Je connais les continents et les océans"),
+    lecon("hg-ce1-milieux", H, "CE1", "Où vivent les hommes ?", 40, C2.format("ce1", "theme-2-decouvrir-les-lieux-ou-vivent-les-etres-humains-trois-o"),
+          ["caractéristiques principales des lieux de vie"],
+          [("On peut vivre en ville, à la campagne, à la montagne ou au bord de la mer, sur le littoral.", ["ville", "campagne", "montagne", "littoral"])],
+          [classer("Quel paysage ?", "Range chaque élément dans son paysage.", {
+              "En ville": ["des immeubles", "un métro", "beaucoup de magasins"], "À la campagne": ["des champs", "une ferme", "des tracteurs"],
+              "À la montagne": ["des sommets enneigés", "un téléphérique"], "Sur le littoral": ["un port", "une plage"]})],
+          competence="Je reconnais les paysages où vivent les hommes"),
+
+    # ---------------- CE2 ----------------
+    lecon("hg-ce2-prehistoire", H, "CE2", "La vie à la Préhistoire", 10, C2.format("ce2", "theme-1-la-vie-des-femmes-et-des-hommes-au-paleolithique-et-au"),
+          ["Paléolithique", "Néolithique"],
+          [("Au Paléolithique, les hommes étaient nomades : ils se déplaçaient pour chasser, pêcher et cueillir. Ils maîtrisaient le feu.", ["nomades", "chasse", "feu"]),
+           "Au Néolithique, ils sont devenus sédentaires : ils ont cultivé la terre, élevé des animaux et construit des villages."],
+          [classer("Paléolithique ou Néolithique ?", "Range chaque activité dans sa période.", {
+              "Paléolithique": ["chasser le mammouth", "peindre dans les grottes", "vivre en nomade"],
+              "Néolithique": ["cultiver le blé", "élever des moutons", "vivre dans un village"]}),
+           bulles("La Préhistoire", [
+               ("Comment appelle-t-on des hommes qui se déplacent tout le temps ?", ["des nomades", "des sédentaires", "des chevaliers"]),
+               ("Où trouve-t-on des peintures préhistoriques, comme à Lascaux ?", ["dans des grottes", "dans des châteaux", "dans des églises"])])],
+          competence="Je connais la vie à la Préhistoire"),
+    lecon("hg-ce2-gaule-romaine", H, "CE2", "La Gaule romaine", 20, C2.format("ce2", "theme-2-vivre-a-rome-et-en-gaule-romaine-du-ier-siecle-avant-j"),
+          ["Gaule", "Rome", "romaine"],
+          [("Il y a plus de deux mille ans, la France s'appelait la Gaule. Jules César, un général romain, l'a conquise.", ["Gaule", "Jules César", "Vercingétorix"]),
+           "Les Romains ont construit des routes, des aqueducs pour l'eau, des arènes et des thermes."],
+          [lecture("Vercingétorix",
+                   "En 52 avant Jésus-Christ, le chef gaulois Vercingétorix réunit plusieurs peuples gaulois contre l'armée de Jules César. Après une victoire à Gergovie, il est encerclé à Alésia. Après un long siège, il se rend. La Gaule devient romaine : les Gaulois adoptent peu à peu la langue latine, les villes et les coutumes des Romains.",
+                   [("Qui est le chef des Gaulois ?", ["Vercingétorix", "Jules César", "Charlemagne"]),
+                    ("Où Vercingétorix se rend-il ?", ["à Alésia", "à Rome", "à Paris"]),
+                    ("Quelle langue les Gaulois adoptent-ils ?", ["le latin", "l'anglais", "le grec"])]),
+           bulles("Constructions romaines", [
+               ("Un aqueduc sert à…", ["transporter l'eau", "faire des spectacles", "se laver"]),
+               ("Où les Romains allaient-ils se baigner ?", ["aux thermes", "à l'aqueduc", "au forum"])])],
+          competence="Je connais la Gaule romaine"),
+    lecon("hg-ce2-moyen-age", H, "CE2", "Châteaux forts et royaume de France", 30, C2.format("ce2", "theme-3-la-construction-du-royaume-de-france-xe-xve-siecles-qua"),
+          ["royaume", "roi"],
+          [("Au Moyen Âge, les seigneurs vivaient dans des châteaux forts, protégés par des murailles et des douves.", ["donjon", "douves", "pont-levis"]),
+           "Peu à peu, les rois ont agrandi le royaume de France. Jeanne d'Arc a aidé le roi Charles VII pendant la guerre de Cent Ans."],
+          [bulles("Le Moyen Âge", [
+              ("La plus haute tour d'un château fort s'appelle…", ["le donjon", "le grenier", "le clocher"]),
+              ("Le fossé rempli d'eau autour du château, ce sont…", ["les douves", "les remparts", "les créneaux"]),
+              ("Qui a aidé le roi Charles VII ?", ["Jeanne d'Arc", "Jules César", "Napoléon"]),
+              ("Qui travaillait la terre du seigneur ?", ["les paysans", "les chevaliers", "les rois"])])],
+          competence="Je connais les châteaux forts et le royaume de France"),
+    lecon("hg-ce2-travailler", H, "CE2", "Travailler en France", 40, C2.format("ce2", "theme-3-travailler-en-france-deux-periodes"),
+          ["exploitation agricole, station touristique"],
+          [("Certains métiers produisent ce qu'on mange : agriculteur, pêcheur. D'autres fabriquent des objets dans des usines. D'autres rendent des services : enseignant, médecin, vendeur.", ["agriculteur", "ouvrier", "médecin"])],
+          [classer("Quel type de travail ?", "Range chaque métier.", {
+              "Produire de la nourriture": ["l'agricultrice", "le pêcheur", "l'éleveur"], "Fabriquer des objets": ["l'ouvrière en usine", "le menuisier"],
+              "Rendre un service": ["l'enseignante", "le médecin", "le facteur"]})],
+          competence="Je connais différents types de métiers"),
+
+    # ---------------- CM1 ----------------
+    lecon("hg-cm1-moyen-age", H, "CM1", "La vie au Moyen Âge", 10, C3.format("cm1", "theme-1-la-vie-quotidienne-au-moyen-age-xie-xiiie-siecles-premi"),
+          ["Moyen Âge", "seigneurs", "paysans"],
+          [("Au Moyen Âge, la société a trois groupes : ceux qui prient (le clergé), ceux qui combattent (les seigneurs et chevaliers) et ceux qui travaillent (les paysans).", ["clergé", "seigneurs", "paysans"]),
+           "Les villes grandissent, avec leurs marchés, leurs artisans et leurs cathédrales."],
+          [classer("Qui fait quoi ?", "Range chaque personne dans son groupe.", {
+              "Ceux qui prient": ["le moine", "l'évêque"], "Ceux qui combattent": ["le chevalier", "le seigneur"], "Ceux qui travaillent": ["le paysan", "l'artisan"]}),
+           bulles("Au Moyen Âge", [
+               ("Une grande église de ville, au Moyen Âge, c'est…", ["une cathédrale", "un château", "une usine"]),
+               ("Les paysans devaient donner au seigneur une partie de…", ["leurs récoltes", "leurs maisons", "leurs livres"])])],
+          competence="Je connais la société du Moyen Âge"),
+    lecon("hg-cm1-louis-xiv", H, "CM1", "Louis XIV, le Roi-Soleil", 20, C3.format("cm1", "theme-2-la-monarchie-en-france-xvie-xviie-siecles-deuxieme-et-t"),
+          ["monarchie", "roi", "pouvoir"],
+          [("Louis XIV a régné pendant 72 ans, de 1643 à 1715. On l'appelait le Roi-Soleil.", ["1643", "1715", "Roi-Soleil"]),
+           "Il avait tous les pouvoirs : c'est la monarchie absolue. Il a fait construire le château de Versailles."],
+          [bulles("Le Roi-Soleil", [
+              ("Quel château Louis XIV a-t-il fait construire ?", ["Versailles", "Chambord", "Le Louvre"]),
+              ("Comment appelait-on Louis XIV ?", ["le Roi-Soleil", "le Roi-Lune", "le Petit Caporal"]),
+              ("Un roi qui a tous les pouvoirs, c'est une monarchie…", ["absolue", "républicaine", "partagée"]),
+              ("Combien de temps a-t-il régné ?", ["72 ans", "7 ans", "20 ans"])])],
+          competence="Je connais la monarchie de Louis XIV"),
+    lecon("hg-cm1-explorations", H, "CM1", "Les grandes explorations", 30, C3.format("cm1", "theme-3-explorations-et-conquetes-par-les-europeens-du-xve-au-x"),
+          ["explorations", "Européens"],
+          [("En 1492, Christophe Colomb traverse l'océan Atlantique et arrive en Amérique, alors qu'il voulait atteindre l'Asie.", ["1492", "Christophe Colomb"]),
+           "Les Européens découvrent de nouvelles terres. Mais ces conquêtes sont violentes pour les peuples qui y vivaient déjà, comme les Aztèques."],
+          [bulles("Les explorateurs", [
+              ("En quelle année Christophe Colomb arrive-t-il en Amérique ?", ["1492", "1789", "1914"]),
+              ("Quel océan traverse-t-il ?", ["l'Atlantique", "le Pacifique", "l'océan Indien"]),
+              ("Quel continent voulait-il atteindre ?", ["l'Asie", "l'Afrique", "l'Europe"]),
+              ("Le navigateur Magellan a organisé le premier…", ["tour du monde", "voyage sur la Lune", "voyage en train"])])],
+          competence="Je connais les grandes explorations", citation_exacte='Question : Pourquoi les Européens explorent-ils le monde et comment cela mène-t-il à la première colonisation ?'),
+    lecon("hg-cm1-1789", H, "CM1", "1789, la Révolution française", 40, C3.format("cm1", "theme-4-1789-une-annee-revolutionnaire-en-france-cinquieme-peri"),
+          ["1789", "révolution"],
+          [("Le 14 juillet 1789, les Parisiens prennent la Bastille, une prison qui représente le pouvoir du roi.", ["14 juillet 1789", "la Bastille"]),
+           "En août 1789, la Déclaration des droits de l'homme et du citoyen affirme que les hommes naissent libres et égaux en droits."],
+          [ordre("Les événements de 1789", "Remets dans l'ordre.", ["Les états généraux se réunissent (mai)", "Prise de la Bastille (14 juillet)", "Déclaration des droits de l'homme (août)"]),
+           bulles("La Révolution", [
+               ("Que fête-t-on le 14 juillet ?", ["la prise de la Bastille", "Noël", "la fin de la guerre"]),
+               ("La Déclaration de 1789 dit que les hommes naissent…", ["libres et égaux en droits", "riches", "tous rois"]),
+               ("Qui était roi en 1789 ?", ["Louis XVI", "Louis XIV", "Charlemagne"])])],
+          competence="Je connais les événements de 1789"),
+    lecon("hg-cm1-se-deplacer", H, "CM1", "Se déplacer", 50, C3.format("cm1", "theme-3-se-deplacer-1-periode"),
+          ["Comment se déplace-t-on dans le monde"],
+          [("Pour se déplacer, on utilise différents moyens de transport : à pied, à vélo, en voiture, en bus, en train, en avion.", ["vélo", "train", "avion"]),
+           "Certains transports polluent beaucoup moins que d'autres : la marche, le vélo, le train."],
+          [classer("Quel transport pour quel trajet ?", "Range chaque transport selon la distance.", {
+              "Trajet court (quartier)": ["à pied", "à vélo", "en trottinette"], "Trajet long (autre pays)": ["en avion", "en train à grande vitesse"]}),
+           bulles("Transports et pollution", [
+               ("Quel transport pollue le moins ?", ["le vélo", "la voiture", "l'avion"]),
+               ("Dans une grande ville, quel transport passe sous terre ?", ["le métro", "le tramway", "le bateau"])])],
+          competence="Je compare les moyens de transport"),
+
+    # ---------------- CM2 ----------------
+    lecon("hg-cm2-napoleon", H, "CM2", "Napoléon Bonaparte", 10, C3.format("cm2", "theme-1-de-la-republique-a-lempire-1792-1815-premiere-periode"),
+          ["Code civil, liberté de la presse"],
+          [("En 1792, la France devient une République. Puis le général Napoléon Bonaparte prend le pouvoir et se fait sacrer empereur en 1804.", ["1792", "1804", "Napoléon"]),
+           "Napoléon crée le Code civil et les lycées. Il fait de nombreuses guerres en Europe, et il est vaincu à Waterloo en 1815."],
+          [ordre("Dans l'ordre", "Remets les événements dans l'ordre.", ["La République est proclamée (1792)", "Napoléon est sacré empereur (1804)", "Défaite de Waterloo (1815)"]),
+           bulles("Napoléon", [
+               ("Quel titre Napoléon prend-il en 1804 ?", ["empereur", "roi", "président"]),
+               ("Quelle création de Napoléon existe toujours ?", ["le Code civil", "la Bastille", "les châteaux forts"]),
+               ("Où Napoléon est-il vaincu en 1815 ?", ["à Waterloo", "à Alésia", "à Versailles"])])],
+          competence="Je connais la période de Napoléon"),
+    lecon("hg-cm2-ecole-republique", H, "CM2", "La IIIe République et l'école", 20, C3.format("cm2", "theme-2-vers-une-france-republicaine-la-iie-republique-1848-185"),
+          ["République", "école", "suffrage"],
+          [("En 1848, l'esclavage est aboli dans les colonies françaises et les hommes obtiennent le droit de vote : c'est le suffrage universel masculin.", ["1848", "suffrage universel"]),
+           "Avec les lois de Jules Ferry, en 1881 et 1882, l'école devient gratuite, obligatoire et laïque."],
+          [bulles("La République", [
+              ("Les lois de Jules Ferry rendent l'école…", ["gratuite, obligatoire et laïque", "payante", "réservée aux garçons"]),
+              ("En 1848, qui obtient le droit de vote ?", ["les hommes", "les femmes", "les enfants"]),
+              ("En quelle année l'esclavage est-il aboli en France ?", ["1848", "1492", "1945"]),
+              ("Quelle est la devise de la République ?", ["Liberté, Égalité, Fraternité", "Un pour tous", "Travail, Famille"])])],
+          competence="Je connais les débuts de la République"),
+    lecon("hg-cm2-guerres", H, "CM2", "Les deux guerres mondiales", 30, C3.format("cm2", "theme-4-la-france-dans-la-premiere-guerre-mondiale-1914-1918-tr"),
+          ["poilus", "armistice"],
+          [("La Première Guerre mondiale dure de 1914 à 1918. Les soldats, appelés « poilus », vivent dans des tranchées. Le 11 novembre 1918, l'armistice met fin aux combats.", ["1914", "1918", "11 novembre"]),
+           "La Seconde Guerre mondiale dure de 1939 à 1945. La France est occupée ; certains Français entrent dans la Résistance."],
+          [bulles("Les guerres mondiales", [
+              ("Comment appelait-on les soldats français de 1914-1918 ?", ["les poilus", "les chevaliers", "les mousquetaires"]),
+              ("Que fête-t-on le 11 novembre ?", ["l'armistice de 1918", "la prise de la Bastille", "le sacre de Napoléon"]),
+              ("En quelle année finit la Seconde Guerre mondiale ?", ["1945", "1918", "1939"]),
+              ("Les Français qui luttaient contre l'occupant formaient…", ["la Résistance", "la Révolution", "la Monarchie"])])],
+          competence="Je connais les deux guerres mondiales"),
+    lecon("hg-cm2-territoire", H, "CM2", "Le territoire français", 40, C3.format("cm2", "theme-1-lorganisation-du-territoire-francais-2-periodes"),
+          ["territoire", "régions", "départements"],
+          [("La France est divisée en régions, elles-mêmes divisées en départements, puis en communes.", ["région", "département", "commune"]),
+           "La France a aussi des territoires loin de l'Europe : les Outre-mer, comme la Guadeloupe, la Martinique ou La Réunion. Sa capitale est Paris."],
+          [ordre("Du plus grand au plus petit", "Range du plus grand au plus petit.", ["la France", "la région", "le département", "la commune"]),
+           bulles("La France", [
+               ("Quelle est la capitale de la France ?", ["Paris", "Lyon", "Marseille"]),
+               ("Quel territoire d'Outre-mer se trouve dans l'océan Indien ?", ["La Réunion", "la Martinique", "la Corse"]),
+               ("Qui dirige une commune ?", ["le maire", "le président", "le préfet"]),
+               ("Quel est le plus long fleuve de France ?", ["la Loire", "la Seine", "le Rhône"])])],
+          competence="Je connais l'organisation du territoire français"),
+    lecon("hg-cm2-europe", H, "CM2", "L'Union européenne", 50, C3.format("cm2", "theme-3-lunion-europeenne-1-periode"),
+          ["Union européenne"],
+          [("L'Union européenne regroupe 27 pays qui coopèrent. Beaucoup utilisent la même monnaie : l'euro.", ["27 pays", "l'euro"]),
+           "Son drapeau est bleu, avec un cercle de douze étoiles dorées."],
+          [bulles("L'Union européenne", [
+              ("Combien de pays dans l'Union européenne ?", ["27", "12", "50"]),
+              ("Quelle est la monnaie de nombreux pays européens ?", ["l'euro", "le dollar", "le franc"]),
+              ("Combien d'étoiles sur le drapeau européen ?", ["12", "27", "50"])]),
+           classer("Dans l'Union européenne ?", "Range chaque pays.", {
+               "Membre de l'Union européenne": ["l'Allemagne", "l'Espagne", "l'Italie", "la Belgique"], "Pas membre": ["la Suisse", "le Canada", "le Japon"]})],
+          competence="Je connais l'Union européenne"),
+]

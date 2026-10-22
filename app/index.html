@@ -123,7 +123,7 @@ select.pill { border: 1px solid var(--glass-line); background: var(--glass-stron
 .subject h3 { font-size: 24px; display: flex; align-items: center; gap: 12px; }
 .subject h3 .ico { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; color: #FFFFFF; font-size: 18px; }
 .subject h3 .ico svg { width: 24px; height: 24px; }
-.path { display: flex; gap: 0; overflow-x: auto; padding: 10px 6px 6px; align-items: flex-start; scroll-snap-type: x proximity; }
+.path { display: flex; gap: 0; overflow-x: auto; padding: 10px 6px 14px; align-items: flex-start; scroll-snap-type: x proximity; }
 .step { flex: 0 0 132px; display: grid; justify-items: center; gap: 8px; text-align: center; position: relative; scroll-snap-align: start; background: none; border: 0; cursor: pointer; color: var(--ink); padding: 0 4px; }
 .step::before { content: ""; position: absolute; top: 36px; left: -50%; width: 100%; border-top: 4px dotted rgba(23,48,42,.25); z-index: -1; }
 .step:first-child::before { display: none; }
@@ -133,7 +133,7 @@ select.pill { border: 1px solid var(--glass-line); background: var(--glass-stron
 .step.next .dot { width: 86px; height: 86px; margin-top: -7px; background: var(--accent); box-shadow: 0 0 0 10px rgba(255,255,255,.55), 0 16px 28px -10px var(--accent-deep); }
 .step[disabled] { cursor: not-allowed; opacity: .75; }
 .step .t { font-size: 14px; font-weight: 600; line-height: 1.2; }
-.step .st { font-size: 12px; color: var(--ink-soft); }
+.step .st { font-size: 12px; color: var(--ink-soft); white-space: nowrap; }
 .step .mine { font-size: 11px; font-weight: 700; color: var(--d); text-transform: uppercase; letter-spacing: .06em; }
 
 /* Toutes les leçons */
