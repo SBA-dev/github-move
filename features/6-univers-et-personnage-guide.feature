@@ -1,5 +1,5 @@
 # language: fr
-@issue-6 @wip
+@issue-6
 Fonctionnalité: Univers et personnage guide
   En tant qu'enfant
   Je veux jouer dans l'univers que j'ai choisi, avec son personnage guide qui me parle et réagit
