@@ -1,5 +1,5 @@
 import { assertEquals } from "@std/assert";
-import { feliciter } from "./paroles.ts";
+import { encourager, feliciter, presentation, presentationAuRetourDuSon } from "./paroles.ts";
 import { type CleUnivers, universDe } from "./univers.ts";
 import { hasardFixe } from "../test_utils/hasard-fixe.ts";
 
@@ -77,3 +77,51 @@ Deno.test("les huit félicitations communes sont tirées mot pour mot", () => {
 
   assertEquals(textes, felicitationsCommunes);
 });
+
+const encouragementsLegacy = [
+  "Oups, presque !",
+  "Hmm, pas tout à fait…",
+  "Pas grave, on réessaie !",
+  "Ah, celle-là est piégeuse !",
+  "Presque ! Regarde bien.",
+];
+
+Deno.test("un tirage de 0 donne le premier encouragement", () => {
+  assertEquals(encourager(hasardFixe(0)).texte, "Oups, presque !");
+});
+
+Deno.test("un tirage de 0,99 donne le dernier encouragement", () => {
+  assertEquals(encourager(hasardFixe(0.99)).texte, "Presque ! Regarde bien.");
+});
+
+Deno.test("les cinq encouragements sont tirés mot pour mot", () => {
+  const textes = encouragementsLegacy.map((_, i) => encourager(hasardFixe((i + 0.5) / 5)).texte);
+
+  assertEquals(textes, encouragementsLegacy);
+});
+
+Deno.test("Noisette se présente au retour du son", () => {
+  assertEquals(presentationAuRetourDuSon(noisette), "Je t'entends ! Je suis Noisette.");
+});
+
+Deno.test("Capitaine Sam se présente au retour du son", () => {
+  assertEquals(
+    presentationAuRetourDuSon(universDe("pompier").personnageGuide),
+    "Je t'entends ! Je suis Capitaine Sam.",
+  );
+});
+
+const presentationsAttendues: [CleUnivers, string][] = [
+  ["princesse", "Je suis Lumi, la fée des nombres et des mots du Royaume des Savanturiers."],
+  ["animaux", "Je suis Noisette, l'écureuil savant de la Forêt des Savanturiers."],
+  ["sports", "Je suis Coach Léo, l'entraîneur des champions du Stade des Savanturiers."],
+  ["police", "Je suis Agente Mila, la policière détective du Commissariat des Savanturiers."],
+  ["pompier", "Je suis Capitaine Sam, le pompier courageux de la Caserne des Savanturiers."],
+  ["danse", "Je suis Lili, la danseuse étoile de l'Opéra des Savanturiers."],
+];
+
+for (const [cle, attendue] of presentationsAttendues) {
+  Deno.test(`le personnage guide de l'univers ${cle} se présente avec son titre et son royaume`, () => {
+    assertEquals(presentation(universDe(cle)), attendue);
+  });
+}
