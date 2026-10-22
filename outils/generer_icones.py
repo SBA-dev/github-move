@@ -1,7 +1,9 @@
 """Génère les icônes PNG de l'application installée (192 et 512 px, et 180 px pour l'écran d'accueil d'Apple) : un écureuil stylisé sur fond vert.
 
-Script à relancer seulement pour changer le dessin : les PNG de public/icones/ sont commités.
-Usage : python3 scripts/generer_icones.py
+Outil à relancer seulement pour changer le dessin : les PNG de public/icones/ sont commités.
+Dépendance : Pillow (pip install Pillow).
+Commande : python3 outils/generer_icones.py
+Sortie : public/icones/icone-192.png, icone-512.png et apple-touch-icon.png.
 """
 from pathlib import Path
 
