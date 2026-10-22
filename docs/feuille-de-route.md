@@ -42,7 +42,7 @@ L'application fonctionne et est publiée comme artifact claude.ai. Elle comprend
 
 - [x] Deno, pytest et les dépendances npm (dont la CLI Supabase) sont installés à chaque session cloud par `.claude/hooks/session-start.sh`.
 - [ ] **Docker** pour `supabase start` : absent du conteneur cloud. À lancer en local, ou à fournir par l'environnement, avant la première story qui touche la base.
-- [ ] Créer une branche **`main`** et en faire la branche par défaut du dépôt (réglage GitHub, à faire par le propriétaire du dépôt).
+- [x] Branche **`main`** créée et définie comme branche par défaut.
 - [x] Squelette créé et vérifié :
   - Vite + React 19 + TypeScript strict + Motion, alias `@domain/<contexte>` ;
   - `deno.json` ;

@@ -40,7 +40,7 @@ Toutes confirmées par le PO le 2026-10-22.
 | 1 | Qui écrit les stories de la réécriture | Claude crée les issues (label `reecriture`) à partir du code actuel | **confirmé** |
 | 2 | Validation des scénarios | Par lot (5 à 6 validations) plutôt qu'à chaque story | **confirmé** |
 | 3 | Base Supabase | Projet de dev gratuit à Francfort | **confirmé** |
-| 4 | Branches et PR | Une branche et une PR par story (`feature/<n>-…`), avec `main` comme base. `main` est créée. La définir comme branche par défaut se fait dans les réglages GitHub, par le PO | **confirmé** |
+| 4 | Branches et PR | Une branche et une PR par story (`feature/<n>-…`), avec `main` comme base. `main` est créée et définie comme branche par défaut | **confirmé** |
 | 5 | Connexion et accès des parents | Connexion par lien magique reçu par e-mail. Un parent ne voit que les enfants auxquels il est rattaché. Un enfant peut avoir deux parents : le second se rattache par un lien d'invitation communiqué par le premier. La question de multiplication reste à l'entrée de l'espace parent | **confirmé** (questions de détail dans le glossaire) |
 | 6 | Services payants | Plus tard : clé API Claude (leçons personnelles par IA) et voix neuronale. En attendant : générateurs locaux et voix du navigateur | **confirmé** |
 | 7 | Données existantes | Pas de migration : on repart de zéro | **confirmé** |

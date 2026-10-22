@@ -183,7 +183,7 @@ Voir `.claude/commands/feature.md`.
 
 - Lancer `/feature` vaut demande explicite d'ouvrir la PR de la story. En dehors de ce workflow, on n'ouvre pas de PR sans qu'on le demande.
 - On travaille sur la branche fournie par la session ou créée pour la story, jamais directement sur la branche par défaut.
-- La **branche de base** est la branche par défaut du dépôt (`git remote show origin | grep HEAD`). Il n'existe pas encore de `main` : ne jamais la supposer.
+- La **branche de base** est `main`, branche par défaut du dépôt. Chaque story part de `main` à jour et y revient par PR.
 - Les deux ⛔ sont des arrêts réels : l'agent attend la réponse humaine et ne la suppose jamais.
 
 ## Équipe d'agents (`.claude/agents/`)
