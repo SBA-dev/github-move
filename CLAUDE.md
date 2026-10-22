@@ -47,6 +47,7 @@ Règles de cohabitation :
 | Build du front | `npm run build` |
 | Tests E2E d'une story | `npx bddgen && npx playwright test --grep @issue-<n>` |
 | Tous les tests E2E | `npx bddgen && npx playwright test` |
+| Tests E2E de la PWA (#8, build de production) | `npx bddgen -c playwright.pwa.config.ts && npx playwright test -c playwright.pwa.config.ts` |
 | Regénérer la bibliothèque | `python3 scripts/build_bibliotheque.py` |
 | Regénérer l'index des programmes | `python3 scripts/index_programmes.py` |
 | Tests du pipeline de contenu | `python3 -m pytest scripts/tests` |
