@@ -7,3 +7,8 @@ export { CARACTERE_LANGUE_ETRANGERE, choisirVoix, choisirVoixDeLangue } from "./
 export type { Hasard } from "./hasard.ts";
 export { reglerPhrases } from "./reglage-de-phrase.ts";
 export type { ReglageDePhrase } from "./reglage-de-phrase.ts";
+export { LectureAVoixHaute } from "./lecture-a-voix-haute.ts";
+export type { DependancesDeLectureAVoixHaute, EtatDuSon } from "./lecture-a-voix-haute.ts";
+export type { LecteurAVoixHaute, LectureDemandee } from "./lecteur-a-voix-haute.ts";
+export type { VoixDeLAppareil } from "./voix-de-l-appareil.ts";
+export { LectureImpossible, VoixBloquee } from "./erreurs.ts";

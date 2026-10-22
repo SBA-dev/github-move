@@ -13,6 +13,6 @@ export function texteALire(brut: string): TexteALire | undefined {
     .replace(/[«»]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
-  if (texte === "") return undefined;
+  if (!/[\p{L}\p{N}]/u.test(texte)) return undefined;
   return { texte, phrases: texte.split(/(?<=[.!?…:])\s+/) };
 }

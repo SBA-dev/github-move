@@ -1,5 +1,5 @@
 import { LectureImpossible, VoixBloquee } from "../domain/erreurs.ts";
-import type { LectureDemandee, LecteurAVoixHaute } from "../domain/lecteur-a-voix-haute.ts";
+import type { LecteurAVoixHaute, LectureDemandee } from "../domain/lecteur-a-voix-haute.ts";
 
 export class LecteurEnMemoire implements LecteurAVoixHaute {
   readonly lectures: LectureDemandee[] = [];
