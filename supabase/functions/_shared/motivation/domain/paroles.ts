@@ -1,4 +1,4 @@
-import type { Hasard } from "./hasard.ts";
+import { type Hasard, tirage } from "./hasard.ts";
 import type { PersonnageGuide } from "./personnage-guide.ts";
 import type { Univers } from "./univers.ts";
 
@@ -28,18 +28,14 @@ const ENCOURAGEMENTS: readonly string[] = [
 ];
 
 function tirerDans(textes: readonly string[], hasard: Hasard): string {
-  const texte = textes[Math.floor(hasard.entre0et1() * textes.length)];
-  if (texte === undefined) {
-    throw new Error("Le hasard doit donner un tirage dans [0, 1[");
-  }
-  return texte;
+  return textes[Math.floor(tirage(hasard) * textes.length)] as string;
 }
 
 export function feliciter(
   personnageGuide: PersonnageGuide,
   hasard: Hasard,
 ): Felicitation {
-  const textes = hasard.entre0et1() < PROBABILITE_EXPRESSION_DU_PERSONNAGE_GUIDE
+  const textes = tirage(hasard) < PROBABILITE_EXPRESSION_DU_PERSONNAGE_GUIDE
     ? personnageGuide.expressions
     : FELICITATIONS_COMMUNES;
   return { texte: tirerDans(textes, hasard) };
