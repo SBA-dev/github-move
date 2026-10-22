@@ -1,0 +1,300 @@
+[
+  {
+    "id": "ma-cp-addition-posee",
+    "matiere": "maths",
+    "niveau": "CP",
+    "titre": "Poser une addition en colonnes",
+    "ordre": 10,
+    "programme": {
+      "section": "c2-mathematiques-cp-les-quatre-operations",
+      "citation": "L’élève sait poser une addition de deux ou trois nombres à un ou deux chiffres, en positionnant les unités sous les unités, les dizaines sous les dizaines, et en calculer le résultat. Par exemple, 45 + 37 ou 28 + 8 + 56."
+    },
+    "lecon": [
+      { "texte": "Dans un nombre à deux chiffres, le chiffre de droite compte les unités, et le chiffre de gauche compte les dizaines.", "exemples": ["45 : 4 dizaines et 5 unités"] },
+      { "texte": "Pour poser une addition, on range les unités sous les unités et les dizaines sous les dizaines.", "exemples": ["45 + 37 : le 5 et le 7 dans la maison des Unités"] },
+      { "texte": "On calcule toujours en commençant par les unités. Si on trouve 10 ou plus, on garde les unités et la dizaine monte en retenue.", "exemples": ["5 + 7 = 12 : j'écris 2 et je retiens 1"] }
+    ],
+    "exercices": [
+      { "type": "addition", "titre": "La leçon en action : 45 + 37", "operations": [[45, 37]], "etapes": ["poser", "calculer"] },
+      { "type": "addition", "titre": "Poser comme un champion", "operations": [[28, 8, 56], [63, 9], [34, 52]], "etapes": ["poser"] },
+      { "type": "addition", "titre": "Calculer avec la retenue", "generateur": { "nombres": 2, "min": 15, "max": 59, "retenue": true, "combien": 3 }, "etapes": ["calculer"] }
+    ]
+  },
+  {
+    "id": "ma-ce1-addition-trois-chiffres",
+    "matiere": "maths",
+    "niveau": "CE1",
+    "titre": "Additions avec les centaines",
+    "ordre": 20,
+    "programme": {
+      "section": "c2-mathematiques-ce1-les-quatre-operations",
+      "citation": "L’élève sait poser une addition de deux ou de trois nombres à un, deux ou trois chiffres (en positionnant les unités sous les unités, les dizaines sous les dizaines, les centaines sous les centaines) et en calculer le résultat. Par exemple, 245 + 437 ou 218 + 48 ou encore 76 + 7 + 568."
+    },
+    "lecon": [
+      { "texte": "Avec trois chiffres, une troisième maison apparaît : la maison des Centaines, tout à gauche.", "exemples": ["245 : 2 centaines, 4 dizaines et 5 unités"] },
+      { "texte": "On pose toujours les nombres à droite : les unités sous les unités. Un petit nombre laisse des maisons vides à gauche.", "exemples": ["218 + 48 : le 48 n'a pas de centaines"] },
+      { "texte": "On calcule maison par maison, de droite à gauche, sans oublier les retenues.", "exemples": ["8 + 8 = 16 : j'écris 6 et je retiens 1"] }
+    ],
+    "exercices": [
+      { "type": "addition", "titre": "Les additions du programme", "operations": [[245, 437], [218, 48], [76, 7, 568]], "etapes": ["poser", "calculer"] },
+      { "type": "addition", "titre": "Encore plus vite", "generateur": { "nombres": 2, "min": 105, "max": 489, "retenue": true, "combien": 2 }, "etapes": ["calculer"] }
+    ]
+  },
+  {
+    "id": "fr-cp-dictee-animaux",
+    "matiere": "francais",
+    "niveau": "CP",
+    "titre": "Dictée : les animaux",
+    "ordre": 10,
+    "programme": {
+      "section": "c2-francais-cp-encoder-puis-ecrire-sous-dictee",
+      "citation": "Écrire sous la dictée des mots et des phrases."
+    },
+    "lecon": [
+      { "texte": "Pour écrire un mot, je le dis lentement et j'écoute chaque son.", "exemples": ["chat : ch - a"] },
+      { "texte": "Certains mots ont une lettre muette, qu'on n'entend pas. Il faut s'en souvenir.", "exemples": ["le chat : le t ne se prononce pas", "la souris : le s ne se prononce pas"] }
+    ],
+    "exercices": [
+      { "type": "dictee", "titre": "J'écris les animaux", "mots": [
+        { "mot": "chat", "phrase": "Le chat dort sur le lit." },
+        { "mot": "chien", "phrase": "Le chien court dans le jardin." },
+        { "mot": "souris", "phrase": "La souris mange du fromage." },
+        { "mot": "lapin", "phrase": "Le lapin aime les carottes." },
+        { "mot": "loup", "phrase": "Le loup hurle la nuit." }
+      ] },
+      { "type": "bulles", "titre": "Le mot bien écrit", "questions": [
+        { "question": "Quel mot est bien écrit ?", "choix": ["chat", "cha", "chas"], "reponse": "chat", "aide": "Pense à la lettre muette, comme dans chaton." },
+        { "question": "Quel mot est bien écrit ?", "choix": ["souri", "souris", "sourie"], "reponse": "souris", "aide": "Souris se termine par une lettre muette : un s." },
+        { "question": "Quel mot est bien écrit ?", "choix": ["lapain", "lapin", "lapun"], "reponse": "lapin", "aide": "Le son « in » de lapin s'écrit i - n." }
+      ] }
+    ]
+  },
+  {
+    "id": "fr-cp-etre-avoir",
+    "matiere": "francais",
+    "niveau": "CP",
+    "titre": "Être et avoir au présent",
+    "ordre": 20,
+    "programme": {
+      "section": "c2-francais-cp-decouvrir-comprendre-et-mettre-en-uvre-lorthographe-grammaticale",
+      "citation": "Apprendre à conjuguer être et avoir au présent de l’indicatif et commencer à les mobiliser à l’écrit."
+    },
+    "lecon": [
+      { "texte": "Être et avoir sont deux verbes très utiles. Ils changent selon la personne qui parle.", "exemples": ["je suis content", "j'ai un chat"] },
+      { "texte": "Voici le verbe être au présent.", "exemples": ["je suis", "tu es", "il est", "nous sommes", "vous êtes", "ils sont"] },
+      { "texte": "Voici le verbe avoir au présent.", "exemples": ["j'ai", "tu as", "elle a", "nous avons", "vous avez", "elles ont"] }
+    ],
+    "exercices": [
+      { "type": "conjugaison", "titre": "Le verbe être", "verbe": "être", "temps": "présent", "formes": [
+        { "pronom": "je", "forme": "suis" }, { "pronom": "tu", "forme": "es" }, { "pronom": "il", "forme": "est" },
+        { "pronom": "nous", "forme": "sommes" }, { "pronom": "vous", "forme": "êtes" }, { "pronom": "ils", "forme": "sont" }
+      ] },
+      { "type": "conjugaison", "titre": "Le verbe avoir", "verbe": "avoir", "temps": "présent", "formes": [
+        { "pronom": "j'", "forme": "ai" }, { "pronom": "tu", "forme": "as" }, { "pronom": "elle", "forme": "a" },
+        { "pronom": "nous", "forme": "avons" }, { "pronom": "vous", "forme": "avez" }, { "pronom": "elles", "forme": "ont" }
+      ] },
+      { "type": "trous", "titre": "Les phrases magiques", "consigne": "Complète chaque phrase avec être ou avoir.", "texte": "Je [suis] dans le jardin. Tu [as] un ballon rouge. Nous [sommes] amis. Ils [ont] faim.", "distracteurs": ["es", "a", "avons", "sont"] }
+    ]
+  },
+  {
+    "id": "fr-cp-masculin-feminin",
+    "matiere": "francais",
+    "niveau": "CP",
+    "titre": "Masculin, féminin, singulier, pluriel",
+    "ordre": 30,
+    "programme": {
+      "section": "c2-francais-cp-decouvrir-comprendre-et-mettre-en-uvre-lorthographe-grammaticale",
+      "citation": "Il opère des classements grammaticaux de groupes nominaux (GN) en fonction de leur genre ou de leur nombre."
+    },
+    "lecon": [
+      { "texte": "Un mot peut être masculin, avec un ou le, ou féminin, avec une ou la. Au féminin, on ajoute souvent un e.", "exemples": ["un petit chat", "une petite chatte"] },
+      { "texte": "Quand il y en a plusieurs, c'est le pluriel. On ajoute souvent un s, qu'on n'entend pas.", "exemples": ["un lapin", "deux lapins"] }
+    ],
+    "exercices": [
+      { "type": "classer", "titre": "Masculin ou féminin ?", "consigne": "Range chaque mot dans la bonne maison.", "groupes": [{ "id": "m", "nom": "Masculin" }, { "id": "f", "nom": "Féminin" }], "items": [
+        { "texte": "un boulanger", "groupe": "m" }, { "texte": "une boulangère", "groupe": "f" }, { "texte": "un petit garçon", "groupe": "m" },
+        { "texte": "une petite fille", "groupe": "f" }, { "texte": "un vélo", "groupe": "m" }, { "texte": "une olive", "groupe": "f" }
+      ] },
+      { "type": "classer", "titre": "Un seul ou plusieurs ?", "consigne": "Range chaque mot : singulier ou pluriel ?", "groupes": [{ "id": "s", "nom": "Singulier" }, { "id": "p", "nom": "Pluriel" }], "items": [
+        { "texte": "deux lapins", "groupe": "p" }, { "texte": "le chien", "groupe": "s" }, { "texte": "mes amis", "groupe": "p" },
+        { "texte": "une olive", "groupe": "s" }, { "texte": "des pommes", "groupe": "p" }, { "texte": "un joli vélo", "groupe": "s" }
+      ] }
+    ]
+  },
+  {
+    "id": "fr-cp-chanson-clair-de-lune",
+    "matiere": "francais",
+    "niveau": "CP",
+    "titre": "Chanson : Au clair de la lune",
+    "ordre": 40,
+    "programme": {
+      "section": "c2-francais-cp-dire-pour-etre-compris",
+      "citation": "Il restitue un poème en articulant distinctement et d’une voix audible."
+    },
+    "lecon": [
+      { "texte": "Pour apprendre une chanson ou un poème, on l'écoute plusieurs fois, vers par vers.", "exemples": [] },
+      { "texte": "Ensuite, on le redit sans regarder, en articulant bien et assez fort pour être entendu.", "exemples": [] }
+    ],
+    "exercices": [
+      { "type": "memoriser", "titre": "Au clair de la lune", "auteur": "Chanson traditionnelle", "vers": [
+        "Au clair de la lune,", "Mon ami Pierrot,", "Prête-moi ta plume", "Pour écrire un mot.",
+        "Ma chandelle est morte,", "Je n'ai plus de feu.", "Ouvre-moi ta porte", "Pour l'amour de Dieu."
+      ] }
+    ]
+  },
+  {
+    "id": "fr-cp-poesie-cigale",
+    "matiere": "francais",
+    "niveau": "CP",
+    "titre": "Poésie : La Cigale et la Fourmi",
+    "ordre": 50,
+    "programme": {
+      "section": "c2-francais-cp-dire-pour-etre-compris",
+      "citation": "Il restitue un poème en articulant distinctement et d’une voix audible."
+    },
+    "lecon": [
+      { "texte": "Jean de La Fontaine a écrit des fables : de petites histoires en vers, souvent avec des animaux.", "exemples": [] },
+      { "texte": "La cigale a chanté tout l'été. Quand l'hiver arrive, elle n'a plus rien à manger.", "exemples": [] }
+    ],
+    "exercices": [
+      { "type": "memoriser", "titre": "Le début de la fable", "auteur": "Jean de La Fontaine", "vers": [
+        "La Cigale, ayant chanté", "Tout l'été,", "Se trouva fort dépourvue", "Quand la bise fut venue :",
+        "Pas un seul petit morceau", "De mouche ou de vermisseau."
+      ] },
+      { "type": "bulles", "titre": "J'ai bien compris", "questions": [
+        { "question": "Qu'a fait la cigale tout l'été ?", "choix": ["Elle a chanté", "Elle a dormi", "Elle a mangé"], "reponse": "Elle a chanté" },
+        { "question": "Que veut dire « la bise » ?", "choix": ["Un vent froid", "Un bisou", "Une fleur"], "reponse": "Un vent froid", "aide": "La bise arrive quand l'hiver commence." }
+      ] }
+    ]
+  },
+  {
+    "id": "fr-ce1-dictee-groupe-nominal",
+    "matiere": "francais",
+    "niveau": "CE1",
+    "titre": "Dictée : les accords du groupe nominal",
+    "ordre": 60,
+    "programme": {
+      "section": "c2-francais-ce1-encoder-puis-ecrire-sous-dictee",
+      "citation": "Réaliser des accords en genre et en nombre dans le groupe nominal (article, nom, adjectif) et dans le groupe verbal (marque de pluriel des verbes = nt)."
+    },
+    "lecon": [
+      { "texte": "Dans un groupe nominal, le déterminant, le nom et l'adjectif s'accordent : ils vont ensemble.", "exemples": ["un joli vélo", "de jolis vélos"] },
+      { "texte": "Quand le sujet est au pluriel, le verbe prend souvent n - t à la fin, qu'on n'entend pas.", "exemples": ["le chat miaule", "les chats miaulent"] }
+    ],
+    "exercices": [
+      { "type": "dictee", "titre": "J'écris sans me tromper", "mots": [
+        { "mot": "des olives", "phrase": "Maman achète des olives." },
+        { "mot": "une boulangère", "phrase": "Une boulangère prépare le pain." },
+        { "mot": "de jolis vélos", "phrase": "Il y a de jolis vélos devant l'école." },
+        { "mot": "les chats miaulent", "phrase": "Le soir, les chats miaulent." }
+      ] },
+      { "type": "bulles", "titre": "Chasse à l'erreur", "questions": [
+        { "question": "Les chats …", "choix": ["miaulent", "miaule", "miaules"], "reponse": "miaulent", "aide": "Les chats, c'est plusieurs : le verbe prend n - t." },
+        { "question": "de … vélos", "choix": ["jolis", "joli", "jolie"], "reponse": "jolis", "aide": "Vélos est au pluriel, l'adjectif aussi : on ajoute un s." }
+      ] }
+    ]
+  },
+  {
+    "id": "fr-ce1-present-premier-groupe",
+    "matiere": "francais",
+    "niveau": "CE1",
+    "titre": "Le présent des verbes en -er",
+    "ordre": 70,
+    "programme": {
+      "section": "c2-francais-ce1-decouvrir-comprendre-et-mettre-en-uvre-lorthographe-grammaticale",
+      "citation": "Identifier le radical et la terminaison d’un verbe du premier groupe conjugué et trouver son infinitif."
+    },
+    "lecon": [
+      { "texte": "Les verbes qui finissent par e - r, comme parler ou jouer, sont les verbes du premier groupe.", "exemples": ["parler", "jouer", "chanter"] },
+      { "texte": "Un verbe a un radical, qui ne change pas, et une terminaison, qui change avec la personne.", "exemples": ["je parl-e", "nous parl-ons"] },
+      { "texte": "Au présent, les terminaisons du premier groupe sont : e, es, e, ons, ez, ent.", "exemples": ["je joue", "tu joues", "il joue", "nous jouons", "vous jouez", "ils jouent"] }
+    ],
+    "exercices": [
+      { "type": "conjugaison", "titre": "Le verbe parler", "verbe": "parler", "temps": "présent", "formes": [
+        { "pronom": "je", "forme": "parle" }, { "pronom": "tu", "forme": "parles" }, { "pronom": "Léo", "forme": "parle" },
+        { "pronom": "nous", "forme": "parlons" }, { "pronom": "vous", "forme": "parlez" }, { "pronom": "les enfants", "forme": "parlent" }
+      ] },
+      { "type": "conjugaison", "titre": "Le verbe jouer", "verbe": "jouer", "temps": "présent", "formes": [
+        { "pronom": "je", "forme": "joue" }, { "pronom": "tu", "forme": "joues" }, { "pronom": "elle", "forme": "joue" },
+        { "pronom": "nous", "forme": "jouons" }, { "pronom": "vous", "forme": "jouez" }, { "pronom": "ils", "forme": "jouent" }
+      ] },
+      { "type": "bulles", "titre": "Retrouve l'infinitif", "questions": [
+        { "question": "ils plieront, tu as plié, vous pliez : quel est l'infinitif ?", "choix": ["plier", "plié", "pliez"], "reponse": "plier", "aide": "L'infinitif, c'est le nom du verbe : il se termine par e - r." },
+        { "question": "nous chantons : quel est l'infinitif ?", "choix": ["chanter", "chantons", "chant"], "reponse": "chanter" }
+      ] }
+    ]
+  },
+  {
+    "id": "fr-cm1-trois-groupes",
+    "matiere": "francais",
+    "niveau": "CM1",
+    "titre": "Les trois groupes de verbes",
+    "ordre": 80,
+    "programme": {
+      "section": "c3-francais-cm1-acquerir-lorthographe-grammaticale",
+      "citation": "Conjugaisons à mémoriser et à maîtriser : présent de l’indicatif, imparfait, futur, passé composé des verbes être et avoir, des verbes du premier et du deuxième groupe et des verbes irréguliers du troisième groupe (faire, aller, dire, venir, pouvoir, voir, vouloir, prendre)"
+    },
+    "lecon": [
+      { "texte": "Premier groupe : les verbes en e - r, comme chanter. Attention, aller est une exception.", "exemples": ["chanter", "jouer", "manger"] },
+      { "texte": "Deuxième groupe : les verbes en i - r qui font i - s - s - o - n - s avec nous.", "exemples": ["finir : nous finissons", "grandir : nous grandissons"] },
+      { "texte": "Troisième groupe : tous les autres verbes, souvent irréguliers.", "exemples": ["faire", "aller", "dire", "venir", "prendre"] }
+    ],
+    "exercices": [
+      { "type": "classer", "titre": "Chaque verbe dans sa maison", "consigne": "Range chaque verbe dans la maison de son groupe.", "groupes": [{ "id": "1", "nom": "1er groupe" }, { "id": "2", "nom": "2e groupe" }, { "id": "3", "nom": "3e groupe" }], "items": [
+        { "texte": "chanter", "groupe": "1" }, { "texte": "finir", "groupe": "2" }, { "texte": "faire", "groupe": "3" },
+        { "texte": "jouer", "groupe": "1" }, { "texte": "grandir", "groupe": "2" }, { "texte": "aller", "groupe": "3" },
+        { "texte": "manger", "groupe": "1" }, { "texte": "choisir", "groupe": "2" }, { "texte": "venir", "groupe": "3" },
+        { "texte": "prendre", "groupe": "3" }, { "texte": "rougir", "groupe": "2" }, { "texte": "pouvoir", "groupe": "3" }
+      ] },
+      { "type": "bulles", "titre": "Les pièges", "questions": [
+        { "question": "Aller est un verbe du…", "choix": ["1er groupe", "2e groupe", "3e groupe"], "reponse": "3e groupe", "aide": "Aller finit par e - r, mais c'est l'exception : il est du 3e groupe." },
+        { "question": "Venir est un verbe du…", "choix": ["1er groupe", "2e groupe", "3e groupe"], "reponse": "3e groupe", "aide": "Avec nous, on dit nous venons, pas nous venissons." }
+      ] }
+    ]
+  },
+  {
+    "id": "emc-ce2-metier-pompier",
+    "matiere": "emc",
+    "niveau": "CE2",
+    "titre": "Découvrir un métier : pompier",
+    "ordre": 10,
+    "programme": {
+      "section": "emc-ce2-service-public",
+      "citation": "Présenter une institution ou une association servant l’intérêt général (pompiers, police, métiers de la santé, par exemple)."
+    },
+    "lecon": [
+      { "texte": "Certains métiers servent à protéger tout le monde : on dit qu'ils sont au service de l'intérêt général.", "exemples": ["les pompiers", "la police", "les soignants"] },
+      { "texte": "Les sapeurs-pompiers éteignent les incendies, mais ils font surtout du secours aux personnes.", "exemples": [] }
+    ],
+    "exercices": [
+      { "type": "lecture", "titre": "Une journée à la caserne", "texte": "Les sapeurs-pompiers travaillent dans une caserne. Quand quelqu'un appelle le 18 ou le 112, l'alarme sonne. Les pompiers enfilent vite leur tenue et montent dans le camion. Ils aident les personnes blessées ou malades, éteignent les incendies et protègent les animaux et la nature. Entre deux interventions, ils vérifient le matériel et s'entraînent.", "questions": [
+        { "question": "Quel numéro appelle-t-on pour les pompiers ?", "choix": ["Le 18", "Le 15", "Le 3"], "reponse": "Le 18" },
+        { "question": "Où travaillent les pompiers ?", "choix": ["Dans une caserne", "Dans une école", "Dans un magasin"], "reponse": "Dans une caserne" },
+        { "question": "Que font-ils entre deux interventions ?", "choix": ["Ils vérifient le matériel", "Ils dorment toujours", "Ils vont au cinéma"], "reponse": "Ils vérifient le matériel" }
+      ] },
+      { "type": "ordre", "titre": "Une intervention, dans l'ordre", "consigne": "Remets les étapes dans l'ordre.", "elements": ["Quelqu'un appelle le 18.", "L'alarme sonne à la caserne.", "Les pompiers montent dans le camion.", "Ils arrivent et portent secours."] }
+    ]
+  },
+  {
+    "id": "emc-ce2-metier-police",
+    "matiere": "emc",
+    "niveau": "CE2",
+    "titre": "Découvrir un métier : policier ou policière",
+    "ordre": 20,
+    "programme": {
+      "section": "emc-ce2-service-public",
+      "citation": "Présenter une institution ou une association servant l’intérêt général (pompiers, police, métiers de la santé, par exemple)."
+    },
+    "lecon": [
+      { "texte": "Les policiers et les policières veillent à la sécurité de tous et font respecter la loi.", "exemples": [] },
+      { "texte": "En cas de danger, on peut appeler le 17.", "exemples": [] }
+    ],
+    "exercices": [
+      { "type": "lecture", "titre": "Au commissariat", "texte": "Les policiers travaillent dans un commissariat. Ils patrouillent dans les rues pour protéger les habitants. Ils aident à traverser près des écoles, retrouvent les objets perdus et écoutent les personnes qui ont besoin d'aide. En cas de danger, on les appelle en composant le 17.", "questions": [
+        { "question": "Quel numéro appelle-t-on pour la police ?", "choix": ["Le 17", "Le 18", "Le 10"], "reponse": "Le 17" },
+        { "question": "Où travaillent les policiers ?", "choix": ["Dans un commissariat", "Dans une caserne", "Dans une ferme"], "reponse": "Dans un commissariat" }
+      ] },
+      { "type": "trous", "titre": "Le mot qui manque", "consigne": "Complète le texte.", "texte": "Les policiers [patrouillent] dans les rues. Ils [protègent] les habitants. On les appelle avec le [17].", "distracteurs": ["dorment", "18", "chantent"] }
+    ]
+  }
+]
