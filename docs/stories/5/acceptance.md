@@ -5,68 +5,78 @@ Modèle du domaine : `docs/stories/5/domain-model.md` (contexte **Famille**).
 
 ## Objectif
 
-En tant que **parent**, je veux me connecter avec un **lien de connexion** reçu par e-mail (« lien magique » dans l'interface), afin de retrouver les profils de mes enfants et leur progression sur tous mes appareils, sans mot de passe à retenir.
+En tant que **parent**, je veux me connecter avec un **lien de connexion** reçu par e-mail (« lien magique » dans l'interface), ou avec le **code de connexion** à 6 chiffres du même e-mail, afin de retrouver les profils de mes enfants et leur progression sur tous mes appareils, sans mot de passe à retenir.
 
-Comportement actuel (`app/`, `Store.init()`) : pas d'écran de connexion, l'identité vient du compte claude.ai ; sans identité, tout reste dans le navigateur ; à la première connexion, les données de l'appareil sont reprises ; pas de déconnexion. La cible change ces points (décisions de démarrage n°5 et n°7) : les exemples viennent donc de l'issue et du modèle, pas du legacy. Les écarts non tranchés sont dans les questions ouvertes.
+Comportement actuel (`app/`, `Store.init()`) : pas d'écran de connexion, l'identité vient du compte claude.ai ; sans identité, tout reste dans le navigateur ; à la première connexion, les données de l'appareil sont reprises ; pas de déconnexion. La cible change ces points (décisions de démarrage n°5 et n°7, décisions n°2 et n°5 à n°8 du lot 1) : connexion obligatoire, lien et code de connexion, déconnexion depuis l'espace parent. Les exemples viennent donc de l'issue et du modèle, pas du legacy.
 
-Vocabulaire : les scénarios disent **lien de connexion**, **connexion du parent**, **déconnexion**, **appareil** (termes `(à valider)` du glossaire). Ils n'emploient ni « compte », ni « session », ni « lien » seul.
+Vocabulaire : les scénarios disent **lien de connexion**, **code de connexion**, **connexion du parent**, **déconnexion**, **appareil** (termes `(à valider)` du glossaire). Ils n'emploient ni « compte », ni « session », ni « lien » seul.
 
 ## Règles
 
 | # | Règle | Scénarios |
 |---|---|---|
-| 1 | Le parent se connecte en suivant le lien de connexion reçu à son adresse e-mail | Paul demande un lien de connexion et le reçoit par e-mail · Paul arrive connecté en suivant le lien de connexion · Les majuscules et les espaces autour de l'adresse ne changent pas le parent reconnu · Une adresse jamais vue devient un nouveau parent dès son premier lien de connexion (`@a-valider`) · Sans connexion, Savanturier invite d'abord le parent à se connecter (`@a-valider`) |
-| 2 | Une adresse e-mail mal formée est refusée avant tout envoi | Refuser l'adresse « <adresse> » (vide, sans @, rien avant le @, pas de domaine, domaine sans point, deux @, espace) · Paul corrige son adresse après un refus |
-| 3 | Un lien de connexion sert une seule fois et expire | Un lien de connexion déjà utilisé est refusé · Un lien de connexion expire au bout d'une heure (`@a-valider`) · Un lien de connexion est encore valable juste avant la fin de sa durée (`@a-valider`) · Après un lien refusé, Paul se connecte avec un nouveau lien |
-| 4 | La connexion du parent reste ouverte sur l'appareil jusqu'à la déconnexion | La connexion reste ouverte après la fermeture et la réouverture de Savanturier · Paul peut être connecté sur deux appareils à la fois (`@a-valider`) |
-| 5 | Après la déconnexion, plus aucune donnée de la famille n'est visible sur l'appareil | Paul se déconnecte · Après la déconnexion, la réouverture de Savanturier ne montre aucune donnée de la famille (`@acces`) · Se déconnecter sur la tablette ne ferme pas la connexion du téléphone (`@acces @a-valider`) |
-| 6 | Seul un parent connecté accède aux données de sa famille | Un visiteur non connecté ne voit aucune donnée de famille (`@acces`) · Un parent connecté ne voit jamais les profils enfants d'une autre famille (`@acces @a-valider`) |
+| 1 | Le parent se connecte en suivant le lien de connexion reçu à son adresse e-mail | Paul demande un lien de connexion et le reçoit par e-mail avec un code de connexion · Paul arrive dans l'espace parent en suivant le lien de connexion · Les majuscules et les espaces autour de l'adresse ne changent pas le parent reconnu · Une adresse jamais vue devient un nouveau parent dès son premier lien de connexion · Sans connexion, Savanturier invite d'abord le parent à se connecter |
+| 2 | Le parent peut aussi se connecter en saisissant le code de connexion sur l'appareil qui a fait la demande | Paul saisit sur la tablette le code de connexion reçu · Un code de connexion faux est refusé (`@a-valider`, question 3) · Refuser le code de connexion « <code> », qui n'a pas 6 chiffres (vide, 5 chiffres, 7 chiffres, une lettre) |
+| 3 | Une adresse e-mail mal formée est refusée avant tout envoi | Refuser l'adresse « <adresse> » (vide, sans @, rien avant le @, pas de domaine, domaine sans point, deux @, espace) · Paul corrige son adresse après un refus |
+| 4 | Un lien de connexion et un code de connexion valent une heure et servent une seule fois | Un lien de connexion déjà utilisé est refusé · Un lien de connexion expire au bout d'une heure · Un lien de connexion est encore valable juste avant la fin de sa durée · Un code de connexion expire au bout d'une heure (`@a-valider`, question 3) · Un code de connexion est encore valable juste avant la fin de sa durée · Après un lien refusé, Paul se connecte avec un nouveau lien |
+| 5 | La connexion du parent reste ouverte sur l'appareil jusqu'à la déconnexion | La connexion reste ouverte après la fermeture et la réouverture de Savanturier · Paul peut être connecté sur deux appareils à la fois |
+| 6 | La déconnexion se fait depuis l'espace parent, et plus aucune donnée de la famille n'est visible ensuite sur l'appareil | Paul se déconnecte depuis l'espace parent · En dehors de l'espace parent, la déconnexion n'est pas proposée (`@acces`) · Après la déconnexion, la réouverture de Savanturier ne montre aucune donnée de la famille (`@acces`) · Se déconnecter sur la tablette ne ferme pas la connexion du téléphone (`@acces`) |
+| 7 | Seul un parent connecté accède aux données de sa famille | Un visiteur non connecté ne voit aucune donnée de famille (`@acces`) · Un parent connecté ne voit jamais les profils enfants d'une autre famille (`@acces`) |
 
-Total : 6 règles, 18 scénarios (24 cas exécutés avec les 7 exemples du plan).
+Total : 7 règles, 24 scénarios (33 cas exécutés avec les 4 exemples du code de connexion et les 7 exemples de l'adresse).
 
-Étapes réutilisées : « j'ouvre Savanturier », « je vois le nom de l'application » (`features/0-socle.feature`), « Paul s'est déconnecté de Savanturier sur la tablette » et « aucun profil enfant de la famille de Paul n'est visible » (`features/8-pwa-installable.feature`).
+Étapes réutilisées : « j'ouvre Savanturier », « je vois le nom de l'application » (`features/0-socle.feature`), « Paul s'est déconnecté de Savanturier sur la tablette » et « aucun profil enfant de la famille de Paul n'est visible » (`features/8-pwa-installable.feature`), « Léa a un profil enfant de niveau CE1 » et « Léa commence à jouer » (`features/6-univers-et-personnage-guide.feature`).
 
-Droits d'accès (`@acces`) : un visiteur non connecté ne voit aucune donnée de famille ; après la déconnexion, rien de la famille ne reste sur l'appareil ; un parent ne voit jamais les profils d'une autre famille (RLS). Le dernier dépend des profils et des rattachements du lot 2.
+Droits d'accès (`@acces`) : un visiteur non connecté ne voit aucune donnée de famille ; la déconnexion n'est proposée que dans l'espace parent ; après la déconnexion, rien de la famille ne reste sur l'appareil, et les autres appareils restent connectés ; un parent ne voit jamais les profils d'une autre famille (RLS). Le dernier dépend des profils et des rattachements du lot 2 : il reste dans #5 et s'exécute au lot 2. Le contrôle parental qui protège l'espace parent arrive au lot 2 : en attendant, les scénarios de déconnexion partent d'un parent déjà dans l'espace parent.
 
-Données de test : adresses fictives en `@exemple.test`. Les e-mails sont lus dans la boîte de test locale de Supabase (Inbucket/Mailpit), jamais envoyés à une vraie adresse.
+Données de test : adresses fictives en `@exemple.test`. Les e-mails (lien et code de connexion) sont lus dans la boîte de test locale de Supabase (Inbucket/Mailpit), jamais envoyés à une vraie adresse.
 
 ## Hors périmètre
 
 - Le rattachement d'un parent à un profil enfant et l'invitation d'un second parent (lot 2).
-- La création des profils enfants et le contrôle parental (lot 2).
-- La reprise des données du legacy (décision n°7) : aucune donnée de `app/` n'est importée.
+- La création des profils enfants, l'écran « Qui joue ? » et le contrôle parental (lot 2). En attendant, les tests partent de profils enfants préparés.
+- La reprise des données du legacy (décision de démarrage n°7) : aucune donnée de `app/` n'est importée.
 - La connexion par mot de passe ou par un fournisseur tiers (Google, Apple…).
 - Le changement d'adresse e-mail du parent, l'export et la suppression de ses données (lot 2).
 - Le comportement sans réseau d'une demande de lien de connexion : question n°6 de `docs/stories/8/acceptance.md`.
-- La synchronisation des résultats faits hors ligne (lot 7) ; le sort des résultats non synchronisés à la déconnexion est la question n°4 du modèle.
+- La synchronisation des résultats faits hors ligne (lot 7) ; le sort des résultats non synchronisés à la déconnexion est la question ouverte n°7.
 
 ## Questions ouvertes
 
-Questions du modèle du domaine (`docs/stories/5/domain-model.md`), reprises par numéro. Les questions 1 à 3 de l'issue y sont déjà fusionnées (modèle n°1, n°2, n°3).
+Numérotées comme dans `docs/stories/5/domain-model.md`. Aucune n'est bloquante pour la story.
 
-1. (modèle n°1, issue n°1) **Sans connexion** : peut-on encore utiliser Savanturier sans être connecté ? Le scénario `@a-valider` « Sans connexion, Savanturier invite d'abord le parent à se connecter » suppose que non.
-2. (modèle n°2, issue n°2) **Premier écran** : l'invitation à se connecter est-elle le premier écran, avant « Qui joue aujourd'hui ? » ? Même scénario `@a-valider`.
-3. (modèle n°3, issue n°3) **Durée de validité** du lien de connexion : 1 h ? Les scénarios `@a-valider` testent 59 et 61 minutes.
-4. (modèle n°4) Déconnexion avec des séances non synchronisées : prévenir le parent ? Aucun scénario tant que ce n'est pas décidé.
-5. (modèle n°5) **Règle de validité de l'adresse** : les 7 exemples du plan de la règle 2 sont la proposition. En ajouter ou en retirer ?
-6. (modèle n°6) **Un ou deux messages** pour un lien expiré et un lien déjà utilisé ? Les scénarios supposent un seul message (« ce lien de connexion ne marche plus »).
-7. (modèle n°7) Données conservées sur le parent en plus de l'e-mail : sans effet sur les scénarios.
-8. (modèle n°8) **Inscription et connexion confondues** : une adresse jamais vue crée-t-elle un nouveau parent ? Scénario `@a-valider` « Une adresse jamais vue devient un nouveau parent… ».
-9. (modèle n°9) Le mot « compte » dans l'interface : sans effet sur les scénarios, qui ne l'emploient pas.
-10. (modèle n°10) Message de l'accueil sur l'endroit où sont enregistrées les données : aucun scénario tant que ce n'est pas décidé. S'il est repris, seule la version « dans ton compte » a encore un sens si la réponse à la question 1 est non.
-
-Nouvelles questions :
-
-11. **Écran après la connexion** : en suivant le lien de connexion, le parent arrive-t-il dans l'espace parent (proposition des scénarios « il voit l'espace parent ») ou sur « Qui joue aujourd'hui ? » ?
-12. **Lien ouvert sur un autre appareil** : si Paul demande le lien sur la tablette mais l'ouvre depuis son téléphone (où il lit ses e-mails), quel appareil est connecté ? Le téléphone, la tablette, ou le lien est-il refusé ? Point d'attention : par défaut, Supabase Auth (PKCE) ne connecte que le navigateur qui a fait la demande. C'est un cas fréquent avec une tablette d'enfant. Aucun scénario écrit.
-13. **Deux demandes de suite** : quand Paul demande un second lien de connexion, le premier reste-t-il valable jusqu'à son expiration ? Et que voit-il s'il redemande trop vite (Supabase limite à une demande par minute par défaut) ? Aucun scénario écrit.
-14. **Confirmation d'envoi neutre** : le message « un lien de connexion a été envoyé à … » doit-il être le même que l'adresse soit connue ou non (pour ne pas révéler qui utilise Savanturier) ? Sans objet si la réponse à la question 8 est oui.
-15. **Plusieurs appareils** : un parent peut-il être connecté sur plusieurs appareils à la fois, et la déconnexion ne ferme-t-elle que l'appareil où elle est faite ? Scénarios `@a-valider` des règles 4 et 5. Faut-il aussi « se déconnecter de tous les appareils » (par exemple après la perte d'un téléphone) ?
-16. **Qui peut se déconnecter** : la déconnexion se fait-elle seulement depuis l'espace parent, protégée par le contrôle parental (lot 2), pour qu'un enfant ne déconnecte pas l'appareil par erreur ? Demande-t-elle une confirmation ?
-17. **Durée de la connexion** : reste-t-elle ouverte sans limite tant que l'appareil sert, ou se ferme-t-elle après une longue période sans utilisation (par exemple plusieurs semaines) ?
-18. **Scénario inter-familles** : « Un parent connecté ne voit jamais les profils enfants d'une autre famille » (`@acces @a-valider`) ne peut s'exécuter qu'avec les profils et les rattachements du lot 2. Le garde-t-on dans #5, exécuté au lot 2, ou le déplace-t-on dans la story de rattachement ?
-19. **Textes des messages** : quels sont les textes exacts vus par le parent pour la confirmation d'envoi, l'adresse refusée et le lien qui ne marche plus ? Les scénarios ne décrivent que le sens.
+1. Faut-il conserver quelque chose sur le parent en plus de son identité et de son e-mail (prénom, langue du parent…) ? Sans effet sur les scénarios.
+2. **Code de connexion saisi avec des espaces** (« 123 456 ») : l'accepte-t-on comme « 123456 » ? Aucun exemple écrit tant que ce n'est pas décidé.
+3. **Un seul message** pour un code de connexion faux, expiré ou déjà utilisé, comme pour le lien (« ce code de connexion ne marche plus ») ? Scénarios `@a-valider` « Un code de connexion faux est refusé » et « Un code de connexion expire au bout d'une heure ».
+4. **Lien et code du même e-mail** : quand le parent s'est connecté avec l'un, l'autre est-il aussi épuisé ? Aucun scénario écrit.
+5. **Lien suivi sur un autre appareil** (demande sur la tablette, lien touché sur le téléphone) : le téléphone est-il connecté, ou le parent est-il invité à saisir le code de connexion sur la tablette ? Aucun scénario écrit.
+6. **Nombre d'essais** du code de connexion : limiter les essais faux (par exemple 5), puis demander un nouvel e-mail ? Le scénario du code faux laisse pour l'instant saisir à nouveau.
+7. Déconnexion avec des séances faites hors ligne pas encore synchronisées : prévenir le parent ? À trancher avant le lot 7.
+8. Le message de l'accueil (« Les profils et la progression sont enregistrés dans ton compte : tu les retrouves sur tous tes appareils. ») est-il repris tel quel ?
+9. **Deux demandes de suite** : le premier lien et le premier code de connexion restent-ils valables jusqu'à leur expiration ? Que voit le parent s'il redemande trop vite (une demande par minute chez Supabase) ?
+10. Faut-il aussi « se déconnecter de tous les appareils » (par exemple après la perte d'un téléphone), plutôt au lot 2 ?
+11. La déconnexion demande-t-elle une confirmation (« Veux-tu vraiment te déconnecter ? ») ?
+12. **Durée de la connexion** : ouverte sans limite tant que l'appareil sert, ou fermée après une longue période sans utilisation ?
+13. **Textes exacts** vus par le parent : confirmation d'envoi, adresse refusée, lien qui ne marche plus, code de connexion refusé. Les scénarios ne décrivent que le sens.
 
 ## Décisions
 
-Aucune pour l'instant.
+Validation n°1 du lot 1 par le PO, le 2026-10-22 (`docs/stories/lot-1-decisions.md`). « Tranchée » = réponse explicite du PO ; « proposition appliquée » = la proposition déjà faite dans les scénarios ou dans ce fichier.
+
+| Ancienne question | Réponse | Source | Effet sur les scénarios |
+|---|---|---|---|
+| 1. Utiliser Savanturier sans être connecté ? | **Non**, la connexion est obligatoire. | Tranchée, décision n°5 | « Sans connexion, Savanturier invite d'abord le parent à se connecter » : `@a-valider` retiré. |
+| 2. L'invitation à se connecter est-elle le premier écran ? | **Oui**. « Qui joue ? » arrive au lot 2. | Tranchée, décision n°2 | Même scénario. |
+| 3. Durée du lien de connexion | **1 heure**, usage unique. | Tranchée, décision n°6 | Scénarios 59 et 61 minutes : `@a-valider` retiré. |
+| 5. Règle de validité de l'adresse | Les 7 exemples du plan. | Proposition appliquée | Aucun changement. |
+| 6. Un ou deux messages (lien expiré, déjà utilisé) | **Un seul** message. | Tranchée, décision n°6 | Aucun changement (déjà « ce lien de connexion ne marche plus »). |
+| 8. Une adresse jamais vue crée-t-elle un nouveau parent ? | **Oui**, inscription et connexion confondues. | Proposition appliquée | `@a-valider` retiré. |
+| 9. Le mot « compte » | Interdit dans le domaine, permis dans l'interface (« ton compte »). | Proposition appliquée | Aucun (les scénarios ne l'emploient pas). |
+| 11. Écran après la connexion | **L'espace parent**. | Tranchée, décision n°2 | Aussi après le code de connexion. |
+| 12. Lien ouvert sur un autre appareil | L'e-mail contient aussi un **code de connexion à 6 chiffres**, à saisir sur l'appareil qui a fait la demande. Même durée et même usage unique que le lien. | Tranchée, décision n°7 | Nouvelle règle 2 et deux scénarios du code en règle 4. |
+| 14. Confirmation d'envoi neutre | **Sans objet**, puisque toute adresse devient un parent. | Conséquence de la question 8 | Aucun. |
+| 15. Plusieurs appareils | **Oui** ; la déconnexion ne ferme que l'appareil où elle est faite. | Proposition appliquée | `@a-valider` retiré des deux scénarios. |
+| 16. Qui peut se déconnecter | **Seulement depuis l'espace parent**, protégé par le contrôle parental (lot 2). | Tranchée, décision n°8 | Scénarios de déconnexion partant de l'espace parent ; nouveau scénario `@acces` « En dehors de l'espace parent, la déconnexion n'est pas proposée ». |
+| 18. Scénario inter-familles | **Reste dans #5**, exécuté au lot 2. | Proposition appliquée (scénario `@a-valider`) | `@a-valider` retiré. |
+
+Les anciennes questions 4, 7, 10, 13, 17, 19 et la suite des questions 15 et 16 restent ouvertes (questions 1, 7 à 13 ci-dessus).
