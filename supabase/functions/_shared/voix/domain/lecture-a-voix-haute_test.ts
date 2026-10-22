@@ -207,3 +207,22 @@ Deno.test("le mot unique « 3+4=7 » reste surligné pendant toute sa lecture", 
 
   assertEquals([...new Set(rangs)], [0]);
 });
+
+Deno.test("le français, quelle que soit la forme de la langue, est lu avec la voix automatique et le personnage guide", async () => {
+  for (const langue of ["fr-FR", "fr", "fr-CA"]) {
+    const { lecture, lecteur } = uneLecture();
+
+    await lecture.lire("Écoute bien.", { langue });
+
+    assertEquals(lecteur.lectures[0]?.voix, DENISE, langue);
+    assertEquals(lecteur.lectures[0]?.phrases, [{ phrase: "Écoute bien.", hauteur: 1.25, rythme: 1 }], langue);
+  }
+});
+
+Deno.test("une nouvelle lecture sans rien à dire coupe quand même la lecture en cours", async () => {
+  const { lecture, lecteur } = uneLecture();
+
+  await lecture.lire("___");
+
+  assertEquals(lecteur.appels, ["arreter"]);
+});
