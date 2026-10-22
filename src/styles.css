@@ -16,7 +16,6 @@ body {
 .application {
   position: relative;
   min-height: 100svh;
-  overflow-x: clip;
 }
 .paysage {
   position: fixed;

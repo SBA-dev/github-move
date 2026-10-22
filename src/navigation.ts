@@ -33,6 +33,7 @@ export function useNavigation() {
   }, []);
 
   const aller = useCallback((destination: Ecran) => {
+    if (CHEMINS[destination] === location.pathname) return;
     const suivante = profondeurCourante() + 1;
     history.pushState({ profondeur: suivante }, "", CHEMINS[destination]);
     setEcran(destination);

@@ -1,29 +1,22 @@
 import { useState } from "react";
 import {
-  encourager,
-  feliciter,
   HUMEUR_PAR_DEFAUT,
-  type Humeur,
-  humeurApresReponse,
+  type Parole,
   presentation,
+  reagirALaReponse,
+  type Reaction,
   type Univers,
 } from "@domain/motivation";
 import { hasardDuNavigateur } from "../hasard-navigateur.ts";
 import { PersonnageGuide } from "../univers/index.ts";
 
-type Parole = { readonly nature: "felicitation" | "encouragement"; readonly texte: string };
-
 export function PageDemonstration({ univers }: { readonly univers: Univers }) {
-  const [humeur, setHumeur] = useState<Humeur>(HUMEUR_PAR_DEFAUT);
-  const [parole, setParole] = useState<Parole | undefined>();
+  const [reaction, setReaction] = useState<Reaction | undefined>();
+  const humeur = reaction?.humeur ?? HUMEUR_PAR_DEFAUT;
+  const parole: Parole | undefined = reaction?.parole;
 
   function repondre(juste: boolean) {
-    setHumeur(humeurApresReponse(juste));
-    setParole(
-      juste
-        ? { nature: "felicitation", texte: feliciter(univers.personnageGuide, hasardDuNavigateur).texte }
-        : { nature: "encouragement", texte: encourager(hasardDuNavigateur).texte },
-    );
+    setReaction(reagirALaReponse(juste, univers.personnageGuide, hasardDuNavigateur));
   }
 
   return (
