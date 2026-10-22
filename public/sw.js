@@ -41,8 +41,11 @@ async function reseauPuisCache(requete, cle) {
   const cache = await caches.open(NOM_DU_CACHE);
   try {
     const reponse = await fetch(requete);
-    if (reponse.ok) await cache.put(cle, reponse.clone());
-    return reponse;
+    if (reponse.ok) {
+      await cache.put(cle, reponse.clone());
+      return reponse;
+    }
+    return (await cache.match(cle)) ?? reponse;
   } catch (erreur) {
     const enCache = await cache.match(cle);
     if (enCache) return enCache;
