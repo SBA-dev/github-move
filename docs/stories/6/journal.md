@@ -9,3 +9,4 @@
 - 16:23 · Cycle 1 (catalogue des univers) : red b9e06a5, green 05b136c. Outillage : import map `@std/assert` versionnée dans `deno.json` (le lint refusait l'import `jsr:` sans version).
 - 16:24 · Cycle 2 (univers par défaut) : red 4ad448d, green 5a705b5, refactor 1d2dd0a.
 - 16:25 · Cycle 3 (humeurs) : red 2de642d, green 43a6f6e (pas de refactor nécessaire).
+- 16:26 · Cycle 4 (félicitations) : red 118ea56, green 56e5739. Écart au modèle : `expressions` en `readonly string[]` (évite un import circulaire). Un `throw` non exigé par un test pour un tirage hors [0,1[ : à signaler à la review.
