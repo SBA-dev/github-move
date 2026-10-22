@@ -32,7 +32,7 @@ Relations :
 | Choix de voix (à valider) | **nouveau** | Préférence de l'appareil : voix automatique ou une voix imposée. |
 | Voix très naturelle (à valider) | **nouveau** | Voix française de score au moins 60 (mention de l'interface). |
 | Essai de voix (à valider) | **nouveau** ou terme d'interface | Phrase lue pour écouter une voix avant de la choisir. Le bouton dit « Écouter ». |
-| La voix des guides | **conflit** | Titre du legacy : « guide » seul est interdit (décision n°1). Proposition : « La voix des personnages guides ». |
+| La voix des guides | **synonyme interdit** | Titre du legacy : « guide » seul est interdit (décision n°1 du glossaire). Le titre devient « La voix des personnages guides » (proposition appliquée, validation n°1 du lot 2). |
 | Voix préférée, voix forcée | synonymes interdits | Déjà au glossaire. |
 
 ## Modèle
@@ -71,16 +71,17 @@ Pas d'agrégat : rien n'est enregistré sur le serveur.
 | Élément | Règle |
 |---|---|
 | `ChoixDeVoix` | `automatique` (défaut, aussi quand rien n'est mémorisé) ou `imposee(nom)`. Un nom vide vaut `automatique`. |
-| `choisirVoix(voix, caractere, choix)` | Si `choix` est une voix imposée **présente** parmi les voix de l'appareil, c'est elle ; sinon la voix automatique de #7. Égalité des noms : exacte, comme aujourd'hui (question ouverte n°6). |
+| `choisirVoix(voix, caractere, choix)` | Si `choix` est une voix imposée **présente** parmi les voix de l'appareil, c'est elle ; sinon la voix automatique de #7. Égalité des noms : exacte, comme aujourd'hui (règle du legacy, sans question au PO). |
+| `voixMontreeCommeChoisie(voix, choix)` | Ce que l'onglet « Voix » montre comme choisi : la voix imposée si elle est présente, sinon « Automatique (recommandé) ». Le choix mémorisé, lui, **n'est pas effacé** : si la voix imposée revient sur l'appareil, elle lit de nouveau (décision n°11 du lot 2). |
 | `estTresNaturelle(voix)` | Score de la voix (#7) d'au moins 60. |
 | `voixProposees(voix)` | Les voix françaises, triées par score (`voixFrancaisesTriees`, #7). |
-| Caractère | Le caractère du personnage guide (hauteur, rythme, voix plus grave) s'applique aussi à la voix imposée (`reglerPhrases`, #7). |
-| Langue étrangère | `choisirVoixDeLangue` ignore le choix de voix (legacy). |
-| `PhraseDEssai` | « Coucou ! Je suis <nom du personnage guide>. On apprend en s'amusant ? Youpi ! » (texte du legacy, décision n°3 du lot 1). Quel personnage guide : question ouverte n°2. |
+| Caractère | Le caractère du personnage guide (hauteur, rythme, voix plus grave) s'applique aussi à la voix imposée (`reglerPhrases`, #7 ; décision n°11). |
+| Langue étrangère | `choisirVoixDeLangue` ignore le choix de voix : l'anglais garde sa voix anglaise (décision n°11). |
+| `PhraseDEssai` | « Coucou ! Je suis <nom du personnage guide>. On apprend en s'amusant ? Youpi ! » (texte du legacy, décision n°3 du lot 1). Personnage guide : celui du **profil en cours**, ou **Noisette** s'il n'y en a pas (décision n°11 du lot 2 ; voir la question ouverte n°5 de #10). |
 
 ### Port
 
-`ChoixDeVoixDeLAppareil` : lire et mémoriser le choix de voix sur l'appareil. Interface déclarée dans `voix/domain/` (décision 0007), adaptateur `localStorage` dans `src/voix/`, à côté de Son/Muet. À la déconnexion (#5), le choix reste-t-il sur l'appareil : question ouverte n°5.
+`ChoixDeVoixDeLAppareil` : lire et mémoriser le choix de voix sur l'appareil. Interface déclarée dans `voix/domain/` (décision 0007), adaptateur `localStorage` dans `src/voix/`, à côté de Son/Muet. À la déconnexion du parent (#5), le choix **reste** sur l'appareil (décision n°11) : `DonneesDeLAppareil` ne l'efface pas.
 
 ### Commandes (navigateur)
 
@@ -88,18 +89,19 @@ Pas d'agrégat : rien n'est enregistré sur le serveur.
 |---|---|
 | `ImposerUneVoix(nom)` | Mémorise la voix imposée sur l'appareil ; les lectures suivantes l'utilisent. |
 | `RevenirALaVoixAutomatique` | Efface le choix. |
-| `EssayerUneVoix(nom ou automatique)` | Lit la phrase d'essai avec cette voix et le caractère du personnage guide, **sans** changer le choix mémorisé. Respecte le Muet ? (question ouverte n°7). |
+| `EssayerUneVoix(nom ou automatique)` | Lit la phrase d'essai avec cette voix et le **caractère** du personnage guide (décision n°11), **sans** changer le choix mémorisé. En Muet, rien n'est lu, comme aujourd'hui (proposition appliquée). |
 
 Aucune erreur métier nouvelle : sans voix française, `voixProposees` est vide et l'interface affiche le message ; sans synthèse, `LectureImpossible` (#7).
 
 ## Invariants
 
-1. La voix imposée, si elle existe encore sur l'appareil, passe avant la voix automatique ; sinon la voix automatique s'applique, sans message (sauf réponse contraire à la question ouverte n°4).
+1. La voix imposée, si elle existe encore sur l'appareil, passe avant la voix automatique ; sinon la voix automatique s'applique, sans message pour l'enfant ni pour le parent : l'onglet « Voix » montre « Automatique (recommandé) » comme choisi, et le choix reste mémorisé (décision n°11).
 2. Seules les voix françaises de l'appareil sont proposées.
-3. Le choix est mémorisé **sur l'appareil**, pour tous les profils qui y jouent ; il ne change pas les autres appareils et n'est jamais envoyé au serveur.
+3. Le choix est mémorisé **sur l'appareil**, pour tous les profils qui y jouent ; il ne change pas les autres appareils, n'est jamais envoyé au serveur et reste après la déconnexion du parent (décision n°11).
 4. Le caractère du personnage guide s'applique toujours, voix imposée comprise (hauteur dans [0,5 ; 2], rythme au plus 1,4).
 5. Le choix de voix n'est accessible que dans l'espace parent ; le bouton Son/Muet reste à la portée de l'enfant.
 6. Écouter une voix ne change pas le choix mémorisé.
+7. La voix imposée ne sert qu'au français : une consigne en anglais garde la voix anglaise (décision n°11).
 
 ## Événements
 
@@ -107,7 +109,7 @@ Aucun.
 
 ## Partage avec le front
 
-Tout est dans le navigateur : `ChoixDeVoix`, `choisirVoix` à trois paramètres, `estTresNaturelle`, l'interface `ChoixDeVoixDeLAppareil` et la phrase d'essai sont exportés par `@domain/voix`. `LectureAVoixHaute` (#7) lit le choix par ce port. L'onglet « Voix » de l'espace parent et les conseils d'installation sont de l'interface (`src/`).
+Tout est dans le navigateur : `ChoixDeVoix`, `choisirVoix` à trois paramètres, `voixMontreeCommeChoisie`, `estTresNaturelle`, l'interface `ChoixDeVoixDeLAppareil` et la phrase d'essai sont exportés par `@domain/voix`. `LectureAVoixHaute` (#7) lit le choix par ce port. L'onglet « Voix » de l'espace parent et les conseils d'installation sont de l'interface (`src/`).
 
 ## Données d'enfants
 
@@ -129,14 +131,30 @@ supabase/functions/_shared/voix/
 src/voix/                               # adaptateur localStorage du choix, onglet « Voix » de l'espace parent
 ```
 
+## Décisions
+
+Validation n°1 du lot 2 par le PO, le 2026-10-22 (`docs/stories/lot-2-decisions.md`). « Tranchée » = réponse explicite du PO ; « proposition appliquée » = question de détail qui suit la proposition déjà faite.
+
+Numéros d'origine : « M » = ancienne liste du modèle, « A » = `docs/stories/15/acceptance.md`.
+
+Correction : l'ancienne ligne `choisirVoix` renvoyait à la « question ouverte n°6 » pour l'égalité exacte des noms de voix, alors que cette question portait sur la mention « actuellement : … ». L'égalité exacte est la règle du legacy, sans question au PO ; le renvoi est retiré.
+
+| Question | Réponse | Source |
+|---|---|---|
+| M1. Conseils d'installation | Repris **tels quels** (iPad / iPhone, Android, ordinateur). | Proposition appliquée (scénario `@a-valider`) |
+| M2. Personnage guide de l'essai de voix | Celui du **profil en cours**, ou **Noisette** s'il n'y en a pas. Le scénario « c'est Noisette qui se présente, quel que soit l'univers » est à revoir par `po-acceptance` selon la réponse à la question n°5 de #10. | Tranchée, décision n°11 |
+| M4 / A1. Voix imposée disparue : ce que voit le parent | Pas de message : « Automatique (recommandé) » apparaît **choisi**. | Tranchée, décision n°11 (absence de message : proposition appliquée) |
+| A2. Voix imposée réinstallée | Le choix est **gardé en mémoire** : la voix revenue lit de nouveau les consignes. | Tranchée, décision n°11 |
+| M5. Déconnexion du parent | Le choix de voix **reste** sur l'appareil. | Tranchée, décision n°11 |
+| M7. Essai de voix en Muet | **Rien n'est lu**, comme aujourd'hui. | Proposition appliquée (scénario `@a-valider`) |
+| M8. Titre | « **La voix des personnages guides** ». | Proposition appliquée (modèle, scénario `@a-valider`) |
+| M9. Leçons d'anglais | **Non** : l'anglais garde sa voix anglaise. | Tranchée, décision n°11 |
+| A3. Texte d'explication | Repris du legacy en remplaçant seulement « guide » par « personnage guide » (règle des textes repris mot pour mot, décision n°3 du lot 1). Le tutoiement du legacy est gardé. | Proposition appliquée (`acceptance.md`) |
+| A4. Essai avec le caractère du personnage guide | **Oui**, la voix imposée garde le caractère du personnage guide, essai compris. | Tranchée, décision n°11 |
+
 ## Questions ouvertes
 
-1. (#7 M13, issue n°1) Reprend-on **tels quels les conseils** d'installation de voix (iPad / iPhone, Android, ordinateur) (oui) ?
-2. (#7 A8, issue n°2) **Personnage guide de la phrase d'essai** quand les profils de l'appareil ont des univers différents : toujours Noisette, comme aujourd'hui en pratique (oui) ? Sinon : celui du dernier profil en cours, ou un bouton par personnage guide ?
-3. (issue n°3) Faut-il pouvoir **imposer une voix différente par personnage guide** (oui / non ; aujourd'hui : une seule voix pour tous) ?
-4. (nouvelle) Quand la voix imposée **n'existe plus** sur l'appareil, le parent voit-il un message dans l'onglet « Voix » (« La voix choisie n'est plus sur cet appareil : on utilise la voix automatique. ») (oui / non) ?
-5. (nouvelle) À la **déconnexion** du parent (#5), le choix de voix reste-t-il sur l'appareil, comme Son/Muet (oui), ou est-il effacé avec les données de la famille (non) ?
-6. (nouvelle) La mention « actuellement : <voix> » de « Automatique » montre aujourd'hui la **meilleure voix**, pas celle que prendra le personnage guide (qui peut être une voix masculine pour Coach Léo). Montrer la voix réellement prise pour le personnage guide de l'essai (oui), ou garder la meilleure voix (non) ?
-7. (nouvelle) Le bouton « Écouter » lit-il **même en mode Muet** (oui : c'est un essai du parent), ou rien n'est lu (non, comme aujourd'hui) ?
-8. (nouvelle) Titre de l'onglet : « La voix des personnages guides » (oui), à la place de « La voix des guides » ?
-9. (nouvelle) La voix imposée s'applique-t-elle aussi aux **leçons d'anglais** (oui / non ; aujourd'hui : non, l'anglais garde sa propre voix) ?
+Aucune n'est bloquante pour la story.
+
+1. (ancienne M3) Faut-il pouvoir **imposer une voix différente par personnage guide** (oui / non) ? Aujourd'hui, une seule voix pour tous ; les scénarios supposent ce comportement.
+2. (ancienne M6) La mention « actuellement : <voix> » de « Automatique » montre aujourd'hui la **meilleure voix**, pas celle que prendra le personnage guide de l'essai (qui peut être une voix masculine pour Coach Léo). Montrer la voix réellement prise pour ce personnage guide (oui), ou garder la meilleure voix (non) ?
