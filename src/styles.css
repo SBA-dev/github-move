@@ -47,7 +47,7 @@ button {
   cursor: pointer;
 }
 button:hover { background: var(--accent-fonce); }
-button[aria-pressed="false"] { background: var(--accent-fonce); opacity: .8; }
+button[data-son="muet"] { background: var(--accent-fonce); opacity: .8; }
 .nom-application button { font-size: inherit; }
 .enfant {
   padding: 10px 14px;
@@ -77,6 +77,15 @@ button[aria-pressed="false"] { background: var(--accent-fonce); opacity: .8; }
   font-weight: 700;
 }
 .consigne { font-size: 1.5rem; font-weight: 700; margin: 0; background: rgba(255, 255, 255, .85); padding: 10px 16px; border-radius: 16px; }
+.mot { border-radius: 6px; padding: 0 2px; }
+.mot[data-prononce] { background: #ffe066; color: #1b1b1b; }
+.voix-bloquee:empty { display: none; }
+.voix-bloquee {
+  padding: 12px 18px;
+  border-radius: 16px;
+  background: #fff3cd;
+  font-weight: 700;
+}
 .reponses { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   HUMEUR_PAR_DEFAUT,
   type Parole,
@@ -9,11 +9,36 @@ import {
 } from "@domain/motivation";
 import { hasardDuNavigateur } from "../hasard-navigateur.ts";
 import { PersonnageGuide } from "../univers/index.ts";
+import type { Voix } from "../voix/index.ts";
+import { lireConsigne } from "./consigne-preparee.ts";
+import { ConsigneLue } from "./ConsigneLue.tsx";
 
-export function PageDemonstration({ univers }: { readonly univers: Univers }) {
+type Props = { readonly univers: Univers; readonly voix: Voix };
+
+export function PageDemonstration({ univers, voix }: Props) {
   const [reaction, setReaction] = useState<Reaction | undefined>();
+  const [consigne] = useState(lireConsigne);
+  const [rangDuMotPrononce, setRangDuMotPrononce] = useState<number | undefined>();
+  const derniereLecture = useRef(0);
+  const { lire, couperLaVoix } = voix;
   const humeur = reaction?.humeur ?? HUMEUR_PAR_DEFAUT;
   const parole: Parole | undefined = reaction?.parole;
+
+  function lireLaConsigne() {
+    const numero = ++derniereLecture.current;
+    const estLaDerniere = () => numero === derniereLecture.current;
+    setRangDuMotPrononce(undefined);
+    void lire(consigne.texte, {
+      langue: consigne.langue,
+      onMot: (rang) => estLaDerniere() && setRangDuMotPrononce(rang),
+      onFin: () => estLaDerniere() && setRangDuMotPrononce(undefined),
+    });
+  }
+
+  useEffect(() => {
+    lireLaConsigne();
+    return couperLaVoix;
+  }, []);
 
   function repondre(juste: boolean) {
     setReaction(reagirALaReponse(juste, univers.personnageGuide, hasardDuNavigateur));
@@ -29,7 +54,8 @@ export function PageDemonstration({ univers }: { readonly univers: Univers }) {
           {parole?.texte}
         </div>
       </div>
-      <p className="consigne" data-testid="consigne">Combien font 3 + 4 ?</p>
+      <ConsigneLue consigne={consigne} rangDuMotPrononce={rangDuMotPrononce} />
+      <button type="button" onClick={lireLaConsigne}>Réécouter</button>
       <div className="reponses">
         <button type="button" onClick={() => repondre(true)}>Bonne réponse</button>
         <button type="button" onClick={() => repondre(false)}>Erreur</button>

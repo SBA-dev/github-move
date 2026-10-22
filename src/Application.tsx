@@ -5,31 +5,36 @@ import { chargerProfilPrepare, PAGE_DEMONSTRATION_DISPONIBLE, PageDemonstration 
 import type { ProfilPrepare } from "./demonstration/profil-prepare.ts";
 import { EnTete } from "./en-tete/EnTete.tsx";
 import { useNavigation } from "./navigation.ts";
+import { useVoix } from "./voix/index.ts";
 import { PALETTES, Paysage, PersonnageGuide } from "./univers/index.ts";
 
 type Habillage = CSSProperties & { readonly "--accent": string; readonly "--accent-fonce": string };
 
 function useProfilPrepare(actif: boolean) {
   const [profil, setProfil] = useState<ProfilPrepare | undefined>();
+  const [charge, setCharge] = useState(false);
   useEffect(() => {
     if (!actif || !chargerProfilPrepare) return;
     let annule = false;
     chargerProfilPrepare().then((profilLu) => {
-      if (!annule) setProfil(profilLu);
+      if (annule) return;
+      setProfil(profilLu);
+      setCharge(true);
     });
     return () => {
       annule = true;
     };
   }, [actif]);
-  return actif ? profil : undefined;
+  return { profil: actif ? profil : undefined, charge: actif && charge };
 }
 
 export function Application() {
   const { ecran: ecranDemande, retourPossible, aller, revenir } = useNavigation();
   const ecran = ecranDemande === "demonstration" && !PAGE_DEMONSTRATION_DISPONIBLE ? "accueil" : ecranDemande;
-  const profil = useProfilPrepare(ecran === "demonstration");
+  const { profil, charge: profilCharge } = useProfilPrepare(ecran === "demonstration");
   const univers = universDe(profil?.univers);
   const palette = PALETTES[univers.cle];
+  const voix = useVoix(univers.personnageGuide);
   const habillage: Habillage = { "--accent": palette.principale, "--accent-fonce": palette.foncee };
 
   return (
@@ -39,21 +44,27 @@ export function Application() {
         <EnTete
           surAccueil={ecran === "accueil"}
           enfant={profil}
+          son={voix.son}
           retourPossible={retourPossible}
+          onBasculerLeSon={voix.basculerLeSon}
           onAccueil={() => aller("accueil")}
           onRetour={revenir}
           onEspaceParent={() => aller("espace-parent")}
         />
         <main className="ecran">
+          <div role="status" className="voix-bloquee">
+            {voix.nomDuGuideDeLaVoixBloquee &&
+              `La voix de ${voix.nomDuGuideDeLaVoixBloquee} est bloquée par ce navigateur. Touche « Réécouter » pour réessayer, ou lis avec un adulte.`}
+          </div>
           {ecran === "accueil" && (
             <>
               <p>Réviser le programme du CP au CM2, en jouant.</p>
               <PersonnageGuide univers={univers} humeur="content" />
             </>
           )}
-          {ecran === "demonstration" && PageDemonstration && (
+          {ecran === "demonstration" && PageDemonstration && profilCharge && (
             <Suspense fallback={null}>
-              <PageDemonstration univers={univers} />
+              <PageDemonstration univers={univers} voix={voix} />
             </Suspense>
           )}
           {ecran === "espace-parent" && (
