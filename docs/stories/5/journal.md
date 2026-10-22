@@ -11,3 +11,4 @@
 - 20:28 · Environnement : seul `SUPABASE_DB_PASSWORD` est présent (ni `SUPABASE_URL`, ni `SUPABASE_ANON_KEY`, ni `SUPABASE_ACCESS_TOKEN`), et pas de démon Docker. On fait le domaine et les cas d'usage (TDD, fakes) ; l'adaptateur Supabase Auth, le front et les E2E attendent les secrets.
 - 20:28 · Arbitrage (décision 0008, même règle) : le port `ServiceDeConnexion` et les cas d'usage, qui tournent dans le navigateur et ne dépendent que de ports du domaine, vont dans `famille/domain/` (importable par `@domain/famille`) plutôt que dans `application/`. Code de connexion : exactement 6 chiffres, espaces refusés tant que la question ouverte n°2 n'est pas tranchée.
 - 20:28 · Étape 3 : boucle TDD. Comportements : AdresseEmail ; CodeDeConnexion ; demander un lien de connexion ; ouvrir la connexion avec le code ; se déconnecter.
+- 20:30 · Cycle 1 (adresse e-mail, code de connexion) : red 849f179 et ef780d4, green c2646bd et 7e84655. 121 tests.
