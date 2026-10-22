@@ -53,12 +53,11 @@ Fonctionnalité: Contrôle parental de l'espace parent
       Quand Paul répond « 56 » au contrôle parental
       Alors il voit l'espace parent
 
-    @a-valider
     Scénario: Juste après la connexion du parent, l'espace parent s'ouvre sans question du contrôle parental
       Étant donné que Paul a demandé un lien de connexion pour "paul@exemple.test" sur la tablette
       Quand Paul suit le lien de connexion reçu
       Alors il voit l'espace parent
-      Et aucune question du contrôle parental ne lui est posée
+      Et aucune question du contrôle parental n'est posée
 
   Règle: Une mauvaise réponse n'est jamais punitive : un message, puis une nouvelle chance
 
@@ -83,7 +82,6 @@ Fonctionnalité: Contrôle parental de l'espace parent
       Quand Paul répond « 56 » au contrôle parental
       Alors il voit l'espace parent
 
-    @a-valider
     Scénario: Après une mauvaise réponse, la même question est reposée
       Étant donné que Paul est connecté sur la tablette
       Et que le contrôle parental pose la question « 7 × 8 »
@@ -91,7 +89,6 @@ Fonctionnalité: Contrôle parental de l'espace parent
       Alors Paul est informé que ce n'est pas la bonne réponse
       Et Paul voit de nouveau la question du contrôle parental « 7 × 8 »
 
-    @a-valider
     Scénario: Le nombre d'essais n'est pas limité
       Étant donné que Paul est connecté sur la tablette
       Et que Paul a répondu 5 fois de suite une mauvaise réponse à la question « 7 × 8 » du contrôle parental
@@ -124,7 +121,6 @@ Fonctionnalité: Contrôle parental de l'espace parent
       Alors Léa voit une question du contrôle parental
       Mais elle ne voit pas l'espace parent
 
-    @a-valider
     Scénario: En quittant l'espace parent, Paul arrive sur « Qui joue ? »
       Étant donné que Paul est connecté sur la tablette
       Et que Léa jouait avant que Paul entre dans l'espace parent
@@ -132,7 +128,7 @@ Fonctionnalité: Contrôle parental de l'espace parent
       Alors il voit « Qui joue ? »
       Et l'en-tête n'affiche aucun prénom ni aucun niveau
 
-    @a-valider @acces
+    @acces
     Scénario: Savanturier fermé puis rouvert ne rouvre pas l'espace parent
       Étant donné que Paul est connecté sur la tablette
       Et que Paul est dans l'espace parent
@@ -140,6 +136,15 @@ Fonctionnalité: Contrôle parental de l'espace parent
       Quand j'ouvre Savanturier
       Alors je ne vois pas l'espace parent
       Et Paul est toujours connecté sur la tablette
+
+  Règle: Seule l'entrée de l'espace parent est protégée par le contrôle parental
+
+    Scénario: Une fois dans l'espace parent, Paul agit sans nouvelle question du contrôle parental
+      Étant donné que Paul est connecté sur la tablette
+      Et que Paul est dans l'espace parent
+      Quand Paul commence la création d'un profil enfant
+      Alors on lui demande le prénom, la classe et l'univers de l'enfant
+      Et aucune question du contrôle parental n'est posée
 
   Règle: L'espace parent ouvert s'appelle « Espace parent » et donne accès à la déconnexion
 
@@ -151,7 +156,6 @@ Fonctionnalité: Contrôle parental de l'espace parent
       Et la déconnexion lui est proposée
       Mais jamais un « Espace adulte »
 
-    @a-valider
     Scénario: L'espace parent s'ouvre sur les profils enfants de la famille
       Étant donné que Paul est connecté sur la tablette
       Et que Paul est rattaché au profil enfant de Léa
