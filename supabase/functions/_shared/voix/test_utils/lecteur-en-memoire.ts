@@ -5,6 +5,11 @@ export class LecteurEnMemoire implements LecteurAVoixHaute {
   readonly lectures: LectureDemandee[] = [];
   readonly appels: Array<"arreter" | "lire"> = [];
   private echec: Error | undefined;
+  private motsAnnonces: Array<{ phrase: number; position: number }> = [];
+
+  prononcerLesMots(...annonces: Array<{ phrase: number; position: number }>): void {
+    this.motsAnnonces = annonces;
+  }
 
   bloquerLaVoix(): void {
     this.echec = new VoixBloquee();
@@ -17,6 +22,7 @@ export class LecteurEnMemoire implements LecteurAVoixHaute {
   lire(lecture: LectureDemandee): Promise<void> {
     this.appels.push("lire");
     this.lectures.push(lecture);
+    for (const { phrase, position } of this.motsAnnonces) lecture.onMot?.(phrase, position);
     return this.echec ? Promise.reject(this.echec) : Promise.resolve();
   }
 

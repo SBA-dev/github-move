@@ -129,3 +129,21 @@ Deno.test("un navigateur sans synthèse vocale ne provoque ni erreur ni signalem
 
   assertEquals(signalementsDeVoixBloquee, []);
 });
+
+Deno.test("le mot prononcé est signalé pendant la lecture, puis la fin de la lecture", async () => {
+  const { lecture, lecteur } = uneLecture();
+  lecteur.prononcerLesMots(
+    { phrase: 0, position: 0 },
+    { phrase: 0, position: 4 },
+    { phrase: 0, position: 7 },
+    { phrase: 1, position: 0 },
+  );
+  const signaux: Array<number | "fin"> = [];
+
+  await lecture.lire("Lis la phrase. Bravo !", {
+    onMot: (rang) => signaux.push(rang),
+    onFin: () => signaux.push("fin"),
+  });
+
+  assertEquals(signaux, [0, 1, 2, 3, "fin"]);
+});
