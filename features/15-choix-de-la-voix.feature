@@ -44,12 +44,11 @@ Fonctionnalité: Choisir la voix des personnages guides sur l'appareil
       Quand Paul ouvre le choix de voix
       Alors la voix « Thomas » ne porte aucune mention
 
-    @a-valider
     Scénario: Le choix de voix s'intitule « La voix des personnages guides »
       Étant donné que Paul est dans l'espace parent
       Quand Paul ouvre le choix de voix
       Alors Paul voit le titre « La voix des personnages guides »
-      Mais jamais « La voix des guides »
+      Mais Paul ne voit pas le titre « La voix des guides »
 
   Règle: Quand l'appareil ne peut pas lire en français, le parent est prévenu et sait comment obtenir des voix plus naturelles
 
@@ -65,36 +64,50 @@ Fonctionnalité: Choisir la voix des personnages guides sur l'appareil
         | l'appareil n'a aucune voix française        | Aucune voix française trouvée sur cet appareil : installe-en une (voir ci-dessous), puis recharge la page. |
         | le navigateur ne sait pas lire à voix haute | Ce navigateur ne sait pas lire à voix haute.                                                         |
 
-    @a-valider
     Scénario: Le parent trouve des conseils pour installer des voix plus naturelles
       Étant donné que Paul est dans l'espace parent
       Quand Paul ouvre le choix de voix
       Alors Paul trouve des conseils pour des voix plus naturelles sur iPad ou iPhone, sur tablette Android et sur ordinateur
 
-  Règle: Écouter une voix lit l'essai de voix, sans changer le choix de voix
+  Règle: Écouter une voix fait lire l'essai de voix par le personnage guide du profil en cours, sans changer le choix de voix
 
     Scénario: Le parent écoute une voix sans changer la voix choisie
       Étant donné que l'appareil a les voix françaises « Amélie (compact) » et « Denise (Natural) »
       Et que personne n'a imposé de voix sur la tablette
-      Et que Paul est dans l'espace parent
+      Et que personne ne jouait sur la tablette
+      Et que Paul est entré dans l'espace parent
       Quand Paul écoute la voix « Amélie (compact) »
-      Alors Paul entend « Coucou ! Je suis Noisette. On apprend en s'amusant ? Youpi ! » avec la voix « Amélie (compact) »
+      Alors Paul entend Noisette dire « Coucou ! Je suis Noisette. On apprend en s'amusant ? Youpi ! » avec la voix « Amélie (compact) »
       Et « Automatique (recommandé) » est toujours choisi
 
     Scénario: Écouter la voix automatique lit l'essai de voix avec la voix la plus naturelle
       Étant donné que l'appareil a les voix françaises « Amélie (compact) » et « Denise (Natural) »
-      Et que Paul est dans l'espace parent
+      Et que personne ne jouait sur la tablette
+      Et que Paul est entré dans l'espace parent
       Quand Paul écoute la voix « Automatique (recommandé) »
-      Alors Paul entend « Coucou ! Je suis Noisette. On apprend en s'amusant ? Youpi ! » avec la voix « Denise (Natural) »
+      Alors Paul entend Noisette dire « Coucou ! Je suis Noisette. On apprend en s'amusant ? Youpi ! » avec la voix « Denise (Natural) »
 
-    @a-valider
-    Scénario: Dans l'essai de voix, c'est Noisette qui se présente, quel que soit l'univers des profils enfants
-      Étant donné que Tom a choisi l'univers sports
-      Et que Paul est dans l'espace parent
+    Plan du Scénario: L'essai de voix est lu par <personnage guide> quand <situation>
+      Étant donné que <situation>
+      Et que Paul est entré dans l'espace parent
       Quand Paul écoute la voix « Automatique (recommandé) »
-      Alors Paul entend Noisette dire « Coucou ! Je suis Noisette. On apprend en s'amusant ? Youpi ! »
+      Alors Paul entend <personnage guide> dire « Coucou ! Je suis <personnage guide>. On apprend en s'amusant ? Youpi ! »
 
-    @a-valider
+      Exemples:
+        | situation                                   | personnage guide |
+        | Tom jouait dans l'univers sports            | Coach Léo        |
+        | Léa jouait dans l'univers princesse         | Lumi             |
+        | Léa jouait sans avoir choisi d'univers      | Noisette         |
+        | personne ne jouait sur la tablette          | Noisette         |
+
+    Scénario: L'essai de voix garde le caractère du personnage guide du profil en cours
+      Étant donné que l'appareil a les voix françaises « Denise (Natural) » et « Henri »
+      Et que Paul a imposé la voix « Denise (Natural) » sur la tablette
+      Et que Léa jouait dans l'univers pompier
+      Et que Paul est entré dans l'espace parent
+      Quand Paul écoute la voix « Denise (Natural) »
+      Alors Paul entend Capitaine Sam dire « Coucou ! Je suis Capitaine Sam. On apprend en s'amusant ? Youpi ! » avec la voix « Denise (Natural) », en plus grave
+
     Scénario: En Muet, l'essai de voix n'est pas lu
       Étant donné que la tablette est en Muet
       Et que Paul est dans l'espace parent
@@ -138,7 +151,6 @@ Fonctionnalité: Choisir la voix des personnages guides sur l'appareil
       Quand la consigne « Écoute bien. » s'affiche
       Alors Léa entend Noisette lire la consigne avec la voix « Denise (Natural) »
 
-    @a-valider
     Scénario: Une consigne en anglais garde la voix anglaise malgré la voix imposée
       Étant donné que l'appareil a une voix française et une voix anglaise
       Et que Paul a imposé la voix française sur la tablette
@@ -156,19 +168,18 @@ Fonctionnalité: Choisir la voix des personnages guides sur l'appareil
       Alors Léa entend Noisette lire la consigne avec la voix « Denise (Natural) »
       Et aucun message d'erreur n'apparaît
 
-    @a-valider
-    Scénario: Le parent voit que la voix automatique a repris
+    Scénario: Le parent voit « Automatique (recommandé) » choisi, sans message, quand la voix imposée a disparu
       Étant donné que l'appareil a les voix françaises « Amélie (compact) » et « Denise (Natural) »
       Et que Paul a imposé la voix « Audrey (améliorée) », qui n'est plus sur la tablette
       Et que Paul est dans l'espace parent
       Quand Paul ouvre le choix de voix
       Alors « Automatique (recommandé) » est choisi
       Et Paul ne voit pas la voix « Audrey (améliorée) »
+      Et aucun message d'erreur n'apparaît
 
-    @a-valider
     Scénario: Une voix imposée de nouveau installée reprend la lecture des consignes
-      Étant donné que Paul a imposé la voix « Audrey (améliorée) » quand elle n'était plus sur la tablette
-      Et que la voix « Audrey (améliorée) » a été de nouveau installée sur la tablette
+      Étant donné que Paul a imposé la voix « Audrey (améliorée) » sur la tablette
+      Et que la voix « Audrey (améliorée) » a disparu de la tablette, puis y a été de nouveau installée
       Et que Léa a choisi l'univers animaux
       Quand la consigne « Écoute bien. » s'affiche
       Alors Léa entend Noisette lire la consigne avec la voix « Audrey (améliorée) »
@@ -216,7 +227,6 @@ Fonctionnalité: Choisir la voix des personnages guides sur l'appareil
       Quand Léa relance Savanturier
       Alors Léa entend Noisette lire la consigne avec la voix « Amélie (compact) »
 
-    @a-valider
     Scénario: La voix imposée reste sur l'appareil après la déconnexion du parent
       Étant donné que l'appareil a les voix françaises « Amélie (compact) » et « Denise (Natural) »
       Et que Paul a imposé la voix « Amélie (compact) » sur la tablette
