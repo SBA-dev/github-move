@@ -1,3 +1,9 @@
 export { AdresseEmail } from "./adresse-email.ts";
 export { CodeDeConnexion } from "./code-de-connexion.ts";
-export { AdresseEmailInvalide, CodeDeConnexionMalForme } from "./erreurs.ts";
+export { DemanderLienDeConnexion } from "./demander-lien-de-connexion.ts";
+export type { DonneesDeLAppareil } from "./donnees-de-l-appareil.ts";
+export { AdresseEmailInvalide, CodeDeConnexionInvalide, CodeDeConnexionMalForme } from "./erreurs.ts";
+export { OuvrirLaConnexionAvecLeCode } from "./ouvrir-la-connexion-avec-le-code.ts";
+export { ParentId } from "./parent-id.ts";
+export { SeDeconnecter } from "./se-deconnecter.ts";
+export type { ServiceDeConnexion } from "./service-de-connexion.ts";
