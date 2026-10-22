@@ -19,7 +19,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 LIB = ROOT / "app" / "bibliotheque.json"
 INDEX = {e["id"]: e for e in json.loads((ROOT / "app" / "programmes-index.json").read_text(encoding="utf-8"))}
-MODULES = ["francais", "maths", "sciences", "histoire", "anglais"]
+MODULES = ["francais", "francais2", "maths", "maths2", "sciences", "histoire", "anglais"]
 
 
 def norm(s):

@@ -404,6 +404,69 @@
   "genere": true
  },
  {
+  "id": "fr-cp-voix-haute",
+  "matiere": "francais",
+  "niveau": "CP",
+  "titre": "Lire à voix haute",
+  "ordre": 13,
+  "programme": {
+   "section": "c2-francais-cp-lire-a-voix-haute",
+   "citation": "L’élève est capable de lire à voix haute des syllabes, des mots."
+  },
+  "lecon": [
+   {
+    "texte": "Pour bien lire à voix haute, je lis les mots sans me presser, et je m'arrête un peu aux points.",
+    "exemples": []
+   },
+   {
+    "texte": "Quand je vois un point d'interrogation, ma voix monte, comme pour poser une question.",
+    "exemples": [
+     "?",
+     "!",
+     "."
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "lecture",
+    "titre": "Le goûter de Tom",
+    "texte": "Tom a faim. Il ouvre le placard. Il voit des biscuits ! Il prend un verre de lait. Maman arrive et dit : « Tu as pensé à ta sœur ? » Tom sourit et donne un biscuit à Lili.",
+    "questions": [
+     {
+      "question": "Pourquoi Tom ouvre-t-il le placard ?",
+      "choix": [
+       "il a faim",
+       "il a froid",
+       "il cherche son ballon"
+      ],
+      "reponse": "il a faim"
+     },
+     {
+      "question": "Quand je lis « Tu as pensé à ta sœur ? », ma voix…",
+      "choix": [
+       "monte, c'est une question",
+       "descend",
+       "crie"
+      ],
+      "reponse": "monte, c'est une question"
+     },
+     {
+      "question": "À qui Tom donne-t-il un biscuit ?",
+      "choix": [
+       "à Lili, sa sœur",
+       "à maman",
+       "au chat"
+      ],
+      "reponse": "à Lili, sa sœur"
+     }
+    ]
+   }
+  ],
+  "competence": "Je lis à voix haute en respectant la ponctuation",
+  "genere": true
+ },
+ {
   "id": "fr-cp-categories",
   "matiere": "francais",
   "niveau": "CP",
@@ -516,6 +579,120 @@
    }
   ],
   "competence": "Je range les mots par catégories",
+  "genere": true
+ },
+ {
+  "id": "fr-cp-mots-maison",
+  "matiere": "francais",
+  "niveau": "CP",
+  "titre": "Les mots de la maison",
+  "ordre": 16,
+  "programme": {
+   "section": "c2-francais-cp-enrichir-son-vocabulaire-dans-tous-les-enseignements",
+   "citation": "L’élève prend plaisir à apprendre de nouveaux mots, il se"
+  },
+  "lecon": [
+   {
+    "texte": "Dans la maison, chaque pièce a ses objets : dans la cuisine, il y a un four ; dans la salle de bains, une baignoire.",
+    "exemples": [
+     "cuisine",
+     "chambre",
+     "salle de bains"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "classer",
+    "titre": "Dans quelle pièce ?",
+    "consigne": "Range chaque objet dans sa pièce.",
+    "groupes": [
+     {
+      "id": "1",
+      "nom": "Cuisine"
+     },
+     {
+      "id": "2",
+      "nom": "Chambre"
+     },
+     {
+      "id": "3",
+      "nom": "Salle de bains"
+     }
+    ],
+    "items": [
+     {
+      "texte": "le four",
+      "groupe": "1"
+     },
+     {
+      "texte": "l'évier",
+      "groupe": "1"
+     },
+     {
+      "texte": "le frigo",
+      "groupe": "1"
+     },
+     {
+      "texte": "le lit",
+      "groupe": "2"
+     },
+     {
+      "texte": "l'armoire",
+      "groupe": "2"
+     },
+     {
+      "texte": "l'oreiller",
+      "groupe": "2"
+     },
+     {
+      "texte": "la baignoire",
+      "groupe": "3"
+     },
+     {
+      "texte": "la brosse à dents",
+      "groupe": "3"
+     },
+     {
+      "texte": "le savon",
+      "groupe": "3"
+     }
+    ]
+   }
+  ],
+  "competence": "Je connais les mots de la maison",
+  "genere": true
+ },
+ {
+  "id": "fr-cp-mot-precis",
+  "matiere": "francais",
+  "niveau": "CP",
+  "titre": "Utiliser le bon mot",
+  "ordre": 17,
+  "programme": {
+   "section": "c2-francais-cp-reemployer-le-vocabulaire-etudie",
+   "citation": "Réemployer et mémoriser les expressions et les mots"
+  },
+  "lecon": [
+   {
+    "texte": "Pour être bien compris, je choisis le mot qui convient.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "trous",
+    "titre": "Le bon mot",
+    "consigne": "Choisis le mot qui convient.",
+    "texte": "Le boulanger fait du [pain]. Le [pompier] éteint le feu. On mange la soupe avec une [cuillère]. La nuit, on voit la [lune].",
+    "distracteurs": [
+     "voiture",
+     "soleil",
+     "fourchette"
+    ]
+   }
+  ],
+  "competence": "J'utilise le mot juste",
   "genere": true
  },
  {
@@ -721,6 +898,164 @@
   "genere": true
  },
  {
+  "id": "fr-cp-lettres",
+  "matiere": "francais",
+  "niveau": "CP",
+  "titre": "Les lettres qui montent et qui descendent",
+  "ordre": 27,
+  "programme": {
+   "section": "c2-francais-cp-apprendre-a-ecrire-en-ecriture-cursive",
+   "citation": "Il est capable d’enchainer plusieurs lettres sans lever le lettres dans des syllabes, mots, phrases."
+  },
+  "lecon": [
+   {
+    "texte": "Quand on écrit, certaines lettres montent au-dessus de la ligne, comme b, d, l. D'autres descendent en dessous, comme g, p, q.",
+    "exemples": [
+     "b d l",
+     "g p q"
+    ]
+   },
+   {
+    "texte": "D'autres restent petites, entre les lignes : a, o, u, e.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "classer",
+    "titre": "Monte, descend ou reste petite ?",
+    "consigne": "Range chaque lettre minuscule selon sa forme en écriture attachée.",
+    "groupes": [
+     {
+      "id": "1",
+      "nom": "Elle monte"
+     },
+     {
+      "id": "2",
+      "nom": "Elle descend"
+     },
+     {
+      "id": "3",
+      "nom": "Elle reste petite"
+     }
+    ],
+    "items": [
+     {
+      "texte": "b",
+      "groupe": "1"
+     },
+     {
+      "texte": "d",
+      "groupe": "1"
+     },
+     {
+      "texte": "l",
+      "groupe": "1"
+     },
+     {
+      "texte": "h",
+      "groupe": "1"
+     },
+     {
+      "texte": "g",
+      "groupe": "2"
+     },
+     {
+      "texte": "p",
+      "groupe": "2"
+     },
+     {
+      "texte": "q",
+      "groupe": "2"
+     },
+     {
+      "texte": "j",
+      "groupe": "2"
+     },
+     {
+      "texte": "a",
+      "groupe": "3"
+     },
+     {
+      "texte": "o",
+      "groupe": "3"
+     },
+     {
+      "texte": "u",
+      "groupe": "3"
+     },
+     {
+      "texte": "e",
+      "groupe": "3"
+     }
+    ]
+   }
+  ],
+  "competence": "Je connais la forme des lettres",
+  "genere": true
+ },
+ {
+  "id": "fr-cp-copier",
+  "matiere": "francais",
+  "niveau": "CP",
+  "titre": "Bien copier un mot",
+  "ordre": 28,
+  "programme": {
+   "section": "c2-francais-cp-copier-et-acquerir-des-strategies-de-copie",
+   "citation": "Copier des syllabes simples puis des mots avec lettres"
+  },
+  "lecon": [
+   {
+    "texte": "Pour copier un mot sans erreur, je ne recopie pas lettre par lettre : je lis le mot, je le dis, j'épelle les lettres, puis je l'écris de mémoire.",
+    "exemples": []
+   },
+   {
+    "texte": "À la fin, je vérifie avec le modèle.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "ordre",
+    "titre": "Les étapes de la copie",
+    "consigne": "Remets les étapes dans l'ordre.",
+    "elements": [
+     "Je lis le mot",
+     "J'épelle ses lettres",
+     "Je cache le modèle",
+     "J'écris le mot",
+     "Je vérifie avec le modèle"
+    ]
+   },
+   {
+    "type": "bulles",
+    "titre": "Bien copier",
+    "questions": [
+     {
+      "question": "Pour bien copier, il vaut mieux…",
+      "choix": [
+       "lire le mot entier puis l'écrire",
+       "regarder chaque lettre une par une",
+       "écrire très vite"
+      ],
+      "reponse": "lire le mot entier puis l'écrire"
+     },
+     {
+      "question": "Après avoir copié, je dois…",
+      "choix": [
+       "vérifier avec le modèle",
+       "effacer",
+       "tourner la page"
+      ],
+      "reponse": "vérifier avec le modèle"
+     }
+    ]
+   }
+  ],
+  "competence": "J'ai une méthode pour copier",
+  "genere": true
+ },
+ {
   "id": "fr-cp-masculin-feminin",
   "matiere": "francais",
   "niveau": "CP",
@@ -883,6 +1218,101 @@
   "genere": true
  },
  {
+  "id": "fr-cp-dictee-familiers",
+  "matiere": "francais",
+  "niveau": "CP",
+  "titre": "Dictée : les mots de tous les jours",
+  "ordre": 36,
+  "programme": {
+   "section": "c2-francais-cp-memoriser-lorthographe-lexicale",
+   "citation": "Mémoriser l’orthographe des mots réguliers fréquemment"
+  },
+  "lecon": [
+   {
+    "texte": "Certains mots, on les écrit très souvent. On les apprend par cœur.",
+    "exemples": []
+   },
+   {
+    "texte": "Écoute bien chaque mot, puis écris-le.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "dictee",
+    "titre": "Mes premiers mots",
+    "mots": [
+     {
+      "mot": "papa",
+      "phrase": "Papa lit le journal."
+     },
+     {
+      "mot": "maman",
+      "phrase": "Maman chante."
+     },
+     {
+      "mot": "école",
+      "phrase": "Je vais à l'école."
+     },
+     {
+      "mot": "ami",
+      "phrase": "Léo est mon ami."
+     },
+     {
+      "mot": "jouer",
+      "phrase": "J'aime jouer."
+     }
+    ]
+   }
+  ],
+  "competence": "J'écris des mots familiers sans erreur",
+  "genere": true
+ },
+ {
+  "id": "fr-cp-ecrire-phrase",
+  "matiere": "francais",
+  "niveau": "CP",
+  "titre": "Écrire une phrase",
+  "ordre": 37,
+  "programme": {
+   "section": "c2-francais-cp-produire-des-ecrits",
+   "citation": "Il respecte les deux marqueurs de la phrase : majuscule (en capitales d’imprimerie) et ponctuation finale forte."
+  },
+  "lecon": [
+   {
+    "texte": "Pour écrire une phrase, je pense d'abord à ce que je veux dire. Je commence par une majuscule et je finis par un point.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "ordre",
+    "titre": "Construis la phrase",
+    "consigne": "Remets les mots dans l'ordre pour dire ce que fait le chat.",
+    "elements": [
+     "Le",
+     "chat",
+     "joue",
+     "avec",
+     "une",
+     "pelote."
+    ]
+   },
+   {
+    "type": "trous",
+    "titre": "Complète la phrase",
+    "consigne": "Choisis le mot qui convient.",
+    "texte": "Le soleil [brille] dans le ciel. Le chien [mange] sa pâtée. Je [dors] dans mon lit.",
+    "distracteurs": [
+     "chante",
+     "vole"
+    ]
+   }
+  ],
+  "competence": "J'écris une phrase simple",
+  "genere": true
+ },
+ {
   "id": "fr-cp-chanson-clair-de-lune",
   "matiere": "francais",
   "niveau": "CP",
@@ -919,6 +1349,203 @@
     ]
    }
   ]
+ },
+ {
+  "id": "fr-cp-conte-chaperon",
+  "matiere": "francais",
+  "niveau": "CP",
+  "titre": "Conte : Le Petit Chaperon rouge",
+  "ordre": 45,
+  "programme": {
+   "section": "c2-francais-cp-devenir-lecteur",
+   "citation": "Repérer et reconnaitre des types de personnages."
+  },
+  "lecon": [
+   {
+    "texte": "Un conte est une histoire très ancienne, que l'on raconte depuis longtemps aux enfants. Celui-ci a été écrit par Charles Perrault.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "lecture",
+    "titre": "Le Petit Chaperon rouge",
+    "texte": "Une petite fille porte toujours un chaperon rouge. Un jour, sa mère lui demande d'apporter une galette à sa grand-mère, qui habite de l'autre côté du bois. Dans la forêt, la fillette rencontre le loup. Le loup lui demande où elle va, puis il court plus vite qu'elle jusqu'à la maison de la grand-mère. Il prend sa place dans le lit. Quand le Petit Chaperon rouge arrive, elle s'étonne : « Grand-mère, que vous avez de grandes dents ! »",
+    "questions": [
+     {
+      "question": "Que porte la petite fille sur la tête ?",
+      "choix": [
+       "un chaperon rouge",
+       "un chapeau bleu",
+       "une couronne"
+      ],
+      "reponse": "un chaperon rouge"
+     },
+     {
+      "question": "Que doit-elle apporter à sa grand-mère ?",
+      "choix": [
+       "une galette",
+       "des fleurs",
+       "une lettre"
+      ],
+      "reponse": "une galette"
+     },
+     {
+      "question": "Qui rencontre-t-elle dans la forêt ?",
+      "choix": [
+       "le loup",
+       "un ours",
+       "un chasseur"
+      ],
+      "reponse": "le loup"
+     },
+     {
+      "question": "Qui est dans le lit de la grand-mère ?",
+      "choix": [
+       "le loup",
+       "la grand-mère",
+       "la maman"
+      ],
+      "reponse": "le loup"
+     }
+    ]
+   },
+   {
+    "type": "ordre",
+    "titre": "L'histoire dans l'ordre",
+    "consigne": "Remets les moments du conte dans l'ordre.",
+    "elements": [
+     "La maman donne une galette",
+     "La fillette rencontre le loup",
+     "Le loup court chez la grand-mère",
+     "La fillette arrive à la maison"
+    ]
+   }
+  ],
+  "competence": "Je connais le conte du Petit Chaperon rouge",
+  "genere": true
+ },
+ {
+  "id": "fr-cp-ecouter-consignes",
+  "matiere": "francais",
+  "niveau": "CP",
+  "titre": "Écouter une consigne",
+  "ordre": 48,
+  "programme": {
+   "section": "c2-francais-cp-ecouter-pour-comprendre",
+   "citation": "Il réalise l’action demandée par un discours injonctif : consigne, recette de cuisine, notice de montage, règle du jeu, etc."
+  },
+  "lecon": [
+   {
+    "texte": "Pour bien comprendre une consigne, j'écoute jusqu'au bout, puis je redis dans ma tête ce que je dois faire.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "lecture",
+    "titre": "La consigne de la maîtresse",
+    "texte": "Prenez votre cahier rouge. Ouvrez-le à la première page. Avec votre crayon à papier, dessinez un soleil en haut, et une maison en bas. Ensuite, coloriez la porte en bleu.",
+    "questions": [
+     {
+      "question": "Quel cahier faut-il prendre ?",
+      "choix": [
+       "le cahier rouge",
+       "le cahier bleu",
+       "le cahier vert"
+      ],
+      "reponse": "le cahier rouge"
+     },
+     {
+      "question": "Que faut-il dessiner en haut ?",
+      "choix": [
+       "un soleil",
+       "une maison",
+       "un arbre"
+      ],
+      "reponse": "un soleil"
+     },
+     {
+      "question": "De quelle couleur faut-il colorier la porte ?",
+      "choix": [
+       "en bleu",
+       "en rouge",
+       "en jaune"
+      ],
+      "reponse": "en bleu"
+     },
+     {
+      "question": "Avec quoi dessine-t-on ?",
+      "choix": [
+       "un crayon à papier",
+       "un feutre",
+       "de la peinture"
+      ],
+      "reponse": "un crayon à papier"
+     }
+    ]
+   }
+  ],
+  "competence": "J'écoute et je comprends une consigne",
+  "genere": true
+ },
+ {
+  "id": "fr-cp-parler-ensemble",
+  "matiere": "francais",
+  "niveau": "CP",
+  "titre": "Bien parler ensemble",
+  "ordre": 49,
+  "programme": {
+   "section": "c2-francais-cp-participer-a-des-echanges",
+   "citation": "L’élève attend la fin d’une prise de parole pour parler."
+  },
+  "lecon": [
+   {
+    "texte": "Pour parler en classe, je lève le doigt et j'attends qu'on me donne la parole.",
+    "exemples": []
+   },
+   {
+    "texte": "J'écoute les autres sans leur couper la parole, et je parle assez fort pour être entendu.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "En classe",
+    "questions": [
+     {
+      "question": "Je veux parler pendant le regroupement. Que fais-je ?",
+      "choix": [
+       "Je lève le doigt",
+       "Je crie",
+       "Je parle en même temps"
+      ],
+      "reponse": "Je lève le doigt"
+     },
+     {
+      "question": "Mon ami parle. Que fais-je ?",
+      "choix": [
+       "Je l'écoute",
+       "Je lui coupe la parole",
+       "Je regarde ailleurs"
+      ],
+      "reponse": "Je l'écoute"
+     },
+     {
+      "question": "Pour être bien entendu, je parle…",
+      "choix": [
+       "assez fort et clairement",
+       "tout bas",
+       "très vite"
+      ],
+      "reponse": "assez fort et clairement"
+     }
+    ]
+   }
+  ],
+  "competence": "Je sais prendre la parole en classe",
+  "genere": true
  },
  {
   "id": "fr-cp-poesie-cigale",
@@ -980,6 +1607,122 @@
     ]
    }
   ]
+ },
+ {
+  "id": "fr-ce1-son-in",
+  "matiere": "francais",
+  "niveau": "CE1",
+  "titre": "Le son « in » : in, ain, ein, un",
+  "ordre": 5,
+  "programme": {
+   "section": "c2-francais-ce1-identifier-les-mots-de-maniere-de-plus-en-plus-aisee",
+   "citation": "Décoder toutes les CGP y compris les plus complexes."
+  },
+  "lecon": [
+   {
+    "texte": "Le son « in » peut s'écrire de plusieurs façons : in comme lapin, ain comme main, ein comme peinture, un comme lundi.",
+    "exemples": [
+     "in",
+     "ain",
+     "ein",
+     "un"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "classer",
+    "titre": "Comment s'écrit le son « in » ?",
+    "consigne": "Range chaque mot selon la façon d'écrire le son « in ».",
+    "groupes": [
+     {
+      "id": "1",
+      "nom": "in"
+     },
+     {
+      "id": "2",
+      "nom": "ain"
+     },
+     {
+      "id": "3",
+      "nom": "ein"
+     }
+    ],
+    "items": [
+     {
+      "texte": "lapin",
+      "groupe": "1"
+     },
+     {
+      "texte": "sapin",
+      "groupe": "1"
+     },
+     {
+      "texte": "jardin",
+      "groupe": "1"
+     },
+     {
+      "texte": "main",
+      "groupe": "2"
+     },
+     {
+      "texte": "pain",
+      "groupe": "2"
+     },
+     {
+      "texte": "train",
+      "groupe": "2"
+     },
+     {
+      "texte": "peinture",
+      "groupe": "3"
+     },
+     {
+      "texte": "plein",
+      "groupe": "3"
+     },
+     {
+      "texte": "frein",
+      "groupe": "3"
+     }
+    ]
+   },
+   {
+    "type": "bulles",
+    "titre": "Le bon mot",
+    "questions": [
+     {
+      "question": "Lequel est bien écrit ?",
+      "choix": [
+       "demain",
+       "demin",
+       "demein"
+      ],
+      "reponse": "demain"
+     },
+     {
+      "question": "Lequel est bien écrit ?",
+      "choix": [
+       "dessin",
+       "dessain",
+       "dessein"
+      ],
+      "reponse": "dessin"
+     },
+     {
+      "question": "Lequel est bien écrit ?",
+      "choix": [
+       "lundi",
+       "lindi",
+       "laindi"
+      ],
+      "reponse": "lundi"
+     }
+    ]
+   }
+  ],
+  "competence": "Je connais les écritures du son « in »",
+  "genere": true
  },
  {
   "id": "fr-ce1-ordre-alphabetique",
@@ -1067,6 +1810,65 @@
   "genere": true
  },
  {
+  "id": "fr-ce1-voix-haute",
+  "matiere": "francais",
+  "niveau": "CE1",
+  "titre": "Lire avec le ton",
+  "ordre": 12,
+  "programme": {
+   "section": "c2-francais-ce1-lire-a-voix-haute",
+   "citation": "Il lit un texte en modifiant sa voix et sa cadence, en fonction du sens."
+  },
+  "lecon": [
+   {
+    "texte": "Le point d'exclamation montre la surprise, la joie ou la colère : on le lit avec de l'énergie.",
+    "exemples": []
+   },
+   {
+    "texte": "Le point d'interrogation montre une question : la voix monte.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "lecture",
+    "titre": "Surprise !",
+    "texte": "Ce matin, Inès ouvre la porte du jardin. Quelle surprise ! Un petit chien l'attend sur le paillasson. « D'où viens-tu ? » demande-t-elle. Le chien remue la queue. « Papa, viens voir ! » crie Inès.",
+    "questions": [
+     {
+      "question": "Que trouve Inès devant la porte ?",
+      "choix": [
+       "un petit chien",
+       "un chat",
+       "un cadeau"
+      ],
+      "reponse": "un petit chien"
+     },
+     {
+      "question": "« D'où viens-tu ? » se lit…",
+      "choix": [
+       "comme une question",
+       "très doucement",
+       "comme un ordre"
+      ],
+      "reponse": "comme une question"
+     },
+     {
+      "question": "« Papa, viens voir ! » se lit…",
+      "choix": [
+       "avec énergie, en appelant",
+       "en chuchotant",
+       "comme une question"
+      ],
+      "reponse": "avec énergie, en appelant"
+     }
+    ]
+   }
+  ],
+  "competence": "Je lis à voix haute avec le ton",
+  "genere": true
+ },
+ {
   "id": "fr-ce1-contraires",
   "matiere": "francais",
   "niveau": "CE1",
@@ -1149,6 +1951,140 @@
    }
   ],
   "competence": "Je trouve le contraire d'un mot",
+  "genere": true
+ },
+ {
+  "id": "fr-ce1-generiques",
+  "matiere": "francais",
+  "niveau": "CE1",
+  "titre": "Les mots qui rangent les autres",
+  "ordre": 21,
+  "programme": {
+   "section": "c2-francais-ce1-reemployer-le-vocabulaire-etudie",
+   "citation": "Il joue au jeu des sept familles en catégorisant : Dans la famille des fruits, je voudrais les agrumes."
+  },
+  "lecon": [
+   {
+    "texte": "Certains mots désignent toute une famille d'objets : « fruit » regroupe la pomme, la poire, la cerise. Ce sont des mots génériques.",
+    "exemples": [
+     "fruit : pomme, poire",
+     "outil : marteau, scie"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Quel mot regroupe les autres ?",
+    "questions": [
+     {
+      "question": "marteau, scie, tournevis : ce sont des…",
+      "choix": [
+       "outils",
+       "jouets",
+       "meubles"
+      ],
+      "reponse": "outils"
+     },
+     {
+      "question": "table, chaise, armoire : ce sont des…",
+      "choix": [
+       "meubles",
+       "outils",
+       "vêtements"
+      ],
+      "reponse": "meubles"
+     },
+     {
+      "question": "rose, tulipe, marguerite : ce sont des…",
+      "choix": [
+       "fleurs",
+       "fruits",
+       "arbres"
+      ],
+      "reponse": "fleurs"
+     },
+     {
+      "question": "piano, guitare, violon : ce sont des…",
+      "choix": [
+       "instruments de musique",
+       "outils",
+       "animaux"
+      ],
+      "reponse": "instruments de musique"
+     }
+    ]
+   }
+  ],
+  "competence": "Je connais des mots génériques",
+  "genere": true
+ },
+ {
+  "id": "fr-ce1-verbes-precis",
+  "matiere": "francais",
+  "niveau": "CE1",
+  "titre": "Des verbes plus précis que « dire »",
+  "ordre": 22,
+  "programme": {
+   "section": "c2-francais-ce1-enrichir-son-vocabulaire-dans-toutes-les-disciplines",
+   "citation": "L’élève prend plaisir à apprendre de nouveaux mots"
+  },
+  "lecon": [
+   {
+    "texte": "Au lieu de toujours écrire « dire », je peux choisir un verbe plus précis : crier, chuchoter, demander, répondre.",
+    "exemples": [
+     "crier",
+     "chuchoter",
+     "demander",
+     "répondre"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Le verbe précis",
+    "questions": [
+     {
+      "question": "Il parle très fort : il…",
+      "choix": [
+       "crie",
+       "chuchote",
+       "murmure"
+      ],
+      "reponse": "crie"
+     },
+     {
+      "question": "Elle parle tout bas, à l'oreille : elle…",
+      "choix": [
+       "chuchote",
+       "hurle",
+       "crie"
+      ],
+      "reponse": "chuchote"
+     },
+     {
+      "question": "Il pose une question : il…",
+      "choix": [
+       "demande",
+       "répond",
+       "ordonne"
+      ],
+      "reponse": "demande"
+     },
+     {
+      "question": "Elle donne la réponse : elle…",
+      "choix": [
+       "répond",
+       "demande",
+       "pleure"
+      ],
+      "reponse": "répond"
+     }
+    ]
+   }
+  ],
+  "competence": "J'utilise des verbes précis",
   "genere": true
  },
  {
@@ -1515,6 +2451,115 @@
   "genere": true
  },
  {
+  "id": "fr-ce1-copier",
+  "matiere": "francais",
+  "niveau": "CE1",
+  "titre": "Copier sans erreur",
+  "ordre": 66,
+  "programme": {
+   "section": "c2-francais-ce1-copier-et-acquerir-des-strategies-de-copie",
+   "citation": "Recopier sans effort une dizaine de lignes en respectant la ponctuation et la mise en page."
+  },
+  "lecon": [
+   {
+    "texte": "Pour copier une phrase, je la lis en entier, puis je la copie par groupes de mots, et non lettre par lettre.",
+    "exemples": []
+   },
+   {
+    "texte": "Je vérifie chaque mot à la fin.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "La bonne méthode",
+    "questions": [
+     {
+      "question": "Pour copier « Le chat dort sur le tapis », je copie…",
+      "choix": [
+       "par groupes de mots : « Le chat dort », « sur le tapis »",
+       "une lettre à la fois",
+       "le dernier mot d'abord"
+      ],
+      "reponse": "par groupes de mots : « Le chat dort », « sur le tapis »"
+     },
+     {
+      "question": "Après la copie, je…",
+      "choix": [
+       "relis et compare avec le modèle",
+       "range mon cahier sans relire",
+       "recommence tout"
+      ],
+      "reponse": "relis et compare avec le modèle"
+     },
+     {
+      "question": "Combien de mots dans « Le chat dort sur le tapis » ?",
+      "choix": [
+       "6",
+       "5",
+       "7"
+      ],
+      "reponse": "6"
+     }
+    ]
+   }
+  ],
+  "competence": "Je copie une phrase par groupes de mots",
+  "genere": true
+ },
+ {
+  "id": "fr-ce1-dictee-invariables",
+  "matiere": "francais",
+  "niveau": "CE1",
+  "titre": "Dictée : les mots invariables",
+  "ordre": 67,
+  "programme": {
+   "section": "c2-francais-ce1-memoriser-lorthographe-des-mots",
+   "citation": "Mémoriser l’orthographe des mots réguliers et irréguliers"
+  },
+  "lecon": [
+   {
+    "texte": "Les mots invariables ne changent jamais : ni au pluriel, ni au féminin. On les apprend par cœur.",
+    "exemples": []
+   },
+   {
+    "texte": "Écoute bien chaque mot, et écris-le.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "dictee",
+    "titre": "Les mots invariables",
+    "mots": [
+     {
+      "mot": "toujours",
+      "phrase": "Il est toujours content."
+     },
+     {
+      "mot": "beaucoup",
+      "phrase": "J'ai beaucoup de jouets."
+     },
+     {
+      "mot": "aujourd'hui",
+      "phrase": "Aujourd'hui, il fait beau."
+     },
+     {
+      "mot": "demain",
+      "phrase": "Demain, c'est mercredi."
+     },
+     {
+      "mot": "maintenant",
+      "phrase": "Viens maintenant !"
+     }
+    ]
+   }
+  ],
+  "competence": "J'écris des mots invariables sans erreur",
+  "genere": true
+ },
+ {
   "id": "fr-ce1-present-premier-groupe",
   "matiere": "francais",
   "niveau": "CE1",
@@ -1718,6 +2763,357 @@
   "genere": true
  },
  {
+  "id": "fr-ce1-conte-cochons",
+  "matiere": "francais",
+  "niveau": "CE1",
+  "titre": "Conte : Les Trois Petits Cochons",
+  "ordre": 77,
+  "programme": {
+   "section": "c2-francais-ce1-devenir-lecteur",
+   "citation": "Il se familiarise avec les lieux de lecture et développe une mesure d’établir des liens entre ses différentes lectures"
+  },
+  "lecon": [
+   {
+    "texte": "Voici un conte traditionnel anglais, raconté partout dans le monde.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "lecture",
+    "titre": "Les Trois Petits Cochons",
+    "texte": "Trois petits cochons quittent la maison de leur mère pour construire chacun leur maison. Le premier, pressé d'aller jouer, construit une maison de paille. Le deuxième construit une maison de bois. Le troisième, patient, construit une maison de briques. Le loup arrive. Il souffle, et la maison de paille s'envole. Il souffle encore, et la maison de bois tombe. Mais il a beau souffler, la maison de briques résiste. Les trois petits cochons y sont à l'abri.",
+    "questions": [
+     {
+      "question": "En quoi est la première maison ?",
+      "choix": [
+       "en paille",
+       "en bois",
+       "en briques"
+      ],
+      "reponse": "en paille"
+     },
+     {
+      "question": "Quelle maison résiste au loup ?",
+      "choix": [
+       "la maison de briques",
+       "la maison de paille",
+       "la maison de bois"
+      ],
+      "reponse": "la maison de briques"
+     },
+     {
+      "question": "Pourquoi le troisième cochon réussit-il ?",
+      "choix": [
+       "il a pris son temps pour bien construire",
+       "il est le plus fort",
+       "il a chassé le loup"
+      ],
+      "reponse": "il a pris son temps pour bien construire"
+     },
+     {
+      "question": "Quelle est la leçon de ce conte ?",
+      "choix": [
+       "il vaut mieux travailler avec soin",
+       "il faut aller vite",
+       "les loups sont gentils"
+      ],
+      "reponse": "il vaut mieux travailler avec soin"
+     }
+    ]
+   }
+  ],
+  "competence": "Je comprends un conte traditionnel",
+  "genere": true
+ },
+ {
+  "id": "fr-ce1-ecrire-histoire",
+  "matiere": "francais",
+  "niveau": "CE1",
+  "titre": "Écrire une petite histoire",
+  "ordre": 78,
+  "programme": {
+   "section": "c2-francais-ce1-produire-des-ecrits",
+   "citation": "L’élève se sert de « brouillons » pour écrire : listes, pistes, cartes mentales, etc."
+  },
+  "lecon": [
+   {
+    "texte": "Une histoire a un début (qui ? où ?), un milieu (ce qui se passe) et une fin.",
+    "exemples": []
+   },
+   {
+    "texte": "Pour relier les phrases, j'utilise des petits mots : d'abord, ensuite, puis, enfin.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "ordre",
+    "titre": "Remets l'histoire en ordre",
+    "consigne": "Remets les phrases de l'histoire dans l'ordre.",
+    "elements": [
+     "Un matin, Zoé part en forêt avec son panier.",
+     "D'abord, elle cueille des champignons.",
+     "Ensuite, il se met à pleuvoir.",
+     "Enfin, elle rentre à la maison, toute mouillée."
+    ]
+   },
+   {
+    "type": "trous",
+    "titre": "Les mots qui relient",
+    "consigne": "Complète avec d'abord, ensuite ou enfin.",
+    "texte": "[D'abord], je me lave les mains. [Ensuite], je mange. [Enfin], je range mon assiette.",
+    "distracteurs": []
+   }
+  ],
+  "competence": "J'écris une histoire avec un début, un milieu et une fin",
+  "genere": true
+ },
+ {
+  "id": "fr-ce1-ecouter-herisson",
+  "matiere": "francais",
+  "niveau": "CE1",
+  "titre": "Écouter un documentaire : le hérisson",
+  "ordre": 79,
+  "programme": {
+   "section": "c2-francais-ce1-ecouter-pour-comprendre",
+   "citation": "Maintenir une attention active pendant quelques minutes"
+  },
+  "lecon": [
+   {
+    "texte": "Écoute bien ce petit documentaire. Ensuite, je te pose des questions.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "lecture",
+    "titre": "Le hérisson",
+    "texte": "Le hérisson est un petit mammifère couvert de piquants. Quand il a peur, il se roule en boule. Il vit dans les haies et les jardins. La nuit, il chasse les limaces, les vers et les insectes : c'est un ami du jardinier. Quand l'hiver arrive, il trouve un abri sous des feuilles et il hiberne jusqu'au printemps.",
+    "questions": [
+     {
+      "question": "Que fait le hérisson quand il a peur ?",
+      "choix": [
+       "il se roule en boule",
+       "il s'enfuit en volant",
+       "il crie"
+      ],
+      "reponse": "il se roule en boule"
+     },
+     {
+      "question": "Que mange le hérisson ?",
+      "choix": [
+       "des limaces et des insectes",
+       "des carottes",
+       "du pain"
+      ],
+      "reponse": "des limaces et des insectes"
+     },
+     {
+      "question": "Pourquoi est-il l'ami du jardinier ?",
+      "choix": [
+       "il mange les limaces",
+       "il arrose les fleurs",
+       "il creuse la terre"
+      ],
+      "reponse": "il mange les limaces"
+     },
+     {
+      "question": "Que fait-il en hiver ?",
+      "choix": [
+       "il hiberne",
+       "il part en voyage",
+       "il chasse"
+      ],
+      "reponse": "il hiberne"
+     }
+    ]
+   }
+  ],
+  "competence": "J'écoute et je comprends un documentaire",
+  "genere": true
+ },
+ {
+  "id": "fr-ce1-comptine-bergere",
+  "matiere": "francais",
+  "niveau": "CE1",
+  "titre": "Chanson : Il pleut, bergère",
+  "ordre": 80,
+  "programme": {
+   "section": "c2-francais-ce1-dire-pour-etre-compris",
+   "citation": "L’élève est capable de prendre la parole en groupe."
+  },
+  "lecon": [
+   {
+    "texte": "Cette chanson a été écrite il y a plus de deux cents ans par le poète Fabre d'Églantine.",
+    "exemples": []
+   },
+   {
+    "texte": "Pour bien la dire, j'articule chaque mot et je respire à la fin des vers.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "memoriser",
+    "titre": "Il pleut, bergère",
+    "auteur": "Fabre d'Églantine",
+    "vers": [
+     "Il pleut, il pleut, bergère,",
+     "Presse tes blancs moutons ;",
+     "Allons sous ma chaumière,",
+     "Bergère, vite, allons.",
+     "J'entends sur le feuillage",
+     "L'eau qui tombe à grand bruit ;",
+     "Voici, voici l'orage,",
+     "Voilà l'éclair qui luit."
+    ]
+   }
+  ],
+  "competence": "Je récite une chanson en articulant",
+  "genere": true
+ },
+ {
+  "id": "fr-ce1-debattre",
+  "matiere": "francais",
+  "niveau": "CE1",
+  "titre": "Échanger poliment",
+  "ordre": 81,
+  "programme": {
+   "section": "c2-francais-ce1-participer-a-des-echanges",
+   "citation": "Respecter le propos au cours des échanges au sein d’un"
+  },
+  "lecon": [
+   {
+    "texte": "Dans une discussion, je donne mon avis en disant « Je pense que… », et j'explique pourquoi.",
+    "exemples": []
+   },
+   {
+    "texte": "Je respecte l'avis des autres, même s'il est différent du mien.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Discuter ensemble",
+    "questions": [
+     {
+      "question": "Pour donner mon avis, je peux dire…",
+      "choix": [
+       "« Je pense que… parce que… »",
+       "« Tais-toi ! »",
+       "« C'est nul. »"
+      ],
+      "reponse": "« Je pense que… parce que… »"
+     },
+     {
+      "question": "Un camarade n'est pas d'accord avec moi. Je…",
+      "choix": [
+       "l'écoute et je réponds calmement",
+       "me fâche",
+       "m'en vais"
+      ],
+      "reponse": "l'écoute et je réponds calmement"
+     },
+     {
+      "question": "Pour demander la parole, je…",
+      "choix": [
+       "lève la main",
+       "crie mon prénom",
+       "tape sur la table"
+      ],
+      "reponse": "lève la main"
+     }
+    ]
+   }
+  ],
+  "competence": "Je donne mon avis poliment",
+  "genere": true
+ },
+ {
+  "id": "fr-ce2-lettre-g-c",
+  "matiere": "francais",
+  "niveau": "CE2",
+  "titre": "g ou gu, c ou ç ?",
+  "ordre": 5,
+  "programme": {
+   "section": "c2-francais-ce2-identifier-les-mots-de-maniere-de-plus-en-plus-aisee",
+   "citation": "Repérer les lettres muettes et décoder les mots inconnus"
+  },
+  "lecon": [
+   {
+    "texte": "Devant e, i, y, la lettre g fait le son « j » : girafe. Pour garder le son « g », on écrit gu : guitare.",
+    "exemples": [
+     "girafe",
+     "guitare"
+    ]
+   },
+   {
+    "texte": "Devant a, o, u, la lettre c fait le son « k » : carotte. Pour faire le son « s », on ajoute une cédille : leçon.",
+    "exemples": [
+     "carotte",
+     "leçon"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Le bon mot",
+    "questions": [
+     {
+      "question": "Lequel est bien écrit ?",
+      "choix": [
+       "guitare",
+       "gitare",
+       "ghitare"
+      ],
+      "reponse": "guitare"
+     },
+     {
+      "question": "Lequel est bien écrit ?",
+      "choix": [
+       "garçon",
+       "garcon",
+       "garsson"
+      ],
+      "reponse": "garçon"
+     },
+     {
+      "question": "Lequel est bien écrit ?",
+      "choix": [
+       "bague",
+       "bage",
+       "baguue"
+      ],
+      "reponse": "bague"
+     },
+     {
+      "question": "Lequel est bien écrit ?",
+      "choix": [
+       "glaçon",
+       "glacon",
+       "glasson"
+      ],
+      "reponse": "glaçon"
+     },
+     {
+      "question": "Dans « girafe », le g fait le son…",
+      "choix": [
+       "« j »",
+       "« g »",
+       "« k »"
+      ],
+      "reponse": "« j »"
+     }
+    ]
+   }
+  ],
+  "competence": "Je sais quand écrire gu et ç",
+  "genere": true
+ },
+ {
   "id": "fr-ce2-futur",
   "matiere": "francais",
   "niveau": "CE2",
@@ -1852,6 +3248,74 @@
    }
   ],
   "competence": "Je conjugue au futur",
+  "genere": true
+ },
+ {
+  "id": "fr-ce2-voix-haute",
+  "matiere": "francais",
+  "niveau": "CE2",
+  "titre": "Lire un dialogue à voix haute",
+  "ordre": 12,
+  "programme": {
+   "section": "c2-francais-ce2-lire-a-voix-haute",
+   "citation": "Lire un texte en respectant l’ensemble des marques de la ponctuation."
+  },
+  "lecon": [
+   {
+    "texte": "Dans un dialogue, plusieurs personnages parlent. Les tirets montrent qu'un nouveau personnage prend la parole.",
+    "exemples": []
+   },
+   {
+    "texte": "Quand je lis, je change un peu ma voix pour chaque personnage.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "lecture",
+    "titre": "Le renard à la boulangerie",
+    "texte": "— Bonjour, madame la boulangère ! dit le renard. — Bonjour, monsieur. Que voulez-vous ? — Un croissant bien doré, s'il vous plaît. — Voilà ! Cela fait un euro. — Oh non ! J'ai oublié mon porte-monnaie ! — Ce n'est pas grave, vous paierez demain.",
+    "questions": [
+     {
+      "question": "Combien de personnages parlent ?",
+      "choix": [
+       "deux",
+       "trois",
+       "un"
+      ],
+      "reponse": "deux"
+     },
+     {
+      "question": "Que montre un tiret au début d'une ligne ?",
+      "choix": [
+       "qu'un personnage parle",
+       "la fin de l'histoire",
+       "une question"
+      ],
+      "reponse": "qu'un personnage parle"
+     },
+     {
+      "question": "Qu'a oublié le renard ?",
+      "choix": [
+       "son porte-monnaie",
+       "son croissant",
+       "son chapeau"
+      ],
+      "reponse": "son porte-monnaie"
+     },
+     {
+      "question": "Comment lire « Oh non ! » ?",
+      "choix": [
+       "avec surprise et inquiétude",
+       "très calmement",
+       "en chantant"
+      ],
+      "reponse": "avec surprise et inquiétude"
+     }
+    ]
+   }
+  ],
+  "competence": "Je lis un dialogue avec expression",
   "genere": true
  },
  {
@@ -2376,6 +3840,144 @@
   "genere": true
  },
  {
+  "id": "fr-ce2-homonymes",
+  "matiere": "francais",
+  "niveau": "CE2",
+  "titre": "Les homonymes",
+  "ordre": 62,
+  "programme": {
+   "section": "c2-francais-ce2-etablir-des-relations-entre-les-mots",
+   "citation": "L’élève perçoit de grandes catégories sémantiques"
+  },
+  "lecon": [
+   {
+    "texte": "Les homonymes se prononcent pareil, mais ne s'écrivent pas pareil et n'ont pas le même sens : vert, verre, ver.",
+    "exemples": [
+     "vert / verre / ver",
+     "mer / mère / maire"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Le bon homonyme",
+    "questions": [
+     {
+      "question": "Je bois dans un…",
+      "choix": [
+       "verre",
+       "vert",
+       "ver"
+      ],
+      "reponse": "verre"
+     },
+     {
+      "question": "Le poisson nage dans la…",
+      "choix": [
+       "mer",
+       "mère",
+       "maire"
+      ],
+      "reponse": "mer"
+     },
+     {
+      "question": "Le … de la ville a inauguré l'école.",
+      "choix": [
+       "maire",
+       "mer",
+       "mère"
+      ],
+      "reponse": "maire"
+     },
+     {
+      "question": "Le jardinier trouve un … de terre.",
+      "choix": [
+       "ver",
+       "vert",
+       "verre"
+      ],
+      "reponse": "ver"
+     },
+     {
+      "question": "J'ai mal au … , je tousse.",
+      "choix": [
+       "cou",
+       "coup",
+       "coût"
+      ],
+      "reponse": "cou"
+     }
+    ]
+   }
+  ],
+  "competence": "Je distingue les homonymes",
+  "genere": true
+ },
+ {
+  "id": "fr-ce2-mot-juste",
+  "matiere": "francais",
+  "niveau": "CE2",
+  "titre": "Le mot juste",
+  "ordre": 63,
+  "programme": {
+   "section": "c2-francais-ce2-reemployer-le-vocabulaire-etudie",
+   "citation": "Employer à bon escient et rigoureusement les mots"
+  },
+  "lecon": [
+   {
+    "texte": "Pour être précis, je choisis le mot exact plutôt qu'un mot vague comme « chose » ou « faire ».",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Plus précis",
+    "questions": [
+     {
+      "question": "« Faire un gâteau » : quel verbe est plus précis ?",
+      "choix": [
+       "préparer",
+       "avoir",
+       "mettre"
+      ],
+      "reponse": "préparer"
+     },
+     {
+      "question": "« Faire un dessin » : quel verbe est plus précis ?",
+      "choix": [
+       "dessiner",
+       "prendre",
+       "voir"
+      ],
+      "reponse": "dessiner"
+     },
+     {
+      "question": "« Mettre son manteau » : quel verbe est plus précis ?",
+      "choix": [
+       "enfiler",
+       "poser",
+       "donner"
+      ],
+      "reponse": "enfiler"
+     },
+     {
+      "question": "« Une chose pour couper » : c'est…",
+      "choix": [
+       "un couteau",
+       "une cuillère",
+       "une assiette"
+      ],
+      "reponse": "un couteau"
+     }
+    ]
+   }
+  ],
+  "competence": "Je choisis le mot juste",
+  "genere": true
+ },
+ {
   "id": "fr-ce2-lecture-phare",
   "matiere": "francais",
   "niveau": "CE2",
@@ -2449,6 +4051,70 @@
   "genere": true
  },
  {
+  "id": "fr-ce2-conte-poucet",
+  "matiere": "francais",
+  "niveau": "CE2",
+  "titre": "Conte : Le Petit Poucet",
+  "ordre": 75,
+  "programme": {
+   "section": "c2-francais-ce2-devenir-lecteur",
+   "citation": "Il partage une culture commune autour de textes"
+  },
+  "lecon": [
+   {
+    "texte": "Ce conte a été écrit par Charles Perrault, il y a plus de trois cents ans.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "lecture",
+    "titre": "Le Petit Poucet",
+    "texte": "Le Petit Poucet est le plus jeune de sept frères. Il est tout petit, mais très malin. Ses parents, très pauvres, décident de perdre leurs enfants dans la forêt. Le Petit Poucet les a entendus : il remplit ses poches de petits cailloux blancs. En marchant, il les laisse tomber derrière lui. Le soir, grâce aux cailloux, il retrouve le chemin de la maison avec ses frères.",
+    "questions": [
+     {
+      "question": "Combien de frères sont-ils ?",
+      "choix": [
+       "sept",
+       "trois",
+       "deux"
+      ],
+      "reponse": "sept"
+     },
+     {
+      "question": "Quelle est la qualité du Petit Poucet ?",
+      "choix": [
+       "il est malin",
+       "il est très grand",
+       "il est riche"
+      ],
+      "reponse": "il est malin"
+     },
+     {
+      "question": "Que met-il dans ses poches ?",
+      "choix": [
+       "des cailloux blancs",
+       "du pain",
+       "des pièces d'or"
+      ],
+      "reponse": "des cailloux blancs"
+     },
+     {
+      "question": "À quoi servent les cailloux ?",
+      "choix": [
+       "à retrouver le chemin",
+       "à se défendre",
+       "à jouer"
+      ],
+      "reponse": "à retrouver le chemin"
+     }
+    ]
+   }
+  ],
+  "competence": "Je comprends le conte du Petit Poucet",
+  "genere": true
+ },
+ {
   "id": "fr-ce2-dictee-accords",
   "matiere": "francais",
   "niveau": "CE2",
@@ -2493,6 +4159,374 @@
    }
   ],
   "competence": "J'accorde les mots dans une dictée",
+  "genere": true
+ },
+ {
+  "id": "fr-ce2-dictee-invariables",
+  "matiere": "francais",
+  "niveau": "CE2",
+  "titre": "Dictée : d'autres mots invariables",
+  "ordre": 81,
+  "programme": {
+   "section": "c2-francais-ce2-memoriser-lorthographe-des-mots",
+   "citation": "En production d’écrits, il fait preuve de vigilance orthographique dans des écrits courts qui ciblent spécifiquement l’orthographe lexicale."
+  },
+  "lecon": [
+   {
+    "texte": "Encore des mots invariables à retenir : ils ne changent jamais.",
+    "exemples": []
+   },
+   {
+    "texte": "Écoute chaque mot, puis écris-le.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "dictee",
+    "titre": "Les mots invariables",
+    "mots": [
+     {
+      "mot": "souvent",
+      "phrase": "Je vais souvent au parc."
+     },
+     {
+      "mot": "pendant",
+      "phrase": "Il a dormi pendant le film."
+     },
+     {
+      "mot": "depuis",
+      "phrase": "J'attends depuis une heure."
+     },
+     {
+      "mot": "alors",
+      "phrase": "Il pleuvait, alors je suis resté."
+     },
+     {
+      "mot": "quand",
+      "phrase": "Quand il fait beau, je joue dehors."
+     }
+    ]
+   }
+  ],
+  "competence": "J'écris des mots invariables sans erreur",
+  "genere": true
+ },
+ {
+  "id": "fr-ce2-connecteurs",
+  "matiere": "francais",
+  "niveau": "CE2",
+  "titre": "Écrire un récit avec des connecteurs",
+  "ordre": 82,
+  "programme": {
+   "section": "c2-francais-ce2-produire-des-ecrits",
+   "citation": "Il parvient à identifier les groupes nominaux et verbaux dans son texte et éventuellement à corriger les erreurs d’accords."
+  },
+  "lecon": [
+   {
+    "texte": "Pour qu'un récit soit clair, j'utilise des mots qui indiquent le temps : un jour, soudain, ensuite, finalement.",
+    "exemples": [
+     "un jour",
+     "soudain",
+     "finalement"
+    ]
+   },
+   {
+    "texte": "Je relis mon texte pour vérifier qu'il a du sens et qu'il n'y a pas d'oubli.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "trous",
+    "titre": "Les connecteurs",
+    "consigne": "Complète le récit avec le bon mot.",
+    "texte": "[Un jour], Léon décide de grimper au sommet de la colline. Il marche longtemps. [Soudain], un orage éclate. Il s'abrite sous un rocher. [Finalement], le soleil revient et Léon atteint le sommet.",
+    "distracteurs": [
+     "Hier",
+     "Alors"
+    ]
+   },
+   {
+    "type": "ordre",
+    "titre": "Remets le récit dans l'ordre",
+    "consigne": "Remets les phrases dans l'ordre.",
+    "elements": [
+     "Il était une fois un dragon qui avait peur du feu.",
+     "Un jour, il éternua et une flamme sortit de sa bouche.",
+     "D'abord, il fut terrifié.",
+     "Puis il comprit qu'il pouvait allumer les feux de camp de ses amis.",
+     "Depuis, tout le monde l'aime."
+    ]
+   }
+  ],
+  "competence": "J'écris un récit organisé",
+  "genere": true
+ },
+ {
+  "id": "fr-ce2-ecouter-loup",
+  "matiere": "francais",
+  "niveau": "CE2",
+  "titre": "Écouter un documentaire : le loup",
+  "ordre": 84,
+  "programme": {
+   "section": "c2-francais-ce2-ecouter-pour-comprendre",
+   "citation": "L’élève écoute une interview d’un ou d’une artiste ou d’un informations importantes pour construire la cohérence"
+  },
+  "lecon": [
+   {
+    "texte": "Écoute ce documentaire et retiens les informations importantes.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "lecture",
+    "titre": "Le loup",
+    "texte": "Le loup gris vit en meute : un groupe de cinq à dix loups, dirigé par un couple. Les loups chassent ensemble des cerfs, des chevreuils ou des sangliers. Ils peuvent parcourir plus de cinquante kilomètres en une nuit. Pour communiquer, ils hurlent : leur hurlement s'entend de très loin. En France, le loup avait disparu ; il est revenu dans les Alpes il y a une trentaine d'années.",
+    "questions": [
+     {
+      "question": "Comment s'appelle le groupe de loups ?",
+      "choix": [
+       "une meute",
+       "un troupeau",
+       "une ruche"
+      ],
+      "reponse": "une meute"
+     },
+     {
+      "question": "Que chassent les loups ?",
+      "choix": [
+       "des cerfs et des sangliers",
+       "des poissons",
+       "des insectes"
+      ],
+      "reponse": "des cerfs et des sangliers"
+     },
+     {
+      "question": "Comment les loups communiquent-ils ?",
+      "choix": [
+       "ils hurlent",
+       "ils chantent",
+       "ils écrivent"
+      ],
+      "reponse": "ils hurlent"
+     },
+     {
+      "question": "Dans quelles montagnes le loup est-il revenu en France ?",
+      "choix": [
+       "les Alpes",
+       "les Vosges",
+       "le Jura"
+      ],
+      "reponse": "les Alpes"
+     }
+    ]
+   }
+  ],
+  "competence": "Je retiens les informations d'un documentaire",
+  "genere": true
+ },
+ {
+  "id": "fr-ce2-fable-grenouille",
+  "matiere": "francais",
+  "niveau": "CE2",
+  "titre": "Fable : La Grenouille et le Bœuf",
+  "ordre": 85,
+  "programme": {
+   "section": "c2-francais-ce2-dire-pour-etre-compris",
+   "citation": "Maintenir l’intérêt de son auditoire"
+  },
+  "lecon": [
+   {
+    "texte": "Dans cette fable de Jean de La Fontaine, une grenouille veut devenir aussi grosse qu'un bœuf.",
+    "exemples": []
+   },
+   {
+    "texte": "Pour réciter, je fais vivre le texte : la voix de la grenouille est fière et pressée.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "memoriser",
+    "titre": "La Grenouille qui se veut faire aussi grosse que le Bœuf (début)",
+    "auteur": "Jean de La Fontaine",
+    "vers": [
+     "Une Grenouille vit un Bœuf",
+     "Qui lui sembla de belle taille.",
+     "Elle, qui n'était pas grosse en tout comme un œuf,",
+     "Envieuse, s'étend, et s'enfle, et se travaille",
+     "Pour égaler l'animal en grosseur."
+    ]
+   },
+   {
+    "type": "bulles",
+    "titre": "Comprendre la fable",
+    "questions": [
+     {
+      "question": "Que veut faire la grenouille ?",
+      "choix": [
+       "devenir aussi grosse que le bœuf",
+       "manger le bœuf",
+       "nager plus vite"
+      ],
+      "reponse": "devenir aussi grosse que le bœuf"
+     },
+     {
+      "question": "Quel sentiment pousse la grenouille ?",
+      "choix": [
+       "l'envie",
+       "la peur",
+       "la tristesse"
+      ],
+      "reponse": "l'envie"
+     }
+    ]
+   }
+  ],
+  "competence": "Je récite une fable avec expression",
+  "genere": true
+ },
+ {
+  "id": "fr-ce2-argumenter",
+  "matiere": "francais",
+  "niveau": "CE2",
+  "titre": "Donner son avis et le justifier",
+  "ordre": 86,
+  "programme": {
+   "section": "c2-francais-ce2-participer-a-des-echanges",
+   "citation": "Il utilise des expressions fournies par le professeur : Pour compléter ce qu’a dit… ;"
+  },
+  "lecon": [
+   {
+    "texte": "Dans un débat, je donne mon avis, et je le justifie avec un argument : « Je pense que… parce que… ».",
+    "exemples": []
+   },
+   {
+    "texte": "Je peux reprendre l'idée d'un camarade : « Je suis d'accord avec Lucas, et en plus… ».",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Débattre",
+    "questions": [
+     {
+      "question": "Quelle phrase donne un avis avec un argument ?",
+      "choix": [
+       "Je préfère lire, parce que ça me fait voyager.",
+       "Lire, c'est bien.",
+       "Je ne sais pas."
+      ],
+      "reponse": "Je préfère lire, parce que ça me fait voyager."
+     },
+     {
+      "question": "Pour reprendre l'idée d'un camarade, je dis…",
+      "choix": [
+       "« Je suis d'accord avec toi, et… »",
+       "« Tu as tort ! »",
+       "« Pas du tout ! »"
+      ],
+      "reponse": "« Je suis d'accord avec toi, et… »"
+     },
+     {
+      "question": "Pendant un débat, on…",
+      "choix": [
+       "s'écoute et on attend son tour",
+       "parle tous en même temps",
+       "se moque des autres"
+      ],
+      "reponse": "s'écoute et on attend son tour"
+     }
+    ]
+   }
+  ],
+  "competence": "Je justifie mon avis",
+  "genere": true
+ },
+ {
+  "id": "fr-cm1-types-phrases",
+  "matiere": "francais",
+  "niveau": "CM1",
+  "titre": "Les types de phrases",
+  "ordre": 15,
+  "programme": {
+   "section": "c3-francais-cm1-identifier-les-constituants-dune-phrase-simple",
+   "citation": "Identifier les trois types de phrases (déclaratif, interrogatif, impératif ou injonctif) et comprendre leurs effets dans un texte simple"
+  },
+  "lecon": [
+   {
+    "texte": "Il y a quatre types de phrases : déclarative (elle raconte), interrogative (elle pose une question), exclamative (elle exprime un sentiment), impérative (elle donne un ordre).",
+    "exemples": [
+     "Il pleut.",
+     "Il pleut ?",
+     "Quelle pluie !",
+     "Prends ton parapluie."
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "classer",
+    "titre": "Quel type de phrase ?",
+    "consigne": "Range chaque phrase dans sa maison.",
+    "groupes": [
+     {
+      "id": "1",
+      "nom": "Déclarative"
+     },
+     {
+      "id": "2",
+      "nom": "Interrogative"
+     },
+     {
+      "id": "3",
+      "nom": "Exclamative"
+     },
+     {
+      "id": "4",
+      "nom": "Impérative"
+     }
+    ],
+    "items": [
+     {
+      "texte": "Le train part à midi.",
+      "groupe": "1"
+     },
+     {
+      "texte": "J'aime la mer.",
+      "groupe": "1"
+     },
+     {
+      "texte": "Où vas-tu ?",
+      "groupe": "2"
+     },
+     {
+      "texte": "As-tu faim ?",
+      "groupe": "2"
+     },
+     {
+      "texte": "Quel beau dessin !",
+      "groupe": "3"
+     },
+     {
+      "texte": "Comme il fait chaud !",
+      "groupe": "3"
+     },
+     {
+      "texte": "Ferme la porte.",
+      "groupe": "4"
+     },
+     {
+      "texte": "Range ta chambre.",
+      "groupe": "4"
+     }
+    ]
+   }
+  ],
+  "competence": "Je reconnais les types de phrases",
   "genere": true
  },
  {
@@ -2726,6 +4760,246 @@
   "genere": true
  },
  {
+  "id": "fr-cm1-emotions",
+  "matiere": "francais",
+  "niveau": "CM1",
+  "titre": "Le vocabulaire des émotions",
+  "ordre": 41,
+  "programme": {
+   "section": "c3-francais-cm1-enrichir-son-vocabulaire-dans-toutes-les-disciplines",
+   "citation": "Approfondir, en contexte, le vocabulaire appris au cycle 2 Mémoriser des mots et expressions en s’appuyant sur des corpus variés issus de toutes les disciplines"
+  },
+  "lecon": [
+   {
+    "texte": "Pour dire ce que l'on ressent, il existe beaucoup de mots : joyeux, fier, inquiet, furieux, déçu, soulagé.",
+    "exemples": [
+     "joyeux",
+     "inquiet",
+     "furieux",
+     "soulagé"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "classer",
+    "titre": "Agréable ou désagréable ?",
+    "consigne": "Range chaque émotion.",
+    "groupes": [
+     {
+      "id": "1",
+      "nom": "Émotion agréable"
+     },
+     {
+      "id": "2",
+      "nom": "Émotion désagréable"
+     }
+    ],
+    "items": [
+     {
+      "texte": "joyeux",
+      "groupe": "1"
+     },
+     {
+      "texte": "fier",
+      "groupe": "1"
+     },
+     {
+      "texte": "soulagé",
+      "groupe": "1"
+     },
+     {
+      "texte": "enthousiaste",
+      "groupe": "1"
+     },
+     {
+      "texte": "inquiet",
+      "groupe": "2"
+     },
+     {
+      "texte": "furieux",
+      "groupe": "2"
+     },
+     {
+      "texte": "déçu",
+      "groupe": "2"
+     },
+     {
+      "texte": "jaloux",
+      "groupe": "2"
+     }
+    ]
+   },
+   {
+    "type": "bulles",
+    "titre": "Quelle émotion ?",
+    "questions": [
+     {
+      "question": "Après avoir eu peur, tout va bien : on est…",
+      "choix": [
+       "soulagé",
+       "furieux",
+       "jaloux"
+      ],
+      "reponse": "soulagé"
+     },
+     {
+      "question": "On a réussi quelque chose de difficile : on est…",
+      "choix": [
+       "fier",
+       "déçu",
+       "inquiet"
+      ],
+      "reponse": "fier"
+     },
+     {
+      "question": "On attendait beaucoup, mais ce n'était pas bien : on est…",
+      "choix": [
+       "déçu",
+       "fier",
+       "enthousiaste"
+      ],
+      "reponse": "déçu"
+     }
+    ]
+   }
+  ],
+  "competence": "Je nomme mes émotions",
+  "genere": true
+ },
+ {
+  "id": "fr-cm1-niveaux-langue",
+  "matiere": "francais",
+  "niveau": "CM1",
+  "titre": "Les niveaux de langue",
+  "ordre": 42,
+  "programme": {
+   "section": "c3-francais-cm1-reemployer-le-vocabulaire-etudie",
+   "citation": "À l’oral et à l’écrit, utiliser à bon escient les mots appris et se les approprier durablement"
+  },
+  "lecon": [
+   {
+    "texte": "On ne parle pas de la même façon à un copain et à la directrice. Il y a trois niveaux de langue : familier, courant, soutenu.",
+    "exemples": [
+     "bagnole / voiture / automobile",
+     "bouquin / livre / ouvrage"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "classer",
+    "titre": "Familier, courant ou soutenu ?",
+    "consigne": "Range chaque mot.",
+    "groupes": [
+     {
+      "id": "1",
+      "nom": "Familier"
+     },
+     {
+      "id": "2",
+      "nom": "Courant"
+     },
+     {
+      "id": "3",
+      "nom": "Soutenu"
+     }
+    ],
+    "items": [
+     {
+      "texte": "une bagnole",
+      "groupe": "1"
+     },
+     {
+      "texte": "un bouquin",
+      "groupe": "1"
+     },
+     {
+      "texte": "bosser",
+      "groupe": "1"
+     },
+     {
+      "texte": "une voiture",
+      "groupe": "2"
+     },
+     {
+      "texte": "un livre",
+      "groupe": "2"
+     },
+     {
+      "texte": "travailler",
+      "groupe": "2"
+     },
+     {
+      "texte": "une automobile",
+      "groupe": "3"
+     },
+     {
+      "texte": "un ouvrage",
+      "groupe": "3"
+     },
+     {
+      "texte": "œuvrer",
+      "groupe": "3"
+     }
+    ]
+   }
+  ],
+  "competence": "Je reconnais les niveaux de langue",
+  "genere": true
+ },
+ {
+  "id": "fr-cm1-dictee",
+  "matiere": "francais",
+  "niveau": "CM1",
+  "titre": "Dictée : mots à retenir",
+  "ordre": 43,
+  "programme": {
+   "section": "c3-francais-cm1-memoriser-lorthographe-des-mots",
+   "citation": "Écrire correctement les mots les plus fréquents de la langue en s’appuyant sur les régularités et la formation S’appuyer sur la dimension morphologique des mots rencontrés lors de ses différentes lectures pour les orthographier"
+  },
+  "lecon": [
+   {
+    "texte": "Ces mots sont souvent mal écrits : apprends-les bien, en regardant les lettres muettes et les doubles consonnes.",
+    "exemples": []
+   },
+   {
+    "texte": "Écoute bien chaque mot, puis écris-le.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "dictee",
+    "titre": "Les mots à retenir",
+    "mots": [
+     {
+      "mot": "longtemps",
+      "phrase": "Il a attendu longtemps."
+     },
+     {
+      "mot": "parmi",
+      "phrase": "Elle est parmi nous."
+     },
+     {
+      "mot": "autrefois",
+      "phrase": "Autrefois, on s'éclairait à la bougie."
+     },
+     {
+      "mot": "quelquefois",
+      "phrase": "Je vais quelquefois au cinéma."
+     },
+     {
+      "mot": "malgré",
+      "phrase": "Il est sorti malgré la pluie."
+     }
+    ]
+   }
+  ],
+  "competence": "J'écris des mots difficiles sans erreur",
+  "genere": true
+ },
+ {
   "id": "fr-cm1-poesie-corbeau",
   "matiere": "francais",
   "niveau": "CM1",
@@ -2797,6 +5071,143 @@
   "genere": true
  },
  {
+  "id": "fr-cm1-heros-ulysse",
+  "matiere": "francais",
+  "niveau": "CM1",
+  "titre": "Héros : Ulysse et le Cyclope",
+  "ordre": 52,
+  "programme": {
+   "section": "c3-francais-cm1-cm2-decouvrir-des-heroines-des-heros",
+   "citation": "Inviter les élèves à réfléchir sur ce qui constitue une héroïne ou un héros à travers des œuvres de la littérature patrimoniale et de la littérature de jeunesse (épopée, roman, fable, conte, nouvelle, pièce de théâtre), c’est les aider à ouvrir le champ de leurs représentations et à les dépasser."
+  },
+  "lecon": [
+   {
+    "texte": "Ulysse est le héros de l'Odyssée, un très vieux poème grec. Il est célèbre pour sa ruse.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "lecture",
+    "titre": "Ulysse et le Cyclope",
+    "texte": "En rentrant de la guerre de Troie, Ulysse et ses compagnons sont prisonniers dans la grotte d'un géant à un seul œil : le Cyclope Polyphème. Le Cyclope demande son nom à Ulysse. « Je m'appelle Personne », répond le héros. Pendant la nuit, Ulysse blesse l'œil du géant. Polyphème appelle à l'aide : « Personne m'attaque ! » Les autres Cyclopes croient que tout va bien et ne viennent pas. Ulysse et ses compagnons s'échappent cachés sous des moutons.",
+    "questions": [
+     {
+      "question": "Combien d'yeux a le Cyclope ?",
+      "choix": [
+       "un seul",
+       "deux",
+       "trois"
+      ],
+      "reponse": "un seul"
+     },
+     {
+      "question": "Quel nom donne Ulysse au Cyclope ?",
+      "choix": [
+       "Personne",
+       "Troie",
+       "Polyphème"
+      ],
+      "reponse": "Personne"
+     },
+     {
+      "question": "Pourquoi les autres Cyclopes ne viennent-ils pas ?",
+      "choix": [
+       "ils croient que personne n'attaque",
+       "ils dorment",
+       "ils ont peur d'Ulysse"
+      ],
+      "reponse": "ils croient que personne n'attaque"
+     },
+     {
+      "question": "Quelle est la qualité principale d'Ulysse ?",
+      "choix": [
+       "la ruse",
+       "la force",
+       "la taille"
+      ],
+      "reponse": "la ruse"
+     }
+    ]
+   }
+  ],
+  "competence": "Je connais un héros de l'Antiquité",
+  "genere": true
+ },
+ {
+  "id": "fr-cm1-merveilleux-cendrillon",
+  "matiere": "francais",
+  "niveau": "CM1",
+  "titre": "Le merveilleux : Cendrillon",
+  "ordre": 54,
+  "programme": {
+   "section": "c3-francais-cm1-cm2-se-confronter-au-merveilleux-a-letrange",
+   "citation": "L’étude du merveilleux et de l’étrange, en s’appuyant sur des textes variés, permet d’allier la découverte du texte littéraire à une réflexion plus large sur notre rapport à l’inexplicable, au rêve et à la peur, et de développer l’esprit critique et la créativité."
+  },
+  "lecon": [
+   {
+    "texte": "Dans les contes merveilleux, la magie existe : fées, objets enchantés, animaux qui parlent.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "lecture",
+    "titre": "Cendrillon",
+    "texte": "Cendrillon vit avec sa belle-mère et ses deux demi-sœurs, qui la font travailler du matin au soir. Un jour, le prince donne un grand bal. Cendrillon n'a pas de robe pour y aller. Alors sa marraine, une fée, transforme une citrouille en carrosse, des souris en chevaux, et ses vieux habits en robe magnifique. Mais attention : à minuit, la magie disparaîtra ! Au bal, le prince danse toute la soirée avec elle. Au douzième coup de minuit, Cendrillon s'enfuit et perd une pantoufle de verre.",
+    "questions": [
+     {
+      "question": "Qui aide Cendrillon ?",
+      "choix": [
+       "sa marraine la fée",
+       "sa belle-mère",
+       "le prince"
+      ],
+      "reponse": "sa marraine la fée"
+     },
+     {
+      "question": "En quoi la citrouille est-elle transformée ?",
+      "choix": [
+       "en carrosse",
+       "en robe",
+       "en château"
+      ],
+      "reponse": "en carrosse"
+     },
+     {
+      "question": "À quelle heure la magie s'arrête-t-elle ?",
+      "choix": [
+       "à minuit",
+       "à midi",
+       "au lever du soleil"
+      ],
+      "reponse": "à minuit"
+     },
+     {
+      "question": "Quel objet Cendrillon perd-elle ?",
+      "choix": [
+       "une pantoufle de verre",
+       "sa couronne",
+       "un gant"
+      ],
+      "reponse": "une pantoufle de verre"
+     },
+     {
+      "question": "Qu'est-ce qui rend ce conte merveilleux ?",
+      "choix": [
+       "la magie de la fée",
+       "le bal",
+       "les demi-sœurs"
+      ],
+      "reponse": "la magie de la fée"
+     }
+    ]
+   }
+  ],
+  "competence": "Je reconnais le merveilleux dans les contes",
+  "genere": true
+ },
+ {
   "id": "fr-cm1-lecture-documentaire",
   "matiere": "francais",
   "niveau": "CM1",
@@ -2858,6 +5269,464 @@
    }
   ],
   "competence": "Je trouve des informations dans un texte documentaire",
+  "genere": true
+ },
+ {
+  "id": "fr-cm1-fluidite",
+  "matiere": "francais",
+  "niveau": "CM1",
+  "titre": "Lire avec fluidité",
+  "ordre": 62,
+  "programme": {
+   "section": "c3-francais-cm1-lire-avec-fluidite",
+   "citation": "Lire à voix haute un texte court, après préparation, sans confondre les graphèmes, même complexes et en tenant compte des marques de ponctuation"
+  },
+  "lecon": [
+   {
+    "texte": "Lire avec fluidité, c'est lire sans buter sur les mots, en regroupant les mots qui vont ensemble.",
+    "exemples": []
+   },
+   {
+    "texte": "Écoute le texte, puis lis-le à ton tour et enregistre-toi : tu entendras tes progrès.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "lecture",
+    "titre": "Le marché du samedi",
+    "texte": "Tous les samedis, la place du village se transforme. Dès six heures du matin, les marchands installent leurs étals : des fruits brillants, des fromages qui sentent fort, des fleurs de toutes les couleurs. Vers dix heures, la foule se presse entre les stands. On entend les marchands crier leurs prix, les enfants rire et un accordéoniste jouer une vieille chanson.",
+    "questions": [
+     {
+      "question": "Quel jour a lieu le marché ?",
+      "choix": [
+       "le samedi",
+       "le dimanche",
+       "le mercredi"
+      ],
+      "reponse": "le samedi"
+     },
+     {
+      "question": "À quelle heure les marchands arrivent-ils ?",
+      "choix": [
+       "dès six heures",
+       "à midi",
+       "à dix heures"
+      ],
+      "reponse": "dès six heures"
+     },
+     {
+      "question": "Quel musicien joue sur le marché ?",
+      "choix": [
+       "un accordéoniste",
+       "un pianiste",
+       "un guitariste"
+      ],
+      "reponse": "un accordéoniste"
+     }
+    ]
+   }
+  ],
+  "competence": "Je lis un texte avec fluidité",
+  "genere": true
+ },
+ {
+  "id": "fr-cm1-expressivite",
+  "matiere": "francais",
+  "niveau": "CM1",
+  "titre": "Lire avec expressivité",
+  "ordre": 63,
+  "programme": {
+   "section": "c3-francais-cm1-lire-a-voix-haute-avec-expressivite",
+   "citation": "Lire à voix haute, avec aisance et expressivité, un texte court travaillé en amont"
+  },
+  "lecon": [
+   {
+    "texte": "Pour lire avec expressivité, je fais attention à la ponctuation, et je montre les émotions des personnages avec ma voix : la peur, la joie, la colère.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "lecture",
+    "titre": "La tempête",
+    "texte": "Le vent hurlait autour du bateau. « Accrochez-vous ! » cria le capitaine. Une vague énorme frappa le pont. Lucie serra la corde de toutes ses forces. « Nous allons y arriver… » murmura-t-elle. Puis, peu à peu, la mer se calma. « Terre ! Terre en vue ! » s'écria le mousse.",
+    "questions": [
+     {
+      "question": "Comment lire « Accrochez-vous ! » ?",
+      "choix": [
+       "en criant, avec urgence",
+       "en chuchotant",
+       "en riant"
+      ],
+      "reponse": "en criant, avec urgence"
+     },
+     {
+      "question": "Comment lire « Nous allons y arriver… » ?",
+      "choix": [
+       "doucement, pour se rassurer",
+       "en hurlant",
+       "comme une question"
+      ],
+      "reponse": "doucement, pour se rassurer"
+     },
+     {
+      "question": "Quelle émotion dans « Terre ! Terre en vue ! » ?",
+      "choix": [
+       "la joie",
+       "la peur",
+       "la colère"
+      ],
+      "reponse": "la joie"
+     }
+    ]
+   }
+  ],
+  "competence": "Je lis à voix haute avec expression",
+  "genere": true
+ },
+ {
+  "id": "fr-cm1-verne-tour-du-monde",
+  "matiere": "francais",
+  "niveau": "CM1",
+  "titre": "Lire une œuvre : Le Tour du monde en 80 jours",
+  "ordre": 64,
+  "programme": {
+   "section": "c3-francais-cm1-lire-une-uvre-et-se-lapproprier",
+   "citation": "Mettre en relation le texte lu avec une œuvre lue en classe afin de garder la mémoire des livres lus"
+  },
+  "lecon": [
+   {
+    "texte": "Jules Verne a écrit ce roman d'aventure en 1872. Voici un résumé de son début.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "lecture",
+    "titre": "Le Tour du monde en quatre-vingts jours",
+    "texte": "À Londres, Phileas Fogg est un gentleman très ponctuel : il fait chaque jour exactement la même chose, à la même heure. Un soir, à son club, il parie avec ses amis qu'il peut faire le tour de la Terre en quatre-vingts jours. Le soir même, il part avec son domestique, Passepartout. Ils voyageront en train, en bateau et même à dos d'éléphant !",
+    "questions": [
+     {
+      "question": "Qui a écrit ce roman ?",
+      "choix": [
+       "Jules Verne",
+       "Victor Hugo",
+       "Charles Perrault"
+      ],
+      "reponse": "Jules Verne"
+     },
+     {
+      "question": "Dans quelle ville vit Phileas Fogg ?",
+      "choix": [
+       "Londres",
+       "Paris",
+       "New York"
+      ],
+      "reponse": "Londres"
+     },
+     {
+      "question": "Quel est le pari de Phileas Fogg ?",
+      "choix": [
+       "faire le tour du monde en 80 jours",
+       "traverser la mer à la nage",
+       "gravir une montagne"
+      ],
+      "reponse": "faire le tour du monde en 80 jours"
+     },
+     {
+      "question": "Comment s'appelle son domestique ?",
+      "choix": [
+       "Passepartout",
+       "Fix",
+       "Robinson"
+      ],
+      "reponse": "Passepartout"
+     }
+    ]
+   }
+  ],
+  "competence": "Je découvre un roman d'aventure",
+  "genere": true
+ },
+ {
+  "id": "fr-cm1-idee-principale",
+  "matiere": "francais",
+  "niveau": "CM1",
+  "titre": "Trouver l'idée principale",
+  "ordre": 72,
+  "programme": {
+   "section": "c3-francais-cm1-ecrire-pour-reflechir-apprendre-et-memoriser",
+   "citation": "Produire des écrits courts pour appliquer une règle de grammaire ou employer et mémoriser le lexique appris"
+  },
+  "lecon": [
+   {
+    "texte": "Pour apprendre une leçon, je repère l'idée principale de chaque paragraphe, et je l'écris en une phrase courte.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "L'idée principale",
+    "questions": [
+     {
+      "question": "« Les manchots vivent en Antarctique. Ils ne volent pas, mais nagent très bien. Ils se serrent les uns contre les autres pour avoir chaud. » L'idée principale :",
+      "choix": [
+       "la vie des manchots en Antarctique",
+       "le froid",
+       "les oiseaux qui volent"
+      ],
+      "reponse": "la vie des manchots en Antarctique"
+     },
+     {
+      "question": "« Le vélo est un moyen de transport. Il ne pollue pas, fait faire du sport et coûte peu cher. » L'idée principale :",
+      "choix": [
+       "les avantages du vélo",
+       "le sport",
+       "le prix des voitures"
+      ],
+      "reponse": "les avantages du vélo"
+     },
+     {
+      "question": "Pour retenir une leçon, il est utile de…",
+      "choix": [
+       "noter les idées importantes en quelques mots",
+       "recopier tout le livre",
+       "ne rien écrire"
+      ],
+      "reponse": "noter les idées importantes en quelques mots"
+     }
+    ]
+   }
+  ],
+  "competence": "Je repère l'idée principale d'un texte",
+  "genere": true
+ },
+ {
+  "id": "fr-cm1-lettre",
+  "matiere": "francais",
+  "niveau": "CM1",
+  "titre": "Écrire une lettre",
+  "ordre": 74,
+  "programme": {
+   "section": "c3-francais-cm1-produire-des-ecrits-varies",
+   "citation": "Écrire au quotidien des textes personnels (donner son avis, imaginer une suite de texte, formuler des hypothèses, etc.)"
+  },
+  "lecon": [
+   {
+    "texte": "Une lettre commence par le lieu et la date, puis une formule pour saluer : « Chère Mamie, ».",
+    "exemples": []
+   },
+   {
+    "texte": "À la fin, on écrit une formule pour dire au revoir, puis on signe.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "ordre",
+    "titre": "Les parties d'une lettre",
+    "consigne": "Remets les parties de la lettre dans l'ordre.",
+    "elements": [
+     "Lyon, le 3 mai",
+     "Chère Mamie,",
+     "Je t'écris pour te raconter ma classe verte.",
+     "Je t'embrasse très fort,",
+     "Léa"
+    ]
+   }
+  ],
+  "competence": "Je sais présenter une lettre",
+  "genere": true
+ },
+ {
+  "id": "fr-cm1-ecouter-volcans",
+  "matiere": "francais",
+  "niveau": "CM1",
+  "titre": "Écouter un exposé",
+  "ordre": 76,
+  "programme": {
+   "section": "c3-francais-cm1-ecouter-pour-comprendre",
+   "citation": "Comprendre un message oral provenant d’un tiers ou d’un média (interview, reportage)"
+  },
+  "lecon": [
+   {
+    "texte": "Écoute cet exposé comme si un camarade le présentait. Retiens les informations importantes.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "lecture",
+    "titre": "Les volcans d'Auvergne",
+    "texte": "Au centre de la France, en Auvergne, on trouve une longue chaîne de volcans : la chaîne des Puys. Elle compte environ quatre-vingts volcans. Le plus haut est le puy de Dôme, qui mesure 1 465 mètres. Ces volcans sont endormis : la dernière éruption a eu lieu il y a plusieurs milliers d'années. Aujourd'hui, la chaîne des Puys est inscrite au patrimoine mondial de l'UNESCO.",
+    "questions": [
+     {
+      "question": "Dans quelle région se trouve la chaîne des Puys ?",
+      "choix": [
+       "l'Auvergne",
+       "la Bretagne",
+       "l'Alsace"
+      ],
+      "reponse": "l'Auvergne"
+     },
+     {
+      "question": "Combien de volcans compte-t-elle environ ?",
+      "choix": [
+       "quatre-vingts",
+       "huit",
+       "huit cents"
+      ],
+      "reponse": "quatre-vingts"
+     },
+     {
+      "question": "Quel est le plus haut volcan ?",
+      "choix": [
+       "le puy de Dôme",
+       "le mont Blanc",
+       "l'Etna"
+      ],
+      "reponse": "le puy de Dôme"
+     },
+     {
+      "question": "Ces volcans sont-ils actifs aujourd'hui ?",
+      "choix": [
+       "non, ils sont endormis",
+       "oui, ils crachent de la lave",
+       "ils n'existent plus"
+      ],
+      "reponse": "non, ils sont endormis"
+     }
+    ]
+   }
+  ],
+  "competence": "J'écoute un exposé et je retiens l'essentiel",
+  "genere": true
+ },
+ {
+  "id": "fr-cm1-verlaine",
+  "matiere": "francais",
+  "niveau": "CM1",
+  "titre": "Poésie : Chanson d'automne",
+  "ordre": 78,
+  "programme": {
+   "section": "c3-francais-cm1-dire-pour-etre-compris-dans-toutes-les-disciplines",
+   "citation": "Faire vivre un texte littéraire, historique ou documentaire par une lecture expressive devant un public"
+  },
+  "lecon": [
+   {
+    "texte": "Paul Verlaine a écrit ce poème en 1866. Les vers sont très courts, comme une musique.",
+    "exemples": []
+   },
+   {
+    "texte": "Pour le dire, je prends mon temps et je fais entendre les sons qui se répètent.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "memoriser",
+    "titre": "Chanson d'automne (première strophe)",
+    "auteur": "Paul Verlaine",
+    "vers": [
+     "Les sanglots longs",
+     "Des violons",
+     "De l'automne",
+     "Blessent mon cœur",
+     "D'une langueur",
+     "Monotone."
+    ]
+   },
+   {
+    "type": "bulles",
+    "titre": "Comprendre le poème",
+    "questions": [
+     {
+      "question": "Quelle saison évoque le poème ?",
+      "choix": [
+       "l'automne",
+       "l'été",
+       "le printemps"
+      ],
+      "reponse": "l'automne"
+     },
+     {
+      "question": "Quel instrument est cité ?",
+      "choix": [
+       "les violons",
+       "les tambours",
+       "la flûte"
+      ],
+      "reponse": "les violons"
+     },
+     {
+      "question": "Quel sentiment exprime le poète ?",
+      "choix": [
+       "la tristesse",
+       "la joie",
+       "la colère"
+      ],
+      "reponse": "la tristesse"
+     }
+    ]
+   }
+  ],
+  "competence": "Je récite un poème de Verlaine",
+  "genere": true
+ },
+ {
+  "id": "fr-cm1-debat",
+  "matiere": "francais",
+  "niveau": "CM1",
+  "titre": "Participer à un débat",
+  "ordre": 79,
+  "programme": {
+   "section": "c3-francais-cm1-participer-a-des-echanges-verbaux",
+   "citation": "Construire et ajuster son propos pour présenter de façon claire et ordonnée des explications, des informations, un point de vue"
+  },
+  "lecon": [
+   {
+    "texte": "Dans un débat, je donne des arguments, j'écoute ceux des autres, et je peux changer d'avis si un argument me convainc.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Bien débattre",
+    "questions": [
+     {
+      "question": "« Faut-il interdire les écrans le soir ? » Quelle réponse est un argument ?",
+      "choix": [
+       "Oui, car les écrans empêchent de bien dormir.",
+       "Oui.",
+       "Je ne sais pas."
+      ],
+      "reponse": "Oui, car les écrans empêchent de bien dormir."
+     },
+     {
+      "question": "Pour contredire poliment, je dis…",
+      "choix": [
+       "« Je ne suis pas d'accord, car… »",
+       "« C'est n'importe quoi ! »",
+       "« Tais-toi ! »"
+      ],
+      "reponse": "« Je ne suis pas d'accord, car… »"
+     },
+     {
+      "question": "Le rôle du président de séance est de…",
+      "choix": [
+       "distribuer la parole",
+       "parler le plus",
+       "donner la bonne réponse"
+      ],
+      "reponse": "distribuer la parole"
+     }
+    ]
+   }
+  ],
+  "competence": "Je participe à un débat avec des arguments",
   "genere": true
  },
  {
@@ -3395,6 +6264,200 @@
   "genere": true
  },
  {
+  "id": "fr-cm2-racines",
+  "matiere": "francais",
+  "niveau": "CM2",
+  "titre": "Les mots venus du grec et du latin",
+  "ordre": 41,
+  "programme": {
+   "section": "c3-francais-cm2-enrichir-son-vocabulaire-dans-toutes-les-disciplines",
+   "citation": "Se servir du contexte et de la morphologie pour comprendre les mots inconnus rencontrés au cours de sa lecture"
+  },
+  "lecon": [
+   {
+    "texte": "Beaucoup de mots français viennent du grec ou du latin. « Télé » veut dire « loin », « phone » veut dire « son » : le téléphone porte le son au loin.",
+    "exemples": [
+     "télé = loin",
+     "micro = petit",
+     "aqua = eau"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Que veut dire la racine ?",
+    "questions": [
+     {
+      "question": "« Micro » (microscope) veut dire…",
+      "choix": [
+       "petit",
+       "grand",
+       "loin"
+      ],
+      "reponse": "petit"
+     },
+     {
+      "question": "« Aqua » (aquarium) veut dire…",
+      "choix": [
+       "eau",
+       "air",
+       "feu"
+      ],
+      "reponse": "eau"
+     },
+     {
+      "question": "« Bio » (biologie) veut dire…",
+      "choix": [
+       "vie",
+       "mort",
+       "terre"
+      ],
+      "reponse": "vie"
+     },
+     {
+      "question": "« Géo » (géographie) veut dire…",
+      "choix": [
+       "terre",
+       "eau",
+       "ciel"
+      ],
+      "reponse": "terre"
+     },
+     {
+      "question": "Un « hippodrome » est un lieu pour les…",
+      "choix": [
+       "chevaux",
+       "poissons",
+       "oiseaux"
+      ],
+      "reponse": "chevaux"
+     }
+    ]
+   }
+  ],
+  "competence": "Je connais des racines grecques et latines",
+  "genere": true
+ },
+ {
+  "id": "fr-cm2-nuances",
+  "matiere": "francais",
+  "niveau": "CM2",
+  "titre": "Les nuances de sens",
+  "ordre": 42,
+  "programme": {
+   "section": "c3-francais-cm2-reemployer-le-vocabulaire-etudie",
+   "citation": "Objectifs d’apprentissage À l’oral et à l’écrit, utiliser précisément le vocabulaire de différents univers de référence et se l’approprier durablement À l’oral et à l’écrit, utiliser à bon escient les mots polysémiques dans différents contextes disciplinaires et se les approprier durablement"
+  },
+  "lecon": [
+   {
+    "texte": "Des mots proches peuvent avoir des nuances : tiède, chaud, brûlant n'ont pas la même force.",
+    "exemples": [
+     "tiède < chaud < brûlant"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "ordre",
+    "titre": "Du plus faible au plus fort",
+    "consigne": "Range du plus faible au plus fort.",
+    "elements": [
+     "tiède",
+     "chaud",
+     "brûlant"
+    ]
+   },
+   {
+    "type": "ordre",
+    "titre": "Encore",
+    "consigne": "Range du plus faible au plus fort.",
+    "elements": [
+     "content",
+     "joyeux",
+     "fou de joie"
+    ]
+   },
+   {
+    "type": "bulles",
+    "titre": "Le mot le plus fort",
+    "questions": [
+     {
+      "question": "Lequel est le plus fort ?",
+      "choix": [
+       "terrifié",
+       "inquiet",
+       "peureux"
+      ],
+      "reponse": "terrifié"
+     },
+     {
+      "question": "Lequel est le plus fort ?",
+      "choix": [
+       "immense",
+       "grand",
+       "haut"
+      ],
+      "reponse": "immense"
+     }
+    ]
+   }
+  ],
+  "competence": "Je perçois les nuances de sens",
+  "genere": true
+ },
+ {
+  "id": "fr-cm2-dictee",
+  "matiere": "francais",
+  "niveau": "CM2",
+  "titre": "Dictée : doubles consonnes et accents",
+  "ordre": 43,
+  "programme": {
+   "section": "c3-francais-cm2-memoriser-lorthographe-des-mots",
+   "citation": "Écrire correctement les mots fréquents en s’appuyant sur les régularités et la formation."
+  },
+  "lecon": [
+   {
+    "texte": "Ces mots ont des doubles consonnes ou des accents difficiles. Écoute bien et pense à leur orthographe.",
+    "exemples": []
+   },
+   {
+    "texte": "Écoute chaque mot, puis écris-le.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "dictee",
+    "titre": "Les mots difficiles",
+    "mots": [
+     {
+      "mot": "appeler",
+      "phrase": "Je vais appeler mon frère."
+     },
+     {
+      "mot": "nécessaire",
+      "phrase": "C'est nécessaire."
+     },
+     {
+      "mot": "différent",
+      "phrase": "Ce dessin est différent."
+     },
+     {
+      "mot": "honneur",
+      "phrase": "C'est un honneur."
+     },
+     {
+      "mot": "succès",
+      "phrase": "Le spectacle est un succès."
+     }
+    ]
+   }
+  ],
+  "competence": "J'écris des mots difficiles sans erreur",
+  "genere": true
+ },
+ {
   "id": "fr-cm2-poesie-hugo",
   "matiere": "francais",
   "niveau": "CM2",
@@ -3452,6 +6515,134 @@
    }
   ],
   "competence": "Je récite un poème de Victor Hugo",
+  "genere": true
+ },
+ {
+  "id": "fr-cm2-robinson",
+  "matiere": "francais",
+  "niveau": "CM2",
+  "titre": "Vivre d'autres vies : Robinson Crusoé",
+  "ordre": 52,
+  "programme": {
+   "section": "c3-francais-cm1-cm2-imaginer-et-vivre-dautres-vies",
+   "citation": "En s’identifiant aux personnages ou en s’en démarquant, en s’immergeant dans un univers étranger ou insolite, l’élève est invité à s’engager personnellement dans la lecture d’œuvres intégrales patrimoniales ou contemporaines ou d’extraits choisis."
+  },
+  "lecon": [
+   {
+    "texte": "Ce roman de Daniel Defoe, publié en 1719, raconte la vie d'un naufragé sur une île déserte.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "lecture",
+    "titre": "Robinson Crusoé",
+    "texte": "Après le naufrage de son bateau, Robinson Crusoé est le seul survivant. Il nage jusqu'à une île déserte. Il récupère des outils dans l'épave, construit une cabane, apprend à cultiver du blé et à élever des chèvres. Il tient un calendrier en faisant une encoche chaque jour sur un poteau. Après de longues années de solitude, il sauve un homme qu'il appelle Vendredi, qui devient son ami.",
+    "questions": [
+     {
+      "question": "Pourquoi Robinson est-il seul sur l'île ?",
+      "choix": [
+       "il est le seul survivant d'un naufrage",
+       "il s'est perdu en forêt",
+       "il est en vacances"
+      ],
+      "reponse": "il est le seul survivant d'un naufrage"
+     },
+     {
+      "question": "Comment compte-t-il les jours ?",
+      "choix": [
+       "avec des encoches sur un poteau",
+       "avec une montre",
+       "avec un téléphone"
+      ],
+      "reponse": "avec des encoches sur un poteau"
+     },
+     {
+      "question": "Quels animaux élève-t-il ?",
+      "choix": [
+       "des chèvres",
+       "des vaches",
+       "des chevaux"
+      ],
+      "reponse": "des chèvres"
+     },
+     {
+      "question": "Comment s'appelle son ami ?",
+      "choix": [
+       "Vendredi",
+       "Dimanche",
+       "Lundi"
+      ],
+      "reponse": "Vendredi"
+     }
+    ]
+   }
+  ],
+  "competence": "Je découvre un roman d'aventure",
+  "genere": true
+ },
+ {
+  "id": "fr-cm2-amitie",
+  "matiere": "francais",
+  "niveau": "CM2",
+  "titre": "Se découvrir : la nouvelle élève",
+  "ordre": 54,
+  "programme": {
+   "section": "c3-francais-cm1-cm2-se-decouvrir-saffirmer-dans-le-rapport-aux-autres",
+   "citation": "Grâce à ces lectures, aux échanges et aux différentes activités conduites en classe à partir des textes, l’élève s’ouvre à la complexité humaine et grandit."
+  },
+  "lecon": [
+   {
+    "texte": "Certains récits nous font réfléchir à nos relations avec les autres : l'amitié, la différence, le courage de dire ce que l'on pense.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "lecture",
+    "titre": "La nouvelle",
+    "texte": "Le jour de la rentrée, Mira arrive dans la classe. Elle vient d'un autre pays et parle encore mal français. À la récréation, quelques élèves se moquent de son accent. Théo hésite : s'il la défend, les autres vont peut-être se moquer de lui aussi. Finalement, il s'approche et lui propose de jouer au ballon. Le lendemain, trois autres enfants les rejoignent.",
+    "questions": [
+     {
+      "question": "Pourquoi des élèves se moquent-ils de Mira ?",
+      "choix": [
+       "à cause de son accent",
+       "à cause de ses habits",
+       "parce qu'elle est en retard"
+      ],
+      "reponse": "à cause de son accent"
+     },
+     {
+      "question": "Pourquoi Théo hésite-t-il ?",
+      "choix": [
+       "il a peur qu'on se moque de lui",
+       "il ne sait pas jouer",
+       "il est malade"
+      ],
+      "reponse": "il a peur qu'on se moque de lui"
+     },
+     {
+      "question": "Que fait finalement Théo ?",
+      "choix": [
+       "il propose à Mira de jouer",
+       "il se moque aussi",
+       "il rentre en classe"
+      ],
+      "reponse": "il propose à Mira de jouer"
+     },
+     {
+      "question": "Quelle qualité montre Théo ?",
+      "choix": [
+       "le courage",
+       "la timidité",
+       "la colère"
+      ],
+      "reponse": "le courage"
+     }
+    ]
+   }
+  ],
+  "competence": "Je réfléchis aux relations avec les autres",
   "genere": true
  },
  {
@@ -3516,6 +6707,481 @@
    }
   ],
   "competence": "Je comprends un texte en m'appuyant sur les indices",
+  "genere": true
+ },
+ {
+  "id": "fr-cm2-fluidite",
+  "matiere": "francais",
+  "niveau": "CM2",
+  "titre": "Lire avec fluidité",
+  "ordre": 62,
+  "programme": {
+   "section": "c3-francais-cm2-lire-avec-fluidite",
+   "citation": "Lire à voix haute, après préparation, un texte long en tenant compte des marques de ponctuation, des liaisons et des unités syntaxiques"
+  },
+  "lecon": [
+   {
+    "texte": "Pour lire avec fluidité un texte plus long, je repère les groupes de mots et je respire aux virgules et aux points.",
+    "exemples": []
+   },
+   {
+    "texte": "Écoute, puis lis à ton tour et enregistre-toi.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "lecture",
+    "titre": "La bibliothèque de nuit",
+    "texte": "Quand la dernière lumière s'éteignait, la bibliothèque municipale changeait d'humeur. Les dictionnaires se racontaient des mots rares, les romans d'aventure faisaient la course entre les rayonnages, et les livres de cuisine échangeaient leurs meilleures recettes. Seul un vieil atlas, posé tout en haut d'une étagère, rêvait en silence aux pays lointains qu'il n'avait jamais vus.",
+    "questions": [
+     {
+      "question": "Quand la bibliothèque change-t-elle d'humeur ?",
+      "choix": [
+       "quand la lumière s'éteint",
+       "le matin",
+       "pendant les vacances"
+      ],
+      "reponse": "quand la lumière s'éteint"
+     },
+     {
+      "question": "Que font les romans d'aventure ?",
+      "choix": [
+       "ils font la course",
+       "ils dorment",
+       "ils cuisinent"
+      ],
+      "reponse": "ils font la course"
+     },
+     {
+      "question": "À quoi rêve le vieil atlas ?",
+      "choix": [
+       "aux pays lointains",
+       "aux recettes",
+       "aux mots rares"
+      ],
+      "reponse": "aux pays lointains"
+     },
+     {
+      "question": "Ce texte est…",
+      "choix": [
+       "un récit imaginaire",
+       "un documentaire",
+       "une recette"
+      ],
+      "reponse": "un récit imaginaire"
+     }
+    ]
+   }
+  ],
+  "competence": "Je lis un texte long avec fluidité",
+  "genere": true
+ },
+ {
+  "id": "fr-cm2-theatre",
+  "matiere": "francais",
+  "niveau": "CM2",
+  "titre": "Lire une scène de théâtre",
+  "ordre": 63,
+  "programme": {
+   "section": "c3-francais-cm2-lire-a-voix-haute-avec-expressivite",
+   "citation": "Lire à voix haute, avec aisance et expressivité, un texte travaillé en amont, en respectant l’articulation du texte"
+  },
+  "lecon": [
+   {
+    "texte": "Au théâtre, le nom du personnage est écrit avant ce qu'il dit. Les didascalies, souvent en italique, disent comment jouer.",
+    "exemples": []
+   },
+   {
+    "texte": "Pour lire une scène, je prends la voix et l'émotion du personnage.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "lecture",
+    "titre": "Le gâteau disparu",
+    "texte": "LA MÈRE, les mains sur les hanches. — Qui a mangé le gâteau ? LOUIS, la bouche pleine de chocolat. — Pas moi ! LA MÈRE, en souriant. — Ah bon ? Et ce chocolat sur ton menton ? LOUIS, gêné, baissant les yeux. — C'est… c'est le chat !",
+    "questions": [
+     {
+      "question": "Que montre « les mains sur les hanches » ?",
+      "choix": [
+       "la façon de jouer le personnage",
+       "ce que dit la mère",
+       "le titre"
+      ],
+      "reponse": "la façon de jouer le personnage"
+     },
+     {
+      "question": "Comment Louis dit-il « Pas moi ! » ?",
+      "choix": [
+       "en mentant, la bouche pleine",
+       "en pleurant",
+       "en chantant"
+      ],
+      "reponse": "en mentant, la bouche pleine"
+     },
+     {
+      "question": "Comment s'appellent les indications de jeu ?",
+      "choix": [
+       "des didascalies",
+       "des répliques",
+       "des strophes"
+      ],
+      "reponse": "des didascalies"
+     },
+     {
+      "question": "Qui a vraiment mangé le gâteau ?",
+      "choix": [
+       "Louis",
+       "le chat",
+       "la mère"
+      ],
+      "reponse": "Louis"
+     }
+    ]
+   }
+  ],
+  "competence": "Je lis une scène de théâtre avec expression",
+  "genere": true
+ },
+ {
+  "id": "fr-cm2-verne-vingt-mille",
+  "matiere": "francais",
+  "niveau": "CM2",
+  "titre": "Lire une œuvre : Vingt mille lieues sous les mers",
+  "ordre": 64,
+  "programme": {
+   "section": "c3-francais-cm2-lire-une-uvre-et-se-lapproprier",
+   "citation": "Développer le plaisir de lire, notamment avec des œuvres choisies S’engager et persévérer dans sa lecture"
+  },
+  "lecon": [
+   {
+    "texte": "Ce roman de Jules Verne, publié en 1870, raconte un voyage extraordinaire sous les océans.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "lecture",
+    "titre": "Vingt mille lieues sous les mers",
+    "texte": "En 1866, un mystérieux monstre marin attaque des navires. Le professeur Aronnax part à sa recherche sur une frégate. Mais le monstre n'est pas un animal : c'est un sous-marin, le Nautilus, commandé par l'étrange capitaine Nemo. Aronnax, son domestique Conseil et le harponneur Ned Land deviennent ses prisonniers. Avec eux, le lecteur découvre les forêts sous-marines, l'Atlantide engloutie et les glaces du pôle Sud.",
+    "questions": [
+     {
+      "question": "Qu'est-ce que le « monstre marin » en réalité ?",
+      "choix": [
+       "un sous-marin",
+       "une baleine",
+       "un calmar géant"
+      ],
+      "reponse": "un sous-marin"
+     },
+     {
+      "question": "Comment s'appelle le sous-marin ?",
+      "choix": [
+       "le Nautilus",
+       "le Titanic",
+       "la Calypso"
+      ],
+      "reponse": "le Nautilus"
+     },
+     {
+      "question": "Qui le commande ?",
+      "choix": [
+       "le capitaine Nemo",
+       "le professeur Aronnax",
+       "Ned Land"
+      ],
+      "reponse": "le capitaine Nemo"
+     },
+     {
+      "question": "Qui est l'auteur ?",
+      "choix": [
+       "Jules Verne",
+       "Victor Hugo",
+       "Alexandre Dumas"
+      ],
+      "reponse": "Jules Verne"
+     }
+    ]
+   }
+  ],
+  "competence": "Je découvre un roman de Jules Verne",
+  "genere": true
+ },
+ {
+  "id": "fr-cm2-resume",
+  "matiere": "francais",
+  "niveau": "CM2",
+  "titre": "Faire un résumé",
+  "ordre": 72,
+  "programme": {
+   "section": "c3-francais-cm2-ecrire-pour-reflechir-apprendre-et-memoriser",
+   "citation": "Produire des écrits courts pour appliquer une règle de grammaire ou employer et mémoriser le lexique appris"
+  },
+  "lecon": [
+   {
+    "texte": "Un résumé raconte l'essentiel d'un texte, en peu de mots. On garde les personnages, les actions principales et la fin. On enlève les détails.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Le bon résumé",
+    "questions": [
+     {
+      "question": "Quel est le meilleur résumé du Petit Poucet ?",
+      "choix": [
+       "Abandonné dans la forêt avec ses frères, le Petit Poucet retrouve le chemin grâce à des cailloux.",
+       "Le Petit Poucet a des cailloux blancs dans sa poche.",
+       "Il était une fois sept frères."
+      ],
+      "reponse": "Abandonné dans la forêt avec ses frères, le Petit Poucet retrouve le chemin grâce à des cailloux."
+     },
+     {
+      "question": "Dans un résumé, on garde…",
+      "choix": [
+       "les actions principales",
+       "tous les détails",
+       "les dialogues entiers"
+      ],
+      "reponse": "les actions principales"
+     },
+     {
+      "question": "Un résumé est…",
+      "choix": [
+       "plus court que le texte",
+       "plus long que le texte",
+       "aussi long que le texte"
+      ],
+      "reponse": "plus court que le texte"
+     }
+    ]
+   }
+  ],
+  "competence": "Je résume un texte",
+  "genere": true
+ },
+ {
+  "id": "fr-cm2-schema-narratif",
+  "matiere": "francais",
+  "niveau": "CM2",
+  "titre": "Écrire un récit : le schéma narratif",
+  "ordre": 74,
+  "programme": {
+   "section": "c3-francais-cm2-produire-des-ecrits-varies",
+   "citation": "Appliquer les principes de la cohérence textuelle"
+  },
+  "lecon": [
+   {
+    "texte": "Un récit suit souvent cinq étapes : la situation initiale, l'élément perturbateur, les péripéties, le dénouement et la situation finale.",
+    "exemples": [
+     "situation initiale",
+     "élément perturbateur",
+     "péripéties",
+     "dénouement",
+     "situation finale"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "ordre",
+    "titre": "Le schéma narratif",
+    "consigne": "Remets les étapes du récit dans l'ordre.",
+    "elements": [
+     "Un petit village vivait en paix au pied de la montagne.",
+     "Un jour, un dragon s'installa dans la grotte voisine.",
+     "Les villageois essayèrent de le chasser, sans succès.",
+     "Une jeune fille découvrit qu'il avait seulement froid, et lui offrit une couverture.",
+     "Depuis, le dragon garde le village."
+    ]
+   },
+   {
+    "type": "bulles",
+    "titre": "Les étapes",
+    "questions": [
+     {
+      "question": "L'événement qui change tout s'appelle…",
+      "choix": [
+       "l'élément perturbateur",
+       "la situation finale",
+       "le titre"
+      ],
+      "reponse": "l'élément perturbateur"
+     },
+     {
+      "question": "La façon dont le problème se résout s'appelle…",
+      "choix": [
+       "le dénouement",
+       "la situation initiale",
+       "les péripéties"
+      ],
+      "reponse": "le dénouement"
+     }
+    ]
+   }
+  ],
+  "competence": "J'organise un récit en étapes",
+  "genere": true
+ },
+ {
+  "id": "fr-cm2-ecouter-reportage",
+  "matiere": "francais",
+  "niveau": "CM2",
+  "titre": "Écouter un reportage",
+  "ordre": 76,
+  "programme": {
+   "section": "c3-francais-cm2-ecouter-pour-comprendre",
+   "citation": "Comprendre un message oral provenant d’un tiers ou d’un média (interview, reportage)"
+  },
+  "lecon": [
+   {
+    "texte": "Écoute ce reportage comme à la radio. Repère : qui ? quoi ? où ? quand ? pourquoi ?",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "lecture",
+    "titre": "Un potager sur le toit",
+    "texte": "Dans une école de Lyon, les élèves de CM2 ont créé un potager sur le toit de leur école. Depuis septembre, ils y cultivent des tomates, des salades et des fraises. Le but : apprendre comment poussent les légumes et manger des produits frais à la cantine. Le projet a aussi attiré des abeilles, ce qui aide les plantes à donner des fruits. L'an prochain, les élèves veulent installer un récupérateur d'eau de pluie.",
+    "questions": [
+     {
+      "question": "Où se trouve le potager ?",
+      "choix": [
+       "sur le toit de l'école",
+       "dans la cour",
+       "dans un parc"
+      ],
+      "reponse": "sur le toit de l'école"
+     },
+     {
+      "question": "Dans quelle ville ?",
+      "choix": [
+       "Lyon",
+       "Paris",
+       "Lille"
+      ],
+      "reponse": "Lyon"
+     },
+     {
+      "question": "Pourquoi les élèves ont-ils créé ce potager ?",
+      "choix": [
+       "pour apprendre et manger frais",
+       "pour vendre des légumes",
+       "pour faire de la place"
+      ],
+      "reponse": "pour apprendre et manger frais"
+     },
+     {
+      "question": "Quel est le projet pour l'an prochain ?",
+      "choix": [
+       "un récupérateur d'eau de pluie",
+       "une piscine",
+       "un poulailler"
+      ],
+      "reponse": "un récupérateur d'eau de pluie"
+     }
+    ]
+   }
+  ],
+  "competence": "Je comprends un reportage",
+  "genere": true
+ },
+ {
+  "id": "fr-cm2-hugo-semailles",
+  "matiere": "francais",
+  "niveau": "CM2",
+  "titre": "Poésie : Saison des semailles",
+  "ordre": 78,
+  "programme": {
+   "section": "c3-francais-cm2-dire-pour-etre-compris-dans-toutes-les-disciplines",
+   "citation": "Faire vivre un texte littéraire, historique ou documentaire par une lecture expressive devant un public"
+  },
+  "lecon": [
+   {
+    "texte": "Dans ce poème, Victor Hugo regarde un vieux paysan semer ses graines au coucher du soleil.",
+    "exemples": []
+   },
+   {
+    "texte": "Pour le dire, je respecte les pauses et je fais sentir la lenteur du soir.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "memoriser",
+    "titre": "Saison des semailles. Le soir (début)",
+    "auteur": "Victor Hugo",
+    "vers": [
+     "C'est le moment crépusculaire.",
+     "J'admire, assis sous un portail,",
+     "Ce reste de jour dont s'éclaire",
+     "La dernière heure du travail.",
+     "Dans les terres, de nuit baignées,",
+     "Je contemple, ému, les haillons",
+     "D'un vieillard qui jette à poignées",
+     "La moisson future aux sillons."
+    ]
+   }
+  ],
+  "competence": "Je récite un poème de Victor Hugo",
+  "genere": true
+ },
+ {
+  "id": "fr-cm2-argumenter",
+  "matiere": "francais",
+  "niveau": "CM2",
+  "titre": "Argumenter et nuancer",
+  "ordre": 79,
+  "programme": {
+   "section": "c3-francais-cm2-participer-a-des-echanges-verbaux",
+   "citation": "Construire et ajuster son propos pour présenter de façon claire et ordonnée des explications, des informations, un point de vue"
+  },
+  "lecon": [
+   {
+    "texte": "Pour convaincre, je donne des arguments et des exemples. Je peux nuancer : « Certes…, mais… ».",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Argumenter",
+    "questions": [
+     {
+      "question": "Quelle phrase nuance un avis ?",
+      "choix": [
+       "Certes, les jeux vidéo sont amusants, mais il faut limiter le temps de jeu.",
+       "Les jeux vidéo, c'est nul.",
+       "J'adore les jeux vidéo."
+      ],
+      "reponse": "Certes, les jeux vidéo sont amusants, mais il faut limiter le temps de jeu."
+     },
+     {
+      "question": "Un exemple sert à…",
+      "choix": [
+       "illustrer un argument",
+       "changer de sujet",
+       "couper la parole"
+      ],
+      "reponse": "illustrer un argument"
+     },
+     {
+      "question": "Pour conclure un débat, on peut…",
+      "choix": [
+       "résumer les arguments de chacun",
+       "crier plus fort",
+       "partir"
+      ],
+      "reponse": "résumer les arguments de chacun"
+     }
+    ]
+   }
+  ],
+  "competence": "J'argumente et je nuance mon avis",
   "genere": true
  },
  {
@@ -3878,6 +7544,157 @@
   "genere": true
  },
  {
+  "id": "ma-cp-ajouter-10",
+  "matiere": "maths",
+  "niveau": "CP",
+  "titre": "Ajouter ou retirer 10",
+  "ordre": 18,
+  "programme": {
+   "section": "c2-mathematiques-cp-utiliser-ses-connaissances-en-numeration-pour-calculer-mentalement",
+   "citation": "L’élève sait qu’ajouter 10 à un nombre, c’est ajouter une dizaine, et que soustraire 10 à un nombre."
+  },
+  "lecon": [
+   {
+    "texte": "Ajouter 10, c'est ajouter une dizaine : le chiffre des dizaines augmente de 1, celui des unités ne bouge pas.",
+    "exemples": [
+     "23 + 10 = 33",
+     "45 + 10 = 55"
+    ]
+   },
+   {
+    "texte": "Retirer 10, c'est enlever une dizaine.",
+    "exemples": [
+     "36 − 10 = 26"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "calcul",
+    "titre": "Une dizaine de plus ou de moins",
+    "operations": [
+     {
+      "q": "23 + 10",
+      "r": 33
+     },
+     {
+      "q": "41 + 10",
+      "r": 51
+     },
+     {
+      "q": "36 − 10",
+      "r": 26
+     },
+     {
+      "q": "70 + 10",
+      "r": 80
+     },
+     {
+      "q": "58 − 10",
+      "r": 48
+     },
+     {
+      "q": "19 + 10",
+      "r": 29
+     }
+    ]
+   },
+   {
+    "type": "fluence",
+    "titre": "Calcul rapide : + 10",
+    "duree": 45,
+    "generateur": {
+     "op": "+",
+     "a": [
+      10,
+      80
+     ],
+     "b": [
+      10,
+      10
+     ]
+    }
+   }
+  ],
+  "competence": "J'ajoute et je retire 10 de tête",
+  "genere": true
+ },
+ {
+  "id": "ma-cp-dizaine-superieure",
+  "matiere": "maths",
+  "niveau": "CP",
+  "titre": "Aller à la dizaine, ajouter 9",
+  "ordre": 20,
+  "programme": {
+   "section": "c2-mathematiques-cp-apprendre-des-procedures-de-calcul-mental",
+   "citation": "L’élève sait que, pour ajouter 9 à un nombre, il peut ajouter 10 puis soustraire 1."
+  },
+  "lecon": [
+   {
+    "texte": "Pour aller de 74 à 80, je regarde les unités : de 4 à 10, il manque 6. Donc 74 + 6 = 80.",
+    "exemples": [
+     "74 + 6 = 80"
+    ]
+   },
+   {
+    "texte": "Pour ajouter 9, j'ajoute 10 puis je retire 1 : 25 + 9 = 35 − 1 = 34.",
+    "exemples": [
+     "25 + 9 = 34"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "calcul",
+    "titre": "Jusqu'à la dizaine",
+    "operations": [
+     {
+      "q": "74 + … = 80",
+      "r": 6,
+      "aide": "De 4 à 10, il manque 6."
+     },
+     {
+      "q": "38 + … = 40",
+      "r": 2
+     },
+     {
+      "q": "51 + … = 60",
+      "r": 9
+     },
+     {
+      "q": "27 + … = 30",
+      "r": 3
+     }
+    ]
+   },
+   {
+    "type": "calcul",
+    "titre": "Ajouter 9",
+    "operations": [
+     {
+      "q": "25 + 9",
+      "r": 34,
+      "aide": "25 + 10 = 35, puis 35 − 1."
+     },
+     {
+      "q": "40 + 9",
+      "r": 49
+     },
+     {
+      "q": "13 + 9",
+      "r": 22
+     },
+     {
+      "q": "36 + 9",
+      "r": 45
+     }
+    ]
+   }
+  ],
+  "competence": "J'ajoute 9 et je vais à la dizaine de tête",
+  "genere": true
+ },
+ {
   "id": "ma-cp-comparer",
   "matiere": "maths",
   "niveau": "CP",
@@ -4033,6 +7850,155 @@
   "genere": true
  },
  {
+  "id": "ma-cp-longueurs",
+  "matiere": "maths",
+  "niveau": "CP",
+  "titre": "Plus long, plus court",
+  "ordre": 32,
+  "programme": {
+   "section": "c2-mathematiques-cp-les-longueurs",
+   "citation": "L’élève sait comparer les longueurs de deux objets déplaçables"
+  },
+  "lecon": [
+   {
+    "texte": "Pour comparer deux longueurs, je mets les objets côte à côte, en partant de la même ligne.",
+    "exemples": [
+     "un crayon et une gomme"
+    ]
+   },
+   {
+    "texte": "Le plus long dépasse l'autre.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Le plus long",
+    "questions": [
+     {
+      "question": "Lequel est le plus long ?",
+      "choix": [
+       "un bus",
+       "une voiture",
+       "un vélo"
+      ],
+      "reponse": "un bus"
+     },
+     {
+      "question": "Lequel est le plus court ?",
+      "choix": [
+       "une fourmi",
+       "un chat",
+       "un serpent"
+      ],
+      "reponse": "une fourmi"
+     },
+     {
+      "question": "Une règle ou un crayon de couleur neuf : lequel est le plus long, en général ?",
+      "choix": [
+       "la règle",
+       "le crayon"
+      ],
+      "reponse": "la règle"
+     },
+     {
+      "question": "Pour comparer deux bâtons, je les mets…",
+      "choix": [
+       "côte à côte, au même départ",
+       "l'un loin de l'autre",
+       "dans une boîte"
+      ],
+      "reponse": "côte à côte, au même départ"
+     }
+    ]
+   },
+   {
+    "type": "ordre",
+    "titre": "Du plus court au plus long",
+    "consigne": "Range du plus court au plus long.",
+    "elements": [
+     "une coccinelle",
+     "une souris",
+     "un chien",
+     "une girafe"
+    ]
+   }
+  ],
+  "competence": "Je compare des longueurs",
+  "genere": true
+ },
+ {
+  "id": "ma-cp-masses",
+  "matiere": "maths",
+  "niveau": "CP",
+  "titre": "Plus lourd, plus léger",
+  "ordre": 34,
+  "programme": {
+   "section": "c2-mathematiques-cp-les-masses",
+   "citation": "L’élève comprend et utilise le lexique associé aux masses : lourd, léger."
+  },
+  "lecon": [
+   {
+    "texte": "Pour savoir quel objet est le plus lourd, je peux les soupeser, ou utiliser une balance à plateaux.",
+    "exemples": [
+     "balance"
+    ]
+   },
+   {
+    "texte": "Le plateau le plus bas porte l'objet le plus lourd.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Lourd ou léger ?",
+    "questions": [
+     {
+      "question": "Lequel est le plus lourd ?",
+      "choix": [
+       "un cartable plein",
+       "une plume",
+       "une feuille"
+      ],
+      "reponse": "un cartable plein"
+     },
+     {
+      "question": "Sur la balance, le plateau qui descend porte l'objet…",
+      "choix": [
+       "le plus lourd",
+       "le plus léger"
+      ],
+      "reponse": "le plus lourd"
+     },
+     {
+      "question": "Lequel est le plus léger ?",
+      "choix": [
+       "un ballon de baudruche",
+       "une pastèque",
+       "un livre"
+      ],
+      "reponse": "un ballon de baudruche"
+     }
+    ]
+   },
+   {
+    "type": "ordre",
+    "titre": "Du plus léger au plus lourd",
+    "consigne": "Range du plus léger au plus lourd.",
+    "elements": [
+     "une plume",
+     "une pomme",
+     "un chat",
+     "un éléphant"
+    ]
+   }
+  ],
+  "competence": "Je compare des masses",
+  "genere": true
+ },
+ {
   "id": "ma-cp-formes",
   "matiere": "maths",
   "niveau": "CP",
@@ -4145,6 +8111,168 @@
   "genere": true
  },
  {
+  "id": "ma-cp-solides",
+  "matiere": "maths",
+  "niveau": "CP",
+  "titre": "Cube, boule et pavé",
+  "ordre": 42,
+  "programme": {
+   "section": "c2-mathematiques-cp-les-solides",
+   "citation": "Un ensemble de solides étant donné, l’élève sait identifier lesquels sont des boules"
+  },
+  "lecon": [
+   {
+    "texte": "Certains objets ont des formes de solides : un dé est un cube, une balle est une boule, une boîte à chaussures est un pavé.",
+    "exemples": [
+     "cube",
+     "boule",
+     "pavé"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "classer",
+    "titre": "Quelle forme ?",
+    "consigne": "Range chaque objet selon sa forme.",
+    "groupes": [
+     {
+      "id": "1",
+      "nom": "Cube"
+     },
+     {
+      "id": "2",
+      "nom": "Boule"
+     },
+     {
+      "id": "3",
+      "nom": "Pavé"
+     }
+    ],
+    "items": [
+     {
+      "texte": "un dé",
+      "groupe": "1"
+     },
+     {
+      "texte": "un morceau de sucre",
+      "groupe": "1"
+     },
+     {
+      "texte": "une balle",
+      "groupe": "2"
+     },
+     {
+      "texte": "une orange",
+      "groupe": "2"
+     },
+     {
+      "texte": "une boîte à chaussures",
+      "groupe": "3"
+     },
+     {
+      "texte": "une brique de lait",
+      "groupe": "3"
+     }
+    ]
+   },
+   {
+    "type": "bulles",
+    "titre": "Les solides",
+    "questions": [
+     {
+      "question": "Quel solide peut rouler dans tous les sens ?",
+      "choix": [
+       "la boule",
+       "le cube",
+       "le pavé"
+      ],
+      "reponse": "la boule"
+     },
+     {
+      "question": "Toutes les faces d'un cube sont des…",
+      "choix": [
+       "carrés",
+       "ronds",
+       "triangles"
+      ],
+      "reponse": "carrés"
+     }
+    ]
+   }
+  ],
+  "competence": "Je reconnais le cube, la boule et le pavé",
+  "genere": true
+ },
+ {
+  "id": "ma-cp-reperage-espace",
+  "matiere": "maths",
+  "niveau": "CP",
+  "titre": "Se repérer : devant, derrière, à côté",
+  "ordre": 45,
+  "programme": {
+   "section": "c2-mathematiques-cp-le-reperage-dans-lespace",
+   "citation": "L’élève sait repérer la position de ses camarades sur un plan de la classe."
+  },
+  "lecon": [
+   {
+    "texte": "Pour dire où se trouve un objet, j'utilise des mots : sur, sous, devant, derrière, entre, à côté de.",
+    "exemples": [
+     "sur",
+     "sous",
+     "devant",
+     "derrière",
+     "entre"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Où est-ce ?",
+    "questions": [
+     {
+      "question": "Le chat dort sur le lit. Le lit est donc… le chat.",
+      "choix": [
+       "sous",
+       "sur",
+       "devant"
+      ],
+      "reponse": "sous"
+     },
+     {
+      "question": "Léa est assise entre Tom et Zoé. Qui est au milieu ?",
+      "choix": [
+       "Léa",
+       "Tom",
+       "Zoé"
+      ],
+      "reponse": "Léa"
+     },
+     {
+      "question": "Dans la file, Paul est devant Noé. Qui est derrière ?",
+      "choix": [
+       "Noé",
+       "Paul"
+      ],
+      "reponse": "Noé"
+     },
+     {
+      "question": "Le contraire de « dessus », c'est…",
+      "choix": [
+       "dessous",
+       "devant",
+       "dedans"
+      ],
+      "reponse": "dessous"
+     }
+    ]
+   }
+  ],
+  "competence": "Je dis où se trouve un objet",
+  "genere": true
+ },
+ {
   "id": "ma-cp-heures",
   "matiere": "maths",
   "niveau": "CP",
@@ -4227,6 +8355,73 @@
    }
   ],
   "competence": "Je connais les jours et je lis les heures",
+  "genere": true
+ },
+ {
+  "id": "ma-cp-tableau",
+  "matiere": "maths",
+  "niveau": "CP",
+  "titre": "Lire un tableau",
+  "ordre": 55,
+  "programme": {
+   "section": "c2-mathematiques-cp-organisation-et-gestion-de-donnees",
+   "citation": "L’élève sait ensuite organiser dans un tableau les données recueillies."
+  },
+  "lecon": [
+   {
+    "texte": "Un tableau range des informations en lignes et en colonnes.",
+    "exemples": []
+   },
+   {
+    "texte": "Dans la classe, on a compté les fruits préférés : 8 enfants aiment les pommes, 5 les bananes, 10 les fraises, 2 les poires.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Les fruits préférés",
+    "questions": [
+     {
+      "question": "Combien d'enfants aiment les bananes ?",
+      "choix": [
+       "5",
+       "8",
+       "10"
+      ],
+      "reponse": "5"
+     },
+     {
+      "question": "Quel fruit est le plus aimé ?",
+      "choix": [
+       "les fraises",
+       "les pommes",
+       "les poires"
+      ],
+      "reponse": "les fraises"
+     },
+     {
+      "question": "Quel fruit est le moins aimé ?",
+      "choix": [
+       "les poires",
+       "les bananes",
+       "les pommes"
+      ],
+      "reponse": "les poires"
+     },
+     {
+      "question": "Combien d'enfants de plus aiment les pommes que les bananes ?",
+      "choix": [
+       "3",
+       "13",
+       "5"
+      ],
+      "reponse": "3"
+     }
+    ]
+   }
+  ],
+  "competence": "Je lis les informations d'un tableau",
   "genere": true
  },
  {
@@ -4597,6 +8792,142 @@
   "genere": true
  },
  {
+  "id": "ma-ce1-ajouter-dizaines",
+  "matiere": "maths",
+  "niveau": "CE1",
+  "titre": "Ajouter des dizaines",
+  "ordre": 32,
+  "programme": {
+   "section": "c2-mathematiques-ce1-utiliser-ses-connaissances-en-numeration-pour-calculer-mentalement",
+   "citation": "Ainsi, chaque chiffre du nombre initial prend une valeur 10 fois plus grande : le chiffre des unités devient le chiffre des dizaines et le chiffre des dizaines devient le chiffre des centaines."
+  },
+  "lecon": [
+   {
+    "texte": "Pour 34 + 20, j'ajoute 2 dizaines : 3 dizaines + 2 dizaines = 5 dizaines. 34 + 20 = 54.",
+    "exemples": [
+     "34 + 20 = 54"
+    ]
+   },
+   {
+    "texte": "Pour 250 + 100, j'ajoute une centaine : 350.",
+    "exemples": [
+     "250 + 100 = 350"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "calcul",
+    "titre": "Calcule de tête",
+    "operations": [
+     {
+      "q": "34 + 20",
+      "r": 54
+     },
+     {
+      "q": "47 + 30",
+      "r": 77
+     },
+     {
+      "q": "250 + 100",
+      "r": 350
+     },
+     {
+      "q": "68 − 40",
+      "r": 28
+     },
+     {
+      "q": "125 + 50",
+      "r": 175
+     },
+     {
+      "q": "390 − 200",
+      "r": 190
+     }
+    ]
+   },
+   {
+    "type": "fluence",
+    "titre": "Calcul rapide : dizaines",
+    "duree": 60,
+    "generateur": {
+     "op": "+",
+     "a": [
+      10,
+      60
+     ],
+     "b": [
+      10,
+      30
+     ]
+    }
+   }
+  ],
+  "competence": "J'ajoute des dizaines et des centaines de tête",
+  "genere": true
+ },
+ {
+  "id": "ma-ce1-calcul-mental-9",
+  "matiere": "maths",
+  "niveau": "CE1",
+  "titre": "Ajouter 9, ajouter 11",
+  "ordre": 34,
+  "programme": {
+   "section": "c2-mathematiques-ce1-le-calcul-mental",
+   "citation": "Les procédures de calcul mental enseignées au CP sont utilisées tout au long du CE1, afin de renforcer leur automatisation."
+  },
+  "lecon": [
+   {
+    "texte": "Ajouter 9, c'est ajouter 10, puis enlever 1 : 26 + 9 = 36 − 1 = 35.",
+    "exemples": [
+     "26 + 9 = 35"
+    ]
+   },
+   {
+    "texte": "Ajouter 11, c'est ajouter 10, puis encore 1 : 26 + 11 = 37.",
+    "exemples": [
+     "26 + 11 = 37"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "calcul",
+    "titre": "Avec l'astuce du 10",
+    "operations": [
+     {
+      "q": "26 + 9",
+      "r": 35,
+      "aide": "26 + 10 = 36, puis 36 − 1."
+     },
+     {
+      "q": "43 + 9",
+      "r": 52
+     },
+     {
+      "q": "15 + 11",
+      "r": 26,
+      "aide": "15 + 10, puis + 1."
+     },
+     {
+      "q": "58 + 9",
+      "r": 67
+     },
+     {
+      "q": "32 + 11",
+      "r": 43
+     },
+     {
+      "q": "70 + 9",
+      "r": 79
+     }
+    ]
+   }
+  ],
+  "competence": "J'utilise des astuces de calcul mental",
+  "genere": true
+ },
+ {
   "id": "ma-ce1-doubles-moities",
   "matiere": "maths",
   "niveau": "CE1",
@@ -4820,6 +9151,77 @@
   "genere": true
  },
  {
+  "id": "ma-ce1-masses",
+  "matiere": "maths",
+  "niveau": "CE1",
+  "titre": "Peser en grammes et en kilogrammes",
+  "ordre": 52,
+  "programme": {
+   "section": "c2-mathematiques-ce1-les-masses",
+   "citation": "L’élève sait ordonner quatre masses exprimées en gramme ou en kilogramme."
+  },
+  "lecon": [
+   {
+    "texte": "On pèse les objets légers en grammes (g) et les objets lourds en kilogrammes (kg).",
+    "exemples": [
+     "une pomme : 150 g",
+     "un chien : 10 kg"
+    ]
+   },
+   {
+    "texte": "1 kilogramme, c'est 1 000 grammes.",
+    "exemples": [
+     "1 kg = 1 000 g"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Quelle masse ?",
+    "questions": [
+     {
+      "question": "Une pomme pèse environ…",
+      "choix": [
+       "150 g",
+       "150 kg",
+       "1 g"
+      ],
+      "reponse": "150 g"
+     },
+     {
+      "question": "Un enfant de 7 ans pèse environ…",
+      "choix": [
+       "25 kg",
+       "25 g",
+       "250 kg"
+      ],
+      "reponse": "25 kg"
+     },
+     {
+      "question": "Pour peser une lettre, j'utilise…",
+      "choix": [
+       "les grammes",
+       "les kilogrammes"
+      ],
+      "reponse": "les grammes"
+     },
+     {
+      "question": "1 kg, c'est…",
+      "choix": [
+       "1 000 g",
+       "100 g",
+       "10 g"
+      ],
+      "reponse": "1 000 g"
+     }
+    ]
+   }
+  ],
+  "competence": "J'utilise les grammes et les kilogrammes",
+  "genere": true
+ },
+ {
   "id": "ma-ce1-heure-demi",
   "matiere": "maths",
   "niveau": "CE1",
@@ -4891,6 +9293,223 @@
   "genere": true
  },
  {
+  "id": "ma-ce1-solides",
+  "matiere": "maths",
+  "niveau": "CE1",
+  "titre": "Faces, arêtes et sommets",
+  "ordre": 62,
+  "programme": {
+   "section": "c2-mathematiques-ce1-les-solides",
+   "citation": "l’élève reconnait, décrit avec le vocabulaire approprié et nomme les"
+  },
+  "lecon": [
+   {
+    "texte": "Un solide a des faces (les surfaces plates), des arêtes (les bords) et des sommets (les pointes).",
+    "exemples": [
+     "faces",
+     "arêtes",
+     "sommets"
+    ]
+   },
+   {
+    "texte": "Le cube a 6 faces carrées. Le pavé a 6 faces rectangulaires.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Les solides",
+    "questions": [
+     {
+      "question": "Combien de faces a un cube ?",
+      "choix": [
+       "6",
+       "4",
+       "8"
+      ],
+      "reponse": "6"
+     },
+     {
+      "question": "Les faces d'un cube sont des…",
+      "choix": [
+       "carrés",
+       "triangles",
+       "cercles"
+      ],
+      "reponse": "carrés"
+     },
+     {
+      "question": "Une boîte de céréales a la forme d'un…",
+      "choix": [
+       "pavé",
+       "cube",
+       "cylindre"
+      ],
+      "reponse": "pavé"
+     },
+     {
+      "question": "La pointe d'un solide s'appelle…",
+      "choix": [
+       "un sommet",
+       "une face",
+       "une arête"
+      ],
+      "reponse": "un sommet"
+     }
+    ]
+   }
+  ],
+  "competence": "Je décris un cube et un pavé",
+  "genere": true
+ },
+ {
+  "id": "ma-ce1-carre-rectangle",
+  "matiere": "maths",
+  "niveau": "CE1",
+  "titre": "Carré, rectangle, triangle",
+  "ordre": 64,
+  "programme": {
+   "section": "c2-mathematiques-ce1-la-geometrie-plane",
+   "citation": "Sur du papier quadrillé, pointé ou uni, l’élève sait compléter ou tracer un carré, un rectangle, un triangle ou un triangle rectangle avec une règle (graduée ou non) et une équerre ;"
+  },
+  "lecon": [
+   {
+    "texte": "Le carré a 4 côtés de même longueur et 4 angles droits.",
+    "exemples": [
+     "carré"
+    ]
+   },
+   {
+    "texte": "Le rectangle a 4 angles droits, et ses côtés opposés ont la même longueur.",
+    "exemples": [
+     "rectangle"
+    ]
+   },
+   {
+    "texte": "Le triangle a 3 côtés et 3 sommets.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Les figures",
+    "questions": [
+     {
+      "question": "Quelle figure a 4 côtés égaux et 4 angles droits ?",
+      "choix": [
+       "le carré",
+       "le rectangle",
+       "le triangle"
+      ],
+      "reponse": "le carré"
+     },
+     {
+      "question": "Combien de sommets a un triangle ?",
+      "choix": [
+       "3",
+       "4",
+       "2"
+      ],
+      "reponse": "3"
+     },
+     {
+      "question": "Un rectangle a combien d'angles droits ?",
+      "choix": [
+       "4",
+       "2",
+       "0"
+      ],
+      "reponse": "4"
+     },
+     {
+      "question": "Une figure à 4 côtés s'appelle un…",
+      "choix": [
+       "quadrilatère",
+       "triangle",
+       "cercle"
+      ],
+      "reponse": "quadrilatère"
+     }
+    ]
+   }
+  ],
+  "competence": "Je reconnais le carré, le rectangle et le triangle",
+  "genere": true
+ },
+ {
+  "id": "ma-ce1-quadrillage",
+  "matiere": "maths",
+  "niveau": "CE1",
+  "titre": "Se repérer sur un quadrillage",
+  "ordre": 66,
+  "programme": {
+   "section": "c2-mathematiques-ce1-le-reperage-dans-lespace",
+   "citation": "Si un robot est disponible, l’élève sait programmer son déplacement sur un tapis"
+  },
+  "lecon": [
+   {
+    "texte": "Sur un quadrillage, une case se repère par une lettre (la colonne) et un chiffre (la ligne) : B3.",
+    "exemples": [
+     "A1",
+     "B3",
+     "C2"
+    ]
+   },
+   {
+    "texte": "Pour coder un déplacement, on utilise des flèches : haut, bas, gauche, droite.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Sur le quadrillage",
+    "questions": [
+     {
+      "question": "Le trésor est dans la colonne C, ligne 2. Comment s'écrit sa case ?",
+      "choix": [
+       "C2",
+       "2C",
+       "B2"
+      ],
+      "reponse": "C2"
+     },
+     {
+      "question": "Je suis en B2 et j'avance d'une case vers la droite. Où suis-je ?",
+      "choix": [
+       "C2",
+       "A2",
+       "B3"
+      ],
+      "reponse": "C2"
+     },
+     {
+      "question": "Je suis en A1 et je monte d'une case (ligne suivante). Où suis-je ?",
+      "choix": [
+       "A2",
+       "B1",
+       "A0"
+      ],
+      "reponse": "A2"
+     },
+     {
+      "question": "Quelle flèche pour aller vers la gauche ?",
+      "choix": [
+       "←",
+       "→",
+       "↑"
+      ],
+      "reponse": "←"
+     }
+    ]
+   }
+  ],
+  "competence": "Je me repère sur un quadrillage",
+  "genere": true
+ },
+ {
   "id": "ma-ce1-problemes-monnaie",
   "matiere": "maths",
   "niveau": "CE1",
@@ -4951,6 +9570,142 @@
    }
   ],
   "competence": "Je résous des problèmes de monnaie",
+  "genere": true
+ },
+ {
+  "id": "ma-ce1-problemes-etapes",
+  "matiere": "maths",
+  "niveau": "CE1",
+  "titre": "Problèmes en deux étapes",
+  "ordre": 72,
+  "programme": {
+   "section": "c2-mathematiques-ce1-la-resolution-de-problemes",
+   "citation": "Pour les problèmes en deux étapes l’élève peut réaliser un schéma pour chaque étape."
+  },
+  "lecon": [
+   {
+    "texte": "Certains problèmes se résolvent en deux calculs. Je cherche d'abord ce que je dois savoir pour répondre.",
+    "exemples": []
+   },
+   {
+    "texte": "Je peux dessiner le problème pour m'aider.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Résous en deux étapes",
+    "questions": [
+     {
+      "question": "Lina a 12 billes. Elle en gagne 5, puis en perd 3. Combien en a-t-elle ?",
+      "choix": [
+       "14",
+       "20",
+       "10"
+      ],
+      "reponse": "14",
+      "aide": "12 + 5 = 17, puis 17 − 3."
+     },
+     {
+      "question": "Un livre coûte 6 € et un cahier 2 €. Tom achète 2 livres et 1 cahier. Combien paie-t-il ?",
+      "choix": [
+       "14 €",
+       "8 €",
+       "16 €"
+      ],
+      "reponse": "14 €",
+      "aide": "2 livres : 6 + 6 = 12, puis + 2."
+     },
+     {
+      "question": "Dans un bus, il y a 20 personnes. 7 descendent et 4 montent. Combien sont-elles ?",
+      "choix": [
+       "17",
+       "31",
+       "9"
+      ],
+      "reponse": "17"
+     },
+     {
+      "question": "Max a 3 paquets de 10 cartes et 6 cartes seules. Combien de cartes en tout ?",
+      "choix": [
+       "36",
+       "19",
+       "13"
+      ],
+      "reponse": "36"
+     }
+    ]
+   }
+  ],
+  "competence": "Je résous des problèmes en deux étapes",
+  "genere": true
+ },
+ {
+  "id": "ma-ce1-graphique",
+  "matiere": "maths",
+  "niveau": "CE1",
+  "titre": "Lire un graphique",
+  "ordre": 74,
+  "programme": {
+   "section": "c2-mathematiques-ce1-organisation-et-gestion-de-donnees",
+   "citation": "Les élèves extraient aussi de l’information à partir de tableaux ou de diagrammes en barres qu’ils n’ont pas eux-mêmes construits."
+  },
+  "lecon": [
+   {
+    "texte": "Un diagramme en barres montre des quantités : plus la barre est haute, plus le nombre est grand.",
+    "exemples": []
+   },
+   {
+    "texte": "Voici les animaux préférés de la classe : chat 9, chien 7, lapin 4, poisson 2.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Les animaux préférés",
+    "questions": [
+     {
+      "question": "Quel animal a la barre la plus haute ?",
+      "choix": [
+       "le chat",
+       "le chien",
+       "le poisson"
+      ],
+      "reponse": "le chat"
+     },
+     {
+      "question": "Combien d'enfants préfèrent le lapin ?",
+      "choix": [
+       "4",
+       "7",
+       "2"
+      ],
+      "reponse": "4"
+     },
+     {
+      "question": "Combien d'enfants en tout ont répondu ?",
+      "choix": [
+       "22",
+       "9",
+       "20"
+      ],
+      "reponse": "22"
+     },
+     {
+      "question": "Combien d'enfants de plus préfèrent le chat au chien ?",
+      "choix": [
+       "2",
+       "16",
+       "9"
+      ],
+      "reponse": "2"
+     }
+    ]
+   }
+  ],
+  "competence": "Je lis un diagramme en barres",
   "genere": true
  },
  {
@@ -5172,6 +9927,268 @@
   "genere": true
  },
  {
+  "id": "ma-ce2-multiplier-10",
+  "matiere": "maths",
+  "niveau": "CE2",
+  "titre": "Multiplier par 10 et par 100",
+  "ordre": 22,
+  "programme": {
+   "section": "c2-mathematiques-ce2-utiliser-ses-connaissances-en-numeration-pour-calculer-mentalement",
+   "citation": "L’élève sait que, lors d’une multiplication par 10, une unité devient une dizaine"
+  },
+  "lecon": [
+   {
+    "texte": "Multiplier par 10, c'est transformer les unités en dizaines : 7 × 10 = 70, 23 × 10 = 230.",
+    "exemples": [
+     "23 × 10 = 230"
+    ]
+   },
+   {
+    "texte": "Multiplier par 100 : 4 × 100 = 400.",
+    "exemples": [
+     "4 × 100 = 400"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "calcul",
+    "titre": "× 10 et × 100",
+    "operations": [
+     {
+      "q": "7 × 10",
+      "r": 70
+     },
+     {
+      "q": "23 × 10",
+      "r": 230
+     },
+     {
+      "q": "4 × 100",
+      "r": 400
+     },
+     {
+      "q": "15 × 10",
+      "r": 150
+     },
+     {
+      "q": "9 × 100",
+      "r": 900
+     },
+     {
+      "q": "60 × 10",
+      "r": 600
+     }
+    ]
+   }
+  ],
+  "competence": "Je multiplie par 10 et par 100",
+  "genere": true
+ },
+ {
+  "id": "ma-ce2-calcul-mental",
+  "matiere": "maths",
+  "niveau": "CE2",
+  "titre": "Calcul mental : compléments à 100",
+  "ordre": 24,
+  "programme": {
+   "section": "c2-mathematiques-ce2-le-calcul-mental",
+   "citation": "Les procédures de calcul mental enseignées au CP et au CE1 sont utilisées tout au long du CE2, afin de renforcer leur automatisation."
+  },
+  "lecon": [
+   {
+    "texte": "Pour aller de 65 à 100, je vais d'abord à la dizaine : 65 + 5 = 70, puis 70 + 30 = 100. Il faut 35.",
+    "exemples": [
+     "65 + 35 = 100"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "calcul",
+    "titre": "Combien pour aller à 100 ?",
+    "operations": [
+     {
+      "q": "65 + … = 100",
+      "r": 35,
+      "aide": "65 + 5 = 70, puis 70 + 30 = 100."
+     },
+     {
+      "q": "40 + … = 100",
+      "r": 60
+     },
+     {
+      "q": "82 + … = 100",
+      "r": 18
+     },
+     {
+      "q": "25 + … = 100",
+      "r": 75
+     },
+     {
+      "q": "91 + … = 100",
+      "r": 9
+     }
+    ]
+   },
+   {
+    "type": "fluence",
+    "titre": "Calcul rapide : compléments à 100",
+    "duree": 60,
+    "generateur": {
+     "op": "complement",
+     "a": [
+      5,
+      95
+     ],
+     "cible": 100
+    }
+   }
+  ],
+  "competence": "Je trouve les compléments à 100",
+  "genere": true
+ },
+ {
+  "id": "ma-ce2-astuces",
+  "matiere": "maths",
+  "niveau": "CE2",
+  "titre": "Astuces de calcul : 99, 101, 50",
+  "ordre": 26,
+  "programme": {
+   "section": "c2-mathematiques-ce2-apprendre-des-procedures-de-calcul-mental",
+   "citation": "Lors d’une séance de calcul mental, si l’élève doit calculer 8 × 27, il peut écrire sur son ardoise : « 54 », puis « 108 », puis « 216 », qu’il entoure pour indiquer qu’il s’agit du résultat cherché."
+  },
+  "lecon": [
+   {
+    "texte": "Ajouter 99, c'est ajouter 100 puis retirer 1 : 245 + 99 = 344.",
+    "exemples": [
+     "245 + 99 = 344"
+    ]
+   },
+   {
+    "texte": "Multiplier par 5, c'est multiplier par 10, puis prendre la moitié : 14 × 5 = 140 : 2 = 70.",
+    "exemples": [
+     "14 × 5 = 70"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "calcul",
+    "titre": "Calcule malin",
+    "operations": [
+     {
+      "q": "245 + 99",
+      "r": 344,
+      "aide": "245 + 100, puis − 1."
+     },
+     {
+      "q": "130 + 101",
+      "r": 231
+     },
+     {
+      "q": "14 × 5",
+      "r": 70,
+      "aide": "14 × 10 = 140, puis la moitié."
+     },
+     {
+      "q": "50 + 50 + 50",
+      "r": 150
+     },
+     {
+      "q": "312 − 99",
+      "r": 213
+     },
+     {
+      "q": "22 × 5",
+      "r": 110
+     }
+    ]
+   }
+  ],
+  "competence": "J'utilise des astuces de calcul",
+  "genere": true
+ },
+ {
+  "id": "ma-ce2-fractions",
+  "matiere": "maths",
+  "niveau": "CE2",
+  "titre": "Les fractions : comparer et partager",
+  "ordre": 28,
+  "programme": {
+   "section": "c2-mathematiques-ce2-les-fractions",
+   "citation": "Les fractions rencontrées au CE2 ont un dénominateur inférieur ou égal à douze et sont toutes inférieures ou égales à un."
+  },
+  "lecon": [
+   {
+    "texte": "Une fraction comme 3/4 veut dire : on partage en 4 parts égales et on en prend 3.",
+    "exemples": [
+     "3/4",
+     "2/3"
+    ]
+   },
+   {
+    "texte": "Plus le nombre du bas est grand, plus les parts sont petites : 1/8 est plus petit que 1/4.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Les fractions",
+    "questions": [
+     {
+      "question": "Une pizza en 3 parts égales, j'en mange 2. Quelle fraction ?",
+      "choix": [
+       "2/3",
+       "3/2",
+       "1/3"
+      ],
+      "reponse": "2/3"
+     },
+     {
+      "question": "Quelle part est la plus petite ?",
+      "choix": [
+       "1/8",
+       "1/4",
+       "1/2"
+      ],
+      "reponse": "1/8"
+     },
+     {
+      "question": "Combien de quarts dans un entier ?",
+      "choix": [
+       "4",
+       "2",
+       "8"
+      ],
+      "reponse": "4"
+     },
+     {
+      "question": "La moitié de 12 billes, c'est…",
+      "choix": [
+       "6",
+       "24",
+       "2"
+      ],
+      "reponse": "6"
+     },
+     {
+      "question": "Un quart de 20, c'est…",
+      "choix": [
+       "5",
+       "4",
+       "80"
+      ],
+      "reponse": "5"
+     }
+    ]
+   }
+  ],
+  "competence": "Je comprends et je compare des fractions simples",
+  "genere": true
+ },
+ {
   "id": "ma-ce2-division-partage",
   "matiere": "maths",
   "niveau": "CE2",
@@ -5367,6 +10384,83 @@
   "genere": true
  },
  {
+  "id": "ma-ce2-problemes",
+  "matiere": "maths",
+  "niveau": "CE2",
+  "titre": "Problèmes de multiplication",
+  "ordre": 45,
+  "programme": {
+   "section": "c2-mathematiques-ce2-la-resolution-de-problemes",
+   "citation": "Le développement des compétences en calcul, en particulier pour la multiplication, conduit à étendre le champ numérique sur lequel portent les problèmes multiplicatifs consistant à rechercher la valeur du tout."
+  },
+  "lecon": [
+   {
+    "texte": "Quand on a plusieurs fois la même quantité, on multiplie.",
+    "exemples": []
+   },
+   {
+    "texte": "Quand on partage en parts égales, on divise.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Multiplier ou diviser ?",
+    "questions": [
+     {
+      "question": "Il y a 6 rangées de 8 chaises. Combien de chaises ?",
+      "choix": [
+       "48",
+       "14",
+       "42"
+      ],
+      "reponse": "48",
+      "aide": "6 fois 8."
+     },
+     {
+      "question": "Un paquet contient 4 yaourts. Combien de yaourts dans 7 paquets ?",
+      "choix": [
+       "28",
+       "11",
+       "24"
+      ],
+      "reponse": "28"
+     },
+     {
+      "question": "On range 30 crayons dans 5 pots, autant dans chaque pot. Combien par pot ?",
+      "choix": [
+       "6",
+       "25",
+       "35"
+      ],
+      "reponse": "6"
+     },
+     {
+      "question": "Une place de cinéma coûte 9 €. Combien pour 3 places ?",
+      "choix": [
+       "27 €",
+       "12 €",
+       "18 €"
+      ],
+      "reponse": "27 €"
+     },
+     {
+      "question": "Un ruban de 40 cm est coupé en 4 morceaux égaux. Combien mesure chaque morceau ?",
+      "choix": [
+       "10 cm",
+       "36 cm",
+       "160 cm"
+      ],
+      "reponse": "10 cm"
+     }
+    ]
+   }
+  ],
+  "competence": "Je résous des problèmes de multiplication et de partage",
+  "genere": true
+ },
+ {
   "id": "ma-ce2-contenances-masses",
   "matiere": "maths",
   "niveau": "CE2",
@@ -5439,6 +10533,282 @@
   "genere": true
  },
  {
+  "id": "ma-ce2-longueurs",
+  "matiere": "maths",
+  "niveau": "CE2",
+  "titre": "Mètres, centimètres, millimètres",
+  "ordre": 52,
+  "programme": {
+   "section": "c2-mathematiques-ce2-les-longueurs",
+   "citation": "L’élève sait que 1 cm = 10 mm et 1 m = 1 000 mm."
+  },
+  "lecon": [
+   {
+    "texte": "1 mètre = 100 centimètres. 1 centimètre = 10 millimètres.",
+    "exemples": [
+     "1 m = 100 cm",
+     "1 cm = 10 mm"
+    ]
+   },
+   {
+    "texte": "Pour les très grandes distances, on utilise le kilomètre : 1 km = 1 000 m.",
+    "exemples": [
+     "1 km = 1 000 m"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Les longueurs",
+    "questions": [
+     {
+      "question": "2 m, c'est combien de centimètres ?",
+      "choix": [
+       "200",
+       "20",
+       "2 000"
+      ],
+      "reponse": "200"
+     },
+     {
+      "question": "3 cm, c'est combien de millimètres ?",
+      "choix": [
+       "30",
+       "300",
+       "3"
+      ],
+      "reponse": "30"
+     },
+     {
+      "question": "La distance entre deux villes se mesure en…",
+      "choix": [
+       "kilomètres",
+       "centimètres",
+       "millimètres"
+      ],
+      "reponse": "kilomètres"
+     },
+     {
+      "question": "L'épaisseur d'une pièce de monnaie mesure environ…",
+      "choix": [
+       "2 mm",
+       "2 m",
+       "2 km"
+      ],
+      "reponse": "2 mm"
+     }
+    ]
+   }
+  ],
+  "competence": "J'utilise les unités de longueur",
+  "genere": true
+ },
+ {
+  "id": "ma-ce2-masses",
+  "matiere": "maths",
+  "niveau": "CE2",
+  "titre": "Grammes, kilogrammes et tonnes",
+  "ordre": 54,
+  "programme": {
+   "section": "c2-mathematiques-ce2-les-masses",
+   "citation": "L’élève sait convertir entre les unités gramme et kilogramme"
+  },
+  "lecon": [
+   {
+    "texte": "1 kg = 1 000 g. Pour les objets très lourds, on utilise la tonne : 1 t = 1 000 kg.",
+    "exemples": [
+     "1 kg = 1 000 g",
+     "1 t = 1 000 kg"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Les masses",
+    "questions": [
+     {
+      "question": "3 kg, c'est combien de grammes ?",
+      "choix": [
+       "3 000",
+       "300",
+       "30"
+      ],
+      "reponse": "3 000"
+     },
+     {
+      "question": "Un éléphant pèse environ…",
+      "choix": [
+       "5 tonnes",
+       "5 kg",
+       "5 g"
+      ],
+      "reponse": "5 tonnes"
+     },
+     {
+      "question": "Quel est le plus lourd ?",
+      "choix": [
+       "2 kg",
+       "1 500 g",
+       "900 g"
+      ],
+      "reponse": "2 kg"
+     },
+     {
+      "question": "500 g + 500 g, ça fait…",
+      "choix": [
+       "1 kg",
+       "10 kg",
+       "1 000 kg"
+      ],
+      "reponse": "1 kg"
+     }
+    ]
+   }
+  ],
+  "competence": "J'utilise les unités de masse",
+  "genere": true
+ },
+ {
+  "id": "ma-ce2-contenances",
+  "matiere": "maths",
+  "niveau": "CE2",
+  "titre": "Litres et centilitres",
+  "ordre": 56,
+  "programme": {
+   "section": "c2-mathematiques-ce2-les-contenances",
+   "citation": "L’élève sait effectuer des conversions en utilisant les unités litre, décilitre et centilitre :  1 L = 10 dL ;"
+  },
+  "lecon": [
+   {
+    "texte": "Le litre (L) mesure ce que contient un récipient. 1 L = 100 cL.",
+    "exemples": [
+     "1 L = 100 cL"
+    ]
+   },
+   {
+    "texte": "Un verre contient environ 20 cL, un seau environ 10 L.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Les contenances",
+    "questions": [
+     {
+      "question": "Un verre d'eau contient environ…",
+      "choix": [
+       "20 cL",
+       "20 L",
+       "2 cL"
+      ],
+      "reponse": "20 cL"
+     },
+     {
+      "question": "1 L, c'est combien de centilitres ?",
+      "choix": [
+       "100",
+       "10",
+       "1 000"
+      ],
+      "reponse": "100"
+     },
+     {
+      "question": "Une piscine contient beaucoup de…",
+      "choix": [
+       "litres",
+       "centilitres"
+      ],
+      "reponse": "litres"
+     },
+     {
+      "question": "2 bouteilles de 50 cL, ça fait…",
+      "choix": [
+       "1 L",
+       "100 L",
+       "50 cL"
+      ],
+      "reponse": "1 L"
+     }
+    ]
+   }
+  ],
+  "competence": "J'utilise les litres et les centilitres",
+  "genere": true
+ },
+ {
+  "id": "ma-ce2-monnaie",
+  "matiere": "maths",
+  "niveau": "CE2",
+  "titre": "Euros et centimes",
+  "ordre": 58,
+  "programme": {
+   "section": "c2-mathematiques-ce2-la-monnaie",
+   "citation": "Les différents rangs pourront être désignés de la manière suivante : centime, dizaine de centimes, centaine de centimes égale à un euro, dizaine d’euros, centaine d’euros, etc."
+  },
+  "lecon": [
+   {
+    "texte": "1 euro = 100 centimes. 2,50 € se lit « deux euros cinquante » : 2 euros et 50 centimes.",
+    "exemples": [
+     "2,50 €",
+     "0,20 €"
+    ]
+   },
+   {
+    "texte": "Pour rendre la monnaie, je complète jusqu'à la somme donnée.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Euros et centimes",
+    "questions": [
+     {
+      "question": "1 euro, c'est combien de centimes ?",
+      "choix": [
+       "100",
+       "10",
+       "1 000"
+      ],
+      "reponse": "100"
+     },
+     {
+      "question": "Une pièce de 50 c et une pièce de 20 c, ça fait…",
+      "choix": [
+       "70 c",
+       "52 c",
+       "30 c"
+      ],
+      "reponse": "70 c"
+     },
+     {
+      "question": "Je paie 5 € pour un jus à 3,50 €. Combien me rend-on ?",
+      "choix": [
+       "1,50 €",
+       "2,50 €",
+       "8,50 €"
+      ],
+      "reponse": "1,50 €"
+     },
+     {
+      "question": "« Deux euros et cinq centimes » s'écrit…",
+      "choix": [
+       "2,05 €",
+       "2,50 €",
+       "25 €"
+      ],
+      "reponse": "2,05 €"
+     }
+    ]
+   }
+  ],
+  "competence": "Je compte avec les euros et les centimes",
+  "genere": true
+ },
+ {
   "id": "ma-ce2-angle-droit",
   "matiere": "maths",
   "niveau": "CE2",
@@ -5508,6 +10878,138 @@
    }
   ],
   "competence": "Je reconnais l'angle droit et les polygones",
+  "genere": true
+ },
+ {
+  "id": "ma-ce2-solides",
+  "matiere": "maths",
+  "niveau": "CE2",
+  "titre": "Patrons et solides",
+  "ordre": 62,
+  "programme": {
+   "section": "c2-mathematiques-ce2-les-solides",
+   "citation": "L’élève sait dire si un assemblage de polygones est ou non un patron d’un cube en argumentant sur le nombre de faces, la nature des faces et la position des faces les unes par rapport aux autres."
+  },
+  "lecon": [
+   {
+    "texte": "Un patron, c'est le dessin à plat d'un solide, qu'on peut découper et plier pour le fabriquer.",
+    "exemples": [
+     "patron du cube : 6 carrés"
+    ]
+   },
+   {
+    "texte": "Le cylindre a deux faces en forme de disque. La pyramide a une pointe.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Les solides",
+    "questions": [
+     {
+      "question": "Combien de carrés faut-il pour le patron d'un cube ?",
+      "choix": [
+       "6",
+       "4",
+       "8"
+      ],
+      "reponse": "6"
+     },
+     {
+      "question": "Une boîte de conserve a la forme d'un…",
+      "choix": [
+       "cylindre",
+       "cube",
+       "pavé"
+      ],
+      "reponse": "cylindre"
+     },
+     {
+      "question": "Quel solide a des faces en triangle qui se rejoignent en pointe ?",
+      "choix": [
+       "la pyramide",
+       "le cube",
+       "le cylindre"
+      ],
+      "reponse": "la pyramide"
+     },
+     {
+      "question": "Combien d'arêtes a un cube ?",
+      "choix": [
+       "12",
+       "6",
+       "8"
+      ],
+      "reponse": "12"
+     }
+    ]
+   }
+  ],
+  "competence": "Je connais les patrons et les solides",
+  "genere": true
+ },
+ {
+  "id": "ma-ce2-donnees",
+  "matiere": "maths",
+  "niveau": "CE2",
+  "titre": "Tableaux et graphiques",
+  "ordre": 66,
+  "programme": {
+   "section": "c2-mathematiques-ce2-organisation-et-gestion-de-donnees",
+   "citation": "L’élève sait trouver dans un tableau ou sur un diagramme en barres"
+  },
+  "lecon": [
+   {
+    "texte": "Voici les livres lus par la classe chaque mois : septembre 12, octobre 18, novembre 15, décembre 9.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Les livres lus",
+    "questions": [
+     {
+      "question": "En quel mois la classe a-t-elle lu le plus de livres ?",
+      "choix": [
+       "octobre",
+       "septembre",
+       "décembre"
+      ],
+      "reponse": "octobre"
+     },
+     {
+      "question": "Combien de livres en novembre ?",
+      "choix": [
+       "15",
+       "12",
+       "18"
+      ],
+      "reponse": "15"
+     },
+     {
+      "question": "Combien de livres en septembre et octobre ensemble ?",
+      "choix": [
+       "30",
+       "6",
+       "28"
+      ],
+      "reponse": "30"
+     },
+     {
+      "question": "De combien les livres lus diminuent-ils entre novembre et décembre ?",
+      "choix": [
+       "6",
+       "24",
+       "3"
+      ],
+      "reponse": "6"
+     }
+    ]
+   }
+  ],
+  "competence": "Je lis et j'utilise un tableau de données",
   "genere": true
  },
  {
@@ -5811,6 +11313,212 @@
   "genere": true
  },
  {
+  "id": "ma-cm1-multiplication-posee",
+  "matiere": "maths",
+  "niveau": "CM1",
+  "titre": "La multiplication",
+  "ordre": 32,
+  "programme": {
+   "section": "c3-mathematiques-cm1-les-quatre-operations",
+   "citation": "La commutativité de la multiplication est à nouveau explicitée lorsqu’elle est mobilisée."
+  },
+  "lecon": [
+   {
+    "texte": "Pour 23 × 4, je multiplie les unités puis les dizaines : 3 × 4 = 12, j'écris 2 et je retiens 1 ; 2 × 4 = 8, plus 1 = 9. Résultat : 92.",
+    "exemples": [
+     "23 × 4 = 92"
+    ]
+   },
+   {
+    "texte": "Je peux aussi décomposer : 23 × 4 = 20 × 4 + 3 × 4 = 80 + 12.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "calcul",
+    "titre": "Multiplie",
+    "operations": [
+     {
+      "q": "23 × 4",
+      "r": 92,
+      "aide": "20 × 4 = 80, 3 × 4 = 12."
+     },
+     {
+      "q": "15 × 6",
+      "r": 90
+     },
+     {
+      "q": "32 × 3",
+      "r": 96
+     },
+     {
+      "q": "47 × 2",
+      "r": 94
+     },
+     {
+      "q": "25 × 8",
+      "r": 200
+     },
+     {
+      "q": "106 × 5",
+      "r": 530
+     }
+    ]
+   }
+  ],
+  "competence": "Je calcule une multiplication",
+  "genere": true
+ },
+ {
+  "id": "ma-cm1-problemes",
+  "matiere": "maths",
+  "niveau": "CM1",
+  "titre": "Problèmes à plusieurs étapes",
+  "ordre": 34,
+  "programme": {
+   "section": "c3-mathematiques-cm1-la-resolution-de-problemes",
+   "citation": "Résoudre des problèmes additifs en une étape des types « parties-tout » et « comparaison » Résoudre des problèmes additifs en deux ou trois étapes"
+  },
+  "lecon": [
+   {
+    "texte": "Pour un problème à plusieurs étapes, je repère la question, je cherche les calculs intermédiaires, puis je vérifie que ma réponse est vraisemblable.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Résous",
+    "questions": [
+     {
+      "question": "Un fermier a 4 caisses de 25 pommes. Il en vend 30. Combien lui en reste-t-il ?",
+      "choix": [
+       "70",
+       "100",
+       "130"
+      ],
+      "reponse": "70",
+      "aide": "4 × 25 = 100, puis 100 − 30."
+     },
+     {
+      "question": "Une place de concert coûte 12 €. Une famille de 4 paie avec 50 €. Combien lui rend-on ?",
+      "choix": [
+       "2 €",
+       "38 €",
+       "48 €"
+      ],
+      "reponse": "2 €"
+     },
+     {
+      "question": "Un livre a 120 pages. Sam lit 15 pages par jour. En combien de jours finit-il ?",
+      "choix": [
+       "8",
+       "105",
+       "135"
+      ],
+      "reponse": "8"
+     },
+     {
+      "question": "Un car transporte 48 élèves. Combien faut-il de cars pour 150 élèves ?",
+      "choix": [
+       "4",
+       "3",
+       "102"
+      ],
+      "reponse": "4",
+      "aide": "3 cars = 144 places : ce n'est pas assez."
+     }
+    ]
+   }
+  ],
+  "competence": "Je résous des problèmes à plusieurs étapes",
+  "genere": true
+ },
+ {
+  "id": "ma-cm1-nombre-mystere",
+  "matiere": "maths",
+  "niveau": "CM1",
+  "titre": "Le nombre mystère",
+  "ordre": 36,
+  "programme": {
+   "section": "c3-mathematiques-cm1-algebre",
+   "citation": "Il peut être placé entre deux expressions qui sont égales, ce qui conduit notamment à faire poindre la notion d’équation, comme dans l’égalité à compléter suivante : « 178 – … = 6 × 8 »."
+  },
+  "lecon": [
+   {
+    "texte": "Dans 17 + … = 30, je cherche le nombre manquant : c'est 13, car 30 − 17 = 13.",
+    "exemples": [
+     "17 + 13 = 30"
+    ]
+   },
+   {
+    "texte": "Le signe = veut dire que les deux côtés ont la même valeur.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "calcul",
+    "titre": "Trouve le nombre manquant",
+    "operations": [
+     {
+      "q": "17 + … = 30",
+      "r": 13
+     },
+     {
+      "q": "… + 25 = 60",
+      "r": 35
+     },
+     {
+      "q": "8 × … = 56",
+      "r": 7
+     },
+     {
+      "q": "50 − … = 32",
+      "r": 18
+     },
+     {
+      "q": "… × 6 = 54",
+      "r": 9
+     }
+    ]
+   },
+   {
+    "type": "bulles",
+    "titre": "Vrai ou faux ?",
+    "questions": [
+     {
+      "question": "12 + 8 = 10 + 10 ?",
+      "choix": [
+       "Vrai",
+       "Faux"
+      ],
+      "reponse": "Vrai"
+     },
+     {
+      "question": "5 × 4 = 4 × 5 ?",
+      "choix": [
+       "Vrai",
+       "Faux"
+      ],
+      "reponse": "Vrai"
+     },
+     {
+      "question": "20 − 5 = 5 − 20 ?",
+      "choix": [
+       "Faux",
+       "Vrai"
+      ],
+      "reponse": "Faux"
+     }
+    ]
+   }
+  ],
+  "competence": "Je trouve un nombre manquant dans une égalité",
+  "genere": true
+ },
+ {
   "id": "ma-cm1-perimetre",
   "matiere": "maths",
   "niveau": "CM1",
@@ -5859,6 +11567,280 @@
    }
   ],
   "competence": "Je calcule un périmètre",
+  "genere": true
+ },
+ {
+  "id": "ma-cm1-conversions",
+  "matiere": "maths",
+  "niveau": "CM1",
+  "titre": "Convertir des mesures",
+  "ordre": 42,
+  "programme": {
+   "section": "c3-mathematiques-cm1-grandeurs-et-mesures",
+   "citation": "Les tâches de conversion contribuent ainsi à renforcer la compréhension et la maîtrise de la numération décimale."
+  },
+  "lecon": [
+   {
+    "texte": "Pour convertir, je me souviens des liens entre les unités : 1 m = 100 cm, 1 km = 1 000 m, 1 kg = 1 000 g.",
+    "exemples": [
+     "3,5 m = 350 cm"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Convertis",
+    "questions": [
+     {
+      "question": "5 m = … cm",
+      "choix": [
+       "500",
+       "50",
+       "5 000"
+      ],
+      "reponse": "500"
+     },
+     {
+      "question": "2 km = … m",
+      "choix": [
+       "2 000",
+       "200",
+       "20"
+      ],
+      "reponse": "2 000"
+     },
+     {
+      "question": "3 kg = … g",
+      "choix": [
+       "3 000",
+       "300",
+       "30"
+      ],
+      "reponse": "3 000"
+     },
+     {
+      "question": "400 cm = … m",
+      "choix": [
+       "4",
+       "40",
+       "0,4"
+      ],
+      "reponse": "4"
+     },
+     {
+      "question": "1 m 25 cm = … cm",
+      "choix": [
+       "125",
+       "1 025",
+       "12,5"
+      ],
+      "reponse": "125"
+     }
+    ]
+   }
+  ],
+  "competence": "Je convertis des longueurs et des masses",
+  "genere": true
+ },
+ {
+  "id": "ma-cm1-masses",
+  "matiere": "maths",
+  "niveau": "CM1",
+  "titre": "Les masses",
+  "ordre": 44,
+  "programme": {
+   "section": "c3-mathematiques-cm1-les-masses",
+   "citation": "Connaître et utiliser les unités de masse du milligramme au kilogramme et la tonne, et les symboles associés"
+  },
+  "lecon": [
+   {
+    "texte": "Les unités de masse : le kilogramme (kg), le gramme (g), la tonne (t). 1 t = 1 000 kg ; 1 kg = 1 000 g.",
+    "exemples": [
+     "1 t = 1 000 kg"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Estimer et calculer des masses",
+    "questions": [
+     {
+      "question": "Un sac de farine pèse 1 kg. J'en utilise 250 g. Combien reste-t-il ?",
+      "choix": [
+       "750 g",
+       "250 g",
+       "1 250 g"
+      ],
+      "reponse": "750 g"
+     },
+     {
+      "question": "Une voiture pèse environ…",
+      "choix": [
+       "1 t",
+       "1 kg",
+       "100 g"
+      ],
+      "reponse": "1 t"
+     },
+     {
+      "question": "Quatre paquets de 250 g, ça fait…",
+      "choix": [
+       "1 kg",
+       "4 kg",
+       "250 g"
+      ],
+      "reponse": "1 kg"
+     },
+     {
+      "question": "Quel est le plus lourd ?",
+      "choix": [
+       "2 kg",
+       "1 800 g",
+       "950 g"
+      ],
+      "reponse": "2 kg"
+     }
+    ]
+   }
+  ],
+  "competence": "Je calcule avec les masses",
+  "genere": true
+ },
+ {
+  "id": "ma-cm1-contenances",
+  "matiere": "maths",
+  "niveau": "CM1",
+  "titre": "Les contenances",
+  "ordre": 46,
+  "programme": {
+   "section": "c3-mathematiques-cm1-les-contenances",
+   "citation": "Connaître et utiliser les unités de contenance du millilitre à l’hectolitre et les symboles associés"
+  },
+  "lecon": [
+   {
+    "texte": "1 L = 10 dL = 100 cL = 1 000 mL.",
+    "exemples": [
+     "1 L = 100 cL",
+     "1 L = 1 000 mL"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Les contenances",
+    "questions": [
+     {
+      "question": "Une cuillère à café contient environ…",
+      "choix": [
+       "5 mL",
+       "5 L",
+       "5 dL"
+      ],
+      "reponse": "5 mL"
+     },
+     {
+      "question": "75 cL + 25 cL = …",
+      "choix": [
+       "1 L",
+       "100 L",
+       "1 dL"
+      ],
+      "reponse": "1 L"
+     },
+     {
+      "question": "Combien de verres de 20 cL pour remplir une bouteille de 1 L ?",
+      "choix": [
+       "5",
+       "20",
+       "10"
+      ],
+      "reponse": "5"
+     },
+     {
+      "question": "2 L = … cL",
+      "choix": [
+       "200",
+       "20",
+       "2 000"
+      ],
+      "reponse": "200"
+     }
+    ]
+   }
+  ],
+  "competence": "J'utilise les unités de contenance",
+  "genere": true
+ },
+ {
+  "id": "ma-cm1-aires",
+  "matiere": "maths",
+  "niveau": "CM1",
+  "titre": "Comparer des aires",
+  "ordre": 48,
+  "programme": {
+   "section": "c3-mathematiques-cm1-les-aires",
+   "citation": "Connaître et utiliser les centimètres carrés pour exprimer des aires"
+  },
+  "lecon": [
+   {
+    "texte": "L'aire, c'est la place qu'occupe une surface. Sur un quadrillage, je peux compter les carreaux.",
+    "exemples": [
+     "4 carreaux",
+     "6 carreaux"
+    ]
+   },
+   {
+    "texte": "Deux figures de formes différentes peuvent avoir la même aire.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Les aires",
+    "questions": [
+     {
+      "question": "Un rectangle de 3 carreaux sur 2 carreaux couvre…",
+      "choix": [
+       "6 carreaux",
+       "5 carreaux",
+       "10 carreaux"
+      ],
+      "reponse": "6 carreaux"
+     },
+     {
+      "question": "Un carré de 4 carreaux de côté couvre…",
+      "choix": [
+       "16 carreaux",
+       "8 carreaux",
+       "4 carreaux"
+      ],
+      "reponse": "16 carreaux"
+     },
+     {
+      "question": "Pour connaître la surface d'un tapis, je mesure…",
+      "choix": [
+       "son aire",
+       "son périmètre",
+       "sa masse"
+      ],
+      "reponse": "son aire"
+     },
+     {
+      "question": "Deux figures différentes peuvent-elles avoir la même aire ?",
+      "choix": [
+       "Oui",
+       "Non"
+      ],
+      "reponse": "Oui"
+     }
+    ]
+   }
+  ],
+  "competence": "Je compare des aires",
   "genere": true
  },
  {
@@ -5924,6 +11906,77 @@
    }
   ],
   "competence": "Je reconnais les angles",
+  "genere": true
+ },
+ {
+  "id": "ma-cm1-durees",
+  "matiere": "maths",
+  "niveau": "CM1",
+  "titre": "Heures, minutes, secondes",
+  "ordre": 52,
+  "programme": {
+   "section": "c3-mathematiques-cm1-le-reperage-dans-le-temps-et-les-durees",
+   "citation": "Comparer et mesurer des durées écoulées entre deux instants affichés sur une horloge (instants et durées sont exprimés en heure et minute)"
+  },
+  "lecon": [
+   {
+    "texte": "1 h = 60 min ; 1 min = 60 s. Un siècle dure 100 ans.",
+    "exemples": [
+     "1 h = 60 min",
+     "1 siècle = 100 ans"
+    ]
+   },
+   {
+    "texte": "Pour calculer une durée, je peux compter par étapes : de 9 h 45 à 10 h, puis de 10 h à 11 h 30.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Les durées",
+    "questions": [
+     {
+      "question": "De 9 h 45 à 11 h 30, il s'écoule…",
+      "choix": [
+       "1 h 45 min",
+       "2 h 15 min",
+       "1 h 15 min"
+      ],
+      "reponse": "1 h 45 min",
+      "aide": "De 9 h 45 à 10 h : 15 min. De 10 h à 11 h 30 : 1 h 30."
+     },
+     {
+      "question": "2 h, c'est combien de minutes ?",
+      "choix": [
+       "120",
+       "200",
+       "60"
+      ],
+      "reponse": "120"
+     },
+     {
+      "question": "90 minutes, c'est…",
+      "choix": [
+       "1 h 30 min",
+       "1 h 9 min",
+       "9 h"
+      ],
+      "reponse": "1 h 30 min"
+     },
+     {
+      "question": "Un film commence à 20 h 15 et dure 1 h 50. Il finit à…",
+      "choix": [
+       "22 h 05",
+       "21 h 65",
+       "21 h 05"
+      ],
+      "reponse": "22 h 05"
+     }
+    ]
+   }
+  ],
+  "competence": "Je calcule des durées",
   "genere": true
  },
  {
@@ -5997,6 +12050,203 @@
   "genere": true
  },
  {
+  "id": "ma-cm1-cercle",
+  "matiere": "maths",
+  "niveau": "CM1",
+  "titre": "Le cercle",
+  "ordre": 64,
+  "programme": {
+   "section": "c3-mathematiques-cm1-la-geometrie-plane",
+   "citation": "Décrire et reconnaître un cercle et un disque comme un ensemble de points caractérisés par leur distance à un point donné"
+  },
+  "lecon": [
+   {
+    "texte": "Tous les points d'un cercle sont à la même distance du centre : cette distance s'appelle le rayon.",
+    "exemples": [
+     "centre",
+     "rayon",
+     "diamètre"
+    ]
+   },
+   {
+    "texte": "Le diamètre traverse le cercle en passant par le centre : il mesure deux rayons. On trace un cercle avec un compas.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Le cercle",
+    "questions": [
+     {
+      "question": "Un cercle a un rayon de 3 cm. Son diamètre mesure…",
+      "choix": [
+       "6 cm",
+       "3 cm",
+       "9 cm"
+      ],
+      "reponse": "6 cm"
+     },
+     {
+      "question": "Quel outil pour tracer un cercle ?",
+      "choix": [
+       "le compas",
+       "l'équerre",
+       "la règle"
+      ],
+      "reponse": "le compas"
+     },
+     {
+      "question": "Le point au milieu du cercle s'appelle…",
+      "choix": [
+       "le centre",
+       "le sommet",
+       "le rayon"
+      ],
+      "reponse": "le centre"
+     },
+     {
+      "question": "Le diamètre mesure 10 cm. Le rayon mesure…",
+      "choix": [
+       "5 cm",
+       "20 cm",
+       "10 cm"
+      ],
+      "reponse": "5 cm"
+     }
+    ]
+   }
+  ],
+  "competence": "Je connais le cercle, son centre, son rayon et son diamètre",
+  "genere": true
+ },
+ {
+  "id": "ma-cm1-solides",
+  "matiere": "maths",
+  "niveau": "CM1",
+  "titre": "Prismes et pyramides",
+  "ordre": 66,
+  "programme": {
+   "section": "c3-mathematiques-cm1-les-solides",
+   "citation": "Décrire un cube, un pavé, une pyramide et un prisme droit en faisant référence à des propriétés et en utilisant le vocabulaire approprié"
+  },
+  "lecon": [
+   {
+    "texte": "Un prisme droit a deux faces identiques, face à face, reliées par des rectangles. Une pyramide a une base et des faces triangulaires qui se rejoignent au sommet.",
+    "exemples": [
+     "prisme",
+     "pyramide"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Les solides",
+    "questions": [
+     {
+      "question": "Combien de faces a une pyramide à base carrée ?",
+      "choix": [
+       "5",
+       "4",
+       "6"
+      ],
+      "reponse": "5"
+     },
+     {
+      "question": "Une tente canadienne a souvent la forme d'un…",
+      "choix": [
+       "prisme",
+       "cube",
+       "cylindre"
+      ],
+      "reponse": "prisme"
+     },
+     {
+      "question": "Combien de sommets a un pavé ?",
+      "choix": [
+       "8",
+       "6",
+       "12"
+      ],
+      "reponse": "8"
+     },
+     {
+      "question": "Les faces latérales d'une pyramide sont des…",
+      "choix": [
+       "triangles",
+       "carrés",
+       "cercles"
+      ],
+      "reponse": "triangles"
+     }
+    ]
+   }
+  ],
+  "competence": "Je reconnais les prismes et les pyramides",
+  "genere": true
+ },
+ {
+  "id": "ma-cm1-reperage",
+  "matiere": "maths",
+  "niveau": "CM1",
+  "titre": "Se repérer sur un plan",
+  "ordre": 68,
+  "programme": {
+   "section": "c3-mathematiques-cm1-le-reperage-dans-lespace",
+   "citation": "Comprendre, utiliser et produire une suite d’instructions qui décrivent un déplacement en utilisant un vocabulaire spatial précis"
+  },
+  "lecon": [
+   {
+    "texte": "Sur un plan quadrillé, chaque case a des coordonnées : une lettre et un nombre.",
+    "exemples": [
+     "D4"
+    ]
+   },
+   {
+    "texte": "Pour décrire un trajet, on donne les déplacements dans l'ordre : avancer, tourner à gauche, tourner à droite.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Sur le plan",
+    "questions": [
+     {
+      "question": "La boulangerie est en D4. La mairie est une case à gauche. Où est la mairie ?",
+      "choix": [
+       "C4",
+       "E4",
+       "D3"
+      ],
+      "reponse": "C4"
+     },
+     {
+      "question": "Je suis face au nord et je tourne à droite. Vers où suis-je tourné ?",
+      "choix": [
+       "l'est",
+       "l'ouest",
+       "le sud"
+      ],
+      "reponse": "l'est"
+     },
+     {
+      "question": "Je suis face au nord et je fais demi-tour. Vers où suis-je tourné ?",
+      "choix": [
+       "le sud",
+       "l'est",
+       "le nord"
+      ],
+      "reponse": "le sud"
+     }
+    ]
+   }
+  ],
+  "competence": "Je me repère et je me déplace sur un plan",
+  "genere": true
+ },
+ {
   "id": "ma-cm1-programmation",
   "matiere": "maths",
   "niveau": "CM1",
@@ -6057,6 +12307,212 @@
    }
   ],
   "competence": "J'écris un programme simple",
+  "genere": true
+ },
+ {
+  "id": "ma-cm1-diagrammes",
+  "matiere": "maths",
+  "niveau": "CM1",
+  "titre": "Lire des tableaux et des diagrammes",
+  "ordre": 72,
+  "programme": {
+   "section": "c3-mathematiques-cm1-organisation-et-gestion-de-donnees",
+   "citation": "Recueillir des données et produire un tableau, un diagramme en barres ou un ensemble de points dans un repère pour les présenter"
+  },
+  "lecon": [
+   {
+    "texte": "Voici les températures relevées à midi pendant une semaine : lundi 12 °C, mardi 15 °C, mercredi 9 °C, jeudi 14 °C, vendredi 18 °C.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Les températures",
+    "questions": [
+     {
+      "question": "Quel jour a-t-il fait le plus chaud ?",
+      "choix": [
+       "vendredi",
+       "mardi",
+       "jeudi"
+      ],
+      "reponse": "vendredi"
+     },
+     {
+      "question": "Quel jour a-t-il fait le plus froid ?",
+      "choix": [
+       "mercredi",
+       "lundi",
+       "jeudi"
+      ],
+      "reponse": "mercredi"
+     },
+     {
+      "question": "De combien de degrés la température a-t-elle augmenté entre mercredi et vendredi ?",
+      "choix": [
+       "9",
+       "27",
+       "6"
+      ],
+      "reponse": "9"
+     },
+     {
+      "question": "Pour montrer l'évolution de la température, quel graphique choisir ?",
+      "choix": [
+       "une courbe ou des barres",
+       "une carte",
+       "un patron"
+      ],
+      "reponse": "une courbe ou des barres"
+     }
+    ]
+   }
+  ],
+  "competence": "Je lis un tableau et un diagramme",
+  "genere": true
+ },
+ {
+  "id": "ma-cm1-probabilites",
+  "matiere": "maths",
+  "niveau": "CM1",
+  "titre": "Le vocabulaire du hasard",
+  "ordre": 74,
+  "programme": {
+   "section": "c3-mathematiques-cm1-les-probabilites",
+   "citation": "Un autre objectif porte sur la comparaison de probabilités d’évènements."
+  },
+  "lecon": [
+   {
+    "texte": "Un événement peut être certain, possible ou impossible.",
+    "exemples": [
+     "certain",
+     "possible",
+     "impossible"
+    ]
+   },
+   {
+    "texte": "Quand on lance un dé, chaque face a autant de chances de sortir.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "classer",
+    "titre": "Certain, possible, impossible",
+    "consigne": "Range chaque événement, quand on lance un dé normal.",
+    "groupes": [
+     {
+      "id": "1",
+      "nom": "Certain"
+     },
+     {
+      "id": "2",
+      "nom": "Possible"
+     },
+     {
+      "id": "3",
+      "nom": "Impossible"
+     }
+    ],
+    "items": [
+     {
+      "texte": "obtenir un nombre plus petit que 7",
+      "groupe": "1"
+     },
+     {
+      "texte": "obtenir un nombre entre 1 et 6",
+      "groupe": "1"
+     },
+     {
+      "texte": "obtenir 6",
+      "groupe": "2"
+     },
+     {
+      "texte": "obtenir un nombre pair",
+      "groupe": "2"
+     },
+     {
+      "texte": "obtenir 0",
+      "groupe": "3"
+     },
+     {
+      "texte": "obtenir 8",
+      "groupe": "3"
+     }
+    ]
+   }
+  ],
+  "competence": "J'utilise le vocabulaire du hasard",
+  "genere": true
+ },
+ {
+  "id": "ma-cm2-millions",
+  "matiere": "maths",
+  "niveau": "CM2",
+  "titre": "Les nombres jusqu'au milliard",
+  "ordre": 5,
+  "programme": {
+   "section": "c3-mathematiques-cm2-les-nombres-entiers",
+   "citation": "Au CM2, la compréhension des aspects décimal (base dix) et positionnel (la valeur d’un chiffre dépend de sa position) de la numération se renforce et s’étend avec l’introduction de trois nouveaux rangs dans l’écriture chiffrée : ceux des millions, des dizaines de millions et des centaines de millions."
+  },
+  "lecon": [
+   {
+    "texte": "Les nombres se lisent par classes de trois chiffres : les unités, les milliers, les millions, les milliards.",
+    "exemples": [
+     "3 456 789 : trois millions quatre cent cinquante-six mille sept cent quatre-vingt-neuf"
+    ]
+   },
+   {
+    "texte": "1 million = 1 000 milliers. 1 milliard = 1 000 millions.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Les grands nombres",
+    "questions": [
+     {
+      "question": "Comment s'écrit « deux millions cinq cent mille » ?",
+      "choix": [
+       "2 500 000",
+       "2 005 000",
+       "25 000 000"
+      ],
+      "reponse": "2 500 000"
+     },
+     {
+      "question": "Dans 47 382 106, quel est le chiffre des millions ?",
+      "choix": [
+       "7",
+       "4",
+       "3"
+      ],
+      "reponse": "7"
+     },
+     {
+      "question": "Quel est le plus grand ?",
+      "choix": [
+       "10 000 000",
+       "9 999 999",
+       "1 000 000"
+      ],
+      "reponse": "10 000 000"
+     },
+     {
+      "question": "La France compte environ 68 millions d'habitants. Cela s'écrit…",
+      "choix": [
+       "68 000 000",
+       "68 000",
+       "680 000"
+      ],
+      "reponse": "68 000 000"
+     }
+    ]
+   }
+  ],
+  "competence": "Je lis et j'écris les grands nombres",
   "genere": true
  },
  {
@@ -6137,6 +12593,162 @@
    }
   ],
   "competence": "Je calcule avec les décimaux",
+  "genere": true
+ },
+ {
+  "id": "ma-cm2-fractions-decimales",
+  "matiere": "maths",
+  "niveau": "CM2",
+  "titre": "Fractions et nombres décimaux",
+  "ordre": 12,
+  "programme": {
+   "section": "c3-mathematiques-cm2-les-fractions",
+   "citation": "Les fractions rencontrées au CM2 ont toutes un dénominateur inférieur ou égal à 60, hormis les fractions décimales qui peuvent avoir un dénominateur égal à 100 ou à 1 000."
+  },
+  "lecon": [
+   {
+    "texte": "Une fraction décimale a pour dénominateur 10, 100 ou 1 000. 3/10 = 0,3 et 25/100 = 0,25.",
+    "exemples": [
+     "3/10 = 0,3",
+     "25/100 = 0,25"
+    ]
+   },
+   {
+    "texte": "Certaines fractions sont égales : 1/2 = 2/4 = 5/10 = 0,5.",
+    "exemples": [
+     "1/2 = 0,5"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Fractions et décimaux",
+    "questions": [
+     {
+      "question": "7/10 s'écrit…",
+      "choix": [
+       "0,7",
+       "7,10",
+       "0,07"
+      ],
+      "reponse": "0,7"
+     },
+     {
+      "question": "45/100 s'écrit…",
+      "choix": [
+       "0,45",
+       "4,5",
+       "45,100"
+      ],
+      "reponse": "0,45"
+     },
+     {
+      "question": "1/2 est égal à…",
+      "choix": [
+       "0,5",
+       "0,2",
+       "1,2"
+      ],
+      "reponse": "0,5"
+     },
+     {
+      "question": "Quelle fraction est égale à 1/4 ?",
+      "choix": [
+       "25/100",
+       "4/10",
+       "1/40"
+      ],
+      "reponse": "25/100"
+     },
+     {
+      "question": "3/4 + 1/4 = ?",
+      "choix": [
+       "1",
+       "4/8",
+       "3/16"
+      ],
+      "reponse": "1"
+     }
+    ]
+   }
+  ],
+  "competence": "Je relie fractions décimales et nombres décimaux",
+  "genere": true
+ },
+ {
+  "id": "ma-cm2-calcul-mental",
+  "matiere": "maths",
+  "niveau": "CM2",
+  "titre": "Calcul mental : diviser par 10 et 100",
+  "ordre": 14,
+  "programme": {
+   "section": "c3-mathematiques-cm2-le-calcul-mental",
+   "citation": "Multiplier un nombre décimal par 10, 100 ou 1 000 Diviser un nombre décimal par 10, 100 ou 1 000 Apprendre des procédures de calcul mental"
+  },
+  "lecon": [
+   {
+    "texte": "Diviser par 10, c'est rendre chaque chiffre dix fois plus petit : 350 : 10 = 35, 4,5 : 10 = 0,45.",
+    "exemples": [
+     "350 : 10 = 35"
+    ]
+   },
+   {
+    "texte": "Multiplier par 25, c'est multiplier par 100 puis diviser par 4 : 12 × 25 = 300.",
+    "exemples": [
+     "12 × 25 = 300"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "calcul",
+    "titre": "Calcule de tête",
+    "operations": [
+     {
+      "q": "350 : 10",
+      "r": 35
+     },
+     {
+      "q": "4 800 : 100",
+      "r": 48
+     },
+     {
+      "q": "12 × 25",
+      "r": 300
+     },
+     {
+      "q": "70 : 10",
+      "r": 7
+     },
+     {
+      "q": "16 × 25",
+      "r": 400
+     },
+     {
+      "q": "9 000 : 100",
+      "r": 90
+     }
+    ]
+   },
+   {
+    "type": "fluence",
+    "titre": "Calcul rapide : tables et divisions",
+    "duree": 60,
+    "generateur": {
+     "op": ":",
+     "a": [
+      2,
+      10
+     ],
+     "b": [
+      2,
+      10
+     ]
+    }
+   }
+  ],
+  "competence": "Je divise par 10 et 100 de tête",
   "genere": true
  },
  {
@@ -6368,6 +12980,268 @@
   "genere": true
  },
  {
+  "id": "ma-cm2-problemes",
+  "matiere": "maths",
+  "niveau": "CM2",
+  "titre": "Problèmes complexes",
+  "ordre": 42,
+  "programme": {
+   "section": "c3-mathematiques-cm2-la-resolution-de-problemes",
+   "citation": "Cet enseignement s’appuie sur le modèle de la résolution de problèmes en quatre phases, synthétisé par le schéma ci-dessous."
+  },
+  "lecon": [
+   {
+    "texte": "Pour résoudre un problème complexe : je lis plusieurs fois, je trouve les informations utiles, je fais un schéma, puis je calcule étape par étape.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Résous",
+    "questions": [
+     {
+      "question": "Un cinéma a 15 rangées de 24 places. 287 places sont occupées. Combien de places libres ?",
+      "choix": [
+       "73",
+       "360",
+       "647"
+      ],
+      "reponse": "73",
+      "aide": "15 × 24 = 360, puis 360 − 287."
+     },
+     {
+      "question": "Lou économise 8 € par semaine. Elle a déjà 26 €. Dans combien de semaines aura-t-elle 90 € ?",
+      "choix": [
+       "8",
+       "11",
+       "64"
+      ],
+      "reponse": "8"
+     },
+     {
+      "question": "Un rouleau de ruban mesure 5 m. On coupe des morceaux de 40 cm. Combien de morceaux ?",
+      "choix": [
+       "12",
+       "125",
+       "8"
+      ],
+      "reponse": "12",
+      "aide": "5 m = 500 cm. 500 : 40 = 12, il reste 20 cm."
+     },
+     {
+      "question": "Trois amis partagent une addition de 54,30 €. Combien paie chacun ?",
+      "choix": [
+       "18,10 €",
+       "18,30 €",
+       "17,10 €"
+      ],
+      "reponse": "18,10 €"
+     }
+    ]
+   }
+  ],
+  "competence": "Je résous des problèmes complexes",
+  "genere": true
+ },
+ {
+  "id": "ma-cm2-algebre",
+  "matiere": "maths",
+  "niveau": "CM2",
+  "titre": "Programmes de calcul",
+  "ordre": 44,
+  "programme": {
+   "section": "c3-mathematiques-cm2-algebre",
+   "citation": "Il peut être placé entre deux expressions qui sont égales, ce qui conduit notamment à faire poindre la notion d’équation, comme dans l’égalité à compléter suivante : « 178 – … = 6 × 8 »."
+  },
+  "lecon": [
+   {
+    "texte": "Un programme de calcul est une suite d'opérations : « Choisis un nombre, multiplie-le par 2, ajoute 3. »",
+    "exemples": [
+     "avec 5 : 5 × 2 + 3 = 13"
+    ]
+   },
+   {
+    "texte": "Dans une expression, on calcule d'abord les multiplications, sauf s'il y a des parenthèses.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "calcul",
+    "titre": "Programmes de calcul",
+    "operations": [
+     {
+      "q": "5 × 2 + 3",
+      "r": 13
+     },
+     {
+      "q": "(4 + 6) × 3",
+      "r": 30
+     },
+     {
+      "q": "20 − 3 × 4",
+      "r": 8,
+      "aide": "D'abord 3 × 4 = 12, puis 20 − 12."
+     },
+     {
+      "q": "2 + 8 × 5",
+      "r": 42
+     },
+     {
+      "q": "(10 − 4) × 7",
+      "r": 42
+     }
+    ]
+   }
+  ],
+  "competence": "J'utilise un programme de calcul",
+  "genere": true
+ },
+ {
+  "id": "ma-cm2-mesures",
+  "matiere": "maths",
+  "niveau": "CM2",
+  "titre": "Mesures et conversions",
+  "ordre": 46,
+  "programme": {
+   "section": "c3-mathematiques-cm2-grandeurs-et-mesures",
+   "citation": "Les tâches de conversion contribuent ainsi à renforcer la compréhension et la maîtrise de la numération décimale."
+  },
+  "lecon": [
+   {
+    "texte": "Pour comparer ou ajouter des mesures, il faut les mettre dans la même unité.",
+    "exemples": [
+     "1,2 km + 300 m = 1 500 m"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Convertis et compare",
+    "questions": [
+     {
+      "question": "1,5 km = … m",
+      "choix": [
+       "1 500",
+       "150",
+       "15"
+      ],
+      "reponse": "1 500"
+     },
+     {
+      "question": "0,25 kg = … g",
+      "choix": [
+       "250",
+       "25",
+       "2 500"
+      ],
+      "reponse": "250"
+     },
+     {
+      "question": "1,2 km + 300 m = …",
+      "choix": [
+       "1 500 m",
+       "301,2 m",
+       "4,2 km"
+      ],
+      "reponse": "1 500 m"
+     },
+     {
+      "question": "Quelle est la plus grande longueur ?",
+      "choix": [
+       "2 km",
+       "1 900 m",
+       "150 000 cm"
+      ],
+      "reponse": "2 km"
+     },
+     {
+      "question": "3,5 L = … cL",
+      "choix": [
+       "350",
+       "35",
+       "3 500"
+      ],
+      "reponse": "350"
+     }
+    ]
+   }
+  ],
+  "competence": "Je convertis et je compare des mesures",
+  "genere": true
+ },
+ {
+  "id": "ma-cm2-angles-degres",
+  "matiere": "maths",
+  "niveau": "CM2",
+  "titre": "Mesurer les angles en degrés",
+  "ordre": 48,
+  "programme": {
+   "section": "c3-mathematiques-cm2-grandeurs-et-mesures",
+   "citation": "L’unité degré est introduite à partir de la mesure de l’angle droit."
+  },
+  "lecon": [
+   {
+    "texte": "L'angle droit mesure 90 degrés (90°). Un angle aigu mesure moins de 90°, un angle obtus plus de 90°.",
+    "exemples": [
+     "angle droit : 90°"
+    ]
+   },
+   {
+    "texte": "La moitié d'un angle droit mesure 45°.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Les angles",
+    "questions": [
+     {
+      "question": "Un angle droit mesure…",
+      "choix": [
+       "90°",
+       "180°",
+       "45°"
+      ],
+      "reponse": "90°"
+     },
+     {
+      "question": "Un angle de 30° est…",
+      "choix": [
+       "aigu",
+       "obtus",
+       "droit"
+      ],
+      "reponse": "aigu"
+     },
+     {
+      "question": "Un angle de 120° est…",
+      "choix": [
+       "obtus",
+       "aigu",
+       "droit"
+      ],
+      "reponse": "obtus"
+     },
+     {
+      "question": "La moitié d'un angle droit mesure…",
+      "choix": [
+       "45°",
+       "30°",
+       "90°"
+      ],
+      "reponse": "45°"
+     }
+    ]
+   }
+  ],
+  "competence": "Je mesure les angles en degrés",
+  "genere": true
+ },
+ {
   "id": "ma-cm2-probabilites",
   "matiere": "maths",
   "niveau": "CM2",
@@ -6462,6 +13336,71 @@
   "genere": true
  },
  {
+  "id": "ma-cm2-durees",
+  "matiere": "maths",
+  "niveau": "CM2",
+  "titre": "Calculer des durées",
+  "ordre": 52,
+  "programme": {
+   "section": "c3-mathematiques-cm2-le-reperage-dans-le-temps-et-les-durees",
+   "citation": "Comparer et mesurer des durées écoulées entre deux instants affichés sur une horloge (instants et durées sont exprimés en heure, minute et seconde)"
+  },
+  "lecon": [
+   {
+    "texte": "Pour calculer une durée, je pars de l'heure de début et j'ajoute par étapes jusqu'à l'heure de fin.",
+    "exemples": [
+     "de 8 h 40 à 11 h 15 : 2 h 35 min"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Les durées",
+    "questions": [
+     {
+      "question": "De 8 h 40 à 11 h 15, il s'écoule…",
+      "choix": [
+       "2 h 35 min",
+       "3 h 25 min",
+       "2 h 75 min"
+      ],
+      "reponse": "2 h 35 min"
+     },
+     {
+      "question": "Un trajet dure 2 h 50 min. Je pars à 14 h 30. J'arrive à…",
+      "choix": [
+       "17 h 20",
+       "16 h 80",
+       "16 h 20"
+      ],
+      "reponse": "17 h 20"
+     },
+     {
+      "question": "3 600 secondes, c'est…",
+      "choix": [
+       "1 heure",
+       "1 minute",
+       "1 jour"
+      ],
+      "reponse": "1 heure"
+     },
+     {
+      "question": "Combien de jours dans une année ordinaire ?",
+      "choix": [
+       "365",
+       "360",
+       "366"
+      ],
+      "reponse": "365"
+     }
+    ]
+   }
+  ],
+  "competence": "Je calcule des durées",
+  "genere": true
+ },
+ {
   "id": "ma-cm2-solides",
   "matiere": "maths",
   "niveau": "CM2",
@@ -6539,6 +13478,319 @@
    }
   ],
   "competence": "Je connais les solides",
+  "genere": true
+ },
+ {
+  "id": "ma-cm2-figures",
+  "matiere": "maths",
+  "niveau": "CM2",
+  "titre": "Triangles et quadrilatères",
+  "ordre": 62,
+  "programme": {
+   "section": "c3-mathematiques-cm2-la-geometrie-plane",
+   "citation": "Reconnaître et nommer les figures suivantes en s’appuyant sur leur définition : triangle, triangle rectangle, triangle isocèle, triangle équilatéral, quadrilatère, carré, rectangle, losange, trapèze, trapèze rectangle, pentagone et hexagone"
+  },
+  "lecon": [
+   {
+    "texte": "Un triangle isocèle a deux côtés égaux. Un triangle équilatéral a trois côtés égaux. Un triangle rectangle a un angle droit.",
+    "exemples": [
+     "isocèle",
+     "équilatéral",
+     "rectangle"
+    ]
+   },
+   {
+    "texte": "Le losange a 4 côtés égaux. Le carré est un losange qui a 4 angles droits.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Les figures",
+    "questions": [
+     {
+      "question": "Un triangle avec trois côtés égaux est…",
+      "choix": [
+       "équilatéral",
+       "isocèle",
+       "rectangle"
+      ],
+      "reponse": "équilatéral"
+     },
+     {
+      "question": "Un triangle avec un angle droit est…",
+      "choix": [
+       "rectangle",
+       "équilatéral",
+       "isocèle"
+      ],
+      "reponse": "rectangle"
+     },
+     {
+      "question": "Un quadrilatère avec 4 côtés égaux est un…",
+      "choix": [
+       "losange",
+       "rectangle",
+       "trapèze"
+      ],
+      "reponse": "losange"
+     },
+     {
+      "question": "Le carré est-il aussi un rectangle ?",
+      "choix": [
+       "Oui",
+       "Non"
+      ],
+      "reponse": "Oui",
+      "aide": "Il a 4 angles droits."
+     }
+    ]
+   },
+   {
+    "type": "classer",
+    "titre": "Triangles ou quadrilatères ?",
+    "consigne": "Range chaque figure.",
+    "groupes": [
+     {
+      "id": "1",
+      "nom": "Triangle"
+     },
+     {
+      "id": "2",
+      "nom": "Quadrilatère"
+     }
+    ],
+    "items": [
+     {
+      "texte": "isocèle",
+      "groupe": "1"
+     },
+     {
+      "texte": "équilatéral",
+      "groupe": "1"
+     },
+     {
+      "texte": "rectangle (avec un angle droit, 3 côtés)",
+      "groupe": "1"
+     },
+     {
+      "texte": "losange",
+      "groupe": "2"
+     },
+     {
+      "texte": "carré",
+      "groupe": "2"
+     },
+     {
+      "texte": "parallélogramme",
+      "groupe": "2"
+     }
+    ]
+   }
+  ],
+  "competence": "Je reconnais les triangles et quadrilatères particuliers",
+  "genere": true
+ },
+ {
+  "id": "ma-cm2-deplacements",
+  "matiere": "maths",
+  "niveau": "CM2",
+  "titre": "Programmer un déplacement",
+  "ordre": 64,
+  "programme": {
+   "section": "c3-mathematiques-cm2-deplacements-dans-lespace",
+   "citation": "Comprendre, utiliser et produire une suite d’instructions qui décrivent un déplacement en utilisant un vocabulaire spatial précis"
+  },
+  "lecon": [
+   {
+    "texte": "Un déplacement peut être décrit par une suite d'instructions : avancer de 3 cases, tourner à gauche, avancer de 2 cases.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Suivre les instructions",
+    "questions": [
+     {
+      "question": "Je suis en A1, tourné vers la droite (colonnes B, C…). J'avance de 3 cases. Où suis-je ?",
+      "choix": [
+       "D1",
+       "A4",
+       "C1"
+      ],
+      "reponse": "D1"
+     },
+     {
+      "question": "Je suis tourné vers le nord. Je tourne deux fois à droite. Vers où suis-je tourné ?",
+      "choix": [
+       "le sud",
+       "l'est",
+       "l'ouest"
+      ],
+      "reponse": "le sud"
+     },
+     {
+      "question": "Pour revenir à mon point de départ après « avancer de 4 », je fais demi-tour et…",
+      "choix": [
+       "j'avance de 4",
+       "j'avance de 2",
+       "je tourne à gauche"
+      ],
+      "reponse": "j'avance de 4"
+     }
+    ]
+   },
+   {
+    "type": "ordre",
+    "titre": "Le trajet de la fourmi",
+    "consigne": "Remets les instructions dans l'ordre pour que la fourmi aille de sa maison au sucre, qui est 2 cases devant puis 3 cases à droite.",
+    "elements": [
+     "Avancer de 2 cases",
+     "Tourner à droite",
+     "Avancer de 3 cases",
+     "Prendre le sucre"
+    ]
+   }
+  ],
+  "competence": "Je décris et je programme un déplacement",
+  "genere": true
+ },
+ {
+  "id": "ma-cm2-moyenne",
+  "matiere": "maths",
+  "niveau": "CM2",
+  "titre": "Lire et interpréter des données",
+  "ordre": 66,
+  "programme": {
+   "section": "c3-mathematiques-cm2-organisation-et-gestion-de-donnees",
+   "citation": "Lire et interpréter les données d’un tableau, d’un diagramme en barres, d’un diagramme circulaire ou d’une courbe"
+  },
+  "lecon": [
+   {
+    "texte": "Pour interpréter des données, je lis le titre, les légendes et les unités, puis je compare les valeurs.",
+    "exemples": []
+   },
+   {
+    "texte": "Voici les visiteurs d'un musée : lundi 120, mardi 95, mercredi 210, jeudi 130, vendredi 145.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Le musée",
+    "questions": [
+     {
+      "question": "Quel jour y a-t-il eu le plus de visiteurs ?",
+      "choix": [
+       "mercredi",
+       "vendredi",
+       "lundi"
+      ],
+      "reponse": "mercredi"
+     },
+     {
+      "question": "Combien de visiteurs en tout du lundi au vendredi ?",
+      "choix": [
+       "700",
+       "600",
+       "750"
+      ],
+      "reponse": "700"
+     },
+     {
+      "question": "Combien de visiteurs de plus mercredi que mardi ?",
+      "choix": [
+       "115",
+       "105",
+       "305"
+      ],
+      "reponse": "115"
+     },
+     {
+      "question": "Si on répartit les 700 visiteurs également sur les 5 jours, cela fait…",
+      "choix": [
+       "140 par jour",
+       "120 par jour",
+       "175 par jour"
+      ],
+      "reponse": "140 par jour"
+     }
+    ]
+   }
+  ],
+  "competence": "J'interprète des données",
+  "genere": true
+ },
+ {
+  "id": "ma-cm2-boucles",
+  "matiere": "maths",
+  "niveau": "CM2",
+  "titre": "Les boucles en programmation",
+  "ordre": 70,
+  "programme": {
+   "section": "c3-mathematiques-cm2-initiation-a-la-pensee-informatique",
+   "citation": "L’élève continue d’utiliser et de produire des codages de déplacements en élargissant les environnements dans lesquels ces déplacements ont lieu (quartier, ville, etc.) et en augmentant le nombre d’instructions des programmes utilisés ou produits."
+  },
+  "lecon": [
+   {
+    "texte": "Une boucle répète des instructions : « répéter 4 fois : avancer de 5, tourner de 90° » dessine un carré.",
+    "exemples": [
+     "répéter 4 fois"
+    ]
+   },
+   {
+    "texte": "Une condition permet de choisir : « si… alors… sinon… ».",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Penser comme un programmeur",
+    "questions": [
+     {
+      "question": "« Répéter 3 fois : avancer, tourner de 120° » dessine…",
+      "choix": [
+       "un triangle",
+       "un carré",
+       "un cercle"
+      ],
+      "reponse": "un triangle"
+     },
+     {
+      "question": "« Répéter 5 fois : ajouter 2 » en partant de 0 donne…",
+      "choix": [
+       "10",
+       "7",
+       "25"
+      ],
+      "reponse": "10"
+     },
+     {
+      "question": "« Si le nombre est pair, dire bonjour, sinon dire au revoir. » Avec 7, le programme dit…",
+      "choix": [
+       "au revoir",
+       "bonjour",
+       "rien"
+      ],
+      "reponse": "au revoir"
+     },
+     {
+      "question": "Pour dessiner un carré, combien de fois faut-il répéter « avancer, tourner » ?",
+      "choix": [
+       "4",
+       "3",
+       "2"
+      ],
+      "reponse": "4"
+     }
+    ]
+   }
+  ],
+  "competence": "Je comprends les boucles et les conditions",
   "genere": true
  },
  {

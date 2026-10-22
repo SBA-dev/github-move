@@ -907,7 +907,7 @@ function keypad(correct, onWrong, opts = {}) {
     }
     S.play.append(box); show();
     keys.firstChild.focus({ preventScroll: true }); revealPlay();
-    S._press = press;
+    S._press = press; window.__ecole.reponse = correct;   /* pour les tests automatisés */
   }));
 }
 /* Glisser une étiquette vers une cible, ou toucher l'étiquette puis la cible. */
