@@ -15,6 +15,13 @@ export type Univers = {
   readonly personnageGuide: PersonnageGuide;
 };
 
+const UNIVERS_PAR_DEFAUT: Univers = {
+  cle: "animaux",
+  libelle: "Animaux de la forêt",
+  royaume: "la Forêt des Savanturiers",
+  personnageGuide: { nom: "Noisette", titre: "l'écureuil savant" },
+};
+
 export const UNIVERS: readonly Univers[] = [
   {
     cle: "princesse",
@@ -22,12 +29,7 @@ export const UNIVERS: readonly Univers[] = [
     royaume: "le Royaume des Savanturiers",
     personnageGuide: { nom: "Lumi", titre: "la fée des nombres et des mots" },
   },
-  {
-    cle: "animaux",
-    libelle: "Animaux de la forêt",
-    royaume: "la Forêt des Savanturiers",
-    personnageGuide: { nom: "Noisette", titre: "l'écureuil savant" },
-  },
+  UNIVERS_PAR_DEFAUT,
   {
     cle: "sports",
     libelle: "Sports",
@@ -58,6 +60,5 @@ export const UNIVERS: readonly Univers[] = [
 ];
 
 export function universDe(cle: string | undefined): Univers {
-  return UNIVERS.find((univers) => univers.cle === cle) ??
-    UNIVERS.find((univers) => univers.cle === "animaux")!;
+  return UNIVERS.find((univers) => univers.cle === cle) ?? UNIVERS_PAR_DEFAUT;
 }
