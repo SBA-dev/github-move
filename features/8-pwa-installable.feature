@@ -8,7 +8,7 @@ Fonctionnalité: Installer Savanturier comme une application
   Règle: Savanturier peut être installé sur l'écran d'accueil de l'appareil
 
     Scénario: Le navigateur propose d'installer Savanturier
-      Étant donné que Paul ouvre Savanturier dans le navigateur de sa tablette
+      Étant donné que Paul ouvre Savanturier dans le navigateur de sa tablette Android
       Quand Savanturier a fini de se charger
       Alors le navigateur propose d'installer « Savanturier »
       Et l'application installée porte le nom et l'icône de Savanturier
@@ -19,11 +19,23 @@ Fonctionnalité: Installer Savanturier comme une application
       Alors Savanturier s'affiche en plein écran, sans la barre du navigateur
       Et elle voit le nom de l'application
 
-    @a-valider
     Scénario: L'application laisse au navigateur le soin de proposer l'installation
-      Étant donné que Paul ouvre Savanturier dans le navigateur de sa tablette
+      Étant donné que Paul ouvre Savanturier dans le navigateur de sa tablette Android
       Quand Savanturier a fini de se charger
       Alors aucune invitation à installer n'apparaît dans l'application
+
+  Règle: Sur iPad et iPhone, une aide explique comment ajouter Savanturier à l'écran d'accueil
+
+    Scénario: Sur iPad, Paul trouve comment ajouter Savanturier à l'écran d'accueil
+      Étant donné que Paul ouvre Savanturier dans Safari sur son iPad
+      Quand Savanturier a fini de se charger
+      Alors Paul voit comment ajouter Savanturier à l'écran d'accueil de son iPad
+
+    @a-valider
+    Scénario: Une fois Savanturier ajouté à l'écran d'accueil de l'iPad, l'aide n'apparaît plus
+      Étant donné que Paul a ajouté Savanturier à l'écran d'accueil de son iPad
+      Quand Léa ouvre Savanturier depuis l'écran d'accueil de l'iPad
+      Alors aucune aide pour ajouter Savanturier à l'écran d'accueil n'apparaît
 
   Règle: Après un premier chargement, Savanturier et la bibliothèque restent disponibles sans réseau
 
@@ -40,7 +52,7 @@ Fonctionnalité: Installer Savanturier comme une application
       Quand j'ouvre Savanturier
       Alors les leçons de la bibliothèque sont disponibles
 
-    @acces @a-valider
+    @acces
     Scénario: Sans réseau, aucune donnée de la famille ne reste visible après la déconnexion
       Étant donné que Paul s'est déconnecté de Savanturier sur la tablette
       Et que le réseau est coupé
@@ -48,22 +60,19 @@ Fonctionnalité: Installer Savanturier comme une application
       Alors je vois le nom de l'application
       Mais aucun profil enfant de la famille de Paul n'est visible
 
-  Règle: Une nouvelle version s'applique sans faire perdre à l'enfant ce qu'il est en train de faire
+  Règle: Une nouvelle version s'applique au lancement suivant, sans jamais recharger un écran en cours d'utilisation
 
-    @a-valider
     Scénario: Une nouvelle version publiée n'interrompt pas l'enfant
       Étant donné que Léa est en train d'utiliser Savanturier
       Quand une nouvelle version de Savanturier est publiée
       Alors Léa reste là où elle en était, sans que l'écran se recharge
 
-    @a-valider
     Scénario: Une nouvelle version s'applique au lancement suivant
       Étant donné que Savanturier a déjà été chargé une fois sur la tablette
       Et qu'une nouvelle version de Savanturier a été publiée depuis
       Quand Léa relance Savanturier
       Alors elle utilise la nouvelle version de Savanturier
 
-    @a-valider
     Scénario: Avec le réseau, la bibliothèque la plus récente est utilisée
       Étant donné que Savanturier a déjà été chargé une fois sur la tablette
       Et que la bibliothèque a reçu une nouvelle leçon depuis
