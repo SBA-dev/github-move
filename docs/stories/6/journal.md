@@ -5,3 +5,5 @@
 - 15:57 · Étape 2 : critères d'acceptance écrits par `po-acceptance` (`features/6-*.feature`, `docs/stories/6/acceptance.md`). Syntaxe vérifiée par `npx bddgen` (étapes à écrire par `e2e-tester`).
 - 15:57 · ⛔ Validation humaine n°1 demandée pour tout le lot 1 (décision de démarrage n°2).
 - 16:09 · Validation n°1 : « OK » du PO pour les propositions du lot (détail dans `docs/stories/lot-1-decisions.md`). Modèle et scénarios mis à jour. Questions restantes non bloquantes, listées dans `acceptance.md`.
+- 16:21 · Étape 3 : boucle TDD lancée (« ok » du PO). Comportements : catalogue des univers ; clé inconnue → animaux ; humeurs ; feliciter ; encourager et présentations. Le caractère de la voix est laissé à #7.
+- 16:23 · Cycle 1 (catalogue des univers) : red b9e06a5, green 05b136c. Outillage : import map `@std/assert` versionnée dans `deno.json` (le lint refusait l'import `jsr:` sans version).

@@ -1,4 +1,4 @@
-import { assertEquals, assertObjectMatch } from "jsr:@std/assert";
+import { assertEquals, assertObjectMatch } from "@std/assert";
 import { type CleUnivers, UNIVERS, universDe } from "./univers.ts";
 
 const catalogueAttendu = [

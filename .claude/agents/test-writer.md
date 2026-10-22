@@ -32,7 +32,7 @@ L'orchestrateur te donne :
    - le nom du test est une **phrase métier** : `"une leçon verrouillée ne peut pas être commencée"`
    - la structure est Arrange / Act / Assert
    - un seul comportement par test, et un minimum d'assertions
-   - il importe le code du domaine par un **chemin relatif avec l'extension `.ts`**. Seul le test lui-même importe `jsr:@std/assert` : le domaine reste chargeable par Deno et par Vite.
+   - il importe le code du domaine par un **chemin relatif avec l'extension `.ts`**. Seul le test lui-même importe `@std/assert` (import map de `deno.json`) : le domaine reste chargeable par Deno et par Vite.
    - il utilise les termes exacts du glossaire. L'API que tu appelles est **celle que tu souhaites voir exister** : c'est le test qui conçoit l'API.
 3. **Lance** `deno test <chemin du fichier de test>` et **vérifie l'échec**. Les deux raisons acceptables sont :
    - une assertion qui échoue sur le comportement attendu

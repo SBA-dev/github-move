@@ -26,7 +26,7 @@ Règles de cohabitation :
 - **Front** : React + TypeScript (Vite), PWA (installable, hors ligne via IndexedDB + synchronisation)
 - **Backend** : Supabase (Postgres, Auth, Storage, **Edge Functions en Deno/TypeScript**), hébergé dans l'UE
 - **Logique métier** : TypeScript pur sous `supabase/functions/_shared/<contexte>/domain/`
-- **Tests unitaires** : `Deno.test` + `jsr:@std/assert`
+- **Tests unitaires** : `Deno.test` + `@std/assert` (import map de `deno.json`, version fixée)
 - **Tests d'acceptance (BDD/E2E)** : playwright-bdd (Gherkin exécuté par Playwright)
 - **IA** : API Claude, appelée **uniquement** depuis une Edge Function (clé dans `Deno.env`)
 - **Voix** : MP3 pré-générés (voix neuronale) servis par le CDN. Repli sur la synthèse vocale du navigateur.
