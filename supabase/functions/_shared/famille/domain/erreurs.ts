@@ -11,3 +11,10 @@ export class CodeDeConnexionMalForme extends Error {
     this.name = "CodeDeConnexionMalForme";
   }
 }
+
+export class CodeDeConnexionInvalide extends Error {
+  constructor() {
+    super("Ce code de connexion ne marche pas ou plus.");
+    this.name = "CodeDeConnexionInvalide";
+  }
+}
