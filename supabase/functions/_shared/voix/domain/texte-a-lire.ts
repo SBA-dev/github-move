@@ -3,8 +3,8 @@ export type TexteALire = {
   readonly phrases: readonly string[];
 };
 
-export function texteALire(brut: string): TexteALire | undefined {
-  const texte = brut
+export function textePrononce(brut: string): string {
+  return brut
     .replace(/<[^>]+>/g, " ")
     .replace(/&[a-z]+;/g, " ")
     .replace(/\+/g, " plus ")
@@ -13,6 +13,10 @@ export function texteALire(brut: string): TexteALire | undefined {
     .replace(/[«»]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
+}
+
+export function texteALire(brut: string): TexteALire | undefined {
+  const texte = textePrononce(brut);
   if (!/[\p{L}\p{N}]/u.test(texte)) return undefined;
   return { texte, phrases: texte.split(/(?<=[.!?…:])\s+/) };
 }

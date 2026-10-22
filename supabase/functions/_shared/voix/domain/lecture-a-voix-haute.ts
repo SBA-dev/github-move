@@ -4,6 +4,7 @@ import { LectureImpossible, VoixBloquee } from "./erreurs.ts";
 import type { Hasard } from "./hasard.ts";
 import type { LecteurAVoixHaute } from "./lecteur-a-voix-haute.ts";
 import { reglerPhrases } from "./reglage-de-phrase.ts";
+import { rangAffichePourChaqueMotPrononce } from "./mots-de-la-consigne.ts";
 import { texteALire } from "./texte-a-lire.ts";
 import type { VoixDeLAppareil } from "./voix-de-l-appareil.ts";
 import type { VoixDisponible } from "./voix-disponible.ts";
@@ -22,19 +23,25 @@ export type DependancesDeLectureAVoixHaute = {
   readonly onVoixBloquee: () => void;
 };
 
+function estFrancais(langue: string): boolean {
+  return /^fr/i.test(langue);
+}
+
 function debutsDesMots(phrase: string): number[] {
   return [...phrase.matchAll(/\S+/g)].map((mot) => mot.index);
 }
 
 function rangDesMots(
   phrases: readonly string[],
+  rangsAffiches: ReadonlyArray<number | undefined>,
   onMot: (rang: number) => void,
 ): (phrase: number, position: number) => void {
   const debuts = phrases.map(debutsDesMots);
   const motsAvant = debuts.map((_, i) => debuts.slice(0, i).reduce((total, d) => total + d.length, 0));
   return (phrase, position) => {
     const dansLaPhrase = (debuts[phrase] ?? []).filter((debut) => debut <= position).length - 1;
-    onMot((motsAvant[phrase] ?? 0) + Math.max(0, dansLaPhrase));
+    const rang = rangsAffiches[(motsAvant[phrase] ?? 0) + Math.max(0, dansLaPhrase)];
+    if (rang !== undefined) onMot(rang);
   };
 }
 
@@ -51,19 +58,20 @@ export class LectureAVoixHaute {
     options: { langue?: string; onMot?: (rang: number) => void; onFin?: () => void } = {},
   ): Promise<void> {
     if (this.etat === "muet") return;
+    const { lecteur, hasard } = this.dependances;
+    lecteur.arreter();
     const texte = texteALire(brut);
     if (!texte) return;
-    const { lecteur, hasard } = this.dependances;
     const langue = options.langue ?? LANGUE_FRANCAISE;
     const voix = this.voixPour(langue);
-    const caractere = options.langue ? CARACTERE_LANGUE_ETRANGERE : this.dependances.caractereDuPersonnageGuide();
-    lecteur.arreter();
+    const caractere = estFrancais(langue) ? this.dependances.caractereDuPersonnageGuide() : CARACTERE_LANGUE_ETRANGERE;
     try {
       await lecteur.lire({
         voix,
         langue,
         phrases: reglerPhrases(texte, caractere, voix, RYTHME_NORMAL, hasard),
-        ...(options.onMot && { onMot: rangDesMots(texte.phrases, options.onMot) }),
+        ...(options.onMot &&
+          { onMot: rangDesMots(texte.phrases, rangAffichePourChaqueMotPrononce(brut), options.onMot) }),
       });
     } catch (erreur) {
       this.absorber(erreur);
@@ -88,7 +96,7 @@ export class LectureAVoixHaute {
 
   private voixPour(langue: string): VoixDisponible | undefined {
     const voix = this.dependances.voixDeLAppareil.voixDisponibles();
-    return langue === LANGUE_FRANCAISE
+    return estFrancais(langue)
       ? choisirVoix(voix, this.dependances.caractereDuPersonnageGuide())
       : choisirVoixDeLangue(voix, langue);
   }
