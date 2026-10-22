@@ -33,8 +33,8 @@ function rangDesMots(
   const debuts = phrases.map(debutsDesMots);
   const motsAvant = debuts.map((_, i) => debuts.slice(0, i).reduce((total, d) => total + d.length, 0));
   return (phrase, position) => {
-    const dansLaPhrase = debuts[phrase].filter((debut) => debut <= position).length - 1;
-    onMot(motsAvant[phrase] + Math.max(0, dansLaPhrase));
+    const dansLaPhrase = (debuts[phrase] ?? []).filter((debut) => debut <= position).length - 1;
+    onMot((motsAvant[phrase] ?? 0) + Math.max(0, dansLaPhrase));
   };
 }
 
