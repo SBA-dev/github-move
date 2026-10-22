@@ -4,3 +4,10 @@ export class AdresseEmailInvalide extends Error {
     this.name = "AdresseEmailInvalide";
   }
 }
+
+export class CodeDeConnexionMalForme extends Error {
+  constructor() {
+    super("Le code de connexion doit avoir 6 chiffres.");
+    this.name = "CodeDeConnexionMalForme";
+  }
+}

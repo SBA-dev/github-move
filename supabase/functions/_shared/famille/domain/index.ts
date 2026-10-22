@@ -1,2 +1,3 @@
 export { AdresseEmail } from "./adresse-email.ts";
-export { AdresseEmailInvalide } from "./erreurs.ts";
+export { CodeDeConnexion } from "./code-de-connexion.ts";
+export { AdresseEmailInvalide, CodeDeConnexionMalForme } from "./erreurs.ts";
