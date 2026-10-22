@@ -65,7 +65,8 @@ L'application fonctionne et est publiée comme artifact claude.ai. Elle comprend
   - Pour finir #5 : ajouter `SUPABASE_URL`, `SUPABASE_ANON_KEY` et `SUPABASE_ACCESS_TOKEN` à l'environnement cloud (seul `SUPABASE_DB_PASSWORD` est présent), puis ouvrir une nouvelle session ; puis adaptateur Supabase Auth, écran de connexion, E2E. Après le merge de la PR #9, remettre la branche sur `main`.
   - À retirer plus tard : la page `/demonstration` et le profil préparé en `localStorage` (lots 2 et 3).
   - Première vérification Supabase (`npx supabase link`) non faite : les secrets `SUPABASE_*` n'étaient pas présents dans la session.
-- [ ] Lots 2 à 7 : issues à écrire.
+- [x] Lot 2 (Famille) : issues écrites, label `reecriture`. Ordre proposé : #10 contrôle parental de l'espace parent, #11 créer et modifier un profil enfant (et « Qui joue ? »), #12 réglages, #13 inviter un second parent, #14 supprimer un profil et ses données (et export), #15 choix de la voix sur l'appareil. Ces stories touchent la base : elles demandent Supabase (secrets et Docker).
+- [ ] Lots 3 à 7 : issues à écrire.
 
 ### 2. Contenu : lecture et écriture au CP (commencé, pas encore livré)
 
