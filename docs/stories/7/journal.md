@@ -10,3 +10,4 @@
 - 16:43 · Cycle 1 (caractère de la voix) : red 6179c63, green 7d926c4, refactor ef57299. Au passage : les steps E2E de #6 cassaient `tsc` (corrigé, 6e3e0d4).
 - 16:44 · Cycle 2 (texte à lire) : red bb50e94, green 6386326.
 - 16:46 · Cycle 3 (score, tri, choix de la voix) : red 5f84443 et 9a90a19, correction de l'exemple de score (70 et non 110, erreur de consigne de l'orchestrateur) c712373, green 4d04893 et suivant. 62 tests.
+- 16:48 · Cycle 4 (voix d'une autre langue, réglage des phrases) : red 4583f3e et 6be334f, green 1c78d97 et d2e2d88. 79 tests. Cycle 5 décidé : les règles Muet, une seule lecture à la fois et voix bloquée signalée une fois vont dans le domaine (service `LectureAVoixHaute` sur le port `LecteurAVoixHaute`), pas dans React.
