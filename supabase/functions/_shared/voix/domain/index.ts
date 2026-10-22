@@ -12,3 +12,5 @@ export type { DependancesDeLectureAVoixHaute, EtatDuSon } from "./lecture-a-voix
 export type { LecteurAVoixHaute, LectureDemandee } from "./lecteur-a-voix-haute.ts";
 export type { VoixDeLAppareil } from "./voix-de-l-appareil.ts";
 export { LectureImpossible, VoixBloquee } from "./erreurs.ts";
+export { motsDeLaConsigne } from "./mots-de-la-consigne.ts";
+export type { SegmentDeConsigne } from "./mots-de-la-consigne.ts";
