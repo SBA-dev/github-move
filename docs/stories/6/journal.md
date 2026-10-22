@@ -15,3 +15,4 @@
 - 16:30 · Câblage : daa1a95, d13dfcd. tsc, build, 34 tests Deno et socle E2E verts. Étape 4 : review.
 - 16:34 · Review 1 : À CORRIGER (1 bloquant : `throw` sans test). Cycle red 6250d6a / green 57f4fdc (`TirageHorsIntervalle`). Non bloquants traités : `reagirALaReponse` dans le domaine (red 75ca5b5 / green cd0d178), refactor f84feb9 (page de démonstration hors du bundle de production, plus d'`overflow-x: clip`, plus de `as`, navigation vers l'écran courant ignorée). Relance de la review sur le delta.
 - 16:35 · Review 2 : APPROUVÉ. Non bloquants laissés : NaN non refusé par `tirage` (Math.random ne renvoie jamais NaN), `as string` dans `tirerDans` (catalogue testé), booléen de `reagirALaReponse` (à revoir au lot 3). Étape 5 : E2E.
+- 16:40 · Étape 5 : E2E 4fffb82, 82/82 cas verts (41 scénarios × tablette 820 px et téléphone 360 px), socle vert. Vérifié par l'orchestrateur : 84/84. Pas de PR ouverte (hors `/feature`, en attente de la demande du PO).

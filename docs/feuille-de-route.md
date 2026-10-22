@@ -55,7 +55,9 @@ L'application fonctionne et est publiée comme artifact claude.ai. Elle comprend
 - [x] Lot 1 (Socle) : issues #5 (connexion du parent), #6 (univers et personnage guide), #7 (voix), #8 (PWA installable), label `reecriture`.
   - Modèles de domaine (#5 à #7) et critères d'acceptance (#5 à #8) écrits, glossaire et context map complétés.
   - Scénarios **validés par le PO** (`docs/stories/lot-1-decisions.md`, décision 0007). Questions restantes non bloquantes dans `docs/stories/<n>/acceptance.md`.
-  - Prochaine étape : boucle TDD, en commençant par #6 et #7 (domaine pur, sans Supabase), puis #8, puis #5 (qui a besoin du projet Supabase).
+  - **#6 livrée sur la branche** : domaine `motivation` (40 tests Deno), front (paysages, personnages guides SVG animés avec Motion, en-tête, page `/demonstration` réservée aux tests), review approuvée, E2E 82/82. PR pas encore ouverte.
+  - Prochaines étapes : #7 (voix), puis #8 (PWA), puis #5 (connexion, qui a besoin du projet Supabase).
+  - À retirer plus tard : la page `/demonstration` et le profil préparé en `localStorage` (lots 2 et 3).
   - Première vérification Supabase (`npx supabase link`) non faite : les secrets `SUPABASE_*` n'étaient pas présents dans la session.
 - [ ] Lots 2 à 7 : issues à écrire.
 
