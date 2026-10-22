@@ -1,4 +1,4 @@
-/* L'École d'Additia : moteur de leçons interactives pour l'école élémentaire (CP → CM2).
+/* Savanturier : moteur de leçons interactives pour l'école élémentaire (CP → CM2).
    Une leçon est une donnée JSON (voir docs/format-lecons.md). Le moteur la joue dans l'univers
    choisi par l'enfant, enregistre la progression et propose un espace adulte pour suivre les
    enfants et créer de nouvelles leçons à partir d'un texte. */
@@ -29,12 +29,12 @@ const MUTED = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke
    L'univers ne change que l'habillage (guide, décor, couleurs). Les gestes, les consignes et les
    couleurs des colonnes de calcul (C vert, D rose, U bleu) restent les mêmes partout. */
 const WORLDS = {
-  princesse: { label: 'Princesses et fées', realm: 'le Royaume d\'Additia', guide: { name: 'Lumi', title: 'la fée des nombres et des mots', look: { skin: '#ffd9b8', hair: '#f7cc4f', body: '#ff9cbc', wings: true, hat: 'tiara', prop: 'wand' } }, bg: 'linear-gradient(180deg,#3b2263,#22174a)', vessel: 'cauldron', liquid: '#7cf0c9' },
-  animaux: { label: 'Animaux de la forêt', realm: 'la Forêt d\'Additia', guide: { name: 'Noisette', title: 'l\'écureuil savant', look: { animal: 'squirrel' } }, bg: 'linear-gradient(180deg,#24452c,#162a1d)', vessel: 'bowl', liquid: '#ffd36b' },
-  sports: { label: 'Sports', realm: 'le Stade d\'Additia', guide: { name: 'Coach Léo', title: 'l\'entraîneur des champions', look: { skin: '#f1c39a', hair: '#5a3a22', body: '#2a63d4', hat: 'cap', prop: 'ball' } }, bg: 'linear-gradient(180deg,#1f5136,#14301f)', vessel: 'trophy', liquid: '#ffd36b' },
-  police: { label: 'Police', realm: 'le Commissariat d\'Additia', guide: { name: 'Agente Mila', title: 'la policière détective', look: { skin: '#c98d5e', hair: '#2b1d14', body: '#1f3a8a', hat: 'police', prop: 'badge' } }, bg: 'linear-gradient(180deg,#1d2c55,#121a36)', vessel: 'tank', liquid: '#9ccfff' },
-  pompier: { label: 'Pompiers', realm: 'la Caserne d\'Additia', guide: { name: 'Capitaine Sam', title: 'le pompier courageux', look: { skin: '#f3c9a5', hair: '#a8461c', body: '#d23a2a', hat: 'helmet', prop: 'hose' } }, bg: 'linear-gradient(180deg,#4a1f1f,#2a1212)', vessel: 'tank', liquid: '#9ccfff' },
-  danse: { label: 'Danse', realm: 'l\'Opéra d\'Additia', guide: { name: 'Lili', title: 'la danseuse étoile', look: { skin: '#e8b58c', hair: '#3b2416', body: '#b55bd6', hat: 'bun', prop: 'ribbon' } }, bg: 'linear-gradient(180deg,#4a1f45,#2a1228)', vessel: 'trophy', liquid: '#ff9de0' },
+  princesse: { label: 'Princesses et fées', realm: 'le Royaume des Savanturiers', guide: { name: 'Lumi', title: 'la fée des nombres et des mots', look: { skin: '#ffd9b8', hair: '#f7cc4f', body: '#ff9cbc', wings: true, hat: 'tiara', prop: 'wand' } }, bg: 'linear-gradient(180deg,#3b2263,#22174a)', vessel: 'cauldron', liquid: '#7cf0c9' },
+  animaux: { label: 'Animaux de la forêt', realm: 'la Forêt des Savanturiers', guide: { name: 'Noisette', title: 'l\'écureuil savant', look: { animal: 'squirrel' } }, bg: 'linear-gradient(180deg,#24452c,#162a1d)', vessel: 'bowl', liquid: '#ffd36b' },
+  sports: { label: 'Sports', realm: 'le Stade des Savanturiers', guide: { name: 'Coach Léo', title: 'l\'entraîneur des champions', look: { skin: '#f1c39a', hair: '#5a3a22', body: '#2a63d4', hat: 'cap', prop: 'ball' } }, bg: 'linear-gradient(180deg,#1f5136,#14301f)', vessel: 'trophy', liquid: '#ffd36b' },
+  police: { label: 'Police', realm: 'le Commissariat des Savanturiers', guide: { name: 'Agente Mila', title: 'la policière détective', look: { skin: '#c98d5e', hair: '#2b1d14', body: '#1f3a8a', hat: 'police', prop: 'badge' } }, bg: 'linear-gradient(180deg,#1d2c55,#121a36)', vessel: 'tank', liquid: '#9ccfff' },
+  pompier: { label: 'Pompiers', realm: 'la Caserne des Savanturiers', guide: { name: 'Capitaine Sam', title: 'le pompier courageux', look: { skin: '#f3c9a5', hair: '#a8461c', body: '#d23a2a', hat: 'helmet', prop: 'hose' } }, bg: 'linear-gradient(180deg,#4a1f1f,#2a1212)', vessel: 'tank', liquid: '#9ccfff' },
+  danse: { label: 'Danse', realm: 'l\'Opéra des Savanturiers', guide: { name: 'Lili', title: 'la danseuse étoile', look: { skin: '#e8b58c', hair: '#3b2416', body: '#b55bd6', hat: 'bun', prop: 'ribbon' } }, bg: 'linear-gradient(180deg,#4a1f45,#2a1228)', vessel: 'trophy', liquid: '#ff9de0' },
 };
 let W = WORLDS.princesse;
 
@@ -373,7 +373,7 @@ function showHome() {
   const kids = Store.children();
   const wrap = el('div', 'panel');
   const head = el('div', 'glass on-scene panel'); head.style.gap = '4px';
-  head.append(el('h1', 'h-title', 'L\'École d\'Additia'), el('p', 'sub', 'Réviser le programme du CP au CM2, en jouant dans l\'univers de son choix.'));
+  head.append(el('h1', 'h-title', 'Savanturier'), el('p', 'sub', 'Réviser le programme du CP au CM2, en jouant dans l\'univers de son choix.'));
   wrap.append(head);
   if (!kids.length) {
     const box = el('div', 'welcome');
@@ -816,8 +816,8 @@ const RUNNERS = {
       S.board.innerHTML = '';
       const hear = el('div', 'hear');
       const again = el('button', 'btn small', SPEAKER + ' Réécouter le mot'); again.type = 'button';
-      const peek = el('button', 'btn small ghost', 'Je n\'entends pas'); peek.type = 'button';
-      hear.append(again, peek);
+      const slow = el('button', 'btn small ghost', 'Écouter plus lentement'); slow.type = 'button';
+      hear.append(again, slow);
       const slots = el('div', 'word-slots');
       const chars = [...word];
       const cells = chars.map(ch => {
@@ -826,10 +826,24 @@ const RUNNERS = {
         c._ch = ch; slots.append(c); return c;
       });
       S.board.append(hear, slots);
-      const dictate = async () => { await say(`Écoute bien… <b>${esc(word)}</b>. ${m.phrase ? esc(m.phrase) + ' ' : ''}À toi d'écrire :`); if (S) speak(word, { rate: .8 }); };
-      again.onclick = dictate;
-      peek.onclick = () => { const c = el('div', 'card big'); c.textContent = word; S.board.append(c); setTimeout(() => c.remove(), 2200); T.err('dictee'); };
-      dictate();
+      /* Dictée : le mot n'est JAMAIS écrit à l'écran, il est seulement dit à voix haute. */
+      window.__ecole.motDicte = word;
+      const instruction = 'Écoute bien et écris le mot que tu entends.';
+      const dictate = async (rate = 1) => {
+        S.txt.textContent = instruction; S.lumi.classList.remove('think', 'cheer');
+        if (!soundOn || !canSpeak) return;
+        await speak(`Écoute bien. ${word}. ${m.phrase ? m.phrase + ' ' : ''}Écris : ${word}.`, { rate: .9 * rate });
+      };
+      again.onclick = () => { unlocked = false; unlockAudio(); dictate(); };
+      slow.onclick = () => { unlocked = false; unlockAudio(); dictate(.65); };
+      if (!soundOn || !canSpeak) {
+        S.txt.textContent = canSpeak ? 'Pour la dictée, j\'ai besoin du son : active-le avec le bouton ci-dessous.' : 'Ce navigateur ne sait pas lire à voix haute : fais cette dictée avec un adulte, qui te dira les mots.';
+        if (canSpeak) {
+          const on = el('button', 'btn small', 'Activer le son'); on.type = 'button';
+          on.onclick = () => { if (!soundOn) $('#sound').click(); on.remove(); dictate(); };
+          S.acts.append(on);
+        }
+      } else dictate();
       await gated(new Promise(res => {
         const letters = chars.filter(ch => !/[\s'’\-.]/.test(ch));
         const pool = 'aeioulnrstcmpbdvé';
@@ -858,7 +872,8 @@ const RUNNERS = {
           if (firstBad < 0) { fillable.forEach(c => c.classList.add('good')); sfx.ok(); sparkle(slots, 12); T.ok('dictee'); setTimeout(res, 600); return; }
           T.err('dictee'); sfx.no();
           got.forEach((g, i) => fillable[i].classList.toggle('bad', g !== want[i]));
-          say(`${oops()} Regarde les lettres en rouge, et écoute encore : <b>${esc(word)}</b>.`, 'think');
+          S.txt.textContent = `${oops()} Regarde les lettres en rouge et écoute encore.`; S.lumi.classList.add('think');
+          if (soundOn) speak(`${S.txt.textContent} ${word}.`);
           setTimeout(() => {
             while (typed.length > firstBad) { const b = typed.pop(); b.disabled = false; fillable[typed.length].innerHTML = ''; }
             fillable.forEach(c => c.classList.remove('bad'));
@@ -1353,6 +1368,7 @@ Règles :
 - Choisis dans "programme.section" l'identifiant de la section du programme officiel la plus adaptée, parmi les sections ci-dessous, et recopie mot pour mot une phrase de son extrait dans "citation".
 - Langage simple, adapté à un enfant de ${niveau}, phrases courtes (elles sont lues à voix haute). Pas d'emoji.
 - Chaque "reponse" doit être exactement l'un des "choix". 3 choix par question en général.
+- Pour une dictée, les mots dictés ne doivent jamais apparaître dans la leçon ni dans les exemples (l'enfant ne doit que les entendre).
 - ${types.length ? `Utilise ces types d'exercices : ${types.join(', ')}.` : 'Choisis les 2 à 4 types d\'exercices les plus utiles pour ce texte.'}
 - Réponds uniquement avec l'objet JSON.
 
@@ -1460,7 +1476,7 @@ function generateLocally(text, niveau, matiere, types) {
   if (shape === 'dictee') {
     const mots = items.slice(0, 10);
     l.titre = 'Dictée : ' + mots.slice(0, 3).join(', ') + (mots.length > 3 ? '…' : '');
-    l.lecon = [{ texte: 'Pour écrire un mot, je le dis lentement et j\'écoute chaque son. Attention aux lettres muettes !', exemples: mots.slice(0, 4) }];
+    l.lecon = [{ texte: 'Pour écrire un mot, je le dis lentement et j\'écoute chaque son. Attention aux lettres muettes !', exemples: [] }];
     if (want('dictee')) l.exercices.push({ type: 'dictee', titre: 'J\'écris les mots', mots: mots.map(mot => ({ mot })) });
     if (want('bulles')) l.exercices.push({ type: 'bulles', titre: 'Le mot bien écrit', questions: mots.slice(0, 5).map(m => ({ question: 'Quel mot est bien écrit ?', choix: [m, ...misspell(m)], reponse: m })).filter(q => q.choix.length >= 2) });
   } else if (shape === 'verbes') {
@@ -1496,4 +1512,4 @@ renderSound();
 $('#view').append(el('p', 'sub', 'Chargement…'));
 Promise.all([loadData(), Store.init()]).then(showHome);
 /* Pour les tests automatisés uniquement. */
-window.__ecole = { Store, validateLesson, generateLocally, detectShape, candidateSections, get LIB() { return LIB; } };
+window.__ecole = { motDicte: '', Store, validateLesson, generateLocally, detectShape, candidateSections, get LIB() { return LIB; } };
