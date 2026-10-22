@@ -94,9 +94,6 @@ Deno.test("chaque personnage guide a le caractère de sa voix (sexe, hauteur, ry
     const univers = universDe(cle);
 
     // Assert
-    assertEquals(
-      (univers.personnageGuide as { caractere?: unknown }).caractere,
-      caractere,
-    );
+    assertEquals(univers.personnageGuide.caractere, caractere);
   }
 });
