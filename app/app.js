@@ -20,7 +20,7 @@ const SUBJECTS = { francais: 'Français', maths: 'Mathématiques', sciences: 'Sc
 const TYPES = {
   bulles: 'Bulles-réponses', classer: 'Ranger dans les maisons', dictee: 'Dictée', ordre: 'Remettre dans l\'ordre',
   trous: 'Texte à trous', conjugaison: 'Conjugaison', lecture: 'Écouter et comprendre', memoriser: 'Apprendre par cœur', addition: 'Addition posée',
-  calcul: 'Calcul', fluence: 'Calcul rapide', ecoute: 'Écouter (langue)',
+  calcul: 'Calcul', fluence: 'Calcul rapide', ecoute: 'Écouter (langue)', boite: 'La boîte à jetons', barres: 'Problème en schéma',
 };
 const STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.3l-5.8 3.1 1.1-6.5L2.6 9.3l6.5-.9z"/></svg>';
 const SPEAKER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 10v4h4l5 4V6L8 10z" fill="currentColor"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg>';
@@ -1075,6 +1075,7 @@ function stepsOf(ex) {
     case 'calcul': return calculOps(ex).length;
     case 'ecoute': return ex.items.length;
     case 'fluence': return 1;
+    case 'boite': case 'barres': return ex.items.length;
     default: return 1;
   }
 }
@@ -1138,6 +1139,8 @@ function questionsFrom(ex) {
     case 'dictee': ex.mots.forEach(m => out.push({ k: 'd:' + norm(m.mot), ex: { type: 'dictee', mots: [m] } })); break;
     case 'calcul': calculOps(ex).forEach(o => out.push({ k: 'n:' + o.q, ex: { type: 'calcul', operations: [o] } })); break;
     case 'addition': additionOps(ex).forEach(n => out.push({ k: 'n:' + n.join('+'), ex: { type: 'calcul', operations: [{ q: n.join(' + '), r: n.reduce((a, b) => a + b, 0) }] } })); break;
+    case 'boite': ex.items.forEach(it => { const r = it.op === '-' ? it.a - it.b : it.a + it.b; out.push({ k: `n:${it.a}${it.op || '+'}${it.b}`, ex: { type: 'calcul', operations: [{ q: `${it.a} ${it.op === '-' ? '−' : '+'} ${it.b}`, r }] } }); }); break;
+    case 'barres': ex.items.forEach(it => out.push({ k: 'p:' + norm(it.enonce), ex: { type: 'barres', items: [it] } })); break;
     case 'ecoute': ex.items.forEach(it => out.push({ k: 'e:' + norm(it.dire), ex: { type: 'ecoute', langue: ex.langue, items: [it] } })); break;
     case 'trous': {
       const parts = String(ex.texte).split(/(\[[^\]]+\])/); const ans = parts.filter(p => /^\[.*\]$/.test(p)).map(p => p.slice(1, -1));
@@ -1540,6 +1543,85 @@ const RUNNERS = {
     await say(rec && best ? `Nouveau record ! ${score} calculs, bravo !` : rec ? `Ton premier record : ${score} calculs ! Essaie de le battre la prochaine fois.` : `${score} calculs ! Ton record reste ${best}. Tu y es presque !`, 'cheer');
     await wait(900);
   },
+  /* La boîte (guide CP « Pour enseigner les nombres… », situation de référence) : des jetons entrent
+     dans une boîte fermée ; l'enfant prévoit combien il y en a, puis on ouvre la boîte pour vérifier. */
+  async boite(ex, T) {
+    for (const it of ex.items) {
+      const r = it.op === '-' ? it.a - it.b : it.a + it.b;
+      S.board.innerHTML = '';
+      const scene = el('div', 'boite-scene', `<div class="jetons"></div><svg class="boite" viewBox="0 0 220 150" aria-hidden="true"><rect x="20" y="40" width="180" height="100" rx="14" fill="#C07C4A"/><rect x="20" y="40" width="180" height="22" fill="#9C5A33"/><g class="couvercle"><rect x="10" y="22" width="200" height="26" rx="10" fill="#E09A5E"/><rect x="95" y="12" width="30" height="14" rx="6" fill="#9C5A33"/></g></svg><div class="dedans"></div>`);
+      const jet = scene.querySelector('.jetons'), dedans = scene.querySelector('.dedans');
+      S.board.append(scene);
+      const pose = async (n, sens) => {
+        jet.innerHTML = Array.from({ length: n }, () => '<i></i>').join('');
+        await wait(REDUCED ? 100 : 900);
+        jet.classList.add(sens === 'in' ? 'entre' : 'sort');
+        sfx.pop(); await wait(REDUCED ? 100 : 700);
+        jet.classList.remove('entre', 'sort'); jet.innerHTML = '';
+      };
+      await say(`Je mets <b>${it.a}</b> jeton${it.a > 1 ? 's' : ''} dans la boîte.`);
+      await pose(it.a, 'in');
+      if (it.op === '-') { await say(`Maintenant, j'en retire <b>${it.b}</b>.`); jet.innerHTML = ''; await pose(it.b, 'out'); }
+      else { await say(`Et j'en mets encore <b>${it.b}</b>.`); await pose(it.b, 'in'); }
+      await say('La boîte est fermée. Combien y a-t-il de jetons dedans ? Réfléchis dans ta tête, avec tes doigts, ou en dessinant.');
+      const mark = () => { T.err('boite'); remember(`n:${it.a}${it.op || '+'}${it.b}`, { type: 'calcul', operations: [{ q: `${it.a} ${it.op === '-' ? '−' : '+'} ${it.b}`, r }] }); };
+      const help = it.op === '-' ? `Pars de ${it.a} et recule de ${it.b}.` : `Mets ${Math.max(it.a, it.b)} dans ta tête, et avance de ${Math.min(it.a, it.b)}.`;
+      if (r <= 20 && levelRank(child?.niveau || 'CP') === 0) await choose([r, r + 1, Math.max(0, r - 1), r + 2], r, () => { mark(); say(`${oops()} ${esc(help)}`, 'think'); }, { help, onHelp: mark });
+      else await keypad(r, () => { mark(); say(`${oops()} ${esc(help)}`, 'think'); }, { help, onHelp: mark });
+      scene.classList.add('ouverte');
+      dedans.innerHTML = Array.from({ length: r }, (_, i) => `<i${i % 5 === 4 ? ' class="cinq"' : ''}></i>`).join('');
+      T.ok('boite'); sfx.magic();
+      await say(`On ouvre la boîte pour vérifier… ${r} jeton${r > 1 ? 's' : ''} ! ${it.a} ${it.op === '-' ? '−' : '+'} ${it.b} = ${r}. ${praise()}`, 'cheer');
+      S.board.append(Object.assign(el('div', 'card big calc'), { textContent: `${it.a} ${it.op === '-' ? '−' : '+'} ${it.b} = ${r}` }));
+      await wait(1200);
+    }
+  },
+  /* Le schéma en barres (guide CP, chapitre 3) : on représente l'énoncé par des rectangles, puis on calcule. */
+  async barres(ex, T) {
+    for (const it of ex.items) {
+      S.board.innerHTML = '';
+      const card = el('div', 'card story'); card.append(readable(it.enonce)); S.board.append(card);
+      const sch = el('div', 'barres');
+      const val = v => v == null ? '?' : String(v);
+      let rep, ecrit;
+      if (it.type === 'comparaison') {
+        const [g, p, e] = [it.grand, it.petit, it.ecart];
+        rep = g == null ? p + e : p == null ? g - e : g - p;
+        const G = g ?? rep, P = p ?? (g - e);
+        sch.innerHTML = `<div class="ligne"><span class="lab"></span><div class="seg" style="flex:${G}">${val(g)}</div></div>
+          <div class="ligne"><span class="lab"></span><div class="seg b" style="flex:${P}">${val(p)}</div><div class="seg ecart" style="flex:${G - P}">${val(e)}</div></div>`;
+        sch.querySelectorAll('.lab')[0].textContent = it.noms?.[0] || ''; sch.querySelectorAll('.lab')[1].textContent = it.noms?.[1] || '';
+        ecrit = g == null ? `${p} + ${e} = ${rep}` : p == null ? `${g} − ${e} = ${rep}` : `${g} − ${p} = ${rep}`;
+      } else if (it.type === 'parts') {
+        const { nb, valeur, total } = it;
+        rep = total == null ? nb * valeur : valeur == null ? total / nb : total / valeur;
+        const n = nb ?? rep, v = valeur ?? (total / n);
+        const segs = nb == null ? `<div class="seg b" style="flex:1">${valeur}</div><div class="seg b" style="flex:1">${valeur}</div><div class="seg vide" style="flex:2">…</div>`
+          : Array.from({ length: n }, (_, i) => `<div class="seg b" style="flex:1">${i === 0 ? val(valeur) : valeur == null ? '' : v}</div>`).join('');
+        sch.innerHTML = `<div class="ligne tout"><div class="seg t" style="flex:1">${val(total)}</div></div><div class="ligne">${segs}</div>`;
+        if (nb == null) sch.append(Object.assign(el('p', 'note'), { textContent: 'Combien de parts de ' + valeur + ' ?' }));
+        ecrit = total == null ? `${n} × ${valeur} = ${rep}` : valeur == null ? `${total} = ${nb} × ${rep}` : `${total} = ${rep} × ${valeur}`;
+      } else {
+        const [a, b] = it.parties, t = it.tout;
+        rep = t == null ? a + b : a == null ? t - b : t - a;
+        const A = a ?? rep, B = b ?? rep;
+        sch.innerHTML = `<div class="ligne tout"><div class="seg t" style="flex:1">${val(t)}</div></div><div class="ligne"><div class="seg b" style="flex:${A}">${val(a)}</div><div class="seg c" style="flex:${B}">${val(b)}</div></div>`;
+        ecrit = t == null ? `${a} + ${b} = ${rep}` : `${t} − ${a ?? b} = ${rep}`;
+      }
+      S.board.append(sch);
+      await say(esc(it.enonce));
+      await say('Regarde le schéma : le point d\'interrogation, c\'est ce qu\'on cherche.');
+      const mark = () => { T.err('barres'); remember('p:' + norm(it.enonce), { type: 'barres', items: [it] }); };
+      const help = it.aide || 'Regarde le schéma : cherches-tu le tout, ou une partie ?';
+      if (levelRank(child?.niveau || 'CP') === 0 && rep <= 20) await choose([rep, rep + 1, Math.max(0, rep - 1), rep + 2], rep, () => { mark(); say(`${oops()} ${esc(help)}`, 'think'); }, { help, onHelp: mark });
+      else await keypad(rep, () => { mark(); say(`${oops()} ${esc(help)}`, 'think'); }, { help, onHelp: mark });
+      sch.querySelectorAll('.seg').forEach(sg => { if (sg.textContent === '?') { sg.textContent = rep; sg.classList.add('trouve'); } });
+      T.ok('barres');
+      S.board.append(Object.assign(el('div', 'card big calc'), { textContent: ecrit }));
+      await say(`${praise()} ${esc(ecrit)}.${it.phrase ? ' ' + esc(it.phrase.replace('{r}', rep)) : ''}`, 'cheer');
+      await wait(1000);
+    }
+  },
   async ecoute(ex, T) {
     const lang = ex.langue || 'en-GB';
     for (const it of ex.items) {
@@ -1756,7 +1838,7 @@ function buildTest() {
   for (let i = 0; i < pool.length && chosen.length < 12; i += step) chosen.push(pool[Math.floor(i)]);
   const ex = [];
   chosen.forEach(l => {
-    const qs = l.exercices.flatMap(questionsFrom).filter(q => ['bulles', 'calcul', 'ecoute'].includes(q.ex.type));
+    const qs = l.exercices.flatMap(questionsFrom).filter(q => ['bulles', 'calcul', 'ecoute', 'barres'].includes(q.ex.type));
     if (qs.length) ex.push({ ...qs[rnd(0, qs.length - 1)].ex, _lid: l.id });
   });
   return { id: 'test', special: 'test', titre: 'Mon test de départ', sous: 'Pour savoir où commencer', niveau: child.niveau, matiere: '', lecon: [], exercices: ex };
@@ -1826,36 +1908,46 @@ async function playLesson(l, only) {
   }
   const stars = T.errors === 0 ? 3 : T.errors <= 3 ? 2 : 1;
   const before = { stars: totalStars(), eps: episodesOpen(), cab: cabaneCount(totalStars()), badges: badgesOf().length };
-  let found = 0;
+  let found = 0; const saves = [];
   if (l.special === 'revision') perItem.forEach(x => Review.result(x.ex._rk, x.ok));
   if (l.special === 'test') {
     for (const x of perItem.filter(x => x.ok)) {
       const lt = lessonById(x.ex._lid), key = `progres_${child._id}_${x.ex._lid}`;
       if (!lt || Store.docs[key]) continue;
       found++;
-      await Store.put(key, { kind: 'progres', enfant: child._id, lecon: lt.id, titre: lt.titre, matiere: lt.matiere, niveau: lt.niveau, etoiles: 1, test: true, essais: 0, parType: {}, maj: Date.now() });
+      saves.push(Store.put(key, { kind: 'progres', enfant: child._id, lecon: lt.id, titre: lt.titre, matiere: lt.matiere, niveau: lt.niveau, etoiles: 1, test: true, essais: 0, parType: {}, maj: Date.now() }));
     }
-    child.testFait = true; const { _id, ...data } = child; await Store.put(child._id, data);
+    child.testFait = true; const { _id, ...data } = child; saves.push(Store.put(child._id, data));
   }
-  if (l.special === 'semaine') { const s = semaineDoc(); s.fait = { ...(s.fait || {}), [today()]: true }; await Store.put(`semaine_${child._id}`, s); }
+  if (l.special === 'semaine') { const s = semaineDoc(); s.fait = { ...(s.fait || {}), [today()]: true }; saves.push(Store.put(`semaine_${child._id}`, s)); }
   if (!l.special) {
     const key = `progres_${child._id}_${l.id}`;
     const prev = Store.docs[key];
-    await Store.put(key, {
+    saves.push(Store.put(key, {
       kind: 'progres', enfant: child._id, lecon: l.id, titre: l.titre, matiere: l.matiere, niveau: l.niveau,
       etoiles: Math.max(stars, prev?.test ? 0 : prev?.etoiles || 0), dernieresEtoiles: stars, erreurs: T.errors, essais: (prev?.essais || 0) + 1,
       parType: T.byType, maj: Date.now(),
-    });
+    }));
   }
-  await Review.flush();
-  if (l.special !== 'test') await Days.addSession();
+  saves.push(Review.flush());
+  if (l.special !== 'test') saves.push(Days.addSession());
+  /* Les sauvegardes partent en arrière-plan : l'écran de fin s'affiche tout de suite. */
+  Promise.all(saves).catch(() => {});
   curLesson = null;
-  S.play.innerHTML = '';
+  S.play.innerHTML = ''; S.board.innerHTML = '';
   const isTest = l.special === 'test';
   const m = el('div', 'medal', isTest ? '<div class="row"></div>' : `<div class="big-stars">${[0, 1, 2].map(i => STAR3D(i < stars)).join('')}</div><div class="news"></div><div class="row"></div>`);
-  const back = el('button', 'btn', isTest ? 'Voir mon parcours' : 'Retour à la carte'); back.type = 'button'; back.onclick = () => showMap(isTest ? 'parcours' : 'accueil');
+  const nxt = !l.special && nextAfter(l);
+  const back = el('button', 'btn' + (nxt ? ' ghost' : ''), isTest ? 'Voir mon parcours' : `${ICON.home.replace('stroke="currentColor"', 'stroke="currentColor" width="20" height="20"')} Accueil`); back.type = 'button';
+  back.onclick = () => isTest ? showMap('parcours') : showMap('accueil');
+  if (nxt) {
+    const go = el('button', 'btn', 'Leçon suivante ›'); go.type = 'button'; go.title = nxt.titre;
+    go.onclick = () => showLesson(nxt);
+    m.querySelector('.row').append(go);
+  }
   m.querySelector('.row').append(back);
   if (!l.special) { const again = el('button', 'btn ghost', 'Rejouer'); again.type = 'button'; again.onclick = () => playLesson(l, only); m.querySelector('.row').append(again); }
+  if (nxt) { const t = el('p', 'note', ''); t.textContent = `Ensuite : ${nxt.titre}`; m.append(t); }
   /* Ce qui vient d'être gagné : épisode, objet pour la cabane, badge. */
   const news = m.querySelector('.news'), after = { stars: totalStars(), eps: episodesOpen() };
   const notes = [];
@@ -1874,6 +1966,12 @@ async function playLesson(l, only) {
   } else {
     say((stars === 3 ? `${pick(styleNow().cri)} Trois étoiles, ${esc(child.prenom)} ! Tu es incroyable !` : `${praise()} Tu gagnes ${stars} étoile${stars > 1 ? 's' : ''}, ${esc(child.prenom)}.${l.special ? '' : ' Tu rejoues pour aller chercher les autres ?'}`) + (notes.length ? ' ' + notes.join(' ') : ''), 'cheer');
   }
+}
+/* La leçon qui suit dans le parcours de la même matière (sinon la prochaine leçon conseillée). */
+function nextAfter(l) {
+  const items = subjectPath(l.matiere), i = items.findIndex(x => x.l.id === l.id);
+  const after = items.slice(i + 1).find(x => !x.done && !x.locked) || items.slice(i + 1).find(x => !x.locked);
+  return after?.l || (nextLesson()?.id !== l.id ? nextLesson() : null);
 }
 function showEpisode(i, back) {
   const v = screen(back);
