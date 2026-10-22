@@ -7923,77 +7923,6 @@
   "genere": true
  },
  {
-  "id": "ma-cp-monnaie",
-  "matiere": "maths",
-  "niveau": "CP",
-  "titre": "Les pièces et les billets",
-  "ordre": 30,
-  "programme": {
-   "section": "c2-mathematiques-cp-la-monnaie",
-   "citation": "L’élève sait que dix pièces de 1 € ont la même valeur qu’un billet de 10 €."
-  },
-  "lecon": [
-   {
-    "texte": "Notre monnaie, c'est l'euro. Il y a des pièces de 1 et 2 euros, et des billets de 5, 10, 20 euros…",
-    "exemples": [
-     "1 €",
-     "2 €",
-     "5 €",
-     "10 €"
-    ]
-   },
-   {
-    "texte": "Pour payer 7 euros, je peux donner un billet de 5 euros et une pièce de 2 euros.",
-    "exemples": []
-   }
-  ],
-  "exercices": [
-   {
-    "type": "bulles",
-    "titre": "Combien d'euros ?",
-    "questions": [
-     {
-      "question": "Un billet de 5 € et une pièce de 2 €, ça fait…",
-      "choix": [
-       "7 €",
-       "52 €",
-       "3 €"
-      ],
-      "reponse": "7 €"
-     },
-     {
-      "question": "Deux billets de 10 €, ça fait…",
-      "choix": [
-       "20 €",
-       "12 €",
-       "100 €"
-      ],
-      "reponse": "20 €"
-     },
-     {
-      "question": "Une glace coûte 3 €. J'ai une pièce de 2 €. Ai-je assez ?",
-      "choix": [
-       "Non",
-       "Oui"
-      ],
-      "reponse": "Non"
-     },
-     {
-      "question": "Trois pièces de 1 €, ça fait…",
-      "choix": [
-       "3 €",
-       "1 €",
-       "111 €"
-      ],
-      "reponse": "3 €"
-     }
-    ]
-   }
-  ],
-  "competence": "Je compte avec des euros",
-  "genere": true
- },
- {
   "id": "ma-cp-signe-egal",
   "matiere": "maths",
   "niveau": "CP",
@@ -8093,6 +8022,77 @@
    "extrait": "l’utilisation du signe « = » dans les deux sens : 5 + 3 = 8 mais aussi 8 = 5 + 3",
    "fichier": "sources/guides/guide-pour-enseigner-les-nombres-le-calcul-et-la-resolution-de-problemes-au-cp-68664.pdf"
   },
+  "genere": true
+ },
+ {
+  "id": "ma-cp-monnaie",
+  "matiere": "maths",
+  "niveau": "CP",
+  "titre": "Les pièces et les billets",
+  "ordre": 31,
+  "programme": {
+   "section": "c2-mathematiques-cp-la-monnaie",
+   "citation": "L’élève sait que dix pièces de 1 € ont la même valeur qu’un billet de 10 €."
+  },
+  "lecon": [
+   {
+    "texte": "Notre monnaie, c'est l'euro. Il y a des pièces de 1 et 2 euros, et des billets de 5, 10, 20 euros…",
+    "exemples": [
+     "1 €",
+     "2 €",
+     "5 €",
+     "10 €"
+    ]
+   },
+   {
+    "texte": "Pour payer 7 euros, je peux donner un billet de 5 euros et une pièce de 2 euros.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "bulles",
+    "titre": "Combien d'euros ?",
+    "questions": [
+     {
+      "question": "Un billet de 5 € et une pièce de 2 €, ça fait…",
+      "choix": [
+       "7 €",
+       "52 €",
+       "3 €"
+      ],
+      "reponse": "7 €"
+     },
+     {
+      "question": "Deux billets de 10 €, ça fait…",
+      "choix": [
+       "20 €",
+       "12 €",
+       "100 €"
+      ],
+      "reponse": "20 €"
+     },
+     {
+      "question": "Une glace coûte 3 €. J'ai une pièce de 2 €. Ai-je assez ?",
+      "choix": [
+       "Non",
+       "Oui"
+      ],
+      "reponse": "Non"
+     },
+     {
+      "question": "Trois pièces de 1 €, ça fait…",
+      "choix": [
+       "3 €",
+       "1 €",
+       "111 €"
+      ],
+      "reponse": "3 €"
+     }
+    ]
+   }
+  ],
+  "competence": "Je compte avec des euros",
   "genere": true
  },
  {
@@ -8352,11 +8352,115 @@
   "genere": true
  },
  {
+  "id": "ma-cp-nombres-100",
+  "matiere": "maths",
+  "niveau": "CP",
+  "titre": "Compter jusqu'à 100",
+  "ordre": 40,
+  "programme": {
+   "section": "c2-mathematiques-cp-les-nombres-entiers",
+   "citation": "L’élève sait compter, à l’oral et à l’écrit, de un en un, de deux en deux et de dix en dix"
+  },
+  "lecon": [
+   {
+    "texte": "Je compte de dix en dix : dix, vingt, trente, quarante, cinquante, soixante, soixante-dix, quatre-vingts, quatre-vingt-dix, cent.",
+    "exemples": [
+     "10, 20, 30… 100"
+    ]
+   },
+   {
+    "texte": "Pour comparer deux nombres, je regarde d'abord les dizaines : 42 est plus grand que 38. Le signe < veut dire « plus petit que ».",
+    "exemples": [
+     "42 > 38",
+     "38 < 42"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "ordre",
+    "titre": "De dix en dix",
+    "consigne": "Remets les nombres dans l'ordre.",
+    "elements": [
+     "10",
+     "20",
+     "30",
+     "40",
+     "50",
+     "60",
+     "70",
+     "80",
+     "90",
+     "100"
+    ]
+   },
+   {
+    "type": "bulles",
+    "titre": "Comparer",
+    "questions": [
+     {
+      "question": "Quel est le plus grand nombre ?",
+      "choix": [
+       "61",
+       "16",
+       "56"
+      ],
+      "reponse": "61"
+     },
+     {
+      "question": "Quel nombre vient juste après 39 ?",
+      "choix": [
+       "40",
+       "30",
+       "310"
+      ],
+      "reponse": "40"
+     },
+     {
+      "question": "12 … 21 : quel signe ?",
+      "choix": [
+       "<",
+       ">",
+       "="
+      ],
+      "reponse": "<"
+     },
+     {
+      "question": "Soixante-dix, c'est…",
+      "choix": [
+       "70",
+       "60",
+       "17"
+      ],
+      "reponse": "70"
+     },
+     {
+      "question": "Quatre-vingt-dix, c'est…",
+      "choix": [
+       "90",
+       "80",
+       "49"
+      ],
+      "reponse": "90"
+     }
+    ]
+   }
+  ],
+  "competence": "Je compte et je compare jusqu'à 100",
+  "guide": {
+   "titre": "Pour enseigner les nombres, le calcul et la résolution de problèmes au CP",
+   "page": 145,
+   "extrait": "Comptine de dix en dix (dix, vingt, etc.).",
+   "fichier": "sources/guides/guide-pour-enseigner-les-nombres-le-calcul-et-la-resolution-de-problemes-au-cp-68664.pdf"
+  },
+  "genere": true
+ },
+ {
   "id": "ma-cp-formes",
   "matiere": "maths",
   "niveau": "CP",
   "titre": "Les formes géométriques",
-  "ordre": 40,
+  "ordre": 41,
   "programme": {
    "section": "c2-mathematiques-cp-la-geometrie-plane",
    "citation": "Les connaissances sur les figures de référence (carré, rectangle, triangle, cercle) s’acquièrent à partir de manipulations, de descriptions et de résolutions de problèmes."
@@ -8461,110 +8565,6 @@
    }
   ],
   "competence": "Je reconnais les formes géométriques",
-  "genere": true
- },
- {
-  "id": "ma-cp-nombres-100",
-  "matiere": "maths",
-  "niveau": "CP",
-  "titre": "Compter jusqu'à 100",
-  "ordre": 40,
-  "programme": {
-   "section": "c2-mathematiques-cp-les-nombres-entiers",
-   "citation": "L’élève sait compter, à l’oral et à l’écrit, de un en un, de deux en deux et de dix en dix"
-  },
-  "lecon": [
-   {
-    "texte": "Je compte de dix en dix : dix, vingt, trente, quarante, cinquante, soixante, soixante-dix, quatre-vingts, quatre-vingt-dix, cent.",
-    "exemples": [
-     "10, 20, 30… 100"
-    ]
-   },
-   {
-    "texte": "Pour comparer deux nombres, je regarde d'abord les dizaines : 42 est plus grand que 38. Le signe < veut dire « plus petit que ».",
-    "exemples": [
-     "42 > 38",
-     "38 < 42"
-    ]
-   }
-  ],
-  "exercices": [
-   {
-    "type": "ordre",
-    "titre": "De dix en dix",
-    "consigne": "Remets les nombres dans l'ordre.",
-    "elements": [
-     "10",
-     "20",
-     "30",
-     "40",
-     "50",
-     "60",
-     "70",
-     "80",
-     "90",
-     "100"
-    ]
-   },
-   {
-    "type": "bulles",
-    "titre": "Comparer",
-    "questions": [
-     {
-      "question": "Quel est le plus grand nombre ?",
-      "choix": [
-       "61",
-       "16",
-       "56"
-      ],
-      "reponse": "61"
-     },
-     {
-      "question": "Quel nombre vient juste après 39 ?",
-      "choix": [
-       "40",
-       "30",
-       "310"
-      ],
-      "reponse": "40"
-     },
-     {
-      "question": "12 … 21 : quel signe ?",
-      "choix": [
-       "<",
-       ">",
-       "="
-      ],
-      "reponse": "<"
-     },
-     {
-      "question": "Soixante-dix, c'est…",
-      "choix": [
-       "70",
-       "60",
-       "17"
-      ],
-      "reponse": "70"
-     },
-     {
-      "question": "Quatre-vingt-dix, c'est…",
-      "choix": [
-       "90",
-       "80",
-       "49"
-      ],
-      "reponse": "90"
-     }
-    ]
-   }
-  ],
-  "competence": "Je compte et je compare jusqu'à 100",
-  "guide": {
-   "titre": "Pour enseigner les nombres, le calcul et la résolution de problèmes au CP",
-   "page": 145,
-   "extrait": "Comptine de dix en dix (dix, vingt, etc.).",
-   "fichier": "sources/guides/guide-pour-enseigner-les-nombres-le-calcul-et-la-resolution-de-problemes-au-cp-68664.pdf"
-  },
   "genere": true
  },
  {
@@ -8960,11 +8960,84 @@
   "genere": true
  },
  {
+  "id": "ma-cp-ajouter-9",
+  "matiere": "maths",
+  "niveau": "CP",
+  "titre": "Ajouter 9",
+  "ordre": 50,
+  "programme": {
+   "section": "c2-mathematiques-cp-apprendre-des-procedures-de-calcul-mental",
+   "citation": "L’élève sait que, pour ajouter 9 à un nombre, il peut ajouter 10 puis soustraire 1."
+  },
+  "lecon": [
+   {
+    "texte": "Si le nombre finit par 0 : j'ajoute les 9 unités. 20 + 9 = 29.",
+    "exemples": [
+     "20 + 9 = 29"
+    ]
+   },
+   {
+    "texte": "S'il finit par 1 : 1 + 9 = 10. 31 + 9 = 40.",
+    "exemples": [
+     "31 + 9 = 40"
+    ]
+   },
+   {
+    "texte": "Sinon : j'ajoute 10, puis j'enlève 1. 47 + 9 = 57 − 1 = 56.",
+    "exemples": [
+     "47 + 9 = 56"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "calcul",
+    "titre": "Ajoute 9",
+    "operations": [
+     {
+      "q": "20 + 9",
+      "r": 29
+     },
+     {
+      "q": "31 + 9",
+      "r": 40,
+      "aide": "1 + 9 = 10 : ça fait une dizaine de plus."
+     },
+     {
+      "q": "47 + 9",
+      "r": 56,
+      "aide": "47 + 10 = 57, puis − 1."
+     },
+     {
+      "q": "26 + 9",
+      "r": 35
+     },
+     {
+      "q": "50 + 9",
+      "r": 59
+     },
+     {
+      "q": "63 + 9",
+      "r": 72
+     }
+    ]
+   }
+  ],
+  "competence": "J'ajoute 9 de tête",
+  "guide": {
+   "titre": "Pour enseigner les nombres, le calcul et la résolution de problèmes au CP",
+   "page": 66,
+   "extrait": "dans les autres cas, on peut faire « + 10 − 1 » : 47 + 9 = 47 + 10 − 1 = 57 − 1 = 56.",
+   "fichier": "sources/guides/guide-pour-enseigner-les-nombres-le-calcul-et-la-resolution-de-problemes-au-cp-68664.pdf"
+  },
+  "genere": true
+ },
+ {
   "id": "ma-cp-heures",
   "matiere": "maths",
   "niveau": "CP",
   "titre": "Les jours et les heures",
-  "ordre": 50,
+  "ordre": 51,
   "programme": {
    "section": "c2-mathematiques-cp-le-reperage-dans-le-temps",
    "citation": "Au CP, le travail mené sur le repérage dans le temps se limite aux heures entières."
@@ -9042,79 +9115,6 @@
    }
   ],
   "competence": "Je connais les jours et je lis les heures",
-  "genere": true
- },
- {
-  "id": "ma-cp-ajouter-9",
-  "matiere": "maths",
-  "niveau": "CP",
-  "titre": "Ajouter 9",
-  "ordre": 50,
-  "programme": {
-   "section": "c2-mathematiques-cp-apprendre-des-procedures-de-calcul-mental",
-   "citation": "L’élève sait que, pour ajouter 9 à un nombre, il peut ajouter 10 puis soustraire 1."
-  },
-  "lecon": [
-   {
-    "texte": "Si le nombre finit par 0 : j'ajoute les 9 unités. 20 + 9 = 29.",
-    "exemples": [
-     "20 + 9 = 29"
-    ]
-   },
-   {
-    "texte": "S'il finit par 1 : 1 + 9 = 10. 31 + 9 = 40.",
-    "exemples": [
-     "31 + 9 = 40"
-    ]
-   },
-   {
-    "texte": "Sinon : j'ajoute 10, puis j'enlève 1. 47 + 9 = 57 − 1 = 56.",
-    "exemples": [
-     "47 + 9 = 56"
-    ]
-   }
-  ],
-  "exercices": [
-   {
-    "type": "calcul",
-    "titre": "Ajoute 9",
-    "operations": [
-     {
-      "q": "20 + 9",
-      "r": 29
-     },
-     {
-      "q": "31 + 9",
-      "r": 40,
-      "aide": "1 + 9 = 10 : ça fait une dizaine de plus."
-     },
-     {
-      "q": "47 + 9",
-      "r": 56,
-      "aide": "47 + 10 = 57, puis − 1."
-     },
-     {
-      "q": "26 + 9",
-      "r": 35
-     },
-     {
-      "q": "50 + 9",
-      "r": 59
-     },
-     {
-      "q": "63 + 9",
-      "r": 72
-     }
-    ]
-   }
-  ],
-  "competence": "J'ajoute 9 de tête",
-  "guide": {
-   "titre": "Pour enseigner les nombres, le calcul et la résolution de problèmes au CP",
-   "page": 66,
-   "extrait": "dans les autres cas, on peut faire « + 10 − 1 » : 47 + 9 = 47 + 10 − 1 = 57 − 1 = 56.",
-   "fichier": "sources/guides/guide-pour-enseigner-les-nombres-le-calcul-et-la-resolution-de-problemes-au-cp-68664.pdf"
-  },
   "genere": true
  },
  {

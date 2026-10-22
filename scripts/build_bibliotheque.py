@@ -19,7 +19,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 LIB = ROOT / "app" / "bibliotheque.json"
 INDEX = {e["id"]: e for e in json.loads((ROOT / "app" / "programmes-index.json").read_text(encoding="utf-8"))}
-ORDRES = {"ma-cp-addition-posee": 57}   # leçons écrites à la main, replacées dans la progression du guide
+ORDRES = {"ma-cp-addition-posee": 57, "ma-cp-monnaie": 31, "ma-cp-formes": 41, "ma-cp-heures": 51}   # leçons écrites à la main, replacées dans la progression du guide
 MODULES = ["francais", "francais2", "maths", "maths2", "maths_cp", "sciences", "histoire", "anglais"]
 
 
