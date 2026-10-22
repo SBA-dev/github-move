@@ -1,9 +1,5 @@
 import { assertEquals } from "@std/assert";
-import {
-  scoreDeLaVoix,
-  type VoixDisponible,
-  voixFrancaisesTriees,
-} from "./voix-disponible.ts";
+import { scoreDeLaVoix, type VoixDisponible, voixFrancaisesTriees } from "./voix-disponible.ts";
 
 const denise: VoixDisponible = {
   nom: "Microsoft Denise Online (Natural)",
