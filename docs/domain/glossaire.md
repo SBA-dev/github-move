@@ -63,9 +63,8 @@ Le glossaire garde l'orthographe française.
 | Parent | Adulte titulaire du compte. Il crée et règle les profils enfants, donne les devoirs et consulte le suivi. Il n'y a pas d'autre rôle adulte. | Famille | utilisateur, adulte, enseignant, tuteur, compte |
 | Compte famille (à valider) | Compte du parent, auquel sont rattachés les profils enfants. | Famille | compte utilisateur |
 | Profil enfant | Enfant qui apprend : prénom ou pseudo, niveau, univers et réglages. Il n'a ni compte, ni e-mail, ni mot de passe. | Famille | élève, utilisateur, joueur, compte enfant |
-| Réglages (à valider) | Préférences d'un profil enfant : mode dys, tout lire à voix haute, parcours libre, clavier, temps d'écran maximum, langue du parent. | Famille | paramètres, options |
+| Réglages (à valider) | Préférences d'un profil enfant : mode dys, tout lire à voix haute, parcours libre, clavier, langue du parent. | Famille | paramètres, options |
 | Mode dys | Réglage qui adapte l'affichage pour les enfants dyslexiques (police, espacement). | Famille | mode dyslexie, accessibilité |
-| Temps d'écran (à valider) | Durée de jeu maximale par jour fixée par le parent. Au-delà, une pause s'affiche. | Famille | limite, quota |
 | Contrôle parental (à valider) | Question à laquelle seul un adulte sait répondre, qui protège l'espace parent. | Famille | code, verrou, mot de passe |
 
 ## Accompagnement
@@ -88,6 +87,8 @@ Le glossaire garde l'orthographe française.
 3. Les deux seuils sont gardés : **réussie** à 1 étoile (ouvre la leçon suivante), **acquise** à 2 étoiles (compétence et badge).
 4. Les **mots de la semaine** sont une sorte de **devoir**.
 5. Les **leçons personnelles** appartiennent au contexte Accompagnement.
+6. **Motivation** est un contexte à part : il réagit aux séances terminées et ne modifie jamais une note.
+7. **Pas de temps d'écran** : l'application ne limite pas la durée de jeu. Le terme n'existe pas dans le domaine.
 
 ## Conflits à trancher
 
