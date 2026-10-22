@@ -1,6 +1,6 @@
 import { assertEquals, assertStrictEquals } from "@std/assert";
 import type { CaractereDeLaVoix } from "./caractere-de-la-voix.ts";
-import { choisirVoix } from "./choix-de-voix.ts";
+import { CARACTERE_LANGUE_ETRANGERE, choisirVoix, choisirVoixDeLangue } from "./choix-de-voix.ts";
 import type { VoixDisponible } from "./voix-disponible.ts";
 
 const noisette: CaractereDeLaVoix = {
@@ -38,4 +38,32 @@ Deno.test("une voix du bon sexe trop loin de la meilleure est écartée au profi
 
 Deno.test("sans voix française, aucune voix n'est choisie", () => {
   assertStrictEquals(choisirVoix([], capitaineSam), undefined);
+});
+
+const googleUk: VoixDisponible = { nom: "Google UK English Female", langue: "en-GB" };
+const daniel: VoixDisponible = { nom: "Daniel", langue: "en-GB" };
+const samantha: VoixDisponible = { nom: "Samantha", langue: "en-US" };
+
+Deno.test("pour l'anglais en-GB, la voix au nom naturel l'emporte sur une voix ordinaire de la même langue", () => {
+  assertEquals(choisirVoixDeLangue([daniel, googleUk], "en-GB"), googleUk);
+});
+
+Deno.test("pour l'anglais en-GB, la voix de la langue exacte l'emporte sur une autre variante", () => {
+  assertEquals(choisirVoixDeLangue([samantha, daniel], "en-GB"), daniel);
+});
+
+Deno.test("une voix d'une autre variante de la langue est choisie à défaut de la langue exacte", () => {
+  assertEquals(choisirVoixDeLangue([samantha], "en-GB"), samantha);
+});
+
+Deno.test("la langue de la voix est reconnue sans tenir compte de la casse", () => {
+  assertEquals(choisirVoixDeLangue([{ nom: "Daniel", langue: "EN-gb" }], "en-GB")?.nom, "Daniel");
+});
+
+Deno.test("sans voix dans la langue demandée, aucune voix n'est choisie", () => {
+  assertStrictEquals(choisirVoixDeLangue([denise, thomas], "en-GB"), undefined);
+});
+
+Deno.test("une langue étrangère se lit toujours avec une voix féminine, un peu plus aiguë et plus lente", () => {
+  assertEquals(CARACTERE_LANGUE_ETRANGERE, { sexe: "feminine", hauteur: 1.05, rythme: 0.95 });
 });
