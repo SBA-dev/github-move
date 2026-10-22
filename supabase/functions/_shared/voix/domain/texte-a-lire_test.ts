@@ -25,6 +25,11 @@ Deno.test("les guillemets français ne sont pas lus", () => {
   assertEquals(texteALire("Lis « papa »")?.texte, "Lis papa");
 });
 
+Deno.test("un guillemet fermant ne laisse pas d'espace devant la ponctuation", () => {
+  assertEquals(texteALire("Lis le mot « maman ».")?.texte, "Lis le mot maman.");
+  assertEquals(texteALire("Dis « Bravo » !")?.texte, "Dis Bravo !");
+});
+
 Deno.test("les espaces multiples sont réduites et le texte rogné", () => {
   assertEquals(texteALire("  Bonjour   les \n amis  ")?.texte, "Bonjour les amis");
 });
