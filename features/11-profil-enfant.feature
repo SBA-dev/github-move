@@ -1,5 +1,5 @@
 # language: fr
-@issue-11 @wip
+@issue-11
 Fonctionnalité: Créer et modifier un profil enfant, et choisir qui joue
   En tant que parent
   Je veux créer le profil enfant de chacun de mes enfants, avec son prénom, son niveau et son univers
