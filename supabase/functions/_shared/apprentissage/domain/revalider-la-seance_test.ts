@@ -123,3 +123,10 @@ Deno.test("une réponse donnée après la réussite d'une question est refusée,
 
   assertThrows(() => revaliderLaSeance(leconDeDeuxExercicesCourts(), reponseEnTropApresLaPremiere), SeanceIncoherente);
 });
+
+Deno.test("des tirages en trop rendent la séance incohérente", () => {
+  const envoi = envoiDeCalcul();
+  const avecUnTirageDeTrop = { ...envoi, tirages: [...envoi.tirages, ["6", "7", "8", "9"]] };
+
+  assertThrows(() => revaliderCalcul(avecUnTirageDeTrop), SeanceIncoherente);
+});
