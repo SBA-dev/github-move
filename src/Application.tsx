@@ -45,9 +45,15 @@ export function Application() {
     consommerLArrivee();
     aller("espace-parent");
   }, [connecte, arriveParLeLien, consommerLArrivee, aller]);
+  const [deconnexionEchouee, setDeconnexionEchouee] = useState(false);
   const seDeconnecter = async () => {
-    await connexion.seDeconnecter.executer();
-    aller("accueil");
+    setDeconnexionEchouee(false);
+    try {
+      await connexion.seDeconnecter.executer();
+      aller("accueil");
+    } catch {
+      setDeconnexionEchouee(true);
+    }
   };
   const habillage: Habillage = { "--accent": palette.principale, "--accent-fonce": palette.foncee };
 
@@ -91,6 +97,7 @@ export function Application() {
               <h2>Espace parent</h2>
               <p>Bientôt disponible.</p>
               <button type="button" onClick={seDeconnecter}>Se déconnecter</button>
+              {deconnexionEchouee && <p role="alert">La déconnexion n'a pas abouti. Réessaie dans un instant.</p>}
             </section>
           )}
         </main>
