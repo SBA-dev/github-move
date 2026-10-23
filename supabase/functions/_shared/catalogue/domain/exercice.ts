@@ -1,5 +1,6 @@
 import { LeconMalFormee } from "./erreurs.ts";
-import { enObjet, listeFacultative, nombreFacultatif, type Objet, texteFacultatif } from "./lecture.ts";
+import { enObjet, listeFacultative, nombreFacultatif, type Objet, texteFacultatif, texteRequis } from "./lecture.ts";
+import { nombreDeTrous } from "./trous.ts";
 import { estUnTypeDExercice, type TypeDExercice } from "./type-d-exercice.ts";
 
 export type Exercice = Readonly<{
@@ -81,5 +82,26 @@ function lireExercice(brut: Objet, type: TypeDExercice): Exercice {
   for (const donnee of DONNEES_REQUISES[type]) {
     if (exercice[donnee] === undefined) throw new LeconMalFormee(`l'exercice « ${type} » n'a pas de ${donnee}`);
   }
+  if (!aDesQuestions(exercice)) throw new LeconMalFormee(`l'exercice « ${type} » n'a aucune question à poser`);
+  if (type === "bulles" || type === "lecture") exercice.questions?.forEach(lireEnonce);
   return exercice;
+}
+
+function aDesQuestions(exercice: Exercice): boolean {
+  switch (exercice.type) {
+    case "trous":
+      return nombreDeTrous(exercice.texte ?? "") > 0;
+    case "fluence":
+    case "calcul":
+    case "addition":
+      return true;
+    default:
+      return DONNEES_REQUISES[exercice.type].every((donnee) =>
+        ((exercice[donnee] as readonly unknown[]) ?? []).length > 0
+      );
+  }
+}
+
+function lireEnonce(question: unknown): void {
+  texteRequis(enObjet(question, "une question").question, "l'énoncé d'une question");
 }

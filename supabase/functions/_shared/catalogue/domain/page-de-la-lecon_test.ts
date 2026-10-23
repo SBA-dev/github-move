@@ -46,7 +46,11 @@ function leconSonsOuOnAn() {
     },
     lecon: [{ texte: "O et U ensemble font le son « ou ».", exemples: [] }],
     exercices: [
-      { type: "bulles", titre: "Quel son entends-tu ?", questions: [{ question: "Quel son ?", choix: ["ou"], reponse: "ou" }] },
+      {
+        type: "bulles",
+        titre: "Quel son entends-tu ?",
+        questions: [{ question: "Quel son ?", choix: ["ou"], reponse: "ou" }],
+      },
       { type: "classer", titre: "Les maisons des sons", items: [{ texte: "loup", groupe: "1" }] },
     ],
   });

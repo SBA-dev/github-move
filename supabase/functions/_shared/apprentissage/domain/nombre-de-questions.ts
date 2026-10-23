@@ -1,4 +1,4 @@
-import type { Exercice } from "../../catalogue/domain/index.ts";
+import { type Exercice, nombreDeTrous } from "../../catalogue/domain/index.ts";
 
 const QUESTIONS_PAR_DEFAUT_D_UN_CALCUL = 5;
 const OPERATIONS_PAR_DEFAUT_D_UNE_ADDITION = 3;
@@ -36,10 +36,6 @@ export function nombreDeQuestions(exercice: Exercice): number {
 
 function taille(liste: readonly unknown[] | undefined): number {
   return liste?.length ?? 0;
-}
-
-function nombreDeTrous(texte: string): number {
-  return texte.match(/\[[^\]]*\]/g)?.length ?? 0;
 }
 
 function combienDemande(exercice: Exercice): number | undefined {

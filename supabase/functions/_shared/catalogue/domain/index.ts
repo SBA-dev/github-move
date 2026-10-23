@@ -15,3 +15,5 @@ export type {
   PassageDuGuideAffiche,
   PassagePourLesAdultes,
 } from "./page-de-la-lecon.ts";
+export { enonceDeLaQuestion } from "./enonce-de-la-question.ts";
+export { nombreDeTrous } from "./trous.ts";

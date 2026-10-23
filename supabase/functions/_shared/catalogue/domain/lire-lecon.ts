@@ -47,8 +47,8 @@ function lireProgramme(brut: unknown): ProgrammeCite {
 }
 
 function lireEtapes(brut: unknown): readonly EtapeDeLecon[] {
-  if (!Array.isArray(brut)) return Object.freeze([]);
-  return Object.freeze(brut.map(lireEtape));
+  if (brut === undefined) return Object.freeze([]);
+  return Object.freeze(liste(brut, "les étapes de la leçon").map(lireEtape));
 }
 
 function lireEtape(brut: unknown): EtapeDeLecon {

@@ -11,6 +11,10 @@ export class ExerciceJoue {
     return this.reussies;
   }
 
+  get rangDeLaQuestionEnCours(): number {
+    return this.reussies;
+  }
+
   reussirUneQuestion(): void {
     this.reussies++;
   }

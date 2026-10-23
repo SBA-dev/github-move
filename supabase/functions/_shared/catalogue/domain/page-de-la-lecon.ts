@@ -20,22 +20,22 @@ export type PageDeLaLecon = Readonly<{
 }>;
 
 export function pageDeLaLecon(lecon: Lecon, section?: SectionDuProgramme): PageDeLaLecon {
-  return {
+  return Object.freeze({
     titre: lecon.titre,
     niveauEtMatiere: `${lecon.niveau} · ${lecon.matiere.libelle}`,
-    exercicesProposes: lecon.exercices.map((exercice, position) => {
+    exercicesProposes: Object.freeze(lecon.exercices.map((exercice, position) => {
       const libelle = libelleDuType(exercice.type);
-      return { position, libelle, intitule: exercice.titre ?? libelle };
-    }),
-    passagePourLesAdultes: {
+      return Object.freeze({ position, libelle, intitule: exercice.titre ?? libelle });
+    })),
+    passagePourLesAdultes: Object.freeze({
       citation: lecon.programme.citation,
       source: section && sourceDeLaSection(section),
-      guide: lecon.guide && {
+      guide: lecon.guide && Object.freeze({
         extrait: lecon.guide.extrait,
         reference: `Guide fondamental « ${lecon.guide.titre} » (Eduscol), page ${lecon.guide.page}.`,
-      },
-    },
-  };
+      }),
+    }),
+  });
 }
 
 function sourceDeLaSection(section: SectionDuProgramme): string {
