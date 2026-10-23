@@ -46,6 +46,21 @@ export class ProfilEnfant {
     return profil;
   }
 
+  static reconstituer(
+    id: ProfilEnfantId,
+    prenom: Prenom,
+    niveau: Niveau,
+    univers: CleUnivers,
+    creeLe: Date,
+    parents: ParentId[],
+  ): ProfilEnfant {
+    return new ProfilEnfant(id, prenom, niveau, univers, creeLe, parents);
+  }
+
+  get rattaches(): readonly ParentId[] {
+    return this.parents;
+  }
+
   get prenom(): Prenom {
     return this._prenom;
   }
