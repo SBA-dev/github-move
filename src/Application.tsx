@@ -9,7 +9,7 @@ import { EnTete } from "./en-tete/EnTete.tsx";
 import { ControleParental, EspaceParent, useAccesALEspaceParent } from "./famille/index.ts";
 import { AideEcranDAccueil } from "./installation/index.ts";
 import { type Lieu, useNavigation } from "./navigation.ts";
-import { PageDeLaLecon } from "./seance/index.ts";
+import { EcranDeSeance, PageDeLaLecon } from "./seance/index.ts";
 import { ChoixDeLaVoix, useVoix } from "./voix/index.ts";
 import { PALETTES, Paysage, PersonnageGuide } from "./univers/index.ts";
 
@@ -102,7 +102,7 @@ export function Application() {
           surAccueil={ecran === "accueil"}
           enfant={profil}
           son={voix.son}
-          retourPossible={retourPossible}
+          retourPossible={retourPossible && ecran !== "seance"}
           onBasculerLeSon={voix.basculerLeSon}
           onAccueil={() => aller("accueil")}
           onRetour={revenir}
@@ -139,6 +139,17 @@ export function Application() {
               accueillir={!viaRetour}
               onCommencer={(exercice) => aller({ ecran: "seance", leconId: lieu.leconId, exercice })}
               onRetourALAccueil={() => aller("accueil")}
+            />
+          )}
+          {lieu.ecran === "seance" && profilCharge && profilEnCours && (
+            <EcranDeSeance
+              key={`${lieu.leconId}/${lieu.exercice ?? "complete"}`}
+              leconId={lieu.leconId}
+              exercice={lieu.exercice}
+              prenom={profilEnCours.prenom}
+              univers={univers}
+              voix={voix}
+              onRetour={() => (retourPossible ? revenir() : remplacer({ ecran: "lecon", leconId: lieu.leconId }))}
             />
           )}
           {ecran === "espace-parent" && connexion.etat === "deconnecte" && (
