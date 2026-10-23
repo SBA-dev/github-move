@@ -14,18 +14,18 @@ function creation(profils: ProfilsEnfantsEnMemoire, identifiant = "profil-lea"):
   return new CreerProfilEnfant(profils, generateurIdFixe(identifiant));
 }
 
-Deno.test("un parent crée le profil enfant de Léa en CE1 dans l'univers des dragons", async () => {
+Deno.test("un parent crée le profil enfant de Léa en CE1 dans l'univers pompier", async () => {
   const profils = new ProfilsEnfantsEnMemoire();
 
   await creation(profils).executer(
-    { parent: "parent-paul", prenom: "Léa", niveau: "CE1", univers: "dragons" },
+    { parent: "parent-paul", prenom: "Léa", niveau: "CE1", univers: "pompier" },
     maintenant,
   );
 
   const profil = await profils.parId(ProfilEnfantId.de("profil-lea"));
   assertEquals(profil?.prenom.valeur, "Léa");
   assertEquals(profil?.niveau.valeur, "CE1");
-  assertEquals(profil?.univers, "dragons");
+  assertEquals(profil?.univers, "pompier");
   assertEquals(profil?.estRattacheA(paul), true);
 });
 

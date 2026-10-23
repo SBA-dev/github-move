@@ -26,13 +26,13 @@ Deno.test("un parent rattaché change le prénom, le niveau et l'univers du prof
     profil: "profil-lea",
     prenom: "Léonie",
     niveau: "CE2",
-    univers: "dragons",
+    univers: "pompier",
   });
 
   const profil = await profils.parId(idDeLea);
   assertEquals(profil?.prenom.valeur, "Léonie");
   assertEquals(profil?.niveau.valeur, "CE2");
-  assertEquals(profil?.univers, "dragons");
+  assertEquals(profil?.univers, "pompier");
 });
 
 Deno.test("changer de niveau annonce NiveauDuProfilChange", async () => {
