@@ -20,7 +20,7 @@ self.addEventListener("fetch", (evenement) => {
   if (requete.method !== "GET" || url.origin !== self.location.origin) return;
   if (requete.mode === "navigate") {
     evenement.respondWith(reseauPuisCache(requete, "/"));
-  } else if (url.pathname === "/bibliotheque.json") {
+  } else if (url.pathname === "/bibliotheque.json" || url.pathname === "/programmes-index.json") {
     evenement.respondWith(reseauPuisCache(requete, url.pathname));
   } else if (url.pathname.startsWith(PREFIXE_DES_FICHIERS_HACHES)) {
     evenement.respondWith(cachePuisReseau(requete));
