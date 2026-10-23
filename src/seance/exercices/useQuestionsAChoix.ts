@@ -92,13 +92,13 @@ export function useQuestionsAChoix(
     await presenter(numero);
   }, [sequence, faireSilence, seance, presenter]);
 
-  /** Une relecture qui va jusqu'au bout fait apparaître les choix : l'enfant n'est jamais laissé devant une question sans choix. */
+  /** Une relecture va jusqu'au bout du déroulé de la présentation : l'enfant n'est jamais laissé devant une question sans choix. */
   const relireLaQuestion = useCallback(async () => {
-    const courante = laQuestionEnCours();
-    if (!courante || estFigee.current) return;
-    sequence.current++;
-    if (await dire({ texte: courante.question.enonce, nature: "question" })) setChoixVisiblesPour(courante.question);
-  }, [laQuestionEnCours, sequence, dire]);
+    if (!laQuestionEnCours() || estFigee.current) return;
+    const numero = ++sequence.current;
+    faireSilence();
+    await presenter(numero);
+  }, [laQuestionEnCours, sequence, faireSilence, presenter]);
 
   const ecouterLeMot = useCallback(async () => {
     const courante = laQuestionEnCours();
@@ -122,19 +122,20 @@ export function useQuestionsAChoix(
     if (jusquAuBout) await direLeMotAEcouter(numero, question);
   }, [dire, direLeMotAEcouter]);
 
-  /** La bulle affiche la phrase entière ; le mot anglais est dit avec la voix anglaise, le reste avec celle du personnage guide. */
+  /** La bulle affiche la phrase entière ; l'explication est lue morceau par morceau, chacun dans sa langue, le reste avec la voix du personnage guide. */
   const feliciter = useCallback(async (numero: number, reaction: Reaction, question: QuestionJouee) => {
     const explication = question.explication();
     if (explication === undefined) {
       await dire({ texte: reaction.parole.texte, nature: "felicitation", humeur: reaction.humeur });
       return;
     }
-    const texte = `${reaction.parole.texte} ${explication}`;
+    const texte = `${reaction.parole.texte} ${explication.texte}`;
     if (!(await dire({ texte, aLire: reaction.parole.texte, nature: "felicitation", humeur: reaction.humeur }))) return;
-    if (!(await direLeMotAEcouter(numero, question))) return;
-    const [, suite = ""] = explication.split(`« ${question.motAEcouter} »`);
-    await lire(suite, {});
-  }, [dire, direLeMotAEcouter, lire]);
+    for (const morceau of explication.morceaux) {
+      await lire(morceau.texte, { langue: morceau.langue });
+      if (numero !== sequence.current) return;
+    }
+  }, [dire, lire, sequence]);
 
   const repondre = useCallback(async (texte: string, suite: SuiteDeLaReponse) => {
     const courante = laQuestionEnCours();

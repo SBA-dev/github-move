@@ -103,10 +103,11 @@ export function useDeroulementDeSeance(
   );
 
   const reecouter = useCallback(() => {
+    if (questions.figee) return;
     if (personnage.parole?.nature === "question" && reprendreLaQuestion()) return;
     sequence.current++;
     relire();
-  }, [personnage.parole, reprendreLaQuestion, relire]);
+  }, [questions.figee, personnage.parole, reprendreLaQuestion, relire]);
 
   const abandonner = useCallback(() => {
     vivant.current = false;
