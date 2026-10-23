@@ -257,7 +257,7 @@ button:focus-visible, summary:focus-visible { outline: 3px solid #1f2a1f; outlin
   cursor: pointer;
   transition: opacity .3s, transform .3s;
 }
-.bulle-de-choix[aria-disabled="true"] { opacity: .45; cursor: default; }
+.bulle-de-choix[aria-disabled="true"], .reecouter[aria-disabled="true"] { opacity: .45; cursor: default; }
 .bulle-de-choix[data-eclatee="true"] { opacity: 0; transform: scale(1.5); }
 .question:hover { background: #fff; }
 .bulle-de-choix:hover:not([aria-disabled="true"]) { background: #fff3c4; }

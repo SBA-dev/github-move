@@ -17,12 +17,13 @@ export function explicationDeLaReponse(
   type: TypeDExerciceAChoix,
   item: { dire?: string; reponse: string; langue?: string },
 ): ExplicationDeLaReponse | undefined {
-  if (type !== "ecoute") return undefined;
+  if (type !== "ecoute" || item.dire === undefined) return undefined;
+  const { dire } = item;
   const motEcoute: MorceauDExplication = item.langue === undefined
-    ? { texte: `${item.dire}` }
-    : { texte: `${item.dire}`, langue: item.langue };
+    ? { texte: dire }
+    : { texte: dire, langue: item.langue };
   return {
-    texte: `« ${item.dire} », c'est « ${item.reponse} ».`,
+    texte: `« ${dire} », c'est « ${item.reponse} ».`,
     morceaux: [motEcoute, { texte: `c'est ${item.reponse}.` }],
   };
 }

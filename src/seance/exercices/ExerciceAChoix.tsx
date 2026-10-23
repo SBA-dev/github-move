@@ -51,7 +51,7 @@ export function ExerciceAChoix(props: Props) {
             Écouter
           </button>
           {props.sonImpossible && (
-            <p className="ecoute-sans-son" data-testid="ecoute-sans-son">{MESSAGE_DE_L_ECOUTE_SANS_SON}</p>
+            <p className="ecoute-sans-son" role="status" data-testid="ecoute-sans-son">{MESSAGE_DE_L_ECOUTE_SANS_SON}</p>
           )}
           {props.sonImpossible && props.sonCoupe && (
             <button type="button" data-testid="activer-le-son" onClick={props.onActiverLeSon}>Activer le son</button>

@@ -104,7 +104,7 @@ function SeanceEnCours({ seance, lecon, univers, voix, onRetour }: PropsEnCours)
           rangDuMotPrononce={deroulement.rangDuMotPrononce}
         />
       </div>
-      <button type="button" onClick={deroulement.reecouter} aria-disabled={deroulement.figee !== undefined}>
+      <button type="button" className="reecouter" onClick={deroulement.reecouter} aria-disabled={deroulement.figee !== undefined ? true : undefined}>
         Réécouter
       </button>
       {etape && (

@@ -49,7 +49,7 @@ export function useDeroulementDeSeance(
     vivant,
     redessiner,
   });
-  const { ouvrir, presenter, repondre: repondreALaQuestion, reprendreLaQuestion } = questions;
+  const { ouvrir, presenter, repondre: repondreALaQuestion, relireLaQuestion } = questions;
 
   const lireLaConsigneDeLExercice = useCallback(async () => {
     const position = seance.exerciceEnCours()?.position;
@@ -104,10 +104,10 @@ export function useDeroulementDeSeance(
 
   const reecouter = useCallback(() => {
     if (questions.figee) return;
-    if (personnage.parole?.nature === "question" && reprendreLaQuestion()) return;
+    if (personnage.parole?.nature === "question" && relireLaQuestion()) return;
     sequence.current++;
     relire();
-  }, [questions.figee, personnage.parole, reprendreLaQuestion, relire]);
+  }, [questions.figee, personnage.parole, relireLaQuestion, relire]);
 
   const abandonner = useCallback(() => {
     vivant.current = false;
@@ -124,7 +124,6 @@ export function useDeroulementDeSeance(
     bulleEclatee,
     avancementAnnonce,
     jAiEcoute,
-    relireLaQuestion,
     ecouterLeMot,
   } = questions;
   return {

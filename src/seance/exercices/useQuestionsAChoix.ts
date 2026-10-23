@@ -92,14 +92,6 @@ export function useQuestionsAChoix(
     await presenter(numero);
   }, [sequence, faireSilence, seance, presenter]);
 
-  /** Une relecture va jusqu'au bout du déroulé de la présentation : l'enfant n'est jamais laissé devant une question sans choix. */
-  const relireLaQuestion = useCallback(async () => {
-    if (!laQuestionEnCours() || estFigee.current) return;
-    const numero = ++sequence.current;
-    faireSilence();
-    await presenter(numero);
-  }, [laQuestionEnCours, sequence, faireSilence, presenter]);
-
   const ecouterLeMot = useCallback(async () => {
     const courante = laQuestionEnCours();
     if (!courante || estFigee.current) return;
@@ -108,13 +100,14 @@ export function useQuestionsAChoix(
     if (await direLeMotAEcouter(numero, courante.question)) setChoixVisiblesPour(courante.question);
   }, [laQuestionEnCours, sequence, faireSilence, direLeMotAEcouter]);
 
-  /** « Réécouter » pendant la lecture d'une question la reprend jusqu'aux choix. Rend `false` si ce n'était pas le cas. */
-  const reprendreLaQuestion = useCallback(() => {
-    const courante = laQuestionEnCours();
-    if (!courante || estFigee.current) return false;
-    void presenter(++sequence.current);
+  /** Relit la question jusqu'au bout du déroulé de la présentation : l'enfant n'est jamais laissé devant une question sans choix. Rend `false` s'il n'y a rien à relire. */
+  const relireLaQuestion = useCallback(() => {
+    if (!laQuestionEnCours() || estFigee.current) return false;
+    const numero = ++sequence.current;
+    faireSilence();
+    void presenter(numero);
     return true;
-  }, [laQuestionEnCours, presenter, sequence]);
+  }, [laQuestionEnCours, sequence, faireSilence, presenter]);
 
   const encourager = useCallback(async (numero: number, reaction: Reaction, question: QuestionJouee) => {
     const texte = `${reaction.parole.texte} ${question.complementDeLEncouragement()}`;
@@ -172,6 +165,5 @@ export function useQuestionsAChoix(
     jAiEcoute,
     relireLaQuestion,
     ecouterLeMot,
-    reprendreLaQuestion,
   };
 }
