@@ -33,3 +33,5 @@ export { PlanDeSeance } from "./plan-de-seance.ts";
 export { Seance } from "./seance.ts";
 export type { FaitDeSeance } from "./seance.ts";
 export { SeanceId } from "./seance-id.ts";
+export { ResultatDeLaLecon } from "./resultat-de-la-lecon.ts";
+export type { EtatDuResultat, EtoilesGagnees, FaitDeResultat } from "./resultat-de-la-lecon.ts";
