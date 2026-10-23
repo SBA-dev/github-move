@@ -2,6 +2,8 @@ export type { CaractereDeLaVoix } from "./caractere-de-la-voix.ts";
 export { texteALire } from "./texte-a-lire.ts";
 export type { TexteALire } from "./texte-a-lire.ts";
 export { estFeminine, estMasculine, estTresNaturelle, scoreDeLaVoix, voixFrancaisesTriees } from "./voix-disponible.ts";
+export { voixProposees } from "./voix-proposees.ts";
+export type { VoixProposee } from "./voix-proposees.ts";
 export { phraseDEssai } from "./phrase-d-essai.ts";
 export type { VoixDisponible } from "./voix-disponible.ts";
 export {
