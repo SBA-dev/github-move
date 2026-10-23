@@ -190,3 +190,19 @@ export function leconDEcouteAvecAide(): Lecon {
     items: [{ dire: "cat", choix: ["chat", "chien"], reponse: "chat", aide: "Pense à l'animal qui miaule." }],
   });
 }
+
+export function leconDeBullesEtDEcoute(): Lecon {
+  return lireLecon({
+    id: "an-cp-bulles-et-ecoute",
+    matiere: "anglais",
+    niveau: "CP",
+    titre: "Bulles et écoute",
+    ordre: 3,
+    programme,
+    lecon: [],
+    exercices: [
+      { type: "bulles", questions: [questionDeBulles("Dans le mot « poule », quel son entends-tu ?")] },
+      { type: "ecoute", items: [{ dire: "cat", choix: ["chat", "chien"], reponse: "chat" }] },
+    ],
+  });
+}
