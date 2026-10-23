@@ -9,8 +9,15 @@ import {
 
 Deno.test("la bonne réponse d'une écoute est expliquée : « « a cat », c'est « un chat ». »", () => {
   assertEquals(
-    explicationDeLaReponse("ecoute", { dire: "a cat", reponse: "un chat" }),
+    explicationDeLaReponse("ecoute", { dire: "a cat", reponse: "un chat", langue: "en-GB" })?.texte,
     "« a cat », c'est « un chat ».",
+  );
+});
+
+Deno.test("l'explication d'une écoute se lit en morceaux : le mot écouté dans sa langue, puis la réponse", () => {
+  assertEquals(
+    explicationDeLaReponse("ecoute", { dire: "a cat", reponse: "un chat", langue: "en-GB" })?.morceaux,
+    [{ texte: "a cat", langue: "en-GB" }, { texte: "c'est un chat." }],
   );
 });
 

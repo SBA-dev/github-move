@@ -31,7 +31,14 @@ Deno.test("une question sans aide n'en porte pas", () => {
 });
 
 Deno.test("l'explication d'une question d'écoute dit le mot écouté et sa réponse", () => {
-  assertEquals(premiereQuestion(leconDEcoute()).explication(), "« cat », c'est « chat ».");
+  assertEquals(premiereQuestion(leconDEcoute()).explication()?.texte, "« cat », c'est « chat ».");
+});
+
+Deno.test("l'explication d'une question d'écoute se lit en morceaux : le mot écouté dans sa langue, puis la réponse", () => {
+  assertEquals(
+    premiereQuestion(leconDEcoute()).explication()?.morceaux,
+    [{ texte: "cat", langue: "en-GB" }, { texte: "c'est chat." }],
+  );
 });
 
 Deno.test("une question qui n'est pas d'écoute n'a aucune explication", () => {
