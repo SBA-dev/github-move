@@ -11,3 +11,4 @@
 - 07:53 · Étape 3 lancée (« TDD de #15 » du PO). Branche `feature/15-choix-de-la-voix`, partie de `feature/10-controle-parental` (l'onglet « Voix » vit dans l'espace parent de #10). Comportements : choix de voix et voix montrée comme choisie ; voix très naturelle et phrase d'essai ; lecture avec le choix de l'appareil et essai d'une voix.
 - 07:55 · Cycle 1 (choix de voix ; voix très naturelle et phrase d'essai) : red 21c699b et 6ab5223, green f97d32e et eefb476. 156 tests.
 - 07:57 · Cycle 2 (lecture et essai avec le choix de l'appareil) : red 1a5b03a, green 8fe70d8. 167 tests. Points à surveiller en review : dépendance `choixDeVoix` optionnelle, chaîne « automatique » utilisée comme valeur spéciale dans `essayerUneVoix`.
+- 08:01 · Câblage : 4be1e78. tsc, build, 167 tests Deno, non-régression E2E 140/140. Étape 4 : review.
