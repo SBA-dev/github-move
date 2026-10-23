@@ -13,3 +13,7 @@ export function hasardFixe(...tirages: number[]): Hasard {
     },
   };
 }
+
+export function hasardSansMelange(): Hasard {
+  return { entre0et1: () => 0.999 };
+}

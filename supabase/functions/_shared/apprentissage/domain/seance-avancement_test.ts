@@ -1,6 +1,7 @@
 import { assertEquals, assertThrows } from "@std/assert";
 import type { Lecon } from "../../catalogue/domain/index.ts";
 import { generateurIdFixe } from "../test_utils/generateur-id-fixe.ts";
+import { hasardSansMelange } from "../test_utils/hasard-fixe.ts";
 import {
   leconDeDeuxExercicesCourts,
   leconDeDeuxExercicesDontLeSecondSansTitre,
@@ -11,7 +12,7 @@ import { PasDeQuestionEnCours, SeanceDejaFinie } from "./erreurs.ts";
 import { Seance } from "./seance.ts";
 
 function commencer(lecon: Lecon, choix: ChoixDeSeance): Seance {
-  return Seance.commencer(generateurIdFixe("seance-1"), "profil-lea", lecon, choix);
+  return Seance.commencer(generateurIdFixe("seance-1"), hasardSansMelange(), "profil-lea", lecon, choix);
 }
 
 function seanceCompleteAuxExercices(lecon: Lecon): Seance {

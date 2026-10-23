@@ -1,6 +1,7 @@
 import { assertEquals, assertThrows } from "@std/assert";
 import type { Lecon } from "../../catalogue/domain/index.ts";
 import { generateurIdFixe } from "../test_utils/generateur-id-fixe.ts";
+import { hasardSansMelange } from "../test_utils/hasard-fixe.ts";
 import { leconCompterSansEtape, leconSansExercice, leconSonsOuOnAn } from "../test_utils/lecons-de-test.ts";
 import { ChoixDeSeance } from "./choix-de-seance.ts";
 import { ExerciceIntrouvable, LeconSansExercice, PasDEtapeDeLeconEnCours } from "./erreurs.ts";
@@ -9,7 +10,7 @@ import { Seance } from "./seance.ts";
 const profilDeLea = "profil-lea";
 
 function commencer(lecon: Lecon, choix: ChoixDeSeance): Seance {
-  return Seance.commencer(generateurIdFixe("seance-1"), profilDeLea, lecon, choix);
+  return Seance.commencer(generateurIdFixe("seance-1"), hasardSansMelange(), profilDeLea, lecon, choix);
 }
 
 Deno.test("une séance commencée porte l'identifiant fourni, le profil enfant et la leçon", () => {
