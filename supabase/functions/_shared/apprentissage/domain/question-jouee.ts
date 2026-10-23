@@ -10,7 +10,7 @@ import {
 } from "./exercices/phrases-des-exercices-a-choix.ts";
 import { ChoixInconnu, JeNeSaisPasDejaDit, QuestionDejaReussie } from "./erreurs.ts";
 import type { Hasard } from "./hasard.ts";
-import type { Reponse, ResultatDeReponse } from "./reponse.ts";
+import type { Reponse, ReponseDonnee, ResultatDeReponse } from "./reponse.ts";
 
 const ERREURS_AVANT_LA_REDUCTION_A_DEUX = 2;
 
@@ -26,15 +26,19 @@ export class QuestionJouee {
   private nombreDErreurs = 0;
   private estReussie = false;
   private jeNeSaisPasDejaDit = false;
+  private readonly ordreInitialDesChoix: string[];
+  private readonly reponsesDonnees: ReponseDonnee[] = [];
 
   private constructor(
     readonly enonce: string,
     readonly cle: CleDeQuestion,
     private readonly bonneReponse: string,
     private choixProposes: ChoixProposes,
-    private readonly type: TypeDExerciceAChoix,
+    readonly type: TypeDExerciceAChoix,
     private readonly complements: Complements,
-  ) {}
+  ) {
+    this.ordreInitialDesChoix = choixProposes.textes();
+  }
 
   static aChoix(
     { cle, enonce, choix, bonneReponse, hasard, type, complements = {} }: {
@@ -89,9 +93,18 @@ export class QuestionJouee {
     if (this.estReussie) throw new QuestionDejaReussie();
     if (this.jeNeSaisPasDejaDit) throw new JeNeSaisPasDejaDit();
     this.jeNeSaisPasDejaDit = true;
+    this.reponsesDonnees.push({ genre: "jeNeSaisPas" });
     if (this.nombreDErreurs === 0) this.nombreDErreurs = 1;
     this.choixProposes = this.choixProposes.reduireALaBonneReponse();
     return { aide: this.aideDeLaQuestion(), bonneReponse: this.bonneReponse, maniere: "briller" };
+  }
+
+  tirage(): string[] {
+    return [...this.ordreInitialDesChoix];
+  }
+
+  reponses(): ReponseDonnee[] {
+    return [...this.reponsesDonnees];
   }
 
   get bonneReponseMontree(): boolean {
@@ -117,6 +130,7 @@ export class QuestionJouee {
   repondre(reponse: Reponse): ResultatDeReponse {
     if (this.estReussie) throw new QuestionDejaReussie();
     if (!this.choixProposes.textes().includes(reponse.texte)) throw new ChoixInconnu(reponse.texte);
+    this.reponsesDonnees.push(reponse);
     if (this.choixProposes.ecartes().includes(reponse.texte)) return "dejaEcartee";
     if (reponse.texte === this.bonneReponse) {
       this.estReussie = true;

@@ -1,16 +1,42 @@
 import type { EtapeDeLecon, Lecon } from "../../catalogue/domain/index.ts";
 import type { ChoixDeSeance } from "./choix-de-seance.ts";
 import { Avancement } from "./avancement.ts";
-import { PasDeQuestionEnCours, PasDEtapeDeLeconEnCours, SeanceDejaFinie } from "./erreurs.ts";
+import {
+  PasDeQuestionEnCours,
+  PasDEtapeDeLeconEnCours,
+  SeanceDejaFinie,
+  SeanceDejaTerminee,
+  SeanceNonFinie,
+} from "./erreurs.ts";
+import { Etoiles } from "./etoiles.ts";
+import type { TypeDExerciceAChoix } from "./exercices/phrases-des-exercices-a-choix.ts";
 import type { CleDeQuestion } from "./cle-de-question.ts";
 import { ExerciceJoue } from "./exercice-joue.ts";
 import type { GenerateurId } from "./generateur-id.ts";
 import type { Hasard } from "./hasard.ts";
 import { nombreDeQuestions } from "./nombre-de-questions.ts";
 import { PlanDeSeance } from "./plan-de-seance.ts";
-import { type AideDonnee, questionsJoueesDe } from "./question-jouee.ts";
+import { type AideDonnee, type QuestionJouee, questionsJoueesDe } from "./question-jouee.ts";
 import type { Reponse, ResultatDeReponse } from "./reponse.ts";
 import { SeanceId } from "./seance-id.ts";
+import type { SeanceTermineeAEnregistrer } from "./seance-terminee-a-enregistrer.ts";
+
+export type QuestionRatee = Readonly<{ cle: CleDeQuestion; erreurs: number; jeNeSaisPas: boolean }>;
+
+export type ReussitesEtErreurs = { reussites: number; erreurs: number };
+
+export type SeanceTerminee = Readonly<{
+  type: "SeanceTerminee";
+  seance: string;
+  enfant: string;
+  lecon: string;
+  choix: ChoixDeSeance;
+  termineeLe: Date;
+  etoiles: Etoiles["nombre"];
+  erreurs: number;
+  questionsRatees: readonly QuestionRatee[];
+  parType: Partial<Record<TypeDExerciceAChoix, ReussitesEtErreurs>>;
+}>;
 
 export type FaitDeSeance =
   | Readonly<{ type: "EtapesDeLeconFinies" }>
@@ -20,6 +46,7 @@ export class Seance {
   private indexDeLEtape = 0;
   private indexDeLExercice = 0;
   private faits: FaitDeSeance[] = [];
+  private termineeLe: Date | undefined;
 
   private constructor(
     readonly id: SeanceId,
@@ -84,6 +111,52 @@ export class Seance {
     return question.direJeNeSaisPas();
   }
 
+  erreurs(): number {
+    return this.questions().reduce((somme, question) => somme + question.erreurs, 0);
+  }
+
+  etoiles(): Etoiles {
+    return Etoiles.depuisErreurs(this.erreurs());
+  }
+
+  terminer(maintenant: Date): SeanceTerminee {
+    if (this.termineeLe) throw new SeanceDejaTerminee();
+    if (!this.estFinie()) throw new SeanceNonFinie();
+    this.termineeLe = maintenant;
+    const fait: SeanceTerminee = {
+      type: "SeanceTerminee",
+      seance: this.id.valeur,
+      enfant: this.enfant,
+      lecon: this.lecon,
+      choix: this.choix,
+      termineeLe: maintenant,
+      etoiles: this.etoiles().nombre,
+      erreurs: this.erreurs(),
+      questionsRatees: this.questions()
+        .filter((question) => question.erreurs > 0)
+        .map((question) => ({
+          cle: question.cle,
+          erreurs: question.erreurs,
+          jeNeSaisPas: question.bonneReponseMontree,
+        })),
+      parType: this.reussitesEtErreursParType(),
+    };
+    return fait;
+  }
+
+  aEnregistrer(): SeanceTermineeAEnregistrer {
+    if (!this.termineeLe) throw new SeanceNonFinie();
+    const questions = this.questions();
+    return {
+      seance: this.id.valeur,
+      lecon: this.lecon,
+      choix: this.choix,
+      tirages: questions.map((question) => question.tirage()),
+      reponses: questions.map((question) => question.reponses()),
+      termineeLe: this.termineeLe,
+    };
+  }
+
   clesDesQuestionsRatees(): CleDeQuestion[] {
     return this.exercices.flatMap((exercice) => exercice.questionsRatees().map((question) => question.cle));
   }
@@ -92,6 +165,21 @@ export class Seance {
     if (!this.etapeDeLeconEnCours()) throw new PasDEtapeDeLeconEnCours();
     this.indexDeLEtape++;
     if (!this.etapeDeLeconEnCours()) this.faits.push({ type: "EtapesDeLeconFinies" });
+  }
+
+  private questions(): QuestionJouee[] {
+    return this.exercices.flatMap((exercice) => [...exercice.questionsJouees()]);
+  }
+
+  private reussitesEtErreursParType(): SeanceTerminee["parType"] {
+    const parType: Record<string, ReussitesEtErreurs> = {};
+    for (const question of this.questions()) {
+      const total = parType[question.type] ?? { reussites: 0, erreurs: 0 };
+      total.reussites += 1;
+      total.erreurs += question.erreurs;
+      parType[question.type] = total;
+    }
+    return parType;
   }
 
   private exerciceDeLaQuestionEnCours(): ExerciceJoue {

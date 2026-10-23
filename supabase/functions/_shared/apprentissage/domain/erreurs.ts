@@ -60,3 +60,17 @@ export class JeNeSaisPasDejaDit extends Error {
     this.name = "JeNeSaisPasDejaDit";
   }
 }
+
+export class SeanceNonFinie extends Error {
+  constructor() {
+    super("Cette séance a encore des questions à réussir : elle ne peut pas être terminée.");
+    this.name = "SeanceNonFinie";
+  }
+}
+
+export class SeanceDejaTerminee extends Error {
+  constructor() {
+    super("Cette séance est déjà terminée.");
+    this.name = "SeanceDejaTerminee";
+  }
+}

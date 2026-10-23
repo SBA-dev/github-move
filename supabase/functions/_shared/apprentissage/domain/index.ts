@@ -14,6 +14,8 @@ export {
   PasDEtapeDeLeconEnCours,
   QuestionDejaReussie,
   SeanceDejaFinie,
+  SeanceDejaTerminee,
+  SeanceNonFinie,
 } from "./erreurs.ts";
 export { texteALireDeLEtape } from "./etape-de-lecon-lue.ts";
 export { lectureDesChoix } from "./lecture-des-choix.ts";
@@ -28,10 +30,13 @@ export type { Hasard } from "./hasard.ts";
 export { QuestionJouee } from "./question-jouee.ts";
 export type { AideDonnee } from "./question-jouee.ts";
 export { Reponse } from "./reponse.ts";
-export type { ResultatDeReponse } from "./reponse.ts";
+export type { ReponseDonnee, ResultatDeReponse } from "./reponse.ts";
 export { PlanDeSeance } from "./plan-de-seance.ts";
 export { Seance } from "./seance.ts";
-export type { FaitDeSeance } from "./seance.ts";
+export type { FaitDeSeance, QuestionRatee, ReussitesEtErreurs, SeanceTerminee } from "./seance.ts";
+export type { SeanceTermineeAEnregistrer } from "./seance-terminee-a-enregistrer.ts";
+export { Etoiles } from "./etoiles.ts";
+export type { NombreDEtoiles } from "./etoiles.ts";
 export { SeanceId } from "./seance-id.ts";
 export { ResultatDeLaLecon } from "./resultat-de-la-lecon.ts";
 export type { EtatDuResultat, EtoilesGagnees, FaitDeResultat } from "./resultat-de-la-lecon.ts";
