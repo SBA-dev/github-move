@@ -28,6 +28,8 @@ export type Exercice = Readonly<{
 
 type Donnee = Exclude<keyof Exercice, "type">;
 
+export const TYPES_A_ENONCE: readonly TypeDExercice[] = ["bulles", "lecture"];
+
 const DONNEES_REQUISES: Record<TypeDExercice, readonly Donnee[]> = {
   bulles: ["questions"],
   classer: ["items"],
@@ -83,8 +85,26 @@ function lireExercice(brut: Objet, type: TypeDExercice): Exercice {
     if (exercice[donnee] === undefined) throw new LeconMalFormee(`l'exercice « ${type} » n'a pas de ${donnee}`);
   }
   if (!aDesQuestions(exercice)) throw new LeconMalFormee(`l'exercice « ${type} » n'a aucune question à poser`);
-  if (type === "bulles" || type === "lecture") exercice.questions?.forEach(lireEnonce);
+  if (TYPES_A_ENONCE.includes(type)) exercice.questions?.forEach(lireEnonce);
   return exercice;
+}
+
+function listeDe(exercice: Exercice, donnee: Donnee): readonly unknown[] {
+  switch (donnee) {
+    case "questions":
+    case "items":
+    case "groupes":
+    case "mots":
+    case "elements":
+    case "distracteurs":
+    case "formes":
+    case "vers":
+    case "operations":
+    case "etapes":
+      return exercice[donnee] ?? [];
+    default:
+      return [];
+  }
 }
 
 function aDesQuestions(exercice: Exercice): boolean {
@@ -96,9 +116,7 @@ function aDesQuestions(exercice: Exercice): boolean {
     case "addition":
       return true;
     default:
-      return DONNEES_REQUISES[exercice.type].every((donnee) =>
-        ((exercice[donnee] as readonly unknown[]) ?? []).length > 0
-      );
+      return DONNEES_REQUISES[exercice.type].every((donnee) => listeDe(exercice, donnee).length > 0);
   }
 }
 
