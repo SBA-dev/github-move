@@ -7,6 +7,7 @@ import {
   lireLeCorpsJson,
   NonAuthentifie,
   originesAutorisees,
+  reglagesFacultatifs,
   statutEtMessage,
   texteFacultatif,
   texteObligatoire,
@@ -101,4 +102,56 @@ Deno.test("l'identifiant d'un profil enfant qui n'est pas un UUID est une entré
 
 Deno.test("l'identifiant d'un profil enfant au format UUID est accepté", () => {
   assertEquals(uuidObligatoire({ profil: profilUuid }, "profil"), profilUuid);
+});
+
+Deno.test("sans champ « reglages », rien n'est à modifier", () => {
+  assertEquals(reglagesFacultatifs({ prenom: "Léa" }), undefined);
+});
+
+Deno.test("le champ « reglages » doit être un objet", () => {
+  for (const brut of ["dys", 1, true, null, ["modeDys"]]) {
+    assertThrows(() => reglagesFacultatifs({ reglages: brut }), EntreeInvalide, "objet");
+  }
+});
+
+Deno.test("un réglage inconnu est refusé et nommé", () => {
+  assertThrows(() => reglagesFacultatifs({ reglages: { modeSombre: true } }), EntreeInvalide, "modeSombre");
+});
+
+Deno.test("un réglage vrai ou faux qui n'est pas un booléen est refusé", () => {
+  for (const cle of ["modeDys", "toutLireAVoixHaute", "parcoursLibre"]) {
+    assertThrows(() => reglagesFacultatifs({ reglages: { [cle]: "oui" } }), EntreeInvalide, cle);
+  }
+});
+
+Deno.test("un réglage de texte qui n'est pas un texte est refusé", () => {
+  for (const cle of ["clavierDesDictees", "langueDuParent"]) {
+    assertThrows(() => reglagesFacultatifs({ reglages: { [cle]: 3 } }), EntreeInvalide, cle);
+  }
+});
+
+Deno.test("des réglages corrects sont rendus tels quels, y compris partiels", () => {
+  assertEquals(reglagesFacultatifs({ reglages: { modeDys: false, langueDuParent: "arabe" } }), {
+    modeDys: false,
+    langueDuParent: "arabe",
+  });
+  assertEquals(reglagesFacultatifs({ reglages: {} }), {});
+  assertEquals(
+    reglagesFacultatifs({
+      reglages: {
+        modeDys: true,
+        toutLireAVoixHaute: true,
+        parcoursLibre: true,
+        clavierDesDictees: "clavierComplet",
+        langueDuParent: "aucune",
+      },
+    }),
+    {
+      modeDys: true,
+      toutLireAVoixHaute: true,
+      parcoursLibre: true,
+      clavierDesDictees: "clavierComplet",
+      langueDuParent: "aucune",
+    },
+  );
 });
