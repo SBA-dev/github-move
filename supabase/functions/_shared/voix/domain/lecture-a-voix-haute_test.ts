@@ -6,6 +6,7 @@ import type { VoixDisponible } from "./voix-disponible.ts";
 import { LecteurEnMemoire } from "../test_utils/lecteur-en-memoire.ts";
 import { voixEnMemoire } from "../test_utils/voix-en-memoire.ts";
 import { hasardFixe } from "../test_utils/hasard-fixe.ts";
+import { ChoixDeVoixEnMemoire } from "../test_utils/choix-de-voix-en-memoire.ts";
 
 const CARACTERE_NOISETTE: CaractereDeLaVoix = { sexe: "feminine", hauteur: 1.25, rythme: 1 };
 const AMELIE: VoixDisponible = { nom: "Amélie (compact)", langue: "fr-FR" };
@@ -18,6 +19,7 @@ function uneLecture(options: { muet?: boolean } = {}) {
   const lecture = new LectureAVoixHaute({
     lecteur,
     voixDeLAppareil: voixEnMemoire([AMELIE, DENISE, VOIX_ANGLAISE]),
+    choixDeVoix: new ChoixDeVoixEnMemoire(),
     hasard: hasardFixe(0.5),
     caractereDuPersonnageGuide: () => CARACTERE_NOISETTE,
     etatInitial: options.muet ? "muet" : "son",

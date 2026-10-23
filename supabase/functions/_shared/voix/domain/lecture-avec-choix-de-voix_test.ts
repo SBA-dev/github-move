@@ -105,7 +105,7 @@ Deno.test("revenir à la voix automatique efface le choix mémorisé", () => {
 Deno.test("essayer une voix lit la phrase d'essai avec cette voix et le caractère du personnage guide", async () => {
   const { lecture, lecteur } = uneLecture({ caractere: CARACTERE_CAPITAINE_SAM });
 
-  await lecture.essayerUneVoix(AMELIE.nom, "Capitaine Sam");
+  await lecture.essayerUneVoix(ChoixDeVoix.imposee(AMELIE.nom), "Capitaine Sam");
 
   const lu = lecteur.lectures[0];
   assertEquals(lu?.voix, AMELIE);
@@ -116,7 +116,7 @@ Deno.test("essayer une voix lit la phrase d'essai avec cette voix et le caractè
 Deno.test("essayer la voix automatique lit avec la meilleure voix", async () => {
   const { lecture, lecteur } = uneLecture({ choix: ChoixDeVoix.imposee(AMELIE.nom) });
 
-  await lecture.essayerUneVoix("automatique", "Noisette");
+  await lecture.essayerUneVoix(ChoixDeVoix.automatique, "Noisette");
 
   assertEquals(lecteur.lectures[0]?.voix, DENISE);
 });
@@ -124,7 +124,7 @@ Deno.test("essayer la voix automatique lit avec la meilleure voix", async () => 
 Deno.test("essayer une voix ne change pas le choix mémorisé", async () => {
   const { lecture, choixDeVoix } = uneLecture({ choix: ChoixDeVoix.imposee(DENISE.nom) });
 
-  await lecture.essayerUneVoix(AMELIE.nom, "Noisette");
+  await lecture.essayerUneVoix(ChoixDeVoix.imposee(AMELIE.nom), "Noisette");
 
   assertEquals(choixDeVoix.lire(), ChoixDeVoix.imposee(DENISE.nom));
 });
@@ -132,7 +132,7 @@ Deno.test("essayer une voix ne change pas le choix mémorisé", async () => {
 Deno.test("en Muet, l'essai d'une voix n'est pas lu", async () => {
   const { lecture, lecteur } = uneLecture({ muet: true });
 
-  await lecture.essayerUneVoix(AMELIE.nom, "Noisette");
+  await lecture.essayerUneVoix(ChoixDeVoix.imposee(AMELIE.nom), "Noisette");
 
   assertEquals(lecteur.lectures, []);
 });
