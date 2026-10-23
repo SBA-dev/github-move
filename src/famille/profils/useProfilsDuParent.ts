@@ -33,7 +33,9 @@ export function useProfilsDuParent(connecte: boolean, aLire: boolean) {
   const dejaAffiche = useRef(false);
 
   useEffect(() => {
-    if (!connecte) setEtat({ type: "chargement" });
+    if (connecte) return;
+    setEtat({ type: "chargement" });
+    dejaAffiche.current = false;
   }, [connecte]);
 
   useEffect(() => {
@@ -70,7 +72,9 @@ export function useProfilsDuParent(connecte: boolean, aLire: boolean) {
   useEffect(() => {
     if (!connecte || !aLire) return;
     const relireSiLibre = () => {
-      if (!lectureEnCours.current) setRelecture((rang) => rang + 1);
+      if (lectureEnCours.current) return;
+      lectureEnCours.current = true;
+      setRelecture((rang) => rang + 1);
     };
     const auRetourDeLApplication = () => {
       if (document.visibilityState === "visible") relireSiLibre();
