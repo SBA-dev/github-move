@@ -27,4 +27,5 @@ export {
   annoncerExerciceSuivant,
   type InvitationAJouer,
   inviterAJouerApresLesEtapes,
+  parolesDeFinDeSeance,
 } from "./paroles-de-seance.ts";

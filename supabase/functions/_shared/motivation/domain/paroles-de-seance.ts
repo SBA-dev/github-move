@@ -1,6 +1,7 @@
 import type { Hasard } from "./hasard.ts";
 import type { Humeur } from "./humeur.ts";
-import { tirerDans } from "./paroles.ts";
+import { feliciter, tirerDans } from "./paroles.ts";
+import type { PersonnageGuide } from "./personnage-guide.ts";
 
 export type InvitationAJouer = { readonly texte: string; readonly humeur: Humeur };
 
@@ -22,6 +23,21 @@ export function accueillirSurLaPageDeLaLecon(prenom: string): string {
 
 export function inviterAJouerApresLesEtapes(hasard: Hasard): InvitationAJouer {
   return { texte: tirerDans(INVITATIONS_A_JOUER, hasard), humeur: "applaudit" };
+}
+
+export function parolesDeFinDeSeance(
+  etoiles: number,
+  prenom: string,
+  personnageGuide: PersonnageGuide,
+  hasard: Hasard,
+): string {
+  if (etoiles === 3) {
+    return `${tirerDans(personnageGuide.expressions, hasard)} Trois étoiles, ${prenom} ! Tu es incroyable !`;
+  }
+  const pluriel = etoiles > 1 ? "s" : "";
+  return `${
+    feliciter(personnageGuide, hasard).texte
+  } Tu gagnes ${etoiles} étoile${pluriel}, ${prenom}. Tu rejoues pour aller chercher les autres ?`;
 }
 
 export function annoncerExerciceSuivant(titre: string, hasard: Hasard): string {
