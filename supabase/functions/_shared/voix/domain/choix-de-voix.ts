@@ -27,7 +27,7 @@ function voixImposeePresente(
   choix: ChoixDeVoix,
 ): VoixDisponible | undefined {
   if (choix.type === "automatique") return undefined;
-  return voix.find((v) => v.nom === choix.nomDeLaVoix);
+  return voixFrancaisesTriees(voix).find((v) => v.nom === choix.nomDeLaVoix);
 }
 
 export function voixMontreeCommeChoisie(
