@@ -320,3 +320,27 @@ button.secondaire:hover { background: #fdf3ea; }
 .formulaire-de-profil .actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .profils-de-l-espace-parent .confirmation { font-weight: 700; }
 .accueil-de-l-enfant { display: grid; justify-items: center; gap: 12px; max-width: 100%; }
+.choix-de-demonstration { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 0; padding: 0; list-style: none; }
+
+/* Mode dys du profil en cours : police Andika, lettres, mots et lignes espacés, syllabes en couleurs alternées. */
+[data-mode-dys="true"] {
+  font-family: "Andika", "Trebuchet MS", sans-serif;
+  letter-spacing: .08em;
+  word-spacing: .3em;
+  line-height: 1.9;
+}
+[data-mode-dys="true"] :is(button, input, select) {
+  font-family: inherit;
+  letter-spacing: inherit;
+  word-spacing: inherit;
+  line-height: inherit;
+}
+[data-mode-dys="true"] :is(.consigne, .bulle, .pastille, .question, .bulle-de-choix) { overflow-wrap: anywhere; }
+.syllabe[data-parite="0"] { color: #1d4ed8; }
+.syllabe[data-parite="1"] { color: #b42318; }
+
+/* Formulaire du profil : section « Réglages » */
+.reglages { display: grid; gap: 8px; margin: 0; padding: 8px 12px; border: 2px solid var(--accent-fonce); border-radius: 12px; }
+.reglages legend { padding: 0 6px; font-weight: 700; }
+.reglage-a-cocher { display: flex; align-items: center; gap: 8px; min-height: 44px; }
+.reglage-a-cocher input { width: 24px; min-height: 24px; height: 24px; margin: 10px; flex: none; accent-color: var(--accent-fonce); }

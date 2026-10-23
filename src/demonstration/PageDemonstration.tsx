@@ -7,15 +7,22 @@ import {
   type Reaction,
   type Univers,
 } from "@domain/motivation";
+import { lectureDesChoix } from "@domain/apprentissage";
 import { hasardDuNavigateur } from "../hasard-navigateur.ts";
+import { TexteEnSyllabes } from "../reglages/index.ts";
 import { PersonnageGuide } from "../univers/index.ts";
 import type { Voix } from "../voix/index.ts";
 import { lireConsigne } from "./consigne-preparee.ts";
 import { ConsigneLue } from "./ConsigneLue.tsx";
 
-type Props = { readonly univers: Univers; readonly voix: Voix };
+type Props = {
+  readonly univers: Univers;
+  readonly voix: Voix;
+  /** Réglage du profil en cours : les choix proposés sont lus après la consigne. */
+  readonly toutLireAVoixHaute: boolean;
+};
 
-export function PageDemonstration({ univers, voix }: Props) {
+export function PageDemonstration({ univers, voix, toutLireAVoixHaute }: Props) {
   const [reaction, setReaction] = useState<Reaction | undefined>();
   const [consigne] = useState(lireConsigne);
   const [rangDuMotPrononce, setRangDuMotPrononce] = useState<number | undefined>();
@@ -28,12 +35,16 @@ export function PageDemonstration({ univers, voix }: Props) {
     const numero = ++derniereLecture.current;
     const estLaDerniere = () => numero === derniereLecture.current;
     setRangDuMotPrononce(undefined);
-    void lire(consigne.texte, {
-      langue: consigne.langue,
-      onMot: (rang) => estLaDerniere() && setRangDuMotPrononce(rang),
-      onFin: () => estLaDerniere() && setRangDuMotPrononce(undefined),
-    });
-  }, [lire, consigne]);
+    const choixALire = toutLireAVoixHaute ? lectureDesChoix(consigne.choix ?? []) : undefined;
+    void (async () => {
+      await lire(consigne.texte, {
+        langue: consigne.langue,
+        onMot: (rang) => estLaDerniere() && setRangDuMotPrononce(rang),
+        onFin: () => estLaDerniere() && setRangDuMotPrononce(undefined),
+      });
+      if (choixALire !== undefined && estLaDerniere()) await lire(choixALire);
+    })();
+  }, [lire, consigne, toutLireAVoixHaute]);
 
   useEffect(() => {
     lireLaConsigne();
@@ -51,10 +62,15 @@ export function PageDemonstration({ univers, voix }: Props) {
       <div className="guide-et-parole">
         <PersonnageGuide univers={univers} humeur={humeur} />
         <div className="bulle" role="status" data-testid="parole" data-nature={parole?.nature}>
-          {parole?.texte}
+          {parole && <TexteEnSyllabes texte={parole.texte} />}
         </div>
       </div>
       <ConsigneLue consigne={consigne} rangDuMotPrononce={rangDuMotPrononce} />
+      {consigne.choix && consigne.choix.length > 0 && (
+        <ul className="choix-de-demonstration" data-testid="choix-de-demonstration" aria-label="Choix">
+          {consigne.choix.map((choix) => <li key={choix} className="pastille"><TexteEnSyllabes texte={choix} /></li>)}
+        </ul>
+      )}
       <button type="button" onClick={lireLaConsigne}>Réécouter</button>
       <div className="reponses">
         <button type="button" onClick={() => repondre(true)}>Bonne réponse</button>

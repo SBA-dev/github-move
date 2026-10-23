@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import type { QuestionJouee } from "@domain/apprentissage";
+import { TexteEnSyllabes } from "../../reglages/index.ts";
 
 type Props = {
   readonly question: QuestionJouee;
@@ -33,7 +34,7 @@ export function ChoixDeLaQuestion({ question, reussie, bulleEclatee, onChoisir }
             aria-disabled={ecarte || reussie ? true : undefined}
             onClick={() => onChoisir(texte)}
           >
-            {texte}
+            <TexteEnSyllabes texte={texte} />
           </button>
         );
       })}

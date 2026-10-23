@@ -1,6 +1,7 @@
 import type { QuestionJouee } from "@domain/apprentissage";
 import type { Exercice } from "@domain/catalogue";
 import { MESSAGE_DE_L_ECOUTE_SANS_SON } from "@domain/apprentissage";
+import { TexteEnSyllabes } from "../../reglages/index.ts";
 import { ChoixDeLaQuestion } from "./ChoixDeLaQuestion.tsx";
 import { TexteDeLecture } from "./TexteDeLecture.tsx";
 
@@ -42,7 +43,7 @@ export function ExerciceAChoix(props: Props) {
           data-testid="question"
           onClick={props.onRelireLaQuestion}
         >
-          {question.enonce}
+          <TexteEnSyllabes texte={question.enonce} />
         </button>
       )}
       {exercice.type === "ecoute" && (

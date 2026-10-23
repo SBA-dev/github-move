@@ -1,4 +1,5 @@
 import { motsDeLaConsigne } from "@domain/voix";
+import { TexteEnSyllabes } from "../reglages/index.ts";
 import type { Consigne } from "./consigne-preparee.ts";
 
 function motSansPonctuation(jeton: string): string {
@@ -19,7 +20,8 @@ export function ConsigneLue({ consigne, rangDuMotPrononce }: Props) {
           "data-prononce": prononce ? "true" : undefined,
           "aria-current": prononce ? ("true" as const) : undefined,
         };
-        return motSansPonctuation(texte) === consigne.motEnGras ? <strong key={i} {...proprietes}>{texte}</strong> : <span key={i} {...proprietes}>{texte}</span>;
+        const mot = <TexteEnSyllabes texte={texte} />;
+        return motSansPonctuation(texte) === consigne.motEnGras ? <strong key={i} {...proprietes}>{mot}</strong> : <span key={i} {...proprietes}>{mot}</span>;
       })}
     </p>
   );

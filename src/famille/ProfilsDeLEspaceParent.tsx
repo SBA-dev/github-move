@@ -1,5 +1,6 @@
 import { useId, useState } from "react";
-import type { ProfilEnfant } from "@domain/famille";
+import { Reglages, type ProfilEnfant } from "@domain/famille";
+import { enReglagesComplets } from "../reglages/index.ts";
 import { FormulaireDeProfil } from "./FormulaireDeProfil.tsx";
 import { InvitationAffichee } from "./InvitationDuPremierProfil.tsx";
 import { classeEtUnivers } from "./libelle-du-profil.ts";
@@ -12,10 +13,20 @@ type Props = {
   readonly onModifie: () => void;
 };
 
-const NOUVEAU_PROFIL: DonneesDeProfil = { prenom: "", niveau: "CP", univers: "animaux" };
+const NOUVEAU_PROFIL: DonneesDeProfil = {
+  prenom: "",
+  niveau: "CP",
+  univers: "animaux",
+  reglages: enReglagesComplets(Reglages.parDefaut()),
+};
 
 function donneesDe(profil: ProfilEnfant): DonneesDeProfil {
-  return { prenom: profil.prenom.valeur, niveau: profil.niveau.valeur, univers: profil.univers };
+  return {
+    prenom: profil.prenom.valeur,
+    niveau: profil.niveau.valeur,
+    univers: profil.univers,
+    reglages: enReglagesComplets(profil.reglages),
+  };
 }
 
 /** La section « Profils » de l'espace parent : liste, création et modification des profils enfants. */

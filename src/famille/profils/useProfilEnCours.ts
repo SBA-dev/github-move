@@ -26,7 +26,7 @@ export function useProfilEnCours() {
           prenom: prepare.prenom,
           niveau: prepare.niveau,
           univers: universDe(prepare.univers).cle,
-          reglages: Reglages.parDefaut(),
+          reglages: Reglages.depuis(prepare.reglages ?? {}),
         };
         setProfil((choisi) => choisi ?? initial);
       }

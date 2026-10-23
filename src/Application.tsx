@@ -4,6 +4,7 @@ import type { EtatDeLEspaceParent } from "@domain/famille";
 import { universDe } from "@domain/motivation";
 import { PAGE_DEMONSTRATION_DISPONIBLE, PageDemonstration } from "./demonstration/disponibilite.ts";
 import { EcranDeConnexion, useConnexion } from "./connexion/index.ts";
+import { ModeDys } from "./reglages/index.ts";
 import { EnTete } from "./en-tete/EnTete.tsx";
 import {
   AccueilDeLEnfant,
@@ -106,95 +107,98 @@ export function Application() {
           onRetour={revenir}
           onEspaceParent={entrerDansLEspaceParent}
         />
-        <main className="ecran">
-          <div role="status" className="voix-bloquee">
-            {voix.nomDuPersonnageGuideDeLaVoixBloquee &&
-              `La voix de ${voix.nomDuPersonnageGuideDeLaVoixBloquee} est bloquée par ce navigateur. Touche « Réécouter » pour réessayer, ou lis avec un adulte.`}
-          </div>
-          {ecran === "accueil" && (
-            <>
-              {connexion.etat === "deconnecte" && <EcranDeConnexion connexion={connexion} onConnecte={ouvrirLEspaceParentConnecte} />}
-              <p>Réviser le programme du CP au CM2, en jouant.</p>
-              {connecte
-                ? (
-                  <QuiJoue
-                    etat={profilsDuParent.etat}
-                    voix={voix}
-                    onChoisir={(profilChoisi) => {
-                      choisirQuiJoue.executer(profilChoisi);
-                      aller("jeu");
-                    }}
-                    onAjouterUnEnfant={entrerDansLEspaceParent}
-                  />
-                )
-                : <PersonnageGuide univers={univers} humeur="content" />}
-              <AideEcranDAccueil />
-            </>
-          )}
-          {lieu.ecran === "jeu" && profilCharge && profilEnCours && (
-            <AccueilDeLEnfant
-              profil={profilEnCours}
-              univers={univers}
-              voix={voix}
-              saluer={!viaRetour}
-              onChangerDEnfant={() => {
-                aller("accueil");
-                oublierLeProfilEnCours();
-              }}
-            />
-          )}
-          {surLaDemonstration && PageDemonstration && profilCharge && (
-            <Suspense fallback={null}>
-              <PageDemonstration univers={univers} voix={voix} />
-            </Suspense>
-          )}
-          {lieu.ecran === "lecon" && profilCharge && profilEnCours && (
-            <PageDeLaLecon
-              key={lieu.leconId}
-              leconId={lieu.leconId}
-              prenom={profilEnCours.prenom}
-              univers={univers}
-              voix={voix}
-              accueillir={!viaRetour}
-              onCommencer={(exercice) => aller({ ecran: "seance", leconId: lieu.leconId, exercice })}
-              onRetourALAccueil={() => aller("accueil")}
-            />
-          )}
-          {lieu.ecran === "seance" && profilCharge && profilEnCours && (
-            <EcranDeSeance
-              key={`${lieu.leconId}/${lieu.exercice ?? "complete"}`}
-              leconId={lieu.leconId}
-              exercice={lieu.exercice}
-              prenom={profilEnCours.prenom}
-              univers={univers}
-              voix={voix}
-              onRetour={() => revenirA({ ecran: "lecon", leconId: lieu.leconId })}
-            />
-          )}
-          {ecran === "espace-parent" && connexion.etat === "deconnecte" && (
-            <EcranDeConnexion connexion={connexion} onConnecte={ouvrirLEspaceParentConnecte} />
-          )}
-          {ecran === "espace-parent" && connecte && etatEspaceParent.type === "questionPosee" && (
-            <ControleParental
-              enonce={etatEspaceParent.enonce}
-              onReponse={acces.repondre}
-              onRenoncer={() => (retourPossible ? revenir() : remplacer("accueil"))}
-            />
-          )}
-          {ecran === "espace-parent" && connecte && etatEspaceParent.type === "ouvert" && (
-            <EspaceParent
-              onQuitter={() => {
-                fermerEspaceParent();
-                remplacer("accueil");
-              }}
-              onSeDeconnecter={seDeconnecter}
-              deconnexionEchouee={deconnexionEchouee}
-            >
-              <ProfilsDeLEspaceParent etat={profilsDuParent.etat} onModifie={profilsDuParent.relire} />
-              <ChoixDeLaVoix voix={voix} />
-            </EspaceParent>
-          )}
-        </main>
+        <ModeDys value={profil?.reglages.modeDys ?? false}>
+          <main className="ecran" data-mode-dys={profil?.reglages.modeDys ? "true" : undefined}>
+            <div role="status" className="voix-bloquee">
+              {voix.nomDuPersonnageGuideDeLaVoixBloquee &&
+                `La voix de ${voix.nomDuPersonnageGuideDeLaVoixBloquee} est bloquée par ce navigateur. Touche « Réécouter » pour réessayer, ou lis avec un adulte.`}
+            </div>
+            {ecran === "accueil" && (
+              <>
+                {connexion.etat === "deconnecte" && <EcranDeConnexion connexion={connexion} onConnecte={ouvrirLEspaceParentConnecte} />}
+                <p>Réviser le programme du CP au CM2, en jouant.</p>
+                {connecte
+                  ? (
+                    <QuiJoue
+                      etat={profilsDuParent.etat}
+                      voix={voix}
+                      onChoisir={(profilChoisi) => {
+                        choisirQuiJoue.executer(profilChoisi);
+                        aller("jeu");
+                      }}
+                      onAjouterUnEnfant={entrerDansLEspaceParent}
+                    />
+                  )
+                  : <PersonnageGuide univers={univers} humeur="content" />}
+                <AideEcranDAccueil />
+              </>
+            )}
+            {lieu.ecran === "jeu" && profilCharge && profilEnCours && (
+              <AccueilDeLEnfant
+                profil={profilEnCours}
+                univers={univers}
+                voix={voix}
+                saluer={!viaRetour}
+                onChangerDEnfant={() => {
+                  aller("accueil");
+                  oublierLeProfilEnCours();
+                }}
+              />
+            )}
+            {surLaDemonstration && PageDemonstration && profilCharge && (
+              <Suspense fallback={null}>
+                <PageDemonstration univers={univers} voix={voix} toutLireAVoixHaute={profil?.reglages.toutLireAVoixHaute ?? false} />
+              </Suspense>
+            )}
+            {lieu.ecran === "lecon" && profilCharge && profilEnCours && (
+              <PageDeLaLecon
+                key={lieu.leconId}
+                leconId={lieu.leconId}
+                prenom={profilEnCours.prenom}
+                univers={univers}
+                voix={voix}
+                accueillir={!viaRetour}
+                onCommencer={(exercice) => aller({ ecran: "seance", leconId: lieu.leconId, exercice })}
+                onRetourALAccueil={() => aller("accueil")}
+              />
+            )}
+            {lieu.ecran === "seance" && profilCharge && profilEnCours && (
+              <EcranDeSeance
+                key={`${lieu.leconId}/${lieu.exercice ?? "complete"}`}
+                leconId={lieu.leconId}
+                exercice={lieu.exercice}
+                prenom={profilEnCours.prenom}
+                univers={univers}
+                voix={voix}
+                toutLireAVoixHaute={profilEnCours.reglages.toutLireAVoixHaute}
+                onRetour={() => revenirA({ ecran: "lecon", leconId: lieu.leconId })}
+              />
+            )}
+            {ecran === "espace-parent" && connexion.etat === "deconnecte" && (
+              <EcranDeConnexion connexion={connexion} onConnecte={ouvrirLEspaceParentConnecte} />
+            )}
+            {ecran === "espace-parent" && connecte && etatEspaceParent.type === "questionPosee" && (
+              <ControleParental
+                enonce={etatEspaceParent.enonce}
+                onReponse={acces.repondre}
+                onRenoncer={() => (retourPossible ? revenir() : remplacer("accueil"))}
+              />
+            )}
+            {ecran === "espace-parent" && connecte && etatEspaceParent.type === "ouvert" && (
+              <EspaceParent
+                onQuitter={() => {
+                  fermerEspaceParent();
+                  remplacer("accueil");
+                }}
+                onSeDeconnecter={seDeconnecter}
+                deconnexionEchouee={deconnexionEchouee}
+              >
+                <ProfilsDeLEspaceParent etat={profilsDuParent.etat} onModifie={profilsDuParent.relire} />
+                <ChoixDeLaVoix voix={voix} />
+              </EspaceParent>
+            )}
+          </main>
+        </ModeDys>
       </div>
     </MotionConfig>
   );
