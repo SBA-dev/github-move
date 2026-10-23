@@ -1,5 +1,5 @@
 # language: fr
-@issue-17 @wip
+@issue-17
 Fonctionnalité: Exercices à choix (bulles, lecture, écoute)
   En tant qu'enfant
   Je veux répondre à une question en choisissant la bonne réponse parmi des choix, après avoir lu la question, écouté une histoire ou un mot d'anglais
@@ -106,6 +106,7 @@ Fonctionnalité: Exercices à choix (bulles, lecture, écoute)
 
   Règle: Avec « tout lire à voix haute », les choix sont lus après la question
 
+    @depend-de-12
     Scénario: Avec « tout lire à voix haute », Noisette lit les choix dans l'ordre affiché
       Étant donné que Paul a réglé « tout lire à voix haute » sur « oui » pour Léa
       Et que Léa joue la question de test « Combien font 3 + 4 ? »
@@ -114,6 +115,7 @@ Fonctionnalité: Exercices à choix (bulles, lecture, écoute)
       Alors Léa entend Noisette lire « Combien font 3 plus 4 ? »
       Et Léa entend ensuite Noisette dire « Est-ce 6, 7, 8, ou 9 ? »
 
+    @depend-de-12
     Scénario: Sans « tout lire à voix haute », les choix ne sont pas lus
       Étant donné que Paul a réglé « tout lire à voix haute » sur « non » pour Léa
       Et que Léa joue la question de test « Combien font 3 + 4 ? »
@@ -179,6 +181,7 @@ Fonctionnalité: Exercices à choix (bulles, lecture, écoute)
 
   Règle: Les exercices à choix s'utilisent en mode dys, au clavier et sur un petit écran
 
+    @depend-de-12
     Scénario: Avec le mode dys, la question et les choix s'affichent en mode dys
       Étant donné que Paul a réglé « mode dys » sur « oui » pour Léa
       Et que Léa joue l'exercice « Quel son entends-tu ? » de la leçon « Les sons ou, on, an »
