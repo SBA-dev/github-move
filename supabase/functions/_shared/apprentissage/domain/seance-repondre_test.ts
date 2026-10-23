@@ -17,7 +17,16 @@ import { Reponse } from "./reponse.ts";
 import { Seance } from "./seance.ts";
 
 function commencer(lecon: Lecon, hasard: Hasard = hasardSansMelange()): Seance {
-  return Seance.commencer(generateurIdFixe("seance-1"), hasard, "profil-lea", lecon, ChoixDeSeance.complete());
+  const seance = Seance.commencer(
+    generateurIdFixe("seance-1"),
+    hasard,
+    "profil-lea",
+    lecon,
+    ChoixDeSeance.complete(),
+  );
+  while (seance.etapeDeLeconEnCours()) seance.continuer();
+  seance.retirerFaits();
+  return seance;
 }
 
 function questionEnCours(seance: Seance) {
