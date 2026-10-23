@@ -1,6 +1,6 @@
 # Critères d'acceptance : issue #12, Réglages d'un profil enfant
 
-Scénarios : `features/12-reglages.feature` (`@issue-12 @wip`).
+Scénarios : `features/12-reglages.feature` (`@issue-12`, livrés : 27 scénarios verts, « Le mode dys s'applique aussi sans réseau » en attente de #44).
 Modèle du domaine : `docs/stories/12/domain-model.md` (ses questions ouvertes restantes ne sont pas répétées ici).
 
 ## Objectif
@@ -20,6 +20,8 @@ Les réglages sont enregistrés avec le profil enfant et retrouvés sur tous les
 | R5 | Avec « tout lire à voix haute », le personnage guide lit aussi les choix proposés | Avec « tout lire à voix haute », les choix proposés sont lus après la consigne · Avec deux choix proposés, la question n'a que deux choix · Avec un seul choix proposé, seule la consigne est lue · Sans « tout lire à voix haute », la consigne est lue mais pas les choix proposés · En Muet, « tout lire à voix haute » ne fait rien lire |
 
 Total : 5 règles, 28 scénarios (dont un plan de 9 exemples), 5 `@acces`, aucun `@a-valider`.
+
+« Le mode dys s'applique aussi sans réseau » est tagué `@depend-de-44` : rouvrir la page sans réseau demande le service worker du build de production, alors que la page de démonstration et son profil préparé n'existent qu'en dev ; il attend le hors ligne complet (#44, lot 7).
 
 Exemples tirés du legacy (`app/app.js`) : valeurs par défaut (tout décoché, clavier « Automatique », langue « Non »), les trois claviers des dictées, les 20 langues, la phrase « Est-ce a, b, ou c ? » lue seulement avec le son et au moins deux choix proposés, la police Andika, le texte espacé et les syllabes en couleurs alternées pour les mots de plus de 3 lettres. Écarts voulus : « temps d'écran » n'est pas repris (décision 0005), d'où le scénario « aucun réglage ne limite la durée de jeu » ; le mode dys ne s'applique qu'aux écrans de l'enfant quand le profil en cours l'a choisi (le legacy le garde sur toute la page).
 

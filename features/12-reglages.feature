@@ -1,5 +1,5 @@
 # language: fr
-@issue-12 @wip
+@issue-12
 Fonctionnalité: Réglages d'un profil enfant
   En tant que parent
   Je veux adapter l'application à mon enfant : mode dys, tout lire à voix haute, parcours libre, clavier des dictées et langue du parent
@@ -175,6 +175,7 @@ Fonctionnalité: Réglages d'un profil enfant
       Quand Léa commence à jouer sur le téléphone
       Alors Léa voit la consigne de la page de démonstration en mode dys
 
+    @depend-de-44
     Scénario: Le mode dys s'applique aussi sans réseau
       Étant donné que Paul a réglé « mode dys » sur « oui » pour Léa
       Et que Savanturier a déjà été chargé une fois sur la tablette
