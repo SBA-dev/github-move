@@ -2,6 +2,7 @@ import { AdresseEmail } from "../domain/adresse-email.ts";
 import { CodeDeConnexion } from "../domain/code-de-connexion.ts";
 import { EmailDeConnexion } from "../domain/email-de-connexion.ts";
 import { LienDeConnexion } from "../domain/lien-de-connexion.ts";
+import { EnvoiDeLEmailImpossible } from "../domain/erreurs.ts";
 import type { ExpediteurDEmails } from "./ports/expediteur-d-emails.ts";
 
 export class EnvoyerEmailDeConnexion {
@@ -13,6 +14,11 @@ export class EnvoyerEmailDeConnexion {
       LienDeConnexion.de(lien),
       CodeDeConnexion.de(code),
     );
-    await this.expediteur.envoyer(email);
+    try {
+      await this.expediteur.envoyer(email);
+    } catch (erreur) {
+      if (erreur instanceof EnvoiDeLEmailImpossible) throw erreur;
+      throw new EnvoiDeLEmailImpossible();
+    }
   }
 }
