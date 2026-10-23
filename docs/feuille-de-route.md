@@ -124,9 +124,9 @@ On suit le guide fondamental « Pour enseigner la lecture et l'écriture au CP �
 Le PO a ajouté les variables `SUPABASE_URL`, `SUPABASE_PROJECT_REF`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` et `SUPABASE_ACCESS_TOKEN` à l'environnement cloud (`SUPABASE_DB_PASSWORD` y était déjà). Projet de développement : `savanturier-dev`, référence `cxptcwkegwhdmhqjxttv`, région Francfort.
 
 À faire en premier :
-1. Vérifier que les variables sont présentes, sans jamais afficher leurs valeurs.
-2. `npx supabase link --project-ref "$SUPABASE_PROJECT_REF"`, puis appliquer une migration vide et la retirer (première vérification de `docs/reecriture.md`).
-3. Faire trancher par le PO où tournent les tests qui touchent la base : (a) contre le projet en ligne `savanturier-dev` (recommandé, le conteneur cloud n'a pas de Docker) ou (b) en local avec Docker. Consigner le choix dans une décision.
+1. [x] Variables présentes (vérifié le 2026-10-23, sans afficher les valeurs).
+2. [x] `npx supabase link` réussi. Réseau : l'API HTTPS du projet répond, mais pas Postgres en direct (ports 5432 et 6543 fermés). [ ] Migration vide de vérification : à appliquer par l'API de gestion, en attente d'une permission de l'outil (écriture dans une ressource partagée).
+3. [x] Le PO a choisi les tests contre le projet en ligne `savanturier-dev` : décision 0010. Le projet est en `eu-west-1` (Irlande), pas à Francfort : le PO doit choisir entre corriger la doc et recréer le projet.
 4. Reprendre #5 (adaptateur Supabase Auth, écran de connexion, E2E), puis #11 à #14.
 
 Branches en cours, chacune partie de la précédente, rien n'est mergé dans `main` : `claude/stoic-faraday-0qy6ez` (lot 1, PR #9) → `feature/5-connexion-du-parent` → `feature/lot-2-modele-et-scenarios` → `feature/10-controle-parental` → `feature/15-choix-de-la-voix`. À part, partie de `main` : `chore/tests-legacy` (339 tests de caractérisation).
