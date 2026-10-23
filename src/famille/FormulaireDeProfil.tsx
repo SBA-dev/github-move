@@ -122,8 +122,7 @@ export function FormulaireDeProfil({ titre, valeurInitiale, libelleDuBouton, onE
             </label>
             {cle === "modeDys" && (
               <p id={`${identifiant}-mode-dys`} className="mention-du-reglage">
-                Ce réglage est gardé avec le profil de l'enfant et sert seulement à adapter l'affichage. Il part avec l'export et la
-                suppression du profil.
+                Ce réglage est gardé avec le profil de l'enfant et sert seulement à adapter l'affichage.
               </p>
             )}
           </Fragment>
