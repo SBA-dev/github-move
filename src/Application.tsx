@@ -8,7 +8,7 @@ import { EnTete } from "./en-tete/EnTete.tsx";
 import { ControleParental, EspaceParent, useAccesALEspaceParent } from "./famille/index.ts";
 import { AideEcranDAccueil } from "./installation/index.ts";
 import { type Ecran, useNavigation } from "./navigation.ts";
-import { useVoix } from "./voix/index.ts";
+import { ChoixDeLaVoix, useVoix } from "./voix/index.ts";
 import { PALETTES, Paysage, PersonnageGuide } from "./univers/index.ts";
 
 type Habillage = CSSProperties & { readonly "--accent": string; readonly "--accent-fonce": string };
@@ -41,10 +41,14 @@ export function Application() {
   const { ecran: ecranDemande, retourPossible, aller, remplacer, revenir } = useNavigation();
   const acces = useAccesALEspaceParent();
   const ecran = ecranAffiche(ecranDemande, acces.etat.type);
-  const { profil, charge: profilCharge } = useProfilPrepare(ecran === "demonstration");
+  const surLaDemonstration = ecran === "demonstration";
+  const { profil: profilEnCours, charge: profilCharge } = useProfilPrepare(
+    surLaDemonstration || ecran === "espace-parent",
+  );
+  const profil = surLaDemonstration ? profilEnCours : undefined;
   const univers = universDe(profil?.univers);
   const palette = PALETTES[univers.cle];
-  const voix = useVoix(univers.personnageGuide);
+  const voix = useVoix(universDe(profilEnCours?.univers).personnageGuide);
   const { etat: etatEspaceParent, quitter: fermerEspaceParent } = acces;
   useEffect(() => {
     if (ecranDemande !== "espace-parent") fermerEspaceParent();
@@ -83,7 +87,7 @@ export function Application() {
               <AideEcranDAccueil />
             </>
           )}
-          {ecran === "demonstration" && PageDemonstration && profilCharge && (
+          {surLaDemonstration && PageDemonstration && profilCharge && (
             <Suspense fallback={null}>
               <PageDemonstration univers={univers} voix={voix} />
             </Suspense>
@@ -101,7 +105,9 @@ export function Application() {
                 fermerEspaceParent();
                 remplacer("accueil");
               }}
-            />
+            >
+              <ChoixDeLaVoix voix={voix} />
+            </EspaceParent>
           )}
         </main>
       </div>

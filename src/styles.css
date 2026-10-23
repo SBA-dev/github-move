@@ -111,3 +111,22 @@ button[data-son="muet"] { background: var(--accent-fonce); opacity: .8; }
 }
 .controle-parental .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
 .controle-parental [role="status"] { min-height: 1.5em; font-weight: 700; }
+.espace-parent { display: grid; justify-items: center; gap: 12px; max-width: 100%; }
+.choix-de-voix {
+  width: 100%;
+  max-width: 40rem;
+  padding: 12px 16px;
+  border-radius: 16px;
+  background: #fff;
+  text-align: left;
+}
+.choix-de-voix h3, .choix-de-voix p { margin: 0 0 8px; }
+.ligne-de-voix { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; min-height: 44px; }
+.ligne-de-voix input { width: 24px; height: 24px; margin: 10px; flex: none; accent-color: var(--accent-fonce); }
+.ligne-de-voix label { min-height: 44px; display: inline-flex; align-items: center; overflow-wrap: anywhere; flex: 1 1 8rem; }
+.mention-de-voix { font-size: .9rem; }
+.mention-de-voix::before { content: "· "; }
+.ligne-de-voix button { margin-left: auto; }
+.avertissement-de-voix { font-weight: 700; }
+.conseils-de-voix { font-size: .9rem; }
+.conseils-de-voix p { margin: 0 0 6px; }

@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { type PersonnageGuide, presentationAuRetourDuSon } from "@domain/motivation";
-import { type EtatDuSon, LectureAVoixHaute } from "@domain/voix";
+import { type ChoixDeVoix, type EtatDuSon, LectureAVoixHaute, type VoixDisponible } from "@domain/voix";
 import { hasardDuNavigateur } from "../hasard-navigateur.ts";
+import { ChoixDeVoixMemoriseSurLAppareil } from "./choix-de-voix-memorise.ts";
 import { DeverrouillageAudio, deverrouillerAuToucher } from "./deverrouillage-audio.ts";
-import { LecteurSyntheseVocale } from "./lecteur-synthese-vocale.ts";
+import { LecteurSyntheseVocale, syntheseVocale } from "./lecteur-synthese-vocale.ts";
 import { lireLEtatDuSon, memoriserLEtatDuSon } from "./memoire-du-son.ts";
 import { VoixDeLAppareilNavigateur } from "./voix-de-l-appareil-navigateur.ts";
 
@@ -15,6 +16,12 @@ export type Voix = {
   readonly lire: (texte: string, options?: OptionsDeLecture) => Promise<void>;
   readonly couperLaVoix: () => void;
   readonly basculerLeSon: () => void;
+  readonly voixDisponibles: readonly VoixDisponible[];
+  readonly syntheseVocalePresente: boolean;
+  readonly choixDeVoix: ChoixDeVoix;
+  readonly imposerUneVoix: (nomDeLaVoix: string) => void;
+  readonly revenirALaVoixAutomatique: () => void;
+  readonly essayerUneVoix: (nomDeLaVoix: string) => void;
 };
 
 export function useVoix(personnageGuide: PersonnageGuide): Voix {
@@ -25,10 +32,15 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
   const [son, setSon] = useState(lireLEtatDuSon);
   const [nomDuPersonnageGuideDeLaVoixBloquee, setNomDuPersonnageGuideDeLaVoixBloquee] = useState<string | undefined>();
   const [deverrouillage] = useState(() => new DeverrouillageAudio());
+  const [voixDeLAppareil] = useState(() => new VoixDeLAppareilNavigateur());
+  const [choixMemorise] = useState(() => new ChoixDeVoixMemoriseSurLAppareil());
+  const [voixDisponibles, setVoixDisponibles] = useState(() => voixDeLAppareil.voixDisponibles());
+  const [choixDeVoix, setChoixDeVoix] = useState(() => choixMemorise.lire());
   const [lecture] = useState(() =>
     new LectureAVoixHaute({
       lecteur: new LecteurSyntheseVocale(),
-      voixDeLAppareil: new VoixDeLAppareilNavigateur(),
+      voixDeLAppareil,
+      choixDeVoix: choixMemorise,
       hasard: hasardDuNavigateur,
       caractereDuPersonnageGuide: () => personnageGuideEnCours.current.caractere,
       etatInitial: son,
@@ -40,6 +52,11 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
     if (son === "muet") return;
     return deverrouillerAuToucher(deverrouillage);
   }, [son, deverrouillage]);
+
+  useEffect(
+    () => voixDeLAppareil.surChangement(() => setVoixDisponibles(voixDeLAppareil.voixDisponibles())),
+    [voixDeLAppareil],
+  );
 
   const lire = useCallback((texte: string, options?: OptionsDeLecture) => {
     setNomDuPersonnageGuideDeLaVoixBloquee(undefined);
@@ -61,5 +78,32 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
     void lecture.remettreLeSon(presentationAuRetourDuSon(personnageGuideEnCours.current));
   }, [son, lecture, deverrouillage]);
 
-  return { son, nomDuPersonnageGuideDeLaVoixBloquee, lire, couperLaVoix, basculerLeSon };
+  const imposerUneVoix = useCallback((nomDeLaVoix: string) => {
+    lecture.imposerUneVoix(nomDeLaVoix);
+    setChoixDeVoix(choixMemorise.lire());
+  }, [lecture, choixMemorise]);
+
+  const revenirALaVoixAutomatique = useCallback(() => {
+    lecture.revenirALaVoixAutomatique();
+    setChoixDeVoix(choixMemorise.lire());
+  }, [lecture, choixMemorise]);
+
+  const essayerUneVoix = useCallback(
+    (nomDeLaVoix: string) => void lecture.essayerUneVoix(nomDeLaVoix, personnageGuideEnCours.current.nom),
+    [lecture],
+  );
+
+  return {
+    son,
+    nomDuPersonnageGuideDeLaVoixBloquee,
+    lire,
+    couperLaVoix,
+    basculerLeSon,
+    voixDisponibles,
+    syntheseVocalePresente: syntheseVocale() !== undefined,
+    choixDeVoix,
+    imposerUneVoix,
+    revenirALaVoixAutomatique,
+    essayerUneVoix,
+  };
 }
