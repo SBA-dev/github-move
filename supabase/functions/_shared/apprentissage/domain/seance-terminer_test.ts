@@ -161,6 +161,7 @@ Deno.test("la séance terminée garde les tirages et la suite des réponses de c
 
   assertEquals(seance.aEnregistrer(), {
     seance: "seance-1",
+    enfant: "profil-lea",
     lecon: "ma-cp-calcul",
     choix: ChoixDeSeance.complete(),
     tirages: [tirage],
