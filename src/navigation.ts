@@ -73,7 +73,7 @@ export function useNavigation() {
     const suivant = enLieu(destination);
     if (cheminDe(suivant) === location.pathname) return;
     const suivante = profondeurCourante() + 1;
-    history.pushState({ profondeur: suivante }, "", cheminDe(suivant));
+    history.pushState({ profondeur: suivante, precedent: location.pathname }, "", cheminDe(suivant));
     setLieu(suivant);
     setProfondeur(suivante);
     setViaRetour(false);
@@ -88,5 +88,13 @@ export function useNavigation() {
 
   const revenir = useCallback(() => history.back(), []);
 
-  return { lieu, retourPossible: profondeur > 0, viaRetour, aller, remplacer, revenir };
+  const revenirA = useCallback((destination: Destination) => {
+    const cible = enLieu(destination);
+    const etat: unknown = history.state;
+    const precedent = (etat as { precedent?: unknown } | null)?.precedent;
+    if (precedent === cheminDe(cible)) history.back();
+    else remplacer(cible, true);
+  }, [remplacer]);
+
+  return { lieu, retourPossible: profondeur > 0, viaRetour, aller, remplacer, revenir, revenirA };
 }

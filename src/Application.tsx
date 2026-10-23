@@ -47,7 +47,7 @@ function lieuAffiche(demande: Lieu, espaceParent: EtatDeLEspaceParent["type"], c
 }
 
 export function Application() {
-  const { lieu: lieuDemande, retourPossible, viaRetour, aller, remplacer, revenir } = useNavigation();
+  const { lieu: lieuDemande, retourPossible, viaRetour, aller, remplacer, revenir, revenirA } = useNavigation();
   const acces = useAccesALEspaceParent();
   const connexion = useConnexion();
   const connecte = connexion.etat === "connecte";
@@ -149,7 +149,7 @@ export function Application() {
               prenom={profilEnCours.prenom}
               univers={univers}
               voix={voix}
-              onRetour={() => remplacer({ ecran: "lecon", leconId: lieu.leconId }, true)}
+              onRetour={() => revenirA({ ecran: "lecon", leconId: lieu.leconId })}
             />
           )}
           {ecran === "espace-parent" && connexion.etat === "deconnecte" && (
