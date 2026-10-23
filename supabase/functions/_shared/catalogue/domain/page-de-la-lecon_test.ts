@@ -49,7 +49,7 @@ function leconSonsOuOnAn() {
       {
         type: "bulles",
         titre: "Quel son entends-tu ?",
-        questions: [{ question: "Quel son ?", choix: ["ou"], reponse: "ou" }],
+        questions: [{ question: "Quel son ?", choix: ["ou", "on"], reponse: "ou" }],
       },
       { type: "classer", titre: "Les maisons des sons", items: [{ texte: "loup", groupe: "1" }] },
     ],

@@ -1,4 +1,4 @@
-import { type Exercice, nombreDeTrous } from "../../catalogue/domain/index.ts";
+import { type Exercice, type ExerciceGenerique, nombreDeTrous } from "../../catalogue/domain/index.ts";
 
 const QUESTIONS_PAR_DEFAUT_D_UN_CALCUL = 5;
 const OPERATIONS_PAR_DEFAUT_D_UNE_ADDITION = 3;
@@ -38,11 +38,11 @@ function taille(liste: readonly unknown[] | undefined): number {
   return liste?.length ?? 0;
 }
 
-function combienDemande(exercice: Exercice): number | undefined {
+function combienDemande(exercice: ExerciceGenerique): number | undefined {
   const combien = exercice.generateur?.combien;
   return typeof combien === "number" ? combien : undefined;
 }
 
-function nombreDOperationsPosees(exercice: Exercice): number {
+function nombreDOperationsPosees(exercice: ExerciceGenerique): number {
   return exercice.operations?.length ?? combienDemande(exercice) ?? OPERATIONS_PAR_DEFAUT_D_UNE_ADDITION;
 }

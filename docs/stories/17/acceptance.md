@@ -1,6 +1,7 @@
 # Critères d'acceptance : issue #17, Exercices à choix (bulles, lecture, écoute)
 
-Scénarios : `features/17-exercices-a-choix.feature` (tags `@issue-17 @wip`).
+Scénarios : `features/17-exercices-a-choix.feature` (tag `@issue-17`).
+Convention `@depend-de-<n>` (voir `docs/stories/16/acceptance.md`) : les trois scénarios tagués `@depend-de-12` (choix lus ou non avec « tout lire à voix haute », mode dys) attendent les réglages de #12 ; on les exclut avec `--grep-invert @depend-de` et on retire le tag quand #12 est livrée.
 Modèle du domaine : `docs/stories/17/domain-model.md` (contexte **Apprentissage**, avec **Catalogue pédagogique**, **Motivation**, **Voix** et **Famille**).
 Numérotation des questions : unique pour le lot 3, voir `docs/stories/16/acceptance.md` (#17 → Q11 à Q20).
 

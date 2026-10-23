@@ -209,13 +209,13 @@ Then(/^(.+) réfléchit en penchant la tête$/, async ({ page }, nom: string) =>
 
 // --- Alors : paroles
 
-function listeDe(texte: string): string[] {
+export function listeDe(texte: string): string[] {
   return [...texte.matchAll(/« (.+?) »/g)].flatMap((m) => (m[1] === undefined ? [] : [m[1]]));
 }
 
-const FELICITATIONS_COMMUNES = ["Bravo !", "Super !", "Ouah, bien joué !", "Exactement !", "Génial !", "Tu gères !", "Parfait !", "Oui, c'est ça !"];
+export const FELICITATIONS_COMMUNES = ["Bravo !", "Super !", "Ouah, bien joué !", "Exactement !", "Génial !", "Tu gères !", "Parfait !", "Oui, c'est ça !"];
 
-const EXPRESSIONS_PAR_PERSONNAGE: Readonly<Record<string, readonly string[]>> = {
+export const EXPRESSIONS_PAR_PERSONNAGE: Readonly<Record<string, readonly string[]>> = {
   "Lumi": ["Abracadabra !", "Par ma baguette, bravo !", "Magique !"],
   "Noisette": ["Youpi !", "Hop hop hop, bravo !", "Trop fort, ça !"],
   "Coach Léo": ["Allez, on y va !", "Et c'est le but !", "Quelle équipe !"],

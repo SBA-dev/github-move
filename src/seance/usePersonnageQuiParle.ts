@@ -2,7 +2,16 @@ import { useCallback, useRef, useState } from "react";
 import { HUMEUR_PAR_DEFAUT, type Humeur } from "@domain/motivation";
 import type { Voix } from "../voix/index.ts";
 
-export type NatureDeParole = "accueil" | "etape" | "invitation" | "annonce" | "consigne";
+export type NatureDeParole =
+  | "accueil"
+  | "etape"
+  | "invitation"
+  | "annonce"
+  | "consigne"
+  | "question"
+  | "introduction"
+  | "felicitation"
+  | "encouragement";
 
 export type ParoleADire = {
   readonly texte: string;

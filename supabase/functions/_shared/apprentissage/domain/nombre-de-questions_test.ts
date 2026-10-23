@@ -4,20 +4,31 @@ import { nombreDeQuestions } from "./nombre-de-questions.ts";
 
 const uneListeDe = (taille: number): readonly unknown[] => Array.from({ length: taille }, (_, i) => ({ rang: i }));
 
+const desQuestionsAChoix = (taille: number) =>
+  Array.from({ length: taille }, (_, i) => ({ question: `Question ${i}`, choix: ["a", "b"], reponse: "a" }));
+
+const desItemsDEcoute = (taille: number) =>
+  Array.from({ length: taille }, (_, i) => ({ dire: `mot ${i}`, choix: ["a", "b"], reponse: "a" }));
+
 Deno.test("un exercice de bulles compte une question par question", () => {
-  const exercice: Exercice = { type: "bulles", titre: "Quel son entends-tu ?", questions: uneListeDe(6) };
+  const exercice: Exercice = { type: "bulles", titre: "Quel son entends-tu ?", questions: desQuestionsAChoix(6) };
 
   assertEquals(nombreDeQuestions(exercice), 6);
 });
 
 Deno.test("un exercice de lecture compte une question par question", () => {
-  const exercice: Exercice = { type: "lecture", titre: "Le petit chat Plume", questions: uneListeDe(4) };
+  const exercice: Exercice = {
+    type: "lecture",
+    titre: "Le petit chat Plume",
+    texte: "Plume dort.",
+    questions: desQuestionsAChoix(4),
+  };
 
   assertEquals(nombreDeQuestions(exercice), 4);
 });
 
 Deno.test("un exercice d'écoute compte une question par item", () => {
-  const exercice: Exercice = { type: "ecoute", langue: "en", items: uneListeDe(4) };
+  const exercice: Exercice = { type: "ecoute", langue: "en", items: desItemsDEcoute(4) };
 
   assertEquals(nombreDeQuestions(exercice), 4);
 });
@@ -135,7 +146,7 @@ Deno.test("une addition posée générée compte les opérations demandées par 
 });
 
 Deno.test("la leçon « Les sons ou, on, an » compte 6 questions de bulles puis 9 de classement", () => {
-  const bulles: Exercice = { type: "bulles", questions: uneListeDe(6) };
+  const bulles: Exercice = { type: "bulles", questions: desQuestionsAChoix(6) };
   const classer: Exercice = { type: "classer", groupes: uneListeDe(3), items: uneListeDe(9) };
 
   assertEquals([bulles, classer].map(nombreDeQuestions), [6, 9]);

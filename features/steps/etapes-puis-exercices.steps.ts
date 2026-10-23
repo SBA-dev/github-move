@@ -19,7 +19,7 @@ import {
 const CLE_PROFIL_PREPARE = "savanturier:profil-prepare";
 
 type EtapeBrute = { texte: string; exemples: string[] };
-type LeconBrute = {
+export type LeconBrute = {
   id: string;
   titre: string;
   matiere: string;
@@ -36,10 +36,10 @@ type EtatDeLaLecon = {
   courante: LeconBrute | undefined;
 };
 
-const BIBLIOTHEQUE: LeconBrute[] = JSON.parse(readFileSync("app/bibliotheque.json", "utf-8"));
+export const BIBLIOTHEQUE: LeconBrute[] = JSON.parse(readFileSync("app/bibliotheque.json", "utf-8"));
 const etats = new WeakMap<Page, EtatDeLaLecon>();
 
-function etat(page: Page): EtatDeLaLecon {
+export function etat(page: Page): EtatDeLaLecon {
   let courant = etats.get(page);
   if (!courant) {
     courant = { injectees: [], courante: undefined };
@@ -48,13 +48,13 @@ function etat(page: Page): EtatDeLaLecon {
   return courant;
 }
 
-function leconDeTitre(page: Page, titre: string): LeconBrute {
+export function leconDeTitre(page: Page, titre: string): LeconBrute {
   const lecon = [...etat(page).injectees, ...BIBLIOTHEQUE].find((candidate) => candidate.titre === titre);
   if (!lecon) throw new Error(`Leçon inconnue : ${titre}`);
   return lecon;
 }
 
-function leconCourante(page: Page): LeconBrute {
+export function leconCourante(page: Page): LeconBrute {
   const lecon = etat(page).courante;
   if (!lecon) throw new Error("Aucune leçon ouverte");
   return lecon;
@@ -63,7 +63,7 @@ function leconCourante(page: Page): LeconBrute {
 const SECTION_DE_TEST = "c2-mathematiques-cp-les-quatre-operations";
 const CITATION_DE_TEST = "Les quatre opérations sont mobilisées au CP lors de la résolution de problèmes qui fournit un cadre permettant de donner du sens aux opérations.";
 
-function leconDeTest(id: string, titre: string, exercices: Array<Record<string, unknown>>): LeconBrute {
+export function leconDeTest(id: string, titre: string, exercices: Array<Record<string, unknown>>): LeconBrute {
   return {
     id,
     titre,
@@ -84,7 +84,7 @@ function bullesDeTest(titre: string | undefined, questions: string[]): Record<st
   };
 }
 
-async function injecter(page: Page, lecon: LeconBrute) {
+export async function injecter(page: Page, lecon: LeconBrute) {
   etat(page).injectees.push(lecon);
 }
 
@@ -98,27 +98,27 @@ async function interceptertLaBibliotheque(page: Page) {
 
 // --- Navigation
 
-function bulle(page: Page) {
+export function bulle(page: Page) {
   return page.getByTestId("parole");
 }
 
-function recipient(page: Page) {
+export function recipient(page: Page) {
   return page.getByTestId("recipient");
 }
 
-async function ouvrirLaPageDeLaLecon(page: Page, titre: string) {
+export async function ouvrirLaPageDeLaLecon(page: Page, titre: string) {
   const lecon = leconDeTitre(page, titre);
   etat(page).courante = lecon;
   await page.goto(`/lecon/${encodeURIComponent(lecon.id)}`);
   await expect(page.getByRole("heading", { level: 2, name: titre })).toBeVisible();
 }
 
-async function commencerLaSeanceComplete(page: Page) {
+export async function commencerLaSeanceComplete(page: Page) {
   await page.getByRole("button", { name: "Leçon et tous les jeux", exact: true }).click();
   await expect(recipient(page)).toBeVisible();
 }
 
-async function commencerSeulementLExercice(page: Page, titre: string) {
+export async function commencerSeulementLExercice(page: Page, titre: string) {
   await page.getByTestId("exercice-propose").filter({ hasText: titre }).click();
   await expect(recipient(page)).toBeVisible();
 }
@@ -129,7 +129,7 @@ async function jouerLaSeanceComplete(page: Page, titre: string) {
 }
 
 // La voix ne prononce pas les guillemets : l'enfant entend le texte sans eux.
-function entendu(texte: string): string {
+export function entendu(texte: string): string {
   return normaliser(texte.replace(/«\s*/g, "").replace(/\s*»/g, ""));
 }
 
@@ -166,7 +166,7 @@ async function continuerApresLesEtapes(page: Page, lecon: LeconBrute, nombre: nu
   }
 }
 
-async function toutesLesParoles(page: Page): Promise<string[]> {
+export async function toutesLesParoles(page: Page): Promise<string[]> {
   return await page.evaluate(() => {
     const faux = Reflect.get(window, "__faux") as { journal: Array<{ type: string; texte: string }> };
     return faux.journal.filter((entree) => entree.type === "speak").map((entree) => entree.texte);
@@ -436,11 +436,6 @@ Then(/^aucun exercice n'a encore commencé$/, async ({ page }) => {
 
 Then(/^Léa voit les exemples « (.+) », « (.+) » et « (.+) »$/, async ({ page }, premier: string, second: string, troisieme: string) => {
   await expect(page.getByTestId("exemple")).toHaveText([premier, second, troisieme]);
-});
-
-Then(/^la question « (.+) » s'affiche$/, async ({ page }, question: string) => {
-  await expect(page.getByTestId("exercice-en-cours")).toBeVisible();
-  await expect(page.getByTestId("question")).toHaveText(question);
 });
 
 Then(

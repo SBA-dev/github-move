@@ -36,7 +36,7 @@ L'application fonctionne et est publiée comme artifact claude.ai. Elle comprend
 
 ## Prochaines étapes
 
-> **Lot 3 en cours** : #16 (étapes lues puis exercices) livrée sur `claude/nice-mendel-cp9syg`, en PR. Domaines `catalogue` (lecture des leçons, page de la leçon) et `apprentissage` (séance, plan, avancement), paroles de séance dans `motivation`, front `src/seance/` (pages `/lecon/<id>` sous la garde du profil préparé). 10 scénarios tagués `@depend-de-17`, `@depend-de-18` ou `@depend-de-12` attendent ces stories. Suite : #17, puis #23, #24 (première leçon jouable de bout en bout, retrait de `/demonstration`).
+> **Lot 3 en cours** : #16 livrée (PR #53, mergée) ; #17 (exercices à choix : bulles, lecture, écoute) livrée sur `claude/nice-mendel-cp9syg`, en PR. Scénarios en attente : `@depend-de-18` (classer), `@depend-de-12` (réglages « tout lire à voix haute » et mode dys). Suite : #23 (aide et « Je ne sais pas »), puis #24 (étoiles et fin de séance, retrait de `/demonstration`).
 
 > **Chantier en cours : la réécriture complète en React + Supabase.** Plan, lots et décisions de démarrage dans `docs/reecriture.md`.
 

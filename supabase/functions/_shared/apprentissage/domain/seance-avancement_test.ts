@@ -1,6 +1,7 @@
 import { assertEquals, assertThrows } from "@std/assert";
 import type { Lecon } from "../../catalogue/domain/index.ts";
 import { generateurIdFixe } from "../test_utils/generateur-id-fixe.ts";
+import { hasardSansMelange } from "../test_utils/hasard-fixe.ts";
 import {
   leconDeDeuxExercicesCourts,
   leconDeDeuxExercicesDontLeSecondSansTitre,
@@ -8,10 +9,11 @@ import {
 } from "../test_utils/lecons-de-test.ts";
 import { ChoixDeSeance } from "./choix-de-seance.ts";
 import { PasDeQuestionEnCours, SeanceDejaFinie } from "./erreurs.ts";
+import { Reponse } from "./reponse.ts";
 import { Seance } from "./seance.ts";
 
 function commencer(lecon: Lecon, choix: ChoixDeSeance): Seance {
-  return Seance.commencer(generateurIdFixe("seance-1"), "profil-lea", lecon, choix);
+  return Seance.commencer(generateurIdFixe("seance-1"), hasardSansMelange(), "profil-lea", lecon, choix);
 }
 
 function seanceCompleteAuxExercices(lecon: Lecon): Seance {
@@ -21,8 +23,10 @@ function seanceCompleteAuxExercices(lecon: Lecon): Seance {
   return seance;
 }
 
+const BONNE_REPONSE = "ou";
+
 function reussirQuestions(seance: Seance, nombre: number): void {
-  for (let i = 0; i < nombre; i++) seance.reussirLaQuestionEnCours();
+  for (let i = 0; i < nombre; i++) seance.repondre(Reponse.choix(BONNE_REPONSE));
 }
 
 Deno.test("l'avancement d'une séance complète de « Les sons ou, on, an » compte 15 questions, aucune réussie", () => {
@@ -126,17 +130,17 @@ Deno.test("une séance d'un exercice se termine avec cet exercice, sans annonce"
   assertEquals(seance.retirerFaits(), []);
 });
 
-Deno.test("réussir une question dans une séance déjà finie est refusé", () => {
+Deno.test("répondre dans une séance déjà finie est refusé", () => {
   const seance = commencer(leconDeDeuxExercicesCourts(), ChoixDeSeance.unExercice(1));
-  seance.reussirLaQuestionEnCours();
+  seance.repondre(Reponse.choix(BONNE_REPONSE));
 
-  assertThrows(() => seance.reussirLaQuestionEnCours(), SeanceDejaFinie);
+  assertThrows(() => seance.repondre(Reponse.choix(BONNE_REPONSE)), SeanceDejaFinie);
 });
 
-Deno.test("réussir une question pendant une étape de leçon est refusé", () => {
+Deno.test("répondre pendant une étape de leçon est refusé", () => {
   const seance = commencer(leconDeDeuxExercicesCourts(), ChoixDeSeance.complete());
 
-  assertThrows(() => seance.reussirLaQuestionEnCours(), PasDeQuestionEnCours);
+  assertThrows(() => seance.repondre(Reponse.choix(BONNE_REPONSE)), PasDeQuestionEnCours);
 });
 
 Deno.test("une séance qui vient de commencer n'est pas finie", () => {

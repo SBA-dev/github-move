@@ -47,12 +47,12 @@ Le moteur affiche n'importe quelle leçon dans l'univers choisi par l'enfant (pr
 | `ordre` | Toucher les étiquettes dans le bon ordre | `consigne, elements[]` (dans l'ordre correct) |
 | `trous` | Compléter un texte, trou par trou, avec des bulles | `consigne, texte` (mots à trouver entre crochets : `Au clair de la [lune]`), `distracteurs[]` |
 | `conjugaison` | Choisir la bonne forme pour chaque personne | `verbe, temps, formes: [{pronom, forme}], distracteurs?[]` |
-| `lecture` | Écouter un texte lu par le personnage guide, puis répondre | `titre, texte, questions: [{question, choix[], reponse}]` |
+| `lecture` | Écouter un texte lu par le personnage guide, puis répondre | `titre, texte, questions: [{question, choix[], reponse, aide?}]` |
 | `memoriser` | Écouter vers par vers, remettre les vers dans l'ordre, retrouver les mots cachés | `titre, auteur?, vers[]` |
 | `addition` | Poser l'addition dans les maisons, puis la calculer colonne par colonne | `operations: [[a, b], ...]` ou `generateur: {nombres, min, max, retenue}`, `etapes: ["poser", "calculer"]` |
 | `calcul` | Calculer, avec le clavier de cristaux (bulles au CP) | `operations: [{q: "12 − 5", r: 7, aide?}]` ou `generateur: {op: "+"\|"-"\|"×"\|":"\|"complement", a: [min, max], b: [min, max], combien, cible?}` |
 | `fluence` | Calcul rapide chronométré, avec un record personnel | `duree` (secondes), `generateur` (comme `calcul`) |
-| `ecoute` | Écouter un mot ou une phrase dite par une voix anglaise, puis choisir sa traduction | `langue: "en-GB"`, `items: [{dire, question, choix[], reponse}]` |
+| `ecoute` | Écouter un mot ou une phrase dite par une voix anglaise, puis choisir sa traduction | `langue?` (défaut `"en-GB"`), `items: [{dire, question?, choix[], reponse, aide?}]` ; sans `question`, le personnage guide dit « Écoute bien ! Que veut dire ce mot ? » |
 | `boite` | La boîte à jetons : des jetons entrent (ou sortent) d'une boîte fermée, l'enfant prévoit combien il y en a, puis on ouvre pour vérifier | `items: [{a, op: "+"\|"-", b}]` |
 | `barres` | Problème illustré par un schéma en barres ; le « ? » montre ce qu'on cherche | `items: [{enonce, parties: [a, b], tout}]` (une valeur `null`), ou `type: "comparaison"` avec `grand, petit, ecart, noms`, ou `type: "parts"` avec `nb, valeur, total` |
 

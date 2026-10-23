@@ -118,3 +118,61 @@ export function leconDeDeuxExercicesDontLeSecondSansTitre(): Lecon {
     questions: [questionDeBulles("Combien font 3 + 3 ?")],
   });
 }
+
+function leconAvecUnExercice(id: string, exercice: object): Lecon {
+  return lireLecon({
+    id,
+    matiere: "maths",
+    niveau: "CP",
+    titre: "Une leçon à choix",
+    ordre: 1,
+    programme,
+    lecon: [],
+    exercices: [exercice],
+  });
+}
+
+export function leconDeCalcul(): Lecon {
+  return leconAvecUnExercice("ma-cp-calcul", {
+    type: "bulles",
+    questions: [{ question: "Combien font 3 + 4 ?", choix: ["6", "7", "8", "9"], reponse: "7" }],
+  });
+}
+
+export function leconDeLecture(): Lecon {
+  return leconAvecUnExercice("fr-cp-lecture-petit-chat", {
+    type: "lecture",
+    texte: "Plume est un petit chat. Il dort sur le lit de Léa.",
+    questions: [{
+      question: "Où dort Plume ?",
+      choix: ["sur le lit de Léa", "dans le jardin"],
+      reponse: "sur le lit de Léa",
+    }],
+  });
+}
+
+export function leconDEcoute(): Lecon {
+  return leconAvecUnExercice("an-cp-animaux", {
+    type: "ecoute",
+    items: [{ dire: "cat", choix: ["chat", "chien"], reponse: "chat" }],
+  });
+}
+
+export function leconAvecDesChoixAccentues(): Lecon {
+  return leconAvecUnExercice("fr-cp-a-ou-a-accent", {
+    type: "bulles",
+    questions: [{ question: "Il … un vélo.", choix: ["a", "à"], reponse: "a" }],
+  });
+}
+
+export function leconDeCalculAvecAide(): Lecon {
+  return leconAvecUnExercice("ma-cp-calcul-avec-aide", {
+    type: "bulles",
+    questions: [{
+      question: "Combien font 3 + 4 ?",
+      choix: ["6", "7", "8", "9"],
+      reponse: "7",
+      aide: "Compte sur tes doigts à partir de 4.",
+    }],
+  });
+}
