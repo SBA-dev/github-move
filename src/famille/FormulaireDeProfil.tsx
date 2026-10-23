@@ -133,7 +133,7 @@ export function FormulaireDeProfil({ titre, valeurInitiale, libelleDuBouton, onE
           value={saisie.reglages.langueDuParent}
           onChange={(evenement) => changerLesReglages({ langueDuParent: evenement.target.value })}
         >
-          <option value="aucune">Non</option>
+          <option value="aucune">Aucune</option>
           {LANGUES_DU_PARENT_PROPOSEES.map(({ code, libelle }) => <option key={code} value={code}>{libelle}</option>)}
         </select>
       </fieldset>

@@ -5,7 +5,10 @@ import type { ReglagesComplets } from "../../reglages/index.ts";
 /** Une écriture refusée ou impossible, avec le message à montrer au parent (jamais punitif). */
 export class EcritureDeProfilRefusee extends Error {}
 
-export type DonneesDeProfil = { readonly prenom: string; readonly niveau: string; readonly univers: string;
+export type DonneesDeProfil = {
+  readonly prenom: string;
+  readonly niveau: string;
+  readonly univers: string;
   readonly reglages: ReglagesComplets;
 };
 
