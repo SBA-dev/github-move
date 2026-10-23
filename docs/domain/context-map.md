@@ -54,6 +54,12 @@ flowchart LR
   Synthese[Synthèse vocale du navigateur] -- "ACL (#7)" --> Voix
   Voix -- "appel (#7)" --> Apprentissage
   Voix -- "appel (#7)" --> Accompagnement
+  Famille -- "Customer/Supplier (langue du parent, #12)" --> Accompagnement
+  Famille -- "contrat de données personnelles (effacer, exporter, #14)" --> Apprentissage
+  Famille -- "contrat de données personnelles (#14)" --> Motivation
+  Famille -- "contrat de données personnelles (#14)" --> Accompagnement
+  Motivation -- "Published Language (CleUnivers, #11)" --> Famille
+  Catalogue -- "Published Language (Niveau, #11)" --> Famille
 ```
 
 | Amont | Aval | Type de relation | Mécanisme (événement, appel, ACL) |
@@ -61,18 +67,22 @@ flowchart LR
 | Programmes officiels et guides | Pipeline de contenu | Conformist | Citations recopiées mot pour mot, vérifiées au build |
 | Pipeline de contenu | Catalogue pédagogique | Published Language | Fichier `bibliotheque.json` au format `docs/format-lecons.md`, lu par un mapper d'infrastructure |
 | Catalogue pédagogique | Apprentissage | Customer/Supplier | Appel en lecture : leçon par identifiant, leçons d'une matière et d'un niveau |
-| Famille | Apprentissage | Customer/Supplier | Appel en lecture : niveau et réglages du profil enfant (parcours libre) |
+| Famille | Apprentissage | Customer/Supplier | Appel en lecture : niveau et réglages du profil enfant (parcours libre, clavier des dictées, tout lire à voix haute, #12) |
 | Apprentissage | Motivation | Événements | `SeanceTerminee` et `LeconAcquise` (à valider), qui font avancer la série, les badges, la cabane et les épisodes |
 | Apprentissage | Accompagnement | Événements | `SeanceTerminee` (à valider) alimente le suivi et le rapport de la semaine |
 | Accompagnement | Apprentissage | Customer/Supplier | Appel en lecture : les devoirs du jour et les leçons personnelles de la famille, que l'enfant joue comme les autres leçons |
 | API Claude | Accompagnement | Anti-Corruption Layer | Port `GenerateurDeLecon` (à valider) : la réponse de l'IA est validée et traduite en leçon avant d'entrer dans le domaine |
 | Application legacy | Famille, Apprentissage | Anti-Corruption Layer | Traducteur de migration ponctuel : profils et progression de l'artifact → agrégats du domaine |
-| Supabase Auth | Famille | Anti-Corruption Layer (story #5) | Port `ServiceDeConnexion` : l'utilisateur et les erreurs de Supabase sont traduits en `ParentId` et en erreurs métier (`AdresseEmailInvalide`, `LienDeConnexionInvalide`, `CodeDeConnexionMalForme`, `CodeDeConnexionInvalide`) |
+| Supabase Auth | Famille | Anti-Corruption Layer (stories #5 et #13) | Port `ServiceDeConnexion` (aussi utilisé par le parent invité avant d'accepter une invitation ; l'acceptation elle-même passe par une fonction Postgres `security definer` appelée avec son JWT, décision 0009, n°3) : l'utilisateur et les erreurs de Supabase sont traduits en `ParentId` et en erreurs métier (`AdresseEmailInvalide`, `LienDeConnexionInvalide`, `CodeDeConnexionMalForme`, `CodeDeConnexionInvalide`) |
 | Supabase Auth | Famille | Anti-Corruption Layer (story #5, décision 0011) | Hook « Send Email » : l'ACL `DemandeDEmailSupabase` traduit la demande signée (adresse, `token`, `token_hash`, `redirect_to`, type d'action) en adresse, lien de connexion et code de connexion, puis appelle le cas d'usage serveur `EnvoyerEmailDeConnexion` |
 | Famille | Expéditeur d'e-mails | Port et adaptateurs (story #5, décision 0011) | Port `ExpediteurDEmails` (couche `application/`) : adaptateur boîte de test (développement), fournisseur européen (production, #45). Le domaine compose l'e-mail de connexion, l'adaptateur ne fait que l'envoyer |
 | Famille | Motivation | Customer/Supplier (story #6) | Le profil enfant garde la clé de son univers ; Motivation retrouve l'univers et son personnage guide (clé inconnue → `animaux`) |
 | Motivation | Apprentissage | Customer/Supplier (story #6) | Appel en lecture au domaine de Motivation, depuis le front : pendant une séance, Apprentissage dit seulement « réponse juste / fausse » ; Motivation donne la félicitation ou l'encouragement et l'humeur du personnage guide. Aucune note n'est modifiée. |
 | Voix | Motivation | Published Language (story #7, décision 0008) | Voix publie le type `CaractereDeLaVoix` ; Motivation l'importe et fournit les valeurs de chaque personnage guide. Voix ne connaît pas les univers |
+| Famille | Accompagnement | Customer/Supplier (story #12) | Appel en lecture : la langue du parent, réglage de chaque profil enfant (décision n°8 du lot 2), pour la traduction des consignes (lot 6). Seul le texte de la consigne part à l'IA |
+| Famille | Apprentissage, Motivation, Accompagnement | Contrat de données personnelles (story #14, décision 0009, n°4) | Suppression en cascade en base pour les tables du profil, plus le port `DonneesPersonnellesDuProfil` (effacer, exporter) pour ce qui n'est pas en base (Storage, caches), et l'événement `ProfilEnfantSupprime`. Chaque contexte qui détient des données d'un enfant fournit son adaptateur ; Famille orchestre la suppression et l'export sans lire leurs tables. Toute story qui ajoute une donnée d'enfant l'ajoute à la suppression et à l'export |
+| Motivation | Famille | Published Language (story #11, décision 0009, n°5) | Famille valide la clé de l'univers d'un profil avec le value object `CleUnivers` publié par Motivation (`@domain/motivation`) |
+| Catalogue pédagogique | Famille | Published Language (story #11, décision 0009, n°5) | Famille importe le value object `Niveau` (CP à CM2) publié par le Catalogue (`@domain/catalogue`, créé avec #11) |
 | Synthèse vocale du navigateur | Voix | Anti-Corruption Layer (story #7) | Port `VoixDeLAppareil` (voix traduites en nom et langue) et port `LecteurAVoixHaute` (adaptateur `speechSynthesis`, plus tard MP3) |
 | Voix | Apprentissage, Motivation, Accompagnement | Appel (story #7) | Depuis le front, par le port `LecteurAVoixHaute` déclaré dans `voix/domain/` (décision 0007) : lire une consigne, une étape de leçon, une félicitation ou un encouragement |
 
@@ -84,3 +94,6 @@ flowchart LR
 - **Pas de temps d'écran** dans l'application : aucune limite de durée de jeu, ni dans Famille ni dans Apprentissage.
 - **Voix est un sous-domaine générique** (décision 0007) : aucun des cinq contextes ne le possède. Les interfaces des ports qu'une règle du domaine utilise dans le navigateur (`Hasard`, `LecteurAVoixHaute`, `VoixDeLAppareil`) sont déclarées dans `domain/`.
 - **La connexion du parent est obligatoire** (lot 1, décision n°5) : Supabase Auth reste derrière l'ACL de Famille, avec un lien de connexion et un code de connexion.
+- **Rattachements et invitation en attente dans l'agrégat `ProfilEnfant`** (proposition des stories #11 et #13, appliquée à la validation n°1 du lot 2) : les invariants « un ou deux parents » et « une invitation acceptée rattache un seul parent » demandent une seule frontière de cohérence. Le `Parent` reste un agrégat à part ; « les enfants d'un parent » est une lecture. Les deux parents ont les mêmes droits (décision n°1 du lot 2).
+- **Accès** : toute table d'un contexte qui porte un identifiant de profil enfant a des policies RLS fondées sur le rattachement du parent connecté, et une suppression en cascade avec le profil (#11, #14). Le domaine vérifie aussi le rattachement : la RLS protège l'accès, elle n'est pas le modèle.
+- **Écritures de Famille** (décision 0009) : création, modification, réglages, invitation, annulation, suppression et export passent par des Edge Functions avec le JWT du parent ; le front ne fait que des lectures directes, sous RLS. Le profil et son premier rattachement sont créés en une seule transaction. L'acceptation d'une invitation passe par une fonction Postgres `security definer` à périmètre minimal, appelée avec le JWT du parent invité ; jamais de `service_role`. Le contrôle parental, le choix du profil en cours et le choix de voix tournent dans le navigateur.

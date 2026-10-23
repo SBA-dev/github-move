@@ -66,6 +66,7 @@ L'application fonctionne et est publiée comme artifact claude.ai. Elle comprend
   - À retirer plus tard : la page `/demonstration` et le profil préparé en `localStorage` (lots 2 et 3).
   - Première vérification Supabase (`npx supabase link`) non faite : les secrets `SUPABASE_*` n'étaient pas présents dans la session.
 - [x] Lot 2 (Famille) : issues écrites, label `reecriture`. Ordre proposé : #10 contrôle parental de l'espace parent, #11 créer et modifier un profil enfant (et « Qui joue ? »), #12 réglages, #13 inviter un second parent, #14 supprimer un profil et ses données (et export), #15 choix de la voix sur l'appareil. Ces stories touchent la base : elles demandent Supabase (secrets et Docker).
+  - Modèles (#10 à #15) et scénarios écrits sur `feature/lot-2-modele-et-scenarios` : 35 règles, 150 scénarios. Scénarios **validés par le PO** (`docs/stories/lot-2-decisions.md`, décision 0009). Prochaine étape : TDD, d'abord #10 (contrôle parental) et #15 (choix de la voix), qui tournent dans le navigateur ; #11 à #14 demandent Supabase (secrets et Docker).
 - [ ] Lots 3 à 7 : issues à écrire.
 
 ### 2. Contenu : lecture et écriture au CP (commencé, pas encore livré)

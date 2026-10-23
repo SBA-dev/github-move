@@ -69,18 +69,32 @@ Le glossaire garde l'orthographe française.
 | Terme | Définition | Contexte | Synonymes interdits |
 |---|---|---|---|
 | Parent | Adulte qui a un compte et qui est rattaché à un ou plusieurs profils enfants. Il crée et règle les profils, donne les devoirs et consulte le suivi. Il ne voit **que les enfants auxquels il est rattaché**. Il n'y a pas d'autre rôle adulte. | Famille | utilisateur, adulte, enseignant, tuteur, compte |
-| Rattachement (à valider) | Lien entre un parent et un profil enfant, qui donne au parent l'accès à ce profil. Un profil enfant a **un ou deux parents**. | Famille | partage, lien, accès |
-| Invitation (à valider) | Lien communiqué par un parent pour qu'un second parent se rattache à un profil enfant. | Famille | code, parrainage |
-| Profil enfant | Enfant qui apprend : prénom ou pseudo, niveau, univers et réglages. Il n'a ni compte, ni e-mail, ni mot de passe. | Famille | élève, utilisateur, joueur, compte enfant |
-| Réglages (à valider) | Préférences d'un profil enfant : mode dys, tout lire à voix haute, parcours libre, clavier, langue du parent. | Famille | paramètres, options |
-| Mode dys | Réglage qui adapte l'affichage pour les enfants dyslexiques (police, espacement). | Famille | mode dyslexie, accessibilité |
-| Contrôle parental (à valider) | Question à laquelle seul un adulte sait répondre, qui protège l'espace parent. | Famille | code, verrou, mot de passe |
+| Rattachement | Lien entre un parent et un profil enfant, qui donne au parent l'accès à ce profil. Un profil enfant a **un ou deux parents**, qui ont les **mêmes droits** (modifier, régler, inviter, exporter, supprimer). Le parent qui crée le profil y est rattaché d'office (#11) ; le second par une invitation (#13). Chaque rattachement est propre à un enfant : deux parents ne voient pas leurs autres enfants respectifs, ni l'adresse e-mail l'un de l'autre (validation n°1 du lot 2, décisions n°1 et n°3). | Famille | partage, lien, accès |
+| Invitation | Demande faite par un parent rattaché pour qu'un second parent se rattache à **un** profil enfant. Valable **7 jours**, utilisable **une seule fois** ; une seule invitation en attente par profil (une nouvelle remplace l'ancienne). Elle est en attente, acceptée ou annulée. Le parent qui invite peut l'annuler ; le parent invité l'accepte ou la refuse. Elle vaut pour quiconque a le lien d'invitation en main. L'application n'envoie rien : le parent communique lui-même le lien d'invitation (#13 ; validation n°1 du lot 2, décision n°2). | Famille | code, parrainage, partage |
+| Lien d'invitation (à valider) | Lien qui porte le jeton d'une invitation, communiqué par le parent qui invite. Jamais « lien » seul. | Famille | lien (seul), lien de connexion, code |
+| Jeton d'invitation (à valider) | Secret impossible à deviner, contenu dans le lien d'invitation, qui désigne l'invitation. Montré une seule fois. | Famille | code, mot de passe |
+| Parent invité (à valider) | Parent qui ouvre un lien d'invitation ; il devient un parent rattaché en l'acceptant. Ce n'est pas un autre rôle. | Famille | invité (seul), second compte |
+| Profil enfant | Enfant qui apprend : prénom ou pseudo, niveau, univers, réglages et date de création, rattaché à un ou deux parents. Il n'a ni compte, ni e-mail, ni mot de passe, ni date de naissance. Changer son niveau garde sa progression. | Famille | élève, utilisateur, joueur, compte enfant |
+| Prénom (à valider) | Prénom ou pseudo d'un profil enfant : 1 à 20 caractères, espaces autour retirés, coupé à 20 caractères s'il est plus long ; un prénom vide est refusé ; deux profils peuvent avoir le même (#11). Un seul terme dans le code (`Prenom`). | Famille | nom, pseudo (dans le code), identifiant |
+| Profil en cours (à valider) | Profil enfant qui joue en ce moment sur l'appareil, choisi dans « Qui joue ? ». Il n'est pas mémorisé d'une ouverture de l'application à l'autre. | Famille | enfant courant, joueur actif, session |
+| Qui joue ? (à valider) | Écran où l'enfant touche son profil pour jouer (« Qui joue aujourd'hui ? »). Il s'affiche à chaque ouverture de l'application et en sortant de l'espace parent. Terme du domaine ou simple titre : question ouverte n°2 de #11. | Famille | accueil, sélection du joueur |
+| Réglages | Préférences d'un profil enfant, réglées par un parent rattaché et lues par les autres contextes : mode dys, tout lire à voix haute, parcours libre, clavier des dictées, langue du parent. Enregistrées avec le profil, retrouvées sur tous les appareils ; jamais une préférence de l'appareil (#12 ; validation n°1 du lot 2, décision n°8). | Famille | paramètres, options, temps d'écran |
+| Tout lire à voix haute (à valider) | Réglage qui fait lire aussi les choix proposés (« Est-ce a, b, ou c ? ») et une salutation. Les consignes, elles, sont toujours lues (Lecture à voix haute). | Famille | lecture automatique, mode audio |
+| Clavier des dictées (à valider) | Réglage du clavier proposé pendant une dictée : automatique (lettres du mot jusqu'au CE1, clavier complet ensuite), lettres du mot seulement, clavier complet. | Famille | clavier (seul), saisie |
+| Langue du parent (à valider) | Réglage de chaque profil enfant : langue dans laquelle les consignes sont traduites pour le parent, ou aucune (20 langues proposées). | Famille | langue (seule), langue de l'enfant, traduction |
+| Mode dys | Réglage qui adapte l'affichage pour les enfants dyslexiques : police Andika, texte espacé, syllabes en couleurs alternées (décision n°8 du lot 2). | Famille | mode dyslexie, accessibilité |
+| Contrôle parental | Question de multiplication (deux facteurs entre 6 et 9) à laquelle seul un adulte sait répondre, qui protège **seulement l'entrée** de l'espace parent sur l'appareil. Après une erreur, la même question est reposée, sans limite d'essais. Elle n'est pas posée juste après la connexion du parent. Ce n'est pas une sécurité : la connexion du parent et l'accès aux données s'en chargent (#10 ; validation n°1 du lot 2, décision n°4). | Famille | code, verrou, mot de passe, code PIN |
+| Question du contrôle parental (à valider) | La multiplication posée par le contrôle parental, tirée au hasard à chaque entrée, et reposée telle quelle après une erreur. | Famille | énigme, captcha |
+| Espace parent (à valider) | Partie de l'application réservée au parent (profils, réglages, suivi, devoirs, voix, déconnexion), protégée par le contrôle parental. En sortir ramène à « Qui joue ? » ; il est refermé à chaque ouverture de l'application. | Famille | espace adulte, administration, back-office |
+| Suppression du profil (à valider) | Effacement immédiat et définitif d'un profil enfant et de toutes les données qui le concernent, dans tous les contextes, dans Storage et sur les appareils, après un avertissement et la confirmation d'un parent rattaché. Elle vaut pour les deux parents. Elle demande le réseau (#14). | Famille (tous les contextes y participent) | archivage, désactivation, détacher |
+| Avertissement de suppression (à valider) | Ce que voit le parent avant de confirmer la suppression du profil : elle est définitive, l'autre parent ne verra plus l'enfant (s'il y en a un), l'export est proposé d'abord (#14). Terme du domaine ou d'interface : question ouverte n°6 de #14. | Famille | alerte, popup |
+| Export des données du profil (à valider) | Fichier JSON lisible (`savanturier-<prénom>-<date>`), téléchargeable par un parent rattaché, qui contient tout ce que l'application garde sur un profil enfant, sans l'adresse e-mail de l'autre parent. Proposé aussi avant la suppression (#14). | Famille (tous les contextes y participent) | sauvegarde, backup |
 | Connexion du parent (à valider) | État d'un appareil sur lequel un parent est reconnu. Elle est obligatoire pour utiliser l'application et reste ouverte jusqu'à la déconnexion. | Famille | session, login |
 | Lien de connexion (à valider) | Lien envoyé par e-mail au parent, qui ouvre la connexion du parent. Il vaut 1 heure et sert une seule fois. L'interface peut dire « lien magique ». | Famille | lien (seul), code de connexion, mot de passe |
 | Code de connexion (à valider) | Code de 6 chiffres, dans le même e-mail que le lien de connexion, que le parent saisit sur l'appareil qui a fait la demande pour ouvrir la connexion du parent. Même durée (1 heure) et même usage unique que le lien. | Famille | code (seul), mot de passe, code PIN, lien de connexion |
 | E-mail de connexion | E-mail que reçoit le parent quand il demande à se connecter : sujet et texte en français, qui contiennent le lien de connexion et le code de connexion de la même demande. Composé par le domaine Famille (décision 0011) ; il n'utilise que l'adresse du parent. | Famille | courriel, courriel de connexion, mail, message, e-mail magique, OTP, modèle d'e-mail |
 | Déconnexion (à valider) | Fin de la connexion du parent sur un appareil, faite depuis l'espace parent. Elle ne ferme pas les autres appareils. Plus aucune donnée de la famille n'y reste visible. | Famille | logout |
-| Appareil (à valider) | Tablette, téléphone ou ordinateur où l'application est ouverte. Certaines préférences y sont mémorisées (Son/Muet ; voix imposée au lot 2). | Famille (utilisé partout) | device, navigateur, poste |
+| Appareil (à valider) | Tablette, téléphone ou ordinateur où l'application est ouverte. Certaines préférences y sont mémorisées (Son/Muet, choix de voix), jamais les réglages d'un profil. | Famille (utilisé partout) | device, navigateur, poste |
 
 ## Accompagnement
 
@@ -94,6 +108,7 @@ Le glossaire garde l'orthographe française.
 | Mots de la semaine | Devoir qui prépare une dictée : une liste de mots et une date de dictée. Chaque jour, l'entraînement en propose 5. | Accompagnement | dictée de la semaine, liste de mots |
 | Leçon personnelle (à valider) | Leçon créée par un parent à partir de son propre texte ou d'une photo, avec l'aide de l'IA. Elle n'est visible que dans sa famille. | Accompagnement | leçon custom, leçon adulte |
 | Enregistrement de lecture (à valider) | Audio de l'enfant qui lit à voix haute, écoutable par le parent. Il expire au bout de 30 jours. | Accompagnement | audio, voix, fichier |
+| Traduction des consignes (à valider) | Traduction d'une consigne dans la langue du parent, faite par l'IA depuis une Edge Function. Seul le texte de la consigne est envoyé (lot 6). | Accompagnement | traduction de l'enfant |
 
 ## Voix (sous-domaine générique)
 
@@ -103,7 +118,10 @@ Sous-domaine décidé à la validation n°1 du lot 1 (décision 0007). Ses terme
 |---|---|---|---|
 | Lecture à voix haute (à valider) | Le personnage guide lit un texte, phrase par phrase, en surlignant le mot prononcé. | Voix | synthèse, TTS |
 | Voix automatique (à valider) | Choix par défaut : la voix française la plus naturelle de l'appareil, adaptée au caractère de la voix du personnage guide. | Voix | voix par défaut |
-| Voix imposée (à valider) | Voix de l'appareil choisie par le parent, dans l'espace parent, à la place de la voix automatique. Mémorisée sur l'appareil. Arrive au lot 2. | Voix | voix préférée, voix forcée |
+| Voix imposée (à valider) | Voix française de l'appareil choisie par le parent, dans l'espace parent, à la place de la voix automatique. Elle garde le caractère de la voix du personnage guide ; l'anglais garde sa voix anglaise. Mémorisée sur l'appareil, pour tous les profils qui y jouent, même après la déconnexion du parent. Si elle n'existe plus sur l'appareil, la voix automatique reprend (affichée comme choisie) et le choix reste mémorisé (#15). | Voix | voix préférée, voix forcée |
+| Choix de voix (à valider) | Préférence de l'appareil : voix automatique ou une voix imposée (#15). | Voix | réglage de voix, préférence vocale |
+| Voix très naturelle (à valider) | Voix française de l'appareil dont le score est d'au moins 60 (mention de l'interface). | Voix | voix premium, voix HD |
+| Essai de voix (à valider) | Phrase lue pour écouter une voix avant de la choisir (« Coucou ! Je suis Noisette. On apprend en s'amusant ? Youpi ! »), par le personnage guide du profil en cours, ou Noisette s'il n'y en a pas. Ne change pas le choix de voix. | Voix | test de voix (« test » est réservé) |
 | Muet (à valider) | Choix de l'appareil qui coupe la voix (et les effets sonores, à confirmer avec leur story). Son contraire est « Son ». | Voix | silencieux, mute |
 | Voix bloquée (à valider) | Le navigateur refuse de lire alors qu'il sait lire à voix haute. L'enfant est prévenu une fois par ouverture de l'application, sans être bloqué. | Voix | voix cassée, erreur de son |
 
@@ -125,18 +143,24 @@ Sous-domaine décidé à la validation n°1 du lot 1 (décision 0007). Ses terme
 14. **« Voix »** (story #7) : désigne la voix de synthèse. L'audio de l'enfant reste un **Enregistrement de lecture** (proposition appliquée). On dit « voix féminine / voix masculine », pas « sexe de la voix ».
 15. **« Monde »** (story #6) : « Monde vivant » est le nom du style graphique, pas un terme du domaine (proposition appliquée).
 16. **Termes d'interface** hors glossaire (story #6) : paysage, couleur principale, en-tête, mouvements réduits, page de démonstration (proposition appliquée).
+17. **« Espace adulte »** (legacy, #10) : synonyme interdit de **Espace parent** (proposition appliquée, validation n°1 du lot 2).
+18. **« Lien »** (#13) : on dit toujours **Lien de connexion** ou **Lien d'invitation**, jamais « lien » seul (proposition appliquée).
+19. **« Supprimer » / « détacher »** (#14) : supprimer un profil qui a deux parents le supprime **pour les deux** (tranchée, décision n°1 du lot 2). « Détacher » reste un synonyme interdit de **Suppression du profil** ; le retrait d'un parent n'existe pas au lot 2.
+20. **« La voix des guides »** (legacy, #15) : on dit « La voix des personnages guides » (proposition appliquée).
+21. **« Progression »** (legacy, #14) : mot d'interface (« supprimer Léa et sa progression »), hors glossaire (proposition appliquée).
+22. **Rattachement, Invitation, Contrôle parental, Réglages** : confirmés par la validation n°1 du lot 2 (`docs/stories/lot-2-decisions.md`, décisions n°1 à n°4 et n°8). Les autres termes du lot 2 restent `(à valider)`.
 
 ## Conflits à trancher
 
 1. **« Étoile »** est aussi le nom de l'« Étoile du savoir » dans l'histoire. Proposition : **Étoile** reste la récompense. L'objet de l'histoire n'est pas un terme du domaine.
 2. **« Test »** : on dit toujours **Test de départ**, pour ne pas confondre avec les tests logiciels.
-
 3. **« Courriel »** (story #5, décision 0011) : **tranché par le PO le 2026-10-23** : on dit **E-mail de connexion** partout, « courriel » est interdit.
 
-Les anciens conflits n°3 à n°7 (compte, session, lien magique, voix, monde) sont tranchés : voir Décisions n°10 à n°15.
+Les anciens conflits n°3 à n°7 (compte, session, lien magique, voix, monde) sont tranchés : voir Décisions n°10 à n°15. Ceux du lot 2 (espace adulte, lien, supprimer / détacher, la voix des guides, progression) : voir Décisions n°17 à n°21.
 
-## Questions ouvertes (pour `domain-modeler`, story de rattachement)
+## Questions ouvertes
 
-1. Les deux parents d'un enfant ont-ils les mêmes droits (par exemple supprimer le profil, retirer l'autre parent) ?
-2. Combien de temps une invitation reste-t-elle valable, et sert-elle une seule fois ?
-3. Deux parents rattachés au même enfant voient-ils aussi leurs autres enfants respectifs ? (Proposition : non. Chaque rattachement est propre à un enfant, ce qui convient aussi aux parents séparés.)
+Les trois questions de rattachement (mêmes droits des deux parents, durée et usage unique d'une invitation, visibilité des autres enfants) sont tranchées par la validation n°1 du lot 2 (décisions n°1, n°2 et n°3). Restent, sans blocage :
+- « Qui joue ? » : terme du domaine ou titre d'écran (#11, question n°2) ;
+- « police de lecture », « texte espacé », « syllabe » : glossaire ou interface (#12, question n°3) ;
+- « Avertissement de suppression » : terme du domaine ou d'interface (#14, question n°6).
