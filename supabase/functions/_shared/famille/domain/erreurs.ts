@@ -32,3 +32,24 @@ export class EnvoiDeLEmailImpossible extends Error {
     this.name = "EnvoiDeLEmailImpossible";
   }
 }
+
+export class PrenomObligatoire extends Error {
+  constructor() {
+    super("Écris le prénom de l'enfant.");
+    this.name = "PrenomObligatoire";
+  }
+}
+
+export class UniversInconnu extends Error {
+  constructor(readonly cle: string) {
+    super(`Cet univers est inconnu : « ${cle} ».`);
+    this.name = "UniversInconnu";
+  }
+}
+
+export class ProfilEnfantIdVide extends Error {
+  constructor() {
+    super("L'identifiant du profil enfant ne peut pas être vide.");
+    this.name = "ProfilEnfantIdVide";
+  }
+}

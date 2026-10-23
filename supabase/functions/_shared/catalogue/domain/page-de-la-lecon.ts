@@ -22,7 +22,7 @@ export type PageDeLaLecon = Readonly<{
 export function pageDeLaLecon(lecon: Lecon, section?: SectionDuProgramme): PageDeLaLecon {
   return Object.freeze({
     titre: lecon.titre,
-    niveauEtMatiere: `${lecon.niveau} · ${lecon.matiere.libelle}`,
+    niveauEtMatiere: `${lecon.niveau.valeur} · ${lecon.matiere.libelle}`,
     exercicesProposes: Object.freeze(lecon.exercices.map((exercice, position) => {
       const libelle = libelleDuType(exercice.type);
       return Object.freeze({ position, libelle, intitule: exercice.titre ?? libelle });
