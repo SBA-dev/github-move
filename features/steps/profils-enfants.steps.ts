@@ -452,8 +452,11 @@ Then(/^on lui demande le prénom, la classe et l'univers de l'enfant$/, async ({
 
 Then(/^jamais d'adresse e-mail, de mot de passe ni de date de naissance$/, async ({ famille }) => {
   const formulaire = formulaireDeCreation(await pageCourante(famille));
-  await expect(formulaire.getByRole("textbox")).toHaveCount(1);
-  await expect(formulaire.getByRole("combobox")).toHaveCount(2);
+  const reglages = formulaire.getByTestId("reglages");
+  const total = async (role: "textbox" | "combobox") => formulaire.getByRole(role).count();
+  const dansReglages = async (role: "textbox" | "combobox") => reglages.getByRole(role).count();
+  expect((await total("textbox")) - (await dansReglages("textbox"))).toBe(1);
+  expect((await total("combobox")) - (await dansReglages("combobox"))).toBe(2);
   await expect(formulaire.getByLabel(/e-?mail|mot de passe|naissance/i)).toHaveCount(0);
   await expect(formulaire.locator("input[type=email], input[type=password], input[type=date]")).toHaveCount(0);
 });
