@@ -105,3 +105,18 @@ Deno.test("l'onglet Voix montre la voix imposée comme choisie quand elle est pr
 Deno.test("l'onglet Voix montre « automatique » quand la voix imposée a disparu", () => {
   assertEquals(voixMontreeCommeChoisie([denise], ChoixDeVoix.imposee("Thomas")), "automatique");
 });
+
+Deno.test("une voix imposée qui n'est pas française laisse la voix automatique", () => {
+  const samanthaAmericaine: VoixDisponible = { nom: "Samantha", langue: "en-US" };
+
+  assertEquals(choisirVoix([samanthaAmericaine, denise, thomas], noisette, ChoixDeVoix.imposee("Samantha")), denise);
+});
+
+Deno.test("l'onglet Voix montre « automatique » quand la voix imposée n'est pas française", () => {
+  const samanthaAmericaine: VoixDisponible = { nom: "Samantha", langue: "en-US" };
+
+  assertEquals(
+    voixMontreeCommeChoisie([samanthaAmericaine, denise, thomas], ChoixDeVoix.imposee("Samantha")),
+    "automatique",
+  );
+});
