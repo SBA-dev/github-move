@@ -1,6 +1,8 @@
 # Critères d'acceptance : issue #16, Étapes de leçon lues, puis exercices
 
-Scénarios : `features/16-etapes-puis-exercices.feature` (tags `@issue-16 @wip`).
+Scénarios : `features/16-etapes-puis-exercices.feature` (tag `@issue-16`).
+
+Convention : un scénario tagué `@depend-de-<n>` (ici `@depend-de-12`, `@depend-de-17`, `@depend-de-18`) n'est pas livré par #16 et attend la story #<n> (arbitrage « Cadre seul », journal du 2026-10-23 14:10) ; on l'exclut avec `--grep-invert @depend-de`, et on retire le tag quand #<n> est livrée.
 Modèle du domaine : `docs/stories/16/domain-model.md` (contextes **Apprentissage** et **Catalogue pédagogique**, avec **Motivation**, **Voix** et **Famille**).
 
 ## Objectif
