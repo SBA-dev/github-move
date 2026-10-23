@@ -52,12 +52,19 @@ L'application fonctionne et est publiée comme artifact claude.ai. Elle comprend
   - `.env.example` et `.gitignore`.
 - [x] Test de contrat de `app/bibliotheque.json` (`scripts/tests/test_bibliotheque.py`, 1 326 cas). Il a révélé 3 paires de leçons de maths du CP avec le même ordre : c'est corrigé.
 - [ ] Compléter `tests/legacy/` avec les scripts de vérification utilisés jusqu'ici (parcours des 265 leçons, profils, révisions, espace parent). Deux premiers tests de caractérisation y sont déjà.
-- [ ] Écrire les premières issues GitHub. Ordre proposé :
-  1. Compte famille et profil enfant
-  2. Jouer une leçon et gagner des étoiles
-  3. Parcours et verrous
-  4. Motivation
-  5. Accompagnement
+- [x] Lot 1 (Socle) : issues #5 (connexion du parent), #6 (univers et personnage guide), #7 (voix), #8 (PWA installable), label `reecriture`.
+  - Modèles de domaine (#5 à #7) et critères d'acceptance (#5 à #8) écrits, glossaire et context map complétés.
+  - Scénarios **validés par le PO** (`docs/stories/lot-1-decisions.md`, décision 0007). Questions restantes non bloquantes dans `docs/stories/<n>/acceptance.md`.
+  - **#6 livrée sur la branche** : domaine `motivation` (40 tests Deno), front (paysages, personnages guides SVG animés avec Motion, en-tête, page `/demonstration` réservée aux tests), review approuvée, E2E 82/82. PR pas encore ouverte.
+  - **#7 livrée sur la branche** : sous-domaine `voix` (103 tests Deno au total), lecture à voix haute des consignes avec le caractère de chaque personnage guide, surlignage du mot prononcé, Son/Muet mémorisé sur l'appareil, voix bloquée signalée une fois ; décision 0008 ; deux reviews (la première À CORRIGER) ; E2E 140/140 avec #6 et le socle. PR pas encore ouverte.
+  - À reprendre plus tard (non bloquant, voir `docs/stories/7/journal.md`) : consignes avec balises à attributs, coupure de Chrome après 15 s de lecture, blocage silencieux sur iOS, entités HTML numériques, message « Réécouter » hors de la page de la consigne.
+  - **#8 livrée sur la branche** : manifeste, icônes, service worker (coquille et bibliothèque hors ligne, nouvelle version au lancement suivant), aide iPad/iPhone ; E2E sur le build de production (`playwright.pwa.config.ts`) 28/28 ; deux reviews (la première À CORRIGER).
+  - **PR du lot 1 ouverte** (#6, #7, #8) : https://github.com/SBA-dev/github-move/pull/9, en attente du merge par le PO.
+  - À reprendre plus tard pour la PWA : fichier chargé à la demande après activation d'une nouvelle version (à traiter avant le premier écran `lazy` en production), délai maximal du réseau d'abord, tests de la réponse en erreur, exemples iPhone et Mac de bureau.
+  - Prochaine étape : #5 (connexion du parent), qui a besoin du projet Supabase : ajouter les secrets `SUPABASE_*` à l'environnement cloud, puis ouvrir une nouvelle session.
+  - À retirer plus tard : la page `/demonstration` et le profil préparé en `localStorage` (lots 2 et 3).
+  - Première vérification Supabase (`npx supabase link`) non faite : les secrets `SUPABASE_*` n'étaient pas présents dans la session.
+- [ ] Lots 2 à 7 : issues à écrire.
 
 ### 2. Contenu : lecture et écriture au CP (commencé, pas encore livré)
 

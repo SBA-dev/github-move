@@ -24,7 +24,7 @@ Chaque story devient une issue GitHub avec le label `reecriture`.
 | Lot | Stories |
 |---|---|
 | 1. Socle | Connexion du parent · Design, univers et personnage guide · Voix (lecture à voix haute) · PWA installable |
-| 2. Famille | Créer et modifier un profil enfant · Inviter un second parent (rattachement par lien) · Réglages (mode dys, tout lire, parcours libre, clavier, langue du parent) · Contrôle parental de l'espace parent · Supprimer un profil et ses données |
+| 2. Famille | Créer et modifier un profil enfant · Choix de la voix par le parent (repris de #7) · Inviter un second parent (rattachement par lien) · Réglages (mode dys, tout lire, parcours libre, clavier, langue du parent) · Contrôle parental de l'espace parent · Supprimer un profil et ses données |
 | 3. Jouer une leçon | Étapes lues puis exercices · Exercices à choix (bulles, lecture, écoute) · Classer, ordre, trous · Dictée, conjugaison · Calcul, fluence, addition posée · Boîte, barres · Mémoriser une poésie · Aide et « Je ne sais pas » · Étoiles et écran de fin |
 | 4. Parcours | Parcours par matière et verrous · Parcours libre et leçons des classes d'avant · Test de départ · Révisions des erreurs · Écran « Aujourd'hui » |
 | 5. Motivation | Série · Badges et compétences · Cabane · Épisodes de l'histoire |

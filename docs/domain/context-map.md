@@ -12,6 +12,14 @@ Première version, tirée de l'application existante. Les contextes sont des **p
 | Famille | Parents, profils enfants, rattachements et invitations, réglages, contrôle parental, données personnelles et RGPD. | `supabase/functions/_shared/famille/` |
 | Accompagnement | Suivi, rapport de la semaine, carte des compétences, devoirs, mots de la semaine, enregistrements de lecture, leçons personnelles. | `supabase/functions/_shared/accompagnement/` |
 
+### Sous-domaine générique
+
+Décidé à la validation n°1 du lot 1 (décision 0007).
+
+| Contexte | Responsabilité | Dossier |
+|---|---|---|
+| Voix | Lecture à voix haute : nettoyage et découpage du texte, choix de la voix de l'appareil, hauteur et rythme selon le caractère de la voix du personnage guide. Port de lecture (voix du navigateur aujourd'hui, MP3 plus tard). Fonctionne entièrement dans le navigateur, importé par le front via `@domain/voix`. Utilisé par Apprentissage, Motivation et Accompagnement. | `supabase/functions/_shared/voix/` |
+
 ### Systèmes externes
 
 | Système | Rôle |
@@ -20,7 +28,8 @@ Première version, tirée de l'application existante. Les contextes sont des **p
 | Pipeline de contenu (`scripts/`, Python) | Produit `bibliotheque.json` et `programmes-index.json` |
 | API Claude | Création de leçons personnelles, lecture de photos de devoirs |
 | Synthèse vocale | Voix qui lit les consignes (MP3 pré-générés, ou voix du navigateur) |
-| Application legacy (`app/`) | Données existantes des profils et de la progression, à reprendre |
+| Supabase Auth | Connexion du parent par lien de connexion ou code de connexion envoyés par e-mail (story #5) |
+| Application legacy (`app/`) | Source des règles métier à reprendre. Pas de reprise des données (décision de démarrage n°7) |
 
 ## Relations
 
@@ -36,6 +45,13 @@ flowchart LR
   Claude[API Claude] -- "ACL" --> Accompagnement
   Legacy[Application legacy] -- "ACL" --> Famille
   Legacy -- "ACL" --> Apprentissage
+  Auth[Supabase Auth] -- "ACL (#5)" --> Famille
+  Famille -- "Customer/Supplier (clé de l'univers, #6)" --> Motivation
+  Motivation -- "Customer/Supplier (paroles et humeur du personnage guide, #6)" --> Apprentissage
+  Motivation -- "Customer/Supplier (caractère de la voix, #7)" --> Voix
+  Synthese[Synthèse vocale du navigateur] -- "ACL (#7)" --> Voix
+  Voix -- "appel (#7)" --> Apprentissage
+  Voix -- "appel (#7)" --> Accompagnement
 ```
 
 | Amont | Aval | Type de relation | Mécanisme (événement, appel, ACL) |
@@ -49,6 +65,12 @@ flowchart LR
 | Accompagnement | Apprentissage | Customer/Supplier | Appel en lecture : les devoirs du jour et les leçons personnelles de la famille, que l'enfant joue comme les autres leçons |
 | API Claude | Accompagnement | Anti-Corruption Layer | Port `GenerateurDeLecon` (à valider) : la réponse de l'IA est validée et traduite en leçon avant d'entrer dans le domaine |
 | Application legacy | Famille, Apprentissage | Anti-Corruption Layer | Traducteur de migration ponctuel : profils et progression de l'artifact → agrégats du domaine |
+| Supabase Auth | Famille | Anti-Corruption Layer (story #5) | Port `ServiceDeConnexion` : l'utilisateur et les erreurs de Supabase sont traduits en `ParentId` et en erreurs métier (`AdresseEmailInvalide`, `LienDeConnexionInvalide`, `CodeDeConnexionMalForme`, `CodeDeConnexionInvalide`) |
+| Famille | Motivation | Customer/Supplier (story #6) | Le profil enfant garde la clé de son univers ; Motivation retrouve l'univers et son personnage guide (clé inconnue → `animaux`) |
+| Motivation | Apprentissage | Customer/Supplier (story #6) | Appel en lecture au domaine de Motivation, depuis le front : pendant une séance, Apprentissage dit seulement « réponse juste / fausse » ; Motivation donne la félicitation ou l'encouragement et l'humeur du personnage guide. Aucune note n'est modifiée. |
+| Voix | Motivation | Published Language (story #7, décision 0008) | Voix publie le type `CaractereDeLaVoix` ; Motivation l'importe et fournit les valeurs de chaque personnage guide. Voix ne connaît pas les univers |
+| Synthèse vocale du navigateur | Voix | Anti-Corruption Layer (story #7) | Port `VoixDeLAppareil` (voix traduites en nom et langue) et port `LecteurAVoixHaute` (adaptateur `speechSynthesis`, plus tard MP3) |
+| Voix | Apprentissage, Motivation, Accompagnement | Appel (story #7) | Depuis le front, par le port `LecteurAVoixHaute` déclaré dans `voix/domain/` (décision 0007) : lire une consigne, une étape de leçon, une félicitation ou un encouragement |
 
 ## Décisions
 
@@ -56,3 +78,5 @@ flowchart LR
 
 - **Motivation est un contexte à part.** Apprentissage annonce seulement les faits (« séance terminée avec 2 étoiles »). Motivation décide seule des récompenses (série, badges, cabane, épisodes). Une récompense ne modifie jamais une note.
 - **Pas de temps d'écran** dans l'application : aucune limite de durée de jeu, ni dans Famille ni dans Apprentissage.
+- **Voix est un sous-domaine générique** (décision 0007) : aucun des cinq contextes ne le possède. Les interfaces des ports qu'une règle du domaine utilise dans le navigateur (`Hasard`, `LecteurAVoixHaute`, `VoixDeLAppareil`) sont déclarées dans `domain/`.
+- **La connexion du parent est obligatoire** (lot 1, décision n°5) : Supabase Auth reste derrière l'ACL de Famille, avec un lien de connexion et un code de connexion.

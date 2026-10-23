@@ -1,0 +1,23 @@
+export type TexteALire = {
+  readonly texte: string;
+  readonly phrases: readonly string[];
+};
+
+export function textePrononce(brut: string): string {
+  return brut
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&[a-z]+;/g, " ")
+    .replace(/\+/g, " plus ")
+    .replace(/=/g, " égale ")
+    .replace(/_{2,}/g, " ... ")
+    .replace(/\s*»(?=[.,!?…])/g, "")
+    .replace(/[«»]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+export function texteALire(brut: string): TexteALire | undefined {
+  const texte = textePrononce(brut);
+  if (!/[\p{L}\p{N}]/u.test(texte)) return undefined;
+  return { texte, phrases: texte.split(/(?<=[.!?…:])\s+/) };
+}

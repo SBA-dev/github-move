@@ -26,6 +26,7 @@
     "tests",
     "supabase/functions/_shared/*/domain",
     "vite.config.ts",
+    "vite-plugins",
     "playwright.config.ts",
     "playwright.legacy.config.ts"
   ],

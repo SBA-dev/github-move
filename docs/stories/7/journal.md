@@ -1,0 +1,18 @@
+# Journal : issue #7, Voix : lecture à voix haute par le personnage guide
+
+- 15:49 · Issue créée à partir du comportement actuel de `app/` (lot 1). Branche de base : `main`. Branche de travail imposée par la session : `claude/stoic-faraday-0qy6ez`.
+- 15:49 · Étape 1 : délégation à `domain-modeler` (règles du choix de la voix et du caractère du personnage guide).
+- 15:57 · Étape 2 : critères d'acceptance écrits par `po-acceptance` (`features/7-*.feature`, `docs/stories/7/acceptance.md`). Syntaxe vérifiée par `npx bddgen` (étapes à écrire par `e2e-tester`).
+- 15:57 · ⛔ Validation humaine n°1 demandée pour tout le lot 1 (décision de démarrage n°2).
+- 16:09 · Validation n°1 : « OK » du PO pour les propositions du lot (détail dans `docs/stories/lot-1-decisions.md`). Modèle et scénarios mis à jour. Questions restantes non bloquantes, listées dans `acceptance.md`.
+- 16:41 · Étape 3 : boucle TDD lancée (« ok » du PO). Comportements : caractère de la voix de chaque personnage guide ; nettoyage du texte ; découpage en phrases ; score et tri des voix françaises ; choix de la voix automatique ; voix d'une autre langue ; réglage des phrases.
+- 16:41 · Arbitrage de l'orchestrateur (questions 3 et 5 du modèle) : `CaractereDeLaVoix` est publié par le sous-domaine générique Voix (amont) et importé par Motivation, plutôt que l'inverse : un sous-domaine générique ne dépend pas d'un contexte métier. Voix déclare sa propre interface `Hasard` (même forme que celle de Motivation) pour ne dépendre de rien.
+- 16:43 · Cycle 1 (caractère de la voix) : red 6179c63, green 7d926c4, refactor ef57299. Au passage : les steps E2E de #6 cassaient `tsc` (corrigé, 6e3e0d4).
+- 16:44 · Cycle 2 (texte à lire) : red bb50e94, green 6386326.
+- 16:46 · Cycle 3 (score, tri, choix de la voix) : red 5f84443 et 9a90a19, correction de l'exemple de score (70 et non 110, erreur de consigne de l'orchestrateur) c712373, green 4d04893 et suivant. 62 tests.
+- 16:48 · Cycle 4 (voix d'une autre langue, réglage des phrases) : red 4583f3e et 6be334f, green 1c78d97 et d2e2d88. 79 tests. Cycle 5 décidé : les règles Muet, une seule lecture à la fois et voix bloquée signalée une fois vont dans le domaine (service `LectureAVoixHaute` sur le port `LecteurAVoixHaute`), pas dans React.
+- 16:50 · Cycle 5 (service de lecture à voix haute) : red 5a60cf6, green 1ab1dd4. 89 tests. Domaine de #7 terminé.
+- 16:56 · Mot prononcé : red 164c542, green 4d7e4b1, refactor a7a7ed9. Câblage : a8af7bb, 342e7ad. 90 tests Deno, #6 et socle E2E verts (84). Dette signalée : le rang du mot surligné se décale pour « ___ » et les guillemets collés à la ponctuation. Étape 4 : review.
+- 17:03 · Review 1 : À CORRIGER (3 bloquants : mot surligné ≠ mot prononcé, règle des mots dans React, règle de langue double). Red a6ff108, f92eac0, 5eada4d ; green 4117ccc, 075108d ; refactor 8d7fe46 (ConsigneLue sans règle, adaptateur : cancel au délai et sur erreur, noms du glossaire, Son avec nom stable et aria-pressed). Décision 0008 ajoutée (6124f82) pour les arbitrages Voix/Motivation et le service de lecture. 102 tests.
+- 19:49 · Review 2 : APPROUVÉ. Non bloquant corrigé : texte visible stable du bouton Son (WCAG 2.5.3). Laissés pour plus tard : balise avec attributs dans une consigne (aucune consigne n'en contient), mot en gras de la démonstration, coupure Chrome à 15 s, blocage silencieux iOS, entités numériques, message « Réécouter » hors de la page de la consigne, keydown du déverrouillage. Étape 5 : E2E.
+- 19:58 · Étape 5 : E2E 169a383, 22/23 au premier passage. Bug applicatif (« maman ». lu « maman . ») : red e9ac3af, fix e328b5c. Vérifié par l'orchestrateur : 140/140 (#6, #7, socle, tablette et téléphone), 103 tests Deno. Tag @wip retiré. Pas de PR ouverte (en attente de la demande du PO).

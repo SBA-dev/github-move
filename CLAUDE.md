@@ -26,7 +26,7 @@ Règles de cohabitation :
 - **Front** : React + TypeScript (Vite), PWA (installable, hors ligne via IndexedDB + synchronisation)
 - **Backend** : Supabase (Postgres, Auth, Storage, **Edge Functions en Deno/TypeScript**), hébergé dans l'UE
 - **Logique métier** : TypeScript pur sous `supabase/functions/_shared/<contexte>/domain/`
-- **Tests unitaires** : `Deno.test` + `jsr:@std/assert`
+- **Tests unitaires** : `Deno.test` + `@std/assert` (import map de `deno.json`, version fixée)
 - **Tests d'acceptance (BDD/E2E)** : playwright-bdd (Gherkin exécuté par Playwright)
 - **IA** : API Claude, appelée **uniquement** depuis une Edge Function (clé dans `Deno.env`)
 - **Voix** : MP3 pré-générés (voix neuronale) servis par le CDN. Repli sur la synthèse vocale du navigateur.
@@ -47,6 +47,7 @@ Règles de cohabitation :
 | Build du front | `npm run build` |
 | Tests E2E d'une story | `npx bddgen && npx playwright test --grep @issue-<n>` |
 | Tous les tests E2E | `npx bddgen && npx playwright test` |
+| Tests E2E de la PWA (#8, build de production) | `npx bddgen -c playwright.pwa.config.ts && npx playwright test -c playwright.pwa.config.ts` |
 | Regénérer la bibliothèque | `python3 scripts/build_bibliotheque.py` |
 | Regénérer l'index des programmes | `python3 scripts/index_programmes.py` |
 | Tests du pipeline de contenu | `python3 -m pytest scripts/tests` |

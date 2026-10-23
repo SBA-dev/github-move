@@ -2,6 +2,49 @@ import { test as base, createBdd } from "playwright-bdd";
 
 // Les données de test (comptes, profils) viendront ici, préparées via l'API admin Supabase.
 // La clé service_role ne sert qu'à ces préparations, jamais à simuler un utilisateur.
-export const test = base;
+
+export type ProfilPrepare = { prenom: string; niveau: string; univers?: string };
+
+type Monde = {
+  profils: Map<string, ProfilPrepare>;
+  tablettes: Map<string, { paysage: string | null; couleur: string }>;
+};
+
+// Story #8 : pilotage du relais de test (features/support/serveur-pwa.mjs).
+export type Pwa = {
+  navigations: number;
+  versionPubliee: string | null;
+  publierVersion(): Promise<string>;
+  publierLecon(): Promise<void>;
+};
+
+export const test = base.extend<{ monde: Monde; pwa: Pwa }>({
+  pwa: async ({ baseURL }, use) => {
+    const commander = async (commande: string): Promise<Response> => {
+      const reponse = await fetch(`${baseURL}/__test/${commande}`, { method: "POST" });
+      if (!reponse.ok) throw new Error(`Relais de test PWA « ${commande} » : ${reponse.status} ${await reponse.text()}`);
+      return reponse;
+    };
+    await commander("reinitialiser");
+    const pwa: Pwa = {
+      navigations: 0,
+      versionPubliee: null,
+      publierVersion: async () => {
+        const { version } = (await (await commander("publier-version")).json()) as { version: string };
+        pwa.versionPubliee = version;
+        return version;
+      },
+      publierLecon: async () => {
+        await commander("publier-lecon");
+      },
+    };
+    await use(pwa);
+    await commander("reinitialiser");
+  },
+
+  monde: async ({}, use) => {
+    await use({ profils: new Map(), tablettes: new Map() });
+  },
+});
 
 export const { Given, When, Then } = createBdd(test);

@@ -50,10 +50,10 @@ Cas particuliers du projet :
 - Le fichier de test s'appelle `xxx_test.ts` et se place à côté de `xxx.ts`.
 - On lance un fichier avec `deno test chemin/xxx_test.ts` et toute la suite avec `deno test --permit-no-files supabase/functions/`.
 - Le nom du test est une **phrase métier** au présent, en français.
-- Le test importe `jsr:@std/assert`. Le code testé (`domain/`) n'importe que des chemins relatifs avec l'extension `.ts`, pour rester chargeable par Vite.
+- Le test importe `@std/assert` (import map de `deno.json`). Le code testé (`domain/`) n'importe que des chemins relatifs avec l'extension `.ts`, pour rester chargeable par Vite.
 
 ```ts
-import { assertEquals, assertThrows } from "jsr:@std/assert";
+import { assertEquals, assertThrows } from "@std/assert";
 import { Quantite } from "./quantite.ts";
 import { QuantiteInvalide } from "./erreurs.ts";
 

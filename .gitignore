@@ -13,3 +13,4 @@ supabase/functions/.env
 __pycache__/
 .pytest_cache/
 *.log
+.features-gen-pwa/

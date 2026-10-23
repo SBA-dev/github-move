@@ -2,7 +2,8 @@ import { defineConfig, devices } from "@playwright/test";
 import { defineBddConfig } from "playwright-bdd";
 
 const testDir = defineBddConfig({
-  features: "features/**/*.feature",
+  // La story #8 (PWA) tourne sur le build de production : playwright.pwa.config.ts.
+  features: ["features/**/*.feature", "!features/8-*.feature"],
   steps: "features/steps/**/*.ts",
 });
 
