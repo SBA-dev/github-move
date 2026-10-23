@@ -39,3 +39,17 @@ export class BonneReponseAbsenteDesChoix extends Error {
     this.name = "BonneReponseAbsenteDesChoix";
   }
 }
+
+export class QuestionDejaReussie extends Error {
+  constructor() {
+    super("Cette question est déjà réussie.");
+    this.name = "QuestionDejaReussie";
+  }
+}
+
+export class ChoixInconnu extends Error {
+  constructor(readonly reponse: string) {
+    super(`« ${reponse} » ne figure pas parmi les choix proposés.`);
+    this.name = "ChoixInconnu";
+  }
+}

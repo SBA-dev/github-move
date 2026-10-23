@@ -71,12 +71,6 @@ export class Seance {
     return this.indexDeLExercice >= this.exercices.length;
   }
 
-  reussirLaQuestionEnCours(): void {
-    const exercice = this.exerciceDeLaQuestionEnCours();
-    exercice.reussirUneQuestion();
-    this.avancerSiExerciceReussi(exercice);
-  }
-
   repondre(reponse: Reponse): ResultatDeReponse {
     const exercice = this.exerciceDeLaQuestionEnCours();
     const resultat = exercice.repondre(reponse);

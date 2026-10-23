@@ -1,11 +1,20 @@
 import type { Exercice } from "../../catalogue/domain/index.ts";
 import { CleDeQuestion } from "./cle-de-question.ts";
 import { ChoixProposes } from "./choix-proposes.ts";
-import { questionDeLEcoute } from "./exercices/phrases-des-exercices-a-choix.ts";
+import {
+  complementDeLEncouragement,
+  explicationDeLaReponse,
+  questionDeLEcoute,
+} from "./exercices/phrases-des-exercices-a-choix.ts";
+import { ChoixInconnu, QuestionDejaReussie } from "./erreurs.ts";
 import type { Hasard } from "./hasard.ts";
 import type { Reponse, ResultatDeReponse } from "./reponse.ts";
 
 const ERREURS_AVANT_LA_REDUCTION_A_DEUX = 2;
+
+type TypeDeQuestion = "bulles" | "lecture" | "ecoute";
+
+type Complements = { readonly aide?: string; readonly motAEcouter?: string; readonly langue?: string };
 
 export class QuestionJouee {
   private nombreDErreurs = 0;
@@ -16,6 +25,8 @@ export class QuestionJouee {
     readonly cle: CleDeQuestion,
     private readonly bonneReponse: string,
     private choixProposes: ChoixProposes,
+    private readonly type: TypeDeQuestion,
+    private readonly complements: Complements,
   ) {}
 
   static aChoix(
@@ -24,8 +35,37 @@ export class QuestionJouee {
     choix: readonly string[],
     bonneReponse: string,
     hasard: Hasard,
+    type: TypeDeQuestion,
+    complements: Complements = {},
   ): QuestionJouee {
-    return new QuestionJouee(enonce, cle, bonneReponse, ChoixProposes.proposer(choix, bonneReponse, hasard));
+    return new QuestionJouee(
+      enonce,
+      cle,
+      bonneReponse,
+      ChoixProposes.proposer(choix, bonneReponse, hasard),
+      type,
+      complements,
+    );
+  }
+
+  get motAEcouter(): string | undefined {
+    return this.complements.motAEcouter;
+  }
+
+  get langue(): string | undefined {
+    return this.complements.langue;
+  }
+
+  get aide(): string | undefined {
+    return this.complements.aide;
+  }
+
+  explication(): string | undefined {
+    return explicationDeLaReponse(this.type, { dire: this.motAEcouter, reponse: this.bonneReponse });
+  }
+
+  complementDeLEncouragement(): string {
+    return complementDeLEncouragement(this.type, { aide: this.aide });
   }
 
   get choix(): ChoixProposes {
@@ -41,9 +81,11 @@ export class QuestionJouee {
   }
 
   repondre(reponse: Reponse): ResultatDeReponse {
+    if (this.estReussie) throw new QuestionDejaReussie();
+    if (!this.choixProposes.textes().includes(reponse.texte)) throw new ChoixInconnu(reponse.texte);
     if (this.choixProposes.ecartes().includes(reponse.texte)) return "dejaEcartee";
     if (reponse.texte === this.bonneReponse) {
-      this.reussir();
+      this.estReussie = true;
       return "juste";
     }
     this.nombreDErreurs++;
@@ -53,17 +95,23 @@ export class QuestionJouee {
     }
     return "fausse";
   }
-
-  reussir(): void {
-    this.estReussie = true;
-  }
 }
 
 export function questionsJoueesDe(exercice: Exercice, hasard: Hasard): QuestionJouee[] {
   switch (exercice.type) {
     case "bulles":
       return exercice.questions.map((q) =>
-        QuestionJouee.aChoix(CleDeQuestion.de("bulles", q.question + q.reponse), q.question, q.choix, q.reponse, hasard)
+        QuestionJouee.aChoix(
+          CleDeQuestion.de("bulles", q.question + q.reponse),
+          q.question,
+          q.choix,
+          q.reponse,
+          hasard,
+          "bulles",
+          {
+            aide: q.aide,
+          },
+        )
       );
     case "lecture":
       return exercice.questions.map((q) =>
@@ -73,6 +121,8 @@ export function questionsJoueesDe(exercice: Exercice, hasard: Hasard): QuestionJ
           q.choix,
           q.reponse,
           hasard,
+          "lecture",
+          { aide: q.aide },
         )
       );
     case "ecoute":
@@ -83,6 +133,8 @@ export function questionsJoueesDe(exercice: Exercice, hasard: Hasard): QuestionJ
           item.choix,
           item.reponse,
           hasard,
+          "ecoute",
+          { aide: item.aide, motAEcouter: item.dire, langue: exercice.langue },
         )
       );
     default:

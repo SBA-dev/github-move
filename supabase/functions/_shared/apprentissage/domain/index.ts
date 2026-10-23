@@ -6,10 +6,12 @@ export { ChoixDeSeance } from "./choix-de-seance.ts";
 export { ChoixProposes } from "./choix-proposes.ts";
 export {
   BonneReponseAbsenteDesChoix,
+  ChoixInconnu,
   ExerciceIntrouvable,
   LeconSansExercice,
   PasDeQuestionEnCours,
   PasDEtapeDeLeconEnCours,
+  QuestionDejaReussie,
   SeanceDejaFinie,
 } from "./erreurs.ts";
 export { texteALireDeLEtape } from "./etape-de-lecon-lue.ts";

@@ -36,11 +36,6 @@ export class ExerciceJoue {
     return this.reussies;
   }
 
-  reussirUneQuestion(): void {
-    this.questionEnCours()?.reussir();
-    this.reussies++;
-  }
-
   estReussi(): boolean {
     return this.reussies >= this.questions;
   }
