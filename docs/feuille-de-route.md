@@ -1,6 +1,6 @@
 # Feuille de route
 
-Mise à jour : 2026-10-22. On la met à jour à la fin de chaque session de travail.
+Mise à jour : 2026-10-23. On la met à jour à la fin de chaque session de travail.
 
 ## Où en est le projet
 
@@ -35,6 +35,8 @@ L'application fonctionne et est publiée comme artifact claude.ai. Elle comprend
 - **Aucun code de la cible n'existe encore.**
 
 ## Prochaines étapes
+
+> **Lot 3 en cours** : #16 (étapes lues puis exercices) livrée sur `claude/nice-mendel-cp9syg`, en PR. Domaines `catalogue` (lecture des leçons, page de la leçon) et `apprentissage` (séance, plan, avancement), paroles de séance dans `motivation`, front `src/seance/` (pages `/lecon/<id>` sous la garde du profil préparé). 10 scénarios tagués `@depend-de-17`, `@depend-de-18` ou `@depend-de-12` attendent ces stories. Suite : #17, puis #23, #24 (première leçon jouable de bout en bout, retrait de `/demonstration`).
 
 > **Chantier en cours : la réécriture complète en React + Supabase.** Plan, lots et décisions de démarrage dans `docs/reecriture.md`.
 
