@@ -108,7 +108,7 @@ export function entetes(origine: string | null, origines: readonly string[]): He
   return resultat;
 }
 
-function repondre(requete: Request, origines: readonly string[], statut: number, corps: unknown): Response {
+export function repondre(requete: Request, origines: readonly string[], statut: number, corps: unknown): Response {
   const headers = entetes(requete.headers.get("Origin"), origines);
   return new Response(statut === 204 ? null : JSON.stringify(corps), { status: statut, headers });
 }
