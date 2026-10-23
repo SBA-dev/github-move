@@ -14,3 +14,4 @@
   - cycle 4 (Apprentissage) : agrégat `Seance` (commencer, étapes de leçon, continuer, texte lu d'une étape, exercice en cours) ;
   - cycle 5 (Motivation) : paroles de séance.
   Puis câblage (front de la page de la leçon et de l'écran de séance).
+- 12:55 · Cycle 1 (Catalogue : types d'exercice, matières, niveaux, lireLecon) : red 2fcb246, green 81c1db3, refactor b97c798. 262 tests.
