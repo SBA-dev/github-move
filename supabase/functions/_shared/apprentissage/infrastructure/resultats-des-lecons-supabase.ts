@@ -6,8 +6,6 @@ import type { NombreDEtoiles } from "../domain/etoiles.ts";
 import { ResultatDeLaLecon } from "../domain/resultat-de-la-lecon.ts";
 
 const COLONNES = "profil, lecon, meilleures_etoiles, dernieres_etoiles, nombre_de_seances";
-const CODE_POSTGRES_CLE_DEJA_PRESENTE = "23505";
-const ESSAIS_AU_PLUS = 3;
 
 export type LigneDeResultat = {
   profil: string;
@@ -33,7 +31,7 @@ function etoilesDeLaLigne(valeur: number | null): NombreDEtoiles | undefined {
   throw new Error(`Nombre d'étoiles inconnu en base : ${valeur}`);
 }
 
-export function resultatDepuisLaLigne(ligne: LigneDeResultat, competence: string): ResultatDeLaLecon {
+export function resultatDepuisLaLigne(ligne: LigneDeResultat, competence: string | undefined): ResultatDeLaLecon {
   return ResultatDeLaLecon.reconstituer({
     enfant: ligne.profil,
     lecon: ligne.lecon,
@@ -45,53 +43,15 @@ export function resultatDepuisLaLigne(ligne: LigneDeResultat, competence: string
 }
 
 export class ResultatsDesLeconsSupabase implements ResultatsDesLecons {
-  constructor(private readonly client: SupabaseClient, private readonly lecons: LeconsDuCatalogue) {}
+  constructor(private readonly client: () => SupabaseClient, private readonly lecons: LeconsDuCatalogue) {}
 
   async de(enfant: string, lecon: string): Promise<ResultatDeLaLecon | null> {
-    const { data, error } = await this.client.from("resultats_des_lecons").select(COLONNES)
+    const { data, error } = await this.client().from("resultats_des_lecons").select(COLONNES)
       .eq("profil", enfant).eq("lecon", lecon).maybeSingle<LigneDeResultat>();
     if (error) throw new Error(`Lecture du résultat de la leçon impossible : ${error.message}`);
     if (data === null) return null;
     const catalogue = await this.lecons.parId(lecon);
     if (!catalogue) throw new LeconIntrouvable(lecon);
-    return resultatDepuisLaLigne(data, catalogue.competence ?? catalogue.titre);
-  }
-
-  // Écriture optimiste : on n'écrit que si le nombre de séances est celui qu'on a lu. Si une autre séance de la même
-  // leçon est passée entre-temps, on relit le résultat, on y ajoute la dernière séance, et on réessaie : aucune
-  // séance n'est perdue et les meilleures étoiles ne baissent pas.
-  async enregistrer(resultat: ResultatDeLaLecon): Promise<void> {
-    let aEcrire = resultat;
-    for (let essai = 1; essai <= ESSAIS_AU_PLUS; essai++) {
-      if (await this.ecrireSiRienNAChange(aEcrire)) return;
-      const dernieres = resultat.dernieres;
-      const actuel = await this.de(resultat.enfant, resultat.lecon);
-      if (actuel === null || dernieres === undefined) {
-        throw new Error("Résultat de la leçon introuvable à la relecture.");
-      }
-      actuel.enregistrerSeance(dernieres);
-      aEcrire = actuel;
-    }
-    throw new Error("Résultat de la leçon modifié en continu : écriture abandonnée.");
-  }
-
-  private async ecrireSiRienNAChange(resultat: ResultatDeLaLecon): Promise<boolean> {
-    const ligne = ligneDuResultat(resultat);
-    const nombreLu = ligne.nombre_de_seances - 1;
-    if (nombreLu === 0) {
-      const { error } = await this.client.from("resultats_des_lecons").insert(ligne);
-      if (error?.code === CODE_POSTGRES_CLE_DEJA_PRESENTE) return false;
-      if (error) throw new Error(`Enregistrement du résultat de la leçon impossible : ${error.message}`);
-      return true;
-    }
-    const { data, error } = await this.client.from("resultats_des_lecons")
-      .update({
-        meilleures_etoiles: ligne.meilleures_etoiles,
-        dernieres_etoiles: ligne.dernieres_etoiles,
-        nombre_de_seances: ligne.nombre_de_seances,
-      })
-      .eq("profil", ligne.profil).eq("lecon", ligne.lecon).eq("nombre_de_seances", nombreLu).select("profil");
-    if (error) throw new Error(`Enregistrement du résultat de la leçon impossible : ${error.message}`);
-    return data.length === 1;
+    return resultatDepuisLaLigne(data, catalogue.competence);
   }
 }

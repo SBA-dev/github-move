@@ -9,6 +9,7 @@ const QUESTIONS_AU_PLUS = 200;
 const CHOIX_AU_PLUS = 20;
 const REPONSES_AU_PLUS = 50;
 const CARACTERES_AU_PLUS = 200;
+const TOLERANCE_D_HORLOGE_EN_MS = 5 * 60 * 1000;
 
 type Objet = Record<string, unknown>;
 
@@ -63,14 +64,17 @@ function lireLesReponses(corps: Objet): ReponseDonnee[][] {
   );
 }
 
-function lireLaDateDeFin(valeur: unknown): Date {
+function lireLaDateDeFin(valeur: unknown, maintenant: Date): Date {
   const date = typeof valeur === "string" && valeur !== "" ? new Date(valeur) : new Date(NaN);
   if (Number.isNaN(date.getTime())) throw new EntreeInvalide("Le champ « termineeLe » doit être une date ISO valide.");
+  if (date.getTime() > maintenant.getTime() + TOLERANCE_D_HORLOGE_EN_MS) {
+    throw new EntreeInvalide("Le champ « termineeLe » ne peut pas être dans le futur.");
+  }
   return date;
 }
 
 /** Lit le corps de la requête. Les étoiles et les erreurs n'y figurent jamais : le serveur les recalcule. */
-export function lireLaSeanceTerminee(corps: Objet): SeanceTermineeAEnregistrer {
+export function lireLaSeanceTerminee(corps: Objet, maintenant: Date): SeanceTermineeAEnregistrer {
   const inconnu = Object.keys(corps).find((cle) => !CHAMPS.includes(cle));
   if (inconnu !== undefined) throw new EntreeInvalide(`Le champ « ${inconnu} » est inconnu.`);
   for (const champ of CHAMPS) {
@@ -83,6 +87,6 @@ export function lireLaSeanceTerminee(corps: Objet): SeanceTermineeAEnregistrer {
     choix: lireLeChoix(corps),
     tirages: lireLesTirages(corps),
     reponses: lireLesReponses(corps),
-    termineeLe: lireLaDateDeFin(corps.termineeLe),
+    termineeLe: lireLaDateDeFin(corps.termineeLe, maintenant),
   };
 }

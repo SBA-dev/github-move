@@ -1,5 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
-import { EnregistrerLesEtoilesDeLaLecon } from "../_shared/apprentissage/application/enregistrer-les-etoiles-de-la-lecon.ts";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { TerminerLaSeance } from "../_shared/apprentissage/application/terminer-la-seance.ts";
 import { lireLaSeanceTerminee } from "../_shared/apprentissage/infrastructure/corps-de-la-seance-terminee.ts";
 import { traiterUneEcritureDApprentissage } from "../_shared/apprentissage/infrastructure/http-apprentissage.ts";
@@ -12,24 +11,30 @@ import bibliotheque from "../../../app/bibliotheque.json" with { type: "json" };
 
 const origines = originesAutorisees(Deno.env.get("ORIGINES_AUTORISEES"));
 
-/** Client serveur pour les seules écritures revalidées (décision 0016) : la clé de service ne quitte jamais la fonction. */
+/** Client serveur, ouvert au premier usage (après le contrôle du rattachement) pour les seules écritures revalidées (décision 0016) : la clé de service ne quitte jamais la fonction. */
+function clientDuServeurALaDemande(): () => SupabaseClient {
+  let client: SupabaseClient | undefined;
+  return () => client ??= ouvrirLeClientDuServeur();
+}
+
 function ouvrirLeClientDuServeur() {
-  return createClient(Deno.env.get("SUPABASE_URL") ?? "", Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "", {
-    auth: { persistSession: false },
-  });
+  const url = Deno.env.get("SUPABASE_URL");
+  const cle = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (!url || !cle) throw new Error("SUPABASE_URL et SUPABASE_SERVICE_ROLE_KEY doivent être définies.");
+  return createClient(url, cle, { auth: { persistSession: false } });
 }
 
 const lecons = new LeconsDuCatalogueJson(bibliotheque);
 
 Deno.serve((requete) =>
   traiterUneEcritureDApprentissage(requete, async ({ client, parent }, corps) => {
-    const seance = lireLaSeanceTerminee(corps);
-    const clientDuServeur = ouvrirLeClientDuServeur();
+    const seance = lireLaSeanceTerminee(corps, new Date());
+    const clientDuServeur = clientDuServeurALaDemande();
     const faits = await new TerminerLaSeance(
       new RattachementsDuParentSupabase(client),
       lecons,
       new SeancesTermineesSupabase(clientDuServeur),
-      new EnregistrerLesEtoilesDeLaLecon(lecons, new ResultatsDesLeconsSupabase(clientDuServeur, lecons)),
+      new ResultatsDesLeconsSupabase(clientDuServeur, lecons),
     ).executer({ parent, seance });
     const fait = faits.find((f) => f.type === "SeanceTerminee");
     return {

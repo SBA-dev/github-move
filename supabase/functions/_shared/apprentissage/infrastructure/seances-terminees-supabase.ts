@@ -1,6 +1,10 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { SeancesTerminees } from "../application/ports/seances-terminees.ts";
+import type { IssueDeLEnregistrement, SeancesTerminees } from "../application/ports/seances-terminees.ts";
+import type { ResultatDeLaLecon } from "../domain/resultat-de-la-lecon.ts";
 import type { SeanceTerminee } from "../domain/seance.ts";
+import { ligneDuResultat } from "./resultats-des-lecons-supabase.ts";
+
+const CODE_POSTGRES_CONFLIT_DE_RESULTAT = "40001";
 
 export function ligneDeLaSeanceTerminee(fait: SeanceTerminee) {
   return {
@@ -25,13 +29,19 @@ export function lignesDesQuestionsDeLaSeance(fait: SeanceTerminee) {
 }
 
 export class SeancesTermineesSupabase implements SeancesTerminees {
-  constructor(private readonly client: SupabaseClient) {}
+  constructor(private readonly client: () => SupabaseClient) {}
 
-  // La séance et ses questions sont écrites par une fonction Postgres : une seule transaction, et un second
-  // envoi de la même séance (même simultané) ne crée rien : la clé primaire fait attendre le second, puis l'écarte.
-  async enregistrer(fait: SeanceTerminee): Promise<boolean> {
+  // La séance, ses questions et le résultat de la leçon sont écrits par une seule fonction Postgres, donc dans une
+  // seule transaction. Elle rend « dejaEnregistree » (rien d'écrit) si la séance existe, et échoue avec le code
+  // 40001 (rien d'écrit) si le nombre de séances stocké n'est plus celui que l'on avait lu.
+  async enregistrerAvecLeResultat(
+    fait: SeanceTerminee,
+    resultat: ResultatDeLaLecon,
+    nombreDeSeancesLu: number,
+  ): Promise<IssueDeLEnregistrement> {
     const ligne = ligneDeLaSeanceTerminee(fait);
-    const { data, error } = await this.client.rpc("enregistrer_la_seance_terminee", {
+    const ligneDuResultatAEcrire = ligneDuResultat(resultat);
+    const { data, error } = await this.client().rpc("enregistrer_la_seance_terminee", {
       p_id: ligne.id,
       p_profil: ligne.profil,
       p_lecon: ligne.lecon,
@@ -41,8 +51,12 @@ export class SeancesTermineesSupabase implements SeancesTerminees {
       p_erreurs: ligne.erreurs,
       p_par_type: ligne.par_type,
       p_questions: lignesDesQuestionsDeLaSeance(fait),
+      p_meilleures_etoiles: ligneDuResultatAEcrire.meilleures_etoiles,
+      p_dernieres_etoiles: ligneDuResultatAEcrire.dernieres_etoiles,
+      p_nombre_de_seances_lu: nombreDeSeancesLu,
     });
+    if (error?.code === CODE_POSTGRES_CONFLIT_DE_RESULTAT) return "conflit";
     if (error) throw new Error(`Enregistrement de la séance terminée impossible : ${error.message}`);
-    return data === true;
+    return data === true ? "enregistree" : "dejaEnregistree";
   }
 }

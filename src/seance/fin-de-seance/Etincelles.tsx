@@ -19,7 +19,7 @@ export function Etincelles() {
           style={{ left: gauche }}
           initial={{ opacity: 0, y: 0, scale: 0.4 }}
           animate={{ opacity: [0, 1, 0], y: [0, -24, -48], scale: [0.4, 1, 0.6] }}
-          transition={{ duration: 1.6, delay: delai, repeat: Infinity }}
+          transition={{ duration: 1.6, delay: delai, repeat: 2 }}
         />
       ))}
     </div>
