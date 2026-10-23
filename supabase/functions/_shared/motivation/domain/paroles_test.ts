@@ -1,5 +1,5 @@
 import { assertEquals } from "@std/assert";
-import { encourager, feliciter, presentation, presentationAuRetourDuSon } from "./paroles.ts";
+import { encourager, feliciter, presentation, presentationAuRetourDuSon, saluer } from "./paroles.ts";
 import { type CleUnivers, universDe } from "./univers.ts";
 import { hasardFixe } from "../test_utils/hasard-fixe.ts";
 
@@ -125,3 +125,7 @@ for (const [cle, attendue] of presentationsAttendues) {
     assertEquals(presentation(universDe(cle)), attendue);
   });
 }
+
+Deno.test("le personnage guide salue l'enfant choisi par son prénom", () => {
+  assertEquals(saluer("Léa"), "Bonjour Léa !");
+});
