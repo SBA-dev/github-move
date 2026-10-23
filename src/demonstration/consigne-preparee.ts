@@ -1,10 +1,6 @@
-export const CLE_CONSIGNE_PREPAREE = "savanturier:consigne-preparee";
+import type { Consigne } from "../voix/index.ts";
 
-export type Consigne = {
-  readonly texte: string;
-  readonly langue?: string;
-  readonly motEnGras?: string;
-};
+export const CLE_CONSIGNE_PREPAREE = "savanturier:consigne-preparee";
 
 export const CONSIGNE_D_EXEMPLE: Consigne = { texte: "Combien font 3 + 4 ?" };
 

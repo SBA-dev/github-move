@@ -1,9 +1,14 @@
 import { motsDeLaConsigne } from "@domain/voix";
-import type { Consigne } from "./consigne-preparee.ts";
 
 function motSansPonctuation(jeton: string): string {
   return jeton.match(/[\p{L}\p{N}'’-]+/u)?.[0] ?? "";
 }
+
+export type Consigne = {
+  readonly texte: string;
+  readonly langue?: string;
+  readonly motEnGras?: string;
+};
 
 type Props = { readonly consigne: Consigne; readonly rangDuMotPrononce: number | undefined };
 

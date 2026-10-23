@@ -9,9 +9,8 @@ import {
 } from "@domain/motivation";
 import { hasardDuNavigateur } from "../hasard-navigateur.ts";
 import { PersonnageGuide } from "../univers/index.ts";
-import type { Voix } from "../voix/index.ts";
+import { ConsigneLue, type Voix } from "../voix/index.ts";
 import { lireConsigne } from "./consigne-preparee.ts";
-import { ConsigneLue } from "./ConsigneLue.tsx";
 
 type Props = { readonly univers: Univers; readonly voix: Voix };
 
