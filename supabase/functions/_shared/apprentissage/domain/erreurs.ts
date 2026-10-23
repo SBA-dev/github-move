@@ -18,3 +18,17 @@ export class PasDEtapeDeLeconEnCours extends Error {
     this.name = "PasDEtapeDeLeconEnCours";
   }
 }
+
+export class PasDeQuestionEnCours extends Error {
+  constructor() {
+    super("Aucune question n'est en cours dans cette séance.");
+    this.name = "PasDeQuestionEnCours";
+  }
+}
+
+export class SeanceDejaFinie extends Error {
+  constructor() {
+    super("Cette séance est déjà finie.");
+    this.name = "SeanceDejaFinie";
+  }
+}
