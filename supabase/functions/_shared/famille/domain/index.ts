@@ -4,7 +4,13 @@ export { AdresseEmail } from "./adresse-email.ts";
 export { CodeDeConnexion } from "./code-de-connexion.ts";
 export { DemanderLienDeConnexion } from "./demander-lien-de-connexion.ts";
 export type { DonneesDeLAppareil } from "./donnees-de-l-appareil.ts";
-export { AdresseEmailInvalide, CodeDeConnexionInvalide, CodeDeConnexionMalForme } from "./erreurs.ts";
+export {
+  AdresseEmailInvalide,
+  CodeDeConnexionInvalide,
+  CodeDeConnexionMalForme,
+  LienDeConnexionMalForme,
+} from "./erreurs.ts";
+export { LienDeConnexion } from "./lien-de-connexion.ts";
 export type { Hasard } from "./hasard.ts";
 export { OuvrirLaConnexionAvecLeCode } from "./ouvrir-la-connexion-avec-le-code.ts";
 export { ParentId } from "./parent-id.ts";
