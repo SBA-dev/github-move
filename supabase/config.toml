@@ -433,3 +433,7 @@ verify_jwt = true
 [functions.modifier-profil-enfant]
 enabled = true
 verify_jwt = true
+
+[functions.terminer-la-seance]
+enabled = true
+verify_jwt = true
