@@ -1,6 +1,12 @@
 import { assertEquals, assertStrictEquals } from "@std/assert";
 import type { CaractereDeLaVoix } from "./caractere-de-la-voix.ts";
-import { CARACTERE_LANGUE_ETRANGERE, choisirVoix, choisirVoixDeLangue } from "./choix-de-voix.ts";
+import {
+  CARACTERE_LANGUE_ETRANGERE,
+  ChoixDeVoix,
+  choisirVoix,
+  choisirVoixDeLangue,
+  voixMontreeCommeChoisie,
+} from "./choix-de-voix.ts";
 import type { VoixDisponible } from "./voix-disponible.ts";
 
 const noisette: CaractereDeLaVoix = {
@@ -66,4 +72,36 @@ Deno.test("sans voix dans la langue demandée, aucune voix n'est choisie", () =>
 
 Deno.test("une langue étrangère se lit toujours avec une voix féminine, un peu plus aiguë et plus lente", () => {
   assertEquals(CARACTERE_LANGUE_ETRANGERE, { sexe: "feminine", hauteur: 1.05, rythme: 0.95 });
+});
+
+Deno.test("la voix imposée présente sur l'appareil passe avant la voix automatique", () => {
+  assertEquals(choisirVoix([denise, thomas], noisette, ChoixDeVoix.imposee("Thomas")), thomas);
+});
+
+Deno.test("une voix imposée absente de l'appareil laisse la voix automatique", () => {
+  assertEquals(choisirVoix([denise, thomas], noisette, ChoixDeVoix.imposee("Paul")), denise);
+});
+
+Deno.test("la voix imposée est reconnue par son nom exact seulement", () => {
+  assertEquals(choisirVoix([denise, thomas], noisette, ChoixDeVoix.imposee("thomas")), denise);
+});
+
+Deno.test("la voix automatique est choisie quand le choix est automatique", () => {
+  assertEquals(choisirVoix([denise, thomas], noisette, ChoixDeVoix.automatique), denise);
+});
+
+Deno.test("sans choix, la voix automatique s'applique comme avant", () => {
+  assertEquals(choisirVoix([henri, denise], noisette), denise);
+});
+
+Deno.test("un nom de voix vide vaut la voix automatique", () => {
+  assertEquals(ChoixDeVoix.imposee(""), ChoixDeVoix.automatique);
+});
+
+Deno.test("l'onglet Voix montre la voix imposée comme choisie quand elle est présente", () => {
+  assertEquals(voixMontreeCommeChoisie([denise, thomas], ChoixDeVoix.imposee("Thomas")), thomas);
+});
+
+Deno.test("l'onglet Voix montre « automatique » quand la voix imposée a disparu", () => {
+  assertEquals(voixMontreeCommeChoisie([denise], ChoixDeVoix.imposee("Thomas")), "automatique");
 });
