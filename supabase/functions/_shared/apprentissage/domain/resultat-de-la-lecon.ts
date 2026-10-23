@@ -1,4 +1,4 @@
-export type EtoilesGagnees = 1 | 2 | 3;
+import { Etoiles, type NombreDEtoiles } from "./etoiles.ts";
 
 export type FaitDeResultat =
   | { type: "LeconReussie"; enfant: string; lecon: string }
@@ -8,8 +8,8 @@ export type EtatDuResultat = {
   enfant: string;
   lecon: string;
   competence: string;
-  meilleures?: EtoilesGagnees;
-  dernieres?: EtoilesGagnees;
+  meilleures?: NombreDEtoiles;
+  dernieres?: NombreDEtoiles;
   nombreDeSeances: number;
 };
 
@@ -37,11 +37,11 @@ export class ResultatDeLaLecon {
     return this.etat.lecon;
   }
 
-  get meilleures(): EtoilesGagnees | undefined {
+  get meilleures(): NombreDEtoiles | undefined {
     return this.etat.meilleures;
   }
 
-  get dernieres(): EtoilesGagnees | undefined {
+  get dernieres(): NombreDEtoiles | undefined {
     return this.etat.dernieres;
   }
 
@@ -57,12 +57,14 @@ export class ResultatDeLaLecon {
     return (this.etat.meilleures ?? 0) >= SEUIL_DE_LECON_ACQUISE;
   }
 
-  enregistrerSeance(etoiles: EtoilesGagnees): void {
+  enregistrerSeance(etoiles: NombreDEtoiles): void {
     const etaitReussie = this.estReussie();
     const etaitAcquise = this.estAcquise();
 
+    const gagnees = Etoiles.de(etoiles);
+    const meilleures = this.etat.meilleures === undefined ? undefined : Etoiles.de(this.etat.meilleures);
     this.etat.dernieres = etoiles;
-    this.etat.meilleures = Math.max(this.etat.meilleures ?? 0, etoiles) as EtoilesGagnees;
+    this.etat.meilleures = gagnees.meilleureQue(meilleures).nombre;
     this.etat.nombreDeSeances += 1;
 
     if (!etaitReussie && this.estReussie()) {

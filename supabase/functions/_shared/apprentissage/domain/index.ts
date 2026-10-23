@@ -39,4 +39,4 @@ export { Etoiles } from "./etoiles.ts";
 export type { NombreDEtoiles } from "./etoiles.ts";
 export { SeanceId } from "./seance-id.ts";
 export { ResultatDeLaLecon } from "./resultat-de-la-lecon.ts";
-export type { EtatDuResultat, EtoilesGagnees, FaitDeResultat } from "./resultat-de-la-lecon.ts";
+export type { EtatDuResultat, FaitDeResultat } from "./resultat-de-la-lecon.ts";
