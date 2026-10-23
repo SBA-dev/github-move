@@ -1,11 +1,12 @@
 import { type BrowserContext, expect, type Page } from "@playwright/test";
 import type { Famille } from "../support/famille.ts";
+import { avecLesReglagesPrevus } from "../support/reglages-prevus.ts";
 import { After, Given, Then, When } from "./fixtures.ts";
 
 // --- Préparation du scénario (avant l'ouverture de la page)
 
 export type VoixFausse = { readonly nom: string; readonly langue: string };
-type ConsignePreparee = { texte: string; langue?: string; motEnGras?: string };
+type ConsignePreparee = { texte: string; langue?: string; motEnGras?: string; choix?: string[] };
 export type Scenario = {
   voix: VoixFausse[];
   univers: string | undefined;
@@ -237,7 +238,7 @@ export async function preparerLaPage(page: Page, etat: Scenario) {
   if (pagesPreparees.has(page)) return;
   pagesPreparees.add(page);
   await page.addInitScript(installerLeFaux, { voix: etat.voix, bloque: etat.bloque, absent: etat.absent });
-  const profil = { prenom: etat.prenom, niveau: "CE1", ...(etat.univers ? { univers: etat.univers } : {}) };
+  const profil = avecLesReglagesPrevus(page, { prenom: etat.prenom, niveau: "CE1", ...(etat.univers ? { univers: etat.univers } : {}) });
   await page.addInitScript(
     ([cleConsigne, consigne, cleProfil, profilPrepare, cleSon, muet, sansProfil]) => {
       localStorage.setItem(cleConsigne, consigne);
@@ -491,9 +492,26 @@ When(/^Léa relance Savanturier$/, async ({ page }) => {
 Then(
   /^Léa entend (?:Noisette|Lumi|Coach Léo|Capitaine Sam) (?:lire|dire) « ([^«»]+) »$/,
   async ({ page }, texte: string) => {
-    await expect.poll(async () => (await journal(page)).lecture.texte).toBe(normaliser(texte));
+    await expect.poll(async () => await texteLuAvantLaLectureDesChoix(page)).toBe(normaliser(texte));
   },
 );
+
+/** Les textes lus, un par lecture. */
+async function textesLus(page: Page): Promise<string[]> {
+  return await page.evaluate(() => {
+    const faux = Reflect.get(window, "__faux") as { journal: Array<{ type: string; lot: number; texte: string }> };
+    const parLot = new Map<number, string[]>();
+    for (const e of faux.journal) if (e.type === "speak") parLot.set(e.lot, [...(parLot.get(e.lot) ?? []), e.texte]);
+    return [...parLot.values()].map((textes) => textes.join(" ").replace(/\s+/g, " ").trim());
+  });
+}
+
+// Avec « tout lire à voix haute », les choix sont lus juste après la question : la question est alors la lecture d'avant.
+async function texteLuAvantLaLectureDesChoix(page: Page): Promise<string> {
+  const textes = await textesLus(page);
+  const derniere = textes[textes.length - 1] ?? "";
+  return /^Est-ce /.test(derniere) ? (textes[textes.length - 2] ?? derniere) : derniere;
+}
 
 Then(/^Léa entend de nouveau Noisette lire « ([^«»]+) »$/, async ({ page }, texte: string) => {
   await expect.poll(async () => (await journal(page)).lots).toBe(2);

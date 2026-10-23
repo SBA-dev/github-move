@@ -18,6 +18,7 @@ export type Appareil = "tablette" | "telephone";
 const ADRESSES_DES_PARENTS: Readonly<Record<string, string>> = {
   Paul: "paul@exemple.test",
   Claire: "claire@exemple.test",
+  Marie: "marie@exemple.test",
 };
 
 const ADRESSE_DE_TEST = /^(\s*[^@\s+]+)(@exemple\.test\s*)$/i;
