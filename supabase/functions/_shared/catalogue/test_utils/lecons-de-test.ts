@@ -48,6 +48,17 @@ export function uneLeconBrute(surcharges: LeconBrute = {}): LeconBrute {
   };
 }
 
+/** Le guide fondamental cité par « La boîte à jetons : ajouter » (ma-cp-boite-ajouter). */
+export function unGuideBrut(): Record<string, unknown> {
+  return {
+    titre: "Pour enseigner les nombres, le calcul et la résolution de problèmes au CP",
+    page: 53,
+    extrait:
+      "La situation de la boîte est une situation de référence pour enseigner ce passage du comptage au calcul dès la première période du CP.",
+    fichier: "sources/guides/guide-pour-enseigner-les-nombres-le-calcul-et-la-resolution-de-problemes-au-cp-68664.pdf",
+  };
+}
+
 export function uneLeconBruteSans(champ: string): LeconBrute {
   const brute = uneLeconBrute();
   delete brute[champ];

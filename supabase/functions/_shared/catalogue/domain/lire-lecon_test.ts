@@ -1,7 +1,7 @@
 import { assertEquals, assertThrows } from "@std/assert";
 import { lireLecon } from "./lire-lecon.ts";
 import { LeconMalFormee } from "./erreurs.ts";
-import { uneLeconBrute, uneLeconBruteSans, unExerciceBrut } from "../test_utils/lecons-de-test.ts";
+import { uneLeconBrute, uneLeconBruteSans, unExerciceBrut, unGuideBrut } from "../test_utils/lecons-de-test.ts";
 
 Deno.test("une leçon valide est lue avec son identifiant, son titre, sa matière, son niveau et son ordre", () => {
   const lecon = lireLecon(uneLeconBrute());
@@ -82,6 +82,27 @@ Deno.test("un exercice de type inconnu est écarté et les autres gardent leur o
   assertEquals(lecon.exercices.map((exercice) => exercice.type), ["bulles", "ordre", "trous"]);
 });
 
+Deno.test("le programme cité par la leçon est lu avec sa section et sa citation", () => {
+  const lecon = lireLecon(uneLeconBrute());
+
+  assertEquals(lecon.programme, {
+    section: "c2-francais-cp-identifier-les-mots-de-maniere-de-plus-en-plus-aisee",
+    citation: "Décoder et encoder de 25 à 30 CGP.",
+  });
+});
+
+Deno.test("le guide fondamental facultatif est lu avec son titre, sa page et son extrait", () => {
+  const lecon = lireLecon(uneLeconBrute({ guide: unGuideBrut() }));
+
+  assertEquals(lecon.guide?.titre, "Pour enseigner les nombres, le calcul et la résolution de problèmes au CP");
+  assertEquals(lecon.guide?.page, 53);
+  assertEquals(lecon.guide?.extrait.startsWith("La situation de la boîte"), true);
+});
+
+Deno.test("une leçon sans guide fondamental est lue sans guide", () => {
+  assertEquals(lireLecon(uneLeconBrute()).guide, undefined);
+});
+
 const leconsMalFormees: ReadonlyArray<readonly [string, unknown]> = [
   ["qui n'est pas un objet", null],
   ["sans identifiant", uneLeconBruteSans("id")],
@@ -99,6 +120,10 @@ const leconsMalFormees: ReadonlyArray<readonly [string, unknown]> = [
     uneLeconBrute({ lecon: [{ texte: "Un son.", exemples: "ou" }] }),
   ],
   ["sans liste d'exercices", uneLeconBruteSans("exercices")],
+  ["sans programme", uneLeconBruteSans("programme")],
+  ["dont le programme n'a pas de citation", uneLeconBrute({ programme: { section: "c2-francais-cp" } })],
+  ["dont le programme n'a pas de section", uneLeconBrute({ programme: { citation: "Décoder." } })],
+  ["dont le guide fondamental n'a pas de page", uneLeconBrute({ guide: { ...unGuideBrut(), page: undefined } })],
 ];
 
 for (const [description, brute] of leconsMalFormees) {
