@@ -81,7 +81,9 @@ export function useNavigation() {
 
   const remplacer = useCallback((destination: Destination, enRevenantEnArriere = false) => {
     const suivant = enLieu(destination);
-    history.replaceState({ profondeur: profondeurCourante() }, "", cheminDe(suivant));
+    const etat: unknown = history.state;
+    const precedent = (etat as { precedent?: unknown } | null)?.precedent;
+    history.replaceState({ profondeur: profondeurCourante(), precedent }, "", cheminDe(suivant));
     setLieu(suivant);
     setViaRetour(enRevenantEnArriere);
   }, []);
