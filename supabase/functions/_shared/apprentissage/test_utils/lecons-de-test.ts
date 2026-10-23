@@ -77,3 +77,38 @@ export function leconSansExercice(): Lecon {
     exercices: [],
   });
 }
+
+function leconDeDeuxExercices(id: string, secondExercice: object): Lecon {
+  return lireLecon({
+    id,
+    matiere: "maths",
+    niveau: "CP",
+    titre: "Deux exercices",
+    ordre: 2,
+    programme,
+    lecon: [{ texte: "Une étape.", exemples: [] }],
+    exercices: [
+      {
+        type: "bulles",
+        titre: "Premier défi",
+        questions: [questionDeBulles("Combien font 1 + 1 ?"), questionDeBulles("Combien font 2 + 2 ?")],
+      },
+      secondExercice,
+    ],
+  });
+}
+
+export function leconDeDeuxExercicesCourts(): Lecon {
+  return leconDeDeuxExercices("ma-cp-deux-exercices", {
+    type: "bulles",
+    titre: "Second défi",
+    questions: [questionDeBulles("Combien font 3 + 3 ?")],
+  });
+}
+
+export function leconDeDeuxExercicesDontLeSecondSansTitre(): Lecon {
+  return leconDeDeuxExercices("ma-cp-second-sans-titre", {
+    type: "bulles",
+    questions: [questionDeBulles("Combien font 3 + 3 ?")],
+  });
+}
