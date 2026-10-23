@@ -20,3 +20,13 @@ Deno.test("si l'effacement des données de la famille échoue, la connexion du p
 
   assertEquals(service.deconnexions, 1);
 });
+
+// Choix métier : l'effacement passe avant tout, puis l'échec de la fermeture remonte pour que l'écran puisse l'afficher.
+Deno.test("même si la fermeture de la connexion échoue, les données de la famille sont effacées de l'appareil et l'échec est signalé", async () => {
+  const service = ServiceDeConnexionEnMemoire.quiEchoueALaFermeture();
+  const donnees = new DonneesDeLAppareilEnMemoire();
+
+  await assertRejects(() => new SeDeconnecter(service, donnees).executer(), Error, "fermeture impossible");
+
+  assertEquals(donnees.effacements, 1);
+});

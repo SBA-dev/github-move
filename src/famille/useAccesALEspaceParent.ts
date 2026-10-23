@@ -17,10 +17,15 @@ export function useAccesALEspaceParent() {
     return resultat;
   }, []);
 
+  const ouvrirApresLaConnexion = useCallback(() => {
+    acces.current.ouvrirApresLaConnexion();
+    setEtat(acces.current.etat());
+  }, []);
+
   const quitter = useCallback(() => {
     acces.current.quitter();
     setEtat(acces.current.etat());
   }, []);
 
-  return { etat, demanderLEntree, repondre, quitter };
+  return { etat, demanderLEntree, repondre, ouvrirApresLaConnexion, quitter };
 }

@@ -131,3 +131,24 @@ button[data-son="muet"] { background: var(--accent-fonce); opacity: .8; }
 .avertissement-de-voix { font-weight: 700; }
 .conseils-de-voix { font-size: .9rem; }
 .conseils-de-voix p { margin: 0 0 6px; }
+.connexion {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  width: min(100%, 420px);
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .92);
+}
+.connexion h2, .connexion p { margin: 0; overflow-wrap: anywhere; }
+.connexion form { display: grid; gap: 8px; width: 100%; text-align: left; }
+.connexion input {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 2px solid var(--accent-fonce);
+  border-radius: 12px;
+  font: inherit;
+}
+.connexion button.secondaire { color: var(--texte); background: #fff; border: 2px solid var(--accent-fonce); }
+.message-erreur { padding: 10px 14px; border-radius: 12px; background: #fff3cd; font-weight: 700; }

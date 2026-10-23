@@ -42,6 +42,7 @@ Règles de cohabitation :
 | Servir les Edge Functions | `supabase functions serve` |
 | Lancer le front | `npm run dev` (http://localhost:5173) |
 | Tests unitaires | `deno test --permit-no-files supabase/functions/` |
+| Typecheck d'une Edge Function | `deno check --node-modules-dir=none supabase/functions/<nom>/index.ts` |
 | Lint / format | `deno lint --permit-no-files supabase/functions/ && deno fmt --check --permit-no-files supabase/functions/` |
 | Typecheck du front | `npx tsc --noEmit` |
 | Build du front | `npm run build` |
@@ -55,9 +56,9 @@ Règles de cohabitation :
 | Tests de caractérisation du legacy | `npx playwright test -c playwright.legacy.config.ts` |
 
 > ⚠️ Tous les agents se fient à ce tableau. Tenez-le à jour quand un script change.
-> Dans un conteneur cloud, Chromium est déjà installé : Playwright le trouve via `PLAYWRIGHT_BROWSERS_PATH`. Ne lancez jamais `playwright install`.
+> Dans un conteneur cloud, Chromium est déjà installé : Playwright le trouve via `PLAYWRIGHT_BROWSERS_PATH`. Ne lancez jamais `playwright install`. Les steps E2E qui appellent Supabase doivent y être lancés avec `NODE_USE_ENV_PROXY=1` (sinon le processus Node de Playwright ne passe pas par le proxy HTTPS du conteneur) ; une exécution complète de #5 consomme environ 44 des 100 e-mails de connexion autorisés par heure sur le projet de développement.
 > Le hook `.claude/hooks/session-start.sh` installe Deno, pytest et les dépendances npm (dont la CLI Supabase : `npx supabase …`) au démarrage de chaque session cloud.
-> `supabase start` a besoin de Docker. Le conteneur cloud n'a pas de démon Docker : les scénarios qui touchent Supabase se lancent en local, ou dans un environnement qui fournit Docker.
+> `supabase start` a besoin de Docker, absent du conteneur cloud : les scénarios qui touchent Supabase tournent donc contre le projet de développement en ligne `savanturier-dev` (décision 0010, sur une branche suivante), et les migrations s'y appliquent par l'API de gestion.
 
 ## Architecture (hexagonale, DDD)
 

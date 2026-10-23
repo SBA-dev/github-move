@@ -1,4 +1,5 @@
 import { type BrowserContext, expect, type Page } from "@playwright/test";
+import type { Famille } from "../support/famille.ts";
 import { After, Given, Then, When } from "./fixtures.ts";
 
 // --- Préparation du scénario (avant l'ouverture de la page)
@@ -271,17 +272,29 @@ export async function ouvrirSurUnAutreAppareil(page: Page, contexte: BrowserCont
   return autre;
 }
 
-export async function entrerDansLEspaceParent(page: Page, etat: Scenario) {
+// Les scénarios de voix préparent l'appareil (voix, profil, voix imposée) avant la première ouverture de la page.
+export async function preparerLaPageSiScenarioDeVoix(page: Page) {
+  const etat = scenarios.get(page);
+  if (etat) await preparerLaPage(page, etat);
+}
+
+// Le parent est connecté sans e-mail (connexion de préparation de #5), puis répond à la question du contrôle parental
+// lue à l'écran (#10), comme un adulte.
+export async function entrerDansLEspaceParent(page: Page, etat: Scenario, famille: Famille) {
   await preparerLaPage(page, etat);
+  if ((await famille.session(page)) === null) await famille.connecterSansEmail("tablette", "Paul");
   await page.goto("/");
-  await page.getByRole("banner").getByRole("button", { name: "Espace parent" }).click();
-  const question = await page.getByText(/Question pour un adulte/).textContent();
-  const facteurs = /(\d+)\s*×\s*(\d+)/.exec(question ?? "");
-  if (!facteurs) throw new Error(`Question du contrôle parental inattendue : ${question}`);
-  const reponse = String(Number(facteurs[1]) * Number(facteurs[2]));
-  await page.getByRole("textbox", { name: /Question pour un adulte/ }).fill(reponse);
-  await page.getByRole("button", { name: "Entrer" }).click();
-  await expect(page.getByTestId("choix-de-voix")).toBeVisible();
+  await page.getByRole("banner").getByRole("button", { name: "Espace parent", exact: true }).click();
+  const question = page.getByText(/Question pour un adulte/);
+  const choix = page.getByTestId("choix-de-voix");
+  await expect(question.or(choix)).toBeVisible();
+  if (await question.isVisible()) {
+    const facteurs = /(\d+)\s*×\s*(\d+)/.exec((await question.textContent()) ?? "");
+    if (!facteurs) throw new Error("Question du contrôle parental inattendue");
+    await page.getByRole("textbox", { name: /Question pour un adulte/ }).fill(String(Number(facteurs[1]) * Number(facteurs[2])));
+    await page.getByRole("button", { name: "Entrer" }).click();
+  }
+  await expect(choix).toBeVisible();
 }
 
 After(async ({ page }) => {
