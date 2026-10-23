@@ -2,6 +2,7 @@ import { ModifierProfilEnfant } from "../_shared/famille/application/modifier-pr
 import { ProfilEnfantId } from "../_shared/famille/domain/profil-enfant-id.ts";
 import {
   originesAutorisees,
+  reglagesFacultatifs,
   texteFacultatif,
   traiterUneEcritureDeFamille,
   uuidObligatoire,
@@ -21,6 +22,7 @@ Deno.serve((requete) =>
       prenom: texteFacultatif(corps, "prenom"),
       niveau: texteFacultatif(corps, "niveau"),
       univers: texteFacultatif(corps, "univers"),
+      reglages: reglagesFacultatifs(corps),
     });
     return presenterLeProfil(await profils.parId(ProfilEnfantId.de(profil)));
   }, origines)

@@ -8,6 +8,13 @@ export function presenterLeProfil(profil: ProfilEnfant | null) {
       prenom: profil.prenom.valeur,
       niveau: profil.niveau.valeur,
       univers: profil.univers,
+      reglages: {
+        modeDys: profil.reglages.modeDys,
+        toutLireAVoixHaute: profil.reglages.toutLireAVoixHaute,
+        parcoursLibre: profil.reglages.parcoursLibre,
+        clavierDesDictees: profil.reglages.clavierDesDictees.valeur,
+        langueDuParent: profil.reglages.langueDuParent.valeur,
+      },
     },
   };
 }

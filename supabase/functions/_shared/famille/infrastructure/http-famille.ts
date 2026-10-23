@@ -1,6 +1,14 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { NiveauInconnu } from "../../catalogue/domain/index.ts";
-import { ParentNonRattache, PrenomObligatoire, ProfilEnfantIntrouvable, UniversInconnu } from "../domain/erreurs.ts";
+import {
+  ClavierDesDicteesInconnu,
+  LangueDuParentInconnue,
+  ParentNonRattache,
+  PrenomObligatoire,
+  ProfilEnfantIntrouvable,
+  UniversInconnu,
+} from "../domain/erreurs.ts";
+import type { ReglagesBruts } from "../domain/reglages.ts";
 
 const LONGUEUR_MAXIMALE_D_UN_TEXTE = 100;
 const ORIGINES_PAR_DEFAUT = ["http://localhost:5173", "http://localhost:4173"];
@@ -31,6 +39,34 @@ export function texteFacultatif(corps: Record<string, unknown>, cle: string): st
   return valeur;
 }
 
+const REGLAGES_BOOLEENS = ["modeDys", "toutLireAVoixHaute", "parcoursLibre"] as const;
+const REGLAGES_TEXTES = ["clavierDesDictees", "langueDuParent"] as const;
+
+/** Lit le champ facultatif `reglages` : un objet partiel dont les clés sont connues et les types corrects. */
+export function reglagesFacultatifs(corps: Record<string, unknown>): ReglagesBruts | undefined {
+  const brut = corps.reglages;
+  if (brut === undefined) return undefined;
+  if (typeof brut !== "object" || brut === null || Array.isArray(brut)) {
+    throw new EntreeInvalide("Le champ « reglages » doit être un objet.");
+  }
+  const reglages = brut as Record<string, unknown>;
+  const connues: readonly string[] = [...REGLAGES_BOOLEENS, ...REGLAGES_TEXTES];
+  const inconnue = Object.keys(reglages).find((cle) => !connues.includes(cle));
+  if (inconnue !== undefined) throw new EntreeInvalide(`Le réglage « ${inconnue} » est inconnu.`);
+  const resultat: ReglagesBruts = {};
+  for (const cle of REGLAGES_BOOLEENS) {
+    const valeur = reglages[cle];
+    if (valeur === undefined) continue;
+    if (typeof valeur !== "boolean") throw new EntreeInvalide(`Le réglage « ${cle} » doit être vrai ou faux.`);
+    resultat[cle] = valeur;
+  }
+  for (const cle of REGLAGES_TEXTES) {
+    const valeur = texteFacultatif(reglages, cle);
+    if (valeur !== undefined) resultat[cle] = valeur;
+  }
+  return resultat;
+}
+
 const FORMAT_UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export function uuidObligatoire(corps: Record<string, unknown>, cle: string): string {
@@ -52,7 +88,8 @@ export function statutEtMessage(cause: unknown): { statut: number; message: stri
   }
   if (
     cause instanceof EntreeInvalide || cause instanceof PrenomObligatoire || cause instanceof NiveauInconnu ||
-    cause instanceof UniversInconnu
+    cause instanceof UniversInconnu || cause instanceof ClavierDesDicteesInconnu ||
+    cause instanceof LangueDuParentInconnue
   ) return { statut: 400, message: cause.message };
   return { statut: 500, message: "Le profil enfant n'a pas pu être enregistré." };
 }

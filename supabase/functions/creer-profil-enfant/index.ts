@@ -2,6 +2,7 @@ import { CreerProfilEnfant } from "../_shared/famille/application/creer-profil-e
 import { ProfilEnfantId } from "../_shared/famille/domain/profil-enfant-id.ts";
 import {
   originesAutorisees,
+  reglagesFacultatifs,
   texteFacultatif,
   texteObligatoire,
   traiterUneEcritureDeFamille,
@@ -20,6 +21,7 @@ Deno.serve((requete) =>
       prenom: texteObligatoire(corps, "prenom"),
       niveau: texteFacultatif(corps, "niveau"),
       univers: texteFacultatif(corps, "univers"),
+      reglages: reglagesFacultatifs(corps),
     }, new Date());
     return presenterLeProfil(await profils.parId(ProfilEnfantId.de(id)));
   }, origines)
