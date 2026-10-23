@@ -23,4 +23,4 @@ Le réseau du conteneur cloud passe par un proxy HTTPS. Une fois `cxptcwkegwhdmh
 
 - Les tests partagent une même base : chaque scénario crée ses propres données (parent, profils) et les nettoie, sans dépendre de l'ordre d'exécution.
 - Appliquer une migration par l'API de gestion modifie une ressource partagée : dans le conteneur cloud, cela demande une permission explicite de l'outil.
-- Le projet est en `eu-west-1` (Irlande), pas à Francfort comme l'indique `CLAUDE.md`. C'est bien dans l'UE. Il reste au PO à choisir : garder l'Irlande et corriger la doc, ou recréer le projet à Francfort avant le premier vrai utilisateur.
+- Le projet est en `eu-west-1` (Irlande), et non à Francfort comme le disait la doc. C'est bien dans l'UE. Le PO garde l'Irlande : `CLAUDE.md` et `docs/reecriture.md` sont corrigés.

@@ -137,7 +137,7 @@ Décisions déjà prises, à respecter partout (code, interface, scénarios) :
 
 ## Données d'enfants (RGPD)
 
-- Hébergement **dans l'UE** (projet Supabase en région Francfort, fonctions dans une région européenne).
+- Hébergement **dans l'UE** (projet Supabase en région Irlande, `eu-west-1`, fonctions dans une région européenne).
 - Seul le **parent** a un compte. L'enfant est un profil rattaché à un ou deux parents : prénom ou pseudo et classe, sans e-mail, sans mot de passe, sans date de naissance complète.
 - Minimisation : on ne stocke que ce qui sert à l'apprentissage ou au suivi parental.
 - Les enregistrements de voix de l'enfant expirent automatiquement après 30 jours.

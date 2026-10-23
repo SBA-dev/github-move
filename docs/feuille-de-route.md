@@ -121,12 +121,12 @@ On suit le guide fondamental « Pour enseigner la lecture et l'écriture au CP �
 
 ## Reprise dans une nouvelle session (Supabase configuré)
 
-Le PO a ajouté les variables `SUPABASE_URL`, `SUPABASE_PROJECT_REF`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` et `SUPABASE_ACCESS_TOKEN` à l'environnement cloud (`SUPABASE_DB_PASSWORD` y était déjà). Projet de développement : `savanturier-dev`, référence `cxptcwkegwhdmhqjxttv`, région Francfort.
+Le PO a ajouté les variables `SUPABASE_URL`, `SUPABASE_PROJECT_REF`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` et `SUPABASE_ACCESS_TOKEN` à l'environnement cloud (`SUPABASE_DB_PASSWORD` y était déjà). Projet de développement : `savanturier-dev`, référence `cxptcwkegwhdmhqjxttv`, région Irlande (`eu-west-1`).
 
 À faire en premier :
 1. [x] Variables présentes (vérifié le 2026-10-23, sans afficher les valeurs).
 2. [x] `npx supabase link` réussi. Réseau : l'API HTTPS du projet répond, mais pas Postgres en direct (ports 5432 et 6543 fermés). [ ] Migration vide de vérification : à appliquer par l'API de gestion, en attente d'une permission de l'outil (écriture dans une ressource partagée).
-3. [x] Le PO a choisi les tests contre le projet en ligne `savanturier-dev` : décision 0010. Le projet est en `eu-west-1` (Irlande), pas à Francfort : le PO doit choisir entre corriger la doc et recréer le projet.
+3. [x] Le PO a choisi les tests contre le projet en ligne `savanturier-dev` : décision 0010. Le projet est en `eu-west-1` (Irlande) : le PO garde l'Irlande, la doc est corrigée.
 4. Reprendre #5 (adaptateur Supabase Auth, écran de connexion, E2E), puis #11 à #14.
 
 Branches en cours, chacune partie de la précédente, rien n'est mergé dans `main` : `claude/stoic-faraday-0qy6ez` (lot 1, PR #9) → `feature/5-connexion-du-parent` → `feature/lot-2-modele-et-scenarios` → `feature/10-controle-parental` → `feature/15-choix-de-la-voix`. À part, partie de `main` : `chore/tests-legacy` (339 tests de caractérisation).
