@@ -38,7 +38,7 @@ function ecranAffiche(demande: Ecran, espaceParent: EtatDeLEspaceParent["type"])
 }
 
 export function Application() {
-  const { ecran: ecranDemande, retourPossible, aller, revenir } = useNavigation();
+  const { ecran: ecranDemande, retourPossible, aller, remplacer, revenir } = useNavigation();
   const acces = useAccesALEspaceParent();
   const ecran = ecranAffiche(ecranDemande, acces.etat.type);
   const { profil, charge: profilCharge } = useProfilPrepare(ecran === "demonstration");
@@ -49,6 +49,9 @@ export function Application() {
   useEffect(() => {
     if (ecranDemande !== "espace-parent") fermerEspaceParent();
   }, [ecranDemande, fermerEspaceParent]);
+  useEffect(() => {
+    if (ecran !== ecranDemande) remplacer(ecran);
+  }, [ecran, ecranDemande, remplacer]);
   const habillage: Habillage = { "--accent": palette.principale, "--accent-fonce": palette.foncee };
 
   return (
@@ -87,17 +90,16 @@ export function Application() {
           )}
           {ecran === "espace-parent" && etatEspaceParent.type === "questionPosee" && (
             <ControleParental
-              key={etatEspaceParent.enonce}
               enonce={etatEspaceParent.enonce}
               onReponse={acces.repondre}
-              onRenoncer={revenir}
+              onRenoncer={() => (retourPossible ? revenir() : remplacer("accueil"))}
             />
           )}
           {ecran === "espace-parent" && etatEspaceParent.type === "ouvert" && (
             <EspaceParent
               onQuitter={() => {
                 fermerEspaceParent();
-                aller("accueil");
+                remplacer("accueil");
               }}
             />
           )}

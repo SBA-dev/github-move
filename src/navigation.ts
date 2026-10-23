@@ -40,7 +40,12 @@ export function useNavigation() {
     setProfondeur(suivante);
   }, []);
 
+  const remplacer = useCallback((destination: Ecran) => {
+    history.replaceState({ profondeur: profondeurCourante() }, "", CHEMINS[destination]);
+    setEcran(destination);
+  }, []);
+
   const revenir = useCallback(() => history.back(), []);
 
-  return { ecran, retourPossible: profondeur > 0, aller, revenir };
+  return { ecran, retourPossible: profondeur > 0, aller, remplacer, revenir };
 }
