@@ -1,15 +1,26 @@
-import type { ResultatsDesLecons } from "../application/ports/resultats-des-lecons.ts";
 import { ResultatDeLaLecon } from "../domain/resultat-de-la-lecon.ts";
 
-export class ResultatsDesLeconsEnMemoire implements ResultatsDesLecons {
+function copie(resultat: ResultatDeLaLecon): ResultatDeLaLecon {
+  return ResultatDeLaLecon.reconstituer({
+    enfant: resultat.enfant,
+    lecon: resultat.lecon,
+    competence: resultat.competence,
+    meilleures: resultat.meilleures,
+    dernieres: resultat.dernieres,
+    nombreDeSeances: resultat.nombreDeSeances,
+  });
+}
+
+/** Lecture seule côté cas d'usage : l'écriture passe par `SeancesTermineesEnMemoire`, avec la séance. */
+export class ResultatsDesLeconsEnMemoire {
   private readonly resultats = new Map<string, ResultatDeLaLecon>();
 
   de(enfant: string, lecon: string): Promise<ResultatDeLaLecon | null> {
-    return Promise.resolve(this.resultats.get(`${enfant}/${lecon}`) ?? null);
+    const resultat = this.resultats.get(`${enfant}/${lecon}`);
+    return Promise.resolve(resultat ? copie(resultat) : null);
   }
 
-  enregistrer(resultat: ResultatDeLaLecon): Promise<void> {
-    this.resultats.set(`${resultat.enfant}/${resultat.lecon}`, resultat);
-    return Promise.resolve();
+  ecrire(resultat: ResultatDeLaLecon): void {
+    this.resultats.set(`${resultat.enfant}/${resultat.lecon}`, copie(resultat));
   }
 }

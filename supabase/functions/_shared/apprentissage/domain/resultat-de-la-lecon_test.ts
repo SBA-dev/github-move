@@ -131,3 +131,17 @@ Deno.test("un résultat reconstitué depuis l'état enregistré garde ses étoil
     [2, 2, 5, []],
   );
 });
+
+Deno.test("une leçon sans compétence est acquise sans compétence dans le fait LeconAcquise", () => {
+  const resultat = ResultatDeLaLecon.commencer(profilDeLea, lecon);
+
+  resultat.enregistrerSeance(2);
+
+  const acquise = resultat.retirerFaits().find((fait) => fait.type === "LeconAcquise");
+  assertEquals(acquise && "competence" in acquise ? acquise.competence : undefined, undefined);
+  assertEquals(resultat.competence, undefined);
+});
+
+Deno.test("le résultat garde la compétence de la leçon", () => {
+  assertEquals(nouveauResultat().competence, competence);
+});

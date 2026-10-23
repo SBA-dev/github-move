@@ -103,3 +103,23 @@ Deno.test("une réponse qui n'est pas un choix proposé rend la séance incohér
 
   assertThrows(() => revaliderCalcul(choixInvente), SeanceIncoherente);
 });
+
+Deno.test("une réponse donnée après la réussite d'une question est refusée, même si une question suit", () => {
+  const seance = Seance.commencer(
+    generateurIdFixe("seance-2"),
+    hasardFixe(0, 0, 0, 0, 0, 0, 0, 0, 0),
+    "profil-lea",
+    leconDeDeuxExercicesCourts(),
+    ChoixDeSeance.complete(),
+  );
+  while (seance.etapeDeLeconEnCours()) seance.continuer();
+  while (!seance.estFinie()) seance.repondre(Reponse.choix("ou"));
+  seance.terminer(fin);
+  const complet = seance.aEnregistrer();
+  const reponseEnTropApresLaPremiere = {
+    ...complet,
+    reponses: [[...complet.reponses[0], Reponse.choix("on")], ...complet.reponses.slice(1)],
+  };
+
+  assertThrows(() => revaliderLaSeance(leconDeDeuxExercicesCourts(), reponseEnTropApresLaPremiere), SeanceIncoherente);
+});

@@ -119,13 +119,14 @@ export function leconDeDeuxExercicesDontLeSecondSansTitre(): Lecon {
   });
 }
 
-function leconAvecUnExercice(id: string, exercice: object): Lecon {
+function leconAvecUnExercice(id: string, exercice: object, competence?: string): Lecon {
   return lireLecon({
     id,
     matiere: "maths",
     niveau: "CP",
     titre: "Une leçon à choix",
     ordre: 1,
+    ...(competence === undefined ? {} : { competence }),
     programme,
     lecon: [],
     exercices: [exercice],
@@ -137,6 +138,13 @@ export function leconDeCalcul(): Lecon {
     type: "bulles",
     questions: [{ question: "Combien font 3 + 4 ?", choix: ["6", "7", "8", "9"], reponse: "7" }],
   });
+}
+
+export function leconDeCalculAvecCompetence(): Lecon {
+  return leconAvecUnExercice("ma-cp-calcul-competence", {
+    type: "bulles",
+    questions: [{ question: "Combien font 3 + 4 ?", choix: ["6", "7", "8", "9"], reponse: "7" }],
+  }, "Calculer des sommes");
 }
 
 export function leconDeLecture(): Lecon {

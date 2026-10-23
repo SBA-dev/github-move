@@ -1,7 +1,8 @@
+import type { Lecon } from "../../catalogue/domain/index.ts";
 import { assertEquals, assertRejects } from "@std/assert";
 import { generateurIdFixe } from "../test_utils/generateur-id-fixe.ts";
 import { hasardFixe } from "../test_utils/hasard-fixe.ts";
-import { leconDeCalcul } from "../test_utils/lecons-de-test.ts";
+import { leconDeCalcul, leconDeCalculAvecCompetence } from "../test_utils/lecons-de-test.ts";
 import { LeconsDuCatalogueEnMemoire } from "../test_utils/lecons-du-catalogue-en-memoire.ts";
 import { RattachementsEnMemoire } from "../test_utils/rattachements-en-memoire.ts";
 import { ResultatsDesLeconsEnMemoire } from "../test_utils/resultats-des-lecons-en-memoire.ts";
@@ -11,15 +12,17 @@ import { LeconIntrouvable, ParentNonRattache, SeanceIncoherente } from "../domai
 import { Reponse } from "../domain/reponse.ts";
 import { Seance } from "../domain/seance.ts";
 import type { SeanceTermineeAEnregistrer } from "../domain/seance-terminee-a-enregistrer.ts";
-import { EnregistrerLesEtoilesDeLaLecon } from "./enregistrer-les-etoiles-de-la-lecon.ts";
 import { TerminerLaSeance } from "./terminer-la-seance.ts";
 
-function envoiAvecUneErreur(): SeanceTermineeAEnregistrer {
+function envoiAvecUneErreur(
+  identifiant = "seance-1",
+  lecon: Lecon = leconDeCalcul(),
+): SeanceTermineeAEnregistrer {
   const seance = Seance.commencer(
-    generateurIdFixe("seance-1"),
+    generateurIdFixe(identifiant),
     hasardFixe(0, 0, 0),
     "profil-lea",
-    leconDeCalcul(),
+    lecon,
     ChoixDeSeance.complete(),
   );
   seance.repondre(Reponse.choix("8"));
@@ -29,13 +32,13 @@ function envoiAvecUneErreur(): SeanceTermineeAEnregistrer {
 }
 
 function monde(lecons = new LeconsDuCatalogueEnMemoire(leconDeCalcul())) {
-  const seances = new SeancesTermineesEnMemoire();
   const resultats = new ResultatsDesLeconsEnMemoire();
+  const seances = new SeancesTermineesEnMemoire(resultats);
   const terminer = new TerminerLaSeance(
     new RattachementsEnMemoire(["parent-paul", "profil-lea"]),
     lecons,
     seances,
-    new EnregistrerLesEtoilesDeLaLecon(lecons, resultats),
+    resultats,
   );
   return { seances, resultats, terminer };
 }
@@ -102,3 +105,56 @@ Deno.test("une séance incohérente est refusée sans rien enregistrer", async (
   assertEquals(seances.toutes(), []);
   assertEquals(await resultats.de("profil-lea", "ma-cp-calcul"), null);
 });
+
+Deno.test("un échec d'écriture n'enregistre ni la séance ni ses étoiles, et le renvoi compte les étoiles une seule fois", async () => {
+  const { seances, resultats, terminer } = monde();
+  seances.echouerAuProchainAppel();
+
+  await assertRejects(() => terminer.executer({ parent: "parent-paul", seance: envoiAvecUneErreur() }));
+  assertEquals(seances.toutes(), []);
+  assertEquals(await resultats.de("profil-lea", "ma-cp-calcul"), null);
+
+  const faits = await terminer.executer({ parent: "parent-paul", seance: envoiAvecUneErreur() });
+
+  const resultat = await resultats.de("profil-lea", "ma-cp-calcul");
+  assertEquals([resultat?.meilleures, resultat?.nombreDeSeances], [2, 1]);
+  assertEquals(faits.map((fait) => fait.type), ["SeanceTerminee", "LeconReussie", "LeconAcquise"]);
+});
+
+Deno.test("deux séances concurrentes de la même leçon comptent chacune une fois et LeconAcquise n'est émis qu'une fois", async () => {
+  const { seances, resultats, terminer } = monde();
+
+  const [premiers, seconds] = await Promise.all([
+    terminer.executer({ parent: "parent-paul", seance: envoiAvecUneErreur("seance-1") }),
+    terminer.executer({ parent: "parent-paul", seance: envoiAvecUneErreur("seance-2") }),
+  ]);
+
+  assertEquals(seances.toutes().length, 2);
+  assertEquals((await resultats.de("profil-lea", "ma-cp-calcul"))?.nombreDeSeances, 2);
+  const types = [...premiers, ...seconds].map((fait) => fait.type);
+  assertEquals(types.filter((type) => type === "LeconAcquise").length, 1);
+  assertEquals(types.filter((type) => type === "LeconReussie").length, 1);
+});
+
+Deno.test("LeconAcquise porte la compétence de la leçon", async () => {
+  const lecon = leconDeCalculAvecCompetence();
+  const { terminer } = monde(new LeconsDuCatalogueEnMemoire(lecon));
+
+  const faits = await terminer.executer({ parent: "parent-paul", seance: envoiAvecUneErreur("seance-1", lecon) });
+
+  assertEquals(competencesAcquises(faits), ["Calculer des sommes"]);
+});
+
+Deno.test("une leçon sans compétence est acquise sans compétence", async () => {
+  const { terminer } = monde();
+
+  const faits = await terminer.executer({ parent: "parent-paul", seance: envoiAvecUneErreur() });
+
+  assertEquals(competencesAcquises(faits), [undefined]);
+});
+
+function competencesAcquises(faits: { type: string }[]): (string | undefined)[] {
+  return faits
+    .filter((fait) => fait.type === "LeconAcquise")
+    .map((fait) => (fait as { competence?: string }).competence);
+}
