@@ -69,10 +69,10 @@ Given(
 
 Given(
   /^Paul a imposé la voix « ([^«»]+) » sur la tablette, puis est revenu à la voix automatique$/,
-  async ({ page }, nom: string) => {
+  async ({ page, famille }, nom: string) => {
     const etat = scenario(page);
     const autrePage = await page.context().newPage();
-    await entrerDansLEspaceParent(autrePage, { ...etat, voixImposee: nom });
+    await entrerDansLEspaceParent(autrePage, { ...etat, voixImposee: nom }, famille);
     await expect(radio(autrePage, nom)).toBeChecked();
     await radio(autrePage, AUTOMATIQUE).check();
     await expect(radio(autrePage, AUTOMATIQUE)).toBeChecked();
@@ -129,18 +129,13 @@ Given(/^Tom a choisi l'univers (sports)$/, async ({ page }, univers: string) => 
   etat.univers = univers;
 });
 
-// La connexion du parent (#5) n'est pas encore branchée : seul le contrôle parental protège l'espace parent.
-// Scénario exclu de l'exécution tant que la déconnexion (#5) n'est pas branchée.
-Given(/^Paul s'est déconnecté puis reconnecté sur la tablette$/, () => {
-  throw new Error("Dépend de la story #5 : la déconnexion du parent n'est pas encore branchée.");
-});
-
-Given(/^Paul est connecté sur la tablette(?: et sur le téléphone)?$/, () => {});
-
-// --- Étant donné : l'espace parent
-
-Given(/^Paul est (?:dans|entré dans) l'espace parent$/, async ({ page }) => {
-  await entrerDansLEspaceParent(page, scenario(page));
+Given(/^Paul s'est déconnecté puis reconnecté sur la tablette$/, async ({ famille, page }) => {
+  await preparerLaPage(page, scenario(page));
+  await famille.connecterSansEmail("tablette", "Paul");
+  await famille.allerDansLEspaceParent("tablette");
+  await famille.seDeconnecter("tablette");
+  await famille.verifierNonConnecte("tablette");
+  await famille.connecterSansEmail("tablette", "Paul");
 });
 
 // --- Quand
@@ -173,10 +168,6 @@ When(/^la consigne « (.+) » s'affiche pour Tom$/, async ({ page }, texte: stri
   await preparerLaPage(page, etat);
   await page.goto("/demonstration");
   await expect(page.getByTestId("consigne")).toBeVisible();
-});
-
-When(/^Léa demande l'entrée de l'espace parent$/, async ({ page }) => {
-  await page.getByRole("banner").getByRole("button", { name: "Espace parent" }).click();
 });
 
 // --- Alors : liste des voix
@@ -270,6 +261,3 @@ Then(/^le choix de voix n'est pas proposé à Léa$/, async ({ page }) => {
   await expect(page.getByTestId("choix-de-voix")).toHaveCount(0);
 });
 
-Then(/^Léa voit une question du contrôle parental$/, async ({ page }) => {
-  await expect(page.getByText(/Question pour un adulte/)).toBeVisible();
-});
