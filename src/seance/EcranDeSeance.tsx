@@ -6,6 +6,7 @@ import { PersonnageGuide } from "../univers/index.ts";
 import type { Voix } from "../voix/index.ts";
 import { BulleDuPersonnageGuide } from "./BulleDuPersonnageGuide.tsx";
 import { generateurIdDuNavigateur } from "./generateur-id-navigateur.ts";
+import { hasardDuNavigateur } from "./hasard-navigateur.ts";
 import { RecipientDeProgression } from "./RecipientDeProgression.tsx";
 import { useDeroulementDeSeance } from "./useDeroulementDeSeance.ts";
 import { useLecon } from "./useLecon.ts";
@@ -23,7 +24,7 @@ type Props = {
 function commencerLaSeance(prenom: string, lecon: Lecon, exercice: number | undefined): Seance | undefined {
   const choix = exercice === undefined ? ChoixDeSeance.complete() : ChoixDeSeance.unExercice(exercice);
   try {
-    return Seance.commencer(generateurIdDuNavigateur, prenom, lecon, choix);
+    return Seance.commencer(generateurIdDuNavigateur, hasardDuNavigateur, prenom, lecon, choix);
   } catch (erreur) {
     if (erreur instanceof ExerciceIntrouvable || erreur instanceof LeconSansExercice) return undefined;
     throw erreur;
