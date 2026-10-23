@@ -1,9 +1,10 @@
 import type { DonneesDeLAppareil } from "@domain/famille";
+import { ProfilsGardesSurLAppareil } from "../famille/profils/profils-gardes-sur-l-appareil.ts";
 
-// Aucune donnée de famille n'est encore gardée sur l'appareil en dehors de la connexion elle-même,
-// que Supabase efface à la déconnexion. Les profils enfants hors ligne (IndexedDB) viendront avec la story #10.
+// Ce que la déconnexion efface de l'appareil, en plus de la session que Supabase retire lui-même :
+// la liste « Qui joue ? » du parent (story #11).
 export class DonneesDeLAppareilNavigateur implements DonneesDeLAppareil {
   effacer(): Promise<void> {
-    return Promise.resolve();
+    return new ProfilsGardesSurLAppareil().effacer();
   }
 }
