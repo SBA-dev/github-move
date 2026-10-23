@@ -47,4 +47,4 @@ export const test = base.extend<{ monde: Monde; pwa: Pwa }>({
   },
 });
 
-export const { Given, When, Then } = createBdd(test);
+export const { Given, When, Then, After } = createBdd(test);
