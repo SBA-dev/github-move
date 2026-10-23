@@ -3,6 +3,7 @@ import { MotionConfig } from "motion/react";
 import { universDe } from "@domain/motivation";
 import { chargerProfilPrepare, PAGE_DEMONSTRATION_DISPONIBLE, PageDemonstration } from "./demonstration/disponibilite.ts";
 import type { ProfilPrepare } from "./demonstration/profil-prepare.ts";
+import { EcranDeConnexion, useConnexion } from "./connexion/index.ts";
 import { EnTete } from "./en-tete/EnTete.tsx";
 import { AideEcranDAccueil } from "./installation/index.ts";
 import { useNavigation } from "./navigation.ts";
@@ -36,6 +37,18 @@ export function Application() {
   const univers = universDe(profil?.univers);
   const palette = PALETTES[univers.cle];
   const voix = useVoix(univers.personnageGuide);
+  const connexion = useConnexion();
+  const connecte = connexion.etat === "connecte";
+  const { arriveParLeLien, consommerLArrivee } = connexion;
+  useEffect(() => {
+    if (!connecte || !arriveParLeLien) return;
+    consommerLArrivee();
+    aller("espace-parent");
+  }, [connecte, arriveParLeLien, consommerLArrivee, aller]);
+  const seDeconnecter = async () => {
+    await connexion.seDeconnecter.executer();
+    aller("accueil");
+  };
   const habillage: Habillage = { "--accent": palette.principale, "--accent-fonce": palette.foncee };
 
   return (
@@ -59,6 +72,7 @@ export function Application() {
           </div>
           {ecran === "accueil" && (
             <>
+              {connexion.etat === "deconnecte" && <EcranDeConnexion connexion={connexion} onConnecte={() => aller("espace-parent")} />}
               <p>Réviser le programme du CP au CM2, en jouant.</p>
               <PersonnageGuide univers={univers} humeur="content" />
               <AideEcranDAccueil />
@@ -69,10 +83,14 @@ export function Application() {
               <PageDemonstration univers={univers} voix={voix} />
             </Suspense>
           )}
-          {ecran === "espace-parent" && (
+          {ecran === "espace-parent" && connexion.etat === "deconnecte" && (
+            <EcranDeConnexion connexion={connexion} onConnecte={() => aller("espace-parent")} />
+          )}
+          {ecran === "espace-parent" && connecte && (
             <section>
               <h2>Espace parent</h2>
               <p>Bientôt disponible.</p>
+              <button type="button" onClick={seDeconnecter}>Se déconnecter</button>
             </section>
           )}
         </main>

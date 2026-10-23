@@ -42,6 +42,7 @@ Règles de cohabitation :
 | Servir les Edge Functions | `supabase functions serve` |
 | Lancer le front | `npm run dev` (http://localhost:5173) |
 | Tests unitaires | `deno test --permit-no-files supabase/functions/` |
+| Typecheck d'une Edge Function | `deno check --node-modules-dir=none supabase/functions/<nom>/index.ts` |
 | Lint / format | `deno lint --permit-no-files supabase/functions/ && deno fmt --check --permit-no-files supabase/functions/` |
 | Typecheck du front | `npx tsc --noEmit` |
 | Build du front | `npm run build` |
