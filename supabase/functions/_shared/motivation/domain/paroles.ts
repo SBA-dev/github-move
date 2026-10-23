@@ -59,3 +59,7 @@ export function presentation(univers: Univers): string {
   const { nom, titre } = univers.personnageGuide;
   return `Je suis ${nom}, ${titre} ${contracterAvecDe(univers.royaume)}.`;
 }
+
+export function saluer(prenom: string): string {
+  return `Bonjour ${prenom} !`;
+}

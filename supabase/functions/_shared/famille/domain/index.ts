@@ -28,3 +28,5 @@ export type { ServiceDeConnexion } from "./service-de-connexion.ts";
 export type { GenerateurId } from "./generateur-id.ts";
 export { ProfilEnfant } from "./profil-enfant.ts";
 export type { FaitDuProfilEnfant, ModificationDuProfilEnfant } from "./profil-enfant.ts";
+export { ChoisirQuiJoue } from "./choisir-qui-joue.ts";
+export type { ProfilEnCours, ProfilEnCoursSurLAppareil } from "./profil-en-cours-sur-l-appareil.ts";
