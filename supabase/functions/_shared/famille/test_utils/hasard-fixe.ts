@@ -8,6 +8,9 @@ export class HasardFixe implements Hasard {
 
   entierEntre(min: number, max: number): number {
     this.tirages.push({ min, max });
+    if (this.suivant >= this.valeurs.length) {
+      throw new Error("HasardFixe : plus aucune valeur de tirage disponible");
+    }
     return this.valeurs[this.suivant++];
   }
 }
