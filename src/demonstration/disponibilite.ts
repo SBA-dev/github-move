@@ -12,3 +12,7 @@ export const PageDemonstration = PAGE_DEMONSTRATION_DISPONIBLE
 export const chargerProfilPrepare = PAGE_DEMONSTRATION_DISPONIBLE
   ? () => import("./profil-prepare.ts").then((m) => m.lireProfilPrepare())
   : undefined;
+
+export const chargerLeconsPreparees = PAGE_DEMONSTRATION_DISPONIBLE
+  ? () => import("./lecons-preparees.ts").then((m) => m.lireLeconsPreparees())
+  : undefined;

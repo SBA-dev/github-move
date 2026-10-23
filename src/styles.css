@@ -152,3 +152,42 @@ button[data-son="muet"] { background: var(--accent-fonce); opacity: .8; }
 }
 .connexion button.secondaire { color: var(--texte); background: #fff; border: 2px solid var(--accent-fonce); }
 .message-erreur { padding: 10px 14px; border-radius: 12px; background: #fff3cd; font-weight: 700; }
+.page-de-la-lecon, .seance { display: grid; justify-items: center; gap: 12px; max-width: 100%; }
+.page-de-la-lecon h2, .seance h2, .page-de-la-lecon p, .seance p { margin: 0; overflow-wrap: anywhere; }
+.page-de-la-lecon ul, .exemples { list-style: none; margin: 0; padding: 0; }
+.exercices-proposes { display: grid; gap: 8px; width: min(100%, 28rem); }
+.exercices-proposes button { width: 100%; display: grid; gap: 2px; border-radius: 16px; }
+.libelle-du-type { font-size: .9rem; font-weight: 400; }
+.passage-pour-les-adultes {
+  width: min(100%, 40rem);
+  padding: 12px 16px;
+  border-radius: 16px;
+  background: #fff;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.passage-pour-les-adultes h3, .passage-pour-les-adultes h4, .passage-pour-les-adultes p, .passage-pour-les-adultes blockquote { margin: 0 0 8px; }
+.bulle { max-width: 100%; overflow-wrap: anywhere; }
+.bulle .consigne { background: none; padding: 0; }
+.exemples { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 8px; }
+.exemples li { padding: 6px 14px; border-radius: 16px; background: var(--fond); font-weight: 700; }
+[data-dys="true"], [data-dys="true"] * {
+  font-family: Andika, "Atkinson Hyperlegible", Verdana, sans-serif;
+  letter-spacing: .12em;
+  word-spacing: .3em;
+  line-height: 1.8;
+}
+.avancement { display: grid; justify-items: center; gap: 4px; width: min(100%, 24rem); }
+.recipient { width: 100%; height: 20px; overflow: hidden; border: 2px solid var(--accent-fonce); border-radius: 12px; background: #fff; }
+.recipient-niveau { height: 100%; background: var(--accent); transition: width .4s; }
+.lecteurs-d-ecran {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.exercice-en-cours { display: grid; justify-items: center; gap: 8px; max-width: 100%; }
+.exercice-en-cours h3 { margin: 0; }
+.lecon-indisponible { display: grid; justify-items: center; gap: 12px; }

@@ -9,8 +9,11 @@ import { EnTete } from "./en-tete/EnTete.tsx";
 import { ControleParental, EspaceParent, useAccesALEspaceParent } from "./famille/index.ts";
 import { AideEcranDAccueil } from "./installation/index.ts";
 import { type Ecran, useNavigation } from "./navigation.ts";
+import { PageLecon } from "./seance/index.ts";
 import { ChoixDeLaVoix, useVoix } from "./voix/index.ts";
 import { PALETTES, Paysage, PersonnageGuide } from "./univers/index.ts";
+
+const ID_DU_PROFIL_PREPARE = "profil-prepare";
 
 type Habillage = CSSProperties & { readonly "--accent": string; readonly "--accent-fonce": string };
 
@@ -39,16 +42,22 @@ function ecranAffiche(demande: Ecran, espaceParent: EtatDeLEspaceParent["type"],
 }
 
 export function Application() {
-  const { ecran: ecranDemande, retourPossible, aller, remplacer, revenir } = useNavigation();
+  const { ecran: ecranDemande, leconId, retourPossible, aller, remplacer, revenir } = useNavigation();
   const acces = useAccesALEspaceParent();
   const connexion = useConnexion();
   const connecte = connexion.etat === "connecte";
   const ecran = ecranAffiche(ecranDemande, acces.etat.type, connecte);
   const surLaDemonstration = ecran === "demonstration";
+  const surUneLecon = ecran === "lecon";
   const { profil: profilEnCours, charge: profilCharge } = useProfilPrepare(
-    surLaDemonstration || ecran === "espace-parent",
+    surLaDemonstration || surUneLecon || ecran === "espace-parent",
   );
-  const profil = surLaDemonstration ? profilEnCours : undefined;
+  const profil = surLaDemonstration || surUneLecon ? profilEnCours : undefined;
+  const [retourDeLaSeance, setRetourDeLaSeance] = useState<(() => void) | undefined>();
+  const definirLeRetourDeLaSeance = useCallback(
+    (retour: (() => void) | undefined) => setRetourDeLaSeance(() => retour),
+    [],
+  );
   const univers = universDe(profil?.univers);
   const palette = PALETTES[univers.cle];
   const voix = useVoix(universDe(profilEnCours?.univers).personnageGuide);
@@ -67,7 +76,7 @@ export function Application() {
     if (ecranDemande !== "espace-parent") fermerEspaceParent();
   }, [ecranDemande, fermerEspaceParent]);
   useEffect(() => {
-    if (ecran !== ecranDemande) remplacer(ecran);
+    if (ecran !== ecranDemande && ecran !== "lecon") remplacer(ecran);
   }, [ecran, ecranDemande, remplacer]);
   const [deconnexionEchouee, setDeconnexionEchouee] = useState(false);
   const seDeconnecter = async () => {
@@ -90,10 +99,10 @@ export function Application() {
           surAccueil={ecran === "accueil"}
           enfant={profil}
           son={voix.son}
-          retourPossible={retourPossible}
+          retourPossible={retourPossible || retourDeLaSeance !== undefined}
           onBasculerLeSon={voix.basculerLeSon}
           onAccueil={() => aller("accueil")}
-          onRetour={revenir}
+          onRetour={retourDeLaSeance ?? revenir}
           onEspaceParent={() => {
             if (connecte) acces.demanderLEntree();
             aller("espace-parent");
@@ -116,6 +125,21 @@ export function Application() {
             <Suspense fallback={null}>
               <PageDemonstration univers={univers} voix={voix} />
             </Suspense>
+          )}
+          {surUneLecon && leconId !== undefined && profilCharge && profil && (
+            <PageLecon
+              leconId={leconId}
+              enfant={{ id: ID_DU_PROFIL_PREPARE, prenom: profil.prenom, modeDys: profil.modeDys ?? false }}
+              univers={univers}
+              voix={voix}
+              onRetourSurLaSeance={definirLeRetourDeLaSeance}
+              onQuitter={() => aller("accueil")}
+            />
+          )}
+          {surUneLecon && (profilCharge || !chargerProfilPrepare) && !profil && (
+            <p className="message-erreur" role="status">
+              Il faut d'abord un profil enfant pour ouvrir une leçon. Demande à un parent de le créer.
+            </p>
           )}
           {ecran === "espace-parent" && connexion.etat === "deconnecte" && (
             <EcranDeConnexion connexion={connexion} onConnecte={ouvrirLEspaceParentConnecte} />

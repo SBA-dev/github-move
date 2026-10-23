@@ -1,15 +1,28 @@
 import { useCallback, useEffect, useState } from "react";
 
-export type Ecran = "accueil" | "demonstration" | "espace-parent";
+export type Ecran = "accueil" | "demonstration" | "espace-parent" | "lecon";
+type Destination = Exclude<Ecran, "lecon">;
 
-const CHEMINS: Readonly<Record<Ecran, string>> = {
+const CHEMINS: Readonly<Record<Destination, string>> = {
   "accueil": "/",
   "demonstration": "/demonstration",
   "espace-parent": "/espace-parent",
 };
 
+const PREFIXE_DE_LA_LECON = "/lecon/";
+
+function leconIdDe(chemin: string): string | undefined {
+  if (!chemin.startsWith(PREFIXE_DE_LA_LECON)) return undefined;
+  try {
+    return decodeURIComponent(chemin.slice(PREFIXE_DE_LA_LECON.length)) || undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 function ecranDe(chemin: string): Ecran {
-  const trouve = (Object.keys(CHEMINS) as Ecran[]).find((ecran) => CHEMINS[ecran] === chemin);
+  if (leconIdDe(chemin) !== undefined) return "lecon";
+  const trouve = (Object.keys(CHEMINS) as Destination[]).find((ecran) => CHEMINS[ecran] === chemin);
   return trouve ?? "accueil";
 }
 
@@ -20,32 +33,32 @@ function profondeurCourante(): number {
 }
 
 export function useNavigation() {
-  const [ecran, setEcran] = useState<Ecran>(() => ecranDe(location.pathname));
+  const [chemin, setChemin] = useState(() => location.pathname);
   const [profondeur, setProfondeur] = useState(profondeurCourante);
 
   useEffect(() => {
     const surRetour = () => {
-      setEcran(ecranDe(location.pathname));
+      setChemin(location.pathname);
       setProfondeur(profondeurCourante());
     };
     addEventListener("popstate", surRetour);
     return () => removeEventListener("popstate", surRetour);
   }, []);
 
-  const aller = useCallback((destination: Ecran) => {
+  const aller = useCallback((destination: Destination) => {
     if (CHEMINS[destination] === location.pathname) return;
     const suivante = profondeurCourante() + 1;
     history.pushState({ profondeur: suivante }, "", CHEMINS[destination]);
-    setEcran(destination);
+    setChemin(CHEMINS[destination]);
     setProfondeur(suivante);
   }, []);
 
-  const remplacer = useCallback((destination: Ecran) => {
+  const remplacer = useCallback((destination: Destination) => {
     history.replaceState({ profondeur: profondeurCourante() }, "", CHEMINS[destination]);
-    setEcran(destination);
+    setChemin(CHEMINS[destination]);
   }, []);
 
   const revenir = useCallback(() => history.back(), []);
 
-  return { ecran, retourPossible: profondeur > 0, aller, remplacer, revenir };
+  return { ecran: ecranDe(chemin), leconId: leconIdDe(chemin), retourPossible: profondeur > 0, aller, remplacer, revenir };
 }

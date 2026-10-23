@@ -5,6 +5,8 @@ import type { Plugin } from "vite";
 
 const BIBLIOTHEQUE_SOURCE = "app/bibliotheque.json";
 const CHEMIN_BIBLIOTHEQUE = "/bibliotheque.json";
+const INDEX_DES_PROGRAMMES_SOURCE = "app/programmes-index.json";
+const CHEMIN_INDEX_DES_PROGRAMMES = "/programmes-index.json";
 const MANIFESTE = "public/manifest.webmanifest";
 const PAGE_D_ACCUEIL = "index.html";
 const DOSSIER_DES_ICONES = "public/icones";
@@ -28,23 +30,27 @@ function icones(racine: string): Buffer[] {
  */
 export function pwa(): Plugin {
   let racine = process.cwd();
+  const fichiersServis = (): ReadonlyArray<readonly [string, string]> => [
+    [CHEMIN_BIBLIOTHEQUE, BIBLIOTHEQUE_SOURCE],
+    [CHEMIN_INDEX_DES_PROGRAMMES, INDEX_DES_PROGRAMMES_SOURCE],
+  ];
   return {
     name: "savanturier-pwa",
     configResolved(config) {
       racine = config.root;
     },
     configureServer(serveur) {
-      serveur.middlewares.use(CHEMIN_BIBLIOTHEQUE, (_requete, reponse) => {
-        reponse.setHeader("content-type", "application/json");
-        reponse.end(readFileSync(join(racine, BIBLIOTHEQUE_SOURCE)));
-      });
+      for (const [chemin, source] of fichiersServis()) {
+        serveur.middlewares.use(chemin, (_requete, reponse) => {
+          reponse.setHeader("content-type", "application/json");
+          reponse.end(readFileSync(join(racine, source)));
+        });
+      }
     },
     generateBundle() {
-      this.emitFile({
-        type: "asset",
-        fileName: CHEMIN_BIBLIOTHEQUE.slice(1),
-        source: readFileSync(join(racine, BIBLIOTHEQUE_SOURCE)),
-      });
+      for (const [chemin, source] of fichiersServis()) {
+        this.emitFile({ type: "asset", fileName: chemin.slice(1), source: readFileSync(join(racine, source)) });
+      }
     },
     writeBundle(options, bundle) {
       const sw = join(options.dir ?? join(racine, "dist"), "sw.js");
