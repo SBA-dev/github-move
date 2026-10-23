@@ -8,17 +8,24 @@ import {
   questionDeLEcoute,
   type TypeDExerciceAChoix,
 } from "./exercices/phrases-des-exercices-a-choix.ts";
-import { ChoixInconnu, QuestionDejaReussie } from "./erreurs.ts";
+import { ChoixInconnu, JeNeSaisPasDejaDit, QuestionDejaReussie } from "./erreurs.ts";
 import type { Hasard } from "./hasard.ts";
 import type { Reponse, ResultatDeReponse } from "./reponse.ts";
 
 const ERREURS_AVANT_LA_REDUCTION_A_DEUX = 2;
+
+export type AideDonnee = {
+  readonly aide: string | undefined;
+  readonly bonneReponse: string;
+  readonly maniere: "briller";
+};
 
 type Complements = { readonly aide?: string; readonly motAEcouter?: string; readonly langue?: string };
 
 export class QuestionJouee {
   private nombreDErreurs = 0;
   private estReussie = false;
+  private jeNeSaisPasDejaDit = false;
 
   private constructor(
     readonly enonce: string,
@@ -70,8 +77,29 @@ export class QuestionJouee {
     });
   }
 
-  complementDeLEncouragement(): string {
-    return complementDeLEncouragement(this.type, { aide: this.aide });
+  aideApresErreur(): string {
+    return complementDeLEncouragement(this.type, { aide: this.aideDeLaQuestion() });
+  }
+
+  jeNeSaisPasPermis(): boolean {
+    return true;
+  }
+
+  direJeNeSaisPas(): AideDonnee {
+    if (this.estReussie) throw new QuestionDejaReussie();
+    if (this.jeNeSaisPasDejaDit) throw new JeNeSaisPasDejaDit();
+    this.jeNeSaisPasDejaDit = true;
+    if (this.nombreDErreurs === 0) this.nombreDErreurs = 1;
+    this.choixProposes = this.choixProposes.reduireALaBonneReponse();
+    return { aide: this.aideDeLaQuestion(), bonneReponse: this.bonneReponse, maniere: "briller" };
+  }
+
+  get bonneReponseMontree(): boolean {
+    return this.jeNeSaisPasDejaDit;
+  }
+
+  private aideDeLaQuestion(): string | undefined {
+    return this.aide || undefined;
   }
 
   get choix(): ChoixProposes {

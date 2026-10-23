@@ -115,7 +115,7 @@ export function useQuestionsAChoix(
   }, [laQuestionEnCours, sequence, faireSilence, presenter]);
 
   const encourager = useCallback(async (numero: number, reaction: Reaction, question: QuestionJouee) => {
-    const texte = `${reaction.parole.texte} ${question.complementDeLEncouragement()}`;
+    const texte = `${reaction.parole.texte} ${question.aideApresErreur()}`;
     const jusquAuBout = await dire({ texte, nature: "encouragement", humeur: reaction.humeur });
     if (jusquAuBout) await direLeMotAEcouter(numero, question);
   }, [dire, direLeMotAEcouter]);

@@ -8,6 +8,7 @@ export {
   BonneReponseAbsenteDesChoix,
   ChoixInconnu,
   ExerciceIntrouvable,
+  JeNeSaisPasDejaDit,
   LeconSansExercice,
   PasDeQuestionEnCours,
   PasDEtapeDeLeconEnCours,
@@ -17,7 +18,6 @@ export {
 export { texteALireDeLEtape } from "./etape-de-lecon-lue.ts";
 export { lectureDesChoix } from "./lecture-des-choix.ts";
 export {
-  complementDeLEncouragement,
   explicationDeLaReponse,
   INTRODUCTION_DE_LA_LECTURE,
   MESSAGE_DE_L_ECOUTE_SANS_SON,
@@ -26,6 +26,7 @@ export {
 export type { GenerateurId } from "./generateur-id.ts";
 export type { Hasard } from "./hasard.ts";
 export { QuestionJouee } from "./question-jouee.ts";
+export type { AideDonnee } from "./question-jouee.ts";
 export { Reponse } from "./reponse.ts";
 export type { ResultatDeReponse } from "./reponse.ts";
 export { PlanDeSeance } from "./plan-de-seance.ts";
