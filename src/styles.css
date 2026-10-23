@@ -98,3 +98,16 @@ button[data-son="muet"] { background: var(--accent-fonce); opacity: .8; }
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
 }
+.controle-parental form { display: grid; justify-items: center; gap: 12px; }
+.controle-parental input {
+  min-height: 44px;
+  width: min(100%, 12rem);
+  padding: 8px 14px;
+  border: 2px solid var(--accent-fonce);
+  border-radius: 22px;
+  font: inherit;
+  font-size: 1.25rem;
+  text-align: center;
+}
+.controle-parental .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.controle-parental [role="status"] { min-height: 1.5em; font-weight: 700; }

@@ -1,11 +1,13 @@
 import { type CSSProperties, Suspense, useEffect, useState } from "react";
 import { MotionConfig } from "motion/react";
+import type { EtatDeLEspaceParent } from "@domain/famille";
 import { universDe } from "@domain/motivation";
 import { chargerProfilPrepare, PAGE_DEMONSTRATION_DISPONIBLE, PageDemonstration } from "./demonstration/disponibilite.ts";
 import type { ProfilPrepare } from "./demonstration/profil-prepare.ts";
 import { EnTete } from "./en-tete/EnTete.tsx";
+import { ControleParental, EspaceParent, useAccesALEspaceParent } from "./famille/index.ts";
 import { AideEcranDAccueil } from "./installation/index.ts";
-import { useNavigation } from "./navigation.ts";
+import { type Ecran, useNavigation } from "./navigation.ts";
 import { useVoix } from "./voix/index.ts";
 import { PALETTES, Paysage, PersonnageGuide } from "./univers/index.ts";
 
@@ -29,13 +31,24 @@ function useProfilPrepare(actif: boolean) {
   return { profil: actif ? profil : undefined, charge: actif && charge };
 }
 
+function ecranAffiche(demande: Ecran, espaceParent: EtatDeLEspaceParent["type"]): Ecran {
+  if (demande === "demonstration" && !PAGE_DEMONSTRATION_DISPONIBLE) return "accueil";
+  if (demande === "espace-parent" && espaceParent === "ferme") return "accueil";
+  return demande;
+}
+
 export function Application() {
   const { ecran: ecranDemande, retourPossible, aller, revenir } = useNavigation();
-  const ecran = ecranDemande === "demonstration" && !PAGE_DEMONSTRATION_DISPONIBLE ? "accueil" : ecranDemande;
+  const acces = useAccesALEspaceParent();
+  const ecran = ecranAffiche(ecranDemande, acces.etat.type);
   const { profil, charge: profilCharge } = useProfilPrepare(ecran === "demonstration");
   const univers = universDe(profil?.univers);
   const palette = PALETTES[univers.cle];
   const voix = useVoix(univers.personnageGuide);
+  const { etat: etatEspaceParent, quitter: fermerEspaceParent } = acces;
+  useEffect(() => {
+    if (ecranDemande !== "espace-parent") fermerEspaceParent();
+  }, [ecranDemande, fermerEspaceParent]);
   const habillage: Habillage = { "--accent": palette.principale, "--accent-fonce": palette.foncee };
 
   return (
@@ -50,7 +63,10 @@ export function Application() {
           onBasculerLeSon={voix.basculerLeSon}
           onAccueil={() => aller("accueil")}
           onRetour={revenir}
-          onEspaceParent={() => aller("espace-parent")}
+          onEspaceParent={() => {
+            acces.demanderLEntree();
+            aller("espace-parent");
+          }}
         />
         <main className="ecran">
           <div role="status" className="voix-bloquee">
@@ -69,11 +85,21 @@ export function Application() {
               <PageDemonstration univers={univers} voix={voix} />
             </Suspense>
           )}
-          {ecran === "espace-parent" && (
-            <section>
-              <h2>Espace parent</h2>
-              <p>Bientôt disponible.</p>
-            </section>
+          {ecran === "espace-parent" && etatEspaceParent.type === "questionPosee" && (
+            <ControleParental
+              key={etatEspaceParent.enonce}
+              enonce={etatEspaceParent.enonce}
+              onReponse={acces.repondre}
+              onRenoncer={revenir}
+            />
+          )}
+          {ecran === "espace-parent" && etatEspaceParent.type === "ouvert" && (
+            <EspaceParent
+              onQuitter={() => {
+                fermerEspaceParent();
+                aller("accueil");
+              }}
+            />
           )}
         </main>
       </div>
