@@ -1,4 +1,4 @@
-import { type FormEvent, useId, useState } from "react";
+import { Fragment, type FormEvent, useId, useState } from "react";
 import { Niveau, NiveauInconnu } from "@domain/catalogue";
 import {
   ClavierDesDicteesInconnu,
@@ -110,14 +110,22 @@ export function FormulaireDeProfil({ titre, valeurInitiale, libelleDuBouton, onE
       <fieldset className="reglages" data-testid="reglages">
         <legend>Réglages</legend>
         {REGLAGES_A_COCHER.map(({ cle, libelle }) => (
-          <label key={cle} className="reglage-a-cocher">
-            <input
-              type="checkbox"
-              checked={saisie.reglages[cle]}
-              onChange={(evenement) => changerLesReglages({ [cle]: evenement.target.checked })}
-            />
-            {libelle}
-          </label>
+          <Fragment key={cle}>
+            <label className="reglage-a-cocher">
+              <input
+                type="checkbox"
+                checked={saisie.reglages[cle]}
+                aria-describedby={cle === "modeDys" ? `${identifiant}-mode-dys` : undefined}
+                onChange={(evenement) => changerLesReglages({ [cle]: evenement.target.checked })}
+              />
+              {libelle}
+            </label>
+            {cle === "modeDys" && (
+              <p id={`${identifiant}-mode-dys`} className="mention-du-reglage">
+                Ce réglage est gardé avec le profil de l'enfant et sert seulement à adapter l'affichage.
+              </p>
+            )}
+          </Fragment>
         ))}
         <label htmlFor={`${identifiant}-clavier`}>Clavier des dictées</label>
         <select

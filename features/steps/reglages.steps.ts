@@ -458,7 +458,7 @@ function enEm(valeur: string, taille: string): number {
 }
 
 // Les espaces entre lettres et entre mots (en em) sont fixés sur l'écran : les textes en héritent en longueur.
-async function verifierModeDys(page: Page, elements: Locator[], attendu: boolean) {
+export async function verifierModeDys(page: Page, elements: Locator[], attendu: boolean) {
   const principal = page.getByRole("main");
   if (attendu) await expect(principal).toHaveAttribute("data-mode-dys", "true");
   else await expect(principal).not.toHaveAttribute("data-mode-dys", "true");

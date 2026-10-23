@@ -1,6 +1,6 @@
 import { assertEquals } from "@std/assert";
 import {
-  complementDeLEncouragement,
+  aideParDefaut,
   explicationDeLaReponse,
   INTRODUCTION_DE_LA_LECTURE,
   MESSAGE_DE_L_ECOUTE_SANS_SON,
@@ -37,20 +37,13 @@ Deno.test("sans question, l'écoute pose la question par défaut", () => {
   assertEquals(questionDeLEcoute({}), "Écoute bien ! Que veut dire ce mot ?");
 });
 
-Deno.test("après une erreur sur des bulles, l'aide de la question complète l'encouragement", () => {
-  assertEquals(
-    complementDeLEncouragement("bulles", { aide: "Écoute le début du mot." }),
-    "Écoute le début du mot.",
-  );
+Deno.test("l'aide par défaut de bulles et de lecture invite à essayer une autre bulle", () => {
+  assertEquals(aideParDefaut("bulles"), "Essaie une autre bulle.");
+  assertEquals(aideParDefaut("lecture"), "Essaie une autre bulle.");
 });
 
-Deno.test("sans aide, bulles et lecture invitent à essayer une autre bulle", () => {
-  assertEquals(complementDeLEncouragement("bulles", {}), "Essaie une autre bulle.");
-  assertEquals(complementDeLEncouragement("lecture", {}), "Essaie une autre bulle.");
-});
-
-Deno.test("après une erreur à l'écoute, l'encouragement est suivi de « Écoute encore. »", () => {
-  assertEquals(complementDeLEncouragement("ecoute", { aide: "ignorée" }), "Écoute encore.");
+Deno.test("l'aide par défaut de l'écoute est « Écoute encore. »", () => {
+  assertEquals(aideParDefaut("ecoute"), "Écoute encore.");
 });
 
 Deno.test("la lecture est introduite par Noisette", () => {

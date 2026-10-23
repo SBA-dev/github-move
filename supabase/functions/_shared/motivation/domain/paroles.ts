@@ -64,6 +64,30 @@ export function saluer(prenom: string): string {
   return `Bonjour ${prenom} !`;
 }
 
+function phrases(...morceaux: (string | undefined)[]): string {
+  return morceaux.filter((morceau) => morceau).join(" ");
+}
+
+export function direJeNeSaisPasAvecLesChoix(aide: string | undefined): string {
+  return phrases(
+    "Pas de souci, on apprend ensemble !",
+    aide,
+    "La bonne réponse brille : touche-la.",
+  );
+}
+
+export function direJeNeSaisPasAuClavierDeCristaux(
+  reponse: string,
+  aide: string | undefined,
+): string {
+  return phrases(
+    "Pas de souci !",
+    aide,
+    `La réponse est ${reponse}.`,
+    "Tape-la sur les cristaux.",
+  );
+}
+
 export function inviterACreerLePremierProfil(): string {
   return "Bonjour ! Pour commencer, crée le profil de l'enfant qui va jouer. Tu pourras en ajouter d'autres ensuite.";
 }

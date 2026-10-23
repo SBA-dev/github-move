@@ -32,10 +32,6 @@ export function questionDeLEcoute(item: { question?: string }): string {
   return item.question ?? "Écoute bien ! Que veut dire ce mot ?";
 }
 
-export function complementDeLEncouragement(
-  type: TypeDExerciceAChoix,
-  item: { aide?: string },
-): string {
-  if (type === "ecoute") return "Écoute encore.";
-  return item.aide ?? "Essaie une autre bulle.";
+export function aideParDefaut(type: TypeDExerciceAChoix): string {
+  return type === "ecoute" ? "Écoute encore." : "Essaie une autre bulle.";
 }

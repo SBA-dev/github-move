@@ -1,6 +1,7 @@
 # Critères d'acceptance : issue #23, Aide et « Je ne sais pas »
 
-Scénarios : `features/23-aide-et-je-ne-sais-pas.feature` (tags `@issue-23 @wip`).
+Scénarios : `features/23-aide-et-je-ne-sais-pas.feature` (tag `@issue-23`).
+Convention : un scénario ou un bloc d'`Exemples` tagué `@depend-de-<n>` (ici `@depend-de-18`, `@depend-de-19`, `@depend-de-20`, `@depend-de-21`, `@depend-de-24`) n'est pas livré par #23 et attend la story #<n> (voir `docs/stories/16/acceptance.md`) ; on l'exclut avec `--grep-invert @depend-de`, et on retire le tag quand #<n> est livrée.
 Modèle du domaine : `docs/stories/23/domain-model.md` (contexte **Apprentissage**, avec **Catalogue pédagogique** et **Motivation**).
 Numérotation des questions : unique pour le lot 3, voir `docs/stories/16/acceptance.md` (#23 → Q63 à Q68).
 

@@ -45,19 +45,19 @@ Deno.test("une question qui n'est pas d'écoute n'a aucune explication", () => {
   assertEquals(premiereQuestion(leconDeLecture()).explication(), undefined);
 });
 
-Deno.test("le complément d'encouragement d'une question avec aide est son aide", () => {
+Deno.test("l'aide après une erreur d'une question avec aide est son aide", () => {
   assertEquals(
-    premiereQuestion(leconDeCalculAvecAide()).complementDeLEncouragement(),
+    premiereQuestion(leconDeCalculAvecAide()).aideApresErreur(),
     "Compte sur tes doigts à partir de 4.",
   );
 });
 
-Deno.test("le complément d'encouragement d'une question sans aide invite à essayer une autre bulle", () => {
-  assertEquals(premiereQuestion(leconDeCalcul()).complementDeLEncouragement(), "Essaie une autre bulle.");
+Deno.test("l'aide après une erreur d'une question sans aide invite à essayer une autre bulle", () => {
+  assertEquals(premiereQuestion(leconDeCalcul()).aideApresErreur(), "Essaie une autre bulle.");
 });
 
-Deno.test("le complément d'encouragement d'une question d'écoute invite à écouter encore", () => {
-  assertEquals(premiereQuestion(leconDEcoute()).complementDeLEncouragement(), "Écoute encore.");
+Deno.test("l'aide après une erreur d'une question d'écoute invite à écouter encore", () => {
+  assertEquals(premiereQuestion(leconDEcoute()).aideApresErreur(), "Écoute encore.");
 });
 
 Deno.test("répondre à une question déjà réussie est refusé", () => {

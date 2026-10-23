@@ -1,5 +1,5 @@
 # language: fr
-@issue-23 @wip
+@issue-23
 Fonctionnalité: Aide et « Je ne sais pas »
   En tant qu'enfant
   Je veux être aidé quand je me trompe, et pouvoir dire « Je ne sais pas »
@@ -29,6 +29,7 @@ Fonctionnalité: Aide et « Je ne sais pas »
       Quand Léa répond « 8 » à « Combien font 3 + 4 ? »
       Alors Noisette dit un encouragement, suivi de « Essaie une autre bulle. »
 
+    @depend-de-20
     Scénario: La nouvelle chance n'a pas de limite
       Étant donné qu'une leçon de test de niveau CE1 a un exercice calcul « 12 − 5 », de résultat 7
       Et que Tom a répondu faux 5 fois de suite à « 12 − 5 »
@@ -56,6 +57,7 @@ Fonctionnalité: Aide et « Je ne sais pas »
       Alors la question « Quel mot est bien écrit ? » est réussie
       Et la question suivante s'affiche
 
+    @depend-de-20
     Scénario: Au clavier de cristaux, « Je ne sais pas » dit la réponse à taper
       Étant donné qu'une leçon de test de niveau CE1 a un exercice calcul « 12 − 5 », de résultat 7, d'aide « Pars de 12 et recule de 5. »
       Et que Tom en est au calcul « 12 − 5 »
@@ -91,13 +93,30 @@ Fonctionnalité: Aide et « Je ne sais pas »
         | bulles      | Léa    | avec les choix                        |
         | lecture     | Léa    | aux questions, avec les choix         |
         | ecoute      | Léa    | avec les choix                        |
+
+      @depend-de-18
+      Exemples:
+        | type        | enfant | cas                                   |
         | trous       | Léa    | avec les choix                        |
+
+      @depend-de-19
+      Exemples:
+        | type        | enfant | cas                                   |
         | conjugaison | Léa    | avec les choix                        |
+
+      @depend-de-20
+      Exemples:
+        | type        | enfant | cas                                   |
         | calcul      | Léa    | au CP, avec les choix                 |
         | calcul      | Tom    | au CE1, au clavier de cristaux        |
+
+      @depend-de-21
+      Exemples:
+        | type        | enfant | cas                                   |
         | boite       | Léa    | au CP, avec les choix                 |
         | barres      | Tom    | au CE1, au clavier de cristaux        |
 
+    @depend-de-20
     Scénario: La fluence ne propose pas « Je ne sais pas »
       Étant donné que Léa joue seulement l'exercice « Calcul rapide : les doubles » de la leçon « Les doubles »
       Quand Noisette dit « C'est parti ! »
@@ -109,15 +128,25 @@ Fonctionnalité: Aide et « Je ne sais pas »
       Alors <ce qui est montré>
       Et Léa doit encore donner elle-même la bonne réponse
 
+      @depend-de-18
       Exemples:
         | type                            | ce qui est montré                                                       |
         | classer                         | la bonne maison de l'étiquette choisie brille                           |
         | ordre                           | l'étiquette qui vient ensuite brille                                    |
+
+      @depend-de-20
+      Exemples:
+        | type                            | ce qui est montré                                                       |
         | addition à l'étape poser        | la bonne colonne du chiffre choisi brille                               |
+
+      @depend-de-19
+      Exemples:
+        | type                            | ce qui est montré                                                       |
         | dictee                          | la lettre juste suivante s'écrit dans sa case, sans montrer tout le mot |
 
   Règle: Une réponse fausse coûte une erreur ; « Je ne sais pas » en coûte une, sauf si la question a déjà coûté une erreur
 
+    @depend-de-24
     Scénario: « Je ne sais pas » compte une erreur
       Étant donné que Léa joue une leçon de test d'une seule question à quatre choix
       Et que Léa a dit « Je ne sais pas » à cette question
@@ -125,6 +154,7 @@ Fonctionnalité: Aide et « Je ne sais pas »
       Alors la séance est terminée
       Et Léa gagne 2 étoiles
 
+    @depend-de-24
     Scénario: « Je ne sais pas » après deux erreurs n'ajoute pas d'erreur à la question
       Étant donné que Léa joue une leçon de test de deux questions à quatre choix
       Et qu'à la première question, Léa a fait deux erreurs, puis a dit « Je ne sais pas », puis a donné la bonne réponse
@@ -132,6 +162,7 @@ Fonctionnalité: Aide et « Je ne sais pas »
       Quand Léa donne la bonne réponse à la deuxième question
       Alors Léa gagne 2 étoiles
 
+    @depend-de-20 @depend-de-24
     Scénario: Après « Je ne sais pas » au clavier de cristaux, une faute de frappe ne coûte pas d'erreur
       Étant donné que Tom joue une leçon de test de niveau CE1 de deux calculs
       Et qu'au premier calcul, Tom a dit « Je ne sais pas », puis a tapé une mauvaise réponse, puis la bonne

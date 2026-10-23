@@ -18,6 +18,7 @@ type Props = {
   readonly sonCoupe: boolean;
   readonly onChoisir: (texte: string) => void;
   readonly onRelireLaQuestion: () => void;
+  readonly onJeNeSaisPas: () => void;
   readonly onEcouterLeMot: () => void;
   readonly onJAiEcoute: () => void;
   readonly onActiverLeSon: () => void;
@@ -59,13 +60,23 @@ export function ExerciceAChoix(props: Props) {
           )}
         </div>
       )}
+      <p className="visuellement-cache" role="status" data-testid="bonne-reponse-annoncee">
+        {question?.bonneReponseMontree && !reussie ? `La bonne réponse est « ${question.choix.possibles()[0]} ».` : ""}
+      </p>
       {question && choixVisibles && (
-        <ChoixDeLaQuestion
-          question={question}
-          reussie={reussie}
-          bulleEclatee={props.bulleEclatee}
-          onChoisir={props.onChoisir}
-        />
+        <>
+          <ChoixDeLaQuestion
+            question={question}
+            reussie={reussie}
+            bulleEclatee={props.bulleEclatee}
+            onChoisir={props.onChoisir}
+          />
+          {question.jeNeSaisPasPermis() && !question.bonneReponseMontree && !reussie && (
+            <button type="button" className="je-ne-sais-pas" data-testid="je-ne-sais-pas" onClick={props.onJeNeSaisPas}>
+              Je ne sais pas
+            </button>
+          )}
+        </>
       )}
     </>
   );

@@ -5,7 +5,7 @@ import { Given, Then, When } from "./fixtures.ts";
 // Elles ne simulent aucun comportement : elles échouent clairement
 // si le scénario est lancé. Les scénarios concernés sont exclus de l'exécution (voir le rapport de l'E2E).
 
-const DEPEND_DE_18 = "Étape non implémentée : dépend de la story #18 (classer : poser une étiquette).";
+const DEPEND_DE_18 = "Étape non implémentée : dépend de la story #18 (classer : poser une étiquette) ou #20 (fluence).";
 const DEPEND_DE_24 = "Étape non implémentée : dépend de la story #24 (étoiles et fin de séance).";
 
 function dependDe(message: string) {

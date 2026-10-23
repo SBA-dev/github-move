@@ -8,7 +8,7 @@ import type { GenerateurId } from "./generateur-id.ts";
 import type { Hasard } from "./hasard.ts";
 import { nombreDeQuestions } from "./nombre-de-questions.ts";
 import { PlanDeSeance } from "./plan-de-seance.ts";
-import { questionsJoueesDe } from "./question-jouee.ts";
+import { type AideDonnee, questionsJoueesDe } from "./question-jouee.ts";
 import type { Reponse, ResultatDeReponse } from "./reponse.ts";
 import { SeanceId } from "./seance-id.ts";
 
@@ -76,6 +76,12 @@ export class Seance {
     const resultat = exercice.repondre(reponse);
     this.avancerSiExerciceReussi(exercice);
     return resultat;
+  }
+
+  direJeNeSaisPas(): AideDonnee {
+    const question = this.exerciceDeLaQuestionEnCours().questionEnCours();
+    if (!question) throw new PasDeQuestionEnCours();
+    return question.direJeNeSaisPas();
   }
 
   clesDesQuestionsRatees(): CleDeQuestion[] {

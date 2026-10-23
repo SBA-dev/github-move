@@ -36,7 +36,7 @@ const FILE_DU_TIRAGE = "__tirageDesChoix";
 
 // --- Leçons : questions jouables
 
-type Question = { enonce: string; reponse: string; choix: string[]; position: number; dire?: string };
+export type Question = { enonce: string; reponse: string; choix: string[]; position: number; dire?: string };
 type ExerciceBrut = Record<string, unknown>;
 
 function questionsDe(exercice: ExerciceBrut, position: number): Question[] {
@@ -89,7 +89,7 @@ function titreDeLExercice(lecon: LeconBrute, position: number): string {
   return titre;
 }
 
-function leconAChoix(identifiant: string, question: string, choix: string[], reponse: string): LeconBrute {
+export function leconAChoix(identifiant: string, question: string, choix: string[], reponse: string): LeconBrute {
   return leconDeTest(identifiant, "Questions", [{ type: "bulles", titre: "Questions à choix", questions: [{ question, choix, reponse }] }]);
 }
 
@@ -107,7 +107,7 @@ type EtatDesChoix = {
 const etats = new WeakMap<Page, EtatDesChoix>();
 const tiragesInstalles = new WeakSet<Page>();
 
-function etatDesChoix(page: Page): EtatDesChoix {
+export function etatDesChoix(page: Page): EtatDesChoix {
   let courant = etats.get(page);
   if (!courant) {
     courant = { demarrage: undefined, exerciceUnique: undefined, ordre: undefined, reussiesAvant: 0, paroles: 0 };
@@ -116,7 +116,7 @@ function etatDesChoix(page: Page): EtatDesChoix {
   return courant;
 }
 
-function questionsDeLaSeance(page: Page): Question[] {
+export function questionsDeLaSeance(page: Page): Question[] {
   const lecon = etat(page).courante;
   if (!lecon) throw new Error("Aucune leçon ouverte");
   return questionsDeLaLecon(lecon, etatDesChoix(page).exerciceUnique);
@@ -168,7 +168,7 @@ async function lancer(page: Page, lecon: LeconBrute, titreDeLExercice?: string) 
   else await commencerSeulementLExercice(page, titreDeLExercice);
 }
 
-async function demarrer(page: Page, question?: string) {
+export async function demarrer(page: Page, question?: string) {
   const choix = etatDesChoix(page);
   const demarrage = choix.demarrage;
   if (demarrage) {
@@ -181,7 +181,7 @@ async function demarrer(page: Page, question?: string) {
 }
 
 /** Sans exercice nommé, on joue seulement l'exercice qui pose la question (ou la séance complète sans question). */
-function demarrageDeLExercice(page: Page, lecon: LeconBrute, titre: string | undefined) {
+export function demarrageDeLExercice(page: Page, lecon: LeconBrute, titre: string | undefined) {
   return async (question: string | undefined) => {
     if (titre !== undefined) return await lancer(page, lecon, titre);
     if (question === undefined) return await lancer(page, lecon);
@@ -266,15 +266,15 @@ function choixDeLaQuestion(page: Page) {
   return page.getByTestId("choix-de-la-question");
 }
 
-function bulleDeChoix(page: Page, texte: string) {
+export function bulleDeChoix(page: Page, texte: string) {
   return choixDeLaQuestion(page).getByRole("button", { name: texte, exact: true });
 }
 
-async function textesDesChoix(page: Page): Promise<string[]> {
+export async function textesDesChoix(page: Page): Promise<string[]> {
   return (await page.getByTestId("choix").allTextContents()).map(normaliser);
 }
 
-async function textesDesChoixPossibles(page: Page): Promise<string[]> {
+export async function textesDesChoixPossibles(page: Page): Promise<string[]> {
   const bulles = await page.getByTestId("choix").all();
   const possibles: string[] = [];
   for (const bulleDeChoixPossible of bulles) {
@@ -285,11 +285,11 @@ async function textesDesChoixPossibles(page: Page): Promise<string[]> {
   return possibles;
 }
 
-async function questionsReussies(page: Page): Promise<number> {
+export async function questionsReussies(page: Page): Promise<number> {
   return Number(await recipient(page).getAttribute("data-questions-reussies"));
 }
 
-async function repondre(page: Page, reponse: string, question?: string) {
+export async function repondre(page: Page, reponse: string, question?: string) {
   await demarrer(page, question);
   if (question === undefined) await avancerJusquAuxChoix(page);
   else await allerALaQuestion(page, question, true);
@@ -314,7 +314,7 @@ async function allerAuRang(page: Page, rang: number, avecChoix: boolean) {
 }
 
 /** Joue, comme un enfant, les questions qui précèdent, jusqu'à celle-ci. */
-async function allerALaQuestion(page: Page, enonce: string, avecChoix: boolean) {
+export async function allerALaQuestion(page: Page, enonce: string, avecChoix: boolean) {
   await demarrer(page, enonce);
   const questions = questionsDeLaSeance(page);
   const deja = await questionsReussies(page);
@@ -409,7 +409,7 @@ Given(/^Noisette a fini de lire la question « (.+) »$/, async ({ page }, quest
   await avancerJusquAuxChoix(page);
 });
 
-Given(/^Léa en est à la question « (.+) »$/, async ({ page }, question: string) => {
+Given(/^Léa en est à la question « (?!.*» dont la réponse est)(.+) »$/, async ({ page }, question: string) => {
   await allerALaQuestion(page, question, true);
 });
 

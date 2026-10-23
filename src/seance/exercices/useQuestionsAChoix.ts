@@ -8,7 +8,7 @@ import {
   type Seance,
 } from "@domain/apprentissage";
 import type { Lecon } from "@domain/catalogue";
-import { type PersonnageGuide, type Reaction, reagirALaReponse } from "@domain/motivation";
+import { type PersonnageGuide, reagirAJeNeSaisPas, type Reaction, reagirALaReponse } from "@domain/motivation";
 import { hasardDuNavigateur } from "../../hasard-navigateur.ts";
 import type { Voix } from "../../voix/index.ts";
 import type { ParoleADire } from "../usePersonnageQuiParle.ts";
@@ -115,7 +115,7 @@ export function useQuestionsAChoix(
   }, [laQuestionEnCours, sequence, faireSilence, presenter]);
 
   const encourager = useCallback(async (numero: number, reaction: Reaction, question: QuestionJouee) => {
-    const texte = `${reaction.parole.texte} ${question.complementDeLEncouragement()}`;
+    const texte = `${reaction.parole.texte} ${question.aideApresErreur()}`;
     const jusquAuBout = await dire({ texte, nature: "encouragement", humeur: reaction.humeur });
     if (jusquAuBout) await direLeMotAEcouter(numero, question);
   }, [dire, direLeMotAEcouter]);
@@ -157,7 +157,20 @@ export function useQuestionsAChoix(
     await suite(++sequence.current, seance.retirerFaits(), nouvelExercice);
   }, [laQuestionEnCours, seance, sequence, redessiner, personnageGuide, encourager, figer, feliciter, vivant]);
 
+  const jeNeSaisPas = useCallback(async () => {
+    const courante = laQuestionEnCours();
+    if (!courante || estFigee.current || !courante.question.jeNeSaisPasPermis() || courante.question.bonneReponseMontree) return;
+    const { aide } = seance.direJeNeSaisPas();
+    const numero = ++sequence.current;
+    faireSilence();
+    redessiner();
+    const reaction = reagirAJeNeSaisPas(aide);
+    const jusquAuBout = await dire({ texte: reaction.parole, nature: "aide", humeur: reaction.humeur });
+    if (jusquAuBout) await direLeMotAEcouter(numero, courante.question);
+  }, [laQuestionEnCours, seance, sequence, faireSilence, redessiner, dire, direLeMotAEcouter]);
+
   return {
+    jeNeSaisPas,
     figee,
     choixVisiblesPour,
     positionDuTexteEcoute,

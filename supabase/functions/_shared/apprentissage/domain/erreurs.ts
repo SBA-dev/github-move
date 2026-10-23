@@ -53,3 +53,10 @@ export class ChoixInconnu extends Error {
     this.name = "ChoixInconnu";
   }
 }
+
+export class JeNeSaisPasDejaDit extends Error {
+  constructor() {
+    super("« Je ne sais pas » a déjà été dit pour cette question.");
+    this.name = "JeNeSaisPasDejaDit";
+  }
+}

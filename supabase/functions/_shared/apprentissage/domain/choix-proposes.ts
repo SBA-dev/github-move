@@ -30,6 +30,11 @@ export class ChoixProposes {
     return new ChoixProposes(this.affiches, this.bonneReponse, [...this.ecartesDuJeu, texte]);
   }
 
+  reduireALaBonneReponse(): ChoixProposes {
+    const ecartes = this.affiches.filter((texte) => texte !== this.bonneReponse);
+    return new ChoixProposes(this.affiches, this.bonneReponse, ecartes);
+  }
+
   reduireADeux(): ChoixProposes {
     const premierAutre = this.possibles().find((texte) => texte !== this.bonneReponse);
     const gardes = [this.bonneReponse, premierAutre];

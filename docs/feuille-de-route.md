@@ -36,7 +36,7 @@ L'application fonctionne et est publiée comme artifact claude.ai. Elle comprend
 
 ## Prochaines étapes
 
-> **En cours** : #16, #17 et #11 livrées (PR #53, #54, #55). #12 (réglages : mode dys, tout lire à voix haute…) livrée sur `claude/nice-mendel-cp9syg`, en PR. Scénarios en attente : `@depend-de-18`, `@depend-de-44` ; `@envoi-email` exclus des exécutions courantes. Suite : #23 et #24 (première leçon jouable de bout en bout), puis #13 et #14.
+> **En cours** : #16, #17, #11, #12 livrées (PR #53 à #56). #23 (aide et « Je ne sais pas ») livrée sur `claude/nice-mendel-cp9syg`, en PR. #14 (export et suppression) reportée par le PO. Suite : #24 (étoiles et fin de séance, retrait de `/demonstration`), puis les autres types d'exercices (#18 à #22).
 
 > **Chantier en cours : la réécriture complète en React + Supabase.** Plan, lots et décisions de démarrage dans `docs/reecriture.md`.
 

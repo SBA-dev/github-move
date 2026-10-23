@@ -1,5 +1,7 @@
 import { assertEquals } from "@std/assert";
 import {
+  direJeNeSaisPasAuClavierDeCristaux,
+  direJeNeSaisPasAvecLesChoix,
   encourager,
   feliciter,
   inviterACreerLePremierProfil,
@@ -141,5 +143,33 @@ Deno.test("le personnage guide invite à créer le profil de l'enfant qui va jou
   assertEquals(
     inviterACreerLePremierProfil(),
     "Bonjour ! Pour commencer, crée le profil de l'enfant qui va jouer. Tu pourras en ajouter d'autres ensuite.",
+  );
+});
+
+Deno.test("avec les choix, « Je ne sais pas » dit l'aide puis que la bonne réponse brille", () => {
+  assertEquals(
+    direJeNeSaisPasAvecLesChoix("Pense à la lettre muette, comme dans chaton."),
+    "Pas de souci, on apprend ensemble ! Pense à la lettre muette, comme dans chaton. La bonne réponse brille : touche-la.",
+  );
+});
+
+Deno.test("avec les choix, sans aide, « Je ne sais pas » dit seulement que la bonne réponse brille", () => {
+  assertEquals(
+    direJeNeSaisPasAvecLesChoix(undefined),
+    "Pas de souci, on apprend ensemble ! La bonne réponse brille : touche-la.",
+  );
+});
+
+Deno.test("au clavier de cristaux, « Je ne sais pas » dit l'aide puis la réponse à taper", () => {
+  assertEquals(
+    direJeNeSaisPasAuClavierDeCristaux("7", "Pars de 12 et recule de 5."),
+    "Pas de souci ! Pars de 12 et recule de 5. La réponse est 7. Tape-la sur les cristaux.",
+  );
+});
+
+Deno.test("au clavier de cristaux, sans aide, « Je ne sais pas » dit seulement la réponse à taper", () => {
+  assertEquals(
+    direJeNeSaisPasAuClavierDeCristaux("7", undefined),
+    "Pas de souci ! La réponse est 7. Tape-la sur les cristaux.",
   );
 });

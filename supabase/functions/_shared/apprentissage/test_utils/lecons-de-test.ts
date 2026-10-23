@@ -176,3 +176,17 @@ export function leconDeCalculAvecAide(): Lecon {
     }],
   });
 }
+
+export function leconDeCalculAvecAideVide(): Lecon {
+  return leconAvecUnExercice("ma-cp-calcul-aide-vide", {
+    type: "bulles",
+    questions: [{ question: "Combien font 3 + 4 ?", choix: ["6", "7", "8", "9"], reponse: "7", aide: "" }],
+  });
+}
+
+export function leconDEcouteAvecAide(): Lecon {
+  return leconAvecUnExercice("an-cp-animaux-avec-aide", {
+    type: "ecoute",
+    items: [{ dire: "cat", choix: ["chat", "chien"], reponse: "chat", aide: "Pense à l'animal qui miaule." }],
+  });
+}

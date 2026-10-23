@@ -13,6 +13,7 @@ type Props = {
 export function ChoixDeLaQuestion({ question, reussie, bulleEclatee, onChoisir }: Props) {
   const ecartes = question.choix.ecartes();
   const premierPossible = question.choix.possibles()[0];
+  const bonneReponseMontree = question.bonneReponseMontree;
   const bulleAFocaliser = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     if (!reussie) bulleAFocaliser.current?.focus();
@@ -30,6 +31,7 @@ export function ChoixDeLaQuestion({ question, reussie, bulleEclatee, onChoisir }
             className="bulle-de-choix"
             data-testid="choix"
             data-ecarte={ecarte ? "true" : undefined}
+            data-brille={bonneReponseMontree && texte === premierPossible && !reussie ? "true" : undefined}
             data-eclatee={texte === bulleEclatee ? "true" : undefined}
             aria-disabled={ecarte || reussie ? true : undefined}
             onClick={() => onChoisir(texte)}
