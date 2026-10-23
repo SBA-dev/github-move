@@ -16,7 +16,14 @@ function parentsDe(rattachements: unknown): unknown[] {
 }
 
 function enLigne(lue: LigneLue): LigneDeProfil {
-  const ligne = { id: lue.id, prenom: lue.prenom, niveau: lue.niveau, univers: lue.univers, creeLe: lue.cree_le, parents: parentsDe(lue.rattachements) };
+  const ligne = {
+    id: lue.id,
+    prenom: lue.prenom,
+    niveau: lue.niveau,
+    univers: lue.univers,
+    creeLe: lue.cree_le,
+    parents: parentsDe(lue.rattachements),
+  };
   if (!estUneLigneDeProfil(ligne)) throw new Error("Profil enfant illisible");
   return ligne;
 }
