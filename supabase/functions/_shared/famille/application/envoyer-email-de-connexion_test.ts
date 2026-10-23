@@ -58,7 +58,7 @@ Deno.test("un lien de connexion mal formé n'envoie aucun e-mail de connexion", 
   assertEquals(expediteur.emailsEnvoyes.length, 0);
 });
 
-Deno.test("un échec de l'expéditeur remonte en envoi de l'e-mail impossible", async () => {
+Deno.test("une panne quelconque de l'expéditeur est traduite en envoi de l'e-mail impossible", async () => {
   const expediteur = ExpediteurDEmailsEnMemoire.enPanne();
 
   await assertRejects(

@@ -1,6 +1,5 @@
 import type { ExpediteurDEmails } from "../application/ports/expediteur-d-emails.ts";
 import type { EmailDeConnexion } from "../domain/email-de-connexion.ts";
-import { EnvoiDeLEmailImpossible } from "../domain/erreurs.ts";
 
 export class ExpediteurDEmailsEnMemoire implements ExpediteurDEmails {
   readonly emailsEnvoyes: EmailDeConnexion[] = [];
@@ -16,7 +15,7 @@ export class ExpediteurDEmailsEnMemoire implements ExpediteurDEmails {
   }
 
   envoyer(email: EmailDeConnexion): Promise<void> {
-    if (this.enPanne) return Promise.reject(new EnvoiDeLEmailImpossible());
+    if (this.enPanne) return Promise.reject(new Error("panne du service d'e-mails"));
     this.emailsEnvoyes.push(email);
     return Promise.resolve();
   }
