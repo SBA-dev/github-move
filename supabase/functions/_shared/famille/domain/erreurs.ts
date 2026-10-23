@@ -18,3 +18,17 @@ export class CodeDeConnexionInvalide extends Error {
     this.name = "CodeDeConnexionInvalide";
   }
 }
+
+export class LienDeConnexionMalForme extends Error {
+  constructor() {
+    super("Le lien de connexion doit être une adresse web absolue.");
+    this.name = "LienDeConnexionMalForme";
+  }
+}
+
+export class EnvoiDeLEmailImpossible extends Error {
+  constructor() {
+    super("L'e-mail de connexion n'a pas pu être envoyé.");
+    this.name = "EnvoiDeLEmailImpossible";
+  }
+}

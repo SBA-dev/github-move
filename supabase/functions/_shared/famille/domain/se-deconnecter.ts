@@ -8,7 +8,10 @@ export class SeDeconnecter {
   ) {}
 
   async executer(): Promise<void> {
-    await this.service.deconnecter();
-    await this.donnees.effacer();
+    try {
+      await this.service.deconnecter();
+    } finally {
+      await this.donnees.effacer();
+    }
   }
 }
