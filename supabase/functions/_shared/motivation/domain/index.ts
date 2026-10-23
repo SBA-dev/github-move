@@ -3,6 +3,8 @@ export { type CleUnivers, UNIVERS, type Univers, universDe } from "./univers.ts"
 export { type Humeur, HUMEUR_PAR_DEFAUT, humeurApresReponse } from "./humeur.ts";
 export type { Hasard } from "./hasard.ts";
 export {
+  direJeNeSaisPasAuClavierDeCristaux,
+  direJeNeSaisPasAvecLesChoix,
   type Encouragement,
   encourager,
   type Felicitation,
