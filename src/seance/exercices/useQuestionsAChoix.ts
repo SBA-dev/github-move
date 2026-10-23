@@ -1,7 +1,5 @@
 import { type MutableRefObject, useCallback, useRef, useState } from "react";
 import {
-  complementDeLEncouragement,
-  explicationDeLaReponse,
   type FaitDeSeance,
   INTRODUCTION_DE_LA_LECTURE,
   type QuestionJouee,
@@ -13,7 +11,6 @@ import { type PersonnageGuide, type Reaction, reagirALaReponse } from "@domain/m
 import { hasardDuNavigateur } from "../../hasard-navigateur.ts";
 import type { Voix } from "../../voix/index.ts";
 import type { ParoleADire } from "../usePersonnageQuiParle.ts";
-import { type QuestionDuCatalogue, questionDuCatalogue } from "./question-du-catalogue.ts";
 
 type Dependances = {
   readonly seance: Seance;
@@ -54,13 +51,12 @@ export function useQuestionsAChoix(
   const laQuestionEnCours = useCallback(() => {
     const exercice = seance.exerciceEnCours();
     const question = exercice?.questionEnCours();
-    const catalogue = exercice && questionDuCatalogue(lecon.exercices[exercice.position], exercice.rangDeLaQuestionEnCours);
-    return exercice && question && catalogue ? { exercice, question, catalogue } : undefined;
-  }, [seance, lecon]);
+    return exercice && question ? { exercice, question } : undefined;
+  }, [seance]);
 
-  const direLeMotAEcouter = useCallback(async (numero: number, { dire: mot, langue }: QuestionDuCatalogue) => {
-    if (mot === undefined) return true;
-    await lire(mot, { langue });
+  const direLeMotAEcouter = useCallback(async (numero: number, question: QuestionJouee) => {
+    if (question.motAEcouter === undefined) return true;
+    await lire(question.motAEcouter, { langue: question.langue });
     return numero === sequence.current;
   }, [lire, sequence]);
 
@@ -68,7 +64,7 @@ export function useQuestionsAChoix(
     const courante = laQuestionEnCours();
     if (!courante) return;
     if (!(await dire({ texte: courante.question.enonce, nature: "question" }))) return;
-    if (!(await direLeMotAEcouter(numero, courante.catalogue))) return;
+    if (!(await direLeMotAEcouter(numero, courante.question))) return;
     setChoixVisiblesPour(courante.question);
   }, [laQuestionEnCours, dire, direLeMotAEcouter]);
 
@@ -96,48 +92,65 @@ export function useQuestionsAChoix(
     await presenter(numero);
   }, [sequence, faireSilence, seance, presenter]);
 
-  const relireLaQuestion = useCallback(() => {
+  /** Une relecture qui va jusqu'au bout fait apparaître les choix : l'enfant n'est jamais laissé devant une question sans choix. */
+  const relireLaQuestion = useCallback(async () => {
     const courante = laQuestionEnCours();
-    if (!courante) return;
+    if (!courante || estFigee.current) return;
     sequence.current++;
-    void dire({ texte: courante.question.enonce, nature: "question" });
+    if (await dire({ texte: courante.question.enonce, nature: "question" })) setChoixVisiblesPour(courante.question);
   }, [laQuestionEnCours, sequence, dire]);
 
   const ecouterLeMot = useCallback(async () => {
     const courante = laQuestionEnCours();
-    if (!courante) return;
+    if (!courante || estFigee.current) return;
     const numero = ++sequence.current;
     faireSilence();
-    await direLeMotAEcouter(numero, courante.catalogue);
+    if (await direLeMotAEcouter(numero, courante.question)) setChoixVisiblesPour(courante.question);
   }, [laQuestionEnCours, sequence, faireSilence, direLeMotAEcouter]);
 
-  const encourager = useCallback(async (numero: number, reaction: Reaction, catalogue: QuestionDuCatalogue) => {
-    const texte = `${reaction.parole.texte} ${complementDeLEncouragement(catalogue.type, catalogue)}`;
+  /** « Réécouter » pendant la lecture d'une question la reprend jusqu'aux choix. Rend `false` si ce n'était pas le cas. */
+  const reprendreLaQuestion = useCallback(() => {
+    const courante = laQuestionEnCours();
+    if (!courante || estFigee.current) return false;
+    void presenter(++sequence.current);
+    return true;
+  }, [laQuestionEnCours, presenter, sequence]);
+
+  const encourager = useCallback(async (numero: number, reaction: Reaction, question: QuestionJouee) => {
+    const texte = `${reaction.parole.texte} ${question.complementDeLEncouragement()}`;
     const jusquAuBout = await dire({ texte, nature: "encouragement", humeur: reaction.humeur });
-    if (jusquAuBout) await direLeMotAEcouter(numero, catalogue);
+    if (jusquAuBout) await direLeMotAEcouter(numero, question);
   }, [dire, direLeMotAEcouter]);
 
-  const feliciter = useCallback(async (reaction: Reaction, catalogue: QuestionDuCatalogue) => {
-    const explication = explicationDeLaReponse(catalogue.type, { dire: catalogue.dire, reponse: catalogue.reponse });
-    const texte = explication === undefined ? reaction.parole.texte : `${reaction.parole.texte} ${explication}`;
-    await dire({ texte, nature: "felicitation", humeur: reaction.humeur });
-  }, [dire]);
+  /** La bulle affiche la phrase entière ; le mot anglais est dit avec la voix anglaise, le reste avec celle du personnage guide. */
+  const feliciter = useCallback(async (numero: number, reaction: Reaction, question: QuestionJouee) => {
+    const explication = question.explication();
+    if (explication === undefined) {
+      await dire({ texte: reaction.parole.texte, nature: "felicitation", humeur: reaction.humeur });
+      return;
+    }
+    const texte = `${reaction.parole.texte} ${explication}`;
+    if (!(await dire({ texte, aLire: reaction.parole.texte, nature: "felicitation", humeur: reaction.humeur }))) return;
+    if (!(await direLeMotAEcouter(numero, question))) return;
+    const [, suite = ""] = explication.split(`« ${question.motAEcouter} »`);
+    await lire(suite, {});
+  }, [dire, direLeMotAEcouter, lire]);
 
   const repondre = useCallback(async (texte: string, suite: SuiteDeLaReponse) => {
     const courante = laQuestionEnCours();
     if (!courante || estFigee.current) return;
-    const { exercice, question, catalogue } = courante;
+    const { exercice, question } = courante;
     const resultat = seance.repondre(Reponse.choix(texte));
     if (resultat === "dejaEcartee") return;
     const numero = ++sequence.current;
     redessiner();
     const reaction = reagirALaReponse(resultat === "juste", personnageGuide, hasardDuNavigateur);
-    if (resultat === "fausse") return await encourager(numero, reaction, catalogue);
+    if (resultat === "fausse") return await encourager(numero, reaction, question);
     figer({ position: exercice.position, question });
     setBulleEclatee(texte);
     const { questionsReussies, total } = seance.avancement();
     setAvancementAnnonce(`${questionsReussies} sur ${total}`);
-    await feliciter(reaction, catalogue);
+    await feliciter(numero, reaction, question);
     if (!vivant.current) return;
     figer(undefined);
     setBulleEclatee(undefined);
@@ -158,5 +171,6 @@ export function useQuestionsAChoix(
     jAiEcoute,
     relireLaQuestion,
     ecouterLeMot,
+    reprendreLaQuestion,
   };
 }

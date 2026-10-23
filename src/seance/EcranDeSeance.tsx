@@ -132,7 +132,7 @@ function SeanceEnCours({ seance, lecon, univers, voix, onRetour }: PropsEnCours)
               sonImpossible={voix.son === "muet" || !voix.syntheseVocalePresente}
               sonCoupe={voix.son === "muet"}
               onChoisir={(texte) => void deroulement.repondre(texte)}
-              onRelireLaQuestion={deroulement.relireLaQuestion}
+              onRelireLaQuestion={() => void deroulement.relireLaQuestion()}
               onEcouterLeMot={() => void deroulement.ecouterLeMot()}
               onJAiEcoute={() => void deroulement.jAiEcoute()}
               onActiverLeSon={voix.basculerLeSon}
