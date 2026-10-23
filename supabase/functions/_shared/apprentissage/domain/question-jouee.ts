@@ -3,16 +3,16 @@ import { CleDeQuestion } from "./cle-de-question.ts";
 import { ChoixProposes } from "./choix-proposes.ts";
 import {
   complementDeLEncouragement,
+  type ExplicationDeLaReponse,
   explicationDeLaReponse,
   questionDeLEcoute,
+  type TypeDExerciceAChoix,
 } from "./exercices/phrases-des-exercices-a-choix.ts";
 import { ChoixInconnu, QuestionDejaReussie } from "./erreurs.ts";
 import type { Hasard } from "./hasard.ts";
 import type { Reponse, ResultatDeReponse } from "./reponse.ts";
 
 const ERREURS_AVANT_LA_REDUCTION_A_DEUX = 2;
-
-type TypeDeQuestion = "bulles" | "lecture" | "ecoute";
 
 type Complements = { readonly aide?: string; readonly motAEcouter?: string; readonly langue?: string };
 
@@ -25,18 +25,20 @@ export class QuestionJouee {
     readonly cle: CleDeQuestion,
     private readonly bonneReponse: string,
     private choixProposes: ChoixProposes,
-    private readonly type: TypeDeQuestion,
+    private readonly type: TypeDExerciceAChoix,
     private readonly complements: Complements,
   ) {}
 
   static aChoix(
-    cle: CleDeQuestion,
-    enonce: string,
-    choix: readonly string[],
-    bonneReponse: string,
-    hasard: Hasard,
-    type: TypeDeQuestion,
-    complements: Complements = {},
+    { cle, enonce, choix, bonneReponse, hasard, type, complements = {} }: {
+      readonly cle: CleDeQuestion;
+      readonly enonce: string;
+      readonly choix: readonly string[];
+      readonly bonneReponse: string;
+      readonly hasard: Hasard;
+      readonly type: TypeDExerciceAChoix;
+      readonly complements?: Complements;
+    },
   ): QuestionJouee {
     return new QuestionJouee(
       enonce,
@@ -60,8 +62,12 @@ export class QuestionJouee {
     return this.complements.aide;
   }
 
-  explication(): string | undefined {
-    return explicationDeLaReponse(this.type, { dire: this.motAEcouter, reponse: this.bonneReponse });
+  explication(): ExplicationDeLaReponse | undefined {
+    return explicationDeLaReponse(this.type, {
+      dire: this.motAEcouter,
+      reponse: this.bonneReponse,
+      langue: this.langue,
+    });
   }
 
   complementDeLEncouragement(): string {
@@ -100,42 +106,31 @@ export class QuestionJouee {
 export function questionsJoueesDe(exercice: Exercice, hasard: Hasard): QuestionJouee[] {
   switch (exercice.type) {
     case "bulles":
+    case "lecture": {
+      const type = exercice.type;
       return exercice.questions.map((q) =>
-        QuestionJouee.aChoix(
-          CleDeQuestion.de("bulles", q.question + q.reponse),
-          q.question,
-          q.choix,
-          q.reponse,
+        QuestionJouee.aChoix({
+          cle: CleDeQuestion.de(type, q.question + q.reponse),
+          enonce: q.question,
+          choix: q.choix,
+          bonneReponse: q.reponse,
           hasard,
-          "bulles",
-          {
-            aide: q.aide,
-          },
-        )
+          type,
+          complements: { aide: q.aide },
+        })
       );
-    case "lecture":
-      return exercice.questions.map((q) =>
-        QuestionJouee.aChoix(
-          CleDeQuestion.de("lecture", q.question + q.reponse),
-          q.question,
-          q.choix,
-          q.reponse,
-          hasard,
-          "lecture",
-          { aide: q.aide },
-        )
-      );
+    }
     case "ecoute":
       return exercice.items.map((item) =>
-        QuestionJouee.aChoix(
-          CleDeQuestion.de("ecoute", item.dire),
-          questionDeLEcoute(item),
-          item.choix,
-          item.reponse,
+        QuestionJouee.aChoix({
+          cle: CleDeQuestion.de("ecoute", item.dire),
+          enonce: questionDeLEcoute(item),
+          choix: item.choix,
+          bonneReponse: item.reponse,
           hasard,
-          "ecoute",
-          { aide: item.aide, motAEcouter: item.dire, langue: exercice.langue },
-        )
+          type: "ecoute",
+          complements: { aide: item.aide, motAEcouter: item.dire, langue: exercice.langue },
+        })
       );
     default:
       return [];
