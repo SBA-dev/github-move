@@ -82,3 +82,26 @@ Deno.test("répondre sans question posée ne fait rien : l'espace parent reste f
   assertEquals(resultat, "refuse");
   assertEquals(acces.etat(), { type: "ferme" });
 });
+
+Deno.test("demander l'entrée quand l'espace parent est ouvert le laisse ouvert, sans nouveau tirage", () => {
+  const hasard = new HasardFixe([6, 7, 8, 9]);
+  const acces = new AccesALEspaceParent(hasard);
+  acces.demanderLEntree();
+  acces.repondre("42");
+
+  acces.demanderLEntree();
+
+  assertEquals(acces.etat(), { type: "ouvert" });
+  assertEquals(hasard.tirages.length, 2);
+});
+
+Deno.test("demander l'entrée quand une question est déjà posée garde la même question, sans nouveau tirage", () => {
+  const hasard = new HasardFixe([6, 7, 8, 9]);
+  const acces = new AccesALEspaceParent(hasard);
+  acces.demanderLEntree();
+
+  acces.demanderLEntree();
+
+  assertEquals(acces.etat(), { type: "questionPosee", enonce: "combien font 6 × 7 ?" });
+  assertEquals(hasard.tirages.length, 2);
+});
