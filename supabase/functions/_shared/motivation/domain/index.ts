@@ -12,3 +12,4 @@ export {
 } from "./paroles.ts";
 export { type Parole, type Reaction, reagirALaReponse } from "./reaction.ts";
 export { TirageHorsIntervalle } from "./hasard.ts";
+export { accueilDeLaLecon, annonceDeLExercice, type ExerciceAnnonce, finDesEtapes } from "./paroles-de-seance.ts";
