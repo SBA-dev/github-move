@@ -111,7 +111,11 @@ Deno.test("un exercice « lecture » donne son titre, son texte et ses questions
 
 Deno.test("un exercice « lecture » sans texte ou avec une réponse hors des choix est mal formé", () => {
   const malFormes = [
-    { type: "lecture", texte: "", questions: [{ question: "Qui dort ?", choix: ["le chat", "le chien"], reponse: "le chat" }] },
+    {
+      type: "lecture",
+      texte: "",
+      questions: [{ question: "Qui dort ?", choix: ["le chat", "le chien"], reponse: "le chat" }],
+    },
     lectureAvec({ question: "Qui dort ?", choix: ["le chat", "le chien"], reponse: "la poule" }),
   ];
   for (const exercice of malFormes) {
