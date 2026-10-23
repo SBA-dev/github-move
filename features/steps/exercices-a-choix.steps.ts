@@ -57,7 +57,7 @@ function questionsDe(exercice: ExerciceBrut, position: number): Question[] {
   return [];
 }
 
-function questionsDeLaLecon(lecon: LeconBrute, position?: number): Question[] {
+export function questionsDeLaLecon(lecon: LeconBrute, position?: number): Question[] {
   return lecon.exercices.flatMap((exercice, rang) => (position === undefined || position === rang ? questionsDe(exercice, rang) : []));
 }
 
@@ -65,7 +65,7 @@ function toutesLesLecons(page: Page): LeconBrute[] {
   return [...etat(page).injectees, ...BIBLIOTHEQUE];
 }
 
-function leconDeLExercice(page: Page, titre: string): LeconBrute {
+export function leconDeLExercice(page: Page, titre: string): LeconBrute {
   const lecon = toutesLesLecons(page).find((candidate) => candidate.exercices.some((e) => e.titre === titre));
   if (!lecon) throw new Error(`Aucune leçon n'a l'exercice « ${titre} »`);
   return lecon;
@@ -77,7 +77,7 @@ function leconDeLaQuestion(page: Page, enonce: string): LeconBrute {
   return lecon;
 }
 
-function positionDeLExercice(lecon: LeconBrute, titre: string): number {
+export function positionDeLExercice(lecon: LeconBrute, titre: string): number {
   const position = lecon.exercices.findIndex((e) => e.titre === titre);
   if (position < 0) throw new Error(`La leçon « ${lecon.titre} » n'a pas d'exercice « ${titre} »`);
   return position;

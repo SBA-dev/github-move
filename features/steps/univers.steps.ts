@@ -16,6 +16,12 @@ const CLE_UNIVERS: Readonly<Record<string, string>> = {
 const UNIVERS_PAR_DEFAUT = "Animaux de la forêt";
 const NIVEAU_PAR_DEFAUT = "CE1";
 
+export function libelleDe(cle: string): string {
+  const libelle = Object.keys(CLE_UNIVERS).find((candidat) => CLE_UNIVERS[candidat] === cle);
+  if (libelle === undefined) throw new Error(`Univers sans libellé connu : ${cle}`);
+  return libelle;
+}
+
 export function cleDe(libelle: string): string {
   const cle = CLE_UNIVERS[libelle];
   if (cle === undefined) throw new Error(`Univers sans clé connue : ${libelle}`);

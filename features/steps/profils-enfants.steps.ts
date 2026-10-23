@@ -185,7 +185,8 @@ Given(/^(Paul|Marie) est rattachée? au profil enfant de (Léa|Tom)$/, async ({ 
     await assurerLeProfil(famille, "Paul", { prenom, niveau: NIVEAU_PAR_DEFAUT });
     return;
   }
-  const { id } = profilDe(famille, prenom);
+  const { id } = etat(famille).profils.find((p) => p.prenom === prenom) ??
+    await assurerLeProfil(famille, "Paul", { prenom, niveau: NIVEAU_PAR_DEFAUT });
   const marie = await famille.preparerUnParent(famille.normalisee(famille.adresseDe(parent)));
   await rattacherUnParent(id, marie.id);
 });

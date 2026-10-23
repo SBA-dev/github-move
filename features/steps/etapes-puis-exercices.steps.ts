@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { expect, type Locator, type Page } from "@playwright/test";
 import { Given, type ProfilPrepare, Then, When } from "./fixtures.ts";
 import { cleDe } from "./univers.steps.ts";
+import { estSurUnProfilReel, jouerAvecLeProfilReel, ouvrirLaLeconDansLApplication } from "./profil-reel.ts";
 import {
   attendreUneLecture,
   journal,
@@ -110,7 +111,8 @@ export function recipient(page: Page) {
 export async function ouvrirLaPageDeLaLecon(page: Page, titre: string) {
   const lecon = leconDeTitre(page, titre);
   etat(page).courante = lecon;
-  await page.goto(`/lecon/${encodeURIComponent(lecon.id)}`);
+  if (estSurUnProfilReel(page)) await ouvrirLaLeconDansLApplication(page, lecon.id);
+  else await page.goto(`/lecon/${encodeURIComponent(lecon.id)}`);
   await expect(page.getByRole("heading", { level: 2, name: titre })).toBeVisible();
 }
 
@@ -176,7 +178,7 @@ export async function toutesLesParoles(page: Page): Promise<string[]> {
 
 // --- Étant donné
 
-Given(/^Léa a un profil enfant préparé de niveau (\S+) dans l'univers « (.+) »$/, async ({ page, monde }, niveau: string, univers: string) => {
+Given(/^Léa a un profil enfant préparé de niveau (\S+) dans l'univers « (.+) »$/, async ({ page, monde, famille, $tags }, niveau: string, univers: string) => {
   const cle = cleDe(univers);
   const profil: ProfilPrepare = { prenom: "Léa", niveau, univers: cle };
   monde.profils.set("Léa", profil);
@@ -188,6 +190,8 @@ Given(/^Léa a un profil enfant préparé de niveau (\S+) dans l'univers « (.+)
     [CLE_PROFIL_PREPARE, JSON.stringify(avecLesReglagesPrevus(page, profil))] as const,
   );
   await interceptertLaBibliotheque(page);
+  // Story #24 : les séances terminées s'enregistrent pour un vrai profil ; Léa joue donc avec le même profil, créé pour Paul.
+  if ($tags.includes("@issue-24")) await jouerAvecLeProfilReel(famille, monde, page);
 });
 
 Given(/^une leçon de test « (.+) » a un exercice calcul sans titre$/, async ({ page }, titre: string) => {
