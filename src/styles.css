@@ -204,4 +204,61 @@ button:focus-visible, summary:focus-visible { outline: 3px solid #1f2a1f; outlin
 .pastille { padding: 8px 18px; border-radius: 22px; background: #fff; font-size: 1.5rem; font-weight: 700; border: 2px solid var(--accent-fonce); }
 .exercice-en-cours { max-width: 100%; }
 .exercice-en-cours:focus { outline: none; }
-.question { font-size: 1.5rem; font-weight: 700; background: rgba(255, 255, 255, .85); padding: 10px 16px; border-radius: 16px; }
+.question {
+  font: inherit;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--texte);
+  min-height: 44px;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  background: rgba(255, 255, 255, .85);
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 16px;
+  cursor: pointer;
+}
+.exercice-en-cours { display: grid; justify-items: center; gap: 12px; }
+.annonce-d-avancement {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.texte-de-lecture {
+  max-width: min(100%, 36rem);
+  padding: 12px 18px;
+  border-radius: 16px;
+  background: #fff;
+  text-align: left;
+  font-size: 1.25rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.texte-de-lecture h3, .texte-de-lecture p { margin: 4px 0; }
+.ecoute { display: grid; justify-items: center; gap: 8px; }
+.ecoute-sans-son { margin: 0; padding: 10px 16px; border-radius: 16px; background: #fff3cd; font-weight: 700; }
+.choix-de-la-question { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; max-width: 100%; }
+.bulle-de-choix {
+  min-width: 44px;
+  min-height: 44px;
+  max-width: 100%;
+  padding: 10px 22px;
+  border: 3px solid var(--accent-fonce);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--texte);
+  font: inherit;
+  font-size: 1.35rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+  transition: opacity .3s, transform .3s;
+}
+.bulle-de-choix[aria-disabled="true"] { opacity: .45; cursor: default; }
+.bulle-de-choix[data-eclatee="true"] { opacity: 0; transform: scale(1.5); }
+.question:hover { background: #fff; }
+.bulle-de-choix:hover:not([aria-disabled="true"]) { background: #fff3c4; }
+.bulle-de-choix[aria-disabled="true"]:hover { background: #fff; }

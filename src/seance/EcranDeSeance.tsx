@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { ChoixDeSeance, ExerciceIntrouvable, LeconSansExercice, Seance } from "@domain/apprentissage";
-import { type Lecon, enonceDeLaQuestion, pageDeLaLecon } from "@domain/catalogue";
+import { type Exercice, type Lecon, pageDeLaLecon } from "@domain/catalogue";
 import type { Univers } from "@domain/motivation";
 import { PersonnageGuide } from "../univers/index.ts";
 import type { Voix } from "../voix/index.ts";
 import { BulleDuPersonnageGuide } from "./BulleDuPersonnageGuide.tsx";
+import { ExerciceAChoix } from "./exercices/ExerciceAChoix.tsx";
 import { generateurIdDuNavigateur } from "./generateur-id-navigateur.ts";
 import { hasardDuNavigateur } from "./hasard-navigateur.ts";
 import { RecipientDeProgression } from "./RecipientDeProgression.tsx";
@@ -56,10 +57,14 @@ function SeanceDeLaLecon({ lecon, exercice, prenom, ...reste }: PropsDeLaLecon) 
   return <SeanceEnCours seance={seance} lecon={lecon} {...reste} />;
 }
 
+function estAChoix(exercice: Exercice): boolean {
+  return exercice.type === "bulles" || exercice.type === "lecture" || exercice.type === "ecoute";
+}
+
 type PropsEnCours = Omit<PropsDeLaLecon, "exercice" | "prenom"> & { readonly seance: Seance };
 
 function SeanceEnCours({ seance, lecon, univers, voix, onRetour }: PropsEnCours) {
-  const deroulement = useDeroulementDeSeance(seance, lecon, voix);
+  const deroulement = useDeroulementDeSeance(seance, lecon, voix, univers.personnageGuide);
   const { commencer, abandonner } = deroulement;
   useEffect(() => {
     void commencer();
@@ -69,8 +74,10 @@ function SeanceEnCours({ seance, lecon, univers, voix, onRetour }: PropsEnCours)
   const { titre, niveauEtMatiere } = pageDeLaLecon(lecon);
   const etape = seance.etapeDeLeconEnCours();
   const exerciceJoue = seance.exerciceEnCours();
-  const exerciceDeLaLecon = exerciceJoue && lecon.exercices[exerciceJoue.position];
-  const question = exerciceJoue && exerciceDeLaLecon && enonceDeLaQuestion(exerciceDeLaLecon, exerciceJoue.rangDeLaQuestionEnCours);
+  const { figee } = deroulement;
+  const position = figee?.position ?? exerciceJoue?.position;
+  const exerciceDeLaLecon = position === undefined ? undefined : lecon.exercices[position];
+  const question = figee?.question ?? exerciceJoue?.questionEnCours();
   const zoneDeLExercice = useRef<HTMLDivElement>(null);
   const exerciceCommence = exerciceJoue !== undefined;
   const dejaMonte = useRef(false);
@@ -108,9 +115,29 @@ function SeanceEnCours({ seance, lecon, univers, voix, onRetour }: PropsEnCours)
           <button type="button" onClick={() => void deroulement.continuer()}>Continuer</button>
         </div>
       )}
-      {exerciceJoue && (
-        <div ref={zoneDeLExercice} tabIndex={-1} className="exercice-en-cours" data-testid="exercice-en-cours" data-position={exerciceJoue.position}>
-          {question !== undefined && <p className="question" data-testid="question">{question}</p>}
+      <div className="annonce-d-avancement" role="status" data-testid="annonce-d-avancement">
+        {deroulement.avancementAnnonce}
+      </div>
+      {position !== undefined && exerciceDeLaLecon && (
+        <div ref={zoneDeLExercice} tabIndex={-1} className="exercice-en-cours" data-testid="exercice-en-cours" data-position={position}>
+          {estAChoix(exerciceDeLaLecon) && (
+            <ExerciceAChoix
+              exercice={exerciceDeLaLecon}
+              question={question}
+              choixVisibles={question !== undefined && deroulement.choixVisiblesPour === question}
+              reussie={figee !== undefined}
+              bulleEclatee={deroulement.bulleEclatee}
+              texteEcoute={deroulement.positionDuTexteEcoute === position}
+              rangDuMotDuTexte={deroulement.rangDuMotDuTexte}
+              sonImpossible={voix.son === "muet" || !voix.syntheseVocalePresente}
+              sonCoupe={voix.son === "muet"}
+              onChoisir={(texte) => void deroulement.repondre(texte)}
+              onRelireLaQuestion={deroulement.relireLaQuestion}
+              onEcouterLeMot={() => void deroulement.ecouterLeMot()}
+              onJAiEcoute={() => void deroulement.jAiEcoute()}
+              onActiverLeSon={voix.basculerLeSon}
+            />
+          )}
         </div>
       )}
     </section>
