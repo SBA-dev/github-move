@@ -46,8 +46,8 @@ function leconSonsOuOnAn() {
     },
     lecon: [{ texte: "O et U ensemble font le son « ou ».", exemples: [] }],
     exercices: [
-      { type: "bulles", titre: "Quel son entends-tu ?", questions: [] },
-      { type: "classer", titre: "Les maisons des sons", items: [] },
+      { type: "bulles", titre: "Quel son entends-tu ?", questions: [{ question: "Quel son ?", choix: ["ou"], reponse: "ou" }] },
+      { type: "classer", titre: "Les maisons des sons", items: [{ texte: "loup", groupe: "1" }] },
     ],
   });
 }
@@ -64,7 +64,7 @@ function leconBoiteAjouter() {
       citation: "Les quatre opérations sont mobilisées au CP lors de la résolution de problèmes.",
     },
     lecon: [{ texte: "Je vais mettre des jetons dans une boîte.", exemples: [] }],
-    exercices: [{ type: "boite", titre: "Combien dans la boîte ?", items: [] }],
+    exercices: [{ type: "boite", titre: "Combien dans la boîte ?", items: [{ a: 4, op: "+", b: 3 }] }],
     guide: {
       titre: "Pour enseigner les nombres, le calcul et la résolution de problèmes au CP",
       page: 53,
@@ -151,4 +151,13 @@ Deno.test("le passage du guide fondamental donne son extrait et sa référence a
     reference:
       "Guide fondamental « Pour enseigner les nombres, le calcul et la résolution de problèmes au CP » (Eduscol), page 53.",
   });
+});
+
+Deno.test("la page de la leçon est en lecture seule, y compris ses exercices proposés", () => {
+  const page = pageDeLaLecon(leconSonsOuOnAn(), lireSectionDuProgramme(SECTION_FRANCAIS));
+
+  assertEquals(Object.isFrozen(page), true);
+  assertEquals(Object.isFrozen(page.exercicesProposes), true);
+  assertEquals(Object.isFrozen(page.exercicesProposes[0]), true);
+  assertEquals(Object.isFrozen(page.passagePourLesAdultes), true);
 });

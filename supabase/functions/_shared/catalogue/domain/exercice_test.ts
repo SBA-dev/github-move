@@ -241,3 +241,28 @@ Deno.test("les exercices d'une leçon lue sont en lecture seule", () => {
   assertEquals(Object.isFrozen(lecon.exercices), true);
   assertEquals(Object.isFrozen(lecon.exercices[0]), true);
 });
+
+Deno.test("un exercice dont aucune question ne peut être posée est mal formé", () => {
+  const sansQuestion = [
+    { type: "bulles", questions: [] },
+    { type: "lecture", texte: "Le loup dort.", questions: [] },
+    { type: "trous", texte: "Au clair de la lune" },
+    { type: "classer", groupes: [{ id: "1", nom: "ou" }], items: [] },
+    { type: "ordre", elements: [] },
+    { type: "dictee", mots: [] },
+    { type: "conjugaison", verbe: "chanter", formes: [] },
+    { type: "memoriser", vers: [] },
+    { type: "ecoute", items: [] },
+    { type: "boite", items: [] },
+    { type: "barres", items: [] },
+  ];
+  for (const exercice of sansQuestion) {
+    assertThrows(() => lireLecon(leconAvec(exercice)), LeconMalFormee, undefined, exercice.type);
+  }
+});
+
+Deno.test("« fluence », « calcul » et « addition » sans donnée explicite restent lisibles (comptés par défaut)", () => {
+  const lecon = lireLecon(leconAvec({ type: "fluence" }, { type: "calcul" }, { type: "addition" }));
+
+  assertEquals(lecon.exercices.length, 3);
+});

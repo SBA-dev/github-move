@@ -233,3 +233,9 @@ Deno.test("un passage du guide fondamental sans titre, page ou extrait valides e
     );
   }
 });
+
+Deno.test("des étapes de leçon qui ne sont pas une liste sont mal formées", () => {
+  const brut = { ...leconSonsOuOnAn(), lecon: "O et U ensemble font le son « ou »." };
+
+  assertThrows(() => lireLecon(brut), LeconMalFormee);
+});

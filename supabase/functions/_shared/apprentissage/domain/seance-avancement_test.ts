@@ -142,3 +142,26 @@ Deno.test("réussir une question pendant une étape de leçon est refusé", () =
 Deno.test("une séance qui vient de commencer n'est pas finie", () => {
   assertEquals(commencer(leconSonsOuOnAn(), ChoixDeSeance.complete()).estFinie(), false);
 });
+
+Deno.test("au début d'un exercice, la question en cours est la première (rang 0)", () => {
+  const seance = seanceCompleteAuxExercices(leconDeDeuxExercicesCourts());
+
+  assertEquals(seance.exerciceEnCours()?.rangDeLaQuestionEnCours, 0);
+});
+
+Deno.test("chaque question réussie fait passer à la question suivante de l'exercice", () => {
+  const seance = seanceCompleteAuxExercices(leconSonsOuOnAn());
+
+  reussirQuestions(seance, 2);
+
+  assertEquals(seance.exerciceEnCours()?.rangDeLaQuestionEnCours, 2);
+});
+
+Deno.test("l'exercice suivant recommence à la première question", () => {
+  const seance = seanceCompleteAuxExercices(leconDeDeuxExercicesCourts());
+
+  reussirQuestions(seance, 2);
+
+  assertEquals(seance.exerciceEnCours()?.position, 1);
+  assertEquals(seance.exerciceEnCours()?.rangDeLaQuestionEnCours, 0);
+});
