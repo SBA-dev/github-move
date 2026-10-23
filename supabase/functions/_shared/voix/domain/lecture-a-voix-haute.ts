@@ -19,7 +19,7 @@ export type EtatDuSon = "son" | "muet";
 export type DependancesDeLectureAVoixHaute = {
   readonly lecteur: LecteurAVoixHaute;
   readonly voixDeLAppareil: VoixDeLAppareil;
-  readonly choixDeVoix?: ChoixDeVoixDeLAppareil;
+  readonly choixDeVoix: ChoixDeVoixDeLAppareil;
   readonly hasard: Hasard;
   readonly caractereDuPersonnageGuide: () => CaractereDeLaVoix;
   readonly etatInitial: EtatDuSon;
@@ -98,19 +98,19 @@ export class LectureAVoixHaute {
   }
 
   imposerUneVoix(nomDeLaVoix: string): void {
-    this.dependances.choixDeVoix?.memoriser(ChoixDeVoix.imposee(nomDeLaVoix));
+    this.dependances.choixDeVoix.memoriser(ChoixDeVoix.imposee(nomDeLaVoix));
   }
 
   revenirALaVoixAutomatique(): void {
-    this.dependances.choixDeVoix?.memoriser(ChoixDeVoix.automatique);
+    this.dependances.choixDeVoix.memoriser(ChoixDeVoix.automatique);
   }
 
-  async essayerUneVoix(nomDeLaVoix: string, nomDuPersonnageGuide: string): Promise<void> {
-    await this.lire(phraseDEssai(nomDuPersonnageGuide), { choix: ChoixDeVoix.imposee(nomDeLaVoix) });
+  async essayerUneVoix(choix: ChoixDeVoix, nomDuPersonnageGuide: string): Promise<void> {
+    await this.lire(phraseDEssai(nomDuPersonnageGuide), { choix });
   }
 
   private choixMemorise(): ChoixDeVoix {
-    return this.dependances.choixDeVoix?.lire() ?? ChoixDeVoix.automatique;
+    return this.dependances.choixDeVoix.lire();
   }
 
   private voixPour(langue: string, choix: ChoixDeVoix): VoixDisponible | undefined {
