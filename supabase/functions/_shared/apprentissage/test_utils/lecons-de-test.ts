@@ -24,7 +24,13 @@ const classerLesMaisons = {
   groupes: [{ id: "1", nom: "ou" }, { id: "2", nom: "on" }, { id: "3", nom: "an" }],
   items: [
     { texte: "loup", groupe: "1" },
+    { texte: "roue", groupe: "1" },
+    { texte: "chou", groupe: "1" },
     { texte: "pont", groupe: "2" },
+    { texte: "lion", groupe: "2" },
+    { texte: "savon", groupe: "2" },
+    { texte: "banc", groupe: "3" },
+    { texte: "vent", groupe: "3" },
     { texte: "dent", groupe: "3" },
   ],
 };
