@@ -2,7 +2,7 @@ import type { Exercice } from "../../catalogue/domain/index.ts";
 import { CleDeQuestion } from "./cle-de-question.ts";
 import { ChoixProposes } from "./choix-proposes.ts";
 import {
-  complementDeLEncouragement,
+  aideParDefaut,
   type ExplicationDeLaReponse,
   explicationDeLaReponse,
   questionDeLEcoute,
@@ -78,7 +78,7 @@ export class QuestionJouee {
   }
 
   aideApresErreur(): string {
-    return complementDeLEncouragement(this.type, { aide: this.aideDeLaQuestion() });
+    return this.aideDeLaQuestion() ?? aideParDefaut(this.type);
   }
 
   jeNeSaisPasPermis(): boolean {
