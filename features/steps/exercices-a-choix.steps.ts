@@ -245,7 +245,7 @@ function boutonContinuer(page: Page) {
 }
 
 /** Fait ce que ferait un enfant pour arriver aux choix de la question en cours : continuer, dire « J'ai écouté ». */
-async function avancerJusquAuxChoix(page: Page) {
+export async function avancerJusquAuxChoix(page: Page) {
   await expect.poll(async () => {
     if (await boutonContinuer(page).isVisible()) {
       await boutonContinuer(page).click();

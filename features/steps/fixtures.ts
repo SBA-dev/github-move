@@ -1,12 +1,13 @@
 import { test as base, createBdd } from "playwright-bdd";
 import { Famille } from "../support/famille.ts";
+import type { ReglagesBruts } from "../support/reglages-prevus.ts";
 
 // Les données de test (comptes, profils) viendront ici, préparées via l'API admin Supabase.
 // La clé service_role ne sert qu'à ces préparations, jamais à simuler un utilisateur.
 
-export type ProfilPrepare = { prenom: string; niveau: string; univers?: string };
+export type ProfilPrepare = { prenom: string; niveau: string; univers?: string; reglages?: ReglagesBruts };
 
-type Monde = {
+export type Monde = {
   profils: Map<string, ProfilPrepare>;
   tablettes: Map<string, { paysage: string | null; couleur: string }>;
 };

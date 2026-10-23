@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { ChoixDeSeance, ExerciceIntrouvable, LeconSansExercice, Seance } from "@domain/apprentissage";
 import { type Exercice, type Lecon, pageDeLaLecon } from "@domain/catalogue";
 import type { Univers } from "@domain/motivation";
+import { TexteEnSyllabes } from "../reglages/index.ts";
 import { PersonnageGuide } from "../univers/index.ts";
 import type { Voix } from "../voix/index.ts";
 import { BulleDuPersonnageGuide } from "./BulleDuPersonnageGuide.tsx";
@@ -19,6 +20,8 @@ type Props = {
   readonly prenom: string;
   readonly univers: Univers;
   readonly voix: Voix;
+  /** Réglage du profil en cours : les choix proposés sont lus après la question. */
+  readonly toutLireAVoixHaute: boolean;
   readonly onRetour: () => void;
 };
 
@@ -63,8 +66,8 @@ function estAChoix(exercice: Exercice): boolean {
 
 type PropsEnCours = Omit<PropsDeLaLecon, "exercice" | "prenom"> & { readonly seance: Seance };
 
-function SeanceEnCours({ seance, lecon, univers, voix, onRetour }: PropsEnCours) {
-  const deroulement = useDeroulementDeSeance(seance, lecon, voix, univers.personnageGuide);
+function SeanceEnCours({ seance, lecon, univers, voix, toutLireAVoixHaute, onRetour }: PropsEnCours) {
+  const deroulement = useDeroulementDeSeance(seance, lecon, voix, univers.personnageGuide, toutLireAVoixHaute);
   const { commencer, abandonner } = deroulement;
   useEffect(() => {
     void commencer();
@@ -111,7 +114,7 @@ function SeanceEnCours({ seance, lecon, univers, voix, onRetour }: PropsEnCours)
         <div className="etape-de-lecon" data-testid="etape-de-lecon">
           {etape.exemples.length > 0 && (
             <ul className="exemples" aria-label="Exemples">
-              {etape.exemples.map((exemple, i) => <li key={i} className="pastille" data-testid="exemple">{exemple}</li>)}
+              {etape.exemples.map((exemple, i) => <li key={i} className="pastille" data-testid="exemple"><TexteEnSyllabes texte={exemple} /></li>)}
             </ul>
           )}
           <button type="button" onClick={() => void deroulement.continuer()}>Continuer</button>

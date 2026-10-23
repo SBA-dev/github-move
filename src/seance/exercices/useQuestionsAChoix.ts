@@ -2,6 +2,7 @@ import { type MutableRefObject, useCallback, useRef, useState } from "react";
 import {
   type FaitDeSeance,
   INTRODUCTION_DE_LA_LECTURE,
+  lectureDesChoix,
   type QuestionJouee,
   Reponse,
   type Seance,
@@ -16,6 +17,8 @@ type Dependances = {
   readonly seance: Seance;
   readonly lecon: Lecon;
   readonly personnageGuide: PersonnageGuide;
+  /** Réglage du profil : les choix proposés sont lus après la question. */
+  readonly toutLireAVoixHaute: boolean;
   readonly lire: Voix["lire"];
   readonly dire: (parole: ParoleADire) => Promise<boolean>;
   readonly faireSilence: () => void;
@@ -33,7 +36,7 @@ type SuiteDeLaReponse = (numero: number, faits: FaitDeSeance[], nouvelExercice: 
 
 /** Le déroulé des exercices à choix (bulles, lecture, écoute) : la question est lue, puis les choix apparaissent. */
 export function useQuestionsAChoix(
-  { seance, lecon, personnageGuide, lire, dire, faireSilence, sequence, vivant, redessiner }: Dependances,
+  { seance, lecon, personnageGuide, toutLireAVoixHaute, lire, dire, faireSilence, sequence, vivant, redessiner }: Dependances,
 ) {
   const [figee, setFigee] = useState<QuestionFigee | undefined>();
   const estFigee = useRef(false);
@@ -66,7 +69,9 @@ export function useQuestionsAChoix(
     if (!(await dire({ texte: courante.question.enonce, nature: "question" }))) return;
     if (!(await direLeMotAEcouter(numero, courante.question))) return;
     setChoixVisiblesPour(courante.question);
-  }, [laQuestionEnCours, dire, direLeMotAEcouter]);
+    const lectureDesChoixProposes = toutLireAVoixHaute ? lectureDesChoix(courante.question.choix.possibles()) : undefined;
+    if (lectureDesChoixProposes !== undefined) await lire(lectureDesChoixProposes);
+  }, [laQuestionEnCours, dire, direLeMotAEcouter, toutLireAVoixHaute, lire]);
 
   const lireLeTexte = useCallback(async (numero: number, texte: string) => {
     if (!(await dire({ texte: INTRODUCTION_DE_LA_LECTURE, nature: "introduction" }))) return;

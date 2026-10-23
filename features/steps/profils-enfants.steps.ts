@@ -2,6 +2,7 @@ import { expect, type Locator, type Page } from "@playwright/test";
 import { ouvrirUneSessionSansEmail } from "../support/connexion-sans-email.ts";
 import type { Appareil, Famille } from "../support/famille.ts";
 import { appelerUneFonctionDeFamille, ecrireEnRestUnProfil, lireEnRestLesProfilsVisibles, type ReponseDeLaFonction } from "../support/profils-api.ts";
+import { rattacherUnParent } from "../support/supabase-test.ts";
 import { Given, Then, When } from "./fixtures.ts";
 import { cleDe, preparerProfil } from "./univers.steps.ts";
 
@@ -10,18 +11,18 @@ import { cleDe, preparerProfil } from "./univers.steps.ts";
 // Functions de Famille avec le jeton du parent (session obtenue sans e-mail) : la RLS et les règles métier
 // s'appliquent comme pour l'application. La clé service_role ne sert qu'au nettoyage (features/support).
 
-type ProfilPrepare = { readonly id: string; readonly prenom: string; readonly parent: string };
+export type ProfilCree = { readonly id: string; readonly prenom: string; readonly parent: string };
 
 type Etat = {
   appareil: Appareil;
-  readonly profils: ProfilPrepare[];
+  readonly profils: ProfilCree[];
   readonly jetons: Map<string, string>;
   reponse: ReponseDeLaFonction | undefined;
 };
 
 const etats = new WeakMap<Famille, Etat>();
 
-function etat(famille: Famille): Etat {
+export function etat(famille: Famille): Etat {
   const connu = etats.get(famille);
   if (connu) return connu;
   const neuf: Etat = { appareil: "tablette", profils: [], jetons: new Map(), reponse: undefined };
@@ -39,7 +40,7 @@ function echapper(texte: string): string {
 
 // --- Préparation par les Edge Functions, avec le jeton du parent
 
-async function jetonDe(famille: Famille, parent: string): Promise<string> {
+export async function jetonDe(famille: Famille, parent: string): Promise<string> {
   const jetons = etat(famille).jetons;
   const connu = jetons.get(parent);
   if (connu) return connu;
@@ -50,13 +51,14 @@ async function jetonDe(famille: Famille, parent: string): Promise<string> {
   return jeton;
 }
 
-type Saisie = { prenom: string; niveau?: string; libelleUnivers?: string };
+export type Saisie = { prenom: string; niveau?: string; libelleUnivers?: string; reglages?: object };
 
-async function creerLeProfil(famille: Famille, parent: string, saisie: Saisie): Promise<ProfilPrepare> {
+export async function creerLeProfil(famille: Famille, parent: string, saisie: Saisie): Promise<ProfilCree> {
   const reponse = await appelerUneFonctionDeFamille("creer-profil-enfant", await jetonDe(famille, parent), {
     prenom: saisie.prenom,
     ...(saisie.niveau === undefined ? {} : { niveau: saisie.niveau }),
     ...(saisie.libelleUnivers === undefined ? {} : { univers: cleDe(saisie.libelleUnivers) }),
+    ...(saisie.reglages === undefined ? {} : { reglages: saisie.reglages }),
   });
   expect(reponse.statut, `création du profil enfant « ${saisie.prenom} » : ${reponse.message ?? ""}`).toBe(200);
   const profil = { id: reponse.profil?.id ?? "", prenom: saisie.prenom, parent };
@@ -73,7 +75,7 @@ async function rouvrirLaTabletteConnectee(famille: Famille): Promise<void> {
   }
 }
 
-async function assurerLeProfil(famille: Famille, parent: string, saisie: Saisie): Promise<ProfilPrepare> {
+export async function assurerLeProfil(famille: Famille, parent: string, saisie: Saisie): Promise<ProfilCree> {
   const existant = etat(famille).profils.find((p) => p.parent === parent && p.prenom === saisie.prenom);
   if (existant) return existant;
   const cree = await creerLeProfil(famille, parent, saisie);
@@ -81,13 +83,13 @@ async function assurerLeProfil(famille: Famille, parent: string, saisie: Saisie)
   return cree;
 }
 
-function profilDe(famille: Famille, prenom: string): ProfilPrepare {
+export function profilDe(famille: Famille, prenom: string): ProfilCree {
   const profil = etat(famille).profils.find((p) => p.prenom === prenom);
   if (!profil) throw new Error(`Profil enfant non préparé : ${prenom}`);
   return profil;
 }
 
-async function modifierLeProfil(famille: Famille, prenom: string, changement: object): Promise<void> {
+export async function modifierLeProfil(famille: Famille, prenom: string, changement: object): Promise<void> {
   const profil = profilDe(famille, prenom);
   const reponse = await appelerUneFonctionDeFamille("modifier-profil-enfant", await jetonDe(famille, profil.parent), {
     profil: profil.id,
@@ -96,7 +98,7 @@ async function modifierLeProfil(famille: Famille, prenom: string, changement: ob
   expect(reponse.statut, `modification du profil enfant « ${prenom} » : ${reponse.message ?? ""}`).toBe(200);
 }
 
-async function connecterSiBesoin(famille: Famille, appareil: Appareil, parent: string): Promise<Page> {
+export async function connecterSiBesoin(famille: Famille, appareil: Appareil, parent: string): Promise<Page> {
   const page = await famille.page(appareil);
   if ((await famille.session(page)) === null) await famille.connecterSansEmail(appareil, parent);
   return page;
@@ -104,21 +106,21 @@ async function connecterSiBesoin(famille: Famille, appareil: Appareil, parent: s
 
 // --- Ce que le parent fait à l'écran
 
-async function pageCourante(famille: Famille): Promise<Page> {
+export async function pageCourante(famille: Famille): Promise<Page> {
   return famille.page(etat(famille).appareil);
 }
 
-function formulaireDeCreation(page: Page): Locator {
+export function formulaireDeCreation(page: Page): Locator {
   return page.getByRole("form", { name: "Ajouter un enfant" });
 }
 
-async function attendreLeRetourDuFormulaire(page: Page): Promise<void> {
+export async function attendreLeRetourDuFormulaire(page: Page): Promise<void> {
   const retour = page.getByRole("status").filter({ hasText: /est (créé|enregistré)/ }).or(page.getByRole("alert"));
   // Le retour attend la réponse de l'Edge Function (démarrage à froid possible) : on attend l'élément sans le délai court des assertions.
   await retour.first().waitFor();
 }
 
-async function creerParLInterface(page: Page, prenom: string, niveau?: string, libelleUnivers?: string): Promise<void> {
+export async function creerParLInterface(page: Page, prenom: string, niveau?: string, libelleUnivers?: string): Promise<void> {
   const formulaire = formulaireDeCreation(page);
   await formulaire.getByLabel("Prénom").fill(prenom);
   if (niveau !== undefined) await formulaire.getByLabel("Classe").selectOption({ label: niveau });
@@ -141,7 +143,7 @@ function quiJoue(page: Page): Locator {
 }
 
 /** « Qui joue ? » chargé : depuis l'espace parent on le quitte, sinon on ouvre Savanturier. */
-async function ouvrirQuiJoue(page: Page): Promise<Locator> {
+export async function ouvrirQuiJoue(page: Page): Promise<Locator> {
   const quitter = page.getByRole("button", { name: "Quitter l'espace parent" });
   if (page.url() === "about:blank") await page.goto("/");
   const dejaLa = await quiJoue(page).or(quitter).waitFor({ timeout: 5_000 }).then(() => true, () => false);
@@ -160,7 +162,7 @@ function profilAvecDetail(page: Page, prenom: string, detail: string): Locator {
   return page.getByRole("button", { name: new RegExp(`(^| )${echapper(prenom)} ${echapper(detail)}$`) });
 }
 
-async function choisirSonProfil(page: Page, prenom: string): Promise<void> {
+export async function choisirSonProfil(page: Page, prenom: string): Promise<void> {
   await ouvrirQuiJoue(page);
   await profilsAChoisir(page).filter({ hasText: prenom }).first().click();
   await expect(page).toHaveURL(/\/jeu$/);
@@ -178,8 +180,14 @@ Given(
   },
 );
 
-Given(/^Paul est rattaché au profil enfant de Léa$/, async ({ famille }) => {
-  await assurerLeProfil(famille, "Paul", { prenom: "Léa", niveau: NIVEAU_PAR_DEFAUT });
+Given(/^(Paul|Marie) est rattachée? au profil enfant de (Léa|Tom)$/, async ({ famille }, parent: string, prenom: string) => {
+  if (parent === "Paul") {
+    await assurerLeProfil(famille, "Paul", { prenom, niveau: NIVEAU_PAR_DEFAUT });
+    return;
+  }
+  const { id } = profilDe(famille, prenom);
+  const marie = await famille.preparerUnParent(famille.normalisee(famille.adresseDe(parent)));
+  await rattacherUnParent(id, marie.id);
 });
 
 Given(/^Paul est rattaché à (\d+) profils enfants$/, async ({ famille }, nombre: string) => {

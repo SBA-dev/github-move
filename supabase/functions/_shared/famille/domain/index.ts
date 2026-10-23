@@ -7,8 +7,10 @@ export { DemanderLienDeConnexion } from "./demander-lien-de-connexion.ts";
 export type { DonneesDeLAppareil } from "./donnees-de-l-appareil.ts";
 export {
   AdresseEmailInvalide,
+  ClavierDesDicteesInconnu,
   CodeDeConnexionInvalide,
   CodeDeConnexionMalForme,
+  LangueDuParentInconnue,
   LienDeConnexionMalForme,
   ParentNonRattache,
   PrenomObligatoire,
@@ -31,3 +33,9 @@ export { ProfilEnfant } from "./profil-enfant.ts";
 export type { FaitDuProfilEnfant, ModificationDuProfilEnfant } from "./profil-enfant.ts";
 export { ChoisirQuiJoue } from "./choisir-qui-joue.ts";
 export type { ProfilEnCours, ProfilEnCoursSurLAppareil } from "./profil-en-cours-sur-l-appareil.ts";
+export { ClavierDesDictees } from "./clavier-des-dictees.ts";
+export type { ValeurDuClavierDesDictees } from "./clavier-des-dictees.ts";
+export { LangueDuParent, LANGUES_DU_PARENT_PROPOSEES } from "./langue-du-parent.ts";
+export type { LangueProposee } from "./langue-du-parent.ts";
+export { Reglages } from "./reglages.ts";
+export type { ReglagesBruts } from "./reglages.ts";

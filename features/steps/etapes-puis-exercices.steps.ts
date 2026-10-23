@@ -1,3 +1,4 @@
+import { avecLesReglagesPrevus } from "../support/reglages-prevus.ts";
 import { readFileSync } from "node:fs";
 import { expect, type Locator, type Page } from "@playwright/test";
 import { Given, type ProfilPrepare, Then, When } from "./fixtures.ts";
@@ -184,7 +185,7 @@ Given(/^Léa a un profil enfant préparé de niveau (\S+) dans l'univers « (.+)
   await preparerLaPage(page, parametres);
   await page.addInitScript(
     ([cleDuProfil, valeur]) => localStorage.setItem(cleDuProfil, valeur),
-    [CLE_PROFIL_PREPARE, JSON.stringify(profil)] as const,
+    [CLE_PROFIL_PREPARE, JSON.stringify(avecLesReglagesPrevus(page, profil))] as const,
   );
   await interceptertLaBibliotheque(page);
 });
@@ -254,8 +255,12 @@ When(/^Léa continue$/, async ({ page }) => {
   await continuer(page);
 });
 
+// Quand Léa vient de commencer la séance (première étape à l'écran), elle continue jusqu'à la troisième étape.
 When(/^la troisième étape de leçon s'affiche$/, async ({ page }) => {
-  await attendreQueLaBulleDise(page, texteDeLEtape(leconCourante(page), 2));
+  const lecon = leconCourante(page);
+  const surLaPremiere = normaliser((await bulle(page).textContent()) ?? "") === normaliser(texteDeLEtape(lecon, 0));
+  if (surLaPremiere) await continuerApresLesEtapes(page, lecon, 2);
+  await attendreQueLaBulleDise(page, texteDeLEtape(lecon, 2));
 });
 
 When(/^Léa demande à réécouter$/, async ({ page }) => {

@@ -86,6 +86,11 @@ export async function supprimerLesProfilsDuParent(parent: string): Promise<void>
   }
 }
 
+/** Préparation seulement (second parent, que la story #13 rattachera par invitation) : le rattachement est écrit directement. */
+export async function rattacherUnParent(profil: string, parent: string): Promise<void> {
+  await appeler("/rest/v1/rattachements", { method: "POST", body: JSON.stringify({ profil, parent }) });
+}
+
 export async function supprimerLesParentsDuSuffixe(suffixe: string): Promise<void> {
   const fin = `+${suffixe}@exemple.test`;
   for (const parent of await parentsExistants()) {

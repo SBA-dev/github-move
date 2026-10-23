@@ -202,7 +202,6 @@ Fonctionnalité: Étapes de leçon lues, puis exercices
 
   Règle: La séance se suit à voix haute, en mode dys, au clavier et sur un petit écran
 
-    @depend-de-12
     Scénario: Avec le mode dys, les étapes de leçon et leurs exemples s'affichent en mode dys
       Étant donné que Paul a réglé « mode dys » sur « oui » pour Léa
       Et que Léa joue la séance complète de la leçon « Les sons ou, on, an »

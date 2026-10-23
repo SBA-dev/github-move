@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { ChoisirQuiJoue, type ProfilEnCours } from "@domain/famille";
+import { ChoisirQuiJoue, type ProfilEnCours, Reglages } from "@domain/famille";
 import { universDe } from "@domain/motivation";
 import { chargerProfilPrepare } from "../../demonstration/disponibilite.ts";
 
@@ -26,6 +26,7 @@ export function useProfilEnCours() {
           prenom: prepare.prenom,
           niveau: prepare.niveau,
           univers: universDe(prepare.univers).cle,
+          reglages: Reglages.depuis(prepare.reglages ?? {}),
         };
         setProfil((choisi) => choisi ?? initial);
       }

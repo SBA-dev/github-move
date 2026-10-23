@@ -1,8 +1,14 @@
 import { assertEquals, assertRejects } from "@std/assert";
 import { NiveauInconnu } from "../../catalogue/domain/index.ts";
-import { PrenomObligatoire, UniversInconnu } from "../domain/erreurs.ts";
+import {
+  ClavierDesDicteesInconnu,
+  LangueDuParentInconnue,
+  PrenomObligatoire,
+  UniversInconnu,
+} from "../domain/erreurs.ts";
 import { ParentId } from "../domain/parent-id.ts";
 import { ProfilEnfantId } from "../domain/profil-enfant-id.ts";
+import { Reglages } from "../domain/reglages.ts";
 import { generateurIdFixe } from "../test_utils/generateur-id-fixe.ts";
 import { ProfilsEnfantsEnMemoire } from "../test_utils/profils-enfants-en-memoire.ts";
 import { CreerProfilEnfant } from "./creer-profil-enfant.ts";
@@ -99,6 +105,56 @@ Deno.test("les profils enfants d'un parent sont listés dans l'ordre de créatio
 Deno.test("un parent ne retrouve pas les profils enfants d'un autre parent", async () => {
   const profils = new ProfilsEnfantsEnMemoire();
   await creation(profils).executer({ parent: "parent-marie", prenom: "Zoé" }, maintenant);
+
+  assertEquals(await profils.duParent(paul), []);
+});
+
+Deno.test("sans réglages choisis, le profil enfant a les réglages par défaut", async () => {
+  const profils = new ProfilsEnfantsEnMemoire();
+
+  await creation(profils).executer({ parent: "parent-paul", prenom: "Léa" }, maintenant);
+
+  assertEquals((await profils.parId(ProfilEnfantId.de("profil-lea")))?.reglages, Reglages.parDefaut());
+});
+
+Deno.test("les réglages choisis dès la création sont ceux du profil enfant", async () => {
+  const profils = new ProfilsEnfantsEnMemoire();
+
+  await creation(profils).executer(
+    { parent: "parent-paul", prenom: "Léa", reglages: { modeDys: true, langueDuParent: "turc" } },
+    maintenant,
+  );
+
+  const reglages = (await profils.parId(ProfilEnfantId.de("profil-lea")))?.reglages;
+  assertEquals(reglages, Reglages.depuis({ modeDys: true, langueDuParent: "turc" }));
+});
+
+Deno.test("un clavier des dictées inconnu ne crée aucun profil enfant", async () => {
+  const profils = new ProfilsEnfantsEnMemoire();
+
+  await assertRejects(
+    () =>
+      creation(profils).executer(
+        { parent: "parent-paul", prenom: "Léa", reglages: { clavierDesDictees: "azerty" } },
+        maintenant,
+      ),
+    ClavierDesDicteesInconnu,
+  );
+
+  assertEquals(await profils.duParent(paul), []);
+});
+
+Deno.test("une langue du parent inconnue ne crée aucun profil enfant", async () => {
+  const profils = new ProfilsEnfantsEnMemoire();
+
+  await assertRejects(
+    () =>
+      creation(profils).executer(
+        { parent: "parent-paul", prenom: "Léa", reglages: { langueDuParent: "klingon" } },
+        maintenant,
+      ),
+    LangueDuParentInconnue,
+  );
 
   assertEquals(await profils.duParent(paul), []);
 });

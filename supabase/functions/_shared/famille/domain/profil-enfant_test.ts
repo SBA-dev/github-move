@@ -5,6 +5,7 @@ import { ParentId } from "./parent-id.ts";
 import { Prenom } from "./prenom.ts";
 import { ProfilEnfant } from "./profil-enfant.ts";
 import { ProfilEnfantId } from "./profil-enfant-id.ts";
+import { Reglages } from "./reglages.ts";
 
 const paul = ParentId.de("parent-paul");
 const marie = ParentId.de("parent-marie");
@@ -123,4 +124,52 @@ Deno.test("modifier la liste des parents donnée à la reconstitution ne change 
 
   assertEquals(profil.estRattacheA(marie), false);
   assertEquals(profil.rattaches.length, 1);
+});
+
+Deno.test("un profil enfant créé sans réglages reçoit les réglages par défaut", () => {
+  assertEquals(profilDeLea().reglages, Reglages.parDefaut());
+});
+
+Deno.test("un parent rattaché change les réglages du profil enfant", () => {
+  const profil = profilDeLea();
+  const reglages = Reglages.depuis({ modeDys: true, clavierDesDictees: "lettresDuMot" });
+
+  profil.changerLesReglages(paul, reglages);
+
+  assertEquals(profil.reglages, reglages);
+});
+
+Deno.test("un parent non rattaché ne peut pas changer les réglages du profil enfant", () => {
+  const profil = profilDeLea();
+
+  assertThrows(() => profil.changerLesReglages(marie, Reglages.depuis({ modeDys: true })), ParentNonRattache);
+
+  assertEquals(profil.reglages, Reglages.parDefaut());
+});
+
+Deno.test("changer les réglages annonce ReglagesChanges", () => {
+  const profil = profilDeLea();
+  profil.retirerFaits();
+
+  profil.changerLesReglages(paul, Reglages.depuis({ parcoursLibre: true }));
+
+  assertEquals(profil.retirerFaits().map((fait) => [fait.type, "profil" in fait ? fait.profil : null]), [
+    ["ReglagesChanges", "profil-lea"],
+  ]);
+});
+
+Deno.test("les réglages de Léa ne changent pas ceux de Tom", () => {
+  const lea = profilDeLea();
+  const tom = ProfilEnfant.creer(
+    ProfilEnfantId.de("profil-tom"),
+    paul,
+    Prenom.de("Tom"),
+    Niveau.de("CP"),
+    "animaux",
+    creeLe,
+  );
+
+  lea.changerLesReglages(paul, Reglages.depuis({ modeDys: true }));
+
+  assertEquals(tom.reglages, Reglages.parDefaut());
 });

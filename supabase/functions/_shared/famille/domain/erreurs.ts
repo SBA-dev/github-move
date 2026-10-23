@@ -74,3 +74,17 @@ export class RattachementsInvalides extends Error {
     this.name = "RattachementsInvalides";
   }
 }
+
+export class ClavierDesDicteesInconnu extends Error {
+  constructor(readonly valeur: string) {
+    super(`Ce clavier des dictées est inconnu : « ${valeur} ».`);
+    this.name = "ClavierDesDicteesInconnu";
+  }
+}
+
+export class LangueDuParentInconnue extends Error {
+  constructor(readonly valeur: string) {
+    super(`Cette langue du parent est inconnue : « ${valeur} ».`);
+    this.name = "LangueDuParentInconnue";
+  }
+}

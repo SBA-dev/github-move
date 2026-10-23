@@ -1,4 +1,5 @@
 import { motsDeLaConsigne } from "@domain/voix";
+import { TexteEnSyllabes } from "../reglages/index.ts";
 
 type Props = {
   readonly texte: string;
@@ -20,7 +21,7 @@ export function TexteSurligne({ texte, rangDuMotPrononce }: Props) {
             data-prononce={prononce ? "true" : undefined}
             aria-current={prononce ? "true" : undefined}
           >
-            {segment}
+            <TexteEnSyllabes texte={segment} />
           </span>
         );
       })}

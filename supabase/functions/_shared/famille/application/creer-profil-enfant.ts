@@ -5,6 +5,7 @@ import { ParentId } from "../domain/parent-id.ts";
 import { Prenom } from "../domain/prenom.ts";
 import { type FaitDuProfilEnfant, ProfilEnfant } from "../domain/profil-enfant.ts";
 import { ProfilEnfantId } from "../domain/profil-enfant-id.ts";
+import { Reglages, type ReglagesBruts } from "../domain/reglages.ts";
 import type { ProfilsEnfants } from "./ports/profils-enfants.ts";
 
 export type DemandeDeCreation = {
@@ -12,6 +13,7 @@ export type DemandeDeCreation = {
   prenom: string;
   niveau?: string;
   univers?: string;
+  reglages?: ReglagesBruts;
 };
 
 export class CreerProfilEnfant {
@@ -28,6 +30,7 @@ export class CreerProfilEnfant {
       Niveau.de(demande.niveau ?? "CP"),
       lireCleUnivers(demande.univers ?? "animaux"),
       maintenant,
+      Reglages.depuis(demande.reglages ?? {}),
     );
     await this.profils.ajouter(profil);
     return profil.retirerFaits();

@@ -1,5 +1,6 @@
 import { expect, type Page } from "@playwright/test";
-import { Given, type ProfilPrepare, Then, When } from "./fixtures.ts";
+import { avecLesReglagesPrevus, reglagesPrevus } from "../support/reglages-prevus.ts";
+import { Given, type Monde, type ProfilPrepare, Then, When } from "./fixtures.ts";
 
 const CLE_PROFIL_PREPARE = "savanturier:profil-prepare";
 
@@ -24,8 +25,16 @@ export function cleDe(libelle: string): string {
 export async function preparerProfil(page: Page, profil: ProfilPrepare) {
   await page.addInitScript(
     ([cle, valeur]) => localStorage.setItem(cle, valeur),
-    [CLE_PROFIL_PREPARE, JSON.stringify(profil)] as const,
+    [CLE_PROFIL_PREPARE, JSON.stringify(avecLesReglagesPrevus(page, profil))] as const,
   );
+}
+
+/** Des réglages prévus pour Léa sans profil préparé : Léa a alors le profil par défaut, avec ces réglages. */
+async function assurerLeProfilDeLeaSiDesReglagesSontPrevus(page: Page, monde: Monde) {
+  if (monde.profils.has("Léa") || Object.keys(reglagesPrevus(page, "Léa")).length === 0) return;
+  const profil = { prenom: "Léa", niveau: NIVEAU_PAR_DEFAUT, univers: cleDe(UNIVERS_PAR_DEFAUT) };
+  monde.profils.set("Léa", profil);
+  await preparerProfil(page, profil);
 }
 
 async function attendreProfilCharge(page: Page, universAttendu: string) {
@@ -96,11 +105,13 @@ Given(/^Léa joue sur un ordinateur, au clavier$/, async ({ page, monde }) => {
 // --- Étant donné : navigation
 
 Given(/^Léa est sur la page de démonstration$/, async ({ page, monde }) => {
+  await assurerLeProfilDeLeaSiDesReglagesSontPrevus(page, monde);
   const profil = monde.profils.get("Léa");
   await ouvrirDemonstration(page, profil?.univers ?? cleDe(UNIVERS_PAR_DEFAUT));
 });
 
 Given(/^Léa joue$/, async ({ page, monde }) => {
+  await assurerLeProfilDeLeaSiDesReglagesSontPrevus(page, monde);
   const profil = monde.profils.get("Léa");
   await ouvrirDemonstration(page, profil?.univers ?? cleDe(UNIVERS_PAR_DEFAUT));
 });
@@ -113,6 +124,7 @@ Given(/^(.+) réfléchit après une erreur de Léa$/, async ({ page }, _nom: str
 // --- Quand
 
 When(/^Léa commence à jouer$/, async ({ page, monde }) => {
+  await assurerLeProfilDeLeaSiDesReglagesSontPrevus(page, monde);
   const profil = monde.profils.get("Léa");
   await ouvrirDemonstration(page, cleDe(profil?.univers ? libelleOuCle(profil.univers) : UNIVERS_PAR_DEFAUT));
 });
@@ -156,6 +168,7 @@ When(/^Léa revient à l'accueil par le nom de l'application$/, async ({ page })
 });
 
 When(/^Léa parcourt l'en-tête au clavier$/, async ({ page, monde }) => {
+  await assurerLeProfilDeLeaSiDesReglagesSontPrevus(page, monde);
   const profil = monde.profils.get("Léa");
   await ouvrirDemonstration(page, profil?.univers ?? cleDe(UNIVERS_PAR_DEFAUT));
 });

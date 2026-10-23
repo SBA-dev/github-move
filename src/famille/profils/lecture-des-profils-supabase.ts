@@ -8,6 +8,11 @@ type LigneLue = {
   readonly univers: unknown;
   readonly cree_le: unknown;
   readonly rattachements: unknown;
+  readonly mode_dys: unknown;
+  readonly tout_lire_a_voix_haute: unknown;
+  readonly parcours_libre: unknown;
+  readonly clavier_des_dictees: unknown;
+  readonly langue_du_parent: unknown;
 };
 
 function parentsDe(rattachements: unknown): unknown[] {
@@ -23,6 +28,13 @@ function enLigne(lue: LigneLue): LigneDeProfil[] {
     univers: lue.univers,
     creeLe: lue.cree_le,
     parents: parentsDe(lue.rattachements),
+    reglages: {
+      modeDys: lue.mode_dys,
+      toutLireAVoixHaute: lue.tout_lire_a_voix_haute,
+      parcoursLibre: lue.parcours_libre,
+      clavierDesDictees: lue.clavier_des_dictees,
+      langueDuParent: lue.langue_du_parent,
+    },
   };
   return estUneLigneDeProfil(ligne) ? [ligne] : [];
 }
@@ -35,7 +47,9 @@ export async function lireLesProfilsDuParent(): Promise<{ parent: string; lignes
   if (parent === undefined) throw new Error("Aucun parent connecté");
   const { data, error } = await client
     .from("profils_enfants")
-    .select("id, prenom, niveau, univers, cree_le, rattachements(parent)")
+    .select(
+      "id, prenom, niveau, univers, cree_le, mode_dys, tout_lire_a_voix_haute, parcours_libre, clavier_des_dictees, langue_du_parent, rattachements(parent)",
+    )
     .order("cree_le", { ascending: true });
   if (error) throw error;
   return { parent, lignes: (data as LigneLue[]).flatMap(enLigne) };

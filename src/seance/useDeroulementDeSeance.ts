@@ -24,6 +24,7 @@ export function useDeroulementDeSeance(
   lecon: Lecon,
   voix: Pick<Voix, "lire" | "couperLaVoix">,
   personnageGuide: PersonnageGuide,
+  toutLireAVoixHaute: boolean,
 ) {
   const personnage = usePersonnageQuiParle(voix);
   const { dire, faireSilence, reecouter: relire } = personnage;
@@ -42,6 +43,7 @@ export function useDeroulementDeSeance(
     seance,
     lecon,
     personnageGuide,
+    toutLireAVoixHaute,
     lire: voix.lire,
     dire,
     faireSilence,

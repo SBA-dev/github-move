@@ -36,7 +36,7 @@ L'application fonctionne et est publiée comme artifact claude.ai. Elle comprend
 
 ## Prochaines étapes
 
-> **En cours** : #16 et #17 livrées (PR #53 et #54). #11 (profils enfants, « Qui joue ? ») livrée sur `claude/nice-mendel-cp9syg`, en PR : tables `profils_enfants` et `rattachements` sur `savanturier-dev`, décision 0014. Scénarios `@envoi-email` exclus des exécutions courantes. Suite : #12 (réglages), puis #23 et #24.
+> **En cours** : #16, #17 et #11 livrées (PR #53, #54, #55). #12 (réglages : mode dys, tout lire à voix haute…) livrée sur `claude/nice-mendel-cp9syg`, en PR. Scénarios en attente : `@depend-de-18`, `@depend-de-44` ; `@envoi-email` exclus des exécutions courantes. Suite : #23 et #24 (première leçon jouable de bout en bout), puis #13 et #14.
 
 > **Chantier en cours : la réécriture complète en React + Supabase.** Plan, lots et décisions de démarrage dans `docs/reecriture.md`.
 

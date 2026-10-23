@@ -1,12 +1,19 @@
 import { assertEquals, assertThrows } from "@std/assert";
 import { NiveauInconnu } from "../../catalogue/domain/index.ts";
-import { ParentNonRattache, PrenomObligatoire, ProfilEnfantIntrouvable } from "../domain/erreurs.ts";
+import {
+  ClavierDesDicteesInconnu,
+  LangueDuParentInconnue,
+  ParentNonRattache,
+  PrenomObligatoire,
+  ProfilEnfantIntrouvable,
+} from "../domain/erreurs.ts";
 import {
   entetes,
   EntreeInvalide,
   lireLeCorpsJson,
   NonAuthentifie,
   originesAutorisees,
+  reglagesFacultatifs,
   statutEtMessage,
   texteFacultatif,
   texteObligatoire,
@@ -22,6 +29,20 @@ Deno.test("un parent non rattaché et un profil introuvable sont présentés par
 Deno.test("une erreur de validation métier est un 400 avec son message", () => {
   assertEquals(statutEtMessage(new PrenomObligatoire()), { statut: 400, message: "Écris le prénom de l'enfant." });
   assertEquals(statutEtMessage(new NiveauInconnu("CE9")).statut, 400);
+});
+
+Deno.test("un clavier des dictées inconnu est refusé en 400 avec son message", () => {
+  assertEquals(statutEtMessage(new ClavierDesDicteesInconnu("azerty")), {
+    statut: 400,
+    message: "Ce clavier des dictées est inconnu : « azerty ».",
+  });
+});
+
+Deno.test("une langue du parent inconnue est refusée en 400 avec son message", () => {
+  assertEquals(statutEtMessage(new LangueDuParentInconnue("klingon")), {
+    statut: 400,
+    message: "Cette langue du parent est inconnue : « klingon ».",
+  });
 });
 
 Deno.test("sans connexion c'est un 401, et une panne inconnue un 500 sans détail", () => {
@@ -101,4 +122,56 @@ Deno.test("l'identifiant d'un profil enfant qui n'est pas un UUID est une entré
 
 Deno.test("l'identifiant d'un profil enfant au format UUID est accepté", () => {
   assertEquals(uuidObligatoire({ profil: profilUuid }, "profil"), profilUuid);
+});
+
+Deno.test("sans champ « reglages », rien n'est à modifier", () => {
+  assertEquals(reglagesFacultatifs({ prenom: "Léa" }), undefined);
+});
+
+Deno.test("le champ « reglages » doit être un objet", () => {
+  for (const brut of ["dys", 1, true, null, ["modeDys"]]) {
+    assertThrows(() => reglagesFacultatifs({ reglages: brut }), EntreeInvalide, "objet");
+  }
+});
+
+Deno.test("un réglage inconnu est refusé et nommé", () => {
+  assertThrows(() => reglagesFacultatifs({ reglages: { modeSombre: true } }), EntreeInvalide, "modeSombre");
+});
+
+Deno.test("un réglage vrai ou faux qui n'est pas un booléen est refusé", () => {
+  for (const cle of ["modeDys", "toutLireAVoixHaute", "parcoursLibre"]) {
+    assertThrows(() => reglagesFacultatifs({ reglages: { [cle]: "oui" } }), EntreeInvalide, cle);
+  }
+});
+
+Deno.test("un réglage de texte qui n'est pas un texte est refusé", () => {
+  for (const cle of ["clavierDesDictees", "langueDuParent"]) {
+    assertThrows(() => reglagesFacultatifs({ reglages: { [cle]: 3 } }), EntreeInvalide, cle);
+  }
+});
+
+Deno.test("des réglages corrects sont rendus tels quels, y compris partiels", () => {
+  assertEquals(reglagesFacultatifs({ reglages: { modeDys: false, langueDuParent: "arabe" } }), {
+    modeDys: false,
+    langueDuParent: "arabe",
+  });
+  assertEquals(reglagesFacultatifs({ reglages: {} }), {});
+  assertEquals(
+    reglagesFacultatifs({
+      reglages: {
+        modeDys: true,
+        toutLireAVoixHaute: true,
+        parcoursLibre: true,
+        clavierDesDictees: "clavierComplet",
+        langueDuParent: "aucune",
+      },
+    }),
+    {
+      modeDys: true,
+      toutLireAVoixHaute: true,
+      parcoursLibre: true,
+      clavierDesDictees: "clavierComplet",
+      langueDuParent: "aucune",
+    },
+  );
 });
