@@ -4,7 +4,7 @@ import { accueilDeLaLecon, HUMEUR_PAR_DEFAUT, type Univers } from "@domain/motiv
 import { PersonnageGuide } from "../univers/index.ts";
 import { ConsigneLue, type Voix } from "../voix/index.ts";
 import { BulleDuPersonnage } from "./BulleDuPersonnage.tsx";
-import { sourceDeLaSection } from "./bibliotheque.ts";
+import { chargerLaSourceDeLaSection } from "./bibliotheque.ts";
 import { useParoleLue } from "./useParoleLue.ts";
 
 type Props = {
@@ -23,7 +23,7 @@ function PassagePourLesAdultes({ passage }: { readonly passage: Page["passagePou
   const section = passage.programme.section;
   useEffect(() => {
     let annule = false;
-    void sourceDeLaSection(section).then((texte) => !annule && setSource(texte));
+    void chargerLaSourceDeLaSection(section).then((texte) => !annule && setSource(texte));
     return () => {
       annule = true;
     };

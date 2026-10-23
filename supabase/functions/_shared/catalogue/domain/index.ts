@@ -2,6 +2,7 @@ export { LeconMalFormee, MatiereInconnue, NiveauInconnu, TypeDExerciceInconnu } 
 export type { EtapeDeLecon, Exercice, Lecon, PassageDuGuideFondamental, ProgrammeCite } from "./lecon.ts";
 export { lireLecon } from "./lire-lecon.ts";
 export { pageDeLaLecon } from "./page-de-la-lecon.ts";
+export { sourceDeLaSection } from "./source-de-la-section.ts";
 export type { ExercicePropose, PageDeLaLecon, PassagePourLesAdultes } from "./page-de-la-lecon.ts";
 export { libelleDeLaMatiere, matiere, MATIERES } from "./matiere.ts";
 export type { Matiere } from "./matiere.ts";
