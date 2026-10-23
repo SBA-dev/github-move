@@ -63,3 +63,7 @@ export function presentation(univers: Univers): string {
 export function saluer(prenom: string): string {
   return `Bonjour ${prenom} !`;
 }
+
+export function inviterACreerLePremierProfil(): string {
+  return "Bonjour ! Pour commencer, crée le profil de l'enfant qui va jouer. Tu pourras en ajouter d'autres ensuite.";
+}

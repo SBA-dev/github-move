@@ -1,12 +1,15 @@
 import { CreerProfilEnfant } from "../_shared/famille/application/creer-profil-enfant.ts";
 import { ProfilEnfantId } from "../_shared/famille/domain/profil-enfant-id.ts";
 import {
+  originesAutorisees,
   texteFacultatif,
   texteObligatoire,
   traiterUneEcritureDeFamille,
 } from "../_shared/famille/infrastructure/http-famille.ts";
 import { ProfilsEnfantsSupabase } from "../_shared/famille/infrastructure/profils-enfants-supabase.ts";
 import { presenterLeProfil } from "../_shared/famille/infrastructure/presentation-du-profil.ts";
+
+const origines = originesAutorisees(Deno.env.get("ORIGINES_AUTORISEES"));
 
 Deno.serve((requete) =>
   traiterUneEcritureDeFamille(requete, async ({ client, parent }, corps) => {
@@ -19,5 +22,5 @@ Deno.serve((requete) =>
       univers: texteFacultatif(corps, "univers"),
     }, new Date());
     return presenterLeProfil(await profils.parId(ProfilEnfantId.de(id)));
-  })
+  }, origines)
 );

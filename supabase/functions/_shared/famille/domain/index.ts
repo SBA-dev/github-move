@@ -14,6 +14,7 @@ export {
   PrenomObligatoire,
   ProfilEnfantIdVide,
   ProfilEnfantIntrouvable,
+  RattachementsInvalides,
   UniversInconnu,
 } from "./erreurs.ts";
 export { LienDeConnexion } from "./lien-de-connexion.ts";

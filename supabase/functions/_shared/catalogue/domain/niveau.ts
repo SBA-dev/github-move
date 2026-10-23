@@ -7,6 +7,10 @@ export type CodeDeNiveau = typeof CODES_DE_NIVEAU[number];
 export class Niveau {
   private constructor(readonly valeur: CodeDeNiveau) {}
 
+  static tous(): Niveau[] {
+    return CODES_DE_NIVEAU.map((code) => new Niveau(code));
+  }
+
   static de(brut: string): Niveau {
     const code = CODES_DE_NIVEAU.find((code) => code === brut);
     if (code === undefined) throw new NiveauInconnu(brut);

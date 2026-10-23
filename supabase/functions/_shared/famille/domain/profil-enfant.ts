@@ -1,6 +1,6 @@
 import type { CleUnivers } from "../../motivation/domain/index.ts";
 import type { Niveau } from "../../catalogue/domain/index.ts";
-import { ParentNonRattache } from "./erreurs.ts";
+import { ParentNonRattache, RattachementsInvalides } from "./erreurs.ts";
 import type { ParentId } from "./parent-id.ts";
 import type { Prenom } from "./prenom.ts";
 import type { ProfilEnfantId } from "./profil-enfant-id.ts";
@@ -54,7 +54,8 @@ export class ProfilEnfant {
     creeLe: Date,
     parents: ParentId[],
   ): ProfilEnfant {
-    return new ProfilEnfant(id, prenom, niveau, univers, creeLe, parents);
+    if (parents.length < 1 || parents.length > 2) throw new RattachementsInvalides();
+    return new ProfilEnfant(id, prenom, niveau, univers, creeLe, [...parents]);
   }
 
   get rattaches(): readonly ParentId[] {

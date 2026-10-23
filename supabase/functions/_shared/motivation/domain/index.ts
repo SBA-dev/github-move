@@ -7,6 +7,7 @@ export {
   encourager,
   type Felicitation,
   feliciter,
+  inviterACreerLePremierProfil,
   presentation,
   presentationAuRetourDuSon,
   saluer,

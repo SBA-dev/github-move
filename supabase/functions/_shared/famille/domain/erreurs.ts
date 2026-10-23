@@ -67,3 +67,10 @@ export class ProfilEnfantIntrouvable extends Error {
     this.name = "ProfilEnfantIntrouvable";
   }
 }
+
+export class RattachementsInvalides extends Error {
+  constructor() {
+    super("Un profil enfant a un ou deux parents.");
+    this.name = "RattachementsInvalides";
+  }
+}
