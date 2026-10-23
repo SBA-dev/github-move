@@ -2,9 +2,9 @@ import { assertEquals, assertStrictEquals } from "@std/assert";
 import type { CaractereDeLaVoix } from "./caractere-de-la-voix.ts";
 import {
   CARACTERE_LANGUE_ETRANGERE,
-  ChoixDeVoix,
   choisirVoix,
   choisirVoixDeLangue,
+  ChoixDeVoix,
   voixMontreeCommeChoisie,
 } from "./choix-de-voix.ts";
 import type { VoixDisponible } from "./voix-disponible.ts";
