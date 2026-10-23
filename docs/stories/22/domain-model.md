@@ -28,7 +28,7 @@ Contextes :
 
 ### Défaut trouvé à la lecture du code (absent de l'issue)
 
-L'issue dit que les erreurs de mots cachés sont notées pour les révisions. **Ce n'est pas le cas** : `RUNNERS.trous` appelle `questionsFrom(ex)` sur un exercice construit **sans `type`** ; `questionsFrom` ne renvoie rien, et `remember` n'est jamais appelé. Aucune erreur de `memoriser` n'est notée pour les révisions aujourd'hui (question ouverte n°5).
+L'issue dit que les erreurs de mots cachés sont notées pour les révisions. **Ce n'est pas le cas** : `RUNNERS.trous` appelle `questionsFrom(ex)` sur un exercice construit **sans `type`** ; `questionsFrom` ne renvoie rien, et `remember` n'est jamais appelé. Aucune erreur de `memoriser` n'est notée pour les révisions dans le legacy. La cible les garde comme toutes les questions ratées, et le lot 4 décide (décision n°5).
 
 ### Autres constats
 
@@ -40,10 +40,10 @@ L'issue dit que les erreurs de mots cachés sont notées pour les révisions. **
 
 | Terme | Statut | Remarque |
 |---|---|---|
-| Vers | **nouveau**, terme du format (`vers`) | Ligne d'une poésie ou d'une chanson. |
-| Poésie | **nouveau** (à valider) | Texte en vers à apprendre par cœur (`memoriser`). L'interface dit aussi « poème ». |
-| Chanson | **nouveau** (à valider) | Poésie à chanter (chanson, comptine) : le personnage guide dit « chante » au lieu de « redis » ou « récite ». |
-| Mot caché | **nouveau** (à valider) | Mot d'un vers remplacé par un trou pendant l'entraînement. |
+| Vers | **nouveau** (validé), terme du format (`vers`) | Ligne d'une poésie ou d'une chanson. |
+| Poésie | **nouveau** (validé) | Texte en vers à apprendre par cœur (`memoriser`). L'interface dit aussi « poème ». |
+| Chanson | **nouveau** (validé) | Poésie à chanter (chanson, comptine) : le personnage guide dit « chante » au lieu de « redis » ou « récite ». |
+| Mot caché | **nouveau** (validé) | Mot d'un vers remplacé par un trou pendant l'entraînement. |
 | Apprendre par cœur | libellé du type (`TYPES`) | Interface. |
 | Auteur | terme du format (`auteur`) | |
 
@@ -75,19 +75,19 @@ classDiagram
 
 ### Catalogue : validation à la lecture
 
-`Poesie` : `titre` non vide, vers non vides (au moins un ; au moins deux : question ouverte n°4), `auteur?`. Détection de la chanson (`estUneChanson`) : « chanson » ou « comptine » dans le titre ou l'auteur, sans tenir compte des majuscules.
+`Poesie` : `titre` non vide, vers non vides (au moins deux : décision n°4), `auteur?`. Détection de la chanson (`estUneChanson`) : « chanson » ou « comptine » dans le titre ou l'auteur, sans tenir compte des majuscules.
 
 ### Apprentissage : règles
 
 - `PlanDeMemorisation.de(poesie)` construit, au début de la séance :
   - l'**ordre des vers** : un `ExerciceOrdre` (#18) dont les éléments sont les vers ;
   - les **mots cachés** : un `TexteATrous` (#18) dont chaque vers devient un segment, avec un trou à la place de son mot caché, vers joints par « / ».
-- `MotCache.choisir(vers)` : le mot le plus long d'au moins 3 caractères (lettres, accents, apostrophes, tirets), le premier en cas d'égalité ; sa première occurrence. Aucun → pas de mot caché (question ouverte n°6).
+- `MotCache.choisir(vers)` : le mot le plus long d'au moins 3 caractères (lettres, accents, apostrophes, tirets), le premier en cas d'égalité ; sa première occurrence. L'article élidé n'en fait pas partie (« amour » plutôt que « l'amour »). Aucun → pas de mot caché (décision n°6).
 - Questions : une par vers pour l'ordre, une par vers pour les mots cachés ; un vers sans mot caché est **réussi d'office**. Avancement : 2 par vers.
-- Choix d'un mot caché : le mot + les autres mots cachés (pas de distracteurs), avec la règle de #18 (question ouverte n°4 pour les poésies courtes).
-- Ordre des vers : comparaison par **texte** si #18 la retient (vers répétés interchangeables, question ouverte n°1).
-- Paroles (Motivation, avec « redis / chante » selon `estUneChanson`) : introduction, « À toi ! … », consignes de l'ordre et des mots cachés (textes du legacy, question ouverte n°3).
-- Les questions des deux entraînements suivent les règles communes d'erreur (#23) ; la séance garde leurs questions ratées comme les autres (question ouverte n°5).
+- Choix d'un mot caché : le mot + les autres mots cachés (pas de distracteurs), avec la règle de #18 ; une poésie courte complète les choix avec d'autres mots de la poésie, non cachés, pour avoir toujours trois choix (décision n°4).
+- Ordre des vers : comparaison par **texte**, comme #18 (vers répétés interchangeables, décision n°1).
+- Paroles (Motivation, avec « redis / chante » selon `estUneChanson`) : introduction, « À toi ! … », consignes de l'ordre et des mots cachés (textes du legacy, sauf « Ensuite, tu le redis avec moi ! » qui devient « Ensuite, à toi de le redire ! », ou « de le chanter » pour une chanson : décision n°3).
+- Les questions des deux entraînements suivent les règles communes d'erreur (#23) ; la séance garde leurs questions ratées comme les autres (décision n°5).
 
 ### Erreurs métier
 
@@ -126,12 +126,18 @@ supabase/functions/_shared/apprentissage/domain/
 src/seance/exercices/           # carte de la poésie, vers mis en avant
 ```
 
+## Décisions du PO
+
+Validation n°1 du lot 3 par le PO, le 2026-10-23 : « OK pour tout » (`docs/stories/lot-3-decisions.md` ; décisions `docs/decisions/0012-lecture-des-lecons-dans-le-domaine-catalogue.md` et `docs/decisions/0013-ecritures-d-apprentissage-par-edge-function.md`). Chaque question reçoit pour réponse sa proposition. Le numéro unique du lot (`Q…`, voir `docs/stories/16/acceptance.md`) suit le numéro de la story.
+
+1. (Q56) **Vers répétés** : interchangeables à l'étape d'ordre ? **Décision** : oui (même règle que #18, question n°1 : on compare le texte).
+2. (Q57) **Sans enregistrement** : ajouter les étapes « redire vers par vers » et « texte masqué » qui n'existent qu'avec l'audio ? **Décision** : non au lot 3 (parité avec le legacy) ; à reprendre avec l'audio des poésies (lot 6).
+3. (Q58) **« Ensuite, tu le redis avec moi ! »** : corriger en « Ensuite, à toi de le redire ! » (« chanter » pour une chanson) ? **Décision** : oui.
+4. (Q59) **Mots cachés d'une poésie courte** : compléter les choix avec d'autres mots de la poésie (non cachés) pour avoir toujours trois choix ? Et le Catalogue refuse-t-il une poésie de moins de deux vers (l'ordre des vers n'y vérifie rien) ? **Décision** : oui pour les deux.
+5. (Q60) **Erreurs de mémorisation et révisions** : aujourd'hui **aucune** n'est notée (défaut trouvé ci-dessus). La séance les garde comme toutes les questions ratées, et le lot 4 décide ? **Décision** : oui.
+6. (Q61) **Choix du mot caché** : garder « le plus long d'au moins 3 lettres », mais sans l'article élidé (« amour » plutôt que « l'amour ») ? **Décision** : oui ; le format pourra plus tard marquer le mot caché.
+7. (Q62) **Glossaire** : « vers », « mot caché », « poésie », « chanson » sont-ils des termes du domaine ? **Décision** : oui ; « poème » est un mot d'interface pour **poésie**.
+
 ## Questions ouvertes
 
-1. **Vers répétés** : interchangeables à l'étape d'ordre ? **Proposition** : oui (même règle que #18, question n°1 : on compare le texte).
-2. **Sans enregistrement** : ajouter les étapes « redire vers par vers » et « texte masqué » qui n'existent qu'avec l'audio ? **Proposition** : non au lot 3 (parité avec le legacy) ; à reprendre avec l'audio des poésies (lot 6).
-3. **« Ensuite, tu le redis avec moi ! »** : corriger en « Ensuite, à toi de le redire ! » (« chanter » pour une chanson) ? **Proposition** : oui.
-4. **Mots cachés d'une poésie courte** : compléter les choix avec d'autres mots de la poésie (non cachés) pour avoir toujours trois choix ? Et le Catalogue refuse-t-il une poésie de moins de deux vers (l'ordre des vers n'y vérifie rien) ? **Proposition** : oui pour les deux.
-5. **Erreurs de mémorisation et révisions** : aujourd'hui **aucune** n'est notée (défaut trouvé ci-dessus). La séance les garde comme toutes les questions ratées, et le lot 4 décide ? **Proposition** : oui.
-6. **Choix du mot caché** : garder « le plus long d'au moins 3 lettres », mais sans l'article élidé (« amour » plutôt que « l'amour ») ? **Proposition** : oui ; le format pourra plus tard marquer le mot caché.
-7. **Glossaire** : « vers », « mot caché », « poésie », « chanson » sont-ils des termes du domaine ? **Proposition** : oui (à valider) ; « poème » est un mot d'interface pour **poésie**.
+Aucune.

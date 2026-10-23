@@ -50,20 +50,20 @@ Contextes :
 
 | Terme | Statut | Remarque |
 |---|---|---|
-| Opération | **nouveau** (à valider), terme du format (`operations`) | Calcul à faire : un énoncé (`q`) et un résultat (`r`), avec une aide facultative. Peut aussi être une question de calcul qui n'a pas de signe (« Moitié de 10 »). |
-| Générateur | **nouveau**, terme du format (`generateur`) | Règle de tirage des opérations (signe, intervalles, nombre, cible). |
-| Adaptation de la difficulté | **nouveau** (à valider) | Réduction des intervalles d'un générateur quand l'enfant se trompe souvent en calcul. |
-| Astuce de l'opération | **nouveau** (à valider) | Aide par défaut d'un calcul, selon son signe. |
-| Clavier de cristaux | **nouveau** (à valider), nommé dans le format | Clavier de chiffres pour répondre à un calcul, à partir du CE1. |
-| Mode de réponse | **nouveau** (à valider) | Choix (au CP) ou clavier de cristaux, selon le niveau (et la réponse, #21). |
+| Opération | **nouveau** (validé), terme du format (`operations`) | Calcul à faire : un énoncé (`q`) et un résultat (`r`), avec une aide facultative. Peut aussi être une question de calcul qui n'a pas de signe (« Moitié de 10 »). |
+| Générateur | **nouveau** (validé), terme du format (`generateur`) | Règle de tirage des opérations (signe, intervalles, nombre, cible). |
+| Adaptation de la difficulté | **nouveau** (validé) | Réduction des intervalles d'un générateur quand l'enfant se trompe souvent en calcul. |
+| Astuce de l'opération | **nouveau** (validé) | Aide par défaut d'un calcul, selon son signe. |
+| Clavier de cristaux | **nouveau** (validé), nommé dans le format | Clavier de chiffres pour répondre à un calcul, à partir du CE1. |
+| Mode de réponse | **nouveau** (validé) | Choix (au CP) ou clavier de cristaux, selon le niveau (et la réponse, #21). |
 | Fluence | terme du format (type `fluence`) | L'interface dit « Calcul rapide ». |
-| Record de fluence | **nouveau** (à valider) | Meilleur score d'un enfant à un exercice de fluence. « Record » seul : seulement dans l'interface. |
-| Score de fluence | **nouveau** (à valider) | Nombre de calculs réussis pendant une fluence. « Score » reste interdit pour les étoiles. |
+| Record de fluence | **nouveau** (validé) | Meilleur score d'un enfant à un exercice de fluence. « Record » seul : seulement dans l'interface. |
+| Score de fluence | **nouveau** (validé) | Nombre de calculs réussis pendant une fluence. « Score » reste interdit pour les étoiles. |
 | Addition posée | terme du format (type `addition`) | |
-| Colonne | **nouveau** (à valider) | Colonne des unités, des dizaines ou des centaines d'une addition posée. L'interface dit « maison » (#18, question n°7 ; #6, question n°5). |
-| Rang | **nouveau** (à valider), **conflit** (question ouverte n°7) | Unités, dizaines, centaines : ce que vaut un chiffre selon sa colonne (mot des programmes de maths). Le glossaire interdit « rang » comme synonyme d'**Ordre** (position d'une leçon) ; proposition : l'interdiction devient « rang (pour une leçon) ». |
-| Retenue | **nouveau** (à valider) | Dizaine d'une colonne reportée dans la colonne suivante. |
-| Étape poser, étape calculer | termes du format (`etapes`) | **Conflit** avec « Étape de leçon » : on dit toujours « étape poser » ou « étape calculer », jamais « étape » seule. |
+| Colonne | **nouveau** (validé) | Colonne des unités, des dizaines ou des centaines d'une addition posée. L'interface dit « maison » (#18, décision n°7 ; #6, question n°5). |
+| Rang | **nouveau** (validé), **conflit tranché** (décision n°7) | Unités, dizaines, centaines : ce que vaut un chiffre selon sa colonne (mot des programmes de maths). « Rang » reste interdit seulement pour la position d'une leçon (**Ordre**). |
+| Retenue | **nouveau** (validé) | Dizaine d'une colonne reportée dans la colonne suivante. |
+| Étape poser, étape calculer | termes du format (`etapes`) | **Conflit tranché** (glossaire, décision n°28) avec « Étape de leçon » : on dit toujours « étape poser » ou « étape calculer », jamais « étape » seule. |
 
 ## Modèle
 
@@ -140,37 +140,37 @@ classDiagram
 | Exercice | Règles de `lireLecon` |
 |---|---|
 | `ExerciceCalcul` | `operations` non vides (`q` non vide, `r` entier ≥ 0) **ou** `generateur` ; sans les deux : générateur par défaut (5 additions, 1 à 10). |
-| `GenerateurDOperations` | Signe connu ; intervalles `[min, max]` d'entiers avec `min ≤ max` ; `combien ≥ 1`. `complement` : `a` au plus égal à la `cible` (question ouverte n°10). `-` : résultat jamais négatif (échange). |
+| `GenerateurDOperations` | Signe connu ; intervalles `[min, max]` d'entiers avec `min ≤ max` ; `combien ≥ 1`. `complement` : `a` au plus égal à la `cible` (décision n°10). `-` : résultat jamais négatif (échange). |
 | `ExerciceFluence` | `duree` > 0 (60 par défaut) ; générateur (défaut : additions 1 à 10). |
-| `ExerciceAddition` | `operations` (au moins 2 nombres entiers positifs chacune) ou `generateur` ; `etapes` parmi `poser`, `calculer` (les deux par défaut). Somme de moins de 1 000 (question ouverte n°5). |
+| `ExerciceAddition` | `operations` (au moins 2 nombres entiers positifs chacune) ou `generateur` ; `etapes` parmi `poser`, `calculer` (les deux par défaut). Somme de moins de 1 000 (décision n°5). |
 
 ### Apprentissage : règles
 
 **Tirage et adaptation** (au début de la séance, #16)
-- `AdaptationDeLaDifficulte.depuis(reussites, erreurs)` : facilité 0,65 si `reussites + erreurs ≥ 6` et `reussites / total < 0,6`, sinon 1. Les compteurs viennent de l'**historique de calcul** de l'enfant (`ContexteDeSeance`, #16), lu par le front dans les séances terminées (#24, réussites et erreurs par type). Périmètre et seuils : question ouverte n°4.
+- `AdaptationDeLaDifficulte.depuis(reussites, erreurs)` : facilité 0,65 si `reussites + erreurs ≥ 6` et `reussites / total < 0,6`, sinon 1. Les compteurs viennent de l'**historique de calcul** de l'enfant (`ContexteDeSeance`, #16), lu par le front dans les séances terminées (#24, réussites et erreurs par type) : toutes les leçons de calcul, seuils gardés, mais seulement les **50 dernières réponses** (décision n°4).
 - `TirageDOperations.tirer` : règles de `genOp` ci-dessus, avec la facilité appliquée aux intervalles. Les opérations tirées font partie des **tirages** de la séance ; le serveur vérifie qu'elles respectent le générateur (#24).
 
 **Calcul**
 - Une question par opération. Réponse `Nombre(n)`. Correction : `n` égal au résultat.
 - `ModeDeReponse.pour(niveau)` : CP → choix `r`, `r+1`, `max(0, r−1)`, `r+2` (dédoublonnés, mélangés, #17) ; CE1 et plus → clavier de cristaux.
 - Clavier de cristaux : la saisie (chiffres, « Effacer », 4 chiffres au plus, « Valider » sans chiffre ignoré) est l'affaire du front ; le domaine reçoit le nombre validé.
-- Aide : `aide`, sinon l'astuce du signe ; pas d'astuce pour une question sans signe (question ouverte n°9).
+- Aide : `aide`, sinon l'astuce du signe ; pas d'astuce pour une question sans signe (décision n°9).
 - Phrase lue : `phraseDuCalcul(operation)` (domaine) ; carte : `carteDuCalcul(operation, resultat?)`.
 
 **Fluence** (`ExerciceChronometre`, entité de la séance)
 - Commence à « C'est parti ! » (`demarrer(maintenant)`). Jusqu'à `debut + duree` : chaque bonne réponse ajoute 1 au score et tire une nouvelle opération ; une réponse fausse ne compte rien. Après la fin, plus aucune réponse.
 - L'heure est **passée en paramètre** (front : port `Horloge`), jamais lue dans le domaine.
-- Une seule question pour l'avancement. Erreurs : aucune aujourd'hui (question ouverte n°2).
+- Une seule question pour l'avancement. Erreurs : aucune, pas de pression dans un exercice chronométré ; ses réponses fausses comptent seulement dans l'adaptation de la difficulté, et une séance faite seulement d'une fluence ne donne pas d'étoiles (décision n°2, #24).
 - `RecordDeFluence.proposer(score)` : nouveau record si `score > meilleurScore` (premier record si aucun) ; sinon le record reste. Un score de 0 n'est jamais un record.
-- Phrases de fin : question ouverte n°3 pour 0 et 1.
+- Phrases de fin pour 0 et 1 (décision n°3) : « 1 calcul réussi ! » au singulier ; pour 0 : « Pas encore de calcul réussi : on réessaie quand tu veux ! », sans parler de record.
 
 **Addition posée** (`AdditionPosee`)
 - Colonnes : autant que de chiffres de la somme (3 au plus), de droite à gauche unités (bleue), dizaines (rose), centaines (verte), **dans tous les univers**.
 - **Étape poser** : une question par chiffre de chaque nombre. `Placement(chiffre, colonne)` juste si la colonne est vide pour ce nombre et si le chiffre est celui du nombre à ce rang. Avec un chiffre en double, l'aide vise **la colonne encore libre** de ce chiffre (correction du défaut).
 - **Étape calculer** : une question par colonne, de droite à gauche. Somme `s` = chiffres de la colonne + retenue. Choix au CP (`s`, `s+1`, `max(0, s−1)`, `s−10` si `s ≥ 10` sinon `s+2`) ou clavier. **Retenue oubliée** reconnue si la retenue est non nulle et la réponse vaut `s − retenue`. Si `s ≥ 10` et ce n'est pas la dernière colonne : on écrit `s mod 10`, la retenue `⌊s / 10⌋` monte. La dernière colonne écrit `s`.
-- Avancement : une question par chiffre posé et par colonne calculée (question ouverte n°11), pour que l'avancement soit complet exactement à la fin.
-- Phrase de la retenue : aujourd'hui « dizaine(s) et unité(s) » partout (question ouverte n°1).
-- Générateur avec `retenue` : le tirage garantit la retenue (question ouverte n°12).
+- Avancement : une question par chiffre posé et par colonne calculée (décision n°11), pour que l'avancement soit complet exactement à la fin.
+- Phrase de la retenue : elle dit le rang de la colonne (« 10, c'est 1 centaine et 0 dizaine ! » dans la colonne des dizaines), au lieu de « dizaine(s) et unité(s) » partout dans le legacy (décision n°1).
+- Générateur avec `retenue` : le tirage garantit toujours la retenue, sans repli silencieux (décision n°12).
 
 ### Ports
 
@@ -203,7 +203,7 @@ classDiagram
 
 | Événement | Données | Qui réagit |
 |---|---|---|
-| `NouveauRecordDeFluence` (à valider) | profil enfant, leçon, exercice, ancien et nouveau record | personne au lot 3 ; Accompagnement (suivi) plus tard |
+| `NouveauRecordDeFluence` | profil enfant, leçon, exercice, ancien et nouveau record | personne au lot 3 ; Accompagnement (suivi) plus tard |
 
 Le score de chaque fluence voyage avec `SeanceTerminee` (#24).
 
@@ -243,17 +243,23 @@ supabase/functions/_shared/apprentissage/infrastructure/
 src/seance/exercices/           # clavier de cristaux, barre de temps, colonnes de l'addition posée
 ```
 
+## Décisions du PO
+
+Validation n°1 du lot 3 par le PO, le 2026-10-23 : « OK pour tout » (`docs/stories/lot-3-decisions.md` ; décisions `docs/decisions/0012-lecture-des-lecons-dans-le-domaine-catalogue.md` et `docs/decisions/0013-ecritures-d-apprentissage-par-edge-function.md`). Chaque question reçoit pour réponse sa proposition. Le numéro unique du lot (`Q…`, voir `docs/stories/16/acceptance.md`) suit le numéro de la story.
+
+1. (Q37) **Phrase de la retenue** : dire le rang de la colonne (« 10, c'est 1 centaine et 0 dizaine ! » dans la colonne des dizaines) ? **Décision** : oui.
+2. (Q38) **Fluence et étoiles** : les réponses fausses de la fluence restent-elles hors des erreurs ? **Décision** : oui, pas d'erreur dans un exercice chronométré (pas de pression), **mais** une séance faite seulement d'une fluence ne donne pas d'étoiles (#24, question n°1), et ses réponses fausses comptent dans l'adaptation de la difficulté.
+3. (Q39) **Fluence : messages pour 0 et 1 calcul** ? **Décision** : accorder au singulier (« 1 calcul réussi ! ») ; pour 0 : « Pas encore de calcul réussi : on réessaie quand tu veux ! », sans parler de record.
+4. (Q40) **Adaptation** : sur toutes les leçons (comme aujourd'hui) ou par leçon ? Seuils gardés (6 réponses, 60 %, 65 %) ? **Décision** : toutes les leçons de calcul, seuils gardés, mais sur les **50 dernières réponses** seulement, pour que les nombres regrandissent quand l'enfant progresse.
+5. (Q41) **Addition de 4 chiffres ou plus** ? **Décision** : non au lot 3 ; le Catalogue refuse une somme de 1 000 ou plus (aucune dans la bibliothèque).
+6. (Q42) **Addition, étape poser : noter les erreurs pour les révisions** ? **Décision** : la séance garde toutes les questions ratées ; le lot 4 décide (même réponse que #18, question n°4).
+7. (Q43) **Glossaire** : « record », « clavier de cristaux », « retenue », « colonnes de calcul » ? **Décision** : **Record de fluence**, **Clavier de cristaux**, **Retenue**, **Colonne** et **Rang** au glossaire ; « maison » reste un mot d'interface ; « rang » n'est plus interdit que pour la position d'une leçon (**Ordre**).
+8. (Q44) **Fluence en mode dys** : faut-il plus de temps ? **Décision** : non au lot 3 (pas de règle aujourd'hui) ; à demander à un orthophoniste avant d'inventer une règle.
+9. (Q45) **Calcul sans signe** (« Moitié de 10 », « Carré de côté 5 ») : quelle aide par défaut ? **Décision** : aucune astuce (seulement l'encouragement), sauf si l'opération a une `aide`.
+10. (Q46) **Complément** : le Catalogue refuse un générateur dont `a` peut dépasser la `cible` (résultat négatif) ? **Décision** : oui.
+11. (Q47) **Avancement de l'addition posée** : une question par chiffre posé et par colonne calculée ? **Décision** : oui, le récipient est plein exactement à la fin.
+12. (Q48) **Générateur d'addition avec `retenue`** : toujours une retenue (pas de repli silencieux après 200 tirages) ? **Décision** : oui.
+
 ## Questions ouvertes
 
-1. **Phrase de la retenue** : dire le rang de la colonne (« 10, c'est 1 centaine et 0 dizaine ! » dans la colonne des dizaines) ? **Proposition** : oui.
-2. **Fluence et étoiles** : les réponses fausses de la fluence restent-elles hors des erreurs ? **Proposition** : oui, pas d'erreur dans un exercice chronométré (pas de pression), **mais** une séance faite seulement d'une fluence ne donne pas d'étoiles (#24, question n°1), et ses réponses fausses comptent dans l'adaptation de la difficulté.
-3. **Fluence : messages pour 0 et 1 calcul** ? **Proposition** : accorder au singulier (« 1 calcul réussi ! ») ; pour 0 : « Pas encore de calcul réussi : on réessaie quand tu veux ! », sans parler de record.
-4. **Adaptation** : sur toutes les leçons (comme aujourd'hui) ou par leçon ? Seuils gardés (6 réponses, 60 %, 65 %) ? **Proposition** : toutes les leçons de calcul, seuils gardés, mais sur les **50 dernières réponses** seulement, pour que les nombres regrandissent quand l'enfant progresse.
-5. **Addition de 4 chiffres ou plus** ? **Proposition** : non au lot 3 ; le Catalogue refuse une somme de 1 000 ou plus (aucune dans la bibliothèque).
-6. **Addition, étape poser : noter les erreurs pour les révisions** ? **Proposition** : la séance garde toutes les questions ratées ; le lot 4 décide (même réponse que #18, question n°4).
-7. **Glossaire** : « record », « clavier de cristaux », « retenue », « colonnes de calcul » ? **Proposition** : **Record de fluence**, **Clavier de cristaux**, **Retenue**, **Colonne** et **Rang** au glossaire (à valider) ; « maison » reste un mot d'interface ; « rang » n'est plus interdit que pour la position d'une leçon (**Ordre**).
-8. **Fluence en mode dys** : faut-il plus de temps ? **Proposition** : non au lot 3 (pas de règle aujourd'hui) ; à demander à un orthophoniste avant d'inventer une règle.
-9. **Calcul sans signe** (« Moitié de 10 », « Carré de côté 5 ») : quelle aide par défaut ? **Proposition** : aucune astuce (seulement l'encouragement), sauf si l'opération a une `aide`.
-10. **Complément** : le Catalogue refuse un générateur dont `a` peut dépasser la `cible` (résultat négatif) ? **Proposition** : oui.
-11. **Avancement de l'addition posée** : une question par chiffre posé et par colonne calculée ? **Proposition** : oui, le récipient est plein exactement à la fin.
-12. **Générateur d'addition avec `retenue`** : toujours une retenue (pas de repli silencieux après 200 tirages) ? **Proposition** : oui.
+Aucune.

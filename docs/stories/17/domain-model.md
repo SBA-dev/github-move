@@ -38,14 +38,14 @@ Résumé des règles (détail dans l'issue) :
 | Terme | Statut | Remarque |
 |---|---|---|
 | Question | au glossaire (confirmé) | « Un item à résoudre à l'intérieur d'un exercice. » C'est l'unité de la séance : avancement, erreurs, révisions. |
-| Réponse | au glossaire (à valider) | Ce que l'enfant propose : un choix touché, un nombre validé, un mot écrit, une étiquette posée, ou « Je ne sais pas » (#23). |
-| Erreur | au glossaire (à valider) | Inchangé. Le compte exact des erreurs d'une question est fixé par #23. |
-| Choix | **nouveau** (à valider), terme du format (`choix`) | Réponses proposées à l'enfant pour une question. |
-| Choix écarté | **nouveau** (à valider) | Choix faux déjà touché : il reste visible, pâle, et ne compte plus d'erreur. |
-| Bulle, carte de la question | termes d'interface (question ouverte n°7) | Le domaine dit **choix** et **question**. |
+| Réponse | au glossaire (validé) | Ce que l'enfant propose : un choix touché, un nombre validé, un mot écrit, une étiquette posée, ou « Je ne sais pas » (#23). |
+| Erreur | au glossaire (validé) | Inchangé. Le compte exact des erreurs d'une question est fixé par #23. |
+| Choix | **nouveau** (validé), terme du format (`choix`) | Réponses proposées à l'enfant pour une question. |
+| Choix écarté | **nouveau** (validé) | Choix faux déjà touché : il reste visible, pâle, et ne compte plus d'erreur. |
+| Bulle, carte de la question | termes d'interface (décision n°7) | Le domaine dit **choix** et **question**. |
 | Texte de lecture | terme du format (`lecture.texte`) | Pas de nouveau terme : « le texte » de l'exercice de lecture. |
-| Mot à écouter | **nouveau** (à valider) | Champ `dire` de l'écoute : mot ou phrase dit par une voix anglaise, jamais écrit. |
-| Explication de la réponse | **nouveau** (à valider) | Phrase propre au type d'exercice, dite après la félicitation (écoute : « « cat », c'est « chat » »). Apprentissage la fournit, Motivation la félicitation. |
+| Mot à écouter | **nouveau** (validé) | Champ `dire` de l'écoute : mot ou phrase dit par une voix anglaise, jamais écrit. |
+| Explication de la réponse | **nouveau** (validé) | Phrase propre au type d'exercice, dite après la félicitation (écoute : « « cat », c'est « chat » »). Apprentissage la fournit, Motivation la félicitation. |
 
 ## Modèle
 
@@ -100,7 +100,7 @@ classDiagram
 |---|---|
 | `ExerciceBulles` | `questions: QuestionAChoix[]`, au moins une. |
 | `ExerciceLecture` | `titre?`, `texte` non vide, `questions: QuestionAChoix[]`. |
-| `ExerciceEcoute` | `langue` (défaut `en-GB`), `items: ItemDEcoute[]` : `dire` non vide, `question?`, `choix`, `reponse` (`aide?`, `consigne?` : question ouverte n°6). |
+| `ExerciceEcoute` | `langue` (défaut `en-GB`), `items: ItemDEcoute[]` : `dire` non vide, `question?`, `choix`, `reponse` (`aide?`, ajoutée au format ; `consigne` n'est pas lue par le moteur, `question` joue ce rôle : décision n°6). |
 | `QuestionAChoix` | `question` non vide, `choix` (au moins 2 **après dédoublonnage**), `reponse` **présente dans les choix**, `aide?`. Sinon `ExerciceMalForme`. Le pipeline vérifie déjà que la réponse fait partie des choix. |
 
 ### Apprentissage : la question jouée
@@ -117,7 +117,7 @@ classDiagram
 
 | Value object | Règle |
 |---|---|
-| `ChoixProposes` | Dédoublonnés par **texte exact** (accents et majuscules gardés, question ouverte n°8), puis mélangés par le port `Hasard`, une fois au début de la séance. `reduireADeux()` garde la bonne réponse et **la première autre non écartée** dans l'ordre affiché (question ouverte n°10). Les choix écartés restent dans la liste, marqués écartés (question ouverte n°5). |
+| `ChoixProposes` | Dédoublonnés par **texte exact** (accents et majuscules gardés, décision n°8), puis mélangés par le port `Hasard`, une fois au début de la séance. `reduireADeux()` garde la bonne réponse et **la première autre non écartée** dans l'ordre affiché (décision n°10). Les choix écartés restent dans la liste, marqués écartés (décision n°5). |
 | `Reponse` | Union des formes de réponse du lot. Ici : `Choix(texte)`. Les autres formes sont posées par #18 à #23. |
 | `CleDeQuestion` | Préfixe du type et texte normalisé (accents retirés, minuscules, espaces réduits), comme `norm` du legacy. La normalisation ne sert **qu'à la clé**, jamais à la correction. |
 | `LectureDesChoix` | « Est-ce `<a>`, `<b>`, ou `<c>` ? », dans l'ordre affiché, seulement s'il reste au moins deux choix. Lue seulement si le réglage **tout lire à voix haute** est actif ; le son et la voix sont l'affaire du front. |
@@ -128,8 +128,8 @@ classDiagram
 | Type | Déroulé (faits annoncés par le domaine) |
 |---|---|
 | `bulles` | Pour chaque question : la question est lue, puis les choix apparaissent. Après une erreur : aide de la question ou « Essaie une autre bulle. ». |
-| `lecture` | Le texte est lu (mot surligné), puis « J'ai écouté », puis les questions comme `bulles`. Texte gardé à l'écran : question ouverte n°2. |
-| `ecoute` | `question` (ou la question par défaut) est lue, puis `dire` est prononcé par la voix anglaise. « Écouter » le redit. Après une erreur : « Écoute encore. », puis `dire` (question ouverte n°3). |
+| `lecture` | Le texte est lu (mot surligné), puis « J'ai écouté », puis les questions comme `bulles`. Le texte reste affiché au-dessus des questions, pour être relu (décision n°2). |
+| `ecoute` | `question` (ou la question par défaut) est lue, puis `dire` est prononcé par la voix anglaise. « Écouter » le redit. Après une erreur : « Écoute encore. » en entier, puis `dire` (décision n°3). |
 
 ### Erreurs métier
 
@@ -175,15 +175,21 @@ supabase/functions/_shared/apprentissage/domain/
 src/seance/exercices/           # bulles, carte de la question, texte de lecture, bouton « Écouter »
 ```
 
+## Décisions du PO
+
+Validation n°1 du lot 3 par le PO, le 2026-10-23 : « OK pour tout » (`docs/stories/lot-3-decisions.md` ; décisions `docs/decisions/0012-lecture-des-lecons-dans-le-domaine-catalogue.md` et `docs/decisions/0013-ecritures-d-apprentissage-par-edge-function.md`). Chaque question reçoit pour réponse sa proposition. Le numéro unique du lot (`Q…`, voir `docs/stories/16/acceptance.md`) suit le numéro de la story.
+
+1. (Q11) **Bulles** : la félicitation est-elle lue jusqu'au bout avant la question suivante ? **Décision** : oui (correction du défaut, au prix d'un peu de temps).
+2. (Q12) **Lecture** : le texte reste-t-il affiché pendant les questions ? **Décision** : oui, au-dessus de la question, pour que l'enfant puisse le relire.
+3. (Q13) **Écoute** : faire entendre l'encouragement en entier, puis le mot ? **Décision** : oui.
+4. (Q14) **Écoute sans son** (muet ou navigateur sans voix) : reprendre les messages de la dictée (« … j'ai besoin du son : active-le avec le bouton ci-dessous. », bouton « Activer le son ») ? **Décision** : oui, mêmes textes en remplaçant « Pour la dictée » par « Pour écouter l'anglais ».
+5. (Q15) **Après deux erreurs** : les bulles écartées restent-elles visibles, pâles ? **Décision** : oui, comme aujourd'hui (l'enfant voit ce qu'il a déjà essayé).
+6. (Q16) **`consigne` et `aide` des items d'écoute** : **Décision** : ajouter `aide` (facultative) au format pour les items d'écoute et les questions de lecture ; retirer `consigne` du moteur (jamais utilisée, et `question` joue ce rôle).
+7. (Q17) **« Bulle », « carte de la question »** : termes d'interface, hors glossaire ? **Décision** : oui.
+8. (Q18) **Choix « a » et « à »** : deux choix différents (dédoublonnage et correction par texte exact, accents et majuscules gardés) ? **Décision** : oui, comme aujourd'hui pour les bulles ; c'est aussi la correction proposée pour les trous (#18).
+9. (Q19) **Lecture** : après une erreur, l'aide reste « Essaie une autre bulle. » (les questions de lecture n'ont pas d'aide) ? **Décision** : oui, tant que le format n'a pas d'`aide` pour elles (question n°6).
+10. (Q20) **Réduction à deux** : la bulle gardée avec la bonne est la première non écartée dans l'ordre affiché (comme aujourd'hui) ? **Décision** : oui ; elle est déterministe et testable.
+
 ## Questions ouvertes
 
-1. **Bulles** : la félicitation est-elle lue jusqu'au bout avant la question suivante ? **Proposition** : oui (correction du défaut, au prix d'un peu de temps).
-2. **Lecture** : le texte reste-t-il affiché pendant les questions ? **Proposition** : oui, au-dessus de la question, pour que l'enfant puisse le relire.
-3. **Écoute** : faire entendre l'encouragement en entier, puis le mot ? **Proposition** : oui.
-4. **Écoute sans son** (muet ou navigateur sans voix) : reprendre les messages de la dictée (« … j'ai besoin du son : active-le avec le bouton ci-dessous. », bouton « Activer le son ») ? **Proposition** : oui, mêmes textes en remplaçant « Pour la dictée » par « Pour écouter l'anglais ».
-5. **Après deux erreurs** : les bulles écartées restent-elles visibles, pâles ? **Proposition** : oui, comme aujourd'hui (l'enfant voit ce qu'il a déjà essayé).
-6. **`consigne` et `aide` des items d'écoute** : **Proposition** : ajouter `aide` (facultative) au format pour les items d'écoute et les questions de lecture ; retirer `consigne` du moteur (jamais utilisée, et `question` joue ce rôle).
-7. **« Bulle », « carte de la question »** : termes d'interface, hors glossaire ? **Proposition** : oui.
-8. **Choix « a » et « à »** : deux choix différents (dédoublonnage et correction par texte exact, accents et majuscules gardés) ? **Proposition** : oui, comme aujourd'hui pour les bulles ; c'est aussi la correction proposée pour les trous (#18).
-9. **Lecture** : après une erreur, l'aide reste « Essaie une autre bulle. » (les questions de lecture n'ont pas d'aide) ? **Proposition** : oui, tant que le format n'a pas d'`aide` pour elles (question n°6).
-10. **Réduction à deux** : la bulle gardée avec la bonne est la première non écartée dans l'ordre affiché (comme aujourd'hui) ? **Proposition** : oui ; elle est déterministe et testable.
+Aucune.

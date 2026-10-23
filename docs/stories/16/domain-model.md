@@ -36,15 +36,15 @@ Décrit en détail dans l'issue. Points qui fixent le modèle :
 | Terme | Statut | Remarque |
 |---|---|---|
 | Leçon, Étape de leçon, Exercice, Question, Consigne | au glossaire (confirmés) | |
-| Séance | au glossaire (à valider) | Précisée : une séance est **complète** ou **d'un seul exercice**. |
-| Séance complète | **nouveau** (à valider) | Étapes de leçon, puis tous les exercices de la leçon, dans l'ordre. Interface : « Leçon et tous les jeux ». |
-| Séance d'un exercice | **nouveau** (à valider) | Un seul exercice choisi sur la page de la leçon, sans étapes de leçon. Interface : « Ou choisis un seul jeu ». |
-| Avancement de la séance | **nouveau** (à valider) | Nombre de questions réussies sur le nombre de questions de la séance. Interface : le **récipient** et les points (question ouverte n°6). |
+| Séance | au glossaire (validé) | Précisée : une séance est **complète** ou **d'un seul exercice**. |
+| Séance complète | **nouveau** (validé) | Étapes de leçon, puis tous les exercices de la leçon, dans l'ordre. Interface : « Leçon et tous les jeux ». |
+| Séance d'un exercice | **nouveau** (validé) | Un seul exercice choisi sur la page de la leçon, sans étapes de leçon. Interface : « Ou choisis un seul jeu ». |
+| Avancement de la séance | **nouveau** (validé) | Nombre de questions réussies sur le nombre de questions de la séance. Interface : le **récipient** et les points (décision n°6). |
 | Type d'exercice | déjà dans « Exercice » | Le Catalogue lui donne un **libellé** (« Bulles-réponses », « Ranger dans les maisons »…). Le libellé est un texte d'interface. |
 | Page de la leçon | terme d'interface | Lecture (`PageDeLaLecon`) du Catalogue, hors glossaire. |
-| Jeu | **conflit** (question ouverte n°3) | L'interface dit « jeu » pour **exercice** (« Leçon et tous les jeux », « Jeu suivant »). Proposition : mot d'interface seulement, jamais dans le code. |
-| Récipient de progression | terme d'interface (question ouverte n°6) | |
-| Guide (seul) | **conflit** (question ouverte n°4) | Le bloc adulte dit « Ce que conseille le guide ». Le glossaire interdit « guide » seul. |
+| Jeu | **conflit tranché** (décision n°3) | L'interface dit « jeu » pour **exercice** (« Leçon et tous les jeux », « Jeu suivant »). Mot d'interface seulement, jamais dans le code ni les scénarios. |
+| Récipient de progression | terme d'interface (décision n°6) | |
+| Guide (seul) | **conflit tranché** (décision n°4) | Le bloc adulte du legacy dit « Ce que conseille le guide ». Le glossaire interdit « guide » seul : la cible dit « Ce que conseille le guide fondamental ». |
 | Partie | synonyme interdit | « Partie » est interdit pour **Séance** (glossaire). « Séance en cours » est le terme retenu par #8. |
 
 ## Modèle
@@ -125,8 +125,8 @@ classDiagram
 ### Catalogue pédagogique : la leçon publiée
 
 - `Lecon` est un **value object en lecture seule**, pas un agrégat : personne ne la modifie dans l'application. Elle est construite par `lireLecon(brut)` à partir du format JSON (`docs/format-lecons.md`), qui valide chaque champ et chaque exercice (règles propres à chaque type dans #17 à #22).
-- `lireLecon` est une **fonction pure du domaine du Catalogue** (`catalogue/domain/`), importée par le front via `@domain/catalogue` : le front lit la bibliothèque gardée sur l'appareil (#8) sans appel au serveur. Côté serveur, le même code sert derrière le port `LeconsDuCatalogue`. La skill DDD place ce mapper dans `infrastructure/` : question ouverte n°10.
-- `TypeDExercice` : les 14 types du format, chacun avec son **libellé** (table `TYPES` du legacy). Un type inconnu lève `TypeDExerciceInconnu` à la lecture de l'exercice. Que devient la leçon : question ouverte n°1.
+- `lireLecon` est une **fonction pure du domaine du Catalogue** (`catalogue/domain/`), importée par le front via `@domain/catalogue` : le front lit la bibliothèque gardée sur l'appareil (#8) sans appel au serveur. Côté serveur, le même code sert derrière le port `LeconsDuCatalogue`. La skill DDD place d'ordinaire ce mapper dans `infrastructure/` : l'écart est acté par la décision 0012 (décision n°10).
+- `TypeDExercice` : les 14 types du format, chacun avec son **libellé** (table `TYPES` du legacy). Un type inconnu lève `TypeDExerciceInconnu` à la lecture de l'exercice. L'exercice est alors écarté (ni affiché, ni joué, ni compté) et la leçon reste jouable avec ses autres exercices (décision n°1 ; décision 0012, n°3).
 - `Matiere` : value object avec son libellé (« Français », « Mathématiques », « Histoire et géographie », « Vivre ensemble (EMC) »…). `Niveau` vient de #11.
 - `PageDeLaLecon` (lecture) : titre, « `<niveau>` · `<matière>` », la liste des exercices (libellé du type et `titre`, sinon le libellé, sinon « Jeu »), et le bloc adulte (citation, source de la section, passage du guide fondamental et sa page). Le texte de la source de la section vient de `programmes-index.json`, lu par le Catalogue.
 
@@ -170,7 +170,7 @@ Nombre de questions par type (repris de `stepsOf`) :
 | `CommencerUneSeance(lecon, choix, contexte)` | Crée la séance, son plan et ses tirages. | `ExerciceIntrouvable`, `LeconSansExercice` | navigateur (`@domain/apprentissage`) |
 | `Continuer` | Passe à l'étape de leçon suivante. Après la dernière : l'exercice suivant commence. | `PasDEtapeDeLeconEnCours` | navigateur |
 | `Repondre`, `DireJeNeSaisPas` | Voir #17 et #23. | | navigateur |
-| `AbandonnerLaSeance` | « Retour » pendant la séance : la séance est oubliée. Rien n'est enregistré (question ouverte n°2). | (aucune) | navigateur |
+| `AbandonnerLaSeance` | « Retour » pendant la séance : la séance est oubliée. Rien n'est enregistré (décision n°2). | (aucune) | navigateur |
 | `TerminerLaSeance` | Voir #24. | | Edge Function |
 
 ### Ce que dit le personnage guide (Motivation)
@@ -179,7 +179,7 @@ Apprentissage dit **ce qui arrive** ; Motivation choisit **la phrase** et l'hume
 
 | Fait (Apprentissage) | Parole (Motivation, textes du legacy) |
 |---|---|
-| Page de la leçon ouverte | « Coucou `<prénom>` ! Je t'explique la leçon en deux minutes, et après, on joue. Tu peux aussi choisir directement un jeu. » (question ouverte n°5) |
+| Page de la leçon ouverte | « Coucou `<prénom>` ! Je t'explique la leçon, et après, on joue. Tu peux aussi choisir directement un jeu. » (sans « en deux minutes », décision n°5) |
 | Étapes de leçon finies | Au hasard, humeur « applaudit » : « À toi de jouer maintenant ! », « C'est parti, à toi ! », « Prêt ? On joue ! » |
 | Exercice suivant (séance de plus d'un exercice, exercice avec un `titre`) | « `<Nouveau défi \| Jeu suivant \| Place au jeu>` : `<titre>` ! » |
 
@@ -196,13 +196,13 @@ Lecture d'une étape de leçon : le `texte`, puis les `exemples` joints par « .
 3. Les exercices se jouent **dans l'ordre de la leçon**. On ne passe à l'exercice suivant que quand toutes les questions de l'exercice en cours sont réussies.
 4. Tout ce qui est tiré au hasard l'est **une fois**, au début de la séance, par le port `Hasard`. Une nouvelle séance tire à nouveau.
 5. L'avancement ne compte que les questions des exercices **joués**. Il est complet exactement quand la dernière question est réussie. Un exercice qui n'est pas joué ne compte jamais.
-6. Une séance abandonnée ne produit **rien** : ni étoiles, ni séance terminée, ni jour de séance (question ouverte n°2).
+6. Une séance abandonnée ne produit **rien** : ni étoiles, ni séance terminée, ni jour de séance (décision n°2).
 7. Apprentissage ne lit jamais le JSON brut d'une leçon : il reçoit une `Lecon` validée par le Catalogue.
 8. Le domaine ne connaît ni l'écran ni le temps : les pauses (400 ms, 150 ms au plus avec `prefers-reduced-motion`) et l'attente de la fin d'une phrase relèvent du front.
 
 ## Événements
 
-Aucun événement de domaine dans cette story. `SeanceTerminee` est porté par #24. L'abandon ne produit pas d'événement (question ouverte n°2).
+Aucun événement de domaine dans cette story. `SeanceTerminee` est porté par #24. L'abandon ne produit pas d'événement (décision n°2).
 
 ## Partage avec le front
 
@@ -221,7 +221,7 @@ Aucune donnée nouvelle n'est enregistrée par cette story. La séance en cours 
 
 ## Accessibilité (rappel de l'issue, sans règle métier)
 
-Étapes et exemples lus à voix haute ; mode dys dans la bulle du personnage guide et dans les pastilles ; avancement annoncé aux lecteurs d'écran (question ouverte n°7) ; cibles de 44 px ; écran tenu à 360 px.
+Étapes et exemples lus à voix haute ; mode dys dans la bulle du personnage guide et dans les pastilles ; avancement annoncé aux lecteurs d'écran (décision n°7) ; cibles de 44 px ; écran tenu à 360 px.
 
 ## Emplacement
 
@@ -281,15 +281,21 @@ src/seance/                     # page de la leçon, écran de séance, récipie
 **Ordre conseillé** : #16 → #17 → #23 → #24 → #18 → #19 → #20 → #21 → #22.
 Raison : #16, #17, #23 et #24 forment une première tranche jouable de bout en bout (une leçon de bulles, des étoiles enregistrées), qui retire la page de démonstration du lot 1. Les autres types s'ajoutent ensuite sans toucher au cœur.
 
+## Décisions du PO
+
+Validation n°1 du lot 3 par le PO, le 2026-10-23 : « OK pour tout » (`docs/stories/lot-3-decisions.md` ; décisions `docs/decisions/0012-lecture-des-lecons-dans-le-domaine-catalogue.md` et `docs/decisions/0013-ecritures-d-apprentissage-par-edge-function.md`). Chaque question reçoit pour réponse sa proposition. Le numéro unique du lot (`Q…`, voir `docs/stories/16/acceptance.md`) suit le numéro de la story.
+
+1. (Q1) **Exercice de type inconnu** : le Catalogue l'**écarte** à la lecture (il n'est ni affiché, ni joué, ni compté), et la leçon reste jouable avec ses autres exercices ? Ou refuse-t-il toute la leçon ? **Décision** : l'écarter. Le pipeline et la vérification des leçons personnelles refusent déjà un type inconnu ; ce cas ne peut venir que d'une leçon plus récente que l'application.
+2. (Q2) **Séance abandonnée** : on ne garde rien, comme aujourd'hui ? **Décision** : oui pour la beta (en ligne seulement). La reprise d'une « séance en cours » arrive avec le hors ligne (#44).
+3. (Q3) **« Jeu »** : reste-t-il le mot d'interface pour **exercice** (« Leçon et tous les jeux », « Ou choisis un seul jeu : », « Jeu suivant »), avec « Nouveau défi » et « Place au jeu » ? **Décision** : oui, dans l'interface seulement. Le code et les scénarios disent « exercice ».
+4. (Q4) **Bloc adulte** : « Ce que conseille le guide » devient « Ce que conseille le guide fondamental » ? **Décision** : oui (glossaire, décision n°1).
+5. (Q5) **Phrase d'accueil** : retirer « en deux minutes » (« Je t'explique la leçon, et après, on joue. ») ? **Décision** : oui, la durée n'est pas tenue pour les longues leçons.
+6. (Q6) **Récipient de progression** : terme d'interface ? **Décision** : oui. Le domaine dit **avancement de la séance**.
+7. (Q7) **Avancement annoncé aux lecteurs d'écran** (« 3 sur 10 ») à chaque question réussie ? **Décision** : oui, en annonce polie, sans couper le personnage guide.
+8. (Q8) **Exercice choisi seul** : le personnage guide n'annonce pas son titre (comme aujourd'hui) ? **Décision** : oui, le titre est déjà sur le bouton touché.
+9. (Q9) **Paroles de séance dans Motivation** : l'accueil de la leçon, la fin des étapes et l'annonce de l'exercice sont-elles des paroles du personnage guide (Motivation), comme les félicitations ? **Décision** : oui.
+10. (Q10) *(architecture)* **Lecture du format JSON dans `catalogue/domain/`** (fonction pure `lireLecon`, importée par le front), et non dans un mapper d'`infrastructure/` comme le dit la skill DDD ? **Décision** : oui, le front doit lire la bibliothèque hors ligne. Consigné dans la décision 0012 (lecture des leçons dans le domaine du Catalogue).
+
 ## Questions ouvertes
 
-1. **Exercice de type inconnu** : le Catalogue l'**écarte** à la lecture (il n'est ni affiché, ni joué, ni compté), et la leçon reste jouable avec ses autres exercices ? Ou refuse-t-il toute la leçon ? **Proposition** : l'écarter. Le pipeline et la vérification des leçons personnelles refusent déjà un type inconnu ; ce cas ne peut venir que d'une leçon plus récente que l'application.
-2. **Séance abandonnée** : on ne garde rien, comme aujourd'hui ? **Proposition** : oui pour la beta (en ligne seulement). La reprise d'une « séance en cours » arrive avec le hors ligne (#44).
-3. **« Jeu »** : reste-t-il le mot d'interface pour **exercice** (« Leçon et tous les jeux », « Ou choisis un seul jeu : », « Jeu suivant »), avec « Nouveau défi » et « Place au jeu » ? **Proposition** : oui, dans l'interface seulement. Le code et les scénarios disent « exercice ».
-4. **Bloc adulte** : « Ce que conseille le guide » devient « Ce que conseille le guide fondamental » ? **Proposition** : oui (glossaire, décision n°1).
-5. **Phrase d'accueil** : retirer « en deux minutes » (« Je t'explique la leçon, et après, on joue. ») ? **Proposition** : oui, la durée n'est pas tenue pour les longues leçons.
-6. **Récipient de progression** : terme d'interface ? **Proposition** : oui. Le domaine dit **avancement de la séance**.
-7. **Avancement annoncé aux lecteurs d'écran** (« 3 sur 10 ») à chaque question réussie ? **Proposition** : oui, en annonce polie, sans couper le personnage guide.
-8. **Exercice choisi seul** : le personnage guide n'annonce pas son titre (comme aujourd'hui) ? **Proposition** : oui, le titre est déjà sur le bouton touché.
-9. **Paroles de séance dans Motivation** : l'accueil de la leçon, la fin des étapes et l'annonce de l'exercice sont-elles des paroles du personnage guide (Motivation), comme les félicitations ? **Proposition** : oui.
-10. *(architecture)* **Lecture du format JSON dans `catalogue/domain/`** (fonction pure `lireLecon`, importée par le front), et non dans un mapper d'`infrastructure/` comme le dit la skill DDD ? **Proposition** : oui, le front doit lire la bibliothèque hors ligne. À consigner dans une décision (0011).
+Aucune.

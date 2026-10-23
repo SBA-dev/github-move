@@ -44,13 +44,13 @@ Principe de `CLAUDE.md` : un retour d'erreur n'est jamais punitif. Un encouragem
 
 | Terme | Statut | Remarque |
 |---|---|---|
-| Réponse | au glossaire (à valider) | « Je ne sais pas » en est une (déjà écrit). |
-| Erreur | au glossaire (à valider) | Le compte exact par question dépend des questions ouvertes n°1 à n°3. |
-| Aide | **nouveau** (à valider), terme du format (`aide`) | Texte lu par le personnage guide après une erreur ou après « Je ne sais pas » : l'`aide` de la question si elle existe, sinon l'aide par défaut du type d'exercice. |
-| Aide par défaut | **nouveau** (à valider) | Aide propre à un type d'exercice, utilisée quand la question n'a pas d'`aide` (tableau ci-dessus). Ex. : l'astuce de l'opération en calcul. |
-| Je ne sais pas | **nouveau** (à valider) | Réponse permise, une fois par question : la bonne réponse est montrée, et l'enfant la donne lui-même. |
-| Nouvelle chance | **nouveau** (à valider) | Après une erreur, la même question reste posée, sans limite d'essais. |
-| Bonne réponse montrée | **nouveau** (à valider) | État d'une question après « Je ne sais pas » : la bonne réponse est montrée (le choix brille, ou le nombre est dit). Interface : « la bonne réponse brille ». |
+| Réponse | au glossaire (validé) | « Je ne sais pas » en est une (déjà écrit). |
+| Erreur | au glossaire (validé) | Compte exact par question (décisions n°1 à n°3) : une erreur par réponse fausse ; « Je ne sais pas » en coûte une seulement si la question n'en a pas encore coûté ; plus aucune après la bonne réponse montrée. |
+| Aide | **nouveau** (validé), terme du format (`aide`) | Texte lu par le personnage guide après une erreur ou après « Je ne sais pas » : l'`aide` de la question si elle existe, sinon l'aide par défaut du type d'exercice. |
+| Aide par défaut | **nouveau** (validé) | Aide propre à un type d'exercice, utilisée quand la question n'a pas d'`aide` (tableau ci-dessus). Ex. : l'astuce de l'opération en calcul. |
+| Je ne sais pas | **nouveau** (validé) | Réponse permise, une fois par question : la bonne réponse est montrée, et l'enfant la donne lui-même. |
+| Nouvelle chance | **nouveau** (validé) | Après une erreur, la même question reste posée, sans limite d'essais. |
+| Bonne réponse montrée | **nouveau** (validé) | État d'une question après « Je ne sais pas » : la bonne réponse est montrée (le choix brille, ou le nombre est dit). Interface : « la bonne réponse brille ». |
 | Encouragement | au glossaire (Motivation) | Inchangé. |
 
 ## Modèle
@@ -92,12 +92,12 @@ classDiagram
 ### Règles de `QuestionJouee` (complètent #17)
 
 - `direJeNeSaisPas()` :
-  - refusé si la mécanique ne le permet pas (`JeNeSaisPasIndisponible`) : dictée, étiquettes (classer, ordre, poser), fluence, au lot 3 comme aujourd'hui (question ouverte n°4) ;
+  - refusé seulement pour la fluence (`JeNeSaisPasIndisponible`) : « Je ne sais pas » est permis **partout ailleurs**, y compris dictée, classer, ordre et addition à l'étape poser (décision n°4 ; absent du legacy pour ces mécaniques) ;
   - refusé une seconde fois (`JeNeSaisPasDejaDit`) ;
   - refusé sur une question réussie (`QuestionDejaReussie`) ;
-  - sinon : la question passe à **bonne réponse montrée**. Avec les choix, il ne reste que la bonne. Avec le clavier, la réponse est donnée à l'enfant. La question reste ouverte : l'enfant donne lui-même la bonne réponse pour la réussir.
-  - Compte : **une erreur**, comme aujourd'hui (questions ouvertes n°1 et n°2).
-- `repondre` après « Je ne sais pas » au clavier : une faute de frappe compte une erreur aujourd'hui (question ouverte n°3).
+  - sinon : la question passe à **bonne réponse montrée**. Avec les choix, il ne reste que la bonne. Avec le clavier, la réponse est donnée à l'enfant. Classer et poser : la bonne maison brille. Ordre : l'étiquette suivante brille. Dictée : la lettre juste suivante s'écrit dans sa case, le mot n'est jamais montré en entier (décision n°4). La question reste ouverte : l'enfant donne lui-même la bonne réponse pour la réussir.
+  - Compte : **une erreur** si la question n'en a pas encore coûté ; **rien de plus** si elle en a déjà coûté au moins une (décisions n°1 et n°2 ; le legacy en ajoutait toujours une).
+- `repondre` après « Je ne sais pas » : plus aucune erreur n'est comptée sur une question dont la bonne réponse a été montrée, faute de frappe comprise (décision n°3 ; le legacy la comptait).
 - `aideApresErreur(reponse)` : l'`aide` de la question si elle existe, sinon l'aide par défaut du type, qui peut dépendre de la réponse donnée (retenue oubliée, #20) ou de la cible touchée (maison de classer, #18). Une aide vide n'est pas lue.
 
 ### Value objects
@@ -106,7 +106,7 @@ classDiagram
 |---|---|
 | `Aide` | Texte non vide, ou aucune aide. `deLaQuestion` passe avant `parDefaut`. |
 | `AideDonnee` | Ce que le front montre et fait dire après « Je ne sais pas » : l'aide (peut être vide), la bonne réponse et la manière (la faire briller, ou la dire). |
-| `MecaniqueDeReponse` | `choix` et `clavierDeCristaux` permettent « Je ne sais pas » ; `dictee` et `etiquettes` non (au lot 3, question ouverte n°4). La fluence n'a pas de questions au sens de cette règle (#20). |
+| `MecaniqueDeReponse` | `choix`, `clavierDeCristaux`, `dictee` et `etiquettes` permettent tous « Je ne sais pas » (décision n°4). La fluence n'a pas de questions au sens de cette règle (#20). |
 
 ### Paroles du personnage guide (Motivation)
 
@@ -129,7 +129,7 @@ Ces deux phrases entrent dans les paroles de Motivation ; l'aide et la bonne ré
 3. « Je ne sais pas » se dit **au plus une fois** par question, et seulement là où la mécanique le permet.
 4. Après « Je ne sais pas », la bonne réponse est montrée : avec les choix, il ne reste qu'elle ; au clavier, elle est dite.
 5. L'aide de la question passe toujours avant l'aide par défaut. Une question sans aide ni aide par défaut ne lit rien après l'encouragement.
-6. Le nombre d'erreurs d'une question ne diminue jamais. Sa règle exacte (questions ouvertes n°1 à n°3) est **la même pour tous les types**, et c'est elle que #24 utilise pour les étoiles.
+6. Le nombre d'erreurs d'une question ne diminue jamais. Sa règle exacte (décisions n°1 à n°3) est **la même pour tous les types**, et c'est elle que #24 utilise pour les étoiles.
 7. Une question qui a coûté au moins une erreur (ou « Je ne sais pas ») est gardée par la séance comme **question ratée** (révisions, lot 4).
 
 ## Événements
@@ -156,11 +156,17 @@ supabase/functions/_shared/motivation/domain/
 src/seance/                     # bouton « Je ne sais pas » (pointillés, 44 px), bonne réponse qui brille
 ```
 
+## Décisions du PO
+
+Validation n°1 du lot 3 par le PO, le 2026-10-23 : « OK pour tout » (`docs/stories/lot-3-decisions.md` ; décisions `docs/decisions/0012-lecture-des-lecons-dans-le-domaine-catalogue.md` et `docs/decisions/0013-ecritures-d-apprentissage-par-edge-function.md`). Chaque question reçoit pour réponse sa proposition. Le numéro unique du lot (`Q…`, voir `docs/stories/16/acceptance.md`) suit le numéro de la story.
+
+1. (Q63) **« Je ne sais pas » compte-t-il une erreur pour les étoiles ?** **Décision** : oui, une erreur, comme aujourd'hui ; les seuils des étoiles (#24) sont calibrés ainsi, et « permis » veut dire « sans reproche », pas « sans effet ».
+2. (Q64) **Une question peut-elle coûter plusieurs erreurs ?** **Décision** : oui, une par réponse fausse (comme aujourd'hui), **mais** « Je ne sais pas » n'ajoute rien si la question a déjà coûté au moins une erreur (correction du défaut « troisième erreur après deux mauvaises bulles »).
+3. (Q65) **Après « Je ne sais pas » au clavier, une faute de frappe compte-t-elle ?** **Décision** : non ; plus aucune erreur n'est comptée sur une question dont la bonne réponse a été montrée.
+4. (Q66) **Une sortie pour l'enfant bloqué en dictée, classer, ordre et addition posée ?** **Décision** : oui, « Je ne sais pas » partout sur le même modèle (la bonne réponse est montrée, l'enfant la donne) : classer et poser, la bonne maison brille ; ordre, l'étiquette suivante brille ; dictée, la lettre juste suivante s'écrit dans sa case (le mot n'est jamais montré en entier).
+5. (Q67) **`aide` sur les items de `classer`, `barres` et `ecoute`** : à ajouter au format des leçons (`docs/format-lecons.md`) ? **Décision** : oui, facultative ; la bibliothèque en utilise déjà 8 dans `barres`. Le pipeline, le format et le domaine changent dans la même story (règle du contrat).
+6. (Q68) **Glossaire** : « Aide », « Je ne sais pas », « Nouvelle chance » sont-ils des termes du domaine ? **Décision** : oui, tous les trois, plus « Aide par défaut » et « Bonne réponse montrée ».
+
 ## Questions ouvertes
 
-1. **« Je ne sais pas » compte-t-il une erreur pour les étoiles ?** **Proposition** : oui, une erreur, comme aujourd'hui ; les seuils des étoiles (#24) sont calibrés ainsi, et « permis » veut dire « sans reproche », pas « sans effet ».
-2. **Une question peut-elle coûter plusieurs erreurs ?** **Proposition** : oui, une par réponse fausse (comme aujourd'hui), **mais** « Je ne sais pas » n'ajoute rien si la question a déjà coûté au moins une erreur (correction du défaut « troisième erreur après deux mauvaises bulles »).
-3. **Après « Je ne sais pas » au clavier, une faute de frappe compte-t-elle ?** **Proposition** : non ; plus aucune erreur n'est comptée sur une question dont la bonne réponse a été montrée.
-4. **Une sortie pour l'enfant bloqué en dictée, classer, ordre et addition posée ?** **Proposition** : oui, « Je ne sais pas » partout sur le même modèle (la bonne réponse est montrée, l'enfant la donne) : classer et poser, la bonne maison brille ; ordre, l'étiquette suivante brille ; dictée, la lettre juste suivante s'écrit dans sa case (le mot n'est jamais montré en entier). Si le PO préfère la parité stricte au lot 3 : non, et on y revient après la beta.
-5. **`aide` sur les items de `classer`, `barres` et `ecoute`** : à ajouter au format des leçons (`docs/format-lecons.md`) ? **Proposition** : oui, facultative ; la bibliothèque en utilise déjà 8 dans `barres`. Le pipeline, le format et le domaine changent dans la même story (règle du contrat).
-6. **Glossaire** : « Aide », « Je ne sais pas », « Nouvelle chance » sont-ils des termes du domaine ? **Proposition** : oui, tous les trois (à valider), plus « Aide par défaut » et « Bonne réponse montrée ».
+Aucune.

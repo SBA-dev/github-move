@@ -38,13 +38,13 @@ Contextes :
 | Terme | Statut | Remarque |
 |---|---|---|
 | Dictée | terme du format (type `dictee`) | Exercice. À distinguer de **Mots de la semaine** (devoir, lot 6) qui prépare une dictée. |
-| Mot dicté | **nouveau** (à valider) | Mot d'un exercice `dictee` (`mots[].mot`), seulement dit à voix haute, jamais montré avant d'être bien écrit. |
-| Phrase d'exemple | **nouveau** (à valider) | Phrase facultative qui situe le mot dicté (`mots[].phrase`). Elle peut contenir le mot (elle n'est jamais affichée). |
+| Mot dicté | **nouveau** (validé) | Mot d'un exercice `dictee` (`mots[].mot`), seulement dit à voix haute, jamais montré avant d'être bien écrit. |
+| Phrase d'exemple | **nouveau** (validé) | Phrase facultative qui situe le mot dicté (`mots[].phrase`). Elle peut contenir le mot (elle n'est jamais affichée). |
 | Case | terme d'interface | Place d'un caractère du mot dicté. |
-| Caractère déjà écrit | **nouveau** (à valider) | Espace, apostrophe, tiret ou point d'un mot dicté, écrit d'avance. |
-| Clavier des dictées | au glossaire (Famille, à valider) | Valeurs `automatique`, `lettresDuMot`, `clavierComplet`. |
+| Caractère déjà écrit | **nouveau** (validé) | Espace, apostrophe, tiret ou point d'un mot dicté, écrit d'avance. |
+| Clavier des dictées | au glossaire (Famille) | Valeurs `automatique`, `lettresDuMot`, `clavierComplet`. |
 | Lettres du mot, Clavier complet | valeurs du réglage | Question ouverte n°6. |
-| Lettre intruse | **nouveau**, proposition : terme d'interface (question ouverte n°6) | Lettre absente du mot ajoutée aux lettres du mot. |
+| Lettre intruse | terme d'interface (décision n°6) | Lettre absente du mot ajoutée aux lettres du mot. |
 | Verbe, temps, pronom, forme | termes du format (`conjugaison`) | Le domaine dit **forme conjuguée** pour un couple (pronom, forme). |
 | Personne | terme du programme | Une ligne du tableau (je, tu, il…). Une question par personne. |
 
@@ -102,13 +102,13 @@ classDiagram
 
 - `MotAEcrire.de(mot)` : une case par caractère ; espace, `'`, `’`, `-`, `.` sont des **caractères déjà écrits**.
 - `ClavierPropose.choisir(reglage, niveau, mot, hasard)` :
-  - `clavierComplet`, ou `automatique` et niveau CE2 ou plus → **clavier complet** (4 rangées AZERTY du legacy ; « œ » : question ouverte n°2) ;
+  - `clavierComplet`, ou `automatique` et niveau CE2 ou plus → **clavier complet** (4 rangées AZERTY du legacy, plus « œ » : décision n°2) ;
   - sinon → **lettres du mot** : les lettres à écrire (avec répétitions) + `min(3, max(2, 8 − nombre de lettres))` intruses tirées de « aeioulnrstcmpbdvé » et absentes du mot, mélangées une fois par le port `Hasard`. Chaque touche ne sert qu'une fois.
-- `corriger(lettres)` quand toutes les cases à écrire sont remplies (pas de « Valider », question ouverte n°4) :
-  - comparaison lettre à lettre ; aujourd'hui contre le mot **en minuscules** (question ouverte n°1) ;
+- `corriger(lettres)` quand toutes les cases à écrire sont remplies (pas de « Valider », décision n°4) :
+  - comparaison lettre à lettre, **sans tenir compte des majuscules** : les deux côtés en minuscules, et les touches montrent les lettres en minuscules (décision n°1 ; le legacy ne mettait en minuscules que le mot attendu) ;
   - juste → la question est réussie ;
   - faux → **une erreur** ; positions des lettres fausses ; lettres gardées = celles **avant la première fausse**.
-- Réponse : `MotEcrit(lettres)`. Pas de « Je ne sais pas » au lot 3 (#23, question n°4).
+- Réponse : `MotEcrit(lettres)`, ou « Je ne sais pas » : la lettre juste suivante s'écrit dans sa case, le mot n'est jamais montré en entier (#23, décision n°4 ; absent du legacy).
 - Texte dit : « Écoute bien. `<mot>`. `<phrase>` Écris : `<mot>`. » (domaine), vitesse normale ou lente (front, Voix). Texte affiché : « Écoute bien et écris le mot que tu entends. » (sans le mot).
 - Après une erreur : aide « Regarde les lettres en rouge et écoute encore. », puis le mot est redit. Clé de révision `d:`.
 - Son coupé ou navigateur sans voix : messages du legacy, choisis par le front selon l'état de Voix (`Muet`, `LectureImpossible`). La dictée est le seul type qui **demande** le son.
@@ -159,12 +159,18 @@ supabase/functions/_shared/apprentissage/domain/
 src/seance/exercices/           # cases, touches, « Effacer », « Réécouter le mot », « Écouter plus lentement », tableau de conjugaison
 ```
 
+## Décisions du PO
+
+Validation n°1 du lot 3 par le PO, le 2026-10-23 : « OK pour tout » (`docs/stories/lot-3-decisions.md` ; décisions `docs/decisions/0012-lecture-des-lecons-dans-le-domaine-catalogue.md` et `docs/decisions/0013-ecritures-d-apprentissage-par-edge-function.md`). Chaque question reçoit pour réponse sa proposition. Le numéro unique du lot (`Q…`, voir `docs/stories/16/acceptance.md`) suit le numéro de la story.
+
+1. (Q30) **Dictée : majuscules** : la correction ignore-t-elle les majuscules (comparer en minuscules des deux côtés, et la touche montre la lettre en minuscule) ? **Décision** : oui ; les mots de la semaine tapés par un parent (lot 6) peuvent avoir une majuscule.
+2. (Q31) **Clavier complet** : ajouter « œ » ? D'autres lettres (« æ », « ü », « ÿ ») ? **Décision** : ajouter « œ » seulement (cœur, sœur, œuf, programme du CE1) ; les autres sont trop rares au primaire.
+3. (Q32) **Dictée : aide ou « Je ne sais pas »** ? **Décision** : voir #23, question n°4 (la lettre juste suivante s'écrit, le mot n'est jamais montré en entier).
+4. (Q33) **Correction automatique** ou bouton « Valider » ? **Décision** : automatique, comme aujourd'hui.
+5. (Q34) **Conjugaison : félicitation après chaque personne** ? **Décision** : non, comme aujourd'hui (seulement à la fin) ; l'humeur « applaudit » à chaque bonne forme (décision M4 de #6).
+6. (Q35) **« Clavier complet », « lettres du mot », « lettres intruses »** : termes d'interface ? **Décision** : « lettres du mot » et « clavier complet » sont les valeurs du réglage **Clavier des dictées** (déjà au glossaire) ; « lettre intruse » est un terme d'interface.
+7. (Q36) **Phrase d'exemple** : peut-elle contenir le mot dicté (elle n'est jamais affichée, seulement dite) ? **Décision** : oui, comme aujourd'hui (« Le chat dort sur le lit. »).
+
 ## Questions ouvertes
 
-1. **Dictée : majuscules** : la correction ignore-t-elle les majuscules (comparer en minuscules des deux côtés, et la touche montre la lettre en minuscule) ? **Proposition** : oui ; les mots de la semaine tapés par un parent (lot 6) peuvent avoir une majuscule.
-2. **Clavier complet** : ajouter « œ » ? D'autres lettres (« æ », « ü », « ÿ ») ? **Proposition** : ajouter « œ » seulement (cœur, sœur, œuf, programme du CE1) ; les autres sont trop rares au primaire.
-3. **Dictée : aide ou « Je ne sais pas »** ? **Proposition** : voir #23, question n°4 (la lettre juste suivante s'écrit, le mot n'est jamais montré en entier).
-4. **Correction automatique** ou bouton « Valider » ? **Proposition** : automatique, comme aujourd'hui.
-5. **Conjugaison : félicitation après chaque personne** ? **Proposition** : non, comme aujourd'hui (seulement à la fin) ; l'humeur « applaudit » à chaque bonne forme (décision M4 de #6).
-6. **« Clavier complet », « lettres du mot », « lettres intruses »** : termes d'interface ? **Proposition** : « lettres du mot » et « clavier complet » sont les valeurs du réglage **Clavier des dictées** (déjà au glossaire) ; « lettre intruse » est un terme d'interface.
-7. **Phrase d'exemple** : peut-elle contenir le mot dicté (elle n'est jamais affichée, seulement dite) ? **Proposition** : oui, comme aujourd'hui (« Le chat dort sur le lit. »).
+Aucune.

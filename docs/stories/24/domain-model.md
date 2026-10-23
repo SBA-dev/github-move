@@ -6,7 +6,7 @@ Story **porteuse de la fin de séance** pour tout le lot 3 : calcul des étoiles
 
 Contextes :
 - **Apprentissage** : `Seance` (#16) se termine ; nouvel agrégat `ResultatDeLaLecon` ; cas d'usage `TerminerLaSeance` (Edge Function).
-- **Catalogue pédagogique** : la leçon, relue par le serveur pour revalider la séance ; `ordre` pour la leçon suivante (question ouverte n°5).
+- **Catalogue pédagogique** : la leçon, relue par le serveur pour revalider la séance ; `ordre` pour la leçon suivante : la leçon d'`ordre` suivant, même matière et même niveau, et pas de bouton après la dernière (décision n°5).
 - **Motivation** : phrase de fin du personnage guide (expression du personnage guide pour 3 étoiles, #6). Au lot 5, Motivation écoute `SeanceTerminee` et `LeconAcquise` et remplit la zone « nouveautés » (épisode, cabane, badge). Elle ne modifie jamais une étoile.
 - **Accompagnement** (lot 6) : écoute `SeanceTerminee` pour le suivi.
 - **Famille** : prénom du profil en cours (phrase de fin), rattachement du parent (accès), contrat de données personnelles (#14).
@@ -22,15 +22,15 @@ Contextes :
 
 | Terme | Statut | Remarque |
 |---|---|---|
-| Étoile | au glossaire (confirmé) | Règle inchangée (question ouverte n°2). |
+| Étoile | au glossaire (confirmé) | Règle inchangée : 0 erreur = 3, 1 à 3 = 2, 4 et plus = 1 (décision n°2). |
 | Leçon réussie, Leçon acquise | au glossaire (confirmés) | Calculées par `ResultatDeLaLecon`. |
-| Séance terminée | **nouveau** (à valider) | Séance dont toutes les questions sont réussies. Elle donne des étoiles et devient un fait enregistré (`SeanceTerminee`). |
-| Résultat de la leçon | **nouveau** (à valider) | Pour un enfant et une leçon : le meilleur nombre d'étoiles, les dernières étoiles et le nombre de séances terminées. Dit si la leçon est réussie ou acquise. |
-| Meilleures étoiles | **nouveau** (à valider) | Le plus grand nombre d'étoiles gagné sur une leçon. Il ne baisse jamais. Le glossaire disait « meilleur score » : « score » est un synonyme interdit d'Étoile. |
-| Écran de fin | terme d'interface (question ouverte n°7) | Le domaine dit **séance terminée**. |
-| Essai | **conflit** (question ouverte n°7) | Le champ legacy `essais` compte les séances terminées d'une leçon. « Essai » est un synonyme interdit de **Réponse**, et « essai de voix » existe déjà. Proposition : **nombre de séances**. |
+| Séance terminée | **nouveau** (validé) | Séance dont toutes les questions sont réussies. Elle donne des étoiles et devient un fait enregistré (`SeanceTerminee`). |
+| Résultat de la leçon | **nouveau** (validé) | Pour un enfant et une leçon : le meilleur nombre d'étoiles, les dernières étoiles et le nombre de séances terminées. Dit si la leçon est réussie ou acquise. |
+| Meilleures étoiles | **nouveau** (validé) | Le plus grand nombre d'étoiles gagné sur une leçon. Il ne baisse jamais. Le glossaire disait « meilleur score » : « score » est un synonyme interdit d'Étoile. |
+| Écran de fin | terme d'interface (décision n°7) | Le domaine dit **séance terminée**. |
+| Essai | **conflit tranché** (décision n°7) | Le champ legacy `essais` compte les séances terminées d'une leçon. « Essai » est un synonyme interdit de **Réponse**, et « essai de voix » existe déjà. On dit **nombre de séances**. |
 | Progression | terme d'interface (glossaire, décision n°21) | Ne nomme donc pas l'agrégat : on dit **Résultat de la leçon**. |
-| Jour de séance | **nouveau** (à valider), utilisé au lot 5 | Jour où l'enfant a terminé au moins une séance. Déduit des séances terminées ; pas de nouvelle donnée. |
+| Jour de séance | **nouveau** (validé), utilisé au lot 5 | Jour où l'enfant a terminé au moins une séance. Déduit des séances terminées ; pas de nouvelle donnée. |
 
 ## Modèle
 
@@ -88,7 +88,7 @@ classDiagram
 - `erreurs()` : somme des erreurs de toutes les questions jouées, selon la règle unique de #23.
 - `etoiles()` = `Etoiles.depuisErreurs(erreurs())` : 0 → 3, 1 à 3 → 2, 4 et plus → 1.
 - `terminer(maintenant)` : refusé si une question n'est pas réussie (`SeanceNonFinie`) ou si la séance est déjà terminée (`SeanceDejaTerminee`). Produit `SeanceTerminee`.
-- Une séance d'un exercice donne les étoiles de la leçon, comme une séance complète (question ouverte n°1 ; exception de la fluence seule : #20).
+- Une séance d'un exercice donne les étoiles de la leçon, comme une séance complète, sauf une séance faite seulement d'une fluence, qui ne donne pas d'étoiles et garde seulement le record (décision n°1, #20).
 
 ### Agrégat `ResultatDeLaLecon`
 
@@ -109,9 +109,9 @@ Le serveur reste la source de vérité. Le front envoie une `SeanceTermineeAEnre
 
 Le cas d'usage relit la leçon dans le Catalogue (port `LeconsDuCatalogue`), **reconstitue la séance** avec les mêmes tirages, **rejoue les réponses** avec le même domaine, puis calcule les étoiles. Il refuse (`SeanceIncoherente`) : une leçon ou un exercice inconnus, un tirage hors de son générateur (#20), une question qui ne finit pas par la bonne réponse, une réponse donnée après la réussite. Il ne fait jamais confiance aux étoiles calculées par le front.
 
-### Ce qui est enregistré (minimisation, question ouverte n°3)
+### Ce qui est enregistré (minimisation, décision n°3)
 
-Proposition : seulement le `ResumeDeSeance`. Les réponses données servent à la revalidation, puis ne sont **pas** gardées.
+Seulement le `ResumeDeSeance`. Les réponses données servent à la revalidation, puis ne sont **pas** gardées.
 
 | Donnée | Pourquoi |
 |---|---|
@@ -161,15 +161,15 @@ Au lot 5, Motivation ajoute ses nouveautés (épisode, cabane, badge) à la suit
 
 | Événement | Données | Qui réagit |
 |---|---|---|
-| `SeanceTerminee` (à valider) | séance, profil enfant, leçon, matière, niveau, choix de séance, étoiles, erreurs, questions ratées, réussites et erreurs par type, date de fin | Apprentissage (résultat de la leçon ; révisions au lot 4), Motivation (série, épisodes, cabane, lot 5), Accompagnement (suivi, lot 6) |
-| `LeconReussie` (à valider) | profil enfant, leçon | Apprentissage (parcours et verrous, lot 4) |
-| `LeconAcquise` (à valider) | profil enfant, leçon, compétence | Motivation (badge, lot 5), Accompagnement (carte des compétences, lot 6) |
+| `SeanceTerminee` | séance, profil enfant, leçon, matière, niveau, choix de séance, étoiles, erreurs, questions ratées, réussites et erreurs par type, date de fin | Apprentissage (résultat de la leçon ; révisions au lot 4), Motivation (série, épisodes, cabane, lot 5), Accompagnement (suivi, lot 6) |
+| `LeconReussie` | profil enfant, leçon | Apprentissage (parcours et verrous, lot 4) |
+| `LeconAcquise` | profil enfant, leçon, compétence | Motivation (badge, lot 5), Accompagnement (carte des compétences, lot 6) |
 
 ## Partage avec le front
 
 - Dans le navigateur (`@domain/apprentissage`) : `Etoiles`, `Seance.etoiles()`, `Seance.terminer()`, le résumé : l'écran de fin s'affiche **tout de suite**, sans attendre le serveur (comme aujourd'hui).
-- Par une Edge Function : `TerminerLaSeance`. Écritures d'Apprentissage par Edge Function seulement, comme Famille (décision 0009) : question ouverte n°9.
-- Envoi qui échoue (beta en ligne seulement) : question ouverte n°8.
+- Par une Edge Function : `TerminerLaSeance`. Écritures d'Apprentissage par Edge Function seulement, comme Famille (décision 0009) : décision 0013 (décision n°9). Une séance incohérente est refusée sans rien enregistrer ; le refus est journalisé sans donnée d'enfant, et l'enfant ne voit rien de plus (décision n°10).
+- Envoi qui échoue (beta en ligne seulement) : l'écran de fin s'affiche quand même ; la séance terminée est gardée sur l'appareil et renvoyée à la prochaine connexion, avec le message « Sauvegarde en ligne impossible : la progression est gardée sur cet appareil. » ; l'identifiant de séance évite de la compter deux fois (décision n°8, décision 0013, n°3). Pas de reprise d'une séance en cours avant #44.
 
 ## Base de données attendue (description, pas de SQL)
 
@@ -183,7 +183,7 @@ Toutes supprimées en **cascade** avec le profil, et incluses dans l'**export** 
 
 ## Données d'enfants
 
-Nouvelles données de l'enfant : séances terminées (leçon, date, étoiles, erreurs), erreurs par question, résultat par leçon. Elles servent à l'apprentissage et au suivi parental (minimisation). Aucune réponse brute gardée (proposition n°3), aucun texte produit par l'enfant, rien envoyé à l'IA. Hébergées dans l'UE (`eu-west-1`). À ajouter à la suppression et à l'export du profil (#14).
+Nouvelles données de l'enfant : séances terminées (leçon, date, étoiles, erreurs), erreurs par question, résultat par leçon. Elles servent à l'apprentissage et au suivi parental (minimisation). Aucune réponse brute gardée (décision n°3), aucun texte produit par l'enfant, rien envoyé à l'IA. Hébergées dans l'UE (`eu-west-1`). À ajouter à la suppression et à l'export du profil (#14).
 
 ## Emplacement
 
@@ -214,15 +214,21 @@ supabase/functions/_shared/motivation/domain/paroles-de-seance.ts   # phrases de
 src/seance/fin-de-seance/          # trois étoiles, « 2 étoiles sur 3 » en texte, boutons
 ```
 
+## Décisions du PO
+
+Validation n°1 du lot 3 par le PO, le 2026-10-23 : « OK pour tout » (`docs/stories/lot-3-decisions.md` ; décisions `docs/decisions/0012-lecture-des-lecons-dans-le-domaine-catalogue.md` et `docs/decisions/0013-ecritures-d-apprentissage-par-edge-function.md`). Chaque question reçoit pour réponse sa proposition. Le numéro unique du lot (`Q…`, voir `docs/stories/16/acceptance.md`) suit le numéro de la story.
+
+1. (Q69) **Une séance d'un seul exercice donne-t-elle les étoiles de la leçon ?** **Décision** : oui, comme aujourd'hui, **sauf** une séance faite seulement d'une fluence, qui ne donne pas d'étoiles (elle garde le record) : sinon une fluence suffit pour une leçon acquise (lié à #20, question n°2).
+2. (Q70) **Seuils des étoiles** : gardés (0 / 1 à 3 / 4 et plus), ou proportionnels au nombre de questions ? **Décision** : gardés pour la beta (règle du glossaire, comportement connu des familles) ; à revoir avec les données du suivi.
+3. (Q71) **Que garde-t-on d'une séance ?** **Décision** : le résumé seulement (étoiles, erreurs, par question : clé, erreurs, « Je ne sais pas » ; réussites et erreurs par type). Les réponses données sont envoyées pour la revalidation, puis oubliées.
+4. (Q72) **Séance abandonnée** : rien n'est enregistré ? **Décision** : oui (comme #16, question n°2).
+5. (Q73) **« Leçon suivante » au lot 3, sans parcours** : la leçon d'`ordre` suivant, même matière et même niveau, et pas de bouton après la dernière ? **Décision** : oui ; le lot 4 la remplacera par la règle du parcours (leçon non faite et non verrouillée).
+6. (Q74) **Le nouveau badge est-il dit à voix haute ?** **Décision** : oui, au lot 5 (« Nouveau badge : `<compétence>` ! »).
+7. (Q75) **« Écran de fin » et « essai »** : « écran de fin » terme d'interface ; « essai » reste interdit, le champ s'appelle **nombre de séances** ? **Décision** : oui pour les deux.
+8. (Q76) **Envoi impossible** (réseau coupé pendant la beta) : l'écran de fin s'affiche quand même, la séance terminée est gardée sur l'appareil et renvoyée à la prochaine connexion, avec le message « Sauvegarde en ligne impossible : la progression est gardée sur cet appareil. » ? **Décision** : oui ; c'est le premier pas du hors ligne (#44), sans reprise de séance en cours.
+9. (Q77) *(architecture)* **Écritures d'Apprentissage par Edge Function seulement** (le front lit sous RLS, n'écrit jamais directement), comme Famille (décision 0009) ? **Décision** : oui, avec la revalidation par rejeu des réponses : consigné dans la décision 0013 (écritures d'Apprentissage par Edge Function).
+10. (Q78) **Séance incohérente refusée par le serveur** : l'enfant ne voit rien de plus (son écran de fin est déjà affiché), et rien n'est enregistré ? **Décision** : oui ; l'erreur est seulement journalisée, sans donnée d'enfant dans les logs.
+
 ## Questions ouvertes
 
-1. **Une séance d'un seul exercice donne-t-elle les étoiles de la leçon ?** **Proposition** : oui, comme aujourd'hui, **sauf** une séance faite seulement d'une fluence, qui ne donne pas d'étoiles (elle garde le record) : sinon une fluence suffit pour une leçon acquise (lié à #20, question n°2).
-2. **Seuils des étoiles** : gardés (0 / 1 à 3 / 4 et plus), ou proportionnels au nombre de questions ? **Proposition** : gardés pour la beta (règle du glossaire, comportement connu des familles) ; à revoir avec les données du suivi.
-3. **Que garde-t-on d'une séance ?** **Proposition** : le résumé seulement (étoiles, erreurs, par question : clé, erreurs, « Je ne sais pas » ; réussites et erreurs par type). Les réponses données sont envoyées pour la revalidation, puis oubliées.
-4. **Séance abandonnée** : rien n'est enregistré ? **Proposition** : oui (comme #16, question n°2).
-5. **« Leçon suivante » au lot 3, sans parcours** : la leçon d'`ordre` suivant, même matière et même niveau, et pas de bouton après la dernière ? **Proposition** : oui ; le lot 4 la remplacera par la règle du parcours (leçon non faite et non verrouillée).
-6. **Le nouveau badge est-il dit à voix haute ?** **Proposition** : oui, au lot 5 (« Nouveau badge : `<compétence>` ! »).
-7. **« Écran de fin » et « essai »** : « écran de fin » terme d'interface ; « essai » reste interdit, le champ s'appelle **nombre de séances** ? **Proposition** : oui pour les deux.
-8. **Envoi impossible** (réseau coupé pendant la beta) : l'écran de fin s'affiche quand même, la séance terminée est gardée sur l'appareil et renvoyée à la prochaine connexion, avec le message « Sauvegarde en ligne impossible : la progression est gardée sur cet appareil. » ? **Proposition** : oui ; c'est le premier pas du hors ligne (#44), sans reprise de séance en cours.
-9. *(architecture)* **Écritures d'Apprentissage par Edge Function seulement** (le front lit sous RLS, n'écrit jamais directement), comme Famille (décision 0009) ? **Proposition** : oui, à consigner dans une décision (0011 ou 0012), avec la revalidation par rejeu des réponses.
-10. **Séance incohérente refusée par le serveur** : l'enfant ne voit rien de plus (son écran de fin est déjà affiché), et rien n'est enregistré ? **Proposition** : oui ; l'erreur est seulement journalisée, sans donnée d'enfant dans les logs.
+Aucune.

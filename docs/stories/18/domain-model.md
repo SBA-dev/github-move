@@ -33,14 +33,14 @@ Contextes :
 
 | Terme | Statut | Remarque |
 |---|---|---|
-| Étiquette | **nouveau** (à valider) | Mot, nombre ou chiffre que l'enfant pose sur une cible : item de `classer`, élément d'`ordre`, chiffre de l'addition posée (#20), vers (#22). |
-| Groupe | **nouveau**, terme du format (`groupes`) | Catégorie d'un exercice `classer`, avec un `id` et un `nom`. L'interface dit « maison ». |
-| Maison | **conflit** (question ouverte n°7) | Dit pour les groupes de `classer` **et** pour les colonnes de l'addition posée (#20). Proposition : mot d'interface seulement ; le domaine dit **Groupe** et **Colonne**. |
+| Étiquette | **nouveau** (validé) | Mot, nombre ou chiffre que l'enfant pose sur une cible : item de `classer`, élément d'`ordre`, chiffre de l'addition posée (#20), vers (#22). |
+| Groupe | **nouveau** (validé), terme du format (`groupes`) | Catégorie d'un exercice `classer`, avec un `id` et un `nom`. L'interface dit « maison ». |
+| Maison | **conflit tranché** (décision n°7) | Dit pour les groupes de `classer` **et** pour les colonnes de l'addition posée (#20). Mot d'interface seulement ; le domaine dit **Groupe** et **Colonne**. |
 | Élément (d'ordre) | terme du format (`elements`) | Étiquette d'un exercice `ordre`, dans l'ordre correct. |
-| Texte à trous | **nouveau** (à valider) | Texte d'un exercice `trous`, découpé par le Catalogue en segments de texte et en trous. |
-| Trou | **nouveau** (à valider) | Place d'un mot attendu dans un texte à trous (`[mot]` dans le format). |
-| Mot attendu | **nouveau** (à valider) | Mot qui remplit un trou. |
-| Distracteur | **nouveau**, terme du format (`distracteurs`) | Mot faux proposé exprès parmi les choix (trous, conjugaison). |
+| Texte à trous | **nouveau** (validé) | Texte d'un exercice `trous`, découpé par le Catalogue en segments de texte et en trous. |
+| Trou | **nouveau** (validé) | Place d'un mot attendu dans un texte à trous (`[mot]` dans le format). |
+| Mot attendu | **nouveau** (validé) | Mot qui remplit un trou. |
+| Distracteur | **nouveau** (validé), terme du format (`distracteurs`) | Mot faux proposé exprès parmi les choix (trous, conjugaison). |
 | Plateau | terme d'interface | Zone des étiquettes à placer. |
 
 ## Modèle
@@ -87,29 +87,29 @@ classDiagram
 
 | Exercice | Règles de `lireLecon` |
 |---|---|
-| `ExerciceClasser` | Au moins 2 groupes, `id` uniques ; chaque item a un `texte` non vide et un `groupe` qui existe. `aide?` : question ouverte n°6. Consigne par défaut : « Range chaque étiquette dans la bonne maison. » |
+| `ExerciceClasser` | Au moins 2 groupes, `id` uniques ; chaque item a un `texte` non vide et un `groupe` qui existe. `aide?` (facultative, ajoutée au format : décision n°6). Consigne par défaut : « Range chaque étiquette dans la bonne maison. » |
 | `ExerciceOrdre` | Au moins 2 éléments non vides. Consigne par défaut : « Remets les étiquettes dans le bon ordre. » |
-| `TexteATrous` | Découpage de `texte` : segments de texte et trous `[mot]`. Au moins un trou ; un trou vide (`[]`) ou des crochets mal fermés → `ExerciceMalForme`. Consigne par défaut : « Complète le texte : choisis le mot qui manque. » Chaque trou doit pouvoir proposer au moins 2 choix (question ouverte n°9). |
+| `TexteATrous` | Découpage de `texte` : segments de texte et trous `[mot]`. Au moins un trou ; un trou vide (`[]`) ou des crochets mal fermés → `ExerciceMalForme`. Consigne par défaut : « Complète le texte : choisis le mot qui manque. » Chaque trou doit pouvoir proposer au moins 2 choix (décision n°9). |
 
 ### Apprentissage : questions et correction
 
 | Type | Questions | Correction |
 |---|---|---|
-| `classer` | une par étiquette, réussies **dans l'ordre que choisit l'enfant** | `Placement(etiquette, groupe)` juste si le groupe de l'étiquette est le groupe visé. Faux : une erreur, l'étiquette revient (pas de groupe écarté ; question ouverte n°8). |
-| `ordre` | une par position | `Placement(etiquette)` juste si son **texte** est celui de l'élément attendu à la position suivante (question ouverte n°1 ; aujourd'hui : la position d'origine). Faux : une erreur. |
+| `classer` | une par étiquette, réussies **dans l'ordre que choisit l'enfant** | `Placement(etiquette, groupe)` juste si le groupe de l'étiquette est le groupe visé. Faux : une erreur, l'étiquette revient (pas de groupe écarté ; décision n°8). |
+| `ordre` | une par position | `Placement(etiquette)` juste si son **texte** est celui de l'élément attendu à la position suivante (décision n°1 : deux éléments au même texte sont interchangeables ; le legacy comparait la position d'origine). Faux : une erreur. |
 | `trous` | une par trou, **dans l'ordre du texte** | Mécanique des choix (#17) : texte exact. Réduction à deux après deux erreurs, « Je ne sais pas » (#23). |
 
 - `EtiquettesAPlacer` : les étiquettes sont mélangées une fois (port `Hasard`) au début de la séance. Une étiquette placée quitte le plateau. L'exercice est fini quand le plateau est vide.
-- `ChoixDuTrou` : mot attendu + 2 candidats tirés parmi `distracteurs` ∪ autres mots attendus, **sans les candidats identiques au mot attendu**. Identique : aujourd'hui « sans accents ni majuscules » ; proposition : **texte exact** (question ouverte n°2), pour que « a » et « à » soient deux choix. Puis dédoublonnage et mélange (#17).
+- `ChoixDuTrou` : mot attendu + 2 candidats tirés parmi `distracteurs` ∪ autres mots attendus, **sans les candidats identiques au mot attendu**. Identique : **texte exact**, accents et majuscules gardés (décision n°2 ; le legacy comparait « sans accents ni majuscules »), pour que « a » et « à » soient deux choix. Puis dédoublonnage et mélange (#17).
 - La consigne est lue, suivie de l'indication du geste : « Fais glisser chaque étiquette, ou touche-la puis touche une maison. » (classer), « Touche d'abord celle qui vient en premier. » (ordre).
-- Clés de question (révisions, lot 4) : `k:` (classer), `t:` (trous, avec la phrase qui contient le trou), comme le legacy. Ordre : aucune aujourd'hui (question ouverte n°4).
+- Clés de question (révisions, lot 4) : `k:` (classer), `t:` (trous, avec la phrase qui contient le trou), comme le legacy. Ordre : aucune dans le legacy ; la séance garde toutes les questions ratées, quel que soit le type, et le lot 4 décide lesquelles deviennent des révisions (décision n°4).
 
 ### Aides et explications (textes du legacy, #23)
 
 | Type | Après une erreur | Après une bonne réponse |
 |---|---|---|
-| `classer` | `aide` de l'item, sinon « « `<étiquette>` » n'habite pas dans la maison « `<nom du groupe touché>` ». Essaie une autre maison. » | félicitation une fois sur deux (question ouverte n°3) |
-| `ordre` | 1re position : « Ce n'est pas le début. Lequel vient en premier ? » ; ensuite : « Pas encore celui-là. Lequel vient juste après ? » | « Oui ! Et après ? » / « Bien ! Et ensuite ? » / « Super ! La suite ? », sauf la dernière (question ouverte n°5) |
+| `classer` | `aide` de l'item, sinon « « `<étiquette>` » n'habite pas dans la maison « `<nom du groupe touché>` ». Essaie une autre maison. » | félicitation une fois sur deux (décision n°3) |
+| `ordre` | 1re position : « Ce n'est pas le début. Lequel vient en premier ? » ; ensuite : « Pas encore celui-là. Lequel vient juste après ? » | « Oui ! Et après ? » / « Bien ! Et ensuite ? » / « Super ! La suite ? », sauf la dernière (décision n°5) |
 | `trous` | « Relis la phrase en entier : quel mot va bien ? » | félicitation, sauf au dernier trou ; fin : « Le texte est complet ! » |
 
 Les relances de l'ordre (« Oui ! Et après ? ») et la fin des trous sont des paroles de Motivation ; l'aide est d'Apprentissage.
@@ -123,7 +123,7 @@ Les relances de l'ordre (« Oui ! Et après ? ») et la fin des trous sont des p
 1. Une étiquette placée au bon endroit n'est plus jamais déplacée ; une étiquette mal placée revient au plateau.
 2. Chaque mauvais placement coûte une erreur.
 3. `classer` : l'enfant pose les étiquettes dans l'ordre qu'il veut. `ordre` : seule l'étiquette suivante est acceptée. `trous` : les trous se remplissent dans l'ordre du texte.
-4. `ordre` : deux éléments au même texte sont interchangeables (si la question ouverte n°1 est acceptée).
+4. `ordre` : deux éléments au même texte sont interchangeables (décision n°1).
 5. Un trou propose toujours son mot attendu, et deux choix qui ne lui sont pas identiques quand c'est possible.
 6. Apprentissage ne lit jamais la syntaxe `[mot]` : il reçoit des segments et des mots attendus du Catalogue.
 
@@ -153,14 +153,20 @@ supabase/functions/_shared/apprentissage/domain/
 src/seance/exercices/           # plateau, maisons, liste à remplir, texte à trous ; glisser, toucher, clavier
 ```
 
+## Décisions du PO
+
+Validation n°1 du lot 3 par le PO, le 2026-10-23 : « OK pour tout » (`docs/stories/lot-3-decisions.md` ; décisions `docs/decisions/0012-lecture-des-lecons-dans-le-domaine-catalogue.md` et `docs/decisions/0013-ecritures-d-apprentissage-par-edge-function.md`). Chaque question reçoit pour réponse sa proposition. Le numéro unique du lot (`Q…`, voir `docs/stories/16/acceptance.md`) suit le numéro de la story.
+
+1. (Q21) **Ordre** : deux éléments au même texte sont-ils interchangeables ? **Décision** : oui, on compare le texte.
+2. (Q22) **Trous** : un candidat n'est écarté que s'il est **identique** au mot attendu (accents et majuscules gardés), pour que « a » et « à » soient deux choix ? **Décision** : oui.
+3. (Q23) **Classer** : félicitation à chaque bonne étiquette, ou une fois sur deux ? **Décision** : l'humeur « applaudit » à chaque fois (décision M4), la félicitation parlée une fois sur deux (tirée par le port `Hasard`), pour ne pas ralentir un exercice de 10 étiquettes.
+4. (Q24) **Ordre** : ses erreurs sont-elles notées pour les révisions ? **Décision** : la séance garde **toutes** les questions ratées, quel que soit le type (ordre et addition posée compris) ; le lot 4 décide lesquelles deviennent des révisions.
+5. (Q25) **Ordre** : une félicitation à la fin de l'exercice ? **Décision** : oui, une félicitation après la dernière étiquette, comme les autres types.
+6. (Q26) **`aide` des items de `classer`** : à ajouter au format ? **Décision** : oui, facultative (même réponse que #23, question n°5).
+7. (Q27) **Glossaire** : « étiquette », « trou », « distracteur » termes du domaine ; « maison » terme d'interface, le domaine disant **Groupe** (classer) et **Colonne** (addition posée) ? **Décision** : oui.
+8. (Q28) **Classer** : reposer une étiquette dans la même mauvaise maison compte une nouvelle erreur (comme aujourd'hui) ? **Décision** : oui ; l'étiquette est revenue au plateau, c'est un nouvel essai.
+9. (Q29) **Trous** : le Catalogue refuse-t-il un texte à trous qui ne peut pas proposer au moins deux choix par trou (un seul trou sans distracteur) ? **Décision** : oui (`ExerciceMalForme`), vérifié aussi par le test de la bibliothèque.
+
 ## Questions ouvertes
 
-1. **Ordre** : deux éléments au même texte sont-ils interchangeables ? **Proposition** : oui, on compare le texte.
-2. **Trous** : un candidat n'est écarté que s'il est **identique** au mot attendu (accents et majuscules gardés), pour que « a » et « à » soient deux choix ? **Proposition** : oui.
-3. **Classer** : félicitation à chaque bonne étiquette, ou une fois sur deux ? **Proposition** : l'humeur « applaudit » à chaque fois (décision M4), la félicitation parlée une fois sur deux (tirée par le port `Hasard`), pour ne pas ralentir un exercice de 10 étiquettes.
-4. **Ordre** : ses erreurs sont-elles notées pour les révisions ? **Proposition** : la séance garde **toutes** les questions ratées, quel que soit le type (ordre et addition posée compris) ; le lot 4 décide lesquelles deviennent des révisions.
-5. **Ordre** : une félicitation à la fin de l'exercice ? **Proposition** : oui, une félicitation après la dernière étiquette, comme les autres types.
-6. **`aide` des items de `classer`** : à ajouter au format ? **Proposition** : oui, facultative (même réponse que #23, question n°5).
-7. **Glossaire** : « étiquette », « trou », « distracteur » termes du domaine ; « maison » terme d'interface, le domaine disant **Groupe** (classer) et **Colonne** (addition posée) ? **Proposition** : oui.
-8. **Classer** : reposer une étiquette dans la même mauvaise maison compte une nouvelle erreur (comme aujourd'hui) ? **Proposition** : oui ; l'étiquette est revenue au plateau, c'est un nouvel essai.
-9. **Trous** : le Catalogue refuse-t-il un texte à trous qui ne peut pas proposer au moins deux choix par trou (un seul trou sans distracteur) ? **Proposition** : oui (`ExerciceMalForme`), vérifié aussi par le test de la bibliothèque.
+Aucune.
