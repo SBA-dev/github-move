@@ -18,3 +18,10 @@ export class CodeDeConnexionInvalide extends Error {
     this.name = "CodeDeConnexionInvalide";
   }
 }
+
+export class LienDeConnexionMalForme extends Error {
+  constructor() {
+    super("Le lien de connexion doit être une adresse web absolue.");
+    this.name = "LienDeConnexionMalForme";
+  }
+}
