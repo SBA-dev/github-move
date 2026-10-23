@@ -3,12 +3,16 @@ import { pageDeLaLecon } from "@domain/catalogue";
 import { accueillirSurLaPageDeLaLecon, type Univers } from "@domain/motivation";
 import { PersonnageGuide } from "../univers/index.ts";
 import type { Voix } from "../voix/index.ts";
+import { EtoilesDessinees } from "./fin-de-seance/EtoilesDessinees.tsx";
+import { meilleuresEtoilesSurTrois } from "./fin-de-seance/texte-des-etoiles.ts";
+import { useMeilleuresEtoiles } from "./fin-de-seance/useMeilleuresEtoiles.ts";
 import { BulleDuPersonnageGuide } from "./BulleDuPersonnageGuide.tsx";
 import { useLecon, useSectionDuProgramme } from "./useLecon.ts";
 import { usePersonnageQuiParle } from "./usePersonnageQuiParle.ts";
 
 type Props = {
   readonly leconId: string;
+  readonly profilId: string;
   readonly prenom: string;
   readonly univers: Univers;
   readonly voix: Voix;
@@ -19,7 +23,7 @@ type Props = {
   readonly onRetourALAccueil: () => void;
 };
 
-export function PageDeLaLecon({ leconId, prenom, univers, voix, accueillir, onCommencer, onRetourALAccueil }: Props) {
+export function PageDeLaLecon({ leconId, profilId, prenom, univers, voix, accueillir, onCommencer, onRetourALAccueil }: Props) {
   const chargee = useLecon(leconId);
   if (chargee.type === "chargement") return <p>Chargement de la leçon…</p>;
   if (chargee.type === "introuvable") {
@@ -34,6 +38,7 @@ export function PageDeLaLecon({ leconId, prenom, univers, voix, accueillir, onCo
   return (
     <LeconAffichee
       lecon={chargee.lecon}
+      profilId={profilId}
       prenom={prenom}
       univers={univers}
       voix={voix}
@@ -47,7 +52,7 @@ type PropsAffichage = Omit<Props, "leconId" | "onRetourALAccueil"> & {
   readonly lecon: Parameters<typeof pageDeLaLecon>[0];
 };
 
-function LeconAffichee({ lecon, prenom, univers, voix, accueillir, onCommencer }: PropsAffichage) {
+function LeconAffichee({ lecon, profilId, prenom, univers, voix, accueillir, onCommencer }: PropsAffichage) {
   const section = useSectionDuProgramme(lecon.programme.section);
   const page = useMemo(() => pageDeLaLecon(lecon, section), [lecon, section]);
   const { parole, rangDuMotPrononce, humeur, dire, reecouter, faireSilence } = usePersonnageQuiParle(voix);
@@ -57,11 +62,18 @@ function LeconAffichee({ lecon, prenom, univers, voix, accueillir, onCommencer }
     return faireSilence;
   }, [accueilALire, prenom, dire, faireSilence]);
   const { passagePourLesAdultes: adultes } = page;
+  const meilleuresEtoiles = useMeilleuresEtoiles(profilId, lecon.id);
 
   return (
     <section className="page-de-la-lecon" aria-labelledby="titre-de-la-lecon">
       <h2 id="titre-de-la-lecon">{page.titre}</h2>
       <p data-testid="niveau-et-matiere">{page.niveauEtMatiere}</p>
+      {meilleuresEtoiles && (
+        <div className="meilleures-etoiles" data-testid="meilleures-etoiles" data-etoiles={meilleuresEtoiles.nombre}>
+          <EtoilesDessinees nombre={meilleuresEtoiles.nombre} />
+          <p>{meilleuresEtoilesSurTrois(meilleuresEtoiles.nombre)}</p>
+        </div>
+      )}
       <div className="guide-et-parole">
         <PersonnageGuide univers={univers} humeur={humeur} />
         <BulleDuPersonnageGuide texte={parole?.texte} nature={parole?.nature} rangDuMotPrononce={rangDuMotPrononce} />

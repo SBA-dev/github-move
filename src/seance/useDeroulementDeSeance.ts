@@ -1,7 +1,12 @@
 import { useCallback, useReducer, useRef } from "react";
 import { type FaitDeSeance, type Seance, texteALireDeLEtape } from "@domain/apprentissage";
 import type { EtapeDeLecon, Lecon } from "@domain/catalogue";
-import { annoncerExerciceSuivant, inviterAJouerApresLesEtapes, type PersonnageGuide } from "@domain/motivation";
+import {
+  annoncerExerciceSuivant,
+  inviterAJouerApresLesEtapes,
+  type PersonnageGuide,
+  parolesDeFinDeSeance,
+} from "@domain/motivation";
 import { useReducedMotion } from "motion/react";
 import { hasardDuNavigateur } from "../hasard-navigateur.ts";
 import type { Voix } from "../voix/index.ts";
@@ -25,6 +30,7 @@ export function useDeroulementDeSeance(
   voix: Pick<Voix, "lire" | "couperLaVoix">,
   personnageGuide: PersonnageGuide,
   toutLireAVoixHaute: boolean,
+  prenom: string,
 ) {
   const personnage = usePersonnageQuiParle(voix);
   const { dire, faireSilence, reecouter: relire } = personnage;
@@ -111,6 +117,12 @@ export function useDeroulementDeSeance(
     relire();
   }, [questions.figee, personnage.parole, relireLaQuestion, relire]);
 
+  const direLaFin = useCallback((etoiles: number) => {
+    sequence.current++;
+    const texte = parolesDeFinDeSeance(etoiles, prenom, personnageGuide, hasardDuNavigateur);
+    void dire({ texte, nature: "felicitation", humeur: "applaudit" });
+  }, [dire, prenom, personnageGuide]);
+
   const abandonner = useCallback(() => {
     vivant.current = false;
     sequence.current++;
@@ -147,6 +159,7 @@ export function useDeroulementDeSeance(
     reecouter,
     commencer,
     continuer,
+    direLaFin,
     abandonner,
   };
 }

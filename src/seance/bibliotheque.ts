@@ -34,6 +34,21 @@ export async function chargerLaLecon(identifiant: string): Promise<Lecon | undef
   }
 }
 
+/** Toutes les leçons lisibles de la bibliothèque (pour trouver la leçon suivante). Vide si elle est indisponible. */
+export async function chargerToutesLesLecons(): Promise<readonly Lecon[]> {
+  try {
+    return (await charger(CHEMIN_DE_LA_BIBLIOTHEQUE)).flatMap((brute) => {
+      try {
+        return [lireLecon(brute)];
+      } catch {
+        return [];
+      }
+    });
+  } catch {
+    return [];
+  }
+}
+
 /** La source d'une leçon est un complément pour les adultes : sans elle, la page reste utilisable. */
 export async function chargerLaSectionDuProgramme(identifiant: string): Promise<SectionDuProgramme | undefined> {
   try {

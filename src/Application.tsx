@@ -18,7 +18,7 @@ import {
 } from "./famille/index.ts";
 import { AideEcranDAccueil } from "./installation/index.ts";
 import { type Lieu, useNavigation } from "./navigation.ts";
-import { EcranDeSeance, PageDeLaLecon } from "./seance/index.ts";
+import { EcranDeSeance, PageDeLaLecon, useRenvoiDesSeancesGardees } from "./seance/index.ts";
 import { ChoixDeLaVoix, useVoix } from "./voix/index.ts";
 import { PALETTES, Paysage, PersonnageGuide } from "./univers/index.ts";
 
@@ -46,6 +46,7 @@ export function Application() {
   const acces = useAccesALEspaceParent();
   const connexion = useConnexion();
   const connecte = connexion.etat === "connecte";
+  useRenvoiDesSeancesGardees(connecte);
   const lieuPossible = lieuAffiche(lieuDemande, acces.etat.type, connecte);
   const { profil: profilEnCours, charge: profilCharge, choisirQuiJoue, oublier: oublierLeProfilEnCours } = useProfilEnCours();
   const enfantAbsent = profilCharge && !profilEnCours && demandeUnProfilEnCours(lieuPossible);
@@ -154,6 +155,7 @@ export function Application() {
               <PageDeLaLecon
                 key={lieu.leconId}
                 leconId={lieu.leconId}
+                profilId={profilEnCours.id}
                 prenom={profilEnCours.prenom}
                 univers={univers}
                 voix={voix}
@@ -167,11 +169,14 @@ export function Application() {
                 key={`${lieu.leconId}/${lieu.exercice ?? "complete"}`}
                 leconId={lieu.leconId}
                 exercice={lieu.exercice}
+                profilId={profilEnCours.id}
                 prenom={profilEnCours.prenom}
                 univers={univers}
                 voix={voix}
                 toutLireAVoixHaute={profilEnCours.reglages.toutLireAVoixHaute}
                 onRetour={() => revenirA({ ecran: "lecon", leconId: lieu.leconId })}
+                onLeconSuivante={(leconId) => aller({ ecran: "lecon", leconId })}
+                onAccueil={() => aller("accueil")}
               />
             )}
             {ecran === "espace-parent" && connexion.etat === "deconnecte" && (

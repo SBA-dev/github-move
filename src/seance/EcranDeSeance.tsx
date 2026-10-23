@@ -6,6 +6,7 @@ import { TexteEnSyllabes } from "../reglages/index.ts";
 import { PersonnageGuide } from "../univers/index.ts";
 import type { Voix } from "../voix/index.ts";
 import { BulleDuPersonnageGuide } from "./BulleDuPersonnageGuide.tsx";
+import { EcranDeFin } from "./fin-de-seance/EcranDeFin.tsx";
 import { ExerciceAChoix } from "./exercices/ExerciceAChoix.tsx";
 import { generateurIdDuNavigateur } from "./generateur-id-navigateur.ts";
 import { hasardDuNavigateur } from "./hasard-navigateur.ts";
@@ -17,18 +18,22 @@ type Props = {
   readonly leconId: string;
   /** Sans position : la séance complète ; avec une position : un seul exercice. */
   readonly exercice: number | undefined;
+  /** Identifiant du profil enfant en cours : la séance lui appartient. */
+  readonly profilId: string;
   readonly prenom: string;
   readonly univers: Univers;
   readonly voix: Voix;
   /** Réglage du profil en cours : les choix proposés sont lus après la question. */
   readonly toutLireAVoixHaute: boolean;
   readonly onRetour: () => void;
+  readonly onLeconSuivante: (leconId: string) => void;
+  readonly onAccueil: () => void;
 };
 
-function commencerLaSeance(prenom: string, lecon: Lecon, exercice: number | undefined): Seance | undefined {
+function commencerLaSeance(profilId: string, lecon: Lecon, exercice: number | undefined): Seance | undefined {
   const choix = exercice === undefined ? ChoixDeSeance.complete() : ChoixDeSeance.unExercice(exercice);
   try {
-    return Seance.commencer(generateurIdDuNavigateur, hasardDuNavigateur, prenom, lecon, choix);
+    return Seance.commencer(generateurIdDuNavigateur, hasardDuNavigateur, profilId, lecon, choix);
   } catch (erreur) {
     if (erreur instanceof ExerciceIntrouvable || erreur instanceof LeconSansExercice) return undefined;
     throw erreur;
@@ -54,8 +59,24 @@ function JeuIntrouvable({ onRetour }: { readonly onRetour: () => void }) {
 
 type PropsDeLaLecon = Omit<Props, "leconId"> & { readonly lecon: Lecon };
 
-function SeanceDeLaLecon({ lecon, exercice, prenom, ...reste }: PropsDeLaLecon) {
-  const [seance] = useState(() => commencerLaSeance(prenom, lecon, exercice));
+function SeanceDeLaLecon({ lecon, exercice, profilId, ...reste }: PropsDeLaLecon) {
+  const [numeroDeLaPartie, setNumeroDeLaPartie] = useState(0);
+  return (
+    <UnePartie
+      key={numeroDeLaPartie}
+      lecon={lecon}
+      exercice={exercice}
+      profilId={profilId}
+      onRejouer={() => setNumeroDeLaPartie((numero) => numero + 1)}
+      {...reste}
+    />
+  );
+}
+
+type PropsDUnePartie = PropsDeLaLecon & { readonly onRejouer: () => void };
+
+function UnePartie({ lecon, exercice, profilId, ...reste }: PropsDUnePartie) {
+  const [seance] = useState(() => commencerLaSeance(profilId, lecon, exercice));
   if (!seance) return <JeuIntrouvable onRetour={reste.onRetour} />;
   return <SeanceEnCours seance={seance} lecon={lecon} {...reste} />;
 }
@@ -64,10 +85,12 @@ function estAChoix(exercice: Exercice): boolean {
   return exercice.type === "bulles" || exercice.type === "lecture" || exercice.type === "ecoute";
 }
 
-type PropsEnCours = Omit<PropsDeLaLecon, "exercice" | "prenom"> & { readonly seance: Seance };
+type PropsEnCours = Omit<PropsDUnePartie, "exercice" | "profilId"> & { readonly seance: Seance };
 
-function SeanceEnCours({ seance, lecon, univers, voix, toutLireAVoixHaute, onRetour }: PropsEnCours) {
-  const deroulement = useDeroulementDeSeance(seance, lecon, voix, univers.personnageGuide, toutLireAVoixHaute);
+function SeanceEnCours(
+  { seance, lecon, prenom, univers, voix, toutLireAVoixHaute, onRetour, onRejouer, onLeconSuivante, onAccueil }: PropsEnCours,
+) {
+  const deroulement = useDeroulementDeSeance(seance, lecon, voix, univers.personnageGuide, toutLireAVoixHaute, prenom);
   const { commencer, abandonner } = deroulement;
   useEffect(() => {
     void commencer();
@@ -78,6 +101,7 @@ function SeanceEnCours({ seance, lecon, univers, voix, toutLireAVoixHaute, onRet
   const etape = seance.etapeDeLeconEnCours();
   const exerciceJoue = seance.exerciceEnCours();
   const { figee } = deroulement;
+  const finie = seance.estFinie() && figee === undefined;
   const position = figee?.position ?? exerciceJoue?.position;
   const exerciceDeLaLecon = position === undefined ? undefined : lecon.exercices[position];
   const question = figee?.question ?? exerciceJoue?.questionEnCours();
@@ -98,7 +122,7 @@ function SeanceEnCours({ seance, lecon, univers, voix, toutLireAVoixHaute, onRet
           <p data-testid="niveau-et-matiere">{niveauEtMatiere}</p>
         </div>
       </div>
-      <RecipientDeProgression avancement={seance.avancement()} />
+      {!finie && <RecipientDeProgression avancement={seance.avancement()} />}
       <div className="guide-et-parole">
         <PersonnageGuide univers={univers} humeur={deroulement.humeur} />
         <BulleDuPersonnageGuide
@@ -123,7 +147,16 @@ function SeanceEnCours({ seance, lecon, univers, voix, toutLireAVoixHaute, onRet
       <div className="annonce-d-avancement" role="status" data-testid="annonce-d-avancement">
         {deroulement.avancementAnnonce}
       </div>
-      {position !== undefined && exerciceDeLaLecon && (
+      {finie && (
+        <EcranDeFin
+          seance={seance}
+          onDireLaFin={deroulement.direLaFin}
+          onRejouer={onRejouer}
+          onLeconSuivante={onLeconSuivante}
+          onAccueil={onAccueil}
+        />
+      )}
+      {!finie && position !== undefined && exerciceDeLaLecon && (
         <div ref={zoneDeLExercice} tabIndex={-1} className="exercice-en-cours" data-testid="exercice-en-cours" data-position={position}>
           {estAChoix(exerciceDeLaLecon) && (
             <ExerciceAChoix
