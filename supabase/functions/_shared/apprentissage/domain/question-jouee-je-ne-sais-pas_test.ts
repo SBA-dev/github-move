@@ -135,6 +135,14 @@ Deno.test("« Je ne sais pas » d'une question d'écoute donne l'aide de l'item"
   assertEquals(question.direJeNeSaisPas().aide, "Pense à l'animal qui miaule.");
 });
 
+Deno.test("après une erreur, l'aide de la question d'écoute passe avant l'aide par défaut", () => {
+  assertEquals(premiereQuestion(leconDEcouteAvecAide()).aideApresErreur(), "Pense à l'animal qui miaule.");
+});
+
+Deno.test("sans aide, une question d'écoute garde « Écoute encore. » après une erreur", () => {
+  assertEquals(premiereQuestion(leconDEcoute()).aideApresErreur(), "Écoute encore.");
+});
+
 Deno.test("« Je ne sais pas » est permis avec une question d'écoute, et il ne reste que la bonne réponse", () => {
   const question = premiereQuestion(leconDEcoute());
 

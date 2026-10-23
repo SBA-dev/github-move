@@ -1,5 +1,6 @@
 import { assertEquals } from "@std/assert";
-import { reagirALaReponse } from "./reaction.ts";
+import { direJeNeSaisPasAvecLesChoix } from "./paroles.ts";
+import { reagirAJeNeSaisPas, reagirALaReponse } from "./reaction.ts";
 import { universDe } from "./univers.ts";
 import { hasardFixe } from "../test_utils/hasard-fixe.ts";
 
@@ -20,5 +21,14 @@ Deno.test("le personnage guide réfléchit et encourage une réponse fausse", ()
   assertEquals(reaction, {
     humeur: "reflechit",
     parole: { nature: "encouragement", texte: "Oups, presque !" },
+  });
+});
+
+Deno.test("à « Je ne sais pas », le personnage guide réfléchit et rassure avec l'aide", () => {
+  const aide = "Pense à l'animal qui miaule.";
+
+  assertEquals(reagirAJeNeSaisPas(aide), {
+    humeur: "reflechit",
+    parole: direJeNeSaisPasAvecLesChoix(aide),
   });
 });
