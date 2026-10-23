@@ -78,6 +78,7 @@ Le glossaire garde l'orthographe française.
 | Connexion du parent (à valider) | État d'un appareil sur lequel un parent est reconnu. Elle est obligatoire pour utiliser l'application et reste ouverte jusqu'à la déconnexion. | Famille | session, login |
 | Lien de connexion (à valider) | Lien envoyé par e-mail au parent, qui ouvre la connexion du parent. Il vaut 1 heure et sert une seule fois. L'interface peut dire « lien magique ». | Famille | lien (seul), code de connexion, mot de passe |
 | Code de connexion (à valider) | Code de 6 chiffres, dans le même e-mail que le lien de connexion, que le parent saisit sur l'appareil qui a fait la demande pour ouvrir la connexion du parent. Même durée (1 heure) et même usage unique que le lien. | Famille | code (seul), mot de passe, code PIN, lien de connexion |
+| E-mail de connexion (à valider) | E-mail que reçoit le parent quand il demande à se connecter : sujet et texte en français, qui contiennent le lien de connexion et le code de connexion de la même demande. Composé par le domaine Famille (décision 0011) ; il n'utilise que l'adresse du parent. | Famille | courriel, courriel de connexion, mail, message, e-mail magique, OTP, modèle d'e-mail |
 | Déconnexion (à valider) | Fin de la connexion du parent sur un appareil, faite depuis l'espace parent. Elle ne ferme pas les autres appareils. Plus aucune donnée de la famille n'y reste visible. | Famille | logout |
 | Appareil (à valider) | Tablette, téléphone ou ordinateur où l'application est ouverte. Certaines préférences y sont mémorisées (Son/Muet ; voix imposée au lot 2). | Famille (utilisé partout) | device, navigateur, poste |
 
@@ -129,6 +130,8 @@ Sous-domaine décidé à la validation n°1 du lot 1 (décision 0007). Ses terme
 
 1. **« Étoile »** est aussi le nom de l'« Étoile du savoir » dans l'histoire. Proposition : **Étoile** reste la récompense. L'objet de l'histoire n'est pas un terme du domaine.
 2. **« Test »** : on dit toujours **Test de départ**, pour ne pas confondre avec les tests logiciels.
+
+3. **« Courriel »** (story #5, décision 0011) : la décision 0011 dit « courriel de connexion », le glossaire dit « e-mail » partout. Proposition : **E-mail de connexion**, « courriel » interdit (question n°15 de `docs/stories/5/domain-model.md`, à valider par le PO).
 
 Les anciens conflits n°3 à n°7 (compte, session, lien magique, voix, monde) sont tranchés : voir Décisions n°10 à n°15.
 
