@@ -151,7 +151,9 @@ Deno.test("le fait SeanceTerminee compte les réussites et les erreurs par type 
 
 Deno.test("la séance terminée garde les tirages et la suite des réponses de chaque question, « Je ne sais pas » compris", () => {
   const seance = commencer(leconDeCalcul(), ChoixDeSeance.complete(), hasardFixe(0, 0, 0));
-  const tirage = seance.exerciceEnCours()?.questionEnCours()?.choix.textes();
+  const question = seance.exerciceEnCours()?.questionEnCours();
+  if (!question) throw new Error("Aucune question en cours");
+  const tirage = question.choix.textes();
   seance.repondre(Reponse.choix("8"));
   seance.direJeNeSaisPas();
   seance.repondre(Reponse.choix("7"));
