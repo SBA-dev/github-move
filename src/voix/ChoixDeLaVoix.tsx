@@ -1,4 +1,4 @@
-import { estTresNaturelle, type VoixDisponible, voixFrancaisesTriees, voixMontreeCommeChoisie } from "@domain/voix";
+import { ChoixDeVoix, voixFrancaisesTriees, voixMontreeCommeChoisie, voixProposees } from "@domain/voix";
 import type { Voix } from "./useVoix.ts";
 
 type Props = { readonly voix: Voix };
@@ -6,38 +6,21 @@ type Props = { readonly voix: Voix };
 type LigneDeVoix = {
   readonly id: string;
   readonly nom: string;
-  readonly nomDeLaVoix: string;
+  readonly choix: ChoixDeVoix;
   readonly mention: string | undefined;
   readonly choisie: boolean;
 };
 
-const AUTOMATIQUE = "Automatique (recommandé)";
-
-function mentionDeLaVoix(voix: VoixDisponible, rang: number): string | undefined {
-  if (estTresNaturelle(voix)) return "très naturelle";
-  return rang === 0 ? "la meilleure ici" : undefined;
-}
-
 function lignesDeVoix(voix: Voix): LigneDeVoix[] {
-  const francaises = voixFrancaisesTriees(voix.voixDisponibles);
-  const choisie = voixMontreeCommeChoisie(francaises, voix.choixDeVoix);
-  const meilleure = francaises[0];
-  return [
-    {
-      id: "voix-automatique",
-      nom: AUTOMATIQUE,
-      nomDeLaVoix: "",
-      mention: meilleure && `actuellement : ${meilleure.nom}`,
-      choisie: choisie === "automatique",
-    },
-    ...francaises.map((v, rang) => ({
-      id: `voix-${rang}`,
-      nom: v.nom,
-      nomDeLaVoix: v.nom,
-      mention: mentionDeLaVoix(v, rang),
-      choisie: choisie !== "automatique" && choisie.nom === v.nom,
-    })),
-  ];
+  const montreeCommeChoisie = voixMontreeCommeChoisie(voix.voixDisponibles, voix.choixDeVoix);
+  const nomDeLaVoixChoisie = montreeCommeChoisie === "automatique" ? "" : montreeCommeChoisie.nom;
+  return voixProposees(voix.voixDisponibles).map((proposee, rang) => ({
+    id: rang === 0 ? "voix-automatique" : `voix-${rang - 1}`,
+    nom: proposee.nom,
+    choix: ChoixDeVoix.imposee(proposee.nomDeLaVoix),
+    mention: proposee.mention,
+    choisie: proposee.nomDeLaVoix === nomDeLaVoixChoisie,
+  }));
 }
 
 function Avertissement({ voix }: Props) {
@@ -74,8 +57,8 @@ function ConseilsDInstallation() {
 }
 
 export function ChoixDeLaVoix({ voix }: Props) {
-  const choisir = (nomDeLaVoix: string) =>
-    nomDeLaVoix === "" ? voix.revenirALaVoixAutomatique() : voix.imposerUneVoix(nomDeLaVoix);
+  const choisir = (choix: ChoixDeVoix) =>
+    choix.type === "automatique" ? voix.revenirALaVoixAutomatique() : voix.imposerUneVoix(choix.nomDeLaVoix);
 
   return (
     <section className="choix-de-voix" aria-labelledby="titre-choix-de-voix" data-testid="choix-de-voix">
@@ -94,18 +77,20 @@ export function ChoixDeLaVoix({ voix }: Props) {
               id={ligne.id}
               checked={ligne.choisie}
               aria-describedby={ligne.mention ? `${ligne.id}-mention` : undefined}
-              onChange={() => choisir(ligne.nomDeLaVoix)}
+              onChange={() => choisir(ligne.choix)}
             />
-            <label htmlFor={ligne.id}>{ligne.nom}</label>
-            {ligne.mention && (
-              <span id={`${ligne.id}-mention`} className="mention-de-voix" data-testid="mention-de-voix">
-                {ligne.mention}
-              </span>
-            )}
+            <span className="nom-et-mention-de-voix">
+              <label htmlFor={ligne.id}>{ligne.nom}</label>
+              {ligne.mention && (
+                <span id={`${ligne.id}-mention`} className="mention-de-voix" data-testid="mention-de-voix">
+                  {ligne.mention}
+                </span>
+              )}
+            </span>
             <button
               type="button"
               aria-label={`Écouter la voix ${ligne.nom}`}
-              onClick={() => voix.essayerUneVoix(ligne.nomDeLaVoix)}
+              onClick={() => voix.essayerUneVoix(ligne.choix)}
             >
               Écouter
             </button>

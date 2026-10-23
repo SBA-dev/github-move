@@ -21,7 +21,7 @@ export type Voix = {
   readonly choixDeVoix: ChoixDeVoix;
   readonly imposerUneVoix: (nomDeLaVoix: string) => void;
   readonly revenirALaVoixAutomatique: () => void;
-  readonly essayerUneVoix: (nomDeLaVoix: string) => void;
+  readonly essayerUneVoix: (choix: ChoixDeVoix) => void;
 };
 
 export function useVoix(personnageGuide: PersonnageGuide): Voix {
@@ -34,6 +34,7 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
   const [deverrouillage] = useState(() => new DeverrouillageAudio());
   const [voixDeLAppareil] = useState(() => new VoixDeLAppareilNavigateur());
   const [choixMemorise] = useState(() => new ChoixDeVoixMemoriseSurLAppareil());
+  const [syntheseVocalePresente] = useState(() => syntheseVocale() !== undefined);
   const [voixDisponibles, setVoixDisponibles] = useState(() => voixDeLAppareil.voixDisponibles());
   const [choixDeVoix, setChoixDeVoix] = useState(() => choixMemorise.lire());
   const [lecture] = useState(() =>
@@ -89,7 +90,7 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
   }, [lecture, choixMemorise]);
 
   const essayerUneVoix = useCallback(
-    (nomDeLaVoix: string) => void lecture.essayerUneVoix(nomDeLaVoix, personnageGuideEnCours.current.nom),
+    (choix: ChoixDeVoix) => void lecture.essayerUneVoix(choix, personnageGuideEnCours.current.nom),
     [lecture],
   );
 
@@ -100,7 +101,7 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
     couperLaVoix,
     basculerLeSon,
     voixDisponibles,
-    syntheseVocalePresente: syntheseVocale() !== undefined,
+    syntheseVocalePresente,
     choixDeVoix,
     imposerUneVoix,
     revenirALaVoixAutomatique,

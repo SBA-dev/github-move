@@ -123,7 +123,8 @@ button[data-son="muet"] { background: var(--accent-fonce); opacity: .8; }
 .choix-de-voix h3, .choix-de-voix p { margin: 0 0 8px; }
 .ligne-de-voix { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; min-height: 44px; }
 .ligne-de-voix input { width: 24px; height: 24px; margin: 10px; flex: none; accent-color: var(--accent-fonce); }
-.ligne-de-voix label { min-height: 44px; display: inline-flex; align-items: center; overflow-wrap: anywhere; flex: 1 1 8rem; }
+.nom-et-mention-de-voix { display: flex; flex-wrap: wrap; align-items: center; gap: 0 8px; flex: 1 1 8rem; min-width: 0; }
+.ligne-de-voix label { min-height: 44px; display: inline-flex; align-items: center; overflow-wrap: anywhere; }
 .mention-de-voix { font-size: .9rem; }
 .mention-de-voix::before { content: "· "; }
 .ligne-de-voix button { margin-left: auto; }
