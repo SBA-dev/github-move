@@ -1,17 +1,24 @@
 import { LeconMalFormee } from "./erreurs.ts";
-import { enObjet, listeFacultative, nombreFacultatif, type Objet, texteFacultatif, texteRequis } from "./lecture.ts";
+import { enObjet, listeFacultative, nombreFacultatif, type Objet, texteFacultatif } from "./lecture.ts";
 import { nombreDeTrous } from "./trous.ts";
+import { type ExerciceBulles, lireBulles } from "./exercices/bulles.ts";
+import { type ExerciceEcoute, lireEcoute } from "./exercices/ecoute.ts";
+import { type ExerciceLecture, lireExerciceDeLecture } from "./exercices/lecture.ts";
 import { estUnTypeDExercice, type TypeDExercice } from "./type-d-exercice.ts";
 
-export type Exercice = Readonly<{
-  type: TypeDExercice;
+type TypeAChoix = "bulles" | "lecture" | "ecoute";
+type TypeGenerique = Exclude<TypeDExercice, TypeAChoix>;
+
+export type Exercice = ExerciceBulles | ExerciceLecture | ExerciceEcoute | ExerciceGenerique;
+
+export type ExerciceGenerique = Readonly<{
+  type: TypeGenerique;
   titre?: string;
   consigne?: string;
   auteur?: string;
   texte?: string;
   verbe?: string;
   temps?: string;
-  langue?: string;
   duree?: number;
   questions?: readonly unknown[];
   items?: readonly unknown[];
@@ -26,23 +33,18 @@ export type Exercice = Readonly<{
   generateur?: Readonly<Record<string, unknown>>;
 }>;
 
-type Donnee = Exclude<keyof Exercice, "type">;
+type Donnee = Exclude<keyof ExerciceGenerique, "type">;
 
-export const TYPES_A_ENONCE: readonly TypeDExercice[] = ["bulles", "lecture"];
-
-const DONNEES_REQUISES: Record<TypeDExercice, readonly Donnee[]> = {
-  bulles: ["questions"],
+const DONNEES_REQUISES: Record<TypeGenerique, readonly Donnee[]> = {
   classer: ["items"],
   dictee: ["mots"],
   ordre: ["elements"],
   trous: ["texte"],
   conjugaison: ["formes"],
-  lecture: ["questions"],
   memoriser: ["vers"],
   addition: [],
   calcul: [],
   fluence: [],
-  ecoute: ["items"],
   boite: ["items"],
   barres: ["items"],
 };
@@ -59,15 +61,34 @@ export function lireExercices(brut: readonly unknown[]): readonly Exercice[] {
 }
 
 function lireExercice(brut: Objet, type: TypeDExercice): Exercice {
-  const exercice: Exercice = Object.freeze({
-    type,
+  const communs = {
     titre: texteFacultatif(brut.titre, "le titre d'un exercice"),
     consigne: texteFacultatif(brut.consigne, "la consigne d'un exercice"),
+  };
+  switch (type) {
+    case "bulles":
+      return lireBulles(brut, communs);
+    case "lecture":
+      return lireExerciceDeLecture(brut, communs);
+    case "ecoute":
+      return lireEcoute(brut, communs);
+    default:
+      return lireExerciceGenerique(brut, type, communs);
+  }
+}
+
+function lireExerciceGenerique(
+  brut: Objet,
+  type: TypeGenerique,
+  communs: { titre?: string; consigne?: string },
+): ExerciceGenerique {
+  const exercice: ExerciceGenerique = Object.freeze({
+    type,
+    ...communs,
     auteur: texteFacultatif(brut.auteur, "l'auteur d'un exercice"),
     texte: texteFacultatif(brut.texte, "le texte d'un exercice"),
     verbe: texteFacultatif(brut.verbe, "le verbe d'un exercice"),
     temps: texteFacultatif(brut.temps, "le temps d'un exercice"),
-    langue: texteFacultatif(brut.langue, "la langue d'un exercice"),
     duree: nombreFacultatif(brut.duree, "la durée d'un exercice"),
     questions: listeFacultative(brut.questions, "les questions"),
     items: listeFacultative(brut.items, "les items"),
@@ -85,11 +106,10 @@ function lireExercice(brut: Objet, type: TypeDExercice): Exercice {
     if (exercice[donnee] === undefined) throw new LeconMalFormee(`l'exercice « ${type} » n'a pas de ${donnee}`);
   }
   if (!aDesQuestions(exercice)) throw new LeconMalFormee(`l'exercice « ${type} » n'a aucune question à poser`);
-  if (TYPES_A_ENONCE.includes(type)) exercice.questions?.forEach(lireEnonce);
   return exercice;
 }
 
-function listeDe(exercice: Exercice, donnee: Donnee): readonly unknown[] {
+function listeDe(exercice: ExerciceGenerique, donnee: Donnee): readonly unknown[] {
   switch (donnee) {
     case "questions":
     case "items":
@@ -107,7 +127,7 @@ function listeDe(exercice: Exercice, donnee: Donnee): readonly unknown[] {
   }
 }
 
-function aDesQuestions(exercice: Exercice): boolean {
+function aDesQuestions(exercice: ExerciceGenerique): boolean {
   switch (exercice.type) {
     case "trous":
       return nombreDeTrous(exercice.texte ?? "") > 0;
@@ -118,8 +138,4 @@ function aDesQuestions(exercice: Exercice): boolean {
     default:
       return DONNEES_REQUISES[exercice.type].every((donnee) => listeDe(exercice, donnee).length > 0);
   }
-}
-
-function lireEnonce(question: unknown): void {
-  texteRequis(enObjet(question, "une question").question, "l'énoncé d'une question");
 }
