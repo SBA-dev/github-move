@@ -16,3 +16,4 @@
   Puis câblage (front de la page de la leçon et de l'écran de séance).
 - 12:55 · Cycle 1 (Catalogue : types d'exercice, matières, niveaux, lireLecon) : red 2fcb246, green 81c1db3, refactor b97c798. 262 tests.
 - 13:10 · Cycles 2 et 3 (page de la leçon, programme et guide fondamental ; choix, plan et avancement de la séance) : red 5d5ebff et 3b148e2, green 0b5e869 et 44cb77b. 308 tests. À surveiller en review : `NombreDeQuestionsInconnu` (addition, en attendant #20) ajouté sans test qui l'exige.
+- 13:30 · Cycles 4 et 5 (agrégat Seance : commencer, étapes de leçon, continuer, texte lu d'une étape ; paroles de séance de Motivation) : red 46c64ab et 4ad185f, green 083453a et d649153. 329 tests. Domaine de #16 fait ; le passage d'un exercice au suivant vient avec #17.
