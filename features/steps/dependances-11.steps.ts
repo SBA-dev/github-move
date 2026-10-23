@@ -15,7 +15,19 @@ Given(/^Paul est rattaché au profil enfant de Léa$/, async () => {
   throw new Error(DEPEND_DE_11);
 });
 
-Then(/^la déconnexion n'est pas proposée à Léa$/, async () => {
+Given(/^Paul commence la création d'un profil enfant$/, async () => {
+  throw new Error(DEPEND_DE_11);
+});
+
+Then(/^on lui demande le prénom, la classe et l'univers de l'enfant$/, async () => {
+  throw new Error(DEPEND_DE_11);
+});
+
+Then(/^il voit « Qui joue \? »$/, async () => {
+  throw new Error(DEPEND_DE_11);
+});
+
+Then(/^il voit les profils enfants de sa famille dans l'espace parent$/, async () => {
   throw new Error(DEPEND_DE_11);
 });
 
