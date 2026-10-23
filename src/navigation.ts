@@ -79,11 +79,11 @@ export function useNavigation() {
     setViaRetour(false);
   }, []);
 
-  const remplacer = useCallback((destination: Destination) => {
+  const remplacer = useCallback((destination: Destination, enRevenantEnArriere = false) => {
     const suivant = enLieu(destination);
     history.replaceState({ profondeur: profondeurCourante() }, "", cheminDe(suivant));
     setLieu(suivant);
-    setViaRetour(false);
+    setViaRetour(enRevenantEnArriere);
   }, []);
 
   const revenir = useCallback(() => history.back(), []);

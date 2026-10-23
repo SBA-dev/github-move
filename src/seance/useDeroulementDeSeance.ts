@@ -1,4 +1,4 @@
-import { useCallback, useReducer, useRef, useState } from "react";
+import { useCallback, useReducer, useRef } from "react";
 import { type FaitDeSeance, type Seance, texteALireDeLEtape } from "@domain/apprentissage";
 import type { EtapeDeLecon, Lecon } from "@domain/catalogue";
 import { annoncerExerciceSuivant, inviterAJouerApresLesEtapes } from "@domain/motivation";
@@ -22,7 +22,6 @@ export function useDeroulementDeSeance(seance: Seance, lecon: Lecon, voix: Pick<
   const personnage = usePersonnageQuiParle(voix);
   const { dire, faireSilence, reecouter: relire } = personnage;
   const [, redessiner] = useReducer((compteur: number) => compteur + 1, 0);
-  const [avancementAnnonce, setAvancementAnnonce] = useState("");
   const sequence = useRef(0);
   const pause = useRef(PAUSE_ENTRE_DEUX_PAROLES_MS);
   pause.current = useReducedMotion() ? PAUSE_AVEC_MOUVEMENTS_REDUITS_MS : PAUSE_ENTRE_DEUX_PAROLES_MS;
@@ -70,17 +69,6 @@ export function useDeroulementDeSeance(seance: Seance, lecon: Lecon, voix: Pick<
     else await enchainerSurLExercice(numero, seance.retirerFaits());
   }, [seance, dire, enchainerSurLExercice]);
 
-  /** Appelée par la mécanique de chaque exercice (#17 à #22) quand la question en cours est réussie. */
-  const reussirLaQuestionEnCours = useCallback(async () => {
-    const numero = ++sequence.current;
-    seance.reussirLaQuestionEnCours();
-    const { questionsReussies, total } = seance.avancement();
-    setAvancementAnnonce(`${questionsReussies} sur ${total}`);
-    redessiner();
-    const faits = seance.retirerFaits();
-    if (faits.length > 0) await enchainerSurLExercice(numero, faits);
-  }, [seance, enchainerSurLExercice]);
-
   const reecouter = useCallback(() => {
     sequence.current++;
     relire();
@@ -91,5 +79,5 @@ export function useDeroulementDeSeance(seance: Seance, lecon: Lecon, voix: Pick<
     faireSilence();
   }, [faireSilence]);
 
-  return { ...personnage, reecouter, avancementAnnonce, commencer, continuer, reussirLaQuestionEnCours, abandonner };
+  return { ...personnage, reecouter, commencer, continuer, abandonner };
 }

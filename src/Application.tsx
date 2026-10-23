@@ -149,7 +149,7 @@ export function Application() {
               prenom={profilEnCours.prenom}
               univers={univers}
               voix={voix}
-              onRetour={() => (retourPossible ? revenir() : remplacer({ ecran: "lecon", leconId: lieu.leconId }))}
+              onRetour={() => remplacer({ ecran: "lecon", leconId: lieu.leconId }, true)}
             />
           )}
           {ecran === "espace-parent" && connexion.etat === "deconnecte" && (

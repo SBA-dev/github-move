@@ -1,13 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { ChoixDeSeance, ExerciceIntrouvable, LeconSansExercice, Seance } from "@domain/apprentissage";
-import { type Lecon, pageDeLaLecon } from "@domain/catalogue";
+import { type Lecon, enonceDeLaQuestion, pageDeLaLecon } from "@domain/catalogue";
 import type { Univers } from "@domain/motivation";
 import { PersonnageGuide } from "../univers/index.ts";
 import type { Voix } from "../voix/index.ts";
 import { BulleDuPersonnageGuide } from "./BulleDuPersonnageGuide.tsx";
 import { generateurIdDuNavigateur } from "./generateur-id-navigateur.ts";
 import { RecipientDeProgression } from "./RecipientDeProgression.tsx";
-import { texteDeLaQuestion } from "./texte-de-la-question.ts";
 import { useDeroulementDeSeance } from "./useDeroulementDeSeance.ts";
 import { useLecon } from "./useLecon.ts";
 
@@ -70,7 +69,7 @@ function SeanceEnCours({ seance, lecon, univers, voix, onRetour }: PropsEnCours)
   const etape = seance.etapeDeLeconEnCours();
   const exerciceJoue = seance.exerciceEnCours();
   const exerciceDeLaLecon = exerciceJoue && lecon.exercices[exerciceJoue.position];
-  const question = exerciceJoue && exerciceDeLaLecon && texteDeLaQuestion(exerciceDeLaLecon, exerciceJoue.questionsReussies);
+  const question = exerciceJoue && exerciceDeLaLecon && enonceDeLaQuestion(exerciceDeLaLecon, exerciceJoue.rangDeLaQuestionEnCours);
   const zoneDeLExercice = useRef<HTMLDivElement>(null);
   const exerciceCommence = exerciceJoue !== undefined;
   const dejaMonte = useRef(false);
@@ -89,9 +88,6 @@ function SeanceEnCours({ seance, lecon, univers, voix, onRetour }: PropsEnCours)
         </div>
       </div>
       <RecipientDeProgression avancement={seance.avancement()} />
-      <div role="status" className="annonce-pour-lecteurs-d-ecran" data-testid="avancement-annonce">
-        {deroulement.avancementAnnonce}
-      </div>
       <div className="guide-et-parole">
         <PersonnageGuide univers={univers} humeur={deroulement.humeur} />
         <BulleDuPersonnageGuide
