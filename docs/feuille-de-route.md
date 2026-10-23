@@ -38,6 +38,22 @@ L'application fonctionne et est publiée comme artifact claude.ai. Elle comprend
 
 > **Chantier en cours : la réécriture complète en React + Supabase.** Plan, lots et décisions de démarrage dans `docs/reecriture.md`.
 
+### Première beta (périmètre validé par le PO le 2026-10-23)
+
+Un parent installe Savanturier, crée le profil de son enfant ; l'enfant joue des leçons, avance dans son parcours et est motivé par la série et les badges. **En ligne seulement** : le hors ligne vient après la beta.
+
+| Lot | Stories | Dans la beta |
+|---|---|---|
+| 1. Socle | #5 à #8 | oui |
+| 2. Famille | #10 à #15 | oui |
+| 3. Jouer une leçon | #16 à #24 | oui |
+| 4. Parcours | #25 à #29 | oui |
+| 5. Motivation | #30 à #33 | oui |
+| 6. Accompagnement | #34 à #43 | non, après la beta |
+| 7. Bascule | #45 mise en ligne | oui ; #44 hors ligne et #46 retrait de `app/` après la beta |
+
+Avant la beta, l'application actuelle (`app/`) reste celle que les familles utilisent.
+
 ### 1. Préparer le terrain de la nouvelle application
 
 - [x] Deno, pytest et les dépendances npm (dont la CLI Supabase) sont installés à chaque session cloud par `.claude/hooks/session-start.sh`.
