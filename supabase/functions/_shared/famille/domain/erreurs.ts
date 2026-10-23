@@ -53,3 +53,17 @@ export class ProfilEnfantIdVide extends Error {
     this.name = "ProfilEnfantIdVide";
   }
 }
+
+export class ParentNonRattache extends Error {
+  constructor() {
+    super("Ce parent n'est pas rattaché à ce profil enfant.");
+    this.name = "ParentNonRattache";
+  }
+}
+
+export class ProfilEnfantIntrouvable extends Error {
+  constructor() {
+    super("Ce profil enfant est introuvable.");
+    this.name = "ProfilEnfantIntrouvable";
+  }
+}
