@@ -13,3 +13,7 @@ for (const inconnu of ["6e", "ce1", "CE1 ", "", "CM3"]) {
     assertThrows(() => Niveau.de(inconnu), NiveauInconnu);
   });
 }
+
+Deno.test("le Catalogue pédagogique publie les niveaux dans l'ordre, du CP au CM2", () => {
+  assertEquals(Niveau.tous().map((niveau) => niveau.valeur), ["CP", "CE1", "CE2", "CM1", "CM2"]);
+});

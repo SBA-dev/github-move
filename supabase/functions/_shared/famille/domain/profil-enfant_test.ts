@@ -1,6 +1,6 @@
 import { assertEquals, assertThrows } from "@std/assert";
 import { Niveau } from "../../catalogue/domain/index.ts";
-import { ParentNonRattache } from "./erreurs.ts";
+import { ParentNonRattache, RattachementsInvalides } from "./erreurs.ts";
 import { ParentId } from "./parent-id.ts";
 import { Prenom } from "./prenom.ts";
 import { ProfilEnfant } from "./profil-enfant.ts";
@@ -88,4 +88,39 @@ Deno.test("les faits d'un profil enfant ne sont annoncés qu'une fois", () => {
   profil.retirerFaits();
 
   assertEquals(profil.retirerFaits(), []);
+});
+
+function reconstituerAvec(parents: ParentId[]): ProfilEnfant {
+  return ProfilEnfant.reconstituer(
+    ProfilEnfantId.de("profil-lea"),
+    Prenom.de("Léa"),
+    Niveau.de("CE1"),
+    "animaux",
+    creeLe,
+    parents,
+  );
+}
+
+Deno.test("un profil enfant reconstitué sans parent est refusé : il a un ou deux parents", () => {
+  assertThrows(() => reconstituerAvec([]), RattachementsInvalides);
+});
+
+Deno.test("un profil enfant reconstitué avec trois parents est refusé : il a un ou deux parents", () => {
+  assertThrows(() => reconstituerAvec([paul, marie, ParentId.de("parent-jean")]), RattachementsInvalides);
+});
+
+Deno.test("un profil enfant reconstitué avec deux parents les rend tous les deux", () => {
+  const profil = reconstituerAvec([paul, marie]);
+
+  assertEquals(profil.rattaches.map((parent) => parent.valeur), ["parent-paul", "parent-marie"]);
+});
+
+Deno.test("modifier la liste des parents donnée à la reconstitution ne change pas le profil enfant", () => {
+  const parents = [paul];
+  const profil = reconstituerAvec(parents);
+
+  parents.push(marie);
+
+  assertEquals(profil.estRattacheA(marie), false);
+  assertEquals(profil.rattaches.length, 1);
 });
