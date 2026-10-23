@@ -1,4 +1,4 @@
-import { BonneReponseAbsenteDesChoix } from "./erreurs.ts";
+import { BonneReponseAbsenteDesChoix, TirageInvalide } from "./erreurs.ts";
 import type { Hasard } from "./hasard.ts";
 
 export class ChoixProposes {
@@ -12,6 +12,14 @@ export class ChoixProposes {
     const distincts = [...new Set(choix)];
     if (!distincts.includes(bonneReponse)) throw new BonneReponseAbsenteDesChoix(bonneReponse);
     return new ChoixProposes(melanger(distincts, hasard), bonneReponse, []);
+  }
+
+  static depuisTirage(choix: readonly string[], bonneReponse: string, tirage: readonly string[]): ChoixProposes {
+    const distincts = [...new Set(choix)];
+    if (!distincts.includes(bonneReponse)) throw new BonneReponseAbsenteDesChoix(bonneReponse);
+    const estUnePermutation = tirage.length === distincts.length && distincts.every((texte) => tirage.includes(texte));
+    if (!estUnePermutation) throw new TirageInvalide();
+    return new ChoixProposes([...tirage], bonneReponse, []);
   }
 
   textes(): string[] {

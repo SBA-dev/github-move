@@ -3,6 +3,7 @@ import type { ReponseDonnee } from "./reponse.ts";
 
 export type SeanceTermineeAEnregistrer = Readonly<{
   seance: string;
+  enfant: string;
   lecon: string;
   choix: ChoixDeSeance;
   tirages: readonly (readonly string[])[];

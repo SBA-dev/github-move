@@ -9,12 +9,15 @@ export {
   ChoixInconnu,
   ExerciceIntrouvable,
   JeNeSaisPasDejaDit,
+  LeconIntrouvable,
   LeconSansExercice,
+  ParentNonRattache,
   PasDeQuestionEnCours,
   PasDEtapeDeLeconEnCours,
   QuestionDejaReussie,
   SeanceDejaFinie,
   SeanceDejaTerminee,
+  SeanceIncoherente,
   SeanceNonFinie,
 } from "./erreurs.ts";
 export { texteALireDeLEtape } from "./etape-de-lecon-lue.ts";
@@ -40,3 +43,4 @@ export type { NombreDEtoiles } from "./etoiles.ts";
 export { SeanceId } from "./seance-id.ts";
 export { ResultatDeLaLecon } from "./resultat-de-la-lecon.ts";
 export type { EtatDuResultat, FaitDeResultat } from "./resultat-de-la-lecon.ts";
+export { revaliderLaSeance } from "./revalider-la-seance.ts";

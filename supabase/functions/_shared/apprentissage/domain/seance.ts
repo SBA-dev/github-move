@@ -7,6 +7,7 @@ import {
   SeanceDejaFinie,
   SeanceDejaTerminee,
   SeanceNonFinie,
+  TirageEnTrop,
 } from "./erreurs.ts";
 import { Etoiles } from "./etoiles.ts";
 import type { TypeDExerciceAChoix } from "./exercices/phrases-des-exercices-a-choix.ts";
@@ -16,7 +17,14 @@ import type { GenerateurId } from "./generateur-id.ts";
 import type { Hasard } from "./hasard.ts";
 import { nombreDeQuestions } from "./nombre-de-questions.ts";
 import { PlanDeSeance } from "./plan-de-seance.ts";
-import { type AideDonnee, type QuestionJouee, questionsJoueesDe } from "./question-jouee.ts";
+import {
+  type AideDonnee,
+  proposerAuHasard,
+  proposerSelonLesTirages,
+  type Proposeur,
+  type QuestionJouee,
+  questionsJoueesAvec,
+} from "./question-jouee.ts";
 import type { Reponse, ResultatDeReponse } from "./reponse.ts";
 import { SeanceId } from "./seance-id.ts";
 import type { SeanceTermineeAEnregistrer } from "./seance-terminee-a-enregistrer.ts";
@@ -64,6 +72,29 @@ export class Seance {
     lecon: Lecon,
     choix: ChoixDeSeance,
   ): Seance {
+    return Seance.construire(SeanceId.de(generateurId.nouveau()), enfant, lecon, choix, proposerAuHasard(hasard));
+  }
+
+  static reconstituer(lecon: Lecon, envoi: SeanceTermineeAEnregistrer): Seance {
+    const tirages = envoi.tirages[Symbol.iterator]();
+    const seance = Seance.construire(
+      SeanceId.de(envoi.seance),
+      envoi.enfant,
+      lecon,
+      envoi.choix,
+      proposerSelonLesTirages(tirages),
+    );
+    if (!tirages.next().done) throw new TirageEnTrop();
+    return seance;
+  }
+
+  private static construire(
+    id: SeanceId,
+    enfant: string,
+    lecon: Lecon,
+    choix: ChoixDeSeance,
+    proposeur: Proposeur,
+  ): Seance {
     const plan = PlanDeSeance.pour(lecon, choix);
     const exercices = lecon.exercices
       .map((exercice, position) => ({ exercice, position }))
@@ -73,10 +104,10 @@ export class Seance {
           position,
           exercice.titre,
           nombreDeQuestions(exercice),
-          questionsJoueesDe(exercice, hasard),
+          questionsJoueesAvec(exercice, proposeur),
         )
       );
-    return new Seance(SeanceId.de(generateurId.nouveau()), enfant, lecon.id, choix, plan, exercices);
+    return new Seance(id, enfant, lecon.id, choix, plan, exercices);
   }
 
   etapeDeLeconEnCours(): EtapeDeLecon | undefined {
@@ -149,6 +180,7 @@ export class Seance {
     const questions = this.questions();
     return {
       seance: this.id.valeur,
+      enfant: this.enfant,
       lecon: this.lecon,
       choix: this.choix,
       tirages: questions.map((question) => question.tirage()),
