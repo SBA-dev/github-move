@@ -141,7 +141,7 @@ Le PO a ajouté les variables `SUPABASE_URL`, `SUPABASE_PROJECT_REF`, `SUPABASE_
 
 À faire en premier :
 1. [x] Variables présentes (vérifié le 2026-10-23, sans afficher les valeurs).
-2. [x] `npx supabase link` réussi. Réseau : l'API HTTPS du projet répond, mais pas Postgres en direct (ports 5432 et 6543 fermés). [ ] Migration vide de vérification : à appliquer par l'API de gestion, en attente d'une permission de l'outil (écriture dans une ressource partagée).
+2. [x] `npx supabase link` réussi. Réseau : l'API HTTPS du projet répond, mais pas Postgres en direct (ports 5432 et 6543 fermés). [x] Migration vide de vérification appliquée par l'API de gestion, puis retirée (2026-10-23) : la chaîne de migration fonctionne depuis le conteneur cloud. Règle d'autorisation dans `.claude/settings.json`.
 3. [x] Le PO a choisi les tests contre le projet en ligne `savanturier-dev` : décision 0010. Le projet est en `eu-west-1` (Irlande) : le PO garde l'Irlande, la doc est corrigée.
 4. Reprendre #5 (adaptateur Supabase Auth, écran de connexion, E2E), puis #11 à #14.
 
