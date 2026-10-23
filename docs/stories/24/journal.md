@@ -15,3 +15,5 @@
   4. Motivation : paroles de fin (3 étoiles ; 1 ou 2 étoiles).
   5. Apprentissage : reconstitution de la séance et rejeu des réponses (`SeanceIncoherente`), cas d'usage `TerminerLaSeance` (rattachement, idempotence, `LeconIntrouvable`) et politique `EnregistrerLesEtoilesDeLaLecon`, ports et fakes.
   Puis câblage : migration (`seances_terminees`, `questions_des_seances`, `resultats_des_lecons`, RLS), Edge Function `terminer-la-seance`, écran de fin, meilleures étoiles sur la page de la leçon, séance gardée sur l'appareil et renvoyée.
+- Décision du PO : quand l'appareil ne peut ni joindre le serveur ni garder la séance (navigation privée, IndexedDB indisponible), le message « Sauvegarde en ligne impossible. » est gardé (variante courte du message de Q76).
+- Décision du PO (option 1, décision 0016) : les séances terminées et les résultats des leçons ne sont écrits que par `terminer-la-seance`, avec la clé `service_role` après la vérification du rattachement au JWT ; aucun droit d'écriture pour les parents.
