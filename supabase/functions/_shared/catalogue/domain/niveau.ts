@@ -12,8 +12,4 @@ export class Niveau {
     if (code === undefined) throw new NiveauInconnu(brut);
     return new Niveau(code);
   }
-
-  toString(): string {
-    return this.valeur;
-  }
 }
