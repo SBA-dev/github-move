@@ -12,6 +12,14 @@ export {
   SeanceDejaFinie,
 } from "./erreurs.ts";
 export { texteALireDeLEtape } from "./etape-de-lecon-lue.ts";
+export { lectureDesChoix } from "./lecture-des-choix.ts";
+export {
+  complementDeLEncouragement,
+  explicationDeLaReponse,
+  INTRODUCTION_DE_LA_LECTURE,
+  MESSAGE_DE_L_ECOUTE_SANS_SON,
+  questionDeLEcoute,
+} from "./exercices/phrases-des-exercices-a-choix.ts";
 export type { GenerateurId } from "./generateur-id.ts";
 export type { Hasard } from "./hasard.ts";
 export { PlanDeSeance } from "./plan-de-seance.ts";
