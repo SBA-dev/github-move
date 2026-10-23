@@ -164,3 +164,15 @@ export function leconAvecDesChoixAccentues(): Lecon {
     questions: [{ question: "Il … un vélo.", choix: ["a", "à"], reponse: "a" }],
   });
 }
+
+export function leconDeCalculAvecAide(): Lecon {
+  return leconAvecUnExercice("ma-cp-calcul-avec-aide", {
+    type: "bulles",
+    questions: [{
+      question: "Combien font 3 + 4 ?",
+      choix: ["6", "7", "8", "9"],
+      reponse: "7",
+      aide: "Compte sur tes doigts à partir de 4.",
+    }],
+  });
+}
