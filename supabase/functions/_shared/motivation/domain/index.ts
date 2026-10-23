@@ -14,7 +14,13 @@ export {
   presentationAuRetourDuSon,
   saluer,
 } from "./paroles.ts";
-export { type Parole, type Reaction, reagirALaReponse } from "./reaction.ts";
+export {
+  type Parole,
+  type Reaction,
+  type ReactionAJeNeSaisPas,
+  reagirAJeNeSaisPas,
+  reagirALaReponse,
+} from "./reaction.ts";
 export { TirageHorsIntervalle } from "./hasard.ts";
 export {
   accueillirSurLaPageDeLaLecon,

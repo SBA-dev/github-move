@@ -8,7 +8,7 @@ import {
   type Seance,
 } from "@domain/apprentissage";
 import type { Lecon } from "@domain/catalogue";
-import { direJeNeSaisPasAvecLesChoix, type PersonnageGuide, type Reaction, reagirALaReponse } from "@domain/motivation";
+import { type PersonnageGuide, reagirAJeNeSaisPas, type Reaction, reagirALaReponse } from "@domain/motivation";
 import { hasardDuNavigateur } from "../../hasard-navigateur.ts";
 import type { Voix } from "../../voix/index.ts";
 import type { ParoleADire } from "../usePersonnageQuiParle.ts";
@@ -164,7 +164,8 @@ export function useQuestionsAChoix(
     const numero = ++sequence.current;
     faireSilence();
     redessiner();
-    const jusquAuBout = await dire({ texte: direJeNeSaisPasAvecLesChoix(aide), nature: "aide", humeur: "reflechit" });
+    const reaction = reagirAJeNeSaisPas(aide);
+    const jusquAuBout = await dire({ texte: reaction.parole, nature: "aide", humeur: reaction.humeur });
     if (jusquAuBout) await direLeMotAEcouter(numero, courante.question);
   }, [laQuestionEnCours, seance, sequence, faireSilence, redessiner, dire, direLeMotAEcouter]);
 
