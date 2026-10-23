@@ -119,6 +119,7 @@ export function Application() {
                 ? (
                   <QuiJoue
                     etat={profilsDuParent.etat}
+                    voix={voix}
                     onChoisir={(profilChoisi) => {
                       choisirQuiJoue.executer(profilChoisi);
                       aller("jeu");
@@ -189,7 +190,7 @@ export function Application() {
               onSeDeconnecter={seDeconnecter}
               deconnexionEchouee={deconnexionEchouee}
             >
-              <ProfilsDeLEspaceParent etat={profilsDuParent.etat} onModifie={profilsDuParent.relire} />
+              <ProfilsDeLEspaceParent etat={profilsDuParent.etat} voix={voix} onModifie={profilsDuParent.relire} />
               <ChoixDeLaVoix voix={voix} />
             </EspaceParent>
           )}

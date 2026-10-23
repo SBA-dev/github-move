@@ -17,6 +17,10 @@ export class ProfilsEnfantsEnMemoire implements ProfilsEnfants {
     return Promise.resolve(profils);
   }
 
+  ajouter(profil: ProfilEnfant): Promise<void> {
+    return this.enregistrer(profil);
+  }
+
   enregistrer(profil: ProfilEnfant): Promise<void> {
     this.profils.set(profil.id.valeur, profil);
     return Promise.resolve();

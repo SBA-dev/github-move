@@ -9,12 +9,15 @@ export type EtatDesProfils =
   | { readonly type: "indisponible" }
   | { readonly type: "charges"; readonly profils: readonly ProfilEnfant[] };
 
-function enProfils(lignes: readonly LigneDeProfil[]): ProfilEnfant[] | undefined {
-  try {
-    return lignes.map(enProfilEnfant);
-  } catch {
-    return undefined;
-  }
+/** Une ligne illisible est ignorée : elle ne fait pas perdre les autres profils. */
+function enProfils(lignes: readonly LigneDeProfil[]): ProfilEnfant[] {
+  return lignes.flatMap((ligne) => {
+    try {
+      return [enProfilEnfant(ligne)];
+    } catch {
+      return [];
+    }
+  });
 }
 
 /**
@@ -34,9 +37,8 @@ export function useProfilsDuParent(connecte: boolean, aLire: boolean) {
     if (!connecte || !aLire) return;
     let annule = false;
     const afficher = (lignes: readonly LigneDeProfil[]): boolean => {
-      const profils = enProfils(lignes);
-      if (annule || profils === undefined) return false;
-      setEtat({ type: "charges", profils });
+      if (annule) return false;
+      setEtat({ type: "charges", profils: enProfils(lignes) });
       return true;
     };
     void (async () => {

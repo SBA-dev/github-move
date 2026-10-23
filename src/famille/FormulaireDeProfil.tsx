@@ -1,10 +1,8 @@
 import { type FormEvent, useId, useState } from "react";
-import { type CodeDeNiveau, Niveau, NiveauInconnu } from "@domain/catalogue";
+import { Niveau, NiveauInconnu } from "@domain/catalogue";
 import { lireCleUnivers, PrenomObligatoire, Prenom, UniversInconnu } from "@domain/famille";
 import { UNIVERS } from "@domain/motivation";
 import { type DonneesDeProfil, EcritureDeProfilRefusee } from "./profils/ecriture-des-profils-supabase.ts";
-
-const CLASSES: readonly CodeDeNiveau[] = ["CP", "CE1", "CE2", "CM1", "CM2"];
 
 type Props = {
   /** Nom accessible du formulaire : « Ajouter un enfant » ou « Modifier <prénom> ». */
@@ -64,7 +62,7 @@ export function FormulaireDeProfil({ titre, valeurInitiale, libelleDuBouton, onE
         value={saisie.niveau}
         onChange={(evenement) => setSaisie({ ...saisie, niveau: evenement.target.value })}
       >
-        {CLASSES.map((classe) => <option key={classe} value={classe}>{classe}</option>)}
+        {Niveau.tous().map(({ valeur }) => <option key={valeur} value={valeur}>{valeur}</option>)}
       </select>
       <label htmlFor={`${identifiant}-univers`}>Univers</label>
       <select

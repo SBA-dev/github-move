@@ -1,13 +1,22 @@
-import { universDe } from "@domain/motivation";
+import { useEffect } from "react";
+import { inviterACreerLePremierProfil, universDe } from "@domain/motivation";
+import { BulleDuPersonnageGuide } from "../seance/BulleDuPersonnageGuide.tsx";
+import { usePersonnageQuiParle } from "../seance/usePersonnageQuiParle.ts";
 import { PersonnageGuide } from "../univers/index.ts";
-import { INVITATION_DU_PREMIER_PROFIL } from "./invitation-du-premier-profil.ts";
+import type { Voix } from "../voix/index.ts";
 
-/** Noisette invite le parent à créer le premier profil enfant dans l'espace parent. */
-export function InvitationDuPremierProfil() {
+/** Noisette invite le parent à créer le premier profil enfant dans l'espace parent, et le lui lit à voix haute. */
+export function InvitationDuPremierProfil({ voix }: { readonly voix: Voix }) {
+  const { parole, rangDuMotPrononce, humeur, dire, faireSilence } = usePersonnageQuiParle(voix);
+  useEffect(() => {
+    void dire({ texte: inviterACreerLePremierProfil(), nature: "invitation" });
+    return faireSilence;
+  }, [dire, faireSilence]);
+
   return (
     <div className="guide-et-parole">
-      <PersonnageGuide univers={universDe(undefined)} humeur="content" />
-      <div className="bulle" data-testid="parole" data-nature="invitation">{INVITATION_DU_PREMIER_PROFIL}</div>
+      <PersonnageGuide univers={universDe(undefined)} humeur={humeur} />
+      <BulleDuPersonnageGuide texte={parole?.texte} nature={parole?.nature} rangDuMotPrononce={rangDuMotPrononce} />
     </div>
   );
 }

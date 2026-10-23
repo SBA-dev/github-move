@@ -29,7 +29,7 @@ export class CreerProfilEnfant {
       lireCleUnivers(demande.univers ?? "animaux"),
       maintenant,
     );
-    await this.profils.enregistrer(profil);
+    await this.profils.ajouter(profil);
     return profil.retirerFaits();
   }
 }

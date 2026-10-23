@@ -50,13 +50,8 @@ export class ProfilsEnfantsSupabase implements ProfilsEnfants {
     return data.map(profilDepuisLaLigne).filter((profil) => profil.estRattacheA(parent));
   }
 
-  async enregistrer(profil: ProfilEnfant): Promise<void> {
-    if ((await this.parId(profil.id)) === null) return await this.creer(profil);
-    await this.modifier(profil);
-  }
-
   // Le profil et son premier rattachement sont écrits par une fonction Postgres : une seule transaction.
-  private async creer(profil: ProfilEnfant): Promise<void> {
+  async ajouter(profil: ProfilEnfant): Promise<void> {
     const { error } = await this.client.rpc("creer_profil_enfant", {
       p_id: profil.id.valeur,
       p_parent: profil.rattaches[0].valeur,
@@ -68,7 +63,7 @@ export class ProfilsEnfantsSupabase implements ProfilsEnfants {
     if (error) throw new Error(`Création du profil enfant impossible : ${error.message}`);
   }
 
-  private async modifier(profil: ProfilEnfant): Promise<void> {
+  async enregistrer(profil: ProfilEnfant): Promise<void> {
     const { data, error } = await this.client.from("profils_enfants").update(modificationDepuisLeProfil(profil))
       .eq("id", profil.id.valeur).select("id");
     if (error) throw new Error(`Modification du profil enfant impossible : ${error.message}`);
