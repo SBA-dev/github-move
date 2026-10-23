@@ -1,15 +1,13 @@
 import { useId, useState } from "react";
 import type { ProfilEnfant } from "@domain/famille";
 import { FormulaireDeProfil } from "./FormulaireDeProfil.tsx";
-import { InvitationDuPremierProfil } from "./InvitationDuPremierProfil.tsx";
+import { InvitationAffichee } from "./InvitationDuPremierProfil.tsx";
 import { classeEtUnivers } from "./libelle-du-profil.ts";
 import { type DonneesDeProfil, profilsEcritsParLesEdgeFunctions } from "./profils/ecriture-des-profils-supabase.ts";
 import type { EtatDesProfils } from "./profils/useProfilsDuParent.ts";
-import type { Voix } from "../voix/index.ts";
 
 type Props = {
   readonly etat: EtatDesProfils;
-  readonly voix: Voix;
   /** À appeler après une écriture : la liste est relue. */
   readonly onModifie: () => void;
 };
@@ -21,7 +19,7 @@ function donneesDe(profil: ProfilEnfant): DonneesDeProfil {
 }
 
 /** La section « Profils » de l'espace parent : liste, création et modification des profils enfants. */
-export function ProfilsDeLEspaceParent({ etat, voix, onModifie }: Props) {
+export function ProfilsDeLEspaceParent({ etat, onModifie }: Props) {
   const titre = useId();
   const [enModification, setEnModification] = useState<string | undefined>();
   const [confirmation, setConfirmation] = useState<string | undefined>();
@@ -47,7 +45,7 @@ export function ProfilsDeLEspaceParent({ etat, voix, onModifie }: Props) {
       <h3 id={titre}>Profils</h3>
       {etat.type === "chargement" && <p role="status">Chargement des profils…</p>}
       {etat.type === "indisponible" && <p role="status">Les profils ne sont pas disponibles pour l'instant. Réessaie dans un instant.</p>}
-      {etat.type === "charges" && profils.length === 0 && <InvitationDuPremierProfil voix={voix} />}
+      {etat.type === "charges" && profils.length === 0 && <InvitationAffichee />}
       {profils.length > 0 && (
         <ul className="profils-enfants">
           {profils.map((profil) => (

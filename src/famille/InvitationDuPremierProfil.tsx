@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import { inviterACreerLePremierProfil, universDe } from "@domain/motivation";
+import { HUMEUR_PAR_DEFAUT, type Humeur, inviterACreerLePremierProfil, universDe } from "@domain/motivation";
 import { BulleDuPersonnageGuide } from "../seance/BulleDuPersonnageGuide.tsx";
-import { usePersonnageQuiParle } from "../seance/usePersonnageQuiParle.ts";
+import { type ParoleADire, usePersonnageQuiParle } from "../seance/usePersonnageQuiParle.ts";
 import { PersonnageGuide } from "../univers/index.ts";
 import type { Voix } from "../voix/index.ts";
 
@@ -13,6 +13,23 @@ export function InvitationDuPremierProfil({ voix }: { readonly voix: Voix }) {
     return faireSilence;
   }, [dire, faireSilence]);
 
+  return <Invitation parole={parole} rangDuMotPrononce={rangDuMotPrononce} humeur={humeur} />;
+}
+
+/** Dans l'espace parent, l'invitation est seulement affichée : le parent la lit lui-même et l'essai de voix reste entendu. */
+export function InvitationAffichee() {
+  return (
+    <Invitation parole={{ texte: inviterACreerLePremierProfil(), nature: "invitation" }} humeur={HUMEUR_PAR_DEFAUT} />
+  );
+}
+
+type PropsInvitation = {
+  readonly parole: ParoleADire | undefined;
+  readonly rangDuMotPrononce?: number;
+  readonly humeur: Humeur;
+};
+
+function Invitation({ parole, rangDuMotPrononce, humeur }: PropsInvitation) {
   return (
     <div className="guide-et-parole">
       <PersonnageGuide univers={universDe(undefined)} humeur={humeur} />

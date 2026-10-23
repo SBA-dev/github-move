@@ -190,7 +190,7 @@ export function Application() {
               onSeDeconnecter={seDeconnecter}
               deconnexionEchouee={deconnexionEchouee}
             >
-              <ProfilsDeLEspaceParent etat={profilsDuParent.etat} voix={voix} onModifie={profilsDuParent.relire} />
+              <ProfilsDeLEspaceParent etat={profilsDuParent.etat} onModifie={profilsDuParent.relire} />
               <ChoixDeLaVoix voix={voix} />
             </EspaceParent>
           )}
