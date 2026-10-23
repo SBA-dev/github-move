@@ -210,6 +210,19 @@ export async function terminerLaLecture(page: Page) {
   });
 }
 
+// Les étapes de voix appliquées après la préparation de la page (voix de l'appareil, Muet) : le scénario #17 les règle
+// après le Contexte, qui a déjà préparé la page. Cette préparation s'exécute après l'autre, donc la dernière gagne.
+export async function reappliquerLAppareil(page: Page) {
+  const etat = scenario(page);
+  await page.addInitScript(installerLeFaux, { voix: etat.voix, bloque: etat.bloque, absent: etat.absent });
+  await page.addInitScript(
+    ([cleSon, muet]) => {
+      if (muet === "oui") localStorage.setItem(cleSon, "muet");
+    },
+    [CLE_SON, etat.muet ? "oui" : "non"] as const,
+  );
+}
+
 // --- Ouverture de la page de démonstration
 
 const pagesPreparees = new WeakSet<Page>();
@@ -591,7 +604,9 @@ Then(/^Léa voit la consigne « (.+) »$/, async ({ page }, texte: string) => {
 });
 
 Then(/^Léa voit le message « (.+) »$/, async ({ page }, message: string) => {
-  await expect(page.getByRole("status").filter({ hasText: message })).toHaveCount(1);
+  const statut = page.getByRole("status").filter({ hasText: message });
+  const messageDeLEcoute = page.getByTestId("ecoute-sans-son").filter({ hasText: message });
+  await expect(statut.or(messageDeLEcoute)).toHaveCount(1);
 });
 
 Then(/^le message de voix bloquée n'apparaît pas de nouveau$/, async ({ page }) => {
