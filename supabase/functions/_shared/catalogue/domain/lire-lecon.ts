@@ -28,22 +28,21 @@ function enNombre(valeur: unknown, description: string): number {
   return valeur;
 }
 
-function lireMatiere(valeur: unknown): Matiere {
+function enLeconMalFormee<T>(lire: () => T, erreurAttendue: new () => Error, detail: string): T {
   try {
-    return matiere(valeur);
+    return lire();
   } catch (erreur) {
-    if (erreur instanceof MatiereInconnue) throw new LeconMalFormee("la matière est inconnue");
+    if (erreur instanceof erreurAttendue) throw new LeconMalFormee(detail);
     throw erreur;
   }
 }
 
+function lireMatiere(valeur: unknown): Matiere {
+  return enLeconMalFormee(() => matiere(valeur), MatiereInconnue, "la matière est inconnue");
+}
+
 function lireNiveau(valeur: unknown): Niveau {
-  try {
-    return niveau(valeur);
-  } catch (erreur) {
-    if (erreur instanceof NiveauInconnu) throw new LeconMalFormee("le niveau est inconnu");
-    throw erreur;
-  }
+  return enLeconMalFormee(() => niveau(valeur), NiveauInconnu, "le niveau est inconnu");
 }
 
 function textesFacultatifs(valeur: unknown, description: string): ReadonlyArray<string> {
