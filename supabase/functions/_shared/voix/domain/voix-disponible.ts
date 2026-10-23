@@ -46,3 +46,9 @@ export function estFeminine(voix: VoixDisponible): boolean {
 export function estMasculine(voix: VoixDisponible): boolean {
   return VOIX_MASCULINE.test(voix.nom);
 }
+
+const SCORE_TRES_NATURELLE = 60;
+
+export function estTresNaturelle(voix: VoixDisponible): boolean {
+  return scoreDeLaVoix(voix) >= SCORE_TRES_NATURELLE;
+}

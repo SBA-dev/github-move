@@ -1,13 +1,14 @@
 export type { CaractereDeLaVoix } from "./caractere-de-la-voix.ts";
 export { texteALire } from "./texte-a-lire.ts";
 export type { TexteALire } from "./texte-a-lire.ts";
-export { estFeminine, estMasculine, scoreDeLaVoix, voixFrancaisesTriees } from "./voix-disponible.ts";
+export { estFeminine, estMasculine, estTresNaturelle, scoreDeLaVoix, voixFrancaisesTriees } from "./voix-disponible.ts";
+export { phraseDEssai } from "./phrase-d-essai.ts";
 export type { VoixDisponible } from "./voix-disponible.ts";
 export {
   CARACTERE_LANGUE_ETRANGERE,
-  ChoixDeVoix,
   choisirVoix,
   choisirVoixDeLangue,
+  ChoixDeVoix,
   voixMontreeCommeChoisie,
 } from "./choix-de-voix.ts";
 export type { Hasard } from "./hasard.ts";
