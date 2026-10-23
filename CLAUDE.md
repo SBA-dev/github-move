@@ -46,7 +46,7 @@ Règles de cohabitation :
 | Lint / format | `deno lint --permit-no-files supabase/functions/ && deno fmt --check --permit-no-files supabase/functions/` |
 | Typecheck du front | `npx tsc --noEmit` |
 | Build du front | `npm run build` |
-| Tests E2E d'une story | `npx bddgen && npx playwright test --grep @issue-<n>` |
+| Tests E2E d'une story | `npx bddgen --tags "@issue-<n>" && npx playwright test --grep @issue-<n> --grep-invert @depend-de` (les scénarios tagués `@depend-de-<m>` attendent la story #m) |
 | Tous les tests E2E | `npx bddgen && npx playwright test` |
 | Tests E2E de la PWA (#8, build de production) | `npx bddgen -c playwright.pwa.config.ts && npx playwright test -c playwright.pwa.config.ts` |
 | Regénérer la bibliothèque | `python3 scripts/build_bibliotheque.py` |

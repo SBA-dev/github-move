@@ -4,7 +4,11 @@ import { join } from "node:path";
 import type { Plugin } from "vite";
 
 const BIBLIOTHEQUE_SOURCE = "app/bibliotheque.json";
-const CHEMIN_BIBLIOTHEQUE = "/bibliotheque.json";
+// Données du pipeline de contenu servies à la racine, sans copie : chemin public → fichier source.
+const DONNEES_DU_CONTENU: Readonly<Record<string, string>> = {
+  "/bibliotheque.json": BIBLIOTHEQUE_SOURCE,
+  "/programmes-index.json": "app/programmes-index.json",
+};
 const MANIFESTE = "public/manifest.webmanifest";
 const PAGE_D_ACCUEIL = "index.html";
 const DOSSIER_DES_ICONES = "public/icones";
@@ -23,7 +27,7 @@ function icones(racine: string): Buffer[] {
 }
 
 /**
- * Sert la bibliothèque du Catalogue pédagogique à la racine (dev et build) sans en garder de copie,
+ * Sert la bibliothèque du Catalogue pédagogique et l'index des programmes à la racine (dev et build) sans en garder de copie,
  * et prépare le service worker : liste de la coquille (noms hachés du build) et version.
  */
 export function pwa(): Plugin {
@@ -34,17 +38,17 @@ export function pwa(): Plugin {
       racine = config.root;
     },
     configureServer(serveur) {
-      serveur.middlewares.use(CHEMIN_BIBLIOTHEQUE, (_requete, reponse) => {
-        reponse.setHeader("content-type", "application/json");
-        reponse.end(readFileSync(join(racine, BIBLIOTHEQUE_SOURCE)));
-      });
+      for (const [chemin, source] of Object.entries(DONNEES_DU_CONTENU)) {
+        serveur.middlewares.use(chemin, (_requete, reponse) => {
+          reponse.setHeader("content-type", "application/json");
+          reponse.end(readFileSync(join(racine, source)));
+        });
+      }
     },
     generateBundle() {
-      this.emitFile({
-        type: "asset",
-        fileName: CHEMIN_BIBLIOTHEQUE.slice(1),
-        source: readFileSync(join(racine, BIBLIOTHEQUE_SOURCE)),
-      });
+      for (const [chemin, source] of Object.entries(DONNEES_DU_CONTENU)) {
+        this.emitFile({ type: "asset", fileName: chemin.slice(1), source: readFileSync(join(racine, source)) });
+      }
     },
     writeBundle(options, bundle) {
       const sw = join(options.dir ?? join(racine, "dist"), "sw.js");

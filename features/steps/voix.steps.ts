@@ -198,7 +198,7 @@ export async function laisserPasserLeDelaiDeLecture(page: Page) {
   await page.evaluate((delai) => new Promise<void>((fin) => setTimeout(fin, delai)), DELAI_POUR_PROUVER_LE_SILENCE_MS);
 }
 
-async function terminerLaLecture(page: Page) {
+export async function terminerLaLecture(page: Page) {
   await page.evaluate(() => {
     const faux = Reflect.get(window, "__faux") as {
       enonces: Array<{ lot: number; enonce: { onend: (() => void) | null } }>;

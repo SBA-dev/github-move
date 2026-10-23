@@ -1,5 +1,5 @@
 # language: fr
-@issue-16 @wip
+@issue-16
 Fonctionnalité: Étapes de leçon lues, puis exercices
   En tant qu'enfant
   Je veux écouter mon personnage guide m'expliquer la leçon étape par étape, puis faire les exercices à la suite, ou en choisir un seul
@@ -106,6 +106,7 @@ Fonctionnalité: Étapes de leçon lues, puis exercices
       Quand Léa choisit seulement l'exercice « Les maisons des sons »
       Alors Noisette n'annonce pas « Les maisons des sons » comme un nouveau défi
 
+    @depend-de-18
     Scénario: Une séance d'un exercice se termine avec cet exercice
       Étant donné que Léa joue seulement l'exercice « Les maisons des sons » de la leçon « Les sons ou, on, an »
       Et qu'il ne reste que l'étiquette « dent » à poser
@@ -115,6 +116,7 @@ Fonctionnalité: Étapes de leçon lues, puis exercices
 
   Règle: Les exercices se jouent dans l'ordre de la leçon, et le personnage guide annonce le titre du suivant
 
+    @depend-de-17
     Scénario: Entre deux exercices, le personnage guide annonce le titre de l'exercice suivant
       Étant donné que Léa joue la séance complète de la leçon « Les sons ou, on, an »
       Et que Léa en est à la dernière question de l'exercice « Quel son entends-tu ? », « Dans le mot « lampe », quel son entends-tu ? »
@@ -122,6 +124,7 @@ Fonctionnalité: Étapes de leçon lues, puis exercices
       Alors Noisette dit « Nouveau défi : Les maisons des sons ! », « Jeu suivant : Les maisons des sons ! » ou « Place au jeu : Les maisons des sons ! »
       Et l'exercice « Les maisons des sons » commence
 
+    @depend-de-17
     Scénario: Un exercice sans titre commence sans être annoncé
       Étant donné qu'une leçon de test « Compter » a deux exercices bulles, le second sans titre
       Et que Léa en est à la dernière question du premier exercice de la séance complète de « Compter »
@@ -129,6 +132,7 @@ Fonctionnalité: Étapes de leçon lues, puis exercices
       Alors le second exercice commence
       Mais Noisette n'annonce aucun nouveau défi
 
+    @depend-de-17
     Scénario: Tant que la question en cours n'est pas réussie, l'exercice suivant ne commence pas
       Étant donné que Léa joue la séance complète de la leçon « Les sons ou, on, an »
       Et que Léa en est à la dernière question de l'exercice « Quel son entends-tu ? », « Dans le mot « lampe », quel son entends-tu ? »
@@ -157,18 +161,21 @@ Fonctionnalité: Étapes de leçon lues, puis exercices
       Quand Léa continue
       Alors l'avancement de la séance montre 0 question réussie sur 15
 
+    @depend-de-17
     Scénario: Chaque question réussie fait avancer la séance d'un pas
       Étant donné que Léa joue la séance complète de la leçon « Les sons ou, on, an »
       Et que Léa en est à la question « Dans le mot « poule », quel son entends-tu ? »
       Quand Léa répond « ou »
       Alors l'avancement de la séance montre 1 question réussie sur 15
 
+    @depend-de-17
     Scénario: Une erreur ne fait jamais reculer l'avancement
       Étant donné que Léa joue la séance complète de la leçon « Les sons ou, on, an »
       Et que Léa a réussi la question « Dans le mot « poule », quel son entends-tu ? »
       Quand Léa répond « an » à la question « Dans le mot « mouton », quel son entends-tu à la fin ? »
       Alors l'avancement de la séance montre toujours 1 question réussie sur 15
 
+    @depend-de-18
     Scénario: L'avancement est complet quand la dernière question est réussie
       Étant donné que Léa joue la séance complète de la leçon « Les sons ou, on, an »
       Et qu'il ne reste que l'étiquette « dent » à poser
@@ -192,6 +199,7 @@ Fonctionnalité: Étapes de leçon lues, puis exercices
       Alors Léa voit la page de la leçon « Les sons ou, on, an »
       Et Léa n'entend plus Noisette
 
+    @depend-de-17
     Scénario: Une séance quittée recommence du début
       Étant donné que Léa a quitté la séance complète de la leçon « Les sons ou, on, an » après 3 questions réussies
       Quand Léa commence de nouveau la séance complète
@@ -200,6 +208,7 @@ Fonctionnalité: Étapes de leçon lues, puis exercices
 
   Règle: La séance se suit à voix haute, en mode dys, au clavier et sur un petit écran
 
+    @depend-de-12
     Scénario: Avec le mode dys, les étapes de leçon et leurs exemples s'affichent en mode dys
       Étant donné que Paul a réglé « mode dys » sur « oui » pour Léa
       Et que Léa joue la séance complète de la leçon « Les sons ou, on, an »
@@ -207,6 +216,7 @@ Fonctionnalité: Étapes de leçon lues, puis exercices
       Alors Léa voit le texte de l'étape de leçon dans la bulle de Noisette en mode dys : police Andika, lettres, mots et lignes espacés
       Et Léa voit les exemples « ou », « on » et « an » en mode dys
 
+    @depend-de-17
     Scénario: L'avancement de la séance est annoncé aux lecteurs d'écran
       Étant donné que Léa joue la séance complète de la leçon « Les sons ou, on, an »
       Et que Léa en est à la question « Dans le mot « poule », quel son entends-tu ? »
