@@ -146,3 +146,10 @@ Le PO a ajouté les variables `SUPABASE_URL`, `SUPABASE_PROJECT_REF`, `SUPABASE_
 4. Reprendre #5 (adaptateur Supabase Auth, écran de connexion, E2E), puis #11 à #14.
 
 Branches en cours, chacune partie de la précédente, rien n'est mergé dans `main` : `claude/stoic-faraday-0qy6ez` (lot 1, PR #9) → `feature/5-connexion-du-parent` → `feature/lot-2-modele-et-scenarios` → `feature/10-controle-parental` → `feature/15-choix-de-la-voix`. À part, partie de `main` : `chore/tests-legacy` (339 tests de caractérisation).
+
+## Point d'arrêt du 2026-10-23 (après-midi)
+
+- Mergé dans `main` : lot 1, #5 (connexion du parent), modèles et scénarios du lot 2, #10 (contrôle parental), #15 (choix de la voix), modèles et scénarios du lot 3 validés par le PO (« OK pour tout », décisions 0012 et 0013).
+- En cours : **#16** sur `feature/16-etapes-puis-exercices` (poussée). Domaine (6 cycles, 333 tests) et câblage faits. Reste : review, E2E (les scénarios qui exigent de répondre dépendent de #17), PR. Puis #17 → #23 → #24 (première leçon jouable de bout en bout).
+- Beta immédiate : l'application actuelle publiée (https://claude.ai/artifact/K6kBG7pBSBhiUoBmocH4tm), identique à `app/` sur `main`.
+- Connu : le scénario PWA « Une nouvelle version s'applique au lancement suivant » échoue sur `main` (le step ouvre `/demonstration`, absente du build de production) ; certains agents ont reçu une erreur d'API (modèle refusé pour l'organisation) : forcer un autre modèle.
