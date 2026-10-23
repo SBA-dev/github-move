@@ -1,0 +1,170 @@
+# Modèle du domaine : issue #19, Dictée, conjugaison
+
+## Contexte
+
+Deux types d'exercices :
+- **dictée** : nouvelle mécanique de réponse (un mot écrit lettre par lettre, corrigé quand toutes les cases sont remplies), avec le **clavier des dictées** réglé par le parent ;
+- **conjugaison** : la mécanique des choix de #17, avec des choix calculés.
+
+S'appuie sur la séance (#16), la question jouée (#17), l'aide et « Je ne sais pas » (#23).
+
+Contextes :
+- **Catalogue pédagogique** : exercices `dictee` (`mots: [{mot, phrase?}]`) et `conjugaison` (`verbe, temps, formes, distracteurs?`).
+- **Apprentissage** : cases du mot, clavier proposé, correction, lettres gardées ; formes proposées et correction de la conjugaison.
+- **Famille** (#12) : réglage **clavier des dictées** (`ClavierDesDictees` : `automatique`, `lettresDuMot`, `clavierComplet`) et niveau du profil. La règle `automatique` appartient à Apprentissage (#12, modèle).
+- **Voix** (#7) : le mot dicté n'existe qu'à l'oral. Son coupé ou navigateur sans voix : messages propres à la dictée.
+- **Motivation** (#6) : félicitations, encouragements, humeur.
+
+### Comportement actuel (`app/`, `RUNNERS.dictee` l. 1305, `RUNNERS.conjugaison` l. 1413, `AZERTY` l. 1268)
+
+**Dictée**
+- Le mot n'est **jamais écrit** avant d'être bien écrit (règle aussi de `docs/format-lecons.md`).
+- Voix (vitesse 0,9) : « Écoute bien. `<mot>`. `<phrase>` Écris : `<mot>`. » ; « Écouter plus lentement » : vitesse 0,65 × 0,9.
+- Une case par caractère. Espace, apostrophes (`'`, `’`), tiret et point sont **déjà écrits** et sautés.
+- Clavier complet si réglage `complet`, ou `auto` et niveau CE2 ou plus. Sinon **lettres du mot** : les lettres à écrire (avec leurs répétitions), plus des **lettres intruses** tirées de « aeioulnrstcmpbdvé », absentes du mot, au nombre de `min(3, max(2, 8 − nombre de lettres))`, le tout mélangé ; chaque touche ne sert qu'une fois (elle revient avec « Effacer »).
+- Clavier complet : « azertyuiop », « qsdfghjklm », « wxcvbnéèêà », « çùëïôâîû ».
+- Chaque lettre remplit la case suivante ; « Effacer » retire la dernière.
+- **Correction automatique** quand toutes les cases sont remplies : lettre à lettre, contre le mot **mis en minuscules**.
+- Juste : « `<félicitation>` « `<mot>` » est bien écrit ! ». Faux : **une erreur**, lettres fausses en rouge, « `<encouragement>` Regarde les lettres en rouge et écoute encore. », le mot est redit ; 1,3 s plus tard, les lettres **à partir de la première fausse** sont retirées. Révision : clé `d:`.
+- Son coupé : « Pour la dictée, j'ai besoin du son : active-le avec le bouton ci-dessous. » + « Activer le son ». Navigateur sans voix : « Ce navigateur ne sait pas lire à voix haute : fais cette dictée avec un adulte, qui te dira les mots. »
+
+**Conjugaison**
+- « `<verbe>` · `<temps>` » et un tableau des pronoms. « Conjuguons le verbe `<verbe>` au `<temps>`. Choisis la bonne forme pour chaque personne. »
+- Pour chaque personne, dans l'ordre : « `<pronom>` … ? ». Choix : la forme + 2 autres tirées parmi (autres formes ∪ `distracteurs`), dédoublonnées, **différentes de la forme attendue** (texte exact).
+- Erreur : « Avec « `<pronom>` », quelle forme va ? ». Bonne : la forme s'écrit, pas de félicitation. Fin : « `<félicitation>` Tu sais conjuguer `<verbe>` ! ». Révision : « Le verbe `<verbe>` au `<temps>` : `<pronom>` … » avec 2 autres formes (clé `c:`).
+
+## Termes
+
+| Terme | Statut | Remarque |
+|---|---|---|
+| Dictée | terme du format (type `dictee`) | Exercice. À distinguer de **Mots de la semaine** (devoir, lot 6) qui prépare une dictée. |
+| Mot dicté | **nouveau** (à valider) | Mot d'un exercice `dictee` (`mots[].mot`), seulement dit à voix haute, jamais montré avant d'être bien écrit. |
+| Phrase d'exemple | **nouveau** (à valider) | Phrase facultative qui situe le mot dicté (`mots[].phrase`). Elle peut contenir le mot (elle n'est jamais affichée). |
+| Case | terme d'interface | Place d'un caractère du mot dicté. |
+| Caractère déjà écrit | **nouveau** (à valider) | Espace, apostrophe, tiret ou point d'un mot dicté, écrit d'avance. |
+| Clavier des dictées | au glossaire (Famille, à valider) | Valeurs `automatique`, `lettresDuMot`, `clavierComplet`. |
+| Lettres du mot, Clavier complet | valeurs du réglage | Question ouverte n°6. |
+| Lettre intruse | **nouveau**, proposition : terme d'interface (question ouverte n°6) | Lettre absente du mot ajoutée aux lettres du mot. |
+| Verbe, temps, pronom, forme | termes du format (`conjugaison`) | Le domaine dit **forme conjuguée** pour un couple (pronom, forme). |
+| Personne | terme du programme | Une ligne du tableau (je, tu, il…). Une question par personne. |
+
+## Modèle
+
+```mermaid
+classDiagram
+  class MotDicte {
+    <<value object, Catalogue>>
+    mot
+    phrase?
+  }
+  class MotAEcrire {
+    <<value object, Apprentissage>>
+    cases : CaseAEcrire | CaractereDejaEcrit
+    lettresAEcrire()
+    corriger(lettres) CorrectionDuMot
+  }
+  class CorrectionDuMot {
+    <<value object>>
+    juste
+    lettresFausses (positions)
+    premiereLettreFausse
+    lettresGardees
+  }
+  class ClavierPropose {
+    <<value object>>
+    lettresDuMot(touches mélangées) | clavierComplet(rangées)
+    choisir(reglage, niveau, mot, hasard)
+  }
+  class ExerciceConjugaison {
+    <<value object, Catalogue>>
+    verbe
+    temps
+    FormeConjuguee[] formes
+    distracteurs[]
+  }
+  class ChoixDeLaForme {
+    <<value object, Apprentissage>>
+    proposer(forme, autresFormes, distracteurs, hasard)
+  }
+  MotDicte ..> MotAEcrire
+  MotAEcrire ..> CorrectionDuMot
+  ExerciceConjugaison ..> ChoixDeLaForme
+```
+
+### Catalogue : validation à la lecture
+
+| Exercice | Règles de `lireLecon` |
+|---|---|
+| `ExerciceDictee` | Au moins un mot ; `mot` non vide, avec au moins une lettre à écrire ; `phrase?`. Le mot ne figure pas dans les étapes ni les exemples de la leçon (règle du format, vérifiée par le pipeline). |
+| `ExerciceConjugaison` | `verbe`, `temps` non vides ; au moins 2 formes, pronoms non vides ; `distracteurs?`. Chaque personne doit pouvoir proposer au moins 2 choix. |
+
+### Apprentissage : la dictée
+
+- `MotAEcrire.de(mot)` : une case par caractère ; espace, `'`, `’`, `-`, `.` sont des **caractères déjà écrits**.
+- `ClavierPropose.choisir(reglage, niveau, mot, hasard)` :
+  - `clavierComplet`, ou `automatique` et niveau CE2 ou plus → **clavier complet** (4 rangées AZERTY du legacy ; « œ » : question ouverte n°2) ;
+  - sinon → **lettres du mot** : les lettres à écrire (avec répétitions) + `min(3, max(2, 8 − nombre de lettres))` intruses tirées de « aeioulnrstcmpbdvé » et absentes du mot, mélangées une fois par le port `Hasard`. Chaque touche ne sert qu'une fois.
+- `corriger(lettres)` quand toutes les cases à écrire sont remplies (pas de « Valider », question ouverte n°4) :
+  - comparaison lettre à lettre ; aujourd'hui contre le mot **en minuscules** (question ouverte n°1) ;
+  - juste → la question est réussie ;
+  - faux → **une erreur** ; positions des lettres fausses ; lettres gardées = celles **avant la première fausse**.
+- Réponse : `MotEcrit(lettres)`. Pas de « Je ne sais pas » au lot 3 (#23, question n°4).
+- Texte dit : « Écoute bien. `<mot>`. `<phrase>` Écris : `<mot>`. » (domaine), vitesse normale ou lente (front, Voix). Texte affiché : « Écoute bien et écris le mot que tu entends. » (sans le mot).
+- Après une erreur : aide « Regarde les lettres en rouge et écoute encore. », puis le mot est redit. Clé de révision `d:`.
+- Son coupé ou navigateur sans voix : messages du legacy, choisis par le front selon l'état de Voix (`Muet`, `LectureImpossible`). La dictée est le seul type qui **demande** le son.
+
+### Apprentissage : la conjugaison
+
+- Une question par personne, dans l'ordre du tableau. Mécanique des choix (#17), réduction à deux, « Je ne sais pas » (#23).
+- `ChoixDeLaForme` : la forme attendue + 2 candidats tirés parmi (autres formes ∪ distracteurs), dédoublonnés, **différents de la forme attendue** (texte exact).
+- Aide : « Avec « `<pronom>` », quelle forme va ? ». Fin : « `<félicitation>` Tu sais conjuguer `<verbe>` ! ». Clé de révision `c:`.
+
+### Erreurs métier
+
+`ExerciceMalForme` (Catalogue), `MotIncomplet` (correction demandée avant la dernière case), `ToucheDejaUtilisee` (lettres du mot), `PasDeLettreAEffacer`.
+
+## Invariants
+
+1. Le mot dicté n'est **jamais** montré à l'écran avant d'être bien écrit, ni envoyé ailleurs qu'à la voix.
+2. Les caractères déjà écrits ne se tapent pas et ne comptent jamais comme faux.
+3. Le mot est corrigé exactement quand sa dernière case à écrire est remplie ; une correction fausse coûte **une** erreur, quelle que soit le nombre de lettres fausses.
+4. Après une erreur, le début juste du mot est gardé.
+5. Avec les lettres du mot, chaque touche sert une fois, et le mot peut toujours s'écrire avec les touches proposées.
+6. Le clavier proposé dépend seulement du réglage et du niveau : `automatique` donne les lettres du mot jusqu'au CE1, le clavier complet à partir du CE2.
+7. Conjugaison : chaque personne propose sa forme et jusqu'à deux autres formes, toutes différentes.
+
+## Événements
+
+Aucun.
+
+## Partage avec le front
+
+Tout tourne dans le navigateur (`@domain/apprentissage`) : cases, clavier proposé, correction, lettres gardées, choix des formes. Le front lit le réglage `ClavierDesDictees` (Famille) et le niveau, appelle `ClavierPropose.choisir`, puis affiche. Les durées (rouge pendant 1,3 s, pause de 700 ms) sont l'affaire du front. À 360 px, les touches du clavier complet gardent au moins 44 px (règle d'interface, pas du domaine).
+
+## Données d'enfants
+
+Aucune donnée nouvelle. Les lettres tapées restent dans la séance ; seul le nombre d'erreurs du mot est gardé (#24).
+
+## Emplacement
+
+```
+supabase/functions/_shared/catalogue/domain/exercices/
+  dictee.ts  conjugaison.ts
+supabase/functions/_shared/apprentissage/domain/
+  mot-a-ecrire.ts               # cases, caractères déjà écrits, correction
+  clavier-propose.ts            # règle automatique, lettres du mot, intruses, clavier complet
+  choix-de-la-forme.ts
+  exercices/
+    dictee.ts  conjugaison.ts
+src/seance/exercices/           # cases, touches, « Effacer », « Réécouter le mot », « Écouter plus lentement », tableau de conjugaison
+```
+
+## Questions ouvertes
+
+1. **Dictée : majuscules** : la correction ignore-t-elle les majuscules (comparer en minuscules des deux côtés, et la touche montre la lettre en minuscule) ? **Proposition** : oui ; les mots de la semaine tapés par un parent (lot 6) peuvent avoir une majuscule.
+2. **Clavier complet** : ajouter « œ » ? D'autres lettres (« æ », « ü », « ÿ ») ? **Proposition** : ajouter « œ » seulement (cœur, sœur, œuf, programme du CE1) ; les autres sont trop rares au primaire.
+3. **Dictée : aide ou « Je ne sais pas »** ? **Proposition** : voir #23, question n°4 (la lettre juste suivante s'écrit, le mot n'est jamais montré en entier).
+4. **Correction automatique** ou bouton « Valider » ? **Proposition** : automatique, comme aujourd'hui.
+5. **Conjugaison : félicitation après chaque personne** ? **Proposition** : non, comme aujourd'hui (seulement à la fin) ; l'humeur « applaudit » à chaque bonne forme (décision M4 de #6).
+6. **« Clavier complet », « lettres du mot », « lettres intruses »** : termes d'interface ? **Proposition** : « lettres du mot » et « clavier complet » sont les valeurs du réglage **Clavier des dictées** (déjà au glossaire) ; « lettre intruse » est un terme d'interface.
+7. **Phrase d'exemple** : peut-elle contenir le mot dicté (elle n'est jamais affichée, seulement dite) ? **Proposition** : oui, comme aujourd'hui (« Le chat dort sur le lit. »).

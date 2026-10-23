@@ -21,22 +21,67 @@ Le glossaire garde l'orthographe française.
 | Matière | Domaine enseigné : `francais`, `maths`, `sciences`, `histoire` (histoire et géographie), `anglais`, `emc`. | Catalogue pédagogique | discipline, sujet, cours |
 | Niveau | Classe de l'élève : `CP`, `CE1`, `CE2`, `CM1`, `CM2`. | Catalogue pédagogique | classe (dans le code), grade, année |
 | Leçon | Unité d'apprentissage d'une matière et d'un niveau : des étapes expliquées, puis des exercices. | Catalogue pédagogique | cours, chapitre, module |
-| Consigne | Texte qui dit à l'enfant ce qu'il doit faire dans un exercice (champ `consigne`). Il est lu à voix haute dès qu'il s'affiche. | Catalogue pédagogique | énoncé, instruction |
+| Consigne | Texte qui dit à l'enfant ce qu'il doit faire dans un exercice (champ `consigne`). Il est lu à voix haute dès qu'il s'affiche. Sans `consigne`, le Catalogue donne la consigne par défaut du type (#18). | Catalogue pédagogique | énoncé (seul, voir Conflits n°11), instruction |
 | Étape de leçon | Explication courte, lue à voix haute avant les exercices (champ `lecon`). | Catalogue pédagogique | slide, page |
 | Exercice | Activité notée d'une leçon. Son **type** fixe la mécanique : `bulles`, `classer`, `dictee`, `ordre`, `trous`, `conjugaison`, `lecture`, `memoriser`, `addition`, `calcul`, `fluence`, `ecoute`, `boite`, `barres`. | Catalogue pédagogique | question, quiz, activité |
 | Question | Un item à résoudre à l'intérieur d'un exercice. | Catalogue pédagogique | exercice (pour l'item) |
-| Ordre | Position d'une leçon dans le parcours de sa matière et de son niveau. | Catalogue pédagogique | rang, index |
+| Ordre | Position d'une leçon dans le parcours de sa matière et de son niveau. Ne pas confondre avec l'exercice `ordre` (remettre des étiquettes dans l'ordre). | Catalogue pédagogique | rang (pour une leçon, voir Conflits n°10), index |
 | Compétence | Ce que l'enfant sait faire quand il réussit une leçon (« Je connais les tables de 3 et de 4 »). C'est le nom de son badge. | Catalogue pédagogique | objectif, skill |
 | Bibliothèque | Ensemble des leçons préparées à partir des programmes officiels (`bibliotheque.json`). | Catalogue pédagogique | catalogue, base de leçons |
+| Choix (à valider) | Terme du format (`choix`) : réponses proposées à l'enfant pour une question ; la réponse attendue en fait toujours partie (#17). | Catalogue pédagogique | option, proposition |
+| Aide (à valider) | Terme du format (`aide`) : texte lu par le personnage guide après une erreur ou après « Je ne sais pas ». Sans `aide`, l'aide par défaut du type d'exercice est lue (#23). | Catalogue pédagogique | indice, correction |
+| Distracteur (à valider) | Terme du format (`distracteurs`) : mot faux proposé exprès parmi les choix d'un texte à trous ou d'une conjugaison (#18, #19). | Catalogue pédagogique | piège, leurre |
+| Groupe (à valider) | Terme du format (`groupes`) : catégorie d'un exercice `classer`, avec un `id` et un `nom`. L'interface dit « maison » (#18). | Catalogue pédagogique | maison (dans le code), catégorie, boîte |
+| Texte à trous (à valider) | Texte d'un exercice `trous`, découpé par le Catalogue en segments de texte et en trous ; Apprentissage ne lit jamais les crochets (#18). | Catalogue pédagogique | texte lacunaire |
+| Trou (à valider) | Place d'un **mot attendu** dans un texte à trous (`[mot]` dans le format) (#18). | Catalogue pédagogique | blanc, case vide |
+| Mot dicté (à valider) | Mot d'un exercice `dictee`, seulement dit à voix haute et jamais montré avant d'être bien écrit (#19). | Catalogue pédagogique | mot de dictée, mot de la semaine (c'est un devoir) |
+| Phrase d'exemple (à valider) | Phrase facultative qui situe un mot dicté (`mots[].phrase`), seulement dite (#19). | Catalogue pédagogique | contexte |
+| Mot à écouter (à valider) | Mot ou phrase d'un exercice `ecoute` (`dire`), dit par une voix anglaise et jamais écrit (#17). | Catalogue pédagogique | mot anglais, audio |
+| Opération (à valider) | Calcul à faire, fixe (`operations` : énoncé `q`, résultat `r`, `aide` facultative) ou tiré par un générateur. Peut être une question de calcul sans signe (« Moitié de 10 ») (#20). | Catalogue pédagogique | calcul (pour l'item), exercice |
+| Générateur (à valider) | Terme du format (`generateur`) : règle de tirage des opérations (signe, intervalles, nombre, cible) ou des additions posées (#20). | Catalogue pédagogique | aléatoire, random |
+| Poésie (à valider) | Texte en vers d'un exercice `memoriser` (`titre`, `auteur`, `vers`). L'interface dit aussi « poème » (#22). | Catalogue pédagogique | récitation, texte |
+| Chanson (à valider) | Poésie à chanter (chanson, comptine, reconnue à son titre ou à son auteur) : le personnage guide dit « chante » au lieu de « redis » ou « récite » (#22). | Catalogue pédagogique | air, musique |
+| Vers (à valider) | Terme du format (`vers`) : ligne d'une poésie ou d'une chanson (#22). | Catalogue pédagogique | ligne, phrase |
+| Boîte à jetons (à valider) | Exercice `boite` (guide fondamental du CP) : des jetons entrent ou sortent d'une boîte fermée, l'enfant prévoit combien il y en a, puis on ouvre pour vérifier (#21). | Catalogue pédagogique | boîte (seule) |
+| Jeton (à valider) | Objet compté qui entre dans la boîte à jetons ou en sort (#21). | Catalogue pédagogique | pion, objet |
+| Schéma en barres (à valider) | Exercice `barres` (guide fondamental du CP) : un problème représenté par des barres proportionnelles, sous trois formes (parties et tout, comparaison, parts) (#21). | Catalogue pédagogique | graphique, dessin |
+| Énoncé du problème (à valider) | Texte d'un problème en schéma en barres (champ `enonce`). « Énoncé » seul reste interdit pour la consigne (#21). | Catalogue pédagogique | énoncé (seul), consigne |
+| Valeur cherchée (à valider) | La seule valeur inconnue d'un schéma en barres (`null` dans le format), montrée par « ? » (#21). | Catalogue pédagogique | inconnue, trou |
+| Écriture du calcul (à valider) | Égalité montrée après la bonne réponse d'une boîte à jetons ou d'un schéma en barres (`4 + 2 = 6`, `12 = 3 × 4`) (#21). | Catalogue pédagogique | opération (pour l'égalité), correction |
 
 ## Apprentissage
 
 | Terme | Définition | Contexte | Synonymes interdits |
 |---|---|---|---|
-| Séance (à valider) | Une partie jouée d'une leçon par un enfant, du début à l'écran de fin. | Apprentissage | partie, session, tentative |
-| Réponse (à valider) | Ce que l'enfant propose à une question. Elle est juste ou fausse. « Je ne sais pas » est une réponse permise. | Apprentissage | saisie, essai |
-| Erreur (à valider) | Réponse fausse à une question pendant une séance. Le nombre d'erreurs fixe les étoiles gagnées. | Apprentissage | faute, échec |
-| Étoile | Récompense d'une séance, de 1 à 3 : 3 sans erreur, 2 avec 1 à 3 erreurs, 1 au-delà. Une leçon garde son meilleur score. | Apprentissage | point, note, score |
+| Séance (à valider) | Une leçon jouée par un enfant, de la première étape de leçon (ou du seul exercice choisi) jusqu'à l'écran de fin. Elle est **complète** ou **d'un exercice** (#16). | Apprentissage | partie, session, tentative |
+| Séance complète (à valider) | Séance qui lit toutes les étapes de leçon, puis joue tous les exercices de la leçon, dans l'ordre. Interface : « Leçon et tous les jeux » (#16). | Apprentissage | leçon complète |
+| Séance d'un exercice (à valider) | Séance d'un seul exercice choisi sur la page de la leçon, sans étapes de leçon (#16). | Apprentissage | jeu seul, mini-séance |
+| Avancement de la séance (à valider) | Nombre de questions réussies sur le nombre de questions de la séance ; les étapes de leçon ne comptent pas. Interface : le récipient et ses points (#16). | Apprentissage | progression, score, récipient (dans le code) |
+| Réponse (à valider) | Ce que l'enfant propose à une question : un choix touché, un nombre validé, un mot écrit, une étiquette posée. Elle est juste ou fausse. « Je ne sais pas » est une réponse permise. | Apprentissage | saisie, essai |
+| Erreur (à valider) | Réponse fausse à une question pendant une séance. Le nombre d'erreurs fixe les étoiles gagnées. Le compte exact (« Je ne sais pas », plusieurs erreurs sur une question) est en question dans #23. | Apprentissage | faute, échec |
+| Nouvelle chance (à valider) | Après une erreur, la même question reste posée, sans limite d'essais : l'enfant avance seulement avec la bonne réponse (#23). | Apprentissage | deuxième essai, rattrapage |
+| Je ne sais pas (à valider) | Réponse permise, une fois par question, là où la mécanique le permet : la bonne réponse est montrée, puis l'enfant la donne lui-même (#23). | Apprentissage | passer, abandon, joker |
+| Aide par défaut (à valider) | Aide propre à un type d'exercice, lue quand la question n'a pas d'`aide` (ex. l'astuce de l'opération) (#23). | Apprentissage | indice |
+| Bonne réponse montrée (à valider) | État d'une question après « Je ne sais pas » : seul le bon choix reste et brille, ou la réponse est dite (#23). | Apprentissage | solution, corrigé |
+| Choix écarté (à valider) | Choix faux déjà touché : il reste visible, pâle, et ne coûte plus d'erreur (#17). | Apprentissage | bulle grisée (dans le code) |
+| Explication de la réponse (à valider) | Phrase propre au type d'exercice, dite après la félicitation (« « cat », c'est « chat » », « On ouvre la boîte pour vérifier… »). Apprentissage la fournit, Motivation la félicitation (#17). | Apprentissage | correction |
+| Étiquette (à valider) | Mot, nombre ou chiffre que l'enfant pose sur une cible : item de `classer`, élément d'`ordre`, chiffre d'une addition posée, vers (#18). | Apprentissage | pierre, tag, carte |
+| Mode de réponse (à valider) | Manière de répondre à un calcul : par choix au CP (et, pour la boîte et les barres, si la réponse vaut 20 au plus), sinon au clavier de cristaux (#20, #21). | Apprentissage | mode de saisie |
+| Clavier de cristaux (à valider) | Clavier de chiffres (0 à 9, « Effacer », « Valider ») pour répondre à un calcul, à partir du CE1. Nommé dans le format (#20). | Apprentissage | pavé numérique, clavier (seul) |
+| Caractère déjà écrit (à valider) | Espace, apostrophe, tiret ou point d'un mot dicté, écrit d'avance et jamais tapé (#19). | Apprentissage | lettre fixe |
+| Adaptation de la difficulté (à valider) | Réduction des intervalles d'un générateur de calcul quand l'enfant se trompe souvent (aujourd'hui : moins de 60 % de réponses justes sur au moins 6) (#20). | Apprentissage | niveau adaptatif, difficulté (seule) |
+| Astuce de l'opération (à valider) | Aide par défaut d'un calcul, selon son signe (« Pars du plus grand nombre, et avance du plus petit. ») (#20). | Apprentissage | conseil, truc |
+| Score de fluence (à valider) | Nombre de calculs réussis pendant une fluence. Ce n'est pas une étoile (#20). | Apprentissage | points, note |
+| Record de fluence (à valider) | Meilleur score de fluence d'un enfant à un exercice de fluence d'une leçon. Il ne baisse jamais ; 0 n'est jamais un record. « Record » seul : interface (#20). | Apprentissage | meilleur temps, high score |
+| Colonne (à valider) | Colonne des unités (bleue), des dizaines (rose) ou des centaines (verte) d'une addition posée, mêmes couleurs dans tous les univers. L'interface dit « maison » (#20). | Apprentissage | maison (dans le code), tour |
+| Rang (à valider) | Unités, dizaines, centaines : ce que vaut un chiffre selon sa colonne (#20). | Apprentissage | position, ordre (réservé à la leçon) |
+| Retenue (à valider) | Dizaine d'une colonne reportée en haut de la colonne suivante, à gauche (#20). | Apprentissage | report |
+| Mot caché (à valider) | Mot d'un vers remplacé par un trou pendant l'entraînement d'une poésie : le plus long d'au moins 3 lettres (#22). | Apprentissage | mot envolé (interface), trou (seul) |
+| Séance terminée (à valider) | Séance dont toutes les questions sont réussies. Elle donne des étoiles et devient un fait enregistré (`SeanceTerminee`) (#24). | Apprentissage | séance finie, séance validée |
+| Résultat de la leçon (à valider) | Pour un enfant et une leçon : meilleures étoiles, dernières étoiles et nombre de séances terminées. Il dit si la leçon est réussie ou acquise (#24). | Apprentissage | progression (mot d'interface), progrès |
+| Meilleures étoiles (à valider) | Le plus grand nombre d'étoiles gagné sur une leçon ; il ne baisse jamais (#24). | Apprentissage | meilleur score, record |
+| Jour de séance (à valider) | Jour où l'enfant a terminé au moins une séance ; sert à la série et aux épisodes (lot 5) (#24). | Apprentissage | jour joué, connexion |
+| Étoile | Récompense d'une séance, de 1 à 3 : 3 sans erreur, 2 avec 1 à 3 erreurs, 1 au-delà. Une leçon garde ses meilleures étoiles. | Apprentissage | point, note, score |
 | Leçon réussie | Leçon pour laquelle l'enfant a gagné au moins 1 étoile. | Apprentissage | leçon terminée, faite |
 | Leçon acquise | Leçon réussie avec au moins 2 étoiles, ou validée par le test de départ. | Apprentissage | maîtrisée, validée |
 | Parcours | Suite ordonnée des leçons d'une matière pour le niveau de l'enfant. | Apprentissage | chemin, programme, carte |
@@ -156,9 +201,21 @@ Sous-domaine décidé à la validation n°1 du lot 1 (décision 0007). Ses terme
 
 Les anciens conflits n°3 à n°7 (compte, session, lien magique, voix, monde) sont tranchés : voir Décisions n°10 à n°15. Ceux du lot 2 (espace adulte, lien, supprimer / détacher, la voix des guides, progression) : voir Décisions n°17 à n°21.
 
+Conflits ouverts par le lot 3 (« Jouer une leçon », #16 à #24), avec la proposition de chaque story :
+
+8. **« Jeu »** (#16) : l'interface dit « jeu » pour **exercice** (« Leçon et tous les jeux », « Jeu suivant »). Proposition : mot d'interface seulement, jamais dans le code ni les scénarios.
+9. **« Maison »** (#18, #20) : dit pour les groupes de `classer` **et** pour les colonnes de l'addition posée. Proposition : mot d'interface ; le domaine dit **Groupe** et **Colonne**.
+10. **« Rang »** (#20) : interdit comme synonyme d'**Ordre**, mais c'est le mot des programmes pour unités, dizaines, centaines. Proposition : **Rang** entre au glossaire pour l'addition posée ; l'interdiction ne vaut que pour la position d'une leçon.
+11. **« Énoncé »** (#21) : interdit comme synonyme de **Consigne**, mais le format a `barres.items[].enonce`. Proposition : **Énoncé du problème** pour le schéma en barres ; « énoncé » seul reste interdit.
+12. **« Essai »** (#24) : le legacy compte les `essais` d'une leçon (séances terminées), mais « essai » est un synonyme interdit de **Réponse**, et « essai de voix » existe. Proposition : on dit **nombre de séances**.
+13. **« Étape »** (#20) : l'addition posée a une « étape poser » et une « étape calculer » (`etapes` du format), à ne pas confondre avec l'**Étape de leçon**. Proposition : jamais « étape » seule.
+14. **« Progression »** (#24) : mot d'interface (décision n°21) ; l'agrégat qui garde les meilleures étoiles s'appelle **Résultat de la leçon**.
+
 ## Questions ouvertes
 
 Les trois questions de rattachement (mêmes droits des deux parents, durée et usage unique d'une invitation, visibilité des autres enfants) sont tranchées par la validation n°1 du lot 2 (décisions n°1, n°2 et n°3). Restent, sans blocage :
 - « Qui joue ? » : terme du domaine ou titre d'écran (#11, question n°2) ;
 - « police de lecture », « texte espacé », « syllabe » : glossaire ou interface (#12, question n°3) ;
 - « Avertissement de suppression » : terme du domaine ou d'interface (#14, question n°6).
+
+Lot 3 : les termes nouveaux sont tous `(à valider)`, y compris ceux qui reprennent un champ du format (`choix`, `aide`, `distracteurs`, `groupes`, `generateur`, `vers`) : leur sens dans le moteur (aide par défaut, choix écartés) va au-delà du simple nom de champ. Les termes que les stories proposent de laisser à l'interface (récipient, bulle, carte de la question, plateau, case, lettre intruse, écran de fin, maison, jeu, poème) ne sont pas ajoutés. Questions détaillées dans `docs/stories/16/` à `docs/stories/24/`.
