@@ -15,3 +15,4 @@
   3. Apprentissage : `QuestionJouee` et `Seance.repondre` (juste, fausse, déjà écartée, erreurs, `QuestionDejaReussie`, choix tirés une fois au début de la séance).
   4. Apprentissage : `CleDeQuestion` et questions qui ont eu une erreur.
   5. Apprentissage : lecture des choix, explication de la réponse, phrases du déroulé (question par défaut de l'écoute, « Essaie une autre bulle. », « Écoute encore. », introduction de la lecture).
+- 18:40 · Boucle TDD du domaine terminée (379 tests Deno verts). Deux allers-retours `implementer` → `test-writer` : trois anciens tests adaptés aux exercices à choix typés (fixture à un seul choix, données non typées, champs lus sans restriction de type), et quatre tests de `repondre` qui répondaient pendant une étape de leçon. `Seance.commencer` reçoit maintenant le port `Hasard` d'Apprentissage : les choix sont tirés une fois au début de la séance.
