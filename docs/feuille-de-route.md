@@ -51,7 +51,14 @@ L'application fonctionne et est publiée comme artifact claude.ai. Elle comprend
   - `playwright.config.ts` (playwright-bdd) et `playwright.legacy.config.ts` ;
   - `.env.example` et `.gitignore`.
 - [x] Test de contrat de `app/bibliotheque.json` (`scripts/tests/test_bibliotheque.py`, 1 326 cas). Il a révélé 3 paires de leçons de maths du CP avec le même ordre : c'est corrigé.
-- [ ] Compléter `tests/legacy/` avec les scripts de vérification utilisés jusqu'ici (parcours des 265 leçons, profils, révisions, espace parent). Deux premiers tests de caractérisation y sont déjà.
+- [x] Compléter `tests/legacy/` avec les scripts de vérification utilisés jusqu'ici : 339 tests de caractérisation verts sur l'application actuelle (environ 5 minutes sur 4 cœurs).
+  - `bibliotheque.spec.ts` : les 265 leçons se jouent jusqu'à l'écran de fin sans erreur JavaScript, sur la tablette. Sur le téléphone : un échantillon fixe (la première leçon de chaque type d'exercice et de chaque classe, 16 leçons) ;
+  - `profils.spec.ts` : premier lancement, création, « Qui joue aujourd'hui ? », prénom vide, prénom coupé à 20 caractères, modification, suppression confirmée ;
+  - `espace-adulte.spec.ts` : multiplication de 6 à 9, mauvaise réponse, onglets ;
+  - `progression.spec.ts` : étoiles (3, 2 de 1 à 3 erreurs, 1 au-delà), meilleur score gardé, verrous, parcours libre, classes d'avant, leçon suivante ;
+  - `revisions.spec.ts` : une erreur revient le lendemain, au plus 10 questions par révision, boîtes 1, 3 et 7 jours ;
+  - outils communs dans `tests/legacy/outils.ts` (profils écrits dans `localStorage`, voix silencieuse, hasard fixé, partie jouée automatiquement).
+  - Comportements à trancher pendant la réécriture : « Toutes les leçons » ouvre une leçon encore verrouillée dans le parcours ; après une leçon jouée hors de l'ordre, « Leçon suivante » propose une leçon d'une autre matière.
 - [ ] Écrire les premières issues GitHub. Ordre proposé :
   1. Compte famille et profil enfant
   2. Jouer une leçon et gagner des étoiles
