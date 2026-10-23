@@ -1,5 +1,5 @@
 import { LeconMalFormee, MatiereInconnue, NiveauInconnu } from "./erreurs.ts";
-import type { EtapeDeLecon, Exercice, Lecon } from "./lecon.ts";
+import type { EtapeDeLecon, Exercice, Lecon, PassageDuGuideFondamental, ProgrammeCite } from "./lecon.ts";
 import { type Matiere, matiere } from "./matiere.ts";
 import { type Niveau, niveau } from "./niveau.ts";
 import { estUnTypeDExercice } from "./type-d-exercice.ts";
@@ -73,6 +73,24 @@ function lireExercices(bruts: ReadonlyArray<unknown>): ReadonlyArray<Exercice> {
   return bruts.map(lireExercice).filter((exercice) => exercice !== undefined);
 }
 
+function lireProgramme(brut: unknown): ProgrammeCite {
+  const programme = enObjet(brut, "le programme");
+  return {
+    section: enTexte(programme.section, "la section du programme"),
+    citation: enTexte(programme.citation, "la citation du programme"),
+  };
+}
+
+function lireGuide(brut: unknown): PassageDuGuideFondamental | undefined {
+  if (brut === undefined) return undefined;
+  const guide = enObjet(brut, "le guide fondamental");
+  return {
+    titre: enTexte(guide.titre, "le titre du guide fondamental"),
+    page: enNombre(guide.page, "la page du guide fondamental"),
+    extrait: enTexte(guide.extrait, "l'extrait du guide fondamental"),
+  };
+}
+
 export function lireLecon(brute: unknown): Lecon {
   const lecon = enObjet(brute, "la leçon");
   return {
@@ -83,5 +101,7 @@ export function lireLecon(brute: unknown): Lecon {
     ordre: enNombre(lecon.ordre, "l'ordre"),
     etapes: enListe(lecon.lecon, "les étapes de leçon").map(lireEtape),
     exercices: lireExercices(enListe(lecon.exercices, "les exercices")),
+    programme: lireProgramme(lecon.programme),
+    guide: lireGuide(lecon.guide),
   };
 }

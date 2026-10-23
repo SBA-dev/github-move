@@ -14,6 +14,17 @@ export type Exercice = {
   readonly contenu: Readonly<Record<string, unknown>>;
 };
 
+export type ProgrammeCite = {
+  readonly section: string;
+  readonly citation: string;
+};
+
+export type PassageDuGuideFondamental = {
+  readonly titre: string;
+  readonly page: number;
+  readonly extrait: string;
+};
+
 export type Lecon = {
   readonly id: string;
   readonly titre: string;
@@ -22,4 +33,6 @@ export type Lecon = {
   readonly ordre: number;
   readonly etapes: ReadonlyArray<EtapeDeLecon>;
   readonly exercices: ReadonlyArray<Exercice>;
+  readonly programme: ProgrammeCite;
+  readonly guide?: PassageDuGuideFondamental;
 };
