@@ -15,18 +15,25 @@ export class SeancesTermineesEnMemoire {
     this.echecAuProchainAppel = true;
   }
 
-  async enregistrerAvecLeResultat(
+  enregistrerAvecLeResultat(
     fait: SeanceTerminee,
     resultat: ResultatDeLaLecon,
     nombreDeSeancesLu: number,
   ): Promise<Issue> {
+    return Promise.resolve(this.enregistrerSansAttendre(fait, resultat, nombreDeSeancesLu));
+  }
+
+  private enregistrerSansAttendre(
+    fait: SeanceTerminee,
+    resultat: ResultatDeLaLecon,
+    nombreDeSeancesLu: number,
+  ): Issue {
     if (this.echecAuProchainAppel) {
       this.echecAuProchainAppel = false;
       throw new Error("écriture impossible");
     }
     if (this.seances.has(fait.seance)) return "dejaEnregistree";
-    const actuel = await this.resultats.de(fait.enfant, fait.lecon);
-    if ((actuel?.nombreDeSeances ?? 0) !== nombreDeSeancesLu) return "conflit";
+    if (this.resultats.nombreDeSeances(fait.enfant, fait.lecon) !== nombreDeSeancesLu) return "conflit";
     this.seances.set(fait.seance, fait);
     this.resultats.ecrire(resultat);
     return "enregistree";

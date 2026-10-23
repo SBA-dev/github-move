@@ -20,6 +20,11 @@ export class ResultatsDesLeconsEnMemoire {
     return Promise.resolve(resultat ? copie(resultat) : null);
   }
 
+  /** Lecture synchrone : permet à l'écriture de la séance d'être atomique, comme la transaction qu'elle remplace. */
+  nombreDeSeances(enfant: string, lecon: string): number {
+    return this.resultats.get(`${enfant}/${lecon}`)?.nombreDeSeances ?? 0;
+  }
+
   ecrire(resultat: ResultatDeLaLecon): void {
     this.resultats.set(`${resultat.enfant}/${resultat.lecon}`, copie(resultat));
   }

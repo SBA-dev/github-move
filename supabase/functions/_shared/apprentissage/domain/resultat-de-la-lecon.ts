@@ -2,12 +2,12 @@ import { Etoiles, type NombreDEtoiles } from "./etoiles.ts";
 
 export type FaitDeResultat =
   | { type: "LeconReussie"; enfant: string; lecon: string }
-  | { type: "LeconAcquise"; enfant: string; lecon: string; competence: string };
+  | { type: "LeconAcquise"; enfant: string; lecon: string; competence?: string };
 
 export type EtatDuResultat = {
   enfant: string;
   lecon: string;
-  competence: string;
+  competence?: string;
   meilleures?: NombreDEtoiles;
   dernieres?: NombreDEtoiles;
   nombreDeSeances: number;
@@ -21,7 +21,7 @@ export class ResultatDeLaLecon {
 
   private constructor(private etat: EtatDuResultat) {}
 
-  static commencer(enfant: string, lecon: string, competence: string): ResultatDeLaLecon {
+  static commencer(enfant: string, lecon: string, competence?: string): ResultatDeLaLecon {
     return new ResultatDeLaLecon({ enfant, lecon, competence, nombreDeSeances: 0 });
   }
 
@@ -35,6 +35,10 @@ export class ResultatDeLaLecon {
 
   get lecon(): string {
     return this.etat.lecon;
+  }
+
+  get competence(): string | undefined {
+    return this.etat.competence;
   }
 
   get meilleures(): NombreDEtoiles | undefined {
@@ -71,11 +75,12 @@ export class ResultatDeLaLecon {
       this.faits.push({ type: "LeconReussie", enfant: this.enfant, lecon: this.lecon });
     }
     if (!etaitAcquise && this.estAcquise()) {
+      const { competence } = this.etat;
       this.faits.push({
         type: "LeconAcquise",
         enfant: this.enfant,
         lecon: this.lecon,
-        competence: this.etat.competence,
+        ...(competence === undefined ? {} : { competence }),
       });
     }
   }

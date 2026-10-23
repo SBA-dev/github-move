@@ -50,7 +50,10 @@ function rejouer(lecon: Lecon, envoi: SeanceTermineeAEnregistrer): SeanceTermine
   const seance = Seance.reconstituer(lecon, envoi);
   while (seance.etapeDeLeconEnCours()) seance.continuer();
   envoi.reponses.forEach((reponsesDeLaQuestion, rang) => {
-    reponsesDeLaQuestion.forEach((reponse) => rejouerLaReponse(seance, reponse));
+    reponsesDeLaQuestion.forEach((reponse) => {
+      if (seance.avancement().questionsReussies > rang) throw new QuestionDejaReussie();
+      rejouerLaReponse(seance, reponse);
+    });
     if (seance.avancement().questionsReussies !== rang + 1) throw new SeanceNonFinie();
   });
   return seance.terminer(envoi.termineeLe);
