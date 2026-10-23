@@ -9,7 +9,7 @@ import { EnTete } from "./en-tete/EnTete.tsx";
 import { ControleParental, EspaceParent, useAccesALEspaceParent } from "./famille/index.ts";
 import { AideEcranDAccueil } from "./installation/index.ts";
 import { type Ecran, useNavigation } from "./navigation.ts";
-import { useVoix } from "./voix/index.ts";
+import { ChoixDeLaVoix, useVoix } from "./voix/index.ts";
 import { PALETTES, Paysage, PersonnageGuide } from "./univers/index.ts";
 
 type Habillage = CSSProperties & { readonly "--accent": string; readonly "--accent-fonce": string };
@@ -44,10 +44,14 @@ export function Application() {
   const connexion = useConnexion();
   const connecte = connexion.etat === "connecte";
   const ecran = ecranAffiche(ecranDemande, acces.etat.type, connecte);
-  const { profil, charge: profilCharge } = useProfilPrepare(ecran === "demonstration");
+  const surLaDemonstration = ecran === "demonstration";
+  const { profil: profilEnCours, charge: profilCharge } = useProfilPrepare(
+    surLaDemonstration || ecran === "espace-parent",
+  );
+  const profil = surLaDemonstration ? profilEnCours : undefined;
   const univers = universDe(profil?.univers);
   const palette = PALETTES[univers.cle];
-  const voix = useVoix(univers.personnageGuide);
+  const voix = useVoix(universDe(profilEnCours?.univers).personnageGuide);
   const { etat: etatEspaceParent, quitter: fermerEspaceParent, ouvrirApresLaConnexion } = acces;
   const ouvrirLEspaceParentConnecte = useCallback(() => {
     ouvrirApresLaConnexion();
@@ -108,7 +112,7 @@ export function Application() {
               <AideEcranDAccueil />
             </>
           )}
-          {ecran === "demonstration" && PageDemonstration && profilCharge && (
+          {surLaDemonstration && PageDemonstration && profilCharge && (
             <Suspense fallback={null}>
               <PageDemonstration univers={univers} voix={voix} />
             </Suspense>
@@ -131,7 +135,9 @@ export function Application() {
               }}
               onSeDeconnecter={seDeconnecter}
               deconnexionEchouee={deconnexionEchouee}
-            />
+            >
+              <ChoixDeLaVoix voix={voix} />
+            </EspaceParent>
           )}
         </main>
       </div>

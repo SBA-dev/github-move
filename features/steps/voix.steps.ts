@@ -1,11 +1,12 @@
-import { expect, type Page } from "@playwright/test";
-import { Given, Then, When } from "./fixtures.ts";
+import { type BrowserContext, expect, type Page } from "@playwright/test";
+import type { Famille } from "../support/famille.ts";
+import { After, Given, Then, When } from "./fixtures.ts";
 
 // --- Préparation du scénario (avant l'ouverture de la page)
 
-type VoixFausse = { readonly nom: string; readonly langue: string };
+export type VoixFausse = { readonly nom: string; readonly langue: string };
 type ConsignePreparee = { texte: string; langue?: string; motEnGras?: string };
-type Scenario = {
+export type Scenario = {
   voix: VoixFausse[];
   univers: string | undefined;
   consigne: ConsignePreparee;
@@ -13,17 +14,22 @@ type Scenario = {
   absent: boolean;
   muet: boolean;
   ouvert: boolean;
+  prenom: string;
+  sansProfil: boolean;
+  voixImposee: string | undefined;
 };
 
 const CLE_CONSIGNE_PREPAREE = "savanturier:consigne-preparee";
 const CLE_PROFIL_PREPARE = "savanturier:profil-prepare";
 const CLE_SON = "savanturier:son";
+const CLE_VOIX = "savanturier:voix";
+const CLE_VOIX_AMORCEE = "savanturier:voix-amorcee-par-le-test";
 
-const DENISE: VoixFausse = { nom: "Denise", langue: "fr-FR" };
+export const DENISE: VoixFausse = { nom: "Denise", langue: "fr-FR" };
 const HENRI: VoixFausse = { nom: "Henri", langue: "fr-FR" };
-const SAMANTHA: VoixFausse = { nom: "Samantha", langue: "en-US" };
+export const SAMANTHA: VoixFausse = { nom: "Samantha", langue: "en-US" };
 const CONSIGNE_PAR_DEFAUT = "Écoute bien.";
-const HAUTEUR_DE_CAPITAINE_SAM = 0.95;
+export const HAUTEUR_DE_CAPITAINE_SAM = 0.95;
 const HAUTEUR_ATTENDUE_SANS_VOIX_MASCULINE = 0.7;
 const TOLERANCE_DE_HAUTEUR = 0.035;
 // Le premier speak a lieu 60 ms après la demande : on laisse passer ce délai pour prouver qu'on n'entend rien.
@@ -31,7 +37,7 @@ const DELAI_POUR_PROUVER_LE_SILENCE_MS = 400;
 
 const scenarios = new WeakMap<Page, Scenario>();
 
-function scenario(page: Page): Scenario {
+export function scenario(page: Page): Scenario {
   let etat = scenarios.get(page);
   if (!etat) {
     etat = {
@@ -42,6 +48,9 @@ function scenario(page: Page): Scenario {
       absent: false,
       muet: false,
       ouvert: false,
+      prenom: "Léa",
+      sansProfil: false,
+      voixImposee: undefined,
     };
     scenarios.set(page, etat);
   }
@@ -150,7 +159,7 @@ type Lecture = {
 
 type JournalDuFaux = { lots: number; lecture: Lecture; speaks: number; chevauchements: number; coupeApresLaDerniereParole: boolean; actifs: number };
 
-async function journal(page: Page): Promise<JournalDuFaux> {
+export async function journal(page: Page): Promise<JournalDuFaux> {
   return await page.evaluate(() => {
     const faux = Reflect.get(window, "__faux") as {
       journal: Array<{ type: string; lot: number; texte: string; voix: string | null; voixLangue: string | null; langue: string; pitch: number }>;
@@ -181,11 +190,11 @@ async function journal(page: Page): Promise<JournalDuFaux> {
   });
 }
 
-async function attendreUneLecture(page: Page) {
+export async function attendreUneLecture(page: Page) {
   await expect.poll(async () => (await journal(page)).speaks).toBeGreaterThan(0);
 }
 
-async function laisserPasserLeDelaiDeLecture(page: Page) {
+export async function laisserPasserLeDelaiDeLecture(page: Page) {
   await page.evaluate((delai) => new Promise<void>((fin) => setTimeout(fin, delai)), DELAI_POUR_PROUVER_LE_SILENCE_MS);
 }
 
@@ -203,16 +212,24 @@ async function terminerLaLecture(page: Page) {
 
 // --- Ouverture de la page de démonstration
 
-async function ouvrir(page: Page) {
-  const etat = scenario(page);
-  if (etat.ouvert) return;
-  etat.ouvert = true;
+const pagesPreparees = new WeakSet<Page>();
+// Un second appareil (téléphone) ouvert pendant le scénario : c'est lui que Léa écoute alors.
+const ecransDeLecture = new WeakMap<Page, Page>();
+
+export function ecranDeLecture(page: Page): Page {
+  return ecransDeLecture.get(page) ?? page;
+}
+
+export async function preparerLaPage(page: Page, etat: Scenario) {
+  if (pagesPreparees.has(page)) return;
+  pagesPreparees.add(page);
   await page.addInitScript(installerLeFaux, { voix: etat.voix, bloque: etat.bloque, absent: etat.absent });
-  const profil = { prenom: "Léa", niveau: "CE1", ...(etat.univers ? { univers: etat.univers } : {}) };
+  const profil = { prenom: etat.prenom, niveau: "CE1", ...(etat.univers ? { univers: etat.univers } : {}) };
   await page.addInitScript(
-    ([cleConsigne, consigne, cleProfil, profilPrepare, cleSon, muet]) => {
+    ([cleConsigne, consigne, cleProfil, profilPrepare, cleSon, muet, sansProfil]) => {
       localStorage.setItem(cleConsigne, consigne);
-      localStorage.setItem(cleProfil, profilPrepare);
+      if (sansProfil === "oui") localStorage.removeItem(cleProfil);
+      else localStorage.setItem(cleProfil, profilPrepare);
       if (muet === "oui") localStorage.setItem(cleSon, "muet");
     },
     [
@@ -222,17 +239,73 @@ async function ouvrir(page: Page) {
       JSON.stringify(profil),
       CLE_SON,
       etat.muet ? "oui" : "non",
+      etat.sansProfil ? "oui" : "non",
     ] as const,
   );
+  if (etat.voixImposee !== undefined) {
+    await page.addInitScript(
+      ([cleVoix, voixImposee, cleAmorcee]) => {
+        if (sessionStorage.getItem(cleAmorcee)) return;
+        sessionStorage.setItem(cleAmorcee, "oui");
+        localStorage.setItem(cleVoix, voixImposee);
+      },
+      [CLE_VOIX, etat.voixImposee, CLE_VOIX_AMORCEE] as const,
+    );
+  }
+}
+
+async function ouvrir(page: Page) {
+  const etat = scenario(page);
+  if (etat.ouvert) return;
+  etat.ouvert = true;
+  await preparerLaPage(page, etat);
   await page.goto("/demonstration");
   await expect(page.getByTestId("consigne")).toBeVisible();
 }
+
+export async function ouvrirSurUnAutreAppareil(page: Page, contexte: BrowserContext, etat: Scenario): Promise<Page> {
+  const autre = await contexte.newPage();
+  await preparerLaPage(autre, etat);
+  await autre.goto("/demonstration");
+  await expect(autre.getByTestId("consigne")).toBeVisible();
+  ecransDeLecture.set(page, autre);
+  return autre;
+}
+
+// Les scénarios de voix préparent l'appareil (voix, profil, voix imposée) avant la première ouverture de la page.
+export async function preparerLaPageSiScenarioDeVoix(page: Page) {
+  const etat = scenarios.get(page);
+  if (etat) await preparerLaPage(page, etat);
+}
+
+// Le parent est connecté sans e-mail (connexion de préparation de #5), puis répond à la question du contrôle parental
+// lue à l'écran (#10), comme un adulte.
+export async function entrerDansLEspaceParent(page: Page, etat: Scenario, famille: Famille) {
+  await preparerLaPage(page, etat);
+  if ((await famille.session(page)) === null) await famille.connecterSansEmail("tablette", "Paul");
+  await page.goto("/");
+  await page.getByRole("banner").getByRole("button", { name: "Espace parent", exact: true }).click();
+  const question = page.getByText(/Question pour un adulte/);
+  const choix = page.getByTestId("choix-de-voix");
+  await expect(question.or(choix)).toBeVisible();
+  if (await question.isVisible()) {
+    const facteurs = /(\d+)\s*×\s*(\d+)/.exec((await question.textContent()) ?? "");
+    if (!facteurs) throw new Error("Question du contrôle parental inattendue");
+    await page.getByRole("textbox", { name: /Question pour un adulte/ }).fill(String(Number(facteurs[1]) * Number(facteurs[2])));
+    await page.getByRole("button", { name: "Entrer" }).click();
+  }
+  await expect(choix).toBeVisible();
+}
+
+After(async ({ page }) => {
+  await ecransDeLecture.get(page)?.context().close();
+});
 
 function boutonSon(page: Page) {
   return page.getByRole("button", { name: "Son" });
 }
 
-function normaliser(texte: string): string {
+export function normaliser(texte: string): string {
   return texte.replace(/\s+/g, " ").trim();
 }
 
@@ -247,7 +320,7 @@ Given(/^l'appareil a une voix française féminine et une voix française mascul
 });
 
 Given(
-  /^l'appareil a les voix françaises « (.+) » et « (.+) »$/,
+  /^l'appareil a les voix françaises « ([^«»]+) » et « ([^«»]+) »$/,
   async ({ page }, premiere: string, seconde: string) => {
     scenario(page).voix = [{ nom: premiere, langue: "fr-FR" }, { nom: seconde, langue: "fr-FR" }];
   },
@@ -265,8 +338,14 @@ Given(/^Léa fait une leçon d'anglais$/, async ({ page }) => {
   scenario(page).consigne.langue = "en-US";
 });
 
-Given(/^Léa a choisi l'univers (animaux|princesse|sports|pompier)$/, async ({ page }, univers: string) => {
+Given(/^Léa a choisi l'univers (animaux|princesse|sports|pompier)$/, async ({ page, monde }, univers: string) => {
   scenario(page).univers = univers;
+  const profil = { prenom: "Léa", niveau: "CE1", univers };
+  monde.profils.set("Léa", profil);
+  await page.addInitScript(
+    ([cle, valeur]) => localStorage.setItem(cle, valeur),
+    [CLE_PROFIL_PREPARE, JSON.stringify(profil)] as const,
+  );
 });
 
 Given(/^Léa n'a pas encore choisi d'univers$/, async ({ page }) => {
@@ -389,7 +468,9 @@ When(/^Léa remet le son$/, async ({ page }) => {
 });
 
 When(/^Léa relance Savanturier$/, async ({ page }) => {
+  await ouvrir(page);
   await page.reload();
+  await expect(page.getByTestId("consigne")).toBeVisible();
 });
 
 // --- Alors : ce que Léa entend
@@ -459,12 +540,19 @@ Then(
   },
 );
 
-Then(/^Léa entend Noisette lire la consigne avec la voix « (.+) »$/, async ({ page }, nom: string) => {
-  await attendreUneLecture(page);
-  const { lecture } = await journal(page);
-  expect(lecture.enonces.length).toBeGreaterThan(0);
-  for (const enonce of lecture.enonces) expect(enonce.voix).toBe(nom);
-});
+Then(
+  /^(Léa|Tom) entend (?:Noisette|Lumi|Coach Léo|Capitaine Sam) lire la consigne avec la voix « ([^«»]+) »(, en plus grave)?$/,
+  async ({ page }, _enfant: string, nom: string, plusGrave: string | undefined) => {
+    const ecran = ecranDeLecture(page);
+    await attendreUneLecture(ecran);
+    const { lecture } = await journal(ecran);
+    expect(lecture.enonces.length).toBeGreaterThan(0);
+    for (const enonce of lecture.enonces) {
+      expect(enonce.voix).toBe(nom);
+      if (plusGrave) expect(enonce.pitch).toBeLessThan(HAUTEUR_DE_CAPITAINE_SAM);
+    }
+  },
+);
 
 Then(/^Léa entend Capitaine Sam lire la consigne avec cette voix, en plus grave$/, async ({ page }) => {
   await attendreUneLecture(page);

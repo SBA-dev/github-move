@@ -146,7 +146,7 @@ Une fonction d'aide « le parent connecté est-il rattaché à ce profil ? » se
 ## Données d'enfants
 
 - Nouvelles données : **prénom ou pseudo**, **niveau**, clé de l'univers, date de création. Conformes à la section RGPD de `CLAUDE.md`.
-- Hébergées dans l'UE (Supabase Francfort). À inclure dans l'export et la suppression (#14).
+- Hébergées dans l'UE (Supabase en Irlande, `eu-west-1`). À inclure dans l'export et la suppression (#14).
 - Gardées sur l'appareil pour le hors ligne, effacées à la déconnexion.
 
 ## Emplacement

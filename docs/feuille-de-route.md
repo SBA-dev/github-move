@@ -38,6 +38,22 @@ L'application fonctionne et est publiée comme artifact claude.ai. Elle comprend
 
 > **Chantier en cours : la réécriture complète en React + Supabase.** Plan, lots et décisions de démarrage dans `docs/reecriture.md`.
 
+### Première beta (périmètre validé par le PO le 2026-10-23)
+
+Un parent installe Savanturier, crée le profil de son enfant ; l'enfant joue des leçons, avance dans son parcours et est motivé par la série et les badges. **En ligne seulement** : le hors ligne vient après la beta.
+
+| Lot | Stories | Dans la beta |
+|---|---|---|
+| 1. Socle | #5 à #8 | oui |
+| 2. Famille | #10 à #15 | oui |
+| 3. Jouer une leçon | #16 à #24 | oui |
+| 4. Parcours | #25 à #29 | oui |
+| 5. Motivation | #30 à #33 | oui |
+| 6. Accompagnement | #34 à #43 | non, après la beta |
+| 7. Bascule | #45 mise en ligne | oui ; #44 hors ligne et #46 retrait de `app/` après la beta |
+
+Avant la beta, l'application actuelle (`app/`) reste celle que les familles utilisent.
+
 ### 1. Préparer le terrain de la nouvelle application
 
 - [x] Deno, pytest et les dépendances npm (dont la CLI Supabase) sont installés à chaque session cloud par `.claude/hooks/session-start.sh`.
@@ -66,7 +82,7 @@ L'application fonctionne et est publiée comme artifact claude.ai. Elle comprend
   - À retirer plus tard : la page `/demonstration` et le profil préparé en `localStorage` (lots 2 et 3).
   - Première vérification Supabase (`npx supabase link`) non faite : les secrets `SUPABASE_*` n'étaient pas présents dans la session.
 - [x] Lot 2 (Famille) : issues écrites, label `reecriture`. Ordre proposé : #10 contrôle parental de l'espace parent, #11 créer et modifier un profil enfant (et « Qui joue ? »), #12 réglages, #13 inviter un second parent, #14 supprimer un profil et ses données (et export), #15 choix de la voix sur l'appareil. Ces stories touchent la base : elles demandent Supabase (secrets et Docker).
-  - Modèles (#10 à #15) et scénarios écrits sur `feature/lot-2-modele-et-scenarios` : 35 règles, 150 scénarios. Scénarios **validés par le PO** (`docs/stories/lot-2-decisions.md`, décision 0009). #10 (contrôle parental) : domaine et écran faits sur `feature/10-controle-parental`, review approuvée, E2E à exécuter avec #5 et #11. Prochaine étape : #15 (choix de la voix), qui tourne dans le navigateur ; #11 à #14 demandent Supabase (secrets et Docker).
+  - Modèles (#10 à #15) et scénarios écrits sur `feature/lot-2-modele-et-scenarios` : 35 règles, 150 scénarios. Scénarios **validés par le PO** (`docs/stories/lot-2-decisions.md`, décision 0009). #10 (contrôle parental) : domaine et écran faits sur `feature/10-controle-parental`, review approuvée, E2E à exécuter avec #5 et #11. #15 (choix de la voix) : livrée sur `feature/15-choix-de-la-voix`, deux reviews (la première À CORRIGER), E2E 31/32 (le scénario de la déconnexion attend #5) ; #11 à #14 demandent Supabase (secrets et Docker).
 - [x] Lots 3 à 7 : issues écrites (label `reecriture`), à partir du comportement actuel de `app/` :
   - lot 3 (Jouer une leçon) : #16 à #24 ;
   - lot 4 (Parcours) : #25 à #29 ;
@@ -118,3 +134,15 @@ On suit le guide fondamental « Pour enseigner la lecture et l'écriture au CP �
 ### 3. Fait récemment
 
 - [x] Réglage « temps d'écran » et écran de pause retirés de `app/` (décision 0005).
+
+## Reprise dans une nouvelle session (Supabase configuré)
+
+Le PO a ajouté les variables `SUPABASE_URL`, `SUPABASE_PROJECT_REF`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` et `SUPABASE_ACCESS_TOKEN` à l'environnement cloud (`SUPABASE_DB_PASSWORD` y était déjà). Projet de développement : `savanturier-dev`, référence `cxptcwkegwhdmhqjxttv`, région Irlande (`eu-west-1`).
+
+À faire en premier :
+1. [x] Variables présentes (vérifié le 2026-10-23, sans afficher les valeurs).
+2. [x] `npx supabase link` réussi. Réseau : l'API HTTPS du projet répond, mais pas Postgres en direct (ports 5432 et 6543 fermés). [x] Migration vide de vérification appliquée par l'API de gestion, puis retirée (2026-10-23) : la chaîne de migration fonctionne depuis le conteneur cloud. Règle d'autorisation dans `.claude/settings.json`.
+3. [x] Le PO a choisi les tests contre le projet en ligne `savanturier-dev` : décision 0010. Le projet est en `eu-west-1` (Irlande) : le PO garde l'Irlande, la doc est corrigée.
+4. Reprendre #5 (adaptateur Supabase Auth, écran de connexion, E2E), puis #11 à #14.
+
+Branches en cours, chacune partie de la précédente, rien n'est mergé dans `main` : `claude/stoic-faraday-0qy6ez` (lot 1, PR #9) → `feature/5-connexion-du-parent` → `feature/lot-2-modele-et-scenarios` → `feature/10-controle-parental` → `feature/15-choix-de-la-voix`. À part, partie de `main` : `chore/tests-legacy` (339 tests de caractérisation).

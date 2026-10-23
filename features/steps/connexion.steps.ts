@@ -2,6 +2,7 @@ import { expect } from "@playwright/test";
 import type { Appareil, Famille } from "../support/famille.ts";
 import { extraireLienEtCode } from "../support/supabase-test.ts";
 import { Given, Then, When } from "./fixtures.ts";
+import { preparerLaPageSiScenarioDeVoix } from "./voix.steps.ts";
 
 // Story #5 : connexion du parent. Les e-mails de connexion sont lus dans la boîte de test de savanturier-dev
 // (clé service_role, dans la fixture `famille` seulement). Le parent, lui, agit uniquement par l'interface.
@@ -63,7 +64,10 @@ Given(/^Savanturier a été fermé sur la tablette$/, async ({ famille }) => {
   await (await famille.page("tablette")).goto("about:blank");
 });
 
-Given(/^Paul est dans l'espace parent(?: sur la tablette)?$/, async ({ famille }) => {
+Given(/^Paul est (?:dans|entré dans) l'espace parent(?: sur la tablette)?$/, async ({ famille }) => {
+  const tablette = await famille.page("tablette");
+  await preparerLaPageSiScenarioDeVoix(tablette);
+  if ((await famille.session(tablette)) === null) await famille.connecterSansEmail("tablette", "Paul");
   await famille.allerDansLEspaceParent("tablette");
 });
 

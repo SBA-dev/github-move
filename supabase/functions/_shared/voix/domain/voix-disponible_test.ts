@@ -1,5 +1,5 @@
 import { assertEquals } from "@std/assert";
-import { scoreDeLaVoix, type VoixDisponible, voixFrancaisesTriees } from "./voix-disponible.ts";
+import { estTresNaturelle, scoreDeLaVoix, type VoixDisponible, voixFrancaisesTriees } from "./voix-disponible.ts";
 
 const denise: VoixDisponible = {
   nom: "Microsoft Denise Online (Natural)",
@@ -43,4 +43,20 @@ Deno.test("les voix françaises sont triées par score décroissant", () => {
     voixFrancaisesTriees([espeak, samantha, amelie, thomas, denise]),
     [denise, thomas, amelie, espeak],
   );
+});
+
+Deno.test("une voix de score 70 est très naturelle", () => {
+  assertEquals(estTresNaturelle(denise), true);
+});
+
+Deno.test("une voix de score 50 n'est pas très naturelle", () => {
+  assertEquals(estTresNaturelle({ nom: "Google français", langue: "fr-FR" }), false);
+});
+
+Deno.test("une voix de score 60 est très naturelle", () => {
+  assertEquals(estTresNaturelle({ nom: "Online", langue: "fr-CA" }), true);
+});
+
+Deno.test("une voix de score 55 n'est pas très naturelle", () => {
+  assertEquals(estTresNaturelle({ nom: "Premium", langue: "fr-CA" }), false);
 });

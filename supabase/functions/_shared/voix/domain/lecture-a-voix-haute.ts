@@ -1,8 +1,10 @@
 import type { CaractereDeLaVoix } from "./caractere-de-la-voix.ts";
-import { CARACTERE_LANGUE_ETRANGERE, choisirVoix, choisirVoixDeLangue } from "./choix-de-voix.ts";
+import { CARACTERE_LANGUE_ETRANGERE, choisirVoix, choisirVoixDeLangue, ChoixDeVoix } from "./choix-de-voix.ts";
+import type { ChoixDeVoixDeLAppareil } from "./choix-de-voix-de-l-appareil.ts";
 import { LectureImpossible, VoixBloquee } from "./erreurs.ts";
 import type { Hasard } from "./hasard.ts";
 import type { LecteurAVoixHaute } from "./lecteur-a-voix-haute.ts";
+import { phraseDEssai } from "./phrase-d-essai.ts";
 import { reglerPhrases } from "./reglage-de-phrase.ts";
 import { rangAffichePourChaqueMotPrononce } from "./mots-de-la-consigne.ts";
 import { texteALire } from "./texte-a-lire.ts";
@@ -17,6 +19,7 @@ export type EtatDuSon = "son" | "muet";
 export type DependancesDeLectureAVoixHaute = {
   readonly lecteur: LecteurAVoixHaute;
   readonly voixDeLAppareil: VoixDeLAppareil;
+  readonly choixDeVoix: ChoixDeVoixDeLAppareil;
   readonly hasard: Hasard;
   readonly caractereDuPersonnageGuide: () => CaractereDeLaVoix;
   readonly etatInitial: EtatDuSon;
@@ -55,7 +58,7 @@ export class LectureAVoixHaute {
 
   async lire(
     brut: string,
-    options: { langue?: string; onMot?: (rang: number) => void; onFin?: () => void } = {},
+    options: { langue?: string; choix?: ChoixDeVoix; onMot?: (rang: number) => void; onFin?: () => void } = {},
   ): Promise<void> {
     if (this.etat === "muet") return;
     const { lecteur, hasard } = this.dependances;
@@ -63,7 +66,7 @@ export class LectureAVoixHaute {
     const texte = texteALire(brut);
     if (!texte) return;
     const langue = options.langue ?? LANGUE_FRANCAISE;
-    const voix = this.voixPour(langue);
+    const voix = this.voixPour(langue, options.choix ?? this.choixMemorise());
     const caractere = estFrancais(langue) ? this.dependances.caractereDuPersonnageGuide() : CARACTERE_LANGUE_ETRANGERE;
     try {
       await lecteur.lire({
@@ -94,10 +97,26 @@ export class LectureAVoixHaute {
     await this.lire(salutation);
   }
 
-  private voixPour(langue: string): VoixDisponible | undefined {
+  imposerUneVoix(nomDeLaVoix: string): void {
+    this.dependances.choixDeVoix.memoriser(ChoixDeVoix.imposee(nomDeLaVoix));
+  }
+
+  revenirALaVoixAutomatique(): void {
+    this.dependances.choixDeVoix.memoriser(ChoixDeVoix.automatique);
+  }
+
+  async essayerUneVoix(choix: ChoixDeVoix, nomDuPersonnageGuide: string): Promise<void> {
+    await this.lire(phraseDEssai(nomDuPersonnageGuide), { choix });
+  }
+
+  private choixMemorise(): ChoixDeVoix {
+    return this.dependances.choixDeVoix.lire();
+  }
+
+  private voixPour(langue: string, choix: ChoixDeVoix): VoixDisponible | undefined {
     const voix = this.dependances.voixDeLAppareil.voixDisponibles();
     return estFrancais(langue)
-      ? choisirVoix(voix, this.dependances.caractereDuPersonnageGuide())
+      ? choisirVoix(voix, this.dependances.caractereDuPersonnageGuide(), choix)
       : choisirVoixDeLangue(voix, langue);
   }
 

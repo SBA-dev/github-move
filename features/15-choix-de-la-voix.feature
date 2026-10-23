@@ -1,5 +1,5 @@
 # language: fr
-@issue-15 @wip
+@issue-15
 Fonctionnalité: Choisir la voix des personnages guides sur l'appareil
   En tant que parent
   Je veux choisir la voix qui lit les consignes sur cet appareil
