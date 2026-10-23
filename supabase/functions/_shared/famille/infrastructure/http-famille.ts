@@ -24,7 +24,9 @@ export function texteFacultatif(corps: Record<string, unknown>, cle: string): st
   const valeur = corps[cle];
   if (valeur === undefined) return undefined;
   if (typeof valeur !== "string" || valeur.length > LONGUEUR_MAXIMALE_D_UN_TEXTE) {
-    throw new EntreeInvalide(`Le champ « ${cle} » doit être un texte d'au plus ${LONGUEUR_MAXIMALE_D_UN_TEXTE} caractères.`);
+    throw new EntreeInvalide(
+      `Le champ « ${cle} » doit être un texte d'au plus ${LONGUEUR_MAXIMALE_D_UN_TEXTE} caractères.`,
+    );
   }
   return valeur;
 }

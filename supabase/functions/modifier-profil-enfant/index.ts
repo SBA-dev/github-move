@@ -1,6 +1,10 @@
 import { ModifierProfilEnfant } from "../_shared/famille/application/modifier-profil-enfant.ts";
 import { ProfilEnfantId } from "../_shared/famille/domain/profil-enfant-id.ts";
-import { texteFacultatif, texteObligatoire, traiterUneEcritureDeFamille } from "../_shared/famille/infrastructure/http-famille.ts";
+import {
+  texteFacultatif,
+  texteObligatoire,
+  traiterUneEcritureDeFamille,
+} from "../_shared/famille/infrastructure/http-famille.ts";
 import { presenterLeProfil } from "../_shared/famille/infrastructure/presentation-du-profil.ts";
 import { ProfilsEnfantsSupabase } from "../_shared/famille/infrastructure/profils-enfants-supabase.ts";
 
