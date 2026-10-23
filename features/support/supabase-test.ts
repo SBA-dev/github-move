@@ -75,10 +75,23 @@ export async function viderLaBoite(suffixe: string): Promise<void> {
   });
 }
 
+// --- Profils enfants (story #11) : nettoyage seulement, par identifiant
+
+/** Supprime les profils enfants rattachés au parent (leurs rattachements partent avec eux), un par un. */
+export async function supprimerLesProfilsDuParent(parent: string): Promise<void> {
+  const reponse = await appeler(`/rest/v1/rattachements?select=profil&parent=eq.${encodeURIComponent(parent)}`);
+  const rattachements = (await reponse.json()) as { profil: string }[];
+  for (const { profil } of rattachements) {
+    await appeler(`/rest/v1/profils_enfants?id=eq.${encodeURIComponent(profil)}`, { method: "DELETE" });
+  }
+}
+
 export async function supprimerLesParentsDuSuffixe(suffixe: string): Promise<void> {
   const fin = `+${suffixe}@exemple.test`;
   for (const parent of await parentsExistants()) {
-    if (parent.email.endsWith(fin)) await supprimerParent(parent.id);
+    if (!parent.email.endsWith(fin)) continue;
+    await supprimerLesProfilsDuParent(parent.id);
+    await supprimerParent(parent.id);
   }
 }
 

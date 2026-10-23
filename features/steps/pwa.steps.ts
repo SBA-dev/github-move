@@ -55,9 +55,20 @@ async function verifierPageControleeParServiceWorker(page: Page) {
     .toBe("activated");
 }
 
+// Le service worker n'existe qu'en production : sur le serveur de développement de Vite (scénarios des autres
+// stories, lancés avec la configuration par défaut), « chargé une fois » se limite à charger puis recharger la page.
+async function surLeServeurDeDeveloppement(page: Page): Promise<boolean> {
+  return page.evaluate(() => document.querySelector('script[src="/@vite/client"]') !== null);
+}
+
 async function chargerUneFois(page: Page) {
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1, name: NOM_APPLICATION })).toBeVisible();
+  if (await surLeServeurDeDeveloppement(page)) {
+    await page.reload();
+    await expect(page.getByRole("heading", { level: 1, name: NOM_APPLICATION })).toBeVisible();
+    return;
+  }
   await attendreServiceWorkerActif(page);
   await page.reload();
   await verifierPageControleeParServiceWorker(page);
