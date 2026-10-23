@@ -198,3 +198,38 @@ Deno.test("une leçon d'un niveau inconnu est mal formée", () => {
 Deno.test("une leçon dont les exercices ne sont pas un tableau est mal formée", () => {
   assertThrows(() => lireLecon({ ...leconSonsOuOnAn(), exercices: "bulles" }), LeconMalFormee);
 });
+
+Deno.test("une leçon dont le programme n'a pas de citation est mal formée", () => {
+  const brut = { ...leconSonsOuOnAn(), programme: { section: "c2-francais-cp" } };
+
+  assertThrows(() => lireLecon(brut), LeconMalFormee);
+});
+
+Deno.test("une leçon dont l'ordre n'est pas un nombre est mal formée", () => {
+  for (const ordre of ["5", undefined, null]) {
+    assertThrows(() => lireLecon({ ...leconSonsOuOnAn(), ordre }), LeconMalFormee);
+  }
+});
+
+Deno.test("une étape de leçon sans texte est mal formée", () => {
+  assertThrows(() => lireLecon({ ...leconSonsOuOnAn(), lecon: [{ exemples: [] }] }), LeconMalFormee);
+});
+
+Deno.test("une étape de leçon dont les exemples ne sont pas des chaînes est mal formée", () => {
+  for (const exemples of [[1, 2], "ou", null]) {
+    assertThrows(
+      () => lireLecon({ ...leconSonsOuOnAn(), lecon: [{ texte: "Écoute.", exemples }] }),
+      LeconMalFormee,
+    );
+  }
+});
+
+Deno.test("un passage du guide fondamental sans titre, page ou extrait valides est mal formé", () => {
+  const guide = leconBoiteAjouter().guide as Record<string, unknown>;
+  for (const invalide of [{ titre: undefined }, { page: "53" }, { extrait: undefined }]) {
+    assertThrows(
+      () => lireLecon({ ...leconBoiteAjouter(), guide: { ...guide, ...invalide } }),
+      LeconMalFormee,
+    );
+  }
+});
