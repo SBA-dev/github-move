@@ -18,3 +18,4 @@
   6. Apprentissage : continuer d'étape de leçon en étape de leçon, texte à lire d'une étape (`PasDEtapeDeLeconEnCours`).
   7. Apprentissage : question réussie, avancement, exercice suivant (annoncé s'il a un titre), séance finie.
   8. Motivation : paroles de séance (accueil, fin des étapes, annonce de l'exercice).
+- 15:20 · Boucle TDD du domaine terminée, 8 comportements en 7 cycles RED → GREEN (314 tests Deno verts). Le comportement 4 (avancement) a demandé une correction de la fixture « Les sons ou, on, an » (3 étiquettes au lieu des 9 réelles), faite par `test-writer`. Noms ajoutés au modèle : erreur `PasDeQuestionEnCours`, faits `EtapesDeLeconFinies` et `ExerciceSuivantCommence`, commande `reussirLaQuestionEnCours` (appelée par `repondre` à partir de #17). `texteALireDeLEtape` rend deux phrases (le texte, puis les exemples joints par « . »), comme le legacy.
