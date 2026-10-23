@@ -10,6 +10,7 @@ export class ChoisirQuiJoue {
       prenom: profil.prenom.valeur,
       niveau: profil.niveau.valeur,
       univers: profil.univers,
+      reglages: profil.reglages,
     });
   }
 }

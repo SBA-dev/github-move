@@ -5,6 +5,7 @@ import { ParentId } from "../domain/parent-id.ts";
 import { Prenom } from "../domain/prenom.ts";
 import type { FaitDuProfilEnfant, ModificationDuProfilEnfant } from "../domain/profil-enfant.ts";
 import { ProfilEnfantId } from "../domain/profil-enfant-id.ts";
+import { Reglages, type ReglagesBruts } from "../domain/reglages.ts";
 import type { ProfilsEnfants } from "./ports/profils-enfants.ts";
 
 export type DemandeDeModification = {
@@ -13,6 +14,7 @@ export type DemandeDeModification = {
   prenom?: string;
   niveau?: string;
   univers?: string;
+  reglages?: ReglagesBruts;
 };
 
 export class ModifierProfilEnfant {
@@ -21,7 +23,11 @@ export class ModifierProfilEnfant {
   async executer(demande: DemandeDeModification): Promise<FaitDuProfilEnfant[]> {
     const profil = await this.profils.parId(ProfilEnfantId.de(demande.profil));
     if (profil === null) throw new ProfilEnfantIntrouvable();
-    profil.modifier(ParentId.de(demande.parent), lireModification(demande));
+    const parent = ParentId.de(demande.parent);
+    const modification = lireModification(demande);
+    const reglages = demande.reglages && Reglages.depuis(demande.reglages, profil.reglages);
+    profil.modifier(parent, modification);
+    if (reglages) profil.changerLesReglages(parent, reglages);
     await this.profils.enregistrer(profil);
     return profil.retirerFaits();
   }

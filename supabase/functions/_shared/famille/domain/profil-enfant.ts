@@ -4,10 +4,12 @@ import { ParentNonRattache, RattachementsInvalides } from "./erreurs.ts";
 import type { ParentId } from "./parent-id.ts";
 import type { Prenom } from "./prenom.ts";
 import type { ProfilEnfantId } from "./profil-enfant-id.ts";
+import { Reglages } from "./reglages.ts";
 
 export type FaitDuProfilEnfant =
   | { type: "ProfilEnfantCree"; profil: string; parent: string; niveau: string; univers: string }
-  | { type: "NiveauDuProfilChange"; profil: string; ancienNiveau: string; nouveauNiveau: string };
+  | { type: "NiveauDuProfilChange"; profil: string; ancienNiveau: string; nouveauNiveau: string }
+  | { type: "ReglagesChanges"; profil: string; reglages: Reglages };
 
 export type ModificationDuProfilEnfant = {
   prenom?: Prenom;
@@ -25,6 +27,7 @@ export class ProfilEnfant {
     private _univers: CleUnivers,
     readonly creeLe: Date,
     private readonly parents: ParentId[],
+    private _reglages: Reglages,
   ) {}
 
   static creer(
@@ -34,8 +37,9 @@ export class ProfilEnfant {
     niveau: Niveau,
     univers: CleUnivers,
     creeLe: Date,
+    reglages: Reglages = Reglages.parDefaut(),
   ): ProfilEnfant {
-    const profil = new ProfilEnfant(id, prenom, niveau, univers, creeLe, [parent]);
+    const profil = new ProfilEnfant(id, prenom, niveau, univers, creeLe, [parent], reglages);
     profil.faits.push({
       type: "ProfilEnfantCree",
       profil: id.valeur,
@@ -53,9 +57,10 @@ export class ProfilEnfant {
     univers: CleUnivers,
     creeLe: Date,
     parents: ParentId[],
+    reglages: Reglages = Reglages.parDefaut(),
   ): ProfilEnfant {
     if (parents.length < 1 || parents.length > 2) throw new RattachementsInvalides();
-    return new ProfilEnfant(id, prenom, niveau, univers, creeLe, [...parents]);
+    return new ProfilEnfant(id, prenom, niveau, univers, creeLe, [...parents], reglages);
   }
 
   get rattaches(): readonly ParentId[] {
@@ -74,6 +79,10 @@ export class ProfilEnfant {
     return this._univers;
   }
 
+  get reglages(): Reglages {
+    return this._reglages;
+  }
+
   estRattacheA(parent: ParentId): boolean {
     return this.parents.some((rattache) => rattache.valeur === parent.valeur);
   }
@@ -83,6 +92,12 @@ export class ProfilEnfant {
     this._prenom = modification.prenom ?? this._prenom;
     this._univers = modification.univers ?? this._univers;
     if (modification.niveau !== undefined) this.changerDeNiveau(modification.niveau);
+  }
+
+  changerLesReglages(par: ParentId, reglages: Reglages): void {
+    if (!this.estRattacheA(par)) throw new ParentNonRattache();
+    this._reglages = reglages;
+    this.faits.push({ type: "ReglagesChanges", profil: this.id.valeur, reglages });
   }
 
   retirerFaits(): FaitDuProfilEnfant[] {
