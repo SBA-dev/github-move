@@ -17,6 +17,7 @@ import {
   leconDeTitre,
   ouvrirLaPageDeLaLecon,
   bulle,
+  injecter,
   recipient,
   toutesLesParoles,
 } from "./etapes-puis-exercices.steps.ts";
@@ -67,7 +68,6 @@ function dependDe(numero: number, mecanique: string): never {
 type Partie = {
   erreursEnTout: number;
   erreursParExercice: Map<number, number>;
-  corpsEnvoye: string | undefined;
   reponse: ReponseDeLEnregistrement | undefined;
   lignesLues: { statut: number; lignes: Record<string, unknown>[] } | undefined;
   insertionDirecte: number | undefined;
@@ -81,7 +81,6 @@ function partie(famille: Famille): Partie {
     courante = {
       erreursEnTout: 0,
       erreursParExercice: new Map(),
-      corpsEnvoye: undefined,
       reponse: undefined,
       lignesLues: undefined,
       insertionDirecte: undefined,
@@ -201,13 +200,6 @@ Given(/^Léa a fait (\d+) erreurs à l'exercice « ([^«»]+) »$/, async ({ fam
   partie(famille).erreursParExercice.set(positionDeLExercice(leconOuverte(page), exercice), Number(nombre));
 });
 
-Given(/^Léa joue de nouveau la séance complète et y a fait (\d+) erreurs$/, async ({ famille, page }, nombre: string) => {
-  const courante = await reposerLesErreurs(famille, page);
-  courante.erreursEnTout = Number(nombre);
-  await ouvrirLaPageDeLaLecon(page, leconOuverte(page).titre);
-  await commencerLaSeanceComplete(page);
-});
-
 // --- Étant donné : séances déjà jouées (par l'interface, avec le vrai profil de Léa)
 
 Given(/^Léa n'a encore jamais terminé de séance de la leçon « ([^«»]+) »$/, async ({ page }, titre: string) => {
@@ -276,18 +268,6 @@ Given(/^Léa a terminé une séance de l'exercice « ([^«»]+) » seul$/, async
   await jouerUnExerciceSeul(famille, page, lecon, positionDeLExercice(lecon, exercice), 0);
 });
 
-Given(/^Léa a terminé la séance complète de la leçon « ([^«»]+) » avec (\d+) erreurs$/, async ({ famille, page }, titre: string, erreurs: string) => {
-  const courante = await reposerLesErreurs(famille, page);
-  courante.erreursEnTout = Number(erreurs);
-  await ouvrirLaPageDeLaLecon(page, titre);
-  await page.route("**/functions/v1/terminer-la-seance", async (route) => {
-    courante.corpsEnvoye = route.request().postData() ?? undefined;
-    await route.continue();
-  });
-  await commencerLaSeanceComplete(page);
-  await jouerJusquALaFin(page, courante);
-});
-
 // --- Étant donné : #14 et #20 (non livrées)
 
 Given(/^Paul a demandé la suppression du profil enfant de Léa$/, () => dependDe(14, "suppression du profil enfant"));
@@ -321,9 +301,10 @@ function jetonDeLaPage(session: { access_token: string } | null, parent: string)
   return session.access_token;
 }
 
-function corpsForge(lecon: LeconBrute, enfant: string, reponsesFinales: "justes" | "derniere-fausse") {
-  const position = premierExerciceAChoix(lecon);
+function corpsForge(lecon: LeconBrute, enfant: string, reponsesFinales: "justes" | "derniere-fausse", erreurs = 0, exercice?: string) {
+  const position = exercice === undefined ? premierExerciceAChoix(lecon) : positionDeLExercice(lecon, exercice);
   const questions = questionsDeLaLecon(lecon, position);
+  const fautes = repartir(erreurs, questions.length);
   return {
     seance: crypto.randomUUID(),
     enfant,
@@ -332,7 +313,8 @@ function corpsForge(lecon: LeconBrute, enfant: string, reponsesFinales: "justes"
     tirages: questions.map((q) => [...new Set(q.choix)]),
     reponses: questions.map((q, rang) => {
       const fausse = q.choix.find((texte) => texte !== q.reponse) as string;
-      return reponsesFinales === "derniere-fausse" && rang === questions.length - 1 ? [{ choix: fausse }] : [{ choix: q.reponse }];
+      if (reponsesFinales === "derniere-fausse" && rang === questions.length - 1) return [{ choix: fausse }];
+      return [...Array.from({ length: fautes[rang] ?? 0 }, () => ({ choix: fausse })), { choix: q.reponse }];
     }),
     termineeLe: new Date().toISOString(),
   };
@@ -343,11 +325,66 @@ When(/^l'appareil envoie une séance terminée dont une question ne finit pas pa
   partie(famille).reponse = await envoyerUneSeanceTerminee(jeton, corpsForge(leconOuverte(page), profilDe(famille, "Léa").id, "derniere-fausse"));
 });
 
-When(/^l'appareil envoie cette séance terminée en annonçant (\d) étoiles?$/, async ({ famille }, etoiles: string) => {
-  const courante = partie(famille);
-  if (courante.corpsEnvoye === undefined) throw new Error("Aucune séance terminée n'a été envoyée par l'application");
+const SECTION_DE_TEST_FRANCAIS = "c2-francais-cp-identifier-les-mots-de-maniere-de-plus-en-plus-aisee";
+const CITATION_DE_TEST_FRANCAIS = "Décoder et encoder de 25 à 30 CGP.";
+const MOTS_DE_TEST = ["loup", "mouton", "ballon", "maman"];
+
+function bullesDeTest(titre: string, consigne: string): Record<string, unknown> {
+  return {
+    type: "bulles",
+    titre,
+    questions: Array.from({ length: 5 }, () => ({ question: consigne, choix: MOTS_DE_TEST, reponse: MOTS_DE_TEST[0] })),
+  };
+}
+
+function leconDeFrancais(id: string, titre: string, ordre: number, exercices: Array<Record<string, unknown>>): LeconBrute {
+  return {
+    id,
+    titre,
+    matiere: "francais",
+    niveau: "CP",
+    ordre,
+    programme: { section: SECTION_DE_TEST_FRANCAIS, citation: CITATION_DE_TEST_FRANCAIS },
+    lecon: [{ texte: "O et U ensemble font le son « ou », comme dans loup.", exemples: [] }],
+    exercices,
+  };
+}
+
+Given(/^les leçons de test « Les sons de test » et « La suite de test » sont dans la bibliothèque$/, async ({ page }) => {
+  await injecter(page, leconDeFrancais("test-les-sons", "Les sons de test", 901, [
+    bullesDeTest("Premières bulles", "Touche le mot qui a le son ou."),
+    bullesDeTest("Dernières bulles", "Touche le mot qui a le son on."),
+  ]));
+  await injecter(page, leconDeFrancais("test-la-suite", "La suite de test", 903, [
+    bullesDeTest("Bulles de la suite", "Touche le mot qui a le son an."),
+  ]));
+});
+
+async function envoyerLaSeanceDeTest(famille: Famille, page: Page, exercice: string, titre: string, erreurs: number, supplement: object) {
+  const lecon = leconDeTitre(page, titre);
+  const corps = corpsForge(lecon, profilDe(famille, "Léa").id, "justes", erreurs, exercice);
   const jeton = await jetonDe(famille, "Paul");
-  courante.reponse = await envoyerUneSeanceTerminee(jeton, { ...JSON.parse(courante.corpsEnvoye), seance: crypto.randomUUID(), etoiles: Number(etoiles) });
+  partie(famille).reponse = await envoyerUneSeanceTerminee(jeton, { ...corps, ...supplement });
+}
+
+When(
+  /^l'appareil envoie une séance terminée de l'exercice « ([^«»]+) » de la leçon « ([^«»]+) » avec (\d+) erreurs, en annonçant (\d) étoiles?$/,
+  async ({ famille, page }, exercice: string, titre: string, erreurs: string, etoiles: string) => {
+    await envoyerLaSeanceDeTest(famille, page, exercice, titre, Number(erreurs), { etoiles: Number(etoiles) });
+  },
+);
+
+When(
+  /^l'appareil envoie une séance terminée de l'exercice « ([^«»]+) » de la leçon « ([^«»]+) » avec (\d+) erreurs, sans annoncer d'étoiles$/,
+  async ({ famille, page }, exercice: string, titre: string, erreurs: string) => {
+    await envoyerLaSeanceDeTest(famille, page, exercice, titre, Number(erreurs), {});
+  },
+);
+
+Then(/^l'enregistrement est refusé$/, async ({ famille }) => {
+  const reponse = partie(famille).reponse;
+  expect(reponse?.statut, "refus de l'envoi qui annonce des étoiles").toBe(400);
+  expect(reponse?.message, "le refus vient du champ « etoiles »").toContain("etoiles");
 });
 
 When(
