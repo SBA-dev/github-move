@@ -4,6 +4,18 @@
       "Bash(curl * https://api.supabase.com/v1/projects/*/database/*)"
     ]
   },
+  "extraKnownMarketplaces": {
+    "context-mode": {
+      "source": {
+        "source": "github",
+        "repo": "mksglu/context-mode",
+        "ref": "v1.0.169"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "context-mode@context-mode": true
+  },
   "hooks": {
     "SessionStart": [
       {
