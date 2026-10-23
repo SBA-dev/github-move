@@ -47,7 +47,7 @@ Règles de cohabitation :
 | Typecheck du front | `npx tsc --noEmit` |
 | Build du front | `npm run build` |
 | Tests E2E d'une story | `npx bddgen --tags "@issue-<n>" && npx playwright test --grep @issue-<n> --grep-invert "@depend-de|@envoi-email"` (les scénarios tagués `@depend-de-<m>` attendent la story #m ; `@envoi-email` : voir plus bas) |
-| Tous les tests E2E | `npx bddgen && npx playwright test --grep-invert "@depend-de|@envoi-email"` |
+| Tous les tests E2E (non-régression) | `npx bddgen --tags "<stories livrées : @socle or @issue-5 or …>" && NODE_USE_ENV_PROXY=1 npx playwright test --grep-invert "@depend-de|@envoi-email"` (sans `--tags`, `bddgen` échoue sur les étapes des stories à venir) |
 | Tests E2E qui envoient un vrai e-mail de connexion (avant un merge qui touche la connexion, ou la mise en ligne) | `npx bddgen --tags "@issue-5" && NODE_USE_ENV_PROXY=1 npx playwright test --grep @envoi-email` |
 | Tests E2E de la PWA (#8, build de production) | `npx bddgen -c playwright.pwa.config.ts && npx playwright test -c playwright.pwa.config.ts` |
 | Regénérer la bibliothèque | `python3 scripts/build_bibliotheque.py` |
