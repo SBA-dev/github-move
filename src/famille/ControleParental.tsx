@@ -1,4 +1,5 @@
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import type { ResultatDeLaReponse } from "@domain/famille";
 
 type Props = {
@@ -11,8 +12,12 @@ export function ControleParental({ enonce, onReponse, onRenoncer }: Props) {
   const [saisie, setSaisie] = useState("");
   const [refuse, setRefuse] = useState(false);
 
+  const champ = useRef<HTMLInputElement>(null);
+  useEffect(() => champ.current?.focus(), []);
+
   const valider = (evenement: FormEvent) => {
     evenement.preventDefault();
+    flushSync(() => setRefuse(false));
     const resultat = onReponse(saisie);
     setRefuse(resultat === "refuse");
     setSaisie("");
@@ -23,6 +28,7 @@ export function ControleParental({ enonce, onReponse, onRenoncer }: Props) {
       <form onSubmit={valider}>
         <p id="question-controle-parental" className="consigne">Question pour un adulte : {enonce}</p>
         <input
+          ref={champ}
           type="text"
           inputMode="numeric"
           autoComplete="off"
