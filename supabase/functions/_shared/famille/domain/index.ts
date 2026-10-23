@@ -1,3 +1,5 @@
+export { AccesALEspaceParent } from "./acces-a-l-espace-parent.ts";
+export type { EtatDeLEspaceParent, ResultatDeLaReponse } from "./acces-a-l-espace-parent.ts";
 export { AdresseEmail } from "./adresse-email.ts";
 export { CodeDeConnexion } from "./code-de-connexion.ts";
 export { DemanderLienDeConnexion } from "./demander-lien-de-connexion.ts";
