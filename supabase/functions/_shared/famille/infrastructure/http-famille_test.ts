@@ -2,9 +2,11 @@ import { assertEquals, assertThrows } from "@std/assert";
 import { NiveauInconnu } from "../../catalogue/domain/index.ts";
 import { ParentNonRattache, PrenomObligatoire, ProfilEnfantIntrouvable } from "../domain/erreurs.ts";
 import {
+  entetes,
   EntreeInvalide,
   lireLeCorpsJson,
   NonAuthentifie,
+  originesAutorisees,
   statutEtMessage,
   texteFacultatif,
   texteObligatoire,
@@ -45,51 +47,34 @@ const ORIGINE_AUTORISEE = "https://savanturier.example";
 const ORIGINE_REFUSEE = "https://pirate.example";
 const profilUuid = "3f2b8c1e-5a4d-4e6f-9b7a-1c2d3e4f5a6b";
 
-async function avecOriginesAutorisees<T>(valeur: string | undefined, action: () => Promise<T>): Promise<T> {
-  const avant = Deno.env.get("ORIGINES_AUTORISEES");
-  if (valeur === undefined) Deno.env.delete("ORIGINES_AUTORISEES");
-  else Deno.env.set("ORIGINES_AUTORISEES", valeur);
-  try {
-    return await action();
-  } finally {
-    if (avant === undefined) Deno.env.delete("ORIGINES_AUTORISEES");
-    else Deno.env.set("ORIGINES_AUTORISEES", avant);
-  }
-}
-
 function ecritureSansEffet(requete: Request): Promise<Response> {
-  return traiterUneEcritureDeFamille(requete, () => Promise.resolve({}));
+  return traiterUneEcritureDeFamille(requete, () => Promise.resolve({}), [ORIGINE_AUTORISEE]);
 }
 
-function postDepuis(origine: string): Request {
-  return new Request("http://fonction.test/", { method: "POST", headers: { Origin: origine } });
-}
+Deno.test("une origine de la liste des origines autorisées reçoit les en-têtes CORS", () => {
+  const origines = originesAutorisees(`https://autre.example, ${ORIGINE_AUTORISEE}`);
 
-Deno.test("une origine de la liste ORIGINES_AUTORISEES reçoit les en-têtes CORS", async () => {
-  const reponse = await avecOriginesAutorisees(
-    `https://autre.example, ${ORIGINE_AUTORISEE}`,
-    () => ecritureSansEffet(postDepuis(ORIGINE_AUTORISEE)),
-  );
+  const reponse = entetes(ORIGINE_AUTORISEE, origines);
 
-  assertEquals(reponse.headers.get("Access-Control-Allow-Origin"), ORIGINE_AUTORISEE);
+  assertEquals(reponse.get("Access-Control-Allow-Origin"), ORIGINE_AUTORISEE);
 });
 
-Deno.test("une origine refusée ne reçoit aucun en-tête CORS", async () => {
-  const reponse = await avecOriginesAutorisees(
-    ORIGINE_AUTORISEE,
-    () => ecritureSansEffet(postDepuis(ORIGINE_REFUSEE)),
-  );
+Deno.test("une origine refusée ne reçoit aucun en-tête CORS", () => {
+  const reponse = entetes(ORIGINE_REFUSEE, originesAutorisees(ORIGINE_AUTORISEE));
 
-  assertEquals(reponse.headers.get("Access-Control-Allow-Origin"), null);
-  assertEquals(reponse.headers.get("Access-Control-Allow-Methods"), null);
+  assertEquals(reponse.get("Access-Control-Allow-Origin"), null);
+  assertEquals(reponse.get("Access-Control-Allow-Methods"), null);
 });
 
-Deno.test("sans liste configurée, seul le poste local de développement est autorisé", async () => {
-  const locale = await avecOriginesAutorisees(undefined, () => ecritureSansEffet(postDepuis("http://localhost:5173")));
-  const autre = await avecOriginesAutorisees(undefined, () => ecritureSansEffet(postDepuis(ORIGINE_REFUSEE)));
+Deno.test("une requête sans origine ne reçoit aucun en-tête CORS", () => {
+  assertEquals(entetes(null, originesAutorisees(ORIGINE_AUTORISEE)).get("Access-Control-Allow-Origin"), null);
+});
 
-  assertEquals(locale.headers.get("Access-Control-Allow-Origin"), "http://localhost:5173");
-  assertEquals(autre.headers.get("Access-Control-Allow-Origin"), null);
+Deno.test("sans liste configurée, seul le poste local de développement est autorisé", () => {
+  const origines = originesAutorisees(undefined);
+
+  assertEquals(entetes("http://localhost:5173", origines).get("Access-Control-Allow-Origin"), "http://localhost:5173");
+  assertEquals(entetes(ORIGINE_REFUSEE, origines).get("Access-Control-Allow-Origin"), null);
 });
 
 Deno.test("une écriture de Famille demandée en GET est refusée en 405", async () => {
@@ -107,7 +92,6 @@ Deno.test("une écriture de Famille sans jeton Bearer est refusée en 401", asyn
   assertEquals(sansEntete.status, 401);
   assertEquals(autreSchema.status, 401);
 });
-
 Deno.test("l'identifiant d'un profil enfant qui n'est pas un UUID est une entrée invalide (400)", () => {
   assertThrows(() => uuidObligatoire({ profil: "profil-lea" }, "profil"), EntreeInvalide);
   assertThrows(() => uuidObligatoire({ profil: "1' or '1'='1" }, "profil"), EntreeInvalide);
