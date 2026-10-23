@@ -5,3 +5,4 @@
 - 11:10 · Validation des scénarios par lot (décision de démarrage n°2).
 - 11:45 · Étape 1 : modèle du domaine écrit par `domain-modeler` (`docs/stories/18/domain-model.md`). Ordre de livraison conseillé pour le lot : #16 → #17 → #23 → #24 → #18 → #19 → #20 → #21 → #22. Questions ouvertes à trancher à la validation du lot.
 - 11:41 · Étape 2 : critères d'acceptance écrits par `po-acceptance` (`features/18-classer-ordre-trous.feature`, `docs/stories/18/acceptance.md`) : 5 règles, 21 scénarios (27 cas), 5 `@a-valider`. Propositions du modèle appliquées comme hypothèse de travail. Syntaxe vérifiée (`npx bddgen` : seules des étapes manquantes). ⛔ Validation du lot attendue.
+- 12:10 · Validation n°1 du lot 3 : « OK pour tout » du PO (`docs/stories/lot-3-decisions.md`, décisions 0012 et 0013). Scénarios mis à jour par `po-acceptance` : 5 `@a-valider` retirés, comportement inchangé ; questions passées en « Décisions » dans `acceptance.md`. Syntaxe vérifiée.

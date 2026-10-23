@@ -10,18 +10,20 @@ En tant qu'**enfant**, je veux prévoir combien de **jetons** sont cachés dans 
 
 Les deux types utilisent le **mode de réponse** et le clavier de cristaux de #20, la question jouée de #17, l'aide et « Je ne sais pas » de #23. Le Catalogue calcule la réponse et l'**écriture du calcul** de chaque item ; Apprentissage ne lit jamais la **valeur cherchée** (`null`) du format.
 
-Comportement actuel (`app/`, `RUNNERS.boite`, `RUNNERS.barres`) repris comme premiers exemples. Écarts voulus, en question ouverte : aides par défaut propres à la comparaison et aux parts (Q49), description du schéma pour les lecteurs d'écran (Q55), `aide` et `phrase` des items de barres dans le format (Q50).
+Comportement actuel (`app/`, `RUNNERS.boite`, `RUNNERS.barres`) repris comme premiers exemples. Écarts voulus, validés par le PO (voir « Décisions ») : aides par défaut propres à la comparaison et aux parts (Q49), description du schéma pour les lecteurs d'écran (Q55), `aide` et `phrase` des items de barres dans le format (Q50).
 
 ## Règles
+
+Validation n°1 du lot 3 par le PO, le 2026-10-23 : « OK pour tout » (`docs/stories/lot-3-decisions.md` ; décisions `docs/decisions/0012-*` et `docs/decisions/0013-*`). Les propositions sont acceptées telles quelles : plus aucun scénario n'est `@a-valider`, et le comportement décrit n'a pas changé.
 
 | # | Règle | Scénarios |
 |---|---|---|
 | 1 | Boîte à jetons : des jetons entrent ou sortent d'une boîte fermée, et l'enfant prévoit combien il y en a | Des jetons entrent dans la boîte, puis elle se ferme · Des jetons sortent de la boîte · La bonne réponse <réponse> ouvre la boîte et donne l'écriture du calcul (3 cas) · Après une erreur à « <a> <signe> <b> », le personnage guide dit « <aide> » (3 cas) |
-| 2 | Au CP, une réponse de 20 au plus se donne par choix ; sinon, au clavier de cristaux | <enfant> répond à un résultat de <résultat> <mode> (5 cas : 7, 0, 20, 24 au CP ; 7 au CE1 ; `@a-valider` Q51) |
-| 3 | Schéma en barres : le « ? » montre la valeur cherchée, et la bonne réponse donne l'écriture du calcul | L'énoncé du problème est lu, puis le schéma est expliqué · Problème « <énoncé> » : la réponse <réponse> donne « <explication> » (8 cas : parties et tout, comparaison, parts, chaque valeur cherchée) · Après une erreur, l'aide du problème est lue (`@a-valider` Q50) · Sans aide, un problème de <forme> donne l'aide par défaut de sa forme (3 cas, `@a-valider` Q49) |
-| 4 | La boîte et le schéma se comprennent aussi sans les voir, et sans mouvement | Le schéma en barres de <forme> est décrit aux lecteurs d'écran (3 cas, `@a-valider` Q55) · Avec les mouvements réduits, la boîte s'ouvre sans animation · La boîte et le schéma tiennent dans un écran de 360 px de large |
+| 2 | Au CP, une réponse de 20 au plus se donne par choix ; sinon, au clavier de cristaux | <enfant> répond à un résultat de <résultat> <mode> (5 cas : 7, 0, 20, 24 au CP ; 7 au CE1) |
+| 3 | Schéma en barres : le « ? » montre la valeur cherchée, et la bonne réponse donne l'écriture du calcul | L'énoncé du problème est lu, puis le schéma est expliqué · Problème « <énoncé> » : la réponse <réponse> donne « <explication> » (8 cas : parties et tout, comparaison, parts, chaque valeur cherchée) · Après une erreur, l'aide du problème est lue · Sans aide, un problème de <forme> donne l'aide par défaut de sa forme (3 cas) |
+| 4 | La boîte et le schéma se comprennent aussi sans les voir, et sans mouvement | Le schéma en barres de <forme> est décrit aux lecteurs d'écran (3 cas) · Avec les mouvements réduits, la boîte s'ouvre sans animation · La boîte et le schéma tiennent dans un écran de 360 px de large |
 
-Total : 4 règles, 12 scénarios (31 cas), dont 4 `@a-valider`.
+Total : 4 règles, 12 scénarios (31 cas), aucun `@a-valider`.
 
 Droits d'accès : aucun scénario `@acces` (rien n'est écrit en base).
 
@@ -44,16 +46,18 @@ Profils : Léa (CP) et Tom (CE1), univers « Animaux de la forêt ».
 - Boîte à jetons en révision (Q52) : lot 4.
 - Le dessin exact des jetons (rangées de 5) et des barres : vérifié seulement par le nombre de jetons et la proportion des barres.
 
-## Questions ouvertes
-
-49. *(#21 n°1)* **Aides par défaut** : comparaison « Regarde le schéma : cherches-tu la grande barre, la petite, ou l'écart entre les deux ? » ; parts « Regarde le schéma : cherches-tu le total, la valeur d'une part, ou le nombre de parts ? » ; parties et tout inchangée ? **Proposition** : oui. → plan « Sans aide, un problème de <forme>… ».
-50. *(#21 n°2)* **`aide` et `phrase` des items de barres** dans le format ? **Proposition** : oui, facultatives. → « Après une erreur, l'aide du problème est lue » (et la phrase « J'ai 6 pommes. »).
-51. *(#21 n°3)* **Seuil « CP et 20 au plus »** pour répondre par choix ? **Proposition** : oui. → plan du mode de réponse.
-52. *(#21 n°4)* **Boîte en révision** : rejouer la boîte ? **Proposition** : oui, à confirmer au lot 4. Pas de scénario.
-53. *(#21 n°5)* **Glossaire** : boîte à jetons, schéma en barres, jeton, valeur cherchée ? **Proposition** : oui.
-54. *(#21 n°6)* **« Énoncé du problème »** pour le texte d'un schéma en barres, « énoncé » seul interdit ? **Proposition** : oui. Les scénarios disent « le problème « … » » et « l'énoncé du problème ».
-55. *(#21 n°7)* **Description du schéma** : « Le tout : ?. Une partie : 4. L'autre partie : 2. », « `<nom 1>` : ?. `<nom 2>` : 9. L'écart : 4. », « Le total : 12. 3 parts. Chaque part : ? » ? **Proposition** : oui. → plan « Le schéma en barres de <forme> est décrit aux lecteurs d'écran ».
-
 ## Décisions
 
-Aucune pour l'instant : la validation des scénarios du lot 3 est attendue.
+Source : validation du PO du 2026-10-23 (`docs/stories/lot-3-decisions.md`). Chaque question reçoit pour réponse sa proposition.
+
+49. *(#21 n°1)* **Aides par défaut** : comparaison « Regarde le schéma : cherches-tu la grande barre, la petite, ou l'écart entre les deux ? » ; parts « Regarde le schéma : cherches-tu le total, la valeur d'une part, ou le nombre de parts ? » ; parties et tout inchangée ? **Décision** : oui. → plan « Sans aide, un problème de <forme>… ».
+50. *(#21 n°2)* **`aide` et `phrase` des items de barres** dans le format ? **Décision** : oui, facultatives. → « Après une erreur, l'aide du problème est lue » (et la phrase « J'ai 6 pommes. »).
+51. *(#21 n°3)* **Seuil « CP et 20 au plus »** pour répondre par choix ? **Décision** : oui. → plan du mode de réponse.
+52. *(#21 n°4)* **Boîte en révision** : rejouer la boîte ? **Décision** : oui, à confirmer au lot 4. Pas de scénario.
+53. *(#21 n°5)* **Glossaire** : boîte à jetons, schéma en barres, jeton, valeur cherchée ? **Décision** : oui.
+54. *(#21 n°6)* **« Énoncé du problème »** pour le texte d'un schéma en barres, « énoncé » seul interdit ? **Décision** : oui. Les scénarios disent « le problème « … » » et « l'énoncé du problème ».
+55. *(#21 n°7)* **Description du schéma** : « Le tout : ?. Une partie : 4. L'autre partie : 2. », « `<nom 1>` : ?. `<nom 2>` : 9. L'écart : 4. », « Le total : 12. 3 parts. Chaque part : ? » ? **Décision** : oui. → plan « Le schéma en barres de <forme> est décrit aux lecteurs d'écran ».
+
+## Questions ouvertes
+
+Aucune.

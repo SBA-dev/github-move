@@ -59,7 +59,6 @@ Fonctionnalité: Étoiles et fin de la séance
 
   Règle: Une séance d'un exercice donne aussi les étoiles de la leçon, sauf une séance faite seulement d'une fluence
 
-    @a-valider
     Scénario: Une séance d'un exercice donne les étoiles de la leçon
       Étant donné que Léa n'a encore jamais terminé de séance de la leçon « Les sons ou, on, an »
       Et que Léa joue seulement l'exercice « Quel son entends-tu ? »
@@ -67,7 +66,6 @@ Fonctionnalité: Étoiles et fin de la séance
       Quand Léa réussit la dernière question de la séance
       Alors la page de la leçon « Les sons ou, on, an » montre 3 étoiles pour Léa
 
-    @a-valider
     Scénario: Une séance faite seulement d'une fluence ne donne pas d'étoiles
       Étant donné que Léa n'a encore jamais terminé de séance de la leçon « Les doubles »
       Et que Léa joue seulement l'exercice « Calcul rapide : les doubles »
@@ -105,14 +103,12 @@ Fonctionnalité: Étoiles et fin de la séance
       Alors la fin de la séance propose « Leçon suivante », « Accueil » et « Rejouer »
       Et le focus est sur « Accueil »
 
-    @a-valider
     Scénario: La leçon suivante est la leçon d'ordre suivant de la même matière et du même niveau
       Étant donné que Léa joue la séance complète de la leçon « Les sons ou, on, an »
       Quand Léa réussit la dernière question de la séance
       Alors la fin de la séance annonce « Ensuite : Les syllabes »
       Et la leçon suivante ouvre la page de la leçon « Les syllabes »
 
-    @a-valider
     Scénario: Après la dernière leçon d'une matière, aucune leçon suivante n'est proposée
       Étant donné que Léa joue la séance complète de la leçon « Les animaux »
       Quand Léa réussit la dernière question de la séance
@@ -139,7 +135,6 @@ Fonctionnalité: Étoiles et fin de la séance
       Quand l'appareil envoie cette séance terminée en annonçant 3 étoiles
       Alors la page de la leçon « Les sons ou, on, an » montre 1 étoile pour Léa sur le téléphone de Paul
 
-    @a-valider
     Scénario: Une séance terminée incohérente n'est pas enregistrée, sans rien montrer de plus à l'enfant
       Étant donné que Léa n'a encore jamais terminé de séance de la leçon « Les sons ou, on, an »
       Quand l'appareil envoie une séance terminée dont une question ne finit pas par la bonne réponse
@@ -167,14 +162,12 @@ Fonctionnalité: Étoiles et fin de la séance
       Quand Claire demande les étoiles du profil enfant de Léa
       Alors Claire ne reçoit aucune donnée de Léa
 
-    @a-valider
     Scénario: Une séance quittée avant la fin n'est pas enregistrée
       Étant donné que Léa a déjà gagné 1 étoile à la leçon « Les sons ou, on, an »
       Et que Léa a quitté une séance complète de cette leçon avant la dernière question
       Quand Léa ouvre la page de la leçon « Les sons ou, on, an »
       Alors la page de la leçon montre toujours 1 étoile pour Léa
 
-    @a-valider
     Scénario: Sans réseau, la fin de la séance s'affiche et la séance terminée est envoyée plus tard
       Étant donné que Léa joue la séance complète de la leçon « Les sons ou, on, an »
       Et que le réseau est coupé
@@ -182,7 +175,6 @@ Fonctionnalité: Étoiles et fin de la séance
       Alors Léa voit ses étoiles
       Et elle voit le message « Sauvegarde en ligne impossible : la progression est gardée sur cet appareil. »
 
-    @a-valider
     Scénario: Au retour du réseau, la séance gardée sur l'appareil est enregistrée
       Étant donné que Léa a gagné 2 étoiles à la leçon « Les sons ou, on, an » sur la tablette, sans réseau
       Quand le réseau revient sur la tablette
@@ -190,7 +182,6 @@ Fonctionnalité: Étoiles et fin de la séance
 
   Règle: Les séances terminées font partie des données du profil enfant
 
-    @a-valider
     Scénario: L'export du profil contient les séances terminées et les étoiles, sans les réponses données
       Étant donné que Léa a gagné 2 étoiles à la leçon « Les sons ou, on, an » avec 2 erreurs
       Et que Paul est dans l'espace parent

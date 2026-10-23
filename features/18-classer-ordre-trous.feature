@@ -46,13 +46,11 @@ Fonctionnalité: Classer, remettre dans l'ordre, compléter un texte à trous
       Alors l'étiquette « loup » revient parmi les étiquettes à poser
       Et Noisette dit un encouragement, suivi de « « loup » n'habite pas dans la maison « on ». Essaie une autre maison. »
 
-    @a-valider
     Scénario: L'aide d'une étiquette passe avant l'aide par défaut
       Étant donné qu'une leçon de test a un exercice classer dont l'étiquette « baleine » du groupe « Mammifères » a l'aide « La baleine respire avec des poumons. »
       Quand Léa pose l'étiquette « baleine » dans la maison « Poissons »
       Alors Noisette dit un encouragement, suivi de « La baleine respire avec des poumons. »
 
-    @a-valider
     Scénario: Reposer une étiquette dans la même mauvaise maison coûte une nouvelle erreur
       Étant donné qu'une leçon de test a un seul exercice classer de deux étiquettes, « loup » pour « ou » et « pont » pour « on »
       Et que Léa a posé 4 fois l'étiquette « loup » dans la maison « on »
@@ -86,7 +84,6 @@ Fonctionnalité: Classer, remettre dans l'ordre, compléter un texte à trous
       Alors l'étiquette « no » revient parmi les étiquettes à poser
       Et Noisette dit un encouragement, suivi de « Pas encore celui-là. Lequel vient juste après ? »
 
-    @a-valider
     Scénario: La dernière étiquette bien posée est félicitée
       Étant donné que Léa joue seulement l'exercice « Le mot en morceaux » de la leçon « Les syllabes »
       Et que Léa a posé les étiquettes « do » et « mi »
@@ -94,7 +91,6 @@ Fonctionnalité: Classer, remettre dans l'ordre, compléter un texte à trous
       Alors Noisette dit une félicitation
       Mais Noisette ne demande pas la suite
 
-    @a-valider
     Scénario: Deux étiquettes au même texte sont interchangeables
       Étant donné que Tom a un profil enfant préparé de niveau CM1
       Et que Tom joue seulement l'exercice « Le robot va chercher la pomme » de la leçon « Programmer un déplacement »
@@ -132,7 +128,6 @@ Fonctionnalité: Classer, remettre dans l'ordre, compléter un texte à trous
       Quand Léa répond « ont »
       Alors Noisette dit une félicitation, suivie de « Le texte est complet ! »
 
-    @a-valider
     Scénario: « a » et « à » sont proposés ensemble à chaque trou
       Étant donné que Tom a un profil enfant préparé de niveau CE1
       Et que Tom est sur la page de la leçon « a ou à ? »

@@ -32,7 +32,6 @@ Fonctionnalité: Exercices à choix (bulles, lecture, écoute)
       Quand la question « Combien font 1 + 1 ? » s'affiche
       Alors Léa voit exactement deux choix, « 2 » et « 3 »
 
-    @a-valider
     Scénario: « a » et « à » sont deux choix différents
       Étant donné qu'une question de test « Il … un vélo. » a les choix « a », « à » et « a », de réponse « a »
       Quand la question « Il … un vélo. » s'affiche
@@ -60,7 +59,6 @@ Fonctionnalité: Exercices à choix (bulles, lecture, écoute)
         | Dictée : les animaux          | Quel mot est bien écrit ?                         | chat               |
         | Lecture : Le petit chat Plume | Où dort Plume ?                                   | sur le lit de Léa  |
 
-    @a-valider
     Scénario: La félicitation est dite en entier avant la question suivante
       Étant donné que Léa joue l'exercice « Quel son entends-tu ? » de la leçon « Les sons ou, on, an »
       Et que Léa en est à la question « Dans le mot « poule », quel son entends-tu ? »
@@ -91,7 +89,6 @@ Fonctionnalité: Exercices à choix (bulles, lecture, écoute)
       Alors les choix « 6 », « 7 » et « 9 » restent possibles
       Et Noisette ne dit rien de plus
 
-    @a-valider
     Scénario: Après deux erreurs sur la même question, il reste deux choix possibles, dont le bon
       Étant donné que Léa joue la question de test « Combien font 3 + 4 ? »
       Et que les choix sont affichés dans l'ordre « 6 », « 7 », « 8 », « 9 »
@@ -138,7 +135,6 @@ Fonctionnalité: Exercices à choix (bulles, lecture, écoute)
       Quand Léa dit qu'elle a écouté
       Alors la question « De quelle couleur est Plume ? » s'affiche avec les choix « gris », « noir » et « blanc »
 
-    @a-valider
     Scénario: Le texte de lecture reste affiché pendant les questions
       Étant donné que Noisette a lu le texte de l'exercice « Le petit chat Plume »
       Quand Léa dit qu'elle a écouté
@@ -169,14 +165,12 @@ Fonctionnalité: Exercices à choix (bulles, lecture, écoute)
       Quand Léa répond « un chat »
       Alors Noisette dit une félicitation, suivie de « « a cat », c'est « un chat ». »
 
-    @a-valider
     Scénario: Après une erreur, l'encouragement est entendu en entier, puis le mot est redit
       Étant donné que Léa joue l'item « a cat » de l'exercice « Quel animal ? »
       Quand Léa répond « un chien »
       Alors Léa entend en entier un encouragement de Noisette, suivi de « Écoute encore. »
       Et Léa entend ensuite « a cat » lu avec la voix anglaise
 
-    @a-valider
     Scénario: En Muet, l'écoute prévient l'enfant qu'elle a besoin du son
       Étant donné que la tablette est en Muet
       Quand Léa commence l'exercice « Quel animal ? » de la leçon « Les animaux »

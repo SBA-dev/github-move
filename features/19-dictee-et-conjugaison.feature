@@ -46,7 +46,6 @@ Fonctionnalité: Dictée et conjugaison
 
   Règle: Le mot est corrigé dès que sa dernière case est remplie, et le début juste est gardé
 
-    @a-valider
     Scénario: Le mot est corrigé sans qu'il faille valider
       Étant donné que Léa joue le mot dicté « chat » de l'exercice « J'écris les animaux »
       Et que Léa a écrit « cha »
@@ -67,7 +66,6 @@ Fonctionnalité: Dictée et conjugaison
       Quand Léa écrit ensuite « chat »
       Alors Léa gagne 2 étoiles
 
-    @a-valider
     Scénario: La correction ne tient pas compte des majuscules
       Étant donné qu'une leçon de test a un exercice dictée du mot « Paris »
       Quand Léa écrit « paris »
@@ -109,7 +107,6 @@ Fonctionnalité: Dictée et conjugaison
       Alors la touche « c » est de nouveau proposée
       Et toutes les cases sont vides
 
-    @a-valider
     Scénario: Le clavier complet propose « œ »
       Étant donné que Paul a réglé « clavier des dictées » sur « clavier complet » pour Léa
       Quand Léa commence un exercice dictée d'une leçon de test
@@ -124,7 +121,6 @@ Fonctionnalité: Dictée et conjugaison
       Et Léa entend Noisette lire « Conjuguons le verbe être au présent. Choisis la bonne forme pour chaque personne. »
       Et « je … ? » propose « suis » et deux autres formes, toutes différentes
 
-    @a-valider
     Scénario: La bonne forme s'écrit dans le tableau sans félicitation
       Étant donné que Léa joue seulement l'exercice « Le verbe être » de la leçon « Être et avoir au présent »
       Quand Léa répond « suis »

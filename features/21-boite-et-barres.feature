@@ -54,7 +54,6 @@ Fonctionnalité: Boîte à jetons et schéma en barres
 
   Règle: Au CP, une réponse de 20 au plus se donne par choix ; sinon, au clavier de cristaux
 
-    @a-valider
     Plan du Scénario: <enfant> répond à un résultat de <résultat> <mode>
       Étant donné qu'une leçon de test a une boîte à jetons « <calcul> »
       Quand <enfant> joue cette boîte à jetons et que la boîte est fermée
@@ -94,13 +93,11 @@ Fonctionnalité: Boîte à jetons et schéma en barres
         | Plusieurs fois, partager           | Trois enfants se partagent une tablette de chocolat de 12 carreaux. Combien de carreaux aura chaque enfant ?   | 4       | 12 = 3 × 4.                |
         | Plusieurs fois, partager           | Il y a 18 élèves. On fait des équipes de 3 élèves. Combien y aura-t-il d'équipes ?                             | 6       | 18 = 6 × 3.                |
 
-    @a-valider
     Scénario: Après une erreur, l'aide du problème est lue
       Étant donné que Léa joue le problème « Lina a 9 crayons : 6 sont rouges, les autres sont bleus. Combien de crayons bleus ? » de la leçon « Problèmes : le tout et les parties »
       Quand Léa répond « 15 »
       Alors Noisette dit un encouragement, suivi de « On connaît le tout, 9, et une partie, 6. On cherche l'autre partie. »
 
-    @a-valider
     Plan du Scénario: Sans aide, un problème de <forme> donne l'aide par défaut de sa forme
       Étant donné que Léa joue le problème « <énoncé> » de la leçon « <leçon> »
       Quand Léa répond faux
@@ -114,7 +111,6 @@ Fonctionnalité: Boîte à jetons et schéma en barres
 
   Règle: La boîte et le schéma se comprennent aussi sans les voir, et sans mouvement
 
-    @a-valider
     Plan du Scénario: Le schéma en barres de <forme> est décrit aux lecteurs d'écran
       Étant donné que Léa joue le problème « <énoncé> » de la leçon « <leçon> »
       Quand le schéma s'affiche

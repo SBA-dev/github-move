@@ -72,14 +72,12 @@ Fonctionnalité: Calcul, fluence et addition posée
       Alors Léa a 5 calculs à faire
       Et chaque calcul additionne deux nombres entre 1 et 10
 
-    @a-valider
     Scénario: Quand l'enfant se trompe souvent, les nombres tirés deviennent plus petits
       Étant donné que les 50 dernières réponses de calcul de Tom comptent 4 réponses justes et 6 fausses
       Et qu'une leçon de test a un exercice calcul dont le générateur tire des additions de deux nombres entre 1 et 20
       Quand Tom commence cet exercice
       Alors chaque calcul additionne deux nombres entre 1 et 13
 
-    @a-valider
     Scénario: Quand l'enfant réussit de nouveau, les nombres tirés regrandissent
       Étant donné que Tom s'est souvent trompé en calcul autrefois
       Mais que ses 50 dernières réponses de calcul comptent 45 réponses justes
@@ -106,7 +104,6 @@ Fonctionnalité: Calcul, fluence et addition posée
       Quand Tom répond « 14 » à « 9 + 6 »
       Alors Noisette dit un encouragement, suivi de « Fais 9 + 1, puis ajoute 5. »
 
-    @a-valider
     Scénario: Un calcul sans signe et sans aide n'a pas d'astuce
       Étant donné qu'une leçon de test a un exercice calcul « Moitié de 10 », de résultat 5, sans aide
       Quand Léa répond « 4 » à « Moitié de 10 »
@@ -121,7 +118,6 @@ Fonctionnalité: Calcul, fluence et addition posée
       Alors Léa voit le temps qui reste, 45 secondes, et 0 calcul réussi
       Et chaque bonne réponse ajoute 1 calcul réussi
 
-    @a-valider
     Scénario: Une réponse fausse pendant la fluence ne coûte pas d'erreur
       Étant donné que Léa fait la fluence « Calcul rapide : les doubles », avec 3 calculs réussis
       Quand Léa donne une réponse fausse
@@ -147,7 +143,6 @@ Fonctionnalité: Calcul, fluence et addition posée
         | un nouveau record         | a un record de 10      | 12    | annonce son nouveau record, 12                            |
         | le record reste           | a un record de 15      | 12    | « 12 calculs ! Ton record reste 15. Tu y es presque ! »   |
 
-    @a-valider
     Plan du Scénario: À la fin de la fluence, <score> calcul réussi donne « <phrase> »
       Étant donné que Léa n'a pas encore de record à la fluence « Calcul rapide : les doubles »
       Et que Léa fait cette fluence
@@ -202,7 +197,6 @@ Fonctionnalité: Calcul, fluence et addition posée
       Quand Léa pose le chiffre « 8 » du nombre 8 dans la colonne des dizaines
       Alors Noisette dit un encouragement, suivi de « Le 8 est tout seul : c'est un chiffre des unités. Il va dans la maison bleue, tout à droite. »
 
-    @a-valider
     Scénario: Avec un chiffre en double, l'aide vise la colonne encore libre
       Étant donné qu'une leçon de test a une addition posée « 55 + 3 » à l'étape poser
       Et que Léa a posé le premier « 5 » de 55 dans la colonne des unités
@@ -241,20 +235,17 @@ Fonctionnalité: Calcul, fluence et addition posée
       Quand la colonne des unités est à calculer
       Alors Léa voit les choix « 12 », « 13 », « 11 » et « 2 »
 
-    @a-valider
     Scénario: Dans la colonne des dizaines, la phrase de la retenue dit centaines et dizaines
       Étant donné qu'une leçon de test a une addition posée « 45 + 65 » à l'étape calculer
       Et que Léa a calculé la colonne des unités
       Quand Léa répond « 11 » pour la colonne des dizaines
       Alors Noisette dit « 11, c'est 1 centaine et 1 dizaine ! J'écris 1, et 1 monte en retenue. »
 
-    @a-valider
     Scénario: Un générateur d'additions avec retenue donne toujours une retenue
       Étant donné que Léa est sur la page de la leçon « Poser une addition en colonnes »
       Quand Léa choisit seulement l'exercice « Calculer avec la retenue »
       Alors chacune des 3 additions a une retenue dans la colonne des unités
 
-    @a-valider
     Scénario: L'avancement d'une addition posée compte chaque chiffre posé et chaque colonne calculée
       Étant donné que Léa est sur la page de la leçon « Poser une addition en colonnes »
       Quand Léa choisit seulement l'exercice « La leçon en action : 45 + 37 »

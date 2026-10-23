@@ -14,7 +14,6 @@ Fonctionnalité: Étapes de leçon lues, puis exercices
 
   Règle: La page de la leçon présente la leçon et propose la séance complète ou un seul exercice
 
-    @a-valider
     Scénario: La page de la leçon propose la séance complète et chaque exercice
       Quand Léa ouvre la page de la leçon « Les sons ou, on, an »
       Alors elle voit le titre « Les sons ou, on, an » et « CP · Français »
@@ -35,12 +34,10 @@ Fonctionnalité: Étapes de leçon lues, puis exercices
       Quand Léa ouvre la page de la leçon « Les nombres »
       Alors un exercice est proposé sous le libellé « Calcul »
 
-    @a-valider
     Scénario: Le personnage guide accueille l'enfant sur la page de la leçon
       Quand Léa ouvre la page de la leçon « Les sons ou, on, an »
       Alors Noisette dit « Coucou Léa ! Je t'explique la leçon, et après, on joue. Tu peux aussi choisir directement un jeu. »
 
-    @a-valider
     Scénario: Le passage pour les adultes cite le programme officiel et le guide fondamental
       Quand Léa ouvre la page de la leçon « La boîte à jetons : ajouter »
       Alors le passage « Pour les adultes : ce que dit le programme » donne la citation du programme officiel et la source de sa section
@@ -104,7 +101,6 @@ Fonctionnalité: Étapes de leçon lues, puis exercices
       Alors Léa entend Noisette lire « Range chaque mot dans la maison de son son. »
       Mais Léa n'entend aucune étape de leçon
 
-    @a-valider
     Scénario: Le titre de l'exercice choisi seul n'est pas annoncé
       Étant donné que Léa est sur la page de la leçon « Les sons ou, on, an »
       Quand Léa choisit seulement l'exercice « Les maisons des sons »
@@ -180,7 +176,6 @@ Fonctionnalité: Étapes de leçon lues, puis exercices
       Alors l'avancement de la séance montre 15 questions réussies sur 15
       Et la séance est terminée
 
-    @a-valider
     Scénario: Un exercice d'un type inconnu est écarté : il n'est ni proposé, ni joué, ni compté
       Étant donné qu'une leçon de test « Mélange » a un exercice bulles de 3 questions et un exercice d'un type inconnu « puzzle »
       Quand Léa ouvre la page de la leçon « Mélange »
@@ -190,7 +185,6 @@ Fonctionnalité: Étapes de leçon lues, puis exercices
 
   Règle: Quitter une séance en cours ne garde rien de cette séance
 
-    @a-valider
     Scénario: Quitter la séance en cours ramène à la page de la leçon et coupe la voix
       Étant donné que Léa joue la séance complète de la leçon « Les sons ou, on, an »
       Et que Noisette est en train de lire la première étape de leçon
@@ -198,7 +192,6 @@ Fonctionnalité: Étapes de leçon lues, puis exercices
       Alors Léa voit la page de la leçon « Les sons ou, on, an »
       Et Léa n'entend plus Noisette
 
-    @a-valider
     Scénario: Une séance quittée recommence du début
       Étant donné que Léa a quitté la séance complète de la leçon « Les sons ou, on, an » après 3 questions réussies
       Quand Léa commence de nouveau la séance complète
@@ -214,7 +207,6 @@ Fonctionnalité: Étapes de leçon lues, puis exercices
       Alors Léa voit le texte de l'étape de leçon dans la bulle de Noisette en mode dys : police Andika, lettres, mots et lignes espacés
       Et Léa voit les exemples « ou », « on » et « an » en mode dys
 
-    @a-valider
     Scénario: L'avancement de la séance est annoncé aux lecteurs d'écran
       Étant donné que Léa joue la séance complète de la leçon « Les sons ou, on, an »
       Et que Léa en est à la question « Dans le mot « poule », quel son entends-tu ? »

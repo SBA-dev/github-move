@@ -21,7 +21,6 @@ Fonctionnalité: Mémoriser une poésie
       Alors Léa voit « Le début de la fable — Jean de La Fontaine »
       Et Léa voit les 6 vers, un par ligne
 
-    @a-valider
     Plan du Scénario: Pour une <sorte>, le personnage guide annonce l'écoute vers par vers
       Étant donné que Léa est sur la page de la leçon « <leçon> »
       Quand Léa choisit seulement l'exercice « <exercice> »
@@ -41,7 +40,6 @@ Fonctionnalité: Mémoriser une poésie
 
   Règle: L'enfant redit seul la poésie, et l'entraînement ne commence que quand il est prêt
 
-    @a-valider
     Plan du Scénario: Pour une <sorte>, le personnage guide invite à <verbe> tout le texte
       Étant donné que Léa joue seulement l'exercice « <exercice> » de la leçon « <leçon> »
       Quand Noisette a lu le dernier vers
@@ -73,7 +71,6 @@ Fonctionnalité: Mémoriser une poésie
       Alors le vers revient parmi les vers à poser
       Et Noisette dit un encouragement, suivi de « Ce n'est pas le début. Lequel vient en premier ? »
 
-    @a-valider
     Scénario: Deux vers identiques sont interchangeables
       Étant donné qu'une poésie de test a les vers « Une poule sur un mur », « Qui picore du pain dur », « Picoti, picota », « Picoti, picota »
       Et que Léa a remis en place les deux premiers vers
@@ -100,7 +97,6 @@ Fonctionnalité: Mémoriser une poésie
         | Mon ami Pierrot,          | Pierrot   | Mon ami …,            |
         | Ma chandelle est morte,   | chandelle | Ma … est morte,       |
 
-    @a-valider
     Scénario: Le mot caché ne comprend pas l'article élidé
       Étant donné que Léa a remis dans l'ordre les vers de « Au clair de la lune »
       Quand l'entraînement des mots cachés commence
@@ -118,7 +114,6 @@ Fonctionnalité: Mémoriser une poésie
       Alors le vers « Il a vu. » n'a pas de trou
       Et l'avancement de la séance compte ce vers comme réussi
 
-    @a-valider
     Scénario: Une poésie de deux vers propose quand même trois choix pour chaque mot caché
       Étant donné qu'une poésie de test a les vers « Le soleil brille » et « Les oiseaux chantent »
       Et que Léa a remis ces vers dans l'ordre
