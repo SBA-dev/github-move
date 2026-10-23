@@ -8,7 +8,8 @@ import { EcranDeConnexion, useConnexion } from "./connexion/index.ts";
 import { EnTete } from "./en-tete/EnTete.tsx";
 import { ControleParental, EspaceParent, useAccesALEspaceParent } from "./famille/index.ts";
 import { AideEcranDAccueil } from "./installation/index.ts";
-import { type Ecran, useNavigation } from "./navigation.ts";
+import { type Lieu, useNavigation } from "./navigation.ts";
+import { PageDeLaLecon } from "./seance/index.ts";
 import { ChoixDeLaVoix, useVoix } from "./voix/index.ts";
 import { PALETTES, Paysage, PersonnageGuide } from "./univers/index.ts";
 
@@ -32,23 +33,34 @@ function useProfilPrepare(actif: boolean) {
   return { profil: actif ? profil : undefined, charge: actif && charge };
 }
 
-function ecranAffiche(demande: Ecran, espaceParent: EtatDeLEspaceParent["type"], connecte: boolean): Ecran {
-  if (demande === "demonstration" && !PAGE_DEMONSTRATION_DISPONIBLE) return "accueil";
-  if (demande === "espace-parent" && connecte && espaceParent === "ferme") return "accueil";
+const ACCUEIL: Lieu = { ecran: "accueil" };
+
+function estPageDeLEnfant(lieu: Lieu): boolean {
+  return lieu.ecran === "demonstration" || lieu.ecran === "lecon" || lieu.ecran === "seance";
+}
+
+// Tant que le profil enfant n'existe que préparé (page de démonstration du lot 1), les pages de l'enfant ne sont pas publiées.
+function lieuAffiche(demande: Lieu, espaceParent: EtatDeLEspaceParent["type"], connecte: boolean): Lieu {
+  if (estPageDeLEnfant(demande) && !PAGE_DEMONSTRATION_DISPONIBLE) return ACCUEIL;
+  if (demande.ecran === "espace-parent" && connecte && espaceParent === "ferme") return ACCUEIL;
   return demande;
 }
 
 export function Application() {
-  const { ecran: ecranDemande, retourPossible, aller, remplacer, revenir } = useNavigation();
+  const { lieu: lieuDemande, retourPossible, viaRetour, aller, remplacer, revenir } = useNavigation();
   const acces = useAccesALEspaceParent();
   const connexion = useConnexion();
   const connecte = connexion.etat === "connecte";
-  const ecran = ecranAffiche(ecranDemande, acces.etat.type, connecte);
-  const surLaDemonstration = ecran === "demonstration";
+  const lieuPossible = lieuAffiche(lieuDemande, acces.etat.type, connecte);
   const { profil: profilEnCours, charge: profilCharge } = useProfilPrepare(
-    surLaDemonstration || ecran === "espace-parent",
+    estPageDeLEnfant(lieuPossible) || lieuPossible.ecran === "espace-parent",
   );
-  const profil = surLaDemonstration ? profilEnCours : undefined;
+  const enfantAbsent = profilCharge && !profilEnCours && (lieuPossible.ecran === "lecon" || lieuPossible.ecran === "seance");
+  const lieu = enfantAbsent ? ACCUEIL : lieuPossible;
+  const ecran = lieu.ecran;
+  const ecranDemande = lieuDemande.ecran;
+  const surLaDemonstration = ecran === "demonstration";
+  const profil = estPageDeLEnfant(lieu) ? profilEnCours : undefined;
   const univers = universDe(profil?.univers);
   const palette = PALETTES[univers.cle];
   const voix = useVoix(universDe(profilEnCours?.univers).personnageGuide);
@@ -67,8 +79,8 @@ export function Application() {
     if (ecranDemande !== "espace-parent") fermerEspaceParent();
   }, [ecranDemande, fermerEspaceParent]);
   useEffect(() => {
-    if (ecran !== ecranDemande) remplacer(ecran);
-  }, [ecran, ecranDemande, remplacer]);
+    if (lieu !== lieuDemande) remplacer(lieu);
+  }, [lieu, lieuDemande, remplacer]);
   const [deconnexionEchouee, setDeconnexionEchouee] = useState(false);
   const seDeconnecter = async () => {
     setDeconnexionEchouee(false);
@@ -116,6 +128,18 @@ export function Application() {
             <Suspense fallback={null}>
               <PageDemonstration univers={univers} voix={voix} />
             </Suspense>
+          )}
+          {lieu.ecran === "lecon" && profilCharge && profilEnCours && (
+            <PageDeLaLecon
+              key={lieu.leconId}
+              leconId={lieu.leconId}
+              prenom={profilEnCours.prenom}
+              univers={univers}
+              voix={voix}
+              accueillir={!viaRetour}
+              onCommencer={(exercice) => aller({ ecran: "seance", leconId: lieu.leconId, exercice })}
+              onRetourALAccueil={() => aller("accueil")}
+            />
           )}
           {ecran === "espace-parent" && connexion.etat === "deconnecte" && (
             <EcranDeConnexion connexion={connexion} onConnecte={ouvrirLEspaceParentConnecte} />
