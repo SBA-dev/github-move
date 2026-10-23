@@ -1,4 +1,6 @@
 import { type Browser, expect, type Page } from "@playwright/test";
+import { deposerLaSession, ouvrirUneSessionSansEmail } from "./connexion-sans-email.ts";
+import { installerLeHasardFixe } from "./hasard-fixe.ts";
 import {
   creerParent,
   emailsRecus,
@@ -200,12 +202,36 @@ export class Famille {
     await expect((await this.page(appareil)).getByRole("heading", { name: "Espace parent" })).toBeVisible();
   }
 
+  // Connexion de préparation sans e-mail (voir connexion-sans-email.ts). L'application s'ouvre sur l'accueil,
+  // espace parent fermé : pour y entrer, il faut répondre au contrôle parental.
+  async connecterSansEmail(appareil: Appareil, prenom: string): Promise<void> {
+    const adresse = this.normalisee(this.adresseDe(prenom));
+    await this.preparerUnParent(adresse);
+    const page = await this.page(appareil);
+    await installerLeHasardFixe(page);
+    await deposerLaSession(page, await ouvrirUneSessionSansEmail(adresse));
+    await this.verifierConnecte(appareil);
+  }
+
+  async demanderLEntreeDeLEspaceParent(appareil: Appareil): Promise<void> {
+    const page = await this.page(appareil);
+    await page.getByRole("banner").getByRole("button", { name: "Espace parent", exact: true }).click();
+  }
+
   async allerDansLEspaceParent(appareil: Appareil): Promise<void> {
     const page = await this.page(appareil);
-    if (!(await page.getByRole("heading", { name: "Espace parent" }).isVisible())) {
-      await page.getByRole("button", { name: "Espace parent" }).click();
+    const titre = page.getByRole("heading", { name: "Espace parent" });
+    if (!(await titre.isVisible())) {
+      await this.demanderLEntreeDeLEspaceParent(appareil);
+      const question = page.getByText(/Question pour un adulte : combien font \d × \d \?/);
+      await expect(question.or(titre)).toBeVisible();
+      if (await question.isVisible()) {
+        const [, a, b] = (await question.innerText()).match(/(\d) × (\d)/) ?? [];
+        await page.getByRole("textbox").fill(String(Number(a) * Number(b)));
+        await page.getByRole("button", { name: "Entrer" }).click();
+      }
     }
-    await expect(page.getByRole("heading", { name: "Espace parent" })).toBeVisible();
+    await expect(titre).toBeVisible();
   }
 
   async seDeconnecter(appareil: Appareil): Promise<void> {

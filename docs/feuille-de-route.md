@@ -66,8 +66,14 @@ L'application fonctionne et est publiée comme artifact claude.ai. Elle comprend
   - À retirer plus tard : la page `/demonstration` et le profil préparé en `localStorage` (lots 2 et 3).
   - Première vérification Supabase (`npx supabase link`) non faite : les secrets `SUPABASE_*` n'étaient pas présents dans la session.
 - [x] Lot 2 (Famille) : issues écrites, label `reecriture`. Ordre proposé : #10 contrôle parental de l'espace parent, #11 créer et modifier un profil enfant (et « Qui joue ? »), #12 réglages, #13 inviter un second parent, #14 supprimer un profil et ses données (et export), #15 choix de la voix sur l'appareil. Ces stories touchent la base : elles demandent Supabase (secrets et Docker).
-  - Modèles (#10 à #15) et scénarios écrits sur `feature/lot-2-modele-et-scenarios` : 35 règles, 150 scénarios. Scénarios **validés par le PO** (`docs/stories/lot-2-decisions.md`, décision 0009). Prochaine étape : TDD, d'abord #10 (contrôle parental) et #15 (choix de la voix), qui tournent dans le navigateur ; #11 à #14 demandent Supabase (secrets et Docker).
-- [ ] Lots 3 à 7 : issues à écrire.
+  - Modèles (#10 à #15) et scénarios écrits sur `feature/lot-2-modele-et-scenarios` : 35 règles, 150 scénarios. Scénarios **validés par le PO** (`docs/stories/lot-2-decisions.md`, décision 0009). #10 (contrôle parental) : domaine et écran faits sur `feature/10-controle-parental`, review approuvée, E2E à exécuter avec #5 et #11. Prochaine étape : #15 (choix de la voix), qui tourne dans le navigateur ; #11 à #14 demandent Supabase (secrets et Docker).
+- [x] Lots 3 à 7 : issues écrites (label `reecriture`), à partir du comportement actuel de `app/` :
+  - lot 3 (Jouer une leçon) : #16 à #24 ;
+  - lot 4 (Parcours) : #25 à #29 ;
+  - lot 5 (Motivation) : #30 à #33 ;
+  - lot 6 (Accompagnement) : #34 à #43 (leçons personnelles découpées en #39, #40, #41) ;
+  - lot 7 (Bascule) : #44 à #46.
+  Chaque issue relève les défauts du legacy et ses questions ouvertes, à trancher à la validation des scénarios de son lot.
 
 ### 2. Contenu : lecture et écriture au CP (commencé, pas encore livré)
 

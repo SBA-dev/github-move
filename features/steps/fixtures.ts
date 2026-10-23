@@ -21,8 +21,10 @@ export type Pwa = {
 
 export const test = base.extend<{ monde: Monde; pwa: Pwa; famille: Famille }>({
   // Story #5 : parents de test et boîte des e-mails de connexion (projet Supabase de développement).
+  // Suffixe d'adresse propre au projet ET au worker : deux fichiers .feature exécutés en parallèle ne se disputent
+  // pas le même parent de test (le nettoyage de l'un supprimait le parent de l'autre en pleine connexion).
   famille: async ({ page, browser, baseURL }, use, testInfo) => {
-    const famille = new Famille(testInfo.project.name, page, browser, baseURL ?? "http://localhost:5173");
+    const famille = new Famille(`${testInfo.project.name}${testInfo.parallelIndex}`, page, browser, baseURL ?? "http://localhost:5173");
     await use(famille);
     await famille.nettoyer();
   },

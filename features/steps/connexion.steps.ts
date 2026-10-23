@@ -55,8 +55,8 @@ Given(/^l'adresse "(.*)" de Paul a été refusée$/, async ({ famille }, adresse
 });
 
 Given(/^Paul est connecté sur la tablette et sur le téléphone$/, async ({ famille }) => {
-  await famille.connecter("tablette", "Paul");
-  await famille.connecter("telephone", "Paul");
+  await famille.connecterSansEmail("tablette", "Paul");
+  await famille.connecterSansEmail("telephone", "Paul");
 });
 
 Given(/^Savanturier a été fermé sur la tablette$/, async ({ famille }) => {
@@ -74,7 +74,8 @@ Given(/^Paul s'est connecté avec le lien de connexion reçu, puis s'est déconn
 });
 
 Given(/^Paul s'est déconnecté de Savanturier sur la tablette$/, async ({ famille }) => {
-  await famille.connecter("tablette", "Paul");
+  await famille.connecterSansEmail("tablette", "Paul");
+  await famille.allerDansLEspaceParent("tablette");
   await famille.seDeconnecter("tablette");
   await famille.verifierNonConnecte("tablette");
 });
@@ -179,9 +180,10 @@ Then(/^aucun e-mail n'est envoyé$/, async ({ famille }) => {
 // --- Alors : état de la connexion
 
 // Même texte en « Étant donné » (préparation) et en « Alors » (vérification) : playwright-bdd ne distingue pas les deux.
-// Tant qu'aucun lien n'a été demandé dans le scénario, c'est une préparation : le parent se connecte réellement.
+// Tant qu'aucun lien n'a été demandé dans le scénario, c'est une préparation : le parent se connecte, sans e-mail
+// (session obtenue par l'API d'administration, voir features/support/connexion-sans-email.ts).
 Then(/^(\S+) est connectée? sur (la tablette|le téléphone)$/, async ({ famille }, prenom: string, appareil: string) => {
-  if (famille.adresseCourante === undefined) await famille.connecter(appareilDe(appareil), prenom);
+  if (famille.adresseCourante === undefined) await famille.connecterSansEmail(appareilDe(appareil), prenom);
   else await famille.verifierConnecte(appareilDe(appareil));
 });
 
@@ -250,8 +252,12 @@ Then(/^je ne vois aucun profil enfant$/, async ({ famille }) => {
   await verifierQuAucuneDonneeDeFamilleNEstVisible(famille);
 });
 
+// Visiteur non connecté : écran de connexion. Parent resté connecté (Savanturier rouvert) : l'accueil, espace parent refermé.
 Then(/^je ne vois pas l'espace parent$/, async ({ famille }) => {
-  await verifierQuAucuneDonneeDeFamilleNEstVisible(famille);
+  const page = await famille.page("tablette");
+  if ((await famille.session(page)) === null) return await verifierQuAucuneDonneeDeFamilleNEstVisible(famille);
+  await expect(page.getByText("Réviser le programme du CP au CM2")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Espace parent" })).toBeHidden();
 });
 
 Then(/^aucun profil enfant de la famille de Paul n'est visible$/, async ({ famille }) => {

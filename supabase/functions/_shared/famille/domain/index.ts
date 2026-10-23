@@ -1,3 +1,5 @@
+export { AccesALEspaceParent } from "./acces-a-l-espace-parent.ts";
+export type { EtatDeLEspaceParent, ResultatDeLaReponse } from "./acces-a-l-espace-parent.ts";
 export { AdresseEmail } from "./adresse-email.ts";
 export { CodeDeConnexion } from "./code-de-connexion.ts";
 export { DemanderLienDeConnexion } from "./demander-lien-de-connexion.ts";
@@ -9,7 +11,9 @@ export {
   LienDeConnexionMalForme,
 } from "./erreurs.ts";
 export { LienDeConnexion } from "./lien-de-connexion.ts";
+export type { Hasard } from "./hasard.ts";
 export { OuvrirLaConnexionAvecLeCode } from "./ouvrir-la-connexion-avec-le-code.ts";
 export { ParentId } from "./parent-id.ts";
+export { QuestionDuControleParental } from "./question-du-controle-parental.ts";
 export { SeDeconnecter } from "./se-deconnecter.ts";
 export type { ServiceDeConnexion } from "./service-de-connexion.ts";
