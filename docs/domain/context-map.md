@@ -28,7 +28,8 @@ Décidé à la validation n°1 du lot 1 (décision 0007).
 | Pipeline de contenu (`scripts/`, Python) | Produit `bibliotheque.json` et `programmes-index.json` |
 | API Claude | Création de leçons personnelles, lecture de photos de devoirs |
 | Synthèse vocale | Voix qui lit les consignes (MP3 pré-générés, ou voix du navigateur) |
-| Supabase Auth | Connexion du parent par lien de connexion ou code de connexion envoyés par e-mail (story #5) |
+| Supabase Auth | Connexion du parent par lien de connexion ou code de connexion envoyés par e-mail (story #5). Émet et vérifie le lien et le code ; confie l'e-mail à une Edge Function (hook « Send Email », décision 0011) |
+| Expéditeur d'e-mails | Envoi de l'e-mail de connexion : boîte de test sur le projet de développement, fournisseur européen en production (#45) (décision 0011) |
 | Application legacy (`app/`) | Source des règles métier à reprendre. Pas de reprise des données (décision de démarrage n°7) |
 
 ## Relations
@@ -46,6 +47,7 @@ flowchart LR
   Legacy[Application legacy] -- "ACL" --> Famille
   Legacy -- "ACL" --> Apprentissage
   Auth[Supabase Auth] -- "ACL (#5)" --> Famille
+  Famille -- "port ExpediteurDEmails (#5)" --> Expediteur[Expéditeur d'e-mails]
   Famille -- "Customer/Supplier (clé de l'univers, #6)" --> Motivation
   Motivation -- "Customer/Supplier (paroles et humeur du personnage guide, #6)" --> Apprentissage
   Motivation -- "Customer/Supplier (caractère de la voix, #7)" --> Voix
@@ -72,6 +74,8 @@ flowchart LR
 | API Claude | Accompagnement | Anti-Corruption Layer | Port `GenerateurDeLecon` (à valider) : la réponse de l'IA est validée et traduite en leçon avant d'entrer dans le domaine |
 | Application legacy | Famille, Apprentissage | Anti-Corruption Layer | Traducteur de migration ponctuel : profils et progression de l'artifact → agrégats du domaine |
 | Supabase Auth | Famille | Anti-Corruption Layer (stories #5 et #13) | Port `ServiceDeConnexion` (aussi utilisé par le parent invité avant d'accepter une invitation ; l'acceptation elle-même passe par une fonction Postgres `security definer` appelée avec son JWT, décision 0009, n°3) : l'utilisateur et les erreurs de Supabase sont traduits en `ParentId` et en erreurs métier (`AdresseEmailInvalide`, `LienDeConnexionInvalide`, `CodeDeConnexionMalForme`, `CodeDeConnexionInvalide`) |
+| Supabase Auth | Famille | Anti-Corruption Layer (story #5, décision 0011) | Hook « Send Email » : l'ACL `DemandeDEmailSupabase` traduit la demande signée (adresse, `token`, `token_hash`, `redirect_to`, type d'action) en adresse, lien de connexion et code de connexion, puis appelle le cas d'usage serveur `EnvoyerEmailDeConnexion` |
+| Famille | Expéditeur d'e-mails | Port et adaptateurs (story #5, décision 0011) | Port `ExpediteurDEmails` (couche `application/`) : adaptateur boîte de test (développement), fournisseur européen (production, #45). Le domaine compose l'e-mail de connexion, l'adaptateur ne fait que l'envoyer |
 | Famille | Motivation | Customer/Supplier (story #6) | Le profil enfant garde la clé de son univers ; Motivation retrouve l'univers et son personnage guide (clé inconnue → `animaux`) |
 | Motivation | Apprentissage | Customer/Supplier (story #6) | Appel en lecture au domaine de Motivation, depuis le front : pendant une séance, Apprentissage dit seulement « réponse juste / fausse » ; Motivation donne la félicitation ou l'encouragement et l'humeur du personnage guide. Aucune note n'est modifiée. |
 | Voix | Motivation | Published Language (story #7, décision 0008) | Voix publie le type `CaractereDeLaVoix` ; Motivation l'importe et fournit les valeurs de chaque personnage guide. Voix ne connaît pas les univers |

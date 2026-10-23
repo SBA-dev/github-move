@@ -8,6 +8,13 @@ export class ServiceDeConnexionEnMemoire implements ServiceDeConnexion {
   readonly adressesAuxquellesOnAEnvoye: AdresseEmail[] = [];
   readonly ouverturesAvecLeCode: Array<{ adresse: AdresseEmail; code: CodeDeConnexion }> = [];
   deconnexions = 0;
+  private fermetureEnEchec = false;
+
+  static quiEchoueALaFermeture(): ServiceDeConnexionEnMemoire {
+    const service = new ServiceDeConnexionEnMemoire();
+    service.fermetureEnEchec = true;
+    return service;
+  }
 
   constructor(
     private readonly codeAccepte: string = "123456",
@@ -27,6 +34,7 @@ export class ServiceDeConnexionEnMemoire implements ServiceDeConnexion {
 
   deconnecter(): Promise<void> {
     this.deconnexions++;
+    if (this.fermetureEnEchec) return Promise.reject(new Error("fermeture impossible"));
     return Promise.resolve();
   }
 }
