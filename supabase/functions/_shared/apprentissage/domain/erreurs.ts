@@ -18,3 +18,10 @@ export class NombreDeQuestionsInconnu extends Error {
     this.name = "NombreDeQuestionsInconnu";
   }
 }
+
+export class PasDEtapeDeLeconEnCours extends Error {
+  constructor() {
+    super("Il n'y a plus d'étape de leçon à passer.");
+    this.name = "PasDEtapeDeLeconEnCours";
+  }
+}
