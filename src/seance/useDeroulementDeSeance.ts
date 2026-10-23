@@ -127,6 +127,7 @@ export function useDeroulementDeSeance(
     avancementAnnonce,
     jAiEcoute,
     ecouterLeMot,
+    jeNeSaisPas,
   } = questions;
   return {
     parole,
@@ -141,6 +142,7 @@ export function useDeroulementDeSeance(
     jAiEcoute,
     relireLaQuestion,
     ecouterLeMot,
+    jeNeSaisPas,
     repondre,
     reecouter,
     commencer,

@@ -138,6 +138,7 @@ function SeanceEnCours({ seance, lecon, univers, voix, toutLireAVoixHaute, onRet
               sonCoupe={voix.son === "muet"}
               onChoisir={(texte) => void deroulement.repondre(texte)}
               onRelireLaQuestion={() => void deroulement.relireLaQuestion()}
+              onJeNeSaisPas={() => void deroulement.jeNeSaisPas()}
               onEcouterLeMot={() => void deroulement.ecouterLeMot()}
               onJAiEcoute={() => void deroulement.jAiEcoute()}
               onActiverLeSon={voix.basculerLeSon}

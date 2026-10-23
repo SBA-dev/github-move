@@ -11,7 +11,8 @@ export type NatureDeParole =
   | "question"
   | "introduction"
   | "felicitation"
-  | "encouragement";
+  | "encouragement"
+  | "aide";
 
 export type ParoleADire = {
   readonly texte: string;

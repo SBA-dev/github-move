@@ -8,7 +8,7 @@ import {
   type Seance,
 } from "@domain/apprentissage";
 import type { Lecon } from "@domain/catalogue";
-import { type PersonnageGuide, type Reaction, reagirALaReponse } from "@domain/motivation";
+import { direJeNeSaisPasAvecLesChoix, type PersonnageGuide, type Reaction, reagirALaReponse } from "@domain/motivation";
 import { hasardDuNavigateur } from "../../hasard-navigateur.ts";
 import type { Voix } from "../../voix/index.ts";
 import type { ParoleADire } from "../usePersonnageQuiParle.ts";
@@ -157,7 +157,19 @@ export function useQuestionsAChoix(
     await suite(++sequence.current, seance.retirerFaits(), nouvelExercice);
   }, [laQuestionEnCours, seance, sequence, redessiner, personnageGuide, encourager, figer, feliciter, vivant]);
 
+  const jeNeSaisPas = useCallback(async () => {
+    const courante = laQuestionEnCours();
+    if (!courante || estFigee.current || !courante.question.jeNeSaisPasPermis() || courante.question.bonneReponseMontree) return;
+    const { aide } = seance.direJeNeSaisPas();
+    const numero = ++sequence.current;
+    faireSilence();
+    redessiner();
+    const jusquAuBout = await dire({ texte: direJeNeSaisPasAvecLesChoix(aide), nature: "aide", humeur: "reflechit" });
+    if (jusquAuBout) await direLeMotAEcouter(numero, courante.question);
+  }, [laQuestionEnCours, seance, sequence, faireSilence, redessiner, dire, direLeMotAEcouter]);
+
   return {
+    jeNeSaisPas,
     figee,
     choixVisiblesPour,
     positionDuTexteEcoute,
