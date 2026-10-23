@@ -1,5 +1,5 @@
 # language: fr
-@issue-24 @wip
+@issue-24
 Fonctionnalité: Étoiles et fin de la séance
   En tant qu'enfant
   Je veux voir combien d'étoiles j'ai gagnées à la fin d'une séance, puis rejouer ou passer à la suite

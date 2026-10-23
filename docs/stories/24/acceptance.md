@@ -1,6 +1,6 @@
 # Critères d'acceptance : issue #24, Étoiles et fin de la séance
 
-Scénarios : `features/24-etoiles-et-fin-de-seance.feature` (tags `@issue-24 @wip`).
+Scénarios : `features/24-etoiles-et-fin-de-seance.feature` (tag `@issue-24`).
 Modèle du domaine : `docs/stories/24/domain-model.md` (contexte **Apprentissage**, avec **Catalogue pédagogique**, **Motivation**, **Accompagnement** et **Famille**).
 Numérotation des questions : unique pour le lot 3, voir `docs/stories/16/acceptance.md` (#24 → Q69 à Q78 ; nouvelle question Q79 ; décisions du PO après les E2E : Q82 à Q85).
 
