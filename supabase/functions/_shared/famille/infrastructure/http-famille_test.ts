@@ -1,6 +1,12 @@
 import { assertEquals, assertThrows } from "@std/assert";
 import { NiveauInconnu } from "../../catalogue/domain/index.ts";
-import { ParentNonRattache, PrenomObligatoire, ProfilEnfantIntrouvable } from "../domain/erreurs.ts";
+import {
+  ClavierDesDicteesInconnu,
+  LangueDuParentInconnue,
+  ParentNonRattache,
+  PrenomObligatoire,
+  ProfilEnfantIntrouvable,
+} from "../domain/erreurs.ts";
 import {
   entetes,
   EntreeInvalide,
@@ -23,6 +29,20 @@ Deno.test("un parent non rattaché et un profil introuvable sont présentés par
 Deno.test("une erreur de validation métier est un 400 avec son message", () => {
   assertEquals(statutEtMessage(new PrenomObligatoire()), { statut: 400, message: "Écris le prénom de l'enfant." });
   assertEquals(statutEtMessage(new NiveauInconnu("CE9")).statut, 400);
+});
+
+Deno.test("un clavier des dictées inconnu est refusé en 400 avec son message", () => {
+  assertEquals(statutEtMessage(new ClavierDesDicteesInconnu("azerty")), {
+    statut: 400,
+    message: "Ce clavier des dictées est inconnu : « azerty ».",
+  });
+});
+
+Deno.test("une langue du parent inconnue est refusée en 400 avec son message", () => {
+  assertEquals(statutEtMessage(new LangueDuParentInconnue("klingon")), {
+    statut: 400,
+    message: "Cette langue du parent est inconnue : « klingon ».",
+  });
 });
 
 Deno.test("sans connexion c'est un 401, et une panne inconnue un 500 sans détail", () => {
