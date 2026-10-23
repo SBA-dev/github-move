@@ -1,3 +1,4 @@
+import type { Exercice } from "./exercice.ts";
 import type { Matiere } from "./matiere.ts";
 
 export const NIVEAUX = ["CP", "CE1", "CE2", "CM1", "CM2"] as const;
@@ -25,6 +26,7 @@ export type Lecon = Readonly<{
   ordre: number;
   programme: ProgrammeCite;
   etapes: readonly EtapeDeLecon[];
+  exercices: readonly Exercice[];
   competence?: string;
   guide?: PassageDuGuideFondamental;
 }>;
