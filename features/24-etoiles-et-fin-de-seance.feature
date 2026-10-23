@@ -86,17 +86,19 @@ Fonctionnalité: Étoiles et fin de la séance
   Règle: Les meilleures étoiles d'une leçon ne baissent jamais
 
     Scénario: Une séance moins bonne ne fait pas baisser les meilleures étoiles
-      Étant donné que Léa a déjà gagné 3 étoiles à la leçon « Les sons de test »
-      Et que Léa joue de nouveau la séance complète et y a fait 5 erreurs
+      Étant donné que Léa a déjà gagné 3 étoiles à la leçon « Les sons ou, on, an »
+      Et que Léa joue seulement l'exercice « Quel son entends-tu ? »
+      Et que Léa a fait 5 erreurs pendant la séance
       Quand Léa réussit la dernière question de la séance
       Alors Léa voit 1 étoile allumée sur 3 pour cette séance
-      Et la page de la leçon « Les sons de test » montre toujours 3 étoiles pour Léa
+      Et la page de la leçon « Les sons ou, on, an » montre toujours 3 étoiles pour Léa
 
     Scénario: Une meilleure séance fait monter les meilleures étoiles
-      Étant donné que Léa a déjà gagné 1 étoile à la leçon « Les sons de test »
-      Et que Léa joue de nouveau la séance complète et y a fait 2 erreurs
+      Étant donné que Léa a déjà gagné 1 étoile à la leçon « Les sons ou, on, an »
+      Et que Léa joue seulement l'exercice « Quel son entends-tu ? »
+      Et que Léa a fait 2 erreurs pendant la séance
       Quand Léa réussit la dernière question de la séance
-      Alors la page de la leçon « Les sons de test » montre 2 étoiles pour Léa
+      Alors la page de la leçon « Les sons ou, on, an » montre 2 étoiles pour Léa
 
     @acces
     Scénario: Les étoiles gagnées sur la tablette se retrouvent sur un autre appareil du parent
@@ -142,15 +144,15 @@ Fonctionnalité: Étoiles et fin de la séance
   Règle: Une séance terminée est enregistrée une seule fois, par le serveur, et seulement pour un parent rattaché
 
     Scénario: Le serveur refuse une séance terminée qui annonce des étoiles
-      Étant donné que Léa n'a encore jamais terminé de séance de la leçon « Les sons de test »
-      Quand l'appareil envoie une séance terminée de la leçon « Les sons de test » avec 5 erreurs, en annonçant 3 étoiles
+      Étant donné que Léa n'a encore jamais terminé de séance de la leçon « Les sons ou, on, an »
+      Quand l'appareil envoie une séance terminée de l'exercice « Quel son entends-tu ? » de la leçon « Les sons ou, on, an » avec 5 erreurs, en annonçant 3 étoiles
       Alors l'enregistrement est refusé
-      Et la page de la leçon « Les sons de test » ne montre aucune étoile pour Léa sur le téléphone de Paul
+      Et la page de la leçon « Les sons ou, on, an » ne montre aucune étoile pour Léa sur le téléphone de Paul
 
     Scénario: Le serveur recalcule les étoiles à partir des réponses de la séance
-      Étant donné que Léa n'a encore jamais terminé de séance de la leçon « Les sons de test »
-      Quand l'appareil envoie une séance terminée de la leçon « Les sons de test » avec 5 erreurs, sans annoncer d'étoiles
-      Alors la page de la leçon « Les sons de test » montre 1 étoile pour Léa sur le téléphone de Paul
+      Étant donné que Léa n'a encore jamais terminé de séance de la leçon « Les sons ou, on, an »
+      Quand l'appareil envoie une séance terminée de l'exercice « Quel son entends-tu ? » de la leçon « Les sons ou, on, an » avec 5 erreurs, sans annoncer d'étoiles
+      Alors la page de la leçon « Les sons ou, on, an » montre 1 étoile pour Léa sur le téléphone de Paul
 
     Scénario: Une séance terminée incohérente n'est pas enregistrée, sans rien montrer de plus à l'enfant
       Étant donné que Léa n'a encore jamais terminé de séance de la leçon « Les sons ou, on, an »

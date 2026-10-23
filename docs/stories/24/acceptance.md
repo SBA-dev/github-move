@@ -2,7 +2,7 @@
 
 Scénarios : `features/24-etoiles-et-fin-de-seance.feature` (tags `@issue-24 @wip`).
 Modèle du domaine : `docs/stories/24/domain-model.md` (contexte **Apprentissage**, avec **Catalogue pédagogique**, **Motivation**, **Accompagnement** et **Famille**).
-Numérotation des questions : unique pour le lot 3, voir `docs/stories/16/acceptance.md` (#24 → Q69 à Q78 ; nouvelle question Q79 ; décisions du PO après les E2E : Q82 à Q84).
+Numérotation des questions : unique pour le lot 3, voir `docs/stories/16/acceptance.md` (#24 → Q69 à Q78 ; nouvelle question Q79 ; décisions du PO après les E2E : Q82 à Q85).
 
 ## Objectif
 
@@ -82,6 +82,7 @@ Décisions du PO après le premier passage des E2E (2026-10-23) :
 82. **Séance complète jouable avant #18** : les scénarios qui jouent la séance complète jusqu'à la fin utilisent une leçon de test faite seulement de questions à bulles (« Les sons de test », suivie de « La suite de test »), au lieu de « Les sons ou, on, an » dont le second exercice est un `classer`. Le comportement vérifié ne change pas, seules les données changent.
 83. **Envoi qui annonce des étoiles** : le serveur **refuse** une séance terminée qui annonce des étoiles (l'application n'en envoie jamais ; seul le rejeu des réponses compte), et les étoiles de l'enfant ne changent pas. Un envoi normal de la même séance donne les étoiles recalculées (1 étoile pour 5 erreurs). → « Le serveur refuse une séance terminée qui annonce des étoiles » et « Le serveur recalcule les étoiles à partir des réponses de la séance ».
 84. **Dépendances** : `@depend-de-14` sur l'export et la suppression du profil, `@depend-de-20` sur la fluence et les calculs tirés. Les scénarios de #23 qui attendaient #24 passent : leur tag `@depend-de-24` est retiré.
+85. **Scénarios serveur sur une leçon connue du serveur** : « Une séance moins bonne ne fait pas baisser les meilleures étoiles », « Une meilleure séance fait monter les meilleures étoiles », « Le serveur refuse une séance terminée qui annonce des étoiles » et « Le serveur recalcule les étoiles à partir des réponses de la séance » jouent la séance de l'exercice « Quel son entends-tu ? » de « Les sons ou, on, an » (6 questions à bulles ; une séance d'un exercice donne les étoiles de la leçon, Q69), au lieu de « Les sons de test », inconnue du serveur. Mêmes cas : 3 étoiles puis 5 erreurs → toujours 3 ; 1 étoile puis 2 erreurs → 2 ; 5 erreurs en annonçant 3 étoiles → refus ; 5 erreurs sans étoiles annoncées → 1 étoile.
 
 ## Questions ouvertes
 
