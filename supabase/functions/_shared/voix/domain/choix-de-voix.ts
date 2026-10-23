@@ -9,7 +9,35 @@ import {
 
 const ECART_DE_SCORE_TOLERE = 15;
 
-export function choisirVoix(
+export type ChoixDeVoix =
+  | { readonly type: "automatique" }
+  | { readonly type: "imposee"; readonly nomDeLaVoix: string };
+
+const AUTOMATIQUE: ChoixDeVoix = { type: "automatique" };
+
+export const ChoixDeVoix = {
+  automatique: AUTOMATIQUE,
+  imposee(nomDeLaVoix: string): ChoixDeVoix {
+    return nomDeLaVoix === "" ? AUTOMATIQUE : { type: "imposee", nomDeLaVoix };
+  },
+};
+
+function voixImposeePresente(
+  voix: readonly VoixDisponible[],
+  choix: ChoixDeVoix,
+): VoixDisponible | undefined {
+  if (choix.type === "automatique") return undefined;
+  return voix.find((v) => v.nom === choix.nomDeLaVoix);
+}
+
+export function voixMontreeCommeChoisie(
+  voix: readonly VoixDisponible[],
+  choix: ChoixDeVoix,
+): VoixDisponible | "automatique" {
+  return voixImposeePresente(voix, choix) ?? "automatique";
+}
+
+function voixAutomatique(
   voix: readonly VoixDisponible[],
   caractere: CaractereDeLaVoix,
 ): VoixDisponible | undefined {
@@ -18,6 +46,14 @@ export function choisirVoix(
   const estDuBonSexe = caractere.sexe === "masculine" ? estMasculine : estFeminine;
   const scoreMinimal = scoreDeLaVoix(meilleure) - ECART_DE_SCORE_TOLERE;
   return [meilleure, ...autres].find((v) => estDuBonSexe(v) && scoreDeLaVoix(v) >= scoreMinimal) ?? meilleure;
+}
+
+export function choisirVoix(
+  voix: readonly VoixDisponible[],
+  caractere: CaractereDeLaVoix,
+  choix: ChoixDeVoix = ChoixDeVoix.automatique,
+): VoixDisponible | undefined {
+  return voixImposeePresente(voix, choix) ?? voixAutomatique(voix, caractere);
 }
 
 export const CARACTERE_LANGUE_ETRANGERE: CaractereDeLaVoix = {
