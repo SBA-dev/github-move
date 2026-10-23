@@ -25,3 +25,10 @@ export class LienDeConnexionMalForme extends Error {
     this.name = "LienDeConnexionMalForme";
   }
 }
+
+export class EnvoiDeLEmailImpossible extends Error {
+  constructor() {
+    super("L'e-mail de connexion n'a pas pu être envoyé.");
+    this.name = "EnvoiDeLEmailImpossible";
+  }
+}
