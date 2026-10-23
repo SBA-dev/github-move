@@ -1,6 +1,6 @@
 # Critères d'acceptance : issue #11, Créer et modifier un profil enfant, et choisir qui joue
 
-Scénarios : `features/11-profil-enfant.feature` (tags `@issue-11 @wip`).
+Scénarios : `features/11-profil-enfant.feature` (tag `@issue-11`).
 Modèle du domaine : `docs/stories/11/domain-model.md` (contexte Famille).
 
 ## Objectif

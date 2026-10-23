@@ -18,3 +18,4 @@ Une décision n'est jamais réécrite : si elle change, une nouvelle décision l
 | [0011](0011-emails-de-connexion-par-edge-function.md) | E-mails de connexion envoyés par une Edge Function, boîte de test en développement | Acceptée |
 | [0012](0012-lecture-des-lecons-dans-le-domaine-catalogue.md) | Lecture du format JSON des leçons dans le domaine du Catalogue | Acceptée |
 | [0013](0013-ecritures-d-apprentissage-par-edge-function.md) | Écritures d'Apprentissage par Edge Function, séance revalidée par le serveur | Acceptée |
+| [0014](0014-profil-supprime-avec-son-dernier-parent.md) | Un profil enfant est supprimé avec son dernier parent | Acceptée |

@@ -63,6 +63,7 @@ Fonctionnalité: Inviter un second parent à se rattacher à un profil enfant
       Alors Marie voit le profil enfant de Léa
       Et le profil enfant de Léa apparaît dans « Qui joue ? » sur le téléphone
 
+    @envoi-email
     Scénario: L'invitation attend que Marie se soit connectée
       Étant donné que Paul a créé un lien d'invitation pour Léa
       Et que Marie n'est pas connectée sur le téléphone

@@ -31,6 +31,8 @@ Droits d'accès (`@acces`) : un visiteur non connecté ne voit aucune donnée de
 
 Données de test : adresses fictives en `@exemple.test`. Les e-mails (lien et code de connexion) sont lus dans la boîte de test locale de Supabase (Inbucket/Mailpit), jamais envoyés à une vraie adresse.
 
+Convention `@envoi-email` (décision du PO) : tout scénario qui envoie un vrai e-mail de connexion (une étape demande un lien de connexion par e-mail ou lit la boîte de test) porte le tag `@envoi-email`, dans `features/5-connexion-du-parent.feature` comme dans les autres `.feature`. Le projet `savanturier-dev` n'accepte qu'environ 100 e-mails de connexion par heure : ces scénarios sont exclus des exécutions courantes (`--grep-invert @envoi-email`) et se lancent avant un merge qui touche la connexion, ou avant la mise en ligne (`--grep @envoi-email`). Les scénarios qui préparent un parent connecté sans e-mail (`features/support/connexion-sans-email.ts`) ne portent pas ce tag.
+
 ## Hors périmètre
 
 - Le rattachement d'un parent à un profil enfant et l'invitation d'un second parent (lot 2).

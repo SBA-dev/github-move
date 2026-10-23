@@ -11,3 +11,10 @@ export class SectionDuProgrammeMalFormee extends Error {
     this.name = "SectionDuProgrammeMalFormee";
   }
 }
+
+export class NiveauInconnu extends Error {
+  constructor(readonly niveau: string) {
+    super(`Ce niveau est inconnu : « ${niveau} ».`);
+    this.name = "NiveauInconnu";
+  }
+}

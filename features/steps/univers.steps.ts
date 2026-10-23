@@ -21,7 +21,7 @@ export function cleDe(libelle: string): string {
   return cle;
 }
 
-async function preparerProfil(page: Page, profil: ProfilPrepare) {
+export async function preparerProfil(page: Page, profil: ProfilPrepare) {
   await page.addInitScript(
     ([cle, valeur]) => localStorage.setItem(cle, valeur),
     [CLE_PROFIL_PREPARE, JSON.stringify(profil)] as const,

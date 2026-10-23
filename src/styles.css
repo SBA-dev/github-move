@@ -262,3 +262,61 @@ button:focus-visible, summary:focus-visible { outline: 3px solid #1f2a1f; outlin
 .question:hover { background: #fff; }
 .bulle-de-choix:hover:not([aria-disabled="true"]) { background: #fff3c4; }
 .bulle-de-choix[aria-disabled="true"]:hover { background: #fff; }
+button.secondaire { color: var(--texte); background: #fff; border: 2px solid var(--accent-fonce); }
+button.secondaire:hover { background: #fdf3ea; }
+.visuellement-cache {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.qui-joue { display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 100%; }
+.qui-joue h2 { margin: 0; padding: 6px 14px; border-radius: 16px; background: rgba(255, 255, 255, .85); }
+.profils-a-choisir { display: grid; gap: 12px; width: min(100%, 28rem); margin: 0; padding: 0; list-style: none; }
+.profil-a-choisir {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  width: 100%;
+  min-height: 88px;
+  padding: 10px 14px;
+  border-radius: 20px;
+  color: var(--texte);
+  background: #fff;
+  border: 3px solid var(--accent-fonce);
+}
+.profil-a-choisir:hover { background: #fdf3ea; }
+.profil-a-choisir .personnage-guide { width: 64px; }
+.profil-a-choisir .prenom { font-size: 1.35rem; overflow-wrap: anywhere; }
+.profil-a-choisir .classe-et-univers { font-size: .95rem; font-weight: 600; }
+.profils-de-l-espace-parent {
+  display: grid;
+  gap: 12px;
+  width: 100%;
+  max-width: 40rem;
+  padding: 12px 16px;
+  border-radius: 16px;
+  background: #fff;
+  text-align: left;
+}
+.profils-de-l-espace-parent h3, .profils-de-l-espace-parent p { margin: 0; }
+.profils-enfants { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.profils-enfants li { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; min-height: 44px; }
+.profils-enfants .prenom { font-weight: 700; overflow-wrap: anywhere; }
+.profils-enfants .classe-et-univers { flex: 1 1 8rem; }
+.profils-enfants .formulaire-de-profil { flex: 1 1 100%; }
+.formulaire-de-profil { display: grid; gap: 8px; }
+.formulaire-de-profil input, .formulaire-de-profil select {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 2px solid var(--accent-fonce);
+  border-radius: 12px;
+  font: inherit;
+  background: #fff;
+}
+.formulaire-de-profil .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.profils-de-l-espace-parent .confirmation { font-weight: 700; }
+.accueil-de-l-enfant { display: grid; justify-items: center; gap: 12px; max-width: 100%; }

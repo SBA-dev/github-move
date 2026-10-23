@@ -7,8 +7,10 @@ export {
   encourager,
   type Felicitation,
   feliciter,
+  inviterACreerLePremierProfil,
   presentation,
   presentationAuRetourDuSon,
+  saluer,
 } from "./paroles.ts";
 export { type Parole, type Reaction, reagirALaReponse } from "./reaction.ts";
 export { TirageHorsIntervalle } from "./hasard.ts";

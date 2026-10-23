@@ -46,8 +46,9 @@ Règles de cohabitation :
 | Lint / format | `deno lint --permit-no-files supabase/functions/ && deno fmt --check --permit-no-files supabase/functions/` |
 | Typecheck du front | `npx tsc --noEmit` |
 | Build du front | `npm run build` |
-| Tests E2E d'une story | `npx bddgen --tags "@issue-<n>" && npx playwright test --grep @issue-<n> --grep-invert @depend-de` (les scénarios tagués `@depend-de-<m>` attendent la story #m) |
-| Tous les tests E2E | `npx bddgen && npx playwright test` |
+| Tests E2E d'une story | `npx bddgen --tags "@issue-<n>" && npx playwright test --grep @issue-<n> --grep-invert "@depend-de|@envoi-email"` (les scénarios tagués `@depend-de-<m>` attendent la story #m ; `@envoi-email` : voir plus bas) |
+| Tous les tests E2E | `npx bddgen && npx playwright test --grep-invert "@depend-de|@envoi-email"` |
+| Tests E2E qui envoient un vrai e-mail de connexion (avant un merge qui touche la connexion, ou la mise en ligne) | `npx bddgen --tags "@issue-5" && NODE_USE_ENV_PROXY=1 npx playwright test --grep @envoi-email` |
 | Tests E2E de la PWA (#8, build de production) | `npx bddgen -c playwright.pwa.config.ts && npx playwright test -c playwright.pwa.config.ts` |
 | Regénérer la bibliothèque | `python3 scripts/build_bibliotheque.py` |
 | Regénérer l'index des programmes | `python3 scripts/index_programmes.py` |
@@ -56,7 +57,7 @@ Règles de cohabitation :
 | Tests de caractérisation du legacy | `npx playwright test -c playwright.legacy.config.ts` |
 
 > ⚠️ Tous les agents se fient à ce tableau. Tenez-le à jour quand un script change.
-> Dans un conteneur cloud, Chromium est déjà installé : Playwright le trouve via `PLAYWRIGHT_BROWSERS_PATH`. Ne lancez jamais `playwright install`. Les steps E2E qui appellent Supabase doivent y être lancés avec `NODE_USE_ENV_PROXY=1` (sinon le processus Node de Playwright ne passe pas par le proxy HTTPS du conteneur) ; une exécution complète de #5 consomme environ 44 des 100 e-mails de connexion autorisés par heure sur le projet de développement.
+> Dans un conteneur cloud, Chromium est déjà installé : Playwright le trouve via `PLAYWRIGHT_BROWSERS_PATH`. Ne lancez jamais `playwright install`. Les steps E2E qui appellent Supabase doivent y être lancés avec `NODE_USE_ENV_PROXY=1` (sinon le processus Node de Playwright ne passe pas par le proxy HTTPS du conteneur) ; les scénarios tagués `@envoi-email` (18 cas de #5, plus quelques-uns de #10, #11 et #13) consomment environ 44 des 100 e-mails de connexion autorisés par heure sur le projet de développement : ils sont exclus des exécutions courantes.
 > Le hook `.claude/hooks/session-start.sh` installe Deno, pytest et les dépendances npm (dont la CLI Supabase : `npx supabase …`) au démarrage de chaque session cloud.
 > `supabase start` a besoin de Docker, absent du conteneur cloud : les scénarios qui touchent Supabase tournent donc contre le projet de développement en ligne `savanturier-dev` (décision 0010, sur une branche suivante), et les migrations s'y appliquent par l'API de gestion.
 

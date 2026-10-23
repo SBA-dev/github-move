@@ -74,7 +74,7 @@ Deno.test("une leçon du format JSON est lue avec son identité, son niveau et s
 
   assertEquals(lecon.id, "fr-cp-sons-ou-on-an");
   assertEquals(lecon.titre, "Les sons ou, on, an");
-  assertEquals(lecon.niveau, "CP");
+  assertEquals(lecon.niveau.valeur, "CP");
   assertEquals(lecon.ordre, 5);
 });
 

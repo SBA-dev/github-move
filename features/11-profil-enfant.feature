@@ -1,5 +1,5 @@
 # language: fr
-@issue-11 @wip
+@issue-11
 Fonctionnalité: Créer et modifier un profil enfant, et choisir qui joue
   En tant que parent
   Je veux créer le profil enfant de chacun de mes enfants, avec son prénom, son niveau et son univers
@@ -193,6 +193,7 @@ Fonctionnalité: Créer et modifier un profil enfant, et choisir qui joue
       Alors aucune question du contrôle parental n'est posée
       Et elle voit Lili dans le paysage de l'univers « Danse »
 
+    @envoi-email
     Scénario: Sans profil enfant, Noisette invite Paul à créer le premier dans l'espace parent
       Étant donné qu'aucun parent n'utilise l'adresse "paul@exemple.test"
       Et que Paul a demandé un lien de connexion pour "paul@exemple.test" sur la tablette

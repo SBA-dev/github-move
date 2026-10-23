@@ -2,11 +2,19 @@ import { type CSSProperties, Suspense, useCallback, useEffect, useState } from "
 import { MotionConfig } from "motion/react";
 import type { EtatDeLEspaceParent } from "@domain/famille";
 import { universDe } from "@domain/motivation";
-import { chargerProfilPrepare, PAGE_DEMONSTRATION_DISPONIBLE, PageDemonstration } from "./demonstration/disponibilite.ts";
-import type { ProfilPrepare } from "./demonstration/profil-prepare.ts";
+import { PAGE_DEMONSTRATION_DISPONIBLE, PageDemonstration } from "./demonstration/disponibilite.ts";
 import { EcranDeConnexion, useConnexion } from "./connexion/index.ts";
 import { EnTete } from "./en-tete/EnTete.tsx";
-import { ControleParental, EspaceParent, useAccesALEspaceParent } from "./famille/index.ts";
+import {
+  AccueilDeLEnfant,
+  ControleParental,
+  EspaceParent,
+  ProfilsDeLEspaceParent,
+  QuiJoue,
+  useAccesALEspaceParent,
+  useProfilEnCours,
+  useProfilsDuParent,
+} from "./famille/index.ts";
 import { AideEcranDAccueil } from "./installation/index.ts";
 import { type Lieu, useNavigation } from "./navigation.ts";
 import { EcranDeSeance, PageDeLaLecon } from "./seance/index.ts";
@@ -15,33 +23,19 @@ import { PALETTES, Paysage, PersonnageGuide } from "./univers/index.ts";
 
 type Habillage = CSSProperties & { readonly "--accent": string; readonly "--accent-fonce": string };
 
-function useProfilPrepare(actif: boolean) {
-  const [profil, setProfil] = useState<ProfilPrepare | undefined>();
-  const [charge, setCharge] = useState(false);
-  useEffect(() => {
-    if (!actif || !chargerProfilPrepare) return;
-    let annule = false;
-    chargerProfilPrepare().then((profilLu) => {
-      if (annule) return;
-      setProfil(profilLu);
-      setCharge(true);
-    });
-    return () => {
-      annule = true;
-    };
-  }, [actif]);
-  return { profil: actif ? profil : undefined, charge: actif && charge };
-}
-
 const ACCUEIL: Lieu = { ecran: "accueil" };
 
 function estPageDeLEnfant(lieu: Lieu): boolean {
-  return lieu.ecran === "demonstration" || lieu.ecran === "lecon" || lieu.ecran === "seance";
+  return lieu.ecran === "demonstration" || lieu.ecran === "jeu" || lieu.ecran === "lecon" || lieu.ecran === "seance";
 }
 
-// Tant que le profil enfant n'existe que préparé (page de démonstration du lot 1), les pages de l'enfant ne sont pas publiées.
+function demandeUnProfilEnCours(lieu: Lieu): boolean {
+  return lieu.ecran === "jeu" || lieu.ecran === "lecon" || lieu.ecran === "seance";
+}
+
+// La page de démonstration du lot 1 n'est publiée qu'en développement (ou avec VITE_PAGE_DEMONSTRATION=1).
 function lieuAffiche(demande: Lieu, espaceParent: EtatDeLEspaceParent["type"], connecte: boolean): Lieu {
-  if (estPageDeLEnfant(demande) && !PAGE_DEMONSTRATION_DISPONIBLE) return ACCUEIL;
+  if (demande.ecran === "demonstration" && !PAGE_DEMONSTRATION_DISPONIBLE) return ACCUEIL;
   if (demande.ecran === "espace-parent" && connecte && espaceParent === "ferme") return ACCUEIL;
   return demande;
 }
@@ -52,10 +46,8 @@ export function Application() {
   const connexion = useConnexion();
   const connecte = connexion.etat === "connecte";
   const lieuPossible = lieuAffiche(lieuDemande, acces.etat.type, connecte);
-  const { profil: profilEnCours, charge: profilCharge } = useProfilPrepare(
-    estPageDeLEnfant(lieuPossible) || lieuPossible.ecran === "espace-parent",
-  );
-  const enfantAbsent = profilCharge && !profilEnCours && (lieuPossible.ecran === "lecon" || lieuPossible.ecran === "seance");
+  const { profil: profilEnCours, charge: profilCharge, choisirQuiJoue, oublier: oublierLeProfilEnCours } = useProfilEnCours();
+  const enfantAbsent = profilCharge && !profilEnCours && demandeUnProfilEnCours(lieuPossible);
   const lieu = enfantAbsent ? ACCUEIL : lieuPossible;
   const ecran = lieu.ecran;
   const ecranDemande = lieuDemande.ecran;
@@ -64,6 +56,7 @@ export function Application() {
   const univers = universDe(profil?.univers);
   const palette = PALETTES[univers.cle];
   const voix = useVoix(universDe(profilEnCours?.univers).personnageGuide);
+  const profilsDuParent = useProfilsDuParent(connecte, ecran === "accueil" || ecran === "espace-parent");
   const { etat: etatEspaceParent, quitter: fermerEspaceParent, ouvrirApresLaConnexion } = acces;
   const ouvrirLEspaceParentConnecte = useCallback(() => {
     ouvrirApresLaConnexion();
@@ -87,10 +80,15 @@ export function Application() {
     try {
       await connexion.seDeconnecter.executer();
       fermerEspaceParent();
+      oublierLeProfilEnCours();
       remplacer("accueil");
     } catch {
       setDeconnexionEchouee(true);
     }
+  };
+  const entrerDansLEspaceParent = () => {
+    if (connecte) acces.demanderLEntree();
+    aller("espace-parent");
   };
   const habillage: Habillage = { "--accent": palette.principale, "--accent-fonce": palette.foncee };
 
@@ -106,10 +104,7 @@ export function Application() {
           onBasculerLeSon={voix.basculerLeSon}
           onAccueil={() => aller("accueil")}
           onRetour={revenir}
-          onEspaceParent={() => {
-            if (connecte) acces.demanderLEntree();
-            aller("espace-parent");
-          }}
+          onEspaceParent={entrerDansLEspaceParent}
         />
         <main className="ecran">
           <div role="status" className="voix-bloquee">
@@ -120,9 +115,33 @@ export function Application() {
             <>
               {connexion.etat === "deconnecte" && <EcranDeConnexion connexion={connexion} onConnecte={ouvrirLEspaceParentConnecte} />}
               <p>Réviser le programme du CP au CM2, en jouant.</p>
-              <PersonnageGuide univers={univers} humeur="content" />
+              {connecte
+                ? (
+                  <QuiJoue
+                    etat={profilsDuParent.etat}
+                    voix={voix}
+                    onChoisir={(profilChoisi) => {
+                      choisirQuiJoue.executer(profilChoisi);
+                      aller("jeu");
+                    }}
+                    onAjouterUnEnfant={entrerDansLEspaceParent}
+                  />
+                )
+                : <PersonnageGuide univers={univers} humeur="content" />}
               <AideEcranDAccueil />
             </>
+          )}
+          {lieu.ecran === "jeu" && profilCharge && profilEnCours && (
+            <AccueilDeLEnfant
+              profil={profilEnCours}
+              univers={univers}
+              voix={voix}
+              saluer={!viaRetour}
+              onChangerDEnfant={() => {
+                aller("accueil");
+                oublierLeProfilEnCours();
+              }}
+            />
           )}
           {surLaDemonstration && PageDemonstration && profilCharge && (
             <Suspense fallback={null}>
@@ -171,6 +190,7 @@ export function Application() {
               onSeDeconnecter={seDeconnecter}
               deconnexionEchouee={deconnexionEchouee}
             >
+              <ProfilsDeLEspaceParent etat={profilsDuParent.etat} onModifie={profilsDuParent.relire} />
               <ChoixDeLaVoix voix={voix} />
             </EspaceParent>
           )}

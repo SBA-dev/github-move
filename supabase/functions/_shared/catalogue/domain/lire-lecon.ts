@@ -1,15 +1,9 @@
-import { LeconMalFormee } from "./erreurs.ts";
+import { LeconMalFormee, NiveauInconnu } from "./erreurs.ts";
 import { lireExercices } from "./exercice.ts";
-import {
-  type EtapeDeLecon,
-  type Lecon,
-  type NiveauDeLecon,
-  NIVEAUX,
-  type PassageDuGuideFondamental,
-  type ProgrammeCite,
-} from "./lecon.ts";
+import { type EtapeDeLecon, type Lecon, type PassageDuGuideFondamental, type ProgrammeCite } from "./lecon.ts";
 import { enObjet, liste, listeDeTextes, nombreRequis, texteFacultatif, texteRequis } from "./lecture.ts";
 import { estUneMatiere, matiereDeCode } from "./matiere.ts";
+import { Niveau } from "./niveau.ts";
 
 export function lireLecon(brut: unknown): Lecon {
   const lecon = enObjet(brut, "la leçon");
@@ -29,13 +23,13 @@ export function lireLecon(brut: unknown): Lecon {
   });
 }
 
-function estUnNiveau(valeur: unknown): valeur is NiveauDeLecon {
-  return NIVEAUX.some((niveau) => niveau === valeur);
-}
-
-function lireNiveau(valeur: unknown): NiveauDeLecon {
-  if (!estUnNiveau(valeur)) throw new LeconMalFormee("le niveau est inconnu");
-  return valeur;
+function lireNiveau(valeur: unknown): Niveau {
+  try {
+    return Niveau.de(texteRequis(valeur, "le niveau"));
+  } catch (erreur) {
+    if (erreur instanceof NiveauInconnu) throw new LeconMalFormee("le niveau est inconnu");
+    throw erreur;
+  }
 }
 
 function lireProgramme(brut: unknown): ProgrammeCite {
