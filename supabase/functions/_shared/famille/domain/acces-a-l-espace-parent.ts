@@ -26,6 +26,7 @@ export class AccesALEspaceParent {
   }
 
   demanderLEntree(): void {
+    if (this.situation.type !== "ferme") return;
     this.situation = { type: "questionPosee", question: QuestionDuControleParental.tirer(this.hasard) };
   }
 
