@@ -63,3 +63,9 @@ Deno.test("l'accueil de la fluence donne la durée et rappelle le record", () =>
     "Calcul rapide ! Tu as 45 secondes pour réussir le plus de calculs possible. Ton record est de 12. Prêt ?",
   );
 });
+
+Deno.test("l'accueil de la fluence sans record ne parle pas de record", () => {
+  const texte = accueilDeLaFluence({ duree: 45 });
+
+  assertEquals(texte, "Calcul rapide ! Tu as 45 secondes pour réussir le plus de calculs possible. Prêt ?");
+});
