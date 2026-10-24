@@ -73,6 +73,8 @@ Une issue fermée est **livrée**.
 
 ## Étape 0 : Lire le graphe
 
+0. **Prérequis du dépôt**, une fois pour toutes : le réglage GitHub « Automatically delete head branches » (Settings → General → Pull Requests) doit être activé, pour que les branches des stories soient supprimées au merge. S'il ne l'est pas (une branche de story mergée encore présente), demande à l'humain de l'activer.
+
 1. Lis `docs/graphe/stories.md` : nœuds, arêtes, ressources, chemin critique, questions encore ouvertes.
 2. Rafraîchis l'état depuis GitHub (`gh` ou `mcp__github__list_issues` / `mcp__github__list_pull_requests`) : issues fermées, PR ouvertes, labels `graphe:*`, issue de coordination.
 3. Si une issue ouverte du périmètre manque au graphe, ou si une issue annonce une dépendance absente du graphe (« dépend de #n », tag `@depend-de-<n>` dans `features/`), **propose** la correction du graphe à l'humain avant de lancer quoi que ce soit. Tu n'inventes jamais une dépendance. Une dépendance marquée `?` bloque tant que l'humain ne l'a pas tranchée.
@@ -190,7 +192,7 @@ Les merges passent **un par un**, par le verrou `merge` :
    - libères le verrou `merge` ;
    - annonces `[Responsable] MAIN A BOUGÉ : #<n> mergée` et envoies `RELIS` à **toutes les équipes encore en cours** ;
    - recalcules les stories prêtes et reviens à l'Étape 1 pour combler la place libérée (nouveau plan présenté à l'humain, sauf s'il a autorisé l'enchaînement automatique).
-4. Vérifie que le commentaire `MERGÉE` annonce la branche supprimée (`git ls-remote origin refs/heads/feature/<n>-<slug>` ne renvoie rien). C'est l'équipe qui la supprime, après le merge : seule sa session peut pousser sur cette branche. Si la suppression a échoué, demande à l'équipe de réessayer ; en dernier recours, donne à l'humain le lien pour la supprimer. Puis relève la consommation finale de la session (`get_session`, champ `usage`) et archive-la (`archive_session`) : jamais avant que la branche soit supprimée.
+4. Vérifie que la branche de la story a disparu (`git ls-remote origin refs/heads/feature/<n>-<slug>` ne renvoie rien) : GitHub la supprime au merge grâce au réglage « Automatically delete head branches ». Aucune session ne peut la supprimer elle-même (le proxy git refuse les suppressions). Si elle est encore là, le réglage est désactivé : rappelle à l'humain de l'activer et donne-lui le lien de la branche. Puis relève la consommation finale de la session (`get_session`, champ `usage`) et archive-la (`archive_session`).
 
 ## Étape 5 : Fin de vague
 

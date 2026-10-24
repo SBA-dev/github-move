@@ -114,8 +114,8 @@ Tu merges **toi-même**, à quatre conditions :
 Alors :
 1. merge la PR vers `main` avec un merge commit (`gh pr merge --merge`, ou `mcp__github__merge_pull_request` avec `merge_method: merge`) ;
 2. vérifie que la PR est bien **mergée** et que l'issue est fermée ;
-3. **supprime ta branche**, seulement maintenant : `git push origin --delete feature/<n>-<slug>`, puis vérifie avec `git ls-remote origin refs/heads/feature/<n>-<slug>` (aucune ligne = supprimée). Toi seule peux le faire : le proxy git refuse cette branche aux autres sessions. Ne supprime jamais une branche avant que sa PR soit mergée, ni une autre branche que la tienne ;
-4. écris `MERGÉE` avec le lien du merge commit et le résultat de la suppression (« branche supprimée », ou l'erreur exacte si elle a échoué) ;
+3. **vérifie que ta branche a été supprimée** : `git ls-remote origin refs/heads/feature/<n>-<slug>` ne doit rien renvoyer. C'est GitHub qui la supprime au merge (réglage « Automatically delete head branches » du dépôt). Ne tente pas de la supprimer toi-même : le proxy git des sessions refuse toute suppression de branche (essai du 2026-10-24) ;
+4. écris `MERGÉE` avec le lien du merge commit et l'état de la branche (« branche supprimée par GitHub », ou « branche encore présente ») ;
 5. `LIBÈRE merge`, et `LIBÈRE base` si tu l'avais.
 
 Si une condition manque, tu ne merges pas : `LIBÈRE merge` et explique pourquoi.
