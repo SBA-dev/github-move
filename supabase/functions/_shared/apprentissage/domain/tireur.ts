@@ -1,7 +1,7 @@
 import { ChoixProposes } from "./choix-proposes.ts";
 import { ClavierPropose } from "./clavier-propose.ts";
 import type { MotAEcrire } from "./mot-a-ecrire.ts";
-import type { ProfilDeSeance } from "./profil-de-seance.ts";
+import { PROFIL_DE_SEANCE_PAR_DEFAUT, type ProfilDeSeance } from "./profil-de-seance.ts";
 import { TirageInvalide, TirageManquant } from "./erreurs.ts";
 import type { Hasard } from "./hasard.ts";
 import { melanger } from "./melange.ts";
@@ -12,16 +12,16 @@ export interface Tireur {
   choix(choix: readonly string[], bonneReponse: string): ChoixProposes;
   trou(motAttendu: string, candidats: readonly string[]): ChoixProposes;
   etiquettesMelangees(etiquettes: readonly string[]): string[];
-  clavier(profil: ProfilDeSeance, mot: MotAEcrire): ClavierPropose;
+  clavier(mot: MotAEcrire): ClavierPropose;
 }
 
-export function tireurAuHasard(hasard: Hasard): Tireur {
+export function tireurAuHasard(hasard: Hasard, profil: ProfilDeSeance = PROFIL_DE_SEANCE_PAR_DEFAUT): Tireur {
   return {
     choix: (choix, bonneReponse) => ChoixProposes.proposer(choix, bonneReponse, hasard),
     trou: (motAttendu, candidats) =>
       ChoixProposes.proposer([motAttendu, ...motsEnPlus(candidats, hasard)], motAttendu, hasard),
     etiquettesMelangees: (etiquettes) => melanger(etiquettes, hasard),
-    clavier: (profil, mot) => ClavierPropose.choisir(profil.clavierDesDictees, profil.niveau, mot, hasard),
+    clavier: (mot) => ClavierPropose.choisir(profil.clavierDesDictees, profil.niveau, mot, hasard),
   };
 }
 
@@ -43,7 +43,7 @@ export function tireurSelonLesTirages(tirages: Iterator<readonly string[]>): Tir
       if (!memesEtiquettes(etiquettes, tirage)) throw new TirageInvalide();
       return [...tirage];
     },
-    clavier: (_profil, mot) => ClavierPropose.depuisTirage(mot, prochainTirage()),
+    clavier: (mot) => ClavierPropose.depuisTirage(mot, prochainTirage()),
   };
 }
 

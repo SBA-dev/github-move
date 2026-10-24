@@ -8,7 +8,6 @@ import type { QuestionSuivie } from "./question-suivie.ts";
 import type { AideDonnee } from "./question-jouee.ts";
 import type { CorrectionDuMot } from "./mot-a-ecrire.ts";
 import { MotAEcrire } from "./mot-a-ecrire.ts";
-import type { ProfilDeSeance } from "./profil-de-seance.ts";
 import { QuestionDeDictee } from "./question-de-dictee.ts";
 import type { Reponse, ResultatDeReponse } from "./reponse.ts";
 import type { Tireur } from "./tireur.ts";
@@ -45,12 +44,12 @@ export class ExerciceJoue {
     private readonly contenu: Contenu = {},
   ) {}
 
-  static depuis(position: number, exercice: Exercice, tireur: Tireur, profil: ProfilDeSeance): ExerciceJoue {
+  static depuis(position: number, exercice: Exercice, tireur: Tireur): ExerciceJoue {
     return new ExerciceJoue(
       position,
       exercice.titre,
       nombreDeQuestions(exercice),
-      contenuDe(exercice, tireur, profil),
+      contenuDe(exercice, tireur),
     );
   }
 
@@ -209,7 +208,7 @@ export class ExerciceJoue {
   }
 }
 
-function contenuDe(exercice: Exercice, tireur: Tireur, profil: ProfilDeSeance): Contenu {
+function contenuDe(exercice: Exercice, tireur: Tireur): Contenu {
   switch (exercice.type) {
     case "classer": {
       const etiquettes = tireur.etiquettesMelangees(exercice.items.map((item) => item.texte));
@@ -224,7 +223,7 @@ function contenuDe(exercice: Exercice, tireur: Tireur, profil: ProfilDeSeance): 
     case "dictee":
       return {
         questionsDeDictee: exercice.mots.map((mot) =>
-          new QuestionDeDictee(mot, exercice.consigne, tireur.clavier(profil, MotAEcrire.de(mot.mot)))
+          new QuestionDeDictee(mot, exercice.consigne, tireur.clavier(MotAEcrire.de(mot.mot)))
         ),
       };
     default:

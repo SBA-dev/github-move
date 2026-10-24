@@ -134,6 +134,18 @@ export class QuestionDeDictee implements QuestionSuivie {
     return disponibles;
   }
 
+  /** Les rangées du clavier, chaque touche disant si elle est encore proposée : une lettre déjà posée ne l'est plus. */
+  rangeesDuClavier(): { lettre: string; disponible: boolean }[][] {
+    const restantes = this.touchesDisponibles();
+    return this.clavierPropose.rangees.map((rangee) =>
+      rangee.map((lettre) => {
+        const rang = restantes.indexOf(lettre);
+        if (rang !== -1) restantes.splice(rang, 1);
+        return { lettre, disponible: rang !== -1 };
+      })
+    );
+  }
+
   tirage(): string[] {
     return this.clavierPropose.tirage();
   }

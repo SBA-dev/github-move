@@ -77,8 +77,7 @@ export class Seance {
       enfant,
       lecon,
       choix,
-      tireurAuHasard(hasard),
-      profil,
+      tireurAuHasard(hasard, profil),
     );
   }
 
@@ -93,7 +92,6 @@ export class Seance {
       lecon,
       envoi.choix,
       tireurSelonLesTirages(tirages),
-      PROFIL_DE_SEANCE_PAR_DEFAUT,
     );
     if (!tirages.next().done) throw new TirageEnTrop();
     return seance;
@@ -105,13 +103,12 @@ export class Seance {
     lecon: Lecon,
     choix: ChoixDeSeance,
     tireur: Tireur,
-    profil: ProfilDeSeance,
   ): Seance {
     const plan = PlanDeSeance.pour(lecon, choix);
     const exercices = lecon.exercices
       .map((exercice, position) => ({ exercice, position }))
       .filter(({ position }) => plan.positionsDesExercices.includes(position))
-      .map(({ exercice, position }) => ExerciceJoue.depuis(position, exercice, tireur, profil));
+      .map(({ exercice, position }) => ExerciceJoue.depuis(position, exercice, tireur));
     return new Seance(id, enfant, lecon.id, choix, plan, exercices);
   }
 
