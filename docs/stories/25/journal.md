@@ -86,3 +86,5 @@ En attente d'une réponse : leçons réussies d'une classe au-dessus (N1, N7, N9
   Dette notée (non demandée par la story) : un niveau changé sur un autre appareil n'est vu qu'au prochain
   « Qui joue ? » ; si besoin, à traiter à une seule source (`profilEnCours` rafraîchi), dans une autre story.
   `main` a137f42 (PR #71, outillage) déjà intégré.
+- 17:50 UTC : MAIN A BOUGÉ : #20 mergée (9115411). À intégrer après le cycle E2E en cours (conflit probable sur la
+  condition `@issue-20`/`@issue-25` du step « profil enfant préparé ») ; `SUFFIXE_E2E` disponible ensuite.
