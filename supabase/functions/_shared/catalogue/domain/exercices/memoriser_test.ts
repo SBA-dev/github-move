@@ -1,6 +1,7 @@
 import { assertEquals, assertThrows } from "@std/assert";
 import { LeconMalFormee } from "../erreurs.ts";
 import { lireLecon } from "../lire-lecon.ts";
+import { estUneChanson } from "./memoriser.ts";
 
 function leconAvec(exercice: unknown): Record<string, unknown> {
   return {
@@ -76,4 +77,24 @@ Deno.test("un exercice « memoriser » de 21 vers rend la leçon mal formée", (
   const exercice = { ...auClairDeLaLune, vers: versNumerotes(21) };
 
   assertThrows(() => lireLecon(leconAvec(exercice)), LeconMalFormee);
+});
+
+Deno.test("un exercice « memoriser » est une chanson quand « chanson » ou « comptine » figure dans son titre ou son auteur, sans tenir compte des majuscules", () => {
+  const chansons = [
+    auClairDeLaLune,
+    { type: "memoriser", titre: "Comptine du loup", vers: ["Un vers,", "Deux vers."] },
+    { type: "memoriser", titre: "Le loup", auteur: "COMPTINE traditionnelle", vers: ["Un vers,", "Deux vers."] },
+  ];
+  const poemes = [
+    {
+      type: "memoriser",
+      titre: "Le début de la fable",
+      auteur: "Jean de La Fontaine",
+      vers: ["Un vers,", "Deux vers."],
+    },
+    { type: "memoriser", vers: ["Un vers,", "Deux vers."] },
+  ];
+
+  assertEquals(chansons.map((c) => estUneChanson(exerciceMemoriser(c))), [true, true, true]);
+  assertEquals(poemes.map((p) => estUneChanson(exerciceMemoriser(p))), [false, false]);
 });
