@@ -30,3 +30,7 @@ Deux constats :
 - `terminer-la-seance` n'a pas de port de lecture du profil de séance pour la dictée.
 - Le domaine expose la vérification d'un tirage de clavier sous ses deux formes, utilisée par le cas d'usage.
 - Une séance reste acceptée si le réglage ou le niveau change entre le jeu et la synchronisation.
+
+## Précision
+
+Pour la forme « clavier complet », le point 2 se lit ainsi : le tirage transmis est **vide**. Le domaine reconstruit alors lui-même le clavier complet, qui ne dépend d'aucun tirage ; un tirage non vide est celui des lettres du mot. Le code (`ClavierPropose.depuisTirage`) fait foi.
