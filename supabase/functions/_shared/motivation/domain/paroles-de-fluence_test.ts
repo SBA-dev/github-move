@@ -1,5 +1,5 @@
 import { assertEquals } from "@std/assert";
-import { parolesDeFinDeFluence } from "./paroles-de-fluence.ts";
+import { accueilDeLaFluence, parolesDeFinDeFluence } from "./paroles-de-fluence.ts";
 
 Deno.test("la fin d'une fluence annonce « 1 calcul réussi ! » au singulier", () => {
   const texte = parolesDeFinDeFluence({ score: 1, issue: "recordInchange", record: 3 });
@@ -53,4 +53,13 @@ Deno.test("l'issue « aucun record » ne dit que l'encouragement, quel que soit 
   const texte = parolesDeFinDeFluence({ score: 2, issue: "aucunRecord" });
 
   assertEquals(texte, "Pas encore de calcul réussi : on réessaie quand tu veux !");
+});
+
+Deno.test("l'accueil de la fluence donne la durée et rappelle le record", () => {
+  const texte = accueilDeLaFluence({ duree: 45, record: 12 });
+
+  assertEquals(
+    texte,
+    "Calcul rapide ! Tu as 45 secondes pour réussir le plus de calculs possible. Ton record est de 12. Prêt ?",
+  );
 });
