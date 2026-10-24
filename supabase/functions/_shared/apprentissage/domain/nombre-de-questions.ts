@@ -1,8 +1,7 @@
-import { type Exercice, type ExerciceGenerique } from "../../catalogue/domain/index.ts";
+import { type Exercice, type ExerciceAddition } from "../../catalogue/domain/index.ts";
 
 const QUESTIONS_PAR_DEFAUT_D_UN_CALCUL = 5;
 const OPERATIONS_PAR_DEFAUT_D_UNE_ADDITION = 3;
-const ETAPES_PAR_DEFAUT_D_UNE_ADDITION = 2;
 const QUESTIONS_PAR_VERS = 2;
 
 export function nombreDeQuestions(exercice: Exercice): number {
@@ -30,7 +29,7 @@ export function nombreDeQuestions(exercice: Exercice): number {
     case "memoriser":
       return taille(exercice.vers) * QUESTIONS_PAR_VERS;
     case "addition":
-      return nombreDOperationsPosees(exercice) * (exercice.etapes?.length ?? ETAPES_PAR_DEFAUT_D_UNE_ADDITION);
+      return nombreDOperationsPosees(exercice) * (exercice.etapes.length);
   }
 }
 
@@ -38,11 +37,6 @@ function taille(liste: readonly unknown[] | undefined): number {
   return liste?.length ?? 0;
 }
 
-function combienDemande(exercice: ExerciceGenerique): number | undefined {
-  const combien = exercice.generateur?.combien;
-  return typeof combien === "number" ? combien : undefined;
-}
-
-function nombreDOperationsPosees(exercice: ExerciceGenerique): number {
-  return exercice.operations?.length ?? combienDemande(exercice) ?? OPERATIONS_PAR_DEFAUT_D_UNE_ADDITION;
+function nombreDOperationsPosees(exercice: ExerciceAddition): number {
+  return exercice.operations?.length ?? exercice.generateur?.combien ?? OPERATIONS_PAR_DEFAUT_D_UNE_ADDITION;
 }
