@@ -42,7 +42,10 @@ function exerciceDeBulles(exercice: Exercice): ExerciceBulles {
 }
 
 function exerciceGenerique(exercice: Exercice): ExerciceGenerique {
-  if (exercice.type === "bulles" || exercice.type === "lecture" || exercice.type === "ecoute") {
+  if (
+    exercice.type === "bulles" || exercice.type === "lecture" || exercice.type === "ecoute" ||
+    exercice.type === "classer" || exercice.type === "ordre" || exercice.type === "trous"
+  ) {
     throw new Error(`« ${exercice.type} » n'est pas un exercice générique`);
   }
   return exercice;
@@ -69,7 +72,7 @@ const unExerciceDeChaqueType: Record<string, Record<string, unknown>> = {
   classer: {
     type: "classer",
     consigne: "Range.",
-    groupes: [{ id: "1", nom: "ou" }],
+    groupes: [{ id: "1", nom: "ou" }, { id: "2", nom: "on" }],
     items: [{ texte: "loup", groupe: "1" }],
   },
   dictee: { type: "dictee", mots: [{ mot: "loup" }] },
@@ -114,8 +117,10 @@ Deno.test("un exercice « classer » lu garde sa consigne et ses 9 items", () =>
 
   assertEquals(lecon.exercices[0].type, "classer");
   assertEquals(lecon.exercices[0].titre, "Les maisons des sons");
-  assertEquals(exerciceGenerique(lecon.exercices[0]).consigne, "Range chaque mot dans la maison de son son.");
-  assertEquals(exerciceGenerique(lecon.exercices[0]).items?.length, 9);
+  const exercice = lecon.exercices[0];
+  if (exercice.type !== "classer") throw new Error("exercice « classer » attendu");
+  assertEquals(exercice.consigne, "Range chaque mot dans la maison de son son.");
+  assertEquals(exercice.items.length, 9);
 });
 
 Deno.test("les exercices d'une leçon gardent l'ordre du JSON", () => {
@@ -235,18 +240,14 @@ Deno.test("un exercice « fluence » garde sa durée et n'a ni question ni item"
 
 Deno.test("le contenu d'un exercice des autres types est gardé tel quel", () => {
   const lecon = lireLecon(leconAvec(
-    unExerciceDeChaqueType.ordre,
-    unExerciceDeChaqueType.trous,
     unExerciceDeChaqueType.conjugaison,
     unExerciceDeChaqueType.dictee,
     unExerciceDeChaqueType.memoriser,
   ));
 
-  assertEquals(exerciceGenerique(lecon.exercices[0]).elements, ["un", "deux"]);
-  assertEquals(exerciceGenerique(lecon.exercices[1]).texte, "Au clair de la [lune]");
-  assertEquals(exerciceGenerique(lecon.exercices[2]).formes?.length, 1);
-  assertEquals(exerciceGenerique(lecon.exercices[3]).mots?.length, 1);
-  assertEquals(exerciceGenerique(lecon.exercices[4]).vers, ["Un vers", "Deux vers"]);
+  assertEquals(exerciceGenerique(lecon.exercices[0]).formes?.length, 1);
+  assertEquals(exerciceGenerique(lecon.exercices[1]).mots?.length, 1);
+  assertEquals(exerciceGenerique(lecon.exercices[2]).vers, ["Un vers", "Deux vers"]);
 });
 
 Deno.test("les exercices d'une leçon lue sont en lecture seule", () => {
