@@ -214,6 +214,19 @@ Deno.test("« Je ne sais pas » ne montre jamais le mot en entier : la dernière
   assertEquals(seance.estFinie(), false);
 });
 
+Deno.test("« Je ne sais pas » à une seule case restante fait briller la bonne touche, que l'enfant tape lui-même", () => {
+  const seance = seanceDeDictee(leconDeDicteeDuChat());
+  ecrire(seance, "cha");
+
+  const aide = seance.direJeNeSaisPas();
+
+  assertEquals({ bonneReponse: aide.bonneReponse, maniere: aide.maniere }, { bonneReponse: "t", maniere: "briller" });
+  assertEquals(affichageDesCases(questionEnCours(seance)), "cha_");
+  assertEquals(seance.erreurs(), 1);
+  assertEquals(seance.estFinie(), false);
+  assertEquals(seance.taper("t"), "juste");
+});
+
 Deno.test("« Je ne sais pas » compte une erreur, et la question reste à réussir", () => {
   const seance = seanceDeDictee(leconDeDicteeDuChat());
 
