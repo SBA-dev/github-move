@@ -6,6 +6,11 @@ import { LeconsDuCatalogueEnMemoire } from "../test_utils/lecons-du-catalogue-en
 import { NiveauxDesProfilsEnMemoire } from "../test_utils/niveaux-des-profils-en-memoire.ts";
 import { RattachementsEnMemoire } from "../test_utils/rattachements-en-memoire.ts";
 import { ResultatsDesTestsDeDepartEnMemoire } from "../test_utils/resultats-des-tests-de-depart-en-memoire.ts";
+import type {
+  IssueDeLEnregistrementDuTestDeDepart,
+  ResultatsDesTestsDeDepart,
+} from "./ports/resultats-des-tests-de-depart.ts";
+import type { ResultatDuTestDeDepart } from "../domain/resultat-du-test-de-depart.ts";
 import { ParentNonRattache, TestDeDepartIncoherent } from "../domain/erreurs.ts";
 import { planDuTestDeDepart } from "../domain/plan-du-test-de-depart.ts";
 import { Reponse } from "../domain/reponse.ts";
@@ -118,4 +123,52 @@ Deno.test("le même test de départ envoyé deux fois n'est compté qu'une fois 
 
   assertEquals(faits, []);
   assertEquals(await resultats.de("profil-lea"), avant);
+});
+
+class ResultatsLusAvantQueLAutreEcrive implements ResultatsDesTestsDeDepart {
+  private lectures = 0;
+  private readonly lesDeuxOntLu: Promise<void>;
+  private libererLesLectures: () => void = () => {};
+
+  constructor(private readonly resultats: ResultatsDesTestsDeDepart) {
+    this.lesDeuxOntLu = new Promise((resolve) => this.libererLesLectures = resolve);
+  }
+
+  async de(enfant: string): Promise<ResultatDuTestDeDepart | null> {
+    const resultat = await this.resultats.de(enfant);
+    if (++this.lectures === 2) this.libererLesLectures();
+    await this.lesDeuxOntLu;
+    return resultat;
+  }
+
+  enregistrer(resultat: ResultatDuTestDeDepart, test: string): Promise<IssueDeLEnregistrementDuTestDeDepart> {
+    return this.resultats.enregistrer(resultat, test);
+  }
+}
+
+Deno.test("deux tests du même enfant lus avant que l'autre n'écrive gardent les leçons des deux et le faitLe le plus récent", async () => {
+  const resultats = new ResultatsDesTestsDeDepartEnMemoire();
+  const terminer = new TerminerLeTestDeDepart(
+    new RattachementsEnMemoire(["parent-paul", "profil-lea"]),
+    new LeconsDuCatalogueEnMemoire(...lecons),
+    new NiveauxDesProfilsEnMemoire(["profil-lea", CE1]),
+    new ResultatsLusAvantQueLAutreEcrive(resultats),
+  );
+  const seulementLaPremiere = envoi([bonne, mauvaise, bonne, mauvaise, bonne], {
+    test: "test-1",
+    termineeLe: new Date("2026-10-24T11:00:00Z"),
+  });
+  const laSecondeEtLaTroisieme = envoi([mauvaise, bonne, bonne, bonne], {
+    test: "test-2",
+    termineeLe: new Date("2026-10-24T10:00:00Z"),
+  });
+
+  await Promise.all([
+    terminer.executer({ parent: "parent-paul", test: seulementLaPremiere }),
+    terminer.executer({ parent: "parent-paul", test: laSecondeEtLaTroisieme }),
+  ]);
+
+  const resultat = await resultats.de("profil-lea");
+  assertEquals([...resultat?.leconsReussies ?? []].sort(), lecons.map(({ id }) => id));
+  assertEquals(resultat?.faitLe, new Date("2026-10-24T11:00:00Z"));
 });

@@ -12,6 +12,18 @@ function copie(resultat: ResultatDuTestDeDepart): ResultatDuTestDeDepart {
   });
 }
 
+function reunion(
+  existant: ResultatDuTestDeDepart | undefined,
+  resultat: ResultatDuTestDeDepart,
+): ResultatDuTestDeDepart {
+  if (existant === undefined) return copie(resultat);
+  return ResultatDuTestDeDepart.reconstituer({
+    enfant: resultat.enfant,
+    faitLe: existant.faitLe > resultat.faitLe ? existant.faitLe : resultat.faitLe,
+    leconsReussies: new Set([...existant.leconsReussies, ...resultat.leconsReussies]),
+  });
+}
+
 export class ResultatsDesTestsDeDepartEnMemoire implements ResultatsDesTestsDeDepart {
   private readonly resultats = new Map<string, ResultatDuTestDeDepart>();
   private readonly testsEnregistres = new Set<string>();
@@ -24,7 +36,7 @@ export class ResultatsDesTestsDeDepartEnMemoire implements ResultatsDesTestsDeDe
   enregistrer(resultat: ResultatDuTestDeDepart, test: string): Promise<IssueDeLEnregistrementDuTestDeDepart> {
     if (this.testsEnregistres.has(test)) return Promise.resolve("dejaEnregistre");
     this.testsEnregistres.add(test);
-    this.resultats.set(resultat.enfant, copie(resultat));
+    this.resultats.set(resultat.enfant, reunion(this.resultats.get(resultat.enfant), resultat));
     return Promise.resolve("enregistre");
   }
 }

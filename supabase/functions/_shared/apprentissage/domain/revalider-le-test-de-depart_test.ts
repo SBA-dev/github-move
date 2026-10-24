@@ -276,3 +276,101 @@ Deno.test("un tirage non consommé dans le groupe d'une question rend le test in
 
   assertIncoherent(modifie(envoi, { tirages: tiragesEnTrop }), lecons);
 });
+
+function laissantLaLeconRetiree(lecons: Lecon[], retiree: number) {
+  return lecons.filter((_, rang) => rang !== retiree);
+}
+
+Deno.test("une leçon retirée entre deux questions fausses compte comme fausse : le test arrêté à 3 questions fausses de suite reste revalidé", () => {
+  const lecons = desLecons(5);
+  const { envoi } = envoiJoue(lecons, [mauvaise, bonne, mauvaise, bonne, mauvaise, bonne]);
+
+  const revalide = revaliderLeTestDeDepart(envoi, laissantLaLeconRetiree(lecons, 1), CE1);
+
+  assertEquals(revalide.arrete, true);
+  assertEquals(revalide.questions, [
+    { lecon: lecons[0].id, juste: false },
+    { lecon: lecons[2].id, juste: false },
+  ]);
+});
+
+Deno.test("une leçon retirée répondue juste interrompt la série des questions fausses de suite : le test n'est pas arrêté", () => {
+  const lecons = desLecons(5);
+  const { envoi } = envoiJoue(lecons, [mauvaise, bonne, mauvaise, bonne, bonne, mauvaise, bonne, mauvaise, bonne]);
+
+  const revalide = revaliderLeTestDeDepart(envoi, laissantLaLeconRetiree(lecons, 2), CE1);
+
+  assertEquals(revalide.arrete, false);
+  assertEquals(revalide.questions.length, 4);
+});
+
+function uneLeconAvecUneDictee(): Lecon {
+  return lireLecon({
+    id: "francais-CE1-1",
+    matiere: "francais",
+    niveau: "CE1",
+    titre: "Leçon 1",
+    ordre: 1,
+    programme: { section: "section", citation: "citation" },
+    exercices: [
+      {
+        type: "bulles",
+        questions: [{ question: "Question 1 ?", choix: ["bonne", "mauvaise"], reponse: "bonne" }],
+      },
+      { type: "dictee", titre: "Dictée", mots: [{ mot: "chat" }] },
+    ],
+  });
+}
+
+function avecLaPremiereQuestion(
+  envoi: TestDeDepartTermineAEnregistrer,
+  changements: Partial<ReturnType<typeof question>>,
+) {
+  return modifie(envoi, { questions: [{ ...envoi.questions[0], ...changements }, ...envoi.questions.slice(1)] });
+}
+
+Deno.test("un plan qui vise un exercice exclu du test de départ (dictée) rend le test incohérent", () => {
+  const lecons = [uneLeconAvecUneDictee(), uneLecon(1), uneLecon(2)];
+  const { envoi } = envoiJoue(lecons, [bonne, bonne, bonne]);
+
+  assertIncoherent(avecLaPremiereQuestion(envoi, { exercice: 1 }), lecons);
+});
+
+Deno.test("un indice d'exercice hors limites rend le test incohérent", () => {
+  const { lecons, envoi } = envoiDeTroisQuestions();
+
+  assertIncoherent(avecLaPremiereQuestion(envoi, { exercice: 7 }), lecons);
+});
+
+Deno.test("un rang de question hors limites rend le test incohérent", () => {
+  const { lecons, envoi } = envoiDeTroisQuestions();
+
+  assertIncoherent(avecLaPremiereQuestion(envoi, { rang: 5 }), lecons);
+});
+
+Deno.test("un groupe de tirages vide pour une question qui doit être tirée rend le test incohérent", () => {
+  const lecons = [leconDeCalculFixe(0), uneLecon(1), uneLecon(2)];
+  const { envoi } = envoiJoue(lecons, [Reponse.nombre(8), bonne, bonne]);
+
+  assertIncoherent(modifie(envoi, { tirages: [[], ...envoi.tirages.slice(1)] }), lecons);
+});
+
+Deno.test("un tirage déplacé dans le groupe de la question précédente rend le test incohérent", () => {
+  const lecons = [uneLecon(0), leconDeCalculFixe(1), uneLecon(2)];
+  const { envoi } = envoiJoue(lecons, [bonne, Reponse.nombre(8), bonne]);
+  const [premier, deuxieme, ...suite] = envoi.tirages;
+
+  assertIncoherent(modifie(envoi, { tirages: [[...premier, ...deuxieme], [], ...suite] }), lecons);
+});
+
+Deno.test("un envoi sans aucune question rend le test incohérent", () => {
+  const { lecons, envoi } = envoiDeTroisQuestions();
+
+  assertIncoherent(modifie(envoi, { questions: [], tirages: [], reponses: [] }), lecons);
+});
+
+Deno.test("un envoi dont toutes les leçons ont été retirées de la bibliothèque rend le test incohérent", () => {
+  const { envoi } = envoiDeTroisQuestions();
+
+  assertIncoherent(envoi, []);
+});
