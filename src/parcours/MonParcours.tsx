@@ -1,8 +1,9 @@
 import { type KeyboardEvent, useEffect, useRef } from "react";
 import { matieresDuParcours, type Parcours, parcoursDeLaMatiere } from "@domain/apprentissage";
-import { type CodeDeMatiere, type Matiere, Niveau } from "@domain/catalogue";
+import type { CodeDeMatiere, Matiere, Niveau } from "@domain/catalogue";
 import type { ProfilEnCours } from "@domain/famille";
 import { annonceDeLaLecon, AUCUNE_LECON_POUR_LA_CLASSE, compteurDuParcours, libelleDeLEtat, libelleDeLOnglet } from "./textes-du-parcours.ts";
+import { niveauDuProfil } from "./niveau-du-profil.ts";
 import { type LecturesDuParcours, useLecturesDuParcours } from "./useEntreesDuParcours.ts";
 
 type Props = {
@@ -12,14 +13,6 @@ type Props = {
   readonly onChoisirLaMatiere: (matiere: CodeDeMatiere) => void;
   readonly onOuvrirLaLecon: (leconId: string) => void;
 };
-
-function niveauDuProfil(brut: string): Niveau | undefined {
-  try {
-    return Niveau.de(brut);
-  } catch {
-    return undefined;
-  }
-}
 
 function matiereOuverte(matieres: readonly Matiere[], choisie: CodeDeMatiere | undefined): Matiere | undefined {
   const parCode = (code: CodeDeMatiere) => matieres.find((matiere) => matiere.code === code);

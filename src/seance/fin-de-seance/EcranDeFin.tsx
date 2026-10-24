@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { leconSuivanteDansLeParcours, type Seance } from "@domain/apprentissage";
-import { Niveau, pageDeLaLecon } from "@domain/catalogue";
+import { pageDeLaLecon } from "@domain/catalogue";
+import { niveauDuProfil } from "../../parcours/niveau-du-profil.ts";
 import { chargerToutesLesLecons } from "../bibliotheque.ts";
 import { EtoilesDessinees } from "./EtoilesDessinees.tsx";
 import { Etincelles } from "./Etincelles.tsx";
@@ -21,17 +22,22 @@ type Props = {
   readonly onAccueil: () => void;
 };
 
+/** Sans bibliothèque (hors ligne, pas encore en cache), l'écran de fin reste valable : il n'annonce simplement pas de leçon suivante. */
+function bibliothequeIndisponible(): void {}
+
 function useLeconSuivante(seance: Seance, niveau: string): Suivante | undefined {
   const [suivante, setSuivante] = useState<Suivante | undefined>();
   const { enfant, lecon: leconId } = seance;
   useEffect(() => {
+    const niveauDeLEnfant = niveauDuProfil(niveau);
+    if (!niveauDeLEnfant) return;
     let annule = false;
     void Promise.all([chargerToutesLesLecons(), lireLesMeilleuresEtoilesDuProfil(enfant)]).then(([lecons, meilleuresEtoiles]) => {
-      const entrees = { lecons, niveau: Niveau.de(niveau), meilleuresEtoiles };
+      const entrees = { lecons, niveau: niveauDeLEnfant, meilleuresEtoiles };
       const idSuivante = leconSuivanteDansLeParcours(entrees, leconId);
       const prochaine = lecons.find((lecon) => lecon.id === idSuivante);
       if (!annule && prochaine) setSuivante({ id: prochaine.id, titre: pageDeLaLecon(prochaine).titre });
-    }).catch(() => undefined);
+    }).catch(bibliothequeIndisponible);
     return () => {
       annule = true;
     };
