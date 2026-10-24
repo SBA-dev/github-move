@@ -1,6 +1,6 @@
 import type { ChoixDeSeance, ReponseDonnee, SeanceTermineeAEnregistrer } from "@domain/apprentissage";
 
-type ReponseEnvoyee =
+export type ReponseEnvoyee =
   | { readonly choix: string }
   | { readonly placement: { readonly etiquette: string; readonly groupe?: string } }
   | { readonly nombre: number }
@@ -18,7 +18,7 @@ export type CorpsDeLaSeance = {
   readonly termineeLe: string;
 };
 
-function enReponseEnvoyee(reponse: ReponseDonnee): ReponseEnvoyee {
+export function enReponseEnvoyee(reponse: ReponseDonnee): ReponseEnvoyee {
   switch (reponse.genre) {
     case "choix":
       return { choix: reponse.texte };

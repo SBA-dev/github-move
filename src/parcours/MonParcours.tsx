@@ -143,7 +143,8 @@ function LeconsDuParcours({ parcours, onOuvrirLaLecon }: PropsDesLecons) {
               <span className="titre-de-la-lecon">{lecon.titre}</span>
               <span className="etat-de-la-lecon" data-testid="etat-de-la-lecon" aria-hidden="true">
                 {lecon.etat.genre === "reussie" && <span className="etoiles-de-la-lecon">{"★".repeat(lecon.etat.etoiles.nombre)} ✓</span>}
-                {lecon.etat.genre !== "reussie" && libelleDeLEtat(lecon)}
+                {lecon.etat.genre === "reussieAuTestDeDepart" && <span className="etoiles-de-la-lecon">✓ {libelleDeLEtat(lecon)}</span>}
+                {lecon.etat.genre !== "reussie" && lecon.etat.genre !== "reussieAuTestDeDepart" && libelleDeLEtat(lecon)}
               </span>
             </button>
           </li>

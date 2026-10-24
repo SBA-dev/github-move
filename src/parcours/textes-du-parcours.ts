@@ -26,7 +26,7 @@ export function libelleDeLEtat(lecon: LeconDuParcours): string {
     case "reussie":
       return "Réussie";
     case "reussieAuTestDeDepart":
-      return "Réussie";
+      return "Test de départ";
     case "prochaine":
       return "À toi !";
     case "aDecouvrir":
@@ -40,7 +40,7 @@ export function annonceDeLaLecon(lecon: LeconDuParcours): string {
     case "reussie":
       return `${lecon.titre} : réussie, ${etoilesSurTrois(lecon.etat.etoiles.nombre)}`;
     case "reussieAuTestDeDepart":
-      return `${lecon.titre} : réussie`;
+      return `${lecon.titre} : réussie au test de départ`;
     case "prochaine":
       return `${lecon.titre} : à toi !`;
     case "aDecouvrir":
@@ -54,5 +54,6 @@ export function titreDesLeconsDejaReussies(niveau: string): string {
 
 /** Ce que lit un lecteur d'écran pour une leçon réussie d'une classe au-dessus. */
 export function annonceDeLaLeconDUneClasseAuDessus(lecon: LeconReussieDUneClasseAuDessus): string {
-  return `${lecon.titre}, ${lecon.niveau.valeur} : réussie${lecon.etoiles ? `, ${etoilesSurTrois(lecon.etoiles.nombre)}` : ""}`;
+  const reussite = lecon.etoiles ? `réussie, ${etoilesSurTrois(lecon.etoiles.nombre)}` : "réussie au test de départ";
+  return `${lecon.titre}, ${lecon.niveau.valeur} : ${reussite}`;
 }
