@@ -26,3 +26,4 @@
 ## Suite après merge (PR #67)
 
 - 2026-10-24 14:16 · Décision du PO n°12 : au début d'un exercice de dictée, le personnage guide ne lit plus la consigne ; il dicte directement le mot. La consigne reste affichée et peut être lue à la demande. Nouveau scénario `@wip` « La dictée commence par le mot dicté, sans lire la consigne avant » (règle 1) ; `domain-model.md` et `acceptance.md` mis à jour.
+- 2026-10-24 14:46 · `domain-modeler` : décision du PO n°13, « Profil enfant » remplace « Profil de séance » (glossaire : ligne supprimée, note d'usage Apprentissage ajoutée à « Profil enfant » ; `domain-model.md` ; note de terminologie dans 0018). Reste au code : renommer `ProfilDeSeance` (`apprentissage/domain/profil-de-seance.ts`).

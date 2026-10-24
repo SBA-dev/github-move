@@ -34,3 +34,7 @@ Deux constats :
 ## Précision
 
 Pour la forme « clavier complet », le point 2 se lit ainsi : le tirage transmis est **vide**. Le domaine reconstruit alors lui-même le clavier complet, qui ne dépend d'aucun tirage ; un tirage non vide est celui des lettres du mot. Le code (`ClavierPropose.depuisTirage`) fait foi.
+
+## Note de terminologie (2026-10-24)
+
+Décision du PO (#19, décision n°13 du modèle) : le terme « profil de séance » employé ci-dessus est abandonné. On dit **profil enfant** (glossaire, contexte Famille) : le navigateur lit du profil enfant le réglage « clavier des dictées » et le niveau pour choisir le clavier proposé. « Profil » seul reste à éviter. Le fond de la décision est inchangé.
