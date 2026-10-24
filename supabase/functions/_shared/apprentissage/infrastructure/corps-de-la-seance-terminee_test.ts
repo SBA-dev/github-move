@@ -264,7 +264,7 @@ Deno.test("le corps d'une séance de dictée est lu puis revalidé sans incohér
     reponses: envoi.reponses.map((question) => question.map(enReponseEnvoyee)),
   };
 
-  const revalidee = revaliderLaSeance(leconDeDicteeDeChatEtLapin(), lire(corps), profil);
+  const revalidee = revaliderLaSeance(leconDeDicteeDeChatEtLapin(), lire(corps));
 
   assertEquals([revalidee.etoiles, revalidee.erreurs], [fait.etoiles, fait.erreurs]);
 });

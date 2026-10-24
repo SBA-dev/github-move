@@ -4,7 +4,6 @@ import { generateurIdFixe } from "../test_utils/generateur-id-fixe.ts";
 import { hasardFixe } from "../test_utils/hasard-fixe.ts";
 import { leconDeCalcul, leconDeCalculAvecCompetence } from "../test_utils/lecons-de-test.ts";
 import { LeconsDuCatalogueEnMemoire } from "../test_utils/lecons-du-catalogue-en-memoire.ts";
-import { ProfilsDeSeanceEnMemoire } from "../test_utils/profils-de-seance-en-memoire.ts";
 import { RattachementsEnMemoire } from "../test_utils/rattachements-en-memoire.ts";
 import { ResultatsDesLeconsEnMemoire } from "../test_utils/resultats-des-lecons-en-memoire.ts";
 import { SeancesTermineesEnMemoire } from "../test_utils/seances-terminees-en-memoire.ts";
@@ -37,7 +36,6 @@ function monde(lecons = new LeconsDuCatalogueEnMemoire(leconDeCalcul())) {
   const seances = new SeancesTermineesEnMemoire(resultats);
   const terminer = new TerminerLaSeance(
     new RattachementsEnMemoire(["parent-paul", "profil-lea"]),
-    new ProfilsDeSeanceEnMemoire(["profil-lea", { clavierDesDictees: "automatique", niveau: "CP" }]),
     lecons,
     seances,
     resultats,

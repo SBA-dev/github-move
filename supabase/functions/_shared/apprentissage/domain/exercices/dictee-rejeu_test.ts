@@ -8,6 +8,7 @@ import {
 } from "../../test_utils/lecons-de-dictee.ts";
 import { MotIncomplet, SeanceIncoherente } from "../erreurs.ts";
 import { Reponse } from "../reponse.ts";
+import { Seance } from "../seance.ts";
 import { revaliderLaSeance } from "../revalider-la-seance.ts";
 
 const FIN = new Date("2026-10-24T10:30:00Z");
@@ -41,7 +42,7 @@ Deno.test("une séance de dictée enregistrée est rejouée à l'identique", () 
   ecrire(seance, "lapin");
   const terminee = seance.terminer(FIN);
 
-  const rejouee = revaliderLaSeance(leconDeDicteeDeChatEtLapin(), seance.aEnregistrer(), LETTRES_DU_MOT);
+  const rejouee = revaliderLaSeance(leconDeDicteeDeChatEtLapin(), seance.aEnregistrer());
 
   assertEquals(rejouee, terminee);
 });
@@ -52,10 +53,21 @@ Deno.test("une séance de dictée au clavier complet est rejouée à l'identique
   ecrire(seance, "chat");
   const terminee = seance.terminer(FIN);
 
-  const rejouee = revaliderLaSeance(leconDeDicteeDuChat(), seance.aEnregistrer(), CLAVIER_COMPLET);
+  const rejouee = revaliderLaSeance(leconDeDicteeDuChat(), seance.aEnregistrer());
 
   assertEquals(rejouee.etoiles, 2);
   assertEquals(rejouee, terminee);
+});
+
+Deno.test("une séance de dictée est reconstituée sans profil, qu'elle ait été jouée avec les lettres du mot ou au clavier complet", () => {
+  for (const profil of [LETTRES_DU_MOT, CLAVIER_COMPLET]) {
+    const seance = seanceDeDictee(leconDeDicteeDuChat(), profil);
+    ecrire(seance, "chat");
+    seance.terminer(FIN);
+    const envoi = seance.aEnregistrer();
+
+    assertEquals(Seance.reconstituer(leconDeDicteeDuChat(), envoi).aEnregistrer().tirages, envoi.tirages);
+  }
 });
 
 Deno.test("un mot faux envoyé comme réussi rend la séance incohérente", () => {
@@ -69,18 +81,7 @@ Deno.test("un mot faux envoyé comme réussi rend la séance incohérente", () =
       revaliderLaSeance(leconDeDicteeDuChat(), {
         ...envoi,
         reponses: [[Reponse.motEcrit(["c", "h", "a", "s"])]],
-      }, CLAVIER_COMPLET),
-    SeanceIncoherente,
-  );
-});
-
-Deno.test("la séance rejouée avec un autre réglage que celui du profil est incohérente", () => {
-  const seance = seanceDeDictee(leconDeDicteeDuChat(), CLAVIER_COMPLET);
-  ecrire(seance, "chat");
-  seance.terminer(FIN);
-
-  assertThrows(
-    () => revaliderLaSeance(leconDeDicteeDuChat(), seance.aEnregistrer(), LETTRES_DU_MOT),
+      }),
     SeanceIncoherente,
   );
 });
@@ -92,7 +93,7 @@ Deno.test("un mot écrit forgé avec moins de lettres que de cases rend la séan
   const envoi = { ...seance.aEnregistrer(), reponses: [[Reponse.motEcrit(["c", "h", "a"])]] };
 
   const erreur = assertThrows(
-    () => revaliderLaSeance(leconDeDicteeDuChat(), envoi, CLAVIER_COMPLET),
+    () => revaliderLaSeance(leconDeDicteeDuChat(), envoi),
     SeanceIncoherente,
   );
 
