@@ -94,7 +94,7 @@ Règles de la base partagée :
 
 ### 4. Quand `main` bouge
 
-À l'annonce `MAIN A BOUGÉ`, à la fin du cycle TDD en cours (jamais au milieu d'un RED) :
+À l'annonce `MAIN A BOUGÉ`, à la fin du cycle TDD en cours (jamais au milieu d'un RED), ou **à la fin du run E2E en cours** : un run E2E lancé n'est jamais interrompu pour intégrer `main`, sinon tout son temps est perdu (décision 0020). Si `main` bouge pendant l'étape E2E, finis la mise au point sur ta branche et n'intègre `main` qu'avant la non-régression complète :
 1. `git fetch origin main && git merge origin/main` (merge, jamais de rebase sur une branche déjà poussée).
 2. Conflit sur `glossaire.md`, `context-map.md` ou des steps : garde les deux ajouts. Conflit dans du code : résous-le avec `implementer`, puis relance tous les tests unitaires.
 3. Si les scénarios d'une dépendance tout juste mergée changent ce que tu as prévu : `ESCALADE`.
@@ -108,7 +108,7 @@ Tu merges **toi-même**, à quatre conditions :
 2. le tableau de l'issue de coordination t'inscrit comme détentrice du verrou `merge` ;
 3. après intégration de `main` dans ta branche, tout est vert **sur le dernier commit** :
    - `deno test --permit-no-files supabase/functions/`, lint, format, `npx tsc --noEmit`, `npm run build`
-   - E2E de la story et non-régression des stories livrées (commandes de `CLAUDE.md`, sans `@envoi-email` sauf si la story touche la connexion)
+   - E2E de la story et non-régression des stories livrées (commandes de `CLAUDE.md`, sans `@envoi-email` sauf si la story touche la connexion). La non-régression complète faite juste avant `PRÊTE À MERGER` compte si `main` n'a pas bougé depuis ; sinon, après l'intégration de `main`, relance-la une fois (décision 0020)
    - `python3 -m pytest scripts/tests` si `scripts/` a changé
    - la CI de la PR
 4. `mr-reviewer` a rendu APPROUVÉ, et si l'intégration de `main` a changé du code de production, il a relu ce delta.

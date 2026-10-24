@@ -54,6 +54,14 @@ Une fois le domaine et les cas d'usage couverts, tu branches le tout :
 - Vérifications : `supabase db reset` passe, `deno test` passe, `npx tsc --noEmit` et `npm run build` passent.
 - Commite : `feat(#<n>): câblage <quoi>`
 
+## Auto-relecture avant de rendre la main (les deux modes)
+
+À la première review, toutes les stories livrées jusqu'ici ont reçu « À CORRIGER » (décision 0020). Avant ta réponse, relis ton propre diff (`git diff <premier commit de ta délégation>^..HEAD`) avec la liste des **bloquants** de `.claude/agents/mr-reviewer.md` :
+- chaque ligne de production ajoutée est exigée par un test ; sinon, ne la garde pas : signale le test manquant à l'orchestrateur (cas fréquent : une vérification de sécurité ou de rejeu écrite « en plus », ou une règle généralisée à partir d'un seul exemple) ;
+- règle de dépendance, glossaire, pas de logique métier dans un handler ou dans React ;
+- en câblage : RLS et policies, JWT de l'appelant, validation des entrées, accessibilité (44 px, 360 px, `prefers-reduced-motion`).
+Corrige ce qui relève de ton rôle, puis cite dans ta réponse ce que tu as vérifié et ce que tu laisses à l'orchestrateur.
+
 ## Interdits absolus
 
 - **Modifier, supprimer, `ignore` ou `only` un test** (`*_test.ts`) ou un `.feature`.

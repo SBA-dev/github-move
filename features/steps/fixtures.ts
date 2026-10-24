@@ -20,13 +20,18 @@ export type Pwa = {
   publierLecon(): Promise<void>;
 };
 
+// Tiré une fois par processus worker : deux exécutions lancées en même temps (deux équipes, deux sessions) contre le
+// même projet Supabase n'ont jamais le même suffixe, alors que le projet et l'index du worker se répètent d'une
+// exécution à l'autre.
+const JETON_DU_WORKER = crypto.randomUUID().slice(0, 8);
+
 export const test = base.extend<{ monde: Monde; pwa: Pwa; famille: Famille }>({
   // Story #5 : parents de test et boîte des e-mails de connexion (projet Supabase de développement).
-  // Suffixe d'adresse propre au projet ET au worker : deux fichiers .feature exécutés en parallèle ne se disputent
-  // pas le même parent de test (le nettoyage de l'un supprimait le parent de l'autre en pleine connexion).
-  // SUFFIXE_E2E (facultatif) sépare aussi deux exécutions simultanées sur le même projet de développement (deux équipes).
+  // Suffixe d'adresse propre au projet, au worker et à l'exécution : deux scénarios exécutés en même temps ne se
+  // disputent pas le même parent de test (le nettoyage de l'un supprimait le parent de l'autre en pleine connexion).
   famille: async ({ page, browser, baseURL }, use, testInfo) => {
-    const famille = new Famille(`${testInfo.project.name}${testInfo.parallelIndex}${process.env.SUFFIXE_E2E ?? ""}`, page, browser, baseURL ?? "http://localhost:5173");
+    const suffixe = `${testInfo.project.name}${testInfo.parallelIndex}-${JETON_DU_WORKER}`;
+    const famille = new Famille(suffixe, page, browser, baseURL ?? "http://localhost:5173");
     await use(famille);
     await famille.nettoyer();
   },
