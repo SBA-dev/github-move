@@ -22,3 +22,10 @@
   Bibliothèque entière relue par `lireLecon` : 265 leçons, 0 refus.
 - 18:42 · Revue intermédiaire (delta `5a31eae..b84171d`) : À CORRIGER, 1 bloquant (règle « énoncé du problème requis » sans test) → tests de caractérisation (`4ba8059`). Non bloquants : typage des valeurs connues (refactor), modèle à aligner sur `LeconMalFormee`, « problème en barres » à ajouter au glossaire, `docs/format-lecons.md` à compléter (au câblage).
 - 18:55 · Re-revue du delta `b84171d..b1fd7a1` : **APPROUVÉ**. Dernier commit relu : `b1fd7a1` (départ du delta suivant).
+- 18:58 → 19:55 · Bloc **Apprentissage** (TDD), 8 cycles :
+  7. mode de réponse : seuil « CP et 20 au plus » (`ModeDeReponse.pour(niveau, reponse?)`, sans réponse : comportement de #20 inchangé) ;
+  8. paroles de la boîte (déroulé, aide, ouverture) ; 9. paroles des barres (explication du schéma, aide du problème ou de sa forme, explication de la réponse) ;
+  10. description du schéma pour les lecteurs d'écran (nombre de parts cherché : « Nombre de parts : ?. » ; chaque segment finit par un point, y compris « Chaque part : ?. ») ;
+  11. jouer une boîte dans la séance (`QuestionDeBoite` enveloppe une `QuestionDeCalcul`, type `boite`, clé `n:`) ; 12. boîte ouverte après la bonne réponse ;
+  13. jouer un schéma en barres dans la séance (`QuestionDeProbleme`, type `barres`, clé `p:`). `implementer` a contesté 2 tests : la leçon de test donnait 20, réponse qui se donne par choix au CP (Q51). Fixture corrigée par `test-writer` (24), règle inchangée (1 aller-retour) ;
+  14. revalidation par le serveur : déjà vraie (rejeu générique), tests gardés en caractérisation.
