@@ -5,6 +5,8 @@ import { seanceCommencee } from "../../test_utils/lecons-de-classer-et-ordre.ts"
 import {
   leconDeConjugaisonAvecBeaucoupDeCandidats,
   leconDeConjugaisonAvecUneFormeRepetee,
+  leconDeConjugaisonDuVerbeAvoirAvecUneApostropheDroite,
+  leconDeConjugaisonDuVerbeAvoirAvecUneApostropheTypographique,
   leconDeConjugaisonDuVerbeEtre,
 } from "../../test_utils/lecons-de-conjugaison.ts";
 import { CleDeQuestion } from "../cle-de-question.ts";
@@ -125,12 +127,39 @@ Deno.test("le tableau montre les pronoms, les formes déjà trouvées et la pers
   seance.repondre(Reponse.choix("suis"));
 
   assertEquals(exercice?.tableauDeConjugaison(), [
-    { pronom: "je", forme: "suis" },
-    { pronom: "tu", forme: undefined },
-    { pronom: "il", forme: undefined },
-    { pronom: "nous", forme: undefined },
-    { pronom: "vous", forme: undefined },
-    { pronom: "ils", forme: undefined },
+    { pronom: "je", forme: "suis", texte: "je suis" },
+    { pronom: "tu", forme: undefined, texte: "tu …" },
+    { pronom: "il", forme: undefined, texte: "il …" },
+    { pronom: "nous", forme: undefined, texte: "nous …" },
+    { pronom: "vous", forme: undefined, texte: "vous …" },
+    { pronom: "ils", forme: undefined, texte: "ils …" },
   ]);
   assertEquals(exercice?.rangDeLaQuestionEnCours, 1);
+});
+
+function textesDuTableau(lecon: Lecon): (string | undefined)[] {
+  const exercice = seanceCommencee(lecon).exerciceEnCours();
+  return exercice?.tableauDeConjugaison().map((ligne) => ligne.texte) ?? [];
+}
+
+Deno.test("le tableau écrit un pronom élidé collé à sa forme, avec l'apostrophe droite", () => {
+  const seance = seanceCommencee(leconDeConjugaisonDuVerbeAvoirAvecUneApostropheDroite());
+  const exercice = seance.exerciceEnCours();
+
+  seance.repondre(Reponse.choix("ai"));
+
+  assertEquals(exercice?.tableauDeConjugaison().map((ligne) => ligne.texte), ["j'ai", "tu …"]);
+});
+
+Deno.test("le tableau écrit un pronom élidé collé à sa forme, avec l'apostrophe typographique", () => {
+  const seance = seanceCommencee(leconDeConjugaisonDuVerbeAvoirAvecUneApostropheTypographique());
+  const exercice = seance.exerciceEnCours();
+
+  seance.repondre(Reponse.choix("ai"));
+
+  assertEquals(exercice?.tableauDeConjugaison().map((ligne) => ligne.texte), ["j’ai", "tu …"]);
+});
+
+Deno.test("le tableau écrit un pronom élidé collé aux points de suspension tant que la forme n'est pas trouvée", () => {
+  assertEquals(textesDuTableau(leconDeConjugaisonDuVerbeAvoirAvecUneApostropheDroite()), ["j'…", "tu …"]);
 });

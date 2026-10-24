@@ -60,3 +60,22 @@ export function leconDeConjugaisonAvecUneFormeRepetee(): Lecon {
     ],
   });
 }
+
+function leconDeConjugaisonDuVerbeAvoir(id: string, pronomDeLaPremierePersonne: string): Lecon {
+  return leconDeConjugaison(id, {
+    verbe: "avoir",
+    temps: "présent",
+    formes: [
+      { pronom: pronomDeLaPremierePersonne, forme: "ai" },
+      { pronom: "tu", forme: "as" },
+    ],
+  });
+}
+
+export function leconDeConjugaisonDuVerbeAvoirAvecUneApostropheDroite(): Lecon {
+  return leconDeConjugaisonDuVerbeAvoir("fr-cp-avoir-apostrophe-droite", "j'");
+}
+
+export function leconDeConjugaisonDuVerbeAvoirAvecUneApostropheTypographique(): Lecon {
+  return leconDeConjugaisonDuVerbeAvoir("fr-cp-avoir-apostrophe-typographique", "j’");
+}
