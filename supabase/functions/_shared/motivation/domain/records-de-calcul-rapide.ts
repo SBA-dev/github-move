@@ -1,4 +1,4 @@
-import type { Lecon } from "../../catalogue/domain/index.ts";
+import type { ExerciceFluence, Lecon } from "../../catalogue/domain/index.ts";
 
 export type RecordDuProfil = Readonly<{
   lecon: string;
@@ -15,7 +15,18 @@ export type PastilleDeRecord = Readonly<{
 
 export function pastillesDesRecords(
   records: readonly RecordDuProfil[],
-  _lecons: readonly Lecon[],
+  lecons: readonly Lecon[],
 ): PastilleDeRecord[] {
-  return records.map((record) => ({ ...record, libelle: record.exercice }));
+  return records.map((record) => ({ ...record, libelle: libelleDu(record, lecons) }));
+}
+
+function libelleDu(record: RecordDuProfil, lecons: readonly Lecon[]): string {
+  const lecon = lecons.find((candidate) => candidate.id === record.lecon);
+  const fluence = lecon?.exercices.find((exercice) => exercice.type === "fluence" && cleDe(exercice) === record.exercice);
+  if (lecon === undefined || fluence === undefined) return record.exercice;
+  return fluence.titre ?? lecon.titre;
+}
+
+function cleDe(fluence: ExerciceFluence): string {
+  return fluence.titre ?? fluence.generateur.op;
 }
