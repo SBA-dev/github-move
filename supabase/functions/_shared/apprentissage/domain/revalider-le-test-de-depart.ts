@@ -61,6 +61,7 @@ function rejouer(
   niveau: Niveau,
 ): TestDeDepartTermine {
   if (envoi.questions.length > NOMBRE_MAXIMAL_DE_QUESTIONS) throw incoherent("trop de questions");
+  if (envoi.tirages.length > envoi.questions.length) throw incoherent("des tirages pour des questions non prévues");
   const retenues = envoi.questions
     .map((question, rang) => ({
       question,
@@ -70,14 +71,16 @@ function rejouer(
     .filter(({ question }) => leconExiste(question, lecons));
   const plan = retenues.map(({ question }) => question);
   verifierLaReserve(plan, lecons, niveau);
+  const tirages = retenues.flatMap(({ tirages }) => tirages).values();
   const test = TestDeDepart.commencer({
     generateurId: { nouveau: () => envoi.test },
     enfant: envoi.enfant,
     niveau,
     lecons,
     plan,
-    tireur: tireurSelonLesTirages(retenues.flatMap(({ tirages }) => tirages).values()),
+    tireur: tireurSelonLesTirages(tirages),
   });
+  if (!tirages.next().done) throw new TirageEnTrop();
   const reponsesApresLePlan = envoi.reponses.slice(envoi.questions.length);
   [...retenues.map(({ reponses }) => reponses), ...reponsesApresLePlan].forEach((reponses) =>
     rejouerLesReponses(test, reponses)
