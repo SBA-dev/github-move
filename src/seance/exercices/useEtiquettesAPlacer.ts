@@ -9,6 +9,7 @@ import {
 } from "@domain/motivation";
 import { hasardDuNavigateur } from "../../hasard-navigateur.ts";
 import type { ParoleADire } from "../usePersonnageQuiParle.ts";
+import { paroleDueDeMotivation } from "./paroleDueDeMotivation.ts";
 import type { QuestionFigee } from "./useQuestionFigee.ts";
 
 type Dependances = {
@@ -52,7 +53,7 @@ export function useEtiquettesAPlacer(
   const feliciterOuRelancer = useCallback(async () => {
     const { humeur } = reagirALaReponse(true, personnageGuide, hasardDuNavigateur);
     const texte = paroleApresUneBonneReponse(
-      seance.paroleDueApresLaDerniereReponse(),
+      paroleDueDeMotivation(seance.paroleDueApresLaDerniereReponse()),
       personnageGuide,
       hasardDuNavigateur,
     );

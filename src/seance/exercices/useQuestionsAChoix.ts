@@ -22,6 +22,7 @@ import { hasardDuNavigateur } from "../../hasard-navigateur.ts";
 import type { Voix } from "../../voix/index.ts";
 import type { ParoleADire } from "../usePersonnageQuiParle.ts";
 import { attendre } from "./attendre.ts";
+import { paroleDueDeMotivation } from "./paroleDueDeMotivation.ts";
 import type { QuestionFigee } from "./useQuestionFigee.ts";
 
 type Dependances = {
@@ -146,7 +147,7 @@ export function useQuestionsAChoix(
     const exercice = lecon.exercices[position];
     const verbe = exercice?.type === "conjugaison" ? exercice.verbe : undefined;
     const finDeLExercice = paroleDue === "tuSaisConjuguer"
-      ? paroleApresUneBonneReponse(paroleDue, personnageGuide, hasardDuNavigateur, verbe)
+      ? paroleApresUneBonneReponse(paroleDueDeMotivation(paroleDue, verbe), personnageGuide, hasardDuNavigateur)
       : seance.texteCompleteParLaDerniereReponse()
       ? direLeTexteComplet(personnageGuide, hasardDuNavigateur)
       : undefined;

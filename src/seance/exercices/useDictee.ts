@@ -5,6 +5,7 @@ import { hasardDuNavigateur } from "../../hasard-navigateur.ts";
 import type { Voix } from "../../voix/index.ts";
 import type { ParoleADire } from "../usePersonnageQuiParle.ts";
 import { attendre } from "./attendre.ts";
+import { paroleDueDeMotivation } from "./paroleDueDeMotivation.ts";
 import type { QuestionFigee } from "./useQuestionFigee.ts";
 
 const DUREE_DES_LETTRES_FAUSSES_MS = 1300;
@@ -84,7 +85,7 @@ export function useDictee(
   const feliciter = useCallback(async () => {
     const { humeur } = reagirALaReponse(true, personnageGuide, hasardDuNavigateur);
     const felicitation = paroleApresUneBonneReponse(
-      seance.paroleDueApresLaDerniereReponse(),
+      paroleDueDeMotivation(seance.paroleDueApresLaDerniereReponse()),
       personnageGuide,
       hasardDuNavigateur,
     );
@@ -97,7 +98,8 @@ export function useDictee(
     const exercice = seance.exerciceEnCours();
     const question = laQuestion();
     const minuscule = lettre.toLowerCase();
-    if (!exercice || !question || !peutEcrire() || !question.touchesDisponibles().includes(minuscule)) return;
+    if (!exercice || !question || !peutEcrire()) return;
+    if (!question.rangeesDuClavier().flat().some((touche) => touche.lettre === minuscule && touche.disponible)) return;
     const resultat = seance.taper(minuscule);
     setToucheQuiBrille(undefined);
     redessiner();

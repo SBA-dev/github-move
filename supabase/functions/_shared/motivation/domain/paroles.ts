@@ -58,14 +58,14 @@ export type ParoleDueApresUneBonneReponse =
   | "felicitationUneFoisSurDeux"
   | "relance"
   | "applaudir"
-  | "tuSaisConjuguer";
+  | { parole: "tuSaisConjuguer"; verbe: string };
 
 export function paroleApresUneBonneReponse(
   paroleDue: ParoleDueApresUneBonneReponse | undefined,
   personnageGuide: PersonnageGuide,
   hasard: Hasard,
-  verbe?: string,
 ): string | undefined {
+  if (typeof paroleDue === "object") return direTuSaisConjuguer(paroleDue.verbe, personnageGuide, hasard);
   switch (paroleDue) {
     case "felicitation":
       return feliciter(personnageGuide, hasard).texte;
@@ -73,8 +73,6 @@ export function paroleApresUneBonneReponse(
       return feliciterUneFoisSurDeux(personnageGuide, hasard);
     case "relance":
       return relancer(hasard);
-    case "tuSaisConjuguer":
-      return verbe === undefined ? undefined : direTuSaisConjuguer(verbe, personnageGuide, hasard);
     case "applaudir":
     case undefined:
       return undefined;
