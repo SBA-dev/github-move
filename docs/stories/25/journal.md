@@ -32,3 +32,5 @@ Indépendants des questions N :
 5. `matieresDuParcours` : matières qui ont au moins une leçon du niveau, dans l'ordre du Catalogue.
 6. `leconSuivanteDansLeParcours` : première leçon d'après non réussie du même parcours ; aucune après la dernière.
 En attente d'une réponse : leçons réussies d'une classe au-dessus (N1, N7, N9), repli de la leçon suivante (N4), leçon suivante après une leçon d'une classe au-dessus (N10).
+- 13:55 UTC : comportements 1 à 6 verts (786 tests). Cycles : 5 RED/GREEN (2 et 3 groupés), 1 reprise de formatage d'un
+  test rouge. Aucun désaccord. Restent en attente des réponses N : N1/N7/N9 (classe au-dessus), N4, N10.
