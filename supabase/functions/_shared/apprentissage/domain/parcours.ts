@@ -25,15 +25,11 @@ export type Parcours = Readonly<{
 }>;
 
 export function matieresDuParcours(entrees: EntreesDuParcours): Matiere[] {
-  return toutesLesMatieres().filter((matiere) =>
-    entrees.lecons.some((lecon) => lecon.matiere.code === matiere.code && lecon.niveau.valeur === entrees.niveau.valeur)
-  );
+  return toutesLesMatieres().filter((matiere) => leconsDeLaMatiere(entrees, matiere).length > 0);
 }
 
 export function parcoursDeLaMatiere(entrees: EntreesDuParcours, matiere: Matiere): Parcours {
-  const ordonnees = entrees.lecons
-    .filter((lecon) => lecon.matiere.code === matiere.code && lecon.niveau.valeur === entrees.niveau.valeur)
-    .sort(parOrdrePuisIdentifiant);
+  const ordonnees = leconsDeLaMatiere(entrees, matiere).sort(parOrdrePuisIdentifiant);
   const prochaineLecon = ordonnees.find((lecon) => !entrees.meilleuresEtoiles.has(lecon.id))?.id;
   const lecons = ordonnees.map((lecon, index) => ({
     lecon: lecon.id,
@@ -43,6 +39,12 @@ export function parcoursDeLaMatiere(entrees: EntreesDuParcours, matiere: Matiere
   }));
   const nombreDeLeconsReussies = ordonnees.filter((lecon) => entrees.meilleuresEtoiles.has(lecon.id)).length;
   return { lecons, prochaineLecon, nombreDeLeconsReussies, nombreDeLecons: ordonnees.length };
+}
+
+function leconsDeLaMatiere(entrees: EntreesDuParcours, matiere: Matiere): Lecon[] {
+  return entrees.lecons.filter((lecon) =>
+    lecon.matiere.code === matiere.code && lecon.niveau.valeur === entrees.niveau.valeur
+  );
 }
 
 function etatDeLaLecon(
