@@ -61,7 +61,7 @@ Deno.test("« a » et « à » sont proposés ensemble à chaque trou", () => {
 
 Deno.test("les choix d'un trou sont mélangés une seule fois, au début de la séance", () => {
   const sansMelange = questionsDe(leconDeTrousAvecBeaucoupDeCandidats(), hasardSansMelange())[0];
-  const melange = questionsDe(leconDeTrousAvecBeaucoupDeCandidats(), hasardFixe(0, 0, 0, 0, 0, 0, 0, 0))[0];
+  const melange = questionsDe(leconDeTrousAvecBeaucoupDeCandidats(), { entre0et1: () => 0 })[0];
 
   assertEquals(melange.choix.textes().join() === sansMelange.choix.textes().join(), false);
   assertEquals(melange.tirage(), melange.choix.textes());
