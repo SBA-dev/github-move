@@ -38,6 +38,10 @@ export class MemorisationJouee {
     return this.ordreDesVers.etiquettesAPlacer().length === 0 ? "motsCaches" : "ordreDesVers";
   }
 
+  tirages(): string[][] {
+    return [this.ordreDesVers.tirage(), ...this.motsCaches.map((question) => question.tirage())];
+  }
+
   questions(): readonly QuestionSuivie[] {
     return [...this.ordreDesVers.questions, ...this.motsCaches];
   }

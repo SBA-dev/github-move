@@ -119,6 +119,7 @@ export class ExerciceJoue {
     const etiquettes = this.contenu.etiquettes;
     if (etiquettes) return [etiquettes.tirage()];
     if (this.contenu.additions) return this.contenu.additions.tirages();
+    if (this.contenu.memorisation) return this.contenu.memorisation.tirages();
     if (this.contenu.questionsDeDictee) return this.contenu.questionsDeDictee.map((question) => question.tirage());
     const operations = (this.contenu.operationsTirees ?? []).map(enonceTire);
     const tiragesDesQuestions = this.questionsPosees().map((question) => question.tirage());
