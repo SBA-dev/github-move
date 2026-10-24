@@ -2,7 +2,7 @@ import type { CleDeQuestion } from "./cle-de-question.ts";
 import type { TypeDExerciceAChoix } from "./exercices/phrases-des-exercices-a-choix.ts";
 import type { ReponseDonnee } from "./reponse.ts";
 
-export type TypeDeQuestion = TypeDExerciceAChoix | "classer" | "ordre" | "calcul" | "fluence";
+export type TypeDeQuestion = TypeDExerciceAChoix | "classer" | "ordre" | "chiffre" | "calcul" | "colonne" | "fluence";
 
 export interface QuestionSuivie {
   readonly cle: CleDeQuestion;

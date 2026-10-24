@@ -225,7 +225,7 @@ export class Seance {
       choix: this.choix,
       tirages: [
         ...this.exercices.flatMap((exercice) => exercice.tirages()),
-        ...this.exercices.flatMap((exercice) => exercice.tiragesEnCoursDeFluence()),
+        ...this.exercices.flatMap((exercice) => exercice.tiragesEnCoursDeJeu()),
       ],
       reponses: questions.map((question) => question.reponses()),
       termineeLe: this.termineeLe,

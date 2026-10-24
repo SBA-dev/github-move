@@ -1,7 +1,9 @@
 import type { ColonneDAdditionPosee } from "./addition-posee.ts";
+import { CleDeQuestion } from "./cle-de-question.ts";
 import { PasDeQuestionEnCours } from "./erreurs.ts";
 import { choixAutourDuResultat, type ModeDeReponse } from "./mode-de-reponse.ts";
 import { QuestionDeCalcul } from "./question-de-calcul.ts";
+import type { QuestionSuivie } from "./question-suivie.ts";
 import type { Rang } from "./rangs-d-addition.ts";
 import type { ReponseEnNombre, ReponseParChoix, ResultatDeReponse } from "./reponse.ts";
 import type { Tireur } from "./tireur.ts";
@@ -17,8 +19,7 @@ type Retenues = Partial<Record<Rang, number>>;
 
 export class EtapeCalculer {
   private indice = 0;
-  private question: QuestionDeCalcul | undefined;
-  private fautesDesColonnesTerminees = 0;
+  private readonly questionsPosees: QuestionDeCalcul[] = [];
   private resultat = "";
   private parole: string | undefined;
   private derniereAide: string | undefined;
@@ -51,8 +52,14 @@ export class EtapeCalculer {
   }
 
   get questionEnCours(): QuestionDeCalcul {
-    this.question ??= this.poserLaQuestion(this.colonneEnCours);
-    return this.question;
+    return this.questionsPosees[this.indice] ??= this.poserLaQuestion(this.colonneEnCours);
+  }
+
+  /** Une question par colonne ; celles qui ne sont pas encore posées n'ont ni erreur ni réussite. */
+  get questions(): readonly QuestionSuivie[] {
+    return this.colonnes.map((colonne, rang) =>
+      this.questionsPosees[rang] ?? colonnePasEncorePosee(this.cleDeLaColonne(colonne))
+    );
   }
 
   get resultatEcrit(): string {
@@ -64,7 +71,11 @@ export class EtapeCalculer {
   }
 
   get erreurs(): number {
-    return this.fautesDesColonnesTerminees + (this.question?.erreurs ?? 0);
+    return this.questionsPosees.reduce((total, question) => total + question.erreurs, 0);
+  }
+
+  tirages(): string[][] {
+    return this.questionsPosees.map((question) => question.tirage()).filter((tirage) => tirage.length > 0);
   }
 
   get paroleApresLaDerniereReponse(): string | undefined {
@@ -94,8 +105,6 @@ export class EtapeCalculer {
       this.resultat = `${somme}${this.resultat}`;
       this.parole = `${this.nombres.join(" + ")} = ${this.resultat}.`;
     }
-    this.fautesDesColonnesTerminees += this.questionEnCours.erreurs;
-    this.question = undefined;
     this.indice++;
   }
 
@@ -125,9 +134,15 @@ export class EtapeCalculer {
     const somme = this.sommeDeLaColonne(colonne);
     const expression = this.termesDeLaColonne(colonne).join(" + ");
     const operation = { q: expression, r: somme, aide: `Compte doucement : ${expression}.` };
-    if (this.mode.genre === "clavierDeCristaux") return QuestionDeCalcul.auClavier(operation);
+    const identite = { type: "colonne", cle: this.cleDeLaColonne(colonne) } as const;
+    if (this.mode.genre === "clavierDeCristaux") return QuestionDeCalcul.auClavier(operation, identite);
     const dernierChoix = somme >= 10 ? somme - 10 : somme + 2;
-    return QuestionDeCalcul.avecLesChoix(operation, this.tireur, choixAutourDuResultat(somme, dernierChoix));
+    const choix = choixAutourDuResultat(somme, dernierChoix);
+    return QuestionDeCalcul.avecLesChoix(operation, this.tireur, choix, identite);
+  }
+
+  private cleDeLaColonne(colonne: ColonneDAdditionPosee): CleDeQuestion {
+    return CleDeQuestion.de("colonne", `${this.nombres.join(" + ")} ${colonne.rang}`);
   }
 
   private aideApresUneFausseReponse(reponse: ReponseParChoix | ReponseEnNombre, somme: number): string | undefined {
@@ -136,6 +151,10 @@ export class EtapeCalculer {
     if (retenue !== 0 && valeur === somme - retenue) return RETENUE_OUBLIEE;
     return this.questionEnCours.aideApresErreur();
   }
+}
+
+function colonnePasEncorePosee(cle: CleDeQuestion): QuestionSuivie {
+  return { cle, type: "colonne", erreurs: 0, reussie: false, bonneReponseMontree: false, reponses: () => [] };
 }
 
 function quantite(nombre: number, rang: Rang): string {

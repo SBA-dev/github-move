@@ -46,6 +46,10 @@ function unites(nombre: number): number {
   return nombre % 10;
 }
 
+export function enonceDUneAddition(addition: Addition): string {
+  return addition.join(SEPARATEUR);
+}
+
 export function relireLesAdditions(generateur: GenerateurDAdditions, tirage: readonly string[]): readonly Addition[] {
   if (tirage.length !== generateur.combien) throw new TirageHorsDuGenerateur(tirage.join(", "));
   return tirage.map((ligne) => {

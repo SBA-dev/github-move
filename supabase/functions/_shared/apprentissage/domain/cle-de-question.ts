@@ -7,7 +7,9 @@ const PREFIXES: Record<TypeDeQuestion, string> = {
   trous: "t:",
   classer: "k:",
   ordre: "o:",
+  chiffre: "c:",
   calcul: "n:",
+  colonne: "u:",
   fluence: "f:",
 };
 

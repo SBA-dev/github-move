@@ -10,8 +10,14 @@ import type { Tireur } from "./tireur.ts";
 
 type ReponseDeCalcul = ReponseEnNombre | ReponseParChoix;
 
+type Identite = Readonly<{ type: "calcul" | "colonne"; cle: CleDeQuestion }>;
+
+function identiteDuCalcul(operation: Operation): Identite {
+  return { type: "calcul", cle: CleDeQuestion.de("calcul", operation.q) };
+}
+
 export class QuestionDeCalcul implements QuestionPosee {
-  readonly type = "calcul";
+  readonly type: Identite["type"];
   readonly cle: CleDeQuestion;
   private nombreDErreurs = 0;
   private estReussie = false;
@@ -21,30 +27,33 @@ export class QuestionDeCalcul implements QuestionPosee {
   private constructor(
     private readonly operation: Operation,
     private readonly auxChoix: QuestionJouee | undefined,
+    identite: Identite,
   ) {
-    this.cle = CleDeQuestion.de("calcul", operation.q);
+    this.type = identite.type;
+    this.cle = identite.cle;
   }
 
-  static auClavier(operation: Operation): QuestionDeCalcul {
-    return new QuestionDeCalcul(operation, undefined);
+  static auClavier(operation: Operation, identite: Identite = identiteDuCalcul(operation)): QuestionDeCalcul {
+    return new QuestionDeCalcul(operation, undefined, identite);
   }
 
   static avecLesChoix(
     operation: Operation,
     tireur: Tireur,
     nombresProposes: readonly number[] = choixAutourDuResultat(operation.r),
+    identite: Identite = identiteDuCalcul(operation),
   ): QuestionDeCalcul {
     const textes = nombresProposes.map(String);
     const bonneReponse = String(operation.r);
     const question = QuestionJouee.aChoix({
-      cle: CleDeQuestion.de("calcul", operation.q),
+      cle: identite.cle,
       enonce: operation.q,
       choix: tireur.choix(textes, bonneReponse),
       bonneReponse,
       type: "bulles",
       complements: { aide: aideApresUneErreurDeCalcul(operation) },
     });
-    return new QuestionDeCalcul(operation, question);
+    return new QuestionDeCalcul(operation, question, identite);
   }
 
   get enonce(): string {

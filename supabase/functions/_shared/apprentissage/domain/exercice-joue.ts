@@ -1,4 +1,5 @@
 import type { Exercice, ExerciceCalcul, Niveau, Operation, Segment } from "../../catalogue/domain/index.ts";
+import { AdditionsJouees } from "./additions-jouees.ts";
 import { type EtiquettePosee, EtiquettesAPlacer } from "./etiquettes-a-placer.ts";
 import { ExerciceChronometre } from "./exercice-chronometre.ts";
 import { FluenceNonCommencee, JeNeSaisPasEnFluence, PasDeQuestionEnCours, ReponseIncompatible } from "./erreurs.ts";
@@ -25,6 +26,7 @@ type Contenu = Readonly<{
   segments?: readonly Segment[];
   operationsTirees?: readonly Operation[];
   chronometre?: ExerciceChronometre;
+  additions?: AdditionsJouees;
 }>;
 
 export class ExerciceJoue {
@@ -39,7 +41,9 @@ export class ExerciceJoue {
   ) {}
 
   static depuis(position: number, exercice: Exercice, tireur: Tireur, niveau: Niveau): ExerciceJoue {
-    return new ExerciceJoue(position, exercice.titre, nombreDeQuestions(exercice), contenuDe(exercice, tireur, niveau));
+    const contenu = contenuDe(exercice, tireur, niveau);
+    const questions = contenu.additions?.questions.length ?? nombreDeQuestions(exercice);
+    return new ExerciceJoue(position, exercice.titre, questions, contenu);
   }
 
   /** La question à choix en cours ; une question de calcul s'affichera par son propre composant. */
@@ -50,7 +54,7 @@ export class ExerciceJoue {
 
   questionsJouees(): readonly QuestionSuivie[] {
     if (this.contenu.chronometre) return [this.contenu.chronometre];
-    return this.contenu.etiquettes?.questions ?? this.questionsPosees();
+    return this.contenu.etiquettes?.questions ?? this.contenu.additions?.questions ?? this.questionsPosees();
   }
 
   questionsRatees(): QuestionSuivie[] {
@@ -62,6 +66,7 @@ export class ExerciceJoue {
     if (chronometre) return chronometre.tirages().slice(0, 1);
     const etiquettes = this.contenu.etiquettes;
     if (etiquettes) return [etiquettes.tirage()];
+    if (this.contenu.additions) return this.contenu.additions.tirages();
     const operations = (this.contenu.operationsTirees ?? []).map(enonceTire);
     const tiragesDesQuestions = this.questionsPosees().map((question) => question.tirage());
     return [...(operations.length > 0 ? [operations] : []), ...tiragesDesQuestions].filter((tirage) =>
@@ -69,9 +74,9 @@ export class ExerciceJoue {
     );
   }
 
-  /** Les opérations qu'une fluence tire après la première, au fil des bonnes réponses. */
-  tiragesEnCoursDeFluence(): string[][] {
-    return this.contenu.chronometre?.tirages().slice(1) ?? [];
+  /** Les tirages faits après le début de l'exercice : opérations d'une fluence, choix des colonnes d'une addition. */
+  tiragesEnCoursDeJeu(): string[][] {
+    return this.contenu.chronometre?.tirages().slice(1) ?? this.contenu.additions?.tiragesEnCoursDeJeu() ?? [];
   }
 
   etiquettesAPlacer(): string[] {
@@ -125,6 +130,7 @@ export class ExerciceJoue {
 
   repondre(reponse: Reponse, maintenant?: Date): ResultatDeReponse {
     if (this.contenu.chronometre) return this.repondreALaFluence(this.contenu.chronometre, reponse, maintenant);
+    if (this.contenu.additions) return this.contenu.additions.repondre(reponse);
     if (reponse.genre === "placement") return this.placer(reponse);
     const question = this.questionPoseeEnCours();
     if (!question) throw new PasDeQuestionEnCours();
@@ -137,6 +143,7 @@ export class ExerciceJoue {
   direJeNeSaisPas(etiquette?: string): AideDonnee {
     if (this.contenu.chronometre) throw new JeNeSaisPasEnFluence();
     if (this.contenu.etiquettes) return this.contenu.etiquettes.direJeNeSaisPas(etiquette);
+    if (this.contenu.additions) return this.contenu.additions.direJeNeSaisPas(etiquette);
     const question = this.questionPoseeEnCours();
     if (!question) throw new PasDeQuestionEnCours();
     return question.direJeNeSaisPas();
@@ -144,7 +151,7 @@ export class ExerciceJoue {
 
   get questionsReussies(): number {
     if (this.contenu.chronometre) return this.contenu.chronometre.reussie ? 1 : 0;
-    return this.contenu.etiquettes?.nombreReussies ?? this.reussies;
+    return this.contenu.etiquettes?.nombreReussies ?? this.contenu.additions?.nombreReussies ?? this.reussies;
   }
 
   get rangDeLaQuestionEnCours(): number {
@@ -198,6 +205,8 @@ function contenuDe(exercice: Exercice, tireur: Tireur, niveau: Niveau): Contenu 
       return contenuDeCalcul(exercice, tireur, niveau);
     case "fluence":
       return { chronometre: ExerciceChronometre.pour(exercice, tireur) };
+    case "addition":
+      return { additions: AdditionsJouees.pour(exercice, tireur, niveau) };
     default:
       return { questionsPosees: questionsJoueesAvec(exercice, tireur) };
   }

@@ -1,7 +1,7 @@
 import { type Exercice, type ExerciceAddition } from "../../catalogue/domain/index.ts";
+import { AdditionPosee } from "./addition-posee.ts";
 
 const QUESTIONS_PAR_DEFAUT_D_UN_CALCUL = 5;
-const OPERATIONS_PAR_DEFAUT_D_UNE_ADDITION = 3;
 const QUESTIONS_PAR_VERS = 2;
 
 export function nombreDeQuestions(exercice: Exercice): number {
@@ -29,7 +29,10 @@ export function nombreDeQuestions(exercice: Exercice): number {
     case "memoriser":
       return taille(exercice.vers) * QUESTIONS_PAR_VERS;
     case "addition":
-      return nombreDOperationsPosees(exercice) * (exercice.etapes.length);
+      return lesAdditionsLesPlusLongues(exercice).reduce(
+        (total, nombres) => total + questionsDUneAddition(nombres, exercice.etapes),
+        0,
+      );
   }
 }
 
@@ -37,6 +40,18 @@ function taille(liste: readonly unknown[] | undefined): number {
   return liste?.length ?? 0;
 }
 
-function nombreDOperationsPosees(exercice: ExerciceAddition): number {
-  return exercice.operations?.length ?? exercice.generateur?.combien ?? OPERATIONS_PAR_DEFAUT_D_UNE_ADDITION;
+function lesAdditionsLesPlusLongues({ operations, generateur }: ExerciceAddition): readonly (readonly number[])[] {
+  if (operations) return operations;
+  if (!generateur) return [];
+  return Array.from(
+    { length: generateur.combien },
+    () => Array.from({ length: generateur.nombres }, () => generateur.max),
+  );
+}
+
+function questionsDUneAddition(nombres: readonly number[], etapes: ExerciceAddition["etapes"]): number {
+  const addition = AdditionPosee.depuis(nombres);
+  const chiffresPoses = etapes.includes("poser") ? addition.etapePoser().questions.length : 0;
+  const colonnesCalculees = etapes.includes("calculer") ? addition.colonnes.length : 0;
+  return chiffresPoses + colonnesCalculees;
 }

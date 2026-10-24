@@ -20,6 +20,10 @@ export class EtapePoser {
     return this.chiffres.map(({ question }) => question);
   }
 
+  get terminee(): boolean {
+    return this.questions.every((question) => question.reussie);
+  }
+
   get erreurs(): number {
     return this.questions.reduce((total, question) => total + question.erreurs, 0);
   }
@@ -70,9 +74,9 @@ function questionsDuNombre(nombre: number, indice: number): ChiffreAPoser[] {
   const chiffres = String(nombre).split("");
   return chiffres.map((chiffre, position) => {
     const { rang, couleur } = RANGS[chiffres.length - 1 - position]!;
-    const cle = CleDeQuestion.de("classer", `addition ${indice} ${nombre} ${rang}`);
+    const cle = CleDeQuestion.de("chiffre", `addition ${indice} ${nombre} ${rang}`);
     const aide = aideDuChiffre(nombre, chiffre, rang, couleur);
-    return { nombre, question: new QuestionAPlacer(cle, "classer", chiffre, { groupe: rang, aide }) };
+    return { nombre, question: new QuestionAPlacer(cle, "chiffre", chiffre, { groupe: rang, aide }) };
   });
 }
 
