@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import type { ProfilEnCours } from "@domain/famille";
 import {
   type PastilleDeRecord,
@@ -27,21 +27,22 @@ export function MesMedailles({ profil, univers, voix }: Props) {
   const pastilles = usePastillesDesRecords(profil.id);
   const { parole, rangDuMotPrononce, humeur, dire, faireSilence } = usePersonnageQuiParle(voix);
   const toutLire = profil.reglages.toutLireAVoixHaute;
-  const { lire } = voix;
+
+  const direLaSuite = useCallback(async (textes: readonly string[]) => {
+    for (const texte of textes) if (!(await dire({ texte, nature: "annonce" }))) return;
+  }, [dire]);
 
   useEffect(() => {
     if (pastilles === undefined) return;
     const [accueil = "", ...suite] = parolesALOuverture({ toutLire, pastilles });
     void (async () => {
       if (!(await dire({ texte: accueil, nature: "accueil" }))) return;
-      for (const texte of suite) await lire(texte);
+      await direLaSuite(suite);
     })();
     return faireSilence;
-  }, [pastilles, toutLire, dire, lire, faireSilence]);
+  }, [pastilles, toutLire, dire, direLaSuite, faireSilence]);
 
-  const ecouterLesRecords = async () => {
-    for (const texte of parolesDeLaSectionDesRecords(pastilles ?? [])) await lire(texte);
-  };
+  const ecouterLesRecords = () => direLaSuite(parolesDeLaSectionDesRecords(pastilles ?? []));
   const sections = sectionsDeLEcran(pastilles ?? []);
 
   return (
@@ -58,7 +59,7 @@ export function MesMedailles({ profil, univers, voix }: Props) {
   );
 }
 
-type PropsDeLaSection = { readonly pastilles: readonly PastilleDeRecord[]; readonly onEcouter: () => void };
+type PropsDeLaSection = { readonly pastilles: readonly PastilleDeRecord[]; readonly onEcouter: () => Promise<void> };
 
 function SectionDesRecords({ pastilles, onEcouter }: PropsDeLaSection) {
   return (
@@ -71,8 +72,8 @@ function SectionDesRecords({ pastilles, onEcouter }: PropsDeLaSection) {
             key={`${pastille.lecon}/${pastille.exercice}`}
             className="pastille-de-record"
             data-testid="pastille-de-record"
-            aria-label={phraseLueDeLaPastille(pastille)}
           >
+            <span className="visuellement-cache">{phraseLueDeLaPastille(pastille)}</span>
             <span className="libelle-de-la-pastille" aria-hidden="true">{pastille.libelle}</span>
             <span className="valeur-de-la-pastille" aria-hidden="true">{pastille.meilleurScore}</span>
           </li>
