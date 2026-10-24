@@ -27,13 +27,25 @@ export function lireGenerateur(brut: unknown): GenerateurComplet {
     op: lireSigne(generateur.op),
     a: lireIntervalle(generateur.a),
     b: lireIntervalle(generateur.b),
-    cible: generateur.cible === undefined ? CIBLE_PAR_DEFAUT : nombreRequis(generateur.cible, "la cible du générateur"),
+    cible: lireCible(generateur.cible),
     combien: lireCombien(generateur.combien),
   });
   if (lu.op === "complement" && lu.a[1] > lu.cible) {
     throw new LeconMalFormee("le nombre de départ d'un complément peut dépasser la cible");
   }
+  if (lu.op === ":" && lu.b[0] === 0) {
+    throw new LeconMalFormee("le diviseur d'un générateur de divisions peut valoir 0");
+  }
   return lu;
+}
+
+function lireCible(brut: unknown): number {
+  if (brut === undefined) return CIBLE_PAR_DEFAUT;
+  const cible = nombreRequis(brut, "la cible du générateur");
+  if (!Number.isInteger(cible) || cible < 0) {
+    throw new LeconMalFormee("la cible du générateur n'est pas un entier positif");
+  }
+  return cible;
 }
 
 function lireSigne(brut: unknown): Signe {
@@ -64,5 +76,6 @@ function lireIntervalle(brut: unknown): Intervalle {
   if (!Number.isInteger(min) || !Number.isInteger(max) || min > max) {
     throw new LeconMalFormee("un intervalle du générateur n'est pas un intervalle d'entiers");
   }
+  if (min < 0) throw new LeconMalFormee("une borne d'un intervalle du générateur est négative");
   return Object.freeze([min, max] as const);
 }

@@ -3,6 +3,7 @@ import { LeconMalFormee } from "../erreurs.ts";
 
 const ETAPES = ["poser", "calculer"] as const;
 const SOMME_MAXIMALE_EXCLUE = 1000;
+const UNITES_POUR_UNE_RETENUE = 10;
 
 const GENERATEUR_PAR_DEFAUT: GenerateurDAdditions = Object.freeze({
   nombres: 2,
@@ -99,7 +100,15 @@ function lireGenerateurDAdditions(brut: unknown): GenerateurDAdditions {
   if (lu.nombres * lu.max >= SOMME_MAXIMALE_EXCLUE) {
     throw new LeconMalFormee("le générateur d'additions peut tirer une somme d'au moins 1 000");
   }
+  if (lu.retenue && lu.nombres * plusGrandeUnite(lu) < UNITES_POUR_UNE_RETENUE) {
+    throw new LeconMalFormee("le générateur d'additions ne permet aucune retenue");
+  }
   return lu;
+}
+
+function plusGrandeUnite({ min, max }: GenerateurDAdditions): number {
+  const dernier = Math.min(max, min + UNITES_POUR_UNE_RETENUE - 1);
+  return Math.max(...Array.from({ length: dernier - min + 1 }, (_, decalage) => (min + decalage) % 10));
 }
 
 function lireEntier(brut: unknown, parDefaut: number, minimum: number, quoi: string): number {
