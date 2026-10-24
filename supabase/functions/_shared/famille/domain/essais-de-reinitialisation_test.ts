@@ -146,3 +146,15 @@ Deno.test("des essais reconstitués gardent leur compteur et leur blocage", () =
     TropDEssaisDeReinitialisation,
   );
 });
+
+Deno.test("les essais retiennent l'instant du dernier essai raté", () => {
+  const essais = essaisApres(quatreRatesALaFois());
+
+  assertEquals(essais.dernierRateLe, plusDeMinutes(debut, 3));
+});
+
+Deno.test("des essais neufs n'ont aucun dernier essai raté", () => {
+  const essais = EssaisDeReinitialisation.nouveaux(AdresseEmail.de("parent@exemple.fr"));
+
+  assertEquals(essais.dernierRateLe, null);
+});
