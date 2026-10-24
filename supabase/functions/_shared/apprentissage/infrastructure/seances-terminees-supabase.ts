@@ -13,7 +13,7 @@ export function ligneDeLaSeanceTerminee(fait: SeanceTerminee) {
     lecon: fait.lecon,
     choix: fait.choix,
     termine_le: fait.termineeLe.toISOString(),
-    etoiles: fait.etoiles,
+    etoiles: fait.etoiles ?? null,
     erreurs: fait.erreurs,
     par_type: fait.parType,
   };
@@ -60,7 +60,20 @@ export class SeancesTermineesSupabase implements SeancesTerminees {
     return data === true ? "enregistree" : "dejaEnregistree";
   }
 
-  enregistrerSansResultat(_fait: SeanceTerminee): Promise<"enregistree" | "dejaEnregistree"> {
-    return Promise.reject(new Error("Enregistrement d'une séance sans résultat : pas encore câblé."));
+  async enregistrerSansResultat(fait: SeanceTerminee): Promise<"enregistree" | "dejaEnregistree"> {
+    const ligne = ligneDeLaSeanceTerminee(fait);
+    const { data, error } = await this.client().rpc("enregistrer_la_seance_terminee_sans_resultat", {
+      p_id: ligne.id,
+      p_profil: ligne.profil,
+      p_lecon: ligne.lecon,
+      p_choix: ligne.choix,
+      p_termine_le: ligne.termine_le,
+      p_etoiles: ligne.etoiles,
+      p_erreurs: ligne.erreurs,
+      p_par_type: ligne.par_type,
+      p_questions: lignesDesQuestionsDeLaSeance(fait),
+    });
+    if (error) throw new Error(`Enregistrement de la séance terminée impossible : ${error.message}`);
+    return data === true ? "enregistree" : "dejaEnregistree";
   }
 }
