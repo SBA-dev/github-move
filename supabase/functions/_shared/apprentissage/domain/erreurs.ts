@@ -124,6 +124,13 @@ export class TirageEnTrop extends Error {
   }
 }
 
+export class TirageHorsDuGenerateur extends Error {
+  constructor(readonly tirage: string) {
+    super(`L'opération tirée « ${tirage} » ne vient pas du générateur de l'exercice.`);
+    this.name = "TirageHorsDuGenerateur";
+  }
+}
+
 export class SeanceIncoherente extends Error {
   constructor(override readonly cause: Error) {
     super(`La séance envoyée est incohérente : ${cause.message}`);
@@ -142,6 +149,34 @@ export class ParentNonRattache extends Error {
   constructor() {
     super("Ce parent n'est pas rattaché à ce profil.");
     this.name = "ParentNonRattache";
+  }
+}
+
+export class ReponseIncompatible extends Error {
+  constructor(readonly genre: string) {
+    super(`Une réponse de genre « ${genre} » ne convient pas à cette question.`);
+    this.name = "ReponseIncompatible";
+  }
+}
+
+export class FluenceNonCommencee extends Error {
+  constructor() {
+    super("Le signal « C'est parti ! » n'a pas encore été donné.");
+    this.name = "FluenceNonCommencee";
+  }
+}
+
+export class FluenceFinie extends Error {
+  constructor() {
+    super("Le temps de cet exercice est écoulé.");
+    this.name = "FluenceFinie";
+  }
+}
+
+export class JeNeSaisPasEnFluence extends Error {
+  constructor() {
+    super("Une fluence ne propose pas « Je ne sais pas ».");
+    this.name = "JeNeSaisPasEnFluence";
   }
 }
 

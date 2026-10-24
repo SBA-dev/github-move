@@ -79,7 +79,10 @@ export function ExerciceAChoix(props: Props) {
       {question && choixVisibles && (
         <>
           <ChoixDeLaQuestion
-            question={question}
+            textes={question.choix.textes()}
+            ecartes={question.choix.ecartes()}
+            possibles={question.choix.possibles()}
+            reponseQuiBrille={question.bonneReponseMontree ? question.choix.possibles()[0] : undefined}
             reussie={reussie}
             bulleEclatee={props.bulleEclatee}
             onChoisir={props.onChoisir}

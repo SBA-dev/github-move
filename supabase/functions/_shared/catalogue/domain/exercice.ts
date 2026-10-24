@@ -1,16 +1,30 @@
 import { LeconMalFormee } from "./erreurs.ts";
-import { enObjet, listeFacultative, nombreFacultatif, type Objet, texteFacultatif } from "./lecture.ts";
+import { enObjet, listeFacultative, type Objet, texteFacultatif } from "./lecture.ts";
+import { type ExerciceAddition, lireAddition } from "./exercices/addition.ts";
 import { type ExerciceBulles, lireBulles } from "./exercices/bulles.ts";
+import { type ExerciceCalcul, lireCalcul } from "./exercices/calcul.ts";
 import { type ExerciceClasser, lireClasser } from "./exercices/classer.ts";
 import { type ExerciceConjugaison, lireConjugaison } from "./exercices/conjugaison.ts";
 import { type ExerciceDictee, lireDictee } from "./exercices/dictee.ts";
+import { type ExerciceFluence, lireFluence } from "./exercices/fluence.ts";
 import { type ExerciceEcoute, lireEcoute } from "./exercices/ecoute.ts";
 import { type ExerciceLecture, lireExerciceDeLecture } from "./exercices/lecture.ts";
 import { type ExerciceOrdre, lireOrdre } from "./exercices/ordre.ts";
 import { type ExerciceTrous, lireTrous } from "./exercices/texte-a-trous.ts";
 import { estUnTypeDExercice, type TypeDExercice } from "./type-d-exercice.ts";
 
-type TypeSpecifique = "bulles" | "lecture" | "ecoute" | "classer" | "ordre" | "trous" | "dictee" | "conjugaison";
+type TypeSpecifique =
+  | "bulles"
+  | "lecture"
+  | "ecoute"
+  | "classer"
+  | "ordre"
+  | "trous"
+  | "dictee"
+  | "conjugaison"
+  | "calcul"
+  | "fluence"
+  | "addition";
 type TypeGenerique = Exclude<TypeDExercice, TypeSpecifique>;
 
 export type Exercice =
@@ -22,6 +36,9 @@ export type Exercice =
   | ExerciceTrous
   | ExerciceDictee
   | ExerciceConjugaison
+  | ExerciceCalcul
+  | ExerciceFluence
+  | ExerciceAddition
   | ExerciceGenerique;
 
 export type ExerciceGenerique = Readonly<{
@@ -29,22 +46,15 @@ export type ExerciceGenerique = Readonly<{
   titre?: string;
   consigne?: string;
   auteur?: string;
-  duree?: number;
   questions?: readonly unknown[];
   items?: readonly unknown[];
   vers?: readonly unknown[];
-  operations?: readonly unknown[];
-  etapes?: readonly unknown[];
-  generateur?: Readonly<Record<string, unknown>>;
 }>;
 
 type Donnee = Exclude<keyof ExerciceGenerique, "type">;
 
 const DONNEES_REQUISES: Record<TypeGenerique, readonly Donnee[]> = {
   memoriser: ["vers"],
-  addition: [],
-  calcul: [],
-  fluence: [],
   boite: ["items"],
   barres: ["items"],
 };
@@ -82,6 +92,12 @@ function lireExercice(brut: Objet, type: TypeDExercice): Exercice {
       return lireDictee(brut, communs);
     case "conjugaison":
       return lireConjugaison(brut, communs);
+    case "calcul":
+      return lireCalcul(brut, communs);
+    case "fluence":
+      return lireFluence(brut, communs);
+    case "addition":
+      return lireAddition(brut, communs);
     default:
       return lireExerciceGenerique(brut, type, communs);
   }
@@ -96,13 +112,9 @@ function lireExerciceGenerique(
     type,
     ...communs,
     auteur: texteFacultatif(brut.auteur, "l'auteur d'un exercice"),
-    duree: nombreFacultatif(brut.duree, "la durée d'un exercice"),
     questions: listeFacultative(brut.questions, "les questions"),
     items: listeFacultative(brut.items, "les items"),
     vers: listeFacultative(brut.vers, "les vers"),
-    operations: listeFacultative(brut.operations, "les opérations"),
-    etapes: listeFacultative(brut.etapes, "les étapes d'un exercice"),
-    generateur: brut.generateur === undefined ? undefined : enObjet(brut.generateur, "le générateur"),
   });
   for (const donnee of DONNEES_REQUISES[type]) {
     if (exercice[donnee] === undefined) throw new LeconMalFormee(`l'exercice « ${type} » n'a pas de ${donnee}`);
@@ -116,8 +128,6 @@ function listeDe(exercice: ExerciceGenerique, donnee: Donnee): readonly unknown[
     case "questions":
     case "items":
     case "vers":
-    case "operations":
-    case "etapes":
       return exercice[donnee] ?? [];
     default:
       return [];
@@ -125,12 +135,5 @@ function listeDe(exercice: ExerciceGenerique, donnee: Donnee): readonly unknown[
 }
 
 function aDesQuestions(exercice: ExerciceGenerique): boolean {
-  switch (exercice.type) {
-    case "fluence":
-    case "calcul":
-    case "addition":
-      return true;
-    default:
-      return DONNEES_REQUISES[exercice.type].every((donnee) => listeDe(exercice, donnee).length > 0);
-  }
+  return DONNEES_REQUISES[exercice.type].every((donnee) => listeDe(exercice, donnee).length > 0);
 }

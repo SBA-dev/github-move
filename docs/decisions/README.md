@@ -10,7 +10,7 @@ Une décision n'est jamais réécrite : si elle change, une nouvelle décision l
 | [0003](0003-domaine-partage-hors-ligne.md) | Domaine TypeScript partagé entre le serveur et le front, pour le hors ligne | Acceptée |
 | [0004](0004-voix-synthetique.md) | Poésies et chansons lues par une voix de synthèse, pas d'enregistrement audio | Acceptée |
 | [0005](0005-pas-de-temps-ecran.md) | Pas de limite de temps d'écran | Acceptée |
-| [0006](0006-methode-tdd-bdd-ddd-agents.md) | Méthode TDD, BDD et DDD avec une équipe de subagents | Acceptée, précisée par 0017 |
+| [0006](0006-methode-tdd-bdd-ddd-agents.md) | Méthode TDD, BDD et DDD avec une équipe de subagents | Acceptée, précisée par 0017 et 0020 |
 | [0007](0007-ports-du-front-dans-le-domaine.md) | Ports utilisés par le front déclarés dans le domaine, sous-domaine Voix | Acceptée, précisée par 0008 |
 | [0008](0008-voix-en-amont-et-service-de-lecture.md) | Voix publie le caractère de la voix ; service de lecture dans le domaine | Acceptée |
 | [0009](0009-ecritures-famille-par-edge-functions.md) | Écritures de Famille par Edge Functions, acceptation d'invitation et suppression | Acceptée |
@@ -24,3 +24,4 @@ Une décision n'est jamais réécrite : si elle change, une nouvelle décision l
 | [0017](0017-livraison-en-parallele-par-equipes.md) | Stories livrées en parallèle, une équipe par story, selon un graphe de dépendances | Acceptée |
 | [0018](0018-revalidation-de-la-dictee-sans-le-profil.md) | La dictée est revalidée sans relire le profil de l'enfant (complète 0016) | Acceptée |
 | [0019](0019-connexion-par-mot-de-passe-sans-e-mail-dans-la-beta.md) | Connexion par mot de passe, sans aucun e-mail, dans la beta ; inscription par Edge Function ; réinitialisation par le prénom d'un enfant jusqu'à #45 | Acceptée |
+| [0020](0020-accelerer-la-livraison-d-une-story.md) | Livraison d'une story accélérée : une seule non-régression E2E, scénarios en parallèle, review plus tôt | Acceptée |

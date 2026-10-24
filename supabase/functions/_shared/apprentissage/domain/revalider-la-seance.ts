@@ -7,22 +7,28 @@ import {
   ExerciceIntrouvable,
   GroupeInconnu,
   JeNeSaisPasDejaDit,
+  JeNeSaisPasEnFluence,
   LeconSansExercice,
   MotIncomplet,
   PasDeQuestionEnCours,
   PasDEtapeDeLeconEnCours,
   QuestionDejaReussie,
+  ReponseIncompatible,
   ReponseRangeeSousUneAutreQuestion,
   SeanceDejaFinie,
   SeanceIncoherente,
   SeanceNonFinie,
   TirageEnTrop,
+  TirageHorsDuGenerateur,
   TirageInvalide,
   TirageManquant,
 } from "./erreurs.ts";
 import type { ReponseDonnee } from "./reponse.ts";
 import { Seance, type SeanceTerminee } from "./seance.ts";
 import type { SeanceTermineeAEnregistrer } from "./seance-terminee-a-enregistrer.ts";
+
+const REPONSES_PAR_SECONDE_AU_PLUS_EN_FLUENCE = 3;
+const REPONSES_AU_PLUS_PAR_QUESTION = 200;
 
 const ERREURS_DE_REJEU = [
   BonneReponseAbsenteDesChoix,
@@ -32,15 +38,18 @@ const ERREURS_DE_REJEU = [
   GroupeInconnu,
   ExerciceIntrouvable,
   JeNeSaisPasDejaDit,
+  JeNeSaisPasEnFluence,
   LeconSansExercice,
   MotIncomplet,
   PasDeQuestionEnCours,
   PasDEtapeDeLeconEnCours,
   QuestionDejaReussie,
+  ReponseIncompatible,
   ReponseRangeeSousUneAutreQuestion,
   SeanceDejaFinie,
   SeanceNonFinie,
   TirageEnTrop,
+  TirageHorsDuGenerateur,
   TirageInvalide,
   TirageManquant,
 ];
@@ -63,16 +72,27 @@ function rejouer(lecon: Lecon, envoi: SeanceTermineeAEnregistrer): SeanceTermine
   const seance = Seance.reconstituer(lecon, envoi);
   while (seance.etapeDeLeconEnCours()) seance.continuer();
   envoi.reponses.forEach((reponsesDeLaQuestion, rang) => {
+    const fluence = seance.fluenceEnCours(envoi.termineeLe);
+    const estUneFluence = fluence !== undefined;
+    const reponsesAuPlus = fluence === undefined
+      ? REPONSES_AU_PLUS_PAR_QUESTION
+      : fluence.tempsRestant * REPONSES_PAR_SECONDE_AU_PLUS_EN_FLUENCE;
+    if (reponsesDeLaQuestion.length > reponsesAuPlus) {
+      throw new SeanceIncoherente(new Error(`${reponsesDeLaQuestion.length} réponses à la question ${rang + 1}`));
+    }
+    if (estUneFluence) seance.demarrerLaFluence(envoi.termineeLe);
     reponsesDeLaQuestion.forEach((reponse) => {
       if (seance.questionEstReussie(rang)) throw new QuestionDejaReussie();
-      rejouerLaReponse(seance, reponse, rang);
+      rejouerLaReponse(seance, reponse, rang, envoi.termineeLe);
     });
+    if (estUneFluence) seance.finirLaFluence();
     if (!seance.questionEstReussie(rang)) throw new SeanceNonFinie();
   });
+  seance.verifierQueTousLesTiragesOntServi();
   return seance.terminer(envoi.termineeLe);
 }
 
-function rejouerLaReponse(seance: Seance, reponse: ReponseDonnee, rang: number): void {
+function rejouerLaReponse(seance: Seance, reponse: ReponseDonnee, rang: number, maintenant: Date): void {
   const etiquetteDeLaQuestion = seance.etiquetteDeClasserALaQuestion(rang);
   if (
     reponse.genre === "placement" && etiquetteDeLaQuestion !== undefined && reponse.etiquette !== etiquetteDeLaQuestion
@@ -80,5 +100,5 @@ function rejouerLaReponse(seance: Seance, reponse: ReponseDonnee, rang: number):
     throw new ReponseRangeeSousUneAutreQuestion(reponse.etiquette);
   }
   if (reponse.genre === "jeNeSaisPas") seance.direJeNeSaisPas(seance.etiquetteDeLaQuestion(rang));
-  else seance.repondre(reponse);
+  else seance.repondre(reponse, maintenant);
 }

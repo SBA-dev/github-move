@@ -1,5 +1,5 @@
 # language: fr
-@issue-20 @wip
+@issue-20
 Fonctionnalité: Calcul, fluence et addition posée
   En tant qu'enfant
   Je veux calculer avec des choix ou le clavier de cristaux, calculer vite contre la montre, et poser puis calculer une addition en colonnes

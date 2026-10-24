@@ -55,6 +55,16 @@ Lis :
 
    **Accessibilité** : section « Accessibilité et expérience enfant » de `CLAUDE.md`
 
+## Mode delta (revue intermédiaire)
+
+L'orchestrateur te demande une **revue intermédiaire** à la fin d'un bloc de comportements TDD (décision 0020), avec un commit de départ `<depart>` :
+- vue d'ensemble limitée au bloc : `git log <depart>..HEAD --oneline` et `git diff <depart>..HEAD` ;
+- vérification automatique complète (tests, lint, fmt), comme d'habitude ;
+- mêmes axes et mêmes critères de bloquant, appliqués aux commits du bloc ; la conformité fonctionnelle porte sur les scénarios que ce bloc prétend couvrir, pas sur toute la story ;
+- même format de sortie, titré `## Verdict (bloc <nom du bloc>) : APPROUVÉ | À CORRIGER`.
+
+À la **review finale** (étape 4), l'orchestrateur te donne la liste des blocs déjà approuvés : tu relis tout le diff, mais tu concentres l'analyse détaillée sur le câblage (migration, repository, handler, front) et sur la cohérence d'ensemble, et tu ne reformules pas un non bloquant déjà signalé dans une revue intermédiaire.
+
 ## Usage de Bash
 
 Uniquement pour la lecture (`git fetch`, `git log`, `git diff`, `git show`), l'exécution de tests et de lint, et `gh`.

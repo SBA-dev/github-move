@@ -5,9 +5,18 @@ export { lireLecon } from "./lire-lecon.ts";
 export type { EtapeDeLecon, Lecon, PassageDuGuideFondamental, ProgrammeCite } from "./lecon.ts";
 export type { CodeDeMatiere, Matiere } from "./matiere.ts";
 export type { Exercice, ExerciceGenerique } from "./exercice.ts";
+export type { Addition, EtapeDAddition, ExerciceAddition, GenerateurDAdditions } from "./exercices/addition.ts";
 export type { ExerciceBulles } from "./exercices/bulles.ts";
 export type { EtiquetteAClasser, ExerciceClasser, Groupe } from "./exercices/classer.ts";
 export { NOMBRE_MAXIMAL_D_ETIQUETTES } from "./exercices/nombre-maximal-d-etiquettes.ts";
+export type { ExerciceCalcul, Operation } from "./exercices/calcul.ts";
+export type { ExerciceFluence } from "./exercices/fluence.ts";
+export type {
+  GenerateurComplet,
+  GenerateurDOperations,
+  Intervalle,
+  Signe,
+} from "./exercices/generateur-d-operations.ts";
 export type { ExerciceOrdre } from "./exercices/ordre.ts";
 export type { ExerciceDictee, MotDicte } from "./exercices/dictee.ts";
 export type { ExerciceConjugaison, FormeConjuguee } from "./exercices/conjugaison.ts";
