@@ -44,12 +44,11 @@ export class QuestionJouee implements QuestionSuivie {
   }
 
   static aChoix(
-    { cle, enonce, choix, bonneReponse, tireur, type, complements = {} }: {
+    { cle, enonce, choix, bonneReponse, type, complements = {} }: {
       readonly cle: CleDeQuestion;
       readonly enonce: string;
-      readonly choix: readonly string[];
+      readonly choix: ChoixProposes;
       readonly bonneReponse: string;
-      readonly tireur: Tireur;
       readonly type: TypeDExerciceAChoix;
       readonly complements?: Complements;
     },
@@ -58,7 +57,7 @@ export class QuestionJouee implements QuestionSuivie {
       enonce,
       cle,
       bonneReponse,
-      tireur.choix(choix, bonneReponse),
+      choix,
       type,
       complements,
     );
@@ -161,9 +160,8 @@ export function questionsJoueesAvec(exercice: Exercice, tireur: Tireur): Questio
         QuestionJouee.aChoix({
           cle: CleDeQuestion.de(type, q.question + q.reponse),
           enonce: q.question,
-          choix: q.choix,
+          choix: tireur.choix(q.choix, q.reponse),
           bonneReponse: q.reponse,
-          tireur,
           type,
           complements: { aide: q.aide },
         })
@@ -174,9 +172,8 @@ export function questionsJoueesAvec(exercice: Exercice, tireur: Tireur): Questio
         QuestionJouee.aChoix({
           cle: CleDeQuestion.de("ecoute", item.dire),
           enonce: questionDeLEcoute(item),
-          choix: item.choix,
+          choix: tireur.choix(item.choix, item.reponse),
           bonneReponse: item.reponse,
-          tireur,
           type: "ecoute",
           complements: { aide: item.aide, motAEcouter: item.dire, langue: exercice.langue },
         })
@@ -186,9 +183,8 @@ export function questionsJoueesAvec(exercice: Exercice, tireur: Tireur): Questio
         QuestionJouee.aChoix({
           cle: CleDeQuestion.de("trous", question.enonce),
           enonce: question.enonce,
-          choix: question.choix,
+          choix: tireur.trou(question.motAttendu, question.candidats),
           bonneReponse: question.motAttendu,
-          tireur,
           type: "trous",
         })
       );

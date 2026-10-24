@@ -20,6 +20,7 @@ type Contenu = Readonly<{
 
 export class ExerciceJoue {
   private reussies = 0;
+  private dernierResultatDuTrou: ResultatDeReponse | undefined;
 
   constructor(
     readonly position: number,
@@ -67,7 +68,13 @@ export class ExerciceJoue {
   }
 
   felicitationApresLaDerniereReponse(): boolean {
-    return this.contenu.etiquettes?.felicitationApresLaDerniereReponse() ?? false;
+    const etiquettes = this.contenu.etiquettes;
+    if (etiquettes) return etiquettes.felicitationApresLaDerniereReponse();
+    return this.dernierBonMotDUnTrou();
+  }
+
+  texteCompleteParLaDerniereReponse(): boolean {
+    return this.dernierBonMotDUnTrou() && this.estReussi();
   }
 
   relanceApresLaDerniereReponse(): string | undefined {
@@ -79,6 +86,7 @@ export class ExerciceJoue {
     const question = this.questionEnCours();
     if (!question) throw new PasDeQuestionEnCours();
     const resultat = question.repondre(reponse);
+    this.dernierResultatDuTrou = resultat;
     if (resultat === "juste") this.reussies++;
     return resultat;
   }
@@ -98,6 +106,10 @@ export class ExerciceJoue {
   private placer(placement: Extract<Reponse, { genre: "placement" }>): ResultatDeReponse {
     if (!this.contenu.etiquettes) throw new PasDeQuestionEnCours();
     return this.contenu.etiquettes.placer(placement);
+  }
+
+  private dernierBonMotDUnTrou(): boolean {
+    return this.contenu.segments !== undefined && this.dernierResultatDuTrou === "juste";
   }
 
   private questionsAChoix(): readonly QuestionJouee[] {

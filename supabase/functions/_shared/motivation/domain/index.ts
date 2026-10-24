@@ -5,6 +5,7 @@ export type { Hasard } from "./hasard.ts";
 export {
   direJeNeSaisPasAuClavierDeCristaux,
   direJeNeSaisPasAvecLesChoix,
+  direLeTexteComplet,
   type Encouragement,
   encourager,
   type Felicitation,

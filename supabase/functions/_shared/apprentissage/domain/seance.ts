@@ -132,6 +132,10 @@ export class Seance {
     return this.dernierExerciceRepondu?.felicitationApresLaDerniereReponse() ?? false;
   }
 
+  texteCompleteParLaDerniereReponse(): boolean {
+    return this.dernierExerciceRepondu?.texteCompleteParLaDerniereReponse() ?? false;
+  }
+
   relanceApresLaDerniereReponse(): string | undefined {
     return this.dernierExerciceRepondu?.relanceApresLaDerniereReponse();
   }

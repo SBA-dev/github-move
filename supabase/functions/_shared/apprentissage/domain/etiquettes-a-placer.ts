@@ -146,6 +146,10 @@ class EtiquettesDOrdre extends EtiquettesAPlacer {
     return this.nombreReussies === 0 ? AIDE_DU_DEBUT : AIDE_DE_LA_SUITE;
   }
 
+  protected override felicitationApresUneBonneEtiquette(reussies: number): boolean {
+    return reussies === this.questions.length;
+  }
+
   protected override relanceApresUneBonneEtiquette(reussies: number): string {
     return RELANCES[(reussies - 1) % RELANCES.length] as string;
   }

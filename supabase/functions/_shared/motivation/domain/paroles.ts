@@ -41,6 +41,10 @@ export function feliciter(
   return { texte: tirerDans(textes, hasard) };
 }
 
+export function direLeTexteComplet(personnageGuide: PersonnageGuide, hasard: Hasard): string {
+  return `${feliciter(personnageGuide, hasard).texte} Le texte est complet !`;
+}
+
 export function encourager(hasard: Hasard): Encouragement {
   return { texte: tirerDans(ENCOURAGEMENTS, hasard) };
 }

@@ -1,22 +1,21 @@
 import type { ExerciceTrous } from "../../../catalogue/domain/index.ts";
 
-const NOMBRE_DE_MOTS_EN_PLUS = 2;
 const EMPLACEMENT_DU_MOT = "…";
 const FIN_DE_PHRASE = /(?<=[.!?])\s+/;
 
-export type QuestionDeTrou = Readonly<{ enonce: string; motAttendu: string; choix: readonly string[] }>;
+export type QuestionDeTrou = Readonly<{ enonce: string; motAttendu: string; candidats: readonly string[] }>;
 
 export function questionsDeTrous(exercice: ExerciceTrous): QuestionDeTrou[] {
   return exercice.motsAttendus.map((motAttendu, rang) => ({
     enonce: phraseDuTrou(exercice, rang),
     motAttendu,
-    choix: [motAttendu, ...motsEnPlus(exercice, motAttendu)],
+    candidats: candidatsDuTrou(exercice, motAttendu),
   }));
 }
 
-function motsEnPlus(exercice: ExerciceTrous, motAttendu: string): string[] {
+function candidatsDuTrou(exercice: ExerciceTrous, motAttendu: string): string[] {
   const candidats = [...exercice.distracteurs, ...exercice.motsAttendus].filter((mot) => mot !== motAttendu);
-  return [...new Set(candidats)].slice(0, NOMBRE_DE_MOTS_EN_PLUS);
+  return [...new Set(candidats)];
 }
 
 function phraseDuTrou(exercice: ExerciceTrous, rang: number): string {
