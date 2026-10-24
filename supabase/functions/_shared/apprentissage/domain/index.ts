@@ -1,6 +1,6 @@
 export { Avancement } from "./avancement.ts";
 export { ExerciceJoue } from "./exercice-joue.ts";
-export type { SegmentDuTexteATrous } from "./exercice-joue.ts";
+export type { LigneDuTableauDeConjugaison, SegmentDuTexteATrous } from "./exercice-joue.ts";
 export type { EtiquettePosee } from "./etiquettes-a-placer.ts";
 export { nombreDeQuestions } from "./nombre-de-questions.ts";
 export { CleDeQuestion } from "./cle-de-question.ts";

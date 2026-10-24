@@ -6,6 +6,7 @@ export {
   direJeNeSaisPasAuClavierDeCristaux,
   direJeNeSaisPasAvecLesChoix,
   direLeTexteComplet,
+  direTuSaisConjuguer,
   type Encouragement,
   encourager,
   type Felicitation,

@@ -1,4 +1,4 @@
-import type { Exercice, Segment } from "../../catalogue/domain/index.ts";
+import type { Exercice, FormeConjuguee, Segment } from "../../catalogue/domain/index.ts";
 import { type EtiquettePosee, EtiquettesAPlacer } from "./etiquettes-a-placer.ts";
 import { PasDeQuestionEnCours } from "./erreurs.ts";
 import { nombreDeQuestions } from "./nombre-de-questions.ts";
@@ -14,10 +14,13 @@ export type SegmentDuTexteATrous =
   | Readonly<{ type: "trou"; mot: string }>
   | Readonly<{ type: "trou"; mot: undefined }>;
 
+export type LigneDuTableauDeConjugaison = Readonly<{ pronom: string; forme: string | undefined }>;
+
 type Contenu = Readonly<{
   questionsAChoix?: readonly QuestionJouee[];
   etiquettes?: EtiquettesAPlacer;
   segments?: readonly Segment[];
+  formes?: readonly FormeConjuguee[];
 }>;
 
 export class ExerciceJoue {
@@ -73,6 +76,13 @@ export class ExerciceJoue {
     });
   }
 
+  tableauDeConjugaison(): LigneDuTableauDeConjugaison[] {
+    return (this.contenu.formes ?? []).map(({ pronom, forme }, rang) => ({
+      pronom,
+      forme: rang < this.reussies ? forme : undefined,
+    }));
+  }
+
   aideApresLaDerniereErreur(): string | undefined {
     return this.contenu.etiquettes?.aideApresLaDerniereErreur();
   }
@@ -80,11 +90,16 @@ export class ExerciceJoue {
   paroleDueApresLaDerniereReponse(): ParoleDue | undefined {
     const etiquettes = this.contenu.etiquettes;
     if (etiquettes) return etiquettes.paroleDueApresLaDerniereReponse();
+    if (this.contenu.formes) return this.conjugaisonCompleteParLaDerniereReponse() ? "felicitation" : undefined;
     return this.dernierBonMotDUnTrou() ? "felicitation" : undefined;
   }
 
   texteCompleteParLaDerniereReponse(): boolean {
-    return this.dernierBonMotDUnTrou() && this.estReussi();
+    return this.contenu.segments !== undefined && this.derniereReponseCompleteLExercice();
+  }
+
+  conjugaisonCompleteParLaDerniereReponse(): boolean {
+    return this.contenu.formes !== undefined && this.derniereReponseCompleteLExercice();
   }
 
   repondre(reponse: Reponse): ResultatDeReponse {
@@ -125,6 +140,10 @@ export class ExerciceJoue {
     return this.contenu.segments !== undefined && this.dernierResultatDuTrou === "juste";
   }
 
+  private derniereReponseCompleteLExercice(): boolean {
+    return this.dernierResultatDuTrou === "juste" && this.estReussi();
+  }
+
   private questionsAChoix(): readonly QuestionJouee[] {
     return this.contenu.questionsAChoix ?? [];
   }
@@ -140,6 +159,8 @@ function contenuDe(exercice: Exercice, tireur: Tireur): Contenu {
       return { etiquettes: EtiquettesAPlacer.pourOrdonner(exercice, tireur.etiquettesMelangees(exercice.elements)) };
     case "trous":
       return { questionsAChoix: questionsJoueesAvec(exercice, tireur), segments: exercice.segments };
+    case "conjugaison":
+      return { questionsAChoix: questionsJoueesAvec(exercice, tireur), formes: exercice.formes };
     default:
       return { questionsAChoix: questionsJoueesAvec(exercice, tireur) };
   }

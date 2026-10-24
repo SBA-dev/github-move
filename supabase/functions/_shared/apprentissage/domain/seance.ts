@@ -138,6 +138,10 @@ export class Seance {
     return this.dernierExerciceRepondu?.texteCompleteParLaDerniereReponse() ?? false;
   }
 
+  conjugaisonCompleteParLaDerniereReponse(): boolean {
+    return this.dernierExerciceRepondu?.conjugaisonCompleteParLaDerniereReponse() ?? false;
+  }
+
   questionEstReussie(rang: number): boolean {
     return this.questions()[rang]?.reussie ?? false;
   }

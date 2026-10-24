@@ -76,6 +76,10 @@ export function direLeTexteComplet(personnageGuide: PersonnageGuide, hasard: Has
   return `${feliciter(personnageGuide, hasard).texte} Le texte est complet !`;
 }
 
+export function direTuSaisConjuguer(verbe: string, personnageGuide: PersonnageGuide, hasard: Hasard): string {
+  return `${feliciter(personnageGuide, hasard).texte} Tu sais conjuguer ${verbe} !`;
+}
+
 export function encourager(hasard: Hasard): Encouragement {
   return { texte: tirerDans(ENCOURAGEMENTS, hasard) };
 }
