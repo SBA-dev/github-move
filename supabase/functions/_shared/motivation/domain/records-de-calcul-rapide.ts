@@ -17,9 +17,9 @@ export function pastillesDesRecords(
   records: readonly RecordDuProfil[],
   lecons: readonly Lecon[],
 ): PastilleDeRecord[] {
-  return records
-    .map((record) => ({ record, position: positionDans(record, lecons) }))
-    .toSorted((a, b) => comparerDansLeParcours(a, b))
+  const positionnes = records.map((record) => ({ record, position: positionDans(record, lecons) }));
+  return [...positionnes]
+    .sort(comparerDansLeParcours)
     .map(({ record, position }) => ({ ...record, libelle: libelleDu(record, position) }));
 }
 
