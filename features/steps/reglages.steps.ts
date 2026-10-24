@@ -15,6 +15,7 @@ import {
   formulaireDeCreation,
   modifierLeProfil,
   pageCourante,
+  pageDansLEspaceParent,
   profilDe,
 } from "./profils-enfants.steps.ts";
 import { preparerProfil, listeDe } from "./univers.steps.ts";
@@ -347,7 +348,7 @@ When(/^Léa commence à jouer sur le téléphone$/, async ({ famille, page }) =>
 Then(
   /^les réglages de (Léa|Tom) indiquent : mode dys (oui|non), tout lire à voix haute (oui|non), parcours libre (oui|non), clavier des dictées (.+), langue du parent (\S+)$/,
   async ({ famille }, prenom: string, dys: string, tout: string, libre: string, clavier: string, langue: string) => {
-    await verifierLesReglages(await pageCourante(famille), prenom, {
+    await verifierLesReglages(await pageDansLEspaceParent(famille), prenom, {
       "mode dys": dys,
       "tout lire à voix haute": tout,
       "parcours libre": libre,
@@ -360,12 +361,12 @@ Then(
 Then(
   /^les réglages de (Léa|Tom) indiquent « ([^«»]+) » : « ([^«»]+) »$/,
   async ({ famille }, prenom: string, nom: string, valeur: string) => {
-    await verifierLesReglages(await pageCourante(famille), prenom, { [reglageConnu(nom)]: valeur });
+    await verifierLesReglages(await pageDansLEspaceParent(famille), prenom, { [reglageConnu(nom)]: valeur });
   },
 );
 
 Then(/^les autres réglages de Léa ont leurs valeurs par défaut$/, async ({ famille }) => {
-  await verifierLesReglages(await pageCourante(famille), "Léa", tousParDefautSauf(etatDesReglages(famille).dernierReglage));
+  await verifierLesReglages(await pageDansLEspaceParent(famille), "Léa", tousParDefautSauf(etatDesReglages(famille).dernierReglage));
 });
 
 Then(

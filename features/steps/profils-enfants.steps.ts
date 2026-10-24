@@ -110,12 +110,22 @@ export async function pageCourante(famille: Famille): Promise<Page> {
   return famille.page(etat(famille).appareil);
 }
 
+/** La page où le parent travaille, ouverte sur l'espace parent (qu'une création de profil ou un test de départ proposé a pu fermer). */
+export async function pageDansLEspaceParent(famille: Famille): Promise<Page> {
+  const appareil = etat(famille).appareil;
+  await famille.allerDansLEspaceParent(appareil);
+  return famille.page(appareil);
+}
+
 export function formulaireDeCreation(page: Page): Locator {
   return page.getByRole("form", { name: "Ajouter un enfant" });
 }
 
 export async function attendreLeRetourDuFormulaire(page: Page): Promise<void> {
-  const retour = page.getByRole("status").filter({ hasText: /est (créé|enregistré)/ }).or(page.getByRole("alert"));
+  // Story #27 : après une création, l'espace parent se ferme sur la proposition du test de départ (ou sur l'accueil de l'enfant
+  // quand la bibliothèque n'est pas chargée).
+  const retour = page.getByRole("status").filter({ hasText: /est (créé|enregistré)/ }).or(page.getByRole("alert"))
+    .or(page.getByTestId("proposition-du-test-de-depart")).or(page.getByRole("region", { name: /^Accueil de / }));
   // Le retour attend la réponse de l'Edge Function (démarrage à froid possible) : on attend l'élément sans le délai court des assertions.
   await retour.first().waitFor();
 }
@@ -146,6 +156,11 @@ function quiJoue(page: Page): Locator {
 export async function ouvrirQuiJoue(page: Page): Promise<Locator> {
   const quitter = page.getByRole("button", { name: "Quitter l'espace parent" });
   if (page.url() === "about:blank") await page.goto("/");
+  // Story #27 : depuis le test de départ, on revient à « Qui joue ? » dans l'application, sans recharger la page (le test fait
+  // pendant l'utilisation et le réseau coupé en dépendent).
+  if (new URL(page.url()).pathname === "/test-de-depart") {
+    await page.getByRole("banner").getByRole("button", { name: "Savanturier" }).click();
+  }
   const dejaLa = await quiJoue(page).or(quitter).waitFor({ timeout: 5_000 }).then(() => true, () => false);
   if (!dejaLa) await page.goto("/");
   if (await quitter.isVisible()) await quitter.click();
@@ -479,7 +494,7 @@ Then(/^Paul est informé que le prénom de l'enfant est obligatoire$/, async ({ 
 });
 
 Then(/^Paul voit le profil enfant de (.+) dans l'espace parent$/, async ({ famille }, prenom: string) => {
-  const page = await pageCourante(famille);
+  const page = await pageDansLEspaceParent(famille);
   await expect(page.getByTestId("profil-enfant").filter({ hasText: prenom })).toHaveCount(1);
   await verifierQueLaBaseRefuseLesEcrituresIncorrectes(famille, page, prenom);
 });

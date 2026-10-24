@@ -1,5 +1,5 @@
 # language: fr
-@issue-27 @wip
+@issue-27
 Fonctionnalité: Test de départ
   En tant qu'enfant
   Je veux répondre à quelques questions de français et de maths au début

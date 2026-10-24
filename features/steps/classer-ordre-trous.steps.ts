@@ -260,7 +260,8 @@ Given(
 
 Given(/^Tom a un profil enfant préparé de niveau (\S+)$/, async ({ page, monde, famille, $tags }, niveau: string) => {
   // Story #25 : Tom est un vrai second profil de Paul (sa progression est lue sous RLS) ; la page de Léa n'est pas touchée.
-  if ($tags.includes("@issue-25")) {
+  // Story #27 : le résultat du test de départ de Tom est lu sous RLS, comme sa progression.
+  if ($tags.includes("@issue-25") || $tags.includes("@issue-27")) {
     await creerLeProfil(famille, "Paul", { prenom: "Tom", niveau, libelleUnivers: "Animaux de la forêt" });
     return;
   }

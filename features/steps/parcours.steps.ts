@@ -1,6 +1,7 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 import type { DataTable } from "playwright-bdd";
 import { LECONS_DU_PARCOURS, servirLaBibliothequeDuParcours } from "../support/bibliotheque-du-parcours.ts";
+import { servirLaBibliothequeDuTestDeDepart } from "../support/bibliotheque-du-test-de-depart.ts";
 import type { Famille } from "../support/famille.ts";
 import { lireEnRestLeNiveauDuProfil } from "../support/profils-api.ts";
 import { ecrireUnResultatDeLecon } from "../support/supabase-test.ts";
@@ -171,10 +172,11 @@ When(/^Léa ouvre le parcours de français$/, async ({ famille, page }) => {
   await ouvrirLeParcoursDeFrancais(famille, page);
 });
 
-When(/^Léa ouvre le parcours de français sur le téléphone de Marie$/, async ({ famille }) => {
+When(/^Léa ouvre le parcours de français sur le téléphone de Marie$/, async ({ famille, $tags }) => {
   const telephone = await famille.page("telephone");
   if ((await famille.session(telephone)) === null) await famille.connecterSansEmail("telephone", "Marie");
-  await servirLaBibliothequeDuParcours(telephone);
+  if ($tags.includes("@issue-27")) await servirLaBibliothequeDuTestDeDepart(telephone);
+  else await servirLaBibliothequeDuParcours(telephone);
   await choisirLeaSur(telephone);
   pagesDuParcours.set(famille, telephone);
   await ouvrirLeParcoursDeFrancais(famille, telephone);
@@ -266,7 +268,7 @@ Then(/^les leçons du parcours sont numérotées (« .+ »)$/, async ({ famille,
   await expect(cible.getByTestId("place-de-la-lecon")).toHaveText(titresCites(liste));
 });
 
-const ETATS_DU_PARCOURS = /^(à toi|à découvrir|réussie, (\d) étoiles?)$/;
+const ETATS_DU_PARCOURS = /^(à toi|à découvrir|réussie au test de départ|réussie, (\d) étoiles?)$/;
 
 async function verifierUneLecon(cible: Page, rang: number, titre: string, etatAttendu: string): Promise<void> {
   const lecon = leconsDuParcours(cible).nth(rang);
@@ -276,6 +278,10 @@ async function verifierUneLecon(cible: Page, rang: number, titre: string, etatAt
     await expect(lecon).toHaveAttribute("data-etat", "prochaine");
     await expect(lecon).toHaveAccessibleName(`${titre} : à toi !`);
     await expect(lecon.getByTestId("etat-de-la-lecon")).toHaveText("À toi !");
+  } else if (correspondance[1] === "réussie au test de départ") {
+    await expect(lecon).toHaveAttribute("data-etat", "reussieAuTestDeDepart");
+    await expect(lecon).toHaveAccessibleName(`${titre} : réussie au test de départ`);
+    await expect(lecon.getByTestId("etat-de-la-lecon")).toHaveText("✓ Test de départ");
   } else if (correspondance[1] === "à découvrir") {
     await expect(lecon).toHaveAttribute("data-etat", "aDecouvrir");
     await expect(lecon).toHaveAccessibleName(`${titre} : à découvrir`);
@@ -341,8 +347,10 @@ Then(/^le bloc « ([^«»]+) » du parcours montre, et seulement elles :$/, asyn
   await expect(bloc.getByRole("button")).toHaveCount(lignes.length);
   for (const ligne of lignes) {
     const etoiles = Number(/(\d)/.exec(String(ligne["état"]))?.[1]);
-    await expect(bloc.getByRole("button", { name: `${String(ligne["leçon"])}, ${String(ligne["niveau"])} : réussie, ${etoiles} étoile${etoiles > 1 ? "s" : ""} sur 3` }))
-      .toBeVisible();
+    const annonce = String(ligne["état"]) === "réussie au test de départ"
+      ? "réussie au test de départ"
+      : `réussie, ${etoiles} étoile${etoiles > 1 ? "s" : ""} sur 3`;
+    await expect(bloc.getByRole("button", { name: `${String(ligne["leçon"])}, ${String(ligne["niveau"])} : ${annonce}` })).toBeVisible();
   }
 });
 

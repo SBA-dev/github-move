@@ -28,6 +28,15 @@ export async function jouerAvecLeProfilReel(famille: Famille, monde: Monde, page
   return profil;
 }
 
+/**
+ * Story #27 : l'accueil de l'enfant charge la bibliothèque et la garde pour toute la session. Une leçon de test ajoutée après
+ * l'accueil n'y serait pas : on recharge l'application et Léa se choisit de nouveau, comme si les leçons étaient là dès le départ.
+ */
+export async function rechargerAvecLeProfilReel(page: Page, prenom = "Léa"): Promise<void> {
+  await page.goto("/");
+  await choisirSonProfil(page, prenom);
+}
+
 /** Sur une autre page (le téléphone d'un parent connecté) : le profil de Léa est choisi dans « Qui joue ? ». */
 export async function choisirLeaSur(page: Page): Promise<void> {
   await page.goto("/");
