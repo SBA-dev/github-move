@@ -67,3 +67,6 @@ En attente d'une réponse : leçons réussies d'une classe au-dessus (N1, N7, N9
 - 16:05 UTC : bloc « Déjà réussies en <niveau> » câblé ; derniers non bloquants traités. Scénarios validés : `@a-valider`
   retirés, fichier renommé `features/25-parcours-par-matiere.feature` (N5 ; le `git mv` a été embarqué par le commit
   feat 6414056 lancé en parallèle, sans changement de contenu), titre d'un scénario de #24 renommé (N6).
+- 16:20 UTC : review du delta final (cycle 3, merge de `main` compris) : **APPROUVÉ**, 0 bloquant. Non bloquants
+  laissés : formatage d'un import dans `MonParcours.tsx`, regroupement par niveau fait dans React (présentation),
+  pas de step pour la page de la leçon hors ligne, commit 6414056 qui contient aussi le `git mv`.
