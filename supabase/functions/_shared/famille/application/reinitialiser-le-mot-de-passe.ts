@@ -37,8 +37,17 @@ export class ReinitialiserLeMotDePasse {
     const parent = await this.parentSiLePrenomEstConnu(adresseSaisie, prenomSaisi);
     if (!parent) throw new InformationsDeReinitialisationIncorrectes();
     await this.motsDePasse.changer(parent, nouveauMotDePasse);
+    await this.remettreLesEssaisAZero(essais, maintenant);
+  }
+
+  /** Le mot de passe est déjà changé : un registre en panne ne doit pas faire croire au parent que la demande a échoué. */
+  private async remettreLesEssaisAZero(essais: EssaisDeReinitialisation, maintenant: Date): Promise<void> {
     essais.enregistrerUneReussite();
-    await this.registre.enregistrer(essais, maintenant);
+    try {
+      await this.registre.enregistrer(essais, maintenant);
+    } catch {
+      // Le raté déjà compté s'oublie de lui-même 24 heures après le dernier raté.
+    }
   }
 
   /** L'essai est compté comme raté avant toute lecture du prénom : deux essais simultanés comptent tous les deux. */
