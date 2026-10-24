@@ -51,3 +51,4 @@ Branche `feature/58-retirer-la-page-de-demonstration`, partie de `main` `c7cabc0
 | Intégrations de `main` | 1 (`2173dba`, #65) : 2 conflits (`src/navigation.ts`, `src/Application.tsx`), résolus par `implementer` et relus par `mr-reviewer` |
 | Vérification anticipée | merge local jetable avec `feature/27-test-de-depart` (2 conflits identiques, nos scénarios verts) |
 | TDD | sans objet (aucun code de `domain/`), 1323 puis 1351 tests unitaires verts |
+- 23:55 UTC — Vérification du responsable : la non-régression « 673/674 » n'avait généré que 13 fichiers (tags de mise au point) ; #18 à #22, #24 et #25 n'ont pas tourné. `PRÊTE À MERGER` suspendu, relance avec la liste complète (20 fichiers attendus).
