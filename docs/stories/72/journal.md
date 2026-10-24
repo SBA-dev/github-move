@@ -22,3 +22,5 @@
 - Comportement 7/9 (ReinitialiserLeMotDePasseEtSeConnecter) : RED 69dd13f, GREEN 2bd6954. Contrat HTTP : 401 informations incorrectes, 429 trop d'essais, 422 entrée invalide. 1018 verts.
 - Comportement 8/9 (InscrireLeParent serveur) : RED 4e592e3, GREEN 0824777. 1025 verts.
 - Comportement 9/9 (ReinitialiserLeMotDePasse serveur) : RED 2616dec, GREEN 1cb559a. 1042 verts. Boucle TDD terminée : 9 cycles, aucune contestation.
+- Câblage serveur (implementer) : 1e8595c, 5e66463, 773caeb, 8654d64. Migration `20261024153000_essais_de_reinitialisation` appliquée sur savanturier-dev (version 20261024150000 déjà prise là-bas par `records_de_fluence` d'une autre équipe, absente de main : horodatage décalé), fonctions déployées (`--no-verify-jwt`), Auth réglée (inscriptions publiques fermées, confirmation désactivée, 8 caractères). Essai réel OK (200/409/422/401/401/422, signUp public refusé, réinitialisation « zoe » OK), données d'essai supprimées par identifiant.
+- Écart de rôle : getter `dernierRateLe` ajouté au domaine sans test ; tests d'infrastructure non écrits. Rattrapage demandé à test-writer (tests de caractérisation, notés comme tels).
