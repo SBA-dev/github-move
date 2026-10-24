@@ -79,3 +79,10 @@ En attente d'une réponse : leçons réussies d'une classe au-dessus (N1, N7, N9
   lui, relit le profil). Bug de câblage du front, pas du domaine : le scénario E2E sert de test rouge (pas de harnais
   de test front). Chargement du parcours hors ligne : 88-178 ms (au lieu d'environ 8 s).
   Intégration de `main` = 61d6fc4 (merge a41bb5d, sans conflit) : 949 tests Deno, tsc, lint, fmt verts.
+- 17:30 UTC : review du correctif (cycle 4) : **À CORRIGER**. Le KO du cycle 3 venait de la mise en place du scénario
+  (le changement de niveau rechargeait la page de Léa, qui jouait ensuite avec le profil préparé) et l'assertion
+  négative passait trop tôt : le vert de 303a05d était un faux positif, et ce code n'était exigé par aucun test.
+  303a05d annulé (ccf15d1). Steps à corriger par `e2e-tester` (rechoisir Léa, assertion stable).
+  Dette notée (non demandée par la story) : un niveau changé sur un autre appareil n'est vu qu'au prochain
+  « Qui joue ? » ; si besoin, à traiter à une seule source (`profilEnCours` rafraîchi), dans une autre story.
+  `main` a137f42 (PR #71, outillage) déjà intégré.
