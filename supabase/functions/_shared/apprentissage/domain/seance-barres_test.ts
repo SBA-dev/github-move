@@ -11,7 +11,7 @@ import { Reponse } from "./reponse.ts";
 import { revaliderLaSeance } from "./revalider-la-seance.ts";
 import { Seance } from "./seance.ts";
 
-const enonceDuMarche = "Au marché, Léa achète 4 pommes et 2 poires. Combien de fruits ?";
+const enonceDuMarche = "Au marché, j'achète 4 pommes rouges et 2 pommes vertes. Combien ai-je de pommes ?";
 const enonceDesCrayons = "Lina a 9 crayons, dont 6 rouges. Combien de bleus ?";
 
 function commencer(lecon: Lecon): Seance {

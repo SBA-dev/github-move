@@ -39,7 +39,7 @@ function leconDeBarresAuNiveau(id: string, niveau: "CP" | "CE1"): Lecon {
       type: "barres",
       items: [
         {
-          enonce: "Au marché, Léa achète 4 pommes et 2 poires. Combien de fruits ?",
+          enonce: "Au marché, j'achète 4 pommes rouges et 2 pommes vertes. Combien ai-je de pommes ?",
           parties: [4, 2],
           tout: null,
           phrase: "J'ai {r} pommes.",
