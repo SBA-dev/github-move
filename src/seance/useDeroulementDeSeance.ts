@@ -204,6 +204,7 @@ export function useDeroulementDeSeance(
     jeNeSaisPasDUneEtiquette,
     bonnesReponsesMontrees,
     lettresFausses: dictee.lettresFausses,
+    toucheQuiBrille: dictee.toucheQuiBrille,
     relireLaDictee: dictee.relireLaDictee,
     reecouterLeMot: dictee.reecouterLeMot,
     effacer: dictee.effacer,

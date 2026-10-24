@@ -32,6 +32,8 @@ export function useDictee(
   /** Les lettres fausses restent en rouge un instant : pendant ce temps, rien ne s'écrit. */
   const [lettresFausses, setLettresFausses] = useState<CorrectionDuMot | undefined>();
   const lettresFaussesMontrees = useRef(false);
+  /** « Je ne sais pas » à la dernière case : la touche à taper brille, la lettre n'est pas écrite. */
+  const [toucheQuiBrille, setToucheQuiBrille] = useState<string | undefined>();
 
   const laQuestion = useCallback((): QuestionDeDictee | undefined => seance.questionDeDicteeEnCours(), [seance]);
 
@@ -96,6 +98,7 @@ export function useDictee(
     const minuscule = lettre.toLowerCase();
     if (!exercice || !question || !peutEcrire() || !question.touchesDisponibles().includes(minuscule)) return;
     const resultat = seance.taper(minuscule);
+    setToucheQuiBrille(undefined);
     redessiner();
     if (resultat === undefined) return;
     sequence.current++;
@@ -121,18 +124,20 @@ export function useDictee(
       if (erreur instanceof PasDeLettreAEffacer) return;
       throw erreur;
     }
+    setToucheQuiBrille(undefined);
     redessiner();
   }, [seance, peutEcrire, redessiner]);
 
   const jeNeSaisPas = useCallback(() => {
     const question = laQuestion();
     if (!question || !peutEcrire() || question.bonneReponseMontree) return;
-    seance.direJeNeSaisPas();
+    const { maniere, bonneReponse } = seance.direJeNeSaisPas();
+    if (maniere === "briller") setToucheQuiBrille(bonneReponse);
     sequence.current++;
     faireSilence();
     montrerHumeur("reflechit");
     redessiner();
   }, [seance, laQuestion, peutEcrire, sequence, faireSilence, montrerHumeur, redessiner]);
 
-  return { lettresFausses, presenter, relireLaDictee, reecouterLeMot, taper, effacer, jeNeSaisPas };
+  return { lettresFausses, toucheQuiBrille, presenter, relireLaDictee, reecouterLeMot, taper, effacer, jeNeSaisPas };
 }

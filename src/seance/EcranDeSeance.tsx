@@ -213,6 +213,7 @@ function SeanceEnCours(
             <ExerciceDeDictee
               question={figee?.questionDeDictee ?? seance.questionDeDicteeEnCours()}
               lettresFausses={deroulement.lettresFausses}
+              toucheQuiBrille={deroulement.toucheQuiBrille}
               reussie={figee !== undefined}
               messageSansVoix={exerciceDemandeLeSon(exerciceDeLaLecon.type) ? messageDeLaDicteeSansVoix(etatDeLaVoix(voix)) : undefined}
               sonCoupe={voix.son === "muet"}

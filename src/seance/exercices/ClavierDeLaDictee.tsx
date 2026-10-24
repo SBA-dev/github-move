@@ -2,6 +2,8 @@ import type { QuestionDeDictee } from "@domain/apprentissage";
 
 type Props = {
   readonly question: QuestionDeDictee;
+  /** La touche à taper, mise en avant par « Je ne sais pas ». */
+  readonly toucheQuiBrille: string | undefined;
   readonly onTaper: (lettre: string) => void;
   readonly onEffacer: () => void;
 };
@@ -22,7 +24,7 @@ function aUneLettreEcrite(question: QuestionDeDictee): boolean {
   return question.cases().some((une) => une.genre === "aEcrire" && une.lettre !== undefined);
 }
 
-export function ClavierDeLaDictee({ question, onTaper, onEffacer }: Props) {
+export function ClavierDeLaDictee({ question, toucheQuiBrille, onTaper, onEffacer }: Props) {
   return (
     <div className="clavier-de-dictee" role="group" aria-label="Clavier" data-testid="clavier-de-dictee" data-genre={question.clavier().genre}>
       {touchesProposees(question).map((rangee, rang) => (
@@ -34,6 +36,7 @@ export function ClavierDeLaDictee({ question, onTaper, onEffacer }: Props) {
               className="touche"
               data-testid="touche"
               data-lettre={lettre}
+              data-brille={proposee && lettre === toucheQuiBrille ? "true" : undefined}
               aria-disabled={proposee ? undefined : true}
               onClick={() => proposee && onTaper(lettre)}
             >

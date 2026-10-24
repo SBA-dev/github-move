@@ -8,6 +8,7 @@ import { useClavierPhysique } from "./useClavierPhysique.ts";
 type Props = {
   readonly question: QuestionDeDictee | undefined;
   readonly lettresFausses: CorrectionDuMot | undefined;
+  readonly toucheQuiBrille: string | undefined;
   /** Le mot est bien écrit : on le félicite avant de passer au suivant. */
   readonly reussie: boolean;
   /** Ce que la dictée dit à l'enfant quand la voix manque (son coupé, navigateur sans voix). */
@@ -44,7 +45,7 @@ export function ExerciceDeDictee(props: Props) {
       <button type="button" className="secondaire" data-testid="reecouter-le-mot" onClick={props.onReecouterLeMot}>
         Réécouter le mot
       </button>
-      <ClavierDeLaDictee question={question} onTaper={props.onTaper} onEffacer={props.onEffacer} />
+      <ClavierDeLaDictee question={question} toucheQuiBrille={props.toucheQuiBrille} onTaper={props.onTaper} onEffacer={props.onEffacer} />
       {!question.bonneReponseMontree && !reussie && (
         <button type="button" className="je-ne-sais-pas" data-testid="je-ne-sais-pas" onClick={props.onJeNeSaisPas}>
           Je ne sais pas
