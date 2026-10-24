@@ -60,3 +60,4 @@ export type { ColonneDAdditionPosee } from "./addition-posee.ts";
 export type { EtapePoser } from "./etape-poser.ts";
 export type { EtapeCalculer } from "./etape-calculer.ts";
 export type { VueAddition, VueColonne } from "./vue-d-addition.ts";
+export { historiqueDeCalcul } from "./historique-de-calcul.ts";
