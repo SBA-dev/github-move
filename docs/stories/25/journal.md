@@ -34,3 +34,9 @@ Indépendants des questions N :
 En attente d'une réponse : leçons réussies d'une classe au-dessus (N1, N7, N9), repli de la leçon suivante (N4), leçon suivante après une leçon d'une classe au-dessus (N10).
 - 13:55 UTC : comportements 1 à 6 verts (786 tests). Cycles : 5 RED/GREEN (2 et 3 groupés), 1 reprise de formatage d'un
   test rouge. Aucun désaccord. Restent en attente des réponses N : N1/N7/N9 (classe au-dessus), N4, N10.
+- 14:10 UTC : câblage du front (écran « Mon parcours », bouton de l'accueil, leçon suivante de fin de séance, étoiles
+  gagnées gardées en mémoire et fusionnées par `Etoiles.meilleureQue`). Ancienne règle `leconSuivante` du Catalogue
+  retirée (test par `test-writer`, code par `implementer`). Relevé : une leçon jouée hors du niveau de l'enfant
+  renvoie aujourd'hui la première leçon non réussie du parcours ; à corriger par un test dès la réponse à N10.
+  Dette signalée : après un rechargement sans réseau, une séance gardée dans IndexedDB n'apparaît pas dans le parcours
+  (relève de #44, réponse 25.6).
