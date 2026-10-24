@@ -3,16 +3,17 @@
 Entrées (dossier passé en argument), écrites par la session qui rafraîchit :
   issues.json    liste des issues (number, title, state, labels)
   prs.json       liste des pull requests (number, title, state, head.ref)
-  sessions.json  sessions Claude : id, title, created_at, tags, cost_usd, branches
+  sessions-nouvelles.json  sessions Claude récentes : id, title, created_at, tags, cost_usd, branches
+                 (fusionnées dans sessions.json, qui garde les anciennes d'un relevé à l'autre)
   comments/<n>.json  commentaire « Avancement » des issues en cours : [{body, updated_at}]
 
 Sorties (dans <entrées>/sortie) : stories, equipes, etapes, couverture,
-tests, sessions, releve (.json), au format attendu par le tableau de bord.
+tests, sessions, previsions, releve (.json), au format attendu par le tableau de bord.
 """
 
 import json
 import re
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 import subprocess
 import sys
 from collections import defaultdict
@@ -177,6 +178,59 @@ def branches(session):
     return session.get("branches") or list(session.get("external_metadata", {}).get("current_branches", {}).values())
 
 
+PAUSE_MAX_S = 45 * 60  # au-delà, l'écart entre deux commits n'est pas compté comme du travail
+
+
+def temps_de_developpement(n):
+    """Dates des commits « (#n) » de toutes les branches : début, fin, durée calendaire et temps actif (heures)."""
+    sortie = subprocess.run(
+        ["git", "log", "--all", "-E", f"--grep=\\(#{n}[),]", "--format=%cI"], cwd=RACINE, capture_output=True, text=True,
+    ).stdout.split()
+    dates = sorted({datetime.fromisoformat(d).astimezone(timezone.utc) for d in sortie})
+    if not dates:
+        return None
+    actif = sum(min((b - a).total_seconds(), PAUSE_MAX_S) for a, b in zip(dates, dates[1:]))
+    return {"debut": dates[0], "fin": dates[-1], "calendaire_h": (dates[-1] - dates[0]).total_seconds() / 3600, "actif_h": actif / 3600}
+
+
+def chemin_critique():
+    m = re.search(r"## Chemin critique.*?`([^`]+)`", (RACINE / "docs/graphe/stories.md").read_text(), re.S)
+    return [int(x) for x in re.findall(r"#(\d+)", m.group(1))] if m else []
+
+
+def previsions(lignes_stories, temps, maintenant):
+    """Date de fin estimée : vitesse des 7 derniers jours, et plancher du chemin critique."""
+    livrees = [s for s in lignes_stories if s["etat"] == "Livrée" and temps.get(s["numero"])]
+    debut = min((t["debut"] for t in temps.values()), default=maintenant)
+    fenetre_j = max(min(7.0, (maintenant - debut).total_seconds() / 86400), 0.5)
+    recentes = [s for s in livrees if (maintenant - temps[s["numero"]]["fin"]).total_seconds() <= fenetre_j * 86400]
+    en_cours = sum(s["avancement"] for s in lignes_stories if s["etat"] in ("En cours", "En revue"))
+    vitesse = (len(recentes) + en_cours) / fenetre_j
+    durees = sorted(temps[s["numero"]]["calendaire_h"] for s in livrees)
+    mediane_h = durees[len(durees) // 2] if durees else 24.0
+    etat = {s["numero"]: s for s in lignes_stories}
+    critique_beta = chemin_critique()
+    lignes = []
+    # Après la beta, le retrait de app/ (#46) attend toutes les autres stories : il allonge le chemin d'une story.
+    for perimetre, filtre, critique in (
+        ("Beta", lambda s: s["beta"] == "oui", critique_beta),
+        ("Toute la réécriture", lambda s: True, critique_beta + [46]),
+    ):
+        reste = sum(1 - s["avancement"] for s in lignes_stories if filtre(s))
+        jours_vitesse = reste / vitesse if vitesse else None
+        jours_critique = sum(1 - etat[n]["avancement"] for n in critique if n in etat) * mediane_h / 24
+        jours = max(jours_vitesse or 0, jours_critique)
+        lignes.append({
+            "perimetre": perimetre, "reste_stories": round(reste, 2), "vitesse_par_jour": round(vitesse, 2),
+            "jours_selon_vitesse": round(jours_vitesse, 1) if jours_vitesse else None, "jours_chemin_critique": round(jours_critique, 1),
+            "stories_chemin_critique": " → ".join(f"#{n}" for n in critique),
+            "duree_mediane_story_h": round(mediane_h, 1), "jours_restants": round(jours, 1),
+            "limite": "chemin critique" if jours_critique >= (jours_vitesse or 0) else "vitesse",
+            "fin_estimee": (maintenant + timedelta(days=jours)).strftime("%Y-%m-%d"),
+        })
+    return lignes
+
+
 def story_d_equipe(session):
     for tag in session.get("tags", []):
         m = re.fullmatch(r"graphe:(\d+)", tag)
@@ -189,7 +243,10 @@ def main(dossier):
     dossier = Path(dossier)
     issues = lire(dossier / "issues.json", [])
     prs = lire(dossier / "prs.json", [])
-    sessions = [s for s in lire(dossier / "sessions.json", []) if s.get("created_at", "") >= DEBUT_REECRITURE]
+    connues = {s["id"]: s for s in lire(dossier / "sessions.json", [])}
+    connues.update({s["id"]: s for s in lire(dossier / "sessions-nouvelles.json", [])})
+    (dossier / "sessions.json").write_text(json.dumps(list(connues.values()), ensure_ascii=False))
+    sessions = [s for s in connues.values() if s.get("created_at", "") >= DEBUT_REECRITURE]
     graphe = lire_graphe()
     date = max((i.get("updated_at", "") for i in issues), default="")[:10]
 
@@ -228,6 +285,8 @@ def main(dossier):
     if rafraichissements:
         lignes_sessions.append({"session": "Tableau de bord et ses mises à jour", "periode": "depuis le 24 oct.", "stories": "ce tableau", "cout_usd": round(rafraichissements, 2), "role": "Outillage"})
 
+    maintenant = datetime.now(timezone.utc)
+    temps = {n: t for n in stories if (t := temps_de_developpement(n))}
     lignes_stories, lignes_equipes, lignes_etapes = [], [], []
     for n in sorted(stories):
         g = graphe.get(n, {"beta": True, "depend_de": "—", "niveau": None})
@@ -248,10 +307,15 @@ def main(dossier):
         else:
             etat, avancement = "Bloquée", 0.0
         c = couts.get(n)
+        t = temps.get(n)
         lignes_stories.append({
             "story": f"#{n}", "numero": n, "titre": stories[n]["title"], "lot": lot(n), "beta": "oui" if g["beta"] else "non",
             "etat": etat, "avancement": avancement, "depend_de": "—" if n in fermees else g["depend_de"], "niveau": g["niveau"],
             "cout_usd": c[0] if c else None, "methode_cout": c[1] if c else None,
+            "temps_actif_h": round(t["actif_h"], 1) if t else None,
+            "duree_calendaire_h": round(t["calendaire_h"], 1) if t else None,
+            "premier_commit": t["debut"].strftime("%Y-%m-%d %H:%M") if t else None,
+            "dernier_commit": t["fin"].strftime("%Y-%m-%d %H:%M") if t else None,
         })
         if etat in ("En cours", "En revue"):
             s = session_de.get(n, {})
@@ -275,7 +339,8 @@ def main(dossier):
     sortie.mkdir(exist_ok=True)
     for nom, donnees in {
         "stories": lignes_stories, "equipes": lignes_equipes, "etapes": lignes_etapes,
-        "releve": [{"releve": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"), "commit_main": commit_main()}],
+        "previsions": previsions(lignes_stories, temps, maintenant),
+        "releve": [{"releve": maintenant.strftime("%Y-%m-%d %H:%M UTC"), "commit_main": commit_main()}],
         "couverture": lignes_couverture, "tests": suites_de_tests(reussis, echoues, date), "sessions": lignes_sessions,
     }.items():
         (sortie / f"{nom}.json").write_text(json.dumps(donnees, ensure_ascii=False, indent=0))

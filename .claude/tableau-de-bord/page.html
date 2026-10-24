@@ -66,6 +66,7 @@
   <section class="sv-kpis" id="chiffres">
     <div class="sv-kpi"><span class="lbl">Avancement de la beta</span><span class="val dash-skeleton" data-source="kpi" data-field="avancement_beta" data-row="0">—</span><span class="sub">34 stories, stories en cours comptées au prorata</span></div>
     <div class="sv-kpi"><span class="lbl">Avancement de toute la réécriture</span><span class="val dash-skeleton" data-source="kpi" data-field="avancement_projet" data-row="0">—</span><span class="sub">43 stories, beta et après la beta</span></div>
+    <div class="sv-kpi"><span class="lbl">Fin estimée de la beta</span><span class="val dash-skeleton" data-source="previsions" data-field="fin_estimee" data-where="perimetre=Beta">—</span><span class="sub">dans <span data-source="previsions" data-field="jours_restants" data-where="perimetre=Beta">—</span> jours, limitée par le <span data-source="previsions" data-field="limite" data-where="perimetre=Beta">—</span></span></div>
     <div class="sv-kpi"><span class="lbl">Couverture des lignes (Deno)</span><span class="val dash-skeleton" data-source="kpi" data-field="couverture_lignes" data-row="0">—</span><span class="sub">branches : <span data-source="kpi" data-field="couverture_branches" data-row="0">—</span></span></div>
     <div class="sv-kpi"><span class="lbl">Usage de la réécriture (équivalent API)</span><span class="val dash-skeleton" data-source="kpi" data-field="cout_total" data-row="0">—</span><span class="sub">en moyenne <span data-source="kpi" data-field="cout_moyen" data-row="0">—</span> par story</span></div>
     <div class="sv-kpi"><span class="lbl">Usage estimé pour finir la beta</span><span class="val dash-skeleton" data-source="kpi" data-field="cout_restant_beta" data-row="0">—</span><span class="sub">coût moyen × stories restantes</span></div>
@@ -95,6 +96,19 @@
     </div>
   </section>
 
+  <section class="sv-sec" id="prevision">
+    <h2>Quand le développement sera-t-il terminé ?</h2>
+    <p class="note">Deux estimations, on garde la plus lointaine. La vitesse : stories livrées ces 7 derniers jours (stories en cours au prorata), appliquée à ce qui reste. Le chemin critique : stories qui doivent se suivre une à une, multipliées par la durée médiane d'une story (du premier commit au dernier). L'estimation ne compte ni les attentes de validation du PO ni les pauses de plusieurs jours.</p>
+    <div class="sv-card">
+      <div class="sv-tablebox">
+        <table data-source="previsions" data-row-key="perimetre" id="table-previsions">
+          <thead><tr><th data-field="perimetre">Périmètre</th><th data-field="fin_estimee">Fin estimée</th><th data-field="jours_restants" class="num">Jours restants</th><th data-field="reste_stories" class="num">Stories restantes</th><th data-field="jours_selon_vitesse" class="num">Selon la vitesse</th><th data-field="jours_chemin_critique" class="num">Selon le chemin critique</th><th data-field="vitesse_par_jour" class="num">Stories par jour</th><th data-field="duree_mediane_story_h" class="num">Durée médiane d'une story</th><th data-field="stories_chemin_critique">Chemin critique</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
   <section class="sv-sec" id="tests">
     <h2>Tests et couverture</h2>
     <div class="sv-grid">
@@ -112,14 +126,14 @@
   </section>
 
   <section class="sv-sec" id="couts">
-    <h2>Usage de Claude par story</h2>
-    <p class="note">Prix qu'aurait coûté chaque session au tarif de l'API, rapporté par la session. Avec l'abonnement Max, il n'est pas facturé : il mesure la part de tes limites d'usage consommée. Exact pour les équipes de la vague 1 (une session par story). Pour les sessions qui ont livré plusieurs stories, le coût est réparti à parts égales.</p>
+    <h2>Temps et usage de Claude par story</h2>
+    <p class="note">Temps actif : somme des écarts entre commits de la story, sans compter les pauses de plus de 45 minutes. Durée calendaire : du premier au dernier commit. Usage : prix qu'aurait coûté chaque session au tarif de l'API, rapporté par la session. Avec l'abonnement Max, il n'est pas facturé : il mesure la part de tes limites d'usage consommée. Exact pour les équipes de la vague 1 (une session par story). Pour les sessions qui ont livré plusieurs stories, le coût est réparti à parts égales.</p>
     <div class="sv-grid">
       <div class="sv-card">
         <h3>Par story</h3>
         <div class="sv-tablebox">
           <table data-source="stories" data-row-key="story" id="table-couts">
-            <thead><tr><th data-field="story">Story</th><th data-field="titre">Titre</th><th data-field="etat">État</th><th data-field="cout_usd" class="num">Équiv. API</th><th data-field="methode_cout">Calcul</th></tr></thead>
+            <thead><tr><th data-field="story">Story</th><th data-field="titre">Titre</th><th data-field="etat">État</th><th data-field="temps_actif_h" class="num">Temps actif</th><th data-field="duree_calendaire_h" class="num">Durée calendaire</th><th data-field="cout_usd" class="num">Équiv. API</th><th data-field="methode_cout">Calcul</th></tr></thead>
             <tbody></tbody>
           </table>
         </div>
@@ -204,7 +218,11 @@ const svPct0 = new Intl.NumberFormat('fr-FR', { style: 'percent', maximumFractio
 const svPct1 = new Intl.NumberFormat('fr-FR', { style: 'percent', minimumFractionDigits: 1, maximumFractionDigits: 1 });
 const svUsd = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
 const svUsd2 = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 });
-window.svFormats = { svFr, svPct0, svPct1, svUsd, svUsd2 };
+const svDec = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 1 });
+const svHeures = (v) => (v === null || v === undefined ? '—' : svDec.format(v) + ' h');
+const svJours = (v) => (v === null || v === undefined ? '—' : svDec.format(v) + ' j');
+const svDate = (v) => (v ? new Intl.DateTimeFormat('fr-FR', { weekday: 'short', day: 'numeric', month: 'long', timeZone: 'UTC' }).format(new Date(v + 'T12:00:00Z')) : '—');
+window.svFormats = { svFr, svPct0, svPct1, svUsd, svUsd2, svDec };
 
 function svFail(el) {
   el.replaceChildren();
@@ -220,6 +238,14 @@ function svKpis() {
     if (rel.status !== 'ok' || !rel.data.length) { el.textContent = '—'; return; }
     el.classList.remove('dash-skeleton');
     el.textContent = rel.data[0][el.dataset.field];
+  });
+  const pr = dash.data('previsions');
+  document.querySelectorAll('#chiffres [data-source="previsions"]').forEach((el) => {
+    const ligne = pr.status === 'ok' ? pr.data.find((p) => p.perimetre === 'Beta') : null;
+    if (!ligne) { el.textContent = '—'; return; }
+    el.classList.remove('dash-skeleton');
+    const f = el.dataset.field;
+    el.textContent = f === 'fin_estimee' ? svDate(ligne[f]) : f === 'jours_restants' ? svDec.format(ligne[f]) : ligne[f];
   });
   const r = dash.data('kpi');
   const fmt = {
@@ -440,8 +466,10 @@ dash.onData(() => {
   svCouverture();
   svSuites();
   svTable(document.getElementById('table-couts'), 'stories',
-    [['story'], ['titre'], ['etat', 'pill'], ['cout_usd', (v) => svUsd2.format(v), true], ['methode_cout']],
-    (s) => s.cout_usd !== null && s.cout_usd !== undefined);
+    [['story'], ['titre'], ['etat', 'pill'], ['temps_actif_h', svHeures, true], ['duree_calendaire_h', svHeures, true], ['cout_usd', (v) => (v === null || v === undefined ? '—' : svUsd2.format(v)), true], ['methode_cout']],
+    (s) => s.cout_usd != null || s.temps_actif_h != null);
+  svTable(document.getElementById('table-previsions'), 'previsions',
+    [['perimetre'], ['fin_estimee', svDate], ['jours_restants', svJours, true], ['reste_stories', (v) => svDec.format(v), true], ['jours_selon_vitesse', svJours, true], ['jours_chemin_critique', svJours, true], ['vitesse_par_jour', (v) => svDec.format(v), true], ['duree_mediane_story_h', svHeures, true], ['stories_chemin_critique']]);
   svTable(document.getElementById('table-sessions'), 'sessions',
     [['session'], ['stories'], ['role'], ['cout_usd', (v) => svUsd2.format(v), true]]);
 });
