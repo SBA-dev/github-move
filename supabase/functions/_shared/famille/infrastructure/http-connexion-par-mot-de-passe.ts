@@ -10,14 +10,11 @@ import {
 } from "../domain/erreurs.ts";
 import { EntreeInvalide, lireLeCorpsJson, repondre, texteObligatoire } from "./http-famille.ts";
 
-/** Caractères d'un mot de passe : 64 au plus, mais le texte reçu peut dépasser (le domaine le refuse en 422). */
-const LONGUEUR_MAXIMALE_DU_CORPS = 10_000;
-
 export const TAILLE_MAXIMALE_DU_CORPS = 4_096;
 
 export function motDePasseObligatoire(corps: Record<string, unknown>): string {
   const valeur = corps.motDePasse;
-  if (typeof valeur !== "string" || valeur === "" || valeur.length > LONGUEUR_MAXIMALE_DU_CORPS) {
+  if (typeof valeur !== "string" || valeur === "") {
     throw new EntreeInvalide("Le champ « motDePasse » est obligatoire.");
   }
   return valeur;

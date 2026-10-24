@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { CARACTERES_SPECIAUX_ACCEPTES, ReglesDuMotDePasse } from "@domain/famille";
 
 type Props = { readonly id: string; readonly motDePasse: string };
@@ -13,15 +13,14 @@ function annonceDesChangements(avant: readonly Verification[], apres: readonly V
 }
 
 export function ListeDesReglesDuMotDePasse({ id, motDePasse }: Props) {
-  const regles = ReglesDuMotDePasse.verifier(motDePasse);
+  const regles = useMemo(() => ReglesDuMotDePasse.verifier(motDePasse), [motDePasse]);
   const precedentes = useRef(regles);
   const [annonce, setAnnonce] = useState("");
 
   useEffect(() => {
-    const reglesActuelles = ReglesDuMotDePasse.verifier(motDePasse);
-    setAnnonce(annonceDesChangements(precedentes.current, reglesActuelles));
-    precedentes.current = reglesActuelles;
-  }, [motDePasse]);
+    setAnnonce(annonceDesChangements(precedentes.current, regles));
+    precedentes.current = regles;
+  }, [regles]);
 
   return (
     <div id={id} className="regles-du-mot-de-passe">
