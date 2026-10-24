@@ -49,7 +49,11 @@ Deno.test("quand aucune parole n'est due, le personnage guide se tait", () => {
 Deno.test("quand l'enfant sait conjuguer le verbe, le personnage guide le dit avec le verbe", () => {
   const attendue = direTuSaisConjuguer("être", personnageGuide, hasardFixe(0.5, 0));
 
-  const parole = paroleApresUneBonneReponse("tuSaisConjuguer", personnageGuide, hasardFixe(0.5, 0), "être");
+  const parole = paroleApresUneBonneReponse(
+    { parole: "tuSaisConjuguer", verbe: "être" },
+    personnageGuide,
+    hasardFixe(0.5, 0),
+  );
 
   assertEquals(parole, attendue);
 });
