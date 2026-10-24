@@ -44,3 +44,13 @@ export {
   secondes,
   SIGNAL_DE_DEPART,
 } from "./paroles-de-fluence.ts";
+export { type SectionDeLEcran, sectionsAAfficher, sectionsDeLEcran } from "./sections-de-l-ecran.ts";
+export { type PastilleDeRecord, pastillesDesRecords, type RecordDuProfil } from "./records-de-calcul-rapide.ts";
+export {
+  NOM_DE_L_ECRAN_DES_MEDAILLES,
+  parolesALOuverture,
+  parolesDeLaSectionDesRecords,
+  parolesDuGuideALOuverture,
+  phraseLueDeLaPastille,
+  TITRE_DES_RECORDS_DE_CALCUL_RAPIDE,
+} from "./paroles-de-l-ecran-des-medailles.ts";
