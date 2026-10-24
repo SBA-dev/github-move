@@ -29,3 +29,4 @@ Branche `feature/58-retirer-la-page-de-demonstration`, partie de `main` `c7cabc0
   disparaît à l'entrée en séance → les scénarios « voix bloquée » de #7 ouvrent la séance par son adresse (dette à
   signaler) ; (2) sans voix, la dernière bonne réponse mène tout de suite à la fin de séance → `repondre` et « la question
   … est réussie » acceptent aussi l'écran de fin.
+- 23:10 UTC — Câblage (implementer) : `src/demonstration/` supprimé, profil préparé déplacé dans `src/famille/profils/` sous `import.meta.env.DEV`, écran `demonstration` retiré ; décision 0021 écrite (`f017d4b`, `230de39`). 34/34 scénarios `@issue-58` verts (téléphone), tsc, build, deno test (1323), lint, fmt verts ; `dist/` sans page ni porte de test. Revue complète lancée.
