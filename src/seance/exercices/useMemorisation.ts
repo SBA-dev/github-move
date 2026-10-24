@@ -93,7 +93,8 @@ export function useMemorisation(
   const apresUnPlacement = useCallback(async () => {
     const courant = exerciceEnCours();
     const motsCaches = seance.exerciceEnCours()?.entrainementDeMemorisation() === "motsCaches";
-    if (!courant || !motsCaches || temps.current?.temps !== "entrainement" || motsCachesAnnonces.current) return;
+    const enEntrainement = temps.current?.position === courant?.position && temps.current?.temps === "entrainement";
+    if (!courant || !motsCaches || !enEntrainement || motsCachesAnnonces.current) return;
     motsCachesAnnonces.current = true;
     const numero = ++sequence.current;
     const { consigne } = PlanDeMemorisation.de(courant.exercice).motsCaches;
