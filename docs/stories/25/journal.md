@@ -93,3 +93,8 @@ En attente d'une réponse : leçons réussies d'une classe au-dessus (N1, N7, N9
   Intégration de `main` = 9115411 (#20) : merge 1468cf8, conflits dans `EcranDeFin.tsx`, `useSauvegardeDeLaSeance.ts`
   (étoiles retenues seulement pour une séance notée), `styles.css`, `domain/index.ts`. 1159 tests Deno, 1404 pytest,
   lint, fmt, tsc, build verts. PR ouverte en brouillon.
+- 18:50 UTC : review du delta (cycle 5) : **À CORRIGER** (2e cycle KO). Bloquant : `waitForLoadState("networkidle")`
+  ne protège pas l'assertion négative dans la SPA (état déjà atteint). Correction côté steps à faire par
+  `e2e-tester` après le passage E2E en cours. Non bloquant à remonter au PO : aucun scénario ne vérifie qu'une
+  séance de fluence seule (#20) n'ouvre pas la leçon suivante du parcours (la condition existe dans
+  `useSauvegardeDeLaSeance.ts`, issue de la résolution du merge).
