@@ -21,3 +21,4 @@ Une décision n'est jamais réécrite : si elle change, une nouvelle décision l
 | [0014](0014-profil-supprime-avec-son-dernier-parent.md) | Un profil enfant est supprimé avec son dernier parent | Acceptée |
 | [0015](0015-decoupage-en-syllabes-dans-voix.md) | Le découpage en syllabes du mode dys est dans le domaine Voix | Acceptée |
 | [0016](0016-ecritures-d-apprentissage-par-le-serveur-seul.md) | Les séances terminées ne sont écrites que par le serveur | Acceptée |
+| [0017](0017-revalidation-de-la-dictee-sans-le-profil.md) | La dictée est revalidée sans relire le profil de l'enfant (complète 0016) | Acceptée |
