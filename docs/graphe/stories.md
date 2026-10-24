@@ -80,15 +80,14 @@ graph LR
 
 `#20 → #21 → #27 → #28 → #29 → #30 → #33 → #45` : 8 stories en série. C'est la durée minimale de la beta, quel que soit le nombre d'équipes. Les stories du chemin critique passent en premier dans chaque vague.
 
-## Vague 1 proposée (au plus 3 équipes)
+## Vague 1 proposée (2 équipes, voir `nombre-d-equipes.md`)
 
 | Équipe | Story | Pourquoi | Verrous |
 |---|---|---|---|
 | A | #20 calcul | chemin critique | base |
 | B | #25 parcours | ouvre #26, #27, #29 | base? |
-| C | #19 dictée | ouvre #28, sans ressource partagée | — |
 
-En attente d'une place : #22, #13, #58 (niveau 0), puis #21 dès que #20 est mergée, #26 dès que #25 est mergée.
+En attente d'une place : #19, #22, #13, #58 (niveau 0), puis #21 dès que #20 est mergée, #26 dès que #25 est mergée.
 
 ## Questions pour le PO avant de lancer les stories concernées
 
