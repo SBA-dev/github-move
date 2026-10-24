@@ -9,6 +9,7 @@ export type { ExerciceBulles } from "./exercices/bulles.ts";
 export type { EtiquetteAClasser, ExerciceClasser, Groupe } from "./exercices/classer.ts";
 export { NOMBRE_MAXIMAL_D_ETIQUETTES } from "./exercices/nombre-maximal-d-etiquettes.ts";
 export type { ExerciceCalcul, Operation } from "./exercices/calcul.ts";
+export type { ExerciceFluence } from "./exercices/fluence.ts";
 export type { GenerateurDOperations, Intervalle, Signe } from "./exercices/generateur-d-operations.ts";
 export type { ExerciceOrdre } from "./exercices/ordre.ts";
 export type { ExerciceTrous, Segment } from "./exercices/texte-a-trous.ts";

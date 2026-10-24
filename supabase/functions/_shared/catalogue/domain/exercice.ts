@@ -3,13 +3,14 @@ import { enObjet, listeFacultative, nombreFacultatif, type Objet, texteFacultati
 import { type ExerciceBulles, lireBulles } from "./exercices/bulles.ts";
 import { type ExerciceCalcul, lireCalcul } from "./exercices/calcul.ts";
 import { type ExerciceClasser, lireClasser } from "./exercices/classer.ts";
+import { type ExerciceFluence, lireFluence } from "./exercices/fluence.ts";
 import { type ExerciceEcoute, lireEcoute } from "./exercices/ecoute.ts";
 import { type ExerciceLecture, lireExerciceDeLecture } from "./exercices/lecture.ts";
 import { type ExerciceOrdre, lireOrdre } from "./exercices/ordre.ts";
 import { type ExerciceTrous, lireTrous } from "./exercices/texte-a-trous.ts";
 import { estUnTypeDExercice, type TypeDExercice } from "./type-d-exercice.ts";
 
-type TypeSpecifique = "bulles" | "lecture" | "ecoute" | "classer" | "ordre" | "trous" | "calcul";
+type TypeSpecifique = "bulles" | "lecture" | "ecoute" | "classer" | "ordre" | "trous" | "calcul" | "fluence";
 type TypeGenerique = Exclude<TypeDExercice, TypeSpecifique>;
 
 export type Exercice =
@@ -20,6 +21,7 @@ export type Exercice =
   | ExerciceOrdre
   | ExerciceTrous
   | ExerciceCalcul
+  | ExerciceFluence
   | ExerciceGenerique;
 
 export type ExerciceGenerique = Readonly<{
@@ -47,7 +49,6 @@ const DONNEES_REQUISES: Record<TypeGenerique, readonly Donnee[]> = {
   conjugaison: ["formes"],
   memoriser: ["vers"],
   addition: [],
-  fluence: [],
   boite: ["items"],
   barres: ["items"],
 };
@@ -83,6 +84,8 @@ function lireExercice(brut: Objet, type: TypeDExercice): Exercice {
       return lireTrous(brut, communs);
     case "calcul":
       return lireCalcul(brut, communs);
+    case "fluence":
+      return lireFluence(brut, communs);
     default:
       return lireExerciceGenerique(brut, type, communs);
   }
@@ -133,7 +136,6 @@ function listeDe(exercice: ExerciceGenerique, donnee: Donnee): readonly unknown[
 
 function aDesQuestions(exercice: ExerciceGenerique): boolean {
   switch (exercice.type) {
-    case "fluence":
     case "addition":
       return true;
     default:
