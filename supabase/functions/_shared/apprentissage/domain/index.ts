@@ -41,6 +41,7 @@ export type { AideDonnee } from "./question-jouee.ts";
 export { Reponse } from "./reponse.ts";
 export type { Placement, ReponseDonnee, ReponseParChoix, ResultatDeReponse } from "./reponse.ts";
 export { PlanDeSeance } from "./plan-de-seance.ts";
+export { PlanDeMemorisation } from "./plan-de-memorisation.ts";
 export { Seance } from "./seance.ts";
 export type { CalculEnCours } from "./question-de-calcul.ts";
 export type { FluenceEnCours } from "./exercice-chronometre.ts";
@@ -84,3 +85,4 @@ export {
 export type { EtatDeLaVoix } from "./exercices/dictee-sans-voix.ts";
 export type { CaseDeQuestion, QuestionDeDictee } from "./question-de-dictee.ts";
 export type { CorrectionDuMot } from "./mot-a-ecrire.ts";
+export { annonceDeLEcoute, carteDeLaPoesie, invitationApresLeDernierVers } from "./exercices/paroles-de-la-poesie.ts";
