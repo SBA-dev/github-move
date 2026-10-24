@@ -1,13 +1,23 @@
 import { LeconMalFormee } from "../erreurs.ts";
-import { enObjet, liste, type Objet, texteFacultatif, texteRequis } from "../lecture.ts";
+import { enObjet, liste, listeDeTextes, type Objet, texteFacultatif, texteRequis } from "../lecture.ts";
 
 type Valeur = number | null;
 
-export type FormeDeSchema = Readonly<{
+type PartiesEtTout = Readonly<{
   genre: "partiesEtTout";
   parties: readonly [Valeur, Valeur];
   tout: Valeur;
 }>;
+
+type Comparaison = Readonly<{
+  genre: "comparaison";
+  grand: Valeur;
+  petit: Valeur;
+  ecart: Valeur;
+  noms: readonly string[];
+}>;
+
+export type FormeDeSchema = PartiesEtTout | Comparaison;
 
 export type ProblemeEnBarres = Readonly<{
   enonce: string;
@@ -33,15 +43,7 @@ export function lireBarres(brut: Objet, communs: { titre?: string; consigne?: st
 
 function lireProbleme(brut: unknown): ProblemeEnBarres {
   const item = enObjet(brut, "un problème en barres");
-  const [premiere = null, seconde = null] = liste(item.parties, "les parties d'un problème en barres").map(
-    lireValeur,
-  );
-  const parties: readonly [Valeur, Valeur] = Object.freeze([premiere, seconde]);
-  const forme: FormeDeSchema = Object.freeze({
-    genre: "partiesEtTout",
-    parties,
-    tout: lireValeur(item.tout),
-  });
+  const forme = item.type === "comparaison" ? lireComparaison(item) : lirePartiesEtTout(item);
   return Object.freeze({
     enonce: texteRequis(item.enonce, "l'énoncé d'un problème en barres"),
     aide: texteFacultatif(item.aide, "l'aide d'un problème en barres"),
@@ -51,16 +53,51 @@ function lireProbleme(brut: unknown): ProblemeEnBarres {
   });
 }
 
+function lirePartiesEtTout(item: Objet): PartiesEtTout {
+  const [premiere = null, seconde = null] = liste(item.parties, "les parties d'un problème en barres").map(
+    lireValeur,
+  );
+  const parties: readonly [Valeur, Valeur] = Object.freeze([premiere, seconde]);
+  return Object.freeze({ genre: "partiesEtTout", parties, tout: lireValeur(item.tout) });
+}
+
+function lireComparaison(item: Objet): Comparaison {
+  return Object.freeze({
+    genre: "comparaison",
+    grand: lireValeur(item.grand),
+    petit: lireValeur(item.petit),
+    ecart: lireValeur(item.ecart),
+    noms: listeDeTextes(item.noms, "les noms d'un problème en barres"),
+  });
+}
+
 function lireValeur(valeur: unknown): Valeur {
   return valeur === null ? null : Number(valeur);
 }
 
-function resoudre({ parties: [premiere, seconde], tout }: FormeDeSchema): { reponse: number; ecriture: string } {
-  if (tout === null) {
-    const reponse = (premiere ?? 0) + (seconde ?? 0);
-    return { reponse, ecriture: `${premiere} + ${seconde} = ${reponse}` };
-  }
-  const connue = premiere ?? seconde ?? 0;
-  const reponse = tout - connue;
-  return { reponse, ecriture: `${tout} − ${connue} = ${reponse}` };
+type Resolution = { reponse: number; ecriture: string };
+
+function resoudre(forme: FormeDeSchema): Resolution {
+  return forme.genre === "comparaison" ? resoudreComparaison(forme) : resoudrePartiesEtTout(forme);
+}
+
+function resoudrePartiesEtTout({ parties: [premiere, seconde], tout }: PartiesEtTout): Resolution {
+  if (tout === null) return addition(premiere, seconde);
+  return soustraction(tout, premiere ?? seconde);
+}
+
+function resoudreComparaison({ grand, petit, ecart }: Comparaison): Resolution {
+  if (ecart === null) return soustraction(grand, petit);
+  if (grand === null) return addition(petit, ecart);
+  return soustraction(grand, ecart);
+}
+
+function addition(a: Valeur, b: Valeur): Resolution {
+  const reponse = (a ?? 0) + (b ?? 0);
+  return { reponse, ecriture: `${a} + ${b} = ${reponse}` };
+}
+
+function soustraction(a: Valeur, b: Valeur): Resolution {
+  const reponse = (a ?? 0) - (b ?? 0);
+  return { reponse, ecriture: `${a} − ${b} = ${reponse}` };
 }
