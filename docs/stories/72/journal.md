@@ -26,3 +26,4 @@
 - Écart de rôle : getter `dernierRateLe` ajouté au domaine sans test ; tests d'infrastructure non écrits. Rattrapage demandé à test-writer (tests de caractérisation, notés comme tels).
 - Tests d'infrastructure (caractérisation) : 5615055, 46 tests, chacun vu échouer en cassant l'assertion. 1085 verts.
 - Câblage front : b4e1239 (3 écrans, liste des règles via ReglesDuMotDePasse.verifier, aria-live, 360 px vérifié). Dette : champs lienRefuse/arriveParLeLien de useConnexion inutilisés (code #5, à nettoyer avec #45). Étape 4 : mr-reviewer lancé, base main.
+- Review cycle 1 : À CORRIGER. B1 essais parallèles contournent la limite (sécurité) ; B2 boucle de reprise dans le handler, non testée ; B3 étape E2E « invité à me connecter » attend l'ancien bouton (pour e2e-tester) ; B4 429 traduit en identifiants incorrects. Plan : test-writer (B1, B2) puis implementer (B1, B2, B4 + non bloquants 1, 2, 3, 4, 7) ; B3 à l'étape E2E.
