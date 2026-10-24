@@ -181,9 +181,31 @@ Deno.test("un placement mal formé est refusé comme toute réponse invalide", (
   }
 });
 
+Deno.test("une réponse en nombre entier positif ou nul est lue comme un nombre", () => {
+  const reponses = [[{ nombre: 0 }, { nombre: 47 }]];
+
+  assertEquals(lire({ ...corpsValide(), reponses }).reponses, [[Reponse.nombre(0), Reponse.nombre(47)]]);
+});
+
+Deno.test("une réponse en nombre qui n'est pas un entier positif ou nul est refusée", () => {
+  const malFormees = [
+    { nombre: 1.5 },
+    { nombre: -3 },
+    { nombre: "47" },
+    { nombre: null },
+    { nombre: Number.NaN },
+    { nombre: Number.POSITIVE_INFINITY },
+    { nombre: 47, choix: "47" },
+  ];
+  for (const reponse of malFormees) {
+    assertThrows(() => lire({ ...corpsValide(), reponses: [[reponse]] }), EntreeInvalide, "reponses");
+  }
+});
+
 function enReponseEnvoyee(reponse: ReponseDonnee): Record<string, unknown> {
   if (reponse.genre === "choix") return { choix: reponse.texte };
   if (reponse.genre === "jeNeSaisPas") return { jeNeSaisPas: true };
+  if (reponse.genre === "nombre") return { nombre: reponse.valeur };
   return {
     placement: reponse.groupe === undefined
       ? { etiquette: reponse.etiquette }
