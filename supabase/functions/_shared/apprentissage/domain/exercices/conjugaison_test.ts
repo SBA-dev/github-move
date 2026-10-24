@@ -59,10 +59,10 @@ Deno.test("la forme d'une autre personne identique à la forme attendue n'est pa
   assertEquals([...premiere.choix.textes()].sort(), ["chante", "chantes"]);
 });
 
-Deno.test("avec moins de deux autres formes, toutes sont proposées", () => {
+Deno.test("avec une seule autre forme possible, elle est proposée avec la forme attendue", () => {
   const questions = questionsDe(leconDeConjugaisonAvecUneFormeRepetee());
 
-  assertEquals(questions.map((question) => question.choix.textes().length), [2, 3, 2]);
+  assertEquals(questions.map((question) => question.choix.textes().length), [2, 2, 2]);
 });
 
 Deno.test("les choix d'une personne sont mélangés une seule fois, au début de la séance", () => {
