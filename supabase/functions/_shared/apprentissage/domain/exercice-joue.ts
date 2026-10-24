@@ -15,7 +15,7 @@ import { nombreDeQuestions } from "./nombre-de-questions.ts";
 import { ModeDeReponse } from "./mode-de-reponse.ts";
 import { MotAEcrire } from "./mot-a-ecrire.ts";
 import type { CorrectionDuMot } from "./mot-a-ecrire.ts";
-import { type BoiteEnCours, QuestionDeBoite } from "./question-de-boite.ts";
+import { type BoiteEnCours, type BoiteOuverte, QuestionDeBoite } from "./question-de-boite.ts";
 import { type CalculEnCours, QuestionDeCalcul } from "./question-de-calcul.ts";
 import { QuestionDeDictee } from "./question-de-dictee.ts";
 import { QuestionJouee, questionsJoueesAvec } from "./question-jouee.ts";
@@ -56,6 +56,7 @@ export class ExerciceJoue {
   private dernierResultatDuTrou: ResultatDeReponse | undefined;
   private derniereQuestionDeDicteeCorrigee: QuestionDeDictee | undefined;
   private aideDeLErreurDeCalcul: string | undefined;
+  private derniereBoiteOuverte: BoiteOuverte | undefined;
 
   constructor(
     readonly position: number,
@@ -88,6 +89,10 @@ export class ExerciceJoue {
   boiteEnCours(): BoiteEnCours | undefined {
     const question = this.questionPoseeEnCours();
     return question instanceof QuestionDeBoite ? question.enCours() : undefined;
+  }
+
+  boiteApresLaDerniereReponse(): BoiteOuverte | undefined {
+    return this.derniereBoiteOuverte;
   }
 
   additionEnCours(): VueAddition | undefined {
@@ -215,6 +220,9 @@ export class ExerciceJoue {
     this.dernierResultatDuTrou = resultat;
     const aUneAideDeCalcul = question instanceof QuestionDeCalcul || question instanceof QuestionDeBoite;
     this.aideDeLErreurDeCalcul = aUneAideDeCalcul && resultat === "fausse" ? question.aideApresErreur() : undefined;
+    this.derniereBoiteOuverte = question instanceof QuestionDeBoite && resultat === "juste"
+      ? question.ouverte()
+      : undefined;
     if (resultat === "juste") this.reussies++;
     return resultat;
   }

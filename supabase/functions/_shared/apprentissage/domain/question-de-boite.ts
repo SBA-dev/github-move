@@ -1,6 +1,6 @@
 import type { ItemDeBoite, Niveau } from "../../catalogue/domain/index.ts";
 import { CleDeQuestion } from "./cle-de-question.ts";
-import { aideDeLaBoite, deroulementDeLaBoite } from "./exercices/boite.ts";
+import { aideDeLaBoite, deroulementDeLaBoite, ouvertureDeLaBoite } from "./exercices/boite.ts";
 import { ModeDeReponse } from "./mode-de-reponse.ts";
 import { type AideDonnee } from "./question-jouee.ts";
 import { type CalculEnCours, QuestionDeCalcul } from "./question-de-calcul.ts";
@@ -14,6 +14,8 @@ export type BoiteEnCours = Readonly<{
   jeNeSaisPasPropose: boolean;
   reponseATaper?: string;
 }>;
+
+export type BoiteOuverte = Readonly<{ deroulement: readonly string[]; jetons: number; ouverture: string }>;
 
 /** Une boîte à jetons se joue comme un calcul : même clé de révision, mêmes modes de réponse. */
 export class QuestionDeBoite implements QuestionPosee {
@@ -56,6 +58,14 @@ export class QuestionDeBoite implements QuestionPosee {
   enCours(): BoiteEnCours {
     const { mode, jeNeSaisPasPropose, reponseATaper } = this.calcul.enCours();
     return { deroulement: deroulementDeLaBoite(this.item), mode, jeNeSaisPasPropose, reponseATaper };
+  }
+
+  ouverte(): BoiteOuverte {
+    return {
+      deroulement: deroulementDeLaBoite(this.item),
+      jetons: this.item.reponse,
+      ouverture: ouvertureDeLaBoite(this.item),
+    };
   }
 
   tirage(): string[] {
