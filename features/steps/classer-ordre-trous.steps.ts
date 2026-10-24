@@ -285,19 +285,8 @@ async function jouerJusquAuxEtiquettes(page: Page) {
   }, { intervals: [100], timeout: 25_000 }).toBe(true);
 }
 
-// En classer, la félicitation n'est dite qu'une fois sur deux (tirage de Motivation, src/hasard-navigateur.ts). Sans elle,
-// la dernière étiquette bien posée ferme la séance aussitôt : l'avancement complet ne serait plus à l'écran. On donne donc
-// au tirage de Motivation un nombre qui fait toujours féliciter ; le tirage de la séance (mélanges) reste intact.
-async function toujoursFeliciter(page: Page) {
-  await page.evaluate(() => {
-    const reel = Math.random.bind(Math);
-    Math.random = () => (new Error().stack?.includes("/src/hasard-navigateur") ? 0 : reel());
-  });
-}
-
 Given(/^il ne reste que l'étiquette « ([^«»]+) » à poser$/, async ({ page }, derniere: string) => {
   await demarrer(page);
-  await toujoursFeliciter(page);
   await jouerJusquAuxEtiquettes(page);
   const exercice = await exerciceEnCours(page);
   const groupes = groupesDe(exercice);
