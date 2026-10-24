@@ -53,11 +53,16 @@ function exerciceDeFluence(exercice: Exercice): ExerciceFluence {
   return exercice;
 }
 
+function exerciceAddition(exercice: Exercice) {
+  if (exercice.type !== "addition") throw new Error(`« ${exercice.type} » n'est pas une addition posée`);
+  return exercice;
+}
+
 function exerciceGenerique(exercice: Exercice): ExerciceGenerique {
   if (
     exercice.type === "bulles" || exercice.type === "lecture" || exercice.type === "ecoute" ||
     exercice.type === "classer" || exercice.type === "ordre" || exercice.type === "trous" ||
-    exercice.type === "calcul" || exercice.type === "fluence"
+    exercice.type === "calcul" || exercice.type === "fluence" || exercice.type === "addition"
   ) {
     throw new Error(`« ${exercice.type} » n'est pas un exercice générique`);
   }
@@ -238,9 +243,9 @@ Deno.test("un exercice « addition » garde ses opérations, ou le nombre d'opé
     { type: "addition", generateur: { nombres: 3, min: 10, max: 99, retenue: true }, etapes: ["poser"] },
   ));
 
-  assertEquals(exerciceGenerique(lecon.exercices[0]).operations?.length, 1);
-  assertEquals(exerciceGenerique(lecon.exercices[0]).etapes, ["poser", "calculer"]);
-  assertEquals(exerciceGenerique(lecon.exercices[1]).generateur?.nombres, 3);
+  assertEquals(exerciceAddition(lecon.exercices[0]).operations?.length, 1);
+  assertEquals(exerciceAddition(lecon.exercices[0]).etapes, ["poser", "calculer"]);
+  assertEquals(exerciceAddition(lecon.exercices[1]).generateur?.nombres, 3);
 });
 
 Deno.test("un exercice « fluence » garde sa durée et n'a ni question ni item", () => {

@@ -144,25 +144,25 @@ Deno.test("un exercice pour mémoriser compte deux questions par vers", () => {
 });
 
 Deno.test("une addition posée compte une question par opération et par étape", () => {
-  const exercice: Exercice = { type: "addition", operations: uneListeDe(1), etapes: ["poser", "calculer"] };
+  const exercice = exerciceLu({ type: "addition", operations: [[12, 5]], etapes: ["poser", "calculer"] });
 
   assertEquals(nombreDeQuestions(exercice), 2);
 });
 
 Deno.test("une addition posée sans étapes compte poser et calculer pour chaque opération", () => {
-  const exercice: Exercice = { type: "addition", operations: uneListeDe(4) };
+  const exercice = exerciceLu({ type: "addition", operations: [[1, 2], [3, 4], [5, 6], [7, 8]] });
 
   assertEquals(nombreDeQuestions(exercice), 8);
 });
 
 Deno.test("une addition posée générée compte 3 opérations quand le générateur n'en demande pas", () => {
-  const exercice: Exercice = { type: "addition", generateur: { nombres: 2, min: 12, max: 59 } };
+  const exercice = exerciceLu({ type: "addition", generateur: { nombres: 2, min: 12, max: 59 } });
 
   assertEquals(nombreDeQuestions(exercice), 6);
 });
 
 Deno.test("une addition posée générée compte les opérations demandées par le générateur", () => {
-  const exercice: Exercice = { type: "addition", generateur: { combien: 4 }, etapes: ["poser"] };
+  const exercice = exerciceLu({ type: "addition", generateur: { combien: 4 }, etapes: ["poser"] });
 
   assertEquals(nombreDeQuestions(exercice), 4);
 });
