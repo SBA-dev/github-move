@@ -46,3 +46,8 @@ export {
 } from "./paroles-de-fluence.ts";
 export { type SectionDeLEcran, sectionsAAfficher } from "./sections-de-l-ecran.ts";
 export { type PastilleDeRecord, pastillesDesRecords, type RecordDuProfil } from "./records-de-calcul-rapide.ts";
+export {
+  NOM_DE_L_ECRAN_DES_MEDAILLES,
+  parolesDuGuideALOuverture,
+  phraseLueDeLaPastille,
+} from "./paroles-de-l-ecran-des-medailles.ts";
