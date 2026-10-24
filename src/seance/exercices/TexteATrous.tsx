@@ -1,4 +1,5 @@
 import type { SegmentDuTexteATrous } from "@domain/apprentissage";
+import { TexteEnSyllabes } from "../../reglages/index.ts";
 
 type Props = {
   readonly segments: readonly SegmentDuTexteATrous[];
@@ -13,8 +14,8 @@ export function TexteATrous({ segments, phraseDuTrouEnCours }: Props) {
     <>
       <p className="texte-a-trous" data-testid="texte-a-trous">
         {segments.map((segment, rang) => {
-          if (segment.type === "texte") return <span key={rang}>{segment.texte}</span>;
-          if (segment.mot !== undefined) return <span key={rang} className="trou" data-etat="rempli">{segment.mot}</span>;
+          if (segment.type === "texte") return <span key={rang}><TexteEnSyllabes texte={segment.texte} /></span>;
+          if (segment.mot !== undefined) return <span key={rang} className="trou" data-etat="rempli"><TexteEnSyllabes texte={segment.mot} /></span>;
           const enCours = rang === rangDuTrouEnCours;
           return (
             <span

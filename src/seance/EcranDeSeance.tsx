@@ -186,6 +186,8 @@ function SeanceEnCours(
             <ExerciceAEtiquettes
               exercice={exerciceDeLaLecon}
               etiquettesAPlacer={exerciceAffiche?.etiquettesAPlacer() ?? []}
+              etiquettesPosees={exerciceAffiche?.etiquettesPosees() ?? []}
+              etiquetteViseeParJeNeSaisPas={(choisie) => exerciceAffiche?.etiquetteViseeParJeNeSaisPas(choisie)}
               bonnesReponsesMontrees={deroulement.bonnesReponsesMontrees}
               onPoser={(etiquette, groupe) => void deroulement.placer(etiquette, groupe)}
               onJeNeSaisPas={(etiquette) => void deroulement.jeNeSaisPasDUneEtiquette(etiquette)}

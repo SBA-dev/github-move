@@ -1,4 +1,5 @@
 import { type DragEvent, useEffect, useRef, useState } from "react";
+import type { EtiquettePosee } from "@domain/apprentissage";
 import type { Exercice } from "@domain/catalogue";
 import { TexteEnSyllabes } from "../../reglages/index.ts";
 
@@ -6,26 +7,19 @@ type Props = {
   readonly exercice: Extract<Exercice, { type: "classer" | "ordre" }>;
   /** Les étiquettes qui attendent encore d'être posées. */
   readonly etiquettesAPlacer: readonly string[];
+  /** Les étiquettes déjà posées, dans l'ordre de pose. */
+  readonly etiquettesPosees: readonly EtiquettePosee[];
+  /** L'étiquette dont « Je ne sais pas » montrera la bonne réponse. */
+  readonly etiquetteViseeParJeNeSaisPas: (choisie?: string) => string | undefined;
   /** Ce que « Je ne sais pas » a montré : la maison (classer) de chaque étiquette aidée, ou l'étiquette qui vient ensuite (ordre, clé vide). */
   readonly bonnesReponsesMontrees: Readonly<Record<string, string>>;
   readonly onPoser: (etiquette: string, groupe?: string) => void;
   readonly onJeNeSaisPas: (etiquette?: string) => void;
 };
 
-type Posee = { readonly texte: string; readonly groupe: string };
+const TYPE_DE_L_ETIQUETTE = "application/x-savanturier-etiquette";
 
-/** Les étiquettes déjà bien posées : ce qui a quitté le plateau est dans la maison de son groupe. */
-function etiquettesPosees(exercice: Extract<Exercice, { type: "classer" }>, aPlacer: readonly string[]): Posee[] {
-  const restantes = [...aPlacer];
-  return exercice.items.flatMap((item) => {
-    const rang = restantes.indexOf(item.texte);
-    if (rang === -1) return [{ texte: item.texte, groupe: item.groupe }];
-    restantes.splice(rang, 1);
-    return [];
-  });
-}
-
-export function ExerciceAEtiquettes({ exercice, etiquettesAPlacer, bonnesReponsesMontrees, onPoser, onJeNeSaisPas }: Props) {
+export function ExerciceAEtiquettes({ exercice, etiquettesAPlacer, etiquettesPosees, etiquetteViseeParJeNeSaisPas, bonnesReponsesMontrees, onPoser, onJeNeSaisPas }: Props) {
   const [choisie, setChoisie] = useState<string | undefined>();
   const premiere = useRef<HTMLButtonElement>(null);
   const nombreRestant = etiquettesAPlacer.length;
@@ -40,7 +34,7 @@ export function ExerciceAEtiquettes({ exercice, etiquettesAPlacer, bonnesReponse
     onPoser(etiquette, groupe);
   };
 
-  const etiquetteVisee = exercice.type === "classer" ? choisie ?? etiquettesAPlacer[0] : undefined;
+  const etiquetteVisee = etiquetteViseeParJeNeSaisPas(choisie);
   const bonneReponseMontree = bonnesReponsesMontrees[etiquetteVisee ?? ""];
   const jeNeSaisPas = () => {
     setChoisie(etiquetteVisee);
@@ -50,13 +44,13 @@ export function ExerciceAEtiquettes({ exercice, etiquettesAPlacer, bonnesReponse
     exercice.type === "ordre" && etiquette === bonneReponseMontree && rang === etiquettesAPlacer.indexOf(etiquette);
 
   return (
-    <div className="etiquettes" data-testid="etiquettes">
+    <div className="etiquettes" data-testid="etiquettes" data-type={exercice.type}>
       <ul className="etiquettes-a-placer" aria-label="Étiquettes à poser" data-testid="etiquettes-a-placer">
         {etiquettesAPlacer.map((etiquette, rang) => (
           <li
             key={`${etiquette}-${rang}`}
             draggable={exercice.type === "classer"}
-            onDragStart={(evenement) => evenement.dataTransfer.setData("text/plain", etiquette)}
+            onDragStart={(evenement) => evenement.dataTransfer.setData(TYPE_DE_L_ETIQUETTE, etiquette)}
           >
             <button
               ref={rang === 0 ? premiere : undefined}
@@ -81,9 +75,10 @@ export function ExerciceAEtiquettes({ exercice, etiquettesAPlacer, bonnesReponse
         ? (
           <Maisons
             exercice={exercice}
-            posees={etiquettesPosees(exercice, etiquettesAPlacer)}
+            posees={etiquettesPosees}
             choisie={choisie}
             maisonQuiBrille={bonneReponseMontree}
+            etiquettesAPlacer={etiquettesAPlacer}
             onPoser={poser}
           />
         )
@@ -94,17 +89,18 @@ export function ExerciceAEtiquettes({ exercice, etiquettesAPlacer, bonnesReponse
 
 type PropsDesMaisons = {
   readonly exercice: Extract<Exercice, { type: "classer" }>;
-  readonly posees: readonly Posee[];
+  readonly posees: readonly EtiquettePosee[];
+  readonly etiquettesAPlacer: readonly string[];
   readonly choisie: string | undefined;
   readonly maisonQuiBrille: string | undefined;
   readonly onPoser: (etiquette: string, groupe: string) => void;
 };
 
-function Maisons({ exercice, posees, choisie, maisonQuiBrille, onPoser }: PropsDesMaisons) {
+function Maisons({ exercice, posees, etiquettesAPlacer, choisie, maisonQuiBrille, onPoser }: PropsDesMaisons) {
   const lacher = (evenement: DragEvent, groupe: string) => {
     evenement.preventDefault();
-    const etiquette = evenement.dataTransfer.getData("text/plain");
-    if (etiquette) onPoser(etiquette, groupe);
+    const etiquette = evenement.dataTransfer.getData(TYPE_DE_L_ETIQUETTE);
+    if (etiquettesAPlacer.includes(etiquette)) onPoser(etiquette, groupe);
   };
   return (
     <div className="maisons">

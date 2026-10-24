@@ -299,8 +299,8 @@ button:focus-visible, summary:focus-visible { outline: 3px solid #1f2a1f; outlin
   font-size: 1.25rem;
   font-weight: 700;
   overflow-wrap: anywhere;
-  cursor: grab;
 }
+.etiquettes[data-type="classer"] .etiquette:not(.posee) { cursor: grab; }
 .etiquette:hover, .etiquette[aria-pressed="true"]:hover { background: #fff3c4; }
 .etiquette[aria-pressed="true"] { background: #fff3c4; box-shadow: 0 0 0 4px #ffd23f; }
 li.etiquette.posee { display: flex; align-items: center; cursor: default; border-style: solid; background: #e8f7e4; }
