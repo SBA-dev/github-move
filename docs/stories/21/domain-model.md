@@ -179,4 +179,4 @@ Validation n°1 du lot 3 par le PO, le 2026-10-23 : « OK pour tout » (`docs/st
 
 ## Questions ouvertes
 
-1. (#21.1, posée au responsable) **Description d'un schéma de parts dont le nombre de parts est cherché** : la décision n°7 ne donne pas ce cas. Le texte « Le total : 18. Nombre de parts : ?. Chaque part : 3. » convient-il ? Recommandation codée en attendant la réponse.
+1. (#21.1, posée au responsable) **Description d'un schéma de parts dont le nombre de parts est cherché** : la décision n°7 ne donne pas ce cas. Le texte « Le total : 18. Nombre de parts : ?. Chaque part : 3. » convient-il ? **Décidée** par le PO le 2026-10-24 : oui (recommandation retenue), voir la décision 56 de `docs/stories/21/acceptance.md`.
