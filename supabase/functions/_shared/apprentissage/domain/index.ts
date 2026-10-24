@@ -45,6 +45,7 @@ export type { FaitDeSeance, QuestionRatee, ReussitesEtErreurs, SeanceTerminee } 
 export type { SeanceTermineeAEnregistrer } from "./seance-terminee-a-enregistrer.ts";
 export { Etoiles } from "./etoiles.ts";
 export type { NombreDEtoiles } from "./etoiles.ts";
+export { meilleuresEtoilesReunies } from "./meilleures-etoiles-reunies.ts";
 export { SeanceId } from "./seance-id.ts";
 export { ResultatDeLaLecon } from "./resultat-de-la-lecon.ts";
 export type { EtatDuResultat, FaitDeResultat } from "./resultat-de-la-lecon.ts";
