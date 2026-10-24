@@ -146,7 +146,7 @@ Deno.test("un exercice de fluence compte une seule question pour tout l'exercice
 });
 
 Deno.test("un exercice pour mémoriser compte deux questions par vers", () => {
-  const exercice: Exercice = { type: "memoriser", vers: uneListeDe(8) };
+  const exercice: Exercice = { type: "memoriser", vers: Array.from({ length: 8 }, (_, i) => `vers ${i}`) };
 
   assertEquals(nombreDeQuestions(exercice), 16);
 });
