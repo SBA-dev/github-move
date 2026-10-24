@@ -23,7 +23,8 @@ const proportion = (de: number, sur: number): Taille => ({ genre: "proportion", 
 
 /**
  * Le dessin d'un schéma : des lignes de morceaux, dont les tailles restent proportionnelles aux nombres.
- * La réponse, une fois connue, remplace le « ? » sans changer les tailles.
+ * La réponse, une fois connue, remplace le « ? » ; les tailles restent celles du problème posé,
+ * sauf pour les parts dont on cherchait le nombre : les parts se dessinent alors à la réponse.
  */
 export function dessinerLeSchema(forme: FormeDeSchema, reponse?: number): readonly Ligne[] {
   const lu = (valeur: number | null) => valeur ?? reponse ?? null;

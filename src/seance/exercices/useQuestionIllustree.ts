@@ -1,4 +1,4 @@
-import { type MutableRefObject, useCallback, useState } from "react";
+import { type MutableRefObject, useCallback, useRef, useState } from "react";
 import type {
   BoiteEnCours,
   BoiteOuverte,
@@ -32,6 +32,11 @@ type Dependances = {
 export type BoiteReussie = Readonly<{ enCours: BoiteEnCours; ouverte: BoiteOuverte }>;
 export type SchemaReussi = Readonly<{ enCours: SchemaEnCours; resolu: SchemaResolu }>;
 
+/** La boîte à jetons et le problème en barres se jouent comme un calcul, avec une présentation illustrée. */
+export function seJoueCommeUneQuestionIllustree(type: string | undefined): boolean {
+  return type === "boite" || type === "barres";
+}
+
 /**
  * Le déroulé d'une boîte à jetons ou d'un problème en barres : le personnage guide pose la question,
  * la réponse est corrigée comme un calcul, puis la boîte s'ouvre ou le « ? » du schéma est remplacé.
@@ -43,17 +48,43 @@ export function useQuestionIllustree(
   const [phrasesDites, setPhrasesDites] = useState(0);
   const [boiteReussie, setBoiteReussie] = useState<BoiteReussie | undefined>();
   const [schemaReussi, setSchemaReussi] = useState<SchemaReussi | undefined>();
+  const numeroDePresentation = useRef(0);
 
   const presenter = useCallback(async () => {
     const boite = seance.boiteEnCours();
     const schema = seance.schemaEnCours();
-    setPhrasesDites(0);
     const phrases = boite?.deroulement ?? (schema ? [schema.enonce, schema.explicationDuSchema] : []);
+    const numero = ++numeroDePresentation.current;
+    setPhrasesDites(0);
     for (const texte of phrases) {
-      if (!(await dire({ texte, nature: "question" }))) return;
+      if (!(await dire({ texte, nature: "question" }))) {
+        // Une présentation interrompue ne laisse jamais l'enfant sans moyen de répondre,
+        // sauf si une présentation plus récente a pris le relais.
+        if (numero === numeroDePresentation.current) setPhrasesDites(phrases.length);
+        return;
+      }
       setPhrasesDites((dites) => dites + 1);
     }
   }, [seance, dire]);
+
+  /** « Réécouter » : la présentation reprend en entier. */
+  const relireLaPresentation = useCallback((): boolean => {
+    if (!(seance.boiteEnCours() ?? seance.schemaEnCours()) || estFigee.current) return false;
+    sequence.current++;
+    faireSilence();
+    void presenter();
+    return true;
+  }, [seance, estFigee, sequence, faireSilence, presenter]);
+
+  const feliciterLaBoite = useCallback(
+    (ouverte: BoiteOuverte) => dire(feliciterUnCalcul(personnageGuide, ouverte.ouverture)),
+    [dire, personnageGuide],
+  );
+
+  const feliciterLeSchema = useCallback(
+    (resolu: SchemaResolu) => dire(feliciterPuisExpliquer(personnageGuide, resolu.explication)),
+    [dire, personnageGuide],
+  );
 
   const repondre = useCallback(async (reponse: Reponse, suite: SuiteDuCalcul) => {
     const boite = seance.boiteEnCours();
@@ -69,12 +100,16 @@ export function useQuestionIllustree(
       return;
     }
     figer({ position: exercice.position, exercice, question: undefined });
+    annoncerLAvancement(seance.avancement());
     const ouverte = seance.boiteApresLaDerniereReponse();
     const resolu = seance.schemaApresLaDerniereReponse();
-    if (boite && ouverte) setBoiteReussie({ enCours: boite, ouverte });
-    if (schema && resolu) setSchemaReussi({ enCours: schema, resolu });
-    annoncerLAvancement(seance.avancement());
-    await dire(ouverte ? feliciterUnCalcul(personnageGuide, ouverte.ouverture) : feliciterPuisExpliquer(personnageGuide, resolu?.explication ?? ""));
+    if (boite && ouverte) {
+      setBoiteReussie({ enCours: boite, ouverte });
+      await feliciterLaBoite(ouverte);
+    } else if (schema && resolu) {
+      setSchemaReussi({ enCours: schema, resolu });
+      await feliciterLeSchema(resolu);
+    }
     if (!vivant.current) return;
     figer(undefined);
     setBoiteReussie(undefined);
@@ -82,7 +117,19 @@ export function useQuestionIllustree(
     setPhrasesDites(0);
     const nouvelExercice = seance.exerciceEnCours()?.position !== exercice.position;
     await suite(++sequence.current, seance.retirerFaits(), nouvelExercice);
-  }, [seance, personnageGuide, dire, sequence, redessiner, figer, annoncerLAvancement, vivant, estFigee]);
+  }, [
+    seance,
+    personnageGuide,
+    dire,
+    sequence,
+    redessiner,
+    figer,
+    annoncerLAvancement,
+    vivant,
+    estFigee,
+    feliciterLaBoite,
+    feliciterLeSchema,
+  ]);
 
   const jeNeSaisPas = useCallback(async () => {
     const enCours = seance.boiteEnCours() ?? seance.schemaEnCours();
@@ -94,5 +141,5 @@ export function useQuestionIllustree(
     await dire(aiderQuandOnNeSaitPas(enCours, aide, bonneReponse));
   }, [seance, sequence, faireSilence, redessiner, dire, estFigee]);
 
-  return { phrasesDites, boiteReussie, schemaReussi, presenter, repondre, jeNeSaisPas };
+  return { phrasesDites, boiteReussie, schemaReussi, presenter, relireLaPresentation, repondre, jeNeSaisPas };
 }

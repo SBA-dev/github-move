@@ -33,7 +33,7 @@ export function BoiteAJetons({ boite, item, phrasesDites, ouverte, ...reponse }:
         data-testid="boite"
         data-etat={etat}
         role="img"
-        aria-label={etat === "ouverte" ? "Boîte ouverte" : "Boîte fermée"}
+        aria-label={libelleDeLaBoite(etat, ouverte)}
       >
         <div className="contenu-de-la-boite">
           {ouverte !== undefined
@@ -56,4 +56,9 @@ function JetonsDuDeroule({ item: { a, sens, b }, phrasesDites }: { readonly item
       <RangeesDeJetons nombre={b} nouveaux />
     </>
   );
+}
+
+function libelleDeLaBoite(etat: "ouverte" | "fermee", ouverte: BoiteOuverte | undefined): string {
+  if (ouverte !== undefined) return `Boîte ouverte : ${ouverte.jetons} jetons`;
+  return etat === "ouverte" ? "Boîte ouverte" : "Boîte fermée";
 }

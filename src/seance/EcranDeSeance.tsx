@@ -241,7 +241,7 @@ function SeanceEnCours(
               onRelire={() => deroulement.relireLaPhrase(calcul.phrase)}
               onChoisir={(texte) => void deroulement.choisirUneReponseDeCalcul(texte)}
               onValider={(nombre) => void deroulement.repondreParUnNombre(nombre)}
-              onJeNeSaisPas={() => void deroulement.jeNeSaisPasDuCalcul()}
+              onJeNeSaisPas={() => void deroulement.jeNeSaisPasALaQuestion()}
             />
           )}
           {exerciceDeLaLecon.type === "boite" && boite && (
@@ -252,18 +252,18 @@ function SeanceEnCours(
               ouverte={deroulement.boiteReussie?.ouverte}
               onChoisir={(texte) => void deroulement.choisirUneReponseDeCalcul(texte)}
               onValider={(nombre) => void deroulement.repondreParUnNombre(nombre)}
-              onJeNeSaisPas={() => void deroulement.jeNeSaisPasDuCalcul()}
+              onJeNeSaisPas={() => void deroulement.jeNeSaisPasALaQuestion()}
             />
           )}
           {exerciceDeLaLecon.type === "barres" && schema && (
             <SchemaDuProbleme
               schema={schema}
-              reponse={deroulement.schemaReussi?.resolu.reponse}
+              resolu={deroulement.schemaReussi?.resolu}
               phrasesDites={deroulement.phrasesDitesDeLaQuestion}
               reussi={deroulement.schemaReussi !== undefined}
               onChoisir={(texte) => void deroulement.choisirUneReponseDeCalcul(texte)}
               onValider={(nombre) => void deroulement.repondreParUnNombre(nombre)}
-              onJeNeSaisPas={() => void deroulement.jeNeSaisPasDuCalcul()}
+              onJeNeSaisPas={() => void deroulement.jeNeSaisPasALaQuestion()}
             />
           )}
           {exerciceDeLaLecon.type === "fluence" && fluence && (

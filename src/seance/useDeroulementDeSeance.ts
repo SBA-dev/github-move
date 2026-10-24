@@ -20,7 +20,7 @@ import type { Voix } from "../voix/index.ts";
 import { useAdditionPosee } from "./exercices/addition/useAdditionPosee.ts";
 import { useBattementDeLaFluence, useFluence } from "./exercices/fluence/useFluence.ts";
 import { type SuiteDuCalcul, useCalcul } from "./exercices/useCalcul.ts";
-import { useQuestionIllustree } from "./exercices/useQuestionIllustree.ts";
+import { seJoueCommeUneQuestionIllustree, useQuestionIllustree } from "./exercices/useQuestionIllustree.ts";
 import { useDictee } from "./exercices/useDictee.ts";
 import { useEtiquettesAPlacer } from "./exercices/useEtiquettesAPlacer.ts";
 import { useQuestionFigee } from "./exercices/useQuestionFigee.ts";
@@ -186,7 +186,11 @@ export function useDeroulementDeSeance(
   );
 
   const { repondre: repondreAuCalcul, jeNeSaisPas: jeNeSaisPasDuCalcul } = calcul;
-  const { repondre: repondreAUneQuestionIllustree, jeNeSaisPas: jeNeSaisPasDUneQuestionIllustree } = illustree;
+  const {
+    repondre: repondreAUneQuestionIllustree,
+    jeNeSaisPas: jeNeSaisPasDUneQuestionIllustree,
+    relireLaPresentation,
+  } = illustree;
   const { repondre: repondreALaFluence, battre: battreLaFluence, demarrer: demarrerLaFluence } = fluence;
   const { repondre: repondreALAddition, placer: placerUnChiffre, jeNeSaisPas: jeNeSaisPasDeLAddition } = addition;
   const repondreParUnNombre = useCallback((nombre: number) => {
@@ -194,7 +198,7 @@ export function useDeroulementDeSeance(
     const type = position === undefined ? undefined : lecon.exercices[position]?.type;
     if (type === "fluence") return repondreALaFluence(nombre, suiteDeLaReponse);
     if (type === "addition") return repondreALAddition(Reponse.nombre(nombre), suiteDeLaReponse);
-    if (type === "boite" || type === "barres") return repondreAUneQuestionIllustree(Reponse.nombre(nombre), suiteDeLaReponse);
+    if (seJoueCommeUneQuestionIllustree(type)) return repondreAUneQuestionIllustree(Reponse.nombre(nombre), suiteDeLaReponse);
     return repondreAuCalcul(Reponse.nombre(nombre), suiteDeLaReponse);
   }, [seance, lecon, repondreALaFluence, repondreALAddition, repondreAuCalcul, repondreAUneQuestionIllustree, suiteDeLaReponse]);
 
@@ -202,14 +206,14 @@ export function useDeroulementDeSeance(
     const position = seance.exerciceEnCours()?.position;
     const type = position === undefined ? undefined : lecon.exercices[position]?.type;
     if (type === "addition") return repondreALAddition(Reponse.choix(texte), suiteDeLaReponse);
-    if (type === "boite" || type === "barres") return repondreAUneQuestionIllustree(Reponse.choix(texte), suiteDeLaReponse);
+    if (seJoueCommeUneQuestionIllustree(type)) return repondreAUneQuestionIllustree(Reponse.choix(texte), suiteDeLaReponse);
     return repondreAuCalcul(Reponse.choix(texte), suiteDeLaReponse);
   }, [seance, lecon, repondreALAddition, repondreAuCalcul, repondreAUneQuestionIllustree, suiteDeLaReponse]);
 
-  const jeNeSaisPasDeLaQuestion = useCallback(() => {
+  const jeNeSaisPasALaQuestion = useCallback(() => {
     const position = seance.exerciceEnCours()?.position;
     const type = position === undefined ? undefined : lecon.exercices[position]?.type;
-    if (type === "boite" || type === "barres") return jeNeSaisPasDUneQuestionIllustree();
+    if (seJoueCommeUneQuestionIllustree(type)) return jeNeSaisPasDUneQuestionIllustree();
     return jeNeSaisPasDuCalcul();
   }, [seance, lecon, jeNeSaisPasDUneQuestionIllustree, jeNeSaisPasDuCalcul]);
 
@@ -238,10 +242,10 @@ export function useDeroulementDeSeance(
 
   const reecouter = useCallback(() => {
     if (reussite.figee) return;
-    if (personnage.parole?.nature === "question" && relireLaQuestion()) return;
+    if (personnage.parole?.nature === "question" && (relireLaPresentation() || relireLaQuestion())) return;
     sequence.current++;
     relire();
-  }, [reussite.figee, personnage.parole, relireLaQuestion, relire]);
+  }, [reussite.figee, personnage.parole, relireLaPresentation, relireLaQuestion, relire]);
 
   const direLaFin = useCallback((etoiles: number | undefined) => {
     sequence.current++;
@@ -304,7 +308,7 @@ export function useDeroulementDeSeance(
     repondreParUnNombre,
     choisirUneReponseDeCalcul,
     poserUnChiffre,
-    jeNeSaisPasDuCalcul: jeNeSaisPasDeLaQuestion,
+    jeNeSaisPasALaQuestion,
     jeNeSaisPasDeLAddition,
     demarrerLaFluence,
     relireLaPhrase,

@@ -1,26 +1,26 @@
 import type { CSSProperties } from "react";
-import type { SchemaEnCours } from "@domain/apprentissage";
+import type { SchemaEnCours, SchemaResolu } from "@domain/apprentissage";
 import { dessinerLeSchema, type Ligne, type Morceau, type Taille } from "./dessin-du-schema.ts";
 
 type Props = {
   readonly schema: SchemaEnCours;
-  /** La réponse, une fois le problème réussi : elle remplace le « ? ». */
-  readonly reponse?: number;
+  /** Le problème réussi : la réponse remplace le « ? », et la description la lit. */
+  readonly resolu?: SchemaResolu;
 };
 
 /** Le schéma en barres : des barres proportionnelles aux nombres, et « ? » pour ce qu'on cherche. */
-export function SchemaEnBarres({ schema, reponse }: Props) {
+export function SchemaEnBarres({ schema, resolu }: Props) {
   return (
     <div
       className="schema-en-barres"
       role="img"
-      aria-label={schema.description}
+      aria-label={resolu?.description ?? schema.description}
       data-testid="schema-en-barres"
       data-genre={schema.forme.genre}
-      data-resolu={reponse === undefined ? undefined : "true"}
+      data-resolu={resolu === undefined ? undefined : "true"}
     >
       <div className="dessin-du-schema" aria-hidden="true">
-        {dessinerLeSchema(schema.forme, reponse).map((ligne, rang) => <LigneDuSchema key={rang} ligne={ligne} />)}
+        {dessinerLeSchema(schema.forme, resolu?.reponse).map((ligne, rang) => <LigneDuSchema key={rang} ligne={ligne} />)}
       </div>
     </div>
   );
