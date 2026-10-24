@@ -184,6 +184,7 @@ Deno.test("un placement mal formé est refusé comme toute réponse invalide", (
 function enReponseEnvoyee(reponse: ReponseDonnee): Record<string, unknown> {
   if (reponse.genre === "choix") return { choix: reponse.texte };
   if (reponse.genre === "jeNeSaisPas") return { jeNeSaisPas: true };
+  if (reponse.genre === "motEcrit") return { motEcrit: reponse.lettres };
   return {
     placement: reponse.groupe === undefined
       ? { etiquette: reponse.etiquette }

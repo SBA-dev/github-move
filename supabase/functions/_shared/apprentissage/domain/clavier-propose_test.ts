@@ -88,7 +88,8 @@ Deno.test("un long mot reçoit toujours deux lettres intruses, et garde ses lett
   const clavier = ClavierPropose.choisir("lettresDuMot", "CP", MotAEcrire.de("arc-en-ciel"), hasardSansMelange());
 
   assertEquals(clavier.touches.length, 11);
-  assertEquals(compter(clavier.touches).get("c")! >= 3, true);
+  const comptes = compter(clavier.touches);
+  assertEquals([comptes.get("c"), comptes.get("e")], [2, 2]);
 });
 
 Deno.test("les lettres intruses sont tirées de la liste prévue et sont absentes du mot", () => {

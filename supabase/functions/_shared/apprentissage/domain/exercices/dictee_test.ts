@@ -31,7 +31,7 @@ Deno.test("une dictée pose une question par mot, avec une case par lettre et au
 Deno.test("les caractères déjà écrits sont dans les cases dès le début", () => {
   const seance = seanceDeDictee(leconDeDicteeDAujourdhui());
 
-  assertEquals(affichageDesCases(questionEnCours(seance)), "________'___");
+  assertEquals(affichageDesCases(questionEnCours(seance)), "_______'___");
 });
 
 Deno.test("chaque lettre tapée remplit la case à écrire suivante, en sautant les caractères déjà écrits", () => {
