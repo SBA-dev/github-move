@@ -33,6 +33,7 @@ export function ClavierDeLaDictee({ question, toucheQuiBrille, onTaper, onEfface
               data-testid="touche"
               data-lettre={lettre}
               data-brille={proposee && lettre === toucheQuiBrille ? "true" : undefined}
+              aria-label={proposee && lettre === toucheQuiBrille ? `${lettre}, la bonne lettre` : undefined}
               aria-disabled={proposee ? undefined : true}
               onClick={() => proposee && onTaper(lettre)}
             >

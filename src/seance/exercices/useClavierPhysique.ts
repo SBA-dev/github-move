@@ -10,7 +10,7 @@ export function useClavierPhysique(actif: boolean, onTaper: (lettre: string) => 
   useEffect(() => {
     if (!actif) return;
     const surUneTouche = (evenement: KeyboardEvent) => {
-      if (evenement.ctrlKey || evenement.metaKey || evenement.altKey) return;
+      if (evenement.repeat || evenement.ctrlKey || evenement.metaKey || evenement.altKey) return;
       if (evenement.key === "Backspace") {
         evenement.preventDefault();
         actions.current.onEffacer();
