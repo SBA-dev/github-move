@@ -21,3 +21,14 @@ Branche de base : `main`. Branche de travail : `feature/25-parcours-par-matiere-
 - 13:30 UTC : critères révisés (`po-acceptance`) : 8 règles, 36 scénarios dont 7 `@a-valider` (N1, N4, N7-N10). R3
   remplacée par une règle positive (toute leçon montrée s'ouvre) : acceptée, elle traduit la réponse 25.1.
   CADRAGE PRÊT mis à jour (questions N1-N11). TDD lancé sur ce qui ne dépend d'aucune question.
+
+### Comportements TDD (ordre prévu)
+
+Indépendants des questions N :
+1. `parcoursDeLaMatiere` : leçons de la matière et du niveau de l'enfant, triées par `ordre` puis par identifiant, avec leur place (1, 2…).
+2. État des leçons : réussie (meilleures étoiles), prochaine (première non réussie), à découvrir (les autres non réussies).
+3. Parcours entièrement réussi : aucune prochaine leçon.
+4. Compteur : leçons réussies sur leçons du niveau (les leçons réussies d'un autre niveau ne comptent pas).
+5. `matieresDuParcours` : matières qui ont au moins une leçon du niveau, dans l'ordre du Catalogue.
+6. `leconSuivanteDansLeParcours` : première leçon d'après non réussie du même parcours ; aucune après la dernière.
+En attente d'une réponse : leçons réussies d'une classe au-dessus (N1, N7, N9), repli de la leçon suivante (N4), leçon suivante après une leçon d'une classe au-dessus (N10).
