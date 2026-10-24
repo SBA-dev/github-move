@@ -1,10 +1,13 @@
 import type { Niveau } from "../../catalogue/domain/index.ts";
 
+const PLUS_GRANDE_REPONSE_A_CHOIX_AU_CP = 20;
+
 export type ModeDeReponse = { genre: "choix" } | { genre: "clavierDeCristaux" };
 
 export const ModeDeReponse = {
-  pour(niveau: Niveau): ModeDeReponse {
-    return niveau.valeur === "CP" ? { genre: "choix" } : { genre: "clavierDeCristaux" };
+  pour(niveau: Niveau, reponse = 0): ModeDeReponse {
+    const parChoix = niveau.valeur === "CP" && reponse <= PLUS_GRANDE_REPONSE_A_CHOIX_AU_CP;
+    return parChoix ? { genre: "choix" } : { genre: "clavierDeCristaux" };
   },
 };
 
