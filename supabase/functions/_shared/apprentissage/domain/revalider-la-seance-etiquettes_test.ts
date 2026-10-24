@@ -43,3 +43,22 @@ Deno.test("le placement d'une étiquette inconnue rend la séance incohérente",
 
   assertThrows(() => revaliderLaSeance(leconDeClasserLesSons(), avecUneEtiquetteInconnue), SeanceIncoherente);
 });
+
+Deno.test("le placement d'une autre étiquette rangé sous la question d'une étiquette rend la séance incohérente", () => {
+  const seance = seanceCommencee(leconDeClasserLesSons());
+  seance.repondre(Reponse.placement("loup", "g-ou"));
+  seance.repondre(Reponse.placement("pont", "g-on"));
+  seance.repondre(Reponse.placement("savon", "g-on"));
+  seance.terminer(fin);
+  const envoi = seance.aEnregistrer();
+  const reponsesRangeesSousLaMauvaiseQuestion = [
+    [Reponse.placement("pont", "g-on"), Reponse.placement("loup", "g-ou")],
+    [],
+    ...envoi.reponses.slice(2),
+  ];
+
+  assertThrows(
+    () => revaliderLaSeance(leconDeClasserLesSons(), { ...envoi, reponses: reponsesRangeesSousLaMauvaiseQuestion }),
+    SeanceIncoherente,
+  );
+});
