@@ -17,8 +17,16 @@ export type EtatDansLeParcours =
 
 export type LeconDuParcours = Readonly<{ lecon: LeconId; titre: string; place: number; etat: EtatDansLeParcours }>;
 
+export type LeconReussieDUneClasseAuDessus = Readonly<{
+  lecon: LeconId;
+  niveau: Niveau;
+  titre: string;
+  etoiles: Etoiles;
+}>;
+
 export type Parcours = Readonly<{
   lecons: readonly LeconDuParcours[];
+  leconsReussiesDesClassesAuDessus: readonly LeconReussieDUneClasseAuDessus[];
   prochaineLecon: LeconId | undefined;
   nombreDeLeconsReussies: number;
   nombreDeLecons: number;
@@ -38,7 +46,31 @@ export function parcoursDeLaMatiere(entrees: EntreesDuParcours, matiere: Matiere
     etat: etatDeLaLecon(lecon.id, entrees.meilleuresEtoiles, prochaineLecon),
   }));
   const nombreDeLeconsReussies = ordonnees.filter((lecon) => entrees.meilleuresEtoiles.has(lecon.id)).length;
-  return { lecons, prochaineLecon, nombreDeLeconsReussies, nombreDeLecons: ordonnees.length };
+  return {
+    lecons,
+    leconsReussiesDesClassesAuDessus: leconsReussiesDesClassesAuDessus(entrees, matiere),
+    prochaineLecon,
+    nombreDeLeconsReussies,
+    nombreDeLecons: ordonnees.length,
+  };
+}
+
+function leconsReussiesDesClassesAuDessus(
+  entrees: EntreesDuParcours,
+  matiere: Matiere,
+): LeconReussieDUneClasseAuDessus[] {
+  return entrees.lecons
+    .filter((lecon) => lecon.matiere.code === matiere.code && lecon.niveau.estAuDessusDe(entrees.niveau))
+    .sort((a, b) => ordreDesNiveaux(a, b) || parOrdrePuisIdentifiant(a, b))
+    .flatMap((lecon) => {
+      const etoiles = entrees.meilleuresEtoiles.get(lecon.id);
+      return etoiles ? [{ lecon: lecon.id, niveau: lecon.niveau, titre: lecon.titre, etoiles }] : [];
+    });
+}
+
+function ordreDesNiveaux(a: Lecon, b: Lecon): number {
+  if (a.niveau.estAuDessusDe(b.niveau)) return 1;
+  return b.niveau.estAuDessusDe(a.niveau) ? -1 : 0;
 }
 
 function leconsDeLaMatiere(entrees: EntreesDuParcours, matiere: Matiere): Lecon[] {
