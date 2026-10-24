@@ -1,7 +1,8 @@
-import { assertEquals } from "@std/assert";
+import { assertEquals, assertThrows } from "@std/assert";
 import { type Lecon, lireLecon, Niveau } from "../../catalogue/domain/index.ts";
 import { hasardFixe, hasardSansMelange } from "../test_utils/hasard-fixe.ts";
 import type { QuestionPrevue } from "./plan-du-test-de-depart.ts";
+import { QuestionHorsDuTestDeDepart } from "./erreurs.ts";
 import { questionDuTestDeDepart } from "./question-du-test-de-depart.ts";
 import { Reponse } from "./reponse.ts";
 import { type Tireur, tireurAuHasard } from "./tireur.ts";
@@ -150,4 +151,42 @@ Deno.test("une addition tirée se pose en ligne comme un calcul", () => {
 
   assertEquals(question.enonce, "15 + 37");
   assertEquals(question.repondre(Reponse.nombre(52)), "juste");
+});
+
+Deno.test("une addition donnée en liste se pose en ligne : la question de rang r est l'addition de rang r", () => {
+  const lecon = leconAvec({ type: "addition", operations: [[45, 37], [12, 29, 8]], etapes: ["calculer"] });
+
+  const question = questionDuTestDeDepart(lecon, questionPrevue(1), tireurSansMelange, CE1);
+
+  assertEquals(question.enonce, "12 + 29 + 8");
+  assertEquals(question.repondre(Reponse.nombre(49)), "juste");
+});
+
+Deno.test("un tableau de conjugaison aux formes répétées propose tout de même trois choix distincts", () => {
+  const lecon = leconAvec({
+    type: "conjugaison",
+    verbe: "parler",
+    temps: "présent",
+    formes: [
+      { pronom: "je", forme: "parle" },
+      { pronom: "tu", forme: "parles" },
+      { pronom: "il", forme: "parle" },
+      { pronom: "nous", forme: "parlons" },
+    ],
+  });
+
+  const question = questionDuTestDeDepart(lecon, questionPrevue(1), tireurSansMelange, CE1);
+
+  const choix = question.tirage();
+  assertEquals(new Set(choix).size, 3);
+  assertEquals(choix.includes("parles"), true);
+});
+
+Deno.test("une question prévue sur un exercice exclu du test de départ est refusée", () => {
+  const lecon = leconAvec({ type: "dictee", mots: [{ mot: "chat" }] });
+
+  assertThrows(
+    () => questionDuTestDeDepart(lecon, questionPrevue(0), tireurSansMelange, CE1),
+    QuestionHorsDuTestDeDepart,
+  );
 });

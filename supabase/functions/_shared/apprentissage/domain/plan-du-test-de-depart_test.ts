@@ -128,7 +128,7 @@ const exercicesAdmissibles: Record<string, { exercice: unknown; questions: numbe
     exercice: { type: "calcul", operations: [{ q: "2 + 3", r: 5 }, { q: "4 + 1", r: 5 }, { q: "6 + 2", r: 8 }] },
     questions: 3,
   },
-  "calcul à générateur : une seule question candidate": {
+  "calcul à générateur : une seule question admissible": {
     exercice: { type: "calcul", generateur: { op: "+", combien: 5 } },
     questions: 1,
   },
@@ -153,14 +153,18 @@ const exercicesAdmissibles: Record<string, { exercice: unknown; questions: numbe
     },
     questions: 3,
   },
-  "addition : une seule question candidate": {
+  "addition en liste : une addition": {
     exercice: { type: "addition", operations: [[45, 37], [12, 29]] },
+    questions: 2,
+  },
+  "addition à générateur : une seule question admissible": {
+    exercice: { type: "addition", generateur: { nombres: 2, min: 15, max: 59, retenue: false, combien: 3 } },
     questions: 1,
   },
 };
 
 for (const [nom, { exercice, questions }] of Object.entries(exercicesAdmissibles)) {
-  Deno.test(`une leçon dont l'exercice est de type ${nom} compte ${questions} question(s) candidate(s)`, () => {
+  Deno.test(`une leçon dont l'exercice est de type ${nom} compte ${questions} question(s) admissible(s)`, () => {
     const lecon = leconAvecLesExercices(exercice);
 
     const dernierTirage = planDuTestDeDepart([lecon], Niveau.de("CE1"), hasardFixe(0.999));
@@ -168,5 +172,25 @@ for (const [nom, { exercice, questions }] of Object.entries(exercicesAdmissibles
 
     assertEquals(dernierTirage, [{ leconId: "fr-ce1-lecon-00", exercice: 0, rang: questions - 1 }]);
     assertEquals(premierTirage, [{ leconId: "fr-ce1-lecon-00", exercice: 0, rang: 0 }]);
+  });
+}
+
+const exercicesExclus: Record<string, unknown> = {
+  dictee: { type: "dictee", mots: [{ mot: "chat" }] },
+  lecture: { type: "lecture", texte: "Le chat dort.", questions: [{ question: "Qui dort ?", ...unChoix }] },
+  ordre: { type: "ordre", elements: ["un", "deux", "trois"] },
+  memoriser: { type: "memoriser", vers: ["Un vers", "Un autre vers"] },
+  fluence: { type: "fluence", generateur: { op: "+", combien: 5 } },
+  boite: { type: "boite", items: [{}] },
+  barres: { type: "barres", items: [{}] },
+};
+
+for (const [type, exercice] of Object.entries(exercicesExclus)) {
+  Deno.test(`une leçon dont le seul exercice est de type ${type} est sautée`, () => {
+    const lecon = leconAvecLesExercices(exercice);
+
+    const plan = planDuTestDeDepart([lecon], Niveau.de("CE1"), hasardSansMelange());
+
+    assertEquals(plan, []);
   });
 }
