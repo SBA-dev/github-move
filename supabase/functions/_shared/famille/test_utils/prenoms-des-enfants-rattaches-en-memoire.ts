@@ -6,12 +6,15 @@ export class PrenomsDesEnfantsRattachesEnMemoire implements PrenomsDesEnfantsRat
   private readonly prenomsParParent = new Map<string, Prenom[]>();
   lectures = 0;
 
+  constructor(private readonly journal: string[] = []) {}
+
   rattacher(parent: ParentId, prenom: Prenom): void {
     this.prenomsParParent.set(parent.valeur, [...(this.prenomsParParent.get(parent.valeur) ?? []), prenom]);
   }
 
   duParent(parent: ParentId): Promise<Prenom[]> {
     this.lectures += 1;
+    this.journal.push("prenoms.lire");
     return Promise.resolve([...(this.prenomsParParent.get(parent.valeur) ?? [])]);
   }
 }

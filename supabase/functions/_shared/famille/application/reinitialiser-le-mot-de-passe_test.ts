@@ -6,6 +6,7 @@ import {
   MotDePasseNonConforme,
   MotDePasseTropLong,
   PrenomObligatoire,
+  ServiceDeConnexionIndisponible,
   TropDEssaisDeReinitialisation,
 } from "../domain/erreurs.ts";
 import { ParentId } from "../domain/parent-id.ts";
@@ -14,6 +15,7 @@ import { MotsDePasseDesParentsEnMemoire } from "../test_utils/mots-de-passe-des-
 import { ParentsDesAdressesEnMemoire } from "../test_utils/parents-des-adresses-en-memoire.ts";
 import { PrenomsDesEnfantsRattachesEnMemoire } from "../test_utils/prenoms-des-enfants-rattaches-en-memoire.ts";
 import { RegistreDesEssaisDeReinitialisationEnMemoire } from "../test_utils/registre-des-essais-de-reinitialisation-en-memoire.ts";
+import { EssaisDeReinitialisationModifiesEnMemeTemps } from "./ports/registre-des-essais-de-reinitialisation.ts";
 import { ReinitialiserLeMotDePasse } from "./reinitialiser-le-mot-de-passe.ts";
 
 const adresse = "paul@exemple.test";
@@ -25,10 +27,11 @@ function apresMinutes(minutes: number): Date {
 }
 
 function scenario() {
-  const registre = new RegistreDesEssaisDeReinitialisationEnMemoire();
-  const parents = new ParentsDesAdressesEnMemoire();
-  const prenoms = new PrenomsDesEnfantsRattachesEnMemoire();
-  const motsDePasse = new MotsDePasseDesParentsEnMemoire();
+  const journal: string[] = [];
+  const registre = new RegistreDesEssaisDeReinitialisationEnMemoire(journal);
+  const parents = new ParentsDesAdressesEnMemoire(journal);
+  const prenoms = new PrenomsDesEnfantsRattachesEnMemoire(journal);
+  const motsDePasse = new MotsDePasseDesParentsEnMemoire(journal);
   const paul = ParentId.de("parent-paul");
   const marie = ParentId.de("parent-marie");
   parents.ajouter(AdresseEmail.de(adresse), paul);
@@ -37,7 +40,7 @@ function scenario() {
   prenoms.rattacher(paul, Prenom.de("Tom"));
   prenoms.rattacher(marie, Prenom.de("Zoé"));
   const reinitialiser = new ReinitialiserLeMotDePasse(registre, parents, prenoms, motsDePasse);
-  return { registre, parents, prenoms, motsDePasse, paul, reinitialiser };
+  return { journal, registre, parents, prenoms, motsDePasse, paul, reinitialiser };
 }
 
 async function rater(
@@ -239,4 +242,101 @@ Deno.test("le mot de passe transmis pour le changement est la saisie telle quell
   await reinitialiser.executer(adresse, "Léa", " Abcdefg% ", midi);
 
   assertEquals(motsDePasse.changements[0].motDePasse, " Abcdefg% ");
+});
+
+Deno.test("l'essai est enregistré avant toute lecture du parent et des prénoms", async () => {
+  const { journal, reinitialiser } = scenario();
+
+  await assertRejects(
+    () => reinitialiser.executer(adresse, "Faux", nouveauMotDePasse, midi),
+    InformationsDeReinitialisationIncorrectes,
+  );
+
+  assertEquals(journal, ["registre.lire", "registre.enregistrer", "parents.lire", "prenoms.lire"]);
+});
+
+Deno.test("un conflit à l'enregistrement de l'essai fait relire les essais et recommencer avant de comparer le prénom", async () => {
+  const { journal, registre, motsDePasse, reinitialiser } = scenario();
+  registre.provoquerDesConflits(1);
+
+  await reinitialiser.executer(adresse, "Léa", nouveauMotDePasse, midi);
+
+  assertEquals(journal, [
+    "registre.lire",
+    "registre.conflit",
+    "registre.lire",
+    "registre.enregistrer",
+    "parents.lire",
+    "prenoms.lire",
+    "mot-de-passe.changer",
+    "registre.enregistrer",
+  ]);
+  assertEquals(motsDePasse.changements.length, 1);
+});
+
+Deno.test("des conflits répétés à l'enregistrement de l'essai font échouer la réinitialisation sans lire de prénom ni changer le mot de passe", async () => {
+  const { journal, registre, parents, prenoms, motsDePasse, reinitialiser } = scenario();
+  registre.provoquerDesConflits(100);
+
+  await assertRejects(
+    () => reinitialiser.executer(adresse, "Léa", nouveauMotDePasse, midi),
+    ServiceDeConnexionIndisponible,
+  );
+
+  assertEquals([parents.lectures, prenoms.lectures], [0, 0]);
+  assertEquals(motsDePasse.changements, []);
+  assert(journal.filter((appel) => appel === "registre.conflit").length <= 10);
+});
+
+Deno.test("l'erreur de concurrence du registre est une erreur du port", () => {
+  assert(new EssaisDeReinitialisationModifiesEnMemeTemps() instanceof Error);
+});
+
+Deno.test("deux essais simultanés comptent tous les deux : le second voit le compte à jour avant de lire les prénoms", async () => {
+  const { journal, registre, parents, prenoms, motsDePasse } = scenario();
+  const premier = new ReinitialiserLeMotDePasse(registre.uneAutreRequete(), parents, prenoms, motsDePasse);
+  const second = new ReinitialiserLeMotDePasse(registre.uneAutreRequete(), parents, prenoms, motsDePasse);
+
+  const resultats = await Promise.allSettled([
+    premier.executer(adresse, "Faux", nouveauMotDePasse, midi),
+    second.executer(adresse, "Faux", nouveauMotDePasse, midi),
+  ]);
+
+  assertEquals(
+    resultats.map((resultat) => resultat.status === "rejected" && resultat.reason.constructor),
+    [InformationsDeReinitialisationIncorrectes, InformationsDeReinitialisationIncorrectes],
+  );
+  assertEquals(registre.conserves().map((essais) => essais.essaisRates), [2]);
+  const secondeReservation = journal.indexOf("registre.enregistrer", journal.indexOf("registre.enregistrer") + 1);
+  assert(secondeReservation !== -1 && secondeReservation < journal.indexOf("prenoms.lire"));
+});
+
+Deno.test("au 5e essai de réinitialisation, après 4 essais ratés, le bon prénom réussit et remet les essais à zéro", async () => {
+  const { journal, registre, motsDePasse, reinitialiser } = scenario();
+  await rater(reinitialiser, 4);
+  journal.length = 0;
+
+  await reinitialiser.executer(adresse, "Léa", nouveauMotDePasse, midi);
+
+  assertEquals(journal, [
+    "registre.lire",
+    "registre.enregistrer",
+    "parents.lire",
+    "prenoms.lire",
+    "mot-de-passe.changer",
+    "registre.enregistrer",
+  ]);
+  assertEquals(motsDePasse.changements.length, 1);
+  assertEquals(registre.conserves(), []);
+});
+
+Deno.test("au 5e essai de réinitialisation, un faux prénom pose le blocage avant toute lecture du parent", async () => {
+  const { journal, registre, reinitialiser } = scenario();
+  await rater(reinitialiser, 4);
+  journal.length = 0;
+
+  await rater(reinitialiser, 1);
+
+  assertEquals(journal.slice(0, 3), ["registre.lire", "registre.enregistrer", "parents.lire"]);
+  assertEquals(registre.conserves().map((essais) => essais.bloqueJusquA !== null), [true]);
 });
