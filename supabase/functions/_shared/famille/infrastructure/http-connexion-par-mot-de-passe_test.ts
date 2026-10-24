@@ -169,10 +169,8 @@ Deno.test("un corps de plus de 4 096 octets est refusé avec 413 sans appeler le
 });
 
 Deno.test("un corps dont content-length annonce déjà plus de 4 096 octets est refusé avec 413 sans être lu", async () => {
-  let lectures = 0;
   const flux = new ReadableStream<Uint8Array>({
     pull(controleur) {
-      lectures++;
       controleur.enqueue(new TextEncoder().encode("{}"));
       controleur.close();
     },
@@ -187,7 +185,7 @@ Deno.test("un corps dont content-length annonce déjà plus de 4 096 octets est 
 
   const reponse = await traiterUneDemandeSansConnexion(requete, () => Promise.resolve(), origines);
 
-  assertEquals([reponse.status, lectures], [413, 0]);
+  assertEquals([reponse.status, requete.bodyUsed], [413, false]);
 });
 
 Deno.test("un corps de 4 096 octets est accepté jusqu'à la validation", async () => {
