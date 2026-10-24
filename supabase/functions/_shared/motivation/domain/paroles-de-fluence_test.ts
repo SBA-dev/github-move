@@ -2,9 +2,9 @@ import { assertEquals } from "@std/assert";
 import { parolesDeFinDeFluence } from "./paroles-de-fluence.ts";
 
 Deno.test("la fin d'une fluence annonce « 1 calcul réussi ! » au singulier", () => {
-  const texte = parolesDeFinDeFluence({ score: 1, issue: "aucunRecord" });
+  const texte = parolesDeFinDeFluence({ score: 1, issue: "recordInchange", record: 3 });
 
-  assertEquals(texte.startsWith("1 calcul réussi ! "), true);
+  assertEquals(texte, "1 calcul réussi ! 1 calcul ! Ton record reste 3. Tu y es presque !");
 });
 
 Deno.test("la fin d'une fluence annonce le nombre de calculs réussis au pluriel", () => {
@@ -45,6 +45,12 @@ Deno.test("un record qui reste est rappelé avec un encouragement", () => {
 
 Deno.test("un score de 0 ne parle pas de record", () => {
   const texte = parolesDeFinDeFluence({ score: 0, issue: "aucunRecord" });
+
+  assertEquals(texte, "Pas encore de calcul réussi : on réessaie quand tu veux !");
+});
+
+Deno.test("l'issue « aucun record » ne dit que l'encouragement, quel que soit le score", () => {
+  const texte = parolesDeFinDeFluence({ score: 2, issue: "aucunRecord" });
 
   assertEquals(texte, "Pas encore de calcul réussi : on réessaie quand tu veux !");
 });
