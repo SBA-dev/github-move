@@ -18,7 +18,12 @@ export type SegmentDuTexteATrous =
   | Readonly<{ type: "trou"; mot: string }>
   | Readonly<{ type: "trou"; mot: undefined }>;
 
-export type LigneDuTableauDeConjugaison = Readonly<{ pronom: string; forme: string | undefined }>;
+export type LigneDuTableauDeConjugaison = Readonly<{ pronom: string; forme: string | undefined; texte: string }>;
+
+function ecrireLaPersonne(pronom: string, forme: string | undefined): string {
+  const elide = pronom.endsWith("'") || pronom.endsWith("’");
+  return `${pronom}${elide ? "" : " "}${forme ?? "…"}`;
+}
 
 type Contenu = Readonly<{
   questionsAChoix?: readonly QuestionJouee[];
@@ -94,10 +99,10 @@ export class ExerciceJoue {
   }
 
   tableauDeConjugaison(): LigneDuTableauDeConjugaison[] {
-    return (this.contenu.formes ?? []).map(({ pronom, forme }, rang) => ({
-      pronom,
-      forme: rang < this.reussies ? forme : undefined,
-    }));
+    return (this.contenu.formes ?? []).map(({ pronom, forme }, rang) => {
+      const formeTrouvee = rang < this.reussies ? forme : undefined;
+      return { pronom, forme: formeTrouvee, texte: ecrireLaPersonne(pronom, formeTrouvee) };
+    });
   }
 
   aideApresLaDerniereErreur(): string | undefined {
@@ -117,7 +122,7 @@ export class ExerciceJoue {
     const etiquettes = this.contenu.etiquettes;
     if (etiquettes) return etiquettes.paroleDueApresLaDerniereReponse();
     if (this.contenu.questionsDeDictee) return this.derniereCorrection()?.juste ? "felicitation" : undefined;
-    if (this.contenu.formes) return this.conjugaisonCompleteParLaDerniereReponse() ? "felicitation" : undefined;
+    if (this.contenu.formes) return this.paroleDueEnConjugaison();
     return this.dernierBonMotDUnTrou() ? "felicitation" : undefined;
   }
 
@@ -184,6 +189,11 @@ export class ExerciceJoue {
   private placer(placement: Extract<Reponse, { genre: "placement" }>): ResultatDeReponse {
     if (!this.contenu.etiquettes) throw new PasDeQuestionEnCours();
     return this.contenu.etiquettes.placer(placement);
+  }
+
+  private paroleDueEnConjugaison(): ParoleDue | undefined {
+    if (this.dernierResultatDuTrou !== "juste") return undefined;
+    return this.estReussi() ? "tuSaisConjuguer" : "applaudir";
   }
 
   private dernierBonMotDUnTrou(): boolean {

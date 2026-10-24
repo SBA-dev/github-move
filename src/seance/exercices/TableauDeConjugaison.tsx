@@ -6,11 +6,6 @@ type Props = {
   readonly lignes: readonly LigneDuTableauDeConjugaison[];
 };
 
-function laPersonneEtSaForme({ pronom, forme }: LigneDuTableauDeConjugaison): string {
-  const separateur = pronom.endsWith("'") ? "" : " ";
-  return `${pronom}${separateur}${forme ?? "…"}`;
-}
-
 /** Le verbe et son temps, puis une ligne par personne : la forme s'écrit quand l'enfant l'a trouvée. */
 export function TableauDeConjugaison({ verbe, temps, lignes }: Props) {
   const rangDeLaPersonneEnCours = lignes.findIndex(({ forme }) => forme === undefined);
@@ -25,7 +20,7 @@ export function TableauDeConjugaison({ verbe, temps, lignes }: Props) {
             data-etat={ligne.forme !== undefined ? "ecrite" : rang === rangDeLaPersonneEnCours ? "en-cours" : "vide"}
             aria-current={rang === rangDeLaPersonneEnCours ? "true" : undefined}
           >
-            {laPersonneEtSaForme(ligne)}
+            {ligne.texte}
           </li>
         ))}
       </ul>
