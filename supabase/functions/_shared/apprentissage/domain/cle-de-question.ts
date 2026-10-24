@@ -10,6 +10,7 @@ const PREFIXES: Record<TypeDeQuestion, string> = {
   ordre: "o:",
   chiffre: "h:",
   calcul: "n:",
+  boite: "n:",
   colonne: "u:",
   fluence: "f:",
   dictee: "d:",

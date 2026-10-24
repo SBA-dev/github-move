@@ -12,6 +12,7 @@ import {
 } from "./erreurs.ts";
 import type { FluenceEnCours } from "./exercice-chronometre.ts";
 import type { VueAddition } from "./vue-d-addition.ts";
+import type { BoiteEnCours } from "./question-de-boite.ts";
 import type { CalculEnCours } from "./question-de-calcul.ts";
 import { Etoiles } from "./etoiles.ts";
 import type { CleDeQuestion } from "./cle-de-question.ts";
@@ -135,6 +136,10 @@ export class Seance {
 
   calculEnCours(): CalculEnCours | undefined {
     return this.exerciceEnCours()?.calculEnCours();
+  }
+
+  boiteEnCours(): BoiteEnCours | undefined {
+    return this.exerciceEnCours()?.boiteEnCours();
   }
 
   additionEnCours(): VueAddition | undefined {

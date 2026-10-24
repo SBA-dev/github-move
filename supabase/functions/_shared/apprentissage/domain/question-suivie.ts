@@ -9,6 +9,7 @@ export type TypeDeQuestion =
   | "dictee"
   | "chiffre"
   | "calcul"
+  | "boite"
   | "colonne"
   | "fluence";
 

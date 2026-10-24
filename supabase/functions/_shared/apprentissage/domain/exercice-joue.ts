@@ -1,5 +1,6 @@
 import type {
   Exercice,
+  ExerciceBoite,
   ExerciceCalcul,
   FormeConjuguee,
   Niveau,
@@ -14,6 +15,7 @@ import { nombreDeQuestions } from "./nombre-de-questions.ts";
 import { ModeDeReponse } from "./mode-de-reponse.ts";
 import { MotAEcrire } from "./mot-a-ecrire.ts";
 import type { CorrectionDuMot } from "./mot-a-ecrire.ts";
+import { type BoiteEnCours, QuestionDeBoite } from "./question-de-boite.ts";
 import { type CalculEnCours, QuestionDeCalcul } from "./question-de-calcul.ts";
 import { QuestionDeDictee } from "./question-de-dictee.ts";
 import { QuestionJouee, questionsJoueesAvec } from "./question-jouee.ts";
@@ -81,6 +83,11 @@ export class ExerciceJoue {
   calculEnCours(): CalculEnCours | undefined {
     const question = this.questionPoseeEnCours();
     return question instanceof QuestionDeCalcul ? question.enCours() : undefined;
+  }
+
+  boiteEnCours(): BoiteEnCours | undefined {
+    const question = this.questionPoseeEnCours();
+    return question instanceof QuestionDeBoite ? question.enCours() : undefined;
   }
 
   additionEnCours(): VueAddition | undefined {
@@ -206,9 +213,8 @@ export class ExerciceJoue {
     if (!question) throw new PasDeQuestionEnCours();
     const resultat = question.repondre(reponse);
     this.dernierResultatDuTrou = resultat;
-    this.aideDeLErreurDeCalcul = question instanceof QuestionDeCalcul && resultat === "fausse"
-      ? question.aideApresErreur()
-      : undefined;
+    const aUneAideDeCalcul = question instanceof QuestionDeCalcul || question instanceof QuestionDeBoite;
+    this.aideDeLErreurDeCalcul = aUneAideDeCalcul && resultat === "fausse" ? question.aideApresErreur() : undefined;
     if (resultat === "juste") this.reussies++;
     return resultat;
   }
@@ -315,6 +321,8 @@ function contenuDe(exercice: Exercice, tireur: Tireur, niveau: Niveau): Contenu 
       };
     case "calcul":
       return contenuDeCalcul(exercice, tireur, niveau);
+    case "boite":
+      return { questionsPosees: questionsDeBoite(exercice, tireur, niveau) };
     case "fluence":
       return { chronometre: ExerciceChronometre.pour(exercice, tireur) };
     case "addition":
@@ -337,4 +345,8 @@ function questionsDeCalcul(operations: readonly Operation[], tireur: Tireur, niv
   return operations.map((operation) =>
     auxChoix ? QuestionDeCalcul.avecLesChoix(operation, tireur) : QuestionDeCalcul.auClavier(operation)
   );
+}
+
+function questionsDeBoite(exercice: ExerciceBoite, tireur: Tireur, niveau: Niveau): QuestionDeBoite[] {
+  return exercice.items.map((item) => QuestionDeBoite.pour(item, tireur, niveau));
 }
