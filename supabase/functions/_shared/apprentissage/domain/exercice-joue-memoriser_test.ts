@@ -176,3 +176,16 @@ Deno.test("pendant l'ordre des vers, les vers déjà posés se lisent dans l'ord
 
   assertEquals(exerciceJoue.etiquettesPosees(), [{ texte: "Au clair de la lune," }, { texte: "Mon ami Pierrot," }]);
 });
+
+Deno.test("les tirages d'une poésie sont les vers mélangés, puis les choix proposés de chaque mot caché dans l'ordre des vers", () => {
+  const exerciceJoue = ExerciceJoue.depuis(0, auClairDeLaLune, tireurQuiRetourneLesVers(), NIVEAU);
+
+  const [vers, ...choixDesMotsCaches] = exerciceJoue.tirages();
+
+  assertEquals(vers, ["Ma chandelle est morte,", "Mon ami Pierrot,", "Au clair de la lune,"]);
+  assertEquals(choixDesMotsCaches.map((choix) => choix.toSorted()), [
+    ["Pierrot", "chandelle", "clair"],
+    ["Pierrot", "chandelle", "clair"],
+    ["Pierrot", "chandelle", "clair"],
+  ]);
+});
