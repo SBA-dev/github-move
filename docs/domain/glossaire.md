@@ -95,10 +95,12 @@ Le glossaire garde l'orthographe française.
 | Test de départ (à valider) | Série de questions de français et de maths, jusqu'au niveau de l'enfant, pour savoir où commencer. Il s'arrête après 3 erreurs de suite. | Apprentissage | évaluation, examen, test (seul) |
 | Révision (à valider) | Séance qui reprend les questions ratées dont la date de révision est arrivée (10 au plus). | Apprentissage | rattrapage, revoir |
 | Leçon des classes d'avant (à valider) | Leçon d'un niveau inférieur, proposée sans verrou pour réviser. | Apprentissage | ancienne leçon |
-| Prochaine leçon (à valider) | Première leçon non réussie du parcours d'une matière, tant que toutes celles d'avant sont réussies ; au plus une par matière, marquée aussi en parcours libre. Interface : « À toi ! » (#25). | Apprentissage | leçon en cours, leçon débloquée |
-| Leçon ouverte (à valider) | Leçon du parcours, non réussie, que l'enfant peut commencer sans qu'elle soit la prochaine leçon (parcours libre). Interface : « À découvrir » (#25). | Apprentissage | leçon libre, leçon déverrouillée |
-| Leçon suivante (à valider) | Leçon proposée à la fin d'une séance (« Leçon suivante », « Ensuite : … ») : la leçon d'`ordre` suivant au lot 3 (#24), la règle du parcours au lot 4 (#25, question n°9). | Apprentissage | leçon d'après, suite |
-| Matière du parcours (à valider) | Matière qui a au moins une leçon pour le niveau de l'enfant ; elle a un onglet dans « Mon parcours » (#25, question n°8). | Apprentissage | onglet (dans le code), discipline |
+| Prochaine leçon (à valider) | Première leçon non réussie du parcours d'une matière ; au plus une par matière, aucune quand toutes sont réussies. Elle est mise en avant et ne ferme aucune autre leçon. Interface : « À toi ! » (#25). | Apprentissage | leçon en cours, leçon débloquée |
+| Leçon à découvrir (à valider) | Leçon du parcours, non réussie, qui n'est pas la prochaine leçon ; l'enfant peut la commencer. Interface : « À découvrir » (#25). | Apprentissage | leçon ouverte, leçon libre, leçon déverrouillée |
+| Leçon suivante (à valider) | Leçon proposée à la fin d'une séance (« Leçon suivante », « Ensuite : … ») : dans le parcours de la leçon jouée, la première leçon d'après non réussie (si toutes celles d'après sont réussies : question N4 du modèle) ; aucune après la dernière leçon du parcours (#25, réponse 25.2). | Apprentissage | leçon d'après, suite |
+| Matière du parcours (à valider) | Matière qui a au moins une leçon du niveau de l'enfant ; elle a un onglet dans « Mon parcours » (#25, réponse 25.4). | Apprentissage | onglet (dans le code), discipline |
+| Place (à valider) | Numéro d'une leçon dans son parcours (1, 2, …), tiré de l'`ordre`. Interface : « Leçon 1 » (#25, réponse 25.8). Ne pas confondre avec la place d'une étiquette dans un exercice `ordre` (Placement). | Apprentissage | rang, étape, numéro d'étape |
+| Leçon réussie d'une classe au-dessus (à valider) | Leçon réussie d'un niveau supérieur à celui de l'enfant (enfant redescendu de classe). Elle reste visible avec ses étoiles, ne compte pas dans le parcours et n'est jamais la prochaine leçon ; endroit à préciser (#25, réponse 25.12). | Apprentissage | leçon perdue, leçon cachée |
 
 ## Motivation
 
@@ -235,6 +237,9 @@ Les trois questions de rattachement (mêmes droits des deux parents, durée et u
 
 Lot 3 : plus aucune question ouverte ; les termes sont validés (Décision n°30).
 
-Lot 4 (#25, `docs/stories/25/domain-model.md`) :
-- « Leçon verrouillée » : le legacy verrouille toute leçon non réussie après la **première** leçon non réussie, pas seulement après une précédente non réussie ; définition à confirmer ou à corriger par le PO (question n°1) ;
-- « Étape » (« Étape 1 » dans « Mon parcours ») : contraire à la Décision n°28 ; libellé à choisir (question n°3).
+Lot 4 (#25, `docs/stories/25/domain-model.md`) : le PO a répondu **aucun verrou** (réponse 25.1). Termes existants devenus faux, **non modifiés** par #25 (escalade, question N3 du modèle) :
+- « Leçon verrouillée » : plus aucune leçon du parcours n'est verrouillée ; terme sans objet ;
+- « Parcours libre » : « ouvre toutes les leçons du parcours », qui le sont toutes ; réglage sans effet (question N2 : le retirer ?) ;
+- « Leçon des classes d'avant » : « proposée sans verrou » ne distingue plus rien ;
+- hors glossaire : `CLAUDE.md` (« réussie à 1 étoile (elle ouvre la suivante) »), ligne `ordre` de `docs/format-lecons.md` (« une leçon s'ouvre quand la précédente est réussie »), trois lignes de `docs/domain/context-map.md` (« parcours et verrous », réglage « parcours libre », `LeconReussie` « servira au parcours et aux verrous »).
+- « Étape » (« Étape 1 ») : remplacé par « Leçon 1 » (réponse 25.8) ; terme « Place » ajouté (à valider).

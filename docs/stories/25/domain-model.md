@@ -1,49 +1,75 @@
-# Modèle du domaine : issue #25, Parcours par matière et verrous
+# Modèle du domaine : issue #25, Parcours par matière
+
+> Révisé après les réponses du PO (annonce du responsable). Réponse structurante : **#25.1 = b, aucun verrou**. Toutes les leçons du parcours sont ouvertes ; la prochaine leçon est seulement mise en avant. Le titre de l'issue (« … et verrous ») ne correspond plus au contenu : question nouvelle n°N5.
 
 ## Contexte
 
-Première story du lot 4 (Parcours). Contexte **Apprentissage** : le parcours, la leçon verrouillée et la prochaine leçon sont des règles du domaine `apprentissage/domain/`, en TypeScript pur, importées par le front via `@domain/apprentissage` (décision 0003). Elles tournent dans le navigateur.
+Première story du lot 4 (Parcours). Contexte **Apprentissage** : le parcours et la prochaine leçon sont des règles du domaine `apprentissage/domain/`, en TypeScript pur, importées par le front via `@domain/apprentissage` (décision 0003). Elles tournent dans le navigateur.
 
 Le parcours se **calcule** à partir de trois sources, sans rien écrire :
 
 | Source | Contexte | Ce qui est lu | Mécanisme |
 |---|---|---|---|
 | Leçons de la bibliothèque | Catalogue pédagogique | `Lecon` : `id`, `matiere`, `niveau`, `ordre`, `titre` | Published Language `@domain/catalogue` (#16) ; le front charge déjà toute la bibliothèque (`chargerToutesLesLecons`) |
-| Niveau et réglage parcours libre du profil en cours | Famille | `ProfilEnCours.niveau`, `ProfilEnCours.reglages.parcoursLibre` | Customer/Supplier existant (#11, #12) : le front passe ces valeurs au domaine |
+| Niveau du profil en cours | Famille | `ProfilEnCours.niveau` | Customer/Supplier existant (#11) : le front passe la valeur au domaine |
 | Meilleures étoiles de chaque leçon du profil | Apprentissage | `resultats_des_lecons` (#24) : `lecon`, `meilleures_etoiles` | Lecture du front sous RLS (voir « Progression en base ») |
 
-Hors de cette story : leçons des classes d'avant et effets du parcours libre sur « Toutes les leçons » (#26), test de départ (#27), écran « Aujourd'hui » (#29), leçons personnelles (Accompagnement, lot 6), hors ligne complet (#44). Story voisine #20 : aucun de ses agrégats n'est touché (exercices calcul, fluence, addition posée, record de fluence, adaptation de la difficulté).
+Le réglage **parcours libre** (#12) n'est **plus lu** : sans verrou, il n'a plus d'effet sur le parcours (question nouvelle n°N2).
 
-### Comportement actuel (`app/app.js`)
+Hors de cette story : leçons des classes d'avant et « Toutes les leçons » (#26), test de départ (#27), écran « Aujourd'hui » (#29), leçons personnelles (Accompagnement, lot 6 ; réponse #25.15), hors ligne complet (#44). Story voisine #20 : aucun de ses agrégats n'est touché.
 
-- `subjectPath(m)` (l. 545) : leçons de la matière dont le niveau est inférieur ou égal à celui de l'enfant (`levelRank`), leçons personnelles comprises (`allLessons`), triées par niveau puis `ordre`. Seules les leçons du niveau de l'enfant (`chained`) forment la suite verrouillée.
-- Parcours de la suite, avec un drapeau `open` (vrai au départ) : une leçon est réussie si `etoiles > 0` ; la **prochaine** est la première leçon non réussie tant que `open` ; dès qu'une leçon du niveau n'est pas réussie, `open` devient faux ; une leçon est **verrouillée** si elle est du niveau, non réussie, `open` faux et pas de parcours libre. Une leçon réussie reste ouverte même après une non réussie.
-- Avec le parcours libre, `open` passe quand même à faux : la prochaine leçon reste unique et marquée, les autres non réussies sont « À découvrir ».
-- `nextAfter(l)` (l. 1956) : après une séance, la première leçon après `l` dans le parcours de sa matière non réussie et non verrouillée, sinon la première non verrouillée, sinon la prochaine leçon conseillée toutes matières confondues (`nextLesson`), si ce n'est pas `l`.
+### Comportement actuel (`app/app.js`), source des règles
+
+- `subjectPath(m)` (l. 545) : leçons de la matière dont le niveau est inférieur ou égal à celui de l'enfant, triées par niveau puis `ordre`. Une leçon est réussie si `etoiles > 0` ; la **prochaine** est la première leçon non réussie de la classe ; les suivantes non réussies sont verrouillées, sauf en parcours libre (« À découvrir »). **La cible abandonne le verrou** (réponse #25.1) : elle garde l'affichage du parcours libre pour tous.
+- `nextAfter(l)` (l. 1956) : après une séance, la première leçon après `l` non réussie et non verrouillée, sinon la première après `l` non verrouillée, sinon la prochaine leçon toutes matières confondues. Sans verrou, la règle devient : la première leçon après `l` non réussie, sinon la leçon juste après `l` (question nouvelle n°N4), sinon rien (pas de repli sur une autre matière avant #29, réponse #25.2).
+
+## Réponses du PO consignées
+
+Numéros de `docs/stories/25/acceptance.md`.
+
+| n° | Question | Réponse |
+|---|---|---|
+| 25.1 | Règle du verrou | **b : aucun verrou.** Toutes les leçons du parcours sont ouvertes ; la prochaine leçon est seulement mise en avant. |
+| 25.2 | Leçon suivante à la fin d'une séance | Recommandation retenue : la première leçon d'après non réussie, dans le parcours de la leçon jouée, sans repli sur une autre matière avant #29. La partie « non verrouillée » tombe. |
+| 25.3 | Leçon verrouillée ouverte par une adresse directe | Sans objet (plus de verrou). |
+| 25.4 | Onglet d'une matière sans leçon du niveau | Pas d'onglet. |
+| 25.5 | Parcours libre dans cette story | Sans objet de fait : le parcours libre n'a plus d'effet (question N2). |
+| 25.6 | Hors ligne | Le parcours se met à jour tout de suite après une séance ; l'affichage sans réseau dès le lancement relève de #44. |
+| 25.7 | Lecteur d'écran | « <titre> : réussie, 2 étoiles sur 3 », « <titre> : à toi ! », « <titre> : à découvrir ». |
+| 25.8 | Libellé de la place | « Leçon 1 », « Leçon 2 »… |
+| 25.9 | Aucune leçon pour le niveau | « Aucune leçon pour ta classe pour l'instant. » |
+| 25.10 | Accès | Bouton « Mon parcours » sur l'accueil de l'enfant ; le retour ramène à cet accueil. |
+| 25.11 | Matière à l'ouverture | Dernière matière choisie pendant l'utilisation en cours, sinon le français, sinon la première. Rien n'est mémorisé d'une ouverture à l'autre. |
+| 25.12 | Descente de classe (CE2 → CE1) | **a : les leçons de CE2 réussies restent visibles** pour l'enfant redescendu en CE1. L'endroit n'est pas précisé (question N1). |
+| 25.13 | Leçon ajoutée au milieu d'un parcours | Acceptée sans signal (elle devient la prochaine leçon si celles d'avant sont réussies ; rien n'est fermé). |
+| 25.14 | Deux leçons de même `ordre` | Le pipeline refuse le doublon (test pytest) ; le domaine départage par identifiant. |
+| 25.15 | Leçons personnelles | Hors story. |
+| 25.16 | Parcours entièrement réussi | Seulement le compteur. |
 
 ## Termes
 
 | Terme | Statut | Remarque |
 |---|---|---|
-| Parcours | au glossaire | Suite ordonnée des leçons d'une matière pour le niveau de l'enfant. Le modèle s'y tient : les leçons des classes d'avant n'en font pas partie ici (#26). |
-| Leçon verrouillée | au glossaire, **en conflit avec le legacy** | Le glossaire dit « parce que la précédente n'est pas réussie » ; le legacy verrouille toute leçon non réussie après la **première** non réussie. Question ouverte n°1. Le glossaire n'est pas reformulé ici. |
-| Leçon réussie | au glossaire (confirmé) | Meilleures étoiles ≥ 1 (`ResultatDeLaLecon.estReussie()`, #24). |
-| Parcours libre | au glossaire (confirmé) | Rien n'est verrouillé ; la prochaine leçon reste marquée. |
+| Parcours | au glossaire | Suite ordonnée des leçons d'une matière pour le niveau de l'enfant. Les leçons de CE2 réussies d'un enfant redescendu en CE1 n'en font pas partie : elles sont montrées à côté (question N1). |
+| Leçon réussie | au glossaire (confirmé) | Meilleures étoiles ≥ 1 (`ResultatDeLaLecon.estReussie()`, #24). Le mot « ouvre la suivante » de `CLAUDE.md` devient faux : escalade (question N3). |
+| Leçon verrouillée | au glossaire, **devenu sans objet** | Plus aucune leçon verrouillée dans le parcours. Ni le code ni l'interface ne l'emploient. Escalade (question N3). |
+| Parcours libre | au glossaire, **devenu sans effet** | Réglage de Famille (#12) qui « ouvre toutes les leçons » : elles le sont toutes. Question N2. |
 | Résultat de la leçon, Meilleures étoiles | au glossaire (#24) | Seule donnée de progression lue. |
-| Ordre | au glossaire (confirmé) | Position dans le parcours. Dans la cible, `ordre` est obligatoire (`lireLecon`) : la règle legacy « absent compte pour 0 » disparaît. |
+| Ordre | au glossaire (confirmé) | Position dans le parcours ; obligatoire dans la cible (`lireLecon`). La ligne `ordre` de `docs/format-lecons.md` (« une leçon s'ouvre quand la précédente est réussie ») devient fausse : escalade (question N3). |
 | Niveau, Matière | au glossaire (confirmés) | |
-| Prochaine leçon | **nouveau** `(à valider)` | Première leçon non réussie du parcours, tant que la suite est ouverte (au plus une par matière). Interface : « À toi ! ». |
-| Leçon ouverte | **nouveau** `(à valider)` | Leçon du parcours non réussie qui n'est ni la prochaine leçon ni verrouillée : elle n'existe qu'avec le parcours libre (ou selon la réponse à la question n°1). Interface : « À découvrir ». |
-| Leçon suivante | **nouveau** `(à valider)` | Leçon proposée à la fin d'une séance (« Leçon suivante », « Ensuite : … »). Aujourd'hui règle du Catalogue (#24, Q73), remplacée par la règle du parcours (question n°9). |
-| Matière du parcours | **nouveau** `(à valider)` | Matière qui a au moins une leçon pour l'enfant ; elle a un onglet dans « Mon parcours » (question n°8 sur le niveau pris en compte). |
-| Étape (« Étape 1 ») | mot d'interface, **en conflit** | La décision n°28 du glossaire interdit « étape » seule. Question ouverte n°3. Le domaine dit **leçon du parcours** et sa **place** (1, 2, …). |
-| Mon parcours, À toi !, Plus tard, À découvrir, Pour toi | mots d'interface | Hors glossaire. |
+| Prochaine leçon | **nouveau** `(à valider)` | Première leçon non réussie du parcours d'une matière ; au plus une ; mise en avant, sans rien fermer. Interface : « À toi ! ». |
+| Leçon à découvrir | **nouveau** `(à valider)`, remplace « Leçon ouverte » | Leçon du parcours non réussie qui n'est pas la prochaine leçon. Interface : « À découvrir ». « Leçon ouverte » est retiré : toutes les leçons sont ouvertes, le mot ne distingue plus rien. |
+| Leçon suivante | **nouveau** `(à valider)`, règle révisée | Leçon proposée à la fin d'une séance (« Leçon suivante », « Ensuite : … ») : la première leçon d'après non réussie dans le parcours de la leçon jouée (réponse #25.2, question N4). |
+| Matière du parcours | **nouveau** `(à valider)`, règle confirmée | Matière qui a au moins une leçon du niveau de l'enfant (réponse #25.4). |
+| Place | **nouveau** `(à valider)` | Numéro 1, 2, … d'une leçon dans son parcours, tiré de l'`ordre` ; interface « Leçon 1 » (réponse #25.8). Le mot « rang » reste interdit pour une leçon (décision n°25). |
+| Leçon réussie d'une classe au-dessus | **nouveau** `(à valider)` | Leçon réussie d'un niveau supérieur à celui de l'enfant (enfant redescendu de classe) ; reste visible (réponse #25.12). Endroit : question N1. |
+| Mon parcours, À toi !, À découvrir | mots d'interface | Hors glossaire. « Plus tard » (leçon verrouillée) disparaît. |
+| Étape (« Étape 1 ») | mot d'interface **retiré** | Remplacé par « Leçon 1 » (réponse #25.8, décision n°28). |
 | Carte, chemin | synonymes interdits de Parcours | Le legacy dit `showMap`, `path` : rien de cela dans le code cible. |
-| Espace adulte | synonyme interdit (décision n°17) | Le texte legacy « Un adulte peut en créer dans l'espace adulte » est à reprendre (question n°13). |
 
 ## Modèle
 
-Le parcours **n'est pas un agrégat** : aucune commande ne le modifie, il ne protège aucun invariant d'écriture. C'est une **vue calculée** par un **service de domaine pur**, recalculée à chaque affichage à partir des leçons, du niveau, du réglage et des meilleures étoiles. La seule écriture qui le fait changer reste `TerminerLaSeance` (#24), qui met à jour l'agrégat `ResultatDeLaLecon`. Cela garde les agrégats petits et évite toute donnée dupliquée (« leçon débloquée » stockée) qui pourrait diverger de la bibliothèque.
+Le parcours **n'est pas un agrégat** : aucune commande ne le modifie, il ne protège aucun invariant d'écriture. C'est une **vue calculée** par un **service de domaine pur**, recalculée à chaque affichage à partir des leçons, du niveau et des meilleures étoiles. La seule écriture qui le fait changer reste `TerminerLaSeance` (#24), qui met à jour l'agrégat `ResultatDeLaLecon`. Sans verrou, il n'y a plus rien à refuser : aucune erreur métier nouvelle.
 
 ```mermaid
 classDiagram
@@ -57,7 +83,6 @@ classDiagram
     <<value object>>
     Lecon[] lecons
     Niveau niveau
-    booleen parcoursLibre
     MeilleuresEtoilesDuProfil meilleuresEtoiles
   }
   class MeilleuresEtoilesDuProfil {
@@ -73,7 +98,7 @@ classDiagram
     nombreDeLeconsReussies
     nombreDeLecons
     prochaineLecon() LeconId?
-    peutCommencer(LeconId) booleen
+    LeconReussieDUneClasseAuDessus[] leconsReussiesDesClassesAuDessus
   }
   class LeconDuParcours {
     <<value object>>
@@ -86,131 +111,130 @@ classDiagram
     <<value object>>
     reussie(Etoiles)
     prochaine
-    verrouillee
-    ouverte
+    aDecouvrir
+  }
+  class LeconReussieDUneClasseAuDessus {
+    <<value object>>
+    LeconId lecon
+    titre
+    Niveau niveau
+    Etoiles etoiles
   }
   CalculDuParcours ..> EntreesDuParcours
   CalculDuParcours ..> Parcours
   Parcours *-- LeconDuParcours
+  Parcours *-- LeconReussieDUneClasseAuDessus
   LeconDuParcours --> EtatDansLeParcours
   EntreesDuParcours --> MeilleuresEtoilesDuProfil
 ```
 
+`leconsReussiesDesClassesAuDessus` dépend de la réponse à la question N1 (endroit et story) ; si elle est montrée ailleurs que dans le parcours de la matière, elle sort de `Parcours` vers une lecture voisine du même service.
+
 ### Entrées
 
-- `lecons` : les leçons lisibles du Catalogue (toute la bibliothèque ; le service filtre lui-même par matière et niveau, pour que le filtre soit une règle du domaine). Plus tard, les leçons personnelles (question n°2).
+- `lecons` : les leçons lisibles du Catalogue (toute la bibliothèque ; le service filtre lui-même par matière et niveau).
 - `niveau` : `Niveau` du Catalogue, lu depuis le profil en cours.
-- `parcoursLibre` : réglage du profil en cours.
-- `meilleuresEtoiles` : leçon → meilleures étoiles (1 à 3), pour le profil en cours. Une leçon absente n'a pas de séance terminée. Une entrée qui ne correspond à aucune leçon de la bibliothèque est ignorée (leçon retirée, leçon d'un autre niveau).
+- `meilleuresEtoiles` : leçon → meilleures étoiles (1 à 3), pour le profil en cours. Une leçon absente n'a pas de séance terminée. Une entrée qui ne correspond à aucune leçon de la bibliothèque est ignorée (leçon retirée).
 
 Le service ne connaît ni le profil, ni le parent, ni la base : il reçoit des valeurs.
 
 ### Sortie : `Parcours` d'une matière
 
-1. Leçons de la matière **et du niveau de l'enfant**, triées par `ordre` croissant (égalité : question n°6).
-2. État de chaque leçon, dans l'ordre, avec une suite « ouverte » au départ :
-   - meilleures étoiles ≥ 1 → `reussie(etoiles)` (toujours, même après une leçon non réussie) ;
-   - sinon, si la suite est ouverte → `prochaine`, puis la suite se ferme ;
-   - sinon → `verrouillee`, ou `ouverte` avec le parcours libre.
-   (Règle du legacy ; la variante « seulement si la précédente n'est pas réussie » est la question n°1.)
-3. `nombreDeLeconsReussies` / `nombreDeLecons` : sur les leçons du niveau seulement (« 1 leçon réussie sur 12 », « 3 leçons réussies sur 12 » ; le texte et l'accord sont faits par l'interface). Parcours vide : « Pas encore de leçon de ta classe dans cette matière. ».
-4. `prochaineLecon()` : au plus une par matière ; aucune si toutes sont réussies.
-5. `peutCommencer(lecon)` : faux pour une leçon verrouillée. C'est la règle que le front consulte avant d'ouvrir la page de la leçon (toucher, clavier, et adresse directe : question n°10).
+1. Leçons de la matière **et du niveau de l'enfant**, triées par `ordre` croissant, puis par identifiant à `ordre` égal (réponse #25.14).
+2. État de chaque leçon :
+   - meilleures étoiles ≥ 1 → `reussie(etoiles)` ;
+   - sinon, la **première** leçon non réussie → `prochaine` ;
+   - sinon → `aDecouvrir`.
+3. `place` : 1, 2, … dans l'ordre du parcours (« Leçon 1 »).
+4. `nombreDeLeconsReussies` / `nombreDeLecons` : sur les leçons du niveau seulement ; le texte et l'accord sont faits par l'interface. Parcours entièrement réussi : pas de prochaine leçon, le compteur suffit (réponse #25.16).
+5. `prochaineLecon()` : au plus une par matière ; aucune si toutes sont réussies.
+6. `leconsReussiesDesClassesAuDessus` : leçons de la matière d'un niveau **supérieur** à celui de l'enfant **et réussies**, avec leurs meilleures étoiles ; elles ne comptent pas dans le compteur et ne sont jamais la prochaine leçon (réponse #25.12 ; endroit, ordre et story : question N1). Les leçons d'une classe au-dessus non réussies ne sont pas montrées (« rien hors programme »).
 
-`matieresDuParcours` : matières, dans l'ordre du Catalogue (français, maths, sciences, histoire, anglais, EMC), qui ont au moins une leçon pour l'enfant (question n°8). Aucune matière : message d'interface (question n°13). La matière choisie par défaut (dernière ouverte, sinon français, sinon la première) est un état d'interface (question n°15).
+`matieresDuParcours` : matières, dans l'ordre du Catalogue (français, maths, sciences, histoire, anglais, EMC), qui ont au moins une leçon **du niveau** de l'enfant (réponse #25.4). Aucune matière : « Aucune leçon pour ta classe pour l'instant. » (réponse #25.9). La matière choisie à l'ouverture est un état d'interface (réponse #25.11) ; question N7 sur une matière qui n'aurait que des leçons réussies d'une classe au-dessus.
 
-`leconSuivanteDansLeParcours` : voir question n°9.
+`leconSuivanteDansLeParcours(entrees, lecon)` : dans le parcours de la matière et du niveau de la leçon jouée, la première leçon placée après elle qui n'est pas réussie ; sinon la leçon juste après elle (question N4) ; sinon aucune (dernière leçon du parcours : pas de bouton, pas de repli sur une autre matière avant #29). Elle remplace `leconSuivante` du Catalogue (#24, Q73).
 
 ### Commandes et lectures
 
 | Commande ou lecture | Effet | Erreurs métier | Où |
 |---|---|---|---|
-| Lecture `MeilleuresEtoilesDuProfil(profil)` | Toutes les meilleures étoiles du profil, en une lecture, sous RLS. | aucune (lecture impossible : parcours sans étoiles, voir question n°11) | front, client Supabase avec le JWT du parent |
-| `parcoursDeLaMatiere`, `matieresDuParcours` | Calcul pur. | `NiveauInconnu` (Catalogue) si le niveau du profil est invalide | navigateur (et serveur si besoin) |
-| `CommencerUneLecon` (existant, page de la leçon #16) | Refusé pour une leçon verrouillée, si la question n°10 le confirme. | `LeconVerrouillee` (à valider, question n°10) | navigateur |
+| Lecture `MeilleuresEtoilesDuProfil(profil)` | Toutes les meilleures étoiles du profil, en une lecture, sous RLS. | aucune (lecture impossible : parcours sans étoiles) | front, client Supabase avec le JWT du parent |
+| `parcoursDeLaMatiere`, `matieresDuParcours`, `leconSuivanteDansLeParcours` | Calcul pur. | `NiveauInconnu` (Catalogue) si le niveau du profil est invalide | navigateur (et serveur si besoin) |
+| `CommencerUneLecon` (existant, page de la leçon #16) | **Inchangé** : toute leçon du parcours peut être commencée. | aucune nouvelle | navigateur |
 | `TerminerLaSeance` (#24) | Inchangé : c'est lui qui fait avancer le parcours en mettant à jour `ResultatDeLaLecon`. | inchangées | Edge Function |
 
-Aucune nouvelle commande d'écriture, donc aucune nouvelle Edge Function.
+Aucune nouvelle commande d'écriture, aucune nouvelle Edge Function, aucune erreur métier nouvelle (`LeconVerrouillee` est abandonnée).
 
 ### Progression en base : `resultats_des_lecons` suffit
 
-**Pas de nouvelle table ni de migration.** La table `resultats_des_lecons` (#24, migrations `20261023213000` et `20261024090000`) porte, par couple (profil, leçon) unique, `meilleures_etoiles` (1 à 3) : c'est exactement ce que le calcul lit (réussie = au moins une ligne, étoiles = `meilleures_etoiles`). La clé primaire `(profil, lecon)` sert aussi d'index pour lire tout un profil. La cascade avec le profil et l'export (contrat #14) sont déjà en place pour cette table.
+**Pas de nouvelle table ni de migration.** La table `resultats_des_lecons` (#24) porte, par couple (profil, leçon) unique, `meilleures_etoiles` (1 à 3) : c'est exactement ce que le calcul lit. La cascade avec le profil et l'export (contrat #14) sont déjà en place.
 
-Lecture par le front : compatible avec les décisions 0013 et 0016. Elles réservent les **écritures** à `terminer-la-seance` ; 0016, n°1 dit explicitement que `authenticated` « garde la lecture sous RLS (parent rattaché) » (policy `resultats_des_lecons_lecture_par_ses_parents`). Le front fait déjà cette lecture pour une leçon (`lecture-des-meilleures-etoiles-supabase.ts`) ; il faut seulement une lecture de toutes les leçons du profil (`select lecon, meilleures_etoiles where profil = …`). Aucune nouvelle décision d'architecture n'est nécessaire, sauf si la question n°11 conduit à garder les résultats sur l'appareil au-delà de ce que fait déjà #24 (à consigner alors).
+Lecture par le front : compatible avec les décisions 0013 et 0016 (écritures réservées à `terminer-la-seance`, lecture sous RLS par un parent rattaché, policy `resultats_des_lecons_lecture_par_ses_parents`). Le front lit déjà une leçon (`lecture-des-meilleures-etoiles-supabase.ts`) ; il faut une lecture de toutes les leçons du profil. Aucune nouvelle décision d'architecture (réponse #25.6 : la copie sur l'appareil relève de #44).
 
-Ce que le parcours **ne** stocke pas : ni « leçon débloquée », ni « prochaine leçon », ni « matière choisie » en base. Tout se recalcule.
+Ce que le parcours **ne** stocke pas : ni « prochaine leçon », ni « matière choisie » en base. Tout se recalcule.
 
 ## Invariants
 
 Le parcours étant calculé, ce sont des **règles du calcul** (à couvrir par les tests du service), pas des invariants d'agrégat :
 
-1. Le parcours d'une matière ne contient que les leçons de cette matière et du niveau de l'enfant, triées par `ordre`.
-2. Une leçon est réussie dès que ses meilleures étoiles valent au moins 1 ; une leçon réussie n'est **jamais** verrouillée.
-3. Il y a **au plus une** prochaine leçon par matière : la première leçon non réussie, tant que toutes les précédentes sont réussies.
-4. Sans parcours libre, toute leçon non réussie après la première leçon non réussie est verrouillée (règle legacy, question n°1). Avec le parcours libre, aucune leçon n'est verrouillée et la prochaine leçon reste marquée.
+1. Le parcours d'une matière ne contient que les leçons de cette matière et du niveau de l'enfant, triées par `ordre`, puis par identifiant.
+2. Une leçon est réussie dès que ses meilleures étoiles valent au moins 1.
+3. **Aucune leçon du parcours n'est fermée** : chacune est réussie, prochaine ou à découvrir, et peut être commencée.
+4. Il y a **au plus une** prochaine leçon par matière : la première leçon non réussie du parcours. Il n'y en a aucune quand toutes sont réussies.
 5. Le compteur ne compte que les leçons du niveau de l'enfant.
-6. Changer de niveau ne supprime aucune étoile (décision n°7 du lot 2) : le parcours du nouveau niveau se calcule avec les mêmes meilleures étoiles ; il commence donc à sa première leçon non réussie.
-7. Un même ensemble d'entrées donne toujours le même parcours (calcul déterministe, identique dans le navigateur et sur le serveur).
-8. Le parcours ne modifie jamais une étoile ; il ne fait que lire le résultat de la leçon.
-9. Un parent ne lit que les résultats des enfants auxquels il est rattaché (RLS existante).
+6. Changer de niveau ne supprime aucune étoile (décision n°7 du lot 2) : le parcours du nouveau niveau se calcule avec les mêmes meilleures étoiles ; les leçons réussies d'une classe au-dessus restent visibles (réponse #25.12) sans compter ni devenir la prochaine leçon.
+7. La leçon suivante d'une séance est toujours dans la même matière et le même niveau que la leçon jouée, et placée après elle.
+8. Un même ensemble d'entrées donne toujours le même parcours (calcul déterministe, identique dans le navigateur et sur le serveur).
+9. Le parcours ne modifie jamais une étoile ; il ne fait que lire le résultat de la leçon.
+10. Un parent ne lit que les résultats des enfants auxquels il est rattaché (RLS existante).
 
 ## Événements
 
-Aucun nouvel événement. Le parcours se recalcule à la lecture : il **n'écoute pas** `LeconReussie` (que la context map prévoyait « pour le parcours et les verrous, lot 4 »). `LeconReussie` reste publié par `ResultatDeLaLecon` et pourra servir à Motivation ou Accompagnement. La context map reçoit une ligne qui le précise.
+Aucun nouvel événement. Le parcours se recalcule à la lecture : il **n'écoute pas** `LeconReussie`. `LeconReussie` reste publié par `ResultatDeLaLecon` et pourra servir à Motivation ou Accompagnement. La context map le précise (ligne #25) ; deux lignes existantes y parlent encore de « verrous » (question N3).
 
 ## Partage avec le front
 
-- Dans `@domain/apprentissage` : `parcoursDeLaMatiere`, `matieresDuParcours`, `leconSuivanteDansLeParcours`, les types `Parcours`, `LeconDuParcours`, `EtatDansLeParcours`, `MeilleuresEtoilesDuProfil`. React affiche l'état renvoyé (cadenas, « À toi ! », étoiles) et ne calcule aucun verrou.
-- Le front fournit : la bibliothèque (déjà chargée par `src/seance/bibliotheque.ts`), le profil en cours (niveau, réglages) et les meilleures étoiles lues sous RLS.
-- Après une séance terminée : le parcours doit refléter la séance tout de suite, même si l'envoi est en cours ou a échoué (séance gardée sur l'appareil, décision 0013, n°3). Proposition : le front ajoute aux meilleures étoiles lues les étoiles des séances terminées gardées sur l'appareil, avec la même règle « meilleures étoiles » (`Etoiles.meilleureQue`, #24) ; question n°11.
-- Accessibilité de l'état (texte lu par un lecteur d'écran : « 2 étoiles sur 3 », « verrouillée ») : libellé d'interface, question n°12. Le domaine fournit le nombre d'étoiles et l'état, pas la phrase.
+- Dans `@domain/apprentissage` : `parcoursDeLaMatiere`, `matieresDuParcours`, `leconSuivanteDansLeParcours`, les types `Parcours`, `LeconDuParcours`, `EtatDansLeParcours`, `LeconReussieDUneClasseAuDessus`, `MeilleuresEtoilesDuProfil`. React affiche l'état renvoyé (« À toi ! », « À découvrir », étoiles) et ne calcule rien.
+- `EcranDeFin.tsx` passe de `leconSuivante` (`@domain/catalogue`) à `leconSuivanteDansLeParcours`, qui a besoin des meilleures étoiles du profil.
+- Le front fournit : la bibliothèque (déjà chargée par `src/seance/bibliotheque.ts`), le niveau du profil en cours et les meilleures étoiles lues sous RLS.
+- Après une séance terminée, même sans réseau : le parcours la reflète tout de suite. Le front ajoute aux meilleures étoiles lues celles des séances terminées gardées sur l'appareil, avec la règle « meilleures étoiles » (`Etoiles.meilleureQue`, #24) (réponse #25.6).
+- Lecteur d'écran : « <titre> : réussie, 2 étoiles sur 3 », « <titre> : à toi ! », « <titre> : à découvrir » (réponse #25.7). Le domaine fournit l'état et le nombre d'étoiles, pas la phrase. Libellé d'une leçon réussie d'une classe au-dessus : question N1.
 
 ## Données d'enfants
 
-Aucune nouvelle donnée personnelle en base : le parcours lit les meilleures étoiles déjà enregistrées par #24 (minimisation respectée, cascade et export déjà en place). À surveiller seulement si la question n°11 conduit à garder les résultats du profil sur l'appareil : ils devraient alors être effacés à la déconnexion et à la suppression du profil (« sur les appareils », #14). Rien n'est envoyé à l'IA.
+Aucune nouvelle donnée personnelle : le parcours lit les meilleures étoiles déjà enregistrées par #24 (cascade et export déjà en place). Les leçons réussies d'une classe au-dessus viennent des mêmes résultats. Rien n'est gardé sur l'appareil au-delà de ce que fait déjà #24 (copie des résultats : #44). Rien n'est envoyé à l'IA.
 
 ## Emplacement
 
 ```
 supabase/functions/_shared/apprentissage/
   domain/
-    parcours.ts                          # Parcours, LeconDuParcours, EtatDansLeParcours, parcoursDeLaMatiere, matieresDuParcours
+    parcours.ts                          # Parcours, LeconDuParcours, EtatDansLeParcours, LeconReussieDUneClasseAuDessus, parcoursDeLaMatiere, matieresDuParcours
     meilleures-etoiles-du-profil.ts      # value object leçon → meilleures étoiles
-    lecon-suivante-dans-le-parcours.ts   # si la question n°9 la met dans cette story
-    erreurs.ts                           # + LeconVerrouillee, seulement si la question n°10 le demande
+    lecon-suivante-dans-le-parcours.ts   # leconSuivanteDansLeParcours
     index.ts                             # exporte les nouveautés
 supabase/functions/_shared/catalogue/domain/
-    niveau.ts                            # (seulement si #26 ou la question n°8 l'exige) comparaison de niveaux
-    lecon-suivante.ts                    # devient inutilisé si la question n°9 est oui : à retirer (refactor)
+    niveau.ts                            # comparaison de niveaux (« au-dessus »), pour les leçons réussies d'une classe au-dessus ; #26 s'en servira pour « en dessous »
+    lecon-suivante.ts                    # remplacé par leconSuivanteDansLeParcours : à retirer avec son test (refactor), une fois EcranDeFin.tsx basculé
 src/parcours/                            # écran « Mon parcours » : onglets, compteur, leçons du parcours
 src/parcours/lecture-des-meilleures-etoiles-du-profil-supabase.ts   # lecture sous RLS, tout le profil
 ```
 
-Pas de nouvelle migration, pas de nouvelle Edge Function, pas d'adaptateur côté serveur.
+Pas de nouvelle migration, pas de nouvelle Edge Function, pas d'adaptateur côté serveur, pas de `LeconVerrouillee` dans `erreurs.ts`.
 
 ## Questions ouvertes
 
-Reprises de l'issue :
+Les questions 25.1 à 25.16 sont tranchées (voir « Réponses du PO consignées »). Questions nées de ces réponses :
 
-1. **Règle du verrou.** Leçons 1 et 3 réussies, 2 non réussie : la 4 est-elle verrouillée ? Legacy : **oui** (toute leçon non réussie après la première non réussie est verrouillée ; seule la 2 est ouverte, c'est la prochaine leçon). Glossaire : **non** (« parce que la précédente n'est pas réussie » : la 4 serait ouverte). **Recommandation** : garder le legacy (un seul point d'entrée, l'ordre conseillé est suivi), et faire corriger par le PO la définition du glossaire en « … parce qu'une leçon avant elle n'est pas réussie », ainsi que la ligne `ordre` de `docs/format-lecons.md` (« une leçon s'ouvre quand la précédente est réussie », qui dit comme le glossaire). Oui ou non ?
-2. **Leçons personnelles** (Accompagnement, lot 6) : entrent-elles dans le parcours verrouillé ? Legacy : oui, avec `ordre` = 1000 + …, donc en fin de parcours et verrouillées tant que tout n'est pas réussi (défaut relevé). **Recommandation** : hors de cette story (elles n'existent pas encore) ; au lot 6, toujours ouvertes, en tête du parcours de leur matière, avec l'étiquette « Pour toi », sans compter dans « réussies sur … ». À confirmer au lot 6 ?
-3. **Libellé « Étape n ».** La décision n°28 du glossaire interdit « étape » seule. Legacy : « Étape 1 », « Étape 2 ». **Recommandation** : « Leçon 1 », « Leçon 2 » à l'écran (le domaine dit déjà « place » d'une leçon du parcours). D'accord ? Sinon, garder « Étape n » comme exception d'interface explicite.
-4. **Descente de classe** (CE2 → CE1) : les leçons de CE2 réussies disparaissent du parcours mais restent en base et réapparaissent si l'enfant remonte. Legacy : identique. **Recommandation** : oui, voulu (décision n°7 du lot 2, rien n'est effacé). Oui ou non ?
-5. **Leçon insérée au milieu** (nouvel `ordre`) : elle devient la prochaine leçon et verrouille les suivantes non réussies ; les suivantes déjà réussies restent ouvertes. Legacy : identique, sans signal. **Recommandation** : l'accepter sans signal pour la beta. Oui ou non ?
-
-Ajoutées par le modèle :
-
-6. **Deux leçons de même `ordre`** dans une matière et un niveau (aucune aujourd'hui dans la bibliothèque) : **recommandation** : le pipeline de contenu refuse le doublon (test pytest), et le domaine départage par identifiant pour rester déterministe. Oui ou non ?
-7. **Parcours libre dans cette story ?** L'issue le décrit (« À découvrir », prochaine leçon marquée) mais le renvoie aussi à #26. **Recommandation** : le calcul prend déjà le réglage ici (une ligne de règle) et un scénario le vérifie ici ; #26 garde « Toutes les leçons » et les classes d'avant. Oui ou non ?
-8. **Onglet d'une matière qui n'a que des leçons des classes d'avant** (ex. EMC n'existe qu'en CE2 : un enfant de CM1 a-t-il un onglet EMC ?). Legacy : oui (« jusqu'au niveau de l'enfant »), avec « Pas encore de leçon de ta classe dans cette matière. ». **Recommandation** : dans #25, un onglet seulement pour une matière qui a au moins une leçon **du niveau** de l'enfant ; #26 élargira aux classes d'avant. Oui ou non ?
-9. **« Leçon suivante » à la fin d'une séance** : #24 a livré la règle du Catalogue (ordre suivant, même matière et même niveau, rien après la dernière ; Q73 : « le lot 4 la remplacera par la règle du parcours »). Le front l'utilise (`EcranDeFin.tsx` → `leconSuivante` de `@domain/catalogue`). **Recommandation** : la remplacer dans cette story par la règle legacy restreinte : la première leçon après celle de la séance, dans son parcours, non réussie et non verrouillée, sinon la première non verrouillée ; **pas** de repli sur une autre matière avant l'écran « Aujourd'hui » (#29), donc toujours pas de bouton après la dernière (le scénario de #24 reste vrai). Oui ou non ?
-10. **Leçon verrouillée ouverte autrement que par le parcours** (adresse directe `/lecon/<id>`, « Leçon suivante », plus tard « Toutes les leçons ») : **recommandation** : le front ne l'ouvre pas depuis le parcours ni depuis une adresse directe (il montre le parcours) ; le serveur **n'en refuse pas** la séance (le verrou guide l'enfant, ce n'est pas une sécurité, et « Toutes les leçons » ouvre tout dans le legacy). Oui ou non ?
-11. **Hors ligne** (critère « Hors ligne, le parcours s'affiche et se met à jour après une séance ») : **recommandation** : dans cette story, le parcours se met à jour tout de suite après une séance avec les étoiles calculées dans le navigateur et celles des séances gardées sur l'appareil ; garder une copie des résultats du profil sur l'appareil pour afficher le parcours sans réseau au lancement relève de #44 (avec une décision d'architecture à ce moment-là). Oui ou non ?
-12. **Texte lu par un lecteur d'écran** pour chaque leçon du parcours. Legacy : « Les sons : ★★ » (défaut). **Recommandation** : « Les sons : réussie, 2 étoiles sur 3 », « Les sons : à toi ! », « Les sons : verrouillée, plus tard », « Les sons : à découvrir ». D'accord ?
-13. **Aucune matière pour le niveau** : legacy « Aucune leçon pour ce niveau pour l'instant. Un adulte peut en créer dans l'espace adulte. » (synonyme interdit, et les leçons personnelles n'existent pas avant le lot 6). **Recommandation** : « Aucune leçon pour ta classe pour l'instant. ». D'accord ?
-14. **Accès à « Mon parcours » dans la cible** : il n'y a pas encore de dock ; l'enfant arrive sur son accueil après « Qui joue ? ». **Recommandation** : un bouton « Mon parcours » sur l'accueil de l'enfant ; le retour ramène à l'accueil de l'enfant (pas à « Qui joue ? » comme le legacy). Oui ou non ?
-15. **Matière choisie par défaut** : la dernière ouverte (legacy, mémorisée pour l'ouverture en cours seulement), sinon français, sinon la première disponible. **Recommandation** : même chose, sans rien mémoriser d'une ouverture de l'application à l'autre (comme le profil en cours). Oui ou non ?
+- **N1. Où l'enfant redescendu en CE1 voit-il ses leçons de CE2 réussies ?** Le PO a dit qu'elles restent visibles, sans dire où. #26 ne couvre que les leçons d'un niveau **inférieur** (bloc « Revoir les classes d'avant ») et demande en question n°2 si les leçons d'une classe au-dessus doivent rester accessibles. Choix : (a) dans « Mon parcours », sous les leçons de CE1, dans un bloc à part « Déjà réussies en CE2 (3 leçons) », chaque leçon avec son niveau (« CE2 »), son titre et ses étoiles, hors compteur, jamais « À toi ! » ; (b) mêlées aux leçons de CE1, à leur `ordre` ; (c) seulement dans le compteur ; (d) seulement dans « Toutes les leçons » (#26). **Recommandation** : (a), livré **dans #25** (seules les leçons réussies, rien d'autre de CE2), et #26 aligne la forme de son bloc « Revoir les classes d'avant » sur lui. Lecteur d'écran : « <titre>, CE2 : réussie, 2 étoiles sur 3 ». D'accord ?
+- **N2. Que devient le réglage « parcours libre » (#12, Famille) ?** Sans verrou, il n'a plus aucun effet : la case est encore dans les réglages du profil (`parcours_libre`, formulaire, scénarios de `features/12-reglages.feature`). **Recommandation** : le retirer de l'interface et du glossaire dans une story de Famille dédiée (petite, après #25), la colonne restant en base jusqu'à une migration de nettoyage ; #26 est renommée « Leçons des classes d'avant » et perd sa partie parcours libre. Dans #25, on n'y touche pas et le parcours ne le lit pas. D'accord ? Si oui, qui crée la story : le responsable des équipes ?
+- **N3. Termes existants devenus faux** (escalade, rien n'est modifié par #25) : « Leçon verrouillée » (glossaire), « Parcours libre » (glossaire), « Leçon des classes d'avant » (« proposée sans verrou »), la phrase de `CLAUDE.md` « Une leçon est réussie à 1 étoile (elle ouvre la suivante) », la ligne `ordre` de `docs/format-lecons.md` (« une leçon s'ouvre quand la précédente est réussie »), la context map (ligne Apprentissage « parcours et verrous », ligne Famille → Apprentissage « parcours libre », ligne `LeconReussie` « servira au parcours et aux verrous »), `docs/feuille-de-route.md` (« parcours par matière avec réglage parcours libre »). **Recommandation** : « Leçon verrouillée » passe en Décisions du glossaire comme « abandonné (#25.1) », « Parcours libre » suit la réponse à N2, `CLAUDE.md` dit « réussie à 1 étoile (elle fait avancer le parcours) », `ordre` dit « position dans le parcours de la matière ». Qui les corrige : l'équipe #25 dans cette story (doc seulement), ou le responsable ?
+- **N4. Leçon suivante quand toutes les leçons d'après sont réussies.** Exemple : parcours de 4 leçons, Léa joue la 2, la 3 et la 4 sont réussies, la 1 ne l'est pas. Le legacy propose la 3 (la leçon juste après). **Recommandation** : proposer la 3 (rejouer pour gagner des étoiles), ne pas revenir en arrière vers la 1 (pas de retour au début avant #29). D'accord ?
+- **N5. Titre de la story et du fichier de scénarios** : « Parcours par matière et verrous » (issue, branche, `features/25-parcours-par-matiere-et-verrous.feature`, `docs/graphe/stories.md`). **Recommandation** : renommer l'issue « Parcours par matière » et le fichier `features/25-parcours-par-matiere.feature` ; garder le nom de la branche (déjà poussée). D'accord ?
+- **N6. Effet sur #24** : ses trois scénarios de la règle « leçon suivante » (`features/24-etoiles-et-fin-de-seance.feature`, l. 109-127) **restent vrais** avec la nouvelle règle : « La suite de test » (ordre 903) suit « Les sons de test » (901) sans autre leçon de français du CP entre elles, et Léa ne l'a pas réussie ; « Les animaux » est la dernière leçon d'anglais du CP (ordre 40), donc aucune leçon suivante. Le titre « La leçon suivante est la leçon d'ordre suivant de la même matière et du même niveau » devient inexact (la leçon d'après **non réussie**). **Recommandation** : renommer seulement ce scénario de #24 (« … est la première leçon d'après non réussie de la même matière et du même niveau ») et ajouter dans #25 un scénario où la leçon d'après est déjà réussie et sautée. La conséquence notée en 25.2 (adapter les données de #24) tombe. D'accord ?
+- **N7. Matière sans leçon du niveau mais avec des leçons réussies d'une classe au-dessus** (ex. enfant redescendu en CE1 qui a réussi une leçon d'EMC de CE2 ; l'EMC n'a pas de leçon de CE1). La réponse 25.4 dit « pas d'onglet », la réponse 25.12 dit « reste visible ». **Recommandation** : pas d'onglet ; ces leçons ne se voient que dans le compteur de suivi du parent et dans « Toutes les leçons » (#26). Ou bien un onglet est-il ouvert pour elles ?
+- **N8. « Prochaine leçon » sans verrou : faut-il encore un ordre conseillé ?** Exemple : leçons 1 et 3 réussies, 2 non réussie : la 2 est « À toi ! », la 4 « À découvrir ». **Recommandation** : oui, garder exactement cela (c'est le comportement du parcours libre du legacy). Juste pour confirmer, sans changement.
 
 Remarques pour les stories suivantes (pas des questions au PO) :
-- #27 : une leçon « validée par le test de départ » (glossaire : acquise) doit entrer dans `MeilleuresEtoilesDuProfil` ou dans une entrée voisine pour compter comme réussie ; le service est prévu pour recevoir cette information sans changer ses règles.
-- #26 : leçons des classes d'avant et comparaison de niveaux (`Niveau` du Catalogue, sans employer « rang », réservé à l'addition posée, décision n°25).
+- #27 : une leçon « validée par le test de départ » (glossaire : acquise) doit entrer dans `MeilleuresEtoilesDuProfil` ou dans une entrée voisine pour compter comme réussie ; le service est prévu pour la recevoir sans changer ses règles.
+- #26 : leçons des classes d'avant et comparaison de niveaux (`Niveau` du Catalogue, sans employer « rang », réservé à l'addition posée, décision n°25) ; sa piste « Sans le parcours libre, la même leçon est verrouillée » et sa question n°1 (« Toutes les leçons » contourne le verrou) sont devenues sans objet.
