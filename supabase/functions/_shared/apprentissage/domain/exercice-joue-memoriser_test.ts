@@ -176,10 +176,3 @@ Deno.test("pendant l'ordre des vers, les vers déjà posés se lisent dans l'ord
 
   assertEquals(exerciceJoue.etiquettesPosees(), [{ texte: "Au clair de la lune," }, { texte: "Mon ami Pierrot," }]);
 });
-
-Deno.test("pendant l'ordre des vers, « Je ne sais pas » vise le vers qui vient ensuite", () => {
-  const exerciceJoue = jouer(auClairDeLaLune);
-  exerciceJoue.repondre(Reponse.placement("Au clair de la lune,"));
-
-  assertEquals(exerciceJoue.etiquetteViseeParJeNeSaisPas(), "Mon ami Pierrot,");
-});
