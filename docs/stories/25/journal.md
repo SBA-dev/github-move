@@ -16,3 +16,5 @@ Branche de base : `main`. Branche de travail : `feature/25-parcours-par-matiere-
 - 13:07 UTC : annonce du responsable (#64) : OK du PO. #25.1 = b, **aucun verrou** (toutes les leçons ouvertes, la
   prochaine leçon seulement mise en avant) ; #25.12 = a, les leçons de CE2 réussies restent visibles pour l'enfant
   redescendu en CE1 (endroit non précisé) ; reco de l'équipe pour toutes les autres questions. Reprise du cadrage.
+- 13:15 UTC : À SAVOIR (#64) : après la migration de #20, `seances_terminees.etoiles` peut valoir `null`. Sans effet :
+  le parcours ne lit que `resultats_des_lecons`, inchangée.
