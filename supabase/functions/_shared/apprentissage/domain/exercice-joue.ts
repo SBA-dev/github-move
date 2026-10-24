@@ -10,6 +10,7 @@ import { AdditionsJouees } from "./additions-jouees.ts";
 import { type EtiquettePosee, EtiquettesAPlacer } from "./etiquettes-a-placer.ts";
 import { ExerciceChronometre, type FluenceEnCours } from "./exercice-chronometre.ts";
 import { FluenceNonCommencee, JeNeSaisPasEnFluence, PasDeQuestionEnCours, ReponseIncompatible } from "./erreurs.ts";
+import { type EntrainementDeMemorisation, MemorisationJouee } from "./memorisation-jouee.ts";
 import { nombreDeQuestions } from "./nombre-de-questions.ts";
 import { ModeDeReponse } from "./mode-de-reponse.ts";
 import { MotAEcrire } from "./mot-a-ecrire.ts";
@@ -47,6 +48,7 @@ type Contenu = Readonly<{
   operationsTirees?: readonly Operation[];
   chronometre?: ExerciceChronometre;
   additions?: AdditionsJouees;
+  memorisation?: MemorisationJouee;
 }>;
 
 export class ExerciceJoue {
@@ -70,8 +72,13 @@ export class ExerciceJoue {
 
   /** La question à choix en cours ; une question de calcul s'affichera par son propre composant. */
   questionEnCours(): QuestionJouee | undefined {
+    if (this.contenu.memorisation) return this.contenu.memorisation.questionEnCours();
     const question = this.questionPoseeEnCours();
     return question instanceof QuestionJouee ? question : undefined;
+  }
+
+  entrainementDeMemorisation(): EntrainementDeMemorisation | undefined {
+    return this.contenu.memorisation?.entrainement();
   }
 
   questionDeDicteeEnCours(): QuestionDeDictee | undefined {
@@ -97,6 +104,7 @@ export class ExerciceJoue {
 
   questionsJouees(): readonly QuestionSuivie[] {
     if (this.contenu.chronometre) return [this.contenu.chronometre];
+    if (this.contenu.memorisation) return this.contenu.memorisation.questions();
     return this.contenu.etiquettes?.questions ?? this.contenu.additions?.questions ??
       this.contenu.questionsDeDictee ?? this.questionsPosees();
   }
@@ -111,6 +119,7 @@ export class ExerciceJoue {
     const etiquettes = this.contenu.etiquettes;
     if (etiquettes) return [etiquettes.tirage()];
     if (this.contenu.additions) return this.contenu.additions.tirages();
+    if (this.contenu.memorisation) return this.contenu.memorisation.tirages();
     if (this.contenu.questionsDeDictee) return this.contenu.questionsDeDictee.map((question) => question.tirage());
     const operations = (this.contenu.operationsTirees ?? []).map(enonceTire);
     const tiragesDesQuestions = this.questionsPosees().map((question) => question.tirage());
@@ -125,11 +134,11 @@ export class ExerciceJoue {
   }
 
   etiquettesAPlacer(): string[] {
-    return this.contenu.etiquettes?.etiquettesAPlacer() ?? [];
+    return (this.contenu.etiquettes ?? this.contenu.memorisation)?.etiquettesAPlacer() ?? [];
   }
 
   etiquettesPosees(): EtiquettePosee[] {
-    return this.contenu.etiquettes?.etiquettesPosees() ?? [];
+    return (this.contenu.etiquettes ?? this.contenu.memorisation)?.etiquettesPosees() ?? [];
   }
 
   etiquetteViseeParJeNeSaisPas(choisie?: string): string | undefined {
@@ -138,9 +147,10 @@ export class ExerciceJoue {
 
   texteATrous(): SegmentDuTexteATrous[] {
     let rangDuTrou = 0;
-    return (this.contenu.segments ?? []).map((segment) => {
+    const trousRemplis = this.contenu.memorisation?.motsTrouves() ?? this.reussies;
+    return (this.contenu.segments ?? this.contenu.memorisation?.segmentsAffiches() ?? []).map((segment) => {
       if (segment.type === "texte") return segment;
-      const estRempli = rangDuTrou++ < this.reussies;
+      const estRempli = rangDuTrou++ < trousRemplis;
       return estRempli ? { type: "trou", mot: segment.motAttendu } : { type: "trou", mot: undefined };
     });
   }
@@ -154,6 +164,7 @@ export class ExerciceJoue {
 
   aideApresLaDerniereErreur(): string | undefined {
     if (this.contenu.questionsDeDictee) return this.derniereQuestionDeDicteeCorrigee?.aideApresErreur();
+    if (this.contenu.memorisation) return this.contenu.memorisation.aideApresLaDerniereErreur();
     return this.contenu.etiquettes?.aideApresLaDerniereErreur() ??
       this.contenu.additions?.aideApresLaDerniereErreur() ??
       this.aideDeLErreurDeCalcul;
@@ -170,12 +181,14 @@ export class ExerciceJoue {
   paroleDueApresLaDerniereReponse(): ParoleDue | undefined {
     const etiquettes = this.contenu.etiquettes;
     if (etiquettes) return etiquettes.paroleDueApresLaDerniereReponse();
+    if (this.contenu.memorisation) return this.contenu.memorisation.paroleDueApresLaDerniereReponse();
     if (this.contenu.questionsDeDictee) return this.derniereCorrection()?.juste ? "felicitation" : undefined;
     if (this.contenu.formes) return this.paroleDueEnConjugaison();
     return this.dernierBonMotDUnTrou() ? "felicitation" : undefined;
   }
 
   texteCompleteParLaDerniereReponse(): boolean {
+    if (this.contenu.memorisation) return this.contenu.memorisation.derniereReponseTrouveLeDernierMot();
     return this.contenu.segments !== undefined && this.derniereReponseCompleteLExercice();
   }
 
@@ -200,6 +213,7 @@ export class ExerciceJoue {
   repondre(reponse: Reponse, maintenant?: Date): ResultatDeReponse {
     if (this.contenu.chronometre) return this.repondreALaFluence(this.contenu.chronometre, reponse, maintenant);
     if (this.contenu.additions) return this.contenu.additions.repondre(reponse);
+    if (this.contenu.memorisation) return this.contenu.memorisation.repondre(reponse);
     if (reponse.genre === "placement") return this.placer(reponse);
     if (reponse.genre === "motEcrit") return this.corrigerLaDictee(this.questionDeDicteeAReussir().repondre(reponse));
     const question = this.questionPoseeEnCours();
@@ -227,6 +241,7 @@ export class ExerciceJoue {
     if (this.contenu.chronometre) throw new JeNeSaisPasEnFluence();
     if (this.contenu.etiquettes) return this.contenu.etiquettes.direJeNeSaisPas(etiquette);
     if (this.contenu.additions) return this.contenu.additions.direJeNeSaisPas(etiquette);
+    if (this.contenu.memorisation) return this.contenu.memorisation.direJeNeSaisPas(etiquette);
     const question = this.questionPoseeEnCours();
     if (!question) throw new PasDeQuestionEnCours();
     return question.direJeNeSaisPas();
@@ -234,7 +249,8 @@ export class ExerciceJoue {
 
   get questionsReussies(): number {
     if (this.contenu.chronometre) return this.contenu.chronometre.reussie ? 1 : 0;
-    return this.contenu.etiquettes?.nombreReussies ?? this.contenu.additions?.nombreReussies ?? this.reussies;
+    return this.contenu.etiquettes?.nombreReussies ?? this.contenu.additions?.nombreReussies ??
+      this.contenu.memorisation?.nombreReussies ?? this.reussies;
   }
 
   get rangDeLaQuestionEnCours(): number {
@@ -319,6 +335,8 @@ function contenuDe(exercice: Exercice, tireur: Tireur, niveau: Niveau): Contenu 
       return { chronometre: ExerciceChronometre.pour(exercice, tireur) };
     case "addition":
       return { additions: AdditionsJouees.pour(exercice, tireur, niveau) };
+    case "memoriser":
+      return { memorisation: MemorisationJouee.pour(exercice, tireur) };
     default:
       return { questionsPosees: questionsJoueesAvec(exercice, tireur) };
   }

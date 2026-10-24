@@ -22,6 +22,7 @@ import { useBattementDeLaFluence, useFluence } from "./exercices/fluence/useFlue
 import { type SuiteDuCalcul, useCalcul } from "./exercices/useCalcul.ts";
 import { useDictee } from "./exercices/useDictee.ts";
 import { useEtiquettesAPlacer } from "./exercices/useEtiquettesAPlacer.ts";
+import { useMemorisation } from "./exercices/useMemorisation.ts";
 import { useQuestionFigee } from "./exercices/useQuestionFigee.ts";
 import { useQuestionsAChoix } from "./exercices/useQuestionsAChoix.ts";
 import { type Horloge, horlogeDuNavigateur } from "./horloge.ts";
@@ -103,6 +104,15 @@ export function useDeroulementDeSeance(
   const calcul = useCalcul(dependancesDuCalcul);
   const fluence = useFluence({ seance, horloge, dire, faireSilence, sequence, vivant, redessiner, reussite });
   const addition = useAdditionPosee({ ...dependancesDuCalcul, montrerHumeur });
+  const memorisation = useMemorisation({
+    seance,
+    lecon,
+    lire: voix.lire,
+    dire,
+    sequence,
+    redessiner,
+    presenterUneQuestion: ouvrir,
+  });
 
   const lireLaConsigneDeLExercice = useCallback(async () => {
     const position = seance.exerciceEnCours()?.position;
@@ -124,10 +134,12 @@ export function useDeroulementDeSeance(
         return await addition.presenter();
       case "dictee":
         return await presenterLaDictee();
+      case "memoriser":
+        return await memorisation.presenter(numero);
       default:
         return await ouvrir(numero);
     }
-  }, [seance, lecon, calcul.presenter, fluence.presenter, addition.presenter, presenterLaDictee, ouvrir]);
+  }, [seance, lecon, calcul.presenter, fluence.presenter, addition.presenter, presenterLaDictee, memorisation.presenter, ouvrir]);
 
   const ouvrirLExercice = useCallback(async (numero: number) => {
     await lireLaConsigneDeLExercice();
@@ -216,17 +228,19 @@ export function useDeroulementDeSeance(
     [taperUneLettre, suiteDeLaReponse],
   );
 
-  const placer = useCallback(
-    (etiquette: string, groupe?: string) => placerUneEtiquette(etiquette, groupe, enchainerSurLExercice),
-    [placerUneEtiquette, enchainerSurLExercice],
-  );
+  const { apresUnPlacement } = memorisation;
+  const placer = useCallback(async (etiquette: string, groupe?: string) => {
+    await placerUneEtiquette(etiquette, groupe, enchainerSurLExercice);
+    await apresUnPlacement();
+  }, [placerUneEtiquette, enchainerSurLExercice, apresUnPlacement]);
 
   const reecouter = useCallback(() => {
     if (reussite.figee) return;
     if (personnage.parole?.nature === "question" && relireLaQuestion()) return;
+    if (memorisation.reecouter()) return;
     sequence.current++;
     relire();
-  }, [reussite.figee, personnage.parole, relireLaQuestion, relire]);
+  }, [reussite.figee, personnage.parole, relireLaQuestion, memorisation.reecouter, relire]);
 
   const direLaFin = useCallback((etoiles: number | undefined) => {
     sequence.current++;
@@ -274,6 +288,9 @@ export function useDeroulementDeSeance(
     reecouterLeMot: dictee.reecouterLeMot,
     reecouterLeMotPlusLentement: dictee.reecouterLeMotPlusLentement,
     effacer: dictee.effacer,
+    versLu: memorisation.versLu,
+    tempsDeLaMemorisation: memorisation.tempsDe,
+    jeSuisPret: memorisation.jeSuisPret,
     jeNeSaisPasEnDictee: dictee.jeNeSaisPas,
     taper,
     repondre,

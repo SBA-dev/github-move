@@ -1,6 +1,6 @@
 import { assertEquals, assertThrows } from "@std/assert";
 import { lireLecon } from "./lire-lecon.ts";
-import type { Exercice, ExerciceGenerique } from "./exercice.ts";
+import type { Exercice } from "./exercice.ts";
 import type { ExerciceBulles } from "./exercices/bulles.ts";
 import type { ExerciceCalcul } from "./exercices/calcul.ts";
 import type { ExerciceFluence } from "./exercices/fluence.ts";
@@ -55,18 +55,6 @@ function exerciceDeFluence(exercice: Exercice): ExerciceFluence {
 
 function exerciceAddition(exercice: Exercice) {
   if (exercice.type !== "addition") throw new Error(`« ${exercice.type} » n'est pas une addition posée`);
-  return exercice;
-}
-
-function exerciceGenerique(exercice: Exercice): ExerciceGenerique {
-  if (
-    exercice.type === "bulles" || exercice.type === "lecture" || exercice.type === "ecoute" ||
-    exercice.type === "classer" || exercice.type === "ordre" || exercice.type === "trous" ||
-    exercice.type === "calcul" || exercice.type === "fluence" || exercice.type === "addition" ||
-    exercice.type === "dictee" || exercice.type === "conjugaison"
-  ) {
-    throw new Error(`« ${exercice.type} » n'est pas un exercice générique`);
-  }
   return exercice;
 }
 
@@ -263,7 +251,9 @@ Deno.test("le contenu d'un exercice des autres types est gardé tel quel", () =>
     unExerciceDeChaqueType.memoriser,
   ));
 
-  assertEquals(exerciceGenerique(lecon.exercices[0]).vers, ["Un vers", "Deux vers"]);
+  const exercice = lecon.exercices[0];
+  if (exercice.type !== "memoriser") throw new Error("exercice « memoriser » attendu");
+  assertEquals(exercice.vers, ["Un vers", "Deux vers"]);
 });
 
 Deno.test("les exercices d'une leçon lue sont en lecture seule", () => {
