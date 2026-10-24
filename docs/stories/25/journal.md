@@ -88,3 +88,8 @@ En attente d'une réponse : leçons réussies d'une classe au-dessus (N1, N7, N9
   `main` a137f42 (PR #71, outillage) déjà intégré.
 - 17:50 UTC : MAIN A BOUGÉ : #20 mergée (9115411). À intégrer après le cycle E2E en cours (conflit probable sur la
   condition `@issue-20`/`@issue-25` du step « profil enfant préparé ») ; `SUFFIXE_E2E` disponible ensuite.
+- 18:30 UTC : E2E cycle 4 : steps corrigés (Léa rechoisie après le changement de niveau ; assertion négative sur un
+  écran stable) ; preuve rouge avec la seule assertion renforcée, vert avec les deux ; #24 et #25 verts ; `@wip` retiré.
+  Intégration de `main` = 9115411 (#20) : merge 1468cf8, conflits dans `EcranDeFin.tsx`, `useSauvegardeDeLaSeance.ts`
+  (étoiles retenues seulement pour une séance notée), `styles.css`, `domain/index.ts`. 1159 tests Deno, 1404 pytest,
+  lint, fmt, tsc, build verts. PR ouverte en brouillon.
