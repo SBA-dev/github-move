@@ -19,7 +19,7 @@ import { PlanDeSeance } from "./plan-de-seance.ts";
 import { QuestionAPlacer } from "./question-a-placer.ts";
 import type { AideDonnee } from "./question-jouee.ts";
 import type { CorrectionDuMot } from "./mot-a-ecrire.ts";
-import { PROFIL_DE_SEANCE_PAR_DEFAUT, type ProfilDeSeance } from "./profil-de-seance.ts";
+import { PROFIL_ENFANT_PAR_DEFAUT, type ProfilEnfant } from "./profil-enfant.ts";
 import type { QuestionDeDictee } from "./question-de-dictee.ts";
 import type { QuestionSuivie, TypeDeQuestion } from "./question-suivie.ts";
 import { type Tireur, tireurAuHasard, tireurSelonLesTirages } from "./tireur.ts";
@@ -70,7 +70,7 @@ export class Seance {
     enfant: string,
     lecon: Lecon,
     choix: ChoixDeSeance,
-    profil: ProfilDeSeance = PROFIL_DE_SEANCE_PAR_DEFAUT,
+    profil: ProfilEnfant = PROFIL_ENFANT_PAR_DEFAUT,
   ): Seance {
     return Seance.construire(
       SeanceId.de(generateurId.nouveau()),

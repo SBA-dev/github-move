@@ -30,7 +30,6 @@ export const DENISE: VoixFausse = { nom: "Denise", langue: "fr-FR" };
 const HENRI: VoixFausse = { nom: "Henri", langue: "fr-FR" };
 export const SAMANTHA: VoixFausse = { nom: "Samantha", langue: "en-US" };
 const CONSIGNE_PAR_DEFAUT = "Écoute bien.";
-const CONSIGNE_DE_LA_DICTEE = "Écoute bien et écris le mot que tu entends.";
 export const HAUTEUR_DE_CAPITAINE_SAM = 0.95;
 const HAUTEUR_ATTENDUE_SANS_VOIX_MASCULINE = 0.7;
 const TOLERANCE_DE_HAUTEUR = 0.035;
@@ -493,14 +492,7 @@ When(/^Léa relance Savanturier$/, async ({ page }) => {
 Then(
   /^Léa entend (?:Noisette|Lumi|Coach Léo|Capitaine Sam) (?:lire|dire) « ([^«»]+) »$/,
   async ({ page }, texte: string) => {
-    await expect.poll(async () => {
-      const lu = await texteLuAvantLaLectureDesChoix(page);
-      // En dictée, la consigne est lue avant le mot dicté : on la laisse finir.
-      if (lu !== normaliser(texte) && lu === CONSIGNE_DE_LA_DICTEE && (await page.getByTestId("dictee").isVisible())) {
-        await terminerLaLecture(page);
-      }
-      return lu;
-    }).toBe(normaliser(texte));
+    await expect.poll(async () => await texteLuAvantLaLectureDesChoix(page)).toBe(normaliser(texte));
   },
 );
 

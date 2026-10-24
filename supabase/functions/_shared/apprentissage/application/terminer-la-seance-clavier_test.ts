@@ -1,5 +1,5 @@
 import { assertEquals } from "@std/assert";
-import type { ProfilDeSeance } from "../domain/profil-de-seance.ts";
+import type { ProfilEnfant } from "../domain/profil-enfant.ts";
 import type { SeanceTermineeAEnregistrer } from "../domain/seance-terminee-a-enregistrer.ts";
 import { ecrire, leconDeDicteeDuChat, seanceDeDictee } from "../test_utils/lecons-de-dictee.ts";
 import { LeconsDuCatalogueEnMemoire } from "../test_utils/lecons-du-catalogue-en-memoire.ts";
@@ -8,7 +8,7 @@ import { ResultatsDesLeconsEnMemoire } from "../test_utils/resultats-des-lecons-
 import { SeancesTermineesEnMemoire } from "../test_utils/seances-terminees-en-memoire.ts";
 import { TerminerLaSeance } from "./terminer-la-seance.ts";
 
-function dicteeJoueeAvec(profil: ProfilDeSeance): SeanceTermineeAEnregistrer {
+function dicteeJoueeAvec(profil: ProfilEnfant): SeanceTermineeAEnregistrer {
   const seance = seanceDeDictee(leconDeDicteeDuChat(), profil);
   ecrire(seance, "chat");
   seance.terminer(new Date("2026-10-23T10:30:00Z"));

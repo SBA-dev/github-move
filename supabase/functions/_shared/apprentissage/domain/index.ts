@@ -51,6 +51,7 @@ export { SeanceId } from "./seance-id.ts";
 export { ResultatDeLaLecon } from "./resultat-de-la-lecon.ts";
 export type { EtatDuResultat, FaitDeResultat } from "./resultat-de-la-lecon.ts";
 export { indicationDuGeste } from "./exercices/indication-du-geste.ts";
+export { consigneLueAuDebut } from "./exercices/consigne-lue-au-debut.ts";
 export { revaliderLaSeance } from "./revalider-la-seance.ts";
 export type { ParoleDue } from "./parole-due.ts";
 export { matieresDuParcours, parcoursDeLaMatiere } from "./parcours.ts";

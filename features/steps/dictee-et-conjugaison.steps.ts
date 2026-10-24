@@ -496,3 +496,32 @@ Then(/^« ([^«»]+) » est demandé$/, async ({ page }, question: string) => {
 Given(/^Léa en est à « ([^«»]+) »$/, async ({ page }, question: string) => {
   await allerALaQuestion(page, question, true);
 });
+
+/** Les paroles de la première lecture de l'exercice, jointes (la page de la leçon a déjà dit son accueil). */
+async function premiereLectureDeLExercice(page: Page): Promise<string> {
+  await attendreLaDictee(page);
+  await expect.poll(async () => (await lecturesDuJournal(page)).length).toBeGreaterThan(0);
+  const lectures = await lecturesDuJournal(page);
+  const apresLAccueil = lectures.filter((lecture) => !/^Coucou /.test(lecture));
+  return apresLAccueil[0] ?? "";
+}
+
+async function lecturesDuJournal(page: Page): Promise<string[]> {
+  const textes = await page.evaluate(() => {
+    const faux = Reflect.get(window, "__faux") as { journal: Array<{ type: string; lot: number; texte: string }> };
+    const parLot = new Map<number, string[]>();
+    for (const e of faux.journal) if (e.type === "speak") parLot.set(e.lot, [...(parLot.get(e.lot) ?? []), e.texte]);
+    return [...parLot.values()].map((paroles) => paroles.join(" "));
+  });
+  return textes.map(normaliser);
+}
+
+Then(/^la première chose que Léa entend Noisette dire est « ([^«»]+) »$/, async ({ page }, texte: string) => {
+  expect(await premiereLectureDeLExercice(page)).toBe(normaliser(texte));
+});
+
+Then(/^Léa n'entend pas Noisette lire la consigne « ([^«»]+) »$/, async ({ page }, consigne: string) => {
+  const paroles = (await toutesLesParoles(page)).map(normaliser);
+  expect(paroles).not.toContain(normaliser(consigne));
+  expect(paroles.join(" ")).not.toContain(normaliser(consigne));
+});
