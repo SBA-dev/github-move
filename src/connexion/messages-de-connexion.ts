@@ -27,7 +27,9 @@ const ERREURS_METIER = [
 ];
 
 export function messageDeConnexion(erreur: unknown): string {
-  if (ERREURS_METIER.some((erreurMetier) => erreur instanceof erreurMetier)) return (erreur as Error).message;
+  if (erreur instanceof Error && ERREURS_METIER.some((erreurMetier) => erreur instanceof erreurMetier)) {
+    return erreur.message;
+  }
   return "Un souci est survenu. Réessaie dans un instant.";
 }
 

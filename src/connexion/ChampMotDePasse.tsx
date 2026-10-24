@@ -27,10 +27,9 @@ export function ChampMotDePasse({ id, libelle, valeur, autoComplete, onChange, d
           type="button"
           className="secondaire"
           aria-pressed={affiche}
-          aria-label="Afficher le mot de passe"
           onClick={() => setAffiche(!affiche)}
         >
-          {affiche ? "Masquer" : "Afficher"}
+          Afficher le mot de passe
         </button>
       </div>
     </div>

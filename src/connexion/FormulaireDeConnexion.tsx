@@ -16,6 +16,8 @@ export function FormulaireDeConnexion({ connexion, onConnecte, onCreerLeCompte, 
   const [motDePasse, setMotDePasse] = useState("");
   const { erreur, message, enCours, soumettre } = useSoumission(onConnecte);
 
+  const motDePasseOublieProposeSousLeMessage = estAdresseOuMotDePasseIncorrect(erreur);
+
   const envoyer = (evenement: FormEvent) => {
     evenement.preventDefault();
     void soumettre(() => connexion.seConnecter.executer(adresse, motDePasse));
@@ -43,12 +45,14 @@ export function FormulaireDeConnexion({ connexion, onConnecte, onCreerLeCompte, 
         <button type="submit" disabled={enCours}>Se connecter</button>
       </form>
       {message && <p role="alert" className="message-erreur">{message}</p>}
-      {estAdresseOuMotDePasseIncorrect(erreur) && (
+      {motDePasseOublieProposeSousLeMessage && (
         <button type="button" className="secondaire" onClick={onMotDePasseOublie}>Mot de passe oublié</button>
       )}
       <div className="autres-choix">
         <button type="button" className="secondaire" onClick={onCreerLeCompte}>Créer ton compte</button>
-        <button type="button" className="secondaire" onClick={onMotDePasseOublie}>Mot de passe oublié</button>
+        {!motDePasseOublieProposeSousLeMessage && (
+          <button type="button" className="secondaire" onClick={onMotDePasseOublie}>Mot de passe oublié</button>
+        )}
       </div>
     </>
   );

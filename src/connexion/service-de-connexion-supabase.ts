@@ -9,9 +9,23 @@ import {
   ParentId,
   type Prenom,
   type ServiceDeConnexion,
+  ServiceDeConnexionIndisponible,
   TropDEssaisDeReinitialisation,
 } from "@domain/famille";
 import { clientSupabase } from "./client-supabase.ts";
+
+const STATUT_SERVICE_INDISPONIBLE = 503;
+const STATUT_REFUS_DES_IDENTIFIANTS = 400;
+const CODE_IDENTIFIANTS_REFUSES = "invalid_credentials";
+
+function estUneReponseDeLaFonction(erreur: unknown, statut: number): boolean {
+  return erreur instanceof FunctionsHttpError && erreur.context.status === statut;
+}
+
+function estUnRefusDesIdentifiants(erreur: unknown): boolean {
+  return erreur instanceof AuthApiError && erreur.status === STATUT_REFUS_DES_IDENTIFIANTS &&
+    erreur.code === CODE_IDENTIFIANTS_REFUSES;
+}
 
 export class EnvoiDuLienImpossible extends Error {
   constructor() {
@@ -25,7 +39,8 @@ export class ServiceDeConnexionSupabase implements ServiceDeConnexion {
     const { error } = await clientSupabase().functions.invoke("inscrire-le-parent", {
       body: { adresse: adresse.valeur, motDePasse },
     });
-    if (error instanceof FunctionsHttpError && error.context.status === 409) throw new AdresseDejaUtilisee();
+    if (estUneReponseDeLaFonction(error, 409)) throw new AdresseDejaUtilisee();
+    if (estUneReponseDeLaFonction(error, STATUT_SERVICE_INDISPONIBLE)) throw new ServiceDeConnexionIndisponible();
     if (error) throw error;
   }
 
@@ -53,8 +68,8 @@ export class ServiceDeConnexionSupabase implements ServiceDeConnexion {
       email: adresse.valeur,
       password: motDePasse,
     });
-    if (error instanceof AuthApiError && error.status < 500) throw new AdresseOuMotDePasseIncorrect();
-    if (error || !data.user) throw error ?? new AdresseOuMotDePasseIncorrect();
+    if (estUnRefusDesIdentifiants(error)) throw new AdresseOuMotDePasseIncorrect();
+    if (error || !data.user) throw new ServiceDeConnexionIndisponible();
     return ParentId.de(data.user.id);
   }
 
@@ -67,10 +82,9 @@ export class ServiceDeConnexionSupabase implements ServiceDeConnexion {
     const { error } = await clientSupabase().functions.invoke("reinitialiser-le-mot-de-passe", {
       body: { adresse: adresse.valeur, prenom: prenom.valeur, motDePasse },
     });
-    if (error instanceof FunctionsHttpError && error.context.status === 401) {
-      throw new InformationsDeReinitialisationIncorrectes();
-    }
-    if (error instanceof FunctionsHttpError && error.context.status === 429) throw new TropDEssaisDeReinitialisation();
+    if (estUneReponseDeLaFonction(error, 401)) throw new InformationsDeReinitialisationIncorrectes();
+    if (estUneReponseDeLaFonction(error, 429)) throw new TropDEssaisDeReinitialisation();
+    if (estUneReponseDeLaFonction(error, STATUT_SERVICE_INDISPONIBLE)) throw new ServiceDeConnexionIndisponible();
     if (error) throw error;
   }
 
