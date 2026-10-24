@@ -9,6 +9,7 @@ import {
   type TypeDExerciceAChoix,
 } from "./exercices/phrases-des-exercices-a-choix.ts";
 import { ChoixInconnu, JeNeSaisPasDejaDit, QuestionDejaReussie } from "./erreurs.ts";
+import { questionsDeConjugaison } from "./exercices/conjugaison.ts";
 import { questionsDeTrous } from "./exercices/trous.ts";
 import type { Hasard } from "./hasard.ts";
 import type { QuestionSuivie } from "./question-suivie.ts";
@@ -20,7 +21,7 @@ const ERREURS_AVANT_LA_REDUCTION_A_DEUX = 2;
 export type AideDonnee = {
   readonly aide: string | undefined;
   readonly bonneReponse: string;
-  readonly maniere: "briller";
+  readonly maniere: "briller" | "ecrire";
 };
 
 type Complements = { readonly aide?: string; readonly motAEcouter?: string; readonly langue?: string };
@@ -186,6 +187,17 @@ export function questionsJoueesAvec(exercice: Exercice, tireur: Tireur): Questio
           choix: tireur.trou(question.motAttendu, question.candidats),
           bonneReponse: question.motAttendu,
           type: "trous",
+        })
+      );
+    case "conjugaison":
+      return questionsDeConjugaison(exercice).map((question) =>
+        QuestionJouee.aChoix({
+          cle: CleDeQuestion.de("conjugaison", question.cle),
+          enonce: question.enonce,
+          choix: tireur.trou(question.motAttendu, question.candidats),
+          bonneReponse: question.motAttendu,
+          type: "conjugaison",
+          complements: { aide: question.aide },
         })
       );
     default:

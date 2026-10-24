@@ -3452,46 +3452,28 @@
     "temps": "passé composé",
     "formes": [
      {
-      "pronom": "je",
-      "forme": [
-       "j'",
-       "ai mangé"
-      ]
+      "pronom": "j'",
+      "forme": "ai mangé"
      },
      {
       "pronom": "tu",
-      "forme": [
-       "tu",
-       "as mangé"
-      ]
+      "forme": "as mangé"
      },
      {
       "pronom": "il",
-      "forme": [
-       "il",
-       "a mangé"
-      ]
+      "forme": "a mangé"
      },
      {
       "pronom": "nous",
-      "forme": [
-       "nous",
-       "avons mangé"
-      ]
+      "forme": "avons mangé"
      },
      {
       "pronom": "vous",
-      "forme": [
-       "vous",
-       "avez mangé"
-      ]
+      "forme": "avez mangé"
      },
      {
       "pronom": "ils",
-      "forme": [
-       "ils",
-       "ont mangé"
-      ]
+      "forme": "ont mangé"
      }
     ],
     "distracteurs": [

@@ -14,8 +14,11 @@ export function questionsDeTrous(exercice: ExerciceTrous): QuestionDeTrou[] {
 }
 
 function candidatsDuTrou(exercice: ExerciceTrous, motAttendu: string): string[] {
-  const candidats = [...exercice.distracteurs, ...exercice.motsAttendus].filter((mot) => mot !== motAttendu);
-  return [...new Set(candidats)];
+  return sansDoublonsNiReponse([...exercice.distracteurs, ...exercice.motsAttendus], motAttendu);
+}
+
+export function sansDoublonsNiReponse(mots: readonly string[], motAttendu: string): string[] {
+  return [...new Set(mots.filter((mot) => mot !== motAttendu))];
 }
 
 function phraseDuTrou(exercice: ExerciceTrous, rang: number): string {

@@ -53,13 +53,19 @@ export function feliciterUneFoisSurDeux(personnageGuide: PersonnageGuide, hasard
   return feliciter(personnageGuide, hasard).texte;
 }
 
-export type ParoleDueApresUneBonneReponse = "felicitation" | "felicitationUneFoisSurDeux" | "relance";
+export type ParoleDueApresUneBonneReponse =
+  | "felicitation"
+  | "felicitationUneFoisSurDeux"
+  | "relance"
+  | "applaudir"
+  | { parole: "tuSaisConjuguer"; verbe: string };
 
 export function paroleApresUneBonneReponse(
   paroleDue: ParoleDueApresUneBonneReponse | undefined,
   personnageGuide: PersonnageGuide,
   hasard: Hasard,
 ): string | undefined {
+  if (typeof paroleDue === "object") return direTuSaisConjuguer(paroleDue.verbe, personnageGuide, hasard);
   switch (paroleDue) {
     case "felicitation":
       return feliciter(personnageGuide, hasard).texte;
@@ -67,6 +73,7 @@ export function paroleApresUneBonneReponse(
       return feliciterUneFoisSurDeux(personnageGuide, hasard);
     case "relance":
       return relancer(hasard);
+    case "applaudir":
     case undefined:
       return undefined;
   }
@@ -74,6 +81,10 @@ export function paroleApresUneBonneReponse(
 
 export function direLeTexteComplet(personnageGuide: PersonnageGuide, hasard: Hasard): string {
   return `${feliciter(personnageGuide, hasard).texte} Le texte est complet !`;
+}
+
+export function direTuSaisConjuguer(verbe: string, personnageGuide: PersonnageGuide, hasard: Hasard): string {
+  return `${feliciter(personnageGuide, hasard).texte} Tu sais conjuguer ${verbe} !`;
 }
 
 export function encourager(hasard: Hasard): Encouragement {
@@ -108,6 +119,13 @@ export function direJeNeSaisPasAvecLesChoix(aide: string | undefined): string {
     "Pas de souci, on apprend ensemble !",
     aide,
     "La bonne réponse brille : touche-la.",
+  );
+}
+
+export function direJeNeSaisPasEnDictee(maniere: "briller" | "ecrire"): string {
+  return phrases(
+    "Pas de souci, on apprend ensemble !",
+    maniere === "briller" ? "La bonne lettre brille : touche-la." : "Voici la lettre suivante. Écris la suite.",
   );
 }
 

@@ -144,3 +144,31 @@ export class ParentNonRattache extends Error {
     this.name = "ParentNonRattache";
   }
 }
+
+export class MotIncomplet extends Error {
+  constructor() {
+    super("Le mot n'est pas corrigé tant que toutes ses cases ne sont pas remplies.");
+    this.name = "MotIncomplet";
+  }
+}
+
+export class ToucheDejaUtilisee extends Error {
+  constructor(readonly lettre: string) {
+    super(`La touche « ${lettre} » est déjà utilisée.`);
+    this.name = "ToucheDejaUtilisee";
+  }
+}
+
+export class ToucheAbsenteDuClavier extends Error {
+  constructor(readonly lettre: string) {
+    super(`La touche « ${lettre} » n'est pas sur le clavier.`);
+    this.name = "ToucheAbsenteDuClavier";
+  }
+}
+
+export class PasDeLettreAEffacer extends Error {
+  constructor() {
+    super("Aucune lettre n'est écrite : il n'y a rien à effacer.");
+    this.name = "PasDeLettreAEffacer";
+  }
+}

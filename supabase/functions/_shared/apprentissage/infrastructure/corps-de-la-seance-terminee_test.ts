@@ -3,6 +3,7 @@ import { ChoixDeSeance } from "../domain/choix-de-seance.ts";
 import { Reponse, type ReponseDonnee } from "../domain/reponse.ts";
 import { revaliderLaSeance } from "../domain/revalider-la-seance.ts";
 import { hasardFixe } from "../test_utils/hasard-fixe.ts";
+import { ecrire, leconDeDicteeDeChatEtLapin, profilDeDictee, seanceDeDictee } from "../test_utils/lecons-de-dictee.ts";
 import { leconDeClasserLesSons, seanceCommencee } from "../test_utils/lecons-de-classer-et-ordre.ts";
 import { lireLaSeanceTerminee } from "./corps-de-la-seance-terminee.ts";
 import { EntreeInvalide } from "./http-apprentissage.ts";
@@ -184,6 +185,7 @@ Deno.test("un placement mal formé est refusé comme toute réponse invalide", (
 function enReponseEnvoyee(reponse: ReponseDonnee): Record<string, unknown> {
   if (reponse.genre === "choix") return { choix: reponse.texte };
   if (reponse.genre === "jeNeSaisPas") return { jeNeSaisPas: true };
+  if (reponse.genre === "motEcrit") return { motEcrit: reponse.lettres };
   return {
     placement: reponse.groupe === undefined
       ? { etiquette: reponse.etiquette }
@@ -208,6 +210,61 @@ Deno.test("le corps d'une séance de classer est lu puis revalidé sans incohér
   };
 
   const revalidee = revaliderLaSeance(leconDeClasserLesSons(), lire(corps));
+
+  assertEquals([revalidee.etoiles, revalidee.erreurs], [fait.etoiles, fait.erreurs]);
+});
+
+Deno.test("les lettres d'un mot écrit sont lues comme le mot écrit par l'enfant", () => {
+  const reponses = [[{ motEcrit: ["c", "h", "a", "t"] }]];
+
+  assertEquals(lire({ ...corpsValide(), reponses }).reponses, [[Reponse.motEcrit(["c", "h", "a", "t"])]]);
+});
+
+Deno.test("la lettre « œ » est une lettre du mot écrit", () => {
+  const reponses = [[{ motEcrit: ["c", "œ", "u", "r"] }]];
+
+  assertEquals(lire({ ...corpsValide(), reponses }).reponses, [[Reponse.motEcrit(["c", "œ", "u", "r"])]]);
+});
+
+Deno.test("un mot écrit mal formé est refusé comme toute réponse invalide", () => {
+  const malFormes = [
+    { motEcrit: "chat" },
+    { motEcrit: { 0: "c" } },
+    { motEcrit: ["c", 7, "a", "t"] },
+    { motEcrit: ["c", "h", null, "t"] },
+    { motEcrit: ["c", "ha", "t"] },
+    { motEcrit: ["c", "", "a", "t"] },
+    { motEcrit: [] },
+    { motEcrit: Array.from({ length: 51 }, () => "a") },
+    { motEcrit: ["c", "h", "a", "t"], choix: "chat" },
+  ];
+  for (const reponse of malFormes) {
+    assertThrows(() => lire({ ...corpsValide(), reponses: [[reponse]] }), EntreeInvalide, "reponses");
+  }
+});
+
+Deno.test("un mot écrit de 50 lettres est accepté", () => {
+  const reponses = [[{ motEcrit: Array.from({ length: 50 }, () => "a") }]];
+
+  assertEquals(lire({ ...corpsValide(), reponses }).reponses[0]?.length, 1);
+});
+
+Deno.test("le corps d'une séance de dictée est lu puis revalidé sans incohérence", () => {
+  const profil = profilDeDictee("lettresDuMot", "CP");
+  const seance = seanceDeDictee(leconDeDicteeDeChatEtLapin(), profil);
+  ecrire(seance, "chat");
+  ecrire(seance, "lapin");
+  const fait = seance.terminer(MAINTENANT);
+  const envoi = seance.aEnregistrer();
+  const corps = {
+    ...envoi,
+    seance: SEANCE,
+    enfant: ENFANT,
+    termineeLe: MAINTENANT.toISOString(),
+    reponses: envoi.reponses.map((question) => question.map(enReponseEnvoyee)),
+  };
+
+  const revalidee = revaliderLaSeance(leconDeDicteeDeChatEtLapin(), lire(corps));
 
   assertEquals([revalidee.etoiles, revalidee.erreurs], [fait.etoiles, fait.erreurs]);
 });
