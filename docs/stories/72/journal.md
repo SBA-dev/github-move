@@ -20,3 +20,4 @@
 - Comportement 5/9 (SeConnecterAvecLeMotDePasse) : RED e2040a2, GREEN 4ed2d5b. 995 verts. Dette : l'adaptateur traduit tout statut < 500 (dont 429) en identifiants incorrects, à cibler au câblage.
 - Comportement 6/9 (InscrireLeParentEtSeConnecter) : RED 256c008, GREEN 5a327b0 (adaptateur : Edge Function inscrire-le-parent, 409 → AdresseDejaUtilisee). 1006 verts, lint/fmt/tsc OK (vérifiés par l'orchestrateur, le rapport de l'agent était vide).
 - Comportement 7/9 (ReinitialiserLeMotDePasseEtSeConnecter) : RED 69dd13f, GREEN 2bd6954. Contrat HTTP : 401 informations incorrectes, 429 trop d'essais, 422 entrée invalide. 1018 verts.
+- Comportement 8/9 (InscrireLeParent serveur) : RED 4e592e3, GREEN 0824777. 1025 verts.
