@@ -11,16 +11,16 @@ function repondreJusqua(rang: number) {
   return seance;
 }
 
-Deno.test("après une bonne forme qui n'est pas la dernière, le personnage guide ne dit rien", () => {
+Deno.test("après une bonne forme qui n'est pas la dernière, le personnage guide applaudit sans féliciter", () => {
   const seance = repondreJusqua(3);
 
-  assertEquals(seance.paroleDueApresLaDerniereReponse(), undefined);
+  assertEquals(seance.paroleDueApresLaDerniereReponse(), "applaudir");
 });
 
-Deno.test("après la bonne forme de la dernière personne, le personnage guide félicite l'enfant", () => {
+Deno.test("après la bonne forme de la dernière personne, le personnage guide dit que l'enfant sait conjuguer le verbe", () => {
   const seance = repondreJusqua(6);
 
-  assertEquals(seance.paroleDueApresLaDerniereReponse(), "felicitation");
+  assertEquals(seance.paroleDueApresLaDerniereReponse(), "tuSaisConjuguer");
 });
 
 Deno.test("la bonne forme de la dernière personne complète la conjugaison", () => {
