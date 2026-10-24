@@ -117,3 +117,19 @@ En attente d'une réponse : leçons réussies d'une classe au-dessus (N1, N7, N9
   (cycle 6) : **APPROUVÉ**. Non bloquants : fixture `auto` sur toutes les pages (coût faible), observateur limité au
   premier écran de fin d'un document, condition réseau recopiée dans le step. Lancement de l'unique non-régression
   complète (décision 0020).
+
+## Mesures (décision 0017, `docs/graphe/nombre-d-equipes.md`)
+
+| Mesure | Valeur |
+|---|---|
+| Durée, du lancement au `PRÊTE À MERGER` | environ 8 h 30 (12:40 → ~21:10 UTC) ; le merge s'ajoute après l'autorisation |
+| Attente du PO | cadrage : 12:42 → 13:07 (25 min, deux réponses contradictoires à faire trancher) ; questions N1-N11 : 13:32 → 14:21 (49 min, TDD indépendant avancé pendant ce temps) |
+| Attente d'un verrou | aucune (pas de migration, pas de redéploiement, pas d'`@envoi-email`) |
+| Attente de `main` | aucune bloquante ; un run E2E interrompu par `MAIN A BOUGÉ` (avant la décision 0020) |
+| Tokens et coût | relevés par le responsable (`get_session`) |
+| Cycles de review | 6 : APPROUVÉ (1, 2, 3, 6), **À CORRIGER (4, 5)** : un correctif applicatif masquait un step défaillant (4), une attente `networkidle` inopérante (5) |
+| Cycles E2E KO | 1 KO réel (cycle 3 : mise en place de scénario, pas l'application) ; échecs d'environnement à la relance : concurrence entre équipes (9 cas), port Vite pris par deux lancements, timeout réseau sous 3 workers (1 cas) |
+| Intégrations de `main` | 5 : 3e12850 (#19, 2 conflits + 1 erreur de type), a41bb5d (PR #70, sans conflit), 1468cf8 (#20, 4 conflits), bc15c4e (décision 0020, sans conflit) ; a137f42 (outillage) arrivé avec a41bb5d |
+| Régression découverte sur `main` après le merge | à relever après le merge |
+| Cycles TDD | 10 comportements du parcours + 1 (fusion des étoiles) : 9 RED/GREEN, aucun désaccord test-writer/implementer |
+| Escalades | aucune `ESCALADE` ; 2 rounds de questions au PO (16 puis 11) |
