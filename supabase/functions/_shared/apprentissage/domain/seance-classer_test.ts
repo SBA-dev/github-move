@@ -80,6 +80,16 @@ Deno.test("après chaque bonne étiquette d'un classement, la félicitation est 
   assertEquals([apresLaPremiere, apresLaSeconde], ["felicitationUneFoisSurDeux", "felicitationUneFoisSurDeux"]);
 });
 
+Deno.test("après la dernière bonne étiquette d'un classement, la félicitation est toujours due", () => {
+  const seance = seanceCommencee(leconDeClasserLesSons());
+  seance.repondre(Reponse.placement("loup", "g-ou"));
+  seance.repondre(Reponse.placement("pont", "g-on"));
+
+  seance.repondre(Reponse.placement("savon", "g-on"));
+
+  assertEquals(seance.paroleDueApresLaDerniereReponse(), "felicitation");
+});
+
 Deno.test("après une étiquette fausse d'un classement, aucune parole n'est due", () => {
   const seance = seanceCommencee(leconDeClasserLesSons());
 
