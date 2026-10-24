@@ -107,3 +107,10 @@ export class MotDePasseTropLong extends Error {
     this.name = "MotDePasseTropLong";
   }
 }
+
+export class TropDEssaisDeReinitialisation extends Error {
+  constructor() {
+    super("Trop d'essais. Réessaie dans une heure.");
+    this.name = "TropDEssaisDeReinitialisation";
+  }
+}

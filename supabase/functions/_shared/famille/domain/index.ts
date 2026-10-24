@@ -19,6 +19,7 @@ export {
   ProfilEnfantIdVide,
   ProfilEnfantIntrouvable,
   RattachementsInvalides,
+  TropDEssaisDeReinitialisation,
   UniversInconnu,
 } from "./erreurs.ts";
 export { LienDeConnexion } from "./lien-de-connexion.ts";
