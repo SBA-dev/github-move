@@ -3,10 +3,11 @@ import { type Lecon, lireLecon, Niveau } from "../../catalogue/domain/index.ts";
 import { generateurIdFixe } from "../test_utils/generateur-id-fixe.ts";
 import { hasardFixe, hasardSansMelange } from "../test_utils/hasard-fixe.ts";
 import { TestDeDepartDejaFini, TestDeDepartNonFini } from "./erreurs.ts";
+import type { Hasard } from "./hasard.ts";
 import { planDuTestDeDepart } from "./plan-du-test-de-depart.ts";
 import { Reponse } from "./reponse.ts";
 import { TestDeDepart } from "./test-de-depart.ts";
-import { type Tireur, tireurAuHasard } from "./tireur.ts";
+import { type Tireur, tireurAuHasard, tireurSelonLesTirages } from "./tireur.ts";
 
 const CE1 = Niveau.de("CE1");
 const programme = { section: "section", citation: "citation" };
@@ -220,6 +221,60 @@ Deno.test("l'envoi d'un test terminé contient les tirages réellement utilisés
   test.terminer(finDuTest);
 
   assertEquals(test.aEnregistrer().tirages, [["mauvaise", "bonne"], ["mauvaise", "bonne"]]);
+});
+
+const calculAGenerateur = { type: "calcul", generateur: { op: "+", a: [1, 20], b: [1, 20], combien: 1 } };
+const additionAGenerateur = {
+  type: "addition",
+  generateur: { nombres: 2, min: 15, max: 59, retenue: false, combien: 1 },
+  etapes: ["calculer"],
+};
+
+Deno.test("l'envoi d'un test avec un calcul puis une addition à générateur contient les opérations tirées, dans l'ordre", () => {
+  const lecons = [uneLecon(0, calculAGenerateur), uneLecon(1, additionAGenerateur)];
+  const test = testDeDepartSur(lecons, tireurAuHasard(hasardFixe(0.2, 0.5, 0, 0.5)));
+  test.repondre(Reponse.nombre(16));
+  test.repondre(Reponse.nombre(52));
+  test.terminer(finDuTest);
+
+  assertEquals(test.aEnregistrer().tirages, [["5 + 11 = 16"], ["15 + 37"]]);
+});
+
+function hasardGraine(graine: number): Hasard {
+  let etat = graine;
+  return {
+    entre0et1: () => {
+      etat = (etat * 16807) % 2147483647;
+      return etat / 2147483647;
+    },
+  };
+}
+
+function enoncesEnRepondantJuste(test: TestDeDepart): string[] {
+  const enonces: string[] = [];
+  for (let question = test.questionEnCours(); question; question = test.questionEnCours()) {
+    enonces.push(question.enonce);
+    const somme = /^[\d +]+$/.test(question.enonce)
+      ? question.enonce.split(" + ").reduce((total, terme) => total + Number(terme), 0)
+      : undefined;
+    test.repondre(somme === undefined ? bonne : Reponse.nombre(somme));
+  }
+  return enonces;
+}
+
+Deno.test("rejouer un test de départ avec les tirages de son envoi redonne les mêmes questions", () => {
+  const lecons = [
+    ...desLecons(1),
+    uneLecon(1, calculAGenerateur),
+    uneLecon(2, additionAGenerateur),
+  ];
+  const commence = testDeDepartSur(lecons, tireurAuHasard(hasardGraine(42)));
+  const enoncesPoses = enoncesEnRepondantJuste(commence);
+  commence.terminer(finDuTest);
+
+  const rejoue = testDeDepartSur(lecons, tireurSelonLesTirages(commence.aEnregistrer().tirages.values()));
+
+  assertEquals(enoncesEnRepondantJuste(rejoue), enoncesPoses);
 });
 
 Deno.test("l'envoi contient les réponses de chaque question posée dans l'ordre, « Je ne sais pas » compris", () => {
