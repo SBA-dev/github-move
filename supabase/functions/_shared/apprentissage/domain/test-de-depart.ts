@@ -9,6 +9,8 @@ import type { ReponseEnNombre, ReponseParChoix, ResultatDeReponse } from "./repo
 import type { TestDeDepartTermineAEnregistrer } from "./test-de-depart-termine-a-enregistrer.ts";
 import { TestDeDepartId } from "./test-de-depart-id.ts";
 import type { Tireur } from "./tireur.ts";
+import { enonceDUneAddition } from "./tirage-d-additions.ts";
+import { enonceTire } from "./tirage-d-operations.ts";
 
 const QUESTIONS_FAUSSES_DE_SUITE_POUR_ARRETER = 3;
 
@@ -31,6 +33,7 @@ export class TestDeDepart {
     readonly enfant: string,
     private readonly plan: PlanDuTestDeDepart,
     private readonly questions: readonly QuestionPosee[],
+    private readonly tirages: readonly (readonly string[])[],
   ) {}
 
   static commencer(
@@ -43,12 +46,15 @@ export class TestDeDepart {
       readonly tireur: Tireur;
     },
   ): TestDeDepart {
+    const tirages: string[][] = [];
     const questions = plan.map((prevue) => {
       const lecon = lecons.find(({ id }) => id === prevue.leconId);
       if (lecon === undefined) throw new LeconIntrouvable(prevue.leconId);
-      return questionDuTestDeDepart(lecon, prevue, tireur, niveau);
+      const question = questionDuTestDeDepart(lecon, prevue, tireurQuiNote(tireur, tirages), niveau);
+      tirages.push(question.tirage());
+      return question;
     });
-    return new TestDeDepart(TestDeDepartId.de(generateurId.nouveau()), enfant, plan, questions);
+    return new TestDeDepart(TestDeDepartId.de(generateurId.nouveau()), enfant, plan, questions, tirages);
   }
 
   questionEnCours(): QuestionPosee | undefined {
@@ -97,7 +103,7 @@ export class TestDeDepart {
       test: this.id.valeur,
       enfant: this.enfant,
       questions: this.plan,
-      tirages: this.questions.map((question) => question.tirage()).filter((tirage) => tirage.length > 0),
+      tirages: this.tirages.filter((tirage) => tirage.length > 0),
       reponses: this.questionsPosees().map((question) => question.reponses()),
       termineeLe: this.termineeLe,
     };
@@ -118,4 +124,21 @@ export class TestDeDepart {
     this.rang++;
     this.questionsFaussesDeSuite = question.erreurs > 0 ? this.questionsFaussesDeSuite + 1 : 0;
   }
+}
+
+/** Les opérations et additions tirées par un générateur sont notées dans l'ordre où le tireur les rend. */
+function tireurQuiNote(tireur: Tireur, tirages: string[][]): Tireur {
+  return {
+    ...tireur,
+    operations: (generateur) => {
+      const operations = tireur.operations(generateur);
+      tirages.push(operations.map(enonceTire));
+      return operations;
+    },
+    additions: (generateur) => {
+      const additions = tireur.additions(generateur);
+      tirages.push(additions.map(enonceDUneAddition));
+      return additions;
+    },
+  };
 }
