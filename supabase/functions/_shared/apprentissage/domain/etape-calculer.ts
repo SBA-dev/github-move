@@ -155,7 +155,7 @@ export class EtapeCalculer {
     if (this.mode.genre === "clavierDeCristaux") return QuestionDeCalcul.auClavier(operation, identite);
     const dernierChoix = somme >= 10 ? somme - 10 : somme + 2;
     const choix = choixAutourDuResultat(somme, dernierChoix);
-    return QuestionDeCalcul.avecLesChoix(operation, this.tireur, choix, identite);
+    return QuestionDeCalcul.avecLesChoix(operation, this.tireur, { nombresProposes: choix, identite });
   }
 
   private cleDeLaColonne(colonne: ColonneDAdditionPosee): CleDeQuestion {

@@ -20,6 +20,8 @@ import { useFaciliteDeLaSeance } from "./difficulte/useFaciliteDeLaSeance.ts";
 import { ExerciceDAdditionPosee } from "./exercices/addition/ExerciceDAdditionPosee.tsx";
 import { ExerciceAChoix } from "./exercices/ExerciceAChoix.tsx";
 import { ExerciceAEtiquettes } from "./exercices/ExerciceAEtiquettes.tsx";
+import { BoiteAJetons } from "./exercices/boite/BoiteAJetons.tsx";
+import { SchemaDuProbleme } from "./exercices/schema/SchemaDuProbleme.tsx";
 import { ExerciceDeCalcul } from "./exercices/ExerciceDeCalcul.tsx";
 import { ExerciceDeDictee } from "./exercices/ExerciceDeDictee.tsx";
 import { ExerciceDeFluence } from "./exercices/fluence/ExerciceDeFluence.tsx";
@@ -154,6 +156,8 @@ function SeanceEnCours(
   const exerciceAffiche = figee?.exercice ?? exerciceJoue;
   const question = figee === undefined ? exerciceJoue?.questionEnCours() : figee.question;
   const calcul = deroulement.calculFige ?? seance.calculEnCours();
+  const boite = deroulement.boiteReussie?.enCours ?? seance.boiteEnCours();
+  const schema = deroulement.schemaReussi?.enCours ?? seance.schemaEnCours();
   const fluence = deroulement.fluenceFinie ?? seance.fluenceEnCours(horlogeDuNavigateur.maintenant());
   const addition = deroulement.additionFigee ?? seance.additionEnCours();
   const zoneDeLExercice = useRef<HTMLDivElement>(null);
@@ -239,7 +243,29 @@ function SeanceEnCours(
               onRelire={() => deroulement.relireLaPhrase(calcul.phrase)}
               onChoisir={(texte) => void deroulement.choisirUneReponseDeCalcul(texte)}
               onValider={(nombre) => void deroulement.repondreParUnNombre(nombre)}
-              onJeNeSaisPas={() => void deroulement.jeNeSaisPasDuCalcul()}
+              onJeNeSaisPas={() => void deroulement.jeNeSaisPasALaQuestion()}
+            />
+          )}
+          {exerciceDeLaLecon.type === "boite" && boite && (
+            <BoiteAJetons
+              boite={boite}
+              item={exerciceDeLaLecon.items[exerciceAffiche?.rangDeLaQuestionEnCours ?? 0]}
+              phrasesDites={deroulement.phrasesDitesDeLaQuestion}
+              ouverte={deroulement.boiteReussie?.ouverte}
+              onChoisir={(texte) => void deroulement.choisirUneReponseDeCalcul(texte)}
+              onValider={(nombre) => void deroulement.repondreParUnNombre(nombre)}
+              onJeNeSaisPas={() => void deroulement.jeNeSaisPasALaQuestion()}
+            />
+          )}
+          {exerciceDeLaLecon.type === "barres" && schema && (
+            <SchemaDuProbleme
+              schema={schema}
+              resolu={deroulement.schemaReussi?.resolu}
+              phrasesDites={deroulement.phrasesDitesDeLaQuestion}
+              reussi={deroulement.schemaReussi !== undefined}
+              onChoisir={(texte) => void deroulement.choisirUneReponseDeCalcul(texte)}
+              onValider={(nombre) => void deroulement.repondreParUnNombre(nombre)}
+              onJeNeSaisPas={() => void deroulement.jeNeSaisPasALaQuestion()}
             />
           )}
           {exerciceDeLaLecon.type === "fluence" && fluence && (

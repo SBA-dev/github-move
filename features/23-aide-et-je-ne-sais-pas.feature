@@ -105,7 +105,6 @@ Fonctionnalité: Aide et « Je ne sais pas »
         | calcul      | Léa    | au CP, avec les choix                 |
         | calcul      | Tom    | au CE1, au clavier de cristaux        |
 
-      @depend-de-21
       Exemples:
         | type        | enfant | cas                                   |
         | boite       | Léa    | au CP, avec les choix                 |

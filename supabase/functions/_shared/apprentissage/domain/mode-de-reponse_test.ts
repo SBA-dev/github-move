@@ -23,3 +23,23 @@ Deno.test("les choix autour du résultat 4 sont 4, 5, 3 et 6", () => {
 Deno.test("les choix autour du résultat 0 sont dédoublonnés : 0, 1 et 2", () => {
   assertEquals(choixAutourDuResultat(0), [0, 1, 2]);
 });
+
+Deno.test("au CP, une réponse de 20 au plus se donne par choix", () => {
+  for (const reponse of [7, 0, 20]) {
+    const mode = ModeDeReponse.pour(Niveau.de("CP"), reponse);
+
+    assertEquals(mode, { genre: "choix" }, `${reponse}`);
+  }
+});
+
+Deno.test("au CP, une réponse de plus de 20 se donne au clavier de cristaux", () => {
+  const mode = ModeDeReponse.pour(Niveau.de("CP"), 24);
+
+  assertEquals(mode, { genre: "clavierDeCristaux" });
+});
+
+Deno.test("au CE1, même une petite réponse se donne au clavier de cristaux", () => {
+  const mode = ModeDeReponse.pour(Niveau.de("CE1"), 7);
+
+  assertEquals(mode, { genre: "clavierDeCristaux" });
+});

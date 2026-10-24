@@ -61,50 +61,60 @@ classDiagram
     a
     sens : ajout | retrait
     b
-    reponse()
-    ecriture()
+    reponse
+    ecriture
   }
   class ProblemeEnBarres {
     <<value object, Catalogue>>
     enonce
-    FormeDeSchema forme
     aide?
     phrase?
-    reponse()
-    ecriture()
+    reponse
+    ecriture
+    FormeDeSchema forme
   }
   class FormeDeSchema {
-    <<value object>>
-    PartiesEtTout(a, b, tout) | Comparaison(grand, petit, ecart, noms) | Parts(nb, valeur, total)
-    valeurCherchee
+    <<value object, Catalogue>>
+    partiesEtTout(parties [a, b], tout) | comparaison(grand, petit, ecart, noms) | parts(nb, valeur, total)
+    null = valeur cherchée
+  }
+  class QuestionDeBoite {
+    <<Apprentissage>>
+    pour(item, tireur, niveau)
+  }
+  class QuestionDeProblemeEnBarres {
+    <<Apprentissage>>
+    pour(probleme, tireur, niveau)
   }
   class ModeDeReponse {
-    <<value object (#20)>>
-    pour(niveau, reponse)
+    <<value object (#20), Apprentissage>>
+    pour(niveau, reponse?)
   }
-  class DescriptionDuSchema {
-    <<value object, Apprentissage>>
-    texte pour les lecteurs d'écran
+  class descriptionDuSchema {
+    <<fonction, Apprentissage>>
+    descriptionDuSchema(forme) texte pour les lecteurs d'écran
   }
   ProblemeEnBarres --> FormeDeSchema
-  ProblemeEnBarres ..> DescriptionDuSchema
-  ItemDeBoite ..> ModeDeReponse
-  ProblemeEnBarres ..> ModeDeReponse
+  QuestionDeBoite ..> ItemDeBoite
+  QuestionDeProblemeEnBarres ..> ProblemeEnBarres
+  QuestionDeProblemeEnBarres ..> descriptionDuSchema
+  QuestionDeBoite ..> ModeDeReponse
+  QuestionDeProblemeEnBarres ..> ModeDeReponse
 ```
 
 ### Catalogue : validation à la lecture
 
 | Item | Règles de `lireLecon` |
 |---|---|
-| `ItemDeBoite` | `a`, `b` entiers ≥ 0 ; `op` `+` ou `-` (défaut `+`) ; retrait : `b ≤ a`, sinon `ExerciceMalForme`. |
-| `ProblemeEnBarres` | `enonce` non vide ; forme reconnue ; **exactement une** valeur `null` ; nombres entiers ≥ 0 ; parties et tout, comparaison : la valeur cherchée calculée est positive ou nulle (`tout ≥` la partie connue, `grand ≥ petit`, `grand ≥ ecart`) ; parts : division **exacte** (`total` divisible par `nb` ou par `valeur`) ; `aide?`, `phrase?` (décision n°2). |
+| `ItemDeBoite` `{a, sens, b, reponse, ecriture}` | `a`, `b` entiers ≥ 0 ; `op` `+` (`sens` ajout) ou `-` (`sens` retrait), défaut `+` ; retrait : `b ≤ a` ; sinon `LeconMalFormee`. |
+| `ProblemeEnBarres` `{enonce, aide?, phrase?, reponse, ecriture, forme}` | `enonce` non vide ; forme reconnue ; **exactement une** valeur `null` ; nombres entiers ≥ 0 ; parties et tout, comparaison : la valeur cherchée calculée est positive ou nulle (`tout ≥` la partie connue, `grand ≥ petit`, `grand ≥ ecart`) ; parts : division **exacte** (`total` divisible par `nb` ou par `valeur`) ; `aide?`, `phrase?` (décision n°2) ; sinon `LeconMalFormee`. `FormeDeSchema` : `partiesEtTout` \| `comparaison` \| `parts`, la valeur `null` est la valeur cherchée. |
 
 La **réponse** et l'**écriture du calcul** sont calculées par le Catalogue au moment de la lecture (règles du tableau) : elles font partie de l'item publié et valident ses nombres. Apprentissage ne lit jamais les `null`.
 
 ### Apprentissage : règles
 
-- Une question par item. Réponse `Nombre(n)`. Correction : `n` égal à la réponse de l'item.
-- `ModeDeReponse.pour(niveau, reponse)` (#20, complété) : CP **et** réponse ≤ 20 → choix `r`, `r+1`, `max(0, r−1)`, `r+2` ; sinon clavier de cristaux (décision n°3).
+- Une question par item : `QuestionDeBoite.pour(item, tireur, niveau)`, `QuestionDeProblemeEnBarres.pour(probleme, tireur, niveau)`. Réponse `Nombre(n)`. Correction : `n` égal à la réponse de l'item.
+- `ModeDeReponse.pour(niveau, reponse?)` (#20, complété) : CP **et** réponse ≤ 20 (ou sans réponse donnée) → choix `r`, `r+1`, `max(0, r−1)`, `r+2` ; sinon clavier de cristaux (décision n°3).
 - Aide (#23) :
   - boîte : retrait « Pars de `<a>` et recule de `<b>`. » ; ajout « Mets `<plus grand>` dans ta tête, et avance de `<plus petit>`. » ;
   - barres : `aide` de l'item, sinon l'aide par défaut **de la forme** (décision n°1).
@@ -112,12 +122,12 @@ La **réponse** et l'**écriture du calcul** sont calculées par le Catalogue au
   - boîte : « On ouvre la boîte pour vérifier… `<r>` jeton(s) ! `<écriture>`. » ;
   - barres : « `<écriture>`. `<phrase réponse>` ».
 - Déroulé de la boîte : les faits « `a` jetons entrent », « `b` jetons entrent / sortent », « la boîte est fermée », « la boîte s'ouvre » ; les animations (et leur durée réduite avec `prefers-reduced-motion`) sont l'affaire du front.
-- `DescriptionDuSchema` : texte du schéma pour les lecteurs d'écran, par forme (décision n°7). La boîte est décrite par ses phrases, déjà lues.
+- `descriptionDuSchema(forme)` : texte du schéma pour les lecteurs d'écran, par forme (décision n°7) ; chaque segment finit par un point, « ? » pour la valeur cherchée : « Le tout : ?. Une partie : 4. L'autre partie : 2. » ; « `<nom 1>` : ?. `<nom 2>` : 5. L'écart : 3. » ; « Le total : 12. 3 parts. Chaque part : ?. ». Nombre de parts cherché : « Le total : 18. Nombre de parts : ?. Chaque part : 3. » (recommandation codée en attendant la réponse à la question #21.1). La boîte est décrite par ses phrases, déjà lues.
 - Clés de révision : `n:` (boîte, comme un calcul), `p:` (barres), comme le legacy (décision n°4 : au lot 4, la boîte sera rejouée en révision, à confirmer avec ce lot).
 
 ### Erreurs métier
 
-`ExerciceMalForme` (Catalogue : retrait impossible, aucune ou plusieurs valeurs cherchées, division non exacte, forme inconnue).
+`LeconMalFormee` (Catalogue, erreur existante de la lecture des leçons : retrait impossible, aucune ou plusieurs valeurs cherchées, valeur cherchée négative, division non exacte, forme inconnue). Pas d'erreur nouvelle.
 
 ## Invariants
 
@@ -147,7 +157,9 @@ supabase/functions/_shared/catalogue/domain/exercices/
   barres.ts                     # ProblemeEnBarres, FormeDeSchema, réponse, écriture
 supabase/functions/_shared/apprentissage/domain/
   mode-de-reponse.ts            # (#20) complété : seuil « CP et 20 au plus »
-  description-du-schema.ts
+  description-du-schema.ts      # descriptionDuSchema
+  question-de-boite.ts          # QuestionDeBoite
+  question-de-probleme-en-barres.ts  # QuestionDeProblemeEnBarres
   exercices/
     boite.ts  barres.ts          # déroulé, aides, explications
 src/seance/exercices/           # boîte et jetons, schéma en barres
@@ -167,4 +179,4 @@ Validation n°1 du lot 3 par le PO, le 2026-10-23 : « OK pour tout » (`docs/st
 
 ## Questions ouvertes
 
-Aucune.
+1. (#21.1, posée au responsable) **Description d'un schéma de parts dont le nombre de parts est cherché** : la décision n°7 ne donne pas ce cas. Le texte « Le total : 18. Nombre de parts : ?. Chaque part : 3. » convient-il ? **Décidée** par le PO le 2026-10-24 : oui (recommandation retenue), voir la décision 56 de `docs/stories/21/acceptance.md`.
