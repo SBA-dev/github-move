@@ -79,3 +79,30 @@ Deno.test("quand toutes les leçons du parcours sont réussies, aucune n'est la 
   assertEquals(parcours.prochaineLecon, undefined);
   assertEquals(parcours.lecons.some(({ etat }) => etat.genre === "prochaine"), false);
 });
+
+Deno.test("le parcours compte les leçons réussies sur les seules leçons du niveau de l'enfant, pas celles d'un autre niveau de la même matière", () => {
+  const meilleuresEtoiles = new Map([
+    ["fr-ce1-b", Etoiles.de(1)],
+    [francaisDuCP.id, Etoiles.de(3)],
+    [francaisDuCE2.id, Etoiles.de(2)],
+  ]);
+
+  const parcours = parcoursDeLaMatiere(
+    { lecons: [...quatreLecons, francaisDuCP, francaisDuCE2], niveau: Niveau.de("CE1"), meilleuresEtoiles },
+    quatreLecons[0].matiere,
+  );
+
+  assertEquals(
+    [parcours.nombreDeLeconsReussies, parcours.nombreDeLecons],
+    [1, 4],
+  );
+});
+
+Deno.test("chaque leçon du parcours porte son titre", () => {
+  const parcours = parcoursDeLaMatiere(
+    { lecons: [sons], niveau: Niveau.de("CE1"), meilleuresEtoiles: new Map() },
+    sons.matiere,
+  );
+
+  assertEquals(parcours.lecons.map(({ titre }) => titre), ["Titre de fr-ce1-sons"]);
+});
