@@ -44,7 +44,8 @@ function exerciceDeBulles(exercice: Exercice): ExerciceBulles {
 function exerciceGenerique(exercice: Exercice): ExerciceGenerique {
   if (
     exercice.type === "bulles" || exercice.type === "lecture" || exercice.type === "ecoute" ||
-    exercice.type === "classer" || exercice.type === "ordre" || exercice.type === "trous"
+    exercice.type === "classer" || exercice.type === "ordre" || exercice.type === "trous" ||
+    exercice.type === "dictee" || exercice.type === "conjugaison"
   ) {
     throw new Error(`« ${exercice.type} » n'est pas un exercice générique`);
   }
@@ -82,7 +83,7 @@ const unExerciceDeChaqueType: Record<string, Record<string, unknown>> = {
     type: "conjugaison",
     verbe: "chanter",
     temps: "présent",
-    formes: [{ pronom: "je", forme: "chante" }],
+    formes: [{ pronom: "je", forme: "chante" }, { pronom: "tu", forme: "chantes" }],
   },
   lecture: {
     type: "lecture",
@@ -240,14 +241,10 @@ Deno.test("un exercice « fluence » garde sa durée et n'a ni question ni item"
 
 Deno.test("le contenu d'un exercice des autres types est gardé tel quel", () => {
   const lecon = lireLecon(leconAvec(
-    unExerciceDeChaqueType.conjugaison,
-    unExerciceDeChaqueType.dictee,
     unExerciceDeChaqueType.memoriser,
   ));
 
-  assertEquals(exerciceGenerique(lecon.exercices[0]).formes?.length, 1);
-  assertEquals(exerciceGenerique(lecon.exercices[1]).mots?.length, 1);
-  assertEquals(exerciceGenerique(lecon.exercices[2]).vers, ["Un vers", "Deux vers"]);
+  assertEquals(exerciceGenerique(lecon.exercices[0]).vers, ["Un vers", "Deux vers"]);
 });
 
 Deno.test("les exercices d'une leçon lue sont en lecture seule", () => {
