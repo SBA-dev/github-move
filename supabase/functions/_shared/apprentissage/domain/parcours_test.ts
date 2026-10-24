@@ -2,7 +2,7 @@ import { assertEquals } from "@std/assert";
 import { lireLecon, Niveau } from "../../catalogue/domain/index.ts";
 import type { Lecon } from "../../catalogue/domain/index.ts";
 import { Etoiles } from "./etoiles.ts";
-import { parcoursDeLaMatiere } from "./parcours.ts";
+import { matieresDuParcours, parcoursDeLaMatiere } from "./parcours.ts";
 
 function lecon(id: string, matiere: string, niveau: string, ordre: number): Lecon {
   return lireLecon({
@@ -105,4 +105,28 @@ Deno.test("chaque leçon du parcours porte son titre", () => {
   );
 
   assertEquals(parcours.lecons.map(({ titre }) => titre), ["Titre de fr-ce1-sons"]);
+});
+
+Deno.test("les matières du parcours sont celles qui ont une leçon du niveau de l'enfant, dans l'ordre du Catalogue et sans doublon", () => {
+  const anglaisDuCE1 = lecon("an-ce1-couleurs", "anglais", "CE1", 1);
+  const sciencesDuCP = lecon("sc-cp-vivant", "sciences", "CP", 1);
+  const histoireDuCE2 = lecon("hi-ce2-temps", "histoire", "CE2", 1);
+
+  const matieres = matieresDuParcours({
+    lecons: [anglaisDuCE1, sciencesDuCP, mathsDuCE1, histoireDuCE2, syllabes, sons],
+    niveau: Niveau.de("CE1"),
+    meilleuresEtoiles: new Map(),
+  });
+
+  assertEquals(matieres.map(({ code }) => code), ["francais", "maths", "anglais"]);
+});
+
+Deno.test("sans aucune leçon du niveau de l'enfant, le parcours n'a aucune matière", () => {
+  const matieres = matieresDuParcours({
+    lecons: [francaisDuCP, francaisDuCE2],
+    niveau: Niveau.de("CE1"),
+    meilleuresEtoiles: new Map(),
+  });
+
+  assertEquals(matieres, []);
 });
