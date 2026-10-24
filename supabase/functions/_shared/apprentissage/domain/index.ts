@@ -51,3 +51,5 @@ export type { EtatDuResultat, FaitDeResultat } from "./resultat-de-la-lecon.ts";
 export { indicationDuGeste } from "./exercices/indication-du-geste.ts";
 export { revaliderLaSeance } from "./revalider-la-seance.ts";
 export type { ParoleDue } from "./parole-due.ts";
+export { RecordDeFluence } from "./record-de-fluence.ts";
+export type { EtatDuRecord, FaitDeRecord, IssueDuRecord } from "./record-de-fluence.ts";

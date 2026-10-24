@@ -34,3 +34,4 @@ export {
   inviterAJouerApresLesEtapes,
   parolesDeFinDeSeance,
 } from "./paroles-de-seance.ts";
+export { type FinDeFluence, parolesDeFinDeFluence } from "./paroles-de-fluence.ts";
