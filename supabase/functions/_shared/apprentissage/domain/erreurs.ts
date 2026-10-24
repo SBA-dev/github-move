@@ -221,3 +221,10 @@ export class TestDeDepartDejaFini extends Error {
     this.name = "TestDeDepartDejaFini";
   }
 }
+
+export class TestDeDepartNonFini extends Error {
+  constructor() {
+    super("Ce test de départ n'est pas fini.");
+    this.name = "TestDeDepartNonFini";
+  }
+}
