@@ -1,6 +1,9 @@
 import type { ChoixDeSeance, ReponseDonnee, SeanceTermineeAEnregistrer } from "@domain/apprentissage";
 
-type ReponseEnvoyee = { readonly choix: string } | { readonly jeNeSaisPas: true };
+type ReponseEnvoyee =
+  | { readonly choix: string }
+  | { readonly placement: { readonly etiquette: string; readonly groupe?: string } }
+  | { readonly jeNeSaisPas: true };
 
 /** Le corps JSON attendu par l'Edge Function `terminer-la-seance`. */
 export type CorpsDeLaSeance = {
@@ -14,7 +17,14 @@ export type CorpsDeLaSeance = {
 };
 
 function enReponseEnvoyee(reponse: ReponseDonnee): ReponseEnvoyee {
-  return reponse.genre === "choix" ? { choix: reponse.texte } : { jeNeSaisPas: true };
+  switch (reponse.genre) {
+    case "choix":
+      return { choix: reponse.texte };
+    case "placement":
+      return { placement: reponse.groupe === undefined ? { etiquette: reponse.etiquette } : { etiquette: reponse.etiquette, groupe: reponse.groupe } };
+    case "jeNeSaisPas":
+      return { jeNeSaisPas: true };
+  }
 }
 
 export function enCorps(envoi: SeanceTermineeAEnregistrer): CorpsDeLaSeance {
