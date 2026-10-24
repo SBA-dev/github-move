@@ -44,3 +44,4 @@ export {
   secondes,
   SIGNAL_DE_DEPART,
 } from "./paroles-de-fluence.ts";
+export { type SectionDeLEcran, sectionsAAfficher } from "./sections-de-l-ecran.ts";
