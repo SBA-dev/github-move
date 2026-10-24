@@ -1,7 +1,7 @@
 import { assertThrows } from "@std/assert";
 import { leconDeClasserLesSons, leconDOrdreDuMot, seanceCommencee } from "../test_utils/lecons-de-classer-et-ordre.ts";
 import { leconDeCalcul } from "../test_utils/lecons-de-test.ts";
-import { EtiquetteInconnue, GroupeInconnu, PasDeQuestionEnCours } from "./erreurs.ts";
+import { EtiquetteDejaPlacee, EtiquetteInconnue, GroupeInconnu, PasDeQuestionEnCours } from "./erreurs.ts";
 import { Reponse } from "./reponse.ts";
 
 Deno.test("poser une étiquette dans un groupe qui n'existe pas est refusé", () => {
@@ -20,7 +20,7 @@ Deno.test("une étiquette déjà bien placée ne peut plus être posée", () => 
   const seance = seanceCommencee(leconDeClasserLesSons());
   seance.repondre(Reponse.placement("loup", "g-ou"));
 
-  assertThrows(() => seance.repondre(Reponse.placement("loup", "g-ou")), EtiquetteInconnue);
+  assertThrows(() => seance.repondre(Reponse.placement("loup", "g-ou")), EtiquetteDejaPlacee);
 });
 
 Deno.test("une étiquette inconnue de l'ordre est refusée", () => {

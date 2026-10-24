@@ -6,7 +6,7 @@ import {
   leconDOrdreDuMot,
   seanceCommencee,
 } from "../test_utils/lecons-de-classer-et-ordre.ts";
-import { EtiquetteInconnue, JeNeSaisPasDejaDit } from "./erreurs.ts";
+import { EtiquetteDejaPlacee, EtiquetteInconnue, JeNeSaisPasDejaDit } from "./erreurs.ts";
 import { Reponse } from "./reponse.ts";
 import { revaliderLaSeance } from "./revalider-la-seance.ts";
 
@@ -101,11 +101,11 @@ Deno.test("« Je ne sais pas » sur une étiquette qui n'est pas au plateau est 
   assertThrows(() => seance.direJeNeSaisPas("tigre"), EtiquetteInconnue);
 });
 
-Deno.test("« Je ne sais pas » sur une étiquette de classer déjà placée est une étiquette inconnue", () => {
+Deno.test("« Je ne sais pas » sur une étiquette de classer déjà placée est une étiquette déjà placée", () => {
   const seance = seanceCommencee(leconDeClasserLesSons());
   seance.repondre(Reponse.placement("loup", "g-ou"));
 
-  assertThrows(() => seance.direJeNeSaisPas("loup"), EtiquetteInconnue);
+  assertThrows(() => seance.direJeNeSaisPas("loup"), EtiquetteDejaPlacee);
 });
 
 Deno.test("« Je ne sais pas » en ordre fait briller l'étiquette qui vient ensuite", () => {
