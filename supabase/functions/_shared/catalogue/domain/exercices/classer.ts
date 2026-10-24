@@ -1,4 +1,5 @@
 import { LeconMalFormee } from "../erreurs.ts";
+import { NOMBRE_MAXIMAL_D_ETIQUETTES } from "./nombre-maximal-d-etiquettes.ts";
 import { enObjet, liste, type Objet, texteFacultatif, texteRequis } from "../lecture.ts";
 
 const CONSIGNE_PAR_DEFAUT = "Range chaque étiquette dans la bonne maison.";
@@ -23,6 +24,9 @@ export function lireClasser(brut: Objet, communs: { titre?: string; consigne?: s
   if (identifiants.size !== groupes.length) throw new LeconMalFormee("deux groupes ont le même identifiant");
   const items = liste(brut.items, "les items").map(lireEtiquette);
   if (items.length === 0) throw new LeconMalFormee("l'exercice n'a aucune étiquette à classer");
+  if (items.length > NOMBRE_MAXIMAL_D_ETIQUETTES) {
+    throw new LeconMalFormee(`l'exercice a plus de ${NOMBRE_MAXIMAL_D_ETIQUETTES} étiquettes à classer`);
+  }
   for (const item of items) {
     if (!identifiants.has(item.groupe)) throw new LeconMalFormee(`le groupe « ${item.groupe} » n'existe pas`);
   }

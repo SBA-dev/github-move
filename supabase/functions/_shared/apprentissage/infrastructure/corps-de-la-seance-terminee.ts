@@ -1,3 +1,4 @@
+import { NOMBRE_MAXIMAL_D_ETIQUETTES } from "../../catalogue/domain/index.ts";
 import { ChoixDeSeance } from "../domain/choix-de-seance.ts";
 import { Reponse, type ReponseDonnee } from "../domain/reponse.ts";
 import type { SeanceTermineeAEnregistrer } from "../domain/seance-terminee-a-enregistrer.ts";
@@ -6,7 +7,6 @@ import { EntreeInvalide } from "./http-apprentissage.ts";
 
 const CHAMPS = ["seance", "enfant", "lecon", "choix", "tirages", "reponses", "termineeLe"];
 const QUESTIONS_AU_PLUS = 200;
-const CHOIX_AU_PLUS = 20;
 const REPONSES_AU_PLUS = 50;
 const CARACTERES_AU_PLUS = 200;
 const TOLERANCE_D_HORLOGE_EN_MS = 5 * 60 * 1000;
@@ -46,7 +46,7 @@ function lireLeChoix(corps: Objet): ChoixDeSeance {
 
 function lireLesTirages(corps: Objet): string[][] {
   return listeDe(corps.tirages, "tirages", QUESTIONS_AU_PLUS).map((tirage) =>
-    listeDe(tirage, "tirages", CHOIX_AU_PLUS).map((choix) => texteCourt(choix, "tirages"))
+    listeDe(tirage, "tirages", NOMBRE_MAXIMAL_D_ETIQUETTES).map((choix) => texteCourt(choix, "tirages"))
   );
 }
 

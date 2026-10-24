@@ -7,6 +7,7 @@ export type { CodeDeMatiere, Matiere } from "./matiere.ts";
 export type { Exercice, ExerciceGenerique } from "./exercice.ts";
 export type { ExerciceBulles } from "./exercices/bulles.ts";
 export type { EtiquetteAClasser, ExerciceClasser, Groupe } from "./exercices/classer.ts";
+export { NOMBRE_MAXIMAL_D_ETIQUETTES } from "./exercices/nombre-maximal-d-etiquettes.ts";
 export type { ExerciceOrdre } from "./exercices/ordre.ts";
 export type { ExerciceTrous, Segment } from "./exercices/texte-a-trous.ts";
 export type { ExerciceEcoute, ItemDEcoute } from "./exercices/ecoute.ts";
