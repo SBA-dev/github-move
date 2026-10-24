@@ -68,3 +68,53 @@ Deno.test("une opération mal formée rend la leçon mal formée", () => {
     assertThrows(() => lireLecon(leconAvec(exercice)), LeconMalFormee, undefined, JSON.stringify(operation));
   }
 });
+
+function unCalculGenere(generateur: unknown) {
+  return { type: "calcul", titre: "Calcul mental", generateur };
+}
+
+Deno.test("un générateur d'opérations incomplet est complété : intervalles de 1 à 10, cible 10, cinq opérations", () => {
+  const exercice = exerciceCalcul(unCalculGenere({ op: "-" }));
+
+  assertEquals(exercice.generateur, { op: "-", a: [1, 10], b: [1, 10], cible: 10, combien: 5 });
+});
+
+Deno.test("un générateur d'opérations accepte les signes +, -, ×, : et complement", () => {
+  for (const op of ["+", "-", "×", ":", "complement"]) {
+    assertEquals(exerciceCalcul(unCalculGenere({ op })).generateur?.op, op);
+  }
+});
+
+Deno.test("un générateur d'opérations au signe inconnu rend la leçon mal formée", () => {
+  for (const op of ["*", "plus", "", 3]) {
+    assertThrows(() => lireLecon(leconAvec(unCalculGenere({ op }))), LeconMalFormee, undefined, JSON.stringify(op));
+  }
+});
+
+Deno.test("un générateur d'opérations à l'intervalle inversé ou non entier rend la leçon mal formée", () => {
+  for (const a of [[10, 1], [1.5, 4], [1, 2.5]]) {
+    assertThrows(
+      () => lireLecon(leconAvec(unCalculGenere({ op: "+", a }))),
+      LeconMalFormee,
+      undefined,
+      JSON.stringify(a),
+    );
+  }
+});
+
+Deno.test("un générateur d'opérations au nombre d'opérations nul, négatif ou non entier rend la leçon mal formée", () => {
+  for (const combien of [0, -2, 2.5]) {
+    assertThrows(
+      () => lireLecon(leconAvec(unCalculGenere({ op: "+", combien }))),
+      LeconMalFormee,
+      undefined,
+      String(combien),
+    );
+  }
+});
+
+Deno.test("un complément dont le nombre de départ peut dépasser la cible rend la leçon mal formée", () => {
+  const generateur = { op: "complement", a: [1, 12], cible: 10 };
+
+  assertThrows(() => lireLecon(leconAvec(unCalculGenere(generateur))), LeconMalFormee);
+});
