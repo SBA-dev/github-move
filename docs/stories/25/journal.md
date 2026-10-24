@@ -13,3 +13,6 @@ Branche de base : `main`. Branche de travail : `feature/25-parcours-par-matiere-
 - 13:05 UTC : étape 2 faite (`po-acceptance`) : 8 règles, 32 scénarios dont 16 `@a-valider`, 16 questions ouvertes.
   Conflit relevé : la règle « Leçon suivante » du parcours rend faux deux scénarios de #24 (question 2).
   CADRAGE PRÊT publié sur #25 ; attente de l'annonce du responsable.
+- 13:07 UTC : annonce du responsable (#64) : OK du PO. #25.1 = b, **aucun verrou** (toutes les leçons ouvertes, la
+  prochaine leçon seulement mise en avant) ; #25.12 = a, les leçons de CE2 réussies restent visibles pour l'enfant
+  redescendu en CE1 (endroit non précisé) ; reco de l'équipe pour toutes les autres questions. Reprise du cadrage.
