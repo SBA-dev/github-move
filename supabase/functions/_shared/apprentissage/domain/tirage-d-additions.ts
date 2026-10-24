@@ -1,4 +1,4 @@
-import { type GenerateurDAdditions, LeconMalFormee } from "../../catalogue/domain/index.ts";
+import type { GenerateurDAdditions } from "../../catalogue/domain/index.ts";
 import { TirageHorsDuGenerateur } from "./erreurs.ts";
 import type { Hasard } from "./hasard.ts";
 import { tirerUnEntier } from "./tirage-d-un-entier.ts";
@@ -11,9 +11,6 @@ type Addition = readonly number[];
 export function tirerLesAdditions(generateur: GenerateurDAdditions, hasard: Hasard): readonly Addition[] {
   const nombresPossibles = lesNombresPossibles(generateur);
   const plusGrandeUnite = Math.max(...nombresPossibles.map(unites));
-  if (generateur.retenue && generateur.nombres * plusGrandeUnite < UNITES_POUR_UNE_RETENUE) {
-    throw new LeconMalFormee("le générateur d'additions ne permet aucune retenue");
-  }
   return Array.from(
     { length: generateur.combien },
     () => tirerUneAddition(generateur, nombresPossibles, plusGrandeUnite, hasard),
