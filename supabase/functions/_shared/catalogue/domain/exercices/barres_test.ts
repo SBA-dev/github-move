@@ -1,4 +1,5 @@
-import { assertEquals } from "@std/assert";
+import { assertEquals, assertThrows } from "@std/assert";
+import { LeconMalFormee } from "../erreurs.ts";
 import { lireLecon } from "../lire-lecon.ts";
 
 function leconAvec(exercice: unknown): Record<string, unknown> {
@@ -150,3 +151,55 @@ Deno.test("un problème en barres de forme parts, dont le nombre de parts est la
   assertEquals(probleme.reponse, 6);
   assertEquals(probleme.ecriture, "18 = 6 × 3");
 });
+
+const enonce = "Combien ?";
+const noms = ["Léa", "Tom"];
+
+const problemesImpossibles: ReadonlyArray<[string, unknown]> = [
+  ["parties et tout sans valeur cherchée", { enonce, parties: [4, 2], tout: 6 }],
+  ["parties et tout avec deux valeurs cherchées", { enonce, parties: [4, null], tout: null }],
+  ["comparaison sans valeur cherchée", { type: "comparaison", enonce, grand: 10, petit: 6, ecart: 4, noms }],
+  ["comparaison avec deux valeurs cherchées", {
+    type: "comparaison",
+    enonce,
+    grand: null,
+    petit: 6,
+    ecart: null,
+    noms,
+  }],
+  ["parts sans valeur cherchée", { type: "parts", enonce, nb: 3, valeur: 4, total: 12 }],
+  ["parts avec deux valeurs cherchées", { type: "parts", enonce, nb: null, valeur: null, total: 12 }],
+  ["un nombre négatif", { enonce, parties: [-2, 3], tout: null }],
+  ["un nombre qui n'est pas entier", { enonce, parties: [1.5, 3], tout: null }],
+  ["un nombre écrit en texte", { enonce, parties: ["4", 3], tout: null }],
+  ["des parties qui ne sont pas deux", { enonce, parties: [4], tout: null }],
+  ["des parties qui sont plus de deux", { enonce, parties: [4, 2, 1], tout: null }],
+  ["un tout plus petit que la partie connue", { enonce, parties: [6, null], tout: 4 }],
+  ["un grand plus petit que le petit", { type: "comparaison", enonce, grand: 5, petit: 9, ecart: null, noms }],
+  ["un grand plus petit que l'écart quand on cherche le petit", {
+    type: "comparaison",
+    enonce,
+    grand: 4,
+    petit: null,
+    ecart: 6,
+    noms,
+  }],
+  ["un partage dont la division n'est pas exacte", { type: "parts", enonce, nb: 3, valeur: null, total: 13 }],
+  ["un partage par un nombre de parts nul", { type: "parts", enonce, nb: 0, valeur: null, total: 12 }],
+  ["un partage par une valeur de part nulle", { type: "parts", enonce, nb: null, valeur: 0, total: 12 }],
+  ["une forme inconnue", { type: "triangle", enonce, parties: [4, 2], tout: null }],
+  ["une comparaison dont les noms ne sont pas deux", {
+    type: "comparaison",
+    enonce,
+    grand: 10,
+    petit: 6,
+    ecart: null,
+    noms: ["Léa"],
+  }],
+];
+
+for (const [impossible, item] of problemesImpossibles) {
+  Deno.test(`un exercice « barres » refuse ${impossible}`, () => {
+    assertThrows(() => problemeEnBarres(item), LeconMalFormee);
+  });
+}
