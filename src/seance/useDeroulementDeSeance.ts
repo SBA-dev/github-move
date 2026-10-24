@@ -1,5 +1,5 @@
 import { useCallback, useReducer, useRef } from "react";
-import { type FaitDeSeance, indicationDuGeste, type Seance, texteALireDeLEtape } from "@domain/apprentissage";
+import { consigneLueAuDebut, type FaitDeSeance, indicationDuGeste, type Seance, texteALireDeLEtape } from "@domain/apprentissage";
 import type { EtapeDeLecon, Lecon } from "@domain/catalogue";
 import {
   annoncerExerciceSuivant,
@@ -91,7 +91,7 @@ export function useDeroulementDeSeance(
   const lireLaConsigneDeLExercice = useCallback(async () => {
     const position = seance.exerciceEnCours()?.position;
     const exercice = position === undefined ? undefined : lecon.exercices[position];
-    if (!exercice?.consigne) return;
+    if (!exercice?.consigne || !consigneLueAuDebut(exercice.type)) return;
     if (!(await dire({ texte: exercice.consigne, nature: "consigne" }))) return;
     const indication = indicationDuGeste(exercice.type);
     if (indication) await dire({ texte: indication, nature: "consigne" });
