@@ -196,7 +196,7 @@ Given(/^Paul est rattaché à (\d+) profils enfants$/, async ({ famille }, nombr
 });
 
 // Le profil de Léa existe pour la famille de Paul ; la porte de test du profil préparé permet de la faire jouer
-// sur la page de démonstration (scénarios de #5 et #6).
+// sur l'accueil de l'enfant (scénarios de #5 et #6).
 Given(/^Léa a un profil enfant de niveau (\S+)$/, async ({ famille, page, monde }, niveau: string) => {
   await assurerLeProfil(famille, "Paul", { prenom: "Léa", niveau });
   const profil = { prenom: "Léa", niveau, univers: cleDe(DETAIL_PAR_DEFAUT) };

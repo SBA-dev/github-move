@@ -22,8 +22,8 @@ import {
   laisserPasserLeDelaiDeLecture,
   normaliser,
   reappliquerLAppareil,
-  retenirLesParolesDejaDites,
   SAMANTHA,
+  sansVoix,
   scenario,
   terminerLaLecture,
 } from "./voix.steps.ts";
@@ -173,6 +173,7 @@ export async function lancer(page: Page, lecon: LeconBrute, titreDeLExercice?: s
   await installerLeTirage(page);
   choix.exerciceUnique = titreDeLExercice === undefined ? undefined : positionDeLExercice(lecon, titreDeLExercice);
   if (scenario(page).bloque) {
+    if (choix.tirage || choix.ordre) throw new Error("Voix bloquée : la séance s'ouvre directement, le tirage prévu ne peut pas être forcé.");
     await ouvrirLaSeanceDirectement(page, lecon.titre, choix.exerciceUnique);
     return;
   }
@@ -317,17 +318,13 @@ export async function repondre(page: Page, reponse: string, question?: string) {
   const touchee = bulleDeChoix(page, reponse);
   await touchee.click();
   // Sans voix, la dernière bonne réponse de la séance ne se fait pas féliciter : l'écran de fin remplace aussitôt les choix.
-  await expect(touchee.and(page.locator("[aria-disabled='true']")).or(finDeSeance(page))).toBeVisible();
+  const reponseEnregistree = touchee.and(page.locator("[aria-disabled='true']"));
+  await expect(sansVoix(page) ? reponseEnregistree.or(finDeSeance(page)) : reponseEnregistree).toBeVisible();
   if (!silencieuse && !sansVoix(page)) await expect.poll(async () => (await journal(page)).speaks).toBeGreaterThan(avant);
 }
 
 function finDeSeance(page: Page) {
   return page.getByTestId("fin-de-seance");
-}
-
-function sansVoix(page: Page): boolean {
-  const { absent, muet } = scenario(page);
-  return absent || muet;
 }
 
 /** Après une bonne forme silencieuse, les choix de la personne précédente restent un instant à l'écran : on attend la personne suivante. */
@@ -613,12 +610,11 @@ Then(
 Then(/^la question « (.+) » s'affiche$/, async ({ page }, question: string) => {
   await allerALaQuestion(page, question, false);
   await expect(page.getByTestId("exercice-en-cours")).toBeVisible();
-  await retenirLesParolesDejaDites(page);
 });
 
 Then(/^la question « .+ » est réussie$/, async ({ page }) => {
   const reussies = recipient(page).and(page.locator(`[data-questions-reussies='${etatDesChoix(page).reussiesAvant + 1}']`));
-  await expect(reussies.or(finDeSeance(page))).toBeVisible();
+  await expect(sansVoix(page) ? reussies.or(finDeSeance(page)) : reussies).toBeVisible();
 });
 
 Then(/^la question « (.+) » reste posée$/, async ({ page }, question: string) => {

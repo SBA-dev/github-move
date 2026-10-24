@@ -231,7 +231,7 @@ export async function reappliquerLAppareil(page: Page) {
   );
 }
 
-// --- Ouverture de la page de démonstration
+// --- Ouverture des écrans de test
 
 const pagesPreparees = new WeakSet<Page>();
 // Un second appareil (téléphone) ouvert pendant le scénario : c'est lui que Léa écoute alors.
@@ -279,13 +279,12 @@ function leconDeLaConsigne(consigne: string) {
   }]);
 }
 
-// Les lectures déjà faites quand le scénario regarde ce que Léa entend : la page de la leçon a déjà dit « Coucou Léa ! ».
-const lecturesDejaFaites = new WeakMap<Page, number>();
 // Le nombre de lectures une fois la consigne lue.
 const lecturesApresLaConsigne = new WeakMap<Page, number>();
 
-export async function retenirLesParolesDejaDites(page: Page) {
-  lecturesDejaFaites.set(page, (await journal(page)).speaks);
+export function sansVoix(page: Page): boolean {
+  const { absent, muet } = scenario(page);
+  return absent || muet;
 }
 
 async function ouvrirLaPageDeLaLeconDeTest(page: Page, etat: Scenario, consigne: string) {
@@ -300,7 +299,6 @@ async function commencerLaSeanceDeTest(page: Page, etat: Scenario) {
   await commencerLaSeanceComplete(page);
   if (!etat.absent && !etat.muet) await expect.poll(async () => (await journal(page)).lots).toBeGreaterThan(avant);
   lecturesApresLaConsigne.set(page, (await journal(page)).lots);
-  await retenirLesParolesDejaDites(page);
 }
 
 /** La séance d'un exercice bulles dont la consigne est celle du scénario : Léa l'entend et la voit dans la bulle du personnage guide. */
@@ -549,7 +547,14 @@ Then(/^Léa n'entend jamais lire les soulignés$/, async ({ page }) => {
 
 Then(/^Léa n'entend rien$/, async ({ page }) => {
   await laisserPasserLeDelaiDeLecture(page);
-  expect((await journal(page)).speaks).toBe(lecturesDejaFaites.get(page) ?? 0);
+  if (sansVoix(page)) {
+    expect((await journal(page)).speaks).toBe(0);
+    return;
+  }
+  // Avec la voix, la page a déjà salué Léa dans une première lecture : rien d'autre n'est dit, et surtout pas les soulignés.
+  const lectures = await textesLus(page);
+  expect(lectures.length).toBeLessThanOrEqual(1);
+  expect(lectures.join(" ")).not.toContain("_");
 });
 
 Then(/^Léa n'entend plus Noisette$/, async ({ page }) => {

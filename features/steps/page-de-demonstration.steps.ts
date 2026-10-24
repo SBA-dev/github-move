@@ -8,7 +8,7 @@ async function ouvrirSavanturierALAdresse(page: Page, adresse: string) {
   await page.goto(adresse);
   // Une page de test chargée à la demande apparaîtrait après le premier affichage : on laisse l'application finir de se charger.
   await expect(page.getByRole("banner")).toBeVisible();
-  await page.waitForLoadState("networkidle");
+  await expect(page.getByRole("main")).toBeVisible();
 }
 
 async function verifierQueLaPageDeDemonstrationNEstPasAffichee(page: Page) {
