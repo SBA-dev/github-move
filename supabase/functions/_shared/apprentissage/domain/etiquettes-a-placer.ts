@@ -1,6 +1,6 @@
-import type { ExerciceClasser, ExerciceOrdre } from "../../catalogue/domain/index.ts";
+import type { ExerciceClasser, ExerciceOrdre, Groupe } from "../../catalogue/domain/index.ts";
 import { CleDeQuestion } from "./cle-de-question.ts";
-import { EtiquetteInconnue, GroupeInconnu } from "./erreurs.ts";
+import { EtiquetteInconnue, GroupeInconnu, PasDeQuestionEnCours } from "./erreurs.ts";
 import { QuestionAPlacer } from "./question-a-placer.ts";
 import type { Placement, ResultatDeReponse } from "./reponse.ts";
 
@@ -120,7 +120,7 @@ class EtiquettesDeClasser extends EtiquettesAPlacer {
     return reussies % 2 === 1;
   }
 
-  private groupeTouche(placement: Placement) {
+  private groupeTouche(placement: Placement): Groupe {
     const groupe = this.exercice.groupes.find((candidat) => candidat.id === placement.groupe);
     if (!groupe) throw new GroupeInconnu(placement.groupe);
     return groupe;
@@ -133,7 +133,9 @@ class EtiquettesDOrdre extends EtiquettesAPlacer {
   }
 
   protected questionVisee(): QuestionAPlacer {
-    return this.questions[this.nombreReussies] as QuestionAPlacer;
+    const question = this.questions.find((candidate) => !candidate.reussie);
+    if (!question) throw new PasDeQuestionEnCours();
+    return question;
   }
 
   protected estBienPlacee(question: QuestionAPlacer, placement: Placement): boolean {

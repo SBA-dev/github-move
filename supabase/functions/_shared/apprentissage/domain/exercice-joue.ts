@@ -2,8 +2,7 @@ import type { Exercice, Segment } from "../../catalogue/domain/index.ts";
 import { EtiquettesAPlacer } from "./etiquettes-a-placer.ts";
 import { PasDeQuestionEnCours } from "./erreurs.ts";
 import { nombreDeQuestions } from "./nombre-de-questions.ts";
-import type { QuestionJouee } from "./question-jouee.ts";
-import { questionsJoueesAvec } from "./question-jouee.ts";
+import { type QuestionJouee, questionsJoueesAvec } from "./question-jouee.ts";
 import type { QuestionSuivie } from "./question-suivie.ts";
 import type { Reponse, ResultatDeReponse } from "./reponse.ts";
 import type { Tireur } from "./tireur.ts";
@@ -30,21 +29,7 @@ export class ExerciceJoue {
   ) {}
 
   static depuis(position: number, exercice: Exercice, tireur: Tireur): ExerciceJoue {
-    const contenu = (): Contenu => {
-      switch (exercice.type) {
-        case "classer":
-          return {
-            etiquettes: EtiquettesAPlacer.pourClasser(exercice, tireur.plateau(exercice.items.map((i) => i.texte))),
-          };
-        case "ordre":
-          return { etiquettes: EtiquettesAPlacer.pourOrdonner(exercice, tireur.plateau(exercice.elements)) };
-        case "trous":
-          return { questionsAChoix: questionsJoueesAvec(exercice, tireur), segments: exercice.segments };
-        default:
-          return { questionsAChoix: questionsJoueesAvec(exercice, tireur) };
-      }
-    };
-    return new ExerciceJoue(position, exercice.titre, nombreDeQuestions(exercice), contenu());
+    return new ExerciceJoue(position, exercice.titre, nombreDeQuestions(exercice), contenuDe(exercice, tireur));
   }
 
   questionEnCours(): QuestionJouee | undefined {
@@ -117,5 +102,20 @@ export class ExerciceJoue {
 
   private questionsAChoix(): readonly QuestionJouee[] {
     return this.contenu.questionsAChoix ?? [];
+  }
+}
+
+function contenuDe(exercice: Exercice, tireur: Tireur): Contenu {
+  switch (exercice.type) {
+    case "classer": {
+      const plateau = tireur.plateau(exercice.items.map((item) => item.texte));
+      return { etiquettes: EtiquettesAPlacer.pourClasser(exercice, plateau) };
+    }
+    case "ordre":
+      return { etiquettes: EtiquettesAPlacer.pourOrdonner(exercice, tireur.plateau(exercice.elements)) };
+    case "trous":
+      return { questionsAChoix: questionsJoueesAvec(exercice, tireur), segments: exercice.segments };
+    default:
+      return { questionsAChoix: questionsJoueesAvec(exercice, tireur) };
   }
 }
