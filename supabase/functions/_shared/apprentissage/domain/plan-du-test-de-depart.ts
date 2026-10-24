@@ -53,7 +53,7 @@ function questionPrevueDeLaLecon(lecon: Lecon, hasard: Hasard): QuestionPrevue |
 function leconsAPasReguliers(reserve: readonly Lecon[]): Lecon[] {
   const pas = Math.max(1, reserve.length / NOMBRE_MAXIMAL_DE_LECONS);
   const nombre = Math.min(reserve.length, NOMBRE_MAXIMAL_DE_LECONS);
-  return Array.from({ length: nombre }, (_, i) => reserve.slice(Math.floor(i * pas))[0]).filter(
+  return Array.from({ length: nombre }, (_, i) => reserve[Math.floor(i * pas)]).filter(
     (lecon): lecon is Lecon => lecon !== undefined,
   );
 }

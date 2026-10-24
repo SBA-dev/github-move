@@ -1,7 +1,7 @@
 import type { Lecon, Niveau } from "../../catalogue/domain/index.ts";
 import { LeconIntrouvable, TestDeDepartDejaFini, TestDeDepartNonFini } from "./erreurs.ts";
 import type { GenerateurId } from "./generateur-id.ts";
-import type { PlanDuTestDeDepart } from "./plan-du-test-de-depart.ts";
+import type { PlanDuTestDeDepart, QuestionPrevue } from "./plan-du-test-de-depart.ts";
 import type { AideDonnee } from "./question-jouee.ts";
 import { questionDuTestDeDepart } from "./question-du-test-de-depart.ts";
 import type { QuestionPosee } from "./question-posee.ts";
@@ -23,6 +23,8 @@ export type TestDeDepartTermine = Readonly<{
   arrete: boolean;
 }>;
 
+type QuestionDuTestDeDepart = Readonly<{ prevue: QuestionPrevue; question: QuestionPosee }>;
+
 export class TestDeDepart {
   private rang = 0;
   private questionsFaussesDeSuite = 0;
@@ -31,8 +33,7 @@ export class TestDeDepart {
   private constructor(
     readonly id: TestDeDepartId,
     readonly enfant: string,
-    private readonly plan: PlanDuTestDeDepart,
-    private readonly questions: readonly QuestionPosee[],
+    private readonly questions: readonly QuestionDuTestDeDepart[],
     private readonly tirages: readonly (readonly (readonly string[])[])[],
   ) {}
 
@@ -47,21 +48,21 @@ export class TestDeDepart {
     },
   ): TestDeDepart {
     const tirages: string[][][] = [];
-    const questions = plan.map((prevue) => {
+    const questions = plan.map((prevue): QuestionDuTestDeDepart => {
       const tiragesDeLaQuestion: string[][] = [];
       tirages.push(tiragesDeLaQuestion);
       const lecon = lecons.find(({ id }) => id === prevue.leconId);
       if (lecon === undefined) throw new LeconIntrouvable(prevue.leconId);
       const question = questionDuTestDeDepart(lecon, prevue, tireurQuiNote(tireur, tiragesDeLaQuestion), niveau);
       if (question.tirage().length > 0) tiragesDeLaQuestion.push(question.tirage());
-      return question;
+      return { prevue, question };
     });
-    return new TestDeDepart(TestDeDepartId.de(generateurId.nouveau()), enfant, plan, questions, tirages);
+    return new TestDeDepart(TestDeDepartId.de(generateurId.nouveau()), enfant, questions, tirages);
   }
 
   questionEnCours(): QuestionPosee | undefined {
     if (this.estArrete()) return undefined;
-    return this.questions[this.rang];
+    return this.questions[this.rang]?.question;
   }
 
   repondre(reponse: ReponseParChoix | ReponseEnNombre): ResultatDeReponse {
@@ -91,9 +92,10 @@ export class TestDeDepart {
       test: this.id.valeur,
       enfant: this.enfant,
       termineeLe: maintenant,
-      questions: this.plan.slice(0, this.rang).flatMap(({ leconId }, rang) =>
-        this.questions.slice(rang, rang + 1).map((question) => ({ lecon: leconId, juste: question.erreurs === 0 }))
-      ),
+      questions: this.questions.slice(0, this.rang).map(({ prevue, question }) => ({
+        lecon: prevue.leconId,
+        juste: question.erreurs === 0,
+      })),
       arrete: this.estArrete(),
     };
   }
@@ -103,7 +105,7 @@ export class TestDeDepart {
     return {
       test: this.id.valeur,
       enfant: this.enfant,
-      questions: this.plan,
+      questions: this.questions.map(({ prevue }) => prevue),
       tirages: this.tirages,
       reponses: this.questionsPosees().map((question) => question.reponses()),
       termineeLe: this.termineeLe,
@@ -111,7 +113,7 @@ export class TestDeDepart {
   }
 
   private questionsPosees(): QuestionPosee[] {
-    return this.questions.slice(0, this.rang);
+    return this.questions.slice(0, this.rang).map(({ question }) => question);
   }
 
   private questionAPoser(): QuestionPosee {
