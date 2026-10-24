@@ -26,7 +26,10 @@ function sommeDesUnites(addition: readonly number[]): number {
 Deno.test("un générateur d'additions donne autant d'additions que demandé, de nombres compris entre min et max", () => {
   const hasard = hasardPseudoAleatoire(7);
 
-  const additions = tirerLesAdditions(generateur({ nombres: 3, min: 15, max: 59, retenue: false, combien: 20 }), hasard);
+  const additions = tirerLesAdditions(
+    generateur({ nombres: 3, min: 15, max: 59, retenue: false, combien: 20 }),
+    hasard,
+  );
 
   assertEquals(additions.length, 20);
   assert(additions.every((addition) => addition.length === 3));
@@ -66,7 +69,10 @@ Deno.test("un tirage d'additions avec un nombre hors de min et max est refusé",
 });
 
 Deno.test("un tirage d'additions avec un autre nombre de nombres est refusé", () => {
-  assertThrows(() => relireLesAdditions(generateur({}), ["27 + 48", "15 + 55 + 19", "36 + 39"]), TirageHorsDuGenerateur);
+  assertThrows(
+    () => relireLesAdditions(generateur({}), ["27 + 48", "15 + 55 + 19", "36 + 39"]),
+    TirageHorsDuGenerateur,
+  );
 });
 
 Deno.test("un tirage avec un autre nombre d'additions que combien est refusé", () => {
