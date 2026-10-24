@@ -121,3 +121,9 @@ Deno.test("un générateur dont la plus grande somme possible est 999 est accept
 
   assertEquals(exercice.generateur?.max, 333);
 });
+
+Deno.test("un générateur d'additions avec retenue qui ne permet aucune retenue rend la leçon mal formée", () => {
+  const generateur = { nombres: 2, min: 0, max: 4, retenue: true };
+
+  assertThrows(() => lireLecon(leconAvec(uneAdditionGeneree(generateur))), LeconMalFormee);
+});
