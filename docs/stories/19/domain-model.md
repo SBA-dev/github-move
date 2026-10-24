@@ -98,6 +98,8 @@ classDiagram
 | `ExerciceDictee` | Au moins un mot ; `mot` non vide, avec au moins une lettre à écrire ; `phrase?`. Le mot ne figure pas dans les étapes ni les exemples de la leçon (règle du format, vérifiée par le pipeline). |
 | `ExerciceConjugaison` | `verbe`, `temps` non vides ; au moins 2 formes, pronoms non vides ; `distracteurs?`. Chaque personne doit pouvoir proposer au moins 2 choix. |
 
+Correctif du contenu : la leçon `fr-ce2-passe-compose` donnait des formes en couples `["j'", "ai mangé"]` sous le pronom « je ». Le pipeline garde désormais les couples pronom/forme donnés (« j' » / « ai mangé ») et refuse au build une forme qui n'est pas un pronom et une forme en texte ; `app/bibliotheque.json` est regénéré. `lireLecon` refuse aussi ces formes (`ExerciceMalForme`).
+
 ### Apprentissage : la dictée
 
 - `MotAEcrire.de(mot)` : une case par caractère ; espace, `'`, `’`, `-`, `.` sont des **caractères déjà écrits**.
@@ -108,8 +110,9 @@ classDiagram
   - comparaison lettre à lettre, **sans tenir compte des majuscules** : les deux côtés en minuscules, et les touches montrent les lettres en minuscules (décision n°1 ; le legacy ne mettait en minuscules que le mot attendu) ;
   - juste → la question est réussie ;
   - faux → **une erreur** ; positions des lettres fausses ; lettres gardées = celles **avant la première fausse**.
-- Réponse : `MotEcrit(lettres)`, ou « Je ne sais pas » : la lettre juste suivante s'écrit dans sa case, le mot n'est jamais montré en entier (#23, décision n°4 ; absent du legacy).
-- Texte dit : « Écoute bien. `<mot>`. `<phrase>` Écris : `<mot>`. » (domaine), vitesse normale ou lente (front, Voix). Texte affiché : « Écoute bien et écris le mot que tu entends. » (sans le mot).
+- Réponse : `MotEcrit(lettres)`, ou « Je ne sais pas » : la lettre juste suivante s'écrit dans sa case, le mot n'est jamais montré en entier (#23, décision n°4 ; absent du legacy). S'il ne reste qu'**une** case à écrire, la lettre n'est pas écrite : la bonne touche du clavier brille et l'enfant la tape (décision n°8 ; la question ne se réussit qu'avec la réponse donnée par l'enfant, invariant n°2 de #23).
+- Texte dit : « Écoute bien. `<mot>`. `<phrase>` Écris : `<mot>`. » (domaine), vitesse normale ou lente (front, Voix). Texte affiché : « Écoute bien et écris le mot que tu entends. » (sans le mot) : c'est la **consigne par défaut** de la dictée (décision n°9).
+- Le clavier proposé est revalidé par le serveur avec le **profil de séance** de l'enfant (`ProfilDeSeance { clavierDesDictees, niveau }`), lu **après** le rattachement (l'enfant appartient bien au parent appelant), jamais pris dans ce qu'envoie le front. Sans profil lisible : `automatique` et `CP` par défaut.
 - Après une erreur : aide « Regarde les lettres en rouge et écoute encore. », puis le mot est redit. Clé de révision `d:`.
 - Son coupé ou navigateur sans voix : messages du legacy, choisis par le front selon l'état de Voix (`Muet`, `LectureImpossible`). La dictée est le seul type qui **demande** le son.
 
@@ -117,6 +120,7 @@ classDiagram
 
 - Une question par personne, dans l'ordre du tableau. Mécanique des choix (#17), réduction à deux, « Je ne sais pas » (#23).
 - `ChoixDeLaForme` : la forme attendue + 2 candidats tirés parmi (autres formes ∪ distracteurs), dédoublonnés, **différents de la forme attendue** (texte exact).
+- Consigne par défaut : « Conjuguons le verbe `<verbe>` au `<temps>`. Choisis la bonne forme pour chaque personne. » (texte dit par le legacy, décision n°9).
 - Aide : « Avec « `<pronom>` », quelle forme va ? ». Fin : « `<félicitation>` Tu sais conjuguer `<verbe>` ! ». Clé de révision `c:`.
 
 ### Erreurs métier
@@ -139,7 +143,7 @@ Aucun.
 
 ## Partage avec le front
 
-Tout tourne dans le navigateur (`@domain/apprentissage`) : cases, clavier proposé, correction, lettres gardées, choix des formes. Le front lit le réglage `ClavierDesDictees` (Famille) et le niveau, appelle `ClavierPropose.choisir`, puis affiche. Les durées (rouge pendant 1,3 s, pause de 700 ms) sont l'affaire du front. À 360 px, les touches du clavier complet gardent au moins 44 px (règle d'interface, pas du domaine).
+Tout tourne dans le navigateur (`@domain/apprentissage`) : cases, clavier proposé, correction, lettres gardées, choix des formes. Le front lit le réglage `ClavierDesDictees` (Famille) et le niveau, appelle `ClavierPropose.choisir`, puis affiche. Côté serveur, le cas d'usage relit le même choix à partir du **profil de séance** (`ProfilDeSeance`, port de lecture d'Apprentissage, adaptateur Supabase), lu après la vérification du rattachement. Les durées (rouge pendant 1,3 s, pause de 700 ms) sont l'affaire du front. À 360 px, les touches du clavier complet gardent au moins 44 px (règle d'interface, pas du domaine).
 
 ## Données d'enfants
 
@@ -170,6 +174,11 @@ Validation n°1 du lot 3 par le PO, le 2026-10-23 : « OK pour tout » (`docs/st
 5. (Q34) **Conjugaison : félicitation après chaque personne** ? **Décision** : non, comme aujourd'hui (seulement à la fin) ; l'humeur « applaudit » à chaque bonne forme (décision M4 de #6).
 6. (Q35) **« Clavier complet », « lettres du mot », « lettres intruses »** : termes d'interface ? **Décision** : « lettres du mot » et « clavier complet » sont les valeurs du réglage **Clavier des dictées** (déjà au glossaire) ; « lettre intruse » est un terme d'interface.
 7. (Q36) **Phrase d'exemple** : peut-elle contenir le mot dicté (elle n'est jamais affichée, seulement dite) ? **Décision** : oui, comme aujourd'hui (« Le chat dort sur le lit. »).
+
+Décisions du PO du 2026-10-24 :
+
+8. **Dictée : « Je ne sais pas » quand il ne reste qu'une case à écrire** : la lettre n'est **pas** écrite (la question ne se réussit qu'avec la réponse donnée par l'enfant, #23 invariant n°2) ; la bonne touche du clavier brille et l'enfant la tape. Ailleurs, la lettre juste suivante s'écrit dans sa case (décision n°3 / Q32, renvoi Q66).
+9. **Consignes par défaut** : dictée « Écoute bien et écris le mot que tu entends. » ; conjugaison « Conjuguons le verbe `<verbe>` au `<temps>`. Choisis la bonne forme pour chaque personne. » (reprise du texte dit par le legacy ; signalé au PO, sans objection).
 
 ## Questions ouvertes
 
