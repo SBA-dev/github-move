@@ -111,11 +111,23 @@ Deno.test("après la bonne réponse, le schéma garde sa forme et donne la répo
 
   seance.repondre(Reponse.choix("6"));
 
-  assertEquals(seance.schemaApresLaDerniereReponse(), {
+  const { forme, reponse, explication } = seance.schemaApresLaDerniereReponse()!;
+  assertEquals({ forme, reponse, explication }, {
     forme: { genre: "partiesEtTout", parties: [4, 2], tout: null },
     reponse: 6,
     explication: "4 + 2 = 6. J'ai 6 pommes.",
   });
+});
+
+Deno.test("après la bonne réponse, la description du schéma lit la valeur trouvée à la place du « ? »", () => {
+  const seance = commencer(leconDeBarresAuCP());
+
+  seance.repondre(Reponse.choix("6"));
+
+  assertEquals(
+    seance.schemaApresLaDerniereReponse()?.description,
+    "Le tout : 6. Une partie : 4. L'autre partie : 2.",
+  );
 });
 
 Deno.test("après une mauvaise réponse, aucun schéma n'est donné comme résolu", () => {
