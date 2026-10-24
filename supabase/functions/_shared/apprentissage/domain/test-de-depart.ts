@@ -89,10 +89,9 @@ export class TestDeDepart {
       test: this.id.valeur,
       enfant: this.enfant,
       termineeLe: maintenant,
-      questions: this.questionsPosees().map((question, rang) => ({
-        lecon: this.plan[rang].leconId,
-        juste: question.erreurs === 0,
-      })),
+      questions: this.plan.slice(0, this.rang).flatMap(({ leconId }, rang) =>
+        this.questions.slice(rang, rang + 1).map((question) => ({ lecon: leconId, juste: question.erreurs === 0 }))
+      ),
       arrete: this.estArrete(),
     };
   }

@@ -15,7 +15,7 @@ export function leconsReussiesAuTestDeDepart(
   const reussies = new Set<LeconId>();
   for (const matiere of new Set(reserve.map((lecon) => lecon.matiere.code))) {
     const deLaMatiere = reserve.filter((lecon) => lecon.matiere.code === matiere);
-    const rangDeLaDerniereJuste = deLaMatiere.findLastIndex((lecon) => justes.has(lecon.id));
+    const rangDeLaDerniereJuste = deLaMatiere.map((lecon) => justes.has(lecon.id)).lastIndexOf(true);
     deLaMatiere
       .slice(0, rangDeLaDerniereJuste + 1)
       .filter((lecon) => !fausses.has(lecon.id))
