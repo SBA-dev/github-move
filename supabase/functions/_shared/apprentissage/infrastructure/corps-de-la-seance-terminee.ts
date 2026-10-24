@@ -7,6 +7,7 @@ import { EntreeInvalide } from "./http-apprentissage.ts";
 
 const CHAMPS = ["seance", "enfant", "lecon", "choix", "tirages", "reponses", "termineeLe"];
 const QUESTIONS_AU_PLUS = 200;
+const TIRAGE_AU_PLUS = NOMBRE_MAXIMAL_D_ETIQUETTES;
 const REPONSES_AU_PLUS = 50;
 const CARACTERES_AU_PLUS = 200;
 const TOLERANCE_D_HORLOGE_EN_MS = 5 * 60 * 1000;
@@ -46,7 +47,7 @@ function lireLeChoix(corps: Objet): ChoixDeSeance {
 
 function lireLesTirages(corps: Objet): string[][] {
   return listeDe(corps.tirages, "tirages", QUESTIONS_AU_PLUS).map((tirage) =>
-    listeDe(tirage, "tirages", NOMBRE_MAXIMAL_D_ETIQUETTES).map((choix) => texteCourt(choix, "tirages"))
+    listeDe(tirage, "tirages", TIRAGE_AU_PLUS).map((choix) => texteCourt(choix, "tirages"))
   );
 }
 
