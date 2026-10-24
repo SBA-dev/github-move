@@ -3,12 +3,21 @@ import { aideApresUneErreurDeCalcul } from "./astuce-de-l-operation.ts";
 import { CleDeQuestion } from "./cle-de-question.ts";
 import { JeNeSaisPasDejaDit, QuestionDejaReussie, ReponseIncompatible } from "./erreurs.ts";
 import { choixAutourDuResultat } from "./mode-de-reponse.ts";
+import { carteDuCalcul, phraseDuCalcul } from "./exercices/phrases-du-calcul.ts";
 import { type AideDonnee, QuestionJouee } from "./question-jouee.ts";
 import type { QuestionPosee } from "./question-posee.ts";
 import type { ReponseDonnee, ReponseEnNombre, ReponseParChoix, ResultatDeReponse } from "./reponse.ts";
 import type { Tireur } from "./tireur.ts";
 
 type ReponseDeCalcul = ReponseEnNombre | ReponseParChoix;
+
+export type CalculEnCours = Readonly<{
+  carte: string;
+  phrase: string;
+  mode: { genre: "choix"; choix: readonly string[] } | { genre: "clavierDeCristaux" };
+  jeNeSaisPasPropose: boolean;
+  reponseATaper?: string;
+}>;
 
 type Identite = Readonly<{ type: "calcul" | "colonne"; cle: CleDeQuestion }>;
 
@@ -74,6 +83,18 @@ export class QuestionDeCalcul implements QuestionPosee {
 
   aideApresErreur(): string | undefined {
     return aideApresUneErreurDeCalcul(this.operation);
+  }
+
+  enCours(): CalculEnCours {
+    const base = {
+      carte: carteDuCalcul(this.operation),
+      phrase: phraseDuCalcul(this.operation),
+      jeNeSaisPasPropose: !this.reussie && !this.bonneReponseMontree,
+    };
+    if (this.auxChoix) return { ...base, mode: { genre: "choix", choix: this.auxChoix.choix.textes() } };
+    const mode = { genre: "clavierDeCristaux" } as const;
+    if (this.jeNeSaisPasDejaDit) return { ...base, mode, reponseATaper: String(this.operation.r) };
+    return { ...base, mode };
   }
 
   tirage(): string[] {

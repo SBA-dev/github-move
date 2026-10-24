@@ -41,6 +41,8 @@ export { Reponse } from "./reponse.ts";
 export type { Placement, ReponseDonnee, ReponseParChoix, ResultatDeReponse } from "./reponse.ts";
 export { PlanDeSeance } from "./plan-de-seance.ts";
 export { Seance } from "./seance.ts";
+export type { CalculEnCours } from "./question-de-calcul.ts";
+export type { FluenceEnCours } from "./exercice-chronometre.ts";
 export type { FaitDeSeance, QuestionRatee, ReussitesEtErreurs, SeanceTerminee } from "./seance.ts";
 export type { SeanceTermineeAEnregistrer } from "./seance-terminee-a-enregistrer.ts";
 export { Etoiles } from "./etoiles.ts";

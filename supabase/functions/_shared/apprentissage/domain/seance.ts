@@ -10,6 +10,8 @@ import {
   SeanceNonFinie,
   TirageEnTrop,
 } from "./erreurs.ts";
+import type { FluenceEnCours } from "./exercice-chronometre.ts";
+import type { CalculEnCours } from "./question-de-calcul.ts";
 import { Etoiles } from "./etoiles.ts";
 import type { CleDeQuestion } from "./cle-de-question.ts";
 import { ExerciceJoue } from "./exercice-joue.ts";
@@ -121,6 +123,14 @@ export class Seance {
   exerciceEnCours(): ExerciceJoue | undefined {
     if (this.etapeDeLeconEnCours()) return undefined;
     return this.exercices[this.indexDeLExercice];
+  }
+
+  calculEnCours(): CalculEnCours | undefined {
+    return this.exerciceEnCours()?.calculEnCours();
+  }
+
+  fluenceEnCours(maintenant: Date): FluenceEnCours | undefined {
+    return this.exerciceEnCours()?.fluenceEnCours(maintenant);
   }
 
   avancement(): Avancement {

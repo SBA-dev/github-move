@@ -1,11 +1,11 @@
 import type { Exercice, ExerciceCalcul, Niveau, Operation, Segment } from "../../catalogue/domain/index.ts";
 import { AdditionsJouees } from "./additions-jouees.ts";
 import { type EtiquettePosee, EtiquettesAPlacer } from "./etiquettes-a-placer.ts";
-import { ExerciceChronometre } from "./exercice-chronometre.ts";
+import { ExerciceChronometre, type FluenceEnCours } from "./exercice-chronometre.ts";
 import { FluenceNonCommencee, JeNeSaisPasEnFluence, PasDeQuestionEnCours, ReponseIncompatible } from "./erreurs.ts";
 import { nombreDeQuestions } from "./nombre-de-questions.ts";
 import { ModeDeReponse } from "./mode-de-reponse.ts";
-import { QuestionDeCalcul } from "./question-de-calcul.ts";
+import { type CalculEnCours, QuestionDeCalcul } from "./question-de-calcul.ts";
 import { QuestionJouee, questionsJoueesAvec } from "./question-jouee.ts";
 import type { QuestionPosee } from "./question-posee.ts";
 import type { ParoleDue } from "./parole-due.ts";
@@ -32,6 +32,7 @@ type Contenu = Readonly<{
 export class ExerciceJoue {
   private reussies = 0;
   private dernierResultatDuTrou: ResultatDeReponse | undefined;
+  private aideDeLErreurDeCalcul: string | undefined;
 
   constructor(
     readonly position: number,
@@ -50,6 +51,15 @@ export class ExerciceJoue {
   questionEnCours(): QuestionJouee | undefined {
     const question = this.questionPoseeEnCours();
     return question instanceof QuestionJouee ? question : undefined;
+  }
+
+  calculEnCours(): CalculEnCours | undefined {
+    const question = this.questionPoseeEnCours();
+    return question instanceof QuestionDeCalcul ? question.enCours() : undefined;
+  }
+
+  fluenceEnCours(maintenant: Date): FluenceEnCours | undefined {
+    return this.contenu.chronometre?.enCours(maintenant);
   }
 
   questionsJouees(): readonly QuestionSuivie[] {
@@ -101,7 +111,7 @@ export class ExerciceJoue {
   }
 
   aideApresLaDerniereErreur(): string | undefined {
-    return this.contenu.etiquettes?.aideApresLaDerniereErreur();
+    return this.contenu.etiquettes?.aideApresLaDerniereErreur() ?? this.aideDeLErreurDeCalcul;
   }
 
   paroleDueApresLaDerniereReponse(): ParoleDue | undefined {
@@ -136,6 +146,9 @@ export class ExerciceJoue {
     if (!question) throw new PasDeQuestionEnCours();
     const resultat = question.repondre(reponse);
     this.dernierResultatDuTrou = resultat;
+    this.aideDeLErreurDeCalcul = question instanceof QuestionDeCalcul && resultat === "fausse"
+      ? question.aideApresErreur()
+      : undefined;
     if (resultat === "juste") this.reussies++;
     return resultat;
   }

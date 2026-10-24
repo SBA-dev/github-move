@@ -3,8 +3,18 @@ import { CleDeQuestion } from "./cle-de-question.ts";
 import { FluenceFinie, FluenceNonCommencee, TirageManquant } from "./erreurs.ts";
 import type { QuestionSuivie } from "./question-suivie.ts";
 import type { ReponseDonnee } from "./reponse.ts";
+import { carteDuCalcul } from "./exercices/phrases-du-calcul.ts";
 import { enonceTire } from "./tirage-d-operations.ts";
 import type { Tireur } from "./tireur.ts";
+
+export type FluenceEnCours = Readonly<{
+  carte: string;
+  tempsRestant: number;
+  score: number;
+  demarree: boolean;
+  finie: boolean;
+  jeNeSaisPasPropose: false;
+}>;
 
 const MILLISECONDES_PAR_SECONDE = 1000;
 
@@ -68,6 +78,18 @@ export class ExerciceChronometre implements QuestionSuivie {
 
   tempsRestant(maintenant: Date): number {
     return this.exercice.duree - this.secondesEcoulees(maintenant);
+  }
+
+  enCours(maintenant: Date): FluenceEnCours {
+    const demarree = this.debut !== undefined;
+    return {
+      carte: carteDuCalcul(this.operation),
+      tempsRestant: demarree ? Math.max(0, Math.ceil(this.tempsRestant(maintenant))) : this.exercice.duree,
+      score: this.reussis,
+      demarree,
+      finie: this.tempsEcoule || (demarree && this.estFinie(maintenant)),
+      jeNeSaisPasPropose: false,
+    };
   }
 
   estFinie(maintenant: Date): boolean {
