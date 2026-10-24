@@ -77,3 +77,4 @@ Limites connues :
 ## Précision (revue n°1)
 
 - L'essai de réinitialisation est **réservé avant toute lecture du prénom** (compté puis enregistré avec contrôle de version) ; la reprise en cas d'essais simultanés (5 tentatives) est dans le cas d'usage, qui lève `ServiceDeConnexionIndisponible` ensuite (503 côté HTTP). Le navigateur ne traduit en `AdresseOuMotDePasseIncorrect` que le refus 400 `invalid_credentials` ; 429, 5xx et erreurs réseau deviennent `ServiceDeConnexionIndisponible`.
+- Une réinitialisation réussie remet le compteur à zéro, y compris les ratés comptés par des requêtes simultanées ; si l'enregistrement de cette remise à zéro échoue après le changement du mot de passe, le parent n'en voit pas l'erreur (son mot de passe est changé) et le compteur s'oublie de lui-même.
