@@ -64,3 +64,4 @@ Bloc C, paroles de l'écran :
 | Escalades | 0 |
 | Verrous pris | 0 |
 | Régression sur `main` après le merge | à relever |
+- 23:00 : À SAVOIR (#64, https://github.com/SBA-dev/github-move/issues/64#issuecomment-6390617082) : avec #27 (PR #80), la bibliothèque est chargée dès l'accueil de l'enfant et gardée pour la session ; une leçon de test injectée après l'accueil n'est plus vue. Nos steps injectent les leçons `e2e-65-` dans des Given (« Deux calculs rapides », « Multiplier vite ») par l'interception de `bibliotheque.json` de #16 : si #27 merge avant nous, relancer nos scénarios après intégration de `main`, et recharger l'application (`rechargerAvecLeProfilReel`, `features/steps/profil-reel.ts`) si ces deux scénarios cassent. Attente de l'autorisation de merge.
