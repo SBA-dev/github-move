@@ -153,3 +153,13 @@ Deno.test("rejouer des « Je ne sais pas » en classer, dans le désordre, et en
   assertEquals(revaliderLaSeance(leconDeClasserLesSons(), classer.aEnregistrer()), faitDeClasser);
   assertEquals(revaliderLaSeance(leconDOrdreDuMot(), ordre.aEnregistrer()), faitDOrdre);
 });
+
+Deno.test("« Je ne sais pas » sur une étiquette de classer déjà posée vise la première étiquette restante", () => {
+  const seance = seanceCommencee(leconDeClasserLesSons());
+  seance.repondre(Reponse.placement("loup", "g-ou"));
+  const premiereRestante = seance.exerciceEnCours()?.etiquettesAPlacer()[0];
+
+  const visee = seance.exerciceEnCours()?.etiquetteViseeParJeNeSaisPas("loup");
+
+  assertEquals(visee, premiereRestante);
+});
