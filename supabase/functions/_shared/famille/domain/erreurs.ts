@@ -1,4 +1,4 @@
-import type { NomDeRegle } from "./regles-du-mot-de-passe.ts";
+import type { NomDeRegle, RegleDuMotDePasse } from "./regles-du-mot-de-passe.ts";
 
 export class AdresseEmailInvalide extends Error {
   constructor() {
@@ -92,8 +92,11 @@ export class LangueDuParentInconnue extends Error {
 }
 
 export class MotDePasseNonConforme extends Error {
-  constructor(readonly reglesManquantes: NomDeRegle[], libellesManquants: string[]) {
-    super(`Il manque : ${libellesManquants.join(", ")}.`);
+  readonly reglesManquantes: NomDeRegle[];
+
+  constructor(reglesManquantes: readonly RegleDuMotDePasse[]) {
+    super(`Il manque : ${reglesManquantes.map((r) => r.libelle).join(", ")}.`);
+    this.reglesManquantes = reglesManquantes.map((r) => r.regle);
     this.name = "MotDePasseNonConforme";
   }
 }

@@ -9,10 +9,7 @@ export class MotDePasseDuParent {
   static de(saisie: string): MotDePasseDuParent {
     const reglesManquantes = ReglesDuMotDePasse.verifier(saisie).filter((r) => !r.respectee);
     if (reglesManquantes.length > 0) {
-      throw new MotDePasseNonConforme(
-        reglesManquantes.map((r) => r.regle),
-        reglesManquantes.map((r) => r.libelle),
-      );
+      throw new MotDePasseNonConforme(reglesManquantes);
     }
     if ([...saisie].length > MotDePasseDuParent.LONGUEUR_MAXIMALE) {
       throw new MotDePasseTropLong(MotDePasseDuParent.LONGUEUR_MAXIMALE);
