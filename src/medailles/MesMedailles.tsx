@@ -5,7 +5,7 @@ import {
   parolesALOuverture,
   parolesDeLaSectionDesRecords,
   phraseLueDeLaPastille,
-  sectionsAAfficher,
+  sectionsDeLEcran,
   type Univers,
   NOM_DE_L_ECRAN_DES_MEDAILLES,
   TITRE_DES_RECORDS_DE_CALCUL_RAPIDE,
@@ -42,7 +42,7 @@ export function MesMedailles({ profil, univers, voix }: Props) {
   const ecouterLesRecords = async () => {
     for (const texte of parolesDeLaSectionDesRecords(pastilles ?? [])) await lire(texte);
   };
-  const sections = sectionsAAfficher(pastilles && pastilles.length > 0 ? ["recordsDeFluence"] : []);
+  const sections = sectionsDeLEcran(pastilles ?? []);
 
   return (
     <section className="mes-medailles" aria-labelledby="titre-de-mes-medailles">

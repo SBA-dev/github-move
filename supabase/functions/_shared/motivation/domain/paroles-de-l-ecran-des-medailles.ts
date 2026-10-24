@@ -1,6 +1,6 @@
 import { calculs } from "./paroles-de-fluence.ts";
 import type { PastilleDeRecord } from "./records-de-calcul-rapide.ts";
-import { type SectionDeLEcran, sectionsAAfficher } from "./sections-de-l-ecran.ts";
+import { type SectionDeLEcran, sectionsDeLEcran } from "./sections-de-l-ecran.ts";
 
 export const NOM_DE_L_ECRAN_DES_MEDAILLES = "Mes médailles";
 export const TITRE_DES_RECORDS_DE_CALCUL_RAPIDE = "Mes records de calcul rapide";
@@ -22,7 +22,7 @@ export function parolesDeLaSectionDesRecords(pastilles: readonly PastilleDeRecor
 export function parolesALOuverture(
   { toutLire, pastilles }: { toutLire: boolean; pastilles: readonly PastilleDeRecord[] },
 ): string[] {
-  const sections = sectionsAAfficher(pastilles.length > 0 ? ["recordsDeFluence"] : []);
+  const sections = sectionsDeLEcran(pastilles);
   const guide = parolesDuGuideALOuverture(sections);
   if (!toutLire) return [guide];
   const recordsLus = sections.includes("recordsDeFluence") ? parolesDeLaSectionDesRecords(pastilles) : [];
