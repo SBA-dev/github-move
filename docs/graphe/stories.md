@@ -1,7 +1,7 @@
 # Graphe des stories
 
-Mise à jour : 2026-10-24, par le chef d'orchestre seulement (décision 0017).
-Une story ne commence son code que quand **toutes** ses dépendances sont mergées dans `main`. L'état courant (en cours, en revue…) est dans les labels `graphe:*` des issues, pas ici.
+Mise à jour : 2026-10-24, par le responsable des équipes seulement (décision 0017).
+Une story ne commence son code que quand **toutes** ses dépendances sont mergées dans `main`. L'état courant (en cours, en revue…) est dans les labels `graphe:*` des issues et dans l'issue « Coordination des équipes », pas ici.
 
 Les dépendances viennent des issues (relevé du 2026-10-24). Une dépendance suivie de `?` est une **hypothèse** : le PO la confirme ou l'écarte avant le lancement de la story. Tant qu'elle n'est pas tranchée, elle bloque.
 
