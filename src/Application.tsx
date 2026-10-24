@@ -1,6 +1,7 @@
 import { type CSSProperties, Suspense, useCallback, useEffect, useState } from "react";
 import { MotionConfig } from "motion/react";
 import type { EtatDeLEspaceParent } from "@domain/famille";
+import type { CodeDeMatiere } from "@domain/catalogue";
 import { universDe } from "@domain/motivation";
 import { PAGE_DEMONSTRATION_DISPONIBLE, PageDemonstration } from "./demonstration/disponibilite.ts";
 import { EcranDeConnexion, useConnexion } from "./connexion/index.ts";
@@ -16,6 +17,7 @@ import {
   useProfilEnCours,
   useProfilsDuParent,
 } from "./famille/index.ts";
+import { MonParcours } from "./parcours/index.ts";
 import { AideEcranDAccueil } from "./installation/index.ts";
 import { type Lieu, useNavigation } from "./navigation.ts";
 import { EcranDeSeance, PageDeLaLecon, useRenvoiDesSeancesGardees } from "./seance/index.ts";
@@ -27,11 +29,12 @@ type Habillage = CSSProperties & { readonly "--accent": string; readonly "--acce
 const ACCUEIL: Lieu = { ecran: "accueil" };
 
 function estPageDeLEnfant(lieu: Lieu): boolean {
-  return lieu.ecran === "demonstration" || lieu.ecran === "jeu" || lieu.ecran === "lecon" || lieu.ecran === "seance";
+  return lieu.ecran === "demonstration" || lieu.ecran === "jeu" || lieu.ecran === "parcours" || lieu.ecran === "lecon" ||
+    lieu.ecran === "seance";
 }
 
 function demandeUnProfilEnCours(lieu: Lieu): boolean {
-  return lieu.ecran === "jeu" || lieu.ecran === "lecon" || lieu.ecran === "seance";
+  return lieu.ecran === "jeu" || lieu.ecran === "parcours" || lieu.ecran === "lecon" || lieu.ecran === "seance";
 }
 
 // La page de démonstration du lot 1 n'est publiée qu'en développement (ou avec VITE_PAGE_DEMONSTRATION=1).
@@ -76,6 +79,7 @@ export function Application() {
   useEffect(() => {
     if (lieu !== lieuDemande) remplacer(lieu);
   }, [lieu, lieuDemande, remplacer]);
+  const [matiereDuParcours, setMatiereDuParcours] = useState<CodeDeMatiere | undefined>();
   const [deconnexionEchouee, setDeconnexionEchouee] = useState(false);
   const seDeconnecter = async () => {
     setDeconnexionEchouee(false);
@@ -140,10 +144,19 @@ export function Application() {
                 univers={univers}
                 voix={voix}
                 saluer={!viaRetour}
+                onMonParcours={() => aller("parcours")}
                 onChangerDEnfant={() => {
                   aller("accueil");
                   oublierLeProfilEnCours();
                 }}
+              />
+            )}
+            {lieu.ecran === "parcours" && profilCharge && profilEnCours && (
+              <MonParcours
+                profil={profilEnCours}
+                matiereChoisie={matiereDuParcours}
+                onChoisirLaMatiere={setMatiereDuParcours}
+                onOuvrirLaLecon={(leconId) => aller({ ecran: "lecon", leconId })}
               />
             )}
             {surLaDemonstration && PageDemonstration && profilCharge && (
@@ -171,6 +184,7 @@ export function Application() {
                 exercice={lieu.exercice}
                 profilId={profilEnCours.id}
                 prenom={profilEnCours.prenom}
+                niveau={profilEnCours.niveau}
                 univers={univers}
                 voix={voix}
                 toutLireAVoixHaute={profilEnCours.reglages.toutLireAVoixHaute}
