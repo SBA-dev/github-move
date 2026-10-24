@@ -24,7 +24,7 @@ export class QuestionDeDictee implements QuestionSuivie {
   private correction: CorrectionDuMot | undefined;
   private readonly reponsesDonnees: ReponseDonnee[] = [];
 
-  constructor(private readonly motDicte: MotDicte, private readonly clavier: ClavierPropose) {
+  constructor(private readonly motDicte: MotDicte, private readonly clavierPropose: ClavierPropose) {
     this.mot = MotAEcrire.de(motDicte.mot);
     this.cle = CleDeQuestion.de("dictee", motDicte.mot);
   }
@@ -65,7 +65,7 @@ export class QuestionDeDictee implements QuestionSuivie {
   taper(lettre: string): ResultatDeReponse | undefined {
     if (this.estReussie) throw new QuestionDejaReussie();
     const minuscule = lettre.toLowerCase();
-    if (this.clavier.genre === "lettresDuMot" && !this.touchesDisponibles().includes(minuscule)) {
+    if (this.clavierPropose.genre === "lettresDuMot" && !this.touchesDisponibles().includes(minuscule)) {
       throw new ToucheDejaUtilisee(minuscule);
     }
     this.lettreMontree = undefined;
@@ -97,8 +97,19 @@ export class QuestionDeDictee implements QuestionSuivie {
     return { aide: undefined, bonneReponse: prochaine, maniere: "ecrire" };
   }
 
+  clavier(): ClavierPropose {
+    return this.clavierPropose;
+  }
+
+  touchesDisponibles(): string[] {
+    const disponibles = this.clavierPropose.touches;
+    if (this.clavierPropose.genre === "clavierComplet") return disponibles;
+    for (const lettre of this.lettres) disponibles.splice(disponibles.indexOf(lettre), 1);
+    return disponibles;
+  }
+
   tirage(): string[] {
-    return this.clavier.tirage();
+    return this.clavierPropose.tirage();
   }
 
   reponses(): ReponseDonnee[] {
@@ -125,12 +136,6 @@ export class QuestionDeDictee implements QuestionSuivie {
 
   private estLaDerniereCase(rang: number): boolean {
     return rang + 1 === this.mot.lettresAEcrire().length;
-  }
-
-  private touchesDisponibles(): string[] {
-    const disponibles = this.clavier.touches;
-    for (const lettre of this.lettres) disponibles.splice(disponibles.indexOf(lettre), 1);
-    return disponibles;
   }
 
   private corriger(lettres: readonly string[]): ResultatDeReponse {
