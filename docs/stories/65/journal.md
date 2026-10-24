@@ -45,3 +45,22 @@ Bloc C, paroles de l'écran :
 - 21:38 : MAIN A BOUGÉ (#21 mergée, `c7cabc0`) : intégrée par merge (5ad0e61), sans conflit ; 1349 tests, lint, fmt, `tsc`, build verts.
 - 21:40 : APPRIS publié sur #65 pour #58 (usage du profil préparé et du profil de démonstration par nos E2E).
 - 21:45 : revue d'ensemble, cycle 1 (`mr-reviewer`) : **À CORRIGER**, 1 bloquant : les suites de lectures de `MesMedailles.tsx` (ouverture avec « tout lire », « Écouter ») ne s'interrompaient pas (lecture continuée sur l'accueil après « Retour », boucles concurrentes). Corrigé : chaque texte passe par `dire`, la suite s'arrête dès qu'un `dire` rend `false` (fb018f4). Non bloquants traités : `sectionsDeLEcran` dans le domaine en TDD (9d7eb5b RED, 098f51b, 3dbcc9a), garde `reseauDisponible()` (aed867c), texte réservé aux lecteurs d'écran dans la pastille (fb018f4). Pas de test unitaire React dans le projet : un scénario E2E est ajouté (règle 4, « Revenir à l'accueil pendant la lecture coupe la voix »), sans nouvelle question au PO. Revue cycle 2 lancée.
+- 22:00 : E2E de mise au point (`e2e-tester`, téléphone, #65 + #25 + #6 + #20) : 158 passés, 3 KO, tous dans le plan « … accueille l'enfant sur l'écran ». Cause : le scénario ne posait aucun record, donc l'écran disait la phrase « rien à montrer » (65.7, 65.17) au lieu de « Regarde tout ce que tu as gagné ! ». Incohérence de notre scénario, pas un bug ni une question au PO : record ajouté au plan (659dd33, `po-acceptance`), 3/3 verts. Steps : f63e555 (`@wip` retiré).
+- 22:05 : PR #78 ouverte en brouillon, commentaire REVUE sur #65.
+- 22:10 : review finale (`mr-reviewer`, `09c6f08`, steps `f63e555`, `659dd33`) : **APPROUVÉ**, publiée sur la PR. Non bloquant : `WeakSet` inutilisé dans les steps, retiré après la non-régression.
+- 22:35 : non-régression complète (tablette et téléphone, socle, #5, #6, #7, #8, #10, #11, #12, #15 à #25, #65 ; #13 et #14 sans steps ; `SUFFIXE_E2E=v65`) sur `659dd33` (`main` `c7cabc0` intégrée) : **1136/1136** en 42,5 min, sans relance.
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Durée, du lancement au `PRÊTE À MERGER` | ≈ 2 h (20:45 → 22:40 UTC) ; merge à venir |
+| Temps passé à attendre | PO : ≈ 10 min (CADRAGE PRÊT 21:08 → réponses 20:55-20:56 UTC côté responsable, déjà reçues à la relecture) ; verrou : 0 ; `main` : 0 (intégration de #21 sans attente) ; une coupure de session (limite d'utilisation de l'API, ≈ 10 min, 21:10 → 21:19) |
+| Tokens et coût de la session | relevés par le responsable |
+| Cycles de review À CORRIGER | 1 (revue d'ensemble, cycle 1 : lectures en suite non interruptibles) ; revues intermédiaires A-B et C : APPROUVÉ au premier passage |
+| Cycles E2E KO | 1 (3 cas d'un même plan, scénario incohérent, corrigé) ; non-régression : 0 KO |
+| Intégrations de `main` | 1 (#21, `c7cabc0`), sans conflit |
+| Cycles TDD | 10 comportements (sections, records ×4, paroles ×2, clé d'une fluence, `sectionsDeLEcran`, départage par identifiant ajouté après coup) |
+| Escalades | 0 |
+| Verrous pris | 0 |
+| Régression sur `main` après le merge | à relever |
