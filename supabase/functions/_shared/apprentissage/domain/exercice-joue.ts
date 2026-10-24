@@ -12,7 +12,6 @@ import { ExerciceChronometre, type FluenceEnCours } from "./exercice-chronometre
 import { FluenceNonCommencee, JeNeSaisPasEnFluence, PasDeQuestionEnCours, ReponseIncompatible } from "./erreurs.ts";
 import { type EntrainementDeMemorisation, MemorisationJouee } from "./memorisation-jouee.ts";
 import { nombreDeQuestions } from "./nombre-de-questions.ts";
-import { ModeDeReponse } from "./mode-de-reponse.ts";
 import { MotAEcrire } from "./mot-a-ecrire.ts";
 import type { CorrectionDuMot } from "./mot-a-ecrire.ts";
 import { type CalculEnCours, QuestionDeCalcul } from "./question-de-calcul.ts";
@@ -351,8 +350,5 @@ function contenuDeCalcul(exercice: ExerciceCalcul, tireur: Tireur, niveau: Nivea
 }
 
 function questionsDeCalcul(operations: readonly Operation[], tireur: Tireur, niveau: Niveau): QuestionDeCalcul[] {
-  const auxChoix = ModeDeReponse.pour(niveau).genre === "choix";
-  return operations.map((operation) =>
-    auxChoix ? QuestionDeCalcul.avecLesChoix(operation, tireur) : QuestionDeCalcul.auClavier(operation)
-  );
+  return operations.map((operation) => QuestionDeCalcul.pour(operation, tireur, niveau));
 }
