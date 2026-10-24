@@ -11,7 +11,13 @@ import {
   seanceDeDictee,
 } from "../../test_utils/lecons-de-dictee.ts";
 import { CleDeQuestion } from "../cle-de-question.ts";
-import { JeNeSaisPasDejaDit, MotIncomplet, PasDeLettreAEffacer, ToucheDejaUtilisee } from "../erreurs.ts";
+import {
+  JeNeSaisPasDejaDit,
+  MotIncomplet,
+  PasDeLettreAEffacer,
+  ToucheAbsenteDuClavier,
+  ToucheDejaUtilisee,
+} from "../erreurs.ts";
 import { Reponse } from "../reponse.ts";
 
 const CLAVIER_COMPLET_CP = profilDeDictee("clavierComplet", "CP");
@@ -55,6 +61,12 @@ Deno.test("avec les lettres du mot, une touche déjà utilisée ne sert pas une 
   seance.taper("c");
 
   assertThrows(() => seance.taper("c"), ToucheDejaUtilisee);
+});
+
+Deno.test("avec les lettres du mot, une touche qui n'a jamais été proposée est absente du clavier", () => {
+  const seance = seanceDeDictee(leconDeDicteeDuChat());
+
+  assertThrows(() => seance.taper("z"), ToucheAbsenteDuClavier);
 });
 
 Deno.test("avec les lettres du mot, « Effacer » retire la dernière lettre et rend sa touche", () => {
