@@ -1,4 +1,4 @@
-# 0017 : La dictée est revalidée sans relire le profil de l'enfant
+# 0018 : La dictée est revalidée sans relire le profil de l'enfant
 
 **Statut** : Acceptée · 2026-10-24 (décision du PO, #19 n°10). Complète 0016 sans la modifier.
 

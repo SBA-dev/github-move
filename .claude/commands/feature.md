@@ -8,6 +8,8 @@ Tiens une todo list à jour pour que l'humain suive l'avancement.
 
 Lancer `/feature` vaut demande explicite de créer la branche, de pousser et d'ouvrir la PR de la story (voir `CLAUDE.md`).
 
+Ce fichier livre **une** story seule. Pour livrer plusieurs stories en parallèle, c'est `/graphe` (`.claude/commands/graphe.md`) ; chaque équipe suit alors ce fichier avec les différences de `.claude/commands/equipe.md`.
+
 **Story à livrer : issue #$ARGUMENTS**
 
 ---
@@ -99,7 +101,7 @@ EOF
 
 ## ⛔ VALIDATION HUMAINE n°2 : merge
 
-**Tu ne merges jamais.** Termine par une synthèse :
+**Tu ne merges jamais** (en équipe lancée par `/graphe`, voir `equipe.md` : l'équipe merge elle-même après l'autorisation humaine). Termine par une synthèse :
 - lien de la PR
 - scénarios couverts
 - verdict de la review

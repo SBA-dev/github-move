@@ -1,6 +1,6 @@
 # Feuille de route
 
-Mise à jour : 2026-10-23. On la met à jour à la fin de chaque session de travail.
+Mise à jour : 2026-10-24. On la met à jour à la fin de chaque session de travail.
 
 ## Où en est le projet
 
@@ -36,7 +36,9 @@ L'application fonctionne et est publiée comme artifact claude.ai. Elle comprend
 
 ## Prochaines étapes
 
-> **En cours** : #16, #17, #11, #12, #23, #24, #18 livrées (PR #53 à #57, #59, #60). #19 (dictée, conjugaison ; décision 0017) livrée sur `claude/nice-mendel-cp9syg`, en PR. #14 reportée par le PO ; #58 (retrait de la page de démonstration, avec le scénario PWA #8 qui l'ouvre encore) à faire. À surveiller : scénario « 7 × 8 » de #10, flaky sous charge. Suite proposée : #20 à #22, puis le lot 4 (parcours).
+> **En cours** : #16, #17, #11, #12, #23, #24, #18 livrées (PR #53 à #57, #59, #60). #19 (dictée, conjugaison ; décision 0018) livrée sur `claude/nice-mendel-cp9syg`, en PR. #14 reportée par le PO ; #58 (retrait de la page de démonstration, avec le scénario PWA #8 qui l'ouvre encore) à faire. À surveiller : scénario « 7 × 8 » de #10, flaky sous charge. Suite : la vague 1 du graphe (`docs/graphe/stories.md`).
+
+> **Nouvelle organisation (décision 0017)** : les stories se livrent maintenant en parallèle, une équipe par story, avec `/graphe`. Graphe des dépendances, chemin critique de la beta et vague 1 proposée (#20, #25) dans `docs/graphe/stories.md` ; 2 équipes par défaut, 3 au maximum (`docs/graphe/nombre-d-equipes.md`). Le PO a tranché les dépendances incertaines le 2026-10-24 : #39 et #38 entrent dans la beta, #65 (écran « Mes trophées ») est créée, le chemin critique passe à 7 stories.
 
 > **Chantier en cours : la réécriture complète en React + Supabase.** Plan, lots et décisions de démarrage dans `docs/reecriture.md`.
 
