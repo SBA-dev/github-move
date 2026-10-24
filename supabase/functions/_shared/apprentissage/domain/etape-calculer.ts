@@ -102,6 +102,7 @@ export class EtapeCalculer {
     const question = this.questionEnCours;
     const somme = this.sommeDeLaColonne(this.colonneEnCours);
     const resultat = question.repondre(reponse);
+    this.parole = undefined;
     if (resultat === "juste") this.validerLaColonne(somme);
     else this.derniereAide = this.aideApresUneFausseReponse(reponse, somme);
     return resultat;
@@ -126,10 +127,7 @@ export class EtapeCalculer {
     const chiffre = somme % 10;
     this.resultat = `${chiffre}${this.resultat}`;
     this.chiffresEcrits[colonne.rang] = String(chiffre);
-    if (retenue === 0) {
-      this.parole = undefined;
-      return;
-    }
+    if (retenue === 0) return;
     this.retenuesPosees[suivante.rang] = retenue;
     this.parole = `${somme}, c'est ${quantite(retenue, suivante.rang)} et ${quantite(chiffre, colonne.rang)} ! ` +
       `J'écris ${chiffre}, et ${retenue} monte en retenue.`;
