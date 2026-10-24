@@ -31,6 +31,18 @@ function uneLecon(rang: number, niveau = "CE1", matiere = "francais"): Lecon {
   });
 }
 
+function leconDeCalculFixe(rang: number): Lecon {
+  return lireLecon({
+    id: `francais-CE1-${rang + 1}`,
+    matiere: "francais",
+    niveau: "CE1",
+    titre: `Leçon ${rang + 1}`,
+    ordre: rang + 1,
+    programme: { section: "section", citation: "citation" },
+    exercices: [{ type: "calcul", generateur: { op: "+", a: [5, 5], b: [3, 3], combien: 1 } }],
+  });
+}
+
 function desLecons(nombre: number): Lecon[] {
   return Array.from({ length: nombre }, (_, rang) => uneLecon(rang));
 }
@@ -146,7 +158,7 @@ Deno.test("un tirage invalide rend le test incohérent", () => {
   const lecons = desLecons(3);
   const { envoi } = envoiJoue(lecons, [bonne, bonne, bonne]);
 
-  assertIncoherent(modifie(envoi, { tirages: [["inconnue", "autre"], ...envoi.tirages.slice(1)] }), lecons);
+  assertIncoherent(modifie(envoi, { tirages: [[["inconnue", "autre"]], ...envoi.tirages.slice(1)] }), lecons);
 });
 
 Deno.test("une question posée qui ne finit pas par la bonne réponse rend le test incohérent", () => {
@@ -191,4 +203,17 @@ Deno.test("le pas régulier du plan n'est pas revérifié : un plan qui saute de
   });
 
   assertEquals(revaliderLeTestDeDepart(envoi, lecons, CE1), fait);
+});
+
+Deno.test("une question retirée de la bibliothèque est ignorée avec son tirage d'opérations générées, le reste est revalidé", () => {
+  const lecons = [uneLecon(0), leconDeCalculFixe(1), uneLecon(2)];
+  const { envoi } = envoiJoue(lecons, [bonne, Reponse.nombre(8), bonne]);
+  const sansLeCalcul = [lecons[0], lecons[2]];
+
+  const revalide = revaliderLeTestDeDepart(envoi, sansLeCalcul, CE1);
+
+  assertEquals(revalide.questions, [
+    { lecon: lecons[0].id, juste: true },
+    { lecon: lecons[2].id, juste: true },
+  ]);
 });

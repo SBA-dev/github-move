@@ -220,7 +220,7 @@ Deno.test("l'envoi d'un test terminé contient les tirages réellement utilisés
   test.repondre(bonne);
   test.terminer(finDuTest);
 
-  assertEquals(test.aEnregistrer().tirages, [["mauvaise", "bonne"], ["mauvaise", "bonne"]]);
+  assertEquals(test.aEnregistrer().tirages, [[["mauvaise", "bonne"]], [["mauvaise", "bonne"]]]);
 });
 
 const calculAGenerateur = { type: "calcul", generateur: { op: "+", a: [1, 20], b: [1, 20], combien: 1 } };
@@ -237,7 +237,7 @@ Deno.test("l'envoi d'un test avec un calcul puis une addition à générateur co
   test.repondre(Reponse.nombre(52));
   test.terminer(finDuTest);
 
-  assertEquals(test.aEnregistrer().tirages, [["5 + 11 = 16"], ["15 + 37"]]);
+  assertEquals(test.aEnregistrer().tirages, [[["5 + 11 = 16"]], [["15 + 37"]]]);
 });
 
 function hasardGraine(graine: number): Hasard {
@@ -272,7 +272,7 @@ Deno.test("rejouer un test de départ avec les tirages de son envoi redonne les 
   const enoncesPoses = enoncesEnRepondantJuste(commence);
   commence.terminer(finDuTest);
 
-  const rejoue = testDeDepartSur(lecons, tireurSelonLesTirages(commence.aEnregistrer().tirages.values()));
+  const rejoue = testDeDepartSur(lecons, tireurSelonLesTirages(commence.aEnregistrer().tirages.flat().values()));
 
   assertEquals(enoncesEnRepondantJuste(rejoue), enoncesPoses);
 });
