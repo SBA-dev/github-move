@@ -42,7 +42,7 @@ N = min(3, L, H, T)
 |---|---|---|
 | `L` | **largeur utile** : nombre de stories prêtes ou qui le deviendront pendant la vague | `docs/graphe/stories.md`, niveaux et hypothèses tranchées |
 | `H` | **capacité du PO** : nombre d'équipes dont il peut traiter les questions sans les faire attendre plus d'une demi-journée | demandé au PO ; temps d'attente mesuré pendant la vague |
-| `T` | **budget de tokens** : `(part de la limite d'utilisation qu'on accepte de dépenser par fenêtre − part du responsable) ÷ part consommée par une équipe par fenêtre` | compteur d'utilisation du compte, relevé au début et à la fin de chaque story |
+| `T` | **budget de tokens** : `(part de la limite d'utilisation qu'on accepte de dépenser par fenêtre − part du responsable) ÷ part consommée par une équipe par fenêtre` | champ `usage` de `get_session` pour chaque session (tokens, coût), et compteur d'utilisation du compte |
 
 ## Mesures à relever à chaque story
 
@@ -52,7 +52,7 @@ Chaque équipe les note dans `docs/stories/<n>/journal.md` (section « Mesures �
 |---|---|
 | Durée, du lancement au merge | efficacité |
 | Temps passé à attendre (PO, verrou, `main`) | perte due au parallélisme |
-| Part de la limite d'utilisation consommée (début et fin) | coût en tokens |
+| Tokens et coût de la session d'équipe (`get_session`, champ `usage`, relevé par le responsable) | coût en tokens |
 | Cycles de review À CORRIGER | qualité |
 | Cycles E2E KO | qualité |
 | Intégrations de `main`, dont avec conflit | coût du parallélisme |

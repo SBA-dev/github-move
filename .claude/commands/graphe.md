@@ -161,7 +161,7 @@ Suis .claude/commands/equipe.md.
 
 **Partager l'utile, pas tout** : une annonce `À SAVOIR` doit faire gagner du temps à une équipe nommée (« #25 : la table `progression` existe déjà, migration du 2026-10-20 »). Tu ne recopies pas les avancées d'une équipe chez les autres.
 
-**Surveille aussi les sessions**, pas seulement les commentaires : à chaque réveil, regarde l'état de chaque session d'équipe (`get_session`, champ `status_bucket`). Une session `blocked` attend souvent une autorisation dans sa propre fenêtre, que personne ne voit : dis à l'humain laquelle ouvrir et ce qu'elle demande (`list_events`). Une session `failed`, ou un commentaire `Avancement` immobile depuis plus de 2 heures : signale-le aussi.
+**Surveille aussi les sessions**, pas seulement les commentaires : à chaque réveil, regarde l'état de chaque session d'équipe (`get_session`, champ `status_bucket` ; le champ `usage` donne sa consommation de tokens et son coût, à relever pour les mesures). Une session `blocked` attend souvent une autorisation dans sa propre fenêtre, que personne ne voit : dis à l'humain laquelle ouvrir et ce qu'elle demande (`list_events`). Une session `failed`, ou un commentaire `Avancement` immobile depuis plus de 2 heures : signale-le aussi.
 
 ### ⛔ VALIDATION HUMAINE n°1 groupée : cadrage
 
@@ -190,12 +190,12 @@ Les merges passent **un par un**, par le verrou `merge` :
    - libères le verrou `merge` ;
    - annonces `[Responsable] MAIN A BOUGÉ : #<n> mergée` et envoies `RELIS` à **toutes les équipes encore en cours** ;
    - recalcules les stories prêtes et reviens à l'Étape 1 pour combler la place libérée (nouveau plan présenté à l'humain, sauf s'il a autorisé l'enchaînement automatique).
-4. Archive la session de l'équipe une fois la story mergée (`archive_session`).
+4. Relève la consommation finale de la session (`get_session`, champ `usage`), puis archive-la (`archive_session`). La branche de la story reste sur GitHub : seule la session de l'équipe peut la pousser, et sa suppression après le merge se fait depuis la PR (bouton « Delete branch ») par l'humain.
 
 ## Étape 5 : Fin de vague
 
 Quand plus aucune story n'est en cours dans le périmètre :
-1. Mets à jour `docs/feuille-de-route.md` et `docs/graphe/stories.md` (stories livrées, questions tranchées) sur une branche `docs/graphe-vague-<date>`, puis ouvre une petite PR `docs: …`. Tu es le **seul** à modifier ces fichiers.
+1. Mets à jour `docs/feuille-de-route.md` et `docs/graphe/stories.md` (stories livrées, questions tranchées) sur **la branche de ta propre session** (une session cloud ne peut pousser que sur sa branche : le proxy refuse les autres), après y avoir intégré `main`, puis ouvre une petite PR `docs: …`. Tu es le **seul** à modifier ces fichiers.
 2. Commente sur l'issue de coordination une synthèse de la vague, puis ferme-la (`state_reason: completed`). La vague suivante en ouvrira une nouvelle.
 3. Synthèse à l'humain : stories livrées (liens des PR), stories bloquées et pourquoi, prochaines stories prêtes, temps gagné par rapport à une livraison une par une (chemin critique contre somme des durées), **mesures de la vague** (`docs/graphe/nombre-d-equipes.md`) et **nombre d'équipes proposé pour la vague suivante**, avec sa raison. Reporte ce nombre en tête de `docs/graphe/nombre-d-equipes.md`.
 

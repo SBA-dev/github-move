@@ -40,3 +40,8 @@ Jusqu'ici les stories sont livrées une par une par `/feature` (décision 0006).
 - Les numéros de décision sont réservés par le responsable pour éviter les doublons.
 - Les données de test créées contre la base partagée portent un préfixe par story (`e2e-<n>-`).
 - `/feature` reste utilisable pour une story seule.
+
+## Essai à blanc du 2026-10-24 (issue #61)
+
+Une session d'équipe de test, créée par le responsable, a réussi : lire une issue, la commenter avec un préfixe, modifier son commentaire sur place, pousser sa branche, réveiller le responsable par message, être réveillée par lui une fois inactive ; elle dispose de l'outil de merge et n'a demandé aucune autorisation. Le label `graphe:coordination` a été créé automatiquement. Coût de la session de test : environ 0,60 $.
+Constat : une session ne peut pousser que sur sa propre branche (le responsable n'a pas pu supprimer la branche de test : erreur 403). Le responsable écrit donc ses mises à jour de fin de vague sur la branche de sa session, et la suppression des branches se fait depuis GitHub.
