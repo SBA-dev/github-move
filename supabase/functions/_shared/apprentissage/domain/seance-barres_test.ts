@@ -129,7 +129,7 @@ Deno.test("une séance de barres terminée compte ses questions sous le type « 
   seance.repondre(Reponse.choix("7"));
   seance.repondre(Reponse.choix("6"));
   seance.repondre(Reponse.choix("3"));
-  seance.repondre(Reponse.nombre(20));
+  seance.repondre(Reponse.nombre(24));
 
   const fait = seance.terminer(new Date("2026-10-23T10:30:00Z"));
 

@@ -50,7 +50,7 @@ function leconDeBarresAuNiveau(id: string, niveau: "CP" | "CE1"): Lecon {
           tout: 9,
           aide: "On connaît le tout, 9, et une partie, 6. On cherche l'autre partie.",
         },
-        { type: "parts", enonce: "4 sacs de 5 billes. Combien de billes en tout ?", nb: 4, valeur: 5, total: null },
+        { type: "parts", enonce: "4 sacs de 6 billes. Combien de billes en tout ?", nb: 4, valeur: 6, total: null },
       ],
     }],
   });
