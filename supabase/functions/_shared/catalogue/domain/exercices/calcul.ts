@@ -1,6 +1,6 @@
 import { enObjet, liste, nombreRequis, type Objet, texteFacultatif, texteRequis } from "../lecture.ts";
 import { LeconMalFormee } from "../erreurs.ts";
-import { type GenerateurDOperations, lireGenerateur } from "./generateur-d-operations.ts";
+import { type GenerateurComplet, lireGenerateur } from "./generateur-d-operations.ts";
 
 export type Operation = Readonly<{ q: string; r: number; aide?: string }>;
 
@@ -9,7 +9,7 @@ export type ExerciceCalcul = Readonly<{
   titre?: string;
   consigne?: string;
   operations?: readonly Operation[];
-  generateur?: GenerateurDOperations;
+  generateur?: GenerateurComplet;
 }>;
 
 export function lireCalcul(brut: Objet, communs: { titre?: string; consigne?: string }): ExerciceCalcul {

@@ -1,6 +1,6 @@
 import { nombreRequis, type Objet } from "../lecture.ts";
 import { LeconMalFormee } from "../erreurs.ts";
-import { type GenerateurDOperations, lireGenerateur } from "./generateur-d-operations.ts";
+import { type GenerateurComplet, lireGenerateur } from "./generateur-d-operations.ts";
 
 const DUREE_PAR_DEFAUT_EN_SECONDES = 60;
 
@@ -9,7 +9,7 @@ export type ExerciceFluence = Readonly<{
   titre?: string;
   consigne?: string;
   duree: number;
-  generateur: GenerateurDOperations;
+  generateur: GenerateurComplet;
 }>;
 
 export function lireFluence(brut: Objet, communs: { titre?: string; consigne?: string }): ExerciceFluence {

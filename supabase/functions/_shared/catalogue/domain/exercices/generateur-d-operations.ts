@@ -19,11 +19,11 @@ export type GenerateurDOperations = Readonly<{
   combien?: number;
 }>;
 
-type GenerateurNormalise = Required<GenerateurDOperations>;
+export type GenerateurComplet = Required<GenerateurDOperations>;
 
-export function lireGenerateur(brut: unknown): GenerateurNormalise {
+export function lireGenerateur(brut: unknown): GenerateurComplet {
   const generateur: Objet = brut === undefined ? {} : enObjet(brut, "le générateur");
-  const lu: GenerateurNormalise = Object.freeze({
+  const lu: GenerateurComplet = Object.freeze({
     op: lireSigne(generateur.op),
     a: lireIntervalle(generateur.a),
     b: lireIntervalle(generateur.b),
