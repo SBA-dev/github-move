@@ -16,4 +16,8 @@ export class Niveau {
     if (code === undefined) throw new NiveauInconnu(brut);
     return new Niveau(code);
   }
+
+  estAuDessusDe(autre: Niveau): boolean {
+    return CODES_DE_NIVEAU.indexOf(this.valeur) > CODES_DE_NIVEAU.indexOf(autre.valeur);
+  }
 }

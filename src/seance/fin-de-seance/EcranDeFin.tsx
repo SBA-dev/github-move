@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import type { Seance } from "@domain/apprentissage";
-import { leconSuivante, pageDeLaLecon } from "@domain/catalogue";
+import { leconSuivanteDansLeParcours, type Seance } from "@domain/apprentissage";
+import { pageDeLaLecon } from "@domain/catalogue";
 import { calculsReussis } from "@domain/motivation";
+import { niveauDuProfil } from "../../parcours/index.ts";
 import { chargerToutesLesLecons } from "../bibliotheque.ts";
 import { EtoilesDessinees } from "./EtoilesDessinees.tsx";
 import { Etincelles } from "./Etincelles.tsx";
+import { lireLesMeilleuresEtoilesDuProfil } from "./meilleures-etoiles-du-profil.ts";
 import { etoilesSurTrois } from "./texte-des-etoiles.ts";
 import { useSauvegardeDeLaSeance } from "./useSauvegardeDeLaSeance.ts";
 
@@ -12,6 +14,8 @@ type Suivante = { readonly id: string; readonly titre: string };
 
 type Props = {
   readonly seance: Seance;
+  /** Niveau du profil en cours : la leçon suivante se cherche dans le parcours de ce niveau. */
+  readonly niveau: string;
   /** Fait dire au personnage guide ses paroles de fin ; sans étoiles (fluence seule), il a déjà tout dit. */
   readonly onDireLaFin: (etoiles: number | undefined) => void;
   readonly onRejouer: () => void;
@@ -19,26 +23,33 @@ type Props = {
   readonly onAccueil: () => void;
 };
 
-function useLeconSuivante(leconId: string): Suivante | undefined {
+/** Sans bibliothèque (hors ligne, pas encore en cache), l'écran de fin reste valable : il n'annonce simplement pas de leçon suivante. */
+function bibliothequeIndisponible(): void {}
+
+function useLeconSuivante(seance: Seance, niveau: string): Suivante | undefined {
   const [suivante, setSuivante] = useState<Suivante | undefined>();
+  const { enfant, lecon: leconId } = seance;
   useEffect(() => {
+    const niveauDeLEnfant = niveauDuProfil(niveau);
+    if (!niveauDeLEnfant) return;
     let annule = false;
-    void chargerToutesLesLecons().then((lecons) => {
-      const courante = lecons.find((lecon) => lecon.id === leconId);
-      const prochaine = courante && leconSuivante(lecons, courante);
+    void Promise.all([chargerToutesLesLecons(), lireLesMeilleuresEtoilesDuProfil(enfant)]).then(([lecons, meilleuresEtoiles]) => {
+      const entrees = { lecons, niveau: niveauDeLEnfant, meilleuresEtoiles };
+      const idSuivante = leconSuivanteDansLeParcours(entrees, leconId);
+      const prochaine = lecons.find((lecon) => lecon.id === idSuivante);
       if (!annule && prochaine) setSuivante({ id: prochaine.id, titre: pageDeLaLecon(prochaine).titre });
-    });
+    }).catch(bibliothequeIndisponible);
     return () => {
       annule = true;
     };
-  }, [leconId]);
+  }, [enfant, leconId, niveau]);
   return suivante;
 }
 
 /** La fin de la séance : étoiles gagnées (dessinées et écrites), paroles du personnage guide, et la suite à choisir. */
-export function EcranDeFin({ seance, onDireLaFin, onRejouer, onLeconSuivante, onAccueil }: Props) {
+export function EcranDeFin({ seance, niveau, onDireLaFin, onRejouer, onLeconSuivante, onAccueil }: Props) {
   const { terminee, message } = useSauvegardeDeLaSeance(seance);
-  const suivante = useLeconSuivante(seance.lecon);
+  const suivante = useLeconSuivante(seance, niveau);
   const accueil = useRef<HTMLButtonElement>(null);
   const dite = useRef(false);
   useEffect(() => {

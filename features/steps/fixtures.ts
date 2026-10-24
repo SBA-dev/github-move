@@ -1,5 +1,6 @@
 import { test as base, createBdd } from "playwright-bdd";
 import { Famille } from "../support/famille.ts";
+import { LecturesDesResultats } from "../support/lectures-des-resultats.ts";
 import type { ReglagesBruts } from "../support/reglages-prevus.ts";
 
 // Les données de test (comptes, profils) viendront ici, préparées via l'API admin Supabase.
@@ -25,7 +26,7 @@ export type Pwa = {
 // exécution à l'autre.
 const JETON_DU_WORKER = crypto.randomUUID().slice(0, 8);
 
-export const test = base.extend<{ monde: Monde; pwa: Pwa; famille: Famille }>({
+export const test = base.extend<{ monde: Monde; pwa: Pwa; famille: Famille; lecturesDesResultats: LecturesDesResultats }>({
   // Story #5 : parents de test et boîte des e-mails de connexion (projet Supabase de développement).
   // Suffixe d'adresse propre au projet, au worker et à l'exécution : deux scénarios exécutés en même temps ne se
   // disputent pas le même parent de test (le nettoyage de l'un supprimait le parent de l'autre en pleine connexion).
@@ -35,6 +36,11 @@ export const test = base.extend<{ monde: Monde; pwa: Pwa; famille: Famille }>({
     await use(famille);
     await famille.nettoyer();
   },
+
+  // Story #24 : suit dès le départ les lectures de l'écran de fin (leçon suivante).
+  lecturesDesResultats: [async ({ page }, use) => {
+    await use(await LecturesDesResultats.suivre(page));
+  }, { auto: true }],
 
   pwa: async ({ baseURL }, use) => {
     const commander = async (commande: string): Promise<Response> => {

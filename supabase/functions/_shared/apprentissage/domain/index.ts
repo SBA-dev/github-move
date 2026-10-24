@@ -49,6 +49,7 @@ export type { FaitDeSeance, QuestionRatee, ReussitesEtErreurs, SeanceTerminee } 
 export type { SeanceTermineeAEnregistrer } from "./seance-terminee-a-enregistrer.ts";
 export { Etoiles } from "./etoiles.ts";
 export type { NombreDEtoiles } from "./etoiles.ts";
+export { meilleuresEtoilesReunies } from "./meilleures-etoiles-reunies.ts";
 export { SeanceId } from "./seance-id.ts";
 export { ResultatDeLaLecon } from "./resultat-de-la-lecon.ts";
 export type { EtatDuResultat, FaitDeResultat } from "./resultat-de-la-lecon.ts";
@@ -56,6 +57,16 @@ export { indicationDuGeste } from "./exercices/indication-du-geste.ts";
 export { consigneLueAuDebut } from "./exercices/consigne-lue-au-debut.ts";
 export { revaliderLaSeance } from "./revalider-la-seance.ts";
 export type { ParoleDue } from "./parole-due.ts";
+export { matieresDuParcours, parcoursDeLaMatiere } from "./parcours.ts";
+export { leconSuivanteDansLeParcours } from "./lecon-suivante-dans-le-parcours.ts";
+export type {
+  EntreesDuParcours,
+  EtatDansLeParcours,
+  LeconDuParcours,
+  LeconId,
+  LeconReussieDUneClasseAuDessus,
+  Parcours,
+} from "./parcours.ts";
 export { RecordDeFluence } from "./record-de-fluence.ts";
 export type { EtatDuRecord, FaitDeRecord, IssueDuRecord } from "./record-de-fluence.ts";
 export { AdditionPosee } from "./addition-posee.ts";

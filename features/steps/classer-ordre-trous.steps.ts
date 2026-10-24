@@ -26,6 +26,7 @@ import {
   questionsReussies,
   textesDesChoix,
 } from "./exercices-a-choix.steps.ts";
+import { creerLeProfil } from "./profils-enfants.steps.ts";
 import { cleDe, EXPRESSIONS_PAR_PERSONNAGE, FELICITATIONS_COMMUNES, listeDe, preparerProfil } from "./univers.steps.ts";
 import { tirageDeLaConjugaison, verifierQueLaDicteeAttendLaReponse } from "./dictee-et-conjugaison.steps.ts";
 import { journal, laisserPasserLeDelaiDeLecture, normaliser, terminerLaLecture } from "./voix.steps.ts";
@@ -257,7 +258,12 @@ Given(
   },
 );
 
-Given(/^Tom a un profil enfant préparé de niveau (\S+)$/, async ({ page, monde }, niveau: string) => {
+Given(/^Tom a un profil enfant préparé de niveau (\S+)$/, async ({ page, monde, famille, $tags }, niveau: string) => {
+  // Story #25 : Tom est un vrai second profil de Paul (sa progression est lue sous RLS) ; la page de Léa n'est pas touchée.
+  if ($tags.includes("@issue-25")) {
+    await creerLeProfil(famille, "Paul", { prenom: "Tom", niveau, libelleUnivers: "Animaux de la forêt" });
+    return;
+  }
   const profil = { prenom: "Tom", niveau, univers: cleDe("Animaux de la forêt") };
   monde.profils.set("Tom", profil);
   await preparerProfil(page, profil);
