@@ -134,3 +134,19 @@ export async function reculerLEnvoi(email: string, minutes: number): Promise<voi
   });
   if (!reponse.ok) throw new Error(`Antidatage impossible : ${reponse.status}`);
 }
+
+// --- Progression préparée (story #25) : la ligne est écrite directement, avec la clé service_role, pour le profil réel de l'enfant.
+// Le nettoyage est celui des profils : les résultats partent avec eux (suppression en cascade).
+
+export async function ecrireUnResultatDeLecon(profil: string, lecon: string, meilleuresEtoiles: number): Promise<void> {
+  await appeler("/rest/v1/resultats_des_lecons", {
+    method: "POST",
+    body: JSON.stringify({
+      profil,
+      lecon,
+      meilleures_etoiles: meilleuresEtoiles,
+      dernieres_etoiles: meilleuresEtoiles,
+      nombre_de_seances: 1,
+    }),
+  });
+}
