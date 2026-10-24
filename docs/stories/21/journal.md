@@ -10,22 +10,26 @@
 
 ## Livraison (équipe #21, vague 1, lancée par `/graphe`)
 
-- 2026-10-24 17:50 UTC · Démarrage de l'équipe. Session `session_01V8ujt2iSDZBGQQA7x1Rs7Z`, branche `feature/21-boite-et-barres` partie de `main` (`6aedff7`). Branche de base : `main`.
-- 17:50 · Étapes 1 et 2 sautées : modèle et scénarios déjà validés au lot 3 (« OK pour tout », `docs/stories/lot-3-decisions.md`), aucune question nouvelle. `CADRAGE PRÊT` pour information.
-- 17:50 · Pas de migration (`par_type` est un `jsonb` libre). En revanche l'Edge Function `terminer-la-seance` de savanturier-dev devra être redéployée pour revalider les séances de boîte et de barres : verrou `base` demandé au moment du câblage.
-- 17:55 · Relu #64 (RELIS) : la vague passe à 3 équipes avec #22 ; fichiers partagés d'Apprentissage par ajout seulement.
-- 17:55 → 18:40 · Bloc **Catalogue** (TDD) : 6 cycles red → green.
+- 2026-10-24 17:45 UTC · Démarrage de l'équipe. Session `session_01V8ujt2iSDZBGQQA7x1Rs7Z`, branche `feature/21-boite-et-barres` partie de `main` (`6aedff7`). Branche de base : `main`.
+- 17:45 · Étapes 1 et 2 sautées : modèle et scénarios déjà validés au lot 3 (« OK pour tout », `docs/stories/lot-3-decisions.md`), aucune question nouvelle. `CADRAGE PRÊT` pour information.
+- 17:45 · Pas de migration (`par_type` est un `jsonb` libre). En revanche l'Edge Function `terminer-la-seance` de savanturier-dev devra être redéployée pour revalider les séances de boîte et de barres : verrou `base` demandé au moment du câblage.
+- 17:49 · Relu #64 (RELIS) : la vague passe à 3 équipes avec #22 ; fichiers partagés d'Apprentissage par ajout seulement.
+- 17:47 → 17:59 · Bloc **Catalogue** (TDD) : 6 cycles red → green.
   1. lecture d'une boîte (sens, réponse, écriture du calcul) ; 2. refus d'un item de boîte impossible ;
   3. barres « parties et tout » ; 4. comparaison ; 5. parts ; 6. refus d'un problème en barres impossible (19 cas).
   Deux commits d'adaptation des types des tests existants (`boite` puis `barres` ne sont plus des exercices génériques).
   L'erreur de lecture reste `LeconMalFormee` (seule erreur de lecture du Catalogue ; le modèle disait `ExerciceMalForme`).
   Bibliothèque entière relue par `lireLecon` : 265 leçons, 0 refus.
-- 18:42 · Revue intermédiaire (delta `5a31eae..b84171d`) : À CORRIGER, 1 bloquant (règle « énoncé du problème requis » sans test) → tests de caractérisation (`4ba8059`). Non bloquants : typage des valeurs connues (refactor), modèle à aligner sur `LeconMalFormee`, « problème en barres » à ajouter au glossaire, `docs/format-lecons.md` à compléter (au câblage).
-- 18:55 · Re-revue du delta `b84171d..b1fd7a1` : **APPROUVÉ**. Dernier commit relu : `b1fd7a1` (départ du delta suivant).
-- 18:58 → 19:55 · Bloc **Apprentissage** (TDD), 8 cycles :
+- 18:00 · Revue intermédiaire (delta `5a31eae..b84171d`) : À CORRIGER, 1 bloquant (règle « énoncé du problème requis » sans test) → tests de caractérisation (`4ba8059`). Non bloquants : typage des valeurs connues (refactor), modèle à aligner sur `LeconMalFormee`, « problème en barres » à ajouter au glossaire, `docs/format-lecons.md` à compléter (au câblage).
+- 18:02 · Re-revue du delta `b84171d..b1fd7a1` : **APPROUVÉ**. Dernier commit relu : `b1fd7a1` (départ du delta suivant).
+- 18:03 → 18:15 · Bloc **Apprentissage** (TDD), 8 cycles :
   7. mode de réponse : seuil « CP et 20 au plus » (`ModeDeReponse.pour(niveau, reponse?)`, sans réponse : comportement de #20 inchangé) ;
   8. paroles de la boîte (déroulé, aide, ouverture) ; 9. paroles des barres (explication du schéma, aide du problème ou de sa forme, explication de la réponse) ;
   10. description du schéma pour les lecteurs d'écran (nombre de parts cherché : « Nombre de parts : ?. » ; chaque segment finit par un point, y compris « Chaque part : ?. ») ;
   11. jouer une boîte dans la séance (`QuestionDeBoite` enveloppe une `QuestionDeCalcul`, type `boite`, clé `n:`) ; 12. boîte ouverte après la bonne réponse ;
   13. jouer un schéma en barres dans la séance (`QuestionDeProbleme`, type `barres`, clé `p:`). `implementer` a contesté 2 tests : la leçon de test donnait 20, réponse qui se donne par choix au CP (Q51). Fixture corrigée par `test-writer` (24), règle inchangée (1 aller-retour) ;
   14. revalidation par le serveur : déjà vraie (rejeu générique), tests gardés en caractérisation.
+- 18:18 · VERROU base demandé (redéploiement de `terminer-la-seance`, sans migration), accordé par le responsable à 18:18. Règle : chaque déploiement contient tout ce qui est déjà déployé (merge local non commité, dans le scratchpad).
+- 18:20 · Revue intermédiaire Apprentissage (delta `b1fd7a1..de65634`) : **APPROUVÉ**, 9 non bloquants. Traités en refactor : `instanceof` de la classe commune et `aideDeLaDerniereErreur` dans `exercice-joue.ts`, calcul de la boîte construit depuis `a`, `sens`, `b`, options de `avecLesChoix`, réponse facultative explicite dans `ModeDeReponse`, `QuestionDeProblemeEnBarres`. Notés pour plus tard (feuille de route, responsable) : retour polymorphe « après la réponse » porté par chaque `QuestionPosee` pour alléger `exercice-joue.ts`. Commit `1bebf30` : GREEN des barres et extraction de la classe commune mêlés (à éviter).
+- 18:20 · Description du schéma : point final gardé (« Chaque part : ?. »), comme les deux autres textes de Q55 ; texte du nombre de parts cherché non couvert par Q55 → question #21.1 posée au responsable (non bloquante, reco codée).
+- 18:20 · Clé de la boîte : `n:` comme le modèle (décision n°4) ; la garde « préfixes de clé distincts » ne liste pas `boite`, qui partage volontairement le préfixe du calcul. Au lot 4 (rejouer la boîte en révision, Q52), retrouver l'item par son calcul dans la leçon.
