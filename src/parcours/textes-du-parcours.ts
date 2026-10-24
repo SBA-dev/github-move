@@ -1,5 +1,5 @@
 import type { CodeDeMatiere } from "@domain/catalogue";
-import type { LeconDuParcours } from "@domain/apprentissage";
+import type { LeconDuParcours, LeconReussieDUneClasseAuDessus } from "@domain/apprentissage";
 import { etoilesSurTrois } from "../seance/fin-de-seance/texte-des-etoiles.ts";
 
 export const AUCUNE_LECON_POUR_LA_CLASSE = "Aucune leçon pour ta classe pour l'instant.";
@@ -42,4 +42,13 @@ export function annonceDeLaLecon(lecon: LeconDuParcours): string {
     case "aDecouvrir":
       return `${lecon.titre} : à découvrir`;
   }
+}
+
+export function titreDesLeconsDejaReussies(niveau: string): string {
+  return `Déjà réussies en ${niveau}`;
+}
+
+/** Ce que lit un lecteur d'écran pour une leçon réussie d'une classe au-dessus. */
+export function annonceDeLaLeconDUneClasseAuDessus(lecon: LeconReussieDUneClasseAuDessus): string {
+  return `${lecon.titre}, ${lecon.niveau.valeur} : réussie, ${etoilesSurTrois(lecon.etoiles.nombre)}`;
 }
