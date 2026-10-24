@@ -315,3 +315,31 @@ Deno.test("la clé de révision d'un mot dicté commence par « d: »", () => {
   assertEquals(seance.clesDesQuestionsRatees(), [CleDeQuestion.de("dictee", "chat")]);
   assertEquals(CleDeQuestion.de("dictee", "chat").valeur, "d:chat");
 });
+
+Deno.test("la lettre montrée par « Je ne sais pas » se distingue d'une lettre tapée", () => {
+  const seance = seanceDeDictee(leconDeDicteeDuChat());
+  ecrire(seance, "c");
+
+  seance.direJeNeSaisPas();
+
+  assertEquals(questionEnCours(seance).cases(), [
+    { genre: "aEcrire", lettre: "c" },
+    { genre: "aEcrire", lettre: "h", montree: true },
+    { genre: "aEcrire" },
+    { genre: "aEcrire" },
+  ]);
+});
+
+Deno.test("la lettre montrée par « Je ne sais pas » ne s'efface pas quand aucune lettre n'est tapée", () => {
+  const seance = seanceDeDictee(leconDeDicteeDuChat());
+  seance.direJeNeSaisPas();
+
+  assertEquals(questionEnCours(seance).peutEffacer(), false);
+});
+
+Deno.test("une lettre tapée peut s'effacer", () => {
+  const seance = seanceDeDictee(leconDeDicteeDuChat());
+  ecrire(seance, "c");
+
+  assertEquals(questionEnCours(seance).peutEffacer(), true);
+});
