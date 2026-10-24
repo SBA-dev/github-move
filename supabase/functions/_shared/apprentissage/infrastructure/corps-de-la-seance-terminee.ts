@@ -8,7 +8,8 @@ import { EntreeInvalide } from "./http-apprentissage.ts";
 const CHAMPS = ["seance", "enfant", "lecon", "choix", "tirages", "reponses", "termineeLe"];
 const QUESTIONS_AU_PLUS = 200;
 const TIRAGE_AU_PLUS = NOMBRE_MAXIMAL_D_ETIQUETTES;
-const REPONSES_AU_PLUS = 50;
+/** Borne technique du corps HTTP : la revalidation du domaine applique la vraie limite de chaque question. */
+const REPONSES_AU_PLUS_PAR_QUESTION = 1000;
 const CARACTERES_AU_PLUS = 200;
 const TOLERANCE_D_HORLOGE_EN_MS = 5 * 60 * 1000;
 
@@ -79,7 +80,7 @@ function lireUnPlacement(brut: unknown): ReponseDonnee {
 
 function lireLesReponses(corps: Objet): ReponseDonnee[][] {
   return listeDe(corps.reponses, "reponses", QUESTIONS_AU_PLUS).map((question) =>
-    listeDe(question, "reponses", REPONSES_AU_PLUS).map(lireUneReponse)
+    listeDe(question, "reponses", REPONSES_AU_PLUS_PAR_QUESTION).map(lireUneReponse)
   );
 }
 

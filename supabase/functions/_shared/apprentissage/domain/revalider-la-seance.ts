@@ -25,6 +25,9 @@ import type { ReponseDonnee } from "./reponse.ts";
 import { Seance, type SeanceTerminee } from "./seance.ts";
 import type { SeanceTermineeAEnregistrer } from "./seance-terminee-a-enregistrer.ts";
 
+const REPONSES_PAR_SECONDE_AU_PLUS_EN_FLUENCE = 3;
+const REPONSES_AU_PLUS_PAR_QUESTION = 200;
+
 const ERREURS_DE_REJEU = [
   BonneReponseAbsenteDesChoix,
   ChoixInconnu,
@@ -62,13 +65,20 @@ function rejouer(lecon: Lecon, envoi: SeanceTermineeAEnregistrer): SeanceTermine
   const seance = Seance.reconstituer(lecon, envoi);
   while (seance.etapeDeLeconEnCours()) seance.continuer();
   envoi.reponses.forEach((reponsesDeLaQuestion, rang) => {
-    const estUneFluence = seance.exerciceEnCours()?.scoreDeFluence() !== undefined;
+    const fluence = seance.fluenceEnCours(envoi.termineeLe);
+    const estUneFluence = fluence !== undefined;
+    const reponsesAuPlus = fluence === undefined
+      ? REPONSES_AU_PLUS_PAR_QUESTION
+      : fluence.tempsRestant * REPONSES_PAR_SECONDE_AU_PLUS_EN_FLUENCE;
+    if (reponsesDeLaQuestion.length > reponsesAuPlus) {
+      throw new SeanceIncoherente(new Error(`${reponsesDeLaQuestion.length} réponses à la question ${rang + 1}`));
+    }
     if (estUneFluence) seance.demarrerLaFluence(envoi.termineeLe);
     reponsesDeLaQuestion.forEach((reponse) => {
       if (seance.questionEstReussie(rang)) throw new QuestionDejaReussie();
       rejouerLaReponse(seance, reponse, rang, envoi.termineeLe);
     });
-    if (estUneFluence) seance.finirLaFluence(envoi.termineeLe);
+    if (estUneFluence) seance.finirLaFluence();
     if (!seance.questionEstReussie(rang)) throw new SeanceNonFinie();
   });
   seance.verifierQueTousLesTiragesOntServi();

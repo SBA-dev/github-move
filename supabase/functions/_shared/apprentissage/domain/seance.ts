@@ -156,7 +156,7 @@ export class Seance {
     this.exerciceDeLaQuestionEnCours().demarrerLaFluence(maintenant);
   }
 
-  finirLaFluence(_maintenant: Date): void {
+  finirLaFluence(_maintenant?: Date): void {
     const exercice = this.exerciceDeLaQuestionEnCours();
     exercice.finirLaFluence();
     this.avancerSiExerciceReussi(exercice);

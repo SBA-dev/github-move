@@ -85,7 +85,7 @@ export function useFluence(
     figer({ position: exercice.position, exercice, question: undefined });
     setFluenceFinie({ ...fluence, tempsRestant: 0, finie: true });
     setDemarree(false);
-    seance.finirLaFluence(maintenant);
+    seance.finirLaFluence();
     sequence.current++;
     faireSilence();
     annoncerLAvancement(seance.avancement());
