@@ -37,3 +37,4 @@
 - E2E : 98ddafb. #72 : 164/168 (52/55 scénarios) ; KO : le 5ᵉ raté répond « Ces informations ne correspondent pas. » alors que 2 scénarios attendent « Trop d'essais. Réessaie dans une heure. » → scénario vs modèle ambigu, escalade au PO. Non-régression 919/924 (4 KO #72 + flaky « 7 × 8 » de #10). Étape « invité à me connecter » adaptée. Suffixe SUFFIXE_E2E repris de main (collisions avec d'autres équipes sur savanturier-dev).
 - PO : option A, le 5ᵉ essai raté répond « Trop d'essais. Réessaie dans une heure. » (les scénarios font foi). Cycle test-writer → implementer.
 - 5ᵉ raté → Trop d'essais : RED 777e5e9, fix 4bb940e, redéployé. 1106 verts. Relance E2E #72 et review du delta.
+- Review du delta : À CORRIGER (B1 helper rater des steps attend 401 au 5ᵉ raté ; B2 fixtures.ts : SUFFIXE_E2E absent de main, main utilise JETON_DU_WORKER (d0f0b5b) → reprendre la version de main). Transmis à l'e2e-tester en cours.
