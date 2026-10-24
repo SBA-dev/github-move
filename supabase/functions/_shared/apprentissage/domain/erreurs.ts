@@ -228,3 +228,10 @@ export class TestDeDepartNonFini extends Error {
     this.name = "TestDeDepartNonFini";
   }
 }
+
+export class TestDeDepartDUnAutreEnfant extends Error {
+  constructor() {
+    super("Ce test de départ est celui d'un autre enfant.");
+    this.name = "TestDeDepartDUnAutreEnfant";
+  }
+}
