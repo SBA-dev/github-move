@@ -98,7 +98,6 @@ Fonctionnalité: Aide et « Je ne sais pas »
         | type        | enfant | cas                                   |
         | trous       | Léa    | avec les choix                        |
 
-      @depend-de-19
       Exemples:
         | type        | enfant | cas                                   |
         | conjugaison | Léa    | avec les choix                        |
@@ -137,7 +136,6 @@ Fonctionnalité: Aide et « Je ne sais pas »
         | type                            | ce qui est montré                                                       |
         | addition à l'étape poser        | la bonne colonne du chiffre choisi brille                               |
 
-      @depend-de-19
       Exemples:
         | type                            | ce qui est montré                                                       |
         | dictee                          | la lettre juste suivante s'écrit dans sa case, sans montrer tout le mot |

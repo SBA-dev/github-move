@@ -16,7 +16,7 @@ import {
   textesDesChoixPossibles,
 } from "./exercices-a-choix.steps.ts";
 import { verifierModeDys } from "./reglages.steps.ts";
-import { cleDe } from "./univers.steps.ts";
+import { cleDe, preparerProfil } from "./univers.steps.ts";
 import { normaliser } from "./voix.steps.ts";
 import type { ProfilPrepare } from "./fixtures.ts";
 import {
@@ -25,6 +25,7 @@ import {
   direJeNeSaisPasSurUneAdditionAPoser,
   unCalculEstAffiche,
 } from "./calcul-pour-les-autres-stories.steps.ts";
+import { direJeNeSaisPasEnDictee, estUneDictee, leconDeConjugaisonDeTest, leconDeDicteeDeTest } from "./dictee-et-conjugaison.steps.ts";
 import { aDesEtiquettesAPlacer, direJeNeSaisPasSurDesEtiquettes } from "./classer-ordre-trous.steps.ts";
 
 // Story #23 : aide après une erreur et « Je ne sais pas ».
@@ -66,6 +67,7 @@ Given(/^Léa en est à la question « (.+) » dont la réponse est « ([^«»]+)
 async function direJeNeSaisPas(page: Page) {
   if (await additionAPoserAffichee(page)) return await direJeNeSaisPasSurUneAdditionAPoser(page);
   if (await aDesEtiquettesAPlacer(page)) return await direJeNeSaisPasSurDesEtiquettes(page);
+  if (await estUneDictee(page)) return await direJeNeSaisPasEnDictee(page);
   await avancerJusquAuxChoix(page);
   etatDesChoix(page).reussiesAvant = await questionsReussies(page);
   await jeNeSaisPas(page).click();
@@ -181,6 +183,8 @@ function leconDeTestDuType(type: string) {
   const question = "Quel animal est un chat ?";
   const choix = ["un chat", "un chien", "un oiseau"];
   const reponse = "un chat";
+  if (type === "conjugaison") return leconDeConjugaisonDeTest();
+  if (type === "dictee" || type === "dictée") return leconDeDicteeDeTest("chat");
   const exercices: Record<string, Record<string, unknown>> = {
     bulles: { type: "bulles", titre: "Exercice", questions: [{ question, choix, reponse }] },
     lecture: { type: "lecture", titre: "Exercice", texte: "Plume est un petit chat gris.", questions: [{ question, choix, reponse }] },
@@ -192,7 +196,6 @@ function leconDeTestDuType(type: string) {
 }
 
 const DEPENDANCES_PAR_TYPE: Readonly<Record<string, { numero: number; mecanique: string }>> = {
-  conjugaison: { numero: 19, mecanique: "conjugaison" },
   boite: { numero: 21, mecanique: "boîte" },
   barres: { numero: 21, mecanique: "barres" },
 };
@@ -206,6 +209,8 @@ When(/^(Léa|Tom) commence un exercice (\S+) d'une leçon de test$/, async ({ pa
     return await dependDe(dependance.numero, dependance.mecanique)();
   }
   await injecter(page, lecon);
+  const profil = monde.profils.get(enfant);
+  if (enfant === "Tom" && profil) await preparerProfil(page, profil);
   await demarrageDeLExercice(page, lecon, "Exercice")(undefined);
 });
 
@@ -215,19 +220,11 @@ Then(/^« Je ne sais pas » est proposé à (Léa|Tom)$/, async ({ page }, _enfa
   await expect(page.getByRole("button", { name: "Je ne sais pas", exact: true })).toBeVisible();
 });
 
-// --- Plan : « Je ne sais pas » dans un exercice <type> : <ce qui est montré> (classer et ordre : classer-ordre-trous.steps.ts ; les autres mécaniques sont à livrer)
-
-const DEPENDANCES_DU_MONTRE: ReadonlyArray<readonly [RegExp, number, string]> = [
-  [/^Léa joue un exercice dictee d'une leçon de test$/, 19, "dictée"],
-  [/^la lettre juste suivante s'écrit dans sa case, sans montrer tout le mot$/, 19, "dictée"],
-];
-for (const [motif, numero, mecanique] of DEPENDANCES_DU_MONTRE) {
-  Given(motif, dependDe(numero, mecanique));
-}
+// --- Plan : « Je ne sais pas » dans un exercice <type> : <ce qui est montré> (classer, ordre, trous, dictée, addition posée : steps de leurs stories ; les autres mécaniques sont à livrer)
 
 // --- Alors : bulles, choix, annonce
 
-Then(/^Noisette dit un encouragement, suivi de « (.+) »$/, async ({ page }, complement: string) => {
+Then(/^Noisette dit un encouragement, suivi de « ((?!.*», puis redit ).+) »$/, async ({ page }, complement: string) => {
   await expect(bulle(page)).toHaveAttribute("data-nature", "encouragement");
   const texte = normaliser((await bulle(page).textContent()) ?? "");
   expect(texte.endsWith(` ${complement}`), texte).toBe(true);

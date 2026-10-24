@@ -11,6 +11,8 @@ sys.path.insert(0, str(SCRIPTS))
 import build_bibliotheque as bb  # noqa: E402
 
 LECONS = json.loads((SCRIPTS.parent / "app/bibliotheque.json").read_text(encoding="utf-8"))
+CONJUGAISONS = [(l["id"], e) for l in LECONS for e in l["exercices"] if e["type"] == "conjugaison"]
+DICTEES = [(l["id"], e) for l in LECONS for e in l["exercices"] if e["type"] == "dictee"]
 EXERCICES_A_TROUS = [(l["id"], e) for l in LECONS for e in l["exercices"] if e["type"] == "trous"]
 
 
@@ -78,3 +80,81 @@ def test_un_ordre_de_plus_de_20_elements_est_refuse(nombre, refuse):
     exercice = bb.ordre("t", "c", [f"e{i}" for i in range(nombre)])
 
     assert bb.a_trop_d_etiquettes(exercice) is refuse
+
+
+def test_conjugaison_de_six_couples_garde_les_pronoms_donnes():
+    couples = [("j'", "ai mangé"), ("tu", "as mangé"), ("il", "a mangé"), ("nous", "avons mangé"), ("vous", "avez mangé"), ("ils", "ont mangé")]
+
+    exercice = bb.conjugaison("manger", "passé composé", couples)
+
+    assert exercice["formes"][0] == {"pronom": "j'", "forme": "ai mangé"}
+
+
+def test_conjugaison_de_six_textes_applique_les_pronoms_par_defaut():
+    textes = ["mange", "manges", "mange", "mangeons", "mangez", "mangent"]
+
+    exercice = bb.conjugaison("manger", "présent", textes)
+
+    assert [f["pronom"] for f in exercice["formes"]] == ["je", "tu", "il", "nous", "vous", "ils"]
+    assert exercice["formes"][3]["forme"] == "mangeons"
+
+
+def test_conjugaison_de_moins_de_six_couples_garde_les_couples():
+    exercice = bb.conjugaison("manger", "impératif", [("tu", "mange"), ("nous", "mangeons")])
+
+    assert exercice["formes"] == [{"pronom": "tu", "forme": "mange"}, {"pronom": "nous", "forme": "mangeons"}]
+
+
+@pytest.mark.parametrize("forme", [{"pronom": "je", "forme": ["j'", "ai mangé"]}, {"pronom": "je", "forme": ""}, {"pronom": ["je"], "forme": "mange"}, {"pronom": "", "forme": "mange"}])
+def test_une_forme_qui_n_est_pas_un_texte_non_vide_est_mal_formee(forme):
+    exercice = {"type": "conjugaison", "formes": [forme]}
+
+    assert bb.formes_mal_formees(exercice) == [forme]
+
+
+def test_une_forme_bien_formee_est_acceptee():
+    exercice = {"type": "conjugaison", "formes": [{"pronom": "j'", "forme": "ai mangé"}]}
+
+    assert bb.formes_mal_formees(exercice) == []
+
+
+@pytest.mark.parametrize("exercice", [e for _, e in CONJUGAISONS], ids=[i for i, _ in CONJUGAISONS])
+def test_la_bibliotheque_ne_contient_aucune_conjugaison_a_forme_mal_formee(exercice):
+    assert bb.formes_mal_formees(exercice) == []
+
+
+def une_dictee(*mots):
+    return {"type": "dictee", "titre": "Dictée", "mots": [{"mot": mot} for mot in mots]}
+
+
+@pytest.mark.parametrize("mot", ["chat", "Paris", "aujourd'hui", "aujourd’hui", "arc-en-ciel", "maison bleue", "cœur", "école", "ça", "où", "noël.", "naïve", "forêt"])
+def test_un_mot_dicte_dont_les_caracteres_sont_sur_le_clavier_est_accepte(mot):
+    assert bb.mots_dictes_hors_du_clavier(une_dictee(mot)) == []
+
+
+@pytest.mark.parametrize("mot", ["chat1", "café!", "ñu", "Œuf2", "a/b", "ã"])
+def test_un_mot_dicte_avec_un_caractere_absent_du_clavier_est_refuse(mot):
+    assert bb.mots_dictes_hors_du_clavier(une_dictee("chat", mot)) == [mot]
+
+
+@pytest.mark.parametrize("nombre, refuse", [(18, False), (19, True)])
+def test_un_mot_dicte_de_plus_de_18_lettres_a_ecrire_est_refuse(nombre, refuse):
+    mot = "a" * nombre
+
+    assert bb.mots_dictes_trop_longs(une_dictee(mot)) == ([mot] if refuse else [])
+
+
+def test_les_caracteres_deja_ecrits_ne_comptent_pas_dans_les_18_lettres_a_ecrire():
+    mot = "arc-en-" + "a" * 11 + "'" + " " + "."
+
+    assert bb.mots_dictes_trop_longs(une_dictee(mot)) == []
+
+
+@pytest.mark.parametrize("exercice", [e for _, e in DICTEES], ids=[i for i, _ in DICTEES])
+def test_la_bibliotheque_ne_contient_aucun_mot_dicte_hors_du_clavier(exercice):
+    assert bb.mots_dictes_hors_du_clavier(exercice) == []
+
+
+@pytest.mark.parametrize("exercice", [e for _, e in DICTEES], ids=[i for i, _ in DICTEES])
+def test_la_bibliotheque_ne_contient_aucun_mot_dicte_trop_long(exercice):
+    assert bb.mots_dictes_trop_longs(exercice) == []

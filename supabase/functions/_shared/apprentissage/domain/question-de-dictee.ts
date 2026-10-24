@@ -1,0 +1,193 @@
+import type { MotDicte } from "../../catalogue/domain/index.ts";
+import { CleDeQuestion } from "./cle-de-question.ts";
+import type { ClavierPropose } from "./clavier-propose.ts";
+import {
+  JeNeSaisPasDejaDit,
+  PasDeLettreAEffacer,
+  QuestionDejaReussie,
+  ToucheAbsenteDuClavier,
+  ToucheDejaUtilisee,
+} from "./erreurs.ts";
+import { type CaractereDejaEcrit, type CorrectionDuMot, MotAEcrire } from "./mot-a-ecrire.ts";
+import type { AideDonnee } from "./question-jouee.ts";
+import type { QuestionSuivie } from "./question-suivie.ts";
+import { type MotEcrit, Reponse, type ReponseDonnee, type ResultatDeReponse } from "./reponse.ts";
+
+const AIDE_APRES_UNE_ERREUR = "Regarde les lettres en rouge et écoute encore.";
+
+export type CaseDeQuestion = Readonly<{ genre: "aEcrire"; lettre?: string; montree?: true }> | CaractereDejaEcrit;
+
+export class QuestionDeDictee implements QuestionSuivie {
+  readonly type = "dictee";
+  readonly cle: CleDeQuestion;
+  private readonly mot: MotAEcrire;
+  private lettres: string[] = [];
+  private nombreDErreurs = 0;
+  private estReussie = false;
+  private jeNeSaisPasDejaDit = false;
+  private lettreMontree: string | undefined;
+  private correction: CorrectionDuMot | undefined;
+  private readonly reponsesDonnees: ReponseDonnee[] = [];
+
+  constructor(
+    private readonly motDicte: MotDicte,
+    private readonly consigne: string,
+    private readonly clavierPropose: ClavierPropose,
+  ) {
+    this.mot = MotAEcrire.de(motDicte.mot);
+    this.cle = CleDeQuestion.de("dictee", motDicte.mot);
+  }
+
+  cases(): CaseDeQuestion[] {
+    const affichees = this.lettreMontree === undefined ? this.lettres : [...this.lettres, this.lettreMontree];
+    let rang = 0;
+    return this.mot.cases().map((une): CaseDeQuestion => {
+      if (une.genre === "dejaEcrit") return une;
+      const estMontree = this.lettreMontree !== undefined && rang === this.lettres.length;
+      const lettre = affichees[rang++];
+      return {
+        genre: "aEcrire",
+        ...(lettre !== undefined && { lettre }),
+        ...(estMontree && { montree: true as const }),
+      };
+    });
+  }
+
+  peutEffacer(): boolean {
+    return this.lettres.length > 0;
+  }
+
+  texteDit(): string {
+    const phrase = this.motDicte.phrase ? `${this.motDicte.phrase} ` : "";
+    return `Écoute bien. ${this.motDicte.mot}. ${phrase}Écris : ${this.motDicte.mot}.`;
+  }
+
+  motADire(): string {
+    return this.motDicte.mot;
+  }
+
+  texteAffiche(): string {
+    return this.consigne;
+  }
+
+  suiteDeLaFelicitation(): string {
+    return `« ${this.motDicte.mot} » est bien écrit !`;
+  }
+
+  aideApresErreur(): string | undefined {
+    return this.correction?.juste === false ? AIDE_APRES_UNE_ERREUR : undefined;
+  }
+
+  derniereCorrection(): CorrectionDuMot | undefined {
+    return this.correction;
+  }
+
+  taper(lettre: string): ResultatDeReponse | undefined {
+    if (this.estReussie) throw new QuestionDejaReussie();
+    const minuscule = lettre.toLowerCase();
+    if (this.clavierPropose.genre === "lettresDuMot") this.verifierQueLaToucheEstLibre(minuscule);
+    this.lettreMontree = undefined;
+    this.lettres.push(minuscule);
+    if (this.lettres.length < this.mot.lettresAEcrire().length) return undefined;
+    return this.corriger(this.lettres);
+  }
+
+  private verifierQueLaToucheEstLibre(touche: string): void {
+    if (this.touchesDisponibles().includes(touche)) return;
+    throw this.clavierPropose.touches.includes(touche)
+      ? new ToucheDejaUtilisee(touche)
+      : new ToucheAbsenteDuClavier(touche);
+  }
+
+  effacer(): void {
+    if (this.lettres.length === 0) throw new PasDeLettreAEffacer();
+    this.lettreMontree = undefined;
+    this.lettres.pop();
+  }
+
+  repondre(reponse: MotEcrit): ResultatDeReponse {
+    if (this.estReussie) throw new QuestionDejaReussie();
+    return this.corriger(reponse.lettres);
+  }
+
+  direJeNeSaisPas(): AideDonnee {
+    if (this.estReussie) throw new QuestionDejaReussie();
+    if (this.jeNeSaisPasDejaDit) throw new JeNeSaisPasDejaDit();
+    this.jeNeSaisPasDejaDit = true;
+    this.reponsesDonnees.push({ genre: "jeNeSaisPas" });
+    if (this.nombreDErreurs === 0) this.nombreDErreurs = 1;
+    this.lettres = this.debutJuste();
+    const prochaine = this.mot.lettresAEcrire()[this.lettres.length] as string;
+    const derniereCase = this.estLaDerniereCase(this.lettres.length);
+    this.lettreMontree = derniereCase ? undefined : prochaine;
+    return { aide: undefined, bonneReponse: prochaine, maniere: derniereCase ? "briller" : "ecrire" };
+  }
+
+  clavier(): ClavierPropose {
+    return this.clavierPropose;
+  }
+
+  touchesDisponibles(): string[] {
+    const disponibles = this.clavierPropose.touches;
+    if (this.clavierPropose.genre === "clavierComplet") return disponibles;
+    for (const lettre of this.lettres) disponibles.splice(disponibles.indexOf(lettre), 1);
+    return disponibles;
+  }
+
+  /** Les rangées du clavier, chaque touche disant si elle est encore proposée : une lettre déjà posée ne l'est plus. */
+  rangeesDuClavier(): { lettre: string; disponible: boolean }[][] {
+    const restantes = this.touchesDisponibles();
+    return this.clavierPropose.rangees.map((rangee) =>
+      rangee.map((lettre) => {
+        const rang = restantes.indexOf(lettre);
+        if (rang !== -1) restantes.splice(rang, 1);
+        return { lettre, disponible: rang !== -1 };
+      })
+    );
+  }
+
+  tirage(): string[] {
+    return this.clavierPropose.tirage();
+  }
+
+  reponses(): ReponseDonnee[] {
+    return [...this.reponsesDonnees];
+  }
+
+  get bonneReponseMontree(): boolean {
+    return this.jeNeSaisPasDejaDit;
+  }
+
+  get erreurs(): number {
+    return this.nombreDErreurs;
+  }
+
+  get reussie(): boolean {
+    return this.estReussie;
+  }
+
+  private debutJuste(): string[] {
+    const attendues = this.mot.lettresAEcrire();
+    const premiereFausse = this.lettres.findIndex((lettre, rang) => lettre !== attendues[rang]);
+    return this.lettres.slice(0, premiereFausse === -1 ? this.lettres.length : premiereFausse);
+  }
+
+  private estLaDerniereCase(rang: number): boolean {
+    return rang + 1 === this.mot.lettresAEcrire().length;
+  }
+
+  private corriger(lettres: readonly string[]): ResultatDeReponse {
+    const correction = this.mot.corriger(lettres);
+    this.lettreMontree = undefined;
+    this.correction = correction;
+    this.reponsesDonnees.push(Reponse.motEcrit([...lettres]));
+    if (correction.juste) {
+      this.lettres = lettres.map((lettre) => lettre.toLowerCase());
+      this.estReussie = true;
+      return "juste";
+    }
+    if (!this.jeNeSaisPasDejaDit) this.nombreDErreurs++;
+    this.lettres = [...correction.lettresGardees];
+    return "fausse";
+  }
+}

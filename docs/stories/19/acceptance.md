@@ -18,14 +18,14 @@ Validation n°1 du lot 3 par le PO, le 2026-10-23 : « OK pour tout » (`docs/st
 
 | # | Règle | Scénarios |
 |---|---|---|
-| 1 | Le mot dicté est seulement dit à voix haute, et il n'est montré qu'une fois bien écrit | Le mot dicté est dit avec sa phrase d'exemple, sans être écrit · Léa peut <demande> (2 cas : réécouter, plus lentement) · Le mot bien écrit est montré et félicité · Les espaces, apostrophes, tirets et points d'un mot dicté sont déjà écrits |
+| 1 | Le mot dicté est seulement dit à voix haute, et il n'est montré qu'une fois bien écrit | Le mot dicté est dit avec sa phrase d'exemple, sans être écrit · La dictée commence par le mot dicté, sans lire la consigne avant (`@wip`, décision du 2026-10-24) · Léa peut <demande> (2 cas : réécouter, plus lentement) · Le mot bien écrit est montré et félicité · Les espaces, apostrophes, tirets et points d'un mot dicté sont déjà écrits |
 | 2 | Le mot est corrigé dès que sa dernière case est remplie, et le début juste est gardé | Le mot est corrigé sans qu'il faille valider · Un mot mal écrit montre les lettres fausses, et le début juste est gardé · Un mot mal écrit coûte une seule erreur, quel que soit le nombre de lettres fausses · La correction ne tient pas compte des majuscules |
 | 3 | Le clavier proposé dépend du réglage clavier des dictées et du niveau de l'enfant | Avec « <réglage> » au <niveau>, la dictée propose <clavier> (6 cas) · Les lettres du mot « <mot> » sont proposées avec <intruses> lettres en plus (3 cas) · Avec les lettres du mot, chaque touche ne sert qu'une fois, et « Effacer » la rend · Le clavier complet propose « œ » |
 | 4 | Conjugaison : une forme par personne, dans l'ordre du tableau, choisie parmi trois | Le verbe et le temps sont annoncés, puis la première personne est demandée · La bonne forme s'écrit dans le tableau sans félicitation · Une mauvaise forme est écartée et le personnage guide rappelle la personne · À la dernière personne, le personnage guide félicite pour le verbe |
 | 5 | Sans son, la dictée prévient l'enfant au lieu de dicter | En Muet, la dictée demande d'activer le son · Sur un navigateur qui ne sait pas lire à voix haute, la dictée se fait avec un adulte |
 | 6 | La dictée s'utilise au clavier et sur un petit écran | Sur un ordinateur, Léa écrit le mot dicté avec le clavier · Le clavier complet tient dans un écran de 360 px de large |
 
-Total : 6 règles, 20 scénarios (28 cas), aucun `@a-valider`. « Je ne sais pas » en dictée (la lettre juste suivante s'écrit) : #23, Q66.
+Total : 6 règles, 21 scénarios (29 cas), aucun `@a-valider`. « Je ne sais pas » en dictée (la lettre juste suivante s'écrit) : #23, Q66.
 
 Droits d'accès : aucun scénario `@acces`. Le réglage clavier des dictées est lu dans Famille, dont les droits sont couverts par #12.
 
@@ -37,7 +37,7 @@ Note pour l'interface : à 360 px, dix touches de 44 px ne tiennent pas sur une 
 |---|---|---|
 | Dictée : les animaux | `fr-cp-dictee-animaux` | dictée « J'écris les animaux » : « chat » (« Le chat dort sur le lit. »), « lapin », « souris » |
 | Être et avoir au présent | `fr-cp-etre-avoir` | conjugaison « Le verbe être » (« je suis » … « ils sont ») |
-| Leçons de test | — | mots dictés « arc-en-ciel » (8 cases, 2 tirets déjà écrits), « Paris », « chat » seul (une seule question, pour les étoiles) |
+| Leçons de test | — | mots dictés « arc-en-ciel » (9 cases, 2 tirets déjà écrits), « Paris », « chat » seul (une seule question, pour les étoiles) |
 
 Nombre de lettres intruses avec les lettres du mot : `min(3, max(2, 8 − nombre de lettres))` ; « chat » → 3 (7 touches), « lapin » → 3 (8 touches), « souris » → 2 (8 touches).
 
@@ -58,6 +58,10 @@ Source : validation du PO du 2026-10-23 (`docs/stories/lot-3-decisions.md`). Cha
 34. *(#19 n°5)* **Conjugaison** : pas de félicitation à chaque personne, humeur « applaudit » à chaque bonne forme ? **Décision** : oui. → « La bonne forme s'écrit dans le tableau sans félicitation ».
 35. *(#19 n°6)* « Lettres du mot » et « clavier complet » valeurs du réglage ; « lettre intruse » terme d'interface ? **Décision** : oui. Les scénarios disent « lettres absentes du mot ».
 36. *(#19 n°7)* **Phrase d'exemple** : peut contenir le mot dicté (jamais affichée) ? **Décision** : oui. Exemple : « Le chat dort sur le lit. » dans le premier scénario.
+
+Suite après le merge de la PR #67, décision du PO du 2026-10-24 :
+
+- *(#19 n°12)* **Début de la dictée** : la consigne est-elle lue avant le mot dicté ? **Décision** : non. Le personnage guide dicte directement le mot (« Écoute bien. chat. Le chat dort sur le lit. Écris : chat. ») ; la consigne reste affichée et peut être lue à la demande, comme tout texte de consigne. → « La dictée commence par le mot dicté, sans lire la consigne avant » (`@wip` jusqu'à l'implémentation).
 
 ## Questions ouvertes
 

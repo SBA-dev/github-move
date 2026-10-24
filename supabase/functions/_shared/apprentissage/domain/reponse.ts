@@ -4,9 +4,12 @@ export type Placement = Readonly<{ genre: "placement"; etiquette: string; groupe
 
 export type ReponseEnNombre = Readonly<{ genre: "nombre"; valeur: number }>;
 
-export type Reponse = ReponseParChoix | Placement | ReponseEnNombre;
+export type MotEcrit = Readonly<{ genre: "motEcrit"; lettres: readonly string[] }>;
+
+export type Reponse = ReponseParChoix | Placement | ReponseEnNombre | MotEcrit;
 
 export const Reponse = {
+  motEcrit: (lettres: readonly string[]): MotEcrit => ({ genre: "motEcrit", lettres }),
   choix: (texte: string): ReponseParChoix => ({ genre: "choix", texte }),
   nombre: (valeur: number): ReponseEnNombre => ({ genre: "nombre", valeur }),
   placement: (etiquette: string, groupe?: string): Placement =>

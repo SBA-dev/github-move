@@ -3,6 +3,7 @@ import {
   type FaitDeSeance,
   INTRODUCTION_DE_LA_LECTURE,
   lectureDesChoix,
+  type ParoleDue,
   type QuestionJouee,
   Reponse,
   type Seance,
@@ -10,6 +11,8 @@ import {
 import type { Lecon } from "@domain/catalogue";
 import {
   direLeTexteComplet,
+  type Humeur,
+  paroleApresUneBonneReponse,
   type PersonnageGuide,
   reagirAJeNeSaisPas,
   type Reaction,
@@ -18,6 +21,8 @@ import {
 import { hasardDuNavigateur } from "../../hasard-navigateur.ts";
 import type { Voix } from "../../voix/index.ts";
 import type { ParoleADire } from "../usePersonnageQuiParle.ts";
+import { attendre } from "./attendre.ts";
+import { paroleDueDeMotivation } from "./paroleDueDeMotivation.ts";
 import type { QuestionFigee } from "./useQuestionFigee.ts";
 
 type Dependances = {
@@ -29,6 +34,7 @@ type Dependances = {
   readonly lire: Voix["lire"];
   readonly dire: (parole: ParoleADire) => Promise<boolean>;
   readonly faireSilence: () => void;
+  readonly montrerHumeur: (humeur: Humeur) => void;
   /** Numéro de la séquence en cours : une action plus récente interrompt les suites en attente. */
   readonly sequence: MutableRefObject<number>;
   /** Faux une fois la séance quittée. */
@@ -37,11 +43,14 @@ type Dependances = {
   readonly reussite: QuestionFigee;
 };
 
+const PAUSE_DES_APPLAUDISSEMENTS_MS = 700;
+
 type SuiteDeLaReponse = (numero: number, faits: FaitDeSeance[], nouvelExercice: boolean) => Promise<void>;
 
 /** Le déroulé des exercices à choix (bulles, lecture, écoute) : la question est lue, puis les choix apparaissent. */
 export function useQuestionsAChoix(
-  { seance, lecon, personnageGuide, toutLireAVoixHaute, lire, dire, faireSilence, sequence, vivant, redessiner, reussite }: Dependances,
+  { seance, lecon, personnageGuide, toutLireAVoixHaute, lire, dire, faireSilence, montrerHumeur, sequence, vivant, redessiner, reussite }:
+    Dependances,
 ) {
   const { estFigee, figer, annoncerLAvancement } = reussite;
   const [choixVisiblesPour, setChoixVisiblesPour] = useState<QuestionJouee | undefined>();
@@ -133,11 +142,31 @@ export function useQuestionsAChoix(
     }
   }, [dire, lire, sequence]);
 
-  /** Au dernier trou, la félicitation annonce que le texte est complet. */
-  const avecLeTexteComplet = useCallback((reaction: Reaction): Reaction =>
-    seance.texteCompleteParLaDerniereReponse()
-      ? { ...reaction, parole: { ...reaction.parole, texte: direLeTexteComplet(personnageGuide, hasardDuNavigateur) } }
-      : reaction, [seance, personnageGuide]);
+  /** Au dernier trou la félicitation annonce que le texte est complet ; à la dernière personne, que le verbe est su. */
+  const avecLaFinDeLExercice = useCallback((reaction: Reaction, position: number, paroleDue: ParoleDue | undefined): Reaction => {
+    const exercice = lecon.exercices[position];
+    const verbe = exercice?.type === "conjugaison" ? exercice.verbe : undefined;
+    const finDeLExercice = paroleDue === "tuSaisConjuguer"
+      ? paroleApresUneBonneReponse(paroleDueDeMotivation(paroleDue, verbe), personnageGuide, hasardDuNavigateur)
+      : seance.texteCompleteParLaDerniereReponse()
+      ? direLeTexteComplet(personnageGuide, hasardDuNavigateur)
+      : undefined;
+    return finDeLExercice === undefined ? reaction : { ...reaction, parole: { ...reaction.parole, texte: finDeLExercice } };
+  }, [lecon, seance, personnageGuide]);
+
+  /** En conjugaison, une bonne forme fait applaudir le personnage guide sans qu'il félicite : seule la dernière personne est félicitée. */
+  const applaudirEnSilence = useCallback(async (humeur: Humeur) => {
+    faireSilence();
+    montrerHumeur(humeur);
+    await attendre(PAUSE_DES_APPLAUDISSEMENTS_MS);
+  }, [faireSilence, montrerHumeur]);
+
+  const reagirALaBonneReponse = useCallback((numero: number, reaction: Reaction, question: QuestionJouee, position: number) => {
+    const paroleDue = seance.paroleDueApresLaDerniereReponse();
+    return paroleDue === "applaudir"
+      ? applaudirEnSilence(reaction.humeur)
+      : feliciter(numero, avecLaFinDeLExercice(reaction, position, paroleDue), question);
+  }, [seance, applaudirEnSilence, feliciter, avecLaFinDeLExercice]);
 
   const repondre = useCallback(async (texte: string, suite: SuiteDeLaReponse) => {
     const courante = laQuestionEnCours();
@@ -152,13 +181,13 @@ export function useQuestionsAChoix(
     figer({ position: exercice.position, exercice, question });
     setBulleEclatee(texte);
     annoncerLAvancement(seance.avancement());
-    await feliciter(numero, avecLeTexteComplet(reaction), question);
+    await reagirALaBonneReponse(numero, reaction, question, exercice.position);
     if (!vivant.current) return;
     figer(undefined);
     setBulleEclatee(undefined);
     const nouvelExercice = seance.exerciceEnCours()?.position !== exercice.position;
     await suite(++sequence.current, seance.retirerFaits(), nouvelExercice);
-  }, [laQuestionEnCours, seance, sequence, redessiner, personnageGuide, encourager, figer, feliciter, vivant, estFigee, annoncerLAvancement, avecLeTexteComplet]);
+  }, [laQuestionEnCours, seance, sequence, redessiner, personnageGuide, encourager, figer, reagirALaBonneReponse, vivant, estFigee, annoncerLAvancement]);
 
   const jeNeSaisPas = useCallback(async () => {
     const courante = laQuestionEnCours();

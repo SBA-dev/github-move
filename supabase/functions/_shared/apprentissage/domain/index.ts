@@ -1,6 +1,6 @@
 export { Avancement } from "./avancement.ts";
 export { ExerciceJoue } from "./exercice-joue.ts";
-export type { SegmentDuTexteATrous } from "./exercice-joue.ts";
+export type { LigneDuTableauDeConjugaison, SegmentDuTexteATrous } from "./exercice-joue.ts";
 export type { EtiquettePosee } from "./etiquettes-a-placer.ts";
 export { nombreDeQuestions } from "./nombre-de-questions.ts";
 export { CleDeQuestion } from "./cle-de-question.ts";
@@ -17,6 +17,7 @@ export {
   LeconIntrouvable,
   LeconSansExercice,
   ParentNonRattache,
+  PasDeLettreAEffacer,
   PasDeQuestionEnCours,
   PasDEtapeDeLeconEnCours,
   QuestionDejaReussie,
@@ -51,6 +52,7 @@ export { SeanceId } from "./seance-id.ts";
 export { ResultatDeLaLecon } from "./resultat-de-la-lecon.ts";
 export type { EtatDuResultat, FaitDeResultat } from "./resultat-de-la-lecon.ts";
 export { indicationDuGeste } from "./exercices/indication-du-geste.ts";
+export { consigneLueAuDebut } from "./exercices/consigne-lue-au-debut.ts";
 export { revaliderLaSeance } from "./revalider-la-seance.ts";
 export type { ParoleDue } from "./parole-due.ts";
 export { RecordDeFluence } from "./record-de-fluence.ts";
@@ -63,3 +65,11 @@ export type { VueAddition, VueColonne } from "./vue-d-addition.ts";
 export { historiqueDeCalcul } from "./historique-de-calcul.ts";
 export { AdaptationDeLaDifficulte } from "./adaptation-de-la-difficulte.ts";
 export { NOMS_DES_COLONNES_A_L_ECRAN } from "./rangs-d-addition.ts";
+export {
+  exerciceDemandeLeSon,
+  LIBELLE_DU_BOUTON_ACTIVER_LE_SON,
+  messageDeLaDicteeSansVoix,
+} from "./exercices/dictee-sans-voix.ts";
+export type { EtatDeLaVoix } from "./exercices/dictee-sans-voix.ts";
+export type { CaseDeQuestion, QuestionDeDictee } from "./question-de-dictee.ts";
+export type { CorrectionDuMot } from "./mot-a-ecrire.ts";

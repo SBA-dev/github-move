@@ -1,6 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import { ChoixDeSeance, ExerciceIntrouvable, LeconSansExercice, Seance } from "@domain/apprentissage";
-import { type Exercice, type Lecon, pageDeLaLecon } from "@domain/catalogue";
+import {
+  ChoixDeSeance,
+  type EtatDeLaVoix,
+  exerciceDemandeLeSon,
+  ExerciceIntrouvable,
+  LeconSansExercice,
+  messageDeLaDicteeSansVoix,
+  Seance,
+} from "@domain/apprentissage";
+import { type Exercice, type Lecon, Niveau, pageDeLaLecon } from "@domain/catalogue";
+import type { ValeurDuClavierDesDictees } from "@domain/famille";
 import type { Univers } from "@domain/motivation";
 import { TexteEnSyllabes } from "../reglages/index.ts";
 import { PersonnageGuide } from "../univers/index.ts";
@@ -12,6 +21,7 @@ import { ExerciceDAdditionPosee } from "./exercices/addition/ExerciceDAdditionPo
 import { ExerciceAChoix } from "./exercices/ExerciceAChoix.tsx";
 import { ExerciceAEtiquettes } from "./exercices/ExerciceAEtiquettes.tsx";
 import { ExerciceDeCalcul } from "./exercices/ExerciceDeCalcul.tsx";
+import { ExerciceDeDictee } from "./exercices/ExerciceDeDictee.tsx";
 import { ExerciceDeFluence } from "./exercices/fluence/ExerciceDeFluence.tsx";
 import { generateurIdDuNavigateur } from "./generateur-id-navigateur.ts";
 import { hasardDuNavigateur } from "./hasard-navigateur.ts";
@@ -31,6 +41,10 @@ type Props = {
   readonly voix: Voix;
   /** Réglage du profil en cours : les choix proposés sont lus après la question. */
   readonly toutLireAVoixHaute: boolean;
+  /** Réglage du profil en cours : le clavier proposé pour écrire les mots dictés. */
+  readonly clavierDesDictees: ValeurDuClavierDesDictees;
+  /** Niveau du profil en cours : en « automatique », il décide du clavier des dictées. */
+  readonly niveau: string;
   readonly onRetour: () => void;
   readonly onLeconSuivante: (leconId: string) => void;
   readonly onAccueil: () => void;
@@ -41,10 +55,13 @@ function commencerLaSeance(
   lecon: Lecon,
   exercice: number | undefined,
   facilite: number,
+  clavierDesDictees: ValeurDuClavierDesDictees,
+  niveau: string,
 ): Seance | undefined {
   const choix = exercice === undefined ? ChoixDeSeance.complete() : ChoixDeSeance.unExercice(exercice);
+  const profil = { clavierDesDictees, niveau: Niveau.de(niveau).valeur };
   try {
-    return Seance.commencer(generateurIdDuNavigateur, hasardDuNavigateur, profilId, lecon, choix, facilite);
+    return Seance.commencer(generateurIdDuNavigateur, hasardDuNavigateur, profilId, lecon, choix, facilite, profil);
   } catch (erreur) {
     if (erreur instanceof ExerciceIntrouvable || erreur instanceof LeconSansExercice) return undefined;
     throw erreur;
@@ -94,18 +111,27 @@ function UnePartie({ lecon, exercice, profilId, ...reste }: PropsDUnePartie) {
 
 type PropsDeLaPartieCommencee = PropsDUnePartie & { readonly facilite: number };
 
-function PartieCommencee({ lecon, exercice, profilId, facilite, ...reste }: PropsDeLaPartieCommencee) {
-  const [seance] = useState(() => commencerLaSeance(profilId, lecon, exercice, facilite));
+function PartieCommencee(
+  { lecon, exercice, profilId, facilite, clavierDesDictees, niveau, ...reste }: PropsDeLaPartieCommencee,
+) {
+  const [seance] = useState(() =>
+    commencerLaSeance(profilId, lecon, exercice, facilite, clavierDesDictees, niveau)
+  );
   if (!seance) return <JeuIntrouvable onRetour={reste.onRetour} />;
   return <SeanceEnCours seance={seance} lecon={lecon} {...reste} />;
 }
 
 function estAChoix(exercice: Exercice): boolean {
   return exercice.type === "bulles" || exercice.type === "lecture" || exercice.type === "ecoute" ||
-    exercice.type === "trous";
+    exercice.type === "trous" || exercice.type === "conjugaison";
 }
 
-type PropsEnCours = Omit<PropsDUnePartie, "exercice" | "profilId"> & { readonly seance: Seance };
+function etatDeLaVoix({ son, syntheseVocalePresente }: Pick<Voix, "son" | "syntheseVocalePresente">): EtatDeLaVoix {
+  if (!syntheseVocalePresente) return "lectureImpossible";
+  return son === "muet" ? "muet" : "disponible";
+}
+
+type PropsEnCours = Omit<PropsDUnePartie, "exercice" | "profilId" | "clavierDesDictees" | "niveau"> & { readonly seance: Seance };
 
 function SeanceEnCours(
   { seance, lecon, prenom, univers, voix, toutLireAVoixHaute, onRetour, onRejouer, onLeconSuivante, onAccueil }: PropsEnCours,
@@ -188,6 +214,7 @@ function SeanceEnCours(
               question={question}
               texteATrous={exerciceAffiche?.texteATrous() ?? []}
               phraseDuTrouEnCours={exerciceAffiche?.questionEnCours()?.enonce}
+              tableauDeConjugaison={exerciceAffiche?.tableauDeConjugaison() ?? []}
               choixVisibles={question !== undefined && deroulement.choixVisiblesPour === question}
               reussie={figee !== undefined}
               bulleEclatee={deroulement.bulleEclatee}
@@ -230,6 +257,23 @@ function SeanceEnCours(
               onChoisir={(texte) => void deroulement.choisirUneReponseDeCalcul(texte)}
               onValider={(nombre) => void deroulement.repondreParUnNombre(nombre)}
               onJeNeSaisPas={(chiffre) => void deroulement.jeNeSaisPasDeLAddition(chiffre)}
+            />
+          )}
+          {exerciceDeLaLecon.type === "dictee" && (
+            <ExerciceDeDictee
+              question={figee?.questionDeDictee ?? seance.questionDeDicteeEnCours()}
+              lettresFausses={deroulement.lettresFausses}
+              toucheQuiBrille={deroulement.toucheQuiBrille}
+              reussie={figee !== undefined}
+              messageSansVoix={exerciceDemandeLeSon(exerciceDeLaLecon.type) ? messageDeLaDicteeSansVoix(etatDeLaVoix(voix)) : undefined}
+              sonCoupe={voix.son === "muet"}
+              onRelire={deroulement.relireLaDictee}
+              onReecouterLeMot={() => void deroulement.reecouterLeMot()}
+              onEcouterPlusLentement={() => void deroulement.reecouterLeMotPlusLentement()}
+              onTaper={(lettre) => void deroulement.taper(lettre)}
+              onEffacer={deroulement.effacer}
+              onJeNeSaisPas={() => void deroulement.jeNeSaisPasEnDictee()}
+              onActiverLeSon={voix.basculerLeSon}
             />
           )}
           {(exerciceDeLaLecon.type === "classer" || exerciceDeLaLecon.type === "ordre") && (

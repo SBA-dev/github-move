@@ -1,5 +1,8 @@
 import type { GenerateurComplet, GenerateurDAdditions, Operation } from "../../catalogue/domain/index.ts";
 import { ChoixProposes } from "./choix-proposes.ts";
+import { ClavierPropose } from "./clavier-propose.ts";
+import type { MotAEcrire } from "./mot-a-ecrire.ts";
+import { PROFIL_ENFANT_PAR_DEFAUT, type ProfilEnfant } from "./profil-enfant.ts";
 import { TirageInvalide, TirageManquant } from "./erreurs.ts";
 import type { Hasard } from "./hasard.ts";
 import { melanger } from "./melange.ts";
@@ -12,18 +15,24 @@ export interface Tireur {
   choix(choix: readonly string[], bonneReponse: string): ChoixProposes;
   trou(motAttendu: string, candidats: readonly string[]): ChoixProposes;
   etiquettesMelangees(etiquettes: readonly string[]): string[];
+  clavier(mot: MotAEcrire): ClavierPropose;
   operations(generateur: GenerateurComplet): readonly Operation[];
   /** Les calculs d'une fluence : la facilité de l'adaptation de la difficulté ne s'y applique pas. */
   operationsDeFluence(generateur: GenerateurComplet): readonly Operation[];
   additions(generateur: GenerateurDAdditions): readonly (readonly number[])[];
 }
 
-export function tireurAuHasard(hasard: Hasard, facilite = 1): Tireur {
+export function tireurAuHasard(
+  hasard: Hasard,
+  facilite = 1,
+  profil: ProfilEnfant = PROFIL_ENFANT_PAR_DEFAUT,
+): Tireur {
   return {
     choix: (choix, bonneReponse) => ChoixProposes.proposer(choix, bonneReponse, hasard),
     trou: (motAttendu, candidats) =>
       ChoixProposes.proposer([motAttendu, ...motsEnPlus(candidats, hasard)], motAttendu, hasard),
     etiquettesMelangees: (etiquettes) => melanger(etiquettes, hasard),
+    clavier: (mot) => ClavierPropose.choisir(profil.clavierDesDictees, profil.niveau, mot, hasard),
     operations: (generateur) => tirerLesOperations(generateur, hasard, facilite),
     operationsDeFluence: (generateur) => tirerLesOperations(generateur, hasard),
     additions: (generateur) => tirerLesAdditions(generateur, hasard),
@@ -48,6 +57,7 @@ export function tireurSelonLesTirages(tirages: Iterator<readonly string[]>): Tir
       if (!memesEtiquettes(etiquettes, tirage)) throw new TirageInvalide();
       return [...tirage];
     },
+    clavier: (mot) => ClavierPropose.depuisTirage(mot, prochainTirage()),
     operations: (generateur) => relireLesOperations(generateur, prochainTirage()),
     operationsDeFluence: (generateur) => relireLesOperations(generateur, prochainTirage()),
     additions: (generateur) => relireLesAdditions(generateur, prochainTirage()),

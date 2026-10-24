@@ -18,6 +18,8 @@ export type {
   Signe,
 } from "./exercices/generateur-d-operations.ts";
 export type { ExerciceOrdre } from "./exercices/ordre.ts";
+export type { ExerciceDictee, MotDicte } from "./exercices/dictee.ts";
+export type { ExerciceConjugaison, FormeConjuguee } from "./exercices/conjugaison.ts";
 export type { ExerciceTrous, Segment } from "./exercices/texte-a-trous.ts";
 export type { ExerciceEcoute, ItemDEcoute } from "./exercices/ecoute.ts";
 export type { ExerciceLecture } from "./exercices/lecture.ts";

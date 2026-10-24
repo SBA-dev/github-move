@@ -8,6 +8,7 @@ export type NatureDeParole =
   | "invitation"
   | "annonce"
   | "consigne"
+  | "dictee"
   | "question"
   | "introduction"
   | "felicitation"

@@ -1,5 +1,6 @@
 import { useCallback, useReducer, useRef } from "react";
 import {
+  consigneLueAuDebut,
   type FaitDeSeance,
   indicationDuGeste,
   Reponse,
@@ -19,6 +20,7 @@ import type { Voix } from "../voix/index.ts";
 import { useAdditionPosee } from "./exercices/addition/useAdditionPosee.ts";
 import { useBattementDeLaFluence, useFluence } from "./exercices/fluence/useFluence.ts";
 import { type SuiteDuCalcul, useCalcul } from "./exercices/useCalcul.ts";
+import { useDictee } from "./exercices/useDictee.ts";
 import { useEtiquettesAPlacer } from "./exercices/useEtiquettesAPlacer.ts";
 import { useQuestionFigee } from "./exercices/useQuestionFigee.ts";
 import { useQuestionsAChoix } from "./exercices/useQuestionsAChoix.ts";
@@ -67,6 +69,18 @@ export function useDeroulementDeSeance(
     lire: voix.lire,
     dire,
     faireSilence,
+    montrerHumeur,
+    sequence,
+    vivant,
+    redessiner,
+    reussite,
+  });
+  const dictee = useDictee({
+    seance,
+    personnageGuide,
+    lire: voix.lire,
+    dire,
+    faireSilence,
     sequence,
     vivant,
     redessiner,
@@ -83,6 +97,7 @@ export function useDeroulementDeSeance(
     redessiner,
     reussite,
   });
+  const { presenter: presenterLaDictee, taper: taperUneLettre } = dictee;
   const { ouvrir, presenter, repondre: repondreALaQuestion, relireLaQuestion } = questions;
   const dependancesDuCalcul = { seance, personnageGuide, dire, faireSilence, sequence, vivant, redessiner, reussite };
   const calcul = useCalcul(dependancesDuCalcul);
@@ -92,7 +107,7 @@ export function useDeroulementDeSeance(
   const lireLaConsigneDeLExercice = useCallback(async () => {
     const position = seance.exerciceEnCours()?.position;
     const exercice = position === undefined ? undefined : lecon.exercices[position];
-    if (!exercice?.consigne) return;
+    if (!exercice?.consigne || !consigneLueAuDebut(exercice.type)) return;
     if (!(await dire({ texte: exercice.consigne, nature: "consigne" }))) return;
     const indication = indicationDuGeste(exercice.type);
     if (indication) await dire({ texte: indication, nature: "consigne" });
@@ -107,10 +122,12 @@ export function useDeroulementDeSeance(
         return await fluence.presenter();
       case "addition":
         return await addition.presenter();
+      case "dictee":
+        return await presenterLaDictee();
       default:
         return await ouvrir(numero);
     }
-  }, [seance, lecon, calcul.presenter, fluence.presenter, addition.presenter, ouvrir]);
+  }, [seance, lecon, calcul.presenter, fluence.presenter, addition.presenter, presenterLaDictee, ouvrir]);
 
   const ouvrirLExercice = useCallback(async (numero: number) => {
     await lireLaConsigneDeLExercice();
@@ -194,6 +211,11 @@ export function useDeroulementDeSeance(
 
   useBattementDeLaFluence(horloge, fluence.demarree, battreLaFluence, suiteDeLaReponse);
 
+  const taper = useCallback(
+    (lettre: string) => taperUneLettre(lettre, suiteDeLaReponse),
+    [taperUneLettre, suiteDeLaReponse],
+  );
+
   const placer = useCallback(
     (etiquette: string, groupe?: string) => placerUneEtiquette(etiquette, groupe, enchainerSurLExercice),
     [placerUneEtiquette, enchainerSurLExercice],
@@ -246,6 +268,14 @@ export function useDeroulementDeSeance(
     jeNeSaisPas,
     jeNeSaisPasDUneEtiquette,
     bonnesReponsesMontrees,
+    lettresFausses: dictee.lettresFausses,
+    toucheQuiBrille: dictee.toucheQuiBrille,
+    relireLaDictee: dictee.relireLaDictee,
+    reecouterLeMot: dictee.reecouterLeMot,
+    reecouterLeMotPlusLentement: dictee.reecouterLeMotPlusLentement,
+    effacer: dictee.effacer,
+    jeNeSaisPasEnDictee: dictee.jeNeSaisPas,
+    taper,
     repondre,
     placer,
     reecouter,

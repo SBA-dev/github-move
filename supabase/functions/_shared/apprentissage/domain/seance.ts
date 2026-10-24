@@ -21,6 +21,9 @@ import type { Hasard } from "./hasard.ts";
 import { PlanDeSeance } from "./plan-de-seance.ts";
 import { QuestionAPlacer } from "./question-a-placer.ts";
 import type { AideDonnee } from "./question-jouee.ts";
+import type { CorrectionDuMot } from "./mot-a-ecrire.ts";
+import { PROFIL_ENFANT_PAR_DEFAUT, type ProfilEnfant } from "./profil-enfant.ts";
+import type { QuestionDeDictee } from "./question-de-dictee.ts";
 import type { QuestionSuivie, TypeDeQuestion } from "./question-suivie.ts";
 import { type Tireur, tireurAuHasard, tireurSelonLesTirages } from "./tireur.ts";
 import type { Reponse, ResultatDeReponse } from "./reponse.ts";
@@ -73,17 +76,21 @@ export class Seance {
     lecon: Lecon,
     choix: ChoixDeSeance,
     facilite = 1,
+    profil: ProfilEnfant = PROFIL_ENFANT_PAR_DEFAUT,
   ): Seance {
     return Seance.construire(
       SeanceId.de(generateurId.nouveau()),
       enfant,
       lecon,
       choix,
-      tireurAuHasard(hasard, facilite),
+      tireurAuHasard(hasard, facilite, profil),
     );
   }
 
-  static reconstituer(lecon: Lecon, envoi: SeanceTermineeAEnregistrer): Seance {
+  static reconstituer(
+    lecon: Lecon,
+    envoi: SeanceTermineeAEnregistrer,
+  ): Seance {
     const tirages = envoi.tirages[Symbol.iterator]();
     return Seance.construire(
       SeanceId.de(envoi.seance),
@@ -165,9 +172,31 @@ export class Seance {
   repondre(reponse: Reponse, maintenant?: Date): ResultatDeReponse {
     const exercice = this.exerciceDeLaQuestionEnCours();
     const resultat = exercice.repondre(reponse, maintenant);
-    this.dernierExerciceRepondu = exercice;
-    this.avancerSiExerciceReussi(exercice);
+    this.dernierExerciceCorrige(exercice);
     return resultat;
+  }
+
+  taper(lettre: string): ResultatDeReponse | undefined {
+    const exercice = this.exerciceDeLaQuestionEnCours();
+    const resultat = exercice.taper(lettre);
+    if (resultat !== undefined) this.dernierExerciceCorrige(exercice);
+    return resultat;
+  }
+
+  effacer(): void {
+    this.exerciceDeLaQuestionEnCours().effacer();
+  }
+
+  questionDeDicteeEnCours(): QuestionDeDictee | undefined {
+    return this.exerciceEnCours()?.questionDeDicteeEnCours();
+  }
+
+  derniereCorrection(): CorrectionDuMot | undefined {
+    return this.dernierExerciceRepondu?.derniereCorrection();
+  }
+
+  suiteDeLaFelicitation(): string | undefined {
+    return this.dernierExerciceRepondu?.suiteDeLaFelicitation();
   }
 
   aideApresLaDerniereErreur(): string | undefined {
@@ -180,6 +209,10 @@ export class Seance {
 
   texteCompleteParLaDerniereReponse(): boolean {
     return this.dernierExerciceRepondu?.texteCompleteParLaDerniereReponse() ?? false;
+  }
+
+  conjugaisonCompleteParLaDerniereReponse(): boolean {
+    return this.dernierExerciceRepondu?.conjugaisonCompleteParLaDerniereReponse() ?? false;
   }
 
   questionEstReussie(rang: number): boolean {
@@ -259,6 +292,11 @@ export class Seance {
     if (!this.etapeDeLeconEnCours()) throw new PasDEtapeDeLeconEnCours();
     this.indexDeLEtape++;
     if (!this.etapeDeLeconEnCours()) this.faits.push({ type: "EtapesDeLeconFinies" });
+  }
+
+  private dernierExerciceCorrige(exercice: ExerciceJoue): void {
+    this.dernierExerciceRepondu = exercice;
+    this.avancerSiExerciceReussi(exercice);
   }
 
   private questions(): QuestionSuivie[] {

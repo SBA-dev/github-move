@@ -1,6 +1,6 @@
 import { assertEquals } from "@std/assert";
 import { direJeNeSaisPasAvecLesChoix } from "./paroles.ts";
-import { reagirAJeNeSaisPas, reagirALaReponse } from "./reaction.ts";
+import { reagirAJeNeSaisPas, reagirAJeNeSaisPasEnDictee, reagirALaReponse } from "./reaction.ts";
 import { universDe } from "./univers.ts";
 import { hasardFixe } from "../test_utils/hasard-fixe.ts";
 
@@ -30,5 +30,19 @@ Deno.test("à « Je ne sais pas », le personnage guide réfléchit et rassure a
   assertEquals(reagirAJeNeSaisPas(aide), {
     humeur: "reflechit",
     parole: direJeNeSaisPasAvecLesChoix(aide),
+  });
+});
+
+Deno.test("à « Je ne sais pas » en dictée, quand une lettre s'écrit, le personnage guide réfléchit et invite à écrire la suite", () => {
+  assertEquals(reagirAJeNeSaisPasEnDictee("ecrire"), {
+    humeur: "reflechit",
+    parole: "Pas de souci, on apprend ensemble ! Voici la lettre suivante. Écris la suite.",
+  });
+});
+
+Deno.test("à « Je ne sais pas » en dictée, quand la bonne touche brille, le personnage guide réfléchit et invite à la toucher", () => {
+  assertEquals(reagirAJeNeSaisPasEnDictee("briller"), {
+    humeur: "reflechit",
+    parole: "Pas de souci, on apprend ensemble ! La bonne lettre brille : touche-la.",
   });
 });

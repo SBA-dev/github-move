@@ -4,6 +4,7 @@ type ReponseEnvoyee =
   | { readonly choix: string }
   | { readonly placement: { readonly etiquette: string; readonly groupe?: string } }
   | { readonly nombre: number }
+  | { readonly motEcrit: readonly string[] }
   | { readonly jeNeSaisPas: true };
 
 /** Le corps JSON attendu par l'Edge Function `terminer-la-seance`. */
@@ -25,6 +26,8 @@ function enReponseEnvoyee(reponse: ReponseDonnee): ReponseEnvoyee {
       return { placement: reponse.groupe === undefined ? { etiquette: reponse.etiquette } : { etiquette: reponse.etiquette, groupe: reponse.groupe } };
     case "nombre":
       return { nombre: reponse.valeur };
+    case "motEcrit":
+      return { motEcrit: reponse.lettres };
     case "jeNeSaisPas":
       return { jeNeSaisPas: true };
   }

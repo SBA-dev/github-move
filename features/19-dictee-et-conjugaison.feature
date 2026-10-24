@@ -1,5 +1,5 @@
 # language: fr
-@issue-19 @wip
+@issue-19
 Fonctionnalité: Dictée et conjugaison
   En tant qu'enfant
   Je veux écrire les mots que mon personnage guide me dicte, et choisir la bonne forme d'un verbe pour chaque personne
@@ -22,6 +22,13 @@ Fonctionnalité: Dictée et conjugaison
       Et Léa voit « Écoute bien et écris le mot que tu entends. » et 4 cases vides
       Mais « chat » n'est écrit nulle part à l'écran
 
+    Scénario: La dictée commence par le mot dicté, sans lire la consigne avant
+      Étant donné que Léa est sur la page de la leçon « Dictée : les animaux »
+      Quand Léa choisit seulement l'exercice « J'écris les animaux »
+      Alors la première chose que Léa entend Noisette dire est « Écoute bien. chat. Le chat dort sur le lit. Écris : chat. »
+      Mais Léa n'entend pas Noisette lire la consigne « Écoute bien et écris le mot que tu entends. »
+      Et Léa voit « Écoute bien et écris le mot que tu entends. » et 4 cases vides
+
     Plan du Scénario: Léa peut <demande>
       Étant donné que Léa joue le mot dicté « chat » de l'exercice « J'écris les animaux »
       Quand Léa demande à <demande>
@@ -41,7 +48,7 @@ Fonctionnalité: Dictée et conjugaison
     Scénario: Les espaces, apostrophes, tirets et points d'un mot dicté sont déjà écrits
       Étant donné qu'une leçon de test a un exercice dictée du mot « arc-en-ciel »
       Quand le mot dicté « arc-en-ciel » commence
-      Alors Léa voit 8 cases à écrire et les deux tirets déjà écrits à leur place
+      Alors Léa voit 9 cases à écrire et les deux tirets déjà écrits à leur place
       Et Léa n'a pas à taper les tirets
 
   Règle: Le mot est corrigé dès que sa dernière case est remplie, et le début juste est gardé

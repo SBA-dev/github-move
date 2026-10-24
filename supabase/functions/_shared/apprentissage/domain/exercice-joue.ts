@@ -1,11 +1,21 @@
-import type { Exercice, ExerciceCalcul, Niveau, Operation, Segment } from "../../catalogue/domain/index.ts";
+import type {
+  Exercice,
+  ExerciceCalcul,
+  FormeConjuguee,
+  Niveau,
+  Operation,
+  Segment,
+} from "../../catalogue/domain/index.ts";
 import { AdditionsJouees } from "./additions-jouees.ts";
 import { type EtiquettePosee, EtiquettesAPlacer } from "./etiquettes-a-placer.ts";
 import { ExerciceChronometre, type FluenceEnCours } from "./exercice-chronometre.ts";
 import { FluenceNonCommencee, JeNeSaisPasEnFluence, PasDeQuestionEnCours, ReponseIncompatible } from "./erreurs.ts";
 import { nombreDeQuestions } from "./nombre-de-questions.ts";
 import { ModeDeReponse } from "./mode-de-reponse.ts";
+import { MotAEcrire } from "./mot-a-ecrire.ts";
+import type { CorrectionDuMot } from "./mot-a-ecrire.ts";
 import { type CalculEnCours, QuestionDeCalcul } from "./question-de-calcul.ts";
+import { QuestionDeDictee } from "./question-de-dictee.ts";
 import { QuestionJouee, questionsJoueesAvec } from "./question-jouee.ts";
 import type { QuestionPosee } from "./question-posee.ts";
 import type { ParoleDue } from "./parole-due.ts";
@@ -21,10 +31,19 @@ export type SegmentDuTexteATrous =
   | Readonly<{ type: "trou"; mot: string }>
   | Readonly<{ type: "trou"; mot: undefined }>;
 
+export type LigneDuTableauDeConjugaison = Readonly<{ pronom: string; forme: string | undefined; texte: string }>;
+
+function ecrireLaPersonne(pronom: string, forme: string | undefined): string {
+  const elide = pronom.endsWith("'") || pronom.endsWith("’");
+  return `${pronom}${elide ? "" : " "}${forme ?? "…"}`;
+}
+
 type Contenu = Readonly<{
   questionsPosees?: readonly QuestionPosee[];
+  questionsDeDictee?: readonly QuestionDeDictee[];
   etiquettes?: EtiquettesAPlacer;
   segments?: readonly Segment[];
+  formes?: readonly FormeConjuguee[];
   operationsTirees?: readonly Operation[];
   chronometre?: ExerciceChronometre;
   additions?: AdditionsJouees;
@@ -33,6 +52,7 @@ type Contenu = Readonly<{
 export class ExerciceJoue {
   private reussies = 0;
   private dernierResultatDuTrou: ResultatDeReponse | undefined;
+  private derniereQuestionDeDicteeCorrigee: QuestionDeDictee | undefined;
   private aideDeLErreurDeCalcul: string | undefined;
 
   constructor(
@@ -54,6 +74,10 @@ export class ExerciceJoue {
     return question instanceof QuestionJouee ? question : undefined;
   }
 
+  questionDeDicteeEnCours(): QuestionDeDictee | undefined {
+    return this.contenu.questionsDeDictee?.[this.reussies];
+  }
+
   calculEnCours(): CalculEnCours | undefined {
     const question = this.questionPoseeEnCours();
     return question instanceof QuestionDeCalcul ? question.enCours() : undefined;
@@ -73,7 +97,8 @@ export class ExerciceJoue {
 
   questionsJouees(): readonly QuestionSuivie[] {
     if (this.contenu.chronometre) return [this.contenu.chronometre];
-    return this.contenu.etiquettes?.questions ?? this.contenu.additions?.questions ?? this.questionsPosees();
+    return this.contenu.etiquettes?.questions ?? this.contenu.additions?.questions ??
+      this.contenu.questionsDeDictee ?? this.questionsPosees();
   }
 
   questionsRatees(): QuestionSuivie[] {
@@ -86,6 +111,7 @@ export class ExerciceJoue {
     const etiquettes = this.contenu.etiquettes;
     if (etiquettes) return [etiquettes.tirage()];
     if (this.contenu.additions) return this.contenu.additions.tirages();
+    if (this.contenu.questionsDeDictee) return this.contenu.questionsDeDictee.map((question) => question.tirage());
     const operations = (this.contenu.operationsTirees ?? []).map(enonceTire);
     const tiragesDesQuestions = this.questionsPosees().map((question) => question.tirage());
     return [...(operations.length > 0 ? [operations] : []), ...tiragesDesQuestions].filter((tirage) =>
@@ -119,20 +145,42 @@ export class ExerciceJoue {
     });
   }
 
+  tableauDeConjugaison(): LigneDuTableauDeConjugaison[] {
+    return (this.contenu.formes ?? []).map(({ pronom, forme }, rang) => {
+      const formeTrouvee = rang < this.reussies ? forme : undefined;
+      return { pronom, forme: formeTrouvee, texte: ecrireLaPersonne(pronom, formeTrouvee) };
+    });
+  }
+
   aideApresLaDerniereErreur(): string | undefined {
+    if (this.contenu.questionsDeDictee) return this.derniereQuestionDeDicteeCorrigee?.aideApresErreur();
     return this.contenu.etiquettes?.aideApresLaDerniereErreur() ??
       this.contenu.additions?.aideApresLaDerniereErreur() ??
       this.aideDeLErreurDeCalcul;
   }
 
+  derniereCorrection(): CorrectionDuMot | undefined {
+    return this.derniereQuestionDeDicteeCorrigee?.derniereCorrection();
+  }
+
+  suiteDeLaFelicitation(): string | undefined {
+    return this.derniereQuestionDeDicteeCorrigee?.suiteDeLaFelicitation();
+  }
+
   paroleDueApresLaDerniereReponse(): ParoleDue | undefined {
     const etiquettes = this.contenu.etiquettes;
     if (etiquettes) return etiquettes.paroleDueApresLaDerniereReponse();
+    if (this.contenu.questionsDeDictee) return this.derniereCorrection()?.juste ? "felicitation" : undefined;
+    if (this.contenu.formes) return this.paroleDueEnConjugaison();
     return this.dernierBonMotDUnTrou() ? "felicitation" : undefined;
   }
 
   texteCompleteParLaDerniereReponse(): boolean {
-    return this.dernierBonMotDUnTrou() && this.estReussi();
+    return this.contenu.segments !== undefined && this.derniereReponseCompleteLExercice();
+  }
+
+  conjugaisonCompleteParLaDerniereReponse(): boolean {
+    return this.contenu.formes !== undefined && this.derniereReponseCompleteLExercice();
   }
 
   scoreDeFluence(): { nom: string; score: number; reponsesFausses: number } | undefined {
@@ -153,6 +201,7 @@ export class ExerciceJoue {
     if (this.contenu.chronometre) return this.repondreALaFluence(this.contenu.chronometre, reponse, maintenant);
     if (this.contenu.additions) return this.contenu.additions.repondre(reponse);
     if (reponse.genre === "placement") return this.placer(reponse);
+    if (reponse.genre === "motEcrit") return this.corrigerLaDictee(this.questionDeDicteeAReussir().repondre(reponse));
     const question = this.questionPoseeEnCours();
     if (!question) throw new PasDeQuestionEnCours();
     const resultat = question.repondre(reponse);
@@ -164,7 +213,17 @@ export class ExerciceJoue {
     return resultat;
   }
 
+  taper(lettre: string): ResultatDeReponse | undefined {
+    const resultat = this.questionDeDicteeAReussir().taper(lettre);
+    return resultat && this.corrigerLaDictee(resultat);
+  }
+
+  effacer(): void {
+    this.questionDeDicteeAReussir().effacer();
+  }
+
   direJeNeSaisPas(etiquette?: string): AideDonnee {
+    if (this.contenu.questionsDeDictee) return this.questionDeDicteeAReussir().direJeNeSaisPas();
     if (this.contenu.chronometre) throw new JeNeSaisPasEnFluence();
     if (this.contenu.etiquettes) return this.contenu.etiquettes.direJeNeSaisPas(etiquette);
     if (this.contenu.additions) return this.contenu.additions.direJeNeSaisPas(etiquette);
@@ -186,6 +245,18 @@ export class ExerciceJoue {
     return this.questionsReussies >= this.questions;
   }
 
+  private questionDeDicteeAReussir(): QuestionDeDictee {
+    const question = this.questionDeDicteeEnCours();
+    if (!question) throw new PasDeQuestionEnCours();
+    return question;
+  }
+
+  private corrigerLaDictee(resultat: ResultatDeReponse): ResultatDeReponse {
+    this.derniereQuestionDeDicteeCorrigee = this.questionDeDicteeAReussir();
+    if (resultat === "juste") this.reussies++;
+    return resultat;
+  }
+
   private chronometre(): ExerciceChronometre {
     if (!this.contenu.chronometre) throw new PasDeQuestionEnCours();
     return this.contenu.chronometre;
@@ -202,8 +273,17 @@ export class ExerciceJoue {
     return this.contenu.etiquettes.placer(placement);
   }
 
+  private paroleDueEnConjugaison(): ParoleDue | undefined {
+    if (this.dernierResultatDuTrou !== "juste") return undefined;
+    return this.estReussi() ? "tuSaisConjuguer" : "applaudir";
+  }
+
   private dernierBonMotDUnTrou(): boolean {
     return this.contenu.segments !== undefined && this.dernierResultatDuTrou === "juste";
+  }
+
+  private derniereReponseCompleteLExercice(): boolean {
+    return this.dernierResultatDuTrou === "juste" && this.estReussi();
   }
 
   private questionPoseeEnCours(): QuestionPosee | undefined {
@@ -225,6 +305,14 @@ function contenuDe(exercice: Exercice, tireur: Tireur, niveau: Niveau): Contenu 
       return { etiquettes: EtiquettesAPlacer.pourOrdonner(exercice, tireur.etiquettesMelangees(exercice.elements)) };
     case "trous":
       return { questionsPosees: questionsJoueesAvec(exercice, tireur), segments: exercice.segments };
+    case "conjugaison":
+      return { questionsPosees: questionsJoueesAvec(exercice, tireur), formes: exercice.formes };
+    case "dictee":
+      return {
+        questionsDeDictee: exercice.mots.map((mot) =>
+          new QuestionDeDictee(mot, exercice.consigne, tireur.clavier(MotAEcrire.de(mot.mot)))
+        ),
+      };
     case "calcul":
       return contenuDeCalcul(exercice, tireur, niveau);
     case "fluence":

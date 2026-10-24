@@ -4,6 +4,8 @@ import { type ExerciceAddition, lireAddition } from "./exercices/addition.ts";
 import { type ExerciceBulles, lireBulles } from "./exercices/bulles.ts";
 import { type ExerciceCalcul, lireCalcul } from "./exercices/calcul.ts";
 import { type ExerciceClasser, lireClasser } from "./exercices/classer.ts";
+import { type ExerciceConjugaison, lireConjugaison } from "./exercices/conjugaison.ts";
+import { type ExerciceDictee, lireDictee } from "./exercices/dictee.ts";
 import { type ExerciceFluence, lireFluence } from "./exercices/fluence.ts";
 import { type ExerciceEcoute, lireEcoute } from "./exercices/ecoute.ts";
 import { type ExerciceLecture, lireExerciceDeLecture } from "./exercices/lecture.ts";
@@ -18,6 +20,8 @@ type TypeSpecifique =
   | "classer"
   | "ordre"
   | "trous"
+  | "dictee"
+  | "conjugaison"
   | "calcul"
   | "fluence"
   | "addition";
@@ -30,6 +34,8 @@ export type Exercice =
   | ExerciceClasser
   | ExerciceOrdre
   | ExerciceTrous
+  | ExerciceDictee
+  | ExerciceConjugaison
   | ExerciceCalcul
   | ExerciceFluence
   | ExerciceAddition
@@ -40,20 +46,14 @@ export type ExerciceGenerique = Readonly<{
   titre?: string;
   consigne?: string;
   auteur?: string;
-  verbe?: string;
-  temps?: string;
   questions?: readonly unknown[];
   items?: readonly unknown[];
-  mots?: readonly unknown[];
-  formes?: readonly unknown[];
   vers?: readonly unknown[];
 }>;
 
 type Donnee = Exclude<keyof ExerciceGenerique, "type">;
 
 const DONNEES_REQUISES: Record<TypeGenerique, readonly Donnee[]> = {
-  dictee: ["mots"],
-  conjugaison: ["formes"],
   memoriser: ["vers"],
   boite: ["items"],
   barres: ["items"],
@@ -88,6 +88,10 @@ function lireExercice(brut: Objet, type: TypeDExercice): Exercice {
       return lireOrdre(brut, communs);
     case "trous":
       return lireTrous(brut, communs);
+    case "dictee":
+      return lireDictee(brut, communs);
+    case "conjugaison":
+      return lireConjugaison(brut, communs);
     case "calcul":
       return lireCalcul(brut, communs);
     case "fluence":
@@ -108,12 +112,8 @@ function lireExerciceGenerique(
     type,
     ...communs,
     auteur: texteFacultatif(brut.auteur, "l'auteur d'un exercice"),
-    verbe: texteFacultatif(brut.verbe, "le verbe d'un exercice"),
-    temps: texteFacultatif(brut.temps, "le temps d'un exercice"),
     questions: listeFacultative(brut.questions, "les questions"),
     items: listeFacultative(brut.items, "les items"),
-    mots: listeFacultative(brut.mots, "les mots"),
-    formes: listeFacultative(brut.formes, "les formes"),
     vers: listeFacultative(brut.vers, "les vers"),
   });
   for (const donnee of DONNEES_REQUISES[type]) {
@@ -127,8 +127,6 @@ function listeDe(exercice: ExerciceGenerique, donnee: Donnee): readonly unknown[
   switch (donnee) {
     case "questions":
     case "items":
-    case "mots":
-    case "formes":
     case "vers":
       return exercice[donnee] ?? [];
     default:

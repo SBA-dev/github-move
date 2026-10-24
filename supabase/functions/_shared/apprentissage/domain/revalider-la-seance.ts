@@ -9,6 +9,7 @@ import {
   JeNeSaisPasDejaDit,
   JeNeSaisPasEnFluence,
   LeconSansExercice,
+  MotIncomplet,
   PasDeQuestionEnCours,
   PasDEtapeDeLeconEnCours,
   QuestionDejaReussie,
@@ -38,6 +39,7 @@ const ERREURS_DE_REJEU = [
   JeNeSaisPasDejaDit,
   JeNeSaisPasEnFluence,
   LeconSansExercice,
+  MotIncomplet,
   PasDeQuestionEnCours,
   PasDEtapeDeLeconEnCours,
   QuestionDejaReussie,
@@ -50,7 +52,10 @@ const ERREURS_DE_REJEU = [
   TirageManquant,
 ];
 
-export function revaliderLaSeance(lecon: Lecon, envoi: SeanceTermineeAEnregistrer): SeanceTerminee {
+export function revaliderLaSeance(
+  lecon: Lecon,
+  envoi: SeanceTermineeAEnregistrer,
+): SeanceTerminee {
   try {
     return rejouer(lecon, envoi);
   } catch (erreur) {

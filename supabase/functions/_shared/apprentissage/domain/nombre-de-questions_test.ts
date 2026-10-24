@@ -89,13 +89,21 @@ Deno.test("un exercice à trous compte une question par mot entre crochets du te
 });
 
 Deno.test("un exercice de conjugaison compte une question par personne", () => {
-  const exercice: Exercice = { type: "conjugaison", verbe: "être", temps: "présent", formes: uneListeDe(6) };
+  const exercice = exerciceLu({
+    type: "conjugaison",
+    verbe: "être",
+    temps: "présent",
+    formes: ["je", "tu", "il", "nous", "vous", "ils"].map((pronom, rang) => ({ pronom, forme: `forme ${rang}` })),
+  });
 
   assertEquals(nombreDeQuestions(exercice), 6);
 });
 
 Deno.test("une dictée compte une question par mot", () => {
-  const exercice: Exercice = { type: "dictee", mots: uneListeDe(5) };
+  const exercice = exerciceLu({
+    type: "dictee",
+    mots: ["chat", "chien", "souris", "lapin", "loup"].map((mot) => ({ mot })),
+  });
 
   assertEquals(nombreDeQuestions(exercice), 5);
 });
