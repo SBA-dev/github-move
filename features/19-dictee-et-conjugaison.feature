@@ -1,5 +1,5 @@
 # language: fr
-@issue-19 @wip
+@issue-19
 Fonctionnalité: Dictée et conjugaison
   En tant qu'enfant
   Je veux écrire les mots que mon personnage guide me dicte, et choisir la bonne forme d'un verbe pour chaque personne

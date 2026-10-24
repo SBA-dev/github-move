@@ -54,6 +54,10 @@ function questionsDe(exercice: ExerciceBrut, position: number): Question[] {
       dire: i.dire,
     }));
   }
+  if (exercice.type === "conjugaison") {
+    const formes = exercice.formes as Array<{ pronom: string; forme: string }>;
+    return formes.map(({ pronom, forme }) => ({ enonce: `${pronom} … ?`, reponse: forme, choix: [], position }));
+  }
   return [];
 }
 
@@ -303,10 +307,26 @@ export async function repondre(page: Page, reponse: string, question?: string) {
   const choix = etatDesChoix(page);
   choix.reussiesAvant = await questionsReussies(page);
   const avant = (await journal(page)).speaks;
+  const silencieuse = estUneBonneFormeSansFelicitation(page, reponse, choix.reussiesAvant);
   const touchee = bulleDeChoix(page, reponse);
   await touchee.click();
   await expect(touchee).toHaveAttribute("aria-disabled", "true");
-  await expect.poll(async () => (await journal(page)).speaks).toBeGreaterThan(avant);
+  if (!silencieuse) await expect.poll(async () => (await journal(page)).speaks).toBeGreaterThan(avant);
+}
+
+/** Après une bonne forme silencieuse, les choix de la personne précédente restent un instant à l'écran : on attend la personne suivante. */
+async function attendreLaQuestionSuivante(page: Page, rang: number) {
+  const suivante = questionsDeLaSeance(page)[rang + 1];
+  if (suivante) await finirLaParoleJusqua(page, { type: "question", texte: suivante.enonce });
+}
+
+/** En conjugaison, une bonne forme suivie d'une autre personne fait applaudir le personnage guide sans qu'il parle. */
+function estUneBonneFormeSansFelicitation(page: Page, reponse: string, rang: number): boolean {
+  const questions = questionsDeLaSeance(page);
+  const courante = questions[rang];
+  const lecon = etat(page).courante;
+  if (!courante || !lecon || lecon.exercices[courante.position]?.type !== "conjugaison") return false;
+  return courante.reponse === reponse && questions[rang + 1]?.position === courante.position;
 }
 
 async function allerAuRang(page: Page, rang: number, avecChoix: boolean) {
@@ -315,6 +335,7 @@ async function allerAuRang(page: Page, rang: number, avecChoix: boolean) {
     await avancerJusquAuxChoix(page);
     await bulleDeChoix(page, (questions[i] as Question).reponse).click();
     await expect(recipient(page)).toHaveAttribute("data-questions-reussies", String(i + 1));
+    if (estUneBonneFormeSansFelicitation(page, (questions[i] as Question).reponse, i)) await attendreLaQuestionSuivante(page, i);
   }
   if (avecChoix) await avancerJusquAuxChoix(page);
   else await finirLaParoleJusqua(page, { type: "question", texte: (questions[rang] as Question).enonce });
@@ -819,6 +840,7 @@ Then(/^le son peut être activé par « ([^«»]+) »$/, async ({ page }, libell
   await page.getByRole("button", { name: libelle, exact: true }).click();
   await expect(page.getByRole("banner").getByRole("button", { name: "Son" })).toHaveAttribute("data-son", "son");
   await expect(page.getByTestId("ecoute-sans-son")).toHaveCount(0);
+  await expect(page.getByTestId("dictee-sans-son")).toHaveCount(0);
 });
 
 // --- Alors : petit écran
