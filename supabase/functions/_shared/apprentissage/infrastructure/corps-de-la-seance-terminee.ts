@@ -56,8 +56,22 @@ function lireUneReponse(brute: unknown): ReponseDonnee {
   const cles = Object.keys(reponse);
   if (cles.length === 1 && cles[0] === "choix") return Reponse.choix(texteCourt(reponse.choix, "reponses"));
   if (cles.length === 1 && cles[0] === "placement") return lireUnPlacement(reponse.placement);
+  if (cles.length === 1 && cles[0] === "motEcrit") return Reponse.motEcrit(lireLesLettres(reponse.motEcrit));
   if (cles.length === 1 && cles[0] === "jeNeSaisPas" && reponse.jeNeSaisPas === true) return { genre: "jeNeSaisPas" };
-  throw new EntreeInvalide("Le champ « reponses » ne contient que des choix, des placements ou « Je ne sais pas ».");
+  throw new EntreeInvalide(
+    "Le champ « reponses » ne contient que des choix, des placements, des mots écrits ou « Je ne sais pas ».",
+  );
+}
+
+function lireLesLettres(brutes: unknown): string[] {
+  const lettres = listeDe(brutes, "reponses", REPONSES_AU_PLUS);
+  if (lettres.length === 0) throw new EntreeInvalide("Le champ « reponses » ne contient aucune lettre.");
+  return lettres.map((lettre) => {
+    if (typeof lettre !== "string" || [...lettre].length !== 1) {
+      throw new EntreeInvalide("Le champ « reponses » ne contient que des lettres d'un caractère.");
+    }
+    return lettre;
+  });
 }
 
 function lireUnPlacement(brut: unknown): ReponseDonnee {
