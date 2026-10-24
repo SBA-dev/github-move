@@ -63,7 +63,8 @@ function exerciceGenerique(exercice: Exercice): ExerciceGenerique {
     exercice.type === "bulles" || exercice.type === "lecture" || exercice.type === "ecoute" ||
     exercice.type === "classer" || exercice.type === "ordre" || exercice.type === "trous" ||
     exercice.type === "calcul" || exercice.type === "fluence" || exercice.type === "addition" ||
-    exercice.type === "dictee" || exercice.type === "conjugaison" || exercice.type === "boite"
+    exercice.type === "dictee" || exercice.type === "conjugaison" || exercice.type === "boite" ||
+    exercice.type === "barres"
   ) {
     throw new Error(`« ${exercice.type} » n'est pas un exercice générique`);
   }

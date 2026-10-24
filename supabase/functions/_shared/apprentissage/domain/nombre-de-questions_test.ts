@@ -1,11 +1,19 @@
 import { assertEquals } from "@std/assert";
-import { type Exercice, type ItemDeBoite, lireLecon } from "../../catalogue/domain/index.ts";
+import { type Exercice, type ItemDeBoite, lireLecon, type ProblemeEnBarres } from "../../catalogue/domain/index.ts";
 import { nombreDeQuestions } from "./nombre-de-questions.ts";
 
 const uneListeDe = (taille: number): readonly unknown[] => Array.from({ length: taille }, (_, i) => ({ rang: i }));
 
 const desItemsDeBoite = (taille: number): readonly ItemDeBoite[] =>
   Array.from({ length: taille }, () => ({ a: 1, sens: "ajout", b: 1, reponse: 2, ecriture: "1 + 1 = 2" }));
+
+const desProblemesEnBarres = (taille: number): readonly ProblemeEnBarres[] =>
+  Array.from({ length: taille }, () => ({
+    enonce: "Combien en tout ?",
+    reponse: 6,
+    ecriture: "4 + 2 = 6",
+    forme: { genre: "partiesEtTout", parties: [4, 2], tout: null },
+  }));
 
 const desQuestionsAChoix = (taille: number) =>
   Array.from({ length: taille }, (_, i) => ({ question: `Question ${i}`, choix: ["a", "b"], reponse: "a" }));
@@ -64,7 +72,7 @@ Deno.test("un exercice de boîte compte une question par item", () => {
 });
 
 Deno.test("un exercice de barres compte une question par item", () => {
-  const exercice: Exercice = { type: "barres", items: uneListeDe(4) };
+  const exercice: Exercice = { type: "barres", items: desProblemesEnBarres(4) };
 
   assertEquals(nombreDeQuestions(exercice), 4);
 });
