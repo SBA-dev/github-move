@@ -89,3 +89,7 @@ Décisions du PO après le premier passage des E2E (2026-10-23) :
 ## Questions ouvertes
 
 Aucune.
+
+## Décisions venues d'autres stories
+
+- **Titre d'un scénario « leçon suivante »** : « La leçon suivante est la leçon d'ordre suivant de la même matière et du même niveau » devient « La leçon suivante est la première leçon d'après non réussie de la même matière et du même niveau », pour suivre la règle de la leçon suivante de #25. Les étapes et les données ne changent pas. Renommé par #25, réponse PO N6, 2026-10-24.

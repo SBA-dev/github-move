@@ -12,11 +12,12 @@ type Props = {
   readonly voix: Voix;
   /** Faux quand l'enfant revient par l'historique : le personnage guide ne le salue pas une seconde fois. */
   readonly saluer: boolean;
+  readonly onMonParcours: () => void;
   readonly onChangerDEnfant: () => void;
 };
 
 /** Là où arrive l'enfant qui vient de choisir son profil : son personnage guide le salue par son prénom. */
-export function AccueilDeLEnfant({ profil, univers, voix, saluer: aSaluer, onChangerDEnfant }: Props) {
+export function AccueilDeLEnfant({ profil, univers, voix, saluer: aSaluer, onMonParcours, onChangerDEnfant }: Props) {
   const { parole, rangDuMotPrononce, humeur, dire, faireSilence } = usePersonnageQuiParle(voix);
   const [salutationALire] = useState(aSaluer);
   useEffect(() => {
@@ -30,6 +31,7 @@ export function AccueilDeLEnfant({ profil, univers, voix, saluer: aSaluer, onCha
         <PersonnageGuide univers={univers} humeur={humeur} />
         <BulleDuPersonnageGuide texte={parole?.texte} nature={parole?.nature} rangDuMotPrononce={rangDuMotPrononce} />
       </div>
+      <button type="button" onClick={onMonParcours}>Mon parcours</button>
       <button type="button" className="secondaire" onClick={onChangerDEnfant}>Changer d'enfant</button>
     </section>
   );

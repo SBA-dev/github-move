@@ -100,6 +100,12 @@ Le glossaire garde l'orthographe française.
 | Test de départ (à valider) | Série de questions de français et de maths, jusqu'au niveau de l'enfant, pour savoir où commencer. Il s'arrête après 3 erreurs de suite. | Apprentissage | évaluation, examen, test (seul) |
 | Révision (à valider) | Séance qui reprend les questions ratées dont la date de révision est arrivée (10 au plus). | Apprentissage | rattrapage, revoir |
 | Leçon des classes d'avant (à valider) | Leçon d'un niveau inférieur, proposée sans verrou pour réviser. | Apprentissage | ancienne leçon |
+| Prochaine leçon | Première leçon non réussie du parcours d'une matière ; au plus une par matière, aucune quand toutes sont réussies. Elle est mise en avant et ne ferme aucune autre leçon ; une leçon réussie plus loin ne la déplace pas (#25, réponse N8). Interface : « À toi ! ». | Apprentissage | leçon en cours, leçon débloquée |
+| Leçon à découvrir | Leçon du parcours, non réussie, qui n'est pas la prochaine leçon ; l'enfant peut la commencer. Interface : « À découvrir » (#25). | Apprentissage | leçon ouverte, leçon libre, leçon déverrouillée |
+| Leçon suivante | Leçon proposée à la fin d'une séance (« Leçon suivante », « Ensuite : … ») : dans le parcours de la leçon jouée, la première leçon d'après non réussie, sinon la leçon juste après ; aucune après la dernière leçon du parcours, ni après une leçon qui n'est pas dans le parcours de l'enfant (leçon d'une classe au-dessus), ni vers une autre matière avant #29 (#25, réponses 25.2, N4, N10). | Apprentissage | leçon d'après, suite |
+| Matière du parcours | Matière qui a au moins une leçon du niveau de l'enfant ; elle a un onglet dans « Mon parcours ». Une matière qui n'a que des leçons réussies d'une classe au-dessus n'en est pas une (#25, réponses 25.4, N7). | Apprentissage | onglet (dans le code), discipline |
+| Place | Numéro d'une leçon dans son parcours (1, 2, …), tiré de l'`ordre`. Interface : « Leçon 1 » (#25, réponse 25.8). Ne pas confondre avec la place d'une étiquette dans un exercice `ordre` (Placement). | Apprentissage | rang, étape, numéro d'étape |
+| Leçon réussie d'une classe au-dessus | Leçon réussie d'un niveau supérieur à celui de l'enfant (enfant redescendu de classe). Elle reste visible avec son niveau et ses étoiles, à part, sous les leçons du parcours de sa matière (« Déjà réussies en CE2 ») ; elle s'ouvre pour être rejouée, ne compte pas dans le parcours, n'est jamais la prochaine leçon et n'a pas de leçon suivante (#25, réponses 25.12, N1, N9, N10). | Apprentissage | leçon perdue, leçon cachée |
 
 ## Motivation
 
@@ -215,6 +221,8 @@ Sous-domaine décidé à la validation n°1 du lot 1 (décision 0007). Ses terme
 30. **Termes du lot 3** (« Jouer une leçon », #16 à #24) : tous validés par le PO le 2026-10-23 (`docs/stories/lot-3-decisions.md`, « OK pour tout »), y compris les définitions précisées de **Séance**, **Réponse** et **Erreur**. Restent hors glossaire, comme mots d'interface : récipient, bulle, carte de la question, plateau, case, lettre intruse, écran de fin, maison, jeu, poème.
 31. **« Plateau »** (#18, ancien conflit n°4) : mot d'interface seulement (Décision n°30) ; le domaine dit **Étiquettes mélangées** et **étiquettes à placer** (`etiquettesMelangees`, `etiquettesAPlacer`) (tranché par le PO le 2026-10-24).
 32. **« Relance »** (#18, ancien conflit n°5) : parole de **Motivation**, tirée **au hasard** parmi les trois phrases. Apprentissage dit seulement quelle **Parole due** (`felicitation`, `felicitationUneFoisSurDeux`, `relance`) ; en `classer`, Motivation tire la félicitation une fois sur deux, et la dernière étiquette est toujours félicitée (tranché par le PO le 2026-10-24).
+33. **« Leçon verrouillée »** (#25) : **abandonné par la réponse 25.1** (aucun verrou : toutes les leçons du parcours s'ouvrent, la prochaine leçon est seulement mise en avant). La ligne « Leçon verrouillée » d'Apprentissage est gardée pour l'historique, mais le terme n'est plus employé (ni code, ni interface, ni scénario) ; « Plus tard » et le cadenas disparaissent. De même, « ouvre la leçon suivante » (Décision n°3) se lit « fait avancer le parcours », et « sans verrou » ne distingue plus une **Leçon des classes d'avant** (tranché par le PO le 2026-10-24, réponse N3).
+34. **Termes du parcours** (#25) : **Prochaine leçon**, **Leçon à découvrir** (remplace « leçon ouverte »), **Leçon suivante**, **Matière du parcours**, **Place** et **Leçon réussie d'une classe au-dessus** sont validés (tranché par le PO le 2026-10-24, réponse N11). Restent des mots d'interface : « Mon parcours », « À toi ! », « À découvrir », « Déjà réussies en CE2 ». « Carte », « chemin », « étape » et « rang » ne désignent jamais une leçon du parcours.
 
 ## Conflits à trancher
 
@@ -235,3 +243,14 @@ Les trois questions de rattachement (mêmes droits des deux parents, durée et u
 - « Avertissement de suppression » : terme du domaine ou d'interface (#14, question n°6).
 
 Lot 3 : plus aucune question ouverte ; les termes sont validés (Décision n°30).
+
+Lot 4 (#25, `docs/stories/25/domain-model.md`) : le PO a répondu **aucun verrou** (réponse 25.1), puis a suivi toutes les recommandations N1 à N11 (2026-10-24). Questions tranchées :
+- « Leçon verrouillée » : abandonné (Décision n°33, réponse N3) ;
+- termes du parcours : validés (Décision n°34, réponse N11) ;
+- leçons réussies d'une classe au-dessus : bloc à part dans « Mon parcours », ouvrables, sans onglet propre ni leçon suivante (réponses N1, N7, N9, N10) ;
+- « Étape » (« Étape 1 ») : remplacé par « Leçon 1 » (réponse 25.8) ; terme **Place** ;
+- hors glossaire, corrigés par #25 (réponse N3) : `CLAUDE.md` (« réussie à 1 étoile (elle fait avancer le parcours) »), ligne `ordre` de `docs/format-lecons.md` (« position dans le parcours de la matière »), note ajoutée à `docs/domain/context-map.md`.
+
+Restent, sans blocage pour #25 :
+- « Parcours libre » : réglage sans effet ; retiré de l'interface et du glossaire par une story de Famille dédiée, créée par le responsable (réponse N2). La ligne reste ici jusque-là ;
+- « Leçon des classes d'avant » : définition à revoir avec #26 (renommée « Leçons des classes d'avant », réponse N2).

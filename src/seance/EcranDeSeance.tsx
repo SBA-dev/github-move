@@ -39,14 +39,14 @@ type Props = {
   /** Identifiant du profil enfant en cours : la séance lui appartient. */
   readonly profilId: string;
   readonly prenom: string;
+  /** Niveau du profil en cours : la fin de séance propose la leçon suivante de son parcours ; en « automatique », il décide du clavier des dictées. */
+  readonly niveau: string;
   readonly univers: Univers;
   readonly voix: Voix;
   /** Réglage du profil en cours : les choix proposés sont lus après la question. */
   readonly toutLireAVoixHaute: boolean;
   /** Réglage du profil en cours : le clavier proposé pour écrire les mots dictés. */
   readonly clavierDesDictees: ValeurDuClavierDesDictees;
-  /** Niveau du profil en cours : en « automatique », il décide du clavier des dictées. */
-  readonly niveau: string;
   readonly onRetour: () => void;
   readonly onLeconSuivante: (leconId: string) => void;
   readonly onAccueil: () => void;
@@ -120,7 +120,7 @@ function PartieCommencee(
     commencerLaSeance(profilId, lecon, exercice, facilite, clavierDesDictees, niveau)
   );
   if (!seance) return <JeuIntrouvable onRetour={reste.onRetour} />;
-  return <SeanceEnCours seance={seance} lecon={lecon} {...reste} />;
+  return <SeanceEnCours seance={seance} lecon={lecon} niveau={niveau} {...reste} />;
 }
 
 function estAChoix(exercice: Exercice): boolean {
@@ -133,10 +133,10 @@ function etatDeLaVoix({ son, syntheseVocalePresente }: Pick<Voix, "son" | "synth
   return son === "muet" ? "muet" : "disponible";
 }
 
-type PropsEnCours = Omit<PropsDUnePartie, "exercice" | "profilId" | "clavierDesDictees" | "niveau"> & { readonly seance: Seance };
+type PropsEnCours = Omit<PropsDUnePartie, "exercice" | "profilId" | "clavierDesDictees"> & { readonly seance: Seance };
 
 function SeanceEnCours(
-  { seance, lecon, prenom, univers, voix, toutLireAVoixHaute, onRetour, onRejouer, onLeconSuivante, onAccueil }: PropsEnCours,
+  { seance, lecon, prenom, niveau, univers, voix, toutLireAVoixHaute, onRetour, onRejouer, onLeconSuivante, onAccueil }: PropsEnCours,
 ) {
   const deroulement = useDeroulementDeSeance(seance, lecon, voix, univers.personnageGuide, toutLireAVoixHaute, prenom);
   const { commencer, abandonner } = deroulement;
@@ -204,6 +204,7 @@ function SeanceEnCours(
       {finie && (
         <EcranDeFin
           seance={seance}
+          niveau={niveau}
           onDireLaFin={deroulement.direLaFin}
           onRejouer={onRejouer}
           onLeconSuivante={onLeconSuivante}
