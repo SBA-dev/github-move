@@ -1,7 +1,7 @@
 import { ChoixProposes } from "./choix-proposes.ts";
 import { ClavierPropose } from "./clavier-propose.ts";
 import type { MotAEcrire } from "./mot-a-ecrire.ts";
-import { PROFIL_DE_SEANCE_PAR_DEFAUT, type ProfilDeSeance } from "./profil-de-seance.ts";
+import { PROFIL_ENFANT_PAR_DEFAUT, type ProfilEnfant } from "./profil-enfant.ts";
 import { TirageInvalide, TirageManquant } from "./erreurs.ts";
 import type { Hasard } from "./hasard.ts";
 import { melanger } from "./melange.ts";
@@ -15,7 +15,7 @@ export interface Tireur {
   clavier(mot: MotAEcrire): ClavierPropose;
 }
 
-export function tireurAuHasard(hasard: Hasard, profil: ProfilDeSeance = PROFIL_DE_SEANCE_PAR_DEFAUT): Tireur {
+export function tireurAuHasard(hasard: Hasard, profil: ProfilEnfant = PROFIL_ENFANT_PAR_DEFAUT): Tireur {
   return {
     choix: (choix, bonneReponse) => ChoixProposes.proposer(choix, bonneReponse, hasard),
     trou: (motAttendu, candidats) =>
