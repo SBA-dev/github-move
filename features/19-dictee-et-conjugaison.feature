@@ -22,7 +22,6 @@ Fonctionnalité: Dictée et conjugaison
       Et Léa voit « Écoute bien et écris le mot que tu entends. » et 4 cases vides
       Mais « chat » n'est écrit nulle part à l'écran
 
-    @wip
     Scénario: La dictée commence par le mot dicté, sans lire la consigne avant
       Étant donné que Léa est sur la page de la leçon « Dictée : les animaux »
       Quand Léa choisit seulement l'exercice « J'écris les animaux »
