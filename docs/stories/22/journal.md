@@ -54,5 +54,5 @@
 
 - 20:00 · Autorisation du PO, via le responsable (#64) : « Merge #25 #22 ». #25 d'abord.
 - 20:03 · Verrou `merge` accordé à #22. `main` (`50f0a55`, #25 mergée) intégrée sans conflit (00c40ff). 1220 tests unitaires, lint, fmt, `tsc`, build, `deno check`, pytest : verts. Relecture du delta d'intégration par `mr-reviewer` : APPROUVÉ (fusion propre, aucun conflit de sens avec #25).
-- 20:45 · Non-régression complète après intégration (avec #25) : 995/998 en 32,2 min ; les 3 échecs (#10 ×2 sur tablette, tirage au hasard connu ; #11 « Qui joue ? » sur tablette) passent relancés seuls avec `--workers=1` (3/3) : sans lien avec #22.
+- 20:36 · Non-régression complète après intégration (avec #25) : 995/998 en 32,2 min ; les 3 échecs (#10 ×2 sur tablette, tirage au hasard connu ; #11 « Qui joue ? » sur tablette) passent relancés seuls avec `--workers=1` (3/3) : sans lien avec #22.
 - Mesures, complément : intégrations de `main` : 1 (après le merge de #25), sans conflit ; non-régressions complètes : 3 lancements au total (1 invalidé, 916/916, puis 998 après #25).
