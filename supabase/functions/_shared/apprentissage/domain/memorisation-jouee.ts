@@ -71,10 +71,6 @@ export class MemorisationJouee {
     return this.ordreDesVers.etiquettesPosees();
   }
 
-  etiquetteViseeParJeNeSaisPas(choisie?: string): string | undefined {
-    return this.ordreDesVers.etiquetteViseeParJeNeSaisPas(choisie);
-  }
-
   repondre(reponse: Reponse): ResultatDeReponse {
     if (reponse.genre === "placement") return this.placer(reponse);
     if (reponse.genre === "motEcrit") throw new ReponseIncompatible(reponse.genre);

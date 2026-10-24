@@ -142,7 +142,7 @@ export class ExerciceJoue {
   }
 
   etiquetteViseeParJeNeSaisPas(choisie?: string): string | undefined {
-    return (this.contenu.etiquettes ?? this.contenu.memorisation)?.etiquetteViseeParJeNeSaisPas(choisie);
+    return this.contenu.etiquettes?.etiquetteViseeParJeNeSaisPas(choisie);
   }
 
   texteATrous(): SegmentDuTexteATrous[] {
