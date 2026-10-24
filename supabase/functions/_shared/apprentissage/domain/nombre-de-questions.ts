@@ -1,8 +1,7 @@
-import { type Exercice, type ExerciceGenerique } from "../../catalogue/domain/index.ts";
+import { type Exercice, type ExerciceAddition } from "../../catalogue/domain/index.ts";
+import { AdditionPosee } from "./addition-posee.ts";
 
 const QUESTIONS_PAR_DEFAUT_D_UN_CALCUL = 5;
-const OPERATIONS_PAR_DEFAUT_D_UNE_ADDITION = 3;
-const ETAPES_PAR_DEFAUT_D_UNE_ADDITION = 2;
 const QUESTIONS_PAR_VERS = 2;
 
 export function nombreDeQuestions(exercice: Exercice): number {
@@ -24,13 +23,15 @@ export function nombreDeQuestions(exercice: Exercice): number {
     case "dictee":
       return taille(exercice.mots);
     case "calcul":
-      return exercice.operations?.length ?? combienDemande(exercice) ?? QUESTIONS_PAR_DEFAUT_D_UN_CALCUL;
+      return exercice.operations?.length ?? exercice.generateur?.combien ?? QUESTIONS_PAR_DEFAUT_D_UN_CALCUL;
     case "fluence":
       return 1;
     case "memoriser":
       return taille(exercice.vers) * QUESTIONS_PAR_VERS;
     case "addition":
-      return nombreDOperationsPosees(exercice) * (exercice.etapes?.length ?? ETAPES_PAR_DEFAUT_D_UNE_ADDITION);
+      return lesAdditionsLesPlusLongues(exercice)
+        .map((nombres) => questionsDUneAddition(nombres, exercice.etapes))
+        .reduce((total, questions) => total + questions, 0);
   }
 }
 
@@ -38,11 +39,18 @@ function taille(liste: readonly unknown[] | undefined): number {
   return liste?.length ?? 0;
 }
 
-function combienDemande(exercice: ExerciceGenerique): number | undefined {
-  const combien = exercice.generateur?.combien;
-  return typeof combien === "number" ? combien : undefined;
+function lesAdditionsLesPlusLongues({ operations, generateur }: ExerciceAddition): readonly (readonly number[])[] {
+  if (operations) return operations;
+  if (!generateur) return [];
+  return Array.from(
+    { length: generateur.combien },
+    () => Array.from({ length: generateur.nombres }, () => generateur.max),
+  );
 }
 
-function nombreDOperationsPosees(exercice: ExerciceGenerique): number {
-  return exercice.operations?.length ?? combienDemande(exercice) ?? OPERATIONS_PAR_DEFAUT_D_UNE_ADDITION;
+function questionsDUneAddition(nombres: readonly number[], etapes: ExerciceAddition["etapes"]): number {
+  const addition = AdditionPosee.depuis(nombres);
+  const chiffresPoses = etapes.includes("poser") ? addition.etapePoser().questions.length : 0;
+  const colonnesCalculees = etapes.includes("calculer") ? addition.colonnes.length : 0;
+  return chiffresPoses + colonnesCalculees;
 }

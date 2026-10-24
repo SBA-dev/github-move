@@ -31,6 +31,8 @@ Validation n°1 du lot 3 par le PO, le 2026-10-23 : « OK pour tout » (`docs/st
 
 Total : 8 règles, 27 scénarios (32 cas), dont 4 `@acces`, aucun `@a-valider`. Tags `@depend-de-<n>` (scénario exclu par `--grep-invert @depend-de` jusqu'à la livraison de #<n>) : `@depend-de-14` (export et suppression du profil), `@depend-de-20` (fluence, calculs tirés). Plus de 6 règles : la story peut se livrer en deux temps, les étoiles et la fin de la séance dans le navigateur (règles 1, 2, 5, 8), puis l'enregistrement (règles 3, 4, 6, 7).
 
+Levée (2026-10-24) : #20 est livrée, le tag `@depend-de-20` est retiré de « Une séance faite seulement d'une fluence ne donne pas d'étoiles » et « Rejouer tire de nouveaux calculs », qui passent en E2E (ainsi que les cas de #23 qui l'attendaient).
+
 Droits d'accès (`@acces`) : les deux parents rattachés lisent les étoiles de Léa, sur tous leurs appareils ; un parent non rattaché (Claire) ne peut ni enregistrer une séance pour Léa (refus présenté comme un profil introuvable, comme #11) ni lire ses étoiles. Les écritures passent par l'Edge Function avec le JWT de l'appelant ; la lecture se fait sous RLS.
 
 Idempotence : une même séance terminée envoyée deux fois n'est comptée qu'une fois. Invisible pour l'enfant (les meilleures étoiles ne changent pas, et le nombre de séances n'est pas affiché au lot 3) : vérifiée par les tests du cas d'usage `TerminerLaSeance` et par un test d'intégration de l'Edge Function, pas en E2E.

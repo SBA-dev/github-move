@@ -1,19 +1,25 @@
 import { useEffect, useRef } from "react";
-import type { QuestionJouee } from "@domain/apprentissage";
 import { TexteEnSyllabes } from "../../reglages/index.ts";
 
 type Props = {
-  readonly question: QuestionJouee;
+  /** Tous les choix, dans l'ordre d'affichage. */
+  readonly textes: readonly string[];
+  /** Les choix déjà écartés : grisés, ils ne répondent plus. */
+  readonly ecartes: readonly string[];
+  /** Les choix encore possibles. */
+  readonly possibles: readonly string[];
+  /** Le choix qui brille : la bonne réponse montrée par « Je ne sais pas ». */
+  readonly reponseQuiBrille: string | undefined;
   /** La question est réussie : on la félicite avant de passer à la suivante. */
   readonly reussie: boolean;
   readonly bulleEclatee: string | undefined;
   readonly onChoisir: (texte: string) => void;
 };
 
-export function ChoixDeLaQuestion({ question, reussie, bulleEclatee, onChoisir }: Props) {
-  const ecartes = question.choix.ecartes();
-  const premierPossible = question.choix.possibles()[0];
-  const bonneReponseMontree = question.bonneReponseMontree;
+export function ChoixDeLaQuestion(
+  { textes, ecartes, possibles, reponseQuiBrille, reussie, bulleEclatee, onChoisir }: Props,
+) {
+  const premierPossible = possibles[0];
   const bulleAFocaliser = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     if (!reussie) bulleAFocaliser.current?.focus();
@@ -21,7 +27,7 @@ export function ChoixDeLaQuestion({ question, reussie, bulleEclatee, onChoisir }
 
   return (
     <div className="choix-de-la-question" role="group" aria-label="Choix" data-testid="choix-de-la-question">
-      {question.choix.textes().map((texte) => {
+      {textes.map((texte) => {
         const ecarte = ecartes.includes(texte);
         return (
           <button
@@ -31,7 +37,7 @@ export function ChoixDeLaQuestion({ question, reussie, bulleEclatee, onChoisir }
             className="bulle-de-choix"
             data-testid="choix"
             data-ecarte={ecarte ? "true" : undefined}
-            data-brille={bonneReponseMontree && texte === premierPossible && !reussie ? "true" : undefined}
+            data-brille={texte === reponseQuiBrille && !reussie ? "true" : undefined}
             data-eclatee={texte === bulleEclatee ? "true" : undefined}
             aria-disabled={ecarte || reussie ? true : undefined}
             onClick={() => onChoisir(texte)}

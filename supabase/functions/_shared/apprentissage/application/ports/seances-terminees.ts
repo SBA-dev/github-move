@@ -14,4 +14,7 @@ export interface SeancesTerminees {
     resultat: ResultatDeLaLecon,
     nombreDeSeancesLu: number,
   ): Promise<IssueDeLEnregistrement>;
+
+  /** Écrit une séance qui ne touche pas au résultat de la leçon (fluence seule). */
+  enregistrerSansResultat(fait: SeanceTerminee): Promise<"enregistree" | "dejaEnregistree">;
 }

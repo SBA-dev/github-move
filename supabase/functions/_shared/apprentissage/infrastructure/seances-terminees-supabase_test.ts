@@ -56,3 +56,9 @@ Deno.test("chaque question ratée devient une ligne de questions_des_seances", (
 Deno.test("une séance sans erreur n'écrit aucune ligne de question", () => {
   assertEquals(lignesDesQuestionsDeLaSeance({ ...fait, erreurs: 0, questionsRatees: [] }), []);
 });
+
+Deno.test("la ligne d'une séance de fluence seule, sans étoiles, a etoiles à null", () => {
+  const { etoiles: _etoiles, ...sansEtoiles } = fait;
+
+  assertEquals(ligneDeLaSeanceTerminee(sansEtoiles).etoiles, null);
+});
