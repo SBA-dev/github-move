@@ -1,6 +1,7 @@
 import { toutesLesMatieres } from "../../catalogue/domain/index.ts";
 import type { Lecon, Matiere, Niveau } from "../../catalogue/domain/index.ts";
 import type { Etoiles } from "./etoiles.ts";
+import { ordreDesNiveaux, parOrdrePuisIdentifiant } from "./ordre-des-lecons.ts";
 
 export type LeconId = string;
 
@@ -68,11 +69,6 @@ function leconsReussiesDesClassesAuDessus(
     });
 }
 
-function ordreDesNiveaux(a: Lecon, b: Lecon): number {
-  if (a.niveau.estAuDessusDe(b.niveau)) return 1;
-  return b.niveau.estAuDessusDe(a.niveau) ? -1 : 0;
-}
-
 function leconsDeLaMatiere(entrees: EntreesDuParcours, matiere: Matiere): Lecon[] {
   return entrees.lecons.filter((lecon) =>
     lecon.matiere.code === matiere.code && lecon.niveau.valeur === entrees.niveau.valeur
@@ -87,8 +83,4 @@ function etatDeLaLecon(
   const etoiles = meilleuresEtoiles.get(lecon);
   if (etoiles) return { genre: "reussie", etoiles };
   return lecon === prochaineLecon ? { genre: "prochaine" } : { genre: "aDecouvrir" };
-}
-
-function parOrdrePuisIdentifiant(a: Lecon, b: Lecon): number {
-  return a.ordre - b.ordre || a.id.localeCompare(b.id);
 }
