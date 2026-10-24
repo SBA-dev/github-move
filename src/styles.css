@@ -271,7 +271,7 @@ button:focus-visible, summary:focus-visible { outline: 3px solid #1f2a1f; outlin
   font-weight: 700;
   cursor: pointer;
 }
-.bulle-de-choix[data-brille="true"] {
+.bulle-de-choix[data-brille="true"], .etiquette[data-brille="true"], .maison[data-brille="true"] {
   background: #fff3c4;
   box-shadow: 0 0 0 6px #ffd23f, 0 0 18px 8px #ffd23f;
   animation: brille 1.2s ease-in-out infinite alternate;

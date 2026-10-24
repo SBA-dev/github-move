@@ -1,6 +1,6 @@
-import { type MutableRefObject, useCallback } from "react";
+import { type MutableRefObject, useCallback, useState } from "react";
 import { type FaitDeSeance, Reponse, type Seance } from "@domain/apprentissage";
-import { type Humeur, type PersonnageGuide, reagirALaReponse } from "@domain/motivation";
+import { type Humeur, type PersonnageGuide, reagirAJeNeSaisPas, reagirALaReponse } from "@domain/motivation";
 import { hasardDuNavigateur } from "../../hasard-navigateur.ts";
 import type { ParoleADire } from "../usePersonnageQuiParle.ts";
 import type { QuestionFigee } from "./useQuestionFigee.ts";
@@ -17,6 +17,8 @@ type Dependances = {
   readonly reussite: QuestionFigee;
 };
 
+const CLE_DE_L_ORDRE = "";
+
 type SuiteDuPlacement = (numero: number, faits: FaitDeSeance[]) => Promise<void>;
 
 /** Le déroulé des exercices à étiquettes (classer, ordre) : une étiquette posée est corrigée, puis le personnage guide réagit. */
@@ -24,6 +26,14 @@ export function useEtiquettesAPlacer(
   { seance, personnageGuide, dire, faireSilence, montrerHumeur, sequence, vivant, redessiner, reussite }: Dependances,
 ) {
   const { estFigee, figer, annoncerLAvancement } = reussite;
+  /** Ce que « Je ne sais pas » a montré : la bonne réponse de chaque étiquette de classer, ou de la question en cours en ordre (clé vide). */
+  const [bonnesReponsesMontrees, setBonnesReponsesMontrees] = useState<Readonly<Record<string, string>>>({});
+
+  const oublierLaBonneReponse = useCallback((etiquette: string) => {
+    setBonnesReponsesMontrees((montrees) =>
+      Object.fromEntries(Object.entries(montrees).filter(([cle]) => cle !== etiquette && cle !== CLE_DE_L_ORDRE))
+    );
+  }, []);
 
   const encourager = useCallback(async () => {
     const reaction = reagirALaReponse(false, personnageGuide, hasardDuNavigateur);
@@ -54,6 +64,7 @@ export function useEtiquettesAPlacer(
       await encourager();
       return;
     }
+    oublierLaBonneReponse(etiquette);
     const exerciceFini = exercice.estReussi();
     if (exerciceFini) figer({ position: exercice.position, exercice, question: undefined });
     annoncerLAvancement(seance.avancement());
@@ -61,7 +72,20 @@ export function useEtiquettesAPlacer(
     if (!exerciceFini || !vivant.current) return;
     figer(undefined);
     await suite(++sequence.current, seance.retirerFaits());
-  }, [seance, estFigee, sequence, redessiner, encourager, figer, annoncerLAvancement, feliciterOuRelancer, vivant]);
+  }, [seance, estFigee, sequence, redessiner, encourager, figer, annoncerLAvancement, feliciterOuRelancer, vivant, oublierLaBonneReponse]);
 
-  return { placer };
+  const jeNeSaisPas = useCallback(async (etiquette?: string) => {
+    if (!seance.exerciceEnCours() || estFigee.current) return;
+    const cle = etiquette ?? CLE_DE_L_ORDRE;
+    if (cle in bonnesReponsesMontrees) return;
+    const { aide, bonneReponse } = seance.direJeNeSaisPas(etiquette);
+    setBonnesReponsesMontrees({ ...bonnesReponsesMontrees, [cle]: bonneReponse });
+    sequence.current++;
+    faireSilence();
+    redessiner();
+    const reaction = reagirAJeNeSaisPas(aide);
+    await dire({ texte: reaction.parole, nature: "aide", humeur: reaction.humeur });
+  }, [seance, estFigee, bonnesReponsesMontrees, sequence, faireSilence, redessiner, dire]);
+
+  return { placer, jeNeSaisPas, bonnesReponsesMontrees };
 }

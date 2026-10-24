@@ -6,7 +6,10 @@ type Props = {
   readonly exercice: Extract<Exercice, { type: "classer" | "ordre" }>;
   /** Les étiquettes qui attendent encore d'être posées. */
   readonly etiquettesAPlacer: readonly string[];
+  /** Ce que « Je ne sais pas » a montré : la maison (classer) de chaque étiquette aidée, ou l'étiquette qui vient ensuite (ordre, clé vide). */
+  readonly bonnesReponsesMontrees: Readonly<Record<string, string>>;
   readonly onPoser: (etiquette: string, groupe?: string) => void;
+  readonly onJeNeSaisPas: (etiquette?: string) => void;
 };
 
 type Posee = { readonly texte: string; readonly groupe: string };
@@ -22,7 +25,7 @@ function etiquettesPosees(exercice: Extract<Exercice, { type: "classer" }>, aPla
   });
 }
 
-export function ExerciceAEtiquettes({ exercice, etiquettesAPlacer, onPoser }: Props) {
+export function ExerciceAEtiquettes({ exercice, etiquettesAPlacer, bonnesReponsesMontrees, onPoser, onJeNeSaisPas }: Props) {
   const [choisie, setChoisie] = useState<string | undefined>();
   const premiere = useRef<HTMLButtonElement>(null);
   const nombreRestant = etiquettesAPlacer.length;
@@ -36,6 +39,15 @@ export function ExerciceAEtiquettes({ exercice, etiquettesAPlacer, onPoser }: Pr
     setChoisie(undefined);
     onPoser(etiquette, groupe);
   };
+
+  const etiquetteVisee = exercice.type === "classer" ? choisie ?? etiquettesAPlacer[0] : undefined;
+  const bonneReponseMontree = bonnesReponsesMontrees[etiquetteVisee ?? ""];
+  const jeNeSaisPas = () => {
+    setChoisie(etiquetteVisee);
+    onJeNeSaisPas(etiquetteVisee);
+  };
+  const brille = (etiquette: string, rang: number) =>
+    exercice.type === "ordre" && etiquette === bonneReponseMontree && rang === etiquettesAPlacer.indexOf(etiquette);
 
   return (
     <div className="etiquettes" data-testid="etiquettes">
@@ -51,6 +63,7 @@ export function ExerciceAEtiquettes({ exercice, etiquettesAPlacer, onPoser }: Pr
               type="button"
               className="etiquette"
               data-testid="etiquette"
+              data-brille={brille(etiquette, rang) ? "true" : undefined}
               aria-pressed={exercice.type === "classer" ? choisie === etiquette : undefined}
               onClick={() => exercice.type === "ordre" ? poser(etiquette) : setChoisie(choisie === etiquette ? undefined : etiquette)}
             >
@@ -59,12 +72,18 @@ export function ExerciceAEtiquettes({ exercice, etiquettesAPlacer, onPoser }: Pr
           </li>
         ))}
       </ul>
+      {nombreRestant > 0 && bonneReponseMontree === undefined && (
+        <button type="button" className="je-ne-sais-pas" data-testid="je-ne-sais-pas" onClick={jeNeSaisPas}>
+          Je ne sais pas
+        </button>
+      )}
       {exercice.type === "classer"
         ? (
           <Maisons
             exercice={exercice}
             posees={etiquettesPosees(exercice, etiquettesAPlacer)}
             choisie={choisie}
+            maisonQuiBrille={bonneReponseMontree}
             onPoser={poser}
           />
         )
@@ -77,10 +96,11 @@ type PropsDesMaisons = {
   readonly exercice: Extract<Exercice, { type: "classer" }>;
   readonly posees: readonly Posee[];
   readonly choisie: string | undefined;
+  readonly maisonQuiBrille: string | undefined;
   readonly onPoser: (etiquette: string, groupe: string) => void;
 };
 
-function Maisons({ exercice, posees, choisie, onPoser }: PropsDesMaisons) {
+function Maisons({ exercice, posees, choisie, maisonQuiBrille, onPoser }: PropsDesMaisons) {
   const lacher = (evenement: DragEvent, groupe: string) => {
     evenement.preventDefault();
     const etiquette = evenement.dataTransfer.getData("text/plain");
@@ -95,6 +115,8 @@ function Maisons({ exercice, posees, choisie, onPoser }: PropsDesMaisons) {
           role="group"
           aria-label={`Maison « ${groupe.nom} »`}
           data-testid="maison"
+          data-groupe={groupe.id}
+          data-brille={groupe.id === maisonQuiBrille ? "true" : undefined}
           onDragOver={(evenement) => evenement.preventDefault()}
           onDrop={(evenement) => lacher(evenement, groupe.id)}
         >

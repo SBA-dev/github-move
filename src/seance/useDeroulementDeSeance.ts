@@ -1,5 +1,5 @@
 import { useCallback, useReducer, useRef } from "react";
-import { type FaitDeSeance, type Seance, texteALireDeLEtape } from "@domain/apprentissage";
+import { type FaitDeSeance, indicationDuGeste, type Seance, texteALireDeLEtape } from "@domain/apprentissage";
 import type { EtapeDeLecon, Lecon } from "@domain/catalogue";
 import {
   annoncerExerciceSuivant,
@@ -10,7 +10,6 @@ import {
 import { useReducedMotion } from "motion/react";
 import { hasardDuNavigateur } from "../hasard-navigateur.ts";
 import type { Voix } from "../voix/index.ts";
-import { indicationDuGeste } from "./exercices/indication-du-geste.ts";
 import { useEtiquettesAPlacer } from "./exercices/useEtiquettesAPlacer.ts";
 import { useQuestionFigee } from "./exercices/useQuestionFigee.ts";
 import { useQuestionsAChoix } from "./exercices/useQuestionsAChoix.ts";
@@ -62,7 +61,7 @@ export function useDeroulementDeSeance(
     redessiner,
     reussite,
   });
-  const { placer: placerUneEtiquette } = useEtiquettesAPlacer({
+  const { placer: placerUneEtiquette, jeNeSaisPas: jeNeSaisPasDUneEtiquette, bonnesReponsesMontrees } = useEtiquettesAPlacer({
     seance,
     personnageGuide,
     dire,
@@ -80,7 +79,7 @@ export function useDeroulementDeSeance(
     const exercice = position === undefined ? undefined : lecon.exercices[position];
     if (!exercice?.consigne) return;
     if (!(await dire({ texte: exercice.consigne, nature: "consigne" }))) return;
-    const indication = indicationDuGeste(exercice);
+    const indication = indicationDuGeste(exercice.type);
     if (indication) await dire({ texte: indication, nature: "consigne" });
   }, [seance, lecon, dire]);
 
@@ -178,6 +177,8 @@ export function useDeroulementDeSeance(
     relireLaQuestion,
     ecouterLeMot,
     jeNeSaisPas,
+    jeNeSaisPasDUneEtiquette,
+    bonnesReponsesMontrees,
     repondre,
     placer,
     reecouter,
