@@ -57,7 +57,7 @@ function segmentsDesVers(vers: readonly string[]): readonly Segment[] {
 }
 
 function distracteursPour(vers: readonly string[], motsAttendus: readonly string[]): readonly string[] {
-  const manquants = Math.max(0, NOMBRE_DE_CHOIX_PAR_TROU - motsAttendus.length);
+  const manquants = Math.max(0, NOMBRE_DE_CHOIX_PAR_TROU - new Set(motsAttendus).size);
   const candidats = vers.flatMap((unVers) => motsDuVers(unVers).map(({ mot }) => mot))
     .filter((mot) => peutEtreUnDistracteur(mot) && !motsAttendus.includes(mot));
   return [...new Set(candidats)].sort((a, b) => b.length - a.length).slice(0, manquants);
