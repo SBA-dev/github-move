@@ -78,3 +78,10 @@ Deno.test("une poésie courte est complétée par le plus long mot non caché po
   assertEquals(plan.motsCaches.motsAttendus, ["soleil", "chantent"]);
   assertEquals(plan.motsCaches.distracteurs, ["oiseaux"]);
 });
+
+Deno.test("un refrain ne compte qu'une fois : les mots cachés distincts sont complétés pour offrir trois choix", () => {
+  const plan = PlanDeMemorisation.de(poesie("Sans titre", ["Picoti, picota", "Picoti, picota", "Le chat dort."]));
+
+  assertEquals(plan.motsCaches.motsAttendus, ["Picoti", "Picoti", "chat"]);
+  assertEquals(plan.motsCaches.distracteurs, ["picota"]);
+});

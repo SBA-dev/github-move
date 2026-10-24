@@ -1,8 +1,9 @@
-import { assertEquals } from "@std/assert";
+import { assertEquals, assertThrows } from "@std/assert";
 import { Niveau } from "../../catalogue/domain/index.ts";
 import type { ExerciceMemoriser } from "../../catalogue/domain/exercices/memoriser.ts";
 import { hasardSansMelange } from "../test_utils/hasard-fixe.ts";
 import { ExerciceJoue } from "./exercice-joue.ts";
+import { ReponseIncompatible } from "./erreurs.ts";
 import { Reponse } from "./reponse.ts";
 import { type Tireur, tireurAuHasard } from "./tireur.ts";
 
@@ -188,4 +189,79 @@ Deno.test("les tirages d'une poésie sont les vers mélangés, puis les choix pr
     ["Pierrot", "chandelle", "clair"],
     ["Pierrot", "chandelle", "clair"],
   ]);
+});
+
+Deno.test("dans une poésie à refrain, chaque mot caché offre trois choix", () => {
+  const vers = ["Picoti, picota", "Picoti, picota", "Le chat dort."];
+  const exerciceJoue = jouer(poesie("Refrain", vers));
+  placerLesVers(exerciceJoue, vers);
+
+  const [, ...choixDesMotsCaches] = exerciceJoue.tirages();
+
+  assertEquals(choixDesMotsCaches.map((choix) => choix.length), [3, 3, 3]);
+});
+
+Deno.test("pendant l'ordre des vers, une relance est due après un vers bien posé et une félicitation après le dernier", () => {
+  const exerciceJoue = jouer(auClairDeLaLune);
+
+  exerciceJoue.repondre(Reponse.placement(versDuClair[0]));
+  assertEquals(exerciceJoue.paroleDueApresLaDerniereReponse(), "relance");
+
+  exerciceJoue.repondre(Reponse.placement(versDuClair[1]));
+  exerciceJoue.repondre(Reponse.placement(versDuClair[2]));
+  assertEquals(exerciceJoue.paroleDueApresLaDerniereReponse(), "felicitation");
+});
+
+Deno.test("pendant l'ordre des vers, aucune parole n'est due après un vers mal posé", () => {
+  const exerciceJoue = jouer(auClairDeLaLune);
+
+  exerciceJoue.repondre(Reponse.placement(versDuClair[1]));
+
+  assertEquals(exerciceJoue.paroleDueApresLaDerniereReponse(), undefined);
+});
+
+Deno.test("pendant les mots cachés, une félicitation est due après un bon mot et aucune parole après une erreur", () => {
+  const exerciceJoue = jouer(auClairDeLaLune);
+  placerLesVers(exerciceJoue, versDuClair);
+
+  exerciceJoue.repondre(Reponse.choix("Pierrot"));
+  assertEquals(exerciceJoue.paroleDueApresLaDerniereReponse(), undefined);
+
+  exerciceJoue.repondre(Reponse.choix("clair"));
+  assertEquals(exerciceJoue.paroleDueApresLaDerniereReponse(), "felicitation");
+});
+
+Deno.test("le bon mot caché qui n'est pas le dernier ne complète pas le texte", () => {
+  const exerciceJoue = jouer(auClairDeLaLune);
+  placerLesVers(exerciceJoue, versDuClair);
+
+  exerciceJoue.repondre(Reponse.choix("clair"));
+
+  assertEquals(exerciceJoue.texteCompleteParLaDerniereReponse(), false);
+});
+
+Deno.test("le bon mot caché du dernier vers complète le texte", () => {
+  const exerciceJoue = jouer(auClairDeLaLune);
+  placerLesVers(exerciceJoue, versDuClair);
+  ["clair", "Pierrot"].forEach((mot) => exerciceJoue.repondre(Reponse.choix(mot)));
+
+  exerciceJoue.repondre(Reponse.choix("chandelle"));
+
+  assertEquals(exerciceJoue.texteCompleteParLaDerniereReponse(), true);
+});
+
+Deno.test("une réponse écrite à une poésie est incompatible", () => {
+  const exerciceJoue = jouer(auClairDeLaLune);
+
+  assertThrows(() => exerciceJoue.repondre(Reponse.motEcrit(["c", "l", "a", "i", "r"])), ReponseIncompatible);
+});
+
+Deno.test("l'énoncé d'un mot caché est le vers qui contient le trou, sans séparateur", () => {
+  const exerciceJoue = jouer(auClairDeLaLune);
+  placerLesVers(exerciceJoue, versDuClair);
+  exerciceJoue.repondre(Reponse.choix("clair"));
+  assertEquals(exerciceJoue.questionEnCours()?.enonce, "Mon ami …,");
+
+  exerciceJoue.repondre(Reponse.choix("Pierrot"));
+  assertEquals(exerciceJoue.questionEnCours()?.enonce, "Ma … est morte,");
 });
