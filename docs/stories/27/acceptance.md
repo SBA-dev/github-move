@@ -112,6 +112,8 @@ Résultat préparé, avec la clé `service_role` réservée à la préparation, 
 
 Comme pour `resultats_des_lecons` (#25), les identifiants `e2e-27-…` doivent y être acceptés.
 
+Séance préparée par le jeu de données : pour #27, l'étape reprise « Léa a terminé une séance de la leçon « … » avec 1 étoile » (règle 5, « Une séance terminée donne ses étoiles à une leçon réussie au test de départ ») n'est **pas jouée** dans l'interface comme dans #25. Avec un exercice d'une seule question à 3 choix, une séance à 1 étoile est injouable. Le résultat est donc préparé directement dans `resultats_des_lecons`, avec la clé `service_role` réservée à la préparation. Le texte de l'étape ne change pas.
+
 Serveur et leçons de test :
 - Le serveur ne connaît pas les leçons de test (#24, Q85). Il refusera donc un test de départ joué sur la bibliothèque de test (`TestDeDepartIncoherent`).
 - Comme pour #25 (réponse 25.6), l'écran de fin, l'accueil et le parcours reflètent tout de suite le test fini, par le résultat calculé dans le navigateur et gardé sur l'appareil.
@@ -141,7 +143,7 @@ Aucune étape existante n'est modifiée.
 
 Étapes nouvelles :
 - proposition : « la bibliothèque de test du test de départ est servie », « la proposition du test de départ s'affiche pour … », « la proposition du test de départ est affichée pour Léa », « la proposition du test de départ propose « … » et « … » », « Noisette dit, et l'écran affiche : » (texte en bloc, à cause des guillemets imbriqués), « l'écran s'intitule « … », avec « … » », « Léa accepte la proposition du test de départ(, au clavier seulement) », « Léa remet le test de départ à plus tard », « Léa ouvre « Mon test de départ » depuis son accueil », « l'accueil de Léa (ne) propose (pas) « Mon test de départ »( sur le téléphone de Paul) », « la bibliothèque ne peut pas être chargée » ;
-- déroulé : « la question de « … » s'affiche », « … reste posée », « Léa répond juste à la question de « … » », « Léa se trompe( 3 fois) à la question de « … »(, puis donne la bonne réponse) », « Léa dit « Je ne sais pas » à la question de « … », puis donne la bonne réponse », « Léa répond juste à toutes les questions du test de départ », « Léa a eu, dans l'ordre, les questions des leçons : », « aucune question de « … » (ni de « … »)( n'est posée) », « Léa quitte le test de départ » ;
+- déroulé : « la question de « … » s'affiche », « … reste posée », « Léa répond juste à la question de « … » », « Léa se trompe( 2 fois) à la question de « … »(, puis donne la bonne réponse) », « Léa dit « Je ne sais pas » à la question de « … », puis donne la bonne réponse », « Léa répond juste à toutes les questions du test de départ », « Léa a eu, dans l'ordre, les questions des leçons : », « aucune question de « … » (ni de « … »)( n'est posée) », « Léa quitte le test de départ » ;
 - fin : « la fin du test de départ s'affiche », « la fin du test de départ propose seulement « Voir mon parcours » », « la fin du test de départ ne montre aucune étoile », « Léa choisit « Voir mon parcours » » ;
 - parent et serveur : « Paul choisit « Refaire le test de départ » pour Léa », « Paul a proposé de nouveau le test de départ à Léa depuis l'espace parent », « l'appareil envoie pour Léa un test de départ terminé … », « Claire demande le résultat du test de départ du profil enfant de Léa », « Claire envoie un test de départ terminé pour le profil enfant de Léa » ;
 - données préparées : voir plus haut.
@@ -192,6 +194,10 @@ Réponse du PO, le 2026-10-24 : « 27# reco OK » (annonce du responsable des é
 | 27.21 | Où mène « Voir mon parcours » ? | À « Mon parcours », ouvert comme depuis l'accueil (réponse 25.11) ; le retour ramène à l'accueil de l'enfant. | `@a-valider` retiré de « « Voir mon parcours » ouvre le parcours de l'enfant ». |
 | 27.22 | « Accueil de l'enfant » absent du glossaire | Ajouté au glossaire (Famille). « Fin du test de départ », « Mon test de départ », « Voir mon parcours » restent des mots d'interface. | Aucun changement d'étape. |
 | 27.23 | Leçon sans question possible placée avant une question juste | Réussie au test de départ, comme toute leçon d'avant. | `@a-valider` retiré de « Le personnage guide dit combien de leçons… » (17 leçons). |
+
+### Correction de données de test, sans changement de règle, après la mise au point E2E
+
+- Règle 4, « Plusieurs erreurs à une même question ne comptent que pour une question fausse » : « Léa se trompe 3 fois » devient « Léa se trompe 2 fois ». Chaque question de la bibliothèque de test n'a que 3 choix, donc 2 mauvaises bulles au plus, et une bulle déjà touchée est grisée : une 3e erreur distincte est impossible. Le sens est gardé : plusieurs erreurs à une même question comptent pour une seule question fausse (27.13).
 
 ### Effet de 27.19 sur les stories livrées (#11, #12, #13)
 

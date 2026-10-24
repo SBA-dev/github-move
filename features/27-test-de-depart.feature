@@ -220,7 +220,7 @@ Fonctionnalité: Test de départ
     Scénario: Plusieurs erreurs à une même question ne comptent que pour une question fausse
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa en est à la question de « Les voyelles » du test de départ
-      Quand Léa se trompe 3 fois à la question de « Les voyelles », puis donne la bonne réponse
+      Quand Léa se trompe 2 fois à la question de « Les voyelles », puis donne la bonne réponse
       Alors la question de « Compter jusqu'à 10 » s'affiche
 
     # Réponse 27.10
