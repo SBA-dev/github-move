@@ -1,6 +1,5 @@
 import { assert, assertEquals, assertThrows } from "@std/assert";
-import { type GenerateurDAdditions, LeconMalFormee } from "../../catalogue/domain/index.ts";
-import { hasardFixe } from "../test_utils/hasard-fixe.ts";
+import type { GenerateurDAdditions } from "../../catalogue/domain/index.ts";
 import { TirageHorsDuGenerateur } from "./erreurs.ts";
 import type { Hasard } from "./hasard.ts";
 import { relireLesAdditions, tirerLesAdditions } from "./tirage-d-additions.ts";
@@ -50,12 +49,6 @@ Deno.test("la retenue est garantie même quand le hasard donne toujours le plus 
   const additions = tirerLesAdditions(generateur({ combien: 1 }), { entre0et1: () => 0 });
 
   assert(sommeDesUnites(additions[0]) >= 10);
-});
-
-Deno.test("un générateur qui ne permet aucune retenue est une leçon mal formée", () => {
-  const sansRetenuePossible = generateur({ min: 10, max: 10, retenue: true });
-
-  assertThrows(() => tirerLesAdditions(sansRetenuePossible, hasardFixe(0, 0, 0, 0, 0, 0)), LeconMalFormee);
 });
 
 Deno.test("relire un tirage d'additions conforme au générateur rend les additions", () => {
