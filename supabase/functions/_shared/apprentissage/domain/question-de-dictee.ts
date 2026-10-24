@@ -36,7 +36,11 @@ export class QuestionDeDictee implements QuestionSuivie {
       if (une.genre === "dejaEcrit") return une;
       const estMontree = this.lettreMontree !== undefined && rang === this.lettres.length;
       const lettre = affichees[rang++];
-      return { genre: "aEcrire", ...(lettre !== undefined && { lettre }), ...(estMontree && { montree: true as const }) };
+      return {
+        genre: "aEcrire",
+        ...(lettre !== undefined && { lettre }),
+        ...(estMontree && { montree: true as const }),
+      };
     });
   }
 

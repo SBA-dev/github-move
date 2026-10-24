@@ -59,7 +59,13 @@ export class LectureAVoixHaute {
 
   async lire(
     brut: string,
-    options: { langue?: string; choix?: ChoixDeVoix; lent?: boolean; onMot?: (rang: number) => void; onFin?: () => void } = {},
+    options: {
+      langue?: string;
+      choix?: ChoixDeVoix;
+      lent?: boolean;
+      onMot?: (rang: number) => void;
+      onFin?: () => void;
+    } = {},
   ): Promise<void> {
     if (this.etat === "muet") return;
     const { lecteur, hasard } = this.dependances;
