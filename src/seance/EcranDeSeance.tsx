@@ -7,10 +7,15 @@ import { PersonnageGuide } from "../univers/index.ts";
 import type { Voix } from "../voix/index.ts";
 import { BulleDuPersonnageGuide } from "./BulleDuPersonnageGuide.tsx";
 import { EcranDeFin } from "./fin-de-seance/EcranDeFin.tsx";
+import { useFaciliteDeLaSeance } from "./difficulte/useFaciliteDeLaSeance.ts";
+import { ExerciceDAdditionPosee } from "./exercices/addition/ExerciceDAdditionPosee.tsx";
 import { ExerciceAChoix } from "./exercices/ExerciceAChoix.tsx";
 import { ExerciceAEtiquettes } from "./exercices/ExerciceAEtiquettes.tsx";
+import { ExerciceDeCalcul } from "./exercices/ExerciceDeCalcul.tsx";
+import { ExerciceDeFluence } from "./exercices/fluence/ExerciceDeFluence.tsx";
 import { generateurIdDuNavigateur } from "./generateur-id-navigateur.ts";
 import { hasardDuNavigateur } from "./hasard-navigateur.ts";
+import { horlogeDuNavigateur } from "./horloge.ts";
 import { RecipientDeProgression } from "./RecipientDeProgression.tsx";
 import { useDeroulementDeSeance } from "./useDeroulementDeSeance.ts";
 import { useLecon } from "./useLecon.ts";
@@ -31,10 +36,15 @@ type Props = {
   readonly onAccueil: () => void;
 };
 
-function commencerLaSeance(profilId: string, lecon: Lecon, exercice: number | undefined): Seance | undefined {
+function commencerLaSeance(
+  profilId: string,
+  lecon: Lecon,
+  exercice: number | undefined,
+  facilite: number,
+): Seance | undefined {
   const choix = exercice === undefined ? ChoixDeSeance.complete() : ChoixDeSeance.unExercice(exercice);
   try {
-    return Seance.commencer(generateurIdDuNavigateur, hasardDuNavigateur, profilId, lecon, choix);
+    return Seance.commencer(generateurIdDuNavigateur, hasardDuNavigateur, profilId, lecon, choix, facilite);
   } catch (erreur) {
     if (erreur instanceof ExerciceIntrouvable || erreur instanceof LeconSansExercice) return undefined;
     throw erreur;
@@ -77,7 +87,15 @@ function SeanceDeLaLecon({ lecon, exercice, profilId, ...reste }: PropsDeLaLecon
 type PropsDUnePartie = PropsDeLaLecon & { readonly onRejouer: () => void };
 
 function UnePartie({ lecon, exercice, profilId, ...reste }: PropsDUnePartie) {
-  const [seance] = useState(() => commencerLaSeance(profilId, lecon, exercice));
+  const facilite = useFaciliteDeLaSeance(profilId, lecon);
+  if (facilite === undefined) return <p>Chargement de la leçon…</p>;
+  return <PartieCommencee lecon={lecon} exercice={exercice} profilId={profilId} facilite={facilite} {...reste} />;
+}
+
+type PropsDeLaPartieCommencee = PropsDUnePartie & { readonly facilite: number };
+
+function PartieCommencee({ lecon, exercice, profilId, facilite, ...reste }: PropsDeLaPartieCommencee) {
+  const [seance] = useState(() => commencerLaSeance(profilId, lecon, exercice, facilite));
   if (!seance) return <JeuIntrouvable onRetour={reste.onRetour} />;
   return <SeanceEnCours seance={seance} lecon={lecon} {...reste} />;
 }
@@ -108,6 +126,9 @@ function SeanceEnCours(
   const exerciceDeLaLecon = position === undefined ? undefined : lecon.exercices[position];
   const exerciceAffiche = figee?.exercice ?? exerciceJoue;
   const question = figee === undefined ? exerciceJoue?.questionEnCours() : figee.question;
+  const calcul = deroulement.calculFige ?? seance.calculEnCours();
+  const fluence = deroulement.fluenceFinie ?? seance.fluenceEnCours(horlogeDuNavigateur.maintenant());
+  const addition = deroulement.additionFigee ?? seance.additionEnCours();
   const zoneDeLExercice = useRef<HTMLDivElement>(null);
   const exerciceCommence = exerciceJoue !== undefined;
   const dejaMonte = useRef(false);
@@ -180,6 +201,35 @@ function SeanceEnCours(
               onEcouterLeMot={() => void deroulement.ecouterLeMot()}
               onJAiEcoute={() => void deroulement.jAiEcoute()}
               onActiverLeSon={voix.basculerLeSon}
+            />
+          )}
+          {exerciceDeLaLecon.type === "calcul" && calcul && (
+            <ExerciceDeCalcul
+              calcul={calcul}
+              reussi={figee !== undefined}
+              onRelire={() => deroulement.relireLaPhrase(calcul.phrase)}
+              onChoisir={(texte) => void deroulement.choisirUneReponseDeCalcul(texte)}
+              onValider={(nombre) => void deroulement.repondreParUnNombre(nombre)}
+              onJeNeSaisPas={() => void deroulement.jeNeSaisPasDuCalcul()}
+            />
+          )}
+          {exerciceDeLaLecon.type === "fluence" && fluence && (
+            <ExerciceDeFluence
+              fluence={fluence}
+              onDemarrer={deroulement.demarrerLaFluence}
+              onValider={(nombre) => void deroulement.repondreParUnNombre(nombre)}
+            />
+          )}
+          {exerciceDeLaLecon.type === "addition" && addition && (
+            <ExerciceDAdditionPosee
+              addition={addition}
+              reussie={figee !== undefined}
+              colonneQuiBrille={deroulement.colonneQuiBrille}
+              onPoser={(chiffre, rang) => void deroulement.poserUnChiffre(chiffre, rang)}
+              onRelire={deroulement.relireLaPhrase}
+              onChoisir={(texte) => void deroulement.choisirUneReponseDeCalcul(texte)}
+              onValider={(nombre) => void deroulement.repondreParUnNombre(nombre)}
+              onJeNeSaisPas={(chiffre) => void deroulement.jeNeSaisPasDeLAddition(chiffre)}
             />
           )}
           {(exerciceDeLaLecon.type === "classer" || exerciceDeLaLecon.type === "ordre") && (
