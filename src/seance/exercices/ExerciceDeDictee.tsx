@@ -16,6 +16,7 @@ type Props = {
   readonly sonCoupe: boolean;
   readonly onRelire: () => void;
   readonly onReecouterLeMot: () => void;
+  readonly onEcouterPlusLentement: () => void;
   readonly onTaper: (lettre: string) => void;
   readonly onEffacer: () => void;
   readonly onJeNeSaisPas: () => void;
@@ -44,6 +45,9 @@ export function ExerciceDeDictee(props: Props) {
       <CasesDeLaDictee question={question} lettresFausses={lettresFausses} />
       <button type="button" className="secondaire" data-testid="reecouter-le-mot" onClick={props.onReecouterLeMot}>
         Réécouter le mot
+      </button>
+      <button type="button" className="secondaire" data-testid="ecouter-plus-lentement" onClick={props.onEcouterPlusLentement}>
+        Écouter plus lentement
       </button>
       <ClavierDeLaDictee question={question} toucheQuiBrille={props.toucheQuiBrille} onTaper={props.onTaper} onEffacer={props.onEffacer} />
       {!question.bonneReponseMontree && !reussie && (

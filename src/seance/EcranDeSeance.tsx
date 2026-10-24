@@ -219,9 +219,10 @@ function SeanceEnCours(
               sonCoupe={voix.son === "muet"}
               onRelire={deroulement.relireLaDictee}
               onReecouterLeMot={() => void deroulement.reecouterLeMot()}
+              onEcouterPlusLentement={() => void deroulement.reecouterLeMotPlusLentement()}
               onTaper={(lettre) => void deroulement.taper(lettre)}
               onEffacer={deroulement.effacer}
-              onJeNeSaisPas={deroulement.jeNeSaisPasEnDictee}
+              onJeNeSaisPas={() => void deroulement.jeNeSaisPasEnDictee()}
               onActiverLeSon={voix.basculerLeSon}
             />
           )}

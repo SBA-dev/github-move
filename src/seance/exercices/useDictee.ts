@@ -1,6 +1,6 @@
 import { type MutableRefObject, useCallback, useRef, useState } from "react";
-import { type CorrectionDuMot, type FaitDeSeance, PasDeLettreAEffacer, type QuestionDeDictee, type Seance } from "@domain/apprentissage";
-import { type Humeur, type PersonnageGuide, paroleApresUneBonneReponse, reagirALaReponse } from "@domain/motivation";
+import { type CorrectionDuMot, type FaitDeSeance, type QuestionDeDictee, type Seance } from "@domain/apprentissage";
+import { type PersonnageGuide, paroleApresUneBonneReponse, reagirAJeNeSaisPasEnDictee, reagirALaReponse } from "@domain/motivation";
 import { hasardDuNavigateur } from "../../hasard-navigateur.ts";
 import type { Voix } from "../../voix/index.ts";
 import type { ParoleADire } from "../usePersonnageQuiParle.ts";
@@ -15,7 +15,6 @@ type Dependances = {
   readonly lire: Voix["lire"];
   readonly dire: (parole: ParoleADire) => Promise<boolean>;
   readonly faireSilence: () => void;
-  readonly montrerHumeur: (humeur: Humeur) => void;
   readonly sequence: MutableRefObject<number>;
   readonly vivant: MutableRefObject<boolean>;
   readonly redessiner: () => void;
@@ -26,7 +25,7 @@ type SuiteDeLaDictee = (numero: number, faits: FaitDeSeance[], nouvelExercice: b
 
 /** Le déroulé d'une dictée : le mot est dit, les lettres s'écrivent case par case, la dernière case corrige. */
 export function useDictee(
-  { seance, personnageGuide, lire, dire, faireSilence, montrerHumeur, sequence, vivant, redessiner, reussite }: Dependances,
+  { seance, personnageGuide, lire, dire, faireSilence, sequence, vivant, redessiner, reussite }: Dependances,
 ) {
   const { estFigee, figer, annoncerLAvancement } = reussite;
   /** Les lettres fausses restent en rouge un instant : pendant ce temps, rien ne s'écrit. */
@@ -55,13 +54,15 @@ export function useDictee(
     void presenter();
   }, [laQuestion, estFigee, sequence, faireSilence, presenter]);
 
-  const reecouterLeMot = useCallback(async () => {
+  const reecouterLeMot = useCallback(async (lent = false) => {
     const question = laQuestion();
     if (!question || estFigee.current) return;
     sequence.current++;
     faireSilence();
-    await lire(question.motADire());
+    await lire(question.motADire(), { lent });
   }, [laQuestion, estFigee, sequence, faireSilence, lire]);
+
+  const reecouterLeMotPlusLentement = useCallback(() => reecouterLeMot(true), [reecouterLeMot]);
 
   const montrerLesLettresFausses = useCallback((correction: CorrectionDuMot) => {
     lettresFaussesMontrees.current = true;
@@ -118,26 +119,23 @@ export function useDictee(
 
   const effacer = useCallback(() => {
     if (!peutEcrire()) return;
-    try {
-      seance.effacer();
-    } catch (erreur) {
-      if (erreur instanceof PasDeLettreAEffacer) return;
-      throw erreur;
-    }
+    if (!laQuestion()?.peutEffacer()) return;
+    seance.effacer();
     setToucheQuiBrille(undefined);
     redessiner();
-  }, [seance, peutEcrire, redessiner]);
+  }, [seance, laQuestion, peutEcrire, redessiner]);
 
-  const jeNeSaisPas = useCallback(() => {
+  const jeNeSaisPas = useCallback(async () => {
     const question = laQuestion();
     if (!question || !peutEcrire() || question.bonneReponseMontree) return;
     const { maniere, bonneReponse } = seance.direJeNeSaisPas();
     if (maniere === "briller") setToucheQuiBrille(bonneReponse);
     sequence.current++;
     faireSilence();
-    montrerHumeur("reflechit");
     redessiner();
-  }, [seance, laQuestion, peutEcrire, sequence, faireSilence, montrerHumeur, redessiner]);
+    const reaction = reagirAJeNeSaisPasEnDictee(maniere);
+    await dire({ texte: reaction.parole, nature: "aide", humeur: reaction.humeur });
+  }, [seance, laQuestion, peutEcrire, sequence, faireSilence, redessiner, dire]);
 
-  return { lettresFausses, toucheQuiBrille, presenter, relireLaDictee, reecouterLeMot, taper, effacer, jeNeSaisPas };
+  return { lettresFausses, toucheQuiBrille, presenter, relireLaDictee, reecouterLeMot, reecouterLeMotPlusLentement, taper, effacer, jeNeSaisPas };
 }
