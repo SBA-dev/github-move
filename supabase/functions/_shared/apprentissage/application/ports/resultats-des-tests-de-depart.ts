@@ -5,6 +5,10 @@ export type IssueDeLEnregistrementDuTestDeDepart = "enregistre" | "dejaEnregistr
 export interface ResultatsDesTestsDeDepart {
   de(enfant: string): Promise<ResultatDuTestDeDepart | null>;
 
-  /** `dejaEnregistre` : ce test de départ était déjà compté, rien n'est écrit (idempotence). */
+  /**
+   * Réunit les leçons du résultat avec ce qui est déjà enregistré pour l'enfant et garde le `faitLe` le plus récent,
+   * de façon atomique (deux envois concurrents ne s'écrasent pas).
+   * `dejaEnregistre` : l'identifiant du test est déjà connu, rien n'est écrit (idempotence).
+   */
   enregistrer(resultat: ResultatDuTestDeDepart, test: string): Promise<IssueDeLEnregistrementDuTestDeDepart>;
 }

@@ -1,17 +1,11 @@
 import type { Lecon, Niveau } from "../../catalogue/domain/index.ts";
 import {
-  BonneReponseAbsenteDesChoix,
   ChoixInconnu,
-  GroupeInconnu,
   JeNeSaisPasDejaDit,
-  MotIncomplet,
   QuestionHorsDuTestDeDepart,
   ReponseIncompatible,
-  TestDeDepartDejaFini,
   TestDeDepartIncoherent,
-  TestDeDepartNonFini,
   TirageEnTrop,
-  TirageHorsDuGenerateur,
   TirageInvalide,
   TirageManquant,
 } from "./erreurs.ts";
@@ -26,17 +20,11 @@ import { tireurSelonLesTirages } from "./tireur.ts";
 const NOMBRE_MAXIMAL_DE_QUESTIONS = 12;
 
 const ERREURS_DE_REJEU = [
-  BonneReponseAbsenteDesChoix,
   ChoixInconnu,
-  GroupeInconnu,
   JeNeSaisPasDejaDit,
-  MotIncomplet,
   QuestionHorsDuTestDeDepart,
   ReponseIncompatible,
-  TestDeDepartDejaFini,
-  TestDeDepartNonFini,
   TirageEnTrop,
-  TirageHorsDuGenerateur,
   TirageInvalide,
   TirageManquant,
 ];
@@ -98,7 +86,7 @@ function rejouer(
 }
 
 function etaitJuste(reponses: readonly ReponseDonnee[]): boolean {
-  return reponses.length === 1 && reponses[0].genre !== "jeNeSaisPas";
+  return reponses.length === 1 && reponses.every(({ genre }) => genre !== "jeNeSaisPas");
 }
 
 function reconstruire(
@@ -132,7 +120,7 @@ function rejouerLaQuestion(
   const test = reconstruire(envoi, lecons, niveau, question, tirages);
   reponses.forEach((reponse) => rejouerLaReponse(test, reponse));
   if (!test.estFini()) throw incoherent("une question posée ne finit pas par la bonne réponse");
-  return test.terminer(envoi.termineeLe).questions[0].juste;
+  return test.terminer(envoi.termineeLe).questions.every(({ juste }) => juste);
 }
 
 function leconExiste(question: QuestionPrevue, lecons: readonly Lecon[]): boolean {
