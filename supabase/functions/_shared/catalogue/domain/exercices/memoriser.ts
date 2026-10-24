@@ -25,3 +25,10 @@ export function lireMemoriser(brut: Objet, communs: { titre?: string; consigne?:
     vers: Object.freeze(vers),
   });
 }
+
+const MOTS_DES_CHANSONS = ["chanson", "comptine"];
+
+export function estUneChanson(exercice: ExerciceMemoriser): boolean {
+  const entete = `${exercice.titre ?? ""} ${exercice.auteur ?? ""}`.toLowerCase();
+  return MOTS_DES_CHANSONS.some((mot) => entete.includes(mot));
+}
