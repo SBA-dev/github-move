@@ -182,7 +182,7 @@ Deno.test("un test qui s'arrête avant la fin sans 3 questions fausses de suite 
   assertIncoherent(modifie(envoi, { reponses: envoi.reponses.slice(0, 2) }), lecons);
 });
 
-Deno.test("une question dont la leçon a été retirée de la bibliothèque est ignorée : ni juste ni fausse, le reste est revalidé", () => {
+Deno.test("une question dont la leçon a été retirée n'apparaît pas dans le résultat, le reste est revalidé", () => {
   const lecons = desLecons(4);
   const { envoi } = envoiJoue(lecons, [bonne, mauvaise, bonne, bonne, bonne]);
   const sansLaDeuxieme = lecons.filter((_, rang) => rang !== 1);
@@ -373,4 +373,17 @@ Deno.test("un envoi dont toutes les leçons ont été retirées de la bibliothè
   const { envoi } = envoiDeTroisQuestions();
 
   assertIncoherent(envoi, []);
+});
+
+Deno.test("des réponses données après la bonne réponse d'une question rendent le test incohérent", () => {
+  const { lecons, envoi } = envoiDeTroisQuestions();
+
+  assertIncoherent(avecReponsesALaPremiereQuestion(envoi, [bonne, bonne]), lecons);
+});
+
+Deno.test("un tirage hors du générateur d'un calcul rend le test incohérent", () => {
+  const lecons = [leconDeCalculFixe(0), uneLecon(1), uneLecon(2)];
+  const { envoi } = envoiJoue(lecons, [Reponse.nombre(8), bonne, bonne]);
+
+  assertIncoherent(modifie(envoi, { tirages: [[["1 + 1 = 2"]], ...envoi.tirages.slice(1)] }), lecons);
 });
