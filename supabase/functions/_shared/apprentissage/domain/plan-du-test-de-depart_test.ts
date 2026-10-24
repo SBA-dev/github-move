@@ -181,8 +181,15 @@ const exercicesExclus: Record<string, unknown> = {
   ordre: { type: "ordre", elements: ["un", "deux", "trois"] },
   memoriser: { type: "memoriser", vers: ["Un vers", "Un autre vers"] },
   fluence: { type: "fluence", generateur: { op: "+", combien: 5 } },
-  boite: { type: "boite", items: [{}] },
-  barres: { type: "barres", items: [{}] },
+  boite: { type: "boite", items: [{ a: 4, op: "+", b: 3 }] },
+  barres: {
+    type: "barres",
+    items: [{
+      enonce: "Au marché, j'achète 4 pommes rouges et 2 pommes vertes. Combien ai-je de pommes ?",
+      parties: [4, 2],
+      tout: null,
+    }],
+  },
 };
 
 for (const [type, exercice] of Object.entries(exercicesExclus)) {
