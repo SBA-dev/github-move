@@ -158,3 +158,17 @@ export class ReponseIncompatible extends Error {
     this.name = "ReponseIncompatible";
   }
 }
+
+export class FluenceNonCommencee extends Error {
+  constructor() {
+    super("Le signal « C'est parti ! » n'a pas encore été donné.");
+    this.name = "FluenceNonCommencee";
+  }
+}
+
+export class FluenceFinie extends Error {
+  constructor() {
+    super("Le temps de cet exercice est écoulé.");
+    this.name = "FluenceFinie";
+  }
+}
