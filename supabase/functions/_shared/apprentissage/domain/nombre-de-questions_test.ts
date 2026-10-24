@@ -110,13 +110,13 @@ Deno.test("un exercice de calcul à opérations fixes compte une question par op
 });
 
 Deno.test("un exercice de calcul généré compte autant de questions que le générateur en demande", () => {
-  const exercice: Exercice = { type: "calcul", generateur: { op: "+", a: [1, 10], b: [1, 10], combien: 8 } };
+  const exercice: Exercice = { type: "calcul", generateur: { op: "+", a: [1, 10], b: [1, 10], cible: 10, combien: 8 } };
 
   assertEquals(nombreDeQuestions(exercice), 8);
 });
 
 Deno.test("un exercice de calcul généré sans nombre demandé compte 5 questions", () => {
-  const exercice: Exercice = { type: "calcul", generateur: { op: "+", a: [1, 10], b: [1, 10] } };
+  const exercice: Exercice = { type: "calcul", generateur: { op: "+", a: [1, 10], b: [1, 10], cible: 10, combien: 5 } };
 
   assertEquals(nombreDeQuestions(exercice), 5);
 });
@@ -128,7 +128,11 @@ Deno.test("un exercice de calcul sans opération ni générateur compte 5 questi
 });
 
 Deno.test("un exercice de fluence compte une seule question pour tout l'exercice", () => {
-  const exercice: Exercice = { type: "fluence", duree: 45, generateur: { op: "+", a: [1, 28], b: [1, 2] } };
+  const exercice: Exercice = {
+    type: "fluence",
+    duree: 45,
+    generateur: { op: "+", a: [1, 28], b: [1, 2], cible: 10, combien: 20 },
+  };
 
   assertEquals(nombreDeQuestions(exercice), 1);
 });

@@ -3,6 +3,7 @@ import { lireLecon } from "./lire-lecon.ts";
 import type { Exercice, ExerciceGenerique } from "./exercice.ts";
 import type { ExerciceBulles } from "./exercices/bulles.ts";
 import type { ExerciceCalcul } from "./exercices/calcul.ts";
+import type { ExerciceFluence } from "./exercices/fluence.ts";
 import { LeconMalFormee } from "./erreurs.ts";
 import { libelleDuType, TYPES_D_EXERCICE } from "./type-d-exercice.ts";
 
@@ -47,11 +48,16 @@ function exerciceDeCalcul(exercice: Exercice): ExerciceCalcul {
   return exercice;
 }
 
+function exerciceDeFluence(exercice: Exercice): ExerciceFluence {
+  if (exercice.type !== "fluence") throw new Error(`« ${exercice.type} » n'est pas un exercice de fluence`);
+  return exercice;
+}
+
 function exerciceGenerique(exercice: Exercice): ExerciceGenerique {
   if (
     exercice.type === "bulles" || exercice.type === "lecture" || exercice.type === "ecoute" ||
     exercice.type === "classer" || exercice.type === "ordre" || exercice.type === "trous" ||
-    exercice.type === "calcul"
+    exercice.type === "calcul" || exercice.type === "fluence"
   ) {
     throw new Error(`« ${exercice.type} » n'est pas un exercice générique`);
   }
@@ -240,9 +246,10 @@ Deno.test("un exercice « addition » garde ses opérations, ou le nombre d'opé
 Deno.test("un exercice « fluence » garde sa durée et n'a ni question ni item", () => {
   const lecon = lireLecon(leconAvec(unExerciceDeChaqueType.fluence));
 
-  assertEquals(exerciceGenerique(lecon.exercices[0]).duree, 60);
-  assertEquals(exerciceGenerique(lecon.exercices[0]).questions, undefined);
-  assertEquals(exerciceGenerique(lecon.exercices[0]).items, undefined);
+  const fluence = exerciceDeFluence(lecon.exercices[0]);
+  assertEquals(fluence.duree, 60);
+  assertEquals("questions" in fluence, false);
+  assertEquals("items" in fluence, false);
 });
 
 Deno.test("le contenu d'un exercice des autres types est gardé tel quel", () => {
