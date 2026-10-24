@@ -41,7 +41,7 @@ export class EssaisDeReinitialisation {
   }
 
   enregistrerUnEssaiRate(maintenant: Date): void {
-    if (this.estOublie(maintenant)) this.enregistrerUneReussite();
+    if (this.estOublie(maintenant)) this.oublier();
     this._essaisRates += 1;
     this.dernierRateLe = maintenant;
     if (this._essaisRates >= ESSAIS_RATES_AVANT_BLOCAGE) {
@@ -50,6 +50,10 @@ export class EssaisDeReinitialisation {
   }
 
   enregistrerUneReussite(): void {
+    this.oublier();
+  }
+
+  private oublier(): void {
     this._essaisRates = 0;
     this.dernierRateLe = null;
     this._bloqueJusquA = null;
