@@ -140,3 +140,14 @@ Deno.test("un générateur de divisions dont le diviseur peut valoir 0 rend la l
     );
   }
 });
+
+Deno.test("une cible négative ou non entière rend la leçon mal formée", () => {
+  for (const cible of [-1, 10.5]) {
+    assertThrows(
+      () => lireLecon(leconAvec(unCalculGenere({ op: "+", cible }))),
+      LeconMalFormee,
+      undefined,
+      String(cible),
+    );
+  }
+});
