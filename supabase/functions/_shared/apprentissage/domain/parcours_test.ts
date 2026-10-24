@@ -130,3 +130,51 @@ Deno.test("sans aucune leçon du niveau de l'enfant, le parcours n'a aucune mati
 
   assertEquals(matieres, []);
 });
+
+const futurDuCE2 = lecon("fr-ce2-futur", "francais", "CE2", 3);
+const imparfaitDuCE2 = lecon("fr-ce2-imparfait", "francais", "CE2", 4);
+const mathsDuCE2 = lecon("ma-ce2-tables", "maths", "CE2", 1);
+const francaisDuCM1 = lecon("fr-cm1-passe", "francais", "CM1", 1);
+
+Deno.test("un enfant redescendu en CE1 retrouve, à part, ses seules leçons réussies de la matière dans les classes au-dessus, avec niveau, titre et meilleures étoiles", () => {
+  const entrees = {
+    lecons: [imparfaitDuCE2, francaisDuCM1, futurDuCE2, francaisDuCP, mathsDuCE2, ...quatreLecons],
+    niveau: Niveau.de("CE1"),
+    meilleuresEtoiles: new Map([
+      [futurDuCE2.id, Etoiles.de(2)],
+      [francaisDuCM1.id, Etoiles.de(1)],
+      [francaisDuCP.id, Etoiles.de(3)],
+      [mathsDuCE2.id, Etoiles.de(3)],
+    ]),
+  };
+
+  const parcours = parcoursDeLaMatiere(entrees, futurDuCE2.matiere);
+
+  assertEquals(
+    parcours.leconsReussiesDesClassesAuDessus.map(({ lecon, niveau, titre, etoiles }) => ({
+      lecon,
+      niveau: niveau.valeur,
+      titre,
+      etoiles,
+    })),
+    [
+      { lecon: "fr-ce2-futur", niveau: "CE2", titre: "Titre de fr-ce2-futur", etoiles: Etoiles.de(2) },
+      { lecon: "fr-cm1-passe", niveau: "CM1", titre: "Titre de fr-cm1-passe", etoiles: Etoiles.de(1) },
+    ],
+  );
+});
+
+Deno.test("les leçons réussies des classes au-dessus ne comptent pas dans le parcours et ne sont jamais la prochaine leçon", () => {
+  const entrees = {
+    lecons: [...quatreLecons, futurDuCE2],
+    niveau: Niveau.de("CE1"),
+    meilleuresEtoiles: new Map([["fr-ce1-a", Etoiles.de(1)], [futurDuCE2.id, Etoiles.de(2)]]),
+  };
+
+  const parcours = parcoursDeLaMatiere(entrees, futurDuCE2.matiere);
+
+  assertEquals(
+    [parcours.nombreDeLeconsReussies, parcours.nombreDeLecons, parcours.prochaineLecon],
+    [1, 4, "fr-ce1-b"],
+  );
+});
