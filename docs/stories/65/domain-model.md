@@ -1,4 +1,4 @@
-# Modèle du domaine : issue #65, Écran « Mes trophées » (nom à valider)
+# Modèle du domaine : issue #65, Écran « Mes médailles » (legacy : « Mes trophées »)
 
 > Le nom de l'écran n'est pas tranché (question n°1) : « trophée » est un synonyme interdit de **Badge**. Dans ce document, l'écran s'appelle « l'écran des récompenses de l'enfant » ou « l'écran » ; aucun nom de code n'est figé avant la réponse du PO.
 
@@ -41,7 +41,7 @@ Hors de cette story (points d'accroche seulement, voir « Sections de l'écran �
 | Terme | Statut | Remarque |
 |---|---|---|
 | « Mes trophées » | **conflit** (glossaire : « trophée » est un synonyme interdit de **Badge**) | Nom de l'écran et de l'onglet du dock à trancher (question n°1). Ni le code, ni les scénarios ne l'emploient avant la réponse. |
-| Écran des récompenses de l'enfant (nom à valider) | **nouveau**, `(à valider)` | L'écran lui-même : sections dans un ordre fixe. Terme du domaine ou simple titre d'écran : question n°1. |
+| Écran des récompenses de l'enfant (interface : « Mes médailles », décision 65.1) | **nouveau**, `(à valider)` | L'écran lui-même : sections dans un ordre fixe. Terme du domaine ou simple titre d'écran : question n°1. |
 | Section de l'écran (à valider) | **nouveau**, `(à valider)` | Une des quatre parties de l'écran : cabane, histoire, badges, records de fluence. Mot d'interface probable ; ajouté pour fixer l'ordre. |
 | Record de fluence | au glossaire (#20) | Meilleur score d'un enfant à un exercice de fluence d'une leçon. L'écran l'affiche sans le modifier. « Record » seul : interface. |
 | Score de fluence | au glossaire (#20) | La valeur d'une pastille est un score de fluence (nombre de calculs réussis). |

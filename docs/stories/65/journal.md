@@ -32,3 +32,7 @@ Bloc C, paroles de l'écran :
 9. paroles lues à l'ouverture, avec et sans « Tout lire » (65.12).
 
 - 21:20 : comportement 1 vert (7dee127 RED, 06dc973 GREEN), 1223 tests.
+- 20:56 : annonce du responsable (#64, https://github.com/SBA-dev/github-move/issues/64#issuecomment-6389432845) : 65.1 tranchée, « Mes médailles » (réponse du PO : « A »). « médaille » retiré des synonymes interdits de Badge (seule ligne existante modifiée du glossaire, sur décision du PO). Critères mis à jour par `po-acceptance` : 0 `@a-valider`, feature renommée `features/65-ecran-mes-medailles.feature`. Note : le `git mv` du renommage, indexé pendant que `test-writer` commitait, est parti dans le commit 3f3433d (test rouge des paroles) ; contenu inchangé, sans effet.
+- 21:25 : comportements 2 à 5 verts (records de calcul rapide). Départage par identifiant écrit avant son test (dd632b1), test ajouté ensuite (08abbd4, vérifié en neutralisant la ligne).
+- 21:30 : revue intermédiaire blocs A et B (`mr-reviewer`, `7dee127^..08abbd4`) : **APPROUVÉ**, 0 bloquant. Retenus : règle de clé d'une fluence (`titre ?? op`) à publier par le Catalogue et utilisée par Apprentissage et Motivation (n°2) ; ligne du tableau des relations de la context map (n°4). Gardés tels quels : tri proche de `parcours.ts` (Motivation n'importe pas Apprentissage), `recordsDeFluence` comme nom de section.
+- 21:35 : comportements 6 à 8 verts (paroles : nom de l'écran, accueil du personnage guide, phrase d'une pastille). Nom d'un test corrigé (« trophées » interdit, be7cca8). 1239 tests.
