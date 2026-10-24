@@ -2,6 +2,7 @@ import type { AdresseEmail } from "../domain/adresse-email.ts";
 import type { CodeDeConnexion } from "../domain/code-de-connexion.ts";
 import { AdresseDejaUtilisee, AdresseOuMotDePasseIncorrect, CodeDeConnexionInvalide } from "../domain/erreurs.ts";
 import { ParentId } from "../domain/parent-id.ts";
+import type { Prenom } from "../domain/prenom.ts";
 import type { ServiceDeConnexion } from "../domain/service-de-connexion.ts";
 
 export class ServiceDeConnexionEnMemoire implements ServiceDeConnexion {
@@ -9,13 +10,30 @@ export class ServiceDeConnexionEnMemoire implements ServiceDeConnexion {
   readonly ouverturesAvecLeCode: Array<{ adresse: AdresseEmail; code: CodeDeConnexion }> = [];
   readonly ouverturesAvecLeMotDePasse: Array<{ adresse: AdresseEmail; motDePasse: string }> = [];
   readonly inscriptions: Array<{ adresse: AdresseEmail; motDePasse: string }> = [];
+  readonly reinitialisations: Array<{ adresse: AdresseEmail; prenom: Prenom; motDePasse: string }> = [];
+  readonly appels: string[] = [];
   deconnexions = 0;
+  fermeturesDesAutresConnexions = 0;
+  private refusDeLaReinitialisation: Error | undefined;
+  private fermetureDesAutresConnexionsEnEchec = false;
   private compte: { adresse: AdresseEmail; motDePasse: string } | undefined;
   private fermetureEnEchec = false;
 
   static quiEchoueALaFermeture(): ServiceDeConnexionEnMemoire {
     const service = new ServiceDeConnexionEnMemoire();
     service.fermetureEnEchec = true;
+    return service;
+  }
+
+  static quiRefuseLaReinitialisation(erreur: Error): ServiceDeConnexionEnMemoire {
+    const service = new ServiceDeConnexionEnMemoire();
+    service.refusDeLaReinitialisation = erreur;
+    return service;
+  }
+
+  static quiEchoueALaFermetureDesAutresConnexions(): ServiceDeConnexionEnMemoire {
+    const service = new ServiceDeConnexionEnMemoire();
+    service.fermetureDesAutresConnexionsEnEchec = true;
     return service;
   }
 
@@ -53,6 +71,7 @@ export class ServiceDeConnexionEnMemoire implements ServiceDeConnexion {
   }
 
   ouvrirLaConnexionAvecLeMotDePasse(adresse: AdresseEmail, motDePasse: string): Promise<ParentId> {
+    this.appels.push("ouvrirLaConnexionAvecLeMotDePasse");
     this.ouverturesAvecLeMotDePasse.push({ adresse, motDePasse });
     const correspond = this.compte !== undefined && this.compte.adresse.estLaMemeQue(adresse) &&
       this.compte.motDePasse === motDePasse;
@@ -63,6 +82,21 @@ export class ServiceDeConnexionEnMemoire implements ServiceDeConnexion {
   deconnecter(): Promise<void> {
     this.deconnexions++;
     if (this.fermetureEnEchec) return Promise.reject(new Error("fermeture impossible"));
+    return Promise.resolve();
+  }
+
+  reinitialiserLeMotDePasse(adresse: AdresseEmail, prenom: Prenom, motDePasse: string): Promise<void> {
+    this.appels.push("reinitialiserLeMotDePasse");
+    this.reinitialisations.push({ adresse, prenom, motDePasse });
+    if (this.refusDeLaReinitialisation) return Promise.reject(this.refusDeLaReinitialisation);
+    this.compte = { adresse, motDePasse };
+    return Promise.resolve();
+  }
+
+  fermerLesAutresConnexions(): Promise<void> {
+    this.appels.push("fermerLesAutresConnexions");
+    this.fermeturesDesAutresConnexions++;
+    if (this.fermetureDesAutresConnexionsEnEchec) return Promise.reject(new Error("fermeture impossible"));
     return Promise.resolve();
   }
 }
