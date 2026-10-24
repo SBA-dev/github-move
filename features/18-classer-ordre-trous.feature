@@ -1,5 +1,5 @@
 # language: fr
-@issue-18 @wip
+@issue-18
 Fonctionnalité: Classer, remettre dans l'ordre, compléter un texte à trous
   En tant qu'enfant
   Je veux ranger des étiquettes dans des maisons, les remettre dans l'ordre et compléter un texte à trous
