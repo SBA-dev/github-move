@@ -1,7 +1,7 @@
 import type { ExerciceClasser, Lecon, Niveau } from "../../catalogue/domain/index.ts";
 import { CleDeQuestion } from "./cle-de-question.ts";
 import { QuestionHorsDuTestDeDepart } from "./erreurs.ts";
-import { questionsDeTrous } from "./exercices/trous.ts";
+import { questionsDeTrous, sansDoublonsNiReponse } from "./exercices/trous.ts";
 import type { QuestionPrevue } from "./plan-du-test-de-depart.ts";
 import { QuestionDeCalcul } from "./question-de-calcul.ts";
 import { QuestionJouee, questionsJoueesAvec } from "./question-jouee.ts";
@@ -28,11 +28,10 @@ export function questionDuTestDeDepart(
     }
     case "conjugaison": {
       const { pronom, forme } = exercice.formes[rang];
-      const autresFormes = exercice.formes.filter((_, autre) => autre !== rang).map((autre) => autre.forme);
       return QuestionJouee.aChoix({
         cle: CleDeQuestion.de("conjugaison", `${exercice.verbe} · ${exercice.temps} · ${pronom}`),
         enonce: `Le verbe ${exercice.verbe} au ${exercice.temps} : ${pronom} …`,
-        choix: tireur.trou(forme, autresFormes.filter((autre) => autre !== forme)),
+        choix: tireur.trou(forme, sansDoublonsNiReponse(exercice.formes.map((f) => f.forme), forme)),
         bonneReponse: forme,
         type: "conjugaison",
       });

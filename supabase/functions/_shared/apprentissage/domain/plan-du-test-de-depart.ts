@@ -22,7 +22,7 @@ function nombreDeQuestionsCandidates(exercice: Exercice): number {
     case "classer":
       return exercice.items.length;
     case "addition":
-      return 1;
+      return exercice.operations?.length ?? 1;
     case "dictee":
     case "lecture":
     case "ordre":
