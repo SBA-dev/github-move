@@ -120,22 +120,9 @@ Given(/^Léa joue$/, async ({ page, monde }) => {
 
 // --- Quand
 
-/** La version publiée (build de production servi par la config PWA) : la porte du profil préparé y est fermée. */
-function estLaVersionPubliee(baseURL: string | undefined): boolean {
-  return baseURL?.endsWith(":4174") ?? false;
-}
-
-/** Dans la version publiée, aucun profil n'est en cours : `/jeu` ramène à l'accueil, que Léa y arrive ou non. */
-async function ouvrirLeJeuSansProfilEnCours(page: Page) {
-  await page.goto("/jeu");
-  await expect(page).toHaveURL(/\/$/);
-  await expect(page.getByText("Réviser le programme du CP au CM2, en jouant.")).toBeVisible();
-}
-
-When(/^Léa commence à jouer$/, async ({ page, monde, baseURL }) => {
+When(/^Léa commence à jouer$/, async ({ page, monde }) => {
   await assurerLeProfilDeLeaSiDesReglagesSontPrevus(page, monde);
   const profil = monde.profils.get("Léa");
-  if (estLaVersionPubliee(baseURL)) return await ouvrirLeJeuSansProfilEnCours(page);
   await ouvrirLAccueilDeLEnfant(page, cleDe(profil?.univers ? libelleOuCle(profil.univers) : UNIVERS_PAR_DEFAUT));
 });
 
