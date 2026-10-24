@@ -14,3 +14,5 @@
 - Questions non bloquantes du domain-modeler (limite d'inscriptions, essais hors export, 72 octets) : propositions retenues, signalées au PO.
 - Étape 3 : découpage TDD en 9 comportements (règles, mot de passe, prénom, essais, 3 cas d'usage navigateur, 2 cas d'usage serveur).
 - Comportement 1/9 (règles) : RED e008165, GREEN 156be2f, formatage e59bb7d. Suite : 959 verts.
+- Comportement 2/9 (MotDePasseDuParent) : RED 4ed7719, GREEN f7f231d. 968 verts.
+- Comportement 3/9 (Prenom.correspondA) : RED 43c0a7b, GREEN 8e5768e, refactor c3e4eac (MotDePasseNonConforme). 974 verts.
