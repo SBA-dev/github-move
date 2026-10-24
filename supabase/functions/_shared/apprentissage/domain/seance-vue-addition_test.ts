@@ -177,3 +177,16 @@ Deno.test("pour un calcul avec choix, la séance dit quels choix sont déjà éc
 
   assertEquals(mode?.genre === "choix" ? mode.ecartes : undefined, ["5"]);
 });
+
+Deno.test("une réponse fausse ne répète pas la parole de la colonne précédente", () => {
+  const seance = additionEnAction();
+  calculerLesUnites(seance);
+
+  seance.repondre(Reponse.choix("9"));
+
+  const addition = seance.additionApresLaDerniereReponse();
+  assertEquals([addition?.parole, seance.aideApresLaDerniereErreur()], [
+    undefined,
+    "Compte doucement : 1 + 4 + 3.",
+  ]);
+});
