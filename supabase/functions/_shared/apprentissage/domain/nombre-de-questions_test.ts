@@ -2,8 +2,6 @@ import { assertEquals } from "@std/assert";
 import { type Exercice, type ItemDeBoite, lireLecon, type ProblemeEnBarres } from "../../catalogue/domain/index.ts";
 import { nombreDeQuestions } from "./nombre-de-questions.ts";
 
-const uneListeDe = (taille: number): readonly unknown[] => Array.from({ length: taille }, (_, i) => ({ rang: i }));
-
 const desItemsDeBoite = (taille: number): readonly ItemDeBoite[] =>
   Array.from({ length: taille }, () => ({ a: 1, sens: "ajout", b: 1, reponse: 2, ecriture: "1 + 1 = 2" }));
 
@@ -157,7 +155,7 @@ Deno.test("un exercice de fluence compte une seule question pour tout l'exercice
 });
 
 Deno.test("un exercice pour mémoriser compte deux questions par vers", () => {
-  const exercice: Exercice = { type: "memoriser", vers: uneListeDe(8) };
+  const exercice: Exercice = { type: "memoriser", vers: Array.from({ length: 8 }, (_, i) => `vers ${i}`) };
 
   assertEquals(nombreDeQuestions(exercice), 16);
 });

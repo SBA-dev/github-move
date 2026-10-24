@@ -25,6 +25,7 @@ import { SchemaDuProbleme } from "./exercices/schema/SchemaDuProbleme.tsx";
 import { ExerciceDeCalcul } from "./exercices/ExerciceDeCalcul.tsx";
 import { ExerciceDeDictee } from "./exercices/ExerciceDeDictee.tsx";
 import { ExerciceDeFluence } from "./exercices/fluence/ExerciceDeFluence.tsx";
+import { ExerciceDeMemorisation } from "./exercices/ExerciceDeMemorisation.tsx";
 import { generateurIdDuNavigateur } from "./generateur-id-navigateur.ts";
 import { hasardDuNavigateur } from "./hasard-navigateur.ts";
 import { horlogeDuNavigateur } from "./horloge.ts";
@@ -312,6 +313,25 @@ function SeanceEnCours(
               bonnesReponsesMontrees={deroulement.bonnesReponsesMontrees}
               onPoser={(etiquette, groupe) => void deroulement.placer(etiquette, groupe)}
               onJeNeSaisPas={(etiquette) => void deroulement.jeNeSaisPasDUneEtiquette(etiquette)}
+            />
+          )}
+          {exerciceDeLaLecon.type === "memoriser" && (
+            <ExerciceDeMemorisation
+              exercice={exerciceDeLaLecon}
+              temps={deroulement.tempsDeLaMemorisation(position)}
+              versLu={deroulement.versLu}
+              exerciceJoue={exerciceAffiche}
+              question={question}
+              choixVisibles={question !== undefined && deroulement.choixVisiblesPour === question}
+              reussie={figee !== undefined}
+              bulleEclatee={deroulement.bulleEclatee}
+              bonnesReponsesMontrees={deroulement.bonnesReponsesMontrees}
+              onJeSuisPret={() => void deroulement.jeSuisPret()}
+              onPoser={(etiquette) => void deroulement.placer(etiquette)}
+              onChoisir={(texte) => void deroulement.repondre(texte)}
+              onRelireLaQuestion={() => void deroulement.relireLaQuestion()}
+              onJeNeSaisPasDUneEtiquette={(etiquette) => void deroulement.jeNeSaisPasDUneEtiquette(etiquette)}
+              onJeNeSaisPas={() => void deroulement.jeNeSaisPas()}
             />
           )}
         </div>
