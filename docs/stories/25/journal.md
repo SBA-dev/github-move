@@ -112,3 +112,8 @@ En attente d'une réponse : leçons réussies d'une classe au-dessus (N1, N7, N9
   `base`). Vérifié : la fonction importe `catalogue/domain/niveau.ts` et `matiere.ts`, où #25 n'a fait que des ajouts
   qu'elle n'appelle pas (`estAuDessusDe`, `toutesLesMatieres`) ; aucun import du parcours. Pas de redéploiement, pas de
   verrou `base` pour #25.
+- 20:55 UTC : E2E : attente réelle des lectures de l'écran de fin (fixture `lecturesDesResultats`), preuve rouge par
+  une réponse retardée (l'ancien step restait vert) ; #24 + #25 71/71 sur `telephone` avec 3 workers. Review du delta
+  (cycle 6) : **APPROUVÉ**. Non bloquants : fixture `auto` sur toutes les pages (coût faible), observateur limité au
+  premier écran de fin d'un document, condition réseau recopiée dans le step. Lancement de l'unique non-régression
+  complète (décision 0020).
