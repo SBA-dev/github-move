@@ -1,9 +1,5 @@
 import { assertEquals } from "@std/assert";
-import {
-  CARACTERES_SPECIAUX_ACCEPTES,
-  type EtatDesRegles,
-  ReglesDuMotDePasse,
-} from "./regles-du-mot-de-passe.ts";
+import { CARACTERES_SPECIAUX_ACCEPTES, type EtatDesRegles, ReglesDuMotDePasse } from "./regles-du-mot-de-passe.ts";
 
 function reglesRespectees(etat: EtatDesRegles): string[] {
   return etat.filter((regle) => regle.respectee).map((regle) => regle.regle);
@@ -127,13 +123,15 @@ for (const caractere of "&#{}()[]$€%@!?") {
   });
 }
 
-for (const [description, saisie] of [
-  ["un chiffre et un tiret", "Abcdef1-"],
-  ["une étoile", "Abcdefg*"],
-  ["un tiret bas", "Abcdefg_"],
-  ["un point", "Abcdefg."],
-  ["une espace", "Abcdefg "],
-] as const) {
+for (
+  const [description, saisie] of [
+    ["un chiffre et un tiret", "Abcdef1-"],
+    ["une étoile", "Abcdefg*"],
+    ["un tiret bas", "Abcdefg_"],
+    ["un point", "Abcdefg."],
+    ["une espace", "Abcdefg "],
+  ] as const
+) {
   Deno.test(`${description} ne compte pas comme caractère spécial`, () => {
     const etat = ReglesDuMotDePasse.verifier(saisie);
 
