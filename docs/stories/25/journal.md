@@ -64,3 +64,6 @@ En attente d'une réponse : leçons réussies d'une classe au-dessus (N1, N7, N9
   3e12850) : conflits `apprentissage/domain/index.ts` et `src/styles.css` (deux ajouts gardés) ; prop `niveau`
   ajoutée des deux côtés dans `Application.tsx`/`EcranDeSeance.tsx` (dédoublonnée). 947 tests Deno, 1404 pytest,
   tsc et build verts.
+- 16:05 UTC : bloc « Déjà réussies en <niveau> » câblé ; derniers non bloquants traités. Scénarios validés : `@a-valider`
+  retirés, fichier renommé `features/25-parcours-par-matiere.feature` (N5 ; le `git mv` a été embarqué par le commit
+  feat 6414056 lancé en parallèle, sans changement de contenu), titre d'un scénario de #24 renommé (N6).
