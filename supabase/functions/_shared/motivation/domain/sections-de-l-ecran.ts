@@ -22,5 +22,5 @@ export function sectionsAAfficher(
 export function sectionsDeLEcran(
   pastilles: readonly PastilleDeRecord[],
 ): SectionDeLEcran[] {
-  return pastilles.length > 0 ? ["recordsDeFluence"] : [];
+  return sectionsAAfficher(pastilles.length > 0 ? ["recordsDeFluence"] : []);
 }
