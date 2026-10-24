@@ -6,6 +6,9 @@ export type { EtapeDeLecon, Lecon, PassageDuGuideFondamental, ProgrammeCite } fr
 export type { CodeDeMatiere, Matiere } from "./matiere.ts";
 export type { Exercice, ExerciceGenerique } from "./exercice.ts";
 export type { ExerciceBulles } from "./exercices/bulles.ts";
+export type { EtiquetteAClasser, ExerciceClasser, Groupe } from "./exercices/classer.ts";
+export type { ExerciceOrdre } from "./exercices/ordre.ts";
+export type { ExerciceTrous, Segment } from "./exercices/texte-a-trous.ts";
 export type { ExerciceEcoute, ItemDEcoute } from "./exercices/ecoute.ts";
 export type { ExerciceLecture } from "./exercices/lecture.ts";
 export type { QuestionAChoix } from "./exercices/question-a-choix.ts";
@@ -22,5 +25,4 @@ export type {
   PassagePourLesAdultes,
 } from "./page-de-la-lecon.ts";
 export { enonceDeLaQuestion } from "./enonce-de-la-question.ts";
-export { nombreDeTrous } from "./trous.ts";
 export { leconSuivante } from "./lecon-suivante.ts";
