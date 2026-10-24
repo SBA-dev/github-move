@@ -1,5 +1,5 @@
 # language: fr
-@issue-25 @wip
+@issue-25
 Fonctionnalité: Parcours par matière
   En tant qu'enfant
   Je veux voir le parcours de chaque matière de ma classe, leçon après leçon, avec la prochaine leçon mise en avant

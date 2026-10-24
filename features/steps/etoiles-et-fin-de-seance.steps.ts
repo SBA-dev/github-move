@@ -494,6 +494,9 @@ Then(/^la fin de la séance propose (« .+ ») et (« [^«»]+ »)$/, async ({ p
 });
 
 Then(/^aucune leçon suivante n'est proposée$/, async ({ page }) => {
+  // La leçon suivante se calcule après la lecture des meilleures étoiles : on attend la fin des échanges réseau de l'écran de fin.
+  await expect(fin(page)).toBeVisible();
+  await page.waitForLoadState("networkidle");
   await page.evaluate(() => new Promise((fait) => requestAnimationFrame(() => requestAnimationFrame(fait))));
   await expect(fin(page).getByRole("button", { name: "Leçon suivante", exact: true })).toHaveCount(0);
   await expect(page.getByTestId("ensuite")).toHaveCount(0);

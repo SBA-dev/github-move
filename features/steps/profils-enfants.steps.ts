@@ -1,7 +1,7 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 import { ouvrirUneSessionSansEmail } from "../support/connexion-sans-email.ts";
 import type { Appareil, Famille } from "../support/famille.ts";
-import { appelerUneFonctionDeFamille, ecrireEnRestUnProfil, lireEnRestLesProfilsVisibles, type ReponseDeLaFonction } from "../support/profils-api.ts";
+import { appelerUneFonctionDeFamille, lireEnRestLeNiveauDuProfil, ecrireEnRestUnProfil, lireEnRestLesProfilsVisibles, type ReponseDeLaFonction } from "../support/profils-api.ts";
 import { rattacherUnParent } from "../support/supabase-test.ts";
 import { Given, Then, When } from "./fixtures.ts";
 import { cleDe, preparerProfil } from "./univers.steps.ts";
@@ -234,14 +234,25 @@ Given(
   },
 );
 
+// Story #25 : le changement de niveau fait perdre le profil en cours (rechargement de la page). L'enfant se choisit de nouveau
+// dans « Qui joue ? » une fois la liste à jour, pour que la séance suivante se joue avec son vrai profil et son nouveau niveau.
+async function rechoisirLEnfantApresLeChangement(famille: Famille, page: Page, prenom: string): Promise<void> {
+  const profil = profilDe(famille, prenom);
+  const niveau = await lireEnRestLeNiveauDuProfil(await jetonDe(famille, profil.parent), profil.id);
+  const quiJoue = await ouvrirQuiJoue(page);
+  await expect(quiJoue.getByTestId("profil-a-choisir").filter({ hasText: prenom }).first()).toContainText(`${niveau} ·`);
+  await choisirSonProfil(page, prenom);
+}
+
 Given(
   new RegExp(`^Paul a changé sur la tablette le niveau du profil enfant de (\\S+) en ${NIVEAUX}$`),
-  async ({ famille }, prenom: string, niveau: string) => {
+  async ({ famille, $tags }, prenom: string, niveau: string) => {
     await assurerLeProfil(famille, "Paul", { prenom, niveau: NIVEAU_PAR_DEFAUT });
     const page = await connecterSiBesoin(famille, "tablette", "Paul");
     await page.goto("/");
     await famille.allerDansLEspaceParent("tablette");
     await modifierParLInterface(page, prenom, { niveau });
+    if ($tags.includes("@issue-25")) await rechoisirLEnfantApresLeChangement(famille, page, prenom);
   },
 );
 
