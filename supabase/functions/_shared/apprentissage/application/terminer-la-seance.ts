@@ -34,8 +34,9 @@ export class TerminerLaSeance {
     const faits = fait.etoiles === undefined
       ? await this.enregistrerSansResultat(fait)
       : await this.enregistrerAvecLeResultat(fait, fait.etoiles, lecon);
-    if (faits.length === 0) return [];
-    return [...faits, ...await this.proposerLesScoresDeFluence(fait)];
+    // Une séance déjà enregistrée repropose quand même ses scores : le premier envoi a pu échouer sur le record.
+    const faitsDeRecord = await this.proposerLesScoresDeFluence(fait);
+    return faits.length === 0 ? [] : [...faits, ...faitsDeRecord];
   }
 
   private async enregistrerSansResultat(fait: SeanceTerminee): Promise<SeanceTerminee[]> {
