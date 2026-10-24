@@ -99,6 +99,8 @@ export { leconsNouvellementReussies } from "./lecons-nouvellement-reussies.ts";
 export { planDuTestDeDepart } from "./plan-du-test-de-depart.ts";
 export type { PlanDuTestDeDepart, QuestionPrevue } from "./plan-du-test-de-depart.ts";
 export { TestDeDepart } from "./test-de-depart.ts";
+export { QuestionDeCalcul } from "./question-de-calcul.ts";
+export { type Tireur, tireurAuHasard } from "./tireur.ts";
 export type { TestDeDepartTermine } from "./test-de-depart.ts";
 export type { TestDeDepartTermineAEnregistrer } from "./test-de-depart-termine-a-enregistrer.ts";
 export { TestDeDepartId } from "./test-de-depart-id.ts";
