@@ -224,7 +224,7 @@ function contenuDe(exercice: Exercice, tireur: Tireur, profil: ProfilDeSeance): 
     case "dictee":
       return {
         questionsDeDictee: exercice.mots.map((mot) =>
-          new QuestionDeDictee(mot, tireur.clavier(profil, MotAEcrire.de(mot.mot)))
+          new QuestionDeDictee(mot, exercice.consigne, tireur.clavier(profil, MotAEcrire.de(mot.mot)))
         ),
       };
     default:

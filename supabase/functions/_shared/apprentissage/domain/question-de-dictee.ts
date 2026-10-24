@@ -13,7 +13,6 @@ import type { AideDonnee } from "./question-jouee.ts";
 import type { QuestionSuivie } from "./question-suivie.ts";
 import { type MotEcrit, Reponse, type ReponseDonnee, type ResultatDeReponse } from "./reponse.ts";
 
-const TEXTE_AFFICHE = "Écoute bien et écris le mot que tu entends.";
 const AIDE_APRES_UNE_ERREUR = "Regarde les lettres en rouge et écoute encore.";
 
 export type CaseDeQuestion = Readonly<{ genre: "aEcrire"; lettre?: string; montree?: true }> | CaractereDejaEcrit;
@@ -30,7 +29,11 @@ export class QuestionDeDictee implements QuestionSuivie {
   private correction: CorrectionDuMot | undefined;
   private readonly reponsesDonnees: ReponseDonnee[] = [];
 
-  constructor(private readonly motDicte: MotDicte, private readonly clavierPropose: ClavierPropose) {
+  constructor(
+    private readonly motDicte: MotDicte,
+    private readonly consigne: string,
+    private readonly clavierPropose: ClavierPropose,
+  ) {
     this.mot = MotAEcrire.de(motDicte.mot);
     this.cle = CleDeQuestion.de("dictee", motDicte.mot);
   }
@@ -64,7 +67,7 @@ export class QuestionDeDictee implements QuestionSuivie {
   }
 
   texteAffiche(): string {
-    return TEXTE_AFFICHE;
+    return this.consigne;
   }
 
   suiteDeLaFelicitation(): string {
