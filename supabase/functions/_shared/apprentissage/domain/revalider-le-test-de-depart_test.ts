@@ -4,7 +4,7 @@ import { generateurIdFixe } from "../test_utils/generateur-id-fixe.ts";
 import { hasardSansMelange } from "../test_utils/hasard-fixe.ts";
 import { TestDeDepartIncoherent } from "./erreurs.ts";
 import { type PlanDuTestDeDepart, planDuTestDeDepart } from "./plan-du-test-de-depart.ts";
-import { Reponse, type ReponseEnNombre, type ReponseParChoix } from "./reponse.ts";
+import { Reponse, type ReponseDonnee, type ReponseEnNombre, type ReponseParChoix } from "./reponse.ts";
 import { revaliderLeTestDeDepart } from "./revalider-le-test-de-depart.ts";
 import { TestDeDepart } from "./test-de-depart.ts";
 import type { TestDeDepartTermineAEnregistrer } from "./test-de-depart-termine-a-enregistrer.ts";
@@ -216,4 +216,63 @@ Deno.test("une question retirée de la bibliothèque est ignorée avec son tirag
     { lecon: lecons[0].id, juste: true },
     { lecon: lecons[2].id, juste: true },
   ]);
+});
+
+function envoiDeTroisQuestions() {
+  const lecons = desLecons(3);
+  return { lecons, ...envoiJoue(lecons, [bonne, bonne, bonne]) };
+}
+
+function avecReponsesALaPremiereQuestion(envoi: TestDeDepartTermineAEnregistrer, reponses: ReponseDonnee[]) {
+  return modifie(envoi, { reponses: [reponses, ...envoi.reponses.slice(1)] });
+}
+
+Deno.test("une réponse par un choix qui n'est pas proposé rend le test incohérent", () => {
+  const { lecons, envoi } = envoiDeTroisQuestions();
+
+  assertIncoherent(avecReponsesALaPremiereQuestion(envoi, [Reponse.choix("inconnu"), bonne]), lecons);
+});
+
+Deno.test("une réponse en nombre à une question à choix rend le test incohérent", () => {
+  const { lecons, envoi } = envoiDeTroisQuestions();
+
+  assertIncoherent(avecReponsesALaPremiereQuestion(envoi, [Reponse.nombre(8)]), lecons);
+});
+
+Deno.test("une réponse par placement rend le test incohérent", () => {
+  const { lecons, envoi } = envoiDeTroisQuestions();
+
+  assertIncoherent(avecReponsesALaPremiereQuestion(envoi, [Reponse.placement("etiquette"), bonne]), lecons);
+});
+
+Deno.test("une réponse par mot écrit rend le test incohérent", () => {
+  const { lecons, envoi } = envoiDeTroisQuestions();
+
+  assertIncoherent(avecReponsesALaPremiereQuestion(envoi, [Reponse.motEcrit(["a"]), bonne]), lecons);
+});
+
+Deno.test("un « Je ne sais pas » répété sur la même question rend le test incohérent", () => {
+  const { lecons, envoi } = envoiDeTroisQuestions();
+  const jeNeSaisPas = { genre: "jeNeSaisPas" } as const;
+
+  assertIncoherent(avecReponsesALaPremiereQuestion(envoi, [jeNeSaisPas, jeNeSaisPas, bonne]), lecons);
+});
+
+Deno.test("des réponses pour un rang au-delà du plan rendent le test incohérent", () => {
+  const { lecons, envoi } = envoiDeTroisQuestions();
+
+  assertIncoherent(modifie(envoi, { reponses: [...envoi.reponses, [bonne]] }), lecons);
+});
+
+Deno.test("un groupe de tirages de plus que de questions prévues rend le test incohérent", () => {
+  const { lecons, envoi } = envoiDeTroisQuestions();
+
+  assertIncoherent(modifie(envoi, { tirages: [...envoi.tirages, [["bonne", "mauvaise"]]] }), lecons);
+});
+
+Deno.test("un tirage non consommé dans le groupe d'une question rend le test incohérent", () => {
+  const { lecons, envoi } = envoiDeTroisQuestions();
+  const tiragesEnTrop = [[...envoi.tirages[0], ["bonne", "mauvaise"]], ...envoi.tirages.slice(1)];
+
+  assertIncoherent(modifie(envoi, { tirages: tiragesEnTrop }), lecons);
 });

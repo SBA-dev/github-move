@@ -85,3 +85,15 @@ Deno.test("le test de départ d'un autre enfant est refusé", () => {
     TestDeDepartDUnAutreEnfant,
   );
 });
+
+Deno.test("un test de départ plus ancien synchronisé après un plus récent réunit ses leçons mais garde la date la plus récente", () => {
+  const resultat = ResultatDuTestDeDepart.reconstituer({
+    enfant: profilDeLea,
+    faitLe: secondJour,
+    leconsReussies: new Set(["lecon-a"]),
+  });
+
+  resultat.enregistrer(testTermine(profilDeLea, premierJour), new Set(["lecon-b"]));
+
+  assertEquals([resultat.faitLe, triees(resultat.leconsReussies)], [secondJour, ["lecon-a", "lecon-b"]]);
+});
