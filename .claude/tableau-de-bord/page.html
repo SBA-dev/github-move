@@ -1,0 +1,448 @@
+<style>
+#dash-root { --dash-gutter: clamp(16px, 3vw, 32px); }
+.sv { font-family: var(--font-anthropic-sans); display: flex; flex-direction: column; gap: var(--cds-gap-xl); max-width: 1200px; margin-inline: auto; }
+.sv-head h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); margin: 0 0 var(--cds-gap-xs); text-wrap: balance; }
+.sv-head p { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-body); max-width: 70ch; }
+.sv-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr)); gap: var(--cds-gap-md); }
+.sv-kpi { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-md) var(--cds-pad-lg); display: flex; flex-direction: column; gap: var(--cds-gap-xs); min-width: 0; }
+.sv-kpi .lbl { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.sv-kpi .val { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: var(--cds-font-size-title); font-variant-numeric: tabular-nums; line-height: 1.1; }
+.sv-kpi .sub { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); font-variant-numeric: tabular-nums; }
+.sv-sec { display: flex; flex-direction: column; gap: var(--cds-gap-md); }
+.sv-sec > h2 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); margin: 0; }
+.sv-sec > .note { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+.sv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); gap: var(--cds-gap-md); }
+.sv-card { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); display: flex; flex-direction: column; gap: var(--cds-gap-sm); min-width: 0; }
+.sv-card h3 { margin: 0; font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); }
+.sv-card .note { margin: 0; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+.sv-team-top { display: flex; justify-content: space-between; align-items: baseline; gap: var(--cds-gap-sm); flex-wrap: wrap; }
+.sv-team-top .who { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.sv-team-top .pct { font-family: var(--font-anthropic-serif); font-size: var(--cds-font-size-title); font-variant-numeric: tabular-nums; }
+.sv-track { height: 8px; border-radius: 4px; background: var(--cds-chart-grid); overflow: hidden; }
+.sv-fill { height: 100%; border-radius: 4px; background: var(--sv-fill, currentColor); }
+.sv-steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--cds-gap-xs); }
+.sv-step { font-size: var(--cds-font-size-caption); padding: var(--cds-pad-xs) var(--cds-pad-sm); border-radius: var(--cds-radius); border: 1px solid var(--color-border-line); display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.sv-step b { font-weight: var(--cds-font-weight-medium); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sv-step span { color: var(--color-fg-muted); }
+.sv-step[data-etat="fait"] span { color: var(--color-ok); }
+.sv-step[data-etat="en cours"] { border-color: currentColor; }
+.sv-step[data-etat="en attente"] span { color: var(--color-warn); }
+.sv-dl { display: grid; grid-template-columns: auto 1fr; gap: 4px var(--cds-gap-md); font-size: var(--cds-font-size-caption); margin: 0; }
+.sv-dl dt { color: var(--color-fg-muted); }
+.sv-dl dd { margin: 0; min-width: 0; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.sv-dl dd.warn { color: var(--color-warn); }
+.sv-lots { display: flex; flex-direction: column; gap: var(--cds-gap-sm); min-height: 14rem; }
+.sv-lot { display: grid; grid-template-columns: minmax(7rem, 10rem) 1fr 3.5rem; gap: var(--cds-gap-sm); align-items: center; font-size: var(--cds-font-size-caption); }
+.sv-lot .n { text-align: right; font-variant-numeric: tabular-nums; color: var(--color-fg-muted); }
+.sv-tablebox { overflow: auto; max-height: 28rem; }
+.sv table { width: 100%; border-collapse: collapse; font-size: var(--cds-font-size-caption); font-variant-numeric: tabular-nums; }
+.sv th { text-align: left; font-weight: var(--cds-font-weight-medium); color: var(--color-fg-muted); padding: var(--cds-pad-xs) var(--cds-pad-sm); border-bottom: 1px solid var(--color-border-line); position: sticky; top: 0; background: var(--color-panel); }
+.sv td { padding: var(--cds-pad-xs) var(--cds-pad-sm); border-bottom: 1px solid var(--color-border-line); vertical-align: top; }
+.sv td.num, .sv th.num { text-align: right; }
+.sv-pill { display: inline-block; padding: 1px 8px; border-radius: 999px; border: 1px solid var(--color-border-line); white-space: nowrap; }
+.sv-pill[data-e="Livrée"] { color: var(--color-ok); }
+.sv-pill[data-e="En revue"], .sv-pill[data-e="Prête"] { color: var(--color-warn); }
+.sv-pill[data-e="Bloquée"] { color: var(--color-fg-muted); }
+.sv-tests { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--cds-gap-sm); }
+.sv-test { border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-sm); display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.sv-test .v { font-family: var(--font-anthropic-serif); font-size: var(--cds-font-size-heading); font-variant-numeric: tabular-nums; }
+.sv-test .l, .sv-test .e { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.sv-chart { position: relative; min-height: 11rem; }
+.sv-tip { position: absolute; pointer-events: none; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); border-radius: var(--cds-radius); box-shadow: var(--cds-shadow-popover); padding: var(--cds-pad-xs) var(--cds-pad-sm); font-size: var(--cds-font-size-caption); white-space: nowrap; }
+.sv-tip .t { color: var(--cds-text-secondary); }
+[data-dash-source-state=empty] { color: transparent; }
+[data-dash-source-state=refreshing] { opacity: .5; transition: opacity var(--cds-dur-slow); }
+.sv-fail { display: flex; align-items: center; justify-content: center; gap: 6px; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); min-height: inherit; }
+.sv-fail::before { content: ""; width: .375rem; height: .375rem; border-radius: 50%; background: var(--color-bad); }
+@media (max-width: 30rem) { .sv-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } .sv-lot { grid-template-columns: 6.5rem 1fr 3rem; } }
+</style>
+
+<div class="sv">
+  <header class="sv-head" id="haut">
+    <h1>Savanturier : avancement de la réécriture</h1>
+    <p id="resume"><span data-source="kpi" data-field="livrees_beta" data-row="0" class="dash-skeleton">—</span> stories livrées sur <span data-source="kpi" data-field="total_beta" data-row="0" class="dash-skeleton">—</span> pour la beta, <span data-source="kpi" data-field="en_cours" data-row="0" class="dash-skeleton">—</span> en cours. Relevé du <span data-source="releve" data-field="releve" data-row="0" class="dash-skeleton">—</span> (GitHub, sessions Claude, tests lancés sur <code>main</code> au commit <span data-source="releve" data-field="commit_main" data-row="0">—</span>), mis à jour automatiquement.</p>
+  </header>
+
+  <section class="sv-kpis" id="chiffres">
+    <div class="sv-kpi"><span class="lbl">Avancement de la beta</span><span class="val dash-skeleton" data-source="kpi" data-field="avancement_beta" data-row="0">—</span><span class="sub">34 stories, stories en cours comptées au prorata</span></div>
+    <div class="sv-kpi"><span class="lbl">Avancement de toute la réécriture</span><span class="val dash-skeleton" data-source="kpi" data-field="avancement_projet" data-row="0">—</span><span class="sub">43 stories, beta et après la beta</span></div>
+    <div class="sv-kpi"><span class="lbl">Couverture des lignes (Deno)</span><span class="val dash-skeleton" data-source="kpi" data-field="couverture_lignes" data-row="0">—</span><span class="sub">branches : <span data-source="kpi" data-field="couverture_branches" data-row="0">—</span></span></div>
+    <div class="sv-kpi"><span class="lbl">Usage de la réécriture (équivalent API)</span><span class="val dash-skeleton" data-source="kpi" data-field="cout_total" data-row="0">—</span><span class="sub">en moyenne <span data-source="kpi" data-field="cout_moyen" data-row="0">—</span> par story</span></div>
+    <div class="sv-kpi"><span class="lbl">Usage estimé pour finir la beta</span><span class="val dash-skeleton" data-source="kpi" data-field="cout_restant_beta" data-row="0">—</span><span class="sub">coût moyen × stories restantes</span></div>
+  </section>
+
+  <section class="sv-sec" id="equipes">
+    <h2>Stories en cours, par équipe</h2>
+    <p class="note">Les 8 étapes du workflow /feature. Une étape « en attente » attend une réponse du PO.</p>
+    <div class="sv-grid" id="cartes-equipes" data-source="equipes etapes"></div>
+  </section>
+
+  <section class="sv-grid">
+    <div class="sv-card" id="prochaines">
+      <h3>Prochaines stories de la beta</h3>
+      <p class="note">Dans l'ordre du graphe : à merger, puis prêtes à démarrer, puis débloquées par la vague 1.</p>
+      <div class="sv-tablebox">
+        <table data-source="prochaines" data-row-key="story">
+          <thead><tr><th data-field="rang" class="num">Rang</th><th data-field="story">Story</th><th data-field="titre">Titre</th><th data-field="disponibilite">Quand</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="sv-card" id="lots">
+      <h3>Avancement par lot</h3>
+      <p class="note">Stories livrées sur total. La barre compte les stories en cours au prorata.</p>
+      <div class="sv-lots" data-source="lots"></div>
+    </div>
+  </section>
+
+  <section class="sv-sec" id="tests">
+    <h2>Tests et couverture</h2>
+    <div class="sv-grid">
+      <div class="sv-card">
+        <h3>Couverture des lignes par contexte</h3>
+        <p class="note">Code de <code>supabase/functions/_shared/</code> (domaine, cas d'usage, adaptateurs), hors fakes et tests.</p>
+        <div class="sv-chart" id="graphe-couverture" data-source="couverture"></div>
+      </div>
+      <div class="sv-card">
+        <h3>Suites de tests</h3>
+        <p class="note">Le front React n'a pas encore de mesure de couverture : il est vérifié par les scénarios E2E.</p>
+        <div class="sv-tests" id="suites" data-source="tests"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sv-sec" id="couts">
+    <h2>Usage de Claude par story</h2>
+    <p class="note">Prix qu'aurait coûté chaque session au tarif de l'API, rapporté par la session. Avec l'abonnement Max, il n'est pas facturé : il mesure la part de tes limites d'usage consommée. Exact pour les équipes de la vague 1 (une session par story). Pour les sessions qui ont livré plusieurs stories, le coût est réparti à parts égales.</p>
+    <div class="sv-grid">
+      <div class="sv-card">
+        <h3>Par story</h3>
+        <div class="sv-tablebox">
+          <table data-source="stories" data-row-key="story" id="table-couts">
+            <thead><tr><th data-field="story">Story</th><th data-field="titre">Titre</th><th data-field="etat">État</th><th data-field="cout_usd" class="num">Équiv. API</th><th data-field="methode_cout">Calcul</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="sv-card">
+        <h3>Par session</h3>
+        <div class="sv-tablebox">
+          <table data-source="sessions" data-row-key="session" id="table-sessions">
+            <thead><tr><th data-field="session">Session</th><th data-field="stories">Contenu</th><th data-field="role">Rôle</th><th data-field="cout_usd" class="num">Équiv. API</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+dash.calc('kpi', {
+  title: 'Chiffres clés',
+  description: 'Avancement pondéré des stories, couverture totale, coût total et coût moyen par story terminée.',
+  inputs: ['stories', 'sessions', 'couverture'],
+  fn: (stories, sessions, couverture) => {
+    const somme = (xs) => xs.reduce((t, x) => t + Number(x || 0), 0);
+    const beta = stories.filter((s) => s.beta === 'oui');
+    const terminees = stories.filter((s) => s.etat === 'Livrée' || s.etat === 'En revue');
+    const coutMoyen = somme(terminees.map((s) => s.cout_usd)) / terminees.length;
+    return [{
+      avancement_beta: somme(beta.map((s) => s.avancement)) / beta.length,
+      avancement_projet: somme(stories.map((s) => s.avancement)) / stories.length,
+      livrees_beta: beta.filter((s) => s.etat === 'Livrée').length,
+      total_beta: beta.length,
+      en_cours: stories.filter((s) => s.etat === 'En cours' || s.etat === 'En revue').length,
+      couverture_lignes: somme(couverture.map((c) => c.lignes_couvertes)) / somme(couverture.map((c) => c.lignes)),
+      couverture_branches: somme(couverture.map((c) => c.branches_couvertes)) / somme(couverture.map((c) => c.branches)),
+      cout_total: somme(sessions.map((s) => s.cout_usd)),
+      cout_moyen: coutMoyen,
+      cout_restant_beta: coutMoyen * somme(beta.map((s) => 1 - Number(s.avancement)))
+    }];
+  }
+});
+
+dash.calc('lots', {
+  title: 'Avancement par lot',
+  description: 'Pour chaque lot : stories livrées, total, et avancement moyen des stories.',
+  inputs: ['stories'],
+  fn: (stories) => {
+    const lots = [...new Set(stories.map((s) => s.lot))].sort();
+    return lots.map((lot) => {
+      const du = stories.filter((s) => s.lot === lot);
+      return {
+        lot,
+        livrees: du.filter((s) => s.etat === 'Livrée').length,
+        total: du.length,
+        avancement: du.reduce((t, s) => t + Number(s.avancement), 0) / du.length
+      };
+    });
+  }
+});
+
+dash.calc('prochaines', {
+  title: 'Prochaines stories',
+  description: 'Stories de la beta pas encore commencées ou à merger, triées : en revue, prêtes, puis par niveau dans le graphe.',
+  inputs: ['stories'],
+  fn: (stories) => {
+    const priorite = { 'En revue': 0, 'Prête': 1, 'Bloquée': 2 };
+    return stories
+      .filter((s) => s.beta === 'oui' && s.etat in priorite)
+      .sort((a, b) => priorite[a.etat] - priorite[b.etat] || (a.niveau ?? 9) - (b.niveau ?? 9) || a.numero - b.numero)
+      .slice(0, 10)
+      .map((s, i) => ({
+        rang: i + 1,
+        story: s.story,
+        titre: s.titre,
+        disponibilite: s.etat === 'En revue' ? 'à merger (PR ouverte)' : s.etat === 'Prête' ? 'peut démarrer maintenant' : 'après ' + s.depend_de
+      }));
+  }
+});
+
+const svFr = new Intl.NumberFormat('fr-FR');
+const svPct0 = new Intl.NumberFormat('fr-FR', { style: 'percent', maximumFractionDigits: 0 });
+const svPct1 = new Intl.NumberFormat('fr-FR', { style: 'percent', minimumFractionDigits: 1, maximumFractionDigits: 1 });
+const svUsd = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+const svUsd2 = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 });
+window.svFormats = { svFr, svPct0, svPct1, svUsd, svUsd2 };
+
+function svFail(el) {
+  el.replaceChildren();
+  const d = document.createElement('div');
+  d.className = 'sv-fail';
+  d.textContent = 'Failed to load';
+  el.appendChild(d);
+}
+
+function svKpis() {
+  const rel = dash.data('releve');
+  document.querySelectorAll('[data-source="releve"]').forEach((el) => {
+    if (rel.status !== 'ok' || !rel.data.length) { el.textContent = '—'; return; }
+    el.classList.remove('dash-skeleton');
+    el.textContent = rel.data[0][el.dataset.field];
+  });
+  const r = dash.data('kpi');
+  const fmt = {
+    avancement_beta: svPct0.format, avancement_projet: svPct0.format,
+    couverture_lignes: svPct1.format, couverture_branches: svPct1.format,
+    cout_total: svUsd.format, cout_moyen: svUsd.format, cout_restant_beta: svUsd.format,
+    livrees_beta: svFr.format, total_beta: svFr.format, en_cours: svFr.format
+  };
+  document.querySelectorAll('[data-source="kpi"]').forEach((el) => {
+    if (r.status !== 'ok' || !r.data.length) { el.textContent = '—'; return; }
+    el.classList.remove('dash-skeleton');
+    const f = el.dataset.field;
+    el.textContent = fmt[f](r.data[0][f]);
+  });
+}
+
+function svEquipes() {
+  const box = document.getElementById('cartes-equipes');
+  const eq = dash.data('equipes');
+  const et = dash.data('etapes');
+  if (eq.status === 'error' || et.status === 'error') { svFail(box); return; }
+  if (eq.status !== 'ok' || et.status !== 'ok') { box.replaceChildren(); return; }
+  box.replaceChildren();
+  eq.data.forEach((e) => {
+    const where = 'story=' + encodeURIComponent(e.story);
+    const card = document.createElement('article');
+    card.className = 'sv-card';
+    card.id = 'equipe-' + String(e.story).replace('#', '');
+
+    const top = document.createElement('div');
+    top.className = 'sv-team-top';
+    const left = document.createElement('div');
+    const who = document.createElement('div');
+    who.className = 'who';
+    const whoName = document.createElement('span');
+    whoName.dataset.source = 'equipes'; whoName.dataset.field = 'equipe'; whoName.dataset.where = where;
+    whoName.textContent = e.equipe;
+    const cadre = document.createElement('span');
+    cadre.dataset.source = 'equipes'; cadre.dataset.field = 'cadre'; cadre.dataset.where = where;
+    cadre.textContent = e.cadre;
+    who.append(whoName, ' · ', cadre);
+    const h = document.createElement('h3');
+    const hs = document.createElement('span');
+    hs.dataset.source = 'equipes'; hs.dataset.field = 'story'; hs.dataset.where = where;
+    hs.textContent = e.story;
+    const ht = document.createElement('span');
+    ht.dataset.source = 'equipes'; ht.dataset.field = 'titre'; ht.dataset.where = where;
+    ht.textContent = e.titre;
+    h.append(hs, ' ', ht);
+    left.append(who, h);
+    const pct = document.createElement('span');
+    pct.className = 'pct';
+    pct.dataset.source = 'equipes'; pct.dataset.field = 'avancement'; pct.dataset.where = where;
+    pct.textContent = svPct0.format(e.avancement);
+    top.append(left, pct);
+
+    const track = document.createElement('div');
+    track.className = 'sv-track';
+    const fill = document.createElement('div');
+    fill.className = 'sv-fill';
+    fill.style.width = (Number(e.avancement) * 100) + '%';
+    fill.style.setProperty('--sv-fill', dash.colors[0]);
+    track.appendChild(fill);
+
+    const steps = document.createElement('div');
+    steps.className = 'sv-steps';
+    et.data.filter((s) => s.story === e.story).sort((a, b) => a.ordre - b.ordre).forEach((s) => {
+      const c = document.createElement('div');
+      c.className = 'sv-step';
+      c.dataset.etat = s.etat;
+      if (s.etat === 'en cours') c.style.color = dash.colors[0];
+      const b = document.createElement('b');
+      b.textContent = s.etape;
+      b.style.color = 'var(--color-fg)';
+      const sp = document.createElement('span');
+      sp.textContent = s.etat;
+      c.append(b, sp);
+      steps.appendChild(c);
+    });
+
+    const dl = document.createElement('dl');
+    dl.className = 'sv-dl';
+    [['Étape', 'etape'], ['Attend', 'attend'], ['Verrou', 'verrou'], ['Branche', 'branche'], ['Usage (équiv. API)', 'cout_usd'], ['Mis à jour', 'maj']].forEach(([lbl, f]) => {
+      const dt = document.createElement('dt'); dt.textContent = lbl;
+      const dd = document.createElement('dd');
+      dd.dataset.source = 'equipes'; dd.dataset.field = f; dd.dataset.where = where;
+      dd.textContent = f === 'cout_usd' ? svUsd2.format(e[f]) : e[f];
+      if (f === 'attend' && e[f] !== 'rien') dd.classList.add('warn');
+      dl.append(dt, dd);
+    });
+
+    card.append(top, track, steps, dl);
+    box.appendChild(card);
+  });
+}
+
+function svTable(table, id, cols, filtre) {
+  const tbody = table.querySelector('tbody');
+  const r = dash.data(id);
+  tbody.replaceChildren();
+  if (r.status === 'error') {
+    const tr = document.createElement('tr'); const td = document.createElement('td');
+    td.colSpan = cols.length; svFail(td); tr.appendChild(td); tbody.appendChild(tr); return;
+  }
+  if (r.status !== 'ok') return;
+  r.data.filter(filtre || (() => true)).forEach((row) => {
+    const tr = document.createElement('tr');
+    cols.forEach(([f, rendu, num]) => {
+      const td = document.createElement('td');
+      if (num) td.className = 'num';
+      const v = row[f];
+      if (rendu === 'pill') {
+        const p = document.createElement('span'); p.className = 'sv-pill'; p.dataset.e = v; p.textContent = v; td.appendChild(p);
+      } else {
+        td.textContent = rendu ? rendu(v) : (v ?? '—');
+      }
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+}
+
+function svLots() {
+  const box = document.querySelector('.sv-lots');
+  const r = dash.data('lots');
+  if (r.status === 'error') { svFail(box); return; }
+  box.replaceChildren();
+  if (r.status !== 'ok') return;
+  r.data.forEach((l) => {
+    const row = document.createElement('div');
+    row.className = 'sv-lot';
+    const name = document.createElement('span');
+    name.textContent = l.lot;
+    const track = document.createElement('div');
+    track.className = 'sv-track';
+    const fill = document.createElement('div');
+    fill.className = 'sv-fill';
+    fill.style.width = (l.avancement * 100) + '%';
+    fill.style.setProperty('--sv-fill', l.avancement >= 1 ? 'var(--color-ok)' : dash.colors[0]);
+    track.appendChild(fill);
+    const n = document.createElement('span');
+    n.className = 'n';
+    n.textContent = l.livrees + ' / ' + l.total;
+    row.append(name, track, n);
+    box.appendChild(row);
+  });
+}
+
+function svCouverture() {
+  const box = document.getElementById('graphe-couverture');
+  const r = dash.data('couverture');
+  if (r.status === 'error') { svFail(box); return; }
+  box.replaceChildren();
+  if (r.status !== 'ok') return;
+  const rows = r.data.map((d) => ({ ...d, taux: Number(d.lignes_couvertes) / Number(d.lignes) })).sort((a, b) => a.taux - b.taux);
+  const W = Math.max(260, box.clientWidth);
+  const barH = 22, gap = 12;
+  const svg = d3.select(box).append('svg').attr('width', '100%');
+  const labels = svg.append('g');
+  const tmp = labels.selectAll('text').data(rows).join('text').attr('font-size', 12).text((d) => d.contexte);
+  const labW = d3.max(tmp.nodes(), (n) => n.getComputedTextLength()) + 10;
+  tmp.remove();
+  const valW = 52;
+  const H = rows.length * (barH + gap) + 24;
+  svg.attr('viewBox', `0 0 ${W} ${H}`).attr('height', H);
+  const x = d3.scaleLinear([0.8, 1], [labW, W - valW]);
+  [0.8, 0.9, 1].forEach((t) => {
+    svg.append('line').attr('x1', x(t)).attr('x2', x(t)).attr('y1', 0).attr('y2', H - 18).attr('stroke', 'var(--cds-chart-grid)');
+    svg.append('text').attr('x', x(t)).attr('y', H - 4).attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', 'var(--color-fg-muted)').text(svPct0.format(t));
+  });
+  const tip = d3.select(box).append('div').attr('class', 'sv-tip').style('opacity', 0);
+  const g = svg.selectAll('g.b').data(rows).join('g').attr('class', 'b').attr('transform', (d, i) => `translate(0, ${i * (barH + gap)})`);
+  g.append('text').attr('x', labW - 10).attr('y', barH / 2).attr('dy', '0.35em').attr('text-anchor', 'end').attr('font-size', 12).attr('fill', 'var(--color-fg)').text((d) => d.contexte);
+  g.append('rect').attr('x', x(0.8)).attr('y', 0).attr('height', barH).attr('rx', 4)
+    .attr('width', (d) => Math.max(2, x(Math.max(0.8, d.taux)) - x(0.8)))
+    .attr('fill', (d) => d.taux < 0.95 ? dash.colors[1] : dash.colors[0])
+    .on('pointermove', (ev, d) => {
+      const [mx, my] = d3.pointer(ev, box);
+      tip.style('opacity', 1).html('');
+      tip.append('div').attr('class', 't').text(d.contexte);
+      tip.append('div').text(`Lignes : ${svFr.format(d.lignes_couvertes)} / ${svFr.format(d.lignes)} (${svPct1.format(d.taux)})`);
+      tip.append('div').text(`Branches : ${svFr.format(d.branches_couvertes)} / ${svFr.format(d.branches)} (${svPct1.format(d.branches_couvertes / d.branches)})`);
+      const tw = tip.node().offsetWidth;
+      tip.style('left', Math.min(Math.max(0, mx - tw / 2), box.clientWidth - tw) + 'px').style('top', (my - 70) + 'px');
+    })
+    .on('pointerleave', () => tip.style('opacity', 0));
+  g.append('text').attr('x', (d) => x(Math.max(0.8, d.taux)) + 6).attr('y', barH / 2).attr('dy', '0.35em').attr('font-size', 12).attr('fill', 'var(--color-fg-muted)').text((d) => svPct1.format(d.taux));
+}
+
+function svSuites() {
+  const box = document.getElementById('suites');
+  const r = dash.data('tests');
+  if (r.status === 'error') { svFail(box); return; }
+  box.replaceChildren();
+  if (r.status !== 'ok') return;
+  r.data.forEach((t) => {
+    const where = 'suite=' + encodeURIComponent(t.suite);
+    const c = document.createElement('div'); c.className = 'sv-test';
+    const v = document.createElement('span'); v.className = 'v';
+    v.dataset.source = 'tests'; v.dataset.field = 'nombre'; v.dataset.where = where;
+    v.textContent = svFr.format(t.nombre) + ' ' + t.unite;
+    const l = document.createElement('span'); l.className = 'l';
+    l.dataset.source = 'tests'; l.dataset.field = 'suite'; l.dataset.where = where;
+    l.textContent = t.suite;
+    const e = document.createElement('span'); e.className = 'e';
+    e.dataset.source = 'tests'; e.dataset.field = 'etat'; e.dataset.where = where;
+    e.textContent = t.etat;
+    c.append(v, l, e);
+    box.appendChild(c);
+  });
+}
+
+dash.onData(() => {
+  svKpis();
+  svEquipes();
+  svTable(document.querySelector('#prochaines table'), 'prochaines', [['rang', null, true], ['story'], ['titre'], ['disponibilite']]);
+  svLots();
+  svCouverture();
+  svSuites();
+  svTable(document.getElementById('table-couts'), 'stories',
+    [['story'], ['titre'], ['etat', 'pill'], ['cout_usd', (v) => svUsd2.format(v), true], ['methode_cout']],
+    (s) => s.cout_usd !== null && s.cout_usd !== undefined);
+  svTable(document.getElementById('table-sessions'), 'sessions',
+    [['session'], ['stories'], ['role'], ['cout_usd', (v) => svUsd2.format(v), true]]);
+});
+</script>
