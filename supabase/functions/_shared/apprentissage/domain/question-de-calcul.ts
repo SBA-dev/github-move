@@ -4,13 +4,13 @@ import { CleDeQuestion } from "./cle-de-question.ts";
 import { JeNeSaisPasDejaDit, QuestionDejaReussie, ReponseIncompatible } from "./erreurs.ts";
 import { choixAutourDuResultat } from "./mode-de-reponse.ts";
 import { type AideDonnee, QuestionJouee } from "./question-jouee.ts";
-import type { QuestionSuivie } from "./question-suivie.ts";
+import type { QuestionPosee } from "./question-posee.ts";
 import type { ReponseDonnee, ReponseEnNombre, ReponseParChoix, ResultatDeReponse } from "./reponse.ts";
 import type { Tireur } from "./tireur.ts";
 
 type ReponseDeCalcul = ReponseEnNombre | ReponseParChoix;
 
-export class QuestionDeCalcul implements QuestionSuivie {
+export class QuestionDeCalcul implements QuestionPosee {
   readonly type = "calcul";
   readonly cle: CleDeQuestion;
   private nombreDErreurs = 0;

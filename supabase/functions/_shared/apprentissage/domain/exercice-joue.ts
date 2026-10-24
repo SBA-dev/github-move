@@ -1,8 +1,11 @@
-import type { Exercice, Segment } from "../../catalogue/domain/index.ts";
+import type { Exercice, Niveau, Operation, Segment } from "../../catalogue/domain/index.ts";
 import { type EtiquettePosee, EtiquettesAPlacer } from "./etiquettes-a-placer.ts";
-import { PasDeQuestionEnCours, ReponseIncompatible } from "./erreurs.ts";
+import { PasDeQuestionEnCours } from "./erreurs.ts";
 import { nombreDeQuestions } from "./nombre-de-questions.ts";
-import { type QuestionJouee, questionsJoueesAvec } from "./question-jouee.ts";
+import { ModeDeReponse } from "./mode-de-reponse.ts";
+import { QuestionDeCalcul } from "./question-de-calcul.ts";
+import { QuestionJouee, questionsJoueesAvec } from "./question-jouee.ts";
+import type { QuestionPosee } from "./question-posee.ts";
 import type { ParoleDue } from "./parole-due.ts";
 import type { QuestionSuivie } from "./question-suivie.ts";
 import type { AideDonnee } from "./question-jouee.ts";
@@ -15,7 +18,7 @@ export type SegmentDuTexteATrous =
   | Readonly<{ type: "trou"; mot: undefined }>;
 
 type Contenu = Readonly<{
-  questionsAChoix?: readonly QuestionJouee[];
+  questionsPosees?: readonly QuestionPosee[];
   etiquettes?: EtiquettesAPlacer;
   segments?: readonly Segment[];
 }>;
@@ -31,16 +34,18 @@ export class ExerciceJoue {
     private readonly contenu: Contenu = {},
   ) {}
 
-  static depuis(position: number, exercice: Exercice, tireur: Tireur): ExerciceJoue {
-    return new ExerciceJoue(position, exercice.titre, nombreDeQuestions(exercice), contenuDe(exercice, tireur));
+  static depuis(position: number, exercice: Exercice, tireur: Tireur, niveau: Niveau): ExerciceJoue {
+    return new ExerciceJoue(position, exercice.titre, nombreDeQuestions(exercice), contenuDe(exercice, tireur, niveau));
   }
 
+  /** La question à choix en cours ; une question de calcul s'affichera par son propre composant. */
   questionEnCours(): QuestionJouee | undefined {
-    return this.questionsAChoix()[this.reussies];
+    const question = this.questionPoseeEnCours();
+    return question instanceof QuestionJouee ? question : undefined;
   }
 
   questionsJouees(): readonly QuestionSuivie[] {
-    return this.contenu.etiquettes?.questions ?? this.questionsAChoix();
+    return this.contenu.etiquettes?.questions ?? this.questionsPosees();
   }
 
   questionsRatees(): QuestionSuivie[] {
@@ -49,7 +54,8 @@ export class ExerciceJoue {
 
   tirages(): string[][] {
     const etiquettes = this.contenu.etiquettes;
-    return etiquettes ? [etiquettes.tirage()] : this.questionsAChoix().map((question) => question.tirage());
+    if (etiquettes) return [etiquettes.tirage()];
+    return this.questionsPosees().map((question) => question.tirage()).filter((tirage) => tirage.length > 0);
   }
 
   etiquettesAPlacer(): string[] {
@@ -89,8 +95,7 @@ export class ExerciceJoue {
 
   repondre(reponse: Reponse): ResultatDeReponse {
     if (reponse.genre === "placement") return this.placer(reponse);
-    if (reponse.genre === "nombre") throw new ReponseIncompatible(reponse.genre);
-    const question = this.questionEnCours();
+    const question = this.questionPoseeEnCours();
     if (!question) throw new PasDeQuestionEnCours();
     const resultat = question.repondre(reponse);
     this.dernierResultatDuTrou = resultat;
@@ -100,7 +105,7 @@ export class ExerciceJoue {
 
   direJeNeSaisPas(etiquette?: string): AideDonnee {
     if (this.contenu.etiquettes) return this.contenu.etiquettes.direJeNeSaisPas(etiquette);
-    const question = this.questionEnCours();
+    const question = this.questionPoseeEnCours();
     if (!question) throw new PasDeQuestionEnCours();
     return question.direJeNeSaisPas();
   }
@@ -126,12 +131,16 @@ export class ExerciceJoue {
     return this.contenu.segments !== undefined && this.dernierResultatDuTrou === "juste";
   }
 
-  private questionsAChoix(): readonly QuestionJouee[] {
-    return this.contenu.questionsAChoix ?? [];
+  private questionPoseeEnCours(): QuestionPosee | undefined {
+    return this.questionsPosees()[this.reussies];
+  }
+
+  private questionsPosees(): readonly QuestionPosee[] {
+    return this.contenu.questionsPosees ?? [];
   }
 }
 
-function contenuDe(exercice: Exercice, tireur: Tireur): Contenu {
+function contenuDe(exercice: Exercice, tireur: Tireur, niveau: Niveau): Contenu {
   switch (exercice.type) {
     case "classer": {
       const etiquettes = tireur.etiquettesMelangees(exercice.items.map((item) => item.texte));
@@ -140,8 +149,17 @@ function contenuDe(exercice: Exercice, tireur: Tireur): Contenu {
     case "ordre":
       return { etiquettes: EtiquettesAPlacer.pourOrdonner(exercice, tireur.etiquettesMelangees(exercice.elements)) };
     case "trous":
-      return { questionsAChoix: questionsJoueesAvec(exercice, tireur), segments: exercice.segments };
+      return { questionsPosees: questionsJoueesAvec(exercice, tireur), segments: exercice.segments };
+    case "calcul":
+      return { questionsPosees: questionsDeCalcul(exercice.operations ?? [], tireur, niveau) };
     default:
-      return { questionsAChoix: questionsJoueesAvec(exercice, tireur) };
+      return { questionsPosees: questionsJoueesAvec(exercice, tireur) };
   }
+}
+
+function questionsDeCalcul(operations: readonly Operation[], tireur: Tireur, niveau: Niveau): QuestionDeCalcul[] {
+  const auxChoix = ModeDeReponse.pour(niveau).genre === "choix";
+  return operations.map((operation) =>
+    auxChoix ? QuestionDeCalcul.avecLesChoix(operation, tireur) : QuestionDeCalcul.auClavier(operation)
+  );
 }

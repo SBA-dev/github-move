@@ -95,7 +95,7 @@ export class Seance {
     const exercices = lecon.exercices
       .map((exercice, position) => ({ exercice, position }))
       .filter(({ position }) => plan.positionsDesExercices.includes(position))
-      .map(({ exercice, position }) => ExerciceJoue.depuis(position, exercice, tireur));
+      .map(({ exercice, position }) => ExerciceJoue.depuis(position, exercice, tireur, lecon.niveau));
     return new Seance(id, enfant, lecon.id, choix, plan, exercices);
   }
 
