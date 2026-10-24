@@ -1,4 +1,4 @@
-import type { ExerciceFluence, Lecon } from "../../catalogue/domain/index.ts";
+import type { Exercice, ExerciceFluence, Lecon } from "../../catalogue/domain/index.ts";
 
 export type RecordDuProfil = Readonly<{
   lecon: string;
@@ -22,9 +22,12 @@ export function pastillesDesRecords(
 
 function libelleDu(record: RecordDuProfil, lecons: readonly Lecon[]): string {
   const lecon = lecons.find((candidate) => candidate.id === record.lecon);
-  const fluence = lecon?.exercices.find((exercice) => exercice.type === "fluence" && cleDe(exercice) === record.exercice);
-  if (lecon === undefined || fluence === undefined) return record.exercice;
-  return fluence.titre ?? lecon.titre;
+  const fluence = lecon?.exercices.filter(estUneFluence).find((exercice) => cleDe(exercice) === record.exercice);
+  return lecon && fluence ? fluence.titre ?? lecon.titre : record.exercice;
+}
+
+function estUneFluence(exercice: Exercice): exercice is ExerciceFluence {
+  return exercice.type === "fluence";
 }
 
 function cleDe(fluence: ExerciceFluence): string {
