@@ -422,3 +422,105 @@ button.secondaire:hover { background: #fdf3ea; }
 .meilleures-etoiles .etoiles-dessinees svg { width: 36px; height: 36px; }
 .meilleures-etoiles p { padding: 4px 12px; border-radius: 16px; background: rgba(255, 255, 255, .85); font-weight: 700; }
 .fin-de-seance .message-erreur:empty { display: none; }
+
+/* Calcul : la carte de l'opération, le clavier de cristaux, la fluence */
+.calcul, .fluence, .addition-posee { display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 100%; }
+.carte-du-calcul { font-size: 2rem; }
+.clavier-de-cristaux { display: grid; justify-items: center; gap: 8px; width: min(100%, 20rem); max-width: 100%; }
+.nombre-tape {
+  display: block;
+  width: 100%;
+  min-height: 56px;
+  padding: 6px 14px;
+  border: 3px solid var(--accent-fonce);
+  border-radius: 16px;
+  background: #fff;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: .15em;
+  text-align: center;
+}
+.cristaux { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; width: 100%; }
+.cristal {
+  min-width: 44px;
+  min-height: 56px;
+  padding: 6px;
+  border: 3px solid #3b6fb6;
+  border-radius: 18px 18px 10px 10px;
+  background: linear-gradient(160deg, #dff0ff, #8cc4ff);
+  color: var(--texte);
+  font-size: 1.5rem;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+.cristal:hover { background: linear-gradient(160deg, #fff, #a9d3ff); }
+.cristal.action { font-size: 1rem; background: #fff; border-color: var(--accent-fonce); }
+.cristal.valider { background: #d9f5d0; border-color: #3f8f2f; }
+.cristal[aria-disabled="true"] { opacity: .45; cursor: default; }
+.cristal[data-brille="true"] {
+  background: #fff3c4;
+  box-shadow: 0 0 0 4px #ffd23f, 0 0 14px 6px #ffd23f;
+  animation: brille 1.2s ease-in-out infinite alternate;
+}
+.tableau-de-fluence { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 16px; width: min(100%, 28rem); padding: 8px 14px; border-radius: 22px; background: rgba(255, 255, 255, .9); font-weight: 800; }
+.barre-de-temps { flex: 1 1 100%; height: 12px; border-radius: 6px; background: #e4ded2; overflow: hidden; }
+.barre-de-temps i { display: block; height: 100%; background: var(--accent); transition: width .3s linear; }
+.scores-de-fluence { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.scores-de-fluence li { padding: 6px 14px; border-radius: 16px; background: rgba(255, 255, 255, .85); font-size: 1.25rem; font-weight: 700; overflow-wrap: anywhere; }
+
+/* Addition posée : unités bleue à droite, dizaines rose, centaines verte, dans tous les univers */
+.operation-posee { padding: 4px 14px; border-radius: 16px; background: rgba(255, 255, 255, .85); font-size: 1.5rem; font-weight: 800; }
+.colonnes { display: flex; justify-content: center; gap: 8px; width: 100%; max-width: 100%; }
+.colonne {
+  --couleur-de-la-colonne: #4a90e2;
+  --fond-de-la-colonne: #dcecff;
+  display: grid;
+  grid-template-rows: auto 2.5rem 1fr auto;
+  justify-items: center;
+  gap: 4px;
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 7.5rem;
+  padding: 6px;
+  border: 3px solid var(--couleur-de-la-colonne);
+  border-radius: 16px;
+  background: var(--fond-de-la-colonne);
+}
+.colonne[data-couleur="bleue"] { --couleur-de-la-colonne: #2f7de1; --fond-de-la-colonne: #dcecff; }
+.colonne[data-couleur="rose"] { --couleur-de-la-colonne: #e0559b; --fond-de-la-colonne: #ffdcee; }
+.colonne[data-couleur="verte"] { --couleur-de-la-colonne: #3f9d45; --fond-de-la-colonne: #dcf5dc; }
+.colonne[data-en-cours="true"] { box-shadow: 0 0 0 4px #ffd23f; }
+.colonne[data-brille="true"] { box-shadow: 0 0 0 6px #ffd23f, 0 0 18px 8px #ffd23f; animation: brille 1.2s ease-in-out infinite alternate; }
+.maison-de-la-colonne {
+  width: 100%;
+  min-height: 44px;
+  padding: 4px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--couleur-de-la-colonne);
+  color: #fff;
+  font-size: 1rem;
+  overflow-wrap: anywhere;
+}
+.maison-de-la-colonne[aria-disabled="true"] { cursor: default; }
+.maison-de-la-colonne:hover { filter: brightness(1.1); background: var(--couleur-de-la-colonne); }
+.place-de-la-retenue { display: flex; align-items: center; justify-content: center; min-height: 2.5rem; }
+.retenue {
+  display: inline-grid;
+  place-items: center;
+  min-width: 2rem;
+  min-height: 2rem;
+  border: 2px solid var(--couleur-de-la-colonne);
+  border-radius: 50%;
+  background: #fff;
+  font-weight: 800;
+  animation: la-retenue-monte .8s ease-out;
+}
+@keyframes la-retenue-monte { from { transform: translate(60%, 6rem) scale(.6); opacity: 0; } to { transform: none; opacity: 1; } }
+.retenue[data-mouvement="aucun"] { animation: none; transform: none; }
+.chiffres-poses { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; font-size: 1.75rem; font-weight: 800; text-align: center; }
+.chiffre-ecrit { display: block; min-height: 2.25rem; padding-top: 2px; border-top: 3px solid var(--couleur-de-la-colonne); font-size: 1.75rem; font-weight: 800; text-align: center; }
+.resultat-de-l-addition { padding: 4px 18px; border-radius: 16px; background: #fff; font-size: 2rem; font-weight: 800; letter-spacing: .1em; }
+.chiffres-a-poser { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.chiffre-a-poser { font-size: 1.75rem; cursor: grab; }
+.invite-de-pose { padding: 6px 14px; border-radius: 16px; background: rgba(255, 255, 255, .85); font-weight: 700; }

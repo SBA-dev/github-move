@@ -1,5 +1,11 @@
 import { useCallback, useReducer, useRef } from "react";
-import { type FaitDeSeance, indicationDuGeste, type Seance, texteALireDeLEtape } from "@domain/apprentissage";
+import {
+  type FaitDeSeance,
+  indicationDuGeste,
+  Reponse,
+  type Seance,
+  texteALireDeLEtape,
+} from "@domain/apprentissage";
 import type { EtapeDeLecon, Lecon } from "@domain/catalogue";
 import {
   annoncerExerciceSuivant,
@@ -10,9 +16,13 @@ import {
 import { useReducedMotion } from "motion/react";
 import { hasardDuNavigateur } from "../hasard-navigateur.ts";
 import type { Voix } from "../voix/index.ts";
+import { useAdditionPosee } from "./exercices/addition/useAdditionPosee.ts";
+import { useBattementDeLaFluence, useFluence } from "./exercices/fluence/useFluence.ts";
+import { type SuiteDuCalcul, useCalcul } from "./exercices/useCalcul.ts";
 import { useEtiquettesAPlacer } from "./exercices/useEtiquettesAPlacer.ts";
 import { useQuestionFigee } from "./exercices/useQuestionFigee.ts";
 import { useQuestionsAChoix } from "./exercices/useQuestionsAChoix.ts";
+import { type Horloge, horlogeDuNavigateur } from "./horloge.ts";
 import { type ParoleADire, usePersonnageQuiParle } from "./usePersonnageQuiParle.ts";
 
 const PAUSE_ENTRE_DEUX_PAROLES_MS = 400;
@@ -33,6 +43,7 @@ export function useDeroulementDeSeance(
   personnageGuide: PersonnageGuide,
   toutLireAVoixHaute: boolean,
   prenom: string,
+  horloge: Horloge = horlogeDuNavigateur,
 ) {
   const personnage = usePersonnageQuiParle(voix);
   const { dire, faireSilence, montrerHumeur, reecouter: relire } = personnage;
@@ -73,6 +84,10 @@ export function useDeroulementDeSeance(
     reussite,
   });
   const { ouvrir, presenter, repondre: repondreALaQuestion, relireLaQuestion } = questions;
+  const dependancesDuCalcul = { seance, personnageGuide, dire, faireSilence, sequence, vivant, redessiner, reussite };
+  const calcul = useCalcul(dependancesDuCalcul);
+  const fluence = useFluence({ seance, horloge, dire, faireSilence, sequence, vivant, redessiner, reussite });
+  const addition = useAdditionPosee({ ...dependancesDuCalcul, montrerHumeur });
 
   const lireLaConsigneDeLExercice = useCallback(async () => {
     const position = seance.exerciceEnCours()?.position;
@@ -83,10 +98,24 @@ export function useDeroulementDeSeance(
     if (indication) await dire({ texte: indication, nature: "consigne" });
   }, [seance, lecon, dire]);
 
+  const presenterLaQuestionDeLExercice = useCallback(async (numero: number) => {
+    const position = seance.exerciceEnCours()?.position;
+    switch (position === undefined ? undefined : lecon.exercices[position]?.type) {
+      case "calcul":
+        return await calcul.presenter();
+      case "fluence":
+        return await fluence.presenter();
+      case "addition":
+        return await addition.presenter();
+      default:
+        return await ouvrir(numero);
+    }
+  }, [seance, lecon, calcul.presenter, fluence.presenter, addition.presenter, ouvrir]);
+
   const ouvrirLExercice = useCallback(async (numero: number) => {
     await lireLaConsigneDeLExercice();
-    if (numero === sequence.current) await ouvrir(numero);
-  }, [lireLaConsigneDeLExercice, ouvrir]);
+    if (numero === sequence.current) await presenterLaQuestionDeLExercice(numero);
+  }, [lireLaConsigneDeLExercice, presenterLaQuestionDeLExercice]);
 
   const direLeFait = useCallback((fait: FaitDeSeance): Promise<boolean> => {
     if (fait.type === "EtapesDeLeconFinies") {
@@ -128,6 +157,43 @@ export function useDeroulementDeSeance(
     [repondreALaQuestion, enchainerSurLExercice, presenter],
   );
 
+  const suiteDeLaReponse: SuiteDuCalcul = useCallback(
+    (numero, faits, nouvelExercice) =>
+      faits.length > 0 || nouvelExercice ? enchainerSurLExercice(numero, faits) : presenterLaQuestionDeLExercice(numero),
+    [enchainerSurLExercice, presenterLaQuestionDeLExercice],
+  );
+
+  const { repondre: repondreAuCalcul, jeNeSaisPas: jeNeSaisPasDuCalcul } = calcul;
+  const { repondre: repondreALaFluence, battre: battreLaFluence, demarrer: demarrerLaFluence } = fluence;
+  const { repondre: repondreALAddition, placer: placerUnChiffre, jeNeSaisPas: jeNeSaisPasDeLAddition } = addition;
+  const repondreParUnNombre = useCallback((nombre: number) => {
+    const position = seance.exerciceEnCours()?.position;
+    const type = position === undefined ? undefined : lecon.exercices[position]?.type;
+    if (type === "fluence") return repondreALaFluence(nombre, suiteDeLaReponse);
+    if (type === "addition") return repondreALAddition(Reponse.nombre(nombre), suiteDeLaReponse);
+    return repondreAuCalcul(Reponse.nombre(nombre), suiteDeLaReponse);
+  }, [seance, lecon, repondreALaFluence, repondreALAddition, repondreAuCalcul, suiteDeLaReponse]);
+
+  const choisirUneReponseDeCalcul = useCallback((texte: string) => {
+    const position = seance.exerciceEnCours()?.position;
+    const type = position === undefined ? undefined : lecon.exercices[position]?.type;
+    if (type === "addition") return repondreALAddition(Reponse.choix(texte), suiteDeLaReponse);
+    return repondreAuCalcul(Reponse.choix(texte), suiteDeLaReponse);
+  }, [seance, lecon, repondreALAddition, repondreAuCalcul, suiteDeLaReponse]);
+
+  const poserUnChiffre = useCallback(
+    (chiffre: string, rang: Parameters<typeof placerUnChiffre>[1]) => placerUnChiffre(chiffre, rang, suiteDeLaReponse),
+    [placerUnChiffre, suiteDeLaReponse],
+  );
+
+  const relireLaPhrase = useCallback((phrase: string) => {
+    if (reussite.estFigee.current) return;
+    sequence.current++;
+    void dire({ texte: phrase, nature: "question" });
+  }, [reussite.estFigee, dire]);
+
+  useBattementDeLaFluence(horloge, fluence.demarree, battreLaFluence, suiteDeLaReponse);
+
   const placer = useCallback(
     (etiquette: string, groupe?: string) => placerUneEtiquette(etiquette, groupe, enchainerSurLExercice),
     [placerUneEtiquette, enchainerSurLExercice],
@@ -140,8 +206,9 @@ export function useDeroulementDeSeance(
     relire();
   }, [reussite.figee, personnage.parole, relireLaQuestion, relire]);
 
-  const direLaFin = useCallback((etoiles: number) => {
+  const direLaFin = useCallback((etoiles: number | undefined) => {
     sequence.current++;
+    if (etoiles === undefined) return;
     const texte = parolesDeFinDeSeance(etoiles, prenom, personnageGuide, hasardDuNavigateur);
     void dire({ texte, nature: "felicitation", humeur: "applaudit" });
   }, [dire, prenom, personnageGuide]);
@@ -182,6 +249,17 @@ export function useDeroulementDeSeance(
     repondre,
     placer,
     reecouter,
+    calculFige: calcul.calculFige,
+    additionFigee: addition.additionFigee,
+    colonneQuiBrille: addition.colonneQuiBrille,
+    fluenceFinie: fluence.fluenceFinie,
+    repondreParUnNombre,
+    choisirUneReponseDeCalcul,
+    poserUnChiffre,
+    jeNeSaisPasDuCalcul,
+    jeNeSaisPasDeLAddition,
+    demarrerLaFluence,
+    relireLaPhrase,
     commencer,
     continuer,
     direLaFin,
