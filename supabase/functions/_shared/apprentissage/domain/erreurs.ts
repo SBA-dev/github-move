@@ -214,3 +214,10 @@ export class QuestionHorsDuTestDeDepart extends Error {
     this.name = "QuestionHorsDuTestDeDepart";
   }
 }
+
+export class TestDeDepartDejaFini extends Error {
+  constructor() {
+    super("Ce test de départ est déjà fini.");
+    this.name = "TestDeDepartDejaFini";
+  }
+}
