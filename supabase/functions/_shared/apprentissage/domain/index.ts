@@ -52,4 +52,5 @@ export { indicationDuGeste } from "./exercices/indication-du-geste.ts";
 export { revaliderLaSeance } from "./revalider-la-seance.ts";
 export type { ParoleDue } from "./parole-due.ts";
 export { matieresDuParcours, parcoursDeLaMatiere } from "./parcours.ts";
+export { leconSuivanteDansLeParcours } from "./lecon-suivante-dans-le-parcours.ts";
 export type { EntreesDuParcours, EtatDansLeParcours, LeconDuParcours, LeconId, Parcours } from "./parcours.ts";
