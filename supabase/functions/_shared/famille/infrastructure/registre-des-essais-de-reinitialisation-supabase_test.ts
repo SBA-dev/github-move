@@ -1,11 +1,11 @@
 import { assert, assertEquals, assertRejects } from "@std/assert";
+import { EssaisDeReinitialisationModifiesEnMemeTemps } from "../application/ports/registre-des-essais-de-reinitialisation.ts";
 import { AdresseEmail } from "../domain/adresse-email.ts";
 import { EssaisDeReinitialisation } from "../domain/essais-de-reinitialisation.ts";
 import { fauxClientSupabase } from "../test_utils/faux-client-supabase.ts";
 import {
   colonnesDesEssais,
   essaisDepuisLaLigne,
-  EssaisDeReinitialisationModifiesEnMemeTemps,
   type LigneDEssais,
   RegistreDesEssaisDeReinitialisationSupabase,
 } from "./registre-des-essais-de-reinitialisation-supabase.ts";

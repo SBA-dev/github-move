@@ -5,6 +5,7 @@ import {
   MotDePasseNonConforme,
   MotDePasseTropLong,
   PrenomObligatoire,
+  ServiceDeConnexionIndisponible,
   TropDEssaisDeReinitialisation,
 } from "../domain/erreurs.ts";
 import { EntreeInvalide, lireLeCorpsJson, repondre, texteObligatoire } from "./http-famille.ts";
@@ -29,6 +30,7 @@ export function statutEtMessageSansConnexion(cause: unknown): { statut: number; 
   if (cause instanceof AdresseDejaUtilisee) return { statut: 409, message: cause.message };
   if (cause instanceof InformationsDeReinitialisationIncorrectes) return { statut: 401, message: cause.message };
   if (cause instanceof TropDEssaisDeReinitialisation) return { statut: 429, message: cause.message };
+  if (cause instanceof ServiceDeConnexionIndisponible) return { statut: 503, message: cause.message };
   if (
     cause instanceof EntreeInvalide || cause instanceof AdresseEmailInvalide || cause instanceof PrenomObligatoire ||
     cause instanceof MotDePasseNonConforme || cause instanceof MotDePasseTropLong

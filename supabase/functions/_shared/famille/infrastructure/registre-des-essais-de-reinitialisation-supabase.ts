@@ -1,5 +1,8 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { RegistreDesEssaisDeReinitialisation } from "../application/ports/registre-des-essais-de-reinitialisation.ts";
+import {
+  EssaisDeReinitialisationModifiesEnMemeTemps,
+  type RegistreDesEssaisDeReinitialisation,
+} from "../application/ports/registre-des-essais-de-reinitialisation.ts";
 import { AdresseEmail } from "../domain/adresse-email.ts";
 import { EssaisDeReinitialisation } from "../domain/essais-de-reinitialisation.ts";
 
@@ -13,9 +16,6 @@ export type LigneDEssais = {
   bloque_jusqua: string | null;
   version: number;
 };
-
-/** Deux essais simultanés ont lu la même version : le second doit recommencer avec l'état à jour. */
-export class EssaisDeReinitialisationModifiesEnMemeTemps extends Error {}
 
 export function essaisDepuisLaLigne(ligne: LigneDEssais): EssaisDeReinitialisation {
   return EssaisDeReinitialisation.reconstituer(

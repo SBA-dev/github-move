@@ -73,3 +73,7 @@ Limites connues :
 - #13 (second parent) : le parent invité s'inscrit par mot de passe (Edge Function d'inscription) en suivant le lien d'invitation partagé par le premier parent ; il peut réinitialiser son mot de passe avec le prénom d'un enfant auquel il est rattaché.
 - #14 (suppression d'un profil) : les essais de réinitialisation ne gardent aucun prénom ; rien de plus à effacer.
 - #45 : retirer la réinitialisation par prénom, son Edge Function et sa table ; garder `service_role` pour l'inscription ou revenir à une autre façon d'inscrire ; décider d'une limite d'inscriptions et d'essais de connexion ; remplacer cette décision par une nouvelle.
+
+## Précision (revue n°1)
+
+- L'essai de réinitialisation est **réservé avant toute lecture du prénom** (compté puis enregistré avec contrôle de version) ; la reprise en cas d'essais simultanés (5 tentatives) est dans le cas d'usage, qui lève `ServiceDeConnexionIndisponible` ensuite (503 côté HTTP). Le navigateur ne traduit en `AdresseOuMotDePasseIncorrect` que le refus 400 `invalid_credentials` ; 429, 5xx et erreurs réseau deviennent `ServiceDeConnexionIndisponible`.
