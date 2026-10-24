@@ -1,5 +1,12 @@
 import { AuthApiError } from "@supabase/supabase-js";
-import { type AdresseEmail, type CodeDeConnexion, CodeDeConnexionInvalide, ParentId, type ServiceDeConnexion } from "@domain/famille";
+import {
+  type AdresseEmail,
+  AdresseOuMotDePasseIncorrect,
+  type CodeDeConnexion,
+  CodeDeConnexionInvalide,
+  ParentId,
+  type ServiceDeConnexion,
+} from "@domain/famille";
 import { clientSupabase } from "./client-supabase.ts";
 
 export class EnvoiDuLienImpossible extends Error {
@@ -26,6 +33,16 @@ export class ServiceDeConnexionSupabase implements ServiceDeConnexion {
     });
     if (error instanceof AuthApiError && error.status < 500) throw new CodeDeConnexionInvalide();
     if (error || !data.user) throw error ?? new CodeDeConnexionInvalide();
+    return ParentId.de(data.user.id);
+  }
+
+  async ouvrirLaConnexionAvecLeMotDePasse(adresse: AdresseEmail, motDePasse: string): Promise<ParentId> {
+    const { data, error } = await clientSupabase().auth.signInWithPassword({
+      email: adresse.valeur,
+      password: motDePasse,
+    });
+    if (error instanceof AuthApiError && error.status < 500) throw new AdresseOuMotDePasseIncorrect();
+    if (error || !data.user) throw error ?? new AdresseOuMotDePasseIncorrect();
     return ParentId.de(data.user.id);
   }
 

@@ -7,12 +7,14 @@ export { DemanderLienDeConnexion } from "./demander-lien-de-connexion.ts";
 export type { DonneesDeLAppareil } from "./donnees-de-l-appareil.ts";
 export {
   AdresseEmailInvalide,
+  AdresseOuMotDePasseIncorrect,
   ClavierDesDicteesInconnu,
   CodeDeConnexionInvalide,
   CodeDeConnexionMalForme,
   LangueDuParentInconnue,
   LienDeConnexionMalForme,
   MotDePasseNonConforme,
+  MotDePasseObligatoire,
   MotDePasseTropLong,
   ParentNonRattache,
   PrenomObligatoire,
@@ -30,6 +32,7 @@ export { ParentId } from "./parent-id.ts";
 export { Prenom } from "./prenom.ts";
 export { ProfilEnfantId } from "./profil-enfant-id.ts";
 export { QuestionDuControleParental } from "./question-du-controle-parental.ts";
+export { SeConnecterAvecLeMotDePasse } from "./se-connecter-avec-le-mot-de-passe.ts";
 export { SeDeconnecter } from "./se-deconnecter.ts";
 export type { ServiceDeConnexion } from "./service-de-connexion.ts";
 export type { GenerateurId } from "./generateur-id.ts";

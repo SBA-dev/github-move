@@ -108,6 +108,20 @@ export class MotDePasseTropLong extends Error {
   }
 }
 
+export class MotDePasseObligatoire extends Error {
+  constructor() {
+    super("Écris ton mot de passe.");
+    this.name = "MotDePasseObligatoire";
+  }
+}
+
+export class AdresseOuMotDePasseIncorrect extends Error {
+  constructor() {
+    super("Adresse e-mail ou mot de passe incorrect.");
+    this.name = "AdresseOuMotDePasseIncorrect";
+  }
+}
+
 export class TropDEssaisDeReinitialisation extends Error {
   constructor() {
     super("Trop d'essais. Réessaie dans une heure.");
