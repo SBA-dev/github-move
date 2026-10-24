@@ -91,6 +91,14 @@ def lecon(id, matiere, niveau, titre, ordre, section, cite, etapes, exercices, c
         if exercice["type"] == "trous":
             for mot in trous_sans_deux_choix(exercice):
                 ERREURS.append(f"{id} : le trou « {mot} » ne propose pas deux choix (ajouter un distracteur)")
+        if exercice["type"] == "conjugaison":
+            for forme in formes_mal_formees(exercice):
+                ERREURS.append(f"{id} : la forme {forme} de « {exercice['titre']} » n'est pas un pronom et une forme en texte")
+        if exercice["type"] == "dictee":
+            for mot in mots_dictes_hors_du_clavier(exercice):
+                ERREURS.append(f"{id} : le mot dicté « {mot} » a une lettre absente du clavier")
+            for mot in mots_dictes_trop_longs(exercice):
+                ERREURS.append(f"{id} : le mot dicté « {mot} » a plus de {NOMBRE_MAXIMAL_DE_LETTRES_DICTEES} lettres à écrire")
         if a_trop_d_etiquettes(exercice):
             ERREURS.append(f"{id} : « {exercice['titre']} » a plus de {NOMBRE_MAXIMAL_D_ETIQUETTES} étiquettes")
     try:
@@ -169,9 +177,37 @@ def a_trop_d_etiquettes(exercice):
     return len(etiquettes) > NOMBRE_MAXIMAL_D_ETIQUETTES
 
 
+TOUCHES_DU_CLAVIER = set("azertyuiopqsdfghjklmwxcvbnéèêàçùëïôâîûœ")
+CARACTERES_DEJA_ECRITS = set(" '’-.")
+NOMBRE_MAXIMAL_DE_LETTRES_DICTEES = 18
+
+
+def lettres_a_ecrire(mot):
+    return [c for c in mot.lower() if c not in CARACTERES_DEJA_ECRITS]
+
+
+def mots_dictes_hors_du_clavier(exercice):
+    """Les mots dictés dont une lettre à écrire n'est pas sur le clavier de l'enfant."""
+    return [m["mot"] for m in exercice["mots"] if not set(lettres_a_ecrire(m["mot"])) <= TOUCHES_DU_CLAVIER]
+
+
+def mots_dictes_trop_longs(exercice):
+    """Les mots dictés de plus de NOMBRE_MAXIMAL_DE_LETTRES_DICTEES lettres à écrire."""
+    return [m["mot"] for m in exercice["mots"] if len(lettres_a_ecrire(m["mot"])) > NOMBRE_MAXIMAL_DE_LETTRES_DICTEES]
+
+
+PRONOMS_PAR_DEFAUT = ["je", "tu", "il", "nous", "vous", "ils"]
+
+
+def formes_mal_formees(exercice):
+    """Les formes dont le pronom n'est pas un texte, ou dont la forme n'est pas un texte non vide."""
+    return [f for f in exercice["formes"] if not isinstance(f["pronom"], str) or not isinstance(f["forme"], str) or not f["forme"] or not f["pronom"]]
+
+
 def conjugaison(verbe, temps, formes, distracteurs=(), titre=None):
-    pr = ["je", "tu", "il", "nous", "vous", "ils"] if len(formes) == 6 else None
-    fs = [{"pronom": p, "forme": f} for p, f in (zip(pr, formes) if pr else formes)]
+    if all(isinstance(f, str) for f in formes) and len(formes) == 6:
+        formes = zip(PRONOMS_PAR_DEFAUT, formes)
+    fs = [{"pronom": p, "forme": f} for p, f in formes]
     return {"type": "conjugaison", "titre": titre or f"{verbe.capitalize()} au {temps}", "verbe": verbe, "temps": temps, "formes": fs, "distracteurs": list(distracteurs)}
 
 

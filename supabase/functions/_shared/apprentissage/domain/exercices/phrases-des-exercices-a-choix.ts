@@ -1,4 +1,4 @@
-export type TypeDExerciceAChoix = "ecoute" | "bulles" | "lecture" | "trous";
+export type TypeDExerciceAChoix = "ecoute" | "bulles" | "lecture" | "trous" | "conjugaison";
 
 export const INTRODUCTION_DE_LA_LECTURE =
   "Installe-toi bien, j'ai une histoire pour toi. Suis les mots avec tes yeux !";

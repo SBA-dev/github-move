@@ -95,8 +95,10 @@ classDiagram
 
 | Exercice | Règles de `lireLecon` |
 |---|---|
-| `ExerciceDictee` | Au moins un mot ; `mot` non vide, avec au moins une lettre à écrire ; `phrase?`. Le mot ne figure pas dans les étapes ni les exemples de la leçon (règle du format, vérifiée par le pipeline). |
+| `ExerciceDictee` | Au moins un mot ; `mot` non vide, avec au moins une lettre à écrire ; `phrase?`. Le mot peut figurer dans les étapes et les exemples de la leçon, comme une dictée préparée en classe (décision n°11) ; il n'est jamais montré pendant l'exercice de dictée (invariant n°1). Aucun contrôle du pipeline ni du domaine sur ce point. |
 | `ExerciceConjugaison` | `verbe`, `temps` non vides ; au moins 2 formes, pronoms non vides ; `distracteurs?`. Chaque personne doit pouvoir proposer au moins 2 choix. |
+
+Correctif du contenu : la leçon `fr-ce2-passe-compose` donnait des formes en couples `["j'", "ai mangé"]` sous le pronom « je ». Le pipeline garde désormais les couples pronom/forme donnés (« j' » / « ai mangé ») et refuse au build une forme qui n'est pas un pronom et une forme en texte ; `app/bibliotheque.json` est regénéré. `lireLecon` refuse aussi ces formes (`ExerciceMalForme`).
 
 ### Apprentissage : la dictée
 
@@ -108,8 +110,9 @@ classDiagram
   - comparaison lettre à lettre, **sans tenir compte des majuscules** : les deux côtés en minuscules, et les touches montrent les lettres en minuscules (décision n°1 ; le legacy ne mettait en minuscules que le mot attendu) ;
   - juste → la question est réussie ;
   - faux → **une erreur** ; positions des lettres fausses ; lettres gardées = celles **avant la première fausse**.
-- Réponse : `MotEcrit(lettres)`, ou « Je ne sais pas » : la lettre juste suivante s'écrit dans sa case, le mot n'est jamais montré en entier (#23, décision n°4 ; absent du legacy).
-- Texte dit : « Écoute bien. `<mot>`. `<phrase>` Écris : `<mot>`. » (domaine), vitesse normale ou lente (front, Voix). Texte affiché : « Écoute bien et écris le mot que tu entends. » (sans le mot).
+- Réponse : `MotEcrit(lettres)`, ou « Je ne sais pas » : la lettre juste suivante s'écrit dans sa case, le mot n'est jamais montré en entier (#23, décision n°4 ; absent du legacy). S'il ne reste qu'**une** case à écrire, la lettre n'est pas écrite : la bonne touche du clavier brille et l'enfant la tape (décision n°8 ; la question ne se réussit qu'avec la réponse donnée par l'enfant, invariant n°2 de #23).
+- Texte dit : « Écoute bien. `<mot>`. `<phrase>` Écris : `<mot>`. » (domaine), vitesse normale ou lente (front, Voix). Texte affiché : « Écoute bien et écris le mot que tu entends. » (sans le mot) : c'est la **consigne par défaut** de la dictée (décision n°9).
+- Le **profil de séance** (`ProfilDeSeance { clavierDesDictees, niveau }`) sert **seulement au navigateur**, pour choisir le clavier proposé. Le serveur ne le lit pas (décision n°10, décision d'architecture 0018) : il accepte le tirage du clavier d'un mot sous l'une **ou** l'autre forme (lettres du mot + intruses, ou clavier complet), chacune validée strictement. Le type de clavier ne change ni la correction ni les étoiles, et une séance faite hors ligne n'est pas refusée si le parent change le réglage ou le niveau avant la synchronisation.
 - Après une erreur : aide « Regarde les lettres en rouge et écoute encore. », puis le mot est redit. Clé de révision `d:`.
 - Son coupé ou navigateur sans voix : messages du legacy, choisis par le front selon l'état de Voix (`Muet`, `LectureImpossible`). La dictée est le seul type qui **demande** le son.
 
@@ -117,6 +120,7 @@ classDiagram
 
 - Une question par personne, dans l'ordre du tableau. Mécanique des choix (#17), réduction à deux, « Je ne sais pas » (#23).
 - `ChoixDeLaForme` : la forme attendue + 2 candidats tirés parmi (autres formes ∪ distracteurs), dédoublonnés, **différents de la forme attendue** (texte exact).
+- Consigne par défaut : « Conjuguons le verbe `<verbe>` au `<temps>`. Choisis la bonne forme pour chaque personne. » (texte dit par le legacy, décision n°9).
 - Aide : « Avec « `<pronom>` », quelle forme va ? ». Fin : « `<félicitation>` Tu sais conjuguer `<verbe>` ! ». Clé de révision `c:`.
 
 ### Erreurs métier
@@ -125,12 +129,12 @@ classDiagram
 
 ## Invariants
 
-1. Le mot dicté n'est **jamais** montré à l'écran avant d'être bien écrit, ni envoyé ailleurs qu'à la voix.
+1. Pendant l'exercice de dictée, le mot dicté n'est **jamais** montré à l'écran avant d'être bien écrit, ni envoyé ailleurs qu'à la voix. Les étapes et les exemples de la leçon peuvent le contenir (dictée préparée, décision n°11).
 2. Les caractères déjà écrits ne se tapent pas et ne comptent jamais comme faux.
 3. Le mot est corrigé exactement quand sa dernière case à écrire est remplie ; une correction fausse coûte **une** erreur, quelle que soit le nombre de lettres fausses.
 4. Après une erreur, le début juste du mot est gardé.
 5. Avec les lettres du mot, chaque touche sert une fois, et le mot peut toujours s'écrire avec les touches proposées.
-6. Le clavier proposé dépend seulement du réglage et du niveau : `automatique` donne les lettres du mot jusqu'au CE1, le clavier complet à partir du CE2.
+6. Le clavier proposé dépend seulement du réglage et du niveau : `automatique` donne les lettres du mot jusqu'au CE1, le clavier complet à partir du CE2. Ce choix est fait dans le navigateur ; le serveur accepte l'une ou l'autre forme de clavier, chacune validée strictement (décision n°10).
 7. Conjugaison : chaque personne propose sa forme et jusqu'à deux autres formes, toutes différentes.
 
 ## Événements
@@ -139,7 +143,7 @@ Aucun.
 
 ## Partage avec le front
 
-Tout tourne dans le navigateur (`@domain/apprentissage`) : cases, clavier proposé, correction, lettres gardées, choix des formes. Le front lit le réglage `ClavierDesDictees` (Famille) et le niveau, appelle `ClavierPropose.choisir`, puis affiche. Les durées (rouge pendant 1,3 s, pause de 700 ms) sont l'affaire du front. À 360 px, les touches du clavier complet gardent au moins 44 px (règle d'interface, pas du domaine).
+Tout tourne dans le navigateur (`@domain/apprentissage`) : cases, clavier proposé, correction, lettres gardées, choix des formes. Le front lit le réglage `ClavierDesDictees` (Famille) et le niveau, appelle `ClavierPropose.choisir`, puis affiche. Le **profil de séance** (`ProfilDeSeance`) ne sert qu'à ce choix, dans le navigateur. Côté serveur, le cas d'usage ne le lit pas : il vérifie que le tirage du clavier de chaque mot est une forme valide (lettres du mot + intruses, ou clavier complet), sans dépendre du réglage ni du niveau (décision n°10, 0018). Les durées (rouge pendant 1,3 s, pause de 700 ms) sont l'affaire du front. À 360 px, les touches du clavier complet gardent au moins 44 px (règle d'interface, pas du domaine).
 
 ## Données d'enfants
 
@@ -170,6 +174,13 @@ Validation n°1 du lot 3 par le PO, le 2026-10-23 : « OK pour tout » (`docs/st
 5. (Q34) **Conjugaison : félicitation après chaque personne** ? **Décision** : non, comme aujourd'hui (seulement à la fin) ; l'humeur « applaudit » à chaque bonne forme (décision M4 de #6).
 6. (Q35) **« Clavier complet », « lettres du mot », « lettres intruses »** : termes d'interface ? **Décision** : « lettres du mot » et « clavier complet » sont les valeurs du réglage **Clavier des dictées** (déjà au glossaire) ; « lettre intruse » est un terme d'interface.
 7. (Q36) **Phrase d'exemple** : peut-elle contenir le mot dicté (elle n'est jamais affichée, seulement dite) ? **Décision** : oui, comme aujourd'hui (« Le chat dort sur le lit. »).
+
+Décisions du PO du 2026-10-24 :
+
+8. **Dictée : « Je ne sais pas » quand il ne reste qu'une case à écrire** : la lettre n'est **pas** écrite (la question ne se réussit qu'avec la réponse donnée par l'enfant, #23 invariant n°2) ; la bonne touche du clavier brille et l'enfant la tape. Ailleurs, la lettre juste suivante s'écrit dans sa case (décision n°3 / Q32, renvoi Q66).
+9. **Consignes par défaut** : dictée « Écoute bien et écris le mot que tu entends. » ; conjugaison « Conjuguons le verbe `<verbe>` au `<temps>`. Choisis la bonne forme pour chaque personne. » (reprise du texte dit par le legacy ; signalé au PO, sans objection).
+10. **Revalidation de la dictée sans relire le profil** : le serveur accepte le tirage du clavier d'un mot sous l'une ou l'autre forme (lettres du mot + intruses, ou clavier complet), chacune validée strictement ; il ne lit plus le réglage « clavier des dictées » ni le niveau. Raisons : le type de clavier ne change ni la correction ni les étoiles (aucun gain de triche), et une séance faite hors ligne ne doit pas être refusée si le parent change le réglage ou le niveau avant la synchronisation. Le profil de séance sert seulement au navigateur pour choisir le clavier. Décision d'architecture `docs/decisions/0018-revalidation-de-la-dictee-sans-le-profil.md` (complète 0016).
+11. **Dictée préparée** : les mots dictés peuvent apparaître dans les étapes et les exemples de la leçon, comme une dictée préparée en classe ; ils ne sont **jamais** montrés pendant l'exercice de dictée avant d'être bien écrits (invariant n°1 inchangé pour l'exercice). `docs/format-lecons.md` est amendé. Rien à changer dans le pipeline ni dans le domaine : aucun contrôle de cette interdiction n'existait.
 
 ## Questions ouvertes
 

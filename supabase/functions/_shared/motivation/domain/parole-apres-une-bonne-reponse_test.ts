@@ -1,5 +1,11 @@
 import { assertEquals } from "@std/assert";
-import { feliciter, feliciterUneFoisSurDeux, paroleApresUneBonneReponse, relancer } from "./index.ts";
+import {
+  direTuSaisConjuguer,
+  feliciter,
+  feliciterUneFoisSurDeux,
+  paroleApresUneBonneReponse,
+  relancer,
+} from "./index.ts";
 import { universDe } from "./univers.ts";
 import { hasardFixe } from "../test_utils/hasard-fixe.ts";
 
@@ -36,6 +42,24 @@ Deno.test("une relance due se dit avec une relance", () => {
 
 Deno.test("quand aucune parole n'est due, le personnage guide se tait", () => {
   const parole = paroleApresUneBonneReponse(undefined, personnageGuide, hasardFixe(0));
+
+  assertEquals(parole, undefined);
+});
+
+Deno.test("quand l'enfant sait conjuguer le verbe, le personnage guide le dit avec le verbe", () => {
+  const attendue = direTuSaisConjuguer("être", personnageGuide, hasardFixe(0.5, 0));
+
+  const parole = paroleApresUneBonneReponse(
+    { parole: "tuSaisConjuguer", verbe: "être" },
+    personnageGuide,
+    hasardFixe(0.5, 0),
+  );
+
+  assertEquals(parole, attendue);
+});
+
+Deno.test("quand le personnage guide applaudit, il se tait", () => {
+  const parole = paroleApresUneBonneReponse("applaudir", personnageGuide, hasardFixe(0));
 
   assertEquals(parole, undefined);
 });

@@ -3,6 +3,7 @@ import type { ChoixDeSeance, ReponseDonnee, SeanceTermineeAEnregistrer } from "@
 type ReponseEnvoyee =
   | { readonly choix: string }
   | { readonly placement: { readonly etiquette: string; readonly groupe?: string } }
+  | { readonly motEcrit: readonly string[] }
   | { readonly jeNeSaisPas: true };
 
 /** Le corps JSON attendu par l'Edge Function `terminer-la-seance`. */
@@ -22,6 +23,8 @@ function enReponseEnvoyee(reponse: ReponseDonnee): ReponseEnvoyee {
       return { choix: reponse.texte };
     case "placement":
       return { placement: reponse.groupe === undefined ? { etiquette: reponse.etiquette } : { etiquette: reponse.etiquette, groupe: reponse.groupe } };
+    case "motEcrit":
+      return { motEcrit: reponse.lettres };
     case "jeNeSaisPas":
       return { jeNeSaisPas: true };
   }

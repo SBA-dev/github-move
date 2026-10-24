@@ -1,8 +1,9 @@
-import type { QuestionJouee, SegmentDuTexteATrous } from "@domain/apprentissage";
+import type { LigneDuTableauDeConjugaison, QuestionJouee, SegmentDuTexteATrous } from "@domain/apprentissage";
 import type { Exercice } from "@domain/catalogue";
 import { MESSAGE_DE_L_ECOUTE_SANS_SON } from "@domain/apprentissage";
 import { TexteEnSyllabes } from "../../reglages/index.ts";
 import { ChoixDeLaQuestion } from "./ChoixDeLaQuestion.tsx";
+import { TableauDeConjugaison } from "./TableauDeConjugaison.tsx";
 import { TexteATrous } from "./TexteATrous.tsx";
 import { TexteDeLecture } from "./TexteDeLecture.tsx";
 
@@ -12,6 +13,8 @@ type Props = {
   /** Texte à trous : le texte entier, ses trous remplis au fil des bonnes réponses. */
   readonly texteATrous: readonly SegmentDuTexteATrous[];
   readonly phraseDuTrouEnCours: string | undefined;
+  /** Conjugaison : une ligne par personne, la forme écrite quand elle est trouvée. */
+  readonly tableauDeConjugaison: readonly LigneDuTableauDeConjugaison[];
   readonly choixVisibles: boolean;
   readonly reussie: boolean;
   readonly bulleEclatee: string | undefined;
@@ -38,6 +41,9 @@ export function ExerciceAChoix(props: Props) {
       )}
       {exercice.type === "trous" && (
         <TexteATrous segments={props.texteATrous} phraseDuTrouEnCours={props.phraseDuTrouEnCours} />
+      )}
+      {exercice.type === "conjugaison" && (
+        <TableauDeConjugaison verbe={exercice.verbe} temps={exercice.temps} lignes={props.tableauDeConjugaison} />
       )}
       {lectureEnAttente && (
         <button type="button" className="action-principale" data-testid="j-ai-ecoute" onClick={props.onJAiEcoute}>

@@ -271,7 +271,7 @@ button:focus-visible, summary:focus-visible { outline: 3px solid #1f2a1f; outlin
   font-weight: 700;
   cursor: pointer;
 }
-.bulle-de-choix[data-brille="true"], .etiquette[data-brille="true"], .maison[data-brille="true"] {
+.bulle-de-choix[data-brille="true"], .etiquette[data-brille="true"], .maison[data-brille="true"], .touche[data-brille="true"] {
   background: #fff3c4;
   box-shadow: 0 0 0 6px #ffd23f, 0 0 18px 8px #ffd23f;
   animation: brille 1.2s ease-in-out infinite alternate;
@@ -455,3 +455,43 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-width: 4px; background:
 .place-de-la-lecon { font-size: .9em; }
 .titre-de-la-lecon { flex: 1 1 8rem; }
 .etoiles-de-la-lecon { color: #b8860b; }
+
+.dictee { display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 100%; }
+.mot-a-ecrire { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 0; padding: 0; list-style: none; max-width: 100%; }
+.case-a-ecrire, .caractere-deja-ecrit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 56px;
+  padding: 0 4px;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+.case-a-ecrire { border: 3px solid var(--accent-fonce); border-radius: 12px; background: #fff; }
+.case-a-ecrire[data-etat="vide"] { border-style: dashed; background: rgba(255, 255, 255, .8); }
+.case-a-ecrire[data-etat="montree"] { border-style: double; border-width: 5px; background: #fff3c4; font-style: italic; }
+.case-a-ecrire[data-etat="fausse"] { border-color: #b00020; background: #ffe3e6; color: #b00020; text-decoration: underline wavy; }
+.clavier-de-dictee { display: grid; justify-items: center; gap: 6px; max-width: 100%; }
+.rangee-de-touches { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; max-width: 100%; }
+.touche {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 4px 8px;
+  border: 2px solid var(--accent-fonce);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--texte);
+  font: inherit;
+  font-size: 1.35rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.touche:hover:not([aria-disabled="true"]) { background: #fff3c4; }
+.touche[aria-disabled="true"] { opacity: .35; cursor: default; }
+.touche-effacer { padding: 4px 16px; font-size: 1.1rem; }
+.tableau-de-conjugaison { max-width: min(100%, 24rem); padding: 8px 18px; border-radius: 16px; background: #fff; }
+.tableau-de-conjugaison h3 { margin: 4px 0; text-align: center; }
+.tableau-de-conjugaison ul { margin: 0; padding: 0; list-style: none; font-size: 1.25rem; line-height: 1.8; }
+.tableau-de-conjugaison li[data-etat="ecrite"] { color: var(--accent-fonce); font-weight: 700; }
+.tableau-de-conjugaison li[data-etat="en-cours"] { background: #fff3c4; border-radius: 8px; }

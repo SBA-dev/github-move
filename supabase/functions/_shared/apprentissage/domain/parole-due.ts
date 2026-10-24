@@ -1,1 +1,1 @@
-export type ParoleDue = "felicitation" | "felicitationUneFoisSurDeux" | "relance";
+export type ParoleDue = "felicitation" | "felicitationUneFoisSurDeux" | "relance" | "applaudir" | "tuSaisConjuguer";

@@ -6,6 +6,7 @@ export {
   direJeNeSaisPasAuClavierDeCristaux,
   direJeNeSaisPasAvecLesChoix,
   direLeTexteComplet,
+  direTuSaisConjuguer,
   type Encouragement,
   encourager,
   type Felicitation,
@@ -24,6 +25,7 @@ export {
   type Reaction,
   type ReactionAJeNeSaisPas,
   reagirAJeNeSaisPas,
+  reagirAJeNeSaisPasEnDictee,
   reagirALaReponse,
 } from "./reaction.ts";
 export { TirageHorsIntervalle } from "./hasard.ts";

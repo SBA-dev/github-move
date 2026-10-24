@@ -1,6 +1,6 @@
 import type { Hasard } from "./hasard.ts";
 import { type Humeur, humeurApresReponse } from "./humeur.ts";
-import { direJeNeSaisPasAvecLesChoix, encourager, feliciter } from "./paroles.ts";
+import { direJeNeSaisPasAvecLesChoix, direJeNeSaisPasEnDictee, encourager, feliciter } from "./paroles.ts";
 import type { PersonnageGuide } from "./personnage-guide.ts";
 
 export type Parole = {
@@ -25,4 +25,8 @@ export type ReactionAJeNeSaisPas = { readonly humeur: Humeur; readonly parole: s
 
 export function reagirAJeNeSaisPas(aide: string | undefined): ReactionAJeNeSaisPas {
   return { humeur: "reflechit", parole: direJeNeSaisPasAvecLesChoix(aide) };
+}
+
+export function reagirAJeNeSaisPasEnDictee(maniere: "briller" | "ecrire"): ReactionAJeNeSaisPas {
+  return { humeur: "reflechit", parole: direJeNeSaisPasEnDictee(maniere) };
 }

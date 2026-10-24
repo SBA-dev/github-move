@@ -1,6 +1,6 @@
 export { Avancement } from "./avancement.ts";
 export { ExerciceJoue } from "./exercice-joue.ts";
-export type { SegmentDuTexteATrous } from "./exercice-joue.ts";
+export type { LigneDuTableauDeConjugaison, SegmentDuTexteATrous } from "./exercice-joue.ts";
 export type { EtiquettePosee } from "./etiquettes-a-placer.ts";
 export { nombreDeQuestions } from "./nombre-de-questions.ts";
 export { CleDeQuestion } from "./cle-de-question.ts";
@@ -17,6 +17,7 @@ export {
   LeconIntrouvable,
   LeconSansExercice,
   ParentNonRattache,
+  PasDeLettreAEffacer,
   PasDeQuestionEnCours,
   PasDEtapeDeLeconEnCours,
   QuestionDejaReussie,
@@ -62,3 +63,11 @@ export type {
   LeconReussieDUneClasseAuDessus,
   Parcours,
 } from "./parcours.ts";
+export {
+  exerciceDemandeLeSon,
+  LIBELLE_DU_BOUTON_ACTIVER_LE_SON,
+  messageDeLaDicteeSansVoix,
+} from "./exercices/dictee-sans-voix.ts";
+export type { EtatDeLaVoix } from "./exercices/dictee-sans-voix.ts";
+export type { CaseDeQuestion, QuestionDeDictee } from "./question-de-dictee.ts";
+export type { CorrectionDuMot } from "./mot-a-ecrire.ts";

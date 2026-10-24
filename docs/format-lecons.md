@@ -58,7 +58,7 @@ Le moteur affiche n'importe quelle leçon dans l'univers choisi par l'enfant (pr
 
 Les réponses sont toujours vérifiées par l'application ; l'aide (`aide`) est lue par le personnage guide après une erreur, ou quand l'enfant touche « Je ne sais pas ».
 
-Pour une dictée, les mots dictés n'apparaissent jamais à l'écran : ils sont seulement dits à voix haute. Ils ne doivent donc pas figurer non plus dans la leçon ni dans ses exemples.
+Pour une dictée, les mots dictés n'apparaissent jamais à l'écran pendant l'exercice avant d'être bien écrits : ils sont seulement dits à voix haute. Ils peuvent en revanche figurer dans les étapes et les exemples de la leçon, comme une dictée préparée en classe (#19, décision du PO n°11).
 
 ## La bibliothèque
 

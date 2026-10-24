@@ -194,6 +194,7 @@ export function Application() {
                 univers={univers}
                 voix={voix}
                 toutLireAVoixHaute={profilEnCours.reglages.toutLireAVoixHaute}
+                clavierDesDictees={profilEnCours.reglages.clavierDesDictees.valeur}
                 onRetour={() => revenirA({ ecran: "lecon", leconId: lieu.leconId })}
                 onLeconSuivante={(leconId) => aller({ ecran: "lecon", leconId })}
                 onAccueil={() => aller("accueil")}

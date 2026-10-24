@@ -5,8 +5,10 @@ const PREFIXES: Record<TypeDeQuestion, string> = {
   lecture: "l:",
   ecoute: "e:",
   trous: "t:",
+  conjugaison: "c:",
   classer: "k:",
   ordre: "o:",
+  dictee: "d:",
 };
 
 export class CleDeQuestion {

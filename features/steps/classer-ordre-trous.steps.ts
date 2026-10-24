@@ -27,6 +27,7 @@ import {
 } from "./exercices-a-choix.steps.ts";
 import { creerLeProfil } from "./profils-enfants.steps.ts";
 import { cleDe, EXPRESSIONS_PAR_PERSONNAGE, FELICITATIONS_COMMUNES, listeDe, preparerProfil } from "./univers.steps.ts";
+import { tirageDeLaConjugaison, verifierQueLaDicteeAttendLaReponse } from "./dictee-et-conjugaison.steps.ts";
 import { journal, laisserPasserLeDelaiDeLecture, normaliser, terminerLaLecture } from "./voix.steps.ts";
 
 // Story #18 : classer (maisons), ordre et texte à trous. Les étiquettes se posent comme un enfant : en touchant
@@ -37,7 +38,7 @@ type Groupe = { id: string; nom: string };
 type Item = { texte: string; groupe: string; aide?: string };
 type Geste = "toucher" | "glisser" | "clavier";
 
-const TYPES_JOUES = ["classer", "ordre", "trous"];
+const TYPES_JOUES = ["classer", "ordre", "trous", "conjugaison", "dictee"];
 const EXERCICE_DE_TEST = "Exercice";
 const GROUPE_PAR_DEFAUT = [{ id: "1", nom: "Fruits" }, { id: "2", nom: "Légumes" }];
 const RELANCES_DE_L_ORDRE = ["Oui ! Et après ?", "Bien ! Et ensuite ?", "Super ! La suite ?"];
@@ -250,6 +251,7 @@ Given(
     if (typeof type !== "string" || !TYPES_JOUES.includes(type)) {
       throw new Error(`Étape non implémentée : l'exercice « ${exercice} » (${String(type)}) dépend d'une story à venir (#19, #20 ou #21).`);
     }
+    if (type === "conjugaison") etatDesChoix(page).tirage = tirageDeLaConjugaison(lecon.exercices[positionDeLExercice(lecon, exercice)] ?? {});
     etatDesChoix(page).demarrage = demarrageDeLExercice(page, lecon, exercice);
   },
 );
@@ -552,6 +554,7 @@ Then(/^l'étiquette qui vient ensuite brille$/, async ({ page }) => {
 
 Then(/^Léa doit encore donner elle-même la bonne réponse$/, async ({ page }) => {
   const exercice = await exerciceEnCours(page);
+  if (exercice.type === "dictee") return await verifierQueLaDicteeAttendLaReponse(page);
   expect(await questionsReussies(page)).toBe(0);
   await expect(page.getByTestId("etiquette")).toHaveCount(exercice.type === "classer" ? itemsDe(exercice).length : elementsDe(exercice).length);
   await expect(page.getByTestId("etiquette-posee")).toHaveCount(0);
