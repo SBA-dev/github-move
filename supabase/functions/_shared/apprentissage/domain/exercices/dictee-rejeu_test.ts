@@ -1,4 +1,4 @@
-import { assertEquals, assertThrows } from "@std/assert";
+import { assert, assertEquals, assertThrows } from "@std/assert";
 import {
   ecrire,
   leconDeDicteeDeChatEtLapin,
@@ -6,7 +6,7 @@ import {
   profilDeDictee,
   seanceDeDictee,
 } from "../../test_utils/lecons-de-dictee.ts";
-import { SeanceIncoherente } from "../erreurs.ts";
+import { MotIncomplet, SeanceIncoherente } from "../erreurs.ts";
 import { Reponse } from "../reponse.ts";
 import { revaliderLaSeance } from "../revalider-la-seance.ts";
 
@@ -83,4 +83,18 @@ Deno.test("la séance rejouée avec un autre réglage que celui du profil est in
     () => revaliderLaSeance(leconDeDicteeDuChat(), seance.aEnregistrer(), LETTRES_DU_MOT),
     SeanceIncoherente,
   );
+});
+
+Deno.test("un mot écrit forgé avec moins de lettres que de cases rend la séance incohérente, pour cause de mot incomplet", () => {
+  const seance = seanceDeDictee(leconDeDicteeDuChat(), CLAVIER_COMPLET);
+  ecrire(seance, "chat");
+  seance.terminer(FIN);
+  const envoi = { ...seance.aEnregistrer(), reponses: [[Reponse.motEcrit(["c", "h", "a"])]] };
+
+  const erreur = assertThrows(
+    () => revaliderLaSeance(leconDeDicteeDuChat(), envoi, CLAVIER_COMPLET),
+    SeanceIncoherente,
+  );
+
+  assert(erreur.cause instanceof MotIncomplet);
 });
