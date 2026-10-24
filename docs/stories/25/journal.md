@@ -70,3 +70,5 @@ En attente d'une réponse : leçons réussies d'une classe au-dessus (N1, N7, N9
 - 16:20 UTC : review du delta final (cycle 3, merge de `main` compris) : **APPROUVÉ**, 0 bloquant. Non bloquants
   laissés : formatage d'un import dans `MonParcours.tsx`, regroupement par niveau fait dans React (présentation),
   pas de step pour la page de la leçon hors ligne, commit 6414056 qui contient aussi le `git mv`.
+- 16:25 UTC : MAIN A BOUGÉ (PR #70, `main` = 61d6fc4, 17 fichiers). À intégrer après l'E2E en cours, avant
+  `PRÊTE À MERGER`.
