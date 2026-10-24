@@ -29,10 +29,9 @@ export function nombreDeQuestions(exercice: Exercice): number {
     case "memoriser":
       return taille(exercice.vers) * QUESTIONS_PAR_VERS;
     case "addition":
-      return lesAdditionsLesPlusLongues(exercice).reduce(
-        (total, nombres) => total + questionsDUneAddition(nombres, exercice.etapes),
-        0,
-      );
+      return lesAdditionsLesPlusLongues(exercice)
+        .map((nombres) => questionsDUneAddition(nombres, exercice.etapes))
+        .reduce((total, questions) => total + questions, 0);
   }
 }
 

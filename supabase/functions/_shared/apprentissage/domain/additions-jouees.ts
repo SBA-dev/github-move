@@ -12,6 +12,10 @@ import type { Tireur } from "./tireur.ts";
 
 type AdditionEnJeu = Readonly<{ poser?: EtapePoser; calculer?: EtapeCalculer }>;
 
+function questionsDeLAddition({ poser, calculer }: AdditionEnJeu): QuestionSuivie[] {
+  return [...(poser?.questions ?? []), ...(calculer?.questions ?? [])];
+}
+
 export class AdditionsJouees {
   private constructor(
     private readonly additions: readonly AdditionEnJeu[],
@@ -32,9 +36,7 @@ export class AdditionsJouees {
   }
 
   get questions(): readonly QuestionSuivie[] {
-    return this.additions.flatMap((
-      { poser, calculer },
-    ) => [...(poser?.questions ?? []), ...(calculer?.questions ?? [])]);
+    return this.additions.flatMap(questionsDeLAddition);
   }
 
   get nombreReussies(): number {
