@@ -4,3 +4,4 @@
 - Branche de base : `main` (61d6fc4). Branche de travail imposée par la session : `claude/sleepy-ride-fof2f2`.
 - Étape 1 : `domain-modeler` lancé. Nouveaux concepts : Mot de passe du parent (règles), Réinitialisation du mot de passe par prénom d'enfant (beta seulement), essais limités à 5 puis blocage 1 h.
 - Étape 1 terminée : domain-model.md, glossaire, context map, décision 0019 (17 questions ouvertes). Étape 2 : po-acceptance lancé.
+- Étape 2 terminée : 6 règles, 44 scénarios (69 cas), tag @hors-beta proposé. ⛔ Validation n°1 présentée au PO.
