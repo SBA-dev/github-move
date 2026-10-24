@@ -64,3 +64,12 @@ export async function lireEnRestLesProfilsVisibles(jeton: string): Promise<{ id:
   });
   return (await reponse.json()) as { id: string; prenom: string }[];
 }
+
+/** Le niveau enregistré d'un profil enfant, lu sous RLS avec le jeton du parent. */
+export async function lireEnRestLeNiveauDuProfil(jeton: string, profil: string): Promise<string | undefined> {
+  const reponse = await fetch(`${variable("SUPABASE_URL")}/rest/v1/profils_enfants?select=niveau&id=eq.${encodeURIComponent(profil)}`, {
+    headers: { apikey: variable("SUPABASE_ANON_KEY"), Authorization: `Bearer ${jeton}` },
+  });
+  const lu = (await reponse.json()) as { niveau?: string }[];
+  return lu[0]?.niveau;
+}
