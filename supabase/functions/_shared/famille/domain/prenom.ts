@@ -10,4 +10,12 @@ export class Prenom {
     if (nettoye === "") throw new PrenomObligatoire();
     return new Prenom(Array.from(nettoye).slice(0, LONGUEUR_MAXIMALE).join(""));
   }
+
+  correspondA(autre: Prenom): boolean {
+    return versLaForme(this.valeur) === versLaForme(autre.valeur);
+  }
+}
+
+function versLaForme(valeur: string): string {
+  return valeur.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
 }
