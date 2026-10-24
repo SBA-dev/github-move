@@ -12,7 +12,7 @@ Contexte **Apprentissage**. Le choix des questions, la règle d'arrêt et le ré
 | Parcours | Apprentissage (#25) | une nouvelle entrée : les leçons réussies au test de départ | Calcul pur existant, étendu |
 | Paroles du personnage guide | Motivation (#6) | proposition, « C'est parti ! », phrase de fin | Customer/Supplier existant. Motivation fournit la phrase, Apprentissage fournit les faits (prénom, nombre de leçons) |
 | Série, épisodes, cabane, objectif du jour | Motivation (lot 5, non livré) | `TestDeDepartTermine` | Événement. Motivation **ne réagit pas** au test de départ (issue). Rien n'est modélisé ici |
-| Suivi, carte des compétences | Accompagnement (#34, non livré) | `TestDeDepartTermine` | Événement. #34 dira comment il affiche une leçon réussie au test de départ (question 27.1) |
+| Suivi, carte des compétences | Accompagnement (#34, non livré) | `TestDeDepartTermine` | Événement. #34 affichera une leçon « réussie au test de départ », jamais acquise (réponse 27.1) |
 | Données personnelles | Famille (#14) | le résultat du test de départ | Contrat de données personnelles : suppression en cascade et export |
 
 Le test de départ **n'est pas une séance** :
@@ -59,20 +59,21 @@ La règle du legacy (« seule la leçon de la question juste est réussie ») ne
 
 | Terme | Statut | Remarque |
 |---|---|---|
-| Test de départ | au glossaire (à valider), **à préciser** | La définition dit « s'arrête après 3 erreurs de suite ». La règle porte en fait sur **3 questions fausses de suite** : une même question peut coûter plusieurs erreurs (#23). Voir 27.13. |
-| Proposition du test de départ | **nouveau** (à valider) | Écran où le personnage guide propose le test de départ : « Oui, on y va ! » ou « Plus tard ». |
-| Question du test de départ | **nouveau** (à valider) | Une question tirée d'un exercice d'une leçon de la réserve, posée seule. Elle est rattachée à cette leçon. |
-| Réserve du test de départ | **nouveau** (à valider) | Leçons qui peuvent fournir une question : bibliothèque, `francais` et `maths`, niveau ≤ celui de l'enfant. |
-| Question juste, question fausse (au test de départ) | **nouveau** (à valider) | Juste : réussie sans aucune erreur, donc sans réponse fausse ni « Je ne sais pas ». Sinon fausse. L'enfant donne quand même la bonne réponse avant de passer à la suite (nouvelle chance). Ne pas confondre avec **Réponse** juste ou fausse. |
-| Arrêt du test de départ | **nouveau** (à valider) | Fin anticipée après 3 questions fausses de suite. Une question juste remet le compte à zéro. |
-| Leçon réussie au test de départ | **nouveau** (à valider), **en conflit** avec « Leçon acquise » | Leçon que le test de départ compte comme réussie, sans étoile (règle de 27.2). Le glossaire dit aujourd'hui qu'une leçon validée par le test de départ est **acquise** (ligne « Leçon acquise »). Voir 27.1. |
-| Résultat du test de départ | **nouveau** (à valider) | Pour un enfant : la date du dernier test de départ fini et les leçons réussies au test de départ. Son existence dit que le test de départ est **fait**. |
-| Test de départ fait | **nouveau** (à valider) | Le profil a fini au moins un test de départ, par toutes ses questions ou par un arrêt. Quitter en cours ne compte pas. Le legacy dit `testFait`. |
-| Leçon réussie, Prochaine leçon, Leçon suivante, Parcours | au glossaire (validés, #25) | La leçon réussie s'étend : au moins 1 étoile **ou** réussie au test de départ (27.1, 27.7). Les définitions de la prochaine leçon et de la leçon suivante disent « non réussie » et restent donc vraies. |
+| Test de départ | au glossaire, **validé et précisé** (27.13) | La définition dit maintenant « s'arrête après 3 questions fausses de suite » : une même question peut coûter plusieurs erreurs (#23). |
+| Proposition du test de départ | **nouveau**, validé | Écran où le personnage guide propose le test de départ : « Oui, on y va ! » ou « Plus tard ». |
+| Question du test de départ | **nouveau**, validé | Une question tirée d'un exercice d'une leçon de la réserve, posée seule. Elle est rattachée à cette leçon. |
+| Réserve du test de départ | **nouveau**, validé | Leçons qui peuvent fournir une question : bibliothèque, `francais` et `maths`, niveau ≤ celui de l'enfant. |
+| Question juste, question fausse (au test de départ) | **nouveau**, validé | Juste : réussie sans aucune erreur, donc sans réponse fausse ni « Je ne sais pas ». Sinon fausse. L'enfant donne quand même la bonne réponse avant de passer à la suite (nouvelle chance). Ne pas confondre avec **Réponse** juste ou fausse. |
+| Arrêt du test de départ | **nouveau**, validé | Fin anticipée après 3 questions fausses de suite. Une question juste remet le compte à zéro. |
+| Leçon réussie au test de départ | **nouveau**, validé ; conflit avec « Leçon acquise » **levé** (27.1) | Leçon que le test de départ compte comme réussie, sans étoile (règle de 27.2). Elle n'est jamais acquise : la ligne « Leçon acquise » du glossaire ne cite plus le test de départ. Une leçon sans question possible placée avant une question juste l'est aussi (27.23). |
+| Résultat du test de départ | **nouveau**, validé | Pour un enfant : la date du dernier test de départ fini et les leçons réussies au test de départ. Son existence dit que le test de départ est **fait**. |
+| Test de départ fait | **nouveau**, validé | Le profil a fini au moins un test de départ, par toutes ses questions ou par un arrêt. Quitter en cours ne compte pas. Le legacy dit `testFait`. |
+| Leçon réussie, Prochaine leçon, Leçon suivante, Parcours | au glossaire (validés, #25) | La leçon réussie s'étend : au moins 1 étoile **ou** réussie au test de départ (27.1, 27.7) ; la ligne du glossaire le dit. Les définitions de la prochaine leçon et de la leçon suivante disent « non réussie » et restent donc vraies. |
 | Séance | au glossaire | Le test de départ **n'en est pas une** : pas d'étoiles, pas de `SeanceTerminee`. |
 | Révision | au glossaire (à valider) | Les questions du test de départ n'y vont jamais. |
+| Accueil de l'enfant | **nouveau**, validé (Famille, 27.22) | Écran de l'enfant après le choix de son profil dans « Qui joue ? ». Il mène à « Mon parcours » et, tant que le test de départ n'est pas fait, à « Mon test de départ ». #29 dira s'il devient « Aujourd'hui ». |
 | Objectif du jour | **absent du glossaire** | L'issue parle de l'objectif du jour « Joue 2 leçons aujourd'hui ». C'est un terme de Motivation (#29, #30), à signaler à ces stories. Il n'est pas ajouté ici. |
-| « Mon test de départ », « Pour savoir où commencer », « Voir mon parcours » | mots d'interface | Hors glossaire. |
+| « Mon test de départ », « Fin du test de départ », « Pour savoir où commencer », « Voir mon parcours » | mots d'interface (27.22) | Hors glossaire. |
 | test (seul), évaluation, examen, interrogation | **interdits** | Conflit n°2 du glossaire. La proposition dit justement « Ce n'est pas une interrogation ». |
 
 ## Modèle
@@ -190,10 +191,11 @@ classDiagram
 
 ### Leçons réussies au test de départ (`leconsReussiesAuTestDeDepart`, fonction pure)
 
-La règle dépend de la réponse à **27.2**. Elle est isolée dans une fonction pure : le navigateur l'utilise pour la phrase de fin, le serveur pour enregistrer le résultat.
+Règle retenue (réponse 27.2, option b), isolée dans une fonction pure : le navigateur l'utilise pour la phrase de fin, le serveur pour enregistrer le résultat.
 
-- Règle du legacy (option a) : les leçons des questions justes.
-- Règle recommandée (option b) : pour chaque matière, toutes les leçons de la réserve placées **avant ou à** une question juste, **sauf** les leçons dont la question était fausse.
+- Pour chaque matière, toutes les leçons de la réserve placées **avant ou à** une question juste sont réussies au test de départ, **sauf** les leçons dont la question était fausse.
+- Cela comprend les leçons de la réserve qui n'ont pas été posées : leçons non retenues par le pas régulier, et leçons **sans question admissible** (ex. « La dictée des sons », que des dictées), dès qu'une question juste de la même matière vient après elles (réponse 27.23).
+- Les leçons des classes d'avant comptent aussi (elles sont placées avant).
 
 ### Parcours (#25, étendu)
 
@@ -211,7 +213,7 @@ C'est une séance ordinaire (#24). `ResultatDeLaLecon.enregistrerSeance` s'appli
 | Commande ou lecture | Effet | Erreurs métier | Où |
 |---|---|---|---|
 | Lecture `TestDeDepartFait(profil)` | Dit si le profil a un résultat du test de départ, sous RLS. Sans réseau et sans réponse connue : on considère que le test n'est pas fait, sans erreur. | aucune | front, JWT du parent |
-| `ProposerLeTestDeDepart` | Affiche la proposition dans trois cas : après la création d'un profil ; depuis l'accueil de l'enfant tant que le test n'est pas fait (27.10) ; depuis « Refaire le test de départ » dans l'espace parent. Seulement si la bibliothèque est chargée et que le plan n'est pas vide (27.5). | aucune | navigateur |
+| `ProposerLeTestDeDepart` | Affiche la proposition dans trois cas : après la création d'un profil (premier profil ou ajout : l'espace parent se ferme, le profil créé devient le **profil en cours**, puis son personnage guide propose le test de départ ; 27.16, 27.19) ; depuis l'accueil de l'enfant tant que le test n'est pas fait (27.10) ; depuis « Refaire le test de départ » dans l'espace parent. « Plus tard » et le retour mènent à l'accueil de l'enfant. Seulement si la bibliothèque est chargée et que le plan n'est pas vide (27.5). | aucune | navigateur |
 | `CommencerLeTestDeDepart(enfant, niveau, lecons)` | Construit le plan (`Hasard`) et commence `TestDeDepart`. | `ReserveVide` si aucune question admissible | navigateur |
 | `Repondre`, `DireJeNeSaisPas` | Correction de la question en cours ; met à jour le compte des questions fausses de suite. | `TestDeDepartDejaFini` ; les erreurs existantes de la question jouée (`ChoixInconnu`, `JeNeSaisPasDejaDit`…) | navigateur |
 | `TerminerLeTestDeDepart(parent, envoi)` | Vérifie le rattachement. Relit les leçons et le niveau du profil, **rejoue** les réponses, vérifie la règle d'arrêt, calcule les leçons réussies au test de départ, puis enregistre `ResultatDuTestDeDepart`. Publie `TestDeDepartTermine`. Idempotent : le même envoi deux fois ne change rien. | `ParentNonRattache`, `TestDeDepartIncoherent`, `TestDeDepartNonFini` | Edge Function `terminer-le-test-de-depart`, JWT du parent |
@@ -239,7 +241,7 @@ Le pas régulier n'est pas revérifié : voir 27.12. Le serveur ne fait jamais c
 | `Tireur` (`tireurAuHasard`, `tireurSelonLesTirages`) | domaine | oui | tirages gardés puis relus par le serveur |
 | `RattachementsDuParent` | `application/ports/` | oui | `TerminerLeTestDeDepart` |
 | `LeconsDuCatalogue` | `application/ports/` | oui, **à étendre** | aujourd'hui `parId` seulement ; il faut aussi toutes les leçons, pour la réserve |
-| `NiveauDuProfil` (à valider) | `application/ports/` | **nouveau** | le serveur relit le niveau du profil (Famille, Customer/Supplier) |
+| `NiveauDuProfil` | `application/ports/` | **nouveau** | le serveur relit le niveau du profil (Famille, Customer/Supplier) |
 | `ResultatsDesTestsDeDepart` | `application/ports/` | **nouveau** | `de(enfant)`, `enregistrer(resultat)` |
 
 ## Invariants
@@ -316,7 +318,7 @@ supabase/functions/_shared/apprentissage/
   application/
     terminer-le-test-de-depart.ts             # cas d'usage
     ports/resultats-des-tests-de-depart.ts    # nouveau port
-    ports/niveau-du-profil.ts                 # nouveau port (à valider)
+    ports/niveau-du-profil.ts                 # nouveau port
     ports/lecons-du-catalogue.ts              # étendu : toutes les leçons
   infrastructure/
     resultats-des-tests-de-depart-supabase.ts
@@ -327,13 +329,26 @@ supabase/functions/_shared/apprentissage/
 supabase/functions/terminer-le-test-de-depart/index.ts
 supabase/migrations/<horodatage>_resultats_des_tests_de_depart.sql   # RLS par rattachement, cascade avec le profil, écriture par la seule Edge Function (décisions 0013, 0016)
 src/test-de-depart/                           # proposition, déroulé, écran de fin
-src/famille/                                  # bouton sur l'accueil de l'enfant (27.10), « Refaire le test de départ » dans l'espace parent, proposition après la création d'un profil
+src/famille/                                  # bouton sur l'accueil de l'enfant (27.10), « Refaire le test de départ » dans l'espace parent, fermeture de l'espace parent et proposition après la création d'un profil (27.19)
 src/parcours/                                 # lecture des leçons réussies au test de départ, nouvel état
 ```
 
 `ResultatDeLaLecon` et la table `resultats_des_lecons` (#24) ne changent pas. Elles exigent au moins une séance et 1 à 3 étoiles, ce que le test de départ n'a pas : c'est une raison de plus pour un agrégat à part.
 
+## Décisions
+
+Le PO a suivi **toutes les recommandations** des questions 27.1 à 27.23 (réponse « 27# reco OK », 2026-10-24). Les questions 27.17 à 27.23 sont dans `docs/stories/27/acceptance.md`. Ce qu'elles changent au modèle :
+- **27.1, 27.13** : une leçon validée par le test de départ est **réussie**, sans étoile, jamais acquise ; l'arrêt porte sur 3 questions fausses de suite. Glossaire corrigé.
+- **27.2, 27.23** : règle (b) de `leconsReussiesAuTestDeDepart`, leçons sans question admissible comprises.
+- **27.16, 27.19** : après la création d'un profil, l'espace parent se ferme, le profil créé devient le profil en cours, puis la proposition s'affiche.
+- **27.10, 27.22** : **Accueil de l'enfant** entre au glossaire (Famille) ; il porte « Mon test de départ » tant que le test n'est pas fait.
+- **27.14, 27.17** : la phrase de fin compte les leçons nouvellement réussies ; au singulier « Tu connais déjà 1 leçon : je l'ai cochée. ».
+- **27.18, 27.20, 27.21** : affichage seulement (message hors ligne de la séance, avancement de la séance, « Voir mon parcours » ouvre « Mon parcours ») ; aucun changement du modèle.
+- Les termes ajoutés pour #27 sont validés (glossaire, Décision n°35). Reste hors de #27 : « Objectif du jour » (Motivation, #29 ou #30).
+
 ## Questions ouvertes
+
+Toutes tranchées (voir « Décisions »). Numérotation gardée.
 
 Les questions 27.1 à 27.6 reprennent celles de l'issue, dans l'ordre. Les suivantes viennent de la décision « aucun verrou » de #25 et du passage à la cible.
 
@@ -342,8 +357,8 @@ Les questions 27.1 à 27.6 reprennent celles de l'issue, dans l'ordre. Les suiva
   - Elle fait avancer le parcours.
   - Elle ne compte ni pour la cabane, ni pour les badges, ni pour la compétence acquise.
   - Le suivi (#34) l'affichera « réussie au test de départ ».
-- Conséquence : la ligne « Leçon acquise » du glossaire perd « ou validée par le test de départ ». La correction sera faite après votre accord. Elle n'est pas faite dans ce cadrage, qui n'apporte que des ajouts.
-- D'accord ?
+- Conséquence : la ligne « Leçon acquise » du glossaire perd « ou validée par le test de départ » (correction faite, Décision n°35 du glossaire).
+- **Tranchée** (PO, 2026-10-24) : recommandation retenue.
 
 **27.2. Quelles leçons le test de départ rend-il réussies ?** Sans verrou, une leçon réussie au milieu du parcours ne déplace pas la prochaine leçon (règle 2 de #25, réponse N8). Avec la seule leçon de la question juste, le test de départ ne fait donc presque jamais « commencer au bon endroit ».
 
@@ -355,15 +370,15 @@ Exemple : Léa, en CE1. Ses questions de français portent, dans l'ordre du parc
 
 Dans tous les cas, la règle s'applique matière par matière et compte aussi les leçons du CP d'un enfant de CE1 : elles sont placées avant celles du CE1 et s'afficheront dans les classes d'avant (#26).
 - **Recommandation** : **(b)**. Elle fait commencer l'enfant à sa première lacune, sans le faire refaire ce qu'il sait déjà. Elle ne coche jamais une leçon dont la question était fausse.
-- D'accord ?
+- **Tranchée** (PO, 2026-10-24) : recommandation retenue.
 
 **27.3. Changement de classe.** Un enfant qui passe du CE1 au CE2 a déjà un test de départ fait. Faut-il le lui proposer de nouveau ?
 - **Recommandation** : **non**, pas de proposition automatique. Les étoiles et les leçons réussies au test de départ sont gardées (décision n°7 du lot 2). Le parent peut toujours utiliser « Refaire le test de départ ».
-- D'accord ?
+- **Tranchée** (PO, 2026-10-24) : recommandation retenue.
 
 **27.4. Objectif du jour.** Le test de départ compte-t-il dans l'objectif du jour (« Joue 2 leçons aujourd'hui »), ou pour la série, les épisodes ou la cabane ?
 - **Recommandation** : **non, pour rien de tout cela**. Le test de départ n'est pas une séance : il ne publie pas `SeanceTerminee` et Motivation ignore `TestDeDepartTermine`. Le défaut du legacy (la date de la progression qui compte dans l'objectif du jour) disparaît. Rien n'est modélisé côté Motivation dans cette story.
-- D'accord ?
+- **Tranchée** (PO, 2026-10-24) : recommandation retenue.
 
 **27.5. Bibliothèque non chargée, ou aucune question.** Que faire si la bibliothèque n'est pas chargée (premier lancement sans réseau), ou si la réserve ne donne aucune question (ex. une classe sans leçon de français ni de maths) ?
 - **Recommandation** :
@@ -371,7 +386,7 @@ Dans tous les cas, la règle s'applique matière par matière et compte aussi le
   - après la création du profil, on va directement à l'accueil de l'enfant ;
   - la proposition revient (bouton de l'accueil, 27.10) dès que la bibliothèque est chargée et qu'il y a au moins une question ;
   - le test n'est pas marqué fait.
-- D'accord ?
+- **Tranchée** (PO, 2026-10-24) : recommandation retenue.
 
 **27.6. Dictée et lecture exclues.** Les questions de dictée et de lecture sont exclues, ce qui pèse surtout au CP. Est-ce voulu ?
 - **Recommandation** : **oui, garder l'exclusion**, ainsi que pour ordre, poésie et fluence.
@@ -379,17 +394,17 @@ Dans tous les cas, la règle s'applique matière par matière et compte aussi le
   - Une lecture demande de lire tout un texte.
   - Ces questions sont longues pour un test de départ, et leur échec tient souvent à l'outil plus qu'à la leçon.
   - Une leçon de CP qui n'a que ces exercices est sautée.
-- D'accord ?
+- **Tranchée** (PO, 2026-10-24) : recommandation retenue.
 
 **27.7. Affichage d'une leçon réussie au test de départ dans « Mon parcours ».** Le domaine peut soit lui donner un état propre, soit la montrer comme « réussie, 1 étoile ».
 - **Recommandation** : un **état propre**, coché **sans étoile**.
   - Lecteur d'écran : « `<titre>` : réussie au test de départ ».
   - Dès qu'une séance est terminée, les étoiles gagnées la remplacent, même s'il n'y en a qu'une (aucune étoile n'est donnée sans séance).
-- D'accord, et ce texte vous va-t-il ?
+- **Tranchée** (PO, 2026-10-24) : recommandation retenue, texte compris.
 
 **27.8. Compteur et leçon suivante.** Les leçons réussies au test de départ comptent-elles dans le compteur « n leçons réussies sur N » ? Sont-elles sautées par « Leçon suivante » en fin de séance, comme une leçon réussie ?
 - **Recommandation** : **oui aux deux**, puisqu'elles sont réussies (27.1).
-- D'accord ?
+- **Tranchée** (PO, 2026-10-24) : recommandation retenue.
 
 **27.9. Refaire le test de départ.**
 - (a) Un nouveau test de départ pose-t-il des questions sur des leçons déjà réussies (en séance ou au test) ?
@@ -399,20 +414,20 @@ Dans tous les cas, la règle s'applique matière par matière et compte aussi le
   - (a) oui, le choix des questions ne regarde pas les résultats ;
   - (b) non, une leçon réussie le reste, et les deux tests s'ajoutent ;
   - (c) non, le test de départ reste fait, et le parent peut le reproposer.
-- D'accord ?
+- **Tranchée** (PO, 2026-10-24) : recommandation retenue.
 
 **27.10. Où trouver la proposition avant l'écran « Aujourd'hui » (#29) ?** La tuile « Mon test de départ » n'existe pas encore, et « Plus tard » menait à « Aujourd'hui ».
 - **Recommandation** :
   - un bouton « Mon test de départ » sur l'accueil de l'enfant, à côté de « Mon parcours », tant que le test de départ n'est pas fait ;
   - « Plus tard » et le retour mènent à cet accueil ;
   - #29 remplacera ce bouton par la tuile.
-- D'accord ?
+- **Tranchée** (PO, 2026-10-24) : recommandation retenue.
 
 **27.11. Forme des questions, boîte et barres.**
 - (a) Conjugaison, texte à trous et classer deviennent une **question à choix** (une forme, une phrase, une étiquette), et l'addition un **calcul en ligne**, comme dans le legacy. On ne garde pas le tableau, le texte entier ou le glissement des étiquettes.
 - (b) Les questions de **boîte** et de **barres** sont exclues tant que #21 n'est pas livrée. #21 (ou une petite story après elle) les ajoutera.
 - **Recommandation** : oui pour (a) et (b).
-- D'accord ?
+- **Tranchée** (PO, 2026-10-24) : recommandation retenue.
 
 **27.12. Revalidation après un test hors ligne.** Entre la fin du test et l'envoi, la bibliothèque peut changer, ou le niveau du profil peut être modifié par l'autre parent.
 - **Recommandation** :
@@ -420,29 +435,29 @@ Dans tous les cas, la règle s'applique matière par matière et compte aussi le
   - il ne revérifie **pas** le pas régulier (trop sensible au moindre ajout de leçon) ;
   - une leçon retirée de la bibliothèque entre-temps est ignorée (non cochée), sans refuser tout le test ;
   - une question au-dessus du niveau actuel fait refuser le test (`TestDeDepartIncoherent`), qui reste alors à faire.
-- D'accord ?
+- **Tranchée** (PO, 2026-10-24) : recommandation retenue.
 
 **27.13. Définition du glossaire.** « Test de départ » dit « Il s'arrête après 3 erreurs de suite ». La règle porte sur **3 questions fausses de suite** (une question peut coûter plusieurs erreurs).
-- **Recommandation** : préciser la ligne (« … après 3 questions fausses de suite ») et valider le terme. Comme pour 27.1, la correction sera faite après votre accord.
-- D'accord ?
+- **Recommandation** : préciser la ligne (« … après 3 questions fausses de suite ») et valider le terme (correction faite, Décision n°35 du glossaire).
+- **Tranchée** (PO, 2026-10-24) : recommandation retenue.
 
 **27.14. Phrase de fin.** « Tu connais déjà 3 leçons : je les ai cochées. » Avec la règle (b) de 27.2, le nombre peut dépasser 12.
 - **Recommandation** : compter les leçons **nouvellement** réussies grâce à ce test, c'est-à-dire celles qui n'étaient réussies ni en séance ni par un test précédent. Sans aucune, dire la phrase « Maintenant, je sais par où commencer ».
 - Sans son d'étoiles (défaut du legacy corrigé), un seul bouton « Voir mon parcours ».
-- D'accord ?
+- **Tranchée** (PO, 2026-10-24) : recommandation retenue.
 
 **27.15. Enfant redescendu de classe.** Une leçon de CE2 réussie au test de départ, chez un enfant redescendu en CE1, va-t-elle dans le bloc « Déjà réussies en CE2 » (#25, N1) ?
 - **Recommandation** : **oui**, sans étoile. Lecteur d'écran : « `<titre>`, CE2 : réussie au test de départ ».
-- D'accord ?
+- **Tranchée** (PO, 2026-10-24) : recommandation retenue.
 
 **27.16. Lien avec la création du profil.** Faut-il proposer le test de départ juste après la création du **premier** profil, et aussi après « + Ajouter un enfant » ?
 - **Recommandation** : **oui dans les deux cas**, comme le legacy. Le profil créé devient le profil en cours, puis la proposition s'affiche.
-- D'accord ?
+- **Tranchée** (PO, 2026-10-24) : recommandation retenue.
 
 Remarques pour les autres stories (pas des questions au PO) :
 - #28 (révisions) : les questions du test de départ ne sont jamais enregistrées comme questions de séance. Les révisions n'ont rien à filtrer.
 - #29 : la tuile « Mon test de départ » lit `TestDeDepartFait` et remplace le bouton de l'accueil (27.10).
 - #30, #31, #32, #33 (Motivation) : ignorer `TestDeDepartTermine`. Les leçons réussies au test de départ n'ont pas d'étoile, donc rien à exclure du total.
-- #34 (suivi) : afficher « réussie au test de départ » et ne pas compter ces leçons comme acquises (si 27.1 = réussie).
+- #34 (suivi) : afficher « réussie au test de départ » et ne pas compter ces leçons comme acquises (réponse 27.1).
 - #14 (export) : ajouter le résultat du test de départ à l'export.
 - Story de Famille qui retire le parcours libre (N2) : sans effet ici.
