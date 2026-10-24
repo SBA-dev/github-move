@@ -1,6 +1,7 @@
 import { type Browser, expect, type Page } from "@playwright/test";
 import { deposerLaSession, ouvrirUneSessionSansEmail } from "./connexion-sans-email.ts";
 import { installerLeHasardFixe } from "./hasard-fixe.ts";
+import { supprimerLesEssaisDuSuffixe } from "./mot-de-passe.ts";
 import {
   creerParent,
   emailsRecus,
@@ -245,5 +246,6 @@ export class Famille {
     await this.contexteDuTelephone?.close();
     await viderLaBoite(this.suffixe);
     await supprimerLesParentsDuSuffixe(this.suffixe);
+    await supprimerLesEssaisDuSuffixe(this.suffixe);
   }
 }

@@ -231,11 +231,17 @@ Then(/^il peut demander un nouveau lien de connexion$/, async ({ famille }) => {
 
 // --- Alors : ce que voit quelqu'un qui ouvre Savanturier sans connexion
 
-Then(/^je suis invité à me connecter avec mon adresse e-mail$/, async ({ famille }) => {
+// Depuis #72, l'écran de connexion demande l'adresse e-mail et le mot de passe du parent (plus de lien de connexion).
+async function verifierQueLEcranDeConnexionEstPropose(famille: Famille): Promise<void> {
   const page = await famille.page("tablette");
   await expect(page.getByRole("heading", { name: "Se connecter" })).toBeVisible();
   await expect(page.getByLabel("Adresse e-mail")).toBeEditable();
-  await expect(page.getByRole("button", { name: "Recevoir un lien de connexion" })).toBeEnabled();
+  await expect(page.getByLabel("Mot de passe", { exact: true })).toBeEditable();
+  await expect(page.getByRole("button", { name: "Se connecter", exact: true })).toBeEnabled();
+}
+
+Then(/^je suis invité à me connecter avec mon adresse e-mail(?: et mon mot de passe du parent)?$/, async ({ famille }) => {
+  await verifierQueLEcranDeConnexionEstPropose(famille);
 });
 
 Then(/^personne n'a d'adresse e-mail à ressaisir$/, async ({ famille }) => {
