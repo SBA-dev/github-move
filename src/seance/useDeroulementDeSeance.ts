@@ -10,6 +10,9 @@ import {
 import { useReducedMotion } from "motion/react";
 import { hasardDuNavigateur } from "../hasard-navigateur.ts";
 import type { Voix } from "../voix/index.ts";
+import { indicationDuGeste } from "./exercices/indication-du-geste.ts";
+import { useEtiquettesAPlacer } from "./exercices/useEtiquettesAPlacer.ts";
+import { useQuestionFigee } from "./exercices/useQuestionFigee.ts";
 import { useQuestionsAChoix } from "./exercices/useQuestionsAChoix.ts";
 import { type ParoleADire, usePersonnageQuiParle } from "./usePersonnageQuiParle.ts";
 
@@ -33,7 +36,7 @@ export function useDeroulementDeSeance(
   prenom: string,
 ) {
   const personnage = usePersonnageQuiParle(voix);
-  const { dire, faireSilence, reecouter: relire } = personnage;
+  const { dire, faireSilence, montrerHumeur, reecouter: relire } = personnage;
   const [, redessiner] = useReducer((compteur: number) => compteur + 1, 0);
   const sequence = useRef(0);
   const vivant = useRef(true);
@@ -45,6 +48,7 @@ export function useDeroulementDeSeance(
     [],
   );
 
+  const reussite = useQuestionFigee();
   const questions = useQuestionsAChoix({
     seance,
     lecon,
@@ -56,13 +60,28 @@ export function useDeroulementDeSeance(
     sequence,
     vivant,
     redessiner,
+    reussite,
+  });
+  const { placer: placerUneEtiquette } = useEtiquettesAPlacer({
+    seance,
+    personnageGuide,
+    dire,
+    faireSilence,
+    montrerHumeur,
+    sequence,
+    vivant,
+    redessiner,
+    reussite,
   });
   const { ouvrir, presenter, repondre: repondreALaQuestion, relireLaQuestion } = questions;
 
   const lireLaConsigneDeLExercice = useCallback(async () => {
     const position = seance.exerciceEnCours()?.position;
-    const consigne = position === undefined ? undefined : lecon.exercices[position]?.consigne;
-    if (consigne) await dire({ texte: consigne, nature: "consigne" });
+    const exercice = position === undefined ? undefined : lecon.exercices[position];
+    if (!exercice?.consigne) return;
+    if (!(await dire({ texte: exercice.consigne, nature: "consigne" }))) return;
+    const indication = indicationDuGeste(exercice);
+    if (indication) await dire({ texte: indication, nature: "consigne" });
   }, [seance, lecon, dire]);
 
   const ouvrirLExercice = useCallback(async (numero: number) => {
@@ -110,12 +129,17 @@ export function useDeroulementDeSeance(
     [repondreALaQuestion, enchainerSurLExercice, presenter],
   );
 
+  const placer = useCallback(
+    (etiquette: string, groupe?: string) => placerUneEtiquette(etiquette, groupe, enchainerSurLExercice),
+    [placerUneEtiquette, enchainerSurLExercice],
+  );
+
   const reecouter = useCallback(() => {
-    if (questions.figee) return;
+    if (reussite.figee) return;
     if (personnage.parole?.nature === "question" && relireLaQuestion()) return;
     sequence.current++;
     relire();
-  }, [questions.figee, personnage.parole, relireLaQuestion, relire]);
+  }, [reussite.figee, personnage.parole, relireLaQuestion, relire]);
 
   const direLaFin = useCallback((etoiles: number) => {
     sequence.current++;
@@ -130,13 +154,12 @@ export function useDeroulementDeSeance(
   }, [faireSilence]);
 
   const { parole, rangDuMotPrononce, humeur } = personnage;
+  const { figee, avancementAnnonce } = reussite;
   const {
-    figee,
     choixVisiblesPour,
     positionDuTexteEcoute,
     rangDuMotDuTexte,
     bulleEclatee,
-    avancementAnnonce,
     jAiEcoute,
     ecouterLeMot,
     jeNeSaisPas,
@@ -156,6 +179,7 @@ export function useDeroulementDeSeance(
     ecouterLeMot,
     jeNeSaisPas,
     repondre,
+    placer,
     reecouter,
     commencer,
     continuer,
