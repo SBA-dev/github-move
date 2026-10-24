@@ -1,7 +1,13 @@
 import type { MotDicte } from "../../catalogue/domain/index.ts";
 import { CleDeQuestion } from "./cle-de-question.ts";
 import type { ClavierPropose } from "./clavier-propose.ts";
-import { JeNeSaisPasDejaDit, PasDeLettreAEffacer, QuestionDejaReussie, ToucheDejaUtilisee } from "./erreurs.ts";
+import {
+  JeNeSaisPasDejaDit,
+  PasDeLettreAEffacer,
+  QuestionDejaReussie,
+  ToucheAbsenteDuClavier,
+  ToucheDejaUtilisee,
+} from "./erreurs.ts";
 import { type CaractereDejaEcrit, type CorrectionDuMot, MotAEcrire } from "./mot-a-ecrire.ts";
 import type { AideDonnee } from "./question-jouee.ts";
 import type { QuestionSuivie } from "./question-suivie.ts";
@@ -76,13 +82,18 @@ export class QuestionDeDictee implements QuestionSuivie {
   taper(lettre: string): ResultatDeReponse | undefined {
     if (this.estReussie) throw new QuestionDejaReussie();
     const minuscule = lettre.toLowerCase();
-    if (this.clavierPropose.genre === "lettresDuMot" && !this.touchesDisponibles().includes(minuscule)) {
-      throw new ToucheDejaUtilisee(minuscule);
-    }
+    if (this.clavierPropose.genre === "lettresDuMot") this.verifierQueLaToucheEstLibre(minuscule);
     this.lettreMontree = undefined;
     this.lettres.push(minuscule);
     if (this.lettres.length < this.mot.lettresAEcrire().length) return undefined;
     return this.corriger(this.lettres);
+  }
+
+  private verifierQueLaToucheEstLibre(touche: string): void {
+    if (this.touchesDisponibles().includes(touche)) return;
+    throw this.clavierPropose.touches.includes(touche)
+      ? new ToucheDejaUtilisee(touche)
+      : new ToucheAbsenteDuClavier(touche);
   }
 
   effacer(): void {

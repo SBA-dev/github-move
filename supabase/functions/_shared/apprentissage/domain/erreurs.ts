@@ -159,6 +159,13 @@ export class ToucheDejaUtilisee extends Error {
   }
 }
 
+export class ToucheAbsenteDuClavier extends Error {
+  constructor(readonly lettre: string) {
+    super(`La touche « ${lettre} » n'est pas sur le clavier.`);
+    this.name = "ToucheAbsenteDuClavier";
+  }
+}
+
 export class PasDeLettreAEffacer extends Error {
   constructor() {
     super("Aucune lettre n'est écrite : il n'y a rien à effacer.");
