@@ -27,3 +27,14 @@ Deno.test("seules les 50 dernières réponses comptent dans l'adaptation de la d
 
   assertEquals(adaptation.facilite, 1);
 });
+
+Deno.test("la séance qui dépasse les 50 dernières réponses ne compte que pour la part qui manque", () => {
+  const historique = [
+    { reussites: 20, erreurs: 20 },
+    { reussites: 30, erreurs: 10 },
+  ];
+
+  const adaptation = AdaptationDeLaDifficulte.depuis(historique);
+
+  assertEquals(adaptation.facilite, 0.65);
+});
