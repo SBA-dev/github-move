@@ -1,5 +1,5 @@
 # language: fr
-@issue-65 @wip
+@issue-65
 Fonctionnalité: L'écran « Mes médailles » réunit ce que l'enfant a gagné
   En tant qu'enfant
   Je veux un écran qui réunit ce que j'ai gagné : la cabane, l'histoire, mes badges et mes records de calcul rapide
@@ -167,6 +167,15 @@ Fonctionnalité: L'écran « Mes médailles » réunit ce que l'enfant a gagné
         | Mes médailles                                                    |
         | Mes records de calcul rapide                                   |
         | Calcul rapide : tables de 3 et 4 : ton record est de 12 calculs |
+
+    Scénario: Revenir à l'accueil pendant la lecture coupe la voix : la suite de l'écran n'est pas lue sur l'accueil
+      Étant donné que Paul a réglé « tout lire à voix haute » sur « oui » pour Léa
+      Et que Léa a un record de 12 à la fluence « Calcul rapide : tables de 3 et 4 »
+      Et que Léa a ouvert « Mes médailles » depuis son accueil
+      Et que Noisette est en train de lire « Regarde tout ce que tu as gagné ! »
+      Quand Léa revient en arrière
+      Alors Léa n'entend pas Noisette lire « Mes records de calcul rapide »
+      Et Léa n'entend pas Noisette lire « Calcul rapide : tables de 3 et 4 : ton record est de 12 calculs »
 
     Scénario: Sans « tout lire à voix haute », seul l'accueil du personnage guide est lu à l'ouverture
       Étant donné que le réglage « tout lire à voix haute » de Léa est sur « non »
