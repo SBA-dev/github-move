@@ -40,3 +40,8 @@ En attente d'une réponse : leçons réussies d'une classe au-dessus (N1, N7, N9
   renvoie aujourd'hui la première leçon non réussie du parcours ; à corriger par un test dès la réponse à N10.
   Dette signalée : après un rechargement sans réseau, une séance gardée dans IndexedDB n'apparaît pas dans le parcours
   (relève de #44, réponse 25.6).
+- 14:25 UTC : review n°1 (`mr-reviewer`) : **APPROUVÉ**, 0 bloquant, 13 non bloquants. Retenus pour un passage après
+  l'E2E : fusion des étoiles serveur/mémoire extraite dans le domaine avec un test (n°1) ; page de la leçon sur la
+  même source (n°2) ; matière choisie remise à zéro au changement d'enfant et à la déconnexion (n°4) ; `catch` vide
+  de la fin de séance (n°5) ; prédicat « du parcours » dupliqué (n°7) ; « sans verrou » dans un nom de test (n°9) ;
+  nom de fichier `useEntreesDuParcours.ts` (n°10).

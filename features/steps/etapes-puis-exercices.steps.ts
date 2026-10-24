@@ -1,4 +1,5 @@
 import { avecLesReglagesPrevus } from "../support/reglages-prevus.ts";
+import { servirLaBibliothequeDuParcours } from "../support/bibliotheque-du-parcours.ts";
 import { readFileSync } from "node:fs";
 import { expect, type Locator, type Page } from "@playwright/test";
 import { Given, type ProfilPrepare, Then, When } from "./fixtures.ts";
@@ -191,7 +192,9 @@ Given(/^Léa a un profil enfant préparé de niveau (\S+) dans l'univers « (.+)
   );
   await interceptertLaBibliotheque(page);
   // Story #24 : les séances terminées s'enregistrent pour un vrai profil ; Léa joue donc avec le même profil, créé pour Paul.
-  if ($tags.includes("@issue-24")) await jouerAvecLeProfilReel(famille, monde, page);
+  // Story #25 : le parcours lit la progression du vrai profil, et la bibliothèque de test remplace celle de l'application.
+  if ($tags.includes("@issue-25")) await servirLaBibliothequeDuParcours(page);
+  if ($tags.includes("@issue-24") || $tags.includes("@issue-25")) await jouerAvecLeProfilReel(famille, monde, page);
 });
 
 Given(/^une leçon de test « (.+) » a un exercice calcul sans titre$/, async ({ page }, titre: string) => {
