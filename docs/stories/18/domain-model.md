@@ -11,7 +11,7 @@ S'appuie sur la séance (#16), la question jouée et les choix proposés (#17), 
 Contextes :
 - **Catalogue pédagogique** : exercices `classer`, `ordre`, `trous` publiés. Le Catalogue **découpe le texte à trous** en segments et mots attendus : Apprentissage ne lit jamais les crochets.
 - **Apprentissage** : placement des étiquettes, correction, choix de chaque trou.
-- **Motivation** (#6) : paroles et humeur. Humeur « applaudit » après **chaque** bonne réponse, y compris en `classer` (écart voulu, décision M4 de #6).
+- **Motivation** (#6) : paroles et humeur. Humeur « applaudit » après **chaque** bonne réponse, y compris en `classer` (écart voulu, décision M4 de #6). Motivation **choisit la phrase** (félicitation, relance) et **tire au hasard** ce qui doit l'être ; Apprentissage dit seulement quelle parole est due (`ParoleDue`, décision n°10).
 
 ### Comportement actuel (`app/`, `placeTags` l. 959, `RUNNERS.classer` l. 1281, `ordre` l. 1378, `trous` l. 1391, `norm` l. 16)
 
@@ -19,7 +19,7 @@ Contextes :
 
 **Classer** : une cible par groupe (« maison »). Bonne si le `groupe` de l'item est l'`id` de la maison. Félicitation **une fois sur deux** (`Math.random() < .5`). Erreur : `aide` de l'item, sinon « « `<étiquette>` » n'habite pas dans la maison « `<maison>` ». Essaie une autre maison. ».
 
-**Ordre** : une seule cible (la liste). Bonne si l'étiquette est **à la position attendue** (comparaison par **position**, pas par texte). Après chaque bonne étiquette sauf la dernière, au hasard : « Oui ! Et après ? », « Bien ! Et ensuite ? », « Super ! La suite ? ». Erreur sur la première : « Ce n'est pas le début. Lequel vient en premier ? » ; ensuite : « Pas encore celui-là. Lequel vient juste après ? ». Erreurs **non notées** pour les révisions. Pas de félicitation à la fin.
+**Ordre** : une seule cible (la liste). Bonne si l'étiquette est **à la position attendue** (comparaison par **position**, pas par texte). Après chaque bonne étiquette sauf la dernière, au hasard : « Oui ! Et après ? », « Bien ! Et ensuite ? », « Super ! La suite ? ». Erreur sur la première : « Ce n'est pas le début. Lequel vient en premier ? » ; ensuite : « Pas encore celui-là. Lequel vient juste après ? ». Erreurs **non notées** pour les révisions. Pas de félicitation à la fin dans le legacy : la cible en ajoute une après la dernière étiquette (**écart voulu**, décision n°5).
 
 **Trous** : découpage de `texte` sur `[mot]`. Trous dans l'ordre. Choix : le mot attendu + 2 autres tirés de `distracteurs` ∪ autres mots attendus, **sans ceux qui s'écrivent pareil une fois accents et majuscules retirés** (`norm`) ; puis dédoublonnage par texte exact (`choose`). Erreur : « Relis la phrase en entier : quel mot va bien ? ». Bonne réponse : le mot s'écrit dans le trou ; félicitation sauf au dernier trou. Fin : « `<félicitation>` Le texte est complet ! ».
 
@@ -41,7 +41,10 @@ Contextes :
 | Trou | **nouveau** (validé) | Place d'un mot attendu dans un texte à trous (`[mot]` dans le format). |
 | Mot attendu | **nouveau** (validé) | Mot qui remplit un trou. |
 | Distracteur | **nouveau** (validé), terme du format (`distracteurs`) | Mot faux proposé exprès parmi les choix (trous, conjugaison). |
-| Plateau | terme d'interface | Zone des étiquettes à placer. |
+| Plateau | **conflit tranché** (Conflits n°4 du glossaire, décision n°30) | Mot d'interface seulement : zone où l'enfant voit les étiquettes. Le domaine dit **étiquettes mélangées** (`etiquettesMelangees`) et **étiquettes à placer** (`etiquettesAPlacer`). |
+| Étiquettes mélangées | **nouveau** (décision n°10) | Étiquettes d'un exercice `classer` ou `ordre` après le mélange du début de séance ; celles qui restent à poser sont les **étiquettes à placer**. |
+| Relance | **conflit tranché** (Conflits n°5 du glossaire, décision n°10) | Parole de **Motivation** dite après une bonne étiquette d'`ordre` sauf la dernière, **tirée au hasard** parmi « Oui ! Et après ? », « Bien ! Et ensuite ? », « Super ! La suite ? ». |
+| Parole due | **nouveau** (à valider, décision n°10) | Ce qu'Apprentissage annonce après une bonne réponse : `felicitation`, `felicitationUneFoisSurDeux` ou `relance`. Motivation en tire la phrase. |
 
 ## Modèle
 
@@ -70,8 +73,13 @@ classDiagram
   }
   class EtiquettesAPlacer {
     <<value object, Apprentissage>>
-    etiquettes restantes (ordre mélangé)
+    etiquettesMelangees
+    etiquettesAPlacer()
     placer(etiquette, cible) ResultatDeReponse
+  }
+  class ParoleDue {
+    <<value object, Apprentissage>>
+    felicitation | felicitationUneFoisSurDeux | relance
   }
   class ChoixDuTrou {
     <<value object, Apprentissage>>
@@ -80,6 +88,7 @@ classDiagram
   TexteATrous "1" *-- "1..*" Segment
   ExerciceClasser ..> EtiquettesAPlacer
   ExerciceOrdre ..> EtiquettesAPlacer
+  EtiquettesAPlacer ..> ParoleDue
   TexteATrous ..> ChoixDuTrou
 ```
 
@@ -99,7 +108,7 @@ classDiagram
 | `ordre` | une par position | `Placement(etiquette)` juste si son **texte** est celui de l'élément attendu à la position suivante (décision n°1 : deux éléments au même texte sont interchangeables ; le legacy comparait la position d'origine). Faux : une erreur. |
 | `trous` | une par trou, **dans l'ordre du texte** | Mécanique des choix (#17) : texte exact. Réduction à deux après deux erreurs, « Je ne sais pas » (#23). |
 
-- `EtiquettesAPlacer` : les étiquettes sont mélangées une fois (port `Hasard`) au début de la séance. Une étiquette placée quitte le plateau. L'exercice est fini quand le plateau est vide.
+- `EtiquettesAPlacer` : les étiquettes sont mélangées une fois (port `Hasard`) au début de la séance : ce sont les **étiquettes mélangées**. Une étiquette bien placée quitte les **étiquettes à placer**. L'exercice est fini quand il ne reste plus d'étiquette à placer. « Plateau » reste un mot d'interface (décision n°10).
 - `ChoixDuTrou` : mot attendu + 2 candidats tirés parmi `distracteurs` ∪ autres mots attendus, **sans les candidats identiques au mot attendu**. Identique : **texte exact**, accents et majuscules gardés (décision n°2 ; le legacy comparait « sans accents ni majuscules »), pour que « a » et « à » soient deux choix. Puis dédoublonnage et mélange (#17).
 - La consigne est lue, suivie de l'indication du geste : « Fais glisser chaque étiquette, ou touche-la puis touche une maison. » (classer), « Touche d'abord celle qui vient en premier. » (ordre).
 - Clés de question (révisions, lot 4) : `k:` (classer), `t:` (trous, avec la phrase qui contient le trou), comme le legacy. Ordre : aucune dans le legacy ; la séance garde toutes les questions ratées, quel que soit le type, et le lot 4 décide lesquelles deviennent des révisions (décision n°4).
@@ -108,11 +117,11 @@ classDiagram
 
 | Type | Après une erreur | Après une bonne réponse |
 |---|---|---|
-| `classer` | `aide` de l'item, sinon « « `<étiquette>` » n'habite pas dans la maison « `<nom du groupe touché>` ». Essaie une autre maison. » | félicitation une fois sur deux (décision n°3) |
-| `ordre` | 1re position : « Ce n'est pas le début. Lequel vient en premier ? » ; ensuite : « Pas encore celui-là. Lequel vient juste après ? » | « Oui ! Et après ? » / « Bien ! Et ensuite ? » / « Super ! La suite ? », sauf la dernière (décision n°5) |
+| `classer` | `aide` de l'item, sinon « « `<étiquette>` » n'habite pas dans la maison « `<nom du groupe touché>` ». Essaie une autre maison. » humeur « applaudit » à chaque fois ; `ParoleDue` `felicitationUneFoisSurDeux` (Motivation tire au hasard si elle parle), sauf la **dernière étiquette** : `felicitation`, toujours dite (décisions n°3 et n°10) |
+| `ordre` | 1re position : « Ce n'est pas le début. Lequel vient en premier ? » ; ensuite : « Pas encore celui-là. Lequel vient juste après ? » `relance` après chaque bonne étiquette sauf la dernière (Motivation tire au hasard « Oui ! Et après ? », « Bien ! Et ensuite ? » ou « Super ! La suite ? ») ; `felicitation` après la dernière (décisions n°5 et n°10 ; écart voulu avec le legacy, qui ne félicitait pas) |
 | `trous` | « Relis la phrase en entier : quel mot va bien ? » | félicitation, sauf au dernier trou ; fin : « Le texte est complet ! » |
 
-Les relances de l'ordre (« Oui ! Et après ? ») et la fin des trous sont des paroles de Motivation ; l'aide est d'Apprentissage.
+Les félicitations, les relances de l'ordre (« Oui ! Et après ? ») et la fin des trous sont des paroles de **Motivation**, qui fait tous les tirages au hasard (quelle relance, félicitation dite ou non en `classer`). Apprentissage ne fournit que la `ParoleDue` et l'aide (décision n°10).
 
 ### Erreurs métier
 
@@ -120,12 +129,13 @@ Les relances de l'ordre (« Oui ! Et après ? ») et la fin des trous sont des p
 
 ## Invariants
 
-1. Une étiquette placée au bon endroit n'est plus jamais déplacée ; une étiquette mal placée revient au plateau.
+1. Une étiquette placée au bon endroit n'est plus jamais déplacée ; une étiquette mal placée revient parmi les étiquettes à placer.
 2. Chaque mauvais placement coûte une erreur.
 3. `classer` : l'enfant pose les étiquettes dans l'ordre qu'il veut. `ordre` : seule l'étiquette suivante est acceptée. `trous` : les trous se remplissent dans l'ordre du texte.
 4. `ordre` : deux éléments au même texte sont interchangeables (décision n°1).
 5. Un trou propose toujours son mot attendu, et deux choix qui ne lui sont pas identiques quand c'est possible.
 6. Apprentissage ne lit jamais la syntaxe `[mot]` : il reçoit des segments et des mots attendus du Catalogue.
+7. Apprentissage ne tire jamais une parole au hasard : il dit la `ParoleDue` ; la dernière étiquette de `classer` et d'`ordre` est toujours `felicitation`.
 
 ## Événements
 
@@ -159,13 +169,14 @@ Validation n°1 du lot 3 par le PO, le 2026-10-23 : « OK pour tout » (`docs/st
 
 1. (Q21) **Ordre** : deux éléments au même texte sont-ils interchangeables ? **Décision** : oui, on compare le texte.
 2. (Q22) **Trous** : un candidat n'est écarté que s'il est **identique** au mot attendu (accents et majuscules gardés), pour que « a » et « à » soient deux choix ? **Décision** : oui.
-3. (Q23) **Classer** : félicitation à chaque bonne étiquette, ou une fois sur deux ? **Décision** : l'humeur « applaudit » à chaque fois (décision M4), la félicitation parlée une fois sur deux (tirée par le port `Hasard`), pour ne pas ralentir un exercice de 10 étiquettes.
+3. (Q23) **Classer** : félicitation à chaque bonne étiquette, ou une fois sur deux ? **Décision** : l'humeur « applaudit » à chaque fois (décision M4), la félicitation parlée une fois sur deux (tirée par le port `Hasard`), pour ne pas ralentir un exercice de 10 étiquettes. Précisée par la décision n°10 : tirage fait par Motivation, dernière étiquette toujours félicitée.
 4. (Q24) **Ordre** : ses erreurs sont-elles notées pour les révisions ? **Décision** : la séance garde **toutes** les questions ratées, quel que soit le type (ordre et addition posée compris) ; le lot 4 décide lesquelles deviennent des révisions.
 5. (Q25) **Ordre** : une félicitation à la fin de l'exercice ? **Décision** : oui, une félicitation après la dernière étiquette, comme les autres types.
 6. (Q26) **`aide` des items de `classer`** : à ajouter au format ? **Décision** : oui, facultative (même réponse que #23, question n°5).
 7. (Q27) **Glossaire** : « étiquette », « trou », « distracteur » termes du domaine ; « maison » terme d'interface, le domaine disant **Groupe** (classer) et **Colonne** (addition posée) ? **Décision** : oui.
 8. (Q28) **Classer** : reposer une étiquette dans la même mauvaise maison compte une nouvelle erreur (comme aujourd'hui) ? **Décision** : oui ; l'étiquette est revenue au plateau, c'est un nouvel essai.
 9. (Q29) **Trous** : le Catalogue refuse-t-il un texte à trous qui ne peut pas proposer au moins deux choix par trou (un seul trou sans distracteur) ? **Décision** : oui (`ExerciceMalForme`), vérifié aussi par le test de la bibliothèque.
+10. (2026-10-24, conflits n°4 et n°5 du glossaire) **Plateau, relance, parole due** : « plateau » est-il un terme du domaine, et qui tire les paroles ? **Décision** : « plateau » est un mot d'interface seulement (décision n°30 du glossaire) ; le domaine dit « étiquettes mélangées » / « étiquettes à placer » (`etiquettesMelangees`, `etiquettesAPlacer`). La relance est une parole de **Motivation**, tirée **au hasard** parmi les trois phrases. Apprentissage dit seulement quelle parole est due (`ParoleDue` : `felicitation` | `felicitationUneFoisSurDeux` | `relance`). En `classer`, la félicitation parlée une fois sur deux est tirée au hasard par Motivation, et la **dernière étiquette est toujours félicitée** ; humeur « applaudit » à chaque bonne étiquette.
 
 ## Questions ouvertes
 

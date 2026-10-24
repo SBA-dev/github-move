@@ -68,7 +68,8 @@ Le glossaire garde l'orthographe française.
 | Étiquette | Mot, nombre ou chiffre que l'enfant pose sur une cible : item de `classer`, élément d'`ordre`, chiffre d'une addition posée, vers (#18). | Apprentissage | pierre, tag, carte |
 | Placement (à valider) | Réponse qui pose une étiquette sur une cible : un groupe pour `classer`, la place suivante de la liste pour `ordre`. Bon placement : l'étiquette ne bouge plus ; mauvais placement : une erreur, l'étiquette revient (#18). | Apprentissage | dépôt, glisser-déposer, drop |
 | Indication du geste (à valider) | Phrase lue après la consigne de `classer` ou d'`ordre` pour dire comment poser une étiquette (« Fais glisser chaque étiquette, ou touche-la puis touche une maison. », « Touche d'abord celle qui vient en premier. ») (#18). | Apprentissage | tutoriel, mode d'emploi |
-| Relance (à valider) | Phrase du personnage guide après chaque bonne étiquette d'un exercice `ordre`, sauf la dernière (« Oui ! Et après ? », « Bien ! Et ensuite ? », « Super ! La suite ? ») ; elle remplace la félicitation. Contexte à confirmer : voir Conflits n°5 (#18). | Apprentissage (à valider) | encouragement, félicitation |
+| Étiquettes mélangées | Étiquettes d'un exercice `classer` ou `ordre`, mélangées une fois au début de la séance ; celles qui restent à poser sont les **étiquettes à placer** (`etiquettesMelangees`, `etiquettesAPlacer`). Interface : le plateau (Décision n°31) (#18). | Apprentissage | plateau (dans le code), pioche |
+| Parole due (à valider) | Ce qu'Apprentissage annonce après une bonne réponse, sans choisir la phrase : `felicitation`, `felicitationUneFoisSurDeux` (classer, sauf la dernière étiquette) ou `relance` (ordre, sauf la dernière étiquette). Motivation en tire la phrase (Décision n°32) (#18). | Apprentissage | réplique, message |
 | Texte complet (à valider) | Moment où le dernier trou d'un texte à trous reçoit le bon mot : le personnage guide dit une félicitation suivie de « Le texte est complet ! » (#18). | Apprentissage | texte fini, texte rempli |
 | Mode de réponse | Manière de répondre à un calcul : par choix au CP (et, pour la boîte et les barres, si la réponse vaut 20 au plus), sinon au clavier de cristaux (#20, #21). | Apprentissage | mode de saisie |
 | Clavier de cristaux | Clavier de chiffres (0 à 9, « Effacer », « Valider ») pour répondre à un calcul, à partir du CE1. Nommé dans le format (#20). | Apprentissage | pavé numérique, clavier (seul) |
@@ -110,6 +111,7 @@ Le glossaire garde l'orthographe française.
 | Humeur du personnage guide (à valider) | Attitude montrée par le personnage guide : `content` (par défaut), `reflechit` (après une erreur, il penche la tête), `applaudit` (il saute). | Motivation | émotion, état, mood |
 | Félicitation (à valider) | Phrase qui salue une bonne réponse : une félicitation commune (« Bravo ! ») ou une expression du personnage guide. | Motivation | compliment, praise |
 | Expression du personnage guide (à valider) | Félicitation propre à un personnage guide (Noisette : « Youpi ! »). | Motivation | cri, réplique |
+| Relance (à valider) | Phrase du personnage guide après chaque bonne étiquette d'un exercice `ordre`, sauf la dernière, **tirée au hasard** par Motivation parmi « Oui ! Et après ? », « Bien ! Et ensuite ? », « Super ! La suite ? » ; elle remplace la félicitation. Apprentissage dit seulement qu'elle est due (**Parole due**) (Décision n°32, #18). | Motivation | encouragement, félicitation |
 | Encouragement (à valider) | Phrase dite après une erreur, jamais punitive (« Pas grave, on réessaie ! »). | Motivation | reproche, oops |
 | Caractère de la voix (à valider) | Voix féminine ou masculine, hauteur et rythme propres à un personnage guide. Sa forme est définie par le sous-domaine Voix, ses valeurs sont fournies par Motivation pour chaque personnage guide (décision 0008). | Motivation | style, timbre, sexe de la voix |
 
@@ -206,14 +208,16 @@ Sous-domaine décidé à la validation n°1 du lot 1 (décision 0007). Ses terme
 28. **« Étape »** (#20) : on dit toujours « étape poser » ou « étape calculer » pour l'addition posée, et **Étape de leçon** pour l'explication ; jamais « étape » seule (tranché par le PO le 2026-10-23).
 29. **« Progression »** (#24) : reste un mot d'interface (décision n°21) ; ce qui garde les meilleures étoiles s'appelle **Résultat de la leçon** (tranché par le PO le 2026-10-23).
 30. **Termes du lot 3** (« Jouer une leçon », #16 à #24) : tous validés par le PO le 2026-10-23 (`docs/stories/lot-3-decisions.md`, « OK pour tout »), y compris les définitions précisées de **Séance**, **Réponse** et **Erreur**. Restent hors glossaire, comme mots d'interface : récipient, bulle, carte de la question, plateau, case, lettre intruse, écran de fin, maison, jeu, poème.
+31. **« Plateau »** (#18, ancien conflit n°4) : mot d'interface seulement (Décision n°30) ; le domaine dit **Étiquettes mélangées** et **étiquettes à placer** (`etiquettesMelangees`, `etiquettesAPlacer`) (tranché par le PO le 2026-10-24).
+32. **« Relance »** (#18, ancien conflit n°5) : parole de **Motivation**, tirée **au hasard** parmi les trois phrases. Apprentissage dit seulement quelle **Parole due** (`felicitation`, `felicitationUneFoisSurDeux`, `relance`) ; en `classer`, Motivation tire la félicitation une fois sur deux, et la dernière étiquette est toujours félicitée (tranché par le PO le 2026-10-24).
 
 ## Conflits à trancher
 
 1. **« Étoile »** est aussi le nom de l'« Étoile du savoir » dans l'histoire. Proposition : **Étoile** reste la récompense. L'objet de l'histoire n'est pas un terme du domaine.
 2. **« Test »** : on dit toujours **Test de départ**, pour ne pas confondre avec les tests logiciels.
 3. **« Courriel »** (story #5, décision 0011) : **tranché par le PO le 2026-10-23** : on dit **E-mail de connexion** partout, « courriel » est interdit.
-4. **« Plateau »** (#18) : la Décision n°30 le range parmi les mots d'interface, hors glossaire, mais le domaine d'Apprentissage l'emploie (paramètre `plateau` de `EtiquettesAPlacer` : les étiquettes mélangées encore à placer). Faut-il l'entrer au glossaire comme terme d'Apprentissage, oui ou non ? Si non, le code dit « étiquettes à placer ».
-5. **« Relance »** (#18) : le modèle de #18 (section Paroles) en fait une parole de **Motivation**, comme la félicitation ; le code la produit dans **Apprentissage** (`etiquettes-a-placer.ts`). Laquelle des deux fournit la relance ? De plus, le modèle dit « au hasard » alors que le code les dit à tour de rôle (1re, 2e, 3e, puis 1re…) : l'ordre doit-il être tiré au hasard, oui ou non ?
+4. **« Plateau »** (#18) : **tranché par le PO le 2026-10-24** : voir Décision n°31.
+5. **« Relance »** (#18) : **tranché par le PO le 2026-10-24** : voir Décision n°32.
 
 Les anciens conflits n°3 à n°7 (compte, session, lien magique, voix, monde) sont tranchés : voir Décisions n°10 à n°15. Ceux du lot 2 (espace adulte, lien, supprimer / détacher, la voix des guides, progression) : voir Décisions n°17 à n°21.
 Ceux du lot 3 (anciens n°8 à n°14 : jeu, maison, rang, énoncé, essai, étape, progression) : voir Décisions n°23 à n°29.
