@@ -11,3 +11,7 @@ Branche de base : `main` (`2173dba`). Branche : `feature/26-lecons-des-classes-d
 - 23:20 UTC : `domain-modeler` : modèle de domaine (`0d5dd32`). Vue calculée, pas d'agrégat, pas de migration ; questions #26.1 à #26.12.
 - 23:40 UTC : `po-acceptance` : critères d'acceptance (`a620c8e`). 6 règles, 37 scénarios (46 cas), 25 `@a-valider`, 2 `@depend-de-27`, 0 `@acces` ; questions #26.13 à #26.16.
 - CADRAGE PRÊT publié sur #26. En attente du OK du PO et du merge de #27 avant le TDD.
+- 23:30 UTC : réponses du PO (annonces `[Responsable]` sur #64) : 26.1 remplacée (« Toutes les leçons » : classe de l'enfant, puis classe juste au-dessus d'une matière réussie, section des classes d'avant en dessous) ; 26.1a matière par matière ; 26.1b classe juste au-dessus seulement ; 26.2 à 26.16 reco. OK du PO, label `graphe:dev`.
+- `domain-modeler` : modèle mis à jour (`166c439`, `c9fc593`) ; nouvelles questions #26.17 à #26.20.
+- `po-acceptance` : critères mis à jour (`053491d`) : 6 règles, 48 scénarios (56 cas), 15 `@a-valider` (#26.17 à #26.20), 3 `@depend-de-27`.
+- Questions #26.17 à #26.20 publiées sur #26. TDD toujours bloqué jusqu'au merge de #27.
