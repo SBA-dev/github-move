@@ -101,7 +101,10 @@ Deno.test("une dictée compte une question par mot", () => {
 });
 
 Deno.test("un exercice de calcul à opérations fixes compte une question par opération", () => {
-  const exercice: Exercice = { type: "calcul", operations: uneListeDe(6) };
+  const exercice: Exercice = {
+    type: "calcul",
+    operations: Array.from({ length: 6 }, () => ({ q: "1 + 1", r: 2 })),
+  };
 
   assertEquals(nombreDeQuestions(exercice), 6);
 });

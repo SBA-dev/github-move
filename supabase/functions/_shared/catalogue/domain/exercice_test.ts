@@ -2,6 +2,7 @@ import { assertEquals, assertThrows } from "@std/assert";
 import { lireLecon } from "./lire-lecon.ts";
 import type { Exercice, ExerciceGenerique } from "./exercice.ts";
 import type { ExerciceBulles } from "./exercices/bulles.ts";
+import type { ExerciceCalcul } from "./exercices/calcul.ts";
 import { LeconMalFormee } from "./erreurs.ts";
 import { libelleDuType, TYPES_D_EXERCICE } from "./type-d-exercice.ts";
 
@@ -41,10 +42,16 @@ function exerciceDeBulles(exercice: Exercice): ExerciceBulles {
   return exercice;
 }
 
+function exerciceDeCalcul(exercice: Exercice): ExerciceCalcul {
+  if (exercice.type !== "calcul") throw new Error(`« ${exercice.type} » n'est pas un exercice de calcul`);
+  return exercice;
+}
+
 function exerciceGenerique(exercice: Exercice): ExerciceGenerique {
   if (
     exercice.type === "bulles" || exercice.type === "lecture" || exercice.type === "ecoute" ||
-    exercice.type === "classer" || exercice.type === "ordre" || exercice.type === "trous"
+    exercice.type === "classer" || exercice.type === "ordre" || exercice.type === "trous" ||
+    exercice.type === "calcul"
   ) {
     throw new Error(`« ${exercice.type} » n'est pas un exercice générique`);
   }
@@ -215,8 +222,8 @@ Deno.test("un exercice « calcul » garde ses opérations ou le nombre de questi
     { type: "calcul", generateur: { op: "+", a: [1, 9], b: [1, 9], combien: 8 } },
   ));
 
-  assertEquals(exerciceGenerique(lecon.exercices[0]).operations?.length, 1);
-  assertEquals(exerciceGenerique(lecon.exercices[1]).generateur?.combien, 8);
+  assertEquals(exerciceDeCalcul(lecon.exercices[0]).operations?.length, 1);
+  assertEquals(exerciceDeCalcul(lecon.exercices[1]).generateur?.combien, 8);
 });
 
 Deno.test("un exercice « addition » garde ses opérations, ou le nombre d'opérations de son générateur, et ses étapes", () => {
