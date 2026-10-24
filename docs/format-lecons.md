@@ -29,7 +29,7 @@ Le moteur affiche n'importe quelle leçon dans l'univers choisi par l'enfant (pr
 |---|---|
 | `matiere` | `francais`, `maths`, `sciences`, `histoire` (histoire et géographie), `anglais` ou `emc` |
 | `niveau` | `CP`, `CE1`, `CE2`, `CM1` ou `CM2` |
-| `ordre` | Position dans le **parcours** de la matière : une leçon s'ouvre quand la précédente est réussie |
+| `ordre` | Position dans le **parcours** de la matière |
 | `programme.section` | Identifiant d'une section de `app/programmes-index.json` (généré par `scripts/index_programmes.py`) |
 | `programme.citation` | Phrase recopiée mot pour mot du texte officiel |
 | `lecon` | Étapes de la leçon, lues à voix haute par le personnage guide avant les exercices |
