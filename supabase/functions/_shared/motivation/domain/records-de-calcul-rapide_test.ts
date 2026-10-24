@@ -104,3 +104,95 @@ Deno.test("un record dont l'exercice a été renommé garde sa pastille, libell�
 
   assertEquals(libelles, ["Calcul rapide : les anciens doubles"]);
 });
+
+function leconDe(id: string, niveau: string, ordre: number, ...exercices: readonly unknown[]): Lecon {
+  return lireLecon({
+    id,
+    matiere: "maths",
+    niveau,
+    titre: id,
+    ordre,
+    programme: {
+      section: "c2-mathematiques-ce1-calculer-avec-des-nombres-entiers",
+      citation: "Mémoriser des faits numériques.",
+    },
+    lecon: [],
+    exercices,
+  });
+}
+
+function fluenceTitree(titre: string) {
+  return { type: "fluence", titre, duree: 60, generateur: { op: "×", a: [1, 10], b: [1, 10] } };
+}
+
+function recordSur(lecon: string, exercice: string): RecordDuProfil {
+  return { lecon, exercice, meilleurScore: 10 };
+}
+
+function clesDesPastilles(records: readonly RecordDuProfil[], lecons: readonly Lecon[]): string[] {
+  return pastillesDesRecords(records, lecons).map((pastille) => `${pastille.lecon}/${pastille.exercice}`);
+}
+
+Deno.test("les pastilles de tous les niveaux suivent l'ordre du parcours : d'abord le niveau, quel que soit l'ordre des records", () => {
+  const lecons = [
+    leconDe("math-cm2-fractions", "CM2", 1, fluenceTitree("Calcul rapide : fractions")),
+    leconDe("math-ce2-tables", "CE2", 1, fluenceTitree("Calcul rapide : tables de 3 et 4")),
+    leconDe("math-ce1-tables", "CE1", 1, fluenceTitree("Calcul rapide : tables de 2 à 5")),
+  ];
+  const records = [
+    recordSur("math-ce2-tables", "Calcul rapide : tables de 3 et 4"),
+    recordSur("math-cm2-fractions", "Calcul rapide : fractions"),
+    recordSur("math-ce1-tables", "Calcul rapide : tables de 2 à 5"),
+  ];
+
+  assertEquals(clesDesPastilles(records, lecons), [
+    "math-ce1-tables/Calcul rapide : tables de 2 à 5",
+    "math-ce2-tables/Calcul rapide : tables de 3 et 4",
+    "math-cm2-fractions/Calcul rapide : fractions",
+  ]);
+});
+
+Deno.test("deux leçons d'un même niveau ont leurs pastilles dans l'ordre des leçons, pas dans l'ordre des records", () => {
+  const lecons = [
+    leconDe("math-ce1-a", "CE1", 5, fluenceTitree("Calcul rapide : A")),
+    leconDe("math-ce1-b", "CE1", 2, fluenceTitree("Calcul rapide : B")),
+  ];
+  const records = [recordSur("math-ce1-a", "Calcul rapide : A"), recordSur("math-ce1-b", "Calcul rapide : B")];
+
+  assertEquals(clesDesPastilles(records, lecons), [
+    "math-ce1-b/Calcul rapide : B",
+    "math-ce1-a/Calcul rapide : A",
+  ]);
+});
+
+Deno.test("deux fluences d'une même leçon ont leurs pastilles dans l'ordre de la leçon, pas dans l'ordre des records", () => {
+  const lecons = [
+    leconDe("math-ce1-tables", "CE1", 1, fluenceTitree("Calcul rapide : A"), fluenceTitree("Calcul rapide : B")),
+  ];
+  const records = [
+    recordSur("math-ce1-tables", "Calcul rapide : B"),
+    recordSur("math-ce1-tables", "Calcul rapide : A"),
+  ];
+
+  assertEquals(clesDesPastilles(records, lecons), [
+    "math-ce1-tables/Calcul rapide : A",
+    "math-ce1-tables/Calcul rapide : B",
+  ]);
+});
+
+Deno.test("les pastilles orphelines (leçon ou exercice disparu) viennent après les autres, dans l'ordre de leurs clés", () => {
+  const lecons = [leconDe("math-ce1-tables", "CE1", 1, fluenceTitree("Calcul rapide : A"))];
+  const records = [
+    recordSur("math-zz-disparue", "Calcul rapide : Z"),
+    recordSur("math-aa-disparue", "Calcul rapide : Y"),
+    recordSur("math-ce1-tables", "Calcul rapide : renommee"),
+    recordSur("math-ce1-tables", "Calcul rapide : A"),
+  ];
+
+  assertEquals(clesDesPastilles(records, lecons), [
+    "math-ce1-tables/Calcul rapide : A",
+    "math-aa-disparue/Calcul rapide : Y",
+    "math-ce1-tables/Calcul rapide : renommee",
+    "math-zz-disparue/Calcul rapide : Z",
+  ]);
+});
