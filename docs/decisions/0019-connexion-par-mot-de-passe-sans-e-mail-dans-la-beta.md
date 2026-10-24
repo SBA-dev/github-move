@@ -82,3 +82,7 @@ Limites connues :
 ## Précision (revue n°3, décision du PO)
 
 - Si l'enregistrement de la remise à zéro échoue **après** un changement de mot de passe réussi, le parent est connecté et le compteur **reste** (y compris un blocage posé au 5ᵉ essai) jusqu'à son oubli : fin du blocage, ou 24 heures après le dernier raté. Seule l'indisponibilité du registre (`RegistreDesEssaisIndisponible`) est absorbée ; toute autre erreur remonte.
+
+## Précision (décision du PO) : le 5ᵉ essai raté
+
+- Le 5ᵉ essai de réinitialisation raté, celui qui pose le blocage, répond `TropDEssaisDeReinitialisation` (« Trop d'essais. Réessaie dans une heure. ») et non `InformationsDeReinitialisationIncorrectes`. Les 1ᵉʳ à 4ᵉ ratés restent inchangés. Un 5ᵉ essai juste réussit toujours.

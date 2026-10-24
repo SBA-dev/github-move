@@ -39,9 +39,11 @@ export class EssaisDeReinitialisation {
   }
 
   verifierQueLaReinitialisationEstOuverte(maintenant: Date): void {
-    if (this._bloqueJusquA && maintenant < this._bloqueJusquA) {
-      throw new TropDEssaisDeReinitialisation();
-    }
+    if (this.estBloque(maintenant)) throw new TropDEssaisDeReinitialisation();
+  }
+
+  estBloque(maintenant: Date): boolean {
+    return this._bloqueJusquA !== null && maintenant < this._bloqueJusquA;
   }
 
   enregistrerUnEssaiRate(maintenant: Date): void {

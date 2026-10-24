@@ -1,5 +1,9 @@
 import { AdresseEmail } from "../domain/adresse-email.ts";
-import { InformationsDeReinitialisationIncorrectes, ServiceDeConnexionIndisponible } from "../domain/erreurs.ts";
+import {
+  InformationsDeReinitialisationIncorrectes,
+  ServiceDeConnexionIndisponible,
+  TropDEssaisDeReinitialisation,
+} from "../domain/erreurs.ts";
 import type { EssaisDeReinitialisation } from "../domain/essais-de-reinitialisation.ts";
 import { MotDePasseDuParent } from "../domain/mot-de-passe-du-parent.ts";
 import type { ParentId } from "../domain/parent-id.ts";
@@ -36,7 +40,11 @@ export class ReinitialiserLeMotDePasse {
     const essais = await this.reserverUnEssai(adresseSaisie, maintenant);
 
     const parent = await this.parentSiLePrenomEstConnu(adresseSaisie, prenomSaisi);
-    if (!parent) throw new InformationsDeReinitialisationIncorrectes();
+    if (!parent) {
+      throw essais.estBloque(maintenant)
+        ? new TropDEssaisDeReinitialisation()
+        : new InformationsDeReinitialisationIncorrectes();
+    }
     await this.motsDePasse.changer(parent, nouveauMotDePasse);
     await this.remettreLesEssaisAZero(essais, maintenant);
   }
