@@ -54,8 +54,16 @@ function lireUneReponse(brute: unknown): ReponseDonnee {
   const reponse = objet(brute, "reponses");
   const cles = Object.keys(reponse);
   if (cles.length === 1 && cles[0] === "choix") return Reponse.choix(texteCourt(reponse.choix, "reponses"));
+  if (cles.length === 1 && cles[0] === "placement") return lireUnPlacement(reponse.placement);
   if (cles.length === 1 && cles[0] === "jeNeSaisPas" && reponse.jeNeSaisPas === true) return { genre: "jeNeSaisPas" };
-  throw new EntreeInvalide("Le champ « reponses » ne contient que des choix ou « Je ne sais pas ».");
+  throw new EntreeInvalide("Le champ « reponses » ne contient que des choix, des placements ou « Je ne sais pas ».");
+}
+
+function lireUnPlacement(brut: unknown): ReponseDonnee {
+  const placement = objet(brut, "reponses");
+  const etiquette = texteCourt(placement.etiquette, "reponses");
+  const groupe = placement.groupe === undefined ? undefined : texteCourt(placement.groupe, "reponses");
+  return Reponse.placement(etiquette, groupe);
 }
 
 function lireLesReponses(corps: Objet): ReponseDonnee[][] {
