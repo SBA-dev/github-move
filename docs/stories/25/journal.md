@@ -72,3 +72,10 @@ En attente d'une réponse : leçons réussies d'une classe au-dessus (N1, N7, N9
   pas de step pour la page de la leçon hors ligne, commit 6414056 qui contient aussi le `git mv`.
 - 16:25 UTC : MAIN A BOUGÉ (PR #70, `main` = 61d6fc4, 17 fichiers). À intégrer après l'E2E en cours, avant
   `PRÊTE À MERGER`.
+- 17:05 UTC : E2E cycle 3 (`e2e-tester`) : #25 35/36 (9 échecs de concurrence avec #20 repassés à la relance ; un step
+  corrigé) ; non-régression 847/850 (2 = le KO de #25, 1 = #10 hors ligne, repassé à la relance : concurrence).
+  **KO réel** : « Après une leçon réussie d'une classe au-dessus, aucune leçon suivante n'est proposée » — l'écran de
+  fin garde le niveau du profil lu au choix de l'enfant ; changé sur un autre appareil, il est périmé (le parcours,
+  lui, relit le profil). Bug de câblage du front, pas du domaine : le scénario E2E sert de test rouge (pas de harnais
+  de test front). Chargement du parcours hors ligne : 88-178 ms (au lieu d'environ 8 s).
+  Intégration de `main` = 61d6fc4 (merge a41bb5d, sans conflit) : 949 tests Deno, tsc, lint, fmt verts.
