@@ -91,6 +91,8 @@ export {
 export type { EtatDeLaVoix } from "./exercices/dictee-sans-voix.ts";
 export type { CaseDeQuestion, QuestionDeDictee } from "./question-de-dictee.ts";
 export type { CorrectionDuMot } from "./mot-a-ecrire.ts";
+export type { BoiteEnCours, BoiteOuverte } from "./question-de-boite.ts";
+export type { SchemaEnCours, SchemaResolu } from "./question-de-probleme-en-barres.ts";
 export { annonceDeLEcoute, carteDeLaPoesie, invitationApresLeDernierVers } from "./exercices/paroles-de-la-poesie.ts";
 export { ResultatDuTestDeDepart } from "./resultat-du-test-de-depart.ts";
 export type { EtatDuResultatDuTestDeDepart, FaitDeTestDeDepart } from "./resultat-du-test-de-depart.ts";

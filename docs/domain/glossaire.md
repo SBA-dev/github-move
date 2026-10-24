@@ -48,6 +48,11 @@ Le glossaire garde l'orthographe française.
 | Énoncé du problème | Texte d'un problème en schéma en barres (champ `enonce`). « Énoncé » seul reste interdit pour la consigne (#21). | Catalogue pédagogique | énoncé (seul), consigne |
 | Valeur cherchée | La seule valeur inconnue d'un schéma en barres (`null` dans le format), montrée par « ? » (#21). | Catalogue pédagogique | inconnue, trou |
 | Écriture du calcul | Égalité montrée après la bonne réponse d'une boîte à jetons ou d'un schéma en barres (`4 + 2 = 6`, `12 = 3 × 4`) (#21). | Catalogue pédagogique | opération (pour l'égalité), correction |
+| Problème en barres | Item d'un schéma en barres (`ProblemeEnBarres`) : un énoncé du problème, une forme (parties et tout, comparaison ou parts) avec sa valeur cherchée, une aide et une phrase réponse facultatives (#21). | Catalogue pédagogique | exercice (pour l'item), question |
+| Parties et tout | Forme d'un schéma en barres (guide fondamental) : deux parties forment le tout ; on cherche le tout ou une partie (#21). | Catalogue pédagogique | addition (pour la forme) |
+| Comparaison | Forme d'un schéma en barres (guide fondamental) : une grande barre, une petite, et l'écart entre les deux (#21). | Catalogue pédagogique | différence (pour la forme) |
+| Parts | Forme d'un schéma en barres (guide fondamental) : un total partagé en parts égales ; on cherche le total, la valeur d'une part ou le nombre de parts (#21). | Catalogue pédagogique | multiplication, division (pour la forme) |
+| Phrase réponse | Phrase facultative d'un problème en barres (`phrase`), dite après la bonne réponse, avec `{r}` remplacé par la réponse (« J'ai 6 pommes. ») (#21). | Catalogue pédagogique | conclusion, correction |
 
 ## Apprentissage
 
