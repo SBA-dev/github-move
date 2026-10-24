@@ -15,7 +15,7 @@ function pastille(meilleurScore: number): PastilleDeRecord {
   };
 }
 
-Deno.test("l'écran des trophées s'appelle « Mes médailles »", () => {
+Deno.test("l'écran des médailles s'appelle « Mes médailles »", () => {
   assertEquals(NOM_DE_L_ECRAN_DES_MEDAILLES, "Mes médailles");
 });
 
