@@ -1,4 +1,5 @@
-import { assertEquals } from "@std/assert";
+import { assertEquals, assertThrows } from "@std/assert";
+import { LeconMalFormee } from "../erreurs.ts";
 import { lireLecon } from "../lire-lecon.ts";
 
 function leconAvec(exercice: unknown): Record<string, unknown> {
@@ -41,3 +42,18 @@ Deno.test("un exercice « boite » donne pour chaque item son sens, sa réponse 
     { a: 2, sens: "ajout", b: 7, reponse: 9, ecriture: "2 + 7 = 9" },
   ]);
 });
+
+const itemsImpossibles: ReadonlyArray<[string, unknown]> = [
+  ["un retrait plus grand que le contenu de la boîte", { a: 3, op: "-", b: 5 }],
+  ["un nombre de départ négatif", { a: -1, op: "+", b: 2 }],
+  ["un nombre de jetons négatif", { a: 2, op: "+", b: -1 }],
+  ["un nombre de départ qui n'est pas entier", { a: 2.5, op: "+", b: 1 }],
+  ["un nombre de jetons qui n'est pas entier", { a: 2, op: "+", b: 1.5 }],
+  ["une opération autre que « + » ou « - »", { a: 4, op: "×", b: 2 }],
+];
+
+for (const [impossible, item] of itemsImpossibles) {
+  Deno.test(`un exercice « boite » refuse ${impossible}`, () => {
+    assertThrows(() => exerciceBoite({ type: "boite", items: [item] }), LeconMalFormee);
+  });
+}
