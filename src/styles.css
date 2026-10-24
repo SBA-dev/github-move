@@ -238,6 +238,12 @@ button:focus-visible, summary:focus-visible { outline: 3px solid #1f2a1f; outlin
   overflow-wrap: anywhere;
 }
 .texte-de-lecture h3, .texte-de-lecture p { margin: 4px 0; }
+.poesie { display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 100%; }
+.carte-de-la-poesie { max-width: min(100%, 36rem); padding: 12px 18px; border-radius: 16px; background: #fff; text-align: left; font-size: 1.25rem; line-height: 1.6; overflow-wrap: anywhere; }
+.carte-de-la-poesie h3 { margin: 4px 0; }
+.vers { margin: 0; padding: 0; list-style: none; }
+.un-vers { min-height: 44px; padding: 8px 10px; border-left: 6px solid transparent; border-radius: 8px; }
+.un-vers[data-lu="true"] { background: #fff3c4; border-left-color: #ffd23f; font-weight: 700; }
 .ecoute { display: grid; justify-items: center; gap: 8px; }
 .ecoute-sans-son { margin: 0; padding: 10px 16px; border-radius: 16px; background: #fff3cd; font-weight: 700; }
 .choix-de-la-question { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; max-width: 100%; }
@@ -398,7 +404,7 @@ button.secondaire:hover { background: #fdf3ea; }
   word-spacing: inherit;
   line-height: inherit;
 }
-[data-mode-dys="true"] :is(.consigne, .bulle, .pastille, .question, .bulle-de-choix, .etiquette, .texte-a-trous) {
+[data-mode-dys="true"] :is(.consigne, .bulle, .pastille, .question, .bulle-de-choix, .etiquette, .texte-a-trous, .carte-de-la-poesie) {
   overflow-wrap: anywhere;
 }
 .syllabe[data-parite="0"] { color: #1d4ed8; }
