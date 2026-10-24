@@ -4,7 +4,7 @@ import type { CodeDeMatiere, Matiere, Niveau } from "@domain/catalogue";
 import type { ProfilEnCours } from "@domain/famille";
 import { annonceDeLaLecon, AUCUNE_LECON_POUR_LA_CLASSE, compteurDuParcours, libelleDeLEtat, libelleDeLOnglet } from "./textes-du-parcours.ts";
 import { niveauDuProfil } from "./niveau-du-profil.ts";
-import { type LecturesDuParcours, useLecturesDuParcours } from "./useEntreesDuParcours.ts";
+import { type LecturesDuParcours, useLecturesDuParcours } from "./useLecturesDuParcours.ts";
 
 type Props = {
   readonly profil: ProfilEnCours;
