@@ -21,11 +21,15 @@ export {
   PasDeQuestionEnCours,
   PasDEtapeDeLeconEnCours,
   QuestionDejaReussie,
+  QuestionHorsDuTestDeDepart,
   SeanceDejaFinie,
   SeanceDejaTerminee,
   SeanceIncoherente,
   SeanceNonFinie,
+  TestDeDepartDejaFini,
+  TestDeDepartDUnAutreEnfant,
   TestDeDepartIncoherent,
+  TestDeDepartNonFini,
 } from "./erreurs.ts";
 export { texteALireDeLEtape } from "./etape-de-lecon-lue.ts";
 export { lectureDesChoix } from "./lecture-des-choix.ts";
@@ -88,3 +92,14 @@ export type { EtatDeLaVoix } from "./exercices/dictee-sans-voix.ts";
 export type { CaseDeQuestion, QuestionDeDictee } from "./question-de-dictee.ts";
 export type { CorrectionDuMot } from "./mot-a-ecrire.ts";
 export { annonceDeLEcoute, carteDeLaPoesie, invitationApresLeDernierVers } from "./exercices/paroles-de-la-poesie.ts";
+export { ResultatDuTestDeDepart } from "./resultat-du-test-de-depart.ts";
+export type { EtatDuResultatDuTestDeDepart, FaitDeTestDeDepart } from "./resultat-du-test-de-depart.ts";
+export { leconsReussiesAuTestDeDepart } from "./lecons-reussies-au-test-de-depart.ts";
+export { leconsNouvellementReussies } from "./lecons-nouvellement-reussies.ts";
+export { planDuTestDeDepart } from "./plan-du-test-de-depart.ts";
+export type { PlanDuTestDeDepart, QuestionPrevue } from "./plan-du-test-de-depart.ts";
+export { TestDeDepart } from "./test-de-depart.ts";
+export type { TestDeDepartTermine } from "./test-de-depart.ts";
+export type { TestDeDepartTermineAEnregistrer } from "./test-de-depart-termine-a-enregistrer.ts";
+export { TestDeDepartId } from "./test-de-depart-id.ts";
+export { reserveDuTestDeDepart } from "./reserve-du-test-de-depart.ts";
