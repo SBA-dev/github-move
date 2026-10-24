@@ -21,7 +21,7 @@ const ERREURS_AVANT_LA_REDUCTION_A_DEUX = 2;
 export type AideDonnee = {
   readonly aide: string | undefined;
   readonly bonneReponse: string;
-  readonly maniere: "briller";
+  readonly maniere: "briller" | "ecrire";
 };
 
 type Complements = { readonly aide?: string; readonly motAEcouter?: string; readonly langue?: string };
