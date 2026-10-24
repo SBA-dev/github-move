@@ -2,6 +2,7 @@ import type { Lecon } from "../../catalogue/domain/index.ts";
 import {
   BonneReponseAbsenteDesChoix,
   ChoixInconnu,
+  EtiquetteDejaPlacee,
   EtiquetteInconnue,
   ExerciceIntrouvable,
   GroupeInconnu,
@@ -10,6 +11,7 @@ import {
   PasDeQuestionEnCours,
   PasDEtapeDeLeconEnCours,
   QuestionDejaReussie,
+  ReponseRangeeSousUneAutreQuestion,
   SeanceDejaFinie,
   SeanceIncoherente,
   SeanceNonFinie,
@@ -24,6 +26,7 @@ import type { SeanceTermineeAEnregistrer } from "./seance-terminee-a-enregistrer
 const ERREURS_DE_REJEU = [
   BonneReponseAbsenteDesChoix,
   ChoixInconnu,
+  EtiquetteDejaPlacee,
   EtiquetteInconnue,
   GroupeInconnu,
   ExerciceIntrouvable,
@@ -32,6 +35,7 @@ const ERREURS_DE_REJEU = [
   PasDeQuestionEnCours,
   PasDEtapeDeLeconEnCours,
   QuestionDejaReussie,
+  ReponseRangeeSousUneAutreQuestion,
   SeanceDejaFinie,
   SeanceNonFinie,
   TirageEnTrop,
@@ -64,6 +68,12 @@ function rejouer(lecon: Lecon, envoi: SeanceTermineeAEnregistrer): SeanceTermine
 }
 
 function rejouerLaReponse(seance: Seance, reponse: ReponseDonnee, rang: number): void {
+  const etiquetteDeLaQuestion = seance.etiquetteDeClasserALaQuestion(rang);
+  if (
+    reponse.genre === "placement" && etiquetteDeLaQuestion !== undefined && reponse.etiquette !== etiquetteDeLaQuestion
+  ) {
+    throw new ReponseRangeeSousUneAutreQuestion(reponse.etiquette);
+  }
   if (reponse.genre === "jeNeSaisPas") seance.direJeNeSaisPas(seance.etiquetteDeLaQuestion(rang));
   else seance.repondre(reponse);
 }

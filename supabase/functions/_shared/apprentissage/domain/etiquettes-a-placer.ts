@@ -1,6 +1,6 @@
 import type { ExerciceClasser, ExerciceOrdre, Groupe } from "../../catalogue/domain/index.ts";
 import { CleDeQuestion } from "./cle-de-question.ts";
-import { EtiquetteInconnue, GroupeInconnu, PasDeQuestionEnCours } from "./erreurs.ts";
+import { EtiquetteDejaPlacee, EtiquetteInconnue, GroupeInconnu, PasDeQuestionEnCours } from "./erreurs.ts";
 import { QuestionAPlacer } from "./question-a-placer.ts";
 import type { AideDonnee } from "./question-jouee.ts";
 import type { Placement, ResultatDeReponse } from "./reponse.ts";
@@ -9,21 +9,27 @@ const RELANCES = ["Oui ! Et après ?", "Bien ! Et ensuite ?", "Super ! La suite 
 const AIDE_DU_DEBUT = "Ce n'est pas le début. Lequel vient en premier ?";
 const AIDE_DE_LA_SUITE = "Pas encore celui-là. Lequel vient juste après ?";
 
+export type EtiquettePosee = Readonly<{ texte: string; groupe?: string }>;
+
 export abstract class EtiquettesAPlacer {
   private restantes: string[];
+  private posees: EtiquettePosee[] = [];
   private derniereAide: string | undefined;
   private dernierResultat: ResultatDeReponse | undefined;
 
-  protected constructor(private readonly plateau: readonly string[], readonly questions: readonly QuestionAPlacer[]) {
-    this.restantes = [...plateau];
+  protected constructor(
+    private readonly etiquettesMelangees: readonly string[],
+    readonly questions: readonly QuestionAPlacer[],
+  ) {
+    this.restantes = [...etiquettesMelangees];
   }
 
-  static pourClasser(exercice: ExerciceClasser, plateau: readonly string[]): EtiquettesAPlacer {
-    return new EtiquettesDeClasser(exercice, plateau);
+  static pourClasser(exercice: ExerciceClasser, etiquettesMelangees: readonly string[]): EtiquettesAPlacer {
+    return new EtiquettesDeClasser(exercice, etiquettesMelangees);
   }
 
-  static pourOrdonner(exercice: ExerciceOrdre, plateau: readonly string[]): EtiquettesAPlacer {
-    return new EtiquettesDOrdre(exercice, plateau);
+  static pourOrdonner(exercice: ExerciceOrdre, etiquettesMelangees: readonly string[]): EtiquettesAPlacer {
+    return new EtiquettesDOrdre(exercice, etiquettesMelangees);
   }
 
   static questionsDeClasser(exercice: ExerciceClasser): QuestionAPlacer[] {
@@ -46,8 +52,12 @@ export abstract class EtiquettesAPlacer {
     return [...this.restantes];
   }
 
+  etiquettesPosees(): EtiquettePosee[] {
+    return [...this.posees];
+  }
+
   tirage(): string[] {
-    return [...this.plateau];
+    return [...this.etiquettesMelangees];
   }
 
   get nombreReussies(): number {
@@ -56,11 +66,18 @@ export abstract class EtiquettesAPlacer {
 
   placer(placement: Placement): ResultatDeReponse {
     const position = this.restantes.indexOf(placement.etiquette);
-    if (position === -1) throw new EtiquetteInconnue(placement.etiquette);
+    if (position === -1) throw this.etiquetteHorsDesRestantes(placement.etiquette);
     const question = this.questionVisee(placement);
     const estJuste = this.estBienPlacee(question, placement);
     question.enregistrer(placement, estJuste);
-    if (estJuste) this.restantes.splice(position, 1);
+    if (estJuste) {
+      this.restantes.splice(position, 1);
+      this.posees.push(
+        question.groupe === undefined
+          ? { texte: question.etiquette }
+          : { texte: question.etiquette, groupe: question.groupe },
+      );
+    }
     this.derniereAide = estJuste ? undefined : this.aideApresErreur(question, placement);
     this.dernierResultat = estJuste ? "juste" : "fausse";
     return this.dernierResultat;
@@ -70,6 +87,8 @@ export abstract class EtiquettesAPlacer {
     const question = this.questionPourJeNeSaisPas(etiquette);
     return question.direJeNeSaisPas(this.bonneReponseDe(question));
   }
+
+  abstract etiquetteViseeParJeNeSaisPas(choisie?: string): string | undefined;
 
   aideApresLaDerniereErreur(): string | undefined {
     return this.derniereAide;
@@ -82,6 +101,11 @@ export abstract class EtiquettesAPlacer {
   relanceApresLaDerniereReponse(): string | undefined {
     if (this.dernierResultat !== "juste" || this.restantes.length === 0) return undefined;
     return this.relanceApresUneBonneEtiquette(this.nombreReussies);
+  }
+
+  protected etiquetteHorsDesRestantes(etiquette: string): Error {
+    const estDeLExercice = this.questions.some((question) => question.etiquette === etiquette);
+    return estDeLExercice ? new EtiquetteDejaPlacee(etiquette) : new EtiquetteInconnue(etiquette);
   }
 
   protected abstract questionVisee(placement: Placement): QuestionAPlacer;
@@ -100,8 +124,8 @@ export abstract class EtiquettesAPlacer {
 }
 
 class EtiquettesDeClasser extends EtiquettesAPlacer {
-  constructor(private readonly exercice: ExerciceClasser, plateau: readonly string[]) {
-    super(plateau, EtiquettesAPlacer.questionsDeClasser(exercice));
+  constructor(private readonly exercice: ExerciceClasser, etiquettesMelangees: readonly string[]) {
+    super(etiquettesMelangees, EtiquettesAPlacer.questionsDeClasser(exercice));
   }
 
   protected questionVisee(placement: Placement): QuestionAPlacer {
@@ -118,9 +142,14 @@ class EtiquettesDeClasser extends EtiquettesAPlacer {
     return question.groupe === placement.groupe;
   }
 
+  override etiquetteViseeParJeNeSaisPas(choisie?: string): string | undefined {
+    return choisie ?? this.etiquettesAPlacer()[0];
+  }
+
   protected questionPourJeNeSaisPas(etiquette: string | undefined): QuestionAPlacer {
-    const visee = etiquette ?? this.etiquettesAPlacer()[0];
-    if (visee === undefined || !this.etiquettesAPlacer().includes(visee)) throw new EtiquetteInconnue(String(visee));
+    const visee = this.etiquetteViseeParJeNeSaisPas(etiquette);
+    if (visee === undefined) throw new EtiquetteInconnue(String(visee));
+    if (!this.etiquettesAPlacer().includes(visee)) throw this.etiquetteHorsDesRestantes(visee);
     const question = this.questions.find((candidate) => !candidate.reussie && candidate.etiquette === visee);
     if (!question) throw new EtiquetteInconnue(visee);
     return question;
@@ -149,8 +178,8 @@ class EtiquettesDeClasser extends EtiquettesAPlacer {
 }
 
 class EtiquettesDOrdre extends EtiquettesAPlacer {
-  constructor(exercice: ExerciceOrdre, plateau: readonly string[]) {
-    super(plateau, EtiquettesAPlacer.questionsDOrdre(exercice));
+  constructor(exercice: ExerciceOrdre, etiquettesMelangees: readonly string[]) {
+    super(etiquettesMelangees, EtiquettesAPlacer.questionsDOrdre(exercice));
   }
 
   protected questionVisee(): QuestionAPlacer {
@@ -161,6 +190,10 @@ class EtiquettesDOrdre extends EtiquettesAPlacer {
 
   protected estBienPlacee(question: QuestionAPlacer, placement: Placement): boolean {
     return question.etiquette === placement.etiquette;
+  }
+
+  override etiquetteViseeParJeNeSaisPas(): undefined {
+    return undefined;
   }
 
   protected questionPourJeNeSaisPas(): QuestionAPlacer {

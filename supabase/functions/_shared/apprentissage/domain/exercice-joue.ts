@@ -1,5 +1,5 @@
 import type { Exercice, Segment } from "../../catalogue/domain/index.ts";
-import { EtiquettesAPlacer } from "./etiquettes-a-placer.ts";
+import { type EtiquettePosee, EtiquettesAPlacer } from "./etiquettes-a-placer.ts";
 import { PasDeQuestionEnCours } from "./erreurs.ts";
 import { nombreDeQuestions } from "./nombre-de-questions.ts";
 import { type QuestionJouee, questionsJoueesAvec } from "./question-jouee.ts";
@@ -53,6 +53,14 @@ export class ExerciceJoue {
 
   etiquettesAPlacer(): string[] {
     return this.contenu.etiquettes?.etiquettesAPlacer() ?? [];
+  }
+
+  etiquettesPosees(): EtiquettePosee[] {
+    return this.contenu.etiquettes?.etiquettesPosees() ?? [];
+  }
+
+  etiquetteViseeParJeNeSaisPas(choisie?: string): string | undefined {
+    return this.contenu.etiquettes?.etiquetteViseeParJeNeSaisPas(choisie);
   }
 
   texteATrous(): SegmentDuTexteATrous[] {
@@ -128,11 +136,11 @@ export class ExerciceJoue {
 function contenuDe(exercice: Exercice, tireur: Tireur): Contenu {
   switch (exercice.type) {
     case "classer": {
-      const plateau = tireur.plateau(exercice.items.map((item) => item.texte));
-      return { etiquettes: EtiquettesAPlacer.pourClasser(exercice, plateau) };
+      const etiquettes = tireur.etiquettesMelangees(exercice.items.map((item) => item.texte));
+      return { etiquettes: EtiquettesAPlacer.pourClasser(exercice, etiquettes) };
     }
     case "ordre":
-      return { etiquettes: EtiquettesAPlacer.pourOrdonner(exercice, tireur.plateau(exercice.elements)) };
+      return { etiquettes: EtiquettesAPlacer.pourOrdonner(exercice, tireur.etiquettesMelangees(exercice.elements)) };
     case "trous":
       return { questionsAChoix: questionsJoueesAvec(exercice, tireur), segments: exercice.segments };
     default:

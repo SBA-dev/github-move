@@ -8,7 +8,7 @@ const NOMBRE_DE_MOTS_EN_PLUS = 2;
 export interface Tireur {
   choix(choix: readonly string[], bonneReponse: string): ChoixProposes;
   trou(motAttendu: string, candidats: readonly string[]): ChoixProposes;
-  plateau(etiquettes: readonly string[]): string[];
+  etiquettesMelangees(etiquettes: readonly string[]): string[];
 }
 
 export function tireurAuHasard(hasard: Hasard): Tireur {
@@ -16,7 +16,7 @@ export function tireurAuHasard(hasard: Hasard): Tireur {
     choix: (choix, bonneReponse) => ChoixProposes.proposer(choix, bonneReponse, hasard),
     trou: (motAttendu, candidats) =>
       ChoixProposes.proposer([motAttendu, ...motsEnPlus(candidats, hasard)], motAttendu, hasard),
-    plateau: (etiquettes) => melanger(etiquettes, hasard),
+    etiquettesMelangees: (etiquettes) => melanger(etiquettes, hasard),
   };
 }
 
@@ -33,7 +33,7 @@ export function tireurSelonLesTirages(tirages: Iterator<readonly string[]>): Tir
       if (!estUnTirageDeTrou(tirage, motAttendu, candidats)) throw new TirageInvalide();
       return ChoixProposes.depuisTirage(tirage, motAttendu, tirage);
     },
-    plateau: (etiquettes) => {
+    etiquettesMelangees: (etiquettes) => {
       const tirage = prochainTirage();
       if (!memesEtiquettes(etiquettes, tirage)) throw new TirageInvalide();
       return [...tirage];

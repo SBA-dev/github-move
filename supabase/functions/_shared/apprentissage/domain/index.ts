@@ -8,6 +8,7 @@ export { ChoixProposes } from "./choix-proposes.ts";
 export {
   BonneReponseAbsenteDesChoix,
   ChoixInconnu,
+  EtiquetteDejaPlacee,
   EtiquetteInconnue,
   ExerciceIntrouvable,
   GroupeInconnu,

@@ -154,6 +154,11 @@ export class Seance {
     return question instanceof QuestionAPlacer ? question.etiquette : undefined;
   }
 
+  etiquetteDeClasserALaQuestion(rang: number): string | undefined {
+    const question = this.questions()[rang];
+    return question instanceof QuestionAPlacer && question.type === "classer" ? question.etiquette : undefined;
+  }
+
   erreurs(): number {
     return this.questions().reduce((somme, question) => somme + question.erreurs, 0);
   }
