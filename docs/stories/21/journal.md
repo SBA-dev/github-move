@@ -21,3 +21,4 @@
   L'erreur de lecture reste `LeconMalFormee` (seule erreur de lecture du Catalogue ; le modèle disait `ExerciceMalForme`).
   Bibliothèque entière relue par `lireLecon` : 265 leçons, 0 refus.
 - 18:42 · Revue intermédiaire (delta `5a31eae..b84171d`) : À CORRIGER, 1 bloquant (règle « énoncé du problème requis » sans test) → tests de caractérisation (`4ba8059`). Non bloquants : typage des valeurs connues (refactor), modèle à aligner sur `LeconMalFormee`, « problème en barres » à ajouter au glossaire, `docs/format-lecons.md` à compléter (au câblage).
+- 18:55 · Re-revue du delta `b84171d..b1fd7a1` : **APPROUVÉ**. Dernier commit relu : `b1fd7a1` (départ du delta suivant).
