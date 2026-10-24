@@ -156,6 +156,10 @@ const enonce = "Combien ?";
 const noms = ["Léa", "Tom"];
 
 const problemesImpossibles: ReadonlyArray<[string, unknown]> = [
+  ["un énoncé du problème absent", { parties: [4, 2], tout: null }],
+  ["un énoncé du problème vide", { enonce: "", parties: [4, 2], tout: null }],
+  ["une aide qui n'est pas un texte", { enonce, parties: [4, 2], tout: null, aide: 3 }],
+  ["une phrase réponse qui n'est pas un texte", { enonce, parties: [4, 2], tout: null, phrase: 3 }],
   ["parties et tout sans valeur cherchée", { enonce, parties: [4, 2], tout: 6 }],
   ["parties et tout avec deux valeurs cherchées", { enonce, parties: [4, null], tout: null }],
   ["comparaison sans valeur cherchée", { type: "comparaison", enonce, grand: 10, petit: 6, ecart: 4, noms }],

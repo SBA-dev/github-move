@@ -44,6 +44,8 @@ Deno.test("un exercice « boite » donne pour chaque item son sens, sa réponse 
 });
 
 const itemsImpossibles: ReadonlyArray<[string, unknown]> = [
+  ["un nombre de départ absent", { op: "+", b: 2 }],
+  ["un nombre de jetons absent", { a: 2, op: "+" }],
   ["un retrait plus grand que le contenu de la boîte", { a: 3, op: "-", b: 5 }],
   ["un nombre de départ négatif", { a: -1, op: "+", b: 2 }],
   ["un nombre de jetons négatif", { a: 2, op: "+", b: -1 }],
