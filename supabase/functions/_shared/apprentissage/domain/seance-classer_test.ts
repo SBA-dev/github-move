@@ -69,13 +69,21 @@ Deno.test("l'aide de l'étiquette passe avant l'aide par défaut", () => {
   assertEquals(seance.aideApresLaDerniereErreur(), "La baleine respire avec des poumons.");
 });
 
-Deno.test("la félicitation est dite une bonne étiquette sur deux", () => {
+Deno.test("après chaque bonne étiquette d'un classement, la félicitation est due une fois sur deux", () => {
   const seance = seanceCommencee(leconDeClasserLesSons());
 
   seance.repondre(Reponse.placement("loup", "g-ou"));
-  const apresLaPremiere = seance.felicitationApresLaDerniereReponse();
+  const apresLaPremiere = seance.paroleDueApresLaDerniereReponse();
   seance.repondre(Reponse.placement("pont", "g-on"));
-  const apresLaSeconde = seance.felicitationApresLaDerniereReponse();
+  const apresLaSeconde = seance.paroleDueApresLaDerniereReponse();
 
-  assertEquals([apresLaPremiere, apresLaSeconde], [true, false]);
+  assertEquals([apresLaPremiere, apresLaSeconde], ["felicitationUneFoisSurDeux", "felicitationUneFoisSurDeux"]);
+});
+
+Deno.test("après une étiquette fausse d'un classement, aucune parole n'est due", () => {
+  const seance = seanceCommencee(leconDeClasserLesSons());
+
+  seance.repondre(Reponse.placement("loup", "g-on"));
+
+  assertEquals(seance.paroleDueApresLaDerniereReponse(), undefined);
 });

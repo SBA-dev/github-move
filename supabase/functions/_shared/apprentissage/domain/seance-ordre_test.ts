@@ -6,8 +6,6 @@ import {
 } from "../test_utils/lecons-de-classer-et-ordre.ts";
 import { Reponse } from "./reponse.ts";
 
-const RELANCES = ["Oui ! Et après ?", "Bien ! Et ensuite ?", "Super ! La suite ?"];
-
 Deno.test("l'étiquette qui vient en premier est juste et prend la première place", () => {
   const seance = seanceCommencee(leconDOrdreDuMot());
 
@@ -64,20 +62,28 @@ Deno.test("deux éléments de même texte sont interchangeables", () => {
   assertEquals(seance.erreurs(), 0);
 });
 
-Deno.test("après une bonne étiquette qui n'est pas la dernière, le personnage guide demande la suite", () => {
+Deno.test("après une bonne étiquette qui n'est pas la dernière, une relance est due", () => {
   const seance = seanceCommencee(leconDOrdreDuMot());
 
   seance.repondre(Reponse.placement("do"));
 
-  assertEquals(RELANCES.includes(seance.relanceApresLaDerniereReponse() ?? ""), true);
+  assertEquals(seance.paroleDueApresLaDerniereReponse(), "relance");
 });
 
-Deno.test("après la dernière étiquette, le personnage guide ne demande pas la suite", () => {
+Deno.test("après la dernière étiquette, une félicitation est due", () => {
   const seance = seanceCommencee(leconDOrdreDuMot());
   seance.repondre(Reponse.placement("do"));
   seance.repondre(Reponse.placement("mi"));
 
   seance.repondre(Reponse.placement("no"));
 
-  assertEquals(seance.relanceApresLaDerniereReponse(), undefined);
+  assertEquals(seance.paroleDueApresLaDerniereReponse(), "felicitation");
+});
+
+Deno.test("après une étiquette fausse d'un ordre, aucune parole n'est due", () => {
+  const seance = seanceCommencee(leconDOrdreDuMot());
+
+  seance.repondre(Reponse.placement("mi"));
+
+  assertEquals(seance.paroleDueApresLaDerniereReponse(), undefined);
 });
