@@ -9,3 +9,7 @@ Branche `feature/58-retirer-la-page-de-demonstration`, partie de `main` `c7cabc0
 - 21:40 UTC — Étape 1 (domain-modeler) **sautée** : la story ne crée ni concept ni règle métier. Elle retire un écran de test
   et déplace des scénarios existants vers des écrans réels (séance, « Qui joue ? »). La porte de test des E2E est un
   choix d'outillage, pas un concept du domaine : il sera tranché à la ⛔ n°1 (question #58.1) puis consigné en décision.
+- 21:32 UTC — RELIS #64 : #27 (≈ 50 scénarios, vrai profil via `profil-reel.ts` pour `@issue-27`) et #65 (vrai profil pour
+  `@issue-65`, et un scénario 65.15 joué avec le profil préparé **sans compte parent**) utilisent les steps « profil enfant
+  préparé ». Contrainte de transition : garder ces steps, leur branchement `@issue-25/27/65`, et la clé
+  `savanturier:profil-prepare` lisible en développement.
