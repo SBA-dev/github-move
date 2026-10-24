@@ -42,7 +42,10 @@ export function tireurSelonLesTirages(tirages: Iterator<readonly string[]>): Tir
 }
 
 function memesEtiquettes(attendues: readonly string[], tirage: readonly string[]): boolean {
-  return [...attendues].sort().join("\n") === [...tirage].sort().join("\n");
+  const attenduesTriees = [...attendues].sort();
+  const tirageTrie = [...tirage].sort();
+  return attenduesTriees.length === tirageTrie.length &&
+    attenduesTriees.every((etiquette, rang) => etiquette === tirageTrie[rang]);
 }
 
 function estUnTirageDeTrou(tirage: readonly string[], motAttendu: string, candidats: readonly string[]): boolean {

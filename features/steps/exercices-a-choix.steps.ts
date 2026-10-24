@@ -102,6 +102,8 @@ type EtatDesChoix = {
   ordre: string[] | undefined;
   reussiesAvant: number;
   paroles: number;
+  /** Nombres forgés pour le tirage du début de séance (autres mots d'un trou), quand l'ordre des choix ne suffit pas. */
+  tirage: number[] | undefined;
 };
 
 const etats = new WeakMap<Page, EtatDesChoix>();
@@ -110,7 +112,7 @@ const tiragesInstalles = new WeakSet<Page>();
 export function etatDesChoix(page: Page): EtatDesChoix {
   let courant = etats.get(page);
   if (!courant) {
-    courant = { demarrage: undefined, exerciceUnique: undefined, ordre: undefined, reussiesAvant: 0, paroles: 0 };
+    courant = { demarrage: undefined, exerciceUnique: undefined, ordre: undefined, reussiesAvant: 0, paroles: 0, tirage: undefined };
     etats.set(page, courant);
   }
   return courant;
@@ -139,8 +141,13 @@ async function installerLeTirage(page: Page) {
 
 /** Les nombres à donner au mélange (Fisher-Yates, du dernier rang au deuxième) pour obtenir l'ordre voulu. */
 function nombresDuTirage(depart: readonly string[], voulu: readonly string[]): number[] {
+  return nombresPourMelanger(depart, (melange) => voulu.every((texte, i) => texte === melange[i]));
+}
+
+/** Les nombres à donner à un mélange (Fisher-Yates) de `depart` pour que le résultat vérifie `convient`. */
+export function nombresPourMelanger(depart: readonly string[], convient: (melange: readonly string[]) => boolean): number[] {
   const chercher = (rang: number, tableau: string[], nombres: number[]): number[] | undefined => {
-    if (rang === 0) return tableau.every((texte, i) => texte === voulu[i]) ? nombres : undefined;
+    if (rang === 0) return convient(tableau) ? nombres : undefined;
     for (let j = 0; j <= rang; j++) {
       const copie = [...tableau];
       [copie[rang], copie[j]] = [copie[j] as string, copie[rang] as string];
@@ -150,19 +157,19 @@ function nombresDuTirage(depart: readonly string[], voulu: readonly string[]): n
     return undefined;
   };
   const nombres = chercher(depart.length - 1, [...depart], []);
-  if (!nombres) throw new Error(`L'ordre ${voulu.join(", ")} est impossible à tirer`);
+  if (!nombres) throw new Error(`Aucun tirage ne donne le mélange voulu de ${depart.join(", ")}`);
   return nombres;
 }
 
-async function lancer(page: Page, lecon: LeconBrute, titreDeLExercice?: string) {
+export async function lancer(page: Page, lecon: LeconBrute, titreDeLExercice?: string) {
   const choix = etatDesChoix(page);
   await reappliquerLAppareil(page);
   await installerLeTirage(page);
   await ouvrirLaPageDeLaLecon(page, lecon.titre);
   choix.exerciceUnique = titreDeLExercice === undefined ? undefined : positionDeLExercice(lecon, titreDeLExercice);
-  if (choix.ordre) {
-    const depart = [...new Set(questionsDeLaLecon(lecon)[0]?.choix ?? [])];
-    await page.evaluate(([cle, nombres]) => Reflect.set(window, cle as string, nombres), [FILE_DU_TIRAGE, nombresDuTirage(depart, choix.ordre)]);
+  const nombresForges = choix.tirage ?? (choix.ordre && nombresDuTirage([...new Set(questionsDeLaLecon(lecon)[0]?.choix ?? [])], choix.ordre));
+  if (nombresForges) {
+    await page.evaluate(([cle, nombres]) => Reflect.set(window, cle as string, nombres), [FILE_DU_TIRAGE, nombresForges]);
   }
   if (titreDeLExercice === undefined) await commencerLaSeanceComplete(page);
   else await commencerSeulementLExercice(page, titreDeLExercice);
@@ -669,8 +676,13 @@ Then(
 Then(
   /^Noisette dit « ([^«»]+) », « ([^«»]+) » ou « ([^«»]+) »$/,
   async ({ page }, a: string, b: string, c: string) => {
-    await finirLaParoleJusqua(page, { type: "parole", nature: "annonce" });
-    expect([a, b, c].map(normaliser)).toContain(normaliser((await bulle(page).textContent()) ?? ""));
+    // L'annonce d'un exercice suivant, ou la relance de l'ordre : on finit de lire ce qui précède, jamais la parole attendue.
+    const attendues = [a, b, c].map(normaliser);
+    await expect.poll(async () => {
+      if (attendues.includes(normaliser((await bulle(page).textContent()) ?? ""))) return true;
+      await terminerLaLecture(page);
+      return false;
+    }, { intervals: [100] }).toBe(true);
   },
 );
 
