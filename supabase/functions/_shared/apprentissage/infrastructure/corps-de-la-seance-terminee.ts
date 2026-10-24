@@ -16,21 +16,21 @@ const TOLERANCE_D_HORLOGE_EN_MS = 5 * 60 * 1000;
 
 type Objet = Record<string, unknown>;
 
-function objet(valeur: unknown, champ: string): Objet {
+export function objet(valeur: unknown, champ: string): Objet {
   if (typeof valeur !== "object" || valeur === null || Array.isArray(valeur)) {
     throw new EntreeInvalide(`Le champ « ${champ} » est mal formé.`);
   }
   return valeur as Objet;
 }
 
-function listeDe(valeur: unknown, champ: string, auPlus: number): unknown[] {
+export function listeDe(valeur: unknown, champ: string, auPlus: number): unknown[] {
   if (!Array.isArray(valeur) || valeur.length > auPlus) {
     throw new EntreeInvalide(`Le champ « ${champ} » doit être une liste d'au plus ${auPlus} éléments.`);
   }
   return valeur;
 }
 
-function texteCourt(valeur: unknown, champ: string): string {
+export function texteCourt(valeur: unknown, champ: string): string {
   if (typeof valeur !== "string" || valeur.length > CARACTERES_AU_PLUS) {
     throw new EntreeInvalide(`Le champ « ${champ} » contient un texte invalide.`);
   }
@@ -53,7 +53,7 @@ function lireLesTirages(corps: Objet): string[][] {
   );
 }
 
-function lireUneReponse(brute: unknown): ReponseDonnee {
+export function lireUneReponse(brute: unknown): ReponseDonnee {
   const reponse = objet(brute, "reponses");
   const cles = Object.keys(reponse);
   if (cles.length === 1 && cles[0] === "choix") return Reponse.choix(texteCourt(reponse.choix, "reponses"));
@@ -97,7 +97,7 @@ function lireLesReponses(corps: Objet): ReponseDonnee[][] {
   );
 }
 
-function lireLaDateDeFin(valeur: unknown, maintenant: Date): Date {
+export function lireLaDateDeFin(valeur: unknown, maintenant: Date): Date {
   const date = typeof valeur === "string" && valeur !== "" ? new Date(valeur) : new Date(NaN);
   if (Number.isNaN(date.getTime())) throw new EntreeInvalide("Le champ « termineeLe » doit être une date ISO valide.");
   if (date.getTime() > maintenant.getTime() + TOLERANCE_D_HORLOGE_EN_MS) {
