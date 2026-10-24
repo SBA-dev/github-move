@@ -55,7 +55,7 @@ Bloc C, paroles de l'écran :
 | Mesure | Valeur |
 |---|---|
 | Durée, du lancement au `PRÊTE À MERGER` | ≈ 2 h (20:45 → 22:40 UTC) ; merge à venir |
-| Temps passé à attendre | PO : ≈ 10 min (CADRAGE PRÊT 21:08 → réponses 20:55-20:56 UTC côté responsable, déjà reçues à la relecture) ; verrou : 0 ; `main` : 0 (intégration de #21 sans attente) ; une coupure de session (limite d'utilisation de l'API, ≈ 10 min, 21:10 → 21:19) |
+| Temps passé à attendre | PO : ≈ 5 min (CADRAGE PRÊT vers 20:50, réponses 20:55 et 20:56 UTC) ; verrou : 0 ; `main` : 0 (intégration de #21 sans attente) ; une coupure de session (limite d'utilisation de l'API, ≈ 10 min, 21:10 → 21:19) |
 | Tokens et coût de la session | relevés par le responsable |
 | Cycles de review À CORRIGER | 1 (revue d'ensemble, cycle 1 : lectures en suite non interruptibles) ; revues intermédiaires A-B et C : APPROUVÉ au premier passage |
 | Cycles E2E KO | 1 (3 cas d'un même plan, scénario incohérent, corrigé) ; non-régression : 0 KO |
