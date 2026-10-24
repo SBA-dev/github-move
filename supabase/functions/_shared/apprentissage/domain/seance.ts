@@ -11,6 +11,7 @@ import {
   TirageEnTrop,
 } from "./erreurs.ts";
 import type { FluenceEnCours } from "./exercice-chronometre.ts";
+import type { VueAddition } from "./vue-d-addition.ts";
 import type { CalculEnCours } from "./question-de-calcul.ts";
 import { Etoiles } from "./etoiles.ts";
 import type { CleDeQuestion } from "./cle-de-question.ts";
@@ -127,6 +128,14 @@ export class Seance {
 
   calculEnCours(): CalculEnCours | undefined {
     return this.exerciceEnCours()?.calculEnCours();
+  }
+
+  additionEnCours(): VueAddition | undefined {
+    return this.exerciceEnCours()?.additionEnCours();
+  }
+
+  additionApresLaDerniereReponse(): VueAddition | undefined {
+    return this.dernierExerciceRepondu?.additionApresLaDerniereReponse();
   }
 
   fluenceEnCours(maintenant: Date): FluenceEnCours | undefined {

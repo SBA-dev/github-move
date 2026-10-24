@@ -12,6 +12,7 @@ import type { ParoleDue } from "./parole-due.ts";
 import type { QuestionSuivie } from "./question-suivie.ts";
 import type { AideDonnee } from "./question-jouee.ts";
 import type { Reponse, ResultatDeReponse } from "./reponse.ts";
+import type { VueAddition } from "./vue-d-addition.ts";
 import { enonceTire } from "./tirage-d-operations.ts";
 import type { Tireur } from "./tireur.ts";
 
@@ -56,6 +57,14 @@ export class ExerciceJoue {
   calculEnCours(): CalculEnCours | undefined {
     const question = this.questionPoseeEnCours();
     return question instanceof QuestionDeCalcul ? question.enCours() : undefined;
+  }
+
+  additionEnCours(): VueAddition | undefined {
+    return this.contenu.additions?.enCours();
+  }
+
+  additionApresLaDerniereReponse(): VueAddition | undefined {
+    return this.contenu.additions?.apresLaDerniereReponse();
   }
 
   fluenceEnCours(maintenant: Date): FluenceEnCours | undefined {
@@ -111,7 +120,9 @@ export class ExerciceJoue {
   }
 
   aideApresLaDerniereErreur(): string | undefined {
-    return this.contenu.etiquettes?.aideApresLaDerniereErreur() ?? this.aideDeLErreurDeCalcul;
+    return this.contenu.etiquettes?.aideApresLaDerniereErreur() ??
+      this.contenu.additions?.aideApresLaDerniereErreur() ??
+      this.aideDeLErreurDeCalcul;
   }
 
   paroleDueApresLaDerniereReponse(): ParoleDue | undefined {

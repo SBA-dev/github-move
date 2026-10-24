@@ -10,10 +10,13 @@ type ChiffreAPoser = Readonly<{ nombre: number; question: QuestionAPlacer }>;
 export class EtapePoser {
   private derniereAide: string | undefined;
 
-  private constructor(private readonly chiffres: readonly ChiffreAPoser[]) {}
+  private constructor(
+    private readonly nombres: readonly number[],
+    private readonly chiffres: readonly ChiffreAPoser[],
+  ) {}
 
   static pour(nombres: readonly number[]): EtapePoser {
-    return new EtapePoser(nombres.flatMap((nombre, indice) => questionsDuNombre(nombre, indice)));
+    return new EtapePoser(nombres, nombres.flatMap((nombre, indice) => questionsDuNombre(nombre, indice)));
   }
 
   get questions(): readonly QuestionAPlacer[] {
@@ -32,6 +35,21 @@ export class EtapePoser {
     const courant = this.chiffres.find(({ question }) => !question.reussie);
     if (!courant) throw new PasDeQuestionEnCours();
     return courant.nombre;
+  }
+
+  get consigne(): string {
+    return `Pose l'addition ${this.nombres.join(" + ")} : range chaque chiffre dans sa maison. ` +
+      "Le chiffre des unités va toujours dans la maison bleue, tout à droite.";
+  }
+
+  get invite(): string {
+    return `Range le nombre ${this.nombreCourant}`;
+  }
+
+  chiffresPoses(rang: Rang): string[] {
+    return this.chiffres
+      .filter(({ question }) => question.reussie && question.groupe === rang)
+      .map(({ question }) => question.etiquette);
   }
 
   chiffresAPoser(): string[] {

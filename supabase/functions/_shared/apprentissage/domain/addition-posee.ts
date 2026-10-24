@@ -12,7 +12,7 @@ export type ColonneDAdditionPosee = {
 
 export class AdditionPosee {
   private constructor(
-    private readonly nombres: readonly number[],
+    readonly nombres: readonly number[],
     readonly colonnes: readonly ColonneDAdditionPosee[],
   ) {}
 

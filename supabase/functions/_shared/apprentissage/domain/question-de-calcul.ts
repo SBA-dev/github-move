@@ -14,7 +14,7 @@ type ReponseDeCalcul = ReponseEnNombre | ReponseParChoix;
 export type CalculEnCours = Readonly<{
   carte: string;
   phrase: string;
-  mode: { genre: "choix"; choix: readonly string[] } | { genre: "clavierDeCristaux" };
+  mode: { genre: "choix"; choix: readonly string[]; ecartes: readonly string[] } | { genre: "clavierDeCristaux" };
   jeNeSaisPasPropose: boolean;
   reponseATaper?: string;
 }>;
@@ -91,7 +91,12 @@ export class QuestionDeCalcul implements QuestionPosee {
       phrase: phraseDuCalcul(this.operation),
       jeNeSaisPasPropose: !this.reussie && !this.bonneReponseMontree,
     };
-    if (this.auxChoix) return { ...base, mode: { genre: "choix", choix: this.auxChoix.choix.textes() } };
+    if (this.auxChoix) {
+      return {
+        ...base,
+        mode: { genre: "choix", choix: this.auxChoix.choix.textes(), ecartes: this.auxChoix.choix.ecartes() },
+      };
+    }
     const mode = { genre: "clavierDeCristaux" } as const;
     if (this.jeNeSaisPasDejaDit) return { ...base, mode, reponseATaper: String(this.operation.r) };
     return { ...base, mode };

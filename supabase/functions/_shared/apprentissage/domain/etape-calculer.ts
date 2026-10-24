@@ -2,7 +2,7 @@ import type { ColonneDAdditionPosee } from "./addition-posee.ts";
 import { CleDeQuestion } from "./cle-de-question.ts";
 import { PasDeQuestionEnCours } from "./erreurs.ts";
 import { choixAutourDuResultat, type ModeDeReponse } from "./mode-de-reponse.ts";
-import { QuestionDeCalcul } from "./question-de-calcul.ts";
+import { type CalculEnCours, QuestionDeCalcul } from "./question-de-calcul.ts";
 import type { QuestionSuivie } from "./question-suivie.ts";
 import type { Rang } from "./rangs-d-addition.ts";
 import type { ReponseEnNombre, ReponseParChoix, ResultatDeReponse } from "./reponse.ts";
@@ -15,6 +15,8 @@ const NOMS_DES_RANGS: Record<Rang, readonly [string, string]> = {
   centaines: ["centaine", "centaines"],
 };
 
+const MAISONS: Record<Rang, string> = { unites: "Unités", dizaines: "Dizaines", centaines: "Centaines" };
+
 type Retenues = Partial<Record<Rang, number>>;
 
 export class EtapeCalculer {
@@ -24,6 +26,7 @@ export class EtapeCalculer {
   private parole: string | undefined;
   private derniereAide: string | undefined;
   private readonly retenuesPosees: Retenues = {};
+  private readonly chiffresEcrits: Partial<Record<Rang, string>> = {};
 
   private constructor(
     private readonly nombres: readonly number[],
@@ -70,6 +73,15 @@ export class EtapeCalculer {
     return { ...this.retenuesPosees };
   }
 
+  chiffreEcrit(rang: Rang): string | undefined {
+    return this.chiffresEcrits[rang];
+  }
+
+  calculEnCours(): CalculEnCours | undefined {
+    if (this.terminee) return undefined;
+    return { ...this.questionEnCours.enCours(), phrase: this.phraseDeLaColonne(this.colonneEnCours) };
+  }
+
   get erreurs(): number {
     return this.questionsPosees.reduce((total, question) => total + question.erreurs, 0);
   }
@@ -102,6 +114,7 @@ export class EtapeCalculer {
     if (suivante) {
       this.avancerVers(colonne, suivante, somme);
     } else {
+      this.chiffresEcrits[colonne.rang] = String(somme);
       this.resultat = `${somme}${this.resultat}`;
       this.parole = `${this.nombres.join(" + ")} = ${this.resultat}.`;
     }
@@ -112,6 +125,7 @@ export class EtapeCalculer {
     const retenue = Math.floor(somme / 10);
     const chiffre = somme % 10;
     this.resultat = `${chiffre}${this.resultat}`;
+    this.chiffresEcrits[colonne.rang] = String(chiffre);
     if (retenue === 0) {
       this.parole = undefined;
       return;
@@ -128,6 +142,13 @@ export class EtapeCalculer {
   private termesDeLaColonne(colonne: ColonneDAdditionPosee): number[] {
     const retenue = this.retenuesPosees[colonne.rang] ?? 0;
     return retenue === 0 ? [...colonne.chiffres] : [retenue, ...colonne.chiffres];
+  }
+
+  private phraseDeLaColonne(colonne: ColonneDAdditionPosee): string {
+    const retenue = this.retenuesPosees[colonne.rang] ? ", sans oublier la retenue" : "";
+    return `Maison des ${MAISONS[colonne.rang]}${retenue} : combien font ${
+      this.termesDeLaColonne(colonne).join(" + ")
+    } ?`;
   }
 
   private poserLaQuestion(colonne: ColonneDAdditionPosee): QuestionDeCalcul {

@@ -9,14 +9,15 @@ import type { QuestionSuivie } from "./question-suivie.ts";
 import type { Reponse, ResultatDeReponse } from "./reponse.ts";
 import { enonceDUneAddition } from "./tirage-d-additions.ts";
 import type { Tireur } from "./tireur.ts";
-
-type AdditionEnJeu = Readonly<{ poser?: EtapePoser; calculer?: EtapeCalculer }>;
+import { type AdditionEnJeu, type VueAddition, vueDeLAddition } from "./vue-d-addition.ts";
 
 function questionsDeLAddition({ poser, calculer }: AdditionEnJeu): QuestionSuivie[] {
   return [...(poser?.questions ?? []), ...(calculer?.questions ?? [])];
 }
 
 export class AdditionsJouees {
+  private derniereReponse: { addition: AdditionEnJeu; etape: EtapePoser | EtapeCalculer } | undefined;
+
   private constructor(
     private readonly additions: readonly AdditionEnJeu[],
     private readonly additionsTirees: readonly (readonly number[])[],
@@ -28,6 +29,7 @@ export class AdditionsJouees {
     const additions = (exercice.operations ?? tirees).map((nombres) => {
       const addition = AdditionPosee.depuis(nombres);
       return {
+        addition,
         poser: exercice.etapes.includes("poser") ? addition.etapePoser() : undefined,
         calculer: exercice.etapes.includes("calculer") ? addition.etapeCalculer(mode, tireur) : undefined,
       };
@@ -53,8 +55,22 @@ export class AdditionsJouees {
     return this.additions.flatMap(({ calculer }) => calculer?.tirages() ?? []);
   }
 
+  enCours(): VueAddition | undefined {
+    const addition = this.additions.find((candidate) => !terminee(candidate));
+    return addition && vueDeLAddition(addition);
+  }
+
+  apresLaDerniereReponse(): VueAddition | undefined {
+    return this.derniereReponse && vueDeLAddition(this.derniereReponse.addition);
+  }
+
+  aideApresLaDerniereErreur(): string | undefined {
+    return this.derniereReponse?.etape.aideApresLaDerniereErreur();
+  }
+
   repondre(reponse: Reponse): ResultatDeReponse {
-    const etape = this.etapeEnCours();
+    const { addition, etape } = this.etapeEnCours();
+    this.derniereReponse = { addition, etape };
     if (etape instanceof EtapePoser) {
       if (reponse.genre !== "placement") throw new ReponseIncompatible(reponse.genre);
       return etape.placer(reponse);
@@ -64,15 +80,25 @@ export class AdditionsJouees {
   }
 
   direJeNeSaisPas(chiffre?: string): AideDonnee {
-    const etape = this.etapeEnCours();
+    const { etape } = this.etapeEnCours();
     return etape instanceof EtapePoser ? etape.direJeNeSaisPas(chiffre) : etape.questionEnCours.direJeNeSaisPas();
   }
 
-  private etapeEnCours(): EtapePoser | EtapeCalculer {
-    for (const { poser, calculer } of this.additions) {
-      if (poser && !poser.terminee) return poser;
-      if (calculer && !calculer.terminee) return calculer;
+  private etapeEnCours(): { addition: AdditionEnJeu; etape: EtapePoser | EtapeCalculer } {
+    for (const addition of this.additions) {
+      const etape = etapeNonTerminee(addition);
+      if (etape) return { addition, etape };
     }
     throw new PasDeQuestionEnCours();
   }
+}
+
+function etapeNonTerminee({ poser, calculer }: AdditionEnJeu): EtapePoser | EtapeCalculer | undefined {
+  if (poser && !poser.terminee) return poser;
+  if (calculer && !calculer.terminee) return calculer;
+  return undefined;
+}
+
+function terminee(addition: AdditionEnJeu): boolean {
+  return etapeNonTerminee(addition) === undefined;
 }
