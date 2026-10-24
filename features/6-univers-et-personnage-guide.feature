@@ -5,6 +5,10 @@ Fonctionnalité: Univers et personnage guide
   Je veux jouer dans l'univers que j'ai choisi, avec son personnage guide qui me parle et réagit
   Afin d'avoir envie de revenir réviser
 
+  « Léa commence à jouer » : Léa arrive sur son accueil, avec son personnage guide (#11).
+  Les réactions du personnage guide se vérifient dans une vraie séance, sur la question de test « Combien font 3 + 4 ? »
+  (choix « 6 », « 7 », « 8 » et « 9 », de réponse « 7 ») : « 7 » est une bonne réponse, « 8 » une erreur.
+
   Règle: Chaque univers a son personnage guide et son paysage
 
     Plan du Scénario: Dans l'univers « <univers> », le personnage guide est <personnage guide>
@@ -20,20 +24,6 @@ Fonctionnalité: Univers et personnage guide
         | Police              | Agente Mila      |
         | Pompiers            | Capitaine Sam    |
         | Danse               | Lili             |
-
-    Plan du Scénario: <personnage guide> se présente avec son titre et son royaume
-      Étant donné que Léa a un profil enfant préparé dans l'univers « <univers> »
-      Quand Léa commence à jouer
-      Alors <personnage guide> se présente comme « <titre> » de « <royaume> »
-
-      Exemples:
-        | univers             | personnage guide | titre                          | royaume                          |
-        | Princesses et fées  | Lumi             | la fée des nombres et des mots | le Royaume des Savanturiers      |
-        | Animaux de la forêt | Noisette         | l'écureuil savant              | la Forêt des Savanturiers        |
-        | Sports              | Coach Léo        | l'entraîneur des champions     | le Stade des Savanturiers        |
-        | Police              | Agente Mila      | la policière détective         | le Commissariat des Savanturiers |
-        | Pompiers            | Capitaine Sam    | le pompier courageux           | la Caserne des Savanturiers      |
-        | Danse               | Lili             | la danseuse étoile             | l'Opéra des Savanturiers         |
 
     Scénario: Deux univers différents donnent deux paysages et deux couleurs principales différents
       Étant donné que Léa a un profil enfant préparé dans l'univers « Danse »
@@ -67,31 +57,35 @@ Fonctionnalité: Univers et personnage guide
       Quand Léa commence à jouer
       Alors Noisette est content
 
+    @issue-58 @a-valider
     Scénario: Le personnage guide applaudit après une bonne réponse
-      Étant donné que Léa a un profil enfant préparé dans l'univers « Animaux de la forêt »
-      Et que Léa est sur la page de démonstration
-      Quand Léa donne une bonne réponse sur la page de démonstration
+      Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
+      Et que Léa joue la question de test « Combien font 3 + 4 ? »
+      Quand Léa répond « 7 »
       Alors Noisette applaudit en sautant
 
+    @issue-58 @a-valider
     Scénario: Le personnage guide réfléchit après une erreur
-      Étant donné que Léa a un profil enfant préparé dans l'univers « Animaux de la forêt »
-      Et que Léa est sur la page de démonstration
-      Quand Léa fait une erreur sur la page de démonstration
+      Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
+      Et que Léa joue la question de test « Combien font 3 + 4 ? »
+      Quand Léa répond « 8 »
       Alors Noisette réfléchit en penchant la tête
 
+    @issue-58 @a-valider
     Scénario: Après avoir réfléchi, le personnage guide applaudit la bonne réponse suivante
-      Étant donné que Léa a un profil enfant préparé dans l'univers « Animaux de la forêt »
-      Et que Léa est sur la page de démonstration
-      Et que Noisette réfléchit après une erreur de Léa
-      Quand Léa donne une bonne réponse sur la page de démonstration
+      Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
+      Et que Léa joue la question de test « Combien font 3 + 4 ? »
+      Et que Léa a répondu « 8 »
+      Quand Léa répond « 7 »
       Alors Noisette applaudit en sautant
 
   Règle: Le personnage guide félicite avec ses propres expressions ou une félicitation commune, et encourage sans jamais punir
 
+    @issue-58 @a-valider
     Plan du Scénario: Après une bonne réponse, <personnage guide> dit une félicitation commune ou une de ses expressions
-      Étant donné que Léa a un profil enfant préparé dans l'univers « <univers> »
-      Et que Léa est sur la page de démonstration
-      Quand Léa donne une bonne réponse sur la page de démonstration
+      Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « <univers> »
+      Et que Léa joue la question de test « Combien font 3 + 4 ? »
+      Quand Léa répond « 7 »
       Alors <personnage guide> dit une félicitation commune ou l'une de ses expressions : <expressions>
       Mais jamais l'expression d'un autre personnage guide
 
@@ -104,16 +98,18 @@ Fonctionnalité: Univers et personnage guide
         | Pompiers            | Capitaine Sam    | « Mission accomplie ! », « Pin-pon, bravo ! », « Sauvetage réussi ! »  |
         | Danse               | Lili             | « Et hop, une pirouette ! », « En rythme, bravo ! », « Quelle grâce ! » |
 
+    @issue-58 @a-valider
     Scénario: Les félicitations communes sont les mêmes dans tous les univers
-      Étant donné que Léa a un profil enfant préparé dans l'univers « Police »
-      Et que Léa est sur la page de démonstration
-      Quand Léa donne une bonne réponse sur la page de démonstration
+      Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Police »
+      Et que Léa joue une leçon de test de deux questions à quatre choix
+      Quand Léa répond « 7 »
       Alors la félicitation commune dite par Agente Mila fait partie de « Bravo ! », « Super ! », « Ouah, bien joué ! », « Exactement ! », « Génial ! », « Tu gères ! », « Parfait ! », « Oui, c'est ça ! »
 
+    @issue-58 @a-valider
     Scénario: Après une erreur, le personnage guide encourage sans punir
-      Étant donné que Léa a un profil enfant préparé dans l'univers « Sports »
-      Et que Léa est sur la page de démonstration
-      Quand Léa fait une erreur sur la page de démonstration
+      Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Sports »
+      Et que Léa joue la question de test « Combien font 3 + 4 ? »
+      Quand Léa répond « 8 »
       Alors Coach Léo dit un encouragement parmi « Oups, presque ! », « Hmm, pas tout à fait… », « Pas grave, on réessaie ! », « Ah, celle-là est piégeuse ! », « Presque ! Regarde bien. »
 
   Règle: L'en-tête donne toujours accès à l'accueil, au son, au retour et à l'espace parent, et montre l'enfant en cours
@@ -176,19 +172,21 @@ Fonctionnalité: Univers et personnage guide
       Quand Léa parcourt l'en-tête au clavier
       Alors elle atteint tour à tour l'accueil, le choix Son/Muet et l'espace parent
 
+    @issue-58 @a-valider
     Scénario: Avec les mouvements réduits, le personnage guide ne saute pas mais son visage montre qu'il applaudit
       Étant donné que l'appareil demande des mouvements réduits
-      Et que Léa a un profil enfant préparé dans l'univers « Animaux de la forêt »
-      Et que Léa est sur la page de démonstration
-      Quand Léa donne une bonne réponse sur la page de démonstration
+      Et que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
+      Et que Léa joue la question de test « Combien font 3 + 4 ? »
+      Quand Léa répond « 7 »
       Alors le visage de Noisette montre qu'il applaudit
       Mais Noisette ne saute pas
 
+    @issue-58 @a-valider
     Scénario: Avec les mouvements réduits, le personnage guide ne penche pas la tête mais son visage montre qu'il réfléchit
       Étant donné que l'appareil demande des mouvements réduits
-      Et que Léa a un profil enfant préparé dans l'univers « Animaux de la forêt »
-      Et que Léa est sur la page de démonstration
-      Quand Léa fait une erreur sur la page de démonstration
+      Et que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
+      Et que Léa joue la question de test « Combien font 3 + 4 ? »
+      Quand Léa répond « 8 »
       Alors le visage de Noisette montre qu'il réfléchit
       Mais Noisette ne penche pas la tête
 

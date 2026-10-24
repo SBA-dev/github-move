@@ -13,3 +13,8 @@ Branche `feature/58-retirer-la-page-de-demonstration`, partie de `main` `c7cabc0
   `@issue-65`, et un scénario 65.15 joué avec le profil préparé **sans compte parent**) utilisent les steps « profil enfant
   préparé ». Contrainte de transition : garder ces steps, leur branchement `@issue-25/27/65`, et la clé
   `savanturier:profil-prepare` lisible en développement.
+- 21:55 UTC — Étape 2 (po-acceptance) : 27 scénarios réécrits, 7 supprimés, 5 ajoutés (`@issue-58 @a-valider`), tableau de
+  correspondance dans `acceptance.md`, questions #58.1 à #58.11. Point marquant : #58.8 (la consigne d'un exercice disparaît
+  après sa lecture, et aussitôt sans voix). Cause du rouge de #8 : l'étape « Léa relance Savanturier » de `voix.steps.ts`
+  ouvre `/demonstration`.
+- CADRAGE PRÊT publié sur #58, APPRIS sur la transition de la porte de test. Attente de la ⛔ n°1.
