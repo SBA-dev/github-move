@@ -38,3 +38,5 @@
 - PO : option A, le 5ᵉ essai raté répond « Trop d'essais. Réessaie dans une heure. » (les scénarios font foi). Cycle test-writer → implementer.
 - 5ᵉ raté → Trop d'essais : RED 777e5e9, fix 4bb940e, redéployé. 1106 verts. Relance E2E #72 et review du delta.
 - Review du delta : À CORRIGER (B1 helper rater des steps attend 401 au 5ᵉ raté ; B2 fixtures.ts : SUFFIXE_E2E absent de main, main utilise JETON_DU_WORKER (d0f0b5b) → reprendre la version de main). Transmis à l'e2e-tester en cours.
+- E2E après corrections : a5ea479, #72 168/168, non-régression 922/924 (2 flaky #19 verts en relance), PWA 26/28 (échec #8 « nouvelle version » reproduit sur main, hors #72). @wip retiré.
+- Merge de origin/main (118 commits, dont #20) : 3632694 ; conflits CLAUDE.md (commandes E2E de 0020 + exclusion @hors-beta) et decisions/README.md (0019 + 0020). 1316 verts, lint/fmt/tsc/build OK. Non-régression finale lancée.
