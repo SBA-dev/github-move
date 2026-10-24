@@ -41,7 +41,7 @@ function apresUnDelai<T>(valeur: T): Promise<T> {
 }
 
 /**
- * La facilité des nombres tirés pour ce profil. Sans profil réel (démonstration), hors ligne ou sans réponse
+ * La facilité des nombres tirés pour ce profil. Sans profil réel (profil préparé), hors ligne ou sans réponse
  * assez vite, la difficulté ne change pas.
  */
 export async function lireLaFaciliteDuProfil(profil: string): Promise<number> {

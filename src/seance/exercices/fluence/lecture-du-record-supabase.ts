@@ -2,7 +2,7 @@ import { clientSupabase } from "../../../connexion/client-supabase.ts";
 import { estUnIdentifiantDeProfil } from "../../fin-de-seance/corps-de-la-seance.ts";
 import { attendreLesEnvoisEnCours } from "../../fin-de-seance/sauvegarde-de-la-seance.ts";
 
-/** Lecture sous RLS du record de fluence. `undefined` : pas encore de record, profil de démonstration ou lecture impossible. */
+/** Lecture sous RLS du record de fluence. `undefined` : pas encore de record, profil préparé ou lecture impossible. */
 export async function lireLeRecordDeFluence(profil: string, lecon: string, exercice: string): Promise<number | undefined> {
   if (!estUnIdentifiantDeProfil(profil)) return undefined;
   try {

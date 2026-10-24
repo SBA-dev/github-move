@@ -33,10 +33,6 @@ function estPageDeLEnfant(lieu: Lieu): boolean {
     lieu.ecran === "seance";
 }
 
-function demandeUnProfilEnCours(lieu: Lieu): boolean {
-  return lieu.ecran === "jeu" || lieu.ecran === "parcours" || lieu.ecran === "lecon" || lieu.ecran === "seance";
-}
-
 function lieuAffiche(demande: Lieu, espaceParent: EtatDeLEspaceParent["type"], connecte: boolean): Lieu {
   if (demande.ecran === "espace-parent" && connecte && espaceParent === "ferme") return ACCUEIL;
   return demande;
@@ -50,7 +46,7 @@ export function Application() {
   useRenvoiDesSeancesGardees(connecte);
   const lieuPossible = lieuAffiche(lieuDemande, acces.etat.type, connecte);
   const { profil: profilEnCours, charge: profilCharge, choisirQuiJoue, oublier: oublierLeProfilEnCours } = useProfilEnCours();
-  const enfantAbsent = profilCharge && !profilEnCours && demandeUnProfilEnCours(lieuPossible);
+  const enfantAbsent = profilCharge && !profilEnCours && estPageDeLEnfant(lieuPossible);
   const lieu = enfantAbsent ? ACCUEIL : lieuPossible;
   const ecran = lieu.ecran;
   const ecranDemande = lieuDemande.ecran;

@@ -93,7 +93,6 @@ button[data-son="muet"] { background: var(--accent-fonce); opacity: .8; }
   background: #fff3cd;
   font-weight: 700;
 }
-.reponses { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
