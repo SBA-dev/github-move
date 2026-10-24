@@ -1,4 +1,4 @@
-import type { Exercice, ExerciceFluence, Lecon } from "../../catalogue/domain/index.ts";
+import { cleDeLaFluence, type Exercice, type ExerciceFluence, type Lecon } from "../../catalogue/domain/index.ts";
 
 export type RecordDuProfil = Readonly<{
   lecon: string;
@@ -66,13 +66,9 @@ function libelleDu(record: RecordDuProfil, position: Position | undefined): stri
 }
 
 function estLaFluenceDuRecord(exercice: Exercice, record: RecordDuProfil): boolean {
-  return estUneFluence(exercice) && cleDe(exercice) === record.exercice;
+  return estUneFluence(exercice) && cleDeLaFluence(exercice) === record.exercice;
 }
 
 function estUneFluence(exercice: Exercice): exercice is ExerciceFluence {
   return exercice.type === "fluence";
-}
-
-function cleDe(fluence: ExerciceFluence): string {
-  return fluence.titre ?? fluence.generateur.op;
 }

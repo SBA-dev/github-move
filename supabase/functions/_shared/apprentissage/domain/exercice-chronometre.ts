@@ -1,4 +1,4 @@
-import type { ExerciceFluence, Operation } from "../../catalogue/domain/index.ts";
+import { cleDeLaFluence, type ExerciceFluence, type Operation } from "../../catalogue/domain/index.ts";
 import { CleDeQuestion } from "./cle-de-question.ts";
 import { FluenceFinie, FluenceNonCommencee, TirageManquant } from "./erreurs.ts";
 import type { QuestionSuivie } from "./question-suivie.ts";
@@ -41,7 +41,7 @@ export class ExerciceChronometre implements QuestionSuivie {
   }
 
   get nom(): string {
-    return this.exercice.titre ?? this.exercice.generateur.op;
+    return cleDeLaFluence(this.exercice);
   }
 
   get reussie(): boolean {
