@@ -129,3 +129,14 @@ Deno.test("un générateur d'opérations dont une borne d'intervalle est négati
     );
   }
 });
+
+Deno.test("un générateur de divisions dont le diviseur peut valoir 0 rend la leçon mal formée", () => {
+  for (const b of [[0, 5], [0, 0]]) {
+    assertThrows(
+      () => lireLecon(leconAvec(unCalculGenere({ op: ":", b }))),
+      LeconMalFormee,
+      undefined,
+      JSON.stringify(b),
+    );
+  }
+});
