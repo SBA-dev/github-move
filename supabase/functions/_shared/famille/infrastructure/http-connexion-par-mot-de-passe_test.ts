@@ -145,3 +145,62 @@ Deno.test("la réponse d'un mot de passe non conforme ne contient pas le mot de 
   assertEquals(reponse.status, 422);
   assertEquals((await reponse.text()).includes('"a"'), false);
 });
+
+const TAILLE_MAXIMALE_DU_CORPS = 4_096;
+
+function corpsJsonDe(octets: number): string {
+  const enveloppe = '{"adresse":""}'.length;
+  return `{"adresse":"${"a".repeat(octets - enveloppe)}"}`;
+}
+
+Deno.test("un corps de plus de 4 096 octets est refusé avec 413 sans appeler le cas d'usage", async () => {
+  let appels = 0;
+
+  const reponse = await traiterUneDemandeSansConnexion(
+    post(corpsJsonDe(TAILLE_MAXIMALE_DU_CORPS + 1)),
+    () => {
+      appels++;
+      return Promise.resolve();
+    },
+    origines,
+  );
+
+  assertEquals([reponse.status, appels], [413, 0]);
+});
+
+Deno.test("un corps dont content-length annonce déjà plus de 4 096 octets est refusé avec 413 sans être lu", async () => {
+  let lectures = 0;
+  const flux = new ReadableStream<Uint8Array>({
+    pull(controleur) {
+      lectures++;
+      controleur.enqueue(new TextEncoder().encode("{}"));
+      controleur.close();
+    },
+  });
+  const requete = new Request("http://localhost/f", {
+    method: "POST",
+    body: flux,
+    headers: { "content-length": String(TAILLE_MAXIMALE_DU_CORPS + 1) },
+    // @ts-expect-error `duplex` est requis pour un corps en flux mais absent des types de RequestInit
+    duplex: "half",
+  });
+
+  const reponse = await traiterUneDemandeSansConnexion(requete, () => Promise.resolve(), origines);
+
+  assertEquals([reponse.status, lectures], [413, 0]);
+});
+
+Deno.test("un corps de 4 096 octets est accepté jusqu'à la validation", async () => {
+  let corpsRecu: Record<string, unknown> | undefined;
+
+  const reponse = await traiterUneDemandeSansConnexion(
+    post(corpsJsonDe(TAILLE_MAXIMALE_DU_CORPS)),
+    (corps) => {
+      corpsRecu = corps;
+      return Promise.resolve();
+    },
+    origines,
+  );
+
+  assertEquals([reponse.status, typeof corpsRecu?.adresse], [200, "string"]);
+});
