@@ -17,7 +17,14 @@ type Comparaison = Readonly<{
   noms: readonly string[];
 }>;
 
-export type FormeDeSchema = PartiesEtTout | Comparaison;
+type Parts = Readonly<{
+  genre: "parts";
+  nb: Valeur;
+  valeur: Valeur;
+  total: Valeur;
+}>;
+
+export type FormeDeSchema = PartiesEtTout | Comparaison | Parts;
 
 export type ProblemeEnBarres = Readonly<{
   enonce: string;
@@ -43,7 +50,7 @@ export function lireBarres(brut: Objet, communs: { titre?: string; consigne?: st
 
 function lireProbleme(brut: unknown): ProblemeEnBarres {
   const item = enObjet(brut, "un problème en barres");
-  const forme = item.type === "comparaison" ? lireComparaison(item) : lirePartiesEtTout(item);
+  const forme = lireForme(item);
   return Object.freeze({
     enonce: texteRequis(item.enonce, "l'énoncé d'un problème en barres"),
     aide: texteFacultatif(item.aide, "l'aide d'un problème en barres"),
@@ -51,6 +58,17 @@ function lireProbleme(brut: unknown): ProblemeEnBarres {
     forme,
     ...resoudre(forme),
   });
+}
+
+function lireForme(item: Objet): FormeDeSchema {
+  switch (item.type) {
+    case "comparaison":
+      return lireComparaison(item);
+    case "parts":
+      return lireParts(item);
+    default:
+      return lirePartiesEtTout(item);
+  }
 }
 
 function lirePartiesEtTout(item: Objet): PartiesEtTout {
@@ -71,6 +89,15 @@ function lireComparaison(item: Objet): Comparaison {
   });
 }
 
+function lireParts(item: Objet): Parts {
+  return Object.freeze({
+    genre: "parts",
+    nb: lireValeur(item.nb),
+    valeur: lireValeur(item.valeur),
+    total: lireValeur(item.total),
+  });
+}
+
 function lireValeur(valeur: unknown): Valeur {
   return valeur === null ? null : Number(valeur);
 }
@@ -78,7 +105,14 @@ function lireValeur(valeur: unknown): Valeur {
 type Resolution = { reponse: number; ecriture: string };
 
 function resoudre(forme: FormeDeSchema): Resolution {
-  return forme.genre === "comparaison" ? resoudreComparaison(forme) : resoudrePartiesEtTout(forme);
+  switch (forme.genre) {
+    case "comparaison":
+      return resoudreComparaison(forme);
+    case "parts":
+      return resoudreParts(forme);
+    case "partiesEtTout":
+      return resoudrePartiesEtTout(forme);
+  }
 }
 
 function resoudrePartiesEtTout({ parties: [premiere, seconde], tout }: PartiesEtTout): Resolution {
@@ -90,6 +124,22 @@ function resoudreComparaison({ grand, petit, ecart }: Comparaison): Resolution {
   if (ecart === null) return soustraction(grand, petit);
   if (grand === null) return addition(petit, ecart);
   return soustraction(grand, ecart);
+}
+
+function resoudreParts({ nb, valeur, total }: Parts): Resolution {
+  if (total === null) return multiplication(nb, valeur);
+  if (valeur === null) return partage(total, nb, (r) => `${total} = ${nb} × ${r}`);
+  return partage(total, valeur, (r) => `${total} = ${r} × ${valeur}`);
+}
+
+function multiplication(a: Valeur, b: Valeur): Resolution {
+  const reponse = (a ?? 0) * (b ?? 0);
+  return { reponse, ecriture: `${a} × ${b} = ${reponse}` };
+}
+
+function partage(total: number, diviseur: Valeur, ecrire: (reponse: number) => string): Resolution {
+  const reponse = total / (diviseur ?? 1);
+  return { reponse, ecriture: ecrire(reponse) };
 }
 
 function addition(a: Valeur, b: Valeur): Resolution {
