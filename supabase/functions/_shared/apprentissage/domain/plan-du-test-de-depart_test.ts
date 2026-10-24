@@ -1,7 +1,7 @@
 import { assertEquals } from "@std/assert";
 import { lireLecon, Niveau } from "../../catalogue/domain/index.ts";
 import type { Lecon } from "../../catalogue/domain/index.ts";
-import { hasardSansMelange } from "../test_utils/hasard-fixe.ts";
+import { hasardFixe, hasardSansMelange } from "../test_utils/hasard-fixe.ts";
 import { planDuTestDeDepart } from "./plan-du-test-de-depart.ts";
 
 const programme = { section: "section", citation: "citation" };
@@ -35,8 +35,7 @@ function leconDeDicteeSeule(ordre: number): Lecon {
 
 const lesLecons = (nombre: number) => Array.from({ length: nombre }, (_, i) => leconAvecUneQuestion(i));
 const leconsDuPlan = (plan: ReturnType<typeof planDuTestDeDepart>) => plan.map(({ leconId }) => leconId);
-const identifiantsAuxIndices = (indices: number[]) =>
-  indices.map((i) => `fr-ce1-lecon-${String(i).padStart(2, "0")}`);
+const identifiantsAuxIndices = (indices: number[]) => indices.map((i) => `fr-ce1-lecon-${String(i).padStart(2, "0")}`);
 
 Deno.test("un CE1 avec une réserve de 19 leçons reçoit 12 questions, prises à pas réguliers dans l'ordre de la réserve", () => {
   const plan = planDuTestDeDepart(lesLecons(19), Niveau.de("CE1"), hasardSansMelange());
@@ -70,3 +69,104 @@ Deno.test("sans leçon en réserve, le plan du test de départ est vide", () => 
 
   assertEquals(plan, []);
 });
+
+function leconAvecLesExercices(...exercices: unknown[]): Lecon {
+  return lireLecon({
+    id: "fr-ce1-lecon-00",
+    matiere: "francais",
+    niveau: "CE1",
+    titre: "Leçon",
+    ordre: 0,
+    programme,
+    exercices,
+  });
+}
+
+const unChoix = { choix: ["ou", "on"], reponse: "ou" };
+const bullesDe2Questions = {
+  type: "bulles",
+  questions: [{ question: "Quel son ?", ...unChoix }, { question: "Et celui-ci ?", ...unChoix }],
+};
+const ecouteDe3Items = {
+  type: "ecoute",
+  items: [{ dire: "cat", ...unChoix }, { dire: "dog", ...unChoix }, { dire: "fish", ...unChoix }],
+};
+
+Deno.test("la question d'une leçon est tirée parmi toutes les questions admissibles de ses exercices", () => {
+  const lecon = leconAvecLesExercices(bullesDe2Questions, ecouteDe3Items);
+  const questionTirée = (tirage: number) => planDuTestDeDepart([lecon], Niveau.de("CE1"), hasardFixe(tirage))[0];
+
+  assertEquals(questionTirée(0), { leconId: "fr-ce1-lecon-00", exercice: 0, rang: 0 });
+  assertEquals(questionTirée(0.5), { leconId: "fr-ce1-lecon-00", exercice: 1, rang: 0 });
+  assertEquals(questionTirée(0.999), { leconId: "fr-ce1-lecon-00", exercice: 1, rang: 2 });
+});
+
+Deno.test("deux tirages différents du hasard désignent deux questions différentes d'une même leçon", () => {
+  const lecon = leconAvecLesExercices(bullesDe2Questions, ecouteDe3Items);
+
+  const [premiere] = planDuTestDeDepart([lecon], Niveau.de("CE1"), hasardFixe(0.1));
+  const [seconde] = planDuTestDeDepart([lecon], Niveau.de("CE1"), hasardFixe(0.7));
+
+  assertEquals(premiere.exercice === seconde.exercice && premiere.rang === seconde.rang, false);
+});
+
+Deno.test("une leçon qui mêle un exercice exclu et un exercice admissible pose la question de l'exercice admissible", () => {
+  const lecon = leconAvecLesExercices({ type: "dictee", mots: [{ mot: "chat" }] }, ecouteDe3Items);
+
+  const plan = planDuTestDeDepart([lecon], Niveau.de("CE1"), hasardSansMelange());
+
+  assertEquals(plan, [{ leconId: "fr-ce1-lecon-00", exercice: 1, rang: 2 }]);
+});
+
+const exercicesAdmissibles: Record<string, { exercice: unknown; questions: number }> = {
+  "bulles : une question": {
+    exercice: { type: "bulles", questions: [{ question: "Quel son ?", ...unChoix }] },
+    questions: 1,
+  },
+  "écoute : un item": { exercice: ecouteDe3Items, questions: 3 },
+  "calcul en liste : une opération": {
+    exercice: { type: "calcul", operations: [{ q: "2 + 3", r: 5 }, { q: "4 + 1", r: 5 }, { q: "6 + 2", r: 8 }] },
+    questions: 3,
+  },
+  "calcul à générateur : une seule question candidate": {
+    exercice: { type: "calcul", generateur: { op: "+", combien: 5 } },
+    questions: 1,
+  },
+  "conjugaison : une forme": {
+    exercice: {
+      type: "conjugaison",
+      verbe: "être",
+      temps: "présent",
+      formes: [{ pronom: "je", forme: "suis" }, { pronom: "tu", forme: "es" }, { pronom: "il", forme: "est" }],
+    },
+    questions: 3,
+  },
+  "trous : un trou": {
+    exercice: { type: "trous", texte: "Le [chat] mange la [souris].", distracteurs: ["chien"] },
+    questions: 2,
+  },
+  "classer : une étiquette": {
+    exercice: {
+      type: "classer",
+      groupes: [{ id: "1", nom: "ou" }, { id: "2", nom: "on" }],
+      items: [{ texte: "loup", groupe: "1" }, { texte: "pont", groupe: "2" }, { texte: "clou", groupe: "1" }],
+    },
+    questions: 3,
+  },
+  "addition : une seule question candidate": {
+    exercice: { type: "addition", operations: [[45, 37], [12, 29]] },
+    questions: 1,
+  },
+};
+
+for (const [nom, { exercice, questions }] of Object.entries(exercicesAdmissibles)) {
+  Deno.test(`une leçon dont l'exercice est de type ${nom} compte ${questions} question(s) candidate(s)`, () => {
+    const lecon = leconAvecLesExercices(exercice);
+
+    const dernierTirage = planDuTestDeDepart([lecon], Niveau.de("CE1"), hasardFixe(0.999));
+    const premierTirage = planDuTestDeDepart([lecon], Niveau.de("CE1"), hasardFixe(0));
+
+    assertEquals(dernierTirage, [{ leconId: "fr-ce1-lecon-00", exercice: 0, rang: questions - 1 }]);
+    assertEquals(premierTirage, [{ leconId: "fr-ce1-lecon-00", exercice: 0, rang: 0 }]);
+  });
+}
