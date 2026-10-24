@@ -25,6 +25,8 @@ function identiteDuCalcul(operation: Operation): Identite {
   return { type: "calcul", cle: CleDeQuestion.de("calcul", operation.q) };
 }
 
+type OptionsDeChoix = Readonly<{ nombresProposes?: readonly number[]; identite?: Identite }>;
+
 export class QuestionDeCalcul implements QuestionPosee {
   readonly type: Identite["type"];
   readonly cle: CleDeQuestion;
@@ -49,8 +51,8 @@ export class QuestionDeCalcul implements QuestionPosee {
   static avecLesChoix(
     operation: Operation,
     tireur: Tireur,
-    nombresProposes: readonly number[] = choixAutourDuResultat(operation.r),
-    identite: Identite = identiteDuCalcul(operation),
+    { nombresProposes = choixAutourDuResultat(operation.r), identite = identiteDuCalcul(operation) }: OptionsDeChoix =
+      {},
   ): QuestionDeCalcul {
     const textes = nombresProposes.map(String);
     const bonneReponse = String(operation.r);

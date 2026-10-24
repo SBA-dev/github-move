@@ -14,7 +14,7 @@ export function calculAuNiveau(
 ): QuestionDeCalcul {
   const auxChoix = ModeDeReponse.pour(niveau, operation.r).genre === "choix";
   return auxChoix
-    ? QuestionDeCalcul.avecLesChoix(operation, tireur, undefined, identite)
+    ? QuestionDeCalcul.avecLesChoix(operation, tireur, { identite })
     : QuestionDeCalcul.auClavier(operation, identite);
 }
 

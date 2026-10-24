@@ -19,13 +19,13 @@ export type SchemaEnCours = Readonly<{
 export type SchemaResolu = Readonly<{ forme: FormeDeSchema; reponse: number; explication: string }>;
 
 /** Un problème en barres se joue comme un calcul : même clé de révision, mêmes modes de réponse. */
-export class QuestionDeProbleme extends QuestionEnveloppantUnCalcul {
+export class QuestionDeProblemeEnBarres extends QuestionEnveloppantUnCalcul {
   private constructor(private readonly probleme: ProblemeEnBarres, calcul: ReturnType<typeof calculDuProbleme>) {
     super(calcul);
   }
 
-  static pour(probleme: ProblemeEnBarres, tireur: Tireur, niveau: Niveau): QuestionDeProbleme {
-    return new QuestionDeProbleme(probleme, calculDuProbleme(probleme, tireur, niveau));
+  static pour(probleme: ProblemeEnBarres, tireur: Tireur, niveau: Niveau): QuestionDeProblemeEnBarres {
+    return new QuestionDeProblemeEnBarres(probleme, calculDuProbleme(probleme, tireur, niveau));
   }
 
   enCours(): SchemaEnCours {

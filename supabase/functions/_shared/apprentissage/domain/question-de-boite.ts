@@ -43,6 +43,6 @@ function calculDeLaBoite(item: ItemDeBoite, tireur: Tireur, niveau: Niveau) {
   return calculAuNiveau(operation, identite, tireur, niveau);
 }
 
-function calculSansResultat({ ecriture }: ItemDeBoite): string {
-  return ecriture.slice(0, ecriture.lastIndexOf(" = "));
+function calculSansResultat({ a, sens, b }: ItemDeBoite): string {
+  return `${a} ${sens === "ajout" ? "+" : "−"} ${b}`;
 }
