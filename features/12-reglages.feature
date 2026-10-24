@@ -124,20 +124,20 @@ Fonctionnalité: Réglages d'un profil enfant
 
   Règle: Le mode dys adapte l'affichage du texte quand le profil en cours l'a choisi
 
-    @issue-58 @a-valider
+    @issue-58
     Scénario: Avec le mode dys, la consigne s'affiche en police Andika et avec un texte espacé
       Étant donné que Paul a réglé « mode dys » sur « oui » pour Léa
       Quand la consigne « Trouve le mot qui commence par le son [a]. » s'affiche
       Alors Léa voit la consigne « Trouve le mot qui commence par le son [a]. » en mode dys : police Andika, lettres, mots et lignes espacés
 
-    @issue-58 @a-valider
+    @issue-58
     Scénario: Sans le mode dys, la consigne s'affiche comme d'habitude
       Étant donné que le réglage « mode dys » de Léa est sur « non »
       Quand la consigne « Trouve le mot qui commence par le son [a]. » s'affiche
       Alors Léa voit la consigne « Trouve le mot qui commence par le son [a]. »
       Mais la consigne ne s'affiche pas en mode dys
 
-    @issue-58 @a-valider
+    @issue-58
     Scénario: Avec le mode dys, ce que dit le personnage guide s'affiche aussi en mode dys
       Étant donné que Paul a réglé « mode dys » sur « oui » pour Léa
       Et que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
@@ -145,20 +145,20 @@ Fonctionnalité: Réglages d'un profil enfant
       Quand Léa répond « 7 »
       Alors la félicitation de Noisette s'affiche en mode dys
 
-    @issue-58 @a-valider
+    @issue-58
     Scénario: Avec le mode dys, les syllabes des mots de plus de trois lettres sont en couleurs alternées
       Étant donné que Paul a réglé « mode dys » sur « oui » pour Léa
       Quand la consigne « Lis le mot maman. » s'affiche
       Alors Léa voit « maman » en deux syllabes de couleurs alternées, « ma » puis « man »
       Mais « Lis », « le » et « mot » restent d'une seule couleur
 
-    @issue-58 @a-valider
+    @issue-58
     Scénario: En mode dys, le mot prononcé est toujours surligné pendant la lecture
       Étant donné que Paul a réglé « mode dys » sur « oui » pour Léa
       Quand la consigne « Lis la phrase avec Noisette. » s'affiche
       Alors chaque mot de la consigne est surligné au moment où Noisette le prononce
 
-    @issue-58 @a-valider
+    @issue-58
     Scénario: Le mode dys suit le profil en cours, pas l'appareil
       Étant donné que Paul a réglé « mode dys » sur « oui » pour Léa
       Et que le réglage « mode dys » de Tom est sur « non »
@@ -166,7 +166,7 @@ Fonctionnalité: Réglages d'un profil enfant
       Quand Tom choisit son profil enfant dans « Qui joue ? » sur la tablette
       Alors Tom voit son accueil sans le mode dys
 
-    @issue-58 @a-valider
+    @issue-58
     Scénario: Un réglage changé pendant que Léa joue s'applique au prochain choix de son profil
       Étant donné que Léa joue sur la tablette sans le mode dys
       Et que Paul a ensuite réglé « mode dys » sur « oui » pour Léa sur le téléphone
@@ -174,14 +174,14 @@ Fonctionnalité: Réglages d'un profil enfant
       Quand Léa choisit son profil enfant dans « Qui joue ? »
       Alors Léa voit son accueil en mode dys
 
-    @issue-58 @a-valider
+    @issue-58
     Scénario: Le mode dys réglé sur la tablette s'applique quand Léa joue sur le téléphone
       Étant donné que Paul a réglé « mode dys » sur « oui » pour Léa sur la tablette
       Et que Paul est connecté sur le téléphone
       Quand Léa commence à jouer sur le téléphone
       Alors Léa voit son accueil en mode dys
 
-    @depend-de-44 @issue-58 @a-valider
+    @depend-de-44 @issue-58
     Scénario: Le mode dys s'applique aussi sans réseau
       Étant donné que Paul a réglé « mode dys » sur « oui » pour Léa
       Et que Savanturier a déjà été chargé une fois sur la tablette
@@ -189,7 +189,7 @@ Fonctionnalité: Réglages d'un profil enfant
       Quand Léa commence à jouer
       Alors Léa voit son accueil en mode dys
 
-    @issue-58 @a-valider
+    @issue-58
     Scénario: En mode dys, une question de lecture tient dans un écran de 360 px
       Étant donné que l'écran de l'appareil mesure 360 px de large
       Et que Paul a réglé « mode dys » sur « oui » pour Léa
@@ -201,7 +201,7 @@ Fonctionnalité: Réglages d'un profil enfant
 
   Règle: Avec « tout lire à voix haute », le personnage guide lit aussi les choix proposés
 
-    @issue-58 @a-valider
+    @issue-58
     Scénario: Avec deux choix proposés, le personnage guide ne lit que ces deux choix
       Étant donné que Paul a réglé « tout lire à voix haute » sur « oui » pour Léa
       Et que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
@@ -210,7 +210,7 @@ Fonctionnalité: Réglages d'un profil enfant
       Quand la question « Trouve le mot qui commence par le son [a]. » s'affiche
       Alors Léa entend ensuite Noisette dire « Est-ce ami, ou lune ? »
 
-    @issue-58 @a-valider
+    @issue-58
     Scénario: En Muet, « tout lire à voix haute » ne fait rien lire
       Étant donné que Paul a réglé « tout lire à voix haute » sur « oui » pour Léa
       Et que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »

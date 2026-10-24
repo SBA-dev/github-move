@@ -9,7 +9,7 @@ La story ne crée aucune règle métier. Elle retire la page de démonstration (
 - l'**accueil de l'enfant**, où il arrive après « Qui joue ? » (#11) ;
 - « **Qui joue ?** ».
 
-Les scénarios réécrits restent dans leur fichier d'origine. Ils gardent le tag de leur fonctionnalité (`@issue-6`…) et reçoivent `@issue-58 @a-valider`.
+Les scénarios réécrits restent dans leur fichier d'origine. Ils gardent le tag de leur fonctionnalité (`@issue-6`…) et reçoivent `@issue-58`.
 
 Écrans réels utilisés :
 - la **question de test** « Combien font 3 + 4 ? » (choix « 6 », « 7 », « 8 », « 9 », de réponse « 7 ») de #17 et #23 : « 7 » est une bonne réponse, « 8 » une erreur ;
@@ -100,7 +100,33 @@ Correction proposée, sans changer le texte : « Léa relance Savanturier » rec
 
 ## Questions ouvertes
 
-**#58.1 — Quelle porte de test garde-t-on pour jouer sans connexion dans les E2E ?**
+Aucune : les onze questions ont été tranchées par le PO (voir « Décisions du PO » ci-dessous).
+
+## Décisions du PO (⛔ n°1, 2026-10-24)
+
+Réponse du PO, recopiée mot pour mot (2026-10-24 vers 21:55 UTC, transmise par le responsable des équipes sur l'issue #64) :
+
+> OK #58 reco partout
+
+Toutes les recommandations s'appliquent. Les tags `@a-valider` des scénarios de #58 sont retirés.
+
+| Question | Décision retenue |
+|---|---|
+| #58.1 Porte de test des E2E | Le « profil préparé » (`savanturier:profil-prepare`) devient la seule porte de test, active en développement seulement ; plus de `VITE_PAGE_DEMONSTRATION` ; la « consigne préparée » disparaît au profit de leçons de test injectées par les steps ; les scénarios qui ont besoin du serveur gardent un vrai profil. Consigné dans la **décision d'architecture 0021**. |
+| #58.2 Humeur après une bonne réponse / une erreur (#6) | Réécrits sur la question de test « Combien font 3 + 4 ? » (« 7 » bonne réponse, « 8 » erreur) ; gardés dans #6 malgré le recoupement avec #17. |
+| #58.3 « Tout lire à voix haute » (#12) | Choix lus après la consigne : supprimé. Sans « tout lire à voix haute » : supprimé. Deux choix : déplacé sur la question de test « ami » / « lune ». Un seul choix : supprimé. En Muet : déplacé sur « Combien font 3 + 4 ? ». |
+| #58.4 Présentation du personnage guide (#6) | Plan supprimé ; la phrase reste vérifiée par le test unitaire `presentation` du domaine Motivation. |
+| #58.5 Écran des consignes (#7, #15) | La consigne d'un exercice `bulles` d'une leçon de test, jouée en séance ; le texte des scénarios ne change pas. |
+| #58.6 « L'enfant peut réécouter la consigne » (#7) | Supprimé (redondant avec #16 et #17). |
+| #58.7 Consigne en gras, consigne en anglais (#7, #15) | Gras : supprimé. Anglais, voix seule : supprimé. Anglais malgré la voix imposée : réécrit sur le mot à écouter « a cat » de « Quel animal ? ». |
+| #58.8 Consigne remplacée par la question après la lecture | Les 6 scénarios de #7 restent portés sur la **question de test**. Le défaut « la consigne disparaît, invisible en Muet » **ne se corrige pas dans #58** : le responsable des équipes ouvre une story de correction (Apprentissage, séance). |
+| #58.9 Ancienne adresse `/demonstration` | L'accueil, comme toute adresse inconnue : invitation à se connecter sans connexion, « Qui joue ? » avec un parent connecté ; pas de page « introuvable ». |
+| #58.10 « Léa commence à jouer » / « Léa joue » | L'accueil de l'enfant ; en mode dys, « … voit son accueil en mode dys ». |
+| #58.11 Mode dys à 360 px | Une question de lecture (« Où dort Plume ? » de « Lecture : Le petit chat Plume »). |
+
+### Détail des questions et des recommandations
+
+#### #58.1 — Quelle porte de test garde-t-on pour jouer sans connexion dans les E2E ?
 Recommandation : **confirmer la piste de l'orchestrateur.**
 - Le « profil préparé » (clé `savanturier:profil-prepare`, même format, lu par `useProfilEnCours`) devient la **seule** porte de test.
 - Il est actif en développement seulement : plus de variable `VITE_PAGE_DEMONSTRATION`, et le code sort de `src/demonstration/`.
@@ -114,13 +140,13 @@ Arguments :
 
 À consigner dans une décision (prochain numéro libre : 0021).
 
-**#58.2 — Les scénarios de #6 « bonne réponse » / « erreur » : les réécrire sur une question d'une vraie séance ?**
+#### #58.2 — Les scénarios de #6 « bonne réponse » / « erreur » : les réécrire sur une question d'une vraie séance ?
 Recommandation : **oui, sur la question de test « Combien font 3 + 4 ? »**, avec « 7 » pour la bonne réponse et « 8 » pour l'erreur. C'est ce qui est écrit.
 - Deux scénarios recoupent #17 : Noisette applaudit après une bonne réponse, et réfléchit après une erreur. On les garde quand même dans #6, parce que la règle de l'humeur appartient à Motivation.
 - #6 couvre ce que #17 ne couvre pas : les 6 univers et leurs expressions, la liste des félicitations communes, les encouragements de Coach Léo et les mouvements réduits.
 - Le PO peut préférer supprimer ces deux scénarios redondants. La règle n'aurait alors plus que « content » dans #6.
 
-**#58.3 — Les scénarios de #12 « tout lire à voix haute » (« ami », « lune », « chat ») : supprimés ou déplacés ?**
+#### #58.3 — Les scénarios de #12 « tout lire à voix haute » (« ami », « lune », « chat ») : supprimés ou déplacés ?
 Recommandation, scénario par scénario :
 - « les choix proposés sont lus après la consigne » (3 choix) → **supprimé** : c'est exactement #17 « Noisette lit les choix dans l'ordre affiché » (4 choix, « Est-ce 6, 7, 8, ou 9 ? »).
 - « Sans « tout lire à voix haute », la consigne est lue mais pas les choix proposés » → **supprimé** : c'est #17 « Sans « tout lire à voix haute », les choix ne sont pas lus ».
@@ -128,13 +154,13 @@ Recommandation, scénario par scénario :
 - « Avec un seul choix proposé » → **supprimé** : une vraie question a toujours au moins deux choix différents (le Catalogue refuse la leçon sinon). Le cas reste couvert par le test unitaire de `lectureDesChoix`.
 - « En Muet » → **déplacé** sur la question de test « Combien font 3 + 4 ? » : absent de #17.
 
-**#58.4 — La présentation du personnage guide (« Je suis Noisette, l'écureuil savant de la Forêt des Savanturiers ») n'apparaît sur aucun écran réel. Que fait-on du plan de #6 qui la vérifiait ?**
+#### #58.4 — La présentation du personnage guide (« Je suis Noisette, l'écureuil savant de la Forêt des Savanturiers ») n'apparaît sur aucun écran réel. Que fait-on du plan de #6 qui la vérifiait ?
 Recommandation : **supprimer le scénario.**
 - Seule la page de démonstration montrait le titre et le royaume. Le legacy ne les affichait pas non plus.
 - La phrase reste vérifiée par le test unitaire du domaine Motivation (`presentation`). Les termes « Titre du personnage guide » et « Royaume » restent `(à valider)` au glossaire.
 - La montrer sur l'accueil de l'enfant, après « Bonjour Léa ! », serait un nouveau comportement. Il changerait #11 (« Lili dit « Bonjour Léa ! » ») et relèverait d'une story de Motivation (lot 5, épisodes et histoire de l'univers), pas d'un retrait d'écran.
 
-**#58.5 — Pour les consignes de #7 et #15 (symboles, trou, caractère de la voix, voix imposée…), quel écran réel ?**
+#### #58.5 — Pour les consignes de #7 et #15 (symboles, trou, caractère de la voix, voix imposée…), quel écran réel ?
 Recommandation : **la consigne d'un exercice d'une leçon de test, jouée en séance d'un exercice.** Le texte des scénarios ne change pas (« la consigne « … » s'affiche »).
 - C'est le sens du glossaire : la consigne est le texte qui dit à l'enfant ce qu'il doit faire dans un exercice, et elle est lue dès qu'elle s'affiche. Le code de la séance la lit au début de chaque exercice, sauf la dictée et la poésie.
 - Un exercice `bulles` avec une `consigne` suffit : il n'ajoute pas d'indication du geste, contrairement à `classer` et `ordre`.
@@ -143,19 +169,19 @@ Recommandation : **la consigne d'un exercice d'une leçon de test, jouée en sé
   - **Question** : elle est déjà le support de #17.
 - Exceptions : les scénarios qui regardent l'écran *après* la lecture (#58.8) et ceux qui n'ont pas d'équivalent (#58.7).
 
-**#58.6 — « L'enfant peut réécouter la consigne » (#7) : dans une vraie séance, « Réécouter » relit la dernière parole du personnage guide. Une fois la consigne lue, la question est posée : c'est elle que « Réécouter » relit. Que fait-on ?**
+#### #58.6 — « L'enfant peut réécouter la consigne » (#7) : dans une vraie séance, « Réécouter » relit la dernière parole du personnage guide. Une fois la consigne lue, la question est posée : c'est elle que « Réécouter » relit. Que fait-on ?
 Recommandation : **supprimer le scénario.**
 - Il est redondant avec #17 « L'enfant peut réécouter la question » et #16 « « Réécouter » relit la dernière phrase du personnage guide ».
 - Pendant la lecture, « Réécouter » relit bien la consigne : c'est déjà vérifié par « Une nouvelle lecture coupe la lecture en cours », qui reste.
 - Si le PO veut que l'enfant puisse réécouter la consigne pendant tout l'exercice, ce comportement rejoint #58.8.
 
-**#58.7 — La consigne en gras et la consigne en anglais (#7, #15) n'existent pas dans le format des leçons. Que deviennent ces scénarios ?**
+#### #58.7 — La consigne en gras et la consigne en anglais (#7, #15) n'existent pas dans le format des leçons. Que deviennent ces scénarios ?
 Recommandation :
 - **Gras** (#7) → **supprimé**. Le format n'a pas de mise en forme. La seule mise en forme réelle, les guillemets, est couverte par l'exemple « Lis le mot « maman ». ». Les crochets d'un texte à trous ne sont jamais lus (#18).
 - **Anglais, voix seule** (#7) → **supprimé**. Le seul texte anglais d'une séance est le mot à écouter, déjà vérifié par #17 (« … dit par la voix anglaise »).
 - **Anglais malgré la voix imposée** (#15) → **réécrit** sur le mot à écouter « a cat » de « Quel animal ? ». Ce cas n'est vérifié nulle part ailleurs.
 
-**#58.8 — Sur un écran réel, la consigne d'un exercice ne reste affichée que pendant sa lecture. Elle est ensuite remplacée par la question (ou par l'indication du geste pour `classer` et `ordre`). Sans voix (Muet, voix bloquée, navigateur sans voix), elle est remplacée aussitôt. Que fait-on ?**
+#### #58.8 — Sur un écran réel, la consigne d'un exercice ne reste affichée que pendant sa lecture. Elle est ensuite remplacée par la question (ou par l'indication du geste pour `classer` et `ordre`). Sans voix (Muet, voix bloquée, navigateur sans voix), elle est remplacée aussitôt. Que fait-on ?
 Constat : un enfant en Muet ne voit donc jamais la consigne d'un exercice `classer` ou `ordre` (« Range chaque mot dans la maison de son son. »). Les scénarios de #7 qui regardaient la consigne après la lecture ne passeraient pas sur une vraie séance. Il s'agit de :
 - « … Et la consigne reste affichée à l'écran » ;
 - « En Muet, la consigne s'affiche sans être lue » ;
@@ -165,29 +191,25 @@ Constat : un enfant en Muet ne voit donc jamais la consigne d'un exercice `class
 - « Un texte sans rien à dire ».
 
 Recommandation :
-1. Dans #58, porter ces scénarios sur la **question de test**, qui reste posée jusqu'à la bonne réponse (c'est ce qui est écrit, `@a-valider`). La première étape « reste affichée à l'écran » devient « Léa voit la consigne « … » », vrai pendant la lecture.
+1. Dans #58, porter ces scénarios sur la **question de test**, qui reste posée jusqu'à la bonne réponse (c'est ce qui est écrit). La première étape « reste affichée à l'écran » devient « Léa voit la consigne « … » », vrai pendant la lecture.
 2. **Ouvrir une story de correction (Apprentissage, séance)** : « la consigne d'un exercice reste visible pendant tout l'exercice, et se relit en la touchant ». Elle rendra aux scénarios de #7 leur sens d'origine : en Muet, l'enfant voit la consigne. C'est une vraie question d'accessibilité (CLAUDE.md : tout texte de consigne peut être lu à voix haute), et elle dépasse le retrait d'un écran de test.
 
 L'alternative serait de corriger l'écran de séance dans #58 même. Cela élargit la story et touche le code de #16 et #18, pendant que d'autres équipes travaillent en parallèle.
 
-**#58.9 — Que montre l'ancienne adresse `/demonstration` ?**
+#### #58.9 — Que montre l'ancienne adresse `/demonstration` ?
 Recommandation : **l'accueil, comme toute adresse inconnue.** C'est ce que fait déjà la navigation de l'application.
 - Sans connexion : l'invitation à se connecter.
 - Avec un parent connecté : « Qui joue ? ».
 
 Pas de page « introuvable » dédiée : l'enfant ne doit jamais voir un message d'erreur, et une telle page serait un nouvel écran, hors périmètre.
 
-**#58.10 — « Léa commence à jouer » et « Léa joue » (#5, #6, #10, #12, #15) ouvraient la page de démonstration. Quel écran réel ?**
+#### #58.10 — « Léa commence à jouer » et « Léa joue » (#5, #6, #10, #12, #15) ouvraient la page de démonstration. Quel écran réel ?
 Recommandation : **l'accueil de l'enfant**, l'écran où il arrive après « Qui joue ? » (#11).
 - Le texte de ces scénarios ne change pas.
 - On y voit le paysage, le personnage guide (content, qui salue l'enfant), l'en-tête avec le prénom et le niveau, et l'entrée de l'espace parent.
 - Pour les scénarios de mode dys qui passent par « Qui joue ? » (#12), « … voit la consigne de la page de démonstration en mode dys » devient « … voit son accueil en mode dys ». On y vérifie la salutation du personnage guide et ses boutons.
 - Alternative : ouvrir une séance. C'est plus lent et inutile pour l'en-tête et l'univers.
 
-**#58.11 — « En mode dys, la page de démonstration tient dans un écran de 360 px » : sur quel écran réel ?**
+#### #58.11 — « En mode dys, la page de démonstration tient dans un écran de 360 px » : sur quel écran réel ?
 Recommandation : **une question de lecture** (« Où dort Plume ? » de « Lecture : Le petit chat Plume »). C'est l'écran d'exercice le plus chargé : texte, question et choix. Le mode dys espace les lettres, les mots et les lignes, c'est donc là que le débordement est le plus probable.
 - Alternative : l'accueil de l'enfant. Il est peu chargé, donc peu probant.
-
-## Décisions
-
-(aucune pour l'instant)

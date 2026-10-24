@@ -13,7 +13,6 @@ Fonctionnalité: Retirer la page de démonstration
 
   Règle: L'ancienne adresse de la page de démonstration mène à l'accueil, comme toute adresse inconnue
 
-    @a-valider
     Scénario: Sans connexion, l'ancienne adresse de la page de démonstration invite le parent à se connecter
       Étant donné que personne n'est connecté sur la tablette
       Quand j'ouvre Savanturier à l'adresse « /demonstration »
@@ -21,14 +20,12 @@ Fonctionnalité: Retirer la page de démonstration
       Mais je ne vois aucune page de démonstration
       Et aucun message d'erreur n'apparaît
 
-    @a-valider
     Scénario: Avec un parent connecté, l'ancienne adresse de la page de démonstration montre « Qui joue ? »
       Étant donné que Paul est connecté sur la tablette
       Quand Paul ouvre Savanturier à l'adresse « /demonstration »
       Alors il voit « Qui joue ? »
       Mais il ne voit aucune page de démonstration
 
-    @a-valider
     Scénario: Un enfant en train de jouer qui ouvre l'ancienne adresse ne voit aucune page de test
       Étant donné que Léa a un profil enfant préparé de niveau CE1
       Et que Léa joue

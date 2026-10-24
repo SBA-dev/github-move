@@ -151,7 +151,7 @@ Fonctionnalité: Choisir la voix des personnages guides sur l'appareil
       Quand la consigne « Écoute bien. » s'affiche
       Alors Léa entend Noisette lire la consigne avec la voix « Denise (Natural) »
 
-    @issue-58 @a-valider
+    @issue-58
     Scénario: Le mot à écouter garde la voix anglaise malgré la voix imposée
       Étant donné que l'appareil a une voix française et une voix anglaise
       Et que Paul a imposé la voix française sur la tablette

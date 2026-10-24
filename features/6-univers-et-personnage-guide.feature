@@ -57,21 +57,21 @@ Fonctionnalité: Univers et personnage guide
       Quand Léa commence à jouer
       Alors Noisette est content
 
-    @issue-58 @a-valider
+    @issue-58
     Scénario: Le personnage guide applaudit après une bonne réponse
       Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
       Et que Léa joue la question de test « Combien font 3 + 4 ? »
       Quand Léa répond « 7 »
       Alors Noisette applaudit en sautant
 
-    @issue-58 @a-valider
+    @issue-58
     Scénario: Le personnage guide réfléchit après une erreur
       Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
       Et que Léa joue la question de test « Combien font 3 + 4 ? »
       Quand Léa répond « 8 »
       Alors Noisette réfléchit en penchant la tête
 
-    @issue-58 @a-valider
+    @issue-58
     Scénario: Après avoir réfléchi, le personnage guide applaudit la bonne réponse suivante
       Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
       Et que Léa joue la question de test « Combien font 3 + 4 ? »
@@ -81,7 +81,7 @@ Fonctionnalité: Univers et personnage guide
 
   Règle: Le personnage guide félicite avec ses propres expressions ou une félicitation commune, et encourage sans jamais punir
 
-    @issue-58 @a-valider
+    @issue-58
     Plan du Scénario: Après une bonne réponse, <personnage guide> dit une félicitation commune ou une de ses expressions
       Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « <univers> »
       Et que Léa joue la question de test « Combien font 3 + 4 ? »
@@ -98,14 +98,14 @@ Fonctionnalité: Univers et personnage guide
         | Pompiers            | Capitaine Sam    | « Mission accomplie ! », « Pin-pon, bravo ! », « Sauvetage réussi ! »  |
         | Danse               | Lili             | « Et hop, une pirouette ! », « En rythme, bravo ! », « Quelle grâce ! » |
 
-    @issue-58 @a-valider
+    @issue-58
     Scénario: Les félicitations communes sont les mêmes dans tous les univers
       Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Police »
       Et que Léa joue une leçon de test de deux questions à quatre choix
       Quand Léa répond « 7 »
       Alors la félicitation commune dite par Agente Mila fait partie de « Bravo ! », « Super ! », « Ouah, bien joué ! », « Exactement ! », « Génial ! », « Tu gères ! », « Parfait ! », « Oui, c'est ça ! »
 
-    @issue-58 @a-valider
+    @issue-58
     Scénario: Après une erreur, le personnage guide encourage sans punir
       Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Sports »
       Et que Léa joue la question de test « Combien font 3 + 4 ? »
@@ -172,7 +172,7 @@ Fonctionnalité: Univers et personnage guide
       Quand Léa parcourt l'en-tête au clavier
       Alors elle atteint tour à tour l'accueil, le choix Son/Muet et l'espace parent
 
-    @issue-58 @a-valider
+    @issue-58
     Scénario: Avec les mouvements réduits, le personnage guide ne saute pas mais son visage montre qu'il applaudit
       Étant donné que l'appareil demande des mouvements réduits
       Et que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
@@ -181,7 +181,7 @@ Fonctionnalité: Univers et personnage guide
       Alors le visage de Noisette montre qu'il applaudit
       Mais Noisette ne saute pas
 
-    @issue-58 @a-valider
+    @issue-58
     Scénario: Avec les mouvements réduits, le personnage guide ne penche pas la tête mais son visage montre qu'il réfléchit
       Étant donné que l'appareil demande des mouvements réduits
       Et que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »

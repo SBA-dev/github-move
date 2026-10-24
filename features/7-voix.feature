@@ -12,7 +12,7 @@ Fonctionnalité: Lecture à voix haute par le personnage guide
 
   Règle: Le personnage guide lit la consigne à voix haute, une seule lecture à la fois
 
-    @issue-58 @a-valider
+    @issue-58
     Scénario: La consigne est lue à voix haute dès qu'elle s'affiche
       Étant donné que Léa a choisi l'univers animaux
       Quand la consigne « Trouve le mot qui commence par le son [a]. » s'affiche
@@ -55,7 +55,7 @@ Fonctionnalité: Lecture à voix haute par le personnage guide
       Alors Léa entend Noisette lire « Le chat », puis un court silence, puis « du lait. »
       Mais Léa n'entend jamais lire les soulignés
 
-    @issue-58 @a-valider
+    @issue-58
     Scénario: Un texte sans rien à dire n'est pas lu
       Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
       Et qu'une question de test « ___ » a les choix « 2 », « 3 » et « 4 », de réponse « 2 »
@@ -102,7 +102,7 @@ Fonctionnalité: Lecture à voix haute par le personnage guide
       Quand j'ouvre Savanturier
       Alors le son est activé
 
-    @issue-58 @a-valider
+    @issue-58
     Scénario: En Muet, la question s'affiche sans être lue
       Étant donné que la tablette est en Muet
       Et que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
@@ -129,7 +129,7 @@ Fonctionnalité: Lecture à voix haute par le personnage guide
 
   Règle: Sans voix, l'enfant peut quand même jouer
 
-    @issue-58 @a-valider
+    @issue-58
     Scénario: Quand la voix est bloquée, l'enfant est prévenu sans être bloqué
       Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
       Et que le navigateur bloque la voix
@@ -144,7 +144,7 @@ Fonctionnalité: Lecture à voix haute par le personnage guide
       Quand la consigne suivante s'affiche
       Alors le message de voix bloquée n'apparaît pas de nouveau
 
-    @issue-58 @a-valider
+    @issue-58
     Scénario: Réécouter permet de réessayer quand la voix était bloquée
       Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
       Et que Léa joue la question de test « Combien font 3 + 4 ? »
@@ -153,7 +153,7 @@ Fonctionnalité: Lecture à voix haute par le personnage guide
       Quand Léa demande à réécouter la question
       Alors Léa entend Noisette lire « Combien font 3 plus 4 ? »
 
-    @issue-58 @a-valider
+    @issue-58
     Scénario: Sur un navigateur qui ne sait pas lire à voix haute, l'enfant joue quand même
       Étant donné que le navigateur ne sait pas lire à voix haute
       Et que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
