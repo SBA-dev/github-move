@@ -190,3 +190,39 @@ Deno.test("une question prévue sur un exercice exclu du test de départ est ref
     QuestionHorsDuTestDeDepart,
   );
 });
+
+Deno.test("une question prévue sur un exercice absent de la leçon est refusée", () => {
+  const lecon = leconAvec({ type: "dictee", mots: [{ mot: "chat" }] });
+  const questionSurExerciceAbsent: QuestionPrevue = { leconId: "fr-ce1-test", exercice: 7, rang: 0 };
+
+  assertThrows(
+    () => questionDuTestDeDepart(lecon, questionSurExerciceAbsent, tireurSansMelange, CE1),
+    QuestionHorsDuTestDeDepart,
+  );
+});
+
+Deno.test("une question de bulles prévue au-delà des questions de l'exercice est refusée", () => {
+  const lecon = leconAvec({
+    type: "bulles",
+    questions: [{ question: "q", choix: ["a", "b"], reponse: "a" }],
+  });
+
+  assertThrows(
+    () => questionDuTestDeDepart(lecon, questionPrevue(4), tireurSansMelange, CE1),
+    QuestionHorsDuTestDeDepart,
+  );
+});
+
+Deno.test("une question de conjugaison prévue au-delà des formes du tableau est refusée", () => {
+  const lecon = leconAvec({
+    type: "conjugaison",
+    verbe: "être",
+    temps: "présent",
+    formes: [{ pronom: "je", forme: "suis" }, { pronom: "tu", forme: "es" }],
+  });
+
+  assertThrows(
+    () => questionDuTestDeDepart(lecon, questionPrevue(5), tireurSansMelange, CE1),
+    QuestionHorsDuTestDeDepart,
+  );
+});
