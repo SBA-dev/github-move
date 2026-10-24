@@ -48,6 +48,9 @@ export { type SectionDeLEcran, sectionsAAfficher } from "./sections-de-l-ecran.t
 export { type PastilleDeRecord, pastillesDesRecords, type RecordDuProfil } from "./records-de-calcul-rapide.ts";
 export {
   NOM_DE_L_ECRAN_DES_MEDAILLES,
+  parolesALOuverture,
+  parolesDeLaSectionDesRecords,
   parolesDuGuideALOuverture,
   phraseLueDeLaPastille,
+  TITRE_DES_RECORDS_DE_CALCUL_RAPIDE,
 } from "./paroles-de-l-ecran-des-medailles.ts";
