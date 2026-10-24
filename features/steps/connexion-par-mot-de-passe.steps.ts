@@ -100,7 +100,7 @@ Given(/^(\S+) n'a aucun profil enfant$/, async ({ famille }, prenom: string) => 
 
 async function rater(famille: Famille, adresse: string, nombre: number): Promise<void> {
   for (let i = 0; i < nombre; i++) {
-    expect(await appelerLaReinitialisation(famille.normalisee(adresse), PRENOM_FAUX, MOT_DE_PASSE_VALIDE), `essai raté n°${i + 1}`).toBe(401);
+    expect(await appelerLaReinitialisation(famille.normalisee(adresse), PRENOM_FAUX, MOT_DE_PASSE_VALIDE), `essai raté n°${i + 1}`).toBe(i + 1 === 5 ? 429 : 401);
   }
 }
 

@@ -1,5 +1,5 @@
 # language: fr
-@issue-72 @wip
+@issue-72
 Fonctionnalité: Connexion du parent par adresse e-mail et mot de passe du parent, sans aucun e-mail
   En tant que parent
   Je veux me connecter avec mon adresse e-mail et un mot de passe du parent, sans attendre d'e-mail
