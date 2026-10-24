@@ -21,6 +21,7 @@ import { MonParcours } from "./parcours/index.ts";
 import { AideEcranDAccueil } from "./installation/index.ts";
 import { type Lieu, useNavigation } from "./navigation.ts";
 import { EcranDeSeance, PageDeLaLecon, useRenvoiDesSeancesGardees } from "./seance/index.ts";
+import { oublierLesEtoilesGagnees } from "./seance/fin-de-seance/etoiles-gagnees-pendant-l-utilisation.ts";
 import { ChoixDeLaVoix, useVoix } from "./voix/index.ts";
 import { PALETTES, Paysage, PersonnageGuide } from "./univers/index.ts";
 
@@ -81,12 +82,17 @@ export function Application() {
   }, [lieu, lieuDemande, remplacer]);
   const [matiereDuParcours, setMatiereDuParcours] = useState<CodeDeMatiere | undefined>();
   const [deconnexionEchouee, setDeconnexionEchouee] = useState(false);
+  const oublierLeProfilEtSaProgression = () => {
+    oublierLeProfilEnCours();
+    setMatiereDuParcours(undefined);
+  };
   const seDeconnecter = async () => {
     setDeconnexionEchouee(false);
     try {
       await connexion.seDeconnecter.executer();
       fermerEspaceParent();
-      oublierLeProfilEnCours();
+      oublierLeProfilEtSaProgression();
+      oublierLesEtoilesGagnees();
       remplacer("accueil");
     } catch {
       setDeconnexionEchouee(true);
@@ -147,7 +153,7 @@ export function Application() {
                 onMonParcours={() => aller("parcours")}
                 onChangerDEnfant={() => {
                   aller("accueil");
-                  oublierLeProfilEnCours();
+                  oublierLeProfilEtSaProgression();
                 }}
               />
             )}

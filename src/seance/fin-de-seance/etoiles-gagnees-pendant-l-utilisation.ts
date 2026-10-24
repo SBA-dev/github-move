@@ -10,3 +10,7 @@ export function retenirLesEtoilesGagnees(profil: string, lecon: string, etoiles:
 export function etoilesGagneesPendantLUtilisation(profil: string): ReadonlyMap<string, Etoiles> {
   return gagnees.get(profil) ?? new Map<string, Etoiles>();
 }
+
+export function oublierLesEtoilesGagnees(): void {
+  gagnees.clear();
+}
