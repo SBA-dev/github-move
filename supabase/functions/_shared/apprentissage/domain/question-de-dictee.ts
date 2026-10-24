@@ -85,21 +85,15 @@ export class QuestionDeDictee implements QuestionSuivie {
     return this.corriger(reponse.lettres);
   }
 
-  jeNeSaisPasPermis(): boolean {
-    return true;
-  }
-
   direJeNeSaisPas(): AideDonnee {
     if (this.estReussie) throw new QuestionDejaReussie();
     if (this.jeNeSaisPasDejaDit) throw new JeNeSaisPasDejaDit();
     this.jeNeSaisPasDejaDit = true;
     this.reponsesDonnees.push({ genre: "jeNeSaisPas" });
     if (this.nombreDErreurs === 0) this.nombreDErreurs = 1;
-    const attendues = this.mot.lettresAEcrire();
-    const gardees = this.lettres.findIndex((lettre, rang) => lettre !== attendues[rang]);
-    this.lettres = this.lettres.slice(0, gardees === -1 ? this.lettres.length : gardees);
-    const prochaine = attendues[this.lettres.length] as string;
-    this.lettreMontree = this.lettres.length + 1 < attendues.length ? prochaine : undefined;
+    this.lettres = this.debutJuste();
+    const prochaine = this.mot.lettresAEcrire()[this.lettres.length] as string;
+    this.lettreMontree = this.estLaDerniereCase(this.lettres.length) ? undefined : prochaine;
     return { aide: undefined, bonneReponse: prochaine, maniere: "ecrire" };
   }
 
@@ -121,6 +115,16 @@ export class QuestionDeDictee implements QuestionSuivie {
 
   get reussie(): boolean {
     return this.estReussie;
+  }
+
+  private debutJuste(): string[] {
+    const attendues = this.mot.lettresAEcrire();
+    const premiereFausse = this.lettres.findIndex((lettre, rang) => lettre !== attendues[rang]);
+    return this.lettres.slice(0, premiereFausse === -1 ? this.lettres.length : premiereFausse);
+  }
+
+  private estLaDerniereCase(rang: number): boolean {
+    return rang + 1 === this.mot.lettresAEcrire().length;
   }
 
   private touchesDisponibles(): string[] {
