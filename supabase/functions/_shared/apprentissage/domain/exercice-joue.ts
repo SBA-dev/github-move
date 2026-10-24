@@ -3,6 +3,7 @@ import { type EtiquettePosee, EtiquettesAPlacer } from "./etiquettes-a-placer.ts
 import { PasDeQuestionEnCours } from "./erreurs.ts";
 import { nombreDeQuestions } from "./nombre-de-questions.ts";
 import { type QuestionJouee, questionsJoueesAvec } from "./question-jouee.ts";
+import type { ParoleDue } from "./parole-due.ts";
 import type { QuestionSuivie } from "./question-suivie.ts";
 import type { AideDonnee } from "./question-jouee.ts";
 import type { Reponse, ResultatDeReponse } from "./reponse.ts";
@@ -76,18 +77,14 @@ export class ExerciceJoue {
     return this.contenu.etiquettes?.aideApresLaDerniereErreur();
   }
 
-  felicitationApresLaDerniereReponse(): boolean {
+  paroleDueApresLaDerniereReponse(): ParoleDue | undefined {
     const etiquettes = this.contenu.etiquettes;
-    if (etiquettes) return etiquettes.felicitationApresLaDerniereReponse();
-    return this.dernierBonMotDUnTrou();
+    if (etiquettes) return etiquettes.paroleDueApresLaDerniereReponse();
+    return this.dernierBonMotDUnTrou() ? "felicitation" : undefined;
   }
 
   texteCompleteParLaDerniereReponse(): boolean {
     return this.dernierBonMotDUnTrou() && this.estReussi();
-  }
-
-  relanceApresLaDerniereReponse(): string | undefined {
-    return this.contenu.etiquettes?.relanceApresLaDerniereReponse();
   }
 
   repondre(reponse: Reponse): ResultatDeReponse {

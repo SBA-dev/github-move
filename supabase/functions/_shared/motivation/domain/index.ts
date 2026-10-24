@@ -10,9 +10,11 @@ export {
   encourager,
   type Felicitation,
   feliciter,
+  feliciterUneFoisSurDeux,
   inviterACreerLePremierProfil,
   presentation,
   presentationAuRetourDuSon,
+  relancer,
   saluer,
 } from "./paroles.ts";
 export {

@@ -1,6 +1,13 @@
 import { type MutableRefObject, useCallback, useState } from "react";
 import { type FaitDeSeance, Reponse, type Seance } from "@domain/apprentissage";
-import { type Humeur, type PersonnageGuide, reagirAJeNeSaisPas, reagirALaReponse } from "@domain/motivation";
+import {
+  feliciterUneFoisSurDeux,
+  type Humeur,
+  type PersonnageGuide,
+  reagirAJeNeSaisPas,
+  reagirALaReponse,
+  relancer,
+} from "@domain/motivation";
 import { hasardDuNavigateur } from "../../hasard-navigateur.ts";
 import type { ParoleADire } from "../usePersonnageQuiParle.ts";
 import type { QuestionFigee } from "./useQuestionFigee.ts";
@@ -45,9 +52,15 @@ export function useEtiquettesAPlacer(
   /** Une bonne étiquette fait applaudir le personnage guide ; il ne parle que si le domaine le demande. */
   const feliciterOuRelancer = useCallback(async () => {
     const { humeur, parole } = reagirALaReponse(true, personnageGuide, hasardDuNavigateur);
-    const relance = seance.relanceApresLaDerniereReponse();
-    if (relance !== undefined) await dire({ texte: relance, nature: "felicitation", humeur });
-    else if (seance.felicitationApresLaDerniereReponse()) await dire({ texte: parole.texte, nature: "felicitation", humeur });
+    const paroleDue = seance.paroleDueApresLaDerniereReponse();
+    const texte = paroleDue === "relance"
+      ? relancer(hasardDuNavigateur)
+      : paroleDue === "felicitationUneFoisSurDeux"
+      ? feliciterUneFoisSurDeux(personnageGuide, hasardDuNavigateur)
+      : paroleDue === "felicitation"
+      ? parole.texte
+      : undefined;
+    if (texte !== undefined) await dire({ texte, nature: "felicitation", humeur });
     else {
       faireSilence();
       montrerHumeur(humeur);

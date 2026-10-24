@@ -1,5 +1,6 @@
 import type { EtapeDeLecon, Lecon } from "../../catalogue/domain/index.ts";
 import type { ChoixDeSeance } from "./choix-de-seance.ts";
+import type { ParoleDue } from "./parole-due.ts";
 import { Avancement } from "./avancement.ts";
 import {
   PasDeQuestionEnCours,
@@ -129,16 +130,12 @@ export class Seance {
     return this.dernierExerciceRepondu?.aideApresLaDerniereErreur();
   }
 
-  felicitationApresLaDerniereReponse(): boolean {
-    return this.dernierExerciceRepondu?.felicitationApresLaDerniereReponse() ?? false;
+  paroleDueApresLaDerniereReponse(): ParoleDue | undefined {
+    return this.dernierExerciceRepondu?.paroleDueApresLaDerniereReponse();
   }
 
   texteCompleteParLaDerniereReponse(): boolean {
     return this.dernierExerciceRepondu?.texteCompleteParLaDerniereReponse() ?? false;
-  }
-
-  relanceApresLaDerniereReponse(): string | undefined {
-    return this.dernierExerciceRepondu?.relanceApresLaDerniereReponse();
   }
 
   questionEstReussie(rang: number): boolean {

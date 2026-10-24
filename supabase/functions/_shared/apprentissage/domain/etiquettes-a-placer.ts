@@ -2,10 +2,10 @@ import type { ExerciceClasser, ExerciceOrdre, Groupe } from "../../catalogue/dom
 import { CleDeQuestion } from "./cle-de-question.ts";
 import { EtiquetteDejaPlacee, EtiquetteInconnue, GroupeInconnu, PasDeQuestionEnCours } from "./erreurs.ts";
 import { QuestionAPlacer } from "./question-a-placer.ts";
+import type { ParoleDue } from "./parole-due.ts";
 import type { AideDonnee } from "./question-jouee.ts";
 import type { Placement, ResultatDeReponse } from "./reponse.ts";
 
-const RELANCES = ["Oui ! Et après ?", "Bien ! Et ensuite ?", "Super ! La suite ?"];
 const AIDE_DU_DEBUT = "Ce n'est pas le début. Lequel vient en premier ?";
 const AIDE_DE_LA_SUITE = "Pas encore celui-là. Lequel vient juste après ?";
 
@@ -94,13 +94,8 @@ export abstract class EtiquettesAPlacer {
     return this.derniereAide;
   }
 
-  felicitationApresLaDerniereReponse(): boolean {
-    return this.dernierResultat === "juste" && this.felicitationApresUneBonneEtiquette(this.nombreReussies);
-  }
-
-  relanceApresLaDerniereReponse(): string | undefined {
-    if (this.dernierResultat !== "juste" || this.restantes.length === 0) return undefined;
-    return this.relanceApresUneBonneEtiquette(this.nombreReussies);
+  paroleDueApresLaDerniereReponse(): ParoleDue | undefined {
+    return this.dernierResultat === "juste" ? this.paroleDueApresUneBonneEtiquette() : undefined;
   }
 
   protected etiquetteHorsDesRestantes(etiquette: string): Error {
@@ -108,19 +103,12 @@ export abstract class EtiquettesAPlacer {
     return estDeLExercice ? new EtiquetteDejaPlacee(etiquette) : new EtiquetteInconnue(etiquette);
   }
 
+  protected abstract paroleDueApresUneBonneEtiquette(): ParoleDue;
   protected abstract questionVisee(placement: Placement): QuestionAPlacer;
   protected abstract estBienPlacee(question: QuestionAPlacer, placement: Placement): boolean;
   protected abstract aideApresErreur(question: QuestionAPlacer, placement: Placement): string;
   protected abstract questionPourJeNeSaisPas(etiquette: string | undefined): QuestionAPlacer;
   protected abstract bonneReponseDe(question: QuestionAPlacer): string;
-
-  protected felicitationApresUneBonneEtiquette(_reussies: number): boolean {
-    return false;
-  }
-
-  protected relanceApresUneBonneEtiquette(_reussies: number): string | undefined {
-    return undefined;
-  }
 }
 
 class EtiquettesDeClasser extends EtiquettesAPlacer {
@@ -166,8 +154,8 @@ class EtiquettesDeClasser extends EtiquettesAPlacer {
       `« ${question.etiquette} » n'habite pas dans la maison « ${nom} ». Essaie une autre maison.`;
   }
 
-  protected override felicitationApresUneBonneEtiquette(reussies: number): boolean {
-    return reussies % 2 === 1;
+  protected paroleDueApresUneBonneEtiquette(): ParoleDue {
+    return "felicitationUneFoisSurDeux";
   }
 
   private groupeTouche(placement: Placement): Groupe {
@@ -208,11 +196,7 @@ class EtiquettesDOrdre extends EtiquettesAPlacer {
     return this.nombreReussies === 0 ? AIDE_DU_DEBUT : AIDE_DE_LA_SUITE;
   }
 
-  protected override felicitationApresUneBonneEtiquette(reussies: number): boolean {
-    return reussies === this.questions.length;
-  }
-
-  protected override relanceApresUneBonneEtiquette(reussies: number): string {
-    return RELANCES[(reussies - 1) % RELANCES.length] as string;
+  protected paroleDueApresUneBonneEtiquette(): ParoleDue {
+    return this.etiquettesAPlacer().length === 0 ? "felicitation" : "relance";
   }
 }

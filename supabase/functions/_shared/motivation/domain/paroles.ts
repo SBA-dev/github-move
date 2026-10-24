@@ -41,6 +41,18 @@ export function feliciter(
   return { texte: tirerDans(textes, hasard) };
 }
 
+const RELANCES: readonly string[] = ["Oui ! Et après ?", "Bien ! Et ensuite ?", "Super ! La suite ?"];
+const PROBABILITE_DE_FELICITER_UNE_FOIS_SUR_DEUX = 0.5;
+
+export function relancer(hasard: Hasard): string {
+  return tirerDans(RELANCES, hasard);
+}
+
+export function feliciterUneFoisSurDeux(personnageGuide: PersonnageGuide, hasard: Hasard): string | undefined {
+  if (tirage(hasard) >= PROBABILITE_DE_FELICITER_UNE_FOIS_SUR_DEUX) return undefined;
+  return feliciter(personnageGuide, hasard).texte;
+}
+
 export function direLeTexteComplet(personnageGuide: PersonnageGuide, hasard: Hasard): string {
   return `${feliciter(personnageGuide, hasard).texte} Le texte est complet !`;
 }

@@ -49,3 +49,4 @@ export { ResultatDeLaLecon } from "./resultat-de-la-lecon.ts";
 export type { EtatDuResultat, FaitDeResultat } from "./resultat-de-la-lecon.ts";
 export { indicationDuGeste } from "./exercices/indication-du-geste.ts";
 export { revaliderLaSeance } from "./revalider-la-seance.ts";
+export type { ParoleDue } from "./parole-due.ts";
