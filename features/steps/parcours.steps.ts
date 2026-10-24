@@ -192,7 +192,7 @@ When(/^Léa revient en arrière$/, async ({ page }) => {
 When(
   /^Léa ouvre la leçon « ([^«»]+) » depuis son parcours(?: (au toucher|au clavier))?$/,
   async ({ page }, titre: string, moyen: string | undefined) => {
-    const lecon = page.getByRole("button", { name: new RegExp(`^${echapper(titre)} : `) });
+    const lecon = page.getByRole("button", { name: new RegExp(`^${echapper(titre)}(?:, [A-Z0-9]+)? : `) });
     etat(page).courante = leconDeTitre(page, titre);
     if (moyen === "au clavier") {
       await lecon.focus();
@@ -249,7 +249,7 @@ Then(/^le parcours montre, dans l'ordre, (« .+ »)$/, async ({ famille, page },
   const titres = titresCites(liste);
   await expect(leconsDuParcours(cible)).toHaveCount(titres.length);
   for (const [rang, titre] of titres.entries()) {
-    await expect(leconsDuParcours(cible).nth(rang)).toHaveAccessibleName(new RegExp(`^${echapper(titre)} : `));
+    await expect(leconsDuParcours(cible).nth(rang)).toHaveAccessibleName(new RegExp(`^${echapper(titre)}(?:, [A-Z0-9]+)? : `));
   }
 });
 
@@ -299,7 +299,7 @@ Then(/^le parcours montre :$/, async ({ famille, page }, tableau: DataTable) => 
 });
 
 async function lecon(cible: Page, titre: string): Promise<Locator> {
-  const bouton = cible.getByRole("button", { name: new RegExp(`^${echapper(titre)} : `) });
+  const bouton = cible.getByRole("button", { name: new RegExp(`^${echapper(titre)}(?:, [A-Z0-9]+)? : `) });
   await expect(bouton).toHaveCount(1);
   return bouton;
 }
