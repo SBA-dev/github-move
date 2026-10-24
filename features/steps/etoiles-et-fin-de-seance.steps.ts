@@ -1,5 +1,6 @@
 import { expect, type Page } from "@playwright/test";
 import type { Famille } from "../support/famille.ts";
+import { LecturesDesResultats } from "../support/lectures-des-resultats.ts";
 import {
   envoyerUneSeanceTerminee,
   insertionDirecteDeSeance,
@@ -33,7 +34,7 @@ import {
   repondre,
   textesDesChoixPossibles,
 } from "./exercices-a-choix.steps.ts";
-import { choisirLeaSur, ouvrirLaLeconDansLApplication } from "./profil-reel.ts";
+import { choisirLeaSur, estSurUnProfilReel, ouvrirLaLeconDansLApplication } from "./profil-reel.ts";
 import { jetonDe, profilDe } from "./profils-enfants.steps.ts";
 import { EXPRESSIONS_PAR_PERSONNAGE } from "./univers.steps.ts";
 import { normaliser, terminerLaLecture } from "./voix.steps.ts";
@@ -494,10 +495,16 @@ Then(/^la fin de la séance propose (« .+ ») et (« [^«»]+ »)$/, async ({ p
   await expect(fin(page).getByRole("button")).toHaveText(noms as string[]);
 });
 
-Then(/^aucune leçon suivante n'est proposée$/, async ({ page }) => {
-  // La leçon suivante se calcule après la lecture des meilleures étoiles : on attend la fin des échanges réseau de l'écran de fin.
+Then(/^aucune leçon suivante n'est proposée$/, async ({ page, lecturesDesResultats }) => {
+  // La leçon suivante se calcule quand les lectures lancées par l'écran de fin sont revenues. Les résultats des leçons ne
+  // sont lus que pour un profil réel et en ligne : sinon l'application ne lance pas cette lecture, il n'y a rien à attendre.
   await expect(fin(page)).toBeVisible();
-  await page.waitForLoadState("networkidle");
+  await page.evaluate(() => new Promise((fait) => requestAnimationFrame(() => requestAnimationFrame(fait))));
+  const resultatsAttendus = estSurUnProfilReel(page) && (await page.evaluate(() => navigator.onLine));
+  await expect.poll(async () => {
+    const depuis = await LecturesDesResultats.instantDeLEcranDeFin(page);
+    return depuis !== undefined && lecturesDesResultats.sontRevenues(depuis, resultatsAttendus);
+  }, { message: "les lectures lancées par l'écran de fin sont revenues", intervals: [50] }).toBe(true);
   await page.evaluate(() => new Promise((fait) => requestAnimationFrame(() => requestAnimationFrame(fait))));
   await expect(fin(page).getByRole("button", { name: "Leçon suivante", exact: true })).toHaveCount(0);
   await expect(page.getByTestId("ensuite")).toHaveCount(0);
