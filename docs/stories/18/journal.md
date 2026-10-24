@@ -13,3 +13,4 @@
   2. Apprentissage : `classer` (une question par étiquette, dans l'ordre choisi par l'enfant, `Placement(etiquette, groupe)`) et `ordre` (une question par position, éléments de même texte interchangeables), aides et paroles de ces types.
   3. Apprentissage : `trous` (une question par trou dans l'ordre du texte, choix proposés selon la décision n°9, mécanique des choix de #17, « Je ne sais pas » de #23), aides et paroles.
   Puis câblage front (poser en glissant, en touchant ou au clavier ; trou annoncé aux lecteurs d'écran), revalidation serveur des nouvelles réponses (#24), E2E et levée des `@depend-de-18`.
+- 2026-10-24 09:14 · `@depend-de-18` retiré des scénarios de #16 (deux scénarios) et de #23 (deux blocs `Exemples`) ; `grep -rn depend-de-18 features/` ne renvoie plus rien. `@wip` conservé sur `features/18-classer-ordre-trous.feature` jusqu'aux E2E verts.
