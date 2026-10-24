@@ -50,3 +50,7 @@ En attente d'une réponse : leçons réussies d'une classe au-dessus (N1, N7, N9
   responsable). Note : un commit de journal (`git commit -a`, 9c38fe7) a embarqué par erreur une partie des steps en
   cours d'écriture ; complétée par le commit des steps, sans effet. Point d'attention : hors ligne, « Chargement du
   parcours… » dure environ 8 s (la lecture des étoiles échoue lentement) ; à corriger avec les non bloquants.
+- 15:05 UTC : corrections des non bloquants (fusion `meilleuresEtoilesReunies` en TDD, page de la leçon, remise à zéro,
+  `catch`, prédicat, nom de fichier, parcours hors ligne sans attente). Review du delta (cycle 2) : **APPROUVÉ**.
+  Petits non bloquants gardés pour le passage N : commentaire « de cet appareil », page de la leçon hors ligne
+  (`reseauDisponible`), noms `a`/`b`, emplacement de `reseau-disponible.ts` et import direct de `niveau-du-profil.ts`.
