@@ -1,6 +1,6 @@
 # Critères d'acceptance : issue #22, Mémoriser une poésie
 
-Scénarios : `features/22-memoriser-une-poesie.feature` (tags `@issue-22 @wip`).
+Scénarios : `features/22-memoriser-une-poesie.feature` (tag `@issue-22`).
 Modèle du domaine : `docs/stories/22/domain-model.md` (contexte **Apprentissage**, avec **Catalogue pédagogique**, **Voix** et **Motivation**).
 Numérotation des questions : unique pour le lot 3, voir `docs/stories/16/acceptance.md` (#22 → Q56 à Q62 ; nouvelle question Q81).
 
