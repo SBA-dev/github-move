@@ -14,7 +14,7 @@ import { QuestionsFaussesDeSuite } from "./questions-fausses-de-suite.ts";
 import type { QuestionPrevue } from "./plan-du-test-de-depart.ts";
 import { reserveDuTestDeDepart } from "./reserve-du-test-de-depart.ts";
 import type { ReponseDonnee } from "./reponse.ts";
-import { TestDeDepart, type TestDeDepartTermine } from "./test-de-depart.ts";
+import { TestDeDepart, type TestDeDepartTermine, testDeDepartTermine } from "./test-de-depart.ts";
 import type { TestDeDepartTermineAEnregistrer } from "./test-de-depart-termine-a-enregistrer.ts";
 import { tireurSelonLesTirages } from "./tireur.ts";
 
@@ -77,14 +77,13 @@ function rejouer(
     serie = serie.apres(juste);
     if (!retiree) jouees.push({ lecon: question.leconId, juste });
   }
-  return {
-    type: "TestDeDepartTermine",
+  return testDeDepartTermine({
     test: envoi.test,
     enfant: envoi.enfant,
     termineeLe: envoi.termineeLe,
     questions: jouees,
     arrete: serie.arreteLeTest(),
-  };
+  });
 }
 
 function etaitJuste(reponses: readonly ReponseDonnee[]): boolean {
@@ -125,7 +124,7 @@ function rejouerLaQuestion(
     rejouerLaReponse(test, reponse);
   });
   if (!test.estFini()) throw incoherent("une question posée ne finit pas par la bonne réponse");
-  return test.terminer(envoi.termineeLe).questions.every(({ juste }) => juste);
+  return test.aEteJuste();
 }
 
 function leconExiste(question: QuestionPrevue, lecons: readonly Lecon[]): boolean {

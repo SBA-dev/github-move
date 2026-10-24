@@ -22,6 +22,12 @@ export type TestDeDepartTermine = Readonly<{
   arrete: boolean;
 }>;
 
+export function testDeDepartTermine(
+  { test, enfant, termineeLe, questions, arrete }: Omit<TestDeDepartTermine, "type">,
+): TestDeDepartTermine {
+  return { type: "TestDeDepartTermine", test, enfant, termineeLe, questions, arrete };
+}
+
 type QuestionDuTestDeDepart = Readonly<{ prevue: QuestionPrevue; question: QuestionPosee }>;
 
 export class TestDeDepart {
@@ -86,8 +92,7 @@ export class TestDeDepart {
   terminer(maintenant: Date): TestDeDepartTermine {
     if (!this.estFini()) throw new TestDeDepartNonFini();
     this.termineeLe = maintenant;
-    return {
-      type: "TestDeDepartTermine",
+    return testDeDepartTermine({
       test: this.id.valeur,
       enfant: this.enfant,
       termineeLe: maintenant,
@@ -96,7 +101,11 @@ export class TestDeDepart {
         juste: question.erreurs === 0,
       })),
       arrete: this.estArrete(),
-    };
+    });
+  }
+
+  aEteJuste(): boolean {
+    return this.questionsPosees().every(({ erreurs }) => erreurs === 0);
   }
 
   aEnregistrer(): TestDeDepartTermineAEnregistrer {
