@@ -15,6 +15,7 @@ import {
   TirageInvalide,
   TirageManquant,
 } from "./erreurs.ts";
+import { QuestionsFaussesDeSuite } from "./questions-fausses-de-suite.ts";
 import type { QuestionPrevue } from "./plan-du-test-de-depart.ts";
 import { reserveDuTestDeDepart } from "./reserve-du-test-de-depart.ts";
 import type { ReponseDonnee } from "./reponse.ts";
@@ -62,31 +63,76 @@ function rejouer(
 ): TestDeDepartTermine {
   if (envoi.questions.length > NOMBRE_MAXIMAL_DE_QUESTIONS) throw incoherent("trop de questions");
   if (envoi.tirages.length > envoi.questions.length) throw incoherent("des tirages pour des questions non prévues");
-  const retenues = envoi.questions
-    .map((question, rang) => ({
-      question,
-      tirages: envoi.tirages[rang] ?? [],
-      reponses: envoi.reponses[rang] ?? [],
-    }))
-    .filter(({ question }) => leconExiste(question, lecons));
-  const plan = retenues.map(({ question }) => question);
-  verifierLaReserve(plan, lecons, niveau);
-  const tirages = retenues.flatMap(({ tirages }) => tirages).values();
+  if (envoi.reponses.length > envoi.questions.length) throw incoherent("des réponses pour des questions non prévues");
+  const questions = envoi.questions.map((question, rang) => ({
+    question,
+    tirages: envoi.tirages[rang] ?? [],
+    reponses: envoi.reponses[rang] ?? [],
+  }));
+  const retenues = questions.filter(({ question }) => leconExiste(question, lecons));
+  if (retenues.length === 0) throw incoherent("aucune question du test de départ n'existe plus dans la bibliothèque");
+  verifierLaReserve(retenues.map(({ question }) => question), lecons, niveau);
+  let serie = QuestionsFaussesDeSuite.aucune();
+  const jouees: TestDeDepartTermine["questions"][number][] = [];
+  for (const { question, tirages, reponses } of questions) {
+    const retiree = !leconExiste(question, lecons);
+    if (serie.arreteLeTest()) {
+      if (reponses.length > 0) throw incoherent("des réponses après l'arrêt du test");
+      if (!retiree) reconstruire(envoi, lecons, niveau, question, tirages);
+      continue;
+    }
+    const juste = retiree
+      ? etaitJuste(reponses)
+      : rejouerLaQuestion(envoi, lecons, niveau, question, tirages, reponses);
+    serie = serie.apres(juste);
+    if (!retiree) jouees.push({ lecon: question.leconId, juste });
+  }
+  return {
+    type: "TestDeDepartTermine",
+    test: envoi.test,
+    enfant: envoi.enfant,
+    termineeLe: envoi.termineeLe,
+    questions: jouees,
+    arrete: serie.arreteLeTest(),
+  };
+}
+
+function etaitJuste(reponses: readonly ReponseDonnee[]): boolean {
+  return reponses.length === 1 && reponses[0].genre !== "jeNeSaisPas";
+}
+
+function reconstruire(
+  envoi: TestDeDepartTermineAEnregistrer,
+  lecons: readonly Lecon[],
+  niveau: Niveau,
+  question: QuestionPrevue,
+  groupe: readonly (readonly string[])[],
+): TestDeDepart {
+  const tirages = groupe.values();
   const test = TestDeDepart.commencer({
     generateurId: { nouveau: () => envoi.test },
     enfant: envoi.enfant,
     niveau,
     lecons,
-    plan,
+    plan: [question],
     tireur: tireurSelonLesTirages(tirages),
   });
   if (!tirages.next().done) throw new TirageEnTrop();
-  const reponsesApresLePlan = envoi.reponses.slice(envoi.questions.length);
-  [...retenues.map(({ reponses }) => reponses), ...reponsesApresLePlan].forEach((reponses) =>
-    rejouerLesReponses(test, reponses)
-  );
-  if (!test.estFini()) throw incoherent("le test s'arrête avant la fin sans trois questions fausses de suite");
-  return test.terminer(envoi.termineeLe);
+  return test;
+}
+
+function rejouerLaQuestion(
+  envoi: TestDeDepartTermineAEnregistrer,
+  lecons: readonly Lecon[],
+  niveau: Niveau,
+  question: QuestionPrevue,
+  tirages: readonly (readonly string[])[],
+  reponses: readonly ReponseDonnee[],
+): boolean {
+  const test = reconstruire(envoi, lecons, niveau, question, tirages);
+  reponses.forEach((reponse) => rejouerLaReponse(test, reponse));
+  if (!test.estFini()) throw incoherent("une question posée ne finit pas par la bonne réponse");
+  return test.terminer(envoi.termineeLe).questions[0].juste;
 }
 
 function leconExiste(question: QuestionPrevue, lecons: readonly Lecon[]): boolean {
@@ -99,14 +145,6 @@ function verifierLaReserve(questions: readonly QuestionPrevue[], lecons: readonl
   if (rangs.includes(-1)) throw incoherent("une leçon est hors de la réserve du test de départ");
   if (rangs.some((rang, i) => rang <= (rangs[i - 1] ?? -1))) {
     throw incoherent("les questions ne suivent pas l'ordre de la réserve, ou une leçon est posée deux fois");
-  }
-}
-
-function rejouerLesReponses(test: TestDeDepart, reponses: readonly ReponseDonnee[]): void {
-  const question = test.questionEnCours();
-  reponses.forEach((reponse) => rejouerLaReponse(test, reponse));
-  if (question !== undefined && test.questionEnCours() === question) {
-    throw incoherent("une question posée ne finit pas par la bonne réponse");
   }
 }
 

@@ -4,6 +4,7 @@ import type { GenerateurId } from "./generateur-id.ts";
 import type { PlanDuTestDeDepart, QuestionPrevue } from "./plan-du-test-de-depart.ts";
 import type { AideDonnee } from "./question-jouee.ts";
 import { questionDuTestDeDepart } from "./question-du-test-de-depart.ts";
+import { QuestionsFaussesDeSuite } from "./questions-fausses-de-suite.ts";
 import type { QuestionPosee } from "./question-posee.ts";
 import type { ReponseEnNombre, ReponseParChoix, ResultatDeReponse } from "./reponse.ts";
 import type { TestDeDepartTermineAEnregistrer } from "./test-de-depart-termine-a-enregistrer.ts";
@@ -11,8 +12,6 @@ import { TestDeDepartId } from "./test-de-depart-id.ts";
 import type { Tireur } from "./tireur.ts";
 import { enonceDUneAddition } from "./tirage-d-additions.ts";
 import { enonceTire } from "./tirage-d-operations.ts";
-
-const QUESTIONS_FAUSSES_DE_SUITE_POUR_ARRETER = 3;
 
 export type TestDeDepartTermine = Readonly<{
   type: "TestDeDepartTermine";
@@ -27,7 +26,7 @@ type QuestionDuTestDeDepart = Readonly<{ prevue: QuestionPrevue; question: Quest
 
 export class TestDeDepart {
   private rang = 0;
-  private questionsFaussesDeSuite = 0;
+  private questionsFaussesDeSuite = QuestionsFaussesDeSuite.aucune();
   private termineeLe: Date | undefined;
 
   private constructor(
@@ -77,7 +76,7 @@ export class TestDeDepart {
   }
 
   estArrete(): boolean {
-    return this.questionsFaussesDeSuite >= QUESTIONS_FAUSSES_DE_SUITE_POUR_ARRETER;
+    return this.questionsFaussesDeSuite.arreteLeTest();
   }
 
   estFini(): boolean {
@@ -125,7 +124,7 @@ export class TestDeDepart {
   private passerALaSuivanteSiReussie(question: QuestionPosee): void {
     if (!question.reussie) return;
     this.rang++;
-    this.questionsFaussesDeSuite = question.erreurs > 0 ? this.questionsFaussesDeSuite + 1 : 0;
+    this.questionsFaussesDeSuite = this.questionsFaussesDeSuite.apres(question.erreurs === 0);
   }
 }
 
