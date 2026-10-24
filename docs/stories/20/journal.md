@@ -29,3 +29,21 @@
 - 2026-10-24 · Review cycle 1 : À CORRIGER, 4 bloquants : (1) plafond de 50 réponses par question qui refuse une fluence rapide ; (2) record perdu si son écriture échoue après celle de la séance ; (3) la facilité s'applique aussi à la fluence ; (4) paroles d'accueil de la fluence et accord « calcul(s) réussi(s) » dans le front. Corrections par cycles RED/GREEN, plus les non bloquants simples (filtre de l'historique, validation du Catalogue, `MAISONS`, paramètre inutilisé, type de `parolesDeFinDeFluence`). Choix technique pour (1) : au plus 3 réponses par seconde de durée pour une fluence, 200 réponses pour une autre question.
 - 2026-10-24 · Corrections de la review n°1 : 13 tests rouges puis verts (borne de réponses dans la revalidation, record reproposé au renvoi, `Tireur.operationsDeFluence` sans facilité, paroles de la fluence dans Motivation, validations du Catalogue), refactors (`parolesDeFinDeFluence` en union discriminée, `NOMS_DES_COLONNES_A_L_ECRAN`, filtre de l'historique). `terminer-la-seance` redéployée. 981 tests.
 - 2026-10-24 · Review cycle 2 : **APPROUVÉ**. Non bloquants restants : borne haute de `duree` (au-delà de 333 s, la borne HTTP de 1000 réponses deviendrait plus stricte que la règle) ; pas de plafond global de réponses par corps ; `finirLaFluence` garde un paramètre facultatif inutilisé ; au renvoi après échec, le record est écrit sans fait `NouveauRecordDeFluence` (aucun consommateur aujourd'hui) ; filtre PostgREST de l'historique couvert seulement par l'E2E.
+- 2026-10-24 · E2E #20 : 43/43 cas (tablette et téléphone). Variable `SUFFIXE_E2E` ajoutée à la fixture `famille` pour les E2E simultanés de deux équipes (noté en `APPRIS`).
+- 2026-10-24 · Scénarios `@depend-de-20` de #23 et #24 : steps réels écrits, 9 cas OK, tags retirés par `po-acceptance`.
+- 2026-10-24 · PR #69 ouverte en brouillon.
+- 2026-10-24 · Intégration de `main` n°1 (`MAIN A BOUGÉ` : #19 Dictée et conjugaison, puis sa suite PR #70) : 18 conflits (domaine Apprentissage, corps HTTP, Catalogue, front, 2 tests, 1 fichier de steps), résolus par `implementer`, `test-writer` et `e2e-tester` chacun sur sa part. Choix : le type de question « chiffre » prend la clé `h:` (`c:` déjà pris par la conjugaison, dont les clés sont stockées). Review du delta : 1 bloquant (`ReponseIncompatible` absent des erreurs de rejeu : erreur 500 au lieu d'une séance incohérente, déjà présent avant la fusion), corrigé par TDD ; garde « préfixes de clé distincts » ajoutée. Review : APPROUVÉ. `terminer-la-seance` redéployée avec le code fusionné.
+- 2026-10-24 · Non-régression E2E sur le code fusionné : 874/874 (#19, #20, #23, #24 compris). #8 (PWA) : « Une nouvelle version s'applique au lancement suivant » échoue aussi sur `main` (step de #7 qui ouvre `/demonstration`, absente du build de production) : sans lien avec #20.
+- 2026-10-24 · Intégration de `main` n°2 (PR #71, outillage du tableau de bord) : sans conflit. 1136 tests unitaires, `tsc`, build, pytest (1404) verts.
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Durée, du lancement à « prête à merger » | ≈ 4 h 15 (12:45 → 17:00 UTC environ) |
+| Temps passé à attendre | PO : 0 (scénarios validés au lot 3) ; verrou `base` : 0 (demandé avant le besoin, accordé en quelques minutes) ; `main` : 0 (intégrations faites entre deux étapes) |
+| Cycles TDD | ≈ 40 cycles RED/GREEN (Catalogue 4, calcul 9, fluence 5, addition posée 5, vues 3, câblage 2, corrections de review 13) ; 5 arrêts de l'implementer sur un test existant à adapter |
+| Cycles de review | 4 : À CORRIGER (4 bloquants), APPROUVÉ, À CORRIGER après fusion (1 bloquant), APPROUVÉ |
+| Cycles d'E2E | 3 passages : #20 43/43 du premier coup après écriture des steps ; `@depend-de-20` + non-régression 794/794 ; non-régression après fusion 874/874 |
+| Intégrations de `main` | 2 (dont une avec 18 conflits, due à #19 livrée hors vague dans les mêmes fichiers d'Apprentissage) |
+| Incidents d'environnement | Chromium 1194 absent (contournement par liens) ; parent de test partagé entre deux équipes en E2E (`SUFFIXE_E2E`) |
