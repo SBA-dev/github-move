@@ -1,11 +1,16 @@
 import { type MutableRefObject, useCallback, useEffect, useRef, useState } from "react";
 import { type FluenceEnCours, RecordDeFluence, Reponse, type Seance } from "@domain/apprentissage";
-import { humeurApresReponse, parolesDeFinDeFluence } from "@domain/motivation";
+import {
+  accueilDeLaFluence,
+  type FinDeFluence,
+  humeurApresReponse,
+  parolesDeFinDeFluence,
+  SIGNAL_DE_DEPART,
+} from "@domain/motivation";
 import type { Horloge } from "../../horloge.ts";
 import type { ParoleADire } from "../../usePersonnageQuiParle.ts";
 import type { SuiteDuCalcul } from "../useCalcul.ts";
 import type { QuestionFigee } from "../useQuestionFigee.ts";
-import { accueilDeLaFluence, SIGNAL_DE_DEPART } from "./accueil-de-la-fluence.ts";
 import { lireLeRecordDeFluence } from "./lecture-du-record-supabase.ts";
 
 const BATTEMENT_EN_MS = 250;
@@ -31,8 +36,12 @@ function finDeFluence(seance: Seance, exercice: string, score: number, recordCon
   });
   const issue = record.proposer(score);
   const meilleurScore = record.meilleurScore;
-  const texte = parolesDeFinDeFluence({ score, issue, ...(meilleurScore === undefined ? {} : { record: meilleurScore }) });
-  return { texte, meilleurScore };
+  if (issue === "recordInchange") {
+    if (meilleurScore === undefined) throw new Error("Un record inchangé suppose un record connu");
+    return { texte: parolesDeFinDeFluence({ score, issue, record: meilleurScore }), meilleurScore };
+  }
+  const fin: FinDeFluence = { score, issue };
+  return { texte: parolesDeFinDeFluence(fin), meilleurScore };
 }
 
 /** Le déroulé d'une fluence : l'accueil et le record, le signal de départ, le temps qui passe, puis la phrase de fin. */
@@ -53,7 +62,7 @@ export function useFluence(
     const recordLu = await lireLeRecordDeFluence(seance.enfant, seance.lecon, nom);
     if (!vivant.current) return;
     setRecord(recordLu);
-    await dire({ texte: accueilDeLaFluence(fluence.tempsRestant, recordLu), nature: "annonce" });
+    await dire({ texte: accueilDeLaFluence({ duree: fluence.tempsRestant, ...(recordLu === undefined ? {} : { record: recordLu }) }), nature: "annonce" });
   }, [seance, horloge, vivant, dire]);
 
   const demarrer = useCallback(() => {

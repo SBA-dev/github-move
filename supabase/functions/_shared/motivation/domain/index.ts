@@ -34,4 +34,11 @@ export {
   inviterAJouerApresLesEtapes,
   parolesDeFinDeSeance,
 } from "./paroles-de-seance.ts";
-export { type FinDeFluence, parolesDeFinDeFluence } from "./paroles-de-fluence.ts";
+export {
+  accueilDeLaFluence,
+  calculsReussis,
+  type FinDeFluence,
+  parolesDeFinDeFluence,
+  secondes,
+  SIGNAL_DE_DEPART,
+} from "./paroles-de-fluence.ts";

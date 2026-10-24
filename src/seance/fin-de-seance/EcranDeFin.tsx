@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import type { Seance } from "@domain/apprentissage";
 import { leconSuivante, pageDeLaLecon } from "@domain/catalogue";
+import { calculsReussis } from "@domain/motivation";
 import { chargerToutesLesLecons } from "../bibliotheque.ts";
-import { calculsReussis } from "../exercices/fluence/accueil-de-la-fluence.ts";
 import { EtoilesDessinees } from "./EtoilesDessinees.tsx";
 import { Etincelles } from "./Etincelles.tsx";
 import { etoilesSurTrois } from "./texte-des-etoiles.ts";

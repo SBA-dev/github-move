@@ -1,20 +1,5 @@
 import type { FluenceEnCours } from "@domain/apprentissage";
-
-export const SIGNAL_DE_DEPART = "C'est parti !";
-
-function secondes(nombre: number): string {
-  return `${nombre} seconde${nombre > 1 ? "s" : ""}`;
-}
-
-export function calculsReussis(nombre: number): string {
-  return `${nombre} calcul${nombre > 1 ? "s" : ""} réussi${nombre > 1 ? "s" : ""}`;
-}
-
-/** L'accueil de la fluence : la durée, le record quand on le connaît. */
-export function accueilDeLaFluence(duree: number, record: number | undefined): string {
-  const fin = record === undefined ? "" : `Ton record est de ${record}. `;
-  return `Calcul rapide ! Tu as ${secondes(duree)} pour réussir le plus de calculs possible. ${fin}Prêt ?`;
-}
+import { calculsReussis, secondes } from "@domain/motivation";
 
 export function tempsQuiReste(fluence: FluenceEnCours): string {
   return secondes(fluence.tempsRestant);
