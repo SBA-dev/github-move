@@ -10,6 +10,7 @@ import type { PrenomsDesEnfantsRattaches } from "./ports/prenoms-des-enfants-rat
 import {
   EssaisDeReinitialisationModifiesEnMemeTemps,
   type RegistreDesEssaisDeReinitialisation,
+  RegistreDesEssaisIndisponible,
 } from "./ports/registre-des-essais-de-reinitialisation.ts";
 
 const TENTATIVES_DE_RESERVATION_EN_CAS_D_ESSAIS_SIMULTANES = 5;
@@ -45,8 +46,9 @@ export class ReinitialiserLeMotDePasse {
     essais.enregistrerUneReussite();
     try {
       await this.registre.enregistrer(essais, maintenant);
-    } catch {
+    } catch (cause) {
       // Le raté déjà compté s'oublie de lui-même 24 heures après le dernier raté.
+      if (!(cause instanceof RegistreDesEssaisIndisponible)) throw cause;
     }
   }
 
