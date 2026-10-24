@@ -96,7 +96,7 @@ def etat_etape(texte):
         return "en attente"
     if "en cours" in t:
         return "en cours"
-    if "fait" in t or "sauté" in t or t.startswith(("ok", "approuv", "vert", "mergé")):
+    if "fait" in t or "sauté" in t or "verts" in t or "approuvé" in t or t.startswith(("ok", "vert", "mergé")):
         return "fait"
     return "en cours"
 
