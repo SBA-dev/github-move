@@ -18,8 +18,9 @@ export function ListeDesReglesDuMotDePasse({ id, motDePasse }: Props) {
   const [annonce, setAnnonce] = useState("");
 
   useEffect(() => {
-    setAnnonce(annonceDesChangements(precedentes.current, regles));
-    precedentes.current = regles;
+    const reglesActuelles = ReglesDuMotDePasse.verifier(motDePasse);
+    setAnnonce(annonceDesChangements(precedentes.current, reglesActuelles));
+    precedentes.current = reglesActuelles;
   }, [motDePasse]);
 
   return (
