@@ -95,7 +95,7 @@ Fonctionnalité: Boîte à jetons et schéma en barres
 
     Scénario: Après une erreur, l'aide du problème est lue
       Étant donné que Léa joue le problème « Lina a 9 crayons : 6 sont rouges, les autres sont bleus. Combien de crayons bleus ? » de la leçon « Problèmes : le tout et les parties »
-      Quand Léa répond « 15 »
+      Quand Léa répond « 5 »
       Alors Noisette dit un encouragement, suivi de « On connaît le tout, 9, et une partie, 6. On cherche l'autre partie. »
 
     Plan du Scénario: Sans aide, un problème de <forme> donne l'aide par défaut de sa forme
