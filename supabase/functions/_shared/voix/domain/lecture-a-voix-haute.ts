@@ -13,6 +13,7 @@ import type { VoixDisponible } from "./voix-disponible.ts";
 
 const LANGUE_FRANCAISE = "fr-FR";
 const RYTHME_NORMAL = 1;
+const RYTHME_LENT = 0.65;
 
 export type EtatDuSon = "son" | "muet";
 
@@ -58,7 +59,7 @@ export class LectureAVoixHaute {
 
   async lire(
     brut: string,
-    options: { langue?: string; choix?: ChoixDeVoix; onMot?: (rang: number) => void; onFin?: () => void } = {},
+    options: { langue?: string; choix?: ChoixDeVoix; lent?: boolean; onMot?: (rang: number) => void; onFin?: () => void } = {},
   ): Promise<void> {
     if (this.etat === "muet") return;
     const { lecteur, hasard } = this.dependances;
@@ -72,7 +73,7 @@ export class LectureAVoixHaute {
       await lecteur.lire({
         voix,
         langue,
-        phrases: reglerPhrases(texte, caractere, voix, RYTHME_NORMAL, hasard),
+        phrases: reglerPhrases(texte, caractere, voix, options.lent ? RYTHME_LENT : RYTHME_NORMAL, hasard),
         ...(options.onMot &&
           { onMot: rangDesMots(texte.phrases, rangAffichePourChaqueMotPrononce(brut), options.onMot) }),
       });
