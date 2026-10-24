@@ -25,6 +25,7 @@ export {
   type Reaction,
   type ReactionAJeNeSaisPas,
   reagirAJeNeSaisPas,
+  reagirAJeNeSaisPasEnDictee,
   reagirALaReponse,
 } from "./reaction.ts";
 export { TirageHorsIntervalle } from "./hasard.ts";

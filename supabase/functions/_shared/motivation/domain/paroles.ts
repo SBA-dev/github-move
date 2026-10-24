@@ -115,6 +115,13 @@ export function direJeNeSaisPasAvecLesChoix(aide: string | undefined): string {
   );
 }
 
+export function direJeNeSaisPasEnDictee(maniere: "briller" | "ecrire"): string {
+  return phrases(
+    "Pas de souci, on apprend ensemble !",
+    maniere === "briller" ? "La bonne lettre brille : touche-la." : "Voici la lettre suivante. Écris la suite.",
+  );
+}
+
 export function direJeNeSaisPasAuClavierDeCristaux(
   reponse: string,
   aide: string | undefined,
