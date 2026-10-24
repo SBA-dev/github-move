@@ -60,3 +60,7 @@ En attente d'une réponse : leçons réussies d'une classe au-dessus (N1, N7, N9
   Comportements TDD ajoutés : 7. repli de la leçon suivante sur la leçon juste après (N4) ; 8. aucune leçon suivante
   après une leçon hors du parcours de l'enfant (N10) ; 9. comparaison de niveaux (Catalogue) ; 10. leçons réussies
   d'une classe au-dessus, hors compteur, jamais prochaine (N1, N7).
+- 15:45 UTC : MAIN A BOUGÉ (#19 mergée). E2E cycle 2 interrompu (rendu obsolète). Intégration de `main` (merge
+  3e12850) : conflits `apprentissage/domain/index.ts` et `src/styles.css` (deux ajouts gardés) ; prop `niveau`
+  ajoutée des deux côtés dans `Application.tsx`/`EcranDeSeance.tsx` (dédoublonnée). 947 tests Deno, 1404 pytest,
+  tsc et build verts.
