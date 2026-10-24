@@ -18,7 +18,13 @@ function leconAvec(exercice: Record<string, unknown>): Lecon {
     ordre: 1,
     programme: { section: "c2-test", citation: "Citation de test." },
     lecon: [],
-    exercices: [{ type: "bulles", questions: [] }, exercice],
+    exercices: [
+      {
+        type: "bulles",
+        questions: [{ question: "q", choix: ["a", "b"], reponse: "a" }],
+      },
+      exercice,
+    ],
   });
 }
 
