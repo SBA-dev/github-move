@@ -20,7 +20,10 @@ Deno.test("un chiffre posé dans la mauvaise colonne revient parmi les chiffres 
   assertEquals(resultat, "fausse");
   assertEquals(poser.chiffresAPoser(), ["4", "5"]);
   assertEquals(poser.erreurs, 1);
-  assertEquals(poser.aideApresLaDerniereErreur(), "Dans 45, le 4 est le chiffre des dizaines : il va dans la maison rose.");
+  assertEquals(
+    poser.aideApresLaDerniereErreur(),
+    "Dans 45, le 4 est le chiffre des dizaines : il va dans la maison rose.",
+  );
 });
 
 Deno.test("l'aide d'un nombre d'un seul chiffre dit qu'il est tout seul", () => {
@@ -41,7 +44,10 @@ Deno.test("avec un chiffre en double, l'aide vise la colonne encore libre", () =
   const resultat = poser.placer(Reponse.placement("5", "unites"));
 
   assertEquals(resultat, "fausse");
-  assertEquals(poser.aideApresLaDerniereErreur(), "Dans 55, le 5 est le chiffre des dizaines : il va dans la maison rose.");
+  assertEquals(
+    poser.aideApresLaDerniereErreur(),
+    "Dans 55, le 5 est le chiffre des dizaines : il va dans la maison rose.",
+  );
 });
 
 Deno.test("« Je ne sais pas » fait briller la bonne colonne du chiffre choisi, compte une erreur et laisse le chiffre à poser", () => {
