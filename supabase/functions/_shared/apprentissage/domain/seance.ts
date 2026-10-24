@@ -85,7 +85,6 @@ export class Seance {
   static reconstituer(
     lecon: Lecon,
     envoi: SeanceTermineeAEnregistrer,
-    profil: ProfilDeSeance = PROFIL_DE_SEANCE_PAR_DEFAUT,
   ): Seance {
     const tirages = envoi.tirages[Symbol.iterator]();
     const seance = Seance.construire(
@@ -94,7 +93,7 @@ export class Seance {
       lecon,
       envoi.choix,
       tireurSelonLesTirages(tirages),
-      profil,
+      PROFIL_DE_SEANCE_PAR_DEFAUT,
     );
     if (!tirages.next().done) throw new TirageEnTrop();
     return seance;

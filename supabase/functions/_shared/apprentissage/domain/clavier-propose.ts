@@ -31,16 +31,8 @@ export class ClavierPropose {
     return ClavierPropose.avecLesLettresDuMot(melanger([...lettres, ...intruses], hasard));
   }
 
-  static depuisTirage(
-    reglage: ReglageDuClavier,
-    niveau: CodeDeNiveau,
-    mot: MotAEcrire,
-    tirage: readonly string[],
-  ): ClavierPropose {
-    if (genreAttendu(reglage, niveau) === "clavierComplet") {
-      if (tirage.length > 0) throw new TirageInvalide();
-      return ClavierPropose.complet();
-    }
+  static depuisTirage(mot: MotAEcrire, tirage: readonly string[]): ClavierPropose {
+    if (tirage.length === 0) return ClavierPropose.complet();
     if (!estUnTirageDeLettres(tirage, mot.lettresAEcrire())) throw new TirageInvalide();
     return ClavierPropose.avecLesLettresDuMot([...tirage]);
   }

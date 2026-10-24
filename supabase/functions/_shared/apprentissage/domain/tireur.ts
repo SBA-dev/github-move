@@ -43,8 +43,7 @@ export function tireurSelonLesTirages(tirages: Iterator<readonly string[]>): Tir
       if (!memesEtiquettes(etiquettes, tirage)) throw new TirageInvalide();
       return [...tirage];
     },
-    clavier: (profil, mot) =>
-      ClavierPropose.depuisTirage(profil.clavierDesDictees, profil.niveau, mot, prochainTirage()),
+    clavier: (_profil, mot) => ClavierPropose.depuisTirage(mot, prochainTirage()),
   };
 }
 

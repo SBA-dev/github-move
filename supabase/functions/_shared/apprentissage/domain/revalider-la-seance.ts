@@ -21,7 +21,6 @@ import {
   TirageManquant,
 } from "./erreurs.ts";
 import type { ReponseDonnee } from "./reponse.ts";
-import { PROFIL_DE_SEANCE_PAR_DEFAUT, type ProfilDeSeance } from "./profil-de-seance.ts";
 import { Seance, type SeanceTerminee } from "./seance.ts";
 import type { SeanceTermineeAEnregistrer } from "./seance-terminee-a-enregistrer.ts";
 
@@ -49,10 +48,9 @@ const ERREURS_DE_REJEU = [
 export function revaliderLaSeance(
   lecon: Lecon,
   envoi: SeanceTermineeAEnregistrer,
-  profil: ProfilDeSeance = PROFIL_DE_SEANCE_PAR_DEFAUT,
 ): SeanceTerminee {
   try {
-    return rejouer(lecon, envoi, profil);
+    return rejouer(lecon, envoi);
   } catch (erreur) {
     if (ERREURS_DE_REJEU.some((classe) => erreur instanceof classe)) {
       throw new SeanceIncoherente(erreur as Error);
@@ -61,8 +59,8 @@ export function revaliderLaSeance(
   }
 }
 
-function rejouer(lecon: Lecon, envoi: SeanceTermineeAEnregistrer, profil: ProfilDeSeance): SeanceTerminee {
-  const seance = Seance.reconstituer(lecon, envoi, profil);
+function rejouer(lecon: Lecon, envoi: SeanceTermineeAEnregistrer): SeanceTerminee {
+  const seance = Seance.reconstituer(lecon, envoi);
   while (seance.etapeDeLeconEnCours()) seance.continuer();
   envoi.reponses.forEach((reponsesDeLaQuestion, rang) => {
     reponsesDeLaQuestion.forEach((reponse) => {

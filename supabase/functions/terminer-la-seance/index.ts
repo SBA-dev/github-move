@@ -3,7 +3,6 @@ import { TerminerLaSeance } from "../_shared/apprentissage/application/terminer-
 import { lireLaSeanceTerminee } from "../_shared/apprentissage/infrastructure/corps-de-la-seance-terminee.ts";
 import { traiterUneEcritureDApprentissage } from "../_shared/apprentissage/infrastructure/http-apprentissage.ts";
 import { LeconsDuCatalogueJson } from "../_shared/apprentissage/infrastructure/lecons-du-catalogue-json.ts";
-import { ProfilsDeSeanceSupabase } from "../_shared/apprentissage/infrastructure/profils-de-seance-supabase.ts";
 import { RattachementsDuParentSupabase } from "../_shared/apprentissage/infrastructure/rattachements-du-parent-supabase.ts";
 import { ResultatsDesLeconsSupabase } from "../_shared/apprentissage/infrastructure/resultats-des-lecons-supabase.ts";
 import { SeancesTermineesSupabase } from "../_shared/apprentissage/infrastructure/seances-terminees-supabase.ts";
@@ -33,7 +32,6 @@ Deno.serve((requete) =>
     const clientDuServeur = clientDuServeurALaDemande();
     const faits = await new TerminerLaSeance(
       new RattachementsDuParentSupabase(client),
-      new ProfilsDeSeanceSupabase(client),
       lecons,
       new SeancesTermineesSupabase(clientDuServeur),
       new ResultatsDesLeconsSupabase(clientDuServeur, lecons),
