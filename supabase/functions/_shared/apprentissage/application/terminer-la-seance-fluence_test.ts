@@ -1,4 +1,4 @@
-import { assertEquals } from "@std/assert";
+import { assertEquals, assertRejects } from "@std/assert";
 import { generateurIdFixe } from "../test_utils/generateur-id-fixe.ts";
 import { hasardSansMelange } from "../test_utils/hasard-fixe.ts";
 import { leconDUneSeuleFluenceAuCP } from "../test_utils/lecons-de-fluence.ts";
@@ -75,13 +75,12 @@ Deno.test("battre son record de fluence annonce NouveauRecordDeFluence", async (
   assertEquals((await records.lire("profil-lea", "ma-cp-doubles-fluence", exercice))?.meilleurScore, 2);
 });
 
-Deno.test("une séance déjà enregistrée ne touche pas aux records", async () => {
+Deno.test("un renvoi après un échec d'écriture du record enregistre le record", async () => {
   const { records, terminer } = monde();
-  await terminer.executer({ parent: "parent-paul", seance: envoiDUneFluence("seance-1", 1) });
-  const ecrituresAvant = records.nombreDEcritures();
+  records.echouerALaProchaineEcriture();
+  await assertRejects(() => terminer.executer({ parent: "parent-paul", seance: envoiDUneFluence("seance-1", 3) }));
 
-  const faits = await terminer.executer({ parent: "parent-paul", seance: envoiDUneFluence("seance-1", 1) });
+  await terminer.executer({ parent: "parent-paul", seance: envoiDUneFluence("seance-1", 3) });
 
-  assertEquals(faits, []);
-  assertEquals(records.nombreDEcritures(), ecrituresAvant);
+  assertEquals((await records.lire("profil-lea", "ma-cp-doubles-fluence", exercice))?.meilleurScore, 3);
 });
