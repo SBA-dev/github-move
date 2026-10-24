@@ -1,5 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { DemanderLienDeConnexion, OuvrirLaConnexionAvecLeCode, SeDeconnecter } from "@domain/famille";
+import {
+  DemanderLienDeConnexion,
+  InscrireLeParentEtSeConnecter,
+  OuvrirLaConnexionAvecLeCode,
+  ReinitialiserLeMotDePasseEtSeConnecter,
+  SeConnecterAvecLeMotDePasse,
+  SeDeconnecter,
+} from "@domain/famille";
 import { clientSupabase, connexionConfiguree } from "./client-supabase.ts";
 import { DonneesDeLAppareilNavigateur } from "./donnees-de-l-appareil-navigateur.ts";
 import { lienDeConnexionRefuse, lienDeConnexionSuivi } from "./lien-refuse.ts";
@@ -33,6 +40,9 @@ export function useConnexion() {
     return {
       demanderLeLien: new DemanderLienDeConnexion(service),
       ouvrirAvecLeCode: new OuvrirLaConnexionAvecLeCode(service),
+      seConnecter: new SeConnecterAvecLeMotDePasse(service),
+      sInscrire: new InscrireLeParentEtSeConnecter(service),
+      reinitialiserLeMotDePasse: new ReinitialiserLeMotDePasseEtSeConnecter(service),
       seDeconnecter: new SeDeconnecter(service, new DonneesDeLAppareilNavigateur()),
     };
   }, []);
