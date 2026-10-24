@@ -7,3 +7,9 @@
 - 11:41 · Étape 2 : critères d'acceptance écrits par `po-acceptance` (`features/21-boite-et-barres.feature`, `docs/stories/21/acceptance.md`) : 4 règles, 12 scénarios (31 cas), 4 `@a-valider`. Propositions du modèle appliquées comme hypothèse de travail. Syntaxe vérifiée (`npx bddgen` : seules des étapes manquantes). ⛔ Validation du lot attendue.
 - 12:10 · Validation n°1 du lot 3 : « OK pour tout » du PO (`docs/stories/lot-3-decisions.md`, décisions 0012 et 0013). Scénarios mis à jour par `po-acceptance` : 4 `@a-valider` retirés, comportement inchangé ; questions passées en « Décisions » dans `acceptance.md`. Syntaxe vérifiée.
 - 12:12 · Modèle mis à jour par `domain-modeler` : questions passées en « Décisions du PO » (réponse = proposition), règles du modèle alignées sur ces décisions, renvois vers les décisions 0012 et 0013 ; termes du lot 3 validés au glossaire (conflits n°8 à n°14 tranchés, Décisions n°23 à n°30).
+
+## Livraison (équipe #21, vague 1, lancée par `/graphe`)
+
+- 2026-10-24 17:50 UTC · Démarrage de l'équipe. Session `session_01V8ujt2iSDZBGQQA7x1Rs7Z`, branche `feature/21-boite-et-barres` partie de `main` (`6aedff7`). Branche de base : `main`.
+- 17:50 · Étapes 1 et 2 sautées : modèle et scénarios déjà validés au lot 3 (« OK pour tout », `docs/stories/lot-3-decisions.md`), aucune question nouvelle. `CADRAGE PRÊT` pour information.
+- 17:50 · Pas de migration (`par_type` est un `jsonb` libre). En revanche l'Edge Function `terminer-la-seance` de savanturier-dev devra être redéployée pour revalider les séances de boîte et de barres : verrou `base` demandé au moment du câblage.
