@@ -190,7 +190,7 @@ Les merges passent **un par un**, par le verrou `merge` :
    - libères le verrou `merge` ;
    - annonces `[Responsable] MAIN A BOUGÉ : #<n> mergée` et envoies `RELIS` à **toutes les équipes encore en cours** ;
    - recalcules les stories prêtes et reviens à l'Étape 1 pour combler la place libérée (nouveau plan présenté à l'humain, sauf s'il a autorisé l'enchaînement automatique).
-4. Relève la consommation finale de la session (`get_session`, champ `usage`), puis archive-la (`archive_session`). La branche de la story reste sur GitHub : seule la session de l'équipe peut la pousser, et sa suppression après le merge se fait depuis la PR (bouton « Delete branch ») par l'humain.
+4. Vérifie que le commentaire `MERGÉE` annonce la branche supprimée (`git ls-remote origin refs/heads/feature/<n>-<slug>` ne renvoie rien). C'est l'équipe qui la supprime, après le merge : seule sa session peut pousser sur cette branche. Si la suppression a échoué, demande à l'équipe de réessayer ; en dernier recours, donne à l'humain le lien pour la supprimer. Puis relève la consommation finale de la session (`get_session`, champ `usage`) et archive-la (`archive_session`) : jamais avant que la branche soit supprimée.
 
 ## Étape 5 : Fin de vague
 

@@ -111,7 +111,12 @@ Tu merges **toi-même**, à quatre conditions :
    - la CI de la PR
 4. `mr-reviewer` a rendu APPROUVÉ, et si l'intégration de `main` a changé du code de production, il a relu ce delta.
 
-Alors : merge la PR vers `main` avec un merge commit (`gh pr merge --merge`, ou `mcp__github__merge_pull_request` avec `merge_method: merge`), vérifie que l'issue est fermée, écris `MERGÉE`, puis `LIBÈRE merge` et `LIBÈRE base` si tu l'avais.
+Alors :
+1. merge la PR vers `main` avec un merge commit (`gh pr merge --merge`, ou `mcp__github__merge_pull_request` avec `merge_method: merge`) ;
+2. vérifie que la PR est bien **mergée** et que l'issue est fermée ;
+3. **supprime ta branche**, seulement maintenant : `git push origin --delete feature/<n>-<slug>`, puis vérifie avec `git ls-remote origin refs/heads/feature/<n>-<slug>` (aucune ligne = supprimée). Toi seule peux le faire : le proxy git refuse cette branche aux autres sessions. Ne supprime jamais une branche avant que sa PR soit mergée, ni une autre branche que la tienne ;
+4. écris `MERGÉE` avec le lien du merge commit et le résultat de la suppression (« branche supprimée », ou l'erreur exacte si elle a échoué) ;
+5. `LIBÈRE merge`, et `LIBÈRE base` si tu l'avais.
 
 Si une condition manque, tu ne merges pas : `LIBÈRE merge` et explique pourquoi.
 
