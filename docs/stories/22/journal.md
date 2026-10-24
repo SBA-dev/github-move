@@ -31,17 +31,17 @@
 - 18:35 · Câblage front (8f00db1) : `ExerciceDeMemorisation.tsx`, `useMemorisation.ts`, ajouts dans `useDeroulementDeSeance.ts` et `EcranDeSeance.tsx`. Export de `PlanDeMemorisation` par l'index du domaine (le front y lit les consignes, sans règle). Verrou `base` demandé (redéploiement de `terminer-la-seance`), en file derrière #21.
 - 18:45 · Review étape 4, cycle 1 : À CORRIGER — interligne du mode dys écrasé sur les vers et le texte à trous. Corrigé (bfe4120), plus `consigneLueAuDebut("memoriser")` = faux (250990f red, 5fd3167) et garde de `useMemorisation` (33f8cb7).
 - 18:55 · Review étape 4, cycle 2 : APPROUVÉ (dernier commit relu 33f8cb7). Dette notée pour la PR : vitesse 0,85 du legacy non reprise (le domaine voix n'offre que lent/normal) ; « Réécouter » pendant « redire » relit l'invitation, pas la poésie ; sans voix, la mise en avant vers par vers est trop rapide pour être vue ; props bouche-trou passées à `ExerciceAChoix` ; `.texte-de-lecture` (#17) a le même défaut d'interligne en mode dys.
-- 19:00 · E2E, mise au point (`telephone`) : #22 21/21 du premier coup après l'écriture des steps (répété deux fois, 42/42) ; avec #18 et #7 : 76/76. Un échec isolé au premier lancement (serveur de dev à froid : lecture des vers redémarrée), non reproduit. Tag `@wip` retiré (0b48129). PR #76 ouverte en brouillon.
-- 19:25 · Verrou `base` (accordé à 18:21, vu en retard : il a été détenu une heure sans être utilisé). `terminer-la-seance` redéployée depuis un merge local non commité de `feature/21-boite-et-barres` `9aed309` et `feature/22` `0b48129` ; `LIBÈRE base` aussitôt. Conflit au second merge avec #21 signalé (`APPRIS` : plus aucun type d'exercice générique après les deux stories).
-- 19:30 · Non-régression complète, premier lancement **invalide** : la review finale a relancé `bddgen` sur un sous-ensemble de tags pendant le run (« Cannot find module … .features-gen »). Leçon : aucun agent ne doit lancer `bddgen` pendant un run E2E. Second lancement : **916/916** sur les deux projets (26,7 min ; tags : socle, #5, #6, #7, #8, #10, #11, #12, #15 à #20, #22 à #24 ; #13 et #14 sans steps).
-- 19:40 · Décision #22.1 du PO (« #22.1 reco ») : toute élision retirée du mot caché ; notée dans `acceptance.md` et `domain-model.md` (c6f3383). Code déjà conforme.
-- 19:45 · Vérifications finales sur le dernier commit : 1197 tests unitaires, lint, fmt, `tsc`, build, `deno check` de `terminer-la-seance`, pytest 1404 : verts. `main` inchangé (`6aedff7`). Review finale publiée sur la PR (APPROUVÉ).
+- 18:40 · E2E, mise au point (`telephone`) : #22 21/21 du premier coup après l'écriture des steps (répété deux fois, 42/42) ; avec #18 et #7 : 76/76. Un échec isolé au premier lancement (serveur de dev à froid : lecture des vers redémarrée), non reproduit. Tag `@wip` retiré (0b48129). PR #76 ouverte en brouillon.
+- 18:47 · Verrou `base` (accordé à 18:21, vu en retard : détenu environ 25 min avant le déploiement). `terminer-la-seance` redéployée depuis un merge local non commité de `feature/21-boite-et-barres` `9aed309` et `feature/22` `0b48129` ; `LIBÈRE base` aussitôt. Conflit au second merge avec #21 signalé (`APPRIS` : plus aucun type d'exercice générique après les deux stories).
+- 18:50 · Non-régression complète, premier lancement **invalide** : la review finale a relancé `bddgen` sur un sous-ensemble de tags pendant le run (« Cannot find module … .features-gen »). Leçon : aucun agent ne doit lancer `bddgen` pendant un run E2E. Second lancement : **916/916** sur les deux projets (26,7 min ; tags : socle, #5, #6, #7, #8, #10, #11, #12, #15 à #20, #22 à #24 ; #13 et #14 sans steps).
+- 19:15 · Décision #22.1 du PO (« #22.1 reco ») : toute élision retirée du mot caché ; notée dans `acceptance.md` et `domain-model.md` (c6f3383). Code déjà conforme.
+- 19:28 · Vérifications finales sur le dernier commit : 1197 tests unitaires, lint, fmt, `tsc`, build, `deno check` de `terminer-la-seance`, pytest 1404 : verts. `main` inchangé (`6aedff7`). Review finale publiée sur la PR (APPROUVÉ).
 
 ## Mesures
 
 | Mesure | Valeur |
 |---|---|
-| Durée | 17:48 (lancement) → 19:50 (PRÊTE À MERGER) : ≈ 2 h |
+| Durée | 17:48 (lancement) → 19:30 (PRÊTE À MERGER) : ≈ 1 h 45 |
 | Temps d'attente | verrou `base` : 3 min de file (18:18 → 18:21) ; aucune attente de réponse du PO (scénarios validés au lot 3, #22.1 non bloquante) |
 | Cycles TDD | 9 comportements (8 prévus + `consigneLueAuDebut`), plus 1 cycle de correction de la revue intermédiaire |
 | Cycles de review | domaine : 2 (À CORRIGER puis APPROUVÉ) ; câblage : 2 (À CORRIGER puis APPROUVÉ) ; review finale : APPROUVÉ |
