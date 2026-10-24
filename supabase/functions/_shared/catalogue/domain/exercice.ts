@@ -25,7 +25,6 @@ export type ExerciceGenerique = Readonly<{
   titre?: string;
   consigne?: string;
   auteur?: string;
-  texte?: string;
   verbe?: string;
   temps?: string;
   duree?: number;
@@ -95,7 +94,6 @@ function lireExerciceGenerique(
     type,
     ...communs,
     auteur: texteFacultatif(brut.auteur, "l'auteur d'un exercice"),
-    texte: texteFacultatif(brut.texte, "le texte d'un exercice"),
     verbe: texteFacultatif(brut.verbe, "le verbe d'un exercice"),
     temps: texteFacultatif(brut.temps, "le temps d'un exercice"),
     duree: nombreFacultatif(brut.duree, "la durée d'un exercice"),

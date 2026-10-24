@@ -37,10 +37,9 @@ export function lireClasser(brut: Objet, communs: { titre?: string; consigne?: s
 
 function lireGroupe(brut: unknown): Groupe {
   const groupe = enObjet(brut, "un groupe");
-  return Object.freeze({
-    id: texteRequis(groupe.id, "l'identifiant d'un groupe"),
-    nom: texteRequis(groupe.nom, "le nom d'un groupe"),
-  });
+  const id = texteRequis(groupe.id, "l'identifiant d'un groupe");
+  const nom = texteRequis(groupe.nom, "le nom d'un groupe");
+  return Object.freeze({ id, nom });
 }
 
 function lireEtiquette(brut: unknown): EtiquetteAClasser {
