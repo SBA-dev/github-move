@@ -8,7 +8,6 @@ import {
 } from "../../test_utils/lecons-de-dictee.ts";
 import { MotIncomplet, SeanceIncoherente } from "../erreurs.ts";
 import { Reponse } from "../reponse.ts";
-import { Seance } from "../seance.ts";
 import { revaliderLaSeance } from "../revalider-la-seance.ts";
 
 const FIN = new Date("2026-10-24T10:30:00Z");
@@ -59,14 +58,15 @@ Deno.test("une séance de dictée au clavier complet est rejouée à l'identique
   assertEquals(rejouee, terminee);
 });
 
-Deno.test("une séance de dictée est reconstituée sans profil, qu'elle ait été jouée avec les lettres du mot ou au clavier complet", () => {
+Deno.test("une séance de dictée est rejouée sans profil, qu'elle ait été jouée avec les lettres du mot ou au clavier complet", () => {
   for (const profil of [LETTRES_DU_MOT, CLAVIER_COMPLET]) {
     const seance = seanceDeDictee(leconDeDicteeDuChat(), profil);
     ecrire(seance, "chat");
-    seance.terminer(FIN);
-    const envoi = seance.aEnregistrer();
+    const terminee = seance.terminer(FIN);
 
-    assertEquals(Seance.reconstituer(leconDeDicteeDuChat(), envoi).aEnregistrer().tirages, envoi.tirages);
+    const rejouee = revaliderLaSeance(leconDeDicteeDuChat(), seance.aEnregistrer());
+
+    assertEquals([rejouee.etoiles, rejouee.erreurs], [terminee.etoiles, terminee.erreurs]);
   }
 });
 
