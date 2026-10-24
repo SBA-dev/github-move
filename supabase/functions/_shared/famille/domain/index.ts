@@ -37,5 +37,7 @@ export { ClavierDesDictees } from "./clavier-des-dictees.ts";
 export type { ValeurDuClavierDesDictees } from "./clavier-des-dictees.ts";
 export { LangueDuParent, LANGUES_DU_PARENT_PROPOSEES } from "./langue-du-parent.ts";
 export type { LangueProposee } from "./langue-du-parent.ts";
+export { CARACTERES_SPECIAUX_ACCEPTES, ReglesDuMotDePasse } from "./regles-du-mot-de-passe.ts";
+export type { EtatDesRegles, NomDeRegle, RegleDuMotDePasse } from "./regles-du-mot-de-passe.ts";
 export { Reglages } from "./reglages.ts";
 export type { ReglagesBruts } from "./reglages.ts";

@@ -59,12 +59,10 @@ classDiagram
     CARACTERES_SPECIAUX_ACCEPTES
   }
   class EtatDesRegles {
-    <<value object>>
-    huitCaracteres : respectée ou non
-    uneMajuscule : respectée ou non
-    uneMinuscule : respectée ou non
-    unCaractereSpecial : respectée ou non
-    reglesManquantes() RegleDuMotDePasse[]
+    <<liste ordonnée de RegleDuMotDePasse>>
+    regle : huitCaracteres, uneMajuscule, uneMinuscule ou unCaractereSpecial
+    libelle : texte court affiché
+    respectee : vrai ou faux
   }
   class Prenom {
     <<value object, existant>>
