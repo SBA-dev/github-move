@@ -110,3 +110,43 @@ Deno.test("un problème en barres de forme comparaison, dont le petit est la val
   assertEquals(probleme.reponse, 9);
   assertEquals(probleme.ecriture, "15 − 6 = 9");
 });
+
+Deno.test("un problème en barres de forme parts, dont le total est la valeur cherchée, multiplie le nombre de parts par la valeur d'une part", () => {
+  const probleme = problemeEnBarres({
+    type: "parts",
+    enonce: "Combien en tout ?",
+    nb: 4,
+    valeur: 5,
+    total: null,
+  });
+
+  assertEquals(probleme.forme, { genre: "parts", nb: 4, valeur: 5, total: null });
+  assertEquals(probleme.reponse, 20);
+  assertEquals(probleme.ecriture, "4 × 5 = 20");
+});
+
+Deno.test("un problème en barres de forme parts, dont la valeur d'une part est la valeur cherchée, divise le total par le nombre de parts", () => {
+  const probleme = problemeEnBarres({
+    type: "parts",
+    enonce: "Combien dans chaque part ?",
+    nb: 3,
+    valeur: null,
+    total: 12,
+  });
+
+  assertEquals(probleme.reponse, 4);
+  assertEquals(probleme.ecriture, "12 = 3 × 4");
+});
+
+Deno.test("un problème en barres de forme parts, dont le nombre de parts est la valeur cherchée, divise le total par la valeur d'une part", () => {
+  const probleme = problemeEnBarres({
+    type: "parts",
+    enonce: "Combien de parts de 3 ?",
+    nb: null,
+    valeur: 3,
+    total: 18,
+  });
+
+  assertEquals(probleme.reponse, 6);
+  assertEquals(probleme.ecriture, "18 = 6 × 3");
+});
