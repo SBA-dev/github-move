@@ -118,6 +118,12 @@ En attente d'une réponse : leçons réussies d'une classe au-dessus (N1, N7, N9
   premier écran de fin d'un document, condition réseau recopiée dans le step. Lancement de l'unique non-régression
   complète (décision 0020).
 
+> Note sur les heures : à partir de 13:30, les heures des entrées ci-dessous ont été estimées et sont en avance
+> d'environ 1 h à 2 h 30. Repères exacts (horodatages GitHub et notifications) : OK du PO 13:07 ; réponses N1-N11
+> 14:21 ; #19 dans `main` 14:41 ; PR #70 15:12 ; PR #71 16:16 ; #20 mergée 16:47 ; décision 0020 17:41 ; règle de
+> `terminer-la-seance` 18:18 ; `PRÊTE À MERGER` ~19:25 ; autorisation de merge 20:00. La durée de la section
+> « Mesures » est calculée sur ces repères.
+
 ## Mesures (décision 0017, `docs/graphe/nombre-d-equipes.md`)
 
 | Mesure | Valeur |
