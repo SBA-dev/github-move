@@ -165,6 +165,19 @@ Deno.test("deux leçons d'un même niveau ont leurs pastilles dans l'ordre des l
   ]);
 });
 
+Deno.test("deux leçons d'un même niveau et de même ordre ont leurs pastilles départagées par l'identifiant de la leçon", () => {
+  const lecons = [
+    leconDe("math-ce1-b", "CE1", 1, fluenceTitree("Calcul rapide : B")),
+    leconDe("math-ce1-a", "CE1", 1, fluenceTitree("Calcul rapide : A")),
+  ];
+  const records = [recordSur("math-ce1-b", "Calcul rapide : B"), recordSur("math-ce1-a", "Calcul rapide : A")];
+
+  assertEquals(clesDesPastilles(records, lecons), [
+    "math-ce1-a/Calcul rapide : A",
+    "math-ce1-b/Calcul rapide : B",
+  ]);
+});
+
 Deno.test("deux fluences d'une même leçon ont leurs pastilles dans l'ordre de la leçon, pas dans l'ordre des records", () => {
   const lecons = [
     leconDe("math-ce1-tables", "CE1", 1, fluenceTitree("Calcul rapide : A"), fluenceTitree("Calcul rapide : B")),
