@@ -1,4 +1,4 @@
-import { parcoursDeLaMatiere } from "./parcours.ts";
+import { estReussie, parcoursDeLaMatiere } from "./parcours.ts";
 import type { EntreesDuParcours, LeconId } from "./parcours.ts";
 
 export function leconSuivanteDansLeParcours(entrees: EntreesDuParcours, lecon: LeconId): LeconId | undefined {
@@ -8,6 +8,6 @@ export function leconSuivanteDansLeParcours(entrees: EntreesDuParcours, lecon: L
   const place = lecons.findIndex((leconDuParcours) => leconDuParcours.lecon === lecon);
   if (place === -1) return undefined;
   const suivantes = lecons.slice(place + 1);
-  const premiereNonReussie = suivantes.find((leconDuParcours) => leconDuParcours.etat.genre !== "reussie");
+  const premiereNonReussie = suivantes.find((leconDuParcours) => !estReussie(entrees, leconDuParcours.lecon));
   return (premiereNonReussie ?? suivantes[0])?.lecon;
 }

@@ -9,10 +9,12 @@ export type EntreesDuParcours = Readonly<{
   lecons: readonly Lecon[];
   niveau: Niveau;
   meilleuresEtoiles: ReadonlyMap<LeconId, Etoiles>;
+  leconsReussiesAuTestDeDepart?: ReadonlySet<LeconId>;
 }>;
 
 export type EtatDansLeParcours =
   | { genre: "reussie"; etoiles: Etoiles }
+  | { genre: "reussieAuTestDeDepart" }
   | { genre: "prochaine" }
   | { genre: "aDecouvrir" };
 
@@ -22,7 +24,7 @@ export type LeconReussieDUneClasseAuDessus = Readonly<{
   lecon: LeconId;
   niveau: Niveau;
   titre: string;
-  etoiles: Etoiles;
+  etoiles?: Etoiles;
 }>;
 
 export type Parcours = Readonly<{
@@ -33,20 +35,24 @@ export type Parcours = Readonly<{
   nombreDeLecons: number;
 }>;
 
+export function estReussie(entrees: EntreesDuParcours, lecon: LeconId): boolean {
+  return entrees.meilleuresEtoiles.has(lecon) || (entrees.leconsReussiesAuTestDeDepart?.has(lecon) ?? false);
+}
+
 export function matieresDuParcours(entrees: EntreesDuParcours): Matiere[] {
   return toutesLesMatieres().filter((matiere) => leconsDeLaMatiere(entrees, matiere).length > 0);
 }
 
 export function parcoursDeLaMatiere(entrees: EntreesDuParcours, matiere: Matiere): Parcours {
   const ordonnees = leconsDeLaMatiere(entrees, matiere).sort(parOrdrePuisIdentifiant);
-  const prochaineLecon = ordonnees.find((lecon) => !entrees.meilleuresEtoiles.has(lecon.id))?.id;
+  const prochaineLecon = ordonnees.find((lecon) => !estReussie(entrees, lecon.id))?.id;
   const lecons = ordonnees.map((lecon, index) => ({
     lecon: lecon.id,
     titre: lecon.titre,
     place: index + 1,
-    etat: etatDeLaLecon(lecon.id, entrees.meilleuresEtoiles, prochaineLecon),
+    etat: etatDeLaLecon(entrees, lecon.id, prochaineLecon),
   }));
-  const nombreDeLeconsReussies = ordonnees.filter((lecon) => entrees.meilleuresEtoiles.has(lecon.id)).length;
+  const nombreDeLeconsReussies = ordonnees.filter((lecon) => estReussie(entrees, lecon.id)).length;
   return {
     lecons,
     leconsReussiesDesClassesAuDessus: leconsReussiesDesClassesAuDessus(entrees, matiere),
@@ -64,8 +70,9 @@ function leconsReussiesDesClassesAuDessus(
     .filter((lecon) => lecon.matiere.code === matiere.code && lecon.niveau.estAuDessusDe(entrees.niveau))
     .sort((a, b) => ordreDesNiveaux(a, b) || parOrdrePuisIdentifiant(a, b))
     .flatMap((lecon) => {
+      if (!estReussie(entrees, lecon.id)) return [];
       const etoiles = entrees.meilleuresEtoiles.get(lecon.id);
-      return etoiles ? [{ lecon: lecon.id, niveau: lecon.niveau, titre: lecon.titre, etoiles }] : [];
+      return [{ lecon: lecon.id, niveau: lecon.niveau, titre: lecon.titre, etoiles }];
     });
 }
 
@@ -76,11 +83,12 @@ function leconsDeLaMatiere(entrees: EntreesDuParcours, matiere: Matiere): Lecon[
 }
 
 function etatDeLaLecon(
+  entrees: EntreesDuParcours,
   lecon: LeconId,
-  meilleuresEtoiles: ReadonlyMap<LeconId, Etoiles>,
   prochaineLecon: LeconId | undefined,
 ): EtatDansLeParcours {
-  const etoiles = meilleuresEtoiles.get(lecon);
+  const etoiles = entrees.meilleuresEtoiles.get(lecon);
   if (etoiles) return { genre: "reussie", etoiles };
+  if (estReussie(entrees, lecon)) return { genre: "reussieAuTestDeDepart" };
   return lecon === prochaineLecon ? { genre: "prochaine" } : { genre: "aDecouvrir" };
 }

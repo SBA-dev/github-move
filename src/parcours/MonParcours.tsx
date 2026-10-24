@@ -185,7 +185,7 @@ function BlocsDesLeconsDejaReussies({ lecons, onOuvrirLaLecon }: PropsDesBlocs) 
                 <span className="place-de-la-lecon" aria-hidden="true">{lecon.niveau.valeur}</span>
                 <span className="titre-de-la-lecon" aria-hidden="true">{lecon.titre}</span>
                 <span className="etat-de-la-lecon" aria-hidden="true">
-                  <span className="etoiles-de-la-lecon">{"★".repeat(lecon.etoiles.nombre)} ✓</span>
+                  <span className="etoiles-de-la-lecon">{"★".repeat(lecon.etoiles?.nombre ?? 0)} ✓</span>
                 </span>
               </button>
             </li>
