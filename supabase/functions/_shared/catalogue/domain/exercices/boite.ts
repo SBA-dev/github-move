@@ -1,0 +1,35 @@
+import { LeconMalFormee } from "../erreurs.ts";
+import { enObjet, liste, nombreRequis, type Objet } from "../lecture.ts";
+
+export type SensDeLaBoite = "ajout" | "retrait";
+
+export type ItemDeBoite = Readonly<{
+  a: number;
+  sens: SensDeLaBoite;
+  b: number;
+  reponse: number;
+  ecriture: string;
+}>;
+
+export type ExerciceBoite = Readonly<{
+  type: "boite";
+  titre?: string;
+  consigne?: string;
+  items: readonly ItemDeBoite[];
+}>;
+
+export function lireBoite(brut: Objet, communs: { titre?: string; consigne?: string }): ExerciceBoite {
+  const items = liste(brut.items, "les items").map(lireItem);
+  if (items.length === 0) throw new LeconMalFormee("l'exercice « boite » n'a aucune question à poser");
+  return Object.freeze({ type: "boite", ...communs, items: Object.freeze(items) });
+}
+
+function lireItem(brut: unknown): ItemDeBoite {
+  const item = enObjet(brut, "un item de la boîte");
+  const a = nombreRequis(item.a, "le nombre de départ d'un item de la boîte");
+  const b = nombreRequis(item.b, "le nombre de jetons d'un item de la boîte");
+  const sens = item.op === "-" ? "retrait" : "ajout";
+  const reponse = sens === "retrait" ? a - b : a + b;
+  const signe = sens === "retrait" ? "−" : "+";
+  return Object.freeze({ a, sens, b, reponse, ecriture: `${a} ${signe} ${b} = ${reponse}` });
+}
