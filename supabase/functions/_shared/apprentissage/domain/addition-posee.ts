@@ -1,5 +1,5 @@
-type Rang = "unites" | "dizaines" | "centaines";
-type Couleur = "bleue" | "rose" | "verte";
+import { EtapePoser } from "./etape-poser.ts";
+import { type Couleur, type Rang, RANGS } from "./rangs-d-addition.ts";
 
 export type ColonneDAdditionPosee = {
   readonly rang: Rang;
@@ -7,14 +7,11 @@ export type ColonneDAdditionPosee = {
   readonly chiffres: readonly number[];
 };
 
-const RANGS: readonly { rang: Rang; couleur: Couleur }[] = [
-  { rang: "unites", couleur: "bleue" },
-  { rang: "dizaines", couleur: "rose" },
-  { rang: "centaines", couleur: "verte" },
-];
-
 export class AdditionPosee {
-  private constructor(readonly colonnes: readonly ColonneDAdditionPosee[]) {}
+  private constructor(
+    private readonly nombres: readonly number[],
+    readonly colonnes: readonly ColonneDAdditionPosee[],
+  ) {}
 
   static depuis(nombres: readonly number[]): AdditionPosee {
     const somme = nombres.reduce((total, nombre) => total + nombre, 0);
@@ -26,6 +23,10 @@ export class AdditionPosee {
         .map((nombre) => Math.floor(nombre / valeurDuRang) % 10);
       return [{ rang, couleur, chiffres }];
     });
-    return new AdditionPosee(colonnes);
+    return new AdditionPosee(nombres, colonnes);
+  }
+
+  etapePoser(): EtapePoser {
+    return EtapePoser.pour(this.nombres);
   }
 }

@@ -55,3 +55,4 @@ export { RecordDeFluence } from "./record-de-fluence.ts";
 export type { EtatDuRecord, FaitDeRecord, IssueDuRecord } from "./record-de-fluence.ts";
 export { AdditionPosee } from "./addition-posee.ts";
 export type { ColonneDAdditionPosee } from "./addition-posee.ts";
+export type { EtapePoser } from "./etape-poser.ts";
