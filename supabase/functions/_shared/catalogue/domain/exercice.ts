@@ -1,6 +1,7 @@
 import { LeconMalFormee } from "./erreurs.ts";
 import { enObjet, listeFacultative, type Objet, texteFacultatif } from "./lecture.ts";
 import { type ExerciceAddition, lireAddition } from "./exercices/addition.ts";
+import { type ExerciceBarres, lireBarres } from "./exercices/barres.ts";
 import { type ExerciceBoite, lireBoite } from "./exercices/boite.ts";
 import { type ExerciceBulles, lireBulles } from "./exercices/bulles.ts";
 import { type ExerciceCalcul, lireCalcul } from "./exercices/calcul.ts";
@@ -26,7 +27,8 @@ type TypeSpecifique =
   | "calcul"
   | "fluence"
   | "addition"
-  | "boite";
+  | "boite"
+  | "barres";
 type TypeGenerique = Exclude<TypeDExercice, TypeSpecifique>;
 
 export type Exercice =
@@ -42,6 +44,7 @@ export type Exercice =
   | ExerciceFluence
   | ExerciceAddition
   | ExerciceBoite
+  | ExerciceBarres
   | ExerciceGenerique;
 
 export type ExerciceGenerique = Readonly<{
@@ -58,7 +61,6 @@ type Donnee = Exclude<keyof ExerciceGenerique, "type">;
 
 const DONNEES_REQUISES: Record<TypeGenerique, readonly Donnee[]> = {
   memoriser: ["vers"],
-  barres: ["items"],
 };
 
 export function lireExercices(brut: readonly unknown[]): readonly Exercice[] {
@@ -102,6 +104,8 @@ function lireExercice(brut: Objet, type: TypeDExercice): Exercice {
       return lireAddition(brut, communs);
     case "boite":
       return lireBoite(brut, communs);
+    case "barres":
+      return lireBarres(brut, communs);
     default:
       return lireExerciceGenerique(brut, type, communs);
   }

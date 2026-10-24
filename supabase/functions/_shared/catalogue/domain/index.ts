@@ -6,6 +6,7 @@ export type { EtapeDeLecon, Lecon, PassageDuGuideFondamental, ProgrammeCite } fr
 export type { CodeDeMatiere, Matiere } from "./matiere.ts";
 export type { Exercice, ExerciceGenerique } from "./exercice.ts";
 export type { Addition, EtapeDAddition, ExerciceAddition, GenerateurDAdditions } from "./exercices/addition.ts";
+export type { ExerciceBarres, FormeDeSchema, ProblemeEnBarres } from "./exercices/barres.ts";
 export type { ExerciceBoite, ItemDeBoite, SensDeLaBoite } from "./exercices/boite.ts";
 export type { ExerciceBulles } from "./exercices/bulles.ts";
 export type { EtiquetteAClasser, ExerciceClasser, Groupe } from "./exercices/classer.ts";
