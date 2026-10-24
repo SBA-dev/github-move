@@ -16,3 +16,4 @@
 - Comportement 1/9 (règles) : RED e008165, GREEN 156be2f, formatage e59bb7d. Suite : 959 verts.
 - Comportement 2/9 (MotDePasseDuParent) : RED 4ed7719, GREEN f7f231d. 968 verts.
 - Comportement 3/9 (Prenom.correspondA) : RED 43c0a7b, GREEN 8e5768e, refactor c3e4eac (MotDePasseNonConforme). 974 verts.
+- Comportement 4/9 (EssaisDeReinitialisation) : RED d5915ee, GREEN 259b193, refactor 9cf3ab5. 987 verts.
