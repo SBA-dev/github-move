@@ -36,3 +36,11 @@ export {
   inviterAJouerApresLesEtapes,
   parolesDeFinDeSeance,
 } from "./paroles-de-seance.ts";
+export {
+  accueilDeLaFluence,
+  calculsReussis,
+  type FinDeFluence,
+  parolesDeFinDeFluence,
+  secondes,
+  SIGNAL_DE_DEPART,
+} from "./paroles-de-fluence.ts";

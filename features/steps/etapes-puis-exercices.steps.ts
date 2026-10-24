@@ -335,7 +335,7 @@ Then(/^un exercice est proposé sous le libellé « (.+) »$/, async ({ page }, 
   await expect(exercices.locator(".intitule")).toHaveCount(0);
 });
 
-Then(/^Noisette dit « ([^«»]+) »$/, async ({ page }, texte: string) => {
+Then(/^Noisette dit « (?!C'est parti)([^«»]+) »$/, async ({ page }, texte: string) => {
   await attendreQueLaBulleDise(page, texte);
 });
 

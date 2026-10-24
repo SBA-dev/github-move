@@ -15,15 +15,15 @@ export function estSurUnProfilReel(page: Page): boolean {
   return surUnProfilReel.has(page);
 }
 
-export async function jouerAvecLeProfilReel(famille: Famille, monde: Monde, page: Page): Promise<ProfilCree> {
-  const prepare = monde.profils.get("Léa");
+export async function jouerAvecLeProfilReel(famille: Famille, monde: Monde, page: Page, prenom = "Léa"): Promise<ProfilCree> {
+  const prepare = monde.profils.get(prenom);
   const profil = await assurerLeProfil(famille, "Paul", {
-    prenom: "Léa",
+    prenom,
     niveau: prepare?.niveau ?? "CP",
     libelleUnivers: libelleDe(prepare?.univers ?? "animaux"),
   });
   await page.goto("/");
-  await choisirSonProfil(page, "Léa");
+  await choisirSonProfil(page, prenom);
   surUnProfilReel.add(page);
   return profil;
 }

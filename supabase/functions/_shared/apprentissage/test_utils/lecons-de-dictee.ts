@@ -75,6 +75,7 @@ export function seanceDeDictee(
     "profil-lea",
     lecon,
     ChoixDeSeance.complete(),
+    undefined,
     profil,
   );
   while (seance.etapeDeLeconEnCours()) seance.continuer();

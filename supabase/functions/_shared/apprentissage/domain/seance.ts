@@ -10,6 +10,9 @@ import {
   SeanceNonFinie,
   TirageEnTrop,
 } from "./erreurs.ts";
+import type { FluenceEnCours } from "./exercice-chronometre.ts";
+import type { VueAddition } from "./vue-d-addition.ts";
+import type { CalculEnCours } from "./question-de-calcul.ts";
 import { Etoiles } from "./etoiles.ts";
 import type { CleDeQuestion } from "./cle-de-question.ts";
 import { ExerciceJoue } from "./exercice-joue.ts";
@@ -38,7 +41,8 @@ export type SeanceTerminee = Readonly<{
   lecon: string;
   choix: ChoixDeSeance;
   termineeLe: Date;
-  etoiles: Etoiles["nombre"];
+  etoiles?: Etoiles["nombre"];
+  scoresDeFluence?: Readonly<Record<string, number>>;
   erreurs: number;
   questionsRatees: readonly QuestionRatee[];
   parType: Partial<Record<TypeDeQuestion, ReussitesEtErreurs>>;
@@ -62,6 +66,7 @@ export class Seance {
     readonly choix: ChoixDeSeance,
     readonly plan: PlanDeSeance,
     private readonly exercices: readonly ExerciceJoue[],
+    private readonly controleDesTirages: () => void = () => {},
   ) {}
 
   static commencer(
@@ -70,6 +75,7 @@ export class Seance {
     enfant: string,
     lecon: Lecon,
     choix: ChoixDeSeance,
+    facilite = 1,
     profil: ProfilEnfant = PROFIL_ENFANT_PAR_DEFAUT,
   ): Seance {
     return Seance.construire(
@@ -77,7 +83,7 @@ export class Seance {
       enfant,
       lecon,
       choix,
-      tireurAuHasard(hasard, profil),
+      tireurAuHasard(hasard, facilite, profil),
     );
   }
 
@@ -86,15 +92,20 @@ export class Seance {
     envoi: SeanceTermineeAEnregistrer,
   ): Seance {
     const tirages = envoi.tirages[Symbol.iterator]();
-    const seance = Seance.construire(
+    return Seance.construire(
       SeanceId.de(envoi.seance),
       envoi.enfant,
       lecon,
       envoi.choix,
       tireurSelonLesTirages(tirages),
+      () => {
+        if (!tirages.next().done) throw new TirageEnTrop();
+      },
     );
-    if (!tirages.next().done) throw new TirageEnTrop();
-    return seance;
+  }
+
+  verifierQueTousLesTiragesOntServi(): void {
+    this.controleDesTirages();
   }
 
   private static construire(
@@ -103,13 +114,14 @@ export class Seance {
     lecon: Lecon,
     choix: ChoixDeSeance,
     tireur: Tireur,
+    controleDesTirages?: () => void,
   ): Seance {
     const plan = PlanDeSeance.pour(lecon, choix);
     const exercices = lecon.exercices
       .map((exercice, position) => ({ exercice, position }))
       .filter(({ position }) => plan.positionsDesExercices.includes(position))
-      .map(({ exercice, position }) => ExerciceJoue.depuis(position, exercice, tireur));
-    return new Seance(id, enfant, lecon.id, choix, plan, exercices);
+      .map(({ exercice, position }) => ExerciceJoue.depuis(position, exercice, tireur, lecon.niveau));
+    return new Seance(id, enfant, lecon.id, choix, plan, exercices, controleDesTirages);
   }
 
   etapeDeLeconEnCours(): EtapeDeLecon | undefined {
@@ -119,6 +131,22 @@ export class Seance {
   exerciceEnCours(): ExerciceJoue | undefined {
     if (this.etapeDeLeconEnCours()) return undefined;
     return this.exercices[this.indexDeLExercice];
+  }
+
+  calculEnCours(): CalculEnCours | undefined {
+    return this.exerciceEnCours()?.calculEnCours();
+  }
+
+  additionEnCours(): VueAddition | undefined {
+    return this.exerciceEnCours()?.additionEnCours();
+  }
+
+  additionApresLaDerniereReponse(): VueAddition | undefined {
+    return this.dernierExerciceRepondu?.additionApresLaDerniereReponse();
+  }
+
+  fluenceEnCours(maintenant: Date): FluenceEnCours | undefined {
+    return this.exerciceEnCours()?.fluenceEnCours(maintenant);
   }
 
   avancement(): Avancement {
@@ -131,9 +159,19 @@ export class Seance {
     return this.indexDeLExercice >= this.exercices.length;
   }
 
-  repondre(reponse: Reponse): ResultatDeReponse {
+  demarrerLaFluence(maintenant: Date): void {
+    this.exerciceDeLaQuestionEnCours().demarrerLaFluence(maintenant);
+  }
+
+  finirLaFluence(_maintenant?: Date): void {
     const exercice = this.exerciceDeLaQuestionEnCours();
-    const resultat = exercice.repondre(reponse);
+    exercice.finirLaFluence();
+    this.avancerSiExerciceReussi(exercice);
+  }
+
+  repondre(reponse: Reponse, maintenant?: Date): ResultatDeReponse {
+    const exercice = this.exerciceDeLaQuestionEnCours();
+    const resultat = exercice.repondre(reponse, maintenant);
     this.dernierExerciceCorrige(exercice);
     return resultat;
   }
@@ -214,7 +252,8 @@ export class Seance {
       lecon: this.lecon,
       choix: this.choix,
       termineeLe: maintenant,
-      etoiles: this.etoiles().nombre,
+      ...this.etoilesSiLaSeanceEstNotee(),
+      ...this.scoresDeFluence(),
       erreurs: this.erreurs(),
       questionsRatees: this.questions()
         .filter((question) => question.erreurs > 0)
@@ -236,7 +275,10 @@ export class Seance {
       enfant: this.enfant,
       lecon: this.lecon,
       choix: this.choix,
-      tirages: this.exercices.flatMap((exercice) => exercice.tirages()),
+      tirages: [
+        ...this.exercices.flatMap((exercice) => exercice.tirages()),
+        ...this.exercices.flatMap((exercice) => exercice.tiragesEnCoursDeJeu()),
+      ],
       reponses: questions.map((question) => question.reponses()),
       termineeLe: this.termineeLe,
     };
@@ -261,13 +303,28 @@ export class Seance {
     return this.exercices.flatMap((exercice) => [...exercice.questionsJouees()]);
   }
 
+  private etoilesSiLaSeanceEstNotee(): Pick<SeanceTerminee, "etoiles"> {
+    const faiteDeFluencesSeules = this.exercices.every((exercice) => exercice.scoreDeFluence() !== undefined);
+    return faiteDeFluencesSeules ? {} : { etoiles: this.etoiles().nombre };
+  }
+
+  private scoresDeFluence(): Pick<SeanceTerminee, "scoresDeFluence"> {
+    const scores = this.exercices.flatMap((exercice) => exercice.scoreDeFluence() ?? []);
+    if (scores.length === 0) return {};
+    return { scoresDeFluence: Object.fromEntries(scores.map(({ nom, score }) => [nom, score])) };
+  }
+
   private reussitesEtErreursParType(): SeanceTerminee["parType"] {
     const parType: Record<string, ReussitesEtErreurs> = {};
-    for (const question of this.questions()) {
-      const total = parType[question.type] ?? { reussites: 0, erreurs: 0 };
-      total.reussites += 1;
-      total.erreurs += question.erreurs;
-      parType[question.type] = total;
+    const cumuler = (type: string, reussites: number, erreurs: number) => {
+      const total = parType[type] ??= { reussites: 0, erreurs: 0 };
+      total.reussites += reussites;
+      total.erreurs += erreurs;
+    };
+    for (const exercice of this.exercices) {
+      const fluence = exercice.scoreDeFluence();
+      if (fluence) cumuler("fluence", fluence.score, fluence.reponsesFausses);
+      else exercice.questionsJouees().forEach((question) => cumuler(question.type, 1, question.erreurs));
     }
     return parType;
   }

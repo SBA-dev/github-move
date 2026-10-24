@@ -109,19 +109,22 @@ Deno.test("une dictée compte une question par mot", () => {
 });
 
 Deno.test("un exercice de calcul à opérations fixes compte une question par opération", () => {
-  const exercice: Exercice = { type: "calcul", operations: uneListeDe(6) };
+  const exercice: Exercice = {
+    type: "calcul",
+    operations: Array.from({ length: 6 }, () => ({ q: "1 + 1", r: 2 })),
+  };
 
   assertEquals(nombreDeQuestions(exercice), 6);
 });
 
 Deno.test("un exercice de calcul généré compte autant de questions que le générateur en demande", () => {
-  const exercice: Exercice = { type: "calcul", generateur: { op: "+", a: [1, 10], b: [1, 10], combien: 8 } };
+  const exercice: Exercice = { type: "calcul", generateur: { op: "+", a: [1, 10], b: [1, 10], cible: 10, combien: 8 } };
 
   assertEquals(nombreDeQuestions(exercice), 8);
 });
 
 Deno.test("un exercice de calcul généré sans nombre demandé compte 5 questions", () => {
-  const exercice: Exercice = { type: "calcul", generateur: { op: "+", a: [1, 10], b: [1, 10] } };
+  const exercice: Exercice = { type: "calcul", generateur: { op: "+", a: [1, 10], b: [1, 10], cible: 10, combien: 5 } };
 
   assertEquals(nombreDeQuestions(exercice), 5);
 });
@@ -133,7 +136,11 @@ Deno.test("un exercice de calcul sans opération ni générateur compte 5 questi
 });
 
 Deno.test("un exercice de fluence compte une seule question pour tout l'exercice", () => {
-  const exercice: Exercice = { type: "fluence", duree: 45, generateur: { op: "+", a: [1, 28], b: [1, 2] } };
+  const exercice: Exercice = {
+    type: "fluence",
+    duree: 45,
+    generateur: { op: "+", a: [1, 28], b: [1, 2], cible: 10, combien: 20 },
+  };
 
   assertEquals(nombreDeQuestions(exercice), 1);
 });
@@ -144,28 +151,28 @@ Deno.test("un exercice pour mémoriser compte deux questions par vers", () => {
   assertEquals(nombreDeQuestions(exercice), 16);
 });
 
-Deno.test("une addition posée compte une question par opération et par étape", () => {
-  const exercice: Exercice = { type: "addition", operations: uneListeDe(1), etapes: ["poser", "calculer"] };
-
-  assertEquals(nombreDeQuestions(exercice), 2);
-});
-
-Deno.test("une addition posée sans étapes compte poser et calculer pour chaque opération", () => {
-  const exercice: Exercice = { type: "addition", operations: uneListeDe(4) };
-
-  assertEquals(nombreDeQuestions(exercice), 8);
-});
-
-Deno.test("une addition posée générée compte 3 opérations quand le générateur n'en demande pas", () => {
-  const exercice: Exercice = { type: "addition", generateur: { nombres: 2, min: 12, max: 59 } };
+Deno.test("une addition posée compte une question par chiffre posé et par chiffre de la somme calculé", () => {
+  const exercice = exerciceLu({ type: "addition", operations: [[45, 37]], etapes: ["poser", "calculer"] });
 
   assertEquals(nombreDeQuestions(exercice), 6);
 });
 
-Deno.test("une addition posée générée compte les opérations demandées par le générateur", () => {
-  const exercice: Exercice = { type: "addition", generateur: { combien: 4 }, etapes: ["poser"] };
+Deno.test("une addition posée sans étapes compte les chiffres posés et les colonnes calculées de chaque opération", () => {
+  const exercice = exerciceLu({ type: "addition", operations: [[1, 2], [3, 4], [5, 6], [7, 8]] });
 
-  assertEquals(nombreDeQuestions(exercice), 4);
+  assertEquals(nombreDeQuestions(exercice), 14);
+});
+
+Deno.test("une addition posée générée compte, pour 3 opérations, la plus grande addition possible du générateur", () => {
+  const exercice = exerciceLu({ type: "addition", generateur: { nombres: 2, min: 12, max: 59 } });
+
+  assertEquals(nombreDeQuestions(exercice), 21);
+});
+
+Deno.test("une addition posée générée compte la plus grande addition possible pour chacune des opérations demandées", () => {
+  const exercice = exerciceLu({ type: "addition", generateur: { combien: 4 }, etapes: ["poser"] });
+
+  assertEquals(nombreDeQuestions(exercice), 16);
 });
 
 Deno.test("la leçon « Les sons ou, on, an » compte 6 questions de bulles puis 9 de classement", () => {
