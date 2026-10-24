@@ -20,6 +20,7 @@ import type { Voix } from "../voix/index.ts";
 import { useAdditionPosee } from "./exercices/addition/useAdditionPosee.ts";
 import { useBattementDeLaFluence, useFluence } from "./exercices/fluence/useFluence.ts";
 import { type SuiteDuCalcul, useCalcul } from "./exercices/useCalcul.ts";
+import { useQuestionIllustree } from "./exercices/useQuestionIllustree.ts";
 import { useDictee } from "./exercices/useDictee.ts";
 import { useEtiquettesAPlacer } from "./exercices/useEtiquettesAPlacer.ts";
 import { useQuestionFigee } from "./exercices/useQuestionFigee.ts";
@@ -101,6 +102,7 @@ export function useDeroulementDeSeance(
   const { ouvrir, presenter, repondre: repondreALaQuestion, relireLaQuestion } = questions;
   const dependancesDuCalcul = { seance, personnageGuide, dire, faireSilence, sequence, vivant, redessiner, reussite };
   const calcul = useCalcul(dependancesDuCalcul);
+  const illustree = useQuestionIllustree(dependancesDuCalcul);
   const fluence = useFluence({ seance, horloge, dire, faireSilence, sequence, vivant, redessiner, reussite });
   const addition = useAdditionPosee({ ...dependancesDuCalcul, montrerHumeur });
 
@@ -118,6 +120,9 @@ export function useDeroulementDeSeance(
     switch (position === undefined ? undefined : lecon.exercices[position]?.type) {
       case "calcul":
         return await calcul.presenter();
+      case "boite":
+      case "barres":
+        return await illustree.presenter();
       case "fluence":
         return await fluence.presenter();
       case "addition":
@@ -127,7 +132,7 @@ export function useDeroulementDeSeance(
       default:
         return await ouvrir(numero);
     }
-  }, [seance, lecon, calcul.presenter, fluence.presenter, addition.presenter, presenterLaDictee, ouvrir]);
+  }, [seance, lecon, calcul.presenter, illustree.presenter, fluence.presenter, addition.presenter, presenterLaDictee, ouvrir]);
 
   const ouvrirLExercice = useCallback(async (numero: number) => {
     await lireLaConsigneDeLExercice();
@@ -181,6 +186,7 @@ export function useDeroulementDeSeance(
   );
 
   const { repondre: repondreAuCalcul, jeNeSaisPas: jeNeSaisPasDuCalcul } = calcul;
+  const { repondre: repondreAUneQuestionIllustree, jeNeSaisPas: jeNeSaisPasDUneQuestionIllustree } = illustree;
   const { repondre: repondreALaFluence, battre: battreLaFluence, demarrer: demarrerLaFluence } = fluence;
   const { repondre: repondreALAddition, placer: placerUnChiffre, jeNeSaisPas: jeNeSaisPasDeLAddition } = addition;
   const repondreParUnNombre = useCallback((nombre: number) => {
@@ -188,15 +194,24 @@ export function useDeroulementDeSeance(
     const type = position === undefined ? undefined : lecon.exercices[position]?.type;
     if (type === "fluence") return repondreALaFluence(nombre, suiteDeLaReponse);
     if (type === "addition") return repondreALAddition(Reponse.nombre(nombre), suiteDeLaReponse);
+    if (type === "boite" || type === "barres") return repondreAUneQuestionIllustree(Reponse.nombre(nombre), suiteDeLaReponse);
     return repondreAuCalcul(Reponse.nombre(nombre), suiteDeLaReponse);
-  }, [seance, lecon, repondreALaFluence, repondreALAddition, repondreAuCalcul, suiteDeLaReponse]);
+  }, [seance, lecon, repondreALaFluence, repondreALAddition, repondreAuCalcul, repondreAUneQuestionIllustree, suiteDeLaReponse]);
 
   const choisirUneReponseDeCalcul = useCallback((texte: string) => {
     const position = seance.exerciceEnCours()?.position;
     const type = position === undefined ? undefined : lecon.exercices[position]?.type;
     if (type === "addition") return repondreALAddition(Reponse.choix(texte), suiteDeLaReponse);
+    if (type === "boite" || type === "barres") return repondreAUneQuestionIllustree(Reponse.choix(texte), suiteDeLaReponse);
     return repondreAuCalcul(Reponse.choix(texte), suiteDeLaReponse);
-  }, [seance, lecon, repondreALAddition, repondreAuCalcul, suiteDeLaReponse]);
+  }, [seance, lecon, repondreALAddition, repondreAuCalcul, repondreAUneQuestionIllustree, suiteDeLaReponse]);
+
+  const jeNeSaisPasDeLaQuestion = useCallback(() => {
+    const position = seance.exerciceEnCours()?.position;
+    const type = position === undefined ? undefined : lecon.exercices[position]?.type;
+    if (type === "boite" || type === "barres") return jeNeSaisPasDUneQuestionIllustree();
+    return jeNeSaisPasDuCalcul();
+  }, [seance, lecon, jeNeSaisPasDUneQuestionIllustree, jeNeSaisPasDuCalcul]);
 
   const poserUnChiffre = useCallback(
     (chiffre: string, rang: Parameters<typeof placerUnChiffre>[1]) => placerUnChiffre(chiffre, rang, suiteDeLaReponse),
@@ -280,13 +295,16 @@ export function useDeroulementDeSeance(
     placer,
     reecouter,
     calculFige: calcul.calculFige,
+    phrasesDitesDeLaQuestion: illustree.phrasesDites,
+    boiteReussie: illustree.boiteReussie,
+    schemaReussi: illustree.schemaReussi,
     additionFigee: addition.additionFigee,
     colonneQuiBrille: addition.colonneQuiBrille,
     fluenceFinie: fluence.fluenceFinie,
     repondreParUnNombre,
     choisirUneReponseDeCalcul,
     poserUnChiffre,
-    jeNeSaisPasDuCalcul,
+    jeNeSaisPasDuCalcul: jeNeSaisPasDeLaQuestion,
     jeNeSaisPasDeLAddition,
     demarrerLaFluence,
     relireLaPhrase,

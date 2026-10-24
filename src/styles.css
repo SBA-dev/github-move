@@ -426,6 +426,35 @@ button.secondaire:hover { background: #fdf3ea; }
 /* Calcul : la carte de l'opération, le clavier de cristaux, la fluence */
 .calcul, .fluence, .addition-posee { display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 100%; }
 .carte-du-calcul { font-size: 2rem; }
+.boite-a-jetons, .probleme-en-barres { display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 100%; }
+
+/* Boîte à jetons : le couvercle se lève ou se ferme, les jetons rangés par 5 */
+.boite { position: relative; box-sizing: border-box; display: grid; place-items: center; width: min(100%, 18rem); min-height: 128px; margin-top: 28px; padding: 12px; border: 4px solid #8a5a2b; border-radius: 6px 6px 16px 16px; background: #e8c48f; }
+.boite::before { content: ""; position: absolute; left: -4px; right: -4px; bottom: 100%; height: 22px; border: 4px solid #8a5a2b; border-radius: 8px; background: #c79a5b; transform-origin: left bottom; transition: transform .5s ease-in-out; }
+.boite[data-etat="ouverte"]::before { transform: rotate(-35deg); }
+.boite[data-etat="fermee"] { background: #c79a5b; }
+.boite[data-etat="fermee"] .contenu-de-la-boite { visibility: hidden; }
+.contenu-de-la-boite { display: grid; justify-items: center; gap: 8px; max-width: 100%; }
+.jetons { display: grid; justify-items: center; gap: 6px; max-width: 100%; }
+.rangee-de-jetons { display: flex; justify-content: center; gap: 6px; }
+.jeton { box-sizing: border-box; flex: none; width: 28px; height: 28px; border: 3px solid #b8860b; border-radius: 50%; background: #ffd43b; }
+.jeton[data-cinquieme="true"] { border-color: var(--accent-fonce); background: #ff922b; }
+.jeton[data-etat="nouveau"] { animation: jeton-entre .6s ease-out; }
+.jeton[data-etat="sortant"] { opacity: .45; animation: jeton-sort .6s ease-in; }
+@keyframes jeton-entre { from { transform: translateY(-40px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes jeton-sort { from { transform: none; opacity: 1; } to { transform: translateY(-40px); opacity: .45; } }
+
+/* Schéma en barres : des barres proportionnelles aux nombres, « ? » pour la valeur cherchée */
+.enonce-du-probleme { max-width: 100%; margin: 0; overflow-wrap: anywhere; }
+.schema-en-barres { width: 100%; max-width: 100%; }
+.dessin-du-schema { display: grid; gap: 10px; width: 100%; }
+.ligne-du-schema { display: grid; gap: 2px; min-width: 0; }
+.nom-de-la-barre { font-weight: 700; overflow-wrap: anywhere; }
+.morceaux { display: flex; width: 100%; }
+.morceau-de-barre { box-sizing: border-box; display: grid; place-items: center; min-width: 0; min-height: 44px; border: 3px solid var(--accent-fonce); background: #fff; font-size: 1.5rem; font-weight: 800; overflow: hidden; }
+.morceau-de-barre[data-role="tout"], .morceau-de-barre[data-role="total"], .morceau-de-barre[data-role="grand"] { background: #ffe3c2; }
+.morceau-de-barre[data-cherchee="true"] { background: #fff3c4; border-style: dashed; }
+.morceau-de-barre[data-role="ecart"], .morceau-de-barre[data-role="suite"] { border-style: dashed; background: transparent; }
 .clavier-de-cristaux { display: grid; justify-items: center; gap: 8px; width: min(100%, 20rem); max-width: 100%; }
 .nombre-tape {
   display: block;
