@@ -20,16 +20,17 @@ export function pastillesDesRecords(
   return records
     .map((record) => ({ record, position: positionDans(record, lecons) }))
     .toSorted((a, b) => comparerDansLeParcours(a, b))
-    .map(({ record }) => ({ ...record, libelle: libelleDu(record, lecons) }));
+    .map(({ record, position }) => ({ ...record, libelle: libelleDu(record, position) }));
 }
 
-type Position = Readonly<{ lecon: Lecon; rang: number }>;
+type Position = Readonly<{ lecon: Lecon; rang: number; fluence: ExerciceFluence }>;
 type RecordPositionne = Readonly<{ record: RecordDuProfil; position: Position | undefined }>;
 
 function positionDans(record: RecordDuProfil, lecons: readonly Lecon[]): Position | undefined {
   const lecon = lecons.find((candidate) => candidate.id === record.lecon);
   const rang = lecon?.exercices.findIndex((exercice) => estLaFluenceDuRecord(exercice, record)) ?? -1;
-  return lecon && rang >= 0 ? { lecon, rang } : undefined;
+  const fluence = lecon?.exercices[rang];
+  return lecon && fluence && estUneFluence(fluence) ? { lecon, rang, fluence } : undefined;
 }
 
 function comparerDansLeParcours(a: RecordPositionne, b: RecordPositionne): number {
@@ -59,10 +60,9 @@ function cleDuRecord(record: RecordDuProfil): string {
   return `${record.lecon}/${record.exercice}`;
 }
 
-function libelleDu(record: RecordDuProfil, lecons: readonly Lecon[]): string {
-  const lecon = lecons.find((candidate) => candidate.id === record.lecon);
-  const fluence = lecon?.exercices.filter(estUneFluence).find((exercice) => cleDe(exercice) === record.exercice);
-  return lecon && fluence ? fluence.titre ?? lecon.titre : record.exercice;
+function libelleDu(record: RecordDuProfil, position: Position | undefined): string {
+  if (!position) return record.exercice;
+  return position.fluence.titre ?? position.lecon.titre;
 }
 
 function estLaFluenceDuRecord(exercice: Exercice, record: RecordDuProfil): boolean {
