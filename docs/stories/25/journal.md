@@ -18,3 +18,6 @@ Branche de base : `main`. Branche de travail : `feature/25-parcours-par-matiere-
   redescendu en CE1 (endroit non précisé) ; reco de l'équipe pour toutes les autres questions. Reprise du cadrage.
 - 13:15 UTC : À SAVOIR (#64) : après la migration de #20, `seances_terminees.etoiles` peut valoir `null`. Sans effet :
   le parcours ne lit que `resultats_des_lecons`, inchangée.
+- 13:30 UTC : critères révisés (`po-acceptance`) : 8 règles, 36 scénarios dont 7 `@a-valider` (N1, N4, N7-N10). R3
+  remplacée par une règle positive (toute leçon montrée s'ouvre) : acceptée, elle traduit la réponse 25.1.
+  CADRAGE PRÊT mis à jour (questions N1-N11). TDD lancé sur ce qui ne dépend d'aucune question.
