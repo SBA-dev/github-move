@@ -6,6 +6,7 @@ import {
   MotDePasseNonConforme,
   MotDePasseTropLong,
   PrenomObligatoire,
+  ServiceDeConnexionIndisponible,
   TropDEssaisDeReinitialisation,
 } from "../domain/erreurs.ts";
 import { ReglesDuMotDePasse } from "../domain/regles-du-mot-de-passe.ts";
@@ -31,6 +32,7 @@ const correspondances: [string, Error, number][] = [
   ["une adresse déjà utilisée", new AdresseDejaUtilisee(), 409],
   ["des informations de réinitialisation incorrectes", new InformationsDeReinitialisationIncorrectes(), 401],
   ["trop d'essais de réinitialisation", new TropDEssaisDeReinitialisation(), 429],
+  ["un service de connexion indisponible", new ServiceDeConnexionIndisponible(), 503],
   ["une adresse invalide", new AdresseEmailInvalide(), 422],
   ["un prénom obligatoire", new PrenomObligatoire(), 422],
   ["un mot de passe non conforme", new MotDePasseNonConforme(reglesManquantes()), 422],
