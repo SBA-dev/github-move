@@ -406,6 +406,7 @@ button.secondaire:hover { background: #fdf3ea; }
 }
 [data-mode-dys="true"] :is(.consigne, .bulle, .pastille, .question, .bulle-de-choix, .etiquette, .texte-a-trous, .carte-de-la-poesie) {
   overflow-wrap: anywhere;
+  line-height: inherit;
 }
 .syllabe[data-parite="0"] { color: #1d4ed8; }
 .syllabe[data-parite="1"] { color: #b42318; }
