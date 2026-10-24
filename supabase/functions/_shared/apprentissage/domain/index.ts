@@ -51,3 +51,9 @@ export type { EtatDuResultat, FaitDeResultat } from "./resultat-de-la-lecon.ts";
 export { indicationDuGeste } from "./exercices/indication-du-geste.ts";
 export { revaliderLaSeance } from "./revalider-la-seance.ts";
 export type { ParoleDue } from "./parole-due.ts";
+export {
+  exerciceDemandeLeSon,
+  LIBELLE_DU_BOUTON_ACTIVER_LE_SON,
+  messageDeLaDicteeSansVoix,
+} from "./exercices/dictee-sans-voix.ts";
+export type { EtatDeLaVoix } from "./exercices/dictee-sans-voix.ts";
