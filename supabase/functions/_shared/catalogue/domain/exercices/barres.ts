@@ -1,5 +1,5 @@
 import { LeconMalFormee } from "../erreurs.ts";
-import { enObjet, liste, listeDeTextes, type Objet, texteFacultatif, texteRequis } from "../lecture.ts";
+import { enObjet, liste, listeDeTextes, nombreRequis, type Objet, texteFacultatif, texteRequis } from "../lecture.ts";
 
 type Valeur = number | null;
 
@@ -62,44 +62,56 @@ function lireProbleme(brut: unknown): ProblemeEnBarres {
 
 function lireForme(item: Objet): FormeDeSchema {
   switch (item.type) {
+    case undefined:
+      return lirePartiesEtTout(item);
     case "comparaison":
       return lireComparaison(item);
     case "parts":
       return lireParts(item);
     default:
-      return lirePartiesEtTout(item);
+      throw new LeconMalFormee("la forme du schéma d'un problème en barres est inconnue");
   }
 }
 
 function lirePartiesEtTout(item: Objet): PartiesEtTout {
-  const [premiere = null, seconde = null] = liste(item.parties, "les parties d'un problème en barres").map(
-    lireValeur,
-  );
+  const valeurs = liste(item.parties, "les parties d'un problème en barres").map(lireValeur);
+  const [premiere, seconde] = valeurs;
+  if (valeurs.length !== 2 || premiere === undefined || seconde === undefined) {
+    throw new LeconMalFormee("un problème en barres n'a pas exactement deux parties");
+  }
+  const tout = lireValeur(item.tout);
+  exigerUneSeuleValeurCherchee([premiere, seconde, tout]);
   const parties: readonly [Valeur, Valeur] = Object.freeze([premiere, seconde]);
-  return Object.freeze({ genre: "partiesEtTout", parties, tout: lireValeur(item.tout) });
+  return Object.freeze({ genre: "partiesEtTout", parties, tout });
 }
 
 function lireComparaison(item: Objet): Comparaison {
-  return Object.freeze({
-    genre: "comparaison",
-    grand: lireValeur(item.grand),
-    petit: lireValeur(item.petit),
-    ecart: lireValeur(item.ecart),
-    noms: listeDeTextes(item.noms, "les noms d'un problème en barres"),
-  });
+  const noms = listeDeTextes(item.noms, "les noms d'un problème en barres");
+  if (noms.length !== 2) throw new LeconMalFormee("une comparaison en barres n'a pas exactement deux noms");
+  const [grand, petit, ecart] = [lireValeur(item.grand), lireValeur(item.petit), lireValeur(item.ecart)] as const;
+  exigerUneSeuleValeurCherchee([grand, petit, ecart]);
+  return Object.freeze({ genre: "comparaison", grand, petit, ecart, noms });
 }
 
 function lireParts(item: Objet): Parts {
-  return Object.freeze({
-    genre: "parts",
-    nb: lireValeur(item.nb),
-    valeur: lireValeur(item.valeur),
-    total: lireValeur(item.total),
-  });
+  const [nb, valeur, total] = [lireValeur(item.nb), lireValeur(item.valeur), lireValeur(item.total)] as const;
+  exigerUneSeuleValeurCherchee([nb, valeur, total]);
+  return Object.freeze({ genre: "parts", nb, valeur, total });
 }
 
 function lireValeur(valeur: unknown): Valeur {
-  return valeur === null ? null : Number(valeur);
+  if (valeur === null) return null;
+  const nombre = nombreRequis(valeur, "une valeur d'un problème en barres");
+  if (!Number.isInteger(nombre) || nombre < 0) {
+    throw new LeconMalFormee("une valeur d'un problème en barres n'est pas un entier positif");
+  }
+  return nombre;
+}
+
+function exigerUneSeuleValeurCherchee(valeurs: readonly (Valeur | undefined)[]): void {
+  if (valeurs.filter((valeur) => valeur === null).length !== 1) {
+    throw new LeconMalFormee("un problème en barres n'a pas exactement une valeur cherchée");
+  }
 }
 
 type Resolution = { reponse: number; ecriture: string };
@@ -138,7 +150,10 @@ function multiplication(a: Valeur, b: Valeur): Resolution {
 }
 
 function partage(total: number, diviseur: Valeur, ecrire: (reponse: number) => string): Resolution {
-  const reponse = total / (diviseur ?? 1);
+  if (!diviseur || total % diviseur !== 0) {
+    throw new LeconMalFormee("un partage en barres n'est pas une division exacte");
+  }
+  const reponse = total / diviseur;
   return { reponse, ecriture: ecrire(reponse) };
 }
 
@@ -149,5 +164,6 @@ function addition(a: Valeur, b: Valeur): Resolution {
 
 function soustraction(a: Valeur, b: Valeur): Resolution {
   const reponse = (a ?? 0) - (b ?? 0);
+  if (reponse < 0) throw new LeconMalFormee("la valeur cherchée d'un problème en barres est négative");
   return { reponse, ecriture: `${a} − ${b} = ${reponse}` };
 }
