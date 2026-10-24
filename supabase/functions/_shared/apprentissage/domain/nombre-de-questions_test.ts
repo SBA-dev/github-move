@@ -1,8 +1,11 @@
 import { assertEquals } from "@std/assert";
-import { type Exercice, lireLecon } from "../../catalogue/domain/index.ts";
+import { type Exercice, type ItemDeBoite, lireLecon } from "../../catalogue/domain/index.ts";
 import { nombreDeQuestions } from "./nombre-de-questions.ts";
 
 const uneListeDe = (taille: number): readonly unknown[] => Array.from({ length: taille }, (_, i) => ({ rang: i }));
+
+const desItemsDeBoite = (taille: number): readonly ItemDeBoite[] =>
+  Array.from({ length: taille }, () => ({ a: 1, sens: "ajout", b: 1, reponse: 2, ecriture: "1 + 1 = 2" }));
 
 const desQuestionsAChoix = (taille: number) =>
   Array.from({ length: taille }, (_, i) => ({ question: `Question ${i}`, choix: ["a", "b"], reponse: "a" }));
@@ -55,7 +58,7 @@ Deno.test("un exercice d'écoute compte une question par item", () => {
 });
 
 Deno.test("un exercice de boîte compte une question par item", () => {
-  const exercice: Exercice = { type: "boite", items: uneListeDe(5) };
+  const exercice: Exercice = { type: "boite", items: desItemsDeBoite(5) };
 
   assertEquals(nombreDeQuestions(exercice), 5);
 });
