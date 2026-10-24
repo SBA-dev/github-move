@@ -5,6 +5,7 @@ import { attendreLesEnvoisEnCours } from "../fin-de-seance/sauvegarde-de-la-sean
 
 const NOMBRE_DE_SEANCES_LUES = 50;
 const FACILITE_NORMALE = 1;
+const SEANCES_AVEC_DU_CALCUL = "par_type->calcul.not.is.null,par_type->fluence.not.is.null";
 const ATTENTE_MAXIMALE_EN_MS = 3000;
 
 type ReussitesEtErreurs = { readonly reussites: number; readonly erreurs: number };
@@ -21,13 +22,14 @@ function enParType(valeur: unknown): ParType {
   return Object.fromEntries(Object.entries(valeur).filter(([, resultat]) => estUnResultat(resultat)));
 }
 
-/** Lecture sous RLS des résumés des dernières séances terminées, de la plus récente à la plus ancienne. */
+/** Lecture sous RLS des résumés des dernières séances terminées qui comptent du calcul ou de la fluence, de la plus récente à la plus ancienne. */
 async function lireLesParTypeDesDernieresSeances(profil: string): Promise<ParType[]> {
   await attendreLesEnvoisEnCours();
   const { data, error } = await clientSupabase()
     .from("seances_terminees")
     .select("par_type")
     .eq("profil", profil)
+    .or(SEANCES_AVEC_DU_CALCUL)
     .order("termine_le", { ascending: false })
     .limit(NOMBRE_DE_SEANCES_LUES);
   if (error || data === null) return [];
