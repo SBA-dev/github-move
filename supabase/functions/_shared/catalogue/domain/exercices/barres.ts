@@ -108,10 +108,15 @@ function lireValeur(valeur: unknown): Valeur {
   return nombre;
 }
 
-function exigerUneSeuleValeurCherchee(valeurs: readonly (Valeur | undefined)[]): void {
+function exigerUneSeuleValeurCherchee(valeurs: readonly Valeur[]): void {
   if (valeurs.filter((valeur) => valeur === null).length !== 1) {
     throw new LeconMalFormee("un problème en barres n'a pas exactement une valeur cherchée");
   }
+}
+
+function connue(valeur: Valeur): number {
+  if (valeur === null) throw new LeconMalFormee("un problème en barres n'a pas toutes ses valeurs connues");
+  return valeur;
 }
 
 type Resolution = { reponse: number; ecriture: string };
@@ -128,42 +133,45 @@ function resoudre(forme: FormeDeSchema): Resolution {
 }
 
 function resoudrePartiesEtTout({ parties: [premiere, seconde], tout }: PartiesEtTout): Resolution {
-  if (tout === null) return addition(premiere, seconde);
-  return soustraction(tout, premiere ?? seconde);
+  if (tout === null) return addition(connue(premiere), connue(seconde));
+  return soustraction(tout, connue(premiere ?? seconde));
 }
 
 function resoudreComparaison({ grand, petit, ecart }: Comparaison): Resolution {
-  if (ecart === null) return soustraction(grand, petit);
-  if (grand === null) return addition(petit, ecart);
+  if (ecart === null) return soustraction(connue(grand), connue(petit));
+  if (grand === null) return addition(connue(petit), ecart);
   return soustraction(grand, ecart);
 }
 
 function resoudreParts({ nb, valeur, total }: Parts): Resolution {
-  if (total === null) return multiplication(nb, valeur);
-  if (valeur === null) return partage(total, nb, (r) => `${total} = ${nb} × ${r}`);
+  if (total === null) return multiplication(connue(nb), connue(valeur));
+  if (valeur === null) {
+    const parts = connue(nb);
+    return partage(total, parts, (r) => `${total} = ${parts} × ${r}`);
+  }
   return partage(total, valeur, (r) => `${total} = ${r} × ${valeur}`);
 }
 
-function multiplication(a: Valeur, b: Valeur): Resolution {
-  const reponse = (a ?? 0) * (b ?? 0);
+function multiplication(a: number, b: number): Resolution {
+  const reponse = a * b;
   return { reponse, ecriture: `${a} × ${b} = ${reponse}` };
 }
 
-function partage(total: number, diviseur: Valeur, ecrire: (reponse: number) => string): Resolution {
-  if (!diviseur || total % diviseur !== 0) {
+function partage(total: number, diviseur: number, ecrire: (reponse: number) => string): Resolution {
+  if (diviseur === 0 || total % diviseur !== 0) {
     throw new LeconMalFormee("un partage en barres n'est pas une division exacte");
   }
   const reponse = total / diviseur;
   return { reponse, ecriture: ecrire(reponse) };
 }
 
-function addition(a: Valeur, b: Valeur): Resolution {
-  const reponse = (a ?? 0) + (b ?? 0);
+function addition(a: number, b: number): Resolution {
+  const reponse = a + b;
   return { reponse, ecriture: `${a} + ${b} = ${reponse}` };
 }
 
-function soustraction(a: Valeur, b: Valeur): Resolution {
-  const reponse = (a ?? 0) - (b ?? 0);
+function soustraction(a: number, b: number): Resolution {
+  const reponse = a - b;
   if (reponse < 0) throw new LeconMalFormee("la valeur cherchée d'un problème en barres est négative");
   return { reponse, ecriture: `${a} − ${b} = ${reponse}` };
 }
