@@ -13,6 +13,8 @@ import { EntreeInvalide, lireLeCorpsJson, repondre, texteObligatoire } from "./h
 /** Caractères d'un mot de passe : 64 au plus, mais le texte reçu peut dépasser (le domaine le refuse en 422). */
 const LONGUEUR_MAXIMALE_DU_CORPS = 10_000;
 
+export const TAILLE_MAXIMALE_DU_CORPS = 4_096;
+
 export function motDePasseObligatoire(corps: Record<string, unknown>): string {
   const valeur = corps.motDePasse;
   if (typeof valeur !== "string" || valeur === "" || valeur.length > LONGUEUR_MAXIMALE_DU_CORPS) {
@@ -48,8 +50,11 @@ export async function traiterUneDemandeSansConnexion(
   if (requete.method !== "POST") {
     return repondre(requete, origines, 405, { error: { message: "Méthode non autorisée." } });
   }
+  if (corpsAnnoncePlusGrandQueLeMaximum(requete)) return reponseCorpsTropVolumineux(requete, origines);
   try {
-    await traiter(lireLeCorpsJson(await requete.text()));
+    const texte = await lireLeCorpsBorne(requete);
+    if (texte === undefined) return reponseCorpsTropVolumineux(requete, origines);
+    await traiter(lireLeCorpsJson(texte));
     return repondre(requete, origines, 200, {});
   } catch (cause) {
     const { statut, message } = statutEtMessageSansConnexion(cause);
@@ -58,4 +63,39 @@ export async function traiterUneDemandeSansConnexion(
     }
     return repondre(requete, origines, statut, { error: { message } });
   }
+}
+
+/** Texte du corps, ou `undefined` s'il dépasse la taille maximale (annoncée, ou comptée en octets pendant la lecture). */
+async function lireLeCorpsBorne(requete: Request): Promise<string | undefined> {
+  const lecteur = requete.body?.getReader();
+  if (!lecteur) return "";
+  const morceaux: Uint8Array[] = [];
+  let total = 0;
+  for (let lu = await lecteur.read(); !lu.done; lu = await lecteur.read()) {
+    total += lu.value.byteLength;
+    if (total > TAILLE_MAXIMALE_DU_CORPS) {
+      await lecteur.cancel();
+      return undefined;
+    }
+    morceaux.push(lu.value);
+  }
+  return new TextDecoder().decode(concatener(morceaux, total));
+}
+
+function concatener(morceaux: readonly Uint8Array[], total: number): Uint8Array {
+  const octets = new Uint8Array(total);
+  let position = 0;
+  for (const morceau of morceaux) {
+    octets.set(morceau, position);
+    position += morceau.byteLength;
+  }
+  return octets;
+}
+
+function corpsAnnoncePlusGrandQueLeMaximum(requete: Request): boolean {
+  return Number(requete.headers.get("content-length")) > TAILLE_MAXIMALE_DU_CORPS;
+}
+
+function reponseCorpsTropVolumineux(requete: Request, origines: readonly string[]): Response {
+  return repondre(requete, origines, 413, { error: { message: "La demande est trop volumineuse." } });
 }
