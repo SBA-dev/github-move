@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import {
   EssaisDeReinitialisationModifiesEnMemeTemps,
   type RegistreDesEssaisDeReinitialisation,
+  RegistreDesEssaisIndisponible,
 } from "../application/ports/registre-des-essais-de-reinitialisation.ts";
 import { AdresseEmail } from "../domain/adresse-email.ts";
 import { EssaisDeReinitialisation } from "../domain/essais-de-reinitialisation.ts";
@@ -68,7 +69,7 @@ export class RegistreDesEssaisDeReinitialisationSupabase implements RegistreDesE
   private async effacer(essais: EssaisDeReinitialisation): Promise<void> {
     const cle = cleDeLAdresse(essais.adresse);
     const { error } = await this.client.from(TABLE).delete().eq("adresse", cle);
-    if (error) throw new Error("Effacement des essais de réinitialisation impossible.");
+    if (error) throw new RegistreDesEssaisIndisponible();
     this.versionsLues.delete(cle);
   }
 
@@ -85,7 +86,7 @@ export class RegistreDesEssaisDeReinitialisationSupabase implements RegistreDesE
   private async inserer(essais: EssaisDeReinitialisation): Promise<number | undefined> {
     const { error } = await this.client.from(TABLE).insert(colonnesDesEssais(essais));
     if (error?.code === CODE_POSTGRES_DE_DOUBLON) return undefined;
-    if (error) throw new Error("Enregistrement des essais de réinitialisation impossible.");
+    if (error) throw new RegistreDesEssaisIndisponible();
     return VERSION_D_UNE_LIGNE_INSEREE;
   }
 
@@ -93,12 +94,12 @@ export class RegistreDesEssaisDeReinitialisationSupabase implements RegistreDesE
     const { data, error } = await this.client.from(TABLE)
       .update({ ...colonnesDesEssais(essais), version: versionLue + 1 })
       .eq("adresse", cleDeLAdresse(essais.adresse)).eq("version", versionLue).select("adresse");
-    if (error) throw new Error("Enregistrement des essais de réinitialisation impossible.");
+    if (error) throw new RegistreDesEssaisIndisponible();
     return data?.length === 1 ? versionLue + 1 : undefined;
   }
 
   private async effacerLesEssaisOublies(): Promise<void> {
     const { error } = await this.client.rpc("effacer_les_essais_de_reinitialisation_oublies");
-    if (error) throw new Error("Effacement des essais de réinitialisation oubliés impossible.");
+    if (error) throw new RegistreDesEssaisIndisponible();
   }
 }
