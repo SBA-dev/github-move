@@ -17,6 +17,7 @@ export {
   LeconIntrouvable,
   LeconSansExercice,
   ParentNonRattache,
+  PasDeLettreAEffacer,
   PasDeQuestionEnCours,
   PasDEtapeDeLeconEnCours,
   QuestionDejaReussie,
@@ -57,3 +58,5 @@ export {
   messageDeLaDicteeSansVoix,
 } from "./exercices/dictee-sans-voix.ts";
 export type { EtatDeLaVoix } from "./exercices/dictee-sans-voix.ts";
+export type { CaseDeQuestion, QuestionDeDictee } from "./question-de-dictee.ts";
+export type { CorrectionDuMot } from "./mot-a-ecrire.ts";

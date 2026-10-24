@@ -1,11 +1,12 @@
 import { useCallback, useRef, useState } from "react";
-import type { Avancement, ExerciceJoue, QuestionJouee } from "@domain/apprentissage";
+import type { Avancement, ExerciceJoue, QuestionDeDictee, QuestionJouee } from "@domain/apprentissage";
 
-/** L'exercice réussi (et sa question, pour les choix), montré tel quel le temps de le féliciter. */
+/** L'exercice réussi (et sa question, pour les choix ou la dictée), montré tel quel le temps de le féliciter. */
 export type ReussiteFigee = {
   readonly position: number;
   readonly exercice: ExerciceJoue;
   readonly question: QuestionJouee | undefined;
+  readonly questionDeDictee?: QuestionDeDictee;
 };
 
 /** Ce que partagent les réponses par choix et par étiquette : la réussite figée le temps de la féliciter, et l'avancement annoncé. */

@@ -422,3 +422,42 @@ button.secondaire:hover { background: #fdf3ea; }
 .meilleures-etoiles .etoiles-dessinees svg { width: 36px; height: 36px; }
 .meilleures-etoiles p { padding: 4px 12px; border-radius: 16px; background: rgba(255, 255, 255, .85); font-weight: 700; }
 .fin-de-seance .message-erreur:empty { display: none; }
+
+.dictee { display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 100%; }
+.mot-a-ecrire { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 0; padding: 0; list-style: none; max-width: 100%; }
+.case-a-ecrire, .caractere-deja-ecrit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 56px;
+  padding: 0 4px;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+.case-a-ecrire { border: 3px solid var(--accent-fonce); border-radius: 12px; background: #fff; }
+.case-a-ecrire[data-etat="vide"] { border-style: dashed; background: rgba(255, 255, 255, .8); }
+.case-a-ecrire[data-etat="fausse"] { border-color: #b00020; background: #ffe3e6; color: #b00020; text-decoration: underline wavy; }
+.clavier-de-dictee { display: grid; justify-items: center; gap: 6px; max-width: 100%; }
+.rangee-de-touches { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; max-width: 100%; }
+.touche {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 4px 8px;
+  border: 2px solid var(--accent-fonce);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--texte);
+  font: inherit;
+  font-size: 1.35rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.touche:hover:not([aria-disabled="true"]) { background: #fff3c4; }
+.touche[aria-disabled="true"] { opacity: .35; cursor: default; }
+.touche-effacer { padding: 4px 16px; font-size: 1.1rem; }
+.tableau-de-conjugaison { max-width: min(100%, 24rem); padding: 8px 18px; border-radius: 16px; background: #fff; }
+.tableau-de-conjugaison h3 { margin: 4px 0; text-align: center; }
+.tableau-de-conjugaison ul { margin: 0; padding: 0; list-style: none; font-size: 1.25rem; line-height: 1.8; }
+.tableau-de-conjugaison li[data-etat="ecrite"] { color: var(--accent-fonce); font-weight: 700; }
+.tableau-de-conjugaison li[data-etat="en-cours"] { background: #fff3c4; border-radius: 8px; }

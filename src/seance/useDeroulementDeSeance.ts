@@ -10,6 +10,7 @@ import {
 import { useReducedMotion } from "motion/react";
 import { hasardDuNavigateur } from "../hasard-navigateur.ts";
 import type { Voix } from "../voix/index.ts";
+import { useDictee } from "./exercices/useDictee.ts";
 import { useEtiquettesAPlacer } from "./exercices/useEtiquettesAPlacer.ts";
 import { useQuestionFigee } from "./exercices/useQuestionFigee.ts";
 import { useQuestionsAChoix } from "./exercices/useQuestionsAChoix.ts";
@@ -56,6 +57,19 @@ export function useDeroulementDeSeance(
     lire: voix.lire,
     dire,
     faireSilence,
+    montrerHumeur,
+    sequence,
+    vivant,
+    redessiner,
+    reussite,
+  });
+  const dictee = useDictee({
+    seance,
+    personnageGuide,
+    lire: voix.lire,
+    dire,
+    faireSilence,
+    montrerHumeur,
     sequence,
     vivant,
     redessiner,
@@ -72,6 +86,7 @@ export function useDeroulementDeSeance(
     redessiner,
     reussite,
   });
+  const { presenter: presenterLaDictee, taper: taperUneLettre } = dictee;
   const { ouvrir, presenter, repondre: repondreALaQuestion, relireLaQuestion } = questions;
 
   const lireLaConsigneDeLExercice = useCallback(async () => {
@@ -85,8 +100,10 @@ export function useDeroulementDeSeance(
 
   const ouvrirLExercice = useCallback(async (numero: number) => {
     await lireLaConsigneDeLExercice();
-    if (numero === sequence.current) await ouvrir(numero);
-  }, [lireLaConsigneDeLExercice, ouvrir]);
+    if (numero !== sequence.current) return;
+    if (seance.questionDeDicteeEnCours()) await presenterLaDictee();
+    else await ouvrir(numero);
+  }, [lireLaConsigneDeLExercice, seance, presenterLaDictee, ouvrir]);
 
   const direLeFait = useCallback((fait: FaitDeSeance): Promise<boolean> => {
     if (fait.type === "EtapesDeLeconFinies") {
@@ -126,6 +143,13 @@ export function useDeroulementDeSeance(
       repondreALaQuestion(texte, (numero, faits, nouvelExercice) =>
         faits.length > 0 || nouvelExercice ? enchainerSurLExercice(numero, faits) : presenter(numero)),
     [repondreALaQuestion, enchainerSurLExercice, presenter],
+  );
+
+  const taper = useCallback(
+    (lettre: string) =>
+      taperUneLettre(lettre, (numero, faits, nouvelExercice) =>
+        faits.length > 0 || nouvelExercice ? enchainerSurLExercice(numero, faits) : presenterLaDictee()),
+    [taperUneLettre, enchainerSurLExercice, presenterLaDictee],
   );
 
   const placer = useCallback(
@@ -179,6 +203,12 @@ export function useDeroulementDeSeance(
     jeNeSaisPas,
     jeNeSaisPasDUneEtiquette,
     bonnesReponsesMontrees,
+    lettresFausses: dictee.lettresFausses,
+    relireLaDictee: dictee.relireLaDictee,
+    reecouterLeMot: dictee.reecouterLeMot,
+    effacer: dictee.effacer,
+    jeNeSaisPasEnDictee: dictee.jeNeSaisPas,
+    taper,
     repondre,
     placer,
     reecouter,
