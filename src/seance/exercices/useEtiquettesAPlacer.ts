@@ -1,12 +1,11 @@
 import { type MutableRefObject, useCallback, useState } from "react";
 import { type FaitDeSeance, Reponse, type Seance } from "@domain/apprentissage";
 import {
-  feliciterUneFoisSurDeux,
   type Humeur,
+  paroleApresUneBonneReponse,
   type PersonnageGuide,
   reagirAJeNeSaisPas,
   reagirALaReponse,
-  relancer,
 } from "@domain/motivation";
 import { hasardDuNavigateur } from "../../hasard-navigateur.ts";
 import type { ParoleADire } from "../usePersonnageQuiParle.ts";
@@ -51,15 +50,12 @@ export function useEtiquettesAPlacer(
 
   /** Une bonne étiquette fait applaudir le personnage guide ; il ne parle que si le domaine le demande. */
   const feliciterOuRelancer = useCallback(async () => {
-    const { humeur, parole } = reagirALaReponse(true, personnageGuide, hasardDuNavigateur);
-    const paroleDue = seance.paroleDueApresLaDerniereReponse();
-    const texte = paroleDue === "relance"
-      ? relancer(hasardDuNavigateur)
-      : paroleDue === "felicitationUneFoisSurDeux"
-      ? feliciterUneFoisSurDeux(personnageGuide, hasardDuNavigateur)
-      : paroleDue === "felicitation"
-      ? parole.texte
-      : undefined;
+    const { humeur } = reagirALaReponse(true, personnageGuide, hasardDuNavigateur);
+    const texte = paroleApresUneBonneReponse(
+      seance.paroleDueApresLaDerniereReponse(),
+      personnageGuide,
+      hasardDuNavigateur,
+    );
     if (texte !== undefined) await dire({ texte, nature: "felicitation", humeur });
     else {
       faireSilence();

@@ -12,6 +12,8 @@ export {
   feliciter,
   feliciterUneFoisSurDeux,
   inviterACreerLePremierProfil,
+  paroleApresUneBonneReponse,
+  type ParoleDueApresUneBonneReponse,
   presentation,
   presentationAuRetourDuSon,
   relancer,

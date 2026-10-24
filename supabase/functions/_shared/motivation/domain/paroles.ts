@@ -53,6 +53,25 @@ export function feliciterUneFoisSurDeux(personnageGuide: PersonnageGuide, hasard
   return feliciter(personnageGuide, hasard).texte;
 }
 
+export type ParoleDueApresUneBonneReponse = "felicitation" | "felicitationUneFoisSurDeux" | "relance";
+
+export function paroleApresUneBonneReponse(
+  paroleDue: ParoleDueApresUneBonneReponse | undefined,
+  personnageGuide: PersonnageGuide,
+  hasard: Hasard,
+): string | undefined {
+  switch (paroleDue) {
+    case "felicitation":
+      return feliciter(personnageGuide, hasard).texte;
+    case "felicitationUneFoisSurDeux":
+      return feliciterUneFoisSurDeux(personnageGuide, hasard);
+    case "relance":
+      return relancer(hasard);
+    case undefined:
+      return undefined;
+  }
+}
+
 export function direLeTexteComplet(personnageGuide: PersonnageGuide, hasard: Hasard): string {
   return `${feliciter(personnageGuide, hasard).texte} Le texte est complet !`;
 }

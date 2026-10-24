@@ -99,8 +99,17 @@ export abstract class EtiquettesAPlacer {
   }
 
   protected etiquetteHorsDesRestantes(etiquette: string): Error {
-    const estDeLExercice = this.questions.some((question) => question.etiquette === etiquette);
-    return estDeLExercice ? new EtiquetteDejaPlacee(etiquette) : new EtiquetteInconnue(etiquette);
+    return this.estUneEtiquetteDeLExercice(etiquette)
+      ? new EtiquetteDejaPlacee(etiquette)
+      : new EtiquetteInconnue(etiquette);
+  }
+
+  protected estDejaPosee(etiquette: string): boolean {
+    return this.estUneEtiquetteDeLExercice(etiquette) && !this.restantes.includes(etiquette);
+  }
+
+  private estUneEtiquetteDeLExercice(etiquette: string): boolean {
+    return this.questions.some((question) => question.etiquette === etiquette);
   }
 
   protected abstract paroleDueApresUneBonneEtiquette(): ParoleDue;
@@ -131,11 +140,13 @@ class EtiquettesDeClasser extends EtiquettesAPlacer {
   }
 
   override etiquetteViseeParJeNeSaisPas(choisie?: string): string | undefined {
-    return choisie ?? this.etiquettesAPlacer()[0];
+    const premiereRestante = this.etiquettesAPlacer()[0];
+    if (choisie !== undefined && this.estDejaPosee(choisie)) return premiereRestante;
+    return choisie ?? premiereRestante;
   }
 
   protected questionPourJeNeSaisPas(etiquette: string | undefined): QuestionAPlacer {
-    const visee = this.etiquetteViseeParJeNeSaisPas(etiquette);
+    const visee = etiquette ?? this.etiquettesAPlacer()[0];
     if (visee === undefined) throw new EtiquetteInconnue(String(visee));
     if (!this.etiquettesAPlacer().includes(visee)) throw this.etiquetteHorsDesRestantes(visee);
     const question = this.questions.find((candidate) => !candidate.reussie && candidate.etiquette === visee);
@@ -155,7 +166,7 @@ class EtiquettesDeClasser extends EtiquettesAPlacer {
   }
 
   protected paroleDueApresUneBonneEtiquette(): ParoleDue {
-    return "felicitationUneFoisSurDeux";
+    return this.etiquettesAPlacer().length === 0 ? "felicitation" : "felicitationUneFoisSurDeux";
   }
 
   private groupeTouche(placement: Placement): Groupe {
