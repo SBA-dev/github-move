@@ -84,7 +84,7 @@ Deno.test("les leçons des classes d'avant sont réussies quand une question jus
 
   const resultat = leconsReussiesAuTestDeDepart(lecons, Niveau.de("CE1"), [juste("fr-ce1-a")]);
 
-  assertEquals(reussies(resultat), ["fr-cp-a", "fr-cp-b", "fr-ce1-a"]);
+  assertEquals(reussies(resultat), ["fr-ce1-a", "fr-cp-a", "fr-cp-b"]);
 });
 
 Deno.test("une question juste en maths ne rend aucune leçon de français réussie", () => {
