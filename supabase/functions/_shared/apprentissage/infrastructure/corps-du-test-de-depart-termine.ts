@@ -23,8 +23,8 @@ function lireLePlan(corps: Record<string, unknown>): PlanDuTestDeDepart {
   return listeDe(corps.questions, "questions", QUESTIONS_AU_PLUS).map((brute) => {
     const question = objet(brute, "questions");
     const leconId = texteObligatoire(question, "leconId");
-    if (leconId.length > IDENTIFIANT_DE_LECON_AU_PLUS) {
-      throw new EntreeInvalide("Le champ « leconId » est trop long.");
+    if (leconId.length === 0 || leconId.length > IDENTIFIANT_DE_LECON_AU_PLUS) {
+      throw new EntreeInvalide("Le champ « leconId » doit contenir entre 1 et 100 caractères.");
     }
     return {
       leconId,
