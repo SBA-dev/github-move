@@ -41,6 +41,7 @@ Contextes :
 - **Poser** (si `etapes` contient `poser`) : pour chaque nombre, ses chiffres sont des étiquettes (#18) à poser dans la bonne colonne. Erreur : « Le `<c>` est tout seul : c'est un chiffre des unités. Il va dans la maison bleue, tout à droite. » ou « Dans `<n>`, le `<c>` est le chiffre des `<rang>` : il va dans la maison `<couleur>`. » (avec un chiffre en double, le message vise le premier). Erreurs comptées, non notées pour les révisions.
 - **Calculer**, des unités vers la gauche : somme des chiffres de la colonne + retenue. Choix au CP (`s`, `s+1`, `max(0, s−1)`, et `s−10` si `s ≥ 10`, sinon `s+2`), clavier ensuite. Erreur : « Tu as oublié la retenue, tout en haut de la maison ! » si la réponse vaut la somme sans la retenue, sinon « Compte doucement : `<expression>`. ». Somme ≥ 10 hors dernière colonne : le chiffre des unités s'écrit, la dizaine monte en retenue, « `<s>`, c'est `<d>` dizaine(s) et `<u>` unité(s) ! J'écris `<u>`, et `<d>` monte en retenue. ». La dernière colonne écrit la somme entière.
 - Fin : « `<a + b>` = `<somme>`. `<félicitation>` ». Révision : la somme en calcul (clé `n:`).
+- Types de question et clés de réponse : « chiffre » (clé `h:`) et « colonne » (clé `u:`) pour l'addition posée, « fluence » (`f:`), « calcul » (`n:`). Une réponse d'un genre incompatible avec le type de la question est rejetée (`ReponseIncompatible`).
 
 ### Ce que montre la bibliothèque
 

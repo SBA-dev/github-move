@@ -5,6 +5,7 @@ import { hasardFixe } from "../test_utils/hasard-fixe.ts";
 import { leconDeCalcul, leconDeCalculAvecCompetence } from "../test_utils/lecons-de-test.ts";
 import { LeconsDuCatalogueEnMemoire } from "../test_utils/lecons-du-catalogue-en-memoire.ts";
 import { RattachementsEnMemoire } from "../test_utils/rattachements-en-memoire.ts";
+import { RecordsDeFluenceEnMemoire } from "../test_utils/records-de-fluence-en-memoire.ts";
 import { ResultatsDesLeconsEnMemoire } from "../test_utils/resultats-des-lecons-en-memoire.ts";
 import { SeancesTermineesEnMemoire } from "../test_utils/seances-terminees-en-memoire.ts";
 import { ChoixDeSeance } from "../domain/choix-de-seance.ts";
@@ -39,6 +40,7 @@ function monde(lecons = new LeconsDuCatalogueEnMemoire(leconDeCalcul())) {
     lecons,
     seances,
     resultats,
+    new RecordsDeFluenceEnMemoire(),
   );
   return { seances, resultats, terminer };
 }

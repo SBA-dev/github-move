@@ -42,6 +42,8 @@ export { Reponse } from "./reponse.ts";
 export type { Placement, ReponseDonnee, ReponseParChoix, ResultatDeReponse } from "./reponse.ts";
 export { PlanDeSeance } from "./plan-de-seance.ts";
 export { Seance } from "./seance.ts";
+export type { CalculEnCours } from "./question-de-calcul.ts";
+export type { FluenceEnCours } from "./exercice-chronometre.ts";
 export type { FaitDeSeance, QuestionRatee, ReussitesEtErreurs, SeanceTerminee } from "./seance.ts";
 export type { SeanceTermineeAEnregistrer } from "./seance-terminee-a-enregistrer.ts";
 export { Etoiles } from "./etoiles.ts";
@@ -64,6 +66,16 @@ export type {
   LeconReussieDUneClasseAuDessus,
   Parcours,
 } from "./parcours.ts";
+export { RecordDeFluence } from "./record-de-fluence.ts";
+export type { EtatDuRecord, FaitDeRecord, IssueDuRecord } from "./record-de-fluence.ts";
+export { AdditionPosee } from "./addition-posee.ts";
+export type { ColonneDAdditionPosee } from "./addition-posee.ts";
+export type { EtapePoser } from "./etape-poser.ts";
+export type { EtapeCalculer } from "./etape-calculer.ts";
+export type { VueAddition, VueColonne } from "./vue-d-addition.ts";
+export { historiqueDeCalcul } from "./historique-de-calcul.ts";
+export { AdaptationDeLaDifficulte } from "./adaptation-de-la-difficulte.ts";
+export { NOMS_DES_COLONNES_A_L_ECRAN } from "./rangs-d-addition.ts";
 export {
   exerciceDemandeLeSon,
   LIBELLE_DU_BOUTON_ACTIVER_LE_SON,

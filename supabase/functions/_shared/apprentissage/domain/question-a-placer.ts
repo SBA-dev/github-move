@@ -14,7 +14,7 @@ export class QuestionAPlacer implements QuestionSuivie {
 
   constructor(
     readonly cle: CleDeQuestion,
-    readonly type: "classer" | "ordre",
+    readonly type: "classer" | "ordre" | "chiffre",
     readonly etiquette: string,
     private readonly cible: Cible = {},
   ) {}
