@@ -65,3 +65,42 @@ Deno.test("deux fluences titrées différemment dans une même leçon ont deux p
 
   assertEquals(libelles.toSorted(), ["Calcul rapide : les doubles", "Calcul rapide : tables de 3 et 4"]);
 });
+
+Deno.test("une fluence sans titre a pour libellé le titre de la leçon", () => {
+  const multiplicationSansTitre = {
+    type: "fluence",
+    duree: 60,
+    generateur: { op: "×", a: [1, 10], b: [1, 10] },
+  };
+  const lecons = [leconDeCalculAvec(multiplicationSansTitre)];
+  const records: RecordDuProfil[] = [{ lecon: "math-ce1-multiplications", exercice: "×", meilleurScore: 7 }];
+
+  const libelles = pastillesDesRecords(records, lecons).map((pastille) => pastille.libelle);
+
+  assertEquals(libelles, ["Les multiplications"]);
+});
+
+Deno.test("un record dont la leçon a disparu de la bibliothèque garde sa pastille, libellée par sa clé", () => {
+  const records: RecordDuProfil[] = [
+    { lecon: "math-ce1-disparue", exercice: "Calcul rapide : les anciens doubles", meilleurScore: 5 },
+  ];
+
+  assertEquals(pastillesDesRecords(records, [leconDeCalculAvec(tablesDe3Et4)]), [
+    {
+      lecon: "math-ce1-disparue",
+      exercice: "Calcul rapide : les anciens doubles",
+      libelle: "Calcul rapide : les anciens doubles",
+      meilleurScore: 5,
+    },
+  ]);
+});
+
+Deno.test("un record dont l'exercice a été renommé garde sa pastille, libellée par sa clé", () => {
+  const records: RecordDuProfil[] = [
+    { lecon: "math-ce1-multiplications", exercice: "Calcul rapide : les anciens doubles", meilleurScore: 5 },
+  ];
+
+  const libelles = pastillesDesRecords(records, [leconDeCalculAvec(lesDoubles)]).map((pastille) => pastille.libelle);
+
+  assertEquals(libelles, ["Calcul rapide : les anciens doubles"]);
+});
