@@ -16,6 +16,7 @@ import {
   useProfilEnCours,
   useProfilsDuParent,
 } from "./famille/index.ts";
+import { MesMedailles } from "./medailles/index.ts";
 import { MonParcours } from "./parcours/index.ts";
 import { AideEcranDAccueil } from "./installation/index.ts";
 import { type Lieu, useNavigation } from "./navigation.ts";
@@ -29,8 +30,8 @@ type Habillage = CSSProperties & { readonly "--accent": string; readonly "--acce
 const ACCUEIL: Lieu = { ecran: "accueil" };
 
 function estPageDeLEnfant(lieu: Lieu): boolean {
-  return lieu.ecran === "jeu" || lieu.ecran === "parcours" || lieu.ecran === "lecon" ||
-    lieu.ecran === "seance";
+  return lieu.ecran === "jeu" || lieu.ecran === "parcours" || lieu.ecran === "medailles" ||
+    lieu.ecran === "lecon" || lieu.ecran === "seance";
 }
 
 function lieuAffiche(demande: Lieu, espaceParent: EtatDeLEspaceParent["type"], connecte: boolean): Lieu {
@@ -143,6 +144,7 @@ export function Application() {
                 voix={voix}
                 saluer={!viaRetour}
                 onMonParcours={() => aller("parcours")}
+                onMesMedailles={() => aller("medailles")}
                 onChangerDEnfant={() => {
                   aller("accueil");
                   oublierLeProfilEtSaProgression();
@@ -156,6 +158,9 @@ export function Application() {
                 onChoisirLaMatiere={setMatiereDuParcours}
                 onOuvrirLaLecon={(leconId) => aller({ ecran: "lecon", leconId })}
               />
+            )}
+            {lieu.ecran === "medailles" && profilCharge && profilEnCours && (
+              <MesMedailles profil={profilEnCours} univers={univers} voix={voix} />
             )}
             {lieu.ecran === "lecon" && profilCharge && profilEnCours && (
               <PageDeLaLecon

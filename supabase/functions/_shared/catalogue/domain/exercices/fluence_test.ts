@@ -1,6 +1,7 @@
 import { assertEquals, assertThrows } from "@std/assert";
 import { LeconMalFormee } from "../erreurs.ts";
 import { lireLecon } from "../lire-lecon.ts";
+import { cleDeLaFluence } from "./fluence.ts";
 
 function leconAvec(exercice: unknown): Record<string, unknown> {
   return {
@@ -67,4 +68,16 @@ Deno.test("un générateur mal formé rend la leçon « fluence » mal formée",
   const exercice = { ...lesDoubles, generateur: { op: "*" } };
 
   assertThrows(() => lireLecon(leconAvec(exercice)), LeconMalFormee);
+});
+
+Deno.test("la clé d'une fluence titrée est son titre", () => {
+  const exercice = exerciceFluence(lesDoubles);
+
+  assertEquals(cleDeLaFluence(exercice), "Calcul rapide : les doubles");
+});
+
+Deno.test("la clé d'une fluence sans titre est le signe de son générateur", () => {
+  const { titre: _titre, ...sansTitre } = lesDoubles;
+
+  assertEquals(cleDeLaFluence(exerciceFluence(sansTitre)), "×");
 });

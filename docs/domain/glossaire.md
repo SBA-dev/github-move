@@ -114,7 +114,7 @@ Le glossaire garde l'orthographe française.
 | Univers | Habillage choisi par l'enfant (princesses, animaux, sports, police, pompiers, danse). Il ne change ni le contenu ni les règles. | Motivation | thème, monde, skin |
 | Personnage guide | Personnage de l'univers qui lit les consignes et encourage l'enfant (Noisette, Lumi, Coach Léo…). | Motivation | mascotte, guide (seul) |
 | Série (à valider) | Nombre de jours consécutifs avec au moins une séance, jusqu'à aujourd'hui ou hier. | Motivation | streak, flamme |
-| Badge (à valider) | Récompense liée à une compétence, gagnée avec au moins 2 étoiles sur la leçon. | Motivation | trophée, médaille |
+| Badge (à valider) | Récompense liée à une compétence, gagnée avec au moins 2 étoiles sur la leçon. | Motivation | trophée |
 | Cabane (à valider) | Décor que l'enfant remplit d'objets débloqués par paliers d'étoiles (3, 6, 10… 75). | Motivation | maison, collection |
 | Épisode (à valider) | Chapitre de l'histoire de l'univers. Un nouvel épisode s'ouvre à chaque jour de séance. | Motivation | chapitre, histoire, niveau |
 | Titre du personnage guide (à valider) | Qualité qui suit le nom du personnage guide (Noisette, « l'écureuil savant »). | Motivation | surnom, rôle |
@@ -125,6 +125,10 @@ Le glossaire garde l'orthographe française.
 | Relance (à valider) | Phrase du personnage guide après chaque bonne étiquette d'un exercice `ordre`, sauf la dernière, **tirée au hasard** par Motivation parmi « Oui ! Et après ? », « Bien ! Et ensuite ? », « Super ! La suite ? » ; elle remplace la félicitation. Apprentissage dit seulement qu'elle est due (**Parole due**) (Décision n°32, #18). | Motivation | encouragement, félicitation |
 | Encouragement (à valider) | Phrase dite après une erreur, jamais punitive (« Pas grave, on réessaie ! »). | Motivation | reproche, oops |
 | Caractère de la voix (à valider) | Voix féminine ou masculine, hauteur et rythme propres à un personnage guide. Sa forme est définie par le sous-domaine Voix, ses valeurs sont fournies par Motivation pour chaque personnage guide (décision 0008). | Motivation | style, timbre, sexe de la voix |
+| Écran des récompenses de l'enfant (à valider) | Écran de l'enfant qui réunit ce qu'il a gagné, en sections dans un ordre fixe : cabane, histoire, badges, records de fluence. Une section n'existe que lorsque sa story est livrée. Il ne fait que lire : il ne modifie ni étoile, ni record. Interface : « Mes médailles » (écran et bouton d'accès, décision 65.1 du PO) ; le legacy dit « Mes trophées » (#65). | Motivation | trophées, mes trophées (« trophée » est interdit pour Badge), collection (interdit pour Cabane), réussites (réservé à Leçon réussie) |
+| Section de l'écran (à valider) | Une des parties de l'écran des récompenses de l'enfant : cabane (#32), histoire (#33), badges (#31), records de calcul rapide (#65), toujours dans cet ordre. Peut-être un simple mot d'interface (#65). | Motivation | onglet, rubrique |
+| Records de calcul rapide (à valider) | Section de l'écran des récompenses de l'enfant qui montre les records de fluence du profil en cours, un par exercice de fluence ; absente quand le profil n'a aucun record. Les records sont lus dans Apprentissage, jamais modifiés. Interface : « Mes records de calcul rapide » (#65). | Motivation | trophées, meilleurs scores, high scores |
+| Pastille de record (à valider) | Libellé d'un exercice de fluence et meilleur score du record de fluence correspondant, dans les records de calcul rapide. Libellé proposé : le titre de l'exercice (question n°3 de #65). Peut-être un simple mot d'interface (#65). | Motivation | badge, médaille, trophée |
 
 ## Famille
 
@@ -254,3 +258,7 @@ Lot 4 (#25, `docs/stories/25/domain-model.md`) : le PO a répondu **aucun verrou
 Restent, sans blocage pour #25 :
 - « Parcours libre » : réglage sans effet ; retiré de l'interface et du glossaire par une story de Famille dédiée, créée par le responsable (réponse N2). La ligne reste ici jusque-là ;
 - « Leçon des classes d'avant » : définition à revoir avec #26 (renommée « Leçons des classes d'avant », réponse N2).
+
+Lot 5 (#65, `docs/stories/65/domain-model.md`) : à trancher par le PO.
+- Nom de l'écran des récompenses de l'enfant : tranché, « Mes médailles » (décision 65.1 du PO ; « médaille » retiré des synonymes interdits de Badge, « trophée » reste interdit) ;
+- « Section de l'écran » et « Pastille de record » : termes du domaine ou mots d'interface (#65).

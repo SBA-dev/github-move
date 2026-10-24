@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
-export type EcranSimple = "accueil" | "jeu" | "parcours" | "espace-parent";
+export type EcranSimple = "accueil" | "jeu" | "parcours" | "medailles" | "espace-parent";
 
 export type Lieu =
   | { readonly ecran: EcranSimple }
@@ -15,6 +15,7 @@ const CHEMINS: Readonly<Record<EcranSimple, string>> = {
   "accueil": "/",
   "jeu": "/jeu",
   "parcours": "/parcours",
+  "medailles": "/medailles",
   "espace-parent": "/espace-parent",
 };
 
