@@ -3,6 +3,7 @@ import type { Etoiles } from "@domain/apprentissage";
 import type { Lecon } from "@domain/catalogue";
 import { chargerToutesLesLecons } from "../seance/bibliotheque.ts";
 import { lireLesMeilleuresEtoilesDuProfil } from "../seance/fin-de-seance/meilleures-etoiles-du-profil.ts";
+import { reseauDisponible } from "../seance/fin-de-seance/reseau-disponible.ts";
 import { attendreLesEnvoisEnCours } from "../seance/fin-de-seance/sauvegarde-de-la-seance.ts";
 
 export type LecturesDuParcours = {
@@ -16,7 +17,7 @@ export function useLecturesDuParcours(profil: string): LecturesDuParcours | unde
   useEffect(() => {
     let annule = false;
     void (async () => {
-      await attendreLesEnvoisEnCours();
+      if (reseauDisponible()) await attendreLesEnvoisEnCours();
       const [lecons, meilleuresEtoiles] = await Promise.all([chargerToutesLesLecons(), lireLesMeilleuresEtoilesDuProfil(profil)]);
       if (!annule) setLectures({ lecons, meilleuresEtoiles });
     })();
