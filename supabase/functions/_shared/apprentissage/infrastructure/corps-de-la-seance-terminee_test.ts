@@ -1,6 +1,9 @@
 import { assertEquals, assertThrows } from "@std/assert";
 import { ChoixDeSeance } from "../domain/choix-de-seance.ts";
-import { Reponse } from "../domain/reponse.ts";
+import { Reponse, type ReponseDonnee } from "../domain/reponse.ts";
+import { revaliderLaSeance } from "../domain/revalider-la-seance.ts";
+import { hasardFixe } from "../test_utils/hasard-fixe.ts";
+import { leconDeClasserLesSons, seanceCommencee } from "../test_utils/lecons-de-classer-et-ordre.ts";
 import { lireLaSeanceTerminee } from "./corps-de-la-seance-terminee.ts";
 import { EntreeInvalide } from "./http-apprentissage.ts";
 
@@ -148,4 +151,63 @@ Deno.test("une date de fin légèrement en avance, dans les 5 minutes de toléra
   const termineeLe = "2026-10-23T10:19:59.000Z";
 
   assertEquals(lire({ ...corpsValide(), termineeLe }).termineeLe, new Date(termineeLe));
+});
+
+Deno.test("un placement dans un groupe est lu comme le placement d'une étiquette dans ce groupe", () => {
+  const reponses = [[{ placement: { etiquette: "loup", groupe: "g-ou" } }]];
+
+  assertEquals(lire({ ...corpsValide(), reponses }).reponses, [[Reponse.placement("loup", "g-ou")]]);
+});
+
+Deno.test("un placement sans groupe, dans un ordre, est lu comme le placement d'une étiquette seule", () => {
+  const reponses = [[{ placement: { etiquette: "mi" } }]];
+
+  assertEquals(lire({ ...corpsValide(), reponses }).reponses, [[Reponse.placement("mi")]]);
+});
+
+Deno.test("un placement mal formé est refusé comme toute réponse invalide", () => {
+  const malFormes = [
+    { placement: {} },
+    { placement: { groupe: "g-ou" } },
+    { placement: { etiquette: 6 } },
+    { placement: { etiquette: "a".repeat(201) } },
+    { placement: { etiquette: "loup", groupe: 3 } },
+    { placement: { etiquette: "loup", groupe: "a".repeat(201) } },
+    { placement: "loup" },
+    { placement: { etiquette: "loup" }, choix: "loup" },
+  ];
+  for (const reponse of malFormes) {
+    assertThrows(() => lire({ ...corpsValide(), reponses: [[reponse]] }), EntreeInvalide, "reponses");
+  }
+});
+
+function enReponseEnvoyee(reponse: ReponseDonnee): Record<string, unknown> {
+  if (reponse.genre === "choix") return { choix: reponse.texte };
+  if (reponse.genre === "jeNeSaisPas") return { jeNeSaisPas: true };
+  return {
+    placement: reponse.groupe === undefined
+      ? { etiquette: reponse.etiquette }
+      : { etiquette: reponse.etiquette, groupe: reponse.groupe },
+  };
+}
+
+Deno.test("le corps d'une séance de classer est lu puis revalidé sans incohérence", () => {
+  const seance = seanceCommencee(leconDeClasserLesSons(), hasardFixe(0, 0));
+  seance.repondre(Reponse.placement("savon", "g-on"));
+  seance.repondre(Reponse.placement("loup", "g-on"));
+  seance.repondre(Reponse.placement("loup", "g-ou"));
+  seance.repondre(Reponse.placement("pont", "g-on"));
+  const fait = seance.terminer(MAINTENANT);
+  const envoi = seance.aEnregistrer();
+  const corps = {
+    ...envoi,
+    seance: SEANCE,
+    enfant: ENFANT,
+    termineeLe: MAINTENANT.toISOString(),
+    reponses: envoi.reponses.map((question) => question.map(enReponseEnvoyee)),
+  };
+
+  const revalidee = revaliderLaSeance(leconDeClasserLesSons(), lire(corps));
+
+  assertEquals([revalidee.etoiles, revalidee.erreurs], [fait.etoiles, fait.erreurs]);
 });

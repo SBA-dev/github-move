@@ -5,13 +5,18 @@ export type { Hasard } from "./hasard.ts";
 export {
   direJeNeSaisPasAuClavierDeCristaux,
   direJeNeSaisPasAvecLesChoix,
+  direLeTexteComplet,
   type Encouragement,
   encourager,
   type Felicitation,
   feliciter,
+  feliciterUneFoisSurDeux,
   inviterACreerLePremierProfil,
+  paroleApresUneBonneReponse,
+  type ParoleDueApresUneBonneReponse,
   presentation,
   presentationAuRetourDuSon,
+  relancer,
   saluer,
 } from "./paroles.ts";
 export {

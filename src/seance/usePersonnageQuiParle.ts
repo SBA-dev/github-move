@@ -49,10 +49,13 @@ export function usePersonnageQuiParle({ lire, couperLaVoix }: Pick<Voix, "lire" 
     if (derniereParole.current) void dire(derniereParole.current);
   }, [dire]);
 
+  /** Change seulement l'humeur : le personnage guide réagit sans rien dire. */
+  const montrerHumeur = useCallback((nouvelleHumeur: Humeur) => setHumeur(nouvelleHumeur), []);
+
   const faireSilence = useCallback(() => {
     derniereLecture.current++;
     couperLaVoix();
   }, [couperLaVoix]);
 
-  return { parole, rangDuMotPrononce, humeur, dire, reecouter, faireSilence };
+  return { parole, rangDuMotPrononce, humeur, dire, reecouter, faireSilence, montrerHumeur };
 }

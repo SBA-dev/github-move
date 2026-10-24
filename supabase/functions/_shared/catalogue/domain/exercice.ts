@@ -1,31 +1,36 @@
 import { LeconMalFormee } from "./erreurs.ts";
 import { enObjet, listeFacultative, nombreFacultatif, type Objet, texteFacultatif } from "./lecture.ts";
-import { nombreDeTrous } from "./trous.ts";
 import { type ExerciceBulles, lireBulles } from "./exercices/bulles.ts";
+import { type ExerciceClasser, lireClasser } from "./exercices/classer.ts";
 import { type ExerciceEcoute, lireEcoute } from "./exercices/ecoute.ts";
 import { type ExerciceLecture, lireExerciceDeLecture } from "./exercices/lecture.ts";
+import { type ExerciceOrdre, lireOrdre } from "./exercices/ordre.ts";
+import { type ExerciceTrous, lireTrous } from "./exercices/texte-a-trous.ts";
 import { estUnTypeDExercice, type TypeDExercice } from "./type-d-exercice.ts";
 
-type TypeAChoix = "bulles" | "lecture" | "ecoute";
-type TypeGenerique = Exclude<TypeDExercice, TypeAChoix>;
+type TypeSpecifique = "bulles" | "lecture" | "ecoute" | "classer" | "ordre" | "trous";
+type TypeGenerique = Exclude<TypeDExercice, TypeSpecifique>;
 
-export type Exercice = ExerciceBulles | ExerciceLecture | ExerciceEcoute | ExerciceGenerique;
+export type Exercice =
+  | ExerciceBulles
+  | ExerciceLecture
+  | ExerciceEcoute
+  | ExerciceClasser
+  | ExerciceOrdre
+  | ExerciceTrous
+  | ExerciceGenerique;
 
 export type ExerciceGenerique = Readonly<{
   type: TypeGenerique;
   titre?: string;
   consigne?: string;
   auteur?: string;
-  texte?: string;
   verbe?: string;
   temps?: string;
   duree?: number;
   questions?: readonly unknown[];
   items?: readonly unknown[];
-  groupes?: readonly unknown[];
   mots?: readonly unknown[];
-  elements?: readonly unknown[];
-  distracteurs?: readonly unknown[];
   formes?: readonly unknown[];
   vers?: readonly unknown[];
   operations?: readonly unknown[];
@@ -36,10 +41,7 @@ export type ExerciceGenerique = Readonly<{
 type Donnee = Exclude<keyof ExerciceGenerique, "type">;
 
 const DONNEES_REQUISES: Record<TypeGenerique, readonly Donnee[]> = {
-  classer: ["items"],
   dictee: ["mots"],
-  ordre: ["elements"],
-  trous: ["texte"],
   conjugaison: ["formes"],
   memoriser: ["vers"],
   addition: [],
@@ -72,6 +74,12 @@ function lireExercice(brut: Objet, type: TypeDExercice): Exercice {
       return lireExerciceDeLecture(brut, communs);
     case "ecoute":
       return lireEcoute(brut, communs);
+    case "classer":
+      return lireClasser(brut, communs);
+    case "ordre":
+      return lireOrdre(brut, communs);
+    case "trous":
+      return lireTrous(brut, communs);
     default:
       return lireExerciceGenerique(brut, type, communs);
   }
@@ -86,16 +94,12 @@ function lireExerciceGenerique(
     type,
     ...communs,
     auteur: texteFacultatif(brut.auteur, "l'auteur d'un exercice"),
-    texte: texteFacultatif(brut.texte, "le texte d'un exercice"),
     verbe: texteFacultatif(brut.verbe, "le verbe d'un exercice"),
     temps: texteFacultatif(brut.temps, "le temps d'un exercice"),
     duree: nombreFacultatif(brut.duree, "la durée d'un exercice"),
     questions: listeFacultative(brut.questions, "les questions"),
     items: listeFacultative(brut.items, "les items"),
-    groupes: listeFacultative(brut.groupes, "les groupes"),
     mots: listeFacultative(brut.mots, "les mots"),
-    elements: listeFacultative(brut.elements, "les éléments"),
-    distracteurs: listeFacultative(brut.distracteurs, "les distracteurs"),
     formes: listeFacultative(brut.formes, "les formes"),
     vers: listeFacultative(brut.vers, "les vers"),
     operations: listeFacultative(brut.operations, "les opérations"),
@@ -113,10 +117,7 @@ function listeDe(exercice: ExerciceGenerique, donnee: Donnee): readonly unknown[
   switch (donnee) {
     case "questions":
     case "items":
-    case "groupes":
     case "mots":
-    case "elements":
-    case "distracteurs":
     case "formes":
     case "vers":
     case "operations":
@@ -129,8 +130,6 @@ function listeDe(exercice: ExerciceGenerique, donnee: Donnee): readonly unknown[
 
 function aDesQuestions(exercice: ExerciceGenerique): boolean {
   switch (exercice.type) {
-    case "trous":
-      return nombreDeTrous(exercice.texte ?? "") > 0;
     case "fluence":
     case "calcul":
     case "addition":

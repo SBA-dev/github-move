@@ -1,3 +1,4 @@
+import { NOMBRE_MAXIMAL_D_ETIQUETTES } from "../../catalogue/domain/index.ts";
 import { ChoixDeSeance } from "../domain/choix-de-seance.ts";
 import { Reponse, type ReponseDonnee } from "../domain/reponse.ts";
 import type { SeanceTermineeAEnregistrer } from "../domain/seance-terminee-a-enregistrer.ts";
@@ -6,7 +7,7 @@ import { EntreeInvalide } from "./http-apprentissage.ts";
 
 const CHAMPS = ["seance", "enfant", "lecon", "choix", "tirages", "reponses", "termineeLe"];
 const QUESTIONS_AU_PLUS = 200;
-const CHOIX_AU_PLUS = 20;
+const TIRAGE_AU_PLUS = NOMBRE_MAXIMAL_D_ETIQUETTES;
 const REPONSES_AU_PLUS = 50;
 const CARACTERES_AU_PLUS = 200;
 const TOLERANCE_D_HORLOGE_EN_MS = 5 * 60 * 1000;
@@ -46,7 +47,7 @@ function lireLeChoix(corps: Objet): ChoixDeSeance {
 
 function lireLesTirages(corps: Objet): string[][] {
   return listeDe(corps.tirages, "tirages", QUESTIONS_AU_PLUS).map((tirage) =>
-    listeDe(tirage, "tirages", CHOIX_AU_PLUS).map((choix) => texteCourt(choix, "tirages"))
+    listeDe(tirage, "tirages", TIRAGE_AU_PLUS).map((choix) => texteCourt(choix, "tirages"))
   );
 }
 
@@ -54,8 +55,16 @@ function lireUneReponse(brute: unknown): ReponseDonnee {
   const reponse = objet(brute, "reponses");
   const cles = Object.keys(reponse);
   if (cles.length === 1 && cles[0] === "choix") return Reponse.choix(texteCourt(reponse.choix, "reponses"));
+  if (cles.length === 1 && cles[0] === "placement") return lireUnPlacement(reponse.placement);
   if (cles.length === 1 && cles[0] === "jeNeSaisPas" && reponse.jeNeSaisPas === true) return { genre: "jeNeSaisPas" };
-  throw new EntreeInvalide("Le champ « reponses » ne contient que des choix ou « Je ne sais pas ».");
+  throw new EntreeInvalide("Le champ « reponses » ne contient que des choix, des placements ou « Je ne sais pas ».");
+}
+
+function lireUnPlacement(brut: unknown): ReponseDonnee {
+  const placement = objet(brut, "reponses");
+  const etiquette = texteCourt(placement.etiquette, "reponses");
+  const groupe = placement.groupe === undefined ? undefined : texteCourt(placement.groupe, "reponses");
+  return Reponse.placement(etiquette, groupe);
 }
 
 function lireLesReponses(corps: Objet): ReponseDonnee[][] {

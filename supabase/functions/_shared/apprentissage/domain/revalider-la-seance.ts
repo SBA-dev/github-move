@@ -2,12 +2,16 @@ import type { Lecon } from "../../catalogue/domain/index.ts";
 import {
   BonneReponseAbsenteDesChoix,
   ChoixInconnu,
+  EtiquetteDejaPlacee,
+  EtiquetteInconnue,
   ExerciceIntrouvable,
+  GroupeInconnu,
   JeNeSaisPasDejaDit,
   LeconSansExercice,
   PasDeQuestionEnCours,
   PasDEtapeDeLeconEnCours,
   QuestionDejaReussie,
+  ReponseRangeeSousUneAutreQuestion,
   SeanceDejaFinie,
   SeanceIncoherente,
   SeanceNonFinie,
@@ -22,12 +26,16 @@ import type { SeanceTermineeAEnregistrer } from "./seance-terminee-a-enregistrer
 const ERREURS_DE_REJEU = [
   BonneReponseAbsenteDesChoix,
   ChoixInconnu,
+  EtiquetteDejaPlacee,
+  EtiquetteInconnue,
+  GroupeInconnu,
   ExerciceIntrouvable,
   JeNeSaisPasDejaDit,
   LeconSansExercice,
   PasDeQuestionEnCours,
   PasDEtapeDeLeconEnCours,
   QuestionDejaReussie,
+  ReponseRangeeSousUneAutreQuestion,
   SeanceDejaFinie,
   SeanceNonFinie,
   TirageEnTrop,
@@ -51,15 +59,21 @@ function rejouer(lecon: Lecon, envoi: SeanceTermineeAEnregistrer): SeanceTermine
   while (seance.etapeDeLeconEnCours()) seance.continuer();
   envoi.reponses.forEach((reponsesDeLaQuestion, rang) => {
     reponsesDeLaQuestion.forEach((reponse) => {
-      if (seance.avancement().questionsReussies > rang) throw new QuestionDejaReussie();
-      rejouerLaReponse(seance, reponse);
+      if (seance.questionEstReussie(rang)) throw new QuestionDejaReussie();
+      rejouerLaReponse(seance, reponse, rang);
     });
-    if (seance.avancement().questionsReussies !== rang + 1) throw new SeanceNonFinie();
+    if (!seance.questionEstReussie(rang)) throw new SeanceNonFinie();
   });
   return seance.terminer(envoi.termineeLe);
 }
 
-function rejouerLaReponse(seance: Seance, reponse: ReponseDonnee): void {
-  if (reponse.genre === "jeNeSaisPas") seance.direJeNeSaisPas();
+function rejouerLaReponse(seance: Seance, reponse: ReponseDonnee, rang: number): void {
+  const etiquetteDeLaQuestion = seance.etiquetteDeClasserALaQuestion(rang);
+  if (
+    reponse.genre === "placement" && etiquetteDeLaQuestion !== undefined && reponse.etiquette !== etiquetteDeLaQuestion
+  ) {
+    throw new ReponseRangeeSousUneAutreQuestion(reponse.etiquette);
+  }
+  if (reponse.genre === "jeNeSaisPas") seance.direJeNeSaisPas(seance.etiquetteDeLaQuestion(rang));
   else seance.repondre(reponse);
 }

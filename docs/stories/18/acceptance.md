@@ -61,6 +61,10 @@ Source : validation du PO du 2026-10-23 (`docs/stories/lot-3-decisions.md`). Cha
 28. *(#18 n°8)* **Classer** : reposer une étiquette dans la même mauvaise maison coûte une nouvelle erreur ? **Décision** : oui. → « Reposer une étiquette dans la même mauvaise maison… » (4 erreurs, 1 étoile).
 29. *(#18 n°9)* **Trous** : le Catalogue refuse un texte à trous qui ne peut pas proposer deux choix par trou ? **Décision** : oui. Tests unitaires et pytest seulement.
 
+Complément du PO, le 2026-10-24 (modèle, décision n°10 ; glossaire, Décisions n°31 et n°32) :
+
+30. *(#18 n°10)* **Paroles des étiquettes** : la relance de l'ordre est tirée au hasard par Motivation ; en classer, la félicitation parlée une fois sur deux est tirée par Motivation et la **dernière étiquette est toujours félicitée** ; humeur « applaudit » à chaque bonne étiquette. « Plateau » reste un mot d'interface. Scénarios inchangés : le tirage n'est pas écrit en scénario (voir « Règles ») ; la félicitation de la dernière étiquette de classer est couverte par les tests unitaires.
+
 ## Questions ouvertes
 
 Aucune.

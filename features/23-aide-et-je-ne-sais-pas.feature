@@ -94,7 +94,6 @@ Fonctionnalité: Aide et « Je ne sais pas »
         | lecture     | Léa    | aux questions, avec les choix         |
         | ecoute      | Léa    | avec les choix                        |
 
-      @depend-de-18
       Exemples:
         | type        | enfant | cas                                   |
         | trous       | Léa    | avec les choix                        |
@@ -128,7 +127,6 @@ Fonctionnalité: Aide et « Je ne sais pas »
       Alors <ce qui est montré>
       Et Léa doit encore donner elle-même la bonne réponse
 
-      @depend-de-18
       Exemples:
         | type                            | ce qui est montré                                                       |
         | classer                         | la bonne maison de l'étiquette choisie brille                           |

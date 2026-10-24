@@ -8,6 +8,7 @@ import type { Voix } from "../voix/index.ts";
 import { BulleDuPersonnageGuide } from "./BulleDuPersonnageGuide.tsx";
 import { EcranDeFin } from "./fin-de-seance/EcranDeFin.tsx";
 import { ExerciceAChoix } from "./exercices/ExerciceAChoix.tsx";
+import { ExerciceAEtiquettes } from "./exercices/ExerciceAEtiquettes.tsx";
 import { generateurIdDuNavigateur } from "./generateur-id-navigateur.ts";
 import { hasardDuNavigateur } from "./hasard-navigateur.ts";
 import { RecipientDeProgression } from "./RecipientDeProgression.tsx";
@@ -82,7 +83,8 @@ function UnePartie({ lecon, exercice, profilId, ...reste }: PropsDUnePartie) {
 }
 
 function estAChoix(exercice: Exercice): boolean {
-  return exercice.type === "bulles" || exercice.type === "lecture" || exercice.type === "ecoute";
+  return exercice.type === "bulles" || exercice.type === "lecture" || exercice.type === "ecoute" ||
+    exercice.type === "trous";
 }
 
 type PropsEnCours = Omit<PropsDUnePartie, "exercice" | "profilId"> & { readonly seance: Seance };
@@ -104,7 +106,8 @@ function SeanceEnCours(
   const finie = seance.estFinie() && figee === undefined;
   const position = figee?.position ?? exerciceJoue?.position;
   const exerciceDeLaLecon = position === undefined ? undefined : lecon.exercices[position];
-  const question = figee?.question ?? exerciceJoue?.questionEnCours();
+  const exerciceAffiche = figee?.exercice ?? exerciceJoue;
+  const question = figee === undefined ? exerciceJoue?.questionEnCours() : figee.question;
   const zoneDeLExercice = useRef<HTMLDivElement>(null);
   const exerciceCommence = exerciceJoue !== undefined;
   const dejaMonte = useRef(false);
@@ -162,6 +165,8 @@ function SeanceEnCours(
             <ExerciceAChoix
               exercice={exerciceDeLaLecon}
               question={question}
+              texteATrous={exerciceAffiche?.texteATrous() ?? []}
+              phraseDuTrouEnCours={exerciceAffiche?.questionEnCours()?.enonce}
               choixVisibles={question !== undefined && deroulement.choixVisiblesPour === question}
               reussie={figee !== undefined}
               bulleEclatee={deroulement.bulleEclatee}
@@ -175,6 +180,17 @@ function SeanceEnCours(
               onEcouterLeMot={() => void deroulement.ecouterLeMot()}
               onJAiEcoute={() => void deroulement.jAiEcoute()}
               onActiverLeSon={voix.basculerLeSon}
+            />
+          )}
+          {(exerciceDeLaLecon.type === "classer" || exerciceDeLaLecon.type === "ordre") && (
+            <ExerciceAEtiquettes
+              exercice={exerciceDeLaLecon}
+              etiquettesAPlacer={exerciceAffiche?.etiquettesAPlacer() ?? []}
+              etiquettesPosees={exerciceAffiche?.etiquettesPosees() ?? []}
+              etiquetteViseeParJeNeSaisPas={(choisie) => exerciceAffiche?.etiquetteViseeParJeNeSaisPas(choisie)}
+              bonnesReponsesMontrees={deroulement.bonnesReponsesMontrees}
+              onPoser={(etiquette, groupe) => void deroulement.placer(etiquette, groupe)}
+              onJeNeSaisPas={(etiquette) => void deroulement.jeNeSaisPasDUneEtiquette(etiquette)}
             />
           )}
         </div>

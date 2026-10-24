@@ -87,6 +87,12 @@ ERREURS = []
 
 
 def lecon(id, matiere, niveau, titre, ordre, section, cite, etapes, exercices, competence=None, citation_exacte=None, guide=None):
+    for exercice in exercices:
+        if exercice["type"] == "trous":
+            for mot in trous_sans_deux_choix(exercice):
+                ERREURS.append(f"{id} : le trou « {mot} » ne propose pas deux choix (ajouter un distracteur)")
+        if a_trop_d_etiquettes(exercice):
+            ERREURS.append(f"{id} : « {exercice['titre']} » a plus de {NOMBRE_MAXIMAL_D_ETIQUETTES} étiquettes")
     try:
         if section not in INDEX:
             raise SystemExit(f"section inconnue {section}")
@@ -121,10 +127,17 @@ def bulles(titre, questions):
         {"question": q[0], "choix": [str(c) for c in q[1]], "reponse": str(q[1][0]), **({"aide": q[2]} if len(q) > 2 else {})} for q in questions]}
 
 
+def _etiquette(texte, groupe):
+    """texte ou (texte, aide) : l'aide facultative est lue après une erreur."""
+    if isinstance(texte, str):
+        return {"texte": texte, "groupe": groupe}
+    return {"texte": texte[0], "groupe": groupe, "aide": texte[1]}
+
+
 def classer(titre, consigne, groupes):
-    """groupes : {nom de la maison: [étiquettes]}"""
+    """groupes : {nom de la maison: [étiquette ou (étiquette, aide)]}"""
     gs = [{"id": str(i + 1), "nom": n} for i, n in enumerate(groupes)]
-    items = [{"texte": t, "groupe": str(i + 1)} for i, (n, ts) in enumerate(groupes.items()) for t in ts]
+    items = [_etiquette(t, str(i + 1)) for i, (n, ts) in enumerate(groupes.items()) for t in ts]
     return {"type": "classer", "titre": titre, "consigne": consigne, "groupes": gs, "items": items}
 
 
@@ -138,6 +151,22 @@ def ordre(titre, consigne, elements):
 
 def trous(titre, consigne, texte, distracteurs=()):
     return {"type": "trous", "titre": titre, "consigne": consigne, "texte": texte, "distracteurs": list(distracteurs)}
+
+
+NOMBRE_MAXIMAL_D_ETIQUETTES = 20
+
+
+def trous_sans_deux_choix(exercice):
+    """Les mots attendus dont le trou ne proposerait pas deux choix (mot attendu + au moins un autre mot différent)."""
+    attendus = re.findall(r"\[([^\]]+)\]", exercice["texte"])
+    candidats = set(attendus) | set(exercice["distracteurs"])
+    return [mot for mot in attendus if not candidats - {mot}]
+
+
+def a_trop_d_etiquettes(exercice):
+    """Un classer ou un ordre de plus de NOMBRE_MAXIMAL_D_ETIQUETTES étiquettes est refusé par le moteur."""
+    etiquettes = exercice.get("items") or exercice.get("elements") or []
+    return len(etiquettes) > NOMBRE_MAXIMAL_D_ETIQUETTES
 
 
 def conjugaison(verbe, temps, formes, distracteurs=(), titre=None):

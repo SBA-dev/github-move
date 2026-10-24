@@ -1,4 +1,4 @@
-export type TypeDExerciceAChoix = "ecoute" | "bulles" | "lecture";
+export type TypeDExerciceAChoix = "ecoute" | "bulles" | "lecture" | "trous";
 
 export const INTRODUCTION_DE_LA_LECTURE =
   "Installe-toi bien, j'ai une histoire pour toi. Suis les mots avec tes yeux !";
@@ -33,5 +33,7 @@ export function questionDeLEcoute(item: { question?: string }): string {
 }
 
 export function aideParDefaut(type: TypeDExerciceAChoix): string {
-  return type === "ecoute" ? "Écoute encore." : "Essaie une autre bulle.";
+  if (type === "ecoute") return "Écoute encore.";
+  if (type === "trous") return "Relis la phrase en entier : quel mot va bien ?";
+  return "Essaie une autre bulle.";
 }

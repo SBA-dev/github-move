@@ -1,4 +1,4 @@
-import { type Exercice, type ExerciceGenerique, nombreDeTrous } from "../../catalogue/domain/index.ts";
+import { type Exercice, type ExerciceGenerique } from "../../catalogue/domain/index.ts";
 
 const QUESTIONS_PAR_DEFAUT_D_UN_CALCUL = 5;
 const OPERATIONS_PAR_DEFAUT_D_UNE_ADDITION = 3;
@@ -18,7 +18,7 @@ export function nombreDeQuestions(exercice: Exercice): number {
     case "ordre":
       return taille(exercice.elements);
     case "trous":
-      return nombreDeTrous(exercice.texte ?? "");
+      return taille(exercice.motsAttendus);
     case "conjugaison":
       return taille(exercice.formes);
     case "dictee":

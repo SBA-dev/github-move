@@ -42,10 +42,10 @@ Le moteur affiche n'importe quelle leçon dans l'univers choisi par l'enfant (pr
 | `type` | Mécanique pour l'enfant | Données |
 |---|---|---|
 | `bulles` | Éclater la bonne bulle | `questions: [{question, choix[], reponse, aide?}]` |
-| `classer` | Glisser chaque étiquette dans la bonne maison | `consigne, groupes: [{id, nom}], items: [{texte, groupe}]` |
+| `classer` | Glisser chaque étiquette dans la bonne maison | `consigne, groupes: [{id, nom}], items: [{texte, groupe, aide?}]` ; `aide?` est lue après une erreur sur cette étiquette ; 20 étiquettes au plus |
 | `dictee` | Écouter le mot, puis l'écrire avec des lettres à toucher | `mots: [{mot, phrase?}]` |
-| `ordre` | Toucher les étiquettes dans le bon ordre | `consigne, elements[]` (dans l'ordre correct) |
-| `trous` | Compléter un texte, trou par trou, avec des bulles | `consigne, texte` (mots à trouver entre crochets : `Au clair de la [lune]`), `distracteurs[]` |
+| `ordre` | Toucher les étiquettes dans le bon ordre | `consigne, elements[]` (dans l'ordre correct, 20 éléments au plus) |
+| `trous` | Compléter un texte, trou par trou, avec des bulles | `consigne, texte` (mots à trouver entre crochets : `Au clair de la [lune]`), `distracteurs[]` ; chaque trou doit proposer au moins deux choix : le mot attendu et un autre mot différent (distracteur ou autre mot attendu du texte), sinon le build échoue |
 | `conjugaison` | Choisir la bonne forme pour chaque personne | `verbe, temps, formes: [{pronom, forme}], distracteurs?[]` |
 | `lecture` | Écouter un texte lu par le personnage guide, puis répondre | `titre, texte, questions: [{question, choix[], reponse, aide?}]` |
 | `memoriser` | Écouter vers par vers, remettre les vers dans l'ordre, retrouver les mots cachés | `titre, auteur?, vers[]` |

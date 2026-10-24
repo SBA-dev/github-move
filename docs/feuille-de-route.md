@@ -36,7 +36,7 @@ L'application fonctionne et est publiée comme artifact claude.ai. Elle comprend
 
 ## Prochaines étapes
 
-> **En cours** : #16, #17, #11, #12, #23 livrées (PR #53 à #57). #24 (étoiles et écran de fin : première leçon jouable de bout en bout, séances enregistrées par le serveur, décision 0016) livrée sur `claude/nice-mendel-cp9syg`, en PR. #14 reportée par le PO ; #58 (retrait de la page de démonstration) à faire. Suite proposée : #18 (classer, ordre, trous), puis #19 à #22, puis le lot 4 (parcours).
+> **En cours** : #16, #17, #11, #12, #23, #24 livrées (PR #53 à #57, #59). #18 (classer, ordre, trous) livrée sur `claude/nice-mendel-cp9syg`, en PR. #14 reportée par le PO ; #58 (retrait de la page de démonstration, avec le scénario PWA #8 qui l'ouvre encore) à faire. Suite proposée : #19 à #22, puis le lot 4 (parcours).
 
 > **Chantier en cours : la réécriture complète en React + Supabase.** Plan, lots et décisions de démarrage dans `docs/reecriture.md`.
 

@@ -1,6 +1,6 @@
 import type { Exercice } from "../../catalogue/domain/index.ts";
 import { CleDeQuestion } from "./cle-de-question.ts";
-import { ChoixProposes } from "./choix-proposes.ts";
+import type { ChoixProposes } from "./choix-proposes.ts";
 import {
   aideParDefaut,
   type ExplicationDeLaReponse,
@@ -8,9 +8,12 @@ import {
   questionDeLEcoute,
   type TypeDExerciceAChoix,
 } from "./exercices/phrases-des-exercices-a-choix.ts";
-import { ChoixInconnu, JeNeSaisPasDejaDit, QuestionDejaReussie, TirageManquant } from "./erreurs.ts";
+import { ChoixInconnu, JeNeSaisPasDejaDit, QuestionDejaReussie } from "./erreurs.ts";
+import { questionsDeTrous } from "./exercices/trous.ts";
 import type { Hasard } from "./hasard.ts";
-import type { Reponse, ReponseDonnee, ResultatDeReponse } from "./reponse.ts";
+import type { QuestionSuivie } from "./question-suivie.ts";
+import type { ReponseDonnee, ReponseParChoix, ResultatDeReponse } from "./reponse.ts";
+import { type Tireur, tireurAuHasard } from "./tireur.ts";
 
 const ERREURS_AVANT_LA_REDUCTION_A_DEUX = 2;
 
@@ -22,7 +25,7 @@ export type AideDonnee = {
 
 type Complements = { readonly aide?: string; readonly motAEcouter?: string; readonly langue?: string };
 
-export class QuestionJouee {
+export class QuestionJouee implements QuestionSuivie {
   private nombreDErreurs = 0;
   private estReussie = false;
   private jeNeSaisPasDejaDit = false;
@@ -41,12 +44,11 @@ export class QuestionJouee {
   }
 
   static aChoix(
-    { cle, enonce, choix, bonneReponse, proposeur, type, complements = {} }: {
+    { cle, enonce, choix, bonneReponse, type, complements = {} }: {
       readonly cle: CleDeQuestion;
       readonly enonce: string;
-      readonly choix: readonly string[];
+      readonly choix: ChoixProposes;
       readonly bonneReponse: string;
-      readonly proposeur: Proposeur;
       readonly type: TypeDExerciceAChoix;
       readonly complements?: Complements;
     },
@@ -55,7 +57,7 @@ export class QuestionJouee {
       enonce,
       cle,
       bonneReponse,
-      proposeur(choix, bonneReponse),
+      choix,
       type,
       complements,
     );
@@ -127,7 +129,7 @@ export class QuestionJouee {
     return this.estReussie;
   }
 
-  repondre(reponse: Reponse): ResultatDeReponse {
+  repondre(reponse: ReponseParChoix): ResultatDeReponse {
     if (this.estReussie) throw new QuestionDejaReussie();
     if (!this.choixProposes.textes().includes(reponse.texte)) throw new ChoixInconnu(reponse.texte);
     this.reponsesDonnees.push(reponse);
@@ -145,25 +147,11 @@ export class QuestionJouee {
   }
 }
 
-export type Proposeur = (choix: readonly string[], bonneReponse: string) => ChoixProposes;
-
-export function proposerAuHasard(hasard: Hasard): Proposeur {
-  return (choix, bonneReponse) => ChoixProposes.proposer(choix, bonneReponse, hasard);
-}
-
-export function proposerSelonLesTirages(tirages: Iterator<readonly string[]>): Proposeur {
-  return (choix, bonneReponse) => {
-    const suivant = tirages.next();
-    if (suivant.done) throw new TirageManquant();
-    return ChoixProposes.depuisTirage(choix, bonneReponse, suivant.value);
-  };
-}
-
 export function questionsJoueesDe(exercice: Exercice, hasard: Hasard): QuestionJouee[] {
-  return questionsJoueesAvec(exercice, proposerAuHasard(hasard));
+  return questionsJoueesAvec(exercice, tireurAuHasard(hasard));
 }
 
-export function questionsJoueesAvec(exercice: Exercice, proposeur: Proposeur): QuestionJouee[] {
+export function questionsJoueesAvec(exercice: Exercice, tireur: Tireur): QuestionJouee[] {
   switch (exercice.type) {
     case "bulles":
     case "lecture": {
@@ -172,9 +160,8 @@ export function questionsJoueesAvec(exercice: Exercice, proposeur: Proposeur): Q
         QuestionJouee.aChoix({
           cle: CleDeQuestion.de(type, q.question + q.reponse),
           enonce: q.question,
-          choix: q.choix,
+          choix: tireur.choix(q.choix, q.reponse),
           bonneReponse: q.reponse,
-          proposeur,
           type,
           complements: { aide: q.aide },
         })
@@ -185,11 +172,20 @@ export function questionsJoueesAvec(exercice: Exercice, proposeur: Proposeur): Q
         QuestionJouee.aChoix({
           cle: CleDeQuestion.de("ecoute", item.dire),
           enonce: questionDeLEcoute(item),
-          choix: item.choix,
+          choix: tireur.choix(item.choix, item.reponse),
           bonneReponse: item.reponse,
-          proposeur,
           type: "ecoute",
           complements: { aide: item.aide, motAEcouter: item.dire, langue: exercice.langue },
+        })
+      );
+    case "trous":
+      return questionsDeTrous(exercice).map((question) =>
+        QuestionJouee.aChoix({
+          cle: CleDeQuestion.de("trous", question.enonce),
+          enonce: question.enonce,
+          choix: tireur.trou(question.motAttendu, question.candidats),
+          bonneReponse: question.motAttendu,
+          type: "trous",
         })
       );
     default:

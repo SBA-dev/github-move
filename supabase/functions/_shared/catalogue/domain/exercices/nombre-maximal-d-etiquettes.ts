@@ -1,0 +1,1 @@
+export const NOMBRE_MAXIMAL_D_ETIQUETTES = 20;

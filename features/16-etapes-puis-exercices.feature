@@ -106,7 +106,6 @@ Fonctionnalité: Étapes de leçon lues, puis exercices
       Quand Léa choisit seulement l'exercice « Les maisons des sons »
       Alors Noisette n'annonce pas « Les maisons des sons » comme un nouveau défi
 
-    @depend-de-18
     Scénario: Une séance d'un exercice se termine avec cet exercice
       Étant donné que Léa joue seulement l'exercice « Les maisons des sons » de la leçon « Les sons ou, on, an »
       Et qu'il ne reste que l'étiquette « dent » à poser
@@ -170,7 +169,6 @@ Fonctionnalité: Étapes de leçon lues, puis exercices
       Quand Léa répond « an » à la question « Dans le mot « mouton », quel son entends-tu à la fin ? »
       Alors l'avancement de la séance montre toujours 1 question réussie sur 15
 
-    @depend-de-18
     Scénario: L'avancement est complet quand la dernière question est réussie
       Étant donné que Léa joue la séance complète de la leçon « Les sons ou, on, an »
       Et qu'il ne reste que l'étiquette « dent » à poser

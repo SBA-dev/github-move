@@ -61,6 +61,34 @@ export class JeNeSaisPasDejaDit extends Error {
   }
 }
 
+export class EtiquetteInconnue extends Error {
+  constructor(readonly etiquette: string) {
+    super(`« ${etiquette} » n'est pas une étiquette à placer.`);
+    this.name = "EtiquetteInconnue";
+  }
+}
+
+export class EtiquetteDejaPlacee extends Error {
+  constructor(readonly etiquette: string) {
+    super(`« ${etiquette} » est déjà bien placée.`);
+    this.name = "EtiquetteDejaPlacee";
+  }
+}
+
+export class ReponseRangeeSousUneAutreQuestion extends Error {
+  constructor(readonly etiquette: string) {
+    super(`Le placement de « ${etiquette} » est rangé sous la question d'une autre étiquette.`);
+    this.name = "ReponseRangeeSousUneAutreQuestion";
+  }
+}
+
+export class GroupeInconnu extends Error {
+  constructor(readonly groupe: string | undefined) {
+    super(`Le groupe « ${groupe ?? ""} » n'existe pas dans cet exercice.`);
+    this.name = "GroupeInconnu";
+  }
+}
+
 export class SeanceNonFinie extends Error {
   constructor() {
     super("Cette séance a encore des questions à réussir : elle ne peut pas être terminée.");
