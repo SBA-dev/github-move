@@ -3,7 +3,7 @@ import type { Etoiles } from "@domain/apprentissage";
 import type { Lecon } from "@domain/catalogue";
 import { chargerToutesLesLecons } from "../seance/bibliotheque.ts";
 import { lireLesMeilleuresEtoilesDuProfil } from "../seance/fin-de-seance/meilleures-etoiles-du-profil.ts";
-import { reseauDisponible } from "../seance/fin-de-seance/reseau-disponible.ts";
+import { reseauDisponible } from "../reseau/reseau-disponible.ts";
 import { attendreLesEnvoisEnCours } from "../seance/fin-de-seance/sauvegarde-de-la-seance.ts";
 
 export type LecturesDuParcours = {

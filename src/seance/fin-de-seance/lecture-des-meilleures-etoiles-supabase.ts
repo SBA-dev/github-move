@@ -1,5 +1,6 @@
 import { Etoiles, type NombreDEtoiles } from "@domain/apprentissage";
 import { clientSupabase } from "../../connexion/client-supabase.ts";
+import { reseauDisponible } from "../../reseau/reseau-disponible.ts";
 import { estUnIdentifiantDeProfil } from "./corps-de-la-seance.ts";
 import { attendreLesEnvoisEnCours } from "./sauvegarde-de-la-seance.ts";
 
@@ -9,7 +10,7 @@ function enEtoiles(valeur: unknown): Etoiles | undefined {
 
 /** Lecture sous RLS du résultat de la leçon. `undefined` : aucune séance terminée, ou lecture impossible. */
 export async function lireLesMeilleuresEtoiles(profil: string, lecon: string): Promise<Etoiles | undefined> {
-  if (!estUnIdentifiantDeProfil(profil)) return undefined;
+  if (!estUnIdentifiantDeProfil(profil) || !reseauDisponible()) return undefined;
   try {
     await attendreLesEnvoisEnCours();
     const { data, error } = await clientSupabase()

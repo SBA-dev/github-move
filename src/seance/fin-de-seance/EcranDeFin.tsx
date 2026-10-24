@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { leconSuivanteDansLeParcours, type Seance } from "@domain/apprentissage";
 import { pageDeLaLecon } from "@domain/catalogue";
-import { niveauDuProfil } from "../../parcours/niveau-du-profil.ts";
+import { niveauDuProfil } from "../../parcours/index.ts";
 import { chargerToutesLesLecons } from "../bibliotheque.ts";
 import { EtoilesDessinees } from "./EtoilesDessinees.tsx";
 import { Etincelles } from "./Etincelles.tsx";
