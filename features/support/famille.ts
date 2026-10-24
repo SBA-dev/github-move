@@ -31,9 +31,10 @@ type SessionStockee = { access_token: string; user: { id: string; email: string 
  * Le « monde » des scénarios de connexion : les appareils du parent (tablette = page du test, téléphone = second
  * contexte), les adresses de test et le suivi des e-mails reçus.
  *
- * Isolation : les projets Playwright (tablette, téléphone) tournent en parallèle sur le même projet Supabase avec les
- * mêmes adresses de scénario. Chaque projet reçoit donc un suffixe : « paul@exemple.test » devient
- * « paul+<projet>@exemple.test », en gardant la casse et les espaces de l'adresse saisie. Le nettoyage de fin de
+ * Isolation : les projets Playwright (tablette, téléphone), leurs workers et les exécutions d'autres équipes tournent
+ * en même temps sur le même projet Supabase avec les mêmes adresses de scénario. Chacun reçoit donc un suffixe :
+ * « paul@exemple.test » devient « paul+<projet><worker>-<jeton>@exemple.test », en gardant la casse et les espaces de
+ * l'adresse saisie. Le nettoyage de fin de
  * scénario (boîte de test, parents) ne touche que les adresses de son suffixe.
  */
 export class Famille {
