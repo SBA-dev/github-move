@@ -210,6 +210,10 @@ Given(/^Léa joue seulement l'exercice « ([^«»]+) »$/, async ({ famille, pag
   const lecon = etat(page).courante ?? leconDeLExercice(page, exercice);
   const position = positionDeLExercice(lecon, exercice);
   const type = String(lecon.exercices[position]?.type);
+  if (type === "fluence") {
+    const { preparerLaFluence } = await import("./calcul-pour-les-autres-stories.steps.ts");
+    return preparerLaFluence(page, exercice);
+  }
   if (!TYPES_A_CHOIX.includes(type)) dependDe(STORY_PAR_TYPE[type] ?? 18, `exercice ${type} « ${exercice} »`);
   await reposerLesErreurs(famille, page);
   await ouvrirLaPageDeLaLecon(page, lecon.titre);
@@ -268,15 +272,9 @@ Given(/^Léa a terminé une séance de l'exercice « ([^«»]+) » seul$/, async
   await jouerUnExerciceSeul(famille, page, lecon, positionDeLExercice(lecon, exercice), 0);
 });
 
-// --- Étant donné : #14 et #20 (non livrées)
+// --- Étant donné : #14 (non livrée)
 
 Given(/^Paul a demandé la suppression du profil enfant de Léa$/, () => dependDe(14, "suppression du profil enfant"));
-Given(
-  /^une leçon de test « Additions » a un exercice calcul dont le générateur tire des additions$/,
-  () => dependDe(20, "calcul au clavier de cristaux"),
-);
-Given(/^Léa a terminé une séance de « Additions » dont le premier calcul était « .+ »$/, () => dependDe(20, "calcul"));
-Given(/^le prochain calcul tiré est « .+ »$/, () => dependDe(20, "calcul"));
 
 // --- Quand
 
@@ -288,7 +286,10 @@ When(/^Léa rejoue$/, async ({ page }) => {
   await page.getByTestId("fin-de-seance").getByRole("button", { name: "Rejouer", exact: true }).click();
 });
 
-When(/^le temps de la fluence est écoulé$/, () => dependDe(20, "fluence"));
+When(/^le temps de la fluence est écoulé$/, async ({ page }) => {
+  const { ecoulerLaFluence } = await import("./calcul-pour-les-autres-stories.steps.ts");
+  await ecoulerLaFluence(page);
+});
 When(/^Paul exporte les données du profil enfant de Léa$/, () => dependDe(14, "export du profil enfant"));
 When(/^Paul confirme la suppression du profil enfant de Léa$/, () => dependDe(14, "suppression du profil enfant"));
 
@@ -513,8 +514,12 @@ Then(/^la leçon suivante ouvre la page de la leçon « ([^«»]+) »$/, async (
   etat(page).courante = leconDeTitre(page, titre);
 });
 
-Then(/^Léa voit son score de fluence, sans étoiles$/, () => dependDe(20, "fluence"));
-Then(/^le premier calcul de la nouvelle séance est « .+ »$/, () => dependDe(20, "calcul"));
+Then(/^Léa voit son score de fluence, sans étoiles$/, async ({ page }) => {
+  await attendreLaFinDeLaSeance(page);
+  await expect(page.getByTestId("score-de-fluence")).toHaveCount(1);
+  await expect(page.getByTestId("etoiles-gagnees")).toHaveCount(0);
+  await expect(page.getByTestId("etoile")).toHaveCount(0);
+});
 Then(/^le fichier téléchargé contient .*$/, () => dependDe(14, "export du profil enfant"));
 Then(/^les meilleures étoiles de Léa pour cette leçon$/, () => dependDe(14, "export du profil enfant"));
 Then(/^aucune des réponses données par Léa$/, () => dependDe(14, "export du profil enfant"));

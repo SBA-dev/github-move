@@ -1,3 +1,4 @@
+import { additionAPoserAffichee, preparerLaFluence, verifierQueLAdditionResteAPoser } from "./calcul-pour-les-autres-stories.steps.ts";
 import { expect, type Page } from "@playwright/test";
 import { Given, Then, When } from "./fixtures.ts";
 import {
@@ -246,8 +247,9 @@ Given(
   async ({ page }, exercice: string, titreDeLaLecon: string) => {
     const lecon = leconDeTitre(page, titreDeLaLecon);
     const type = lecon.exercices[positionDeLExercice(lecon, exercice)]?.type;
+    if (type === "fluence") return preparerLaFluence(page, exercice);
     if (typeof type !== "string" || !TYPES_JOUES.includes(type)) {
-      throw new Error(`Étape non implémentée : l'exercice « ${exercice} » (${String(type)}) dépend d'une story à venir (#19, #20 ou #21).`);
+      throw new Error(`Étape non implémentée : l'exercice « ${exercice} » (${String(type)}) dépend d'une story à venir (#19 ou #21).`);
     }
     etatDesChoix(page).demarrage = demarrageDeLExercice(page, lecon, exercice);
   },
@@ -545,6 +547,7 @@ Then(/^l'étiquette qui vient ensuite brille$/, async ({ page }) => {
 });
 
 Then(/^Léa doit encore donner elle-même la bonne réponse$/, async ({ page }) => {
+  if (await additionAPoserAffichee(page)) return await verifierQueLAdditionResteAPoser(page);
   const exercice = await exerciceEnCours(page);
   expect(await questionsReussies(page)).toBe(0);
   await expect(page.getByTestId("etiquette")).toHaveCount(exercice.type === "classer" ? itemsDe(exercice).length : elementsDe(exercice).length);

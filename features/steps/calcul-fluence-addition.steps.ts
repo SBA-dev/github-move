@@ -71,7 +71,7 @@ type Partie20 = {
 
 const parties = new WeakMap<Page, Partie20>();
 
-function partie20(page: Page): Partie20 {
+export function partie20(page: Page): Partie20 {
   let courante = parties.get(page);
   if (!courante) {
     courante = {
@@ -105,11 +105,11 @@ function exactement(texte: string): RegExp {
 
 const OPERATION = /^(\d+) ([+−×:]) (\d+)$/;
 
-function enonceDeLaCarte(carte: string): string {
+export function enonceDeLaCarte(carte: string): string {
   return normaliser(carte).replace(/ = \?$| \?$/, "");
 }
 
-function calculer(enonce: string): number {
+export function calculer(enonce: string): number {
   const lue = OPERATION.exec(enonce);
   if (!lue) throw new Error(`Opération inconnue : « ${enonce} »`);
   const a = Number(lue[1]);
@@ -126,7 +126,7 @@ function calculer(enonce: string): number {
   }
 }
 
-function resultatDeLaCarte(lecon: LeconBrute | undefined, carte: string): number {
+export function resultatDeLaCarte(lecon: LeconBrute | undefined, carte: string): number {
   const enonce = enonceDeLaCarte(carte);
   for (const exercice of lecon?.exercices ?? []) {
     if (exercice.type !== "calcul") continue;
@@ -149,19 +149,19 @@ function sommeDeLaPhrase(phrase: string): number {
 
 // --- Les écrans
 
-const carteDuCalcul = (page: Page) => page.getByTestId("carte-du-calcul");
-const clavier = (page: Page) => page.getByTestId("clavier-de-cristaux");
+export const carteDuCalcul = (page: Page) => page.getByTestId("carte-du-calcul");
+export const clavier = (page: Page) => page.getByTestId("clavier-de-cristaux");
 const choixDeLaQuestion = (page: Page) => page.getByTestId("choix-de-la-question");
 const nombreTape = (page: Page) => page.getByTestId("nombre-tape");
-const fluence = (page: Page) => page.getByTestId("fluence");
-const finDeSeance = (page: Page) => page.getByTestId("fin-de-seance");
+export const fluence = (page: Page) => page.getByTestId("fluence");
+export const finDeSeance = (page: Page) => page.getByTestId("fin-de-seance");
 const phraseDeLaColonne = (page: Page) => page.getByTestId("phrase-de-la-colonne");
 
-function colonne(page: Page, libelle: string): Locator {
+export function colonne(page: Page, libelle: string): Locator {
   return page.getByRole("group", { name: `Colonne des ${libelle}`, exact: true });
 }
 
-async function lireLaCarte(page: Page): Promise<string> {
+export async function lireLaCarte(page: Page): Promise<string> {
   await expect(carteDuCalcul(page)).toBeVisible({ timeout: DELAI_D_UN_APPEL_SERVEUR_MS });
   return normaliser((await carteDuCalcul(page).textContent()) ?? "");
 }
@@ -180,7 +180,7 @@ async function choisirExactement(page: Page, titre: string): Promise<void> {
 
 // --- Le tirage : on donne des nombres au hasard de l'application, on ne le remplace pas (voir #17)
 
-async function forcerLeTirage(page: Page, nombres: number[]): Promise<void> {
+export async function forcerLeTirage(page: Page, nombres: number[]): Promise<void> {
   await page.evaluate(([cle, valeurs]) => {
     const reel = Math.random.bind(Math);
     Reflect.set(window, cle as string, valeurs);
@@ -193,7 +193,7 @@ async function forcerLeTirage(page: Page, nombres: number[]): Promise<void> {
 }
 
 /** Le nombre de Math.random qui fait tirer `valeur` dans [min, max] par `min + floor(r × (max − min + 1))`. */
-function tirageDe(valeur: number, [min, max]: readonly [number, number]): number {
+export function tirageDe(valeur: number, [min, max]: readonly [number, number]): number {
   return (valeur - min + 0.5) / (max - min + 1);
 }
 
@@ -213,7 +213,7 @@ async function preparerLActeur(page: Page, monde: Monde): Promise<void> {
   await preparerProfil(page, prepare);
 }
 
-async function lancerLExerciceDeTest(page: Page, monde: Monde): Promise<void> {
+export async function lancerLExerciceDeTest(page: Page, monde: Monde): Promise<void> {
   const p = partie20(page);
   if (!p.lecon) {
     p.lecon = { ...leconDeTest("e2e-20-calcul", "Leçon de test e2e-20", p.exercicesDeTest), niveau: niveauDeLaLecon(p) };
@@ -227,7 +227,7 @@ async function lancerLExerciceDeTest(page: Page, monde: Monde): Promise<void> {
   await choisirExactement(page, titre);
 }
 
-function preparerUnExercice(page: Page, monde: Monde, exercice: Exercice, niveau?: string): void {
+export function preparerUnExercice(page: Page, monde: Monde, exercice: Exercice, niveau?: string): void {
   const p = partie20(page);
   p.exercicesDeTest = [exercice];
   p.titreExercice = String(exercice.titre);
@@ -235,25 +235,25 @@ function preparerUnExercice(page: Page, monde: Monde, exercice: Exercice, niveau
   etatDesChoix(page).demarrage = () => lancerLExerciceDeTest(page, monde);
 }
 
-function exerciceDeCalcul(operations: Array<{ q: string; r: number; aide?: string }>): Exercice {
+export function exerciceDeCalcul(operations: Array<{ q: string; r: number; aide?: string }>): Exercice {
   return { type: "calcul", titre: "Calcul de test", operations };
 }
 
-function exerciceAGenerateur(generateur: Record<string, unknown>): Exercice {
+export function exerciceAGenerateur(generateur: Record<string, unknown>): Exercice {
   return { type: "calcul", titre: "Calcul de test", generateur };
 }
 
 // --- Répondre comme un enfant
 
-async function taperLesChiffres(page: Page, chiffres: string, force = false): Promise<void> {
+export async function taperLesChiffres(page: Page, chiffres: string, force = false): Promise<void> {
   for (const chiffre of chiffres) await clavier(page).getByRole("button", { name: chiffre, exact: true }).click({ force });
 }
 
-async function valider(page: Page, force = false): Promise<void> {
+export async function valider(page: Page, force = false): Promise<void> {
   await clavier(page).getByRole("button", { name: "Valider", exact: true }).click({ force });
 }
 
-async function repondreAuNombre(page: Page, nombre: number | string): Promise<void> {
+export async function repondreAuNombre(page: Page, nombre: number | string): Promise<void> {
   await expect(clavier(page).or(choixDeLaQuestion(page))).toBeVisible({ timeout: DELAI_D_UN_APPEL_SERVEUR_MS });
   if (await clavier(page).isVisible()) {
     await taperLesChiffres(page, String(nombre));
@@ -263,13 +263,13 @@ async function repondreAuNombre(page: Page, nombre: number | string): Promise<vo
   }
 }
 
-async function figee(page: Page): Promise<boolean> {
+export async function figee(page: Page): Promise<boolean> {
   const touche = clavier(page).or(choixDeLaQuestion(page)).getByRole("button").first();
   return (await touche.getAttribute("aria-disabled")) === "true";
 }
 
 /** Laisse Noisette finir de féliciter, jusqu'à la suite : le prochain calcul prêt, ou la fin de la séance. */
-async function attendreLaSuiteApresUneReussite(page: Page, reussiesAvant: number): Promise<void> {
+export async function attendreLaSuiteApresUneReussite(page: Page, reussiesAvant: number): Promise<void> {
   await expect.poll(async () => {
     if (await finDeSeance(page).isVisible()) return true;
     if ((await questionsReussies(page)) > reussiesAvant && !(await figee(page))) return true;
@@ -278,7 +278,7 @@ async function attendreLaSuiteApresUneReussite(page: Page, reussiesAvant: number
   }, { intervals: [100], timeout: DELAI_D_UN_APPEL_SERVEUR_MS }).toBe(true);
 }
 
-async function reussirLeCalcul(page: Page, lecon: LeconBrute | undefined): Promise<string> {
+export async function reussirLeCalcul(page: Page, lecon: LeconBrute | undefined): Promise<string> {
   const carte = await lireLaCarte(page);
   const reussies = await questionsReussies(page);
   await repondreAuNombre(page, resultatDeLaCarte(lecon, carte));
@@ -286,7 +286,7 @@ async function reussirLeCalcul(page: Page, lecon: LeconBrute | undefined): Promi
   return carte;
 }
 
-async function allerAuCalcul(page: Page, enonce: string): Promise<void> {
+export async function allerAuCalcul(page: Page, enonce: string): Promise<void> {
   const lecon = partie20(page).lecon ?? etat(page).courante;
   for (let essai = 0; essai < 30; essai++) {
     const carte = await lireLaCarte(page);
@@ -582,7 +582,7 @@ function dureeDeLaFluence(page: Page): number {
   return Number(exercice?.duree ?? 60);
 }
 
-async function ouvrirLaFluence(page: Page, titre: string): Promise<void> {
+export async function ouvrirLaFluence(page: Page, titre: string): Promise<void> {
   const p = partie20(page);
   p.fluence = titre;
   const lecon = leconDeLExercice(page, titre);
@@ -596,7 +596,7 @@ async function ouvrirLaFluence(page: Page, titre: string): Promise<void> {
 const ACCUEIL_DE_LA_FLUENCE = "Calcul rapide ! Tu as ";
 
 /** Le signal de départ : l'enfant touche « C'est parti ! » une fois l'accueil dit. Le temps est figé à cet instant. */
-async function donnerLeSignalDeDepart(page: Page): Promise<void> {
+export async function donnerLeSignalDeDepart(page: Page): Promise<void> {
   const p = partie20(page);
   p.accueilsDeFluenceDits += 1;
   const attendus = p.accueilsDeFluenceDits;
@@ -623,7 +623,7 @@ async function reussirDesCalculsDeFluence(page: Page, nombre: number): Promise<v
 }
 
 /** La durée passe d'un coup : l'horloge du navigateur avance au-delà de la durée de la fluence. */
-async function laisserPasserLeTemps(page: Page): Promise<void> {
+export async function laisserPasserLeTemps(page: Page): Promise<void> {
   const p = partie20(page);
   p.maintenant = new Date(p.maintenant.getTime() + (dureeDeLaFluence(page) + 1) * SECONDE_EN_MS);
   await page.clock.setFixedTime(p.maintenant);
