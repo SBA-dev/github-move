@@ -145,3 +145,48 @@ Deno.test("chaque enregistrement efface aussi les essais oubliés des autres adr
 
   assertEquals(requetes.at(-1)?.cible, "rpc:effacer_les_essais_de_reinitialisation_oublies");
 });
+
+Deno.test("des essais relus sans ligne après une première lecture sont insérés, pas mis à jour", async () => {
+  const { client, requetes } = fauxClientSupabase([{ data: ligne }, { data: null }, {}]);
+  const registre = new RegistreDesEssaisDeReinitialisationSupabase(client);
+  await registre.pourAdresse(adresse);
+  const essais = await registre.pourAdresse(adresse);
+  essais.enregistrerUnEssaiRate(maintenant);
+
+  await registre.enregistrer(essais, maintenant);
+
+  assertEquals(requetes[2].appels[0].methode, "insert");
+});
+
+Deno.test("après un enregistrement réussi, un nouvel enregistrement de la même instance part de la version écrite", async () => {
+  const { client, requetes } = fauxClientSupabase([
+    { data: ligne },
+    { data: [{ adresse: "parent@exemple.fr" }] },
+    {},
+    { data: [{ adresse: "parent@exemple.fr" }] },
+  ]);
+  const registre = new RegistreDesEssaisDeReinitialisationSupabase(client);
+  const essais = await registre.pourAdresse(adresse);
+  essais.enregistrerUnEssaiRate(maintenant);
+  await registre.enregistrer(essais, maintenant);
+
+  await registre.enregistrer(essais, maintenant);
+
+  const secondeMiseAJour = requetes[3];
+  assertEquals((secondeMiseAJour.appels[0].args[0] as { version: number }).version, 5);
+  assert(secondeMiseAJour.appels.some((a) => a.methode === "eq" && a.args[0] === "version" && a.args[1] === 4));
+});
+
+Deno.test("après un effacement, l'enregistrement suivant de la même instance insère", async () => {
+  const { client, requetes } = fauxClientSupabase([{ data: ligne }, {}, {}, {}, {}]);
+  const registre = new RegistreDesEssaisDeReinitialisationSupabase(client);
+  const essais = await registre.pourAdresse(adresse);
+  essais.enregistrerUneReussite();
+  await registre.enregistrer(essais, maintenant);
+  const nouveaux = EssaisDeReinitialisation.nouveaux(adresse);
+  nouveaux.enregistrerUnEssaiRate(maintenant);
+
+  await registre.enregistrer(nouveaux, maintenant);
+
+  assertEquals(requetes[3].appels[0].methode, "insert");
+});
