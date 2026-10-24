@@ -1,6 +1,6 @@
 # 0006 : Méthode TDD, BDD et DDD avec une équipe de subagents
 
-**Statut** : Acceptée · 2026-10-22
+**Statut** : Acceptée · 2026-10-22 · précisée par 0017 (livraison en parallèle)
 
 ## Contexte
 

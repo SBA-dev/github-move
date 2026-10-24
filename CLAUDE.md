@@ -184,10 +184,20 @@ Décisions déjà prises, à respecter partout (code, interface, scénarios) :
 domaine → critères d'acceptance → ⛔ validation humaine → TDD → review → E2E → PR → ⛔ merge humain.
 Voir `.claude/commands/feature.md`.
 
-- Lancer `/feature` vaut demande explicite d'ouvrir la PR de la story. En dehors de ce workflow, on n'ouvre pas de PR sans qu'on le demande.
+- Lancer `/feature` ou `/graphe` vaut demande explicite d'ouvrir la PR de la story (de chaque story lancée pour `/graphe`). En dehors de ce workflow, on n'ouvre pas de PR sans qu'on le demande.
 - On travaille sur la branche fournie par la session ou créée pour la story, jamais directement sur la branche par défaut.
 - La **branche de base** est `main`, branche par défaut du dépôt. Chaque story part de `main` à jour et y revient par PR.
 - Les deux ⛔ sont des arrêts réels : l'agent attend la réponse humaine et ne la suppose jamais.
+
+### Plusieurs stories en parallèle : `/graphe`
+
+`/graphe [lot <n> | issues]` livre plusieurs stories **en même temps**, une **équipe** par story (décision 0017) :
+- le graphe des dépendances est `docs/graphe/stories.md` ; une story ne commence son code que quand ses dépendances sont mergées ;
+- le **responsable des équipes** (`.claude/commands/graphe.md`) lance 2 équipes par défaut, 3 au maximum (`docs/graphe/nombre-d-equipes.md`), suit leurs avancées, partage les informations utiles, regroupe les validations ⛔, accorde les verrous (`base`, `email`, `merge`) et ordonne les merges ;
+- chaque **équipe** (`.claude/commands/equipe.md`) est une session, son orchestrateur et les 6 subagents, sur sa branche `feature/<n>-<slug>`, et suit `/feature` avec les règles du parallèle ;
+- les ⛔ restent : validation des cadrages (groupée) et autorisation de merge (par PR ou pour toute la vague). **Une fois autorisée, l'équipe merge elle-même**, un merge à la fois, après avoir intégré `main` et tout repassé au vert ;
+- la coordination passe par les **issues GitHub** : commentaire « Avancement » de chaque équipe sur l'issue de sa story, issue `[Coordination des équipes] Vague <k>` tenue par le responsable (tableau, annonces, questions au PO). Commentaires préfixés `[Responsable]` / `[Équipe #<n>]`, jamais de secret ni de donnée d'enfant ;
+- pendant une vague, seul le responsable modifie `docs/feuille-de-route.md` et `docs/graphe/` ; le glossaire et la context map ne reçoivent que des ajouts.
 
 ## Équipe d'agents (`.claude/agents/`)
 
