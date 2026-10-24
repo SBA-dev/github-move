@@ -293,6 +293,13 @@ def main(dossier):
         labels = noms_labels(stories[n])
         en_cours = any(l.startswith("graphe:") and l != "graphe:coordination" for l in labels)
         avancement_equipe = lire_avancement(lire(dossier / "comments" / f"{n}.json", []))
+        if avancement_equipe and "graphe:revue" in labels:
+            # Le label est plus frais que le commentaire « Avancement » : tout ce qui précède la review est fait.
+            etapes = avancement_equipe["etapes"]
+            for e in ETAPES[:ETAPES.index("Review")]:
+                etapes[e] = ("fait", "fait")
+            if etapes.get("Review", ("à faire",))[0] == "à faire":
+                etapes["Review"] = ("en cours", "en revue (label graphe:revue)")
         if n in fermees:
             etat, avancement = "Livrée", 1.0
         elif n in pr_ouvertes and not (avancement_equipe and avancement_equipe["etapes"].get("Merge", ("à faire",))[0] == "à faire" and en_cours):
