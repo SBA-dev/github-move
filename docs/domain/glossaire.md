@@ -95,6 +95,10 @@ Le glossaire garde l'orthographe française.
 | Test de départ (à valider) | Série de questions de français et de maths, jusqu'au niveau de l'enfant, pour savoir où commencer. Il s'arrête après 3 erreurs de suite. | Apprentissage | évaluation, examen, test (seul) |
 | Révision (à valider) | Séance qui reprend les questions ratées dont la date de révision est arrivée (10 au plus). | Apprentissage | rattrapage, revoir |
 | Leçon des classes d'avant (à valider) | Leçon d'un niveau inférieur, proposée sans verrou pour réviser. | Apprentissage | ancienne leçon |
+| Prochaine leçon (à valider) | Première leçon non réussie du parcours d'une matière, tant que toutes celles d'avant sont réussies ; au plus une par matière, marquée aussi en parcours libre. Interface : « À toi ! » (#25). | Apprentissage | leçon en cours, leçon débloquée |
+| Leçon ouverte (à valider) | Leçon du parcours, non réussie, que l'enfant peut commencer sans qu'elle soit la prochaine leçon (parcours libre). Interface : « À découvrir » (#25). | Apprentissage | leçon libre, leçon déverrouillée |
+| Leçon suivante (à valider) | Leçon proposée à la fin d'une séance (« Leçon suivante », « Ensuite : … ») : la leçon d'`ordre` suivant au lot 3 (#24), la règle du parcours au lot 4 (#25, question n°9). | Apprentissage | leçon d'après, suite |
+| Matière du parcours (à valider) | Matière qui a au moins une leçon pour le niveau de l'enfant ; elle a un onglet dans « Mon parcours » (#25, question n°8). | Apprentissage | onglet (dans le code), discipline |
 
 ## Motivation
 
@@ -230,3 +234,7 @@ Les trois questions de rattachement (mêmes droits des deux parents, durée et u
 - « Avertissement de suppression » : terme du domaine ou d'interface (#14, question n°6).
 
 Lot 3 : plus aucune question ouverte ; les termes sont validés (Décision n°30).
+
+Lot 4 (#25, `docs/stories/25/domain-model.md`) :
+- « Leçon verrouillée » : le legacy verrouille toute leçon non réussie après la **première** leçon non réussie, pas seulement après une précédente non réussie ; définition à confirmer ou à corriger par le PO (question n°1) ;
+- « Étape » (« Étape 1 » dans « Mon parcours ») : contraire à la Décision n°28 ; libellé à choisir (question n°3).
