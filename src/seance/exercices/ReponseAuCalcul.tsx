@@ -2,8 +2,11 @@ import type { CalculEnCours } from "@domain/apprentissage";
 import { ChoixDeLaQuestion } from "./ChoixDeLaQuestion.tsx";
 import { ClavierDeCristaux } from "./ClavierDeCristaux.tsx";
 
+/** Ce qu'il faut savoir d'une question jouée comme un calcul (calcul, boîte, schéma en barres) pour y répondre. */
+export type ReponseACalculer = Pick<CalculEnCours, "mode" | "jeNeSaisPasPropose" | "reponseATaper">;
+
 type Props = {
-  readonly calcul: CalculEnCours;
+  readonly calcul: ReponseACalculer;
   /** Le calcul est réussi : on le félicite avant de passer au suivant. */
   readonly reussi: boolean;
   readonly onChoisir: (texte: string) => void;
