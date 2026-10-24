@@ -1,6 +1,13 @@
-type TypeDeQuestion = "bulles" | "lecture" | "ecoute";
+import type { TypeDeQuestion } from "./question-suivie.ts";
 
-const PREFIXES: Record<TypeDeQuestion, string> = { bulles: "b:", lecture: "l:", ecoute: "e:" };
+const PREFIXES: Record<TypeDeQuestion, string> = {
+  bulles: "b:",
+  lecture: "l:",
+  ecoute: "e:",
+  trous: "t:",
+  classer: "k:",
+  ordre: "o:",
+};
 
 export class CleDeQuestion {
   private constructor(readonly valeur: string) {}

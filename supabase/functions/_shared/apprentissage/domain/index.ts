@@ -1,5 +1,6 @@
 export { Avancement } from "./avancement.ts";
 export { ExerciceJoue } from "./exercice-joue.ts";
+export type { SegmentDuTexteATrous } from "./exercice-joue.ts";
 export { nombreDeQuestions } from "./nombre-de-questions.ts";
 export { CleDeQuestion } from "./cle-de-question.ts";
 export { ChoixDeSeance } from "./choix-de-seance.ts";
@@ -7,7 +8,9 @@ export { ChoixProposes } from "./choix-proposes.ts";
 export {
   BonneReponseAbsenteDesChoix,
   ChoixInconnu,
+  EtiquetteInconnue,
   ExerciceIntrouvable,
+  GroupeInconnu,
   JeNeSaisPasDejaDit,
   LeconIntrouvable,
   LeconSansExercice,
@@ -33,7 +36,7 @@ export type { Hasard } from "./hasard.ts";
 export { QuestionJouee } from "./question-jouee.ts";
 export type { AideDonnee } from "./question-jouee.ts";
 export { Reponse } from "./reponse.ts";
-export type { ReponseDonnee, ResultatDeReponse } from "./reponse.ts";
+export type { Placement, ReponseDonnee, ReponseParChoix, ResultatDeReponse } from "./reponse.ts";
 export { PlanDeSeance } from "./plan-de-seance.ts";
 export { Seance } from "./seance.ts";
 export type { FaitDeSeance, QuestionRatee, ReussitesEtErreurs, SeanceTerminee } from "./seance.ts";

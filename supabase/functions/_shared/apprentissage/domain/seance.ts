@@ -10,21 +10,14 @@ import {
   TirageEnTrop,
 } from "./erreurs.ts";
 import { Etoiles } from "./etoiles.ts";
-import type { TypeDExerciceAChoix } from "./exercices/phrases-des-exercices-a-choix.ts";
 import type { CleDeQuestion } from "./cle-de-question.ts";
 import { ExerciceJoue } from "./exercice-joue.ts";
 import type { GenerateurId } from "./generateur-id.ts";
 import type { Hasard } from "./hasard.ts";
-import { nombreDeQuestions } from "./nombre-de-questions.ts";
 import { PlanDeSeance } from "./plan-de-seance.ts";
-import {
-  type AideDonnee,
-  proposerAuHasard,
-  proposerSelonLesTirages,
-  type Proposeur,
-  type QuestionJouee,
-  questionsJoueesAvec,
-} from "./question-jouee.ts";
+import type { AideDonnee } from "./question-jouee.ts";
+import type { QuestionSuivie, TypeDeQuestion } from "./question-suivie.ts";
+import { type Tireur, tireurAuHasard, tireurSelonLesTirages } from "./tireur.ts";
 import type { Reponse, ResultatDeReponse } from "./reponse.ts";
 import { SeanceId } from "./seance-id.ts";
 import type { SeanceTermineeAEnregistrer } from "./seance-terminee-a-enregistrer.ts";
@@ -43,7 +36,7 @@ export type SeanceTerminee = Readonly<{
   etoiles: Etoiles["nombre"];
   erreurs: number;
   questionsRatees: readonly QuestionRatee[];
-  parType: Partial<Record<TypeDExerciceAChoix, ReussitesEtErreurs>>;
+  parType: Partial<Record<TypeDeQuestion, ReussitesEtErreurs>>;
 }>;
 
 export type FaitDeSeance =
@@ -55,6 +48,7 @@ export class Seance {
   private indexDeLExercice = 0;
   private faits: FaitDeSeance[] = [];
   private termineeLe: Date | undefined;
+  private dernierExerciceRepondu: ExerciceJoue | undefined;
 
   private constructor(
     readonly id: SeanceId,
@@ -72,7 +66,7 @@ export class Seance {
     lecon: Lecon,
     choix: ChoixDeSeance,
   ): Seance {
-    return Seance.construire(SeanceId.de(generateurId.nouveau()), enfant, lecon, choix, proposerAuHasard(hasard));
+    return Seance.construire(SeanceId.de(generateurId.nouveau()), enfant, lecon, choix, tireurAuHasard(hasard));
   }
 
   static reconstituer(lecon: Lecon, envoi: SeanceTermineeAEnregistrer): Seance {
@@ -82,7 +76,7 @@ export class Seance {
       envoi.enfant,
       lecon,
       envoi.choix,
-      proposerSelonLesTirages(tirages),
+      tireurSelonLesTirages(tirages),
     );
     if (!tirages.next().done) throw new TirageEnTrop();
     return seance;
@@ -93,20 +87,13 @@ export class Seance {
     enfant: string,
     lecon: Lecon,
     choix: ChoixDeSeance,
-    proposeur: Proposeur,
+    tireur: Tireur,
   ): Seance {
     const plan = PlanDeSeance.pour(lecon, choix);
     const exercices = lecon.exercices
       .map((exercice, position) => ({ exercice, position }))
       .filter(({ position }) => plan.positionsDesExercices.includes(position))
-      .map(({ exercice, position }) =>
-        new ExerciceJoue(
-          position,
-          exercice.titre,
-          nombreDeQuestions(exercice),
-          questionsJoueesAvec(exercice, proposeur),
-        )
-      );
+      .map(({ exercice, position }) => ExerciceJoue.depuis(position, exercice, tireur));
     return new Seance(id, enfant, lecon.id, choix, plan, exercices);
   }
 
@@ -132,8 +119,25 @@ export class Seance {
   repondre(reponse: Reponse): ResultatDeReponse {
     const exercice = this.exerciceDeLaQuestionEnCours();
     const resultat = exercice.repondre(reponse);
+    this.dernierExerciceRepondu = exercice;
     this.avancerSiExerciceReussi(exercice);
     return resultat;
+  }
+
+  aideApresLaDerniereErreur(): string | undefined {
+    return this.dernierExerciceRepondu?.aideApresLaDerniereErreur();
+  }
+
+  felicitationApresLaDerniereReponse(): boolean {
+    return this.dernierExerciceRepondu?.felicitationApresLaDerniereReponse() ?? false;
+  }
+
+  relanceApresLaDerniereReponse(): string | undefined {
+    return this.dernierExerciceRepondu?.relanceApresLaDerniereReponse();
+  }
+
+  questionEstReussie(rang: number): boolean {
+    return this.questions()[rang]?.reussie ?? false;
   }
 
   direJeNeSaisPas(): AideDonnee {
@@ -183,7 +187,7 @@ export class Seance {
       enfant: this.enfant,
       lecon: this.lecon,
       choix: this.choix,
-      tirages: questions.map((question) => question.tirage()),
+      tirages: this.exercices.flatMap((exercice) => exercice.tirages()),
       reponses: questions.map((question) => question.reponses()),
       termineeLe: this.termineeLe,
     };
@@ -199,7 +203,7 @@ export class Seance {
     if (!this.etapeDeLeconEnCours()) this.faits.push({ type: "EtapesDeLeconFinies" });
   }
 
-  private questions(): QuestionJouee[] {
+  private questions(): QuestionSuivie[] {
     return this.exercices.flatMap((exercice) => [...exercice.questionsJouees()]);
   }
 

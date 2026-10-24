@@ -2,7 +2,9 @@ import type { Lecon } from "../../catalogue/domain/index.ts";
 import {
   BonneReponseAbsenteDesChoix,
   ChoixInconnu,
+  EtiquetteInconnue,
   ExerciceIntrouvable,
+  GroupeInconnu,
   JeNeSaisPasDejaDit,
   LeconSansExercice,
   PasDeQuestionEnCours,
@@ -22,6 +24,8 @@ import type { SeanceTermineeAEnregistrer } from "./seance-terminee-a-enregistrer
 const ERREURS_DE_REJEU = [
   BonneReponseAbsenteDesChoix,
   ChoixInconnu,
+  EtiquetteInconnue,
+  GroupeInconnu,
   ExerciceIntrouvable,
   JeNeSaisPasDejaDit,
   LeconSansExercice,
@@ -51,10 +55,10 @@ function rejouer(lecon: Lecon, envoi: SeanceTermineeAEnregistrer): SeanceTermine
   while (seance.etapeDeLeconEnCours()) seance.continuer();
   envoi.reponses.forEach((reponsesDeLaQuestion, rang) => {
     reponsesDeLaQuestion.forEach((reponse) => {
-      if (seance.avancement().questionsReussies > rang) throw new QuestionDejaReussie();
+      if (seance.questionEstReussie(rang)) throw new QuestionDejaReussie();
       rejouerLaReponse(seance, reponse);
     });
-    if (seance.avancement().questionsReussies !== rang + 1) throw new SeanceNonFinie();
+    if (!seance.questionEstReussie(rang)) throw new SeanceNonFinie();
   });
   return seance.terminer(envoi.termineeLe);
 }
