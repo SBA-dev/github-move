@@ -38,7 +38,7 @@ type Groupe = { id: string; nom: string };
 type Item = { texte: string; groupe: string; aide?: string };
 type Geste = "toucher" | "glisser" | "clavier";
 
-const TYPES_JOUES = ["classer", "ordre", "trous", "conjugaison", "dictee"];
+const TYPES_JOUES = ["classer", "ordre", "trous", "conjugaison", "dictee", "memoriser"];
 const EXERCICE_DE_TEST = "Exercice";
 const GROUPE_PAR_DEFAUT = [{ id: "1", nom: "Fruits" }, { id: "2", nom: "Légumes" }];
 const RELANCES_DE_L_ORDRE = ["Oui ! Et après ?", "Bien ! Et ensuite ?", "Super ! La suite ?"];
@@ -478,7 +478,12 @@ Then(/^le premier trou propose « ([^«»]+) » et deux autres mots, tous diffé
 });
 
 Then(/^Léa voit « ([^«»]+) »$/, async ({ page }, phrase: string) => {
-  await expect(page.getByTestId("texte-a-trous")).toContainText(phrase);
+  // Story #22 : devant une poésie, c'est la carte de la poésie (titre — auteur) que Léa voit.
+  const carte = page.getByTestId("carte-de-la-poesie");
+  const texte = page.getByTestId("texte-a-trous");
+  await expect(carte.or(texte)).toBeVisible();
+  if ((await carte.count()) > 0) await expect(carte.getByRole("heading")).toHaveText(phrase);
+  else await expect(texte).toContainText(phrase);
 });
 
 Then(/^le trou de « ([^«»]+) » est mis en avant$/, async ({ page }, phrase: string) => {
