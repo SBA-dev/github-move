@@ -53,3 +53,5 @@ export { revaliderLaSeance } from "./revalider-la-seance.ts";
 export type { ParoleDue } from "./parole-due.ts";
 export { RecordDeFluence } from "./record-de-fluence.ts";
 export type { EtatDuRecord, FaitDeRecord, IssueDuRecord } from "./record-de-fluence.ts";
+export { AdditionPosee } from "./addition-posee.ts";
+export type { ColonneDAdditionPosee } from "./addition-posee.ts";
