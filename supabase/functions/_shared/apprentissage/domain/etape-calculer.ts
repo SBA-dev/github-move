@@ -4,7 +4,7 @@ import { PasDeQuestionEnCours } from "./erreurs.ts";
 import { choixAutourDuResultat, type ModeDeReponse } from "./mode-de-reponse.ts";
 import { type CalculEnCours, QuestionDeCalcul } from "./question-de-calcul.ts";
 import type { QuestionSuivie } from "./question-suivie.ts";
-import type { Rang } from "./rangs-d-addition.ts";
+import { NOMS_DES_COLONNES_A_L_ECRAN, type Rang } from "./rangs-d-addition.ts";
 import type { ReponseEnNombre, ReponseParChoix, ResultatDeReponse } from "./reponse.ts";
 import type { Tireur } from "./tireur.ts";
 
@@ -14,8 +14,6 @@ const NOMS_DES_RANGS: Record<Rang, readonly [string, string]> = {
   dizaines: ["dizaine", "dizaines"],
   centaines: ["centaine", "centaines"],
 };
-
-const MAISONS: Record<Rang, string> = { unites: "Unités", dizaines: "Dizaines", centaines: "Centaines" };
 
 type Retenues = Partial<Record<Rang, number>>;
 
@@ -144,7 +142,7 @@ export class EtapeCalculer {
 
   private phraseDeLaColonne(colonne: ColonneDAdditionPosee): string {
     const retenue = this.retenuesPosees[colonne.rang] ? ", sans oublier la retenue" : "";
-    return `Maison des ${MAISONS[colonne.rang]}${retenue} : combien font ${
+    return `Maison des ${NOMS_DES_COLONNES_A_L_ECRAN[colonne.rang]}${retenue} : combien font ${
       this.termesDeLaColonne(colonne).join(" + ")
     } ?`;
   }

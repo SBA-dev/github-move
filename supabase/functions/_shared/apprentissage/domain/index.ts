@@ -62,3 +62,4 @@ export type { EtapeCalculer } from "./etape-calculer.ts";
 export type { VueAddition, VueColonne } from "./vue-d-addition.ts";
 export { historiqueDeCalcul } from "./historique-de-calcul.ts";
 export { AdaptationDeLaDifficulte } from "./adaptation-de-la-difficulte.ts";
+export { NOMS_DES_COLONNES_A_L_ECRAN } from "./rangs-d-addition.ts";

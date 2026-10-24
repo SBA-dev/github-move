@@ -1,6 +1,6 @@
 import { type DragEvent, useState } from "react";
 import { useReducedMotion } from "motion/react";
-import type { VueAddition, VueColonne } from "@domain/apprentissage";
+import { NOMS_DES_COLONNES_A_L_ECRAN, type VueAddition, type VueColonne } from "@domain/apprentissage";
 import { ReponseAuCalcul } from "../ReponseAuCalcul.tsx";
 
 type Rang = VueColonne["rang"];
@@ -15,12 +15,6 @@ type Props = {
   readonly onChoisir: (texte: string) => void;
   readonly onValider: (nombre: number) => void;
   readonly onJeNeSaisPas: (chiffre?: string) => void;
-};
-
-const NOMS_DES_COLONNES: Record<Rang, { readonly maison: string; readonly des: string }> = {
-  unites: { maison: "Unités", des: "unités" },
-  dizaines: { maison: "Dizaines", des: "dizaines" },
-  centaines: { maison: "Centaines", des: "centaines" },
 };
 
 const TYPE_DU_CHIFFRE = "application/x-savanturier-chiffre";
@@ -140,7 +134,7 @@ function Colonne({ colonne, brille, enCours, pose, chiffreChoisi, chiffresAPoser
     <section
       className="colonne"
       role="group"
-      aria-label={`Colonne des ${NOMS_DES_COLONNES[rang].des}`}
+      aria-label={`Colonne des ${NOMS_DES_COLONNES_A_L_ECRAN[rang].toLowerCase()}`}
       data-testid="colonne"
       data-rang={rang}
       data-couleur={couleur}
@@ -153,11 +147,11 @@ function Colonne({ colonne, brille, enCours, pose, chiffreChoisi, chiffresAPoser
         type="button"
         className="maison-de-la-colonne"
         data-testid="maison-de-la-colonne"
-        aria-label={`Poser dans la colonne des ${NOMS_DES_COLONNES[rang].des}`}
+        aria-label={`Poser dans la colonne des ${NOMS_DES_COLONNES_A_L_ECRAN[rang].toLowerCase()}`}
         aria-disabled={pose && chiffreChoisi !== undefined ? undefined : true}
         onClick={() => pose && chiffreChoisi !== undefined && onPoser(chiffreChoisi, rang)}
       >
-        {NOMS_DES_COLONNES[rang].maison}
+        {NOMS_DES_COLONNES_A_L_ECRAN[rang]}
       </button>
       <div className="place-de-la-retenue">
         {retenue !== undefined && (

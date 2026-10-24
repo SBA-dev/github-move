@@ -6,3 +6,10 @@ export const RANGS: readonly { rang: Rang; couleur: Couleur }[] = [
   { rang: "dizaines", couleur: "rose" },
   { rang: "centaines", couleur: "verte" },
 ];
+
+/** Le nom de chaque colonne tel que l'enfant le lit à l'écran. */
+export const NOMS_DES_COLONNES_A_L_ECRAN: Record<Rang, string> = {
+  unites: "Unités",
+  dizaines: "Dizaines",
+  centaines: "Centaines",
+};
