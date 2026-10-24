@@ -35,8 +35,6 @@ function partie65(page: Page): Partie65 {
   return courante;
 }
 
-const demonstrations = new WeakSet<Page>();
-
 function ecranDe(page: Page): Page {
   return partie65(page).ecranDeMarie ?? page;
 }
@@ -125,8 +123,8 @@ Given(/^Tom a un record de ([0-9]+) à la fluence « ([^«»]+) »$/, async ({ f
   await inscrireUnRecordDeFluence(profilDe(famille, "Tom").id, leconDeLExercice(page, titre).id, titre, Number(record));
 });
 
-Given(/^Léa joue avec un profil de démonstration, sans compte parent$/, async ({ page }) => {
-  demonstrations.add(page);
+Given(/^Léa joue avec un profil de démonstration, sans compte parent$/, async () => {
+  // Le profil de démonstration est l'état par défaut : rien à préparer.
 });
 
 // --- Ouvrir l'écran depuis l'accueil
