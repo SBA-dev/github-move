@@ -17,6 +17,7 @@ export type {
   Intervalle,
   Signe,
 } from "./exercices/generateur-d-operations.ts";
+export type { ExerciceMemoriser } from "./exercices/memoriser.ts";
 export type { ExerciceOrdre } from "./exercices/ordre.ts";
 export type { ExerciceDictee, MotDicte } from "./exercices/dictee.ts";
 export type { ExerciceConjugaison, FormeConjuguee } from "./exercices/conjugaison.ts";
