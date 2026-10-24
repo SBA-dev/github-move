@@ -24,7 +24,7 @@ export function nombreDeQuestions(exercice: Exercice): number {
     case "dictee":
       return taille(exercice.mots);
     case "calcul":
-      return exercice.operations?.length ?? combienDemande(exercice) ?? QUESTIONS_PAR_DEFAUT_D_UN_CALCUL;
+      return exercice.operations?.length ?? exercice.generateur?.combien ?? QUESTIONS_PAR_DEFAUT_D_UN_CALCUL;
     case "fluence":
       return 1;
     case "memoriser":
