@@ -5,6 +5,7 @@ import { traiterUneEcritureDApprentissage } from "../_shared/apprentissage/infra
 import { LeconsDuCatalogueJson } from "../_shared/apprentissage/infrastructure/lecons-du-catalogue-json.ts";
 import { RattachementsDuParentSupabase } from "../_shared/apprentissage/infrastructure/rattachements-du-parent-supabase.ts";
 import { ResultatsDesLeconsSupabase } from "../_shared/apprentissage/infrastructure/resultats-des-lecons-supabase.ts";
+import { RecordsDeFluenceSupabase } from "../_shared/apprentissage/infrastructure/records-de-fluence-supabase.ts";
 import { SeancesTermineesSupabase } from "../_shared/apprentissage/infrastructure/seances-terminees-supabase.ts";
 import { originesAutorisees } from "../_shared/famille/infrastructure/http-famille.ts";
 import bibliotheque from "../../../app/bibliotheque.json" with { type: "json" };
@@ -35,6 +36,7 @@ Deno.serve((requete) =>
       lecons,
       new SeancesTermineesSupabase(clientDuServeur),
       new ResultatsDesLeconsSupabase(clientDuServeur, lecons),
+      new RecordsDeFluenceSupabase(),
     ).executer({ parent, seance });
     const fait = faits.find((f) => f.type === "SeanceTerminee");
     return {

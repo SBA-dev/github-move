@@ -59,4 +59,8 @@ export class SeancesTermineesSupabase implements SeancesTerminees {
     if (error) throw new Error(`Enregistrement de la séance terminée impossible : ${error.message}`);
     return data === true ? "enregistree" : "dejaEnregistree";
   }
+
+  enregistrerSansResultat(_fait: SeanceTerminee): Promise<"enregistree" | "dejaEnregistree"> {
+    return Promise.reject(new Error("Enregistrement d'une séance sans résultat : pas encore câblé."));
+  }
 }
