@@ -45,3 +45,4 @@ export {
   SIGNAL_DE_DEPART,
 } from "./paroles-de-fluence.ts";
 export { type SectionDeLEcran, sectionsAAfficher } from "./sections-de-l-ecran.ts";
+export { type PastilleDeRecord, pastillesDesRecords, type RecordDuProfil } from "./records-de-calcul-rapide.ts";
