@@ -33,7 +33,7 @@ export class TestDeDepart {
     readonly enfant: string,
     private readonly plan: PlanDuTestDeDepart,
     private readonly questions: readonly QuestionPosee[],
-    private readonly tirages: readonly (readonly string[])[],
+    private readonly tirages: readonly (readonly (readonly string[])[])[],
   ) {}
 
   static commencer(
@@ -46,12 +46,14 @@ export class TestDeDepart {
       readonly tireur: Tireur;
     },
   ): TestDeDepart {
-    const tirages: string[][] = [];
+    const tirages: string[][][] = [];
     const questions = plan.map((prevue) => {
+      const tiragesDeLaQuestion: string[][] = [];
+      tirages.push(tiragesDeLaQuestion);
       const lecon = lecons.find(({ id }) => id === prevue.leconId);
       if (lecon === undefined) throw new LeconIntrouvable(prevue.leconId);
-      const question = questionDuTestDeDepart(lecon, prevue, tireurQuiNote(tireur, tirages), niveau);
-      tirages.push(question.tirage());
+      const question = questionDuTestDeDepart(lecon, prevue, tireurQuiNote(tireur, tiragesDeLaQuestion), niveau);
+      if (question.tirage().length > 0) tiragesDeLaQuestion.push(question.tirage());
       return question;
     });
     return new TestDeDepart(TestDeDepartId.de(generateurId.nouveau()), enfant, plan, questions, tirages);
@@ -102,7 +104,7 @@ export class TestDeDepart {
       test: this.id.valeur,
       enfant: this.enfant,
       questions: this.plan,
-      tirages: this.tirages.filter((tirage) => tirage.length > 0),
+      tirages: this.tirages,
       reponses: this.questionsPosees().map((question) => question.reponses()),
       termineeLe: this.termineeLe,
     };

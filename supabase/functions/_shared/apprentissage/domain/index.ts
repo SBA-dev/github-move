@@ -25,6 +25,7 @@ export {
   SeanceDejaTerminee,
   SeanceIncoherente,
   SeanceNonFinie,
+  TestDeDepartIncoherent,
 } from "./erreurs.ts";
 export { texteALireDeLEtape } from "./etape-de-lecon-lue.ts";
 export { lectureDesChoix } from "./lecture-des-choix.ts";
@@ -56,6 +57,7 @@ export type { EtatDuResultat, FaitDeResultat } from "./resultat-de-la-lecon.ts";
 export { indicationDuGeste } from "./exercices/indication-du-geste.ts";
 export { consigneLueAuDebut } from "./exercices/consigne-lue-au-debut.ts";
 export { revaliderLaSeance } from "./revalider-la-seance.ts";
+export { revaliderLeTestDeDepart } from "./revalider-le-test-de-depart.ts";
 export type { ParoleDue } from "./parole-due.ts";
 export { matieresDuParcours, parcoursDeLaMatiere } from "./parcours.ts";
 export { leconSuivanteDansLeParcours } from "./lecon-suivante-dans-le-parcours.ts";

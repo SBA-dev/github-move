@@ -5,7 +5,8 @@ export type TestDeDepartTermineAEnregistrer = Readonly<{
   test: string;
   enfant: string;
   questions: PlanDuTestDeDepart;
-  tirages: readonly (readonly string[])[];
+  /** Un élément par question du plan : les tirages consommés pour elle, dans l'ordre. */
+  tirages: readonly (readonly (readonly string[])[])[];
   reponses: readonly (readonly ReponseDonnee[])[];
   termineeLe: Date;
 }>;

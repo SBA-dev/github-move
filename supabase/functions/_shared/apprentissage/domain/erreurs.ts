@@ -235,3 +235,10 @@ export class TestDeDepartDUnAutreEnfant extends Error {
     this.name = "TestDeDepartDUnAutreEnfant";
   }
 }
+
+export class TestDeDepartIncoherent extends Error {
+  constructor(override readonly cause: Error) {
+    super(`Le test de départ envoyé est incohérent : ${cause.message}`);
+    this.name = "TestDeDepartIncoherent";
+  }
+}
