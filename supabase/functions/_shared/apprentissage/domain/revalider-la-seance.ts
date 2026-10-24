@@ -62,13 +62,13 @@ function rejouer(lecon: Lecon, envoi: SeanceTermineeAEnregistrer): SeanceTermine
   const seance = Seance.reconstituer(lecon, envoi);
   while (seance.etapeDeLeconEnCours()) seance.continuer();
   envoi.reponses.forEach((reponsesDeLaQuestion, rang) => {
-    const ceQuiSeJoueAuChrono = seance.exerciceEnCours()?.scoreDeFluence() !== undefined;
-    if (ceQuiSeJoueAuChrono) seance.demarrerLaFluence(envoi.termineeLe);
+    const estUneFluence = seance.exerciceEnCours()?.scoreDeFluence() !== undefined;
+    if (estUneFluence) seance.demarrerLaFluence(envoi.termineeLe);
     reponsesDeLaQuestion.forEach((reponse) => {
       if (seance.questionEstReussie(rang)) throw new QuestionDejaReussie();
       rejouerLaReponse(seance, reponse, rang, envoi.termineeLe);
     });
-    if (ceQuiSeJoueAuChrono) seance.finirLaFluence(envoi.termineeLe);
+    if (estUneFluence) seance.finirLaFluence(envoi.termineeLe);
     if (!seance.questionEstReussie(rang)) throw new SeanceNonFinie();
   });
   seance.verifierQueTousLesTiragesOntServi();
