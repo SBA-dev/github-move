@@ -262,3 +262,22 @@ Deno.test("une fluence de 45 secondes avec 60 réponses est lue puis revalidée 
 
   assertEquals(revalidee.scoresDeFluence, fait.scoresDeFluence);
 });
+
+Deno.test("une question de calcul au clavier avec 60 réponses fausses puis la bonne est lue puis revalidée", () => {
+  const lecon = leconDeSoustractionsAuCE1();
+  const seance = Seance.commencer(
+    generateurIdFixe("seance-1"),
+    hasardSansMelange(),
+    "profil-lea",
+    lecon,
+    Choix.complete(),
+  );
+  for (let i = 0; i < 60; i++) seance.repondre(Reponse.nombre(8));
+  seance.repondre(Reponse.nombre(7));
+  seance.repondre(Reponse.nombre(5));
+  const fait = seance.terminer(MAINTENANT);
+
+  const revalidee = revaliderLaSeance(lecon, lire(enCorps(seance.aEnregistrer())));
+
+  assertEquals([revalidee.etoiles, revalidee.erreurs], [fait.etoiles, fait.erreurs]);
+});
