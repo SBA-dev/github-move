@@ -34,6 +34,18 @@ export function leconDeClasserLesSons(): Lecon {
   });
 }
 
+export function leconDeClasserAvecDeuxEtiquettesIdentiques(): Lecon {
+  return leconAvecUnExercice("fr-cp-classer-doublons", {
+    type: "classer",
+    groupes: [{ id: "g-lettre", nom: "lettre" }, { id: "g-mot", nom: "mot" }],
+    items: [
+      { texte: "a", groupe: "g-lettre" },
+      { texte: "a", groupe: "g-mot" },
+      { texte: "ami", groupe: "g-mot" },
+    ],
+  });
+}
+
 export function leconDeClasserAvecUneAide(): Lecon {
   return leconAvecUnExercice("fr-cp-classer-aide", {
     type: "classer",
