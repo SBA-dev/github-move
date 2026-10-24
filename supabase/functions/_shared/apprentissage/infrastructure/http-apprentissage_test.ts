@@ -1,6 +1,12 @@
 import { assertEquals } from "@std/assert";
 import { ProfilEnfantIntrouvable } from "../../famille/domain/erreurs.ts";
-import { LeconIntrouvable, ParentNonRattache, SeanceIncoherente, TirageInvalide } from "../domain/erreurs.ts";
+import {
+  LeconIntrouvable,
+  ParentNonRattache,
+  SeanceIncoherente,
+  TestDeDepartIncoherent,
+  TirageInvalide,
+} from "../domain/erreurs.ts";
 import { EntreeInvalide, statutEtMessage } from "./http-apprentissage.ts";
 
 Deno.test("un parent non rattaché est présenté comme un profil introuvable (404)", () => {
@@ -19,6 +25,15 @@ Deno.test("une séance incohérente est un 422 sans détail sur la cause", () =>
   const cause = new TirageInvalide();
 
   const { statut, message } = statutEtMessage(new SeanceIncoherente(cause));
+
+  assertEquals(statut, 422);
+  assertEquals(message.includes(cause.message), false);
+});
+
+Deno.test("un test de départ incohérent est un 422 sans détail sur la cause", () => {
+  const cause = new TirageInvalide();
+
+  const { statut, message } = statutEtMessage(new TestDeDepartIncoherent(cause));
 
   assertEquals(statut, 422);
   assertEquals(message.includes(cause.message), false);
