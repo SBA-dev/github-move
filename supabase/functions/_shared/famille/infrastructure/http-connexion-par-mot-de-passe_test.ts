@@ -14,6 +14,7 @@ import {
   adresseObligatoire,
   motDePasseObligatoire,
   statutEtMessageSansConnexion,
+  TAILLE_MAXIMALE_DU_CORPS,
   traiterUneDemandeSansConnexion,
 } from "./http-connexion-par-mot-de-passe.ts";
 import { EntreeInvalide } from "./http-famille.ts";
@@ -146,8 +147,6 @@ Deno.test("la réponse d'un mot de passe non conforme ne contient pas le mot de 
   assertEquals((await reponse.text()).includes('"a"'), false);
 });
 
-const TAILLE_MAXIMALE_DU_CORPS = 4_096;
-
 function corpsJsonDe(octets: number): string {
   const enveloppe = '{"adresse":""}'.length;
   return `{"adresse":"${"a".repeat(octets - enveloppe)}"}`;
@@ -158,6 +157,34 @@ Deno.test("un corps de plus de 4 096 octets est refusé avec 413 sans appeler le
 
   const reponse = await traiterUneDemandeSansConnexion(
     post(corpsJsonDe(TAILLE_MAXIMALE_DU_CORPS + 1)),
+    () => {
+      appels++;
+      return Promise.resolve();
+    },
+    origines,
+  );
+
+  assertEquals([reponse.status, appels], [413, 0]);
+});
+
+Deno.test("un corps de moins de 4 096 caractères mais de plus de 4 096 octets, sans content-length, est refusé avec 413", async () => {
+  const octets = new TextEncoder().encode(`{"adresse":"${"é".repeat(2_100)}"}`);
+  const flux = new ReadableStream<Uint8Array>({
+    pull(controleur) {
+      controleur.enqueue(octets);
+      controleur.close();
+    },
+  });
+  const requete = new Request("http://localhost/f", {
+    method: "POST",
+    body: flux,
+    // @ts-expect-error `duplex` est requis pour un corps en flux mais absent des types de RequestInit
+    duplex: "half",
+  });
+  let appels = 0;
+
+  const reponse = await traiterUneDemandeSansConnexion(
+    requete,
     () => {
       appels++;
       return Promise.resolve();
