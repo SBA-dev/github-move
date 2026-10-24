@@ -73,3 +73,4 @@ export {
 export type { EtatDeLaVoix } from "./exercices/dictee-sans-voix.ts";
 export type { CaseDeQuestion, QuestionDeDictee } from "./question-de-dictee.ts";
 export type { CorrectionDuMot } from "./mot-a-ecrire.ts";
+export { annonceDeLEcoute, carteDeLaPoesie, invitationApresLeDernierVers } from "./exercices/paroles-de-la-poesie.ts";

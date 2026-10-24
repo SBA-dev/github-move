@@ -1,5 +1,5 @@
 import type { ExerciceMemoriser, Segment } from "../../catalogue/domain/index.ts";
-import { EtiquettesAPlacer } from "./etiquettes-a-placer.ts";
+import { type EtiquettePosee, EtiquettesAPlacer } from "./etiquettes-a-placer.ts";
 import { PasDeQuestionEnCours, ReponseIncompatible } from "./erreurs.ts";
 import type { ParoleDue } from "./parole-due.ts";
 import { PlanDeMemorisation } from "./plan-de-memorisation.ts";
@@ -61,6 +61,14 @@ export class MemorisationJouee {
 
   etiquettesAPlacer(): string[] {
     return this.ordreDesVers.etiquettesAPlacer();
+  }
+
+  etiquettesPosees(): EtiquettePosee[] {
+    return this.ordreDesVers.etiquettesPosees();
+  }
+
+  etiquetteViseeParJeNeSaisPas(choisie?: string): string | undefined {
+    return this.ordreDesVers.etiquetteViseeParJeNeSaisPas(choisie);
   }
 
   repondre(reponse: Reponse): ResultatDeReponse {

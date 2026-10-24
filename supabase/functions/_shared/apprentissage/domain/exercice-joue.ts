@@ -137,11 +137,11 @@ export class ExerciceJoue {
   }
 
   etiquettesPosees(): EtiquettePosee[] {
-    return this.contenu.etiquettes?.etiquettesPosees() ?? [];
+    return (this.contenu.etiquettes ?? this.contenu.memorisation)?.etiquettesPosees() ?? [];
   }
 
   etiquetteViseeParJeNeSaisPas(choisie?: string): string | undefined {
-    return this.contenu.etiquettes?.etiquetteViseeParJeNeSaisPas(choisie);
+    return (this.contenu.etiquettes ?? this.contenu.memorisation)?.etiquetteViseeParJeNeSaisPas(choisie);
   }
 
   texteATrous(): SegmentDuTexteATrous[] {
