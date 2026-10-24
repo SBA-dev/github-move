@@ -118,3 +118,14 @@ Deno.test("un complément dont le nombre de départ peut dépasser la cible rend
 
   assertThrows(() => lireLecon(leconAvec(unCalculGenere(generateur))), LeconMalFormee);
 });
+
+Deno.test("un générateur d'opérations dont une borne d'intervalle est négative rend la leçon mal formée", () => {
+  for (const generateur of [{ op: "+", a: [-3, 5] }, { op: "+", b: [-1, -1] }]) {
+    assertThrows(
+      () => lireLecon(leconAvec(unCalculGenere(generateur))),
+      LeconMalFormee,
+      undefined,
+      JSON.stringify(generateur),
+    );
+  }
+});
