@@ -1,3 +1,5 @@
+import type { PastilleDeRecord } from "./records-de-calcul-rapide.ts";
+
 export type SectionDeLEcran =
   | "cabane"
   | "histoire"
@@ -15,4 +17,10 @@ export function sectionsAAfficher(
   disponibles: readonly SectionDeLEcran[],
 ): SectionDeLEcran[] {
   return ORDRE_DES_SECTIONS.filter((section) => disponibles.includes(section));
+}
+
+export function sectionsDeLEcran(
+  pastilles: readonly PastilleDeRecord[],
+): SectionDeLEcran[] {
+  return pastilles.length > 0 ? ["recordsDeFluence"] : [];
 }
