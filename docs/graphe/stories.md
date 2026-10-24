@@ -33,13 +33,13 @@ Ressources : `base` = migration sur `savanturier-dev` ; `email` = scénarios `@e
 | 39 | Leçons personnelles (générateurs locaux) | Accompagnement | 25, 26, 19, 20, 22, 14 | base | 2 |
 | 29 | Écran « Aujourd'hui » | Apprentissage | 25, 26, 27, 28 | — | 3 |
 | 31 | Badges et compétences | Motivation | 27, 39, 65 | base? | 3 |
-| 34 | Suivi et carte des compétences | Accompagnement | 25, 27, 28, 13? | — | 3 |
+| 34 | Suivi et carte des compétences | Accompagnement | 25, 27, 28, 13 | — | 3 |
 | 30 | Série | Motivation | 29, 27 | base | 4 |
 | 38 | Enregistrements de lecture | Accompagnement | 22, 14, 34 | base | 4 |
 | 33 | Épisodes de l'histoire | Motivation | 27, 28, 30, 65 | base | 5 |
 | 45 | Mise en ligne | transverse | toute la beta | email, base? | 6 |
 
-#39 et #38 entrent dans la beta (décision du PO du 2026-10-24). #34 y entre avec #38, dont il est une dépendance (voir la question 1 plus bas).
+#39, #38 et #34 entrent dans la beta (décisions du PO du 2026-10-24).
 
 ### Après la beta
 
@@ -88,7 +88,7 @@ graph LR
   28 --> 29
   28 --> 34[#34 suivi]
   27 --> 34
-  13[#13 second parent] -.?.-> 34
+  13[#13 second parent] --> 34
   22 --> 38[#38 enregistrements]
   14 --> 38
   34 --> 38
@@ -123,13 +123,15 @@ En attente d'une place : #19, #22, #14, #13, #58 (niveau 0), puis #21 et #65 dè
 | #31 cite #39 (hors beta) | #31 dépend de #39, et #39 entre dans la beta | #39 dans la beta |
 | #45 suppose l'expiration à 30 jours de #38 | #38 entre dans la beta | #38 dans la beta |
 | #30 dépend-elle de #27 ? #33 de #30 ? | oui et oui (lecture de la réponse « #30 dépend de #27, #33 de #30 », à corriger si elle est fausse) | arêtes confirmées |
+| #38 dépend de #34 : #34 entre aussi dans la beta ? | oui, #38 et #34 entrent dans la beta | #34 dans la beta |
+| #34 dépend-elle de #13 ? | oui | arête confirmée |
 | Écran « Mes trophées » et type `lecture` sans issue | créer les issues | **#65** créée pour l'écran ; pas d'issue pour `lecture` : le type est déjà livré par #17 (« Lecture : Le petit chat Plume »), et le bouton d'enregistrement qui lui manque est décrit dans #38 |
 
 ## Questions encore ouvertes
 
-1. **#38 dépend de #34** (les enregistrements s'écoutent dans un bloc du suivi). Faire entrer #38 dans la beta y fait entrer #34. On garde #34 dans la beta, ou #38 affiche les enregistrements ailleurs pour la beta ?
-2. **#34 dépend-elle de #13 ?** (le suivi montre-t-il les deux parents rattachés ?)
-3. Les questions ouvertes de **#65**, dont le nom de l'écran (« trophée » est un synonyme interdit de badge).
+Aucune hypothèse `?` ne reste dans la beta.
+
+1. Les questions ouvertes de **#65**, dont le nom de l'écran (« trophée » est un synonyme interdit de badge). Elles se tranchent à la validation du cadrage de #65, comme pour toute story.
 
 ## Scénarios déjà écrits qui attendent une story ouverte
 

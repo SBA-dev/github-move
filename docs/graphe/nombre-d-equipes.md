@@ -19,7 +19,7 @@ Lecture :
 - **La 2e équipe presque double la vitesse** et reste occupée 95 % du temps.
 - **La 3e équipe est maintenant utile** : 11 → 8 stories, occupée 88 % du temps. Avant les réponses du PO, elle ne faisait gagner qu'une story (9 → 8) : les hypothèses `?` allongeaient le chemin critique. Il est passé de 8 à 7 stories (`#20 → #21 → #28 → #29 → #30 → #33 → #45`), et la beta compte 4 stories de plus (#39, #38, #34, #65) qui peuvent avancer en parallèle.
 - Une 4e équipe ne gagnerait qu'une story de plus et attendrait un quart du temps : la limite de 3 reste.
-- La règle ne change pas : la vague 1 part à 2 équipes pour mesurer, puis on passe à 3 si les conditions plus bas sont réunies. Celle sur les hypothèses `?` l'est déjà pour la beta, sauf les deux questions encore ouvertes sur #34.
+- La règle ne change pas : la vague 1 part à 2 équipes pour mesurer, puis on passe à 3 si les conditions plus bas sont réunies. Celle sur les hypothèses `?` l'est déjà : il n'en reste aucune dans la beta.
 
 ## Ce que coûte une équipe de plus
 
