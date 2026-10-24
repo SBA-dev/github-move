@@ -5,3 +5,8 @@
 - Étape 1 : `domain-modeler` lancé. Nouveaux concepts : Mot de passe du parent (règles), Réinitialisation du mot de passe par prénom d'enfant (beta seulement), essais limités à 5 puis blocage 1 h.
 - Étape 1 terminée : domain-model.md, glossaire, context map, décision 0019 (17 questions ouvertes). Étape 2 : po-acceptance lancé.
 - Étape 2 terminée : 6 règles, 44 scénarios (69 cas), tag @hors-beta proposé. ⛔ Validation n°1 présentée au PO.
+- ⛔ Validation n°1 : le PO répond « OK aux propositions » (22 réponses) :
+  1. majuscule accentuée = majuscule ; 2. chiffres et `* - _ .` permis, non spéciaux ; 3. 64 caractères max ; 4. espaces gardés tels quels ; 5. libellés courts ; 6. Edge Function d'inscription qui vérifie les 4 règles et crée le parent (API admin), inscriptions directes fermées ;
+  7. confirmation du nouveau mot de passe ; 8. pas de normalisation des tirets/espaces internes/ligatures ; 9. prénom vide ou adresse mal formée refusés sans compter de raté ; 10. un essai pendant le blocage ne le prolonge pas ; 11. un raté s'oublie après 24 h ; 12. essais gardés 24 h après le dernier ; 13. déconnexion des autres appareils après réinitialisation ; 14. le blocage ne bloque pas la connexion ; 15. message fixe ; 16. « Mot de passe oublié » sur l'écran de connexion et sous le message d'identifiants incorrects ;
+  17. « Inscription du parent » (domaine) / « Créer ton compte » (écran) ; 18. toujours « essai de réinitialisation » ;
+  19. tag `@hors-beta` dès cette story, exclu des commandes de CLAUDE.md ; 20. tests avec `@exemple.test` seulement, preuve Gmail manuelle par le PO ; 21. pas d'E2E « service indisponible » ; 22. pas de mode dys sur les écrans de connexion.
