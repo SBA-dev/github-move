@@ -1,16 +1,24 @@
 import { type BrowserContext, expect, type Page } from "@playwright/test";
 import type { Famille } from "../support/famille.ts";
 import { avecLesReglagesPrevus } from "../support/reglages-prevus.ts";
+import {
+  bulle,
+  commencerLaSeanceComplete,
+  injecter,
+  interceptertLaBibliotheque,
+  leconDeTest,
+  ouvrirLaPageDeLaLecon,
+} from "./etapes-puis-exercices.steps.ts";
+import { allerALaQuestion } from "./exercices-a-choix.steps.ts";
 import { After, Given, Then, When } from "./fixtures.ts";
 
 // --- Préparation du scénario (avant l'ouverture de la page)
 
 export type VoixFausse = { readonly nom: string; readonly langue: string };
-type ConsignePreparee = { texte: string; langue?: string; motEnGras?: string; choix?: string[] };
 export type Scenario = {
   voix: VoixFausse[];
   univers: string | undefined;
-  consigne: ConsignePreparee;
+  consigne: { texte: string };
   bloque: boolean;
   absent: boolean;
   muet: boolean;
@@ -20,7 +28,6 @@ export type Scenario = {
   voixImposee: string | undefined;
 };
 
-const CLE_CONSIGNE_PREPAREE = "savanturier:consigne-preparee";
 const CLE_PROFIL_PREPARE = "savanturier:profil-prepare";
 const CLE_SON = "savanturier:son";
 const CLE_VOIX = "savanturier:voix";
@@ -240,21 +247,12 @@ export async function preparerLaPage(page: Page, etat: Scenario) {
   await page.addInitScript(installerLeFaux, { voix: etat.voix, bloque: etat.bloque, absent: etat.absent });
   const profil = avecLesReglagesPrevus(page, { prenom: etat.prenom, niveau: "CE1", ...(etat.univers ? { univers: etat.univers } : {}) });
   await page.addInitScript(
-    ([cleConsigne, consigne, cleProfil, profilPrepare, cleSon, muet, sansProfil]) => {
-      localStorage.setItem(cleConsigne, consigne);
+    ([cleProfil, profilPrepare, cleSon, muet, sansProfil]) => {
       if (sansProfil === "oui") localStorage.removeItem(cleProfil);
       else localStorage.setItem(cleProfil, profilPrepare);
       if (muet === "oui") localStorage.setItem(cleSon, "muet");
     },
-    [
-      CLE_CONSIGNE_PREPAREE,
-      JSON.stringify(etat.consigne),
-      CLE_PROFIL_PREPARE,
-      JSON.stringify(profil),
-      CLE_SON,
-      etat.muet ? "oui" : "non",
-      etat.sansProfil ? "oui" : "non",
-    ] as const,
+    [CLE_PROFIL_PREPARE, JSON.stringify(profil), CLE_SON, etat.muet ? "oui" : "non", etat.sansProfil ? "oui" : "non"] as const,
   );
   if (etat.voixImposee !== undefined) {
     await page.addInitScript(
@@ -268,20 +266,66 @@ export async function preparerLaPage(page: Page, etat: Scenario) {
   }
 }
 
-async function ouvrir(page: Page) {
+const TITRE_DE_LA_LECON_DE_TEST = "Écoute";
+const QUESTION_DE_LA_LECON_DE_TEST = "Combien font 1 + 2 ?";
+
+/** Une leçon de test d'un exercice bulles : sa consigne est lue au début de l'exercice, puis la question est posée. */
+function leconDeLaConsigne(consigne: string) {
+  return leconDeTest("test-consigne", TITRE_DE_LA_LECON_DE_TEST, [{
+    type: "bulles",
+    titre: "Écoute",
+    consigne,
+    questions: [{ question: QUESTION_DE_LA_LECON_DE_TEST, choix: ["1", "2", "3"], reponse: "3" }],
+  }]);
+}
+
+// Les lectures déjà faites quand le scénario regarde ce que Léa entend : la page de la leçon a déjà dit « Coucou Léa ! ».
+const lecturesDejaFaites = new WeakMap<Page, number>();
+// Le nombre de lectures une fois la consigne lue.
+const lecturesApresLaConsigne = new WeakMap<Page, number>();
+
+export async function retenirLesParolesDejaDites(page: Page) {
+  lecturesDejaFaites.set(page, (await journal(page)).speaks);
+}
+
+async function ouvrirLaPageDeLaLeconDeTest(page: Page, etat: Scenario, consigne: string) {
+  await preparerLaPage(page, etat);
+  await injecter(page, leconDeLaConsigne(consigne));
+  await interceptertLaBibliotheque(page);
+  await ouvrirLaPageDeLaLecon(page, TITRE_DE_LA_LECON_DE_TEST);
+}
+
+async function commencerLaSeanceDeTest(page: Page, etat: Scenario) {
+  const avant = (await journal(page)).lots;
+  await commencerLaSeanceComplete(page);
+  if (!etat.absent && !etat.muet) await expect.poll(async () => (await journal(page)).lots).toBeGreaterThan(avant);
+  lecturesApresLaConsigne.set(page, (await journal(page)).lots);
+  await retenirLesParolesDejaDites(page);
+}
+
+/** La séance d'un exercice bulles dont la consigne est celle du scénario : Léa l'entend et la voit dans la bulle du personnage guide. */
+export async function ouvrir(page: Page) {
+  const etat = scenario(page);
+  if (etat.ouvert) return;
+  etat.ouvert = true;
+  await ouvrirLaPageDeLaLeconDeTest(page, etat, etat.consigne.texte);
+  await commencerLaSeanceDeTest(page, etat);
+}
+
+/** L'accueil de l'enfant, là où il arrive après « Qui joue ? ». */
+async function ouvrirLAccueil(page: Page) {
   const etat = scenario(page);
   if (etat.ouvert) return;
   etat.ouvert = true;
   await preparerLaPage(page, etat);
-  await page.goto("/demonstration");
-  await expect(page.getByTestId("consigne")).toBeVisible();
+  await page.goto("/jeu");
+  await expect(page.getByRole("region", { name: /^Accueil de / })).toBeVisible();
 }
 
 export async function ouvrirSurUnAutreAppareil(page: Page, contexte: BrowserContext, etat: Scenario): Promise<Page> {
   const autre = await contexte.newPage();
-  await preparerLaPage(autre, etat);
-  await autre.goto("/demonstration");
-  await expect(autre.getByTestId("consigne")).toBeVisible();
+  await ouvrirLaPageDeLaLeconDeTest(autre, etat, etat.consigne.texte);
+  await commencerLaSeanceDeTest(autre, etat);
   ecransDeLecture.set(page, autre);
   return autre;
 }
@@ -348,10 +392,6 @@ Given(/^l'appareil a une voix française et une voix anglaise$/, async ({ page }
   scenario(page).voix = [DENISE, SAMANTHA];
 });
 
-Given(/^Léa fait une leçon d'anglais$/, async ({ page }) => {
-  scenario(page).consigne.langue = "en-US";
-});
-
 Given(/^Léa a choisi l'univers (animaux|princesse|sports|pompier)$/, async ({ page, monde }, univers: string) => {
   scenario(page).univers = univers;
   const profil = { prenom: "Léa", niveau: "CE1", univers };
@@ -389,14 +429,6 @@ Given(/^le navigateur ne bloque plus la voix$/, async ({ page }) => {
   });
 });
 
-// --- Étant donné : consigne affichée
-
-Given(/^la consigne « (.+) » montre le mot « (.+) » en gras$/, async ({ page }, texte: string, mot: string) => {
-  const etat = scenario(page);
-  etat.consigne.texte = texte;
-  etat.consigne.motEnGras = mot;
-});
-
 Given(/^Noisette est en train de lire la consigne « (.+) »$/, async ({ page }, texte: string) => {
   scenario(page).consigne.texte = texte;
   await ouvrir(page);
@@ -404,29 +436,24 @@ Given(/^Noisette est en train de lire la consigne « (.+) »$/, async ({ page },
   expect((await journal(page)).actifs).toBeGreaterThan(0);
 });
 
-Given(/^Noisette a fini de lire la consigne « (.+) »$/, async ({ page }, texte: string) => {
-  scenario(page).consigne.texte = texte;
-  await ouvrir(page);
-  await attendreUneLecture(page);
-  await terminerLaLecture(page);
-});
-
 Given(/^Léa a passé la tablette en Muet$/, async ({ page }) => {
-  await ouvrir(page);
+  await ouvrirLAccueil(page);
   await boutonSon(page).click();
   await expect(boutonSon(page)).toHaveAttribute("data-son", "muet");
 });
 
+// La page de la leçon est la première à parler : c'est là que la voix bloquée est signalée, une seule fois.
 Given(/^Léa a déjà vu le message de voix bloquée$/, async ({ page }) => {
-  await ouvrir(page);
+  const etat = scenario(page);
+  etat.ouvert = true;
+  await ouvrirLaPageDeLaLeconDeTest(page, etat, etat.consigne.texte);
   await expect(messageDeVoixBloquee(page)).toHaveCount(1);
 });
 
-Given(/^la voix a été bloquée pendant la lecture de la consigne « (.+) »$/, async ({ page }, texte: string) => {
-  const etat = scenario(page);
-  etat.consigne.texte = texte;
-  etat.bloque = true;
-  await ouvrir(page);
+Given(/^la voix a été bloquée pendant la lecture de la question « (.+) »$/, async ({ page }, question: string) => {
+  scenario(page).bloque = true;
+  await reappliquerLAppareil(page);
+  await allerALaQuestion(page, question, false);
   await expect(messageDeVoixBloquee(page)).toHaveCount(1);
 });
 
@@ -437,26 +464,11 @@ When(/^la consigne « (.+) » s'affiche$/, async ({ page }, texte: string) => {
   await ouvrir(page);
 });
 
-When(/^une consigne qui ne contient que « (.+) » s'affiche$/, async ({ page }, texte: string) => {
-  scenario(page).consigne.texte = texte;
-  await ouvrir(page);
-});
-
-When(/^cette consigne s'affiche$/, async ({ page }) => {
-  await ouvrir(page);
-});
-
 When(/^la consigne suivante s'affiche$/, async ({ page }) => {
-  const avant = (await journal(page)).lots;
-  await page.evaluate(
-    ([cle, consigne]) => localStorage.setItem(cle, consigne),
-    [CLE_CONSIGNE_PREPAREE, JSON.stringify({ texte: "Regarde bien." })] as const,
-  );
-  await page.getByRole("banner").getByRole("button", { name: "Savanturier" }).click();
-  await expect(page).toHaveURL(/\/$/);
-  await page.goBack();
-  await expect(page.getByTestId("consigne")).toHaveText("Regarde bien.");
-  await expect.poll(async () => (await journal(page)).lots).toBeGreaterThan(avant);
+  const etat = scenario(page);
+  const avant = (await journal(page)).speaks;
+  await commencerLaSeanceDeTest(page, etat);
+  await expect.poll(async () => (await journal(page)).speaks).toBeGreaterThan(avant);
   await laisserPasserLeDelaiDeLecture(page);
 });
 
@@ -475,16 +487,18 @@ When(/^Léa passe en Muet$/, async ({ page }) => {
 });
 
 When(/^Léa remet le son$/, async ({ page }) => {
-  await ouvrir(page);
+  await ouvrirLAccueil(page);
   await expect(boutonSon(page)).toHaveAttribute("data-son", "muet");
   await boutonSon(page).click();
   await expect(boutonSon(page)).toHaveAttribute("data-son", "son");
 });
 
+// Une page déjà ouverte (l'accueil, la séance, la version publiée) est rechargée. Sans page ouverte, Léa lance d'abord
+// Savanturier sur la séance du scénario. Dans les deux cas, on attend l'application, jamais une consigne.
 When(/^Léa relance Savanturier$/, async ({ page }) => {
-  await ouvrir(page);
+  if (page.url() === "about:blank") await ouvrir(page);
   await page.reload();
-  await expect(page.getByTestId("consigne")).toBeVisible();
+  await expect(page.getByRole("banner")).toBeVisible();
 });
 
 // --- Alors : ce que Léa entend
@@ -535,7 +549,7 @@ Then(/^Léa n'entend jamais lire les soulignés$/, async ({ page }) => {
 
 Then(/^Léa n'entend rien$/, async ({ page }) => {
   await laisserPasserLeDelaiDeLecture(page);
-  expect((await journal(page)).speaks).toBe(0);
+  expect((await journal(page)).speaks).toBe(lecturesDejaFaites.get(page) ?? 0);
 });
 
 Then(/^Léa n'entend plus Noisette$/, async ({ page }) => {
@@ -546,7 +560,7 @@ Then(/^Léa n'entend plus Noisette$/, async ({ page }) => {
 });
 
 Then(/^la lecture reprend depuis le début de la consigne$/, async ({ page }) => {
-  await expect.poll(async () => (await journal(page)).lots).toBe(2);
+  await expect.poll(async () => (await journal(page)).lots).toBe((lecturesApresLaConsigne.get(page) ?? 1) + 1);
   const { lecture } = await journal(page);
   expect(lecture.texte).toBe(normaliser(scenario(page).consigne.texte));
 });
@@ -602,23 +616,14 @@ Then(/^Léa entend Noisette lire la consigne$/, async ({ page }) => {
   for (const enonce of lecture.enonces) expect(enonce.voix).toBe(DENISE.nom);
 });
 
-Then(/^Léa entend « ([^«»]+) » lu avec la voix anglaise$/, async ({ page }, texte: string) => {
-  await expect.poll(async () => (await journal(page)).lecture.texte).toBe(normaliser(texte));
-  const { lecture } = await journal(page);
-  for (const enonce of lecture.enonces) {
-    expect(enonce.voix).toBe(SAMANTHA.nom);
-    expect(enonce.voixLangue).toMatch(/^en/i);
-  }
-});
-
 // --- Alors : affichage
 
-Then(/^la consigne reste affichée à l'écran$/, async ({ page }) => {
-  await expect(page.getByTestId("consigne")).toHaveText(normaliser(scenario(page).consigne.texte));
+Then(/^Léa voit la consigne « (.+) »$/, async ({ page }, texte: string) => {
+  await expect(bulle(page)).toHaveText(normaliser(texte));
 });
 
-Then(/^Léa voit la consigne « (.+) »$/, async ({ page }, texte: string) => {
-  await expect(page.getByTestId("consigne")).toHaveText(normaliser(texte));
+Then(/^Léa voit la question « (.+) »$/, async ({ page }, question: string) => {
+  await expect(page.getByTestId("question")).toHaveText(normaliser(question));
 });
 
 Then(/^Léa voit le message « (.+) »$/, async ({ page }, message: string) => {
@@ -635,7 +640,7 @@ Then(/^le message de voix bloquée n'apparaît pas de nouveau$/, async ({ page }
 
 Then(/^chaque mot de la consigne est surligné au moment où Noisette le prononce$/, async ({ page }) => {
   await attendreUneLecture(page);
-  const mots = await page.getByTestId("consigne").locator("[data-mot]").allTextContents();
+  const mots = await bulle(page).locator("[data-mot]").allTextContents();
   expect(mots.length).toBeGreaterThan(0);
   for (const [rang, mot] of mots.entries()) {
     await page.evaluate((rangDuMot) => {
@@ -654,7 +659,7 @@ Then(/^chaque mot de la consigne est surligné au moment où Noisette le prononc
         motsAvant += debuts.length;
       }
     }, rang);
-    const surligne = page.getByTestId("consigne").locator("[data-prononce='true']");
+    const surligne = bulle(page).locator("[data-prononce='true']");
     await expect(surligne).toHaveCount(1);
     await expect(surligne).toHaveText(mot);
     await expect(surligne).toHaveAttribute("data-mot", String(rang));
@@ -663,7 +668,7 @@ Then(/^chaque mot de la consigne est surligné au moment où Noisette le prononc
 
 Then(/^plus aucun mot n'est surligné quand la lecture est finie$/, async ({ page }) => {
   await terminerLaLecture(page);
-  await expect(page.getByTestId("consigne").locator("[data-prononce='true']")).toHaveCount(0);
+  await expect(bulle(page).locator("[data-prononce='true']")).toHaveCount(0);
 });
 
 // --- Alors : Son / Muet

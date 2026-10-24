@@ -12,6 +12,7 @@ import {
   leconDeTest,
   leconDeTitre,
   ouvrirLaPageDeLaLecon,
+  ouvrirLaSeanceDirectement,
   recipient,
   toutesLesParoles,
 } from "./etapes-puis-exercices.steps.ts";
@@ -21,6 +22,7 @@ import {
   laisserPasserLeDelaiDeLecture,
   normaliser,
   reappliquerLAppareil,
+  retenirLesParolesDejaDites,
   SAMANTHA,
   scenario,
   terminerLaLecture,
@@ -169,8 +171,12 @@ export async function lancer(page: Page, lecon: LeconBrute, titreDeLExercice?: s
   const choix = etatDesChoix(page);
   await reappliquerLAppareil(page);
   await installerLeTirage(page);
-  await ouvrirLaPageDeLaLecon(page, lecon.titre);
   choix.exerciceUnique = titreDeLExercice === undefined ? undefined : positionDeLExercice(lecon, titreDeLExercice);
+  if (scenario(page).bloque) {
+    await ouvrirLaSeanceDirectement(page, lecon.titre, choix.exerciceUnique);
+    return;
+  }
+  await ouvrirLaPageDeLaLecon(page, lecon.titre);
   const nombresForges = choix.tirage ?? (choix.ordre && nombresDuTirage([...new Set(questionsDeLaLecon(lecon)[0]?.choix ?? [])], choix.ordre));
   if (nombresForges) {
     await page.evaluate(([cle, nombres]) => Reflect.set(window, cle as string, nombres), [FILE_DU_TIRAGE, nombresForges]);
@@ -310,8 +316,18 @@ export async function repondre(page: Page, reponse: string, question?: string) {
   const silencieuse = estUneBonneFormeSansFelicitation(page, reponse, choix.reussiesAvant);
   const touchee = bulleDeChoix(page, reponse);
   await touchee.click();
-  await expect(touchee).toHaveAttribute("aria-disabled", "true");
-  if (!silencieuse) await expect.poll(async () => (await journal(page)).speaks).toBeGreaterThan(avant);
+  // Sans voix, la dernière bonne réponse de la séance ne se fait pas féliciter : l'écran de fin remplace aussitôt les choix.
+  await expect(touchee.and(page.locator("[aria-disabled='true']")).or(finDeSeance(page))).toBeVisible();
+  if (!silencieuse && !sansVoix(page)) await expect.poll(async () => (await journal(page)).speaks).toBeGreaterThan(avant);
+}
+
+function finDeSeance(page: Page) {
+  return page.getByTestId("fin-de-seance");
+}
+
+function sansVoix(page: Page): boolean {
+  const { absent, muet } = scenario(page);
+  return absent || muet;
 }
 
 /** Après une bonne forme silencieuse, les choix de la personne précédente restent un instant à l'écran : on attend la personne suivante. */
@@ -383,6 +399,15 @@ Given(/^Léa joue la question de test « (.+) »$/, async ({ page }, question: s
   await injecter(page, lecon);
   etatDesChoix(page).demarrage = demarrageDeLExercice(page, lecon, undefined);
 });
+
+Given(
+  /^une question de test « (.+) » a les choix « ([^«»]+) » et « ([^«»]+) », de réponse « ([^«»]+) »$/,
+  async ({ page }, question: string, a: string, b: string, reponse: string) => {
+    const lecon = leconAChoix("test-deux-choix", question, [a, b], reponse);
+    await injecter(page, lecon);
+    etatDesChoix(page).demarrage = demarrageDeLExercice(page, lecon, undefined);
+  },
+);
 
 Given(
   /^une question de test « (.+) » a les choix « ([^«»]+) », « ([^«»]+) » et « ([^«»]+) », de réponse « ([^«»]+) »$/,
@@ -588,10 +613,12 @@ Then(
 Then(/^la question « (.+) » s'affiche$/, async ({ page }, question: string) => {
   await allerALaQuestion(page, question, false);
   await expect(page.getByTestId("exercice-en-cours")).toBeVisible();
+  await retenirLesParolesDejaDites(page);
 });
 
 Then(/^la question « .+ » est réussie$/, async ({ page }) => {
-  await expect(recipient(page)).toHaveAttribute("data-questions-reussies", String(etatDesChoix(page).reussiesAvant + 1));
+  const reussies = recipient(page).and(page.locator(`[data-questions-reussies='${etatDesChoix(page).reussiesAvant + 1}']`));
+  await expect(reussies.or(finDeSeance(page))).toBeVisible();
 });
 
 Then(/^la question « (.+) » reste posée$/, async ({ page }, question: string) => {
@@ -644,6 +671,17 @@ Then(/^Noisette ne dit rien de plus$/, async ({ page }) => {
 // --- Alors : paroles de Noisette
 
 const FELICITATIONS_DE_NOISETTE = [...FELICITATIONS_COMMUNES, ...(EXPRESSIONS_PAR_PERSONNAGE["Noisette"] ?? [])];
+
+// Le tirage entre félicitation commune et expression du personnage guide (seuil 0,35) se fait avec Math.random.
+// On le fige à 0,9 puis Léa donne la bonne réponse de la question suivante : le tirage est alors une félicitation commune.
+Then(/^la félicitation commune dite par (.+) fait partie de (.+)$/, async ({ page }, _nom: string, communes: string) => {
+  await page.evaluate(() => {
+    Math.random = () => 0.9;
+  });
+  await repondre(page, (questionsDeLaSeance(page)[await questionsReussies(page)] as Question).reponse);
+  await expect(bulle(page)).toHaveAttribute("data-nature", "felicitation");
+  expect(listeDe(communes)).toContain(normaliser((await bulle(page).textContent()) ?? ""));
+});
 
 Then(/^Noisette dit un encouragement$/, async ({ page }) => {
   await expect(bulle(page)).toHaveAttribute("data-nature", "encouragement");

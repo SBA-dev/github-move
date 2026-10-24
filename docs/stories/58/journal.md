@@ -21,3 +21,11 @@ Branche `feature/58-retirer-la-page-de-demonstration`, partie de `main` `c7cabc0
 - 21:44 UTC — RELIS #64 : décision **0021** réservée à #58 (porte de test), à écrire seulement après le OK du PO sur #58.1. Cadrage transmis au PO.
 - 21:56 UTC — ⛔ n°1 levée : « OK #58 reco partout » (annonce [Responsable] du 21:56 sur #64). 58.8 hors story (le responsable ouvre la story de correction). Décision 0021 à écrire.
 - Étape 3 (TDD) : aucun comportement unitaire. La story ne touche aucun code de `domain/` ; elle retire du front et des steps. Les scénarios E2E rouges de #58 et #8 (adresse /demonstration, profil préparé ignoré dans la version publiée) exigent le code : steps d'abord (e2e-tester), puis retrait (implementer).
+- 23:00 UTC — E2E (e2e-tester), steps sur écrans réels : téléphone 520/523 (stories livrées + #58), PWA 32/32.
+  Les 3 rouges attendus sont ceux de `58-retirer-la-page-de-demonstration.feature` (la page est encore servie en dev) :
+  ils exigent le retrait. Le scénario #8 « Une nouvelle version s'applique au lancement suivant » est vert.
+  « Un profil enfant préparé ne fait jouer personne » (PWA) passe déjà : la porte est fermée en production.
+  Écarts notés : (1) la voix bloquée n'est signalée qu'une fois par vie de page, sur la page de la leçon, et le message
+  disparaît à l'entrée en séance → les scénarios « voix bloquée » de #7 ouvrent la séance par son adresse (dette à
+  signaler) ; (2) sans voix, la dernière bonne réponse mène tout de suite à la fin de séance → `repondre` et « la question
+  … est réussie » acceptent aussi l'écran de fin.
