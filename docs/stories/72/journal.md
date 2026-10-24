@@ -18,3 +18,4 @@
 - Comportement 3/9 (Prenom.correspondA) : RED 43c0a7b, GREEN 8e5768e, refactor c3e4eac (MotDePasseNonConforme). 974 verts.
 - Comportement 4/9 (EssaisDeReinitialisation) : RED d5915ee, GREEN 259b193, refactor 9cf3ab5. 987 verts.
 - Comportement 5/9 (SeConnecterAvecLeMotDePasse) : RED e2040a2, GREEN 4ed2d5b. 995 verts. Dette : l'adaptateur traduit tout statut < 500 (dont 429) en identifiants incorrects, à cibler au câblage.
+- Comportement 6/9 (InscrireLeParentEtSeConnecter) : RED 256c008, GREEN 5a327b0 (adaptateur : Edge Function inscrire-le-parent, 409 → AdresseDejaUtilisee). 1006 verts, lint/fmt/tsc OK (vérifiés par l'orchestrateur, le rapport de l'agent était vide).
