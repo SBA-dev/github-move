@@ -1,10 +1,10 @@
 import type { ExerciceClasser, Lecon, Niveau } from "../../catalogue/domain/index.ts";
 import { CleDeQuestion } from "./cle-de-question.ts";
-import { QuestionHorsDuTestDeDepart } from "./erreurs.ts";
+import { GroupeInconnu, QuestionHorsDuTestDeDepart } from "./erreurs.ts";
 import { questionsDeTrous, sansDoublonsNiReponse } from "./exercices/trous.ts";
 import type { QuestionPrevue } from "./plan-du-test-de-depart.ts";
 import { QuestionDeCalcul } from "./question-de-calcul.ts";
-import { QuestionJouee, questionsJoueesAvec } from "./question-jouee.ts";
+import { QuestionJouee, questionJoueeDuTrou, questionsJoueesAvec } from "./question-jouee.ts";
 import type { QuestionPosee } from "./question-posee.ts";
 import { enonceDUneAddition } from "./tirage-d-additions.ts";
 import type { Tireur } from "./tireur.ts";
@@ -36,16 +36,8 @@ export function questionDuTestDeDepart(
         type: "conjugaison",
       });
     }
-    case "trous": {
-      const question = questionsDeTrous(exercice)[rang];
-      return QuestionJouee.aChoix({
-        cle: CleDeQuestion.de("trous", question.enonce),
-        enonce: question.enonce,
-        choix: tireur.trou(question.motAttendu, question.candidats),
-        bonneReponse: question.motAttendu,
-        type: "trous",
-      });
-    }
+    case "trous":
+      return questionJoueeDuTrou(questionsDeTrous(exercice)[rang], tireur);
     case "classer":
       return questionDeClassement(exercice, rang, tireur);
     case "addition": {
@@ -61,7 +53,8 @@ export function questionDuTestDeDepart(
 
 function questionDeClassement(exercice: ExerciceClasser, rang: number, tireur: Tireur): QuestionJouee {
   const { texte, groupe } = exercice.items[rang];
-  const bonneReponse = exercice.groupes.find(({ id }) => id === groupe)?.nom ?? groupe;
+  const bonneReponse = exercice.groupes.find(({ id }) => id === groupe)?.nom;
+  if (bonneReponse === undefined) throw new GroupeInconnu(groupe);
   return QuestionJouee.aChoix({
     cle: CleDeQuestion.de("classer", texte),
     enonce: `« ${texte} » va dans quelle maison ?`,

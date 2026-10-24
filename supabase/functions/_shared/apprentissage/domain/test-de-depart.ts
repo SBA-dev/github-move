@@ -1,5 +1,5 @@
 import type { Lecon, Niveau } from "../../catalogue/domain/index.ts";
-import { TestDeDepartDejaFini, TestDeDepartNonFini } from "./erreurs.ts";
+import { LeconIntrouvable, TestDeDepartDejaFini, TestDeDepartNonFini } from "./erreurs.ts";
 import type { GenerateurId } from "./generateur-id.ts";
 import type { PlanDuTestDeDepart } from "./plan-du-test-de-depart.ts";
 import type { AideDonnee } from "./question-jouee.ts";
@@ -44,7 +44,8 @@ export class TestDeDepart {
     },
   ): TestDeDepart {
     const questions = plan.map((prevue) => {
-      const lecon = lecons.find(({ id }) => id === prevue.leconId) as Lecon;
+      const lecon = lecons.find(({ id }) => id === prevue.leconId);
+      if (lecon === undefined) throw new LeconIntrouvable(prevue.leconId);
       return questionDuTestDeDepart(lecon, prevue, tireur, niveau);
     });
     return new TestDeDepart(TestDeDepartId.de(generateurId.nouveau()), enfant, plan, questions);

@@ -7,7 +7,7 @@ export type PlanDuTestDeDepart = readonly QuestionPrevue[];
 
 const NOMBRE_MAXIMAL_DE_LECONS = 12;
 
-function nombreDeQuestionsCandidates(exercice: Exercice): number {
+function nombreDeQuestionsAdmissibles(exercice: Exercice): number {
   switch (exercice.type) {
     case "bulles":
       return exercice.questions.length;
@@ -36,18 +36,18 @@ function nombreDeQuestionsCandidates(exercice: Exercice): number {
   }
 }
 
-function questionsCandidates(lecon: Lecon): QuestionPrevue[] {
+function questionsAdmissibles(lecon: Lecon): QuestionPrevue[] {
   return lecon.exercices.flatMap((exercice, indice) =>
     Array.from(
-      { length: nombreDeQuestionsCandidates(exercice) },
+      { length: nombreDeQuestionsAdmissibles(exercice) },
       (_, rang) => ({ leconId: lecon.id, exercice: indice, rang }),
     )
   );
 }
 
 function questionPrevueDeLaLecon(lecon: Lecon, hasard: Hasard): QuestionPrevue | undefined {
-  const candidates = questionsCandidates(lecon);
-  return candidates.length === 0 ? undefined : candidates[Math.floor(hasard.entre0et1() * candidates.length)];
+  const admissibles = questionsAdmissibles(lecon);
+  return admissibles.length === 0 ? undefined : admissibles[Math.floor(hasard.entre0et1() * admissibles.length)];
 }
 
 function leconsAPasReguliers(reserve: readonly Lecon[]): Lecon[] {
