@@ -1,5 +1,5 @@
 import { assertEquals } from "@std/assert";
-import { accueilDeLaFluence, parolesDeFinDeFluence, SIGNAL_DE_DEPART } from "./paroles-de-fluence.ts";
+import { accueilDeLaFluence, calculsReussis, parolesDeFinDeFluence, SIGNAL_DE_DEPART } from "./paroles-de-fluence.ts";
 
 Deno.test("la fin d'une fluence annonce « 1 calcul réussi ! » au singulier", () => {
   const texte = parolesDeFinDeFluence({ score: 1, issue: "recordInchange", record: 3 });
@@ -72,4 +72,11 @@ Deno.test("l'accueil de la fluence sans record ne parle pas de record", () => {
 
 Deno.test("le signal de départ de la fluence est « C'est parti ! »", () => {
   assertEquals(SIGNAL_DE_DEPART, "C'est parti !");
+});
+
+Deno.test("le compteur de la fluence accorde « calcul réussi » avec le score", () => {
+  assertEquals(
+    [0, 1, 2].map(calculsReussis),
+    ["0 calcul réussi", "1 calcul réussi", "2 calculs réussis"],
+  );
 });
