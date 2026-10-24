@@ -96,3 +96,23 @@ Deno.test("« Je ne sais pas » à une boîte au clavier de cristaux montre la r
 
   assertEquals(boiteEnCours(seance).reponseATaper, "7");
 });
+
+Deno.test("après la bonne réponse, la boîte s'ouvre sur ses jetons et l'écriture du calcul", () => {
+  const seance = commencer(leconDeBoiteAuCP());
+
+  seance.repondre(Reponse.choix("7"));
+
+  assertEquals(seance.boiteApresLaDerniereReponse(), {
+    deroulement: deroulementDeQuatrePlusTrois,
+    jetons: 7,
+    ouverture: "On ouvre la boîte pour vérifier… 7 jetons ! 4 + 3 = 7.",
+  });
+});
+
+Deno.test("après une mauvaise réponse, la boîte reste fermée", () => {
+  const seance = commencer(leconDeBoiteAuCP());
+
+  seance.repondre(Reponse.choix("8"));
+
+  assertEquals(seance.boiteApresLaDerniereReponse(), undefined);
+});
