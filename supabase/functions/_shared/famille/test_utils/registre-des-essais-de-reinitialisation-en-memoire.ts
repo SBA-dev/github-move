@@ -6,7 +6,11 @@ import type { AdresseEmail } from "../domain/adresse-email.ts";
 import { EssaisDeReinitialisation } from "../domain/essais-de-reinitialisation.ts";
 
 type EssaisVersionnes = { essais: EssaisDeReinitialisation; version: number };
-type Stockage = { parAdresse: Map<string, EssaisVersionnes>; conflitsAProvoquer: number };
+type Stockage = {
+  parAdresse: Map<string, EssaisVersionnes>;
+  conflitsAProvoquer: number;
+  panneALaRemiseAZero?: Error;
+};
 
 /** Une instance représente une requête : elle retient la version lue de chaque adresse, comme l'adaptateur Supabase. */
 export class RegistreDesEssaisDeReinitialisationEnMemoire implements RegistreDesEssaisDeReinitialisation {
@@ -25,6 +29,11 @@ export class RegistreDesEssaisDeReinitialisationEnMemoire implements RegistreDes
 
   provoquerDesConflits(nombre: number): void {
     this.stockage.conflitsAProvoquer = nombre;
+  }
+
+  /** Limitée à l'enregistrement de la réussite (essais oubliés) : la réservation de l'essai, elle, aboutit. */
+  tomberEnPanneALaRemiseAZero(erreur: Error): void {
+    this.stockage.panneALaRemiseAZero = erreur;
   }
 
   pourAdresse(adresse: AdresseEmail): Promise<EssaisDeReinitialisation> {
@@ -46,6 +55,11 @@ export class RegistreDesEssaisDeReinitialisationEnMemoire implements RegistreDes
       this.stockage.conflitsAProvoquer = Math.max(0, this.stockage.conflitsAProvoquer - 1);
       this.journal.push("registre.conflit");
       return Promise.reject(new EssaisDeReinitialisationModifiesEnMemeTemps());
+    }
+    const panne = this.stockage.panneALaRemiseAZero;
+    if (panne && essais.estOublie(maintenant)) {
+      this.journal.push("registre.panne");
+      return Promise.reject(panne);
     }
     this.journal.push("registre.enregistrer");
     this.enregistrements += 1;

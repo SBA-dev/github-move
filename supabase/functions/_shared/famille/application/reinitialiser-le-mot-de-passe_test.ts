@@ -15,6 +15,7 @@ import { MotsDePasseDesParentsEnMemoire } from "../test_utils/mots-de-passe-des-
 import { ParentsDesAdressesEnMemoire } from "../test_utils/parents-des-adresses-en-memoire.ts";
 import { PrenomsDesEnfantsRattachesEnMemoire } from "../test_utils/prenoms-des-enfants-rattaches-en-memoire.ts";
 import { RegistreDesEssaisDeReinitialisationEnMemoire } from "../test_utils/registre-des-essais-de-reinitialisation-en-memoire.ts";
+import { RegistreDesEssaisIndisponible } from "./ports/registre-des-essais-de-reinitialisation.ts";
 import { ReinitialiserLeMotDePasse } from "./reinitialiser-le-mot-de-passe.ts";
 
 const adresse = "paul@exemple.test";
@@ -334,4 +335,24 @@ Deno.test("au 5e essai de réinitialisation, un faux prénom pose le blocage ava
 
   assertEquals(journal.slice(0, 3), ["registre.lire", "registre.enregistrer", "parents.lire"]);
   assertEquals(registre.conserves().map((essais) => essais.bloqueJusquA !== null), [true]);
+});
+
+Deno.test("un registre en panne après le changement du mot de passe n'empêche pas la réinitialisation de réussir", async () => {
+  const { registre, motsDePasse, paul, reinitialiser } = scenario();
+  registre.tomberEnPanneALaRemiseAZero(new RegistreDesEssaisIndisponible());
+
+  await reinitialiser.executer(adresse, "Léa", nouveauMotDePasse, midi);
+
+  assertEquals(motsDePasse.changements, [{ parent: paul, motDePasse: nouveauMotDePasse }]);
+});
+
+Deno.test("une erreur inattendue à l'enregistrement qui suit le changement du mot de passe remonte", async () => {
+  const { registre, reinitialiser } = scenario();
+  registre.tomberEnPanneALaRemiseAZero(new TypeError("erreur de programmation"));
+
+  await assertRejects(
+    () => reinitialiser.executer(adresse, "Léa", nouveauMotDePasse, midi),
+    TypeError,
+    "erreur de programmation",
+  );
 });
