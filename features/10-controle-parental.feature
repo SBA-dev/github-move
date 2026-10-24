@@ -53,7 +53,7 @@ Fonctionnalité: Contrôle parental de l'espace parent
       Quand Paul répond « 56 » au contrôle parental
       Alors il voit l'espace parent
 
-    @envoi-email
+    @envoi-email @hors-beta
     Scénario: Juste après la connexion du parent, l'espace parent s'ouvre sans question du contrôle parental
       Étant donné que Paul a demandé un lien de connexion pour "paul@exemple.test" sur la tablette
       Quand Paul suit le lien de connexion reçu

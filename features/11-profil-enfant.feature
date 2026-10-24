@@ -193,7 +193,7 @@ Fonctionnalité: Créer et modifier un profil enfant, et choisir qui joue
       Alors aucune question du contrôle parental n'est posée
       Et elle voit Lili dans le paysage de l'univers « Danse »
 
-    @envoi-email
+    @envoi-email @hors-beta
     Scénario: Sans profil enfant, Noisette invite Paul à créer le premier dans l'espace parent
       Étant donné qu'aucun parent n'utilise l'adresse "paul@exemple.test"
       Et que Paul a demandé un lien de connexion pour "paul@exemple.test" sur la tablette

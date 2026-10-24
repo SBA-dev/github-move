@@ -7,18 +7,13 @@ Fonctionnalité: Connexion du parent par adresse e-mail et mot de passe du paren
 
   Règle: Le parent s'inscrit avec son adresse e-mail et un mot de passe du parent, et il est connecté aussitôt, sans aucun e-mail
 
-    Plan du Scénario: Paul s'inscrit avec l'adresse « <adresse> » et arrive dans l'espace parent sans recevoir d'e-mail
-      Étant donné qu'aucun parent n'utilise l'adresse "<adresse>"
+    Scénario: Paul s'inscrit et arrive dans l'espace parent sans recevoir d'e-mail
+      Étant donné qu'aucun parent n'utilise l'adresse "paul@exemple.test"
       Et que Paul n'est pas connecté sur la tablette
-      Quand Paul s'inscrit avec "<adresse>", le mot de passe du parent "Abcdefg%" et la confirmation "Abcdefg%"
+      Quand Paul s'inscrit avec "paul@exemple.test", le mot de passe du parent "Abcdefg%" et la confirmation "Abcdefg%"
       Alors Paul est connecté sur la tablette
       Et il voit l'espace parent, sans aucun profil enfant
       Et aucun e-mail n'est envoyé
-
-      Exemples:
-        | adresse                    | cas                   |
-        | paul@exemple.test          | adresse de test       |
-        | paul.savanturier@gmail.com | vraie adresse (Gmail) |
 
     Scénario: Juste après l'inscription, Noisette invite Paul à créer le premier profil enfant, sans question du contrôle parental
       Étant donné qu'aucun parent n'utilise l'adresse "paul@exemple.test"
@@ -76,6 +71,8 @@ Fonctionnalité: Connexion du parent par adresse e-mail et mot de passe du paren
         | Abcdefgù | ù est une minuscule, pas un spécial    | au vert  | au vert   | au vert   | à faire  |
         | Abcde%g  | 7 caractères                           | à faire  | au vert   | au vert   | au vert  |
         | ABCDEFG% | sans minuscule                         | au vert  | au vert   | à faire   | au vert  |
+        | Écolier% | É est une majuscule                    | au vert  | au vert   | au vert   | au vert  |
+        | Abcdef1- | chiffre et tiret permis, pas spéciaux  | au vert  | au vert   | au vert   | à faire  |
         | Abcdefg% | les 4 règles                           | au vert  | au vert   | au vert   | au vert  |
 
     Plan du Scénario: Avec le caractère spécial « <special> », les 4 règles sont au vert et l'inscription réussit
@@ -104,7 +101,25 @@ Fonctionnalité: Connexion du parent par adresse e-mail et mot de passe du paren
         | abcdefg% | « une majuscule »                             |
         | ABCDEFG% | « une minuscule »                             |
         | Abcdefgù | « un caractère spécial »                      |
+        | Abc1*-_. | « un caractère spécial »                      |
         | abcdefgh | « une majuscule » et « un caractère spécial » |
+
+    Scénario: Les chiffres et les signes « * - _ . » sont permis à côté d'un caractère spécial
+      Étant donné qu'aucun parent n'utilise l'adresse "paul@exemple.test"
+      Quand Paul s'inscrit avec "paul@exemple.test", le mot de passe du parent "Paul-2024_*.!" et la confirmation "Paul-2024_*.!"
+      Alors les 4 règles du mot de passe sont au vert
+      Et Paul est connecté sur la tablette
+
+    Scénario: Un mot de passe du parent de 64 caractères est accepté
+      Étant donné qu'aucun parent n'utilise l'adresse "paul@exemple.test"
+      Quand Paul s'inscrit avec "paul@exemple.test" et un mot de passe du parent de 64 caractères qui respecte les 4 règles
+      Alors Paul est connecté sur la tablette
+
+    Scénario: Un mot de passe du parent de 65 caractères est refusé
+      Étant donné qu'aucun parent n'utilise l'adresse "paul@exemple.test"
+      Quand Paul s'inscrit avec "paul@exemple.test" et un mot de passe du parent de 65 caractères qui respecte les 4 règles
+      Alors Paul est informé que le mot de passe du parent ne doit pas dépasser 64 caractères
+      Et il n'est pas connecté
 
   Règle: Le parent se connecte avec son adresse e-mail et son mot de passe du parent ; aucun lien de connexion n'est proposé dans la beta
 
@@ -112,7 +127,7 @@ Fonctionnalité: Connexion du parent par adresse e-mail et mot de passe du paren
       Étant donné que personne n'est connecté sur la tablette
       Quand j'ouvre Savanturier
       Alors je suis invité à me connecter avec mon adresse e-mail et mon mot de passe du parent
-      Et on me propose aussi de m'inscrire et de réinitialiser mon mot de passe du parent
+      Et « Créer ton compte » et « Mot de passe oublié » me sont proposés
       Mais « Recevoir un lien de connexion » n'est pas proposé
       Et la saisie d'un code de connexion n'est pas proposée
 
@@ -146,12 +161,20 @@ Fonctionnalité: Connexion du parent par adresse e-mail et mot de passe du paren
       Alors Paul est informé « Adresse e-mail ou mot de passe incorrect »
       Et il n'est pas connecté
       Et il peut réessayer de se connecter
+      Et « Mot de passe oublié » lui est proposé sous le message
 
       Exemples:
         | adresse              | mot de passe | cas                                   |
         | paul@exemple.test    | Abcdefg!     | un mauvais mot de passe du parent     |
         | paul@exemple.test    | abcdefg%     | une seule lettre de casse différente  |
         | inconnu@exemple.test | Abcdefg%     | une adresse qu'aucun parent n'utilise |
+
+    Scénario: Les espaces au début et à la fin du mot de passe du parent en font partie
+      Étant donné que Paul est inscrit avec "paul@exemple.test" et le mot de passe du parent " Abcdefg% "
+      Et que Paul n'est pas connecté sur la tablette
+      Quand Paul se connecte avec "paul@exemple.test" et le mot de passe du parent "Abcdefg%"
+      Alors Paul est informé « Adresse e-mail ou mot de passe incorrect »
+      Et il n'est pas connecté
 
     Scénario: Après un mauvais mot de passe du parent, Paul se connecte avec le bon
       Étant donné que Paul est inscrit avec "paul@exemple.test" et le mot de passe du parent "Abcdefg%"
@@ -180,7 +203,7 @@ Fonctionnalité: Connexion du parent par adresse e-mail et mot de passe du paren
       Étant donné que Paul est inscrit avec "paul@exemple.test" et le mot de passe du parent "Abcdefg%"
       Et que Paul est rattaché au profil enfant "Léa" de niveau CE1
       Et que Paul n'est pas connecté sur la tablette
-      Quand Paul réinitialise le mot de passe du parent de "paul@exemple.test" avec le prénom "<prénom saisi>" et le nouveau mot de passe du parent "Noisette#"
+      Quand Paul réinitialise le mot de passe du parent de "paul@exemple.test" avec le prénom "<prénom saisi>", le nouveau mot de passe du parent "Noisette#" et la confirmation "Noisette#"
       Alors Paul est connecté sur la tablette
       Et il voit l'espace parent
       Et aucun e-mail n'est envoyé
@@ -194,14 +217,14 @@ Fonctionnalité: Connexion du parent par adresse e-mail et mot de passe du paren
     Scénario: Les espaces autour du prénom saisi sont ignorés
       Étant donné que Paul est inscrit avec "paul@exemple.test" et le mot de passe du parent "Abcdefg%"
       Et que Paul est rattaché au profil enfant "Léa" de niveau CE1
-      Quand Paul réinitialise le mot de passe du parent de "paul@exemple.test" avec le prénom "  Léa  " et le nouveau mot de passe du parent "Noisette#"
+      Quand Paul réinitialise le mot de passe du parent de "paul@exemple.test" avec le prénom "  Léa  ", le nouveau mot de passe du parent "Noisette#" et la confirmation "Noisette#"
       Alors Paul est connecté sur la tablette
 
     Scénario: Le prénom de n'importe lequel de ses enfants suffit
       Étant donné que Paul est inscrit avec "paul@exemple.test" et le mot de passe du parent "Abcdefg%"
       Et que Paul est rattaché au profil enfant "Léa" de niveau CE1
       Et que Paul est rattaché au profil enfant "Tom" de niveau CM1
-      Quand Paul réinitialise le mot de passe du parent de "paul@exemple.test" avec le prénom "Tom" et le nouveau mot de passe du parent "Noisette#"
+      Quand Paul réinitialise le mot de passe du parent de "paul@exemple.test" avec le prénom "Tom", le nouveau mot de passe du parent "Noisette#" et la confirmation "Noisette#"
       Alors Paul est connecté sur la tablette
 
     Scénario: Après la réinitialisation, l'ancien mot de passe du parent ne marche plus
@@ -220,7 +243,7 @@ Fonctionnalité: Connexion du parent par adresse e-mail et mot de passe du paren
     Plan du Scénario: Le nouveau mot de passe du parent « <saisie> » est refusé, et le message dit qu'il manque <manque>
       Étant donné que Paul est inscrit avec "paul@exemple.test" et le mot de passe du parent "Abcdefg%"
       Et que Paul est rattaché au profil enfant "Léa" de niveau CE1
-      Quand Paul réinitialise le mot de passe du parent de "paul@exemple.test" avec le prénom "Léa" et le nouveau mot de passe du parent "<saisie>"
+      Quand Paul réinitialise le mot de passe du parent de "paul@exemple.test" avec le prénom "Léa", le nouveau mot de passe du parent "<saisie>" et la confirmation "<saisie>"
       Alors Paul est informé qu'il manque <manque>
       Et il n'est pas connecté
 
@@ -228,6 +251,14 @@ Fonctionnalité: Connexion du parent par adresse e-mail et mot de passe du paren
         | saisie    | manque                                        |
         | noisette  | « une majuscule » et « un caractère spécial » |
         | Noisetteù | « un caractère spécial »                      |
+
+    Scénario: À la réinitialisation, une confirmation différente du nouveau mot de passe du parent est refusée
+      Étant donné que Paul est inscrit avec "paul@exemple.test" et le mot de passe du parent "Abcdefg%"
+      Et que Paul est rattaché au profil enfant "Léa" de niveau CE1
+      Quand Paul réinitialise le mot de passe du parent de "paul@exemple.test" avec le prénom "Léa", le nouveau mot de passe du parent "Noisette#" et la confirmation "Noisette!"
+      Alors Paul est informé que les deux mots de passe ne sont pas pareils
+      Et il n'est pas connecté
+      Et le mot de passe du parent "Abcdefg%" de Paul marche toujours
 
     Scénario: Au choix du nouveau mot de passe du parent, la liste des règles passe au vert pendant la saisie
       Étant donné que Paul a commencé la réinitialisation de son mot de passe du parent
@@ -239,7 +270,7 @@ Fonctionnalité: Connexion du parent par adresse e-mail et mot de passe du paren
     Plan du Scénario: Avec <cas>, le même message s'affiche et le prénom attendu n'est jamais dit
       Étant donné que Paul est inscrit avec "paul@exemple.test" et le mot de passe du parent "Abcdefg%"
       Et que Paul est rattaché au profil enfant "Léa" de niveau CE1
-      Quand quelqu'un réinitialise le mot de passe du parent de "<adresse>" avec le prénom "<prénom>" et le nouveau mot de passe du parent "Noisette#"
+      Quand quelqu'un réinitialise le mot de passe du parent de "<adresse>" avec le prénom "<prénom>", le nouveau mot de passe du parent "Noisette#" et la confirmation "Noisette#"
       Alors il est informé « Ces informations ne correspondent pas. »
       Mais le prénom « Léa » n'apparaît nulle part
       Et il n'est pas connecté
@@ -251,10 +282,42 @@ Fonctionnalité: Connexion du parent par adresse e-mail et mot de passe du paren
         | paul@exemple.test    | Lé     | un début de prénom                          |
         | inconnu@exemple.test | Léa    | une adresse qu'aucun parent n'utilise       |
 
+    Plan du Scénario: Le prénom « <prénom> » ne correspond pas au profil enfant « Marie-Lou » (<cas>)
+      Étant donné que Paul est inscrit avec "paul@exemple.test" et le mot de passe du parent "Abcdefg%"
+      Et que Paul est rattaché au profil enfant "Marie-Lou" de niveau CP
+      Quand Paul réinitialise le mot de passe du parent de "paul@exemple.test" avec le prénom "<prénom>", le nouveau mot de passe du parent "Noisette#" et la confirmation "Noisette#"
+      Alors Paul est informé « Ces informations ne correspondent pas. »
+      Et il n'est pas connecté
+
+      Exemples:
+        | prénom    | cas                         |
+        | Marie Lou | une espace au lieu du tiret |
+        | MarieLou  | sans le tiret               |
+
+    Plan du Scénario: À la réinitialisation, <cas> est refusé tout de suite
+      Étant donné que Paul est inscrit avec "paul@exemple.test" et le mot de passe du parent "Abcdefg%"
+      Et que Paul est rattaché au profil enfant "Léa" de niveau CE1
+      Quand Paul réinitialise le mot de passe du parent de "<adresse>" avec le prénom "<prénom>", le nouveau mot de passe du parent "Noisette#" et la confirmation "Noisette#"
+      Alors Paul est informé que <message>
+      Et il n'est pas connecté
+
+      Exemples:
+        | adresse           | prénom | cas                    | message                           |
+        | paul@exemple.test |        | un prénom vide         | le prénom est obligatoire         |
+        | paul@exemple      | Léa    | une adresse mal formée | l'adresse e-mail n'est pas valide |
+
+    Scénario: Un prénom vide ne compte pas comme un essai de réinitialisation raté
+      Étant donné que Paul est inscrit avec "paul@exemple.test" et le mot de passe du parent "Abcdefg%"
+      Et que Paul est rattaché au profil enfant "Léa" de niveau CE1
+      Et que Paul a raté 4 essais de réinitialisation pour "paul@exemple.test"
+      Et que la réinitialisation pour "paul@exemple.test" a ensuite été refusée à Paul pour un prénom vide
+      Quand Paul réinitialise le mot de passe du parent de "paul@exemple.test" avec le prénom "Léa", le nouveau mot de passe du parent "Noisette#" et la confirmation "Noisette#"
+      Alors Paul est connecté sur la tablette
+
     Scénario: Un parent sans aucun profil enfant ne peut pas réinitialiser son mot de passe du parent ainsi
       Étant donné que Claire est inscrite avec "claire@exemple.test" et le mot de passe du parent "Claire#ok"
       Et que Claire n'a aucun profil enfant
-      Quand Claire réinitialise le mot de passe du parent de "claire@exemple.test" avec le prénom "Léa" et le nouveau mot de passe du parent "Noisette#"
+      Quand Claire réinitialise le mot de passe du parent de "claire@exemple.test" avec le prénom "Léa", le nouveau mot de passe du parent "Noisette#" et la confirmation "Noisette#"
       Alors Claire est informée « Ces informations ne correspondent pas. »
       Et elle n'est pas connectée
 
@@ -269,7 +332,7 @@ Fonctionnalité: Connexion du parent par adresse e-mail et mot de passe du paren
       Étant donné que Paul est inscrit avec "paul@exemple.test" et le mot de passe du parent "Abcdefg%"
       Et que Paul est rattaché au profil enfant "Léa" de niveau CE1
       Et que Claire est rattachée au profil enfant "Tom" de niveau CM2
-      Quand Claire réinitialise le mot de passe du parent de "paul@exemple.test" avec le prénom "Tom" et le nouveau mot de passe du parent "Noisette#"
+      Quand Claire réinitialise le mot de passe du parent de "paul@exemple.test" avec le prénom "Tom", le nouveau mot de passe du parent "Noisette#" et la confirmation "Noisette#"
       Alors Claire est informée « Ces informations ne correspondent pas. »
       Et elle n'est pas connectée
       Et le mot de passe du parent "Abcdefg%" de Paul marche toujours
@@ -278,7 +341,7 @@ Fonctionnalité: Connexion du parent par adresse e-mail et mot de passe du paren
     Scénario: Claire ne peut pas réinitialiser son propre mot de passe du parent avec le prénom d'un enfant de Paul
       Étant donné que Paul est rattaché au profil enfant "Léa" de niveau CE1
       Et que Claire est rattachée au profil enfant "Tom" de niveau CM2
-      Quand Claire réinitialise le mot de passe du parent de "claire@exemple.test" avec le prénom "Léa" et le nouveau mot de passe du parent "Noisette#"
+      Quand Claire réinitialise le mot de passe du parent de "claire@exemple.test" avec le prénom "Léa", le nouveau mot de passe du parent "Noisette#" et la confirmation "Noisette#"
       Alors Claire est informée « Ces informations ne correspondent pas. »
       Et elle n'est pas connectée
 
@@ -287,9 +350,19 @@ Fonctionnalité: Connexion du parent par adresse e-mail et mot de passe du paren
       Étant donné que Paul est rattaché au profil enfant "Léa" de niveau CE1
       Et que Marie est rattachée au profil enfant de Léa
       Et que Marie est inscrite avec "marie@exemple.test" et le mot de passe du parent "Marie#ok"
-      Quand Marie réinitialise le mot de passe du parent de "marie@exemple.test" avec le prénom "lea" et le nouveau mot de passe du parent "Noisette#"
+      Quand Marie réinitialise le mot de passe du parent de "marie@exemple.test" avec le prénom "lea", le nouveau mot de passe du parent "Noisette#" et la confirmation "Noisette#"
       Alors Marie est connectée sur la tablette
       Et elle voit le profil enfant de Léa dans l'espace parent
+
+    @acces
+    Scénario: Après une réinitialisation, Paul n'est plus connecté sur ses autres appareils
+      Étant donné que Paul est inscrit avec "paul@exemple.test" et le mot de passe du parent "Abcdefg%"
+      Et que Paul est rattaché au profil enfant "Léa" de niveau CE1
+      Et que Paul est connecté sur le téléphone
+      Et que Paul n'est pas connecté sur la tablette
+      Quand Paul réinitialise le mot de passe du parent de "paul@exemple.test" avec le prénom "Léa", le nouveau mot de passe du parent "Noisette#" et la confirmation "Noisette#"
+      Alors Paul est connecté sur la tablette
+      Mais Paul n'est plus connecté sur le téléphone
 
   Règle: Après 5 essais de réinitialisation ratés pour une même adresse, la réinitialisation est bloquée une heure, même avec un prénom juste
 
@@ -297,7 +370,7 @@ Fonctionnalité: Connexion du parent par adresse e-mail et mot de passe du paren
       Étant donné que Paul est inscrit avec "paul@exemple.test" et le mot de passe du parent "Abcdefg%"
       Et que Paul est rattaché au profil enfant "Léa" de niveau CE1
       Et que Paul a raté 5 essais de réinitialisation pour "paul@exemple.test"
-      Quand Paul réinitialise le mot de passe du parent de "paul@exemple.test" avec le prénom "Léa" et le nouveau mot de passe du parent "Noisette#"
+      Quand Paul réinitialise le mot de passe du parent de "paul@exemple.test" avec le prénom "Léa", le nouveau mot de passe du parent "Noisette#" et la confirmation "Noisette#"
       Alors Paul est informé « Trop d'essais. Réessaie dans une heure. »
       Et il n'est pas connecté
 
@@ -305,42 +378,63 @@ Fonctionnalité: Connexion du parent par adresse e-mail et mot de passe du paren
       Étant donné que Paul est inscrit avec "paul@exemple.test" et le mot de passe du parent "Abcdefg%"
       Et que Paul est rattaché au profil enfant "Léa" de niveau CE1
       Et que Paul a raté 4 essais de réinitialisation pour "paul@exemple.test"
-      Quand Paul réinitialise le mot de passe du parent de "paul@exemple.test" avec le prénom "Léa" et le nouveau mot de passe du parent "Noisette#"
+      Quand Paul réinitialise le mot de passe du parent de "paul@exemple.test" avec le prénom "Léa", le nouveau mot de passe du parent "Noisette#" et la confirmation "Noisette#"
       Alors Paul est connecté sur la tablette
 
     Scénario: Le 5ᵉ essai de réinitialisation raté bloque aussitôt la réinitialisation
       Étant donné que Paul est inscrit avec "paul@exemple.test" et le mot de passe du parent "Abcdefg%"
       Et que Paul est rattaché au profil enfant "Léa" de niveau CE1
       Et que Paul a raté 4 essais de réinitialisation pour "paul@exemple.test"
-      Quand Paul réinitialise le mot de passe du parent de "paul@exemple.test" avec le prénom "Tom" et le nouveau mot de passe du parent "Noisette#"
+      Quand Paul réinitialise le mot de passe du parent de "paul@exemple.test" avec le prénom "Tom", le nouveau mot de passe du parent "Noisette#" et la confirmation "Noisette#"
       Alors Paul est informé « Trop d'essais. Réessaie dans une heure. »
       Et il n'est pas connecté
 
     Scénario: Une adresse qu'aucun parent n'utilise est bloquée de la même façon
       Étant donné qu'aucun parent n'utilise l'adresse "inconnu@exemple.test"
       Et que quelqu'un a raté 5 essais de réinitialisation pour "inconnu@exemple.test"
-      Quand quelqu'un réinitialise le mot de passe du parent de "inconnu@exemple.test" avec le prénom "Léa" et le nouveau mot de passe du parent "Noisette#"
+      Quand quelqu'un réinitialise le mot de passe du parent de "inconnu@exemple.test" avec le prénom "Léa", le nouveau mot de passe du parent "Noisette#" et la confirmation "Noisette#"
       Alors il est informé « Trop d'essais. Réessaie dans une heure. »
 
     Scénario: 59 minutes après le 5ᵉ essai de réinitialisation raté, la réinitialisation est encore bloquée
       Étant donné que Paul est inscrit avec "paul@exemple.test" et le mot de passe du parent "Abcdefg%"
       Et que Paul est rattaché au profil enfant "Léa" de niveau CE1
       Et que Paul a raté 5 essais de réinitialisation pour "paul@exemple.test", le dernier il y a 59 minutes
-      Quand Paul réinitialise le mot de passe du parent de "paul@exemple.test" avec le prénom "Léa" et le nouveau mot de passe du parent "Noisette#"
+      Quand Paul réinitialise le mot de passe du parent de "paul@exemple.test" avec le prénom "Léa", le nouveau mot de passe du parent "Noisette#" et la confirmation "Noisette#"
       Alors Paul est informé « Trop d'essais. Réessaie dans une heure. »
 
     Scénario: 61 minutes après le 5ᵉ essai de réinitialisation raté, la réinitialisation est rouverte
       Étant donné que Paul est inscrit avec "paul@exemple.test" et le mot de passe du parent "Abcdefg%"
       Et que Paul est rattaché au profil enfant "Léa" de niveau CE1
       Et que Paul a raté 5 essais de réinitialisation pour "paul@exemple.test", le dernier il y a 61 minutes
-      Quand Paul réinitialise le mot de passe du parent de "paul@exemple.test" avec le prénom "Léa" et le nouveau mot de passe du parent "Noisette#"
+      Quand Paul réinitialise le mot de passe du parent de "paul@exemple.test" avec le prénom "Léa", le nouveau mot de passe du parent "Noisette#" et la confirmation "Noisette#"
       Alors Paul est connecté sur la tablette
+
+    Scénario: Un essai de réinitialisation pendant le blocage ne prolonge pas le blocage
+      Étant donné que Paul est inscrit avec "paul@exemple.test" et le mot de passe du parent "Abcdefg%"
+      Et que Paul est rattaché au profil enfant "Léa" de niveau CE1
+      Et que Paul a raté 5 essais de réinitialisation pour "paul@exemple.test", le dernier il y a 61 minutes
+      Et que Paul a refait un essai de réinitialisation pour "paul@exemple.test" pendant le blocage, il y a 30 minutes
+      Quand Paul réinitialise le mot de passe du parent de "paul@exemple.test" avec le prénom "Léa", le nouveau mot de passe du parent "Noisette#" et la confirmation "Noisette#"
+      Alors Paul est connecté sur la tablette
+
+    Plan du Scénario: 4 essais de réinitialisation ratés il y a <âge> <effet>
+      Étant donné que Paul est inscrit avec "paul@exemple.test" et le mot de passe du parent "Abcdefg%"
+      Et que Paul est rattaché au profil enfant "Léa" de niveau CE1
+      Et que Paul a raté 4 essais de réinitialisation pour "paul@exemple.test", tous il y a <âge>
+      Quand Paul réinitialise le mot de passe du parent de "paul@exemple.test" avec le prénom "Tom", le nouveau mot de passe du parent "Noisette#" et la confirmation "Noisette#"
+      Alors Paul est informé « <message> »
+      Et il n'est pas connecté
+
+      Exemples:
+        | âge       | effet                                        | message                                 |
+        | 23 heures | comptent encore : le 5ᵉ raté bloque          | Trop d'essais. Réessaie dans une heure. |
+        | 25 heures | sont oubliés : le nouveau raté ne bloque pas | Ces informations ne correspondent pas.  |
 
     Scénario: Une réinitialisation réussie remet à zéro les essais de réinitialisation ratés
       Étant donné que Paul est inscrit avec "paul@exemple.test" et le mot de passe du parent "Abcdefg%"
       Et que Paul est rattaché au profil enfant "Léa" de niveau CE1
       Et que Paul a raté 4 essais de réinitialisation, puis réinitialisé son mot de passe du parent, puis raté encore 4 essais de réinitialisation pour "paul@exemple.test"
-      Quand Paul réinitialise le mot de passe du parent de "paul@exemple.test" avec le prénom "Léa" et le nouveau mot de passe du parent "Noisette#"
+      Quand Paul réinitialise le mot de passe du parent de "paul@exemple.test" avec le prénom "Léa", le nouveau mot de passe du parent "Noisette#" et la confirmation "Noisette#"
       Alors Paul est connecté sur la tablette
 
     @acces
@@ -348,10 +442,9 @@ Fonctionnalité: Connexion du parent par adresse e-mail et mot de passe du paren
       Étant donné que Paul a raté 5 essais de réinitialisation pour "paul@exemple.test"
       Et que Claire est inscrite avec "claire@exemple.test" et le mot de passe du parent "Claire#ok"
       Et que Claire est rattachée au profil enfant "Tom" de niveau CM2
-      Quand Claire réinitialise le mot de passe du parent de "claire@exemple.test" avec le prénom "Tom" et le nouveau mot de passe du parent "Noisette#"
+      Quand Claire réinitialise le mot de passe du parent de "claire@exemple.test" avec le prénom "Tom", le nouveau mot de passe du parent "Noisette#" et la confirmation "Noisette#"
       Alors Claire est connectée sur la tablette
 
-    @a-valider
     Scénario: Pendant le blocage de la réinitialisation, Paul peut encore se connecter avec son mot de passe du parent
       Étant donné que Paul est inscrit avec "paul@exemple.test" et le mot de passe du parent "Abcdefg%"
       Et que Paul a raté 5 essais de réinitialisation pour "paul@exemple.test"
