@@ -16,7 +16,7 @@ export function profilDeDictee(clavierDesDictees: ReglageDuClavier, niveau: Code
   return { clavierDesDictees, niveau };
 }
 
-function leconDeDictee(id: string, mots: MotDicte[]): Lecon {
+function leconDeDictee(id: string, mots: MotDicte[], consigne = "Écoute bien et écris le mot que tu entends."): Lecon {
   return lireLecon({
     id,
     matiere: "francais",
@@ -25,7 +25,7 @@ function leconDeDictee(id: string, mots: MotDicte[]): Lecon {
     ordre: 1,
     programme,
     lecon: [],
-    exercices: [{ type: "dictee", consigne: "Écoute bien et écris le mot que tu entends.", mots }],
+    exercices: [{ type: "dictee", consigne, mots }],
   });
 }
 
@@ -38,6 +38,10 @@ export function leconDeDicteeDeChatEtLapin(): Lecon {
     { mot: "chat", phrase: "Le chat dort sur le lit." },
     { mot: "lapin" },
   ]);
+}
+
+export function leconDeDicteeAvecSaPropreConsigne(consigne: string): Lecon {
+  return leconDeDictee("fr-cp-dictee-consigne", [{ mot: "chat" }], consigne);
 }
 
 export function leconDeDicteeDuLapin(): Lecon {
