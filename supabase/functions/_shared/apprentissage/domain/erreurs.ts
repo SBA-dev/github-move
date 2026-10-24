@@ -207,3 +207,10 @@ export class PasDeLettreAEffacer extends Error {
     this.name = "PasDeLettreAEffacer";
   }
 }
+
+export class QuestionHorsDuTestDeDepart extends Error {
+  constructor(readonly type: string) {
+    super(`Un exercice de type « ${type} » ne pose pas de question au test de départ.`);
+    this.name = "QuestionHorsDuTestDeDepart";
+  }
+}
