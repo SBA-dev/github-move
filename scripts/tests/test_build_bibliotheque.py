@@ -63,3 +63,18 @@ def test_classer_recopie_l_aide_facultative_d_une_etiquette():
         {"texte": "chien", "groupe": "1"},
         {"texte": "thon", "groupe": "2"},
     ]
+
+
+@pytest.mark.parametrize("nombre, refuse", [(20, False), (21, True)])
+def test_un_classer_de_plus_de_20_etiquettes_est_refuse(nombre, refuse):
+    exercice = bb.classer("t", "c", {"A": [f"a{i}" for i in range(nombre - 1)], "B": ["b"]})
+
+    assert len(exercice["items"]) == nombre
+    assert bb.a_trop_d_etiquettes(exercice) is refuse
+
+
+@pytest.mark.parametrize("nombre, refuse", [(20, False), (21, True)])
+def test_un_ordre_de_plus_de_20_elements_est_refuse(nombre, refuse):
+    exercice = bb.ordre("t", "c", [f"e{i}" for i in range(nombre)])
+
+    assert bb.a_trop_d_etiquettes(exercice) is refuse
