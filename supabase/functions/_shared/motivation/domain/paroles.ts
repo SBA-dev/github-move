@@ -53,12 +53,18 @@ export function feliciterUneFoisSurDeux(personnageGuide: PersonnageGuide, hasard
   return feliciter(personnageGuide, hasard).texte;
 }
 
-export type ParoleDueApresUneBonneReponse = "felicitation" | "felicitationUneFoisSurDeux" | "relance";
+export type ParoleDueApresUneBonneReponse =
+  | "felicitation"
+  | "felicitationUneFoisSurDeux"
+  | "relance"
+  | "applaudir"
+  | "tuSaisConjuguer";
 
 export function paroleApresUneBonneReponse(
   paroleDue: ParoleDueApresUneBonneReponse | undefined,
   personnageGuide: PersonnageGuide,
   hasard: Hasard,
+  verbe?: string,
 ): string | undefined {
   switch (paroleDue) {
     case "felicitation":
@@ -67,6 +73,9 @@ export function paroleApresUneBonneReponse(
       return feliciterUneFoisSurDeux(personnageGuide, hasard);
     case "relance":
       return relancer(hasard);
+    case "tuSaisConjuguer":
+      return verbe === undefined ? undefined : direTuSaisConjuguer(verbe, personnageGuide, hasard);
+    case "applaudir":
     case undefined:
       return undefined;
   }

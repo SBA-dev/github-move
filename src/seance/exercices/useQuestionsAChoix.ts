@@ -3,6 +3,7 @@ import {
   type FaitDeSeance,
   INTRODUCTION_DE_LA_LECTURE,
   lectureDesChoix,
+  type ParoleDue,
   type QuestionJouee,
   Reponse,
   type Seance,
@@ -10,8 +11,8 @@ import {
 import type { Lecon } from "@domain/catalogue";
 import {
   direLeTexteComplet,
-  direTuSaisConjuguer,
   type Humeur,
+  paroleApresUneBonneReponse,
   type PersonnageGuide,
   reagirAJeNeSaisPas,
   type Reaction,
@@ -141,10 +142,11 @@ export function useQuestionsAChoix(
   }, [dire, lire, sequence]);
 
   /** Au dernier trou la félicitation annonce que le texte est complet ; à la dernière personne, que le verbe est su. */
-  const avecLaFinDeLExercice = useCallback((reaction: Reaction, position: number): Reaction => {
+  const avecLaFinDeLExercice = useCallback((reaction: Reaction, position: number, paroleDue: ParoleDue | undefined): Reaction => {
     const exercice = lecon.exercices[position];
-    const finDeLExercice = exercice?.type === "conjugaison" && seance.conjugaisonCompleteParLaDerniereReponse()
-      ? direTuSaisConjuguer(exercice.verbe, personnageGuide, hasardDuNavigateur)
+    const verbe = exercice?.type === "conjugaison" ? exercice.verbe : undefined;
+    const finDeLExercice = paroleDue === "tuSaisConjuguer"
+      ? paroleApresUneBonneReponse(paroleDue, personnageGuide, hasardDuNavigateur, verbe)
       : seance.texteCompleteParLaDerniereReponse()
       ? direLeTexteComplet(personnageGuide, hasardDuNavigateur)
       : undefined;
@@ -159,12 +161,11 @@ export function useQuestionsAChoix(
   }, [faireSilence, montrerHumeur]);
 
   const reagirALaBonneReponse = useCallback((numero: number, reaction: Reaction, question: QuestionJouee, position: number) => {
-    const sansFelicitation = lecon.exercices[position]?.type === "conjugaison" &&
-      seance.paroleDueApresLaDerniereReponse() === undefined;
-    return sansFelicitation
+    const paroleDue = seance.paroleDueApresLaDerniereReponse();
+    return paroleDue === "applaudir"
       ? applaudirEnSilence(reaction.humeur)
-      : feliciter(numero, avecLaFinDeLExercice(reaction, position), question);
-  }, [lecon, seance, applaudirEnSilence, feliciter, avecLaFinDeLExercice]);
+      : feliciter(numero, avecLaFinDeLExercice(reaction, position, paroleDue), question);
+  }, [seance, applaudirEnSilence, feliciter, avecLaFinDeLExercice]);
 
   const repondre = useCallback(async (texte: string, suite: SuiteDeLaReponse) => {
     const courante = laQuestionEnCours();
