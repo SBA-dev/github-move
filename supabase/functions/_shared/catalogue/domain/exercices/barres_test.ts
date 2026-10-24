@@ -61,3 +61,52 @@ Deno.test("un problème en barres garde son énoncé du problème, son aide et s
     ["Léa a 4 pommes et Tom en a 2. Combien en ont-ils ?", "Cherche le tout.", "J'ai {r} pommes."],
   );
 });
+
+Deno.test("un problème en barres de forme comparaison, dont l'écart est la valeur cherchée, soustrait le petit du grand", () => {
+  const probleme = problemeEnBarres({
+    type: "comparaison",
+    enonce: "Combien de plus ?",
+    grand: 43,
+    petit: 37,
+    ecart: null,
+    noms: ["Léa", "Tom"],
+  });
+
+  assertEquals(probleme.forme, {
+    genre: "comparaison",
+    grand: 43,
+    petit: 37,
+    ecart: null,
+    noms: ["Léa", "Tom"],
+  });
+  assertEquals(probleme.reponse, 6);
+  assertEquals(probleme.ecriture, "43 − 37 = 6");
+});
+
+Deno.test("un problème en barres de forme comparaison, dont le grand est la valeur cherchée, ajoute l'écart au petit", () => {
+  const probleme = problemeEnBarres({
+    type: "comparaison",
+    enonce: "Combien en a Léa ?",
+    grand: null,
+    petit: 9,
+    ecart: 4,
+    noms: ["Léa", "Tom"],
+  });
+
+  assertEquals(probleme.reponse, 13);
+  assertEquals(probleme.ecriture, "9 + 4 = 13");
+});
+
+Deno.test("un problème en barres de forme comparaison, dont le petit est la valeur cherchée, retire l'écart du grand", () => {
+  const probleme = problemeEnBarres({
+    type: "comparaison",
+    enonce: "Combien en a Tom ?",
+    grand: 15,
+    petit: null,
+    ecart: 6,
+    noms: ["Léa", "Tom"],
+  });
+
+  assertEquals(probleme.reponse, 9);
+  assertEquals(probleme.ecriture, "15 − 6 = 9");
+});
