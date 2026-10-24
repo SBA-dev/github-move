@@ -1,11 +1,13 @@
-import { assertEquals } from "@std/assert";
+import { assertEquals, assertThrows } from "@std/assert";
 import type { Lecon } from "../../catalogue/domain/index.ts";
 import { generateurIdFixe } from "../test_utils/generateur-id-fixe.ts";
 import { hasardSansMelange } from "../test_utils/hasard-fixe.ts";
 import { leconDeBoiteAuCE1, leconDeBoiteAuCP } from "../test_utils/lecons-de-boite-et-barres.ts";
 import { leconLesDoublesAuCP } from "../test_utils/lecons-de-calcul.ts";
 import { ChoixDeSeance } from "./choix-de-seance.ts";
+import { SeanceIncoherente } from "./erreurs.ts";
 import { Reponse } from "./reponse.ts";
+import { revaliderLaSeance } from "./revalider-la-seance.ts";
 import { Seance } from "./seance.ts";
 
 function commencer(lecon: Lecon): Seance {
@@ -115,4 +117,44 @@ Deno.test("après une mauvaise réponse, la boîte reste fermée", () => {
   seance.repondre(Reponse.choix("8"));
 
   assertEquals(seance.boiteApresLaDerniereReponse(), undefined);
+});
+
+const fin = new Date("2026-10-23T10:30:00Z");
+
+function seanceDeBoiteAuCPTerminee(lecon: Lecon): Seance {
+  const seance = commencer(lecon);
+  seance.repondre(Reponse.choix("8"));
+  seance.repondre(Reponse.choix("7"));
+  seance.direJeNeSaisPas();
+  seance.repondre(Reponse.nombre(24));
+  seance.repondre(Reponse.choix("5"));
+  return seance;
+}
+
+Deno.test("rejouer une séance de boîte au CP, avec une erreur, un « Je ne sais pas » et un clavier, redonne le même résultat", () => {
+  const lecon = leconDeBoiteAuCP();
+  const seance = seanceDeBoiteAuCPTerminee(lecon);
+  const fait = seance.terminer(fin);
+
+  assertEquals(revaliderLaSeance(lecon, seance.aEnregistrer()), fait);
+});
+
+Deno.test("une réponse par choix là où la boîte attend le clavier de cristaux rend la séance incohérente", () => {
+  const lecon = leconDeBoiteAuCP();
+  const seance = seanceDeBoiteAuCPTerminee(lecon);
+  seance.terminer(fin);
+  const envoi = seance.aEnregistrer();
+  const reponses = envoi.reponses.map((donnees, rang) => rang === 1 ? [Reponse.choix("24")] : donnees);
+
+  assertThrows(() => revaliderLaSeance(lecon, { ...envoi, reponses }), SeanceIncoherente);
+});
+
+Deno.test("une réponse en trop à une boîte rend la séance incohérente", () => {
+  const lecon = leconDeBoiteAuCP();
+  const seance = seanceDeBoiteAuCPTerminee(lecon);
+  seance.terminer(fin);
+  const envoi = seance.aEnregistrer();
+  const reponses = envoi.reponses.map((donnees, rang) => rang === 0 ? [...donnees, Reponse.choix("7")] : donnees);
+
+  assertThrows(() => revaliderLaSeance(lecon, { ...envoi, reponses }), SeanceIncoherente);
 });

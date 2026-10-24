@@ -1,4 +1,4 @@
-import { assertEquals } from "@std/assert";
+import { assertEquals, assertThrows } from "@std/assert";
 import type { Lecon } from "../../catalogue/domain/index.ts";
 import { generateurIdFixe } from "../test_utils/generateur-id-fixe.ts";
 import { hasardSansMelange } from "../test_utils/hasard-fixe.ts";
@@ -6,7 +6,9 @@ import { leconDeBarresAuCE1, leconDeBarresAuCP } from "../test_utils/lecons-de-b
 import { leconLesDoublesAuCP } from "../test_utils/lecons-de-calcul.ts";
 import { ChoixDeSeance } from "./choix-de-seance.ts";
 import { CleDeQuestion } from "./cle-de-question.ts";
+import { SeanceIncoherente } from "./erreurs.ts";
 import { Reponse } from "./reponse.ts";
+import { revaliderLaSeance } from "./revalider-la-seance.ts";
 import { Seance } from "./seance.ts";
 
 const enonceDuMarche = "Au marché, Léa achète 4 pommes et 2 poires. Combien de fruits ?";
@@ -136,4 +138,61 @@ Deno.test("une séance de barres terminée compte ses questions sous le type « 
   assertEquals(fait.parType.barres, { reussites: 3, erreurs: 1 });
   assertEquals(fait.questionsRatees.map(({ cle }) => cle.valeur), [CleDeQuestion.de("barres", enonceDuMarche).valeur]);
   assertEquals(CleDeQuestion.de("barres", enonceDesCrayons).valeur.startsWith("p:"), true);
+});
+
+const fin = new Date("2026-10-23T10:30:00Z");
+
+function seanceDeBarresAuCPTerminee(lecon: Lecon): Seance {
+  const seance = commencer(lecon);
+  seance.repondre(Reponse.choix("7"));
+  seance.repondre(Reponse.choix("6"));
+  seance.repondre(Reponse.choix("3"));
+  seance.direJeNeSaisPas();
+  seance.repondre(Reponse.nombre(24));
+  return seance;
+}
+
+function seanceDeBarresAuCE1Terminee(lecon: Lecon): Seance {
+  const seance = commencer(lecon);
+  seance.repondre(Reponse.nombre(7));
+  seance.repondre(Reponse.nombre(6));
+  seance.repondre(Reponse.nombre(3));
+  seance.repondre(Reponse.nombre(24));
+  return seance;
+}
+
+Deno.test("rejouer une séance de barres au CP, avec une erreur, un « Je ne sais pas » et un clavier, redonne le même résultat", () => {
+  const lecon = leconDeBarresAuCP();
+  const seance = seanceDeBarresAuCPTerminee(lecon);
+  const fait = seance.terminer(fin);
+
+  assertEquals(revaliderLaSeance(lecon, seance.aEnregistrer()), fait);
+});
+
+Deno.test("rejouer une séance de barres au CE1, faite au clavier de cristaux, redonne le même résultat", () => {
+  const lecon = leconDeBarresAuCE1();
+  const seance = seanceDeBarresAuCE1Terminee(lecon);
+  const fait = seance.terminer(fin);
+
+  assertEquals(revaliderLaSeance(lecon, seance.aEnregistrer()), fait);
+});
+
+Deno.test("une réponse par choix là où le problème en barres attend le clavier de cristaux rend la séance incohérente", () => {
+  const lecon = leconDeBarresAuCE1();
+  const seance = seanceDeBarresAuCE1Terminee(lecon);
+  seance.terminer(fin);
+  const envoi = seance.aEnregistrer();
+  const reponses = envoi.reponses.map((donnees, rang) => rang === 1 ? [Reponse.choix("6")] : donnees);
+
+  assertThrows(() => revaliderLaSeance(lecon, { ...envoi, reponses }), SeanceIncoherente);
+});
+
+Deno.test("une réponse en trop à un problème en barres rend la séance incohérente", () => {
+  const lecon = leconDeBarresAuCP();
+  const seance = seanceDeBarresAuCPTerminee(lecon);
+  seance.terminer(fin);
+  const envoi = seance.aEnregistrer();
+  const reponses = envoi.reponses.map((donnees, rang) => rang === 1 ? [...donnees, Reponse.choix("3")] : donnees);
+
+  assertThrows(() => revaliderLaSeance(lecon, { ...envoi, reponses }), SeanceIncoherente);
 });
