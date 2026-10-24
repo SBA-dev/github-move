@@ -75,7 +75,7 @@ type Partie = {
 };
 const parties = new WeakMap<Famille, Partie>();
 
-function partie(famille: Famille): Partie {
+export function partie(famille: Famille): Partie {
   let courante = parties.get(famille);
   if (!courante) {
     courante = {
