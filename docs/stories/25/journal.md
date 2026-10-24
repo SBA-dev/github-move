@@ -137,3 +137,8 @@ En attente d'une réponse : leçons réussies d'une classe au-dessus (N1, N7, N9
   (tirage de la question non fixé, `@wip`, verts à la relance). 3 KO de #24 sur tablette (timeouts, dont
   « meilleures-etoiles » introuvable au retour du réseau) : touchent des fichiers modifiés par #25, diagnostic en cours
   (traces, relance isolée, comparaison avec `main`) avant `PRÊTE À MERGER`.
+- 22:30 UTC : diagnostic des 3 KO de #24 (tablette) : **environnement**, pas une régression de #25. Seuls, 3/3 verts
+  deux fois (17-21 s) ; tout #24 avec 3 workers : 5 timeouts sur d'autres scénarios, toutes les requêtes en 200, durées
+  de 28-35 s pour un timeout de 30 s. Au retour du réseau, la page de la leçon relit bien le serveur. Réserve notée :
+  une page de la leçon déjà affichée hors ligne ne se relit pas seule à l'événement `online` (non couvert, hors #25).
+  `PRÊTE À MERGER`.
