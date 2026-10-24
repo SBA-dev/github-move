@@ -93,8 +93,9 @@ export class QuestionDeDictee implements QuestionSuivie {
     if (this.nombreDErreurs === 0) this.nombreDErreurs = 1;
     this.lettres = this.debutJuste();
     const prochaine = this.mot.lettresAEcrire()[this.lettres.length] as string;
-    this.lettreMontree = this.estLaDerniereCase(this.lettres.length) ? undefined : prochaine;
-    return { aide: undefined, bonneReponse: prochaine, maniere: "ecrire" };
+    const derniereCase = this.estLaDerniereCase(this.lettres.length);
+    this.lettreMontree = derniereCase ? undefined : prochaine;
+    return { aide: undefined, bonneReponse: prochaine, maniere: derniereCase ? "briller" : "ecrire" };
   }
 
   clavier(): ClavierPropose {
