@@ -9,7 +9,7 @@ export class EssaisDeReinitialisation {
   private constructor(
     readonly adresse: AdresseEmail,
     private _essaisRates: number,
-    private dernierRateLe: Date | null,
+    private _dernierRateLe: Date | null,
     private _bloqueJusquA: Date | null,
   ) {}
 
@@ -30,6 +30,10 @@ export class EssaisDeReinitialisation {
     return this._essaisRates;
   }
 
+  get dernierRateLe(): Date | null {
+    return this._dernierRateLe;
+  }
+
   get bloqueJusquA(): Date | null {
     return this._bloqueJusquA;
   }
@@ -43,7 +47,7 @@ export class EssaisDeReinitialisation {
   enregistrerUnEssaiRate(maintenant: Date): void {
     if (this.estOublie(maintenant)) this.oublier();
     this._essaisRates += 1;
-    this.dernierRateLe = maintenant;
+    this._dernierRateLe = maintenant;
     if (this._essaisRates >= ESSAIS_RATES_AVANT_BLOCAGE) {
       this._bloqueJusquA = new Date(maintenant.getTime() + DUREE_DU_BLOCAGE_EN_MS);
     }
@@ -55,14 +59,14 @@ export class EssaisDeReinitialisation {
 
   private oublier(): void {
     this._essaisRates = 0;
-    this.dernierRateLe = null;
+    this._dernierRateLe = null;
     this._bloqueJusquA = null;
   }
 
   estOublie(maintenant: Date): boolean {
     if (this._essaisRates === 0) return true;
     if (this._bloqueJusquA && maintenant >= this._bloqueJusquA) return true;
-    return this.dernierRateLe !== null &&
-      maintenant.getTime() - this.dernierRateLe.getTime() >= DUREE_AVANT_OUBLI_EN_MS;
+    return this._dernierRateLe !== null &&
+      maintenant.getTime() - this._dernierRateLe.getTime() >= DUREE_AVANT_OUBLI_EN_MS;
   }
 }
