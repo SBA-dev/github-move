@@ -49,9 +49,10 @@ async function rater(
   adresseSaisie = adresse,
 ): Promise<void> {
   for (let i = 0; i < fois; i++) {
+    const estLeCinquieme = i === 4;
     await assertRejects(
       () => reinitialiser.executer(adresseSaisie, "Faux", nouveauMotDePasse, midi),
-      InformationsDeReinitialisationIncorrectes,
+      estLeCinquieme ? TropDEssaisDeReinitialisation : InformationsDeReinitialisationIncorrectes,
     );
   }
 }
@@ -326,14 +327,26 @@ Deno.test("au 5e essai de réinitialisation, après 4 essais ratés, le bon pré
   assertEquals(registre.conserves(), []);
 });
 
-Deno.test("au 5e essai de réinitialisation, un faux prénom pose le blocage avant toute lecture du parent", async () => {
+Deno.test("du 1er au 4e essai de réinitialisation raté, le parent reçoit des informations incorrectes et rien n'est bloqué", async () => {
+  const { registre, reinitialiser } = scenario();
+
+  await rater(reinitialiser, 4);
+
+  assertEquals(registre.conserves().map((essais) => essais.bloqueJusquA), [null]);
+});
+
+Deno.test("au 5e essai de réinitialisation, un faux prénom pose le blocage et le parent reçoit aussitôt « Trop d'essais »", async () => {
   const { journal, registre, reinitialiser } = scenario();
   await rater(reinitialiser, 4);
   journal.length = 0;
 
-  await rater(reinitialiser, 1);
+  await assertRejects(
+    () => reinitialiser.executer(adresse, "Faux", nouveauMotDePasse, midi),
+    TropDEssaisDeReinitialisation,
+    "Trop d'essais. Réessaie dans une heure.",
+  );
 
-  assertEquals(journal.slice(0, 3), ["registre.lire", "registre.enregistrer", "parents.lire"]);
+  assertEquals(journal.slice(0, 2), ["registre.lire", "registre.enregistrer"]);
   assertEquals(registre.conserves().map((essais) => essais.bloqueJusquA !== null), [true]);
 });
 

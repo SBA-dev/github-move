@@ -158,3 +158,13 @@ Deno.test("des essais neufs n'ont aucun dernier essai raté", () => {
 
   assertEquals(essais.dernierRateLe, null);
 });
+
+Deno.test("le cinquième essai raté annonce le blocage, pas les quatre premiers", () => {
+  const essais = EssaisDeReinitialisation.nouveaux(AdresseEmail.de("parent@exemple.fr"));
+  const bloquesApresChaqueEssai = cinqRatesALaFois().map((instant) => {
+    essais.enregistrerUnEssaiRate(instant);
+    return essais.estBloque(instant);
+  });
+
+  assertEquals(bloquesApresChaqueEssai, [false, false, false, false, true]);
+});
