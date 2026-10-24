@@ -172,3 +172,17 @@ export class FluenceFinie extends Error {
     this.name = "FluenceFinie";
   }
 }
+
+export class JeNeSaisPasEnFluence extends Error {
+  constructor() {
+    super("Une fluence ne propose pas « Je ne sais pas ».");
+    this.name = "JeNeSaisPasEnFluence";
+  }
+}
+
+export class SeanceSansEtoiles extends Error {
+  constructor() {
+    super("Une séance faite seulement de fluences ne donne pas d'étoiles : elle ne s'enregistre pas encore.");
+    this.name = "SeanceSansEtoiles";
+  }
+}

@@ -1,4 +1,4 @@
-import { LeconIntrouvable, ParentNonRattache } from "../domain/erreurs.ts";
+import { LeconIntrouvable, ParentNonRattache, SeanceSansEtoiles } from "../domain/erreurs.ts";
 import { type FaitDeResultat, ResultatDeLaLecon } from "../domain/resultat-de-la-lecon.ts";
 import { revaliderLaSeance } from "../domain/revalider-la-seance.ts";
 import type { SeanceTerminee } from "../domain/seance.ts";
@@ -26,13 +26,15 @@ export class TerminerLaSeance {
     if (!lecon) throw new LeconIntrouvable(seance.lecon);
 
     const fait = revaliderLaSeance(lecon, seance);
+    const etoiles = fait.etoiles;
+    if (etoiles === undefined) throw new SeanceSansEtoiles();
     // Écriture optimiste : si une autre séance de la même leçon est passée entre la lecture et l'écriture,
     // on relit le résultat et on y fait avancer cette séance : aucune séance n'est perdue.
     for (let essai = 1; essai <= ESSAIS_AU_PLUS; essai++) {
       const resultat = await this.resultats.de(fait.enfant, fait.lecon) ??
         ResultatDeLaLecon.commencer(fait.enfant, fait.lecon, lecon.competence);
       const nombreDeSeancesLu = resultat.nombreDeSeances;
-      resultat.enregistrerSeance(fait.etoiles);
+      resultat.enregistrerSeance(etoiles);
       const issue = await this.seances.enregistrerAvecLeResultat(fait, resultat, nombreDeSeancesLu);
       if (issue === "dejaEnregistree") return [];
       if (issue === "enregistree") return [fait, ...resultat.retirerFaits()];

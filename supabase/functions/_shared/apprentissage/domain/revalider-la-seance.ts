@@ -7,6 +7,7 @@ import {
   ExerciceIntrouvable,
   GroupeInconnu,
   JeNeSaisPasDejaDit,
+  JeNeSaisPasEnFluence,
   LeconSansExercice,
   PasDeQuestionEnCours,
   PasDEtapeDeLeconEnCours,
@@ -32,6 +33,7 @@ const ERREURS_DE_REJEU = [
   GroupeInconnu,
   ExerciceIntrouvable,
   JeNeSaisPasDejaDit,
+  JeNeSaisPasEnFluence,
   LeconSansExercice,
   PasDeQuestionEnCours,
   PasDEtapeDeLeconEnCours,
@@ -60,16 +62,20 @@ function rejouer(lecon: Lecon, envoi: SeanceTermineeAEnregistrer): SeanceTermine
   const seance = Seance.reconstituer(lecon, envoi);
   while (seance.etapeDeLeconEnCours()) seance.continuer();
   envoi.reponses.forEach((reponsesDeLaQuestion, rang) => {
+    const ceQuiSeJoueAuChrono = seance.exerciceEnCours()?.scoreDeFluence() !== undefined;
+    if (ceQuiSeJoueAuChrono) seance.demarrerLaFluence(envoi.termineeLe);
     reponsesDeLaQuestion.forEach((reponse) => {
       if (seance.questionEstReussie(rang)) throw new QuestionDejaReussie();
-      rejouerLaReponse(seance, reponse, rang);
+      rejouerLaReponse(seance, reponse, rang, envoi.termineeLe);
     });
+    if (ceQuiSeJoueAuChrono) seance.finirLaFluence(envoi.termineeLe);
     if (!seance.questionEstReussie(rang)) throw new SeanceNonFinie();
   });
+  seance.verifierQueTousLesTiragesOntServi();
   return seance.terminer(envoi.termineeLe);
 }
 
-function rejouerLaReponse(seance: Seance, reponse: ReponseDonnee, rang: number): void {
+function rejouerLaReponse(seance: Seance, reponse: ReponseDonnee, rang: number, maintenant: Date): void {
   const etiquetteDeLaQuestion = seance.etiquetteDeClasserALaQuestion(rang);
   if (
     reponse.genre === "placement" && etiquetteDeLaQuestion !== undefined && reponse.etiquette !== etiquetteDeLaQuestion
@@ -77,5 +83,5 @@ function rejouerLaReponse(seance: Seance, reponse: ReponseDonnee, rang: number):
     throw new ReponseRangeeSousUneAutreQuestion(reponse.etiquette);
   }
   if (reponse.genre === "jeNeSaisPas") seance.direJeNeSaisPas(seance.etiquetteDeLaQuestion(rang));
-  else seance.repondre(reponse);
+  else seance.repondre(reponse, maintenant);
 }

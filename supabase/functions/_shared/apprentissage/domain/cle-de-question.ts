@@ -8,6 +8,7 @@ const PREFIXES: Record<TypeDeQuestion, string> = {
   classer: "k:",
   ordre: "o:",
   calcul: "n:",
+  fluence: "f:",
 };
 
 export class CleDeQuestion {

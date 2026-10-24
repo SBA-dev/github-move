@@ -1,6 +1,7 @@
 import type { Exercice, ExerciceCalcul, Niveau, Operation, Segment } from "../../catalogue/domain/index.ts";
 import { type EtiquettePosee, EtiquettesAPlacer } from "./etiquettes-a-placer.ts";
-import { PasDeQuestionEnCours } from "./erreurs.ts";
+import { ExerciceChronometre } from "./exercice-chronometre.ts";
+import { FluenceNonCommencee, JeNeSaisPasEnFluence, PasDeQuestionEnCours, ReponseIncompatible } from "./erreurs.ts";
 import { nombreDeQuestions } from "./nombre-de-questions.ts";
 import { ModeDeReponse } from "./mode-de-reponse.ts";
 import { QuestionDeCalcul } from "./question-de-calcul.ts";
@@ -23,6 +24,7 @@ type Contenu = Readonly<{
   etiquettes?: EtiquettesAPlacer;
   segments?: readonly Segment[];
   operationsTirees?: readonly Operation[];
+  chronometre?: ExerciceChronometre;
 }>;
 
 export class ExerciceJoue {
@@ -47,6 +49,7 @@ export class ExerciceJoue {
   }
 
   questionsJouees(): readonly QuestionSuivie[] {
+    if (this.contenu.chronometre) return [this.contenu.chronometre];
     return this.contenu.etiquettes?.questions ?? this.questionsPosees();
   }
 
@@ -55,6 +58,8 @@ export class ExerciceJoue {
   }
 
   tirages(): string[][] {
+    const chronometre = this.contenu.chronometre;
+    if (chronometre) return chronometre.tirages().slice(0, 1);
     const etiquettes = this.contenu.etiquettes;
     if (etiquettes) return [etiquettes.tirage()];
     const operations = (this.contenu.operationsTirees ?? []).map(enonceTire);
@@ -62,6 +67,11 @@ export class ExerciceJoue {
     return [...(operations.length > 0 ? [operations] : []), ...tiragesDesQuestions].filter((tirage) =>
       tirage.length > 0
     );
+  }
+
+  /** Les opérations qu'une fluence tire après la première, au fil des bonnes réponses. */
+  tiragesEnCoursDeFluence(): string[][] {
+    return this.contenu.chronometre?.tirages().slice(1) ?? [];
   }
 
   etiquettesAPlacer(): string[] {
@@ -99,7 +109,22 @@ export class ExerciceJoue {
     return this.dernierBonMotDUnTrou() && this.estReussi();
   }
 
-  repondre(reponse: Reponse): ResultatDeReponse {
+  scoreDeFluence(): { nom: string; score: number; reponsesFausses: number } | undefined {
+    const chronometre = this.contenu.chronometre;
+    if (!chronometre) return undefined;
+    return { nom: chronometre.nom, score: chronometre.score, reponsesFausses: chronometre.reponsesFausses };
+  }
+
+  demarrerLaFluence(maintenant: Date): void {
+    this.chronometre().demarrer(maintenant);
+  }
+
+  finirLaFluence(): void {
+    this.chronometre().finir();
+  }
+
+  repondre(reponse: Reponse, maintenant?: Date): ResultatDeReponse {
+    if (this.contenu.chronometre) return this.repondreALaFluence(this.contenu.chronometre, reponse, maintenant);
     if (reponse.genre === "placement") return this.placer(reponse);
     const question = this.questionPoseeEnCours();
     if (!question) throw new PasDeQuestionEnCours();
@@ -110,6 +135,7 @@ export class ExerciceJoue {
   }
 
   direJeNeSaisPas(etiquette?: string): AideDonnee {
+    if (this.contenu.chronometre) throw new JeNeSaisPasEnFluence();
     if (this.contenu.etiquettes) return this.contenu.etiquettes.direJeNeSaisPas(etiquette);
     const question = this.questionPoseeEnCours();
     if (!question) throw new PasDeQuestionEnCours();
@@ -117,6 +143,7 @@ export class ExerciceJoue {
   }
 
   get questionsReussies(): number {
+    if (this.contenu.chronometre) return this.contenu.chronometre.reussie ? 1 : 0;
     return this.contenu.etiquettes?.nombreReussies ?? this.reussies;
   }
 
@@ -126,6 +153,17 @@ export class ExerciceJoue {
 
   estReussi(): boolean {
     return this.questionsReussies >= this.questions;
+  }
+
+  private chronometre(): ExerciceChronometre {
+    if (!this.contenu.chronometre) throw new PasDeQuestionEnCours();
+    return this.contenu.chronometre;
+  }
+
+  private repondreALaFluence(chronometre: ExerciceChronometre, reponse: Reponse, maintenant?: Date): ResultatDeReponse {
+    if (reponse.genre !== "nombre") throw new ReponseIncompatible(reponse.genre);
+    if (!maintenant) throw new FluenceNonCommencee();
+    return chronometre.repondre(reponse.valeur, maintenant);
   }
 
   private placer(placement: Extract<Reponse, { genre: "placement" }>): ResultatDeReponse {
@@ -158,6 +196,8 @@ function contenuDe(exercice: Exercice, tireur: Tireur, niveau: Niveau): Contenu 
       return { questionsPosees: questionsJoueesAvec(exercice, tireur), segments: exercice.segments };
     case "calcul":
       return contenuDeCalcul(exercice, tireur, niveau);
+    case "fluence":
+      return { chronometre: ExerciceChronometre.pour(exercice, tireur) };
     default:
       return { questionsPosees: questionsJoueesAvec(exercice, tireur) };
   }
