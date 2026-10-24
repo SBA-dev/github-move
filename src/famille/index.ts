@@ -3,6 +3,7 @@ export { ControleParental } from "./ControleParental.tsx";
 export { EspaceParent } from "./EspaceParent.tsx";
 export { ProfilsDeLEspaceParent } from "./ProfilsDeLEspaceParent.tsx";
 export { useProfilEnCours } from "./profils/useProfilEnCours.ts";
+export { lireLeNiveauDuProfil } from "./profils/lecture-des-profils-supabase.ts";
 export { useProfilsDuParent } from "./profils/useProfilsDuParent.ts";
 export { QuiJoue } from "./QuiJoue.tsx";
 export { useAccesALEspaceParent } from "./useAccesALEspaceParent.ts";
