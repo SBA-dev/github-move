@@ -105,3 +105,6 @@ En attente d'une réponse : leçons réussies d'une classe au-dessus (N1, N7, N9
 - 19:05 UTC : annonce [Responsable] (#64) confirmant la décision 0020 (`main` = 6aedff7) : run en cours non
   interrompu, une seule non-régression complète avant `PRÊTE À MERGER`, `SUFFIXE_E2E` remplacé par un jeton par worker,
   steps indépendants (fullyParallel, 3 workers).
+- 19:55 UTC : E2E cycle 5 (avant la décision 0020) : #25 82/82 cas, non-régression 872/872 (dont #19 et #20).
+  Intégration de `main` = 6aedff7 (merge bc15c4e, sans conflit) : 1159 tests Deno, tsc verts. Correction du bloquant
+  de review (assertion négative) et vérification du parallélisme des steps confiées à `e2e-tester`.
