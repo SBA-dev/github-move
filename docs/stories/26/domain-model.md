@@ -1,6 +1,6 @@
 # Modèle du domaine : issue #26, Leçons des classes d'avant
 
-> Révisé après la réponse du PO à #26.1 (voir « Réponse du PO consignée »). #26.1a et #26.1b sont posées au PO ; #26.2 à #26.16 attendent (recommandations gardées).
+> Révisé après les réponses du PO : 26.1, puis 26.1a (matière par matière) et 26.1b (classe juste au-dessus) ; recommandations #26.2 à #26.16 validées (voir « Réponses du PO consignées »). Restent #26.17 à #26.20.
 >
 > Cadrage seulement. Le code partira de la branche de #27 (`feature/27-test-de-depart`, PR #80), qui modifie déjà `apprentissage/domain/parcours.ts` (état « réussie au test de départ »). Rien n'est codé avant le merge de #27.
 
@@ -58,7 +58,7 @@ classDiagram
     <<fonctions pures, #25 #27, étendues>>
     parcoursDeLaMatiere(EntreesDuParcours, Matiere) Parcours
     toutesLesLecons(EntreesDuParcours, FiltreDesLecons) ToutesLesLecons
-    niveauReussi(EntreesDuParcours, Matiere?) booleen
+    matiereReussieDuNiveau(EntreesDuParcours, Matiere) booleen
     choixDuFiltre(EntreesDuParcours) ChoixDuFiltre
   }
   class Parcours {
@@ -125,29 +125,22 @@ classDiagram
 
 Le bloc n'existe que dans une **matière du parcours** (#26.7). L'interface montre le nombre de leçons du bloc (#26.6) ; le domaine le donne par la longueur de la liste.
 
-### 2. « Toutes les leçons » (`toutesLesLecons`, `niveauReussi`, `choixDuFiltre`)
+### 2. « Toutes les leçons » (`toutesLesLecons`, `matiereReussieDuNiveau`, `choixDuFiltre`)
 
 Réponse du PO à #26.1 : « toutes les leçons de sa classe ; quand il a fini et réussi toutes les leçons de sa classe, il peut voir les leçons de la classe au-dessus ; les leçons des classes précédentes sont disponibles en dessous, dans une section dédiée, ordonnées par classe ».
 
 `ToutesLesLecons` a deux parties :
 1. **`lecons`** (en haut) :
    - toutes les leçons de la classe de l'enfant, toutes matières, avec leur état du parcours (`reussie`, `reussieAuTestDeDepart`, `prochaine`, `aDecouvrir`) ;
-   - puis, **si le niveau est réussi**, les leçons de la classe au-dessus, avec un état hors du parcours (`reussie`, `reussieAuTestDeDepart`, `aDecouvrir`), jamais `prochaine` (#26.19) ;
+   - puis, **dans chaque matière réussie de sa classe**, les leçons de cette matière de la classe juste au-dessus, avec un état hors du parcours (`reussie`, `reussieAuTestDeDepart`, `aDecouvrir`), jamais `prochaine` (#26.19) ;
    - les leçons réussies d'une classe au-dessus (enfant redescendu) : selon #26.17.
-2. **`leconsDesClassesDAvant`** (en dessous, section à part) : une entrée `{ niveau, lecons }` par classe inférieure, rangée par classe (#26.18), état hors du parcours ; vide au CP.
+2. **`leconsDesClassesDAvant`** (en dessous, section à part) : une entrée `{ niveau, lecons }` par classe inférieure, rangée par classe (#26.20), état hors du parcours ; vide au CP.
 
-**Règle paramétrable `niveauReussi`** (le PO choisit les deux paramètres ; une seule variante sera codée) :
+**Règle `matiereReussieDuNiveau(entrees, matiere)`** (réponses 26.1a, 26.1b) : vraie quand l'enfant a réussi **toutes** les leçons de cette matière de sa classe. Elle est vraie ou fausse **matière par matière**. Quand elle est vraie, « Toutes les leçons » montre les leçons de cette matière de la **classe juste au-dessus**, et pas au-delà (un CE1 qui a réussi tout le CE1 et tout le CE2 en maths ne voit pas le CM1). Une matière sans aucune leçon de la classe : #26.18.
 
-| Paramètre | Variante | Effet |
-|---|---|---|
-| #26.1a portée | **par matière** (reco) | la classe au-dessus s'ouvre dans une matière dès que toutes les leçons de cette matière du niveau de l'enfant sont réussies |
-| | toutes matières | elle s'ouvre, pour toutes les matières, quand toutes les leçons du niveau sont réussies |
-| #26.1b étendue | **classe juste au-dessus** (reco) | on montre au plus un niveau au-dessus |
-| | classes suivantes | la même règle se répète : CE2 réussi après CE1 réussi → CM1 montré, et ainsi de suite |
+« Réussie » a son sens du glossaire : au moins 1 étoile, ou réussie au test de départ. Le calcul se refait à chaque affichage : une leçon de la classe ajoutée plus tard à la bibliothèque referme la classe au-dessus de sa matière (sauf les leçons réussies, #26.17).
 
-« Réussie » a son sens du glossaire : au moins 1 étoile ou réussie au test de départ. Le calcul se refait à chaque affichage : une leçon de la classe ajoutée plus tard à la bibliothèque referme la classe au-dessus (sauf les leçons réussies, #26.17).
-
-Filtre : `matiere` facultative ; `niveau` seulement si #26.18 le garde. Le filtre s'applique aux deux parties. Tri dans chaque partie : niveau, matière (ordre du Catalogue), `ordre`, identifiant. Le filtre choisi est un état d'interface.
+Filtre : `matiere` et `niveau` facultatifs (#26.9, validée) ; ils s'appliquent aux deux parties (forme de la section : #26.20). Tri dans chaque partie : niveau, matière (ordre du Catalogue), `ordre`, identifiant. Le filtre choisi est un état d'interface.
 
 « Mon parcours » ne change pas avec cette réponse : il ne montre jamais de leçon d'une classe au-dessus non réussie (#25, N1), et la classe au-dessus ne donne pas de prochaine leçon.
 
@@ -156,7 +149,7 @@ Filtre : `matiere` facultative ; `niveau` seulement si #26.18 le garde. Le filtr
 | Commande ou lecture | Effet | Où |
 |---|---|---|
 | Lecture des meilleures étoiles et du résultat du test de départ | Inchangée (#25, #27) | front, sous RLS |
-| `parcoursDeLaMatiere` (étendu), `toutesLesLecons`, `niveauReussi`, `choixDuFiltre` | Calcul pur | navigateur |
+| `parcoursDeLaMatiere` (étendu), `toutesLesLecons`, `matiereReussieDuNiveau`, `choixDuFiltre` | Calcul pur | navigateur |
 | `CommencerUneLecon` (#16) | Inchangé : toute leçon montrée peut être commencée | navigateur |
 | `leconSuivanteDansLeParcours` (#25) | Inchangé : aucune leçon suivante après une leçon hors du parcours (#26.8) | navigateur |
 
@@ -170,7 +163,7 @@ Règles du calcul (tests du service), pas invariants d'agrégat :
 2. Une leçon des classes d'avant n'est **jamais** la prochaine leçon, ne compte pas dans le compteur du parcours et n'a pas de leçon suivante.
 3. Elle est réussie si elle a des meilleures étoiles ou si elle est réussie au test de départ ; les étoiles l'emportent pour l'affichage (27.7).
 4. Changer de classe ne perd aucune étoile : les leçons de l'ancienne classe deviennent des leçons des classes d'avant (montée) ou des leçons réussies d'une classe au-dessus (descente), avec leurs étoiles (décision n°7 du lot 2).
-5. « Toutes les leçons » ne montre une leçon d'une classe au-dessus non réussie que si le niveau de l'enfant est réussi (portée #26.1a, étendue #26.1b) ; une telle leçon n'est jamais la prochaine leçon et n'a pas de leçon suivante. Une leçon du niveau de l'enfant y a le même état que dans « Mon parcours ».
+5. « Toutes les leçons » ne montre une leçon d'une classe au-dessus non réussie que si elle est de la classe **juste** au-dessus et que l'enfant a réussi toutes les leçons de **sa matière** dans sa classe ; une telle leçon n'est jamais la prochaine leçon et n'a pas de leçon suivante. Une leçon du niveau de l'enfant y a le même état que dans « Mon parcours ».
 5 bis. « Mon parcours » ne montre jamais une leçon d'une classe au-dessus non réussie.
 6. Chaque leçon montrée s'ouvre.
 7. Même entrées, même résultat (déterministe, à égalité par identifiant).
@@ -195,7 +188,7 @@ Aucune donnée personnelle nouvelle : seules les meilleures étoiles (#24) et le
 ```
 supabase/functions/_shared/apprentissage/domain/
   parcours.ts                       # Parcours.leconsDesClassesDAvant, LeconDesClassesDAvant, EtatHorsDuParcours
-  toutes-les-lecons.ts              # toutesLesLecons, niveauReussi, choixDuFiltre, ToutesLesLecons, FiltreDesLecons, ChoixDuFiltre, LeconDeToutesLesLecons
+  toutes-les-lecons.ts              # toutesLesLecons, matiereReussieDuNiveau, choixDuFiltre, ToutesLesLecons, FiltreDesLecons, ChoixDuFiltre, LeconDeToutesLesLecons
   index.ts                          # exports
 src/parcours/MonParcours.tsx, textes-du-parcours.ts    # bloc repliable, annonces
 src/toutes-les-lecons/                                 # écran « Toutes les leçons » (filtres, liste)
@@ -206,9 +199,9 @@ src/famille/AccueilDeLEnfant.tsx                       # bouton « Toutes les le
 ### Ajouts proposés au glossaire (faits plus tard, en fin de section)
 
 - **Leçon des classes d'avant** (nouvelle définition, Décision) : « Leçon d'une matière du parcours dont le niveau est inférieur à celui de l'enfant. Elle est montrée à part, sous les leçons du parcours, avec son niveau ; elle s'ouvre, ne compte pas dans le parcours, n'est jamais la prochaine leçon et n'a pas de leçon suivante. » Synonymes interdits : ancienne leçon, leçon de révision.
-- **Niveau réussi** `(à valider)`, terme manquant (réponse 26.1) : « Toutes les leçons du niveau de l'enfant sont réussies [dans une matière | dans toutes les matières, selon #26.1a]. Il ouvre, dans « Toutes les leçons », les leçons de la classe au-dessus. » Interface : « classe » ; synonymes interdits : classe finie, classe terminée, niveau validé.
+- **Matière réussie** `(à valider)`, terme manquant (réponses 26.1, 26.1a, 26.1b) : « Matière dont l'enfant a réussi toutes les leçons de sa classe. Dans « Toutes les leçons », elle montre les leçons de cette matière de la classe juste au-dessus, et pas au-delà. » Synonymes interdits : classe finie, matière terminée, matière validée. (Nom à confirmer ; voir aussi #26.18.)
 - « Classes précédentes » (mot du PO) = **Leçon des classes d'avant** : un seul terme, à noter comme synonyme à éviter.
-- **Leçon à découvrir** (extension) : « … ou leçon des classes d'avant non réussie (si #26.3 est retenue), ou leçon de la classe au-dessus non réussie montrée dans « Toutes les leçons » (si #26.19 est retenue) ».
+- **Leçon à découvrir** (extension) : « … ou leçon des classes d'avant non réussie (26.3, validée), ou leçon de la classe au-dessus non réussie montrée dans « Toutes les leçons » (si #26.19 est retenue) ».
 - Décision : « Toutes les leçons » et le titre du bloc sont des mots d'interface ; l'état « Révision » d'une leçon et « Revoir les classes d'avant » sont abandonnés (« revoir » reste réservé à la **Révision**).
 
 Context map : pas de contexte ni de relation nouvelle. Note proposée : « #26 : leçons des classes d'avant et « Toutes les leçons », vues calculées d'Apprentissage sur le Catalogue ; le parcours libre de Famille n'est plus lu (N2). »
@@ -219,17 +212,19 @@ Context map : pas de contexte ni de relation nouvelle. Note proposée : « #26 :
 
 | n° | État | Par quoi |
 |---|---|---|
-| 1. « Toutes les leçons » et le verrou | **Tranchée** : plus de verrou (25.1 b) ; périmètre donné par la réponse 26.1 | → #26.1a, #26.1b, #26.18 |
-| 2. Leçons d'une classe au-dessus | **Tranchée en partie** : réussies visibles (N1, N7, N9) ; non réussies visibles une fois la classe réussie (26.1) | → #26.1a, #26.1b, #26.17, #26.19 |
-| 3. État « Révision » | Reste | → #26.3, #26.4 |
+| 1. « Toutes les leçons » et le verrou | **Tranchée** : plus de verrou (25.1 b) ; périmètre par 26.1, 26.1a, 26.1b | → #26.20 (forme de la section) |
+| 2. Leçons d'une classe au-dessus | **Tranchée** : réussies visibles (N1, N7, N9) ; non réussies de la classe juste au-dessus, matière par matière réussie (26.1a, 26.1b) | → #26.17 à #26.19 |
+| 3. État « Révision » | **Tranchée** : « À découvrir » (26.3), titre « Leçons des classes d'avant » (26.4) | — |
 | 4. Deux compteurs | **Tranchée pour « Mon parcours »** : seulement le niveau de l'enfant (règle 4 de #25). Les tuiles de « Aujourd'hui » relèvent de #29 (sa question n°4) | → #26.6 pour le nombre du bloc |
-| 5. « Toutes les leçons » au glossaire | Reste | → #26.12 |
+| 5. « Toutes les leçons » au glossaire | **Tranchée** : mot d'interface (26.12) | — |
 
 ### Questions de #26
 
+#26.2 à #26.12 (et #26.13 à #26.16 de `acceptance.md`) : **recommandations validées par le PO**. Texte gardé pour mémoire.
+
+
 - **#26.1 Quelles leçons dans « Toutes les leçons » ?** **Tranchée par le PO** (voir « Réponse du PO consignée ») ; la recommandation d'origine (jamais une leçon au-dessus non réussie) est remplacée.
-- **#26.1a « Toutes les leçons de sa classe réussies » : matière par matière ou toutes les matières ensemble ?** (posée au PO par le responsable.) Exemple : Léa, CE1, a réussi toutes ses leçons de maths du CE1, mais pas celles de français. Voit-elle les maths du CE2 ? **Recommandation : matière par matière** (oui, elle les voit). Raisons : le parcours avance déjà matière par matière (une prochaine leçon par matière, #25) ; toutes ensemble, une seule leçon d'anglais ou d'histoire jamais jouée bloquerait les maths du CE2 pour toute l'année ; un enfant en avance en maths ne l'est pas forcément en français. Une matière sans leçon de la classe (l'EMC pour un CE1) n'ouvre pas sa classe au-dessus : il faut au moins une leçon réussie pour « finir » une classe.
-- **#26.1b Seulement la classe juste au-dessus, ou aussi les suivantes une fois celle-là finie ?** Exemple : Léa, CE1, a réussi tout le CE1 puis tout le CE2 en maths. Voit-elle les maths du CM1 ? **Recommandation : seulement la classe juste au-dessus** (non, pas le CM1). Raisons : c'est la lecture mot pour mot de la réponse (« la classe au-dessus ») ; on reste au plus près de « rien hors programme » ; un enfant qui a fini la classe d'au-dessus est sans doute dans une autre classe que celle du profil, et c'est au parent d'en changer le niveau (Famille), ce qui garde ses étoiles (décision n°7 du lot 2) et refait la règle à partir du nouveau niveau.
+- **#26.1a** (matière par matière ou toutes ensemble ?) : **tranchée, matière par matière.** **#26.1b** (classe juste au-dessus ou suivantes ?) : **tranchée, classe juste au-dessus seulement.**
 - **#26.2 Comment l'enfant ouvre-t-il « Toutes les leçons » ?** Avant #29 il n'y a pas de dock. **Recommandation** : un bouton « Toutes les leçons » sur l'accueil de l'enfant, juste après « Mon parcours » (ajout seulement dans `AccueilDeLEnfant.tsx`) ; le retour ramène à l'accueil, et le retour depuis une leçon ouverte ici ramène à « Toutes les leçons ». #29 pourra le déplacer dans le dock. D'accord ?
 - **#26.3 Que lit l'enfant pour une leçon des classes d'avant non réussie ?** « Révision » est réservé à la séance de révision des erreurs. **Recommandation** : « À découvrir » (lu « Les syllabes, CP : à découvrir »), en étendant le terme **Leçon à découvrir** aux leçons des classes d'avant non réussies : un enfant arrivé en CE1 sans avoir joué au CP ne « revoit » rien, il découvre. « À revoir » est écarté (synonyme interdit de Révision, et tuile « À revoir » des révisions dans #29). D'accord ?
 - **#26.4 Titre du bloc ?** « Revoir les classes d'avant » emploie « revoir », synonyme interdit de Révision. **Recommandation** : « Leçons des classes d'avant (24) » (« (1) » au singulier), lu « Leçons des classes d'avant, 24 leçons » : c'est exactement le terme du domaine et le titre de la story. D'accord, ou garder « Revoir les classes d'avant » comme simple mot d'interface ?
@@ -249,14 +244,18 @@ Context map : pas de contexte ni de relation nouvelle. Note proposée : « #26 :
 - **#39** (Accompagnement) : leçons personnelles dans « Toutes les leçons », étiquette « Pour toi » et place dans le tri.
 - **Story Famille (N2)** : retrait du réglage parcours libre.
 
-## Réponse du PO consignée
+## Réponses du PO consignées
 
 | n° | Question | Réponse |
 |---|---|---|
-| 26.1 | Quelles leçons dans « Toutes les leçons » ? | « toutes les leçons de sa classe. Quand il a fini et réussi toutes les leçons de sa classe. Il peut voir les leçons de la classe au dessus. Les leçons des classes précédentes sont disponibles en dessous dans une section dédiée et ordonnées par classe » (mot pour mot). Questions qui en découlent : #26.1a, #26.1b (posées au PO), #26.17 à #26.19. |
+| 26.1 | Quelles leçons dans « Toutes les leçons » ? | « toutes les leçons de sa classe. Quand il a fini et réussi toutes les leçons de sa classe. Il peut voir les leçons de la classe au dessus. Les leçons des classes précédentes sont disponibles en dessous dans une section dédiée et ordonnées par classe » (mot pour mot). |
+| 26.1a | Toutes matières ensemble ou matière par matière ? | Matière par matière. |
+| 26.1b | Classe juste au-dessus ou suivantes ? | Seulement la classe juste au-dessus, pas au-delà. |
+| 26.2 à 26.16 | (voir les questions) | Recommandations validées. |
 
-### Questions nées de la réponse 26.1 (#26.13 à #26.16 sont dans `docs/stories/26/acceptance.md`)
+### Questions restantes (#26.13 à #26.16 sont dans `docs/stories/26/acceptance.md`, validées)
 
-- **#26.17 Les leçons réussies d'une classe au-dessus (enfant redescendu, N7) se voient-elles toujours dans « Toutes les leçons », ou seulement une fois sa classe réussie ?** Exemple : Léa, redescendue en CE1, a réussi « Le futur » (CE2) ; elle n'a pas fini le CE1. **Recommandation : toujours** (avec ses étoiles, ou « réussie au test de départ »), en haut, après les leçons de sa classe. Raisons : N7 a promis qu'elles se voient ici, et le bloc « Déjà réussies en CE2 » de #25 les montre déjà sans condition ; elles ne sont pas « hors programme » pour l'enfant, il les a réussies ; sinon, une leçon d'EMC du CE2 réussie (sans onglet, N7) disparaîtrait de partout. Les leçons au-dessus **non réussies** restent soumises à #26.1a et #26.1b.
-- **#26.18 La section des classes d'avant et les listes de #26.9 : faut-il encore la liste « Niveau » ?** La réponse range déjà par classe : la classe de l'enfant (et celle d'au-dessus) en haut, les classes d'avant en dessous, une par une. **Recommandation** : retirer la liste « Niveau » et garder seulement « Matière », qui s'applique aux deux parties. La section s'appelle comme le bloc de « Mon parcours » (« Leçons des classes d'avant (24) », #26.4) ; elle est repliée à l'ouverture et se déplie au toucher et au clavier (comme #26.5) ; dedans, un sous-titre par classe (« CP », « CE1 »), dans l'ordre des classes (CP d'abord), comme le bloc de « Mon parcours » (#26.6). Raisons : une liste de moins sur un écran de 360 px, et le choix d'un niveau ne ferait que répéter le rangement. Le nombre de leçons montrées (#26.9) compte les deux parties. Les scénarios de la règle 5 de `acceptance.md` qui choisissent un niveau (cas « CP ») sont à revoir par po-acceptance si c'est retenu.
-- **#26.19 Que lit l'enfant pour une leçon de la classe au-dessus non réussie, montrée parce que sa classe est réussie ?** **Recommandation** : « À découvrir », jamais « À toi ! », lu « L'imparfait, CE2, Français : à découvrir » ; aucune leçon suivante à la fin de sa séance (comme N10) ; elle n'apparaît pas dans « Mon parcours » tant qu'elle n'est pas réussie, puis elle passe dans « Déjà réussies en CE2 » (#25). Raisons : « À toi ! » est la prochaine leçon du parcours de la classe, qui n'en a plus (classe réussie) ; même mot que pour une leçon des classes d'avant non réussie (#26.3).
+- **#26.17 Les leçons réussies d'une classe au-dessus (enfant redescendu, N7) se voient-elles dans « Toutes les leçons » même quand leur matière n'est pas réussie dans sa classe ?** Exemple : Léa, redescendue en CE1, a réussi « Le futur » (CE2) ; elle n'a pas réussi tout le français du CE1. Autre cas : un CE1 qui a réussi une leçon de CM1 avant de redescendre de deux classes. **Recommandation : oui, toujours, quel que soit leur niveau au-dessus** (avec leurs étoiles, ou « réussie au test de départ »), en haut, après les leçons de sa classe. Raisons : N7 l'a promis, le bloc « Déjà réussies en CE2 » de #25 les montre déjà sans condition, l'enfant les a réussies (rien de nouveau ne lui est proposé), et une leçon d'EMC du CE2 réussie, sans onglet (N7), disparaîtrait sinon de partout. Seules les leçons au-dessus **non réussies** suivent la règle 26.1a / 26.1b.
+- **#26.18 Une matière sans aucune leçon dans la classe de l'enfant est-elle « réussie » d'office ?** Exemple : l'EMC n'a de leçons qu'en CE2 ; un CE1 n'en a aucune. Si « toutes réussies » est vraie d'office (zéro leçon), un CE1 voit tout de suite l'EMC du CE2 ; un CP voit les sciences du CE1 s'il n'y a pas de sciences en CP. **Recommandation : non**, une matière sans leçon dans la classe ne montre pas sa classe au-dessus : il faut avoir réussi au moins une leçon pour « finir » une matière. Raisons : « rien hors programme » ; la réponse parle d'un enfant qui « a fini et réussi », ce qui suppose des leçons faites ; cela reste cohérent avec #25 (pas d'onglet sans leçon de la classe, 25.4).
+- **#26.19 Que lit l'enfant pour une leçon de la classe juste au-dessus non réussie, montrée parce que sa matière est réussie ?** **Recommandation** : « À découvrir », jamais « À toi ! », lu « L'imparfait, CE2, Français : à découvrir » ; aucune leçon suivante à la fin de sa séance (comme N10) ; elle n'apparaît pas dans « Mon parcours » tant qu'elle n'est pas réussie, puis elle va dans « Déjà réussies en CE2 » (#25). Raisons : « À toi ! » est la prochaine leçon du parcours de la classe, qui n'en a plus dans cette matière ; même mot que pour une leçon des classes d'avant non réussie (26.3, validée).
+- **#26.20 Forme de la section des classes d'avant dans « Toutes les leçons » ?** La réponse demande une section à part, en dessous, rangée par classe ; 26.4 à 26.6 ne parlaient que du bloc de « Mon parcours ». **Recommandation** : la même forme que ce bloc : titre « Leçons des classes d'avant (24) », repliée à l'ouverture, dépliée au toucher et au clavier, un sous-titre par classe (« CP », puis « CE1 »…), leçons rangées par matière puis `ordre`. Les listes « Matière » et « Niveau » (26.9, validée) s'appliquent aux deux parties : choisir « CP » ne garde que la section, dépliée. Le nombre de leçons montrées compte les deux parties. Au CP, pas de section.
