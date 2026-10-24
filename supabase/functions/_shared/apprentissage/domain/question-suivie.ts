@@ -10,6 +10,7 @@ export type TypeDeQuestion =
   | "chiffre"
   | "calcul"
   | "boite"
+  | "barres"
   | "colonne"
   | "fluence";
 

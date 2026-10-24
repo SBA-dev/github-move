@@ -11,6 +11,7 @@ const PREFIXES: Record<TypeDeQuestion, string> = {
   chiffre: "h:",
   calcul: "n:",
   boite: "n:",
+  barres: "p:",
   colonne: "u:",
   fluence: "f:",
   dictee: "d:",

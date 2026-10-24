@@ -1,11 +1,8 @@
 import type { ItemDeBoite, Niveau } from "../../catalogue/domain/index.ts";
 import { CleDeQuestion } from "./cle-de-question.ts";
 import { aideDeLaBoite, deroulementDeLaBoite, ouvertureDeLaBoite } from "./exercices/boite.ts";
-import { ModeDeReponse } from "./mode-de-reponse.ts";
-import { type AideDonnee } from "./question-jouee.ts";
-import { type CalculEnCours, QuestionDeCalcul } from "./question-de-calcul.ts";
-import type { QuestionPosee } from "./question-posee.ts";
-import type { ReponseDonnee, ReponseEnNombre, ReponseParChoix, ResultatDeReponse } from "./reponse.ts";
+import type { CalculEnCours } from "./question-de-calcul.ts";
+import { calculAuNiveau, QuestionEnveloppantUnCalcul } from "./question-enveloppant-un-calcul.ts";
 import type { Tireur } from "./tireur.ts";
 
 export type BoiteEnCours = Readonly<{
@@ -18,46 +15,17 @@ export type BoiteEnCours = Readonly<{
 export type BoiteOuverte = Readonly<{ deroulement: readonly string[]; jetons: number; ouverture: string }>;
 
 /** Une boîte à jetons se joue comme un calcul : même clé de révision, mêmes modes de réponse. */
-export class QuestionDeBoite implements QuestionPosee {
-  private constructor(private readonly item: ItemDeBoite, private readonly calcul: QuestionDeCalcul) {}
+export class QuestionDeBoite extends QuestionEnveloppantUnCalcul {
+  private constructor(private readonly item: ItemDeBoite, calcul: ReturnType<typeof calculDeLaBoite>) {
+    super(calcul);
+  }
 
   static pour(item: ItemDeBoite, tireur: Tireur, niveau: Niveau): QuestionDeBoite {
-    const operation = { q: calculSansResultat(item), r: item.reponse, aide: aideDeLaBoite(item) };
-    const identite = { type: "boite", cle: CleDeQuestion.de("boite", operation.q) } as const;
-    const auxChoix = ModeDeReponse.pour(niveau, item.reponse).genre === "choix";
-    const calcul = auxChoix
-      ? QuestionDeCalcul.avecLesChoix(operation, tireur, undefined, identite)
-      : QuestionDeCalcul.auClavier(operation, identite);
-    return new QuestionDeBoite(item, calcul);
-  }
-
-  get type() {
-    return this.calcul.type;
-  }
-
-  get cle() {
-    return this.calcul.cle;
-  }
-
-  get enonce(): string {
-    return this.calcul.enonce;
-  }
-
-  get erreurs(): number {
-    return this.calcul.erreurs;
-  }
-
-  get reussie(): boolean {
-    return this.calcul.reussie;
-  }
-
-  get bonneReponseMontree(): boolean {
-    return this.calcul.bonneReponseMontree;
+    return new QuestionDeBoite(item, calculDeLaBoite(item, tireur, niveau));
   }
 
   enCours(): BoiteEnCours {
-    const { mode, jeNeSaisPasPropose, reponseATaper } = this.calcul.enCours();
-    return { deroulement: deroulementDeLaBoite(this.item), mode, jeNeSaisPasPropose, reponseATaper };
+    return { deroulement: deroulementDeLaBoite(this.item), ...this.modeEnCours() };
   }
 
   ouverte(): BoiteOuverte {
@@ -67,26 +35,12 @@ export class QuestionDeBoite implements QuestionPosee {
       ouverture: ouvertureDeLaBoite(this.item),
     };
   }
+}
 
-  tirage(): string[] {
-    return this.calcul.tirage();
-  }
-
-  reponses(): ReponseDonnee[] {
-    return this.calcul.reponses();
-  }
-
-  aideApresErreur(): string | undefined {
-    return this.calcul.aideApresErreur();
-  }
-
-  repondre(reponse: ReponseParChoix | ReponseEnNombre): ResultatDeReponse {
-    return this.calcul.repondre(reponse);
-  }
-
-  direJeNeSaisPas(): AideDonnee {
-    return this.calcul.direJeNeSaisPas();
-  }
+function calculDeLaBoite(item: ItemDeBoite, tireur: Tireur, niveau: Niveau) {
+  const operation = { q: calculSansResultat(item), r: item.reponse, aide: aideDeLaBoite(item) };
+  const identite = { type: "boite", cle: CleDeQuestion.de("boite", operation.q) } as const;
+  return calculAuNiveau(operation, identite, tireur, niveau);
 }
 
 function calculSansResultat({ ecriture }: ItemDeBoite): string {

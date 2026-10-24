@@ -1,5 +1,6 @@
 import type {
   Exercice,
+  ExerciceBarres,
   ExerciceBoite,
   ExerciceCalcul,
   FormeConjuguee,
@@ -16,6 +17,7 @@ import { ModeDeReponse } from "./mode-de-reponse.ts";
 import { MotAEcrire } from "./mot-a-ecrire.ts";
 import type { CorrectionDuMot } from "./mot-a-ecrire.ts";
 import { type BoiteEnCours, type BoiteOuverte, QuestionDeBoite } from "./question-de-boite.ts";
+import { QuestionDeProbleme, type SchemaEnCours, type SchemaResolu } from "./question-de-probleme.ts";
 import { type CalculEnCours, QuestionDeCalcul } from "./question-de-calcul.ts";
 import { QuestionDeDictee } from "./question-de-dictee.ts";
 import { QuestionJouee, questionsJoueesAvec } from "./question-jouee.ts";
@@ -57,6 +59,7 @@ export class ExerciceJoue {
   private derniereQuestionDeDicteeCorrigee: QuestionDeDictee | undefined;
   private aideDeLErreurDeCalcul: string | undefined;
   private derniereBoiteOuverte: BoiteOuverte | undefined;
+  private dernierSchemaResolu: SchemaResolu | undefined;
 
   constructor(
     readonly position: number,
@@ -89,6 +92,15 @@ export class ExerciceJoue {
   boiteEnCours(): BoiteEnCours | undefined {
     const question = this.questionPoseeEnCours();
     return question instanceof QuestionDeBoite ? question.enCours() : undefined;
+  }
+
+  schemaEnCours(): SchemaEnCours | undefined {
+    const question = this.questionPoseeEnCours();
+    return question instanceof QuestionDeProbleme ? question.enCours() : undefined;
+  }
+
+  schemaApresLaDerniereReponse(): SchemaResolu | undefined {
+    return this.dernierSchemaResolu;
   }
 
   boiteApresLaDerniereReponse(): BoiteOuverte | undefined {
@@ -218,10 +230,14 @@ export class ExerciceJoue {
     if (!question) throw new PasDeQuestionEnCours();
     const resultat = question.repondre(reponse);
     this.dernierResultatDuTrou = resultat;
-    const aUneAideDeCalcul = question instanceof QuestionDeCalcul || question instanceof QuestionDeBoite;
+    const aUneAideDeCalcul = question instanceof QuestionDeCalcul || question instanceof QuestionDeBoite ||
+      question instanceof QuestionDeProbleme;
     this.aideDeLErreurDeCalcul = aUneAideDeCalcul && resultat === "fausse" ? question.aideApresErreur() : undefined;
     this.derniereBoiteOuverte = question instanceof QuestionDeBoite && resultat === "juste"
       ? question.ouverte()
+      : undefined;
+    this.dernierSchemaResolu = question instanceof QuestionDeProbleme && resultat === "juste"
+      ? question.resolu()
       : undefined;
     if (resultat === "juste") this.reussies++;
     return resultat;
@@ -331,6 +347,8 @@ function contenuDe(exercice: Exercice, tireur: Tireur, niveau: Niveau): Contenu 
       return contenuDeCalcul(exercice, tireur, niveau);
     case "boite":
       return { questionsPosees: questionsDeBoite(exercice, tireur, niveau) };
+    case "barres":
+      return { questionsPosees: questionsDeProbleme(exercice, tireur, niveau) };
     case "fluence":
       return { chronometre: ExerciceChronometre.pour(exercice, tireur) };
     case "addition":
@@ -357,4 +375,8 @@ function questionsDeCalcul(operations: readonly Operation[], tireur: Tireur, niv
 
 function questionsDeBoite(exercice: ExerciceBoite, tireur: Tireur, niveau: Niveau): QuestionDeBoite[] {
   return exercice.items.map((item) => QuestionDeBoite.pour(item, tireur, niveau));
+}
+
+function questionsDeProbleme(exercice: ExerciceBarres, tireur: Tireur, niveau: Niveau): QuestionDeProbleme[] {
+  return exercice.items.map((probleme) => QuestionDeProbleme.pour(probleme, tireur, niveau));
 }

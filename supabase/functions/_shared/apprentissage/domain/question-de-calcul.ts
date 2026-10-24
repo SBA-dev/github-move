@@ -19,7 +19,7 @@ export type CalculEnCours = Readonly<{
   reponseATaper?: string;
 }>;
 
-export type Identite = Readonly<{ type: "calcul" | "colonne" | "boite"; cle: CleDeQuestion }>;
+export type Identite = Readonly<{ type: "calcul" | "colonne" | "boite" | "barres"; cle: CleDeQuestion }>;
 
 function identiteDuCalcul(operation: Operation): Identite {
   return { type: "calcul", cle: CleDeQuestion.de("calcul", operation.q) };
