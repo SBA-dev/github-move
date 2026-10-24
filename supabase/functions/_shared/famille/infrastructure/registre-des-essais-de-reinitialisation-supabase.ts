@@ -8,6 +8,7 @@ import { EssaisDeReinitialisation } from "../domain/essais-de-reinitialisation.t
 
 const TABLE = "essais_de_reinitialisation";
 const CODE_POSTGRES_DE_DOUBLON = "23505";
+const VERSION_D_UNE_LIGNE_INSEREE = 1;
 
 export type LigneDEssais = {
   adresse: string;
@@ -50,7 +51,10 @@ export class RegistreDesEssaisDeReinitialisationSupabase implements RegistreDesE
     const { data, error } = await this.client.from(TABLE).select("*").eq("adresse", cle)
       .maybeSingle<LigneDEssais>();
     if (error) throw new Error("Lecture des essais de réinitialisation impossible.");
-    if (data === null) return EssaisDeReinitialisation.nouveaux(adresse);
+    if (data === null) {
+      this.versionsLues.delete(cle);
+      return EssaisDeReinitialisation.nouveaux(adresse);
+    }
     this.versionsLues.set(cle, data.version);
     return essaisDepuisLaLigne(data);
   }
@@ -62,30 +66,35 @@ export class RegistreDesEssaisDeReinitialisationSupabase implements RegistreDesE
   }
 
   private async effacer(essais: EssaisDeReinitialisation): Promise<void> {
-    const { error } = await this.client.from(TABLE).delete().eq("adresse", cleDeLAdresse(essais.adresse));
+    const cle = cleDeLAdresse(essais.adresse);
+    const { error } = await this.client.from(TABLE).delete().eq("adresse", cle);
     if (error) throw new Error("Effacement des essais de réinitialisation impossible.");
+    this.versionsLues.delete(cle);
   }
 
   private async ecrire(essais: EssaisDeReinitialisation): Promise<void> {
     const cle = cleDeLAdresse(essais.adresse);
     const versionLue = this.versionsLues.get(cle);
-    const ecrit = versionLue === undefined ? await this.inserer(essais) : await this.mettreAJour(essais, versionLue);
-    if (!ecrit) throw new EssaisDeReinitialisationModifiesEnMemeTemps();
+    const versionEcrite = versionLue === undefined
+      ? await this.inserer(essais)
+      : await this.mettreAJour(essais, versionLue);
+    if (versionEcrite === undefined) throw new EssaisDeReinitialisationModifiesEnMemeTemps();
+    this.versionsLues.set(cle, versionEcrite);
   }
 
-  private async inserer(essais: EssaisDeReinitialisation): Promise<boolean> {
+  private async inserer(essais: EssaisDeReinitialisation): Promise<number | undefined> {
     const { error } = await this.client.from(TABLE).insert(colonnesDesEssais(essais));
-    if (error?.code === CODE_POSTGRES_DE_DOUBLON) return false;
+    if (error?.code === CODE_POSTGRES_DE_DOUBLON) return undefined;
     if (error) throw new Error("Enregistrement des essais de réinitialisation impossible.");
-    return true;
+    return VERSION_D_UNE_LIGNE_INSEREE;
   }
 
-  private async mettreAJour(essais: EssaisDeReinitialisation, versionLue: number): Promise<boolean> {
+  private async mettreAJour(essais: EssaisDeReinitialisation, versionLue: number): Promise<number | undefined> {
     const { data, error } = await this.client.from(TABLE)
       .update({ ...colonnesDesEssais(essais), version: versionLue + 1 })
       .eq("adresse", cleDeLAdresse(essais.adresse)).eq("version", versionLue).select("adresse");
     if (error) throw new Error("Enregistrement des essais de réinitialisation impossible.");
-    return data.length === 1;
+    return data?.length === 1 ? versionLue + 1 : undefined;
   }
 
   private async effacerLesEssaisOublies(): Promise<void> {
