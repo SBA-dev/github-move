@@ -1,12 +1,12 @@
 # language: fr
 @issue-25 @wip
-Fonctionnalité: Parcours par matière et verrous
+Fonctionnalité: Parcours par matière
   En tant qu'enfant
   Je veux voir le parcours de chaque matière de ma classe, leçon après leçon, avec la prochaine leçon mise en avant
   Afin d'apprendre dans l'ordre conseillé sans me perdre
 
   Aucune leçon du parcours n'est verrouillée (réponse 25.1) : toutes s'ouvrent, la prochaine leçon est seulement
-  mise en avant. Le titre de la fonctionnalité et le nom du fichier attendent la question N5.
+  mise en avant.
 
   Pour ces scénarios, la bibliothèque servie au navigateur est remplacée par la bibliothèque de test du parcours
   (identifiants préfixés « e2e-25- », leçons servies dans le désordre, chacune faite d'un exercice bulles de deux
@@ -22,7 +22,7 @@ Fonctionnalité: Parcours par matière et verrous
   Dans les tableaux, l'état d'une leçon du parcours se lit ainsi : « réussie, n étoiles » (étoiles gagnées),
   « à toi » (prochaine leçon, « À toi ! »), « à découvrir » (leçon non réussie qui n'est pas la prochaine leçon).
   Paul et Marie sont les deux parents rattachés au profil enfant de Léa ; Claire n'y est pas rattachée.
-  Un commentaire « Question Nn » renvoie aux questions ouvertes de docs/stories/25/acceptance.md.
+  Un commentaire « Réponse Nn » renvoie aux décisions de docs/stories/25/acceptance.md.
 
   Contexte:
     Étant donné que Paul est connecté sur la tablette
@@ -52,8 +52,7 @@ Fonctionnalité: Parcours par matière et verrous
       Quand Léa ouvre son parcours
       Alors aucun onglet « Sciences » n'est proposé
 
-    # Question N7
-    @a-valider
+    # Réponse N7
     Scénario: Une matière qui n'a que des leçons réussies d'une classe au-dessus n'a pas d'onglet
       Étant donné que Léa a un profil enfant préparé de niveau CE2 dans l'univers « Animaux de la forêt »
       Et que Léa a pour meilleures étoiles :
@@ -114,8 +113,7 @@ Fonctionnalité: Parcours par matière et verrous
         | 3     | Les mots contraires  | à découvrir        |
         | 4     | Le pluriel des noms  | à découvrir        |
 
-    # Question N8
-    @a-valider
+    # Réponse N8
     Scénario: Une leçon réussie plus loin dans le parcours ne déplace pas la prochaine leçon
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a pour meilleures étoiles :
@@ -176,8 +174,7 @@ Fonctionnalité: Parcours par matière et verrous
         | au toucher  |
         | au clavier  |
 
-    # Questions N1 et N9
-    @a-valider
+    # Réponses N1 et N9
     Scénario: Une leçon déjà réussie dans une classe au-dessus s'ouvre depuis le parcours
       Étant donné que Léa a un profil enfant préparé de niveau CE2 dans l'univers « Animaux de la forêt »
       Et que Léa a pour meilleures étoiles :
@@ -241,8 +238,7 @@ Fonctionnalité: Parcours par matière et verrous
       Alors le parcours montre « Le son in » réussie avec 2 étoiles
       Et « L'ordre alphabétique » est la prochaine leçon
 
-    # Question N1
-    @a-valider
+    # Réponse N1
     Scénario: Redescendue en CE1, l'enfant retrouve à part ses leçons de CE2 réussies, et seulement elles
       Étant donné que Léa a un profil enfant préparé de niveau CE2 dans l'univers « Animaux de la forêt »
       Et que Léa a pour meilleures étoiles :
@@ -276,8 +272,7 @@ Fonctionnalité: Parcours par matière et verrous
       Alors la fin de la séance annonce « Ensuite : Les mots contraires »
       Et la leçon suivante ouvre la page de la leçon « Les mots contraires »
 
-    # Question N4
-    @a-valider
+    # Réponse N4
     Scénario: Quand toutes les leçons d'après sont réussies, la leçon suivante est la leçon juste après
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a pour meilleures étoiles :
@@ -296,8 +291,7 @@ Fonctionnalité: Parcours par matière et verrous
       Alors la fin de la séance propose « Accueil » et « Rejouer »
       Mais aucune leçon suivante n'est proposée
 
-    # Question N10
-    @a-valider
+    # Réponse N10
     Scénario: Après une leçon réussie d'une classe au-dessus, aucune leçon suivante n'est proposée
       Étant donné que Léa a un profil enfant préparé de niveau CE2 dans l'univers « Animaux de la forêt »
       Et que Léa a pour meilleures étoiles :
@@ -332,8 +326,7 @@ Fonctionnalité: Parcours par matière et verrous
         | Les mots contraires : à découvrir        |
         | Le pluriel des noms : à découvrir        |
 
-    # Question N1
-    @a-valider
+    # Réponse N1
     Scénario: Un lecteur d'écran lit le niveau d'une leçon réussie d'une classe au-dessus
       Étant donné que Léa a un profil enfant préparé de niveau CE2 dans l'univers « Animaux de la forêt »
       Et que Léa a pour meilleures étoiles :

@@ -115,7 +115,7 @@ Fonctionnalité: Étoiles et fin de la séance
       Alors la fin de la séance propose « Leçon suivante », « Accueil » et « Rejouer »
       Et le focus est sur « Accueil »
 
-    Scénario: La leçon suivante est la leçon d'ordre suivant de la même matière et du même niveau
+    Scénario: La leçon suivante est la première leçon d'après non réussie de la même matière et du même niveau
       Étant donné que Léa joue la séance complète de la leçon « Les sons de test »
       Quand Léa réussit la dernière question de la séance
       Alors la fin de la séance annonce « Ensuite : La suite de test »
