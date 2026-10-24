@@ -1,3 +1,5 @@
+import type { NomDeRegle } from "./regles-du-mot-de-passe.ts";
+
 export class AdresseEmailInvalide extends Error {
   constructor() {
     super("Cette adresse e-mail n'est pas valide.");
@@ -86,5 +88,19 @@ export class LangueDuParentInconnue extends Error {
   constructor(readonly valeur: string) {
     super(`Cette langue du parent est inconnue : « ${valeur} ».`);
     this.name = "LangueDuParentInconnue";
+  }
+}
+
+export class MotDePasseNonConforme extends Error {
+  constructor(readonly reglesManquantes: NomDeRegle[], libellesManquants: string[]) {
+    super(`Il manque : ${libellesManquants.join(", ")}.`);
+    this.name = "MotDePasseNonConforme";
+  }
+}
+
+export class MotDePasseTropLong extends Error {
+  constructor(longueurMaximale: number) {
+    super(`${longueurMaximale} caractères au plus.`);
+    this.name = "MotDePasseTropLong";
   }
 }

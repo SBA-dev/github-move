@@ -12,6 +12,8 @@ export {
   CodeDeConnexionMalForme,
   LangueDuParentInconnue,
   LienDeConnexionMalForme,
+  MotDePasseNonConforme,
+  MotDePasseTropLong,
   ParentNonRattache,
   PrenomObligatoire,
   ProfilEnfantIdVide,
@@ -22,6 +24,7 @@ export {
 export { LienDeConnexion } from "./lien-de-connexion.ts";
 export type { Hasard } from "./hasard.ts";
 export { OuvrirLaConnexionAvecLeCode } from "./ouvrir-la-connexion-avec-le-code.ts";
+export { MotDePasseDuParent } from "./mot-de-passe-du-parent.ts";
 export { ParentId } from "./parent-id.ts";
 export { Prenom } from "./prenom.ts";
 export { ProfilEnfantId } from "./profil-enfant-id.ts";
