@@ -1,6 +1,6 @@
 # Feuille de route
 
-Mise à jour : 2026-10-23. On la met à jour à la fin de chaque session de travail.
+Mise à jour : 2026-10-24. On la met à jour à la fin de chaque session de travail.
 
 ## Où en est le projet
 
@@ -37,6 +37,8 @@ L'application fonctionne et est publiée comme artifact claude.ai. Elle comprend
 ## Prochaines étapes
 
 > **En cours** : #16, #17, #11, #12, #23, #24 livrées (PR #53 à #57, #59). #18 (classer, ordre, trous) livrée sur `claude/nice-mendel-cp9syg`, en PR. #14 reportée par le PO ; #58 (retrait de la page de démonstration, avec le scénario PWA #8 qui l'ouvre encore) à faire. Suite proposée : #19 à #22, puis le lot 4 (parcours).
+
+> **Nouvelle organisation (décision 0017)** : les stories se livrent maintenant en parallèle, une équipe par story, avec `/graphe`. Graphe des dépendances, chemin critique de la beta et vague 1 proposée (#20, #25, #19) dans `docs/graphe/stories.md`, avec 7 questions pour le PO.
 
 > **Chantier en cours : la réécriture complète en React + Supabase.** Plan, lots et décisions de démarrage dans `docs/reecriture.md`.
 
