@@ -38,7 +38,9 @@ Deno.test("le parcours de français d'un enfant de CE1 ne contient que les leço
   );
 });
 
-const quatreLecons = ["fr-ce1-a", "fr-ce1-b", "fr-ce1-c", "fr-ce1-d"].map((id, index) => lecon(id, "francais", "CE1", index + 1));
+const quatreLecons = ["fr-ce1-a", "fr-ce1-b", "fr-ce1-c", "fr-ce1-d"].map((id, index) =>
+  lecon(id, "francais", "CE1", index + 1)
+);
 
 function etatsDuParcours(meilleuresEtoiles: Map<string, Etoiles>) {
   const parcours = parcoursDeLaMatiere(
@@ -62,7 +64,9 @@ Deno.test("dans un parcours, les leçons réussies gardent leurs étoiles, la pr
 Deno.test("sans progression, la première leçon du parcours est la prochaine et les autres sont à découvrir", () => {
   const etats = etatsDuParcours(new Map());
 
-  assertEquals(etats, [{ genre: "prochaine" }, { genre: "aDecouvrir" }, { genre: "aDecouvrir" }, { genre: "aDecouvrir" }]);
+  assertEquals(etats, [{ genre: "prochaine" }, { genre: "aDecouvrir" }, { genre: "aDecouvrir" }, {
+    genre: "aDecouvrir",
+  }]);
 });
 
 Deno.test("quand toutes les leçons du parcours sont réussies, aucune n'est la prochaine leçon", () => {
