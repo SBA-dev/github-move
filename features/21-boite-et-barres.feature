@@ -1,5 +1,5 @@
 # language: fr
-@issue-21 @wip
+@issue-21
 Fonctionnalité: Boîte à jetons et schéma en barres
   En tant qu'enfant
   Je veux prévoir combien de jetons sont cachés dans une boîte, et résoudre un problème à l'aide d'un schéma en barres
