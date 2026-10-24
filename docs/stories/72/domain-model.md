@@ -165,6 +165,8 @@ Ordre imposé dans `ReinitialiserLeMotDePasse` : le **blocage est vérifié avan
 | `PrenomsDesEnfantsRattaches` | `application/ports/` | `duParent(parentId) → Prenom[]` : seulement les prénoms, rien d'autre du profil (minimisation) | lecture des rattachements et des prénoms avec `service_role`, filtrée **par le `ParentId`** trouvé à l'étape 3 |
 | `MotsDePasseDesParents` | `application/ports/` | `changer(parentId, motDePasse)` | API d'administration de Supabase Auth (`updateUserById`) |
 
+Contrat de l'Edge Function `inscrire-le-parent` (corps `{ adresse, motDePasse }`) : 2xx = parent créé ; **409 = `AdresseDejaUtilisee`** (traduit en erreur métier par l'adaptateur du navigateur) ; **422 = adresse ou règles du mot de passe non respectées** ; toute autre erreur est relancée telle quelle.
+
 Pourquoi un port de lecture des prénoms plutôt que `ProfilsEnfants.duParent` : l'appelant n'est pas connecté (pas de JWT, donc pas de RLS), et le cas d'usage n'a besoin que des prénoms. Charger les agrégats `ProfilEnfant` entiers (niveau, réglages, univers) avec `service_role` lirait plus que nécessaire.
 
 ### Erreurs métier (dans `domain/erreurs.ts`)

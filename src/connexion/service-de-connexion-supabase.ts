@@ -1,5 +1,6 @@
-import { AuthApiError } from "@supabase/supabase-js";
+import { AuthApiError, FunctionsHttpError } from "@supabase/supabase-js";
 import {
+  AdresseDejaUtilisee,
   type AdresseEmail,
   AdresseOuMotDePasseIncorrect,
   type CodeDeConnexion,
@@ -17,6 +18,14 @@ export class EnvoiDuLienImpossible extends Error {
 }
 
 export class ServiceDeConnexionSupabase implements ServiceDeConnexion {
+  async inscrire(adresse: AdresseEmail, motDePasse: string): Promise<void> {
+    const { error } = await clientSupabase().functions.invoke("inscrire-le-parent", {
+      body: { adresse: adresse.valeur, motDePasse },
+    });
+    if (error instanceof FunctionsHttpError && error.context.status === 409) throw new AdresseDejaUtilisee();
+    if (error) throw error;
+  }
+
   async envoyerLienEtCodeDeConnexion(adresse: AdresseEmail): Promise<void> {
     const { error } = await clientSupabase().auth.signInWithOtp({
       email: adresse.valeur,

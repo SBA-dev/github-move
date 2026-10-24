@@ -128,3 +128,17 @@ export class TropDEssaisDeReinitialisation extends Error {
     this.name = "TropDEssaisDeReinitialisation";
   }
 }
+
+export class ConfirmationDuMotDePasseDifferente extends Error {
+  constructor() {
+    super("Les deux mots de passe ne sont pas pareils.");
+    this.name = "ConfirmationDuMotDePasseDifferente";
+  }
+}
+
+export class AdresseDejaUtilisee extends Error {
+  constructor() {
+    super("Cette adresse a déjà un compte. Connecte-toi.");
+    this.name = "AdresseDejaUtilisee";
+  }
+}
