@@ -45,3 +45,8 @@ En attente d'une réponse : leçons réussies d'une classe au-dessus (N1, N7, N9
   même source (n°2) ; matière choisie remise à zéro au changement d'enfant et à la déconnexion (n°4) ; `catch` vide
   de la fin de séance (n°5) ; prédicat « du parcours » dupliqué (n°7) ; « sans verrou » dans un nom de test (n°9) ;
   nom de fichier `useEntreesDuParcours.ts` (n°10).
+- 14:45 UTC : E2E cycle 1 (`e2e-tester`) : **34/34 scénarios non `@a-valider` verts** (68 cas, tablette et
+  téléphone) ; non-régression #24 : 56/56. Contournement Chromium 1194 → 1243 par liens dans le scratchpad (annonce du
+  responsable). Note : un commit de journal (`git commit -a`, 9c38fe7) a embarqué par erreur une partie des steps en
+  cours d'écriture ; complétée par le commit des steps, sans effet. Point d'attention : hors ligne, « Chargement du
+  parcours… » dure environ 8 s (la lecture des étoiles échoue lentement) ; à corriger avec les non bloquants.
