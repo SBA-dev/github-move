@@ -101,6 +101,14 @@ Le glossaire garde l'orthographe française.
 | Matière du parcours | Matière qui a au moins une leçon du niveau de l'enfant ; elle a un onglet dans « Mon parcours ». Une matière qui n'a que des leçons réussies d'une classe au-dessus n'en est pas une (#25, réponses 25.4, N7). | Apprentissage | onglet (dans le code), discipline |
 | Place | Numéro d'une leçon dans son parcours (1, 2, …), tiré de l'`ordre`. Interface : « Leçon 1 » (#25, réponse 25.8). Ne pas confondre avec la place d'une étiquette dans un exercice `ordre` (Placement). | Apprentissage | rang, étape, numéro d'étape |
 | Leçon réussie d'une classe au-dessus | Leçon réussie d'un niveau supérieur à celui de l'enfant (enfant redescendu de classe). Elle reste visible avec son niveau et ses étoiles, à part, sous les leçons du parcours de sa matière (« Déjà réussies en CE2 ») ; elle s'ouvre pour être rejouée, ne compte pas dans le parcours, n'est jamais la prochaine leçon et n'a pas de leçon suivante (#25, réponses 25.12, N1, N9, N10). | Apprentissage | leçon perdue, leçon cachée |
+| Proposition du test de départ (à valider) | Moment où le personnage guide propose le test de départ, avec « Oui, on y va ! » et « Plus tard » : après la création d'un profil, depuis l'accueil de l'enfant tant que le test de départ n'est pas fait, ou depuis l'espace parent (#27). | Apprentissage | invitation (réservé à Famille), test (seul) |
+| Réserve du test de départ (à valider) | Leçons qui peuvent fournir une question du test de départ : bibliothèque seulement, `francais` et `maths`, niveau inférieur ou égal à celui de l'enfant (#27). | Apprentissage | banque de questions, pool |
+| Question du test de départ (à valider) | Une seule question tirée au hasard d'un exercice d'une leçon de la réserve, et rattachée à cette leçon ; au plus 12, une par leçon, de la plus facile à la plus difficile (#27). | Apprentissage | item, épreuve |
+| Question juste, question fausse (au test de départ) (à valider) | Juste : question du test de départ réussie sans aucune erreur. Fausse : au moins une réponse fausse ou « Je ne sais pas » ; l'enfant donne quand même la bonne réponse avant de continuer (#27). Ne pas confondre avec une **Réponse** juste ou fausse. | Apprentissage | question ratée, échec |
+| Arrêt du test de départ (à valider) | Fin anticipée du test de départ après 3 questions fausses de suite ; une question juste remet le compte à zéro. Un test de départ arrêté est fait (#27). | Apprentissage | abandon, élimination |
+| Leçon réussie au test de départ (à valider) | Leçon que le test de départ compte comme réussie, sans étoile : elle fait avancer le parcours, ne donne ni étoile, ni badge, ni compétence acquise (proposition #27, questions 27.1 et 27.2). Une séance terminée ensuite lui donne ses étoiles. | Apprentissage | acquise au test, validée, cochée (dans le code) |
+| Résultat du test de départ (à valider) | Pour un enfant : la date du dernier test de départ fait et les leçons réussies au test de départ. Il ne modifie jamais une étoile (#27). | Apprentissage | progression, score, note |
+| Test de départ fait (à valider) | Le profil a fini au moins un test de départ, par toutes ses questions ou par un arrêt ; quitter en cours ne compte pas (#27). | Apprentissage | test passé, testFait (dans le code) |
 
 ## Motivation
 
@@ -249,3 +257,8 @@ Lot 4 (#25, `docs/stories/25/domain-model.md`) : le PO a répondu **aucun verrou
 Restent, sans blocage pour #25 :
 - « Parcours libre » : réglage sans effet ; retiré de l'interface et du glossaire par une story de Famille dédiée, créée par le responsable (réponse N2). La ligne reste ici jusque-là ;
 - « Leçon des classes d'avant » : définition à revoir avec #26 (renommée « Leçons des classes d'avant », réponse N2).
+
+Lot 4 (#27, `docs/stories/27/domain-model.md`), en attente du PO :
+- « Leçon acquise » dit « ou validée par le test de départ » : en conflit avec la proposition « Leçon réussie au test de départ » (question 27.1). La ligne n'est pas modifiée avant la réponse ;
+- « Test de départ » dit « 3 erreurs de suite » : la règle porte sur 3 **questions fausses** de suite (question 27.13) ;
+- « Objectif du jour » (« Joue 2 leçons aujourd'hui ») : employé par l'issue #27, absent du glossaire ; terme de Motivation, à définir par #29 ou #30.
