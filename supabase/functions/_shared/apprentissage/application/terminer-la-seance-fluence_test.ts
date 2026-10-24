@@ -75,6 +75,16 @@ Deno.test("battre son record de fluence annonce NouveauRecordDeFluence", async (
   assertEquals((await records.lire("profil-lea", "ma-cp-doubles-fluence", exercice))?.meilleurScore, 2);
 });
 
+Deno.test("un renvoi d'une séance déjà enregistrée ne réannonce pas NouveauRecordDeFluence", async () => {
+  const { records, terminer } = monde();
+  await terminer.executer({ parent: "parent-paul", seance: envoiDUneFluence("seance-1", 3) });
+
+  const faits = await terminer.executer({ parent: "parent-paul", seance: envoiDUneFluence("seance-1", 3) });
+
+  assertEquals(faits, []);
+  assertEquals((await records.lire("profil-lea", "ma-cp-doubles-fluence", exercice))?.meilleurScore, 3);
+});
+
 Deno.test("un renvoi après un échec d'écriture du record enregistre le record", async () => {
   const { records, terminer } = monde();
   records.echouerALaProchaineEcriture();
