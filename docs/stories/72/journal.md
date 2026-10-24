@@ -17,3 +17,4 @@
 - Comportement 2/9 (MotDePasseDuParent) : RED 4ed7719, GREEN f7f231d. 968 verts.
 - Comportement 3/9 (Prenom.correspondA) : RED 43c0a7b, GREEN 8e5768e, refactor c3e4eac (MotDePasseNonConforme). 974 verts.
 - Comportement 4/9 (EssaisDeReinitialisation) : RED d5915ee, GREEN 259b193, refactor 9cf3ab5. 987 verts.
+- Comportement 5/9 (SeConnecterAvecLeMotDePasse) : RED e2040a2, GREEN 4ed2d5b. 995 verts. Dette : l'adaptateur traduit tout statut < 500 (dont 429) en identifiants incorrects, à cibler au câblage.
