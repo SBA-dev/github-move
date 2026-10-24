@@ -20,10 +20,6 @@ function touchesProposees(question: QuestionDeDictee): { lettre: string; propose
   );
 }
 
-function aUneLettreEcrite(question: QuestionDeDictee): boolean {
-  return question.cases().some((une) => une.genre === "aEcrire" && une.lettre !== undefined);
-}
-
 export function ClavierDeLaDictee({ question, toucheQuiBrille, onTaper, onEffacer }: Props) {
   return (
     <div className="clavier-de-dictee" role="group" aria-label="Clavier" data-testid="clavier-de-dictee" data-genre={question.clavier().genre}>
@@ -49,7 +45,7 @@ export function ClavierDeLaDictee({ question, toucheQuiBrille, onTaper, onEfface
         type="button"
         className="touche touche-effacer"
         data-testid="effacer"
-        aria-disabled={aUneLettreEcrite(question) ? undefined : true}
+        aria-disabled={question.peutEffacer() ? undefined : true}
         onClick={onEffacer}
       >
         Effacer

@@ -437,6 +437,7 @@ button.secondaire:hover { background: #fdf3ea; }
 }
 .case-a-ecrire { border: 3px solid var(--accent-fonce); border-radius: 12px; background: #fff; }
 .case-a-ecrire[data-etat="vide"] { border-style: dashed; background: rgba(255, 255, 255, .8); }
+.case-a-ecrire[data-etat="montree"] { border-style: double; border-width: 5px; background: #fff3c4; font-style: italic; }
 .case-a-ecrire[data-etat="fausse"] { border-color: #b00020; background: #ffe3e6; color: #b00020; text-decoration: underline wavy; }
 .clavier-de-dictee { display: grid; justify-items: center; gap: 6px; max-width: 100%; }
 .rangee-de-touches { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; max-width: 100%; }

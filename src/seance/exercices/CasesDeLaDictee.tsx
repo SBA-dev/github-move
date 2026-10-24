@@ -6,19 +6,25 @@ type Props = {
   readonly lettresFausses: CorrectionDuMot | undefined;
 };
 
-type LettreDeLaCase = { readonly lettre: string | undefined; readonly fausse: boolean };
+type LettreDeLaCase = { readonly lettre: string | undefined; readonly fausse: boolean; readonly montree: boolean };
 
-function lettreDeLaCase(rang: number, ecrite: string | undefined, correction: CorrectionDuMot | undefined): LettreDeLaCase {
-  if (correction === undefined) return { lettre: ecrite, fausse: false };
+function lettreDeLaCase(rang: number, ecrite: string | undefined, montree: boolean, correction: CorrectionDuMot | undefined): LettreDeLaCase {
+  if (correction === undefined) return { lettre: ecrite, fausse: false, montree };
   const gardee = correction.lettresGardees[rang];
-  if (gardee !== undefined) return { lettre: gardee, fausse: false };
+  if (gardee !== undefined) return { lettre: gardee, fausse: false, montree: false };
   const fausse = correction.lettresFausses.find(({ position }) => position === rang);
-  return { lettre: fausse?.lettre, fausse: fausse !== undefined };
+  return { lettre: fausse?.lettre, fausse: fausse !== undefined, montree: false };
 }
 
-function descriptionDeLaCase(rang: number, { lettre, fausse }: LettreDeLaCase): string {
+function etatDeLaCase({ lettre, fausse, montree }: LettreDeLaCase): string {
+  if (fausse) return "fausse";
+  if (montree) return "montree";
+  return lettre === undefined ? "vide" : "ecrite";
+}
+
+function descriptionDeLaCase(rang: number, { lettre, fausse, montree }: LettreDeLaCase): string {
   if (lettre === undefined) return `Case ${rang + 1}, vide`;
-  return `Case ${rang + 1} : ${lettre}${fausse ? ", fausse" : ""}`;
+  return `Case ${rang + 1} : ${lettre}${fausse ? ", fausse" : ""}${montree ? ", lettre montrée par le personnage guide" : ""}`;
 }
 
 /** Une case par lettre à écrire ; espaces, apostrophes, tirets et points sont déjà écrits. Le mot n'apparaît que lettre après lettre. */
@@ -31,13 +37,13 @@ export function CasesDeLaDictee({ question, lettresFausses }: Props) {
           return <li key={position} className="caractere-deja-ecrit" data-testid="caractere-deja-ecrit">{une.caractere}</li>;
         }
         const rangDeLaCase = rang++;
-        const contenu = lettreDeLaCase(rangDeLaCase, une.lettre, lettresFausses);
+        const contenu = lettreDeLaCase(rangDeLaCase, une.lettre, une.montree === true, lettresFausses);
         return (
           <li
             key={position}
             className="case-a-ecrire"
             data-testid="case-a-ecrire"
-            data-etat={contenu.fausse ? "fausse" : contenu.lettre === undefined ? "vide" : "ecrite"}
+            data-etat={etatDeLaCase(contenu)}
             aria-label={descriptionDeLaCase(rangDeLaCase, contenu)}
           >
             {contenu.lettre}
