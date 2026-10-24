@@ -1,6 +1,6 @@
 import type { Exercice, Segment } from "../../catalogue/domain/index.ts";
 import { type EtiquettePosee, EtiquettesAPlacer } from "./etiquettes-a-placer.ts";
-import { PasDeQuestionEnCours } from "./erreurs.ts";
+import { PasDeQuestionEnCours, ReponseIncompatible } from "./erreurs.ts";
 import { nombreDeQuestions } from "./nombre-de-questions.ts";
 import { type QuestionJouee, questionsJoueesAvec } from "./question-jouee.ts";
 import type { ParoleDue } from "./parole-due.ts";
@@ -89,6 +89,7 @@ export class ExerciceJoue {
 
   repondre(reponse: Reponse): ResultatDeReponse {
     if (reponse.genre === "placement") return this.placer(reponse);
+    if (reponse.genre === "nombre") throw new ReponseIncompatible(reponse.genre);
     const question = this.questionEnCours();
     if (!question) throw new PasDeQuestionEnCours();
     const resultat = question.repondre(reponse);

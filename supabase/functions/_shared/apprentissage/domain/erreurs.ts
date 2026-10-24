@@ -144,3 +144,10 @@ export class ParentNonRattache extends Error {
     this.name = "ParentNonRattache";
   }
 }
+
+export class ReponseIncompatible extends Error {
+  constructor(readonly genre: string) {
+    super(`Une réponse de genre « ${genre} » ne convient pas à cette question.`);
+    this.name = "ReponseIncompatible";
+  }
+}
