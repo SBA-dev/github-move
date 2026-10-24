@@ -49,3 +49,19 @@
 - 20:40 · Intégration de `main` `f07fc23` (#22, après #25) : 4 conflits. `implementer` a résolu `catalogue/domain/exercice.ts` (chemin générique devenu vide retiré, `ExerciceGenerique` n'est plus exporté), `apprentissage/domain/index.ts` (les deux ajouts gardés) et `src/seance/useDeroulementDeSeance.ts` (poésie et question illustrée ; « Réécouter » : présentation illustrée, puis question à choix, puis poésie). `test-writer` a résolu `exercice_test.ts` (identique à `main`) et retiré une constante inutilisée. Merge `2588bd5` : 1323 tests unitaires, lint, fmt, `tsc`, build, `deno check` verts. Revue du delta lancée ; VERROU base demandé pour redéployer `terminer-la-seance` depuis `2588bd5` (domaine serveur touché par la résolution).
 - 20:44 · VERROU base accordé (20:42) ; `terminer-la-seance` redéployée depuis `2588bd5` (`main` `f07fc23` + #21), `deno check` OK ; LIBÈRE base. Non-régression complète relancée contre ce code (avec #22 et #25).
 - 20:46 · Revue du delta d'intégration de `main` (`c651272`, `2588bd5`) : **APPROUVÉ**.
+- 21:18 · Non-régression complète sur le code fusionné (`main` `f07fc23` + #21, `terminer-la-seance` redéployée), tablette + téléphone, 3 workers, 34,6 min : **1063/1064**, puis 1064/1064 (seul KO : #10 `@wip` tablette, tirage du contrôle parental, vert relancé avec `--workers=1`). #21 62/62, #22 42/42, #25 82/82. `@issue-13` et `@issue-14` (`@wip`) hors de la liste (étapes manquantes).
+- 21:20 · PR #77 passée en « prête », `PRÊTE À MERGER` écrit sur #21. J'attends l'autorisation de merge (annonce du responsable) et le verrou `merge`.
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Durée, du lancement à « prête à merger » | ≈ 3 h 35 (17:45 → 21:20 UTC) |
+| Temps passé à attendre | PO : ≈ 25 min (escalade du scénario « 15 », 18:48 → 19:14 ; #21.1 non bloquante) ; verrou `base` : 0 (accordé 2 fois en moins d'une minute) ; `main` : ≈ 35 min (attente du merge de #22 pour n'intégrer qu'une fois, mise à profit par l'intégration de #25) |
+| Cycles TDD | 15 cycles RED/GREEN (Catalogue 6, Apprentissage 8, review 1) ; 2 adaptations de types de tests existants ; 1 contestation de l'implementer (fixture 20 → 24) ; 4 commits de caractérisation (règles déjà codées, rejeu générique) |
+| Cycles de review À CORRIGER | 2 : revue intermédiaire Catalogue (1 bloquant : test manquant) ; review de l'étape 4 (2 bloquants front : « Réécouter », couvercle animé). Revues APPROUVÉ : intermédiaires Catalogue et Apprentissage, étape 4 (cycle 2), delta d'intégration de `main` |
+| Cycles E2E KO | 1 : scénario validé irréalisable (« 15 » jamais proposé au CP) → escalade, décision #21.2 du PO. Mise au point 253/254 ; non-régressions 938/940 (sur l'ancien `main`, 2 instables) et 1064/1064 (après rerun d'un instable) |
+| Intégrations de `main` | 2 : #25 (sans conflit) ; #22 (4 conflits : `exercice.ts`, son test, `apprentissage/domain/index.ts`, `useDeroulementDeSeance.ts`) |
+| Déploiements de `terminer-la-seance` | 2 (`db3d1a7`, `2588bd5`), sous verrou `base` |
+| Incidents d'environnement | Chromium 1194 absent (contournement par liens) ; serveur de dev Vite tombé pendant une non-régression (run relancé une fois, serveur lancé à part) ; instabilités connues sous 3 workers (#10 `@wip`, `ECONNRESET` du serveur de dev) |
+| Régression découverte sur `main` après le merge | — (à compléter après le merge) |
