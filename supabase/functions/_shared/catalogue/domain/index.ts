@@ -40,3 +40,4 @@ export type {
   PassagePourLesAdultes,
 } from "./page-de-la-lecon.ts";
 export { enonceDeLaQuestion } from "./enonce-de-la-question.ts";
+export { cleDeLaFluence } from "./exercices/fluence.ts";
