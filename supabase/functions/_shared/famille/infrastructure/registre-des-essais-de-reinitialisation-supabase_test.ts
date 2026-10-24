@@ -1,5 +1,8 @@
 import { assert, assertEquals, assertRejects } from "@std/assert";
-import { EssaisDeReinitialisationModifiesEnMemeTemps } from "../application/ports/registre-des-essais-de-reinitialisation.ts";
+import {
+  EssaisDeReinitialisationModifiesEnMemeTemps,
+  RegistreDesEssaisIndisponible,
+} from "../application/ports/registre-des-essais-de-reinitialisation.ts";
 import { AdresseEmail } from "../domain/adresse-email.ts";
 import { EssaisDeReinitialisation } from "../domain/essais-de-reinitialisation.ts";
 import { fauxClientSupabase } from "../test_utils/faux-client-supabase.ts";
@@ -113,14 +116,40 @@ Deno.test("un doublon à l'insertion signale une modification en même temps", a
   await assertRejects(() => registre.enregistrer(essais, maintenant), EssaisDeReinitialisationModifiesEnMemeTemps);
 });
 
-Deno.test("une autre erreur à l'insertion n'est pas prise pour un doublon", async () => {
+Deno.test("une autre erreur à l'insertion rend le registre indisponible, sans être prise pour un doublon", async () => {
   const { client } = fauxClientSupabase([{ data: null }, { error: { code: "XX000" } }]);
   const registre = new RegistreDesEssaisDeReinitialisationSupabase(client);
   const essais = await registre.pourAdresse(adresse);
   essais.enregistrerUnEssaiRate(maintenant);
 
-  const erreur = await assertRejects(() => registre.enregistrer(essais, maintenant));
-  assert(!(erreur instanceof EssaisDeReinitialisationModifiesEnMemeTemps));
+  await assertRejects(() => registre.enregistrer(essais, maintenant), RegistreDesEssaisIndisponible);
+});
+
+Deno.test("une erreur à la mise à jour rend le registre indisponible", async () => {
+  const { client } = fauxClientSupabase([{ data: ligne }, { error: { code: "XX000" } }]);
+  const registre = new RegistreDesEssaisDeReinitialisationSupabase(client);
+  const essais = await registre.pourAdresse(adresse);
+  essais.enregistrerUnEssaiRate(maintenant);
+
+  await assertRejects(() => registre.enregistrer(essais, maintenant), RegistreDesEssaisIndisponible);
+});
+
+Deno.test("une erreur à l'effacement rend le registre indisponible", async () => {
+  const { client } = fauxClientSupabase([{ data: ligne }, { error: { code: "XX000" } }]);
+  const registre = new RegistreDesEssaisDeReinitialisationSupabase(client);
+  const essais = await registre.pourAdresse(adresse);
+  essais.enregistrerUneReussite();
+
+  await assertRejects(() => registre.enregistrer(essais, maintenant), RegistreDesEssaisIndisponible);
+});
+
+Deno.test("une erreur à l'effacement des essais oubliés rend le registre indisponible", async () => {
+  const { client } = fauxClientSupabase([{ data: null }, {}, { error: { code: "XX000" } }]);
+  const registre = new RegistreDesEssaisDeReinitialisationSupabase(client);
+  const essais = await registre.pourAdresse(adresse);
+  essais.enregistrerUnEssaiRate(maintenant);
+
+  await assertRejects(() => registre.enregistrer(essais, maintenant), RegistreDesEssaisIndisponible);
 });
 
 Deno.test("des essais oubliés sont effacés au lieu d'être écrits", async () => {
