@@ -122,7 +122,7 @@ En attente d'une réponse : leçons réussies d'une classe au-dessus (N1, N7, N9
 
 | Mesure | Valeur |
 |---|---|
-| Durée, du lancement au `PRÊTE À MERGER` | environ 8 h 30 (12:40 → ~21:10 UTC) ; le merge s'ajoute après l'autorisation |
+| Durée, du lancement au merge | environ 7 h 25 (12:40 → ~20:05 UTC) ; `PRÊTE À MERGER` à ~19:25, attente de l'autorisation 35 min |
 | Attente du PO | cadrage : 12:42 → 13:07 (25 min, deux réponses contradictoires à faire trancher) ; questions N1-N11 : 13:32 → 14:21 (49 min, TDD indépendant avancé pendant ce temps) |
 | Attente d'un verrou | aucune (pas de migration, pas de redéploiement, pas d'`@envoi-email`) |
 | Attente de `main` | aucune bloquante ; un run E2E interrompu par `MAIN A BOUGÉ` (avant la décision 0020) |
@@ -142,3 +142,7 @@ En attente d'une réponse : leçons réussies d'une classe au-dessus (N1, N7, N9
   de 28-35 s pour un timeout de 30 s. Au retour du réseau, la page de la leçon relit bien le serveur. Réserve notée :
   une page de la leçon déjà affichée hors ligne ne se relit pas seule à l'événement `online` (non couvert, hors #25).
   `PRÊTE À MERGER`.
+- 20:05 UTC : **merge autorisé** (annonce [Responsable] de 20:00 sur #64, phrase du PO « Merge #25 #22 ») ; verrou
+  `merge` détenu. `main` = 6aedff7 inchangé depuis la non-régression complète (pas de relance, décision 0020).
+  Vérifications rapides sur 64a87de : 1159 tests Deno, lint, fmt, tsc, build verts ; `scripts/` inchangé ; pas de CI.
+  Review APPROUVÉ, aucun code de production depuis. Merge de la PR #74 par merge commit.
