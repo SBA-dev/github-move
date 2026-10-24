@@ -101,6 +101,8 @@ Règles de la base partagée :
 
 ### 5. Le merge, fait par l'équipe
 
+**Ta PR reste en brouillon jusqu'au bout.** À l'étape 6 de `feature.md`, ouvre-la en brouillon (`gh pr create --draft`, ou `mcp__github__create_pull_request` avec `draft: true`). Un brouillon ne peut pas être mergé par erreur pendant que tu pousses encore. Passe-la en « prête » (`gh pr ready`, ou `mcp__github__update_pull_request` avec `draft: false`) seulement quand tu écris `PRÊTE À MERGER`, et ne pousse plus rien ensuite sauf l'intégration de `main` sous verrou `merge`.
+
 Tu merges **toi-même**, à quatre conditions :
 1. une annonce `[Responsable]` dit que l'humain autorise ce merge (pour cette PR, ou pour toute la vague) ;
 2. le tableau de l'issue de coordination t'inscrit comme détentrice du verrou `merge` ;
@@ -119,6 +121,8 @@ Alors :
 5. `LIBÈRE merge`, et `LIBÈRE base` si tu l'avais.
 
 Si une condition manque, tu ne merges pas : `LIBÈRE merge` et explique pourquoi.
+
+**Après `MERGÉE`, tu ne pousses plus jamais sur cette branche.** Un push recréerait la branche en silence, sans PR, et ce travail n'arriverait jamais dans `main`. Si une correction est nécessaire après le merge, écris-la en `ESCALADE` : le responsable lance une nouvelle équipe sur une nouvelle branche.
 
 ### 6. Fin de mission
 

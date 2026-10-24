@@ -179,6 +179,7 @@ Sur « OK » : label `graphe:dev`.
 ### ⛔ VALIDATION HUMAINE n°2 : autorisation de merge
 
 Une équipe merge **elle-même** sa PR, mais seulement avec l'autorisation de l'humain. Présente : lien de la PR, scénarios couverts, verdict de review, E2E, dette restante.
+Rappelle à l'humain de **donner l'autorisation plutôt que de cliquer « Merge » lui-même** : l'équipe doit avoir intégré `main`, tout repassé au vert et fini de pousser avant le merge.
 L'humain répond pour une PR (« merge #19 »), pour plusieurs (« merge #19 #20 ») ou pour toute la vague (« merge autorisé pour la vague »). Inscris l'autorisation dans le tableau, avec la date et la phrase de l'humain, et annonce-la aux équipes concernées.
 
 ## Étape 4 : File de merge
@@ -192,7 +193,11 @@ Les merges passent **un par un**, par le verrou `merge` :
    - libères le verrou `merge` ;
    - annonces `[Responsable] MAIN A BOUGÉ : #<n> mergée` et envoies `RELIS` à **toutes les équipes encore en cours** ;
    - recalcules les stories prêtes et reviens à l'Étape 1 pour combler la place libérée (nouveau plan présenté à l'humain, sauf s'il a autorisé l'enchaînement automatique).
-4. Vérifie que la branche de la story a disparu (`git ls-remote origin refs/heads/feature/<n>-<slug>` ne renvoie rien) : GitHub la supprime au merge grâce au réglage « Automatically delete head branches ». Aucune session ne peut la supprimer elle-même (le proxy git refuse les suppressions). Si elle est encore là, le réglage est désactivé : rappelle à l'humain de l'activer et donne-lui le lien de la branche. Puis relève la consommation finale de la session (`get_session`, champ `usage`) et archive-la (`archive_session`).
+4. Vérifie que la branche de la story a disparu (`git ls-remote origin refs/heads/feature/<n>-<slug>` ne renvoie rien) : GitHub la supprime au merge grâce au réglage « Automatically delete head branches ». Aucune session ne peut la supprimer elle-même (le proxy git refuse les suppressions). Si elle est encore là, regarde ce qu'elle contient de plus que `main` (`git fetch origin && git log origin/main..origin/feature/<n>-<slug>`) :
+   - **rien** : le réglage est désactivé ; rappelle à l'humain de l'activer et donne-lui le lien de la branche ;
+   - **des commits** : ils ont été poussés après le merge et ne sont pas dans `main`. Ouvre une PR depuis cette branche (`mcp__github__create_pull_request`), signale-le à l'humain et traite-la comme une story à merger.
+
+   Puis relève la consommation finale de la session (`get_session`, champ `usage`) et archive-la (`archive_session`).
 
 ## Étape 5 : Fin de vague
 
