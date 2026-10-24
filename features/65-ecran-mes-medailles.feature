@@ -147,6 +147,7 @@ Fonctionnalité: L'écran « Mes médailles » réunit ce que l'enfant a gagné
 
     Plan du Scénario: Dans l'univers « <univers> », <personnage guide> accueille l'enfant sur l'écran
       Étant donné que Léa a choisi l'univers <clé>
+      Et que Léa a un record de 12 à la fluence « Calcul rapide : tables de 3 et 4 »
       Quand Léa ouvre « Mes médailles » depuis son accueil
       Alors elle voit <personnage guide> dans le paysage de l'univers « <univers> »
       Et Léa entend <personnage guide> dire « Regarde tout ce que tu as gagné ! »

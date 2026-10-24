@@ -51,6 +51,7 @@ Droits d'accès (`@acces`) : les records sont lus sous la RLS existante de `reco
 ## Scénario ajouté après la revue
 
 - **Règle 4 : « Revenir à l'accueil pendant la lecture coupe la voix : la suite de l'écran n'est pas lue sur l'accueil ».** La revue a trouvé qu'un retour pendant la lecture de « tout lire à voix haute » faisait lire la suite de l'écran (section, pastilles) sur l'accueil de l'enfant. Ce n'est pas une nouvelle règle métier : c'est la règle 4 et le comportement général de la voix de #7 (« Quitter l'écran coupe la voix »). Pas de nouvelle question au PO.
+- **Correction (règle 4, plan « Dans l'univers « <univers> », <personnage guide> accueille l'enfant sur l'écran »)** : ajout de l'étape « Léa a un record de 12 à la fluence « Calcul rapide : tables de 3 et 4 » », car « Regarde tout ce que tu as gagné ! » n'est dite que s'il y a quelque chose à montrer (décisions 65.2, 65.7, 65.17) ; règle inchangée.
 
 ## Hors périmètre
 
