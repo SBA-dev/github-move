@@ -50,7 +50,7 @@ Deno.test("un exercice « calcul » sans opérations ni générateur tire cinq a
   const exercice = exerciceCalcul(sansOperations);
 
   assertEquals(exercice.operations, undefined);
-  assertEquals(exercice.generateur, { op: "+", a: [1, 10], b: [1, 10], combien: 5 });
+  assertEquals(exercice.generateur, { op: "+", a: [1, 10], b: [1, 10], cible: 10, combien: 5 });
 });
 
 Deno.test("une opération mal formée rend la leçon mal formée", () => {
