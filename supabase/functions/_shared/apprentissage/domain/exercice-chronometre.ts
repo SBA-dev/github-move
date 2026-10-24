@@ -114,7 +114,7 @@ export class ExerciceChronometre implements QuestionSuivie {
   }
 
   private tirerUneOperation(): Operation {
-    const [operation] = this.tireur.operations({ ...this.exercice.generateur, combien: 1 });
+    const [operation] = this.tireur.operationsDeFluence({ ...this.exercice.generateur, combien: 1 });
     if (operation === undefined) throw new TirageManquant();
     this.operationsTirees.push(operation);
     return operation;

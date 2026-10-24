@@ -13,6 +13,8 @@ export interface Tireur {
   trou(motAttendu: string, candidats: readonly string[]): ChoixProposes;
   etiquettesMelangees(etiquettes: readonly string[]): string[];
   operations(generateur: GenerateurComplet): readonly Operation[];
+  /** Les calculs d'une fluence : la facilité de l'adaptation de la difficulté ne s'y applique pas. */
+  operationsDeFluence(generateur: GenerateurComplet): readonly Operation[];
   additions(generateur: GenerateurDAdditions): readonly (readonly number[])[];
 }
 
@@ -23,6 +25,7 @@ export function tireurAuHasard(hasard: Hasard, facilite = 1): Tireur {
       ChoixProposes.proposer([motAttendu, ...motsEnPlus(candidats, hasard)], motAttendu, hasard),
     etiquettesMelangees: (etiquettes) => melanger(etiquettes, hasard),
     operations: (generateur) => tirerLesOperations(generateur, hasard, facilite),
+    operationsDeFluence: (generateur) => tirerLesOperations(generateur, hasard),
     additions: (generateur) => tirerLesAdditions(generateur, hasard),
   };
 }
@@ -46,6 +49,7 @@ export function tireurSelonLesTirages(tirages: Iterator<readonly string[]>): Tir
       return [...tirage];
     },
     operations: (generateur) => relireLesOperations(generateur, prochainTirage()),
+    operationsDeFluence: (generateur) => relireLesOperations(generateur, prochainTirage()),
     additions: (generateur) => relireLesAdditions(generateur, prochainTirage()),
   };
 }

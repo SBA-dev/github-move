@@ -5,7 +5,7 @@ import { lireLaFaciliteDuProfil } from "./lecture-de-l-historique-de-calcul-supa
 const FACILITE_NORMALE = 1;
 
 function tireDesOperations(lecon: Lecon): boolean {
-  return lecon.exercices.some(({ type }) => type === "calcul" || type === "fluence" || type === "addition");
+  return lecon.exercices.some(({ type }) => type === "calcul" || type === "addition");
 }
 
 /** La facilité des nombres tirés ; `undefined` tant que l'historique de l'enfant se lit. Seule une leçon de calcul le lit. */
