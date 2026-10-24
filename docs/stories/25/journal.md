@@ -133,3 +133,7 @@ En attente d'une réponse : leçons réussies d'une classe au-dessus (N1, N7, N9
 | Régression découverte sur `main` après le merge | à relever après le merge |
 | Cycles TDD | 10 comportements du parcours + 1 (fusion des étoiles) : 9 RED/GREEN, aucun désaccord test-writer/implementer |
 | Escalades | aucune `ESCALADE` ; 2 rounds de questions au PO (16 puis 11) |
+- 22:00 UTC : non-régression complète (décision 0020) : 950/956 au premier passage. #25 entièrement vert. 3 KO de #10
+  (tirage de la question non fixé, `@wip`, verts à la relance). 3 KO de #24 sur tablette (timeouts, dont
+  « meilleures-etoiles » introuvable au retour du réseau) : touchent des fichiers modifiés par #25, diagnostic en cours
+  (traces, relance isolée, comparaison avec `main`) avant `PRÊTE À MERGER`.
