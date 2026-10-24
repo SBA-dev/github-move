@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import type { Seance } from "@domain/apprentissage";
-import { leconSuivante, pageDeLaLecon } from "@domain/catalogue";
+import { leconSuivanteDansLeParcours, type Seance } from "@domain/apprentissage";
+import { Niveau, pageDeLaLecon } from "@domain/catalogue";
 import { chargerToutesLesLecons } from "../bibliotheque.ts";
 import { EtoilesDessinees } from "./EtoilesDessinees.tsx";
 import { Etincelles } from "./Etincelles.tsx";
+import { lireLesMeilleuresEtoilesDuProfil } from "./meilleures-etoiles-du-profil.ts";
 import { etoilesSurTrois } from "./texte-des-etoiles.ts";
 import { useSauvegardeDeLaSeance } from "./useSauvegardeDeLaSeance.ts";
 
@@ -11,6 +12,8 @@ type Suivante = { readonly id: string; readonly titre: string };
 
 type Props = {
   readonly seance: Seance;
+  /** Niveau du profil en cours : la leçon suivante se cherche dans le parcours de ce niveau. */
+  readonly niveau: string;
   /** Fait dire au personnage guide ses paroles de fin. */
   readonly onDireLaFin: (etoiles: number) => void;
   readonly onRejouer: () => void;
@@ -18,27 +21,29 @@ type Props = {
   readonly onAccueil: () => void;
 };
 
-function useLeconSuivante(leconId: string): Suivante | undefined {
+function useLeconSuivante(seance: Seance, niveau: string): Suivante | undefined {
   const [suivante, setSuivante] = useState<Suivante | undefined>();
+  const { enfant, lecon: leconId } = seance;
   useEffect(() => {
     let annule = false;
-    void chargerToutesLesLecons().then((lecons) => {
-      const courante = lecons.find((lecon) => lecon.id === leconId);
-      const prochaine = courante && leconSuivante(lecons, courante);
+    void Promise.all([chargerToutesLesLecons(), lireLesMeilleuresEtoilesDuProfil(enfant)]).then(([lecons, meilleuresEtoiles]) => {
+      const entrees = { lecons, niveau: Niveau.de(niveau), meilleuresEtoiles };
+      const idSuivante = leconSuivanteDansLeParcours(entrees, leconId);
+      const prochaine = lecons.find((lecon) => lecon.id === idSuivante);
       if (!annule && prochaine) setSuivante({ id: prochaine.id, titre: pageDeLaLecon(prochaine).titre });
-    });
+    }).catch(() => undefined);
     return () => {
       annule = true;
     };
-  }, [leconId]);
+  }, [enfant, leconId, niveau]);
   return suivante;
 }
 
 /** La fin de la séance : étoiles gagnées (dessinées et écrites), paroles du personnage guide, et la suite à choisir. */
-export function EcranDeFin({ seance, onDireLaFin, onRejouer, onLeconSuivante, onAccueil }: Props) {
+export function EcranDeFin({ seance, niveau, onDireLaFin, onRejouer, onLeconSuivante, onAccueil }: Props) {
   const etoiles = seance.etoiles().nombre;
   const message = useSauvegardeDeLaSeance(seance);
-  const suivante = useLeconSuivante(seance.lecon);
+  const suivante = useLeconSuivante(seance, niveau);
   const accueil = useRef<HTMLButtonElement>(null);
   const dite = useRef(false);
   useEffect(() => {

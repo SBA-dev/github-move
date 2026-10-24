@@ -22,6 +22,8 @@ type Props = {
   /** Identifiant du profil enfant en cours : la séance lui appartient. */
   readonly profilId: string;
   readonly prenom: string;
+  /** Niveau du profil en cours : la fin de séance propose la leçon suivante de son parcours. */
+  readonly niveau: string;
   readonly univers: Univers;
   readonly voix: Voix;
   /** Réglage du profil en cours : les choix proposés sont lus après la question. */
@@ -90,7 +92,7 @@ function estAChoix(exercice: Exercice): boolean {
 type PropsEnCours = Omit<PropsDUnePartie, "exercice" | "profilId"> & { readonly seance: Seance };
 
 function SeanceEnCours(
-  { seance, lecon, prenom, univers, voix, toutLireAVoixHaute, onRetour, onRejouer, onLeconSuivante, onAccueil }: PropsEnCours,
+  { seance, lecon, prenom, niveau, univers, voix, toutLireAVoixHaute, onRetour, onRejouer, onLeconSuivante, onAccueil }: PropsEnCours,
 ) {
   const deroulement = useDeroulementDeSeance(seance, lecon, voix, univers.personnageGuide, toutLireAVoixHaute, prenom);
   const { commencer, abandonner } = deroulement;
@@ -153,6 +155,7 @@ function SeanceEnCours(
       {finie && (
         <EcranDeFin
           seance={seance}
+          niveau={niveau}
           onDireLaFin={deroulement.direLaFin}
           onRejouer={onRejouer}
           onLeconSuivante={onLeconSuivante}
