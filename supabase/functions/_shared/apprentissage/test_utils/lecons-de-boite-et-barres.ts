@@ -25,3 +25,41 @@ export function leconDeBoiteAuCP(): Lecon {
 export function leconDeBoiteAuCE1(): Lecon {
   return leconDeBoiteAuNiveau("ma-ce1-boite", "CE1");
 }
+
+function leconDeBarresAuNiveau(id: string, niveau: "CP" | "CE1"): Lecon {
+  return lireLecon({
+    id,
+    matiere: "maths",
+    niveau,
+    titre: "Les problèmes en barres",
+    ordre: 1,
+    programme,
+    lecon: [],
+    exercices: [{
+      type: "barres",
+      items: [
+        {
+          enonce: "Au marché, Léa achète 4 pommes et 2 poires. Combien de fruits ?",
+          parties: [4, 2],
+          tout: null,
+          phrase: "J'ai {r} pommes.",
+        },
+        {
+          enonce: "Lina a 9 crayons, dont 6 rouges. Combien de bleus ?",
+          parties: [6, null],
+          tout: 9,
+          aide: "On connaît le tout, 9, et une partie, 6. On cherche l'autre partie.",
+        },
+        { type: "parts", enonce: "4 sacs de 5 billes. Combien de billes en tout ?", nb: 4, valeur: 5, total: null },
+      ],
+    }],
+  });
+}
+
+export function leconDeBarresAuCP(): Lecon {
+  return leconDeBarresAuNiveau("ma-cp-barres", "CP");
+}
+
+export function leconDeBarresAuCE1(): Lecon {
+  return leconDeBarresAuNiveau("ma-ce1-barres", "CE1");
+}
