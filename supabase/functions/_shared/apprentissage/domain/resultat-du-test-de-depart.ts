@@ -7,11 +7,17 @@ export type EtatDuResultatDuTestDeDepart = {
   leconsReussies: ReadonlySet<string>;
 };
 
+export type FaitDeTestDeDepart = TestDeDepartTermine & Readonly<{ leconsReussies: ReadonlySet<string> }>;
+
 export class ResultatDuTestDeDepart {
   private constructor(private etat: EtatDuResultatDuTestDeDepart) {}
 
   static premier(fait: TestDeDepartTermine, leconsReussies: ReadonlySet<string>): ResultatDuTestDeDepart {
-    return new ResultatDuTestDeDepart({ enfant: fait.enfant, faitLe: fait.termineeLe, leconsReussies });
+    return new ResultatDuTestDeDepart({
+      enfant: fait.enfant,
+      faitLe: fait.termineeLe,
+      leconsReussies: new Set(leconsReussies),
+    });
   }
 
   static reconstituer(etat: EtatDuResultatDuTestDeDepart): ResultatDuTestDeDepart {
@@ -32,7 +38,7 @@ export class ResultatDuTestDeDepart {
 
   enregistrer(fait: TestDeDepartTermine, leconsReussies: ReadonlySet<string>): void {
     if (fait.enfant !== this.enfant) throw new TestDeDepartDUnAutreEnfant();
-    this.etat.faitLe = fait.termineeLe;
+    if (fait.termineeLe > this.etat.faitLe) this.etat.faitLe = fait.termineeLe;
     this.etat.leconsReussies = new Set([...this.etat.leconsReussies, ...leconsReussies]);
   }
 }
