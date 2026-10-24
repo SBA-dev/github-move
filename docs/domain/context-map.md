@@ -61,6 +61,8 @@ flowchart LR
   Famille -- "contrat de données personnelles (#14)" --> Accompagnement
   Motivation -- "Published Language (CleUnivers, #11)" --> Famille
   Catalogue -- "Published Language (Niveau, #11)" --> Famille
+  Apprentissage -- "lecture des records de fluence (#65)" --> Motivation
+  Catalogue -- "Published Language (Lecon, #65)" --> Motivation
 ```
 
 | Amont | Aval | Type de relation | Mécanisme (événement, appel, ACL) |
@@ -89,6 +91,7 @@ flowchart LR
 | Synthèse vocale du navigateur | Voix | Anti-Corruption Layer (story #7) | Port `VoixDeLAppareil` (voix traduites en nom et langue) et port `LecteurAVoixHaute` (adaptateur `speechSynthesis`, plus tard MP3) |
 | Voix | Apprentissage, Motivation, Accompagnement | Appel (story #7) | Depuis le front, par le port `LecteurAVoixHaute` déclaré dans `voix/domain/` (décision 0007) : lire une consigne, une étape de leçon, une félicitation ou un encouragement. Au lot 3 : le mot à écouter avec la voix anglaise (#17), le mot dicté à vitesse normale ou lente (#19), les vers (#22) ; l'état Muet ou « ne sait pas lire » décide des messages de la dictée et de l'écoute |
 | Catalogue pédagogique, Famille, Apprentissage | Apprentissage (parcours) | Calcul dans le domaine (story #25) | Le parcours n'est pas enregistré : le service de domaine pur `parcoursDeLaMatiere` (`@domain/apprentissage`, navigateur) le calcule à partir des leçons du Catalogue, du niveau du profil en cours (Famille) et des meilleures étoiles du profil, lues par le front sous RLS dans `resultats_des_lecons` (#24, aucune écriture, décisions 0013 et 0016). Aucune leçon n'y est verrouillée (réponse 25.1) : il ne lit pas le réglage parcours libre et n'écoute pas `LeconReussie`. La leçon suivante de fin de séance passe du Catalogue (`leconSuivante`, #24) à ce calcul |
+| Apprentissage, Catalogue pédagogique | Motivation (écran des récompenses de l'enfant) | Lecture seule (story #65, à valider) | L'écran (nom à valider, legacy « Mes trophées ») est calculé par des fonctions pures de `@domain/motivation` (ordre des sections, pastilles de record). Le front lit les records de fluence du **profil en cours** sous RLS dans `records_de_fluence` (#20, aucune écriture, décisions 0013 et 0016 ; pas de migration ni d'Edge Function) et les passe à Motivation sous une forme propre (leçon, clé de l'exercice, meilleur score) : Motivation n'importe pas l'agrégat `RecordDeFluence`. Le libellé vient du Catalogue (`Lecon`, titre de l'exercice de fluence). Motivation n'écrit jamais un record ni une étoile |
 
 Note (#25, réponses 25.1 et N3, 2026-10-24) : **il n'y a plus de verrou**. Dans les tableaux ci-dessus, « parcours et verrous » (ligne Apprentissage des contextes) se lit « parcours » ; le réglage « parcours libre » (ligne Famille → Apprentissage) n'est plus lu par le parcours et sera retiré par une story de Famille (réponse N2) ; `LeconReussie` (ligne des événements internes) ne sert ni au parcours ni à des verrous : le parcours se recalcule à la lecture, sans écouter d'événement. Le parcours lit aussi, dans le Published Language du Catalogue (`@domain/catalogue`), `toutesLesMatieres` (ordre des matières) et `Niveau#estAuDessusDe` (leçons réussies d'une classe au-dessus, réponse N1) ; il remplace `leconSuivante` du Catalogue, retirée.
 
