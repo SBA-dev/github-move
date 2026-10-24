@@ -33,9 +33,9 @@ Branche `feature/58-retirer-la-page-de-demonstration`, partie de `main` `c7cabc0
 - 23:20 UTC — Revue cycle 1 : À CORRIGER. Bloquants dans les steps : (1) le scénario #8 « profil préparé ne fait jouer personne » ne peut pas échouer (ouvre `/`) ; (2) « Léa n'entend rien » prend sa base trop tard (Muet, texte sans rien à dire). Non bloquants : steps assouplis à restreindre au cas sans voix, `estPageDeLEnfant` dupliquée, CSS `.reponses` morte, commentaires périmés, `networkidle`, « accueil de l'enfant » absent du glossaire.
 - 23:06 UTC — RELIS #64 : #65 mergée (`main` = `2173dba`). À intégrer à la fin du cycle en cours (conflit attendu sur navigation.ts / Application.tsx : garder "medailles", retirer "demonstration" ; 65.15 doit rester vert).
 - 23:20 UTC — `main` `2173dba` (#65) intégrée (`0112012`) : conflits navigation.ts / Application.tsx résolus ("medailles" gardé, "demonstration" retiré). tsc, build, deno test 1351 verts. Compatibilité avec #27 vérifiée par un merge local jetable : aucun step à corriger.
-- 23:45 UTC — Corrections de revue (e2e-tester) : bloquants 1 et 2 corrigés, preuve d'échec pour chacun (porte ouverte en dev → #8 rouge ; lecture fautive injectée → 3 scénarios rouges). Téléphone 220/220 (#6, #7, #10, #12, #15, #17, #65, #58), PWA 32/32. Revue cycle 2 (delta).
-- 00:05 UTC — Revue cycle 2 : APPROUVÉ. Après la revue : scénario #8 de la porte de test réécrit (« Léa ouvre Savanturier à l'adresse « /jeu » ») et « Léa commence à jouer » remise à l'identique (plus de détection de la version publiée). PWA 32/32, preuve d'échec en dev refaite, téléphone 113/113 (#6, #12, #65, #58). Commentaire périmé de #65 corrigé.
-- 00:35 UTC — Non-régression complète (head `1cb2350`, `main` `2173dba`) : **673/674** sur tablette et téléphone, 3 workers,
+- 23:15 UTC — Corrections de revue (e2e-tester) : bloquants 1 et 2 corrigés, preuve d'échec pour chacun (porte ouverte en dev → #8 rouge ; lecture fautive injectée → 3 scénarios rouges). Téléphone 220/220 (#6, #7, #10, #12, #15, #17, #65, #58), PWA 32/32. Revue cycle 2 (delta).
+- 23:25 UTC — Revue cycle 2 : APPROUVÉ. Après la revue : scénario #8 de la porte de test réécrit (« Léa ouvre Savanturier à l'adresse « /jeu » ») et « Léa commence à jouer » remise à l'identique (plus de détection de la version publiée). PWA 32/32, preuve d'échec en dev refaite, téléphone 113/113 (#6, #12, #65, #58). Commentaire périmé de #65 corrigé.
+- 23:50 UTC — Non-régression complète (head `1cb2350`, `main` `2173dba`) : **673/674** sur tablette et téléphone, 3 workers,
   20,1 min. Le seul KO est le scénario `@wip` de #10 « Une nouvelle entrée pose une nouvelle question » (téléphone, tirage non
   fixé) : il passe 2/2 relancé seul avec `--workers=1`. PWA 32/32. Aucune régression liée à #58.
 - PR #81 en brouillon, passée en « prête ». `PRÊTE À MERGER` publié.
@@ -44,7 +44,7 @@ Branche `feature/58-retirer-la-page-de-demonstration`, partie de `main` `c7cabc0
 
 | Mesure | Valeur |
 |---|---|
-| Durée | ≈ 3 h 10 (21:27 → 00:37 UTC), du lancement à `PRÊTE À MERGER` |
+| Durée | ≈ 2 h 25 (21:27 → 23:52 UTC), du lancement à `PRÊTE À MERGER` |
 | Temps d'attente | ⛔ n°1 : 13 min (CADRAGE PRÊT 21:43 → OK du PO 21:56). Aucun verrou demandé |
 | Cycles de review | 2 (cycle 1 À CORRIGER : 2 bloquants dans les steps ; cycle 2 APPROUVÉ en delta), puis un ajustement de steps après approbation |
 | Cycles d'E2E | mise au point : 4 passages (steps initiaux, compatibilité #27, corrections de revue, retrait de la détection PWA) ; 1 non-régression complète |
