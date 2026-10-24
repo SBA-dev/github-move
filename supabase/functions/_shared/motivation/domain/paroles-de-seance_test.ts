@@ -3,7 +3,9 @@ import {
   accueillirSurLaPageDeLaLecon,
   annoncerExerciceSuivant,
   inviterAJouerApresLesEtapes,
+  parolesDeFinDeSeance,
 } from "./paroles-de-seance.ts";
+import { universDe } from "./univers.ts";
 import { hasardFixe } from "../test_utils/hasard-fixe.ts";
 
 Deno.test("le personnage guide accueille l'enfant par son prénom sur la page de la leçon", () => {
@@ -55,4 +57,24 @@ Deno.test("l'annonce de l'exercice suivant commence par « Place au jeu » au de
   const texte = annoncerExerciceSuivant("Les maisons des sons", hasardFixe(0.99));
 
   assertEquals(texte, "Place au jeu : Les maisons des sons !");
+});
+
+const noisette = universDe("animaux").personnageGuide;
+
+Deno.test("avec 3 étoiles, le personnage guide dit une de ses expressions puis « Trois étoiles »", () => {
+  const texte = parolesDeFinDeSeance(3, "Léa", noisette, hasardFixe(0.99));
+
+  assertEquals(texte, "Trop fort, ça ! Trois étoiles, Léa ! Tu es incroyable !");
+});
+
+Deno.test("avec 2 étoiles, le personnage guide félicite puis propose de rejouer", () => {
+  const texte = parolesDeFinDeSeance(2, "Léa", noisette, hasardFixe(0.5, 0));
+
+  assertEquals(texte, "Bravo ! Tu gagnes 2 étoiles, Léa. Tu rejoues pour aller chercher les autres ?");
+});
+
+Deno.test("avec 1 étoile, « étoile » reste au singulier", () => {
+  const texte = parolesDeFinDeSeance(1, "Léa", noisette, hasardFixe(0.5, 0.99));
+
+  assertEquals(texte, "Oui, c'est ça ! Tu gagnes 1 étoile, Léa. Tu rejoues pour aller chercher les autres ?");
 });

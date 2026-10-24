@@ -364,3 +364,15 @@ button.secondaire:hover { background: #fdf3ea; }
 .reglage-a-cocher { display: flex; align-items: center; gap: 8px; min-height: 44px; }
 .reglage-a-cocher input { width: 24px; min-height: 24px; height: 24px; margin: 10px; flex: none; accent-color: var(--accent-fonce); }
 .mention-du-reglage { margin: 0 0 8px; font-size: 0.9em; }
+.fin-de-seance { position: relative; display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 100%; }
+.etoiles-dessinees { display: flex; justify-content: center; gap: 8px; }
+.etoiles-dessinees svg { width: 56px; height: 56px; fill: #fff; stroke: var(--accent-fonce); stroke-width: 1.2; stroke-linejoin: round; }
+.etoiles-dessinees svg[data-allumee="true"] { fill: #ffd43b; }
+.etoiles-gagnees { padding: 6px 14px; border-radius: 16px; background: rgba(255, 255, 255, .85); font-size: 1.5rem; font-weight: 700; }
+.actions-de-fin { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 100%; }
+.etincelles { position: absolute; inset: 0; pointer-events: none; }
+.etincelles span { position: absolute; top: 40px; width: 12px; height: 12px; border-radius: 50%; background: #ffd43b; }
+.meilleures-etoiles { display: grid; justify-items: center; gap: 4px; }
+.meilleures-etoiles .etoiles-dessinees svg { width: 36px; height: 36px; }
+.meilleures-etoiles p { padding: 4px 12px; border-radius: 16px; background: rgba(255, 255, 255, .85); font-weight: 700; }
+.fin-de-seance .message-erreur:empty { display: none; }

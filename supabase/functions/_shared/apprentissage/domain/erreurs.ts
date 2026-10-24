@@ -60,3 +60,59 @@ export class JeNeSaisPasDejaDit extends Error {
     this.name = "JeNeSaisPasDejaDit";
   }
 }
+
+export class SeanceNonFinie extends Error {
+  constructor() {
+    super("Cette séance a encore des questions à réussir : elle ne peut pas être terminée.");
+    this.name = "SeanceNonFinie";
+  }
+}
+
+export class SeanceDejaTerminee extends Error {
+  constructor() {
+    super("Cette séance est déjà terminée.");
+    this.name = "SeanceDejaTerminee";
+  }
+}
+
+export class TirageInvalide extends Error {
+  constructor() {
+    super("Ce tirage n'est pas un ordre possible des choix de la question.");
+    this.name = "TirageInvalide";
+  }
+}
+
+export class TirageManquant extends Error {
+  constructor() {
+    super("Il manque le tirage d'une question de la séance.");
+    this.name = "TirageManquant";
+  }
+}
+
+export class TirageEnTrop extends Error {
+  constructor() {
+    super("La séance reçoit plus de tirages que de questions.");
+    this.name = "TirageEnTrop";
+  }
+}
+
+export class SeanceIncoherente extends Error {
+  constructor(override readonly cause: Error) {
+    super(`La séance envoyée est incohérente : ${cause.message}`);
+    this.name = "SeanceIncoherente";
+  }
+}
+
+export class LeconIntrouvable extends Error {
+  constructor(readonly lecon: string) {
+    super(`La leçon ${lecon} est introuvable.`);
+    this.name = "LeconIntrouvable";
+  }
+}
+
+export class ParentNonRattache extends Error {
+  constructor() {
+    super("Ce parent n'est pas rattaché à ce profil.");
+    this.name = "ParentNonRattache";
+  }
+}

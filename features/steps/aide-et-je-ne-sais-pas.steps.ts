@@ -23,7 +23,6 @@ import type { ProfilPrepare } from "./fixtures.ts";
 // Story #23 : aide après une erreur et « Je ne sais pas ».
 // Les mécaniques livrées (choix : bulles, lecture, écoute) se jouent comme un enfant. Celles qui ne sont pas encore
 // livrées échouent clairement (« Étape non implémentée ») et leurs scénarios portent @depend-de-<n>.
-// Le compte des erreurs n'a pas d'écran avant #24 : les scénarios d'étoiles dépendent de la story #24.
 
 const LECON_DES_ANIMAUX = "Dictée : les animaux";
 
@@ -294,10 +293,6 @@ Then(/^Léa voit « ([^«»]+) » dans la bulle de Noisette en mode dys$/, async
   await expect(bulle(page)).toContainText(texte);
   await verifierModeDys(page, [bulle(page)], true);
 });
-
-// --- Étoiles : pas d'écran avant la story #24
-
-Then(/^(?:Léa|Tom) gagne (?:\d+) étoiles?$/, dependDe(24, "étoiles et fin de séance"));
 
 // --- Calcul au clavier de cristaux : story #20
 

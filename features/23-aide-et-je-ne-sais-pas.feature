@@ -146,7 +146,6 @@ Fonctionnalité: Aide et « Je ne sais pas »
 
   Règle: Une réponse fausse coûte une erreur ; « Je ne sais pas » en coûte une, sauf si la question a déjà coûté une erreur
 
-    @depend-de-24
     Scénario: « Je ne sais pas » compte une erreur
       Étant donné que Léa joue une leçon de test d'une seule question à quatre choix
       Et que Léa a dit « Je ne sais pas » à cette question
@@ -154,7 +153,6 @@ Fonctionnalité: Aide et « Je ne sais pas »
       Alors la séance est terminée
       Et Léa gagne 2 étoiles
 
-    @depend-de-24
     Scénario: « Je ne sais pas » après deux erreurs n'ajoute pas d'erreur à la question
       Étant donné que Léa joue une leçon de test de deux questions à quatre choix
       Et qu'à la première question, Léa a fait deux erreurs, puis a dit « Je ne sais pas », puis a donné la bonne réponse
@@ -162,7 +160,7 @@ Fonctionnalité: Aide et « Je ne sais pas »
       Quand Léa donne la bonne réponse à la deuxième question
       Alors Léa gagne 2 étoiles
 
-    @depend-de-20 @depend-de-24
+    @depend-de-20
     Scénario: Après « Je ne sais pas » au clavier de cristaux, une faute de frappe ne coûte pas d'erreur
       Étant donné que Tom joue une leçon de test de niveau CE1 de deux calculs
       Et qu'au premier calcul, Tom a dit « Je ne sais pas », puis a tapé une mauvaise réponse, puis la bonne

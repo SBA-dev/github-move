@@ -16,6 +16,10 @@ export class ExerciceJoue {
     return this.questionsAChoix[this.reussies];
   }
 
+  questionsJouees(): readonly QuestionJouee[] {
+    return this.questionsAChoix;
+  }
+
   questionsRatees(): QuestionJouee[] {
     return this.questionsAChoix.filter((question) => question.erreurs > 0);
   }

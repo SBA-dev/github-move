@@ -20,3 +20,4 @@ Une décision n'est jamais réécrite : si elle change, une nouvelle décision l
 | [0013](0013-ecritures-d-apprentissage-par-edge-function.md) | Écritures d'Apprentissage par Edge Function, séance revalidée par le serveur | Acceptée |
 | [0014](0014-profil-supprime-avec-son-dernier-parent.md) | Un profil enfant est supprimé avec son dernier parent | Acceptée |
 | [0015](0015-decoupage-en-syllabes-dans-voix.md) | Le découpage en syllabes du mode dys est dans le domaine Voix | Acceptée |
+| [0016](0016-ecritures-d-apprentissage-par-le-serveur-seul.md) | Les séances terminées ne sont écrites que par le serveur | Acceptée |

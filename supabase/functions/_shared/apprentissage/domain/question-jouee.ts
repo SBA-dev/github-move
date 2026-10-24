@@ -8,9 +8,9 @@ import {
   questionDeLEcoute,
   type TypeDExerciceAChoix,
 } from "./exercices/phrases-des-exercices-a-choix.ts";
-import { ChoixInconnu, JeNeSaisPasDejaDit, QuestionDejaReussie } from "./erreurs.ts";
+import { ChoixInconnu, JeNeSaisPasDejaDit, QuestionDejaReussie, TirageManquant } from "./erreurs.ts";
 import type { Hasard } from "./hasard.ts";
-import type { Reponse, ResultatDeReponse } from "./reponse.ts";
+import type { Reponse, ReponseDonnee, ResultatDeReponse } from "./reponse.ts";
 
 const ERREURS_AVANT_LA_REDUCTION_A_DEUX = 2;
 
@@ -26,23 +26,27 @@ export class QuestionJouee {
   private nombreDErreurs = 0;
   private estReussie = false;
   private jeNeSaisPasDejaDit = false;
+  private readonly ordreInitialDesChoix: string[];
+  private readonly reponsesDonnees: ReponseDonnee[] = [];
 
   private constructor(
     readonly enonce: string,
     readonly cle: CleDeQuestion,
     private readonly bonneReponse: string,
     private choixProposes: ChoixProposes,
-    private readonly type: TypeDExerciceAChoix,
+    readonly type: TypeDExerciceAChoix,
     private readonly complements: Complements,
-  ) {}
+  ) {
+    this.ordreInitialDesChoix = choixProposes.textes();
+  }
 
   static aChoix(
-    { cle, enonce, choix, bonneReponse, hasard, type, complements = {} }: {
+    { cle, enonce, choix, bonneReponse, proposeur, type, complements = {} }: {
       readonly cle: CleDeQuestion;
       readonly enonce: string;
       readonly choix: readonly string[];
       readonly bonneReponse: string;
-      readonly hasard: Hasard;
+      readonly proposeur: Proposeur;
       readonly type: TypeDExerciceAChoix;
       readonly complements?: Complements;
     },
@@ -51,7 +55,7 @@ export class QuestionJouee {
       enonce,
       cle,
       bonneReponse,
-      ChoixProposes.proposer(choix, bonneReponse, hasard),
+      proposeur(choix, bonneReponse),
       type,
       complements,
     );
@@ -89,9 +93,18 @@ export class QuestionJouee {
     if (this.estReussie) throw new QuestionDejaReussie();
     if (this.jeNeSaisPasDejaDit) throw new JeNeSaisPasDejaDit();
     this.jeNeSaisPasDejaDit = true;
+    this.reponsesDonnees.push({ genre: "jeNeSaisPas" });
     if (this.nombreDErreurs === 0) this.nombreDErreurs = 1;
     this.choixProposes = this.choixProposes.reduireALaBonneReponse();
     return { aide: this.aideDeLaQuestion(), bonneReponse: this.bonneReponse, maniere: "briller" };
+  }
+
+  tirage(): string[] {
+    return [...this.ordreInitialDesChoix];
+  }
+
+  reponses(): ReponseDonnee[] {
+    return [...this.reponsesDonnees];
   }
 
   get bonneReponseMontree(): boolean {
@@ -117,6 +130,7 @@ export class QuestionJouee {
   repondre(reponse: Reponse): ResultatDeReponse {
     if (this.estReussie) throw new QuestionDejaReussie();
     if (!this.choixProposes.textes().includes(reponse.texte)) throw new ChoixInconnu(reponse.texte);
+    this.reponsesDonnees.push(reponse);
     if (this.choixProposes.ecartes().includes(reponse.texte)) return "dejaEcartee";
     if (reponse.texte === this.bonneReponse) {
       this.estReussie = true;
@@ -131,7 +145,25 @@ export class QuestionJouee {
   }
 }
 
+export type Proposeur = (choix: readonly string[], bonneReponse: string) => ChoixProposes;
+
+export function proposerAuHasard(hasard: Hasard): Proposeur {
+  return (choix, bonneReponse) => ChoixProposes.proposer(choix, bonneReponse, hasard);
+}
+
+export function proposerSelonLesTirages(tirages: Iterator<readonly string[]>): Proposeur {
+  return (choix, bonneReponse) => {
+    const suivant = tirages.next();
+    if (suivant.done) throw new TirageManquant();
+    return ChoixProposes.depuisTirage(choix, bonneReponse, suivant.value);
+  };
+}
+
 export function questionsJoueesDe(exercice: Exercice, hasard: Hasard): QuestionJouee[] {
+  return questionsJoueesAvec(exercice, proposerAuHasard(hasard));
+}
+
+export function questionsJoueesAvec(exercice: Exercice, proposeur: Proposeur): QuestionJouee[] {
   switch (exercice.type) {
     case "bulles":
     case "lecture": {
@@ -142,7 +174,7 @@ export function questionsJoueesDe(exercice: Exercice, hasard: Hasard): QuestionJ
           enonce: q.question,
           choix: q.choix,
           bonneReponse: q.reponse,
-          hasard,
+          proposeur,
           type,
           complements: { aide: q.aide },
         })
@@ -155,7 +187,7 @@ export function questionsJoueesDe(exercice: Exercice, hasard: Hasard): QuestionJ
           enonce: questionDeLEcoute(item),
           choix: item.choix,
           bonneReponse: item.reponse,
-          hasard,
+          proposeur,
           type: "ecoute",
           complements: { aide: item.aide, motAEcouter: item.dire, langue: exercice.langue },
         })
