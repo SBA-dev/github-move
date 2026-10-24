@@ -6,8 +6,8 @@ Fonctionnalité: Test de départ
   Afin que mon parcours commence là où j'en suis, sans refaire ce que je sais déjà
 
   Le test de départ n'est pas une séance : il ne donne pas d'étoiles. Il rend des leçons réussies au test de départ,
-  qui font avancer le parcours (aucun verrou, décisions de #25). Les scénarios marqués @a-valider suivent la
-  recommandation d'une question ouverte de docs/stories/27/acceptance.md (commentaire « Question 27.n »).
+  qui font avancer le parcours (aucun verrou, décisions de #25). Les commentaires « Réponse 27.n » renvoient
+  aux décisions du PO dans docs/stories/27/acceptance.md.
 
   Pour ces scénarios, la bibliothèque servie au navigateur est remplacée par la bibliothèque de test du test de départ
   (identifiants préfixés « e2e-27- », leçons servies dans le désordre). Chaque leçon a une étape de leçon et un seul
@@ -35,8 +35,7 @@ Fonctionnalité: Test de départ
 
   Règle: Le test de départ est proposé après la création d'un profil enfant, puis depuis l'accueil de l'enfant tant qu'il n'est pas fait
 
-    # Questions 27.16 et 27.19
-    @a-valider
+    # Réponses 27.16 et 27.19
     Scénario: Juste après la création de son profil, le personnage guide propose le test de départ à l'enfant
       Étant donné que Paul est dans l'espace parent
       Quand Paul crée le profil enfant "Léa" de niveau CE1 dans l'univers « Animaux de la forêt »
@@ -47,8 +46,7 @@ Fonctionnalité: Test de départ
         """
       Et la proposition du test de départ propose « Oui, on y va ! » et « Plus tard »
 
-    # Questions 27.16 et 27.19
-    @a-valider
+    # Réponses 27.16 et 27.19
     Scénario: Le test de départ est aussi proposé après l'ajout d'un deuxième enfant
       Étant donné que Paul a créé le profil enfant "Léa" de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Paul est dans l'espace parent
@@ -67,8 +65,7 @@ Fonctionnalité: Test de départ
       Et la question de « Les voyelles » s'affiche
       Mais Léa n'entend aucune étape de leçon
 
-    # Question 27.10
-    @a-valider
+    # Réponse 27.10
     Plan du Scénario: Sans faire le test de départ, l'enfant revient à son accueil, qui le propose encore (<cas>)
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que la proposition du test de départ est affichée pour Léa
@@ -81,16 +78,14 @@ Fonctionnalité: Test de départ
         | « Plus tard » | Léa remet le test de départ à plus tard |
         | retour       | Léa revient en arrière                  |
 
-    # Question 27.10
-    @a-valider
+    # Réponse 27.10
     Scénario: Tant que le test de départ n'est pas fait, l'accueil de l'enfant le propose
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Quand Léa choisit son profil enfant dans « Qui joue ? »
       Alors Léa voit son accueil
       Et l'accueil de Léa propose « Mon test de départ »
 
-    # Question 27.10
-    @a-valider
+    # Réponse 27.10
     Scénario: Depuis l'accueil de l'enfant, « Mon test de départ » ouvre la proposition
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a choisi son profil enfant dans « Qui joue ? »
@@ -98,8 +93,7 @@ Fonctionnalité: Test de départ
       Alors la proposition du test de départ s'affiche pour Léa
       Et la proposition du test de départ propose « Oui, on y va ! » et « Plus tard »
 
-    # Question 27.10
-    @a-valider
+    # Réponse 27.10
     Plan du Scénario: Un test de départ fait n'est plus proposé sur l'accueil de l'enfant (<cas>)
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a fait le test de départ, <déroulé>
@@ -111,8 +105,7 @@ Fonctionnalité: Test de départ
         | allé jusqu'au bout          | en répondant juste à toutes les questions                                              |
         | arrêté après 3 questions    | avec des questions fausses à « Les voyelles », « Compter jusqu'à 10 » et « Les syllabes » |
 
-    # Question 27.3
-    @a-valider
+    # Réponse 27.3
     Scénario: Un enfant qui change de classe ne se voit pas proposer de nouveau le test de départ
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a déjà fait le test de départ
@@ -120,8 +113,7 @@ Fonctionnalité: Test de départ
       Quand Léa choisit son profil enfant dans « Qui joue ? »
       Alors l'accueil de Léa ne propose pas « Mon test de départ »
 
-    # Question 27.5
-    @a-valider
+    # Réponse 27.5
     Scénario: Sans bibliothèque chargée, le test de départ n'est pas proposé, sans message d'erreur
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que la bibliothèque ne peut pas être chargée
@@ -151,8 +143,7 @@ Fonctionnalité: Test de départ
         | Les tables de 2         | maths    | CE1    |
       Mais aucune question de « Le futur » ni de « Les cinq sens »
 
-    # Question 27.6
-    @a-valider
+    # Réponse 27.6
     Scénario: Une leçon sans question possible est sautée, et le test de départ d'un enfant de CP pose moins de 12 questions
       Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
       Et que Léa a commencé le test de départ
@@ -192,8 +183,7 @@ Fonctionnalité: Test de départ
       Alors Noisette dit un encouragement, suivi de « Essaie une autre bulle. »
       Et la question de « Les voyelles » reste posée
 
-    # Question 27.2
-    @a-valider
+    # Réponse 27.2
     Plan du Scénario: Une question répondue <manière> est <résultat>, ce qui fixe la prochaine leçon
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a fait le test de départ, en répondant à la question de « L'ordre alphabétique » <manière>, et juste aux autres
@@ -226,16 +216,14 @@ Fonctionnalité: Test de départ
       Quand Léa se trompe à la question de « Les doubles », puis donne la bonne réponse
       Alors la question de « Le son on » s'affiche
 
-    # Question 27.13
-    @a-valider
+    # Réponse 27.13
     Scénario: Plusieurs erreurs à une même question ne comptent que pour une question fausse
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa en est à la question de « Les voyelles » du test de départ
       Quand Léa se trompe 3 fois à la question de « Les voyelles », puis donne la bonne réponse
       Alors la question de « Compter jusqu'à 10 » s'affiche
 
-    # Question 27.10
-    @a-valider
+    # Réponse 27.10
     Scénario: Quitter le test de départ en cours ramène à l'accueil, qui le propose encore
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a répondu au test de départ jusqu'à « Les mots contraires »
@@ -252,8 +240,7 @@ Fonctionnalité: Test de départ
 
   Règle: Le parcours commence à la première leçon que l'enfant ne sait pas, et le test de départ ne change jamais une étoile
 
-    # Questions 27.2 et 27.7
-    @a-valider
+    # Réponses 27.2 et 27.7
     Scénario: Toutes les leçons jusqu'à la dernière question juste d'une matière sont réussies, même celles qui n'ont pas été posées
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a fait le test de départ, en répondant juste à toutes les questions
@@ -266,8 +253,7 @@ Fonctionnalité: Test de départ
         | 4     | Le pluriel des noms  | à toi                     |
         | 5     | Le féminin des noms  | à découvrir               |
 
-    # Questions 27.2 et 27.7
-    @a-valider
+    # Réponses 27.2 et 27.7
     Scénario: Le parcours commence à la première leçon dont la question est fausse
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a fait le test de départ, avec une question fausse à « L'ordre alphabétique »
@@ -280,8 +266,7 @@ Fonctionnalité: Test de départ
         | 4     | Le pluriel des noms  | à découvrir               |
         | 5     | Le féminin des noms  | à découvrir               |
 
-    # Questions 27.2 et 27.7
-    @a-valider
+    # Réponses 27.2 et 27.7
     Scénario: Une matière dont toutes les leçons sont réussies au test de départ n'a plus de prochaine leçon
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a fait le test de départ, avec une question fausse à « L'ordre alphabétique »
@@ -313,8 +298,7 @@ Fonctionnalité: Test de départ
       Quand Léa ouvre le parcours de français
       Alors le parcours montre « L'ordre alphabétique » réussie avec 2 étoiles
 
-    # Question 27.7
-    @a-valider
+    # Réponse 27.7
     Scénario: Une séance terminée donne ses étoiles à une leçon réussie au test de départ
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a pour leçons réussies au test de départ :
@@ -324,8 +308,7 @@ Fonctionnalité: Test de départ
       Quand Léa ouvre le parcours de français
       Alors le parcours montre « Le son in » réussie avec 1 étoile
 
-    # Question 27.8
-    @a-valider
+    # Réponse 27.8
     Scénario: Les leçons réussies au test de départ comptent parmi les leçons réussies du parcours
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a pour leçons réussies au test de départ :
@@ -338,8 +321,7 @@ Fonctionnalité: Test de départ
       Quand Léa ouvre le parcours de français
       Alors le parcours indique « 3 leçons réussies sur 5 »
 
-    # Question 27.8
-    @a-valider
+    # Réponse 27.8
     Scénario: La leçon suivante saute une leçon réussie au test de départ
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a pour leçons réussies au test de départ :
@@ -350,8 +332,7 @@ Fonctionnalité: Test de départ
       Alors la fin de la séance annonce « Ensuite : Les mots contraires »
       Et la leçon suivante ouvre la page de la leçon « Les mots contraires »
 
-    # Question 27.15
-    @a-valider
+    # Réponse 27.15
     Scénario: Redescendue en CE1, l'enfant retrouve à part sa leçon de CE2 réussie au test de départ
       Étant donné que Léa a un profil enfant préparé de niveau CE2 dans l'univers « Animaux de la forêt »
       Et que Léa a pour leçons réussies au test de départ :
@@ -374,16 +355,14 @@ Fonctionnalité: Test de départ
       Et la fin du test de départ ne montre aucune étoile
       Et le focus est sur « Voir mon parcours »
 
-    # Questions 27.2, 27.14 et 27.23
-    @a-valider
+    # Réponses 27.2, 27.14 et 27.23
     Scénario: Le personnage guide dit combien de leçons l'enfant connaît déjà, celles des classes d'avant comprises
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a répondu au test de départ jusqu'à « La soustraction »
       Quand Léa répond juste à la question de « Les tables de 2 »
       Alors Noisette dit « Merci Léa ! Tu connais déjà 17 leçons : je les ai cochées. Ton parcours t'attend ! »
 
-    # Question 27.17
-    @a-valider
+    # Réponse 27.17
     Scénario: Avec une seule leçon connue, le personnage guide le dit au singulier
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a répondu au test de départ jusqu'à « Les syllabes », avec des questions fausses à « Compter jusqu'à 10 » et « Les syllabes »
@@ -396,8 +375,7 @@ Fonctionnalité: Test de départ
       Quand Léa se trompe à la question de « Les syllabes », puis donne la bonne réponse
       Alors Noisette dit « Merci Léa ! Maintenant, je sais par où commencer. Ton parcours t'attend ! »
 
-    # Question 27.14
-    @a-valider
+    # Réponse 27.14
     Scénario: Une leçon déjà réussie avant le test de départ n'est pas comptée parmi les leçons connues
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a pour meilleures étoiles :
@@ -407,8 +385,7 @@ Fonctionnalité: Test de départ
       Quand Léa se trompe à la question de « Les nombres jusqu'à 20 », puis donne la bonne réponse
       Alors Noisette dit « Merci Léa ! Maintenant, je sais par où commencer. Ton parcours t'attend ! »
 
-    # Question 27.21
-    @a-valider
+    # Réponse 27.21
     Scénario: « Voir mon parcours » ouvre le parcours de l'enfant
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a fait le test de départ, en répondant juste à toutes les questions
@@ -424,8 +401,7 @@ Fonctionnalité: Test de départ
       Quand Paul choisit « Refaire le test de départ » pour Léa
       Alors la proposition du test de départ s'affiche pour Léa
 
-    # Question 27.9
-    @a-valider
+    # Réponse 27.9
     Scénario: Un test de départ refait pose aussi des questions sur les leçons déjà réussies
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a pour meilleures étoiles :
@@ -436,8 +412,7 @@ Fonctionnalité: Test de départ
       Quand Léa accepte la proposition du test de départ
       Alors la question de « Les voyelles » s'affiche
 
-    # Question 27.9
-    @a-valider
+    # Réponse 27.9
     Scénario: Une leçon réussie à un test de départ le reste, même si sa question est fausse au suivant
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a pour leçons réussies au test de départ :
@@ -454,8 +429,7 @@ Fonctionnalité: Test de départ
         | 4     | Le pluriel des noms  | à toi                     |
         | 5     | Le féminin des noms  | à découvrir               |
 
-    # Question 27.9
-    @a-valider
+    # Réponse 27.9
     Scénario: Après « Plus tard », un test de départ proposé de nouveau par le parent reste fait
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a déjà fait le test de départ
@@ -466,8 +440,7 @@ Fonctionnalité: Test de départ
 
   Règle: Le test de départ se joue sans réseau, à voix haute, au clavier et sur un petit écran
 
-    # Question 27.2
-    @a-valider
+    # Réponse 27.2
     Scénario: Sans réseau, le test de départ se joue jusqu'au bout et le parcours se met à jour tout de suite
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que le réseau est coupé
@@ -475,8 +448,7 @@ Fonctionnalité: Test de départ
       Quand Léa ouvre le parcours de français
       Alors « Le pluriel des noms » est la prochaine leçon
 
-    # Question 27.18
-    @a-valider
+    # Réponse 27.18
     Scénario: Sans réseau, la fin du test de départ dit que la progression est gardée sur l'appareil
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a répondu au test de départ jusqu'à « La soustraction »
@@ -491,8 +463,7 @@ Fonctionnalité: Test de départ
       Quand Léa répond juste à la question de « Les voyelles »
       Alors Léa entend Noisette lire « Compter jusqu'à 10 : quelle est la bonne réponse ? »
 
-    # Question 27.7
-    @a-valider
+    # Réponse 27.7
     Scénario: Un lecteur d'écran lit qu'une leçon est réussie au test de départ
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a pour leçons réussies au test de départ :

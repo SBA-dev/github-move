@@ -3,7 +3,7 @@
 Scénarios : `features/27-test-de-depart.feature` (tags `@issue-27 @wip`).
 Modèle du domaine : `docs/stories/27/domain-model.md` (contexte **Apprentissage**, qui lit le **Catalogue pédagogique** et **Famille**). Les questions 27.1 à 27.16 en viennent ; 27.17 à 27.23 sont ajoutées ici.
 
-Chaque scénario qui dépend d'une question encore sans réponse suit la **recommandation** de la question. Il porte le tag `@a-valider` et un commentaire `# Question 27.n`.
+Le PO a retenu toutes les recommandations des questions 27.1 à 27.23 (voir « Décisions »). Les scénarios qui en dépendent portent un commentaire `# Réponse 27.n` ; aucun ne porte plus `@a-valider`.
 
 ## Objectif
 
@@ -13,9 +13,9 @@ Le test de départ se joue dans le navigateur, même sans réseau, avec la corre
 - la **prochaine leçon** (« À toi ! ») est la première leçon non réussie du parcours ;
 - la **leçon suivante** en fin de séance saute les leçons réussies.
 
-Le test de départ s'exprime donc ainsi : après lui, quelle leçon est « À toi ! ». Avec la règle recommandée (27.2 b), c'est la première leçon que l'enfant ne sait pas.
+Le test de départ s'exprime donc ainsi : après lui, quelle leçon est « À toi ! ». Avec la règle retenue (27.2 b), c'est la première leçon que l'enfant ne sait pas.
 
-Le comportement actuel (`app/`, `offerTest`, `buildTest`, `playLesson` partie `test`) donne les premiers exemples. Les écarts voulus sont des questions : 27.2, 27.7, 27.10, 27.14, 27.17, 27.19.
+Le comportement actuel (`app/`, `offerTest`, `buildTest`, `playLesson` partie `test`) donne les premiers exemples. Les écarts voulus ont été tranchés par le PO : 27.2, 27.7, 27.10, 27.14, 27.17, 27.19.
 
 ## Example mapping
 
@@ -45,7 +45,7 @@ Le comportement actuel (`app/`, `offerTest`, `buildTest`, `playLesson` partie `t
 | 8 | Le test de départ se joue sans réseau, à voix haute, au clavier et sur un petit écran | Sans réseau, le test de départ se joue jusqu'au bout et le parcours se met à jour tout de suite · Sans réseau, la fin du test de départ dit que la progression est gardée sur l'appareil · Le personnage guide lit chaque question du test de départ · Un lecteur d'écran lit qu'une leçon est réussie au test de départ · Le test de départ se commence et se joue au clavier · La proposition du test de départ tient dans un écran de 360 px, avec des boutons assez grands pour un doigt d'enfant · Une question du test de départ tient dans un écran de 360 px, « Je ne sais pas » compris | 27.2, 27.7, 27.18 |
 | 9 | Le résultat du test de départ est enregistré par le serveur, et seulement pour un parent rattaché au profil enfant | Un test de départ terminé envoyé par l'appareil est enregistré et se retrouve sur un autre appareil du parent (`@acces`) · Le serveur refuse un test de départ terminé incohérent, qui reste à faire (3 cas) · Le second parent rattaché retrouve sur son téléphone le parcours que le test de départ a fait avancer (`@acces`) · Le test de départ d'un enfant ne fait jamais avancer le parcours d'un autre enfant (`@acces`) · Un parent qui n'est pas rattaché ne lit pas le résultat du test de départ de Léa (`@acces`) · Un parent qui n'est pas rattaché ne peut pas enregistrer un test de départ pour Léa (`@acces`) | 27.12 (pas de scénario E2E) |
 
-Total : 9 règles, 53 scénarios (60 cas), dont 29 `@a-valider` et 5 `@acces`.
+Total : 9 règles, 53 scénarios (60 cas), dont 0 `@a-valider` (29 avant les décisions du PO) et 5 `@acces`.
 
 La story peut se livrer en deux temps :
 1. le test de départ et sa proposition (règles 1 à 4, 6 à 9) ;
@@ -165,55 +165,43 @@ Aucune étape existante n'est modifiée.
 
 ## Décisions
 
-Aucune pour l'instant : toutes les questions attendent la validation du PO.
+Réponse du PO, le 2026-10-24 : « 27# reco OK » (annonce du responsable des équipes, https://github.com/SBA-dev/github-move/issues/64#issuecomment-6389314266). Toutes les recommandations sont retenues. Le détail des questions 27.1 à 27.16 est dans `docs/stories/27/domain-model.md` (section « Questions ouvertes », toutes tranchées).
+
+| n° | Question | Réponse | Effet sur les scénarios |
+|---|---|---|---|
+| 27.1 | Réussie ou acquise ? | **Réussie**, sans étoile, sans badge ni compétence acquise. La ligne « Leçon acquise » du glossaire perd « ou validée par le test de départ ». | Vocabulaire « réussie au test de départ » de la règle 5 confirmé. |
+| 27.2 | Quelles leçons le test de départ rend-il réussies ? | **(b)** : pour chaque matière, toutes les leçons de la réserve jusqu'à la dernière question juste, sauf celles dont la question est fausse. | `@a-valider` retiré de « Une question répondue <manière>… », des 3 premiers scénarios de la règle 5, de « Le personnage guide dit combien de leçons… » et de « Sans réseau, le test de départ se joue jusqu'au bout… ». |
+| 27.3 | Changement de classe | Pas de nouvelle proposition automatique ; le parent garde « Refaire le test de départ ». | `@a-valider` retiré de « Un enfant qui change de classe… ». |
+| 27.4 | Objectif du jour, série, épisodes, cabane | Le test de départ ne compte pour rien de tout cela. | Aucun scénario (hors périmètre). |
+| 27.5 | Bibliothèque non chargée, ou aucune question | Pas de proposition, sans message ; après la création, l'accueil de l'enfant ; le test n'est pas marqué fait. | `@a-valider` retiré de « Sans bibliothèque chargée… ». |
+| 27.6 | Dictée et lecture exclues (avec ordre, poésie, fluence) | Oui. | `@a-valider` retiré de « Une leçon sans question possible est sautée… ». |
+| 27.7 | Affichage d'une leçon réussie au test de départ | État propre, coché sans étoile, lu « `<titre>` : réussie au test de départ » ; une séance terminée ensuite affiche ses étoiles, même une seule. | `@a-valider` retiré des scénarios de la règle 5 et de « Un lecteur d'écran lit… ». |
+| 27.8 | Compteur et leçon suivante | Les leçons réussies au test de départ comptent dans le compteur, et la leçon suivante les saute. | `@a-valider` retiré des 2 scénarios concernés. |
+| 27.9 | Refaire le test de départ | (a) les questions ne regardent pas les résultats ; (b) une leçon réussie le reste ; (c) après « Plus tard », le test reste fait. | `@a-valider` retiré des 3 derniers scénarios de la règle 7. |
+| 27.10 | Où trouver la proposition avant #29 ? | Bouton « Mon test de départ » sur l'accueil de l'enfant, à côté de « Mon parcours », tant que le test n'est pas fait ; « Plus tard », le retour et « quitter » mènent à cet accueil. | `@a-valider` retiré des scénarios de la règle 1 et de « Quitter le test de départ en cours… ». |
+| 27.11 | Forme des questions, boîte et barres | Questions à choix pour conjugaison, trous et classer, addition en ligne ; boîte et barres exclues jusqu'à #21. | Aucun scénario E2E (tests unitaires). |
+| 27.12 | Revalidation après un test hors ligne | Niveau actuel du profil, pas de contrôle du pas régulier, leçon retirée ignorée, question au-dessus du niveau refusée. | Tests unitaires ; scénarios E2E inchangés. |
+| 27.13 | Définition du glossaire | « 3 questions fausses de suite ». Glossaire corrigé. | `@a-valider` retiré de « Plusieurs erreurs à une même question… ». |
+| 27.14 | Phrase de fin | Compter les leçons **nouvellement** réussies, classes d'avant comprises ; sans aucune, « Maintenant, je sais par où commencer ». | `@a-valider` retiré des 2 scénarios concernés. |
+| 27.15 | Enfant redescendu de classe | La leçon de CE2 réussie au test de départ va dans « Déjà réussies en CE2 », sans étoile. | `@a-valider` retiré de « Redescendue en CE1… ». |
+| 27.16 | Proposition après le premier profil et après l'ajout d'un enfant | Oui dans les deux cas. | `@a-valider` retiré des 2 premiers scénarios de la règle 1. |
+| 27.17 | Phrase de fin au singulier | « Merci `<prénom>` ! Tu connais déjà 1 leçon : je l'ai cochée. Ton parcours t'attend ! » ; le pluriel ne change pas. | `@a-valider` retiré de « Avec une seule leçon connue… ». |
+| 27.18 | Fin du test de départ sans réseau | Même message que la fin d'une séance (#24) : « Sauvegarde en ligne impossible : la progression est gardée sur cet appareil. » | `@a-valider` retiré de « Sans réseau, la fin du test de départ dit… ». |
+| 27.19 | Proposition juste après une création faite dans l'espace parent | Après la création, l'espace parent se ferme, le profil créé devient le profil en cours et son personnage guide propose le test de départ ; « Plus tard » mène à l'accueil de cet enfant. Pour créer un autre profil, le parent rentre dans l'espace parent (contrôle parental). | `@a-valider` retiré des 2 premiers scénarios de la règle 1. Scénarios de #11 et #12 qui vérifient l'espace parent juste après une création : texte inchangé, adaptation dans les steps (voir ci-dessous). |
+| 27.20 | Avancement pendant le test de départ | Le même avancement que la séance ; après un arrêt, directement la fin. | Aucun scénario. |
+| 27.21 | Où mène « Voir mon parcours » ? | À « Mon parcours », ouvert comme depuis l'accueil (réponse 25.11) ; le retour ramène à l'accueil de l'enfant. | `@a-valider` retiré de « « Voir mon parcours » ouvre le parcours de l'enfant ». |
+| 27.22 | « Accueil de l'enfant » absent du glossaire | Ajouté au glossaire (Famille). « Fin du test de départ », « Mon test de départ », « Voir mon parcours » restent des mots d'interface. | Aucun changement d'étape. |
+| 27.23 | Leçon sans question possible placée avant une question juste | Réussie au test de départ, comme toute leçon d'avant. | `@a-valider` retiré de « Le personnage guide dit combien de leçons… » (17 leçons). |
+
+### Effet de 27.19 sur les stories livrées (#11, #12, #13)
+
+La même étape « Paul crée le profil enfant … » sert dans #11 et dans les 2 premiers scénarios de la règle 1 de #27, où elle doit laisser la proposition du test de départ affichée. La création ne peut donc pas, dans son step, fermer la proposition et revenir dans l'espace parent. Ce sont les étapes `Alors` qui regardent l'espace parent qui y rentrent si besoin (contrôle parental compris), comme « … apparaît dans « Qui joue ? » » ouvre déjà « Qui joue ? ». Aucun texte de scénario de #11, #12 ou #13 ne change ; le travail revient à l'`e2e-tester` :
+- `features/11-profil-enfant.feature`, « Le parent qui crée un profil enfant y est rattaché d'office » : « Paul voit le profil enfant de Léa dans l'espace parent » rentre dans l'espace parent s'il n'est pas affiché.
+- `features/12-reglages.feature`, « Les réglages se choisissent dès la création du profil » : « les réglages de Léa indiquent « mode dys » : « oui » » et « les autres réglages de Léa ont leurs valeurs par défaut » rentrent dans l'espace parent s'il n'est pas affiché.
+- Toutes les créations par l'écran (`creerParLInterface`, création avec un réglage de #12) : le retour attendu après « Créer le profil » est le message de création, une erreur **ou** la proposition du test de départ (ou l'accueil de l'enfant si la bibliothèque n'est pas chargée, 27.5).
+- Les scénarios de #11 qui vérifient « Qui joue ? » après une création, et les étapes « Paul est dans l'espace parent » qui suivent une création (#12), passent par les steps existants qui ouvrent « Qui joue ? » ou rentrent dans l'espace parent : aucun changement de texte.
+- #13 ne crée aucun profil par l'écran : aucun scénario touché.
 
 ## Questions ouvertes
 
-Questions du modèle du domaine. Le détail et les exemples sont dans `docs/stories/27/domain-model.md`.
-
-1. **27.1. Réussie ou acquise ?** Reco : **réussie**, sans étoile, sans badge ni compétence acquise. La ligne « Leçon acquise » du glossaire perd « ou validée par le test de départ ». Scénarios : règle 5 (vocabulaire « réussie au test de départ »).
-2. **27.2. Quelles leçons le test de départ rend-il réussies ?** Reco : **(b)**, pour chaque matière, toutes les leçons de la réserve jusqu'à la dernière question juste, sauf celles dont la question est fausse. Scénarios : « Une question répondue <manière>… », les 3 premiers de la règle 5, « Le personnage guide dit combien de leçons… », « Sans réseau, le test de départ se joue jusqu'au bout… ».
-3. **27.3. Changement de classe.** Reco : pas de nouvelle proposition automatique ; le parent garde « Refaire le test de départ ». Scénario : « Un enfant qui change de classe… ».
-4. **27.4. Objectif du jour, série, épisodes, cabane.** Reco : le test de départ ne compte pour rien de tout cela. Pas de scénario (hors périmètre).
-5. **27.5. Bibliothèque non chargée, ou aucune question.** Reco : pas de proposition, sans message ; après la création, on va à l'accueil de l'enfant ; le test n'est pas marqué fait. Scénario : « Sans bibliothèque chargée… ».
-6. **27.6. Dictée et lecture exclues** (avec ordre, poésie, fluence). Reco : oui. Scénario : « Une leçon sans question possible est sautée… ».
-7. **27.7. Affichage d'une leçon réussie au test de départ.** Reco : état propre, coché sans étoile, lu « `<titre>` : réussie au test de départ » ; une séance terminée ensuite affiche ses étoiles, même une seule. Scénarios : règle 5, « Un lecteur d'écran lit qu'une leçon est réussie au test de départ ».
-8. **27.8. Compteur et leçon suivante.** Reco : oui aux deux. Scénarios : « Les leçons réussies au test de départ comptent… », « La leçon suivante saute une leçon réussie au test de départ ».
-9. **27.9. Refaire le test de départ.** Reco : (a) les questions ne regardent pas les résultats ; (b) une leçon réussie le reste ; (c) après « Plus tard », le test de départ reste fait. Scénarios : les 3 derniers de la règle 7.
-10. **27.10. Où trouver la proposition avant #29 ?** Reco : bouton « Mon test de départ » sur l'accueil de l'enfant, à côté de « Mon parcours », tant que le test de départ n'est pas fait ; « Plus tard », le retour et « quitter » mènent à cet accueil. Scénarios : règle 1, « Quitter le test de départ en cours… ».
-11. **27.11. Forme des questions, boîte et barres.** Reco : questions à choix pour conjugaison, trous et classer, addition en ligne ; boîte et barres exclues jusqu'à #21. Pas de scénario E2E.
-12. **27.12. Revalidation après un test hors ligne.** Reco : niveau **actuel** du profil, pas de contrôle du pas régulier, leçon retirée ignorée, question au-dessus du niveau = refus. Couvert par les tests unitaires ; le scénario E2E « … dont une question vient d'une leçon de CE1 » n'en dépend pas.
-13. **27.13. Définition du glossaire** : « 3 questions fausses de suite », pas « 3 erreurs de suite ». Reco : préciser la ligne. Scénario : « Plusieurs erreurs à une même question… ».
-14. **27.14. Phrase de fin.** Reco : compter les leçons **nouvellement** réussies (ni en séance, ni par un test précédent), classes d'avant comprises ; sans aucune, « Maintenant, je sais par où commencer ». Scénarios : « Le personnage guide dit combien… » (17), « Une leçon déjà réussie avant le test de départ n'est pas comptée… ».
-15. **27.15. Enfant redescendu de classe.** Reco : la leçon de CE2 réussie au test de départ va dans « Déjà réussies en CE2 », sans étoile. Scénario : « Redescendue en CE1… ».
-16. **27.16. Proposition après la création du premier profil et après l'ajout d'un enfant.** Reco : oui dans les deux cas. Scénarios : les 2 premiers de la règle 1.
-
-Questions nouvelles :
-
-17. **27.17. Phrase de fin au singulier.** Le legacy dit « Tu connais déjà 1 leçon : je les ai cochées. »
-    - **Recommandation** : « Merci `<prénom>` ! Tu connais déjà 1 leçon : je l'ai cochée. Ton parcours t'attend ! ». Au pluriel, la phrase ne change pas.
-    - Scénario : « Avec une seule leçon connue, le personnage guide le dit au singulier ». D'accord ?
-18. **27.18. Fin du test de départ sans réseau.** Le test fini est gardé sur l'appareil, comme une séance.
-    - **Recommandation** : la fin du test de départ montre le même message que la fin d'une séance (#24) : « Sauvegarde en ligne impossible : la progression est gardée sur cet appareil. ». La phrase de Noisette et « Voir mon parcours » ne changent pas.
-    - Scénario : « Sans réseau, la fin du test de départ dit… ». D'accord ?
-19. **27.19. Proposition juste après une création faite dans l'espace parent.** Dans la cible, un profil enfant se crée dans l'espace parent (#11). Dans le legacy, la création se faisait hors de l'espace adulte, et la proposition suivait.
-    - **Recommandation** :
-      - après la création, l'espace parent se ferme ;
-      - le profil créé devient le profil en cours ;
-      - son personnage guide propose le test de départ ;
-      - « Plus tard » mène à l'accueil de cet enfant.
-      Pour créer un autre profil, le parent rentre dans l'espace parent (contrôle parental).
-    - Conséquence : après « Paul crée le profil enfant … », l'écran n'est plus l'espace parent. Les scénarios de #11, #12 et #13 qui créent un profil doivent rester verts (l'`e2e-tester` le vérifie).
-    - Scénarios : les 2 premiers de la règle 1. D'accord ?
-20. **27.20. Avancement pendant le test de départ.** Le legacy montre l'avancement des questions sur le nombre prévu, comme une séance.
-    - **Recommandation** : le même avancement que la séance (questions réussies sur le nombre de questions prévues). Après un arrêt, on passe directement à la fin, sans message sur les questions restantes.
-    - Pas de scénario. D'accord ?
-21. **27.21. Où mène « Voir mon parcours » ?**
-    - **Recommandation** : à « Mon parcours », ouvert comme depuis l'accueil (le français, ou la dernière matière choisie, réponse 25.11). Le retour depuis le parcours ramène à l'accueil de l'enfant.
-    - Scénario : « « Voir mon parcours » ouvre le parcours de l'enfant ». D'accord ?
-22. **27.22. « Accueil de l'enfant » absent du glossaire.** Le terme sert dans #25 (« Léa voit son accueil »), dans la proposition (glossaire, ligne « Proposition du test de départ ») et dans 27.10.
-    - **Recommandation** : l'ajouter au glossaire (Famille, à valider) : « écran de l'enfant après le choix de son profil dans « Qui joue ? » : son personnage guide le salue ; il mène à « Mon parcours » et, tant que le test de départ n'est pas fait, à « Mon test de départ » ». #29 dira s'il devient « Aujourd'hui ».
-    - « Fin du test de départ », « Mon test de départ », « Voir mon parcours » restent des mots d'interface. D'accord ?
-23. **27.23. Leçon sans question possible placée avant une question juste.** Avec la règle (b) de 27.2, « La dictée des sons » (que des dictées) est réussie au test de départ dès qu'une question juste de français vient après elle, sans avoir jamais été posée.
-    - **Recommandation** : oui, comme toute leçon d'avant. L'enfant la retrouve réussie, sans étoile, et peut la jouer.
-    - Scénario : « Le personnage guide dit combien de leçons l'enfant connaît déjà… » (17 au lieu de 16 sans elle). D'accord ?
+Aucune.

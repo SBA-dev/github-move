@@ -59,6 +59,15 @@ Validation n°1 du lot 2 par le PO, le 2026-10-22 (`docs/stories/lot-2-decisions
 | « Bonjour <prénom> ! » à chaque choix (M10) | Oui, même sans « tout lire à voix haute ». | « Léa choisit son profil enfant et son personnage guide la salue » inchangé. | Proposition appliquée |
 | Droits des deux parents | Les deux parents rattachés modifient le profil. | Aucun changement ici (story #13). | Tranchée, décision n°1 |
 
+### Après la création d'un profil (story #27)
+
+Décision de #27 (réponses 27.16 et 27.19, PO, 2026-10-24, « 27# reco OK ») : après la création d'un profil enfant dans l'espace parent, l'espace parent se ferme, le profil créé devient le profil en cours et la proposition du test de départ s'affiche ; « Plus tard » mène à l'accueil de cet enfant. Sans bibliothèque chargée, on va directement à l'accueil de l'enfant (réponse 27.5). Pour créer un autre profil, le parent rentre dans l'espace parent (contrôle parental).
+
+Effet ici : aucun texte de scénario ne change. L'étape « Paul crée le profil enfant … » sert aussi à #27, où elle doit laisser la proposition affichée ; ce sont les étapes `Alors` qui rentrent dans l'espace parent ou ouvrent « Qui joue ? » si besoin (steps, `e2e-tester` de #27).
+- « Le parent qui crée un profil enfant y est rattaché d'office » : « Paul voit le profil enfant de Léa dans l'espace parent » rentre dans l'espace parent, contrôle parental compris.
+- Scénarios qui vérifient « Qui joue ? » après une création (règles 1 et 2) : l'étape ouvre déjà « Qui joue ? » ; inchangés.
+- Prénom vide : rien n'est créé, l'espace parent reste affiché ; inchangés.
+
 ## Questions ouvertes
 
 Aucune n'est bloquante. Numéros identiques à ceux de `docs/stories/11/domain-model.md`.
