@@ -62,3 +62,19 @@ Deno.test("un exercice « ordre » mal formé rend la leçon mal formée", () =>
     assertThrows(() => lireLecon(leconAvec(exercice)), LeconMalFormee, undefined, JSON.stringify(exercice));
   }
 });
+
+function elementsNumerotes(nombre: number): string[] {
+  return Array.from({ length: nombre }, (_, rang) => `étape ${rang}`);
+}
+
+Deno.test("un exercice « ordre » de 20 éléments est accepté", () => {
+  const exercice = exerciceOrdre({ ...lesSyllabes, elements: elementsNumerotes(20) });
+
+  assertEquals(exercice.elements.length, 20);
+});
+
+Deno.test("un exercice « ordre » de 21 éléments rend la leçon mal formée", () => {
+  const exercice = { ...lesSyllabes, elements: elementsNumerotes(21) };
+
+  assertThrows(() => lireLecon(leconAvec(exercice)), LeconMalFormee);
+});

@@ -73,3 +73,19 @@ Deno.test("un exercice « classer » mal formé rend la leçon mal formée", () 
     assertThrows(() => lireLecon(leconAvec(exercice)), LeconMalFormee, undefined, JSON.stringify(exercice));
   }
 });
+
+function etiquettesDansLaMaison(nombre: number) {
+  return Array.from({ length: nombre }, (_, rang) => ({ texte: `mot-${rang}`, groupe: "1" }));
+}
+
+Deno.test("un exercice « classer » de 20 étiquettes est accepté", () => {
+  const exercice = exerciceClasser({ ...lesMaisonsDesSons, items: etiquettesDansLaMaison(20) });
+
+  assertEquals(exercice.items.length, 20);
+});
+
+Deno.test("un exercice « classer » de 21 étiquettes rend la leçon mal formée", () => {
+  const exercice = { ...lesMaisonsDesSons, items: etiquettesDansLaMaison(21) };
+
+  assertThrows(() => lireLecon(leconAvec(exercice)), LeconMalFormee);
+});
