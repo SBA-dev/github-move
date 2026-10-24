@@ -13,6 +13,7 @@ export {
   CodeDeConnexionInvalide,
   CodeDeConnexionMalForme,
   ConfirmationDuMotDePasseDifferente,
+  InformationsDeReinitialisationIncorrectes,
   LangueDuParentInconnue,
   LienDeConnexionMalForme,
   MotDePasseNonConforme,
@@ -23,6 +24,7 @@ export {
   ProfilEnfantIdVide,
   ProfilEnfantIntrouvable,
   RattachementsInvalides,
+  ServiceDeConnexionIndisponible,
   TropDEssaisDeReinitialisation,
   UniversInconnu,
 } from "./erreurs.ts";
@@ -35,6 +37,7 @@ export { ParentId } from "./parent-id.ts";
 export { Prenom } from "./prenom.ts";
 export { ProfilEnfantId } from "./profil-enfant-id.ts";
 export { QuestionDuControleParental } from "./question-du-controle-parental.ts";
+export { ReinitialiserLeMotDePasseEtSeConnecter } from "./reinitialiser-le-mot-de-passe-et-se-connecter.ts";
 export { SeConnecterAvecLeMotDePasse } from "./se-connecter-avec-le-mot-de-passe.ts";
 export { SeDeconnecter } from "./se-deconnecter.ts";
 export type { ServiceDeConnexion } from "./service-de-connexion.ts";

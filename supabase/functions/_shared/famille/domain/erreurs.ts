@@ -142,3 +142,17 @@ export class AdresseDejaUtilisee extends Error {
     this.name = "AdresseDejaUtilisee";
   }
 }
+
+export class InformationsDeReinitialisationIncorrectes extends Error {
+  constructor() {
+    super("Ces informations ne correspondent pas.");
+    this.name = "InformationsDeReinitialisationIncorrectes";
+  }
+}
+
+export class ServiceDeConnexionIndisponible extends Error {
+  constructor() {
+    super("Le service ne répond pas. Réessaie dans un instant.");
+    this.name = "ServiceDeConnexionIndisponible";
+  }
+}

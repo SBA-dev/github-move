@@ -5,8 +5,11 @@ import {
   AdresseOuMotDePasseIncorrect,
   type CodeDeConnexion,
   CodeDeConnexionInvalide,
+  InformationsDeReinitialisationIncorrectes,
   ParentId,
+  type Prenom,
   type ServiceDeConnexion,
+  TropDEssaisDeReinitialisation,
 } from "@domain/famille";
 import { clientSupabase } from "./client-supabase.ts";
 
@@ -57,6 +60,22 @@ export class ServiceDeConnexionSupabase implements ServiceDeConnexion {
 
   async deconnecter(): Promise<void> {
     const { error } = await clientSupabase().auth.signOut({ scope: "local" });
+    if (error) throw error;
+  }
+
+  async reinitialiserLeMotDePasse(adresse: AdresseEmail, prenom: Prenom, motDePasse: string): Promise<void> {
+    const { error } = await clientSupabase().functions.invoke("reinitialiser-le-mot-de-passe", {
+      body: { adresse: adresse.valeur, prenom: prenom.valeur, motDePasse },
+    });
+    if (error instanceof FunctionsHttpError && error.context.status === 401) {
+      throw new InformationsDeReinitialisationIncorrectes();
+    }
+    if (error instanceof FunctionsHttpError && error.context.status === 429) throw new TropDEssaisDeReinitialisation();
+    if (error) throw error;
+  }
+
+  async fermerLesAutresConnexions(): Promise<void> {
+    const { error } = await clientSupabase().auth.signOut({ scope: "others" });
     if (error) throw error;
   }
 }

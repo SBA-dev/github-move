@@ -167,6 +167,8 @@ Ordre imposé dans `ReinitialiserLeMotDePasse` : le **blocage est vérifié avan
 
 Contrat de l'Edge Function `inscrire-le-parent` (corps `{ adresse, motDePasse }`) : 2xx = parent créé ; **409 = `AdresseDejaUtilisee`** (traduit en erreur métier par l'adaptateur du navigateur) ; **422 = adresse ou règles du mot de passe non respectées** ; toute autre erreur est relancée telle quelle.
 
+Contrat de l'Edge Function `reinitialiser-le-mot-de-passe` (corps `{ adresse, prenom, motDePasse }`) : 2xx = mot de passe changé ; **401 = `InformationsDeReinitialisationIncorrectes`** (un seul statut pour adresse inconnue, parent sans enfant et prénom faux, jamais de 404 qui distinguerait les cas ; 404 reste réservé à une fonction non déployée et est relancé) ; **429 = `TropDEssaisDeReinitialisation`** ; **422 = entrée invalide** ; toute autre erreur est relancée telle quelle. L'adaptateur du navigateur traduit 401 et 429 ; `fermerLesAutresConnexions` appelle `signOut({ scope: "others" })` et relance l'erreur.
+
 Pourquoi un port de lecture des prénoms plutôt que `ProfilsEnfants.duParent` : l'appelant n'est pas connecté (pas de JWT, donc pas de RLS), et le cas d'usage n'a besoin que des prénoms. Charger les agrégats `ProfilEnfant` entiers (niveau, réglages, univers) avec `service_role` lirait plus que nécessaire.
 
 ### Erreurs métier (dans `domain/erreurs.ts`)
