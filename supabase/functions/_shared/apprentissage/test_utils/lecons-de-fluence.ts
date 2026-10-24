@@ -35,3 +35,21 @@ export function leconLesDoublesAvecUneFluenceAuCP(): Lecon {
 export function leconDUneSeuleFluenceAuCP(): Lecon {
   return leconAvec("ma-cp-doubles-fluence", [fluenceDesDoubles]);
 }
+
+export function leconDUneFluenceDe1a20AuCE1(): Lecon {
+  return lireLecon({
+    id: "ma-ce1-fluence-large",
+    matiere: "maths",
+    niveau: "CE1",
+    titre: "Calcul rapide",
+    ordre: 1,
+    programme,
+    lecon: [],
+    exercices: [{
+      type: "fluence",
+      titre: "Calcul rapide : jusqu'à 20",
+      duree: 45,
+      generateur: { op: "×", a: [1, 20], b: [1, 1] },
+    }],
+  });
+}
