@@ -10,7 +10,7 @@ import { type MotEcrit, Reponse, type ReponseDonnee, type ResultatDeReponse } fr
 const TEXTE_AFFICHE = "Écoute bien et écris le mot que tu entends.";
 const AIDE_APRES_UNE_ERREUR = "Regarde les lettres en rouge et écoute encore.";
 
-export type CaseDeQuestion = Readonly<{ genre: "aEcrire"; lettre?: string }> | CaractereDejaEcrit;
+export type CaseDeQuestion = Readonly<{ genre: "aEcrire"; lettre?: string; montree?: true }> | CaractereDejaEcrit;
 
 export class QuestionDeDictee implements QuestionSuivie {
   readonly type = "dictee";
@@ -32,9 +32,16 @@ export class QuestionDeDictee implements QuestionSuivie {
   cases(): CaseDeQuestion[] {
     const affichees = this.lettreMontree === undefined ? this.lettres : [...this.lettres, this.lettreMontree];
     let rang = 0;
-    return this.mot.cases().map((une) =>
-      une.genre === "dejaEcrit" ? une : { genre: "aEcrire", lettre: affichees[rang++] }
-    );
+    return this.mot.cases().map((une): CaseDeQuestion => {
+      if (une.genre === "dejaEcrit") return une;
+      const estMontree = this.lettreMontree !== undefined && rang === this.lettres.length;
+      const lettre = affichees[rang++];
+      return { genre: "aEcrire", ...(lettre !== undefined && { lettre }), ...(estMontree && { montree: true as const }) };
+    });
+  }
+
+  peutEffacer(): boolean {
+    return this.lettres.length > 0;
   }
 
   texteDit(): string {
