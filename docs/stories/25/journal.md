@@ -108,3 +108,7 @@ En attente d'une réponse : leçons réussies d'une classe au-dessus (N1, N7, N9
 - 19:55 UTC : E2E cycle 5 (avant la décision 0020) : #25 82/82 cas, non-régression 872/872 (dont #19 et #20).
   Intégration de `main` = 6aedff7 (merge bc15c4e, sans conflit) : 1159 tests Deno, tsc verts. Correction du bloquant
   de review (assertion négative) et vérification du parallélisme des steps confiées à `e2e-tester`.
+- 20:20 UTC : règle du responsable sur `terminer-la-seance` (un seul déploiement partagé, redéploiement sous verrou
+  `base`). Vérifié : la fonction importe `catalogue/domain/niveau.ts` et `matiere.ts`, où #25 n'a fait que des ajouts
+  qu'elle n'appelle pas (`estAuDessusDe`, `toutesLesMatieres`) ; aucun import du parcours. Pas de redéploiement, pas de
+  verrou `base` pour #25.
