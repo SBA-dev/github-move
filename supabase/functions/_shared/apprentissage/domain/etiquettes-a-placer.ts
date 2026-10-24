@@ -2,6 +2,7 @@ import type { ExerciceClasser, ExerciceOrdre, Groupe } from "../../catalogue/dom
 import { CleDeQuestion } from "./cle-de-question.ts";
 import { EtiquetteInconnue, GroupeInconnu, PasDeQuestionEnCours } from "./erreurs.ts";
 import { QuestionAPlacer } from "./question-a-placer.ts";
+import type { AideDonnee } from "./question-jouee.ts";
 import type { Placement, ResultatDeReponse } from "./reponse.ts";
 
 const RELANCES = ["Oui ! Et après ?", "Bien ! Et ensuite ?", "Super ! La suite ?"];
@@ -65,6 +66,11 @@ export abstract class EtiquettesAPlacer {
     return this.dernierResultat;
   }
 
+  direJeNeSaisPas(etiquette?: string): AideDonnee {
+    const question = this.questionPourJeNeSaisPas(etiquette);
+    return question.direJeNeSaisPas(this.bonneReponseDe(question));
+  }
+
   aideApresLaDerniereErreur(): string | undefined {
     return this.derniereAide;
   }
@@ -81,6 +87,8 @@ export abstract class EtiquettesAPlacer {
   protected abstract questionVisee(placement: Placement): QuestionAPlacer;
   protected abstract estBienPlacee(question: QuestionAPlacer, placement: Placement): boolean;
   protected abstract aideApresErreur(question: QuestionAPlacer, placement: Placement): string;
+  protected abstract questionPourJeNeSaisPas(etiquette: string | undefined): QuestionAPlacer;
+  protected abstract bonneReponseDe(question: QuestionAPlacer): string;
 
   protected felicitationApresUneBonneEtiquette(_reussies: number): boolean {
     return false;
@@ -108,6 +116,19 @@ class EtiquettesDeClasser extends EtiquettesAPlacer {
   protected estBienPlacee(question: QuestionAPlacer, placement: Placement): boolean {
     this.groupeTouche(placement);
     return question.groupe === placement.groupe;
+  }
+
+  protected questionPourJeNeSaisPas(etiquette: string | undefined): QuestionAPlacer {
+    const visee = etiquette ?? this.etiquettesAPlacer()[0];
+    if (visee === undefined || !this.etiquettesAPlacer().includes(visee)) throw new EtiquetteInconnue(String(visee));
+    const question = this.questions.find((candidate) => !candidate.reussie && candidate.etiquette === visee);
+    if (!question) throw new EtiquetteInconnue(visee);
+    return question;
+  }
+
+  protected bonneReponseDe(question: QuestionAPlacer): string {
+    if (question.groupe === undefined) throw new GroupeInconnu(question.etiquette);
+    return question.groupe;
   }
 
   protected aideApresErreur(question: QuestionAPlacer, placement: Placement): string {
@@ -140,6 +161,14 @@ class EtiquettesDOrdre extends EtiquettesAPlacer {
 
   protected estBienPlacee(question: QuestionAPlacer, placement: Placement): boolean {
     return question.etiquette === placement.etiquette;
+  }
+
+  protected questionPourJeNeSaisPas(): QuestionAPlacer {
+    return this.questionVisee();
+  }
+
+  protected bonneReponseDe(question: QuestionAPlacer): string {
+    return question.etiquette;
   }
 
   protected aideApresErreur(): string {

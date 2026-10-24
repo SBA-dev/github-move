@@ -4,6 +4,7 @@ import { PasDeQuestionEnCours } from "./erreurs.ts";
 import { nombreDeQuestions } from "./nombre-de-questions.ts";
 import { type QuestionJouee, questionsJoueesAvec } from "./question-jouee.ts";
 import type { QuestionSuivie } from "./question-suivie.ts";
+import type { AideDonnee } from "./question-jouee.ts";
 import type { Reponse, ResultatDeReponse } from "./reponse.ts";
 import type { Tireur } from "./tireur.ts";
 
@@ -89,6 +90,13 @@ export class ExerciceJoue {
     this.dernierResultatDuTrou = resultat;
     if (resultat === "juste") this.reussies++;
     return resultat;
+  }
+
+  direJeNeSaisPas(etiquette?: string): AideDonnee {
+    if (this.contenu.etiquettes) return this.contenu.etiquettes.direJeNeSaisPas(etiquette);
+    const question = this.questionEnCours();
+    if (!question) throw new PasDeQuestionEnCours();
+    return question.direJeNeSaisPas();
   }
 
   get questionsReussies(): number {

@@ -56,14 +56,14 @@ function rejouer(lecon: Lecon, envoi: SeanceTermineeAEnregistrer): SeanceTermine
   envoi.reponses.forEach((reponsesDeLaQuestion, rang) => {
     reponsesDeLaQuestion.forEach((reponse) => {
       if (seance.questionEstReussie(rang)) throw new QuestionDejaReussie();
-      rejouerLaReponse(seance, reponse);
+      rejouerLaReponse(seance, reponse, rang);
     });
     if (!seance.questionEstReussie(rang)) throw new SeanceNonFinie();
   });
   return seance.terminer(envoi.termineeLe);
 }
 
-function rejouerLaReponse(seance: Seance, reponse: ReponseDonnee): void {
-  if (reponse.genre === "jeNeSaisPas") seance.direJeNeSaisPas();
+function rejouerLaReponse(seance: Seance, reponse: ReponseDonnee, rang: number): void {
+  if (reponse.genre === "jeNeSaisPas") seance.direJeNeSaisPas(seance.etiquetteDeLaQuestion(rang));
   else seance.repondre(reponse);
 }

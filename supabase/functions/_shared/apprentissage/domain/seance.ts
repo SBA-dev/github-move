@@ -15,6 +15,7 @@ import { ExerciceJoue } from "./exercice-joue.ts";
 import type { GenerateurId } from "./generateur-id.ts";
 import type { Hasard } from "./hasard.ts";
 import { PlanDeSeance } from "./plan-de-seance.ts";
+import { QuestionAPlacer } from "./question-a-placer.ts";
 import type { AideDonnee } from "./question-jouee.ts";
 import type { QuestionSuivie, TypeDeQuestion } from "./question-suivie.ts";
 import { type Tireur, tireurAuHasard, tireurSelonLesTirages } from "./tireur.ts";
@@ -144,10 +145,13 @@ export class Seance {
     return this.questions()[rang]?.reussie ?? false;
   }
 
-  direJeNeSaisPas(): AideDonnee {
-    const question = this.exerciceDeLaQuestionEnCours().questionEnCours();
-    if (!question) throw new PasDeQuestionEnCours();
-    return question.direJeNeSaisPas();
+  direJeNeSaisPas(etiquette?: string): AideDonnee {
+    return this.exerciceDeLaQuestionEnCours().direJeNeSaisPas(etiquette);
+  }
+
+  etiquetteDeLaQuestion(rang: number): string | undefined {
+    const question = this.questions()[rang];
+    return question instanceof QuestionAPlacer ? question.etiquette : undefined;
   }
 
   erreurs(): number {
