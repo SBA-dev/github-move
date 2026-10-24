@@ -37,7 +37,13 @@ Lis :
 
 ### 3. Exécution
 
-`npx bddgen && npx playwright test --grep @issue-<n>`
+Les scénarios tournent contre le projet en ligne : un run est long. L'orchestrateur te dit lequel lancer (décision 0020, commandes de `CLAUDE.md`) :
+- **mise au point** (par défaut) : le périmètre de la story (`@issue-<n>`, les `@depend-de-<n>` levés, les stories livrées du même contexte que l'orchestrateur te liste) sur le projet `telephone` seulement (`--project=telephone`). Pour corriger un step, relance d'abord le seul scénario concerné (`--grep "<titre du scénario>"`) ;
+- **non-régression complète** : seulement quand l'orchestrateur la demande, une fois, juste avant la PR prête.
+
+Les scénarios tournent en parallèle, même dans un seul fichier (`fullyParallel`, 3 workers, `E2E_WORKERS` pour changer) : un step ne doit jamais dépendre d'un autre scénario ni d'une donnée partagée hors du suffixe de `famille`.
+
+Run long lancé en arrière-plan (`run_in_background`, sortie dans un fichier) : attends-le avec l'outil `Monitor`, ou une boucle qui vérifie toutes les 30 s que le résumé final (`passed`/`failed`) est écrit, **jamais** un `sleep` de plusieurs minutes.
 
 ### 4. En cas d'échec, diagnostic
 

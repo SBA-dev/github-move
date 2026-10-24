@@ -86,8 +86,9 @@ Une issue fermée est **livrée**.
 2. Trie-les : d'abord celles du **chemin critique** (plus longue chaîne de descendants), puis celles de la beta, puis par numéro d'issue.
 3. **Nombre d'équipes : 2 par défaut, 3 au maximum, jamais plus.** Le nombre de la vague est celui fixé à la fin de la vague précédente selon `docs/graphe/nombre-d-equipes.md` (formule `N = min(3, L, H, T)`, conditions pour passer à 3 ou revenir à 2). Pour la première vague : 2.
 4. **Démarrage anticipé** (facultatif) : une story dont les dépendances sont en `graphe:revue` ou `graphe:pret-a-merger` peut commencer son **cadrage** (domaine + scénarios), jamais son code.
-5. Deux stories qui créeraient le **même agrégat** ou la **même table** ne partent pas ensemble : la seconde attend, ou devient dépendante de la première (à proposer à l'humain).
-6. Présente le plan à l'humain : stories lancées, stories en attente et ce qu'elles attendent, verrous prévus. **Attends son « OK »** avant de lancer les équipes.
+5. **Cadrer la vague suivante pendant la vague en cours** (décision 0020) : une story qui va devenir prête et n'a pas encore de scénarios validés est cadrée à l'avance (`domain-modeler` puis `po-acceptance`, dans une session de cadrage lancée comme une équipe, avec pour brief « cadrage seulement, pas de code », sur une branche `feature/lot-<k>-modele-et-scenarios` comme aux lots 2 et 3). Ses questions rejoignent la prochaine ⛔ n°1 groupée. L'équipe qui la reprend démarre avec des scénarios validés et ne s'arrête que pour les questions nouvelles : l'attente du PO ne bloque plus le début de la story (22 min pour #25 à la vague 1).
+6. Deux stories qui créeraient le **même agrégat** ou la **même table** ne partent pas ensemble : la seconde attend, ou devient dépendante de la première (à proposer à l'humain).
+7. Présente le plan à l'humain : stories lancées, stories en attente et ce qu'elles attendent, verrous prévus. **Attends son « OK »** avant de lancer les équipes.
 
 ## Étape 2 : Ouvrir la vague et lancer les équipes
 
@@ -191,7 +192,7 @@ Les merges passent **un par un**, par le verrou `merge` :
 3. Toi :
    - fermes l'issue si GitHub ne l'a pas fait (`Closes #<n>`), retires les labels `graphe:*` ;
    - libères le verrou `merge` ;
-   - annonces `[Responsable] MAIN A BOUGÉ : #<n> mergée` et envoies `RELIS` à **toutes les équipes encore en cours** ;
+   - annonces `[Responsable] MAIN A BOUGÉ : #<n> mergée` et envoies `RELIS` à **toutes les équipes encore en cours** (une équipe qui a un run E2E en cours le finit avant d'intégrer `main`, `equipe.md` section 4) ;
    - recalcules les stories prêtes et reviens à l'Étape 1 pour combler la place libérée (nouveau plan présenté à l'humain, sauf s'il a autorisé l'enchaînement automatique).
 4. Vérifie que la branche de la story a disparu (`git ls-remote origin refs/heads/feature/<n>-<slug>` ne renvoie rien) : GitHub la supprime au merge grâce au réglage « Automatically delete head branches ». Aucune session ne peut la supprimer elle-même (le proxy git refuse les suppressions). Si elle est encore là, regarde ce qu'elle contient de plus que `main` (`git fetch origin && git log origin/main..origin/feature/<n>-<slug>`) :
    - **rien** : le réglage est désactivé ; rappelle à l'humain de l'activer et donne-lui le lien de la branche ;
