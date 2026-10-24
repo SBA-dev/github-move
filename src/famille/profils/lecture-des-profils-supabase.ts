@@ -58,10 +58,3 @@ export async function lireLesProfilsDuParent(): Promise<{ parent: string; lignes
 export function parentConnecte(): Promise<string | undefined> {
   return clientSupabase().auth.getSession().then(({ data }) => data.session?.user.id).catch(() => undefined);
 }
-
-/** Le niveau actuel du profil, tel que le serveur le connaît : un parent a pu le changer depuis un autre appareil. */
-export async function lireLeNiveauDuProfil(profil: string): Promise<string | undefined> {
-  const { data, error } = await clientSupabase().from("profils_enfants").select("niveau").eq("id", profil).maybeSingle();
-  if (error) throw error;
-  return typeof data?.niveau === "string" ? data.niveau : undefined;
-}
