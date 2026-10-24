@@ -50,7 +50,7 @@ function etatsDuParcours(meilleuresEtoiles: Map<string, Etoiles>) {
   return parcours.lecons.map(({ etat }) => etat);
 }
 
-Deno.test("dans un parcours, les leçons réussies gardent leurs étoiles, la première leçon non réussie est la prochaine et les autres sont à découvrir, sans verrou", () => {
+Deno.test("dans un parcours, les leçons réussies gardent leurs étoiles, la première leçon non réussie est la prochaine et les autres sont à découvrir", () => {
   const etats = etatsDuParcours(new Map([["fr-ce1-a", Etoiles.de(3)], ["fr-ce1-c", Etoiles.de(1)]]));
 
   assertEquals(etats, [
