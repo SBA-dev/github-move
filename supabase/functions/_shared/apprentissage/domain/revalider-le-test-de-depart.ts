@@ -6,6 +6,7 @@ import {
   ReponseIncompatible,
   TestDeDepartIncoherent,
   TirageEnTrop,
+  TirageHorsDuGenerateur,
   TirageInvalide,
   TirageManquant,
 } from "./erreurs.ts";
@@ -25,6 +26,7 @@ const ERREURS_DE_REJEU = [
   QuestionHorsDuTestDeDepart,
   ReponseIncompatible,
   TirageEnTrop,
+  TirageHorsDuGenerateur,
   TirageInvalide,
   TirageManquant,
 ];
@@ -118,7 +120,10 @@ function rejouerLaQuestion(
   reponses: readonly ReponseDonnee[],
 ): boolean {
   const test = reconstruire(envoi, lecons, niveau, question, tirages);
-  reponses.forEach((reponse) => rejouerLaReponse(test, reponse));
+  reponses.forEach((reponse) => {
+    if (test.estFini()) throw incoherent("des réponses après la bonne réponse");
+    rejouerLaReponse(test, reponse);
+  });
   if (!test.estFini()) throw incoherent("une question posée ne finit pas par la bonne réponse");
   return test.terminer(envoi.termineeLe).questions.every(({ juste }) => juste);
 }
