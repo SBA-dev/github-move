@@ -1,3 +1,4 @@
+import { toutesLesMatieres } from "../../catalogue/domain/index.ts";
 import type { Lecon, Matiere, Niveau } from "../../catalogue/domain/index.ts";
 import type { Etoiles } from "./etoiles.ts";
 
@@ -22,6 +23,12 @@ export type Parcours = Readonly<{
   nombreDeLeconsReussies: number;
   nombreDeLecons: number;
 }>;
+
+export function matieresDuParcours(entrees: EntreesDuParcours): Matiere[] {
+  return toutesLesMatieres().filter((matiere) =>
+    entrees.lecons.some((lecon) => lecon.matiere.code === matiere.code && lecon.niveau.valeur === entrees.niveau.valeur)
+  );
+}
 
 export function parcoursDeLaMatiere(entrees: EntreesDuParcours, matiere: Matiere): Parcours {
   const ordonnees = entrees.lecons

@@ -15,6 +15,10 @@ export function estUneMatiere(code: unknown): code is CodeDeMatiere {
 
 export type Matiere = Readonly<{ code: CodeDeMatiere; libelle: string }>;
 
+export function toutesLesMatieres(): Matiere[] {
+  return (Object.keys(LIBELLES) as CodeDeMatiere[]).map(matiereDeCode);
+}
+
 export function matiereDeCode(code: CodeDeMatiere): Matiere {
   return Object.freeze({ code, libelle: LIBELLES[code] });
 }

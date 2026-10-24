@@ -3,6 +3,7 @@ export { Niveau } from "./niveau.ts";
 export type { CodeDeNiveau } from "./niveau.ts";
 export { lireLecon } from "./lire-lecon.ts";
 export type { EtapeDeLecon, Lecon, PassageDuGuideFondamental, ProgrammeCite } from "./lecon.ts";
+export { toutesLesMatieres } from "./matiere.ts";
 export type { CodeDeMatiere, Matiere } from "./matiere.ts";
 export type { Exercice, ExerciceGenerique } from "./exercice.ts";
 export type { ExerciceBulles } from "./exercices/bulles.ts";
