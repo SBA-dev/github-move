@@ -1,6 +1,7 @@
 import type { GenerateurComplet, Intervalle, Operation } from "../../catalogue/domain/index.ts";
 import { TirageHorsDuGenerateur } from "./erreurs.ts";
 import type { Hasard } from "./hasard.ts";
+import { tirerUnEntier } from "./tirage-d-un-entier.ts";
 
 export function tirerLesOperations(
   generateur: GenerateurComplet,
@@ -31,10 +32,6 @@ function tirerUneOperation(
     case ":":
       return { q: `${a * b} : ${b}`, r: a };
   }
-}
-
-function tirerUnEntier([min, max]: Intervalle, hasard: Hasard): number {
-  return min + Math.floor(hasard.entre0et1() * (max - min + 1));
 }
 
 function reduire([min, max]: Intervalle, facilite: number): Intervalle {
