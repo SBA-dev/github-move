@@ -19,7 +19,11 @@ function assertTirageRefuse(tirage: readonly string[], profil = LETTRES_DU_MOT):
 }
 
 Deno.test("un tirage sans une lettre du mot rend la séance incohérente", () => {
-  assertTirageRefuse(["c", "h", "a", "e", "i", "o", "u"]);
+  assertTirageRefuse(["c", "h", "a", "e", "i", "o"]);
+});
+
+Deno.test("un tirage avec une même intruse en double rend la séance incohérente", () => {
+  assertTirageRefuse(["c", "h", "a", "t", "e", "e", "i"]);
 });
 
 Deno.test("un tirage avec une intruse présente dans le mot rend la séance incohérente", () => {
