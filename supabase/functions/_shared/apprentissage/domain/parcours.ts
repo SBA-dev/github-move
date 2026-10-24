@@ -14,9 +14,14 @@ export type EtatDansLeParcours =
   | { genre: "prochaine" }
   | { genre: "aDecouvrir" };
 
-export type LeconDuParcours = Readonly<{ lecon: LeconId; place: number; etat: EtatDansLeParcours }>;
+export type LeconDuParcours = Readonly<{ lecon: LeconId; titre: string; place: number; etat: EtatDansLeParcours }>;
 
-export type Parcours = Readonly<{ lecons: readonly LeconDuParcours[]; prochaineLecon: LeconId | undefined }>;
+export type Parcours = Readonly<{
+  lecons: readonly LeconDuParcours[];
+  prochaineLecon: LeconId | undefined;
+  nombreDeLeconsReussies: number;
+  nombreDeLecons: number;
+}>;
 
 export function parcoursDeLaMatiere(entrees: EntreesDuParcours, matiere: Matiere): Parcours {
   const ordonnees = entrees.lecons
@@ -25,10 +30,12 @@ export function parcoursDeLaMatiere(entrees: EntreesDuParcours, matiere: Matiere
   const prochaineLecon = ordonnees.find((lecon) => !entrees.meilleuresEtoiles.has(lecon.id))?.id;
   const lecons = ordonnees.map((lecon, index) => ({
     lecon: lecon.id,
+    titre: lecon.titre,
     place: index + 1,
     etat: etatDeLaLecon(lecon.id, entrees.meilleuresEtoiles, prochaineLecon),
   }));
-  return { lecons, prochaineLecon };
+  const nombreDeLeconsReussies = ordonnees.filter((lecon) => entrees.meilleuresEtoiles.has(lecon.id)).length;
+  return { lecons, prochaineLecon, nombreDeLeconsReussies, nombreDeLecons: ordonnees.length };
 }
 
 function etatDeLaLecon(
