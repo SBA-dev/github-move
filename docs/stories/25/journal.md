@@ -98,3 +98,7 @@ En attente d'une réponse : leçons réussies d'une classe au-dessus (N1, N7, N9
   `e2e-tester` après le passage E2E en cours. Non bloquant à remonter au PO : aucun scénario ne vérifie qu'une
   séance de fluence seule (#20) n'ouvre pas la leçon suivante du parcours (la condition existe dans
   `useSauvegardeDeLaSeance.ts`, issue de la résolution du merge).
+- 19:00 UTC : information d'une autre session (pas encore d'annonce [Responsable]) : PR #75 (décision 0020) mergée,
+  nouvelles règles de livraison (une seule non-régression complète juste avant PRÊTE À MERGER, `SUFFIXE_E2E`
+  remplacé par un jeton par worker, run E2E non interrompu quand main bouge). À appliquer après confirmation du
+  responsable et intégration de main.
