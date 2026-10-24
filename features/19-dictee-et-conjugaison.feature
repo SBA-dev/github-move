@@ -41,7 +41,7 @@ Fonctionnalité: Dictée et conjugaison
     Scénario: Les espaces, apostrophes, tirets et points d'un mot dicté sont déjà écrits
       Étant donné qu'une leçon de test a un exercice dictée du mot « arc-en-ciel »
       Quand le mot dicté « arc-en-ciel » commence
-      Alors Léa voit 8 cases à écrire et les deux tirets déjà écrits à leur place
+      Alors Léa voit 9 cases à écrire et les deux tirets déjà écrits à leur place
       Et Léa n'a pas à taper les tirets
 
   Règle: Le mot est corrigé dès que sa dernière case est remplie, et le début juste est gardé

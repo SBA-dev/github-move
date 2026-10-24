@@ -37,7 +37,7 @@ Note pour l'interface : à 360 px, dix touches de 44 px ne tiennent pas sur une 
 |---|---|---|
 | Dictée : les animaux | `fr-cp-dictee-animaux` | dictée « J'écris les animaux » : « chat » (« Le chat dort sur le lit. »), « lapin », « souris » |
 | Être et avoir au présent | `fr-cp-etre-avoir` | conjugaison « Le verbe être » (« je suis » … « ils sont ») |
-| Leçons de test | — | mots dictés « arc-en-ciel » (8 cases, 2 tirets déjà écrits), « Paris », « chat » seul (une seule question, pour les étoiles) |
+| Leçons de test | — | mots dictés « arc-en-ciel » (9 cases, 2 tirets déjà écrits), « Paris », « chat » seul (une seule question, pour les étoiles) |
 
 Nombre de lettres intruses avec les lettres du mot : `min(3, max(2, 8 − nombre de lettres))` ; « chat » → 3 (7 touches), « lapin » → 3 (8 touches), « souris » → 2 (8 touches).
 

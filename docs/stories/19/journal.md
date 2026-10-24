@@ -13,3 +13,4 @@
   2. Apprentissage, dictée : mot à écrire (cases, caractères déjà écrits), clavier proposé (règle automatique, lettres du mot et intruses, clavier complet avec « œ »), correction automatique, lettres gardées, « Je ne sais pas » (#23), paroles, rejeu.
   3. Apprentissage, conjugaison : une question par personne, choix de la forme, aide, félicitation finale (Motivation), rejeu.
   Puis serveur (réponse « mot écrit » dans le corps de la séance, RED d'abord), front (cases, touches, Effacer, réécouter, plus lentement, tableau de conjugaison, Muet / sans voix), E2E et levée des `@depend-de-19`.
+- 2026-10-24 11:25 · Correction par `po-acceptance` : « arc-en-ciel » a 9 cases à écrire (a r c e n c i e l), pas 8, dans le scénario des caractères déjà écrits et dans les données de test de `acceptance.md`. Aucun autre changement.
