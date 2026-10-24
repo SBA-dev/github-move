@@ -102,3 +102,6 @@ En attente d'une réponse : leçons réussies d'une classe au-dessus (N1, N7, N9
   nouvelles règles de livraison (une seule non-régression complète juste avant PRÊTE À MERGER, `SUFFIXE_E2E`
   remplacé par un jeton par worker, run E2E non interrompu quand main bouge). À appliquer après confirmation du
   responsable et intégration de main.
+- 19:05 UTC : annonce [Responsable] (#64) confirmant la décision 0020 (`main` = 6aedff7) : run en cours non
+  interrompu, une seule non-régression complète avant `PRÊTE À MERGER`, `SUFFIXE_E2E` remplacé par un jeton par worker,
+  steps indépendants (fullyParallel, 3 workers).
