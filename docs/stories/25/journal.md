@@ -54,3 +54,9 @@ En attente d'une réponse : leçons réussies d'une classe au-dessus (N1, N7, N9
   `catch`, prédicat, nom de fichier, parcours hors ligne sans attente). Review du delta (cycle 2) : **APPROUVÉ**.
   Petits non bloquants gardés pour le passage N : commentaire « de cet appareil », page de la leçon hors ligne
   (`reseauDisponible`), noms `a`/`b`, emplacement de `reseau-disponible.ts` et import direct de `niveau-du-profil.ts`.
+- 15:25 UTC : annonce du responsable (#64) : PO « reco partout » sur N1-N11. N3 : l'équipe corrige dans sa PR
+  `CLAUDE.md`, la ligne `ordre` de `docs/format-lecons.md`, le glossaire et la context map par ajouts ; le responsable
+  fait la feuille de route, le graphe, l'issue #26, la story Famille (N2) et le titre de l'issue (N5).
+  Comportements TDD ajoutés : 7. repli de la leçon suivante sur la leçon juste après (N4) ; 8. aucune leçon suivante
+  après une leçon hors du parcours de l'enfant (N10) ; 9. comparaison de niveaux (Catalogue) ; 10. leçons réussies
+  d'une classe au-dessus, hors compteur, jamais prochaine (N1, N7).
