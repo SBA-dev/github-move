@@ -56,3 +56,4 @@ export type { EtatDuRecord, FaitDeRecord, IssueDuRecord } from "./record-de-flue
 export { AdditionPosee } from "./addition-posee.ts";
 export type { ColonneDAdditionPosee } from "./addition-posee.ts";
 export type { EtapePoser } from "./etape-poser.ts";
+export type { EtapeCalculer } from "./etape-calculer.ts";

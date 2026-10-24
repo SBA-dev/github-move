@@ -8,7 +8,7 @@ export const ModeDeReponse = {
   },
 };
 
-export function choixAutourDuResultat(resultat: number): number[] {
-  const candidats = [resultat, resultat + 1, Math.max(0, resultat - 1), resultat + 2];
+export function choixAutourDuResultat(resultat: number, dernierChoix = resultat + 2): number[] {
+  const candidats = [resultat, resultat + 1, Math.max(0, resultat - 1), dernierChoix];
   return [...new Set(candidats)];
 }

@@ -1,4 +1,7 @@
+import { EtapeCalculer } from "./etape-calculer.ts";
 import { EtapePoser } from "./etape-poser.ts";
+import type { ModeDeReponse } from "./mode-de-reponse.ts";
+import type { Tireur } from "./tireur.ts";
 import { type Couleur, type Rang, RANGS } from "./rangs-d-addition.ts";
 
 export type ColonneDAdditionPosee = {
@@ -28,5 +31,9 @@ export class AdditionPosee {
 
   etapePoser(): EtapePoser {
     return EtapePoser.pour(this.nombres);
+  }
+
+  etapeCalculer(mode: ModeDeReponse, tireur: Tireur): EtapeCalculer {
+    return EtapeCalculer.pour(this.nombres, this.colonnes, mode, tireur);
   }
 }

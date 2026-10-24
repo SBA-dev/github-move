@@ -29,8 +29,12 @@ export class QuestionDeCalcul implements QuestionPosee {
     return new QuestionDeCalcul(operation, undefined);
   }
 
-  static avecLesChoix(operation: Operation, tireur: Tireur): QuestionDeCalcul {
-    const textes = choixAutourDuResultat(operation.r).map(String);
+  static avecLesChoix(
+    operation: Operation,
+    tireur: Tireur,
+    nombresProposes: readonly number[] = choixAutourDuResultat(operation.r),
+  ): QuestionDeCalcul {
+    const textes = nombresProposes.map(String);
     const bonneReponse = String(operation.r);
     const question = QuestionJouee.aChoix({
       cle: CleDeQuestion.de("calcul", operation.q),
