@@ -1,6 +1,6 @@
 import type { FormeDeSchema, Niveau, ProblemeEnBarres } from "../../catalogue/domain/index.ts";
 import { CleDeQuestion } from "./cle-de-question.ts";
-import { descriptionDuSchema } from "./description-du-schema.ts";
+import { descriptionDuSchema, descriptionDuSchemaResolu } from "./description-du-schema.ts";
 import { aideDesBarres, explicationDeLaReponseEnBarres, explicationDuSchema } from "./exercices/barres.ts";
 import type { CalculEnCours } from "./question-de-calcul.ts";
 import { calculAuNiveau, QuestionEnveloppantUnCalcul } from "./question-enveloppant-un-calcul.ts";
@@ -16,7 +16,12 @@ export type SchemaEnCours = Readonly<{
   reponseATaper?: string;
 }>;
 
-export type SchemaResolu = Readonly<{ forme: FormeDeSchema; reponse: number; explication: string }>;
+export type SchemaResolu = Readonly<{
+  forme: FormeDeSchema;
+  reponse: number;
+  explication: string;
+  description: string;
+}>;
 
 /** Un problème en barres se joue comme un calcul : même clé de révision, mêmes modes de réponse. */
 export class QuestionDeProblemeEnBarres extends QuestionEnveloppantUnCalcul {
@@ -41,7 +46,12 @@ export class QuestionDeProblemeEnBarres extends QuestionEnveloppantUnCalcul {
 
   resolu(): SchemaResolu {
     const { forme, reponse } = this.probleme;
-    return { forme, reponse, explication: explicationDeLaReponseEnBarres(this.probleme) };
+    return {
+      forme,
+      reponse,
+      explication: explicationDeLaReponseEnBarres(this.probleme),
+      description: descriptionDuSchemaResolu(forme, reponse),
+    };
   }
 }
 

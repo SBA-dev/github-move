@@ -17,6 +17,25 @@ export function descriptionDuSchema(forme: FormeDeSchema): string {
   }
 }
 
+/** La description du schéma une fois la valeur cherchée trouvée : elle prend la place du « ? ». */
+export function descriptionDuSchemaResolu(forme: FormeDeSchema, reponse: number): string {
+  return descriptionDuSchema(avecLaValeurTrouvee(forme, reponse));
+}
+
+function avecLaValeurTrouvee(forme: FormeDeSchema, reponse: number): FormeDeSchema {
+  const trouvee = (valeur: number | null) => valeur ?? reponse;
+  switch (forme.genre) {
+    case "partiesEtTout": {
+      const [partie, autrePartie] = forme.parties;
+      return { ...forme, parties: [trouvee(partie), trouvee(autrePartie)], tout: trouvee(forme.tout) };
+    }
+    case "comparaison":
+      return { ...forme, grand: trouvee(forme.grand), petit: trouvee(forme.petit), ecart: trouvee(forme.ecart) };
+    case "parts":
+      return { ...forme, nb: trouvee(forme.nb), valeur: trouvee(forme.valeur), total: trouvee(forme.total) };
+  }
+}
+
 function lu(valeur: number | null): string {
   return valeur === null ? "?" : String(valeur);
 }
