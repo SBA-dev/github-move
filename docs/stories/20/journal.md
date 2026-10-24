@@ -7,3 +7,8 @@
 - 11:41 · Étape 2 : critères d'acceptance écrits par `po-acceptance` (`features/20-calcul-fluence-addition-posee.feature`, `docs/stories/20/acceptance.md`) : 7 règles, 39 scénarios (43 cas), 9 `@a-valider`, 1 `@acces`. Propositions du modèle appliquées comme hypothèse de travail. Syntaxe vérifiée (`npx bddgen` : seules des étapes manquantes). Nouvelle question Q80 (aide d'un chiffre en double). Story la plus grosse du lot : découpage possible calcul / fluence / addition posée. ⛔ Validation du lot attendue.
 - 12:10 · Validation n°1 du lot 3 : « OK pour tout » du PO (`docs/stories/lot-3-decisions.md`, décisions 0012 et 0013). Scénarios mis à jour par `po-acceptance` : 9 `@a-valider` retirés, comportement inchangé ; questions passées en « Décisions » dans `acceptance.md`. Syntaxe vérifiée.
 - 12:12 · Modèle mis à jour par `domain-modeler` : questions passées en « Décisions du PO » (réponse = proposition), règles du modèle alignées sur ces décisions, renvois vers les décisions 0012 et 0013 ; termes du lot 3 validés au glossaire (conflits n°8 à n°14 tranchés, Décisions n°23 à n°30).
+
+## Livraison (vague 1 du graphe, équipe #20)
+
+- 2026-10-24 12:45 · Étape 0 : équipe lancée par le responsable (issue de coordination #64). Branche `feature/20-calcul-fluence-addition-posee`, partie de `main` (`abb606a`). Branche de base : `main`. Story voisine : #25 (ne pas toucher à ses agrégats ni à `resultats_des_lecons`).
+- 2026-10-24 12:45 · Étapes 1 et 2 sautées : modèle et scénarios déjà écrits et validés au lot 3 (« OK pour tout », `docs/stories/lot-3-decisions.md`). `CADRAGE PRÊT` posté pour information.
