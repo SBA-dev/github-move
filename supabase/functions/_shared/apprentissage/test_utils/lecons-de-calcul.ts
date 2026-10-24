@@ -22,3 +22,24 @@ export function leconDeSoustractionsAuCE1(): Lecon {
 export function leconLesDoublesAuCP(): Lecon {
   return leconDeCalculAvecOperations("ma-cp-les-doubles", "CP", [{ q: "2 + 2", r: 4 }, { q: "3 + 3", r: 6 }]);
 }
+
+function leconDeCalculTire(id: string, generateur: object): Lecon {
+  return lireLecon({
+    id,
+    matiere: "maths",
+    niveau: "CE1",
+    titre: "Du calcul tiré",
+    ordre: 1,
+    programme,
+    lecon: [],
+    exercices: [{ type: "calcul", generateur }],
+  });
+}
+
+export function leconDAdditionsTireesDe1a5AuCE1(): Lecon {
+  return leconDeCalculTire("ma-ce1-additions-tirees", { op: "+", a: [1, 5], b: [1, 5], combien: 3 });
+}
+
+export function leconDUneAdditionTireeDe1a20AuCE1(): Lecon {
+  return leconDeCalculTire("ma-ce1-addition-tiree-large", { op: "+", a: [1, 20], b: [1, 20], combien: 1 });
+}
