@@ -110,6 +110,6 @@ Fonctionnalité: Installer Savanturier comme une application
     @issue-58
     Scénario: Dans la version publiée, un profil enfant préparé pour les tests ne fait jouer personne
       Étant donné que Léa a un profil enfant préparé de niveau CE1
-      Quand j'ouvre Savanturier
+      Quand Léa commence à jouer
       Alors je vois le nom de l'application
       Mais l'en-tête n'affiche aucun prénom ni aucun niveau

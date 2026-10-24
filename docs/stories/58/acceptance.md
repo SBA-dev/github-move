@@ -124,6 +124,19 @@ Toutes les recommandations s'appliquent. Les tags `@a-valider` des scénarios de
 | #58.10 « Léa commence à jouer » / « Léa joue » | L'accueil de l'enfant ; en mode dys, « … voit son accueil en mode dys ». |
 | #58.11 Mode dys à 360 px | Une question de lecture (« Où dort Plume ? » de « Lecture : Le petit chat Plume »). |
 
+### Reformulation après revue, sans changement de règle
+
+Scénario de R2 « Dans la version publiée, un profil enfant préparé pour les tests ne fait jouer personne » (`features/8-pwa-installable.feature`).
+
+La revue a montré qu'il ne pouvait pas échouer : « Quand j'ouvre Savanturier » ouvre l'accueil, où l'en-tête n'affiche jamais de prénom, que la porte de test soit ouverte ou fermée. Le scénario fait désormais **commencer à jouer** Léa, avec son profil préparé. Il ouvre ainsi l'accueil de l'enfant, la page où la porte de test ferait apparaître son prénom et son niveau dans l'en-tête.
+
+| | Étape « Quand » |
+|---|---|
+| Avant | `Quand j'ouvre Savanturier` |
+| Après | `Quand Léa commence à jouer` (étape existante de #6, voir #58.10) |
+
+Le titre, la règle (R2) et les « Alors » ne changent pas : « je vois le nom de l'application », « Mais l'en-tête n'affiche aucun prénom ni aucun niveau ». Dans la version publiée, Léa ne peut pas commencer à jouer : l'application revient à l'accueil, sans enfant en cours.
+
 ### Détail des questions et des recommandations
 
 #### #58.1 — Quelle porte de test garde-t-on pour jouer sans connexion dans les E2E ?
