@@ -15,7 +15,6 @@ import { MotsDePasseDesParentsEnMemoire } from "../test_utils/mots-de-passe-des-
 import { ParentsDesAdressesEnMemoire } from "../test_utils/parents-des-adresses-en-memoire.ts";
 import { PrenomsDesEnfantsRattachesEnMemoire } from "../test_utils/prenoms-des-enfants-rattaches-en-memoire.ts";
 import { RegistreDesEssaisDeReinitialisationEnMemoire } from "../test_utils/registre-des-essais-de-reinitialisation-en-memoire.ts";
-import { EssaisDeReinitialisationModifiesEnMemeTemps } from "./ports/registre-des-essais-de-reinitialisation.ts";
 import { ReinitialiserLeMotDePasse } from "./reinitialiser-le-mot-de-passe.ts";
 
 const adresse = "paul@exemple.test";
@@ -285,11 +284,7 @@ Deno.test("des conflits répétés à l'enregistrement de l'essai font échouer 
 
   assertEquals([parents.lectures, prenoms.lectures], [0, 0]);
   assertEquals(motsDePasse.changements, []);
-  assert(journal.filter((appel) => appel === "registre.conflit").length <= 10);
-});
-
-Deno.test("l'erreur de concurrence du registre est une erreur du port", () => {
-  assert(new EssaisDeReinitialisationModifiesEnMemeTemps() instanceof Error);
+  assertEquals(journal.filter((appel) => appel === "registre.conflit").length, 5);
 });
 
 Deno.test("deux essais simultanés comptent tous les deux : le second voit le compte à jour avant de lire les prénoms", async () => {
