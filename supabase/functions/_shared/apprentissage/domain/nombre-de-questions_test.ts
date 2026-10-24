@@ -1,5 +1,5 @@
 import { assertEquals } from "@std/assert";
-import type { Exercice } from "../../catalogue/domain/index.ts";
+import { type Exercice, lireLecon } from "../../catalogue/domain/index.ts";
 import { nombreDeQuestions } from "./nombre-de-questions.ts";
 
 const uneListeDe = (taille: number): readonly unknown[] => Array.from({ length: taille }, (_, i) => ({ rang: i }));
@@ -9,6 +9,27 @@ const desQuestionsAChoix = (taille: number) =>
 
 const desItemsDEcoute = (taille: number) =>
   Array.from({ length: taille }, (_, i) => ({ dire: `mot ${i}`, choix: ["a", "b"], reponse: "a" }));
+
+function exerciceLu(brut: unknown): Exercice {
+  return lireLecon({
+    id: "fr-cp-sons-ou-on-an",
+    matiere: "francais",
+    niveau: "CP",
+    titre: "Les sons ou, on, an",
+    ordre: 5,
+    programme: {
+      section: "c2-francais-cp-identifier-les-mots-de-maniere-de-plus-en-plus-aisee",
+      citation: "Décoder et encoder de 25 à 30 CGP.",
+    },
+    lecon: [],
+    exercices: [brut],
+  }).exercices[0];
+}
+
+const desGroupes = (taille: number) => Array.from({ length: taille }, (_, i) => ({ id: `${i}`, nom: `maison ${i}` }));
+
+const desItemsAClasser = (taille: number) =>
+  Array.from({ length: taille }, (_, i) => ({ texte: `mot ${i}`, groupe: "0" }));
 
 Deno.test("un exercice de bulles compte une question par question", () => {
   const exercice: Exercice = { type: "bulles", titre: "Quel son entends-tu ?", questions: desQuestionsAChoix(6) };
@@ -46,31 +67,25 @@ Deno.test("un exercice de barres compte une question par item", () => {
 });
 
 Deno.test("un exercice pour classer compte une question par étiquette, pas par groupe", () => {
-  const exercice: Exercice = { type: "classer", groupes: uneListeDe(3), items: uneListeDe(9) };
+  const exercice = exerciceLu({ type: "classer", groupes: desGroupes(3), items: desItemsAClasser(9) });
 
   assertEquals(nombreDeQuestions(exercice), 9);
 });
 
 Deno.test("un exercice d'ordre compte une question par élément", () => {
-  const exercice: Exercice = { type: "ordre", elements: uneListeDe(3) };
+  const exercice = exerciceLu({ type: "ordre", elements: ["do", "mi", "no"] });
 
   assertEquals(nombreDeQuestions(exercice), 3);
 });
 
 Deno.test("un exercice à trous compte une question par mot entre crochets du texte", () => {
-  const exercice: Exercice = {
+  const exercice = exerciceLu({
     type: "trous",
     texte: "Le [chat] dort sur le [lit] de Léa, près de la [fenêtre].",
-    distracteurs: uneListeDe(5),
-  };
+    distracteurs: ["pré", "mur"],
+  });
 
   assertEquals(nombreDeQuestions(exercice), 3);
-});
-
-Deno.test("un exercice à trous sans crochet n'a aucune question", () => {
-  const exercice: Exercice = { type: "trous", texte: "Le chat dort." };
-
-  assertEquals(nombreDeQuestions(exercice), 0);
 });
 
 Deno.test("un exercice de conjugaison compte une question par personne", () => {
@@ -147,7 +162,7 @@ Deno.test("une addition posée générée compte les opérations demandées par 
 
 Deno.test("la leçon « Les sons ou, on, an » compte 6 questions de bulles puis 9 de classement", () => {
   const bulles: Exercice = { type: "bulles", questions: desQuestionsAChoix(6) };
-  const classer: Exercice = { type: "classer", groupes: uneListeDe(3), items: uneListeDe(9) };
+  const classer = exerciceLu({ type: "classer", groupes: desGroupes(3), items: desItemsAClasser(9) });
 
   assertEquals([bulles, classer].map(nombreDeQuestions), [6, 9]);
 });

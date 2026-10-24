@@ -51,7 +51,12 @@ function leconSonsOuOnAn() {
         titre: "Quel son entends-tu ?",
         questions: [{ question: "Quel son ?", choix: ["ou", "on"], reponse: "ou" }],
       },
-      { type: "classer", titre: "Les maisons des sons", items: [{ texte: "loup", groupe: "1" }] },
+      {
+        type: "classer",
+        titre: "Les maisons des sons",
+        groupes: [{ id: "1", nom: "ou" }, { id: "2", nom: "on" }],
+        items: [{ texte: "loup", groupe: "1" }],
+      },
     ],
   });
 }
