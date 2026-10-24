@@ -35,3 +35,5 @@
 - Option A : RED 9b85b55, c865607 ; fix 70005c6 (requalifie f1a47d4), refactor 0ce004f, docs b35762b ; RED adaptateur 28cd6ec, fix be8a0f2. Redéployé. 1104 verts. Dette : erreur de lecture du registre (pourAdresse) → 500 générique. Review n°4 lancée.
 - Review n°4 : APPROUVÉ (non bloquants : c865607 étiqueté red alors que caractérisation ; panne absorbée sans trace serveur ; utilitaire de requête en flux ; lecture du registre → 500 ; renvoi dans 0019). Étape 5 : e2e-tester lancé.
 - E2E : 98ddafb. #72 : 164/168 (52/55 scénarios) ; KO : le 5ᵉ raté répond « Ces informations ne correspondent pas. » alors que 2 scénarios attendent « Trop d'essais. Réessaie dans une heure. » → scénario vs modèle ambigu, escalade au PO. Non-régression 919/924 (4 KO #72 + flaky « 7 × 8 » de #10). Étape « invité à me connecter » adaptée. Suffixe SUFFIXE_E2E repris de main (collisions avec d'autres équipes sur savanturier-dev).
+- PO : option A, le 5ᵉ essai raté répond « Trop d'essais. Réessaie dans une heure. » (les scénarios font foi). Cycle test-writer → implementer.
+- 5ᵉ raté → Trop d'essais : RED 777e5e9, fix 4bb940e, redéployé. 1106 verts. Relance E2E #72 et review du delta.
