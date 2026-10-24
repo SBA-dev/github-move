@@ -1,7 +1,9 @@
+import type { GenerateurComplet, Operation } from "../../catalogue/domain/index.ts";
 import { ChoixProposes } from "./choix-proposes.ts";
 import { TirageInvalide, TirageManquant } from "./erreurs.ts";
 import type { Hasard } from "./hasard.ts";
 import { melanger } from "./melange.ts";
+import { relireLesOperations, tirerLesOperations } from "./tirage-d-operations.ts";
 
 const NOMBRE_DE_MOTS_EN_PLUS = 2;
 
@@ -9,14 +11,16 @@ export interface Tireur {
   choix(choix: readonly string[], bonneReponse: string): ChoixProposes;
   trou(motAttendu: string, candidats: readonly string[]): ChoixProposes;
   etiquettesMelangees(etiquettes: readonly string[]): string[];
+  operations(generateur: GenerateurComplet): readonly Operation[];
 }
 
-export function tireurAuHasard(hasard: Hasard): Tireur {
+export function tireurAuHasard(hasard: Hasard, facilite = 1): Tireur {
   return {
     choix: (choix, bonneReponse) => ChoixProposes.proposer(choix, bonneReponse, hasard),
     trou: (motAttendu, candidats) =>
       ChoixProposes.proposer([motAttendu, ...motsEnPlus(candidats, hasard)], motAttendu, hasard),
     etiquettesMelangees: (etiquettes) => melanger(etiquettes, hasard),
+    operations: (generateur) => tirerLesOperations(generateur, hasard, facilite),
   };
 }
 
@@ -38,6 +42,7 @@ export function tireurSelonLesTirages(tirages: Iterator<readonly string[]>): Tir
       if (!memesEtiquettes(etiquettes, tirage)) throw new TirageInvalide();
       return [...tirage];
     },
+    operations: (generateur) => relireLesOperations(generateur, prochainTirage()),
   };
 }
 

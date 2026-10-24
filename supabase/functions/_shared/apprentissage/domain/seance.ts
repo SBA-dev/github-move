@@ -67,8 +67,15 @@ export class Seance {
     enfant: string,
     lecon: Lecon,
     choix: ChoixDeSeance,
+    facilite = 1,
   ): Seance {
-    return Seance.construire(SeanceId.de(generateurId.nouveau()), enfant, lecon, choix, tireurAuHasard(hasard));
+    return Seance.construire(
+      SeanceId.de(generateurId.nouveau()),
+      enfant,
+      lecon,
+      choix,
+      tireurAuHasard(hasard, facilite),
+    );
   }
 
   static reconstituer(lecon: Lecon, envoi: SeanceTermineeAEnregistrer): Seance {

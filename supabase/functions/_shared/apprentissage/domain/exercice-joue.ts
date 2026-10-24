@@ -1,4 +1,4 @@
-import type { Exercice, Niveau, Operation, Segment } from "../../catalogue/domain/index.ts";
+import type { Exercice, ExerciceCalcul, Niveau, Operation, Segment } from "../../catalogue/domain/index.ts";
 import { type EtiquettePosee, EtiquettesAPlacer } from "./etiquettes-a-placer.ts";
 import { PasDeQuestionEnCours } from "./erreurs.ts";
 import { nombreDeQuestions } from "./nombre-de-questions.ts";
@@ -10,6 +10,7 @@ import type { ParoleDue } from "./parole-due.ts";
 import type { QuestionSuivie } from "./question-suivie.ts";
 import type { AideDonnee } from "./question-jouee.ts";
 import type { Reponse, ResultatDeReponse } from "./reponse.ts";
+import { enonceTire } from "./tirage-d-operations.ts";
 import type { Tireur } from "./tireur.ts";
 
 export type SegmentDuTexteATrous =
@@ -21,6 +22,7 @@ type Contenu = Readonly<{
   questionsPosees?: readonly QuestionPosee[];
   etiquettes?: EtiquettesAPlacer;
   segments?: readonly Segment[];
+  operationsTirees?: readonly Operation[];
 }>;
 
 export class ExerciceJoue {
@@ -55,7 +57,11 @@ export class ExerciceJoue {
   tirages(): string[][] {
     const etiquettes = this.contenu.etiquettes;
     if (etiquettes) return [etiquettes.tirage()];
-    return this.questionsPosees().map((question) => question.tirage()).filter((tirage) => tirage.length > 0);
+    const operations = (this.contenu.operationsTirees ?? []).map(enonceTire);
+    const tiragesDesQuestions = this.questionsPosees().map((question) => question.tirage());
+    return [...(operations.length > 0 ? [operations] : []), ...tiragesDesQuestions].filter((tirage) =>
+      tirage.length > 0
+    );
   }
 
   etiquettesAPlacer(): string[] {
@@ -151,10 +157,18 @@ function contenuDe(exercice: Exercice, tireur: Tireur, niveau: Niveau): Contenu 
     case "trous":
       return { questionsPosees: questionsJoueesAvec(exercice, tireur), segments: exercice.segments };
     case "calcul":
-      return { questionsPosees: questionsDeCalcul(exercice.operations ?? [], tireur, niveau) };
+      return contenuDeCalcul(exercice, tireur, niveau);
     default:
       return { questionsPosees: questionsJoueesAvec(exercice, tireur) };
   }
+}
+
+function contenuDeCalcul(exercice: ExerciceCalcul, tireur: Tireur, niveau: Niveau): Contenu {
+  if (exercice.operations || !exercice.generateur) {
+    return { questionsPosees: questionsDeCalcul(exercice.operations ?? [], tireur, niveau) };
+  }
+  const operationsTirees = tireur.operations(exercice.generateur);
+  return { operationsTirees, questionsPosees: questionsDeCalcul(operationsTirees, tireur, niveau) };
 }
 
 function questionsDeCalcul(operations: readonly Operation[], tireur: Tireur, niveau: Niveau): QuestionDeCalcul[] {

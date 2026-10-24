@@ -16,6 +16,7 @@ import {
   SeanceIncoherente,
   SeanceNonFinie,
   TirageEnTrop,
+  TirageHorsDuGenerateur,
   TirageInvalide,
   TirageManquant,
 } from "./erreurs.ts";
@@ -39,6 +40,7 @@ const ERREURS_DE_REJEU = [
   SeanceDejaFinie,
   SeanceNonFinie,
   TirageEnTrop,
+  TirageHorsDuGenerateur,
   TirageInvalide,
   TirageManquant,
 ];

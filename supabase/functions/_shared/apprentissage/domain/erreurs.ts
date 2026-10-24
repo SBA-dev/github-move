@@ -124,6 +124,13 @@ export class TirageEnTrop extends Error {
   }
 }
 
+export class TirageHorsDuGenerateur extends Error {
+  constructor(readonly tirage: string) {
+    super(`L'opération tirée « ${tirage} » ne vient pas du générateur de l'exercice.`);
+    this.name = "TirageHorsDuGenerateur";
+  }
+}
+
 export class SeanceIncoherente extends Error {
   constructor(override readonly cause: Error) {
     super(`La séance envoyée est incohérente : ${cause.message}`);
