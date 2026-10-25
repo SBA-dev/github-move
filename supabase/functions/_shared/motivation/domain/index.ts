@@ -80,3 +80,9 @@ export {
   titreDeLaSection,
 } from "./paroles-de-la-cabane.ts";
 export { type FaitsDuJour, type ObjectifDuJour, objectifDuJour } from "./objectif-du-jour.ts";
+export {
+  faitsDuJour,
+  type SeanceDeRevisionTermineeDUnJour,
+  type SeancesConnues,
+  type SeanceTermineeDUnJour,
+} from "./faits-du-jour.ts";
