@@ -74,3 +74,15 @@ Deno.test("essayer une voix en Muet, voix suspendue, ne lit rien", async () => {
 
   assertEquals(lecteur.lectures.length, 0);
 });
+
+Deno.test("remettre le son, voix suspendue, ne lit pas la présentation mais le son est bien remis", async () => {
+  const { lecture, lecteur } = uneLecture({ muet: true });
+  lecture.suspendre();
+
+  await lecture.remettreLeSon("Je t'entends ! Je suis Lumi.");
+  assertEquals(lecteur.lectures.length, 0);
+
+  lecture.reprendre();
+  await lecture.lire("Écoute bien.");
+  assertEquals(lecteur.lectures.length, 1);
+});
