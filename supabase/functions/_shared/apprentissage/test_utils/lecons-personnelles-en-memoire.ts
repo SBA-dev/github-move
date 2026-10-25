@@ -14,4 +14,10 @@ export class LeconsPersonnellesDuProfilEnMemoire implements LeconsPersonnellesDu
     this.identifiantsInterroges.push(id);
     return Promise.resolve(this.lecons.get(`${profil}/${id}`) ?? null);
   }
+
+  toutes(profil: string): Promise<readonly Lecon[]> {
+    return Promise.resolve(
+      [...this.lecons].filter(([cle]) => cle.startsWith(`${profil}/`)).map(([, lecon]) => lecon),
+    );
+  }
 }
