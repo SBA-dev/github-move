@@ -1,4 +1,4 @@
-import { assertEquals, assertThrows } from "@std/assert";
+import { assertEquals, assertExists, assertThrows } from "@std/assert";
 import { type Lecon, lireLecon, Niveau } from "../../catalogue/domain/index.ts";
 import { hasardSansMelange } from "../test_utils/hasard-fixe.ts";
 import { CleDeQuestion } from "./cle-de-question.ts";
@@ -178,6 +178,12 @@ Deno.test("en révision, une question de dictée se joue jusqu'au bout et est fa
   assertEquals(seance.resultats(), [{ identite: mot, juste: false }]);
 });
 
+function tirageDeLaQuestionEnCours(seance: SeanceDeRevision): string[] {
+  const posee = seance.questionEnCours()?.question;
+  assertExists(posee);
+  return posee.tirage();
+}
+
 const finDeLaRevision = new Date("2026-10-25T17:00:00Z");
 
 function seanceFinieSurBateau(): SeanceDeRevision {
@@ -225,10 +231,10 @@ Deno.test("l'envoi d'une séance de révision terminée contient les questions, 
   const plan = planDesQuestionsRatees(bateau, chat);
   const [premiere, seconde] = plan.questions.map(({ identite }) => identite);
   const seance = seanceSur(plan);
-  const tirageDeLaPremiere = seance.questionEnCours()?.question?.tirage();
+  const tirageDeLaPremiere = tirageDeLaQuestionEnCours(seance);
   seance.repondre(mauvaiseReponseDe(premiere));
   seance.repondre(bonneReponseDe(premiere));
-  const tirageDeLaSeconde = seance.questionEnCours()?.question?.tirage();
+  const tirageDeLaSeconde = tirageDeLaQuestionEnCours(seance);
   seance.direJeNeSaisPas();
   seance.repondre(bonneReponseDe(seconde));
   seance.terminer(finDeLaRevision, jourDeLaRevision);
