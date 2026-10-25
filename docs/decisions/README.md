@@ -24,5 +24,6 @@ Une décision n'est jamais réécrite : si elle change, une nouvelle décision l
 | [0017](0017-livraison-en-parallele-par-equipes.md) | Stories livrées en parallèle, une équipe par story, selon un graphe de dépendances | Acceptée |
 | [0018](0018-revalidation-de-la-dictee-sans-le-profil.md) | La dictée est revalidée sans relire le profil de l'enfant (complète 0016) | Acceptée |
 | [0019](0019-connexion-par-mot-de-passe-sans-e-mail-dans-la-beta.md) | Connexion par mot de passe, sans aucun e-mail, dans la beta ; inscription par Edge Function ; réinitialisation par le prénom d'un enfant jusqu'à #45 | Acceptée |
-| [0020](0020-accelerer-la-livraison-d-une-story.md) | Livraison d'une story accélérée : une seule non-régression E2E, scénarios en parallèle, review plus tôt | Acceptée |
+| [0020](0020-accelerer-la-livraison-d-une-story.md) | Livraison d'une story accélérée : une seule non-régression E2E, scénarios en parallèle, review plus tôt | Acceptée, précisée par 0022 |
 | [0021](0021-porte-de-test-du-profil-prepare.md) | Le profil préparé, seule porte de test, en développement seulement | Acceptée |
+| [0022](0022-non-regression-groupee-sur-main.md) | Non-régression complète groupée sur `main` après 3 merges ; merges autorisés pour la vague | Acceptée |
