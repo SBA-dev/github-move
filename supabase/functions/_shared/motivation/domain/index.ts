@@ -54,3 +54,27 @@ export {
   phraseLueDeLaPastille,
   TITRE_DES_RECORDS_DE_CALCUL_RAPIDE,
 } from "./paroles-de-l-ecran-des-medailles.ts";
+export {
+  cabaneDe,
+  type EtatDeLaCabane,
+  type MeilleuresEtoilesDuProfil,
+  NombreDEtoilesInvalide,
+  type ObjetDeLaCabane,
+  objetRecuParLaSeance,
+  type PalierDeLaCabane,
+  PALIERS_DE_LA_CABANE,
+  totalDesEtoiles,
+  TotalDEtoilesInvalide,
+} from "./cabane.ts";
+export { type PastilleDeLaCabane, pastillesDeLaCabane } from "./pastilles-de-la-cabane.ts";
+export {
+  annonceDeLObjetRecu,
+  descriptionDuDessin,
+  finDePhraseDuPersonnageGuide,
+  libelleDuPalier,
+  libelleLuDuPalier,
+  phraseDeFinAvecLaCabane,
+  phraseDeLEtat,
+  titreDeLAnnonce,
+  titreDeLaSection,
+} from "./paroles-de-la-cabane.ts";

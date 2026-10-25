@@ -11,8 +11,10 @@ import type { EtapeDeLecon, Lecon } from "@domain/catalogue";
 import {
   annoncerExerciceSuivant,
   inviterAJouerApresLesEtapes,
+  type ObjetDeLaCabane,
   type PersonnageGuide,
   parolesDeFinDeSeance,
+  phraseDeFinAvecLaCabane,
 } from "@domain/motivation";
 import { useReducedMotion } from "motion/react";
 import { hasardDuNavigateur } from "../hasard-navigateur.ts";
@@ -271,10 +273,11 @@ export function useDeroulementDeSeance(
     relire();
   }, [reussite.figee, personnage.parole, relireLaPresentation, relireLaQuestion, memorisation.reecouter, relire]);
 
-  const direLaFin = useCallback((etoiles: number | undefined) => {
+  const direLaFin = useCallback((etoiles: number | undefined, objetRecu: ObjetDeLaCabane | undefined) => {
     sequence.current++;
     if (etoiles === undefined) return;
-    const texte = parolesDeFinDeSeance(etoiles, prenom, personnageGuide, hasardDuNavigateur);
+    const felicitation = parolesDeFinDeSeance(etoiles, prenom, personnageGuide, hasardDuNavigateur);
+    const texte = phraseDeFinAvecLaCabane(felicitation, objetRecu);
     void dire({ texte, nature: "felicitation", humeur: "applaudit" });
   }, [dire, prenom, personnageGuide]);
 

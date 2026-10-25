@@ -28,19 +28,24 @@ export async function lireLesMeilleuresEtoiles(profil: string, lecon: string): P
 
 type LigneDeResultat = { readonly lecon?: unknown; readonly meilleures_etoiles?: unknown };
 
-/** Lecture sous RLS des résultats de toutes les leçons du profil. Vide si la lecture est impossible (sans réseau). */
-export async function lireToutesLesMeilleuresEtoiles(profil: string): Promise<ReadonlyMap<string, Etoiles>> {
+/** Lecture sous RLS des résultats de toutes les leçons du profil. `undefined` : la lecture a échoué. Vide pour un identifiant qui n'est pas celui d'un profil réel. */
+export async function lireToutesLesMeilleuresEtoilesSiPossible(profil: string): Promise<ReadonlyMap<string, Etoiles> | undefined> {
   const meilleures = new Map<string, Etoiles>();
   if (!estUnIdentifiantDeProfil(profil)) return meilleures;
   try {
     const { data, error } = await clientSupabase().from("resultats_des_lecons").select("lecon, meilleures_etoiles").eq("profil", profil);
-    if (error || data === null) return meilleures;
+    if (error || data === null) return undefined;
     for (const ligne of data as readonly LigneDeResultat[]) {
       const etoiles = enEtoiles(ligne.meilleures_etoiles);
       if (typeof ligne.lecon === "string" && etoiles) meilleures.set(ligne.lecon, etoiles);
     }
   } catch {
-    return new Map();
+    return undefined;
   }
   return meilleures;
+}
+
+/** Lecture sous RLS des résultats de toutes les leçons du profil. Vide si la lecture est impossible (sans réseau). */
+export async function lireToutesLesMeilleuresEtoiles(profil: string): Promise<ReadonlyMap<string, Etoiles>> {
+  return (await lireToutesLesMeilleuresEtoilesSiPossible(profil)) ?? new Map();
 }
