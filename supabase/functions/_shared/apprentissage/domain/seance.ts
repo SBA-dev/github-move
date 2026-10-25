@@ -16,6 +16,7 @@ import type { BoiteEnCours, BoiteOuverte } from "./question-de-boite.ts";
 import type { SchemaEnCours, SchemaResolu } from "./question-de-probleme-en-barres.ts";
 import type { CalculEnCours } from "./question-de-calcul.ts";
 import { Etoiles } from "./etoiles.ts";
+import type { Jour } from "./jour.ts";
 import type { CleDeQuestion } from "./cle-de-question.ts";
 import { ExerciceJoue } from "./exercice-joue.ts";
 import type { GenerateurId } from "./generateur-id.ts";
@@ -30,6 +31,7 @@ import type { QuestionSuivie, TypeDeQuestion } from "./question-suivie.ts";
 import { type Tireur, tireurAuHasard, tireurSelonLesTirages } from "./tireur.ts";
 import type { Reponse, ResultatDeReponse } from "./reponse.ts";
 import { SeanceId } from "./seance-id.ts";
+import type { QuestionRateeARetenir } from "./file-de-revision.ts";
 import type { SeanceTermineeAEnregistrer } from "./seance-terminee-a-enregistrer.ts";
 
 export type QuestionRatee = Readonly<{ cle: CleDeQuestion; erreurs: number; jeNeSaisPas: boolean }>;
@@ -43,10 +45,12 @@ export type SeanceTerminee = Readonly<{
   lecon: string;
   choix: ChoixDeSeance;
   termineeLe: Date;
+  jour?: Jour;
   etoiles?: Etoiles["nombre"];
   scoresDeFluence?: Readonly<Record<string, number>>;
   erreurs: number;
   questionsRatees: readonly QuestionRatee[];
+  questionsRateesARetenir: readonly QuestionRateeARetenir[];
   parType: Partial<Record<TypeDeQuestion, ReussitesEtErreurs>>;
 }>;
 
@@ -59,6 +63,7 @@ export class Seance {
   private indexDeLExercice = 0;
   private faits: FaitDeSeance[] = [];
   private termineeLe: Date | undefined;
+  private jour: Jour | undefined;
   private dernierExerciceRepondu: ExerciceJoue | undefined;
 
   private constructor(
@@ -259,10 +264,11 @@ export class Seance {
     return Etoiles.depuisErreurs(this.erreurs());
   }
 
-  terminer(maintenant: Date): SeanceTerminee {
+  terminer(maintenant: Date, jour?: Jour): SeanceTerminee {
     if (this.termineeLe) throw new SeanceDejaTerminee();
     if (!this.estFinie()) throw new SeanceNonFinie();
     this.termineeLe = maintenant;
+    this.jour = jour;
     const fait: SeanceTerminee = {
       type: "SeanceTerminee",
       seance: this.id.valeur,
@@ -270,6 +276,7 @@ export class Seance {
       lecon: this.lecon,
       choix: this.choix,
       termineeLe: maintenant,
+      ...(jour && { jour }),
       ...this.etoilesSiLaSeanceEstNotee(),
       ...this.scoresDeFluence(),
       erreurs: this.erreurs(),
@@ -280,6 +287,7 @@ export class Seance {
           erreurs: question.erreurs,
           jeNeSaisPas: question.bonneReponseMontree,
         })),
+      questionsRateesARetenir: this.questionsRateesARetenir(),
       parType: this.reussitesEtErreursParType(),
     };
     return fait;
@@ -299,6 +307,7 @@ export class Seance {
       ],
       reponses: questions.map((question) => question.reponses()),
       termineeLe: this.termineeLe,
+      ...(this.jour && { jour: this.jour.toString() }),
     };
   }
 
@@ -315,6 +324,20 @@ export class Seance {
   private dernierExerciceCorrige(exercice: ExerciceJoue): void {
     this.dernierExerciceRepondu = exercice;
     this.avancerSiExerciceReussi(exercice);
+  }
+
+  private questionsRateesARetenir(): QuestionRateeARetenir[] {
+    return this.exercices.flatMap((exercice) =>
+      exercice.questionsRateesARetenir().map((question) => ({
+        identite: question.cle,
+        origine: {
+          leconDOrigine: this.lecon,
+          position: exercice.position,
+          type: question.type,
+          ...(question.tirage && { tirage: question.tirage }),
+        },
+      }))
+    );
   }
 
   private questions(): QuestionSuivie[] {

@@ -23,6 +23,9 @@ type Props = {
   /** Vrai tant que le test de départ n'est pas fait et qu'il a des questions à poser. */
   readonly testDeDepartAProposer: boolean;
   readonly onMonTestDeDepart: () => void;
+  /** Le nombre de questions dues de la file de révision ; zéro tant que la file n'est pas connue. */
+  readonly questionsDuesALaRevision: number;
+  readonly onJeRevise: () => void;
   readonly onCommencerLaLecon: (leconId: string) => void;
   readonly onOuvrirLaMatiere: (matiere: CodeDeMatiere) => void;
   readonly onChangerDEnfant: () => void;
@@ -30,7 +33,7 @@ type Props = {
 
 /** Là où arrive l'enfant qui vient de choisir son profil : la date, son personnage guide qui le salue, puis ce qu'il peut faire aujourd'hui. */
 export function AccueilDeLEnfant(
-  { profil, univers, voix, saluer: aSaluer, testDeDepartAProposer, onMonTestDeDepart, onCommencerLaLecon, onOuvrirLaMatiere, onChangerDEnfant }: Props,
+  { profil, univers, voix, saluer: aSaluer, testDeDepartAProposer, questionsDuesALaRevision, onMonTestDeDepart, onJeRevise, onCommencerLaLecon, onOuvrirLaMatiere, onChangerDEnfant }: Props,
 ) {
   const { parole, rangDuMotPrononce, humeur, dire, faireSilence } = usePersonnageQuiParle(voix);
   const [salutationALire] = useState(aSaluer);
@@ -51,8 +54,9 @@ export function AccueilDeLEnfant(
         <BulleDuPersonnageGuide texte={parole?.texte} nature={parole?.nature} rangDuMotPrononce={rangDuMotPrononce} />
       </div>
       <TuilesDuJourDeLAccueil
-        tuiles={tuilesDuJour({ nombreDeQuestionsDues: undefined, testDeDepartAProposer })}
+        tuiles={tuilesDuJour({ nombreDeQuestionsDues: questionsDuesALaRevision, testDeDepartAProposer })}
         onMonTestDeDepart={onMonTestDeDepart}
+        onJeRevise={onJeRevise}
       />
       {entrees && (
         <>

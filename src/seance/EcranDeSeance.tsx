@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
   ChoixDeSeance,
-  type EtatDeLaVoix,
   exerciceDemandeLeSon,
   ExerciceIntrouvable,
   LeconSansExercice,
@@ -27,6 +26,7 @@ import { ExerciceDeCalcul } from "./exercices/ExerciceDeCalcul.tsx";
 import { ExerciceDeDictee } from "./exercices/ExerciceDeDictee.tsx";
 import { ExerciceDeFluence } from "./exercices/fluence/ExerciceDeFluence.tsx";
 import { ExerciceDeMemorisation } from "./exercices/ExerciceDeMemorisation.tsx";
+import { etatDeLaVoix } from "./etat-de-la-voix.ts";
 import { generateurIdDuNavigateur } from "./generateur-id-navigateur.ts";
 import { hasardDuNavigateur } from "./hasard-navigateur.ts";
 import { horlogeDuNavigateur } from "./horloge.ts";
@@ -138,11 +138,6 @@ function PartieCommencee(
 function estAChoix(exercice: Exercice): boolean {
   return exercice.type === "bulles" || exercice.type === "lecture" || exercice.type === "ecoute" ||
     exercice.type === "trous" || exercice.type === "conjugaison";
-}
-
-function etatDeLaVoix({ son, syntheseVocalePresente }: Pick<Voix, "son" | "syntheseVocalePresente">): EtatDeLaVoix {
-  if (!syntheseVocalePresente) return "lectureImpossible";
-  return son === "muet" ? "muet" : "disponible";
 }
 
 type PropsEnCours = Omit<PropsDUnePartie, "exercice" | "profilId" | "clavierDesDictees"> & {
