@@ -13,7 +13,7 @@ import { SeancesGardeesSurLAppareil } from "./seances-gardees-sur-l-appareil.ts"
  */
 export type Sauvegarde = "enregistree" | "gardee" | "perdue" | "ignoree";
 
-type IssueDeLEnvoi = "enregistree" | "refusee" | "impossible";
+export type IssueDeLEnvoi = "enregistree" | "refusee" | "impossible";
 
 const STATUT_NON_AUTORISE = 401;
 const PREMIER_STATUT_SERVEUR_INDISPONIBLE = 500;
@@ -21,7 +21,7 @@ const PREMIER_STATUT_SERVEUR_INDISPONIBLE = 500;
 const envoisEnCours = new Set<Promise<unknown>>();
 
 /** Le serveur a répondu 4xx autre que 401 : le renvoyer ne changerait rien. Un 401 ou un 5xx peut se rétablir. */
-function issueDuStatut(statut: number): IssueDeLEnvoi {
+export function issueDuStatut(statut: number): IssueDeLEnvoi {
   return statut === STATUT_NON_AUTORISE || statut >= PREMIER_STATUT_SERVEUR_INDISPONIBLE ? "impossible" : "refusee";
 }
 

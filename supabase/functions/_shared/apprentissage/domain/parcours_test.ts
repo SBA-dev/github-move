@@ -178,3 +178,70 @@ Deno.test("les leçons réussies des classes au-dessus ne comptent pas dans le p
     [1, 4, "fr-ce1-b"],
   );
 });
+
+function parcoursAvecTestDeDepart(
+  meilleuresEtoiles: Map<string, Etoiles>,
+  leconsReussiesAuTestDeDepart: string[],
+) {
+  return parcoursDeLaMatiere(
+    {
+      lecons: quatreLecons,
+      niveau: Niveau.de("CE1"),
+      meilleuresEtoiles,
+      leconsReussiesAuTestDeDepart: new Set(leconsReussiesAuTestDeDepart),
+    },
+    quatreLecons[0].matiere,
+  );
+}
+
+Deno.test("une leçon réussie au test de départ a l'état réussie au test de départ, sans étoiles, et la prochaine leçon est la première leçon ni réussie ni réussie au test de départ", () => {
+  const parcours = parcoursAvecTestDeDepart(new Map(), ["fr-ce1-a", "fr-ce1-b"]);
+
+  assertEquals(parcours.lecons.map(({ etat }) => etat), [
+    { genre: "reussieAuTestDeDepart" },
+    { genre: "reussieAuTestDeDepart" },
+    { genre: "prochaine" },
+    { genre: "aDecouvrir" },
+  ]);
+  assertEquals(parcours.prochaineLecon, "fr-ce1-c");
+});
+
+Deno.test("une leçon réussie au test de départ qui a aussi des meilleures étoiles garde l'état réussie avec ses étoiles", () => {
+  const parcours = parcoursAvecTestDeDepart(new Map([["fr-ce1-a", Etoiles.de(2)]]), ["fr-ce1-a"]);
+
+  assertEquals(parcours.lecons[0].etat, { genre: "reussie", etoiles: Etoiles.de(2) });
+});
+
+Deno.test("les leçons réussies au test de départ comptent dans le nombre de leçons réussies du parcours", () => {
+  const parcours = parcoursAvecTestDeDepart(new Map([["fr-ce1-a", Etoiles.de(1)]]), ["fr-ce1-a", "fr-ce1-c"]);
+
+  assertEquals([parcours.nombreDeLeconsReussies, parcours.nombreDeLecons], [2, 4]);
+});
+
+Deno.test("quand toutes les leçons d'une matière sont réussies au test de départ, elle n'a plus de prochaine leçon", () => {
+  const parcours = parcoursAvecTestDeDepart(new Map(), quatreLecons.map((l) => l.id));
+
+  assertEquals(parcours.prochaineLecon, undefined);
+  assertEquals(parcours.lecons.some(({ etat }) => etat.genre === "prochaine"), false);
+});
+
+Deno.test("un enfant redescendu en CE1 retrouve, sans étoiles, une leçon de la classe au-dessus réussie au test de départ", () => {
+  const entrees = {
+    lecons: [...quatreLecons, futurDuCE2],
+    niveau: Niveau.de("CE1"),
+    meilleuresEtoiles: new Map(),
+    leconsReussiesAuTestDeDepart: new Set([futurDuCE2.id]),
+  };
+
+  const parcours = parcoursDeLaMatiere(entrees, futurDuCE2.matiere);
+
+  assertEquals(
+    parcours.leconsReussiesDesClassesAuDessus.map(({ lecon, niveau, titre, etoiles }) => ({
+      lecon,
+      niveau: niveau.valeur,
+      titre,
+      etoiles,
+    })),
+    [{ lecon: "fr-ce2-futur", niveau: "CE2", titre: "Titre de fr-ce2-futur", etoiles: undefined }],
+  );
+});

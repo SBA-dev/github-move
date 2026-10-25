@@ -38,5 +38,5 @@ export function useProfilEnCours() {
   }, []);
 
   const oublier = useCallback(() => setProfil(undefined), []);
-  return { profil, charge, choisirQuiJoue, oublier };
+  return { profil, charge, choisirQuiJoue, definir: setProfil, oublier };
 }

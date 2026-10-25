@@ -1,8 +1,8 @@
-import type { Operation } from "../../catalogue/domain/index.ts";
+import type { Niveau, Operation } from "../../catalogue/domain/index.ts";
 import { aideApresUneErreurDeCalcul } from "./astuce-de-l-operation.ts";
 import { CleDeQuestion } from "./cle-de-question.ts";
 import { JeNeSaisPasDejaDit, QuestionDejaReussie, ReponseIncompatible } from "./erreurs.ts";
-import { choixAutourDuResultat } from "./mode-de-reponse.ts";
+import { choixAutourDuResultat, ModeDeReponse } from "./mode-de-reponse.ts";
 import { carteDuCalcul, phraseDuCalcul } from "./exercices/phrases-du-calcul.ts";
 import { type AideDonnee, QuestionJouee } from "./question-jouee.ts";
 import type { QuestionPosee } from "./question-posee.ts";
@@ -65,6 +65,12 @@ export class QuestionDeCalcul implements QuestionPosee {
       complements: { aide: aideApresUneErreurDeCalcul(operation) },
     });
     return new QuestionDeCalcul(operation, question, identite);
+  }
+
+  static pour(operation: Operation, tireur: Tireur, niveau: Niveau): QuestionDeCalcul {
+    return ModeDeReponse.pour(niveau).genre === "choix"
+      ? QuestionDeCalcul.avecLesChoix(operation, tireur)
+      : QuestionDeCalcul.auClavier(operation);
   }
 
   get enonce(): string {

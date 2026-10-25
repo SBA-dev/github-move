@@ -3,6 +3,7 @@ import { leconSuivanteDansLeParcours, type Seance } from "@domain/apprentissage"
 import { pageDeLaLecon } from "@domain/catalogue";
 import { calculsReussis } from "@domain/motivation";
 import { niveauDuProfil } from "../../parcours/index.ts";
+import { lireLEtatDuTestDeDepart } from "../../test-de-depart/etat-du-test-de-depart.ts";
 import { chargerToutesLesLecons } from "../bibliotheque.ts";
 import { EtoilesDessinees } from "./EtoilesDessinees.tsx";
 import { Etincelles } from "./Etincelles.tsx";
@@ -33,8 +34,17 @@ function useLeconSuivante(seance: Seance, niveau: string): Suivante | undefined 
     const niveauDeLEnfant = niveauDuProfil(niveau);
     if (!niveauDeLEnfant) return;
     let annule = false;
-    void Promise.all([chargerToutesLesLecons(), lireLesMeilleuresEtoilesDuProfil(enfant)]).then(([lecons, meilleuresEtoiles]) => {
-      const entrees = { lecons, niveau: niveauDeLEnfant, meilleuresEtoiles };
+    void Promise.all([
+      chargerToutesLesLecons(),
+      lireLesMeilleuresEtoilesDuProfil(enfant),
+      lireLEtatDuTestDeDepart(enfant),
+    ]).then(([lecons, meilleuresEtoiles, testDeDepart]) => {
+      const entrees = {
+        lecons,
+        niveau: niveauDeLEnfant,
+        meilleuresEtoiles,
+        leconsReussiesAuTestDeDepart: testDeDepart.leconsReussies,
+      };
       const idSuivante = leconSuivanteDansLeParcours(entrees, leconId);
       const prochaine = lecons.find((lecon) => lecon.id === idSuivante);
       if (!annule && prochaine) setSuivante({ id: prochaine.id, titre: pageDeLaLecon(prochaine).titre });

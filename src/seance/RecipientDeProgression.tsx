@@ -1,12 +1,18 @@
 import type { Avancement } from "@domain/apprentissage";
 
-export function RecipientDeProgression({ avancement }: { readonly avancement: Avancement }) {
+type Props = {
+  readonly avancement: Avancement;
+  /** Ce que lit un lecteur d'écran : « Avancement de la séance » par défaut. */
+  readonly libelle?: string;
+};
+
+export function RecipientDeProgression({ avancement, libelle = "Avancement de la séance" }: Props) {
   const { questionsReussies, total } = avancement;
   return (
     <div
       className="recipient"
       role="progressbar"
-      aria-label="Avancement de la séance"
+      aria-label={libelle}
       aria-valuemin={0}
       aria-valuemax={total}
       aria-valuenow={questionsReussies}

@@ -1,6 +1,8 @@
 import { FunctionsHttpError } from "@supabase/supabase-js";
+import type { ProfilEnCours } from "@domain/famille";
 import { clientSupabase } from "../../connexion/client-supabase.ts";
 import type { ReglagesComplets } from "../../reglages/index.ts";
+import { profilCreeCommeProfilEnCours } from "./profil-cree.ts";
 
 /** Une écriture refusée ou impossible, avec le message à montrer au parent (jamais punitif). */
 export class EcritureDeProfilRefusee extends Error {}
@@ -25,14 +27,19 @@ async function messageDeLaReponse(reponse: Response): Promise<string> {
   }
 }
 
-async function appeler(fonction: string, corps: object): Promise<void> {
-  const { error } = await clientSupabase().functions.invoke(fonction, { body: corps });
+async function appeler(fonction: string, corps: object): Promise<unknown> {
+  const { data, error } = await clientSupabase().functions.invoke(fonction, { body: corps });
   if (error instanceof FunctionsHttpError) throw new EcritureDeProfilRefusee(await messageDeLaReponse(error.context));
   if (error) throw new EcritureDeProfilRefusee(SANS_RESEAU);
+  return data;
 }
 
 /** Toute écriture de Famille passe par une Edge Function, avec le JWT du parent (décision 0009). */
 export const profilsEcritsParLesEdgeFunctions = {
-  creer: (donnees: DonneesDeProfil) => appeler("creer-profil-enfant", donnees),
-  modifier: (profil: string, donnees: DonneesDeProfil) => appeler("modifier-profil-enfant", { profil, ...donnees }),
+  /** Rend le profil créé, prêt à devenir le profil en cours ; `undefined` si la réponse du serveur est illisible. */
+  creer: async (donnees: DonneesDeProfil): Promise<ProfilEnCours | undefined> =>
+    profilCreeCommeProfilEnCours(await appeler("creer-profil-enfant", donnees)),
+  modifier: async (profil: string, donnees: DonneesDeProfil): Promise<void> => {
+    await appeler("modifier-profil-enfant", { profil, ...donnees });
+  },
 };

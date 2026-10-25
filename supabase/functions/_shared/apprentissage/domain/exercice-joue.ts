@@ -14,7 +14,6 @@ import { ExerciceChronometre, type FluenceEnCours } from "./exercice-chronometre
 import { FluenceNonCommencee, JeNeSaisPasEnFluence, PasDeQuestionEnCours, ReponseIncompatible } from "./erreurs.ts";
 import { type EntrainementDeMemorisation, MemorisationJouee } from "./memorisation-jouee.ts";
 import { nombreDeQuestions } from "./nombre-de-questions.ts";
-import { ModeDeReponse } from "./mode-de-reponse.ts";
 import { MotAEcrire } from "./mot-a-ecrire.ts";
 import type { CorrectionDuMot } from "./mot-a-ecrire.ts";
 import { type BoiteEnCours, type BoiteOuverte, QuestionDeBoite } from "./question-de-boite.ts";
@@ -385,10 +384,7 @@ function contenuDeCalcul(exercice: ExerciceCalcul, tireur: Tireur, niveau: Nivea
 }
 
 function questionsDeCalcul(operations: readonly Operation[], tireur: Tireur, niveau: Niveau): QuestionDeCalcul[] {
-  const auxChoix = ModeDeReponse.pour(niveau).genre === "choix";
-  return operations.map((operation) =>
-    auxChoix ? QuestionDeCalcul.avecLesChoix(operation, tireur) : QuestionDeCalcul.auClavier(operation)
-  );
+  return operations.map((operation) => QuestionDeCalcul.pour(operation, tireur, niveau));
 }
 
 function questionsDeBoite(exercice: ExerciceBoite, tireur: Tireur, niveau: Niveau): QuestionDeBoite[] {
