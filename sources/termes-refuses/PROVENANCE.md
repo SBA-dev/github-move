@@ -1,6 +1,6 @@
 # Termes refusés (français)
 
-> **Statut : relue par le PO le 2026-10-25, validation finale à confirmer.** La liste n'est branchée nulle part tant que le PO ne l'a pas validée (#103).
+> **Statut : validée par le PO le 2026-10-25.** #103 peut la brancher. Toute modification ultérieure (ajout ou retrait d'un terme) est validée par le PO et notée dans « Traitements ».
 
 `fr.txt` : un terme par ligne, en minuscules, 327 termes. C'est une liste de **filtrage** : elle n'est **jamais montrée** à l'enfant ni au parent. Elle sert à refuser un texte saisi par un parent (#103, puis une story par saisie) selon la règle « Contenus pour les enfants » de `CLAUDE.md`.
 
