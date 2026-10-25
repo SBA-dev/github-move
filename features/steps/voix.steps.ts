@@ -30,6 +30,8 @@ export type Scenario = {
   voixImposee: string | undefined;
   /** #79 : Léa relit la consigne pendant que Noisette lit la question ; `lotsAvant` = lectures déjà faites à ce moment-là. */
   relitPendantLaQuestion: { relue: boolean; lotsAvant: number | undefined } | undefined;
+  /** #7 : Léa réécoute la consigne d'ouverture pendant qu'elle est lue (« Réécouter », actif pendant la présentation, 79.12). */
+  reecouteLaConsigneDOuverture: boolean;
 };
 
 const CLE_PROFIL_PREPARE = "savanturier:profil-prepare";
@@ -64,6 +66,7 @@ export function scenario(page: Page): Scenario {
       sansProfil: false,
       voixImposee: undefined,
       relitPendantLaQuestion: undefined,
+      reecouteLaConsigneDOuverture: false,
     };
     scenarios.set(page, etat);
   }
@@ -453,6 +456,7 @@ Given(/^le navigateur ne bloque plus la voix$/, async ({ page }) => {
 
 Given(/^Noisette est en train de lire la consigne « (.+) »$/, async ({ page }, texte: string) => {
   scenario(page).consigne.texte = texte;
+  scenario(page).reecouteLaConsigneDOuverture = true;
   await ouvrir(page);
   await attendreUneLecture(page);
   expect((await journal(page)).actifs).toBeGreaterThan(0);
@@ -497,15 +501,25 @@ When(/^la consigne suivante s'affiche$/, async ({ page }) => {
 When(/^Léa demande à réécouter la consigne$/, async ({ page }) => {
   await demarrer(page);
   const etat = scenario(page);
+  const relire = page.getByRole("button", { name: "Relire la consigne", exact: true });
   if (etat.relitPendantLaQuestion) {
     await attendreUneLecture(page);
     await terminerLaLecture(page);
     // Le StrictMode du mode développement peut lire la consigne en deux lots : on attend la lecture de la question.
     await expect.poll(async () => (await journal(page)).lecture.texte).toContain("Combien font");
+    // 79.12 : pendant la présentation de l'exercice, relire la consigne est inactif.
+    await expect(relire).toHaveAttribute("aria-disabled", "true");
+    // La présentation finie (les choix apparaissent), il devient actif.
+    await avancerJusquAuxChoix(page);
+    await expect(relire).not.toHaveAttribute("aria-disabled", "true");
     etat.relitPendantLaQuestion.relue = true;
     etat.relitPendantLaQuestion.lotsAvant = (await journal(page)).lots;
   }
-  await page.getByRole("button", { name: "Relire la consigne", exact: true }).click();
+  // #7 : la consigne d'ouverture est réécoutée pendant sa lecture, avec « Réécouter » (« Relire la consigne » y est inactif).
+  const bouton = etat.reecouteLaConsigneDOuverture
+    ? page.getByRole("button", { name: "Réécouter", exact: true })
+    : relire;
+  await bouton.click();
 });
 
 When(/^Léa quitte l'écran de la consigne$/, async ({ page }) => {
