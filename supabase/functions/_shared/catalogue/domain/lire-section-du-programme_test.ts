@@ -19,12 +19,13 @@ function sectionFrancais(): Record<string, unknown> {
   };
 }
 
-Deno.test("une section de programmes-index.json est lue avec son identifiant, sa source, son domaine et ses niveaux", () => {
+Deno.test("une section de programmes-index.json est lue avec son identifiant, sa source, sa matière, son domaine et ses niveaux", () => {
   const section = lireSectionDuProgramme(sectionFrancais());
 
   assertEquals(section, {
     id: "c2-francais-cp-identifier-les-mots-de-maniere-de-plus-en-plus-aisee",
     source: { texte: "Programme de français du cycle 2", bo: "BO n° 41 du 31 octobre 2024" },
+    matiere: "francais",
     domaine: "Lecture",
     section: "Identifier les mots de manière de plus en plus aisée",
     niveaux: ["CP"],
@@ -35,6 +36,12 @@ Deno.test("une section sans domaine est mal formée", () => {
   const { domaine: _, ...sansDomaine } = sectionFrancais();
 
   assertThrows(() => lireSectionDuProgramme(sansDomaine), SectionDuProgrammeMalFormee);
+});
+
+Deno.test("une section sans matière est mal formée", () => {
+  const { matiere: _, ...sansMatiere } = sectionFrancais();
+
+  assertThrows(() => lireSectionDuProgramme(sansMatiere), SectionDuProgrammeMalFormee);
 });
 
 Deno.test("une section dont la source n'est pas un objet est mal formée", () => {
