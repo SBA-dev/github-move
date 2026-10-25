@@ -130,3 +130,6 @@ Branche de base : `main`. Aucun numéro de décision réservé (prochain libre :
 | Conflits | 3 dans le code (`EcranDeSeance.tsx`, index du domaine Apprentissage, `lecture-a-voix-haute.ts`), 1 conflit sémantique (test de #73), 2 de fin de `styles.css` |
 | Verrous | aucun avant `merge` (ni migration, ni Edge Function) |
 | Leçons | ne jamais modifier `src/` pendant un run E2E servi par le dossier de travail (worktree sur un autre port) ; un bouton actif pendant une lecture enchaînée crée des courses : le désactiver pendant la présentation (79.12) |
+- 00:15 UTC — RELIS #64 : `MAIN A BOUGÉ` (#29 mergée, `9a977c3`, fin de séance). Intégration sans conflit
+  (`8c9a55a`) : 2 320 tests unitaires verts ; `tsc`, build, lint, fmt OK. Périmètre lancé : #79 et les stories dont
+  #29 a modifié des steps partagés (#16, #18, #24 à #29, #65). #79.13 toujours sans réponse.
