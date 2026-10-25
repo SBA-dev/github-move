@@ -135,8 +135,7 @@ export function useDeroulementDeSeance(
     if (indication) await dire({ texte: indication, nature: "consigne" });
   }, [seance, lecon, dire, consigneDeLExercice]);
 
-  const presenterLaQuestionDeLExercice = useCallback(async (numero: number) => {
-    exercicePresente.current = true;
+  const jouerLaPresentation = useCallback(async (numero: number) => {
     const position = seance.exerciceEnCours()?.position;
     switch (position === undefined ? undefined : lecon.exercices[position]?.type) {
       case "calcul":
@@ -166,6 +165,13 @@ export function useDeroulementDeSeance(
     memorisation.presenter,
     ouvrir,
   ]);
+
+  /** L'exercice n'est « présenté » que si sa présentation est allée au bout sans être coupée par une action plus récente. */
+  const presenterLaQuestionDeLExercice = useCallback(async (numero: number) => {
+    exercicePresente.current = false;
+    await jouerLaPresentation(numero);
+    if (numero === sequence.current) exercicePresente.current = true;
+  }, [jouerLaPresentation]);
 
   const ouvrirLExercice = useCallback(async (numero: number) => {
     exercicePresente.current = false;
