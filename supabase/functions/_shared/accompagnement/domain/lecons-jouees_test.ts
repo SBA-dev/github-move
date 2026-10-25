@@ -22,7 +22,7 @@ function seance(leconId: string, termineeLe: string, erreurs = 0, etoiles?: 1 | 
 }
 
 const contraires = lecon("fr-ce1-contraires", "CE1", "Les mots contraires");
-const nombres = lecon("ma-ce1-nombres", "CE1", "Les nombres jusqu'à 1000", "mathematiques");
+const nombres = lecon("ma-ce1-nombres", "CE1", "Les nombres jusqu'à 1000", "maths");
 const sons = lecon("fr-ce1-sons", "CE1", "Les sons");
 const sonsDuCP = lecon("fr-cp-sons", "CP", "Les sons du CP");
 const lettresDuCP = lecon("fr-cp-lettres", "CP", "Les lettres du CP");
