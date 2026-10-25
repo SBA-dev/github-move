@@ -1,4 +1,4 @@
-import { type ChangeEvent, useEffect, useId } from "react";
+import { type ChangeEvent, useId } from "react";
 import { type ChoixDuFiltre, choixDuFiltre, type EntreesDuParcours, toutesLesLecons } from "@domain/apprentissage";
 import type { CodeDeMatiere } from "@domain/catalogue";
 import type { ProfilEnCours } from "@domain/famille";
@@ -48,15 +48,13 @@ function LeconsDuNiveau({ entrees, choix, onOuvrirLaLecon }: PropsDuNiveau) {
   const proposes = choixDuFiltre(entrees);
   const matiere = proposes.matieres.find(({ code }) => code === choisi.matiere);
   const niveau = proposes.niveaux.find(({ valeur }) => valeur === choisi.niveau);
-  const { lecons, leconsDesClassesDAvant, nombreDeLecons: nombre, seulementLesClassesDAvant } = toutesLesLecons(
-    entrees,
-    { matiere, niveau },
-  );
-  const { deplierLaSection } = choix;
-  useEffect(() => {
-    if (seulementLesClassesDAvant) deplierLaSection();
-  }, [seulementLesClassesDAvant, deplierLaSection]);
-  const nombreDansLaSection = leconsDesClassesDAvant.reduce((somme, classe) => somme + classe.lecons.length, 0);
+  const { lecons, leconsDesClassesDAvant, nombreDeLecons: nombre, nombreDansLesClassesDAvant: nombreDansLaSection } =
+    toutesLesLecons(entrees, { matiere, niveau });
+  const choisirLeNiveau = (valeur: string | undefined) => {
+    choix.choisirLeNiveau(valeur);
+    const nouveau = proposes.niveaux.find((propose) => propose.valeur === valeur);
+    if (toutesLesLecons(entrees, { matiere, niveau: nouveau }).seulementLesClassesDAvant) choix.deplierLaSection();
+  };
   return (
     <>
       <ListesDeChoix
@@ -64,7 +62,7 @@ function LeconsDuNiveau({ entrees, choix, onOuvrirLaLecon }: PropsDuNiveau) {
         matiere={matiere?.code}
         niveau={niveau?.valeur}
         onChoisirLaMatiere={choix.choisirLaMatiere}
-        onChoisirLeNiveau={choix.choisirLeNiveau}
+        onChoisirLeNiveau={choisirLeNiveau}
       />
       <p role="status" className="nombre-de-lecons" data-testid="nombre-de-lecons">
         {nombre === 0 ? AUCUNE_LECON_POUR_CE_CHOIX : nombreDeLecons(nombre)}
