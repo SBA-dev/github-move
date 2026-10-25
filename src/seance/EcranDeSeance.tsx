@@ -10,12 +10,13 @@ import {
 } from "@domain/apprentissage";
 import { type Exercice, type Lecon, Niveau, pageDeLaLecon } from "@domain/catalogue";
 import type { ValeurDuClavierDesDictees } from "@domain/famille";
-import type { Univers } from "@domain/motivation";
+import type { MeilleuresEtoilesDuProfil, Univers } from "@domain/motivation";
 import { TexteEnSyllabes } from "../reglages/index.ts";
 import { PersonnageGuide } from "../univers/index.ts";
 import type { Voix } from "../voix/index.ts";
 import { BulleDuPersonnageGuide } from "./BulleDuPersonnageGuide.tsx";
 import { EcranDeFin } from "./fin-de-seance/EcranDeFin.tsx";
+import { lireLesMeilleuresEtoilesPourLaCabane } from "./fin-de-seance/meilleures-etoiles-pour-la-cabane.ts";
 import { useFaciliteDeLaSeance } from "./difficulte/useFaciliteDeLaSeance.ts";
 import { ExerciceDAdditionPosee } from "./exercices/addition/ExerciceDAdditionPosee.tsx";
 import { ExerciceAChoix } from "./exercices/ExerciceAChoix.tsx";
@@ -120,8 +121,17 @@ function PartieCommencee(
   const [seance] = useState(() =>
     commencerLaSeance(profilId, lecon, exercice, facilite, clavierDesDictees, niveau)
   );
+  const [meilleuresEtoilesAvant] = useState(() => lireLesMeilleuresEtoilesPourLaCabane(profilId));
   if (!seance) return <JeuIntrouvable onRetour={reste.onRetour} />;
-  return <SeanceEnCours seance={seance} lecon={lecon} niveau={niveau} {...reste} />;
+  return (
+    <SeanceEnCours
+      seance={seance}
+      lecon={lecon}
+      niveau={niveau}
+      meilleuresEtoilesAvant={meilleuresEtoilesAvant}
+      {...reste}
+    />
+  );
 }
 
 function estAChoix(exercice: Exercice): boolean {
@@ -134,10 +144,13 @@ function etatDeLaVoix({ son, syntheseVocalePresente }: Pick<Voix, "son" | "synth
   return son === "muet" ? "muet" : "disponible";
 }
 
-type PropsEnCours = Omit<PropsDUnePartie, "exercice" | "profilId" | "clavierDesDictees"> & { readonly seance: Seance };
+type PropsEnCours = Omit<PropsDUnePartie, "exercice" | "profilId" | "clavierDesDictees"> & {
+  readonly seance: Seance;
+  readonly meilleuresEtoilesAvant: Promise<MeilleuresEtoilesDuProfil | undefined>;
+};
 
 function SeanceEnCours(
-  { seance, lecon, prenom, niveau, univers, voix, toutLireAVoixHaute, onRetour, onRejouer, onLeconSuivante, onAccueil }: PropsEnCours,
+  { seance, lecon, prenom, niveau, univers, voix, toutLireAVoixHaute, meilleuresEtoilesAvant, onRetour, onRejouer, onLeconSuivante, onAccueil }: PropsEnCours,
 ) {
   const deroulement = useDeroulementDeSeance(seance, lecon, voix, univers.personnageGuide, toutLireAVoixHaute, prenom);
   const { commencer, abandonner } = deroulement;
@@ -207,6 +220,7 @@ function SeanceEnCours(
           seance={seance}
           niveau={niveau}
           onDireLaFin={deroulement.direLaFin}
+          meilleuresEtoilesAvant={meilleuresEtoilesAvant}
           onRejouer={onRejouer}
           onLeconSuivante={onLeconSuivante}
           onAccueil={onAccueil}

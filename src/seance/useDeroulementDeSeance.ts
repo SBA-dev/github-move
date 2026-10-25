@@ -10,7 +10,9 @@ import {
 import type { EtapeDeLecon, Lecon } from "@domain/catalogue";
 import {
   annoncerExerciceSuivant,
+  finDePhraseDuPersonnageGuide,
   inviterAJouerApresLesEtapes,
+  type ObjetDeLaCabane,
   type PersonnageGuide,
   parolesDeFinDeSeance,
 } from "@domain/motivation";
@@ -271,10 +273,11 @@ export function useDeroulementDeSeance(
     relire();
   }, [reussite.figee, personnage.parole, relireLaPresentation, relireLaQuestion, memorisation.reecouter, relire]);
 
-  const direLaFin = useCallback((etoiles: number | undefined) => {
+  const direLaFin = useCallback((etoiles: number | undefined, objetRecu: ObjetDeLaCabane | undefined) => {
     sequence.current++;
     if (etoiles === undefined) return;
-    const texte = parolesDeFinDeSeance(etoiles, prenom, personnageGuide, hasardDuNavigateur);
+    const felicitation = parolesDeFinDeSeance(etoiles, prenom, personnageGuide, hasardDuNavigateur);
+    const texte = objetRecu ? `${felicitation} ${finDePhraseDuPersonnageGuide(objetRecu)}` : felicitation;
     void dire({ texte, nature: "felicitation", humeur: "applaudit" });
   }, [dire, prenom, personnageGuide]);
 

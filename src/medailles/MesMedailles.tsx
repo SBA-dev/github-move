@@ -5,7 +5,9 @@ import {
   parolesALOuverture,
   parolesDeLaSectionDesRecords,
   phraseLueDeLaPastille,
+  phraseDeLEtat,
   sectionsDeLEcran,
+  titreDeLaSection,
   type Univers,
   NOM_DE_L_ECRAN_DES_MEDAILLES,
   TITRE_DES_RECORDS_DE_CALCUL_RAPIDE,
@@ -14,6 +16,8 @@ import { BulleDuPersonnageGuide } from "../seance/BulleDuPersonnageGuide.tsx";
 import { usePersonnageQuiParle } from "../seance/usePersonnageQuiParle.ts";
 import { PersonnageGuide } from "../univers/index.ts";
 import type { Voix } from "../voix/index.ts";
+import { SectionDeLaCabane } from "./SectionDeLaCabane.tsx";
+import { useCabane } from "./useCabane.ts";
 import { usePastillesDesRecords } from "./usePastillesDesRecords.ts";
 
 type Props = {
@@ -25,6 +29,7 @@ type Props = {
 /** L'écran « Mes médailles » : il affiche ce que le domaine calcule et lit ce que le domaine lui dit de lire. */
 export function MesMedailles({ profil, univers, voix }: Props) {
   const pastilles = usePastillesDesRecords(profil.id);
+  const { chargee: cabaneChargee, cabane } = useCabane(profil.id);
   const { parole, rangDuMotPrononce, humeur, dire, faireSilence } = usePersonnageQuiParle(voix);
   const toutLire = profil.reglages.toutLireAVoixHaute;
 
@@ -33,17 +38,20 @@ export function MesMedailles({ profil, univers, voix }: Props) {
   }, [dire]);
 
   useEffect(() => {
-    if (pastilles === undefined) return;
-    const [accueil = "", ...suite] = parolesALOuverture({ toutLire, pastilles, cabane: undefined });
+    if (pastilles === undefined || !cabaneChargee) return;
+    const [accueil = "", ...suite] = parolesALOuverture({ toutLire, pastilles, cabane });
     void (async () => {
       if (!(await dire({ texte: accueil, nature: "accueil" }))) return;
       await direLaSuite(suite);
     })();
     return faireSilence;
-  }, [pastilles, toutLire, dire, direLaSuite, faireSilence]);
+  }, [pastilles, cabaneChargee, cabane, toutLire, dire, direLaSuite, faireSilence]);
 
   const ecouterLesRecords = () => direLaSuite(parolesDeLaSectionDesRecords(pastilles ?? []));
-  const sections = sectionsDeLEcran({ pastilles: pastilles ?? [], cabane: undefined });
+  const ecouterLaCabane = async () => {
+    if (cabane) await direLaSuite([titreDeLaSection(), phraseDeLEtat(cabane)]);
+  };
+  const sections = sectionsDeLEcran({ pastilles: pastilles ?? [], cabane });
 
   return (
     <section className="mes-medailles" aria-labelledby="titre-de-mes-medailles">
@@ -52,6 +60,9 @@ export function MesMedailles({ profil, univers, voix }: Props) {
         <PersonnageGuide univers={univers} humeur={humeur} />
         <BulleDuPersonnageGuide texte={parole?.texte} nature={parole?.nature} rangDuMotPrononce={rangDuMotPrononce} />
       </div>
+      {cabane !== undefined && sections.includes("cabane") && (
+        <SectionDeLaCabane cabane={cabane} onEcouter={ecouterLaCabane} />
+      )}
       {pastilles !== undefined && sections.includes("recordsDeFluence") && (
         <SectionDesRecords pastilles={pastilles} onEcouter={ecouterLesRecords} />
       )}
