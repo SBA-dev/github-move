@@ -35,8 +35,13 @@ export function fileDeRevisionDeLAppareil(profil: string): FileDeRevision | unde
   return copies.get(profil);
 }
 
-/** La file lue du serveur devient la copie : l'appareil la fait ensuite évoluer seul, par les règles du domaine. */
+/**
+ * La file lue du serveur devient la copie, sauf si l'appareil en a déjà une (une séance terminée pendant la lecture) :
+ * l'appareil la fait ensuite évoluer seul, par les règles du domaine. Rend la copie.
+ */
 export function adopterLaFileDuServeur(profil: string, file: FileDeRevision): FileDeRevision {
+  const copie = copies.get(profil);
+  if (copie) return copie;
   copies.set(profil, file);
   return file;
 }
