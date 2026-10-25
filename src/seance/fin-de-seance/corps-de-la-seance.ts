@@ -16,6 +16,8 @@ export type CorpsDeLaSeance = {
   readonly tirages: readonly (readonly string[])[];
   readonly reponses: readonly (readonly ReponseEnvoyee[])[];
   readonly termineeLe: string;
+  /** Le jour du calendrier de l'appareil : il date les questions ratées à revoir. */
+  readonly jour?: string;
 };
 
 export function enReponseEnvoyee(reponse: ReponseDonnee): ReponseEnvoyee {
@@ -42,6 +44,7 @@ export function enCorps(envoi: SeanceTermineeAEnregistrer): CorpsDeLaSeance {
     tirages: envoi.tirages,
     reponses: envoi.reponses.map((reponses) => reponses.map(enReponseEnvoyee)),
     termineeLe: envoi.termineeLe.toISOString(),
+    ...(envoi.jour === undefined ? {} : { jour: envoi.jour }),
   };
 }
 

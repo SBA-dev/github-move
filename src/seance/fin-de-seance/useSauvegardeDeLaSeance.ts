@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { Seance, SeanceTerminee } from "@domain/apprentissage";
+import { retenirLesQuestionsRatees } from "../../revision/copie-de-la-file-sur-l-appareil.ts";
+import { jourDuNavigateur } from "../jour-du-navigateur.ts";
 import { retenirLesEtoilesGagnees } from "./etoiles-gagnees-pendant-l-utilisation.ts";
 import { type Sauvegarde, sauvegarderLaSeance } from "./sauvegarde-de-la-seance.ts";
 
@@ -21,8 +23,11 @@ export function useSauvegardeDeLaSeance(seance: Seance) {
   useEffect(() => {
     if (lancee.current) return;
     lancee.current = true;
-    const terminee = seance.terminer(new Date());
+    const maintenant = new Date();
+    const jour = jourDuNavigateur(maintenant);
+    const terminee = seance.terminer(maintenant, jour);
     setTerminee(terminee);
+    retenirLesQuestionsRatees(seance.enfant, terminee.seance, terminee.questionsRateesARetenir, jour, maintenant);
     if (terminee.etoiles !== undefined) retenirLesEtoilesGagnees(seance.enfant, seance.lecon, seance.etoiles());
     void sauvegarderLaSeance(seance.aEnregistrer()).then(setSauvegarde);
   }, [seance]);
