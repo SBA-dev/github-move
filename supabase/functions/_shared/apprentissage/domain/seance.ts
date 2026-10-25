@@ -30,6 +30,7 @@ import type { QuestionSuivie, TypeDeQuestion } from "./question-suivie.ts";
 import { type Tireur, tireurAuHasard, tireurSelonLesTirages } from "./tireur.ts";
 import type { Reponse, ResultatDeReponse } from "./reponse.ts";
 import { SeanceId } from "./seance-id.ts";
+import type { QuestionRateeARetenir } from "./file-de-revision.ts";
 import type { SeanceTermineeAEnregistrer } from "./seance-terminee-a-enregistrer.ts";
 
 export type QuestionRatee = Readonly<{ cle: CleDeQuestion; erreurs: number; jeNeSaisPas: boolean }>;
@@ -47,6 +48,7 @@ export type SeanceTerminee = Readonly<{
   scoresDeFluence?: Readonly<Record<string, number>>;
   erreurs: number;
   questionsRatees: readonly QuestionRatee[];
+  questionsRateesARetenir?: readonly QuestionRateeARetenir[];
   parType: Partial<Record<TypeDeQuestion, ReussitesEtErreurs>>;
 }>;
 
@@ -280,6 +282,7 @@ export class Seance {
           erreurs: question.erreurs,
           jeNeSaisPas: question.bonneReponseMontree,
         })),
+      questionsRateesARetenir: this.questionsRateesARetenir(),
       parType: this.reussitesEtErreursParType(),
     };
     return fait;
@@ -315,6 +318,15 @@ export class Seance {
   private dernierExerciceCorrige(exercice: ExerciceJoue): void {
     this.dernierExerciceRepondu = exercice;
     this.avancerSiExerciceReussi(exercice);
+  }
+
+  private questionsRateesARetenir(): QuestionRateeARetenir[] {
+    return this.exercices.flatMap((exercice) =>
+      exercice.questionsRatees().map((question) => ({
+        identite: question.cle,
+        origine: { leconDOrigine: this.lecon, position: exercice.position, type: question.type },
+      }))
+    );
   }
 
   private questions(): QuestionSuivie[] {
