@@ -35,7 +35,7 @@ function partie65(page: Page): Partie65 {
   return courante;
 }
 
-function ecranDe(page: Page): Page {
+export function ecranDe(page: Page): Page {
   return partie65(page).ecranDeMarie ?? page;
 }
 
@@ -123,8 +123,9 @@ Given(/^Tom a un record de ([0-9]+) à la fluence « ([^«»]+) »$/, async ({ f
   await inscrireUnRecordDeFluence(profilDe(famille, "Tom").id, leconDeLExercice(page, titre).id, titre, Number(record));
 });
 
-Given(/^Léa joue avec un profil de démonstration, sans compte parent$/, async () => {
-  // Le profil de démonstration est l'état par défaut : rien à préparer.
+Given(/^Léa joue avec le profil préparé, sans profil réel au serveur$/, async ({ page }) => {
+  // Le profil préparé du Contexte est l'état par défaut : rien à préparer, et aucun profil réel ne doit exister.
+  expect(estSurUnProfilReel(page), "aucun profil réel n'est créé pour Léa").toBe(false);
 });
 
 // --- Ouvrir l'écran depuis l'accueil
@@ -163,13 +164,25 @@ async function appliquerLesReglagesPrevus(famille: Famille, page: Page): Promise
   return true;
 }
 
+// Depuis l'écran de fin, « Accueil » mène à « Qui joue ? » : le profil préparé n'y est pas listé. On rejoint son accueil dans
+// l'application, sans recharger la page (un rechargement perdrait les étoiles gagnées sur l'appareil).
+async function revenirALAccueilDansLApplication(page: Page): Promise<void> {
+  await page.evaluate(() => {
+    history.pushState({ profondeur: 2, precedent: "/" }, "", "/jeu");
+    dispatchEvent(new PopStateEvent("popstate"));
+  });
+}
+
 async function atteindreLAccueilDeLea(famille: Famille, page: Page): Promise<void> {
   const etat = partie65(page);
   const muetAAppliquer = scenario(page).muet && !etat.muetApplique;
   if (!estSurUnProfilReel(page)) {
     await reappliquerLAppareil(page);
     etat.muetApplique = true;
-    if (!(await accueil(page).isVisible())) await page.goto("/jeu");
+    // Un écran déjà ouvert (retour à l'accueil après une séance) n'est pas rechargé : les étoiles gagnées y sont gardées en mémoire.
+    if (!(await accueil(page).isVisible()) && page.url() !== "about:blank") await revenirALAccueilDansLApplication(page);
+    const dejaLa = await accueil(page).waitFor({ timeout: 3_000 }).then(() => true, () => false);
+    if (!dejaLa) await page.goto("/jeu");
     await expect(accueil(page)).toBeVisible();
     return;
   }
@@ -180,6 +193,12 @@ async function atteindreLAccueilDeLea(famille: Famille, page: Page): Promise<voi
     if (await finDeSeance.isVisible()) {
       await finDeSeance.getByRole("button", { name: "Accueil", exact: true }).click();
       // « Accueil » ramène à « Qui joue ? » sans recharger : Léa s'y choisit de nouveau, ses envois de séance suivent.
+      await choisirSonProfil(page, "Léa");
+      await expect(accueil(page)).toBeVisible();
+      return;
+    }
+    // Story #32 : « Accueil » depuis l'écran de fin ramène à « Qui joue ? » : Léa s'y choisit de nouveau, sans recharger.
+    if (new URL(page.url()).pathname === "/") {
       await choisirSonProfil(page, "Léa");
       await expect(accueil(page)).toBeVisible();
       return;
@@ -348,7 +367,7 @@ Then(/^Léa entend Noisette lire, dans l'ordre :$/, async ({ page }, tableau: Da
   }, { intervals: [100], timeout: DELAI_D_UN_APPEL_SERVEUR_MS }).toEqual(attendues);
 });
 
-Then(/^Léa entend Noisette lire « ([^«»]+) », puis « ([^«»]+) »$/, { tags: "@issue-65" }, async ({ page }, premier: string, second: string) => {
+Then(/^Léa entend Noisette lire « ([^«»]+) », puis « ([^«»]+) »$/, { tags: "@issue-65 or @issue-32" }, async ({ page }, premier: string, second: string) => {
   const [premiere, seconde] = [normaliser(entendu(premier)), normaliser(entendu(second))];
   await expect.poll(async () => {
     const lots = await lecturesParLot(page);
@@ -390,7 +409,7 @@ async function hauteurDe(element: Locator, nom: string): Promise<number> {
 Then(
   /^le bouton d'accès à l'écran, « Retour » et chaque bouton « Écouter » mesurent au moins 44 px de haut$/,
   async ({ page }) => {
-    await expect(sectionDesRecords(page)).toBeVisible({ timeout: DELAI_D_UN_APPEL_SERVEUR_MS });
+    await expect(sectionsDeLEcran(page).first()).toBeVisible({ timeout: DELAI_D_UN_APPEL_SERVEUR_MS });
     expect(await hauteurDe(page.getByRole("button", { name: "Retour", exact: true }), "Retour")).toBeGreaterThanOrEqual(44);
     const boutons = await page.getByRole("button", { name: "Écouter", exact: true }).all();
     expect(boutons.length).toBeGreaterThan(0);

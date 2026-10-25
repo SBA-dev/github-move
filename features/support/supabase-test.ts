@@ -151,6 +151,23 @@ export async function ecrireUnResultatDeLecon(profil: string, lecon: string, mei
   });
 }
 
+/** Story #32 : plusieurs meilleures étoiles d'un coup, sur des leçons de test absentes de la bibliothèque. */
+export async function ecrireDesResultatsDeLecons(profil: string, resultats: ReadonlyArray<{ lecon: string; meilleuresEtoiles: number }>): Promise<void> {
+  if (resultats.length === 0) return;
+  await appeler("/rest/v1/resultats_des_lecons", {
+    method: "POST",
+    body: JSON.stringify(
+      resultats.map(({ lecon, meilleuresEtoiles }) => ({
+        profil,
+        lecon,
+        meilleures_etoiles: meilleuresEtoiles,
+        dernieres_etoiles: meilleuresEtoiles,
+        nombre_de_seances: 1,
+      })),
+    ),
+  });
+}
+
 // --- Test de départ préparé (story #27) : la ligne est écrite directement, avec la clé service_role, pour le profil réel de l'enfant.
 // Le nettoyage est celui des profils : le résultat part avec eux (suppression en cascade).
 

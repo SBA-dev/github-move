@@ -192,7 +192,7 @@ export async function toutesLesParoles(page: Page): Promise<string[]> {
 
 // --- Étant donné
 
-Given(/^Léa a un profil enfant préparé de niveau (\S+) dans l'univers « (.+) »$/, async ({ page, monde, famille, $tags }, niveau: string, univers: string) => {
+Given(/^Léa a un profil enfant préparé de niveau (\S+) dans l'univers « (.+) »$/, async ({ page, monde, famille, $tags, $testInfo }, niveau: string, univers: string) => {
   const cle = cleDe(univers);
   const profil: ProfilPrepare = { prenom: "Léa", niveau, univers: cle };
   monde.profils.set("Léa", profil);
@@ -209,7 +209,9 @@ Given(/^Léa a un profil enfant préparé de niveau (\S+) dans l'univers « (.+)
   if ($tags.includes("@issue-25")) await servirLaBibliothequeDuParcours(page);
   // Story #27 : la bibliothèque de test du test de départ est servie de nouveau, après l'interception ci-dessus qui l'aurait masquée.
   if ($tags.includes("@issue-27")) await servirLaBibliothequeDuTestDeDepart(page);
-  if ($tags.includes("@issue-24") || $tags.includes("@issue-25") || $tags.includes("@issue-27")) {
+  // Story #32 : la cabane lit les étoiles du serveur ; seul le scénario du profil préparé garde le profil sans identifiant.
+  const cabaneSurLeServeur = $tags.includes("@issue-32") && !$testInfo.title.includes("sans profil réel au serveur");
+  if ($tags.includes("@issue-24") || $tags.includes("@issue-25") || $tags.includes("@issue-27") || cabaneSurLeServeur) {
     await jouerAvecLeProfilReel(famille, monde, page);
   }
 });

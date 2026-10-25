@@ -9,6 +9,8 @@ import {
   leconDeTest,
   ouvrirLaPageDeLaLecon,
 } from "./etapes-puis-exercices.steps.ts";
+import { estSurUnProfilReel, rechargerAvecLeProfilReel } from "./profil-reel.ts";
+import { modifierLeProfil } from "./profils-enfants.steps.ts";
 import { allerALaQuestion } from "./exercices-a-choix.steps.ts";
 import { After, Given, Then, When } from "./fixtures.ts";
 
@@ -390,8 +392,14 @@ Given(/^l'appareil a une voix française et une voix anglaise$/, async ({ page }
   scenario(page).voix = [DENISE, SAMANTHA];
 });
 
-Given(/^Léa a choisi l'univers (animaux|princesse|sports|pompier)$/, async ({ page, monde }, univers: string) => {
+Given(/^Léa a choisi l'univers (animaux|princesse|sports|pompier)$/, async ({ page, monde, famille, $tags }, univers: string) => {
   scenario(page).univers = univers;
+  // Story #32 : le profil réel de Léa est déjà créé ; son univers change sur le serveur, puis Léa se choisit de nouveau.
+  if ($tags.includes("@issue-32") && estSurUnProfilReel(page)) {
+    await modifierLeProfil(famille, "Léa", { univers });
+    await rechargerAvecLeProfilReel(page);
+    return;
+  }
   const profil = { prenom: "Léa", niveau: "CE1", univers };
   monde.profils.set("Léa", profil);
   await page.addInitScript(
