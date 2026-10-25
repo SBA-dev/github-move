@@ -73,6 +73,8 @@ export function EcranDeFin({ seance, niveau, onDireLaFin, meilleuresEtoilesAvant
   const dite = useRef(false);
   useEffect(() => {
     accueil.current?.focus();
+  }, []);
+  useEffect(() => {
     if (dite.current || terminee === undefined || !pret) return;
     dite.current = true;
     onDireLaFin(terminee.etoiles, objet);

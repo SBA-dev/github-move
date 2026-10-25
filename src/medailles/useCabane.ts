@@ -13,10 +13,12 @@ export function useCabane(profil: string): LectureDeLaCabane {
   const [lecture, setLecture] = useState<LectureDeLaCabane>({ chargee: false, cabane: undefined });
   useEffect(() => {
     let annule = false;
-    void lireLesMeilleuresEtoilesPourLaCabane(profil).then((meilleures) => {
-      const cabane = meilleures === undefined ? undefined : cabaneDe(totalDesEtoiles(meilleures));
-      if (!annule) setLecture({ chargee: true, cabane });
-    });
+    void lireLesMeilleuresEtoilesPourLaCabane(profil)
+      .then((meilleures) => (meilleures === undefined ? undefined : cabaneDe(totalDesEtoiles(meilleures))))
+      .catch(() => undefined)
+      .then((cabane) => {
+        if (!annule) setLecture({ chargee: true, cabane });
+      });
     return () => {
       annule = true;
     };

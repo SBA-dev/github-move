@@ -1,11 +1,4 @@
-import {
-  type EtatDeLaCabane,
-  libelleDuPalier,
-  libelleLuDuPalier,
-  PALIERS_DE_LA_CABANE,
-  phraseDeLEtat,
-  titreDeLaSection,
-} from "@domain/motivation";
+import { type EtatDeLaCabane, pastillesDeLaCabane, phraseDeLEtat, titreDeLaSection } from "@domain/motivation";
 import { DessinDeLaCabane } from "./DessinDeLaCabane.tsx";
 
 type Props = { readonly cabane: EtatDeLaCabane; readonly onEcouter: () => Promise<void> };
@@ -19,26 +12,16 @@ export function SectionDeLaCabane({ cabane, onEcouter }: Props) {
       <DessinDeLaCabane cabane={cabane} />
       <p className="phrase-de-la-cabane" data-testid="phrase-de-la-cabane">{phraseDeLEtat(cabane)}</p>
       <ul className="pastilles-de-la-cabane">
-        {PALIERS_DE_LA_CABANE.map((palier, rang) => {
-          const atteint = rang < cabane.objetsRecus.length;
-          const libelle = libelleDuPalier(palier, atteint);
-          const libelleLu = libelleLuDuPalier(palier, atteint);
-          return (
-            <li
-              key={palier.objet.cle}
-              className="pastille-de-la-cabane"
-              data-testid="pastille-de-la-cabane"
-              data-atteint={atteint}
-            >
-              {libelleLu === libelle ? libelle : (
-                <>
-                  <span className="visuellement-cache">{libelleLu}</span>
-                  <span aria-hidden="true">{libelle}</span>
-                </>
-              )}
-            </li>
-          );
-        })}
+        {pastillesDeLaCabane(cabane).map(({ cle, libelle, libelleLu, atteint }) => (
+          <li key={cle} className="pastille-de-la-cabane" data-testid="pastille-de-la-cabane" data-atteint={atteint}>
+            {libelleLu === libelle ? libelle : (
+              <>
+                <span className="visuellement-cache">{libelleLu}</span>
+                <span aria-hidden="true">{libelle}</span>
+              </>
+            )}
+          </li>
+        ))}
       </ul>
     </section>
   );

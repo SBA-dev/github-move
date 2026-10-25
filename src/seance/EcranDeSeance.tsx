@@ -16,7 +16,7 @@ import { PersonnageGuide } from "../univers/index.ts";
 import type { Voix } from "../voix/index.ts";
 import { BulleDuPersonnageGuide } from "./BulleDuPersonnageGuide.tsx";
 import { EcranDeFin } from "./fin-de-seance/EcranDeFin.tsx";
-import { lireLesMeilleuresEtoilesPourLaCabane } from "./fin-de-seance/meilleures-etoiles-pour-la-cabane.ts";
+import { lireLesMeilleuresEtoilesAvantLaSeance } from "./fin-de-seance/meilleures-etoiles-pour-la-cabane.ts";
 import { useFaciliteDeLaSeance } from "./difficulte/useFaciliteDeLaSeance.ts";
 import { ExerciceDAdditionPosee } from "./exercices/addition/ExerciceDAdditionPosee.tsx";
 import { ExerciceAChoix } from "./exercices/ExerciceAChoix.tsx";
@@ -121,7 +121,7 @@ function PartieCommencee(
   const [seance] = useState(() =>
     commencerLaSeance(profilId, lecon, exercice, facilite, clavierDesDictees, niveau)
   );
-  const [meilleuresEtoilesAvant] = useState(() => lireLesMeilleuresEtoilesPourLaCabane(profilId));
+  const [meilleuresEtoilesAvant] = useState(() => lireLesMeilleuresEtoilesAvantLaSeance(profilId));
   if (!seance) return <JeuIntrouvable onRetour={reste.onRetour} />;
   return (
     <SeanceEnCours
