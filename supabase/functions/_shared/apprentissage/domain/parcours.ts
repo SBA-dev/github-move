@@ -10,6 +10,7 @@ export type EntreesDuParcours = Readonly<{
   niveau: Niveau;
   meilleuresEtoiles: ReadonlyMap<LeconId, Etoiles>;
   leconsReussiesAuTestDeDepart?: ReadonlySet<LeconId>;
+  leconsPersonnelles?: readonly Lecon[];
 }>;
 
 export type EtatDansLeParcours =

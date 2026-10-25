@@ -1,4 +1,5 @@
 import { type Lecon, lireLecon, lireSectionDuProgramme, type SectionDuProgramme } from "@domain/catalogue";
+import { lireUneLeconPersonnelleDuProfil } from "../accompagnement/lecons-personnelles-lues.ts";
 
 const CHEMIN_DE_LA_BIBLIOTHEQUE = "/bibliotheque.json";
 const CHEMIN_DE_L_INDEX_DES_PROGRAMMES = "/programmes-index.json";
@@ -24,14 +25,18 @@ function aLIdentifiant(brut: unknown, identifiant: string): boolean {
   return typeof brut === "object" && brut !== null && "id" in brut && brut.id === identifiant;
 }
 
-/** Lit la leçon voulue seulement : une autre leçon mal formée ne gêne pas. `undefined` si elle est introuvable ou illisible. */
-export async function chargerLaLecon(identifiant: string): Promise<Lecon | undefined> {
+async function chargerLaLeconDeLaBibliotheque(identifiant: string): Promise<Lecon | undefined> {
   try {
     const brute = (await charger(CHEMIN_DE_LA_BIBLIOTHEQUE)).find((candidate) => aLIdentifiant(candidate, identifiant));
     return brute === undefined ? undefined : lireLecon(brute);
   } catch {
     return undefined;
   }
+}
+
+/** Lit la leçon voulue seulement : une autre leçon mal formée ne gêne pas. Cherche dans la bibliothèque, puis dans les leçons personnelles du profil. `undefined` si elle est introuvable ou illisible. */
+export async function chargerLaLecon(identifiant: string, profil: string): Promise<Lecon | undefined> {
+  return await chargerLaLeconDeLaBibliotheque(identifiant) ?? await lireUneLeconPersonnelleDuProfil(profil, identifiant);
 }
 
 /** Toutes les leçons lisibles de la bibliothèque (pour trouver la leçon suivante). Vide si elle est indisponible. */
@@ -49,18 +54,8 @@ export async function chargerToutesLesLecons(): Promise<readonly Lecon[]> {
   }
 }
 
-/** La source d'une leçon est un complément pour les adultes : sans elle, la page reste utilisable. */
-export async function chargerLaSectionDuProgramme(identifiant: string): Promise<SectionDuProgramme | undefined> {
-  try {
-    const brute = (await charger(CHEMIN_DE_L_INDEX_DES_PROGRAMMES)).find((candidate) => aLIdentifiant(candidate, identifiant));
-    return brute === undefined ? undefined : lireSectionDuProgramme(brute);
-  } catch {
-    return undefined;
-  }
-}
-
-/** Toutes les sections lisibles du programme, dans l'ordre de l'index (pour la carte des compétences). Vide si l'index est indisponible. */
-export async function chargerLesSectionsDuProgramme(): Promise<readonly SectionDuProgramme[]> {
+/** Toutes les sections de l'index des programmes lisibles, pour préparer une leçon personnelle. `undefined` si l'index est indisponible. */
+export async function chargerLesSectionsDuProgramme(): Promise<readonly SectionDuProgramme[] | undefined> {
   try {
     return (await charger(CHEMIN_DE_L_INDEX_DES_PROGRAMMES)).flatMap((brute) => {
       try {
@@ -70,6 +65,16 @@ export async function chargerLesSectionsDuProgramme(): Promise<readonly SectionD
       }
     });
   } catch {
-    return [];
+    return undefined;
+  }
+}
+
+/** La source d'une leçon est un complément pour les adultes : sans elle, la page reste utilisable. */
+export async function chargerLaSectionDuProgramme(identifiant: string): Promise<SectionDuProgramme | undefined> {
+  try {
+    const brute = (await charger(CHEMIN_DE_L_INDEX_DES_PROGRAMMES)).find((candidate) => aLIdentifiant(candidate, identifiant));
+    return brute === undefined ? undefined : lireSectionDuProgramme(brute);
+  } catch {
+    return undefined;
   }
 }

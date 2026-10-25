@@ -24,7 +24,7 @@ type Props = {
 };
 
 export function PageDeLaLecon({ leconId, profilId, prenom, univers, voix, accueillir, onCommencer, onRetourALAccueil }: Props) {
-  const chargee = useLecon(leconId);
+  const chargee = useLecon(leconId, profilId);
   if (chargee.type === "chargement") return <p>Chargement de la leçon…</p>;
   if (chargee.type === "introuvable") {
     return (

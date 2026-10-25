@@ -16,6 +16,7 @@ import {
   useProfilEnCours,
   useProfilsDuParent,
 } from "./famille/index.ts";
+import { LeconsPersonnellesDuParent } from "./accompagnement/index.ts";
 import { MesMedailles } from "./medailles/index.ts";
 import { SuiviDeLEspaceParent } from "./suivi/index.ts";
 import { MonParcours } from "./parcours/index.ts";
@@ -309,6 +310,7 @@ export function Application() {
                   onCree={(profilCree) => proposerLeTestDeDepart(() => definir(profilCree))}
                   onRefaireLeTestDeDepart={(profilExistant) => proposerLeTestDeDepart(() => choisirQuiJoue.executer(profilExistant))}
                 />
+                <LeconsPersonnellesDuParent profils={profilsDuParent.etat.type === "charges" ? profilsDuParent.etat.profils : undefined} />
                 <ChoixDeLaVoix voix={voix} />
               </EspaceParent>
             )}

@@ -1,13 +1,15 @@
 import { LeconMalFormee, SectionDuProgrammeMalFormee } from "./erreurs.ts";
 import { enObjet, listeDeTextes, texteRequis } from "./lecture.ts";
+import { estUneMatiere, type Matiere, matiereDeCode } from "./matiere.ts";
 
 export type SectionDuProgramme = Readonly<{
   id: string;
   source: Readonly<{ texte: string; bo: string }>;
-  matiere: string;
+  matiere: Matiere;
   domaine: string;
   section: string;
   niveaux: readonly string[];
+  extrait: string;
 }>;
 
 export function lireSectionDuProgramme(brut: unknown): SectionDuProgramme {
@@ -22,15 +24,17 @@ export function lireSectionDuProgramme(brut: unknown): SectionDuProgramme {
 function lire(brut: unknown): SectionDuProgramme {
   const section = enObjet(brut, "une section du programme");
   const source = enObjet(section.source, "la source d'une section");
+  if (!estUneMatiere(section.matiere)) throw new LeconMalFormee("la matière est inconnue");
   return Object.freeze({
     id: texteRequis(section.id, "l'identifiant d'une section"),
     source: Object.freeze({
       texte: texteRequis(source.texte, "le texte de la source"),
       bo: texteRequis(source.bo, "le bulletin officiel de la source"),
     }),
-    matiere: texteRequis(section.matiere, "la matière d'une section"),
+    matiere: matiereDeCode(section.matiere),
     domaine: texteRequis(section.domaine, "le domaine d'une section"),
     section: texteRequis(section.section, "l'intitulé d'une section"),
     niveaux: listeDeTextes(section.niveaux, "les niveaux d'une section"),
+    extrait: texteRequis(section.extrait, "l'extrait d'une section"),
   });
 }

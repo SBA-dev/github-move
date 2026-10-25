@@ -32,7 +32,7 @@ export type CarteDesCompetences = Readonly<{
 export function carteDesCompetences(entrees: EntreesDuSuivi): CarteDesCompetences {
   const sections = entrees.sections.filter((section) => section.niveaux.includes(entrees.enfant.niveau.valeur));
   const matieres = toutesLesMatieres()
-    .map(({ code }) => matiereDeLaCarte(entrees, code, sections.filter((section) => section.matiere === code)))
+    .map(({ code }) => matiereDeLaCarte(entrees, code, sections.filter((section) => section.matiere.code === code)))
     .filter((matiere) => matiere.domaines.length > 0);
   return { niveau: entrees.enfant.niveau, matieres, legende: legendeDe(matieres) };
 }

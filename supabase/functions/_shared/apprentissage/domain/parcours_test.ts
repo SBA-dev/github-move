@@ -348,3 +348,22 @@ Deno.test("au CP, il n'y a aucune leçon des classes d'avant", () => {
 
   assertEquals(parcours.leconsDesClassesDAvant, []);
 });
+
+Deno.test("les leçons personnelles de l'enfant ne comptent pas dans le parcours : ni place, ni compteur, ni prochaine leçon", () => {
+  const personnelle = lecon("fr-ce1-perso-chats", "francais", "CE1", 0);
+  const entrees = {
+    lecons: [sons, syllabes],
+    niveau: Niveau.de("CE1"),
+    meilleuresEtoiles: new Map(),
+    leconsPersonnelles: [personnelle],
+  };
+
+  const parcours = parcoursDeLaMatiere(entrees, sons.matiere);
+
+  assertEquals(parcours.lecons.map(({ lecon, place }) => [lecon, place]), [["fr-ce1-sons", 1], ["fr-ce1-syllabes", 2]]);
+  assertEquals([parcours.prochaineLecon, parcours.nombreDeLecons, parcours.nombreDeLeconsReussies], [
+    "fr-ce1-sons",
+    2,
+    0,
+  ]);
+});

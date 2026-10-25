@@ -24,7 +24,7 @@ export function useSuiviDeLEnfant(id: string, prenom: string, niveau: string): E
       ]);
       if (annule) return;
       setEtat(
-        donnees === undefined || lecons.length === 0 || sections.length === 0
+        donnees === undefined || lecons.length === 0 || sections === undefined || sections.length === 0
           ? { type: "indisponible" }
           : {
             type: "pret",
