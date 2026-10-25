@@ -75,3 +75,9 @@ Branche de base : `main`. Aucun numéro de décision réservé (prochain libre :
   `EcranDeSeance.tsx` (imports). Conflit sémantique : le test de #73 `voix-suspendue_test.ts` fournit désormais
   `onFinDeLaVoixBloquee` (test-writer). Merge `b7c8583` : 2 031 tests unitaires verts, `tsc`, lint, fmt, build OK.
 - 21:00 UTC — Relecture du delta (cycle 2 + intégration) et périmètre E2E final (avec #28 et #73) lancés en parallèle.
+- 21:15 UTC — Relecture du delta (cycle 2 + intégration) : **À CORRIGER**, 3e cycle. L'intégration de `main` est
+  approuvée. Bloquant : depuis `30bcc38`, un geste qui remplace la présentation (« J'ai écouté » en lecture,
+  « Réécouter », une réponse) laisse l'exercice « non présenté », et « Relire la consigne » relance toute la
+  présentation (en lecture : tout le texte relu). Non bloquant : `9cfa5d8` n'a pas de RED dédié (à tracer).
+  **ESCALADE** #79.12 (règle des 3 cycles) : bouton « Relire la consigne » inactif pendant la présentation (reco A)
+  ou actif avec reprise type par type (B). Rien n'est mergé ; le périmètre E2E final continue.
