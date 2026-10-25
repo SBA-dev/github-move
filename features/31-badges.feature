@@ -5,11 +5,13 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
   Je veux recevoir un badge qui dit ce que je sais faire quand j'ai bien réussi une leçon
   Afin de voir mes progrès
 
-  Cadrage anticipé (décision 0020, point 6). Les scénarios suivent la recommandation de chaque question de
-  docs/stories/31/acceptance.md ; ceux qui dépendent d'une question encore ouverte portent @a-valider et un
-  commentaire « Question 31.n ». Le badge ne fait que constater qu'une leçon est acquise (au moins 2 meilleures
-  étoiles) : il n'est pas enregistré, ne modifie aucune étoile et ne se perd jamais tant que sa leçon existe
-  (modèle : docs/stories/31/domain-model.md). « Médaille » n'est que le nom de l'écran, jamais celui d'un badge.
+  Cadrage anticipé (décision 0020, point 6), validé par le PO le 2026-10-25 : toutes les questions de
+  docs/stories/31/acceptance.md sont tranchées (recommandations retenues ; 31.5, 31.22 et la partie « leçons
+  personnelles » de 31.7 sans objet). Le badge ne fait que constater qu'une leçon de la bibliothèque est acquise
+  (au moins 2 meilleures étoiles) : il n'est pas enregistré, ne modifie aucune étoile et ne se perd jamais tant que
+  sa leçon est dans la bibliothèque (modèle : docs/stories/31/domain-model.md). Les leçons personnelles ne donnent
+  pas de badge (décision du PO, comme 39.12). « Médaille » n'est que le nom de l'écran, jamais celui d'un badge.
+  À l'écran de fin, les nouveautés s'annoncent dans l'ordre cabane, épisode, badge (décision 33.13).
 
   Leçons de la bibliothèque utilisées (titre, compétence, matière, niveau) :
   - « Les sons ou, on, an » (fr-cp-sons-ou-on-an), « Je reconnais les sons ou, on, an », français, CP ;
@@ -34,7 +36,7 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
     Et que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
     Et que les leçons de test « Les sons de test » et « La suite de test » sont dans la bibliothèque
 
-  Règle: Une leçon acquise donne un badge ; une leçon réussie à 1 étoile ou au test de départ n'en donne pas ; un badge ne se perd jamais tant que sa leçon existe
+  Règle: Une leçon de la bibliothèque acquise donne un badge ; une leçon réussie à 1 étoile ou au test de départ n'en donne pas, une leçon personnelle non plus ; un badge ne se perd jamais tant que sa leçon est dans la bibliothèque
 
     Plan du Scénario: Avec <étoiles> étoiles à une leçon, l'enfant a le badge de sa compétence
       Étant donné que Léa a pour meilleures étoiles :
@@ -48,8 +50,7 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
         | 2       |
         | 3       |
 
-    # Question 31.10 (phrase sans badge)
-    @a-valider
+    # Décision 31.10 (phrase sans badge)
     Scénario: Une leçon réussie avec 1 étoile ne donne pas de badge
       Étant donné que Léa a pour meilleures étoiles :
         | leçon         | étoiles |
@@ -58,8 +59,7 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
       Alors aucune pastille de badge n'apparaît
       Et Léa lit « Gagne au moins 2 étoiles dans une leçon pour recevoir son badge. »
 
-    # Question 31.1 (déjà tranchée par les réponses 27.1 et 27.2) ; question 31.10 (phrase sans badge)
-    @a-valider
+    # Décisions 31.1 (comme 27.1 et 27.2) et 31.10 (phrase sans badge)
     Scénario: Une leçon réussie au test de départ ne donne pas de badge
       Étant donné que Léa a pour leçons réussies au test de départ :
         | leçon               |
@@ -69,7 +69,7 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
       Alors aucune pastille de badge n'apparaît
       Et Léa lit « Gagne au moins 2 étoiles dans une leçon pour recevoir son badge. »
 
-    # Question 31.1
+    # Décision 31.1
     Scénario: Une leçon réussie au test de départ puis rejouée avec 2 étoiles donne son badge
       Étant donné que Léa a pour leçons réussies au test de départ :
         | leçon        |
@@ -88,8 +88,7 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
       Quand Léa ouvre « Mes médailles » depuis son accueil
       Alors les badges montrent seulement « Je sais : Les sons de test »
 
-    # Question 31.18
-    @a-valider
+    # Décision 31.18
     Scénario: Après un changement de classe, l'enfant garde les badges des leçons d'une autre classe
       Étant donné que Léa a pour meilleures étoiles :
         | leçon                   | étoiles |
@@ -98,26 +97,23 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
       Quand Léa ouvre « Mes médailles » depuis son accueil
       Alors les badges montrent seulement « Je connais les tables de 3 et de 4 »
 
-    # Question 31.13
-    @a-valider
+    # Décision 31.13
     Scénario: Une leçon qui n'est plus dans la bibliothèque ne donne pas de badge
       Étant donné que Léa a 3 étoiles à une leçon « Les anciens sons » qui n'est plus dans la bibliothèque
       Quand Léa ouvre « Mes médailles » depuis son accueil
       Alors aucune pastille de badge n'apparaît
 
-    # Questions 31.5 et 31.22
-    @a-valider @depend-de-39
-    Scénario: Le badge d'une leçon personnelle disparaît avec la leçon
+    # Décision du PO (2026-10-25) : les leçons personnelles ne donnent pas de badge (comme 39.12)
+    @depend-de-39
+    Scénario: Une leçon personnelle acquise ne donne pas de badge
       Étant donné que Paul a créé la leçon personnelle « Dictée : chaton, maison, poisson »
       Et que Léa a gagné 2 étoiles à la leçon personnelle « Dictée : chaton, maison, poisson »
-      Et que Paul a supprimé la leçon personnelle « Dictée : chaton, maison, poisson »
       Quand Léa ouvre « Mes médailles » depuis son accueil
       Alors aucune pastille de badge n'apparaît
 
   Règle: Le nom du badge est la compétence de la leçon, sinon « Je sais : <titre de la leçon> » ; une compétence ne donne qu'un badge
 
-    # Question 31.20 (si les 12 leçons reçoivent une compétence, ces exemples changent)
-    @a-valider
+    # Décision 31.20 : quand les 12 leçons sans compétence en reçoivent une (contenu, hors story), ces exemples changent
     Plan du Scénario: Une leçon sans compétence donne le badge « Je sais : <titre> »
       Étant donné que Léa a pour meilleures étoiles :
         | leçon     | étoiles |
@@ -130,16 +126,7 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
         | Être et avoir au présent |
         | Dictée : les animaux     |
 
-    # Questions 31.20 et 31.22
-    @a-valider @depend-de-39
-    Scénario: Une leçon personnelle donne toujours un badge « Je sais : » suivi de son titre
-      Étant donné que Paul a créé la leçon personnelle « Dictée : chaton, maison, poisson »
-      Et que Léa a gagné 2 étoiles à la leçon personnelle « Dictée : chaton, maison, poisson »
-      Quand Léa ouvre « Mes médailles » depuis son accueil
-      Alors les badges montrent seulement « Je sais : Dictée : chaton, maison, poisson »
-
-    # Question 31.2
-    @a-valider
+    # Décision 31.2
     Plan du Scénario: Les leçons acquises d'une même compétence ne donnent qu'un badge (<compétence>)
       Étant donné que Léa a pour meilleures étoiles :
         | leçon      | étoiles |
@@ -155,16 +142,14 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
 
   Règle: La section « Mes badges » de « Mes médailles » montre une pastille par badge du profil en cours, toujours dans le même ordre
 
-    # Question 31.10
-    @a-valider
+    # Décision 31.10
     Scénario: Sans badge, la section invite l'enfant à gagner au moins 2 étoiles
       Étant donné que Léa n'a encore jamais terminé de séance de la leçon « Les syllabes »
       Quand Léa ouvre « Mes médailles » depuis son accueil
       Alors Léa lit « Mes badges »
       Et Léa lit « Gagne au moins 2 étoiles dans une leçon pour recevoir son badge. »
 
-    # Question 31.7
-    @a-valider
+    # Décision 31.7
     Scénario: Les badges suivent l'ordre du catalogue : matière, puis niveau, puis ordre de la leçon
       Étant donné que Léa a pour meilleures étoiles :
         | leçon                   | étoiles |
@@ -178,8 +163,7 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
         | Je découpe un mot en syllabes      |
         | Je connais les tables de 3 et de 4 |
 
-    # Question 31.8
-    @a-valider
+    # Décision 31.8
     Plan du Scénario: La pastille d'un badge montre l'icône de sa matière (<matière>)
       Étant donné que Léa a pour meilleures étoiles :
         | leçon     | étoiles |
@@ -192,16 +176,14 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
         | Les syllabes            | Je découpe un mot en syllabes      | français |
         | Les tables de 3 et de 4 | Je connais les tables de 3 et de 4 | maths    |
 
-    # Question 31.14 (comme la décision 32.19)
-    @a-valider
+    # Décision 31.14 (comme la décision 32.19)
     Scénario: Juste après la séance qui rend une leçon acquise, son badge est déjà dans « Mes badges »
       Étant donné que Léa n'a encore jamais terminé de séance de la leçon « Les sons de test »
       Et que Léa a terminé une séance de la leçon « Les sons de test » avec 2 étoiles
       Quand Léa ouvre « Mes médailles » depuis son accueil
       Alors les badges montrent seulement « Je sais : Les sons de test »
 
-    # Question 31.15
-    @a-valider
+    # Décision 31.15
     Scénario: Une pastille de badge n'ouvre pas la leçon
       Étant donné que Léa a pour meilleures étoiles :
         | leçon        | étoiles |
@@ -210,8 +192,7 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
       Quand Léa choisit la pastille « Je découpe un mot en syllabes »
       Alors le titre de l'écran est toujours « Mes médailles »
 
-    # Question 31.14 (comme la décision 32.13)
-    @a-valider
+    # Décision 31.14 (comme la décision 32.13)
     Scénario: Sans réseau, la section des badges n'apparaît pas, sans message d'erreur
       Étant donné que Léa a pour meilleures étoiles :
         | leçon        | étoiles |
@@ -221,8 +202,7 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
       Alors aucune section « Mes badges » n'apparaît
       Et aucun message d'erreur n'apparaît
 
-    # Question 31.14 (comme la décision 32.22)
-    @a-valider
+    # Décision 31.14 (comme la décision 32.22)
     Scénario: Avec le profil préparé, sans profil réel au serveur, les badges viennent des étoiles gagnées sur l'appareil
       Étant donné que Léa joue avec le profil préparé, sans profil réel au serveur
       Et que Léa a terminé une séance de la leçon « Les sons de test » avec 2 étoiles
@@ -248,8 +228,7 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
       Quand Léa réussit la dernière question de la séance
       Alors la fin de la séance annonce un nouveau badge « Je sais : Les sons de test »
 
-    # Question 31.4 (décision Q74 de #24)
-    @a-valider
+    # Décision 31.4 (décision Q74 de #24)
     Scénario: Le personnage guide termine sa phrase de fin par le nouveau badge
       Étant donné que la leçon de test « Les sons de test » a pour compétence « Je reconnais les sons de test »
       Et que Léa n'a encore jamais terminé de séance de la leçon « Les sons de test »
@@ -274,8 +253,7 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
         | leçon acquise rejouée avec 1 étoile  | 2     | 5       |
         | leçon réussie rejouée avec 1 étoile  | 1     | 5       |
 
-    # Question 31.2
-    @a-valider
+    # Décision 31.2
     Scénario: Une leçon dont la compétence est déjà un badge n'annonce pas de nouveau badge
       Étant donné que les leçons de test « Les sons de test » et « La suite de test » ont pour compétence « Je reconnais les sons de test »
       Et que Léa a pour meilleures étoiles :
@@ -286,8 +264,7 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
       Quand Léa réussit la dernière question de la séance
       Alors aucune annonce de nouveau badge n'apparaît à la fin de la séance
 
-    # Question 31.14 (comme la décision 32.13)
-    @a-valider
+    # Décision 31.14 (comme la décision 32.13)
     Scénario: Sans réseau au début de la séance, la fin de la séance n'annonce aucun badge
       Étant donné que Léa n'a encore jamais terminé de séance de la leçon « Les sons de test »
       Et que le réseau est coupé
@@ -296,8 +273,8 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
       Quand Léa réussit la dernière question de la séance
       Alors aucune annonce de nouveau badge n'apparaît à la fin de la séance
 
-    # Questions 31.4 et 31.12 : ordre du legacy, cabane puis badge
-    @a-valider @depend-de-32
+    # Décisions 31.4, 31.12 et 33.13 : cabane, épisode, badge
+    @depend-de-32
     Scénario: Quand la séance fait recevoir un objet et gagner un badge, la cabane est annoncée avant le badge
       Étant donné que la leçon de test « Les sons de test » a pour compétence « Je reconnais les sons de test »
       Et que Léa a gagné 1 étoile en tout
@@ -307,8 +284,7 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
       Alors la fin de la séance montre, dans l'ordre, l'annonce pour la cabane puis l'annonce de nouveau badge
       Et Noisette dit une félicitation, suivie de « Tu gagnes 2 étoiles, Léa. Tu rejoues pour aller chercher les autres ? Noisette a reçu une lanterne pour sa cabane. Nouveau badge : Je reconnais les sons de test ! »
 
-    # Question 31.16
-    @a-valider
+    # Décision 31.16
     Scénario: Avec les mouvements réduits, l'annonce du nouveau badge apparaît sans mouvement
       Étant donné que l'appareil demande des mouvements réduits
       Et que Léa n'a encore jamais terminé de séance de la leçon « Les sons de test »
@@ -319,9 +295,9 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
 
   Règle: Les badges se lisent à voix haute, au lecteur d'écran, en mode dys et sur un petit écran
 
-    # Questions 31.9 et 31.11 ; la cabane est lue avant les badges (#32). Si #33 est livrée avant #31,
+    # Décisions 31.9 et 31.11 ; la cabane est lue avant les badges (#32). Si #33 est livrée avant #31,
     # le titre et la phrase de l'histoire s'insèrent entre la cabane et les badges.
-    @a-valider @depend-de-32
+    @depend-de-32
     Scénario: Avec « tout lire à voix haute », le titre des badges puis leur nombre sont lus à l'ouverture
       Étant donné que Paul a réglé « tout lire à voix haute » sur « oui » pour Léa
       Et que Léa a pour meilleures étoiles :
@@ -337,8 +313,7 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
         | Mes badges                                                          |
         | Tu as 1 badge.                                                      |
 
-    # Question 31.9
-    @a-valider
+    # Décision 31.9
     Scénario: Sans « tout lire à voix haute », l'enfant fait lire les badges à la demande
       Étant donné que le réglage « tout lire à voix haute » de Léa est sur « non »
       Et que Léa a pour meilleures étoiles :
@@ -349,8 +324,7 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
       Quand Léa demande à écouter les badges
       Alors Léa entend Noisette lire « Mes badges », puis « Tu as 2 badges. »
 
-    # Questions 31.9 et 31.15
-    @a-valider
+    # Décisions 31.9 et 31.15
     Scénario: Choisir une pastille de badge fait lire son nom
       Étant donné que Léa a pour meilleures étoiles :
         | leçon        | étoiles |
@@ -359,8 +333,8 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
       Quand Léa choisit la pastille « Je découpe un mot en syllabes »
       Alors Léa entend Noisette lire « Je découpe un mot en syllabes »
 
-    # Question 31.11 ; sans badge, la phrase de la décision 32.9 reste
-    @a-valider @depend-de-32
+    # Décision 31.11 ; sans badge, la phrase de la décision 32.9 reste
+    @depend-de-32
     Scénario: Avec un badge, même sans objet ni record, le personnage guide dit « Regarde tout ce que tu as gagné ! »
       Étant donné que Léa a pour meilleures étoiles :
         | leçon        | étoiles |
@@ -368,8 +342,7 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
       Quand Léa ouvre « Mes médailles » depuis son accueil
       Alors Léa entend Noisette dire « Regarde tout ce que tu as gagné ! »
 
-    # Questions 31.8 et 31.24
-    @a-valider
+    # Décisions 31.8 et 31.24
     Scénario: Un lecteur d'écran annonce la liste des badges et le nom de chaque badge
       Étant donné que Léa a pour meilleures étoiles :
         | leçon               | étoiles |
