@@ -66,3 +66,34 @@ Deno.test("« Toutes les leçons » montre les leçons de la classe de l'enfant,
     ],
   );
 });
+
+Deno.test("« Toutes les leçons » montre, après la classe de l'enfant, les leçons de la classe juste au-dessus dans une matière dont il a réussi toutes les leçons de sa classe, et dans cette matière seulement", () => {
+  const entrees = {
+    lecons: [
+      lecon("fr-ce1-sons", "francais", "CE1", 1),
+      lecon("ma-ce1-additions", "maths", "CE1", 1),
+      lecon("ma-ce1-soustractions", "maths", "CE1", 2),
+      lecon("ma-ce2-tables", "maths", "CE2", 2),
+      lecon("ma-ce2-nombres", "maths", "CE2", 1),
+      lecon("ma-cm1-fractions", "maths", "CM1", 1),
+      lecon("fr-ce2-accords", "francais", "CE2", 1),
+      lecon("emc-ce2-regles", "emc", "CE2", 1),
+    ],
+    niveau: Niveau.de("CE1"),
+    meilleuresEtoiles: new Map([["ma-ce1-additions", Etoiles.de(1)]]),
+    leconsReussiesAuTestDeDepart: new Set(["ma-ce1-soustractions"]),
+  };
+
+  const { lecons } = toutesLesLecons(entrees, {});
+
+  assertEquals(
+    lecons.map(({ lecon, niveau, etat }) => ({ lecon, niveau, etat })),
+    [
+      { lecon: "fr-ce1-sons", niveau: Niveau.de("CE1"), etat: { genre: "prochaine" } },
+      { lecon: "ma-ce1-additions", niveau: Niveau.de("CE1"), etat: { genre: "reussie", etoiles: Etoiles.de(1) } },
+      { lecon: "ma-ce1-soustractions", niveau: Niveau.de("CE1"), etat: { genre: "reussieAuTestDeDepart" } },
+      { lecon: "ma-ce2-nombres", niveau: Niveau.de("CE2"), etat: { genre: "aDecouvrir" } },
+      { lecon: "ma-ce2-tables", niveau: Niveau.de("CE2"), etat: { genre: "aDecouvrir" } },
+    ],
+  );
+});
