@@ -11,7 +11,7 @@ import {
 } from "./etapes-puis-exercices.steps.ts";
 import { estSurUnProfilReel } from "./profil-reel.ts";
 import { choisirSonProfil, modifierLeProfil } from "./profils-enfants.steps.ts";
-import { allerALaQuestion, avancerJusquAuxChoix, bulleDeChoix, demarrer } from "./exercices-a-choix.steps.ts";
+import { allerALaQuestion, avancerJusquAuxChoix, bulleDeChoix, demarrer, textesDesChoix } from "./exercices-a-choix.steps.ts";
 import { After, Given, Then, When } from "./fixtures.ts";
 
 // --- Préparation du scénario (avant l'ouverture de la page)
@@ -28,6 +28,8 @@ export type Scenario = {
   prenom: string;
   sansProfil: boolean;
   voixImposee: string | undefined;
+  /** #79 : Léa relit la consigne pendant que Noisette lit la question ; `lotsAvant` = lectures déjà faites à ce moment-là. */
+  relitPendantLaQuestion: { relue: boolean; lotsAvant: number | undefined } | undefined;
 };
 
 const CLE_PROFIL_PREPARE = "savanturier:profil-prepare";
@@ -61,6 +63,7 @@ export function scenario(page: Page): Scenario {
       prenom: "Léa",
       sansProfil: false,
       voixImposee: undefined,
+      relitPendantLaQuestion: undefined,
     };
     scenarios.set(page, etat);
   }
@@ -493,6 +496,16 @@ When(/^la consigne suivante s'affiche$/, async ({ page }) => {
 
 When(/^Léa demande à réécouter la consigne$/, async ({ page }) => {
   await demarrer(page);
+  const etat = scenario(page);
+  if (etat.relitPendantLaQuestion) {
+    await attendreUneLecture(page);
+    const lotsDeLaConsigne = (await journal(page)).lots;
+    await terminerLaLecture(page);
+    await expect.poll(async () => (await journal(page)).lots).toBe(lotsDeLaConsigne + 1);
+    expect((await journal(page)).lecture.texte).toContain("Combien font");
+    etat.relitPendantLaQuestion.relue = true;
+    etat.relitPendantLaQuestion.lotsAvant = lotsDeLaConsigne + 1;
+  }
   await page.getByRole("button", { name: "Relire la consigne", exact: true }).click();
 });
 
@@ -548,7 +561,8 @@ async function texteLuAvantLaLectureDesChoix(page: Page): Promise<string> {
 }
 
 Then(/^Léa entend de nouveau Noisette lire « ([^«»]+) »$/, async ({ page }, texte: string) => {
-  await expect.poll(async () => (await journal(page)).lots).toBe(2);
+  const lotsAvant = scenario(page).relitPendantLaQuestion?.lotsAvant;
+  await expect.poll(async () => (await journal(page)).lots).toBe(lotsAvant === undefined ? 2 : lotsAvant + 1);
   expect((await journal(page)).lecture.texte).toBe(normaliser(texte));
 });
 
@@ -661,6 +675,12 @@ Then(/^Léa voit la consigne « (.+) »$/, async ({ page }, texte: string) => {
 
 Then(/^Léa voit la question « (.+) »$/, async ({ page }, question: string) => {
   await expect(page.getByTestId("question")).toHaveText(normaliser(question));
+  if (scenario(page).relitPendantLaQuestion?.relue) {
+    // La question reste posée : on termine les lectures en cours, et les choix doivent venir.
+    await avancerJusquAuxChoix(page);
+    await expect(page.getByTestId("question")).toHaveText(normaliser(question));
+    expect(await textesDesChoix(page)).toEqual(["1", "2", "3"]);
+  }
 });
 
 Then(/^Léa voit le message « (.+) »$/, async ({ page }, message: string) => {

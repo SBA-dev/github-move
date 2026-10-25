@@ -5,7 +5,7 @@ import { bulle, injecter, leconDeTest } from "./etapes-puis-exercices.steps.ts";
 import { elementsDe, exerciceEnCours, jouerJusquAuxEtiquettes, poserEtAttendreLOrdre } from "./classer-ordre-trous.steps.ts";
 import { demarrer } from "./exercices-a-choix.steps.ts";
 import { aContinueApresLaReussite, boutonContinuerApresLaReussite } from "./etoiles-et-fin-de-seance.steps.ts";
-import { consigneAffichee, normaliser } from "./voix.steps.ts";
+import { consigneAffichee, normaliser, scenario } from "./voix.steps.ts";
 
 // Story #79 : la consigne reste affichée pendant tout l'exercice, la voix bloquée reste signalée, et sans voix la
 // félicitation de la dernière bonne réponse attend que l'enfant continue.
@@ -20,6 +20,7 @@ function echapper(texte: string): string {
 Given(
   /^une leçon de test « ([^«»]+) » a un exercice bulles de consigne « ([^«»]+) » qui pose « (.+) »$/,
   async ({ page }, titre: string, consigne: string, question: string) => {
+    scenario(page).relitPendantLaQuestion = { relue: false, lotsAvant: undefined };
     await injecter(
       page,
       leconDeTest("test-consigne-visible", titre, [{
