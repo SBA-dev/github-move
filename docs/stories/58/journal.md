@@ -44,11 +44,12 @@ Branche `feature/58-retirer-la-page-de-demonstration`, partie de `main` `c7cabc0
 
 | Mesure | Valeur |
 |---|---|
-| Durée | ≈ 2 h 25 (21:27 → 23:52 UTC), du lancement à `PRÊTE À MERGER` |
+| Durée | ≈ 3 h 15 (21:27 → 00:40 UTC), du lancement à `PRÊTE À MERGER` |
 | Temps d'attente | ⛔ n°1 : 13 min (CADRAGE PRÊT 21:43 → OK du PO 21:56). Aucun verrou demandé |
 | Cycles de review | 2 (cycle 1 À CORRIGER : 2 bloquants dans les steps ; cycle 2 APPROUVÉ en delta), puis un ajustement de steps après approbation |
-| Cycles d'E2E | mise au point : 4 passages (steps initiaux, compatibilité #27, corrections de revue, retrait de la détection PWA) ; 1 non-régression complète |
+| Cycles d'E2E | mise au point : 4 passages (steps initiaux, compatibilité #27, corrections de revue, retrait de la détection PWA) ; 2 non-régressions complètes (la première incomplète : 13 fichiers générés au lieu de 20) |
 | Intégrations de `main` | 1 (`2173dba`, #65) : 2 conflits (`src/navigation.ts`, `src/Application.tsx`), résolus par `implementer` et relus par `mr-reviewer` |
 | Vérification anticipée | merge local jetable avec `feature/27-test-de-depart` (2 conflits identiques, nos scénarios verts) |
 | TDD | sans objet (aucun code de `domain/`), 1323 puis 1351 tests unitaires verts |
 - 23:55 UTC — Vérification du responsable : la non-régression « 673/674 » n'avait généré que 13 fichiers (tags de mise au point) ; #18 à #22, #24 et #25 n'ont pas tourné. `PRÊTE À MERGER` suspendu, relance avec la liste complète (20 fichiers attendus).
+- 00:35 UTC — Non-régression complète refaite (20 fichiers, 1118 cas) : 1116/1118 en 40,2 min, les 2 KO (#10, téléphone, tirage non fixé) passent 3/3 relancés seuls → 1118/1118. Écart avec les 1136 de #65 : −24 (7 scénarios supprimés, dont le plan à 6 exemples « titre et royaume », ×2 projets) +6 (3 scénarios de #58 ×2) = −18. PWA 32/32. `PRÊTE À MERGER` republié.
