@@ -46,3 +46,24 @@ Branche : `feature/28-revisions-des-erreurs`, partie de `main` 89b5729. Branche 
 - 16:20 UTC : **décision du PO** (« OK A B C D », future décision 0023, https://github.com/SBA-dev/github-move/issues/64#issuecomment-6400086984) : plus de non-régression complète par story ; pour #28, la non-régression (liste complète, **`telephone` seulement**, sur la branche à jour de `main` `6be4dc6`) compte comme non-régression sur `main` de l'après-midi ; ensuite `PRÊTE À MERGER` et `VERROU merge` ; les équipes mergent elles-mêmes.
 - 16:30 UTC : mise au point E2E (`e2e-tester`) : #28 **47/47** sur `telephone` (2 défauts de steps corrigés, 21c8226 : bouton « Retour » de la séance ordinaire ; ordre à date égale des questions préparées) ; #24, #25, #27 131/131 après relance seule des timeouts connus de #24. Aucun bug applicatif.
 - 16:45 UTC : intégration de `main` `6be4dc6` (#26) : conflits sur `src/navigation.ts`, `src/Application.tsx`, `src/famille/AccueilDeLEnfant.tsx` (`implementer` : deux ajouts gardés ; boutons : Mon parcours, Toutes les leçons, Mes médailles, Mon test de départ, Je révise mes erreurs, Changer d'enfant) et `docs/domain/glossaire.md` (`domain-modeler` : décision de #28 renumérotée **38**). Merge db7ceae ; 1914 tests, lint, fmt, `tsc`, build verts. Relecture du delta lancée. **Non-régression complète** sur `telephone` lancée à 16:45 (24 fichiers, 799 cas), comptant comme non-régression sur `main`.
+- 17:46 UTC : **non-régression complète** (`telephone` seulement, décision du PO point B), sur db7ceae (`main` 6be4dc6 intégrée), 24 fichiers, 799 cas : premier passage 781/799 en 53 min ; les 18 KO (15 de #24, 2 de #27, 1 de #10 : timeouts sous charge connus) passent tous en relance seule `--workers=1` (18/18, 6 min). **799/799.** Compte comme `NON-RÉGRESSION MAIN : OK` de l'après-midi. Revue du delta d'intégration (db7ceae) : **APPROUVÉ** (non bloquants : « revoir » interdit dans le domaine par la décision 37 de #26 alors que « À revoir » reste un mot d'interface de #28 ; numérotation des décisions du glossaire en double venue de `main`). `main` a bougé pendant le run (#32 mergée, 7a80bae) : intégration sous le verrou `merge`.
+- 17:50 UTC : PRÊTE À MERGER ; PR #85 passée en « prête ».
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Durée totale | 08:35 → ~17:50 UTC, soit ~9 h 15 |
+| Cadrage (domaine + critères) | 08:35 → 08:50 (≈ 15 min de travail des agents) |
+| Attente de la validation du PO | 08:51 → 10:06 (≈ 1 h 15) |
+| TDD (blocs A à E) | 10:15 → ~11:45 (≈ 1 h 30), 5 blocs, ≈ 35 comportements RED/GREEN |
+| Câblage serveur + front | ~11:00 → ~12:15, en parallèle de la fin du TDD |
+| Revues intermédiaires | A : 1 cycle ; B : 1 ; C : 3 (bloquants : rejeu avec le seul tirage, test manquant de l'addition tirée) ; D : 2 (tirage par question) ; E : 2 (erreurs de rejeu non converties ; format) ; migration : 1 |
+| Review finale | 2 cycles (copie de la file écrasée par la file du serveur) ; revue du delta d'intégration : 1 |
+| E2E | mise au point : 2 runs (le premier arrêté à la demande du responsable), 2 défauts de steps, aucun bug applicatif ; non-régression complète : 1 run (781/799) + relance des 18 KO (18/18) |
+| Attente de créneaux E2E et de redéploiement (base partagée) | 12:20 → 15:40 (≈ 3 h 20) : non-régressions de #72 puis de #26 |
+| Intégrations de `main` | 6 (48c6496, e466e25, aaae2e6, d1d2def, 6be4dc6, et 7a80bae sous le verrou `merge`) ; conflits : 1 (6be4dc6 : glossaire et 3 fichiers du front, avec #26) |
+| Verrous | `base` 11:27 → 15:40 (migration, `terminer-la-seance-de-revision`, redéploiement de `terminer-la-seance`) |
+| Escalades | aucune |
+| Commits de la story (hors merges) | 132 : 46 `test`, 47 `feat`, 5 `refactor`, 32 `docs`, 1 `style`, 1 autre |
+| Tests unitaires | 1495 → 1914 (dont ≈ 214 de #28 ; le reste vient de `main`) |
