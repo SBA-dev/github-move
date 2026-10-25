@@ -50,9 +50,7 @@ Deno.serve((requete) =>
       return {
         seance: seance.seance,
         enregistree: fait !== undefined,
-        ...(fait?.type === "SeanceTerminee"
-          ? { etoiles: fait.etoiles, erreurs: fait.erreurs }
-          : {}),
+        ...(fait?.type === "SeanceTerminee" ? { etoiles: fait.etoiles, erreurs: fait.erreurs } : {}),
       };
     },
     origines,
