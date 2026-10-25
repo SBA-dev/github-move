@@ -1,8 +1,8 @@
 # Modèle du domaine : issue #39, Leçons personnelles (générateurs locaux)
 
-> **Cadrage, à valider par le PO.** Questions #39.1 à #39.16 en fin de document, chacune avec une recommandation.
+> **Cadrage validé par le PO le 2026-10-25** (annonce du responsable sur l'issue #39, 17:44 UTC : « 39. reco OK sauf 39.13 oui on conserve le texte »). Toutes les recommandations #39.1 à #39.21 sont retenues, **sauf #39.13 : le texte du parent est conservé** avec la leçon personnelle. #39.12 est confirmée (réponse « A » sur la contradiction avec #31 : la leçon personnelle reste sans badge, #31 retirera les badges des leçons personnelles).
 > Décisions déjà prises (rappel, non re-questionnées) : #14 et #13 sortent de la beta (pendant la beta, un enfant n'a qu'un parent ; l'export et la suppression des leçons personnelles avec le profil vont dans #14, la suppression des données d'un profil se fait à la main sur demande écrite du parent) ; aucun verrou dans le parcours (25.1 b) ; « Toutes les leçons » et les classes d'avant sont livrés (#26).
-> Glossaire et context map **non modifiés** à ce stade : les termes proposés sont listés plus bas, ils seront ajoutés après validation (ajouts seulement).
+> Glossaire et context map : termes et relations **ajoutés** après la validation (ajouts seulement, règle de la vague). La réécriture de l'ancienne ligne « Leçon personnelle » du glossaire (#39.21) est **à faire hors vague** : en attendant, la ligne « Leçon personnelle (beta, #39) » ajoutée en fin de section Accompagnement fait foi.
 
 ## Contexte
 
@@ -25,24 +25,24 @@ Comportement actuel (`app/app.js`), source des règles et non modèle : `adultCr
 
 | Terme | Statut | Remarque |
 |---|---|---|
-| Leçon personnelle | au glossaire `(à valider)`, **définition en conflit** | Le glossaire dit « avec l'aide de l'IA » et « visible que dans sa famille ». Ici : faite **sans IA** par les générateurs locaux, et (reco #39.1) pour **un profil enfant**. Nouvelle définition proposée ci-dessous. |
+| Leçon personnelle | au glossaire `(à valider)`, **définition en conflit** (tranché : nouvelle définition ci-dessous, ajoutée au glossaire en ligne « Leçon personnelle (beta, #39) ») | Le glossaire dit « avec l'aide de l'IA » et « visible que dans sa famille ». Ici : faite **sans IA** par les générateurs locaux, et (reco #39.1) pour **un profil enfant**. Nouvelle définition proposée ci-dessous. |
 | Leçon, Matière, Niveau, Section du programme, Citation, Étape de leçon, Exercice, Consigne, Ordre | au glossaire (Catalogue) | Repris tels quels. **Citation** reste « mot pour mot » (#39.2). |
 | Parent, Profil enfant, Rattachement, Espace parent | au glossaire (Famille) | Repris. |
 | Leçon des classes d'avant, Prochaine leçon, Parcours, Place | au glossaire (Apprentissage) | Une leçon personnelle n'en relève pas (reco #39.3). |
-| Texte du parent | **nouveau** `(à valider)` | Texte collé par le parent pour créer une leçon personnelle. 3 à 3000 caractères (#39.14). Non gardé (#39.13). Synonymes interdits : texte source, prompt, saisie. |
-| Forme du texte | **nouveau** `(à valider)` | Ce que l'application reconnaît dans le texte du parent : **liste de mots**, **liste de verbes**, **poésie**, **texte documentaire**, **texte sur un métier**. Code : `listeDeMots`, `listeDeVerbes`, `poesie`, `texteDocumentaire`, `texteSurUnMetier`. |
-| Liste de mots, Liste de verbes, Poésie, Texte documentaire, Texte sur un métier | **nouveaux** `(à valider)` | Les cinq formes du texte. **Conflit évité** : le legacy dit `dictee` pour la forme et `dictee` pour le type d'exercice, et `prose` pour ce que `docs/format-lecons.md` appelle « texte documentaire ». On garde `dictee` pour le type d'exercice seulement. |
-| Générateur local | **nouveau** `(à valider)` | Règle du domaine qui prépare une leçon personnelle à partir d'une forme du texte, sans IA. Un par forme. Synonymes interdits : template, IA locale. |
-| Leçon préparée | **nouveau** `(à valider)` | Leçon personnelle calculée dans le navigateur et montrée au parent avant l'enregistrement ; elle n'existe pas encore pour l'enfant. Synonymes interdits : brouillon. |
+| Texte du parent | **nouveau**, validé | Texte collé par le parent pour créer une leçon personnelle. 3 à 3000 caractères (#39.14). **Conservé** avec la leçon personnelle (#39.13, réponse du PO). Synonymes interdits : texte source, prompt, saisie. |
+| Forme du texte | **nouveau**, validé | Ce que l'application reconnaît dans le texte du parent : **liste de mots**, **liste de verbes**, **poésie**, **texte documentaire**, **texte sur un métier**. Code : `listeDeMots`, `listeDeVerbes`, `poesie`, `texteDocumentaire`, `texteSurUnMetier`. |
+| Liste de mots, Liste de verbes, Poésie, Texte documentaire, Texte sur un métier | **nouveaux**, validés | Les cinq formes du texte. **Conflit évité** : le legacy dit `dictee` pour la forme et `dictee` pour le type d'exercice, et `prose` pour ce que `docs/format-lecons.md` appelle « texte documentaire ». On garde `dictee` pour le type d'exercice seulement. |
+| Générateur local | **nouveau**, validé | Règle du domaine qui prépare une leçon personnelle à partir d'une forme du texte, sans IA. Un par forme. Synonymes interdits : template, IA locale. |
+| Leçon préparée | **nouveau**, validé | Leçon personnelle calculée dans le navigateur et montrée au parent avant l'enregistrement ; elle n'existe pas encore pour l'enfant. Synonymes interdits : brouillon. |
 | Aperçu de la leçon | mot d'interface | Ce que voit le parent : titre, « CE1 · Français · préparée sans IA », section du programme, citation, étapes, exercices. |
-| Section retenue | **nouveau** `(à valider)` | La section du programme choisie par le domaine pour une leçon préparée (la mieux notée). Pas un nouveau concept du Catalogue : c'est une **Section du programme**. |
-| Groupe du verbe | **nouveau** `(à valider)`, **conflit possible** | 1er, 2e ou 3e groupe d'un verbe. « Groupe » seul désigne déjà la maison de l'exercice `classer` (Décision n°24) : on dit toujours **Groupe du verbe**. |
+| Section retenue | **nouveau**, validé | La section du programme choisie par le domaine pour une leçon préparée (la mieux notée). Pas un nouveau concept du Catalogue : c'est une **Section du programme**. |
+| Groupe du verbe | **nouveau**, validé, **conflit possible** | 1er, 2e ou 3e groupe d'un verbe. « Groupe » seul désigne déjà la maison de l'exercice `classer` (Décision n°24) : on dit toujours **Groupe du verbe**. |
 | « Pour toi » | mot d'interface | Étiquette d'une leçon personnelle chez l'enfant. |
 | « Mes leçons », « Créer une leçon » | mots d'interface | Onglets de l'espace parent. |
 | « Je choisis » | **mot du legacy à retirer** | L'écran s'appelle « Toutes les leçons » (#26). |
 | Préparée sans IA | mot d'interface | Mention de l'aperçu. Le domaine ne garde pas cette information (#40 dira s'il faut la garder). |
 
-Définition proposée pour **Leçon personnelle** : « Leçon créée par un parent pour **un** profil enfant auquel il est rattaché, à partir du texte du parent (plus tard : avec l'IA, ou d'une photo). Elle respecte le format des leçons, se rattache à une section du programme avec une citation mot pour mot, et n'est visible que des parents rattachés à cet enfant et de cet enfant. Elle ne se modifie pas. » Synonymes interdits : leçon custom, leçon adulte, leçon perso.
+Définition retenue pour **Leçon personnelle** (validée, #39.1 et #39.13) : « Leçon créée par un parent pour **un** profil enfant auquel il est rattaché, à partir du texte du parent, qu'elle conserve (plus tard : avec l'IA, ou d'une photo). Elle respecte le format des leçons, se rattache à une section du programme avec une citation mot pour mot, et n'est visible que des parents rattachés à cet enfant et de cet enfant. Elle ne se modifie pas. » Synonymes interdits : leçon custom, leçon adulte, leçon perso.
 
 ## Modèle
 
@@ -99,9 +99,10 @@ classDiagram
     <<agrégat racine>>
     LeconPersonnelleId id
     ProfilEnfantId profil
+    TexteDuParent texte
     Lecon lecon
     Date creeeLe
-    creer(id, profil, LeconPreparee, maintenant)$
+    creer(id, profil, TexteDuParent, LeconPreparee, maintenant)$
     supprimer()
   }
   class LeconPersonnelleId {
@@ -117,6 +118,7 @@ classDiagram
   DemandeDeLecon *-- TexteDuParent
   LeconPersonnelle ..> LeconPreparee : créée à partir de
   LeconPersonnelle *-- LeconPersonnelleId
+  LeconPersonnelle *-- TexteDuParent
 ```
 
 ### Value objects
@@ -162,17 +164,18 @@ Matière de la leçon : celle choisie par le parent ; sinon (#39.10) `emc` pour 
 
 ### Agrégat `LeconPersonnelle`
 
-- Racine : `LeconPersonnelle` (id, profil, leçon au format, date de création). Elle référence le profil **par identifiant**.
-- Créée seulement à partir d'une `LeconPreparee` **revalidée** ; jamais modifiée ensuite (#39.6) ; supprimée en entier.
-- Ne contient **pas** le texte du parent (#39.13), ni l'auteur (un seul parent pendant la beta ; les deux parents rattachés ont les mêmes droits).
+- Racine : `LeconPersonnelle` (id, profil, **texte du parent**, leçon au format, date de création). Elle référence le profil **par identifiant**.
+- Le **texte du parent** est un attribut de l'agrégat (#39.13, réponse du PO) : value object `TexteDuParent`, 3 à 3000 caractères (#39.14), espaces autour retirés. Il sert à recréer ou vérifier la leçon et au suivi parental ; il n'est jamais montré à l'enfant.
+- Créée seulement à partir d'une `LeconPreparee` **revalidée**, préparée à partir de ce même texte ; jamais modifiée ensuite, ni la leçon ni le texte (#39.6) ; supprimée en entier, texte compris.
+- Ne contient pas l'auteur (un seul parent pendant la beta ; les deux parents rattachés ont les mêmes droits).
 
 ### Commandes
 
 | Commande | Où | Effet |
 |---|---|---|
 | `PreparerUneLeconPersonnelle` (texte, niveau, matière?) | navigateur, fonction pure de `@domain/accompagnement` | Rend la `LeconPreparee` pour l'aperçu, ou une erreur métier. Rien n'est écrit. Marche hors ligne. |
-| `CreerUneLeconPersonnelle` (profil, texte, niveau, matière?) | Edge Function `creer-une-lecon-personnelle`, JWT du parent | Vérifie le rattachement, **refait la préparation** avec le même domaine (le serveur ne fait pas confiance à une leçon envoyée toute faite), crée l'agrégat, l'enregistre. Émet `LeconPersonnelleCreee`. Le texte n'est pas gardé. |
-| `SupprimerUneLeconPersonnelle` (leçon) | Edge Function `supprimer-une-lecon-personnelle`, JWT du parent | Vérifie le rattachement au profil de la leçon, la supprime. Émet `LeconPersonnelleSupprimee`. Résultats et séances déjà enregistrés : #39.7. |
+| `CreerUneLeconPersonnelle` (profil, texte, niveau, matière?) | Edge Function `creer-une-lecon-personnelle`, JWT du parent | Vérifie le rattachement, **refait la préparation** avec le même domaine (le serveur ne fait pas confiance à une leçon envoyée toute faite), crée l'agrégat avec le texte du parent, l'enregistre. Émet `LeconPersonnelleCreee`. |
+| `SupprimerUneLeconPersonnelle` (leçon) | Edge Function `supprimer-une-lecon-personnelle`, JWT du parent | Vérifie le rattachement au profil de la leçon, la supprime avec son texte du parent. Émet `LeconPersonnelleSupprimee`. Résultats et séances déjà enregistrés : #39.7. |
 | Lire « Mes leçons » | front, sous RLS | Leçons personnelles de tous les enfants rattachés au parent : titre, « CE1 · Français · Dictée », prénom de l'enfant (#39.1). |
 | Lire les leçons de l'enfant | front, sous RLS | Leçons personnelles du profil en cours, données à Apprentissage (`EntreesDuParcours.leconsPersonnelles`). |
 
@@ -194,8 +197,8 @@ De l'agrégat `LeconPersonnelle` :
 1. Une leçon personnelle est **valide** au moment de sa création : `lireLecon` l'accepte et les règles propres sont respectées (section existante, de sa matière, couvrant son niveau ; citation mot pour mot dans l'extrait ; mots dictés dictables ; au moins un exercice).
 2. Elle appartient à **un seul profil enfant**, auquel le parent qui la crée ou la supprime est rattaché.
 3. Son identifiant commence par `perso-` et ne peut pas être celui d'une leçon de la bibliothèque.
-4. Elle ne change plus après sa création (#39.6) ; elle est supprimée en entier.
-5. Elle ne contient ni le texte du parent, ni de donnée sur l'enfant autre que l'identifiant de son profil.
+4. Elle ne change plus après sa création, ni sa leçon ni son texte du parent (#39.6) ; elle est supprimée en entier, texte compris.
+5. Elle conserve le texte du parent dont sa leçon a été préparée (3 à 3000 caractères, #39.13, #39.14) : à sa création, la leçon est celle que la préparation donne à partir de ce texte, de son niveau et de sa matière. Elle ne contient aucune autre donnée sur l'enfant que l'identifiant de son profil.
 
 Des services purs (tests unitaires) :
 6. Même demande et même index des programmes : même forme, même section, même citation, même leçon.
@@ -225,20 +228,21 @@ Les séances d'une leçon personnelle émettent `SeanceTerminee` (et `LeconReuss
 
 ## Données d'enfants (RGPD)
 
-- **Nouvelle donnée liée à un enfant** : la leçon personnelle (contenu écrit par le parent, rattaché à un profil). Elle peut contenir un prénom ou une information privée si le parent l'a collée : c'est une donnée de l'enfant.
-- Minimisation : le **texte du parent n'est pas gardé** (#39.13), seulement la leçon ; pas d'auteur ; pas d'IA.
-- Suppression : **cascade** avec le profil enfant (clé étrangère `on delete cascade`, comme toutes les tables d'un profil) : la suppression manuelle d'un profil pendant la beta l'emporte sans geste en plus. Export : #14 (la table est à ajouter à son contrat de données personnelles).
+- **Nouvelles données liées à un enfant** : la leçon personnelle et le **texte du parent** qu'elle conserve (#39.13), rattachés à un profil. Ils peuvent contenir un prénom ou une information privée si le parent l'a collée : ce sont des données de l'enfant.
+- Minimisation : le texte du parent est gardé parce qu'il sert à **recréer ou vérifier la leçon** et au **suivi parental** (décision du PO, #39.13) ; il est limité à 3000 caractères (#39.14), lu seulement par les parents rattachés (même RLS que la leçon), jamais montré à l'enfant, jamais envoyé à un service externe ni à l'IA dans cette story. Pas d'auteur.
+- Suppression : le texte **part avec la leçon** (même enregistrement) quand le parent la supprime, et avec le profil enfant (**cascade**, clé étrangère `on delete cascade`, comme toutes les tables d'un profil) : la suppression manuelle d'un profil pendant la beta l'emporte sans geste en plus. Export : reporté dans #14 (la table, texte compris, est à ajouter à son contrat de données personnelles).
 - Hébergement UE (base existante), aucun service tiers.
 
 ## Table et RLS envisagées (migration additive)
 
-Base partagée : une seule migration, qui **ajoute** une table et ne touche à rien d'existant.
+Base partagée : une seule migration, qui **ajoute** une table et ne touche à rien d'existant. Le texte du parent est une colonne de cette table (#39.13) : même RLS par rattachement, supprimé avec la leçon et avec le profil.
 
 ```sql
 -- Story #39 : leçons personnelles (Accompagnement).
 create table public.lecons_personnelles (
   id text primary key check (id ~ '^perso-[0-9a-f-]{36}$'),
   profil uuid not null references public.profils_enfants (id) on delete cascade,
+  texte_du_parent text not null check (char_length(texte_du_parent) between 3 and 3000),  -- #39.13, #39.14
   lecon jsonb not null check (lecon ->> 'id' = id and octet_length(lecon::text) <= 60000),
   cree_le timestamptz not null default now()
 );
@@ -256,7 +260,7 @@ create policy lecons_personnelles_suppression_par_ses_parents on public.lecons_p
   for delete to authenticated using (private.est_rattache_au_profil(profil));
 ```
 
-Écritures par les deux Edge Functions **avec le JWT du parent** (règle de `CLAUDE.md`, pas de `service_role`). Un parent pourrait insérer directement une leçon mal formée pour **son propre** enfant : le dégât reste chez lui, et les lecteurs l'écartent (`lireLecon`). Voir #39.16. Le serveur de `terminer-la-seance` lit cette table avec le JWT de l'appelant ; il n'y écrit jamais.
+Écritures par les deux Edge Functions **avec le JWT du parent** (règle de `CLAUDE.md`, pas de `service_role`, décision 0024). Un parent pourrait insérer directement une leçon mal formée pour **son propre** enfant : le dégât reste chez lui, et les lecteurs l'écartent (`lireLecon`). Voir #39.16. Le serveur de `terminer-la-seance` lit cette table avec le JWT de l'appelant ; il n'y écrit jamais.
 
 ## Emplacement
 
@@ -283,7 +287,7 @@ supabase/functions/_shared/accompagnement/
     creer-une-lecon-personnelle.ts
     supprimer-une-lecon-personnelle.ts
   infrastructure/
-    lecons-personnelles-supabase.ts     # mapper jsonb <-> agrégat
+    lecons-personnelles-supabase.ts     # mapper (texte du parent, leçon jsonb) <-> agrégat
     sections-du-programme-json.ts       # app/programmes-index.json importé (comme bibliotheque.json)
     rattachements-du-parent-supabase.ts
     http-accompagnement.ts              # lecture et validation du corps (profil, texte, niveau, matière)
@@ -306,66 +310,84 @@ vite.config.ts, tsconfig.json                                              # ali
 
 Risque de conflit avec les stories parallèles : `toutes-les-lecons.ts` et `parcours.ts` (#29 lit le parcours), `terminer-la-seance/index.ts` (#28 révisions). Changements additifs et facultatifs seulement ; aucun agrégat de #28, #29, #32 n'est touché.
 
-## Termes proposés pour le glossaire (après validation, ajouts seulement)
+## Termes ajoutés au glossaire (ajouts seulement, 2026-10-25)
+
+Ajoutés en fin de section Accompagnement (Catalogue pour Groupe du verbe), décision n°38 du glossaire. La ligne « Leçon personnelle (beta, #39) » porte la définition retenue ; la réécriture de l'ancienne ligne « Leçon personnelle » est à faire **hors vague** (#39.21).
 
 Accompagnement : **Texte du parent**, **Forme du texte**, **Liste de mots**, **Liste de verbes**, **Poésie** (forme), **Texte documentaire**, **Texte sur un métier**, **Générateur local**, **Leçon préparée**, **Section retenue** ; nouvelle définition de **Leçon personnelle**. Catalogue : **Groupe du verbe** (jamais « groupe » seul pour un verbe). Mots d'interface (hors glossaire) : « Pour toi », « Mes leçons », « Créer une leçon », « préparée sans IA », aperçu ; « Je choisis » abandonné.
 
-Context map (après validation) : ligne Catalogue → Accompagnement (Published Language : `Lecon`, `lireLecon`, `SectionDuProgramme` étendue) ; précision de la ligne Accompagnement → Apprentissage (leçons personnelles du profil en cours, lues sous RLS ; revalidation des séances par l'adaptateur `LeconsDuCatalogueEtPersonnelles`) ; la ligne « API Claude → Accompagnement » reste pour #40.
+Context map (ajouts, 2026-10-25) : ligne Catalogue → Accompagnement (Published Language : `Lecon`, `lireLecon`, `SectionDuProgramme` étendue) ; précision de la ligne Accompagnement → Apprentissage (leçons personnelles du profil en cours, lues sous RLS ; revalidation des séances par l'adaptateur `LeconsDuCatalogueEtPersonnelles`) ; la ligne « API Claude → Accompagnement » reste pour #40.
 
 ## Questions ouvertes
 
-Questions de l'issue (1 à 8) puis nouvelles questions. Chaque recommandation vise la beta : simple, corrige les défauts relevés, sans élargir le périmètre.
+**Toutes tranchées par le PO le 2026-10-25** (annonce du responsable sur l'issue #39, 17:44 UTC : « 39. reco OK sauf 39.13 oui on conserve le texte »). Les questions #39.17 à #39.21 sont dans `docs/stories/39/acceptance.md` : recommandations retenues.
 
 - **#39.1 (issue 1) La leçon personnelle appartient-elle à la famille ou à un profil enfant ?**
   **Recommandation : à un profil enfant.** Le parent choisit l'enfant dans le formulaire (un seul enfant rattaché : choisi d'office), et la classe proposée est **celle de cet enfant** (modifiable). Raisons : « la famille » n'existe pas dans le modèle (deux parents n'ont pas forcément les mêmes enfants, décision n°3 du lot 2) et il faudrait l'inventer ; le rattachement au profil réutilise tel quel `private.est_rattache_au_profil` et la cascade avec le profil (RGPD réglé sans #14) ; cela corrige le défaut « la classe proposée est toujours CP » ; « Pour toi » devient vrai (la leçon est pour cet enfant). Coût : pour deux enfants, le parent crée deux fois la leçon (un texte collé, deux clics). « Mes leçons » montre le prénom de l'enfant sur chaque carte. D'accord ?
+  **Tranchée le 2026-10-25** : recommandation retenue (un profil enfant).
 
 - **#39.2 (issue 2) Quelle citation pour une leçon locale ?**
   **Recommandation : la phrase de l'extrait de la section retenue, choisie par la même méthode que `scripts/build_bibliotheque.py`** (phrase qui contient le plus de mots du texte et d'indices de la forme, lisible, proche de 120 caractères ; à défaut, la phrase lisible la plus proche de 120 caractères). Elle est recopiée telle quelle : la règle « mot pour mot » est respectée, la mention « Citation non retrouvée mot pour mot » disparaît de l'aperçu (la piste de critère « L'aperçu signale une citation non vérifiée » tombe) et `citationVerifiee` n'existe plus. `docs/format-lecons.md` est mis à jour. D'accord ?
+  **Tranchée le 2026-10-25** : recommandation retenue.
 
 - **#39.3 (issue 3) Où placer la leçon dans le parcours ?**
   Il n'y a plus de verrou (25.1 b) : elle s'ouvre toujours. Reste sa place. Avec `ordre` ≥ 1000 elle irait en fin de parcours, compterait dans « 3 / 12 », ne serait jamais la prochaine leçon avant la fin, et fermerait la classe au-dessus (#26, matière réussie).
   **Recommandation : hors du parcours.** Elle n'apparaît **pas** dans « Mon parcours » (ni place, ni compteur, ni prochaine leçon, ni leçon suivante) ; elle apparaît **en tête de « Toutes les leçons »**, dans une partie « Pour toi », la plus récente d'abord, quel que soit son niveau, avec son état (« À découvrir » ou ses étoiles). Le message après l'enregistrement devient « La leçon apparaît maintenant dans « Toutes les leçons » de <prénom>, avec « Pour toi ». » #29 (« Aujourd'hui ») et #36 (devoir « leçon à faire ») pourront la mettre en avant. D'accord, ou faut-il aussi un bloc « Pour toi » en tête de sa matière dans « Mon parcours » ?
+  **Tranchée le 2026-10-25** : recommandation retenue (hors du parcours, « Pour toi » en tête de « Toutes les leçons »).
 
 - **#39.4 (issue 4) Corrige-t-on les générateurs ?**
   **Recommandation : oui, les trois**, puisque rien n'est encore enregistré dans la cible (aucune leçon existante ne change) :
   (a) verbes en `-oir` au 3e groupe (`voir`, `avoir`, `savoir`, `vouloir`, `pouvoir`, `devoir`) ;
   (b) « j' » devant une voyelle ou un h muet, « je » devant un h aspiré d'une courte liste (hurler, huer, hacher, hisser, hausser, heurter, hanter, harceler, hocher, hululer, hâter, hennir) : « j'habite », « je hurle » ;
   (c) la liste de mots ne produit plus l'exercice `bulles` « Le mot bien écrit », qui montre les mots dictés (contre `docs/format-lecons.md`) : la leçon a la seule dictée. D'accord pour les trois ?
+  **Tranchée le 2026-10-25** : recommandation retenue (a, b et c).
 
 - **#39.5 (issue 5) Texte documentaire : code (trous et ordre) ou doc (lecture et trous) ?**
   **Recommandation : suivre le code (trous et ordre) et corriger `docs/format-lecons.md`.** Un exercice `lecture` demande des questions à choix que les générateurs locaux ne savent pas écrire sans IA ; « remettre les phrases dans l'ordre » se fait sans risque d'erreur. La lecture avec questions viendra avec l'IA (#40). D'accord ?
+  **Tranchée le 2026-10-25** : recommandation retenue.
 
 - **#39.6 (issue 6) Le parent peut-il modifier la leçon avant ou après l'enregistrement ?**
   **Recommandation : non, ni avant ni après.** Avant : il corrige son texte (ou la classe, la matière) et touche à nouveau « Créer la leçon » ; l'aperçu se refait. Après : il supprime la leçon et la recrée. Pas de droit de modification en base. D'accord ?
+  **Tranchée le 2026-10-25** : recommandation retenue (ni avant ni après).
 
 - **#39.7 (issue 7) Que deviennent progrès, devoirs et audio d'une leçon supprimée ?**
   Devoirs (#36) et audio (#42) n'existent pas encore dans la cible.
   **Recommandation : dans la beta, rien d'autre n'est effacé** : les étoiles et les séances déjà enregistrées restent, invisibles (tous les écrans partent des leçons qui existent) et partent avec le profil (cascade). Elles ne contiennent ni le texte ni la leçon. L'événement `LeconPersonnelleSupprimee` est émis pour que #36 et #42 nettoient leurs propres données quand ils seront livrés. D'accord, ou faut-il effacer aussi les étoiles et séances de cette leçon (une écriture dans Apprentissage, par le serveur seul, décision 0016) ?
+  **Tranchée le 2026-10-25** : recommandation retenue (rien d'autre n'est effacé dans la beta).
 
 - **#39.8 (issue 8) Les types cochés sont ignorés pour une poésie. On garde ?**
   Sur 14 types proposés, les générateurs locaux n'en savent faire que 6, et selon la forme ; cocher « Calcul » pour une liste de mots ne fait rien.
   **Recommandation : retirer le choix des types d'exercices de cette story.** La forme du texte décide des exercices ; l'aperçu les montre. Le choix reviendra avec l'IA (#40), qui sait faire les 14 types. La question de la poésie tombe. D'accord ?
+  **Tranchée le 2026-10-25** : recommandation retenue (pas de choix des types d'exercices).
 
 - **#39.9 (nouvelle) Quel verbe conjuguer ?** Le legacy conjugue le premier verbe du 1er groupe avec la règle régulière : « appeler » donne « j'appele », « acheter » « j'achete », « payer » « je paye/paie » sans choix, « lever » « je leve ».
   **Recommandation : conjuguer le premier verbe du 1er groupe régulier** (ni `-yer`, ni `-eler`, ni `-eter`, ni `e` ou `é` + consonne(s) + `er` comme lever, céder ; `-ger` et `-cer` restent gérés) ; s'il n'y en a pas, pas d'exercice de conjugaison (le classement reste). Exemple : « appeler, chanter, finir » conjugue « chanter ». D'accord ?
+  **Tranchée le 2026-10-25** : recommandation retenue.
 
 - **#39.10 (nouvelle) Texte sur un métier hors CE2 : quelle matière ?** L'index n'a qu'une section d'EMC, au CE2. Le legacy donnait une leçon d'EMC rattachée à une section de français au CP (matière et section incohérentes).
   **Recommandation** : la section est toujours de la matière de la leçon. Sans matière choisie, un texte sur un métier donne une leçon d'**EMC si une section d'EMC couvre la classe** (CE2 aujourd'hui), sinon de **français** (texte documentaire). Si le parent choisit une matière sans section pour la classe (ex. EMC au CP), le message « Aucune section du programme pour cette classe et cette matière. » s'affiche et rien n'est préparé. La piste de critère devient « … au CE2, sans matière choisie, donne une leçon d'EMC ». D'accord ?
+  **Tranchée le 2026-10-25** : recommandation retenue.
 
 - **#39.11 (nouvelle) Mots qu'on ne peut pas dicter.** Le build refuse un mot dicté de plus de 18 lettres ou avec une lettre absente du clavier de l'enfant (chiffre, `ñ`…) ; `lireLecon` ne le vérifie pas.
   **Recommandation** : la liste de mots écarte ces mots et l'aperçu le dit (« 1 mot ne peut pas être dicté : 2024. ») ; s'il ne reste aucun mot, la préparation retombe sur « Mon texte » ou échoue (règle des générateurs). D'accord ?
+  **Tranchée le 2026-10-25** : recommandation retenue.
 
 - **#39.12 (nouvelle) Une séance d'une leçon personnelle compte-t-elle comme les autres ?**
   **Recommandation : oui** pour les étoiles, la série, la cabane et le suivi (même `SeanceTerminee`, revalidée par le serveur) ; **pas de badge**, car la leçon n'a pas de `competence` ; jamais dans le test de départ. Les questions ratées vont dans les révisions comme les autres (à confirmer par #28, sans changement de son agrégat). D'accord ?
+  **Tranchée le 2026-10-25** : recommandation retenue, confirmée : compte comme les autres, sans badge (réponse « A » sur la contradiction avec #31 : #31 retirera les badges des leçons personnelles).
 
 - **#39.13 (nouvelle) Garde-t-on le texte du parent ?** L'issue le traite comme une donnée de la famille à exporter et supprimer.
   **Recommandation : non.** Seule la leçon est gardée (elle contient déjà les mots, vers ou phrases utiles) ; le texte transite vers l'Edge Function, qui refait la préparation, et n'est écrit nulle part (minimisation RGPD, rien à exporter en plus). D'accord ?
+  **Tranchée le 2026-10-25** : **recommandation non retenue : oui, on conserve le texte du parent** avec la leçon personnelle (attribut de l'agrégat, colonne de la même table sous la même RLS, supprimé avec la leçon et avec le profil, export dans #14).
 
 - **#39.14 (nouvelle) Longueur du texte du parent ?** Le legacy n'avait pas de limite (6000 caractères envoyés à l'IA).
   **Recommandation : 3000 caractères au plus**, avec « Ton texte est trop long : 3000 caractères au plus. » Une poésie de 16 vers ou une page de cahier tiennent largement ; seuls 16 vers, 12 verbes, 10 mots ou 8 phrases servent. D'accord, ou une autre limite ?
+  **Tranchée le 2026-10-25** : recommandation retenue (3000 caractères au plus).
 
 - **#39.15 (nouvelle) Points de suspension des titres.** Le legacy ajoute « … » même quand rien n'est coupé (« Les verbes : chanter, finir, prendre… » pour trois verbes ; « Lecture : … » pour une phrase courte).
   **Recommandation** : « … » seulement s'il y a plus de 3 mots ou verbes, ou si le titre de lecture est coupé à 40 caractères. D'accord ?
+  **Tranchée le 2026-10-25** : recommandation retenue.
 
 - **#39.16 (nouvelle, architecture) Écriture avec le JWT du parent ou par le serveur seul ?** Avec le JWT (règle de `CLAUDE.md`), la RLS donne au parent le droit d'insérer : il pourrait écrire directement une leçon mal formée pour **son** enfant, sans passer par la revalidation (le dégât reste chez lui, et les lecteurs l'écartent). Le serveur seul (`service_role`, comme 0016) l'empêcherait mais ajoute une exception de plus.
   **Recommandation : JWT du parent + RLS**, avec les contraintes de la table (préfixe de l'identifiant, taille, identifiant cohérent) et sans droit de modification. Une décision d'architecture courte serait utile : **aucun numéro n'est réservé**, au responsable d'en attribuer un s'il le juge nécessaire. D'accord ?
+  **Tranchée le 2026-10-25** : recommandation retenue (JWT du parent + RLS) ; décision d'architecture 0024.
