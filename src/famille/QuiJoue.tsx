@@ -1,14 +1,12 @@
 import type { ProfilEnfant } from "@domain/famille";
 import { universDe } from "@domain/motivation";
 import { PersonnageGuide } from "../univers/index.ts";
-import { InvitationDuPremierProfil } from "./InvitationDuPremierProfil.tsx";
+import { InvitationAffichee } from "./InvitationDuPremierProfil.tsx";
 import { classeEtUnivers } from "./libelle-du-profil.ts";
 import type { EtatDesProfils } from "./profils/useProfilsDuParent.ts";
-import type { Voix } from "../voix/index.ts";
 
 type Props = {
   readonly etat: EtatDesProfils;
-  readonly voix: Voix;
   readonly onChoisir: (profil: ProfilEnfant) => void;
   /** Ajouter un enfant se fait dans l'espace parent : le contrôle parental est demandé. */
   readonly onAjouterUnEnfant: () => void;
@@ -21,13 +19,13 @@ function Message({ etat }: { readonly etat: Exclude<EtatDesProfils, { type: "cha
 }
 
 /** « Qui joue ? » : les profils du parent connecté, dans l'ordre de création, en grandes cibles. */
-export function QuiJoue({ etat, voix, onChoisir, onAjouterUnEnfant }: Props) {
+export function QuiJoue({ etat, onChoisir, onAjouterUnEnfant }: Props) {
   const profils = etat.type === "charges" ? etat.profils : [];
   return (
     <section className="qui-joue" aria-labelledby="titre-qui-joue" data-testid="qui-joue">
       <h2 id="titre-qui-joue">Qui joue aujourd'hui ?</h2>
       {etat.type !== "charges" && <Message etat={etat} />}
-      {etat.type === "charges" && profils.length === 0 && <InvitationDuPremierProfil voix={voix} />}
+      {etat.type === "charges" && profils.length === 0 && <InvitationAffichee />}
       {profils.length > 0 && (
         <ul className="profils-a-choisir">
           {profils.map((profil) => (
