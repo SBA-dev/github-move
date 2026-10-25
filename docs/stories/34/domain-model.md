@@ -17,13 +17,14 @@ Questions de précision, réponses « 1 oui, 2b, 3 oui + a » : (1) les autres q
 | **34.4** | Une section dont la seule leçon jouée est réussie au test de départ reste **« à faire »**. Le test de départ ne pose qu'une question d'une leçon : il ne fait pas travailler la section. | Règle 7 (état de la section) : seule une **séance terminée** met une section « en cours ». `carteDesCompetences` ne lit plus les leçons réussies au test de départ. Celles-ci restent comptées dans les leçons réussies (34.3) et affichées dans le tableau (34.14) |
 | **34.8** | **Une vue par enfant** : le parent choisit l'enfant dont il voit le suivi. Plus de liste de tous les enfants l'un sous l'autre. | Nouvelle fonction `enfantSuivi(profilsRattaches, choix)` (règle 12) ; `suivisDesEnfants` est abandonnée. Le front lit seulement les données de l'enfant suivi. Terme **Enfant suivi** |
 | **34.11** | Les chiffres du suivi ne comptent que la **classe en cours** de l'enfant (son niveau actuel). Les leçons des classes passées sont « à titre indicatif » : dans le tableau des leçons jouées, elles sont **à part**, avec la mention **« classe précédente »**. | Règles 2 à 4 : `chiffresDuSuivi` ne garde que les leçons du niveau du profil. Règles 9 à 11 : `leconsJouees` rend deux listes, celle de la classe en cours et celle des autres classes (`TableauDesLeconsJouees`) |
+| **34.29** | « 34.29 reco » (commentaire [Responsable] du 2026-10-25, 17:41 UTC). Une séance terminée d'une leçon qui n'est plus dans la bibliothèque **ne compte plus** dans « séances jouées » : la leçon est ignorée partout. Corrige la seconde moitié de la recommandation 34.13. | Règle 4 et I2 : une séance terminée ne compte que si sa leçon est connue du Catalogue et de la classe en cours. `suiviDeLEnfant` écarte les leçons inconnues **et leurs séances** avant tout calcul (34.13) |
 
 ### Interprétations (tranchées par le modeleur, au plus simple, dans l'esprit des réponses)
 
 Aucune question nouvelle : chaque point a une lecture simple. Elles sont à relire par le PO à la démonstration, sans bloquer.
 
 - **I1. Classe en cours** = le **niveau actuel du profil enfant** (Famille). Une leçon est « de la classe en cours » si son `niveau` est celui du profil. L'application ne connaît pas d'année scolaire : après un changement de niveau, les chiffres suivent aussitôt le nouveau niveau, et rien n'est daté.
-- **I2. Séances de révision dans « séances jouées »** : **comptées toutes**, sans filtre de classe. Une séance de révision n'a pas de leçon, donc pas de classe, et elle est jouée maintenant (34.5 gardée). Les séances terminées, elles, ne comptent que si leur leçon est de la classe en cours, fluence seule comprise.
+- **I2. Séances de révision dans « séances jouées »** : **comptées toutes**, sans filtre de classe. Une séance de révision n'a pas de leçon, donc pas de classe, et elle est jouée maintenant (34.5 gardée). Les séances terminées, elles, ne comptent que si leur leçon est connue du Catalogue et de la classe en cours, fluence seule comprise ; la séance d'une leçon retirée de la bibliothèque ne compte pas (décision 34.29).
 - **I3. Erreurs corrigées pour de bon** : **non filtrées par classe**. Le compteur de la file de révision est un total par profil, sans détail par leçon (décision 28.20) ; on n'ajoute aucune donnée pour le découper.
 - **I4. Leçons d'une classe au-dessus** (enfant redescendu de classe) : elles vont **dans la même zone à part** que les classes passées, mais avec la mention **« classe au-dessus »** (« classe précédente » serait faux). Elles ne comptent pas dans les chiffres non plus. C'est le cas rare de **Leçon réussie d'une classe au-dessus** (#25).
 - **I5. Mention « classe précédente »** pour **toute** leçon d'un niveau inférieur, même deux classes avant (une leçon de CP pour un enfant de CE2). C'est la **Leçon des classes d'avant** du glossaire ; « classe précédente » est la mention d'interface choisie par le PO.
@@ -224,7 +225,7 @@ classDiagram
 
 | Fonction | Entrée | Sortie | Règles |
 |---|---|---|---|
-| `suiviDeLEnfant(entrees)` | `EntreesDuSuivi` | `SuiviDeLEnfant` | assemble les trois suivantes ; les leçons inconnues du Catalogue sont écartées d'abord (34.13) |
+| `suiviDeLEnfant(entrees)` | `EntreesDuSuivi` | `SuiviDeLEnfant` | assemble les trois suivantes ; les leçons inconnues du Catalogue et leurs séances sont écartées d'abord (34.13, 34.29) |
 | `chiffresDuSuivi(entrees)` | idem | `ChiffresDuSuivi` | règles 2 à 5 des invariants, classe en cours seulement (34.11) |
 | `carteDesCompetences(entrees)` | idem | `CarteDesCompetences` | règles 6 à 8 |
 | `leconsJouees(entrees)` | idem | `TableauDesLeconsJouees` | règles 9 à 11 : classe en cours d'abord, autres classes à part avec leur mention (34.11, I4 à I7) |
@@ -266,7 +267,7 @@ Ce sont les règles du calcul ; elles valent dans le navigateur, seul endroit o�
 1. Le suivi **ne modifie rien** et ne recalcule **aucune étoile** : il lit les meilleures étoiles d'Apprentissage. Deux calculs sur les mêmes entrées donnent le même suivi.
 2. **Leçons réussies** = nombre de leçons connues du Catalogue **de la classe en cours** (34.11, I1) avec des meilleures étoiles ≥ 1 **ou** réussies au test de départ (34.3), chaque leçon comptée une fois.
 3. **Étoiles** (total des étoiles) = somme des meilleures étoiles des leçons de la classe en cours. Une leçon réussie au test de départ seulement n'ajoute aucune étoile (27.1).
-4. **Séances jouées** = nombre de séances terminées (complètes, d'un exercice, de fluence seule) **dont la leçon est de la classe en cours** + nombre de **toutes** les séances de révision terminées (34.5, I2). Le test de départ n'en est pas une.
+4. **Séances jouées** = nombre de séances terminées (complètes, d'un exercice, de fluence seule) **dont la leçon est connue du Catalogue et de la classe en cours** (une leçon retirée de la bibliothèque est ignorée avec ses séances, 34.29) + nombre de **toutes** les séances de révision terminées (34.5, I2). Le test de départ n'en est pas une.
 5. **Erreurs corrigées pour de bon** = compteur de la file de révision du profil, sans filtre de classe (I3) ; 0 s'il n'y a pas de file. Il ne baisse jamais (invariant 8 de #28).
 6. La carte montre **chaque section du programme qui couvre le niveau de l'enfant**, une fois, dans l'ordre de l'index, regroupée par matière (ordre de `toutesLesMatieres`) puis par domaine (ordre d'apparition dans l'index).
 7. **État de la section**, d'après toutes les leçons connues rattachées à cette section (`programme.section`), quel que soit leur niveau (34.9) :
@@ -358,7 +359,7 @@ Aucun fichier sous `supabase/migrations/` ni `supabase/functions/<nom>/`.
 
 ## Questions ouvertes
 
-**Toutes tranchées** (PO, 2026-10-25, 17:30 UTC). Les recommandations sont retenues, sauf 34.4, 34.8 et 34.11 : voir « Décisions du PO (25/10) » et les interprétations I1 à I11. Les questions 34.23 à 34.28 sont dans `acceptance.md`. Aucune question nouvelle. Texte d'origine gardé ci-dessous.
+**Toutes tranchées** (PO, 2026-10-25, 17:30 UTC ; 34.29 à 17:41 UTC). Les recommandations sont retenues, sauf 34.4, 34.8 et 34.11 : voir « Décisions du PO (25/10) » et les interprétations I1 à I11. Les questions 34.23 à 34.28 sont dans `acceptance.md`. Aucune question nouvelle. Texte d'origine gardé ci-dessous.
 
 Les questions 34.1 à 34.7 reprennent celles de l'issue, dans l'ordre. Les suivantes viennent du passage à la cible et des stories livrées. Chaque recommandation vise à finir la beta vite, sans perdre ce que voient les parents aujourd'hui.
 
@@ -403,6 +404,7 @@ Les questions 34.1 à 34.7 reprennent celles de l'issue, dans l'ordre. Les suiva
 
 **34.13. Une leçon retirée de la bibliothèque, mais avec des étoiles enregistrées.**
 - **Recommandation** : **ignorée partout dans le suivi** (chiffres, carte, tableau), sans message, comme une question introuvable en révision (28.15). Les chiffres restent cohérents avec le tableau. Ses séances comptent quand même dans « séances jouées » (elles ont eu lieu).
+- **Corrigée par 34.29** (PO, « 34.29 reco ») : ses séances **ne comptent plus** dans « séances jouées » ; la leçon est ignorée partout, séances comprises.
 
 **34.14. Leçon réussie au test de départ dans le tableau : libellé et date.**
 - **Recommandation** : libellé **« réussie au test de départ »** (27.1, au lieu de « acquise au test »), date du **dernier test de départ**. Dès qu'une séance lui donne des étoiles, ce sont ses étoiles et la date de cette séance qui s'affichent.

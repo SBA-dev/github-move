@@ -164,8 +164,7 @@ Fonctionnalité: Suivi et carte des compétences
         | leçons réussies | étoiles | séances jouées | erreurs corrigées pour de bon |
         | 2               | 3       | 5              | 4                             |
 
-    # Réponse 34.13, Question 34.29
-    @a-valider
+    # Réponses 34.13 et 34.29
     Scénario: Une leçon qui n'est plus dans la bibliothèque n'est comptée nulle part dans les chiffres
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a terminé ces séances :
