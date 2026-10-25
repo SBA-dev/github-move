@@ -12,6 +12,13 @@ export class LeconsPersonnellesDuProfilSupabase implements LeconsPersonnellesDuP
     if (error) throw new Error(`Lecture de la leçon personnelle impossible : ${error.code ?? "inconnu"}`);
     return data === null ? null : lecturePermissive(data.lecon);
   }
+
+  async toutes(profil: string): Promise<readonly Lecon[]> {
+    const { data, error } = await this.client.from("lecons_personnelles").select("lecon")
+      .eq("profil", profil).returns<{ lecon: unknown }[]>();
+    if (error) throw new Error(`Lecture des leçons personnelles impossible : ${error.code ?? "inconnu"}`);
+    return (data ?? []).flatMap((ligne) => lecturePermissive(ligne.lecon) ?? []);
+  }
 }
 
 function lecturePermissive(brut: unknown): Lecon | null {
