@@ -500,10 +500,9 @@ Given(/^Léa en est à « ([^«»]+) »$/, async ({ page }, question: string) =>
 /** Les paroles de la première lecture de l'exercice, jointes (la page de la leçon a déjà dit son accueil). */
 async function premiereLectureDeLExercice(page: Page): Promise<string> {
   await attendreLaDictee(page);
-  await expect.poll(async () => (await lecturesDuJournal(page)).length).toBeGreaterThan(0);
-  const lectures = await lecturesDuJournal(page);
-  const apresLAccueil = lectures.filter((lecture) => !/^Coucou /.test(lecture));
-  return apresLAccueil[0] ?? "";
+  const apresLAccueil = async () => (await lecturesDuJournal(page)).filter((lecture) => !/^Coucou /.test(lecture));
+  await expect.poll(async () => (await apresLAccueil()).length).toBeGreaterThan(0);
+  return (await apresLAccueil())[0] ?? "";
 }
 
 async function lecturesDuJournal(page: Page): Promise<string[]> {
