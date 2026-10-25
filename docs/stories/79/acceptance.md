@@ -141,6 +141,15 @@ Décisions qui en découlent :
 - **79.8 Types d'exercice concernés** : reco retenue. Tous ceux dont la consigne est lue au début (tous sauf `dictee` et `memoriser`), consigne par défaut de classer, ordre et trous comprise.
 - **79.9 Indication du geste** : reco retenue. Elle reste dans la bulle jusqu'à la parole suivante ; seule la consigne a une place fixe.
 
+Annonce du responsable sur l'issue #79, le 2026-10-25. Réponse du PO, mot pour mot : « 79.2 : A ». Le responsable la lit comme **79.12 : A**, seule question avec un choix A.
+
+- **79.12 Relire la consigne pendant la présentation** : choix A. Pendant que le personnage guide présente l'exercice (consigne, texte, question), le bouton « Relire la consigne » est inactif (grisé, `aria-disabled`). Il devient actif dès que la présentation est finie et le reste jusqu'à la fin de l'exercice. La consigne reste visible tout le temps. Origine : 3e cycle « À CORRIGER » de la review (relire pendant la présentation coupait l'ouverture de l'exercice). Le texte des scénarios ne change pas.
+
+Complément du responsable sur l'issue #79, le 2026-10-25. Réponse du PO à 79.10 et 79.11, mot pour mot : « oui pour les 2 ».
+
+- **79.10 Nouveau blocage de la voix** : oui. Si la voix revient puis se bloque de nouveau pendant la même ouverture de l'application, le message de voix bloquée réapparaît.
+- **79.11 Invitation à jouer sans voix** : oui. Sans voix, l'invitation à jouer après les étapes de la leçon reste visible environ 2 s, puis l'exercice vient seul, comme l'annonce du nouveau défi (79.4).
+
 ## Questions ouvertes
 
-Aucune. Les questions du cadrage (79.1 à 79.9) sont tranchées : voir « Décisions ».
+Aucune. Les questions du cadrage (79.1 à 79.9) et les questions 79.10 à 79.12 sont tranchées : voir « Décisions ».
