@@ -18,7 +18,13 @@ const casAttendus: [string, "1" | "2" | "3"][] = [
 ];
 
 for (const [infinitif, groupe] of casAttendus) {
-  Deno.test(`le verbe « ${infinitif} » est du ${groupe}er groupe`.replace("er groupe", groupe === "1" ? "er groupe" : "e groupe"), () => {
-    assertEquals(groupeDuVerbe(infinitif), groupe);
-  });
+  Deno.test(
+    `le verbe « ${infinitif} » est du ${groupe}er groupe`.replace(
+      "er groupe",
+      groupe === "1" ? "er groupe" : "e groupe",
+    ),
+    () => {
+      assertEquals(groupeDuVerbe(infinitif), groupe);
+    },
+  );
 }
