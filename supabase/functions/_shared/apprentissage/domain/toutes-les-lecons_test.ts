@@ -1,5 +1,5 @@
 import { assertEquals } from "@std/assert";
-import { lireLecon, Niveau } from "../../catalogue/domain/index.ts";
+import { lireLecon, Niveau, toutesLesMatieres } from "../../catalogue/domain/index.ts";
 import type { Lecon } from "../../catalogue/domain/index.ts";
 import { Etoiles } from "./etoiles.ts";
 import { toutesLesLecons } from "./toutes-les-lecons.ts";
@@ -245,4 +245,68 @@ Deno.test("« Toutes les leçons » n'a aucune leçon des classes d'avant pour u
   const { leconsDesClassesDAvant } = toutesLesLecons(entrees, {});
 
   assertEquals(leconsDesClassesDAvant, []);
+});
+
+function matiere(code: string) {
+  return toutesLesMatieres().find((candidate) => candidate.code === code)!;
+}
+
+function entreesDuFiltre() {
+  return {
+    lecons: [
+      lecon("fr-cp-lettres", "francais", "CP", 1),
+      lecon("ma-cp-nombres", "maths", "CP", 1),
+      lecon("fr-ce1-sons", "francais", "CE1", 1),
+      lecon("fr-ce2-accords", "francais", "CE2", 1),
+      lecon("ma-ce2-tables", "maths", "CE2", 1),
+    ],
+    niveau: Niveau.de("CE2"),
+    meilleuresEtoiles: new Map(),
+  };
+}
+
+function identifiants(resultat: ReturnType<typeof toutesLesLecons>) {
+  return {
+    lecons: resultat.lecons.map(({ lecon }) => lecon),
+    classesDAvant: resultat.leconsDesClassesDAvant.map(({ niveau, lecons }) => ({
+      niveau: niveau.valeur,
+      lecons: lecons.map(({ lecon }) => lecon),
+    })),
+  };
+}
+
+Deno.test("filtrer « Toutes les leçons » par matière ne garde que les leçons de cette matière, dans la classe de l'enfant et dans les classes d'avant, et fait disparaître une classe d'avant sans leçon de cette matière", () => {
+  const resultat = toutesLesLecons(entreesDuFiltre(), { matiere: matiere("maths") });
+
+  assertEquals(identifiants(resultat), {
+    lecons: ["ma-ce2-tables"],
+    classesDAvant: [{ niveau: "CP", lecons: ["ma-cp-nombres"] }],
+  });
+});
+
+Deno.test("choisir une classe d'avant dans le filtre « Niveau » ne laisse que la section de cette classe, et aucune leçon de la classe de l'enfant", () => {
+  const resultat = toutesLesLecons(entreesDuFiltre(), { niveau: Niveau.de("CP") });
+
+  assertEquals(identifiants(resultat), {
+    lecons: [],
+    classesDAvant: [{ niveau: "CP", lecons: ["fr-cp-lettres", "ma-cp-nombres"] }],
+  });
+});
+
+Deno.test("choisir la classe de l'enfant dans le filtre « Niveau » vide la section des classes d'avant", () => {
+  const resultat = toutesLesLecons(entreesDuFiltre(), { niveau: Niveau.de("CE2") });
+
+  assertEquals(identifiants(resultat), {
+    lecons: ["fr-ce2-accords", "ma-ce2-tables"],
+    classesDAvant: [],
+  });
+});
+
+Deno.test("filtrer « Toutes les leçons » par matière et par niveau combine les deux filtres", () => {
+  const resultat = toutesLesLecons(entreesDuFiltre(), { matiere: matiere("francais"), niveau: Niveau.de("CE1") });
+
+  assertEquals(identifiants(resultat), {
+    lecons: [],
+    classesDAvant: [{ niveau: "CE1", lecons: ["fr-ce1-sons"] }],
+  });
 });
