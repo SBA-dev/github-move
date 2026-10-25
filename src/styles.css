@@ -387,6 +387,8 @@ button.secondaire:hover { background: #fdf3ea; }
 .formulaire-de-profil .actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .profils-de-l-espace-parent .confirmation { font-weight: 700; }
 .accueil-de-l-enfant { display: grid; justify-items: center; gap: 12px; max-width: 100%; }
+.proposition-de-revision { display: grid; justify-items: center; gap: 4px; max-width: 100%; }
+.proposition-de-revision p { margin: 0; overflow-wrap: anywhere; text-align: center; font-weight: 700; }
 
 /* Mode dys du profil en cours : police Andika, lettres, mots et lignes espacés, syllabes en couleurs alternées. */
 [data-mode-dys="true"] {

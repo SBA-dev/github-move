@@ -1,3 +1,4 @@
+import { cleDeLEcoute, cleDUneQuestionALire, cleDuTrou } from "./cles-des-questions.ts";
 import type { Exercice } from "../../catalogue/domain/index.ts";
 import { CleDeQuestion } from "./cle-de-question.ts";
 import type { ChoixProposes } from "./choix-proposes.ts";
@@ -151,7 +152,7 @@ export class QuestionJouee implements QuestionPosee {
 
 export function questionJoueeDuTrou(question: QuestionDeTrou, tireur: Tireur): QuestionJouee {
   return QuestionJouee.aChoix({
-    cle: CleDeQuestion.de("trous", question.enonce),
+    cle: cleDuTrou(question.enonce),
     enonce: question.enonce,
     choix: tireur.trou(question.motAttendu, question.candidats),
     bonneReponse: question.motAttendu,
@@ -170,7 +171,7 @@ export function questionsJoueesAvec(exercice: Exercice, tireur: Tireur): Questio
       const type = exercice.type;
       return exercice.questions.map((q) =>
         QuestionJouee.aChoix({
-          cle: CleDeQuestion.de(type, q.question + q.reponse),
+          cle: cleDUneQuestionALire(type, q),
           enonce: q.question,
           choix: tireur.choix(q.choix, q.reponse),
           bonneReponse: q.reponse,
@@ -182,7 +183,7 @@ export function questionsJoueesAvec(exercice: Exercice, tireur: Tireur): Questio
     case "ecoute":
       return exercice.items.map((item) =>
         QuestionJouee.aChoix({
-          cle: CleDeQuestion.de("ecoute", item.dire),
+          cle: cleDeLEcoute(item),
           enonce: questionDeLEcoute(item),
           choix: tireur.choix(item.choix, item.reponse),
           bonneReponse: item.reponse,

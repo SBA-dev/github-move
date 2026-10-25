@@ -1,5 +1,6 @@
-import { assertEquals } from "@std/assert";
+import { assertEquals, assertThrows } from "@std/assert";
 import { CleDeQuestion } from "./cle-de-question.ts";
+import { CleDeQuestionInvalide } from "./erreurs.ts";
 import type { TypeDeQuestion } from "./question-suivie.ts";
 
 Deno.test("la clé d'une question de bulles commence par « b: » et normalise le texte", () => {
@@ -33,4 +34,28 @@ Deno.test("deux types de question n'ont jamais le même préfixe de clé", () =>
   const prefixes = types.map((type) => CleDeQuestion.de(type, "x").valeur.replace(/x$/, ""));
 
   assertEquals(new Set(prefixes).size, types.length);
+});
+
+Deno.test("une clé sérialisée redevient la clé d'origine, pour chaque forme de clé", () => {
+  const cles = [
+    CleDeQuestion.de("bulles", "Combien font 3 + 4 ?"),
+    CleDeQuestion.de("classer", "Classer les sons"),
+    CleDeQuestion.de("calcul", "12 + 7"),
+    CleDeQuestion.de("dictee", "Le chat dort"),
+    CleDeQuestion.de("ecoute", "Été"),
+  ];
+
+  assertEquals(cles.map((cle) => CleDeQuestion.depuisLaValeur(cle.valeur)), cles);
+});
+
+Deno.test("une valeur de clé vide, sans préfixe connu ou sans texte est refusée", () => {
+  for (const valeur of ["", "cat", "z:cat", "b:", "b: "]) {
+    assertThrows(() => CleDeQuestion.depuisLaValeur(valeur), CleDeQuestionInvalide);
+  }
+});
+
+Deno.test("une valeur de clé qui n'est pas normalisée est refusée", () => {
+  for (const valeur of ["b:Cat", "e:été", "b:deux  espaces", "b: cat"]) {
+    assertThrows(() => CleDeQuestion.depuisLaValeur(valeur), CleDeQuestionInvalide);
+  }
 });
