@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(curl * https://api.supabase.com/v1/projects/*/database/*)"
+      "Bash(curl * https://api.supabase.com/v1/projects/*/database/*)",
+      "mcp__github__merge_pull_request",
+      "Bash(gh pr merge * --merge*)"
     ]
   },
   "extraKnownMarketplaces": {
