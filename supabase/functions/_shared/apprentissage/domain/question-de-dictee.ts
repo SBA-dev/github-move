@@ -1,3 +1,4 @@
+import { cleDeLaDictee } from "./cles-des-questions.ts";
 import type { MotDicte } from "../../catalogue/domain/index.ts";
 import { CleDeQuestion } from "./cle-de-question.ts";
 import type { ClavierPropose } from "./clavier-propose.ts";
@@ -35,7 +36,7 @@ export class QuestionDeDictee implements QuestionSuivie {
     private readonly clavierPropose: ClavierPropose,
   ) {
     this.mot = MotAEcrire.de(motDicte.mot);
-    this.cle = CleDeQuestion.de("dictee", motDicte.mot);
+    this.cle = cleDeLaDictee(motDicte);
   }
 
   cases(): CaseDeQuestion[] {

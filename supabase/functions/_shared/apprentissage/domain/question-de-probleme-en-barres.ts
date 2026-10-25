@@ -1,5 +1,5 @@
+import { cleDesBarres } from "./cles-des-questions.ts";
 import type { FormeDeSchema, Niveau, ProblemeEnBarres } from "../../catalogue/domain/index.ts";
-import { CleDeQuestion } from "./cle-de-question.ts";
 import { descriptionDuSchema, descriptionDuSchemaResolu } from "./description-du-schema.ts";
 import { aideDesBarres, explicationDeLaReponseEnBarres, explicationDuSchema } from "./exercices/barres.ts";
 import type { CalculEnCours } from "./question-de-calcul.ts";
@@ -57,6 +57,6 @@ export class QuestionDeProblemeEnBarres extends QuestionEnveloppantUnCalcul {
 
 function calculDuProbleme(probleme: ProblemeEnBarres, tireur: Tireur, niveau: Niveau) {
   const operation = { q: probleme.enonce, r: probleme.reponse, aide: aideDesBarres(probleme) };
-  const identite = { type: "barres", cle: CleDeQuestion.de("barres", probleme.enonce) } as const;
+  const identite = { type: "barres", cle: cleDesBarres(probleme) } as const;
   return calculAuNiveau(operation, identite, tireur, niveau);
 }
