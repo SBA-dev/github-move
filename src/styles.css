@@ -744,3 +744,37 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-width: 4px; background:
 @media (prefers-reduced-motion: reduce) {
   .pour-la-cabane { animation: none; }
 }
+
+.lecons-personnelles-du-parent {
+  display: grid;
+  gap: 12px;
+  width: 100%;
+  max-width: 40rem;
+  padding: 12px 16px;
+  border-radius: 16px;
+  background: #fff;
+  text-align: left;
+  box-sizing: border-box;
+}
+.lecons-personnelles-du-parent h4, .lecons-personnelles-du-parent p, .lecons-personnelles-du-parent blockquote { margin: 0; overflow-wrap: anywhere; }
+.lecons-personnelles-du-parent .onglets { display: flex; flex-wrap: wrap; gap: 8px; }
+.lecons-personnelles-du-parent [role="tabpanel"], .creer-une-lecon { display: grid; gap: 12px; min-width: 0; }
+.formulaire-de-lecon { display: grid; gap: 8px; }
+.formulaire-de-lecon select, .formulaire-de-lecon textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 2px solid var(--accent-fonce);
+  border-radius: 12px;
+  font: inherit;
+  background: #fff;
+}
+.apercu-de-la-lecon { display: grid; gap: 8px; padding: 12px; border: 2px solid var(--accent-fonce); border-radius: 12px; }
+.exercices-de-l-apercu, .mes-lecons { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.exercices-de-l-apercu .libelle-du-type { font-weight: 700; }
+.mes-lecons li { display: grid; gap: 6px; padding: 12px; border: 2px solid var(--accent-fonce); border-radius: 12px; }
+.mes-lecons .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.texte-colle summary { display: flex; align-items: center; min-height: 44px; font-weight: 700; cursor: pointer; }
+.texte-colle pre { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; }
+.lecons-personnelles-du-parent summary:focus-visible { outline: 3px solid #1f2a1f; outline-offset: 2px; }

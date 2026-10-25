@@ -17,6 +17,7 @@ import {
   useProfilsDuParent,
 } from "./famille/index.ts";
 import { DockDeLEnfant, type EcranDuDock, estUnEcranDuDock } from "./accueil/index.ts";
+import { LeconsPersonnellesDuParent } from "./accompagnement/index.ts";
 import { MesMedailles } from "./medailles/index.ts";
 import { MonParcours } from "./parcours/index.ts";
 import { EcranDeRevision, useQuestionsDuesALAccueil, useRenvoiDesSeancesDeRevisionGardees } from "./revision/index.ts";
@@ -326,6 +327,7 @@ export function Application() {
                   onCree={(profilCree) => proposerLeTestDeDepart(() => definir(profilCree))}
                   onRefaireLeTestDeDepart={(profilExistant) => proposerLeTestDeDepart(() => choisirQuiJoue.executer(profilExistant))}
                 />
+                <LeconsPersonnellesDuParent profils={profilsDuParent.etat.type === "charges" ? profilsDuParent.etat.profils : undefined} />
                 <ChoixDeLaVoix voix={voix} />
               </EspaceParent>
             )}

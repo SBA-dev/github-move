@@ -62,8 +62,9 @@ function laBonneReponse(identite: CleDeQuestion) {
 
 function envoiJoue(
   file: FileDeRevision,
-  { fausses = [], id = "revision-1", jour = jourDeLaRevision }: {
+  { fausses = [], id = "revision-1", jour = jourDeLaRevision, lecons = [leconDesSyllabes] }: {
     fausses?: CleDeQuestion[];
+    lecons?: Lecon[];
     id?: string;
     jour?: Jour;
   } = {},
@@ -72,7 +73,7 @@ function envoiJoue(
     id,
     enfant: "profil-lea",
     plan: file.planDeLaSeanceDeRevision(jourDeLaRevision),
-    lecons: [leconDesSyllabes],
+    lecons,
     tireurDe: () => tireurAuHasard(hasardSansMelange()),
     niveau: CE1,
   });
@@ -263,4 +264,18 @@ Deno.test("une question dont la leçon d'origine a disparu est oubliée de la fi
   await terminer.executer({ parent: "parent-paul", seance: envoiJoue(fileDuNavigateur) });
 
   assertEquals(laFileApres(files), [[bateau.valeur, 3, "2026-10-28"]]);
+});
+
+Deno.test("une question ratée d'une leçon personnelle est revalidée quand les leçons fournies contiennent cette leçon", async () => {
+  const leconPersonnelle = { ...uneLecon([questionChat]), id: "perso-1" };
+  const chatPersonnel = {
+    ...retenue(chat, 1),
+    origine: { leconDOrigine: leconPersonnelle.id, position: 0, type: "bulles" as const },
+  };
+  const fileDuProfil = laFileDuProfil(chatPersonnel);
+  const { files, terminer } = monde(fileDuProfil, [leconDesSyllabes, leconPersonnelle]);
+
+  await terminer.executer({ parent: "parent-paul", seance: envoiJoue(fileDuProfil, { lecons: [leconPersonnelle] }) });
+
+  assertEquals(laFileApres(files), [[chat.valeur, 3, "2026-10-28"]]);
 });

@@ -20,7 +20,7 @@ function sectionFrancais(): Record<string, unknown> {
 }
 
 Deno.test("une section de programmes-index.json est lue avec son identifiant, sa source, son domaine et ses niveaux", () => {
-  const section = lireSectionDuProgramme(sectionFrancais());
+  const { matiere: _matiere, extrait: _extrait, ...section } = lireSectionDuProgramme(sectionFrancais());
 
   assertEquals(section, {
     id: "c2-francais-cp-identifier-les-mots-de-maniere-de-plus-en-plus-aisee",
@@ -29,6 +29,20 @@ Deno.test("une section de programmes-index.json est lue avec son identifiant, sa
     section: "Identifier les mots de manière de plus en plus aisée",
     niveaux: ["CP"],
   });
+});
+
+Deno.test("une section est lue avec sa matière du Catalogue et son extrait du programme", () => {
+  const { matiere, extrait } = lireSectionDuProgramme(sectionFrancais());
+
+  assertEquals(matiere, { code: "francais", libelle: "Français" });
+  assertEquals(extrait, "Objectifs d’apprentissage");
+});
+
+Deno.test("une section dont la matière est inconnue est mal formée", () => {
+  assertThrows(
+    () => lireSectionDuProgramme({ ...sectionFrancais(), matiere: "astrologie" }),
+    SectionDuProgrammeMalFormee,
+  );
 });
 
 Deno.test("une section sans domaine est mal formée", () => {
