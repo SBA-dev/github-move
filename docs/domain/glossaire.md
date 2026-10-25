@@ -114,6 +114,19 @@ Le glossaire garde l'orthographe française.
 | Leçon réussie au test de départ | Leçon que le test de départ compte comme réussie, sans étoile : elle fait avancer le parcours, ne donne ni étoile, ni badge, ni compétence acquise (#27, réponses 27.1 et 27.2 du PO). Une séance terminée ensuite lui donne ses étoiles. | Apprentissage | acquise au test, validée, cochée (dans le code) |
 | Résultat du test de départ | Pour un enfant : la date du dernier test de départ fait et les leçons réussies au test de départ. Il ne modifie jamais une étoile (#27). | Apprentissage | progression, score, note |
 | Test de départ fait | Le profil a fini au moins un test de départ, par toutes ses questions ou par un arrêt ; quitter en cours ne compte pas (#27). | Apprentissage | test passé, testFait (dans le code) |
+| Question ratée (à valider) | Question d'une séance terminée qui a coûté au moins une erreur (réponse fausse ou « Je ne sais pas ») ; `QuestionRatee` dans le code (#24, #28). Le test de départ n'en produit pas : on y dit **question fausse**. | Apprentissage | question fausse (réservé au test de départ et à la séance de révision), faute |
+| File de révision (à valider) | Pour un profil enfant : toutes ses questions retenues et le nombre d'erreurs corrigées pour de bon ; 250 questions au plus, à confirmer (#28, question 28.3). | Apprentissage | liste d'erreurs, à revoir (mot d'interface), carnet |
+| Question retenue (à valider) | Question ratée gardée dans la file de révision, une seule fois par profil, avec sa leçon d'origine, son intervalle de révision, sa date de révision et son nombre de fois ratée. Une addition ratée donne une seule question retenue (#28). | Apprentissage | erreur à revoir, question à rattraper |
+| Leçon d'origine (à valider) | Leçon de la séance où une question retenue a été ratée pour la première fois ; elle ne change jamais, même si la question est ratée de nouveau en séance de révision (#28). | Apprentissage | leçon en cours, titre (seul) |
+| Intervalle de révision (à valider) | 1, 3 ou 7 jours : écart entre le jour du dernier passage d'une question retenue et sa date de révision. 1 après une erreur, puis 3, puis 7 à chaque question juste en séance de révision (#28). | Apprentissage | boîte (réservé à la boîte à jetons), niveau, palier |
+| Date de révision (à valider) | Jour à partir duquel une question retenue est due ; le lendemain du jour de l'erreur, puis le jour du passage plus l'intervalle de révision (#28). | Apprentissage | échéance, date limite |
+| Question due (à valider) | Question retenue dont la date de révision est aujourd'hui ou avant (#28). | Apprentissage | question en retard, à revoir (mot d'interface) |
+| Séance de révision (à valider) | Séance sans leçon ni étape de leçon qui pose les questions dues, les plus anciennes d'abord, 10 au plus. Interface : « Je révise mes erreurs ». Elle ne modifie ni étoile ni résultat de la leçon (#28, questions 28.2 et 28.16). | Apprentissage | rattrapage, séance de rattrapage, revoir |
+| Question juste, question fausse (en révision) (à valider) | Juste : question de la séance de révision réussie sans aucune erreur. Fausse : au moins une réponse fausse ou « Je ne sais pas » ; l'enfant donne quand même la bonne réponse avant de continuer (#28). Même règle qu'au test de départ. | Apprentissage | question réussie (seule), échec |
+| Erreur corrigée pour de bon (à valider) | Question retenue juste en séance de révision à l'intervalle de 7 jours : elle sort de la file de révision et le compteur du profil augmente de 1. Le legacy dit `acquis` (#28). | Apprentissage | erreur acquise (« acquise » est réservé à la leçon), question maîtrisée |
+| Nombre de fois ratée (à valider) | Nombre de fois qu'une question retenue a été ratée, en séance ou en séance de révision ; sert au conseil du parent (lot 6) (#28). | Apprentissage | échecs (« échec » est interdit pour Erreur), fails (dans le code) |
+| Jour (à valider) | Jour du calendrier de l'appareil, sans heure : le jour commence à minuit, heure de l'appareil. Envoyé avec chaque séance terminée ; sert à la date de révision (#28) et au jour de séance (#30) (question 28.9). | Apprentissage | date (seule), journée |
+| Question oubliée (à valider) | Question retirée de la file de révision sans être corrigée : limite de 250 atteinte, ou leçon d'origine retirée de la bibliothèque. Elle ne compte pas comme erreur corrigée pour de bon (#28, questions 28.3 et 28.15). | Apprentissage | question supprimée, question perdue |
 
 ## Motivation
 
@@ -275,3 +288,9 @@ Lot 4 (#27, `docs/stories/27/domain-model.md`) : le PO a suivi toutes les recomm
 Lot 5 (#65, `docs/stories/65/domain-model.md`) : à trancher par le PO.
 - Nom de l'écran des récompenses de l'enfant : tranché, « Mes médailles » (décision 65.1 du PO ; « médaille » retiré des synonymes interdits de Badge, « trophée » reste interdit) ;
 - « Section de l'écran » et « Pastille de record » : termes du domaine ou mots d'interface (#65).
+
+Lot 4 (#28, `docs/stories/28/domain-model.md`) : à trancher par le PO (question 28.7).
+- « Boîte » (legacy `box`) n'entre pas au domaine : il désigne la boîte à jetons et il est interdit pour Groupe. Proposition : **Intervalle de révision** ;
+- la ligne « Révision (à valider) » désigne aujourd'hui une séance. Proposition : la séance devient **Séance de révision**, et « Révision » désigne le mécanisme (« questions ratées qui reviennent à 1, 3 puis 7 jours ») ;
+- **conflit** avec « Séance » (« une leçon jouée par un enfant ») et « Jour de séance » : la séance de révision n'a pas de leçon. Proposition : préciser les deux lignes pour y inclure la séance de révision (question 28.16) ;
+- « Question ratée » (déjà dans le code) entre au glossaire ; « question fausse » reste réservé au test de départ et à la séance de révision.
