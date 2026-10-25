@@ -114,3 +114,19 @@ Branche de base : `main`. Aucun numéro de décision réservé (prochain libre :
 - 23:50 UTC — Intégration de `main` `759203f` (#34) : conflit de fin de `src/styles.css` (les deux gardés), `701d26c`.
   2 278 tests unitaires verts ; `tsc`, build, lint, fmt OK. Périmètre 0022 lancé : #79, #34, #18, #7.
   #79.13 toujours sans réponse du PO.
+- 00:00 UTC — Périmètre 0022 sur `701d26c` : **135/135 verts** (#79 34/34, #34 49/49, #18 27/27, #7 25/25), 7 min.
+  Reste : réponse du PO à #79.13 (retrait de `@a-valider`), puis `PRÊTE À MERGER`.
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Durée (lancement → tout vert sur le dernier head) | ≈ 6 h (18:00 → 00:00 UTC, horloge du journal) |
+| Temps d'attente du responsable ou du PO | ≈ 35 min pour #79.12 ; #79.13 en cours ; 79.10 et 79.11 sans blocage (reco appliquée) |
+| Cycles TDD (domaine) | 3 blocs (Voix, Apprentissage ×2), 1 aller-retour test-writer ⇄ implementer |
+| Cycles de review | 1 intermédiaire (APPROUVÉ) ; finale : 4 « À CORRIGER » puis APPROUVÉ au cycle 5 ; escalade au 3e (#79.12) |
+| Cycles E2E | mise au point 228/228 ; périmètre invalidé une fois (code modifié pendant le run) ; 712/712 ; 746/746 ; 135/135 |
+| Intégrations de `main` | 4 (`5e35bea` au départ ; #28 et #73 ensemble ; #39 ; #34) |
+| Conflits | 3 dans le code (`EcranDeSeance.tsx`, index du domaine Apprentissage, `lecture-a-voix-haute.ts`), 1 conflit sémantique (test de #73), 2 de fin de `styles.css` |
+| Verrous | aucun avant `merge` (ni migration, ni Edge Function) |
+| Leçons | ne jamais modifier `src/` pendant un run E2E servi par le dossier de travail (worktree sur un autre port) ; un bouton actif pendant une lecture enchaînée crée des courses : le désactiver pendant la présentation (79.12) |
