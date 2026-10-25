@@ -1,12 +1,16 @@
 import { type KeyboardEvent, useEffect, useRef } from "react";
-import { type LeconReussieDUneClasseAuDessus, matieresDuParcours, type Parcours, parcoursDeLaMatiere } from "@domain/apprentissage";
+import { type LeconDesClassesDAvant, type LeconReussieDUneClasseAuDessus, matieresDuParcours, type Parcours, parcoursDeLaMatiere } from "@domain/apprentissage";
 import type { CodeDeMatiere, Matiere, Niveau } from "@domain/catalogue";
 import type { ProfilEnCours } from "@domain/famille";
 import {
   annonceDeLaLecon,
-  annonceDeLaLeconDUneClasseAuDessus, AUCUNE_LECON_POUR_LA_CLASSE, compteurDuParcours, libelleDeLEtat, libelleDeLOnglet,
+  annonceDeLaLeconDesClassesDAvant,
+  annonceDeLaLeconDUneClasseAuDessus, AUCUNE_LECON_POUR_LA_CLASSE, compteurDuParcours, libelleDeLOnglet,
   titreDesLeconsDejaReussies,
 } from "./textes-du-parcours.ts";
+import { BoutonDeLecon } from "./BoutonDeLecon.tsx";
+import { EtatDeLaLecon } from "./EtatDeLaLecon.tsx";
+import { SectionDesClassesDAvant } from "./SectionDesClassesDAvant.tsx";
 import { niveauDuProfil } from "./niveau-du-profil.ts";
 import { type LecturesDuParcours, useLecturesDuParcours } from "./useLecturesDuParcours.ts";
 
@@ -15,6 +19,9 @@ type Props = {
   /** La dernière matière choisie pendant l'utilisation en cours. */
   readonly matiereChoisie: CodeDeMatiere | undefined;
   readonly onChoisirLaMatiere: (matiere: CodeDeMatiere) => void;
+  /** Les matières dont l'enfant a déplié les leçons des classes d'avant pendant l'utilisation en cours. */
+  readonly classesDAvantDeplieesPour: ReadonlySet<CodeDeMatiere>;
+  readonly onBasculerLesClassesDAvant: (matiere: CodeDeMatiere) => void;
   readonly onOuvrirLaLecon: (leconId: string) => void;
 };
 
@@ -24,7 +31,9 @@ function matiereOuverte(matieres: readonly Matiere[], choisie: CodeDeMatiere | u
 }
 
 /** L'écran « Mon parcours » : les leçons du niveau de l'enfant, matière par matière. Il n'affiche que ce que le domaine calcule. */
-export function MonParcours({ profil, matiereChoisie, onChoisirLaMatiere, onOuvrirLaLecon }: Props) {
+export function MonParcours(
+  { profil, matiereChoisie, onChoisirLaMatiere, classesDAvantDeplieesPour, onBasculerLesClassesDAvant, onOuvrirLaLecon }: Props,
+) {
   const lectures = useLecturesDuParcours(profil.id);
   const niveau = niveauDuProfil(profil.niveau);
   return (
@@ -38,6 +47,8 @@ export function MonParcours({ profil, matiereChoisie, onChoisirLaMatiere, onOuvr
           niveau={niveau}
           matiereChoisie={matiereChoisie}
           onChoisirLaMatiere={onChoisirLaMatiere}
+          classesDAvantDeplieesPour={classesDAvantDeplieesPour}
+          onBasculerLesClassesDAvant={onBasculerLesClassesDAvant}
           onOuvrirLaLecon={onOuvrirLaLecon}
         />
       )}
@@ -47,7 +58,9 @@ export function MonParcours({ profil, matiereChoisie, onChoisirLaMatiere, onOuvr
 
 type PropsDuNiveau = Omit<Props, "profil"> & { readonly lectures: LecturesDuParcours; readonly niveau: Niveau };
 
-function ParcoursDuNiveau({ lectures, niveau, matiereChoisie, onChoisirLaMatiere, onOuvrirLaLecon }: PropsDuNiveau) {
+function ParcoursDuNiveau(
+  { lectures, niveau, matiereChoisie, onChoisirLaMatiere, classesDAvantDeplieesPour, onBasculerLesClassesDAvant, onOuvrirLaLecon }: PropsDuNiveau,
+) {
   const entrees = { ...lectures, niveau };
   const matieres = matieresDuParcours(entrees);
   const ouverte = matiereOuverte(matieres, matiereChoisie);
@@ -60,6 +73,12 @@ function ParcoursDuNiveau({ lectures, niveau, matiereChoisie, onChoisirLaMatiere
         <h3 data-testid="titre-du-parcours">{ouverte.libelle} · {niveau.valeur}</h3>
         <LeconsDuParcours parcours={parcours} onOuvrirLaLecon={onOuvrirLaLecon} />
         <BlocsDesLeconsDejaReussies lecons={parcours.leconsReussiesDesClassesAuDessus} onOuvrirLaLecon={onOuvrirLaLecon} />
+        <LeconsDesClassesDAvant
+          lecons={parcours.leconsDesClassesDAvant}
+          deplie={classesDAvantDeplieesPour.has(ouverte.code)}
+          onBasculer={() => onBasculerLesClassesDAvant(ouverte.code)}
+          onOuvrirLaLecon={onOuvrirLaLecon}
+        />
       </div>
     </>
   );
@@ -141,11 +160,7 @@ function LeconsDuParcours({ parcours, onOuvrirLaLecon }: PropsDesLecons) {
             >
               <span className="place-de-la-lecon" data-testid="place-de-la-lecon">Leçon {lecon.place}</span>
               <span className="titre-de-la-lecon">{lecon.titre}</span>
-              <span className="etat-de-la-lecon" data-testid="etat-de-la-lecon" aria-hidden="true">
-                {lecon.etat.genre === "reussie" && <span className="etoiles-de-la-lecon">{"★".repeat(lecon.etat.etoiles.nombre)} ✓</span>}
-                {lecon.etat.genre === "reussieAuTestDeDepart" && <span className="etoiles-de-la-lecon">✓ {libelleDeLEtat(lecon)}</span>}
-                {lecon.etat.genre !== "reussie" && lecon.etat.genre !== "reussieAuTestDeDepart" && libelleDeLEtat(lecon)}
-              </span>
+              <EtatDeLaLecon etat={lecon.etat} />
             </button>
           </li>
         ))}
@@ -195,4 +210,34 @@ function BlocsDesLeconsDejaReussies({ lecons, onOuvrirLaLecon }: PropsDesBlocs) 
       </section>
     );
   });
+}
+
+type PropsDesClassesDAvant = {
+  readonly lecons: readonly LeconDesClassesDAvant[];
+  readonly deplie: boolean;
+  readonly onBasculer: () => void;
+  readonly onOuvrirLaLecon: (leconId: string) => void;
+};
+
+/** Les leçons des niveaux inférieurs : à part, hors compteur, jamais la prochaine leçon. Pas de bloc au CP. */
+function LeconsDesClassesDAvant({ lecons, deplie, onBasculer, onOuvrirLaLecon }: PropsDesClassesDAvant) {
+  if (lecons.length === 0) return null;
+  return (
+    <SectionDesClassesDAvant nombre={lecons.length} deplie={deplie} onBasculer={onBasculer}>
+      <ul className="lecons-du-parcours">
+        {lecons.map((lecon) => (
+          <li key={lecon.lecon}>
+            <BoutonDeLecon
+              titre={lecon.titre}
+              repere={lecon.niveau.valeur}
+              etat={lecon.etat}
+              annonce={annonceDeLaLeconDesClassesDAvant(lecon)}
+              testid="lecon-des-classes-d-avant"
+              onOuvrir={() => onOuvrirLaLecon(lecon.lecon)}
+            />
+          </li>
+        ))}
+      </ul>
+    </SectionDesClassesDAvant>
+  );
 }
