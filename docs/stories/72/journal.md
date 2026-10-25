@@ -46,3 +46,19 @@
 - E2E mise au point lancée (telephone, @issue-72/5/10/11). Chromium 1194 → 1243 par liens dans le scratchpad.
 - Review delta du merge e0b21a9 : APPROUVÉ (non bloquant : `.visuellement-cache` déclarée deux fois dans styles.css, doublon venu de b4e1239, sans effet).
 - #72.1 tranchée par le responsable (annonce du 2026-10-25 09:56) : on garde la réponse n°19, pas de réécriture des scénarios @envoi-email, pas de verrou email.
+- Merge de origin/main e466e25 (#82, documentaire : décision 0022) : feac10f, conflit sur docs/decisions/README.md (lignes 0019 et 0020 gardées). Review finale publiée sur la PR #83 : APPROUVÉ, 7 non bloquants.
+- E2E mise au point (telephone, @issue-72/5/10/11) : 155/155 (3 KO de #10 sous charge, verts à 1 worker).
+- Non-régression complète (22 fichiers, 1392 cas, liste complète + @issue-72, 3 workers, 10:22 → 12:13 UTC) : 1262/1392 ; 130 KO de timeout dans #24 (56), #27 (47), #25 (9), #10 (7), #20 (6), #65 (5), aucun dans #72/#5/#11. Relance seule à 1 worker (12:15 → 13:02) : 130/130. Total 1392/1392.
+- Merge autorisé pour la vague (annonce du responsable du 2026-10-25 10:25, décision 0022). PRÊTE À MERGER, VERROU merge demandé.
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Durée, du lancement au merge | session précédente : 2026-10-24 de ~10:00 à 21:07 (arrêtée en échec) ; reprise : 2026-10-25 de 09:52 à `PRÊTE À MERGER` vers 13:20 (≈ 3,5 h), merge à venir |
+| Temps passé à attendre | PO : 0 dans la reprise (#72.1 tranchée par le responsable en 5 min) ; session précédente : 3 escalades au PO (review n°3, 5ᵉ raté) ; E2E : ≈ 2,6 h de non-régression (1,8 h à 3 workers + 47 min de relance des KO à 1 worker) ; verrous : aucun pris |
+| Tokens et coût | relevés par le responsable |
+| Cycles de review À CORRIGER | 3 (n°1 à n°3, la n°3 escaladée), puis 1 sur le delta du 5ᵉ raté ; deltas des merges de main : APPROUVÉ |
+| Cycles E2E KO | 2 (5ᵉ raté attendu « Trop d'essais » ; helper rater et fixtures), puis 1 non-régression à timeouts hors Famille, verte à la relance |
+| Intégrations de `main` | 3 : 3632694 (118 commits, conflits CLAUDE.md et decisions/README.md), e0b21a9 (340 commits, conflits context-map.md, styles.css, config.toml : ajouts des deux côtés), feac10f (#82, conflit decisions/README.md) |
+| Régression sur `main` après merge | à relever |
