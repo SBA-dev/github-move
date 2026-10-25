@@ -7,39 +7,62 @@ export type FormeDuTexte =
   | "texteDocumentaire"
   | "texteSurUnMetier";
 
-const NOMBRE_MINIMAL_DE_MOTS_DE_LISTE = 3;
+const NOMBRE_MINIMAL_D_ELEMENTS_DE_LISTE = 3;
+const NOMBRE_MAXIMAL_DE_MOTS_D_UN_ELEMENT_COURT = 3;
+const PART_MINIMALE_D_ELEMENTS_COURTS = 0.8;
+const PART_MINIMALE_DE_VERBES_PARMI_LES_COURTS = 0.7;
 const NOMBRE_MINIMAL_DE_VERS = 3;
-const LONGUEUR_MAXIMALE_D_UN_VERS = 8;
+const LONGUEUR_MAXIMALE_D_UN_VERS = 12;
 const NOMBRE_DE_MOTS_DES_TEXTES_SUR_UN_METIER = 25;
-const METIERS = ["pompier", "medecin"];
+const MOTS_DE_METIER = [
+  "pompier",
+  "policier",
+  "policiere",
+  "medecin",
+  "infirmier",
+  "boulanger",
+  "metier",
+  "travaille",
+];
 
 export function reconnaitreLaForme(texte: TexteDuParent): FormeDuTexte {
   if (parleDUnMetier(texte)) return "texteSurUnMetier";
-  if (estUneListeDeVerbes(texte)) return "listeDeVerbes";
-  if (estUneListeDeMots(texte)) return "listeDeMots";
+  const elementsCourts = elementsCourtsDUneListe(texte);
+  if (elementsCourts !== null) {
+    return estUneListeDeVerbes(elementsCourts) ? "listeDeVerbes" : "listeDeMots";
+  }
   if (estUnePoesie(texte)) return "poesie";
   return "texteDocumentaire";
 }
 
 function parleDUnMetier(texte: TexteDuParent): boolean {
   if (texte.mots().length <= NOMBRE_DE_MOTS_DES_TEXTES_SUR_UN_METIER) return false;
-  const mots = texte.normalise().split(/[^a-z]+/);
-  return METIERS.some((metier) => mots.includes(metier));
+  const normalise = texte.normalise();
+  return MOTS_DE_METIER.some((mot) => normalise.includes(mot));
 }
 
-function estUneListeDeMots(texte: TexteDuParent): boolean {
+function nombreDeMots(element: string): number {
+  return element.split(/\s+/).length;
+}
+
+function elementsCourtsDUneListe(texte: TexteDuParent): string[] | null {
   const elements = texte.elements();
-  return elements.length >= NOMBRE_MINIMAL_DE_MOTS_DE_LISTE &&
-    elements.every((element) => !/\s/.test(element));
+  if (elements.length < NOMBRE_MINIMAL_D_ELEMENTS_DE_LISTE) return null;
+  const courts = elements.filter(
+    (element) => nombreDeMots(element) <= NOMBRE_MAXIMAL_DE_MOTS_D_UN_ELEMENT_COURT,
+  );
+  return courts.length / elements.length > PART_MINIMALE_D_ELEMENTS_COURTS ? courts : null;
 }
 
-function estUneListeDeVerbes(texte: TexteDuParent): boolean {
-  return estUneListeDeMots(texte) &&
-    texte.elements().every((element) => /(er|ir|re)$/.test(element.toLowerCase()));
+function estUneListeDeVerbes(elementsCourts: string[]): boolean {
+  const verbes = elementsCourts.filter(
+    (element) => nombreDeMots(element) === 1 && /(er|ir|re|oir)$/.test(element.toLowerCase()),
+  );
+  return verbes.length / elementsCourts.length > PART_MINIMALE_DE_VERBES_PARMI_LES_COURTS;
 }
 
 function estUnePoesie(texte: TexteDuParent): boolean {
   const lignes = texte.lignes();
   return lignes.length >= NOMBRE_MINIMAL_DE_VERS &&
-    lignes.every((ligne) => ligne.split(/\s+/).length <= LONGUEUR_MAXIMALE_D_UN_VERS);
+    lignes.every((ligne) => nombreDeMots(ligne) <= LONGUEUR_MAXIMALE_D_UN_VERS);
 }
