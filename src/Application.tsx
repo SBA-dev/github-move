@@ -19,6 +19,7 @@ import {
 import { DockDeLEnfant, type EcranDuDock, estUnEcranDuDock } from "./accueil/index.ts";
 import { LeconsPersonnellesDuParent } from "./accompagnement/index.ts";
 import { MesMedailles } from "./medailles/index.ts";
+import { SuiviDeLEspaceParent } from "./suivi/index.ts";
 import { MonParcours } from "./parcours/index.ts";
 import { EcranDeRevision, useQuestionsDuesALAccueil, useRenvoiDesSeancesDeRevisionGardees } from "./revision/index.ts";
 import { ToutesLesLecons, useChoixDeToutesLesLecons } from "./toutes-les-lecons/index.ts";
@@ -321,6 +322,7 @@ export function Application() {
                 onSeDeconnecter={seDeconnecter}
                 deconnexionEchouee={deconnexionEchouee}
               >
+                <SuiviDeLEspaceParent etat={profilsDuParent.etat} />
                 <ProfilsDeLEspaceParent
                   etat={profilsDuParent.etat}
                   onModifie={profilsDuParent.relire}

@@ -6,6 +6,7 @@ import { servirLaBibliothequeDuTestDeDepart } from "../support/bibliotheque-du-t
 import { readFileSync } from "node:fs";
 import { expect, type Locator, type Page } from "@playwright/test";
 import { Given, type ProfilPrepare, Then, When } from "./fixtures.ts";
+import { assurerLeProfil } from "./profils-enfants.steps.ts";
 import { cleDe } from "./univers.steps.ts";
 import { estSurUnProfilReel, jouerAvecLeProfilReel, ouvrirLaLeconDansLApplication, rechargerAvecLeProfilReel } from "./profil-reel.ts";
 import {
@@ -198,6 +199,11 @@ Given(/^Léa a un profil enfant préparé de niveau (\S+) dans l'univers « (.+)
   const cle = cleDe(univers);
   const profil: ProfilPrepare = { prenom: "Léa", niveau, univers: cle };
   monde.profils.set("Léa", profil);
+  // Story #34 : le suivi lit sous RLS les faits du vrai profil de Léa, créé pour Paul ; Léa ne joue pas.
+  if ($tags.includes("@issue-34")) {
+    await assurerLeProfil(famille, "Paul", { prenom: "Léa", niveau, libelleUnivers: univers });
+    return;
+  }
   const parametres = scenario(page);
   parametres.univers = cle;
   await preparerLaPage(page, parametres);
