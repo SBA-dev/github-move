@@ -1,9 +1,9 @@
 # Critères d'acceptance : issue #28, Révisions des erreurs
 
-Scénarios : `features/28-revisions-des-erreurs.feature` (tags `@issue-28 @wip`).
+Scénarios : `features/28-revisions-des-erreurs.feature` (tag `@issue-28`).
 Modèle du domaine : `docs/stories/28/domain-model.md` (contexte **Apprentissage**, qui lit le **Catalogue pédagogique** et **Famille**). Les questions 28.1 à 28.21 en viennent ; 28.22 à 28.28 sont ajoutées ici.
 
-Le PO n'a pas encore répondu. Les scénarios suivent les **recommandations** du modèle et de ce document. Ceux qui dépendent d'une question portent `@a-valider` et un commentaire `# Question 28.n`.
+Le PO a retenu toutes les recommandations des questions 28.1 à 28.28 (voir « Décisions »). Les scénarios qui en dépendent portent un commentaire `# Réponse 28.n` ; aucun ne porte plus `@a-valider`.
 
 ## Objectif
 
@@ -17,7 +17,7 @@ Une **question ratée** d'une séance terminée devient une **question retenue**
 
 La séance de révision pose les questions dues, les plus anciennes d'abord, 10 au plus. Elle ne donne pas d'étoiles et ne touche ni les étoiles ni le parcours. Elle se joue dans le navigateur, même sans réseau ; le serveur la revalide.
 
-Le comportement actuel (`app/`, `Review`, `remember`, `playReview`) donne les premiers exemples. Écarts voulus (à valider) :
+Le comportement actuel (`app/`, `Review`, `remember`, `playReview`) donne les premiers exemples. Écarts voulus, tranchés par le PO :
 - la leçon d'origine ne change jamais (28.1) ;
 - une question ratée en révision n'est retenue qu'une fois (28.1) ;
 - pas d'étoiles à la fin de la séance de révision (28.2) ;
@@ -41,17 +41,17 @@ Le comportement actuel (`app/`, `Review`, `remember`, `playReview`) donne les pr
 
 | # | Règle | Scénarios | Questions |
 |---|---|---|---|
-| 1 | Une question ratée dans une séance terminée est retenue ; elle est due le lendemain, jamais le jour même | Une question ratée <manière> revient en révision le lendemain (2 cas : erreur, « Je ne sais pas ») `@a-valider` · Une question ratée n'est pas due le jour même · Une séance terminée sans erreur ne retient aucune question · Une séance quittée avant la fin ne retient aucune question · Une question fausse au test de départ n'est jamais retenue · Une question retenue, ratée de nouveau dans une séance, revient le lendemain `@a-valider` · Une question retenue réussie dans une séance ordinaire reste due `@a-valider` | 28.4, 28.17, 28.18 |
-| 2 | L'accueil de l'enfant propose la séance de révision dès qu'au moins une question est due, et dit combien | Avec <dues> question(s) due(s), l'accueil annonce « <annonce> » (3 cas : 1, 3, 12) `@a-valider` · Sans question due, l'accueil ne propose pas de séance de révision · La séance de révision commence par la plus ancienne question due, sans étape de leçon `@a-valider` | 28.8, 28.28 |
-| 3 | La séance de révision pose au plus 10 questions dues, les plus anciennes d'abord ; les autres attendent la suivante | La séance de révision pose les 10 questions dues les plus anciennes, dans l'ordre de leur date de révision · Après une séance de révision de 10 questions, l'accueil propose les questions dues qui restent `@a-valider` | 28.25 |
+| 1 | Une question ratée dans une séance terminée est retenue ; elle est due le lendemain, jamais le jour même | Une question ratée <manière> revient en révision le lendemain (2 cas : erreur, « Je ne sais pas ») · Une question ratée n'est pas due le jour même · Une séance terminée sans erreur ne retient aucune question · Une séance quittée avant la fin ne retient aucune question · Une question fausse au test de départ n'est jamais retenue · Une question retenue, ratée de nouveau dans une séance, revient le lendemain · Une question retenue réussie dans une séance ordinaire reste due | 28.4, 28.17, 28.18 |
+| 2 | L'accueil de l'enfant propose la séance de révision dès qu'au moins une question est due, et dit combien | Avec <dues> question(s) due(s), l'accueil annonce « <annonce> » (3 cas : 1, 3, 12) · Sans question due, l'accueil ne propose pas de séance de révision · La séance de révision commence par la plus ancienne question due, sans étape de leçon | 28.8, 28.28 |
+| 3 | La séance de révision pose au plus 10 questions dues, les plus anciennes d'abord ; les autres attendent la suivante | La séance de révision pose les 10 questions dues les plus anciennes, dans l'ordre de leur date de révision · Après une séance de révision de 10 questions, l'accueil propose les questions dues qui restent | 28.25 |
 | 4 | En séance de révision, une question est juste seulement sans aucune erreur ; l'enfant a une nouvelle chance et peut dire « Je ne sais pas » | Après une erreur en séance de révision, le personnage guide encourage et la même question reste posée · Après « Je ne sais pas » en séance de révision, la bonne réponse est montrée et l'enfant la donne | — |
-| 5 | Juste en séance de révision, une question revient 3 jours, puis 7 jours plus tard, puis elle est corrigée pour de bon ; fausse, elle revient le lendemain | Juste à l'intervalle de <intervalle>, une question <résultat> <jours> jours plus tard (4 cas) · Juste à l'intervalle de 7 jours, une question est corrigée pour de bon et ne revient plus · Fausse en séance de révision (<cas>), une question revient le lendemain, même à l'intervalle de 7 jours (2 cas) `@a-valider` · Une question de texte à trous ratée en séance de révision reste une seule question retenue `@a-valider` · Une séance de révision quittée en cours ne change aucune question retenue `@a-valider` | 28.1, 28.4, 28.8, 28.13 |
-| 6 | La fin de la séance de révision ne donne pas d'étoiles : le personnage guide dit les erreurs qui s'effacent, et l'enfant revient à son accueil | La fin de la séance de révision ne montre aucune étoile et propose seulement « Accueil » `@a-valider` · Avec <justes> question(s) juste(s), le personnage guide dit « <phrase> » (3 cas) `@a-valider` · « Accueil » ramène à l'accueil, qui ne propose plus la séance de révision quand plus rien n'est dû `@a-valider` · Une séance de révision ne change pas les étoiles d'une leçon `@a-valider` | 28.2, 28.8, 28.23 |
-| 7 | La révision marche sans réseau, à voix haute, au clavier et sur un petit écran | Sans réseau, une question ratée est quand même proposée le lendemain sur l'appareil `@a-valider` · Sans réseau, la séance de révision se joue jusqu'au bout et sa fin dit que la progression est gardée sur l'appareil `@a-valider` · Sans file de révision lue, l'accueil ne propose pas de séance de révision, sans message d'erreur `@a-valider` · Le personnage guide lit chaque question de la séance de révision · La séance de révision se commence et se joue au clavier · La proposition de la séance de révision tient dans un écran de 360 px, assez grande pour un doigt d'enfant · Une question de la séance de révision tient dans un écran de 360 px, « Je ne sais pas » compris | 28.21, 28.22 |
+| 5 | Juste en séance de révision, une question revient 3 jours, puis 7 jours plus tard, puis elle est corrigée pour de bon ; fausse, elle revient le lendemain | Juste à l'intervalle de <intervalle>, une question <résultat> <jours> jours plus tard (4 cas) · Juste à l'intervalle de 7 jours, une question est corrigée pour de bon et ne revient plus · Fausse en séance de révision (<cas>), une question revient le lendemain, même à l'intervalle de 7 jours (2 cas) · Une question de texte à trous ratée en séance de révision reste une seule question retenue · Une séance de révision quittée en cours ne change aucune question retenue | 28.1, 28.4, 28.8, 28.13 |
+| 6 | La fin de la séance de révision ne donne pas d'étoiles : le personnage guide dit les erreurs qui s'effacent, et l'enfant revient à son accueil | La fin de la séance de révision ne montre aucune étoile et propose seulement « Accueil » · Avec <justes> question(s) juste(s), le personnage guide dit « <phrase> » (3 cas) · « Accueil » ramène à l'accueil, qui ne propose plus la séance de révision quand plus rien n'est dû · Une séance de révision ne change pas les étoiles d'une leçon | 28.2, 28.8, 28.23 |
+| 7 | La révision marche sans réseau, à voix haute, au clavier et sur un petit écran | Sans réseau, une question ratée est quand même proposée le lendemain sur l'appareil · Sans réseau, la séance de révision se joue jusqu'au bout et sa fin dit que la progression est gardée sur l'appareil · Sans file de révision lue, l'accueil ne propose pas de séance de révision, sans message d'erreur · Le personnage guide lit chaque question de la séance de révision · La séance de révision se commence et se joue au clavier · La proposition de la séance de révision tient dans un écran de 360 px, assez grande pour un doigt d'enfant · Une question de la séance de révision tient dans un écran de 360 px, « Je ne sais pas » compris | 28.21, 28.22 |
 | 8 | La file de révision est tenue par le serveur, et seulement pour un parent rattaché au profil enfant | Une séance terminée envoyée par l'appareil retient sa question ratée, que l'on retrouve sur un autre appareil du parent (`@acces`) · Une séance de révision terminée envoyée par l'appareil fait avancer la question juste · Le serveur refuse une séance de révision terminée incohérente, et la question reste due (2 cas) · Le second parent rattaché retrouve sur son téléphone la séance de révision proposée à Léa (`@acces`) · Les questions retenues d'un enfant ne sont jamais proposées à un autre enfant (`@acces`) · Un parent qui n'est pas rattaché ne lit pas la file de révision de Léa (`@acces`) · Un parent qui n'est pas rattaché ne peut pas enregistrer une séance de révision pour Léa (`@acces`) | 28.11, 28.12 (tests unitaires) |
 | 9 | La file de révision fait partie des données du profil enfant | L'export du profil contient les questions retenues, sans les réponses données (`@depend-de-14`) · La suppression du profil efface sa file de révision (`@depend-de-14`) | 28.20 |
 
-Total : 9 règles, 39 scénarios (49 cas), dont 16 `@a-valider`, 5 `@acces` et 2 `@depend-de-14`.
+Total : 9 règles, 39 scénarios (49 cas), dont 0 `@a-valider` (16 avant les décisions du PO), 5 `@acces` et 2 `@depend-de-14`.
 
 Droits d'accès (`@acces`) :
 - La file de révision et les séances de révision terminées sont de nouvelles données du profil enfant, sous RLS fondée sur le rattachement. Seul le serveur y écrit (décision 0016).
@@ -149,11 +149,46 @@ Aucune étape existante n'est modifiée.
 - Mots de la semaine (#37) : leurs séances terminées retiendront les mots ratés par la même règle.
 - Export et suppression : scénarios écrits, tagués `@depend-de-14` tant que #14 n'est pas livrée.
 
-## Questions ouvertes
+## Décisions
 
-Les questions **28.1 à 28.21** sont dans `docs/stories/28/domain-model.md`, chacune avec sa recommandation. Les scénarios suivent ces recommandations ; ceux qui en dépendent portent `@a-valider` (28.1, 28.2, 28.4, 28.8, 28.13, 28.17, 28.18, 28.21). Les autres (28.3, 28.5, 28.6, 28.7, 28.9 à 28.12, 28.14 à 28.16, 28.19, 28.20) ne touchent que les tests unitaires ou le glossaire.
+Réponse du PO, le 2026-10-25 vers 10:06 UTC : « #28 reco OK » (annonce du responsable des équipes, https://github.com/SBA-dev/github-move/issues/64#issuecomment-6396299951). Toutes les recommandations sont retenues telles quelles. Le détail des questions 28.1 à 28.21 est dans `docs/stories/28/domain-model.md` (section « Questions ouvertes ») ; celui des questions 28.22 à 28.28 est rappelé plus bas.
 
-Questions ajoutées par les critères d'acceptance :
+| Question | Sujet | Décision (la recommandation) | Effet sur les scénarios |
+|---|---|---|---|
+| 28.1 | Défauts du legacy (leçon d'origine perdue, question retenue deux fois) | **Corrigés**, comme écarts voulus : la leçon d'origine ne change jamais, le résultat d'une révision s'applique par l'identité d'origine. | `@a-valider` retiré de « Une question de texte à trous ratée en séance de révision reste une seule question retenue ». Leçon d'origine vérifiée par les tests unitaires. |
+| 28.2 | Étoiles de la séance de révision | **(b) retirées**. La fin montre une phrase du personnage guide sur les erreurs qui s'effacent, sans étoile ni nombre de fautes, et un seul bouton « Accueil ». | `@a-valider` retiré de « La fin de la séance de révision ne montre aucune étoile… », « Avec <justes> question(s) juste(s)… » et « Une séance de révision ne change pas les étoiles d'une leçon ». |
+| 28.3 | Limite de 250 questions retenues | **Gardée** : on oublie celles dont la dernière erreur est la plus ancienne. La file est un agrégat par profil. | Tests unitaires. |
+| 28.4 | « Je ne sais pas » | **Erreur retenue** en séance ; en séance de révision, il rend la question fausse (retour à 1 jour). | `@a-valider` retiré de « Une question ratée <manière> revient en révision le lendemain » et « Fausse en séance de révision (<cas>)… ». |
+| 28.5 | Leçons des classes d'avant, personnelles, d'une classe au-dessus | **Retenues comme les autres** : toute séance terminée, quelle que soit sa leçon. | Tests unitaires. |
+| 28.6 | Changement de classe | Les questions retenues **restent** dans la file. | Tests unitaires. |
+| 28.7 | Termes | « Boîte » n'entre pas au domaine (on dit **Intervalle de révision**) ; nouveaux termes ajoutés au glossaire ; « Révision » redéfinie comme le mécanisme ; « Erreur » inchangée. | Glossaire (autre agent). |
+| 28.8 | Accès avant « Aujourd'hui » (#29) | Bouton **« Je révise mes erreurs »** sur l'accueil de l'enfant, seulement s'il y a au moins une question due, avec « `<n>` petites erreurs des jours passés » (« 1 petite erreur… » au singulier, toutes les questions dues comptées) ; retour et « Accueil » mènent à l'accueil de l'enfant. | `@a-valider` retiré de « Avec <dues> question(s) due(s)… », « La séance de révision commence par la plus ancienne question due… », « Une séance de révision quittée en cours… » et « « Accueil » ramène à l'accueil… ». |
+| 28.9 | Fuseau horaire | **(a)** : l'appareil envoie son jour (date locale de la fin), le serveur vérifie la cohérence avec l'heure de fin à 14 heures près. | Tests unitaires. |
+| 28.10 | Stockage de la file | **Table propre** ; `questions_des_seances` reste l'histoire. | Aucun. |
+| 28.11 | Mise à jour de la file après une séance ordinaire | **Même enregistrement, tout ou rien**, que la séance et le résultat de la leçon ; écriture optimiste (version de la file). | Tests unitaires. |
+| 28.12 | Revalidation d'une séance de révision faite hors ligne | Refus de l'envoi entier seulement s'il est incohérent en lui-même ; question absente, non due ou de leçon disparue ignorée ; résultat plus ancien que la dernière erreur ignoré ; ordre non revérifié ; fusion au lot 7. | Tests unitaires ; 2 cas de refus en E2E. |
+| 28.13 | Questions retenues et forme rejouée | **Oui au tableau** du modèle, boîte à jetons rejouée en boîte comprise ; `ordre`, `memoriser`, `fluence` jamais retenues. | Couvert par le scénario du texte à trous (28.1) et les tests unitaires. |
+| 28.14 | Question générée | On retient son **tirage** ; jamais le texte entier d'une question de la bibliothèque. | Tests unitaires. |
+| 28.15 | Leçon retirée ou texte changé | Question **oubliée sans bruit** à la prochaine séance de révision. | Tests unitaires. |
+| 28.16 | La séance de révision est-elle une « séance » ? | Terme **Séance de révision** gardé ; « Séance » et « Jour de séance » précisés ; événement à part **`SeanceDeRevisionTerminee`**. | Glossaire (autre agent). |
+| 28.17 | Question retenue réussie en séance ordinaire | **N'avance pas** : seule la séance de révision fait avancer une question. | `@a-valider` retiré de « Une question retenue réussie dans une séance ordinaire reste due ». |
+| 28.18 | Question retenue ratée de nouveau en séance ordinaire | Retour à 1 jour, due le lendemain, nombre de fois ratée + 1 ; leçon d'origine inchangée. | `@a-valider` retiré de « Une question retenue, ratée de nouveau dans une séance, revient le lendemain ». |
+| 28.19 | Ordre à égalité de date de révision | Date de révision, puis dernière erreur la plus ancienne, puis clé ; même ordre sur l'appareil et le serveur. | Tests unitaires. |
+| 28.20 | Données pour le suivi du parent | **Gardées dès maintenant** : nombre de fois ratée par question et compteur d'erreurs corrigées pour de bon par profil. | Tests unitaires ; export (`@depend-de-14`). |
+| 28.21 | Sans réseau, avant #44 | Comme le test de départ : sans file connue, pas de bouton ni de message ; séance de révision finie hors ligne gardée et renvoyée une seule fois grâce à son identifiant. | `@a-valider` retiré des 3 premiers scénarios de la règle 7. |
+| 28.22 | Séance terminée pas encore enregistrée | **Oui**, ses questions ratées sont proposées le lendemain sur l'appareil ; la copie de la file réapplique les envois en attente. | `@a-valider` retiré de « Sans réseau, une question ratée est quand même proposée le lendemain sur l'appareil ». |
+| 28.23 | Phrase de fin | 2 ou plus : « Bravo `<prénom>` ! `<n>` erreurs s'effacent un peu plus. » ; 1 : « Bravo `<prénom>` ! 1 erreur s'efface un peu plus. » ; 0 : « Merci `<prénom>` ! Ces erreurs reviendront demain : on les effacera ensemble. » | `@a-valider` retiré de « Avec <justes> question(s) juste(s), le personnage guide dit « <phrase> » ». |
+| 28.24 | Dire à l'enfant qu'une erreur est corrigée pour de bon | **Pas dans cette story** (suivi du parent #34, Motivation #31 à #33). | Aucun scénario. |
+| 28.25 | Plus de 10 questions dues | **Pas de deuxième séance enchaînée** ; l'accueil propose de nouveau la séance de révision avec les questions encore dues. | `@a-valider` retiré de « Après une séance de révision de 10 questions… ». |
+| 28.26 | Leçon d'origine pendant la séance de révision | **Pas montrée** : ni étape ni titre de leçon. | Aucun ; maintien de la leçon d'origine en tests unitaires. |
+| 28.27 | Avancement pendant la séance de révision | Le même que la séance (récipient, questions réussies sur questions posées, au plus 10). | Aucun scénario. |
+| 28.28 | Titre, sous-titre, phrase d'accueil | Ceux du legacy : « Je révise mes erreurs », « Révision », « On révise les petites erreurs des jours passés. Chaque fois que tu réussis, l'erreur s'efface un peu plus ! » | `@a-valider` retiré de « La séance de révision commence par la plus ancienne question due, sans étape de leçon ». |
+
+### Rappel des questions 28.22 à 28.28
+
+Les questions **28.1 à 28.21** sont dans `docs/stories/28/domain-model.md`, chacune avec sa recommandation. Les scénarios suivent ces recommandations ; ceux qui en dépendaient portaient `@a-valider` (28.1, 28.2, 28.4, 28.8, 28.13, 28.17, 28.18, 28.21). Les autres (28.3, 28.5, 28.6, 28.7, 28.9 à 28.12, 28.14 à 28.16, 28.19, 28.20) ne touchent que les tests unitaires ou le glossaire.
+
+Questions ajoutées par les critères d'acceptance (texte d'origine, recommandation retenue) :
 
 **28.22. Une séance terminée pas encore enregistrée par le serveur** (sans réseau, ou envoi en échec) : ses questions ratées sont-elles proposées le lendemain sur l'appareil ?
 - **Recommandation** : **oui**. La copie de la file sur l'appareil est mise à jour dès la fin de la séance ; quand l'appareil relit la file du serveur, il y réapplique les séances et séances de révision gardées en attente d'envoi, comme les meilleures étoiles « gagnées pendant l'utilisation » (#24). Sur un autre appareil, les questions n'apparaissent qu'après l'envoi. Scénario : « Sans réseau, une question ratée est quand même proposée le lendemain sur l'appareil ».
@@ -163,7 +198,7 @@ Questions ajoutées par les critères d'acceptance :
   - 2 ou plus : « Bravo `<prénom>` ! `<n>` erreurs s'effacent un peu plus. » ;
   - 1 : « Bravo `<prénom>` ! 1 erreur s'efface un peu plus. » ;
   - 0 : « Merci `<prénom>` ! Ces erreurs reviendront demain : on les effacera ensemble. » (jamais punitif).
-- Phrases dites par le personnage guide (Motivation), précédées d'une félicitation ou non : à valider avec 28.2.
+- Phrases dites par le personnage guide (Motivation), précédées d'une félicitation ou non : validées avec 28.2 et 28.23.
 
 **28.24. Dire à l'enfant qu'une erreur est corrigée pour de bon ?** Le legacy ne le dit qu'au parent (suivi).
 - **Recommandation** : **pas dans cette story**. La phrase de fin reste simple (28.23). Le compteur appartient au suivi du parent (#34) ; une récompense visible pour l'enfant relèverait de Motivation (badges, #31 à #33). Aucun scénario.
@@ -180,6 +215,6 @@ Questions ajoutées par les critères d'acceptance :
 **28.28. Titre, sous-titre et phrase d'accueil de la séance de révision.**
 - **Recommandation** : ceux du legacy. Titre « Je révise mes erreurs », sous-titre « Révision ». Le personnage guide dit : « On révise les petites erreurs des jours passés. Chaque fois que tu réussis, l'erreur s'efface un peu plus ! » Scénario : « La séance de révision commence par la plus ancienne question due, sans étape de leçon ».
 
-## Décisions
+## Questions ouvertes
 
-Aucune pour l'instant (en attente de la validation du PO).
+Aucune.

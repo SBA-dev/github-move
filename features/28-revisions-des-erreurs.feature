@@ -1,5 +1,5 @@
 # language: fr
-@issue-28 @wip
+@issue-28
 Fonctionnalité: Révisions des erreurs
   En tant qu'enfant
   Je veux retrouver les questions que j'ai ratées les jours passés, à intervalles de plus en plus longs
@@ -34,8 +34,7 @@ Fonctionnalité: Révisions des erreurs
 
   Règle: Une question ratée dans une séance terminée est retenue ; elle est due le lendemain, jamais le jour même
 
-    # Question 28.4
-    @a-valider
+    # Réponse 28.4
     Plan du Scénario: Une question ratée <manière> revient en révision le lendemain
       Étant donné que Léa a terminé une séance de la leçon « Les sons de révision », <manière> à « Quel mot a le son ou ? »
       Quand Léa revient à son accueil le lendemain
@@ -66,8 +65,7 @@ Fonctionnalité: Révisions des erreurs
       Quand Léa revient à son accueil le lendemain
       Alors l'accueil de Léa ne propose pas de séance de révision
 
-    # Question 28.18
-    @a-valider
+    # Réponse 28.18
     Scénario: Une question retenue, ratée de nouveau dans une séance, revient le lendemain
       Étant donné que Léa a pour questions retenues de la leçon « Les sons de révision » :
         | question               | date de révision | intervalle de révision |
@@ -76,8 +74,7 @@ Fonctionnalité: Révisions des erreurs
       Quand Léa revient à son accueil le lendemain
       Alors l'accueil de Léa propose la séance de révision, avec « 1 petite erreur des jours passés »
 
-    # Question 28.17
-    @a-valider
+    # Réponse 28.17
     Scénario: Une question retenue réussie dans une séance ordinaire reste due
       Étant donné que Léa a pour questions retenues de la leçon « Les sons de révision » :
         | question               | date de révision | intervalle de révision |
@@ -88,8 +85,7 @@ Fonctionnalité: Révisions des erreurs
 
   Règle: L'accueil de l'enfant propose la séance de révision dès qu'au moins une question est due, et dit combien
 
-    # Question 28.8
-    @a-valider
+    # Réponse 28.8
     Plan du Scénario: Avec <dues> question(s) due(s), l'accueil annonce « <annonce> »
       Étant donné que Léa a <dues> questions dues de la leçon « Les nombres de révision »
       Quand Léa choisit son profil enfant dans « Qui joue ? »
@@ -108,8 +104,7 @@ Fonctionnalité: Révisions des erreurs
       Quand Léa choisit son profil enfant dans « Qui joue ? »
       Alors l'accueil de Léa ne propose pas de séance de révision
 
-    # Questions 28.8 et 28.28
-    @a-valider
+    # Réponses 28.8 et 28.28
     Scénario: La séance de révision commence par la plus ancienne question due, sans étape de leçon
       Étant donné que Léa a pour questions retenues de la leçon « Les sons de révision » :
         | question               | date de révision |
@@ -155,8 +150,7 @@ Fonctionnalité: Révisions des erreurs
         | Combien font 12 + 12 ?  |
       Mais ni « Combien font 1 + 1 ? » ni « Combien font 6 + 6 ? »
 
-    # Question 28.25
-    @a-valider
+    # Réponse 28.25
     Scénario: Après une séance de révision de 10 questions, l'accueil propose les questions dues qui restent
       Étant donné que Léa a 12 questions dues de la leçon « Les nombres de révision »
       Et que Léa a fait la séance de révision, en répondant juste à toutes les questions
@@ -207,8 +201,7 @@ Fonctionnalité: Révisions des erreurs
       Quand Léa revient à son accueil 30 jours plus tard
       Alors l'accueil de Léa ne propose pas de séance de révision
 
-    # Question 28.4
-    @a-valider
+    # Réponse 28.4
     Plan du Scénario: Fausse en séance de révision (<cas>), une question revient le lendemain, même à l'intervalle de 7 jours
       Étant donné que Léa a pour questions retenues de la leçon « Les sons de révision » :
         | question               | date de révision | intervalle de révision |
@@ -222,8 +215,7 @@ Fonctionnalité: Révisions des erreurs
         | une erreur         | en se trompant               |
         | « Je ne sais pas » | en disant « Je ne sais pas » |
 
-    # Question 28.1 : écart voulu avec le legacy, qui la retenait une seconde fois sous la forme rejouée
-    @a-valider
+    # Réponse 28.1 : écart voulu avec le legacy, qui la retenait une seconde fois sous la forme rejouée
     Scénario: Une question de texte à trous ratée en séance de révision reste une seule question retenue
       Étant donné que Léa a pour questions retenues de la leçon « Le texte à trous de révision » :
         | question         | date de révision |
@@ -232,8 +224,7 @@ Fonctionnalité: Révisions des erreurs
       Quand Léa revient à son accueil le lendemain
       Alors l'accueil de Léa propose la séance de révision, avec « 1 petite erreur des jours passés »
 
-    # Question 28.8
-    @a-valider
+    # Réponse 28.8
     Scénario: Une séance de révision quittée en cours ne change aucune question retenue
       Étant donné que Léa a pour questions retenues de la leçon « Les sons de révision » :
         | question               | date de révision |
@@ -247,8 +238,7 @@ Fonctionnalité: Révisions des erreurs
 
   Règle: La fin de la séance de révision ne donne pas d'étoiles : le personnage guide dit les erreurs qui s'effacent, et l'enfant revient à son accueil
 
-    # Question 28.2 : écart voulu avec le legacy, qui montrait des étoiles comptées nulle part
-    @a-valider
+    # Réponse 28.2 : écart voulu avec le legacy, qui montrait des étoiles comptées nulle part
     Scénario: La fin de la séance de révision ne montre aucune étoile et propose seulement « Accueil »
       Étant donné que Léa a 3 questions dues de la leçon « Les nombres de révision »
       Et que Léa a commencé la séance de révision
@@ -257,8 +247,7 @@ Fonctionnalité: Révisions des erreurs
       Et la fin de la séance de révision ne montre aucune étoile
       Et le focus est sur « Accueil »
 
-    # Questions 28.2 et 28.23
-    @a-valider
+    # Réponses 28.2 et 28.23
     Plan du Scénario: Avec <justes> question(s) juste(s), le personnage guide dit « <phrase> »
       Étant donné que Léa a pour questions retenues de la leçon « Les sons de révision » :
         | question               | date de révision |
@@ -275,8 +264,7 @@ Fonctionnalité: Révisions des erreurs
         | 1      | juste seulement à « Quel mot a le son ou ? »               | Bravo Léa ! 1 erreur s'efface un peu plus.                           |
         | 0      | en se trompant à toutes les questions                      | Merci Léa ! Ces erreurs reviendront demain : on les effacera ensemble. |
 
-    # Question 28.8
-    @a-valider
+    # Réponse 28.8
     Scénario: « Accueil » ramène à l'accueil, qui ne propose plus la séance de révision quand plus rien n'est dû
       Étant donné que Léa a 3 questions dues de la leçon « Les nombres de révision »
       Et que Léa a fait la séance de révision, en répondant juste à toutes les questions
@@ -284,8 +272,7 @@ Fonctionnalité: Révisions des erreurs
       Alors Léa voit son accueil
       Et l'accueil de Léa ne propose pas de séance de révision
 
-    # Question 28.2
-    @a-valider
+    # Réponse 28.2
     Scénario: Une séance de révision ne change pas les étoiles d'une leçon
       Étant donné que Léa a pour meilleures étoiles :
         | leçon                | étoiles |
@@ -299,16 +286,14 @@ Fonctionnalité: Révisions des erreurs
 
   Règle: La révision marche sans réseau, à voix haute, au clavier et sur un petit écran
 
-    # Questions 28.21 et 28.22
-    @a-valider
+    # Réponses 28.21 et 28.22
     Scénario: Sans réseau, une question ratée est quand même proposée le lendemain sur l'appareil
       Étant donné que le réseau est coupé
       Et que Léa a terminé une séance de la leçon « Les sons de révision », en se trompant à « Quel mot a le son ou ? »
       Quand Léa revient à son accueil le lendemain
       Alors l'accueil de Léa propose la séance de révision, avec « 1 petite erreur des jours passés »
 
-    # Question 28.21
-    @a-valider
+    # Réponse 28.21
     Scénario: Sans réseau, la séance de révision se joue jusqu'au bout et sa fin dit que la progression est gardée sur l'appareil
       Étant donné que Léa a 3 questions dues de la leçon « Les nombres de révision »
       Et que Léa a commencé la séance de révision
@@ -317,8 +302,7 @@ Fonctionnalité: Révisions des erreurs
       Alors la fin de la séance de révision propose seulement « Accueil »
       Et elle voit le message « Sauvegarde en ligne impossible : la progression est gardée sur cet appareil. »
 
-    # Question 28.21
-    @a-valider
+    # Réponse 28.21
     Scénario: Sans file de révision lue, l'accueil ne propose pas de séance de révision, sans message d'erreur
       Étant donné que Léa a 3 questions dues de la leçon « Les nombres de révision »
       Et que la file de révision de Léa ne peut pas être lue
