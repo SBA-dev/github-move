@@ -6,7 +6,10 @@ import { SeanceDeRevisionIncoherente } from "./erreurs.ts";
 import { FileDeRevision, type QuestionRetenue } from "./file-de-revision.ts";
 import { Jour } from "./jour.ts";
 import { Reponse, type ReponseDonnee } from "./reponse.ts";
-import { revaliderLaSeanceDeRevision } from "./revalider-la-seance-de-revision.ts";
+import {
+  questionsIntrouvablesDeLaSeanceDeRevision,
+  revaliderLaSeanceDeRevision,
+} from "./revalider-la-seance-de-revision.ts";
 import type { SeanceDeRevisionTermineeAEnregistrer } from "./seance-de-revision-terminee-a-enregistrer.ts";
 import { SeanceDeRevision } from "./seance-de-revision.ts";
 import { tireurAuHasard } from "./tireur.ts";
@@ -260,4 +263,154 @@ Deno.test("un jour trop éloigné de la date de fin, avant, est refusé comme in
 
 Deno.test("un jour illisible est refusé comme incohérent", () => {
   assertIncoherent({ ...jouer(), jour: "demain" });
+});
+
+function leconSansLaQuestion(retiree: CleDeQuestion): Lecon {
+  const gardees = [
+    { question: "Combien de syllabes dans « bateau » ?", choix: ["1", "2"], reponse: "2", cle: bateau },
+    { question: "Combien de syllabes dans « chat » ?", choix: ["1", "2"], reponse: "1", cle: chat },
+  ].filter(({ cle }) => cle.valeur !== retiree.valeur);
+  return lireLecon({
+    id: leconDesSyllabes.id,
+    matiere: "francais",
+    niveau: "CE1",
+    titre: "Les syllabes",
+    ordre: 1,
+    programme: { section: "c2-test", citation: "Citation de test." },
+    lecon: [],
+    exercices: [{
+      type: "bulles",
+      questions: gardees.map(({ question, choix, reponse }) => ({ question, choix, reponse })),
+    }],
+  });
+}
+
+function revaliderSur(
+  envoi: SeanceDeRevisionTermineeAEnregistrer,
+  file: FileDeRevision,
+  lecons: readonly Lecon[] = [leconDesSyllabes],
+) {
+  return revaliderLaSeanceDeRevision(envoi, file, lecons, CE1);
+}
+
+function fileDuServeurSans(question: CleDeQuestion): FileDeRevision {
+  const file = laFileDuProfil();
+  file.oublier(question);
+  return file;
+}
+
+function fileDuServeurOuLaQuestionEstRevenueAuTravail(question: CleDeQuestion): FileDeRevision {
+  const file = laFileDuProfil();
+  const retenue = file.questions.find(({ identite }) => identite.valeur === question.valeur);
+  if (retenue) file.retenir([retenue], jourDeLaRevision, finDeLaRevision);
+  return file;
+}
+
+function fileDuServeurOuLaLeconDeOrigineADisparu(question: CleDeQuestion): FileDeRevision {
+  return FileDeRevision.reconstituer({
+    enfant: "profil-lea",
+    erreursCorrigeesPourDeBon: 0,
+    questions: laFileDuProfil().questions.map((retenue) =>
+      retenue.identite.valeur === question.valeur
+        ? { ...retenue, origine: { ...retenue.origine, leconDOrigine: "fr-ce1-retiree" } }
+        : retenue
+    ),
+  });
+}
+
+Deno.test("une question de l'envoi qui n'est plus dans la file est ignorée, la suivante est rejouée avec ses propres réponses", () => {
+  const envoi = jouer();
+  const [premiere, seconde] = envoi.questions;
+
+  const revalide = revaliderSur(envoi, fileDuServeurSans(premiere));
+
+  assertEquals(revalide.resultats, [{ identite: seconde, juste: true }]);
+  assertEquals([revalide.nombreDeQuestions, revalide.nombreDeQuestionsJustes], [1, 1]);
+});
+
+Deno.test("la dernière question d'un envoi, absente de la file, est ignorée sans toucher à la première", () => {
+  const envoi = jouer();
+  const [premiere, seconde] = envoi.questions;
+
+  const revalide = revaliderSur(envoi, fileDuServeurSans(seconde));
+
+  assertEquals(revalide.resultats, [{ identite: premiere, juste: false }]);
+});
+
+Deno.test("une question pas encore due au jour envoyé est ignorée, l'autre est rejouée", () => {
+  const envoi = jouer();
+  const [premiere, seconde] = envoi.questions;
+
+  const revalide = revaliderSur(envoi, fileDuServeurOuLaQuestionEstRevenueAuTravail(premiere));
+
+  assertEquals(revalide.resultats, [{ identite: seconde, juste: true }]);
+});
+
+Deno.test("une question dont la leçon d'origine a disparu est ignorée, l'autre est rejouée", () => {
+  const envoi = jouer();
+  const [premiere, seconde] = envoi.questions;
+
+  const revalide = revaliderSur(envoi, fileDuServeurOuLaLeconDeOrigineADisparu(premiere));
+
+  assertEquals(revalide.resultats, [{ identite: seconde, juste: true }]);
+});
+
+Deno.test("une question dont le texte a changé dans sa leçon est ignorée, l'autre est rejouée", () => {
+  const envoi = jouer();
+  const [premiere, seconde] = envoi.questions;
+
+  const revalide = revaliderSur(envoi, laFileDuProfil(), [leconSansLaQuestion(premiere)]);
+
+  assertEquals(revalide.resultats, [{ identite: seconde, juste: true }]);
+});
+
+Deno.test("quand toutes les questions sont ignorées, le fait revalidé existe sans aucun résultat", () => {
+  const envoi = jouer();
+
+  const revalide = revaliderSur(envoi, FileDeRevision.vide("profil-lea"));
+
+  assertEquals(
+    [revalide.id, revalide.enfant, revalide.resultats, revalide.nombreDeQuestions, revalide.nombreDeQuestionsJustes],
+    [envoi.id, envoi.enfant, [], 0, 0],
+  );
+});
+
+Deno.test("les questions introuvables sont celles dont la leçon d'origine a disparu", () => {
+  const envoi = jouer();
+  const [premiere] = envoi.questions;
+
+  const introuvables = questionsIntrouvablesDeLaSeanceDeRevision(
+    envoi,
+    fileDuServeurOuLaLeconDeOrigineADisparu(premiere),
+    [leconDesSyllabes],
+    CE1,
+  );
+
+  assertEquals(introuvables, [premiere]);
+});
+
+Deno.test("les questions introuvables sont celles dont le texte a changé dans leur leçon", () => {
+  const envoi = jouer();
+  const [premiere] = envoi.questions;
+
+  const introuvables = questionsIntrouvablesDeLaSeanceDeRevision(
+    envoi,
+    laFileDuProfil(),
+    [leconSansLaQuestion(premiere)],
+    CE1,
+  );
+
+  assertEquals(introuvables, [premiere]);
+});
+
+Deno.test("une question absente de la file ou pas encore due n'est pas introuvable : elle est seulement ignorée", () => {
+  const envoi = jouer();
+  const [premiere, seconde] = envoi.questions;
+
+  const introuvables = [
+    fileDuServeurSans(premiere),
+    fileDuServeurOuLaQuestionEstRevenueAuTravail(seconde),
+  ].flatMap((file) => questionsIntrouvablesDeLaSeanceDeRevision(envoi, file, [leconDesSyllabes], CE1));
+
+  assertEquals(introuvables, []);
 });
