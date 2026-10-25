@@ -98,6 +98,7 @@ Réponse du PO, recopiée mot pour mot depuis l'annonce du responsable sur l'iss
 - **32.1 à 32.24 : recommandations de l'équipe retenues, telles qu'écrites** (32.1 à 32.20 dans `domain-model.md`, 32.21 à 32.24 ci-dessous ; 32.22 dans sa version corrigée, profil préparé, commit `60387a1`).
 - Textes désormais **définitifs** : « une coupe dorée » remplace « un trophée » (objet n°11, 32.5) ; « Gagne des étoiles pour remplir la cabane ! » est la phrase d'ouverture de « Mes médailles » sans objet ni record (32.9).
 - Les 17 tags `@a-valider` de `features/32-cabane.feature` sont retirés ; les commentaires « Question 32.n » deviennent « Décision 32.n ».
+- **32.25** (décision à part, annonce du responsable sur l'issue #32, commentaire 6398991641) : « 32.25 OK ». Le scénario de #24 « Avec 3 étoiles, le personnage guide dit son expression et salue l'enfant » partait de 0 étoile ; ses 3 étoiles atteignaient le palier de la lanterne et la phrase de fin se terminait par « Noisette a reçu une lanterne pour sa cabane. ». Il commence désormais par « Léa a gagné 6 étoiles en tout » (6 + 3 = 9, aucun palier atteint), sans changer sa règle ni sa phrase. Voir « Mise à jour par #32, décision 32.25 » à la fin de `docs/stories/24/acceptance.md`.
 - 32.21 : les scénarios livrés de #65 que la cabane rend faux sont mis à jour dans la même PR (voir « Mise à jour par #32, décision 32.21 » à la fin de `docs/stories/65/acceptance.md`).
 
 Questions tranchées (32.1 à 32.20 : énoncé complet dans `domain-model.md`) :
@@ -129,6 +130,7 @@ Questions tranchées (32.1 à 32.20 : énoncé complet dans `domain-model.md`) :
 | 32.22 | Le profil préparé affiche la cabane | Oui, étoiles gagnées sur l'appareil | validée | « Avec le profil préparé, sans profil réel au serveur… » |
 | 32.23 | Encart lu avec « tout lire » | Non, seule la phrase du personnage guide | validée | (aucun : tests unitaires et revue) |
 | 32.24 | Cabane dans l'Espace parent | Non dans #32 | validée | (aucun) |
+| 32.25 | Scénario de #24 à 3 étoiles, qui atteint le palier de la lanterne | Le scénario part de 6 étoiles en tout (aucun palier atteint), règle et phrase inchangées | validée | « Avec 3 étoiles, le personnage guide dit son expression et salue l'enfant » (`features/24-etoiles-et-fin-de-seance.feature`) |
 
 Questions nées de l'écriture des scénarios (énoncé et recommandation retenue) :
 
@@ -136,5 +138,6 @@ Questions nées de l'écriture des scénarios (énoncé et recommandation retenu
 22. **32.22 Le profil préparé affiche-t-il la cabane ?** 32.13 retire la section quand les étoiles du serveur ne sont pas lues ; le profil préparé (sans profil réel au serveur, décision 0021) n'a **pas** d'étoiles au serveur (rien d'inconnu), et 32.14 veut compter les étoiles gagnées pendant l'utilisation. **Recommandation retenue** : oui : pour le profil préparé, sans profil réel au serveur, la cabane compte les étoiles gagnées sur l'appareil pendant l'utilisation, et l'écran de fin annonce l'objet reçu ; la règle 32.13 ne vaut que pour un profil réel dont la lecture a échoué.
 23. **32.23 Avec « tout lire à voix haute », l'encart « Pour la cabane » est-il lu en plus de la phrase du personnage guide ?** Les deux disent la même chose (« Noisette a reçu un tapis tout doux ! » et « … pour sa cabane. »). **Recommandation retenue** : non : seule la phrase du personnage guide est lue ; l'encart est annoncé aux lecteurs d'écran (`role="status"`) sans être dit par la voix.
 24. **32.24 Le parent voit-il la cabane ou le total des étoiles dans l'Espace parent ?** **Recommandation retenue** : non dans #32 (comme les records, 65.16) ; le suivi relève d'Accompagnement (rapport de la semaine).
+25. **32.25 Le scénario de #24 « Avec 3 étoiles, le personnage guide dit son expression et salue l'enfant » doit-il éviter le palier de la lanterne ?** Parti de 0 étoile, il atteint le palier de 3 et la phrase de fin gagne « Noisette a reçu une lanterne pour sa cabane. ». **Recommandation retenue** : le scénario part de 6 étoiles en tout (aucun palier atteint avec 9), sans changer la règle ni la phrase attendue.
 
 À signaler au domain-modeler : « encart » et « zone « nouveautés » » sont des mots d'interface, hors glossaire.
