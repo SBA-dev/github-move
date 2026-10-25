@@ -43,3 +43,23 @@ Branche de base : `main` (`2173dba`). Branche : `feature/26-lecons-des-classes-d
 - 12:33 UTC : annonce `[Responsable]` : la non-régression de #26 passe juste après celle de #72, avant celle de #28 (proposition de #26 acceptée).
 - 13:26 UTC : #72 a fini à 1392/1392. Non-régression complète de #26 lancée sur `52557a9` (22 fichiers, 1350 cas, tablette et téléphone). Fin prévue vers 15:15.
 - À savoir pour le merge : #72 n'a pas pu merger, car le mode de permission de sa session refuse un merge sans review humaine. Le responsable a posé la question au PO. Le même blocage concernera #26.
+- 15:40 UTC : non-régression complète sur `a957b14` (code identique à `52557a9`), 22 fichiers, 1350 cas, tablette et téléphone, 3 workers. Premier passage : 1261/1350 en 1 h 38. Les 89 KO (#24 : 52, #27 : 28, #10 : 5, #25 : 2, #26 : 1, #65 : 1), dont 35 timeouts de 30 s, sont tous verts à la relance seule avec `--workers=1` (89/89, 30 min). **Total : 1350/1350.**
+- Pour #28 : fin de la non-régression de #26, `terminer-la-seance` peut être redéployée.
+- `PRÊTE À MERGER` publié et PR #84 passée en « prête ». À intégrer sous le verrou `merge` : `main` `d1d2def` (#72, permissions de merge), puis le périmètre de #26, #72, #5, #10 et #11 sur `telephone`, en excluant `@hors-beta`.
+
+## Mesures
+
+Voir `docs/graphe/nombre-d-equipes.md`. La consommation de tokens est relevée par le responsable.
+
+| Mesure | Valeur |
+|---|---|
+| Durée totale (lancement → `PRÊTE À MERGER`) | ≈ 16 h 30 (24/10 23:15 → 25/10 15:45) |
+| Temps d'attente | ≈ 9 h 15 en démarrage anticipé, en attendant le merge de #27 (dont la nuit et l'attente du PO) ; ≈ 3 h pour la non-régression (celle de #72 occupait savanturier-dev, 10:33 → 13:26) |
+| Temps de travail effectif | ≈ 4 h 15 : cadrage ≈ 1 h la veille au soir, TDD, câblage, review et E2E ≈ 3 h 15 le 25/10 |
+| Questions au PO | 20 (#26.1 à #26.20), plus 2 précisions (26.1a, 26.1b) ; 3 allers-retours |
+| Comportements TDD | 10, plus 3 corrections demandées par les reviews ; 9 tests de caractérisation |
+| Cycles de review | 2 revues intermédiaires (blocs A et B, APPROUVÉ) ; review complète en 2 cycles (cycle 1 À CORRIGER, 1 bloquant) ; 2 revues de delta (steps E2E : 1 bloquant, puis APPROUVÉ) |
+| Cycles E2E | 1 mise au point sur le téléphone (+ 1 relance après le correctif des steps) ; 1 non-régression complète (+ 1 lancement arrêté au bout de 8 min, à cause de l'annonce de #72) |
+| Intégrations de `main` | 3 (`89b5729` #27, `48c6496` #58, `e466e25` 0022) ; 2 conflits : glossaire (ajouts, gardés tous les deux), `navigation.ts` et `Application.tsx` (résolus par `implementer`) |
+| Verrous | aucun (pas de migration ni d'Edge Function) |
+| Escalades | aucune |
