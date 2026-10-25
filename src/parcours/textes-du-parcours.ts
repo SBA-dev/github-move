@@ -49,7 +49,7 @@ export function annonceDeLaLeconDUneClasseAuDessus(lecon: LeconReussieDUneClasse
   return `${lecon.titre}, ${lecon.niveau.valeur} : ${reussite}`;
 }
 
-function reussiteDeLEtat(etat: EtatDansLeParcours): string {
+export function reussiteDeLEtat(etat: EtatDansLeParcours): string {
   switch (etat.genre) {
     case "reussie":
       return `réussie, ${etoilesSurTrois(etat.etoiles.nombre)}`;
@@ -79,12 +79,4 @@ export function annonceDuBlocDesClassesDAvant(nombre: number): string {
 /** Ce que lit un lecteur d'écran pour une leçon des classes d'avant dans « Mon parcours ». */
 export function annonceDeLaLeconDesClassesDAvant(lecon: { readonly titre: string; readonly niveau: Niveau; readonly etat: EtatDansLeParcours }): string {
   return `${lecon.titre}, ${lecon.niveau.valeur} : ${reussiteDeLEtat(lecon.etat)}`;
-}
-
-/** Ce que lit un lecteur d'écran pour une leçon de « Toutes les leçons ». */
-export function annonceDeLaLeconDeToutesLesLecons(
-  lecon: { readonly titre: string; readonly niveau: Niveau; readonly etat: EtatDansLeParcours },
-  matiere: CodeDeMatiere,
-): string {
-  return `${lecon.titre}, ${lecon.niveau.valeur}, ${libelleDeLOnglet(matiere)} : ${reussiteDeLEtat(lecon.etat)}`;
 }

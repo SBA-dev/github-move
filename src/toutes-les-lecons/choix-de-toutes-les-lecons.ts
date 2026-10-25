@@ -5,20 +5,20 @@ import type { CodeDeMatiere } from "@domain/catalogue";
 export type ChoixDeToutesLesLecons = {
   readonly matiere: CodeDeMatiere | undefined;
   readonly niveau: string | undefined;
-  readonly sectionDesClassesDAvantDeployee: boolean;
+  readonly sectionDesClassesDAvantDepliee: boolean;
 };
 
-const AUCUN_CHOIX: ChoixDeToutesLesLecons = { matiere: undefined, niveau: undefined, sectionDesClassesDAvantDeployee: false };
+const AUCUN_CHOIX: ChoixDeToutesLesLecons = { matiere: undefined, niveau: undefined, sectionDesClassesDAvantDepliee: false };
 
 export function useChoixDeToutesLesLecons() {
   const [choix, setChoix] = useState(AUCUN_CHOIX);
   const choisirLaMatiere = useCallback((matiere: CodeDeMatiere | undefined) => setChoix((actuel) => ({ ...actuel, matiere })), []);
   const choisirLeNiveau = useCallback((niveau: string | undefined) => setChoix((actuel) => ({ ...actuel, niveau })), []);
   const basculerLaSection = useCallback(
-    () => setChoix((actuel) => ({ ...actuel, sectionDesClassesDAvantDeployee: !actuel.sectionDesClassesDAvantDeployee })),
+    () => setChoix((actuel) => ({ ...actuel, sectionDesClassesDAvantDepliee: !actuel.sectionDesClassesDAvantDepliee })),
     [],
   );
-  const deplierLaSection = useCallback(() => setChoix((actuel) => ({ ...actuel, sectionDesClassesDAvantDeployee: true })), []);
+  const deplierLaSection = useCallback(() => setChoix((actuel) => ({ ...actuel, sectionDesClassesDAvantDepliee: true })), []);
   const oublier = useCallback(() => setChoix(AUCUN_CHOIX), []);
   return { choix, choisirLaMatiere, choisirLeNiveau, basculerLaSection, deplierLaSection, oublier };
 }

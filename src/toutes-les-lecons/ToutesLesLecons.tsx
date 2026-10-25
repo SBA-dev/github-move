@@ -3,17 +3,21 @@ import { type ChoixDuFiltre, choixDuFiltre, type EntreesDuParcours, toutesLesLec
 import type { CodeDeMatiere } from "@domain/catalogue";
 import type { ProfilEnCours } from "@domain/famille";
 import {
-  annonceDeLaLeconDeToutesLesLecons,
   AUCUNE_LECON_POUR_LA_CLASSE,
   BoutonDeLecon,
   libelleDeLOnglet,
+  niveauDuProfil,
   nombreDeLecons,
   SectionDesClassesDAvant,
   useLecturesDuParcours,
 } from "../parcours/index.ts";
-import { niveauDuProfil } from "../parcours/niveau-du-profil.ts";
 import type { ChoixEnCours } from "./choix-de-toutes-les-lecons.ts";
-import { AUCUNE_LECON_POUR_CE_CHOIX, TOUS_LES_NIVEAUX, TOUTES_LES_MATIERES } from "./textes-de-toutes-les-lecons.ts";
+import {
+  annonceDeLaLeconDeToutesLesLecons,
+  AUCUNE_LECON_POUR_CE_CHOIX,
+  TOUS_LES_NIVEAUX,
+  TOUTES_LES_MATIERES,
+} from "./textes-de-toutes-les-lecons.ts";
 
 type Props = {
   readonly profil: ProfilEnCours;
@@ -84,12 +88,12 @@ function LeconsDuNiveau({ entrees, choix, onOuvrirLaLecon }: PropsDuNiveau) {
       {nombreDansLaSection > 0 && (
         <SectionDesClassesDAvant
           nombre={nombreDansLaSection}
-          deplie={choisi.sectionDesClassesDAvantDeployee}
+          deplie={choisi.sectionDesClassesDAvantDepliee}
           onBasculer={choix.basculerLaSection}
         >
           {leconsDesClassesDAvant.map((classe) => (
             <div key={classe.niveau.valeur} className="lecons-d-une-classe-d-avant">
-              <h4>{classe.niveau.valeur}</h4>
+              <h3>{classe.niveau.valeur}</h3>
               <ul className="lecons-du-parcours">
                 {classe.lecons.map((lecon) => (
                   <li key={lecon.lecon}>

@@ -5,8 +5,8 @@ export { SectionDesClassesDAvant } from "./SectionDesClassesDAvant.tsx";
 export { useLecturesDuParcours } from "./useLecturesDuParcours.ts";
 export type { LecturesDuParcours } from "./useLecturesDuParcours.ts";
 export {
-  annonceDeLaLeconDeToutesLesLecons,
   AUCUNE_LECON_POUR_LA_CLASSE,
   libelleDeLOnglet,
   nombreDeLecons,
+  reussiteDeLEtat,
 } from "./textes-du-parcours.ts";

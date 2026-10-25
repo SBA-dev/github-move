@@ -471,7 +471,7 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-width: 4px; background:
 
 /* Toutes les leçons */
 .toutes-les-lecons { display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 32rem; }
-.toutes-les-lecons h2, .toutes-les-lecons h4 { margin: 0; }
+.toutes-les-lecons h2, .toutes-les-lecons h3 { margin: 0; }
 .toutes-les-lecons .lecons-du-parcours, .toutes-les-lecons .lecons-des-classes-d-avant { width: 100%; }
 .choix-des-lecons { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 8px 12px; width: 100%; }
 .choix-des-lecons select {
