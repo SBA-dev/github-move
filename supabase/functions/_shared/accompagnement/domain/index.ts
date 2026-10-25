@@ -14,3 +14,5 @@ export type {
 } from "./carte-des-competences.ts";
 export { leconsJouees } from "./lecons-jouees.ts";
 export type { EtoilesAffichees, LeconJouee, MentionDeClasse, TableauDesLeconsJouees } from "./lecons-jouees.ts";
+export { suiviDeLEnfant } from "./suivi-de-l-enfant.ts";
+export type { SuiviDeLEnfant } from "./suivi-de-l-enfant.ts";
