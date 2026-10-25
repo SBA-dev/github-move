@@ -412,3 +412,81 @@ Deno.test("« Toutes les leçons » donne au front le nombre de leçons des clas
     [3, 2, 0],
   );
 });
+
+function entreesAvecLeconsPersonnelles() {
+  return {
+    ...entreesDuFiltre(),
+    leconsPersonnelles: [
+      lecon("perso-ma-cm1-fractions", "maths", "CM1", 0),
+      lecon("perso-fr-cp-chats", "francais", "CP", 0),
+      lecon("perso-fr-ce2-volcans", "francais", "CE2", 0),
+    ],
+    meilleuresEtoiles: new Map([["perso-fr-cp-chats", Etoiles.de(2)]]),
+  };
+}
+
+Deno.test("« Toutes les leçons » montre en tête « Pour toi » : les leçons personnelles de l'enfant, de tout niveau, dans l'ordre reçu, avec leur état hors du parcours", () => {
+  const { pourToi } = toutesLesLecons(entreesAvecLeconsPersonnelles(), {});
+
+  assertEquals(
+    pourToi.map(({ lecon, matiere, niveau, titre, etat }) => ({ lecon, matiere: matiere.code, niveau, titre, etat })),
+    [
+      {
+        lecon: "perso-ma-cm1-fractions",
+        matiere: "maths",
+        niveau: Niveau.de("CM1"),
+        titre: "Titre de perso-ma-cm1-fractions",
+        etat: { genre: "aDecouvrir" },
+      },
+      {
+        lecon: "perso-fr-cp-chats",
+        matiere: "francais",
+        niveau: Niveau.de("CP"),
+        titre: "Titre de perso-fr-cp-chats",
+        etat: { genre: "reussie", etoiles: Etoiles.de(2) },
+      },
+      {
+        lecon: "perso-fr-ce2-volcans",
+        matiere: "francais",
+        niveau: Niveau.de("CE2"),
+        titre: "Titre de perso-fr-ce2-volcans",
+        etat: { genre: "aDecouvrir" },
+      },
+    ],
+  );
+});
+
+Deno.test("les filtres « Matière » et « Niveau » s'appliquent aussi à « Pour toi »", () => {
+  const parMatiere = toutesLesLecons(entreesAvecLeconsPersonnelles(), { matiere: matiere("francais") });
+  const parNiveau = toutesLesLecons(entreesAvecLeconsPersonnelles(), { niveau: Niveau.de("CM1") });
+  const parLesDeux = toutesLesLecons(entreesAvecLeconsPersonnelles(), {
+    matiere: matiere("francais"),
+    niveau: Niveau.de("CM1"),
+  });
+
+  assertEquals(parMatiere.pourToi.map(({ lecon }) => lecon), ["perso-fr-cp-chats", "perso-fr-ce2-volcans"]);
+  assertEquals(parNiveau.pourToi.map(({ lecon }) => lecon), ["perso-ma-cm1-fractions"]);
+  assertEquals(parLesDeux.pourToi, []);
+});
+
+Deno.test("sans leçon personnelle, « Pour toi » est vide et « Toutes les leçons » ne change pas", () => {
+  const sans = toutesLesLecons(entreesDuFiltre(), {});
+  const avecListeVide = toutesLesLecons({ ...entreesDuFiltre(), leconsPersonnelles: [] }, {});
+
+  assertEquals(sans.pourToi, []);
+  assertEquals(avecListeVide, sans);
+});
+
+Deno.test("les choix des listes « Matière » et « Niveau » proposent aussi la matière et le niveau qui n'existent que dans les leçons personnelles", () => {
+  const entrees = {
+    lecons: [lecon("fr-ce2-accords", "francais", "CE2", 1)],
+    niveau: Niveau.de("CE2"),
+    meilleuresEtoiles: new Map(),
+    leconsPersonnelles: [lecon("perso-sc-cm1-volcans", "sciences", "CM1", 0)],
+  };
+
+  const { matieres, niveaux } = choixDuFiltre(entrees);
+
+  assertEquals(matieres.map(({ code }) => code), ["francais", "sciences"]);
+  assertEquals(niveaux.map(({ valeur }) => valeur), ["CE2", "CM1"]);
+});
