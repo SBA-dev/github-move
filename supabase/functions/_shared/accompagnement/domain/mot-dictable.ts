@@ -4,7 +4,7 @@ const NOMBRE_MAXIMAL_DE_LETTRES_DICTEES = 18;
 
 export function estUnMotDictable(mot: string): boolean {
   const lettres = lettresAEcrire(mot);
-  return lettres.length <= NOMBRE_MAXIMAL_DE_LETTRES_DICTEES &&
+  return lettres.length > 0 && lettres.length <= NOMBRE_MAXIMAL_DE_LETTRES_DICTEES &&
     lettres.every((lettre) => TOUCHES_DU_CLAVIER.has(lettre));
 }
 

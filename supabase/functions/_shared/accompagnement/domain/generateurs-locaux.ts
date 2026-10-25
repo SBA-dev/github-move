@@ -61,7 +61,7 @@ export function leconDeMots(texte: TexteDuParent): { contenu: ContenuDeLecon; ec
   const dictables = elements.filter(estUnMotDictable);
   return {
     contenu: {
-      titre: titreAvecLesPremiers("Dictée", dictables),
+      titre: titreAvecLesPremiers("Dictée", dictables.length === 0 ? elements : dictables),
       etapes: [ETAPE_DES_LETTRES_MUETTES],
       exercices: dictables.length === 0 ? [] : [dictee(dictables.slice(0, NOMBRE_MAXIMAL_DE_MOTS_DICTES))],
     },
@@ -71,11 +71,12 @@ export function leconDeMots(texte: TexteDuParent): { contenu: ContenuDeLecon; ec
 
 export function leconDeVerbes(texte: TexteDuParent): { contenu: ContenuDeLecon; ecartes: string[] } {
   const verbes = texte.elements().map((verbe) => verbe.toLowerCase());
+  const classes = verbes.slice(0, NOMBRE_MAXIMAL_DE_VERBES_A_CLASSER);
   return {
     contenu: {
       titre: titreAvecLesPremiers("Les verbes", verbes),
       etapes: [ETAPE_DES_GROUPES_DU_VERBE],
-      exercices: [classement(verbes.slice(0, NOMBRE_MAXIMAL_DE_VERBES_A_CLASSER)), ...conjugaisonDe(verbes)],
+      exercices: [classement(classes), ...conjugaisonDe(classes)],
     },
     ecartes: [],
   };
@@ -95,10 +96,10 @@ export function leconDePoesie(texte: TexteDuParent): { contenu: ContenuDeLecon; 
 }
 
 export function leconDeTexte(texte: TexteDuParent): { contenu: ContenuDeLecon; ecartes: string[] } {
-  const phrases = texte.phrases();
+  const phrases = texte.phrases().map(surUneLigne);
   return {
     contenu: {
-      titre: titreDeLecture(texte.valeur),
+      titre: titreDeLecture(surUneLigne(texte.valeur)),
       etapes: [ETAPE_DE_LA_LECTURE],
       exercices: [...motsEnvoles(phrases), ...dansLOrdre(phrases)],
     },
@@ -144,6 +145,10 @@ function lignesDuRepli(texte: TexteDuParent, forme: FormeDuTexte): string[] {
   }
 }
 
+function surUneLigne(texte: string): string {
+  return texte.replace(/\s+/g, " ").trim();
+}
+
 function titreDeLecture(texte: string): string {
   const caracteres = Array.from(texte);
   const suite = caracteres.length > NOMBRE_DE_CARACTERES_DU_TITRE_DE_LECTURE ? "…" : "";
@@ -151,7 +156,7 @@ function titreDeLecture(texte: string): string {
 }
 
 function motsEnvoles(phrases: string[]): ExerciceTrous[] {
-  const texte = phrases.slice(0, NOMBRE_DE_PHRASES_UTILES).join(" ");
+  const texte = phrases.slice(0, NOMBRE_DE_PHRASES_UTILES).join(" ").replace(/[\[\]]/g, "");
   const motsLongs = [
     ...new Set(
       (texte.match(/\p{L}+/gu) ?? []).filter((mot) => mot.length >= NOMBRE_MINIMAL_DE_LETTRES_D_UN_MOT_CACHE),
@@ -160,24 +165,22 @@ function motsEnvoles(phrases: string[]): ExerciceTrous[] {
   const caches = motsLongs.slice(0, NOMBRE_DE_MOTS_CACHES);
   if (caches.length < 2) return [];
   const distracteurs = motsLongs.slice(NOMBRE_DE_MOTS_CACHES, NOMBRE_DE_MOTS_CACHES + NOMBRE_DE_DISTRACTEURS);
-  const enonce = texte.replace(/\p{L}+/gu, (mot) => caches.includes(mot) ? `[${mot}]` : mot);
   return [{
     type: "trous",
     titre: "Les mots envolés",
     consigne: "Retrouve les mots qui manquent.",
-    ...segmenter(enonce),
+    segments: segmenter(texte, caches),
+    motsAttendus: texte.match(/\p{L}+/gu)?.filter((mot) => caches.includes(mot)) ?? [],
     distracteurs,
   }];
 }
 
-function segmenter(enonce: string): Pick<ExerciceTrous, "segments" | "motsAttendus"> {
-  const segments = enonce.split(/(\[[^\]]+\])/).filter((morceau) => morceau !== "").map((morceau) =>
-    morceau.startsWith("[")
-      ? { type: "trou" as const, motAttendu: morceau.slice(1, -1) }
+function segmenter(texte: string, caches: string[]): ExerciceTrous["segments"] {
+  return texte.split(/(\p{L}+)/u).filter((morceau) => morceau !== "").map((morceau) =>
+    caches.includes(morceau)
+      ? { type: "trou" as const, motAttendu: morceau }
       : { type: "texte" as const, texte: morceau }
   );
-  const motsAttendus = segments.flatMap((segment) => segment.type === "trou" ? [segment.motAttendu] : []);
-  return { segments, motsAttendus };
 }
 
 function dansLOrdre(phrases: string[]): ExerciceOrdre[] {
