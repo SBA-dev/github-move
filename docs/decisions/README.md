@@ -24,3 +24,4 @@ Une décision n'est jamais réécrite : si elle change, une nouvelle décision l
 | [0017](0017-livraison-en-parallele-par-equipes.md) | Stories livrées en parallèle, une équipe par story, selon un graphe de dépendances | Acceptée |
 | [0018](0018-revalidation-de-la-dictee-sans-le-profil.md) | La dictée est revalidée sans relire le profil de l'enfant (complète 0016) | Acceptée |
 | [0020](0020-accelerer-la-livraison-d-une-story.md) | Livraison d'une story accélérée : une seule non-régression E2E, scénarios en parallèle, review plus tôt | Acceptée |
+| [0021](0021-porte-de-test-du-profil-prepare.md) | Le profil préparé, seule porte de test, en développement seulement | Acceptée |
