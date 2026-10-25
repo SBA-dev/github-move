@@ -271,6 +271,7 @@ Restent, sans blocage pour #25 :
 
 Lot 4 (#27, `docs/stories/27/domain-model.md`) : le PO a suivi toutes les recommandations 27.1 à 27.23 (2026-10-24) ; voir Décision n°35. Reste, sans blocage pour #27 :
 - « Objectif du jour » (« Joue 2 leçons aujourd'hui ») : employé par l'issue #27, absent du glossaire ; terme de Motivation, à définir par #29 ou #30.
+
 Lot 5 (#65, `docs/stories/65/domain-model.md`) : à trancher par le PO.
 - Nom de l'écran des récompenses de l'enfant : tranché, « Mes médailles » (décision 65.1 du PO ; « médaille » retiré des synonymes interdits de Badge, « trophée » reste interdit) ;
 - « Section de l'écran » et « Pastille de record » : termes du domaine ou mots d'interface (#65).
