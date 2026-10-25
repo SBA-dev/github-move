@@ -1,4 +1,4 @@
-import { type MutableRefObject, useCallback, useRef, useState } from "react";
+import { type MutableRefObject, useCallback, useEffect, useRef, useState } from "react";
 import {
   type Avancement,
   attenteAvantLEcranSuivant,
@@ -40,12 +40,18 @@ export function useQuestionFigee(seance: Seance, paroleEntendue: MutableRefObjec
     const attente = attenteAvantLEcranSuivant({ entendue: paroleEntendue.current, seanceTerminee: seance.estFinie() });
     if (attente.genre === "dureeDAffichageSansVoix") return await attendre(attente.millisecondes);
     if (attente.genre === "aucune") return;
+    continuerQuandLEnfantLeVeut.current?.();
     setEnfantAttendu(true);
     await new Promise<void>((fin) => continuerQuandLEnfantLeVeut.current = fin);
     setEnfantAttendu(false);
   }, [seance, paroleEntendue]);
 
-  const continuer = useCallback(() => continuerQuandLEnfantLeVeut.current?.(), []);
+  const continuer = useCallback(() => {
+    continuerQuandLEnfantLeVeut.current?.();
+    continuerQuandLEnfantLeVeut.current = undefined;
+  }, []);
+
+  useEffect(() => continuer, [continuer]);
 
   return { figee, estFigee, figer, avancementAnnonce, annoncerLAvancement, attendreLEcranSuivant, enfantAttendu, continuer };
 }
