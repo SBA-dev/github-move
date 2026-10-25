@@ -42,7 +42,7 @@ Branche de base : `main` (`6be4dc6`). Branche : `feature/39-lecons-personnelles`
 
 | Mesure | Valeur |
 |---|---|
-| Durée, du lancement à PRÊTE À MERGER | 16:22 → 20:15 UTC, environ 3 h 55 |
+| Durée, du lancement à PRÊTE À MERGER | 16:22 → 19:56 UTC, environ 3 h 35 |
 | Attente du PO (cadrage) | 16:36 → 17:44, environ 1 h 10 (domaine et TDD non commencés pendant ce temps) |
 | Attente des verrous | `base` : 3 min (demandé en avance) puis immédiat ; `merge` : à venir |
 | Attente de `main` | `terminer-la-seance` attendue jusqu'au merge de #28 (environ 15 min, sans blocage : front câblé pendant ce temps) |
