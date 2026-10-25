@@ -1,5 +1,5 @@
 # language: fr
-@issue-79 @wip
+@issue-79
 Fonctionnalité: La consigne d'un exercice reste visible pendant tout l'exercice
   En tant qu'enfant
   Je veux voir la consigne de l'exercice tant que je le fais
@@ -14,7 +14,8 @@ Fonctionnalité: La consigne d'un exercice reste visible pendant tout l'exercice
   elle est seule dans sa séance. Les leçons de test sont décrites dans les scénarios.
 
   Les scénarios de #7 réécrits par #58 sur la question de test restent vrais sans changer un mot (non-régression,
-  voir docs/stories/79/acceptance.md), sauf « Le message de voix bloquée n'apparaît qu'une fois » (question 79.5).
+  voir docs/stories/79/acceptance.md), sauf « Le message de voix bloquée n'apparaît qu'une fois », que l'équipe
+  réécrit pour vérifier un seul message (décision 79.5).
 
   Contexte:
     Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
@@ -115,7 +116,6 @@ Fonctionnalité: La consigne d'un exercice reste visible pendant tout l'exercice
 
   Règle: La consigne peut être relue à voix haute pendant tout l'exercice
 
-    @a-valider
     Scénario: L'enfant fait relire la consigne au milieu d'un exercice ordre
       Étant donné que Léa joue seulement l'exercice « Le mot en morceaux » de la leçon « Les syllabes »
       Et que Léa a posé l'étiquette « do »
@@ -123,7 +123,6 @@ Fonctionnalité: La consigne d'un exercice reste visible pendant tout l'exercice
       Alors Léa entend de nouveau Noisette lire « Remets les syllabes dans l'ordre pour écrire « domino ». »
       Et l'étiquette « do » reste à la première place
 
-    @a-valider
     Scénario: Dans un exercice bulles, relire la consigne laisse la question posée
       Étant donné qu'une leçon de test « Compter » a un exercice bulles de consigne « Touche le bon nombre. » qui pose « Combien font 2 + 1 ? »
       Et que Léa joue la séance complète de la leçon « Compter »
@@ -131,7 +130,6 @@ Fonctionnalité: La consigne d'un exercice reste visible pendant tout l'exercice
       Alors Léa entend de nouveau Noisette lire « Touche le bon nombre. »
       Et Léa voit la question « Combien font 2 + 1 ? »
 
-    @a-valider
     Scénario: En Muet, demander à relire la consigne ne fait rien entendre et la consigne reste visible
       Étant donné que la tablette est en Muet
       Et que Léa joue seulement l'exercice « Les maisons des sons » de la leçon « Les sons ou, on, an »
@@ -148,21 +146,18 @@ Fonctionnalité: La consigne d'un exercice reste visible pendant tout l'exercice
       Alors Léa voit le message « La voix de Noisette est bloquée par ce navigateur. Touche « Réécouter » pour réessayer, ou lis avec un adulte. »
       Et Léa voit la consigne « Range chaque mot dans la maison de son son. »
 
-    @a-valider
     Scénario: Le message de voix bloquée reste visible après une réponse
       Étant donné que le navigateur bloque la voix
       Et que Léa joue seulement l'exercice « Les maisons des sons » de la leçon « Les sons ou, on, an »
       Quand Léa pose l'étiquette « loup » dans la maison « ou »
       Alors Léa voit le message « La voix de Noisette est bloquée par ce navigateur. Touche « Réécouter » pour réessayer, ou lis avec un adulte. »
 
-    @a-valider
     Scénario: Le message de voix bloquée n'est jamais affiché deux fois
       Étant donné que le navigateur bloque la voix
       Et que Léa a déjà vu le message de voix bloquée
       Quand la consigne suivante s'affiche
       Alors Léa voit un seul message de voix bloquée
 
-    @a-valider
     Scénario: Quand la voix revient, le message de voix bloquée disparaît
       Étant donné que Léa joue la question de test « Combien font 3 + 4 ? »
       Et que la voix a été bloquée pendant la lecture de la question « Combien font 3 + 4 ? »
@@ -171,15 +166,16 @@ Fonctionnalité: La consigne d'un exercice reste visible pendant tout l'exercice
       Alors Léa entend Noisette lire « Combien font 3 plus 4 ? »
       Et Léa ne voit plus le message de voix bloquée
 
-  Règle: Sans voix, la félicitation de la dernière bonne réponse est visible avant la fin de la séance
+  Règle: Sans voix, la félicitation est visible avant l'écran suivant, et celle de la dernière bonne réponse attend que l'enfant continue
 
-    Plan du Scénario: Quand <situation>, la dernière étiquette d'un exercice ordre est félicitée avant la fin de la séance
+    Plan du Scénario: Quand <situation>, la félicitation de la dernière étiquette d'un exercice ordre reste visible jusqu'à ce que Léa continue
       Étant donné que <situation>
       Et que Léa joue seulement l'exercice « Le mot en morceaux » de la leçon « Les syllabes »
       Et que Léa a posé les étiquettes « do » et « mi »
       Quand Léa pose l'étiquette « no »
       Alors Léa voit une félicitation de Noisette
-      Et ensuite seulement, la fin de la séance s'affiche
+      Et Léa peut continuer quand elle est prête
+      Mais la fin de la séance ne s'affiche pas d'elle-même
 
       Exemples:
         | situation                                    |
@@ -187,29 +183,46 @@ Fonctionnalité: La consigne d'un exercice reste visible pendant tout l'exercice
         | le navigateur bloque la voix                 |
         | le navigateur ne sait pas lire à voix haute  |
 
-    Scénario: En Muet, la dernière étiquette d'un exercice classer est félicitée avant la fin de la séance
+    Scénario: En Muet, la félicitation de la dernière étiquette d'un exercice classer reste visible jusqu'à ce que Léa continue
       Étant donné que la tablette est en Muet
       Et que Léa joue seulement l'exercice « Les maisons des sons » de la leçon « Les sons ou, on, an »
       Et qu'il ne reste que l'étiquette « dent » à poser
       Quand Léa pose l'étiquette « dent » dans la maison « an »
       Alors Léa voit une félicitation de Noisette
-      Et ensuite seulement, la fin de la séance s'affiche
+      Et Léa peut continuer quand elle est prête
+      Mais la fin de la séance ne s'affiche pas d'elle-même
 
-    Scénario: En Muet, la bonne réponse à la dernière question est félicitée avant la fin de la séance
+    Scénario: En Muet, la fin de la séance s'affiche quand Léa continue après la félicitation de la dernière question
       Étant donné que la tablette est en Muet
       Et que Léa joue la question de test « Combien font 3 + 4 ? »
-      Quand Léa répond « 7 »
-      Alors Léa voit une félicitation de Noisette
-      Et ensuite seulement, la fin de la séance s'affiche
+      Et que Léa a répondu « 7 »
+      Quand Léa continue
+      Alors la séance est terminée
 
-    @a-valider
-    Scénario: En Muet, la félicitation d'une question est visible avant la question suivante
+    Scénario: Avec la voix, la fin de la séance vient après la félicitation de la dernière étiquette, sans que Léa continue
+      Étant donné que Léa joue seulement l'exercice « Le mot en morceaux » de la leçon « Les syllabes »
+      Et que Léa a posé les étiquettes « do » et « mi »
+      Quand Léa pose l'étiquette « no »
+      Alors la séance est terminée
+      Et Léa n'a pas eu à continuer
+
+    Scénario: En Muet, la félicitation d'une question est visible, puis la question suivante vient d'elle-même
       Étant donné que la tablette est en Muet
       Et que Léa joue l'exercice « Quel son entends-tu ? » de la leçon « Les sons ou, on, an »
       Et que Léa en est à la question « Dans le mot « poule », quel son entends-tu ? »
       Quand Léa répond « ou »
       Alors Léa voit une félicitation de Noisette
       Et ensuite seulement, la question « Dans le mot « mouton », quel son entends-tu à la fin ? » s'affiche
+      Et Léa n'a pas eu à continuer
+
+    Scénario: En Muet, après la dernière étiquette d'un exercice qui n'est pas le dernier, l'exercice suivant vient de lui-même
+      Étant donné que la tablette est en Muet
+      Et que Léa joue la séance complète de la leçon « Les syllabes »
+      Et que Léa en est à la dernière étiquette de l'exercice « Le mot en morceaux », « no »
+      Quand Léa pose l'étiquette « no »
+      Alors Léa voit une félicitation de Noisette
+      Et ensuite seulement, Léa voit la consigne « Remets les syllabes dans l'ordre pour écrire « caramel ». »
+      Et Léa n'a pas eu à continuer
 
   Règle: La consigne visible se lit en mode dys et tient sur un petit écran
 
@@ -230,7 +243,6 @@ Fonctionnalité: La consigne d'un exercice reste visible pendant tout l'exercice
 
   Règle: Le texte d'une étape de leçon reste visible jusqu'à ce que l'enfant continue
 
-    @a-valider
     Scénario: En Muet, le texte de la première étape de leçon reste visible jusqu'à ce que Léa continue
       Étant donné que la tablette est en Muet
       Et que Léa est sur la page de la leçon « Les sons ou, on, an »
