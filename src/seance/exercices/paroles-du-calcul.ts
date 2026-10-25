@@ -21,8 +21,14 @@ export function feliciterUnCalcul(personnageGuide: PersonnageGuide, suite?: stri
   return { texte, nature: "felicitation", humeur };
 }
 
+/** Une félicitation, puis l'explication de la réponse (le problème en barres). */
+export function feliciterPuisExpliquer(personnageGuide: PersonnageGuide, explication: string): ParoleADire {
+  const { humeur, parole } = reagirALaReponse(true, personnageGuide, hasardDuNavigateur);
+  return { texte: `${parole.texte} ${explication}`, nature: "felicitation", humeur };
+}
+
 /** « Je ne sais pas » : avec les choix, la bonne réponse brille ; au clavier de cristaux, le personnage guide la dit. */
-export function aiderQuandOnNeSaitPas(calcul: CalculEnCours, aide: string | undefined, bonneReponse: string): ParoleADire {
+export function aiderQuandOnNeSaitPas(calcul: Pick<CalculEnCours, "mode">, aide: string | undefined, bonneReponse: string): ParoleADire {
   const { humeur, parole } = reagirAJeNeSaisPas(aide);
   const texte = calcul.mode.genre === "choix" ? parole : direJeNeSaisPasAuClavierDeCristaux(bonneReponse, aide);
   return { texte, nature: "aide", humeur };

@@ -1,8 +1,17 @@
 import { assertEquals } from "@std/assert";
-import { type Exercice, lireLecon } from "../../catalogue/domain/index.ts";
+import { type Exercice, type ItemDeBoite, lireLecon, type ProblemeEnBarres } from "../../catalogue/domain/index.ts";
 import { nombreDeQuestions } from "./nombre-de-questions.ts";
 
-const uneListeDe = (taille: number): readonly unknown[] => Array.from({ length: taille }, (_, i) => ({ rang: i }));
+const desItemsDeBoite = (taille: number): readonly ItemDeBoite[] =>
+  Array.from({ length: taille }, () => ({ a: 1, sens: "ajout", b: 1, reponse: 2, ecriture: "1 + 1 = 2" }));
+
+const desProblemesEnBarres = (taille: number): readonly ProblemeEnBarres[] =>
+  Array.from({ length: taille }, () => ({
+    enonce: "Combien en tout ?",
+    reponse: 6,
+    ecriture: "4 + 2 = 6",
+    forme: { genre: "partiesEtTout", parties: [4, 2], tout: null },
+  }));
 
 const desQuestionsAChoix = (taille: number) =>
   Array.from({ length: taille }, (_, i) => ({ question: `Question ${i}`, choix: ["a", "b"], reponse: "a" }));
@@ -55,13 +64,13 @@ Deno.test("un exercice d'écoute compte une question par item", () => {
 });
 
 Deno.test("un exercice de boîte compte une question par item", () => {
-  const exercice: Exercice = { type: "boite", items: uneListeDe(5) };
+  const exercice: Exercice = { type: "boite", items: desItemsDeBoite(5) };
 
   assertEquals(nombreDeQuestions(exercice), 5);
 });
 
 Deno.test("un exercice de barres compte une question par item", () => {
-  const exercice: Exercice = { type: "barres", items: uneListeDe(4) };
+  const exercice: Exercice = { type: "barres", items: desProblemesEnBarres(4) };
 
   assertEquals(nombreDeQuestions(exercice), 4);
 });
@@ -146,7 +155,7 @@ Deno.test("un exercice de fluence compte une seule question pour tout l'exercice
 });
 
 Deno.test("un exercice pour mémoriser compte deux questions par vers", () => {
-  const exercice: Exercice = { type: "memoriser", vers: uneListeDe(8) };
+  const exercice: Exercice = { type: "memoriser", vers: Array.from({ length: 8 }, (_, i) => `vers ${i}`) };
 
   assertEquals(nombreDeQuestions(exercice), 16);
 });

@@ -1,6 +1,6 @@
 # Critères d'acceptance : issue #22, Mémoriser une poésie
 
-Scénarios : `features/22-memoriser-une-poesie.feature` (tags `@issue-22 @wip`).
+Scénarios : `features/22-memoriser-une-poesie.feature` (tag `@issue-22`).
 Modèle du domaine : `docs/stories/22/domain-model.md` (contexte **Apprentissage**, avec **Catalogue pédagogique**, **Voix** et **Motivation**).
 Numérotation des questions : unique pour le lot 3, voir `docs/stories/16/acceptance.md` (#22 → Q56 à Q62 ; nouvelle question Q81).
 
@@ -58,6 +58,10 @@ Source : validation du PO du 2026-10-23 (`docs/stories/lot-3-decisions.md`). Cha
 Question née des scénarios :
 
 81. **Phrase « À toi ! »** : au lot 3, l'enregistrement de lecture n'existe pas encore (lot 6). Faut-il retirer « Tu peux t'enregistrer pour te réécouter. » de « À toi ! Redis tout le texte, tranquillement. Tu peux t'enregistrer pour te réécouter. Quand c'est bon, on joue ! » tant qu'il n'y a pas de bouton d'enregistrement ? Même question pour le bouton « Je la lis à voix haute et je m'enregistre » de la lecture (#17). **Décision** : oui, on ne mentionne pas ce que l'enfant ne peut pas faire ; la phrase complète revient au lot 6. → plan « Pour une <sorte>, le personnage guide invite à <verbe> tout le texte ».
+
+Question née de l'implémentation :
+
+61 bis. *(#22.1, précise Q61)* **Élision retirée du mot caché** : faut-il retirer seulement l'article élidé (« l' », « d' ») ou toute élision ? **Décision** (2026-10-24, réponse du PO « #22.1 reco », transmise par le responsable sur l'issue de coordination #64) : toute élision d'une lettre ou de « qu' » en tête de mot est retirée, pronoms compris (« dont s'éclaire » cache « éclaire »). Le comportement des scénarios ne change pas.
 
 ## Questions ouvertes
 

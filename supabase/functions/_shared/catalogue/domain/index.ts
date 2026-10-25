@@ -3,9 +3,12 @@ export { Niveau } from "./niveau.ts";
 export type { CodeDeNiveau } from "./niveau.ts";
 export { lireLecon } from "./lire-lecon.ts";
 export type { EtapeDeLecon, Lecon, PassageDuGuideFondamental, ProgrammeCite } from "./lecon.ts";
+export { toutesLesMatieres } from "./matiere.ts";
 export type { CodeDeMatiere, Matiere } from "./matiere.ts";
-export type { Exercice, ExerciceGenerique } from "./exercice.ts";
+export type { Exercice } from "./exercice.ts";
 export type { Addition, EtapeDAddition, ExerciceAddition, GenerateurDAdditions } from "./exercices/addition.ts";
+export type { ExerciceBarres, FormeDeSchema, ProblemeEnBarres } from "./exercices/barres.ts";
+export type { ExerciceBoite, ItemDeBoite, SensDeLaBoite } from "./exercices/boite.ts";
 export type { ExerciceBulles } from "./exercices/bulles.ts";
 export type { EtiquetteAClasser, ExerciceClasser, Groupe } from "./exercices/classer.ts";
 export { NOMBRE_MAXIMAL_D_ETIQUETTES } from "./exercices/nombre-maximal-d-etiquettes.ts";
@@ -17,6 +20,8 @@ export type {
   Intervalle,
   Signe,
 } from "./exercices/generateur-d-operations.ts";
+export { estUneChanson } from "./exercices/memoriser.ts";
+export type { ExerciceMemoriser } from "./exercices/memoriser.ts";
 export type { ExerciceOrdre } from "./exercices/ordre.ts";
 export type { ExerciceDictee, MotDicte } from "./exercices/dictee.ts";
 export type { ExerciceConjugaison, FormeConjuguee } from "./exercices/conjugaison.ts";
@@ -37,4 +42,4 @@ export type {
   PassagePourLesAdultes,
 } from "./page-de-la-lecon.ts";
 export { enonceDeLaQuestion } from "./enonce-de-la-question.ts";
-export { leconSuivante } from "./lecon-suivante.ts";
+export { cleDeLaFluence } from "./exercices/fluence.ts";

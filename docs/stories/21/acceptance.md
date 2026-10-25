@@ -57,6 +57,8 @@ Source : validation du PO du 2026-10-23 (`docs/stories/lot-3-decisions.md`). Cha
 53. *(#21 n°5)* **Glossaire** : boîte à jetons, schéma en barres, jeton, valeur cherchée ? **Décision** : oui.
 54. *(#21 n°6)* **« Énoncé du problème »** pour le texte d'un schéma en barres, « énoncé » seul interdit ? **Décision** : oui. Les scénarios disent « le problème « … » » et « l'énoncé du problème ».
 55. *(#21 n°7)* **Description du schéma** : « Le tout : ?. Une partie : 4. L'autre partie : 2. », « `<nom 1>` : ?. `<nom 2>` : 9. L'écart : 4. », « Le total : 12. 3 parts. Chaque part : ? » ? **Décision** : oui. → plan « Le schéma en barres de <forme> est décrit aux lecteurs d'écran ».
+56. *(#21.1, réponse du PO du 2026-10-24)* **Description d'un schéma de parts dont le nombre de parts est cherché** : la décision n°55 ne donne pas ce cas ; « Le total : 18. Nombre de parts : ?. Chaque part : 3. » convient-il ? **Décision** : oui (recommandation retenue), chaque segment finit par un point. Pas de scénario.
+57. *(#21.2, réponse du PO du 2026-10-24)* **Réponse donnée dans « Après une erreur, l'aide du problème est lue »** : au CP, une réponse de 20 au plus se donne par choix (n°51) et les choix autour de 3 sont 3, 4, 2 et 5, donc « 15 » n'est jamais proposé ; remplacer par « 5 » ? **Décision** : oui (recommandation retenue). → « Quand Léa répond « 5 » ».
 
 ## Questions ouvertes
 

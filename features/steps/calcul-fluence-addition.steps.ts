@@ -32,7 +32,7 @@ import { attendreUneLecture, journal, laisserPasserLeDelaiDeLecture, normaliser,
 // Fluence : la durée passe en figeant l'horloge du navigateur (page.clock.setFixedTime), jamais en attendant 45 s.
 // Les leçons de test sont ajoutées à la réponse de /bibliotheque.json par le navigateur du test (voir #16).
 
-const { Given, When, Then } = createBdd(test, { tags: "@issue-20" });
+const { Given, When, Then } = createBdd(test, { tags: "@issue-20 or @issue-65" });
 
 type Acteur = "Léa" | "Tom" | "Nina";
 type Exercice = Record<string, unknown>;

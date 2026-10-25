@@ -14,6 +14,11 @@ export class LeconsDuCatalogueJson implements LeconsDuCatalogue {
     }
   }
 
+  async toutes(): Promise<readonly Lecon[]> {
+    const lecons = await Promise.all([...this.brutes.keys()].map((id) => this.parId(id)));
+    return lecons.filter((lecon): lecon is Lecon => lecon !== null);
+  }
+
   parId(id: string): Promise<Lecon | null> {
     const brute = this.brutes.get(id);
     if (brute === undefined) return Promise.resolve(null);

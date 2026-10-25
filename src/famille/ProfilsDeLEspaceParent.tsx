@@ -1,5 +1,5 @@
 import { useId, useState } from "react";
-import { Reglages, type ProfilEnfant } from "@domain/famille";
+import { Reglages, type ProfilEnCours, type ProfilEnfant } from "@domain/famille";
 import { enReglagesComplets } from "../reglages/index.ts";
 import { FormulaireDeProfil } from "./FormulaireDeProfil.tsx";
 import { InvitationAffichee } from "./InvitationDuPremierProfil.tsx";
@@ -11,6 +11,10 @@ type Props = {
   readonly etat: EtatDesProfils;
   /** À appeler après une écriture : la liste est relue. */
   readonly onModifie: () => void;
+  /** Un profil vient d'être créé : il devient le profil en cours et l'espace parent se ferme sur la proposition du test de départ. */
+  readonly onCree: (profil: ProfilEnCours) => void;
+  /** Le parent propose de nouveau le test de départ à cet enfant. */
+  readonly onRefaireLeTestDeDepart: (profil: ProfilEnfant) => void;
 };
 
 const NOUVEAU_PROFIL: DonneesDeProfil = {
@@ -30,7 +34,7 @@ function donneesDe(profil: ProfilEnfant): DonneesDeProfil {
 }
 
 /** La section « Profils » de l'espace parent : liste, création et modification des profils enfants. */
-export function ProfilsDeLEspaceParent({ etat, onModifie }: Props) {
+export function ProfilsDeLEspaceParent({ etat, onModifie, onCree, onRefaireLeTestDeDepart }: Props) {
   const titre = useId();
   const [enModification, setEnModification] = useState<string | undefined>();
   const [confirmation, setConfirmation] = useState<string | undefined>();
@@ -38,9 +42,10 @@ export function ProfilsDeLEspaceParent({ etat, onModifie }: Props) {
 
   const creer = async (donnees: DonneesDeProfil) => {
     setConfirmation(undefined);
-    await profilsEcritsParLesEdgeFunctions.creer(donnees);
+    const cree = await profilsEcritsParLesEdgeFunctions.creer(donnees);
     setConfirmation(`Le profil de ${donnees.prenom} est créé.`);
     onModifie();
+    if (cree) onCree(cree);
   };
 
   const modifier = (profil: ProfilEnfant) => async (donnees: DonneesDeProfil) => {
@@ -74,9 +79,14 @@ export function ProfilsDeLEspaceParent({ etat, onModifie }: Props) {
                   />
                 )
                 : (
-                  <button type="button" className="secondaire" onClick={() => setEnModification(profil.id.valeur)}>
-                    Modifier<span className="visuellement-cache"> le profil de {profil.prenom.valeur}</span>
-                  </button>
+                  <>
+                    <button type="button" className="secondaire" onClick={() => setEnModification(profil.id.valeur)}>
+                      Modifier<span className="visuellement-cache"> le profil de {profil.prenom.valeur}</span>
+                    </button>
+                    <button type="button" className="secondaire" onClick={() => onRefaireLeTestDeDepart(profil)}>
+                      Refaire le test de départ<span className="visuellement-cache"> de {profil.prenom.valeur}</span>
+                    </button>
+                  </>
                 )}
             </li>
           ))}

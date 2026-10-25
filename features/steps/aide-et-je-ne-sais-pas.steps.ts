@@ -25,6 +25,11 @@ import {
   direJeNeSaisPasSurUneAdditionAPoser,
   unCalculEstAffiche,
 } from "./calcul-pour-les-autres-stories.steps.ts";
+import {
+  attendreQueLEnfantPuisseRepondreALaQuestionIllustree,
+  commencerUneQuestionIllustreeDeTest,
+  uneQuestionIllustreeEstAffichee,
+} from "./boite-et-barres.steps.ts";
 import { direJeNeSaisPasEnDictee, estUneDictee, leconDeConjugaisonDeTest, leconDeDicteeDeTest } from "./dictee-et-conjugaison.steps.ts";
 import { aDesEtiquettesAPlacer, direJeNeSaisPasSurDesEtiquettes } from "./classer-ordre-trous.steps.ts";
 
@@ -33,12 +38,6 @@ import { aDesEtiquettesAPlacer, direJeNeSaisPasSurDesEtiquettes } from "./classe
 // livrées échouent clairement (« Étape non implémentée ») et leurs scénarios portent @depend-de-<n>.
 
 const LECON_DES_ANIMAUX = "Dictée : les animaux";
-
-function dependDe(numero: number, mecanique: string) {
-  return async () => {
-    throw new Error(`Étape non implémentée : dépend de la story #${numero} (${mecanique}).`);
-  };
-}
 
 const jeNeSaisPas = (page: Page) => page.getByTestId("je-ne-sais-pas");
 
@@ -195,18 +194,12 @@ function leconDeTestDuType(type: string) {
   return exercice === undefined ? undefined : leconDeTest(`test-je-ne-sais-pas-${type}`, `Leçon de test ${type}`, [exercice]);
 }
 
-const DEPENDANCES_PAR_TYPE: Readonly<Record<string, { numero: number; mecanique: string }>> = {
-  boite: { numero: 21, mecanique: "boîte" },
-  barres: { numero: 21, mecanique: "barres" },
-};
-
 When(/^(Léa|Tom) commence un exercice (\S+) d'une leçon de test$/, async ({ page, monde }, enfant: string, type: string) => {
   if (type === "calcul") return await commencerUnCalculDeTest(page, monde, enfant as "Léa" | "Tom");
   const lecon = leconDeTestDuType(type);
   if (lecon === undefined) {
-    const dependance = DEPENDANCES_PAR_TYPE[type];
-    if (dependance === undefined) throw new Error(`Type d'exercice inconnu : ${type}`);
-    return await dependDe(dependance.numero, dependance.mecanique)();
+    if (type === "boite" || type === "barres") return await commencerUneQuestionIllustreeDeTest(page, monde, type, enfant as "Léa" | "Tom");
+    throw new Error(`Type d'exercice inconnu : ${type}`);
   }
   await injecter(page, lecon);
   const profil = monde.profils.get(enfant);
@@ -215,7 +208,8 @@ When(/^(Léa|Tom) commence un exercice (\S+) d'une leçon de test$/, async ({ pa
 });
 
 Then(/^« Je ne sais pas » est proposé à (Léa|Tom)$/, async ({ page }, _enfant: string) => {
-  if (!(await unCalculEstAffiche(page))) await avancerJusquAuxChoix(page);
+  if (await uneQuestionIllustreeEstAffichee(page)) await attendreQueLEnfantPuisseRepondreALaQuestionIllustree(page);
+  else if (!(await unCalculEstAffiche(page))) await avancerJusquAuxChoix(page);
   await expect(jeNeSaisPas(page)).toBeVisible();
   await expect(page.getByRole("button", { name: "Je ne sais pas", exact: true })).toBeVisible();
 });

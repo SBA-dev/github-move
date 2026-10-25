@@ -1,7 +1,7 @@
 import type { ExerciceTrous } from "../../../catalogue/domain/index.ts";
 
 const EMPLACEMENT_DU_MOT = "…";
-const FIN_DE_PHRASE = /(?<=[.!?])\s+/;
+const FIN_DE_PHRASE = /(?<=[.!?])\s+|\s\/\s/;
 
 export type QuestionDeTrou = Readonly<{ enonce: string; motAttendu: string; candidats: readonly string[] }>;
 

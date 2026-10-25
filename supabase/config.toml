@@ -447,3 +447,7 @@ verify_jwt = false
 [functions.reinitialiser-le-mot-de-passe]
 enabled = true
 verify_jwt = false
+
+[functions.terminer-le-test-de-depart]
+enabled = true
+verify_jwt = true

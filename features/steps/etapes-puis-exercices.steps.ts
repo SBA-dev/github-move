@@ -1,9 +1,11 @@
 import { avecLesReglagesPrevus } from "../support/reglages-prevus.ts";
+import { servirLaBibliothequeDuParcours } from "../support/bibliotheque-du-parcours.ts";
+import { servirLaBibliothequeDuTestDeDepart } from "../support/bibliotheque-du-test-de-depart.ts";
 import { readFileSync } from "node:fs";
 import { expect, type Locator, type Page } from "@playwright/test";
 import { Given, type ProfilPrepare, Then, When } from "./fixtures.ts";
 import { cleDe } from "./univers.steps.ts";
-import { estSurUnProfilReel, jouerAvecLeProfilReel, ouvrirLaLeconDansLApplication } from "./profil-reel.ts";
+import { estSurUnProfilReel, jouerAvecLeProfilReel, ouvrirLaLeconDansLApplication, rechargerAvecLeProfilReel } from "./profil-reel.ts";
 import {
   attendreUneLecture,
   journal,
@@ -88,9 +90,10 @@ function bullesDeTest(titre: string | undefined, questions: string[]): Record<st
 
 export async function injecter(page: Page, lecon: LeconBrute) {
   etat(page).injectees.push(lecon);
+  if (estSurUnProfilReel(page)) await rechargerAvecLeProfilReel(page);
 }
 
-async function interceptertLaBibliotheque(page: Page) {
+export async function interceptertLaBibliotheque(page: Page) {
   await page.route("**/bibliotheque.json", async (route) => {
     const reponse = await route.fetch();
     const bibliotheque: unknown[] = await reponse.json();
@@ -114,6 +117,17 @@ export async function ouvrirLaPageDeLaLecon(page: Page, titre: string) {
   if (estSurUnProfilReel(page)) await ouvrirLaLeconDansLApplication(page, lecon.id);
   else await page.goto(`/lecon/${encodeURIComponent(lecon.id)}`);
   await expect(page.getByRole("heading", { level: 2, name: titre })).toBeVisible();
+}
+
+/**
+ * La séance est ouverte par son adresse, sans passer par la page de la leçon. La voix bloquée n'est signalée qu'une seule
+ * fois : la page de la leçon, qui parle la première, la signalerait avant la question.
+ */
+export async function ouvrirLaSeanceDirectement(page: Page, titre: string, position?: number) {
+  const lecon = leconDeTitre(page, titre);
+  etat(page).courante = lecon;
+  await page.goto(`/lecon/${encodeURIComponent(lecon.id)}/seance${position === undefined ? "" : `/${position}`}`);
+  await expect(recipient(page)).toBeVisible();
 }
 
 export async function commencerLaSeanceComplete(page: Page) {
@@ -191,7 +205,13 @@ Given(/^Léa a un profil enfant préparé de niveau (\S+) dans l'univers « (.+)
   );
   await interceptertLaBibliotheque(page);
   // Story #24 : les séances terminées s'enregistrent pour un vrai profil ; Léa joue donc avec le même profil, créé pour Paul.
-  if ($tags.includes("@issue-24")) await jouerAvecLeProfilReel(famille, monde, page);
+  // Story #25 : le parcours lit la progression du vrai profil, et la bibliothèque de test remplace celle de l'application.
+  if ($tags.includes("@issue-25")) await servirLaBibliothequeDuParcours(page);
+  // Story #27 : la bibliothèque de test du test de départ est servie de nouveau, après l'interception ci-dessus qui l'aurait masquée.
+  if ($tags.includes("@issue-27")) await servirLaBibliothequeDuTestDeDepart(page);
+  if ($tags.includes("@issue-24") || $tags.includes("@issue-25") || $tags.includes("@issue-27")) {
+    await jouerAvecLeProfilReel(famille, monde, page);
+  }
 });
 
 Given(/^une leçon de test « (.+) » a un exercice calcul sans titre$/, async ({ page }, titre: string) => {

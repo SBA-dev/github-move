@@ -10,7 +10,7 @@ export function secondes(nombre: number): string {
   return `${nombre} seconde${nombre > 1 ? "s" : ""}`;
 }
 
-function calculs(nombre: number): string {
+export function calculs(nombre: number): string {
   return `${nombre} ${nombre > 1 ? "calculs" : "calcul"}`;
 }
 

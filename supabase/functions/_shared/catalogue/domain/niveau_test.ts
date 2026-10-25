@@ -17,3 +17,18 @@ for (const inconnu of ["6e", "ce1", "CE1 ", "", "CM3"]) {
 Deno.test("le Catalogue pédagogique publie les niveaux dans l'ordre, du CP au CM2", () => {
   assertEquals(Niveau.tous().map((niveau) => niveau.valeur), ["CP", "CE1", "CE2", "CM1", "CM2"]);
 });
+
+for (
+  const [niveau, autre, attendu] of [
+    ["CE1", "CP", true],
+    ["CM2", "CM1", true],
+    ["CM2", "CP", true],
+    ["CE1", "CE1", false],
+    ["CP", "CE1", false],
+    ["CM1", "CM2", false],
+  ] as const
+) {
+  Deno.test(`${niveau} ${attendu ? "est" : "n'est pas"} au-dessus de ${autre}`, () => {
+    assertEquals(Niveau.de(niveau).estAuDessusDe(Niveau.de(autre)), attendu);
+  });
+}

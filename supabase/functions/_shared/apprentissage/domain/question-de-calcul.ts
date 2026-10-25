@@ -1,8 +1,8 @@
-import type { Operation } from "../../catalogue/domain/index.ts";
+import type { Niveau, Operation } from "../../catalogue/domain/index.ts";
 import { aideApresUneErreurDeCalcul } from "./astuce-de-l-operation.ts";
 import { CleDeQuestion } from "./cle-de-question.ts";
 import { JeNeSaisPasDejaDit, QuestionDejaReussie, ReponseIncompatible } from "./erreurs.ts";
-import { choixAutourDuResultat } from "./mode-de-reponse.ts";
+import { choixAutourDuResultat, ModeDeReponse } from "./mode-de-reponse.ts";
 import { carteDuCalcul, phraseDuCalcul } from "./exercices/phrases-du-calcul.ts";
 import { type AideDonnee, QuestionJouee } from "./question-jouee.ts";
 import type { QuestionPosee } from "./question-posee.ts";
@@ -19,11 +19,13 @@ export type CalculEnCours = Readonly<{
   reponseATaper?: string;
 }>;
 
-type Identite = Readonly<{ type: "calcul" | "colonne"; cle: CleDeQuestion }>;
+export type Identite = Readonly<{ type: "calcul" | "colonne" | "boite" | "barres"; cle: CleDeQuestion }>;
 
 function identiteDuCalcul(operation: Operation): Identite {
   return { type: "calcul", cle: CleDeQuestion.de("calcul", operation.q) };
 }
+
+type OptionsDeChoix = Readonly<{ nombresProposes?: readonly number[]; identite?: Identite }>;
 
 export class QuestionDeCalcul implements QuestionPosee {
   readonly type: Identite["type"];
@@ -49,8 +51,8 @@ export class QuestionDeCalcul implements QuestionPosee {
   static avecLesChoix(
     operation: Operation,
     tireur: Tireur,
-    nombresProposes: readonly number[] = choixAutourDuResultat(operation.r),
-    identite: Identite = identiteDuCalcul(operation),
+    { nombresProposes = choixAutourDuResultat(operation.r), identite = identiteDuCalcul(operation) }: OptionsDeChoix =
+      {},
   ): QuestionDeCalcul {
     const textes = nombresProposes.map(String);
     const bonneReponse = String(operation.r);
@@ -63,6 +65,12 @@ export class QuestionDeCalcul implements QuestionPosee {
       complements: { aide: aideApresUneErreurDeCalcul(operation) },
     });
     return new QuestionDeCalcul(operation, question, identite);
+  }
+
+  static pour(operation: Operation, tireur: Tireur, niveau: Niveau): QuestionDeCalcul {
+    return ModeDeReponse.pour(niveau).genre === "choix"
+      ? QuestionDeCalcul.avecLesChoix(operation, tireur)
+      : QuestionDeCalcul.auClavier(operation);
   }
 
   get enonce(): string {

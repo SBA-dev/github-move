@@ -47,3 +47,20 @@ Deno.test("un élément de la bibliothèque qui n'est pas un objet est ignoré",
 
   assertEquals((await catalogue.parId("ma-cp-calcul"))?.id, "ma-cp-calcul");
 });
+
+Deno.test("le catalogue rend toutes les leçons lisibles de la bibliothèque", async () => {
+  const autreLecon = { ...leconBrute, id: "ma-cp-ajouter", titre: "Ajouter", ordre: 2 };
+  const catalogue = new LeconsDuCatalogueJson([leconBrute, autreLecon]);
+
+  const lecons = await catalogue.toutes();
+
+  assertEquals(lecons.map((lecon) => lecon.id), ["ma-cp-calcul", "ma-cp-ajouter"]);
+});
+
+Deno.test("toutes les leçons ignorent une leçon illisible, sans gêner les autres", async () => {
+  const catalogue = new LeconsDuCatalogueJson([leconIllisible, leconBrute]);
+
+  const lecons = await catalogue.toutes();
+
+  assertEquals(lecons.map((lecon) => lecon.id), ["ma-cp-calcul"]);
+});

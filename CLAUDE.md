@@ -110,7 +110,7 @@ Décisions déjà prises, à respecter partout (code, interface, scénarios) :
 - **Parent** est le seul rôle adulte (pas d'enseignant). L'interface dit « Espace parent ».
 - Un parent ne voit **que les enfants auxquels il est rattaché**. Un profil enfant a un ou deux parents. Le second se rattache par un lien d'invitation.
 - **Personnage guide** (Noisette, Lumi…) et **Guide fondamental** (guide Eduscol) : jamais « guide » seul.
-- Une leçon est **réussie** à 1 étoile (elle ouvre la suivante) et **acquise** à 2 étoiles (compétence et badge).
+- Une leçon est **réussie** à 1 étoile (elle fait avancer le parcours) et **acquise** à 2 étoiles (compétence et badge).
 - **Pas de temps d'écran** : l'application ne limite pas la durée de jeu.
 
 - Le glossaire de référence est `docs/domain/glossaire.md`.

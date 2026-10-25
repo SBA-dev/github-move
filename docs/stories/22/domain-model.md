@@ -82,7 +82,7 @@ classDiagram
 - `PlanDeMemorisation.de(poesie)` construit, au début de la séance :
   - l'**ordre des vers** : un `ExerciceOrdre` (#18) dont les éléments sont les vers ;
   - les **mots cachés** : un `TexteATrous` (#18) dont chaque vers devient un segment, avec un trou à la place de son mot caché, vers joints par « / ».
-- `MotCache.choisir(vers)` : le mot le plus long d'au moins 3 caractères (lettres, accents, apostrophes, tirets), le premier en cas d'égalité ; sa première occurrence. L'article élidé n'en fait pas partie (« amour » plutôt que « l'amour »). Aucun → pas de mot caché (décision n°6).
+- `MotCache.choisir(vers)` : le mot le plus long d'au moins 3 caractères (lettres, accents, apostrophes, tirets), le premier en cas d'égalité ; sa première occurrence. L'élision en tête de mot n'en fait pas partie (« amour » plutôt que « l'amour », « éclaire » plutôt que « s'éclaire »). Aucun → pas de mot caché (décision n°6).
 - Questions : une par vers pour l'ordre, une par vers pour les mots cachés ; un vers sans mot caché est **réussi d'office**. Avancement : 2 par vers.
 - Choix d'un mot caché : le mot + les autres mots cachés (pas de distracteurs), avec la règle de #18 ; une poésie courte complète les choix avec d'autres mots de la poésie, non cachés, pour avoir toujours trois choix (décision n°4).
 - Ordre des vers : comparaison par **texte**, comme #18 (vers répétés interchangeables, décision n°1).
@@ -136,6 +136,7 @@ Validation n°1 du lot 3 par le PO, le 2026-10-23 : « OK pour tout » (`docs/st
 4. (Q59) **Mots cachés d'une poésie courte** : compléter les choix avec d'autres mots de la poésie (non cachés) pour avoir toujours trois choix ? Et le Catalogue refuse-t-il une poésie de moins de deux vers (l'ordre des vers n'y vérifie rien) ? **Décision** : oui pour les deux.
 5. (Q60) **Erreurs de mémorisation et révisions** : aujourd'hui **aucune** n'est notée (défaut trouvé ci-dessus). La séance les garde comme toutes les questions ratées, et le lot 4 décide ? **Décision** : oui.
 6. (Q61) **Choix du mot caché** : garder « le plus long d'au moins 3 lettres », mais sans l'article élidé (« amour » plutôt que « l'amour ») ? **Décision** : oui ; le format pourra plus tard marquer le mot caché.
+   Précision (#22.1, 2026-10-24, réponse du PO « #22.1 reco » via le responsable, issue #64) : on retire toute élision d'une lettre ou de « qu' » en tête de mot, pas seulement l'article, pronoms compris (« dont s'éclaire » cache « éclaire »).
 7. (Q62) **Glossaire** : « vers », « mot caché », « poésie », « chanson » sont-ils des termes du domaine ? **Décision** : oui ; « poème » est un mot d'interface pour **poésie**.
 
 ## Questions ouvertes

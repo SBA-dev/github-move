@@ -26,6 +26,7 @@ import {
   questionsReussies,
   textesDesChoix,
 } from "./exercices-a-choix.steps.ts";
+import { creerLeProfil } from "./profils-enfants.steps.ts";
 import { cleDe, EXPRESSIONS_PAR_PERSONNAGE, FELICITATIONS_COMMUNES, listeDe, preparerProfil } from "./univers.steps.ts";
 import { tirageDeLaConjugaison, verifierQueLaDicteeAttendLaReponse } from "./dictee-et-conjugaison.steps.ts";
 import { journal, laisserPasserLeDelaiDeLecture, normaliser, terminerLaLecture } from "./voix.steps.ts";
@@ -38,7 +39,7 @@ type Groupe = { id: string; nom: string };
 type Item = { texte: string; groupe: string; aide?: string };
 type Geste = "toucher" | "glisser" | "clavier";
 
-const TYPES_JOUES = ["classer", "ordre", "trous", "conjugaison", "dictee"];
+const TYPES_JOUES = ["classer", "ordre", "trous", "conjugaison", "dictee", "memoriser"];
 const EXERCICE_DE_TEST = "Exercice";
 const GROUPE_PAR_DEFAUT = [{ id: "1", nom: "Fruits" }, { id: "2", nom: "Légumes" }];
 const RELANCES_DE_L_ORDRE = ["Oui ! Et après ?", "Bien ! Et ensuite ?", "Super ! La suite ?"];
@@ -257,7 +258,14 @@ Given(
   },
 );
 
-Given(/^Tom a un profil enfant préparé de niveau (\S+)$/, async ({ page, monde }, niveau: string) => {
+Given(/^Tom a un profil enfant préparé de niveau (\S+)$/, async ({ page, monde, famille, $tags }, niveau: string) => {
+  // Story #25 : Tom est un vrai second profil de Paul (sa progression est lue sous RLS) ; la page de Léa n'est pas touchée.
+  // Story #27 : le résultat du test de départ de Tom est lu sous RLS, comme sa progression.
+  // Story #65 : ses records sont lus sous RLS.
+  if ($tags.includes("@issue-25") || $tags.includes("@issue-27") || $tags.includes("@issue-65")) {
+    await creerLeProfil(famille, "Paul", { prenom: "Tom", niveau, libelleUnivers: "Animaux de la forêt" });
+    return;
+  }
   const profil = { prenom: "Tom", niveau, univers: cleDe("Animaux de la forêt") };
   monde.profils.set("Tom", profil);
   await preparerProfil(page, profil);
@@ -478,7 +486,12 @@ Then(/^le premier trou propose « ([^«»]+) » et deux autres mots, tous diffé
 });
 
 Then(/^Léa voit « ([^«»]+) »$/, async ({ page }, phrase: string) => {
-  await expect(page.getByTestId("texte-a-trous")).toContainText(phrase);
+  // Story #22 : devant une poésie, c'est la carte de la poésie (titre — auteur) que Léa voit.
+  const carte = page.getByTestId("carte-de-la-poesie");
+  const texte = page.getByTestId("texte-a-trous");
+  await expect(carte.or(texte)).toBeVisible();
+  if ((await carte.count()) > 0) await expect(carte.getByRole("heading")).toHaveText(phrase);
+  else await expect(texte).toContainText(phrase);
 });
 
 Then(/^le trou de « ([^«»]+) » est mis en avant$/, async ({ page }, phrase: string) => {
