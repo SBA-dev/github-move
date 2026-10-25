@@ -4,6 +4,7 @@ import { enObjet, listeDeTextes, texteRequis } from "./lecture.ts";
 export type SectionDuProgramme = Readonly<{
   id: string;
   source: Readonly<{ texte: string; bo: string }>;
+  matiere: string;
   domaine: string;
   section: string;
   niveaux: readonly string[];
@@ -27,6 +28,7 @@ function lire(brut: unknown): SectionDuProgramme {
       texte: texteRequis(source.texte, "le texte de la source"),
       bo: texteRequis(source.bo, "le bulletin officiel de la source"),
     }),
+    matiere: texteRequis(section.matiere, "la matière d'une section"),
     domaine: texteRequis(section.domaine, "le domaine d'une section"),
     section: texteRequis(section.section, "l'intitulé d'une section"),
     niveaux: listeDeTextes(section.niveaux, "les niveaux d'une section"),
