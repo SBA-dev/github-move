@@ -235,7 +235,7 @@ Then(/^l'objectif du jour de Léa indique « ([^«»]+) »(?: et « ([^«»]+) �
   await surLAccueilDeLea(page);
   const objectif = objectifDuJour(page);
   await expect(objectif).toContainText(premier, { timeout: DELAI_DU_CALCUL_MS });
-  if (second !== undefined) await expect(objectif).toContainText(second);
+  if (second != null) await expect(objectif).toContainText(second);
 });
 
 Then(/^les lecteurs d'écran annoncent l'objectif du jour « ([^«»]+) », sans lire la barre$/, async ({ page }, annonce: string) => {

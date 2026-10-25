@@ -558,7 +558,7 @@ Then(/^la proposition de la séance de révision mesure au moins 44 px de haut$/
 
 // --- Alors : la séance
 
-Then(/^l'écran s'intitule « ([^«»]+) », avec « ([^«»]+) »$/, { tags: "@issue-28" }, async ({ page }, titre: string, sousTitre: string) => {
+Then(/^l'écran s'intitule « ([^«»]+) », avec « ([^«»]+) »$/, { tags: "@issue-28 or @issue-29" }, async ({ page }, titre: string, sousTitre: string) => {
   await expect(page.getByRole("heading", { level: 2, name: titre, exact: true })).toBeVisible();
   await expect(page.getByTestId("sous-titre-de-la-revision")).toHaveText(sousTitre);
 });
