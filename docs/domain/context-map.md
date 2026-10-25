@@ -65,6 +65,8 @@ flowchart LR
   Auth -- "ACL : mot de passe, API d'administration (#72)" --> Famille
   Apprentissage -- "lecture des records de fluence (#65)" --> Motivation
   Catalogue -- "Published Language (Lecon, #65)" --> Motivation
+  Accompagnement -- "lecture des leçons personnelles pour les badges (#31, à valider)" --> Motivation
+  Apprentissage -- "lecture des séances terminées pour les épisodes (#33, à valider)" --> Motivation
 ```
 
 | Amont | Aval | Type de relation | Mécanisme (événement, appel, ACL) |
@@ -102,6 +104,10 @@ flowchart LR
 Note (#25, réponses 25.1 et N3, 2026-10-24) : **il n'y a plus de verrou**. Dans les tableaux ci-dessus, « parcours et verrous » (ligne Apprentissage des contextes) se lit « parcours » ; le réglage « parcours libre » (ligne Famille → Apprentissage) n'est plus lu par le parcours et sera retiré par une story de Famille (réponse N2) ; `LeconReussie` (ligne des événements internes) ne sert ni au parcours ni à des verrous : le parcours se recalcule à la lecture, sans écouter d'événement. Le parcours lit aussi, dans le Published Language du Catalogue (`@domain/catalogue`), `toutesLesMatieres` (ordre des matières) et `Niveau#estAuDessusDe` (leçons réussies d'une classe au-dessus, réponse N1) ; il remplace `leconSuivante` du Catalogue, retirée.
 
 Note (#26, 2026-10-25) : les leçons des classes d'avant (bloc de « Mon parcours ») et « Toutes les leçons » sont des vues calculées d'Apprentissage (`parcoursDeLaMatiere` étendu, `toutesLesLecons`), sur les mêmes lectures que #25 et #27 (Catalogue, niveau du profil, meilleures étoiles, leçons réussies au test de départ). Aucune nouvelle relation ; le réglage parcours libre de Famille n'est pas lu (réponse N2 de #25).
+
+Note (#31, cadrage, à valider) : proposition de recalculer les badges comme la cabane (décision 32.20), sans les enregistrer ni s'abonner à `LeconAcquise` (question 31.3 de `docs/stories/31/domain-model.md`). Le front lit les meilleures étoiles du profil en cours sous RLS (lecture de #32), obtient de `@domain/apprentissage` les leçons acquises et celle que la séance vient de rendre acquise (fonctions pures, seuil de `ResultatDeLaLecon`), puis passe ces identifiants à `@domain/motivation`, avec les leçons du Catalogue (`competence`, `titre`, `matiere`) et les leçons personnelles d'Accompagnement (#39 : `titre`, `matiere`, jamais de `competence`). Si la proposition est retenue, la ligne « Apprentissage → Motivation : Événements » se lit, pour les badges, « lecture seule et calcul dans le domaine » ; `LeconAcquise` reste publié, sans abonné. Aucune donnée d'enfant nouvelle.
+
+Note (#33, cadrage, à valider) : proposition de recalculer les épisodes ouverts comme la cabane (décision 32.20) et la série (décision 30.5 a), sans les enregistrer ni s'abonner à `SeanceTerminee` ou `SeanceDeRevisionTerminee` (question 33.8 de `docs/stories/33/domain-model.md`). Le front lit les identifiants des séances terminées et des séances de révision terminées du profil en cours sous RLS (`seances_terminees`, `seances_de_revision_terminees`, même lecture que #29 et #30), les réunit avec les séances gardées sur l'appareil, et passe le résultat à `@domain/motivation` sous une forme propre (`SeancesTermineesDuProfil`) : Motivation n'importe aucun agrégat d'Apprentissage. Le nombre « avant » est lu au lancement de la séance, comme les meilleures étoiles de la cabane. Le texte d'un épisode est lu par le port `LecteurAVoixHaute` (Voix, relation existante). Le test de départ n'ouvre rien (27.4). Aucune migration, aucune Edge Function, aucune donnée d'enfant nouvelle. Si la proposition est retenue, la ligne « Apprentissage → Motivation : Événements » se lit, pour les épisodes, « lecture seule et calcul dans le domaine ».
 
 ## Décisions
 

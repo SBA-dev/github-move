@@ -138,6 +138,14 @@ Le glossaire garde l'orthographe française.
 | Section de l'écran (à valider) | Une des parties de l'écran des récompenses de l'enfant : cabane (#32), histoire (#33), badges (#31), records de calcul rapide (#65), toujours dans cet ordre. Peut-être un simple mot d'interface (#65). | Motivation | onglet, rubrique |
 | Records de calcul rapide (à valider) | Section de l'écran des récompenses de l'enfant qui montre les records de fluence du profil en cours, un par exercice de fluence ; absente quand le profil n'a aucun record. Les records sont lus dans Apprentissage, jamais modifiés. Interface : « Mes records de calcul rapide » (#65). | Motivation | trophées, meilleurs scores, high scores |
 | Pastille de record (à valider) | Libellé d'un exercice de fluence et meilleur score du record de fluence correspondant, dans les records de calcul rapide. Libellé proposé : le titre de l'exercice (question n°3 de #65). Peut-être un simple mot d'interface (#65). | Motivation | badge, médaille, trophée |
+| Badge, précision (à valider) | Proposition de #31 : un badge existe dès qu'une leçon est **acquise** (au moins 2 meilleures étoiles), jamais par le test de départ ; il se recalcule à partir des meilleures étoiles, n'est pas enregistré et ne se perd jamais tant que sa leçon existe. Un seul badge par compétence, ou un par leçon : question 31.2 de #31. | Motivation | trophée, médaille (« Mes médailles » est le nom de l'écran, question 31.21) |
+| Nom du badge (à valider) | La compétence de la leçon acquise, sinon « Je sais : `<titre de la leçon>` » (toujours le cas d'une leçon personnelle) (#31, question 31.20). | Motivation | titre du badge, intitulé |
+| Badge gagné par la séance (à valider) | Badge que la séance vient de faire gagner : la leçon jouée n'était pas acquise avant la séance et l'est après. Au plus un par séance. Interface : encart « Nouveau badge » de l'écran de fin. Peut-être un simple mot d'interface (#31). | Motivation | nouveau trophée, badge débloqué |
+| Épisode, nouvelle définition (à valider) | Proposition de #33 : une des 20 parties de l'histoire des Savanturiers, numérotées de 1 à 20 (titre et texte, lus à voix haute). Un épisode s'ouvre à chaque séance terminée, dans l'ordre, quel que soit l'univers (questions 33.1 et 33.2 de #33). Remplacera la ligne **Épisode** ci-dessus, qui dit « histoire de l'univers » et « à chaque jour de séance », en conflit avec le legacy. | Motivation | chapitre, histoire (pour un seul épisode), niveau |
+| Histoire des Savanturiers (à valider) | Suite des 20 épisodes, la même pour tous les profils ; l'histoire de Noisette (#33, questions 33.2 et 33.6). Interface : section « L'histoire des Savanturiers » de « Mes médailles ». | Motivation | histoire de l'univers, livre, saga |
+| Épisode ouvert (à valider) | Épisode dont le numéro est inférieur ou égal au nombre de séances terminées du profil (20 au plus). Il se recalcule à partir des séances terminées et des séances de révision terminées d'Apprentissage, n'est pas enregistré et ne se referme jamais. Contraire : épisode fermé, interface « À découvrir » (#33, questions 33.1 et 33.8). | Motivation | épisode débloqué, épisode gagné |
+| Nombre de séances terminées (à valider) | Nombre de séances terminées et de séances de révision terminées d'un profil, chacune comptée une fois (par son identifiant), séances gardées sur l'appareil comprises ; le test de départ n'en est pas une. Sert aux épisodes. Ne pas confondre avec le **nombre de séances** du résultat de la leçon (une seule leçon). Peut-être un simple calcul (#33, question 33.27). | Motivation | score, total de séances jouées |
+| Épisode ouvert par la séance (à valider) | Épisode qui s'ouvre parce que la séance qui vient de finir est terminée (numéro = nombre de séances terminées avant elle + 1, si ce nombre est connu et inférieur à 20). Interface : encart « Nouvel épisode ! » de l'écran de fin. Peut-être un simple calcul (#33). | Motivation | nouvel épisode débloqué |
 
 ## Famille
 
@@ -267,6 +275,11 @@ Sous-domaine décidé à la validation n°1 du lot 1 (décision 0007). Ses terme
 Les anciens conflits n°3 à n°7 (compte, session, lien magique, voix, monde) sont tranchés : voir Décisions n°10 à n°15. Ceux du lot 2 (espace adulte, lien, supprimer / détacher, la voix des guides, progression) : voir Décisions n°17 à n°21.
 Ceux du lot 3 (anciens n°8 à n°14 : jeu, maison, rang, énoncé, essai, étape, progression) : voir Décisions n°23 à n°29.
 
+Ajouts de #33 (cadrage, numéros à attribuer à la fusion des branches du lot 5) :
+- **« Histoire »** (#33) : synonyme interdit d'**Épisode**, mais nom de l'ensemble des 20 épisodes (« L'histoire des Savanturiers »). Proposition : **Histoire des Savanturiers** entre au glossaire ; « histoire » reste interdit pour désigner **un** épisode (question 33.27).
+- **« Leçon terminée »** (#33) : le sous-titre du legacy (« Un nouvel épisode s'ouvre à chaque leçon terminée. ») emploie un synonyme interdit de **Leçon réussie**. Proposition : réécrire le sous-titre selon la règle d'ouverture (questions 33.1 et 33.6).
+- Conflit n°1 (**Étoile du savoir**) : #33 propose de le trancher comme ci-dessus (question 33.4).
+
 ## Questions ouvertes
 
 Les trois questions de rattachement (mêmes droits des deux parents, durée et usage unique d'une invitation, visibilité des autres enfants) sont tranchées par la validation n°1 du lot 2 (décisions n°1, n°2 et n°3). Restent, sans blocage :
@@ -294,4 +307,15 @@ Lot 5 (#65, `docs/stories/65/domain-model.md`) : à trancher par le PO.
 - Nom de l'écran des récompenses de l'enfant : tranché, « Mes médailles » (décision 65.1 du PO ; « médaille » retiré des synonymes interdits de Badge, « trophée » reste interdit) ;
 - « Section de l'écran » et « Pastille de record » : termes du domaine ou mots d'interface (#65).
 
+Lot 5 (#31, `docs/stories/31/domain-model.md`, cadrage) : à trancher par le PO.
+- Badge par compétence ou par leçon (31.2), badge recalculé ou enregistré (31.3) : précision de la ligne « Badge » ;
+- « Nom du badge » et « Badge gagné par la séance » : termes du domaine ou mots d'interface ;
+- « Médaille » : nom de l'écran seulement, jamais pour un badge (31.21) ;
+- **Carte des compétences** : conflit de sens (la définition dit « par compétence », le legacy calcule par section du programme, test de départ compris) ; à trancher par #34 (31.17).
+
 Lot 4 (#26, `docs/stories/26/domain-model.md`) : tout est tranché (réponses 26.1 à 26.20) ; « Leçon des classes d'avant » est redéfinie (Décision n°36). Reste le nom **Matière réussie** `(à valider)`.
+
+Lot 5 (#33, `docs/stories/33/domain-model.md`, cadrage) : à trancher par le PO.
+- Règle d'ouverture d'un épisode : chaque séance terminée, chaque leçon réussie ou chaque jour de séance (33.1) ; selon la réponse, la ligne **Jour de séance** (« sert à la série et aux épisodes ») perdra « et aux épisodes » ;
+- histoire de Noisette pour tous, ou une histoire par univers (33.2) : nouvelle définition de **Épisode** ;
+- « Nombre de séances terminées » et « Épisode ouvert par la séance » : termes du domaine ou simples calculs (33.27).
