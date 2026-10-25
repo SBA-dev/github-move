@@ -249,3 +249,10 @@ export class JourInvalide extends Error {
     this.name = "JourInvalide";
   }
 }
+
+export class IntervalleDeRevisionInvalide extends Error {
+  constructor(readonly jours: number) {
+    super(`Un intervalle de révision dure 1, 3 ou 7 jours, pas ${jours}.`);
+    this.name = "IntervalleDeRevisionInvalide";
+  }
+}
