@@ -57,7 +57,7 @@ Deno.test("le suivi porte l'enfant suivi et rend les mêmes chiffres, carte et l
 
 Deno.test("deux calculs sur les mêmes entrées donnent le même suivi, sans modifier les entrées", () => {
   const donnees = entrees();
-  const copie = structuredClone(donnees);
+  const copie = entrees();
 
   const premier = suiviDeLEnfant(donnees);
   const second = suiviDeLEnfant(donnees);
