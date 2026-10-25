@@ -7,7 +7,7 @@ Fonctionnalité: Choisir la voix des personnages guides sur l'appareil
 
   Le choix de voix se fait dans l'espace parent. Il est mémorisé sur l'appareil,
   pour tous les profils enfants qui y jouent, et ne change pas les autres appareils.
-  Jusqu'au lot 3, les consignes s'affichent sur la page de démonstration réservée aux tests.
+  La consigne est celle d'un exercice d'une leçon de test, jouée dans une vraie séance (comme dans #7).
 
   Règle: Dans l'espace parent, le parent voit les voix françaises de l'appareil, la plus naturelle en tête
 
@@ -151,12 +151,14 @@ Fonctionnalité: Choisir la voix des personnages guides sur l'appareil
       Quand la consigne « Écoute bien. » s'affiche
       Alors Léa entend Noisette lire la consigne avec la voix « Denise (Natural) »
 
-    Scénario: Une consigne en anglais garde la voix anglaise malgré la voix imposée
+    @issue-58
+    Scénario: Le mot à écouter garde la voix anglaise malgré la voix imposée
       Étant donné que l'appareil a une voix française et une voix anglaise
       Et que Paul a imposé la voix française sur la tablette
-      Et que Léa fait une leçon d'anglais
-      Quand la consigne « Listen and repeat: cat. » s'affiche
-      Alors Léa entend « Listen and repeat: cat. » lu avec la voix anglaise
+      Et que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
+      Et que Léa joue l'exercice « Quel animal ? » de la leçon « Les animaux »
+      Quand l'item « a cat » commence
+      Alors Léa entend ensuite « a cat » lu avec la voix anglaise
 
   Règle: Une voix imposée qui n'existe plus sur l'appareil laisse place à la voix automatique
 

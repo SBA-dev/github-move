@@ -15,14 +15,15 @@ import {
   formulaireDeCreation,
   modifierLeProfil,
   pageCourante,
+  pageDansLEspaceParent,
   profilDe,
 } from "./profils-enfants.steps.ts";
-import { preparerProfil, listeDe } from "./univers.steps.ts";
-import { journal, laisserPasserLeDelaiDeLecture, normaliser, scenario } from "./voix.steps.ts";
+import { preparerProfil } from "./univers.steps.ts";
+import { journal, laisserPasserLeDelaiDeLecture, normaliser } from "./voix.steps.ts";
 
 // Story #12 : réglages d'un profil enfant. Le parent règle par l'interface (formulaire « Modifier <prénom> »).
 // Les préparations passent par les Edge Functions avec le jeton du parent (RLS appliquée). Tant qu'un scénario n'a
-// pas besoin d'un vrai profil, les réglages prévus sont mis dans le profil préparé de la page de démonstration.
+// pas besoin d'un vrai profil, les réglages prévus sont mis dans le profil préparé de l'appareil (porte de test).
 
 type Reglage = "mode dys" | "tout lire à voix haute" | "parcours libre" | "clavier des dictées" | "langue du parent";
 
@@ -138,6 +139,9 @@ function etatDesReglages(famille: Famille): EtatDesReglages {
 }
 
 const ecransDeLEnfant = new WeakMap<Page, Page>();
+function accueilDe(page: Page, prenom: string): Locator {
+  return page.getByRole("region", { name: `Accueil de ${prenom}` });
+}
 function ecranDeLEnfant(page: Page): Page {
   return ecransDeLEnfant.get(page) ?? page;
 }
@@ -221,22 +225,14 @@ Given(/^(Paul|Marie) est dans l'espace parent sur le téléphone$/, async ({ fam
   await famille.allerDansLEspaceParent("telephone");
 });
 
-async function allerALaDemonstrationDansLApplication(page: Page) {
-  if (new URL(page.url()).pathname !== "/demonstration") {
-    await page.evaluate(() => {
-      history.pushState({ profondeur: 2 }, "", "/demonstration");
-      dispatchEvent(new PopStateEvent("popstate"));
-    });
-  }
-  await expect(page.getByTestId("consigne")).toBeVisible();
-}
-
+/** Léa choisit son profil dans « Qui joue ? » : elle arrive sur son accueil, où son personnage guide la salue. */
 async function jouerSurLaTablette(famille: Famille, page: Page, prenoms: string[]) {
   for (const prenom of prenoms) await materialiser(famille, page, prenom);
   const tablette = await connecterSiBesoin(famille, "tablette", "Paul");
-  await choisirSonProfil(tablette, prenoms[0] ?? "Léa");
+  const enfant = prenoms[0] ?? "Léa";
+  await choisirSonProfil(tablette, enfant);
+  await expect(accueilDe(tablette, enfant)).toBeVisible();
   ecransDeLEnfant.set(page, tablette);
-  await allerALaDemonstrationDansLApplication(tablette);
 }
 
 Given(/^Léa a joué sur la tablette$/, async ({ famille, page }) => {
@@ -260,13 +256,6 @@ Given(/^Léa est revenue sur « Qui joue \? » sur la tablette$/, async ({ famil
   await expect(tablette.getByTestId("qui-joue")).toBeVisible();
   ecransDeLEnfant.set(page, tablette);
 });
-
-Given(
-  /^la page de démonstration propose (?:les choix (.+)|le seul choix « ([^«»]+) »)$/,
-  async ({ page }, liste?: string, seul?: string) => {
-    scenario(page).consigne.choix = typeof seul === "string" ? [seul] : listeDe(liste ?? "");
-  },
-);
 
 // --- Quand : le parent
 
@@ -347,7 +336,7 @@ When(/^Léa commence à jouer sur le téléphone$/, async ({ famille, page }) =>
 Then(
   /^les réglages de (Léa|Tom) indiquent : mode dys (oui|non), tout lire à voix haute (oui|non), parcours libre (oui|non), clavier des dictées (.+), langue du parent (\S+)$/,
   async ({ famille }, prenom: string, dys: string, tout: string, libre: string, clavier: string, langue: string) => {
-    await verifierLesReglages(await pageCourante(famille), prenom, {
+    await verifierLesReglages(await pageDansLEspaceParent(famille), prenom, {
       "mode dys": dys,
       "tout lire à voix haute": tout,
       "parcours libre": libre,
@@ -360,12 +349,12 @@ Then(
 Then(
   /^les réglages de (Léa|Tom) indiquent « ([^«»]+) » : « ([^«»]+) »$/,
   async ({ famille }, prenom: string, nom: string, valeur: string) => {
-    await verifierLesReglages(await pageCourante(famille), prenom, { [reglageConnu(nom)]: valeur });
+    await verifierLesReglages(await pageDansLEspaceParent(famille), prenom, { [reglageConnu(nom)]: valeur });
   },
 );
 
 Then(/^les autres réglages de Léa ont leurs valeurs par défaut$/, async ({ famille }) => {
-  await verifierLesReglages(await pageCourante(famille), "Léa", tousParDefautSauf(etatDesReglages(famille).dernierReglage));
+  await verifierLesReglages(await pageDansLEspaceParent(famille), "Léa", tousParDefautSauf(etatDesReglages(famille).dernierReglage));
 });
 
 Then(
@@ -436,7 +425,7 @@ Then(/^le changement est refusé$/, async ({ famille }) => {
 });
 
 Then(/^les réglages ne sont pas proposés à Léa$/, async ({ page }) => {
-  await expect(page.getByTestId("consigne")).toBeVisible();
+  await expect(accueilDe(page, "Léa")).toBeVisible();
   await expect(page.getByTestId("reglages")).toHaveCount(0);
   await expect(page.getByRole("form")).toHaveCount(0);
   await expect(page.getByRole("button", { name: /Modifier/ })).toHaveCount(0);
@@ -487,22 +476,20 @@ export async function verifierModeDys(page: Page, elements: Locator[], attendu: 
   }
 }
 
-Then(
-  /^(Léa|Tom) voit la consigne de la page de démonstration (en mode dys|sans le mode dys)$/,
-  async ({ page }, _prenom: string, mode: string) => {
-    const ecran = ecranDeLEnfant(page);
-    await allerALaDemonstrationDansLApplication(ecran);
-    await verifierModeDys(ecran, [ecran.getByTestId("consigne")], mode === "en mode dys");
-  },
-);
+Then(/^(Léa|Tom) voit son accueil (en mode dys|sans le mode dys)$/, async ({ page }, prenom: string, mode: string) => {
+  const ecran = ecranDeLEnfant(page);
+  await expect(accueilDe(ecran, prenom)).toBeVisible();
+  await expect(ecran.getByTestId("parole")).not.toBeEmpty();
+  await verifierModeDys(ecran, [ecran.getByTestId("parole")], mode === "en mode dys");
+});
 
 Then(/^Léa voit la consigne « ([^«»]+) » en mode dys : .+$/, async ({ page }, texte: string) => {
-  await expect(page.getByTestId("consigne")).toHaveText(normaliser(texte));
-  await verifierModeDys(page, [page.getByTestId("consigne")], true);
+  await expect(page.getByTestId("parole")).toHaveText(normaliser(texte));
+  await verifierModeDys(page, [page.getByTestId("parole")], true);
 });
 
 Then(/^la consigne ne s'affiche pas en mode dys$/, async ({ page }) => {
-  await verifierModeDys(page, [page.getByTestId("consigne")], false);
+  await verifierModeDys(page, [page.getByTestId("parole")], false);
 });
 
 Then(/^la félicitation de Noisette s'affiche en mode dys$/, async ({ page }) => {
@@ -515,7 +502,7 @@ const COULEURS_DES_SYLLABES = ["rgb(29, 78, 216)", "rgb(180, 35, 24)"];
 Then(
   /^Léa voit « ([^«»]+) » en deux syllabes de couleurs alternées, « ([^«»]+) » puis « ([^«»]+) »$/,
   async ({ page }, mot: string, premiere: string, seconde: string) => {
-    const enSyllabes = page.getByTestId("consigne").getByTestId("mot-en-syllabes");
+    const enSyllabes = page.getByTestId("parole").getByTestId("mot-en-syllabes");
     await expect(enSyllabes).toHaveCount(1);
     await expect(enSyllabes).toHaveText(mot);
     const syllabes = enSyllabes.getByText(/./);
@@ -528,7 +515,7 @@ Then(
 );
 
 Then(/^« ([^«»]+) », « ([^«»]+) » et « ([^«»]+) » restent d'une seule couleur$/, async ({ page }, a: string, b: string, c: string) => {
-  const consigne = page.getByTestId("consigne");
+  const consigne = page.getByTestId("parole");
   const couleurDuTexte = await consigne.evaluate((el) => getComputedStyle(el).color);
   expect(COULEURS_DES_SYLLABES).not.toContain(couleurDuTexte);
   for (const mot of [a, b, c]) {

@@ -52,6 +52,8 @@ Pour **chaque** comportement :
 2. Délègue à `implementer` (GREEN + REFACTOR). Vérifie toi-même que `deno test --permit-no-files supabase/functions/` est **entièrement vert** (et `python3 -m pytest scripts/tests` si `scripts/` a changé).
 3. Si `implementer` conteste un test, transmets son argument à `test-writer` (1 aller-retour). Si le désaccord persiste, **escalade vers moi**.
 
+**Revue intermédiaire** (décision 0020) : à la fin de chaque **bloc** de comportements (un bounded context, ou un groupe cohérent de la liste, par exemple « Apprentissage, dictée »), délègue à `mr-reviewer` en **mode delta**, sur les commits du bloc seulement. Ses bloquants se corrigent tout de suite, par le même cycle qu'à l'étape 4, avant le bloc suivant. Note le dernier commit relu dans le journal : c'est le point de départ du delta suivant.
+
 Ensuite, délègue à `implementer` en **mode CÂBLAGE** :
 - migration avec RLS
 - repository Supabase
@@ -60,7 +62,7 @@ Ensuite, délègue à `implementer` en **mode CÂBLAGE** :
 
 ## Étape 4 : Review (`mr-reviewer`)
 
-Délègue au subagent `mr-reviewer` sur la branche, en lui donnant la branche de base `<base>`.
+Délègue au subagent `mr-reviewer` sur la branche, en lui donnant la branche de base `<base>` et la liste des revues intermédiaires déjà faites (il se concentre sur le câblage et sur la cohérence d'ensemble, sans refaire l'analyse ligne à ligne des blocs déjà approuvés).
 - **APPROUVÉ** : passe à l'étape 5.
 - **À CORRIGER** : pour chaque bloquant,
   - si un test manque ou si c'est un bug, fais un cycle `test-writer` puis `implementer`
@@ -70,7 +72,17 @@ Délègue au subagent `mr-reviewer` sur la branche, en lui donnant la branche de
 
 ## Étape 5 : Tests E2E (`e2e-tester`)
 
-Délègue au subagent `e2e-tester`.
+Délègue au subagent `e2e-tester`. Les E2E se lancent contre le projet en ligne et prennent du temps : une non-régression complète dure 30 min et plus, et elle s'allonge à chaque story livrée. On les lance en deux temps (décision 0020) :
+
+1. **Pendant la mise au point** (écriture des steps, corrections) : seulement le **périmètre de la story**, sur le projet `telephone` (360 px, le plus contraint) :
+   - les scénarios `@issue-<n>` ;
+   - les scénarios `@depend-de-<n>` des autres stories, une fois levés ;
+   - les stories livrées du **même bounded context** que les fichiers de production modifiés (`git diff --stat origin/<base>...HEAD` : dossiers `_shared/<contexte>/` et écrans de `src/` touchés), par leurs tags `@issue-<m>`. Le contexte d'une story livrée est en tête de `docs/stories/<m>/domain-model.md`. En cas de doute sur un fichier partagé (`features/steps/`, `features/support/`, composant commun de `src/`), inclus les stories qui l'utilisent.
+   Commande dans `CLAUDE.md` (« Tests E2E d'une story, mise au point »).
+2. **Une seule non-régression complète**, sur les deux projets (`tablette` et `telephone`), **juste avant de passer la PR en « prête »**, après la dernière intégration de `<base>`. En équipe lancée par `/graphe`, elle n'est refaite sous le verrou `merge` que si `main` a bougé depuis (voir `equipe.md`). Si elle trouve un bug et que la correction ne touche qu'un contexte, on relance le périmètre de ce contexte puis la non-régression complète une seule fois.
+
+Attendre un run lancé en arrière-plan : utilise l'outil `Monitor` (ou une boucle qui vérifie toutes les 30 s le marqueur de fin du fichier de sortie, `until grep -q … ; do sleep 30; done`), **jamais** un `sleep` de plusieurs minutes : un run fini doit être vu tout de suite.
+
 - **Bug applicatif** : `test-writer` écrit d'abord un test unitaire qui reproduit le bug, puis `implementer` corrige, puis tu relances `e2e-tester`.
 - **Scénario ambigu** : escalade vers moi.
 - Si du code de production a changé pendant cette étape, relance `mr-reviewer` sur le delta.

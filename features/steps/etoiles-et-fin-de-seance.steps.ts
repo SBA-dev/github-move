@@ -1,5 +1,6 @@
 import { expect, type Page } from "@playwright/test";
 import type { Famille } from "../support/famille.ts";
+import { LecturesDesResultats } from "../support/lectures-des-resultats.ts";
 import {
   envoyerUneSeanceTerminee,
   insertionDirecteDeSeance,
@@ -33,7 +34,7 @@ import {
   repondre,
   textesDesChoixPossibles,
 } from "./exercices-a-choix.steps.ts";
-import { choisirLeaSur, ouvrirLaLeconDansLApplication } from "./profil-reel.ts";
+import { choisirLeaSur, estSurUnProfilReel, ouvrirLaLeconDansLApplication } from "./profil-reel.ts";
 import { jetonDe, profilDe } from "./profils-enfants.steps.ts";
 import { EXPRESSIONS_PAR_PERSONNAGE } from "./univers.steps.ts";
 import { normaliser, terminerLaLecture } from "./voix.steps.ts";
@@ -75,7 +76,7 @@ type Partie = {
 };
 const parties = new WeakMap<Famille, Partie>();
 
-function partie(famille: Famille): Partie {
+export function partie(famille: Famille): Partie {
   let courante = parties.get(famille);
   if (!courante) {
     courante = {
@@ -210,6 +211,10 @@ Given(/^Léa joue seulement l'exercice « ([^«»]+) »$/, async ({ famille, pag
   const lecon = etat(page).courante ?? leconDeLExercice(page, exercice);
   const position = positionDeLExercice(lecon, exercice);
   const type = String(lecon.exercices[position]?.type);
+  if (type === "fluence") {
+    const { preparerLaFluence } = await import("./calcul-pour-les-autres-stories.steps.ts");
+    return preparerLaFluence(page, exercice);
+  }
   if (!TYPES_A_CHOIX.includes(type)) dependDe(STORY_PAR_TYPE[type] ?? 18, `exercice ${type} « ${exercice} »`);
   await reposerLesErreurs(famille, page);
   await ouvrirLaPageDeLaLecon(page, lecon.titre);
@@ -268,15 +273,9 @@ Given(/^Léa a terminé une séance de l'exercice « ([^«»]+) » seul$/, async
   await jouerUnExerciceSeul(famille, page, lecon, positionDeLExercice(lecon, exercice), 0);
 });
 
-// --- Étant donné : #14 et #20 (non livrées)
+// --- Étant donné : #14 (non livrée)
 
 Given(/^Paul a demandé la suppression du profil enfant de Léa$/, () => dependDe(14, "suppression du profil enfant"));
-Given(
-  /^une leçon de test « Additions » a un exercice calcul dont le générateur tire des additions$/,
-  () => dependDe(20, "calcul au clavier de cristaux"),
-);
-Given(/^Léa a terminé une séance de « Additions » dont le premier calcul était « .+ »$/, () => dependDe(20, "calcul"));
-Given(/^le prochain calcul tiré est « .+ »$/, () => dependDe(20, "calcul"));
 
 // --- Quand
 
@@ -288,7 +287,10 @@ When(/^Léa rejoue$/, async ({ page }) => {
   await page.getByTestId("fin-de-seance").getByRole("button", { name: "Rejouer", exact: true }).click();
 });
 
-When(/^le temps de la fluence est écoulé$/, () => dependDe(20, "fluence"));
+When(/^le temps de la fluence est écoulé$/, async ({ page }) => {
+  const { ecoulerLaFluence } = await import("./calcul-pour-les-autres-stories.steps.ts");
+  await ecoulerLaFluence(page);
+});
 When(/^Paul exporte les données du profil enfant de Léa$/, () => dependDe(14, "export du profil enfant"));
 When(/^Paul confirme la suppression du profil enfant de Léa$/, () => dependDe(14, "suppression du profil enfant"));
 
@@ -493,7 +495,16 @@ Then(/^la fin de la séance propose (« .+ ») et (« [^«»]+ »)$/, async ({ p
   await expect(fin(page).getByRole("button")).toHaveText(noms as string[]);
 });
 
-Then(/^aucune leçon suivante n'est proposée$/, async ({ page }) => {
+Then(/^aucune leçon suivante n'est proposée$/, async ({ page, lecturesDesResultats }) => {
+  // La leçon suivante se calcule quand les lectures lancées par l'écran de fin sont revenues. Les résultats des leçons ne
+  // sont lus que pour un profil réel et en ligne : sinon l'application ne lance pas cette lecture, il n'y a rien à attendre.
+  await expect(fin(page)).toBeVisible();
+  await page.evaluate(() => new Promise((fait) => requestAnimationFrame(() => requestAnimationFrame(fait))));
+  const resultatsAttendus = estSurUnProfilReel(page) && (await page.evaluate(() => navigator.onLine));
+  await expect.poll(async () => {
+    const depuis = await LecturesDesResultats.instantDeLEcranDeFin(page);
+    return depuis !== undefined && lecturesDesResultats.sontRevenues(depuis, resultatsAttendus);
+  }, { message: "les lectures lancées par l'écran de fin sont revenues", intervals: [50] }).toBe(true);
   await page.evaluate(() => new Promise((fait) => requestAnimationFrame(() => requestAnimationFrame(fait))));
   await expect(fin(page).getByRole("button", { name: "Leçon suivante", exact: true })).toHaveCount(0);
   await expect(page.getByTestId("ensuite")).toHaveCount(0);
@@ -513,8 +524,12 @@ Then(/^la leçon suivante ouvre la page de la leçon « ([^«»]+) »$/, async (
   etat(page).courante = leconDeTitre(page, titre);
 });
 
-Then(/^Léa voit son score de fluence, sans étoiles$/, () => dependDe(20, "fluence"));
-Then(/^le premier calcul de la nouvelle séance est « .+ »$/, () => dependDe(20, "calcul"));
+Then(/^Léa voit son score de fluence, sans étoiles$/, async ({ page }) => {
+  await attendreLaFinDeLaSeance(page);
+  await expect(page.getByTestId("score-de-fluence")).toHaveCount(1);
+  await expect(page.getByTestId("etoiles-gagnees")).toHaveCount(0);
+  await expect(page.getByTestId("etoile")).toHaveCount(0);
+});
 Then(/^le fichier téléchargé contient .*$/, () => dependDe(14, "export du profil enfant"));
 Then(/^les meilleures étoiles de Léa pour cette leçon$/, () => dependDe(14, "export du profil enfant"));
 Then(/^aucune des réponses données par Léa$/, () => dependDe(14, "export du profil enfant"));

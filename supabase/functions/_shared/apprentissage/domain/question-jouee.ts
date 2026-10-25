@@ -8,12 +8,12 @@ import {
   questionDeLEcoute,
   type TypeDExerciceAChoix,
 } from "./exercices/phrases-des-exercices-a-choix.ts";
-import { ChoixInconnu, JeNeSaisPasDejaDit, QuestionDejaReussie } from "./erreurs.ts";
+import { ChoixInconnu, JeNeSaisPasDejaDit, QuestionDejaReussie, ReponseIncompatible } from "./erreurs.ts";
 import { questionsDeConjugaison } from "./exercices/conjugaison.ts";
-import { questionsDeTrous } from "./exercices/trous.ts";
+import { type QuestionDeTrou, questionsDeTrous } from "./exercices/trous.ts";
 import type { Hasard } from "./hasard.ts";
-import type { QuestionSuivie } from "./question-suivie.ts";
-import type { ReponseDonnee, ReponseParChoix, ResultatDeReponse } from "./reponse.ts";
+import type { QuestionPosee } from "./question-posee.ts";
+import type { ReponseDonnee, ReponseEnNombre, ReponseParChoix, ResultatDeReponse } from "./reponse.ts";
 import { type Tireur, tireurAuHasard } from "./tireur.ts";
 
 const ERREURS_AVANT_LA_REDUCTION_A_DEUX = 2;
@@ -26,7 +26,7 @@ export type AideDonnee = {
 
 type Complements = { readonly aide?: string; readonly motAEcouter?: string; readonly langue?: string };
 
-export class QuestionJouee implements QuestionSuivie {
+export class QuestionJouee implements QuestionPosee {
   private nombreDErreurs = 0;
   private estReussie = false;
   private jeNeSaisPasDejaDit = false;
@@ -130,7 +130,8 @@ export class QuestionJouee implements QuestionSuivie {
     return this.estReussie;
   }
 
-  repondre(reponse: ReponseParChoix): ResultatDeReponse {
+  repondre(reponse: ReponseParChoix | ReponseEnNombre): ResultatDeReponse {
+    if (reponse.genre === "nombre") throw new ReponseIncompatible(reponse.genre);
     if (this.estReussie) throw new QuestionDejaReussie();
     if (!this.choixProposes.textes().includes(reponse.texte)) throw new ChoixInconnu(reponse.texte);
     this.reponsesDonnees.push(reponse);
@@ -146,6 +147,16 @@ export class QuestionJouee implements QuestionSuivie {
     }
     return "fausse";
   }
+}
+
+export function questionJoueeDuTrou(question: QuestionDeTrou, tireur: Tireur): QuestionJouee {
+  return QuestionJouee.aChoix({
+    cle: CleDeQuestion.de("trous", question.enonce),
+    enonce: question.enonce,
+    choix: tireur.trou(question.motAttendu, question.candidats),
+    bonneReponse: question.motAttendu,
+    type: "trous",
+  });
 }
 
 export function questionsJoueesDe(exercice: Exercice, hasard: Hasard): QuestionJouee[] {
@@ -180,15 +191,7 @@ export function questionsJoueesAvec(exercice: Exercice, tireur: Tireur): Questio
         })
       );
     case "trous":
-      return questionsDeTrous(exercice).map((question) =>
-        QuestionJouee.aChoix({
-          cle: CleDeQuestion.de("trous", question.enonce),
-          enonce: question.enonce,
-          choix: tireur.trou(question.motAttendu, question.candidats),
-          bonneReponse: question.motAttendu,
-          type: "trous",
-        })
-      );
+      return questionsDeTrous(exercice).map((question) => questionJoueeDuTrou(question, tireur));
     case "conjugaison":
       return questionsDeConjugaison(exercice).map((question) =>
         QuestionJouee.aChoix({

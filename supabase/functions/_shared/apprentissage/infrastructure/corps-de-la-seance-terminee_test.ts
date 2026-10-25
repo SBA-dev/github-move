@@ -2,7 +2,11 @@ import { assertEquals, assertThrows } from "@std/assert";
 import { ChoixDeSeance } from "../domain/choix-de-seance.ts";
 import { Reponse, type ReponseDonnee } from "../domain/reponse.ts";
 import { revaliderLaSeance } from "../domain/revalider-la-seance.ts";
-import { hasardFixe } from "../test_utils/hasard-fixe.ts";
+import { hasardFixe, hasardSansMelange } from "../test_utils/hasard-fixe.ts";
+import { generateurIdFixe } from "../test_utils/generateur-id-fixe.ts";
+import { leconDeSoustractionsAuCE1 } from "../test_utils/lecons-de-calcul.ts";
+import { leconDUneSeuleFluenceAuCP } from "../test_utils/lecons-de-fluence.ts";
+import { Seance } from "../domain/seance.ts";
 import { ecrire, leconDeDicteeDeChatEtLapin, profilDeDictee, seanceDeDictee } from "../test_utils/lecons-de-dictee.ts";
 import { leconDeClasserLesSons, seanceCommencee } from "../test_utils/lecons-de-classer-et-ordre.ts";
 import { lireLaSeanceTerminee } from "./corps-de-la-seance-terminee.ts";
@@ -125,12 +129,6 @@ Deno.test("plus de 20 choix dans un tirage est refusé", () => {
   assertThrows(() => lire({ ...corpsValide(), tirages: [tirage] }), EntreeInvalide, "tirages");
 });
 
-Deno.test("plus de 50 réponses à une même question est refusé", () => {
-  const reponses = [Array.from({ length: 51 }, () => ({ choix: "6" }))];
-
-  assertThrows(() => lire({ ...corpsValide(), reponses }), EntreeInvalide, "reponses");
-});
-
 Deno.test("un texte de plus de 200 caractères, dans un tirage ou une réponse, est refusé", () => {
   const long = "a".repeat(201);
 
@@ -182,9 +180,31 @@ Deno.test("un placement mal formé est refusé comme toute réponse invalide", (
   }
 });
 
+Deno.test("une réponse en nombre entier positif ou nul est lue comme un nombre", () => {
+  const reponses = [[{ nombre: 0 }, { nombre: 47 }]];
+
+  assertEquals(lire({ ...corpsValide(), reponses }).reponses, [[Reponse.nombre(0), Reponse.nombre(47)]]);
+});
+
+Deno.test("une réponse en nombre qui n'est pas un entier positif ou nul est refusée", () => {
+  const malFormees = [
+    { nombre: 1.5 },
+    { nombre: -3 },
+    { nombre: "47" },
+    { nombre: null },
+    { nombre: Number.NaN },
+    { nombre: Number.POSITIVE_INFINITY },
+    { nombre: 47, choix: "47" },
+  ];
+  for (const reponse of malFormees) {
+    assertThrows(() => lire({ ...corpsValide(), reponses: [[reponse]] }), EntreeInvalide, "reponses");
+  }
+});
+
 function enReponseEnvoyee(reponse: ReponseDonnee): Record<string, unknown> {
   if (reponse.genre === "choix") return { choix: reponse.texte };
   if (reponse.genre === "jeNeSaisPas") return { jeNeSaisPas: true };
+  if (reponse.genre === "nombre") return { nombre: reponse.valeur };
   if (reponse.genre === "motEcrit") return { motEcrit: reponse.lettres };
   return {
     placement: reponse.groupe === undefined
@@ -265,6 +285,55 @@ Deno.test("le corps d'une séance de dictée est lu puis revalidé sans incohér
   };
 
   const revalidee = revaliderLaSeance(leconDeDicteeDeChatEtLapin(), lire(corps));
+
+  assertEquals([revalidee.etoiles, revalidee.erreurs], [fait.etoiles, fait.erreurs]);
+});
+
+function enCorps(envoi: ReturnType<Seance["aEnregistrer"]>): Record<string, unknown> {
+  return {
+    ...envoi,
+    seance: SEANCE,
+    enfant: ENFANT,
+    termineeLe: MAINTENANT.toISOString(),
+    reponses: envoi.reponses.map((question) => question.map(enReponseEnvoyee)),
+  };
+}
+
+Deno.test("une fluence de 45 secondes avec 60 réponses est lue puis revalidée sans incohérence", () => {
+  const lecon = leconDUneSeuleFluenceAuCP();
+  const debut = new Date("2026-10-23T10:00:00Z");
+  const seance = Seance.commencer(
+    generateurIdFixe("seance-1"),
+    hasardSansMelange(),
+    "profil-lea",
+    lecon,
+    ChoixDeSeance.complete(),
+  );
+  seance.demarrerLaFluence(debut);
+  for (let i = 0; i < 60; i++) seance.repondre(Reponse.nombre(20), debut);
+  seance.finirLaFluence(new Date(debut.getTime() + 45_000));
+  const fait = seance.terminer(MAINTENANT);
+
+  const revalidee = revaliderLaSeance(lecon, lire(enCorps(seance.aEnregistrer())));
+
+  assertEquals(revalidee.scoresDeFluence, fait.scoresDeFluence);
+});
+
+Deno.test("une question de calcul au clavier avec 60 réponses fausses puis la bonne est lue puis revalidée", () => {
+  const lecon = leconDeSoustractionsAuCE1();
+  const seance = Seance.commencer(
+    generateurIdFixe("seance-1"),
+    hasardSansMelange(),
+    "profil-lea",
+    lecon,
+    ChoixDeSeance.complete(),
+  );
+  for (let i = 0; i < 60; i++) seance.repondre(Reponse.nombre(8));
+  seance.repondre(Reponse.nombre(7));
+  seance.repondre(Reponse.nombre(5));
+  const fait = seance.terminer(MAINTENANT);
+
+  const revalidee = revaliderLaSeance(lecon, lire(enCorps(seance.aEnregistrer())));
 
   assertEquals([revalidee.etoiles, revalidee.erreurs], [fait.etoiles, fait.erreurs]);
 });

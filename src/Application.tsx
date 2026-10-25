@@ -1,8 +1,8 @@
-import { type CSSProperties, Suspense, useCallback, useEffect, useState } from "react";
+import { type CSSProperties, useCallback, useEffect, useState } from "react";
 import { MotionConfig } from "motion/react";
 import type { EtatDeLEspaceParent } from "@domain/famille";
+import type { CodeDeMatiere } from "@domain/catalogue";
 import { universDe } from "@domain/motivation";
-import { PAGE_DEMONSTRATION_DISPONIBLE, PageDemonstration } from "./demonstration/disponibilite.ts";
 import { EcranDeConnexion, useConnexion } from "./connexion/index.ts";
 import { ModeDys } from "./reglages/index.ts";
 import { EnTete } from "./en-tete/EnTete.tsx";
@@ -16,9 +16,18 @@ import {
   useProfilEnCours,
   useProfilsDuParent,
 } from "./famille/index.ts";
+import { MesMedailles } from "./medailles/index.ts";
+import { MonParcours } from "./parcours/index.ts";
 import { AideEcranDAccueil } from "./installation/index.ts";
 import { type Lieu, useNavigation } from "./navigation.ts";
 import { EcranDeSeance, PageDeLaLecon, useRenvoiDesSeancesGardees } from "./seance/index.ts";
+import { oublierLesEtoilesGagnees } from "./seance/fin-de-seance/etoiles-gagnees-pendant-l-utilisation.ts";
+import {
+  EcranDuTestDeDepart,
+  oublierLesTestsDeDepartFaits,
+  useRenvoiDesTestsDeDepartGardes,
+  useTestDeDepartAFaire,
+} from "./test-de-depart/index.ts";
 import { ChoixDeLaVoix, useVoix } from "./voix/index.ts";
 import { PALETTES, Paysage, PersonnageGuide } from "./univers/index.ts";
 
@@ -27,16 +36,11 @@ type Habillage = CSSProperties & { readonly "--accent": string; readonly "--acce
 const ACCUEIL: Lieu = { ecran: "accueil" };
 
 function estPageDeLEnfant(lieu: Lieu): boolean {
-  return lieu.ecran === "demonstration" || lieu.ecran === "jeu" || lieu.ecran === "lecon" || lieu.ecran === "seance";
+  return lieu.ecran === "jeu" || lieu.ecran === "parcours" || lieu.ecran === "medailles" || lieu.ecran === "test-de-depart" ||
+    lieu.ecran === "lecon" || lieu.ecran === "seance";
 }
 
-function demandeUnProfilEnCours(lieu: Lieu): boolean {
-  return lieu.ecran === "jeu" || lieu.ecran === "lecon" || lieu.ecran === "seance";
-}
-
-// La page de démonstration du lot 1 n'est publiée qu'en développement (ou avec VITE_PAGE_DEMONSTRATION=1).
 function lieuAffiche(demande: Lieu, espaceParent: EtatDeLEspaceParent["type"], connecte: boolean): Lieu {
-  if (demande.ecran === "demonstration" && !PAGE_DEMONSTRATION_DISPONIBLE) return ACCUEIL;
   if (demande.ecran === "espace-parent" && connecte && espaceParent === "ferme") return ACCUEIL;
   return demande;
 }
@@ -47,13 +51,14 @@ export function Application() {
   const connexion = useConnexion();
   const connecte = connexion.etat === "connecte";
   useRenvoiDesSeancesGardees(connecte);
+  useRenvoiDesTestsDeDepartGardes(connecte);
   const lieuPossible = lieuAffiche(lieuDemande, acces.etat.type, connecte);
-  const { profil: profilEnCours, charge: profilCharge, choisirQuiJoue, oublier: oublierLeProfilEnCours } = useProfilEnCours();
-  const enfantAbsent = profilCharge && !profilEnCours && demandeUnProfilEnCours(lieuPossible);
+  const { profil: profilEnCours, charge: profilCharge, choisirQuiJoue, definir, oublier: oublierLeProfilEnCours } = useProfilEnCours();
+  const enfantAbsent = profilCharge && !profilEnCours && estPageDeLEnfant(lieuPossible);
   const lieu = enfantAbsent ? ACCUEIL : lieuPossible;
   const ecran = lieu.ecran;
+  const testDeDepartAFaire = useTestDeDepartAFaire(profilEnCours, ecran === "jeu");
   const ecranDemande = lieuDemande.ecran;
-  const surLaDemonstration = ecran === "demonstration";
   const profil = estPageDeLEnfant(lieu) ? profilEnCours : undefined;
   const univers = universDe(profil?.univers);
   const palette = PALETTES[univers.cle];
@@ -76,17 +81,32 @@ export function Application() {
   useEffect(() => {
     if (lieu !== lieuDemande) remplacer(lieu);
   }, [lieu, lieuDemande, remplacer]);
+  const [matiereDuParcours, setMatiereDuParcours] = useState<CodeDeMatiere | undefined>();
   const [deconnexionEchouee, setDeconnexionEchouee] = useState(false);
+  const oublierLeProfilEtSaProgression = () => {
+    oublierLeProfilEnCours();
+    setMatiereDuParcours(undefined);
+  };
   const seDeconnecter = async () => {
     setDeconnexionEchouee(false);
     try {
       await connexion.seDeconnecter.executer();
       fermerEspaceParent();
-      oublierLeProfilEnCours();
+      oublierLeProfilEtSaProgression();
+      oublierLesEtoilesGagnees();
+      oublierLesTestsDeDepartFaits();
       remplacer("accueil");
     } catch {
       setDeconnexionEchouee(true);
     }
+  };
+  /** L'espace parent se ferme sur l'enfant choisi, dont le personnage guide propose le test de départ ; le retour mène à son accueil. */
+  const proposerLeTestDeDepart = (choisirLEnfant: () => void) => {
+    fermerEspaceParent();
+    choisirLEnfant();
+    setMatiereDuParcours(undefined);
+    remplacer("jeu");
+    aller("test-de-depart");
   };
   const entrerDansLEspaceParent = () => {
     if (connecte) acces.demanderLEntree();
@@ -140,16 +160,35 @@ export function Application() {
                 univers={univers}
                 voix={voix}
                 saluer={!viaRetour}
+                onMonParcours={() => aller("parcours")}
+                onMesMedailles={() => aller("medailles")}
+                onMonTestDeDepart={testDeDepartAFaire ? () => aller("test-de-depart") : undefined}
                 onChangerDEnfant={() => {
                   aller("accueil");
-                  oublierLeProfilEnCours();
+                  oublierLeProfilEtSaProgression();
                 }}
               />
             )}
-            {surLaDemonstration && PageDemonstration && profilCharge && (
-              <Suspense fallback={null}>
-                <PageDemonstration univers={univers} voix={voix} toutLireAVoixHaute={profil?.reglages.toutLireAVoixHaute ?? false} />
-              </Suspense>
+            {lieu.ecran === "test-de-depart" && profilCharge && profilEnCours && (
+              <EcranDuTestDeDepart
+                key={profilEnCours.id}
+                profil={profilEnCours}
+                univers={univers}
+                voix={voix}
+                onPlusTard={() => revenirA("jeu")}
+                onVoirMonParcours={() => remplacer("parcours")}
+              />
+            )}
+            {lieu.ecran === "parcours" && profilCharge && profilEnCours && (
+              <MonParcours
+                profil={profilEnCours}
+                matiereChoisie={matiereDuParcours}
+                onChoisirLaMatiere={setMatiereDuParcours}
+                onOuvrirLaLecon={(leconId) => aller({ ecran: "lecon", leconId })}
+              />
+            )}
+            {lieu.ecran === "medailles" && profilCharge && profilEnCours && (
+              <MesMedailles profil={profilEnCours} univers={univers} voix={voix} />
             )}
             {lieu.ecran === "lecon" && profilCharge && profilEnCours && (
               <PageDeLaLecon
@@ -171,11 +210,11 @@ export function Application() {
                 exercice={lieu.exercice}
                 profilId={profilEnCours.id}
                 prenom={profilEnCours.prenom}
+                niveau={profilEnCours.niveau}
                 univers={univers}
                 voix={voix}
                 toutLireAVoixHaute={profilEnCours.reglages.toutLireAVoixHaute}
                 clavierDesDictees={profilEnCours.reglages.clavierDesDictees.valeur}
-                niveau={profilEnCours.niveau}
                 onRetour={() => revenirA({ ecran: "lecon", leconId: lieu.leconId })}
                 onLeconSuivante={(leconId) => aller({ ecran: "lecon", leconId })}
                 onAccueil={() => aller("accueil")}
@@ -200,7 +239,12 @@ export function Application() {
                 onSeDeconnecter={seDeconnecter}
                 deconnexionEchouee={deconnexionEchouee}
               >
-                <ProfilsDeLEspaceParent etat={profilsDuParent.etat} onModifie={profilsDuParent.relire} />
+                <ProfilsDeLEspaceParent
+                  etat={profilsDuParent.etat}
+                  onModifie={profilsDuParent.relire}
+                  onCree={(profilCree) => proposerLeTestDeDepart(() => definir(profilCree))}
+                  onRefaireLeTestDeDepart={(profilExistant) => proposerLeTestDeDepart(() => choisirQuiJoue.executer(profilExistant))}
+                />
                 <ChoixDeLaVoix voix={voix} />
               </EspaceParent>
             )}

@@ -8,27 +8,29 @@ import { EntreeInvalide } from "./http-apprentissage.ts";
 const CHAMPS = ["seance", "enfant", "lecon", "choix", "tirages", "reponses", "termineeLe"];
 const QUESTIONS_AU_PLUS = 200;
 const TIRAGE_AU_PLUS = NOMBRE_MAXIMAL_D_ETIQUETTES;
-const REPONSES_AU_PLUS = 50;
+/** Borne technique du corps HTTP : la revalidation du domaine applique la vraie limite de chaque question. */
+const REPONSES_AU_PLUS_PAR_QUESTION = 1000;
+const LETTRES_AU_PLUS = 50;
 const CARACTERES_AU_PLUS = 200;
 const TOLERANCE_D_HORLOGE_EN_MS = 5 * 60 * 1000;
 
 type Objet = Record<string, unknown>;
 
-function objet(valeur: unknown, champ: string): Objet {
+export function objet(valeur: unknown, champ: string): Objet {
   if (typeof valeur !== "object" || valeur === null || Array.isArray(valeur)) {
     throw new EntreeInvalide(`Le champ « ${champ} » est mal formé.`);
   }
   return valeur as Objet;
 }
 
-function listeDe(valeur: unknown, champ: string, auPlus: number): unknown[] {
+export function listeDe(valeur: unknown, champ: string, auPlus: number): unknown[] {
   if (!Array.isArray(valeur) || valeur.length > auPlus) {
     throw new EntreeInvalide(`Le champ « ${champ} » doit être une liste d'au plus ${auPlus} éléments.`);
   }
   return valeur;
 }
 
-function texteCourt(valeur: unknown, champ: string): string {
+export function texteCourt(valeur: unknown, champ: string): string {
   if (typeof valeur !== "string" || valeur.length > CARACTERES_AU_PLUS) {
     throw new EntreeInvalide(`Le champ « ${champ} » contient un texte invalide.`);
   }
@@ -51,20 +53,28 @@ function lireLesTirages(corps: Objet): string[][] {
   );
 }
 
-function lireUneReponse(brute: unknown): ReponseDonnee {
+export function lireUneReponse(brute: unknown): ReponseDonnee {
   const reponse = objet(brute, "reponses");
   const cles = Object.keys(reponse);
   if (cles.length === 1 && cles[0] === "choix") return Reponse.choix(texteCourt(reponse.choix, "reponses"));
   if (cles.length === 1 && cles[0] === "placement") return lireUnPlacement(reponse.placement);
+  if (cles.length === 1 && cles[0] === "nombre") return lireUnNombre(reponse.nombre);
   if (cles.length === 1 && cles[0] === "motEcrit") return Reponse.motEcrit(lireLesLettres(reponse.motEcrit));
   if (cles.length === 1 && cles[0] === "jeNeSaisPas" && reponse.jeNeSaisPas === true) return { genre: "jeNeSaisPas" };
   throw new EntreeInvalide(
-    "Le champ « reponses » ne contient que des choix, des placements, des mots écrits ou « Je ne sais pas ».",
+    "Le champ « reponses » ne contient que des choix, des placements, des nombres, des mots écrits ou « Je ne sais pas ».",
   );
 }
 
+function lireUnNombre(brut: unknown): ReponseDonnee {
+  if (typeof brut !== "number" || !Number.isInteger(brut) || brut < 0) {
+    throw new EntreeInvalide("Le champ « reponses » ne contient que des nombres entiers positifs ou nuls.");
+  }
+  return Reponse.nombre(brut);
+}
+
 function lireLesLettres(brutes: unknown): string[] {
-  const lettres = listeDe(brutes, "reponses", REPONSES_AU_PLUS);
+  const lettres = listeDe(brutes, "reponses", LETTRES_AU_PLUS);
   if (lettres.length === 0) throw new EntreeInvalide("Le champ « reponses » ne contient aucune lettre.");
   return lettres.map((lettre) => {
     if (typeof lettre !== "string" || [...lettre].length !== 1) {
@@ -83,11 +93,11 @@ function lireUnPlacement(brut: unknown): ReponseDonnee {
 
 function lireLesReponses(corps: Objet): ReponseDonnee[][] {
   return listeDe(corps.reponses, "reponses", QUESTIONS_AU_PLUS).map((question) =>
-    listeDe(question, "reponses", REPONSES_AU_PLUS).map(lireUneReponse)
+    listeDe(question, "reponses", REPONSES_AU_PLUS_PAR_QUESTION).map(lireUneReponse)
   );
 }
 
-function lireLaDateDeFin(valeur: unknown, maintenant: Date): Date {
+export function lireLaDateDeFin(valeur: unknown, maintenant: Date): Date {
   const date = typeof valeur === "string" && valeur !== "" ? new Date(valeur) : new Date(NaN);
   if (Number.isNaN(date.getTime())) throw new EntreeInvalide("Le champ « termineeLe » doit être une date ISO valide.");
   if (date.getTime() > maintenant.getTime() + TOLERANCE_D_HORLOGE_EN_MS) {

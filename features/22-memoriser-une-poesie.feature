@@ -1,5 +1,5 @@
 # language: fr
-@issue-22 @wip
+@issue-22
 Fonctionnalité: Mémoriser une poésie
   En tant qu'enfant
   Je veux écouter une poésie ou une chanson vers par vers, la redire seul, puis m'entraîner à remettre les vers dans l'ordre et à retrouver les mots cachés

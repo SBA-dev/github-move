@@ -23,6 +23,17 @@ export class SeancesTermineesEnMemoire {
     return Promise.resolve(this.enregistrerSansAttendre(fait, resultat, nombreDeSeancesLu));
   }
 
+  /** Enregistre une séance qui ne touche pas au résultat de la leçon (fluence seule). */
+  enregistrerSansResultat(fait: SeanceTerminee): Promise<"enregistree" | "dejaEnregistree"> {
+    if (this.echecAuProchainAppel) {
+      this.echecAuProchainAppel = false;
+      return Promise.reject(new Error("écriture impossible"));
+    }
+    if (this.seances.has(fait.seance)) return Promise.resolve("dejaEnregistree");
+    this.seances.set(fait.seance, fait);
+    return Promise.resolve("enregistree");
+  }
+
   private enregistrerSansAttendre(
     fait: SeanceTerminee,
     resultat: ResultatDeLaLecon,

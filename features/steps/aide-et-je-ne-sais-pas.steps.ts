@@ -19,6 +19,17 @@ import { verifierModeDys } from "./reglages.steps.ts";
 import { cleDe, preparerProfil } from "./univers.steps.ts";
 import { normaliser } from "./voix.steps.ts";
 import type { ProfilPrepare } from "./fixtures.ts";
+import {
+  additionAPoserAffichee,
+  commencerUnCalculDeTest,
+  direJeNeSaisPasSurUneAdditionAPoser,
+  unCalculEstAffiche,
+} from "./calcul-pour-les-autres-stories.steps.ts";
+import {
+  attendreQueLEnfantPuisseRepondreALaQuestionIllustree,
+  commencerUneQuestionIllustreeDeTest,
+  uneQuestionIllustreeEstAffichee,
+} from "./boite-et-barres.steps.ts";
 import { direJeNeSaisPasEnDictee, estUneDictee, leconDeConjugaisonDeTest, leconDeDicteeDeTest } from "./dictee-et-conjugaison.steps.ts";
 import { aDesEtiquettesAPlacer, direJeNeSaisPasSurDesEtiquettes } from "./classer-ordre-trous.steps.ts";
 
@@ -28,15 +39,9 @@ import { aDesEtiquettesAPlacer, direJeNeSaisPasSurDesEtiquettes } from "./classe
 
 const LECON_DES_ANIMAUX = "Dictée : les animaux";
 
-function dependDe(numero: number, mecanique: string) {
-  return async () => {
-    throw new Error(`Étape non implémentée : dépend de la story #${numero} (${mecanique}).`);
-  };
-}
-
 const jeNeSaisPas = (page: Page) => page.getByTestId("je-ne-sais-pas");
 
-// --- Profil de Tom (aucun scénario livré ne le fait jouer : ses exercices sont des calculs, story #20)
+// --- Profil de Tom (ses exercices sont des calculs : voir calcul-pour-les-autres-stories.steps.ts)
 
 Given(
   /^Tom a un profil enfant préparé de niveau (\S+) dans l'univers « (.+) »$/,
@@ -59,6 +64,7 @@ Given(/^Léa en est à la question « (.+) » dont la réponse est « ([^«»]+)
 });
 
 async function direJeNeSaisPas(page: Page) {
+  if (await additionAPoserAffichee(page)) return await direJeNeSaisPasSurUneAdditionAPoser(page);
   if (await aDesEtiquettesAPlacer(page)) return await direJeNeSaisPasSurDesEtiquettes(page);
   if (await estUneDictee(page)) return await direJeNeSaisPasEnDictee(page);
   await avancerJusquAuxChoix(page);
@@ -188,18 +194,12 @@ function leconDeTestDuType(type: string) {
   return exercice === undefined ? undefined : leconDeTest(`test-je-ne-sais-pas-${type}`, `Leçon de test ${type}`, [exercice]);
 }
 
-const DEPENDANCES_PAR_TYPE: Readonly<Record<string, { numero: number; mecanique: string }>> = {
-  calcul: { numero: 20, mecanique: "calcul" },
-  boite: { numero: 21, mecanique: "boîte" },
-  barres: { numero: 21, mecanique: "barres" },
-};
-
 When(/^(Léa|Tom) commence un exercice (\S+) d'une leçon de test$/, async ({ page, monde }, enfant: string, type: string) => {
+  if (type === "calcul") return await commencerUnCalculDeTest(page, monde, enfant as "Léa" | "Tom");
   const lecon = leconDeTestDuType(type);
   if (lecon === undefined) {
-    const dependance = DEPENDANCES_PAR_TYPE[type];
-    if (dependance === undefined) throw new Error(`Type d'exercice inconnu : ${type}`);
-    return await dependDe(dependance.numero, dependance.mecanique)();
+    if (type === "boite" || type === "barres") return await commencerUneQuestionIllustreeDeTest(page, monde, type, enfant as "Léa" | "Tom");
+    throw new Error(`Type d'exercice inconnu : ${type}`);
   }
   await injecter(page, lecon);
   const profil = monde.profils.get(enfant);
@@ -208,20 +208,13 @@ When(/^(Léa|Tom) commence un exercice (\S+) d'une leçon de test$/, async ({ pa
 });
 
 Then(/^« Je ne sais pas » est proposé à (Léa|Tom)$/, async ({ page }, _enfant: string) => {
-  await avancerJusquAuxChoix(page);
+  if (await uneQuestionIllustreeEstAffichee(page)) await attendreQueLEnfantPuisseRepondreALaQuestionIllustree(page);
+  else if (!(await unCalculEstAffiche(page))) await avancerJusquAuxChoix(page);
   await expect(jeNeSaisPas(page)).toBeVisible();
   await expect(page.getByRole("button", { name: "Je ne sais pas", exact: true })).toBeVisible();
 });
 
-// --- Plan : « Je ne sais pas » dans un exercice <type> : <ce qui est montré> (classer et ordre : classer-ordre-trous.steps.ts ; les autres mécaniques sont à livrer)
-
-const DEPENDANCES_DU_MONTRE: ReadonlyArray<readonly [RegExp, number, string]> = [
-  [/^Léa joue un exercice addition à l'étape poser d'une leçon de test$/, 20, "addition posée"],
-  [/^la bonne colonne du chiffre choisi brille$/, 20, "addition posée"],
-];
-for (const [motif, numero, mecanique] of DEPENDANCES_DU_MONTRE) {
-  Given(motif, dependDe(numero, mecanique));
-}
+// --- Plan : « Je ne sais pas » dans un exercice <type> : <ce qui est montré> (classer, ordre, trous, dictée, addition posée : steps de leurs stories ; les autres mécaniques sont à livrer)
 
 // --- Alors : bulles, choix, annonce
 
@@ -293,19 +286,3 @@ Then(/^Léa voit « ([^«»]+) » dans la bulle de Noisette en mode dys$/, async
   await expect(bulle(page)).toContainText(texte);
   await verifierModeDys(page, [bulle(page)], true);
 });
-
-// --- Calcul au clavier de cristaux : story #20
-
-Given(/^une leçon de test de niveau CE1 a un exercice calcul « (?:.+) », de résultat (?:\d+)(?:, d'aide « .+ »)?$/, dependDe(20, "calcul au clavier de cristaux"));
-Given(/^Tom a répondu faux (?:\d+) fois de suite à « (?:.+) »$/, dependDe(20, "calcul au clavier de cristaux"));
-When(/^Tom répond « (?:[^«»]+) » à « (?:.+) »$/, dependDe(20, "calcul au clavier de cristaux"));
-Given(/^Tom en est au calcul « (?:.+) »$/, dependDe(20, "calcul au clavier de cristaux"));
-When(/^Tom dit « Je ne sais pas »$/, dependDe(20, "calcul au clavier de cristaux"));
-Then(/^le calcul « (?:.+) » reste posé jusqu'à ce que Tom tape (?:\d+)$/, dependDe(20, "calcul au clavier de cristaux"));
-Given(/^Tom joue une leçon de test de niveau CE1 de deux calculs$/, dependDe(20, "calcul au clavier de cristaux"));
-Given(
-  /^au premier calcul, Tom a dit « Je ne sais pas », puis a tapé une mauvaise réponse, puis la bonne$/,
-  dependDe(20, "calcul au clavier de cristaux"),
-);
-Given(/^au second calcul, Tom a fait deux erreurs$/, dependDe(20, "calcul au clavier de cristaux"));
-When(/^Tom donne la bonne réponse au second calcul$/, dependDe(20, "calcul au clavier de cristaux"));

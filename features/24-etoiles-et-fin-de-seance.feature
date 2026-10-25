@@ -75,7 +75,6 @@ Fonctionnalité: Étoiles et fin de la séance
       Quand Léa réussit la dernière question de la séance
       Alors la page de la leçon « Les sons ou, on, an » montre 3 étoiles pour Léa
 
-    @depend-de-20
     Scénario: Une séance faite seulement d'une fluence ne donne pas d'étoiles
       Étant donné que Léa n'a encore jamais terminé de séance de la leçon « Les doubles »
       Et que Léa joue seulement l'exercice « Calcul rapide : les doubles »
@@ -115,7 +114,7 @@ Fonctionnalité: Étoiles et fin de la séance
       Alors la fin de la séance propose « Leçon suivante », « Accueil » et « Rejouer »
       Et le focus est sur « Accueil »
 
-    Scénario: La leçon suivante est la leçon d'ordre suivant de la même matière et du même niveau
+    Scénario: La leçon suivante est la première leçon d'après non réussie de la même matière et du même niveau
       Étant donné que Léa joue la séance complète de la leçon « Les sons de test »
       Quand Léa réussit la dernière question de la séance
       Alors la fin de la séance annonce « Ensuite : La suite de test »
@@ -133,7 +132,6 @@ Fonctionnalité: Étoiles et fin de la séance
       Alors Léa entend Noisette lire « Touche le mot qui a le son on. »
       Mais Léa n'entend aucune étape de leçon
 
-    @depend-de-20
     Scénario: Rejouer tire de nouveaux calculs
       Étant donné qu'une leçon de test « Additions » a un exercice calcul dont le générateur tire des additions
       Et que Léa a terminé une séance de « Additions » dont le premier calcul était « 2 + 5 »

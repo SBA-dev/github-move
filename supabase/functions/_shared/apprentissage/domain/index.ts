@@ -21,10 +21,15 @@ export {
   PasDeQuestionEnCours,
   PasDEtapeDeLeconEnCours,
   QuestionDejaReussie,
+  QuestionHorsDuTestDeDepart,
   SeanceDejaFinie,
   SeanceDejaTerminee,
   SeanceIncoherente,
   SeanceNonFinie,
+  TestDeDepartDejaFini,
+  TestDeDepartDUnAutreEnfant,
+  TestDeDepartIncoherent,
+  TestDeDepartNonFini,
 } from "./erreurs.ts";
 export { texteALireDeLEtape } from "./etape-de-lecon-lue.ts";
 export { lectureDesChoix } from "./lecture-des-choix.ts";
@@ -39,20 +44,45 @@ export type { Hasard } from "./hasard.ts";
 export { QuestionJouee } from "./question-jouee.ts";
 export type { AideDonnee } from "./question-jouee.ts";
 export { Reponse } from "./reponse.ts";
-export type { Placement, ReponseDonnee, ReponseParChoix, ResultatDeReponse } from "./reponse.ts";
+export type { Placement, ReponseDonnee, ReponseEnNombre, ReponseParChoix, ResultatDeReponse } from "./reponse.ts";
 export { PlanDeSeance } from "./plan-de-seance.ts";
+export { PlanDeMemorisation } from "./plan-de-memorisation.ts";
 export { Seance } from "./seance.ts";
+export type { CalculEnCours } from "./question-de-calcul.ts";
+export type { FluenceEnCours } from "./exercice-chronometre.ts";
 export type { FaitDeSeance, QuestionRatee, ReussitesEtErreurs, SeanceTerminee } from "./seance.ts";
 export type { SeanceTermineeAEnregistrer } from "./seance-terminee-a-enregistrer.ts";
 export { Etoiles } from "./etoiles.ts";
 export type { NombreDEtoiles } from "./etoiles.ts";
+export { meilleuresEtoilesReunies } from "./meilleures-etoiles-reunies.ts";
 export { SeanceId } from "./seance-id.ts";
 export { ResultatDeLaLecon } from "./resultat-de-la-lecon.ts";
 export type { EtatDuResultat, FaitDeResultat } from "./resultat-de-la-lecon.ts";
 export { indicationDuGeste } from "./exercices/indication-du-geste.ts";
 export { consigneLueAuDebut } from "./exercices/consigne-lue-au-debut.ts";
 export { revaliderLaSeance } from "./revalider-la-seance.ts";
+export { revaliderLeTestDeDepart } from "./revalider-le-test-de-depart.ts";
 export type { ParoleDue } from "./parole-due.ts";
+export { matieresDuParcours, parcoursDeLaMatiere } from "./parcours.ts";
+export { leconSuivanteDansLeParcours } from "./lecon-suivante-dans-le-parcours.ts";
+export type {
+  EntreesDuParcours,
+  EtatDansLeParcours,
+  LeconDuParcours,
+  LeconId,
+  LeconReussieDUneClasseAuDessus,
+  Parcours,
+} from "./parcours.ts";
+export { RecordDeFluence } from "./record-de-fluence.ts";
+export type { EtatDuRecord, FaitDeRecord, IssueDuRecord } from "./record-de-fluence.ts";
+export { AdditionPosee } from "./addition-posee.ts";
+export type { ColonneDAdditionPosee } from "./addition-posee.ts";
+export type { EtapePoser } from "./etape-poser.ts";
+export type { EtapeCalculer } from "./etape-calculer.ts";
+export type { VueAddition, VueColonne } from "./vue-d-addition.ts";
+export { historiqueDeCalcul } from "./historique-de-calcul.ts";
+export { AdaptationDeLaDifficulte } from "./adaptation-de-la-difficulte.ts";
+export { NOMS_DES_COLONNES_A_L_ECRAN } from "./rangs-d-addition.ts";
 export {
   exerciceDemandeLeSon,
   LIBELLE_DU_BOUTON_ACTIVER_LE_SON,
@@ -61,3 +91,20 @@ export {
 export type { EtatDeLaVoix } from "./exercices/dictee-sans-voix.ts";
 export type { CaseDeQuestion, QuestionDeDictee } from "./question-de-dictee.ts";
 export type { CorrectionDuMot } from "./mot-a-ecrire.ts";
+export type { BoiteEnCours, BoiteOuverte } from "./question-de-boite.ts";
+export type { SchemaEnCours, SchemaResolu } from "./question-de-probleme-en-barres.ts";
+export { annonceDeLEcoute, carteDeLaPoesie, invitationApresLeDernierVers } from "./exercices/paroles-de-la-poesie.ts";
+export { ResultatDuTestDeDepart } from "./resultat-du-test-de-depart.ts";
+export type { EtatDuResultatDuTestDeDepart, FaitDeTestDeDepart } from "./resultat-du-test-de-depart.ts";
+export { leconsReussiesAuTestDeDepart } from "./lecons-reussies-au-test-de-depart.ts";
+export { leconsNouvellementReussies } from "./lecons-nouvellement-reussies.ts";
+export { planDuTestDeDepart } from "./plan-du-test-de-depart.ts";
+export type { PlanDuTestDeDepart, QuestionPrevue } from "./plan-du-test-de-depart.ts";
+export { TestDeDepart } from "./test-de-depart.ts";
+export { QuestionDeCalcul } from "./question-de-calcul.ts";
+export type { QuestionPosee } from "./question-posee.ts";
+export { type Tireur, tireurAuHasard } from "./tireur.ts";
+export type { TestDeDepartTermine } from "./test-de-depart.ts";
+export type { TestDeDepartTermineAEnregistrer } from "./test-de-depart-termine-a-enregistrer.ts";
+export { TestDeDepartId } from "./test-de-depart-id.ts";
+export { reserveDuTestDeDepart } from "./reserve-du-test-de-depart.ts";

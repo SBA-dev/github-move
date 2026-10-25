@@ -46,8 +46,8 @@ Règles de cohabitation :
 | Lint / format | `deno lint --permit-no-files supabase/functions/ && deno fmt --check --permit-no-files supabase/functions/` |
 | Typecheck du front | `npx tsc --noEmit` |
 | Build du front | `npm run build` |
-| Tests E2E d'une story | `npx bddgen --tags "@issue-<n>" && npx playwright test --grep @issue-<n> --grep-invert "@depend-de|@envoi-email"` (les scénarios tagués `@depend-de-<m>` attendent la story #m ; `@envoi-email` : voir plus bas) |
-| Tous les tests E2E (non-régression) | `npx bddgen --tags "<stories livrées : @socle or @issue-5 or …>" && NODE_USE_ENV_PROXY=1 npx playwright test --grep-invert "@depend-de|@envoi-email"` (sans `--tags`, `bddgen` échoue sur les étapes des stories à venir) |
+| Tests E2E d'une story, mise au point | `npx bddgen --tags "@issue-<n> or @issue-<m> or …" && NODE_USE_ENV_PROXY=1 npx playwright test --project=telephone --grep "@issue-<n>|@issue-<m>" --grep-invert "@depend-de|@envoi-email"` : la story et les stories livrées du même contexte, sur le seul projet `telephone` (décision 0020). Les scénarios tagués `@depend-de-<m>` attendent la story #m ; `@envoi-email` : voir plus bas |
+| Tous les tests E2E (non-régression, **une fois** par story, juste avant la PR prête) | `npx bddgen --tags "<stories livrées : @socle or @issue-5 or …>" && NODE_USE_ENV_PROXY=1 npx playwright test --grep-invert "@depend-de|@envoi-email"` (sans `--tags`, `bddgen` échoue sur les étapes des stories à venir). Scénarios en parallèle sur 3 workers (`E2E_WORKERS=<k>` pour changer) |
 | Tests E2E qui envoient un vrai e-mail de connexion (avant un merge qui touche la connexion, ou la mise en ligne) | `npx bddgen --tags "@issue-5" && NODE_USE_ENV_PROXY=1 npx playwright test --grep @envoi-email` |
 | Tests E2E de la PWA (#8, build de production) | `npx bddgen -c playwright.pwa.config.ts && npx playwright test -c playwright.pwa.config.ts` |
 | Regénérer la bibliothèque | `python3 scripts/build_bibliotheque.py` |
@@ -110,7 +110,7 @@ Décisions déjà prises, à respecter partout (code, interface, scénarios) :
 - **Parent** est le seul rôle adulte (pas d'enseignant). L'interface dit « Espace parent ».
 - Un parent ne voit **que les enfants auxquels il est rattaché**. Un profil enfant a un ou deux parents. Le second se rattache par un lien d'invitation.
 - **Personnage guide** (Noisette, Lumi…) et **Guide fondamental** (guide Eduscol) : jamais « guide » seul.
-- Une leçon est **réussie** à 1 étoile (elle ouvre la suivante) et **acquise** à 2 étoiles (compétence et badge).
+- Une leçon est **réussie** à 1 étoile (elle fait avancer le parcours) et **acquise** à 2 étoiles (compétence et badge).
 - **Pas de temps d'écran** : l'application ne limite pas la durée de jeu.
 
 - Le glossaire de référence est `docs/domain/glossaire.md`.

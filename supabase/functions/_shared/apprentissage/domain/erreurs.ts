@@ -124,6 +124,13 @@ export class TirageEnTrop extends Error {
   }
 }
 
+export class TirageHorsDuGenerateur extends Error {
+  constructor(readonly tirage: string) {
+    super(`L'opération tirée « ${tirage} » ne vient pas du générateur de l'exercice.`);
+    this.name = "TirageHorsDuGenerateur";
+  }
+}
+
 export class SeanceIncoherente extends Error {
   constructor(override readonly cause: Error) {
     super(`La séance envoyée est incohérente : ${cause.message}`);
@@ -142,6 +149,34 @@ export class ParentNonRattache extends Error {
   constructor() {
     super("Ce parent n'est pas rattaché à ce profil.");
     this.name = "ParentNonRattache";
+  }
+}
+
+export class ReponseIncompatible extends Error {
+  constructor(readonly genre: string) {
+    super(`Une réponse de genre « ${genre} » ne convient pas à cette question.`);
+    this.name = "ReponseIncompatible";
+  }
+}
+
+export class FluenceNonCommencee extends Error {
+  constructor() {
+    super("Le signal « C'est parti ! » n'a pas encore été donné.");
+    this.name = "FluenceNonCommencee";
+  }
+}
+
+export class FluenceFinie extends Error {
+  constructor() {
+    super("Le temps de cet exercice est écoulé.");
+    this.name = "FluenceFinie";
+  }
+}
+
+export class JeNeSaisPasEnFluence extends Error {
+  constructor() {
+    super("Une fluence ne propose pas « Je ne sais pas ».");
+    this.name = "JeNeSaisPasEnFluence";
   }
 }
 
@@ -170,5 +205,40 @@ export class PasDeLettreAEffacer extends Error {
   constructor() {
     super("Aucune lettre n'est écrite : il n'y a rien à effacer.");
     this.name = "PasDeLettreAEffacer";
+  }
+}
+
+export class QuestionHorsDuTestDeDepart extends Error {
+  constructor(readonly type: string) {
+    super(`Un exercice de type « ${type} » ne pose pas de question au test de départ.`);
+    this.name = "QuestionHorsDuTestDeDepart";
+  }
+}
+
+export class TestDeDepartDejaFini extends Error {
+  constructor() {
+    super("Ce test de départ est déjà fini.");
+    this.name = "TestDeDepartDejaFini";
+  }
+}
+
+export class TestDeDepartNonFini extends Error {
+  constructor() {
+    super("Ce test de départ n'est pas fini.");
+    this.name = "TestDeDepartNonFini";
+  }
+}
+
+export class TestDeDepartDUnAutreEnfant extends Error {
+  constructor() {
+    super("Ce test de départ est celui d'un autre enfant.");
+    this.name = "TestDeDepartDUnAutreEnfant";
+  }
+}
+
+export class TestDeDepartIncoherent extends Error {
+  constructor(override readonly cause: Error) {
+    super(`Le test de départ envoyé est incohérent : ${cause.message}`);
+    this.name = "TestDeDepartIncoherent";
   }
 }

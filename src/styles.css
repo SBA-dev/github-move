@@ -66,7 +66,6 @@ button[data-son="muet"] { background: var(--accent-fonce); opacity: .8; }
 }
 .personnage-guide { width: min(200px, 50vw); }
 .personnage-guide svg { width: 100%; height: auto; display: block; }
-.demonstration { display: grid; justify-items: center; gap: 12px; max-width: 100%; }
 .guide-et-parole { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; }
 .bulle:empty { display: none; }
 .bulle {
@@ -94,9 +93,8 @@ button[data-son="muet"] { background: var(--accent-fonce); opacity: .8; }
   background: #fff3cd;
   font-weight: 700;
 }
-.reponses { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
 @media (prefers-reduced-motion: reduce) {
-  * { animation: none !important; transition: none !important; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 .controle-parental form { display: grid; justify-items: center; gap: 12px; }
 .controle-parental input {
@@ -238,6 +236,12 @@ button:focus-visible, summary:focus-visible { outline: 3px solid #1f2a1f; outlin
   overflow-wrap: anywhere;
 }
 .texte-de-lecture h3, .texte-de-lecture p { margin: 4px 0; }
+.poesie { display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 100%; }
+.carte-de-la-poesie { max-width: min(100%, 36rem); padding: 12px 18px; border-radius: 16px; background: #fff; text-align: left; font-size: 1.25rem; line-height: 1.6; overflow-wrap: anywhere; }
+.carte-de-la-poesie h3 { margin: 4px 0; }
+.vers { margin: 0; padding: 0; list-style: none; }
+.un-vers { min-height: 44px; padding: 8px 10px; border-left: 6px solid transparent; border-radius: 8px; }
+.un-vers[data-lu="true"] { background: #fff3c4; border-left-color: #ffd23f; font-weight: 700; }
 .ecoute { display: grid; justify-items: center; gap: 8px; }
 .ecoute-sans-son { margin: 0; padding: 10px 16px; border-radius: 16px; background: #fff3cd; font-weight: 700; }
 .choix-de-la-question { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; max-width: 100%; }
@@ -383,7 +387,6 @@ button.secondaire:hover { background: #fdf3ea; }
 .formulaire-de-profil .actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .profils-de-l-espace-parent .confirmation { font-weight: 700; }
 .accueil-de-l-enfant { display: grid; justify-items: center; gap: 12px; max-width: 100%; }
-.choix-de-demonstration { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 0; padding: 0; list-style: none; }
 
 /* Mode dys du profil en cours : police Andika, lettres, mots et lignes espacés, syllabes en couleurs alternées. */
 [data-mode-dys="true"] {
@@ -398,8 +401,9 @@ button.secondaire:hover { background: #fdf3ea; }
   word-spacing: inherit;
   line-height: inherit;
 }
-[data-mode-dys="true"] :is(.consigne, .bulle, .pastille, .question, .bulle-de-choix, .etiquette, .texte-a-trous) {
+[data-mode-dys="true"] :is(.consigne, .bulle, .pastille, .question, .bulle-de-choix, .etiquette, .texte-a-trous, .carte-de-la-poesie) {
   overflow-wrap: anywhere;
+  line-height: inherit;
 }
 .syllabe[data-parite="0"] { color: #1d4ed8; }
 .syllabe[data-parite="1"] { color: #b42318; }
@@ -422,6 +426,172 @@ button.secondaire:hover { background: #fdf3ea; }
 .meilleures-etoiles .etoiles-dessinees svg { width: 36px; height: 36px; }
 .meilleures-etoiles p { padding: 4px 12px; border-radius: 16px; background: rgba(255, 255, 255, .85); font-weight: 700; }
 .fin-de-seance .message-erreur:empty { display: none; }
+
+/* Mon parcours */
+.mon-parcours { display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 100%; }
+.mon-parcours h2, .mon-parcours h3 { margin: 0; }
+.onglets-des-matieres { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 100%; }
+.onglets-des-matieres [role="tab"] { color: var(--texte); background: #fff; border: 2px solid var(--accent-fonce); }
+.onglets-des-matieres [role="tab"][aria-selected="true"] { color: #fff; background: var(--accent-fonce); }
+.parcours-de-la-matiere { display: grid; gap: 12px; width: 100%; max-width: 32rem; }
+.progression-du-parcours { display: grid; gap: 4px; justify-items: center; }
+.progression-du-parcours progress { width: min(100%, 20rem); height: 16px; accent-color: var(--accent-fonce); }
+.progression-du-parcours p { margin: 0; padding: 4px 12px; border-radius: 16px; background: rgba(255, 255, 255, .85); font-weight: 700; }
+.lecons-du-parcours { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+button.lecon-du-parcours {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 12px;
+  width: 100%;
+  min-height: 56px;
+  padding: 8px 16px;
+  border: 2px solid var(--accent-fonce);
+  border-radius: 16px;
+  color: var(--texte);
+  background: #fff;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+button.lecon-du-parcours:hover { background: #fdf3ea; }
+button.lecon-du-parcours[data-etat="prochaine"] { border-width: 4px; background: #fff3cd; }
+.lecons-deja-reussies { display: grid; gap: 8px; }
+.lecons-deja-reussies h4 { margin: 8px 0 0; }
+.place-de-la-lecon { font-size: .9em; }
+.titre-de-la-lecon { flex: 1 1 8rem; }
+.etoiles-de-la-lecon { color: #b8860b; }
+
+/* Calcul : la carte de l'opération, le clavier de cristaux, la fluence */
+.calcul, .fluence, .addition-posee { display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 100%; }
+.carte-du-calcul { font-size: 2rem; }
+.boite-a-jetons, .probleme-en-barres { display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 100%; }
+
+/* Boîte à jetons : le couvercle se lève ou se ferme, les jetons rangés par 5 */
+.boite { position: relative; box-sizing: border-box; display: grid; place-items: center; width: min(100%, 18rem); min-height: 128px; margin-top: 28px; padding: 12px; border: 4px solid #8a5a2b; border-radius: 6px 6px 16px 16px; background: #e8c48f; }
+.boite::before { content: ""; position: absolute; left: -4px; right: -4px; bottom: 100%; height: 22px; border: 4px solid #8a5a2b; border-radius: 8px; background: #c79a5b; transform-origin: left bottom; transition: transform .5s ease-in-out; }
+.boite[data-etat="ouverte"]::before { transform: rotate(-35deg); }
+.boite[data-etat="fermee"] { background: #c79a5b; }
+.boite[data-etat="fermee"] .contenu-de-la-boite { visibility: hidden; }
+.contenu-de-la-boite { display: grid; justify-items: center; gap: 8px; max-width: 100%; }
+.jetons { display: grid; justify-items: center; gap: 6px; max-width: 100%; }
+.rangee-de-jetons { display: flex; justify-content: center; gap: 6px; }
+.jeton { box-sizing: border-box; flex: none; width: 28px; height: 28px; border: 3px solid #b8860b; border-radius: 50%; background: #ffd43b; }
+.jeton[data-cinquieme="true"] { border-color: var(--accent-fonce); background: #ff922b; }
+.jeton[data-etat="nouveau"] { animation: jeton-entre .6s ease-out; }
+.jeton[data-etat="sortant"] { opacity: .45; animation: jeton-sort .6s ease-in; }
+@keyframes jeton-entre { from { transform: translateY(-40px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes jeton-sort { from { transform: none; opacity: 1; } to { transform: translateY(-40px); opacity: .45; } }
+
+/* Schéma en barres : des barres proportionnelles aux nombres, « ? » pour la valeur cherchée */
+.enonce-du-probleme { max-width: 100%; margin: 0; overflow-wrap: anywhere; }
+.schema-en-barres { width: 100%; max-width: 100%; }
+.dessin-du-schema { display: grid; gap: 10px; width: 100%; }
+.ligne-du-schema { display: grid; gap: 2px; min-width: 0; }
+.nom-de-la-barre { font-weight: 700; overflow-wrap: anywhere; }
+.morceaux { display: flex; width: 100%; }
+.morceau-de-barre { box-sizing: border-box; display: grid; place-items: center; min-width: 0; min-height: 44px; border: 3px solid var(--accent-fonce); background: #fff; font-size: 1.5rem; font-weight: 800; overflow: hidden; }
+.morceau-de-barre[data-role="tout"], .morceau-de-barre[data-role="total"], .morceau-de-barre[data-role="grand"] { background: #ffe3c2; }
+.morceau-de-barre[data-cherchee="true"] { background: #fff3c4; border-style: dashed; }
+.morceau-de-barre[data-role="ecart"], .morceau-de-barre[data-role="suite"] { border-style: dashed; background: transparent; }
+.clavier-de-cristaux { display: grid; justify-items: center; gap: 8px; width: min(100%, 20rem); max-width: 100%; }
+.nombre-tape {
+  display: block;
+  width: 100%;
+  min-height: 56px;
+  padding: 6px 14px;
+  border: 3px solid var(--accent-fonce);
+  border-radius: 16px;
+  background: #fff;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: .15em;
+  text-align: center;
+}
+.cristaux { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; width: 100%; }
+.cristal {
+  min-width: 44px;
+  min-height: 56px;
+  padding: 6px;
+  border: 3px solid #3b6fb6;
+  border-radius: 18px 18px 10px 10px;
+  background: linear-gradient(160deg, #dff0ff, #8cc4ff);
+  color: var(--texte);
+  font-size: 1.5rem;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+.cristal:hover { background: linear-gradient(160deg, #fff, #a9d3ff); }
+.cristal.action { font-size: 1rem; background: #fff; border-color: var(--accent-fonce); }
+.cristal.valider { background: #d9f5d0; border-color: #3f8f2f; }
+.cristal[aria-disabled="true"] { opacity: .45; cursor: default; }
+.cristal[data-brille="true"] {
+  background: #fff3c4;
+  box-shadow: 0 0 0 4px #ffd23f, 0 0 14px 6px #ffd23f;
+  animation: brille 1.2s ease-in-out infinite alternate;
+}
+.tableau-de-fluence { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 16px; width: min(100%, 28rem); padding: 8px 14px; border-radius: 22px; background: rgba(255, 255, 255, .9); font-weight: 800; }
+.barre-de-temps { flex: 1 1 100%; height: 12px; border-radius: 6px; background: #e4ded2; overflow: hidden; }
+.barre-de-temps i { display: block; height: 100%; background: var(--accent); transition: width .3s linear; }
+.scores-de-fluence { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.scores-de-fluence li { padding: 6px 14px; border-radius: 16px; background: rgba(255, 255, 255, .85); font-size: 1.25rem; font-weight: 700; overflow-wrap: anywhere; }
+
+/* Addition posée : unités bleue à droite, dizaines rose, centaines verte, dans tous les univers */
+.operation-posee { padding: 4px 14px; border-radius: 16px; background: rgba(255, 255, 255, .85); font-size: 1.5rem; font-weight: 800; }
+.colonnes { display: flex; justify-content: center; gap: 8px; width: 100%; max-width: 100%; }
+.colonne {
+  --couleur-de-la-colonne: #4a90e2;
+  --fond-de-la-colonne: #dcecff;
+  display: grid;
+  grid-template-rows: auto 2.5rem 1fr auto;
+  justify-items: center;
+  gap: 4px;
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 7.5rem;
+  padding: 6px;
+  border: 3px solid var(--couleur-de-la-colonne);
+  border-radius: 16px;
+  background: var(--fond-de-la-colonne);
+}
+.colonne[data-couleur="bleue"] { --couleur-de-la-colonne: #2f7de1; --fond-de-la-colonne: #dcecff; }
+.colonne[data-couleur="rose"] { --couleur-de-la-colonne: #e0559b; --fond-de-la-colonne: #ffdcee; }
+.colonne[data-couleur="verte"] { --couleur-de-la-colonne: #3f9d45; --fond-de-la-colonne: #dcf5dc; }
+.colonne[data-en-cours="true"] { box-shadow: 0 0 0 4px #ffd23f; }
+.colonne[data-brille="true"] { box-shadow: 0 0 0 6px #ffd23f, 0 0 18px 8px #ffd23f; animation: brille 1.2s ease-in-out infinite alternate; }
+.maison-de-la-colonne {
+  width: 100%;
+  min-height: 44px;
+  padding: 4px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--couleur-de-la-colonne);
+  color: #fff;
+  font-size: 1rem;
+  overflow-wrap: anywhere;
+}
+.maison-de-la-colonne[aria-disabled="true"] { cursor: default; }
+.maison-de-la-colonne:hover { filter: brightness(1.1); background: var(--couleur-de-la-colonne); }
+.place-de-la-retenue { display: flex; align-items: center; justify-content: center; min-height: 2.5rem; }
+.retenue {
+  display: inline-grid;
+  place-items: center;
+  min-width: 2rem;
+  min-height: 2rem;
+  border: 2px solid var(--couleur-de-la-colonne);
+  border-radius: 50%;
+  background: #fff;
+  font-weight: 800;
+  animation: la-retenue-monte .8s ease-out;
+}
+@keyframes la-retenue-monte { from { transform: translate(60%, 6rem) scale(.6); opacity: 0; } to { transform: none; opacity: 1; } }
+.retenue[data-mouvement="aucun"] { animation: none; transform: none; }
+.chiffres-poses { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; font-size: 1.75rem; font-weight: 800; text-align: center; }
+.chiffre-ecrit { display: block; min-height: 2.25rem; padding-top: 2px; border-top: 3px solid var(--couleur-de-la-colonne); font-size: 1.75rem; font-weight: 800; text-align: center; }
+.resultat-de-l-addition { padding: 4px 18px; border-radius: 16px; background: #fff; font-size: 2rem; font-weight: 800; letter-spacing: .1em; }
+.chiffres-a-poser { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.chiffre-a-poser { font-size: 1.75rem; cursor: grab; }
+.invite-de-pose { padding: 6px 14px; border-radius: 16px; background: rgba(255, 255, 255, .85); font-weight: 700; }
 
 .dictee { display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 100%; }
 .mot-a-ecrire { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 0; padding: 0; list-style: none; max-width: 100%; }
@@ -462,3 +632,31 @@ button.secondaire:hover { background: #fdf3ea; }
 .tableau-de-conjugaison ul { margin: 0; padding: 0; list-style: none; font-size: 1.25rem; line-height: 1.8; }
 .tableau-de-conjugaison li[data-etat="ecrite"] { color: var(--accent-fonce); font-weight: 700; }
 .tableau-de-conjugaison li[data-etat="en-cours"] { background: #fff3c4; border-radius: 8px; }
+
+/* Mes médailles */
+.mes-medailles { display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 100%; }
+.mes-medailles h1, .mes-medailles h2 { margin: 0; overflow-wrap: anywhere; }
+.section-des-medailles { display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 32rem; }
+.pastilles-de-record { display: grid; gap: 8px; width: 100%; margin: 0; padding: 0; list-style: none; }
+.pastille-de-record {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 3px solid var(--accent-fonce);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .9);
+  font-weight: 700;
+  overflow-wrap: anywhere;
+  animation: apparition-d-une-pastille .3s ease-out;
+}
+.valeur-de-la-pastille { flex: none; font-size: 1.5rem; }
+@keyframes apparition-d-une-pastille {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pastille-de-record { animation: none; }
+}

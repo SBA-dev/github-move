@@ -1,8 +1,6 @@
 import type { LigneDuTableauDeConjugaison, QuestionJouee, SegmentDuTexteATrous } from "@domain/apprentissage";
 import type { Exercice } from "@domain/catalogue";
-import { MESSAGE_DE_L_ECOUTE_SANS_SON } from "@domain/apprentissage";
-import { TexteEnSyllabes } from "../../reglages/index.ts";
-import { ChoixDeLaQuestion } from "./ChoixDeLaQuestion.tsx";
+import { QuestionAChoix } from "./QuestionAChoix.tsx";
 import { TableauDeConjugaison } from "./TableauDeConjugaison.tsx";
 import { TexteATrous } from "./TexteATrous.tsx";
 import { TexteDeLecture } from "./TexteDeLecture.tsx";
@@ -50,47 +48,21 @@ export function ExerciceAChoix(props: Props) {
           J'ai écouté
         </button>
       )}
-      {question && !lectureEnAttente && (
-        <button
-          type="button"
-          className="question"
-          data-testid="question"
-          onClick={props.onRelireLaQuestion}
-        >
-          <TexteEnSyllabes texte={question.enonce} />
-        </button>
-      )}
-      {exercice.type === "ecoute" && (
-        <div className="ecoute" data-testid="ecoute">
-          <button type="button" className="action-principale" data-testid="ecouter" onClick={props.onEcouterLeMot}>
-            Écouter
-          </button>
-          {props.sonImpossible && (
-            <p className="ecoute-sans-son" role="status" data-testid="ecoute-sans-son">{MESSAGE_DE_L_ECOUTE_SANS_SON}</p>
-          )}
-          {props.sonImpossible && props.sonCoupe && (
-            <button type="button" data-testid="activer-le-son" onClick={props.onActiverLeSon}>Activer le son</button>
-          )}
-        </div>
-      )}
-      <p className="visuellement-cache" role="status" data-testid="bonne-reponse-annoncee">
-        {question?.bonneReponseMontree && !reussie ? `La bonne réponse est « ${question.choix.possibles()[0]} ».` : ""}
-      </p>
-      {question && choixVisibles && (
-        <>
-          <ChoixDeLaQuestion
-            question={question}
-            reussie={reussie}
-            bulleEclatee={props.bulleEclatee}
-            onChoisir={props.onChoisir}
-          />
-          {question.jeNeSaisPasPermis() && !question.bonneReponseMontree && !reussie && (
-            <button type="button" className="je-ne-sais-pas" data-testid="je-ne-sais-pas" onClick={props.onJeNeSaisPas}>
-              Je ne sais pas
-            </button>
-          )}
-        </>
-      )}
+      <QuestionAChoix
+        question={question}
+        avecEcoute={exercice.type === "ecoute"}
+        questionMasquee={lectureEnAttente}
+        choixVisibles={choixVisibles}
+        reussie={reussie}
+        bulleEclatee={props.bulleEclatee}
+        sonImpossible={props.sonImpossible}
+        sonCoupe={props.sonCoupe}
+        onChoisir={props.onChoisir}
+        onRelireLaQuestion={props.onRelireLaQuestion}
+        onJeNeSaisPas={props.onJeNeSaisPas}
+        onEcouterLeMot={props.onEcouterLeMot}
+        onActiverLeSon={props.onActiverLeSon}
+      />
     </>
   );
 }

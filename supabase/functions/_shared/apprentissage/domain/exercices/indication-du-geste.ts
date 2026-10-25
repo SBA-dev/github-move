@@ -6,6 +6,7 @@ export function indicationDuGeste(type: Exercice["type"]): string | undefined {
     case "classer":
       return "Fais glisser chaque étiquette, ou touche-la puis touche une maison.";
     case "ordre":
+    case "memoriser":
       return "Touche d'abord celle qui vient en premier.";
     default:
       return undefined;

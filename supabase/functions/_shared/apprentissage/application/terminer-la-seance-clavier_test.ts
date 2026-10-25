@@ -4,6 +4,7 @@ import type { SeanceTermineeAEnregistrer } from "../domain/seance-terminee-a-enr
 import { ecrire, leconDeDicteeDuChat, seanceDeDictee } from "../test_utils/lecons-de-dictee.ts";
 import { LeconsDuCatalogueEnMemoire } from "../test_utils/lecons-du-catalogue-en-memoire.ts";
 import { RattachementsEnMemoire } from "../test_utils/rattachements-en-memoire.ts";
+import { RecordsDeFluenceEnMemoire } from "../test_utils/records-de-fluence-en-memoire.ts";
 import { ResultatsDesLeconsEnMemoire } from "../test_utils/resultats-des-lecons-en-memoire.ts";
 import { SeancesTermineesEnMemoire } from "../test_utils/seances-terminees-en-memoire.ts";
 import { TerminerLaSeance } from "./terminer-la-seance.ts";
@@ -23,6 +24,7 @@ function terminer() {
     new LeconsDuCatalogueEnMemoire(leconDeDicteeDuChat()),
     seances,
     resultats,
+    new RecordsDeFluenceEnMemoire(),
   );
   return { seances, terminer };
 }

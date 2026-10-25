@@ -5,21 +5,19 @@ Fonctionnalité: Lecture à voix haute par le personnage guide
   Je veux que le personnage guide me lise les consignes à voix haute
   Afin de pouvoir jouer seul
 
-  Jusqu'au lot 3, les consignes s'affichent sur la page de démonstration réservée aux tests.
+  La consigne est celle d'un exercice d'une leçon de test, jouée dans une vraie séance : elle s'affiche dans la bulle
+  du personnage guide et elle est lue au début de l'exercice. Les scénarios qui regardent ce qui reste affiché ou
+  ce qui est réécouté une fois la lecture finie portent sur une question de test, qui reste posée jusqu'à la bonne
+  réponse (#17).
 
   Règle: Le personnage guide lit la consigne à voix haute, une seule lecture à la fois
 
+    @issue-58
     Scénario: La consigne est lue à voix haute dès qu'elle s'affiche
       Étant donné que Léa a choisi l'univers animaux
       Quand la consigne « Trouve le mot qui commence par le son [a]. » s'affiche
       Alors Léa entend Noisette lire « Trouve le mot qui commence par le son [a]. »
-      Et la consigne reste affichée à l'écran
-
-    Scénario: L'enfant peut réécouter la consigne
-      Étant donné que Léa a choisi l'univers animaux
-      Et que Noisette a fini de lire la consigne « Range les nombres du plus petit au plus grand. »
-      Quand Léa demande à réécouter la consigne
-      Alors Léa entend de nouveau Noisette lire « Range les nombres du plus petit au plus grand. »
+      Et Léa voit la consigne « Trouve le mot qui commence par le son [a]. »
 
     Scénario: Le mot prononcé est surligné pendant la lecture
       Étant donné que Léa a choisi l'univers animaux
@@ -57,15 +55,11 @@ Fonctionnalité: Lecture à voix haute par le personnage guide
       Alors Léa entend Noisette lire « Le chat », puis un court silence, puis « du lait. »
       Mais Léa n'entend jamais lire les soulignés
 
-    Scénario: La mise en forme de la consigne n'est jamais prononcée
-      Étant donné que Léa a choisi l'univers animaux
-      Et que la consigne « Trouve le mot chat dans la phrase. » montre le mot « chat » en gras
-      Quand cette consigne s'affiche
-      Alors Léa entend Noisette lire « Trouve le mot chat dans la phrase. »
-
+    @issue-58
     Scénario: Un texte sans rien à dire n'est pas lu
-      Étant donné que Léa a choisi l'univers animaux
-      Quand une consigne qui ne contient que « ___ » s'affiche
+      Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
+      Et qu'une question de test « ___ » a les choix « 2 », « 3 » et « 4 », de réponse « 2 »
+      Quand la question « ___ » s'affiche
       Alors Léa n'entend rien
       Et aucun message d'erreur n'apparaît
 
@@ -101,12 +95,6 @@ Fonctionnalité: Lecture à voix haute par le personnage guide
       Quand la consigne « Écoute bien. » s'affiche
       Alors Léa entend Noisette lire la consigne
 
-    Scénario: Une consigne en anglais est lue avec une voix anglaise
-      Étant donné que l'appareil a une voix française et une voix anglaise
-      Et que Léa fait une leçon d'anglais
-      Quand la consigne « Listen and repeat: cat. » s'affiche
-      Alors Léa entend « Listen and repeat: cat. » lu avec la voix anglaise
-
   Règle: En Muet, rien n'est lu, et ce choix est mémorisé sur l'appareil
 
     Scénario: Le son est activé au premier lancement
@@ -114,10 +102,13 @@ Fonctionnalité: Lecture à voix haute par le personnage guide
       Quand j'ouvre Savanturier
       Alors le son est activé
 
-    Scénario: En Muet, la consigne s'affiche sans être lue
+    @issue-58
+    Scénario: En Muet, la question s'affiche sans être lue
       Étant donné que la tablette est en Muet
-      Quand la consigne « Écoute bien. » s'affiche
-      Alors Léa voit la consigne « Écoute bien. »
+      Et que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
+      Et que Léa joue la question de test « Combien font 3 + 4 ? »
+      Quand la question « Combien font 3 + 4 ? » s'affiche
+      Alors Léa voit la question « Combien font 3 + 4 ? »
       Mais Léa n'entend rien
 
     Scénario: Passer en Muet coupe la lecture en cours
@@ -138,12 +129,14 @@ Fonctionnalité: Lecture à voix haute par le personnage guide
 
   Règle: Sans voix, l'enfant peut quand même jouer
 
+    @issue-58
     Scénario: Quand la voix est bloquée, l'enfant est prévenu sans être bloqué
-      Étant donné que Léa a choisi l'univers animaux
+      Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
       Et que le navigateur bloque la voix
-      Quand la consigne « Écoute bien. » s'affiche
+      Et que Léa joue la question de test « Combien font 3 + 4 ? »
+      Quand la question « Combien font 3 + 4 ? » s'affiche
       Alors Léa voit le message « La voix de Noisette est bloquée par ce navigateur. Touche « Réécouter » pour réessayer, ou lis avec un adulte. »
-      Et Léa voit la consigne « Écoute bien. »
+      Et Léa voit la question « Combien font 3 + 4 ? »
 
     Scénario: Le message de voix bloquée n'apparaît qu'une fois
       Étant donné que le navigateur bloque la voix
@@ -151,15 +144,20 @@ Fonctionnalité: Lecture à voix haute par le personnage guide
       Quand la consigne suivante s'affiche
       Alors le message de voix bloquée n'apparaît pas de nouveau
 
+    @issue-58
     Scénario: Réécouter permet de réessayer quand la voix était bloquée
-      Étant donné que Léa a choisi l'univers animaux
-      Et que la voix a été bloquée pendant la lecture de la consigne « Écoute bien. »
+      Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
+      Et que Léa joue la question de test « Combien font 3 + 4 ? »
+      Et que la voix a été bloquée pendant la lecture de la question « Combien font 3 + 4 ? »
       Et que le navigateur ne bloque plus la voix
-      Quand Léa demande à réécouter la consigne
-      Alors Léa entend Noisette lire « Écoute bien. »
+      Quand Léa demande à réécouter la question
+      Alors Léa entend Noisette lire « Combien font 3 plus 4 ? »
 
+    @issue-58
     Scénario: Sur un navigateur qui ne sait pas lire à voix haute, l'enfant joue quand même
       Étant donné que le navigateur ne sait pas lire à voix haute
-      Quand la consigne « Écoute bien. » s'affiche
-      Alors Léa voit la consigne « Écoute bien. »
+      Et que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
+      Et que Léa joue la question de test « Combien font 3 + 4 ? »
+      Quand Léa répond « 7 »
+      Alors la question « Combien font 3 + 4 ? » est réussie
       Et aucun message d'erreur n'apparaît

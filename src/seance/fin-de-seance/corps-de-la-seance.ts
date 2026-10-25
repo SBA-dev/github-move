@@ -1,8 +1,9 @@
 import type { ChoixDeSeance, ReponseDonnee, SeanceTermineeAEnregistrer } from "@domain/apprentissage";
 
-type ReponseEnvoyee =
+export type ReponseEnvoyee =
   | { readonly choix: string }
   | { readonly placement: { readonly etiquette: string; readonly groupe?: string } }
+  | { readonly nombre: number }
   | { readonly motEcrit: readonly string[] }
   | { readonly jeNeSaisPas: true };
 
@@ -17,12 +18,14 @@ export type CorpsDeLaSeance = {
   readonly termineeLe: string;
 };
 
-function enReponseEnvoyee(reponse: ReponseDonnee): ReponseEnvoyee {
+export function enReponseEnvoyee(reponse: ReponseDonnee): ReponseEnvoyee {
   switch (reponse.genre) {
     case "choix":
       return { choix: reponse.texte };
     case "placement":
       return { placement: reponse.groupe === undefined ? { etiquette: reponse.etiquette } : { etiquette: reponse.etiquette, groupe: reponse.groupe } };
+    case "nombre":
+      return { nombre: reponse.valeur };
     case "motEcrit":
       return { motEcrit: reponse.lettres };
     case "jeNeSaisPas":

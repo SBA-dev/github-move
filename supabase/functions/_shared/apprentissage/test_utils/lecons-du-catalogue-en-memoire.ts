@@ -8,6 +8,10 @@ export class LeconsDuCatalogueEnMemoire implements LeconsDuCatalogue {
     this.lecons = new Map(lecons.map((lecon) => [lecon.id, lecon]));
   }
 
+  toutes(): Promise<readonly Lecon[]> {
+    return Promise.resolve([...this.lecons.values()]);
+  }
+
   parId(id: string): Promise<Lecon | null> {
     return Promise.resolve(this.lecons.get(id) ?? null);
   }

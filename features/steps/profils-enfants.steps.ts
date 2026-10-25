@@ -1,7 +1,7 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 import { ouvrirUneSessionSansEmail } from "../support/connexion-sans-email.ts";
 import type { Appareil, Famille } from "../support/famille.ts";
-import { appelerUneFonctionDeFamille, ecrireEnRestUnProfil, lireEnRestLesProfilsVisibles, type ReponseDeLaFonction } from "../support/profils-api.ts";
+import { appelerUneFonctionDeFamille, lireEnRestLeNiveauDuProfil, ecrireEnRestUnProfil, lireEnRestLesProfilsVisibles, type ReponseDeLaFonction } from "../support/profils-api.ts";
 import { rattacherUnParent } from "../support/supabase-test.ts";
 import { Given, Then, When } from "./fixtures.ts";
 import { cleDe, preparerProfil } from "./univers.steps.ts";
@@ -110,12 +110,22 @@ export async function pageCourante(famille: Famille): Promise<Page> {
   return famille.page(etat(famille).appareil);
 }
 
+/** La page où le parent travaille, ouverte sur l'espace parent (qu'une création de profil ou un test de départ proposé a pu fermer). */
+export async function pageDansLEspaceParent(famille: Famille): Promise<Page> {
+  const appareil = etat(famille).appareil;
+  await famille.allerDansLEspaceParent(appareil);
+  return famille.page(appareil);
+}
+
 export function formulaireDeCreation(page: Page): Locator {
   return page.getByRole("form", { name: "Ajouter un enfant" });
 }
 
 export async function attendreLeRetourDuFormulaire(page: Page): Promise<void> {
-  const retour = page.getByRole("status").filter({ hasText: /est (créé|enregistré)/ }).or(page.getByRole("alert"));
+  // Story #27 : après une création, l'espace parent se ferme sur la proposition du test de départ (ou sur l'accueil de l'enfant
+  // quand la bibliothèque n'est pas chargée).
+  const retour = page.getByRole("status").filter({ hasText: /est (créé|enregistré)/ }).or(page.getByRole("alert"))
+    .or(page.getByTestId("proposition-du-test-de-depart")).or(page.getByRole("region", { name: /^Accueil de / }));
   // Le retour attend la réponse de l'Edge Function (démarrage à froid possible) : on attend l'élément sans le délai court des assertions.
   await retour.first().waitFor();
 }
@@ -146,6 +156,11 @@ function quiJoue(page: Page): Locator {
 export async function ouvrirQuiJoue(page: Page): Promise<Locator> {
   const quitter = page.getByRole("button", { name: "Quitter l'espace parent" });
   if (page.url() === "about:blank") await page.goto("/");
+  // Story #27 : depuis le test de départ, on revient à « Qui joue ? » dans l'application, sans recharger la page (le test fait
+  // pendant l'utilisation et le réseau coupé en dépendent).
+  if (new URL(page.url()).pathname === "/test-de-depart") {
+    await page.getByRole("banner").getByRole("button", { name: "Savanturier" }).click();
+  }
   const dejaLa = await quiJoue(page).or(quitter).waitFor({ timeout: 5_000 }).then(() => true, () => false);
   if (!dejaLa) await page.goto("/");
   if (await quitter.isVisible()) await quitter.click();
@@ -196,7 +211,7 @@ Given(/^Paul est rattaché à (\d+) profils enfants$/, async ({ famille }, nombr
 });
 
 // Le profil de Léa existe pour la famille de Paul ; la porte de test du profil préparé permet de la faire jouer
-// sur la page de démonstration (scénarios de #5 et #6).
+// sur l'accueil de l'enfant (scénarios de #5 et #6).
 Given(/^Léa a un profil enfant de niveau (\S+)$/, async ({ famille, page, monde }, niveau: string) => {
   await assurerLeProfil(famille, "Paul", { prenom: "Léa", niveau });
   const profil = { prenom: "Léa", niveau, univers: cleDe(DETAIL_PAR_DEFAUT) };
@@ -234,14 +249,25 @@ Given(
   },
 );
 
+// Story #25 : le changement de niveau fait perdre le profil en cours (rechargement de la page). L'enfant se choisit de nouveau
+// dans « Qui joue ? » une fois la liste à jour, pour que la séance suivante se joue avec son vrai profil et son nouveau niveau.
+async function rechoisirLEnfantApresLeChangement(famille: Famille, page: Page, prenom: string): Promise<void> {
+  const profil = profilDe(famille, prenom);
+  const niveau = await lireEnRestLeNiveauDuProfil(await jetonDe(famille, profil.parent), profil.id);
+  const quiJoue = await ouvrirQuiJoue(page);
+  await expect(quiJoue.getByTestId("profil-a-choisir").filter({ hasText: prenom }).first()).toContainText(`${niveau} ·`);
+  await choisirSonProfil(page, prenom);
+}
+
 Given(
   new RegExp(`^Paul a changé sur la tablette le niveau du profil enfant de (\\S+) en ${NIVEAUX}$`),
-  async ({ famille }, prenom: string, niveau: string) => {
+  async ({ famille, $tags }, prenom: string, niveau: string) => {
     await assurerLeProfil(famille, "Paul", { prenom, niveau: NIVEAU_PAR_DEFAUT });
     const page = await connecterSiBesoin(famille, "tablette", "Paul");
     await page.goto("/");
     await famille.allerDansLEspaceParent("tablette");
     await modifierParLInterface(page, prenom, { niveau });
+    if ($tags.includes("@issue-25")) await rechoisirLEnfantApresLeChangement(famille, page, prenom);
   },
 );
 
@@ -468,7 +494,7 @@ Then(/^Paul est informé que le prénom de l'enfant est obligatoire$/, async ({ 
 });
 
 Then(/^Paul voit le profil enfant de (.+) dans l'espace parent$/, async ({ famille }, prenom: string) => {
-  const page = await pageCourante(famille);
+  const page = await pageDansLEspaceParent(famille);
   await expect(page.getByTestId("profil-enfant").filter({ hasText: prenom })).toHaveCount(1);
   await verifierQueLaBaseRefuseLesEcrituresIncorrectes(famille, page, prenom);
 });

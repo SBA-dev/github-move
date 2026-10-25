@@ -1,0 +1,155 @@
+import type { Lecon, Niveau } from "../../catalogue/domain/index.ts";
+import { LeconIntrouvable, TestDeDepartDejaFini, TestDeDepartNonFini } from "./erreurs.ts";
+import type { GenerateurId } from "./generateur-id.ts";
+import type { PlanDuTestDeDepart, QuestionPrevue } from "./plan-du-test-de-depart.ts";
+import type { AideDonnee } from "./question-jouee.ts";
+import { questionDuTestDeDepart } from "./question-du-test-de-depart.ts";
+import { QuestionsFaussesDeSuite } from "./questions-fausses-de-suite.ts";
+import type { QuestionPosee } from "./question-posee.ts";
+import type { ReponseEnNombre, ReponseParChoix, ResultatDeReponse } from "./reponse.ts";
+import type { TestDeDepartTermineAEnregistrer } from "./test-de-depart-termine-a-enregistrer.ts";
+import { TestDeDepartId } from "./test-de-depart-id.ts";
+import type { Tireur } from "./tireur.ts";
+import { enonceDUneAddition } from "./tirage-d-additions.ts";
+import { enonceTire } from "./tirage-d-operations.ts";
+
+export type TestDeDepartTermine = Readonly<{
+  type: "TestDeDepartTermine";
+  test: string;
+  enfant: string;
+  termineeLe: Date;
+  questions: readonly Readonly<{ lecon: string; juste: boolean }>[];
+  arrete: boolean;
+}>;
+
+export function testDeDepartTermine(
+  { test, enfant, termineeLe, questions, arrete }: Omit<TestDeDepartTermine, "type">,
+): TestDeDepartTermine {
+  return { type: "TestDeDepartTermine", test, enfant, termineeLe, questions, arrete };
+}
+
+type QuestionDuTestDeDepart = Readonly<{ prevue: QuestionPrevue; question: QuestionPosee }>;
+
+export class TestDeDepart {
+  private rang = 0;
+  private questionsFaussesDeSuite = QuestionsFaussesDeSuite.aucune();
+  private termineeLe: Date | undefined;
+
+  private constructor(
+    readonly id: TestDeDepartId,
+    readonly enfant: string,
+    private readonly questions: readonly QuestionDuTestDeDepart[],
+    private readonly tirages: readonly (readonly (readonly string[])[])[],
+  ) {}
+
+  static commencer(
+    { generateurId, enfant, niveau, lecons, plan, tireur }: {
+      readonly generateurId: GenerateurId;
+      readonly enfant: string;
+      readonly niveau: Niveau;
+      readonly lecons: readonly Lecon[];
+      readonly plan: PlanDuTestDeDepart;
+      readonly tireur: Tireur;
+    },
+  ): TestDeDepart {
+    const tirages: string[][][] = [];
+    const questions = plan.map((prevue): QuestionDuTestDeDepart => {
+      const tiragesDeLaQuestion: string[][] = [];
+      tirages.push(tiragesDeLaQuestion);
+      const lecon = lecons.find(({ id }) => id === prevue.leconId);
+      if (lecon === undefined) throw new LeconIntrouvable(prevue.leconId);
+      const question = questionDuTestDeDepart(lecon, prevue, tireurQuiNote(tireur, tiragesDeLaQuestion), niveau);
+      if (question.tirage().length > 0) tiragesDeLaQuestion.push(question.tirage());
+      return { prevue, question };
+    });
+    return new TestDeDepart(TestDeDepartId.de(generateurId.nouveau()), enfant, questions, tirages);
+  }
+
+  questionEnCours(): QuestionPosee | undefined {
+    if (this.estArrete()) return undefined;
+    return this.questions[this.rang]?.question;
+  }
+
+  repondre(reponse: ReponseParChoix | ReponseEnNombre): ResultatDeReponse {
+    const question = this.questionAPoser();
+    const resultat = question.repondre(reponse);
+    this.passerALaSuivanteSiReussie(question);
+    return resultat;
+  }
+
+  direJeNeSaisPas(): AideDonnee {
+    return this.questionAPoser().direJeNeSaisPas();
+  }
+
+  estArrete(): boolean {
+    return this.questionsFaussesDeSuite.arreteLeTest();
+  }
+
+  estFini(): boolean {
+    return this.estArrete() || this.rang >= this.questions.length;
+  }
+
+  terminer(maintenant: Date): TestDeDepartTermine {
+    if (!this.estFini()) throw new TestDeDepartNonFini();
+    this.termineeLe = maintenant;
+    return testDeDepartTermine({
+      test: this.id.valeur,
+      enfant: this.enfant,
+      termineeLe: maintenant,
+      questions: this.questions.slice(0, this.rang).map(({ prevue, question }) => ({
+        lecon: prevue.leconId,
+        juste: question.erreurs === 0,
+      })),
+      arrete: this.estArrete(),
+    });
+  }
+
+  aEteJuste(): boolean {
+    return this.questionsPosees().every(({ erreurs }) => erreurs === 0);
+  }
+
+  aEnregistrer(): TestDeDepartTermineAEnregistrer {
+    if (!this.termineeLe) throw new TestDeDepartNonFini();
+    return {
+      test: this.id.valeur,
+      enfant: this.enfant,
+      questions: this.questions.map(({ prevue }) => prevue),
+      tirages: this.tirages,
+      reponses: this.questionsPosees().map((question) => question.reponses()),
+      termineeLe: this.termineeLe,
+    };
+  }
+
+  private questionsPosees(): QuestionPosee[] {
+    return this.questions.slice(0, this.rang).map(({ question }) => question);
+  }
+
+  private questionAPoser(): QuestionPosee {
+    const question = this.questionEnCours();
+    if (!question) throw new TestDeDepartDejaFini();
+    return question;
+  }
+
+  private passerALaSuivanteSiReussie(question: QuestionPosee): void {
+    if (!question.reussie) return;
+    this.rang++;
+    this.questionsFaussesDeSuite = this.questionsFaussesDeSuite.apres(question.erreurs === 0);
+  }
+}
+
+/** Les opérations et additions tirées par un générateur sont notées dans l'ordre où le tireur les rend. */
+function tireurQuiNote(tireur: Tireur, tirages: string[][]): Tireur {
+  return {
+    ...tireur,
+    operations: (generateur) => {
+      const operations = tireur.operations(generateur);
+      tirages.push(operations.map(enonceTire));
+      return operations;
+    },
+    additions: (generateur) => {
+      const additions = tireur.additions(generateur);
+      tirages.push(additions.map(enonceDUneAddition));
+      return additions;
+    },
+  };
+}
