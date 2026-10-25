@@ -7,6 +7,7 @@ Le PO a retenu toutes les recommandations des questions 29.1 à 29.24 (« OK #29
 
 > Cadrage anticipé (décision 0020, point 6). Rien n'est codé avant le merge de #26 et #28. Les décisions du PO sur #25, #26, #27 et #28 ne sont pas reposées.
 > Les scénarios qui dépendent d'une décision portent un commentaire `# Réponse 29.n`. Aucun scénario ne porte plus `@a-valider` : la question 29.26 est tranchée (« 29.26 OK »). Ceux qui attendent une story pas encore mergée portent `@depend-de-26` ou `@depend-de-28`.
+> 2026-10-25 : #26 est mergée dans `main`. Les tags `@depend-de-26` sont retirés de `features/29-aujourd-hui.feature` (6 scénarios et le cas « Toutes les leçons » du plan du dock, réuni au bloc d'exemples des deux autres écrans) ; seuls restent les 7 `@depend-de-28`. Les mentions `@depend-de-26` ci-dessous (tableau des règles, total, décisions) datent du cadrage.
 
 ## Objectif
 
@@ -178,6 +179,18 @@ Ce cadrage ne modifie aucun fichier d'une autre story. Les réponses 29.7, 29.8,
 - Glossaire : la ligne « Leçon suivante » (« ni vers une autre matière avant #29 ») reçoit une note (ajout seulement), qui mentionne aussi le bouton « Toutes les leçons » quand aucune leçon suivante n'est proposée (29.25).
 
 Les scénarios de #11 (« Léa choisit son profil enfant et son personnage guide la salue »), #12 (« Léa voit son accueil en mode dys ») et #6 (le nom de l'application ramène à l'accueil) restent vrais sans adaptation.
+
+## Scénarios réécrits dans les autres stories
+
+Action 2, faite le 2026-10-25 après le merge de #26 (réponses 29.8, 29.24 et 29.25). Étapes existantes reprises mot pour mot (« la fin de la séance annonce « Ensuite : … » », « la leçon suivante ouvre la page de la leçon « … » ») ; chaque scénario garde le tag de sa story et reçoit `@issue-29`, avec un commentaire `# Réponse 29.n (#29)`. Aucun ne garde « aucune leçon suivante n'est proposée » : une leçon du jour existe dans chaque cas.
+
+| Fichier | Ancien titre | Nouveau titre | Leçon suivante annoncée |
+|---|---|---|---|
+| `features/24-etoiles-et-fin-de-seance.feature` | Après la dernière leçon d'une matière, aucune leçon suivante n'est proposée | Après la dernière leçon d'une matière, la fin de la séance propose la leçon du jour | « Les sons ou, on, an » (première leçon de français du CP de la vraie bibliothèque, ordre 5) |
+| `features/25-parcours-par-matiere.feature` | Après la dernière leçon du parcours, aucune leçon d'une autre matière n'est proposée | Après la dernière leçon du parcours de français, la fin de la séance propose la leçon du jour en maths | « Les nombres jusqu'à 100 » |
+| `features/25-parcours-par-matiere.feature` | Après une leçon réussie d'une classe au-dessus, aucune leçon suivante n'est proposée (N10) | Après une leçon réussie d'une classe au-dessus, la fin de la séance propose la leçon du jour de sa classe | « Les nombres jusqu'à 100 » |
+| `features/26-lecons-des-classes-d-avant.feature` | Après une leçon des classes d'avant, aucune leçon suivante n'est proposée (26.8) | Après une leçon des classes d'avant, la fin de la séance propose la leçon du jour de sa classe | « Les nombres jusqu'à 100 » |
+| `features/26-lecons-des-classes-d-avant.feature` | Après une leçon de la classe juste au-dessus, aucune leçon suivante n'est proposée (26.19, 29.24) | Après une leçon de la classe juste au-dessus, la fin de la séance propose la leçon du jour de sa classe | « Le son in » (dernière séance en maths, donc le français) |
 
 ## Hors périmètre
 

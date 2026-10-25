@@ -117,12 +117,14 @@ Fonctionnalité: Leçons des classes d'avant
       Alors le parcours indique « 0 leçon réussie sur 3 »
 
     # Réponse 26.8
-    Scénario: Après une leçon des classes d'avant, aucune leçon suivante n'est proposée
+    # Réponse 29.8 (#29)
+    @issue-29
+    Scénario: Après une leçon des classes d'avant, la fin de la séance propose la leçon du jour de sa classe
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa joue la séance complète de la leçon « Les voyelles »
       Quand Léa réussit la dernière question de la séance
-      Alors la fin de la séance propose « Accueil » et « Rejouer »
-      Mais aucune leçon suivante n'est proposée
+      Alors la fin de la séance annonce « Ensuite : Les nombres jusqu'à 100 »
+      Et la leçon suivante ouvre la page de la leçon « Les nombres jusqu'à 100 »
 
   Règle: Une leçon des classes d'avant montre ce que l'enfant y a réussi, même après un changement de classe ou le test de départ
 
@@ -292,15 +294,17 @@ Fonctionnalité: Leçons des classes d'avant
       Alors Léa voit la page de la leçon « Les règles de la classe »
 
     # Réponse 26.19
-    Scénario: Après une leçon de la classe juste au-dessus, aucune leçon suivante n'est proposée
+    # Réponse 29.24 (#29)
+    @issue-29
+    Scénario: Après une leçon de la classe juste au-dessus, la fin de la séance propose la leçon du jour de sa classe
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a pour meilleures étoiles :
         | leçon                   | étoiles |
         | Les nombres jusqu'à 100 | 1       |
       Et que Léa joue la séance complète de la leçon « Les tables de 2 »
       Quand Léa réussit la dernière question de la séance
-      Alors la fin de la séance propose « Accueil » et « Rejouer »
-      Mais aucune leçon suivante n'est proposée
+      Alors la fin de la séance annonce « Ensuite : Le son in »
+      Et la leçon suivante ouvre la page de la leçon « Le son in »
 
     # Réponse 26.19
     Scénario: Une leçon de la classe juste au-dessus non réussie n'apparaît pas dans « Mon parcours »

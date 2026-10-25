@@ -11,7 +11,7 @@ Fonctionnalité: Écran « Aujourd'hui » : l'accueil de l'enfant
   puis répondu à 29.25 : « Si aucune autre leçon est proposé, on ajoute un bouton pour revenir aux autres cours »,
   et à 29.26 : « 29.26 OK » (bouton « Toutes les leçons », qui ouvre « Toutes les leçons », dès qu'il n'y a pas de leçon suivante).
   Un scénario qui en dépend porte un commentaire « Réponse 29.n » (décisions dans docs/stories/29/acceptance.md).
-  « @depend-de-26 » et « @depend-de-28 » : le scénario attend la story #26 ou #28, pas encore mergée.
+  « @depend-de-28 » : le scénario attend la story #28, pas encore mergée (#26 est mergée depuis le 2026-10-25).
 
   Pour ces scénarios, la bibliothèque servie au navigateur est remplacée par la bibliothèque de test de l'accueil
   (identifiants préfixés « e2e-29- », leçons servies dans le désordre ; chaque leçon a un exercice bulles de deux
@@ -198,7 +198,6 @@ Fonctionnalité: Écran « Aujourd'hui » : l'accueil de l'enfant
       Alors la fin de la séance annonce « Ensuite : Les nombres jusqu'à 100 »
 
     # Réponse 29.8
-    @depend-de-26
     Scénario: Après une leçon des classes d'avant, la fin de la séance ramène l'enfant à la leçon du jour de sa classe
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa joue la séance complète de la leçon « Les voyelles »
@@ -216,7 +215,6 @@ Fonctionnalité: Écran « Aujourd'hui » : l'accueil de l'enfant
 
     # Réponses 29.8 et 29.25
     # Réponse 29.26
-    @depend-de-26
     Scénario: Quand la séance termine tout le parcours, la fin de la séance propose « Toutes les leçons » à la place d'une leçon suivante
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a réussi 3 leçons de français du CE1
@@ -233,7 +231,6 @@ Fonctionnalité: Écran « Aujourd'hui » : l'accueil de l'enfant
 
     # Réponse 29.25
     # Réponse 29.26
-    @depend-de-26
     Scénario: Sans aucune leçon pour sa classe, après une leçon des classes d'avant, la fin de la séance propose « Toutes les leçons »
       Étant donné que Léa a un profil enfant préparé de niveau CM2 dans l'univers « Animaux de la forêt »
       Et que Léa joue la séance complète de la leçon « Le futur »
@@ -243,7 +240,6 @@ Fonctionnalité: Écran « Aujourd'hui » : l'accueil de l'enfant
 
     # Réponse 29.25
     # Réponse 29.26
-    @depend-de-26
     Scénario: Le bouton « Toutes les leçons » de la fin de la séance ouvre « Toutes les leçons »
       Étant donné que Léa a un profil enfant préparé de niveau CM2 dans l'univers « Animaux de la forêt »
       Et que Léa joue la séance complète de la leçon « Le futur »
@@ -253,7 +249,6 @@ Fonctionnalité: Écran « Aujourd'hui » : l'accueil de l'enfant
 
     # Réponses 29.7 e et 29.25
     # Réponse 29.26
-    @depend-de-26
     Scénario: Depuis « Toutes les leçons » ouvert en fin de séance, le retour ramène à l'accueil de l'enfant
       Étant donné que Léa a un profil enfant préparé de niveau CM2 dans l'univers « Animaux de la forêt »
       Et que Léa a choisi « Toutes les leçons » à la fin de la séance de la leçon « Le futur »
@@ -363,7 +358,6 @@ Fonctionnalité: Écran « Aujourd'hui » : l'accueil de l'enfant
       Alors l'objectif du jour de Léa indique « 1 sur 2 »
 
     # Réponse 29.2 c
-    @depend-de-26
     Scénario: Une leçon des classes d'avant terminée compte dans l'objectif du jour
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a terminé une séance de la leçon « Les voyelles » avec 1 étoile
@@ -460,13 +454,9 @@ Fonctionnalité: Écran « Aujourd'hui » : l'accueil de l'enfant
       Alors l'écran « <écran> » s'affiche, avec le bouton « <écran> » du dock marqué comme l'écran en cours
 
       Exemples:
-        | écran          |
-        | Mon parcours   |
-        | Mes médailles  |
-
-      @depend-de-26
-      Exemples:
         | écran              |
+        | Mon parcours       |
+        | Mes médailles      |
         | Toutes les leçons  |
 
     # Réponse 29.7 a et e
