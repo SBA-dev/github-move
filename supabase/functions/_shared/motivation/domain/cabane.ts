@@ -67,3 +67,18 @@ export function cabaneDe(total: number): EtatDeLaCabane {
     complete: prochain === undefined,
   };
 }
+
+export function objetRecuParLaSeance(
+  meilleuresAvant: MeilleuresEtoilesDuProfil,
+  lecon: string,
+  etoilesDeLaSeance: number | undefined,
+): ObjetDeLaCabane | undefined {
+  if (etoilesDeLaSeance === undefined) return undefined;
+  verifierNombreDEtoiles(etoilesDeLaSeance);
+  const meilleurAvant = meilleuresAvant.get(lecon) ?? 0;
+  const totalAvant = totalDesEtoiles(meilleuresAvant);
+  const totalApres = totalAvant - meilleurAvant + Math.max(meilleurAvant, etoilesDeLaSeance);
+  const objetsAvant = cabaneDe(totalAvant).objetsRecus;
+  const objetsApres = cabaneDe(totalApres).objetsRecus;
+  return objetsApres.length > objetsAvant.length ? objetsApres.at(-1) : undefined;
+}

@@ -60,6 +60,7 @@ export {
   type MeilleuresEtoilesDuProfil,
   NombreDEtoilesInvalide,
   type ObjetDeLaCabane,
+  objetRecuParLaSeance,
   type PalierDeLaCabane,
   PALIERS_DE_LA_CABANE,
   totalDesEtoiles,
