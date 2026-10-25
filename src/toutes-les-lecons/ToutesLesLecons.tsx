@@ -2,6 +2,7 @@ import { type ChangeEvent, useId } from "react";
 import { type ChoixDuFiltre, choixDuFiltre, type EntreesDuParcours, toutesLesLecons } from "@domain/apprentissage";
 import type { CodeDeMatiere } from "@domain/catalogue";
 import type { ProfilEnCours } from "@domain/famille";
+import { useLeconsPersonnellesDuProfil } from "../accompagnement/useLeconsPersonnellesDuProfil.ts";
 import {
   AUCUNE_LECON_POUR_LA_CLASSE,
   BoutonDeLecon,
@@ -14,7 +15,9 @@ import {
 import type { ChoixEnCours } from "./choix-de-toutes-les-lecons.ts";
 import {
   annonceDeLaLeconDeToutesLesLecons,
+  annonceDeLaLeconPourToi,
   AUCUNE_LECON_POUR_CE_CHOIX,
+  POUR_TOI,
   TOUS_LES_NIVEAUX,
   TOUTES_LES_MATIERES,
 } from "./textes-de-toutes-les-lecons.ts";
@@ -27,7 +30,9 @@ type Props = {
 
 /** L'écran « Toutes les leçons » : la classe de l'enfant et ce qu'il peut voir au-dessus, puis les classes d'avant. Il n'affiche que ce que le domaine calcule. */
 export function ToutesLesLecons({ profil, choix, onOuvrirLaLecon }: Props) {
-  const lectures = useLecturesDuParcours(profil.id);
+  const lecturesDuParcours = useLecturesDuParcours(profil.id);
+  const leconsPersonnelles = useLeconsPersonnellesDuProfil(profil.id);
+  const lectures = lecturesDuParcours && leconsPersonnelles ? { ...lecturesDuParcours, leconsPersonnelles } : undefined;
   const niveau = niveauDuProfil(profil.niveau);
   return (
     <section className="toutes-les-lecons" aria-labelledby="titre-de-toutes-les-lecons">
@@ -48,7 +53,7 @@ function LeconsDuNiveau({ entrees, choix, onOuvrirLaLecon }: PropsDuNiveau) {
   const proposes = choixDuFiltre(entrees);
   const matiere = proposes.matieres.find(({ code }) => code === choisi.matiere);
   const niveau = proposes.niveaux.find(({ valeur }) => valeur === choisi.niveau);
-  const { lecons, leconsDesClassesDAvant, nombreDeLecons: nombre, nombreDansLesClassesDAvant: nombreDansLaSection } =
+  const { pourToi, lecons, leconsDesClassesDAvant, nombreDeLecons: nombre, nombreDansLesClassesDAvant: nombreDansLaSection } =
     toutesLesLecons(entrees, { matiere, niveau });
   const choisirLeNiveau = (valeur: string | undefined) => {
     choix.choisirLeNiveau(valeur);
@@ -67,8 +72,20 @@ function LeconsDuNiveau({ entrees, choix, onOuvrirLaLecon }: PropsDuNiveau) {
       <p role="status" className="nombre-de-lecons" data-testid="nombre-de-lecons">
         {nombre === 0 ? AUCUNE_LECON_POUR_CE_CHOIX : nombreDeLecons(nombre)}
       </p>
-      {lecons.length > 0 && (
+      {pourToi.length + lecons.length > 0 && (
         <ul className="lecons-du-parcours">
+          {pourToi.map((lecon) => (
+            <li key={lecon.lecon}>
+              <BoutonDeLecon
+                titre={lecon.titre}
+                repere={POUR_TOI}
+                etat={lecon.etat}
+                annonce={annonceDeLaLeconPourToi(lecon, lecon.matiere.code)}
+                testid="lecon-de-toutes-les-lecons"
+                onOuvrir={() => onOuvrirLaLecon(lecon.lecon)}
+              />
+            </li>
+          ))}
           {lecons.map((lecon) => (
             <li key={lecon.lecon}>
               <BoutonDeLecon
