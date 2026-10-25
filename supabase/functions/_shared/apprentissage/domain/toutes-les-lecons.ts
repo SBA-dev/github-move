@@ -1,6 +1,6 @@
 import { Niveau } from "../../catalogue/domain/index.ts";
 import type { Matiere } from "../../catalogue/domain/index.ts";
-import { ordreDesNiveaux, parOrdrePuisIdentifiant } from "./ordre-des-lecons.ts";
+import { parOrdrePuisIdentifiant } from "./ordre-des-lecons.ts";
 import {
   estReussie,
   etatHorsDuParcours,
@@ -58,8 +58,8 @@ export function matiereReussieDuNiveau(entrees: EntreesDuParcours, matiere: Mati
 function leconsDeLaClasseAuDessus(entrees: EntreesDuParcours, matiere: Matiere): LeconDeToutesLesLecons[] {
   const classeAuDessus = Niveau.tous().find((niveau) => niveau.estAuDessusDe(entrees.niveau));
   return toutesLesLeconsDeLaMatiere(entrees, matiere)
-    .filter((lecon) => classeAuDessus !== undefined && lecon.niveau.valeur === classeAuDessus.valeur)
-    .sort((a, b) => ordreDesNiveaux(a, b) || parOrdrePuisIdentifiant(a, b))
+    .filter((lecon) => lecon.niveau.valeur === classeAuDessus?.valeur)
+    .sort(parOrdrePuisIdentifiant)
     .map((lecon) => ({
       lecon: lecon.id,
       matiere,
