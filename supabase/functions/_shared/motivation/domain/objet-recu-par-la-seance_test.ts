@@ -28,6 +28,30 @@ Deno.test("rejouer une leçon de 2 à 3 étoiles n'ajoute que l'étoile en plus 
   assertEquals(objet?.nom, "une lanterne");
 });
 
+Deno.test("rejouer une leçon de 1 à 3 étoiles ajoute 2 étoiles et fait passer le total de 4 à 6 : un tapis tout doux", () => {
+  const meilleuresAvant = new Map([["lecon-rejouee", 1], ["lecon-b", 3]]);
+
+  const objet = objetRecuParLaSeance(meilleuresAvant, "lecon-rejouee", 3);
+
+  assertEquals(objet?.nom, "un tapis tout doux");
+});
+
+Deno.test("rejouer une leçon de 1 à 3 étoiles ajoute 2 étoiles et non 3 : le total passe de 3 à 5, aucun objet", () => {
+  const meilleuresAvant = new Map([["lecon-rejouee", 1], ["lecon-b", 2]]);
+
+  const objet = objetRecuParLaSeance(meilleuresAvant, "lecon-rejouee", 3);
+
+  assertEquals(objet, undefined);
+});
+
+Deno.test("une séance qui franchit deux paliers à la fois ne fait recevoir qu'un seul objet : la lanterne", () => {
+  const meilleuresAvant = new Map([["lecon-b", 2]]);
+
+  const objet = objetRecuParLaSeance(meilleuresAvant, "lecon-nouvelle", 3);
+
+  assertEquals(objet?.nom, "une lanterne");
+});
+
 Deno.test("rejouer une leçon à 3 étoiles avec 1 étoile ne fait recevoir aucun objet", () => {
   const meilleuresAvant = new Map([["lecon-rejouee", 3], ["lecon-b", 3]]);
 
