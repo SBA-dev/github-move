@@ -23,22 +23,25 @@ const EXEMPLES: readonly Exemple[] = [
 ];
 
 for (const { total, nombreDObjets, prochain } of EXEMPLES) {
-  Deno.test(`avec ${total} étoiles, la cabane a ${nombreDObjets} objet(s) et ${
-    prochain ? `attend ${prochain.nom} (encore ${prochain.etoilesManquantes})` : "est complète"
-  }`, () => {
-    const etat = cabaneDe(total);
+  Deno.test(
+    `avec ${total} étoiles, la cabane a ${nombreDObjets} objet(s) et ${
+      prochain ? `attend ${prochain.nom} (encore ${prochain.etoilesManquantes})` : "est complète"
+    }`,
+    () => {
+      const etat = cabaneDe(total);
 
-    assertEquals(etat.total, total);
-    assertEquals(etat.objetsRecus, PALIERS_DE_LA_CABANE.slice(0, nombreDObjets).map((palier) => palier.objet));
-    assertEquals(
-      etat.prochainPalier && {
-        nom: etat.prochainPalier.objet.nom,
-        etoilesManquantes: etat.prochainPalier.etoilesManquantes,
-      },
-      prochain,
-    );
-    assertEquals(etat.complete, prochain === undefined);
-  });
+      assertEquals(etat.total, total);
+      assertEquals(etat.objetsRecus, PALIERS_DE_LA_CABANE.slice(0, nombreDObjets).map((palier) => palier.objet));
+      assertEquals(
+        etat.prochainPalier && {
+          nom: etat.prochainPalier.objet.nom,
+          etoilesManquantes: etat.prochainPalier.etoilesManquantes,
+        },
+        prochain,
+      );
+      assertEquals(etat.complete, prochain === undefined);
+    },
+  );
 }
 
 for (const total of [-1, 2.5, Number.NaN, Number.POSITIVE_INFINITY]) {
