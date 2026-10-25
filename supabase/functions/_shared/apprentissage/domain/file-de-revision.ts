@@ -118,7 +118,7 @@ export class FileDeRevision {
       type: "ErreursCorrigeesPourDeBon",
       enfant: this.enfant,
       nombre: corrigees.length,
-      leconsDOrigine: corrigees.map(({ origine }) => origine.leconDOrigine),
+      leconsDOrigine: [...new Set(corrigees.map(({ origine }) => origine.leconDOrigine))],
     }];
   }
 
