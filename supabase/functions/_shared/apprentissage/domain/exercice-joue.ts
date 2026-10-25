@@ -140,7 +140,7 @@ export class ExerciceJoue {
     return this.questionsJouees().filter((question) => question.erreurs > 0);
   }
 
-  questionsRateesARetenir(): { cle: CleDeQuestion; type: TypeDeQuestion }[] {
+  questionsRateesARetenir(): { cle: CleDeQuestion; type: TypeDeQuestion; tirage?: string }[] {
     if (this.contenu.additions) {
       return this.contenu.additions.additionsRatees().map((addition) => ({
         cle: CleDeQuestion.de("calcul", enonceDUneAddition(addition)),
@@ -148,9 +148,11 @@ export class ExerciceJoue {
       }));
     }
     if (this.contenu.memorisation) return [];
-    return this.questionsRatees()
-      .filter(({ type }) => estUnTypeDeQuestionRetenu(type))
-      .map(({ cle, type }) => ({ cle, type }));
+    return this.questionsJouees().flatMap(({ cle, type, erreurs }, rang) => {
+      if (erreurs === 0 || !estUnTypeDeQuestionRetenu(type)) return [];
+      const operationTiree = this.contenu.operationsTirees?.[rang];
+      return [{ cle, type, ...(operationTiree && { tirage: enonceTire(operationTiree) }) }];
+    });
   }
 
   tirages(): string[][] {

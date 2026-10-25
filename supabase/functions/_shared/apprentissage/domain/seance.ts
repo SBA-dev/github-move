@@ -324,7 +324,12 @@ export class Seance {
     return this.exercices.flatMap((exercice) =>
       exercice.questionsRateesARetenir().map((question) => ({
         identite: question.cle,
-        origine: { leconDOrigine: this.lecon, position: exercice.position, type: question.type },
+        origine: {
+          leconDOrigine: this.lecon,
+          position: exercice.position,
+          type: question.type,
+          ...(question.tirage && { tirage: question.tirage }),
+        },
       }))
     );
   }
