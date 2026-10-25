@@ -41,7 +41,7 @@ function estPageDeLEnfant(lieu: Lieu): boolean {
     lieu.ecran === "test-de-depart" || lieu.ecran === "lecon" || lieu.ecran === "seance";
 }
 
-function ecranAffiche(lieu: Lieu, connecte: boolean, espaceParent: EtatDeLEspaceParent["type"]): EcranDuDomaine {
+function ecranAffiche(lieu: Lieu, espaceParent: EtatDeLEspaceParent["type"], connecte: boolean): EcranDuDomaine {
   switch (lieu.ecran) {
     case "accueil":
       return connecte ? "qui-joue" : "connexion";
@@ -84,7 +84,7 @@ export function Application() {
   const univers = universDe(profil?.univers);
   const palette = PALETTES[univers.cle];
   const voix = useVoix(universDe(profilEnCours?.univers).personnageGuide);
-  const parent = estUnEcranDuParent(ecranAffiche(lieu, connecte, acces.etat.type));
+  const parent = estUnEcranDuParent(ecranAffiche(lieu, acces.etat.type, connecte));
   const { suspendre: suspendreLaVoix, reprendre: reprendreLaVoix } = voix;
   useLayoutEffect(() => {
     if (parent) suspendreLaVoix();
