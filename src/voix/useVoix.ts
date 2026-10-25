@@ -60,10 +60,7 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
     [voixDeLAppareil],
   );
 
-  const lire = useCallback((texte: string, options?: OptionsDeLecture) => {
-    setNomDuPersonnageGuideDeLaVoixBloquee(undefined);
-    return lecture.lire(texte, options);
-  }, [lecture]);
+  const lire = useCallback((texte: string, options?: OptionsDeLecture) => lecture.lire(texte, options), [lecture]);
 
   const couperLaVoix = useCallback(() => lecture.couperLaVoix(), [lecture]);
 
