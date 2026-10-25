@@ -18,3 +18,10 @@ export class LeconImpossibleAPreparer extends Error {
     this.name = "LeconImpossibleAPreparer";
   }
 }
+
+export class AucuneSectionDuProgramme extends Error {
+  constructor() {
+    super("Aucune section du programme pour cette classe et cette matière.");
+    this.name = "AucuneSectionDuProgramme";
+  }
+}
