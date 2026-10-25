@@ -17,6 +17,7 @@ const fait: SeanceTerminee = {
     { cle: CleDeQuestion.de("bulles", "Combien font 3 + 4 ?"), erreurs: 2, jeNeSaisPas: false },
     { cle: CleDeQuestion.de("ecoute", "cat"), erreurs: 1, jeNeSaisPas: true },
   ],
+  questionsRateesARetenir: [],
   parType: { bulles: { reussites: 4, erreurs: 2 }, ecoute: { reussites: 2, erreurs: 1 } },
 };
 
