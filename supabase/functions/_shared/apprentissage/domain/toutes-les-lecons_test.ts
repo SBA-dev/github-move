@@ -335,3 +335,41 @@ Deno.test("les choix des listes « Matière » et « Niveau » ne proposent que 
   assertEquals(matieres.map(({ code }) => code), ["francais", "maths", "emc"]);
   assertEquals(niveaux.map(({ valeur }) => valeur), ["CP", "CE1", "CE2"]);
 });
+
+function entreesDUnCe1AyantReussiToutesSesMaths() {
+  return {
+    lecons: [
+      lecon("ma-ce1-additions", "maths", "CE1", 1),
+      lecon("ma-ce1-soustractions", "maths", "CE1", 2),
+      lecon("fr-ce1-sons", "francais", "CE1", 1),
+      lecon("ma-ce2-nombres", "maths", "CE2", 1),
+      lecon("ma-ce2-tables", "maths", "CE2", 2),
+      lecon("fr-ce2-accords", "francais", "CE2", 1),
+    ],
+    niveau: Niveau.de("CE1"),
+    meilleuresEtoiles: new Map([
+      ["ma-ce1-additions", Etoiles.de(1)],
+      ["ma-ce1-soustractions", Etoiles.de(2)],
+    ]),
+  };
+}
+
+Deno.test("filtrer par niveau « Toutes les leçons » s'applique aussi aux leçons de la classe au-dessus, et le filtre par matière et par niveau ne garde que les maths du CE1", () => {
+  const entrees = entreesDUnCe1AyantReussiToutesSesMaths();
+
+  const duCe2 = toutesLesLecons(entrees, { niveau: Niveau.de("CE2") });
+  const mathsDuCe1 = toutesLesLecons(entrees, { matiere: matiere("maths"), niveau: Niveau.de("CE1") });
+
+  assertEquals(duCe2.lecons.map(({ lecon }) => lecon), ["ma-ce2-nombres", "ma-ce2-tables"]);
+  assertEquals(mathsDuCe1.lecons.map(({ lecon }) => lecon), ["ma-ce1-additions", "ma-ce1-soustractions"]);
+});
+
+Deno.test("une leçon de la classe ajoutée plus tard referme la classe au-dessus de sa matière, sauf les leçons déjà réussies (26.17)", () => {
+  const entrees = entreesDUnCe1AyantReussiToutesSesMaths();
+  entrees.lecons.push(lecon("ma-ce1-geometrie", "maths", "CE1", 3));
+  entrees.meilleuresEtoiles.set("ma-ce2-tables", Etoiles.de(1));
+
+  const { lecons } = toutesLesLecons(entrees, { niveau: Niveau.de("CE2") });
+
+  assertEquals(lecons.map(({ lecon }) => lecon), ["ma-ce2-tables"]);
+});
