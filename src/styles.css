@@ -387,6 +387,8 @@ button.secondaire:hover { background: #fdf3ea; }
 .formulaire-de-profil .actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .profils-de-l-espace-parent .confirmation { font-weight: 700; }
 .accueil-de-l-enfant { display: grid; justify-items: center; gap: 12px; max-width: 100%; }
+.proposition-de-revision { display: grid; justify-items: center; gap: 4px; max-width: 100%; }
+.proposition-de-revision p { margin: 0; overflow-wrap: anywhere; text-align: center; font-weight: 700; }
 
 /* Mode dys du profil en cours : police Andika, lettres, mots et lignes espacés, syllabes en couleurs alternées. */
 [data-mode-dys="true"] {
@@ -695,4 +697,32 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-width: 4px; background:
 }
 @media (prefers-reduced-motion: reduce) {
   .pastille-de-record { animation: none; }
+}
+
+/* Cabane de Noisette */
+.section-de-la-cabane .dessin-de-la-cabane { display: block; width: 100%; max-width: 100%; height: auto; }
+.phrase-de-la-cabane { margin: 0; padding: 6px 14px; border-radius: 16px; background: rgba(255, 255, 255, .85); font-weight: 700; overflow-wrap: anywhere; }
+.pastilles-de-la-cabane { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; width: 100%; margin: 0; padding: 0; list-style: none; }
+.pastille-de-la-cabane {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 6px 14px;
+  border: 3px dashed var(--accent-fonce);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .6);
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.pastille-de-la-cabane[data-atteint="true"] { border-style: solid; background: rgba(255, 255, 255, .95); }
+[data-mode-dys="true"] :is(.phrase-de-la-cabane, .pastille-de-la-cabane, .pour-la-cabane) { overflow-wrap: anywhere; line-height: inherit; }
+.pour-la-cabane { display: grid; justify-items: center; gap: 4px; max-width: 100%; padding: 8px 16px; border: 3px solid var(--accent-fonce); border-radius: 16px; background: rgba(255, 255, 255, .95); overflow-wrap: anywhere; animation: arrivee-d-un-objet .4s ease-out; }
+.pour-la-cabane:empty { display: none; }
+.pour-la-cabane p { margin: 0; font-weight: 700; }
+@keyframes arrivee-d-un-objet {
+  from { opacity: 0; transform: scale(.85); }
+  to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pour-la-cabane { animation: none; }
 }

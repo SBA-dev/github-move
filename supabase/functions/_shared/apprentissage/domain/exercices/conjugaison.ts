@@ -1,3 +1,4 @@
+import { cleDeLaConjugaison } from "../cles-des-questions.ts";
 import type { ExerciceConjugaison } from "../../../catalogue/domain/index.ts";
 import { type QuestionDeTrou, sansDoublonsNiReponse } from "./trous.ts";
 
@@ -12,7 +13,7 @@ export function questionsDeConjugaison(exercice: ExerciceConjugaison): QuestionD
       forme,
     ),
     pronom,
-    cle: `${exercice.verbe} · ${exercice.temps} · ${pronom}`,
+    cle: cleDeLaConjugaison(exercice, pronom),
     aide: `Avec « ${pronom} », quelle forme va ?`,
   }));
 }

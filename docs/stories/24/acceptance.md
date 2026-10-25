@@ -93,3 +93,13 @@ Aucune.
 ## Décisions venues d'autres stories
 
 - **Titre d'un scénario « leçon suivante »** : « La leçon suivante est la leçon d'ordre suivant de la même matière et du même niveau » devient « La leçon suivante est la première leçon d'après non réussie de la même matière et du même niveau », pour suivre la règle de la leçon suivante de #25. Les étapes et les données ne changent pas. Renommé par #25, réponse PO N6, 2026-10-24.
+
+## Mise à jour par #32, décision 32.25 (2026-10-25)
+
+Réponse du PO, recopiée mot pour mot depuis l'annonce du responsable sur l'issue #32 (commentaire 6398991641) :
+
+> « 32.25 OK »
+
+Avec la cabane (#32), une séance qui fait atteindre un palier du total des étoiles termine la phrase de fin du personnage guide par l'objet reçu (décision 32.12). Dans le scénario « Avec 3 étoiles, le personnage guide dit son expression et salue l'enfant », Léa partait de 0 étoile : ses 3 étoiles atteignaient le palier de la lanterne, et la phrase se terminait par « Noisette a reçu une lanterne pour sa cabane. ».
+
+Modification : l'étape « Léa a gagné 6 étoiles en tout » (étape de #32) est ajoutée en tête des « Étant donné », avec le commentaire « # Mise à jour par #32 (décision 32.25) ». Avec 6 + 3 = 9 étoiles, aucun palier n'est atteint (le suivant est 10). La règle et la phrase attendue (« Trois étoiles, Léa ! Tu es incroyable ! ») ne changent pas.

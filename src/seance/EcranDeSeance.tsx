@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
   ChoixDeSeance,
-  type EtatDeLaVoix,
   exerciceDemandeLeSon,
   ExerciceIntrouvable,
   LeconSansExercice,
@@ -10,12 +9,13 @@ import {
 } from "@domain/apprentissage";
 import { type Exercice, type Lecon, Niveau, pageDeLaLecon } from "@domain/catalogue";
 import type { ValeurDuClavierDesDictees } from "@domain/famille";
-import type { Univers } from "@domain/motivation";
+import type { MeilleuresEtoilesDuProfil, Univers } from "@domain/motivation";
 import { TexteEnSyllabes } from "../reglages/index.ts";
 import { PersonnageGuide } from "../univers/index.ts";
 import type { Voix } from "../voix/index.ts";
 import { BulleDuPersonnageGuide } from "./BulleDuPersonnageGuide.tsx";
 import { EcranDeFin } from "./fin-de-seance/EcranDeFin.tsx";
+import { lireLesMeilleuresEtoilesAvantLaSeance } from "./fin-de-seance/meilleures-etoiles-pour-la-cabane.ts";
 import { useFaciliteDeLaSeance } from "./difficulte/useFaciliteDeLaSeance.ts";
 import { ExerciceDAdditionPosee } from "./exercices/addition/ExerciceDAdditionPosee.tsx";
 import { ExerciceAChoix } from "./exercices/ExerciceAChoix.tsx";
@@ -26,6 +26,7 @@ import { ExerciceDeCalcul } from "./exercices/ExerciceDeCalcul.tsx";
 import { ExerciceDeDictee } from "./exercices/ExerciceDeDictee.tsx";
 import { ExerciceDeFluence } from "./exercices/fluence/ExerciceDeFluence.tsx";
 import { ExerciceDeMemorisation } from "./exercices/ExerciceDeMemorisation.tsx";
+import { etatDeLaVoix } from "./etat-de-la-voix.ts";
 import { generateurIdDuNavigateur } from "./generateur-id-navigateur.ts";
 import { hasardDuNavigateur } from "./hasard-navigateur.ts";
 import { horlogeDuNavigateur } from "./horloge.ts";
@@ -120,8 +121,17 @@ function PartieCommencee(
   const [seance] = useState(() =>
     commencerLaSeance(profilId, lecon, exercice, facilite, clavierDesDictees, niveau)
   );
+  const [meilleuresEtoilesAvant] = useState(() => lireLesMeilleuresEtoilesAvantLaSeance(profilId));
   if (!seance) return <JeuIntrouvable onRetour={reste.onRetour} />;
-  return <SeanceEnCours seance={seance} lecon={lecon} niveau={niveau} {...reste} />;
+  return (
+    <SeanceEnCours
+      seance={seance}
+      lecon={lecon}
+      niveau={niveau}
+      meilleuresEtoilesAvant={meilleuresEtoilesAvant}
+      {...reste}
+    />
+  );
 }
 
 function estAChoix(exercice: Exercice): boolean {
@@ -129,15 +139,13 @@ function estAChoix(exercice: Exercice): boolean {
     exercice.type === "trous" || exercice.type === "conjugaison";
 }
 
-function etatDeLaVoix({ son, syntheseVocalePresente }: Pick<Voix, "son" | "syntheseVocalePresente">): EtatDeLaVoix {
-  if (!syntheseVocalePresente) return "lectureImpossible";
-  return son === "muet" ? "muet" : "disponible";
-}
-
-type PropsEnCours = Omit<PropsDUnePartie, "exercice" | "profilId" | "clavierDesDictees"> & { readonly seance: Seance };
+type PropsEnCours = Omit<PropsDUnePartie, "exercice" | "profilId" | "clavierDesDictees"> & {
+  readonly seance: Seance;
+  readonly meilleuresEtoilesAvant: Promise<MeilleuresEtoilesDuProfil | undefined>;
+};
 
 function SeanceEnCours(
-  { seance, lecon, prenom, niveau, univers, voix, toutLireAVoixHaute, onRetour, onRejouer, onLeconSuivante, onAccueil }: PropsEnCours,
+  { seance, lecon, prenom, niveau, univers, voix, toutLireAVoixHaute, meilleuresEtoilesAvant, onRetour, onRejouer, onLeconSuivante, onAccueil }: PropsEnCours,
 ) {
   const deroulement = useDeroulementDeSeance(seance, lecon, voix, univers.personnageGuide, toutLireAVoixHaute, prenom);
   const { commencer, abandonner } = deroulement;
@@ -207,6 +215,7 @@ function SeanceEnCours(
           seance={seance}
           niveau={niveau}
           onDireLaFin={deroulement.direLaFin}
+          meilleuresEtoilesAvant={meilleuresEtoilesAvant}
           onRejouer={onRejouer}
           onLeconSuivante={onLeconSuivante}
           onAccueil={onAccueil}

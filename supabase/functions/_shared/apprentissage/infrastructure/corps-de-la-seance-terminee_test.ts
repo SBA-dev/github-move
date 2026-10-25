@@ -337,3 +337,14 @@ Deno.test("une question de calcul au clavier avec 60 réponses fausses puis la b
 
   assertEquals([revalidee.etoiles, revalidee.erreurs], [fait.etoiles, fait.erreurs]);
 });
+
+Deno.test("le jour facultatif de l'appareil est transmis tel quel", () => {
+  assertEquals(lire({ ...corpsValide(), jour: "2026-10-23" }).jour, "2026-10-23");
+});
+
+Deno.test("un jour qui n'est pas une chaîne est refusé alors qu'une chaîne AAAA-MM-JJ est acceptée", () => {
+  lire({ ...corpsValide(), jour: "2026-10-23" });
+  for (const jour of [20261023, null, true, ["2026-10-23"]]) {
+    assertThrows(() => lire({ ...corpsValide(), jour }), EntreeInvalide, "jour");
+  }
+});

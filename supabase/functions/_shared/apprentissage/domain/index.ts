@@ -118,3 +118,22 @@ export type { TestDeDepartTermine } from "./test-de-depart.ts";
 export type { TestDeDepartTermineAEnregistrer } from "./test-de-depart-termine-a-enregistrer.ts";
 export { TestDeDepartId } from "./test-de-depart-id.ts";
 export { reserveDuTestDeDepart } from "./reserve-du-test-de-depart.ts";
+export { FileDeRevision } from "./file-de-revision.ts";
+export type {
+  PlanDeSeanceDeRevision,
+  QuestionRateeARetenir,
+  QuestionRetenue,
+  ResultatDeRevision,
+} from "./file-de-revision.ts";
+export { IntervalleDeRevision } from "./intervalle-de-revision.ts";
+export { Jour, jourDe } from "./jour.ts";
+export type { OrigineDeLaQuestion } from "./origine-de-la-question.ts";
+export type { TypeDeQuestion } from "./question-suivie.ts";
+export { SeanceDeRevision } from "./seance-de-revision.ts";
+export type { SeanceDeRevisionTerminee } from "./seance-de-revision.ts";
+export type { SeanceDeRevisionTermineeAEnregistrer } from "./seance-de-revision-terminee-a-enregistrer.ts";
+export type { QuestionDeRevision } from "./question-de-revision.ts";
+export { AucuneQuestionDue } from "./erreurs.ts";
+export { cleDeLaBoite, QuestionDeBoite } from "./question-de-boite.ts";
+export { QuestionDeProblemeEnBarres } from "./question-de-probleme-en-barres.ts";
+export { estUnTypeDeQuestion } from "./cle-de-question.ts";

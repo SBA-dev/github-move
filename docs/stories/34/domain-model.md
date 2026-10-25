@@ -103,7 +103,7 @@ Ce qui ne vient **pas** d'Apprentissage : le nombre de fois ratée (`questions_r
 | Leçon jouée | **validé** (34.22) | Leçon qui a au moins une séance terminée, ou qui est réussie au test de départ (34.12, 34.14). Pour la carte, seule une séance terminée compte (34.4). Le mot « jouée » de la définition de **Séance** désigne le geste ; pas de conflit de sens |
 | Erreurs de la dernière séance | **validé** (34.22) | Nombre d'erreurs de la séance terminée la plus récente d'une leçon. Interface : « Erreurs (dernière fois) » (34.7) |
 | Dernière séance | **validé** (34.22) | Date de la séance terminée la plus récente d'une leçon, ou date du dernier test de départ pour une leçon seulement réussie au test de départ (34.14) |
-| Carte des compétences | au glossaire `(à valider)`, **conflit n°8 tranché** (34.1) | Par section du programme, avec 4 états. La nouvelle définition est la ligne « Carte des compétences, définition de #34 » du glossaire |
+| Carte des compétences | au glossaire `(à valider)`, **conflit n°10 tranché** (34.1) | Par section du programme, avec 4 états. La nouvelle définition est la ligne « Carte des compétences, définition de #34 » du glossaire |
 | Ligne de la carte | **validé** (34.22) | Une section du programme du niveau de l'enfant, son état et les titres de ses leçons |
 | État de la section | **validé** (34.22), précisé par 34.4 | `acquise` (une leçon acquise), `en cours` (une leçon avec une séance terminée), `à faire` (sinon, même si une leçon est réussie au test de départ), `pas encore de leçon` |
 | Leçon des classes d'avant, Leçon réussie d'une classe au-dessus | au glossaire (Apprentissage) | Repris pour la zone à part du tableau. Mentions d'interface : « classe précédente » (décision 34.11), « classe au-dessus » (I4) |
@@ -364,7 +364,7 @@ Aucun fichier sous `supabase/migrations/` ni `supabase/functions/<nom>/`.
 Les questions 34.1 à 34.7 reprennent celles de l'issue, dans l'ordre. Les suivantes viennent du passage à la cible et des stories livrées. Chaque recommandation vise à finir la beta vite, sans perdre ce que voient les parents aujourd'hui.
 
 **34.1. Carte par section du programme, ou par compétence ?** Le glossaire définit la carte par **compétence** (à faire, en cours, acquise). Le legacy la construit par **section du programme**, avec un quatrième état « pas encore de leçon ».
-- **Recommandation** : **par section du programme**, avec les 4 états. Les sections viennent des programmes officiels et couvrent tout le niveau, même ce qui n'a pas encore de leçon : c'est ce qui dit au parent « où il en est ». La compétence reste le nom du badge (#31). Au glossaire : redéfinir « Carte des compétences » (proposition ajoutée en ligne nouvelle, conflit n°8), ajouter « Ligne de la carte » et « État de la section ».
+- **Recommandation** : **par section du programme**, avec les 4 états. Les sections viennent des programmes officiels et couvrent tout le niveau, même ce qui n'a pas encore de leçon : c'est ce qui dit au parent « où il en est ». La compétence reste le nom du badge (#31). Au glossaire : redéfinir « Carte des compétences » (proposition ajoutée en ligne nouvelle, conflit n°10), ajouter « Ligne de la carte » et « État de la section ».
 
 **34.2. Libellé de l'état : « acquis » ou « acquise » ?**
 - **Recommandation** : **« acquise »**, accordé à « section » et identique au terme **Leçon acquise** (même seuil de 2 étoiles). Légende : « acquise (n) · en cours (n) · à faire (n) · pas encore de leçon (n) ».
@@ -432,7 +432,7 @@ Les questions 34.1 à 34.7 reprennent celles de l'issue, dans l'ordre. Les suiva
 **34.21. Le suivi sans réseau.**
 - **Recommandation** : il **demande le réseau** dans la beta. Sans réseau : un message à la place du suivi, par exemple « Le suivi a besoin d'Internet. Réessaie dans un instant. » (texte à valider). La copie locale arrive avec #44.
 
-**34.22. Termes.** (Tranchée : recommandation retenue ; les termes sont validés, avec les définitions précisées par 34.4 et 34.11.) Valider : **Chiffres du suivi**, **Total des étoiles**, **Séances jouées**, **Leçon jouée**, **Erreurs de la dernière séance**, **Dernière séance**, **Ligne de la carte**, **État de la section**, et la nouvelle définition de **Carte des compétences** (conflit n°8).
+**34.22. Termes.** (Tranchée : recommandation retenue ; les termes sont validés, avec les définitions précisées par 34.4 et 34.11.) Valider : **Chiffres du suivi**, **Total des étoiles**, **Séances jouées**, **Leçon jouée**, **Erreurs de la dernière séance**, **Dernière séance**, **Ligne de la carte**, **État de la section**, et la nouvelle définition de **Carte des compétences** (conflit n°10).
 - **Recommandation** : **oui**. « Toutes les leçons jouées », « Erreurs (dernière fois) » et la légende restent des mots d'interface.
 
 Remarques pour les autres stories (pas des questions au PO) :

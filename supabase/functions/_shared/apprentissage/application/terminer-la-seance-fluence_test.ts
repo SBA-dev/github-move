@@ -2,6 +2,7 @@ import { assertEquals, assertRejects } from "@std/assert";
 import { generateurIdFixe } from "../test_utils/generateur-id-fixe.ts";
 import { hasardSansMelange } from "../test_utils/hasard-fixe.ts";
 import { leconDUneSeuleFluenceAuCP } from "../test_utils/lecons-de-fluence.ts";
+import { FilesDeRevisionEnMemoire } from "../test_utils/files-de-revision-en-memoire.ts";
 import { LeconsDuCatalogueEnMemoire } from "../test_utils/lecons-du-catalogue-en-memoire.ts";
 import { RattachementsEnMemoire } from "../test_utils/rattachements-en-memoire.ts";
 import { RecordsDeFluenceEnMemoire } from "../test_utils/records-de-fluence-en-memoire.ts";
@@ -34,7 +35,8 @@ function envoiDUneFluence(identifiant: string, bonnesReponses: number): SeanceTe
 
 function monde() {
   const resultats = new ResultatsDesLeconsEnMemoire();
-  const seances = new SeancesTermineesEnMemoire(resultats);
+  const files = new FilesDeRevisionEnMemoire();
+  const seances = new SeancesTermineesEnMemoire(resultats, files);
   const records = new RecordsDeFluenceEnMemoire();
   const terminer = new TerminerLaSeance(
     new RattachementsEnMemoire(["parent-paul", "profil-lea"]),
@@ -42,6 +44,7 @@ function monde() {
     seances,
     resultats,
     records,
+    files,
   );
   return { seances, resultats, records, terminer };
 }
