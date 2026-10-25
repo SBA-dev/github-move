@@ -67,9 +67,9 @@ export { matieresDuParcours, parcoursDeLaMatiere } from "./parcours.ts";
 export { choixDuFiltre, toutesLesLecons } from "./toutes-les-lecons.ts";
 export type {
   ChoixDuFiltre,
-  ClasseDAvant,
   FiltreDesLecons,
   LeconDeToutesLesLecons,
+  LeconsDUnNiveau,
   ToutesLesLecons,
 } from "./toutes-les-lecons.ts";
 export { leconSuivanteDansLeParcours } from "./lecon-suivante-dans-le-parcours.ts";

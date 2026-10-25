@@ -2,9 +2,12 @@ import { Niveau, toutesLesMatieres } from "../../catalogue/domain/index.ts";
 import type { Lecon, Matiere } from "../../catalogue/domain/index.ts";
 import { ordreDesNiveaux, parOrdrePuisIdentifiant } from "./ordre-des-lecons.ts";
 import {
+  classeJusteAuDessus,
   estReussie,
+  estUneClasseAuDessus,
+  estUneClasseDAvant,
   etatHorsDuParcours,
-  leconsDeLaMatiere as leconsDeLaClasse,
+  leconsDeLaClasse,
   matieresDuParcours,
   parcoursDeLaMatiere,
 } from "./parcours.ts";
@@ -20,11 +23,11 @@ export type LeconDeToutesLesLecons = Readonly<{
   etat: EtatDansLeParcours;
 }>;
 
-export type ClasseDAvant = Readonly<{ niveau: Niveau; lecons: readonly LeconDesClassesDAvant[] }>;
+export type LeconsDUnNiveau = Readonly<{ niveau: Niveau; lecons: readonly LeconDesClassesDAvant[] }>;
 
 export type ToutesLesLecons = Readonly<{
   lecons: readonly LeconDeToutesLesLecons[];
-  leconsDesClassesDAvant: readonly ClasseDAvant[];
+  leconsDesClassesDAvant: readonly LeconsDUnNiveau[];
 }>;
 
 export function toutesLesLecons(entrees: EntreesDuParcours, filtre: FiltreDesLecons): ToutesLesLecons {
@@ -42,14 +45,15 @@ export function toutesLesLecons(entrees: EntreesDuParcours, filtre: FiltreDesLec
 
 function leconsDAuDessusMontrees(entrees: EntreesDuParcours): LeconDeToutesLesLecons[] {
   const matieres = toutesLesMatieres();
-  const classeAuDessus = Niveau.tous().find((niveau) => niveau.estAuDessusDe(entrees.niveau));
+  const auDessus = estUneClasseAuDessus(entrees);
+  const classeAuDessus = classeJusteAuDessus(entrees.niveau);
   const matieresReussies = matieres.filter((matiere) => matiereReussieDuNiveau(entrees, matiere));
   const montrees = (lecon: Lecon) =>
     estReussie(entrees, lecon.id) ||
     (lecon.niveau.valeur === classeAuDessus?.valeur &&
       matieresReussies.some((matiere) => matiere.code === lecon.matiere.code));
   return entrees.lecons
-    .filter((lecon) => lecon.niveau.estAuDessusDe(entrees.niveau) && montrees(lecon))
+    .filter((lecon) => auDessus(lecon.niveau) && montrees(lecon))
     .sort((a, b) => ordreDesNiveaux(a, b) || parMatiereOrdrePuisIdentifiant(a, b))
     .map((lecon) => ({
       lecon: lecon.id,
@@ -60,15 +64,16 @@ function leconsDAuDessusMontrees(entrees: EntreesDuParcours): LeconDeToutesLesLe
     }));
 }
 
+const matieresDuCatalogue = toutesLesMatieres();
+const rang = (lecon: Lecon) => matieresDuCatalogue.findIndex((matiere) => matiere.code === lecon.matiere.code);
+
 function parMatiereOrdrePuisIdentifiant(a: Lecon, b: Lecon): number {
-  const matieres = toutesLesMatieres();
-  const rang = (lecon: Lecon) => matieres.findIndex((matiere) => matiere.code === lecon.matiere.code);
   return rang(a) - rang(b) || parOrdrePuisIdentifiant(a, b);
 }
 
-function classesDAvant(entrees: EntreesDuParcours, retenue: (lecon: Lecon) => boolean): ClasseDAvant[] {
+function classesDAvant(entrees: EntreesDuParcours, retenue: (lecon: Lecon) => boolean): LeconsDUnNiveau[] {
   return Niveau.tous()
-    .filter((niveau) => entrees.niveau.estAuDessusDe(niveau))
+    .filter(estUneClasseDAvant(entrees))
     .map((niveau) => ({
       niveau,
       lecons: entrees.lecons
@@ -102,12 +107,13 @@ export function matiereReussieDuNiveau(entrees: EntreesDuParcours, matiere: Mati
 export type ChoixDuFiltre = Readonly<{ matieres: readonly Matiere[]; niveaux: readonly Niveau[] }>;
 
 export function choixDuFiltre(entrees: EntreesDuParcours): ChoixDuFiltre {
-  const aDesLecons = (filtre: FiltreDesLecons) => {
-    const { lecons, leconsDesClassesDAvant } = toutesLesLecons(entrees, filtre);
-    return lecons.length > 0 || leconsDesClassesDAvant.length > 0;
-  };
+  const { lecons, leconsDesClassesDAvant } = toutesLesLecons(entrees, {});
+  const identifiants = new Set(
+    [...lecons, ...leconsDesClassesDAvant.flatMap((classe) => classe.lecons)].map(({ lecon }) => lecon),
+  );
+  const presentes = entrees.lecons.filter((lecon) => identifiants.has(lecon.id));
   return {
-    matieres: toutesLesMatieres().filter((matiere) => aDesLecons({ matiere })),
-    niveaux: Niveau.tous().filter((niveau) => aDesLecons({ niveau })),
+    matieres: toutesLesMatieres().filter((matiere) => presentes.some((lecon) => lecon.matiere.code === matiere.code)),
+    niveaux: Niveau.tous().filter((niveau) => presentes.some((lecon) => lecon.niveau.valeur === niveau.valeur)),
   };
 }
