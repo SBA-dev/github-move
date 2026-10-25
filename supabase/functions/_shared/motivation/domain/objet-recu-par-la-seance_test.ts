@@ -44,7 +44,7 @@ Deno.test("rejouer une leçon de 1 à 3 étoiles ajoute 2 étoiles et non 3 : le
   assertEquals(objet, undefined);
 });
 
-Deno.test("une séance qui franchit deux paliers à la fois ne fait recevoir qu'un seul objet : la lanterne", () => {
+Deno.test("une séance de 3 étoiles fait recevoir au plus un objet : la lanterne", () => {
   const meilleuresAvant = new Map([["lecon-b", 2]]);
 
   const objet = objetRecuParLaSeance(meilleuresAvant, "lecon-nouvelle", 3);

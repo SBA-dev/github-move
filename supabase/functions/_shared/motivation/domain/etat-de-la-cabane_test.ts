@@ -1,5 +1,5 @@
 import { assertEquals, assertThrows } from "@std/assert";
-import { cabaneDe, PALIERS_DE_LA_CABANE, TotalDEtoilesInvalide } from "./cabane.ts";
+import { cabaneDe, PALIERS_DE_LA_CABANE, totalDesEtoiles, TotalDEtoilesInvalide } from "./cabane.ts";
 
 type Exemple = {
   total: number;
@@ -66,6 +66,12 @@ for (const total of [-1, 2.5, Number.NaN, Number.POSITIVE_INFINITY]) {
   });
 }
 
-Deno.test("les mêmes meilleures étoiles donnent toujours la même cabane", () => {
-  assertEquals(cabaneDe(33), cabaneDe(33));
+Deno.test("les mêmes meilleures étoiles, insérées dans un ordre différent, donnent le même total puis la même cabane", () => {
+  const dansUnOrdre = new Map([["lecon-a", 3], ["lecon-b", 2], ["lecon-c", 1]]);
+  const dansUnAutreOrdre = new Map([["lecon-c", 1], ["lecon-a", 3], ["lecon-b", 2]]);
+
+  const total = totalDesEtoiles(dansUnOrdre);
+
+  assertEquals(totalDesEtoiles(dansUnAutreOrdre), total);
+  assertEquals(cabaneDe(totalDesEtoiles(dansUnAutreOrdre)), cabaneDe(total));
 });
