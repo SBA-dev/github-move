@@ -3,6 +3,7 @@ import { ProfilEnfantIntrouvable } from "../../famille/domain/erreurs.ts";
 import {
   LeconIntrouvable,
   ParentNonRattache,
+  SeanceDeRevisionIncoherente,
   SeanceIncoherente,
   TestDeDepartIncoherent,
   TirageInvalide,
@@ -28,6 +29,15 @@ Deno.test("une séance incohérente est un 422 sans détail sur la cause", () =>
 
   assertEquals(statut, 422);
   assertEquals(message.includes(cause.message), false);
+});
+
+Deno.test("une séance de révision incohérente est un 422 propre à la révision, sans détail sur la cause", () => {
+  const cause = new TirageInvalide();
+
+  assertEquals(statutEtMessage(new SeanceDeRevisionIncoherente(cause)), {
+    statut: 422,
+    message: "Cette séance de révision n'a pas pu être vérifiée.",
+  });
 });
 
 Deno.test("un test de départ incohérent est un 422 sans détail sur la cause", () => {

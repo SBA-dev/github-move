@@ -86,3 +86,25 @@ Deno.test("seules la file et les questions retenues du profil demandé sont lues
 
   assertEquals(lue?.file.questions.length, 1);
 });
+
+Deno.test("une question retenue d'un type inconnu est ignorée, les autres sont lues", async () => {
+  const inconnue = { ...ligneSansTirage, cle: "e:dog", type: "hologramme" };
+  const faux = clientSupabaseFactice({
+    tables: { files_de_revision: [ligneDeFile], questions_retenues: [inconnue, ligneAvecTirage] },
+  });
+
+  const lue = await new FilesDeRevisionSupabase(faux.client).de(ENFANT);
+
+  assertEquals(lue?.file.questions.map(({ identite }) => identite.valeur), ["b:combien font 3 + 4 ?"]);
+});
+
+Deno.test("une question retenue dont l'intervalle n'est pas 1, 3 ou 7 jours est ignorée, les autres sont lues", async () => {
+  const inconnue = { ...ligneSansTirage, cle: "e:dog", intervalle: 2 };
+  const faux = clientSupabaseFactice({
+    tables: { files_de_revision: [ligneDeFile], questions_retenues: [inconnue, ligneAvecTirage] },
+  });
+
+  const lue = await new FilesDeRevisionSupabase(faux.client).de(ENFANT);
+
+  assertEquals(lue?.file.questions.map(({ identite }) => identite.valeur), ["b:combien font 3 + 4 ?"]);
+});
