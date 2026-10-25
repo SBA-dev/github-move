@@ -451,3 +451,11 @@ verify_jwt = false
 [functions.terminer-le-test-de-depart]
 enabled = true
 verify_jwt = true
+
+[functions.creer-une-lecon-personnelle]
+enabled = true
+verify_jwt = true
+
+[functions.supprimer-une-lecon-personnelle]
+enabled = true
+verify_jwt = true
