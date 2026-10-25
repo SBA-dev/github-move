@@ -109,3 +109,8 @@ Branche de base : `main`. Aucun numéro de décision réservé (prochain libre :
 - 22:50 UTC — RELIS #64 : `MAIN A BOUGÉ` (#34 mergée, `759203f`). Simulation : un conflit de fin de `src/styles.css`.
   #34 touche aussi `classer-ordre-trous.steps.ts` et le domaine Apprentissage (fusion automatique). Intégration à la
   fin du run E2E en cours, puis périmètre de #34 et de #79 seulement (0022).
+- 23:45 UTC — **Périmètre complet sur le code final : 746/746 verts** (`8bb74d8`, `telephone`, `--workers=2`, 52 min),
+  dont #79 34/34 (scénario `@a-valider` compris), #39 33/33, et les deux scénarios « mode dys » (verts sur 5173).
+- 23:50 UTC — Intégration de `main` `759203f` (#34) : conflit de fin de `src/styles.css` (les deux gardés), `701d26c`.
+  2 278 tests unitaires verts ; `tsc`, build, lint, fmt OK. Périmètre 0022 lancé : #79, #34, #18, #7.
+  #79.13 toujours sans réponse du PO.
