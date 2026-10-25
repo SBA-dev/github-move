@@ -8,9 +8,9 @@ Fonctionnalité: Écran « Aujourd'hui » : l'accueil de l'enfant
   « Aujourd'hui » est le nom de cadrage de la story : l'écran est l'accueil de l'enfant (réponse 29.5).
   Rien n'y est enregistré : tout ce qu'il montre est calculé à chaque affichage, aussi sans réseau.
   Le PO a retenu toutes les recommandations des questions 29.1 à 29.24 (« OK #29 #30 reco partout », 2026-10-25),
-  puis répondu à 29.25 : « Si aucune autre leçon est proposé, on ajoute un bouton pour revenir aux autres cours ».
+  puis répondu à 29.25 : « Si aucune autre leçon est proposé, on ajoute un bouton pour revenir aux autres cours »,
+  et à 29.26 : « 29.26 OK » (bouton « Toutes les leçons », qui ouvre « Toutes les leçons », dès qu'il n'y a pas de leçon suivante).
   Un scénario qui en dépend porte un commentaire « Réponse 29.n » (décisions dans docs/stories/29/acceptance.md).
-  « @a-valider » et « Question 29.n » : le scénario dépend d'une question encore ouverte.
   « @depend-de-26 » et « @depend-de-28 » : le scénario attend la story #26 ou #28, pas encore mergée.
 
   Pour ces scénarios, la bibliothèque servie au navigateur est remplacée par la bibliothèque de test de l'accueil
@@ -206,8 +206,7 @@ Fonctionnalité: Écran « Aujourd'hui » : l'accueil de l'enfant
       Alors la fin de la séance annonce « Ensuite : Les nombres jusqu'à 100 »
 
     # Réponses 29.8 et 29.25
-    # Question 29.26
-    @a-valider
+    # Réponse 29.26
     Scénario: Quand une leçon suivante est proposée, la fin de la séance ne propose pas « Toutes les leçons »
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa joue la séance complète de la leçon « Le son in »
@@ -216,8 +215,8 @@ Fonctionnalité: Écran « Aujourd'hui » : l'accueil de l'enfant
       Mais la fin de la séance ne propose pas « Toutes les leçons »
 
     # Réponses 29.8 et 29.25
-    # Question 29.26
-    @a-valider @depend-de-26
+    # Réponse 29.26
+    @depend-de-26
     Scénario: Quand la séance termine tout le parcours, la fin de la séance propose « Toutes les leçons » à la place d'une leçon suivante
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a réussi 3 leçons de français du CE1
@@ -233,8 +232,8 @@ Fonctionnalité: Écran « Aujourd'hui » : l'accueil de l'enfant
       Mais aucune leçon suivante n'est proposée
 
     # Réponse 29.25
-    # Question 29.26
-    @a-valider @depend-de-26
+    # Réponse 29.26
+    @depend-de-26
     Scénario: Sans aucune leçon pour sa classe, après une leçon des classes d'avant, la fin de la séance propose « Toutes les leçons »
       Étant donné que Léa a un profil enfant préparé de niveau CM2 dans l'univers « Animaux de la forêt »
       Et que Léa joue la séance complète de la leçon « Le futur »
@@ -243,8 +242,8 @@ Fonctionnalité: Écran « Aujourd'hui » : l'accueil de l'enfant
       Mais aucune leçon suivante n'est proposée
 
     # Réponse 29.25
-    # Question 29.26
-    @a-valider @depend-de-26
+    # Réponse 29.26
+    @depend-de-26
     Scénario: Le bouton « Toutes les leçons » de la fin de la séance ouvre « Toutes les leçons »
       Étant donné que Léa a un profil enfant préparé de niveau CM2 dans l'univers « Animaux de la forêt »
       Et que Léa joue la séance complète de la leçon « Le futur »
@@ -253,8 +252,8 @@ Fonctionnalité: Écran « Aujourd'hui » : l'accueil de l'enfant
       Alors l'écran « Toutes les leçons » s'affiche, avec le bouton « Toutes les leçons » du dock marqué comme l'écran en cours
 
     # Réponses 29.7 e et 29.25
-    # Question 29.26
-    @a-valider @depend-de-26
+    # Réponse 29.26
+    @depend-de-26
     Scénario: Depuis « Toutes les leçons » ouvert en fin de séance, le retour ramène à l'accueil de l'enfant
       Étant donné que Léa a un profil enfant préparé de niveau CM2 dans l'univers « Animaux de la forêt »
       Et que Léa a choisi « Toutes les leçons » à la fin de la séance de la leçon « Le futur »
