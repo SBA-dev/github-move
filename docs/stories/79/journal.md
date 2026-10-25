@@ -44,3 +44,15 @@ Branche de base : `main`. Aucun numéro de décision réservé (prochain libre :
   (lien de la build 1194 vers la 1243, hors dépôt).
 - 19:35 UTC — Périmètre 0023 lancé sur `telephone` (#10, #15, #19 à #23, #25 à #27, #65 ; #28 pas encore mergée),
   review finale lancée en parallèle.
+- 19:50 UTC — Review finale (cycle 1) : **À CORRIGER**. Bloquant : « Relire la consigne » pendant l'ouverture d'un
+  exercice (ou pendant l'annonce entre deux exercices) incrémentait la séquence et l'exercice ne s'ouvrait jamais.
+  RED E2E : step de reprise du scénario de #7 « Une nouvelle lecture coupe la lecture en cours » (`306802c`, texte
+  inchangé). Corrections : `28b6baf` (relire relance l'ouverture tant que l'exercice n'est pas présenté),
+  `6725802` (attente de « Continuer » jamais en suspens), `23dced0` (`aria-live` sur la consigne, focus après
+  « Continuer »). 34/34 sur `telephone` (#79 et le scénario de #7).
+- Non bloquants laissés tels quels, à signaler au PO : le step « Léa demande à réécouter la consigne » touche désormais
+  « Relire la consigne » (le scénario de #7 ne vérifie plus « Réécouter », qui reste couvert par #16) ;
+  `attendreLaFinDeLaSeance` touche « Continuer » d'elle-même (les scénarios « Léa n'a pas eu à continuer » le vérifient).
+- 20:05 UTC — Relecture du delta (cycle 2) : **À CORRIGER**. Le même blocage existe pendant la lecture de la question
+  (après la consigne, avant les choix). RED E2E en cours sur le scénario de #79 « Dans un exercice bulles, relire la
+  consigne laisse la question posée ».
