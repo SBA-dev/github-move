@@ -9,7 +9,7 @@ import { libelleDe } from "./univers.steps.ts";
 // avec son jeton), et Léa le choisit dans « Qui joue ? ». Ensuite, l'application ne se recharge plus (un rechargement
 // ramènerait le profil préparé, sans identifiant) : on ouvre les pages de leçon dans l'application, comme un lien interne.
 
-const surUnProfilReel = new WeakSet<Page>();
+const surUnProfilReel = new WeakMap<Page, string>();
 
 export function estSurUnProfilReel(page: Page): boolean {
   return surUnProfilReel.has(page);
@@ -24,7 +24,7 @@ export async function jouerAvecLeProfilReel(famille: Famille, monde: Monde, page
   });
   await page.goto("/");
   await choisirSonProfil(page, prenom);
-  surUnProfilReel.add(page);
+  surUnProfilReel.set(page, prenom);
   return profil;
 }
 
@@ -32,7 +32,7 @@ export async function jouerAvecLeProfilReel(famille: Famille, monde: Monde, page
  * Story #27 : l'accueil de l'enfant charge la bibliothèque et la garde pour toute la session. Une leçon de test ajoutée après
  * l'accueil n'y serait pas : on recharge l'application et Léa se choisit de nouveau, comme si les leçons étaient là dès le départ.
  */
-export async function rechargerAvecLeProfilReel(page: Page, prenom = "Léa"): Promise<void> {
+export async function rechargerAvecLeProfilReel(page: Page, prenom = surUnProfilReel.get(page) ?? "Léa"): Promise<void> {
   await page.goto("/");
   await choisirSonProfil(page, prenom);
 }
@@ -41,7 +41,7 @@ export async function rechargerAvecLeProfilReel(page: Page, prenom = "Léa"): Pr
 export async function choisirLeaSur(page: Page): Promise<void> {
   await page.goto("/");
   await choisirSonProfil(page, "Léa");
-  surUnProfilReel.add(page);
+  surUnProfilReel.set(page, "Léa");
 }
 
 async function allerDansLApplication(page: Page, chemin: string): Promise<void> {
