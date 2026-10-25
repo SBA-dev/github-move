@@ -34,11 +34,9 @@ export function parolesALOuverture(
   { toutLire, pastilles, cabane }: { toutLire: boolean } & ContenuDeLEcran,
 ): string[] {
   const guide = parolesDuGuideALOuverture({ pastilles, cabane });
-  if (!toutLire || !aQuelqueChoseAMontrer({ pastilles, cabane })) return [guide];
+  if (!toutLire) return [guide];
   const sections = sectionsDeLEcran({ pastilles, cabane });
-  const cabaneLue = cabane !== undefined && sections.includes("cabane")
-    ? [titreDeLaSection(), phraseDeLEtat(cabane)]
-    : [];
+  const cabaneLue = cabane !== undefined ? [titreDeLaSection(), phraseDeLEtat(cabane)] : [];
   const recordsLus = sections.includes("recordsDeFluence") ? parolesDeLaSectionDesRecords(pastilles) : [];
   return [guide, NOM_DE_L_ECRAN_DES_MEDAILLES, ...cabaneLue, ...recordsLus];
 }
