@@ -31,7 +31,7 @@ import { Seance, type SeanceTerminee } from "./seance.ts";
 import type { SeanceTermineeAEnregistrer } from "./seance-terminee-a-enregistrer.ts";
 
 const REPONSES_PAR_SECONDE_AU_PLUS_EN_FLUENCE = 3;
-const REPONSES_AU_PLUS_PAR_QUESTION = 200;
+export const REPONSES_AU_PLUS_PAR_QUESTION = 200;
 
 const ERREURS_DE_REJEU = [
   BonneReponseAbsenteDesChoix,

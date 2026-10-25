@@ -1,19 +1,27 @@
 import type { Lecon, Niveau } from "../../catalogue/domain/index.ts";
 import {
+  BonneReponseAbsenteDesChoix,
+  ChoixInconnu,
+  JeNeSaisPasDejaDit,
   JourIncoherent,
   JourInvalide,
+  MotIncomplet,
+  PasDeQuestionEnCours,
+  QuestionDejaReussie,
   ReponseIncompatible,
   SeanceDeRevisionIncoherente,
   SeanceDeRevisionNonFinie,
+  TirageHorsDuGenerateur,
   TirageInvalide,
   TirageManquant,
 } from "./erreurs.ts";
 import type { CleDeQuestion } from "./cle-de-question.ts";
 import type { FileDeRevision, QuestionRetenue } from "./file-de-revision.ts";
 import { questionDeRevision } from "./question-de-revision.ts";
-import { Jour } from "./jour.ts";
+import type { Jour } from "./jour.ts";
 import { jourDeLAppareil } from "./jour-de-l-appareil.ts";
 import type { ReponseDonnee } from "./reponse.ts";
+import { REPONSES_AU_PLUS_PAR_QUESTION } from "./revalider-la-seance.ts";
 import { SeanceDeRevision, type SeanceDeRevisionTerminee, seanceDeRevisionTerminee } from "./seance-de-revision.ts";
 import type { SeanceDeRevisionTermineeAEnregistrer } from "./seance-de-revision-terminee-a-enregistrer.ts";
 import { type Tireur, tireurSelonLesTirages } from "./tireur.ts";
@@ -21,20 +29,33 @@ import { type Tireur, tireurSelonLesTirages } from "./tireur.ts";
 const NOMBRE_MAXIMAL_DE_QUESTIONS = 10;
 
 const ERREURS_DE_REJEU = [
+  BonneReponseAbsenteDesChoix,
+  ChoixInconnu,
+  JeNeSaisPasDejaDit,
   JourIncoherent,
   JourInvalide,
+  MotIncomplet,
+  PasDeQuestionEnCours,
+  QuestionDejaReussie,
   ReponseIncompatible,
   SeanceDeRevisionNonFinie,
+  TirageHorsDuGenerateur,
   TirageInvalide,
   TirageManquant,
 ];
+
+export type SeanceDeRevisionRevalidee = {
+  readonly fait: SeanceDeRevisionTerminee;
+  /** Dues mais que la bibliothèque ne sait plus poser : le cas d'usage les oublie de la file. */
+  readonly questionsIntrouvables: readonly CleDeQuestion[];
+};
 
 export function revaliderLaSeanceDeRevision(
   envoi: SeanceDeRevisionTermineeAEnregistrer,
   file: FileDeRevision,
   lecons: readonly Lecon[],
   niveau: Niveau,
-): SeanceDeRevisionTerminee {
+): SeanceDeRevisionRevalidee {
   try {
     return rejouer(envoi, file, lecons, niveau);
   } catch (erreur) {
@@ -50,11 +71,13 @@ function rejouer(
   file: FileDeRevision,
   lecons: readonly Lecon[],
   niveau: Niveau,
-): SeanceDeRevisionTerminee {
+): SeanceDeRevisionRevalidee {
   verifierLaForme(envoi);
   const jour = jourDeLAppareil(envoi.jour, envoi.termineeLe);
-  const { rejouables } = trier(envoi, file, jour, lecons, niveau);
-  if (rejouables.length === 0) return seanceDeRevisionTerminee({ ...envoi, jour, resultats: [] });
+  const { rejouables, introuvables: questionsIntrouvables } = trier(envoi, file, jour, lecons, niveau);
+  if (rejouables.length === 0) {
+    return { fait: seanceDeRevisionTerminee({ ...envoi, jour, resultats: [] }), questionsIntrouvables };
+  }
   const seance = SeanceDeRevision.commencer({
     id: envoi.id,
     enfant: envoi.enfant,
@@ -64,7 +87,9 @@ function rejouer(
     niveau,
   });
   rejouables.forEach(({ rang, retenue: { identite } }) => {
-    envoi.reponses[rang]?.forEach((reponse) => {
+    const reponses = envoi.reponses[rang] ?? [];
+    if (reponses.length > REPONSES_AU_PLUS_PAR_QUESTION) throw incoherente("trop de réponses à une question");
+    reponses.forEach((reponse) => {
       if (seance.questionEnCours()?.identite.valeur !== identite.valeur) {
         throw incoherente("une réponse est donnée après la réussite de la question");
       }
@@ -74,16 +99,7 @@ function rejouer(
       throw incoherente("une question posée ne finit pas par la bonne réponse");
     }
   });
-  return seance.terminer(envoi.termineeLe, jour);
-}
-
-export function questionsIntrouvablesDeLaSeanceDeRevision(
-  envoi: SeanceDeRevisionTermineeAEnregistrer,
-  file: FileDeRevision,
-  lecons: readonly Lecon[],
-  niveau: Niveau,
-): CleDeQuestion[] {
-  return trier(envoi, file, Jour.de(envoi.jour), lecons, niveau).introuvables;
+  return { fait: seance.terminer(envoi.termineeLe, jour), questionsIntrouvables };
 }
 
 type QuestionRejouable = { readonly rang: number; readonly retenue: QuestionRetenue };

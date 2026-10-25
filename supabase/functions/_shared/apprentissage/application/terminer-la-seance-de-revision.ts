@@ -1,9 +1,6 @@
 import { ParentNonRattache } from "../domain/erreurs.ts";
 import { type FaitDeFileDeRevision, FileDeRevision } from "../domain/file-de-revision.ts";
-import {
-  questionsIntrouvablesDeLaSeanceDeRevision,
-  revaliderLaSeanceDeRevision,
-} from "../domain/revalider-la-seance-de-revision.ts";
+import { revaliderLaSeanceDeRevision } from "../domain/revalider-la-seance-de-revision.ts";
 import type { SeanceDeRevisionTerminee } from "../domain/seance-de-revision.ts";
 import type { SeanceDeRevisionTermineeAEnregistrer } from "../domain/seance-de-revision-terminee-a-enregistrer.ts";
 import type { FilesDeRevision } from "./ports/files-de-revision.ts";
@@ -33,8 +30,8 @@ export class TerminerLaSeanceDeRevision {
     for (let essai = 1; essai <= ESSAIS_AU_PLUS; essai++) {
       const lue = await this.files.de(seance.enfant);
       const file = lue?.file ?? FileDeRevision.vide(seance.enfant);
-      const fait = revaliderLaSeanceDeRevision(seance, file, lecons, niveau);
-      questionsIntrouvablesDeLaSeanceDeRevision(seance, file, lecons, niveau).forEach((cle) => file.oublier(cle));
+      const { fait, questionsIntrouvables } = revaliderLaSeanceDeRevision(seance, file, lecons, niveau);
+      questionsIntrouvables.forEach((cle) => file.oublier(cle));
       file.enregistrerLaRevision(fait.resultats, fait.jour, fait.termineeLe);
       const issue = await this.seances.enregistrer(fait, { file, versionLue: lue?.version ?? 0 });
       if (issue === "dejaEnregistree") return [];
