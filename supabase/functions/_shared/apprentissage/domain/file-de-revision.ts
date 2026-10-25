@@ -17,6 +17,8 @@ export type QuestionRetenue = Readonly<{
   nombreDeFoisRatee: number;
 }>;
 
+export const NOMBRE_MAXIMAL_DE_QUESTIONS_RETENUES = 250;
+
 export type DonneesDeFileDeRevision = {
   readonly enfant: string;
   readonly questions: readonly QuestionRetenue[];
@@ -26,7 +28,7 @@ export type DonneesDeFileDeRevision = {
 export class FileDeRevision {
   private constructor(
     readonly enfant: string,
-    private readonly questionsRetenues: QuestionRetenue[],
+    private questionsRetenues: QuestionRetenue[],
     readonly erreursCorrigeesPourDeBon: number,
   ) {}
 
@@ -53,6 +55,18 @@ export class FileDeRevision {
         this.questionsRetenues[index] = rateeDeNouveau(this.questionsRetenues[index], jour, termineeLe);
       }
     }
+    this.oublierLesPlusAnciennesAuDelaDeLaLimite();
+  }
+
+  private oublierLesPlusAnciennesAuDelaDeLaLimite(): void {
+    const nombreEnTrop = this.questionsRetenues.length - NOMBRE_MAXIMAL_DE_QUESTIONS_RETENUES;
+    if (nombreEnTrop <= 0) return;
+    const oubliees = new Set(
+      [...this.questionsRetenues]
+        .sort((a, b) => a.derniereErreurLe.getTime() - b.derniereErreurLe.getTime())
+        .slice(0, nombreEnTrop),
+    );
+    this.questionsRetenues = this.questionsRetenues.filter((question) => !oubliees.has(question));
   }
 }
 
