@@ -9,8 +9,12 @@ import type { QuestionDeDictee } from "./question-de-dictee.ts";
 import { QuestionDeProblemeEnBarres } from "./question-de-probleme-en-barres.ts";
 import { questionJoueeDuTrou, questionsJoueesAvec } from "./question-jouee.ts";
 import type { QuestionPosee } from "./question-posee.ts";
-import { questionDeCalculEnLigne, questionDeClassement, questionDeConjugaison } from "./question-du-test-de-depart.ts";
-import { questionDeDictee } from "./questions-de-l-exercice.ts";
+import {
+  questionDeCalculEnLigne,
+  questionDeClassement,
+  questionDeConjugaison,
+  questionDeDictee,
+} from "./questions-de-l-exercice.ts";
 import { enonceDUneAddition, relireUneAdditionDuGenerateur } from "./tirage-d-additions.ts";
 import { relireUneOperationDuGenerateur } from "./tirage-d-operations.ts";
 import type { Tireur } from "./tireur.ts";
@@ -67,11 +71,13 @@ function posables(exercice: Exercice, origine: OrigineDeLaQuestion, tireur: Tire
         cle: CleDeQuestion.de("conjugaison", `${exercice.verbe} · ${exercice.temps} · ${forme.pronom}`),
         poser: () => questionDeConjugaison(exercice, forme, tireur),
       }));
-    case "classer":
-      return EtiquettesAPlacer.questionsDeClasser(exercice).map(({ cle }, rang) => ({
-        cle,
-        poser: () => questionDeClassement(exercice, rang, tireur),
-      }));
+    case "classer": {
+      const cles = EtiquettesAPlacer.questionsDeClasser(exercice).map(({ cle }) => cle);
+      return exercice.items.flatMap((item, rang) => {
+        const cle = cles[rang];
+        return cle ? [{ cle, poser: () => questionDeClassement(exercice, item, tireur) }] : [];
+      });
+    }
     case "boite":
       return exercice.items.map((item) => ({
         cle: cleDeLaBoite(item),
