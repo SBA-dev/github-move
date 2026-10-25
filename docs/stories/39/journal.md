@@ -12,3 +12,7 @@ Branche de base : `main` (`6be4dc6`). Branche : `feature/39-lecons-personnelles`
 - CADRAGE PRÊT publié sur #39, avec DÉCISION (numéro demandé pour #39.16). En attente du OK du PO.
 - 16:37 UTC : annonce `[Responsable]` sur #64 : décision **0024** réservée pour #39. Elle sera écrite après la réponse du PO à #39.16.
 - 17:23 UTC : `main` (`7a80bae`, #32 mergée) intégrée, sans conflit. Toujours en attente du PO.
+- 17:44 UTC : annonce `[Responsable]` **sur #39** (et non sur #64 ; vérifiée : même compte, préfixe `[Responsable]`, réponse du PO citée mot pour mot, suivie d'un message « RELIS #39 » de la session du responsable) : « 39. reco OK sauf 39.13 oui on conserve le texte » ; 39.12 confirmée (sans badge, choix « A »). Cadrage validé.
+- `domain-modeler` (`2c1478d`) : modèle tranché, texte du parent conservé dans l'agrégat et la table, glossaire (décision n°38) et context map (ajouts), décision 0024.
+- `po-acceptance` (`9553fc3`) : 6 règles, 31 scénarios (33 cas), 6 `@acces`, 0 `@a-valider`.
+- 17:55 UTC : `VERROU base` demandé en avance (migration additive `lecons_personnelles`). TDD démarre.
