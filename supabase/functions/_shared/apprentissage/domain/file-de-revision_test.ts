@@ -459,3 +459,19 @@ Deno.test("une file de 250 questions peut être reconstituée", () => {
 
   assertEquals(fileDes(...questions).questions.length, 250);
 });
+
+Deno.test("modifier une date lue dans les questions de la file ne change pas la file", () => {
+  const file = fileDes(retenueA("a", 3));
+
+  file.questions[0]?.derniereErreurLe.setUTCFullYear(2000);
+
+  assertEquals(file.questions[0]?.derniereErreurLe, new Date("2026-10-24T08:00:00Z"));
+});
+
+Deno.test("modifier une date lue dans le plan de la séance de révision ne change pas la file", () => {
+  const file = fileDes(retenueA("a", 3));
+
+  file.planDeLaSeanceDeRevision(aujourdHui).questions[0]?.derniereErreurLe.setUTCFullYear(2000);
+
+  assertEquals(file.questions[0]?.derniereErreurLe, new Date("2026-10-24T08:00:00Z"));
+});

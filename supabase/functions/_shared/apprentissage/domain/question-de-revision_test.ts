@@ -456,3 +456,102 @@ Deno.test("une addition posée ratée en séance est rejouée par la question de
   assertEquals(question?.identite, aRetenir?.identite);
   assertEquals(question?.question?.enonce, "45 + 37");
 });
+
+const generateurDAdditions = { nombres: 2, min: 15, max: 59, retenue: true, combien: 3 };
+
+Deno.test("une addition tirée dont le tirage sort du générateur est oubliée", () => {
+  const lecon = leconAvec({ type: "addition", generateur: generateurDAdditions, etapes: ["calculer"] });
+
+  const question = questionDeRevision(
+    lecon,
+    origineAuxPosition1("calcul", "100 + 100"),
+    CleDeQuestion.de("calcul", "100 + 100"),
+    tireurSansMelange,
+    CE1,
+  );
+
+  assertEquals(question, undefined);
+});
+
+Deno.test("une addition tirée dont le tirage est illisible est oubliée", () => {
+  const lecon = leconAvec({ type: "addition", generateur: generateurDAdditions, etapes: ["calculer"] });
+
+  const question = questionDeRevision(
+    lecon,
+    origineAuxPosition1("calcul", "n'importe quoi"),
+    CleDeQuestion.de("calcul", "59 + 59"),
+    tireurSansMelange,
+    CE1,
+  );
+
+  assertEquals(question, undefined);
+});
+
+Deno.test("un trou reposé avec son seul tirage redonne les mêmes choix", () => {
+  const lecon = leconAvec({
+    type: "trous",
+    consigne: "Complète chaque phrase.",
+    texte: "Je [suis] ici. Tu [es] là.",
+    distracteurs: ["sont"],
+  });
+  const identite = CleDeQuestion.de("trous", "Tu … là.");
+
+  const { premiere, seconde } = reposeeAvecSonSeulTirage(lecon, origineAuxPosition1("trous"), identite, CE1);
+
+  assertEquals(seconde?.question?.enonce, premiere?.question?.enonce);
+  assertEquals(seconde?.question?.tirage(), premiere?.question?.tirage());
+});
+
+Deno.test("une question d'écoute reposée avec son seul tirage redonne les mêmes choix", () => {
+  const lecon = leconAvec({
+    type: "ecoute",
+    items: [
+      { dire: "cat", choix: ["chat", "chien", "cheval"], reponse: "chat" },
+      { dire: "dog", choix: ["chat", "chien", "cheval"], reponse: "chien" },
+    ],
+  });
+  const identite = CleDeQuestion.de("ecoute", "dog");
+
+  const { premiere, seconde } = reposeeAvecSonSeulTirage(lecon, origineAuxPosition1("ecoute"), identite, CE1);
+
+  assertEquals(seconde?.question?.tirage(), premiere?.question?.tirage());
+});
+
+Deno.test("une boîte à jetons reposée avec son seul tirage redonne les mêmes choix", () => {
+  const lecon = leconAvec({ type: "boite", items: [{ a: 4, op: "+", b: 3 }, { a: 15, op: "+", b: 9 }] });
+  const identite = CleDeQuestion.de("boite", "15 + 9");
+
+  const { premiere, seconde } = reposeeAvecSonSeulTirage(lecon, origineAuxPosition1("boite"), identite, CP);
+
+  assertEquals(seconde?.question?.tirage(), premiere?.question?.tirage());
+});
+
+Deno.test("un problème en barres reposé avec son seul tirage redonne les mêmes choix", () => {
+  const enonce = "Lina a 9 crayons, dont 6 rouges. Combien de bleus ?";
+  const lecon = leconAvec({
+    type: "barres",
+    items: [
+      { enonce: "J'achète 4 pommes rouges et 2 pommes vertes. Combien de pommes ?", parties: [4, 2], tout: null },
+      { enonce, parties: [6, null], tout: 9 },
+    ],
+  });
+  const identite = CleDeQuestion.de("barres", enonce);
+
+  const { premiere, seconde } = reposeeAvecSonSeulTirage(lecon, origineAuxPosition1("barres"), identite, CP);
+
+  assertEquals(seconde?.question?.tirage(), premiere?.question?.tirage());
+});
+
+Deno.test("une addition tirée reposée avec son seul tirage redonne les mêmes choix", () => {
+  const lecon = leconAvec({ type: "addition", generateur: generateurDAdditions, etapes: ["calculer"] });
+  const identite = CleDeQuestion.de("calcul", "59 + 59");
+
+  const { premiere, seconde } = reposeeAvecSonSeulTirage(
+    lecon,
+    origineAuxPosition1("calcul", "59 + 59"),
+    identite,
+    CP,
+  );
+
+  assertEquals(seconde?.question?.tirage(), premiere?.question?.tirage());
+});
