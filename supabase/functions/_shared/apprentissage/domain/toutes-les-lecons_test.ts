@@ -374,22 +374,30 @@ Deno.test("une leçon de la classe ajoutée plus tard referme la classe au-dessu
   assertEquals(lecons.map(({ lecon }) => lecon), ["ma-ce2-tables"]);
 });
 
-Deno.test("« Toutes les leçons » donne au front tout son modèle de vue : la matière de chaque leçon des classes d'avant, le nombre de leçons montrées (les deux parties comptées) et si seules les classes d'avant sont montrées (26.20)", () => {
+Deno.test("« Toutes les leçons » donne au front la matière de chaque leçon des classes d'avant (26.20)", () => {
+  const { leconsDesClassesDAvant } = toutesLesLecons(entreesDuFiltre(), {});
+
+  assertEquals(
+    leconsDesClassesDAvant.flatMap(({ lecons }) => lecons.map(({ lecon, matiere }) => [lecon, matiere.code])),
+    [["fr-cp-lettres", "francais"], ["ma-cp-nombres", "maths"], ["fr-ce1-sons", "francais"]],
+  );
+});
+
+Deno.test("« Toutes les leçons » donne au front le nombre de leçons montrées, les deux parties comptées (26.20)", () => {
   const sansFiltre = toutesLesLecons(entreesDuFiltre(), {});
   const classeDAvant = toutesLesLecons(entreesDuFiltre(), { niveau: Niveau.de("CP") });
   const classeDeLEnfant = toutesLesLecons(entreesDuFiltre(), { niveau: Niveau.de("CE2") });
 
   assertEquals(
-    sansFiltre.leconsDesClassesDAvant.flatMap(({ lecons }) =>
-      lecons.map(({ lecon, matiere }) => [lecon, matiere.code])
-    ),
-    [["fr-cp-lettres", "francais"], ["ma-cp-nombres", "maths"], ["fr-ce1-sons", "francais"]],
+    [sansFiltre, classeDAvant, classeDeLEnfant].map((resultat) => resultat.nombreDeLecons),
+    [5, 2, 2],
   );
-  assertEquals(
-    [sansFiltre, classeDAvant, classeDeLEnfant].map((resultat) => [
-      resultat.nombreDeLecons,
-      resultat.seulementLesClassesDAvant,
-    ]),
-    [[5, false], [2, true], [2, false]],
-  );
+});
+
+Deno.test("« Toutes les leçons » dit au front si seules les classes d'avant sont montrées (26.20)", () => {
+  const seulement = (niveau?: string) =>
+    toutesLesLecons(entreesDuFiltre(), niveau === undefined ? {} : { niveau: Niveau.de(niveau) })
+      .seulementLesClassesDAvant;
+
+  assertEquals([seulement(), seulement("CP"), seulement("CE1"), seulement("CE2")], [false, true, true, false]);
 });
