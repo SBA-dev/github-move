@@ -45,10 +45,9 @@ function leconsDAuDessusMontrees(entrees: EntreesDuParcours): LeconDeToutesLesLe
     estReussie(entrees, lecon.id) ||
     (lecon.niveau.valeur === classeAuDessus?.valeur &&
       matieresReussies.some((matiere) => matiere.code === lecon.matiere.code));
-  const rangDeLaMatiere = (lecon: Lecon) => matieres.findIndex((matiere) => matiere.code === lecon.matiere.code);
   return entrees.lecons
     .filter((lecon) => lecon.niveau.estAuDessusDe(entrees.niveau) && montrees(lecon))
-    .sort((a, b) => ordreDesNiveaux(a, b) || rangDeLaMatiere(a) - rangDeLaMatiere(b) || parOrdrePuisIdentifiant(a, b))
+    .sort((a, b) => ordreDesNiveaux(a, b) || parMatiereOrdrePuisIdentifiant(a, b))
     .map((lecon) => ({
       lecon: lecon.id,
       matiere: lecon.matiere,
@@ -58,16 +57,20 @@ function leconsDAuDessusMontrees(entrees: EntreesDuParcours): LeconDeToutesLesLe
     }));
 }
 
-function classesDAvant(entrees: EntreesDuParcours): ClasseDAvant[] {
+function parMatiereOrdrePuisIdentifiant(a: Lecon, b: Lecon): number {
   const matieres = toutesLesMatieres();
-  const rangDeLaMatiere = (lecon: Lecon) => matieres.findIndex((matiere) => matiere.code === lecon.matiere.code);
+  const rang = (lecon: Lecon) => matieres.findIndex((matiere) => matiere.code === lecon.matiere.code);
+  return rang(a) - rang(b) || parOrdrePuisIdentifiant(a, b);
+}
+
+function classesDAvant(entrees: EntreesDuParcours): ClasseDAvant[] {
   return Niveau.tous()
     .filter((niveau) => entrees.niveau.estAuDessusDe(niveau))
     .map((niveau) => ({
       niveau,
       lecons: entrees.lecons
         .filter((lecon) => lecon.niveau.valeur === niveau.valeur)
-        .sort((a, b) => rangDeLaMatiere(a) - rangDeLaMatiere(b) || parOrdrePuisIdentifiant(a, b))
+        .sort(parMatiereOrdrePuisIdentifiant)
         .map((lecon) => ({
           lecon: lecon.id,
           niveau: lecon.niveau,
