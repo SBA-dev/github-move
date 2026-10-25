@@ -1,5 +1,5 @@
 # language: fr
-@issue-73 @wip
+@issue-73
 Fonctionnalité: Aucune voix sur les écrans du parent
   En tant que parent
   Je veux que le personnage guide ne lise rien quand je me connecte ou que je suis dans l'espace parent
