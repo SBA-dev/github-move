@@ -238,3 +238,46 @@ Deno.test("une addition tirée retenue est rejouée en calcul en ligne depuis le
   assertEquals(question?.question?.enonce, "59 + 59");
   assertEquals(question?.question?.repondre(Reponse.nombre(118)), "juste");
 });
+
+Deno.test("une question retenue dont l'exercice d'origine n'existe plus n'est pas rejouée", () => {
+  const lecon = leconAvec({ type: "calcul", operations: [{ q: "2 + 2", r: 4 }] });
+  const origineAbsente: OrigineDeLaQuestion = { ...origineAuxPosition1("calcul"), position: 7 };
+
+  const question = questionDeRevision(
+    lecon,
+    origineAbsente,
+    CleDeQuestion.de("calcul", "2 + 2"),
+    tireurSansMelange,
+    CE1,
+  );
+
+  assertEquals(question, undefined);
+});
+
+Deno.test("une question retenue dont le texte a changé dans la leçon n'est pas rejouée", () => {
+  const lecon = leconAvec({ type: "calcul", operations: [{ q: "2 + 3", r: 5 }] });
+
+  const question = questionDeRevision(
+    lecon,
+    origineAuxPosition1("calcul"),
+    CleDeQuestion.de("calcul", "2 + 2"),
+    tireurSansMelange,
+    CE1,
+  );
+
+  assertEquals(question, undefined);
+});
+
+Deno.test("un calcul tiré dont le tirage gardé est illisible n'est pas rejoué", () => {
+  const lecon = leconAvec({ type: "calcul", generateur: { op: "+", a: [1, 5], b: [1, 5], combien: 3 } });
+
+  const question = questionDeRevision(
+    lecon,
+    origineAuxPosition1("calcul", "n'importe quoi"),
+    CleDeQuestion.de("calcul", "3 + 4"),
+    tireurSansMelange,
+    CE1,
+  );
+
+  assertEquals(question, undefined);
+});

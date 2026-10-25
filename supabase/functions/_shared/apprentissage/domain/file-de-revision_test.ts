@@ -368,3 +368,20 @@ Deno.test("plusieurs résultats d'une même révision s'appliquent chacun à leu
   ]);
   assertEquals(file.erreursCorrigeesPourDeBon, 1);
 });
+
+Deno.test("oublier une question la retire de la file sans faire monter le compteur d'erreurs corrigées pour de bon", () => {
+  const file = fileDes(retenueA("a", 3), retenueA("b", 1));
+
+  file.oublier(CleDeQuestion.de("calcul", "a"));
+
+  assertEquals(file.questions.map((question) => question.identite.valeur), ["n:b"]);
+  assertEquals(file.erreursCorrigeesPourDeBon, 0);
+});
+
+Deno.test("oublier une question absente de la file est sans effet", () => {
+  const file = fileDes(retenueA("a", 3));
+
+  file.oublier(CleDeQuestion.de("calcul", "inconnue"));
+
+  assertEquals(file.questions.map((question) => question.identite.valeur), ["n:a"]);
+});
