@@ -15,6 +15,7 @@ Lis :
 - `.claude/skills/ddd/SKILL.md`
 - `.claude/skills/craftsmanship/SKILL.md`
 - `.claude/skills/gamification/SKILL.md` si la story touche un écran de l'enfant (animations, sons, récompenses)
+- `.claude/skills/illustration/SKILL.md` si la story ajoute ou modifie un dessin (personnage guide, décor, objet, carte)
 - `docs/domain/glossaire.md` et `docs/stories/<n>/domain-model.md`
 
 ## Mode 1 : GREEN + REFACTOR (par défaut)

@@ -9,6 +9,8 @@ Savanturier doit donner envie de jouer, comme un jeu vidéo pour enfants. Le jeu
 
 Ce skill complète `bdd-gherkin` (scénarios), `ddd` (où vit la règle) et `craftsmanship` (review). Le vocabulaire vient de `docs/domain/glossaire.md`.
 
+Les dessins (personnages, décors, objets de récompense) suivent le skill `illustration`.
+
 ## 1. Les trois besoins à nourrir (théorie de l'autodétermination)
 
 Toute mécanique ludique doit nourrir au moins un de ces besoins, sans en abîmer aucun :
