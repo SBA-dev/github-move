@@ -1,4 +1,6 @@
-import programmesIndex from "../../../app/programmes-index.json" with { type: "json" };
+import programmesIndex from "../../../app/programmes-index.json" with {
+  type: "json",
+};
 import { CreerUneLeconPersonnelle } from "../_shared/accompagnement/application/creer-une-lecon-personnelle.ts";
 import {
   lireLaCreation,
@@ -13,15 +15,27 @@ const origines = originesAutorisees(Deno.env.get("ORIGINES_AUTORISEES"));
 const sectionsDuProgramme = new SectionsDuProgrammeJson(programmesIndex);
 
 Deno.serve((requete) =>
-  traiterUneEcritureDAccompagnement(requete, async ({ client, parent }, corps) => {
-    const cas = new CreerUneLeconPersonnelle(
-      new RattachementsDuParentSupabase(client),
-      sectionsDuProgramme,
-      new LeconsPersonnellesSupabase(client),
-      { nouveau: () => crypto.randomUUID() },
-    );
-    const { leconPersonnelle } = await cas.executer({ parent, ...lireLaCreation(corps) }, new Date());
-    const { lecon } = leconPersonnelle;
-    return { id: lecon.id, titre: lecon.titre, matiere: lecon.matiere.code, niveau: lecon.niveau.valeur };
-  }, origines)
+  traiterUneEcritureDAccompagnement(
+    requete,
+    async ({ client, parent }, corps) => {
+      const cas = new CreerUneLeconPersonnelle(
+        new RattachementsDuParentSupabase(client),
+        sectionsDuProgramme,
+        new LeconsPersonnellesSupabase(client),
+        { nouveau: () => crypto.randomUUID() },
+      );
+      const { leconPersonnelle } = await cas.executer({
+        parent,
+        ...lireLaCreation(corps),
+      }, new Date());
+      const { lecon } = leconPersonnelle;
+      return {
+        id: lecon.id,
+        titre: lecon.titre,
+        matiere: lecon.matiere.code,
+        niveau: lecon.niveau.valeur,
+      };
+    },
+    origines,
+  )
 );

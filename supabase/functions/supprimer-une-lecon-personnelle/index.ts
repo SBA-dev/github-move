@@ -10,12 +10,16 @@ import { originesAutorisees } from "../_shared/famille/infrastructure/http-famil
 const origines = originesAutorisees(Deno.env.get("ORIGINES_AUTORISEES"));
 
 Deno.serve((requete) =>
-  traiterUneEcritureDAccompagnement(requete, async ({ client, parent }, corps) => {
-    const cas = new SupprimerUneLeconPersonnelle(
-      new RattachementsDuParentSupabase(client),
-      new LeconsPersonnellesSupabase(client),
-    );
-    await cas.executer({ parent, ...lireLaSuppression(corps) }, new Date());
-    return { supprimee: true };
-  }, origines)
+  traiterUneEcritureDAccompagnement(
+    requete,
+    async ({ client, parent }, corps) => {
+      const cas = new SupprimerUneLeconPersonnelle(
+        new RattachementsDuParentSupabase(client),
+        new LeconsPersonnellesSupabase(client),
+      );
+      await cas.executer({ parent, ...lireLaSuppression(corps) }, new Date());
+      return { supprimee: true };
+    },
+    origines,
+  )
 );
