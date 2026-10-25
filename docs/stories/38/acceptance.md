@@ -3,7 +3,7 @@
 Scénarios : `features/38-enregistrements-de-lecture.feature` (tags `@issue-38 @wip`).
 Modèle du domaine : `docs/stories/38/domain-model.md` (contexte **Accompagnement**, proposé pendant une séance d'**Apprentissage**, lit le **Catalogue pédagogique** et **Famille**). Les questions 38.1 à 38.20 en viennent ; 38.21 à 38.29 sont ajoutées ici.
 
-Les scénarios suivent **les recommandations** du modèle et de ce document. Ceux qui dépendent d'une question encore ouverte portent `@a-valider` et un commentaire `# Question 38.n`. Ceux qui passent par le suivi de l'espace parent (#34, cadrée en parallèle, pas encore livrée) portent `@depend-de-34`.
+Le PO a retenu toutes les recommandations des questions 38.1 à 38.29, le 25/10 (voir « Décisions du PO (25/10) »). Les scénarios qui en dépendent portent un commentaire `# Réponse 38.n` ; aucun ne porte plus `@a-valider`. Ceux qui passent par le suivi de l'espace parent (#34, cadrée en parallèle, pas encore livrée) portent `@depend-de-34`.
 
 Décisions du PO déjà prises (commentaire [Responsable] du 2026-10-25 sur l'issue) :
 - #13 (second parent) et #14 (export et suppression du profil) sont **sortis de la beta** : aucun scénario « second parent », aucun scénario d'export ni de suppression du profil ;
@@ -16,7 +16,7 @@ En tant qu'**enfant**, je veux m'enregistrer quand je lis, récite ou chante à 
 
 L'enregistrement de lecture **n'est pas noté** : il ne change ni l'avancement de la séance, ni les étoiles. Son refus ou son échec ne bloque jamais l'exercice. C'est une donnée sensible (la voix de l'enfant) : seul un parent rattaché l'écoute, elle est effacée 30 jours après l'enregistrement, et rien n'est envoyé à l'IA.
 
-Le comportement actuel (`app/app.js`, `recordButton`, bloc des enregistrements de `adultSuivi`) donne les premiers exemples : libellés des boutons, messages à l'enfant, ligne « `<titre ou « Enregistrement »>` · `<date>` », « Supprimer » puis « Confirmer », bloc absent sans enregistrement. Les écarts voulus (enregistrement dans la page, expiration, liste complète, suppression sûre, accès réservé) sont des questions : 38.1, 38.6, 38.8, 38.15, 38.23, 38.24.
+Le comportement actuel (`app/app.js`, `recordButton`, bloc des enregistrements de `adultSuivi`) donne les premiers exemples : libellés des boutons, messages à l'enfant, ligne « `<titre ou « Enregistrement »>` · `<date>` », « Supprimer » puis « Confirmer », bloc absent sans enregistrement. Les écarts voulus (enregistrement dans la page, expiration, liste complète, suppression sûre, accès réservé) ont été tranchés par le PO (reco retenue) : 38.1, 38.6, 38.8, 38.15, 38.23, 38.24.
 
 ## Example mapping
 
@@ -35,18 +35,18 @@ Le comportement actuel (`app/app.js`, `recordButton`, bloc des enregistrements d
 
 | # | Règle | Scénarios | Questions |
 |---|---|---|---|
-| 1 | Seuls les exercices `lecture` et `memoriser` proposent de s'enregistrer, avec un libellé selon ce que l'enfant fait, et seulement si l'appareil sait enregistrer | Dans une lecture, après le texte lu, l'enfant peut s'enregistrer avant de dire qu'il a écouté · Pour une `<sorte>`, après le dernier vers, l'enfant peut s'enregistrer avec « `<libellé>` » (2 cas) · Pour une `<sorte>`, le personnage guide invite à `<verbe>` tout le texte et à s'enregistrer (2 cas, `@a-valider`) · Sur un appareil qui ne sait pas enregistrer, la poésie n'invite pas à s'enregistrer (`@a-valider`) · Sur un appareil qui ne sait pas enregistrer, la lecture ne propose pas de s'enregistrer (`@a-valider`) · Un exercice qui n'est ni une lecture ni une poésie ne propose pas de s'enregistrer | 38.1, 38.17, 38.20, 38.21, 38.27 |
-| 2 | L'enfant s'enregistre, s'arrête et se réécoute ; l'enregistrement de lecture n'est pas noté et ne bloque jamais l'exercice | Pendant qu'il s'enregistre, l'enfant voit qu'il est en train de s'enregistrer et peut arrêter (`@a-valider`) · Après l'arrêt, l'enfant peut se réécouter et continuer l'exercice · L'enregistrement s'arrête tout seul au bout de 3 minutes (`@a-valider`) · Dire qu'il a écouté pendant l'enregistrement l'arrête et le garde (`@a-valider`) · S'enregistrer ne compte pas dans l'avancement de la séance · Si le micro est refusé, l'enfant est prévenu sans reproche et continue l'exercice (`@a-valider`) | 38.1, 38.3, 38.17, 38.18, 38.28 |
-| 3 | L'enregistrement de lecture est gardé par le serveur pour les parents ; sinon l'enfant se réécoute quand même et en est prévenu | Un enregistrement de lecture gardé est annoncé à l'enfant et se retrouve chez le parent (`@a-valider`) · Sans réseau, l'enfant se réécoute et apprend que l'enregistrement n'a pas pu être gardé (`@a-valider`) · Au retour du réseau, un enregistrement de lecture fait sans réseau n'est pas envoyé (`@a-valider`) · Deux enregistrements dans le même exercice sont gardés tous les deux (`@a-valider`) · Le serveur refuse de garder un enregistrement de lecture `<cas>` (5 cas, dont 3 `@a-valider`) | 38.2, 38.3, 38.7, 38.9, 38.10, 38.11, 38.19, 38.22 |
-| 4 | Le parent écoute dans le suivi les enregistrements de lecture de l'enfant, avec leur date d'expiration | Le suivi montre les enregistrements de lecture, du plus récent au plus ancien, avec leur date d'expiration · Le suivi dit que les enregistrements de lecture sont effacés au bout de 30 jours · Tous les enregistrements de lecture non expirés sont montrés, même au-delà de 30 · Un enregistrement de lecture d'une leçon qui n'est plus dans la bibliothèque s'appelle « Enregistrement » · Sans enregistrement de lecture, le suivi ne montre pas leur bloc · Le parent écoute un enregistrement de lecture (tous `@depend-de-34 @a-valider`) | 38.4, 38.6, 38.8, 38.16, 38.23, 38.24, 38.29 |
-| 5 | Le parent supprime un enregistrement de lecture en deux temps ; supprimé, il ne s'écoute plus | « Supprimer » demande une confirmation avant de supprimer · Après confirmation, l'enregistrement de lecture disparaît du suivi et ne s'écoute plus · Supprimer le dernier enregistrement de lecture retire leur bloc du suivi (`@a-valider`) · Si la suppression échoue, l'enregistrement de lecture reste et le parent peut réessayer (`@a-valider`) (tous `@depend-de-34`) | 38.15, 38.23 |
-| 6 | Un enregistrement de lecture expire 30 jours après avoir été fait : il n'est plus ni listé ni écoutable, puis il est effacé avec son fichier | Un enregistrement de lecture fait il y a `<âge>` `<résultat>` (3 cas) · Un enregistrement de lecture expiré n'est plus listé dans le suivi, même avant d'être effacé (`@depend-de-34`) · L'effacement des enregistrements expirés efface l'enregistrement de lecture et son fichier, et garde les autres · Un fichier d'enregistrement sans enregistrement de lecture, rangé il y a `<âge>`, `<résultat>` (2 cas, `@a-valider`) · Un parent ne peut pas lancer l'effacement des enregistrements expirés (`@acces`) | 38.12, 38.14, 38.26 |
-| 7 | Seul un parent rattaché garde, liste, écoute ou supprime les enregistrements de lecture d'un enfant ; l'enfant ne réécoute que celui qu'il vient de faire | Un parent qui n'est pas rattaché ne liste pas les enregistrements de lecture de Léa · … n'écoute pas un enregistrement de lecture de Léa, même avec `<moyen>` (2 cas : identifiant, chemin du fichier) · … ne supprime pas un enregistrement de lecture de Léa · … ne garde pas d'enregistrement de lecture pour Léa · Le suivi de Léa ne montre jamais les enregistrements de lecture d'un autre enfant (`@depend-de-34`) · L'enfant ne réécoute pas un enregistrement de lecture déjà gardé en rejouant l'exercice (`@a-valider`) · Un autre enfant de la même tablette ne réécoute pas l'enregistrement de lecture de Léa (tous `@acces`) | 38.9 |
-| 8 | S'enregistrer et écouter se font au doigt, au clavier, avec un lecteur d'écran et sur un petit écran | Le bouton d'enregistrement tient dans un écran de 360 px et se touche du doigt · Pendant l'enregistrement, « Arrêter » tient dans un écran de 360 px et se touche du doigt · Un lecteur d'écran annonce que l'enregistrement est en cours (`@a-valider`) · Un lecteur d'écran annonce la fin de l'enregistrement (`@a-valider`) · Au clavier, l'enfant s'enregistre et s'arrête sans souris · Avec les mouvements réduits, l'enregistrement en cours est signalé sans animation (`@a-valider`) · Les enregistrements de lecture du suivi tiennent dans un écran de 360 px et se touchent du doigt (`@depend-de-34`) | 38.25 |
+| 1 | Seuls les exercices `lecture` et `memoriser` proposent de s'enregistrer, avec un libellé selon ce que l'enfant fait, et seulement si l'appareil sait enregistrer | Dans une lecture, après le texte lu, l'enfant peut s'enregistrer avant de dire qu'il a écouté · Pour une `<sorte>`, après le dernier vers, l'enfant peut s'enregistrer avec « `<libellé>` » (2 cas) · Pour une `<sorte>`, le personnage guide invite à `<verbe>` tout le texte et à s'enregistrer (2 cas) · Sur un appareil qui ne sait pas enregistrer, la poésie n'invite pas à s'enregistrer · Sur un appareil qui ne sait pas enregistrer, la lecture ne propose pas de s'enregistrer · Un exercice qui n'est ni une lecture ni une poésie ne propose pas de s'enregistrer | 38.1, 38.17, 38.20, 38.21, 38.27 |
+| 2 | L'enfant s'enregistre, s'arrête et se réécoute ; l'enregistrement de lecture n'est pas noté et ne bloque jamais l'exercice | Pendant qu'il s'enregistre, l'enfant voit qu'il est en train de s'enregistrer et peut arrêter · Après l'arrêt, l'enfant peut se réécouter et continuer l'exercice · L'enregistrement s'arrête tout seul au bout de 3 minutes · Dire qu'il a écouté pendant l'enregistrement l'arrête et le garde · S'enregistrer ne compte pas dans l'avancement de la séance · Si le micro est refusé, l'enfant est prévenu sans reproche et continue l'exercice | 38.1, 38.3, 38.17, 38.18, 38.28 |
+| 3 | L'enregistrement de lecture est gardé par le serveur pour les parents ; sinon l'enfant se réécoute quand même et en est prévenu | Un enregistrement de lecture gardé est annoncé à l'enfant et se retrouve chez le parent · Sans réseau, l'enfant se réécoute et apprend que l'enregistrement n'a pas pu être gardé · Au retour du réseau, un enregistrement de lecture fait sans réseau n'est pas envoyé · Deux enregistrements dans le même exercice sont gardés tous les deux · Le serveur refuse de garder un enregistrement de lecture `<cas>` (5 cas) | 38.2, 38.3, 38.7, 38.9, 38.10, 38.11, 38.19, 38.22 |
+| 4 | Le parent écoute dans le suivi les enregistrements de lecture de l'enfant, avec leur date d'expiration | Le suivi montre les enregistrements de lecture, du plus récent au plus ancien, avec leur date d'expiration · Le suivi dit que les enregistrements de lecture sont effacés au bout de 30 jours · Tous les enregistrements de lecture non expirés sont montrés, même au-delà de 30 · Un enregistrement de lecture d'une leçon qui n'est plus dans la bibliothèque s'appelle « Enregistrement » · Sans enregistrement de lecture, le suivi ne montre pas leur bloc · Le parent écoute un enregistrement de lecture (tous `@depend-de-34`) | 38.4, 38.6, 38.8, 38.16, 38.23, 38.24, 38.29 |
+| 5 | Le parent supprime un enregistrement de lecture en deux temps ; supprimé, il ne s'écoute plus | « Supprimer » demande une confirmation avant de supprimer · Après confirmation, l'enregistrement de lecture disparaît du suivi et ne s'écoute plus · Supprimer le dernier enregistrement de lecture retire leur bloc du suivi · Si la suppression échoue, l'enregistrement de lecture reste et le parent peut réessayer (tous `@depend-de-34`) | 38.15, 38.23 |
+| 6 | Un enregistrement de lecture expire 30 jours après avoir été fait : il n'est plus ni listé ni écoutable, puis il est effacé avec son fichier | Un enregistrement de lecture fait il y a `<âge>` `<résultat>` (3 cas) · Un enregistrement de lecture expiré n'est plus listé dans le suivi, même avant d'être effacé (`@depend-de-34`) · L'effacement des enregistrements expirés efface l'enregistrement de lecture et son fichier, et garde les autres · Un fichier d'enregistrement sans enregistrement de lecture, rangé il y a `<âge>`, `<résultat>` (2 cas) · Un parent ne peut pas lancer l'effacement des enregistrements expirés (`@acces`) | 38.12, 38.14, 38.26 |
+| 7 | Seul un parent rattaché garde, liste, écoute ou supprime les enregistrements de lecture d'un enfant ; l'enfant ne réécoute que celui qu'il vient de faire | Un parent qui n'est pas rattaché ne liste pas les enregistrements de lecture de Léa · … n'écoute pas un enregistrement de lecture de Léa, même avec `<moyen>` (2 cas : identifiant, chemin du fichier) · … ne supprime pas un enregistrement de lecture de Léa · … ne garde pas d'enregistrement de lecture pour Léa · Le suivi de Léa ne montre jamais les enregistrements de lecture d'un autre enfant (`@depend-de-34`) · L'enfant ne réécoute pas un enregistrement de lecture déjà gardé en rejouant l'exercice · Un autre enfant de la même tablette ne réécoute pas l'enregistrement de lecture de Léa (tous `@acces`) | 38.9 |
+| 8 | S'enregistrer et écouter se font au doigt, au clavier, avec un lecteur d'écran et sur un petit écran | Le bouton d'enregistrement tient dans un écran de 360 px et se touche du doigt · Pendant l'enregistrement, « Arrêter » tient dans un écran de 360 px et se touche du doigt · Un lecteur d'écran annonce que l'enregistrement est en cours · Un lecteur d'écran annonce la fin de l'enregistrement · Au clavier, l'enfant s'enregistre et s'arrête sans souris · Avec les mouvements réduits, l'enregistrement en cours est signalé sans animation · Les enregistrements de lecture du suivi tiennent dans un écran de 360 px et se touchent du doigt (`@depend-de-34`) | 38.25 |
 
-Total : **8 règles, 46 scénarios (56 cas)**, dont **25 `@a-valider`** (un seul bloc `Exemples` du plan de refus en porte le tag), **8 `@acces`** et **13 `@depend-de-34`**.
+Total : **8 règles, 46 scénarios (56 cas)**, dont **0 `@a-valider`** (25 avant la décision du PO), **8 `@acces`** et **13 `@depend-de-34`**.
 
-8 règles, c'est au-dessus des 6 conseillées par le skill. La story peut se livrer en deux temps, ce qui suit aussi la dépendance à #34 :
+8 règles, c'est au-dessus des 6 conseillées par le skill. La story se livre en deux temps (décision du PO, détail dans « Décisions du PO (25/10) »), ce qui suit aussi la dépendance à #34 :
 1. **l'enfant** (règles 1, 2, 3, 8 sans le dernier scénario) et **l'expiration et les droits** hors suivi (règles 6 et 7 sans leurs scénarios `@depend-de-34`) : tout se vérifie sans le suivi, par la réécoute et par les étapes « Paul retrouve … » et « Paul demande à écouter … » (appels directs sous le JWT de Paul) ;
 2. **le bloc du suivi** (règles 4 et 5, et les 13 scénarios `@depend-de-34`), après le merge de #34.
 
@@ -130,9 +130,13 @@ Aucune étape existante n'est modifiée.
 
 ## Questions ouvertes
 
-Les questions **38.1 à 38.20** sont dans `docs/stories/38/domain-model.md`, avec leurs recommandations. Les scénarios les suivent ; ceux qui en dépendent portent `@a-valider` et `# Question 38.n`. Rappel des scénarios concernés :
+Aucune. Toutes les questions sont tranchées (voir « Décisions du PO (25/10) »).
 
-| n° | Sujet | Scénarios `@a-valider` |
+## Questions traitées
+
+Les questions **38.1 à 38.20** sont dans `docs/stories/38/domain-model.md`, avec leurs recommandations, toutes retenues. Les scénarios qui en dépendent portent `# Réponse 38.n`. Rappel des scénarios concernés :
+
+| n° | Sujet | Scénarios concernés (`# Réponse 38.n`) |
 |---|---|---|
 | 38.1 | Enregistrement dans la page, « Arrêter » | Pendant qu'il s'enregistre, l'enfant voit … et peut arrêter |
 | 38.2 | Accord du parent | aucun (hors périmètre) |
@@ -155,7 +159,7 @@ Les questions **38.1 à 38.20** sont dans `docs/stories/38/domain-model.md`, ave
 | 38.19 | Leçons hors du Catalogue refusées | refus « d'une leçon qui n'est pas dans la bibliothèque » |
 | 38.20 | Glossaire (définition élargie, sortes) | aucun (vocabulaire des scénarios inchangé dans les deux cas) |
 
-### Questions nouvelles
+### Questions nouvelles (toutes « reco retenue »)
 
 **38.21. Scénario livré de #22 et phrase « Tu peux t'enregistrer ».** `features/22-memoriser-une-poesie.feature`, plan « Pour une `<sorte>`, le personnage guide invite à `<verbe>` tout le texte », attend « À toi ! `<Verbe>` tout le texte, tranquillement. Quand c'est bon, on joue ! ». Avec #38 (38.17), sur l'appareil des tests E2E, qui sait enregistrer, la phrase complète revient : le scénario de #22 échouera.
 - **Recommandation** : ajouter à ce plan de #22 l'étape « Étant donné que l'appareil ne sait pas enregistrer » (son sens est gardé : on ne mentionne pas ce que l'enfant ne peut pas faire), et laisser à #38 le cas où l'appareil sait enregistrer. Modification faite par l'équipe de #38, dans sa PR, avec l'accord du PO.
@@ -186,6 +190,63 @@ Les questions **38.1 à 38.20** sont dans `docs/stories/38/domain-model.md`, ave
 **38.29. Format des dates du suivi.** Le legacy écrit `23/10/2026` (`fr-FR`). La ligne devient « `<titre>` · `<date>` · gardé jusqu'au `<date d'expiration>` ».
 - **Recommandation** : **même format que la « Dernière séance » de #34** (une seule façon d'écrire une date dans le suivi) ; la date d'expiration est un jour, sans heure.
 
-## Décisions
+## Décisions du PO (25/10)
 
-Aucune pour l'instant : les questions 38.1 à 38.29 attendent la validation du PO.
+Réponse du PO, mot pour mot, le 2026-10-25 à 17:28 UTC (session de questions, vérifiée) : « 38. Reco OK ».
+Elle est consignée dans le commentaire [Responsable] VALIDÉ du 25/10 à 17:30 sur l'issue #38, qui fait foi : https://github.com/SBA-dev/github-move/issues/38#issuecomment-6400846179
+
+Toutes les recommandations sont retenues. Effet sur les scénarios : tous les `@a-valider` sont retirés (25 avant la décision), et les commentaires `# Question 38.n` deviennent `# Réponse 38.n`. Aucun texte de scénario ne change.
+
+| n° | Sujet | Décision |
+|---|---|---|
+| 38.1 | Enregistrement dans la page (`MediaRecorder`), « Arrêter », arrêt automatique | reco retenue |
+| 38.2 | Pas de réglage d'accord du parent dans la beta (dette avant #45) | reco retenue |
+| 38.3 | Arrêt à 3 minutes, refus au-delà de 5 Mo, pas de plafond en nombre | reco retenue |
+| 38.4 | Ni prolongation au-delà de 30 jours, ni « Télécharger » | reco retenue |
+| 38.5 | Export : hors périmètre, reporté dans #14 | reco retenue |
+| 38.6 | Tous les enregistrements non expirés, sans pagination | reco retenue |
+| 38.7 | Sans réseau, rien gardé sur l'appareil ; l'attente du réseau relève de #44 | reco retenue |
+| 38.8 | « gardé jusqu'au … » sur chaque ligne et « Les enregistrements sont effacés au bout de 30 jours. » | reco retenue |
+| 38.9 | L'enfant ne supprime ni ne revoit rien ; chaque enregistrement est gardé | reco retenue |
+| 38.10 | Messages du legacy : « Bravo ! Ton enregistrement est gardé : tes parents pourront l'écouter. » et « Écoute-toi ! (L'enregistrement n'a pas pu être gardé.) » | reco retenue |
+| 38.11 | Formats de `MediaRecorder`, sans conversion | reco retenue |
+| 38.12 | `pg_cron` + `pg_net` toutes les heures vers l'Edge Function protégée par un secret | reco retenue |
+| 38.13 | Jamais en révision ni au test de départ | reco retenue |
+| 38.14 | Fichiers sans enregistrement de plus d'une heure effacés | reco retenue |
+| 38.15 | Suppression en deux temps, fichier d'abord ; « L'enregistrement n'a pas pu être supprimé. Réessaie. » | reco retenue |
+| 38.16 | Titre de la leçon relu dans le Catalogue, « Enregistrement » si elle n'existe plus | reco retenue |
+| 38.17 | Phrase « Tu peux t'enregistrer… » et bouton seulement si l'appareil sait enregistrer ; « Le micro n'est pas disponible. Tu peux lire à voix haute sans t'enregistrer. » | reco retenue |
+| 38.18 | « J'ai écouté » ou « Je suis prêt » pendant l'enregistrement l'arrête et le garde | reco retenue |
+| 38.19 | Leçon hors du Catalogue refusée pendant la beta | reco retenue |
+| 38.20 | Définition élargie (« lit, récite ou chante ») ; sortes `lecture`, `recitation`, `chanson` | reco retenue |
+| 38.21 | Plan de #22 adapté par « Étant donné que l'appareil ne sait pas enregistrer », dans la PR de #38 | reco retenue |
+| 38.22 | Toujours « enregistrement de lecture » en entier ; étapes livrées de #24 et #27 inchangées | reco retenue |
+| 38.23 | Pas de bloc vide ; le bloc disparaît après la suppression du dernier | reco retenue |
+| 38.24 | Bouton « Écouter » par ligne, URL signée demandée à l'appui ; noms lus avec titre et date | reco retenue |
+| 38.25 | « Arrêter », « Enregistrement en cours », « Enregistrement terminé » ; témoin fixe avec les mouvements réduits ; pas de compte à rebours | reco retenue |
+| 38.26 | Effacement vérifié dans la table et le bucket avec `service_role` (3 cas, exception RGPD) | reco retenue |
+| 38.27 | « Chanson d'automne » : « Je chante et je m'enregistre » pour la beta | reco retenue |
+| 38.28 | Pas de petit son après l'enregistrement | reco retenue |
+| 38.29 | Dates au format de la « Dernière séance » de #34 ; expiration au jour, sans heure | reco retenue |
+
+### Livraison en deux temps
+
+**Temps 1 : l'enfant, l'expiration et les droits.** 33 scénarios (43 cas), aucun `@depend-de-34`. Ils se vérifient sans le suivi, par la réécoute et par les appels directs sous le JWT de Paul (« Paul retrouve … », « Paul demande à écouter … »).
+- Règle 1 (6) : Dans une lecture, après le texte lu, l'enfant peut s'enregistrer avant de dire qu'il a écouté · Pour une `<sorte>`, après le dernier vers, l'enfant peut s'enregistrer avec « `<libellé>` » (2 cas) · Pour une `<sorte>`, le personnage guide invite à `<verbe>` tout le texte et à s'enregistrer (2 cas) · Sur un appareil qui ne sait pas enregistrer, la poésie n'invite pas à s'enregistrer · Sur un appareil qui ne sait pas enregistrer, la lecture ne propose pas de s'enregistrer · Un exercice qui n'est ni une lecture ni une poésie ne propose pas de s'enregistrer.
+- Règle 2 (6) : Pendant qu'il s'enregistre, l'enfant voit qu'il est en train de s'enregistrer et peut arrêter · Après l'arrêt, l'enfant peut se réécouter et continuer l'exercice · L'enregistrement s'arrête tout seul au bout de 3 minutes · Dire qu'il a écouté pendant l'enregistrement l'arrête et le garde · S'enregistrer ne compte pas dans l'avancement de la séance · Si le micro est refusé, l'enfant est prévenu sans reproche et continue l'exercice.
+- Règle 3 (5) : Un enregistrement de lecture gardé est annoncé à l'enfant et se retrouve chez le parent · Sans réseau, l'enfant se réécoute et apprend que l'enregistrement n'a pas pu être gardé · Au retour du réseau, un enregistrement de lecture fait sans réseau n'est pas envoyé · Deux enregistrements dans le même exercice sont gardés tous les deux · Le serveur refuse de garder un enregistrement de lecture `<cas>` (5 cas).
+- Règle 6 (4) : Un enregistrement de lecture fait il y a `<âge>` `<résultat>` (3 cas) · L'effacement des enregistrements expirés efface l'enregistrement de lecture et son fichier, et garde les autres · Un fichier d'enregistrement sans enregistrement de lecture, rangé il y a `<âge>`, `<résultat>` (2 cas) · Un parent ne peut pas lancer l'effacement des enregistrements expirés.
+- Règle 7 (6) : Un parent qui n'est pas rattaché ne liste pas les enregistrements de lecture de Léa · … n'écoute pas un enregistrement de lecture de Léa, même avec `<moyen>` (2 cas) · … ne supprime pas un enregistrement de lecture de Léa · … ne garde pas d'enregistrement de lecture pour Léa · L'enfant ne réécoute pas un enregistrement de lecture déjà gardé en rejouant l'exercice · Un autre enfant de la même tablette ne réécoute pas l'enregistrement de lecture de Léa.
+- Règle 8 (6) : Le bouton d'enregistrement tient dans un écran de 360 px et se touche du doigt · Pendant l'enregistrement, « Arrêter » tient dans un écran de 360 px et se touche du doigt · Un lecteur d'écran annonce que l'enregistrement est en cours · Un lecteur d'écran annonce la fin de l'enregistrement · Au clavier, l'enfant s'enregistre et s'arrête sans souris · Avec les mouvements réduits, l'enregistrement en cours est signalé sans animation.
+
+**Temps 2 : le bloc du suivi, après le merge de #34.** Les 13 scénarios `@depend-de-34` (13 cas). La commande E2E de mise au point les exclut déjà (`--grep-invert "@depend-de|…"`) ; on retire le tag quand #34 est mergée.
+- Règle 4 (6) : Le suivi montre les enregistrements de lecture, du plus récent au plus ancien, avec leur date d'expiration · Le suivi dit que les enregistrements de lecture sont effacés au bout de 30 jours · Tous les enregistrements de lecture non expirés sont montrés, même au-delà de 30 · Un enregistrement de lecture d'une leçon qui n'est plus dans la bibliothèque s'appelle « Enregistrement » · Sans enregistrement de lecture, le suivi ne montre pas leur bloc · Le parent écoute un enregistrement de lecture.
+- Règle 5 (4) : « Supprimer » demande une confirmation avant de supprimer · Après confirmation, l'enregistrement de lecture disparaît du suivi et ne s'écoute plus · Supprimer le dernier enregistrement de lecture retire leur bloc du suivi · Si la suppression échoue, l'enregistrement de lecture reste et le parent peut réessayer.
+- Les 3 scénarios des autres règles qui passent par le suivi : Un enregistrement de lecture expiré n'est plus listé dans le suivi, même avant d'être effacé (règle 6) · Le suivi de Léa ne montre jamais les enregistrements de lecture d'un autre enfant (règle 7) · Les enregistrements de lecture du suivi tiennent dans un écran de 360 px et se touchent du doigt (règle 8).
+
+### À faire par l'équipe
+
+- **38.21, dans la PR de #38** : dans `features/22-memoriser-une-poesie.feature`, plan « Pour une `<sorte>`, le personnage guide invite à `<verbe>` tout le texte », ajouter l'étape « Étant donné que l'appareil ne sait pas enregistrer » avant « Léa joue seulement l'exercice … » (devenu « Et que … »). Ce fichier n'est pas modifié pendant le cadrage.
+- **38.20, 38.22** : le glossaire reçoit, par la session de la story, la définition élargie d'« Enregistrement de lecture », les termes de #38 validés, la résolution des conflits n°9 et n°10, et la note : « enregistrement » seul ne désigne jamais un enregistrement de lecture.
+- **38.2** : noter la dette « accord du parent avant de garder » pour #45 (feuille de route, par le responsable).
+- **Procédure manuelle de la beta** : la suppression d'un profil à la demande d'un parent efface aussi le dossier `<profil>/` du bucket (runbook, par le responsable).
