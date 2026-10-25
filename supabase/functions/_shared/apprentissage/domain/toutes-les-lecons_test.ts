@@ -401,3 +401,14 @@ Deno.test("« Toutes les leçons » dit au front si seules les classes d'avant s
 
   assertEquals([seulement(), seulement("CP"), seulement("CE1"), seulement("CE2")], [false, true, true, false]);
 });
+
+Deno.test("« Toutes les leçons » donne au front le nombre de leçons des classes d'avant après filtre, zéro quand la classe de l'enfant est choisie (26.20)", () => {
+  const sansFiltre = toutesLesLecons(entreesDuFiltre(), {});
+  const classeDAvant = toutesLesLecons(entreesDuFiltre(), { niveau: Niveau.de("CP") });
+  const classeDeLEnfant = toutesLesLecons(entreesDuFiltre(), { niveau: Niveau.de("CE2") });
+
+  assertEquals(
+    [sansFiltre, classeDAvant, classeDeLEnfant].map((resultat) => resultat.nombreDansLesClassesDAvant),
+    [3, 2, 0],
+  );
+});
