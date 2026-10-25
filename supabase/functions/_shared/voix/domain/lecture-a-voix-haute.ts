@@ -100,6 +100,10 @@ export class LectureAVoixHaute {
     this.couperLaVoix();
   }
 
+  reprendre(): void {
+    this.voixSuspendue = false;
+  }
+
   passerEnMuet(): void {
     this.etat = "muet";
     this.couperLaVoix();
