@@ -67,3 +67,9 @@ Deno.test("quand la leçon du jour est la leçon qui vient d'être jouée, il n'
 
   assertEquals(leconSuivanteEnFinDeSeance(francaisReussi, maths2.id), undefined);
 });
+
+Deno.test("après une leçon personnelle, qui n'est pas une leçon de la bibliothèque, aucune leçon suivante n'est proposée même s'il y a une leçon du jour", () => {
+  const leconPersonnelle = lecon("fr-ce1-perso-chats", "francais", "CE1", 0);
+
+  assertEquals(leconSuivanteEnFinDeSeance(entrees([]), leconPersonnelle.id), undefined);
+});
