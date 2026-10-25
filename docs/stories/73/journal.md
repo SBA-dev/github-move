@@ -35,3 +35,5 @@ Branche de base : `main`. Branche : `feature/73-aucun-son-cote-parent`, partie d
 | Intégrations de `main` | 1 (au démarrage), sans conflit |
 | Verrous pris | aucun (verrou `merge` à venir) |
 | Escalades | aucune |
+- 18:45 UTC — `VERROU merge` accordé (annonce [Responsable] « MAIN A BOUGÉ : #28 mergée … VERROU merge accordé à #73 »). Intégration de `main` `be8f648` (#28) : merge `efe81c3` sans conflit textuel, mais `tsc` refuse le `switch` de `ecranAffiche` : #28 ajoute le lieu `revision`. C'est la garde voulue (73.7). Cycle TDD : `7caebf1` RED (révision parmi les écrans de l'enfant), `25d8e53` GREEN. Unitaires 2008/2008, `tsc` et build verts.
+- 18:50 UTC — Sous verrou : périmètre #73, #28, #5, #7, #10, #11, #15, #16, #65, #72 et socle sur `telephone` (`--workers=2`) ; relecture du delta d'intégration.
