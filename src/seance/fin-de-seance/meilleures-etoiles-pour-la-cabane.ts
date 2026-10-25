@@ -17,7 +17,15 @@ export async function lireLesMeilleuresEtoilesPourLaCabane(profil: string): Prom
 }
 
 /** Les étoiles d'avant la séance, ou `undefined` si leur lecture dépasse le délai maximal. */
-export function lireLesMeilleuresEtoilesAvantLaSeance(profil: string): Promise<MeilleuresEtoilesDuProfil | undefined> {
-  const abandon = new Promise<undefined>((resoudre) => setTimeout(resoudre, DELAI_MAXIMAL_DE_LECTURE_EN_MS));
-  return Promise.race([lireLesMeilleuresEtoilesPourLaCabane(profil), abandon]);
+export async function lireLesMeilleuresEtoilesAvantLaSeance(profil: string): Promise<MeilleuresEtoilesDuProfil | undefined> {
+  let annulerLAbandon = () => {};
+  const abandon = new Promise<undefined>((resoudre) => {
+    const minuteur = setTimeout(resoudre, DELAI_MAXIMAL_DE_LECTURE_EN_MS);
+    annulerLAbandon = () => clearTimeout(minuteur);
+  });
+  try {
+    return await Promise.race([lireLesMeilleuresEtoilesPourLaCabane(profil), abandon]);
+  } finally {
+    annulerLAbandon();
+  }
 }

@@ -47,17 +47,5 @@ export async function lireToutesLesMeilleuresEtoilesSiPossible(profil: string): 
 
 /** Lecture sous RLS des résultats de toutes les leçons du profil. Vide si la lecture est impossible (sans réseau). */
 export async function lireToutesLesMeilleuresEtoiles(profil: string): Promise<ReadonlyMap<string, Etoiles>> {
-  const meilleures = new Map<string, Etoiles>();
-  if (!estUnIdentifiantDeProfil(profil)) return meilleures;
-  try {
-    const { data, error } = await clientSupabase().from("resultats_des_lecons").select("lecon, meilleures_etoiles").eq("profil", profil);
-    if (error || data === null) return meilleures;
-    for (const ligne of data as readonly LigneDeResultat[]) {
-      const etoiles = enEtoiles(ligne.meilleures_etoiles);
-      if (typeof ligne.lecon === "string" && etoiles) meilleures.set(ligne.lecon, etoiles);
-    }
-  } catch {
-    return new Map();
-  }
-  return meilleures;
+  return (await lireToutesLesMeilleuresEtoilesSiPossible(profil)) ?? new Map();
 }
