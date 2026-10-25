@@ -1,5 +1,6 @@
-import { assertEquals } from "@std/assert";
-import { leconDeMots, leconDeVerbes } from "./generateurs-locaux.ts";
+import { assertEquals, assertThrows } from "@std/assert";
+import { LeconImpossibleAPreparer } from "./erreurs.ts";
+import { leconDeMots, leconDePoesie, leconDeTexte, leconDeVerbes, leconDuTexte } from "./generateurs-locaux.ts";
 import { presentDuPremierGroupe } from "./present-du-premier-groupe.ts";
 import { TexteDuParent } from "./texte-du-parent.ts";
 
@@ -167,4 +168,175 @@ Deno.test("sans verbe régulier du 1er groupe, la leçon ne propose aucune conju
   const { contenu } = leconDeVerbes(texte);
 
   assertEquals(contenu.exercices.some((exercice) => exercice.type === "conjugaison"), false);
+});
+
+const POESIE = "Au clair de la lune,\nMon ami Pierrot,\nPrête-moi ta plume\nPour écrire un mot.";
+
+const TEXTE_DOCUMENTAIRE = [
+  "Les abeilles construisent des ruches.",
+  "Les abeilles fabriquent du miel.",
+  "Une reine pond beaucoup d'oeufs.",
+  "Les ouvrières butinent les fleurs.",
+  "Le miel nourrit toute la colonie.",
+  "Ainsi, la ruche vit tout l'été.",
+].join(" ");
+
+Deno.test("la leçon d'une poésie est titrée avec son premier vers sans ponctuation finale", () => {
+  const { contenu } = leconDePoesie(TexteDuParent.de(POESIE));
+
+  assertEquals(contenu.titre, "Poésie : Au clair de la lune");
+});
+
+Deno.test("la leçon d'une poésie a une étape pour apprendre un texte par cœur", () => {
+  const { contenu } = leconDePoesie(TexteDuParent.de(POESIE));
+
+  assertEquals(contenu.etapes, [{
+    texte: "Pour apprendre un texte par cœur, on l'écoute vers par vers, puis on le redit sans regarder.",
+    exemples: [],
+  }]);
+});
+
+Deno.test("la leçon d'une poésie propose un seul exercice à mémoriser avec les vers", () => {
+  const { contenu } = leconDePoesie(TexteDuParent.de(POESIE));
+  const memoriser = contenu.exercices[0];
+
+  assertEquals(contenu.exercices.length, 1);
+  assertEquals(memoriser.type, "memoriser");
+  assertEquals(memoriser.type === "memoriser" && memoriser.vers, [
+    "Au clair de la lune,",
+    "Mon ami Pierrot,",
+    "Prête-moi ta plume",
+    "Pour écrire un mot.",
+  ]);
+});
+
+Deno.test("l'exercice à mémoriser d'une poésie garde 16 vers au plus", () => {
+  const vingtVers = Array.from({ length: 20 }, (_, i) => `Vers numéro ${i + 1}`).join("\n");
+
+  const { contenu } = leconDePoesie(TexteDuParent.de(vingtVers));
+
+  assertEquals(contenu.exercices[0].type === "memoriser" && contenu.exercices[0].vers.length, 16);
+});
+
+Deno.test("la leçon d'un texte documentaire est titrée avec ses 40 premiers caractères suivis de « … »", () => {
+  const { contenu } = leconDeTexte(TexteDuParent.de(TEXTE_DOCUMENTAIRE));
+
+  assertEquals(contenu.titre, "Lecture : Les abeilles construisent des ruches. Le…");
+});
+
+Deno.test("la leçon d'un texte documentaire de 40 caractères ou moins est titrée sans « … »", () => {
+  const { contenu } = leconDuTexte(TexteDuParent.de("Le chat dort sur le lit. Il est bien là."), "texteDocumentaire");
+
+  assertEquals(contenu.titre, "Lecture : Le chat dort sur le lit. Il est bien là.");
+});
+
+Deno.test("la leçon d'un texte documentaire a une étape pour écouter, retrouver les mots et remettre les phrases dans l'ordre", () => {
+  const { contenu } = leconDeTexte(TexteDuParent.de(TEXTE_DOCUMENTAIRE));
+
+  assertEquals(contenu.etapes, [{
+    texte: "Écoute bien le texte. Ensuite, retrouve les mots qui manquent et remets les phrases dans l'ordre.",
+    exemples: [],
+  }]);
+});
+
+Deno.test("« Les mots envolés » cache les 4 premiers mots distincts de 6 lettres ou plus, les 5e et 6e sont des distracteurs", () => {
+  const { contenu } = leconDeTexte(TexteDuParent.de(TEXTE_DOCUMENTAIRE));
+  const trous = contenu.exercices.find((exercice) => exercice.type === "trous");
+
+  assertEquals(trous?.titre, "Les mots envolés");
+  assertEquals(trous?.consigne, "Retrouve les mots qui manquent.");
+  assertEquals(
+    trous?.type === "trous" && [...new Set(trous.motsAttendus)],
+    ["abeilles", "construisent", "ruches", "fabriquent"],
+  );
+  assertEquals(trous?.type === "trous" && trous.distracteurs, ["beaucoup", "ouvrières"]);
+});
+
+Deno.test("« Dans l'ordre » propose les 5 premières phrases du texte", () => {
+  const { contenu } = leconDeTexte(TexteDuParent.de(TEXTE_DOCUMENTAIRE));
+  const ordre = contenu.exercices.find((exercice) => exercice.type === "ordre");
+
+  assertEquals(ordre?.titre, "Dans l'ordre");
+  assertEquals(ordre?.consigne, "Remets les phrases du texte dans l'ordre.");
+  assertEquals(ordre?.type === "ordre" && ordre.elements, [
+    "Les abeilles construisent des ruches.",
+    "Les abeilles fabriquent du miel.",
+    "Une reine pond beaucoup d'oeufs.",
+    "Les ouvrières butinent les fleurs.",
+    "Le miel nourrit toute la colonie.",
+  ]);
+});
+
+Deno.test("une phrase de 8 caractères ou moins n'est pas retenue dans « Dans l'ordre »", () => {
+  const texte = TexteDuParent.de(
+    "Les abeilles construisent des ruches. Il dort. Les abeilles fabriquent du miel. Une reine pond beaucoup d'oeufs.",
+  );
+
+  const { contenu } = leconDeTexte(texte);
+  const ordre = contenu.exercices.find((exercice) => exercice.type === "ordre");
+
+  assertEquals(ordre?.type === "ordre" && ordre.elements.includes("Il dort."), false);
+});
+
+Deno.test("avec moins de 3 phrases, la leçon d'un texte ne propose pas « Dans l'ordre »", () => {
+  const texte = TexteDuParent.de("Les abeilles construisent des ruches. Les abeilles fabriquent du miel.");
+
+  const { contenu } = leconDeTexte(texte);
+
+  assertEquals(contenu.exercices.some((exercice) => exercice.type === "ordre"), false);
+});
+
+Deno.test("un texte dont les mots longs n'offrent pas deux choix par trou ne propose pas « Les mots envolés »", () => {
+  const texte = TexteDuParent.de("Le chat dort sur le tapis. Il mange du pain. Elle joue dehors. Il rit et il sort.");
+
+  const { contenu } = leconDeTexte(texte);
+
+  assertEquals(contenu.exercices.some((exercice) => exercice.type === "trous"), false);
+});
+
+Deno.test("sans exercice possible, un texte documentaire de 2 phrases courtes se replie sur « Mon texte » à mémoriser", () => {
+  const texte = TexteDuParent.de("Le chat dort sur le lit. Il est bien là.");
+
+  const { contenu } = leconDuTexte(texte, "texteDocumentaire");
+
+  assertEquals(contenu.exercices.length, 1);
+  assertEquals(contenu.exercices[0].type, "memoriser");
+  assertEquals(contenu.exercices[0].titre, "Mon texte");
+  assertEquals(
+    contenu.exercices[0].type === "memoriser" && contenu.exercices[0].vers,
+    ["Le chat dort sur le lit.", "Il est bien là."],
+  );
+});
+
+Deno.test("une liste de mots dont tous les mots sont écartés se replie sur « Mon texte » et signale les mots écartés", () => {
+  const texte = TexteDuParent.de("zoo@\nchat@\nlion@");
+
+  const { contenu, ecartes } = leconDuTexte(texte, "listeDeMots");
+
+  assertEquals(contenu.exercices[0].titre, "Mon texte");
+  assertEquals(contenu.exercices[0].type === "memoriser" && contenu.exercices[0].vers, ["zoo@", "chat@", "lion@"]);
+  assertEquals(ecartes, ["zoo@", "chat@", "lion@"]);
+});
+
+Deno.test("le repli « Mon texte » garde 12 lignes au plus", () => {
+  const texte = TexteDuParent.de(Array.from({ length: 15 }, (_, i) => `zoo${i}@`).join("\n"));
+
+  const { contenu } = leconDuTexte(texte, "listeDeMots");
+
+  assertEquals(contenu.exercices[0].type === "memoriser" && contenu.exercices[0].vers.length, 12);
+});
+
+Deno.test("un texte d'une seule phrase courte ne permet pas de préparer une leçon", () => {
+  const erreur = assertThrows(
+    () => leconDuTexte(TexteDuParent.de("Le chat dort."), "texteDocumentaire"),
+    LeconImpossibleAPreparer,
+  );
+
+  assertEquals(erreur.message, "Ce texte ne permet pas de préparer une leçon.");
+});
+
+Deno.test("leconDuTexte aiguille une poésie vers sa leçon de poésie", () => {
+  const { contenu } = leconDuTexte(TexteDuParent.de(POESIE), "poesie");
+
+  assertEquals(contenu.titre, "Poésie : Au clair de la lune");
 });
