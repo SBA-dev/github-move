@@ -1,6 +1,10 @@
 import { assertEquals } from "@std/assert";
 import { generateurIdFixe } from "../test_utils/generateur-id-fixe.ts";
 import { hasardFixe, hasardSansMelange } from "../test_utils/hasard-fixe.ts";
+import {
+  leconPoserUneAdditionEnColonnesAuCP,
+  POSITION_DU_CALCUL_AVEC_RETENUE,
+} from "../test_utils/lecons-d-addition.ts";
 import { leconDAdditionsTireesDe1a5AuCE1, leconLesDoublesAuCP } from "../test_utils/lecons-de-calcul.ts";
 import { ChoixDeSeance } from "./choix-de-seance.ts";
 import { CleDeQuestion } from "./cle-de-question.ts";
@@ -47,5 +51,36 @@ Deno.test("une question ratée d'un calcul écrit dans la leçon n'a pas de tira
   assertEquals(fait.questionsRateesARetenir, [{
     identite: CleDeQuestion.de("calcul", "2 + 2"),
     origine: { leconDOrigine: "ma-cp-les-doubles", position: 0, type: "calcul" },
+  }]);
+});
+
+Deno.test("une addition tirée ratée garde dans son origine l'addition tirée", () => {
+  const seance = Seance.commencer(
+    generateurIdFixe("seance-1"),
+    hasardSansMelange(),
+    "profil-tom",
+    leconPoserUneAdditionEnColonnesAuCP(),
+    ChoixDeSeance.unExercice(POSITION_DU_CALCUL_AVEC_RETENUE),
+  );
+  seance.direJeNeSaisPas();
+  seance.repondre(Reponse.choix("18"));
+  seance.repondre(Reponse.choix("11"));
+  seance.repondre(Reponse.choix("1"));
+  for (let addition = 1; addition < 3; addition++) {
+    seance.repondre(Reponse.choix("18"));
+    seance.repondre(Reponse.choix("11"));
+    seance.repondre(Reponse.choix("1"));
+  }
+
+  const fait = seance.terminer(fin);
+
+  assertEquals(fait.questionsRateesARetenir, [{
+    identite: CleDeQuestion.de("calcul", "59 + 59"),
+    origine: {
+      leconDOrigine: "ma-cp-addition-posee",
+      position: POSITION_DU_CALCUL_AVEC_RETENUE,
+      type: "calcul",
+      tirage: "59 + 59",
+    },
   }]);
 });
