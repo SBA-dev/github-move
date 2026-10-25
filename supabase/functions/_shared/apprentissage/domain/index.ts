@@ -72,6 +72,13 @@ export type {
   LeconsDUnNiveau,
   ToutesLesLecons,
 } from "./toutes-les-lecons.ts";
+export { leconDuJour } from "./lecon-du-jour.ts";
+export type { EntreesDuJour, LeconDuJour } from "./lecon-du-jour.ts";
+export { tuilesDeMatiere } from "./tuiles-de-matiere.ts";
+export type { TuileDeMatiere } from "./tuiles-de-matiere.ts";
+export { tuilesDuJour } from "./tuiles-du-jour.ts";
+export type { EntreesDesTuilesDuJour, TuileDuJour } from "./tuiles-du-jour.ts";
+export { leconSuivanteEnFinDeSeance } from "./lecon-suivante-en-fin-de-seance.ts";
 export { leconSuivanteDansLeParcours } from "./lecon-suivante-dans-le-parcours.ts";
 export type {
   EntreesDuParcours,

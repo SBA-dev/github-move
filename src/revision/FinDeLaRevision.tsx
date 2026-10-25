@@ -5,6 +5,7 @@ import { messageDeSauvegarde } from "../seance/fin-de-seance/useSauvegardeDeLaSe
 import { jourDuNavigateur } from "../seance/jour-du-navigateur.ts";
 import { ParoleDuGuide } from "../test-de-depart/ParoleDuGuide.tsx";
 import { enregistrerLaRevisionSurLAppareil } from "./copie-de-la-file-sur-l-appareil.ts";
+import { retenirLaSeanceDeRevisionTerminee } from "./seances-de-revision-terminees-pendant-l-utilisation.ts";
 import { sauvegarderLaSeanceDeRevision } from "./sauvegarde-de-la-seance-de-revision.ts";
 import type { Personnage } from "./useDeroulementDeRevision.ts";
 
@@ -34,6 +35,7 @@ export function FinDeLaRevision({ seance, prenom, personnage, univers, onAccueil
     const maintenant = new Date();
     const terminee = seance.terminer(maintenant, jourDuNavigateur(maintenant));
     enregistrerLaRevisionSurLAppareil(terminee.enfant, terminee.resultats, terminee.jour, terminee.termineeLe);
+    retenirLaSeanceDeRevisionTerminee(terminee.enfant, terminee.jour.toString());
     setPret(true);
     if (affichee.current) {
       void dire({

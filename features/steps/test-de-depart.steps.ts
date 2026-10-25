@@ -9,8 +9,9 @@ import {
   refuserLaBibliotheque,
   servirLaBibliothequeDuTestDeDepart,
   suivreLesLecturesDuResultat,
-  titreDeLaQuestion,
+  titreDeLaQuestion as titreDeLaQuestionDeTest,
 } from "../support/bibliotheque-du-test-de-depart.ts";
+import { QUESTIONS_DE_REVISION } from "../support/bibliotheque-des-revisions.ts";
 import { deposerLaSession, ouvrirUneSessionSansEmail } from "../support/connexion-sans-email.ts";
 import type { Famille } from "../support/famille.ts";
 import { ecrireUnResultatDeLecon, ecrireUnResultatDeTestDeDepart } from "../support/supabase-test.ts";
@@ -45,7 +46,8 @@ const DELAI_DE_LA_TRANSITION_MS = 15_000;
 const proposition = (page: Page) => page.getByTestId("proposition-du-test-de-depart");
 const finDuTest = (page: Page) => page.getByTestId("fin-du-test-de-depart");
 const accueilDeLEnfant = (page: Page) => page.getByRole("region", { name: /^Accueil de / });
-const boutonMonTestDeDepart = (page: Page) => page.getByRole("button", { name: "Mon test de départ", exact: true });
+// Le nom du bouton est le titre de la tuile, suivi (ou non) de sa proposition : seul le titre compte.
+const boutonMonTestDeDepart = (page: Page) => page.getByRole("button", { name: /^Mon test de départ(?: |$)/ });
 const boutonOui = (page: Page) => page.getByRole("button", { name: "Oui, on y va !", exact: true });
 const boutonPlusTard = (page: Page) => page.getByRole("button", { name: "Plus tard", exact: true });
 const jeNeSaisPas = (page: Page) => page.getByTestId("je-ne-sais-pas");
@@ -156,6 +158,15 @@ async function accueilDeLeaSurLeTelephoneDePaul(famille: Famille, browser: Brows
 
 // --- Jouer le test de départ comme un enfant
 
+// Story #29 : « Les sons de révision » (leçon de #28) est dans la bibliothèque de l'accueil ; ses questions ont leurs propres bonnes réponses.
+const questionDeRevisionPosee = (enonce: string) => QUESTIONS_DE_REVISION.find((q) => q.enonce === enonce);
+const titreDeLaQuestion = (enonce: string) => questionDeRevisionPosee(enonce)?.leconTitre ?? titreDeLaQuestionDeTest(enonce);
+
+async function reponseJusteAffichee(page: Page): Promise<string> {
+  const enonce = await enonceAffiche(page);
+  return (enonce === null ? undefined : questionDeRevisionPosee(enonce)?.reponse) ?? REPONSE_JUSTE;
+}
+
 type Maniere = "juste" | "jeNeSaisPas" | { readonly erreurs: number };
 type QuestionCourante = { readonly fin: true } | { readonly fin: false; readonly titre: string; readonly enonce: string };
 
@@ -195,9 +206,10 @@ async function laQuestionPosee(page: Page, titre: string): Promise<string> {
 }
 
 async function faireUneErreur(page: Page): Promise<void> {
-  const possibles = (await textesDesChoixPossibles(page)).filter((texte) => texte !== REPONSE_JUSTE);
+  const juste = await reponseJusteAffichee(page);
+  const possibles = (await textesDesChoixPossibles(page)).filter((texte) => texte !== juste);
   // Quand toutes les mauvaises bulles sont déjà grisées, l'enfant touche une bulle grisée : rien ne change.
-  const cible = possibles[0] ?? (await textesDesChoix(page)).find((texte) => texte !== REPONSE_JUSTE) ?? CHOIX_FAUX[0];
+  const cible = possibles[0] ?? (await textesDesChoix(page)).find((texte) => texte !== juste) ?? CHOIX_FAUX[0];
   const touchee = bulleDeChoix(page, cible);
   await touchee.click({ force: possibles.length === 0 });
   if (possibles.length > 0) await expect(touchee).toHaveAttribute("aria-disabled", "true");
@@ -210,7 +222,7 @@ async function direJeNeSaisPas(page: Page): Promise<void> {
 }
 
 async function donnerLaBonneReponse(page: Page, reussiesAvant: number): Promise<void> {
-  await bulleDeChoix(page, REPONSE_JUSTE).click();
+  await bulleDeChoix(page, await reponseJusteAffichee(page)).click();
   await expect(recipient(page)).toHaveAttribute("data-questions-reussies", String(reussiesAvant + 1));
 }
 
@@ -463,7 +475,8 @@ Then(
   },
 );
 
-Then(/^l'écran s'intitule « ([^«»]+) », avec « ([^«»]+) »$/, async ({ page }, titre: string, sousTitre: string) => {
+// Tag @issue-27 : #28 et #29 ont leur propre étape de même texte (écran de la révision) ; un scénario qui porterait aussi leur tag serait ambigu.
+Then(/^l'écran s'intitule « ([^«»]+) », avec « ([^«»]+) »$/, { tags: "@issue-27" }, async ({ page }, titre: string, sousTitre: string) => {
   await expect(page.getByRole("heading", { level: 2, name: titre, exact: true })).toBeVisible();
   await expect(page.getByTestId("sous-titre-du-test-de-depart")).toHaveText(sousTitre);
 });

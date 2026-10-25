@@ -135,7 +135,8 @@ function accueil(page: Page): Locator {
 }
 
 function boutonDAcces(page: Page): Locator {
-  return accueil(page).getByRole("button", { name: ECRAN, exact: true });
+  // Story #29 : l'accès à l'écran est le bouton du dock.
+  return page.getByRole("navigation", { name: "Mes écrans", exact: true }).getByRole("button", { name: ECRAN, exact: true });
 }
 
 function titreDeLEcran(page: Page): Locator {

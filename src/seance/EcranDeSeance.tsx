@@ -53,6 +53,7 @@ type Props = {
   readonly clavierDesDictees: ValeurDuClavierDesDictees;
   readonly onRetour: () => void;
   readonly onLeconSuivante: (leconId: string) => void;
+  readonly onToutesLesLecons: () => void;
   readonly onAccueil: () => void;
 };
 
@@ -147,7 +148,7 @@ type PropsEnCours = Omit<PropsDUnePartie, "exercice" | "profilId" | "clavierDesD
 };
 
 function SeanceEnCours(
-  { seance, lecon, prenom, niveau, univers, voix, toutLireAVoixHaute, meilleuresEtoilesAvant, onRetour, onRejouer, onLeconSuivante, onAccueil }: PropsEnCours,
+  { seance, lecon, prenom, niveau, univers, voix, toutLireAVoixHaute, meilleuresEtoilesAvant, onRetour, onRejouer, onLeconSuivante, onToutesLesLecons, onAccueil }: PropsEnCours,
 ) {
   const deroulement = useDeroulementDeSeance(seance, lecon, voix, univers.personnageGuide, toutLireAVoixHaute, prenom);
   const { commencer, abandonner } = deroulement;
@@ -239,6 +240,7 @@ function SeanceEnCours(
           meilleuresEtoilesAvant={meilleuresEtoilesAvant}
           onRejouer={onRejouer}
           onLeconSuivante={onLeconSuivante}
+          onToutesLesLecons={onToutesLesLecons}
           onAccueil={onAccueil}
         />
       )}

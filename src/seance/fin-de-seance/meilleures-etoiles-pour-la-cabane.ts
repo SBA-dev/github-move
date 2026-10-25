@@ -1,5 +1,6 @@
 import { meilleuresEtoilesReunies } from "@domain/apprentissage";
 import type { MeilleuresEtoilesDuProfil } from "@domain/motivation";
+import { avecDelaiMaximal } from "../../reseau/avec-delai-maximal.ts";
 import { reseauDisponible } from "../../reseau/reseau-disponible.ts";
 import { etoilesGagneesPendantLUtilisation } from "./etoiles-gagnees-pendant-l-utilisation.ts";
 import { lireToutesLesMeilleuresEtoilesSiPossible } from "./lecture-des-meilleures-etoiles-supabase.ts";
@@ -17,15 +18,6 @@ export async function lireLesMeilleuresEtoilesPourLaCabane(profil: string): Prom
 }
 
 /** Les étoiles d'avant la séance, ou `undefined` si leur lecture dépasse le délai maximal. */
-export async function lireLesMeilleuresEtoilesAvantLaSeance(profil: string): Promise<MeilleuresEtoilesDuProfil | undefined> {
-  let annulerLAbandon = () => {};
-  const abandon = new Promise<undefined>((resoudre) => {
-    const minuteur = setTimeout(resoudre, DELAI_MAXIMAL_DE_LECTURE_EN_MS);
-    annulerLAbandon = () => clearTimeout(minuteur);
-  });
-  try {
-    return await Promise.race([lireLesMeilleuresEtoilesPourLaCabane(profil), abandon]);
-  } finally {
-    annulerLAbandon();
-  }
+export function lireLesMeilleuresEtoilesAvantLaSeance(profil: string): Promise<MeilleuresEtoilesDuProfil | undefined> {
+  return avecDelaiMaximal(lireLesMeilleuresEtoilesPourLaCabane(profil), DELAI_MAXIMAL_DE_LECTURE_EN_MS);
 }

@@ -253,7 +253,7 @@ Fonctionnalité: Parcours par matière
         | L'imparfait | CE2    | réussie, 1 étoile  |
       Et « Le son in » est la prochaine leçon
 
-  Règle: À la fin d'une séance, la leçon suivante est la première leçon d'après non réussie du même parcours, sinon la leçon juste après
+  Règle: À la fin d'une séance, la leçon suivante est la première leçon d'après non réussie du même parcours, sinon la leçon juste après ; sans leçon suivante dans le parcours, la leçon du jour (#29)
 
     Scénario: La leçon suivante saute une leçon déjà réussie
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
@@ -284,15 +284,19 @@ Fonctionnalité: Parcours par matière
       Alors la fin de la séance annonce « Ensuite : Les mots contraires »
       Et la leçon suivante ouvre la page de la leçon « Les mots contraires »
 
-    Scénario: Après la dernière leçon du parcours, aucune leçon d'une autre matière n'est proposée
+    # Réponse 29.8 (#29)
+    @issue-29
+    Scénario: Après la dernière leçon du parcours de français, la fin de la séance propose la leçon du jour en maths
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa joue la séance complète de la leçon « Le pluriel des noms »
       Quand Léa réussit la dernière question de la séance
-      Alors la fin de la séance propose « Accueil » et « Rejouer »
-      Mais aucune leçon suivante n'est proposée
+      Alors la fin de la séance annonce « Ensuite : Les nombres jusqu'à 100 »
+      Et la leçon suivante ouvre la page de la leçon « Les nombres jusqu'à 100 »
 
     # Réponse N10
-    Scénario: Après une leçon réussie d'une classe au-dessus, aucune leçon suivante n'est proposée
+    # Réponse 29.8 (#29)
+    @issue-29
+    Scénario: Après une leçon réussie d'une classe au-dessus, la fin de la séance propose la leçon du jour de sa classe
       Étant donné que Léa a un profil enfant préparé de niveau CE2 dans l'univers « Animaux de la forêt »
       Et que Léa a pour meilleures étoiles :
         | leçon    | étoiles |
@@ -300,8 +304,8 @@ Fonctionnalité: Parcours par matière
       Et que Paul a changé sur la tablette le niveau du profil enfant de Léa en CE1
       Et que Léa joue la séance complète de la leçon « Le futur »
       Quand Léa réussit la dernière question de la séance
-      Alors la fin de la séance propose « Accueil » et « Rejouer »
-      Mais aucune leçon suivante n'est proposée
+      Alors la fin de la séance annonce « Ensuite : Les nombres jusqu'à 100 »
+      Et la leçon suivante ouvre la page de la leçon « Les nombres jusqu'à 100 »
 
   Règle: Le parcours se lit sans réseau, au lecteur d'écran, au clavier et sur un petit écran
 

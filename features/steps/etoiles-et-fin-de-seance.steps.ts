@@ -180,6 +180,11 @@ async function jouerJusquALaFin(page: Page, partieEnCours: Partie): Promise<void
   await attendreLaFinDeLaSeance(page);
 }
 
+/** Joue les questions restantes de la séance ouverte, avec les erreurs prévues du scénario, jusqu'à l'écran de fin. */
+export async function jouerJusquALaFinDeLaSeance(famille: Famille, page: Page): Promise<void> {
+  await jouerJusquALaFin(page, partie(famille));
+}
+
 async function reposerLesErreurs(famille: Famille, page: Page): Promise<Partie> {
   const courante = partie(famille);
   courante.erreursEnTout = 0;
