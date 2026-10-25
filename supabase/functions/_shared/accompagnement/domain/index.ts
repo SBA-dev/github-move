@@ -12,3 +12,5 @@ export type {
   LigneDeLaCarte,
   MatiereDeLaCarte,
 } from "./carte-des-competences.ts";
+export { leconsJouees } from "./lecons-jouees.ts";
+export type { EtoilesAffichees, LeconJouee, MentionDeClasse, TableauDesLeconsJouees } from "./lecons-jouees.ts";

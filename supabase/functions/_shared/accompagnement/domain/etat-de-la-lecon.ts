@@ -4,7 +4,11 @@ import type { Lecon } from "../../catalogue/domain/index.ts";
 import type { EntreesDuSuivi } from "./entrees-du-suivi.ts";
 
 export function leconsDeLaClasseEnCours(entrees: EntreesDuSuivi): readonly Lecon[] {
-  return entrees.lecons.filter((lecon) => lecon.niveau.valeur === entrees.enfant.niveau.valeur);
+  return entrees.lecons.filter((lecon) => estDeLaClasseEnCours(entrees, lecon));
+}
+
+export function estDeLaClasseEnCours(entrees: EntreesDuSuivi, lecon: Lecon): boolean {
+  return lecon.niveau.valeur === entrees.enfant.niveau.valeur;
 }
 
 export function meilleuresEtoilesDeLaLecon(entrees: EntreesDuSuivi, lecon: LeconId): number {
