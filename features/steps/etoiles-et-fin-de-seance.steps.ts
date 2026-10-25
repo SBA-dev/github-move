@@ -141,10 +141,27 @@ async function faireUneErreur(page: Page): Promise<void> {
   await repondre(page, fausse);
 }
 
+// Sans voix, la félicitation de la dernière bonne réponse attend que l'enfant appuie sur « Continuer » (#79).
+const continuesApresLaReussite = new WeakSet<Page>();
+
+export function boutonContinuerApresLaReussite(page: Page) {
+  return page.locator(".continuer-apres-la-reussite");
+}
+
+export function aContinueApresLaReussite(page: Page): boolean {
+  return continuesApresLaReussite.has(page);
+}
+
+export async function continuerApresLaReussite(page: Page): Promise<void> {
+  await boutonContinuerApresLaReussite(page).click();
+  continuesApresLaReussite.add(page);
+}
+
 export async function attendreLaFinDeLaSeance(page: Page): Promise<void> {
   const fin = page.getByTestId("fin-de-seance");
   await expect.poll(async () => {
     if (await fin.isVisible()) return true;
+    if (await boutonContinuerApresLaReussite(page).isVisible()) await continuerApresLaReussite(page);
     await terminerLaLecture(page);
     return false;
   }, { intervals: [100] }).toBe(true);

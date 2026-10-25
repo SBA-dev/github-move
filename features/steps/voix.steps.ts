@@ -2,7 +2,6 @@ import { type BrowserContext, expect, type Page } from "@playwright/test";
 import type { Famille } from "../support/famille.ts";
 import { avecLesReglagesPrevus } from "../support/reglages-prevus.ts";
 import {
-  bulle,
   commencerLaSeanceComplete,
   injecter,
   interceptertLaBibliotheque,
@@ -11,7 +10,7 @@ import {
 } from "./etapes-puis-exercices.steps.ts";
 import { estSurUnProfilReel } from "./profil-reel.ts";
 import { choisirSonProfil, modifierLeProfil } from "./profils-enfants.steps.ts";
-import { allerALaQuestion } from "./exercices-a-choix.steps.ts";
+import { allerALaQuestion, demarrer } from "./exercices-a-choix.steps.ts";
 import { After, Given, Then, When } from "./fixtures.ts";
 
 // --- Préparation du scénario (avant l'ouverture de la page)
@@ -303,7 +302,7 @@ async function commencerLaSeanceDeTest(page: Page, etat: Scenario) {
   lecturesApresLaConsigne.set(page, (await journal(page)).lots);
 }
 
-/** La séance d'un exercice bulles dont la consigne est celle du scénario : Léa l'entend et la voit dans la bulle du personnage guide. */
+/** La séance d'un exercice bulles dont la consigne est celle du scénario : Léa l'entend et la voit affichée. */
 export async function ouvrir(page: Page) {
   const etat = scenario(page);
   if (etat.ouvert) return;
@@ -421,16 +420,24 @@ Given(/^Savanturier n'a jamais été ouvert sur la tablette$/, async ({ page }) 
   scenario(page).muet = false;
 });
 
+// Quand la page est déjà préparée (profil préparé du Contexte, #79), l'état de l'appareil choisi ensuite est réappliqué.
+async function reappliquerSiLaPageEstPreparee(page: Page) {
+  if (pagesPreparees.has(page)) await reappliquerLAppareil(page);
+}
+
 Given(/^la tablette est en Muet$/, async ({ page }) => {
   scenario(page).muet = true;
+  await reappliquerSiLaPageEstPreparee(page);
 });
 
 Given(/^le navigateur bloque la voix$/, async ({ page }) => {
   scenario(page).bloque = true;
+  await reappliquerSiLaPageEstPreparee(page);
 });
 
 Given(/^le navigateur ne sait pas lire à voix haute$/, async ({ page }) => {
   scenario(page).absent = true;
+  await reappliquerSiLaPageEstPreparee(page);
 });
 
 Given(/^le navigateur ne bloque plus la voix$/, async ({ page }) => {
@@ -484,7 +491,8 @@ When(/^la consigne suivante s'affiche$/, async ({ page }) => {
 });
 
 When(/^Léa demande à réécouter la consigne$/, async ({ page }) => {
-  await page.getByRole("button", { name: "Réécouter" }).click();
+  await demarrer(page);
+  await page.getByRole("button", { name: "Relire la consigne", exact: true }).click();
 });
 
 When(/^Léa quitte l'écran de la consigne$/, async ({ page }) => {
@@ -636,8 +644,13 @@ Then(/^Léa entend Noisette lire la consigne$/, async ({ page }) => {
 
 // --- Alors : affichage
 
+/** La consigne affichée, à sa place à elle au-dessus de l'exercice (#79), en dehors de la bulle du personnage guide. */
+export function consigneAffichee(page: Page) {
+  return page.getByTestId("consigne");
+}
+
 Then(/^Léa voit la consigne « (.+) »$/, async ({ page }, texte: string) => {
-  await expect(bulle(page)).toHaveText(normaliser(texte));
+  await expect(consigneAffichee(page)).toHaveText(normaliser(texte));
 });
 
 Then(/^Léa voit la question « (.+) »$/, async ({ page }, question: string) => {
@@ -650,6 +663,19 @@ Then(/^Léa voit le message « (.+) »$/, async ({ page }, message: string) => {
   await expect(statut.or(messageDeLEcoute)).toHaveCount(1);
 });
 
+Then(/^Léa voit un seul message de voix bloquée$/, async ({ page }) => {
+  await expect(messageDeVoixBloquee(page)).toHaveCount(1);
+  await expect(page.getByText("est bloquée par ce navigateur")).toHaveCount(1);
+});
+
+// Le faux navigateur ne termine une lecture que sur demande : la lecture réussie de la voix revenue se termine ici.
+Then(/^Léa ne voit plus le message de voix bloquée$/, async ({ page }) => {
+  await expect.poll(async () => {
+    await terminerLaLecture(page);
+    return await messageDeVoixBloquee(page).count();
+  }, { intervals: [100] }).toBe(0);
+});
+
 Then(/^le message de voix bloquée n'apparaît pas de nouveau$/, async ({ page }) => {
   await expect(messageDeVoixBloquee(page)).toHaveCount(0);
 });
@@ -658,7 +684,7 @@ Then(/^le message de voix bloquée n'apparaît pas de nouveau$/, async ({ page }
 
 Then(/^chaque mot de la consigne est surligné au moment où Noisette le prononce$/, async ({ page }) => {
   await attendreUneLecture(page);
-  const mots = await bulle(page).locator("[data-mot]").allTextContents();
+  const mots = await consigneAffichee(page).locator("[data-mot]").allTextContents();
   expect(mots.length).toBeGreaterThan(0);
   for (const [rang, mot] of mots.entries()) {
     await page.evaluate((rangDuMot) => {
@@ -677,7 +703,7 @@ Then(/^chaque mot de la consigne est surligné au moment où Noisette le prononc
         motsAvant += debuts.length;
       }
     }, rang);
-    const surligne = bulle(page).locator("[data-prononce='true']");
+    const surligne = consigneAffichee(page).locator("[data-prononce='true']");
     await expect(surligne).toHaveCount(1);
     await expect(surligne).toHaveText(mot);
     await expect(surligne).toHaveAttribute("data-mot", String(rang));
@@ -686,7 +712,7 @@ Then(/^chaque mot de la consigne est surligné au moment où Noisette le prononc
 
 Then(/^plus aucun mot n'est surligné quand la lecture est finie$/, async ({ page }) => {
   await terminerLaLecture(page);
-  await expect(bulle(page).locator("[data-prononce='true']")).toHaveCount(0);
+  await expect(consigneAffichee(page).locator("[data-prononce='true']")).toHaveCount(0);
 });
 
 // --- Alors : Son / Muet
