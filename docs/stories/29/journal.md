@@ -38,3 +38,19 @@
 - 20:50 `MAIN A BOUGÉ : #39 mergée` (`906c749`) : seul conflit les imports de `Application.tsx` (`2411bd2`, résolu par `implementer`) ; 2260 tests, lint, fmt, tsc, build verts. Lancés : périmètre #29, #39, #26, #24 sur `telephone` ; review finale cycle 2.
 - 21:15 Review finale cycle 2 : **APPROUVÉ** (publiée sur la PR #90). Périmètre après intégration de #39 (`2411bd2`, `telephone`, `--workers=2`) : 186/187 ; #24 30/30, #26 56/56, #29 71/71, #39 31/32. KO reproductible : « Après une leçon personnelle, aucune leçon suivante n'est proposée » (#39.3) : `leconSuivanteEnFinDeSeance` propose la leçon du jour après une leçon personnelle. Pas d'escalade : la décision #39.3 du PO tranche (la note « à revoir avec #39 » des écarts du modèle). Cycle TDD de correction lancé (E2E cycle 1 KO).
 - `MAIN A BOUGÉ : #34 mergée` (`759203f`) : à intégrer sous le verrou `merge`.
+- 21:35 Fix #39.3 : RED `29f5bed`, GREEN `8bcd7b9` (leçon jouée absente de la bibliothèque → aucune leçon suivante ; la fin de séance propose « Toutes les leçons »), doc `f783a54`. Revue delta : **APPROUVÉ**. E2E (`telephone`, `--workers=2`) : **#29 71/71, #39 33/33** (104/104, 11 min). Unitaires 2261 verts, lint, fmt, tsc, build verts.
+- 21:40 `PRÊTE À MERGER` ; PR #90 passée en « prête » ; `VERROU merge` demandé. Sous le verrou : intégrer `main` (#34 depuis `759203f`, et ce qui aura bougé), relancer unitaires, lint, fmt, tsc, build, puis sur `telephone` le périmètre de #29 et des stories mergées depuis.
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Durée (lancement → PRÊTE À MERGER) | ~4 h 35 (17:03 → 21:40 UTC) |
+| Temps d'attente de dépendance | ~1 h 45 (merge de #28 attendu de 17:05 à 18:45 ; travail non dépendant fait pendant ce temps : domaine, câblage, E2E 272/281) |
+| Attente du PO | aucune (cadrage validé avant le lancement) |
+| Comportements TDD | 7 (leçon du jour, tuiles de matière, tuiles du jour, leçon suivante en fin de séance, objectif du jour, faits du jour, fix #39.3) ; 0 désaccord test-writer/implementer |
+| Revues | 4 revues intermédiaires delta APPROUVÉES (domaine, câblage, intégration de #28 + objectif, fix #39.3) ; review finale : cycle 1 À CORRIGER (1 bloquant de step), cycle 2 APPROUVÉ |
+| Cycles E2E | mise au point 1 : 272/281 (objectif pas encore câblé) ; 2 : #29 71/71, #28+#27 107/107 ; périmètre 0023 : 504/504 (2 timeouts relancés) ; après #39 : 186/187 (1 KO applicatif, interaction #39) ; après fix : 104/104. 1 run perdu (serveur Vite tué par un `pkill`) |
+| Intégrations de `main` | 4 : départ (`8448f19`, conflits d'ajouts doc), #28 (`c10d6d8`, 4 conflits de code + glossaire), #73 (`47b5c9b`, sans conflit), #39 (`2411bd2`, 1 conflit d'imports) ; #34 à intégrer sous verrou |
+| Escalades | aucune |
+| Verrous | aucun (`base` non nécessaire : pas de migration) |
