@@ -33,7 +33,7 @@ export function toutesLesLecons(entrees: EntreesDuParcours, _filtre: FiltreDesLe
       ...matieresDuParcours(entrees).flatMap((matiere) => leconsDeLaMatiere(entrees, matiere)),
       ...leconsDAuDessusMontrees(entrees),
     ],
-    leconsDesClassesDAvant: [],
+    leconsDesClassesDAvant: classesDAvant(entrees),
   };
 }
 
@@ -56,6 +56,26 @@ function leconsDAuDessusMontrees(entrees: EntreesDuParcours): LeconDeToutesLesLe
       titre: lecon.titre,
       etat: etatHorsDuParcours(entrees, lecon.id),
     }));
+}
+
+function classesDAvant(entrees: EntreesDuParcours): ClasseDAvant[] {
+  const matieres = toutesLesMatieres();
+  const rangDeLaMatiere = (lecon: Lecon) => matieres.findIndex((matiere) => matiere.code === lecon.matiere.code);
+  return Niveau.tous()
+    .filter((niveau) => entrees.niveau.estAuDessusDe(niveau))
+    .map((niveau) => ({
+      niveau,
+      lecons: entrees.lecons
+        .filter((lecon) => lecon.niveau.valeur === niveau.valeur)
+        .sort((a, b) => rangDeLaMatiere(a) - rangDeLaMatiere(b) || parOrdrePuisIdentifiant(a, b))
+        .map((lecon) => ({
+          lecon: lecon.id,
+          niveau: lecon.niveau,
+          titre: lecon.titre,
+          etat: etatHorsDuParcours(entrees, lecon.id),
+        })),
+    }))
+    .filter(({ lecons }) => lecons.length > 0);
 }
 
 function leconsDeLaMatiere(entrees: EntreesDuParcours, matiere: Matiere): LeconDeToutesLesLecons[] {
