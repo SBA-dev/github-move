@@ -76,6 +76,7 @@ function RevisionChargee({ lecons, file, niveau, profil, univers, voix, onAccuei
           <DeroulementDeLaRevision
             seance={revision.seance}
             boites={revision.boites}
+            textes={revision.textes}
             nombreDeQuestions={revision.seance.resultats().length}
             personnage={personnage}
             univers={univers}

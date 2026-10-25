@@ -20,11 +20,14 @@ import { etatDeLaVoix } from "../seance/etat-de-la-voix.ts";
 import { RecipientDeProgression } from "../seance/RecipientDeProgression.tsx";
 import { ParoleDuGuide } from "../test-de-depart/ParoleDuGuide.tsx";
 import type { Voix } from "../voix/index.ts";
+import { TexteDeLecture as AffichageDuTexte } from "../seance/exercices/TexteDeLecture.tsx";
+import type { TexteDeLecture } from "./commencer-la-revision.ts";
 import { type Personnage, useDeroulementDeRevision } from "./useDeroulementDeRevision.ts";
 
 type Props = {
   readonly seance: SeanceDeRevision;
   readonly boites: ReadonlyMap<string, ItemDeBoite>;
+  readonly textes: ReadonlyMap<string, TexteDeLecture>;
   readonly nombreDeQuestions: number;
   readonly personnage: Personnage;
   readonly univers: Univers;
@@ -36,7 +39,7 @@ type Props = {
 
 /** La séance de révision en cours : une question à la fois, sans étape de leçon, avec l'avancement de la séance. */
 export function DeroulementDeLaRevision(
-  { seance, boites, nombreDeQuestions, personnage, univers, voix, toutLireAVoixHaute, onFini }: Props,
+  { seance, boites, textes, nombreDeQuestions, personnage, univers, voix, toutLireAVoixHaute, onFini }: Props,
 ) {
   const deroulement = useDeroulementDeRevision({
     seance,
@@ -102,6 +105,13 @@ export function DeroulementDeLaRevision(
               onChoisir={repondreParUnChoix}
               onValider={repondreParUnNombre}
               onJeNeSaisPas={jeNeSaisPas}
+            />
+          )}
+          {question instanceof QuestionJouee && textes.has(courante.identite.valeur) && (
+            <AffichageDuTexte
+              titre={textes.get(courante.identite.valeur)?.titre}
+              texte={textes.get(courante.identite.valeur)?.texte ?? ""}
+              rangDuMotPrononce={undefined}
             />
           )}
           {question instanceof QuestionJouee && (
