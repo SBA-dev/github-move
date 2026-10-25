@@ -225,3 +225,42 @@ Deno.test("un profil sans file de révision enregistre la séance comme une séa
   assertEquals(seances.toutes().map(({ id, nombreDeQuestions }) => [id, nombreDeQuestions]), [["revision-1", 0]]);
   assertEquals(files.fileDe("profil-lea")?.questions, []);
 });
+
+Deno.test("une écriture qui échoue remonte l'erreur sans rien écrire, et le renvoi enregistre la séance", async () => {
+  const fileDuProfil = laFileDuProfil(retenue(chat, 1));
+  const { files, seances, terminer } = monde(fileDuProfil);
+  const envoi = envoiJoue(fileDuProfil);
+  seances.echouerAuProchainAppel();
+
+  await assertRejects(() => terminer.executer({ parent: "parent-paul", seance: envoi }));
+  assertEquals(seances.toutes(), []);
+  assertEquals(laFileApres(files), [[chat.valeur, 1, "2026-10-25"]]);
+
+  const faits = await terminer.executer({ parent: "parent-paul", seance: envoi });
+
+  assertEquals(faits.map((fait) => fait.type), ["SeanceDeRevisionTerminee"]);
+  assertEquals(laFileApres(files), [[chat.valeur, 3, "2026-10-28"]]);
+});
+
+Deno.test("une file modifiée en continu par un autre appareil fait abandonner l'écriture après 3 essais, sans rien écrire", async () => {
+  const fileDuProfil = laFileDuProfil(retenue(chat, 1));
+  const { files, seances, terminer } = monde(fileDuProfil);
+  files.apresChaqueLecture((file) => file.oublier(bateau));
+
+  await assertRejects(() => terminer.executer({ parent: "parent-paul", seance: envoiJoue(fileDuProfil) }));
+  assertEquals(seances.toutes(), []);
+  assertEquals(laFileApres(files), [[chat.valeur, 1, "2026-10-25"]]);
+});
+
+Deno.test("une question dont la leçon d'origine a disparu est oubliée de la file, les autres sont appliquées", async () => {
+  const fileDuNavigateur = laFileDuProfil(retenue(bateau, 1), retenue(chat, 1));
+  const chatDUneLeconDisparue = {
+    ...retenue(chat, 1),
+    origine: { leconDOrigine: "fr-ce1-retiree", position: 0, type: "bulles" as const },
+  };
+  const { files, terminer } = monde(laFileDuProfil(retenue(bateau, 1), chatDUneLeconDisparue));
+
+  await terminer.executer({ parent: "parent-paul", seance: envoiJoue(fileDuNavigateur) });
+
+  assertEquals(laFileApres(files), [[bateau.valeur, 3, "2026-10-28"]]);
+});

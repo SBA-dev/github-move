@@ -1,10 +1,8 @@
 import type { ResultatDeLaLecon } from "../domain/resultat-de-la-lecon.ts";
 import type { SeanceTerminee } from "../domain/seance.ts";
-import type { FileDeRevisionALEcrire } from "../application/ports/seances-terminees.ts";
+import type { FileDeRevisionALEcrire, IssueDeLEnregistrement } from "../application/ports/seances-terminees.ts";
 import type { FilesDeRevisionEnMemoire } from "./files-de-revision-en-memoire.ts";
 import type { ResultatsDesLeconsEnMemoire } from "./resultats-des-lecons-en-memoire.ts";
-
-type Issue = "enregistree" | "dejaEnregistree" | "conflit";
 
 /** Enregistre la séance et le résultat de la leçon d'un seul geste : tout ou rien. */
 export class SeancesTermineesEnMemoire {
@@ -25,7 +23,7 @@ export class SeancesTermineesEnMemoire {
     resultat: ResultatDeLaLecon,
     nombreDeSeancesLu: number,
     file?: FileDeRevisionALEcrire,
-  ): Promise<Issue> {
+  ): Promise<IssueDeLEnregistrement> {
     return Promise.resolve(this.enregistrerSansAttendre(fait, resultat, nombreDeSeancesLu, file));
   }
 
@@ -45,7 +43,7 @@ export class SeancesTermineesEnMemoire {
     resultat: ResultatDeLaLecon,
     nombreDeSeancesLu: number,
     file?: FileDeRevisionALEcrire,
-  ): Issue {
+  ): IssueDeLEnregistrement {
     if (this.echecAuProchainAppel) {
       this.echecAuProchainAppel = false;
       throw new Error("écriture impossible");
