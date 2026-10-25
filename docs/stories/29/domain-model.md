@@ -432,3 +432,4 @@ D'accord ?
 - **Lot 6** : remplir les genres `devoirs` et `dicteeDuJour` de `tuilesDuJour`. Les mots de la semaine compteront pour l'objectif du jour comme la séance de révision (29.2).
 - **#39** : décider si une leçon personnelle peut être la leçon du jour.
 - **#44** : copie sur l'appareil au lancement sans réseau (29.11).
+- **Jour d'une séance ordinaire, à aligner avec #30** : `seances_terminees` n'a pas de colonne de jour ; ce modèle déduit le jour par `jourDe(termineLe, decalage de l'appareil)`, ce qui peut décaler une séance d'un jour après un changement d'heure ou de fuseau. La question 30.6 propose que la séance terminée garde le jour envoyé par l'appareil, comme la séance de révision (28.9). L'objectif du jour et la série doivent lire **le même jour** : la réponse à 30.6 s'applique aussi ici.
