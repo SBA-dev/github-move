@@ -54,7 +54,7 @@ Deno.test("en bulles, la consigne affichée est celle de l'exercice", () => {
 });
 
 Deno.test("en texte à trous, la consigne affichée est celle de l'exercice", () => {
-  const exercice = exerciceDe({ type: "trous", consigne: "Complète chaque phrase.", texte: "Je [suis] ici." });
+  const exercice = exerciceDe({ type: "trous", consigne: "Complète chaque phrase.", texte: "Je [suis] ici.", distracteurs: ["sont"] });
 
   assertEquals(consigneAffichee(exercice), "Complète chaque phrase.");
 });
