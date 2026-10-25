@@ -3,6 +3,7 @@ import { lireLecon, Niveau } from "../../catalogue/domain/index.ts";
 import type { Lecon } from "../../catalogue/domain/index.ts";
 import { Etoiles } from "./etoiles.ts";
 import { matieresDuParcours, parcoursDeLaMatiere } from "./parcours.ts";
+import type { LeconId } from "./parcours.ts";
 
 function lecon(id: string, matiere: string, niveau: string, ordre: number): Lecon {
   return lireLecon({
@@ -180,7 +181,7 @@ Deno.test("les leçons réussies des classes au-dessus ne comptent pas dans le p
 });
 
 function parcoursAvecTestDeDepart(
-  meilleuresEtoiles: Map<string, Etoiles>,
+  meilleuresEtoiles: Map<LeconId, Etoiles>,
   leconsReussiesAuTestDeDepart: string[],
 ) {
   return parcoursDeLaMatiere(
@@ -244,4 +245,106 @@ Deno.test("un enfant redescendu en CE1 retrouve, sans étoiles, une leçon de la
     })),
     [{ lecon: "fr-ce2-futur", niveau: "CE2", titre: "Titre de fr-ce2-futur", etoiles: undefined }],
   );
+});
+
+Deno.test("sans aucune réussite, un enfant de CE2 retrouve les leçons de la matière des classes d'avant, à découvrir, par niveau croissant puis ordre", () => {
+  const voyelles = lecon("fr-cp-voyelles", "francais", "CP", 10);
+  const consonnes = lecon("fr-cp-consonnes", "francais", "CP", 20);
+  const lecturesDuCE1 = lecon("fr-ce1-lectures", "francais", "CE1", 10);
+  const mathsDuCP = lecon("ma-cp-nombres", "maths", "CP", 10);
+  const entrees = {
+    lecons: [lecturesDuCE1, consonnes, mathsDuCP, futurDuCE2, francaisDuCM1, voyelles],
+    niveau: Niveau.de("CE2"),
+    meilleuresEtoiles: new Map(),
+  };
+
+  const parcours = parcoursDeLaMatiere(entrees, futurDuCE2.matiere);
+
+  assertEquals(
+    parcours.leconsDesClassesDAvant.map(({ lecon, niveau, titre, etat }) => ({
+      lecon,
+      niveau: niveau.valeur,
+      titre,
+      etat,
+    })),
+    [
+      { lecon: "fr-cp-voyelles", niveau: "CP", titre: "Titre de fr-cp-voyelles", etat: { genre: "aDecouvrir" } },
+      { lecon: "fr-cp-consonnes", niveau: "CP", titre: "Titre de fr-cp-consonnes", etat: { genre: "aDecouvrir" } },
+      { lecon: "fr-ce1-lectures", niveau: "CE1", titre: "Titre de fr-ce1-lectures", etat: { genre: "aDecouvrir" } },
+    ],
+  );
+});
+
+const voyellesDuCP = lecon("fr-cp-voyelles", "francais", "CP", 10);
+const lecturesDuCE1 = lecon("fr-ce1-lectures", "francais", "CE1", 10);
+
+function etatsDesClassesDAvant(
+  meilleuresEtoiles: Map<LeconId, Etoiles>,
+  leconsReussiesAuTestDeDepart: LeconId[] = [],
+) {
+  const parcours = parcoursDeLaMatiere(
+    {
+      lecons: [voyellesDuCP, lecturesDuCE1, futurDuCE2],
+      niveau: Niveau.de("CE2"),
+      meilleuresEtoiles,
+      leconsReussiesAuTestDeDepart: new Set(leconsReussiesAuTestDeDepart),
+    },
+    futurDuCE2.matiere,
+  );
+  return parcours.leconsDesClassesDAvant.map(({ etat }) => etat);
+}
+
+Deno.test("une leçon des classes d'avant réussie garde ses meilleures étoiles dans son état", () => {
+  const etats = etatsDesClassesDAvant(new Map([[voyellesDuCP.id, Etoiles.de(3)]]));
+
+  assertEquals(etats, [{ genre: "reussie", etoiles: Etoiles.de(3) }, { genre: "aDecouvrir" }]);
+});
+
+Deno.test("une leçon des classes d'avant réussie au test de départ seulement a l'état réussie au test de départ, sans étoiles", () => {
+  const etats = etatsDesClassesDAvant(new Map(), [lecturesDuCE1.id]);
+
+  assertEquals(etats, [{ genre: "aDecouvrir" }, { genre: "reussieAuTestDeDepart" }]);
+});
+
+Deno.test("une leçon des classes d'avant réussie au test de départ qui a aussi des étoiles garde l'état réussie avec ses étoiles", () => {
+  const etats = etatsDesClassesDAvant(new Map([[voyellesDuCP.id, Etoiles.de(2)]]), [voyellesDuCP.id]);
+
+  assertEquals(etats[0], { genre: "reussie", etoiles: Etoiles.de(2) });
+});
+
+Deno.test("quand toutes les leçons du niveau de l'enfant sont réussies, il n'y a pas de prochaine leçon, même s'il reste des leçons des classes d'avant à découvrir", () => {
+  const parcours = parcoursDeLaMatiere(
+    {
+      lecons: [voyellesDuCP, futurDuCE2, imparfaitDuCE2],
+      niveau: Niveau.de("CE2"),
+      meilleuresEtoiles: new Map([[futurDuCE2.id, Etoiles.de(2)], [imparfaitDuCE2.id, Etoiles.de(1)]]),
+    },
+    futurDuCE2.matiere,
+  );
+
+  assertEquals(parcours.prochaineLecon, undefined);
+  assertEquals(parcours.leconsDesClassesDAvant.map(({ etat }) => etat), [{ genre: "aDecouvrir" }]);
+});
+
+Deno.test("les leçons des classes d'avant réussies ne comptent ni dans le nombre de leçons réussies ni dans le nombre de leçons du parcours", () => {
+  const parcours = parcoursDeLaMatiere(
+    {
+      lecons: [voyellesDuCP, lecturesDuCE1, futurDuCE2, imparfaitDuCE2],
+      niveau: Niveau.de("CE2"),
+      meilleuresEtoiles: new Map([[voyellesDuCP.id, Etoiles.de(3)], [futurDuCE2.id, Etoiles.de(1)]]),
+      leconsReussiesAuTestDeDepart: new Set([lecturesDuCE1.id]),
+    },
+    futurDuCE2.matiere,
+  );
+
+  assertEquals([parcours.nombreDeLeconsReussies, parcours.nombreDeLecons], [1, 2]);
+});
+
+Deno.test("au CP, il n'y a aucune leçon des classes d'avant", () => {
+  const parcours = parcoursDeLaMatiere(
+    { lecons: [voyellesDuCP, lecturesDuCE1, futurDuCE2], niveau: Niveau.de("CP"), meilleuresEtoiles: new Map() },
+    voyellesDuCP.matiere,
+  );
+
+  assertEquals(parcours.leconsDesClassesDAvant, []);
 });

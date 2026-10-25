@@ -18,6 +18,7 @@ import {
 } from "./famille/index.ts";
 import { MesMedailles } from "./medailles/index.ts";
 import { MonParcours } from "./parcours/index.ts";
+import { ToutesLesLecons, useChoixDeToutesLesLecons } from "./toutes-les-lecons/index.ts";
 import { AideEcranDAccueil } from "./installation/index.ts";
 import { type Lieu, useNavigation } from "./navigation.ts";
 import { EcranDeSeance, PageDeLaLecon, useRenvoiDesSeancesGardees } from "./seance/index.ts";
@@ -36,8 +37,8 @@ type Habillage = CSSProperties & { readonly "--accent": string; readonly "--acce
 const ACCUEIL: Lieu = { ecran: "accueil" };
 
 function estPageDeLEnfant(lieu: Lieu): boolean {
-  return lieu.ecran === "jeu" || lieu.ecran === "parcours" || lieu.ecran === "medailles" || lieu.ecran === "test-de-depart" ||
-    lieu.ecran === "lecon" || lieu.ecran === "seance";
+  return lieu.ecran === "jeu" || lieu.ecran === "parcours" || lieu.ecran === "toutes-les-lecons" || lieu.ecran === "medailles" ||
+    lieu.ecran === "test-de-depart" || lieu.ecran === "lecon" || lieu.ecran === "seance";
 }
 
 function lieuAffiche(demande: Lieu, espaceParent: EtatDeLEspaceParent["type"], connecte: boolean): Lieu {
@@ -82,10 +83,21 @@ export function Application() {
     if (lieu !== lieuDemande) remplacer(lieu);
   }, [lieu, lieuDemande, remplacer]);
   const [matiereDuParcours, setMatiereDuParcours] = useState<CodeDeMatiere | undefined>();
+  const [classesDAvantDeplieesPour, setClassesDAvantDeplieesPour] = useState<ReadonlySet<CodeDeMatiere>>(new Set());
+  const choixDeToutesLesLecons = useChoixDeToutesLesLecons();
+  const { oublier: oublierLesChoixDeToutesLesLecons } = choixDeToutesLesLecons;
+  const basculerLesClassesDAvant = (matiere: CodeDeMatiere) =>
+    setClassesDAvantDeplieesPour((actuelles) => {
+      const suivantes = new Set(actuelles);
+      if (!suivantes.delete(matiere)) suivantes.add(matiere);
+      return suivantes;
+    });
   const [deconnexionEchouee, setDeconnexionEchouee] = useState(false);
   const oublierLeProfilEtSaProgression = () => {
     oublierLeProfilEnCours();
     setMatiereDuParcours(undefined);
+    setClassesDAvantDeplieesPour(new Set());
+    oublierLesChoixDeToutesLesLecons();
   };
   const seDeconnecter = async () => {
     setDeconnexionEchouee(false);
@@ -161,6 +173,7 @@ export function Application() {
                 voix={voix}
                 saluer={!viaRetour}
                 onMonParcours={() => aller("parcours")}
+                onToutesLesLecons={() => aller("toutes-les-lecons")}
                 onMesMedailles={() => aller("medailles")}
                 onMonTestDeDepart={testDeDepartAFaire ? () => aller("test-de-depart") : undefined}
                 onChangerDEnfant={() => {
@@ -184,6 +197,15 @@ export function Application() {
                 profil={profilEnCours}
                 matiereChoisie={matiereDuParcours}
                 onChoisirLaMatiere={setMatiereDuParcours}
+                classesDAvantDeplieesPour={classesDAvantDeplieesPour}
+                onBasculerLesClassesDAvant={basculerLesClassesDAvant}
+                onOuvrirLaLecon={(leconId) => aller({ ecran: "lecon", leconId })}
+              />
+            )}
+            {lieu.ecran === "toutes-les-lecons" && profilCharge && profilEnCours && (
+              <ToutesLesLecons
+                profil={profilEnCours}
+                choix={choixDeToutesLesLecons}
                 onOuvrirLaLecon={(leconId) => aller({ ecran: "lecon", leconId })}
               />
             )}
