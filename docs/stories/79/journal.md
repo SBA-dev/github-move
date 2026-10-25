@@ -135,3 +135,6 @@ Branche de base : `main`. Aucun numéro de décision réservé (prochain libre :
   #29 a modifié des steps partagés (#16, #18, #24 à #29, #65). #79.13 toujours sans réponse.
 - 01:05 UTC — RELIS #64 : non-régression de `main` KO (régression de #29 sur la dictée, #19), verrou `merge` gelé
   jusqu'au correctif. #79 ne le détient pas ; la vérification après intégration de #29 continue.
+- 01:15 UTC — Périmètre après intégration de #29 (`8c9a55a`) : **432/432 verts** sur `telephone`, 47 min (#79 34,
+  #29 66, #24 30, #25 41, #26 56, #16 35, #18 27, #27 60, #28 47, #65 36). « Continuer » est gardé après la fusion
+  dans `attendreLaFinDeLaSeance`. Reste : #79.13.
