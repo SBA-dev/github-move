@@ -1,5 +1,5 @@
 # language: fr
-@issue-39 @wip
+@issue-39
 Fonctionnalité: Leçons personnelles créées à partir d'un texte
   En tant que parent
   Je veux coller un texte (liste de mots, liste de verbes, poésie, texte documentaire), vérifier la leçon préparée,
