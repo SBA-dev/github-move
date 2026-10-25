@@ -12,6 +12,7 @@ function section(id: string, matiere: string, domaine: string, niveaux: string[]
     domaine,
     section: `Intitulé de ${id}`,
     niveaux,
+    extrait: `Extrait de ${id}`,
     source: { texte: "Programme", bo: "BO" },
   });
 }
