@@ -160,7 +160,11 @@ Deno.test("au-delà de 250, la question à la dernière erreur la plus ancienne 
 Deno.test("plusieurs questions qui entrent d'un coup font oublier les plus anciennes", () => {
   const file = fileAvec(LIMITE);
 
-  file.retenir([nouvelleQuestion(LIMITE), nouvelleQuestion(LIMITE + 1), nouvelleQuestion(LIMITE + 2)], jourDeLaSeance, termineeLe);
+  file.retenir(
+    [nouvelleQuestion(LIMITE), nouvelleQuestion(LIMITE + 1), nouvelleQuestion(LIMITE + 2)],
+    jourDeLaSeance,
+    termineeLe,
+  );
 
   assertEquals(file.questions.length, LIMITE);
   for (const numero of [0, 1, 2]) {
