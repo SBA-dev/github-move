@@ -1,7 +1,7 @@
 import type { Lecon } from "../../catalogue/domain/index.ts";
 import type { LeconsPersonnellesDuProfil } from "../application/ports/lecons-personnelles-du-profil.ts";
 
-export class LeconsPersonnellesEnMemoire implements LeconsPersonnellesDuProfil {
+export class LeconsPersonnellesDuProfilEnMemoire implements LeconsPersonnellesDuProfil {
   readonly identifiantsInterroges: string[] = [];
   private readonly lecons = new Map<string, Lecon>();
 

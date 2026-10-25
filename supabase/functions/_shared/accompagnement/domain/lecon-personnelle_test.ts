@@ -1,7 +1,8 @@
 import { assertEquals, assertThrows } from "@std/assert";
 import { Niveau, type SectionDuProgramme } from "../../catalogue/domain/index.ts";
 import { sectionDeTest } from "../test_utils/sections-de-test.ts";
-import { LeconPersonnelleInvalide } from "./erreurs.ts";
+import { LeconPersonnelleInvalide, TexteTropCourt } from "./erreurs.ts";
+import { leconEnBrut } from "./lecon-en-brut.ts";
 import { LeconPersonnelle } from "./lecon-personnelle.ts";
 import { type LeconPreparee, preparerUneLeconPersonnelle } from "./preparer-une-lecon-personnelle.ts";
 import { TexteDuParent } from "./texte-du-parent.ts";
@@ -102,6 +103,54 @@ Deno.test("supprimer une leçon personnelle émet LeconPersonnelleSupprimee", ()
   const suppression = new Date("2026-10-26T08:30:00Z");
 
   assertEquals(leconPersonnelle.supprimer(suppression), {
+    type: "LeconPersonnelleSupprimee",
+    lecon: "perso-abc123",
+    profil: PROFIL,
+    supprimeeLe: suppression,
+  });
+});
+
+function relue(changement: { lecon?: unknown; texte?: string } = {}) {
+  const { leconPersonnelle } = creer(leconPreparee());
+  const enBrut = leconEnBrut(leconPersonnelle.lecon, leconPersonnelle.lecon.id);
+  const relecture = LeconPersonnelle.reconstituer({
+    lecon: enBrut,
+    profil: PROFIL,
+    texte: TEXTE,
+    creeeLe: MAINTENANT,
+    ...changement,
+  });
+  return { originale: leconPersonnelle, relecture };
+}
+
+Deno.test("relire une leçon personnelle depuis la base redonne la même leçon, le même texte, le même profil et la même date", () => {
+  const { originale, relecture } = relue();
+
+  assertEquals(
+    [relecture.lecon, relecture.texte.valeur, relecture.profil, relecture.creeeLe],
+    [originale.lecon, originale.texte.valeur, originale.profil, originale.creeeLe],
+  );
+});
+
+Deno.test("relire une leçon personnelle depuis la base ne renvoie qu'une leçon, sans événement", () => {
+  const { relecture } = relue();
+
+  assertEquals(relecture instanceof LeconPersonnelle, true);
+});
+
+Deno.test("une leçon brute illisible est une leçon personnelle invalide", () => {
+  assertThrows(() => relue({ lecon: { titre: 12 } }), LeconPersonnelleInvalide);
+});
+
+Deno.test("un texte de moins de 3 caractères est un texte trop court à la relecture", () => {
+  assertThrows(() => relue({ texte: "a" }), TexteTropCourt);
+});
+
+Deno.test("une leçon personnelle relue peut être supprimée et émet LeconPersonnelleSupprimee", () => {
+  const { relecture } = relue();
+  const suppression = new Date("2026-10-26T08:30:00Z");
+
+  assertEquals(relecture.supprimer(suppression), {
     type: "LeconPersonnelleSupprimee",
     lecon: "perso-abc123",
     profil: PROFIL,

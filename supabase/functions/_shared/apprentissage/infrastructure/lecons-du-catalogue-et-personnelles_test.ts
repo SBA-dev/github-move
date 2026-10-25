@@ -1,14 +1,14 @@
 import { assertEquals } from "@std/assert";
 import { LeconsDuCatalogueEtPersonnelles } from "./lecons-du-catalogue-et-personnelles.ts";
 import { LeconsDuCatalogueEnMemoire } from "../test_utils/lecons-du-catalogue-en-memoire.ts";
-import { LeconsPersonnellesEnMemoire } from "../test_utils/lecons-personnelles-en-memoire.ts";
+import { LeconsPersonnellesDuProfilEnMemoire } from "../test_utils/lecons-personnelles-en-memoire.ts";
 import { leconDeCalcul, leconDeLecture } from "../test_utils/lecons-de-test.ts";
 
 const profil = "profil-lea";
 const autreProfil = "profil-tom";
 const leconPersonnelle = { ...leconDeLecture(), id: "perso-1" };
 
-function composite(personnelles: LeconsPersonnellesEnMemoire) {
+function composite(personnelles: LeconsPersonnellesDuProfilEnMemoire) {
   return new LeconsDuCatalogueEtPersonnelles(
     new LeconsDuCatalogueEnMemoire(leconDeCalcul()),
     personnelles,
@@ -17,7 +17,7 @@ function composite(personnelles: LeconsPersonnellesEnMemoire) {
 }
 
 Deno.test("une leçon de la bibliothèque est lue dans le catalogue sans interroger les leçons personnelles", async () => {
-  const personnelles = new LeconsPersonnellesEnMemoire();
+  const personnelles = new LeconsPersonnellesDuProfilEnMemoire();
 
   const lecon = await composite(personnelles).parId("ma-cp-calcul");
 
@@ -26,25 +26,25 @@ Deno.test("une leçon de la bibliothèque est lue dans le catalogue sans interro
 });
 
 Deno.test("une leçon personnelle du profil est retrouvée par son identifiant", async () => {
-  const personnelles = new LeconsPersonnellesEnMemoire().ajouter(profil, leconPersonnelle);
+  const personnelles = new LeconsPersonnellesDuProfilEnMemoire().ajouter(profil, leconPersonnelle);
 
   assertEquals(await composite(personnelles).parId("perso-1"), leconPersonnelle);
 });
 
 Deno.test("la leçon personnelle d'un autre profil reste introuvable", async () => {
-  const personnelles = new LeconsPersonnellesEnMemoire().ajouter(autreProfil, leconPersonnelle);
+  const personnelles = new LeconsPersonnellesDuProfilEnMemoire().ajouter(autreProfil, leconPersonnelle);
 
   assertEquals(await composite(personnelles).parId("perso-1"), null);
 });
 
 Deno.test("un identifiant inconnu ne donne aucune leçon", async () => {
-  const personnelles = new LeconsPersonnellesEnMemoire().ajouter(profil, leconPersonnelle);
+  const personnelles = new LeconsPersonnellesDuProfilEnMemoire().ajouter(profil, leconPersonnelle);
 
   assertEquals(await composite(personnelles).parId("inconnue"), null);
 });
 
 Deno.test("les leçons personnelles n'entrent pas dans l'ensemble des leçons du catalogue", async () => {
-  const personnelles = new LeconsPersonnellesEnMemoire().ajouter(profil, leconPersonnelle);
+  const personnelles = new LeconsPersonnellesDuProfilEnMemoire().ajouter(profil, leconPersonnelle);
 
   assertEquals(await composite(personnelles).toutes(), [leconDeCalcul()]);
 });

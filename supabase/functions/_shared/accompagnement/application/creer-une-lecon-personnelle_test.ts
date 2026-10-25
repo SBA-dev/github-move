@@ -1,6 +1,8 @@
 import { assertEquals, assertInstanceOf, assertRejects } from "@std/assert";
-import { Niveau } from "../../catalogue/domain/index.ts";
+import { type Matiere, matiereDeCode, Niveau } from "../../catalogue/domain/index.ts";
 import { AucuneSectionDuProgramme, ParentNonRattache, TexteTropCourt } from "../domain/erreurs.ts";
+import { leconEnBrut } from "../domain/lecon-en-brut.ts";
+import { preparerUneLeconPersonnelle } from "../domain/preparer-une-lecon-personnelle.ts";
 import { generateurIdFixe } from "../test_utils/generateur-id-fixe.ts";
 import { LeconsPersonnellesEnMemoire } from "../test_utils/lecons-personnelles-en-memoire.ts";
 import { RattachementsEnMemoire } from "../test_utils/rattachements-en-memoire.ts";
@@ -24,7 +26,7 @@ function monter(sections = [sectionDeTest({ id: "francais-ce1", niveaux: ["CE1"]
   return { cas, lecons };
 }
 
-const demande = (changement: { parent?: string; texte?: string } = {}) => ({
+const demande = (changement: { parent?: string; texte?: string; matiere?: Matiere } = {}) => ({
   parent: PARENT,
   profil: PROFIL,
   texte: TEXTE,
@@ -66,4 +68,45 @@ Deno.test("sans section du programme pour la classe, la leçon n'est pas enregis
   await assertRejects(() => cas.executer(demande(), MAINTENANT), AucuneSectionDuProgramme);
 
   assertEquals(lecons.toutes(), []);
+});
+
+const SECTIONS_FRANCAIS_ET_MATHS = [
+  sectionDeTest({ id: "francais-ce1", niveaux: ["CE1"] }),
+  sectionDeTest({ id: "maths-ce1", matiere: "maths", niveaux: ["CE1"] }),
+];
+
+Deno.test("le parent peut choisir la matière de la leçon personnelle : elle se retrouve dans la leçon et dans sa section du programme", async () => {
+  const { cas } = monter(SECTIONS_FRANCAIS_ET_MATHS);
+
+  const { leconPersonnelle } = await cas.executer(demande({ matiere: matiereDeCode("maths") }), MAINTENANT);
+
+  assertEquals(
+    [leconPersonnelle.lecon.matiere.code, leconPersonnelle.lecon.programme.section],
+    ["maths", "maths-ce1"],
+  );
+});
+
+Deno.test("une matière sans section du programme pour la classe est refusée et rien n'est enregistré", async () => {
+  const { cas, lecons } = monter();
+
+  await assertRejects(
+    () => cas.executer(demande({ matiere: matiereDeCode("maths") }), MAINTENANT),
+    AucuneSectionDuProgramme,
+  );
+
+  assertEquals(lecons.toutes(), []);
+});
+
+Deno.test("la leçon enregistrée, hors identifiant, est celle que prépare la préparation pour la même demande", async () => {
+  const sections = SECTIONS_FRANCAIS_ET_MATHS;
+  const { cas } = monter(sections);
+  const matiere = matiereDeCode("maths");
+
+  const { leconPersonnelle } = await cas.executer(demande({ matiere }), MAINTENANT);
+
+  const preparee = preparerUneLeconPersonnelle({ texte: TEXTE, niveau: Niveau.de("CE1"), matiere }, sections);
+  assertEquals(
+    leconEnBrut(leconPersonnelle.lecon, "x"),
+    leconEnBrut(preparee.lecon, "x"),
+  );
 });
