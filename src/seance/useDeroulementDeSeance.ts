@@ -56,6 +56,7 @@ export function useDeroulementDeSeance(
   const [, redessiner] = useReducer((compteur: number) => compteur + 1, 0);
   const sequence = useRef(0);
   const vivant = useRef(true);
+  const exercicePresente = useRef(false);
   const pause = useRef(PAUSE_ENTRE_DEUX_PAROLES_MS);
   pause.current = useReducedMotion() ? PAUSE_AVEC_MOUVEMENTS_REDUITS_MS : PAUSE_ENTRE_DEUX_PAROLES_MS;
 
@@ -134,14 +135,8 @@ export function useDeroulementDeSeance(
     if (indication) await dire({ texte: indication, nature: "consigne" });
   }, [seance, lecon, dire, consigneDeLExercice]);
 
-  const relireLaConsigne = useCallback(() => {
-    const consigne = consigneDeLExercice();
-    if (consigne === undefined || reussite.estFigee.current) return;
-    sequence.current++;
-    void dire({ texte: consigne, nature: "consigne" });
-  }, [consigneDeLExercice, reussite.estFigee, dire]);
-
   const presenterLaQuestionDeLExercice = useCallback(async (numero: number) => {
+    exercicePresente.current = true;
     const position = seance.exerciceEnCours()?.position;
     switch (position === undefined ? undefined : lecon.exercices[position]?.type) {
       case "calcul":
@@ -173,9 +168,18 @@ export function useDeroulementDeSeance(
   ]);
 
   const ouvrirLExercice = useCallback(async (numero: number) => {
+    exercicePresente.current = false;
     await lireLaConsigneDeLExercice();
     if (numero === sequence.current) await presenterLaQuestionDeLExercice(numero);
   }, [lireLaConsigneDeLExercice, presenterLaQuestionDeLExercice]);
+
+  const relireLaConsigne = useCallback(() => {
+    const consigne = consigneDeLExercice();
+    if (consigne === undefined || reussite.estFigee.current) return;
+    const numero = ++sequence.current;
+    if (exercicePresente.current) void dire({ texte: consigne, nature: "consigne" });
+    else void ouvrirLExercice(numero);
+  }, [consigneDeLExercice, reussite.estFigee, dire, ouvrirLExercice]);
 
   const direLeFait = useCallback((fait: FaitDeSeance): Promise<boolean> => {
     if (fait.type === "EtapesDeLeconFinies") {
@@ -186,6 +190,7 @@ export function useDeroulementDeSeance(
   }, [dire]);
 
   const enchainerSurLExercice = useCallback(async (numero: number, faits: readonly FaitDeSeance[]) => {
+    exercicePresente.current = false;
     for (const fait of faits) {
       if (!(await direLeFait(fait))) return;
       await reussite.attendreLEcranSuivant();
@@ -300,8 +305,9 @@ export function useDeroulementDeSeance(
   const abandonner = useCallback(() => {
     vivant.current = false;
     sequence.current++;
+    reussite.continuer();
     faireSilence();
-  }, [faireSilence]);
+  }, [faireSilence, reussite.continuer]);
 
   const { parole, rangDuMotPrononce, humeur } = personnage;
   const { figee, avancementAnnonce } = reussite;
