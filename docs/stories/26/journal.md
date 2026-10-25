@@ -40,3 +40,6 @@ Branche de base : `main` (`2173dba`). Branche : `feature/26-lecons-des-classes-d
 - Correctif des steps `04fc7ad` : revue **APPROUVÉE**, `bddgen` passe sur toute la liste des stories livrées. `main` `e466e25` intégrée (`52557a9`, décision 0022 : documentation seulement). PR #84 ouverte en brouillon.
 - 10:22 UTC : non-régression complète lancée, puis arrêtée dès que j'ai lu l'annonce `[Responsable]` : #72 a la sienne de 10:22 à 11:20. Relance prévue vers 11:25 UTC.
 - 10:25 UTC : annonce `[Responsable]` : merge autorisé pour toute la vague (« Oui » du PO, décision 0022, point 1). Ordre du verrou `merge` : #28, #72, puis #26.
+- 12:33 UTC : annonce `[Responsable]` : la non-régression de #26 passe juste après celle de #72, avant celle de #28 (proposition de #26 acceptée).
+- 13:26 UTC : #72 a fini à 1392/1392. Non-régression complète de #26 lancée sur `52557a9` (22 fichiers, 1350 cas, tablette et téléphone). Fin prévue vers 15:15.
+- À savoir pour le merge : #72 n'a pas pu merger, car le mode de permission de sa session refuse un merge sans review humaine. Le responsable a posé la question au PO. Le même blocage concernera #26.
