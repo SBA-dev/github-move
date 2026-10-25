@@ -11,7 +11,7 @@ import {
   matieresDuParcours,
   parcoursDeLaMatiere,
 } from "./parcours.ts";
-import type { EntreesDuParcours, EtatDansLeParcours, LeconDesClassesDAvant, LeconId } from "./parcours.ts";
+import type { EntreesDuParcours, EtatDansLeParcours, LeconId } from "./parcours.ts";
 
 export type FiltreDesLecons = Readonly<{ matiere?: Matiere; niveau?: Niveau }>;
 
@@ -23,23 +23,29 @@ export type LeconDeToutesLesLecons = Readonly<{
   etat: EtatDansLeParcours;
 }>;
 
-export type LeconsDUnNiveau = Readonly<{ niveau: Niveau; lecons: readonly LeconDesClassesDAvant[] }>;
+export type LeconsDUnNiveau = Readonly<{ niveau: Niveau; lecons: readonly LeconDeToutesLesLecons[] }>;
 
 export type ToutesLesLecons = Readonly<{
   lecons: readonly LeconDeToutesLesLecons[];
   leconsDesClassesDAvant: readonly LeconsDUnNiveau[];
+  nombreDeLecons: number;
+  seulementLesClassesDAvant: boolean;
 }>;
 
 export function toutesLesLecons(entrees: EntreesDuParcours, filtre: FiltreDesLecons): ToutesLesLecons {
   const retenue = ({ matiere, niveau }: { matiere: Matiere; niveau: Niveau }) =>
     (filtre.matiere === undefined || matiere.code === filtre.matiere.code) &&
     (filtre.niveau === undefined || niveau.valeur === filtre.niveau.valeur);
+  const lecons = [
+    ...matieresDuParcours(entrees).flatMap((matiere) => leconsDeLaMatiere(entrees, matiere)),
+    ...leconsDAuDessusMontrees(entrees),
+  ].filter(retenue);
+  const leconsDesClassesDAvant = classesDAvant(entrees, retenue);
   return {
-    lecons: [
-      ...matieresDuParcours(entrees).flatMap((matiere) => leconsDeLaMatiere(entrees, matiere)),
-      ...leconsDAuDessusMontrees(entrees),
-    ].filter(retenue),
-    leconsDesClassesDAvant: classesDAvant(entrees, retenue),
+    lecons,
+    leconsDesClassesDAvant,
+    nombreDeLecons: lecons.length + leconsDesClassesDAvant.reduce((somme, classe) => somme + classe.lecons.length, 0),
+    seulementLesClassesDAvant: filtre.niveau !== undefined && estUneClasseDAvant(entrees)(filtre.niveau),
   };
 }
 
@@ -81,6 +87,7 @@ function classesDAvant(entrees: EntreesDuParcours, retenue: (lecon: Lecon) => bo
         .sort(parMatiereOrdrePuisIdentifiant)
         .map((lecon) => ({
           lecon: lecon.id,
+          matiere: lecon.matiere,
           niveau: lecon.niveau,
           titre: lecon.titre,
           etat: etatHorsDuParcours(entrees, lecon.id),
@@ -108,10 +115,7 @@ export type ChoixDuFiltre = Readonly<{ matieres: readonly Matiere[]; niveaux: re
 
 export function choixDuFiltre(entrees: EntreesDuParcours): ChoixDuFiltre {
   const { lecons, leconsDesClassesDAvant } = toutesLesLecons(entrees, {});
-  const identifiants = new Set(
-    [...lecons, ...leconsDesClassesDAvant.flatMap((classe) => classe.lecons)].map(({ lecon }) => lecon),
-  );
-  const presentes = entrees.lecons.filter((lecon) => identifiants.has(lecon.id));
+  const presentes = [...lecons, ...leconsDesClassesDAvant.flatMap((classe) => classe.lecons)];
   return {
     matieres: toutesLesMatieres().filter((matiere) => presentes.some((lecon) => lecon.matiere.code === matiere.code)),
     niveaux: Niveau.tous().filter((niveau) => presentes.some((lecon) => lecon.niveau.valeur === niveau.valeur)),
