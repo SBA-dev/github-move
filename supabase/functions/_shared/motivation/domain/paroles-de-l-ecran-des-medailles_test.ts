@@ -82,7 +82,7 @@ Deno.test("sans « Tout lire à voix haute », seule la phrase du personnage gui
   assertEquals(paroles, ["Regarde tout ce que tu as gagné !"]);
 });
 
-Deno.test("avec « Tout lire à voix haute », l'ouverture lit le personnage guide, le nom de l'écran puis la section des records", () => {
+Deno.test("avec « Tout lire à voix haute », avec une cabane à 0 étoile, la cabane est lue avant les records", () => {
   const paroles = parolesALOuverture({ toutLire: true, pastilles: [pastille(12)], cabane: cabaneDe(0) });
 
   assertEquals(paroles, [
@@ -95,10 +95,21 @@ Deno.test("avec « Tout lire à voix haute », l'ouverture lit le personnage gui
   ]);
 });
 
-Deno.test("avec « Tout lire à voix haute » et rien à montrer, seule la phrase du personnage guide est lue", () => {
+Deno.test("avec « Tout lire à voix haute » et rien à montrer, la phrase d'accueil est suivie de « Mes médailles » puis de la cabane", () => {
   const paroles = parolesALOuverture({ toutLire: true, pastilles: [], cabane: cabaneDe(2) });
 
-  assertEquals(paroles, ["Gagne des étoiles pour remplir la cabane !"]);
+  assertEquals(paroles, [
+    "Gagne des étoiles pour remplir la cabane !",
+    "Mes médailles",
+    "La cabane de Noisette",
+    "Tu as 2 étoiles. Encore 1 étoile et Noisette recevra une lanterne !",
+  ]);
+});
+
+Deno.test("avec « Tout lire à voix haute », rien à montrer et les étoiles non lues, la phrase d'accueil est suivie de « Mes médailles »", () => {
+  const paroles = parolesALOuverture({ toutLire: true, pastilles: [], cabane: undefined });
+
+  assertEquals(paroles, ["Gagne des étoiles pour remplir la cabane !", "Mes médailles"]);
 });
 
 Deno.test("avec « Tout lire à voix haute », la cabane est lue avant les records, sans ses pastilles", () => {
