@@ -7,8 +7,7 @@ Fonctionnalité: Leçons des classes d'avant
 
   Aucune leçon n'est verrouillée (réponse 25.1) et le réglage « parcours libre » n'est pas lu (réponse N2).
   Un commentaire « Réponse 26.n », « Réponse Nn » ou « Réponse 27.n » renvoie à une décision du PO
-  (docs/stories/26/acceptance.md, #25, #27). Le tag @depend-de-27 marque un scénario qui emploie
-  les étapes du test de départ (#27) : il ne tourne qu'après le merge de #27.
+  (docs/stories/26/acceptance.md, #25, #27).
 
   Pour ces scénarios, la bibliothèque servie au navigateur est remplacée par la bibliothèque de test des leçons
   des classes d'avant (identifiants préfixés « e2e-26- », leçons servies dans le désordre, chacune faite d'un
@@ -156,7 +155,6 @@ Fonctionnalité: Leçons des classes d'avant
       Et « Le son in » est la prochaine leçon
 
     # Réponses 27.7, 27.15 et 26.3
-    @depend-de-27
     Scénario: Une leçon du CP réussie au test de départ par un enfant de CE1 se retrouve parmi les leçons des classes d'avant
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a pour leçons réussies au test de départ :
@@ -234,7 +232,6 @@ Fonctionnalité: Leçons des classes d'avant
       Mais « Les fractions » n'apparaît pas dans « Toutes les leçons »
 
     # Réponses 26.1a et 27.7
-    @depend-de-27
     Scénario: Une matière réussie au test de départ montre aussi les leçons de la classe juste au-dessus
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a pour leçons réussies au test de départ :
@@ -263,7 +260,6 @@ Fonctionnalité: Leçons des classes d'avant
       Mais « L'imparfait » n'apparaît pas dans « Toutes les leçons »
 
     # Réponse 27.7
-    @depend-de-27
     Scénario: Une leçon réussie au test de départ l'est aussi dans « Toutes les leçons »
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a pour leçons réussies au test de départ :
