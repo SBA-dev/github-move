@@ -198,6 +198,7 @@ Réponse du PO, le 2026-10-24 : « 27# reco OK » (annonce du responsable des é
 ### Correction de données de test, sans changement de règle, après la mise au point E2E
 
 - Règle 4, « Plusieurs erreurs à une même question ne comptent que pour une question fausse » : « Léa se trompe 3 fois » devient « Léa se trompe 2 fois ». Chaque question de la bibliothèque de test n'a que 3 choix, donc 2 mauvaises bulles au plus, et une bulle déjà touchée est grisée : une 3e erreur distincte est impossible. Le sens est gardé : plusieurs erreurs à une même question comptent pour une seule question fausse (27.13).
+- Validée par le PO le 2026-10-25 (« 2 fois OK ») : https://github.com/SBA-dev/github-move/issues/64#issuecomment-6395398175
 
 ### Effet de 27.19 sur les stories livrées (#11, #12, #13)
 
