@@ -409,7 +409,8 @@ async function hauteurDe(element: Locator, nom: string): Promise<number> {
 Then(
   /^le bouton d'accès à l'écran, « Retour » et chaque bouton « Écouter » mesurent au moins 44 px de haut$/,
   async ({ page }) => {
-    await expect(sectionsDeLEcran(page).first()).toBeVisible({ timeout: DELAI_D_UN_APPEL_SERVEUR_MS });
+    // La bulle du personnage guide n'apparaît qu'une fois les lectures de l'écran terminées.
+    await expect(page.getByTestId("parole")).toBeVisible({ timeout: DELAI_D_UN_APPEL_SERVEUR_MS });
     expect(await hauteurDe(page.getByRole("button", { name: "Retour", exact: true }), "Retour")).toBeGreaterThanOrEqual(44);
     const boutons = await page.getByRole("button", { name: "Écouter", exact: true }).all();
     expect(boutons.length).toBeGreaterThan(0);
