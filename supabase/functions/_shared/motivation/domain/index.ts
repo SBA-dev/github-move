@@ -54,3 +54,4 @@ export {
   phraseLueDeLaPastille,
   TITRE_DES_RECORDS_DE_CALCUL_RAPIDE,
 } from "./paroles-de-l-ecran-des-medailles.ts";
+export { type ObjetDeLaCabane, type PalierDeLaCabane, PALIERS_DE_LA_CABANE } from "./cabane.ts";
