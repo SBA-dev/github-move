@@ -7,7 +7,7 @@ export class TexteTropCourt extends Error {
 
 export class TexteTropLong extends Error {
   constructor() {
-    super("Ce texte est trop long : colle-en une partie seulement.");
+    super("Ton texte est trop long : 3000 caractères au plus.");
     this.name = "TexteTropLong";
   }
 }

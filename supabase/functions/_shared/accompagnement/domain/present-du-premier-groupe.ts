@@ -1,19 +1,22 @@
 import type { FormeConjuguee } from "../../catalogue/domain/index.ts";
 import { groupeDuVerbe } from "./groupe-du-verbe.ts";
+import { normaliser } from "./texte-normalise.ts";
 
 const H_ASPIRES = new Set([
   "hurler",
+  "huer",
   "hacher",
   "hisser",
   "hausser",
   "heurter",
   "hanter",
   "harceler",
-  "hasarder",
-  "herisser",
   "hocher",
   "hululer",
-  "huer",
+  "hater",
+  "hennir",
+  "hasarder",
+  "herisser",
   "happer",
 ]);
 
@@ -21,6 +24,8 @@ const VERBES_EN_ER_IRREGULIERS = new Set(["aller"]);
 const DEBUT_ELIDE = /^[aeiouyéèêâîô]/;
 const EN_YER_ELER_ETER = /(yer|eler|eter)$/;
 const E_CONSONNE_ER = /[eé][^aeiouyéèêâîô]er$/;
+const E_ACCENTUE_CONSONNES_ER = /é[^aeiouyéèêâîô]+er$/;
+const E_CONSONNE_LIQUIDE_ER = /e[^aeiouyéèêâîô][rl]er$/;
 
 export function presentDuPremierGroupe(infinitif: string): FormeConjuguee[] {
   const verbe = infinitif.toLowerCase();
@@ -36,12 +41,14 @@ export function presentDuPremierGroupe(infinitif: string): FormeConjuguee[] {
 }
 
 export function verbeAConjuguer(verbes: readonly string[]): string | undefined {
-  return verbes.find(estRegulierDuPremierGroupe);
+  return verbes.map((verbe) => verbe.toLowerCase()).find(
+    estRegulierDuPremierGroupe,
+  );
 }
 
 function pronomJe(verbe: string): string {
   const voyelle = DEBUT_ELIDE.test(verbe);
-  const hMuet = verbe.startsWith("h") && !H_ASPIRES.has(verbe.replace("é", "e"));
+  const hMuet = verbe.startsWith("h") && !H_ASPIRES.has(normaliser(verbe));
   return voyelle || hMuet ? "j'" : "je";
 }
 
@@ -56,5 +63,7 @@ function estRegulierDuPremierGroupe(infinitif: string): boolean {
   return groupeDuVerbe(verbe) === "1" &&
     !VERBES_EN_ER_IRREGULIERS.has(verbe) &&
     !EN_YER_ELER_ETER.test(verbe) &&
-    !E_CONSONNE_ER.test(verbe);
+    !E_CONSONNE_ER.test(verbe) &&
+    !E_ACCENTUE_CONSONNES_ER.test(verbe) &&
+    !E_CONSONNE_LIQUIDE_ER.test(verbe);
 }
