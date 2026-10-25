@@ -6,9 +6,9 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
   Afin d'avoir envie de connaître la suite
 
   L'histoire ne fait que compter les séances terminées du profil en cours : elle ne modifie aucune séance,
-  aucune étoile et n'enregistre rien (modèle : docs/stories/33/domain-model.md). Les questions 33.1 à 33.31
-  sont dans docs/stories/33/acceptance.md ; un scénario qui dépend d'une question encore ouverte porte le tag
-  « à valider » et le numéro de la question en commentaire. Les scénarios suivent les recommandations.
+  aucune étoile et n'enregistre rien (modèle : docs/stories/33/domain-model.md). Le PO a validé le cadrage le
+  2026-10-25 (« 33. reco OK ») : les décisions 33.1 à 33.31 sont dans docs/stories/33/acceptance.md, et le
+  commentaire au-dessus d'un scénario rappelle la décision qu'il illustre. Le code commence après le merge de #30.
 
   Les 20 épisodes (titres du legacy, dans l'ordre) : 1 « La carte froissée », 2 « Le premier indice »,
   3 « Le pont des lettres », 4 « Pipo le hérisson », 5 « La forêt qui chuchote », 6 « Le moulin des nombres »,
@@ -16,11 +16,11 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
   11 « Le géant endormi », 12 « La boutique du renard », 13 « Le pied de la montagne », 14 « L'automne en couleurs »,
   15 « La grotte de l'écho », 16 « L'horloge de glace », 17 « La tempête de neige », 18 « Le dernier escalier »,
   19 « L'Étoile du savoir », 20 « Le retour des Savanturiers ». « L'Étoile du savoir » est un titre, pas un terme
-  du domaine (question 33.4).
+  du domaine (décision 33.4).
 
   « Léa a terminé N séances » prépare N séances terminées de la leçon « Les sons ou, on, an », chacune un jour
-  différent avant aujourd'hui et avec au moins 1 étoile, sans jouer de séance : l'exemple vaut quelle que soit la
-  réponse à la question 33.1. Elle ne change pas le total des étoiles de la cabane : quand un scénario en a
+  différent avant aujourd'hui et avec au moins 1 étoile, sans jouer de séance : l'exemple ne dépend ni du jour
+  ni des étoiles (décision 33.1 : chaque séance terminée ouvre un épisode). Elle ne change pas le total des étoiles de la cabane : quand un scénario en a
   besoin, « Léa a gagné N étoiles en tout » fixe ce total, séances préparées comprises. Comme toute étape qui écrit en base, elle suppose que Léa joue avec un profil réel,
   créé pour Paul (features/steps/profil-reel.ts, décision 0021, point 5) ; les séances partent avec le profil enfant.
   « Les sons de test » est la leçon de test de #24 (10 questions : 0 erreur donne 3 étoiles, 5 erreurs 1 étoile).
@@ -73,8 +73,7 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
         | L'Étoile du savoir         |
         | Le retour des Savanturiers |
 
-    # Questions 33.1 et 33.7 : la séance compte avec 1 étoile, et même si c'est la deuxième du jour
-    @a-valider
+    # Décisions 33.1 et 33.7 : la séance compte avec 1 étoile, et même si c'est la deuxième du jour
     Scénario: Deux séances le même jour ouvrent deux épisodes, même à 1 étoile
       Étant donné que Léa n'a terminé aucune séance
       Et que Léa a terminé une séance de la leçon « Les sons de test » avec 3 étoiles
@@ -82,8 +81,7 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
       Quand Léa ouvre « Mes médailles » depuis son accueil
       Alors les tuiles 1 et 2 de l'histoire montrent « La carte froissée » et « Le premier indice »
 
-    # Question 33.7
-    @a-valider
+    # Décision 33.7
     Plan du Scénario: Une séance <cas> ouvre aussi un épisode
       Étant donné que Léa n'a terminé aucune séance
       Et que <séance>
@@ -123,8 +121,8 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
       Alors la tuile 1 de l'histoire montre « La carte froissée »
       Et les tuiles 2 à 20 de l'histoire montrent « À découvrir »
 
-    # Question 33.7 (et décision 28.16 : la séance de révision est une séance)
-    @depend-de-28 @a-valider
+    # Décision 33.7 (et décision 28.16 : la séance de révision est une séance)
+    @depend-de-28
     Scénario: Une séance de révision terminée ouvre un épisode
       Étant donné que la bibliothèque de test des révisions est servie
       Et que Léa a terminé 1 séance
@@ -174,8 +172,7 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
       Quand Léa choisit « Lire l'épisode »
       Alors l'écran de l'épisode s'intitule « La carte froissée », avec « Épisode 1 sur 20 »
 
-    # Questions 33.12 et 33.7
-    @a-valider
+    # Décisions 33.12 et 33.7
     Scénario: Après une séance faite seulement de fluence, la fin annonce aussi le nouvel épisode
       Étant donné que Léa n'a terminé aucune séance
       Et que Léa joue seulement l'exercice « Calcul rapide : les doubles »
@@ -183,8 +180,8 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
       Alors la fin de la séance annonce « Nouvel épisode ! » avec « La carte froissée »
       Et Noisette termine les paroles de fin de fluence par « Un nouvel épisode de l'histoire t'attend ! »
 
-    # Questions 33.12 et 33.7
-    @depend-de-28 @a-valider
+    # Décisions 33.12 et 33.7
+    @depend-de-28
     Scénario: À la fin d'une séance de révision, la fin annonce aussi le nouvel épisode
       Étant donné que la bibliothèque de test des révisions est servie
       Et que Léa a terminé 1 séance
@@ -192,8 +189,8 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
       Quand Léa fait la séance de révision, en répondant juste à toutes les questions
       Alors la fin de la séance de révision annonce « Nouvel épisode ! » avec « Le premier indice »
 
-    # Question 33.13 : ordre de « Mes médailles », cabane puis épisode (le cadrage de #31 propose épisode, cabane, badge)
-    @depend-de-32 @a-valider
+    # Décision 33.13 : ordre de « Mes médailles », cabane puis épisode
+    @depend-de-32
     Scénario: Quand la séance fait aussi recevoir un objet à la cabane, la cabane est annoncée avant l'épisode
       Étant donné que Léa a gagné 5 étoiles en tout
       Et que Léa a terminé 3 séances
@@ -203,8 +200,8 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
       Alors la fin de la séance annonce, dans l'ordre, « Noisette a reçu un tapis tout doux ! » puis « Nouvel épisode ! » avec « Pipo le hérisson »
       Et Noisette dit une félicitation, suivie de « Tu gagnes 1 étoile, Léa. Tu rejoues pour aller chercher les autres ? Noisette a reçu un tapis tout doux pour sa cabane. Un nouvel épisode de l'histoire t'attend ! »
 
-    # Question 33.13 : badge en dernier
-    @depend-de-31 @depend-de-32 @a-valider
+    # Décision 33.13 : badge en dernier
+    @depend-de-31 @depend-de-32
     Scénario: Quand la séance donne aussi un objet de la cabane et un badge, l'ordre est cabane, épisode, badge
       Étant donné que Léa a gagné 5 étoiles en tout
       Et que Léa a terminé 3 séances
@@ -213,8 +210,7 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
       Quand Léa réussit la dernière question de la séance
       Alors la zone des nouveautés de la fin de la séance montre, dans l'ordre, l'objet de la cabane, le nouvel épisode, puis le badge
 
-    # Questions 33.9 et 33.10 (b)
-    @a-valider
+    # Décisions 33.9 et 33.10 (b)
     Scénario: Sans réseau au début de la séance, la fin de la séance n'annonce aucun épisode
       Étant donné que Léa a terminé 2 séances
       Et que le réseau est coupé
@@ -223,8 +219,7 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
       Alors aucune annonce de nouvel épisode n'apparaît à la fin de la séance
       Et aucun message d'erreur n'apparaît
 
-    # Question 33.10 (a)
-    @a-valider
+    # Décision 33.10 (a)
     Scénario: Une séance commencée avec le réseau et finie sans réseau annonce l'épisode
       Étant donné que Léa a terminé 2 séances
       Et que Léa joue la séance complète de la leçon « Les sons de test »
@@ -232,16 +227,14 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
       Quand Léa réussit la dernière question de la séance
       Alors la fin de la séance annonce « Nouvel épisode ! » avec « Le pont des lettres »
 
-    # Question 33.19
-    @a-valider
+    # Décision 33.19
     Scénario: Avec le profil préparé, sans profil réel au serveur, la fin de la première séance annonce le premier épisode
       Étant donné que Léa joue avec le profil préparé, sans profil réel au serveur
       Et que Léa joue la séance complète de la leçon « Les sons de test »
       Quand Léa réussit la dernière question de la séance
       Alors la fin de la séance annonce « Nouvel épisode ! » avec « La carte froissée »
 
-    # Question 33.28
-    @a-valider
+    # Décision 33.28
     Scénario: Avec un profil de démonstration, la fin de la première séance annonce le premier épisode
       Étant donné que Léa joue avec un profil de démonstration, sans compte parent
       Et que Léa joue la séance complète de la leçon « Les sons de test »
@@ -270,8 +263,7 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
       Et chaque mot du texte de l'épisode est surligné au moment où Noisette le prononce
       Et plus aucun mot n'est surligné quand la lecture est finie
 
-    # Question 33.16 : le titre, puis le texte ; la position n'est pas lue
-    @a-valider
+    # Décision 33.16 : le titre, puis le texte ; la position n'est pas lue
     Scénario: La voix lit le titre de l'épisode puis son texte, sans sa position
       Étant donné que Léa a terminé 1 séance
       Et que Léa a ouvert « Mes médailles » depuis son accueil
@@ -279,8 +271,7 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
       Alors Léa entend Noisette lire « La carte froissée », puis le texte de l'épisode
       Mais Léa n'entend pas Noisette lire « Épisode 1 sur 20 »
 
-    # Question 33.15 : lecture à l'ouverture, avec ou sans « tout lire à voix haute »
-    @a-valider
+    # Décision 33.15 : lecture à l'ouverture, avec ou sans « tout lire à voix haute »
     Scénario: Sans « tout lire à voix haute », l'épisode est quand même lu à son ouverture
       Étant donné que le réglage « tout lire à voix haute » de Léa est sur « non »
       Et que Léa a terminé 1 séance
@@ -320,8 +311,7 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
         | 3 séances  | Le pont des lettres        |
         | 20 séances | Le retour des Savanturiers |
 
-    # Question 33.18
-    @a-valider
+    # Décision 33.18
     Scénario: L'épisode qui vient de s'ouvrir à la fin de la séance ne propose pas « Épisode suivant »
       Étant donné que Léa a terminé 2 séances
       Et que la fin de la séance de la leçon « Les sons de test » vient d'annoncer « Le pont des lettres »
@@ -329,8 +319,7 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
       Alors l'écran de l'épisode s'intitule « Le pont des lettres », avec « Épisode 3 sur 20 »
       Mais l'écran de l'épisode ne propose pas « Épisode suivant »
 
-    # Question 33.17
-    @a-valider
+    # Décision 33.17
     Scénario: L'écran de l'épisode ne propose pas d'épisode précédent
       Étant donné que Léa a terminé 3 séances
       Quand Léa lit l'épisode « Le pont des lettres » depuis « Mes médailles »
@@ -342,8 +331,7 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
       Quand Léa choisit « Fermer le livre »
       Alors le titre de l'écran est « Mes médailles »
 
-    # Question 33.20
-    @a-valider
+    # Décision 33.20
     Scénario: « Fermer le livre » ramène à l'accueil quand l'épisode a été ouvert à la fin de la séance
       Étant donné que Léa n'a terminé aucune séance
       Et que la fin de la séance de la leçon « Les sons de test » vient d'annoncer « La carte froissée »
@@ -358,8 +346,7 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
       Quand Léa choisit « Fermer le livre »
       Alors Léa n'entend plus Noisette
 
-    # Questions 33.3 et 33.24
-    @a-valider
+    # Décisions 33.3 et 33.24
     Scénario: Le dernier épisode garde sa fin et s'adresse à tous les enfants
       Étant donné que Léa a terminé 20 séances
       Quand Léa lit l'épisode « Le retour des Savanturiers » depuis « Mes médailles »
@@ -368,8 +355,7 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
 
   Règle: L'histoire est celle de Noisette dans tous les univers, racontée par le personnage guide du profil
 
-    # Question 33.2 (d)
-    @a-valider
+    # Décision 33.2 (d)
     Plan du Scénario: Dans l'univers <clé>, <personnage guide> raconte l'histoire de Noisette
       Étant donné que Léa a choisi l'univers <clé>
       Et que Léa a terminé 1 séance
@@ -383,16 +369,14 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
         | pompier   | Capitaine Sam    |
         | princesse | Lumi             |
 
-    # Question 33.2
-    @a-valider
+    # Décision 33.2
     Scénario: Changer d'univers ne referme aucun épisode
       Étant donné que Léa a terminé 2 séances
       Et que Léa a choisi l'univers sports
       Quand Léa ouvre « Mes médailles » depuis son accueil
       Alors les tuiles 1 et 2 de l'histoire montrent « La carte froissée » et « Le premier indice »
 
-    # Question 33.2 (d)
-    @a-valider
+    # Décision 33.2 (d)
     Scénario: Dans l'univers Pompiers, Capitaine Sam annonce l'épisode qui attend l'enfant
       Étant donné que Léa a choisi l'univers pompier
       Et que Léa n'a terminé aucune séance
@@ -403,8 +387,8 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
 
   Règle: L'histoire se lit à voix haute, au lecteur d'écran, au clavier, en mode dys, sans mouvement et sur un petit écran
 
-    # Questions 33.6 et 33.22 ; texte du sous-titre à valider
-    @depend-de-32 @a-valider
+    # Décisions 33.6 et 33.22
+    @depend-de-32
     Scénario: Avec « tout lire à voix haute », le titre de l'histoire puis son sous-titre sont lus après la cabane
       Étant donné que Paul a réglé « tout lire à voix haute » sur « oui » pour Léa
       Et que Léa a gagné 3 étoiles en tout
@@ -420,8 +404,7 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
         | Un nouvel épisode s'ouvre à chaque séance terminée.                        |
       Mais Léa n'entend pas Noisette lire « La carte froissée »
 
-    # Questions 33.6 et 33.22
-    @a-valider
+    # Décisions 33.6 et 33.22
     Scénario: Sans « tout lire à voix haute », l'enfant fait lire l'histoire à la demande
       Étant donné que le réglage « tout lire à voix haute » de Léa est sur « non »
       Et que Léa a terminé 2 séances
@@ -429,8 +412,8 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
       Quand Léa demande à écouter l'histoire
       Alors Léa entend Noisette lire « L'histoire des Savanturiers », puis « Un nouvel épisode s'ouvre à chaque séance terminée. »
 
-    # Question 33.22 (a) et décision 32.9
-    @depend-de-32 @a-valider
+    # Décision 33.22 (a) et décision 32.9
+    @depend-de-32
     Scénario: Un épisode ouvert suffit pour que le personnage guide dise « Regarde tout ce que tu as gagné ! »
       Étant donné que Léa a gagné 2 étoiles en tout
       Et que Léa a terminé 1 séance
@@ -438,8 +421,7 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
       Alors Léa entend Noisette dire « Regarde tout ce que tu as gagné ! »
       Mais Léa n'entend pas Noisette lire « Gagne des étoiles pour remplir la cabane ! »
 
-    # Question 33.14
-    @a-valider
+    # Décision 33.14
     Scénario: Avec « tout lire à voix haute », l'annonce du nouvel épisode n'est pas lue en plus de la phrase du personnage guide
       Étant donné que Paul a réglé « tout lire à voix haute » sur « oui » pour Léa
       Et que Léa n'a terminé aucune séance
@@ -447,16 +429,14 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
       Quand Léa réussit la dernière question de la séance
       Alors Léa n'entend pas Noisette lire « Nouvel épisode ! »
 
-    # Question 33.21 : textes à valider
-    @a-valider
+    # Décision 33.21 : libellés validés
     Scénario: Un lecteur d'écran annonce chaque tuile avec son numéro
       Étant donné que Léa a terminé 1 séance
       Quand Léa ouvre « Mes médailles » depuis son accueil
       Alors les lecteurs d'écran annoncent « Épisode 1 : La carte froissée »
       Et les lecteurs d'écran annoncent « Épisode 2, à découvrir »
 
-    # Question 33.29 : texte à valider
-    @a-valider
+    # Décision 33.29 : texte validé
     Scénario: Un lecteur d'écran annonce le nouvel épisode à la fin de la séance
       Étant donné que Léa n'a terminé aucune séance
       Et que Léa joue la séance complète de la leçon « Les sons de test »
@@ -470,8 +450,7 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
       Quand Léa choisit la tuile « La carte froissée », au clavier seulement
       Alors l'écran de l'épisode s'intitule « La carte froissée », avec « Épisode 1 sur 20 »
 
-    # Question 33.30
-    @a-valider
+    # Décision 33.30
     Scénario: À la fin de la séance, « Lire l'épisode » s'atteint au clavier sans prendre le focus
       Étant donné que Léa joue sur un ordinateur, au clavier
       Et que Léa n'a terminé aucune séance
@@ -501,8 +480,7 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
       Alors Léa voit le titre et le texte de l'épisode en mode dys : police Andika, lettres, mots et lignes espacés
       Et chaque mot du texte de l'épisode est surligné au moment où Noisette le prononce
 
-    # Question 33.26
-    @a-valider
+    # Décision 33.26
     Scénario: Avec les mouvements réduits, l'annonce du nouvel épisode apparaît sans mouvement
       Étant donné que l'appareil demande des mouvements réduits
       Et que Léa n'a terminé aucune séance
@@ -510,8 +488,7 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
       Quand Léa réussit la dernière question de la séance
       Alors l'annonce du nouvel épisode apparaît sans mouvement
 
-    # Question 33.10 (c)
-    @a-valider
+    # Décision 33.10 (c)
     Scénario: Sans réseau, la section de l'histoire n'apparaît pas, sans message d'erreur
       Étant donné que Léa a terminé 2 séances
       Et que le réseau est coupé

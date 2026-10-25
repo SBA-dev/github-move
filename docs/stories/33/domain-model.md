@@ -1,7 +1,7 @@
 # Modèle du domaine : issue #33, Épisodes de l'histoire, un épisode s'ouvre à chaque séance
 
 > Cadrage anticipé (décision 0020, point 6). Rien n'est codé avant le merge des dépendances : #27 (test de départ), #28 (séances de révision), #30 (série, lecture des séances terminées), #65 (écran « Mes médailles ») et, en pratique, #32 (cabane, PR #88), qui ouvre la zone « nouveautés » de l'écran de fin et compose déjà la phrase de fin du personnage guide.
-> Les questions 33.1 à 33.27 attendent le PO. Chacune a une recommandation. Les textes d'interface qui ne viennent pas du legacy sont marqués « à valider ».
+> **Modèle validé par le PO le 2026-10-25** : « 33. reco OK » (annonce du responsable, https://github.com/SBA-dev/github-move/issues/33#issuecomment-6400998421). Les questions 33.1 à 33.27 sont devenues la section « Décisions » : toutes les recommandations sont retenues, et les textes d'interface qui étaient « à valider » sont validés. Le code commence après le merge de #30 (et de #32).
 
 ## Contexte
 
@@ -12,7 +12,7 @@ Pourquoi Motivation :
 - il ne fait que **compter** des séances déjà terminées : Apprentissage les enregistre (#24, #28), Motivation ne les modifie pas et ne lit ni étoile, ni erreur, ni leçon ;
 - il s'affiche à trois endroits que Motivation compose déjà : la section `histoire` de « Mes médailles » (#65, réservée en deuxième place), la zone « nouveautés » de l'écran de fin (#32) et la phrase de fin du personnage guide (`parolesDeFinDeSeance`, #24, complétée par `phraseDeFinAvecLaCabane`, #32).
 
-**Proposition de modèle (question 33.8) : les épisodes ouverts ne sont pas enregistrés, ils se recalculent.** Le nombre d'épisodes ouverts dépend seulement du nombre de séances terminées du profil ; or une séance terminée enregistrée ne disparaît jamais (seulement avec le profil). Donc le nombre ne baisse jamais, donc aucun épisode ne se referme, sans rien stocker. C'est le choix de #25 (parcours), #65 (records), #32 (cabane, décision 32.20) et #30 (série, décision 30.5 a : « pas de journal propre à Motivation ») : une **vue calculée** par des fonctions pures de `@domain/motivation`, à partir de ce que le front lit déjà sous RLS. Motivation **ne s'abonne pas** à `SeanceTerminee`. L'issue proposait un compte « en base » : il y est déjà, sous la forme des séances terminées d'Apprentissage.
+**Modèle retenu (décision 33.8) : les épisodes ouverts ne sont pas enregistrés, ils se recalculent.** Le nombre d'épisodes ouverts dépend seulement du nombre de séances terminées du profil ; or une séance terminée enregistrée ne disparaît jamais (seulement avec le profil). Donc le nombre ne baisse jamais, donc aucun épisode ne se referme, sans rien stocker. C'est le choix de #25 (parcours), #65 (records), #32 (cabane, décision 32.20) et #30 (série, décision 30.5 a : « pas de journal propre à Motivation ») : une **vue calculée** par des fonctions pures de `@domain/motivation`, à partir de ce que le front lit déjà sous RLS. Motivation **ne s'abonne pas** à `SeanceTerminee`. L'issue proposait un compte « en base » : il y est déjà, sous la forme des séances terminées d'Apprentissage.
 
 ### Sources lues, sans rien écrire
 
@@ -73,16 +73,16 @@ Non lus, volontairement :
 
 | Terme | Statut | Remarque |
 |---|---|---|
-| Épisode | au glossaire, `(à valider)`, **en conflit avec le legacy** | Le glossaire dit « chapitre de l'histoire de l'univers » et « s'ouvre à chaque jour de séance » ; le legacy n'a qu'une histoire (celle de Noisette) et ouvre un épisode à chaque séance. Nouvelle définition proposée (ajout au glossaire, `(à valider)`), l'ancienne ligne sera remplacée quand 33.1 et 33.2 seront tranchées. Synonyme interdit « chapitre » gardé ; « histoire » reste interdit **pour un seul épisode** |
-| Histoire des Savanturiers | **nouveau**, `(à valider)` | La suite des 20 épisodes, la même pour tous les profils (33.2). Interface : titre de la section « L'histoire des Savanturiers » (33.6). **Conflit** : « histoire » est aujourd'hui un synonyme interdit d'Épisode ; il désigne ici l'ensemble, pas un épisode |
-| Épisode ouvert | **nouveau**, `(à valider)` | Épisode dont le numéro est inférieur ou égal au nombre de séances terminées du profil (33.1). Il ne se referme jamais. Contraire : épisode fermé (interface : « À découvrir »). Verbe : « s'ouvre » (legacy), jamais « se débloque » |
-| Nombre de séances terminées | **nouveau**, `(à valider)`, peut-être un simple calcul | Séances terminées et séances de révision terminées du profil, comptées une fois chacune (identifiant). Ce n'est **pas** un score ni une note, et pas le **nombre de séances** du résultat de la leçon (#24, Décision n°27), qui compte les séances d'une seule leçon |
-| Épisode ouvert par la séance | **nouveau**, `(à valider)`, peut-être un simple calcul | L'épisode qui s'ouvre parce que la séance qui vient de finir est terminée (numéro = nombre avant + 1), annoncé à l'écran de fin |
+| Épisode | au glossaire, **redéfini** (décisions 33.1, 33.2, 33.27) | L'ancienne ligne (« chapitre de l'histoire de l'univers », « s'ouvre à chaque jour de séance ») contredisait le legacy. Nouvelle définition : une des 20 parties de l'histoire des Savanturiers ; un épisode s'ouvre à chaque séance terminée, dans l'ordre, quel que soit l'univers. Synonyme interdit « chapitre » gardé ; « histoire » reste interdit **pour un seul épisode** |
+| Histoire des Savanturiers | **validé** (33.27) | La suite des 20 épisodes, la même pour tous les profils (33.2). Interface : titre de la section « L'histoire des Savanturiers » (33.6). « Histoire » désigne l'ensemble ; il reste interdit pour **un** épisode |
+| Épisode ouvert | **validé** (33.27) | Épisode dont le numéro est inférieur ou égal au nombre de séances terminées du profil (33.1). Il ne se referme jamais. Contraire : épisode fermé (interface : « À découvrir »). Verbe : « s'ouvre » (legacy), jamais « se débloque » |
+| Nombre de séances terminées | **nom de calcul**, hors glossaire (33.27) | Séances terminées et séances de révision terminées du profil, comptées une fois chacune (identifiant). Ce n'est **pas** un score ni une note, et pas le **nombre de séances** du résultat de la leçon (#24, Décision n°27), qui compte les séances d'une seule leçon |
+| Épisode ouvert par la séance | **nom de calcul**, hors glossaire (33.27) | L'épisode qui s'ouvre parce que la séance qui vient de finir est terminée (numéro = nombre avant + 1), annoncé à l'écran de fin |
 | Séance terminée, Séance de révision | au glossaire (#24, #28) | Les deux ouvrent un épisode (33.7, comme la série : 30.4, 28.16) |
-| Jour de séance | au glossaire (validé, Apprentissage) | Sa définition dit « sert à la série et aux épisodes » : à corriger si 33.1 retient « chaque séance » (les épisodes ne lisent plus le jour) |
+| Jour de séance | au glossaire (validé, Apprentissage) | Sa définition dit « sert à la série et aux épisodes » : à corriger, 33.1 retenant « chaque séance » (les épisodes ne lisent pas le jour) |
 | Test de départ | au glossaire (validé) | N'est pas une séance : n'ouvre aucun épisode (27.4) |
-| Étoile du savoir | **conflit n°1** du glossaire | Nom d'un objet de l'histoire (titre de l'épisode 19, textes 1, 19). Proposition maintenue : **pas un terme du domaine**, comme « l'étoile magique » de la cabane (32.6) ; il ne compte dans aucun total (33.4) |
-| « Leçon terminée » (sous-titre du legacy) | **conflit** | Synonyme interdit de **Leçon réussie**. Le sous-titre est à réécrire selon 33.1 (33.6) |
+| Étoile du savoir | **conflit n°1** du glossaire, **tranché** (33.4) | Nom d'un objet de l'histoire (titre de l'épisode 19, textes 1, 19). **Pas un terme du domaine**, comme « l'étoile magique » de la cabane (32.6) ; il ne compte dans aucun total (33.4) |
+| « Leçon terminée » (sous-titre du legacy) | **tranché** (33.6) | Synonyme interdit de **Leçon réussie**. Sous-titre retenu : « Un nouvel épisode s'ouvre à chaque séance terminée. » |
 | « Mes trophées » | **tranché** (65.1) | L'écran s'appelle « Mes médailles » ; « trophée » reste interdit |
 | Écran des récompenses de l'enfant, Section de l'écran | au glossaire, `(à valider)` (#65) | La section `histoire` existe dans l'ordre des sections (cabane, histoire, badges, records) |
 | Zone « nouveautés » de l'écran de fin | mot d'interface (#24, #32) | #33 y ajoute l'encart « Nouvel épisode ! » |
@@ -168,7 +168,7 @@ classDiagram
   HistoireDe ..> SeancesTermineesDuProfil : reçoit son nombre
 ```
 
-Les noms sont des propositions de travail ; ceux qui dépendent de 33.1, 33.2 et 33.6 attendent le PO.
+Les noms de code sont des noms de travail ; 33.1, 33.2 et 33.6 sont tranchés (voir « Décisions »).
 
 ### Value objects et constante
 
@@ -196,9 +196,9 @@ Les noms sont des propositions de travail ; ceux qui dépendent de 33.1, 33.2 et
 4. `tuilesDeLHistoire(etat)` : les 20 tuiles, dans l'ordre.
 5. Paroles (`paroles-de-l-histoire.ts`), textes du legacy sauf mention :
    - `titreDeLaSection()` : « L'histoire des Savanturiers » (33.6) ;
-   - `sousTitreDeLaSection()` : à réécrire selon 33.1 (legacy : « Un nouvel épisode s'ouvre à chaque leçon terminée. », en conflit) ;
+   - `sousTitreDeLaSection()` : « Un nouvel épisode s'ouvre à chaque séance terminée. » (décision 33.6 ; le sous-titre du legacy, « … à chaque leçon terminée. », est abandonné) ;
    - `positionDeLEpisode(episode)` : « Épisode `<i>` sur 20 » ;
-   - `texteALire(episode)` : ce que lit la voix à l'ouverture et avec « Réécouter » (texte seul, ou titre puis texte : 33.16) ;
+   - `texteALire(episode)` : ce que lit la voix à l'ouverture et avec « Réécouter » : le titre, puis le texte (décision 33.16) ;
    - `titreDeLAnnonce()` : « Nouvel épisode ! » ; `annonceDeLEpisodeOuvert(episode)` : son titre ;
    - `finDePhraseDuPersonnageGuide()` : « Un nouvel épisode de l'histoire t'attend ! » ;
    - `phraseDeFinAvecLesNouveautes(phraseDeFin, { objet, episode })` : la phrase de fin, puis les fins de phrase des nouveautés dans un ordre fixe (33.13). Remplace la composition `phraseDeFinAvecLaCabane` de #32 ou l'appelle : composition dans le domaine, jamais dans React (comme 32.12).
@@ -218,7 +218,7 @@ Ce calcul ne donne au front aucun pouvoir : il n'écrit rien. Une séance refus�
 
 ### Écran d'un épisode
 
-- Composé par le front avec les fonctions ci-dessus : titre (`h1`), position (« Épisode `<i>` sur 20 »), personnage guide et voix (33.2), texte surligné mot à mot pendant la lecture (`LecteurAVoixHaute`, `onMot`), boutons « Réécouter », « Fermer le livre », « Épisode suivant » (si ouvert) et, selon 33.17, « Épisode précédent ».
+- Composé par le front avec les fonctions ci-dessus : titre (`h1`), position (« Épisode `<i>` sur 20 »), personnage guide et voix (33.2), texte surligné mot à mot pendant la lecture (`LecteurAVoixHaute`, `onMot`), boutons « Réécouter », « Fermer le livre » et « Épisode suivant » (si ouvert) ; pas d'« Épisode précédent » (décision 33.17).
 - Lecture automatique à l'ouverture (33.15), arrêtée en quittant l'écran ou en passant à l'épisode suivant ; Muet respecté.
 
 ### Commandes et lectures
@@ -233,7 +233,7 @@ Aucune commande d'écriture. `TerminerLaSeance` (#24) et `TerminerLaSeanceDeRevi
 
 ### Migration et Edge Function
 
-- **Pas de migration**, si 33.8 est retenue : `seances_terminees` et `seances_de_revision_terminees` contiennent tout ce qui est compté ; policies de lecture, cascade avec le profil et export existent (#24, #28). La colonne de jour de 30.6 n'est pas nécessaire ici (sauf si 33.1 retient le jour de séance).
+- **Pas de migration** (décision 33.8) : `seances_terminees` et `seances_de_revision_terminees` contiennent tout ce qui est compté ; policies de lecture, cascade avec le profil et export existent (#24, #28). La colonne de jour de 30.6 n'est pas nécessaire ici (décision 33.1 : chaque séance terminée).
 - **Pas d'Edge Function** : lecture directe sous RLS (décisions 0013 et 0016).
 - Une histoire qui dépendrait d'autre chose que du nombre de séances (épisodes choisis, histoire par univers changée en cours de route, nouvelle histoire après la 20e séance avec reprise à 1) demanderait un état enregistré (33.2, 33.3).
 
@@ -241,7 +241,7 @@ Aucune commande d'écriture. `TerminerLaSeance` (#24) et `TerminerLaSeanceDeRevi
 
 L'état étant calculé, ce sont des **règles du calcul**, couvertes par les tests des fonctions pures :
 
-1. Le nombre d'épisodes ouverts est min(20, nombre de séances terminées du profil) (règle à confirmer : 33.1).
+1. Le nombre d'épisodes ouverts est min(20, nombre de séances terminées du profil) (décision 33.1).
 2. Une séance terminée compte **une seule fois**, même renvoyée ou gardée sur l'appareil puis envoyée (identifiant).
 3. Comptent : toute séance terminée et toute séance de révision terminée ; ne comptent pas : le test de départ (27.4), une séance quittée avant la fin (33.7).
 4. Les épisodes s'ouvrent **dans l'ordre**, de 1 à 20, et un épisode ouvert ne se referme jamais (les séances terminées ne disparaissent pas), même en changeant d'univers.
@@ -265,7 +265,7 @@ Aucun nouvel événement, aucun abonnement (33.8). `SeanceTerminee` (#24) et `Se
 | Apprentissage (écran de fin) | Motivation (histoire) | Appel depuis le front | L'écran de fin passe le nombre de séances d'avant (lu au lancement) ; Motivation rend l'épisode ouvert, l'annonce et la phrase de fin complétée, que le front affiche dans la zone « nouveautés » et fait dire au personnage guide |
 | Motivation | Voix | Appel (#7) | Lecture du texte d'un épisode par `LecteurAVoixHaute`, avec le caractère de la voix fourni par Motivation (33.2) |
 | Famille | Motivation | Customer/Supplier existant (#6, #12) | Univers et réglage Tout lire du profil en cours |
-| Famille | Motivation | Contrat de données personnelles (#14) | Rien de nouveau si 33.8 est retenue |
+| Famille | Motivation | Contrat de données personnelles (#14) | Rien de nouveau (décision 33.8) |
 
 ## Partage avec le front
 
@@ -276,7 +276,7 @@ Aucun nouvel événement, aucun abonnement (33.8). `SeanceTerminee` (#24) et `Se
 
 ## Données d'enfants
 
-**Aucune donnée personnelle nouvelle** si 33.8 est retenue : rien n'est enregistré (ni nombre de séances, ni épisodes ouverts). L'histoire lit les séances terminées et les séances de révision terminées déjà gardées par Apprentissage, sous RLS, supprimées en cascade avec le profil et incluses dans l'export (#14). Les textes des épisodes sont du contenu, pas des données d'enfant. Rien n'est gardé sur l'appareil au-delà de ce que font déjà #24 et #28, rien n'est envoyé à l'IA. Les épisodes n'apparaissent pas dans l'Espace parent (33.25).
+**Aucune donnée personnelle nouvelle** (décision 33.8) : rien n'est enregistré (ni nombre de séances, ni épisodes ouverts). L'histoire lit les séances terminées et les séances de révision terminées déjà gardées par Apprentissage, sous RLS, supprimées en cascade avec le profil et incluses dans l'export (#14). Les textes des épisodes sont du contenu, pas des données d'enfant. Rien n'est gardé sur l'appareil au-delà de ce que font déjà #24 et #28, rien n'est envoyé à l'IA. Les épisodes n'apparaissent pas dans l'Espace parent (33.25).
 
 ## Où vivent les textes des 20 épisodes (question 33.5)
 
@@ -285,7 +285,7 @@ Aucun nouvel événement, aucun abonnement (33.8). `SeanceTerminee` (#24) et `Se
 | (a) **Domaine Motivation** : constante `HISTOIRE_DES_SAVANTURIERS` dans `motivation/domain/histoire.ts` | Hors ligne sans rien charger ; même place que les objets de la cabane (`PALIERS_DE_LA_CABANE`) et les paroles du personnage guide ; la règle « 20 épisodes » et les textes restent ensemble, vérifiés par `deno test` ; ~4 Ko | Changer un texte demande une PR de code ; une seconde histoire ou une histoire par univers grossirait le domaine |
 | (b) **Contenu** : textes dans `scripts/` (Python), publiés en JSON à côté de `bibliotheque.json`, lus par un mapper | Le contenu reste au pipeline ; MP3 de la voix neuronale générés au même endroit que ceux des leçons | Nouveau format publié (doc, test pytest, test de schéma, mapper, cache hors ligne de la PWA) pour 20 textes fixes ; pas de citation des programmes à vérifier |
 
-**Recommandation : (a)**, tant qu'il n'y a qu'une histoire. Passer à (b) le jour où le PO veut plusieurs histoires (33.2 c, 33.3) : ce sera alors un changement du contrat de contenu, avec sa propre story.
+**Décision 33.5 : (a)**, tant qu'il n'y a qu'une histoire. Passer à (b) le jour où le PO veut plusieurs histoires (33.2 c, 33.3) : ce sera alors un changement du contrat de contenu, avec sa propre story.
 
 ## Emplacement
 
@@ -314,98 +314,98 @@ src/seance/EcranDeSeance.tsx, useDeroulementDeSeance.ts   # nombre d'avant lu au
 src/navigation.ts                        # écran de l'épisode (ajout)
 ```
 
-Pas de migration, pas d'Edge Function, rien dans `apprentissage/` (si 33.1 et 33.8 suivent les recommandations).
+Pas de migration, pas d'Edge Function, rien dans `apprentissage/` (décisions 33.1 et 33.8).
 
 ## Remarques (pas des questions au PO)
 
 - **Dépendance pratique à #32** (PR #88, pas encore mergée) : #33 réutilise la zone « nouveautés », la lecture « avant » au lancement et `phraseDeFinAvecLaCabane`. #33 doit partir de `main` après le merge de #32, sinon il faudra recréer ces points d'accroche.
 - **Lecture partagée avec #29 et #30** : les trois stories lisent les mêmes séances terminées. Une seule lecture côté front (identifiant, jour, leçon) évite trois requêtes ; à organiser par la première story livrée.
-- **Ligne Jour de séance du glossaire** : elle dit « sert à la série et aux épisodes ». Si 33.1 retient « chaque séance », il faudra retirer « et aux épisodes » (modification d'une ligne existante : à faire hors vague, ou par le responsable).
+- **Ligne Jour de séance du glossaire** : elle dit « sert à la série et aux épisodes ». 33.1 retenant « chaque séance », il faut retirer « et aux épisodes » (modification d'une ligne existante : à faire hors vague, ou par le responsable).
 - **Accompagnement (lot 6)** : mots de la semaine et leçons personnelles compteront dès qu'ils publieront une séance terminée (comme 30.4).
 
-## Questions ouvertes
+## Décisions
 
-Les questions 33.1 à 33.6 reprennent celles de l'issue (1 à 6). Les suivantes viennent du modèle et des cas limites. Déjà tranché, et repris sans question : le test de départ n'ouvre rien (27.4) ; la séance de révision est une séance (28.16) ; l'écran s'appelle « Mes médailles », la section `histoire` y est deuxième (65.1, #65) ; « Mes médailles » suit l'univers du profil (65.5) ; la cabane reste celle de Noisette (32.1).
+Décisions du PO du 2026-10-25 : « 33. reco OK » (annonce du responsable, https://github.com/SBA-dev/github-move/issues/33#issuecomment-6400998421). Toutes les recommandations ci-dessous sont **retenues** ; les textes « à valider » sont validés tels qu'écrits. Les questions 33.1 à 33.6 reprennent celles de l'issue (1 à 6), les suivantes viennent du modèle et des cas limites ; 33.28 à 33.31 sont dans `acceptance.md`. Déjà tranché, et repris sans question : le test de départ n'ouvre rien (27.4) ; la séance de révision est une séance (28.16) ; l'écran s'appelle « Mes médailles », la section `histoire` y est deuxième (65.1, #65) ; « Mes médailles » suit l'univers du profil (65.5) ; la cabane reste celle de Noisette (32.1).
 
 **33.1. Règle d'ouverture** (question 1 de l'issue). Un épisode s'ouvre-t-il (a) à chaque séance terminée (code du legacy, titre de l'issue), (b) à chaque leçon réussie (sous-titre du legacy), ou (c) à chaque jour de séance (glossaire) ? Exemple : Léa fait 3 séances lundi ; (a) ouvre les épisodes 1 à 3, (c) seulement le 1.
-- **Recommandation : (a), chaque séance terminée**, comme le code et le titre de l'issue ; l'issue écrit aussi « aucun épisode n'est limité dans la journée », ce qu'interdirait (c). Le sous-titre et la définition d'Épisode au glossaire s'alignent (33.6). Conséquence assumée : un enfant peut ouvrir les 20 épisodes en un après-midi en enchaînant des séances d'un exercice.
+- **Retenu (reco OK) : (a), chaque séance terminée**, comme le code et le titre de l'issue ; l'issue écrit aussi « aucun épisode n'est limité dans la journée », ce qu'interdirait (c). Le sous-titre et la définition d'Épisode au glossaire s'alignent (33.6). Conséquence assumée : un enfant peut ouvrir les 20 épisodes en un après-midi en enchaînant des séances d'un exercice.
 
 **33.2. L'histoire suit-elle l'univers ?** (question 2 de l'issue). (a) Histoire de Noisette pour tous, image et voix de Noisette ; (b) comme le legacy : image de Noisette, voix du personnage guide du profil (un enfant de l'univers Pompiers voit Noisette et entend Capitaine Sam) ; (c) une histoire par univers (6 histoires, textes à fournir, pas à inventer) ; (d) l'histoire reste celle de Noisette, **racontée par le personnage guide du profil** (son image et sa voix : Capitaine Sam lit l'histoire de Noisette).
-- **Recommandation : (d)**. Cohérent avec 32.1 (le contenu reste celui de Noisette) et 65.5 (l'écran suit l'univers) ; corrige l'écart image/voix du legacy ; aucun texte à écrire. Dans l'univers Animaux, Noisette lit sa propre histoire, déjà écrite à la troisième personne.
+- **Retenu (reco OK) : (d)**. Cohérent avec 32.1 (le contenu reste celui de Noisette) et 65.5 (l'écran suit l'univers) ; corrige l'écart image/voix du legacy ; aucun texte à écrire. Dans l'univers Animaux, Noisette lit sa propre histoire, déjà écrite à la troisième personne.
 
 **33.3. Après l'épisode 20** (question 3 de l'issue).
-- **Recommandation : rien de nouveau dans #33** : les 20 tuiles restent ouvertes, l'écran de fin n'annonce plus rien, sans message. Une seconde histoire serait une story à part, avec ses textes fournis par le PO (et alors 33.5 b). Le texte de l'épisode 20 garde « Mais chut… une nouvelle carte vient d'arriver. » (contenu du legacy), sauf si le PO préfère le retirer tant qu'aucune suite n'existe. Lequel ?
+- **Retenu (reco OK) : rien de nouveau dans #33** : les 20 tuiles restent ouvertes, l'écran de fin n'annonce plus rien, sans message. Une seconde histoire serait une story à part, avec ses textes fournis par le PO (et alors 33.5 b). Le texte de l'épisode 20 garde « Mais chut… une nouvelle carte vient d'arriver. » (contenu du legacy).
 
 **33.4. « L'Étoile du savoir »** (question 4 de l'issue, conflit n°1 du glossaire).
-- **Recommandation : oui, confirmer** : ce n'est pas un terme du domaine, c'est un objet de l'histoire (comme « l'étoile magique », 32.6) ; il ne compte dans aucun total d'étoiles, n'entre ni dans le code du domaine (hors texte) ni dans les scénarios comme terme. Le conflit n°1 est alors tranché.
+- **Retenu (reco OK)** : ce n'est pas un terme du domaine, c'est un objet de l'histoire (comme « l'étoile magique », 32.6) ; il ne compte dans aucun total d'étoiles, n'entre ni dans le code du domaine (hors texte) ni dans les scénarios comme terme. Le conflit n°1 est tranché.
 
 **33.5. Où vivent les textes des épisodes** (question 5 de l'issue).
-- **Recommandation : dans le domaine Motivation** (constante `HISTOIRE_DES_SAVANTURIERS`), voir le tableau « Où vivent les textes ». Passage au contenu (`scripts/`, JSON) seulement avec plusieurs histoires.
+- **Retenu (reco OK) : dans le domaine Motivation** (constante `HISTOIRE_DES_SAVANTURIERS`), voir le tableau « Où vivent les textes ». Passage au contenu (`scripts/`, JSON) seulement avec plusieurs histoires.
 
 **33.6. Titres et sous-titre de la section** (question 6 de l'issue ; l'onglet est déjà « Mes médailles », 65.1).
-- **Recommandation** : garder « L'histoire des Savanturiers » (aucun conflit une fois **Histoire des Savanturiers** au glossaire) ; remplacer le sous-titre « Un nouvel épisode s'ouvre à chaque leçon terminée. » (« leçon terminée » est un synonyme interdit de Leçon réussie) par, selon 33.1 (a), « Un nouvel épisode s'ouvre à chaque séance terminée. » (texte à valider). Après l'épisode 20, même sous-titre. D'accord, et avec quel texte ?
+- **Retenu (reco OK)** : garder « L'histoire des Savanturiers » (aucun conflit une fois **Histoire des Savanturiers** au glossaire) ; remplacer le sous-titre « Un nouvel épisode s'ouvre à chaque leçon terminée. » (« leçon terminée » est un synonyme interdit de Leçon réussie) par, selon 33.1 (a), « Un nouvel épisode s'ouvre à chaque séance terminée. ». Après l'épisode 20, même sous-titre.
 
 **33.7. Ce qui ouvre un épisode.** Séance complète ; séance d'un exercice, fluence seule comprise ; leçon rejouée ; classes d'avant ou au-dessus ; 1, 2 ou 3 étoiles ; séance de révision ; plus tard mots de la semaine et leçons personnelles.
-- **Recommandation : oui à tout**, comme le legacy et la série (30.4, 28.16). Non : test de départ (27.4), séance quittée avant la fin.
+- **Retenu (reco OK) : oui à tout**, comme le legacy et la série (30.4, 28.16). Non : test de départ (27.4), séance quittée avant la fin.
 
 **33.8. Rien d'enregistré pour les épisodes.** L'issue proposait un compte en base et une réaction à `SeanceTerminee`.
-- **Recommandation : oui, rien d'enregistré** : le nombre d'épisodes ouverts se recalcule à partir des séances terminées et des séances de révision terminées déjà enregistrées par Apprentissage, plus les séances gardées sur l'appareil ; pas de table, pas d'abonnement, pas de donnée d'enfant nouvelle (comme 30.5 a et 32.20).
+- **Retenu (reco OK) : oui, rien d'enregistré** : le nombre d'épisodes ouverts se recalcule à partir des séances terminées et des séances de révision terminées déjà enregistrées par Apprentissage, plus les séances gardées sur l'appareil ; pas de table, pas d'abonnement, pas de donnée d'enfant nouvelle (comme 30.5 a et 32.20).
 
 **33.9. Nombre « avant » lu au lancement de la séance.** Comme la cabane (#32), l'écran de fin a besoin du nombre de séances d'avant la séance.
-- **Recommandation : oui**, lu au lancement, 5 s au plus ; sans lui (sans réseau, échec, trop lent), **aucune annonce**, sans message, pour ne jamais annoncer un épisode déjà ouvert. L'épisode reste visible ensuite dans « Mes médailles ».
+- **Retenu (reco OK) : oui**, lu au lancement, 5 s au plus ; sans lui (sans réseau, échec, trop lent), **aucune annonce**, sans message, pour ne jamais annoncer un épisode déjà ouvert. L'épisode reste visible ensuite dans « Mes médailles ».
 
 **33.10. Sans réseau.** (a) Séance lancée en ligne, finie hors ligne : le nombre d'avant est connu, l'épisode est annoncé. (b) Séance lancée hors ligne : pas d'annonce (33.9). (c) « Mes médailles » sans réseau : nombre du serveur inconnu.
-- **Recommandation** : (a) annonce, (b) pas d'annonce, (c) section « histoire » absente, sans message d'erreur (comme 32.13), jusqu'à la copie sur l'appareil de #44 ; si le nombre a été lu plus tôt pendant l'utilisation, la section reste, séances gardées sur l'appareil comprises (comme 30.9).
+- **Retenu (reco OK)** : (a) annonce, (b) pas d'annonce, (c) section « histoire » absente, sans message d'erreur (comme 32.13), jusqu'à la copie sur l'appareil de #44 ; si le nombre a été lu plus tôt pendant l'utilisation, la section reste, séances gardées sur l'appareil comprises (comme 30.9).
 
 **33.11. Plusieurs séances d'un coup.** Léa finit trois séances hors ligne, envoyées ensemble au retour du réseau ; ou elle joue sur deux appareils en même temps.
-- **Recommandation** : chaque écran de fin annonce au plus l'épisode ouvert par sa séance (numéro d'avant + 1, lu au lancement) ; les épisodes ouverts par des séances non annoncées se découvrent dans « Mes médailles ». Si deux appareils annoncent le même numéro, c'est accepté (aucune correction, aucun message).
+- **Retenu (reco OK)** : chaque écran de fin annonce au plus l'épisode ouvert par sa séance (numéro d'avant + 1, lu au lancement) ; les épisodes ouverts par des séances non annoncées se découvrent dans « Mes médailles ». Si deux appareils annoncent le même numéro, c'est accepté (aucune correction, aucun message).
 
 **33.12. Fins de séance sans phrase de fin habituelle.** Une séance de fluence seule ne dit pas `parolesDeFinDeSeance` (le personnage guide a déjà dit les paroles de fin de fluence) ; la séance de révision a sa propre fin (#28).
-- **Recommandation** : l'encart « Nouvel épisode ! » s'affiche aussi après une fluence seule et après une séance de révision ; « Un nouvel épisode de l'histoire t'attend ! » est ajouté à la fin des paroles de fin de fluence et de la phrase de fin de la séance de révision. D'accord ?
+- **Retenu (reco OK)** : l'encart « Nouvel épisode ! » s'affiche aussi après une fluence seule et après une séance de révision ; « Un nouvel épisode de l'histoire t'attend ! » est ajouté à la fin des paroles de fin de fluence et de la phrase de fin de la séance de révision.
 
 **33.13. Ordre avec la cabane, dans la zone « nouveautés » et dans la phrase du personnage guide.** Le legacy met l'épisode avant la cabane ; « Mes médailles » met la cabane avant l'histoire.
-- **Recommandation** : un seul ordre partout, celui de « Mes médailles » : cabane, puis épisode (puis badge, #31). Phrase : « `<phrase de fin>` Noisette a reçu une lanterne pour sa cabane. Un nouvel épisode de l'histoire t'attend ! » ; l'invitation à lire vient en dernier, juste avant le bouton « Lire l'épisode ». Composition dans le domaine. Ou garder l'ordre du legacy ?
+- **Retenu (reco OK)** : un seul ordre partout, celui de « Mes médailles » : cabane, puis épisode (puis badge, #31). Phrase : « `<phrase de fin>` Noisette a reçu une lanterne pour sa cabane. Un nouvel épisode de l'histoire t'attend ! » ; l'invitation à lire vient en dernier, juste avant le bouton « Lire l'épisode ». Composition dans le domaine.
 
 **33.14. L'encart est-il lu avec « tout lire à voix haute » ?**
-- **Recommandation : non**, comme 32.23 : seule la phrase du personnage guide est dite ; l'encart est annoncé aux lecteurs d'écran.
+- **Retenu (reco OK) : non**, comme 32.23 : seule la phrase du personnage guide est dite ; l'encart est annoncé aux lecteurs d'écran.
 
 **33.15. Lecture de l'épisode à l'ouverture.** Le legacy lit toujours le texte, même sans « tout lire », à la vitesse 0,92.
-- **Recommandation** : lecture **automatique à l'ouverture, avec ou sans « tout lire »** (c'est une histoire à écouter, pour des enfants qui ne lisent pas encore), mots surlignés ; Muet respecté (pas de lecture, le texte reste affiché) ; lecture arrêtée en quittant l'écran ; « Réécouter » relit depuis le début. Rythme : le rythme normal du personnage guide (pas de rythme 0,92 propre aux épisodes). D'accord, ou faut-il un rythme plus lent ?
+- **Retenu (reco OK)** : lecture **automatique à l'ouverture, avec ou sans « tout lire »** (c'est une histoire à écouter, pour des enfants qui ne lisent pas encore), mots surlignés ; Muet respecté (pas de lecture, le texte reste affiché) ; lecture arrêtée en quittant l'écran ; « Réécouter » relit depuis le début. Rythme : le rythme normal du personnage guide (pas de rythme 0,92 propre aux épisodes).
 
 **33.16. Que lit la voix ?** Le legacy lit le texte seul.
-- **Recommandation** : le titre, puis le texte (« La carte froissée. Un matin, Noisette… ») ; le surlignage porte sur le texte. « Épisode 1 sur 20 » n'est pas lu. Ou le texte seul ?
+- **Retenu (reco OK)** : le titre, puis le texte (« La carte froissée. Un matin, Noisette… ») ; le surlignage porte sur le texte. « Épisode 1 sur 20 » n'est pas lu.
 
 **33.17. « Épisode précédent ».** Le legacy n'en a pas.
-- **Recommandation : non**, comme le legacy : tous les épisodes ouverts sont dans la section ; « Fermer le livre » y ramène. D'accord ?
+- **Retenu (reco OK) : non**, comme le legacy : tous les épisodes ouverts sont dans la section ; « Fermer le livre » y ramène.
 
 **33.18. « Épisode suivant » depuis l'écran de fin.** Après « Lire l'épisode », l'épisode qui vient de s'ouvrir est le dernier ouvert : pas d'« Épisode suivant ».
-- **Recommandation** : d'accord, conséquence de la règle (invariant 7) ; aucun bouton vers un épisode fermé.
+- **Retenu (reco OK)** : d'accord, conséquence de la règle (invariant 7) ; aucun bouton vers un épisode fermé.
 
 **33.19. Profil préparé** (porte de test, décision 0021 ; pas de profil réel au serveur).
-- **Recommandation** : comme 32.22, l'histoire compte les séances terminées pendant l'utilisation et gardées sur l'appareil (lecture du serveur vide, pas en échec) ; l'écran de fin annonce l'épisode. Indispensable aux scénarios E2E.
+- **Retenu (reco OK)** : comme 32.22, l'histoire compte les séances terminées pendant l'utilisation et gardées sur l'appareil (lecture du serveur vide, pas en échec) ; l'écran de fin annonce l'épisode. Indispensable aux scénarios E2E.
 
 **33.20. « Fermer le livre » après « Lire l'épisode » depuis l'écran de fin.**
-- **Recommandation** : retour à l'accueil de l'enfant, comme le legacy (l'écran de fin n'est pas rejoué ; « Leçon suivante » reste dans « Mon parcours »). Depuis « Mes médailles », retour à « Mes médailles ». Ou revenir à l'écran de fin ?
+- **Retenu (reco OK)** : retour à l'accueil de l'enfant, comme le legacy (l'écran de fin n'est pas rejoué ; « Leçon suivante » reste dans « Mon parcours »). Depuis « Mes médailles », retour à « Mes médailles ».
 
 **33.21. La section et ses tuiles.**
-- **Recommandation** : section toujours affichée quand le nombre est connu, même à 0 (20 tuiles « À découvrir »), comme 32.8 ; tuile fermée non activable, lue « Épisode 5, à découvrir » par le lecteur d'écran (texte à valider) ; tuile ouverte lue « Épisode 1 : La carte froissée » (à valider).
+- **Retenu (reco OK)** : section toujours affichée quand le nombre est connu, même à 0 (20 tuiles « À découvrir »), comme 32.8 ; tuile fermée non activable, lue « Épisode 5, à découvrir » par le lecteur d'écran ; tuile ouverte lue « Épisode 1 : La carte froissée ».
 
 **33.22. « Mes médailles » à l'ouverture.**
-- **Recommandation** : (a) un épisode ouvert compte pour « Regarde tout ce que tu as gagné ! » (décision 32.9) ; (b) avec « tout lire », après la cabane : « L'histoire des Savanturiers » puis le sous-titre, sans les 20 tuiles (comme 32.10) ; sans « tout lire », un bouton « Écouter » sur la section lit les mêmes phrases.
+- **Retenu (reco OK)** : (a) un épisode ouvert compte pour « Regarde tout ce que tu as gagné ! » (décision 32.9) ; (b) avec « tout lire », après la cabane : « L'histoire des Savanturiers » puis le sous-titre, sans les 20 tuiles (comme 32.10) ; sans « tout lire », un bouton « Écouter » sur la section lit les mêmes phrases.
 
 **33.23. Séance refusée par le serveur.**
-- **Recommandation** : comme 30.13, elle compte pendant l'utilisation (épisode annoncé) ; après un rechargement, seules comptent les séances connues du serveur et celles encore gardées sur l'appareil : l'épisode peut redevenir « À découvrir », sans message. Cas rare (séance incohérente).
+- **Retenu (reco OK)** : comme 30.13, elle compte pendant l'utilisation (épisode annoncé) ; après un rechargement, seules comptent les séances connues du serveur et celles encore gardées sur l'appareil : l'épisode peut redevenir « À découvrir », sans message. Cas rare (séance incohérente).
 
 **33.24. Textes du legacy à revoir ?** (contenu, pas le modèle)
 - Épisode 20 : « Et toi, tu es devenu un vrai Savanturier ! » est au masculin, lu aussi à une fille.
 - Épisode 2 : « Elle vient justement de réussir une leçon avec toi ! » est faux si la deuxième séance était une séance de révision ou une fluence seule (pas une leçon réussie).
-- **Recommandation** : reprendre les 20 textes mot pour mot, sauf l'épisode 20, que le PO réécrit sous une forme épicène (proposition à valider : « Et toi, tu fais maintenant partie des Savanturiers ! ») ; l'épisode 2 reste tel quel (approximation acceptable dans une histoire). D'accord, et avec quel texte ?
+- **Retenu (reco OK)** : reprendre les 20 textes mot pour mot, sauf l'épisode 20, réécrit sous une forme épicène (texte validé : « Et toi, tu fais maintenant partie des Savanturiers ! ») ; l'épisode 2 reste tel quel (approximation acceptable dans une histoire).
 
 **33.25. Épisodes dans l'Espace parent.**
-- **Recommandation : non dans #33** (comme 32.24) ; le suivi (#34) dira s'il montre le nombre de séances.
+- **Retenu (reco OK) : non dans #33** (comme 32.24) ; le suivi (#34) dira s'il montre le nombre de séances.
 
 **33.26. Animation.**
-- **Recommandation** : courte, sur l'encart de l'écran de fin seulement, supprimée avec les mouvements réduits (comme 32.17) ; aucune animation sur les tuiles ni sur l'écran de l'épisode, hormis le surlignage.
+- **Retenu (reco OK)** : courte, sur l'encart de l'écran de fin seulement, supprimée avec les mouvements réduits (comme 32.17) ; aucune animation sur les tuiles ni sur l'écran de l'épisode, hormis le surlignage.
 
 **33.27. Termes.** « Histoire des Savanturiers », « Épisode ouvert » : termes du domaine ; « Nombre de séances terminées » et « Épisode ouvert par la séance » : simples calculs ?
-- **Recommandation** : **Histoire des Savanturiers** et **Épisode ouvert** entrent au glossaire ; les deux autres restent des noms de calcul, retirés du glossaire à la validation. « Histoire » reste interdit pour désigner **un** épisode. La ligne **Épisode** est redéfinie : « Une des 20 parties de l'histoire des Savanturiers ; un épisode s'ouvre à chaque séance terminée, dans l'ordre » (selon 33.1 et 33.2).
+- **Retenu (reco OK)** : **Histoire des Savanturiers** et **Épisode ouvert** entrent au glossaire ; les deux autres restent des noms de calcul, retirés du glossaire à la validation. « Histoire » reste interdit pour désigner **un** épisode. La ligne **Épisode** est redéfinie : « Une des 20 parties de l'histoire des Savanturiers ; un épisode s'ouvre à chaque séance terminée, dans l'ordre » (selon 33.1 et 33.2).
