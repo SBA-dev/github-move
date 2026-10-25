@@ -32,3 +32,10 @@ export class Jour {
     return new Date(this.instant).toISOString().slice(0, 10);
   }
 }
+
+const MILLISECONDES_PAR_MINUTE = 60 * 1000;
+
+export function jourDe(maintenant: Date, decalageEnMinutes: number): Jour {
+  const instantLocal = new Date(maintenant.getTime() - decalageEnMinutes * MILLISECONDES_PAR_MINUTE);
+  return Jour.de(instantLocal.toISOString().slice(0, 10));
+}
