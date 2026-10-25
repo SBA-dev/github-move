@@ -97,3 +97,33 @@ Deno.test("« Toutes les leçons » montre, après la classe de l'enfant, les le
     ],
   );
 });
+
+Deno.test("« Toutes les leçons » montre toujours les leçons réussies d'une classe au-dessus, même dans une matière dont l'enfant n'a pas réussi toutes les leçons de sa classe, et laisse de côté celles qui ne sont pas réussies", () => {
+  const entrees = {
+    lecons: [
+      lecon("fr-ce1-sons", "francais", "CE1", 1),
+      lecon("fr-ce2-accords", "francais", "CE2", 1),
+      lecon("fr-ce2-conjugaison", "francais", "CE2", 2),
+      lecon("fr-cm1-recits", "francais", "CM1", 1),
+      lecon("emc-ce2-regles", "emc", "CE2", 1),
+    ],
+    niveau: Niveau.de("CE1"),
+    meilleuresEtoiles: new Map([
+      ["fr-ce2-accords", Etoiles.de(2)],
+      ["emc-ce2-regles", Etoiles.de(1)],
+    ]),
+    leconsReussiesAuTestDeDepart: new Set(["fr-cm1-recits"]),
+  };
+
+  const { lecons } = toutesLesLecons(entrees, {});
+
+  assertEquals(
+    lecons.map(({ lecon, niveau, etat }) => ({ lecon, niveau, etat })),
+    [
+      { lecon: "fr-ce1-sons", niveau: Niveau.de("CE1"), etat: { genre: "prochaine" } },
+      { lecon: "fr-ce2-accords", niveau: Niveau.de("CE2"), etat: { genre: "reussie", etoiles: Etoiles.de(2) } },
+      { lecon: "emc-ce2-regles", niveau: Niveau.de("CE2"), etat: { genre: "reussie", etoiles: Etoiles.de(1) } },
+      { lecon: "fr-cm1-recits", niveau: Niveau.de("CM1"), etat: { genre: "reussieAuTestDeDepart" } },
+    ],
+  );
+});
