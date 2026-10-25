@@ -475,6 +475,7 @@ Then(
   },
 );
 
+// Tag @issue-27 : #28 et #29 ont leur propre étape de même texte (écran de la révision) ; un scénario qui porterait aussi leur tag serait ambigu.
 Then(/^l'écran s'intitule « ([^«»]+) », avec « ([^«»]+) »$/, { tags: "@issue-27" }, async ({ page }, titre: string, sousTitre: string) => {
   await expect(page.getByRole("heading", { level: 2, name: titre, exact: true })).toBeVisible();
   await expect(page.getByTestId("sous-titre-du-test-de-depart")).toHaveText(sousTitre);

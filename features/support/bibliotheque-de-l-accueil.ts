@@ -63,3 +63,8 @@ export async function servirLaBibliothequeDeLAccueil(page: Page): Promise<void> 
   await page.context().route("**/bibliotheque.json", servir);
   await page.route("**/bibliotheque.json", servir);
 }
+
+/** Les scénarios de #29 qui ne sont pas aussi ceux de #24, #25 ou #26 jouent avec la bibliothèque de test de l'accueil. */
+export function utiliseLaBibliothequeDeLAccueil(tags: readonly string[]): boolean {
+  return tags.includes("@issue-29") && !["@issue-24", "@issue-25", "@issue-26"].some((tag) => tags.includes(tag));
+}

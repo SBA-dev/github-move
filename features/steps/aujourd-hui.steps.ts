@@ -3,7 +3,7 @@ import type { DataTable } from "playwright-bdd";
 import { LECONS_DE_L_ACCUEIL } from "../support/bibliotheque-de-l-accueil.ts";
 import { lecturesDuResultatEnCours, suivreLesLecturesDuResultat } from "../support/bibliotheque-du-test-de-depart.ts";
 import { lireEnRest } from "../support/seances-api.ts";
-import { partie } from "./etoiles-et-fin-de-seance.steps.ts";
+import { jouerJusquALaFinDeLaSeance, partie } from "./etoiles-et-fin-de-seance.steps.ts";
 import { commencerLaSeanceComplete, entendu, etat, type LeconBrute, leconDeTitre, ouvrirLaPageDeLaLecon } from "./etapes-puis-exercices.steps.ts";
 import { avancerJusquAuxChoix, bulleDeChoix, questionsDeLaSeance } from "./exercices-a-choix.steps.ts";
 import { Given, Then, When } from "./fixtures.ts";
@@ -316,7 +316,7 @@ Then(/^le bouton « ([^«»]+) » du dock est marqué comme l'écran en cours$/,
 });
 
 When(/^Léa ouvre « ([^«»]+) » par le dock(, au clavier seulement)?$/, async ({ page }, nom: string, clavier: string | undefined) => {
-  await surLAccueilDeLea(page).catch(() => undefined);
+  await expect(dock(page)).toBeVisible();
   await activer(page, dock(page).getByRole("button", { name: nom, exact: true }), clavier != null);
 });
 
@@ -373,7 +373,6 @@ When(/^Claire demande les séances terminées du profil enfant de Léa$/, async 
 // --- Fin de séance
 
 Given(/^Léa a réussi la dernière question de la séance$/, async ({ famille, page }) => {
-  const { jouerJusquALaFinDeLaSeance } = await import("./etoiles-et-fin-de-seance.steps.ts");
   await jouerJusquALaFinDeLaSeance(famille, page);
 });
 
@@ -394,7 +393,6 @@ When(/^Léa choisit « Toutes les leçons » à la fin de la séance$/, async ({
 });
 
 Given(/^Léa a choisi « Toutes les leçons » à la fin de la séance de la leçon « ([^«»]+) »$/, async ({ famille, page }, titre: string) => {
-  const { jouerJusquALaFinDeLaSeance } = await import("./etoiles-et-fin-de-seance.steps.ts");
   await ouvrirLaPageDeLaLecon(page, titre);
   await commencerLaSeanceComplete(page);
   await jouerJusquALaFinDeLaSeance(famille, page);

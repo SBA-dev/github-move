@@ -1,5 +1,5 @@
 import { avecLesReglagesPrevus } from "../support/reglages-prevus.ts";
-import { servirLaBibliothequeDeLAccueil } from "../support/bibliotheque-de-l-accueil.ts";
+import { servirLaBibliothequeDeLAccueil, utiliseLaBibliothequeDeLAccueil } from "../support/bibliotheque-de-l-accueil.ts";
 import { servirLaBibliothequeDesClassesDAvant } from "../support/bibliotheque-des-classes-d-avant.ts";
 import { servirLaBibliothequeDuParcours } from "../support/bibliotheque-du-parcours.ts";
 import { servirLaBibliothequeDuTestDeDepart } from "../support/bibliotheque-du-test-de-depart.ts";
@@ -217,7 +217,7 @@ Given(/^Léa a un profil enfant préparé de niveau (\S+) dans l'univers « (.+)
   if ($tags.includes("@issue-26")) await servirLaBibliothequeDesClassesDAvant(page);
   // Story #29 : la bibliothèque de test de l'accueil est servie de la même façon.
   // Les scénarios de #24, #25 et #26 réécrits par #29 gardent la bibliothèque de leur story.
-  const accueilSeul = $tags.includes("@issue-29") && !["@issue-24", "@issue-25", "@issue-26"].some((tag) => $tags.includes(tag));
+  const accueilSeul = utiliseLaBibliothequeDeLAccueil($tags);
   if (accueilSeul) await servirLaBibliothequeDeLAccueil(page);
   if ($tags.includes("@issue-24") || accueilSeul || $tags.includes("@issue-25") || $tags.includes("@issue-26") || $tags.includes("@issue-27") || cabaneSurLeServeur) {
     await jouerAvecLeProfilReel(famille, monde, page);
