@@ -47,3 +47,62 @@ Deno.test("plusieurs questions ratées dans la même séance entrent toutes dans
     [CleDeQuestion.de("calcul", "3 + 4"), CleDeQuestion.de("calcul", "5 + 6")],
   );
 });
+
+const jourDuLendemain = Jour.de("2026-10-26");
+const termineeLeLendemain = new Date("2026-10-26T17:00:00Z");
+
+function filePrete(intervalle: number) {
+  return FileDeRevision.reconstituer({
+    enfant: profilDeLea,
+    erreursCorrigeesPourDeBon: 4,
+    questions: [{
+      identite: CleDeQuestion.de("calcul", "3 + 4"),
+      origine,
+      intervalle: IntervalleDeRevision.de(intervalle),
+      dateDeRevision: Jour.de("2026-11-02"),
+      derniereErreurLe: termineeLe,
+      nombreDeFoisRatee: 2,
+    }],
+  });
+}
+
+Deno.test("une file se reconstitue depuis ses données avec son compteur d'erreurs corrigées pour de bon", () => {
+  const file = filePrete(3);
+
+  assertEquals(file.enfant, profilDeLea);
+  assertEquals(file.erreursCorrigeesPourDeBon, 4);
+  assertEquals(file.questions[0].intervalle, IntervalleDeRevision.de(3));
+});
+
+Deno.test("une question déjà retenue, ratée de nouveau, repart à l'intervalle de 1 jour et compte une fois de plus", () => {
+  const file = filePrete(7);
+
+  file.retenir([questionRatee("3 + 4")], jourDuLendemain, termineeLeLendemain);
+
+  assertEquals(file.questions, [{
+    identite: CleDeQuestion.de("calcul", "3 + 4"),
+    origine,
+    intervalle: IntervalleDeRevision.premier(),
+    dateDeRevision: Jour.de("2026-10-27"),
+    derniereErreurLe: termineeLeLendemain,
+    nombreDeFoisRatee: 3,
+  }]);
+});
+
+Deno.test("une question déjà retenue garde sa leçon d'origine même si elle est ratée dans une autre leçon", () => {
+  const file = filePrete(3);
+  const autreOrigine: OrigineDeLaQuestion = { leconDOrigine: "lecon-tables", position: 0, type: "calcul" };
+
+  file.retenir([questionRatee("3 + 4", autreOrigine)], jourDuLendemain, termineeLeLendemain);
+
+  assertEquals(file.questions.map((question) => question.origine), [origine]);
+});
+
+Deno.test("la même question ratée deux fois dans une séance n'est retenue qu'une fois", () => {
+  const file = FileDeRevision.vide(profilDeLea);
+
+  file.retenir([questionRatee("3 + 4"), questionRatee("3 + 4")], jourDeLaSeance, termineeLe);
+
+  assertEquals(file.questions.length, 1);
+  assertEquals(file.questions[0].nombreDeFoisRatee, 1);
+});
