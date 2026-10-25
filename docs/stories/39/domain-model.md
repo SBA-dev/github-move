@@ -52,9 +52,9 @@ Un seul agrégat, petit : **`LeconPersonnelle`**. Tout le reste est fait de fonc
 classDiagram
   class PreparationDUneLecon {
     <<service de domaine pur, navigateur et serveur>>
-    preparerUneLeconPersonnelle(DemandeDeLecon, SectionDuProgramme[]) LeconPreparee
+    preparerUneLeconPersonnelle(DemandeDeLeconPersonnelle, SectionDuProgramme[]) LeconPreparee
   }
-  class DemandeDeLecon {
+  class DemandeDeLeconPersonnelle {
     <<value object>>
     TexteDuParent texte
     Niveau niveau
@@ -70,7 +70,7 @@ classDiagram
   class FormeDuTexte {
     <<value object>>
     listeDeMots | listeDeVerbes | poesie | texteDocumentaire | texteSurUnMetier
-    reconnaitre(TexteDuParent) FormeDuTexte
+    reconnaitreLaForme(TexteDuParent) FormeDuTexte
   }
   class ChoixDeLaSection {
     <<service de domaine pur>>
@@ -87,13 +87,18 @@ classDiagram
   class GroupeDuVerbe {
     <<value object>>
     premier | deuxieme | troisieme
-    de(infinitif) GroupeDuVerbe
+    groupeDuVerbe(infinitif) GroupeDuVerbe
   }
   class LeconPreparee {
     <<value object>>
     Lecon lecon (format docs/format-lecons.md, sans identifiant définitif)
     FormeDuTexte forme
     SectionDuProgramme section
+    ecartes (mots écartés, montrés dans l'aperçu)
+  }
+  class EcritureDuFormat {
+    <<service de domaine pur>>
+    leconEnBrut(Lecon, id) : leçon au format, inverse de lireLecon
   }
   class LeconPersonnelle {
     <<agrégat racine>>
@@ -109,13 +114,14 @@ classDiagram
     <<value object>>
     "perso-" + identifiant unique
   }
-  PreparationDUneLecon ..> DemandeDeLecon
+  PreparationDUneLecon ..> DemandeDeLeconPersonnelle
   PreparationDUneLecon ..> FormeDuTexte
   PreparationDUneLecon ..> ChoixDeLaSection
   PreparationDUneLecon ..> GenerateursLocaux
   GenerateursLocaux ..> GroupeDuVerbe
   PreparationDUneLecon ..> LeconPreparee
-  DemandeDeLecon *-- TexteDuParent
+  DemandeDeLeconPersonnelle *-- TexteDuParent
+  LeconPersonnelle ..> EcritureDuFormat
   LeconPersonnelle ..> LeconPreparee : créée à partir de
   LeconPersonnelle *-- LeconPersonnelleId
   LeconPersonnelle *-- TexteDuParent
@@ -124,32 +130,32 @@ classDiagram
 ### Value objects
 
 - **`TexteDuParent`** : texte, espaces autour retirés. Moins de 3 caractères → `TexteTropCourt` (« Colle d'abord un texte. »). Plus de 3000 → `TexteTropLong` (#39.14). `elements()` : morceaux coupés sur retour à la ligne, `,` et `;`, vides retirés ; `lignes()` ; `phrases()` (coupées après `.`, `!`, `?`). La comparaison se fait sur le texte **normalisé** (minuscules, sans accents, apostrophes unifiées), comme le `norm` du legacy.
-- **`FormeDuTexte.reconnaitre`** (règles du legacy `detectShape`, renommées) :
+- **`reconnaitreLaForme`** (règles du legacy `detectShape`, renommées) :
   1. `texteSurUnMetier` : le texte normalisé contient pompier, policier, policiere, medecin, infirmier, boulanger, metier ou travaille, **et** plus de 25 mots ;
   2. sinon, si au moins 3 éléments et plus de 80 % d'éléments courts (3 mots au plus) : `listeDeVerbes` si plus de 70 % des courts sont un seul mot fini par `er`, `ir`, `re` ou `oir`, sinon `listeDeMots` ;
   3. sinon `poesie` : au moins 3 lignes, toutes de 12 mots au plus ;
   4. sinon `texteDocumentaire`.
-- **`GroupeDuVerbe.de(infinitif)`** (legacy `verbGroup`, **corrigé** si #39.4 est acceptée) : `aller` → 3e ; fin en `er` → 1er ; fin en `oir` → 3e (corrige `voir`, `avoir`, `savoir`, `vouloir`, `pouvoir`, `devoir`) ; fin en `ir` hors de la liste des 20 verbes du 3e groupe (venir, tenir, partir… bouillir) → 2e ; sinon 3e.
+- **`groupeDuVerbe(infinitif)`** (legacy `verbGroup`, **corrigé** selon #39.4) : `aller` → 3e ; fin en `er` → 1er ; fin en `oir` → 3e (corrige `voir`, `avoir`, `savoir`, `vouloir`, `pouvoir`, `devoir`) ; fin en `ir` hors de la liste des 20 verbes du 3e groupe (venir, tenir, partir… bouillir) → 2e ; sinon 3e.
 - **`LeconPersonnelleId`** : `perso-` suivi d'un identifiant donné par le port `GenerateurId` (jamais tiré au hasard dans le domaine). Le préfixe ne peut pas rencontrer un identifiant de la bibliothèque et tient dans les 100 caractères de `seances_terminees.lecon`.
-- **`LeconPreparee`** : la leçon au format, la forme, la section retenue. Elle est **déterministe** : même demande et même index des programmes, même leçon (sauf l'identifiant).
+- **`LeconPreparee`** : la leçon au format, la forme, la section retenue, et `ecartes` : les mots écartés (non dictables, #39.11), que l'aperçu montre. Elle est **déterministe** : même demande et même index des programmes, même leçon (sauf l'identifiant).
 
 ### Services de domaine purs
 
 **`ChoixDeLaSection`** (legacy `candidateSections`, une seule section gardée) :
 - candidates : les sections de la **matière de la leçon** (#39.10) qui **couvrent le niveau** ; aucune → `AucuneSectionDuProgramme` (« Aucune section du programme pour cette classe et cette matière. ») ;
-- score (legacy) : un point par mot de plus de 3 lettres du texte présent dans « section + domaine + extrait », plus les mots indices de la forme (liste de mots : dictee encoder orthographe mots ; poésie : poeme poesie dire memorise oraliser ; liste de verbes : verbe conjug groupe terminaison radical infinitif ; texte documentaire : comprendre texte lire ; texte sur un métier : service public metiers pompiers police), plus 8 (section « dictée », « dire pour être compris » ou « poésie », « orthographe grammaticale » selon la forme), plus 10 pour une section d'EMC si texte sur un métier ;
+- score (legacy) : un point par mot de plus de 3 lettres du texte présent dans « section + domaine + extrait », plus les mots indices de la forme (liste de mots : dictee encoder orthographe mots ; poésie : poeme poesie dire memorise oraliser ; liste de verbes : verbe conjug groupe terminaison radical infinitif ; texte documentaire : comprendre texte lire ; texte sur un métier : service public metiers pompiers police), plus 8 (section « dictée », « dire pour être compris » ou « poésie », « orthographe grammaticale » selon la forme). Le bonus de 10 points du legacy pour une section d'EMC (texte sur un métier) n'existe pas : depuis #39.10 la section est toujours de la matière de la leçon, il ne départagerait rien ;
 - la meilleure gagne ; à égalité, la première dans l'ordre de l'index (déterministe).
 
-**`citationDeLaSection`** (#39.2, même méthode que `citation()` de `scripts/build_bibliotheque.py`, portée en TypeScript) : l'extrait de la section est découpé en phrases (mêmes séparateurs), on garde celles de 25 à 450 caractères, puis la phrase qui contient le plus de mots-clés (mots du texte et indices de la forme), lisible de préférence (fonction `propre`), la plus proche de 120 caractères. Si aucune phrase ne contient de mot-clé, la phrase lisible la plus proche de 120 caractères. La citation est **toujours** un passage de l'extrait, recopié tel quel : `citationVerifiee` disparaît.
+**`citationDeLaSection`** (#39.2, même méthode que `citation()` de `scripts/build_bibliotheque.py`, portée en TypeScript) : l'extrait de la section est découpé en phrases (mêmes séparateurs), on garde celles de 25 à 450 caractères, puis la phrase qui contient le plus de mots-clés (mots du texte et indices de la forme), lisible de préférence (fonction `propre`), la plus proche de 120 caractères. Si aucune phrase ne contient de mot-clé, la phrase lisible la plus proche de 120 caractères. La citation est **toujours** un passage de l'extrait, recopié tel quel : `citationVerifiee` disparaît. Si l'extrait n'a aucune phrase de 25 à 450 caractères : `AucuneCitationDansLaSection` (« Aucune phrase lisible dans cette section du programme. ») ; cela n'arrive pas avec l'index réel.
 
 **`GenerateursLocaux`** (legacy `generateLocally`, corrections #39.4, #39.5, #39.8, #39.9, #39.15) :
 
 | Forme | Titre | Étape de leçon | Exercices |
 |---|---|---|---|
-| Liste de mots | « Dictée : chaton, maison, poisson… » (« … » seulement s'il y a plus de 3 mots) | « Pour écrire un mot, je le dis lentement et j'écoute chaque son. Attention aux lettres muettes ! » | `dictee` « J'écris les mots » : 10 mots dictables au plus (#39.11). **Plus de** `bulles` « Le mot bien écrit » (#39.4). |
+| Liste de mots | « Dictée : chaton, maison, poisson… » (« … » seulement s'il y a plus de 3 mots) ; si aucun mot n'est dictable, le titre reprend les éléments du texte (comme le legacy), il n'est jamais vide | « Pour écrire un mot, je le dis lentement et j'écoute chaque son. Attention aux lettres muettes ! » | `dictee` « J'écris les mots » : 10 mots dictables au plus (#39.11). **Plus de** `bulles` « Le mot bien écrit » (#39.4). |
 | Liste de verbes | « Les verbes : chanter, finir, prendre… » (« … » seulement s'il y en a plus de 3) | « Premier groupe : les verbes en e - r. Deuxième groupe… Troisième groupe : tous les autres. » (exemples chanter, finir, prendre) | `classer` « Chaque verbe dans sa maison » (12 verbes au plus, en minuscules, 1er / 2e / 3e groupe) ; `conjugaison` « Le verbe chanter » au présent, sur le premier verbe régulier du 1er groupe (#39.9) ; « j' » devant une voyelle ou un h muet (#39.4). |
 | Poésie | « Poésie : <1er vers sans ponctuation finale> » | « Pour apprendre un texte par cœur, on l'écoute vers par vers, puis on le redit sans regarder. » | `memoriser` (16 vers au plus). |
-| Texte documentaire, texte sur un métier | « Lecture : <40 premiers caractères>… » (« … » seulement si coupé) | « Écoute bien le texte. Ensuite, retrouve les mots qui manquent et remets les phrases dans l'ordre. » | `trous` « Les mots envolés » (4 premiers mots distincts de 6 lettres ou plus, dans les 5 premières phrases ; 5e et 6e en distracteurs), produit seulement si chaque trou a deux choix ; `ordre` « Dans l'ordre » (5 phrases, s'il y en a au moins 3) (#39.5). |
+| Texte documentaire, texte sur un métier | « Lecture : <40 premiers caractères>… » (« … » seulement si coupé) | « Écoute bien le texte. Ensuite, retrouve les mots qui manquent et remets les phrases dans l'ordre. » | `trous` « Les mots envolés » (4 premiers mots distincts de 6 lettres ou plus, dans les 5 premières phrases ; 5e et 6e en distracteurs), produit seulement si chaque trou a deux choix ; **toutes** les occurrences d'un mot caché deviennent des trous ; les mots sont comparés tels quels (« Abeilles » et « abeilles » sont deux mots) ; un crochet du texte du parent ne crée jamais de trou ; `ordre` « Dans l'ordre » (5 phrases, s'il y en a au moins 3) (#39.5). |
 | Aucun exercice possible | inchangé | inchangée | `memoriser` « Mon texte » (12 lignes ou phrases), s'il y en a au moins 2 ; sinon `LeconImpossibleAPreparer` (« Ce texte ne permet pas de préparer une leçon. ») |
 
 Un générateur ne produit jamais un exercice que `lireLecon` refuserait (trou sans deux choix, moins de deux éléments, plus de 20 étiquettes…).
@@ -181,7 +187,7 @@ Matière de la leçon : celle choisie par le parent ; sinon (#39.10) `emc` pour 
 
 ### Erreurs métier (Accompagnement)
 
-`TexteTropCourt`, `TexteTropLong`, `AucuneSectionDuProgramme`, `LeconImpossibleAPreparer`, `LeconPersonnelleInvalide` (la leçon ne respecte pas le format ou les règles propres ; ne doit jamais arriver avec les générateurs locaux, prévue pour #40), `LeconPersonnelleIntrouvable`, `ParentNonRattache` (même nom qu'Apprentissage, déclaré dans Accompagnement).
+`TexteTropCourt`, `TexteTropLong`, `AucuneSectionDuProgramme`, `AucuneCitationDansLaSection` (l'extrait de la section retenue n'a aucune phrase citable de 25 à 450 caractères ; n'arrive pas avec l'index réel), `LeconImpossibleAPreparer`, `LeconPersonnelleInvalide` (la leçon ne respecte pas le format ou les règles propres ; ne doit jamais arriver avec les générateurs locaux, prévue pour #40), `LeconPersonnelleIntrouvable`, `ParentNonRattache` (même nom qu'Apprentissage, déclaré dans Accompagnement).
 
 ### Côté Apprentissage (lecture seule, ajouts)
 
@@ -220,7 +226,7 @@ Les séances d'une leçon personnelle émettent `SeanceTerminee` (et `LeconReuss
 
 ## Partage avec le front
 
-`@domain/accompagnement` (nouveau `accompagnement/domain/index.ts`, alias à ajouter dans `vite.config.ts` et `tsconfig.json`) exporte : `preparerUneLeconPersonnelle`, `TexteDuParent`, `FormeDuTexte`, `GroupeDuVerbe` (pour les tests), les types `DemandeDeLecon`, `LeconPreparee`, et les erreurs. **Tout l'aperçu se calcule dans le navigateur, hors ligne** ; l'enregistrement, lui, demande le réseau (Edge Function). React n'a aucune règle : il affiche l'aperçu, les messages, et la liste de « Mes leçons ».
+`@domain/accompagnement` (nouveau `accompagnement/domain/index.ts`, alias à ajouter dans `vite.config.ts` et `tsconfig.json`) exporte : `preparerUneLeconPersonnelle`, `TexteDuParent`, `reconnaitreLaForme`, `groupeDuVerbe` (pour les tests), les types `DemandeDeLeconPersonnelle`, `LeconPreparee` (avec `ecartes`), et les erreurs. **Tout l'aperçu se calcule dans le navigateur, hors ligne** ; l'enregistrement, lui, demande le réseau (Edge Function). React n'a aucune règle : il affiche l'aperçu, les messages, et la liste de « Mes leçons ».
 
 `@domain/apprentissage` : `EntreesDuParcours.leconsPersonnelles`, partie `pourToi` de `ToutesLesLecons` (étiquette « Pour toi », lue « Pour toi : Dictée : chaton, maison, poisson…, CP, Français : à découvrir »).
 
@@ -268,14 +274,15 @@ create policy lecons_personnelles_suppression_par_ses_parents on public.lecons_p
 supabase/functions/_shared/accompagnement/
   domain/
     texte-du-parent.ts                  # TexteDuParent, normalisation, éléments, lignes, phrases
-    forme-du-texte.ts                   # FormeDuTexte.reconnaitre
+    forme-du-texte.ts                   # reconnaitreLaForme
     choix-de-la-section.ts              # sectionRetenue, mots indices, scores
     citation-de-la-section.ts           # citationDeLaSection (méthode de build_bibliotheque.py)
-    groupe-du-verbe.ts                  # GroupeDuVerbe
+    groupe-du-verbe.ts                  # GroupeDuVerbe, groupeDuVerbe
     present-du-premier-groupe.ts        # formes du présent, « j' », -ger, -cer, verbe régulier
     generateurs-locaux.ts               # un générateur par forme
     preparer-une-lecon-personnelle.ts   # PreparationDUneLecon -> LeconPreparee
     valider-la-lecon-personnelle.ts     # lireLecon + règles propres
+    lecon-en-brut.ts                    # leconEnBrut : écriture du format (inverse de lireLecon)
     lecon-personnelle.ts                # agrégat, LeconPersonnelleId, événements
     erreurs.ts
     generateur-id.ts                    # port (interface) déclaré dans domain, comme Apprentissage
@@ -309,6 +316,10 @@ vite.config.ts, tsconfig.json                                              # ali
 ```
 
 Risque de conflit avec les stories parallèles : `toutes-les-lecons.ts` et `parcours.ts` (#29 lit le parcours), `terminer-la-seance/index.ts` (#28 révisions). Changements additifs et facultatifs seulement ; aucun agrégat de #28, #29, #32 n'est touché.
+
+## Points d'attention
+
+- **Lisibilité de la citation (pour le PO, plus tard)** : sur l'index réel, la citation retenue est parfois peu lisible (ex. « celle des autres et progresser dans la production de »), parce que « contient un mot-clé » passe avant « propre » (lisible), dans le même ordre que `citation()` de `scripts/build_bibliotheque.py` (#39.2). Changer cet ordre est une règle métier : question à poser au PO, rien n'est changé dans cette story.
 
 ## Termes ajoutés au glossaire (ajouts seulement, 2026-10-25)
 
