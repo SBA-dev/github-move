@@ -11,7 +11,9 @@ export type Ecran =
   | "page-de-la-lecon"
   | "seance";
 
-const PUBLIC_DE_L_ECRAN: Readonly<Record<Ecran, "parent" | "enfant">> = {
+type PublicDeLEcran = "parent" | "enfant";
+
+const PUBLIC_DE_L_ECRAN: Readonly<Record<Ecran, PublicDeLEcran>> = {
   "connexion": "parent",
   "qui-joue": "parent",
   "controle-parental": "parent",
