@@ -48,9 +48,11 @@ async function attendreProfilCharge(page: Page, universAttendu: string) {
   await expect(page.locator(".application")).toHaveAttribute("data-univers", universAttendu);
 }
 
-async function ouvrirDemonstration(page: Page, universAttendu: string) {
-  await page.goto("/demonstration");
+/** L'accueil de l'enfant, là où il arrive après « Qui joue ? » : le personnage guide le salue. */
+async function ouvrirLAccueilDeLEnfant(page: Page, universAttendu: string) {
+  await page.goto("/jeu");
   await attendreProfilCharge(page, universAttendu);
+  await expect(page.getByRole("region", { name: /^Accueil de / })).toBeVisible();
 }
 
 function guide(page: Page) {
@@ -110,21 +112,10 @@ Given(/^Léa joue sur un ordinateur, au clavier$/, async ({ page, monde }) => {
 
 // --- Étant donné : navigation
 
-Given(/^Léa est sur la page de démonstration$/, async ({ page, monde }) => {
-  await assurerLeProfilDeLeaSiDesReglagesSontPrevus(page, monde);
-  const profil = monde.profils.get("Léa");
-  await ouvrirDemonstration(page, profil?.univers ?? cleDe(UNIVERS_PAR_DEFAUT));
-});
-
 Given(/^Léa joue$/, async ({ page, monde }) => {
   await assurerLeProfilDeLeaSiDesReglagesSontPrevus(page, monde);
   const profil = monde.profils.get("Léa");
-  await ouvrirDemonstration(page, profil?.univers ?? cleDe(UNIVERS_PAR_DEFAUT));
-});
-
-Given(/^(.+) réfléchit après une erreur de Léa$/, async ({ page }, _nom: string) => {
-  await page.getByRole("button", { name: "Erreur" }).click();
-  await expect(guide(page)).toHaveAttribute("data-humeur", "reflechit");
+  await ouvrirLAccueilDeLEnfant(page, profil?.univers ?? cleDe(UNIVERS_PAR_DEFAUT));
 });
 
 // --- Quand
@@ -132,7 +123,7 @@ Given(/^(.+) réfléchit après une erreur de Léa$/, async ({ page }, _nom: str
 When(/^Léa commence à jouer$/, async ({ page, monde }) => {
   await assurerLeProfilDeLeaSiDesReglagesSontPrevus(page, monde);
   const profil = monde.profils.get("Léa");
-  await ouvrirDemonstration(page, cleDe(profil?.univers ? libelleOuCle(profil.univers) : UNIVERS_PAR_DEFAUT));
+  await ouvrirLAccueilDeLEnfant(page, cleDe(profil?.univers ? libelleOuCle(profil.univers) : UNIVERS_PAR_DEFAUT));
 });
 
 function libelleOuCle(cle: string): string {
@@ -150,7 +141,7 @@ When(/^Léa et Tom commencent à jouer, chacun sur sa tablette$/, async ({ brows
     });
     const page = await contexte.newPage();
     await preparerProfil(page, profil);
-    await ouvrirDemonstration(page, profil.univers);
+    await ouvrirLAccueilDeLEnfant(page, profil.univers);
     const paysage = await page.getByTestId("paysage").getAttribute("data-univers");
     const couleur = await page.locator(".application").evaluate((el) =>
       getComputedStyle(el).getPropertyValue("--accent").trim()
@@ -158,14 +149,6 @@ When(/^Léa et Tom commencent à jouer, chacun sur sa tablette$/, async ({ brows
     monde.tablettes.set(prenom, { paysage, couleur });
     await contexte.close();
   }
-});
-
-When(/^Léa donne une bonne réponse sur la page de démonstration$/, async ({ page }) => {
-  await page.getByRole("button", { name: "Bonne réponse" }).click();
-});
-
-When(/^Léa fait une erreur sur la page de démonstration$/, async ({ page }) => {
-  await page.getByRole("button", { name: "Erreur" }).click();
 });
 
 When(/^Léa revient à l'accueil par le nom de l'application$/, async ({ page }) => {
@@ -176,7 +159,7 @@ When(/^Léa revient à l'accueil par le nom de l'application$/, async ({ page })
 When(/^Léa parcourt l'en-tête au clavier$/, async ({ page, monde }) => {
   await assurerLeProfilDeLeaSiDesReglagesSontPrevus(page, monde);
   const profil = monde.profils.get("Léa");
-  await ouvrirDemonstration(page, profil?.univers ?? cleDe(UNIVERS_PAR_DEFAUT));
+  await ouvrirLAccueilDeLEnfant(page, profil?.univers ?? cleDe(UNIVERS_PAR_DEFAUT));
 });
 
 // --- Alors : paysage et personnage guide
@@ -184,14 +167,6 @@ When(/^Léa parcourt l'en-tête au clavier$/, async ({ page, monde }) => {
 Then(/^(?:elle|je) voi[st] (.+) dans le paysage de l'univers « (.+) »$/, async ({ page }, nom: string, univers: string) => {
   await expect(page.getByTestId("paysage")).toHaveAttribute("data-univers", cleDe(univers));
   await expect(page.getByRole("img", { name: nom, exact: true })).toBeVisible();
-});
-
-Then(/^(.+) se présente comme « (.+) » de « (.+) »$/, async ({ page }, nom: string, titre: string, royaume: string) => {
-  const presentation = page.getByTestId("presentation");
-  await expect(presentation).toContainText(nom);
-  await expect(presentation).toContainText(titre);
-  const nomDuRoyaume = royaume.replace(/^(le|la) /, "");
-  await expect(presentation).toContainText(nomDuRoyaume);
 });
 
 Then(/^le paysage et la couleur principale de Léa diffèrent de ceux de Tom$/, ({ monde }) => {
@@ -261,27 +236,12 @@ Then(/^jamais l'expression d'un autre personnage guide$/, async ({ page }) => {
   expect(autres).not.toContain(texte);
 });
 
-Then(
-  /^la félicitation commune dite par (.+) fait partie de (.+)$/,
-  async ({ page }, _nom: string, communes: string) => {
-    // Le tirage entre félicitation commune et expression du personnage est aléatoire (seuil 0,35).
-    // On fige Math.random à 0,9 puis on redonne une bonne réponse : le tirage est alors une félicitation commune.
-    await page.evaluate(() => {
-      Math.random = () => 0.9;
-    });
-    await page.getByRole("button", { name: "Bonne réponse" }).click();
-    const parole = page.getByTestId("parole");
-    await expect(parole).toHaveAttribute("data-nature", "felicitation");
-    const texte = ((await parole.textContent()) ?? "").trim();
-    expect(listeDe(communes)).toContain(texte);
-  },
-);
-
+// L'encouragement est suivi de l'aide par défaut de la question (#23) : on vérifie le début de ce que dit le personnage guide.
 Then(/^(.+) dit un encouragement parmi (.+)$/, async ({ page }, _nom: string, encouragements: string) => {
   const parole = page.getByTestId("parole");
   await expect(parole).toHaveAttribute("data-nature", "encouragement");
   const texte = ((await parole.textContent()) ?? "").trim();
-  expect(listeDe(encouragements)).toContain(texte);
+  expect(listeDe(encouragements).some((encouragement) => texte.startsWith(encouragement)), texte).toBe(true);
 });
 
 // --- Alors : en-tête

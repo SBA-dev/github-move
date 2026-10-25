@@ -13,7 +13,7 @@ function enRecord(ligne: LigneDeRecord): RecordDuProfil[] {
     : [];
 }
 
-/** Lecture sous RLS, filtrée sur le profil en cours. Aucun record : profil de démonstration, sans réseau ou lecture impossible. */
+/** Lecture sous RLS, filtrée sur le profil en cours. Aucun record : profil préparé, sans réseau ou lecture impossible. */
 export async function lireLesRecordsDuProfil(profil: string): Promise<readonly RecordDuProfil[]> {
   if (!estUnIdentifiantDeProfil(profil) || !reseauDisponible()) return [];
   try {

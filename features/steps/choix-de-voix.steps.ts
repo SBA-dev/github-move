@@ -6,6 +6,7 @@ import {
   journal,
   laisserPasserLeDelaiDeLecture,
   normaliser,
+  ouvrir,
   ouvrirSurUnAutreAppareil,
   preparerLaPage,
   scenario,
@@ -165,9 +166,7 @@ When(/^la consigne « (.+) » s'affiche sur le téléphone$/, async ({ page, bro
 When(/^la consigne « (.+) » s'affiche pour Tom$/, async ({ page }, texte: string) => {
   const etat = scenario(page);
   etat.consigne.texte = texte;
-  await preparerLaPage(page, etat);
-  await page.goto("/demonstration");
-  await expect(page.getByTestId("consigne")).toBeVisible();
+  await ouvrir(page);
 });
 
 // --- Alors : liste des voix

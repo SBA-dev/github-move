@@ -1,5 +1,5 @@
 // Réglages que les scénarios prévoient pour un profil enfant (Léa, Tom) avant que le profil existe quelque part :
-// ils sont appliqués au profil préparé sur l'appareil (page de démonstration) ou au profil créé dans Supabase,
+// ils sont appliqués au profil préparé sur l'appareil (porte de test du profil préparé) ou au profil créé dans Supabase,
 // selon le chemin que prend le scénario.
 
 import type { Page } from "@playwright/test";

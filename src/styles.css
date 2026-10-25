@@ -66,7 +66,6 @@ button[data-son="muet"] { background: var(--accent-fonce); opacity: .8; }
 }
 .personnage-guide { width: min(200px, 50vw); }
 .personnage-guide svg { width: 100%; height: auto; display: block; }
-.demonstration { display: grid; justify-items: center; gap: 12px; max-width: 100%; }
 .guide-et-parole { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; }
 .bulle:empty { display: none; }
 .bulle {
@@ -94,7 +93,6 @@ button[data-son="muet"] { background: var(--accent-fonce); opacity: .8; }
   background: #fff3cd;
   font-weight: 700;
 }
-.reponses { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
@@ -389,7 +387,6 @@ button.secondaire:hover { background: #fdf3ea; }
 .formulaire-de-profil .actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .profils-de-l-espace-parent .confirmation { font-weight: 700; }
 .accueil-de-l-enfant { display: grid; justify-items: center; gap: 12px; max-width: 100%; }
-.choix-de-demonstration { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 0; padding: 0; list-style: none; }
 
 /* Mode dys du profil en cours : police Andika, lettres, mots et lignes espacés, syllabes en couleurs alternées. */
 [data-mode-dys="true"] {

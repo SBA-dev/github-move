@@ -1,13 +1,18 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ChoisirQuiJoue, type ProfilEnCours, Reglages } from "@domain/famille";
 import { universDe } from "@domain/motivation";
-import { chargerProfilPrepare } from "../../demonstration/disponibilite.ts";
+
+// Porte réservée aux tests (décision 0021) : l'import dynamique reste sous la garde du développement,
+// le bundle de production ne contient pas le module.
+const chargerProfilPrepare = import.meta.env.DEV
+  ? () => import("./profil-prepare.ts").then((m) => m.lireProfilPrepare())
+  : undefined;
 
 /**
  * Le profil en cours : un état de l'application, jamais mémorisé d'une ouverture à l'autre (décision n°7 du lot 2).
  * Adaptateur du port `ProfilEnCoursSurLAppareil` en état React.
  *
- * Le profil préparé (porte réservée aux tests, en développement ou avec VITE_PAGE_DEMONSTRATION=1) sert de profil
+ * Le profil préparé (porte réservée aux tests, en développement seulement, décision 0021) sert de profil
  * en cours initial : `chargerProfilPrepare` est absent d'un build de production.
  */
 export function useProfilEnCours() {
