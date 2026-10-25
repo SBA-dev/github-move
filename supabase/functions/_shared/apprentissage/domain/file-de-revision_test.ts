@@ -272,3 +272,99 @@ Deno.test("sans question due, il n'y a pas de séance de révision à planifier"
   assertThrows(() => file.planDeLaSeanceDeRevision(aujourdHui), AucuneQuestionDue);
   assertThrows(() => FileDeRevision.vide(profilDeLea).planDeLaSeanceDeRevision(aujourdHui), AucuneQuestionDue);
 });
+
+const finDeRevision = new Date("2026-10-25T18:00:00Z");
+
+function resultat(texte: string, juste: boolean) {
+  return { identite: CleDeQuestion.de("calcul", texte), juste };
+}
+
+function retenueA(texte: string, jours: number) {
+  return { ...retenue(texte, "2026-10-25", "2026-10-24T08:00:00Z"), intervalle: IntervalleDeRevision.de(jours) };
+}
+
+Deno.test("une question retenue juste en révision à 1 jour passe à 3 jours, avec sa date de révision recalculée", () => {
+  const file = fileDes(retenueA("a", 1));
+
+  file.enregistrerLaRevision([resultat("a", true)], aujourdHui, finDeRevision);
+
+  assertEquals(file.questions[0].intervalle, IntervalleDeRevision.de(3));
+  assertEquals(file.questions[0].dateDeRevision, Jour.de("2026-10-28"));
+});
+
+Deno.test("une question retenue juste en révision à 3 jours passe à 7 jours", () => {
+  const file = fileDes(retenueA("a", 3));
+
+  file.enregistrerLaRevision([resultat("a", true)], aujourdHui, finDeRevision);
+
+  assertEquals(file.questions[0].intervalle, IntervalleDeRevision.de(7));
+  assertEquals(file.questions[0].dateDeRevision, Jour.de("2026-11-01"));
+});
+
+Deno.test("une question juste en révision ne change ni son nombre de fois ratée ni sa dernière erreur", () => {
+  const file = fileDes(retenueA("a", 1));
+
+  file.enregistrerLaRevision([resultat("a", true)], aujourdHui, finDeRevision);
+
+  assertEquals(file.questions[0].nombreDeFoisRatee, 1);
+  assertEquals(file.questions[0].derniereErreurLe, new Date("2026-10-24T08:00:00Z"));
+});
+
+Deno.test("une question juste en révision à 7 jours est corrigée pour de bon : elle sort de la file et le compteur monte", () => {
+  const file = fileDes(retenueA("a", 7), retenueA("b", 3));
+
+  file.enregistrerLaRevision([resultat("a", true)], aujourdHui, finDeRevision);
+
+  assertEquals(file.questions.map((question) => question.identite.valeur), ["n:b"]);
+  assertEquals(file.erreursCorrigeesPourDeBon, 1);
+});
+
+Deno.test("une question fausse en révision repart à 1 jour, compte une erreur de plus et garde son origine", () => {
+  const file = fileDes(retenueA("a", 7));
+
+  file.enregistrerLaRevision([resultat("a", false)], aujourdHui, finDeRevision);
+
+  assertEquals(file.questions, [{
+    identite: CleDeQuestion.de("calcul", "a"),
+    origine,
+    intervalle: IntervalleDeRevision.premier(),
+    dateDeRevision: Jour.de("2026-10-26"),
+    derniereErreurLe: finDeRevision,
+    nombreDeFoisRatee: 2,
+  }]);
+  assertEquals(file.erreursCorrigeesPourDeBon, 0);
+});
+
+Deno.test("le résultat d'une question absente de la file est ignoré", () => {
+  const file = fileDes(retenueA("a", 1));
+
+  file.enregistrerLaRevision([resultat("inconnue", false), resultat("inconnue", true)], aujourdHui, finDeRevision);
+
+  assertEquals(file.questions.map((question) => question.identite.valeur), ["n:a"]);
+  assertEquals(file.questions[0].intervalle, IntervalleDeRevision.premier());
+});
+
+Deno.test("le résultat d'une révision terminée avant la dernière erreur de la question est ignoré", () => {
+  const file = fileDes(retenueA("a", 1));
+  const avantLaDerniereErreur = new Date("2026-10-24T07:00:00Z");
+
+  file.enregistrerLaRevision([resultat("a", true)], aujourdHui, avantLaDerniereErreur);
+
+  assertEquals(file.questions[0].intervalle, IntervalleDeRevision.premier());
+});
+
+Deno.test("plusieurs résultats d'une même révision s'appliquent chacun à leur question", () => {
+  const file = fileDes(retenueA("a", 1), retenueA("b", 3), retenueA("c", 7));
+
+  file.enregistrerLaRevision(
+    [resultat("a", true), resultat("b", false), resultat("c", true)],
+    aujourdHui,
+    finDeRevision,
+  );
+
+  assertEquals(file.questions.map((question) => [question.identite.valeur, question.intervalle.jours]), [
+    ["n:a", 3],
+    ["n:b", 1],
+  ]);
+  assertEquals(file.erreursCorrigeesPourDeBon, 1);
+});
