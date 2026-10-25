@@ -151,11 +151,18 @@ export class ExerciceJoue {
       }));
     }
     if (this.contenu.memorisation) return [];
-    return this.questionsJouees().flatMap(({ cle, type, erreurs }, rang) => {
-      if (erreurs === 0 || !estUnTypeDeQuestionRetenu(type)) return [];
-      const operationTiree = this.contenu.operationsTirees?.[rang];
-      return [{ cle, type, ...(operationTiree && { tirage: enonceTire(operationTiree) }) }];
-    });
+    return this.questionsRatees()
+      .filter(({ type }) => estUnTypeDeQuestionRetenu(type))
+      .map(({ cle, type }) => {
+        const operationTiree = this.operationTireeDeLaQuestion(cle);
+        return { cle, type, ...(operationTiree && { tirage: enonceTire(operationTiree) }) };
+      });
+  }
+
+  private operationTireeDeLaQuestion(cle: CleDeQuestion): Operation | undefined {
+    return this.contenu.operationsTirees?.find((operation) =>
+      CleDeQuestion.de("calcul", operation.q).valeur === cle.valeur
+    );
   }
 
   tirages(): string[][] {
