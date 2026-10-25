@@ -1,6 +1,6 @@
 import { assertEquals, assertThrows } from "@std/assert";
 import { CleDeQuestion } from "./cle-de-question.ts";
-import { AucuneQuestionDue } from "./erreurs.ts";
+import { AucuneQuestionDue, FileDeRevisionIncoherente } from "./erreurs.ts";
 import { FileDeRevision, type QuestionRetenue } from "./file-de-revision.ts";
 import { IntervalleDeRevision } from "./intervalle-de-revision.ts";
 import { Jour } from "./jour.ts";
@@ -384,4 +384,78 @@ Deno.test("oublier une question absente de la file est sans effet", () => {
   file.oublier(CleDeQuestion.de("calcul", "inconnue"));
 
   assertEquals(file.questions.map((question) => question.identite.valeur), ["n:a"]);
+});
+
+Deno.test("modifier la date passée à retenir ensuite ne change pas la dernière erreur de la file", () => {
+  const file = FileDeRevision.vide(profilDeLea);
+  const fin = new Date("2026-10-25T16:30:00Z");
+
+  file.retenir([questionRatee("3 + 4")], jourDeLaSeance, fin);
+  fin.setUTCFullYear(2000);
+
+  assertEquals(file.questions[0]?.derniereErreurLe, new Date("2026-10-25T16:30:00Z"));
+});
+
+Deno.test("modifier la date passée à enregistrerLaRevision ensuite ne change pas la dernière erreur de la file", () => {
+  const file = fileDes(retenueA("a", 3));
+  const fin = new Date("2026-10-25T18:00:00Z");
+
+  file.enregistrerLaRevision([resultat("a", false)], aujourdHui, fin);
+  fin.setUTCFullYear(2000);
+
+  assertEquals(file.questions[0]?.derniereErreurLe, new Date("2026-10-25T18:00:00Z"));
+});
+
+Deno.test("modifier la date d'une question reconstituée ensuite ne change pas la file", () => {
+  const derniereErreurLe = new Date("2026-10-24T08:00:00Z");
+  const file = fileDes({ ...retenueA("a", 3), derniereErreurLe });
+
+  derniereErreurLe.setUTCFullYear(2000);
+
+  assertEquals(file.questions[0]?.derniereErreurLe, new Date("2026-10-24T08:00:00Z"));
+});
+
+Deno.test("ratée dans une séance plus ancienne que sa dernière erreur, une question garde la dernière erreur la plus récente", () => {
+  const file = fileDes(retenueA("a", 7));
+  const seanceAnterieure = new Date("2026-10-23T09:00:00Z");
+
+  file.retenir([questionRatee("a")], Jour.de("2026-10-23"), seanceAnterieure);
+
+  assertEquals(file.questions, [{
+    identite: CleDeQuestion.de("calcul", "a"),
+    origine,
+    intervalle: IntervalleDeRevision.premier(),
+    dateDeRevision: Jour.de("2026-10-24"),
+    derniereErreurLe: new Date("2026-10-24T08:00:00Z"),
+    nombreDeFoisRatee: 2,
+  }]);
+});
+
+Deno.test("une file de plus de 250 questions ne peut pas être reconstituée", () => {
+  const questions = Array.from(
+    { length: 251 },
+    (_, numero) => retenue(`q${numero}`, "2026-10-25", "2026-10-24T08:00:00Z"),
+  );
+
+  assertThrows(() => fileDes(...questions), FileDeRevisionIncoherente);
+});
+
+Deno.test("une file qui contient deux fois la même question ne peut pas être reconstituée", () => {
+  assertThrows(() => fileDes(retenueA("a", 1), retenueA("a", 3)), FileDeRevisionIncoherente);
+});
+
+Deno.test("une file au compteur d'erreurs corrigées pour de bon négatif ne peut pas être reconstituée", () => {
+  assertThrows(
+    () => FileDeRevision.reconstituer({ enfant: profilDeLea, erreursCorrigeesPourDeBon: -1, questions: [] }),
+    FileDeRevisionIncoherente,
+  );
+});
+
+Deno.test("une file de 250 questions peut être reconstituée", () => {
+  const questions = Array.from(
+    { length: 250 },
+    (_, numero) => retenue(`q${numero}`, "2026-10-25", "2026-10-24T08:00:00Z"),
+  );
+
+  assertEquals(fileDes(...questions).questions.length, 250);
 });
