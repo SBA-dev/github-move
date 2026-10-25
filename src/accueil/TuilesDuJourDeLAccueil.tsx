@@ -8,6 +8,7 @@ type Props = {
 };
 
 function TuileDuTestDeDepart({ onOuvrir }: { readonly onOuvrir: () => void }) {
+  const idDuTitre = useId();
   const idDeLaProposition = useId();
   return (
     <button
@@ -15,10 +16,11 @@ function TuileDuTestDeDepart({ onOuvrir }: { readonly onOuvrir: () => void }) {
       className="tuile"
       data-testid="tuile-du-jour"
       data-genre="testDeDepart"
+      aria-labelledby={idDuTitre}
       aria-describedby={idDeLaProposition}
       onClick={onOuvrir}
     >
-      <span className="nom-de-la-tuile">{MON_TEST_DE_DEPART}</span>
+      <span id={idDuTitre} className="nom-de-la-tuile">{MON_TEST_DE_DEPART}</span>
       <span id={idDeLaProposition}>{PROPOSITION_DU_TEST_DE_DEPART}</span>
     </button>
   );
