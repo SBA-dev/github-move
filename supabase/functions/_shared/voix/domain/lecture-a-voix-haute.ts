@@ -27,6 +27,14 @@ export type DependancesDeLectureAVoixHaute = {
   readonly onVoixBloquee: () => void;
 };
 
+type OptionsDeLecture = {
+  langue?: string;
+  choix?: ChoixDeVoix;
+  lent?: boolean;
+  onMot?: (rang: number) => void;
+  onFin?: () => void;
+};
+
 function estFrancais(langue: string): boolean {
   return /^fr/i.test(langue);
 }
@@ -51,23 +59,19 @@ function rangDesMots(
 
 export class LectureAVoixHaute {
   private etat: EtatDuSon;
+  private voixSuspendue = false;
   private voixBloqueeSignalee = false;
 
   constructor(private readonly dependances: DependancesDeLectureAVoixHaute) {
     this.etat = dependances.etatInitial;
   }
 
-  async lire(
-    brut: string,
-    options: {
-      langue?: string;
-      choix?: ChoixDeVoix;
-      lent?: boolean;
-      onMot?: (rang: number) => void;
-      onFin?: () => void;
-    } = {},
-  ): Promise<void> {
-    if (this.etat === "muet") return;
+  async lire(brut: string, options: OptionsDeLecture = {}): Promise<void> {
+    if (this.etat === "muet" || this.voixSuspendue) return;
+    await this.lireLeTexte(brut, options);
+  }
+
+  private async lireLeTexte(brut: string, options: OptionsDeLecture): Promise<void> {
     const { lecteur, hasard } = this.dependances;
     lecteur.arreter();
     const texte = texteALire(brut);
@@ -94,6 +98,15 @@ export class LectureAVoixHaute {
     this.dependances.lecteur.arreter();
   }
 
+  suspendre(): void {
+    this.voixSuspendue = true;
+    this.couperLaVoix();
+  }
+
+  reprendre(): void {
+    this.voixSuspendue = false;
+  }
+
   passerEnMuet(): void {
     this.etat = "muet";
     this.couperLaVoix();
@@ -113,7 +126,8 @@ export class LectureAVoixHaute {
   }
 
   async essayerUneVoix(choix: ChoixDeVoix, nomDuPersonnageGuide: string): Promise<void> {
-    await this.lire(phraseDEssai(nomDuPersonnageGuide), { choix });
+    if (this.etat === "muet") return;
+    await this.lireLeTexte(phraseDEssai(nomDuPersonnageGuide), { choix });
   }
 
   private choixMemorise(): ChoixDeVoix {
