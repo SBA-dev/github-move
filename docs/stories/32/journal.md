@@ -26,3 +26,21 @@ Branche : `feature/32-cabane`, partie de `main` (`e466e25`). Branche de base : `
 - `main` `d1d2def` intégrée (configuration : autorisation de merger).
 - PR #88 ouverte en brouillon. Créneau demandé pour la non-régression complète.
 - ~16:00 UTC : `MAIN A BOUGÉ` (#26 mergée, `6be4dc6`). Intégration : conflits d'ajouts sur `glossaire.md`, `context-map.md` (les deux ajouts gardés) et `etapes-puis-exercices.steps.ts` (résolu par `e2e-tester`, conditions de #26 et #32 réunies). 1786 tests, lint, format, tsc, build verts (`5e23cfb`).
+- 16:20 UTC : décision du PO (« OK A B C D », future décision 0023, puis `main` `4dda35c`) : plus de non-régression complète par story. Mise au point finale sur `telephone` après intégration de `main` `6be4dc6` : tags #32, #65, #24, #25, #26, #27 → 256/257 en 20 min 45 s. Le KO était une instabilité du step de l'univers (Coach Léo) : step corrigé (attente de la relecture des profils), puis #32 34/34 et 9/9 en `--repeat-each=3`. #15 et #7 (step « a choisi l'univers ») pas relancés : la modification est gardée par `@issue-32`.
+- `main` `4dda35c` intégrée (documentation seulement : décision 0023).
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Durée totale | ~12:20 → ~16:55 UTC, soit environ 4 h 35 |
+| Cadrage (domaine + scénarios, avant CADRAGE PRÊT) | ~12:20 → 13:28, dont ~50 min perdues sur la limite d'utilisation (agent `po-acceptance` interrompu) |
+| Attente de la validation du PO | 13:28 → 13:43 (15 min), plus 1 aller-retour sur le « profil de démonstration » |
+| Attente du démarrage du TDD (`#72 mergée`) | aucune en pratique (13:45, en même temps que la validation) |
+| TDD | 8 comportements (B1 à B8), 1761 tests unitaires à la fin (1786 après l'intégration de #26) |
+| Revues | bloc 1 : 1 cycle À CORRIGER (tests de bornes) ; bloc 2 : 1 cycle À CORRIGER (brief erroné) ; review complète : 1 cycle À CORRIGER (lecture en échec) ; 3 cycles en tout, tous APPROUVÉS au 2e passage |
+| E2E | 3 runs de mise au point : 1er (#32 34/34, #24 1 KO), 2e 141/141 en 11 min 53 s, 3e (périmètre final) 256/257 en 20 min 45 s puis #32 34/34 après correction du step |
+| Escalades | 1 (32.25, scénario de #24), réponse du PO en ~3 min |
+| Intégrations de `main` | 4 : `aaae2e6` (#72, conflit glossaire), `d1d2def` (réglages), `6be4dc6` (#26, conflits glossaire, context map et step partagé), `4dda35c` (doc) |
+| Verrous | aucun verrou `base` (ni migration ni Edge Function) |
+| Tokens | relevés par le responsable |
