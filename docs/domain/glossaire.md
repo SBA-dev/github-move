@@ -137,9 +137,9 @@ Le glossaire garde l'orthographe française.
 | Section de l'écran (à valider) | Une des parties de l'écran des récompenses de l'enfant : cabane (#32), histoire (#33), badges (#31), records de calcul rapide (#65), toujours dans cet ordre. Peut-être un simple mot d'interface (#65). | Motivation | onglet, rubrique |
 | Records de calcul rapide (à valider) | Section de l'écran des récompenses de l'enfant qui montre les records de fluence du profil en cours, un par exercice de fluence ; absente quand le profil n'a aucun record. Les records sont lus dans Apprentissage, jamais modifiés. Interface : « Mes records de calcul rapide » (#65). | Motivation | trophées, meilleurs scores, high scores |
 | Pastille de record (à valider) | Libellé d'un exercice de fluence et meilleur score du record de fluence correspondant, dans les records de calcul rapide. Libellé proposé : le titre de l'exercice (question n°3 de #65). Peut-être un simple mot d'interface (#65). | Motivation | badge, médaille, trophée |
-| Total des étoiles (à valider) | Somme des meilleures étoiles de toutes les leçons du profil, toutes classes confondues ; le test de départ n'y ajoute rien. Il ne baisse jamais. Interface : « Tu as 12 étoiles » (#32). | Motivation | score, points, note |
-| Palier de la cabane (à valider) | Seuil du total des étoiles qui fait recevoir un objet de la cabane : 3, 6, 10, 15, 20, 26, 33, 40, 48, 56, 65, 75 (legacy). Deux paliers sont espacés d'au moins 3 : une séance fait recevoir au plus un objet. Interface : pastille « 10 ★ » (#32). | Motivation | niveau, étape, seuil (seul) |
-| Objet de la cabane (à valider) | Ce que reçoit la cabane quand le total des étoiles atteint un palier (« une lanterne »). Il ne se perd jamais. Les 12 objets reçus : la cabane est complète. Les noms des objets sont du contenu, pas des termes du domaine (#32). | Motivation | badge, trophée, récompense (seul), objet débloqué |
+| Total des étoiles | Somme des meilleures étoiles de toutes les leçons du profil, toutes classes confondues ; le test de départ n'y ajoute rien. Il ne baisse jamais. Interface : « Tu as 12 étoiles » (#32, validé par le PO le 2026-10-25). | Motivation | score, points, note |
+| Palier de la cabane | Seuil du total des étoiles qui fait recevoir un objet de la cabane : 3, 6, 10, 15, 20, 26, 33, 40, 48, 56, 65, 75 (legacy). Deux paliers sont espacés d'au moins 3 : une séance fait recevoir au plus un objet. Interface : pastille « 10 ★ », dite « 10 étoiles » (#32, validé par le PO le 2026-10-25, décision 32.11). | Motivation | niveau, étape, seuil (seul) |
+| Objet de la cabane | Ce que reçoit la cabane quand le total des étoiles atteint un palier (« une lanterne »). Il ne se perd jamais. Les 12 objets reçus : la cabane est complète. Les noms des objets sont du contenu, pas des termes du domaine (#32, validé par le PO le 2026-10-25). | Motivation | badge, trophée, récompense (seul), objet débloqué |
 
 ## Famille
 
@@ -263,8 +263,8 @@ Sous-domaine décidé à la validation n°1 du lot 1 (décision 0007). Ses terme
 5. **« Relance »** (#18) : **tranché par le PO le 2026-10-24** : voir Décision n°32.
 6. **« Essai »** (#72) : **tranché par le PO le 2026-10-24** : voir Décision n°35.
 7. **« Création du compte »** (#72) : **tranché par le PO le 2026-10-24** : voir Décision n°34.
-8. **« Trophée »** (#32) : nom de l'objet n°11 de la cabane (« un trophée ») dans le legacy, alors que « trophée » est un synonyme interdit de **Badge**. Proposition : renommer l'objet (question 32.5).
-9. **« Étoile »** (#32, même famille que le conflit n°1) : « l'étoile magique » est l'objet n°12 de la cabane. Proposition : **Étoile** reste la récompense d'une séance ; l'objet ne compte pas dans le total des étoiles et n'est pas un terme du domaine (question 32.6).
+8. **« Trophée »** (#32) : **tranché par le PO le 2026-10-25** (décision 32.5) : l'objet n°11 de la cabane, « un trophée » dans le legacy, est renommé « une coupe dorée » ; « trophée » reste un synonyme interdit de **Badge**.
+9. **« Étoile »** (#32, même famille que le conflit n°1) : **tranché par le PO le 2026-10-25** (décision 32.6) : « l'étoile magique », objet n°12 de la cabane, garde son nom ; **Étoile** reste la récompense d'une séance ; l'objet ne compte pas dans le total des étoiles et n'est pas un terme du domaine.
 
 Les anciens conflits n°3 à n°7 (compte, session, lien magique, voix, monde) sont tranchés : voir Décisions n°10 à n°15. Ceux du lot 2 (espace adulte, lien, supprimer / détacher, la voix des guides, progression) : voir Décisions n°17 à n°21.
 Ceux du lot 3 (anciens n°8 à n°14 : jeu, maison, rang, énoncé, essai, étape, progression) : voir Décisions n°23 à n°29.
@@ -296,7 +296,7 @@ Lot 5 (#65, `docs/stories/65/domain-model.md`) : à trancher par le PO.
 - Nom de l'écran des récompenses de l'enfant : tranché, « Mes médailles » (décision 65.1 du PO ; « médaille » retiré des synonymes interdits de Badge, « trophée » reste interdit) ;
 - « Section de l'écran » et « Pastille de record » : termes du domaine ou mots d'interface (#65).
 
-Lot 5 (#32, `docs/stories/32/domain-model.md`) : à trancher par le PO.
-- **Total des étoiles**, **Palier de la cabane**, **Objet de la cabane** : nouveaux termes (à valider) ;
-- conflits n°8 (« un trophée ») et n°9 (« l'étoile magique ») : questions 32.5 et 32.6 ;
-- sujet des phrases de la cabane (« Noisette a reçu… ») selon l'univers : question 32.1.
+Lot 5 (#32, `docs/stories/32/domain-model.md`) : le PO a suivi toutes les recommandations le 2026-10-25 (« OK #32 reco partout », décisions dans `docs/stories/32/acceptance.md`).
+- **Total des étoiles**, **Palier de la cabane**, **Objet de la cabane** : tranché, termes validés ;
+- conflits n°8 (« un trophée ») et n°9 (« l'étoile magique ») : tranchés, décisions 32.5 (« une coupe dorée ») et 32.6 (nom gardé, hors du total) ;
+- sujet des phrases de la cabane (« Noisette a reçu… ») selon l'univers : tranché, décision 32.1 (la cabane est celle de Noisette dans tous les univers).
