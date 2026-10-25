@@ -10,7 +10,7 @@ export class IntervalleDeRevision {
   private constructor(readonly jours: number) {}
 
   static premier(): IntervalleDeRevision {
-    return new IntervalleDeRevision(INTERVALLES_EN_JOURS[0]);
+    return new IntervalleDeRevision(1);
   }
 
   static de(jours: number): IntervalleDeRevision {

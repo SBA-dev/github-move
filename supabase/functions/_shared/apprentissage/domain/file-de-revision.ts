@@ -60,45 +60,42 @@ export class FileDeRevision {
 
   retenir(questions: readonly QuestionRateeARetenir[], jour: Jour, termineeLe: Date): void {
     for (const question of sansDoublon(questions)) {
-      const index = this.questionsRetenues.findIndex(
-        (retenue) => retenue.identite.valeur === question.identite.valeur,
-      );
-      if (index === -1) {
-        this.questionsRetenues.push(nouvelleQuestionRetenue(question, jour, termineeLe));
-      } else {
-        this.questionsRetenues[index] = rateeDeNouveau(this.questionsRetenues[index], jour, termineeLe);
-      }
+      const retenue = this.trouver(question.identite);
+      if (retenue) this.remplacer(retenue, rateeDeNouveau(retenue, jour, termineeLe));
+      else this.questionsRetenues.push(nouvelleQuestionRetenue(question, jour, termineeLe));
     }
     this.oublierLesPlusAnciennesAuDelaDeLaLimite();
   }
 
   enregistrerLaRevision(resultats: readonly ResultatDeRevision[], jour: Jour, termineeLe: Date): void {
-    for (const resultat of resultats) {
-      const index = this.questionsRetenues.findIndex(
-        (retenue) => retenue.identite.valeur === resultat.identite.valeur,
-      );
-      if (index !== -1) this.appliquer(index, resultat.juste, jour, termineeLe);
+    for (const { identite, juste } of resultats) {
+      const retenue = this.trouver(identite);
+      if (retenue) this.appliquer(retenue, juste, jour, termineeLe);
     }
   }
 
-  private appliquer(index: number, juste: boolean, jour: Jour, termineeLe: Date): void {
-    const retenue = this.questionsRetenues[index];
+  private trouver(identite: CleDeQuestion): QuestionRetenue | undefined {
+    return this.questionsRetenues.find((retenue) => retenue.identite.valeur === identite.valeur);
+  }
+
+  private remplacer(ancienne: QuestionRetenue, nouvelle: QuestionRetenue): void {
+    this.questionsRetenues = this.questionsRetenues.map((question) => question === ancienne ? nouvelle : question);
+  }
+
+  private appliquer(retenue: QuestionRetenue, juste: boolean, jour: Jour, termineeLe: Date): void {
     if (termineeLe.getTime() < retenue.derniereErreurLe.getTime()) return;
-    if (!juste) {
-      this.questionsRetenues[index] = rateeDeNouveau(retenue, jour, termineeLe);
-      return;
-    }
+    if (!juste) return this.remplacer(retenue, rateeDeNouveau(retenue, jour, termineeLe));
     const suite = retenue.intervalle.suivant();
     if (suite.corrigeePourDeBon) {
-      this.questionsRetenues.splice(index, 1);
+      this.questionsRetenues = this.questionsRetenues.filter((question) => question !== retenue);
       this.nombreDErreursCorrigeesPourDeBon++;
       return;
     }
-    this.questionsRetenues[index] = {
+    this.remplacer(retenue, {
       ...retenue,
       intervalle: suite.intervalle,
       dateDeRevision: jour.plus(suite.intervalle.jours),
-    };
+    });
   }
 
   questionsDues(jour: Jour): readonly QuestionRetenue[] {

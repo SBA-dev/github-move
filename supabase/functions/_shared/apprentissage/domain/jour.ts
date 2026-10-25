@@ -9,8 +9,8 @@ export class Jour {
   static de(texte: string): Jour {
     const correspondance = FORMAT.exec(texte);
     if (!correspondance) throw new JourInvalide(texte);
-    const [annee, mois, jour] = correspondance.slice(1).map(Number);
-    const instant = Date.UTC(annee, mois - 1, jour);
+    const [, annee, mois, jour] = correspondance;
+    const instant = Date.UTC(Number(annee), Number(mois) - 1, Number(jour));
     const jourCree = new Jour(instant);
     if (jourCree.toString() !== texte) throw new JourInvalide(texte);
     return jourCree;
