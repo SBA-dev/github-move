@@ -726,3 +726,45 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-width: 4px; background:
 @media (prefers-reduced-motion: reduce) {
   .pour-la-cabane { animation: none; }
 }
+
+/* Suivi de l'espace parent : une colonne, tout passe à la ligne, aucune largeur fixe (360 px sans défilement horizontal). */
+.suivi-de-l-espace-parent {
+  display: grid;
+  gap: 12px;
+  width: 100%;
+  max-width: 40rem;
+  min-width: 0;
+  padding: 12px 16px;
+  border-radius: 16px;
+  background: #fff;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.suivi-de-l-espace-parent h3, .suivi-de-l-espace-parent h4, .suivi-de-l-espace-parent h5,
+.suivi-de-l-espace-parent h6, .suivi-de-l-espace-parent p, .suivi-de-l-espace-parent dl,
+.suivi-de-l-espace-parent dd, .suivi-de-l-espace-parent ul { margin: 0; }
+.choix-de-l-enfant-suivi, .legende-de-la-carte, .lignes-de-la-carte, .lecons-jouees, .lecons-de-la-ligne {
+  display: grid;
+  gap: 8px;
+  padding: 0;
+  list-style: none;
+}
+.choix-de-l-enfant-suivi { grid-auto-flow: row; }
+.choix-de-l-enfant-suivi button { width: 100%; min-height: 44px; }
+.choix-de-l-enfant-suivi button[aria-pressed="true"] { border-width: 4px; background: #fff3cd; }
+.chiffres-du-suivi { display: grid; grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); gap: 8px; }
+.chiffres-du-suivi > div { display: grid; gap: 2px; padding: 8px; border-radius: 12px; background: #fdf3ea; }
+.chiffres-du-suivi dd { font-size: 1.5rem; font-weight: 700; }
+.bloc-replie { display: grid; gap: 8px; min-width: 0; }
+.bloc-replie h4 { font-size: 1rem; }
+.bouton-du-bloc { width: 100%; min-height: 44px; text-align: left; overflow-wrap: anywhere; }
+.bloc-replie [hidden] { display: none; }
+.legende-de-la-carte { grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); font-weight: 700; }
+.matiere-de-la-carte, .matiere-de-la-carte > section { display: grid; gap: 6px; min-width: 0; }
+.lignes-de-la-carte > li { padding: 6px 8px; border-left: 6px solid #bbb; border-radius: 4px; background: #f7f7f7; }
+.lignes-de-la-carte > li[data-etat="acquise"] { border-left-color: #2e7d32; }
+.lignes-de-la-carte > li[data-etat="enCours"] { border-left-color: #ef8a17; }
+.lignes-de-la-carte .etat { font-weight: 700; }
+.lecons-de-la-ligne { margin-top: 4px; gap: 2px; font-size: .95rem; }
+.lecon-jouee { display: grid; gap: 2px; padding: 8px; border-radius: 12px; background: #fdf3ea; }
+.lecons-d-autres-classes { display: grid; gap: 8px; margin-top: 8px; }
