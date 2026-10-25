@@ -203,6 +203,11 @@ Le glossaire garde l'orthographe française.
 | Carte des compétences, définition proposée par #34 (à valider) | Pour un profil enfant, chaque section du programme qui couvre son niveau, avec son état de la section et les titres de ses leçons, regroupée par matière puis par domaine. Remplacerait la définition « par compétence » si la question 34.1 est retenue (conflit n°8). | Accompagnement | skill map, carte (seule), carte des compétences du programme (mot d'interface) |
 | Ligne de la carte (à valider) | Une section du programme dans la carte des compétences : son intitulé, son état de la section et les titres des leçons qui s'y rattachent (`programme.section`), quel que soit leur niveau (#34, question 34.9). | Accompagnement | compétence (pour la ligne), rubrique |
 | État de la section (à valider) | État d'une ligne de la carte : **acquise** (au moins une leçon acquise), **en cours** (au moins une leçon jouée, réussie au test de départ comprise, aucune acquise), **à faire** (des leçons, aucune jouée), **pas encore de leçon** (aucune leçon rattachée) (#34, questions 34.2, 34.4, 34.10). | Accompagnement | acquis (au masculin), validée, terminée, vide |
+| Sorte d'enregistrement (à valider) | Ce que l'enfant enregistre : `lecture` (exercice `lecture`), `recitation` (exercice `memoriser`, poésie) ou `chanson` (exercice `memoriser`, chanson ou comptine). Calculée à partir de l'exercice, jamais gardée ; elle donne le libellé du bouton (« Je la lis à voix haute et je m'enregistre », « Je récite et je m'enregistre », « Je chante et je m'enregistre ») (#38). | Accompagnement | type d'enregistrement, voix |
+| Expiration d'un enregistrement de lecture (à valider) | Effacement automatique du fichier et de ses informations 30 jours après l'enregistrement, par une tâche planifiée du serveur ; dès sa date d'expiration, l'enregistrement n'est plus ni listé ni écoutable. L'interface dit « gardé jusqu'au … » (#38). | Accompagnement | purge, archivage, nettoyage |
+| Date d'expiration (à valider) | Date de l'enregistrement (fixée par le serveur) plus 30 jours (#38). | Accompagnement | date limite, date de péremption |
+| Durée maximale d'un enregistrement (à valider) | Durée au-delà de laquelle l'enregistrement de lecture s'arrête tout seul (3 minutes proposées, #38). | Accompagnement | temps d'écran, limite de temps |
+| Garder un enregistrement de lecture (à valider) | Envoyer au serveur l'enregistrement que l'enfant vient de faire, pour que ses parents puissent l'écouter. Code : `GarderLEnregistrementDeLecture`. L'interface dit « Ton enregistrement est gardé » (#38). | Accompagnement | sauvegarder, téléverser, uploader |
 
 ## Voix (sous-domaine générique)
 
@@ -274,6 +279,8 @@ Sous-domaine décidé à la validation n°1 du lot 1 (décision 0007). Ses terme
 6. **« Essai »** (#72) : **tranché par le PO le 2026-10-24** : voir Décision n°35.
 7. **« Création du compte »** (#72) : **tranché par le PO le 2026-10-24** : voir Décision n°34.
 8. **« Carte des compétences »** (#34) : la ligne d'Accompagnement la définit par **compétence** (à faire, en cours, acquise) ; le legacy et l'issue #34 la construisent par **section du programme**, avec un quatrième état « pas encore de leçon ». Proposition (question 34.1) : par section du programme ; « compétence » reste le nom du badge (#31). Voir les lignes « Carte des compétences, définition proposée par #34 », « Ligne de la carte » et « État de la section ».
+9. **« Lecture à voix haute »** (#38) : terme de **Voix** (le personnage guide lit). Proposition : ce que fait l'enfant est un **Enregistrement de lecture** ; « Je la lis à voix haute » reste un texte d'écran.
+10. **« Récitation »** (#38) : synonyme interdit de **Poésie** pour le texte ; proposé comme valeur de la **Sorte d'enregistrement** (`recitation`) seulement (question 38.20).
 
 Les anciens conflits n°3 à n°7 (compte, session, lien magique, voix, monde) sont tranchés : voir Décisions n°10 à n°15. Ceux du lot 2 (espace adulte, lien, supprimer / détacher, la voix des guides, progression) : voir Décisions n°17 à n°21.
 Ceux du lot 3 (anciens n°8 à n°14 : jeu, maison, rang, énoncé, essai, étape, progression) : voir Décisions n°23 à n°29.
@@ -311,3 +318,7 @@ Lot 6 (#34, `docs/stories/34/domain-model.md`) : à trancher par le PO (question
 - Carte des compétences par section du programme ou par compétence (34.1, conflit n°8) ; libellé « acquise » plutôt que « acquis » (34.2) ;
 - leçons réussies au test de départ comptées dans les leçons réussies (34.3), et section « en cours », jamais « acquise », par elles seules (34.4, conforme à la réponse 27.1) ;
 - termes nouveaux : Chiffres du suivi, Total des étoiles, Séances jouées, Leçon jouée, Erreurs de la dernière séance, Dernière séance, Ligne de la carte, État de la section (34.22).
+
+Lot 6 (#38, `docs/stories/38/domain-model.md`) : à trancher par le PO (questions 38.1 à 38.20).
+- Conflits n°9 (« Lecture à voix haute ») et n°10 (« Récitation ») ; élargissement de la définition d'« Enregistrement de lecture » à « lit, récite ou chante » (38.20) ;
+- termes nouveaux : Sorte d'enregistrement, Expiration d'un enregistrement de lecture, Date d'expiration, Durée maximale d'un enregistrement, Garder un enregistrement de lecture.
