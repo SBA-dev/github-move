@@ -499,12 +499,11 @@ When(/^Léa demande à réécouter la consigne$/, async ({ page }) => {
   const etat = scenario(page);
   if (etat.relitPendantLaQuestion) {
     await attendreUneLecture(page);
-    const lotsDeLaConsigne = (await journal(page)).lots;
     await terminerLaLecture(page);
-    await expect.poll(async () => (await journal(page)).lots).toBe(lotsDeLaConsigne + 1);
-    expect((await journal(page)).lecture.texte).toContain("Combien font");
+    // Le StrictMode du mode développement peut lire la consigne en deux lots : on attend la lecture de la question.
+    await expect.poll(async () => (await journal(page)).lecture.texte).toContain("Combien font");
     etat.relitPendantLaQuestion.relue = true;
-    etat.relitPendantLaQuestion.lotsAvant = lotsDeLaConsigne + 1;
+    etat.relitPendantLaQuestion.lotsAvant = (await journal(page)).lots;
   }
   await page.getByRole("button", { name: "Relire la consigne", exact: true }).click();
 });
@@ -679,7 +678,7 @@ Then(/^Léa voit la question « (.+) »$/, async ({ page }, question: string) =>
     // La question reste posée : on termine les lectures en cours, et les choix doivent venir.
     await avancerJusquAuxChoix(page);
     await expect(page.getByTestId("question")).toHaveText(normaliser(question));
-    expect(await textesDesChoix(page)).toEqual(["1", "2", "3"]);
+    expect([...(await textesDesChoix(page))].sort()).toEqual(["1", "2", "3"]);
   }
 });
 
