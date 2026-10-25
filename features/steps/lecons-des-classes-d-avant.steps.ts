@@ -5,6 +5,7 @@ import type { Famille } from "../support/famille.ts";
 import { etat, leconDeTitre, type LeconBrute } from "./etapes-puis-exercices.steps.ts";
 import { annonceDeLEtatDUneLeconDuBloc, choisirLea, ouvrirLeParcoursDeFrancais } from "./parcours.steps.ts";
 import { Given, Then, When } from "./fixtures.ts";
+import { verifierQueLeBlocDuSuiviEstReplie } from "./suivi.steps.ts";
 
 // Story #26 : leçons des classes d'avant dans « Mon parcours » et écran « Toutes les leçons ».
 // La bibliothèque de test (identifiants « e2e-26- ») remplace celle de l'application dans le navigateur de Léa
@@ -89,7 +90,9 @@ Given(
   },
 );
 
-Then(/^le bloc « ([^«»]+) » est replié et s'intitule « ([^«»]+) »$/, async ({ page }, nom: string, titre: string) => {
+Then(/^le bloc « ([^«»]+) » est replié et s'intitule « ([^«»]+) »$/, async ({ page, famille, $tags }, nom: string, titre: string) => {
+  // Story #34 : le même texte décrit les blocs du suivi de l'espace parent (boutons repliés, pas des régions).
+  if ($tags.includes("@issue-34")) return verifierQueLeBlocDuSuiviEstReplie(famille, nom, titre);
   await verifierQueLaRegionEstRepliee(page, nom, titre);
 });
 

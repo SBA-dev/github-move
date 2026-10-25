@@ -18,6 +18,7 @@ import {
 import { choisirLeaSur } from "./profil-reel.ts";
 import { jetonDe, choisirSonProfil, ouvrirQuiJoue, profilDe } from "./profils-enfants.steps.ts";
 import { Given, Then, When } from "./fixtures.ts";
+import { verifierQueLaLigneDeLaCarteEstAnnoncee } from "./suivi.steps.ts";
 
 // Story #25 : parcours par matière (aucun verrou).
 // La bibliothèque de test (identifiants « e2e-25- ») remplace celle de l'application dans le navigateur de Léa.
@@ -371,7 +372,9 @@ Then(/^les lecteurs d'écran annoncent les leçons du parcours ainsi :$/, async 
   }
 });
 
-Then(/^les lecteurs d'écran annoncent « ([^«»]+) »$/, async ({ page }, annonce: string) => {
+Then(/^les lecteurs d'écran annoncent « ([^«»]+) »$/, async ({ page, famille, $tags }, annonce: string) => {
+  // Story #34 : le même texte décrit l'état d'une ligne de la carte des compétences, dans l'espace parent.
+  if ($tags.includes("@issue-34")) return verifierQueLaLigneDeLaCarteEstAnnoncee(famille, annonce);
   await expect(page.getByRole("button", { name: annonce, exact: true })).toBeVisible();
 });
 
