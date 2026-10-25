@@ -1,6 +1,6 @@
 # Modèle du domaine : issue #79, la consigne d'un exercice reste visible pendant tout l'exercice
 
-État : story de correction, scénarios **validés par le PO le 2026-10-25** (décisions 79.1 à 79.9 dans `acceptance.md`). Ce modèle ne fait que placer ces règles ; il n'en ajoute aucune. Aucune migration, aucune Edge Function, aucun agrégat nouveau.
+État : story de correction, scénarios **validés par le PO le 2026-10-25** (décisions 79.1 à 79.9 dans `acceptance.md`), puis décisions 79.10 à 79.12 le même jour. Ce modèle ne fait que placer ces règles ; il n'en ajoute aucune. Aucune migration, aucune Edge Function, aucun agrégat nouveau.
 
 ## Contexte
 
@@ -11,7 +11,7 @@ Deux contextes existants, chacun pour ce qu'il sait. Tout se joue dans le naviga
 
 Communication : **appel dans le navigateur**. Le front lit avec `LectureAVoixHaute` (Voix), puis passe `entendue` à `attenteAvantLEcranSuivant` (Apprentissage). Apprentissage n'importe pas Voix : pas de nouvelle relation dans la context map.
 
-React n'a aucune règle : il affiche la consigne affichée dans une place à elle, au-dessus de l'exercice et hors de la bulle du personnage guide, avec un bouton pour la relire (44 px ou plus) ; il montre le message de voix bloquée entre `onVoixBloquee` et `onFinDeLaVoixBloquee` ; il applique l'attente rendue par le domaine. Il ne doit plus effacer le message à chaque lecture (défaut 2 de l'issue).
+React n'a aucune règle : il affiche la consigne affichée dans une place à elle, au-dessus de l'exercice et hors de la bulle du personnage guide, avec un bouton pour la relire (44 px ou plus) ; il montre le message de voix bloquée entre `onVoixBloquee` et `onFinDeLaVoixBloquee` ; il applique l'attente rendue par le domaine. Il ne doit plus effacer le message à chaque lecture (défaut 2 de l'issue). Il rend « Relire la consigne » inactif pendant la présentation de l'exercice, puis actif jusqu'à la fin de l'exercice (décision 79.12) : c'est de l'affichage, aucune règle de domaine nouvelle.
 
 ## Termes
 
@@ -37,7 +37,7 @@ React n'a aucune règle : il affiche la consigne affichée dans une place à ell
 - État interne `voixBloqueeSignalee` (existant), désormais remis à faux :
   - `onVoixBloquee` est appelé au premier blocage, puis plus tant que la voix reste bloquée (décision 79.5 : jamais deux messages) ;
   - `onFinDeLaVoixBloquee` est appelé, une fois, quand la voix bloquée signalée prend fin : **lecture entendue** (décision 79.5) ou **`passerEnMuet`** (décision 79.6) ;
-  - après une fin, un nouveau blocage appelle de nouveau `onVoixBloquee` (voir question 79.10).
+  - après une fin, un nouveau blocage appelle de nouveau `onVoixBloquee`, même dans la même ouverture de l'application (décision 79.10).
 
 ### Apprentissage : fonctions pures (`apprentissage/domain/`)
 
@@ -55,7 +55,7 @@ DUREE_D_AFFICHAGE_SANS_VOIX_MS = 2000
 |---|---|---|
 | oui | – | `aucune` |
 | non | oui (félicitation de la dernière bonne réponse) | `enfantQuiContinue` |
-| non | non (félicitation entre deux questions, dernière bonne réponse d'un exercice qui n'est pas le dernier, annonce du nouveau défi) | `dureeDAffichageSansVoix`, 2000 ms |
+| non | non (félicitation entre deux questions, dernière bonne réponse d'un exercice qui n'est pas le dernier, annonce du nouveau défi, invitation à jouer après les étapes de la leçon) | `dureeDAffichageSansVoix`, 2000 ms (79.4, 79.11) |
 
 Elle ne s'applique qu'aux paroles **suivies d'un écran qui vient seul**. L'étape de leçon attend déjà l'enfant (79.2, inchangé) ; l'indication du geste n'a pas d'écran suivant (79.9).
 
@@ -91,5 +91,8 @@ Aucun événement de domaine (rien n'est enregistré). Les deux signaux `onVoixB
 
 ## Questions ouvertes
 
-- **79.10** La définition actuelle de Voix bloquée dit « prévenu **une fois par ouverture de l'application** ». Avec 79.5 (« visible tant que la voix est bloquée »), si la voix revient puis se bloque de nouveau dans la même ouverture, le message réapparaît-il ? (oui / non ; le modèle suit « oui », changement d'une ligne si c'est non.)
-- **79.11** Sans voix, l'**invitation à jouer après les étapes de la leçon** (avant le premier exercice) reste-t-elle aussi visible environ 2 s avant que l'exercice vienne seul, comme l'annonce du nouveau défi ? (oui / non ; 79.4 ne cite que la félicitation entre deux questions et l'annonce du nouveau défi.)
+Aucune. Tranchées le 2026-10-25 (voir « Décisions » dans `acceptance.md`) :
+
+- **79.10** oui : après une fin de la voix bloquée, un nouveau blocage dans la même ouverture de l'application fait réapparaître le message de voix bloquée. Le modèle le suivait déjà (remise à faux de `voixBloqueeSignalee`).
+- **79.11** oui : sans voix, l'invitation à jouer après les étapes de la leçon reste visible environ 2 s, puis l'exercice vient seul. Elle relève de la ligne `seanceTerminee: non` de `attenteAvantLEcranSuivant` : aucune règle nouvelle.
+- **79.12** A : « Relire la consigne » est inactif pendant la présentation de l'exercice, actif ensuite jusqu'à la fin de l'exercice. Côté React seulement (état du bouton), aucune règle de domaine nouvelle.
