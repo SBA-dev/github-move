@@ -1,5 +1,5 @@
 # language: fr
-@issue-26 @wip
+@issue-26
 Fonctionnalité: Leçons des classes d'avant
   En tant qu'enfant
   Je veux retrouver les leçons des classes d'avant et voir toutes les leçons que je peux faire

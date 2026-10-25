@@ -1,6 +1,6 @@
 # Critères d'acceptance : issue #26, Leçons des classes d'avant
 
-Scénarios : `features/26-lecons-des-classes-d-avant.feature` (tags `@issue-26 @wip`).
+Scénarios : `features/26-lecons-des-classes-d-avant.feature` (tag `@issue-26`).
 Modèle du domaine : `docs/stories/26/domain-model.md` (contexte **Apprentissage**, qui lit le **Catalogue pédagogique** ; Famille n'est plus lu, réponse N2 de #25). Les questions #26.1 à #26.12 et #26.17 à #26.20 viennent du modèle ; #26.13 à #26.16 ont été ajoutées ici.
 
 > Story **redéfinie** par les réponses du PO sur #25 et #27 : aucun verrou (25.1 b), parcours libre sans effet (N2), bloc aligné sur « Déjà réussies en CE2 » (N1), leçons réussies d'une classe au-dessus visibles dans « Toutes les leçons » (N7), leçon réussie au test de départ (27.7, 27.15).
