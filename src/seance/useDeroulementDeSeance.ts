@@ -1,6 +1,6 @@
 import { useCallback, useReducer, useRef } from "react";
 import {
-  consigneLueAuDebut,
+  consigneAffichee,
   type FaitDeSeance,
   indicationDuGeste,
   Reponse,
@@ -64,7 +64,7 @@ export function useDeroulementDeSeance(
     [],
   );
 
-  const reussite = useQuestionFigee();
+  const reussite = useQuestionFigee(seance, personnage.paroleEntendue);
   const questions = useQuestionsAChoix({
     seance,
     lecon,
@@ -118,14 +118,28 @@ export function useDeroulementDeSeance(
     presenterUneQuestion: ouvrir,
   });
 
+  const consigneDeLExercice = useCallback(() => {
+    const position = seance.exerciceEnCours()?.position;
+    const exercice = position === undefined ? undefined : lecon.exercices[position];
+    return exercice && consigneAffichee(exercice);
+  }, [seance, lecon]);
+
   const lireLaConsigneDeLExercice = useCallback(async () => {
     const position = seance.exerciceEnCours()?.position;
     const exercice = position === undefined ? undefined : lecon.exercices[position];
-    if (!exercice?.consigne || !consigneLueAuDebut(exercice.type)) return;
-    if (!(await dire({ texte: exercice.consigne, nature: "consigne" }))) return;
+    const consigne = consigneDeLExercice();
+    if (!exercice || consigne === undefined) return;
+    if (!(await dire({ texte: consigne, nature: "consigne" }))) return;
     const indication = indicationDuGeste(exercice.type);
     if (indication) await dire({ texte: indication, nature: "consigne" });
-  }, [seance, lecon, dire]);
+  }, [seance, lecon, dire, consigneDeLExercice]);
+
+  const relireLaConsigne = useCallback(() => {
+    const consigne = consigneDeLExercice();
+    if (consigne === undefined || reussite.estFigee.current) return;
+    sequence.current++;
+    void dire({ texte: consigne, nature: "consigne" });
+  }, [consigneDeLExercice, reussite.estFigee, dire]);
 
   const presenterLaQuestionDeLExercice = useCallback(async (numero: number) => {
     const position = seance.exerciceEnCours()?.position;
@@ -174,10 +188,12 @@ export function useDeroulementDeSeance(
   const enchainerSurLExercice = useCallback(async (numero: number, faits: readonly FaitDeSeance[]) => {
     for (const fait of faits) {
       if (!(await direLeFait(fait))) return;
+      await reussite.attendreLEcranSuivant();
+      if (numero !== sequence.current) return;
     }
     await attendreUnPeu();
     if (numero === sequence.current) await ouvrirLExercice(numero);
-  }, [direLeFait, attendreUnPeu, ouvrirLExercice]);
+  }, [direLeFait, attendreUnPeu, ouvrirLExercice, reussite.attendreLEcranSuivant]);
 
   const commencer = useCallback(async () => {
     vivant.current = true;
@@ -342,6 +358,9 @@ export function useDeroulementDeSeance(
     jeNeSaisPasDeLAddition,
     demarrerLaFluence,
     relireLaPhrase,
+    relireLaConsigne,
+    enfantAttendu: reussite.enfantAttendu,
+    continuerApresLaReussite: reussite.continuer,
     commencer,
     continuer,
     direLaFin,

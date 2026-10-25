@@ -36,7 +36,7 @@ function estFinie(vue: VueAddition | undefined): boolean {
 export function useAdditionPosee(
   { seance, personnageGuide, dire, faireSilence, montrerHumeur, sequence, vivant, redessiner, reussite }: Dependances,
 ) {
-  const { estFigee, figer, annoncerLAvancement } = reussite;
+  const { estFigee, figer, annoncerLAvancement, attendreLEcranSuivant } = reussite;
   /** L'addition terminée, montrée telle quelle le temps de la féliciter. */
   const [additionFigee, setAdditionFigee] = useState<VueAddition | undefined>();
   /** La colonne que « Je ne sais pas » fait briller. */
@@ -66,12 +66,13 @@ export function useAdditionPosee(
     figer({ position: exercice.position, exercice, question: undefined });
     setAdditionFigee(apres);
     await dire(feliciterUnCalcul(personnageGuide, apres.parole));
+    await attendreLEcranSuivant();
     if (!vivant.current) return;
     figer(undefined);
     setAdditionFigee(undefined);
     const nouvelExercice = seance.exerciceEnCours()?.position !== exercice.position;
     await suite(++sequence.current, seance.retirerFaits(), nouvelExercice);
-  }, [seance, figer, dire, personnageGuide, vivant, sequence]);
+  }, [seance, figer, dire, personnageGuide, vivant, sequence, attendreLEcranSuivant]);
 
   const repondre = useCallback(async (reponse: Reponse, suite: SuiteDuCalcul) => {
     const avant = seance.additionEnCours();

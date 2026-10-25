@@ -28,7 +28,7 @@ type SuiteDeLaDictee = (numero: number, faits: FaitDeSeance[], nouvelExercice: b
 export function useDictee(
   { seance, personnageGuide, lire, dire, faireSilence, sequence, vivant, redessiner, reussite }: Dependances,
 ) {
-  const { estFigee, figer, annoncerLAvancement } = reussite;
+  const { estFigee, figer, annoncerLAvancement, attendreLEcranSuivant } = reussite;
   /** Les lettres fausses restent en rouge un instant : pendant ce temps, rien ne s'écrit. */
   const [lettresFausses, setLettresFausses] = useState<CorrectionDuMot | undefined>();
   const lettresFaussesMontrees = useRef(false);
@@ -113,11 +113,12 @@ export function useDictee(
     figer({ position: exercice.position, exercice, question: undefined, questionDeDictee: question });
     annoncerLAvancement(seance.avancement());
     await feliciter();
+    await attendreLEcranSuivant();
     if (!vivant.current) return;
     figer(undefined);
     const nouvelExercice = seance.exerciceEnCours()?.position !== exercice.position;
     await suite(++sequence.current, seance.retirerFaits(), nouvelExercice);
-  }, [seance, laQuestion, peutEcrire, redessiner, sequence, montrerLesLettresFausses, encourager, figer, annoncerLAvancement, feliciter, vivant]);
+  }, [seance, laQuestion, peutEcrire, redessiner, sequence, montrerLesLettresFausses, encourager, figer, annoncerLAvancement, feliciter, vivant, attendreLEcranSuivant]);
 
   const effacer = useCallback(() => {
     if (!peutEcrire()) return;

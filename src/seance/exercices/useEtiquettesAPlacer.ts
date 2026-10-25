@@ -32,7 +32,7 @@ type SuiteDuPlacement = (numero: number, faits: FaitDeSeance[]) => Promise<void>
 export function useEtiquettesAPlacer(
   { seance, personnageGuide, dire, faireSilence, montrerHumeur, sequence, vivant, redessiner, reussite }: Dependances,
 ) {
-  const { estFigee, figer, annoncerLAvancement } = reussite;
+  const { estFigee, figer, annoncerLAvancement, attendreLEcranSuivant } = reussite;
   /** Ce que « Je ne sais pas » a montré : la bonne réponse de chaque étiquette de classer, ou de la question en cours en ordre (clé vide). */
   const [bonnesReponsesMontrees, setBonnesReponsesMontrees] = useState<Readonly<Record<string, string>>>({});
 
@@ -79,10 +79,12 @@ export function useEtiquettesAPlacer(
     if (exerciceFini) figer({ position: exercice.position, exercice, question: undefined });
     annoncerLAvancement(seance.avancement());
     await feliciterOuRelancer();
-    if (!exerciceFini || !vivant.current) return;
+    if (!exerciceFini) return;
+    await attendreLEcranSuivant();
+    if (!vivant.current) return;
     figer(undefined);
     await suite(++sequence.current, seance.retirerFaits());
-  }, [seance, estFigee, sequence, redessiner, encourager, figer, annoncerLAvancement, feliciterOuRelancer, vivant, oublierLaBonneReponse]);
+  }, [seance, estFigee, sequence, redessiner, encourager, figer, annoncerLAvancement, feliciterOuRelancer, vivant, oublierLaBonneReponse, attendreLEcranSuivant]);
 
   const jeNeSaisPas = useCallback(async (etiquette?: string) => {
     if (!seance.exerciceEnCours() || estFigee.current) return;

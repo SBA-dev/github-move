@@ -52,7 +52,7 @@ export function useQuestionsAChoix(
   { seance, lecon, personnageGuide, toutLireAVoixHaute, lire, dire, faireSilence, montrerHumeur, sequence, vivant, redessiner, reussite }:
     Dependances,
 ) {
-  const { estFigee, figer, annoncerLAvancement } = reussite;
+  const { estFigee, figer, annoncerLAvancement, attendreLEcranSuivant } = reussite;
   const [choixVisiblesPour, setChoixVisiblesPour] = useState<QuestionJouee | undefined>();
   const [positionDuTexteEcoute, setPositionDuTexteEcoute] = useState<number | undefined>();
   const [rangDuMotDuTexte, setRangDuMotDuTexte] = useState<number | undefined>();
@@ -182,12 +182,13 @@ export function useQuestionsAChoix(
     setBulleEclatee(texte);
     annoncerLAvancement(seance.avancement());
     await reagirALaBonneReponse(numero, reaction, question, exercice.position);
+    await attendreLEcranSuivant();
     if (!vivant.current) return;
     figer(undefined);
     setBulleEclatee(undefined);
     const nouvelExercice = seance.exerciceEnCours()?.position !== exercice.position;
     await suite(++sequence.current, seance.retirerFaits(), nouvelExercice);
-  }, [laQuestionEnCours, seance, sequence, redessiner, personnageGuide, encourager, figer, reagirALaBonneReponse, vivant, estFigee, annoncerLAvancement]);
+  }, [laQuestionEnCours, seance, sequence, redessiner, personnageGuide, encourager, figer, reagirALaBonneReponse, vivant, estFigee, annoncerLAvancement, attendreLEcranSuivant]);
 
   const jeNeSaisPas = useCallback(async () => {
     const courante = laQuestionEnCours();

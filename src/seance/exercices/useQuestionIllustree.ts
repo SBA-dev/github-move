@@ -44,7 +44,7 @@ export function seJoueCommeUneQuestionIllustree(type: string | undefined): boole
 export function useQuestionIllustree(
   { seance, personnageGuide, dire, faireSilence, sequence, vivant, redessiner, reussite }: Dependances,
 ) {
-  const { estFigee, figer, annoncerLAvancement } = reussite;
+  const { estFigee, figer, annoncerLAvancement, attendreLEcranSuivant } = reussite;
   const [phrasesDites, setPhrasesDites] = useState(0);
   const [boiteReussie, setBoiteReussie] = useState<BoiteReussie | undefined>();
   const [schemaReussi, setSchemaReussi] = useState<SchemaReussi | undefined>();
@@ -110,6 +110,7 @@ export function useQuestionIllustree(
       setSchemaReussi({ enCours: schema, resolu });
       await feliciterLeSchema(resolu);
     }
+    await attendreLEcranSuivant();
     if (!vivant.current) return;
     figer(undefined);
     setBoiteReussie(undefined);
@@ -129,6 +130,7 @@ export function useQuestionIllustree(
     estFigee,
     feliciterLaBoite,
     feliciterLeSchema,
+    attendreLEcranSuivant,
   ]);
 
   const jeNeSaisPas = useCallback(async () => {
