@@ -25,3 +25,4 @@ Branche : `feature/32-cabane`, partie de `main` (`e466e25`). Branche de base : `
 - Environnement : Playwright 1.56.1 cherche Chromium 1194 alors que 1243 est installé ; contournement par un `PLAYWRIGHT_BROWSERS_PATH` propre à la session (APPRIS publié sur #32).
 - `main` `d1d2def` intégrée (configuration : autorisation de merger).
 - PR #88 ouverte en brouillon. Créneau demandé pour la non-régression complète.
+- ~16:00 UTC : `MAIN A BOUGÉ` (#26 mergée, `6be4dc6`). Intégration : conflits d'ajouts sur `glossaire.md`, `context-map.md` (les deux ajouts gardés) et `etapes-puis-exercices.steps.ts` (résolu par `e2e-tester`, conditions de #26 et #32 réunies). 1786 tests, lint, format, tsc, build verts (`5e23cfb`).
