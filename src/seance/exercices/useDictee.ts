@@ -113,8 +113,7 @@ export function useDictee(
     figer({ position: exercice.position, exercice, question: undefined, questionDeDictee: question });
     annoncerLAvancement(seance.avancement());
     await feliciter();
-    await attendreLEcranSuivant();
-    if (!vivant.current) return;
+    if (!(await attendreLEcranSuivant()) || !vivant.current) return;
     figer(undefined);
     const nouvelExercice = seance.exerciceEnCours()?.position !== exercice.position;
     await suite(++sequence.current, seance.retirerFaits(), nouvelExercice);

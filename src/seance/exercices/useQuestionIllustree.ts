@@ -110,8 +110,7 @@ export function useQuestionIllustree(
       setSchemaReussi({ enCours: schema, resolu });
       await feliciterLeSchema(resolu);
     }
-    await attendreLEcranSuivant();
-    if (!vivant.current) return;
+    if (!(await attendreLEcranSuivant()) || !vivant.current) return;
     figer(undefined);
     setBoiteReussie(undefined);
     setSchemaReussi(undefined);

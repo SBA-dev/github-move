@@ -92,8 +92,7 @@ export function useFluence(
     const fin = finDeFluence(seance, nom, fluence.score, record);
     setRecord(fin.meilleurScore);
     await dire({ texte: fin.texte, nature: "felicitation", humeur: humeurApresReponse(fluence.score > 0) });
-    await attendreLEcranSuivant();
-    if (!vivant.current) return;
+    if (!(await attendreLEcranSuivant()) || !vivant.current) return;
     figer(undefined);
     setFluenceFinie(undefined);
     await suite(++sequence.current, seance.retirerFaits(), true);

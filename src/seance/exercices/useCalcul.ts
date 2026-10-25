@@ -47,8 +47,7 @@ export function useCalcul(
     setCalculFige(calcul);
     annoncerLAvancement(seance.avancement());
     await dire(feliciterUnCalcul(personnageGuide));
-    await attendreLEcranSuivant();
-    if (!vivant.current) return;
+    if (!(await attendreLEcranSuivant()) || !vivant.current) return;
     figer(undefined);
     setCalculFige(undefined);
     const nouvelExercice = seance.exerciceEnCours()?.position !== exercice.position;

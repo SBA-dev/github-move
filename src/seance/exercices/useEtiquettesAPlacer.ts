@@ -80,8 +80,7 @@ export function useEtiquettesAPlacer(
     annoncerLAvancement(seance.avancement());
     await feliciterOuRelancer();
     if (!exerciceFini) return;
-    await attendreLEcranSuivant();
-    if (!vivant.current) return;
+    if (!(await attendreLEcranSuivant()) || !vivant.current) return;
     figer(undefined);
     await suite(++sequence.current, seance.retirerFaits());
   }, [seance, estFigee, sequence, redessiner, encourager, figer, annoncerLAvancement, feliciterOuRelancer, vivant, oublierLaBonneReponse, attendreLEcranSuivant]);

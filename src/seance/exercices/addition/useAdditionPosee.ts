@@ -66,8 +66,7 @@ export function useAdditionPosee(
     figer({ position: exercice.position, exercice, question: undefined });
     setAdditionFigee(apres);
     await dire(feliciterUnCalcul(personnageGuide, apres.parole));
-    await attendreLEcranSuivant();
-    if (!vivant.current) return;
+    if (!(await attendreLEcranSuivant()) || !vivant.current) return;
     figer(undefined);
     setAdditionFigee(undefined);
     const nouvelExercice = seance.exerciceEnCours()?.position !== exercice.position;

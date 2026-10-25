@@ -182,8 +182,7 @@ export function useQuestionsAChoix(
     setBulleEclatee(texte);
     annoncerLAvancement(seance.avancement());
     await reagirALaBonneReponse(numero, reaction, question, exercice.position);
-    await attendreLEcranSuivant();
-    if (!vivant.current) return;
+    if (!(await attendreLEcranSuivant()) || !vivant.current) return;
     figer(undefined);
     setBulleEclatee(undefined);
     const nouvelExercice = seance.exerciceEnCours()?.position !== exercice.position;

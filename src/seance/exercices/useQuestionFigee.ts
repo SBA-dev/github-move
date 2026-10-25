@@ -33,21 +33,28 @@ export function useQuestionFigee(seance: Seance, paroleEntendue: MutableRefObjec
   }, []);
 
   const [enfantAttendu, setEnfantAttendu] = useState(false);
-  const continuerQuandLEnfantLeVeut = useRef<(() => void) | undefined>(undefined);
+  const continuerQuandLEnfantLeVeut = useRef<((continuee: boolean) => void) | undefined>(undefined);
 
-  /** Sans voix, la parole reste lisible : une durée fixe, ou le bouton « Continuer » quand la séance est finie. */
-  const attendreLEcranSuivant = useCallback(async () => {
+  /**
+   * Sans voix, la parole reste lisible : une durée fixe, ou le bouton « Continuer » quand la séance est finie.
+   * Rend `false` si une attente plus récente l'a remplacée : l'appelant ne doit alors pas enchaîner.
+   */
+  const attendreLEcranSuivant = useCallback(async (): Promise<boolean> => {
     const attente = attenteAvantLEcranSuivant({ entendue: paroleEntendue.current, seanceTerminee: seance.estFinie() });
-    if (attente.genre === "dureeDAffichageSansVoix") return await attendre(attente.millisecondes);
-    if (attente.genre === "aucune") return;
-    continuerQuandLEnfantLeVeut.current?.();
+    if (attente.genre === "aucune") return true;
+    if (attente.genre === "dureeDAffichageSansVoix") {
+      await attendre(attente.millisecondes);
+      return true;
+    }
+    continuerQuandLEnfantLeVeut.current?.(false);
     setEnfantAttendu(true);
-    await new Promise<void>((fin) => continuerQuandLEnfantLeVeut.current = fin);
-    setEnfantAttendu(false);
+    const continuee = await new Promise<boolean>((fin) => continuerQuandLEnfantLeVeut.current = fin);
+    if (continuee) setEnfantAttendu(false);
+    return continuee;
   }, [seance, paroleEntendue]);
 
   const continuer = useCallback(() => {
-    continuerQuandLEnfantLeVeut.current?.();
+    continuerQuandLEnfantLeVeut.current?.(true);
     continuerQuandLEnfantLeVeut.current = undefined;
   }, []);
 

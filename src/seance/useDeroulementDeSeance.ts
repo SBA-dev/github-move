@@ -199,8 +199,7 @@ export function useDeroulementDeSeance(
     exercicePresente.current = false;
     for (const fait of faits) {
       if (!(await direLeFait(fait))) return;
-      await reussite.attendreLEcranSuivant();
-      if (numero !== sequence.current) return;
+      if (!(await reussite.attendreLEcranSuivant()) || numero !== sequence.current) return;
     }
     await attendreUnPeu();
     if (numero === sequence.current) await ouvrirLExercice(numero);
