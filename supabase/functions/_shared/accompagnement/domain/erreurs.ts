@@ -25,3 +25,10 @@ export class AucuneSectionDuProgramme extends Error {
     this.name = "AucuneSectionDuProgramme";
   }
 }
+
+export class AucuneCitationDansLaSection extends Error {
+  constructor() {
+    super("Aucune phrase lisible dans cette section du programme.");
+    this.name = "AucuneCitationDansLaSection";
+  }
+}
