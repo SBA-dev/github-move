@@ -1,4 +1,5 @@
 import { expect } from "@playwright/test";
+import { DUREE_D_AFFICHAGE_SANS_VOIX_MS } from "../../supabase/functions/_shared/apprentissage/domain/attente-avant-l-ecran-suivant.ts";
 import { Given, Then } from "./fixtures.ts";
 import { bulle, injecter, leconDeTest } from "./etapes-puis-exercices.steps.ts";
 import { elementsDe, exerciceEnCours, jouerJusquAuxEtiquettes, poserEtAttendreLOrdre } from "./classer-ordre-trous.steps.ts";
@@ -9,8 +10,8 @@ import { consigneAffichee, normaliser } from "./voix.steps.ts";
 // Story #79 : la consigne reste affichée pendant tout l'exercice, la voix bloquée reste signalée, et sans voix la
 // félicitation de la dernière bonne réponse attend que l'enfant continue.
 
-// Sans voix, l'écran suivant vient seul au bout d'environ 2 s : pour prouver qu'il ne vient pas, on attend plus longtemps.
-const DELAI_POUR_PROUVER_QUE_RIEN_NE_VIENT_MS = 2_600;
+// Sans voix, l'écran suivant vient seul au bout d'environ 2 s : pour prouver qu'il ne vient pas, on attend plus longtemps (la durée du domaine plus une marge).
+const DELAI_POUR_PROUVER_QUE_RIEN_NE_VIENT_MS = DUREE_D_AFFICHAGE_SANS_VOIX_MS + 600;
 
 function echapper(texte: string): string {
   return texte.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");

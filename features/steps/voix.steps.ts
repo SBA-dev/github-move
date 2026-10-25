@@ -2,6 +2,7 @@ import { type BrowserContext, expect, type Page } from "@playwright/test";
 import type { Famille } from "../support/famille.ts";
 import { avecLesReglagesPrevus } from "../support/reglages-prevus.ts";
 import {
+  bulle,
   commencerLaSeanceComplete,
   injecter,
   interceptertLaBibliotheque,
@@ -10,7 +11,7 @@ import {
 } from "./etapes-puis-exercices.steps.ts";
 import { estSurUnProfilReel } from "./profil-reel.ts";
 import { choisirSonProfil, modifierLeProfil } from "./profils-enfants.steps.ts";
-import { allerALaQuestion, demarrer } from "./exercices-a-choix.steps.ts";
+import { allerALaQuestion, avancerJusquAuxChoix, bulleDeChoix, demarrer } from "./exercices-a-choix.steps.ts";
 import { After, Given, Then, When } from "./fixtures.ts";
 
 // --- Préparation du scénario (avant l'ouverture de la page)
@@ -589,6 +590,11 @@ Then(/^la lecture reprend depuis le début de la consigne$/, async ({ page }) =>
   await expect.poll(async () => (await journal(page)).lots).toBe((lecturesApresLaConsigne.get(page) ?? 1) + 1);
   const { lecture } = await journal(page);
   expect(lecture.texte).toBe(normaliser(scenario(page).consigne.texte));
+  // La reprise va jusqu'au bout : la consigne relue terminée, l'exercice s'ouvre sur sa question et ses choix.
+  await terminerLaLecture(page);
+  await expect(bulle(page)).toContainText(QUESTION_DE_LA_LECON_DE_TEST);
+  await avancerJusquAuxChoix(page);
+  for (const choix of ["1", "2", "3"]) await expect(bulleDeChoix(page, choix)).toBeVisible();
 });
 
 Then(/^Léa n'entend jamais deux lectures en même temps$/, async ({ page }) => {
