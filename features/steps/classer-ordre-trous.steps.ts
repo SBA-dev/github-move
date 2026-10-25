@@ -485,8 +485,7 @@ Then(/^le premier trou propose « ([^«»]+) » et deux autres mots, tous diffé
   expect(choix).toContain(attendu);
 });
 
-// Story #26 : « Léa voit « Toutes les leçons » » est une étape de lecons-des-classes-d-avant.steps.ts.
-Then(/^Léa voit « ([^«»]+) »$/, { tags: "not @issue-26" }, async ({ page }, phrase: string) => {
+Then(/^Léa voit « ([^«»]+) »$/, async ({ page }, phrase: string) => {
   // Story #22 : devant une poésie, c'est la carte de la poésie (titre — auteur) que Léa voit.
   const carte = page.getByTestId("carte-de-la-poesie");
   const texte = page.getByTestId("texte-a-trous");

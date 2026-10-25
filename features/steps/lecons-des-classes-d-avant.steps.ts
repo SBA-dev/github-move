@@ -162,7 +162,8 @@ Given(/^Léa a ouvert « Toutes les leçons » depuis son accueil$/, async ({ fa
   await ouvrirToutesLesLecons(famille, page);
 });
 
-Then(/^Léa voit « Toutes les leçons »$/, async ({ page }) => {
+// Étape propre à #26 : le step générique de #22 « Léa voit « … » » entrerait en concurrence si elle n'était pas réservée.
+Then(/^Léa voit « Toutes les leçons »$/, { tags: "@issue-26" }, async ({ page }) => {
   await expect(titreDeToutesLesLecons(page)).toBeVisible();
   await expect(nombreDeLecons(page)).toBeVisible();
 });

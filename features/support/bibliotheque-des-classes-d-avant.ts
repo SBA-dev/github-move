@@ -3,6 +3,8 @@ import type { LeconDuParcours } from "./bibliotheque-du-parcours.ts";
 
 // Story #26 : bibliothèque de test des leçons des classes d'avant, servie au navigateur À LA PLACE de la vraie bibliothèque
 // (interception réseau de `/bibliotheque.json` : le fichier de l'application reste intact).
+// Deux chemins, deux usages : la route réseau (ci-dessous) sert la bibliothèque au navigateur ; l'étape « … est servie » range les mêmes
+// leçons dans `injectees`, que les étapes de préparation (étoiles, test de départ) lisent pour retrouver un identifiant par son titre.
 // Identifiants préfixés « e2e-26- » ; chaque leçon est faite d'un exercice bulles de deux questions à quatre choix.
 
 const SECTION_DE_TEST = "c2-francais-cp-identifier-les-mots-de-maniere-de-plus-en-plus-aisee";
