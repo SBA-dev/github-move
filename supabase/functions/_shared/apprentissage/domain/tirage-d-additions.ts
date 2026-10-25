@@ -6,7 +6,7 @@ import { tirerUnEntier } from "./tirage-d-un-entier.ts";
 const SEPARATEUR = " + ";
 const UNITES_POUR_UNE_RETENUE = 10;
 
-type Addition = readonly number[];
+export type Addition = readonly number[];
 
 export function tirerLesAdditions(generateur: GenerateurDAdditions, hasard: Hasard): readonly Addition[] {
   const nombresPossibles = lesNombresPossibles(generateur);
@@ -56,7 +56,7 @@ export function relireLesAdditions(generateur: GenerateurDAdditions, tirage: rea
   });
 }
 
-function lireUneAddition(ligne: string): Addition {
+export function lireUneAddition(ligne: string): Addition {
   return /^\d+( \+ \d+)*$/.test(ligne) ? ligne.split(SEPARATEUR).map(Number) : [];
 }
 

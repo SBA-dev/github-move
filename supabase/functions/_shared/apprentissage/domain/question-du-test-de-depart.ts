@@ -1,4 +1,10 @@
-import type { ExerciceClasser, Lecon, Niveau } from "../../catalogue/domain/index.ts";
+import type {
+  ExerciceClasser,
+  ExerciceConjugaison,
+  FormeConjuguee,
+  Lecon,
+  Niveau,
+} from "../../catalogue/domain/index.ts";
 import { CleDeQuestion } from "./cle-de-question.ts";
 import { GroupeInconnu, QuestionHorsDuTestDeDepart } from "./erreurs.ts";
 import { questionsDeTrous, sansDoublonsNiReponse } from "./exercices/trous.ts";
@@ -6,7 +12,7 @@ import type { QuestionPrevue } from "./plan-du-test-de-depart.ts";
 import { QuestionDeCalcul } from "./question-de-calcul.ts";
 import { QuestionJouee, questionJoueeDuTrou, questionsJoueesAvec } from "./question-jouee.ts";
 import type { QuestionPosee } from "./question-posee.ts";
-import { enonceDUneAddition } from "./tirage-d-additions.ts";
+import { type Addition, enonceDUneAddition } from "./tirage-d-additions.ts";
 import type { Tireur } from "./tireur.ts";
 
 /** La question prévue au plan du test de départ, posée comme en séance. */
@@ -35,25 +41,15 @@ export function questionDuTestDeDepart(
       const operations = exercice.operations ?? (exercice.generateur ? tireur.operations(exercice.generateur) : []);
       return QuestionDeCalcul.pour(elementOuHorsDuTest(operations, rang, exercice.type), tireur, niveau);
     }
-    case "conjugaison": {
-      const { pronom, forme } = elementOuHorsDuTest(exercice.formes, rang, exercice.type);
-      return QuestionJouee.aChoix({
-        cle: CleDeQuestion.de("conjugaison", `${exercice.verbe} · ${exercice.temps} · ${pronom}`),
-        enonce: `Le verbe ${exercice.verbe} au ${exercice.temps} : ${pronom} …`,
-        choix: tireur.trou(forme, sansDoublonsNiReponse(exercice.formes.map((f) => f.forme), forme)),
-        bonneReponse: forme,
-        type: "conjugaison",
-      });
-    }
+    case "conjugaison":
+      return questionDeConjugaison(exercice, elementOuHorsDuTest(exercice.formes, rang, exercice.type), tireur);
     case "trous":
       return questionJoueeDuTrou(elementOuHorsDuTest(questionsDeTrous(exercice), rang, exercice.type), tireur);
     case "classer":
       return questionDeClassement(exercice, rang, tireur);
     case "addition": {
       const additions = exercice.operations ?? (exercice.generateur ? tireur.additions(exercice.generateur) : []);
-      const addition = elementOuHorsDuTest(additions, rang, exercice.type);
-      const somme = addition.reduce((total, nombre) => total + nombre, 0);
-      return QuestionDeCalcul.pour({ q: enonceDUneAddition(addition), r: somme }, tireur, niveau);
+      return questionDeCalculEnLigne(elementOuHorsDuTest(additions, rang, exercice.type), tireur, niveau);
     }
     default:
       throw new QuestionHorsDuTestDeDepart(exercice.type);
@@ -70,7 +66,7 @@ function premiereQuestion(questions: readonly QuestionJouee[], type: string): Qu
   return elementOuHorsDuTest(questions, 0, type);
 }
 
-function questionDeClassement(exercice: ExerciceClasser, rang: number, tireur: Tireur): QuestionJouee {
+export function questionDeClassement(exercice: ExerciceClasser, rang: number, tireur: Tireur): QuestionJouee {
   const { texte, groupe } = elementOuHorsDuTest(exercice.items, rang, exercice.type);
   const bonneReponse = exercice.groupes.find(({ id }) => id === groupe)?.nom;
   if (bonneReponse === undefined) throw new GroupeInconnu(groupe);
@@ -81,4 +77,23 @@ function questionDeClassement(exercice: ExerciceClasser, rang: number, tireur: T
     bonneReponse,
     type: "bulles",
   });
+}
+
+export function questionDeConjugaison(
+  exercice: ExerciceConjugaison,
+  { pronom, forme }: FormeConjuguee,
+  tireur: Tireur,
+): QuestionJouee {
+  return QuestionJouee.aChoix({
+    cle: CleDeQuestion.de("conjugaison", `${exercice.verbe} · ${exercice.temps} · ${pronom}`),
+    enonce: `Le verbe ${exercice.verbe} au ${exercice.temps} : ${pronom} …`,
+    choix: tireur.trou(forme, sansDoublonsNiReponse(exercice.formes.map((f) => f.forme), forme)),
+    bonneReponse: forme,
+    type: "conjugaison",
+  });
+}
+
+export function questionDeCalculEnLigne(addition: Addition, tireur: Tireur, niveau: Niveau): QuestionDeCalcul {
+  const somme = addition.reduce((total, nombre) => total + nombre, 0);
+  return QuestionDeCalcul.pour({ q: enonceDUneAddition(addition), r: somme }, tireur, niveau);
 }
