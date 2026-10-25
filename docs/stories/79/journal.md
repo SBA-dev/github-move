@@ -64,3 +64,14 @@ Branche de base : `main`. Aucun numéro de décision réservé (prochain libre :
   « Transform failed » (JSX incomplet), et tous les scénarios suivants tombent. Leçon : ne jamais modifier `src/`
   pendant un run E2E qui sert le dossier de travail. Le périmètre sera relancé une fois, sur le code final, après la
   correction du cycle 2 et l'intégration de `main` (#28).
+- 20:45 UTC — Cycle 2 de correction : RED E2E `a698a80` (scénario de #79 « relire la consigne laisse la question
+  posée », joué pendant la lecture de la question). Corrections `30bcc38` (l'exercice n'est présenté que quand sa
+  présentation va au bout), `4423b1b` (région `aria-live` de la consigne toujours montée), `9cfa5d8` (une attente
+  remplacée ne fait pas enchaîner l'appelant précédent). Côté code, la question et ses choix viennent ; deux défauts
+  des steps restent (ordre aléatoire des choix, course due au `StrictMode`), renvoyés à l'e2e-tester.
+- 20:55 UTC — RELIS #64 : `MAIN A BOUGÉ` (#73 mergée, `26116ae`). Intégration de `main` (#28 et #73) en un merge :
+  conflits sur `apprentissage/domain/index.ts` (les deux listes d'exports), `voix/domain/lecture-a-voix-haute.ts`
+  (parole entendue de #79 et voix suspendue de #73 coexistent : une lecture suspendue n'est pas entendue) et
+  `EcranDeSeance.tsx` (imports). Conflit sémantique : le test de #73 `voix-suspendue_test.ts` fournit désormais
+  `onFinDeLaVoixBloquee` (test-writer). Merge `b7c8583` : 2 031 tests unitaires verts, `tsc`, lint, fmt, build OK.
+- 21:00 UTC — Relecture du delta (cycle 2 + intégration) et périmètre E2E final (avec #28 et #73) lancés en parallèle.
