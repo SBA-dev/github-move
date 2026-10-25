@@ -245,3 +245,31 @@ Deno.test("un enfant redescendu en CE1 retrouve, sans étoiles, une leçon de la
     [{ lecon: "fr-ce2-futur", niveau: "CE2", titre: "Titre de fr-ce2-futur", etoiles: undefined }],
   );
 });
+
+Deno.test("sans aucune réussite, un enfant de CE2 retrouve les leçons de la matière des classes d'avant, à découvrir, par niveau croissant puis ordre", () => {
+  const voyelles = lecon("fr-cp-voyelles", "francais", "CP", 10);
+  const consonnes = lecon("fr-cp-consonnes", "francais", "CP", 20);
+  const lecturesDuCE1 = lecon("fr-ce1-lectures", "francais", "CE1", 10);
+  const mathsDuCP = lecon("ma-cp-nombres", "maths", "CP", 10);
+  const entrees = {
+    lecons: [lecturesDuCE1, consonnes, mathsDuCP, futurDuCE2, voyelles],
+    niveau: Niveau.de("CE2"),
+    meilleuresEtoiles: new Map(),
+  };
+
+  const parcours = parcoursDeLaMatiere(entrees, futurDuCE2.matiere);
+
+  assertEquals(
+    parcours.leconsDesClassesDAvant.map(({ lecon, niveau, titre, etat }) => ({
+      lecon,
+      niveau: niveau.valeur,
+      titre,
+      etat,
+    })),
+    [
+      { lecon: "fr-cp-voyelles", niveau: "CP", titre: "Titre de fr-cp-voyelles", etat: { genre: "aDecouvrir" } },
+      { lecon: "fr-cp-consonnes", niveau: "CP", titre: "Titre de fr-cp-consonnes", etat: { genre: "aDecouvrir" } },
+      { lecon: "fr-ce1-lectures", niveau: "CE1", titre: "Titre de fr-ce1-lectures", etat: { genre: "aDecouvrir" } },
+    ],
+  );
+});
