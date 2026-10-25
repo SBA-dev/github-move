@@ -242,3 +242,10 @@ export class TestDeDepartIncoherent extends Error {
     this.name = "TestDeDepartIncoherent";
   }
 }
+
+export class JourInvalide extends Error {
+  constructor(readonly texte: string) {
+    super(`« ${texte} » n'est pas un jour du calendrier au format AAAA-MM-JJ.`);
+    this.name = "JourInvalide";
+  }
+}
