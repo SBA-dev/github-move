@@ -15,3 +15,13 @@ Branche de base : `main`. Aucun numéro de décision réservé (prochain libre :
   (décision 79.5).
 - Voisinage : le message de voix bloquée est affiché dans `src/Application.tsx` et alimenté par `src/voix/useVoix.ts`,
   fichiers que touche aussi #73. Ajouts simples ; `APPRIS` à publier sur #79 si on y touche.
+- 18:20 UTC — Étape 1 faite (`659a23c`) : Voix (parole entendue, fin de la voix bloquée) et Apprentissage
+  (`attenteAvantLEcranSuivant`, `consigneAffichee`). Questions #79.10 et #79.11 publiées en ESCALADE non bloquante,
+  reco « oui » appliquée.
+- 18:25 UTC — Scénario de #7 réécrit par po-acceptance (`a13db00`).
+- TDD, cycle 1 (Voix) : RED `b77b628`, GREEN `07f68ac`. Écart : `onFinDeLaVoixBloquee` optionnelle, car
+  `lecture-avec-choix-de-voix_test.ts` construit la lecture sans elle (soumis à la revue intermédiaire).
+- TDD, cycle 2 (Apprentissage) : RED `bf5296c`, puis un aller-retour test-writer ⇄ implementer : la donnée du test
+  « texte à trous » n'était pas une leçon valide (`fa93a6c`). GREEN `e3313d7`, mise en forme `f5622ea`.
+  Tests unitaires : 1 809 verts.
+- 18:40 UTC — Revue intermédiaire du bloc domaine et câblage React lancés en parallèle. `APPRIS` Voix publié pour #73.
