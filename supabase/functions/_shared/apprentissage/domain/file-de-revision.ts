@@ -35,7 +35,16 @@ export type DonneesDeFileDeRevision = {
   readonly erreursCorrigeesPourDeBon: number;
 };
 
+export type FaitDeFileDeRevision = Readonly<{
+  type: "ErreursCorrigeesPourDeBon";
+  enfant: string;
+  nombre: number;
+  leconsDOrigine: readonly string[];
+}>;
+
 export class FileDeRevision {
+  private corrigeesPourDeBon: QuestionRetenue[] = [];
+
   private constructor(
     readonly enfant: string,
     private questionsRetenues: QuestionRetenue[],
@@ -91,6 +100,7 @@ export class FileDeRevision {
     if (suite.corrigeePourDeBon) {
       this.questionsRetenues = this.questionsRetenues.filter((question) => question !== retenue);
       this.nombreDErreursCorrigeesPourDeBon++;
+      this.corrigeesPourDeBon.push(retenue);
       return;
     }
     this.remplacer(retenue, {
@@ -98,6 +108,18 @@ export class FileDeRevision {
       intervalle: suite.intervalle,
       dateDeRevision: jour.plus(suite.intervalle.jours),
     });
+  }
+
+  retirerFaits(): FaitDeFileDeRevision[] {
+    const corrigees = this.corrigeesPourDeBon;
+    this.corrigeesPourDeBon = [];
+    if (corrigees.length === 0) return [];
+    return [{
+      type: "ErreursCorrigeesPourDeBon",
+      enfant: this.enfant,
+      nombre: corrigees.length,
+      leconsDOrigine: corrigees.map(({ origine }) => origine.leconDOrigine),
+    }];
   }
 
   oublier(identite: CleDeQuestion): void {
