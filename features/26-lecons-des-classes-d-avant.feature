@@ -82,7 +82,7 @@ Fonctionnalité: Leçons des classes d'avant
       Quand Léa ouvre le parcours de français
       Alors les blocs du parcours se suivent ainsi : « Déjà réussies en CE2 », puis « Leçons des classes d'avant »
 
-  Règle: Une leçon des classes d'avant s'ouvre, mais elle n'est jamais la prochaine leçon, ne compte pas dans le parcours et n'a pas de leçon suivante
+  Règle: Une leçon des classes d'avant s'ouvre, mais elle n'est jamais la prochaine leçon, ne compte pas dans le parcours et n'a pas de leçon suivante dans le parcours ; sans leçon suivante dans le parcours, la leçon du jour (#29)
 
     Plan du Scénario: Une leçon des classes d'avant s'ouvre <moyen> depuis le parcours
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
@@ -170,7 +170,7 @@ Fonctionnalité: Leçons des classes d'avant
         | Les syllabes | CP     | à découvrir               |
       Et le parcours indique « 0 leçon réussie sur 3 »
 
-  Règle: « Toutes les leçons » montre toutes les leçons de la classe de l'enfant ; dans une matière dont il a réussi toutes les leçons de sa classe, celles de la classe juste au-dessus ; et ses leçons réussies d'une classe au-dessus
+  Règle: « Toutes les leçons » montre toutes les leçons de la classe de l'enfant ; dans une matière dont il a réussi toutes les leçons de sa classe, celles de la classe juste au-dessus ; et ses leçons réussies d'une classe au-dessus ; après une leçon de la classe juste au-dessus, sans leçon suivante dans le parcours, la leçon du jour (#29)
 
     # Réponses 26.1, 26.10 et 26.11
     Scénario: Un enfant de CE1 voit dans « Toutes les leçons » toutes les leçons de sa classe, avec leur état

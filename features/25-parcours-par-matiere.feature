@@ -253,7 +253,7 @@ Fonctionnalité: Parcours par matière
         | L'imparfait | CE2    | réussie, 1 étoile  |
       Et « Le son in » est la prochaine leçon
 
-  Règle: À la fin d'une séance, la leçon suivante est la première leçon d'après non réussie du même parcours, sinon la leçon juste après
+  Règle: À la fin d'une séance, la leçon suivante est la première leçon d'après non réussie du même parcours, sinon la leçon juste après ; sans leçon suivante dans le parcours, la leçon du jour (#29)
 
     Scénario: La leçon suivante saute une leçon déjà réussie
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
