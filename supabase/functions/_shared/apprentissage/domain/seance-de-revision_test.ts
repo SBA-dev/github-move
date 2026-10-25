@@ -2,7 +2,13 @@ import { assertEquals, assertThrows } from "@std/assert";
 import { type Lecon, lireLecon, Niveau } from "../../catalogue/domain/index.ts";
 import { hasardSansMelange } from "../test_utils/hasard-fixe.ts";
 import { CleDeQuestion } from "./cle-de-question.ts";
-import { AucuneQuestionDue } from "./erreurs.ts";
+import {
+  AucuneQuestionDue,
+  ReponseIncompatible,
+  SeanceDeRevisionDejaFinie,
+  SeanceDeRevisionDejaTerminee,
+  SeanceDeRevisionNonFinie,
+} from "./erreurs.ts";
 import { FileDeRevision, type PlanDeSeanceDeRevision } from "./file-de-revision.ts";
 import { Jour } from "./jour.ts";
 import { Reponse } from "./reponse.ts";
@@ -170,4 +176,117 @@ Deno.test("en révision, une question de dictée se joue jusqu'au bout et est fa
 
   assertEquals(seance.estFinie(), true);
   assertEquals(seance.resultats(), [{ identite: mot, juste: false }]);
+});
+
+const finDeLaRevision = new Date("2026-10-25T17:00:00Z");
+
+function seanceFinieSurBateau(): SeanceDeRevision {
+  const seance = seanceSur(planDesQuestionsRatees(bateau));
+  seance.repondre(bonneReponseDe(bateau));
+  return seance;
+}
+
+Deno.test("terminer une séance de révision finie produit le fait avec les résultats et les nombres de questions", () => {
+  const plan = planDesQuestionsRatees(bateau, chat);
+  const [premiere, seconde] = plan.questions.map(({ identite }) => identite);
+  const seance = seanceSur(plan);
+  seance.repondre(mauvaiseReponseDe(premiere));
+  seance.repondre(bonneReponseDe(premiere));
+  seance.repondre(bonneReponseDe(seconde));
+
+  const fait = seance.terminer(finDeLaRevision, jourDeLaRevision);
+
+  assertEquals(fait, {
+    type: "SeanceDeRevisionTerminee",
+    id: "revision-1",
+    enfant: "profil-lea",
+    termineeLe: finDeLaRevision,
+    jour: jourDeLaRevision,
+    resultats: [{ identite: premiere, juste: false }, { identite: seconde, juste: true }],
+    nombreDeQuestions: 2,
+    nombreDeQuestionsJustes: 1,
+  });
+});
+
+Deno.test("une séance de révision qui n'est pas finie ne peut pas être terminée", () => {
+  const seance = seanceSur(planDesQuestionsRatees(bateau));
+
+  assertThrows(() => seance.terminer(finDeLaRevision, jourDeLaRevision), SeanceDeRevisionNonFinie);
+});
+
+Deno.test("une séance de révision déjà terminée ne peut pas l'être une seconde fois", () => {
+  const seance = seanceFinieSurBateau();
+  seance.terminer(finDeLaRevision, jourDeLaRevision);
+
+  assertThrows(() => seance.terminer(finDeLaRevision, jourDeLaRevision), SeanceDeRevisionDejaTerminee);
+});
+
+Deno.test("l'envoi d'une séance de révision terminée contient les questions, leurs tirages et leurs réponses dans l'ordre", () => {
+  const plan = planDesQuestionsRatees(bateau, chat);
+  const [premiere, seconde] = plan.questions.map(({ identite }) => identite);
+  const seance = seanceSur(plan);
+  const tirageDeLaPremiere = seance.questionEnCours()?.question?.tirage();
+  seance.repondre(mauvaiseReponseDe(premiere));
+  seance.repondre(bonneReponseDe(premiere));
+  const tirageDeLaSeconde = seance.questionEnCours()?.question?.tirage();
+  seance.direJeNeSaisPas();
+  seance.repondre(bonneReponseDe(seconde));
+  seance.terminer(finDeLaRevision, jourDeLaRevision);
+
+  assertEquals(seance.aEnregistrer(), {
+    id: "revision-1",
+    enfant: "profil-lea",
+    questions: [premiere, seconde],
+    tirages: [tirageDeLaPremiere, tirageDeLaSeconde],
+    reponses: [
+      [mauvaiseReponseDe(premiere), bonneReponseDe(premiere)],
+      [{ genre: "jeNeSaisPas" }, bonneReponseDe(seconde)],
+    ],
+    termineeLe: finDeLaRevision,
+    jour: "2026-10-25",
+  });
+});
+
+Deno.test("l'envoi d'une séance de révision non terminée est refusé", () => {
+  const seance = seanceFinieSurBateau();
+
+  assertThrows(() => seance.aEnregistrer(), SeanceDeRevisionNonFinie);
+});
+
+Deno.test("répondre ou dire « Je ne sais pas » après la fin de la séance de révision est refusé", () => {
+  const seance = seanceFinieSurBateau();
+
+  assertThrows(() => seance.repondre(bonneReponseDe(bateau)), SeanceDeRevisionDejaFinie);
+  assertThrows(() => seance.direJeNeSaisPas(), SeanceDeRevisionDejaFinie);
+});
+
+Deno.test("un mot écrit donné à une question à choix est refusé", () => {
+  const seance = seanceSur(planDesQuestionsRatees(bateau));
+
+  assertThrows(() => seance.repondre(Reponse.motEcrit(["c", "h", "a", "t"])), ReponseIncompatible);
+});
+
+Deno.test("un choix donné à une dictée est refusé", () => {
+  const leconDeDictee: Lecon = lireLecon({
+    id: "fr-ce1-dictees",
+    matiere: "francais",
+    niveau: "CE1",
+    titre: "Les dictées",
+    ordre: 2,
+    programme: { section: "c2-test", citation: "Citation de test." },
+    lecon: [],
+    exercices: [{ type: "dictee", consigne: "Écris le mot.", mots: [{ mot: "chat" }] }],
+  });
+  const file = FileDeRevision.vide("profil-lea");
+  file.retenir(
+    [{
+      identite: CleDeQuestion.de("dictee", "chat"),
+      origine: { leconDOrigine: leconDeDictee.id, position: 0, type: "dictee" },
+    }],
+    jourDesErreurs,
+    termineeLe,
+  );
+  const seance = seanceSur(file.planDeLaSeanceDeRevision(jourDeLaRevision), [leconDeDictee]);
+
+  assertThrows(() => seance.repondre(Reponse.choix("chat")), ReponseIncompatible);
 });
