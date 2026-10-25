@@ -98,6 +98,10 @@ export class FileDeRevision {
     });
   }
 
+  oublier(identite: CleDeQuestion): void {
+    this.questionsRetenues = this.questionsRetenues.filter((question) => question.identite.valeur !== identite.valeur);
+  }
+
   questionsDues(jour: Jour): readonly QuestionRetenue[] {
     return this.questionsRetenues.filter((question) => question.dateDeRevision.estAvantOuEgal(jour));
   }
