@@ -159,3 +159,82 @@ Deno.test("une question de problème en barres retenue est rejouée en problème
   assertEquals(question?.identite, identite);
   assertEquals(question?.question instanceof QuestionDeProblemeEnBarres, true);
 });
+
+Deno.test("une étiquette à classer retenue sous sa clé de séance est rejouée en question « dans quelle maison ? »", () => {
+  const lecon = leconAvec({
+    type: "classer",
+    groupes: [{ id: "g-ou", nom: "ou" }, { id: "g-on", nom: "on" }],
+    items: [{ texte: "loup", groupe: "g-ou" }, { texte: "pont", groupe: "g-on" }],
+  });
+  const identite = CleDeQuestion.de("classer", "pontou,on");
+
+  const question = questionDeRevision(lecon, origineAuxPosition1("classer"), identite, tireurSansMelange, CE1);
+
+  assertEquals(question?.identite, identite);
+  assertEquals(question?.question?.enonce, "« pont » va dans quelle maison ?");
+  assertEquals(question?.question?.repondre(Reponse.choix("on")), "juste");
+});
+
+Deno.test("une forme de conjugaison retenue est rejouée en question à choix", () => {
+  const lecon = leconAvec({
+    type: "conjugaison",
+    verbe: "être",
+    temps: "présent",
+    formes: [{ pronom: "je", forme: "suis" }, { pronom: "tu", forme: "es" }, { pronom: "il", forme: "est" }],
+  });
+  const identite = CleDeQuestion.de("conjugaison", "être · présent · tu");
+
+  const question = questionDeRevision(lecon, origineAuxPosition1("conjugaison"), identite, tireurSansMelange, CE1);
+
+  assertEquals(question?.identite, identite);
+  assertEquals(question?.question?.enonce, "Le verbe être au présent : tu …");
+  assertEquals(question?.question?.repondre(Reponse.choix("es")), "juste");
+});
+
+Deno.test("un trou retenu est rejoué en question à choix : la phrase qui le contient", () => {
+  const lecon = leconAvec({
+    type: "trous",
+    consigne: "Complète chaque phrase.",
+    texte: "Je [suis] ici. Tu [es] là.",
+    distracteurs: ["sont"],
+  });
+  const identite = CleDeQuestion.de("trous", "Tu … là.");
+
+  const question = questionDeRevision(lecon, origineAuxPosition1("trous"), identite, tireurSansMelange, CE1);
+
+  assertEquals(question?.identite, identite);
+  assertEquals(question?.question?.enonce, "Tu … là.");
+  assertEquals(question?.question?.repondre(Reponse.choix("es")), "juste");
+});
+
+Deno.test("une addition écrite dans la leçon, retenue sous son identité en ligne, est rejouée en calcul en ligne", () => {
+  const lecon = leconAvec({ type: "addition", operations: [[12, 29, 8], [45, 37]], etapes: ["poser", "calculer"] });
+  const identite = CleDeQuestion.de("calcul", "45 + 37");
+
+  const question = questionDeRevision(lecon, origineAuxPosition1("calcul"), identite, tireurSansMelange, CE1);
+
+  assertEquals(question?.identite, identite);
+  assertEquals(question?.question?.enonce, "45 + 37");
+  assertEquals(question?.question?.repondre(Reponse.nombre(82)), "juste");
+});
+
+Deno.test("une addition tirée retenue est rejouée en calcul en ligne depuis le tirage gardé dans l'origine", () => {
+  const lecon = leconAvec({
+    type: "addition",
+    generateur: { nombres: 2, min: 15, max: 59, retenue: true, combien: 3 },
+    etapes: ["calculer"],
+  });
+  const identite = CleDeQuestion.de("calcul", "59 + 59");
+
+  const question = questionDeRevision(
+    lecon,
+    origineAuxPosition1("calcul", "59 + 59"),
+    identite,
+    tireurSansMelange,
+    CE1,
+  );
+
+  assertEquals(question?.identite, identite);
+  assertEquals(question?.question?.enonce, "59 + 59");
+  assertEquals(question?.question?.repondre(Reponse.nombre(118)), "juste");
+});
