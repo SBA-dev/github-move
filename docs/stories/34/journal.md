@@ -31,3 +31,18 @@ Branche : `feature/34-suivi`, partie du cadrage `feature/lot-34-38-modele-et-sce
 - `main` a bougé (#39, `906c749`) pendant le périmètre ; intégration préparée dans un worktree séparé pour ne pas interrompre le run (décision 0020) : merge `aee360a` (conflits : glossaire et context map, deux ajouts gardés ; `accompagnement/domain/index.ts`, deux blocs d'exports ; `SectionDuProgramme` pris de #39, `matiere: Matiere` et `extrait`, test « section sans matière » de #34 gardé en plus ; `carte-des-competences.ts` regroupe par `matiere.code` ; doublon `chargerLesSectionsDuProgramme`, version de #39 gardée ; `styles.css`, deux blocs), puis `b654124` (`test-writer` : `extrait` dans la fabrique de sections). 2255 tests verts. Revue du delta : **APPROUVÉ**. Le non bloquant n°1 de la revue du domaine (matière typée) est réglé par #39.
 - Pieds de commit `Co-Authored-By` : ligne d'attribution standard, présente sur plus de 800 commits de `main` ; aucun historique réécrit.
 - Après l'intégration : `@issue-34` + `@issue-39` (stories mergées depuis le périmètre, décision 0022) et la relance du cas #24, sur `telephone`, `--workers=2`.
+- 20:45 UTC : `@issue-34` + `@issue-39` + relance du cas #24 : **83/83** sur `telephone`. Tout est vert sur `b654124` (2255 tests unitaires, lint, fmt, `tsc`, build ; la PR #94 n'a pas de CI configurée). PR passée en « prête ». PRÊTE À MERGER.
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Durée, du lancement à PRÊTE À MERGER | 18:45 → 20:47 UTC, environ 2 h (merge à venir) |
+| Temps passé à attendre | PO : 0 (scénarios déjà validés) ; verrous : 0 jusqu'ici ; `main` : 0 (intégrations préparées pendant les runs) |
+| Tokens et coût | relevés par le responsable |
+| Cycles TDD | 6 comportements, 6 cycles ; 2 tests corrigés après coup (fixtures) |
+| Cycles de review À CORRIGER | 0 (domaine APPROUVÉ, complète APPROUVÉ, 2 deltas APPROUVÉ) |
+| Cycles E2E KO | 0 bug ; 1 KO de charge sur 528 (#24), passé à la relance seule |
+| Intégrations de `main` | 3 : `be8f648` (#28, conflits docs), `26116ae` (#73, sans conflit), `906c749` (#39, conflits docs et code d'Accompagnement et du Catalogue) |
+| Régression sur `main` après le merge | à suivre |
+| Runs E2E | mise au point 49 (4,6 min) ; périmètre 528 (51 min) ; complément 83 (7,8 min) |
