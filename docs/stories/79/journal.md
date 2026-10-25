@@ -32,3 +32,15 @@ Branche de base : `main`. Aucun numéro de décision réservé (prochain libre :
   lecture interrompue par `arreter()`. Sans effet quand une parole plus récente l'interrompt (séquence périmée) ;
   cas limite restant : passage en Muet au milieu d'une félicitation, qui n'attend pas. Dette notée.
   Dernier commit relu : `f5622ea`.
+- 19:00 UTC — Câblage React (implementer) : `c91e820` (message de voix bloquée), `f9d44b4` (attente avant l'écran
+  suivant, factorisée dans `useQuestionFigee.ts`), `95f1a0a` (consigne affichée, « Relire la consigne », « Continuer »).
+  `tsc` et build verts. Le câblage n'a pas de test unitaire (aucun hook React n'en a) : il est exigé par les E2E de #79.
+- Non bloquant n°1 de la revue corrigé : `9c6ef69` (test) puis `d6fec70` (refactor), dépendance obligatoire.
+- 19:05 UTC — RELIS #64 : `À SAVOIR` de #73 sur `voix.steps.ts` et `classer-ordre-trous.steps.ts`, relayé à
+  l'e2e-tester (ajouts localisés seulement, `installerLeFaux` et le step « Léa voit « … » » non touchés).
+- 19:30 UTC — E2E, mise au point (e2e-tester, cycle 1) : **228/228 verts** sur `telephone` (`@issue-79`, 7, 12, 16,
+  17, 18, 24, 58), 12 min, `--workers=2`. Un premier lancement avait 17 KO, tous dans les steps (relire la consigne,
+  fin de la voix bloquée dans le faux navigateur), aucun bug applicatif. Steps : `1d9674e`. Contournement Chromium
+  (lien de la build 1194 vers la 1243, hors dépôt).
+- 19:35 UTC — Périmètre 0023 lancé sur `telephone` (#10, #15, #19 à #23, #25 à #27, #65 ; #28 pas encore mergée),
+  review finale lancée en parallèle.
