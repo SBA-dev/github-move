@@ -243,6 +243,13 @@ export class TestDeDepartIncoherent extends Error {
   }
 }
 
+export class SeanceDeRevisionIncoherente extends Error {
+  constructor(override readonly cause: Error) {
+    super(`La séance de révision envoyée est incohérente : ${cause.message}`);
+    this.name = "SeanceDeRevisionIncoherente";
+  }
+}
+
 export class JourInvalide extends Error {
   constructor(readonly texte: string) {
     super(`« ${texte} » n'est pas un jour du calendrier au format AAAA-MM-JJ.`);
