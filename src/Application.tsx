@@ -58,6 +58,7 @@ function ecranAffiche(lieu: Lieu, espaceParent: EtatDeLEspaceParent["type"], con
     case "medailles":
     case "test-de-depart":
     case "seance":
+    case "revision":
       return lieu.ecran;
   }
 }
