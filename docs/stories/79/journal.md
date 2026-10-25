@@ -106,3 +106,6 @@ Branche de base : `main`. Aucun numéro de décision réservé (prochain libre :
   réponse à « 1 + 1 » (le scénario n'y répond pas) ; passer la bonne réponse en paramètre si on la réutilise ;
   (3) les choix d'une question coupée ne sont pas lus avec « Tout lire à voix haute » (acceptable).
   Périmètre E2E final en cours sur `8bb74d8`.
+- 22:50 UTC — RELIS #64 : `MAIN A BOUGÉ` (#34 mergée, `759203f`). Simulation : un conflit de fin de `src/styles.css`.
+  #34 touche aussi `classer-ordre-trous.steps.ts` et le domaine Apprentissage (fusion automatique). Intégration à la
+  fin du run E2E en cours, puis périmètre de #34 et de #79 seulement (0022).
