@@ -56,3 +56,6 @@ Branche de base : `main`. Aucun numéro de décision réservé (prochain libre :
 - 20:05 UTC — Relecture du delta (cycle 2) : **À CORRIGER**. Le même blocage existe pendant la lecture de la question
   (après la consigne, avant les choix). RED E2E en cours sur le scénario de #79 « Dans un exercice bulles, relire la
   consigne laisse la question posée ».
+- 20:10 UTC — RELIS #64 : `MAIN A BOUGÉ`, #28 mergée (`be8f648`). Simulation : conflits dans
+  `src/seance/EcranDeSeance.tsx` et `apprentissage/domain/index.ts`. Intégration reportée à la fin du cycle de
+  correction en cours (jamais au milieu d'un RED), puis périmètre relancé avec #28.
