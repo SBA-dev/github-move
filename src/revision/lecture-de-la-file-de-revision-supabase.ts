@@ -1,10 +1,10 @@
 import {
   CleDeQuestion,
+  estUnTypeDeQuestion,
   FileDeRevision,
   IntervalleDeRevision,
   Jour,
   type QuestionRetenue,
-  type TypeDeQuestion,
 } from "@domain/apprentissage";
 import { clientSupabase } from "../connexion/client-supabase.ts";
 import { reseauDisponible } from "../reseau/reseau-disponible.ts";
@@ -28,12 +28,13 @@ const COLONNES_DES_QUESTIONS =
   "cle, lecon_d_origine, position, type, tirage, intervalle, date_de_revision, derniere_erreur_le, nombre_de_fois_ratee";
 
 function questionRetenueDepuisLaLigne(ligne: LigneDeQuestionRetenue): QuestionRetenue {
+  if (!estUnTypeDeQuestion(ligne.type)) throw new Error(`Type de question inconnu : ${ligne.type}`);
   return {
     identite: CleDeQuestion.depuisLaValeur(ligne.cle),
     origine: {
       leconDOrigine: ligne.lecon_d_origine,
       position: ligne.position,
-      type: ligne.type as TypeDeQuestion,
+      type: ligne.type,
       ...(ligne.tirage === null ? {} : { tirage: ligne.tirage }),
     },
     intervalle: IntervalleDeRevision.de(ligne.intervalle),

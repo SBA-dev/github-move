@@ -126,3 +126,4 @@ export type { QuestionDeRevision } from "./question-de-revision.ts";
 export { AucuneQuestionDue } from "./erreurs.ts";
 export { cleDeLaBoite, QuestionDeBoite } from "./question-de-boite.ts";
 export { QuestionDeProblemeEnBarres } from "./question-de-probleme-en-barres.ts";
+export { estUnTypeDeQuestion } from "./cle-de-question.ts";

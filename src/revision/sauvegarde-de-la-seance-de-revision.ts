@@ -4,11 +4,8 @@ import { clientSupabase } from "../connexion/client-supabase.ts";
 import { parentConnecte } from "../famille/profils/lecture-des-profils-supabase.ts";
 import { estUnIdentifiantDeProfil } from "../seance/fin-de-seance/corps-de-la-seance.ts";
 import { type IssueDeLEnvoi, issueDuStatut, type Sauvegarde } from "../seance/fin-de-seance/sauvegarde-de-la-seance.ts";
-import { confirmerLEnvoi } from "./copie-de-la-file-sur-l-appareil.ts";
 import { type CorpsDeLaSeanceDeRevision, enCorpsDeLaSeanceDeRevision } from "./corps-de-la-seance-de-revision.ts";
 import { SeancesDeRevisionGardeesSurLAppareil } from "./seances-de-revision-gardees-sur-l-appareil.ts";
-
-const envoisEnCours = new Set<Promise<unknown>>();
 
 async function envoyer(corps: CorpsDeLaSeanceDeRevision): Promise<IssueDeLEnvoi> {
   try {
@@ -33,18 +30,7 @@ async function sauvegarder(envoi: SeanceDeRevisionTermineeAEnregistrer): Promise
 
 /** Envoie la séance de révision terminée au serveur, sans jamais lever d'erreur. */
 export function sauvegarderLaSeanceDeRevision(envoi: SeanceDeRevisionTermineeAEnregistrer): Promise<Sauvegarde> {
-  const envoyee = sauvegarder(envoi).then((sauvegarde) => {
-    if (sauvegarde === "enregistree" || sauvegarde === "ignoree") confirmerLEnvoi(envoi.id);
-    return sauvegarde;
-  }).catch((): Sauvegarde => "ignoree");
-  envoisEnCours.add(envoyee);
-  void envoyee.finally(() => envoisEnCours.delete(envoyee));
-  return envoyee;
-}
-
-/** Pour lire la file après les envois lancés par la séance de révision qui vient de finir. */
-export async function attendreLesEnvoisDesSeancesDeRevision(): Promise<void> {
-  await Promise.allSettled([...envoisEnCours]);
+  return sauvegarder(envoi).catch((): Sauvegarde => "ignoree");
 }
 
 let renvoiEnCours = false;
@@ -61,7 +47,6 @@ export async function renvoyerLesSeancesDeRevisionGardees(): Promise<void> {
       const issue = await envoyer(corps);
       if (issue === "impossible") return;
       await appareil.retirer(corps.id);
-      confirmerLEnvoi(corps.id);
     }
   } catch {
     // Le prochain retour du réseau réessaiera.

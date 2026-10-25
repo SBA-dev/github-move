@@ -2,7 +2,6 @@ import { FunctionsHttpError } from "@supabase/supabase-js";
 import type { SeanceTermineeAEnregistrer } from "@domain/apprentissage";
 import { clientSupabase } from "../../connexion/client-supabase.ts";
 import { parentConnecte } from "../../famille/profils/lecture-des-profils-supabase.ts";
-import { confirmerLEnvoi } from "../../revision/copie-de-la-file-sur-l-appareil.ts";
 import { type CorpsDeLaSeance, enCorps, estUnIdentifiantDeProfil } from "./corps-de-la-seance.ts";
 import { SeancesGardeesSurLAppareil } from "./seances-gardees-sur-l-appareil.ts";
 
@@ -49,10 +48,7 @@ async function sauvegarder(envoi: SeanceTermineeAEnregistrer): Promise<Sauvegard
 
 /** Envoie la séance terminée au serveur, sans jamais lever d'erreur. */
 export function sauvegarderLaSeance(envoi: SeanceTermineeAEnregistrer): Promise<Sauvegarde> {
-  const envoyee = sauvegarder(envoi).then((sauvegarde) => {
-    if (sauvegarde === "enregistree" || sauvegarde === "ignoree") confirmerLEnvoi(envoi.seance);
-    return sauvegarde;
-  }).catch((): Sauvegarde => "ignoree");
+  const envoyee = sauvegarder(envoi).catch((): Sauvegarde => "ignoree");
   envoisEnCours.add(envoyee);
   void envoyee.finally(() => envoisEnCours.delete(envoyee));
   return envoyee;
@@ -77,7 +73,6 @@ export async function renvoyerLesSeancesGardees(): Promise<void> {
       const issue = await envoyer(corps);
       if (issue === "impossible") return;
       await appareil.retirer(corps.seance);
-      confirmerLEnvoi(corps.seance);
     }
   } catch {
     // Le prochain retour du réseau réessaiera.

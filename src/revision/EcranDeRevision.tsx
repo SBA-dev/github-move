@@ -51,7 +51,7 @@ function RevisionChargee({ lecons, file, niveau, profil, univers, voix, onAccuei
   };
   useEffect(() => {
     if (!revision) retournerALAccueil();
-  });
+  }, [revision]);
   if (!revision) return null;
 
   return (
