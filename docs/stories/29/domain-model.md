@@ -444,3 +444,8 @@ D'accord ?
   - `testDeDepartAProposer`, calculé par la règle existante de #27 (`useTestDeDepartAFaire` / `planDuTestDeDepart`).
 - La leçon suivante de fin de séance est `leconSuivanteEnFinDeSeance` (Apprentissage) : quand la matière n'a plus de leçon suivante dans le parcours, c'est la leçon du jour, si elle existe et n'est pas la leçon jouée (29.8, 29.24) ; sinon la fin de séance propose « Toutes les leçons » (29.25, 29.26).
 - Une leçon absente de la bibliothèque (leçon personnelle, #39) jouée en dernier fait proposer le français (règle « dans tous les autres cas »). À revoir avec #39.
+- L'objectif du jour est calculé par deux fonctions pures de Motivation :
+  - `faitsDuJour({ aujourdhui, seancesTerminees, seancesDeRevisionTerminees })` garde les séances du `Jour` de l'appareil. Le jour d'une séance ordinaire est `jourDe(termineLe, décalage de l'appareil)`, en attendant la colonne de jour de 30.6 ; celui d'une séance de révision est le `jour` gardé par #28 ;
+  - puis `objectifDuJour(faits)`.
+  Motivation importe le value object `Jour` publié par Apprentissage (Published Language, déjà noté pour #30 dans la context map).
+- Les sources (serveur sous RLS, séances gardées sur l'appareil, mémoire de l'utilisation) ne sont pas dédoublonnées par identifiant de séance. C'est sans effet sur le compte actuel (leçons distinctes, révision comptée pour 1), mais à reprendre si le lot 6 compte autrement (mots de la semaine).
