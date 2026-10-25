@@ -4,6 +4,8 @@ import type { CodeDeMatiere } from "@domain/catalogue";
 import type { ProfilEnCours } from "@domain/famille";
 import { saluer, type Univers } from "@domain/motivation";
 import { dateDuJourPourLesMachines, dateEnToutesLettres } from "../accueil/date-du-jour.ts";
+import { ObjectifDuJourDeLAccueil } from "../accueil/ObjectifDuJourDeLAccueil.tsx";
+import { useObjectifDuJour } from "../accueil/useObjectifDuJour.ts";
 import { LeconDuJourDeLAccueil } from "../accueil/LeconDuJourDeLAccueil.tsx";
 import { TuilesDeMatiereDeLAccueil } from "../accueil/TuilesDeMatiereDeLAccueil.tsx";
 import { TuilesDuJourDeLAccueil } from "../accueil/TuilesDuJourDeLAccueil.tsx";
@@ -39,6 +41,7 @@ export function AccueilDeLEnfant(
   const [salutationALire] = useState(aSaluer);
   const [maintenant] = useState(() => horlogeDuNavigateur.maintenant());
   const entrees = useEntreesDuJour(profil);
+  const objectif = useObjectifDuJour(profil.id, maintenant);
   useEffect(() => {
     if (salutationALire) void dire({ texte: saluer(profil.prenom), nature: "accueil" });
     return faireSilence;
@@ -58,9 +61,10 @@ export function AccueilDeLEnfant(
         onMonTestDeDepart={onMonTestDeDepart}
         onJeRevise={onJeRevise}
       />
+      {entrees && <LeconDuJourDeLAccueil lecon={leconDuJour(entrees)} personnageGuide={univers.personnageGuide.nom} onCommencer={onCommencerLaLecon} />}
+      {objectif && <ObjectifDuJourDeLAccueil objectif={objectif} />}
       {entrees && (
         <>
-          <LeconDuJourDeLAccueil lecon={leconDuJour(entrees)} personnageGuide={univers.personnageGuide.nom} onCommencer={onCommencerLaLecon} />
           {entrees.parcours && <TuilesDeMatiereDeLAccueil tuiles={tuilesDeMatiere(entrees.parcours)} onOuvrir={onOuvrirLaMatiere} />}
         </>
       )}

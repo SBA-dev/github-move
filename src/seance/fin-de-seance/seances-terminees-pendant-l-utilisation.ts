@@ -1,17 +1,23 @@
 export type SeanceTermineeConnue = { readonly lecon: string; readonly termineeLe: Date };
 
-const dernieres = new Map<string, SeanceTermineeConnue>();
+const terminees = new Map<string, readonly SeanceTermineeConnue[]>();
 
 /** Retient la leçon et la date de fin d'une séance terminée dans ce navigateur, même si le serveur l'a refusée ou ne l'a pas reçue. */
 export function retenirLaSeanceTerminee(profil: string, seance: SeanceTermineeConnue): void {
-  const precedente = dernieres.get(profil);
-  if (!precedente || seance.termineeLe >= precedente.termineeLe) dernieres.set(profil, seance);
+  terminees.set(profil, [...seancesTermineesPendantLUtilisation(profil), seance]);
+}
+
+export function seancesTermineesPendantLUtilisation(profil: string): readonly SeanceTermineeConnue[] {
+  return terminees.get(profil) ?? [];
 }
 
 export function derniereSeanceTermineePendantLUtilisation(profil: string): SeanceTermineeConnue | undefined {
-  return dernieres.get(profil);
+  return seancesTermineesPendantLUtilisation(profil).reduce<SeanceTermineeConnue | undefined>(
+    (recente, seance) => (recente && recente.termineeLe > seance.termineeLe ? recente : seance),
+    undefined,
+  );
 }
 
 export function oublierLesSeancesTerminees(): void {
-  dernieres.clear();
+  terminees.clear();
 }

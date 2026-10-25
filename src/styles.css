@@ -392,6 +392,11 @@ button.secondaire:hover { background: #fdf3ea; }
 .grande-tuile { display: grid; justify-items: center; gap: 8px; width: min(100%, 480px); margin: 0; padding: 16px; border: 3px solid var(--accent-fonce); border-radius: 20px; background: #fff; overflow-wrap: anywhere; }
 .grande-tuile h2, .grande-tuile p { margin: 0; }
 .grande-tuile .matiere-et-niveau { font-weight: 700; color: var(--accent-fonce); }
+.objectif-du-jour { display: grid; justify-items: center; gap: 6px; width: min(100%, 480px); text-align: center; overflow-wrap: anywhere; }
+.objectif-du-jour p { margin: 0; }
+.objectif-du-jour .avancement-de-l-objectif, .objectif-du-jour .objectif-atteint { font-weight: 700; color: var(--accent-fonce); }
+.barre-de-l-objectif { width: 100%; height: 12px; border-radius: 6px; background: #eadfd2; overflow: hidden; }
+.remplissage-de-l-objectif { height: 100%; background: var(--accent-fonce); }
 .tuiles-du-jour, .tuiles-de-matiere { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; width: 100%; margin: 0; padding: 0; list-style: none; }
 .tuiles-du-jour li, .tuiles-de-matiere li { flex: 1 1 140px; min-width: 0; max-width: 100%; }
 button.tuile { display: grid; gap: 4px; justify-items: center; width: 100%; min-height: 64px; padding: 10px 12px; border: 2px solid var(--accent-fonce); border-radius: 16px; color: var(--texte); background: #fff; overflow-wrap: anywhere; }
