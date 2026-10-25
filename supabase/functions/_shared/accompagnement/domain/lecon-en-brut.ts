@@ -1,4 +1,4 @@
-import type { EtapeDeLecon, Exercice, Lecon } from "../../catalogue/domain/index.ts";
+import type { EtapeDeLecon, Exercice, Lecon, MotDicte } from "../../catalogue/domain/index.ts";
 
 export function leconEnBrut(lecon: Omit<Lecon, "id">, id: string): unknown {
   return {
@@ -21,7 +21,7 @@ function exerciceEnBrut(exercice: Exercice): unknown {
   const communs = { type: exercice.type, titre: exercice.titre, consigne: exercice.consigne };
   switch (exercice.type) {
     case "dictee":
-      return { ...communs, mots: exercice.mots.map((mot) => ({ ...mot })) };
+      return { ...communs, mots: exercice.mots.map(motEnBrut) };
     case "classer":
       return {
         ...communs,
@@ -50,4 +50,8 @@ function exerciceEnBrut(exercice: Exercice): unknown {
     default:
       throw new Error(`Le type d'exercice « ${exercice.type} » n'est pas pris en charge dans une leçon personnelle.`);
   }
+}
+
+function motEnBrut(mot: MotDicte): unknown {
+  return mot.phrase === undefined ? { mot: mot.mot } : { mot: mot.mot, phrase: mot.phrase };
 }

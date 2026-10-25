@@ -42,14 +42,15 @@ export function toutesLesLecons(entrees: EntreesDuParcours, filtre: FiltreDesLec
     ...matieresDuParcours(entrees).flatMap((matiere) => leconsDeLaMatiere(entrees, matiere)),
     ...leconsDAuDessusMontrees(entrees),
   ].filter(retenue);
+  const leconsPourToi = pourToi(entrees, retenue);
   const leconsDesClassesDAvant = classesDAvant(entrees, retenue);
   const nombreDansLesClassesDAvant = leconsDesClassesDAvant.reduce((somme, classe) => somme + classe.lecons.length, 0);
   return {
-    pourToi: pourToi(entrees, retenue),
+    pourToi: leconsPourToi,
     lecons,
     leconsDesClassesDAvant,
     nombreDansLesClassesDAvant,
-    nombreDeLecons: lecons.length + nombreDansLesClassesDAvant,
+    nombreDeLecons: leconsPourToi.length + lecons.length + nombreDansLesClassesDAvant,
     seulementLesClassesDAvant: filtre.niveau !== undefined && estUneClasseDAvant(entrees)(filtre.niveau),
   };
 }

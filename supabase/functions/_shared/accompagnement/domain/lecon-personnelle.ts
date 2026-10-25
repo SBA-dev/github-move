@@ -1,6 +1,7 @@
-import type { Lecon, SectionDuProgramme } from "../../catalogue/domain/index.ts";
+import { type Lecon, LeconMalFormee, lireLecon, type SectionDuProgramme } from "../../catalogue/domain/index.ts";
+import { LeconPersonnelleInvalide } from "./erreurs.ts";
 import type { LeconPreparee } from "./preparer-une-lecon-personnelle.ts";
-import type { TexteDuParent } from "./texte-du-parent.ts";
+import { TexteDuParent } from "./texte-du-parent.ts";
 import { validerLaLeconPersonnelle } from "./valider-la-lecon-personnelle.ts";
 
 const PREFIXE_DE_L_IDENTIFIANT = "perso-";
@@ -55,7 +56,22 @@ export class LeconPersonnelle {
     };
   }
 
+  static reconstituer(
+    { lecon, profil, texte, creeeLe }: { lecon: unknown; profil: string; texte: string; creeeLe: Date },
+  ): LeconPersonnelle {
+    return new LeconPersonnelle(lireLaLecon(lecon), profil, TexteDuParent.de(texte), creeeLe);
+  }
+
   supprimer(maintenant: Date): LeconPersonnelleSupprimee {
     return { type: "LeconPersonnelleSupprimee", lecon: this.lecon.id, profil: this.profil, supprimeeLe: maintenant };
+  }
+}
+
+function lireLaLecon(brute: unknown): Lecon {
+  try {
+    return lireLecon(brute);
+  } catch (cause) {
+    if (cause instanceof LeconMalFormee) throw new LeconPersonnelleInvalide(cause.raison);
+    throw cause;
   }
 }

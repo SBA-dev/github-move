@@ -1,4 +1,4 @@
-import type { Niveau } from "../../catalogue/domain/index.ts";
+import type { Matiere, Niveau } from "../../catalogue/domain/index.ts";
 import { ParentNonRattache } from "../domain/erreurs.ts";
 import type { GenerateurId } from "../domain/generateur-id.ts";
 import { LeconPersonnelle, type LeconPersonnelleCreee } from "../domain/lecon-personnelle.ts";
@@ -13,6 +13,7 @@ export type DemandeDeCreation = {
   profil: string;
   texte: string;
   niveau: Niveau;
+  matiere?: Matiere;
 };
 
 export class CreerUneLeconPersonnelle {
@@ -29,7 +30,11 @@ export class CreerUneLeconPersonnelle {
   ): Promise<{ leconPersonnelle: LeconPersonnelle; evenement: LeconPersonnelleCreee }> {
     if (!await this.rattachements.estRattache(demande.parent, demande.profil)) throw new ParentNonRattache();
     const sections = await this.sectionsDuProgramme.toutes();
-    const preparee = preparerUneLeconPersonnelle({ texte: demande.texte, niveau: demande.niveau }, sections);
+    const preparee = preparerUneLeconPersonnelle({
+      texte: demande.texte,
+      niveau: demande.niveau,
+      matiere: demande.matiere,
+    }, sections);
     const creation = LeconPersonnelle.creer({
       id: this.generateurId.nouveau(),
       profil: demande.profil,
