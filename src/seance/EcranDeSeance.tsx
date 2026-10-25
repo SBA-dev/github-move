@@ -179,6 +179,7 @@ function SeanceEnCours(
   const laConsigneEstLue = consigne !== undefined && deroulement.parole?.nature === "consigne" && deroulement.parole.texte === consigne;
   const paroleDeLaBulle = laConsigneEstLue ? undefined : deroulement.parole;
   const zoneDeLExercice = useRef<HTMLDivElement>(null);
+  const laSeance = useRef<HTMLElement>(null);
   const exerciceCommence = exerciceJoue !== undefined;
   const dejaMonte = useRef(false);
   useEffect(() => {
@@ -187,7 +188,7 @@ function SeanceEnCours(
   }, [exerciceCommence]);
 
   return (
-    <section className="seance" aria-labelledby="titre-de-la-seance">
+    <section ref={laSeance} className="seance" aria-labelledby="titre-de-la-seance">
       <div className="entete-de-seance">
         <button type="button" onClick={onRetour}>Retour</button>
         <div>
@@ -208,7 +209,7 @@ function SeanceEnCours(
         Réécouter
       </button>
       {consigne !== undefined && (
-        <div className="consigne-de-l-exercice">
+        <div className="consigne-de-l-exercice" aria-live="polite">
           <p className="consigne" data-testid="consigne">
             <TexteSurligne
               texte={consigne}
@@ -369,7 +370,15 @@ function SeanceEnCours(
         </div>
       )}
       {deroulement.enfantAttendu && (
-        <button type="button" className="continuer-apres-la-reussite" autoFocus onClick={deroulement.continuerApresLaReussite}>
+        <button
+          type="button"
+          className="continuer-apres-la-reussite"
+          autoFocus={!finie}
+          onClick={() => {
+            deroulement.continuerApresLaReussite();
+            if (finie) laSeance.current?.querySelector<HTMLElement>(".actions-de-fin button")?.focus();
+          }}
+        >
           Continuer
         </button>
       )}
