@@ -127,3 +127,24 @@ Deno.test("« Toutes les leçons » montre toujours les leçons réussies d'une 
     ],
   );
 });
+
+Deno.test("« Toutes les leçons » ne montre aucune leçon d'une classe au-dessus à un enfant de CM2, qui n'a pas de classe au-dessus", () => {
+  const entrees = {
+    lecons: [
+      lecon("ma-cm2-fractions", "maths", "CM2", 1),
+      lecon("ma-cm2-proportion", "maths", "CM2", 2),
+    ],
+    niveau: Niveau.de("CM2"),
+    meilleuresEtoiles: new Map([
+      ["ma-cm2-fractions", Etoiles.de(2)],
+      ["ma-cm2-proportion", Etoiles.de(1)],
+    ]),
+  };
+
+  const { lecons } = toutesLesLecons(entrees, {});
+
+  assertEquals(lecons.map(({ lecon, niveau }) => ({ lecon, niveau })), [
+    { lecon: "ma-cm2-fractions", niveau: Niveau.de("CM2") },
+    { lecon: "ma-cm2-proportion", niveau: Niveau.de("CM2") },
+  ]);
+});
