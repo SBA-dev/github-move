@@ -54,3 +54,4 @@
 | Intégrations de `main` | 4 : départ (`8448f19`, conflits d'ajouts doc), #28 (`c10d6d8`, 4 conflits de code + glossaire), #73 (`47b5c9b`, sans conflit), #39 (`2411bd2`, 1 conflit d'imports) ; #34 à intégrer sous verrou |
 | Escalades | aucune |
 | Verrous | aucun (`base` non nécessaire : pas de migration) |
+- 21:50 VERROU merge accordé (annonce [Responsable] du 21:43 ; merge autorisé pour la vague par le PO). Intégration de `main` `759203f` (#34) : conflits d'ajouts dans `context-map.md` et dans la condition du step « Tom a un profil enfant préparé » (`classer-ordre-trous.steps.ts` : union `@issue-34` et `@issue-29`), résolus par l'orchestrateur (`5ccfb27`, mécanique, aucun sens changé). Code de production de #29 inchangé (#34 ajoute seulement `SuiviDeLEspaceParent` dans l'Espace parent). 2297 tests, lint, fmt, tsc, build verts. Périmètre #29 + #34 sur `telephone` lancé.
