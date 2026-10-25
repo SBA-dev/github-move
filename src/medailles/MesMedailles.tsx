@@ -34,7 +34,7 @@ export function MesMedailles({ profil, univers, voix }: Props) {
 
   useEffect(() => {
     if (pastilles === undefined) return;
-    const [accueil = "", ...suite] = parolesALOuverture({ toutLire, pastilles });
+    const [accueil = "", ...suite] = parolesALOuverture({ toutLire, pastilles, cabane: undefined });
     void (async () => {
       if (!(await dire({ texte: accueil, nature: "accueil" }))) return;
       await direLaSuite(suite);
@@ -43,7 +43,7 @@ export function MesMedailles({ profil, univers, voix }: Props) {
   }, [pastilles, toutLire, dire, direLaSuite, faireSilence]);
 
   const ecouterLesRecords = () => direLaSuite(parolesDeLaSectionDesRecords(pastilles ?? []));
-  const sections = sectionsDeLEcran(pastilles ?? []);
+  const sections = sectionsDeLEcran({ pastilles: pastilles ?? [], cabane: undefined });
 
   return (
     <section className="mes-medailles" aria-labelledby="titre-de-mes-medailles">
