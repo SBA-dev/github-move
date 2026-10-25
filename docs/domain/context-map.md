@@ -101,6 +101,8 @@ flowchart LR
 
 Note (#25, réponses 25.1 et N3, 2026-10-24) : **il n'y a plus de verrou**. Dans les tableaux ci-dessus, « parcours et verrous » (ligne Apprentissage des contextes) se lit « parcours » ; le réglage « parcours libre » (ligne Famille → Apprentissage) n'est plus lu par le parcours et sera retiré par une story de Famille (réponse N2) ; `LeconReussie` (ligne des événements internes) ne sert ni au parcours ni à des verrous : le parcours se recalcule à la lecture, sans écouter d'événement. Le parcours lit aussi, dans le Published Language du Catalogue (`@domain/catalogue`), `toutesLesMatieres` (ordre des matières) et `Niveau#estAuDessusDe` (leçons réussies d'une classe au-dessus, réponse N1) ; il remplace `leconSuivante` du Catalogue, retirée.
 
+Note (#26, 2026-10-25) : les leçons des classes d'avant (bloc de « Mon parcours ») et « Toutes les leçons » sont des vues calculées d'Apprentissage (`parcoursDeLaMatiere` étendu, `toutesLesLecons`), sur les mêmes lectures que #25 et #27 (Catalogue, niveau du profil, meilleures étoiles, leçons réussies au test de départ). Aucune nouvelle relation ; le réglage parcours libre de Famille n'est pas lu (réponse N2 de #25).
+
 ## Décisions
 
 - Les leçons personnelles appartiennent à Accompagnement. Elles respectent le même format JSON que la bibliothèque, pour qu'Apprentissage les joue de la même façon.

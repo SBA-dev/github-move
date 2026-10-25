@@ -59,3 +59,8 @@ Deno.test("la leçon suivante saute les leçons d'après réussies au test de d�
 
   assertEquals(leconSuivanteDansLeParcours(avecTestDeDepart, b.id), d.id);
 });
+
+Deno.test("une leçon des classes d'avant n'a pas de leçon suivante dans le parcours de l'enfant", () => {
+  const leconDuCP = lecon("fr-cp-a", "francais", 1, "CP");
+  assertEquals(leconSuivanteDansLeParcours(entrees([], [leconDuCP]), leconDuCP.id), undefined);
+});

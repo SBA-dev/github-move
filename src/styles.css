@@ -458,9 +458,30 @@ button.lecon-du-parcours:hover { background: #fdf3ea; }
 button.lecon-du-parcours[data-etat="prochaine"] { border-width: 4px; background: #fff3cd; }
 .lecons-deja-reussies { display: grid; gap: 8px; }
 .lecons-deja-reussies h4 { margin: 8px 0 0; }
+.lecons-des-classes-d-avant { display: grid; gap: 8px; }
+.lecons-des-classes-d-avant > div { display: grid; gap: 8px; }
+.lecons-des-classes-d-avant > div[hidden] { display: none; }
+.bascule-des-classes-d-avant { width: 100%; min-height: 44px; overflow-wrap: anywhere; }
 .place-de-la-lecon { font-size: .9em; }
 .titre-de-la-lecon { flex: 1 1 8rem; }
 .etoiles-de-la-lecon { color: #b8860b; }
+
+/* Toutes les leçons */
+.toutes-les-lecons { display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 32rem; }
+.toutes-les-lecons h2, .toutes-les-lecons h3 { margin: 0; }
+.toutes-les-lecons .lecons-du-parcours, .toutes-les-lecons .lecons-des-classes-d-avant { width: 100%; }
+.choix-des-lecons { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 8px 12px; width: 100%; }
+.choix-des-lecons select {
+  min-width: 0;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 2px solid var(--accent-fonce);
+  border-radius: 12px;
+  font: inherit;
+  background: #fff;
+}
+.nombre-de-lecons { margin: 0; padding: 4px 12px; border-radius: 16px; background: rgba(255, 255, 255, .85); font-weight: 700; }
+.lecons-d-une-classe-d-avant { display: grid; gap: 8px; }
 
 /* Calcul : la carte de l'opération, le clavier de cristaux, la fluence */
 .calcul, .fluence, .addition-posee { display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 100%; }
