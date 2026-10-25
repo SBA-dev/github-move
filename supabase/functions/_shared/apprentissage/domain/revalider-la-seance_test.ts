@@ -5,6 +5,7 @@ import { hasardFixe } from "../test_utils/hasard-fixe.ts";
 import { leconDeCalcul, leconDeDeuxExercicesCourts } from "../test_utils/lecons-de-test.ts";
 import { ChoixDeSeance } from "./choix-de-seance.ts";
 import { SeanceIncoherente } from "./erreurs.ts";
+import { Jour } from "./jour.ts";
 import { Reponse } from "./reponse.ts";
 import { revaliderLaSeance } from "./revalider-la-seance.ts";
 import { Seance } from "./seance.ts";
@@ -129,4 +130,45 @@ Deno.test("des tirages en trop rendent la séance incohérente", () => {
   const avecUnTirageDeTrop = { ...envoi, tirages: [...envoi.tirages, ["6", "7", "8", "9"]] };
 
   assertThrows(() => revaliderCalcul(avecUnTirageDeTrop), SeanceIncoherente);
+});
+
+function seanceDeCalculTermineeLe(jour: Jour) {
+  const seance = Seance.commencer(
+    generateurIdFixe("seance-1"),
+    hasardFixe(0, 0, 0),
+    "profil-lea",
+    leconDeCalcul(),
+    ChoixDeSeance.complete(),
+  );
+  seance.repondre(Reponse.choix("8"));
+  seance.repondre(Reponse.choix("7"));
+  return { seance, fait: seance.terminer(fin, jour) };
+}
+
+Deno.test("l'envoi d'une séance terminée porte le jour de l'appareil et le serveur le redonne dans le fait", () => {
+  const { seance, fait } = seanceDeCalculTermineeLe(Jour.de("2026-10-23"));
+  const envoi = seance.aEnregistrer();
+
+  assertEquals(envoi.jour, "2026-10-23");
+  assertEquals(revaliderCalcul(envoi), fait);
+});
+
+Deno.test("un envoi de séance dont le jour est illisible est incohérent", () => {
+  assertThrows(() => revaliderCalcul({ ...envoiDeCalcul(), jour: "demain" }), SeanceIncoherente);
+});
+
+Deno.test("un envoi de séance dont le jour est trop loin de la date de fin, après, est incohérent", () => {
+  assertThrows(() => revaliderCalcul({ ...envoiDeCalcul(), jour: "2026-10-25" }), SeanceIncoherente);
+});
+
+Deno.test("un envoi de séance dont le jour est trop loin de la date de fin, avant, est incohérent", () => {
+  assertThrows(() => revaliderCalcul({ ...envoiDeCalcul(), jour: "2026-10-21" }), SeanceIncoherente);
+});
+
+Deno.test("un envoi de séance dont le jour est à +14 h ou à -12 h de la date de fin UTC est accepté", () => {
+  const jours = ["2026-10-24", "2026-10-22"].map((jour) =>
+    revaliderCalcul({ ...envoiDeCalcul(), jour }).jour?.toString()
+  );
+
+  assertEquals(jours, ["2026-10-24", "2026-10-22"]);
 });
