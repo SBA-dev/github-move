@@ -256,3 +256,10 @@ export class IntervalleDeRevisionInvalide extends Error {
     this.name = "IntervalleDeRevisionInvalide";
   }
 }
+
+export class AucuneQuestionDue extends Error {
+  constructor() {
+    super("Aucune question n'est due ce jour-là : il n'y a pas de séance de révision à planifier.");
+    this.name = "AucuneQuestionDue";
+  }
+}

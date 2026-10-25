@@ -1,4 +1,5 @@
 import type { CleDeQuestion } from "./cle-de-question.ts";
+import { AucuneQuestionDue } from "./erreurs.ts";
 import { IntervalleDeRevision } from "./intervalle-de-revision.ts";
 import type { Jour } from "./jour.ts";
 import type { OrigineDeLaQuestion } from "./origine-de-la-question.ts";
@@ -18,6 +19,10 @@ export type QuestionRetenue = Readonly<{
 }>;
 
 export const NOMBRE_MAXIMAL_DE_QUESTIONS_RETENUES = 250;
+
+export const NOMBRE_MAXIMAL_DE_QUESTIONS_PAR_SEANCE_DE_REVISION = 10;
+
+export type PlanDeSeanceDeRevision = { readonly questions: readonly QuestionRetenue[] };
 
 export type DonneesDeFileDeRevision = {
   readonly enfant: string;
@@ -56,6 +61,19 @@ export class FileDeRevision {
       }
     }
     this.oublierLesPlusAnciennesAuDelaDeLaLimite();
+  }
+
+  questionsDues(jour: Jour): readonly QuestionRetenue[] {
+    return this.questionsRetenues.filter((question) => question.dateDeRevision.estAvantOuEgal(jour));
+  }
+
+  planDeLaSeanceDeRevision(jour: Jour): PlanDeSeanceDeRevision {
+    const dues = this.questionsDues(jour);
+    if (dues.length === 0) throw new AucuneQuestionDue();
+    const questions = [...dues]
+      .sort(parOrdreDeRevision)
+      .slice(0, NOMBRE_MAXIMAL_DE_QUESTIONS_PAR_SEANCE_DE_REVISION);
+    return { questions };
   }
 
   private oublierLesPlusAnciennesAuDelaDeLaLimite(): void {
@@ -101,4 +119,20 @@ function rateeDeNouveau(retenue: QuestionRetenue, jour: Jour, termineeLe: Date):
     derniereErreurLe: termineeLe,
     nombreDeFoisRatee: retenue.nombreDeFoisRatee + 1,
   };
+}
+
+function parOrdreDeRevision(a: QuestionRetenue, b: QuestionRetenue): number {
+  return comparerLesJours(a.dateDeRevision, b.dateDeRevision) ||
+    a.derniereErreurLe.getTime() - b.derniereErreurLe.getTime() ||
+    comparerLesTextes(a.identite.valeur, b.identite.valeur);
+}
+
+function comparerLesJours(a: Jour, b: Jour): number {
+  if (a.estEgalA(b)) return 0;
+  return a.estAvantOuEgal(b) ? -1 : 1;
+}
+
+function comparerLesTextes(a: string, b: string): number {
+  if (a === b) return 0;
+  return a < b ? -1 : 1;
 }
