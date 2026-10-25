@@ -11,3 +11,4 @@ Branche de base : `main` (`6be4dc6`). Branche : `feature/39-lecons-personnelles`
 - 16:35 UTC : `po-acceptance` : critères d'acceptance (`19d3d7d`). 6 règles, 29 scénarios (31 cas), 16 `@a-valider`, 6 `@acces` ; questions #39.17 à #39.21.
 - CADRAGE PRÊT publié sur #39, avec DÉCISION (numéro demandé pour #39.16). En attente du OK du PO.
 - 16:37 UTC : annonce `[Responsable]` sur #64 : décision **0024** réservée pour #39. Elle sera écrite après la réponse du PO à #39.16.
+- 17:23 UTC : `main` (`7a80bae`, #32 mergée) intégrée, sans conflit. Toujours en attente du PO.
