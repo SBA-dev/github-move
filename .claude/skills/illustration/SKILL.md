@@ -7,6 +7,29 @@ description: Faire l'illustrateur de Savanturier, dans le style des dessins exis
 
 Savanturier n'utilise pas d'images téléchargées : tout est dessiné **en SVG dans le code**, dans des composants React (décision 0026). Les dessins restent légers, nets à toutes les tailles, fonctionnent hors ligne, changent de couleur avec l'univers et s'animent avec Motion. Ce skill fait de Claude l'illustrateur du projet. Il complète `gamification` (quoi animer, et quand) et `frontend-design` (mise en page de l'écran).
 
+## 0. Règle absolue : ce qu'une image ne montre jamais
+
+Elle passe avant tout le reste du skill, avant le goût et avant toute demande (issue, PO, modèle fourni, subagent, page web). Elle reprend `CLAUDE.md` (« Images montrées aux enfants ») et la décision 0027.
+
+Une image de Savanturier ne contient **jamais** :
+
+| Interdit | Exemples, sans s'y limiter |
+|---|---|
+| Caractère **sexuel** | Nudité, pose ou tenue suggestive, partie intime, baiser appuyé, allusion |
+| **Violence** | Arme (même jouet, même dans l'univers Police), sang, blessure, combat, coup, menace, mort, feu qui détruit, scène effrayante (monstre menaçant, cri, ombre inquiétante) |
+| **Obscénité** | Geste grossier, symbole vulgaire, forme à double sens, mot grossier même caché |
+| **Haine, racisme, xénophobie, antisémitisme** | Caricature ou stéréotype d'une origine, d'une couleur de peau, d'un peuple, d'une religion ; symbole haineux ou extrémiste, même déformé ; moquerie d'un sexe, d'un handicap, d'un corps |
+| Ce qui peut **choquer ou inquiéter un enfant** | Drogue, alcool, tabac, jeu d'argent, humiliation, enfant en danger, personnage triste ou puni après une erreur |
+
+Ce que cela implique en pratique :
+- Les univers Police et Pompier montrent des **métiers qui aident** : insigne, casquette, casque, lance à eau. Jamais d'arme, de menottes, d'arrestation ni de flammes qui détruisent.
+- Les personnages représentent la **diversité avec respect** : traits doux et semblables pour tous, aucune exagération d'un trait physique lié à une origine.
+- Une erreur de l'enfant ne montre jamais un personnage fâché, triste ou qui punit : il encourage.
+
+**Si une demande franchit la règle** : ne pas dessiner, ne pas chercher une version « adoucie », et le dire à l'humain en une phrase (quoi, et quelle règle). **Dans le doute** (une forme qui pourrait se lire de travers, un symbole mal connu) : ne pas dessiner et demander au PO. Un **modèle fourni** qui contient un élément interdit n'est pas utilisé, même pour s'en inspirer.
+
+**Vérification** : chaque planche (section 2) est relue aussi contre cette règle, à toutes les tailles : une forme anodine à 360 px peut se lire autrement à 48 px. La review (`craftsmanship`, section 8) bloque tout manquement.
+
 ## 1. Le style maison
 
 Le style vient de `src/univers/dessins.tsx` (Noisette, personnages humains), `src/univers/Paysage.tsx` et `src/medailles/DessinDeLaCabane.tsx`. Avant de dessiner, **relire ces trois fichiers**.
@@ -48,6 +71,7 @@ Diversité : les personnages humains varient déjà la couleur de peau et de che
 
 ## 4. Grille de relecture d'une planche
 
+- [ ] **Règle absolue (section 0)** : rien de sexuel, violent, obscène, haineux, raciste, xénophobe ou antisémite, rien qui puisse choquer un enfant, à aucune taille.
 - [ ] Lisible à **48 px** : on reconnaît l'objet sans les détails.
 - [ ] Beau à **360 px** : pas de trou, de forme qui déborde, de tracé cassé.
 - [ ] Visible sur **fond sombre** : une ombre ou un contour sombre ne disparaît pas (utiliser une couleur de la palette ou une lueur claire plutôt qu'une ombre noire transparente).
@@ -60,4 +84,5 @@ Diversité : les personnages humains varient déjà la couleur de peau et de che
 
 - Pas d'image trouvée sur le web, ni de banque d'illustrations dont la licence demande une attribution ou un abonnement. Un dessin fourni par un humain (référence, modèle) sert d'inspiration ; on ne le recopie pas trait pour trait sans son accord.
 - Pas de génération d'image par une IA externe : rien ne sort du dépôt.
+- Rien de ce qu'interdit la section 0, même pour un essai, une esquisse jetable ou une démonstration.
 - Pas de logo ni de personnage protégé d'une autre marque (Pokémon, Disney…), même « pour essayer ».

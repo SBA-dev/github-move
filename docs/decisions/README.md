@@ -31,3 +31,4 @@ Une décision n'est jamais réécrite : si elle change, une nouvelle décision l
 | [0024](0024-lecons-personnelles-par-edge-function-sous-rls.md) | Leçons personnelles écrites par deux Edge Functions avec le JWT du parent, sous RLS ; préparation refaite par le serveur ; texte du parent conservé | Acceptée |
 | [0025](0025-gamification-encadree-et-plugins-de-design.md) | Gamification encadrée par le skill `gamification` ; plugins `frontend-design`, `design` et `education-agent-skills` | Acceptée |
 | [0026](0026-illustrations-dessinees-en-svg-dans-le-code.md) | Illustrations dessinées en SVG dans le code par Claude, skill `illustration` et son outil de rendu | Acceptée |
+| [0027](0027-images-sans-contenu-choquant-pour-les-enfants.md) | Aucune image sexuelle, violente, obscène, haineuse, raciste, xénophobe ou antisémite : règle absolue, bloquante en review | Acceptée |

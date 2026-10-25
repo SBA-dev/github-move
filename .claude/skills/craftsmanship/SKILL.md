@@ -85,6 +85,7 @@ Un refactoring se fait **avec tous les tests au vert**, par petits pas, et en re
 - [ ] Les consignes peuvent être lues à voix haute, et le mode dys est respecté.
 - [ ] Les éléments interactifs ont un nom accessible (`aria-label` ou texte visible).
 - [ ] Un message d'erreur destiné à l'enfant encourage et propose de réessayer. Il n'est jamais punitif.
+- [ ] **Bloquant** : aucune image ajoutée ou modifiée (SVG, illustration, icône, animation) n'a de caractère sexuel, violent, obscène, haineux, raciste, xénophobe ou antisémite, ni rien qui puisse choquer un enfant (règle absolue de `CLAUDE.md`, « Images montrées aux enfants »). Le reviewer regarde le rendu de chaque nouveau dessin, pas seulement son code.
 
 ## 9. Migrations
 
