@@ -1,4 +1,4 @@
-import { type MutableRefObject, useCallback, useState } from "react";
+import { type MutableRefObject, useCallback, useRef, useState } from "react";
 import {
   type FaitDeSeance,
   INTRODUCTION_DE_LA_LECTURE,
@@ -57,6 +57,7 @@ export function useQuestionsAChoix(
   const [positionDuTexteEcoute, setPositionDuTexteEcoute] = useState<number | undefined>();
   const [rangDuMotDuTexte, setRangDuMotDuTexte] = useState<number | undefined>();
   const [bulleEclatee, setBulleEclatee] = useState<string | undefined>();
+  const numeroDePresentation = useRef(0);
 
   const laQuestionEnCours = useCallback(() => {
     const exercice = seance.exerciceEnCours();
@@ -73,12 +74,20 @@ export function useQuestionsAChoix(
   const presenter = useCallback(async (numero: number) => {
     const courante = laQuestionEnCours();
     if (!courante) return;
-    if (!(await dire({ texte: courante.question.enonce, nature: "question" }))) return;
+    const presentation = ++numeroDePresentation.current;
+    if (!(await dire({ texte: courante.question.enonce, nature: "question" }))) {
+      // Une lecture coupée ne laisse jamais l'enfant sans choix, sauf si une présentation plus récente a pris le relais.
+      if (presentation !== numeroDePresentation.current) return;
+      if (vivant.current && !estFigee.current && laQuestionEnCours()?.question === courante.question) {
+        setChoixVisiblesPour(courante.question);
+      }
+      return;
+    }
     if (!(await direLeMotAEcouter(numero, courante.question))) return;
     setChoixVisiblesPour(courante.question);
     const lectureDesChoixProposes = toutLireAVoixHaute ? lectureDesChoix(courante.question.choix.possibles()) : undefined;
     if (lectureDesChoixProposes !== undefined) await lire(lectureDesChoixProposes);
-  }, [laQuestionEnCours, dire, direLeMotAEcouter, toutLireAVoixHaute, lire]);
+  }, [laQuestionEnCours, dire, direLeMotAEcouter, toutLireAVoixHaute, lire, vivant, estFigee]);
 
   const lireLeTexte = useCallback(async (numero: number, texte: string) => {
     if (!(await dire({ texte: INTRODUCTION_DE_LA_LECTURE, nature: "introduction" }))) return;

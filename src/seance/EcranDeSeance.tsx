@@ -212,7 +212,7 @@ function SeanceEnCours(
                 rangDuMotPrononce={laConsigneEstLue ? deroulement.rangDuMotPrononce : undefined}
               />
             </p>
-            <button type="button" className="relire-la-consigne" onClick={deroulement.relireLaConsigne} aria-disabled={figee !== undefined ? true : undefined}>
+            <button type="button" className="relire-la-consigne" onClick={deroulement.relireLaConsigne} aria-disabled={deroulement.presentationEnCours || figee !== undefined ? true : undefined}>
               Relire la consigne
             </button>
           </>
