@@ -25,7 +25,7 @@ export type DependancesDeLectureAVoixHaute = {
   readonly caractereDuPersonnageGuide: () => CaractereDeLaVoix;
   readonly etatInitial: EtatDuSon;
   readonly onVoixBloquee: () => void;
-  readonly onFinDeLaVoixBloquee?: () => void;
+  readonly onFinDeLaVoixBloquee: () => void;
 };
 
 export type ParoleEntendue = { readonly entendue: boolean };
@@ -140,7 +140,7 @@ export class LectureAVoixHaute {
   private signalerLaFinDeLaVoixBloquee(): void {
     if (!this.voixBloqueeSignalee) return;
     this.voixBloqueeSignalee = false;
-    this.dependances.onFinDeLaVoixBloquee?.();
+    this.dependances.onFinDeLaVoixBloquee();
   }
 
   private absorber(erreur: unknown): void {
