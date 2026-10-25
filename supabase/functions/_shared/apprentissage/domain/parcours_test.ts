@@ -310,3 +310,40 @@ Deno.test("une leçon des classes d'avant réussie au test de départ qui a auss
 
   assertEquals(etats[0], { genre: "reussie", etoiles: Etoiles.de(2) });
 });
+
+Deno.test("quand toutes les leçons du niveau de l'enfant sont réussies, il n'y a pas de prochaine leçon, même s'il reste des leçons des classes d'avant à découvrir", () => {
+  const parcours = parcoursDeLaMatiere(
+    {
+      lecons: [voyellesDuCP, futurDuCE2, imparfaitDuCE2],
+      niveau: Niveau.de("CE2"),
+      meilleuresEtoiles: new Map([[futurDuCE2.id, Etoiles.de(2)], [imparfaitDuCE2.id, Etoiles.de(1)]]),
+    },
+    futurDuCE2.matiere,
+  );
+
+  assertEquals(parcours.prochaineLecon, undefined);
+  assertEquals(parcours.leconsDesClassesDAvant.map(({ etat }) => etat), [{ genre: "aDecouvrir" }]);
+});
+
+Deno.test("les leçons des classes d'avant réussies ne comptent ni dans le nombre de leçons réussies ni dans le nombre de leçons du parcours", () => {
+  const parcours = parcoursDeLaMatiere(
+    {
+      lecons: [voyellesDuCP, lecturesDuCE1, futurDuCE2, imparfaitDuCE2],
+      niveau: Niveau.de("CE2"),
+      meilleuresEtoiles: new Map([[voyellesDuCP.id, Etoiles.de(3)], [futurDuCE2.id, Etoiles.de(1)]]),
+      leconsReussiesAuTestDeDepart: new Set([lecturesDuCE1.id]),
+    },
+    futurDuCE2.matiere,
+  );
+
+  assertEquals([parcours.nombreDeLeconsReussies, parcours.nombreDeLecons], [1, 2]);
+});
+
+Deno.test("au CP, il n'y a aucune leçon des classes d'avant", () => {
+  const parcours = parcoursDeLaMatiere(
+    { lecons: [voyellesDuCP, lecturesDuCE1, futurDuCE2], niveau: Niveau.de("CP"), meilleuresEtoiles: new Map() },
+    voyellesDuCP.matiere,
+  );
+
+  assertEquals(parcours.leconsDesClassesDAvant, []);
+});
