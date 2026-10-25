@@ -1,11 +1,11 @@
-import { expect } from "@playwright/test";
+import { expect, type Page } from "@playwright/test";
 import { DUREE_D_AFFICHAGE_SANS_VOIX_MS } from "../../supabase/functions/_shared/apprentissage/domain/attente-avant-l-ecran-suivant.ts";
-import { Given, Then } from "./fixtures.ts";
+import { Given, Then, When } from "./fixtures.ts";
 import { bulle, injecter, leconDeTest } from "./etapes-puis-exercices.steps.ts";
 import { elementsDe, exerciceEnCours, jouerJusquAuxEtiquettes, poserEtAttendreLOrdre } from "./classer-ordre-trous.steps.ts";
-import { demarrer } from "./exercices-a-choix.steps.ts";
+import { avancerJusquAuxChoix, demarrer, textesDesChoix } from "./exercices-a-choix.steps.ts";
 import { aContinueApresLaReussite, boutonContinuerApresLaReussite } from "./etoiles-et-fin-de-seance.steps.ts";
-import { consigneAffichee, normaliser, scenario } from "./voix.steps.ts";
+import { consigneAffichee, journal, normaliser, scenario, terminerLaLecture } from "./voix.steps.ts";
 
 // Story #79 : la consigne reste affichée pendant tout l'exercice, la voix bloquée reste signalée, et sans voix la
 // félicitation de la dernière bonne réponse attend que l'enfant continue.
@@ -17,19 +17,48 @@ function echapper(texte: string): string {
   return texte.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
+async function injecterUnExerciceBulles(page: Page, titre: string, consigne: string, questions: string[]) {
+  scenario(page).relitPendantLaQuestion = { relue: false, lotsAvant: undefined };
+  await injecter(
+    page,
+    leconDeTest("test-consigne-visible", titre, [{
+      type: "bulles",
+      titre,
+      consigne,
+      questions: questions.map((question) => ({ question, choix: ["1", "2", "3"], reponse: "3" })),
+    }]),
+  );
+}
+
 Given(
-  /^une leçon de test « ([^«»]+) » a un exercice bulles de consigne « ([^«»]+) » qui pose « (.+) »$/,
+  /^une leçon de test « ([^«»]+) » a un exercice bulles de consigne « ([^«»]+) » qui pose « ((?:(?!» puis «).)+) »$/,
   async ({ page }, titre: string, consigne: string, question: string) => {
-    scenario(page).relitPendantLaQuestion = { relue: false, lotsAvant: undefined };
-    await injecter(
-      page,
-      leconDeTest("test-consigne-visible", titre, [{
-        type: "bulles",
-        titre,
-        consigne,
-        questions: [{ question, choix: ["1", "2", "3"], reponse: "3" }],
-      }]),
-    );
+    await injecterUnExerciceBulles(page, titre, consigne, [question]);
+  },
+);
+
+Given(
+  /^une leçon de test « ([^«»]+) » a un exercice bulles de consigne « ([^«»]+) » qui pose « ([^«»]+) » puis « ([^«»]+) »$/,
+  async ({ page }, titre: string, consigne: string, premiere: string, seconde: string) => {
+    await injecterUnExerciceBulles(page, titre, consigne, [premiere, seconde]);
+  },
+);
+
+When(
+  /^Léa demande à réécouter la consigne pendant que Noisette lit la question « ([^«»]+) »$/,
+  async ({ page }, question: string) => {
+    const debut = normaliser(question).slice(0, 12);
+    await demarrer(page);
+    await expect.poll(async () => {
+      const lisaitLaQuestion = (await journal(page)).lecture.texte.includes(debut);
+      if (!lisaitLaQuestion) await terminerLaLecture(page);
+      return lisaitLaQuestion;
+    }, { intervals: [100] }).toBe(true);
+    const relire = page.getByRole("button", { name: "Relire la consigne", exact: true });
+    await expect(relire).not.toHaveAttribute("aria-disabled", "true");
+    const etat = scenario(page);
+    etat.relitPendantLaQuestion = { relue: true, lotsAvant: (await journal(page)).lots };
+    await relire.click();
   },
 );
 
@@ -44,6 +73,12 @@ Given(
     await expect(page.getByTestId("etiquette")).toHaveCount(1);
   },
 );
+
+Then(/^Léa voit la question « ([^«»]+) » avec ses choix$/, async ({ page }, question: string) => {
+  await avancerJusquAuxChoix(page);
+  await expect(page.getByTestId("question")).toHaveText(normaliser(question));
+  expect([...(await textesDesChoix(page))].sort()).toEqual(["1", "2", "3"]);
+});
 
 Then(/^Léa ne voit plus la consigne « (.+) »$/, async ({ page }, texte: string) => {
   await expect(consigneAffichee(page).filter({ hasText: normaliser(texte) })).toHaveCount(0);
