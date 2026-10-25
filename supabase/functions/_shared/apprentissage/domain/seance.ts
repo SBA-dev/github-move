@@ -48,7 +48,7 @@ export type SeanceTerminee = Readonly<{
   scoresDeFluence?: Readonly<Record<string, number>>;
   erreurs: number;
   questionsRatees: readonly QuestionRatee[];
-  questionsRateesARetenir?: readonly QuestionRateeARetenir[];
+  questionsRateesARetenir: readonly QuestionRateeARetenir[];
   parType: Partial<Record<TypeDeQuestion, ReussitesEtErreurs>>;
 }>;
 
@@ -322,7 +322,7 @@ export class Seance {
 
   private questionsRateesARetenir(): QuestionRateeARetenir[] {
     return this.exercices.flatMap((exercice) =>
-      exercice.questionsRatees().map((question) => ({
+      exercice.questionsRateesARetenir().map((question) => ({
         identite: question.cle,
         origine: { leconDOrigine: this.lecon, position: exercice.position, type: question.type },
       }))

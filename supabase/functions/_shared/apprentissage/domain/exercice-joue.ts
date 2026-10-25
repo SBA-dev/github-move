@@ -24,7 +24,10 @@ import { QuestionDeDictee } from "./question-de-dictee.ts";
 import { QuestionJouee, questionsJoueesAvec } from "./question-jouee.ts";
 import type { QuestionPosee } from "./question-posee.ts";
 import type { ParoleDue } from "./parole-due.ts";
-import type { QuestionSuivie } from "./question-suivie.ts";
+import type { QuestionSuivie, TypeDeQuestion } from "./question-suivie.ts";
+import { CleDeQuestion } from "./cle-de-question.ts";
+import { estUnTypeDeQuestionRetenu } from "./types-de-question-retenus.ts";
+import { enonceDUneAddition } from "./tirage-d-additions.ts";
 import type { AideDonnee } from "./question-jouee.ts";
 import type { Reponse, ResultatDeReponse } from "./reponse.ts";
 import type { VueAddition } from "./vue-d-addition.ts";
@@ -135,6 +138,18 @@ export class ExerciceJoue {
 
   questionsRatees(): QuestionSuivie[] {
     return this.questionsJouees().filter((question) => question.erreurs > 0);
+  }
+
+  questionsRateesARetenir(): { cle: CleDeQuestion; type: TypeDeQuestion }[] {
+    if (this.contenu.additions) {
+      return this.contenu.additions.additionsRatees().map((addition) => ({
+        cle: CleDeQuestion.de("calcul", enonceDUneAddition(addition)),
+        type: "calcul",
+      }));
+    }
+    return this.questionsRatees()
+      .filter(({ type }) => estUnTypeDeQuestionRetenu(type))
+      .map(({ cle, type }) => ({ cle, type }));
   }
 
   tirages(): string[][] {
