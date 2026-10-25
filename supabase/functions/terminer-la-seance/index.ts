@@ -37,6 +37,7 @@ Deno.serve((requete) =>
       new SeancesTermineesSupabase(clientDuServeur),
       new ResultatsDesLeconsSupabase(clientDuServeur, lecons),
       new RecordsDeFluenceSupabase(clientDuServeur),
+      { de: () => Promise.resolve(null) },
     ).executer({ parent, seance });
     const fait = faits.find((f) => f.type === "SeanceTerminee");
     return {
