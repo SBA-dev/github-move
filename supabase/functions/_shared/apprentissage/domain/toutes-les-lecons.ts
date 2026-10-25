@@ -26,6 +26,7 @@ export type LeconDeToutesLesLecons = Readonly<{
 export type LeconsDUnNiveau = Readonly<{ niveau: Niveau; lecons: readonly LeconDeToutesLesLecons[] }>;
 
 export type ToutesLesLecons = Readonly<{
+  pourToi: readonly LeconDeToutesLesLecons[];
   lecons: readonly LeconDeToutesLesLecons[];
   leconsDesClassesDAvant: readonly LeconsDUnNiveau[];
   nombreDansLesClassesDAvant: number;
@@ -44,12 +45,23 @@ export function toutesLesLecons(entrees: EntreesDuParcours, filtre: FiltreDesLec
   const leconsDesClassesDAvant = classesDAvant(entrees, retenue);
   const nombreDansLesClassesDAvant = leconsDesClassesDAvant.reduce((somme, classe) => somme + classe.lecons.length, 0);
   return {
+    pourToi: pourToi(entrees, retenue),
     lecons,
     leconsDesClassesDAvant,
     nombreDansLesClassesDAvant,
     nombreDeLecons: lecons.length + nombreDansLesClassesDAvant,
     seulementLesClassesDAvant: filtre.niveau !== undefined && estUneClasseDAvant(entrees)(filtre.niveau),
   };
+}
+
+function pourToi(entrees: EntreesDuParcours, retenue: (lecon: Lecon) => boolean): LeconDeToutesLesLecons[] {
+  return (entrees.leconsPersonnelles ?? []).filter(retenue).map((lecon) => ({
+    lecon: lecon.id,
+    matiere: lecon.matiere,
+    niveau: lecon.niveau,
+    titre: lecon.titre,
+    etat: etatHorsDuParcours(entrees, lecon.id),
+  }));
 }
 
 function leconsDAuDessusMontrees(entrees: EntreesDuParcours): LeconDeToutesLesLecons[] {
@@ -117,8 +129,8 @@ export function matiereReussieDuNiveau(entrees: EntreesDuParcours, matiere: Mati
 export type ChoixDuFiltre = Readonly<{ matieres: readonly Matiere[]; niveaux: readonly Niveau[] }>;
 
 export function choixDuFiltre(entrees: EntreesDuParcours): ChoixDuFiltre {
-  const { lecons, leconsDesClassesDAvant } = toutesLesLecons(entrees, {});
-  const presentes = [...lecons, ...leconsDesClassesDAvant.flatMap((classe) => classe.lecons)];
+  const { pourToi, lecons, leconsDesClassesDAvant } = toutesLesLecons(entrees, {});
+  const presentes = [...pourToi, ...lecons, ...leconsDesClassesDAvant.flatMap((classe) => classe.lecons)];
   return {
     matieres: toutesLesMatieres().filter((matiere) => presentes.some((lecon) => lecon.matiere.code === matiere.code)),
     niveaux: Niveau.tous().filter((niveau) => presentes.some((lecon) => lecon.niveau.valeur === niveau.valeur)),
