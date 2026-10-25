@@ -1,5 +1,5 @@
 import type { CleDeQuestion } from "./cle-de-question.ts";
-import { AucuneQuestionDue } from "./erreurs.ts";
+import { AucuneQuestionDue, FileDeRevisionIncoherente } from "./erreurs.ts";
 import { IntervalleDeRevision } from "./intervalle-de-revision.ts";
 import type { Jour } from "./jour.ts";
 import type { OrigineDeLaQuestion } from "./origine-de-la-question.ts";
@@ -47,7 +47,12 @@ export class FileDeRevision {
   }
 
   static reconstituer(donnees: DonneesDeFileDeRevision): FileDeRevision {
-    return new FileDeRevision(donnees.enfant, [...donnees.questions], donnees.erreursCorrigeesPourDeBon);
+    verifierLaCoherence(donnees);
+    const questions = donnees.questions.map((question) => ({
+      ...question,
+      derniereErreurLe: new Date(question.derniereErreurLe),
+    }));
+    return new FileDeRevision(donnees.enfant, questions, donnees.erreursCorrigeesPourDeBon);
   }
 
   get erreursCorrigeesPourDeBon(): number {
@@ -145,7 +150,7 @@ function nouvelleQuestionRetenue(
     origine,
     intervalle: IntervalleDeRevision.premier(),
     dateDeRevision: jour.plus(1),
-    derniereErreurLe: termineeLe,
+    derniereErreurLe: new Date(termineeLe),
     nombreDeFoisRatee: 1,
   };
 }
@@ -155,7 +160,7 @@ function rateeDeNouveau(retenue: QuestionRetenue, jour: Jour, termineeLe: Date):
     ...retenue,
     intervalle: IntervalleDeRevision.premier(),
     dateDeRevision: jour.plus(1),
-    derniereErreurLe: termineeLe,
+    derniereErreurLe: new Date(Math.max(retenue.derniereErreurLe.getTime(), termineeLe.getTime())),
     nombreDeFoisRatee: retenue.nombreDeFoisRatee + 1,
   };
 }
@@ -174,4 +179,14 @@ function comparerLesJours(a: Jour, b: Jour): number {
 function comparerLesTextes(a: string, b: string): number {
   if (a === b) return 0;
   return a < b ? -1 : 1;
+}
+
+function verifierLaCoherence({ questions, erreursCorrigeesPourDeBon }: DonneesDeFileDeRevision): void {
+  if (questions.length > NOMBRE_MAXIMAL_DE_QUESTIONS_RETENUES) {
+    throw new FileDeRevisionIncoherente(`plus de ${NOMBRE_MAXIMAL_DE_QUESTIONS_RETENUES} questions`);
+  }
+  if (new Set(questions.map((question) => question.identite.valeur)).size !== questions.length) {
+    throw new FileDeRevisionIncoherente("une question est retenue deux fois");
+  }
+  if (erreursCorrigeesPourDeBon < 0) throw new FileDeRevisionIncoherente("compteur d'erreurs corrigées négatif");
 }

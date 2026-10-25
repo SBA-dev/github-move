@@ -263,3 +263,10 @@ export class AucuneQuestionDue extends Error {
     this.name = "AucuneQuestionDue";
   }
 }
+
+export class FileDeRevisionIncoherente extends Error {
+  constructor(readonly raison: string) {
+    super(`Cette file de révision est incohérente : ${raison}`);
+    this.name = "FileDeRevisionIncoherente";
+  }
+}
