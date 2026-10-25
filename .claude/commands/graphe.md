@@ -181,7 +181,7 @@ Sur « OK » : label `graphe:dev`.
 
 Une équipe merge **elle-même** sa PR, mais seulement avec l'autorisation de l'humain. Présente : lien de la PR, scénarios couverts, verdict de review, E2E, dette restante.
 Rappelle à l'humain de **donner l'autorisation plutôt que de cliquer « Merge » lui-même** : l'équipe doit avoir intégré `main`, tout repassé au vert et fini de pousser avant le merge.
-L'humain répond pour une PR (« merge #19 »), pour plusieurs (« merge #19 #20 ») ou pour toute la vague (« merge autorisé pour la vague »). Inscris l'autorisation dans le tableau, avec la date et la phrase de l'humain, et annonce-la aux équipes concernées.
+L'humain répond pour une PR (« merge #19 »), pour plusieurs (« merge #19 #20 ») ou pour toute la vague (« merge autorisé pour la vague »). Inscris l'autorisation dans le tableau, avec la date et la phrase de l'humain, et annonce-la aux équipes concernées. **À l'ouverture d'une vague, propose d'abord l'autorisation pour toute la vague** (décision 0022) : une PR prête le soir n'attend plus la nuit. Une autorisation pour la vague vaut aussi pour les stories lancées plus tard dans cette vague, jusqu'à ce que l'humain la retire.
 
 ## Étape 4 : File de merge
 
@@ -192,6 +192,7 @@ Les merges passent **un par un**, par le verrou `merge` :
 3. Toi :
    - fermes l'issue si GitHub ne l'a pas fait (`Closes #<n>`), retires les labels `graphe:*` ;
    - libères le verrou `merge` ;
+   - comptes ce merge dans le tableau (« merges depuis la dernière non-régression groupée »). Au 3e, ou si plus aucune PR n'attend avant une pause, demande à l'équipe qui vient de merger la **non-régression complète sur `main`**, et n'accorde plus le verrou `merge` avant `NON-RÉGRESSION MAIN : OK`. Si elle rend `KO`, c'est un signal d'arrêt (décision 0022) : le verrou reste gelé jusqu'au merge de la PR `fix(#<n>)` ;
    - annonces `[Responsable] MAIN A BOUGÉ : #<n> mergée` et envoies `RELIS` à **toutes les équipes encore en cours** (une équipe qui a un run E2E en cours le finit avant d'intégrer `main`, `equipe.md` section 4) ;
    - recalcules les stories prêtes et reviens à l'Étape 1 pour combler la place libérée (nouveau plan présenté à l'humain, sauf s'il a autorisé l'enchaînement automatique).
 4. Vérifie que la branche de la story a disparu (`git ls-remote origin refs/heads/feature/<n>-<slug>` ne renvoie rien) : GitHub la supprime au merge grâce au réglage « Automatically delete head branches ». Aucune session ne peut la supprimer elle-même (le proxy git refuse les suppressions). Si elle est encore là, regarde ce qu'elle contient de plus que `main` (`git fetch origin && git log origin/main..origin/feature/<n>-<slug>`) :

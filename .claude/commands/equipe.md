@@ -108,7 +108,7 @@ Tu merges **toi-même**, à quatre conditions :
 2. le tableau de l'issue de coordination t'inscrit comme détentrice du verrou `merge` ;
 3. après intégration de `main` dans ta branche, tout est vert **sur le dernier commit** :
    - `deno test --permit-no-files supabase/functions/`, lint, format, `npx tsc --noEmit`, `npm run build`
-   - E2E de la story et non-régression des stories livrées (commandes de `CLAUDE.md`, sans `@envoi-email` sauf si la story touche la connexion). La non-régression complète faite juste avant `PRÊTE À MERGER` compte si `main` n'a pas bougé depuis ; sinon, après l'intégration de `main`, relance-la une fois (décision 0020)
+   - E2E (commandes de `CLAUDE.md`, sans `@envoi-email` sauf si la story touche la connexion). La non-régression complète faite juste avant `PRÊTE À MERGER` compte. Si `main` a bougé depuis, ne la relance pas : lance seulement, sur `telephone`, le périmètre de ta story et celui de chaque story mergée depuis ta non-régression complète (décision 0022)
    - `python3 -m pytest scripts/tests` si `scripts/` a changé
    - la CI de la PR
 4. `mr-reviewer` a rendu APPROUVÉ, et si l'intégration de `main` a changé du code de production, il a relu ce delta.
@@ -118,6 +118,7 @@ Alors :
 2. vérifie que la PR est bien **mergée** et que l'issue est fermée ;
 3. **vérifie que ta branche a été supprimée** : `git ls-remote origin refs/heads/feature/<n>-<slug>` ne doit rien renvoyer. C'est GitHub qui la supprime au merge (réglage « Automatically delete head branches » du dépôt). Ne tente pas de la supprimer toi-même : le proxy git des sessions refuse toute suppression de branche (essai du 2026-10-24) ;
 4. écris `MERGÉE` avec le lien du merge commit et l'état de la branche (« branche supprimée par GitHub », ou « branche encore présente ») ;
+5. si le responsable te le demande (3e merge depuis la dernière non-régression groupée, ou dernier merge avant une pause), lance la **non-régression complète sur `main` à jour**, sur les deux projets, puis écris `NON-RÉGRESSION MAIN : OK` ou `KO` avec le rapport. En cas de KO, le verrou `merge` reste gelé et la correction passe en priorité (décision 0022) ;
 5. `LIBÈRE merge`, et `LIBÈRE base` si tu l'avais.
 
 Si une condition manque, tu ne merges pas : `LIBÈRE merge` et explique pourquoi.
