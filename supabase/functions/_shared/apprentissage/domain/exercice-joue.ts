@@ -1,7 +1,5 @@
 import type {
   Exercice,
-  ExerciceBarres,
-  ExerciceBoite,
   ExerciceCalcul,
   FormeConjuguee,
   Niveau,
@@ -14,7 +12,6 @@ import { ExerciceChronometre, type FluenceEnCours } from "./exercice-chronometre
 import { FluenceNonCommencee, JeNeSaisPasEnFluence, PasDeQuestionEnCours, ReponseIncompatible } from "./erreurs.ts";
 import { type EntrainementDeMemorisation, MemorisationJouee } from "./memorisation-jouee.ts";
 import { nombreDeQuestions } from "./nombre-de-questions.ts";
-import { MotAEcrire } from "./mot-a-ecrire.ts";
 import type { CorrectionDuMot } from "./mot-a-ecrire.ts";
 import { type BoiteEnCours, type BoiteOuverte, QuestionDeBoite } from "./question-de-boite.ts";
 import { QuestionDeProblemeEnBarres, type SchemaEnCours, type SchemaResolu } from "./question-de-probleme-en-barres.ts";
@@ -26,6 +23,12 @@ import type { QuestionPosee } from "./question-posee.ts";
 import type { ParoleDue } from "./parole-due.ts";
 import type { QuestionSuivie, TypeDeQuestion } from "./question-suivie.ts";
 import { CleDeQuestion } from "./cle-de-question.ts";
+import {
+  questionsDeBoite,
+  questionsDeCalcul,
+  questionsDeDictee,
+  questionsDeProblemesEnBarres,
+} from "./questions-de-l-exercice.ts";
 import { estUnTypeDeQuestionRetenu } from "./types-de-question-retenus.ts";
 import type { AideDonnee } from "./question-jouee.ts";
 import type { Reponse, ResultatDeReponse } from "./reponse.ts";
@@ -372,9 +375,7 @@ function contenuDe(exercice: Exercice, tireur: Tireur, niveau: Niveau): Contenu 
       return { questionsPosees: questionsJoueesAvec(exercice, tireur), formes: exercice.formes };
     case "dictee":
       return {
-        questionsDeDictee: exercice.mots.map((mot) =>
-          new QuestionDeDictee(mot, exercice.consigne, tireur.clavier(MotAEcrire.de(mot.mot)))
-        ),
+        questionsDeDictee: questionsDeDictee(exercice, tireur),
       };
     case "calcul":
       return contenuDeCalcul(exercice, tireur, niveau);
@@ -399,20 +400,4 @@ function contenuDeCalcul(exercice: ExerciceCalcul, tireur: Tireur, niveau: Nivea
   }
   const operationsTirees = tireur.operations(exercice.generateur);
   return { operationsTirees, questionsPosees: questionsDeCalcul(operationsTirees, tireur, niveau) };
-}
-
-function questionsDeCalcul(operations: readonly Operation[], tireur: Tireur, niveau: Niveau): QuestionDeCalcul[] {
-  return operations.map((operation) => QuestionDeCalcul.pour(operation, tireur, niveau));
-}
-
-function questionsDeBoite(exercice: ExerciceBoite, tireur: Tireur, niveau: Niveau): QuestionDeBoite[] {
-  return exercice.items.map((item) => QuestionDeBoite.pour(item, tireur, niveau));
-}
-
-function questionsDeProblemesEnBarres(
-  exercice: ExerciceBarres,
-  tireur: Tireur,
-  niveau: Niveau,
-): QuestionDeProblemeEnBarres[] {
-  return exercice.items.map((probleme) => QuestionDeProblemeEnBarres.pour(probleme, tireur, niveau));
 }

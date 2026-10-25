@@ -1,15 +1,21 @@
 import type { Exercice, Lecon, Niveau } from "../../catalogue/domain/index.ts";
 import type { CleDeQuestion } from "./cle-de-question.ts";
 import type { OrigineDeLaQuestion } from "./origine-de-la-question.ts";
-import { QuestionDeBoite } from "./question-de-boite.ts";
-import { QuestionDeCalcul } from "./question-de-calcul.ts";
-import { QuestionDeProblemeEnBarres } from "./question-de-probleme-en-barres.ts";
+import type { QuestionDeDictee } from "./question-de-dictee.ts";
 import { questionsJoueesAvec } from "./question-jouee.ts";
 import type { QuestionPosee } from "./question-posee.ts";
 import { lireUneOperation } from "./tirage-d-operations.ts";
+import {
+  questionsDeBoite,
+  questionsDeCalcul,
+  questionsDeDictee,
+  questionsDeProblemesEnBarres,
+} from "./questions-de-l-exercice.ts";
 import type { Tireur } from "./tireur.ts";
 
-export type QuestionDeRevision = Readonly<{ identite: CleDeQuestion; question: QuestionPosee }>;
+export type QuestionDeRevision =
+  | Readonly<{ identite: CleDeQuestion; question: QuestionPosee; dictee?: undefined }>
+  | Readonly<{ identite: CleDeQuestion; dictee: QuestionDeDictee; question?: undefined }>;
 
 /** La question retenue, retrouvée par sa clé dans l'exercice d'où elle vient. */
 export function questionDeRevision(
@@ -21,12 +27,22 @@ export function questionDeRevision(
 ): QuestionDeRevision | undefined {
   const exercice = lecon.exercices[origine.position];
   if (!exercice) return undefined;
-  const question = questionsDeLExercice(exercice, origine, tireur, niveau)
-    .find((candidate) => candidate.cle.valeur === identite.valeur);
+  if (exercice.type === "dictee") {
+    const dictee = retrouver(questionsDeDictee(exercice, tireur), identite);
+    return dictee && { identite, dictee };
+  }
+  const question = retrouver(questionsPosees(exercice, origine, tireur, niveau), identite);
   return question && { identite, question };
 }
 
-function questionsDeLExercice(
+function retrouver<Q extends { readonly cle: CleDeQuestion }>(
+  questions: readonly Q[],
+  identite: CleDeQuestion,
+): Q | undefined {
+  return questions.find((candidate) => candidate.cle.valeur === identite.valeur);
+}
+
+function questionsPosees(
   exercice: Exercice,
   origine: OrigineDeLaQuestion,
   tireur: Tireur,
@@ -34,13 +50,13 @@ function questionsDeLExercice(
 ): readonly QuestionPosee[] {
   switch (exercice.type) {
     case "boite":
-      return exercice.items.map((item) => QuestionDeBoite.pour(item, tireur, niveau));
+      return questionsDeBoite(exercice, tireur, niveau);
     case "barres":
-      return exercice.items.map((probleme) => QuestionDeProblemeEnBarres.pour(probleme, tireur, niveau));
+      return questionsDeProblemesEnBarres(exercice, tireur, niveau);
     case "calcul": {
       const operations = exercice.operations ??
         (origine.tirage === undefined ? [] : [lireUneOperation(origine.tirage)]);
-      return operations.map((operation) => QuestionDeCalcul.pour(operation, tireur, niveau));
+      return questionsDeCalcul(operations, tireur, niveau);
     }
     default:
       return questionsJoueesAvec(exercice, tireur);
