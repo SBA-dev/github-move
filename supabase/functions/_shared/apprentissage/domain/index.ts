@@ -64,8 +64,14 @@ export { revaliderLaSeance } from "./revalider-la-seance.ts";
 export { revaliderLeTestDeDepart } from "./revalider-le-test-de-depart.ts";
 export type { ParoleDue } from "./parole-due.ts";
 export { matieresDuParcours, parcoursDeLaMatiere } from "./parcours.ts";
-export { toutesLesLecons } from "./toutes-les-lecons.ts";
-export type { ClasseDAvant, FiltreDesLecons, LeconDeToutesLesLecons, ToutesLesLecons } from "./toutes-les-lecons.ts";
+export { choixDuFiltre, toutesLesLecons } from "./toutes-les-lecons.ts";
+export type {
+  ChoixDuFiltre,
+  ClasseDAvant,
+  FiltreDesLecons,
+  LeconDeToutesLesLecons,
+  ToutesLesLecons,
+} from "./toutes-les-lecons.ts";
 export { leconSuivanteDansLeParcours } from "./lecon-suivante-dans-le-parcours.ts";
 export type {
   EntreesDuParcours,

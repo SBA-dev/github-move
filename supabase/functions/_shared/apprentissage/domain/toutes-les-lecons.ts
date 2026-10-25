@@ -98,3 +98,16 @@ export function matiereReussieDuNiveau(entrees: EntreesDuParcours, matiere: Mati
   const lecons = leconsDeLaClasse(entrees, matiere);
   return lecons.length > 0 && lecons.every((lecon) => estReussie(entrees, lecon.id));
 }
+
+export type ChoixDuFiltre = Readonly<{ matieres: readonly Matiere[]; niveaux: readonly Niveau[] }>;
+
+export function choixDuFiltre(entrees: EntreesDuParcours): ChoixDuFiltre {
+  const aDesLecons = (filtre: FiltreDesLecons) => {
+    const { lecons, leconsDesClassesDAvant } = toutesLesLecons(entrees, filtre);
+    return lecons.length > 0 || leconsDesClassesDAvant.length > 0;
+  };
+  return {
+    matieres: toutesLesMatieres().filter((matiere) => aDesLecons({ matiere })),
+    niveaux: Niveau.tous().filter((niveau) => aDesLecons({ niveau })),
+  };
+}
