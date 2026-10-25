@@ -2,6 +2,7 @@ import { useCallback, useReducer, useRef, useState } from "react";
 import {
   type BoiteOuverte,
   type CorrectionDuMot,
+  INTRODUCTION_DE_LA_LECTURE,
   lectureDesChoix,
   QuestionDeBoite,
   QuestionDeProblemeEnBarres,
@@ -21,6 +22,7 @@ import { attendre } from "../seance/exercices/attendre.ts";
 import { aiderQuandOnNeSaitPas } from "../seance/exercices/paroles-du-calcul.ts";
 import type { usePersonnageQuiParle } from "../seance/usePersonnageQuiParle.ts";
 import type { Voix } from "../voix/index.ts";
+import type { TexteDeLecture } from "./commencer-la-revision.ts";
 import { encouragerLaReponse, feliciterLaReponse, vueDuCalcul } from "./paroles-de-la-revision.ts";
 
 export type Personnage = ReturnType<typeof usePersonnageQuiParle>;
@@ -32,6 +34,8 @@ const DUREE_DES_LETTRES_FAUSSES_MS = 1300;
 type Parametres = {
   readonly seance: SeanceDeRevision;
   readonly nombreDeQuestions: number;
+  /** Les textes des questions de lecture, par clé de question : ils sont lus avant la question. */
+  readonly textes: ReadonlyMap<string, TexteDeLecture>;
   readonly personnage: Personnage;
   readonly lire: Voix["lire"];
   readonly personnageGuide: PersonnageGuide;
@@ -58,7 +62,7 @@ function jeNeSaisPasPropose(question: QuestionPosee): boolean {
  * Chaque action repart d'une nouvelle « séquence » : une parole ou un abandon plus récent interrompt les suites en attente.
  */
 export function useDeroulementDeRevision(
-  { seance, nombreDeQuestions, personnage, lire, personnageGuide, toutLireAVoixHaute, onFini }: Parametres,
+  { seance, nombreDeQuestions, textes, personnage, lire, personnageGuide, toutLireAVoixHaute, onFini }: Parametres,
 ) {
   const { dire, faireSilence, reecouter: relire } = personnage;
   const [, redessiner] = useReducer((compteur: number) => compteur + 1, 0);
@@ -76,6 +80,8 @@ export function useDeroulementDeRevision(
   const [schemaResolu, setSchemaResolu] = useState<SchemaResolu | undefined>();
   const [lettresFausses, setLettresFausses] = useState<CorrectionDuMot | undefined>();
   const [toucheQuiBrille, setToucheQuiBrille] = useState<string | undefined>();
+  const [texteEcoutePour, setTexteEcoutePour] = useState<string | undefined>();
+  const [rangDuMotDuTexte, setRangDuMotDuTexte] = useState<number | undefined>();
   const [questionsReussies, setQuestionsReussies] = useState(0);
   const [avancementAnnonce, setAvancementAnnonce] = useState("");
   const pause = useRef(PAUSE_ENTRE_DEUX_PAROLES_MS);
@@ -119,13 +125,38 @@ export function useDeroulementDeRevision(
     if (choixLus !== undefined) await lire(choixLus);
   }, [seance, dire, presenterUneQuestionIllustree, direLeMotAEcouter, toutLireAVoixHaute, lire]);
 
+  const lireLeTexte = useCallback(async (numero: number, texte: string) => {
+    if (!(await dire({ texte: INTRODUCTION_DE_LA_LECTURE, nature: "introduction" }))) return;
+    const estLaDerniere = () => numero === sequence.current;
+    await lire(texte, {
+      onMot: (rang) => estLaDerniere() && setRangDuMotDuTexte(rang),
+      onFin: () => estLaDerniere() && setRangDuMotDuTexte(undefined),
+    });
+  }, [dire, lire]);
+
+  /** Une question de lecture commence par la lecture de son texte ; la question suit quand l'enfant dit « J'ai écouté ». */
+  const ouvrir = useCallback(async (numero: number) => {
+    const courante = seance.questionEnCours();
+    const texte = courante && textes.get(courante.identite.valeur);
+    if (texte) await lireLeTexte(numero, texte.texte);
+    else await presenter(numero);
+  }, [seance, textes, lireLeTexte, presenter]);
+
+  const jAiEcoute = useCallback(async () => {
+    const numero = ++sequence.current;
+    faireSilence();
+    setRangDuMotDuTexte(undefined);
+    setTexteEcoutePour(seance.questionEnCours()?.identite.valeur);
+    await presenter(numero);
+  }, [faireSilence, seance, presenter]);
+
   const commencer = useCallback(async () => {
     vivant.current = true;
     const numero = ++sequence.current;
     if (!(await dire({ texte: accueillirEnRevision(), nature: "consigne" }))) return;
     await attendre(pause.current);
-    if (numero === sequence.current) await presenter(numero);
-  }, [dire, presenter]);
+    if (numero === sequence.current) await ouvrir(numero);
+  }, [dire, ouvrir]);
 
   const feliciterEtPasserALaSuite = useCallback(async (courante: QuestionDeRevision, texte: string | undefined) => {
     figer(courante);
@@ -143,8 +174,8 @@ export function useDeroulementDeRevision(
     setSchemaResolu(undefined);
     setPhrasesDites(0);
     if (seance.estFinie()) return quandFini.current();
-    await presenter(++sequence.current);
-  }, [figer, questionsReussies, nombreDeQuestions, dire, personnageGuide, seance, presenter]);
+    await ouvrir(++sequence.current);
+  }, [figer, questionsReussies, nombreDeQuestions, dire, personnageGuide, seance, ouvrir]);
 
   const apresLaReponse = useCallback(async (courante: QuestionDeRevision, resultat: ResultatDeReponse, texte?: string) => {
     if (resultat === "dejaEcartee") return;
@@ -273,6 +304,9 @@ export function useDeroulementDeRevision(
     choixVisiblesPour,
     bulleEclatee,
     phrasesDites,
+    texteEcoutePour,
+    rangDuMotDuTexte,
+    jAiEcoute,
     boiteOuverte,
     schemaResolu,
     lettresFausses,

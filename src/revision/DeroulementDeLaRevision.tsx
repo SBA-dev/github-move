@@ -44,6 +44,7 @@ export function DeroulementDeLaRevision(
   const deroulement = useDeroulementDeRevision({
     seance,
     nombreDeQuestions,
+    textes,
     personnage,
     lire: voix.lire,
     personnageGuide: univers.personnageGuide,
@@ -63,6 +64,8 @@ export function DeroulementDeLaRevision(
   const repondreParUnChoix = (texte: string) => void deroulement.repondreParUnChoix(texte);
   const repondreParUnNombre = (nombre: number) => void deroulement.repondreParUnNombre(nombre);
   const jeNeSaisPas = () => void deroulement.jeNeSaisPas();
+  const texteDeLaQuestion = courante && textes.get(courante.identite.valeur);
+  const lectureEnAttente = texteDeLaQuestion !== undefined && deroulement.texteEcoutePour !== courante?.identite.valeur;
   return (
     <>
       <RecipientDeProgression
@@ -107,18 +110,23 @@ export function DeroulementDeLaRevision(
               onJeNeSaisPas={jeNeSaisPas}
             />
           )}
-          {question instanceof QuestionJouee && textes.has(courante.identite.valeur) && (
+          {question instanceof QuestionJouee && texteDeLaQuestion && (
             <AffichageDuTexte
-              titre={textes.get(courante.identite.valeur)?.titre}
-              texte={textes.get(courante.identite.valeur)?.texte ?? ""}
-              rangDuMotPrononce={undefined}
+              titre={texteDeLaQuestion.titre}
+              texte={texteDeLaQuestion.texte}
+              rangDuMotPrononce={deroulement.rangDuMotDuTexte}
             />
+          )}
+          {question instanceof QuestionJouee && lectureEnAttente && (
+            <button type="button" className="action-principale" data-testid="j-ai-ecoute" onClick={() => void deroulement.jAiEcoute()}>
+              J'ai écouté
+            </button>
           )}
           {question instanceof QuestionJouee && (
             <QuestionAChoix
               question={question}
               avecEcoute={question.motAEcouter !== undefined}
-              questionMasquee={false}
+              questionMasquee={lectureEnAttente}
               choixVisibles={deroulement.choixVisiblesPour === question}
               reussie={reussie}
               bulleEclatee={deroulement.bulleEclatee}
