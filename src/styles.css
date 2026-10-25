@@ -387,8 +387,26 @@ button.secondaire:hover { background: #fdf3ea; }
 .formulaire-de-profil .actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .profils-de-l-espace-parent .confirmation { font-weight: 700; }
 .accueil-de-l-enfant { display: grid; justify-items: center; gap: 12px; max-width: 100%; }
-.proposition-de-revision { display: grid; justify-items: center; gap: 4px; max-width: 100%; }
-.proposition-de-revision p { margin: 0; overflow-wrap: anywhere; text-align: center; font-weight: 700; }
+.accueil-de-l-enfant > * { max-width: 100%; }
+.date-du-jour { margin: 0; padding: 6px 14px; border-radius: 16px; background: rgba(255, 255, 255, .85); font-weight: 700; }
+.grande-tuile { display: grid; justify-items: center; gap: 8px; width: min(100%, 480px); margin: 0; padding: 16px; border: 3px solid var(--accent-fonce); border-radius: 20px; background: #fff; overflow-wrap: anywhere; }
+.grande-tuile h2, .grande-tuile p { margin: 0; }
+.grande-tuile .matiere-et-niveau { font-weight: 700; color: var(--accent-fonce); }
+.objectif-du-jour { display: grid; justify-items: center; gap: 6px; width: min(100%, 480px); text-align: center; overflow-wrap: anywhere; }
+.objectif-du-jour p, .objectif-du-jour .titre-de-l-objectif { margin: 0; }
+.objectif-du-jour .titre-de-l-objectif { font-size: 1rem; }
+.objectif-du-jour .avancement-de-l-objectif, .objectif-du-jour .objectif-atteint { font-weight: 700; color: var(--accent-fonce); }
+.barre-de-l-objectif { width: 100%; height: 12px; border-radius: 6px; background: #eadfd2; overflow: hidden; }
+.remplissage-de-l-objectif { height: 100%; background: var(--accent-fonce); }
+.tuiles-du-jour, .tuiles-de-matiere { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; width: 100%; margin: 0; padding: 0; list-style: none; }
+.tuiles-du-jour li, .tuiles-de-matiere li { flex: 1 1 140px; min-width: 0; max-width: 100%; }
+button.tuile { display: grid; gap: 4px; justify-items: center; width: 100%; min-height: 64px; padding: 10px 12px; border: 2px solid var(--accent-fonce); border-radius: 16px; color: var(--texte); background: #fff; overflow-wrap: anywhere; }
+button.tuile:hover { background: #fdf3ea; }
+button.tuile .nom-de-la-tuile, button.tuile .nom-de-la-matiere { font-size: 1.1rem; }
+.dock { position: sticky; bottom: 0; z-index: 2; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; padding: 8px max(12px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)); background: rgba(255, 255, 255, .95); border-top: 2px solid var(--accent-fonce); }
+.dock button { flex: 1 1 auto; color: var(--texte); background: #fff; border: 2px solid var(--accent-fonce); }
+.dock button:hover { background: #fdf3ea; }
+.dock button[aria-current="page"] { color: #fff; background: var(--accent-fonce); }
 
 /* Mode dys du profil en cours : police Andika, lettres, mots et lignes espacés, syllabes en couleurs alternées. */
 [data-mode-dys="true"] {

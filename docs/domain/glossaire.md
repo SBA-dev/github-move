@@ -115,6 +115,8 @@ Le glossaire garde l'orthographe française.
 | Leçon réussie au test de départ | Leçon que le test de départ compte comme réussie, sans étoile : elle fait avancer le parcours, ne donne ni étoile, ni badge, ni compétence acquise (#27, réponses 27.1 et 27.2 du PO). Une séance terminée ensuite lui donne ses étoiles. | Apprentissage | acquise au test, validée, cochée (dans le code) |
 | Résultat du test de départ | Pour un enfant : la date du dernier test de départ fait et les leçons réussies au test de départ. Il ne modifie jamais une étoile (#27). | Apprentissage | progression, score, note |
 | Test de départ fait | Le profil a fini au moins un test de départ, par toutes ses questions ou par un arrêt ; quitter en cours ne compte pas (#27). | Apprentissage | test passé, testFait (dans le code) |
+| Leçon du jour | Leçon proposée par la grande tuile de l'accueil de l'enfant : une prochaine leçon, choisie parmi celles des matières du parcours, en alternant français et maths selon la matière de la dernière séance terminée, puis les autres matières dans l'ordre du Catalogue (réponse 29.1). Aucune quand toutes les matières du parcours sont réussies ; jamais une leçon des classes d'avant ni d'une classe au-dessus (réponse 29.9). Une fin de séance sans leçon suivante la propose (réponse 29.8). Calculée, jamais enregistrée (#29). | Apprentissage | prochaine leçon (au singulier, il y en a une par matière), leçon conseillée, mission du jour |
+| Tuile du jour | Ce que l'accueil de l'enfant propose de faire aujourd'hui, en plus de la leçon du jour, seulement quand c'est dû, dans un ordre fixe : devoirs et dictée du jour (lot 6), révision (« À revoir », s'il y a au moins une question due), test de départ (tant qu'il n'est pas fait). Terme du domaine (réponse 29.17) (#29). | Apprentissage | tâche (interdit pour Devoir), activité (interdit pour Exercice), notification |
 | Question ratée | Question d'une séance terminée qui a coûté au moins une erreur (réponse fausse ou « Je ne sais pas ») ; `QuestionRatee` dans le code (#24, #28). Le test de départ n'en produit pas : on y dit **question fausse**. | Apprentissage | question fausse (réservé au test de départ et à la séance de révision), faute |
 | File de révision | Pour un profil enfant : toutes ses questions retenues et le nombre d'erreurs corrigées pour de bon ; 250 questions au plus (#28, réponse 28.3). | Apprentissage | liste d'erreurs, à revoir (mot d'interface), carnet |
 | Question retenue | Question ratée gardée dans la file de révision, une seule fois par profil, avec sa leçon d'origine, son intervalle de révision, sa date de révision et son nombre de fois ratée. Une addition ratée donne une seule question retenue (#28). | Apprentissage | erreur à revoir, question à rattraper |
@@ -154,6 +156,8 @@ Le glossaire garde l'orthographe française.
 | Section de l'écran (à valider) | Une des parties de l'écran des récompenses de l'enfant : cabane (#32), histoire (#33), badges (#31), records de calcul rapide (#65), toujours dans cet ordre. Peut-être un simple mot d'interface (#65). | Motivation | onglet, rubrique |
 | Records de calcul rapide (à valider) | Section de l'écran des récompenses de l'enfant qui montre les records de fluence du profil en cours, un par exercice de fluence ; absente quand le profil n'a aucun record. Les records sont lus dans Apprentissage, jamais modifiés. Interface : « Mes records de calcul rapide » (#65). | Motivation | trophées, meilleurs scores, high scores |
 | Pastille de record (à valider) | Libellé d'un exercice de fluence et meilleur score du record de fluence correspondant, dans les records de calcul rapide. Libellé proposé : le titre de l'exercice (question n°3 de #65). Peut-être un simple mot d'interface (#65). | Motivation | badge, médaille, trophée |
+| Objectif du jour | Encouragement de l'accueil de l'enfant : jouer 2 leçons dans la journée (jour de l'appareil). Compte chaque leçon distincte qui a une séance terminée ce jour-là, et 1 de plus s'il y a au moins une séance de révision terminée (réponse 29.2) ; jamais le test de départ (réponse 27.4). Il ne limite rien et ne modifie aucune note. Calculé, jamais enregistré. Contexte : Motivation, en lecture seule (réponse 29.3) (#29). | Motivation | défi, quota, limite, temps d'écran, mission du jour |
+
 | Total des étoiles | Somme des meilleures étoiles de toutes les leçons du profil, toutes classes confondues ; le test de départ n'y ajoute rien. Il ne baisse jamais. Interface : « Tu as 12 étoiles » (#32, validé par le PO le 2026-10-25). | Motivation | score, points, note |
 | Palier de la cabane | Seuil du total des étoiles qui fait recevoir un objet de la cabane : 3, 6, 10, 15, 20, 26, 33, 40, 48, 56, 65, 75 (legacy). Deux paliers sont espacés d'au moins 3 : une séance fait recevoir au plus un objet. Interface : pastille « 10 ★ », dite « 10 étoiles » (#32, validé par le PO le 2026-10-25, décision 32.11). | Motivation | niveau, étape, seuil (seul) |
 | Objet de la cabane | Ce que reçoit la cabane quand le total des étoiles atteint un palier (« une lanterne »). Il ne se perd jamais. Les 12 objets reçus : la cabane est complète. Les noms des objets sont du contenu, pas des termes du domaine (#32, validé par le PO le 2026-10-25). | Motivation | badge, trophée, récompense (seul), objet débloqué |
@@ -363,6 +367,30 @@ Lot 4 (#27, `docs/stories/27/domain-model.md`) : le PO a suivi toutes les recomm
 Lot 5 (#65, `docs/stories/65/domain-model.md`) : à trancher par le PO.
 - Nom de l'écran des récompenses de l'enfant : tranché, « Mes médailles » (décision 65.1 du PO ; « médaille » retiré des synonymes interdits de Badge, « trophée » reste interdit) ;
 - « Section de l'écran » et « Pastille de record » : termes du domaine ou mots d'interface (#65).
+
+Lot 4 (#29, `docs/stories/29/domain-model.md`) : questions 29.1 à 29.18, tranchées le 2026-10-25 (voir la note suivante).
+- « Objectif du jour » : ajouté `(à valider)` en Motivation (signalé par #27) ; contexte (Apprentissage ou Motivation) : question 29.3 ;
+- « Leçon du jour » et « Tuile du jour » : ajoutés `(à valider)` en Apprentissage (questions 29.17, 29.18) ;
+- « Aujourd'hui » : proposé comme simple mot de cadrage, l'écran étant l'**Accueil de l'enfant** (question 29.5, qui répond à 27.22). Si c'est retenu, la ligne « Devoir » se lit « mis en avant sur l'accueil de l'enfant » (ligne non réécrite) ;
+- « Mes trophées » reste interdit : le dock dira « Mes médailles » (65.1, question 29.7).
+
+Lot 5 (#30, `docs/stories/30/domain-model.md`) : questions 30.1 à 30.12, tranchées le 2026-10-25 (voir la note suivante).
+- « Série » : la règle « jusqu'à aujourd'hui ou hier » est celle du legacy ; « (à valider) » retiré si 30.2 est retenue. La série est **calculée** à partir des **jours de séance**, jamais enregistrée ;
+- « Jour de séance » reste dans Apprentissage (proposition 30.5) : déduit des séances terminées et des séances de révision terminées (28.16), au **Jour** de l'appareil à la fin de la séance (28.9, proposition 30.6) ; le test de départ n'en donne pas (27.4) ;
+- « Pastille de série » et « Série jusqu'à hier » : ajoutés `(à valider)` en Motivation ; termes du domaine, mot d'interface ou simple état (question 30.12) ;
+- « Minutes jouées » : pas ajouté ; elles ne servent qu'au rapport de la semaine (lot 6, décision 0005), à définir par #34 ou #35 ;
+- « streak », « flamme » (l'icône), « jour joué », « connexion » restent interdits ; pas de « record de série ».
+
+Lot 4 et lot 5 (#29, #30) : tranché par le PO le 2026-10-25, « OK #29 #30 reco partout » (réponses 29.1 à 29.24 et 30.1 à 30.14).
+- **Leçon du jour**, **Tuile du jour** et **Objectif du jour** (Motivation, réponse 29.3) sont validés ;
+- « Aujourd'hui » n'est pas un terme du domaine : l'écran est l'**Accueil de l'enfant** (réponse 29.5, qui répond « oui » à 27.22). Les lignes « Accueil de l'enfant » et « Devoir » se lisent en conséquence (« mis en avant sur l'accueil de l'enfant ») ; l'équipe de #29 les réécrit après la vague ;
+- **Série** est validée avec la règle « jusqu'à aujourd'hui ou hier » (réponse 30.2) : « (à valider) » est à retirer de sa ligne par l'équipe de #30 après la vague ;
+- « Pastille de série » est un mot d'interface et « Série jusqu'à hier » un simple état de la série (réponse 30.12) : ni l'un ni l'autre n'entre au glossaire ;
+- **Jour de séance** reste dans Apprentissage (réponse 30.5) ; une séance terminée garde le jour envoyé par l'appareil, comme la séance de révision (réponse 30.6 : colonne de jour sur les séances terminées).
+
+Lot 4 (#29), note du 2026-10-25 sur la **Leçon suivante** (réponses 29.8, 29.24, 29.25, 29.26) : la ligne « Leçon suivante » dit encore « ni vers une autre matière avant #29 » ; elle se lit désormais ainsi.
+- Depuis #29, quand la matière n'a plus de leçon suivante dans le parcours (dernière leçon du parcours, leçon des classes d'avant, leçon d'une classe au-dessus), la leçon suivante est la **leçon du jour**, si elle existe et n'est pas la leçon jouée (29.8, 29.24). La leçon du jour devient donc la leçon suivante dans ces cas (code : `leconSuivanteEnFinDeSeance`) ;
+- quand aucune leçon suivante n'est proposée, la fin de séance propose le bouton « Toutes les leçons » (29.25, 29.26 ; mot d'interface, pas un terme du domaine).
 
 Lot 4 (#28, `docs/stories/28/domain-model.md`) : le PO a suivi toutes les recommandations 28.1 à 28.28 (2026-10-25, « #28 reco OK ») ; voir Décision n°38. Propositions retenues (réponses 28.7 et 28.16) :
 - « Boîte » (legacy `box`) n'entre pas au domaine : il désigne la boîte à jetons et il est interdit pour Groupe. Proposition : **Intervalle de révision** ;

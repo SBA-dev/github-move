@@ -9,6 +9,8 @@ Fonctionnalité: Étoiles et fin de la séance
   besoin de se terminer dans l'interface, ou ne joue que son exercice bulles « Quel son entends-tu ? »),
   « Les animaux » (an-cp-animaux, dernière leçon d'anglais du CP) et « Les doubles » (ma-cp-doubles, avec la
   fluence « Calcul rapide : les doubles »).
+  « Les sons ou, on, an » (ordre 5) est aussi la première leçon de français du CP : c'est la leçon du jour
+  de Léa, en CP sans progression, après une séance d'anglais (réponses 29.8 et 29.25 de #29).
   Leçons de test, ajoutées à la bibliothèque pour ces scénarios :
   - « Les sons de test » (français, CP, ordre 901) : une étape de leçon, puis deux exercices bulles de
     5 questions à quatre choix chacun, « Premières bulles » (consigne « Touche le mot qui a le son ou. »)
@@ -122,11 +124,14 @@ Fonctionnalité: Étoiles et fin de la séance
       Alors la fin de la séance annonce « Ensuite : La suite de test »
       Et la leçon suivante ouvre la page de la leçon « La suite de test »
 
-    Scénario: Après la dernière leçon d'une matière, aucune leçon suivante n'est proposée
+    # Réponse 29.8 (#29)
+    # Réponse 29.25 (#29)
+    @issue-29
+    Scénario: Après la dernière leçon d'une matière, la fin de la séance propose la leçon du jour
       Étant donné que Léa joue la séance complète de la leçon « Les animaux »
       Quand Léa réussit la dernière question de la séance
-      Alors la fin de la séance propose « Accueil » et « Rejouer »
-      Mais aucune leçon suivante n'est proposée
+      Alors la fin de la séance annonce « Ensuite : Les sons ou, on, an »
+      Et la leçon suivante ouvre la page de la leçon « Les sons ou, on, an »
 
     Scénario: Rejouer relance le même choix de séance
       Étant donné que Léa a terminé une séance de l'exercice « Dernières bulles » seul
