@@ -10,7 +10,8 @@ const ONGLETS: readonly { readonly cle: Onglet; readonly libelle: string }[] = [
   { cle: "mes-lecons", libelle: "Mes leçons" },
 ];
 
-type Props = { readonly profils: readonly ProfilEnfant[] };
+/** `undefined` tant que les profils se chargent. */
+type Props = { readonly profils: readonly ProfilEnfant[] | undefined };
 
 /** La section « Leçons » de l'espace parent : deux onglets, « Créer une leçon » et « Mes leçons ». */
 export function LeconsPersonnellesDuParent({ profils }: Props) {
@@ -35,7 +36,7 @@ export function LeconsPersonnellesDuParent({ profils }: Props) {
         ))}
       </div>
       <div role="tabpanel" id={`${identifiant}-panneau`} aria-labelledby={`${identifiant}-${onglet}`}>
-        {onglet === "creer" ? <CreerUneLecon profils={profils} /> : <MesLecons profils={profils} />}
+        {onglet === "creer" ? <CreerUneLecon profils={profils} /> : <MesLecons profils={profils ?? []} />}
       </div>
     </section>
   );

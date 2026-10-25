@@ -4,7 +4,7 @@ import type { Lecon, Niveau } from "@domain/catalogue";
 import type { ProfilEnCours } from "@domain/famille";
 import type { Univers } from "@domain/motivation";
 import { niveauDuProfil } from "../parcours/niveau-du-profil.ts";
-import { lireLesLeconsPersonnellesDuProfil } from "../accompagnement/lecons-personnelles-lues.ts";
+import { useLeconsPersonnellesDuProfil } from "../accompagnement/useLeconsPersonnellesDuProfil.ts";
 import { jourDuNavigateur } from "../seance/jour-du-navigateur.ts";
 import { useToutesLesLecons } from "../test-de-depart/useToutesLesLecons.ts";
 import { usePersonnageQuiParle } from "../seance/usePersonnageQuiParle.ts";
@@ -31,20 +31,6 @@ export function EcranDeRevision(props: Props) {
   }
   const lecons = [...leconsDuCatalogue, ...leconsPersonnelles];
   return <RevisionChargee lecons={lecons} file={file} niveau={niveauDuProfil(props.profil.niveau)} {...props} />;
-}
-
-function useLeconsPersonnellesDuProfil(profil: string): readonly Lecon[] | undefined {
-  const [lecons, setLecons] = useState<readonly Lecon[] | undefined>();
-  useEffect(() => {
-    let annule = false;
-    void lireLesLeconsPersonnellesDuProfil(profil).then((lues) => {
-      if (!annule) setLecons(lues);
-    });
-    return () => {
-      annule = true;
-    };
-  }, [profil]);
-  return lecons;
 }
 
 type PropsChargees = Props & {

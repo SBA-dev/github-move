@@ -17,7 +17,8 @@ import { AUCUN_ENFANT, messageApresEnregistrement, PREPARATION_IMPOSSIBLE, PROGR
 const JE_NE_SAIS_PAS = "Je ne sais pas";
 
 type Props = {
-  readonly profils: readonly ProfilEnfant[];
+  /** `undefined` tant que les profils se chargent. */
+  readonly profils: readonly ProfilEnfant[] | undefined;
 };
 
 type Apercu = { readonly preparee: LeconPreparee; readonly demande: { readonly profil: ProfilEnfant; readonly texte: string; readonly classe: string; readonly matiere: string } };
@@ -40,6 +41,7 @@ export function CreerUneLecon({ profils }: Props) {
   const [confirmation, setConfirmation] = useState<string | undefined>();
   const [enCours, setEnCours] = useState(false);
 
+  if (profils === undefined) return <p role="status">Chargement…</p>;
   const enfant = profils.find(({ id }) => id.valeur === enfantChoisi) ?? profils[0];
   if (enfant === undefined) return <p>{AUCUN_ENFANT}</p>;
   const classe = classeChoisie ?? enfant.niveau.valeur;

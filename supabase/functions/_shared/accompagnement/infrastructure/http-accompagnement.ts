@@ -25,7 +25,7 @@ export { EntreeInvalide };
 
 const PREFIXE_D_UNE_LECON_PERSONNELLE = "perso-";
 const LONGUEUR_MAXIMALE_D_UN_IDENTIFIANT = 100;
-// Le domaine borne le texte à 3000 caractères après avoir retiré les espaces : cette limite évite seulement de lire un corps démesuré.
+// Le domaine borne le texte à 3000 caractères après un `trim()` : cette limite évite seulement de lire un corps démesuré.
 const LONGUEUR_MAXIMALE_DU_CORPS_DU_TEXTE = 10000;
 
 export type CorpsDeCreation = {

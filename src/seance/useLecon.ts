@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { Lecon, SectionDuProgramme } from "@domain/catalogue";
 import { chargerLaLecon, chargerLaSectionDuProgramme } from "./bibliotheque.ts";
 
@@ -9,12 +9,12 @@ export type LeconChargee =
 
 type Resultat<T> = { readonly pour: string; readonly valeur: T };
 
-function useChargement<T>(cle: string | undefined, charger: (cle: string) => Promise<T>): Resultat<T> | undefined {
+/** `charger` doit être stable tant que `cle` ne change pas ; la valeur d'une clé périmée n'est jamais rendue. */
+function useChargement<T>(cle: string, charger: () => Promise<T>): Resultat<T> | undefined {
   const [resultat, setResultat] = useState<Resultat<T> | undefined>();
   useEffect(() => {
-    if (cle === undefined) return;
     let annule = false;
-    void charger(cle).then((valeur) => {
+    void charger().then((valeur) => {
       if (!annule) setResultat({ pour: cle, valeur });
     });
     return () => {
@@ -24,18 +24,15 @@ function useChargement<T>(cle: string | undefined, charger: (cle: string) => Pro
   return resultat?.pour === cle ? resultat : undefined;
 }
 
-function chargerLaLeconDeLaCle(cle: string): Promise<Lecon | undefined> {
-  const [profil = "", identifiant = ""] = cle.split("/");
-  return chargerLaLecon(identifiant, profil);
-}
-
 /** La leçon de la bibliothèque, sinon une leçon personnelle du profil. */
 export function useLecon(identifiant: string, profil: string): LeconChargee {
-  const resultat = useChargement(`${profil}/${identifiant}`, chargerLaLeconDeLaCle);
+  const charger = useCallback(() => chargerLaLecon(identifiant, profil), [identifiant, profil]);
+  const resultat = useChargement(JSON.stringify([profil, identifiant]), charger);
   if (!resultat) return { type: "chargement" };
   return resultat.valeur ? { type: "trouvee", lecon: resultat.valeur } : { type: "introuvable" };
 }
 
 export function useSectionDuProgramme(identifiant: string): SectionDuProgramme | undefined {
-  return useChargement(identifiant, chargerLaSectionDuProgramme)?.valeur;
+  const charger = useCallback(() => chargerLaSectionDuProgramme(identifiant), [identifiant]);
+  return useChargement(identifiant, charger)?.valeur;
 }

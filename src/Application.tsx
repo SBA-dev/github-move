@@ -308,7 +308,7 @@ export function Application() {
                   onCree={(profilCree) => proposerLeTestDeDepart(() => definir(profilCree))}
                   onRefaireLeTestDeDepart={(profilExistant) => proposerLeTestDeDepart(() => choisirQuiJoue.executer(profilExistant))}
                 />
-                <LeconsPersonnellesDuParent profils={profilsDuParent.etat.type === "charges" ? profilsDuParent.etat.profils : []} />
+                <LeconsPersonnellesDuParent profils={profilsDuParent.etat.type === "charges" ? profilsDuParent.etat.profils : undefined} />
                 <ChoixDeLaVoix voix={voix} />
               </EspaceParent>
             )}

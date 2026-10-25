@@ -4,6 +4,7 @@ import { estUnIdentifiantDeProfil } from "../seance/fin-de-seance/corps-de-la-se
 
 const TABLE = "lecons_personnelles";
 const COLONNES = "id, profil, texte_du_parent, lecon, cree_le";
+const COLONNES_POUR_L_ENFANT = "id, profil, lecon, cree_le";
 
 export type LeconPersonnelleLue = {
   readonly lecon: Lecon;
@@ -14,7 +15,7 @@ export type LeconPersonnelleLue = {
 
 type Ligne = {
   readonly profil: string;
-  readonly texte_du_parent: string;
+  readonly texte_du_parent?: string;
   readonly lecon: unknown;
   readonly cree_le: string;
 };
@@ -23,7 +24,7 @@ type Ligne = {
 function enLeconsLues(lignes: readonly Ligne[]): LeconPersonnelleLue[] {
   return lignes.flatMap((ligne) => {
     try {
-      return [{ lecon: lireLecon(ligne.lecon), profil: ligne.profil, texteDuParent: ligne.texte_du_parent, creeeLe: ligne.cree_le }];
+      return [{ lecon: lireLecon(ligne.lecon), profil: ligne.profil, texteDuParent: ligne.texte_du_parent ?? "", creeeLe: ligne.cree_le }];
     } catch {
       return [];
     }
@@ -41,7 +42,7 @@ export async function lireLesLeconsPersonnellesDuParent(): Promise<LeconPersonne
 export async function lireLesLeconsPersonnellesDuProfil(profil: string): Promise<readonly Lecon[]> {
   if (!estUnIdentifiantDeProfil(profil)) return [];
   try {
-    const { data, error } = await clientSupabase().from(TABLE).select(COLONNES).eq("profil", profil)
+    const { data, error } = await clientSupabase().from(TABLE).select(COLONNES_POUR_L_ENFANT).eq("profil", profil)
       .order("cree_le", { ascending: false });
     if (error) return [];
     return enLeconsLues(data as Ligne[]).map(({ lecon }) => lecon);
@@ -54,7 +55,7 @@ export async function lireLesLeconsPersonnellesDuProfil(profil: string): Promise
 export async function lireUneLeconPersonnelleDuProfil(profil: string, identifiant: string): Promise<Lecon | undefined> {
   if (!estUnIdentifiantDeProfil(profil)) return undefined;
   try {
-    const { data, error } = await clientSupabase().from(TABLE).select(COLONNES).eq("profil", profil).eq("id", identifiant)
+    const { data, error } = await clientSupabase().from(TABLE).select(COLONNES_POUR_L_ENFANT).eq("profil", profil).eq("id", identifiant)
       .maybeSingle();
     if (error || data === null) return undefined;
     return enLeconsLues([data as Ligne])[0]?.lecon;
