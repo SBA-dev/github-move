@@ -51,6 +51,7 @@ function rangDesMots(
 
 export class LectureAVoixHaute {
   private etat: EtatDuSon;
+  private voixSuspendue = false;
   private voixBloqueeSignalee = false;
 
   constructor(private readonly dependances: DependancesDeLectureAVoixHaute) {
@@ -67,7 +68,7 @@ export class LectureAVoixHaute {
       onFin?: () => void;
     } = {},
   ): Promise<void> {
-    if (this.etat === "muet") return;
+    if (this.etat === "muet" || this.voixSuspendue) return;
     const { lecteur, hasard } = this.dependances;
     lecteur.arreter();
     const texte = texteALire(brut);
@@ -92,6 +93,11 @@ export class LectureAVoixHaute {
 
   couperLaVoix(): void {
     this.dependances.lecteur.arreter();
+  }
+
+  suspendre(): void {
+    this.voixSuspendue = true;
+    this.couperLaVoix();
   }
 
   passerEnMuet(): void {
