@@ -69,7 +69,7 @@ export type {
   EntreesDuParcours,
   EtatDansLeParcours,
   EtatHorsDuParcours,
-  LeconDUneClasseDAvant,
+  LeconDesClassesDAvant,
   LeconDuParcours,
   LeconId,
   LeconReussieDUneClasseAuDessus,

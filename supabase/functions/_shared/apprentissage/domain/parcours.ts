@@ -29,7 +29,7 @@ export type LeconReussieDUneClasseAuDessus = Readonly<{
   etoiles?: Etoiles;
 }>;
 
-export type LeconDUneClasseDAvant = Readonly<{
+export type LeconDesClassesDAvant = Readonly<{
   lecon: LeconId;
   niveau: Niveau;
   titre: string;
@@ -38,7 +38,7 @@ export type LeconDUneClasseDAvant = Readonly<{
 
 export type Parcours = Readonly<{
   lecons: readonly LeconDuParcours[];
-  leconsDesClassesDAvant: readonly LeconDUneClasseDAvant[];
+  leconsDesClassesDAvant: readonly LeconDesClassesDAvant[];
   leconsReussiesDesClassesAuDessus: readonly LeconReussieDUneClasseAuDessus[];
   prochaineLecon: LeconId | undefined;
   nombreDeLeconsReussies: number;
@@ -73,8 +73,8 @@ export function parcoursDeLaMatiere(entrees: EntreesDuParcours, matiere: Matiere
   };
 }
 
-function leconsDesClassesDAvant(entrees: EntreesDuParcours, matiere: Matiere): LeconDUneClasseDAvant[] {
-  return leconsDesAutresClasses(entrees, matiere, (lecon) => entrees.niveau.estAuDessusDe(lecon.niveau))
+function leconsDesClassesDAvant(entrees: EntreesDuParcours, matiere: Matiere): LeconDesClassesDAvant[] {
+  return leconsDesAutresClasses(entrees, matiere, (niveau) => entrees.niveau.estAuDessusDe(niveau))
     .map((lecon) => ({
       lecon: lecon.id,
       niveau: lecon.niveau,
@@ -87,7 +87,7 @@ function leconsReussiesDesClassesAuDessus(
   entrees: EntreesDuParcours,
   matiere: Matiere,
 ): LeconReussieDUneClasseAuDessus[] {
-  return leconsDesAutresClasses(entrees, matiere, (lecon) => lecon.niveau.estAuDessusDe(entrees.niveau))
+  return leconsDesAutresClasses(entrees, matiere, (niveau) => niveau.estAuDessusDe(entrees.niveau))
     .flatMap((lecon) => {
       if (!estReussie(entrees, lecon.id)) return [];
       const etoiles = entrees.meilleuresEtoiles.get(lecon.id);
@@ -98,17 +98,19 @@ function leconsReussiesDesClassesAuDessus(
 function leconsDesAutresClasses(
   entrees: EntreesDuParcours,
   matiere: Matiere,
-  estDansLaBonneDirection: (lecon: Lecon) => boolean,
+  estDeLaBonneClasse: (niveau: Niveau) => boolean,
 ): Lecon[] {
-  return entrees.lecons
-    .filter((lecon) => lecon.matiere.code === matiere.code && estDansLaBonneDirection(lecon))
+  return toutesLesLeconsDeLaMatiere(entrees, matiere)
+    .filter((lecon) => estDeLaBonneClasse(lecon.niveau))
     .sort((a, b) => ordreDesNiveaux(a, b) || parOrdrePuisIdentifiant(a, b));
 }
 
 function leconsDeLaMatiere(entrees: EntreesDuParcours, matiere: Matiere): Lecon[] {
-  return entrees.lecons.filter((lecon) =>
-    lecon.matiere.code === matiere.code && lecon.niveau.valeur === entrees.niveau.valeur
-  );
+  return toutesLesLeconsDeLaMatiere(entrees, matiere).filter((lecon) => lecon.niveau.valeur === entrees.niveau.valeur);
+}
+
+function toutesLesLeconsDeLaMatiere(entrees: EntreesDuParcours, matiere: Matiere): Lecon[] {
+  return entrees.lecons.filter((lecon) => lecon.matiere.code === matiere.code);
 }
 
 function etatDeLaLecon(
