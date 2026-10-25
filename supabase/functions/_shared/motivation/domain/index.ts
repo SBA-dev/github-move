@@ -72,6 +72,7 @@ export {
   finDePhraseDuPersonnageGuide,
   libelleDuPalier,
   libelleLuDuPalier,
+  phraseDeFinAvecLaCabane,
   phraseDeLEtat,
   titreDeLAnnonce,
   titreDeLaSection,
