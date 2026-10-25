@@ -27,13 +27,16 @@ export type ToutesLesLecons = Readonly<{
   leconsDesClassesDAvant: readonly ClasseDAvant[];
 }>;
 
-export function toutesLesLecons(entrees: EntreesDuParcours, _filtre: FiltreDesLecons): ToutesLesLecons {
+export function toutesLesLecons(entrees: EntreesDuParcours, filtre: FiltreDesLecons): ToutesLesLecons {
+  const retenue = ({ matiere, niveau }: { matiere: Matiere; niveau: Niveau }) =>
+    (filtre.matiere === undefined || matiere.code === filtre.matiere.code) &&
+    (filtre.niveau === undefined || niveau.valeur === filtre.niveau.valeur);
   return {
     lecons: [
       ...matieresDuParcours(entrees).flatMap((matiere) => leconsDeLaMatiere(entrees, matiere)),
       ...leconsDAuDessusMontrees(entrees),
-    ],
-    leconsDesClassesDAvant: classesDAvant(entrees),
+    ].filter(retenue),
+    leconsDesClassesDAvant: classesDAvant(entrees, retenue),
   };
 }
 
@@ -63,13 +66,13 @@ function parMatiereOrdrePuisIdentifiant(a: Lecon, b: Lecon): number {
   return rang(a) - rang(b) || parOrdrePuisIdentifiant(a, b);
 }
 
-function classesDAvant(entrees: EntreesDuParcours): ClasseDAvant[] {
+function classesDAvant(entrees: EntreesDuParcours, retenue: (lecon: Lecon) => boolean): ClasseDAvant[] {
   return Niveau.tous()
     .filter((niveau) => entrees.niveau.estAuDessusDe(niveau))
     .map((niveau) => ({
       niveau,
       lecons: entrees.lecons
-        .filter((lecon) => lecon.niveau.valeur === niveau.valeur)
+        .filter((lecon) => lecon.niveau.valeur === niveau.valeur && retenue(lecon))
         .sort(parMatiereOrdrePuisIdentifiant)
         .map((lecon) => ({
           lecon: lecon.id,
