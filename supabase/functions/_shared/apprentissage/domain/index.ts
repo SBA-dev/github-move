@@ -56,7 +56,7 @@ export { Etoiles } from "./etoiles.ts";
 export type { NombreDEtoiles } from "./etoiles.ts";
 export { meilleuresEtoilesReunies } from "./meilleures-etoiles-reunies.ts";
 export { SeanceId } from "./seance-id.ts";
-export { ResultatDeLaLecon } from "./resultat-de-la-lecon.ts";
+export { ResultatDeLaLecon, SEUIL_DE_LECON_REUSSIE } from "./resultat-de-la-lecon.ts";
 export type { EtatDuResultat, FaitDeResultat } from "./resultat-de-la-lecon.ts";
 export { indicationDuGeste } from "./exercices/indication-du-geste.ts";
 export { consigneLueAuDebut } from "./exercices/consigne-lue-au-debut.ts";
