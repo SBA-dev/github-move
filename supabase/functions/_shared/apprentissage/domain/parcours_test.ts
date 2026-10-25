@@ -273,3 +273,40 @@ Deno.test("sans aucune réussite, un enfant de CE2 retrouve les leçons de la ma
     ],
   );
 });
+
+const voyellesDuCP = lecon("fr-cp-voyelles", "francais", "CP", 10);
+const lecturesDuCE1 = lecon("fr-ce1-lectures", "francais", "CE1", 10);
+
+function etatsDesClassesDAvant(
+  meilleuresEtoiles: Map<string, Etoiles>,
+  leconsReussiesAuTestDeDepart: string[] = [],
+) {
+  const parcours = parcoursDeLaMatiere(
+    {
+      lecons: [voyellesDuCP, lecturesDuCE1, futurDuCE2],
+      niveau: Niveau.de("CE2"),
+      meilleuresEtoiles,
+      leconsReussiesAuTestDeDepart: new Set(leconsReussiesAuTestDeDepart),
+    },
+    futurDuCE2.matiere,
+  );
+  return parcours.leconsDesClassesDAvant.map(({ etat }) => etat);
+}
+
+Deno.test("une leçon des classes d'avant réussie garde ses meilleures étoiles dans son état", () => {
+  const etats = etatsDesClassesDAvant(new Map([[voyellesDuCP.id, Etoiles.de(3)]]));
+
+  assertEquals(etats, [{ genre: "reussie", etoiles: Etoiles.de(3) }, { genre: "aDecouvrir" }]);
+});
+
+Deno.test("une leçon des classes d'avant réussie au test de départ seulement a l'état réussie au test de départ, sans étoiles", () => {
+  const etats = etatsDesClassesDAvant(new Map(), [lecturesDuCE1.id]);
+
+  assertEquals(etats, [{ genre: "aDecouvrir" }, { genre: "reussieAuTestDeDepart" }]);
+});
+
+Deno.test("une leçon des classes d'avant réussie au test de départ qui a aussi des étoiles garde l'état réussie avec ses étoiles", () => {
+  const etats = etatsDesClassesDAvant(new Map([[voyellesDuCP.id, Etoiles.de(2)]]), [voyellesDuCP.id]);
+
+  assertEquals(etats[0], { genre: "reussie", etoiles: Etoiles.de(2) });
+});
