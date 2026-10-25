@@ -305,3 +305,10 @@ export class SeanceDeRevisionDejaFinie extends Error {
     this.name = "SeanceDeRevisionDejaFinie";
   }
 }
+
+export class CleDeQuestionInvalide extends Error {
+  constructor(readonly valeur: string) {
+    super(`« ${valeur} » n'est pas une clé de question valide.`);
+    this.name = "CleDeQuestionInvalide";
+  }
+}

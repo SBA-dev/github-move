@@ -1,3 +1,4 @@
+import { CleDeQuestionInvalide } from "./erreurs.ts";
 import type { TypeDeQuestion } from "./question-suivie.ts";
 
 const PREFIXES: Record<TypeDeQuestion, string> = {
@@ -22,6 +23,13 @@ export class CleDeQuestion {
 
   static de(type: TypeDeQuestion, texte: string): CleDeQuestion {
     return new CleDeQuestion(PREFIXES[type] + normaliser(texte));
+  }
+
+  static depuisLaValeur(valeur: string): CleDeQuestion {
+    const prefixe = Object.values(PREFIXES).find((candidat) => valeur.startsWith(candidat));
+    const texte = prefixe === undefined ? "" : valeur.slice(prefixe.length);
+    if (texte === "" || normaliser(texte) !== texte) throw new CleDeQuestionInvalide(valeur);
+    return new CleDeQuestion(valeur);
   }
 }
 
