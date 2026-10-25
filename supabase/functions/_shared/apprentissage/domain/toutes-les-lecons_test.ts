@@ -380,7 +380,9 @@ Deno.test("« Toutes les leçons » donne au front tout son modèle de vue : la 
   const classeDeLEnfant = toutesLesLecons(entreesDuFiltre(), { niveau: Niveau.de("CE2") });
 
   assertEquals(
-    sansFiltre.leconsDesClassesDAvant.flatMap(({ lecons }) => lecons.map(({ lecon, matiere }) => [lecon, matiere.code])),
+    sansFiltre.leconsDesClassesDAvant.flatMap(({ lecons }) =>
+      lecons.map(({ lecon, matiere }) => [lecon, matiere.code])
+    ),
     [["fr-cp-lettres", "francais"], ["ma-cp-nombres", "maths"], ["fr-ce1-sons", "francais"]],
   );
   assertEquals(
