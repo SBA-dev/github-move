@@ -123,8 +123,6 @@ enfoire
 enfoiré
 enfoirée
 envaselineur
-épais
-epais
 espingoin
 étron
 etron
@@ -161,7 +159,6 @@ grande folle
 grognasse
 grogniasse
 gueniche
-gueule
 guindoule
 imbecile
 imbécile
