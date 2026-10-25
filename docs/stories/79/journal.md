@@ -96,3 +96,13 @@ Branche de base : `main`. Aucun numéro de décision réservé (prochain libre :
 - 22:15 UTC — Review cycle 4 : **À CORRIGER**. Une question suivante coupée par « Relire la consigne » reste sans
   choix. Aucun scénario ne le couvre : scénario nouveau `@a-valider` (`76f966a`), **ESCALADE #79.13** (reco oui),
   steps `7025912`, RED vérifié (1 KO attendu, 4 verts). Correction (a) en cours.
+- 22:20 UTC — Correction du cycle 4 (`bc7a117`) : vert dans le worktree, 62/64. Les 2 KO « mode dys » (#17, #79)
+  sont une `NetworkError` propre au port 5174 du worktree, qui existe aussi sans la correction ; à revérifier sur 5173.
+  Fusion du worktree (`5a63d35`), puis intégration de `main` `906c749` (#39) : conflit de fin de `src/styles.css`
+  (les deux blocs gardés), `8bb74d8`. 2 242 tests unitaires verts ; `tsc`, build, lint et fmt OK. Worktree retiré.
+  Incident sans conséquence : une ligne ajoutée par erreur au fichier `.git` du worktree, réparée tout de suite.
+- 22:40 UTC — Review, cycle 5 : **APPROUVÉ**. Non bloquants : (1) retirer `@a-valider` après la réponse du PO à
+  #79.13 ; (2) dette : la leçon de test à deux questions de `consigne-visible.steps.ts` donne « 3 » comme bonne
+  réponse à « 1 + 1 » (le scénario n'y répond pas) ; passer la bonne réponse en paramètre si on la réutilise ;
+  (3) les choix d'une question coupée ne sont pas lus avec « Tout lire à voix haute » (acceptable).
+  Périmètre E2E final en cours sur `8bb74d8`.
