@@ -15,3 +15,10 @@ Branche de base : `main` (`2173dba`). Branche : `feature/26-lecons-des-classes-d
 - `domain-modeler` : modèle mis à jour (`166c439`, `c9fc593`) ; nouvelles questions #26.17 à #26.20.
 - `po-acceptance` : critères mis à jour (`053491d`) : 6 règles, 48 scénarios (56 cas), 15 `@a-valider` (#26.17 à #26.20), 3 `@depend-de-27`.
 - Questions #26.17 à #26.20 publiées sur #26. TDD toujours bloqué jusqu'au merge de #27.
+
+## 2026-10-25
+
+- 08:27 UTC : annonce `[Responsable]` sur #64 : le PO retient les recos #26.17 à #26.20 (« OK #26 reco »). Cadrage entièrement validé. Le TDD attend `MAIN A BOUGÉ : #27 mergée`.
+- `po-acceptance` : critères validés (`0d71753`) : 6 règles, 48 scénarios (56 cas), 0 `@a-valider`, 3 `@depend-de-27`.
+- `domain-modeler` : modèle validé, glossaire et context map complétés par ajouts seulement (`4229b9e`) : « Matière réussie », décisions n°36 et n°37 du glossaire (n°35 laissée à #27).
+- À reprendre hors vague (ajouts seulement pendant la vague) : réécrire les lignes « Leçon des classes d'avant » et « Leçon à découvrir » du glossaire selon la décision n°36.
