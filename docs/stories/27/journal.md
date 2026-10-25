@@ -49,3 +49,7 @@ Branche : `feature/27-test-de-depart`, partie de `main` 50f0a55. Branche de base
 | Intégrations de `main` | 3 : #22 (sans conflit), #21 (sans conflit de code, 2 tests adaptés), #65 (conflits sur 6 fichiers) |
 | Régression découverte sur `main` après le merge | — (à relever par le responsable) |
 | Tokens et coût | relevés par le responsable (`get_session`) |
+
+## Merge
+
+- 2026-10-25 08:27 UTC (annonce) : **MERGE AUTORISÉ** par le PO (« merge #27 #58, 2 fois OK, OK #26 reco », ~07:40 UTC) et verrou `merge` accordé à #27. Correction « 2 fois » de la règle 4 validée par le PO (ac33a70). `main` 2173dba inchangée depuis la non-régression complète : pas de relance. Vérifications rapides relancées sur le dernier commit, puis merge de la PR #80 (merge commit).
