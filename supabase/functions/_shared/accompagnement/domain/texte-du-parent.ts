@@ -22,6 +22,18 @@ export class TexteDuParent {
     return nonVides(this.valeur.split("\n"));
   }
 
+  mots(): string[] {
+    return nonVides(this.valeur.split(/\s+/));
+  }
+
+  normalise(): string {
+    return this.valeur
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/\p{M}/gu, "")
+      .replace(/[’‘`]/g, "'");
+  }
+
   phrases(): string[] {
     return nonVides(this.valeur.split(/(?<=[.!?])\s+/));
   }
