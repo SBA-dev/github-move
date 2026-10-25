@@ -25,7 +25,13 @@ export type DependancesDeLectureAVoixHaute = {
   readonly caractereDuPersonnageGuide: () => CaractereDeLaVoix;
   readonly etatInitial: EtatDuSon;
   readonly onVoixBloquee: () => void;
+  readonly onFinDeLaVoixBloquee?: () => void;
 };
+
+export type ParoleEntendue = { readonly entendue: boolean };
+
+const PAROLE_ENTENDUE: ParoleEntendue = { entendue: true };
+const PAROLE_NON_ENTENDUE: ParoleEntendue = { entendue: false };
 
 function estFrancais(langue: string): boolean {
   return /^fr/i.test(langue);
@@ -66,12 +72,12 @@ export class LectureAVoixHaute {
       onMot?: (rang: number) => void;
       onFin?: () => void;
     } = {},
-  ): Promise<void> {
-    if (this.etat === "muet") return;
+  ): Promise<ParoleEntendue> {
+    if (this.etat === "muet") return PAROLE_NON_ENTENDUE;
     const { lecteur, hasard } = this.dependances;
     lecteur.arreter();
     const texte = texteALire(brut);
-    if (!texte) return;
+    if (!texte) return PAROLE_NON_ENTENDUE;
     const langue = options.langue ?? LANGUE_FRANCAISE;
     const voix = this.voixPour(langue, options.choix ?? this.choixMemorise());
     const caractere = estFrancais(langue) ? this.dependances.caractereDuPersonnageGuide() : CARACTERE_LANGUE_ETRANGERE;
@@ -83,8 +89,11 @@ export class LectureAVoixHaute {
         ...(options.onMot &&
           { onMot: rangDesMots(texte.phrases, rangAffichePourChaqueMotPrononce(brut), options.onMot) }),
       });
+      this.signalerLaFinDeLaVoixBloquee();
+      return PAROLE_ENTENDUE;
     } catch (erreur) {
       this.absorber(erreur);
+      return PAROLE_NON_ENTENDUE;
     } finally {
       options.onFin?.();
     }
@@ -97,6 +106,7 @@ export class LectureAVoixHaute {
   passerEnMuet(): void {
     this.etat = "muet";
     this.couperLaVoix();
+    this.signalerLaFinDeLaVoixBloquee();
   }
 
   async remettreLeSon(salutation: string): Promise<void> {
@@ -125,6 +135,12 @@ export class LectureAVoixHaute {
     return estFrancais(langue)
       ? choisirVoix(voix, this.dependances.caractereDuPersonnageGuide(), choix)
       : choisirVoixDeLangue(voix, langue);
+  }
+
+  private signalerLaFinDeLaVoixBloquee(): void {
+    if (!this.voixBloqueeSignalee) return;
+    this.voixBloqueeSignalee = false;
+    this.dependances.onFinDeLaVoixBloquee?.();
   }
 
   private absorber(erreur: unknown): void {

@@ -17,7 +17,7 @@ export type { Hasard } from "./hasard.ts";
 export { reglerPhrases } from "./reglage-de-phrase.ts";
 export type { ReglageDePhrase } from "./reglage-de-phrase.ts";
 export { LectureAVoixHaute } from "./lecture-a-voix-haute.ts";
-export type { DependancesDeLectureAVoixHaute, EtatDuSon } from "./lecture-a-voix-haute.ts";
+export type { DependancesDeLectureAVoixHaute, EtatDuSon, ParoleEntendue } from "./lecture-a-voix-haute.ts";
 export type { LecteurAVoixHaute, LectureDemandee } from "./lecteur-a-voix-haute.ts";
 export type { ChoixDeVoixDeLAppareil } from "./choix-de-voix-de-l-appareil.ts";
 export type { VoixDeLAppareil } from "./voix-de-l-appareil.ts";
