@@ -1,4 +1,4 @@
-import type { Jour } from "../../apprentissage/domain/jour.ts";
+import type { Jour } from "../../apprentissage/domain/index.ts";
 import type { FaitsDuJour } from "./objectif-du-jour.ts";
 
 export type SeanceTermineeDUnJour = { readonly lecon: string; readonly jour: Jour };
