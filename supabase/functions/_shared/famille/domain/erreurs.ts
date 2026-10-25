@@ -1,3 +1,5 @@
+import type { NomDeRegle, RegleDuMotDePasse } from "./regles-du-mot-de-passe.ts";
+
 export class AdresseEmailInvalide extends Error {
   constructor() {
     super("Cette adresse e-mail n'est pas valide.");
@@ -86,5 +88,71 @@ export class LangueDuParentInconnue extends Error {
   constructor(readonly valeur: string) {
     super(`Cette langue du parent est inconnue : « ${valeur} ».`);
     this.name = "LangueDuParentInconnue";
+  }
+}
+
+export class MotDePasseNonConforme extends Error {
+  readonly reglesManquantes: NomDeRegle[];
+
+  constructor(reglesManquantes: readonly RegleDuMotDePasse[]) {
+    super(`Il manque : ${reglesManquantes.map((r) => r.libelle).join(", ")}.`);
+    this.reglesManquantes = reglesManquantes.map((r) => r.regle);
+    this.name = "MotDePasseNonConforme";
+  }
+}
+
+export class MotDePasseTropLong extends Error {
+  constructor(longueurMaximale: number) {
+    super(`${longueurMaximale} caractères au plus.`);
+    this.name = "MotDePasseTropLong";
+  }
+}
+
+export class MotDePasseObligatoire extends Error {
+  constructor() {
+    super("Écris ton mot de passe.");
+    this.name = "MotDePasseObligatoire";
+  }
+}
+
+export class AdresseOuMotDePasseIncorrect extends Error {
+  constructor() {
+    super("Adresse e-mail ou mot de passe incorrect.");
+    this.name = "AdresseOuMotDePasseIncorrect";
+  }
+}
+
+export class TropDEssaisDeReinitialisation extends Error {
+  constructor() {
+    super("Trop d'essais. Réessaie dans une heure.");
+    this.name = "TropDEssaisDeReinitialisation";
+  }
+}
+
+export class ConfirmationDuMotDePasseDifferente extends Error {
+  constructor() {
+    super("Les deux mots de passe ne sont pas pareils.");
+    this.name = "ConfirmationDuMotDePasseDifferente";
+  }
+}
+
+export class AdresseDejaUtilisee extends Error {
+  constructor() {
+    super("Cette adresse a déjà un compte. Connecte-toi.");
+    this.name = "AdresseDejaUtilisee";
+  }
+}
+
+export class InformationsDeReinitialisationIncorrectes extends Error {
+  constructor() {
+    super("Ces informations ne correspondent pas.");
+    this.name = "InformationsDeReinitialisationIncorrectes";
+  }
+}
+
+export class ServiceDeConnexionIndisponible extends Error {
+  constructor() {
+    super("Le service ne répond pas. Réessaie dans un instant.");
+    this.name = "ServiceDeConnexionIndisponible";
   }
 }
