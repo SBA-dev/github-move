@@ -30,3 +30,25 @@ Branche de base : `main` (`6be4dc6`). Branche : `feature/39-lecons-personnelles`
 - `terminer-la-seance` : adaptateur `LeconsPersonnellesDuProfilSupabase` et câblage `f62880c`. Trou trouvé : les questions ratées d'une leçon personnelle étaient oubliées par la révision (#28) ; décision PO #39.12 (« compte pour les révisions ») : comportement 17 RED `fc1dfe8` → GREEN `52cf89e`, front `33cd0f3`.
 - 18:47 UTC : **VERROU base** accordé ; 18:51 UTC : `terminer-la-seance` et `terminer-la-seance-de-revision` redéployées depuis `33cd0f3` (= `main` + #39), `LIBÈRE base`.
 - Review finale et mise au point E2E (`telephone`, `--workers=2`) lancées.
+- Review finale (`origin/main...33cd0f3`) : **APPROUVÉE**, aucun bloquant. Non bloquants appliqués en `3e41dba` (lectures de l'enfant sans `texte_du_parent`, hook partagé dans la révision, clé de chargement structurée, commentaire, état de chargement des profils). Restent : flèches clavier des onglets, leçon illisible insérée à la main supprimable seulement avec le profil (#14), `leconEnBrut` à déplacer dans le Catalogue, type de ligne distinct parent/enfant.
+- E2E mise au point (`telephone`, `--workers=2`) : **33/33** (`48db233`), échecs de mise au point tous dans les steps, aucun bug applicatif.
+- 19:13 UTC : `MAIN A BOUGÉ : #73 mergée` ; `main` `26116ae` intégrée après le run E2E, sans conflit. Écrans « Créer une leçon » et « Mes leçons » : onglets de l'écran `espace-parent` déjà classé « parent », rien à ajouter à `ecran.ts`.
+- Revue delta (`33cd0f3..3e41dba`, steps, intégration de #73, refactor) : **APPROUVÉE**.
+- PR brouillon #93 ouverte.
+- Périmètre E2E avant PRÊTE À MERGER (`telephone`, `--workers=2`, `@issue-39`, #11, #16, #24, #25, #26, #27, #28) : 337/338 en 36,6 min, 1 timeout de #28 (32 s sous charge) relancé seul avec `--workers=1` : vert. **338/338.**
+- Vérifications sur `3e41dba` + journal : 2219 tests unitaires, lint, format, `tsc`, build verts ; `scripts/` inchangé.
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Durée, du lancement à PRÊTE À MERGER | 16:22 → 20:15 UTC, environ 3 h 55 |
+| Attente du PO (cadrage) | 16:36 → 17:44, environ 1 h 10 (domaine et TDD non commencés pendant ce temps) |
+| Attente des verrous | `base` : 3 min (demandé en avance) puis immédiat ; `merge` : à venir |
+| Attente de `main` | `terminer-la-seance` attendue jusqu'au merge de #28 (environ 15 min, sans blocage : front câblé pendant ce temps) |
+| Comportements TDD | 17 (+ 3 cycles de correction de revue) |
+| Cycles de review À CORRIGER | 3 revues delta à 1 cycle chacune (A, B, C/D) ; review finale APPROUVÉE au 1er passage |
+| Cycles E2E KO | 0 bug applicatif ; 1 timeout de charge (#28) relancé seul |
+| Intégrations de `main` | 3 (#32, #28, #73), 0 conflit |
+| Régression sur `main` après merge | à constater |
+| Tokens et coût | relevés par le responsable |
