@@ -39,3 +39,10 @@ export class LeconPersonnelleInvalide extends Error {
     this.name = "LeconPersonnelleInvalide";
   }
 }
+
+export class ParentNonRattache extends Error {
+  constructor() {
+    super("Ce parent n'est pas rattaché à ce profil.");
+    this.name = "ParentNonRattache";
+  }
+}
