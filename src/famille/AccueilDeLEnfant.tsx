@@ -39,7 +39,14 @@ export function AccueilDeLEnfant(
 ) {
   const { parole, rangDuMotPrononce, humeur, dire, faireSilence } = usePersonnageQuiParle(voix);
   const [salutationALire] = useState(aSaluer);
-  const [maintenant] = useState(() => horlogeDuNavigateur.maintenant());
+  const [maintenant, setMaintenant] = useState(() => horlogeDuNavigateur.maintenant());
+  useEffect(() => {
+    const auRetourDeLApplication = () => {
+      if (document.visibilityState === "visible") setMaintenant(horlogeDuNavigateur.maintenant());
+    };
+    document.addEventListener("visibilitychange", auRetourDeLApplication);
+    return () => document.removeEventListener("visibilitychange", auRetourDeLApplication);
+  }, []);
   const entrees = useEntreesDuJour(profil);
   const objectif = useObjectifDuJour(profil.id, maintenant);
   useEffect(() => {
