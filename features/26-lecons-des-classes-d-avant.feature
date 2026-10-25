@@ -7,8 +7,7 @@ Fonctionnalité: Leçons des classes d'avant
 
   Aucune leçon n'est verrouillée (réponse 25.1) et le réglage « parcours libre » n'est pas lu (réponse N2).
   Un commentaire « Réponse 26.n », « Réponse Nn » ou « Réponse 27.n » renvoie à une décision du PO
-  (docs/stories/26/acceptance.md, #25, #27). Un commentaire « Question 26.n » renvoie à une question encore ouverte :
-  le scénario suit la recommandation et porte le tag @a-valider. Le tag @depend-de-27 marque un scénario qui emploie
+  (docs/stories/26/acceptance.md, #25, #27). Le tag @depend-de-27 marque un scénario qui emploie
   les étapes du test de départ (#27) : il ne tourne qu'après le merge de #27.
 
   Pour ces scénarios, la bibliothèque servie au navigateur est remplacée par la bibliothèque de test des leçons
@@ -188,8 +187,7 @@ Fonctionnalité: Leçons des classes d'avant
         | Les nombres jusqu'à 100 | CE1    | Maths    | à toi              |
       Mais « Toutes les leçons » n'indique aucun nombre de leçons réussies
 
-    # Réponses 26.1 et 26.9 ; question 26.20 (le nombre compte aussi la section des classes d'avant)
-    @a-valider
+    # Réponses 26.1 et 26.9 ; réponse 26.20 (le nombre compte aussi la section des classes d'avant)
     Plan du Scénario: Un enfant de <niveau> voit <nombre> dans « Toutes les leçons »
       Étant donné que Léa a un profil enfant préparé de niveau <niveau> dans l'univers « Animaux de la forêt »
       Quand Léa ouvre « Toutes les leçons » depuis son accueil
@@ -202,8 +200,7 @@ Fonctionnalité: Leçons des classes d'avant
         | CE2    | 12 leçons  |
         | CM2    | 13 leçons  |
 
-    # Réponses 26.1 et 26.1a ; question 26.19
-    @a-valider
+    # Réponses 26.1 et 26.1a ; réponse 26.19
     Scénario: Quand l'enfant a réussi toutes les leçons de maths de sa classe, les leçons de maths de la classe juste au-dessus apparaissent, à découvrir
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a pour meilleures étoiles :
@@ -246,15 +243,13 @@ Fonctionnalité: Leçons des classes d'avant
       Quand Léa ouvre « Toutes les leçons » depuis son accueil
       Alors « Les tables de 2 » apparaît dans « Toutes les leçons »
 
-    # Question 26.18
-    @a-valider
+    # Réponse 26.18
     Scénario: Sans leçon réussie, aucune leçon de la classe au-dessus n'apparaît, même d'une matière qui n'a aucune leçon dans la classe de l'enfant
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Quand Léa ouvre « Toutes les leçons » depuis son accueil
       Alors aucune leçon du CE2 n'apparaît dans « Toutes les leçons »
 
-    # Réponse N7 ; question 26.17
-    @a-valider
+    # Réponse N7 ; réponse 26.17
     Scénario: Redescendue en CE1, l'enfant retrouve dans « Toutes les leçons » ses leçons du CE2 réussies, même d'une matière qu'elle n'a pas finie
       Étant donné que Léa a un profil enfant préparé de niveau CE2 dans l'univers « Animaux de la forêt »
       Et que Léa a pour meilleures étoiles :
@@ -289,8 +284,7 @@ Fonctionnalité: Leçons des classes d'avant
         | au toucher |
         | au clavier |
 
-    # Réponses N7 et N9 ; question 26.17
-    @a-valider
+    # Réponses N7 et N9 ; réponse 26.17
     Scénario: Une leçon réussie d'une classe au-dessus, sans onglet dans le parcours, s'ouvre depuis « Toutes les leçons »
       Étant donné que Léa a un profil enfant préparé de niveau CE2 dans l'univers « Animaux de la forêt »
       Et que Léa a pour meilleures étoiles :
@@ -301,8 +295,7 @@ Fonctionnalité: Leçons des classes d'avant
       Quand Léa ouvre la leçon « Les règles de la classe » depuis « Toutes les leçons »
       Alors Léa voit la page de la leçon « Les règles de la classe »
 
-    # Question 26.19
-    @a-valider
+    # Réponse 26.19
     Scénario: Après une leçon de la classe juste au-dessus, aucune leçon suivante n'est proposée
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a pour meilleures étoiles :
@@ -313,8 +306,7 @@ Fonctionnalité: Leçons des classes d'avant
       Alors la fin de la séance propose « Accueil » et « Rejouer »
       Mais aucune leçon suivante n'est proposée
 
-    # Question 26.19
-    @a-valider
+    # Réponse 26.19
     Scénario: Une leçon de la classe juste au-dessus non réussie n'apparaît pas dans « Mon parcours »
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a pour meilleures étoiles :
@@ -342,8 +334,7 @@ Fonctionnalité: Leçons des classes d'avant
 
   Règle: « Toutes les leçons » range les leçons par niveau, puis par matière, puis dans l'ordre, avec en dessous les leçons des classes d'avant, rangées par classe ; l'enfant choisit une matière et un niveau
 
-    # Réponse 26.9 ; question 26.20
-    @a-valider
+    # Réponse 26.9 ; réponse 26.20
     Scénario: À l'ouverture, « Toutes les leçons » montre toutes les matières et tous les niveaux, la section des classes d'avant repliée en dessous
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Quand Léa ouvre « Toutes les leçons » depuis son accueil
@@ -361,8 +352,7 @@ Fonctionnalité: Leçons des classes d'avant
       Quand Léa ouvre « Toutes les leçons » depuis son accueil
       Alors « Toutes les leçons » montre, dans l'ordre, « Le son in », « L'ordre alphabétique », « Les mots contraires », « Les nombres jusqu'à 100 » et « Les tables de 2 »
 
-    # Réponse 26.1 ; question 26.20
-    @a-valider
+    # Réponse 26.1 ; réponse 26.20
     Scénario: Dépliée, la section des classes d'avant range ses leçons par classe, puis par matière, puis dans l'ordre
       Étant donné que Léa a un profil enfant préparé de niveau CE2 dans l'univers « Animaux de la forêt »
       Et que Léa a ouvert « Toutes les leçons » depuis son accueil
@@ -378,8 +368,7 @@ Fonctionnalité: Leçons des classes d'avant
         | CE1    | Les mots contraires     | Français | à découvrir |
         | CE1    | Les nombres jusqu'à 100 | Maths    | à découvrir |
 
-    # Question 26.20
-    @a-valider
+    # Réponse 26.20
     Scénario: Au CP, « Toutes les leçons » n'a pas de section des classes d'avant
       Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
       Quand Léa ouvre « Toutes les leçons » depuis son accueil
@@ -392,8 +381,7 @@ Fonctionnalité: Leçons des classes d'avant
       Alors la liste « Matière » propose « Toutes les matières », « Français », « Maths » et « Sciences »
       Et la liste « Niveau » propose « Tous les niveaux », « CP » et « CE1 »
 
-    # Réponse 26.9 ; question 26.20
-    @a-valider
+    # Réponse 26.9 ; réponse 26.20
     Plan du Scénario: Choisir « <matière> » dans la liste « Matière » ne montre que ses leçons, dans les deux parties
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a ouvert « Toutes les leçons » depuis son accueil
@@ -407,8 +395,7 @@ Fonctionnalité: Leçons des classes d'avant
         | Français | « Le son in », « L'ordre alphabétique » et « Les mots contraires » | Leçons des classes d'avant (2) | 5 leçons |
         | Maths    | « Les nombres jusqu'à 100 »                                       | Leçons des classes d'avant (1) | 2 leçons |
 
-    # Question 26.20
-    @a-valider
+    # Réponse 26.20
     Scénario: Choisir une classe d'avant dans la liste « Niveau » ne garde que la section des classes d'avant, dépliée
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a ouvert « Toutes les leçons » depuis son accueil
@@ -473,8 +460,7 @@ Fonctionnalité: Leçons des classes d'avant
         | Les voyelles | CP     | à découvrir |
         | Les syllabes | CP     | à découvrir |
 
-    # Réponse 26.10 ; question 26.19
-    @a-valider
+    # Réponse 26.10 ; réponse 26.19
     Scénario: Un lecteur d'écran lit le niveau, la matière et l'état de chaque leçon de « Toutes les leçons »
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a pour meilleures étoiles :
@@ -490,15 +476,13 @@ Fonctionnalité: Leçons des classes d'avant
         | Les nombres jusqu'à 100, CE1, Maths : réussie, 1 étoile sur 3 |
         | Les tables de 2, CE2, Maths : à découvrir           |
 
-    # Question 26.20
-    @a-valider
+    # Réponse 26.20
     Scénario: Un lecteur d'écran lit que la section des classes d'avant de « Toutes les leçons » est repliée, et combien elle en a
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Quand Léa ouvre « Toutes les leçons » depuis son accueil
       Alors les lecteurs d'écran annoncent le bouton « Leçons des classes d'avant, 4 leçons », replié
 
-    # Réponse 26.9 ; question 26.20 (le nombre compte aussi la section des classes d'avant)
-    @a-valider
+    # Réponse 26.9 ; réponse 26.20 (le nombre compte aussi la section des classes d'avant)
     Scénario: Quand l'enfant change de choix, un lecteur d'écran lit le nombre de leçons montrées
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a ouvert « Toutes les leçons » depuis son accueil
