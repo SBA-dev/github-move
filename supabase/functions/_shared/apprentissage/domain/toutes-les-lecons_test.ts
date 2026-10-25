@@ -373,3 +373,21 @@ Deno.test("une leçon de la classe ajoutée plus tard referme la classe au-dessu
 
   assertEquals(lecons.map(({ lecon }) => lecon), ["ma-ce2-tables"]);
 });
+
+Deno.test("« Toutes les leçons » donne au front tout son modèle de vue : la matière de chaque leçon des classes d'avant, le nombre de leçons montrées (les deux parties comptées) et si seules les classes d'avant sont montrées (26.20)", () => {
+  const sansFiltre = toutesLesLecons(entreesDuFiltre(), {});
+  const classeDAvant = toutesLesLecons(entreesDuFiltre(), { niveau: Niveau.de("CP") });
+  const classeDeLEnfant = toutesLesLecons(entreesDuFiltre(), { niveau: Niveau.de("CE2") });
+
+  assertEquals(
+    sansFiltre.leconsDesClassesDAvant.flatMap(({ lecons }) => lecons.map(({ lecon, matiere }) => [lecon, matiere.code])),
+    [["fr-cp-lettres", "francais"], ["ma-cp-nombres", "maths"], ["fr-ce1-sons", "francais"]],
+  );
+  assertEquals(
+    [sansFiltre, classeDAvant, classeDeLEnfant].map((resultat) => [
+      resultat.nombreDeLecons,
+      resultat.seulementLesClassesDAvant,
+    ]),
+    [[5, false], [2, true], [2, false]],
+  );
+});
