@@ -16,6 +16,7 @@ export function personnageGuideAttend(personnageGuide: string): string {
   return `${personnageGuide} t'attend pour une nouvelle leçon.`;
 }
 
+export const TITRE_DE_L_OBJECTIF = "Objectif du jour";
 export const OBJECTIF_DU_JOUR = "Joue 2 leçons aujourd'hui";
 export const OBJECTIF_ATTEINT = "Objectif atteint, bravo !";
 
