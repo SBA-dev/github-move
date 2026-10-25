@@ -27,7 +27,6 @@ import type { ParoleDue } from "./parole-due.ts";
 import type { QuestionSuivie, TypeDeQuestion } from "./question-suivie.ts";
 import { CleDeQuestion } from "./cle-de-question.ts";
 import { estUnTypeDeQuestionRetenu } from "./types-de-question-retenus.ts";
-import { enonceDUneAddition } from "./tirage-d-additions.ts";
 import type { AideDonnee } from "./question-jouee.ts";
 import type { Reponse, ResultatDeReponse } from "./reponse.ts";
 import type { VueAddition } from "./vue-d-addition.ts";
@@ -142,9 +141,10 @@ export class ExerciceJoue {
 
   questionsRateesARetenir(): { cle: CleDeQuestion; type: TypeDeQuestion; tirage?: string }[] {
     if (this.contenu.additions) {
-      return this.contenu.additions.additionsRatees().map((addition) => ({
-        cle: CleDeQuestion.de("calcul", enonceDUneAddition(addition)),
+      return this.contenu.additions.additionsRatees().map(({ enonce, tiree }) => ({
+        cle: CleDeQuestion.de("calcul", enonce),
         type: "calcul",
+        ...(tiree && { tirage: enonce }),
       }));
     }
     if (this.contenu.memorisation) return [];
