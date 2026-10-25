@@ -140,7 +140,7 @@ Given(/^(Léa|Tom) a pour meilleures étoiles :$/, async ({ famille, page }, pre
 
 Given(/^Léa a réussi (\d+) leçons?(?:\(s\))? de français du CE1$/, async ({ famille, page, $tags }, nombre: string) => {
   // Story #26 : la bibliothèque de test des leçons des classes d'avant a ses propres identifiants (étape « … est servie »).
-  const bibliotheque = $tags.includes("@issue-26") ? etat(page).injectees : LECONS_DU_PARCOURS;
+  const bibliotheque = $tags.includes("@issue-26") || ($tags.includes("@issue-29") && !$tags.includes("@issue-24") && !$tags.includes("@issue-25")) ? etat(page).injectees : LECONS_DU_PARCOURS;
   const lecons = bibliotheque.filter((l) => l.matiere === "francais" && l.niveau === "CE1")
     .sort((a, b) => a.ordre - b.ordre)
     .slice(0, Number(nombre))

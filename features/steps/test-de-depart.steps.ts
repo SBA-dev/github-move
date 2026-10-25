@@ -45,7 +45,8 @@ const DELAI_DE_LA_TRANSITION_MS = 15_000;
 const proposition = (page: Page) => page.getByTestId("proposition-du-test-de-depart");
 const finDuTest = (page: Page) => page.getByTestId("fin-du-test-de-depart");
 const accueilDeLEnfant = (page: Page) => page.getByRole("region", { name: /^Accueil de / });
-const boutonMonTestDeDepart = (page: Page) => page.getByRole("button", { name: "Mon test de départ", exact: true });
+// Le nom du bouton est le titre de la tuile, suivi (ou non) de sa proposition : seul le titre compte.
+const boutonMonTestDeDepart = (page: Page) => page.getByRole("button", { name: /^Mon test de départ(?: |$)/ });
 const boutonOui = (page: Page) => page.getByRole("button", { name: "Oui, on y va !", exact: true });
 const boutonPlusTard = (page: Page) => page.getByRole("button", { name: "Plus tard", exact: true });
 const jeNeSaisPas = (page: Page) => page.getByTestId("je-ne-sais-pas");
