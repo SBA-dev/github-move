@@ -25,3 +25,10 @@ Branche de base : `main`. Aucun numéro de décision réservé (prochain libre :
   « texte à trous » n'était pas une leçon valide (`fa93a6c`). GREEN `e3313d7`, mise en forme `f5622ea`.
   Tests unitaires : 1 809 verts.
 - 18:40 UTC — Revue intermédiaire du bloc domaine et câblage React lancés en parallèle. `APPRIS` Voix publié pour #73.
+- 18:50 UTC — Revue intermédiaire du bloc domaine (`5e35bea..f5622ea`) : **APPROUVÉ**, aucun bloquant. Non bloquants :
+  (1) rendre `onFinDeLaVoixBloquee` obligatoire (test-writer complète `lecture-avec-choix-de-voix_test.ts`, puis
+  implementer), à faire après le câblage ; (2) et (3) ajustements de tests ; (4) `useVoix.ts` modifié dans le commit
+  de domaine (nécessaire au typecheck) ; (5) vérifié par l'orchestrateur : `LecteurSyntheseVocale` résout aussi une
+  lecture interrompue par `arreter()`. Sans effet quand une parole plus récente l'interrompt (séquence périmée) ;
+  cas limite restant : passage en Muet au milieu d'une félicitation, qui n'attend pas. Dette notée.
+  Dernier commit relu : `f5622ea`.
