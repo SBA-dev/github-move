@@ -61,6 +61,8 @@ flowchart LR
   Famille -- "contrat de données personnelles (#14)" --> Accompagnement
   Motivation -- "Published Language (CleUnivers, #11)" --> Famille
   Catalogue -- "Published Language (Niveau, #11)" --> Famille
+  Apprentissage -- "lecture des records de fluence (#65)" --> Motivation
+  Catalogue -- "Published Language (Lecon, #65)" --> Motivation
 ```
 
 | Amont | Aval | Type de relation | Mécanisme (événement, appel, ACL) |
@@ -92,6 +94,7 @@ flowchart LR
 | Catalogue pédagogique, Famille | Apprentissage (test de départ) | Customer/Supplier (story #27) | Le choix des questions (`planDuTestDeDepart`, `@domain/apprentissage`, navigateur, port `Hasard`) lit toutes les leçons du Catalogue et le niveau du profil en cours. Côté serveur, `TerminerLeTestDeDepart` relit les leçons (port `LeconsDuCatalogue`, étendu à toutes les leçons) et le niveau du profil (port `NiveauDuProfil`), rejoue les réponses et enregistre l'agrégat `ResultatDuTestDeDepart` (leçons réussies au test de départ), à part de `ResultatDeLaLecon` |
 | Apprentissage (test de départ) | Apprentissage (parcours) | Calcul dans le domaine (story #27) | Le parcours reçoit les leçons réussies au test de départ en plus des meilleures étoiles, lues par le front sous RLS ; aucune étoile n'est créée ni modifiée |
 | Apprentissage (test de départ) | Motivation, Accompagnement | Événement (story #27) | `TestDeDepartTermine`. Le test de départ n'est pas une séance : ni `SeanceTerminee`, ni `LeconReussie`, ni jour de séance. Motivation n'y réagit pas (ni série, ni épisode, ni cabane, ni objectif du jour) ; Accompagnement (#34) s'en sert pour le suivi. Les questions du test de départ ne vont jamais dans les révisions |
+| Apprentissage, Catalogue pédagogique | Motivation (écran des récompenses de l'enfant) | Lecture seule (story #65, à valider) | L'écran (nom à valider, legacy « Mes trophées ») est calculé par des fonctions pures de `@domain/motivation` (ordre des sections, pastilles de record). Le front lit les records de fluence du **profil en cours** sous RLS dans `records_de_fluence` (#20, aucune écriture, décisions 0013 et 0016 ; pas de migration ni d'Edge Function) et les passe à Motivation sous une forme propre (leçon, clé de l'exercice, meilleur score) : Motivation n'importe pas l'agrégat `RecordDeFluence`. Le libellé vient du Catalogue (`Lecon`, titre de l'exercice de fluence). Motivation n'écrit jamais un record ni une étoile |
 
 Note (#25, réponses 25.1 et N3, 2026-10-24) : **il n'y a plus de verrou**. Dans les tableaux ci-dessus, « parcours et verrous » (ligne Apprentissage des contextes) se lit « parcours » ; le réglage « parcours libre » (ligne Famille → Apprentissage) n'est plus lu par le parcours et sera retiré par une story de Famille (réponse N2) ; `LeconReussie` (ligne des événements internes) ne sert ni au parcours ni à des verrous : le parcours se recalcule à la lecture, sans écouter d'événement. Le parcours lit aussi, dans le Published Language du Catalogue (`@domain/catalogue`), `toutesLesMatieres` (ordre des matières) et `Niveau#estAuDessusDe` (leçons réussies d'une classe au-dessus, réponse N1) ; il remplace `leconSuivante` du Catalogue, retirée.
 

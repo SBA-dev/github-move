@@ -27,3 +27,7 @@ function lireDuree(brut: unknown): number {
   if (duree <= 0) throw new LeconMalFormee("la durée d'un exercice de fluence n'est pas positive");
   return duree;
 }
+
+export function cleDeLaFluence(exercice: ExerciceFluence): string {
+  return exercice.titre ?? exercice.generateur.op;
+}

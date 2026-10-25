@@ -17,6 +17,7 @@ import {
   useProfilEnCours,
   useProfilsDuParent,
 } from "./famille/index.ts";
+import { MesMedailles } from "./medailles/index.ts";
 import { MonParcours } from "./parcours/index.ts";
 import { AideEcranDAccueil } from "./installation/index.ts";
 import { type Lieu, useNavigation } from "./navigation.ts";
@@ -36,13 +37,13 @@ type Habillage = CSSProperties & { readonly "--accent": string; readonly "--acce
 const ACCUEIL: Lieu = { ecran: "accueil" };
 
 function estPageDeLEnfant(lieu: Lieu): boolean {
-  return lieu.ecran === "demonstration" || lieu.ecran === "jeu" || lieu.ecran === "parcours" || lieu.ecran === "test-de-depart" ||
-    lieu.ecran === "lecon" || lieu.ecran === "seance";
+  return lieu.ecran === "demonstration" || lieu.ecran === "jeu" || lieu.ecran === "parcours" || lieu.ecran === "medailles" ||
+    lieu.ecran === "test-de-depart" || lieu.ecran === "lecon" || lieu.ecran === "seance";
 }
 
 function demandeUnProfilEnCours(lieu: Lieu): boolean {
-  return lieu.ecran === "jeu" || lieu.ecran === "parcours" || lieu.ecran === "test-de-depart" || lieu.ecran === "lecon" ||
-    lieu.ecran === "seance";
+  return lieu.ecran === "jeu" || lieu.ecran === "parcours" || lieu.ecran === "medailles" || lieu.ecran === "test-de-depart" ||
+    lieu.ecran === "lecon" || lieu.ecran === "seance";
 }
 
 // La page de démonstration du lot 1 n'est publiée qu'en développement (ou avec VITE_PAGE_DEMONSTRATION=1).
@@ -169,6 +170,7 @@ export function Application() {
                 voix={voix}
                 saluer={!viaRetour}
                 onMonParcours={() => aller("parcours")}
+                onMesMedailles={() => aller("medailles")}
                 onMonTestDeDepart={testDeDepartAFaire ? () => aller("test-de-depart") : undefined}
                 onChangerDEnfant={() => {
                   aller("accueil");
@@ -193,6 +195,9 @@ export function Application() {
                 onChoisirLaMatiere={setMatiereDuParcours}
                 onOuvrirLaLecon={(leconId) => aller({ ecran: "lecon", leconId })}
               />
+            )}
+            {lieu.ecran === "medailles" && profilCharge && profilEnCours && (
+              <MesMedailles profil={profilEnCours} univers={univers} voix={voix} />
             )}
             {surLaDemonstration && PageDemonstration && profilCharge && (
               <Suspense fallback={null}>
