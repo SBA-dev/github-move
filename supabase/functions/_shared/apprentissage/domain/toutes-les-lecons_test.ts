@@ -2,7 +2,7 @@ import { assertEquals } from "@std/assert";
 import { lireLecon, Niveau, toutesLesMatieres } from "../../catalogue/domain/index.ts";
 import type { Lecon } from "../../catalogue/domain/index.ts";
 import { Etoiles } from "./etoiles.ts";
-import { toutesLesLecons } from "./toutes-les-lecons.ts";
+import { choixDuFiltre, toutesLesLecons } from "./toutes-les-lecons.ts";
 
 function lecon(id: string, matiere: string, niveau: string, ordre: number): Lecon {
   return lireLecon({
@@ -309,4 +309,29 @@ Deno.test("filtrer « Toutes les leçons » par matière et par niveau combine l
     lecons: [],
     classesDAvant: [{ niveau: "CE1", lecons: ["fr-ce1-sons"] }],
   });
+});
+
+Deno.test("les choix des listes « Matière » et « Niveau » ne proposent que les matières (ordre du Catalogue) et les niveaux (croissants) qui ont au moins une leçon montrée dans « Toutes les leçons »", () => {
+  const entrees = {
+    lecons: [
+      lecon("ma-cp-nombres", "maths", "CP", 1),
+      lecon("fr-ce1-sons", "francais", "CE1", 1),
+      lecon("fr-ce2-accords", "francais", "CE2", 1),
+      lecon("fr-ce2-conjugaison", "francais", "CE2", 2),
+      lecon("ma-ce2-tables", "maths", "CE2", 1),
+      lecon("emc-ce2-regles", "emc", "CE2", 1),
+      lecon("fr-cm1-recits", "francais", "CM1", 1),
+      lecon("sc-cm1-vivant", "sciences", "CM1", 1),
+    ],
+    niveau: Niveau.de("CE2"),
+    meilleuresEtoiles: new Map([
+      ["fr-ce2-accords", Etoiles.de(1)],
+      ["ma-ce2-tables", Etoiles.de(1)],
+    ]),
+  };
+
+  const { matieres, niveaux } = choixDuFiltre(entrees);
+
+  assertEquals(matieres.map(({ code }) => code), ["francais", "maths", "emc"]);
+  assertEquals(niveaux.map(({ valeur }) => valeur), ["CP", "CE1", "CE2"]);
 });
