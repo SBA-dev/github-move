@@ -35,3 +35,35 @@ export function totalDesEtoiles(meilleures: MeilleuresEtoilesDuProfil): number {
   for (const etoiles of meilleures.values()) total += verifierNombreDEtoiles(etoiles);
   return total;
 }
+
+export type EtatDeLaCabane = {
+  readonly total: number;
+  readonly objetsRecus: readonly ObjetDeLaCabane[];
+  readonly prochainPalier?: {
+    readonly objet: ObjetDeLaCabane;
+    readonly seuil: number;
+    readonly etoilesManquantes: number;
+  };
+  readonly complete: boolean;
+};
+
+export class TotalDEtoilesInvalide extends Error {
+  constructor(readonly total: number) {
+    super(`${total} n'est pas un total d'étoiles valide : il faut un nombre entier positif ou nul.`);
+    this.name = "TotalDEtoilesInvalide";
+  }
+}
+
+export function cabaneDe(total: number): EtatDeLaCabane {
+  if (!Number.isInteger(total) || total < 0) throw new TotalDEtoilesInvalide(total);
+  const objetsRecus = PALIERS_DE_LA_CABANE.filter((palier) => palier.seuil <= total).map((palier) => palier.objet);
+  const prochain = PALIERS_DE_LA_CABANE.find((palier) => palier.seuil > total);
+  return {
+    total,
+    objetsRecus,
+    ...(prochain && {
+      prochainPalier: { objet: prochain.objet, seuil: prochain.seuil, etoilesManquantes: prochain.seuil - total },
+    }),
+    complete: prochain === undefined,
+  };
+}
