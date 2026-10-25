@@ -138,3 +138,7 @@ Branche de base : `main`. Aucun numéro de décision réservé (prochain libre :
 - 01:15 UTC — Périmètre après intégration de #29 (`8c9a55a`) : **432/432 verts** sur `telephone`, 47 min (#79 34,
   #29 66, #24 30, #25 41, #26 56, #16 35, #18 27, #27 60, #28 47, #65 36). « Continuer » est gardé après la fusion
   dans `attendreLaFinDeLaSeance`. Reste : #79.13.
+- 01:40 UTC — RELIS #64 : `À SAVOIR` (motif fragile : attendre « au moins un lot » du journal de la voix puis écarter
+  « Coucou »). Vérifié : les steps ajoutés par #79 attendent la parole vérifiée (texte de la lecture en cours). Le
+  compte de lectures par défaut du step « Léa entend de nouveau Noisette lire » (2 lots) existait avant #79 : à
+  reprendre dans #87. Rappel du responsable : 3 équipes au plus, périmètres au plus juste (limites d'utilisation).
