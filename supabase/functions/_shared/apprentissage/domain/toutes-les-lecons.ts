@@ -28,6 +28,7 @@ export type LeconsDUnNiveau = Readonly<{ niveau: Niveau; lecons: readonly LeconD
 export type ToutesLesLecons = Readonly<{
   lecons: readonly LeconDeToutesLesLecons[];
   leconsDesClassesDAvant: readonly LeconsDUnNiveau[];
+  nombreDansLesClassesDAvant: number;
   nombreDeLecons: number;
   seulementLesClassesDAvant: boolean;
 }>;
@@ -41,10 +42,12 @@ export function toutesLesLecons(entrees: EntreesDuParcours, filtre: FiltreDesLec
     ...leconsDAuDessusMontrees(entrees),
   ].filter(retenue);
   const leconsDesClassesDAvant = classesDAvant(entrees, retenue);
+  const nombreDansLesClassesDAvant = leconsDesClassesDAvant.reduce((somme, classe) => somme + classe.lecons.length, 0);
   return {
     lecons,
     leconsDesClassesDAvant,
-    nombreDeLecons: lecons.length + leconsDesClassesDAvant.reduce((somme, classe) => somme + classe.lecons.length, 0),
+    nombreDansLesClassesDAvant,
+    nombreDeLecons: lecons.length + nombreDansLesClassesDAvant,
     seulementLesClassesDAvant: filtre.niveau !== undefined && estUneClasseDAvant(entrees)(filtre.niveau),
   };
 }
