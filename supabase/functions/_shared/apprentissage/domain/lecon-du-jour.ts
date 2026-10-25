@@ -28,9 +28,8 @@ export function leconDuJour(entrees: EntreesDuJour): LeconDuJour {
 
 function matieresAJouer(parcours: EntreesDuParcours, matieres: Matiere[]): MatiereAJouer[] {
   return matieres.flatMap((matiere) => {
-    const { prochaineLecon, lecons } = parcoursDeLaMatiere(parcours, matiere);
-    const titre = lecons.find((lecon) => lecon.lecon === prochaineLecon)?.titre;
-    return prochaineLecon === undefined || titre === undefined ? [] : [{ matiere, lecon: prochaineLecon, titre }];
+    const prochaine = parcoursDeLaMatiere(parcours, matiere).lecons.find((lecon) => lecon.etat.genre === "prochaine");
+    return prochaine ? [{ matiere, lecon: prochaine.lecon, titre: prochaine.titre }] : [];
   });
 }
 
