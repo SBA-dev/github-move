@@ -45,13 +45,18 @@ export function enonceTire({ q, r }: Operation): string {
 export function relireLesOperations(generateur: GenerateurComplet, tirage: readonly string[]): readonly Operation[] {
   if (tirage.length !== generateur.combien) throw new TirageHorsDuGenerateur(tirage.join(", "));
   return tirage.map((ligne) => {
-    const operation = lireUneOperation(ligne);
-    if (!estConforme(generateur, operation)) throw new TirageHorsDuGenerateur(ligne);
+    const operation = relireUneOperationDuGenerateur(generateur, ligne);
+    if (!operation) throw new TirageHorsDuGenerateur(ligne);
     return operation;
   });
 }
 
-export function lireUneOperation(ligne: string): Operation {
+export function relireUneOperationDuGenerateur(generateur: GenerateurComplet, ligne: string): Operation | undefined {
+  const operation = lireUneOperation(ligne);
+  return estConforme(generateur, operation) ? operation : undefined;
+}
+
+function lireUneOperation(ligne: string): Operation {
   const coupure = ligne.lastIndexOf(" = ");
   return { q: ligne.slice(0, coupure), r: Number(ligne.slice(coupure + 3)) };
 }

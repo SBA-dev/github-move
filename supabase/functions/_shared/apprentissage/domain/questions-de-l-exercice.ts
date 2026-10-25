@@ -1,4 +1,11 @@
-import type { ExerciceBarres, ExerciceBoite, ExerciceDictee, Niveau, Operation } from "../../catalogue/domain/index.ts";
+import type {
+  ExerciceBarres,
+  ExerciceBoite,
+  ExerciceDictee,
+  MotDicte,
+  Niveau,
+  Operation,
+} from "../../catalogue/domain/index.ts";
 import { MotAEcrire } from "./mot-a-ecrire.ts";
 import { QuestionDeBoite } from "./question-de-boite.ts";
 import { QuestionDeCalcul } from "./question-de-calcul.ts";
@@ -26,8 +33,10 @@ export function questionsDeProblemesEnBarres(
   return exercice.items.map((probleme) => QuestionDeProblemeEnBarres.pour(probleme, tireur, niveau));
 }
 
+export function questionDeDictee(exercice: ExerciceDictee, mot: MotDicte, tireur: Tireur): QuestionDeDictee {
+  return new QuestionDeDictee(mot, exercice.consigne, tireur.clavier(MotAEcrire.de(mot.mot)));
+}
+
 export function questionsDeDictee(exercice: ExerciceDictee, tireur: Tireur): QuestionDeDictee[] {
-  return exercice.mots.map((mot) =>
-    new QuestionDeDictee(mot, exercice.consigne, tireur.clavier(MotAEcrire.de(mot.mot)))
-  );
+  return exercice.mots.map((mot) => questionDeDictee(exercice, mot, tireur));
 }
