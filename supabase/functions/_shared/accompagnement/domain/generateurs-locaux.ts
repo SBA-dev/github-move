@@ -83,9 +83,10 @@ export function leconDeVerbes(texte: TexteDuParent): { contenu: ContenuDeLecon; 
 
 export function leconDePoesie(texte: TexteDuParent): { contenu: ContenuDeLecon; ecartes: string[] } {
   const vers = texte.lignes();
+  const [premierVers = ""] = vers;
   return {
     contenu: {
-      titre: `Poésie : ${vers[0].replace(/[.,;:!?…]+$/, "")}`,
+      titre: `Poésie : ${premierVers.replace(/[.,;:!?…]+$/, "")}`,
       etapes: [ETAPE_DE_LA_POESIE],
       exercices: [memoriser(vers.slice(0, NOMBRE_MAXIMAL_DE_VERS_A_MEMORISER))],
     },
