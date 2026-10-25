@@ -1,5 +1,5 @@
 import { assertEquals } from "@std/assert";
-import { accueillirEnRevision, parolesDeFinDeRevision } from "./paroles-de-revision.ts";
+import { accueillirEnRevision, annonceDeLaSeanceDeRevision, parolesDeFinDeRevision } from "./paroles-de-revision.ts";
 
 Deno.test("le personnage guide accueille la séance de révision en parlant des petites erreurs des jours passés", () => {
   const texte = accueillirEnRevision();
@@ -26,4 +26,16 @@ Deno.test("à la fin d'une révision sans question juste, le personnage guide re
   const texte = parolesDeFinDeRevision({ prenom: "Léa", questionsJustes: 0 });
 
   assertEquals(texte, "Merci Léa ! Ces erreurs reviendront demain : on les effacera ensemble.");
+});
+
+Deno.test("l'annonce sous le bouton de révision dit « 1 petite erreur » au singulier", () => {
+  const texte = annonceDeLaSeanceDeRevision(1);
+
+  assertEquals(texte, "1 petite erreur des jours passés");
+});
+
+Deno.test("l'annonce sous le bouton de révision compte toutes les questions dues, même au-delà de 10", () => {
+  const texte = annonceDeLaSeanceDeRevision(14);
+
+  assertEquals(texte, "14 petites erreurs des jours passés");
 });
