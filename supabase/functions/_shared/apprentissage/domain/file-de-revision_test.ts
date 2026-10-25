@@ -106,3 +106,83 @@ Deno.test("la même question ratée deux fois dans une séance n'est retenue qu'
   assertEquals(file.questions.length, 1);
   assertEquals(file.questions[0].nombreDeFoisRatee, 1);
 });
+
+const LIMITE = 250;
+const premiereErreur = new Date("2026-09-01T10:00:00Z").getTime();
+
+function identiteNumero(numero: number) {
+  return CleDeQuestion.de("calcul", `question ${numero}`);
+}
+
+// La question numéro n a été ratée n minutes après la première : la 0 est la plus ancienne.
+function fileAvec(nombreDeQuestions: number) {
+  return FileDeRevision.reconstituer({
+    enfant: profilDeLea,
+    erreursCorrigeesPourDeBon: 4,
+    questions: Array.from({ length: nombreDeQuestions }, (_, numero) => ({
+      identite: identiteNumero(numero),
+      origine,
+      intervalle: IntervalleDeRevision.premier(),
+      dateDeRevision: Jour.de("2026-09-02"),
+      derniereErreurLe: new Date(premiereErreur + numero * 60_000),
+      nombreDeFoisRatee: 1,
+    })),
+  });
+}
+
+function nouvelleQuestion(numero: number) {
+  return { identite: identiteNumero(numero), origine };
+}
+
+function identitesDe(file: FileDeRevision) {
+  return file.questions.map((question) => question.identite.valeur);
+}
+
+Deno.test("la file garde toutes ses questions quand elle atteint exactement 250", () => {
+  const file = fileAvec(LIMITE - 1);
+
+  file.retenir([nouvelleQuestion(LIMITE)], jourDeLaSeance, termineeLe);
+
+  assertEquals(file.questions.length, LIMITE);
+  assertEquals(identitesDe(file).includes(identiteNumero(0).valeur), true);
+});
+
+Deno.test("au-delà de 250, la question à la dernière erreur la plus ancienne est oubliée", () => {
+  const file = fileAvec(LIMITE);
+
+  file.retenir([nouvelleQuestion(LIMITE)], jourDeLaSeance, termineeLe);
+
+  assertEquals(file.questions.length, LIMITE);
+  assertEquals(identitesDe(file).includes(identiteNumero(0).valeur), false);
+  assertEquals(identitesDe(file).includes(identiteNumero(LIMITE).valeur), true);
+});
+
+Deno.test("plusieurs questions qui entrent d'un coup font oublier les plus anciennes", () => {
+  const file = fileAvec(LIMITE);
+
+  file.retenir([nouvelleQuestion(LIMITE), nouvelleQuestion(LIMITE + 1), nouvelleQuestion(LIMITE + 2)], jourDeLaSeance, termineeLe);
+
+  assertEquals(file.questions.length, LIMITE);
+  for (const numero of [0, 1, 2]) {
+    assertEquals(identitesDe(file).includes(identiteNumero(numero).valeur), false);
+  }
+  assertEquals(identitesDe(file).includes(identiteNumero(3).valeur), true);
+});
+
+Deno.test("une question ancienne ratée de nouveau n'est pas oubliée : c'est la suivante qui l'est", () => {
+  const file = fileAvec(LIMITE);
+
+  file.retenir([nouvelleQuestion(0), nouvelleQuestion(LIMITE)], jourDeLaSeance, termineeLe);
+
+  assertEquals(file.questions.length, LIMITE);
+  assertEquals(identitesDe(file).includes(identiteNumero(0).valeur), true);
+  assertEquals(identitesDe(file).includes(identiteNumero(1).valeur), false);
+});
+
+Deno.test("une question oubliée ne compte pas comme erreur corrigée pour de bon", () => {
+  const file = fileAvec(LIMITE);
+
+  file.retenir([nouvelleQuestion(LIMITE)], jourDeLaSeance, termineeLe);
+
+  assertEquals(file.erreursCorrigeesPourDeBon, 4);
+});
