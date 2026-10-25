@@ -18,6 +18,10 @@ const PREFIXES: Record<TypeDeQuestion, string> = {
   dictee: "d:",
 };
 
+export function estUnTypeDeQuestion(valeur: string): valeur is TypeDeQuestion {
+  return Object.hasOwn(PREFIXES, valeur);
+}
+
 export class CleDeQuestion {
   private constructor(readonly valeur: string) {}
 

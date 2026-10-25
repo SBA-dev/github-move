@@ -1,10 +1,10 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { FilesDeRevision } from "../application/ports/files-de-revision.ts";
-import { CleDeQuestion } from "../domain/cle-de-question.ts";
+import { CleDeQuestion, estUnTypeDeQuestion } from "../domain/cle-de-question.ts";
+import { CleDeQuestionInvalide, IntervalleDeRevisionInvalide, JourInvalide } from "../domain/erreurs.ts";
 import { FileDeRevision, type QuestionRetenue } from "../domain/file-de-revision.ts";
 import { IntervalleDeRevision } from "../domain/intervalle-de-revision.ts";
 import { Jour } from "../domain/jour.ts";
-import type { TypeDeQuestion } from "../domain/question-suivie.ts";
 
 type LigneDeQuestionRetenue = {
   cle: string;
@@ -39,13 +39,18 @@ export function lignesDesQuestionsRetenues(file: FileDeRevision) {
   }));
 }
 
+const ERREURS_DE_LIGNE_ILLISIBLE = [CleDeQuestionInvalide, IntervalleDeRevisionInvalide, JourInvalide];
+
+class TypeDeQuestionInconnu extends Error {}
+
 function questionRetenueDepuisLaLigne(ligne: LigneDeQuestionRetenue): QuestionRetenue {
+  if (!estUnTypeDeQuestion(ligne.type)) throw new TypeDeQuestionInconnu();
   return {
     identite: CleDeQuestion.depuisLaValeur(ligne.cle),
     origine: {
       leconDOrigine: ligne.lecon_d_origine,
       position: ligne.position,
-      type: ligne.type as TypeDeQuestion,
+      type: ligne.type,
       ...(ligne.tirage === null ? {} : { tirage: ligne.tirage }),
     },
     intervalle: IntervalleDeRevision.de(ligne.intervalle),
@@ -53,6 +58,18 @@ function questionRetenueDepuisLaLigne(ligne: LigneDeQuestionRetenue): QuestionRe
     derniereErreurLe: new Date(ligne.derniere_erreur_le),
     nombreDeFoisRatee: ligne.nombre_de_fois_ratee,
   };
+}
+
+// Une ligne illisible (type, clé, intervalle ou jour inconnus) est ignorée plutôt que de bloquer toute la file.
+function questionRetenueLisible(ligne: LigneDeQuestionRetenue): QuestionRetenue[] {
+  try {
+    return [questionRetenueDepuisLaLigne(ligne)];
+  } catch (cause) {
+    const illisible = cause instanceof TypeDeQuestionInconnu ||
+      ERREURS_DE_LIGNE_ILLISIBLE.some((erreur) => cause instanceof erreur);
+    if (illisible) return [];
+    throw cause;
+  }
 }
 
 export class FilesDeRevisionSupabase implements FilesDeRevision {
@@ -71,7 +88,7 @@ export class FilesDeRevisionSupabase implements FilesDeRevision {
     const file = FileDeRevision.reconstituer({
       enfant,
       erreursCorrigeesPourDeBon: ligne.erreurs_corrigees_pour_de_bon,
-      questions: (lignes as LigneDeQuestionRetenue[]).map(questionRetenueDepuisLaLigne),
+      questions: (lignes as LigneDeQuestionRetenue[]).flatMap(questionRetenueLisible),
     });
     return { file, version: ligne.version };
   }
