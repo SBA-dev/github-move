@@ -1,4 +1,4 @@
-import type { GenerateurId } from "../domain/generateur-id.ts";
+import type { GenerateurId } from "../application/ports/generateur-id.ts";
 
 export function generateurIdFixe(identifiant: string): GenerateurId {
   return { nouveau: () => identifiant };

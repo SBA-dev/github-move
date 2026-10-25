@@ -8,7 +8,6 @@ export {
   TexteTropCourt,
   TexteTropLong,
 } from "./erreurs.ts";
-export type { GenerateurId } from "./generateur-id.ts";
 export { reconnaitreLaForme } from "./forme-du-texte.ts";
 export type { FormeDuTexte } from "./forme-du-texte.ts";
 export { groupeDuVerbe } from "./groupe-du-verbe.ts";

@@ -1,6 +1,6 @@
 import type { Matiere, Niveau } from "../../catalogue/domain/index.ts";
 import { ParentNonRattache } from "../domain/erreurs.ts";
-import type { GenerateurId } from "../domain/generateur-id.ts";
+import type { GenerateurId } from "./ports/generateur-id.ts";
 import { LeconPersonnelle, type LeconPersonnelleCreee } from "../domain/lecon-personnelle.ts";
 import { preparerUneLeconPersonnelle } from "../domain/preparer-une-lecon-personnelle.ts";
 import { TexteDuParent } from "../domain/texte-du-parent.ts";
