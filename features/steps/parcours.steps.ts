@@ -60,7 +60,7 @@ function leconsDuParcours(page: Page): Locator {
 
 // « Qui joue ? » montre d'abord la copie gardée sur l'appareil, puis la relit sur le serveur : après un changement de
 // niveau fait par le parent, on attend que la liste ait rattrapé le niveau enregistré avant de choisir Léa.
-async function choisirLea(famille: Famille, page: Page): Promise<void> {
+export async function choisirLea(famille: Famille, page: Page): Promise<void> {
   const profil = profilDe(famille, "Léa");
   const niveau = await lireEnRestLeNiveauDuProfil(await jetonDe(famille, profil.parent), profil.id);
   const quiJoue = await ouvrirQuiJoue(page);
@@ -83,7 +83,7 @@ async function choisirLaMatiere(page: Page, matiere: string): Promise<void> {
   await expect(onglet).toHaveAttribute("aria-selected", "true");
 }
 
-async function ouvrirLeParcoursDeFrancais(famille: Famille, page: Page): Promise<void> {
+export async function ouvrirLeParcoursDeFrancais(famille: Famille, page: Page): Promise<void> {
   await ouvrirLeParcours(famille, page);
   await choisirLaMatiere(page, "Français");
 }
@@ -138,8 +138,10 @@ Given(/^(Léa|Tom) a pour meilleures étoiles :$/, async ({ famille, page }, pre
   await preparerLesEtoiles(famille, page, prenom, lecons);
 });
 
-Given(/^Léa a réussi (\d+) leçons?(?:\(s\))? de français du CE1$/, async ({ famille, page }, nombre: string) => {
-  const lecons = LECONS_DU_PARCOURS.filter((l) => l.matiere === "francais" && l.niveau === "CE1")
+Given(/^Léa a réussi (\d+) leçons?(?:\(s\))? de français du CE1$/, async ({ famille, page, $tags }, nombre: string) => {
+  // Story #26 : la bibliothèque de test des leçons des classes d'avant a ses propres identifiants (étape « … est servie »).
+  const bibliotheque = $tags.includes("@issue-26") ? etat(page).injectees : LECONS_DU_PARCOURS;
+  const lecons = bibliotheque.filter((l) => l.matiere === "francais" && l.niveau === "CE1")
     .sort((a, b) => a.ordre - b.ordre)
     .slice(0, Number(nombre))
     .map((l) => ({ titre: l.titre, etoiles: 1 }));
@@ -341,15 +343,20 @@ Then(/^le parcours indique « ([^«»]+) »$/, async ({ famille, page }, compteu
   await expect(pageDuParcours(famille, page).getByTestId("compteur-du-parcours")).toHaveText(compteur);
 });
 
+/** Ce que lit un lecteur d'écran de l'état d'une leçon d'un bloc (« Leçons des classes d'avant », « Déjà réussies en … »). */
+export function annonceDeLEtatDUneLeconDuBloc(etatAttendu: string): string {
+  if (etatAttendu === "réussie au test de départ" || etatAttendu === "à découvrir") return etatAttendu;
+  const etoiles = Number(/(\d)/.exec(etatAttendu)?.[1]);
+  return `réussie, ${etoiles} étoile${etoiles > 1 ? "s" : ""} sur 3`;
+}
+
 Then(/^le bloc « ([^«»]+) » du parcours montre, et seulement elles :$/, async ({ page }, nom: string, tableau: DataTable) => {
-  const bloc = page.getByRole("region", { name: nom });
+  const bloc = page.getByRole("region", { name: nom, exact: true });
   const lignes = tableau.hashes();
-  await expect(bloc.getByRole("button")).toHaveCount(lignes.length);
+  // Le bouton qui plie et déplie le bloc (`aria-expanded`) n'est pas une leçon du bloc.
+  await expect(bloc.locator("button:not([aria-expanded])")).toHaveCount(lignes.length);
   for (const ligne of lignes) {
-    const etoiles = Number(/(\d)/.exec(String(ligne["état"]))?.[1]);
-    const annonce = String(ligne["état"]) === "réussie au test de départ"
-      ? "réussie au test de départ"
-      : `réussie, ${etoiles} étoile${etoiles > 1 ? "s" : ""} sur 3`;
+    const annonce = annonceDeLEtatDUneLeconDuBloc(String(ligne["état"]));
     await expect(bloc.getByRole("button", { name: `${String(ligne["leçon"])}, ${String(ligne["niveau"])} : ${annonce}` })).toBeVisible();
   }
 });

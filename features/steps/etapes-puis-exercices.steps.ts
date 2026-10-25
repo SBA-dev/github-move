@@ -1,4 +1,5 @@
 import { avecLesReglagesPrevus } from "../support/reglages-prevus.ts";
+import { servirLaBibliothequeDesClassesDAvant } from "../support/bibliotheque-des-classes-d-avant.ts";
 import { servirLaBibliothequeDuParcours } from "../support/bibliotheque-du-parcours.ts";
 import { servirLaBibliothequeDuTestDeDepart } from "../support/bibliotheque-du-test-de-depart.ts";
 import { readFileSync } from "node:fs";
@@ -211,7 +212,9 @@ Given(/^Léa a un profil enfant préparé de niveau (\S+) dans l'univers « (.+)
   if ($tags.includes("@issue-27")) await servirLaBibliothequeDuTestDeDepart(page);
   // Story #32 : la cabane lit les étoiles du serveur ; seul le scénario du profil préparé garde le profil sans identifiant.
   const cabaneSurLeServeur = $tags.includes("@issue-32") && !$testInfo.title.includes("sans profil réel au serveur");
-  if ($tags.includes("@issue-24") || $tags.includes("@issue-25") || $tags.includes("@issue-27") || cabaneSurLeServeur) {
+  // Story #26 : la bibliothèque de test des leçons des classes d'avant est servie avant l'accueil, qui la charge dès son ouverture.
+  if ($tags.includes("@issue-26")) await servirLaBibliothequeDesClassesDAvant(page);
+  if ($tags.includes("@issue-24") || $tags.includes("@issue-25") || $tags.includes("@issue-26") || $tags.includes("@issue-27") || cabaneSurLeServeur) {
     await jouerAvecLeProfilReel(famille, monde, page);
   }
 });
