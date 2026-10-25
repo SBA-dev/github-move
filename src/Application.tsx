@@ -1,6 +1,6 @@
-import { type CSSProperties, useCallback, useEffect, useState } from "react";
+import { type CSSProperties, useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { MotionConfig } from "motion/react";
-import type { EtatDeLEspaceParent } from "@domain/famille";
+import { type Ecran as EcranDuDomaine, type EtatDeLEspaceParent, estUnEcranDuParent } from "@domain/famille";
 import type { CodeDeMatiere } from "@domain/catalogue";
 import { universDe } from "@domain/motivation";
 import { EcranDeConnexion, useConnexion } from "./connexion/index.ts";
@@ -41,6 +41,26 @@ function estPageDeLEnfant(lieu: Lieu): boolean {
     lieu.ecran === "test-de-depart" || lieu.ecran === "lecon" || lieu.ecran === "seance";
 }
 
+function ecranAffiche(lieu: Lieu, connecte: boolean, espaceParent: EtatDeLEspaceParent["type"]): EcranDuDomaine {
+  switch (lieu.ecran) {
+    case "accueil":
+      return connecte ? "qui-joue" : "connexion";
+    case "espace-parent":
+      if (!connecte) return "connexion";
+      return espaceParent === "questionPosee" ? "controle-parental" : "espace-parent";
+    case "jeu":
+      return "accueil-de-l-enfant";
+    case "lecon":
+      return "page-de-la-lecon";
+    case "parcours":
+    case "toutes-les-lecons":
+    case "medailles":
+    case "test-de-depart":
+    case "seance":
+      return lieu.ecran;
+  }
+}
+
 function lieuAffiche(demande: Lieu, espaceParent: EtatDeLEspaceParent["type"], connecte: boolean): Lieu {
   if (demande.ecran === "espace-parent" && connecte && espaceParent === "ferme") return ACCUEIL;
   return demande;
@@ -64,6 +84,12 @@ export function Application() {
   const univers = universDe(profil?.univers);
   const palette = PALETTES[univers.cle];
   const voix = useVoix(universDe(profilEnCours?.univers).personnageGuide);
+  const parent = estUnEcranDuParent(ecranAffiche(lieu, connecte, acces.etat.type));
+  const { suspendre: suspendreLaVoix, reprendre: reprendreLaVoix } = voix;
+  useLayoutEffect(() => {
+    if (parent) suspendreLaVoix();
+    else reprendreLaVoix();
+  }, [parent, suspendreLaVoix, reprendreLaVoix]);
   const profilsDuParent = useProfilsDuParent(connecte, ecran === "accueil" || ecran === "espace-parent");
   const { etat: etatEspaceParent, quitter: fermerEspaceParent, ouvrirApresLaConnexion } = acces;
   const ouvrirLEspaceParentConnecte = useCallback(() => {
@@ -154,7 +180,6 @@ export function Application() {
                   ? (
                     <QuiJoue
                       etat={profilsDuParent.etat}
-                      voix={voix}
                       onChoisir={(profilChoisi) => {
                         choisirQuiJoue.executer(profilChoisi);
                         aller("jeu");
