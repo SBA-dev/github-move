@@ -9,8 +9,8 @@ import {
   leconDeTest,
   ouvrirLaPageDeLaLecon,
 } from "./etapes-puis-exercices.steps.ts";
-import { estSurUnProfilReel, rechargerAvecLeProfilReel } from "./profil-reel.ts";
-import { modifierLeProfil } from "./profils-enfants.steps.ts";
+import { estSurUnProfilReel } from "./profil-reel.ts";
+import { choisirSonProfil, modifierLeProfil } from "./profils-enfants.steps.ts";
 import { allerALaQuestion } from "./exercices-a-choix.steps.ts";
 import { After, Given, Then, When } from "./fixtures.ts";
 
@@ -397,7 +397,12 @@ Given(/^Léa a choisi l'univers (animaux|princesse|sports|pompier)$/, async ({ p
   // Story #32 : le profil réel de Léa est déjà créé ; son univers change sur le serveur, puis Léa se choisit de nouveau.
   if ($tags.includes("@issue-32") && estSurUnProfilReel(page)) {
     await modifierLeProfil(famille, "Léa", { univers });
-    await rechargerAvecLeProfilReel(page);
+    // « Qui joue ? » montre d'abord la copie gardée de l'ancien univers : on attend qu'il ait relu la liste sur le serveur.
+    const listeRelue = page.waitForResponse((reponse) => reponse.url().includes("/rest/v1/profils_enfants"));
+    await page.goto("/");
+    await listeRelue;
+    await choisirSonProfil(page, "Léa");
+    await expect(page.getByTestId("paysage")).toHaveAttribute("data-univers", univers);
     return;
   }
   const profil = { prenom: "Léa", niveau: "CE1", univers };
