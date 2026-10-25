@@ -11,3 +11,4 @@ Branche : `feature/32-cabane`, partie de `main` (`e466e25`). Branche de base : `
 - 12:30 → 13:20 UTC : `po-acceptance` interrompu par la limite d'utilisation, sans rien écrire ; relancé après le redémarrage de la session.
 - 13:45 UTC : `po-acceptance` : 6 règles, 28 scénarios (34 cas), 17 `@a-valider`, 3 `@acces`. `bddgen` : syntaxe OK, 13 étapes à définir. Nouvelles questions 32.21 à 32.24 (32.21 : mettre à jour 4 scénarios de #65 dans la même PR).
 - CADRAGE PRÊT publié sur #32 ; attente de la validation du PO par une annonce `[Responsable]`.
+- 13:35 UTC : remarque du responsable (décision 0021) : « profil de démonstration » n'existe plus. `po-acceptance` le remplace par « profil préparé, sans profil réel au serveur » (scénario de 32.14/32.22, questions 32.14, 32.21, 32.22) ; les étapes qui écrivent des étoiles en base supposent un profil réel (`profil-reel.ts`).

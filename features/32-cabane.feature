@@ -16,6 +16,10 @@ Fonctionnalité: La cabane reçoit des objets à chaque palier du total des éto
 
   « Léa a gagné N étoiles en tout » prépare des meilleures étoiles sur des leçons de test absentes de la
   bibliothèque (identifiants préfixés « e2e-32- »), sans jouer de séance ; elles partent avec le profil enfant.
+  Comme toute étape qui écrit en base (« Léa a pour meilleures étoiles : », « Léa a gagné N étoiles à la leçon … »),
+  elle suppose que Léa joue avec un profil réel, créé pour Paul (features/steps/profil-reel.ts, décision 0021,
+  point 5). Seul le scénario « Avec le profil préparé, sans profil réel au serveur… » garde le profil préparé
+  du Contexte, sans profil réel : ses étoiles ne sont que celles gagnées sur l'appareil.
   « Les sons de test » est la leçon de test de #24 (10 questions : 0 erreur donne 3 étoiles, 5 erreurs 1 étoile).
   Paul et Marie sont les deux parents rattachés au profil enfant de Léa ; Tom est un autre enfant de Paul ;
   Claire n'est rattachée à aucun des deux.
@@ -150,8 +154,8 @@ Fonctionnalité: La cabane reçoit des objets à chaque palier du total des éto
 
     # Questions 32.14 et 32.22
     @a-valider
-    Scénario: Avec un profil de démonstration, la cabane compte les étoiles gagnées sur l'appareil
-      Étant donné que Léa joue avec un profil de démonstration, sans compte parent
+    Scénario: Avec le profil préparé, sans profil réel au serveur, la cabane compte les étoiles gagnées sur l'appareil
+      Étant donné que Léa joue avec le profil préparé, sans profil réel au serveur
       Et que Léa a terminé une séance de la leçon « Les sons de test » avec 3 étoiles
       Quand Léa ouvre « Mes médailles » depuis son accueil
       Alors Léa lit « Tu as 3 étoiles. Encore 3 étoiles et Noisette recevra un tapis tout doux ! »
