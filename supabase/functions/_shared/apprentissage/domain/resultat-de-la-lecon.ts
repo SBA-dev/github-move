@@ -14,7 +14,7 @@ export type EtatDuResultat = {
 };
 
 export const SEUIL_DE_LECON_REUSSIE = 1;
-const SEUIL_DE_LECON_ACQUISE = 2;
+export const SEUIL_DE_LECON_ACQUISE = 2;
 
 export class ResultatDeLaLecon {
   private faits: FaitDeResultat[] = [];
