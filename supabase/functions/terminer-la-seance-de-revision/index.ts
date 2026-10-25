@@ -4,6 +4,8 @@ import { lireLaSeanceDeRevisionTerminee } from "../_shared/apprentissage/infrast
 import { traiterUneEcritureDApprentissage } from "../_shared/apprentissage/infrastructure/http-apprentissage.ts";
 import { FilesDeRevisionSupabase } from "../_shared/apprentissage/infrastructure/files-de-revision-supabase.ts";
 import { LeconsDuCatalogueJson } from "../_shared/apprentissage/infrastructure/lecons-du-catalogue-json.ts";
+import { LeconsDuCatalogueEtPersonnellesPourLaRevision } from "../_shared/apprentissage/infrastructure/lecons-du-catalogue-et-personnelles-pour-la-revision.ts";
+import { LeconsPersonnellesDuProfilSupabase } from "../_shared/apprentissage/infrastructure/lecons-personnelles-du-profil-supabase.ts";
 import { NiveauDuProfilSupabase } from "../_shared/apprentissage/infrastructure/niveau-du-profil-supabase.ts";
 import { RattachementsDuParentSupabase } from "../_shared/apprentissage/infrastructure/rattachements-du-parent-supabase.ts";
 import { SeancesDeRevisionTermineesSupabase } from "../_shared/apprentissage/infrastructure/seances-de-revision-terminees-supabase.ts";
@@ -39,7 +41,11 @@ Deno.serve((requete) =>
       const clientDuServeur = clientDuServeurALaDemande();
       const faits = await new TerminerLaSeanceDeRevision(
         new RattachementsDuParentSupabase(client),
-        lecons,
+        new LeconsDuCatalogueEtPersonnellesPourLaRevision(
+          lecons,
+          new LeconsPersonnellesDuProfilSupabase(client),
+          seance.enfant,
+        ),
         new NiveauDuProfilSupabase(client),
         new FilesDeRevisionSupabase(clientDuServeur),
         new SeancesDeRevisionTermineesSupabase(clientDuServeur),

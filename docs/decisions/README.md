@@ -28,3 +28,4 @@ Une décision n'est jamais réécrite : si elle change, une nouvelle décision l
 | [0021](0021-porte-de-test-du-profil-prepare.md) | Le profil préparé, seule porte de test, en développement seulement | Acceptée |
 | [0022](0022-non-regression-groupee-sur-main.md) | Non-régression complète groupée sur `main` après 3 merges ; merges autorisés pour la vague | Acceptée, points 2 et 3 remplacés par 0023 |
 | [0023](0023-non-regression-sur-main-seulement.md) | Non-régression complète sur `main` seulement, deux fois par jour ; merge par les équipes | Acceptée |
+| [0024](0024-lecons-personnelles-par-edge-function-sous-rls.md) | Leçons personnelles écrites par deux Edge Functions avec le JWT du parent, sous RLS ; préparation refaite par le serveur ; texte du parent conservé | Acceptée |
