@@ -72,6 +72,8 @@ export type {
   LeconsDUnNiveau,
   ToutesLesLecons,
 } from "./toutes-les-lecons.ts";
+export { leconDuJour } from "./lecon-du-jour.ts";
+export type { EntreesDuJour, LeconDuJour } from "./lecon-du-jour.ts";
 export { leconSuivanteDansLeParcours } from "./lecon-suivante-dans-le-parcours.ts";
 export type {
   EntreesDuParcours,
