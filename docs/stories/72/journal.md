@@ -44,3 +44,5 @@
 - 2026-10-25 : merge de origin/main 48c6496 (340 commits : #20, #21, #22, #25, #27, #58, #65) : e0b21a9, par implementer. Conflits d'ajouts seulement : context-map.md, styles.css, config.toml. 1675 verts, lint/fmt/tsc/build OK. Review delta lancée.
 - Question #72.1 (CADRAGE PRÊT sur #72) : le brief demande d'adapter les scénarios @envoi-email au mot de passe, alors que la réponse n°19 les garde tels quels en @hors-beta. Reco : garder n°19, pas de verrou email. Non bloquant.
 - E2E mise au point lancée (telephone, @issue-72/5/10/11). Chromium 1194 → 1243 par liens dans le scratchpad.
+- Review delta du merge e0b21a9 : APPROUVÉ (non bloquant : `.visuellement-cache` déclarée deux fois dans styles.css, doublon venu de b4e1239, sans effet).
+- #72.1 tranchée par le responsable (annonce du 2026-10-25 09:56) : on garde la réponse n°19, pas de réécriture des scénarios @envoi-email, pas de verrou email.
