@@ -1,4 +1,5 @@
 import { TexteTropCourt, TexteTropLong } from "./erreurs.ts";
+import { normaliser } from "./texte-normalise.ts";
 
 const LONGUEUR_MINIMALE = 3;
 const LONGUEUR_MAXIMALE = 3000;
@@ -27,11 +28,7 @@ export class TexteDuParent {
   }
 
   normalise(): string {
-    return this.valeur
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/\p{M}/gu, "")
-      .replace(/[’‘`]/g, "'");
+    return normaliser(this.valeur);
   }
 
   phrases(): string[] {
