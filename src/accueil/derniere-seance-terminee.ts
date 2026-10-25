@@ -13,7 +13,7 @@ async function seancesGardeesDuProfil(profil: string): Promise<SeanceTermineeCon
   return gardees.filter((corps) => corps.enfant === profil).map((corps) => ({ lecon: corps.lecon, termineeLe: new Date(corps.termineeLe) }));
 }
 
-export function laPlusRecente(seances: readonly SeanceTermineeConnue[]): SeanceTermineeConnue | undefined {
+function laPlusRecente(seances: readonly SeanceTermineeConnue[]): SeanceTermineeConnue | undefined {
   return seances.reduce<SeanceTermineeConnue | undefined>(
     (recente, seance) => (recente && recente.termineeLe > seance.termineeLe ? recente : seance),
     undefined,
