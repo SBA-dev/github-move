@@ -118,7 +118,8 @@ When(/^Paul passe en Muet$/, async ({ page }) => {
 // La tablette était annoncée en Muet : si l'écran affiché par un step existant (« Qui joue ? ») ne l'a pas appliqué,
 // Paul la passe en Muet comme un adulte, puis remet le son.
 When(/^Paul remet le son$/, async ({ page }) => {
-  if (scenario(page).muet && (await boutonSon(page).getAttribute("data-son")) === "son") await boutonSon(page).click();
+  const surQuiJoue = await page.getByTestId("qui-joue").isVisible();
+  if (surQuiJoue && scenario(page).muet && (await boutonSon(page).getAttribute("data-son")) === "son") await boutonSon(page).click();
   await expect(boutonSon(page)).toHaveAttribute("data-son", "muet");
   await boutonSon(page).click();
 });
@@ -126,12 +127,14 @@ When(/^Paul remet le son$/, async ({ page }) => {
 // --- Alors : la voix
 
 Then(/^(?:Paul|Léa) n'entend aucune voix$/, async ({ page }) => {
+  const parolesALArrivee = (await journal(page)).speaks;
   await laisserPasserLeDelaiDeLecture(page);
   const { speaks, actifs, coupeApresLaDerniereParole } = await journal(page);
   // Une lecture déjà en cours (consigne, salutation) a été coupée : plus rien ne parle et rien n'a repris depuis.
   if (scenario(page).ouvert) {
     expect(actifs).toBe(0);
     expect(coupeApresLaDerniereParole || speaks === 0).toBe(true);
+    expect(speaks).toBe(parolesALArrivee);
     return;
   }
   expect(speaks).toBe(0);
