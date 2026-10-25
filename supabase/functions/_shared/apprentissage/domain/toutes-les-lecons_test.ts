@@ -148,3 +148,86 @@ Deno.test("« Toutes les leçons » ne montre aucune leçon d'une classe au-dess
     { lecon: "ma-cm2-proportion", niveau: Niveau.de("CM2") },
   ]);
 });
+
+Deno.test("« Toutes les leçons » range les leçons des classes d'avant par classe (CP puis CE1), puis par matière du Catalogue, ordre et identifiant, quelle que soit la matière, avec leur état hors du parcours, et ne les mêle pas aux leçons de la classe", () => {
+  const entrees = {
+    lecons: [
+      lecon("fr-ce2-accords", "francais", "CE2", 1),
+      lecon("sc-cp-vivant", "sciences", "CP", 1),
+      lecon("ma-ce1-additions", "maths", "CE1", 1),
+      lecon("fr-ce1-sons", "francais", "CE1", 2),
+      lecon("fr-cp-voyelles", "francais", "CP", 2),
+      lecon("fr-cp-lettres", "francais", "CP", 1),
+      lecon("fr-cp-syllabes", "francais", "CP", 2),
+      lecon("ma-cp-nombres", "maths", "CP", 1),
+      lecon("fr-cm1-recits", "francais", "CM1", 1),
+    ],
+    niveau: Niveau.de("CE2"),
+    meilleuresEtoiles: new Map([["fr-cp-lettres", Etoiles.de(2)]]),
+    leconsReussiesAuTestDeDepart: new Set(["ma-ce1-additions"]),
+  };
+
+  const { lecons, leconsDesClassesDAvant } = toutesLesLecons(entrees, {});
+
+  assertEquals(
+    leconsDesClassesDAvant.map(({ niveau, lecons }) => ({
+      niveau,
+      lecons: lecons.map(({ lecon, niveau, titre, etat }) => ({ lecon, niveau, titre, etat })),
+    })),
+    [
+      {
+        niveau: Niveau.de("CP"),
+        lecons: [
+          {
+            lecon: "fr-cp-lettres",
+            niveau: Niveau.de("CP"),
+            titre: "Titre de fr-cp-lettres",
+            etat: { genre: "reussie", etoiles: Etoiles.de(2) },
+          },
+          {
+            lecon: "fr-cp-syllabes",
+            niveau: Niveau.de("CP"),
+            titre: "Titre de fr-cp-syllabes",
+            etat: { genre: "aDecouvrir" },
+          },
+          {
+            lecon: "fr-cp-voyelles",
+            niveau: Niveau.de("CP"),
+            titre: "Titre de fr-cp-voyelles",
+            etat: { genre: "aDecouvrir" },
+          },
+          {
+            lecon: "ma-cp-nombres",
+            niveau: Niveau.de("CP"),
+            titre: "Titre de ma-cp-nombres",
+            etat: { genre: "aDecouvrir" },
+          },
+          {
+            lecon: "sc-cp-vivant",
+            niveau: Niveau.de("CP"),
+            titre: "Titre de sc-cp-vivant",
+            etat: { genre: "aDecouvrir" },
+          },
+        ],
+      },
+      {
+        niveau: Niveau.de("CE1"),
+        lecons: [
+          {
+            lecon: "fr-ce1-sons",
+            niveau: Niveau.de("CE1"),
+            titre: "Titre de fr-ce1-sons",
+            etat: { genre: "aDecouvrir" },
+          },
+          {
+            lecon: "ma-ce1-additions",
+            niveau: Niveau.de("CE1"),
+            titre: "Titre de ma-ce1-additions",
+            etat: { genre: "reussieAuTestDeDepart" },
+          },
+        ],
+      },
+    ],
+  );
+  assertEquals(lecons.map(({ lecon }) => lecon), ["fr-ce2-accords"]);
+});
