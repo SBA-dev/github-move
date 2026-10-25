@@ -5,6 +5,8 @@ export { lireCleUnivers } from "./cle-univers.ts";
 export { CodeDeConnexion } from "./code-de-connexion.ts";
 export { DemanderLienDeConnexion } from "./demander-lien-de-connexion.ts";
 export type { DonneesDeLAppareil } from "./donnees-de-l-appareil.ts";
+export { estUnEcranDuParent } from "./ecran.ts";
+export type { Ecran } from "./ecran.ts";
 export {
   AdresseDejaUtilisee,
   AdresseEmailInvalide,
