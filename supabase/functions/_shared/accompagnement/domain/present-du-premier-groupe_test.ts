@@ -51,3 +51,26 @@ Deno.test("les verbes irréguliers du 1er groupe ne sont pas à conjuguer", () =
 Deno.test("sans verbe régulier du 1er groupe, il n'y a rien à conjuguer", () => {
   assertEquals(verbeAConjuguer(["finir", "prendre"]), undefined);
 });
+
+for (const verbe of ["hâter", "huer", "hocher", "hennir"]) {
+  Deno.test(`« je » reste « je » devant le h aspiré de « ${verbe} »`, () => {
+    assertEquals(
+      presentDuPremierGroupe(verbe)[0].pronom,
+      "je",
+    );
+  });
+}
+
+Deno.test("« je hâte » : le h aspiré avec accent garde « je »", () => {
+  assertEquals(formes("hâter")[0], "je hâte");
+});
+
+for (const irregulier of ["sécher", "régler", "célébrer", "sevrer", "lécher"]) {
+  Deno.test(`« ${irregulier} » n'est pas un verbe à conjuguer : on prend « aimer »`, () => {
+    assertEquals(verbeAConjuguer([irregulier, "aimer"]), "aimer");
+  });
+}
+
+Deno.test("le verbe à conjuguer est rendu en minuscules", () => {
+  assertEquals(verbeAConjuguer(["Aimer"]), "aimer");
+});
