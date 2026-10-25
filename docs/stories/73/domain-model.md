@@ -1,6 +1,6 @@
 # Modèle du domaine : issue #73, Aucun son pendant la connexion du parent ni dans l'Espace parent
 
-État : **cadrage anticipé**, à valider par le PO (questions 73.1 à 73.7 en fin de document).
+État : **validé par le PO** le 2026-10-25 (« #73 reco OK ») : recommandations retenues pour 73.1 à 73.7 (détail dans `acceptance.md`, section Décisions).
 
 ## Contexte
 

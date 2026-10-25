@@ -1,6 +1,6 @@
 # Critères d'acceptance : issue #73, Aucun son pendant la connexion du parent ni dans l'Espace parent
 
-État : **cadrage anticipé**, à valider par le PO avec le modèle (questions 73.1 à 73.7 dans `domain-model.md`, 73.8 à 73.10 ci-dessous).
+État : **validé par le PO** le 2026-10-25 (« #73 reco OK ») : recommandations retenues de 73.1 à 73.10. Les tags `@a-valider` sont retirés.
 
 Scénarios : `features/73-aucun-son-sur-les-ecrans-du-parent.feature` (tags `@issue-73 @wip`, `@wip` retiré par l'`e2e-tester` à la livraison ; aucun `@envoi-email`, aucun `@hors-beta`).
 Modèle du domaine : `docs/stories/73/domain-model.md` (contextes **Famille** et **Voix**).
@@ -107,4 +107,17 @@ Proposition : **oui, par principe** : un écran du parent ne fait entendre ni vo
 
 ## Décisions
 
-Aucune pour l'instant (cadrage anticipé, en attente de la validation du PO).
+Validation n°1 du PO, 2026-10-25 17:40 UTC, mot pour mot : « #73 reco OK » (annonce [Responsable] VALIDÉ sur #73). Toutes les propositions sont retenues :
+
+- **73.1** L'essai de voix (« Écouter ») reste audible dans l'Espace parent ; en Muet, il ne l'est pas.
+- **73.2** « Qui joue ? » est silencieux, avec ou sans profil ; la voix commence à l'accueil de l'enfant.
+- **73.3** Le choix Son/Muet reste visible et utilisable sur les écrans du parent.
+- **73.4** Remettre le son sur un écran du parent le mémorise sans rien lire (pas de présentation).
+- **73.5** L'écran de connexion est un écran du parent.
+- **73.6** Le message s'appelle « Invitation à créer le premier profil », toujours en entier.
+- **73.7** Chaque story qui ajoute un écran le classe écran du parent ou écran de l'enfant.
+- **73.8** La lecture coupée ne reprend pas en revenant sur un écran de l'enfant ; « Réécouter » reste disponible.
+- **73.9** La proposition du test de départ est un écran de l'enfant : elle est lue.
+- **73.10** La règle vaudra aussi pour les futurs effets sonores (sans scénario aujourd'hui).
+
+Les termes Écran du parent, Écran de l'enfant, Voix suspendue et Invitation à créer le premier profil sont validés.

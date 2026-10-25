@@ -52,7 +52,6 @@ Fonctionnalité: Aucune voix sur les écrans du parent
       Alors Noisette dit « Bonjour ! Pour commencer, crée le profil de l'enfant qui va jouer. Tu pourras en ajouter d'autres ensuite. »
       Mais Paul n'entend aucune voix
 
-    @a-valider
     Scénario: Sur « Qui joue ? » avec des profils enfants, aucune voix ne se fait entendre
       Étant donné que Paul a créé le profil enfant "Léa" de niveau CE1 dans l'univers « Animaux de la forêt »
       Quand j'ouvre Savanturier
@@ -126,7 +125,6 @@ Fonctionnalité: Aucune voix sur les écrans du parent
       Quand Léa demande à réécouter la question
       Alors Léa entend Noisette lire « Combien font 3 plus 4 ? »
 
-    @a-valider
     Scénario: Le profil créé dans l'espace parent, la proposition du test de départ est lue à l'enfant
       Étant donné que Paul est dans l'espace parent
       Quand Paul crée le profil enfant "Léa" de niveau CE1 dans l'univers « Animaux de la forêt »
@@ -154,7 +152,6 @@ Fonctionnalité: Aucune voix sur les écrans du parent
       Quand la question « Combien font 3 + 4 ? » s'affiche
       Alors Léa n'entend rien
 
-    @a-valider
     Plan du Scénario: Sur <écran>, Paul peut passer la tablette en Muet
       Étant donné que <écran> est affiché sur la tablette
       Quand Paul passe en Muet
@@ -167,7 +164,6 @@ Fonctionnalité: Aucune voix sur les écrans du parent
         | la question du contrôle parental     |
         | l'espace parent                      |
 
-    @a-valider
     Plan du Scénario: Sur <écran>, remettre le son ne fait rien lire
       Étant donné que la tablette est en Muet
       Et que <écran> est affiché sur la tablette
@@ -184,7 +180,6 @@ Fonctionnalité: Aucune voix sur les écrans du parent
 
   Règle: Dans l'espace parent, l'essai de voix reste entendu, mais seulement quand le parent le demande
 
-    @a-valider
     Scénario: Dans l'espace parent, Paul entend l'essai de voix qu'il demande
       Étant donné que l'appareil a les voix françaises « Amélie (compact) » et « Denise (Natural) »
       Et que personne ne jouait sur la tablette
