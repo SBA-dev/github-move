@@ -45,6 +45,12 @@ Deno.test("une section dont la matière est inconnue est mal formée", () => {
   );
 });
 
+Deno.test("une section sans matière est mal formée", () => {
+  const { matiere: _, ...sansMatiere } = sectionFrancais();
+
+  assertThrows(() => lireSectionDuProgramme(sansMatiere), SectionDuProgrammeMalFormee);
+});
+
 Deno.test("une section sans domaine est mal formée", () => {
   const { domaine: _, ...sansDomaine } = sectionFrancais();
 
