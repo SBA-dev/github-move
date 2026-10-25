@@ -40,3 +40,7 @@
 - Review du delta : À CORRIGER (B1 helper rater des steps attend 401 au 5ᵉ raté ; B2 fixtures.ts : SUFFIXE_E2E absent de main, main utilise JETON_DU_WORKER (d0f0b5b) → reprendre la version de main). Transmis à l'e2e-tester en cours.
 - E2E après corrections : a5ea479, #72 168/168, non-régression 922/924 (2 flaky #19 verts en relance), PWA 26/28 (échec #8 « nouvelle version » reproduit sur main, hors #72). @wip retiré.
 - Merge de origin/main (118 commits, dont #20) : 3632694 ; conflits CLAUDE.md (commandes E2E de 0020 + exclusion @hors-beta) et decisions/README.md (0019 + 0020). 1316 verts, lint/fmt/tsc/build OK. Non-régression finale lancée.
+- 2026-10-25 10:05 : reprise par session_01FYwFZDorDknD4C1RVoBHA6, branche feature/72-connexion-par-mot-de-passe depuis cab99a1. Intégration de main 48c6496.
+- 2026-10-25 : merge de origin/main 48c6496 (340 commits : #20, #21, #22, #25, #27, #58, #65) : e0b21a9, par implementer. Conflits d'ajouts seulement : context-map.md, styles.css, config.toml. 1675 verts, lint/fmt/tsc/build OK. Review delta lancée.
+- Question #72.1 (CADRAGE PRÊT sur #72) : le brief demande d'adapter les scénarios @envoi-email au mot de passe, alors que la réponse n°19 les garde tels quels en @hors-beta. Reco : garder n°19, pas de verrou email. Non bloquant.
+- E2E mise au point lancée (telephone, @issue-72/5/10/11). Chromium 1194 → 1243 par liens dans le scratchpad.
