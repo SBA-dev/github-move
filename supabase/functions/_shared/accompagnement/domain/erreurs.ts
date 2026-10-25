@@ -46,3 +46,10 @@ export class ParentNonRattache extends Error {
     this.name = "ParentNonRattache";
   }
 }
+
+export class LeconPersonnelleIntrouvable extends Error {
+  constructor() {
+    super("Cette leçon personnelle est introuvable.");
+    this.name = "LeconPersonnelleIntrouvable";
+  }
+}
