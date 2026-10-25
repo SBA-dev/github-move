@@ -46,8 +46,8 @@ Deno.test("une question de bulles retenue est retrouvée par sa clé dans l'exer
   const question = questionDeRevision(lecon, origineAuxPosition1("bulles"), identite, tireurSansMelange, CE1);
 
   assertEquals(question?.identite, identite);
-  assertEquals(question?.question.enonce, "Quel son entends-tu dans « poule » ?");
-  assertEquals(question?.question.repondre(Reponse.choix("ou")), "juste");
+  assertEquals(question?.question?.enonce, "Quel son entends-tu dans « poule » ?");
+  assertEquals(question?.question?.repondre(Reponse.choix("ou")), "juste");
 });
 
 Deno.test("une question d'écoute retenue est retrouvée par sa clé et posée telle quelle", () => {
@@ -63,7 +63,7 @@ Deno.test("une question d'écoute retenue est retrouvée par sa clé et posée t
   const question = questionDeRevision(lecon, origineAuxPosition1("ecoute"), identite, tireurSansMelange, CE1);
 
   assertEquals(question?.identite, identite);
-  assertEquals(question?.question.repondre(Reponse.choix("chien")), "juste");
+  assertEquals(question?.question?.repondre(Reponse.choix("chien")), "juste");
 });
 
 Deno.test("un calcul écrit dans la leçon est retrouvé par sa clé et posé tel quel", () => {
@@ -73,8 +73,8 @@ Deno.test("un calcul écrit dans la leçon est retrouvé par sa clé et posé te
   const question = questionDeRevision(lecon, origineAuxPosition1("calcul"), identite, tireurSansMelange, CE1);
 
   assertEquals(question?.identite, identite);
-  assertEquals(question?.question.enonce, "3 + 3");
-  assertEquals(question?.question.repondre(Reponse.nombre(6)), "juste");
+  assertEquals(question?.question?.enonce, "3 + 3");
+  assertEquals(question?.question?.repondre(Reponse.nombre(6)), "juste");
 });
 
 Deno.test("un calcul tiré est reposé depuis le tirage gardé dans l'origine", () => {
@@ -93,8 +93,8 @@ Deno.test("un calcul tiré est reposé depuis le tirage gardé dans l'origine", 
   );
 
   assertEquals(question?.identite, identite);
-  assertEquals(question?.question.enonce, "3 + 4");
-  assertEquals(question?.question.repondre(Reponse.nombre(7)), "juste");
+  assertEquals(question?.question?.enonce, "3 + 4");
+  assertEquals(question?.question?.repondre(Reponse.nombre(7)), "juste");
 });
 
 Deno.test("une question de lecture retenue est retrouvée par sa clé et posée telle quelle, avec son texte", () => {
@@ -111,8 +111,8 @@ Deno.test("une question de lecture retenue est retrouvée par sa clé et posée 
   const question = questionDeRevision(lecon, origineAuxPosition1("lecture"), identite, tireurSansMelange, CE1);
 
   assertEquals(question?.identite, identite);
-  assertEquals(question?.question.enonce, "Que mange Plume ?");
-  assertEquals(question?.question.repondre(Reponse.choix("des graines")), "juste");
+  assertEquals(question?.question?.enonce, "Que mange Plume ?");
+  assertEquals(question?.question?.repondre(Reponse.choix("des graines")), "juste");
 });
 
 Deno.test("une question de dictée retenue est retrouvée par son mot et posée avec le clavier des dictées", () => {
@@ -126,7 +126,8 @@ Deno.test("une question de dictée retenue est retrouvée par son mot et posée 
   const question = questionDeRevision(lecon, origineAuxPosition1("dictee"), identite, tireurSansMelange, CE1);
 
   assertEquals(question?.identite, identite);
-  assertInstanceOf(question?.question, QuestionDeDictee);
+  assertInstanceOf(question?.dictee, QuestionDeDictee);
+  assertEquals(question?.question, undefined);
 });
 
 Deno.test("une question de boîte à jetons retenue est rejouée en boîte à jetons", () => {
