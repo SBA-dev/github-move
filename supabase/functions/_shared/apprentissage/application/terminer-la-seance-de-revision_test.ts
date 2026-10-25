@@ -84,9 +84,9 @@ function envoiJoue(
   return seance.aEnregistrer();
 }
 
-function monde(file: FileDeRevision, lecons: Lecon[] = [leconDesSyllabes]) {
+function monde(file: FileDeRevision | null, lecons: Lecon[] = [leconDesSyllabes]) {
   const files = new FilesDeRevisionEnMemoire();
-  files.ecrire(file);
+  if (file) files.ecrire(file);
   const seances = new SeancesDeRevisionTermineesEnMemoire(files);
   const terminer = new TerminerLaSeanceDeRevision(
     new RattachementsEnMemoire(["parent-paul", "profil-lea"]),
@@ -213,4 +213,15 @@ Deno.test("une file modifiée entre-temps par un autre appareil est relue : la s
   );
   assertEquals(seances.toutes().length, 1);
   assertEquals(faits.map((fait) => fait.type), ["SeanceDeRevisionTerminee"]);
+});
+
+Deno.test("un profil sans file de révision enregistre la séance comme une séance de révision vide, sans rien retenir", async () => {
+  const fileDuNavigateur = laFileDuProfil(retenue(chat, 1));
+  const { files, seances, terminer } = monde(null);
+
+  const faits = await terminer.executer({ parent: "parent-paul", seance: envoiJoue(fileDuNavigateur) });
+
+  assertEquals(faits.map((fait) => fait.type), ["SeanceDeRevisionTerminee"]);
+  assertEquals(seances.toutes().map(({ id, nombreDeQuestions }) => [id, nombreDeQuestions]), [["revision-1", 0]]);
+  assertEquals(files.fileDe("profil-lea")?.questions, []);
 });

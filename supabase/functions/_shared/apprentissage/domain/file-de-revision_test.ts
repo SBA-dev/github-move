@@ -510,3 +510,11 @@ Deno.test("les leçons d'origine des erreurs corrigées pour de bon sont listée
     [3, ["lecon-b", "lecon-a"]],
   ]);
 });
+
+Deno.test("les faits de la file sont retirés une fois lus", () => {
+  const file = fileDes(retenueDeLaLecon("a", "lecon-fractions"));
+  file.enregistrerLaRevision([resultat("a", true)], aujourdHui, finDeRevision);
+  file.retirerFaits();
+
+  assertEquals(file.retirerFaits(), []);
+});
