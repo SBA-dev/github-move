@@ -1,8 +1,11 @@
-import { assertEquals } from "@std/assert";
+import { assertEquals, assertInstanceOf } from "@std/assert";
 import { type Lecon, lireLecon, Niveau } from "../../catalogue/domain/index.ts";
 import { hasardSansMelange } from "../test_utils/hasard-fixe.ts";
 import { CleDeQuestion } from "./cle-de-question.ts";
 import type { OrigineDeLaQuestion } from "./origine-de-la-question.ts";
+import { QuestionDeBoite } from "./question-de-boite.ts";
+import { QuestionDeDictee } from "./question-de-dictee.ts";
+import { QuestionDeProblemeEnBarres } from "./question-de-probleme-en-barres.ts";
 import { questionDeRevision } from "./question-de-revision.ts";
 import { Reponse } from "./reponse.ts";
 import { type Tireur, tireurAuHasard } from "./tireur.ts";
@@ -92,4 +95,66 @@ Deno.test("un calcul tiré est reposé depuis le tirage gardé dans l'origine", 
   assertEquals(question?.identite, identite);
   assertEquals(question?.question.enonce, "3 + 4");
   assertEquals(question?.question.repondre(Reponse.nombre(7)), "juste");
+});
+
+Deno.test("une question de lecture retenue est retrouvée par sa clé et posée telle quelle, avec son texte", () => {
+  const lecon = leconAvec({
+    type: "lecture",
+    texte: "Plume est un petit oiseau. Il dort dans le lit et mange des graines.",
+    questions: [
+      { question: "Où dort Plume ?", choix: ["dans le lit", "sur le toit"], reponse: "dans le lit" },
+      { question: "Que mange Plume ?", choix: ["des graines", "du pain"], reponse: "des graines" },
+    ],
+  });
+  const identite = CleDeQuestion.de("lecture", "Que mange Plume ?des graines");
+
+  const question = questionDeRevision(lecon, origineAuxPosition1("lecture"), identite, tireurSansMelange, CE1);
+
+  assertEquals(question?.identite, identite);
+  assertEquals(question?.question.enonce, "Que mange Plume ?");
+  assertEquals(question?.question.repondre(Reponse.choix("des graines")), "juste");
+});
+
+Deno.test("une question de dictée retenue est retrouvée par son mot et posée avec le clavier des dictées", () => {
+  const lecon = leconAvec({
+    type: "dictee",
+    consigne: "Écoute bien et écris le mot que tu entends.",
+    mots: [{ mot: "chat" }, { mot: "lapin" }],
+  });
+  const identite = CleDeQuestion.de("dictee", "lapin");
+
+  const question = questionDeRevision(lecon, origineAuxPosition1("dictee"), identite, tireurSansMelange, CE1);
+
+  assertEquals(question?.identite, identite);
+  assertInstanceOf(question?.question, QuestionDeDictee);
+});
+
+Deno.test("une question de boîte à jetons retenue est rejouée en boîte à jetons", () => {
+  const lecon = leconAvec({
+    type: "boite",
+    items: [{ a: 4, op: "+", b: 3 }, { a: 15, op: "+", b: 9 }],
+  });
+  const identite = CleDeQuestion.de("boite", "15 + 9");
+
+  const question = questionDeRevision(lecon, origineAuxPosition1("boite"), identite, tireurSansMelange, CE1);
+
+  assertEquals(question?.identite, identite);
+  assertEquals(question?.question instanceof QuestionDeBoite, true);
+});
+
+Deno.test("une question de problème en barres retenue est rejouée en problème en barres", () => {
+  const enonce = "Lina a 9 crayons, dont 6 rouges. Combien de bleus ?";
+  const lecon = leconAvec({
+    type: "barres",
+    items: [
+      { enonce: "J'achète 4 pommes rouges et 2 pommes vertes. Combien de pommes ?", parties: [4, 2], tout: null },
+      { enonce, parties: [6, null], tout: 9 },
+    ],
+  });
+  const identite = CleDeQuestion.de("barres", enonce);
+
+  const question = questionDeRevision(lecon, origineAuxPosition1("barres"), identite, tireurSansMelange, CE1);
+
+  assertEquals(question?.identite, identite);
+  assertEquals(question?.question instanceof QuestionDeProblemeEnBarres, true);
 });
