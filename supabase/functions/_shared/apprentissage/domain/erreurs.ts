@@ -242,3 +242,73 @@ export class TestDeDepartIncoherent extends Error {
     this.name = "TestDeDepartIncoherent";
   }
 }
+
+export class SeanceDeRevisionIncoherente extends Error {
+  constructor(override readonly cause: Error) {
+    super(`La séance de révision envoyée est incohérente : ${cause.message}`);
+    this.name = "SeanceDeRevisionIncoherente";
+  }
+}
+
+export class JourIncoherent extends Error {
+  constructor(readonly jour: string) {
+    super(`Le jour ${jour} ne correspond pas à la date de fin envoyée.`);
+    this.name = "JourIncoherent";
+  }
+}
+
+export class JourInvalide extends Error {
+  constructor(readonly texte: string) {
+    super(`« ${texte} » n'est pas un jour du calendrier au format AAAA-MM-JJ.`);
+    this.name = "JourInvalide";
+  }
+}
+
+export class IntervalleDeRevisionInvalide extends Error {
+  constructor(readonly jours: number) {
+    super(`Un intervalle de révision dure 1, 3 ou 7 jours, pas ${jours}.`);
+    this.name = "IntervalleDeRevisionInvalide";
+  }
+}
+
+export class AucuneQuestionDue extends Error {
+  constructor() {
+    super("Aucune question n'est due ce jour-là : il n'y a pas de séance de révision à planifier.");
+    this.name = "AucuneQuestionDue";
+  }
+}
+
+export class FileDeRevisionIncoherente extends Error {
+  constructor(readonly raison: string) {
+    super(`Cette file de révision est incohérente : ${raison}`);
+    this.name = "FileDeRevisionIncoherente";
+  }
+}
+
+export class SeanceDeRevisionNonFinie extends Error {
+  constructor() {
+    super("Cette séance de révision n'est pas finie : elle ne peut pas être terminée.");
+    this.name = "SeanceDeRevisionNonFinie";
+  }
+}
+
+export class SeanceDeRevisionDejaTerminee extends Error {
+  constructor() {
+    super("Cette séance de révision est déjà terminée.");
+    this.name = "SeanceDeRevisionDejaTerminee";
+  }
+}
+
+export class SeanceDeRevisionDejaFinie extends Error {
+  constructor() {
+    super("Cette séance de révision est déjà finie.");
+    this.name = "SeanceDeRevisionDejaFinie";
+  }
+}
+
+export class CleDeQuestionInvalide extends Error {
+  constructor(readonly valeur: string) {
+    super(`« ${valeur} » n'est pas une clé de question valide.`);
+    this.name = "CleDeQuestionInvalide";
+  }
+}

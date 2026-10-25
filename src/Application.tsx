@@ -19,6 +19,7 @@ import {
 import { LeconsPersonnellesDuParent } from "./accompagnement/index.ts";
 import { MesMedailles } from "./medailles/index.ts";
 import { MonParcours } from "./parcours/index.ts";
+import { EcranDeRevision, useQuestionsDuesALAccueil, useRenvoiDesSeancesDeRevisionGardees } from "./revision/index.ts";
 import { ToutesLesLecons, useChoixDeToutesLesLecons } from "./toutes-les-lecons/index.ts";
 import { AideEcranDAccueil } from "./installation/index.ts";
 import { type Lieu, useNavigation } from "./navigation.ts";
@@ -39,7 +40,7 @@ const ACCUEIL: Lieu = { ecran: "accueil" };
 
 function estPageDeLEnfant(lieu: Lieu): boolean {
   return lieu.ecran === "jeu" || lieu.ecran === "parcours" || lieu.ecran === "toutes-les-lecons" || lieu.ecran === "medailles" ||
-    lieu.ecran === "test-de-depart" || lieu.ecran === "lecon" || lieu.ecran === "seance";
+    lieu.ecran === "test-de-depart" || lieu.ecran === "revision" || lieu.ecran === "lecon" || lieu.ecran === "seance";
 }
 
 function lieuAffiche(demande: Lieu, espaceParent: EtatDeLEspaceParent["type"], connecte: boolean): Lieu {
@@ -54,12 +55,14 @@ export function Application() {
   const connecte = connexion.etat === "connecte";
   useRenvoiDesSeancesGardees(connecte);
   useRenvoiDesTestsDeDepartGardes(connecte);
+  useRenvoiDesSeancesDeRevisionGardees(connecte);
   const lieuPossible = lieuAffiche(lieuDemande, acces.etat.type, connecte);
   const { profil: profilEnCours, charge: profilCharge, choisirQuiJoue, definir, oublier: oublierLeProfilEnCours } = useProfilEnCours();
   const enfantAbsent = profilCharge && !profilEnCours && estPageDeLEnfant(lieuPossible);
   const lieu = enfantAbsent ? ACCUEIL : lieuPossible;
   const ecran = lieu.ecran;
   const testDeDepartAFaire = useTestDeDepartAFaire(profilEnCours, ecran === "jeu");
+  const questionsDuesALaRevision = useQuestionsDuesALAccueil(profilEnCours?.id, ecran === "jeu");
   const ecranDemande = lieuDemande.ecran;
   const profil = estPageDeLEnfant(lieu) ? profilEnCours : undefined;
   const univers = universDe(profil?.univers);
@@ -177,6 +180,8 @@ export function Application() {
                 onToutesLesLecons={() => aller("toutes-les-lecons")}
                 onMesMedailles={() => aller("medailles")}
                 onMonTestDeDepart={testDeDepartAFaire ? () => aller("test-de-depart") : undefined}
+                questionsDuesALaRevision={questionsDuesALaRevision}
+                onJeRevise={() => aller("revision")}
                 onChangerDEnfant={() => {
                   aller("accueil");
                   oublierLeProfilEtSaProgression();
@@ -191,6 +196,15 @@ export function Application() {
                 voix={voix}
                 onPlusTard={() => revenirA("jeu")}
                 onVoirMonParcours={() => remplacer("parcours")}
+              />
+            )}
+            {lieu.ecran === "revision" && profilCharge && profilEnCours && (
+              <EcranDeRevision
+                key={profilEnCours.id}
+                profil={profilEnCours}
+                univers={univers}
+                voix={voix}
+                onAccueil={() => revenirA("jeu")}
               />
             )}
             {lieu.ecran === "parcours" && profilCharge && profilEnCours && (

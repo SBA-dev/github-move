@@ -1,3 +1,4 @@
+import { cleDuClasser } from "./cles-des-questions.ts";
 import type { ExerciceClasser, ExerciceOrdre, Groupe } from "../../catalogue/domain/index.ts";
 import { CleDeQuestion } from "./cle-de-question.ts";
 import { EtiquetteDejaPlacee, EtiquetteInconnue, GroupeInconnu, PasDeQuestionEnCours } from "./erreurs.ts";
@@ -33,9 +34,8 @@ export abstract class EtiquettesAPlacer {
   }
 
   static questionsDeClasser(exercice: ExerciceClasser): QuestionAPlacer[] {
-    const noms = exercice.groupes.map((groupe) => groupe.nom).join();
     return exercice.items.map((item) =>
-      new QuestionAPlacer(CleDeQuestion.de("classer", item.texte + noms), "classer", item.texte, {
+      new QuestionAPlacer(cleDuClasser(exercice, item), "classer", item.texte, {
         groupe: item.groupe,
         aide: item.aide,
       })

@@ -55,6 +55,16 @@ Deno.test("les réponses fausses d'une fluence ne coûtent aucune erreur ni éto
   assertEquals([fait.erreurs, fait.etoiles, fait.questionsRatees], [0, 3, []]);
 });
 
+Deno.test("les réponses fausses d'une fluence ne donnent aucune question à retenir", () => {
+  const seance = seanceArriveeALaFluence();
+  seance.repondre(Reponse.nombre(21), apres(5));
+  seance.finirLaFluence(apres(45));
+
+  const fait = seance.terminer(finDeLaSeance);
+
+  assertEquals(fait.questionsRateesARetenir, []);
+});
+
 Deno.test("la fluence ne propose pas « Je ne sais pas »", () => {
   const seance = seanceArriveeALaFluence();
 

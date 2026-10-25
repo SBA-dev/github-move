@@ -45,6 +45,14 @@ export class AdditionsJouees {
     return this.questions.filter((question) => question.reussie).length;
   }
 
+  /** Les additions dont au moins une étape a été ratée, avec leur énoncé « a + b » et le fait qu'elles soient tirées. */
+  additionsRatees(): { enonce: string; tiree: boolean }[] {
+    const tiree = this.additionsTirees.length > 0;
+    return this.additions
+      .filter((addition) => questionsDeLAddition(addition).some((question) => question.erreurs > 0))
+      .map(({ addition }) => ({ enonce: enonceDUneAddition(addition.nombres), tiree }));
+  }
+
   /** Les additions que le générateur a tirées, une ligne « a + b » par addition. */
   tirages(): string[][] {
     return this.additionsTirees.length === 0 ? [] : [this.additionsTirees.map(enonceDUneAddition)];
