@@ -22,7 +22,10 @@ export function revaliderLaSeanceDeRevision(
       ),
     },
     lecons,
-    tireur: tireurSelonLesTirages(envoi.tirages.values()),
+    tireurDe: (identite) => {
+      const rang = envoi.questions.findIndex(({ valeur }) => valeur === identite.valeur);
+      return tireurSelonLesTirages([envoi.tirages[rang] ?? []].values());
+    },
     niveau,
   });
   envoi.reponses.flat().forEach((reponse) => rejouerLaReponse(seance, reponse));

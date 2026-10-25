@@ -38,18 +38,18 @@ export class SeanceDeRevision {
   ) {}
 
   static commencer(
-    { id, enfant, plan, lecons, tireur, niveau }: {
+    { id, enfant, plan, lecons, tireurDe, niveau }: {
       readonly id: string;
       readonly enfant: string;
       readonly plan: PlanDeSeanceDeRevision;
       readonly lecons: readonly Lecon[];
-      readonly tireur: Tireur;
+      readonly tireurDe: (identite: CleDeQuestion) => Tireur;
       readonly niveau: Niveau;
     },
   ): SeanceDeRevision {
     const questions = plan.questions.flatMap(({ identite, origine }) => {
       const lecon = lecons.find(({ id }) => id === origine.leconDOrigine);
-      const posee = lecon && questionDeRevision(lecon, origine, identite, tireur, niveau);
+      const posee = lecon && questionDeRevision(lecon, origine, identite, tireurDe(identite), niveau);
       return posee ? [posee] : [];
     });
     if (questions.length === 0) throw new AucuneQuestionDue();
