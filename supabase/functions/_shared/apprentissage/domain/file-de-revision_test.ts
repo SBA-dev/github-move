@@ -475,3 +475,38 @@ Deno.test("modifier une date lue dans le plan de la séance de révision ne chan
 
   assertEquals(file.questions[0]?.derniereErreurLe, new Date("2026-10-24T08:00:00Z"));
 });
+
+function retenueDeLaLecon(texte: string, leconDOrigine: string): QuestionRetenue {
+  return { ...retenueA(texte, 7), origine: { ...origine, leconDOrigine } };
+}
+
+Deno.test("deux questions de la même leçon corrigées pour de bon donnent un seul fait avec la leçon une seule fois", () => {
+  const file = fileDes(retenueDeLaLecon("a", "lecon-fractions"), retenueDeLaLecon("b", "lecon-fractions"));
+
+  file.enregistrerLaRevision([resultat("a", true), resultat("b", true)], aujourdHui, finDeRevision);
+
+  assertEquals(file.retirerFaits(), [{
+    type: "ErreursCorrigeesPourDeBon",
+    enfant: profilDeLea,
+    nombre: 2,
+    leconsDOrigine: ["lecon-fractions"],
+  }]);
+});
+
+Deno.test("les leçons d'origine des erreurs corrigées pour de bon sont listées dans l'ordre d'apparition", () => {
+  const file = fileDes(
+    retenueDeLaLecon("a", "lecon-b"),
+    retenueDeLaLecon("b", "lecon-a"),
+    retenueDeLaLecon("c", "lecon-b"),
+  );
+
+  file.enregistrerLaRevision(
+    [resultat("a", true), resultat("b", true), resultat("c", true)],
+    aujourdHui,
+    finDeRevision,
+  );
+
+  assertEquals(file.retirerFaits().map(({ nombre, leconsDOrigine }) => [nombre, leconsDOrigine]), [
+    [3, ["lecon-b", "lecon-a"]],
+  ]);
+});
