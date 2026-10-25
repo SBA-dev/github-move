@@ -105,11 +105,11 @@ function leconsDesAutresClasses(
     .sort((a, b) => ordreDesNiveaux(a, b) || parOrdrePuisIdentifiant(a, b));
 }
 
-function leconsDeLaMatiere(entrees: EntreesDuParcours, matiere: Matiere): Lecon[] {
+export function leconsDeLaMatiere(entrees: EntreesDuParcours, matiere: Matiere): Lecon[] {
   return toutesLesLeconsDeLaMatiere(entrees, matiere).filter((lecon) => lecon.niveau.valeur === entrees.niveau.valeur);
 }
 
-function toutesLesLeconsDeLaMatiere(entrees: EntreesDuParcours, matiere: Matiere): Lecon[] {
+export function toutesLesLeconsDeLaMatiere(entrees: EntreesDuParcours, matiere: Matiere): Lecon[] {
   return entrees.lecons.filter((lecon) => lecon.matiere.code === matiere.code);
 }
 
@@ -121,7 +121,7 @@ function etatDeLaLecon(
   return lecon === prochaineLecon ? { genre: "prochaine" } : etatHorsDuParcours(entrees, lecon);
 }
 
-function etatHorsDuParcours(entrees: EntreesDuParcours, lecon: LeconId): EtatHorsDuParcours {
+export function etatHorsDuParcours(entrees: EntreesDuParcours, lecon: LeconId): EtatHorsDuParcours {
   const etoiles = entrees.meilleuresEtoiles.get(lecon);
   if (etoiles) return { genre: "reussie", etoiles };
   return estReussie(entrees, lecon) ? { genre: "reussieAuTestDeDepart" } : { genre: "aDecouvrir" };
