@@ -115,6 +115,8 @@ Le glossaire garde l'orthographe française.
 | Résultat du test de départ | Pour un enfant : la date du dernier test de départ fait et les leçons réussies au test de départ. Il ne modifie jamais une étoile (#27). | Apprentissage | progression, score, note |
 | Test de départ fait | Le profil a fini au moins un test de départ, par toutes ses questions ou par un arrêt ; quitter en cours ne compte pas (#27). | Apprentissage | test passé, testFait (dans le code) |
 | Matière réussie (à valider) | Matière dont l'enfant a réussi toutes les leçons de sa classe (au moins 1 étoile ou réussie au test de départ). Dans « Toutes les leçons », elle montre les leçons de cette matière de la classe **juste** au-dessus, et pas au-delà. Une matière sans leçon dans la classe n'est jamais réussie. Calculée à chaque affichage (#26, réponses 26.1, 26.1a, 26.1b, 26.18). | Apprentissage | classe finie, matière terminée, matière validée |
+| Message de voix bloquée (à valider) | Message affiché quand le navigateur bloque la voix ; il reste visible pendant la séance tant que la voix est bloquée (#79, question 79.5). | Apprentissage | alerte son, popup |
+| Relire la consigne (à valider) | Faire lire à nouveau la consigne de l'exercice en cours, à la demande de l'enfant ; distinct de « Réécouter » (#79, question 79.7). | Apprentissage | répéter |
 
 ## Motivation
 
@@ -179,6 +181,10 @@ Le glossaire garde l'orthographe française.
 | Blocage de la réinitialisation | Après 5 essais de réinitialisation ratés pour une même adresse, connue ou non, toute réinitialisation est refusée pendant 1 heure à partir du 5ᵉ raté, même avec un prénom juste, avec le message fixe « Trop d'essais. Réessaie dans une heure. ». Un essai pendant le blocage ne le prolonge pas. Il n'empêche pas la connexion avec le bon mot de passe du parent. Une réinitialisation réussie ou la fin du blocage remettent le compteur à zéro (#72, validé le 2026-10-24). | Famille | verrou, verrouillage (réservé à la leçon verrouillée), bannissement |
 | Appareil (à valider) | Tablette, téléphone ou ordinateur où l'application est ouverte. Certaines préférences y sont mémorisées (Son/Muet, choix de voix), jamais les réglages d'un profil. | Famille (utilisé partout) | device, navigateur, poste |
 | Accueil de l'enfant | Écran de l'enfant après le choix de son profil dans « Qui joue ? » : son personnage guide le salue ; il mène à « Mon parcours » et, tant que le test de départ n'est pas fait, à « Mon test de départ ». #29 dira s'il devient « Aujourd'hui » (#27, réponse 27.22 du PO). | Famille | écran d'accueil, home, tableau de bord |
+| Écran du parent (à valider) | Écran qui s'adresse au parent : connexion du parent, « Qui joue ? » (invitation à créer le premier profil comprise), contrôle parental, Espace parent. Le personnage guide n'y lit rien de lui-même et une lecture en cours s'arrête en y arrivant (#73). | Famille | écran adulte, écran silencieux |
+| Écran de l'enfant (à valider) | Écran qui s'adresse à l'enfant : accueil de l'enfant, Mon parcours, Toutes les leçons, Mes médailles, test de départ, page de la leçon, séance (#73). | Famille | écran joueur |
+| Invitation à créer le premier profil (à valider) | Message du personnage guide qui invite le parent sans profil enfant à en créer un ; toujours nommé en entier, « Invitation » seul désigne le lien du second parent (#73, question 73.6). | Famille | invitation (seul), message d'accueil |
+| Demande de suppression des données (à valider) | Demande écrite du parent de supprimer les données d'un profil enfant ou de son compte, traitée à la main pendant la beta, avec le même effet que la suppression du profil ou du compte (#45, décision du PO du 25/10). | Famille | désinscription, droit à l'oubli (dans l'interface) |
 
 ## Accompagnement
 
@@ -208,6 +214,19 @@ Sous-domaine décidé à la validation n°1 du lot 1 (décision 0007). Ses terme
 | Essai de voix (à valider) | Phrase lue pour écouter une voix avant de la choisir (« Coucou ! Je suis Noisette. On apprend en s'amusant ? Youpi ! »), par le personnage guide du profil en cours, ou Noisette s'il n'y en a pas. Ne change pas le choix de voix. | Voix | test de voix (« test » est réservé) |
 | Muet (à valider) | Choix de l'appareil qui coupe la voix (et les effets sonores, à confirmer avec leur story). Son contraire est « Son ». | Voix | silencieux, mute |
 | Voix bloquée (à valider) | Le navigateur refuse de lire alors qu'il sait lire à voix haute. L'enfant est prévenu une fois par ouverture de l'application, sans être bloqué. | Voix | voix cassée, erreur de son |
+| Voix suspendue (à valider) | État de la voix sur un écran du parent : le personnage guide ne lit rien de lui-même, seul l'essai de voix demandé par le parent est entendu. Ce n'est pas Muet : le choix Son/Muet ne change pas (#73). | Voix | silencieux, muet temporaire |
+
+## Exploitation (à valider, #45)
+
+Termes d'exploitation et juridiques : ils ne vont pas dans `domain/`.
+
+| Terme | Définition | Contexte | Synonymes interdits |
+|---|---|---|---|
+| Beta (à valider) | Première mise en ligne, réservée aux familles invitées, sans e-mail, sans export ni suppression dans l'application (#45, 0019). | Exploitation | version d'essai, alpha |
+| Production (à valider) | Projet Supabase et adresse du front utilisés par les familles, distincts de `savanturier-dev` (#45). | Exploitation | prod (dans l'interface), live |
+| Procédure de publication (à valider) | Suite écrite des vérifications puis des étapes (migrations, Edge Functions, front) qui publie une version, avec son retour en arrière (#45). | Exploitation | déploiement manuel, mise en prod |
+| Politique de confidentialité (à valider) | Page qui dit quelles données sont gardées, où, combien de temps, et comment faire une demande de suppression des données (#45). | Exploitation | charte, RGPD (pour la page) |
+| Mentions légales (à valider) | Page qui nomme l'éditeur, le directeur de publication et l'hébergeur (#45). | Exploitation | CGU |
 
 ## Décisions
 
