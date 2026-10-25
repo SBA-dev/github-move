@@ -186,7 +186,8 @@ Décisions déjà prises, à respecter partout (code, interface, scénarios) :
 - Une demande qui franchit la règle est **refusée et signalée** à l'humain, jamais contournée ni adoucie. Un sous-agent qui reçoit une telle demande s'arrête et la signale à son orchestrateur, qui la signale à l'humain.
 - **Dans le doute**, on ne produit pas le contenu et on demande au PO.
 - Un contenu qui vient de l'**IA** ou d'un **parent** n'est jamais montré à l'enfant sans être vérifié : la story qui l'introduit prévoit cette vérification (consignes envoyées à l'IA, contrôle de la réponse, refus avec un message clair) et ses scénarios.
-- La review bloque tout manquement (`.claude/skills/craftsmanship/`, section 8). Images : `.claude/skills/illustration/`, section 0. Décisions 0027 et 0028.
+- **Fait historique enseigné** : un fait dur du programme officiel (une guerre en histoire, par exemple) est accepté s'il est factuel, neutre, sans détail violent ni image de combat, et respectueux des victimes ; sinon c'est un contenu violent (décision 0029).
+- La review bloque tout manquement (`.claude/skills/craftsmanship/`, section 8). Images : `.claude/skills/illustration/`, section 0. Décisions 0027, 0028 et 0029.
 
 ## Décisions et feuille de route
 
