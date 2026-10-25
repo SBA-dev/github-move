@@ -1,6 +1,6 @@
 import { assertEquals, assertFalse, assertThrows } from "@std/assert";
 import { JourInvalide } from "./erreurs.ts";
-import { Jour } from "./jour.ts";
+import { Jour, jourDe } from "./jour.ts";
 
 Deno.test("un jour se construit à partir d'une date AAAA-MM-JJ et la redonne en texte", () => {
   assertEquals(Jour.de("2026-10-25").toString(), "2026-10-25");
@@ -70,4 +70,36 @@ Deno.test("un jour n'est pas avant ou égal à un jour plus ancien", () => {
 Deno.test("deux jours de même date sont égaux, deux jours différents ne le sont pas", () => {
   assertEquals(Jour.de("2026-10-25").estEgalA(Jour.de("2026-10-25")), true);
   assertEquals(Jour.de("2026-10-25").estEgalA(Jour.de("2026-10-26")), false);
+});
+
+// Convention du décalage : celle de Date.prototype.getTimezoneOffset(), en minutes,
+// positif à l'ouest de UTC (Paris en hiver = -60, La Réunion = -240, Guadeloupe = +240).
+// Le jour local est donc l'instant UTC moins le décalage.
+const PARIS_HIVER = -60;
+const LA_REUNION = -240;
+const GUADELOUPE = 240;
+
+Deno.test("jourDe donne le jour UTC quand le décalage est nul", () => {
+  assertEquals(jourDe(new Date("2026-10-25T12:00:00Z"), 0).toString(), "2026-10-25");
+});
+
+Deno.test("jourDe donne le jour qui commence à minuit pile, heure de l'appareil", () => {
+  assertEquals(jourDe(new Date("2026-12-09T23:00:00Z"), PARIS_HIVER).toString(), "2026-12-10");
+});
+
+Deno.test("jourDe reste sur la veille une minute avant minuit, heure de l'appareil", () => {
+  assertEquals(jourDe(new Date("2026-12-09T22:59:00Z"), PARIS_HIVER).toString(), "2026-12-09");
+});
+
+Deno.test("jourDe passe au lendemain de UTC pour un appareil à l'est (La Réunion)", () => {
+  assertEquals(jourDe(new Date("2026-10-25T20:30:00Z"), LA_REUNION).toString(), "2026-10-26");
+});
+
+Deno.test("jourDe reste sur la veille de UTC pour un appareil à l'ouest (Guadeloupe)", () => {
+  assertEquals(jourDe(new Date("2026-10-26T02:00:00Z"), GUADELOUPE).toString(), "2026-10-25");
+});
+
+Deno.test("jourDe change d'année selon l'heure de l'appareil", () => {
+  assertEquals(jourDe(new Date("2026-12-31T23:30:00Z"), PARIS_HIVER).toString(), "2027-01-01");
+  assertEquals(jourDe(new Date("2027-01-01T01:00:00Z"), GUADELOUPE).toString(), "2026-12-31");
 });
