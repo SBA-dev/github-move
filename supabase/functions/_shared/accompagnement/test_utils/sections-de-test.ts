@@ -10,7 +10,7 @@ export function sectionDeTest(modele: Modele = {}): SectionDuProgramme {
     domaine: "Domaine de test",
     section: "Section de test",
     niveaux: ["CE1"],
-    extrait: "Extrait de test.",
+    extrait: "Le programme de test décrit ce que les élèves apprennent.",
     ...reste,
     matiere: toutesLesMatieres().find((m) => m.code === matiere)!,
   };

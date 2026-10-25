@@ -7,7 +7,7 @@ import { normaliser } from "./texte-normalise.ts";
 const LONGUEUR_MINIMALE_D_UN_MOT_DU_TEXTE = 4;
 const BONUS_DE_LA_SECTION_DE_LA_FORME = 8;
 
-const MOTS_INDICES_PAR_FORME: Record<FormeDuTexte, string[]> = {
+export const MOTS_INDICES_PAR_FORME: Record<FormeDuTexte, string[]> = {
   listeDeMots: ["dictee", "encoder", "orthographe", "mots"],
   poesie: ["poeme", "poesie", "dire", "memorise", "oraliser"],
   listeDeVerbes: ["verbe", "conjug", "groupe", "terminaison", "radical", "infinitif"],
@@ -38,11 +38,14 @@ export function sectionRetenue(
   );
 }
 
-function motsDeLaRecherche(texte: TexteDuParent, forme: FormeDuTexte): Set<string> {
-  const motsDuTexte = texte.normalise().split(/[^a-z0-9]+/).filter(
+export function motsSignificatifsDuTexte(texte: TexteDuParent): string[] {
+  return texte.normalise().split(/[^a-z0-9]+/).filter(
     (mot) => mot.length >= LONGUEUR_MINIMALE_D_UN_MOT_DU_TEXTE,
   );
-  return new Set([...motsDuTexte, ...MOTS_INDICES_PAR_FORME[forme]]);
+}
+
+function motsDeLaRecherche(texte: TexteDuParent, forme: FormeDuTexte): Set<string> {
+  return new Set([...motsSignificatifsDuTexte(texte), ...MOTS_INDICES_PAR_FORME[forme]]);
 }
 
 function score(section: SectionDuProgramme, mots: Set<string>, forme: FormeDuTexte): number {
