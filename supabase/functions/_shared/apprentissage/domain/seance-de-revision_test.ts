@@ -1,0 +1,458 @@
+import { assertEquals, assertExists, assertNotEquals, assertThrows } from "@std/assert";
+import { type Lecon, lireLecon, Niveau } from "../../catalogue/domain/index.ts";
+import { hasardSansMelange } from "../test_utils/hasard-fixe.ts";
+import { CleDeQuestion } from "./cle-de-question.ts";
+import {
+  AucuneQuestionDue,
+  ReponseIncompatible,
+  SeanceDeRevisionDejaFinie,
+  SeanceDeRevisionDejaTerminee,
+  SeanceDeRevisionNonFinie,
+} from "./erreurs.ts";
+import { FileDeRevision, type PlanDeSeanceDeRevision } from "./file-de-revision.ts";
+import { Jour } from "./jour.ts";
+import { Reponse } from "./reponse.ts";
+import { SeanceDeRevision } from "./seance-de-revision.ts";
+import type { SeanceDeRevisionTermineeAEnregistrer } from "./seance-de-revision-terminee-a-enregistrer.ts";
+import { type Tireur, tireurAuHasard, tireurSelonLesTirages } from "./tireur.ts";
+import type { Hasard } from "./hasard.ts";
+import type { TypeDeQuestion } from "./question-suivie.ts";
+
+const CE1 = Niveau.de("CE1");
+const tireur: Tireur = tireurAuHasard(hasardSansMelange());
+const jourDesErreurs = Jour.de("2026-10-24");
+const jourDeLaRevision = Jour.de("2026-10-25");
+const termineeLe = new Date("2026-10-24T16:30:00Z");
+
+const leconDesSyllabes: Lecon = lireLecon({
+  id: "fr-ce1-syllabes",
+  matiere: "francais",
+  niveau: "CE1",
+  titre: "Les syllabes",
+  ordre: 1,
+  programme: { section: "c2-test", citation: "Citation de test." },
+  lecon: [],
+  exercices: [{
+    type: "bulles",
+    questions: [
+      { question: "Combien de syllabes dans « bateau » ?", choix: ["1", "2"], reponse: "2" },
+      { question: "Combien de syllabes dans « chat » ?", choix: ["1", "2"], reponse: "1" },
+    ],
+  }],
+});
+
+const bateau = CleDeQuestion.de("bulles", "Combien de syllabes dans « bateau » ?2");
+const chat = CleDeQuestion.de("bulles", "Combien de syllabes dans « chat » ?1");
+const introuvable = CleDeQuestion.de("bulles", "Une question qui n'existe plus ?oui");
+
+function planDesQuestionsRatees(...identites: CleDeQuestion[]): PlanDeSeanceDeRevision {
+  const file = FileDeRevision.vide("profil-lea");
+  file.retenir(
+    identites.map((identite) => ({
+      identite,
+      origine: { leconDOrigine: leconDesSyllabes.id, position: 0, type: "bulles" as const },
+    })),
+    jourDesErreurs,
+    termineeLe,
+  );
+  return file.planDeLaSeanceDeRevision(jourDeLaRevision);
+}
+
+function seanceSur(plan: PlanDeSeanceDeRevision, lecons: readonly Lecon[] = [leconDesSyllabes]): SeanceDeRevision {
+  return SeanceDeRevision.commencer({
+    id: "revision-1",
+    enfant: "profil-lea",
+    plan,
+    lecons,
+    tireurDe: () => tireur,
+    niveau: CE1,
+  });
+}
+
+Deno.test("une séance de révision pose les questions une à une, dans l'ordre du plan, jusqu'à la dernière bonne réponse", () => {
+  const plan = planDesQuestionsRatees(bateau, chat);
+  const [premiere, seconde] = plan.questions.map(({ identite }) => identite);
+  const seance = seanceSur(plan);
+  const poseesDansLOrdre: (CleDeQuestion | undefined)[] = [];
+
+  poseesDansLOrdre.push(seance.questionEnCours()?.identite);
+  seance.questionEnCours()?.question?.repondre(Reponse.choix(premiere === bateau ? "2" : "1"));
+  poseesDansLOrdre.push(seance.questionEnCours()?.identite);
+  const finieAvantLaDerniere = seance.estFinie();
+  seance.questionEnCours()?.question?.repondre(Reponse.choix(seconde === bateau ? "2" : "1"));
+
+  assertEquals(poseesDansLOrdre, [premiere, seconde]);
+  assertEquals([finieAvantLaDerniere, seance.estFinie(), seance.questionEnCours()], [false, true, undefined]);
+});
+
+Deno.test("après une réponse fausse en révision, la même question reste posée pour une nouvelle chance", () => {
+  const plan = planDesQuestionsRatees(bateau, chat);
+  const seance = seanceSur(plan);
+  const premiere = seance.questionEnCours();
+  const fausse = premiere?.identite === bateau ? "1" : "2";
+
+  premiere?.question?.repondre(Reponse.choix(fausse));
+
+  assertEquals(seance.questionEnCours(), premiere);
+});
+
+Deno.test("une question retenue dont la leçon d'origine est absente est sautée", () => {
+  const sansLecon = planDesQuestionsRatees(bateau);
+  const autreOrigine = {
+    ...sansLecon.questions[0],
+    origine: { leconDOrigine: "fr-ce1-retiree", position: 0, type: "bulles" as const },
+  };
+  const plan: PlanDeSeanceDeRevision = { questions: [autreOrigine, ...planDesQuestionsRatees(chat).questions] };
+
+  const seance = seanceSur(plan);
+
+  assertEquals(seance.questionEnCours()?.identite, chat);
+});
+
+Deno.test("une question retenue introuvable dans sa leçon est sautée", () => {
+  const plan = planDesQuestionsRatees(introuvable, chat);
+
+  const seance = seanceSur(plan);
+
+  assertEquals(seance.questionEnCours()?.identite, chat);
+});
+
+Deno.test("une séance de révision dont aucune question n'est posable ne peut pas commencer", () => {
+  const plan = planDesQuestionsRatees(introuvable);
+
+  assertThrows(() => seanceSur(plan), AucuneQuestionDue);
+});
+
+function bonneReponseDe(identite: CleDeQuestion) {
+  return Reponse.choix(identite === bateau ? "2" : "1");
+}
+
+function mauvaiseReponseDe(identite: CleDeQuestion) {
+  return Reponse.choix(identite === bateau ? "1" : "2");
+}
+
+Deno.test("en révision, une question réussie sans erreur est juste et une question avec une réponse fausse est fausse", () => {
+  const plan = planDesQuestionsRatees(bateau, chat);
+  const [premiere, seconde] = plan.questions.map(({ identite }) => identite);
+  const seance = seanceSur(plan);
+
+  seance.repondre(mauvaiseReponseDe(premiere));
+  seance.repondre(bonneReponseDe(premiere));
+  seance.repondre(bonneReponseDe(seconde));
+
+  assertEquals(seance.resultats(), [{ identite: premiere, juste: false }, { identite: seconde, juste: true }]);
+});
+
+Deno.test("en révision, « Je ne sais pas » rend la question fausse, montre la bonne réponse puis passe à la suivante", () => {
+  const plan = planDesQuestionsRatees(bateau, chat);
+  const [premiere, seconde] = plan.questions.map(({ identite }) => identite);
+  const seance = seanceSur(plan);
+
+  const aide = seance.direJeNeSaisPas();
+  seance.repondre(bonneReponseDe(premiere));
+
+  assertEquals(aide.bonneReponse, premiere === bateau ? "2" : "1");
+  assertEquals(seance.questionEnCours()?.identite, seconde);
+  seance.repondre(bonneReponseDe(seconde));
+  assertEquals(seance.resultats(), [{ identite: premiere, juste: false }, { identite: seconde, juste: true }]);
+});
+
+Deno.test("en révision, une question de dictée se joue jusqu'au bout et est fausse après une erreur", () => {
+  const leconDesDictees: Lecon = lireLecon({
+    id: "fr-ce1-dictees",
+    matiere: "francais",
+    niveau: "CE1",
+    titre: "Les dictées",
+    ordre: 2,
+    programme: { section: "c2-test", citation: "Citation de test." },
+    lecon: [],
+    exercices: [{
+      type: "dictee",
+      consigne: "Écoute bien et écris le mot que tu entends.",
+      mots: [{ mot: "chat" }],
+    }],
+  });
+  const mot = CleDeQuestion.de("dictee", "chat");
+  const file = FileDeRevision.vide("profil-lea");
+  file.retenir(
+    [{ identite: mot, origine: { leconDOrigine: leconDesDictees.id, position: 0, type: "dictee" } }],
+    jourDesErreurs,
+    termineeLe,
+  );
+  const seance = seanceSur(file.planDeLaSeanceDeRevision(jourDeLaRevision), [leconDesDictees]);
+
+  seance.repondre(Reponse.motEcrit(["x", "h", "a", "t"]));
+  seance.repondre(Reponse.motEcrit(["c", "h", "a", "t"]));
+
+  assertEquals(seance.estFinie(), true);
+  assertEquals(seance.resultats(), [{ identite: mot, juste: false }]);
+});
+
+function tirageDeLaQuestionEnCours(seance: SeanceDeRevision): string[] {
+  const posee = seance.questionEnCours()?.question;
+  assertExists(posee);
+  return posee.tirage();
+}
+
+const finDeLaRevision = new Date("2026-10-25T17:00:00Z");
+
+function seanceFinieSurBateau(): SeanceDeRevision {
+  const seance = seanceSur(planDesQuestionsRatees(bateau));
+  seance.repondre(bonneReponseDe(bateau));
+  return seance;
+}
+
+Deno.test("terminer une séance de révision finie produit le fait avec les résultats et les nombres de questions", () => {
+  const plan = planDesQuestionsRatees(bateau, chat);
+  const [premiere, seconde] = plan.questions.map(({ identite }) => identite);
+  const seance = seanceSur(plan);
+  seance.repondre(mauvaiseReponseDe(premiere));
+  seance.repondre(bonneReponseDe(premiere));
+  seance.repondre(bonneReponseDe(seconde));
+
+  const fait = seance.terminer(finDeLaRevision, jourDeLaRevision);
+
+  assertEquals(fait, {
+    type: "SeanceDeRevisionTerminee",
+    id: "revision-1",
+    enfant: "profil-lea",
+    termineeLe: finDeLaRevision,
+    jour: jourDeLaRevision,
+    resultats: [{ identite: premiere, juste: false }, { identite: seconde, juste: true }],
+    nombreDeQuestions: 2,
+    nombreDeQuestionsJustes: 1,
+  });
+});
+
+Deno.test("une séance de révision qui n'est pas finie ne peut pas être terminée", () => {
+  const seance = seanceSur(planDesQuestionsRatees(bateau));
+
+  assertThrows(() => seance.terminer(finDeLaRevision, jourDeLaRevision), SeanceDeRevisionNonFinie);
+});
+
+Deno.test("une séance de révision déjà terminée ne peut pas l'être une seconde fois", () => {
+  const seance = seanceFinieSurBateau();
+  seance.terminer(finDeLaRevision, jourDeLaRevision);
+
+  assertThrows(() => seance.terminer(finDeLaRevision, jourDeLaRevision), SeanceDeRevisionDejaTerminee);
+});
+
+Deno.test("l'envoi d'une séance de révision terminée contient les questions, leurs tirages et leurs réponses dans l'ordre", () => {
+  const plan = planDesQuestionsRatees(bateau, chat);
+  const [premiere, seconde] = plan.questions.map(({ identite }) => identite);
+  const seance = seanceSur(plan);
+  const tirageDeLaPremiere = tirageDeLaQuestionEnCours(seance);
+  seance.repondre(mauvaiseReponseDe(premiere));
+  seance.repondre(bonneReponseDe(premiere));
+  const tirageDeLaSeconde = tirageDeLaQuestionEnCours(seance);
+  seance.direJeNeSaisPas();
+  seance.repondre(bonneReponseDe(seconde));
+  seance.terminer(finDeLaRevision, jourDeLaRevision);
+
+  assertEquals(seance.aEnregistrer(), {
+    id: "revision-1",
+    enfant: "profil-lea",
+    questions: [premiere, seconde],
+    tirages: [tirageDeLaPremiere, tirageDeLaSeconde],
+    reponses: [
+      [mauvaiseReponseDe(premiere), bonneReponseDe(premiere)],
+      [{ genre: "jeNeSaisPas" }, bonneReponseDe(seconde)],
+    ],
+    termineeLe: finDeLaRevision,
+    jour: "2026-10-25",
+  });
+});
+
+Deno.test("l'envoi d'une séance de révision non terminée est refusé", () => {
+  const seance = seanceFinieSurBateau();
+
+  assertThrows(() => seance.aEnregistrer(), SeanceDeRevisionNonFinie);
+});
+
+Deno.test("répondre ou dire « Je ne sais pas » après la fin de la séance de révision est refusé", () => {
+  const seance = seanceFinieSurBateau();
+
+  assertThrows(() => seance.repondre(bonneReponseDe(bateau)), SeanceDeRevisionDejaFinie);
+  assertThrows(() => seance.direJeNeSaisPas(), SeanceDeRevisionDejaFinie);
+});
+
+Deno.test("un mot écrit donné à une question à choix est refusé", () => {
+  const seance = seanceSur(planDesQuestionsRatees(bateau));
+
+  assertThrows(() => seance.repondre(Reponse.motEcrit(["c", "h", "a", "t"])), ReponseIncompatible);
+});
+
+Deno.test("un choix donné à une dictée est refusé", () => {
+  const leconDeDictee: Lecon = lireLecon({
+    id: "fr-ce1-dictees",
+    matiere: "francais",
+    niveau: "CE1",
+    titre: "Les dictées",
+    ordre: 2,
+    programme: { section: "c2-test", citation: "Citation de test." },
+    lecon: [],
+    exercices: [{ type: "dictee", consigne: "Écris le mot.", mots: [{ mot: "chat" }] }],
+  });
+  const file = FileDeRevision.vide("profil-lea");
+  file.retenir(
+    [{
+      identite: CleDeQuestion.de("dictee", "chat"),
+      origine: { leconDOrigine: leconDeDictee.id, position: 0, type: "dictee" },
+    }],
+    jourDesErreurs,
+    termineeLe,
+  );
+  const seance = seanceSur(file.planDeLaSeanceDeRevision(jourDeLaRevision), [leconDeDictee]);
+
+  assertThrows(() => seance.repondre(Reponse.choix("chat")), ReponseIncompatible);
+});
+
+function uneLecon(id: string, exercice: Record<string, unknown>): Lecon {
+  return lireLecon({
+    id,
+    matiere: "francais",
+    niveau: "CE1",
+    titre: `Leçon ${id}`,
+    ordre: 1,
+    programme: { section: "c2-test", citation: "Citation de test." },
+    lecon: [],
+    exercices: [exercice],
+  });
+}
+
+const leconDuBateau = uneLecon("fr-ce1-bateau", {
+  type: "bulles",
+  questions: [{ question: "Combien de syllabes dans « bateau » ?", choix: ["1", "2"], reponse: "2" }],
+});
+const leconDuChat = uneLecon("fr-ce1-chat", {
+  type: "bulles",
+  questions: [{ question: "Combien de syllabes dans « chat » ?", choix: ["1", "2"], reponse: "1" }],
+});
+const leconDuCalcul = uneLecon("fr-ce1-calcul", { type: "calcul", operations: [{ q: "2 + 2", r: 4 }] });
+const calcul = CleDeQuestion.de("calcul", "2 + 2");
+
+type QuestionARevoir = { readonly identite: CleDeQuestion; readonly lecon: Lecon; readonly type: TypeDeQuestion };
+
+const duBateau: QuestionARevoir = { identite: bateau, lecon: leconDuBateau, type: "bulles" };
+const duChat: QuestionARevoir = { identite: chat, lecon: leconDuChat, type: "bulles" };
+const duCalcul: QuestionARevoir = { identite: calcul, lecon: leconDuCalcul, type: "calcul" };
+
+function planDe(...questions: QuestionARevoir[]): PlanDeSeanceDeRevision {
+  const file = FileDeRevision.vide("profil-lea");
+  file.retenir(
+    questions.map(({ identite, lecon, type }) => ({
+      identite,
+      origine: { leconDOrigine: lecon.id, position: 0, type },
+    })),
+    jourDesErreurs,
+    termineeLe,
+  );
+  return file.planDeLaSeanceDeRevision(jourDeLaRevision);
+}
+
+function hasardQuiAlterne(): Hasard {
+  let rang = 0;
+  return { entre0et1: () => (rang++ % 2 === 0 ? 0 : 0.999) };
+}
+
+function reponseJusteA(identite: CleDeQuestion) {
+  if (identite.valeur === calcul.valeur) return Reponse.nombre(4);
+  return Reponse.choix(identite.valeur === bateau.valeur ? "2" : "1");
+}
+
+function reponseFausseA(identite: CleDeQuestion) {
+  if (identite.valeur === calcul.valeur) return Reponse.nombre(5);
+  return Reponse.choix(identite.valeur === bateau.valeur ? "1" : "2");
+}
+
+function jouerEnRatantLaPremiere(seance: SeanceDeRevision): void {
+  let premiere = true;
+  while (!seance.estFinie()) {
+    const enCours = seance.questionEnCours();
+    assertExists(enCours);
+    if (premiere) seance.repondre(reponseFausseA(enCours.identite));
+    premiere = false;
+    seance.repondre(reponseJusteA(enCours.identite));
+  }
+}
+
+function uneSeanceJoueeEtEnvoyee(
+  plan: PlanDeSeanceDeRevision,
+  lecons: readonly Lecon[],
+): { resultats: ReturnType<SeanceDeRevision["resultats"]>; envoi: SeanceDeRevisionTermineeAEnregistrer } {
+  const tireurDuNavigateur = tireurAuHasard(hasardQuiAlterne());
+  const seance = SeanceDeRevision.commencer({
+    id: "revision-1",
+    enfant: "profil-lea",
+    plan,
+    lecons,
+    tireurDe: () => tireurDuNavigateur,
+    niveau: CE1,
+  });
+  jouerEnRatantLaPremiere(seance);
+  seance.terminer(finDeLaRevision, jourDeLaRevision);
+  return { resultats: seance.resultats(), envoi: seance.aEnregistrer() };
+}
+
+/** Comme le serveur : un tireur par question, avec le tirage de l'envoi ; les réponses de l'envoi rejouées. */
+function rejoueeDepuis(
+  envoi: SeanceDeRevisionTermineeAEnregistrer,
+  plan: PlanDeSeanceDeRevision,
+  lecons: readonly Lecon[],
+): SeanceDeRevision {
+  const rangDe = (identite: CleDeQuestion) => envoi.questions.findIndex(({ valeur }) => valeur === identite.valeur);
+  const seance = SeanceDeRevision.commencer({
+    id: envoi.id,
+    enfant: envoi.enfant,
+    plan,
+    lecons,
+    tireurDe: (identite) => tireurSelonLesTirages([envoi.tirages[rangDe(identite)]].values()),
+    niveau: CE1,
+  });
+  while (!seance.estFinie()) {
+    const enCours = seance.questionEnCours();
+    assertExists(enCours);
+    for (const reponse of envoi.reponses[rangDe(enCours.identite)]) {
+      if (reponse.genre === "jeNeSaisPas") seance.direJeNeSaisPas();
+      else if (reponse.genre === "placement") throw new Error("Pas de placement dans ces séances.");
+      else seance.repondre(reponse);
+    }
+  }
+  seance.terminer(finDeLaRevision, jourDeLaRevision);
+  return seance;
+}
+
+Deno.test("une séance de révision rejouée depuis son envoi, un tireur par question, redonne les mêmes résultats", () => {
+  const plan = planDe(duBateau, duChat);
+  const { resultats, envoi } = uneSeanceJoueeEtEnvoyee(plan, [leconDuBateau, leconDuChat]);
+
+  const rejouee = rejoueeDepuis(envoi, plan, [leconDuBateau, leconDuChat]);
+
+  assertEquals(rejouee.resultats(), resultats);
+  assertEquals(rejouee.aEnregistrer().tirages, envoi.tirages);
+});
+
+Deno.test("rejouée sans la leçon de la première question, la suivante garde son propre tirage et seule la disparue est ignorée", () => {
+  const plan = planDe(duBateau, duChat);
+  const { resultats, envoi } = uneSeanceJoueeEtEnvoyee(plan, [leconDuBateau, leconDuChat]);
+  const premiereDuPlan = plan.questions[0].origine.leconDOrigine;
+  const leconsRestantes = [leconDuBateau, leconDuChat].filter(({ id }) => id !== premiereDuPlan);
+  assertNotEquals(envoi.tirages[0], envoi.tirages[1]);
+
+  const rejouee = rejoueeDepuis(envoi, plan, leconsRestantes);
+
+  assertEquals(rejouee.resultats(), [resultats[1]]);
+  assertEquals(rejouee.aEnregistrer().tirages, [envoi.tirages[1]]);
+});
+
+Deno.test("une question sans tirage, un calcul écrit dans la leçon, ne décale pas les tirages des suivantes", () => {
+  const plan = planDe(duBateau, duCalcul, duChat);
+  const { resultats, envoi } = uneSeanceJoueeEtEnvoyee(plan, [leconDuBateau, leconDuCalcul, leconDuChat]);
+  const rangDuCalcul = envoi.questions.findIndex(({ valeur }) => valeur === calcul.valeur);
+  assertEquals(envoi.tirages[rangDuCalcul], []);
+
+  const rejouee = rejoueeDepuis(envoi, plan, [leconDuBateau, leconDuCalcul, leconDuChat]);
+
+  assertEquals(rejouee.resultats(), resultats);
+  assertEquals(rejouee.aEnregistrer().tirages, envoi.tirages);
+});

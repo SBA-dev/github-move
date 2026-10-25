@@ -1,5 +1,10 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { IssueDeLEnregistrement, SeancesTerminees } from "../application/ports/seances-terminees.ts";
+import type {
+  FileDeRevisionALEcrire,
+  IssueDeLEnregistrement,
+  SeancesTerminees,
+} from "../application/ports/seances-terminees.ts";
+import { lignesDesQuestionsRetenues } from "./files-de-revision-supabase.ts";
 import type { ResultatDeLaLecon } from "../domain/resultat-de-la-lecon.ts";
 import type { SeanceTerminee } from "../domain/seance.ts";
 import { ligneDuResultat } from "./resultats-des-lecons-supabase.ts";
@@ -38,10 +43,11 @@ export class SeancesTermineesSupabase implements SeancesTerminees {
     fait: SeanceTerminee,
     resultat: ResultatDeLaLecon,
     nombreDeSeancesLu: number,
+    file?: FileDeRevisionALEcrire,
   ): Promise<IssueDeLEnregistrement> {
     const ligne = ligneDeLaSeanceTerminee(fait);
     const ligneDuResultatAEcrire = ligneDuResultat(resultat);
-    const { data, error } = await this.client().rpc("enregistrer_la_seance_terminee", {
+    const parametres = {
       p_id: ligne.id,
       p_profil: ligne.profil,
       p_lecon: ligne.lecon,
@@ -54,10 +60,26 @@ export class SeancesTermineesSupabase implements SeancesTerminees {
       p_meilleures_etoiles: ligneDuResultatAEcrire.meilleures_etoiles,
       p_dernieres_etoiles: ligneDuResultatAEcrire.dernieres_etoiles,
       p_nombre_de_seances_lu: nombreDeSeancesLu,
-    });
+    };
+    if (file) return await this.enregistrerAvecLaFile(parametres, file);
+    const { data, error } = await this.client().rpc("enregistrer_la_seance_terminee", parametres);
     if (error?.code === CODE_POSTGRES_CONFLIT_DE_RESULTAT) return "conflit";
     if (error) throw new Error(`Enregistrement de la séance terminée impossible : ${error.message}`);
     return data === true ? "enregistree" : "dejaEnregistree";
+  }
+
+  private async enregistrerAvecLaFile(
+    parametres: Record<string, unknown>,
+    { file, versionLue }: FileDeRevisionALEcrire,
+  ): Promise<IssueDeLEnregistrement> {
+    const { data, error } = await this.client().rpc("enregistrer_la_seance_terminee_et_la_file_de_revision", {
+      ...parametres,
+      p_version_de_la_file_lue: versionLue,
+      p_erreurs_corrigees_pour_de_bon: file.erreursCorrigeesPourDeBon,
+      p_questions_retenues: lignesDesQuestionsRetenues(file),
+    });
+    if (error) throw new Error(`Enregistrement de la séance terminée impossible : ${error.message}`);
+    return data as IssueDeLEnregistrement;
   }
 
   async enregistrerSansResultat(fait: SeanceTerminee): Promise<"enregistree" | "dejaEnregistree"> {

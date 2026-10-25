@@ -1,11 +1,14 @@
 import { NOMBRE_MAXIMAL_D_ETIQUETTES } from "../../catalogue/domain/index.ts";
 import { ChoixDeSeance } from "../domain/choix-de-seance.ts";
+import { JourInvalide } from "../domain/erreurs.ts";
+import { Jour } from "../domain/jour.ts";
 import { Reponse, type ReponseDonnee } from "../domain/reponse.ts";
 import type { SeanceTermineeAEnregistrer } from "../domain/seance-terminee-a-enregistrer.ts";
 import { texteObligatoire, uuidObligatoire } from "../../famille/infrastructure/http-famille.ts";
 import { EntreeInvalide } from "./http-apprentissage.ts";
 
-const CHAMPS = ["seance", "enfant", "lecon", "choix", "tirages", "reponses", "termineeLe"];
+const CHAMPS_OBLIGATOIRES = ["seance", "enfant", "lecon", "choix", "tirages", "reponses", "termineeLe"];
+const CHAMPS = [...CHAMPS_OBLIGATOIRES, "jour"];
 const QUESTIONS_AU_PLUS = 200;
 const TIRAGE_AU_PLUS = NOMBRE_MAXIMAL_D_ETIQUETTES;
 /** Borne technique du corps HTTP : la revalidation du domaine applique la vraie limite de chaque question. */
@@ -106,11 +109,20 @@ export function lireLaDateDeFin(valeur: unknown, maintenant: Date): Date {
   return date;
 }
 
+export function lireLeJour(valeur: unknown): string {
+  try {
+    if (typeof valeur === "string") return Jour.de(valeur).toString();
+  } catch (cause) {
+    if (!(cause instanceof JourInvalide)) throw cause;
+  }
+  throw new EntreeInvalide("Le champ « jour » doit être une date au format AAAA-MM-JJ.");
+}
+
 /** Lit le corps de la requête. Les étoiles et les erreurs n'y figurent jamais : le serveur les recalcule. */
 export function lireLaSeanceTerminee(corps: Objet, maintenant: Date): SeanceTermineeAEnregistrer {
   const inconnu = Object.keys(corps).find((cle) => !CHAMPS.includes(cle));
   if (inconnu !== undefined) throw new EntreeInvalide(`Le champ « ${inconnu} » est inconnu.`);
-  for (const champ of CHAMPS) {
+  for (const champ of CHAMPS_OBLIGATOIRES) {
     if (corps[champ] === undefined) throw new EntreeInvalide(`Le champ « ${champ} » est obligatoire.`);
   }
   return {
@@ -121,5 +133,6 @@ export function lireLaSeanceTerminee(corps: Objet, maintenant: Date): SeanceTerm
     tirages: lireLesTirages(corps),
     reponses: lireLesReponses(corps),
     termineeLe: lireLaDateDeFin(corps.termineeLe, maintenant),
+    ...(corps.jour === undefined ? {} : { jour: lireLeJour(corps.jour) }),
   };
 }

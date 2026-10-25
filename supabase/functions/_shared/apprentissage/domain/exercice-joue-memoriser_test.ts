@@ -265,3 +265,13 @@ Deno.test("l'énoncé d'un mot caché est le vers qui contient le trou, sans sé
   exerciceJoue.repondre(Reponse.choix("Pierrot"));
   assertEquals(exerciceJoue.questionEnCours()?.enonce, "Ma … est morte,");
 });
+
+Deno.test("les erreurs sur les vers et sur les mots cachés d'une poésie ne sont jamais retenues", () => {
+  const exerciceJoue = jouer(auClairDeLaLune);
+  exerciceJoue.repondre(Reponse.placement("Mon ami Pierrot,"));
+  placerLesVers(exerciceJoue, versDuClair);
+  exerciceJoue.repondre(Reponse.choix("Pierrot"));
+
+  assertEquals(exerciceJoue.questionsRatees().length, 2);
+  assertEquals(exerciceJoue.questionsRateesARetenir(), []);
+});

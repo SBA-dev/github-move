@@ -9,4 +9,5 @@ export type SeanceTermineeAEnregistrer = Readonly<{
   tirages: readonly (readonly string[])[];
   reponses: readonly (readonly ReponseDonnee[])[];
   termineeLe: Date;
+  jour?: string;
 }>;

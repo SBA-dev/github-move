@@ -16,6 +16,8 @@ export type Voix = {
   readonly lire: (texte: string, options?: OptionsDeLecture) => Promise<ParoleEntendue>;
   readonly couperLaVoix: () => void;
   readonly basculerLeSon: () => void;
+  readonly suspendre: () => void;
+  readonly reprendre: () => void;
   readonly voixDisponibles: readonly VoixDisponible[];
   readonly syntheseVocalePresente: boolean;
   readonly choixDeVoix: ChoixDeVoix;
@@ -77,6 +79,10 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
     void lecture.remettreLeSon(presentationAuRetourDuSon(personnageGuideEnCours.current));
   }, [son, lecture, deverrouillage]);
 
+  const suspendre = useCallback(() => lecture.suspendre(), [lecture]);
+
+  const reprendre = useCallback(() => lecture.reprendre(), [lecture]);
+
   const imposerUneVoix = useCallback((nomDeLaVoix: string) => {
     lecture.imposerUneVoix(nomDeLaVoix);
     setChoixDeVoix(choixMemorise.lire());
@@ -98,6 +104,8 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
     lire,
     couperLaVoix,
     basculerLeSon,
+    suspendre,
+    reprendre,
     voixDisponibles,
     syntheseVocalePresente,
     choixDeVoix,

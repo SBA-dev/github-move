@@ -74,7 +74,7 @@ export function scenario(page: Page): Scenario {
 
 type ConfigurationDuFaux = { voix: readonly VoixFausse[]; bloque: boolean; absent: boolean };
 
-function installerLeFaux(config: ConfigurationDuFaux) {
+export function installerLeFaux(config: ConfigurationDuFaux) {
   type Enonce = {
     text: string;
     lang: string;

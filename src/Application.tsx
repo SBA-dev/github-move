@@ -1,6 +1,6 @@
-import { type CSSProperties, useCallback, useEffect, useState } from "react";
+import { type CSSProperties, useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { MotionConfig } from "motion/react";
-import type { EtatDeLEspaceParent } from "@domain/famille";
+import { type Ecran as EcranDuDomaine, type EtatDeLEspaceParent, estUnEcranDuParent } from "@domain/famille";
 import type { CodeDeMatiere } from "@domain/catalogue";
 import { universDe } from "@domain/motivation";
 import { EcranDeConnexion, useConnexion } from "./connexion/index.ts";
@@ -18,6 +18,7 @@ import {
 } from "./famille/index.ts";
 import { MesMedailles } from "./medailles/index.ts";
 import { MonParcours } from "./parcours/index.ts";
+import { EcranDeRevision, useQuestionsDuesALAccueil, useRenvoiDesSeancesDeRevisionGardees } from "./revision/index.ts";
 import { ToutesLesLecons, useChoixDeToutesLesLecons } from "./toutes-les-lecons/index.ts";
 import { AideEcranDAccueil } from "./installation/index.ts";
 import { type Lieu, useNavigation } from "./navigation.ts";
@@ -38,7 +39,28 @@ const ACCUEIL: Lieu = { ecran: "accueil" };
 
 function estPageDeLEnfant(lieu: Lieu): boolean {
   return lieu.ecran === "jeu" || lieu.ecran === "parcours" || lieu.ecran === "toutes-les-lecons" || lieu.ecran === "medailles" ||
-    lieu.ecran === "test-de-depart" || lieu.ecran === "lecon" || lieu.ecran === "seance";
+    lieu.ecran === "test-de-depart" || lieu.ecran === "revision" || lieu.ecran === "lecon" || lieu.ecran === "seance";
+}
+
+function ecranAffiche(lieu: Lieu, espaceParent: EtatDeLEspaceParent["type"], connecte: boolean): EcranDuDomaine {
+  switch (lieu.ecran) {
+    case "accueil":
+      return connecte ? "qui-joue" : "connexion";
+    case "espace-parent":
+      if (!connecte) return "connexion";
+      return espaceParent === "questionPosee" ? "controle-parental" : "espace-parent";
+    case "jeu":
+      return "accueil-de-l-enfant";
+    case "lecon":
+      return "page-de-la-lecon";
+    case "parcours":
+    case "toutes-les-lecons":
+    case "medailles":
+    case "test-de-depart":
+    case "seance":
+    case "revision":
+      return lieu.ecran;
+  }
 }
 
 function lieuAffiche(demande: Lieu, espaceParent: EtatDeLEspaceParent["type"], connecte: boolean): Lieu {
@@ -53,17 +75,25 @@ export function Application() {
   const connecte = connexion.etat === "connecte";
   useRenvoiDesSeancesGardees(connecte);
   useRenvoiDesTestsDeDepartGardes(connecte);
+  useRenvoiDesSeancesDeRevisionGardees(connecte);
   const lieuPossible = lieuAffiche(lieuDemande, acces.etat.type, connecte);
   const { profil: profilEnCours, charge: profilCharge, choisirQuiJoue, definir, oublier: oublierLeProfilEnCours } = useProfilEnCours();
   const enfantAbsent = profilCharge && !profilEnCours && estPageDeLEnfant(lieuPossible);
   const lieu = enfantAbsent ? ACCUEIL : lieuPossible;
   const ecran = lieu.ecran;
   const testDeDepartAFaire = useTestDeDepartAFaire(profilEnCours, ecran === "jeu");
+  const questionsDuesALaRevision = useQuestionsDuesALAccueil(profilEnCours?.id, ecran === "jeu");
   const ecranDemande = lieuDemande.ecran;
   const profil = estPageDeLEnfant(lieu) ? profilEnCours : undefined;
   const univers = universDe(profil?.univers);
   const palette = PALETTES[univers.cle];
   const voix = useVoix(universDe(profilEnCours?.univers).personnageGuide);
+  const parent = estUnEcranDuParent(ecranAffiche(lieu, acces.etat.type, connecte));
+  const { suspendre: suspendreLaVoix, reprendre: reprendreLaVoix } = voix;
+  useLayoutEffect(() => {
+    if (parent) suspendreLaVoix();
+    else reprendreLaVoix();
+  }, [parent, suspendreLaVoix, reprendreLaVoix]);
   const profilsDuParent = useProfilsDuParent(connecte, ecran === "accueil" || ecran === "espace-parent");
   const { etat: etatEspaceParent, quitter: fermerEspaceParent, ouvrirApresLaConnexion } = acces;
   const ouvrirLEspaceParentConnecte = useCallback(() => {
@@ -154,7 +184,6 @@ export function Application() {
                   ? (
                     <QuiJoue
                       etat={profilsDuParent.etat}
-                      voix={voix}
                       onChoisir={(profilChoisi) => {
                         choisirQuiJoue.executer(profilChoisi);
                         aller("jeu");
@@ -176,6 +205,8 @@ export function Application() {
                 onToutesLesLecons={() => aller("toutes-les-lecons")}
                 onMesMedailles={() => aller("medailles")}
                 onMonTestDeDepart={testDeDepartAFaire ? () => aller("test-de-depart") : undefined}
+                questionsDuesALaRevision={questionsDuesALaRevision}
+                onJeRevise={() => aller("revision")}
                 onChangerDEnfant={() => {
                   aller("accueil");
                   oublierLeProfilEtSaProgression();
@@ -190,6 +221,15 @@ export function Application() {
                 voix={voix}
                 onPlusTard={() => revenirA("jeu")}
                 onVoirMonParcours={() => remplacer("parcours")}
+              />
+            )}
+            {lieu.ecran === "revision" && profilCharge && profilEnCours && (
+              <EcranDeRevision
+                key={profilEnCours.id}
+                profil={profilEnCours}
+                univers={univers}
+                voix={voix}
+                onAccueil={() => revenirA("jeu")}
               />
             )}
             {lieu.ecran === "parcours" && profilCharge && profilEnCours && (

@@ -485,7 +485,7 @@ Then(/^le premier trou propose « ([^«»]+) » et deux autres mots, tous diffé
   expect(choix).toContain(attendu);
 });
 
-Then(/^Léa voit « ([^«»]+) »$/, async ({ page }, phrase: string) => {
+Then(/^Léa voit « (?!Qui joue \?)([^«»]+) »$/, async ({ page }, phrase: string) => {
   // Story #22 : devant une poésie, c'est la carte de la poésie (titre — auteur) que Léa voit.
   const carte = page.getByTestId("carte-de-la-poesie");
   const texte = page.getByTestId("texte-a-trous");

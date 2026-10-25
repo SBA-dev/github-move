@@ -6,7 +6,7 @@ import { tirerUnEntier } from "./tirage-d-un-entier.ts";
 const SEPARATEUR = " + ";
 const UNITES_POUR_UNE_RETENUE = 10;
 
-type Addition = readonly number[];
+export type Addition = readonly number[];
 
 export function tirerLesAdditions(generateur: GenerateurDAdditions, hasard: Hasard): readonly Addition[] {
   const nombresPossibles = lesNombresPossibles(generateur);
@@ -50,10 +50,15 @@ export function enonceDUneAddition(addition: Addition): string {
 export function relireLesAdditions(generateur: GenerateurDAdditions, tirage: readonly string[]): readonly Addition[] {
   if (tirage.length !== generateur.combien) throw new TirageHorsDuGenerateur(tirage.join(", "));
   return tirage.map((ligne) => {
-    const addition = lireUneAddition(ligne);
-    if (!estConforme(generateur, addition)) throw new TirageHorsDuGenerateur(ligne);
+    const addition = relireUneAdditionDuGenerateur(generateur, ligne);
+    if (!addition) throw new TirageHorsDuGenerateur(ligne);
     return addition;
   });
+}
+
+export function relireUneAdditionDuGenerateur(generateur: GenerateurDAdditions, ligne: string): Addition | undefined {
+  const addition = lireUneAddition(ligne);
+  return estConforme(generateur, addition) ? addition : undefined;
 }
 
 function lireUneAddition(ligne: string): Addition {

@@ -33,6 +33,14 @@ export type ParoleEntendue = { readonly entendue: boolean };
 const PAROLE_ENTENDUE: ParoleEntendue = { entendue: true };
 const PAROLE_NON_ENTENDUE: ParoleEntendue = { entendue: false };
 
+type OptionsDeLecture = {
+  langue?: string;
+  choix?: ChoixDeVoix;
+  lent?: boolean;
+  onMot?: (rang: number) => void;
+  onFin?: () => void;
+};
+
 function estFrancais(langue: string): boolean {
   return /^fr/i.test(langue);
 }
@@ -57,23 +65,19 @@ function rangDesMots(
 
 export class LectureAVoixHaute {
   private etat: EtatDuSon;
+  private voixSuspendue = false;
   private voixBloqueeSignalee = false;
 
   constructor(private readonly dependances: DependancesDeLectureAVoixHaute) {
     this.etat = dependances.etatInitial;
   }
 
-  async lire(
-    brut: string,
-    options: {
-      langue?: string;
-      choix?: ChoixDeVoix;
-      lent?: boolean;
-      onMot?: (rang: number) => void;
-      onFin?: () => void;
-    } = {},
-  ): Promise<ParoleEntendue> {
-    if (this.etat === "muet") return PAROLE_NON_ENTENDUE;
+  async lire(brut: string, options: OptionsDeLecture = {}): Promise<ParoleEntendue> {
+    if (this.etat === "muet" || this.voixSuspendue) return PAROLE_NON_ENTENDUE;
+    return await this.lireLeTexte(brut, options);
+  }
+
+  private async lireLeTexte(brut: string, options: OptionsDeLecture): Promise<ParoleEntendue> {
     const { lecteur, hasard } = this.dependances;
     lecteur.arreter();
     const texte = texteALire(brut);
@@ -103,6 +107,15 @@ export class LectureAVoixHaute {
     this.dependances.lecteur.arreter();
   }
 
+  suspendre(): void {
+    this.voixSuspendue = true;
+    this.couperLaVoix();
+  }
+
+  reprendre(): void {
+    this.voixSuspendue = false;
+  }
+
   passerEnMuet(): void {
     this.etat = "muet";
     this.couperLaVoix();
@@ -123,7 +136,8 @@ export class LectureAVoixHaute {
   }
 
   async essayerUneVoix(choix: ChoixDeVoix, nomDuPersonnageGuide: string): Promise<void> {
-    await this.lire(phraseDEssai(nomDuPersonnageGuide), { choix });
+    if (this.etat === "muet") return;
+    await this.lireLeTexte(phraseDEssai(nomDuPersonnageGuide), { choix });
   }
 
   private choixMemorise(): ChoixDeVoix {

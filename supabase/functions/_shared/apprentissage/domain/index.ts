@@ -121,3 +121,22 @@ export { reserveDuTestDeDepart } from "./reserve-du-test-de-depart.ts";
 export { attenteAvantLEcranSuivant, DUREE_D_AFFICHAGE_SANS_VOIX_MS } from "./attente-avant-l-ecran-suivant.ts";
 export type { AttenteAvantLEcranSuivant } from "./attente-avant-l-ecran-suivant.ts";
 export { consigneAffichee } from "./exercices/consigne-affichee.ts";
+export { FileDeRevision } from "./file-de-revision.ts";
+export type {
+  PlanDeSeanceDeRevision,
+  QuestionRateeARetenir,
+  QuestionRetenue,
+  ResultatDeRevision,
+} from "./file-de-revision.ts";
+export { IntervalleDeRevision } from "./intervalle-de-revision.ts";
+export { Jour, jourDe } from "./jour.ts";
+export type { OrigineDeLaQuestion } from "./origine-de-la-question.ts";
+export type { TypeDeQuestion } from "./question-suivie.ts";
+export { SeanceDeRevision } from "./seance-de-revision.ts";
+export type { SeanceDeRevisionTerminee } from "./seance-de-revision.ts";
+export type { SeanceDeRevisionTermineeAEnregistrer } from "./seance-de-revision-terminee-a-enregistrer.ts";
+export type { QuestionDeRevision } from "./question-de-revision.ts";
+export { AucuneQuestionDue } from "./erreurs.ts";
+export { cleDeLaBoite, QuestionDeBoite } from "./question-de-boite.ts";
+export { QuestionDeProblemeEnBarres } from "./question-de-probleme-en-barres.ts";
+export { estUnTypeDeQuestion } from "./cle-de-question.ts";

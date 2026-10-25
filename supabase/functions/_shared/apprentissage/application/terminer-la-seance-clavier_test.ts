@@ -2,6 +2,7 @@ import { assertEquals } from "@std/assert";
 import type { ProfilEnfant } from "../domain/profil-enfant.ts";
 import type { SeanceTermineeAEnregistrer } from "../domain/seance-terminee-a-enregistrer.ts";
 import { ecrire, leconDeDicteeDuChat, seanceDeDictee } from "../test_utils/lecons-de-dictee.ts";
+import { FilesDeRevisionEnMemoire } from "../test_utils/files-de-revision-en-memoire.ts";
 import { LeconsDuCatalogueEnMemoire } from "../test_utils/lecons-du-catalogue-en-memoire.ts";
 import { RattachementsEnMemoire } from "../test_utils/rattachements-en-memoire.ts";
 import { RecordsDeFluenceEnMemoire } from "../test_utils/records-de-fluence-en-memoire.ts";
@@ -18,13 +19,15 @@ function dicteeJoueeAvec(profil: ProfilEnfant): SeanceTermineeAEnregistrer {
 
 function terminer() {
   const resultats = new ResultatsDesLeconsEnMemoire();
-  const seances = new SeancesTermineesEnMemoire(resultats);
+  const files = new FilesDeRevisionEnMemoire();
+  const seances = new SeancesTermineesEnMemoire(resultats, files);
   const terminer = new TerminerLaSeance(
     new RattachementsEnMemoire(["parent-paul", "profil-lea"]),
     new LeconsDuCatalogueEnMemoire(leconDeDicteeDuChat()),
     seances,
     resultats,
     new RecordsDeFluenceEnMemoire(),
+    files,
   );
   return { seances, terminer };
 }

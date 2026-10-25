@@ -39,8 +39,12 @@ export class QuestionDeBoite extends QuestionEnveloppantUnCalcul {
 
 function calculDeLaBoite(item: ItemDeBoite, tireur: Tireur, niveau: Niveau) {
   const operation = { q: calculSansResultat(item), r: item.reponse, aide: aideDeLaBoite(item) };
-  const identite = { type: "boite", cle: CleDeQuestion.de("boite", operation.q) } as const;
+  const identite = { type: "boite", cle: cleDeLaBoite(item) } as const;
   return calculAuNiveau(operation, identite, tireur, niveau);
+}
+
+export function cleDeLaBoite(item: ItemDeBoite): CleDeQuestion {
+  return CleDeQuestion.de("boite", calculSansResultat(item));
 }
 
 function calculSansResultat({ a, sens, b }: ItemDeBoite): string {

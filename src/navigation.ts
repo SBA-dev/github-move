@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
-export type EcranSimple = "accueil" | "jeu" | "parcours" | "toutes-les-lecons" | "medailles" | "test-de-depart" | "espace-parent";
+export type EcranSimple =
+  | "accueil" | "jeu" | "parcours" | "toutes-les-lecons" | "medailles" | "test-de-depart" | "espace-parent" | "revision";
 
 export type Lieu =
   | { readonly ecran: EcranSimple }
@@ -19,6 +20,7 @@ const CHEMINS: Readonly<Record<EcranSimple, string>> = {
   "medailles": "/medailles",
   "test-de-depart": "/test-de-depart",
   "espace-parent": "/espace-parent",
+  "revision": "/revision",
 };
 
 const PAGE_D_UNE_LECON = /^\/lecon\/([^/]+)(?:\/(seance)(?:\/(\d+))?)?\/?$/;
