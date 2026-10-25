@@ -26,4 +26,5 @@ Une décision n'est jamais réécrite : si elle change, une nouvelle décision l
 | [0019](0019-connexion-par-mot-de-passe-sans-e-mail-dans-la-beta.md) | Connexion par mot de passe, sans aucun e-mail, dans la beta ; inscription par Edge Function ; réinitialisation par le prénom d'un enfant jusqu'à #45 | Acceptée |
 | [0020](0020-accelerer-la-livraison-d-une-story.md) | Livraison d'une story accélérée : une seule non-régression E2E, scénarios en parallèle, review plus tôt | Acceptée, précisée par 0022 |
 | [0021](0021-porte-de-test-du-profil-prepare.md) | Le profil préparé, seule porte de test, en développement seulement | Acceptée |
-| [0022](0022-non-regression-groupee-sur-main.md) | Non-régression complète groupée sur `main` après 3 merges ; merges autorisés pour la vague | Acceptée |
+| [0022](0022-non-regression-groupee-sur-main.md) | Non-régression complète groupée sur `main` après 3 merges ; merges autorisés pour la vague | Acceptée, points 2 et 3 remplacés par 0023 |
+| [0023](0023-non-regression-sur-main-seulement.md) | Non-régression complète sur `main` seulement, deux fois par jour ; merge par les équipes | Acceptée |

@@ -106,3 +106,20 @@ Questions tranchées (énoncé et recommandation retenue) :
 17. **Phrase du personnage guide quand il n'y a rien à montrer et que « tout lire à voix haute » est actif.** Les phrases des questions 2 et 7 se cumulent-elles ? **Reco** : non : sans rien à montrer, la phrase de la question 7 remplace celle de la question 2 (une seule phrase à l'ouverture).
 
 À signaler : « profil de démonstration » (question 15) n'est pas au glossaire ; le terme est repris de la question validée et du modèle du domaine, à ajouter au glossaire par le domain-modeler.
+
+## Mise à jour par #32, décision 32.21 (2026-10-25)
+
+La story #32 (cabane) ajoute la section « La cabane de Noisette », **toujours** affichée en tête de l'écran, même à 0 étoile (décision 32.8), et une nouvelle phrase d'ouverture quand il n'y a ni objet dans la cabane ni record (décision 32.9). Le PO a retenu toutes les recommandations de #32 (« OK #32 reco partout », issue #32, commentaire 6398398436), dont 32.21 : #32 met à jour, dans la même PR, les scénarios de #65 que la cabane rend faux. Aucune autre règle de #65 ne change. Les décisions 65.1 à 65.17 ci-dessus restent valables, sauf sur les deux points suivants :
+
+- **65.7 et 65.17** : « rien à montrer » veut dire désormais **aucun objet dans la cabane et aucun record** ; la phrase d'ouverture correspondante devient « Gagne des étoiles pour remplir la cabane ! » (décision 32.9) au lieu de « Fais un calcul rapide pour gagner ton premier record ! ». Il y a toujours une seule phrase d'accueil (65.17).
+- **65.12** : avec « tout lire à voix haute », la section de la cabane est lue après le titre de l'écran et avant les records : son titre puis sa phrase, sans les pastilles (décision 32.10).
+
+Scénarios modifiés dans `features/65-ecran-mes-medailles.feature` (chacun porte un commentaire « Mise à jour par #32 ») :
+
+1. « Sans rien à montrer, le personnage guide invite l'enfant à gagner un premier record » devient « Sans rien à montrer, le personnage guide invite l'enfant à gagner des étoiles » : Léa lit « Gagne des étoiles pour remplir la cabane ! ».
+2. « Avec un profil de démonstration, l'écran s'ouvre sans section des records » devient « Avec le profil préparé, sans profil réel au serveur, l'écran s'ouvre sans section des records ». L'étape « Léa joue avec un profil de démonstration, sans compte parent » est remplacée par « Léa joue avec le profil préparé, sans profil réel au serveur » (décision d'architecture 0021 : la page `/demonstration` est retirée, le profil préparé est la seule porte de test) ; Léa lit « Gagne des étoiles pour remplir la cabane ! » (décisions 32.9, 32.22).
+3. « Avec « tout lire à voix haute », le titre puis chaque section sont lus à l'ouverture » : le tableau de lecture ajoute « La cabane de Noisette » et « Tu as 0 étoile. Encore 3 étoiles et Noisette recevra une lanterne ! » entre « Mes médailles » et « Mes records de calcul rapide ».
+4. « Sans rien à montrer, le personnage guide ne dit qu'une phrase à l'ouverture, même avec « tout lire à voix haute » » devient « … ne dit qu'une phrase d'accueil à l'ouverture… » (la cabane est ensuite lue) ; la phrase entendue devient « Gagne des étoiles pour remplir la cabane ! ».
+5. « Les quatre sections apparaissent dans l'ordre cabane, histoire, badges, records » : le tag `@depend-de-32` est retiré (#32 livre la cabane) ; le scénario attend toujours #31 et #33 (`@depend-de-31 @depend-de-33`).
+
+Les autres scénarios restent vrais tels quels (par exemple « Revenir à l'accueil pendant la lecture coupe la voix » et « Sans « tout lire à voix haute », seul l'accueil du personnage guide est lu à l'ouverture »). Le terme « profil de démonstration » des questions 15 et 17 ci-dessus est conservé pour l'historique ; il est remplacé par « profil préparé (sans profil réel au serveur) » depuis la décision 0021.
