@@ -324,6 +324,10 @@ Lot 4 et lot 5 (#29, #30) : tranché par le PO le 2026-10-25, « OK #29 #30 reco
 - « Pastille de série » est un mot d'interface et « Série jusqu'à hier » un simple état de la série (réponse 30.12) : ni l'un ni l'autre n'entre au glossaire ;
 - **Jour de séance** reste dans Apprentissage (réponse 30.5) ; une séance terminée garde le jour envoyé par l'appareil, comme la séance de révision (réponse 30.6 : colonne de jour sur les séances terminées).
 
+Lot 4 (#29), note du 2026-10-25 sur la **Leçon suivante** (réponses 29.8, 29.24, 29.25, 29.26) : la ligne « Leçon suivante » dit encore « ni vers une autre matière avant #29 » ; elle se lit désormais ainsi.
+- Depuis #29, quand la matière n'a plus de leçon suivante dans le parcours (dernière leçon du parcours, leçon des classes d'avant, leçon d'une classe au-dessus), la leçon suivante est la **leçon du jour**, si elle existe et n'est pas la leçon jouée (29.8, 29.24). La leçon du jour devient donc la leçon suivante dans ces cas (code : `leconSuivanteEnFinDeSeance`) ;
+- quand aucune leçon suivante n'est proposée, la fin de séance propose le bouton « Toutes les leçons » (29.25, 29.26 ; mot d'interface, pas un terme du domaine).
+
 Lot 4 (#26, `docs/stories/26/domain-model.md`) : tout est tranché (réponses 26.1 à 26.20) ; « Leçon des classes d'avant » est redéfinie (Décision n°36). Reste le nom **Matière réussie** `(à valider)`.
 
 Lot 5 (#32, `docs/stories/32/domain-model.md`) : le PO a suivi toutes les recommandations le 2026-10-25 (« OK #32 reco partout », décisions dans `docs/stories/32/acceptance.md`).

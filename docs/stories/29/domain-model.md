@@ -435,3 +435,12 @@ D'accord ?
 - **#39** : décider si une leçon personnelle peut être la leçon du jour.
 - **#44** : copie sur l'appareil au lancement sans réseau (29.11).
 - **Jour d'une séance ordinaire, à aligner avec #30** : `seances_terminees` n'a pas de colonne de jour ; ce modèle déduit le jour par `jourDe(termineLe, decalage de l'appareil)`, ce qui peut décaler une séance d'un jour après un changement d'heure ou de fuseau. La question 30.6 propose que la séance terminée garde le jour envoyé par l'appareil, comme la séance de révision (28.9). L'objectif du jour et la série doivent lire **le même jour** : la réponse à 30.6 s'applique aussi ici.
+
+## Écarts de l'implémentation (2026-10-25)
+
+- `EntreesDuJour` ne porte que `parcours` (`undefined` = bibliothèque non chargée) et `matiereDeLaDerniereSeance`.
+- Les tuiles du jour ont leurs propres entrées, `EntreesDesTuilesDuJour` :
+  - `nombreDeQuestionsDues` (`undefined` = file inconnue) ;
+  - `testDeDepartAProposer`, calculé par la règle existante de #27 (`useTestDeDepartAFaire` / `planDuTestDeDepart`).
+- La leçon suivante de fin de séance est `leconSuivanteEnFinDeSeance` (Apprentissage) : quand la matière n'a plus de leçon suivante dans le parcours, c'est la leçon du jour, si elle existe et n'est pas la leçon jouée (29.8, 29.24) ; sinon la fin de séance propose « Toutes les leçons » (29.25, 29.26).
+- Une leçon absente de la bibliothèque (leçon personnelle, #39) jouée en dernier fait proposer le français (règle « dans tous les autres cas »). À revoir avec #39.
