@@ -133,3 +133,5 @@ Branche de base : `main`. Aucun numéro de décision réservé (prochain libre :
 - 00:15 UTC — RELIS #64 : `MAIN A BOUGÉ` (#29 mergée, `9a977c3`, fin de séance). Intégration sans conflit
   (`8c9a55a`) : 2 320 tests unitaires verts ; `tsc`, build, lint, fmt OK. Périmètre lancé : #79 et les stories dont
   #29 a modifié des steps partagés (#16, #18, #24 à #29, #65). #79.13 toujours sans réponse.
+- 01:05 UTC — RELIS #64 : non-régression de `main` KO (régression de #29 sur la dictée, #19), verrou `merge` gelé
+  jusqu'au correctif. #79 ne le détient pas ; la vérification après intégration de #29 continue.
