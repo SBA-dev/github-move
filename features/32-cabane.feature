@@ -7,12 +7,12 @@ Fonctionnalité: La cabane reçoit des objets à chaque palier du total des éto
 
   La cabane ne fait que compter : le total des étoiles est la somme des meilleures étoiles de toutes les leçons
   du profil en cours. Elle ne modifie aucune étoile et n'enregistre rien (modèle : docs/stories/32/domain-model.md).
-  Les commentaires « Question 32.n » renvoient aux questions ouvertes de docs/stories/32/acceptance.md ;
-  les scénarios qui en dépendent portent @a-valider et suivent la recommandation de l'équipe.
+  Les commentaires « Décision 32.n » renvoient aux décisions du PO dans docs/stories/32/acceptance.md
+  (validation du 2026-10-25 : recommandations de l'équipe retenues partout).
 
   Paliers et objets (legacy) : 3 une lanterne, 6 un tapis tout doux, 10 un pot de fleurs, 15 une étagère de livres,
   20 un tableau, 26 un gros coussin, 33 une guirlande, 40 un télescope, 48 un globe, 56 une boîte à trésor,
-  65 un trophée (nom à remplacer, question 32.5), 75 l'étoile magique.
+  65 une coupe dorée (« un trophée » dans le legacy, renommé par la décision 32.5), 75 l'étoile magique.
 
   « Léa a gagné N étoiles en tout » prépare des meilleures étoiles sur des leçons de test absentes de la
   bibliothèque (identifiants préfixés « e2e-32- »), sans jouer de séance ; elles partent avec le profil enfant.
@@ -31,8 +31,7 @@ Fonctionnalité: La cabane reçoit des objets à chaque palier du total des éto
 
   Règle: Le total des étoiles est la somme des meilleures étoiles de toutes les leçons du profil ; le test de départ n'y ajoute rien
 
-    # Question 32.4
-    @a-valider
+    # Décision 32.4
     Scénario: Les étoiles des leçons d'une autre classe comptent dans le total
       Étant donné que Léa a pour meilleures étoiles :
         | leçon                     | étoiles |
@@ -62,15 +61,13 @@ Fonctionnalité: La cabane reçoit des objets à chaque palier du total des éto
       Alors Léa lit « Tu as 6 étoiles. Encore 4 étoiles et Noisette recevra un pot de fleurs ! »
       Et les lecteurs d'écran annoncent « La cabane de Noisette, avec 2 objets »
 
-    # Question 32.15
-    @a-valider
+    # Décision 32.15
     Scénario: Les étoiles d'une leçon qui n'est plus dans la bibliothèque comptent toujours
       Étant donné que Léa a 3 étoiles à une leçon « Les anciens sons » qui n'est plus dans la bibliothèque
       Quand Léa ouvre « Mes médailles » depuis son accueil
       Alors Léa lit « Tu as 3 étoiles. Encore 3 étoiles et Noisette recevra un tapis tout doux ! »
 
-    # Question 32.19
-    @a-valider
+    # Décision 32.19
     Scénario: Juste après une séance, ses étoiles sont déjà dans le total de la cabane
       Étant donné que Léa a gagné 2 étoiles en tout
       Et que Léa a terminé une séance de la leçon « Les sons de test » avec 1 étoile
@@ -79,8 +76,7 @@ Fonctionnalité: La cabane reçoit des objets à chaque palier du total des éto
 
   Règle: La cabane a un objet par palier atteint par le total des étoiles ; elle est complète à 75 étoiles
 
-    # Question 32.8 : la section est toujours là, même à 0 étoile
-    @a-valider
+    # Décision 32.8 : la section est toujours là, même à 0 étoile
     Plan du Scénario: Avec <total> en tout, la cabane a <objets>
       Étant donné que Léa a gagné <total> en tout
       Quand Léa ouvre « Mes médailles » depuis son accueil
@@ -95,7 +91,7 @@ Fonctionnalité: La cabane reçoit des objets à chaque palier du total des éto
         | 9 étoiles  | 2 objets  | Tu as 9 étoiles. Encore 1 étoile et Noisette recevra un pot de fleurs !    |
         | 75 étoiles | 12 objets | Tu as 75 étoiles. La cabane est complète, quelle merveille !               |
 
-    # Question 32.11 : la pastille non atteinte s'affiche « 10 ★ »
+    # Décision 32.11 : la pastille non atteinte s'affiche « 10 ★ »
     Scénario: Une pastille montre le nom de l'objet reçu, ou le palier qui reste à atteindre
       Étant donné que Léa a gagné 6 étoiles en tout
       Quand Léa ouvre « Mes médailles » depuis son accueil
@@ -114,8 +110,7 @@ Fonctionnalité: La cabane reçoit des objets à chaque palier du total des éto
         | 65 ★               |
         | 75 ★               |
 
-    # Question 32.5 : « une coupe dorée » est un exemple de nouveau nom pour « un trophée », à valider ; question 32.3 : pas de palier après 75
-    @a-valider
+    # Décision 32.5 : « une coupe dorée » remplace « un trophée » ; décision 32.3 : pas de palier après 75
     Scénario: Au-delà de 75 étoiles, la cabane reste complète avec ses 12 objets
       Étant donné que Léa a gagné 100 étoiles en tout
       Quand Léa ouvre « Mes médailles » depuis son accueil
@@ -135,16 +130,14 @@ Fonctionnalité: La cabane reçoit des objets à chaque palier du total des éto
         | une coupe dorée        |
         | l'étoile magique       |
 
-    # Question 32.16
-    @a-valider
+    # Décision 32.16
     Scénario: Une pastille de la cabane n'ouvre rien
       Étant donné que Léa a gagné 3 étoiles en tout
       Et que Léa a ouvert « Mes médailles » depuis son accueil
       Quand Léa choisit la pastille « une lanterne »
       Alors le titre de l'écran est toujours « Mes médailles »
 
-    # Question 32.13
-    @a-valider
+    # Décision 32.13
     Scénario: Sans réseau, la section de la cabane n'apparaît pas, sans message d'erreur
       Étant donné que Léa a gagné 3 étoiles en tout
       Et que le réseau est coupé
@@ -152,8 +145,7 @@ Fonctionnalité: La cabane reçoit des objets à chaque palier du total des éto
       Alors aucune section « La cabane de Noisette » n'apparaît
       Et aucun message d'erreur n'apparaît
 
-    # Questions 32.14 et 32.22
-    @a-valider
+    # Décisions 32.14 et 32.22
     Scénario: Avec le profil préparé, sans profil réel au serveur, la cabane compte les étoiles gagnées sur l'appareil
       Étant donné que Léa joue avec le profil préparé, sans profil réel au serveur
       Et que Léa a terminé une séance de la leçon « Les sons de test » avec 3 étoiles
@@ -169,8 +161,7 @@ Fonctionnalité: La cabane reçoit des objets à chaque palier du total des éto
       Quand Léa réussit la dernière question de la séance
       Alors la fin de la séance annonce pour la cabane « Noisette a reçu un tapis tout doux ! »
 
-    # Question 32.12
-    @a-valider
+    # Décision 32.12
     Scénario: Le personnage guide termine sa phrase de fin par l'objet reçu
       Étant donné que Léa a gagné 5 étoiles en tout
       Et que Léa joue la séance complète de la leçon « Les sons de test »
@@ -202,8 +193,7 @@ Fonctionnalité: La cabane reçoit des objets à chaque palier du total des éto
         | leçon rejouée avec moins d'étoiles  | 3     |
         | leçon rejouée avec autant d'étoiles | 1     |
 
-    # Question 32.13
-    @a-valider
+    # Décision 32.13
     Scénario: Sans réseau au début de la séance, la fin de la séance n'annonce aucun objet
       Étant donné que Léa a gagné 5 étoiles en tout
       Et que le réseau est coupé
@@ -214,8 +204,7 @@ Fonctionnalité: La cabane reçoit des objets à chaque palier du total des éto
 
   Règle: La cabane est toujours celle de Noisette, quel que soit l'univers du profil
 
-    # Questions 32.1 et 32.2
-    @a-valider
+    # Décisions 32.1 et 32.2
     Plan du Scénario: Dans l'univers <clé>, l'enfant retrouve la cabane de Noisette et ses objets
       Étant donné que Léa a gagné 3 étoiles en tout
       Et que Léa a choisi l'univers <clé>
@@ -228,8 +217,7 @@ Fonctionnalité: La cabane reçoit des objets à chaque palier du total des éto
         | sports    |
         | princesse |
 
-    # Question 32.1
-    @a-valider
+    # Décision 32.1
     Scénario: Dans l'univers Sports, Coach Léo annonce que Noisette a reçu un objet
       Étant donné que Léa a choisi l'univers sports
       Et que Léa a gagné 5 étoiles en tout
@@ -240,8 +228,7 @@ Fonctionnalité: La cabane reçoit des objets à chaque palier du total des éto
 
   Règle: La cabane se lit à voix haute, au lecteur d'écran, en mode dys, sans mouvement et sur un petit écran
 
-    # Questions 32.9 et 32.10 ; question 32.21 : effet sur les scénarios de #65
-    @a-valider
+    # Décisions 32.9 et 32.10 ; décision 32.21 : scénarios de #65 mis à jour
     Scénario: Avec « tout lire à voix haute », le titre de la cabane puis sa phrase sont lus à l'ouverture
       Étant donné que Paul a réglé « tout lire à voix haute » sur « oui » pour Léa
       Et que Léa a gagné 3 étoiles en tout
@@ -253,8 +240,7 @@ Fonctionnalité: La cabane reçoit des objets à chaque palier du total des éto
         | La cabane de Noisette                                                      |
         | Tu as 3 étoiles. Encore 3 étoiles et Noisette recevra un tapis tout doux ! |
 
-    # Question 32.10
-    @a-valider
+    # Décision 32.10
     Scénario: Sans « tout lire à voix haute », l'enfant fait lire la cabane à la demande
       Étant donné que le réglage « tout lire à voix haute » de Léa est sur « non »
       Et que Léa a gagné 2 étoiles en tout
@@ -262,15 +248,13 @@ Fonctionnalité: La cabane reçoit des objets à chaque palier du total des éto
       Quand Léa demande à écouter la cabane
       Alors Léa entend Noisette lire « La cabane de Noisette », puis « Tu as 2 étoiles. Encore 1 étoile et Noisette recevra une lanterne ! »
 
-    # Question 32.9 : « Gagne des étoiles pour remplir la cabane ! » est un exemple de texte, à valider
-    @a-valider
+    # Décision 32.9
     Scénario: Sans objet ni record, le personnage guide invite l'enfant à gagner des étoiles
       Étant donné que Léa a gagné 2 étoiles en tout
       Quand Léa ouvre « Mes médailles » depuis son accueil
       Alors Léa entend Noisette dire « Gagne des étoiles pour remplir la cabane ! »
 
-    # Question 32.11
-    @a-valider
+    # Décision 32.11
     Scénario: Un lecteur d'écran dit une pastille non atteinte en étoiles
       Étant donné que Léa a gagné 3 étoiles en tout
       Quand Léa ouvre « Mes médailles » depuis son accueil
@@ -289,8 +273,7 @@ Fonctionnalité: La cabane reçoit des objets à chaque palier du total des éto
       Quand Léa ouvre « Mes médailles » depuis son accueil
       Alors Léa voit la phrase et les pastilles de la cabane en mode dys : police Andika, lettres, mots et lignes espacés
 
-    # Question 32.17
-    @a-valider
+    # Décision 32.17
     Scénario: Avec les mouvements réduits, l'annonce de l'objet reçu apparaît sans mouvement
       Étant donné que l'appareil demande des mouvements réduits
       Et que Léa a gagné 5 étoiles en tout
