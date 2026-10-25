@@ -2,13 +2,12 @@ import { expect, type Locator, type Page } from "@playwright/test";
 import type { DataTable } from "playwright-bdd";
 import { LECONS_DE_L_ACCUEIL } from "../support/bibliotheque-de-l-accueil.ts";
 import { lecturesDuResultatEnCours, suivreLesLecturesDuResultat } from "../support/bibliotheque-du-test-de-depart.ts";
-import { lireEnRest } from "../support/seances-api.ts";
-import { jouerJusquALaFinDeLaSeance, partie } from "./etoiles-et-fin-de-seance.steps.ts";
+import { jouerJusquALaFinDeLaSeance } from "./etoiles-et-fin-de-seance.steps.ts";
 import { commencerLaSeanceComplete, entendu, etat, type LeconBrute, leconDeTitre, ouvrirLaPageDeLaLecon } from "./etapes-puis-exercices.steps.ts";
 import { avancerJusquAuxChoix, bulleDeChoix, questionsDeLaSeance } from "./exercices-a-choix.steps.ts";
 import { Given, Then, When } from "./fixtures.ts";
 import { pageDeMarieOuCourante } from "./revisions-des-erreurs.steps.ts";
-import { choisirSonProfil, profilDe } from "./profils-enfants.steps.ts";
+import { choisirSonProfil } from "./profils-enfants.steps.ts";
 import { normaliser, terminerLaLecture } from "./voix.steps.ts";
 
 // Story #29 : l'accueil de l'enfant (« Aujourd'hui »).
@@ -358,16 +357,6 @@ Then(/^l'accueil de Léa s'affiche sans mouvement$/, async ({ page }) => {
     document.getAnimations().filter((animation) => animation.playState === "running").map((animation) => animation.id || animation.constructor.name)
   );
   expect(enCours, "animations en cours sur l'accueil").toEqual([]);
-});
-
-// --- Droits
-
-When(/^Claire demande les séances terminées du profil enfant de Léa$/, async ({ famille }) => {
-  const telephone = await famille.page("telephone");
-  const jeton = (await famille.session(telephone))?.access_token;
-  if (jeton === undefined) throw new Error("Claire n'est pas connectée sur le téléphone");
-  const lues = await lireEnRest(jeton, "seances_terminees", profilDe(famille, "Léa").id);
-  partie(famille).lignesLues = { statut: lues.statut, lignes: [...lues.lignes] };
 });
 
 // --- Fin de séance
