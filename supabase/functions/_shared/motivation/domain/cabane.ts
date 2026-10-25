@@ -15,3 +15,23 @@ export const PALIERS_DE_LA_CABANE: readonly PalierDeLaCabane[] = [
   { seuil: 65, objet: { cle: "coupe", nom: "une coupe dorée" } },
   { seuil: 75, objet: { cle: "etoile-magique", nom: "l'étoile magique" } },
 ];
+
+export type MeilleuresEtoilesDuProfil = ReadonlyMap<string, number>;
+
+export class NombreDEtoilesInvalide extends Error {
+  constructor(readonly etoiles: number) {
+    super(`${etoiles} n'est pas un nombre d'étoiles valide : une leçon rapporte de 1 à 3 étoiles.`);
+    this.name = "NombreDEtoilesInvalide";
+  }
+}
+
+function verifierNombreDEtoiles(etoiles: number): number {
+  if (!Number.isInteger(etoiles) || etoiles < 1 || etoiles > 3) throw new NombreDEtoilesInvalide(etoiles);
+  return etoiles;
+}
+
+export function totalDesEtoiles(meilleures: MeilleuresEtoilesDuProfil): number {
+  let total = 0;
+  for (const etoiles of meilleures.values()) total += verifierNombreDEtoiles(etoiles);
+  return total;
+}
