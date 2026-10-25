@@ -44,7 +44,13 @@ def noms_labels(issue):
     return [l if isinstance(l, str) else l.get("name", "") for l in issue.get("labels", [])]
 
 
+# Stories ajoutées après coup à un lot : leur numéro ne suit plus l'ordre des lots.
+LOTS_AJOUTES = {72: "2. Famille", 73: "2. Famille"}
+
+
 def lot(n):
+    if n in LOTS_AJOUTES:
+        return LOTS_AJOUTES[n]
     for borne, nom in ((8, "1. Socle"), (15, "2. Famille"), (24, "3. Jouer une leçon"), (29, "4. Parcours")):
         if n <= borne:
             return nom
@@ -90,7 +96,7 @@ def etat_etape(texte):
         return "en attente"
     if "en cours" in t:
         return "en cours"
-    if "fait" in t or "sauté" in t or t.startswith(("ok", "approuv", "vert", "mergé")):
+    if "fait" in t or "sauté" in t or "verts" in t or "approuvé" in t or t.startswith(("ok", "vert", "mergé")):
         return "fait"
     return "en cours"
 
