@@ -270,3 +270,24 @@ export class FileDeRevisionIncoherente extends Error {
     this.name = "FileDeRevisionIncoherente";
   }
 }
+
+export class SeanceDeRevisionNonFinie extends Error {
+  constructor() {
+    super("Cette séance de révision n'est pas finie : elle ne peut pas être terminée.");
+    this.name = "SeanceDeRevisionNonFinie";
+  }
+}
+
+export class SeanceDeRevisionDejaTerminee extends Error {
+  constructor() {
+    super("Cette séance de révision est déjà terminée.");
+    this.name = "SeanceDeRevisionDejaTerminee";
+  }
+}
+
+export class SeanceDeRevisionDejaFinie extends Error {
+  constructor() {
+    super("Cette séance de révision est déjà finie.");
+    this.name = "SeanceDeRevisionDejaFinie";
+  }
+}

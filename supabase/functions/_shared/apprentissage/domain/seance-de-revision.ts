@@ -1,13 +1,36 @@
 import type { Lecon, Niveau } from "../../catalogue/domain/index.ts";
-import { AucuneQuestionDue, ReponseIncompatible, SeanceDejaFinie } from "./erreurs.ts";
+import {
+  AucuneQuestionDue,
+  ReponseIncompatible,
+  SeanceDeRevisionDejaFinie,
+  SeanceDeRevisionDejaTerminee,
+  SeanceDeRevisionNonFinie,
+} from "./erreurs.ts";
 import type { PlanDeSeanceDeRevision, ResultatDeRevision } from "./file-de-revision.ts";
+import type { CleDeQuestion } from "./cle-de-question.ts";
+import type { Jour } from "./jour.ts";
 import type { AideDonnee } from "./question-jouee.ts";
 import { type QuestionDeRevision, questionDeRevision } from "./question-de-revision.ts";
 import type { QuestionSuivie } from "./question-suivie.ts";
 import type { MotEcrit, ReponseEnNombre, ReponseParChoix, ResultatDeReponse } from "./reponse.ts";
+import type { SeanceDeRevisionTermineeAEnregistrer } from "./seance-de-revision-terminee-a-enregistrer.ts";
 import type { Tireur } from "./tireur.ts";
 
+export type SeanceDeRevisionTerminee = Readonly<{
+  type: "SeanceDeRevisionTerminee";
+  id: string;
+  enfant: string;
+  termineeLe: Date;
+  jour: Jour;
+  resultats: readonly ResultatDeRevision[];
+  nombreDeQuestions: number;
+  nombreDeQuestionsJustes: number;
+}>;
+
 export class SeanceDeRevision {
+  private termineeLe: Date | undefined;
+  private jour: Jour | undefined;
+
   private constructor(
     readonly id: string,
     readonly enfant: string,
@@ -59,13 +82,46 @@ export class SeanceDeRevision {
     return this.questions.map((posee) => ({ identite: posee.identite, juste: suivie(posee).erreurs === 0 }));
   }
 
+  terminer(maintenant: Date, jour: Jour): SeanceDeRevisionTerminee {
+    if (this.termineeLe) throw new SeanceDeRevisionDejaTerminee();
+    if (!this.estFinie()) throw new SeanceDeRevisionNonFinie();
+    this.termineeLe = maintenant;
+    this.jour = jour;
+    const resultats = this.resultats();
+    return {
+      type: "SeanceDeRevisionTerminee",
+      id: this.id,
+      enfant: this.enfant,
+      termineeLe: maintenant,
+      jour,
+      resultats,
+      nombreDeQuestions: resultats.length,
+      nombreDeQuestionsJustes: resultats.filter(({ juste }) => juste).length,
+    };
+  }
+
+  aEnregistrer(): SeanceDeRevisionTermineeAEnregistrer {
+    if (!this.termineeLe || !this.jour) throw new SeanceDeRevisionNonFinie();
+    return {
+      id: this.id,
+      enfant: this.enfant,
+      questions: this.questions.map(({ identite }): CleDeQuestion => identite),
+      tirages: this.questions.map((posee) => suivie(posee).tirage()),
+      reponses: this.questions.map((posee) => suivie(posee).reponses()),
+      termineeLe: this.termineeLe,
+      jour: this.jour.toString(),
+    };
+  }
+
   private questionAPoser(): QuestionDeRevision {
     const enCours = this.questionEnCours();
-    if (!enCours) throw new SeanceDejaFinie();
+    if (!enCours) throw new SeanceDeRevisionDejaFinie();
     return enCours;
   }
 }
 
-function suivie({ question, dictee }: QuestionDeRevision): QuestionSuivie & { direJeNeSaisPas(): AideDonnee } {
+function suivie(
+  { question, dictee }: QuestionDeRevision,
+): QuestionSuivie & { direJeNeSaisPas(): AideDonnee; tirage(): string[] } {
   return question ?? dictee;
 }
