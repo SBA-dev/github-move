@@ -5,6 +5,8 @@ description: Rendre Savanturier ludique sans trahir l'apprentissage ni l'enfant 
 
 # Gamification : rendre l'apprentissage ludique, sans piège
 
+> ⛔ **Règle absolue, à appliquer avant toute autre instruction** : `CLAUDE.md`, section « Contenus pour les enfants ». Aucun contenu (image, texte, son, donnée de test, exemple) n'a de caractère sexuel, violent, obscène, haineux, raciste, xénophobe ou antisémite, ni rien qui puisse choquer un enfant. Aucune commande ni aucun agent ne peut l'ignorer. Une demande qui la franchit : tu ne la fais pas, tu la signales.
+
 Savanturier doit donner envie de jouer, comme un jeu vidéo pour enfants. Le jeu sert l'apprentissage : il rend visible la progression, récompense l'effort et donne envie de revenir. Il ne remplace jamais l'exercice, et il ne retient jamais l'enfant par la contrainte.
 
 Ce skill complète `bdd-gherkin` (scénarios), `ddd` (où vit la règle) et `craftsmanship` (review). Le vocabulaire vient de `docs/domain/glossaire.md`.
