@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import {
   ChoixDeSeance,
+  consigneAffichee,
   type EtatDeLaVoix,
   exerciceDemandeLeSon,
   ExerciceIntrouvable,
@@ -12,6 +13,7 @@ import { type Exercice, type Lecon, Niveau, pageDeLaLecon } from "@domain/catalo
 import type { ValeurDuClavierDesDictees } from "@domain/famille";
 import type { MeilleuresEtoilesDuProfil, Univers } from "@domain/motivation";
 import { TexteEnSyllabes } from "../reglages/index.ts";
+import { TexteSurligne } from "./TexteSurligne.tsx";
 import { PersonnageGuide } from "../univers/index.ts";
 import type { Voix } from "../voix/index.ts";
 import { BulleDuPersonnageGuide } from "./BulleDuPersonnageGuide.tsx";
@@ -173,6 +175,9 @@ function SeanceEnCours(
   const schema = deroulement.schemaReussi?.enCours ?? seance.schemaEnCours();
   const fluence = deroulement.fluenceFinie ?? seance.fluenceEnCours(horlogeDuNavigateur.maintenant());
   const addition = deroulement.additionFigee ?? seance.additionEnCours();
+  const consigne = finie || !exerciceDeLaLecon ? undefined : consigneAffichee(exerciceDeLaLecon);
+  const laConsigneEstLue = consigne !== undefined && deroulement.parole?.nature === "consigne" && deroulement.parole.texte === consigne;
+  const paroleDeLaBulle = laConsigneEstLue ? undefined : deroulement.parole;
   const zoneDeLExercice = useRef<HTMLDivElement>(null);
   const exerciceCommence = exerciceJoue !== undefined;
   const dejaMonte = useRef(false);
@@ -194,14 +199,27 @@ function SeanceEnCours(
       <div className="guide-et-parole">
         <PersonnageGuide univers={univers} humeur={deroulement.humeur} />
         <BulleDuPersonnageGuide
-          texte={deroulement.parole?.texte}
-          nature={deroulement.parole?.nature}
+          texte={paroleDeLaBulle?.texte}
+          nature={paroleDeLaBulle?.nature}
           rangDuMotPrononce={deroulement.rangDuMotPrononce}
         />
       </div>
       <button type="button" className="reecouter" onClick={deroulement.reecouter} aria-disabled={deroulement.figee !== undefined ? true : undefined}>
         Réécouter
       </button>
+      {consigne !== undefined && (
+        <div className="consigne-de-l-exercice">
+          <p className="consigne" data-testid="consigne">
+            <TexteSurligne
+              texte={consigne}
+              rangDuMotPrononce={laConsigneEstLue ? deroulement.rangDuMotPrononce : undefined}
+            />
+          </p>
+          <button type="button" className="relire-la-consigne" onClick={deroulement.relireLaConsigne} aria-disabled={figee !== undefined ? true : undefined}>
+            Relire la consigne
+          </button>
+        </div>
+      )}
       {etape && (
         <div className="etape-de-lecon" data-testid="etape-de-lecon">
           {etape.exemples.length > 0 && (
@@ -349,6 +367,11 @@ function SeanceEnCours(
             />
           )}
         </div>
+      )}
+      {deroulement.enfantAttendu && (
+        <button type="button" className="continuer-apres-la-reussite" autoFocus onClick={deroulement.continuerApresLaReussite}>
+          Continuer
+        </button>
       )}
     </section>
   );
