@@ -6,10 +6,7 @@ import { SeanceDeRevisionIncoherente } from "./erreurs.ts";
 import { FileDeRevision, type QuestionRetenue } from "./file-de-revision.ts";
 import { Jour } from "./jour.ts";
 import { Reponse, type ReponseDonnee } from "./reponse.ts";
-import {
-  questionsIntrouvablesDeLaSeanceDeRevision,
-  revaliderLaSeanceDeRevision,
-} from "./revalider-la-seance-de-revision.ts";
+import { revaliderLaSeanceDeRevision } from "./revalider-la-seance-de-revision.ts";
 import type { SeanceDeRevisionTermineeAEnregistrer } from "./seance-de-revision-terminee-a-enregistrer.ts";
 import { SeanceDeRevision } from "./seance-de-revision.ts";
 import { tireurAuHasard } from "./tireur.ts";
@@ -79,7 +76,7 @@ Deno.test("un envoi cohérent de séance de révision est revalidé et redonne l
     erreursCorrigeesPourDeBon: 0,
   });
 
-  const revalide = revaliderLaSeanceDeRevision(envoi, fileDuServeur, [leconDesSyllabes], CE1);
+  const { fait: revalide } = revaliderLaSeanceDeRevision(envoi, fileDuServeur, [leconDesSyllabes], CE1);
 
   assertEquals(revalide.resultats.map(({ juste }) => juste), [false, true]);
   assertEquals(revalide, fait);
@@ -117,7 +114,7 @@ function revalider(envoi: SeanceDeRevisionTermineeAEnregistrer) {
     questions: laFileDuProfil().questions,
     erreursCorrigeesPourDeBon: 0,
   });
-  return revaliderLaSeanceDeRevision(envoi, file, [leconDesSyllabes], CE1);
+  return revaliderLaSeanceDeRevision(envoi, file, [leconDesSyllabes], CE1).fait;
 }
 
 function assertIncoherent(envoi: SeanceDeRevisionTermineeAEnregistrer) {
@@ -290,7 +287,16 @@ function revaliderSur(
   file: FileDeRevision,
   lecons: readonly Lecon[] = [leconDesSyllabes],
 ) {
-  return revaliderLaSeanceDeRevision(envoi, file, lecons, CE1);
+  return revaliderLaSeanceDeRevision(envoi, file, lecons, CE1).fait;
+}
+
+function introuvablesDe(
+  envoi: SeanceDeRevisionTermineeAEnregistrer,
+  file: FileDeRevision,
+  lecons: readonly Lecon[],
+  niveau: Niveau,
+) {
+  return revaliderLaSeanceDeRevision(envoi, file, lecons, niveau).questionsIntrouvables;
 }
 
 function fileDuServeurSans(question: CleDeQuestion): FileDeRevision {
@@ -379,7 +385,7 @@ Deno.test("les questions introuvables sont celles dont la leçon d'origine a dis
   const envoi = jouer();
   const [premiere] = envoi.questions;
 
-  const introuvables = questionsIntrouvablesDeLaSeanceDeRevision(
+  const introuvables = introuvablesDe(
     envoi,
     fileDuServeurOuLaLeconDeOrigineADisparu(premiere),
     [leconDesSyllabes],
@@ -393,7 +399,7 @@ Deno.test("les questions introuvables sont celles dont le texte a changé dans l
   const envoi = jouer();
   const [premiere] = envoi.questions;
 
-  const introuvables = questionsIntrouvablesDeLaSeanceDeRevision(
+  const introuvables = introuvablesDe(
     envoi,
     laFileDuProfil(),
     [leconSansLaQuestion(premiere)],
@@ -410,7 +416,68 @@ Deno.test("une question absente de la file ou pas encore due n'est pas introuvab
   const introuvables = [
     fileDuServeurSans(premiere),
     fileDuServeurOuLaQuestionEstRevenueAuTravail(seconde),
-  ].flatMap((file) => questionsIntrouvablesDeLaSeanceDeRevision(envoi, file, [leconDesSyllabes], CE1));
+  ].flatMap((file) => introuvablesDe(envoi, file, [leconDesSyllabes], CE1));
 
   assertEquals(introuvables, []);
+});
+
+function avecLesReponsesDeLaPremiereQuestion(envoi: SeanceDeRevisionTermineeAEnregistrer, reponses: ReponseDonnee[]) {
+  return { ...envoi, reponses: [reponses, ...envoi.reponses.slice(1)] };
+}
+
+Deno.test("une réponse par un choix qui n'est pas proposé est refusée comme incohérente", () => {
+  const envoi = jouer();
+
+  assertIncoherent(avecLesReponsesDeLaPremiereQuestion(envoi, [Reponse.choix("inconnu"), ...envoi.reponses[0]]));
+});
+
+Deno.test("deux « Je ne sais pas » de suite sur la même question sont refusés comme incohérents", () => {
+  const envoi = jouer();
+
+  assertIncoherent(avecLesReponsesDeLaPremiereQuestion(envoi, [jeNeSaisPas, ...envoi.reponses[0]]));
+});
+
+Deno.test("un mot de la dictée écrit incomplet est refusé comme incohérent", () => {
+  const leconDeDictee = lireLecon({
+    id: "fr-ce1-dictees",
+    matiere: "francais",
+    niveau: "CE1",
+    titre: "Les dictées",
+    ordre: 2,
+    programme: { section: "c2-test", citation: "Citation de test." },
+    lecon: [],
+    exercices: [{ type: "dictee", consigne: "Écris le mot.", mots: [{ mot: "chat" }] }],
+  });
+  const mot = CleDeQuestion.de("dictee", "chat");
+  const file = FileDeRevision.vide("profil-lea");
+  file.retenir(
+    [{ identite: mot, origine: { leconDOrigine: leconDeDictee.id, position: 0, type: "dictee" } }],
+    jourDesErreurs,
+    erreursFaitesLe,
+  );
+  const seance = SeanceDeRevision.commencer({
+    id: "revision-1",
+    enfant: "profil-lea",
+    plan: file.planDeLaSeanceDeRevision(jourDeLaRevision),
+    lecons: [leconDeDictee],
+    tireurDe: () => tireurAuHasard(hasardSansMelange()),
+    niveau: CE1,
+  });
+  seance.repondre(Reponse.motEcrit(["c", "h", "a", "t"]));
+  seance.terminer(finDeLaRevision, jourDeLaRevision);
+  const envoi = { ...seance.aEnregistrer(), reponses: [[Reponse.motEcrit(["c", "h", "a"])]] };
+
+  assertThrows(
+    () => revaliderLaSeanceDeRevision(envoi, file, [leconDeDictee], CE1),
+    SeanceDeRevisionIncoherente,
+  );
+});
+
+Deno.test("plus de 200 réponses à une même question sont refusées comme incohérentes", () => {
+  const envoi = jouer();
+  const [premiere] = envoi.questions;
+  const fausse = Reponse.choix(premiere.valeur === bateau.valeur ? "1" : "2");
+  const deuxCentUneReponses = [...Array.from({ length: 200 }, () => fausse), bonneReponseDe(premiere)];
+
+  assertIncoherent(avecLesReponsesDeLaPremiereQuestion(envoi, deuxCentUneReponses));
 });
