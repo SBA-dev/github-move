@@ -1,9 +1,8 @@
-import { type CSSProperties, Suspense, useCallback, useEffect, useState } from "react";
+import { type CSSProperties, useCallback, useEffect, useState } from "react";
 import { MotionConfig } from "motion/react";
 import type { EtatDeLEspaceParent } from "@domain/famille";
 import type { CodeDeMatiere } from "@domain/catalogue";
 import { universDe } from "@domain/motivation";
-import { PAGE_DEMONSTRATION_DISPONIBLE, PageDemonstration } from "./demonstration/disponibilite.ts";
 import { EcranDeConnexion, useConnexion } from "./connexion/index.ts";
 import { ModeDys } from "./reglages/index.ts";
 import { EnTete } from "./en-tete/EnTete.tsx";
@@ -38,18 +37,11 @@ type Habillage = CSSProperties & { readonly "--accent": string; readonly "--acce
 const ACCUEIL: Lieu = { ecran: "accueil" };
 
 function estPageDeLEnfant(lieu: Lieu): boolean {
-  return lieu.ecran === "demonstration" || lieu.ecran === "jeu" || lieu.ecran === "parcours" || lieu.ecran === "toutes-les-lecons" || lieu.ecran === "medailles" ||
+  return lieu.ecran === "jeu" || lieu.ecran === "parcours" || lieu.ecran === "toutes-les-lecons" || lieu.ecran === "medailles" ||
     lieu.ecran === "test-de-depart" || lieu.ecran === "lecon" || lieu.ecran === "seance";
 }
 
-function demandeUnProfilEnCours(lieu: Lieu): boolean {
-  return lieu.ecran === "jeu" || lieu.ecran === "parcours" || lieu.ecran === "toutes-les-lecons" || lieu.ecran === "medailles" || lieu.ecran === "test-de-depart" ||
-    lieu.ecran === "lecon" || lieu.ecran === "seance";
-}
-
-// La page de démonstration du lot 1 n'est publiée qu'en développement (ou avec VITE_PAGE_DEMONSTRATION=1).
 function lieuAffiche(demande: Lieu, espaceParent: EtatDeLEspaceParent["type"], connecte: boolean): Lieu {
-  if (demande.ecran === "demonstration" && !PAGE_DEMONSTRATION_DISPONIBLE) return ACCUEIL;
   if (demande.ecran === "espace-parent" && connecte && espaceParent === "ferme") return ACCUEIL;
   return demande;
 }
@@ -63,12 +55,11 @@ export function Application() {
   useRenvoiDesTestsDeDepartGardes(connecte);
   const lieuPossible = lieuAffiche(lieuDemande, acces.etat.type, connecte);
   const { profil: profilEnCours, charge: profilCharge, choisirQuiJoue, definir, oublier: oublierLeProfilEnCours } = useProfilEnCours();
-  const enfantAbsent = profilCharge && !profilEnCours && demandeUnProfilEnCours(lieuPossible);
+  const enfantAbsent = profilCharge && !profilEnCours && estPageDeLEnfant(lieuPossible);
   const lieu = enfantAbsent ? ACCUEIL : lieuPossible;
   const ecran = lieu.ecran;
   const testDeDepartAFaire = useTestDeDepartAFaire(profilEnCours, ecran === "jeu");
   const ecranDemande = lieuDemande.ecran;
-  const surLaDemonstration = ecran === "demonstration";
   const profil = estPageDeLEnfant(lieu) ? profilEnCours : undefined;
   const univers = universDe(profil?.univers);
   const palette = PALETTES[univers.cle];
@@ -220,11 +211,6 @@ export function Application() {
             )}
             {lieu.ecran === "medailles" && profilCharge && profilEnCours && (
               <MesMedailles profil={profilEnCours} univers={univers} voix={voix} />
-            )}
-            {surLaDemonstration && PageDemonstration && profilCharge && (
-              <Suspense fallback={null}>
-                <PageDemonstration univers={univers} voix={voix} toutLireAVoixHaute={profil?.reglages.toutLireAVoixHaute ?? false} />
-              </Suspense>
             )}
             {lieu.ecran === "lecon" && profilCharge && profilEnCours && (
               <PageDeLaLecon

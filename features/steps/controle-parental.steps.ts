@@ -83,7 +83,7 @@ Given(/^Léa jouait avant que Paul entre dans l'espace parent$/, async ({ famill
     ([cle, valeur]) => localStorage.setItem(cle, valeur),
     [CLE_PROFIL_PREPARE, JSON.stringify({ prenom: "Léa", niveau: "CE1", univers: "animaux" })] as const,
   );
-  await page.goto("/demonstration");
+  await page.goto("/jeu");
   await expect(page.getByTestId("enfant-en-cours")).toContainText("Léa");
   await famille.allerDansLEspaceParent("tablette");
 });
@@ -149,7 +149,7 @@ Then(/^la déconnexion n'est pas proposée à Léa$/, async ({ page }) => {
 });
 
 Then(/^Léa revient là où elle jouait$/, async ({ page }) => {
-  await expect(page).toHaveURL(/\/demonstration$/);
+  await expect(page).toHaveURL(/\/jeu$/);
   await expect(page.getByTestId("enfant-en-cours")).toContainText("Léa");
   await expect(question(page)).toHaveCount(0);
 });

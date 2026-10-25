@@ -97,3 +97,19 @@ Fonctionnalité: Installer Savanturier comme une application
       Quand Léa ouvre Savanturier depuis l'écran d'accueil du téléphone
       Alors Savanturier s'affiche en plein écran, sans la barre du navigateur
       Et la page tient dans la largeur de l'écran
+
+  Règle: La version publiée ne contient que des écrans réels, sans aucune page ni porte de test
+
+    @issue-58
+    Scénario: Dans la version publiée, l'ancienne adresse de la page de démonstration mène à l'accueil
+      Quand j'ouvre Savanturier à l'adresse « /demonstration »
+      Alors je vois le nom de l'application
+      Mais je ne vois aucune page de démonstration
+      Et aucun message d'erreur n'apparaît
+
+    @issue-58
+    Scénario: Dans la version publiée, un profil enfant préparé pour les tests ne fait jouer personne
+      Étant donné que Léa a un profil enfant préparé de niveau CE1
+      Quand Léa ouvre Savanturier à l'adresse « /jeu »
+      Alors je vois le nom de l'application
+      Mais l'en-tête n'affiche aucun prénom ni aucun niveau

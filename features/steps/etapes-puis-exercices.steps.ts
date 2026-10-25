@@ -94,7 +94,7 @@ export async function injecter(page: Page, lecon: LeconBrute) {
   if (estSurUnProfilReel(page)) await rechargerAvecLeProfilReel(page);
 }
 
-async function interceptertLaBibliotheque(page: Page) {
+export async function interceptertLaBibliotheque(page: Page) {
   await page.route("**/bibliotheque.json", async (route) => {
     const reponse = await route.fetch();
     const bibliotheque: unknown[] = await reponse.json();
@@ -118,6 +118,17 @@ export async function ouvrirLaPageDeLaLecon(page: Page, titre: string) {
   if (estSurUnProfilReel(page)) await ouvrirLaLeconDansLApplication(page, lecon.id);
   else await page.goto(`/lecon/${encodeURIComponent(lecon.id)}`);
   await expect(page.getByRole("heading", { level: 2, name: titre })).toBeVisible();
+}
+
+/**
+ * La séance est ouverte par son adresse, sans passer par la page de la leçon. La voix bloquée n'est signalée qu'une seule
+ * fois : la page de la leçon, qui parle la première, la signalerait avant la question.
+ */
+export async function ouvrirLaSeanceDirectement(page: Page, titre: string, position?: number) {
+  const lecon = leconDeTitre(page, titre);
+  etat(page).courante = lecon;
+  await page.goto(`/lecon/${encodeURIComponent(lecon.id)}/seance${position === undefined ? "" : `/${position}`}`);
+  await expect(recipient(page)).toBeVisible();
 }
 
 export async function commencerLaSeanceComplete(page: Page) {

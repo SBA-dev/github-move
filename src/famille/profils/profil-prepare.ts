@@ -1,5 +1,5 @@
 import type { ReglagesBruts } from "@domain/famille";
-import { estUnReglagesBruts } from "../reglages/index.ts";
+import { estUnReglagesBruts } from "../../reglages/index.ts";
 
 export const CLE_PROFIL_PREPARE = "savanturier:profil-prepare";
 
