@@ -147,6 +147,7 @@ export class ExerciceJoue {
         type: "calcul",
       }));
     }
+    if (this.contenu.memorisation) return [];
     return this.questionsRatees()
       .filter(({ type }) => estUnTypeDeQuestionRetenu(type))
       .map(({ cle, type }) => ({ cle, type }));
