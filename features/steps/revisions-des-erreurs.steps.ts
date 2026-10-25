@@ -8,6 +8,7 @@ import {
   type QuestionDeRevisionDeTest,
   servirLaBibliothequeDesRevisions,
 } from "../support/bibliotheque-des-revisions.ts";
+import { servirLaBibliothequeDeLAccueil } from "../support/bibliotheque-de-l-accueil.ts";
 import { deposerLaSession, ouvrirUneSessionSansEmail } from "../support/connexion-sans-email.ts";
 import type { Famille } from "../support/famille.ts";
 import {
@@ -135,7 +136,8 @@ async function attendreLaFinDesLectures(page: Page): Promise<void> {
 // --- Les écrans
 
 const accueilDeLEnfant = (page: Page) => page.getByRole("region", { name: /^Accueil de / });
-const boutonJeRevise = (page: Page) => page.getByRole("button", { name: "Je révise mes erreurs", exact: true });
+// Depuis #29, la proposition de la séance de révision est la tuile du jour « À revoir ».
+const boutonJeRevise = (page: Page) => page.getByRole("button", { name: "À revoir", exact: true });
 const annonce = (page: Page) => page.getByTestId("annonce-de-la-revision");
 const finDeLaRevision = (page: Page) => page.getByTestId("fin-de-la-revision");
 const jeNeSaisPas = (page: Page) => page.getByTestId("je-ne-sais-pas");
@@ -238,9 +240,9 @@ Given(
   },
 );
 
-Given(/^Léa a (\d+) questions dues de la leçon « ([^«»]+) »$/, async ({ famille, page }, n: string, _lecon: string) => {
+Given(/^Léa a (\d+) questions dues de la leçon « ([^«»]+) »$/, async ({ famille, page }, n: string, lecon: string) => {
   const nombre = Number(n);
-  const nombres = QUESTIONS_DE_REVISION.filter((q) => q.leconId === "e2e-28-maths-cp-20").slice(0, nombre);
+  const nombres = QUESTIONS_DE_REVISION.filter((q) => q.leconTitre === lecon).slice(0, nombre);
   const lignes = nombres.map((q, i) => ligneDe(page, q.enonce, nombre - i === 1 ? "hier" : `il y a ${nombre - i} jours`));
   await preparerLesQuestions(famille, page, "Léa", lignes);
 });
@@ -648,8 +650,15 @@ async function accueilSurLeTelephone(
   return telephone;
 }
 
-When(/^Léa choisit son profil enfant sur le téléphone de Marie$/, async ({ famille, browser, baseURL }) => {
+/** La page de Marie quand Léa s'est choisie sur son téléphone, sinon la page courante. */
+export function pageDeMarieOuCourante(famille: Famille, page: Page): Page {
+  return partieDeMarie.get(famille) ?? page;
+}
+
+When(/^Léa choisit son profil enfant sur le téléphone de Marie$/, async ({ famille, browser, baseURL, $tags }) => {
   const telephone = await telephoneDe(famille, browser, baseURL, "Marie");
+  // Story #29 : le téléphone de Marie lit la même bibliothèque de test que la tablette de Paul.
+  if ($tags.includes("@issue-29")) await servirLaBibliothequeDeLAccueil(telephone);
   await telephone.goto("/");
   await choisirSonProfil(telephone, "Léa");
   partieDeMarie.set(famille, telephone);

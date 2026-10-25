@@ -7,6 +7,7 @@ import { partie } from "./etoiles-et-fin-de-seance.steps.ts";
 import { commencerLaSeanceComplete, entendu, etat, type LeconBrute, leconDeTitre, ouvrirLaPageDeLaLecon } from "./etapes-puis-exercices.steps.ts";
 import { avancerJusquAuxChoix, bulleDeChoix, questionsDeLaSeance } from "./exercices-a-choix.steps.ts";
 import { Given, Then, When } from "./fixtures.ts";
+import { pageDeMarieOuCourante } from "./revisions-des-erreurs.steps.ts";
 import { choisirSonProfil, profilDe } from "./profils-enfants.steps.ts";
 import { normaliser, terminerLaLecture } from "./voix.steps.ts";
 
@@ -151,7 +152,8 @@ Then(/^Léa n'entend pas Noisette lire « ([^«»]+) »$/, { tags: "@issue-29" }
 
 // --- Leçon du jour
 
-Then(/^la leçon du jour de Léa est « ([^«»]+) », avec « ([^«»]+) »$/, async ({ page }, titre: string, annonce: string) => {
+Then(/^la leçon du jour de Léa est « ([^«»]+) », avec « ([^«»]+) »$/, async ({ famille, page: pageCourante }, titre: string, annonce: string) => {
+  const page = pageDeMarieOuCourante(famille, pageCourante);
   const zone = await surLAccueilDeLea(page);
   await expect(zone.getByTestId("titre-de-la-lecon-du-jour")).toHaveText(titre, { timeout: DELAI_DU_CALCUL_MS });
   await expect(zone.getByTestId("matiere-de-la-lecon-du-jour")).toHaveText(annonce);

@@ -1,5 +1,6 @@
 import type { Page, Route } from "@playwright/test";
 import { enonceDeLaQuestion, REPONSE_JUSTE } from "./bibliotheque-du-test-de-depart.ts";
+import { LECONS_DES_REVISIONS } from "./bibliotheque-des-revisions.ts";
 import type { LeconDuParcours } from "./bibliotheque-du-parcours.ts";
 
 // Story #29 : bibliothèque de test de l'accueil, servie au navigateur À LA PLACE de la vraie bibliothèque
@@ -32,6 +33,14 @@ function leconDeTest(matiere: string, niveau: string, ordre: number, titre: stri
   };
 }
 
+// « Les sons de révision » est la leçon de #28 telle quelle (même identifiant, mêmes questions « Quel mot a le son ou ? »…),
+// pour que les étapes de #28 préparent et jouent la file de révision ; seul son ordre change.
+function leconDesSonsDeRevision(): LeconDuParcours {
+  const sons = LECONS_DES_REVISIONS.find((lecon) => lecon.titre === "Les sons de révision");
+  if (sons === undefined) throw new Error("La leçon « Les sons de révision » manque à la bibliothèque de test des révisions");
+  return { ...sons, ordre: 30 };
+}
+
 // Servies dans le désordre, pour vérifier les tris. Aucune leçon d'histoire, d'anglais, ni de CM1 ou de CM2.
 export const LECONS_DE_L_ACCUEIL: readonly LeconDuParcours[] = [
   leconDeTest("francais", "CE1", 30, "Les mots contraires"),
@@ -45,7 +54,7 @@ export const LECONS_DE_L_ACCUEIL: readonly LeconDuParcours[] = [
   leconDeTest("francais", "CE1", 20, "L'ordre alphabétique"),
   leconDeTest("sciences", "CE1", 10, "Les êtres vivants"),
   leconDeTest("maths", "CE1", 10, "Les nombres jusqu'à 100"),
-  leconDeTest("francais", "CP", 30, "Les sons de révision", 3),
+  leconDesSonsDeRevision(),
   leconDeTest("francais", "CP", 10, "Les voyelles"),
 ];
 
