@@ -29,3 +29,4 @@ Une décision n'est jamais réécrite : si elle change, une nouvelle décision l
 | [0022](0022-non-regression-groupee-sur-main.md) | Non-régression complète groupée sur `main` après 3 merges ; merges autorisés pour la vague | Acceptée, points 2 et 3 remplacés par 0023 |
 | [0023](0023-non-regression-sur-main-seulement.md) | Non-régression complète sur `main` seulement, deux fois par jour ; merge par les équipes | Acceptée |
 | [0024](0024-lecons-personnelles-par-edge-function-sous-rls.md) | Leçons personnelles écrites par deux Edge Functions avec le JWT du parent, sous RLS ; préparation refaite par le serveur ; texte du parent conservé | Acceptée |
+| [0025](0025-gamification-encadree-et-plugins-de-design.md) | Gamification encadrée par le skill `gamification` ; plugins `frontend-design`, `design` et `education-agent-skills` | Acceptée |

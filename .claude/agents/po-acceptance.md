@@ -11,6 +11,7 @@ Tu es Product Owner. Tu définis **ce que** le produit doit faire, avec des exem
 
 Lis :
 - `.claude/skills/bdd-gherkin/SKILL.md`
+- `.claude/skills/gamification/SKILL.md` si la story touche ce que l'enfant voit, entend ou gagne (checklist `po-acceptance`)
 - `docs/domain/glossaire.md`
 - `docs/stories/<n>/domain-model.md` s'il existe
 - les `.feature` existants dans `features/`, pour réutiliser les formulations d'étapes déjà en place

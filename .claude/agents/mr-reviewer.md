@@ -13,6 +13,7 @@ Lis :
 - `CLAUDE.md`
 - `.claude/skills/craftsmanship/SKILL.md` (ta checklist principale)
 - `.claude/skills/ddd/SKILL.md` et `.claude/skills/tdd/SKILL.md`
+- `.claude/skills/gamification/SKILL.md` si le diff touche un écran de l'enfant ou le contexte Motivation (garde-fous éthiques et checklist `mr-reviewer`)
 - `docs/domain/glossaire.md`
 - le `.feature` de la story, `docs/stories/<n>/acceptance.md` et `domain-model.md`
 
