@@ -1,6 +1,7 @@
-import { assertEquals } from "@std/assert";
+import { assertEquals, assertThrows } from "@std/assert";
 import { CleDeQuestion } from "./cle-de-question.ts";
-import { FileDeRevision } from "./file-de-revision.ts";
+import { AucuneQuestionDue } from "./erreurs.ts";
+import { FileDeRevision, type QuestionRetenue } from "./file-de-revision.ts";
 import { IntervalleDeRevision } from "./intervalle-de-revision.ts";
 import { Jour } from "./jour.ts";
 import type { OrigineDeLaQuestion } from "./origine-de-la-question.ts";
@@ -189,4 +190,85 @@ Deno.test("une question oubliée ne compte pas comme erreur corrigée pour de bo
   file.retenir([nouvelleQuestion(LIMITE)], jourDeLaSeance, termineeLe);
 
   assertEquals(file.erreursCorrigeesPourDeBon, 4);
+});
+
+function retenue(texte: string, dateDeRevision: string, derniereErreur: string): QuestionRetenue {
+  return {
+    identite: CleDeQuestion.de("calcul", texte),
+    origine,
+    intervalle: IntervalleDeRevision.premier(),
+    dateDeRevision: Jour.de(dateDeRevision),
+    derniereErreurLe: new Date(derniereErreur),
+    nombreDeFoisRatee: 1,
+  };
+}
+
+function fileDes(...questions: QuestionRetenue[]) {
+  return FileDeRevision.reconstituer({ enfant: profilDeLea, erreursCorrigeesPourDeBon: 0, questions });
+}
+
+function textesDuPlan(file: FileDeRevision, jour: Jour) {
+  return file.planDeLaSeanceDeRevision(jour).questions.map((question) => question.identite.valeur);
+}
+
+const aujourdHui = Jour.de("2026-10-25");
+
+Deno.test("une question est due le jour de sa date de révision et après, pas avant", () => {
+  const file = fileDes(
+    retenue("hier", "2026-10-24", "2026-10-23T10:00:00Z"),
+    retenue("aujourdhui", "2026-10-25", "2026-10-24T10:00:00Z"),
+    retenue("demain", "2026-10-26", "2026-10-25T10:00:00Z"),
+  );
+
+  assertEquals(
+    file.questionsDues(aujourdHui).map((question) => question.identite.valeur),
+    [CleDeQuestion.de("calcul", "hier").valeur, CleDeQuestion.de("calcul", "aujourdhui").valeur],
+  );
+});
+
+Deno.test("le plan de la séance de révision pose d'abord la question dont la date de révision est la plus ancienne", () => {
+  const file = fileDes(
+    retenue("recente", "2026-10-25", "2026-10-24T10:00:00Z"),
+    retenue("ancienne", "2026-10-22", "2026-10-21T10:00:00Z"),
+  );
+
+  assertEquals(textesDuPlan(file, aujourdHui), ["n:ancienne", "n:recente"]);
+});
+
+Deno.test("à date de révision égale, le plan pose d'abord la dernière erreur la plus ancienne", () => {
+  const file = fileDes(
+    retenue("a", "2026-10-25", "2026-10-24T12:00:00Z"),
+    retenue("b", "2026-10-25", "2026-10-24T08:00:00Z"),
+  );
+
+  assertEquals(textesDuPlan(file, aujourdHui), ["n:b", "n:a"]);
+});
+
+Deno.test("à date de révision et dernière erreur égales, le plan range par clé", () => {
+  const file = fileDes(
+    retenue("c", "2026-10-25", "2026-10-24T08:00:00Z"),
+    retenue("a", "2026-10-25", "2026-10-24T08:00:00Z"),
+    retenue("b", "2026-10-25", "2026-10-24T08:00:00Z"),
+  );
+
+  assertEquals(textesDuPlan(file, aujourdHui), ["n:a", "n:b", "n:c"]);
+});
+
+Deno.test("le plan de la séance de révision compte 10 questions au plus", () => {
+  const questions = Array.from(
+    { length: 12 },
+    (_, numero) => retenue(`q${String(numero).padStart(2, "0")}`, "2026-10-25", "2026-10-24T08:00:00Z"),
+  );
+
+  const plan = fileDes(...questions).planDeLaSeanceDeRevision(aujourdHui);
+
+  assertEquals(plan.questions.length, 10);
+  assertEquals(plan.questions[9].identite.valeur, "n:q09");
+});
+
+Deno.test("sans question due, il n'y a pas de séance de révision à planifier", () => {
+  const file = fileDes(retenue("demain", "2026-10-26", "2026-10-25T10:00:00Z"));
+
+  assertThrows(() => file.planDeLaSeanceDeRevision(aujourdHui), AucuneQuestionDue);
+  assertThrows(() => FileDeRevision.vide(profilDeLea).planDeLaSeanceDeRevision(aujourdHui), AucuneQuestionDue);
 });
