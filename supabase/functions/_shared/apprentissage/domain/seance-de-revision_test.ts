@@ -106,3 +106,68 @@ Deno.test("une séance de révision dont aucune question n'est posable ne peut p
 
   assertThrows(() => seanceSur(plan), AucuneQuestionDue);
 });
+
+function bonneReponseDe(identite: CleDeQuestion) {
+  return Reponse.choix(identite === bateau ? "2" : "1");
+}
+
+function mauvaiseReponseDe(identite: CleDeQuestion) {
+  return Reponse.choix(identite === bateau ? "1" : "2");
+}
+
+Deno.test("en révision, une question réussie sans erreur est juste et une question avec une réponse fausse est fausse", () => {
+  const plan = planDesQuestionsRatees(bateau, chat);
+  const [premiere, seconde] = plan.questions.map(({ identite }) => identite);
+  const seance = seanceSur(plan);
+
+  seance.repondre(mauvaiseReponseDe(premiere));
+  seance.repondre(bonneReponseDe(premiere));
+  seance.repondre(bonneReponseDe(seconde));
+
+  assertEquals(seance.resultats(), [{ identite: premiere, juste: false }, { identite: seconde, juste: true }]);
+});
+
+Deno.test("en révision, « Je ne sais pas » rend la question fausse, montre la bonne réponse puis passe à la suivante", () => {
+  const plan = planDesQuestionsRatees(bateau, chat);
+  const [premiere, seconde] = plan.questions.map(({ identite }) => identite);
+  const seance = seanceSur(plan);
+
+  const aide = seance.direJeNeSaisPas();
+  seance.repondre(bonneReponseDe(premiere));
+
+  assertEquals(aide.bonneReponse, premiere === bateau ? "2" : "1");
+  assertEquals(seance.questionEnCours()?.identite, seconde);
+  seance.repondre(bonneReponseDe(seconde));
+  assertEquals(seance.resultats(), [{ identite: premiere, juste: false }, { identite: seconde, juste: true }]);
+});
+
+Deno.test("en révision, une question de dictée se joue jusqu'au bout et est fausse après une erreur", () => {
+  const leconDesDictees: Lecon = lireLecon({
+    id: "fr-ce1-dictees",
+    matiere: "francais",
+    niveau: "CE1",
+    titre: "Les dictées",
+    ordre: 2,
+    programme: { section: "c2-test", citation: "Citation de test." },
+    lecon: [],
+    exercices: [{
+      type: "dictee",
+      consigne: "Écoute bien et écris le mot que tu entends.",
+      mots: [{ mot: "chat" }],
+    }],
+  });
+  const mot = CleDeQuestion.de("dictee", "chat");
+  const file = FileDeRevision.vide("profil-lea");
+  file.retenir(
+    [{ identite: mot, origine: { leconDOrigine: leconDesDictees.id, position: 0, type: "dictee" } }],
+    jourDesErreurs,
+    termineeLe,
+  );
+  const seance = seanceSur(file.planDeLaSeanceDeRevision(jourDeLaRevision), [leconDesDictees]);
+
+  seance.repondre(Reponse.motEcrit(["x", "h", "a", "t"]));
+  seance.repondre(Reponse.motEcrit(["c", "h", "a", "t"]));
+
+  assertEquals(seance.estFinie(), true);
+  assertEquals(seance.resultats(), [{ identite: mot, juste: false }]);
+});
