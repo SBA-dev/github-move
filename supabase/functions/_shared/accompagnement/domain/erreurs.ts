@@ -32,3 +32,10 @@ export class AucuneCitationDansLaSection extends Error {
     this.name = "AucuneCitationDansLaSection";
   }
 }
+
+export class LeconPersonnelleInvalide extends Error {
+  constructor(readonly raison: string) {
+    super(`La leçon personnelle est invalide : ${raison}.`);
+    this.name = "LeconPersonnelleInvalide";
+  }
+}
