@@ -1,9 +1,11 @@
 # Critères d'acceptance : issue #34, Suivi et carte des compétences
 
-Scénarios : `features/34-suivi-et-carte-des-competences.feature` (tags `@issue-34 @wip`).
+Scénarios : `features/34-suivi-et-carte-des-competences.feature` (tag `@issue-34`).
 Modèle du domaine : `docs/stories/34/domain-model.md` (contexte **Accompagnement**, qui lit **Apprentissage**, le **Catalogue pédagogique** et **Famille**). Les questions 34.1 à 34.22 viennent du modèle, 34.23 à 34.28 ont été ajoutées ici, et 34.29 est née de l'application des décisions.
 
 Le PO a validé #34 le 2026-10-25 (17:30 UTC). Il a retenu les recommandations, sauf pour 34.4, 34.8 et 34.11 (voir « Décisions du PO (25/10) »). Les scénarios concernés portent un commentaire `# Réponse 34.n`, complété par `(I<n>)` quand ils appliquent une interprétation du modèle. La question 34.29, née de ces décisions, a été tranchée selon la recommandation (PO, 25/10, 17:41 UTC). Aucun scénario ne porte plus `@a-valider`. Les scénarios qui lisent les révisions des erreurs de #28 (pas encore mergée, PR #85) portent `@depend-de-28`.
+
+Levée (25/10) : #28 est mergée dans `main` (PR #85) ; les tags `@depend-de-28` et `@wip` sont retirés du `.feature`, ces scénarios tournent avec ceux de la story.
 
 Décisions antérieures (commentaire [Responsable] du 2026-10-25 sur l'issue) : #13 (second parent) et #14 (export et suppression) sont **sorties de la beta**. Aucun scénario ici ne porte sur le second parent ni sur l'export.
 

@@ -1,5 +1,5 @@
 # language: fr
-@issue-34 @wip
+@issue-34
 Fonctionnalité: Suivi et carte des compétences
   En tant que parent
   Je veux voir la progression de chacun de mes enfants : leçons réussies, étoiles, séances jouées,
@@ -27,7 +27,6 @@ Fonctionnalité: Suivi et carte des compétences
   Paul est rattaché au profil enfant de Léa (et de Tom quand il est cité) ; Claire n'y est pas rattachée.
   Un commentaire « Réponse 34.n » renvoie aux décisions du PO dans docs/stories/34/acceptance.md (« I<n> » : une
   interprétation de ces décisions, reprise du modèle du domaine).
-  Les scénarios tagués @depend-de-28 lisent les révisions des erreurs (#28).
 
   Contexte:
     Étant donné que Paul est connecté sur la tablette
@@ -149,7 +148,6 @@ Fonctionnalité: Suivi et carte des compétences
         | 0               | 0       | 1              | 0                             |
 
     # Réponses 34.5 et 34.11 (I2, I3)
-    @depend-de-28
     Scénario: Toutes les séances de révision et toutes les erreurs corrigées pour de bon comptent, quelle que soit la classe
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a terminé ces séances :
@@ -514,7 +512,7 @@ Fonctionnalité: Suivi et carte des compétences
         | les séances terminées          |
         | le résultat du test de départ  |
 
-    @acces @depend-de-28
+    @acces
     Plan du Scénario: Même avec l'identifiant du profil enfant, un parent qui n'est pas rattaché ne lit pas <données> de Léa (révisions)
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a terminé 3 séances de révision
