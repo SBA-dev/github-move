@@ -16,3 +16,6 @@ Branche de base : `main` (`6be4dc6`). Branche : `feature/39-lecons-personnelles`
 - `domain-modeler` (`2c1478d`) : modèle tranché, texte du parent conservé dans l'agrégat et la table, glossaire (décision n°38) et context map (ajouts), décision 0024.
 - `po-acceptance` (`9553fc3`) : 6 règles, 31 scénarios (33 cas), 6 `@acces`, 0 `@a-valider`.
 - 17:55 UTC : `VERROU base` demandé en avance (migration additive `lecons_personnelles`). TDD démarre.
+- TDD bloc A (domaine Accompagnement) : 1 TexteDuParent RED `5e37ba7` → GREEN `be47d9a` ; 2 FormeDuTexte RED `ca4a948` → GREEN `63cf863` (raccourcis contraires au modèle) → RED `32f82d2` (règles exactes) → GREEN `c9d6b52` ; 3 GroupeDuVerbe RED `051863e` → GREEN `0285db6` ; 4 présent du 1er groupe et verbe à conjuguer RED `4541c1b` → GREEN `48eb143`.
+- Revue delta bloc A (`cd8b755..48eb143`) : **À CORRIGER** (cycle 1) : message de `TexteTropLong`, h aspiré « hâter », verbes en é + consonnes + er (« je séche »), apostrophes sans test. Corrigé : RED `3cb5f71` → GREEN `65e2ef8`. Non bloquants retenus : verbe en minuscules (fait). Dernier commit relu : `48eb143`.
+- Bloc B : 5 leçon d'une liste de mots RED `bcc90e0` → GREEN `7a15e7a` ; 6 leçon d'une liste de verbes RED `e78f810` → GREEN `61b0eb1`. 1875 tests verts.
