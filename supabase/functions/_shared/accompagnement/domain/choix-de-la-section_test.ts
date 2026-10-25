@@ -69,7 +69,7 @@ Deno.test("une section d'un autre niveau ou d'une autre matière n'est jamais re
   assertEquals(retenue.id, "candidate");
 });
 
-Deno.test("un texte sur un métier préfère une section d'EMC", () => {
+Deno.test("seules les sections de la matière demandée sont retenues, ici celles d'EMC pour un texte sur un métier", () => {
   const francaise = sectionDeTest({ id: "francais" });
   const emc = sectionDeTest({ id: "emc", matiere: "emc" });
   const emcMatiere = toutesLesMatieres().find((m) => m.code === "emc")!;

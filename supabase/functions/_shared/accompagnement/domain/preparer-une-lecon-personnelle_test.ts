@@ -7,7 +7,8 @@ import {
   toutesLesMatieres,
 } from "../../catalogue/domain/index.ts";
 import { sectionDeTest } from "../test_utils/sections-de-test.ts";
-import { AucuneSectionDuProgramme, TexteTropCourt } from "./erreurs.ts";
+import { AucuneSectionDuProgramme, LeconImpossibleAPreparer, TexteTropCourt } from "./erreurs.ts";
+import { LeconPersonnelle } from "./lecon-personnelle.ts";
 import { leconDuTexte } from "./generateurs-locaux.ts";
 import { reconnaitreLaForme } from "./forme-du-texte.ts";
 import { leconEnBrut } from "./lecon-en-brut.ts";
@@ -210,5 +211,87 @@ Deno.test("une matière sans section du programme pour la classe empêche de pr�
         sections,
       ),
     AucuneSectionDuProgramme,
+  );
+});
+
+function preparerPuisCreer(texte: string) {
+  const sections = [sectionDeFrancaisDuCE1];
+  const preparee = preparerUneLeconPersonnelle(demande(texte), sections);
+  LeconPersonnelle.creer({
+    id: "abc123",
+    profil: "profil-de-lina",
+    texte: TexteDuParent.de(texte),
+    preparee,
+    sections,
+    maintenant: new Date("2026-10-25T10:00:00Z"),
+  });
+  return preparee;
+}
+
+function motsEnvolesDe(texte: string): readonly string[] {
+  const trous = preparerPuisCreer(texte).lecon.exercices.find((exercice) => exercice.type === "trous");
+  assertEquals(trous?.titre, "Les mots envolés");
+  return trous?.type === "trous" ? trous.motsAttendus : [];
+}
+
+function assertAucunMotAttenduParasite(mots: readonly string[]) {
+  assertEquals(mots.filter((mot) => mot === "…" || /[\[\]]/.test(mot)), []);
+}
+
+Deno.test("un texte du parent avec « […] » donne une leçon valide dont les mots envolés sont de vrais mots", () => {
+  const mots = motsEnvolesDe(
+    "Les abeilles construisent des ruches […] Les abeilles fabriquent du miel. Une reine pond beaucoup d'oeufs.",
+  );
+
+  assertAucunMotAttenduParasite(mots);
+});
+
+Deno.test("un texte du parent avec un « ] » seul donne une leçon valide dont les mots envolés sont de vrais mots", () => {
+  const mots = motsEnvolesDe(
+    "Les abeilles construisent des ruches ] Les abeilles fabriquent du miel. Une reine pond beaucoup d'oeufs.",
+  );
+
+  assertAucunMotAttenduParasite(mots);
+});
+
+Deno.test("un texte du parent avec un « [ » seul donne une leçon valide dont les mots envolés sont de vrais mots", () => {
+  const mots = motsEnvolesDe(
+    "Les abeilles construisent des ruches [ Les abeilles fabriquent du miel. Une reine pond beaucoup d'oeufs.",
+  );
+
+  assertAucunMotAttenduParasite(mots);
+});
+
+const TEXTES_PIEGEUX = [
+  "[…] Les abeilles construisent des ruches. [abeilles] fabriquent du miel. Une reine pond beaucoup d'oeufs.",
+  "Les abeilles construisent des ruches.\n\n\nLes abeilles fabriquent du miel.\r\nUne reine pond beaucoup d'oeufs.",
+  "L’abeille construit l’énorme ruche. L’ouvrière butine l’immense jardin. L’apiculteur récolte l’excellent miel.",
+  "2024\n1999\n3000",
+  "!!! ??? ... ,,, ;;;",
+  "- ' - '",
+  "[[abeilles]] ]construisent[ des [ruches]]",
+  "chaton ] maison [ poisson […] garçon",
+];
+
+Deno.test("les textes piégeux se préparent puis se créent sans leçon invalide, ou donnent une erreur de préparation attendue", () => {
+  for (const texte of TEXTES_PIEGEUX) {
+    try {
+      preparerPuisCreer(texte);
+    } catch (erreur) {
+      const attendue = erreur instanceof TexteTropCourt || erreur instanceof LeconImpossibleAPreparer ||
+        erreur instanceof AucuneSectionDuProgramme;
+      if (!attendue) throw new Error(`Texte ${JSON.stringify(texte)} : ${erreur}`);
+    }
+  }
+});
+
+Deno.test("une leçon avec un type d'exercice que les générateurs ne produisent pas ne peut pas être mise en brut", () => {
+  const { lecon } = preparerUneLeconPersonnelle(demande(LISTE_DE_MOTS), [sectionDeFrancaisDuCE1]);
+  const avecCalcul = { ...lecon, exercices: [{ type: "calcul" as const, operations: [{ q: "1 + 1", r: 2 }] }] };
+
+  assertThrows(
+    () => leconEnBrut(avecCalcul, "perso-1"),
+    Error,
+    "Le type d'exercice « calcul » n'est pas pris en charge dans une leçon personnelle.",
   );
 });

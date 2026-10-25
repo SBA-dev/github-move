@@ -1,5 +1,6 @@
-import { assert, assertEquals } from "@std/assert";
+import { assert, assertEquals, assertThrows } from "@std/assert";
 import { sectionDeTest } from "../test_utils/sections-de-test.ts";
+import { AucuneCitationDansLaSection } from "./erreurs.ts";
 import { citationDeLaSection } from "./citation-de-la-section.ts";
 
 function sectionAvecExtrait(...phrases: string[]) {
@@ -111,4 +112,14 @@ Deno.test("l'extrait réel d'une section de dictée du CE1 donne une citation qu
 
   assert(citation.length > 0);
   assert(espacesUnifies(section.extrait).includes(espacesUnifies(citation)));
+});
+
+Deno.test("une section dont l'extrait n'a aucune phrase de 25 à 450 caractères n'a aucune citation", () => {
+  const section = sectionAvecExtrait("Trop court.", "Encore court.");
+
+  assertThrows(
+    () => citationDeLaSection(section, ["chat"]),
+    AucuneCitationDansLaSection,
+    "Aucune phrase lisible dans cette section du programme.",
+  );
 });

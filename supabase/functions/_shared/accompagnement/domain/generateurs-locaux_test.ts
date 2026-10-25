@@ -340,3 +340,40 @@ Deno.test("leconDuTexte aiguille une poésie vers sa leçon de poésie", () => {
 
   assertEquals(contenu.titre, "Poésie : Au clair de la lune");
 });
+
+Deno.test("une liste dont aucun mot n'est dictable est titrée avec les éléments du texte", () => {
+  const { contenu } = leconDuTexte(TexteDuParent.de("2024, 1999, 3000"), "listeDeMots");
+
+  assertEquals(contenu.titre, "Dictée : 2024, 1999, 3000");
+});
+
+Deno.test("le titre de lecture d'un texte sur plusieurs lignes n'a ni saut de ligne ni espaces multiples", () => {
+  const { contenu } = leconDeTexte(TexteDuParent.de("Le chat\ndort   sur\nle lit. Il est bien là."));
+
+  assertEquals(contenu.titre, "Lecture : Le chat dort sur le lit. Il est bien là.");
+});
+
+Deno.test("les étiquettes de « Dans l'ordre » n'ont ni saut de ligne ni espaces multiples", () => {
+  const texte = TexteDuParent.de(
+    "Les abeilles construisent\ndes ruches.  Les abeilles fabriquent   du miel. Une reine pond\nbeaucoup d'oeufs.",
+  );
+
+  const { contenu } = leconDeTexte(texte);
+  const ordre = contenu.exercices.find((exercice) => exercice.type === "ordre");
+
+  assertEquals(ordre?.type === "ordre" && ordre.elements, [
+    "Les abeilles construisent des ruches.",
+    "Les abeilles fabriquent du miel.",
+    "Une reine pond beaucoup d'oeufs.",
+  ]);
+});
+
+Deno.test("le verbe conjugué est toujours l'un des 12 verbes du classement", () => {
+  const texte = TexteDuParent.de(
+    "finir, prendre, venir, voir, savoir, dormir, partir, lire, grandir, vouloir, pouvoir, sortir, chanter",
+  );
+
+  const { contenu } = leconDeVerbes(texte);
+
+  assertEquals(contenu.exercices.some((exercice) => exercice.type === "conjugaison"), false);
+});
