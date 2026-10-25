@@ -1,14 +1,25 @@
+import type { EtatDeLaCabane } from "./cabane.ts";
 import { calculs } from "./paroles-de-fluence.ts";
+import { phraseDeLEtat, titreDeLaSection } from "./paroles-de-la-cabane.ts";
 import type { PastilleDeRecord } from "./records-de-calcul-rapide.ts";
-import { type SectionDeLEcran, sectionsDeLEcran } from "./sections-de-l-ecran.ts";
+import { sectionsDeLEcran } from "./sections-de-l-ecran.ts";
 
 export const NOM_DE_L_ECRAN_DES_MEDAILLES = "Mes médailles";
 export const TITRE_DES_RECORDS_DE_CALCUL_RAPIDE = "Mes records de calcul rapide";
 
-export function parolesDuGuideALOuverture(sections: readonly SectionDeLEcran[]): string {
-  return sections.length > 0
+type ContenuDeLEcran = {
+  pastilles: readonly PastilleDeRecord[];
+  cabane: EtatDeLaCabane | undefined;
+};
+
+function aQuelqueChoseAMontrer({ cabane, pastilles }: ContenuDeLEcran): boolean {
+  return pastilles.length > 0 || (cabane?.objetsRecus.length ?? 0) > 0;
+}
+
+export function parolesDuGuideALOuverture(contenu: ContenuDeLEcran): string {
+  return aQuelqueChoseAMontrer(contenu)
     ? "Regarde tout ce que tu as gagné !"
-    : "Fais un calcul rapide pour gagner ton premier record !";
+    : "Gagne des étoiles pour remplir la cabane !";
 }
 
 export function phraseLueDeLaPastille(pastille: PastilleDeRecord): string {
@@ -20,11 +31,12 @@ export function parolesDeLaSectionDesRecords(pastilles: readonly PastilleDeRecor
 }
 
 export function parolesALOuverture(
-  { toutLire, pastilles }: { toutLire: boolean; pastilles: readonly PastilleDeRecord[] },
+  { toutLire, pastilles, cabane }: { toutLire: boolean } & ContenuDeLEcran,
 ): string[] {
-  const sections = sectionsDeLEcran(pastilles);
-  const guide = parolesDuGuideALOuverture(sections);
+  const guide = parolesDuGuideALOuverture({ pastilles, cabane });
   if (!toutLire) return [guide];
+  const sections = sectionsDeLEcran({ pastilles, cabane });
+  const cabaneLue = cabane !== undefined ? [titreDeLaSection(), phraseDeLEtat(cabane)] : [];
   const recordsLus = sections.includes("recordsDeFluence") ? parolesDeLaSectionDesRecords(pastilles) : [];
-  return [guide, NOM_DE_L_ECRAN_DES_MEDAILLES, ...recordsLus];
+  return [guide, NOM_DE_L_ECRAN_DES_MEDAILLES, ...cabaneLue, ...recordsLus];
 }

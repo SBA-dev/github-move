@@ -1,3 +1,4 @@
+import type { EtatDeLaCabane } from "./cabane.ts";
 import type { PastilleDeRecord } from "./records-de-calcul-rapide.ts";
 
 export type SectionDeLEcran =
@@ -20,7 +21,13 @@ export function sectionsAAfficher(
 }
 
 export function sectionsDeLEcran(
-  pastilles: readonly PastilleDeRecord[],
+  { pastilles, cabane }: {
+    pastilles: readonly PastilleDeRecord[];
+    cabane: EtatDeLaCabane | undefined;
+  },
 ): SectionDeLEcran[] {
-  return sectionsAAfficher(pastilles.length > 0 ? ["recordsDeFluence"] : []);
+  const disponibles: SectionDeLEcran[] = [];
+  if (cabane !== undefined) disponibles.push("cabane");
+  if (pastilles.length > 0) disponibles.push("recordsDeFluence");
+  return sectionsAAfficher(disponibles);
 }
