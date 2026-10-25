@@ -1,3 +1,4 @@
+import { cleDuCalcul } from "./cles-des-questions.ts";
 import type { Niveau, Operation } from "../../catalogue/domain/index.ts";
 import { aideApresUneErreurDeCalcul } from "./astuce-de-l-operation.ts";
 import { CleDeQuestion } from "./cle-de-question.ts";
@@ -22,7 +23,7 @@ export type CalculEnCours = Readonly<{
 export type Identite = Readonly<{ type: "calcul" | "colonne" | "boite" | "barres"; cle: CleDeQuestion }>;
 
 function identiteDuCalcul(operation: Operation): Identite {
-  return { type: "calcul", cle: CleDeQuestion.de("calcul", operation.q) };
+  return { type: "calcul", cle: cleDuCalcul(operation.q) };
 }
 
 type OptionsDeChoix = Readonly<{ nombresProposes?: readonly number[]; identite?: Identite }>;

@@ -1,3 +1,4 @@
+import { cleDeLaConjugaison } from "./cles-des-questions.ts";
 import type {
   ExerciceBarres,
   ExerciceBoite,
@@ -71,7 +72,7 @@ export function questionDeConjugaison(
   tireur: Tireur,
 ): QuestionJouee {
   return QuestionJouee.aChoix({
-    cle: CleDeQuestion.de("conjugaison", `${exercice.verbe} · ${exercice.temps} · ${pronom}`),
+    cle: CleDeQuestion.de("conjugaison", cleDeLaConjugaison(exercice, pronom)),
     enonce: `Le verbe ${exercice.verbe} au ${exercice.temps} : ${pronom} …`,
     choix: tireur.trou(forme, sansDoublonsNiReponse(exercice.formes.map((f) => f.forme), forme)),
     bonneReponse: forme,

@@ -1,6 +1,16 @@
+import {
+  cleDeLaConjugaison,
+  cleDeLAddition,
+  cleDeLaDictee,
+  cleDeLEcoute,
+  cleDesBarres,
+  cleDuCalcul,
+  cleDuClasser,
+  cleDUneQuestionALire,
+  cleDuTrou,
+} from "./cles-des-questions.ts";
 import type { Exercice, Lecon, Niveau } from "../../catalogue/domain/index.ts";
 import { CleDeQuestion } from "./cle-de-question.ts";
-import { EtiquettesAPlacer } from "./etiquettes-a-placer.ts";
 import { questionsDeTrous } from "./exercices/trous.ts";
 import type { OrigineDeLaQuestion } from "./origine-de-la-question.ts";
 import { cleDeLaBoite, QuestionDeBoite } from "./question-de-boite.ts";
@@ -15,7 +25,7 @@ import {
   questionDeConjugaison,
   questionDeDictee,
 } from "./questions-de-l-exercice.ts";
-import { enonceDUneAddition, relireUneAdditionDuGenerateur } from "./tirage-d-additions.ts";
+import { relireUneAdditionDuGenerateur } from "./tirage-d-additions.ts";
 import { relireUneOperationDuGenerateur } from "./tirage-d-operations.ts";
 import type { Tireur } from "./tireur.ts";
 
@@ -40,7 +50,7 @@ export function questionDeRevision(
   const exercice = lecon.exercices[origine.position];
   if (!exercice) return undefined;
   if (exercice.type === "dictee") {
-    const mot = exercice.mots.find((candidat) => CleDeQuestion.de("dictee", candidat.mot).valeur === identite.valeur);
+    const mot = exercice.mots.find((candidat) => cleDeLaDictee(candidat).valeur === identite.valeur);
     return mot && { identite, dictee: questionDeDictee(exercice, mot, tireur) };
   }
   const question = posables(exercice, origine, tireur, niveau)
@@ -53,31 +63,29 @@ function posables(exercice: Exercice, origine: OrigineDeLaQuestion, tireur: Tire
     case "bulles":
     case "lecture":
       return exercice.questions.map((q) => ({
-        cle: CleDeQuestion.de(exercice.type, q.question + q.reponse),
+        cle: cleDUneQuestionALire(exercice.type, q),
         poser: () => questionsJoueesAvec({ ...exercice, questions: [q] }, tireur)[0],
       }));
     case "ecoute":
       return exercice.items.map((item) => ({
-        cle: CleDeQuestion.de("ecoute", item.dire),
+        cle: cleDeLEcoute(item),
         poser: () => questionsJoueesAvec({ ...exercice, items: [item] }, tireur)[0],
       }));
     case "trous":
       return questionsDeTrous(exercice).map((trou) => ({
-        cle: CleDeQuestion.de("trous", trou.enonce),
+        cle: cleDuTrou(trou.enonce),
         poser: () => questionJoueeDuTrou(trou, tireur),
       }));
     case "conjugaison":
       return exercice.formes.map((forme) => ({
-        cle: CleDeQuestion.de("conjugaison", `${exercice.verbe} · ${exercice.temps} · ${forme.pronom}`),
+        cle: CleDeQuestion.de("conjugaison", cleDeLaConjugaison(exercice, forme.pronom)),
         poser: () => questionDeConjugaison(exercice, forme, tireur),
       }));
-    case "classer": {
-      const cles = EtiquettesAPlacer.questionsDeClasser(exercice).map(({ cle }) => cle);
-      return exercice.items.flatMap((item, rang) => {
-        const cle = cles[rang];
-        return cle ? [{ cle, poser: () => questionDeClassement(exercice, item, tireur) }] : [];
-      });
-    }
+    case "classer":
+      return exercice.items.map((item) => ({
+        cle: cleDuClasser(exercice, item),
+        poser: () => questionDeClassement(exercice, item, tireur),
+      }));
     case "boite":
       return exercice.items.map((item) => ({
         cle: cleDeLaBoite(item),
@@ -85,7 +93,7 @@ function posables(exercice: Exercice, origine: OrigineDeLaQuestion, tireur: Tire
       }));
     case "barres":
       return exercice.items.map((probleme) => ({
-        cle: CleDeQuestion.de("barres", probleme.enonce),
+        cle: cleDesBarres(probleme),
         poser: () => QuestionDeProblemeEnBarres.pour(probleme, tireur, niveau),
       }));
     case "calcul": {
@@ -93,7 +101,7 @@ function posables(exercice: Exercice, origine: OrigineDeLaQuestion, tireur: Tire
         ? relireUneOperationDuGenerateur(exercice.generateur, origine.tirage)
         : undefined;
       return (exercice.operations ?? (tiree ? [tiree] : [])).map((operation) => ({
-        cle: CleDeQuestion.de("calcul", operation.q),
+        cle: cleDuCalcul(operation.q),
         poser: () => QuestionDeCalcul.pour(operation, tireur, niveau),
       }));
     }
@@ -102,7 +110,7 @@ function posables(exercice: Exercice, origine: OrigineDeLaQuestion, tireur: Tire
         ? relireUneAdditionDuGenerateur(exercice.generateur, origine.tirage)
         : undefined;
       return (exercice.operations ?? (tiree ? [tiree] : [])).map((addition) => ({
-        cle: CleDeQuestion.de("calcul", enonceDUneAddition(addition)),
+        cle: cleDeLAddition(addition),
         poser: () => questionDeCalculEnLigne(addition, tireur, niveau),
       }));
     }

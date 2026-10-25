@@ -1,3 +1,4 @@
+import { cleDuCalcul } from "./cles-des-questions.ts";
 import type {
   Exercice,
   ExerciceCalcul,
@@ -145,7 +146,7 @@ export class ExerciceJoue {
   questionsRateesARetenir(): { cle: CleDeQuestion; type: TypeDeQuestion; tirage?: string }[] {
     if (this.contenu.additions) {
       return this.contenu.additions.additionsRatees().map(({ enonce, tiree }) => ({
-        cle: CleDeQuestion.de("calcul", enonce),
+        cle: cleDuCalcul(enonce),
         type: "calcul",
         ...(tiree && { tirage: enonce }),
       }));
@@ -160,9 +161,7 @@ export class ExerciceJoue {
   }
 
   private operationTireeDeLaQuestion(cle: CleDeQuestion): Operation | undefined {
-    return this.contenu.operationsTirees?.find((operation) =>
-      CleDeQuestion.de("calcul", operation.q).valeur === cle.valeur
-    );
+    return this.contenu.operationsTirees?.find((operation) => cleDuCalcul(operation.q).valeur === cle.valeur);
   }
 
   tirages(): string[][] {
