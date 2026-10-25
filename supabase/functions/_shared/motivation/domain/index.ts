@@ -44,7 +44,7 @@ export {
   secondes,
   SIGNAL_DE_DEPART,
 } from "./paroles-de-fluence.ts";
-export { accueillirEnRevision, parolesDeFinDeRevision } from "./paroles-de-revision.ts";
+export { accueillirEnRevision, annonceDeLaSeanceDeRevision, parolesDeFinDeRevision } from "./paroles-de-revision.ts";
 export { type SectionDeLEcran, sectionsAAfficher, sectionsDeLEcran } from "./sections-de-l-ecran.ts";
 export { type PastilleDeRecord, pastillesDesRecords, type RecordDuProfil } from "./records-de-calcul-rapide.ts";
 export {

@@ -9,3 +9,8 @@ export function parolesDeFinDeRevision(
   const effacement = questionsJustes > 1 ? "erreurs s'effacent" : "erreur s'efface";
   return `Bravo ${prenom} ! ${questionsJustes} ${effacement} un peu plus.`;
 }
+
+export function annonceDeLaSeanceDeRevision(nombreDeQuestionsDues: number): string {
+  const pluriel = nombreDeQuestionsDues > 1 ? "petites erreurs" : "petite erreur";
+  return `${nombreDeQuestionsDues} ${pluriel} des jours passés`;
+}
