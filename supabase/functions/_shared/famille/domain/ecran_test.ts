@@ -23,6 +23,7 @@ Deno.test("les écrans où l'enfant apprend ne sont pas des écrans du parent", 
     "test-de-depart",
     "page-de-la-lecon",
     "seance",
+    "revision",
   ];
 
   const reponses = ecransDeLEnfant.map(estUnEcranDuParent);
