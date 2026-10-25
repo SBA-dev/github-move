@@ -119,4 +119,4 @@ Les questions 33.1 à 33.27 reprennent celles du modèle (`docs/stories/33/domai
 30. **33.30. Focus à la fin de la séance** : reco retenue. Le focus reste sur « Accueil » ; « Lire l'épisode » s'atteint au clavier.
 31. **33.31. Repère « épisode déjà lu »** : reco retenue. Pas de repère dans #33 (hors périmètre, aucun scénario).
 
-Note sur 33.13 : le cadrage de #31 recommandait l'ordre du legacy (épisode, cabane, badge). La décision de #33 fixe « cabane, épisode, badge » ; les scénarios de #31 qui parlent de l'ordre des nouveautés doivent s'y aligner (point signalé au responsable).
+Note sur 33.13 : la décision vaut pour #31, #32 et #33. Le cadrage de #31 recommandait d'abord l'ordre du legacy (épisode, cabane, badge) ; ses décisions (`docs/stories/31/acceptance.md`, `features/31-badges.feature`) suivent désormais « cabane, épisode, badge ».

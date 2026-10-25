@@ -262,7 +262,7 @@ Sous-domaine décidé à la validation n°1 du lot 1 (décision 0007). Ses terme
 
 ## Conflits à trancher
 
-1. **« Étoile »** est aussi le nom de l'« Étoile du savoir » dans l'histoire. Proposition : **Étoile** reste la récompense. L'objet de l'histoire n'est pas un terme du domaine.
+1. **« Étoile »** (« Étoile du savoir », #33) : **tranché par le PO le 2026-10-25** (décision 33.4) : **Étoile** reste la récompense. « L'Étoile du savoir » est un titre d'épisode et un objet de l'histoire, pas un terme du domaine ; elle ne compte dans aucun total d'étoiles.
 2. **« Test »** : on dit toujours **Test de départ**, pour ne pas confondre avec les tests logiciels.
 3. **« Courriel »** (story #5, décision 0011) : **tranché par le PO le 2026-10-23** : on dit **E-mail de connexion** partout, « courriel » est interdit.
 4. **« Plateau »** (#18) : **tranché par le PO le 2026-10-24** : voir Décision n°31.
@@ -273,10 +273,10 @@ Sous-domaine décidé à la validation n°1 du lot 1 (décision 0007). Ses terme
 Les anciens conflits n°3 à n°7 (compte, session, lien magique, voix, monde) sont tranchés : voir Décisions n°10 à n°15. Ceux du lot 2 (espace adulte, lien, supprimer / détacher, la voix des guides, progression) : voir Décisions n°17 à n°21.
 Ceux du lot 3 (anciens n°8 à n°14 : jeu, maison, rang, énoncé, essai, étape, progression) : voir Décisions n°23 à n°29.
 
-Ajouts de #33 (cadrage, numéros à attribuer à la fusion des branches du lot 5) :
-- **« Histoire »** (#33) : synonyme interdit d'**Épisode**, mais nom de l'ensemble des 20 épisodes (« L'histoire des Savanturiers »). Proposition : **Histoire des Savanturiers** entre au glossaire ; « histoire » reste interdit pour désigner **un** épisode (question 33.27).
-- **« Leçon terminée »** (#33) : le sous-titre du legacy (« Un nouvel épisode s'ouvre à chaque leçon terminée. ») emploie un synonyme interdit de **Leçon réussie**. Proposition : réécrire le sous-titre selon la règle d'ouverture (questions 33.1 et 33.6).
-- Conflit n°1 (**Étoile du savoir**) : #33 propose de le trancher comme ci-dessus (question 33.4).
+Ajouts de #33 (tranchés par le PO le 2026-10-25, « 33. reco OK » ; numéros à attribuer à la fusion des branches du lot 5) :
+- **« Histoire »** (#33) : **Histoire des Savanturiers** entre au glossaire comme nom de l'ensemble des 20 épisodes (« L'histoire des Savanturiers ») ; « histoire » reste interdit pour désigner **un** épisode (décision 33.27).
+- **« Leçon terminée »** (#33) : le sous-titre du legacy (« Un nouvel épisode s'ouvre à chaque leçon terminée. ») est abandonné ; le sous-titre devient « Un nouvel épisode s'ouvre à chaque séance terminée. » (décisions 33.1 et 33.6).
+- Conflit n°1 (**Étoile du savoir**) : tranché comme ci-dessus (décision 33.4).
 
 ## Questions ouvertes
 
@@ -313,7 +313,7 @@ Lot 5 (#31, `docs/stories/31/domain-model.md`) : tranché par le PO le 2026-10-2
 
 Lot 4 (#26, `docs/stories/26/domain-model.md`) : tout est tranché (réponses 26.1 à 26.20) ; « Leçon des classes d'avant » est redéfinie (Décision n°36). Reste le nom **Matière réussie** `(à valider)`.
 
-Lot 5 (#33, `docs/stories/33/domain-model.md`, cadrage) : à trancher par le PO.
-- Règle d'ouverture d'un épisode : chaque séance terminée, chaque leçon réussie ou chaque jour de séance (33.1) ; selon la réponse, la ligne **Jour de séance** (« sert à la série et aux épisodes ») perdra « et aux épisodes » ;
-- histoire de Noisette pour tous, ou une histoire par univers (33.2) : nouvelle définition de **Épisode** ;
-- « Nombre de séances terminées » et « Épisode ouvert par la séance » : termes du domaine ou simples calculs (33.27).
+Lot 5 (#33, `docs/stories/33/domain-model.md`) : tranché par le PO le 2026-10-25 (« 33. reco OK » : toutes les recommandations).
+- Règle d'ouverture d'un épisode : chaque séance terminée (33.1) ; la ligne **Jour de séance** (« sert à la série et aux épisodes ») doit perdre « et aux épisodes » (modification d'une ligne existante, laissée au responsable) ;
+- histoire de Noisette pour tous, racontée par le personnage guide du profil (33.2) : nouvelle définition de **Épisode** (qui remplace l'ancienne ligne **Épisode**), **Histoire des Savanturiers** et **Épisode ouvert** validés ;
+- « Nombre de séances terminées » et « Épisode ouvert par la séance » : simples noms de calcul, retirés du glossaire (33.27).
