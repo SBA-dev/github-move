@@ -83,3 +83,16 @@ Branche de base : `main`. Aucun numéro de décision réservé (prochain libre :
   ou actif avec reprise type par type (B). Rien n'est mergé ; le périmètre E2E final continue.
 - 21:30 UTC — RELIS #64 : `MAIN A BOUGÉ` (#39 mergée, `906c749`). Intégration à la fin du run E2E en cours (jamais
   pendant un run), `@issue-39` ajouté au périmètre. #79 n'ajoute aucun écran (rien à classer pour 73.7).
+- 21:50 UTC — Steps stabilisés (`cc3e0f1` : choix comparés après tri, attente de la question au lieu d'un compte
+  de lectures). **Périmètre complet : 712/712 verts** sur `telephone` (`--workers=2`, 49 min), sur `b7c8583`
+  (`main` `26116ae` avec #28 et #73) : #79 33, #7 25, #10 27, #12 32, #15 33, #16 35, #17 29, #18 27, #19 29,
+  #20 43, #21 31, #22 21, #23 30, #24 30, #25 41, #26 56, #27 60, #28 47, #58 34, #65 36, #73 31. Aucun KO ni flaky.
+- 22:00 UTC — RELIS #79 : réponses du PO, **79.12 : A** (bouton inactif pendant la présentation) et **79.10, 79.11 :
+  oui**. Pour ne pas casser le run en cours, travail dans un worktree `wt/79-12` : décisions consignées (`88f735a`),
+  modèle et glossaire (`b5a61d5`), RED (`7338bd3`, bouton `aria-disabled` pendant la lecture de la question ; le step
+  de #7 reprend « Réécouter », son sens d'origine), correction (`5ee3625`, indicateur de présentation en cours ;
+  « Réécouter » pendant la consigne d'ouverture relance l'ouverture). Tests E2E du worktree sur le port 5174
+  (config locale non commitée).
+- 22:15 UTC — Review cycle 4 : **À CORRIGER**. Une question suivante coupée par « Relire la consigne » reste sans
+  choix. Aucun scénario ne le couvre : scénario nouveau `@a-valider` (`76f966a`), **ESCALADE #79.13** (reco oui),
+  steps `7025912`, RED vérifié (1 KO attendu, 4 verts). Correction (a) en cours.
