@@ -635,6 +635,21 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-width: 4px; background:
 .tableau-de-conjugaison li[data-etat="ecrite"] { color: var(--accent-fonce); font-weight: 700; }
 .tableau-de-conjugaison li[data-etat="en-cours"] { background: #fff3c4; border-radius: 8px; }
 
+.connexion .champ-mot-de-passe { display: grid; gap: 4px; }
+.connexion .champ-mot-de-passe-saisie { display: flex; gap: 8px; align-items: stretch; }
+.connexion .champ-mot-de-passe-saisie input { flex: 1; min-width: 0; }
+.connexion .champ-mot-de-passe-saisie button { flex: none; min-height: 44px; min-width: 44px; }
+.connexion .autres-choix { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.connexion button { min-height: 44px; }
+.connexion input:focus-visible { outline: 3px solid #1f2a1f; outline-offset: 2px; }
+.regles-du-mot-de-passe p { margin: 0 0 4px; }
+.regles-du-mot-de-passe ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 2px; }
+.regles-du-mot-de-passe li { overflow-wrap: anywhere; }
+.regles-du-mot-de-passe li.respectee { color: #1b5e20; font-weight: 700; }
+.visuellement-cache {
+  position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+
 /* Mes médailles */
 .mes-medailles { display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 100%; }
 .mes-medailles h1, .mes-medailles h2 { margin: 0; overflow-wrap: anywhere; }
