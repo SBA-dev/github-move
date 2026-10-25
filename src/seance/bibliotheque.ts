@@ -58,3 +58,18 @@ export async function chargerLaSectionDuProgramme(identifiant: string): Promise<
     return undefined;
   }
 }
+
+/** Toutes les sections lisibles du programme, dans l'ordre de l'index (pour la carte des compétences). Vide si l'index est indisponible. */
+export async function chargerLesSectionsDuProgramme(): Promise<readonly SectionDuProgramme[]> {
+  try {
+    return (await charger(CHEMIN_DE_L_INDEX_DES_PROGRAMMES)).flatMap((brute) => {
+      try {
+        return [lireSectionDuProgramme(brute)];
+      } catch {
+        return [];
+      }
+    });
+  } catch {
+    return [];
+  }
+}
