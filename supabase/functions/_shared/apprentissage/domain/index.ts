@@ -68,6 +68,8 @@ export { leconSuivanteDansLeParcours } from "./lecon-suivante-dans-le-parcours.t
 export type {
   EntreesDuParcours,
   EtatDansLeParcours,
+  EtatHorsDuParcours,
+  LeconDUneClasseDAvant,
   LeconDuParcours,
   LeconId,
   LeconReussieDUneClasseAuDessus,
