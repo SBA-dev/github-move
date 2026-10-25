@@ -114,6 +114,8 @@ Le glossaire garde l'orthographe française.
 | Leçon réussie au test de départ | Leçon que le test de départ compte comme réussie, sans étoile : elle fait avancer le parcours, ne donne ni étoile, ni badge, ni compétence acquise (#27, réponses 27.1 et 27.2 du PO). Une séance terminée ensuite lui donne ses étoiles. | Apprentissage | acquise au test, validée, cochée (dans le code) |
 | Résultat du test de départ | Pour un enfant : la date du dernier test de départ fait et les leçons réussies au test de départ. Il ne modifie jamais une étoile (#27). | Apprentissage | progression, score, note |
 | Test de départ fait | Le profil a fini au moins un test de départ, par toutes ses questions ou par un arrêt ; quitter en cours ne compte pas (#27). | Apprentissage | test passé, testFait (dans le code) |
+| Leçon du jour (à valider) | Leçon proposée par la grande tuile de l'accueil de l'enfant : une prochaine leçon, choisie parmi celles des matières du parcours (règle d'ordre des matières : question 29.1). Aucune quand toutes les matières du parcours sont réussies ; jamais une leçon des classes d'avant ni d'une classe au-dessus (question 29.9). Calculée, jamais enregistrée (#29). | Apprentissage | prochaine leçon (au singulier, il y en a une par matière), leçon conseillée, mission du jour |
+| Tuile du jour (à valider) | Ce que l'accueil de l'enfant propose de faire aujourd'hui, en plus de la leçon du jour, seulement quand c'est dû, dans un ordre fixe : devoirs et dictée du jour (lot 6), révision (« À revoir », s'il y a au moins une question due), test de départ (tant qu'il n'est pas fait). Terme du domaine ou d'interface : question 29.17 (#29). | Apprentissage | tâche (interdit pour Devoir), activité (interdit pour Exercice), notification |
 
 ## Motivation
 
@@ -137,6 +139,9 @@ Le glossaire garde l'orthographe française.
 | Section de l'écran (à valider) | Une des parties de l'écran des récompenses de l'enfant : cabane (#32), histoire (#33), badges (#31), records de calcul rapide (#65), toujours dans cet ordre. Peut-être un simple mot d'interface (#65). | Motivation | onglet, rubrique |
 | Records de calcul rapide (à valider) | Section de l'écran des récompenses de l'enfant qui montre les records de fluence du profil en cours, un par exercice de fluence ; absente quand le profil n'a aucun record. Les records sont lus dans Apprentissage, jamais modifiés. Interface : « Mes records de calcul rapide » (#65). | Motivation | trophées, meilleurs scores, high scores |
 | Pastille de record (à valider) | Libellé d'un exercice de fluence et meilleur score du record de fluence correspondant, dans les records de calcul rapide. Libellé proposé : le titre de l'exercice (question n°3 de #65). Peut-être un simple mot d'interface (#65). | Motivation | badge, médaille, trophée |
+| Objectif du jour (à valider) | Encouragement de l'accueil de l'enfant : jouer 2 leçons dans la journée (jour de l'appareil). Compte chaque leçon distincte qui a une séance terminée ce jour-là, et 1 de plus s'il y a au moins une séance de révision terminée (proposition 29.2) ; jamais le test de départ (réponse 27.4). Il ne limite rien et ne modifie aucune note. Calculé, jamais enregistré. Contexte proposé : Motivation (question 29.3) (#29). | Motivation (à valider : 29.3) | défi, quota, limite, temps d'écran, mission du jour |
+| Pastille de série (à valider) | Petit libellé avec une flamme, sous « Bonjour `<prénom>` ! » sur l'accueil de l'enfant, qui dit la série : « Une petite leçon pour bien commencer ? », « Tu as joué aujourd'hui ! », « `<n>` jours d'affilée, bravo ! », plus le texte du cas « joué hier, pas encore aujourd'hui » (question 30.1). Calculée à chaque affichage, jamais enregistrée. Peut-être un simple mot d'interface (question 30.12) (#30). | Motivation | badge, médaille, compteur de connexion |
+| Série jusqu'à hier (à valider) | Série dont le dernier jour de séance est hier : l'enfant n'a pas encore joué aujourd'hui, la série n'est pas cassée (règle « aujourd'hui ou hier », question 30.2). Peut-être un simple état de la série (question 30.12) (#30). | Motivation | série en danger, série perdue |
 
 ## Famille
 
@@ -275,3 +280,16 @@ Lot 4 (#27, `docs/stories/27/domain-model.md`) : le PO a suivi toutes les recomm
 Lot 5 (#65, `docs/stories/65/domain-model.md`) : à trancher par le PO.
 - Nom de l'écran des récompenses de l'enfant : tranché, « Mes médailles » (décision 65.1 du PO ; « médaille » retiré des synonymes interdits de Badge, « trophée » reste interdit) ;
 - « Section de l'écran » et « Pastille de record » : termes du domaine ou mots d'interface (#65).
+
+Lot 4 (#29, `docs/stories/29/domain-model.md`) : à trancher par le PO (questions 29.1 à 29.18).
+- « Objectif du jour » : ajouté `(à valider)` en Motivation (signalé par #27) ; contexte (Apprentissage ou Motivation) : question 29.3 ;
+- « Leçon du jour » et « Tuile du jour » : ajoutés `(à valider)` en Apprentissage (questions 29.17, 29.18) ;
+- « Aujourd'hui » : proposé comme simple mot de cadrage, l'écran étant l'**Accueil de l'enfant** (question 29.5, qui répond à 27.22). Si c'est retenu, la ligne « Devoir » se lit « mis en avant sur l'accueil de l'enfant » (ligne non réécrite) ;
+- « Mes trophées » reste interdit : le dock dira « Mes médailles » (65.1, question 29.7).
+
+Lot 5 (#30, `docs/stories/30/domain-model.md`) : à trancher par le PO (questions 30.1 à 30.12).
+- « Série » : la règle « jusqu'à aujourd'hui ou hier » est celle du legacy ; « (à valider) » retiré si 30.2 est retenue. La série est **calculée** à partir des **jours de séance**, jamais enregistrée ;
+- « Jour de séance » reste dans Apprentissage (proposition 30.5) : déduit des séances terminées et des séances de révision terminées (28.16), au **Jour** de l'appareil à la fin de la séance (28.9, proposition 30.6) ; le test de départ n'en donne pas (27.4) ;
+- « Pastille de série » et « Série jusqu'à hier » : ajoutés `(à valider)` en Motivation ; termes du domaine, mot d'interface ou simple état (question 30.12) ;
+- « Minutes jouées » : pas ajouté ; elles ne servent qu'au rapport de la semaine (lot 6, décision 0005), à définir par #34 ou #35 ;
+- « streak », « flamme » (l'icône), « jour joué », « connexion » restent interdits ; pas de « record de série ».
