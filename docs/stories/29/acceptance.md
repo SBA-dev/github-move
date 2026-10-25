@@ -8,6 +8,7 @@ Le PO a retenu toutes les recommandations des questions 29.1 à 29.24 (« OK #29
 > Cadrage anticipé (décision 0020, point 6). Rien n'est codé avant le merge de #26 et #28. Les décisions du PO sur #25, #26, #27 et #28 ne sont pas reposées.
 > Les scénarios qui dépendent d'une décision portent un commentaire `# Réponse 29.n`. Aucun scénario ne porte plus `@a-valider` : la question 29.26 est tranchée (« 29.26 OK »). Ceux qui attendent une story pas encore mergée portent `@depend-de-26` ou `@depend-de-28`.
 > 2026-10-25 : #26 est mergée dans `main`. Les tags `@depend-de-26` sont retirés de `features/29-aujourd-hui.feature` (6 scénarios et le cas « Toutes les leçons » du plan du dock, réuni au bloc d'exemples des deux autres écrans) ; seuls restent les 7 `@depend-de-28`. Les mentions `@depend-de-26` ci-dessous (tableau des règles, total, décisions) datent du cadrage.
+> 2026-10-25 : #28 est mergée dans `main` et intégrée dans `feature/29-aujourd-hui`. Les 7 tags `@depend-de-28` sont retirés de `features/29-aujourd-hui.feature` (le scénario de droits garde `@acces`) ; plus aucun scénario de #29 ne porte de `@depend-de`. `features/28-revisions-des-erreurs.feature` ne contient aucun `@depend-de-29`. Les mentions `@depend-de-28` ci-dessous datent du cadrage.
 
 ## Objectif
 

@@ -11,7 +11,7 @@ Fonctionnalité: Écran « Aujourd'hui » : l'accueil de l'enfant
   puis répondu à 29.25 : « Si aucune autre leçon est proposé, on ajoute un bouton pour revenir aux autres cours »,
   et à 29.26 : « 29.26 OK » (bouton « Toutes les leçons », qui ouvre « Toutes les leçons », dès qu'il n'y a pas de leçon suivante).
   Un scénario qui en dépend porte un commentaire « Réponse 29.n » (décisions dans docs/stories/29/acceptance.md).
-  « @depend-de-28 » : le scénario attend la story #28, pas encore mergée (#26 est mergée depuis le 2026-10-25).
+  Les stories #26 et #28 sont mergées (2026-10-25) : aucun scénario n'attend plus une autre story.
 
   Pour ces scénarios, la bibliothèque servie au navigateur est remplacée par la bibliothèque de test de l'accueil
   (identifiants préfixés « e2e-29- », leçons servies dans le désordre ; chaque leçon a un exercice bulles de deux
@@ -258,7 +258,6 @@ Fonctionnalité: Écran « Aujourd'hui » : l'accueil de l'enfant
   Règle: Les tuiles du jour proposent ce qui est dû aujourd'hui, seulement quand c'est dû, toujours dans le même ordre : « À revoir », puis « Mon test de départ »
 
     # Réponse 29.7 b
-    @depend-de-28
     Plan du Scénario: Avec <dues> question(s) due(s), la tuile « À revoir » annonce « <annonce> »
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a <dues> questions dues de la leçon « Les sons de révision »
@@ -270,7 +269,6 @@ Fonctionnalité: Écran « Aujourd'hui » : l'accueil de l'enfant
         | 1    | 1 petite erreur des jours passés    |
         | 3    | 3 petites erreurs des jours passés  |
 
-    @depend-de-28
     Scénario: Sans question due aujourd'hui, l'accueil ne propose pas la tuile « À revoir »
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a pour questions retenues de la leçon « Les sons de révision » :
@@ -280,7 +278,6 @@ Fonctionnalité: Écran « Aujourd'hui » : l'accueil de l'enfant
       Alors l'accueil de Léa ne propose pas la tuile « À revoir »
 
     # Réponse 29.7 b
-    @depend-de-28
     Scénario: La tuile « À revoir » commence la séance de révision
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a 3 questions dues de la leçon « Les sons de révision »
@@ -316,7 +313,6 @@ Fonctionnalité: Écran « Aujourd'hui » : l'accueil de l'enfant
       Mais la leçon du jour de Léa est « Le son in », avec « Français · CE1 »
 
     # Réponse 29.6
-    @depend-de-28
     Scénario: La tuile « À revoir » vient avant la tuile « Mon test de départ »
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a pour questions retenues de la leçon « Les sons de révision » :
@@ -377,7 +373,6 @@ Fonctionnalité: Écran « Aujourd'hui » : l'accueil de l'enfant
       Alors l'objectif du jour de Léa indique « 0 sur 2 »
 
     # Réponse 29.2 b
-    @depend-de-28
     Scénario: Une séance de révision terminée compte pour une leçon dans l'objectif du jour
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a 3 questions dues de la leçon « Les sons de révision »
@@ -386,7 +381,6 @@ Fonctionnalité: Écran « Aujourd'hui » : l'accueil de l'enfant
       Alors l'objectif du jour de Léa indique « 1 sur 2 »
 
     # Réponse 29.13
-    @depend-de-28
     Scénario: Le lendemain, l'objectif du jour repart de 0
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a terminé une séance de la leçon « Le son in » avec 1 étoile
@@ -533,7 +527,7 @@ Fonctionnalité: Écran « Aujourd'hui » : l'accueil de l'enfant
 
   Règle: L'accueil ne montre que ce qui appartient au profil enfant en cours, et seulement à un parent rattaché
 
-    @acces @depend-de-28
+    @acces
     Scénario: Le second parent rattaché retrouve sur son téléphone la leçon du jour de Léa
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Marie est rattachée au profil enfant de Léa
