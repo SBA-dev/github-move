@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { Seance, SeanceTerminee } from "@domain/apprentissage";
 import { retenirLesEtoilesGagnees } from "./etoiles-gagnees-pendant-l-utilisation.ts";
+import { retenirLaSeanceTerminee } from "./seances-terminees-pendant-l-utilisation.ts";
 import { type Sauvegarde, sauvegarderLaSeance } from "./sauvegarde-de-la-seance.ts";
 
 export const MESSAGE_DE_SAUVEGARDE_IMPOSSIBLE = "Sauvegarde en ligne impossible : la progression est gardée sur cet appareil.";
@@ -21,8 +22,10 @@ export function useSauvegardeDeLaSeance(seance: Seance) {
   useEffect(() => {
     if (lancee.current) return;
     lancee.current = true;
-    const terminee = seance.terminer(new Date());
+    const termineeLe = new Date();
+    const terminee = seance.terminer(termineeLe);
     setTerminee(terminee);
+    retenirLaSeanceTerminee(seance.enfant, { lecon: seance.lecon, termineeLe });
     if (terminee.etoiles !== undefined) retenirLesEtoilesGagnees(seance.enfant, seance.lecon, seance.etoiles());
     void sauvegarderLaSeance(seance.aEnregistrer()).then(setSauvegarde);
   }, [seance]);

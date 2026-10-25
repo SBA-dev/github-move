@@ -16,6 +16,7 @@ import {
   useProfilEnCours,
   useProfilsDuParent,
 } from "./famille/index.ts";
+import { DockDeLEnfant, type EcranDuDock, estUnEcranDuDock } from "./accueil/index.ts";
 import { MesMedailles } from "./medailles/index.ts";
 import { MonParcours } from "./parcours/index.ts";
 import { ToutesLesLecons, useChoixDeToutesLesLecons } from "./toutes-les-lecons/index.ts";
@@ -23,6 +24,7 @@ import { AideEcranDAccueil } from "./installation/index.ts";
 import { type Lieu, useNavigation } from "./navigation.ts";
 import { EcranDeSeance, PageDeLaLecon, useRenvoiDesSeancesGardees } from "./seance/index.ts";
 import { oublierLesEtoilesGagnees } from "./seance/fin-de-seance/etoiles-gagnees-pendant-l-utilisation.ts";
+import { oublierLesSeancesTerminees } from "./seance/fin-de-seance/seances-terminees-pendant-l-utilisation.ts";
 import {
   EcranDuTestDeDepart,
   oublierLesTestsDeDepartFaits,
@@ -106,6 +108,7 @@ export function Application() {
       fermerEspaceParent();
       oublierLeProfilEtSaProgression();
       oublierLesEtoilesGagnees();
+      oublierLesSeancesTerminees();
       oublierLesTestsDeDepartFaits();
       remplacer("accueil");
     } catch {
@@ -123,6 +126,12 @@ export function Application() {
   const entrerDansLEspaceParent = () => {
     if (connecte) acces.demanderLEntree();
     aller("espace-parent");
+  };
+  /** Depuis l'accueil le dock ouvre un écran ; entre deux écrans du dock il le remplace, pour que le retour mène toujours à l'accueil. */
+  const ouvrirParLeDock = (destination: EcranDuDock) => {
+    if (destination === "jeu") revenirA("jeu");
+    else if (ecran === "jeu") aller(destination);
+    else remplacer(destination);
   };
   const habillage: Habillage = { "--accent": palette.principale, "--accent-fonce": palette.foncee };
 
@@ -172,10 +181,13 @@ export function Application() {
                 univers={univers}
                 voix={voix}
                 saluer={!viaRetour}
-                onMonParcours={() => aller("parcours")}
-                onToutesLesLecons={() => aller("toutes-les-lecons")}
-                onMesMedailles={() => aller("medailles")}
-                onMonTestDeDepart={testDeDepartAFaire ? () => aller("test-de-depart") : undefined}
+                testDeDepartAProposer={testDeDepartAFaire}
+                onMonTestDeDepart={() => aller("test-de-depart")}
+                onCommencerLaLecon={(leconId) => aller({ ecran: "lecon", leconId })}
+                onOuvrirLaMatiere={(matiere) => {
+                  setMatiereDuParcours(matiere);
+                  aller("parcours");
+                }}
                 onChangerDEnfant={() => {
                   aller("accueil");
                   oublierLeProfilEtSaProgression();
@@ -239,6 +251,10 @@ export function Application() {
                 clavierDesDictees={profilEnCours.reglages.clavierDesDictees.valeur}
                 onRetour={() => revenirA({ ecran: "lecon", leconId: lieu.leconId })}
                 onLeconSuivante={(leconId) => aller({ ecran: "lecon", leconId })}
+                onToutesLesLecons={() => {
+                  remplacer("jeu");
+                  aller("toutes-les-lecons");
+                }}
                 onAccueil={() => aller("accueil")}
               />
             )}
@@ -271,6 +287,7 @@ export function Application() {
               </EspaceParent>
             )}
           </main>
+          {profilCharge && profilEnCours && estUnEcranDuDock(ecran) && <DockDeLEnfant ecranEnCours={ecran} onOuvrir={ouvrirParLeDock} />}
         </ModeDys>
       </div>
     </MotionConfig>
