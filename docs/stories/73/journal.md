@@ -13,3 +13,6 @@ Branche de base : `main`. Branche : `feature/73-aucun-son-cote-parent`, partie d
   4. Essai de voix entendu voix suspendue, jamais en Muet : `44ce6ff` RED, `f19e8a5` GREEN (extraction de `lireLeTexte`).
   5. Remettre le son voix suspendue ne lit rien : test de protection, vert à l'écriture (`lire` ignore déjà la lecture voix suspendue).
   Cycles 1 et 2 menés en parallèle (fichiers disjoints, commits faits par l'orchestrateur).
+- ~18:50 UTC — Revue intermédiaire du bloc domaine (`2ff377f..25639f9`) : **APPROUVÉ**, 5 non bloquants. Le n°3 (nommer `PublicDeLEcran`) est traité en `6963b35`. N°1 (`onFin` non appelé voix suspendue, comme en Muet) : sans effet, car la voix est reprise dans un `useLayoutEffect` avant les effets des écrans de l'enfant. N°2 (test d'idempotence) et n°4 (commit `f19e8a5` qui contient aussi l'extraction) : laissés tels quels.
+- ~18:55 UTC — Câblage (`6a7af1f`) : `ecranAffiche` (switch exhaustif lieu → `Ecran`) et `useLayoutEffect` dans `Application.tsx` ; `suspendre`/`reprendre` dans `useVoix` ; « Qui joue ? » sans profil affiche l'invitation à créer le premier profil sans la lire (le composant qui la lisait est supprimé).
+- ~19:00 UTC — En parallèle : `e2e-tester` (steps de #73, puis mise au point sur `telephone`, `--workers=2`) et `mr-reviewer` (revue complète).
