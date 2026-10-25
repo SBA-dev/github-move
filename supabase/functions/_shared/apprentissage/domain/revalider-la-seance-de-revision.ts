@@ -7,12 +7,14 @@ import {
   TirageInvalide,
   TirageManquant,
 } from "./erreurs.ts";
-import type { FileDeRevision } from "./file-de-revision.ts";
+import type { CleDeQuestion } from "./cle-de-question.ts";
+import type { FileDeRevision, QuestionRetenue } from "./file-de-revision.ts";
+import { questionDeRevision } from "./question-de-revision.ts";
 import { Jour, jourDe } from "./jour.ts";
 import type { ReponseDonnee } from "./reponse.ts";
-import { SeanceDeRevision, type SeanceDeRevisionTerminee } from "./seance-de-revision.ts";
+import { SeanceDeRevision, type SeanceDeRevisionTerminee, seanceDeRevisionTerminee } from "./seance-de-revision.ts";
 import type { SeanceDeRevisionTermineeAEnregistrer } from "./seance-de-revision-terminee-a-enregistrer.ts";
-import { tireurSelonLesTirages } from "./tireur.ts";
+import { type Tireur, tireurSelonLesTirages } from "./tireur.ts";
 
 const NOMBRE_MAXIMAL_DE_QUESTIONS = 10;
 const DECALAGE_UTC_MAXIMAL_A_L_OUEST_EN_MINUTES = 12 * 60;
@@ -45,33 +47,75 @@ function rejouer(
   verifierLaForme(envoi);
   const jour = Jour.de(envoi.jour);
   verifierLeJour(jour, envoi.termineeLe);
+  const { rejouables } = trier(envoi, file, jour, lecons, niveau);
+  if (rejouables.length === 0) return seanceDeRevisionTerminee({ ...envoi, jour, resultats: [] });
   const seance = SeanceDeRevision.commencer({
     id: envoi.id,
     enfant: envoi.enfant,
-    plan: {
-      questions: envoi.questions.flatMap((cle) =>
-        file.questions.filter(({ identite }) => identite.valeur === cle.valeur)
-      ),
-    },
+    plan: { questions: rejouables.map(({ retenue }) => retenue) },
     lecons,
-    tireurDe: (identite) => {
-      const rang = envoi.questions.findIndex(({ valeur }) => valeur === identite.valeur);
-      return tireurSelonLesTirages([envoi.tirages[rang] ?? []].values());
-    },
+    tireurDe: (identite) => tireurDeLaQuestion(envoi, identite),
     niveau,
   });
-  envoi.questions.forEach(({ valeur }, rang) => {
-    (envoi.reponses[rang] ?? []).forEach((reponse) => {
-      if (seance.questionEnCours()?.identite.valeur !== valeur) {
+  rejouables.forEach(({ rang, retenue: { identite } }) => {
+    envoi.reponses[rang]?.forEach((reponse) => {
+      if (seance.questionEnCours()?.identite.valeur !== identite.valeur) {
         throw incoherente("une réponse est donnée après la réussite de la question");
       }
       rejouerLaReponse(seance, reponse);
     });
-    if (seance.questionEnCours()?.identite.valeur === valeur) {
+    if (seance.questionEnCours()?.identite.valeur === identite.valeur) {
       throw incoherente("une question posée ne finit pas par la bonne réponse");
     }
   });
   return seance.terminer(envoi.termineeLe, jour);
+}
+
+export function questionsIntrouvablesDeLaSeanceDeRevision(
+  envoi: SeanceDeRevisionTermineeAEnregistrer,
+  file: FileDeRevision,
+  lecons: readonly Lecon[],
+  niveau: Niveau,
+): CleDeQuestion[] {
+  return trier(envoi, file, Jour.de(envoi.jour), lecons, niveau).introuvables;
+}
+
+type QuestionRejouable = { readonly rang: number; readonly retenue: QuestionRetenue };
+
+/** Parmi les questions de l'envoi : celles à rejouer, et celles dues mais que la bibliothèque ne sait plus poser. */
+function trier(
+  envoi: SeanceDeRevisionTermineeAEnregistrer,
+  file: FileDeRevision,
+  jour: Jour,
+  lecons: readonly Lecon[],
+  niveau: Niveau,
+): { rejouables: QuestionRejouable[]; introuvables: CleDeQuestion[] } {
+  const dues = file.questionsDues(jour);
+  const rejouables: QuestionRejouable[] = [];
+  const introuvables: CleDeQuestion[] = [];
+  envoi.questions.forEach((cle, rang) => {
+    const retenue = dues.find(({ identite }) => identite.valeur === cle.valeur);
+    if (!retenue) return;
+    if (estPosable(retenue, envoi, lecons, niveau)) rejouables.push({ rang, retenue });
+    else introuvables.push(cle);
+  });
+  return { rejouables, introuvables };
+}
+
+function estPosable(
+  { identite, origine }: QuestionRetenue,
+  envoi: SeanceDeRevisionTermineeAEnregistrer,
+  lecons: readonly Lecon[],
+  niveau: Niveau,
+): boolean {
+  const lecon = lecons.find(({ id }) => id === origine.leconDOrigine);
+  return lecon !== undefined &&
+    questionDeRevision(lecon, origine, identite, tireurDeLaQuestion(envoi, identite), niveau) !== undefined;
+}
+
+function tireurDeLaQuestion(envoi: SeanceDeRevisionTermineeAEnregistrer, identite: CleDeQuestion): Tireur {
+  const rang = envoi.questions.findIndex(({ valeur }) => valeur === identite.valeur);
+  return tireurSelonLesTirages([envoi.tirages[rang] ?? []].values());
 }
 
 function verifierLaForme(envoi: SeanceDeRevisionTermineeAEnregistrer): void {

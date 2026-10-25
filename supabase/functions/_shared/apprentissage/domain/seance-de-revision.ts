@@ -27,6 +27,24 @@ export type SeanceDeRevisionTerminee = Readonly<{
   nombreDeQuestionsJustes: number;
 }>;
 
+export function seanceDeRevisionTerminee(
+  { id, enfant, termineeLe, jour, resultats }: Pick<
+    SeanceDeRevisionTerminee,
+    "id" | "enfant" | "termineeLe" | "jour" | "resultats"
+  >,
+): SeanceDeRevisionTerminee {
+  return {
+    type: "SeanceDeRevisionTerminee",
+    id,
+    enfant,
+    termineeLe,
+    jour,
+    resultats,
+    nombreDeQuestions: resultats.length,
+    nombreDeQuestionsJustes: resultats.filter(({ juste }) => juste).length,
+  };
+}
+
 export class SeanceDeRevision {
   private termineeLe: Date | undefined;
   private jour: Jour | undefined;
@@ -87,17 +105,13 @@ export class SeanceDeRevision {
     if (!this.estFinie()) throw new SeanceDeRevisionNonFinie();
     this.termineeLe = maintenant;
     this.jour = jour;
-    const resultats = this.resultats();
-    return {
-      type: "SeanceDeRevisionTerminee",
+    return seanceDeRevisionTerminee({
       id: this.id,
       enfant: this.enfant,
       termineeLe: maintenant,
       jour,
-      resultats,
-      nombreDeQuestions: resultats.length,
-      nombreDeQuestionsJustes: resultats.filter(({ juste }) => juste).length,
-    };
+      resultats: this.resultats(),
+    });
   }
 
   aEnregistrer(): SeanceDeRevisionTermineeAEnregistrer {
