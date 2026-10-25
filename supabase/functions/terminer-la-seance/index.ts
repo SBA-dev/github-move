@@ -3,7 +3,9 @@ import { TerminerLaSeance } from "../_shared/apprentissage/application/terminer-
 import { lireLaSeanceTerminee } from "../_shared/apprentissage/infrastructure/corps-de-la-seance-terminee.ts";
 import { traiterUneEcritureDApprentissage } from "../_shared/apprentissage/infrastructure/http-apprentissage.ts";
 import { FilesDeRevisionSupabase } from "../_shared/apprentissage/infrastructure/files-de-revision-supabase.ts";
+import { LeconsDuCatalogueEtPersonnelles } from "../_shared/apprentissage/infrastructure/lecons-du-catalogue-et-personnelles.ts";
 import { LeconsDuCatalogueJson } from "../_shared/apprentissage/infrastructure/lecons-du-catalogue-json.ts";
+import { LeconsPersonnellesDuProfilSupabase } from "../_shared/apprentissage/infrastructure/lecons-personnelles-du-profil-supabase.ts";
 import { RattachementsDuParentSupabase } from "../_shared/apprentissage/infrastructure/rattachements-du-parent-supabase.ts";
 import { ResultatsDesLeconsSupabase } from "../_shared/apprentissage/infrastructure/resultats-des-lecons-supabase.ts";
 import { RecordsDeFluenceSupabase } from "../_shared/apprentissage/infrastructure/records-de-fluence-supabase.ts";
@@ -30,7 +32,7 @@ function ouvrirLeClientDuServeur() {
   return createClient(url, cle, { auth: { persistSession: false } });
 }
 
-const lecons = new LeconsDuCatalogueJson(bibliotheque);
+const catalogue = new LeconsDuCatalogueJson(bibliotheque);
 
 Deno.serve((requete) =>
   traiterUneEcritureDApprentissage(
@@ -38,6 +40,11 @@ Deno.serve((requete) =>
     async ({ client, parent }, corps) => {
       const seance = lireLaSeanceTerminee(corps, new Date());
       const clientDuServeur = clientDuServeurALaDemande();
+      const lecons = new LeconsDuCatalogueEtPersonnelles(
+        catalogue,
+        new LeconsPersonnellesDuProfilSupabase(client),
+        seance.enfant,
+      );
       const faits = await new TerminerLaSeance(
         new RattachementsDuParentSupabase(client),
         lecons,
