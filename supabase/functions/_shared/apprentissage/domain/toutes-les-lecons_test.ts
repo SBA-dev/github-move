@@ -231,3 +231,18 @@ Deno.test("« Toutes les leçons » range les leçons des classes d'avant par cl
   );
   assertEquals(lecons.map(({ lecon }) => lecon), ["fr-ce2-accords"]);
 });
+
+Deno.test("« Toutes les leçons » n'a aucune leçon des classes d'avant pour un enfant de CP, qui n'a pas de classe inférieure", () => {
+  const entrees = {
+    lecons: [
+      lecon("fr-cp-lettres", "francais", "CP", 1),
+      lecon("ma-ce1-additions", "maths", "CE1", 1),
+    ],
+    niveau: Niveau.de("CP"),
+    meilleuresEtoiles: new Map(),
+  };
+
+  const { leconsDesClassesDAvant } = toutesLesLecons(entrees, {});
+
+  assertEquals(leconsDesClassesDAvant, []);
+});
