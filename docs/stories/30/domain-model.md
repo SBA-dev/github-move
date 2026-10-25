@@ -223,6 +223,8 @@ src/motivation/ ou src/seance/                                  # lecture des jo
 
 ## Questions ouvertes
 
+Tranché par le PO le 2026-10-25 : toutes les recommandations sont retenues (« OK #29 #30 reco partout »). Décisions détaillées dans la section « Décisions » de `docs/stories/30/acceptance.md`.
+
 Les questions 30.1 à 30.5 reprennent celles de l'issue (1 à 5). Les suivantes viennent des cas limites. Déjà tranché, et repris sans question : le test de départ ne compte pas (27.4) ; le jour est celui de l'appareil, envoyé avec la séance et vérifié à 14 heures près (28.9) ; la séance de révision donne un jour de séance (28.16).
 
 **30.1. Joué hier, pas encore aujourd'hui** (question 1 de l'issue). Le legacy dit « Tu as joué aujourd'hui ! », ce qui est faux.

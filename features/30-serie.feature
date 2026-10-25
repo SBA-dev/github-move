@@ -8,9 +8,10 @@ Fonctionnalité: Série : jours d'affilée avec au moins une séance
   La série compte les jours de séance consécutifs, jusqu'à aujourd'hui ou hier. Un jour de séance est un jour
   où l'enfant a terminé au moins une séance ou une séance de révision ; le test de départ n'en donne pas.
   La pastille de série, sous « Bonjour <prénom> ! » sur l'accueil de l'enfant, la dit à l'enfant :
-  « Une petite leçon pour bien commencer ? », « Tu as joué aujourd'hui ! », « <n> jours d'affilée, bravo ! ».
+  « Une petite leçon pour bien commencer ? », « Tu as joué aujourd'hui ! », « Tu as joué hier. Une petite leçon aujourd'hui ? »,
+  « <n> jours d'affilée, bravo ! ».
   La série ne lit pas les étoiles, ne modifie aucune note et n'impose rien : ni objectif, ni durée, ni message quand elle casse.
-  Les commentaires « Question 30.n » renvoient aux questions ouvertes de docs/stories/30/acceptance.md.
+  Les commentaires « Réponse 30.n » renvoient aux décisions du PO (docs/stories/30/acceptance.md, 2026-10-25).
 
   « Aujourd'hui », « hier », « il y a 2 jours », « le lendemain » : jours du calendrier de l'appareil, qui commencent à minuit.
   Une séance « terminée » un jour donné, sans autre précision, est une séance terminée de la leçon « Les sons ou, on, an »,
@@ -44,8 +45,7 @@ Fonctionnalité: Série : jours d'affilée avec au moins une séance
         | aujourd'hui, hier et il y a 2 jours           | 3 jours d'affilée, bravo ! |
         | aujourd'hui, il y a 2 jours et il y a 3 jours | Tu as joué aujourd'hui !   |
 
-    # Questions 30.1 et 30.2
-    @a-valider
+    # Réponses 30.1 et 30.2
     Plan du Scénario: Sans séance aujourd'hui, la série jusqu'à hier est gardée et la pastille dit « <texte> »
       Étant donné que Léa a terminé une séance chacun de ces jours : <jours>
       Quand Léa choisit son profil enfant dans « Qui joue ? »
@@ -56,15 +56,13 @@ Fonctionnalité: Série : jours d'affilée avec au moins une séance
         | hier et il y a 2 jours | 2 jours d'affilée, bravo !                       |
         | hier                   | Tu as joué hier. Une petite leçon aujourd'hui ?  |
 
-    # Question 30.10
-    @a-valider
+    # Réponse 30.10
     Scénario: Un jour sans séance remet la série à zéro, sans rappel de la série perdue
       Étant donné que Léa a terminé une séance chacun de ces jours : il y a 2 jours, il y a 3 jours, il y a 4 jours, il y a 5 jours et il y a 6 jours
       Quand Léa choisit son profil enfant dans « Qui joue ? »
       Alors la pastille de série dit « Une petite leçon pour bien commencer ? »
 
-    # Questions 30.1 et 30.11
-    @a-valider
+    # Réponses 30.1 et 30.11
     Plan du Scénario: L'accueil met la série à jour quand Léa revient <quand>, sans recharger l'application
       Étant donné que Léa a terminé une séance chacun de ces jours : aujourd'hui et hier
       Et que Léa a choisi son profil enfant dans « Qui joue ? »
@@ -78,8 +76,7 @@ Fonctionnalité: Série : jours d'affilée avec au moins une séance
 
   Règle: Une séance terminée ou une séance de révision terminée fait un jour de séance, quelles que soient la leçon et les étoiles ; ni le test de départ ni une séance quittée n'en font un
 
-    # Questions 30.4 et 30.13
-    @a-valider
+    # Réponses 30.4 et 30.13
     Plan du Scénario: Une séance terminée aujourd'hui compte tout de suite pour la série, <cas>
       Étant donné que Léa a terminé une séance chacun de ces jours : hier
       Et que <séance du jour>
@@ -93,8 +90,7 @@ Fonctionnalité: Série : jours d'affilée avec au moins une séance
         | d'un seul exercice               | Léa a terminé une séance de l'exercice « Premières bulles » seul            |
         | d'une leçon rejouée              | Léa a gagné 2 étoiles à la leçon « Les sons ou, on, an »                    |
 
-    # Question 30.4
-    @a-valider
+    # Réponse 30.4
     Scénario: Une séance d'une leçon des classes d'avant compte pour la série
       Étant donné que Paul a changé sur la tablette le niveau du profil enfant de Léa en CE1
       Et que Léa a terminé une séance chacun de ces jours : hier
@@ -145,15 +141,13 @@ Fonctionnalité: Série : jours d'affilée avec au moins une séance
       Quand Léa revient à l'accueil par le nom de l'application
       Alors la pastille de série dit « 2 jours d'affilée, bravo ! »
 
-    # Questions 30.1, 30.3 et 30.6
-    @a-valider
+    # Réponses 30.1, 30.3 et 30.6
     Scénario: Une séance gardée sur l'appareil compte pour le jour où elle a été finie, même envoyée le lendemain
       Étant donné que Léa a gagné 2 étoiles à la leçon « Les sons ou, on, an » sur la tablette, sans réseau
       Quand le réseau revient sur la tablette le lendemain
       Alors la pastille de série dit « Tu as joué hier. Une petite leçon aujourd'hui ? » sur le téléphone de Paul
 
-    # Question 30.9
-    @a-valider
+    # Réponse 30.9
     Scénario: Sans réseau ni jours de séance connus, l'accueil n'affiche pas de pastille de série, sans message d'erreur
       Étant donné que Léa a terminé une séance chacun de ces jours : hier et il y a 2 jours
       Et que Savanturier a déjà été chargé une fois sur la tablette
@@ -172,8 +166,7 @@ Fonctionnalité: Série : jours d'affilée avec au moins une séance
       Alors Léa entend Noisette lire « Bonjour Léa ! 3 jours d'affilée, bravo ! »
       Et Léa entend la salutation une seule fois
 
-    # Question 30.14
-    @a-valider
+    # Réponse 30.14
     Scénario: Sans « tout lire à voix haute », le texte de la pastille de série n'est pas lu
       Étant donné que le réglage « tout lire à voix haute » de Léa est sur « non »
       Et que Léa a terminé une séance chacun de ces jours : aujourd'hui, hier et il y a 2 jours

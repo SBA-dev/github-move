@@ -3,14 +3,16 @@
 Scénarios : `features/29-aujourd-hui.feature` (tags `@issue-29 @wip`).
 Modèle du domaine : `docs/stories/29/domain-model.md` (contexte **Apprentissage**, qui lit le **Catalogue pédagogique** et **Famille** ; objectif du jour en **Motivation** selon 29.3). Les questions 29.1 à 29.18 en viennent ; 29.19 à 29.24 sont ajoutées ici.
 
+Le PO a retenu toutes les recommandations des questions 29.1 à 29.24 (« OK #29 #30 reco partout », 2026-10-25, relayé par le responsable des équipes sur les issues #29 et #30). Voir « Décisions ».
+
 > Cadrage anticipé (décision 0020, point 6). Rien n'est codé avant le merge de #26 et #28. Les décisions du PO sur #25, #26, #27 et #28 ne sont pas reposées.
-> Les scénarios qui dépendent d'une question ouverte portent `@a-valider` et un commentaire `# Question 29.n` ; ils suivent la recommandation. Ceux qui attendent une story pas encore mergée portent `@depend-de-26` ou `@depend-de-28`.
+> Les scénarios qui dépendent d'une décision portent un commentaire `# Réponse 29.n` ; aucun ne porte plus `@a-valider`. Ceux qui attendent une story pas encore mergée portent `@depend-de-26` ou `@depend-de-28`.
 
 ## Objectif
 
 En tant qu'**enfant**, je veux voir en arrivant ce que je peux faire aujourd'hui (ma leçon du jour, mes révisions, mon test de départ), afin de me mettre au travail d'un seul geste.
 
-L'écran est l'**accueil de l'enfant** (recommandation 29.5 : « Aujourd'hui » reste un mot de cadrage). Il réunit :
+L'écran est l'**accueil de l'enfant** (réponse 29.5 : « Aujourd'hui » reste un mot de cadrage). Il réunit :
 - l'en-tête : date du jour en toutes lettres, « Bonjour `<prénom>` ! » (place réservée sous le titre pour la pastille de série de #30) ;
 - les **tuiles du jour**, seulement quand elles sont dues : « À revoir » (#28), « Mon test de départ » (#27) ; les devoirs et la dictée du jour viendront au lot 6 ;
 - la **leçon du jour** (grande tuile, « Commencer ») ;
@@ -20,7 +22,7 @@ L'écran est l'**accueil de l'enfant** (recommandation 29.5 : « Aujourd'hui » 
 
 Tout est **calculé** à chaque affichage par le domaine (`@domain/apprentissage`, `@domain/motivation`), dans le navigateur, aussi sans réseau. Rien n'est enregistré : pas de table, pas d'Edge Function.
 
-Le comportement actuel (`app/`, `showMap('accueil')`, `todayTiles`, `nextLesson`, `subjectPath`, `nextAfter`) donne les premiers exemples. Écarts voulus, à confirmer par le PO :
+Le comportement actuel (`app/`, `showMap('accueil')`, `todayTiles`, `nextLesson`, `subjectPath`, `nextAfter`) donne les premiers exemples. Écarts voulus, retenus par le PO le 2026-10-25 :
 - le français ne passe plus toujours en premier (29.1) ;
 - le test de départ ne compte pas dans l'objectif du jour (27.4) ; la séance de révision compte (29.2 b) ;
 - le compteur des tuiles de matière est celui de « Mon parcours » (29.4) ;
@@ -44,7 +46,7 @@ Le comportement actuel (`app/`, `showMap('accueil')`, `todayTiles`, `nextLesson`
 
 ## Règles
 
-| # | Règle | Scénarios | Questions |
+| # | Règle | Scénarios | Réponses |
 |---|---|---|---|
 | 1 | En choisissant son profil, l'enfant arrive sur son accueil : son personnage guide le salue une seule fois, sous la date du jour en toutes lettres | En choisissant son profil, l'enfant arrive sur son accueil et son personnage guide le salue · L'accueil affiche la date du jour en toutes lettres, avec une majuscule (2 cas : jour ordinaire, premier jour du mois) · Avec « tout lire à voix haute », la salutation n'est dite qu'une seule fois à l'arrivée · En revenant sur son accueil depuis son parcours, l'enfant n'est pas salué de nouveau | 29.5, 29.10 f, 29.14, 29.19, 29.20 |
 | 2 | La leçon du jour est la prochaine leçon d'une matière du parcours ; le français et les maths alternent, puis viennent les autres matières ; quand tout le parcours est réussi, il n'y en a plus | Un enfant de CE1 sans progression a pour leçon du jour la première leçon de français de sa classe · « Commencer » ouvre la page de la leçon du jour · Après une séance de <matière jouée>, la leçon du jour est « <leçon du jour> » (4 cas) · Après une séance de français puis une séance de maths, la leçon du jour revient au français · Quand tout le français de la classe est réussi, la leçon du jour reste en maths, même après une séance de maths · Quand le français et les maths de la classe sont réussis, la leçon du jour passe aux autres matières, dans l'ordre · La leçon du jour n'est jamais une leçon déjà réussie · Une leçon réussie au test de départ n'est jamais la leçon du jour · Quand tout le parcours est réussi, l'accueil félicite l'enfant, sans lui proposer une leçon des classes d'avant · Sans aucune leçon pour sa classe, l'accueil le dit, sans féliciter l'enfant d'avoir fini son parcours · Sans bibliothèque chargée, l'accueil ne montre ni leçon du jour ni tuile de matière, sans message d'erreur | 29.1, 29.9, 29.10 a b, 29.11, 29.12, 29.16, 29.18 |
@@ -56,7 +58,7 @@ Le comportement actuel (`app/`, `showMap('accueil')`, `todayTiles`, `nextLesson`
 | 8 | L'accueil marche sans réseau, se lit au lecteur d'écran, s'utilise au clavier et tient sur un petit écran | Sans réseau, l'accueil se met à jour tout de suite après une séance · Un lecteur d'écran lit la date, l'objectif du jour et les compteurs en toutes lettres · La leçon du jour se commence au clavier · L'accueil tient dans un écran de 360 px de large, avec des cibles assez grandes pour un doigt d'enfant · Avec les mouvements réduits, l'accueil s'affiche sans animation | 29.11, 29.14 |
 | 9 | L'accueil ne montre que ce qui appartient au profil enfant en cours, et seulement à un parent rattaché | Le second parent rattaché retrouve sur son téléphone la leçon du jour de Léa (`@acces`, `@depend-de-28`) · L'accueil d'un enfant ne tient jamais compte des étoiles d'un autre enfant (`@acces`) · Un parent qui n'est pas rattaché ne lit pas les séances terminées de Léa (`@acces`) | — |
 
-Total : 9 règles, 55 scénarios (62 cas), dont 39 `@a-valider`, 3 `@acces`, 7 `@depend-de-28` et 2 `@depend-de-26` (plus le cas « Toutes les leçons » du plan du dock).
+Total : 9 règles, 55 scénarios (62 cas), dont 0 `@a-valider` (tous retirés le 2026-10-25), 3 `@acces`, 7 `@depend-de-28` et 2 `@depend-de-26` (plus le cas « Toutes les leçons » du plan du dock).
 
 Sans #26 ni #28 mergées, 46 scénarios peuvent tourner (le plan du dock sans son cas « Toutes les leçons »).
 
@@ -73,7 +75,7 @@ Droits d'accès (`@acces`) :
 
 ### Lecture des scénarios
 
-| Dans les scénarios | À l'écran (recommandations) |
+| Dans les scénarios | À l'écran (décisions) |
 |---|---|
 | la leçon du jour de Léa est « X », avec « Français · CE1 » | grande tuile : libellé court de la matière et niveau (29.16), titre X, « `<Personnage guide>` t'attend pour une nouvelle leçon. », bouton « Commencer » |
 | l'accueil ne propose aucune leçon du jour | pas de bouton « Commencer » |
@@ -152,11 +154,11 @@ Aucune étape existante n'est modifiée.
 - Accessibilité : « « Commencer », chaque tuile de l'accueil et chaque bouton du dock mesurent au moins 44 px de haut », « l'accueil de Léa s'affiche sans mouvement ».
 - Droits : « Claire demande les séances terminées du profil enfant de Léa ».
 
-## Scénarios des autres stories à adapter
+## Actions décidées pour l'équipe qui reprendra #29
 
-Les accès provisoires de l'accueil disparaissent si 29.7 est retenue. Aucun fichier n'est modifié par ce cadrage. Le travail revient à l'`e2e-tester` de #29, et aux équipes de #26 et #28 si elles ne sont pas encore mergées.
+Ce cadrage ne modifie aucun fichier d'une autre story. Les réponses 29.7, 29.8 et 29.24 décident des actions suivantes, faites par l'équipe qui reprendra #29, au moment du code (après le merge de #26 et #28).
 
-**Texte inchangé, adaptation dans les steps seulement** (accès par le dock ou par une tuile du jour) :
+**Action 1 (réponse 29.7) : steps des accès provisoires.** Texte des scénarios inchangé, adaptation dans les steps seulement (accès par le dock ou par une tuile du jour). Le travail revient à l'`e2e-tester` de #29, au moment du code :
 
 | Story | Étapes concernées | Nouvel accès | Scénarios touchés |
 |---|---|---|---|
@@ -166,10 +168,11 @@ Les accès provisoires de l'accueil disparaissent si 29.7 est retenue. Aucun fic
 | #28 (« Je révise mes erreurs », 28.8) | « l'accueil de Léa propose la séance de révision, avec « … »( sur le téléphone de Paul) », « l'accueil de Léa ne propose pas de séance de révision », « Léa commence la séance de révision », « la proposition de la séance de révision mesure au moins 44 px de haut » | tuile du jour « À revoir » | règles 1, 2, 3, 5, 6 et 7 de `features/28-revisions-des-erreurs.feature` (dont « l'accueil de Léa propose la séance de révision ») |
 | #65 (« Mes médailles ») | « Léa ouvre « Mes médailles » depuis son accueil(, au clavier seulement) », « Léa a ouvert « Mes médailles » depuis son accueil », « Léa ouvre « Mes médailles » sur le téléphone de Marie » | bouton « Mes médailles » du dock | tous les scénarios de `features/65-ecran-mes-medailles.feature` ; la phrase de description « En attendant le dock de #29… » devient caduque |
 
-**Texte à changer si 29.8 est retenue** (la règle change : il y a de nouveau une leçon suivante, vers la leçon du jour) :
-- #25 : « Après la dernière leçon du parcours, aucune leçon d'une autre matière n'est proposée » et « Après une leçon réussie d'une classe au-dessus, aucune leçon suivante n'est proposée » (N10). Ils deviennent ceux de la règle 3 de #29 ; les retirer de #25, ou les réécrire avec la leçon du jour.
-- #26 : « Après une leçon des classes d'avant, aucune leçon suivante n'est proposée » (26.8) et, si 29.24 est retenue, « Après une leçon de la classe juste au-dessus, aucune leçon suivante n'est proposée » (26.19).
-- Glossaire : la ligne « Leçon suivante » (« ni vers une autre matière avant #29 ») reçoit une note.
+**Action 2 (réponses 29.8 et 29.24) : texte de scénarios à réécrire.** La règle change : il y a de nouveau une leçon suivante, la leçon du jour, si elle existe et n'est pas la leçon jouée. L'équipe de #29 réécrit ces scénarios au moment du code, **après le merge de #26** (pour ceux de #26) :
+- #25, `features/25-parcours-par-matiere.feature`, 2 scénarios : « Après la dernière leçon du parcours, aucune leçon d'une autre matière n'est proposée » et « Après une leçon réussie d'une classe au-dessus, aucune leçon suivante n'est proposée » (N10). Ils deviennent ceux de la règle 3 de #29 : les retirer de #25, ou les réécrire avec la leçon du jour.
+- #26, `features/26-lecons-des-classes-d-avant.feature` : « Après une leçon des classes d'avant, aucune leçon suivante n'est proposée » (26.8) et « Après une leçon de la classe juste au-dessus, aucune leçon suivante n'est proposée » (26.19, réponse 29.24).
+- **À confirmer par l'équipe (relevé lors de la mise à jour des décisions)** : #24, `features/24-etoiles-et-fin-de-seance.feature`, « Après la dernière leçon d'une matière, aucune leçon suivante n'est proposée » (« Les animaux », dernière leçon d'anglais du CP, Léa en CP sans progression). Avec 29.8, la fin de séance proposerait la leçon du jour (une leçon de français du CP) : le scénario est lui aussi à réécrire, ou à préparer pour que tout le parcours soit réussi.
+- Glossaire : la ligne « Leçon suivante » (« ni vers une autre matière avant #29 ») reçoit une note (ajout seulement).
 
 Les scénarios de #11 (« Léa choisit son profil enfant et son personnage guide la salue »), #12 (« Léa voit son accueil en mode dys ») et #6 (le nom de l'application ramène à l'accueil) restent vrais sans adaptation.
 
@@ -192,47 +195,39 @@ Les scénarios de #11 (« Léa choisit son profil enfant et son personnage guide
 - Accueil resté ouvert à minuit : pas de mise à jour toute seule (29.13), non vérifié en E2E.
 - Absence de fête quand l'objectif est atteint (29.15) : aucun son ni animation de récompense n'est observé par les scénarios.
 
+## Décisions
+
+Réponse du PO, le 2026-10-25 : « OK #29 #30 reco partout » (relayée par le responsable des équipes sur les issues #29 et #30). Toutes les recommandations sont retenues. Le détail des questions 29.1 à 29.18 est dans `docs/stories/29/domain-model.md` (section « Questions ouvertes ») ; 29.19 à 29.24 sont rappelées ci-dessous.
+
+| n° | Question | Réponse | Effet sur les scénarios et les documents |
+|---|---|---|---|
+| 29.1 | Ordre des matières de la leçon du jour | **(b)** : alterner français et maths selon la matière de la dernière séance terminée ; quand les deux sont réussis, les autres matières dans l'ordre du Catalogue. | `@a-valider` retiré de 4 scénarios de la règle 2 ; la règle 3 en découle. |
+| 29.2 | Objectif du jour : quoi compter | (a) « 2 leçons », fixe, sans réglage ; (b) la séance de révision compte pour 1, même s'il y en a plusieurs ; (c) leçon rejouée comptée une fois, séance d'un exercice comptée, leçon des classes d'avant comptée. Mots de la semaine : comme la révision (lot 6 le confirmera). | `@a-valider` retiré de 6 scénarios de la règle 5. |
+| 29.3 | Apprentissage ou Motivation ? | **Motivation**, livré par #29 dans `motivation/domain/`, en lecture seule des séances terminées d'Apprentissage. | Aucun scénario (emplacement du code). |
+| 29.4 | Compteur des tuiles de matière | Celui de « Mon parcours » (classe de l'enfant seulement) ; une tuile par matière du parcours, même liste et même ordre que les onglets. | `@a-valider` retiré de 3 scénarios de la règle 6. |
+| 29.5 | « Aujourd'hui » : terme ? | Non : l'écran est l'**accueil de l'enfant** ; la ligne « Devoir » du glossaire reçoit une note. | Vocabulaire des scénarios confirmé. |
+| 29.6 | Ordre des tuiles du jour | Devoirs, dictée du jour, « À revoir », test de départ. | `@a-valider` retiré de « La tuile « À revoir » vient avant la tuile « Mon test de départ » ». |
+| 29.7 | Accès provisoires de l'accueil | (a) dock de 4 boutons « Accueil », « Mon parcours », « Toutes les leçons », « Mes médailles », bouton actif marqué ; (b) « Je révise mes erreurs » devient la tuile « À revoir » ; (c) « Mon test de départ » devient une tuile du jour ; (d) « Changer d'enfant » reste sur l'accueil, hors du dock ; (e) le retour de ces écrans mène à l'accueil. | `@a-valider` retiré de 11 scénarios (règles 4 et 7). Steps des accès provisoires de #25, #26, #27, #28 et #65 à adapter : action 1. |
+| 29.8 | Leçon suivante quand la matière n'en a plus | La fin de séance propose la **leçon du jour**, si elle existe et n'est pas la leçon jouée. Note au glossaire (« Leçon suivante »). | `@a-valider` retiré des 4 scénarios de la règle 3. Scénarios de #25 et #26 (et #24, à confirmer) à réécrire : action 2. |
+| 29.9 | Repli vers les classes d'avant | Pas de repli ; « Bravo ! », « Tu as fini ton parcours » ; pas de bouton « Toutes les leçons » dans la tuile. | `@a-valider` retiré de « Quand tout le parcours est réussi… ». |
+| 29.10 | Défauts du legacy | Tous corrigés (a à f) ; la salutation n'est dite qu'une fois à l'arrivée. | `@a-valider` retiré de « Avec « tout lire à voix haute », la salutation n'est dite qu'une seule fois… ». |
+| 29.11 | Bibliothèque non chargée | Ni grande tuile, ni tuiles de matière, ni « Mon test de départ », sans message ; « À revoir » si la file est connue ; objectif du jour montré. | `@a-valider` retiré de « Sans bibliothèque chargée… ». |
+| 29.12 | Classe sans leçon | « Aucune leçon pour ta classe pour l'instant. », aucune tuile de matière, objectif du jour montré. | `@a-valider` retiré de 2 scénarios (règles 2 et 6). |
+| 29.13 | Fuseau et changement de jour | Jour de l'appareil (28.9) ; recalcul à chaque affichage et au retour au premier plan ; pas de minuterie à minuit. Le jour d'une séance ordinaire est celui gardé avec la séance terminée (réponse 30.6, ci-dessous). | `@a-valider` retiré de « Le lendemain, l'objectif du jour repart de 0 ». |
+| 29.14 | Date en tête | Gardée, en toutes lettres, avec une majuscule, en français, lue par les lecteurs d'écran. | `@a-valider` retiré de 2 scénarios (règles 1 et 8). |
+| 29.15 | Objectif atteint : une fête ? | Seulement le texte « Objectif atteint, bravo ! ». | `@a-valider` retiré (avec 29.2) de « Après deux leçons terminées… ». |
+| 29.16 | Nom de la matière sur la grande tuile | Libellé court des onglets (« Maths · CE1 »). | `@a-valider` retiré de 2 scénarios de la règle 2. |
+| 29.17 | « Tuile du jour » | Terme du domaine ; « (à valider) » retiré au glossaire. | Aucun changement de texte. |
+| 29.18 | « Leçon du jour » | Terme du domaine ; « (à valider) » retiré au glossaire. | Aucun changement de texte. |
+| 29.19 | Premier jour du mois dans la date | « Vendredi 1er janvier », lu « premier ». | `@a-valider` retiré des exemples « premier jour du mois » de « L'accueil affiche la date du jour en toutes lettres… ». |
+| 29.20 | Salutation au retour sur l'accueil | Dite seulement au choix du profil dans « Qui joue ? » ; au retour, écrite mais pas redite. | `@a-valider` retiré de « En revenant sur son accueil depuis son parcours… ». |
+| 29.21 | Où le dock se montre-t-il ? | Seulement sur l'accueil, « Mon parcours », « Toutes les leçons » et « Mes médailles ». | `@a-valider` retiré de « Le dock n'est pas montré en dehors de ses quatre écrans ». |
+| 29.22 | Ordre des parties de l'accueil | Celui du legacy : en-tête, tuiles du jour, grande tuile, objectif du jour, tuiles de matière. | Aucun scénario (mise en page). |
+| 29.23 | Lecture à voix haute du reste de l'accueil | **(a)** dans #29 : seulement la salutation (puis la pastille, #30) ; (b) ou (c) à décider plus tard. | Aucun scénario. |
+| 29.24 | Leçon suivante après une leçon de la classe juste au-dessus | Même règle que 29.8 : la leçon du jour. | Aucun scénario ici ; scénario 26.19 de #26 à réécrire : action 2. |
+
+Note sur le jour d'une séance ordinaire : la réponse 30.6 (`docs/stories/30/acceptance.md`) ajoute une colonne de jour aux séances terminées, envoyée par l'appareil et vérifiée comme en 28.9 (migration sous verrou `base` au moment du code). L'objectif du jour et la leçon du jour de #29 lisent ce jour, et non un jour recalculé avec le fuseau actuel de l'appareil.
+
 ## Questions ouvertes
 
-Les questions **29.1 à 29.18** sont dans `docs/stories/29/domain-model.md`, chacune avec sa recommandation. Les scénarios suivent ces recommandations :
-
-| Question | Sujet | Scénarios `@a-valider` |
-|---|---|---|
-| 29.1 | Ordre des matières de la leçon du jour (reco : alterner français et maths, puis les autres) | 4 (règle 2) et, par effet, la règle 3 |
-| 29.2 | Objectif du jour : 2 leçons ; révision comptée pour 1 ; leçon rejouée une fois ; classes d'avant comptées | 6 (règle 5) |
-| 29.3 | Objectif du jour en Motivation | aucun (emplacement du code) |
-| 29.4 | Compteur des tuiles de matière = celui de « Mon parcours » ; une tuile par matière du parcours | 3 (règle 6) |
-| 29.5 | « Aujourd'hui » n'est pas un terme ; l'écran est l'accueil de l'enfant | aucun (vocabulaire des scénarios) |
-| 29.6 | Ordre des tuiles du jour | 1 |
-| 29.7 | Dock, tuiles « À revoir » et « Mon test de départ », « Changer d'enfant » | 11 (règles 4 et 7) |
-| 29.8 | Leçon du jour en fin de séance sans leçon suivante | 4 (règle 3) |
-| 29.9 | Pas de repli vers les classes d'avant | 1 |
-| 29.10 | Défauts du legacy corrigés (dont salutation dite une fois) | 1 (et par 29.1, 29.2, 29.4) |
-| 29.11 | Bibliothèque non chargée | 1 |
-| 29.12 | Classe sans leçon | 2 |
-| 29.13 | Jour de l'appareil ; recalcul à l'affichage | 1 |
-| 29.14 | Date en tête de l'écran | 2 |
-| 29.15 | Objectif atteint : seulement le texte | 1 (avec 29.2) |
-| 29.16 | Libellé court de la matière sur la grande tuile (« Maths · CE1 ») | 2 |
-| 29.17, 29.18 | « Tuile du jour » et « Leçon du jour » : termes du domaine | aucun (vocabulaire) |
-
-Questions ajoutées par les critères d'acceptance :
-
-**29.19. Le premier jour du mois dans la date.** La mise en forme du navigateur écrit « Vendredi 1 janvier ». L'usage français écrit « 1er janvier ».
-- **Recommandation** : « Vendredi 1er janvier ». Le lecteur d'écran lit alors « premier ». Scénario : cas « premier jour du mois » de « L'accueil affiche la date du jour en toutes lettres… ». D'accord ?
-
-**29.20. Salutation au retour sur l'accueil.** 29.10 f dit « une seule fois à l'arrivée ». L'enfant revient souvent sur l'accueil : depuis « Mon parcours », depuis la fin d'une séance, par le dock.
-- **Recommandation** : la salutation n'est dite qu'au **choix du profil** dans « Qui joue ? ». Au retour sur l'accueil, elle reste écrite mais n'est pas dite de nouveau. Scénario : « En revenant sur son accueil depuis son parcours, l'enfant n'est pas salué de nouveau ». D'accord ?
-
-**29.21. Où le dock se montre-t-il ?** 29.7 a dit « sur ces quatre écrans ».
-- **Recommandation** : seulement sur l'accueil, « Mon parcours », « Toutes les leçons » et « Mes médailles ». Il n'est pas montré sur la page de la leçon, pendant une séance, une séance de révision ou le test de départ, ni dans « Qui joue ? » et l'espace parent : l'enfant reste dans ce qu'il fait, et la fin de séance a déjà « Accueil ». Scénarios : « Le dock n'est pas montré en dehors de ses quatre écrans », « « Changer d'enfant » reste sur l'accueil… ». D'accord ?
-
-**29.22. Ordre des parties de l'accueil.** Le legacy montre, de haut en bas : l'en-tête, les tuiles du jour, la grande tuile, l'objectif du jour, les tuiles de matière.
-- **Recommandation** : garder cet ordre. Ce que le parent a demandé et ce qui est dû viennent d'abord ; à 360 px, la grande tuile reste visible sans défiler quand il n'y a qu'une tuile du jour. Pas de scénario (mise en page), sauf si le PO le souhaite. D'accord ?
-
-**29.23. Lecture à voix haute du reste de l'accueil.** Avec « tout lire à voix haute », le legacy ne lit que la salutation (et la pastille). Un enfant de CP qui lit mal ne sait pas ce que propose la grande tuile.
-- Options : (a) comme le legacy, seulement la salutation (puis la pastille, #30) ; (b) avec « tout lire », Noisette lit aussi la leçon du jour (« Noisette t'attend pour une nouvelle leçon : Le son in ») ; (c) un bouton « Écouter » sur la grande tuile, comme les sections de « Mes médailles » (#65).
-- **Recommandation : (a) dans cette story**, pour ne pas allonger la lecture à chaque arrivée ; (b) ou (c) à décider avec #30, qui ajoute déjà la pastille à la même lecture. Aucun scénario. D'accord, ou préférez-vous (b) ou (c) dès #29 ?
-
-**29.24. Leçon suivante après une leçon de la classe juste au-dessus** (26.19). 29.8 cite trois cas sans leçon suivante ; #26 en ajoute un quatrième : une leçon de la classe juste au-dessus, ouverte depuis « Toutes les leçons » quand la matière de la classe est réussie.
-- **Recommandation** : même règle que 29.8 : la fin de séance propose la leçon du jour, si elle existe et n'est pas la leçon jouée. Exemple : Léa, CE1, maths du CE1 réussies, finit « Les tables de 2 » (CE2) ; elle se voit proposer la prochaine leçon de français du CE1. Le scénario de #26 « Après une leçon de la classe juste au-dessus, aucune leçon suivante n'est proposée » serait réécrit. Pas de scénario ici (la bibliothèque de test de l'accueil n'a pas de classe juste au-dessus ouverte). D'accord ?
+Aucune.

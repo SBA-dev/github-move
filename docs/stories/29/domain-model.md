@@ -275,6 +275,8 @@ Pas de migration : les tables `seances_terminees` (#24) et `seances_de_revision_
 
 ## Questions ouvertes
 
+Tranché par le PO le 2026-10-25 : toutes les recommandations sont retenues (« OK #29 #30 reco partout »). Décisions détaillées dans la section « Décisions » de `docs/stories/29/acceptance.md`.
+
 Les questions 29.1 à 29.6 reprennent les 6 questions de l'issue. Les suivantes viennent des stories #25 à #28 et des accès provisoires.
 
 **29.1. Ordre des matières pour la leçon du jour** (question n°1 de l'issue). Le legacy prend toujours le français en premier : tant qu'il reste une leçon de français, la grande tuile ne propose jamais les maths.
