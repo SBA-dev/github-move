@@ -1,3 +1,4 @@
+import { useId } from "react";
 import type { EtoilesAffichees, LeconJouee, MentionDeClasse, TableauDesLeconsJouees } from "@domain/accompagnement";
 import { BlocReplie } from "./BlocReplie.tsx";
 import { libelleDeLaMatiere } from "./libelle-de-la-matiere.ts";
@@ -51,18 +52,22 @@ function ListeDeLeconsJouees({ lecons, testid }: { readonly lecons: readonly Lec
 /** Les leçons jouées de la classe en cours, puis celles des autres classes à part, la plus récente d'abord. */
 export function LeconsJouees({ tableau }: { readonly tableau: TableauDesLeconsJouees }) {
   const { deLaClasseEnCours, dAutresClasses } = tableau;
+  const titreDesAutresClasses = useId();
+  const aDesLeconsJouees = deLaClasseEnCours.length > 0 || dAutresClasses.length > 0;
   return (
     <>
-      <BlocReplie titre="Toutes les leçons jouées">
-        {deLaClasseEnCours.length > 0 && <ListeDeLeconsJouees lecons={deLaClasseEnCours} testid="lecons-jouees" />}
-        {dAutresClasses.length > 0 && (
-          <section className="lecons-d-autres-classes" aria-labelledby="titre-des-autres-classes">
-            <h5 id="titre-des-autres-classes">Leçons jouées dans d'autres classes</h5>
-            <ListeDeLeconsJouees lecons={dAutresClasses} testid="lecons-jouees-d-autres-classes" />
-          </section>
-        )}
-      </BlocReplie>
       {deLaClasseEnCours.length === 0 && <p data-testid="aucune-lecon-jouee">Pas encore de leçon jouée.</p>}
+      {aDesLeconsJouees && (
+        <BlocReplie titre="Toutes les leçons jouées">
+          {deLaClasseEnCours.length > 0 && <ListeDeLeconsJouees lecons={deLaClasseEnCours} testid="lecons-jouees" />}
+          {dAutresClasses.length > 0 && (
+            <section className="lecons-d-autres-classes" aria-labelledby={titreDesAutresClasses}>
+              <h5 id={titreDesAutresClasses}>Leçons jouées dans d'autres classes</h5>
+              <ListeDeLeconsJouees lecons={dAutresClasses} testid="lecons-jouees-d-autres-classes" />
+            </section>
+          )}
+        </BlocReplie>
+      )}
     </>
   );
 }

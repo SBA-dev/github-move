@@ -17,7 +17,7 @@ function LigneDeLaCarte({ ligne }: { readonly ligne: LigneDeLaCarte }) {
       <span className="intitule">{ligne.intitule}</span> : <span className="etat">{LIBELLES_DES_ETATS[ligne.etat]}</span>
       {ligne.titresDesLecons.length > 0 && (
         <ul className="lecons-de-la-ligne">
-          {ligne.titresDesLecons.map((titre) => <li key={titre}>{titre}</li>)}
+          {ligne.titresDesLecons.map((titre, rang) => <li key={`${rang}-${titre}`}>{titre}</li>)}
         </ul>
       )}
     </li>
