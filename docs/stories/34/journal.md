@@ -21,3 +21,9 @@ Branche : `feature/34-suivi`, partie du cadrage `feature/lot-34-38-modele-et-sce
 - `79b5c4e` (`po-acceptance`) : tags `@wip` et `@depend-de-28` retirés (#28 mergée).
 - Review complète (étape 4) : **APPROUVÉ**, cycle 1, aucun bloquant. Non bloquants retenus pour correction avec les retours E2E : ordre I7 (message « Pas encore de leçon jouée. » avant la zone à part, pas de bloc vide) ; échec silencieux de la bibliothèque ou de l'index (afficher l'indisponibilité). Gardés en dette : plafond de 1000 lignes de PostgREST sur `seances_terminees` (vue agrégée `security_invoker` en story technique) ; couplage de l'adaptateur avec `src/seance/fin-de-seance/`.
 - `main` a bougé (#73, `26116ae`) pendant la mise au point E2E : intégration après la mise au point (décision 0020).
+- Mise au point E2E (`e2e-tester`, `a0c299a`) : **49/49** sur `telephone`, `--workers=2`, cycle 1, sans bug applicatif. Quatre steps existants étendus sous condition `@issue-34` (sens inchangé pour les autres stories). Contournement Chromium (lien 1194 → 1243) recréé dans le conteneur.
+- `defb71b` (`implementer`) : non bloquants appliqués (ordre I7, indisponibilité si bibliothèque ou index vide, `useId`, clé React).
+- `04817bc` : intégration de `main` `26116ae` (#73), sans conflit ; 2044 tests unitaires, lint, fmt, `tsc`, build verts.
+- Revue delta (`defb71b`, `a0c299a`, `04817bc`) : **APPROUVÉ**.
+- PR #94 ouverte en brouillon.
+- 19:50 UTC : périmètre de non-régression (décision 0023) sur `telephone`, `--workers=2` : `@issue-34` + #11, #12, #24, #25, #27, #28, #72, #73 + #16, #18, #26 (528 cas).
