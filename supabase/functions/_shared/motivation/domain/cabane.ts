@@ -54,17 +54,21 @@ export class TotalDEtoilesInvalide extends Error {
   }
 }
 
+function prochainPalierDe(total: number): EtatDeLaCabane["prochainPalier"] {
+  const prochain = PALIERS_DE_LA_CABANE.find((palier) => palier.seuil > total);
+  if (prochain === undefined) return undefined;
+  return { objet: prochain.objet, seuil: prochain.seuil, etoilesManquantes: prochain.seuil - total };
+}
+
 export function cabaneDe(total: number): EtatDeLaCabane {
   if (!Number.isInteger(total) || total < 0) throw new TotalDEtoilesInvalide(total);
   const objetsRecus = PALIERS_DE_LA_CABANE.filter((palier) => palier.seuil <= total).map((palier) => palier.objet);
-  const prochain = PALIERS_DE_LA_CABANE.find((palier) => palier.seuil > total);
+  const prochainPalier = prochainPalierDe(total);
   return {
     total,
     objetsRecus,
-    ...(prochain && {
-      prochainPalier: { objet: prochain.objet, seuil: prochain.seuil, etoilesManquantes: prochain.seuil - total },
-    }),
-    complete: prochain === undefined,
+    ...(prochainPalier && { prochainPalier }),
+    complete: prochainPalier === undefined,
   };
 }
 
@@ -74,10 +78,10 @@ export function objetRecuParLaSeance(
   etoilesDeLaSeance: number | undefined,
 ): ObjetDeLaCabane | undefined {
   if (etoilesDeLaSeance === undefined) return undefined;
-  verifierNombreDEtoiles(etoilesDeLaSeance);
+  const etoilesValides = verifierNombreDEtoiles(etoilesDeLaSeance);
   const meilleurAvant = meilleuresAvant.get(lecon) ?? 0;
   const totalAvant = totalDesEtoiles(meilleuresAvant);
-  const totalApres = totalAvant - meilleurAvant + Math.max(meilleurAvant, etoilesDeLaSeance);
+  const totalApres = totalAvant - meilleurAvant + Math.max(meilleurAvant, etoilesValides);
   const objetsAvant = cabaneDe(totalAvant).objetsRecus;
   const objetsApres = cabaneDe(totalApres).objetsRecus;
   return objetsApres.length > objetsAvant.length ? objetsApres.at(-1) : undefined;
