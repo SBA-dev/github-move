@@ -66,3 +66,13 @@ export {
   totalDesEtoiles,
   TotalDEtoilesInvalide,
 } from "./cabane.ts";
+export {
+  annonceDeLObjetRecu,
+  descriptionDuDessin,
+  finDePhraseDuPersonnageGuide,
+  libelleDuPalier,
+  libelleLuDuPalier,
+  phraseDeLEtat,
+  titreDeLAnnonce,
+  titreDeLaSection,
+} from "./paroles-de-la-cabane.ts";
