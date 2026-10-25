@@ -59,3 +59,8 @@ Branche de base : `main`. Aucun numéro de décision réservé (prochain libre :
 - 20:10 UTC — RELIS #64 : `MAIN A BOUGÉ`, #28 mergée (`be8f648`). Simulation : conflits dans
   `src/seance/EcranDeSeance.tsx` et `apprentissage/domain/index.ts`. Intégration reportée à la fin du cycle de
   correction en cours (jamais au milieu d'un RED), puis périmètre relancé avec #28.
+- 20:20 UTC — Run du périmètre 0023 (lancé 19:35) : 304 verts, 102 KO, **invalide**. Dès 18:50 (heure du serveur vite),
+  `src/seance/EcranDeSeance.tsx` était en cours de modification par l'implementer (correction de la review) :
+  « Transform failed » (JSX incomplet), et tous les scénarios suivants tombent. Leçon : ne jamais modifier `src/`
+  pendant un run E2E qui sert le dossier de travail. Le périmètre sera relancé une fois, sur le code final, après la
+  correction du cycle 2 et l'intégration de `main` (#28).
