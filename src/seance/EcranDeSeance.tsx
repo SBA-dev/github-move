@@ -208,19 +208,21 @@ function SeanceEnCours(
       <button type="button" className="reecouter" onClick={deroulement.reecouter} aria-disabled={deroulement.figee !== undefined ? true : undefined}>
         Réécouter
       </button>
-      {consigne !== undefined && (
-        <div className="consigne-de-l-exercice" aria-live="polite">
-          <p className="consigne" data-testid="consigne">
-            <TexteSurligne
-              texte={consigne}
-              rangDuMotPrononce={laConsigneEstLue ? deroulement.rangDuMotPrononce : undefined}
-            />
-          </p>
-          <button type="button" className="relire-la-consigne" onClick={deroulement.relireLaConsigne} aria-disabled={figee !== undefined ? true : undefined}>
-            Relire la consigne
-          </button>
-        </div>
-      )}
+      <div className="consigne-de-l-exercice" aria-live="polite">
+        {consigne !== undefined && (
+          <>
+            <p className="consigne" data-testid="consigne">
+              <TexteSurligne
+                texte={consigne}
+                rangDuMotPrononce={laConsigneEstLue ? deroulement.rangDuMotPrononce : undefined}
+              />
+            </p>
+            <button type="button" className="relire-la-consigne" onClick={deroulement.relireLaConsigne} aria-disabled={figee !== undefined ? true : undefined}>
+              Relire la consigne
+            </button>
+          </>
+        )}
+      </div>
       {etape && (
         <div className="etape-de-lecon" data-testid="etape-de-lecon">
           {etape.exemples.length > 0 && (
