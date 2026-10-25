@@ -1,5 +1,6 @@
 import type { Lecon, Niveau } from "../../catalogue/domain/index.ts";
 import {
+  JourIncoherent,
   JourInvalide,
   ReponseIncompatible,
   SeanceDeRevisionIncoherente,
@@ -10,17 +11,23 @@ import {
 import type { CleDeQuestion } from "./cle-de-question.ts";
 import type { FileDeRevision, QuestionRetenue } from "./file-de-revision.ts";
 import { questionDeRevision } from "./question-de-revision.ts";
-import { Jour, jourDe } from "./jour.ts";
+import { Jour } from "./jour.ts";
+import { jourDeLAppareil } from "./jour-de-l-appareil.ts";
 import type { ReponseDonnee } from "./reponse.ts";
 import { SeanceDeRevision, type SeanceDeRevisionTerminee, seanceDeRevisionTerminee } from "./seance-de-revision.ts";
 import type { SeanceDeRevisionTermineeAEnregistrer } from "./seance-de-revision-terminee-a-enregistrer.ts";
 import { type Tireur, tireurSelonLesTirages } from "./tireur.ts";
 
 const NOMBRE_MAXIMAL_DE_QUESTIONS = 10;
-const DECALAGE_UTC_MAXIMAL_A_L_OUEST_EN_MINUTES = 12 * 60;
-const DECALAGE_UTC_MAXIMAL_A_L_EST_EN_MINUTES = -14 * 60;
 
-const ERREURS_DE_REJEU = [JourInvalide, ReponseIncompatible, SeanceDeRevisionNonFinie, TirageInvalide, TirageManquant];
+const ERREURS_DE_REJEU = [
+  JourIncoherent,
+  JourInvalide,
+  ReponseIncompatible,
+  SeanceDeRevisionNonFinie,
+  TirageInvalide,
+  TirageManquant,
+];
 
 export function revaliderLaSeanceDeRevision(
   envoi: SeanceDeRevisionTermineeAEnregistrer,
@@ -45,8 +52,7 @@ function rejouer(
   niveau: Niveau,
 ): SeanceDeRevisionTerminee {
   verifierLaForme(envoi);
-  const jour = Jour.de(envoi.jour);
-  verifierLeJour(jour, envoi.termineeLe);
+  const jour = jourDeLAppareil(envoi.jour, envoi.termineeLe);
   const { rejouables } = trier(envoi, file, jour, lecons, niveau);
   if (rejouables.length === 0) return seanceDeRevisionTerminee({ ...envoi, jour, resultats: [] });
   const seance = SeanceDeRevision.commencer({
@@ -126,14 +132,6 @@ function verifierLaForme(envoi: SeanceDeRevisionTermineeAEnregistrer): void {
   }
   if (tirages.length !== questions.length) throw incoherente("il faut un tirage par question");
   if (reponses.length !== questions.length) throw incoherente("il faut une liste de réponses par question");
-}
-
-function verifierLeJour(jour: Jour, termineeLe: Date): void {
-  const lePlusTot = jourDe(termineeLe, DECALAGE_UTC_MAXIMAL_A_L_OUEST_EN_MINUTES);
-  const lePlusTard = jourDe(termineeLe, DECALAGE_UTC_MAXIMAL_A_L_EST_EN_MINUTES);
-  if (!lePlusTot.estAvantOuEgal(jour) || !jour.estAvantOuEgal(lePlusTard)) {
-    throw incoherente("le jour ne correspond pas à la date de fin");
-  }
 }
 
 function rejouerLaReponse(seance: SeanceDeRevision, reponse: ReponseDonnee): void {

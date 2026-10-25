@@ -16,6 +16,7 @@ import type { BoiteEnCours, BoiteOuverte } from "./question-de-boite.ts";
 import type { SchemaEnCours, SchemaResolu } from "./question-de-probleme-en-barres.ts";
 import type { CalculEnCours } from "./question-de-calcul.ts";
 import { Etoiles } from "./etoiles.ts";
+import type { Jour } from "./jour.ts";
 import type { CleDeQuestion } from "./cle-de-question.ts";
 import { ExerciceJoue } from "./exercice-joue.ts";
 import type { GenerateurId } from "./generateur-id.ts";
@@ -44,6 +45,7 @@ export type SeanceTerminee = Readonly<{
   lecon: string;
   choix: ChoixDeSeance;
   termineeLe: Date;
+  jour?: Jour;
   etoiles?: Etoiles["nombre"];
   scoresDeFluence?: Readonly<Record<string, number>>;
   erreurs: number;
@@ -61,6 +63,7 @@ export class Seance {
   private indexDeLExercice = 0;
   private faits: FaitDeSeance[] = [];
   private termineeLe: Date | undefined;
+  private jour: Jour | undefined;
   private dernierExerciceRepondu: ExerciceJoue | undefined;
 
   private constructor(
@@ -261,10 +264,11 @@ export class Seance {
     return Etoiles.depuisErreurs(this.erreurs());
   }
 
-  terminer(maintenant: Date): SeanceTerminee {
+  terminer(maintenant: Date, jour?: Jour): SeanceTerminee {
     if (this.termineeLe) throw new SeanceDejaTerminee();
     if (!this.estFinie()) throw new SeanceNonFinie();
     this.termineeLe = maintenant;
+    this.jour = jour;
     const fait: SeanceTerminee = {
       type: "SeanceTerminee",
       seance: this.id.valeur,
@@ -272,6 +276,7 @@ export class Seance {
       lecon: this.lecon,
       choix: this.choix,
       termineeLe: maintenant,
+      ...(jour && { jour }),
       ...this.etoilesSiLaSeanceEstNotee(),
       ...this.scoresDeFluence(),
       erreurs: this.erreurs(),
@@ -302,6 +307,7 @@ export class Seance {
       ],
       reponses: questions.map((question) => question.reponses()),
       termineeLe: this.termineeLe,
+      ...(this.jour && { jour: this.jour.toString() }),
     };
   }
 

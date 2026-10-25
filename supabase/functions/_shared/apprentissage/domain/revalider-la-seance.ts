@@ -8,6 +8,8 @@ import {
   GroupeInconnu,
   JeNeSaisPasDejaDit,
   JeNeSaisPasEnFluence,
+  JourIncoherent,
+  JourInvalide,
   LeconSansExercice,
   MotIncomplet,
   PasDeQuestionEnCours,
@@ -23,6 +25,7 @@ import {
   TirageInvalide,
   TirageManquant,
 } from "./erreurs.ts";
+import { jourDeLAppareil } from "./jour-de-l-appareil.ts";
 import type { ReponseDonnee } from "./reponse.ts";
 import { Seance, type SeanceTerminee } from "./seance.ts";
 import type { SeanceTermineeAEnregistrer } from "./seance-terminee-a-enregistrer.ts";
@@ -36,6 +39,8 @@ const ERREURS_DE_REJEU = [
   EtiquetteDejaPlacee,
   EtiquetteInconnue,
   GroupeInconnu,
+  JourIncoherent,
+  JourInvalide,
   ExerciceIntrouvable,
   JeNeSaisPasDejaDit,
   JeNeSaisPasEnFluence,
@@ -89,7 +94,8 @@ function rejouer(lecon: Lecon, envoi: SeanceTermineeAEnregistrer): SeanceTermine
     if (!seance.questionEstReussie(rang)) throw new SeanceNonFinie();
   });
   seance.verifierQueTousLesTiragesOntServi();
-  return seance.terminer(envoi.termineeLe);
+  const jour = envoi.jour === undefined ? undefined : jourDeLAppareil(envoi.jour, envoi.termineeLe);
+  return seance.terminer(envoi.termineeLe, jour);
 }
 
 function rejouerLaReponse(seance: Seance, reponse: ReponseDonnee, rang: number, maintenant: Date): void {

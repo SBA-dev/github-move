@@ -250,6 +250,13 @@ export class SeanceDeRevisionIncoherente extends Error {
   }
 }
 
+export class JourIncoherent extends Error {
+  constructor(readonly jour: string) {
+    super(`Le jour ${jour} ne correspond pas à la date de fin envoyée.`);
+    this.name = "JourIncoherent";
+  }
+}
+
 export class JourInvalide extends Error {
   constructor(readonly texte: string) {
     super(`« ${texte} » n'est pas un jour du calendrier au format AAAA-MM-JJ.`);
