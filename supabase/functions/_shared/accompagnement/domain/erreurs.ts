@@ -11,3 +11,10 @@ export class TexteTropLong extends Error {
     this.name = "TexteTropLong";
   }
 }
+
+export class LeconImpossibleAPreparer extends Error {
+  constructor() {
+    super("Ce texte ne permet pas de préparer une leçon.");
+    this.name = "LeconImpossibleAPreparer";
+  }
+}
