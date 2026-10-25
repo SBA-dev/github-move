@@ -171,9 +171,9 @@ async function verifierLaProposition(page: Page, propose: boolean, texte?: strin
 
 // --- Préparation en base
 
-function questionEnBase(l: Ligne, base: Date): QuestionRetenueEnBase {
+function questionEnBase(l: Ligne, base: Date, rang: number): QuestionRetenueEnBase {
   const date = new Date(base.getFullYear(), base.getMonth(), base.getDate() + decalageDeJour(l.date, base));
-  const derniere = new Date(date.getFullYear(), date.getMonth(), date.getDate() - l.intervalle, 9, 0, 0);
+  const derniere = new Date(date.getFullYear(), date.getMonth(), date.getDate() - l.intervalle, 9, rang, 0);
   return {
     cle: l.q.cle,
     leconDOrigine: l.q.leconId,
@@ -198,7 +198,7 @@ async function preparerLesQuestions(
   lignes: readonly Ligne[],
 ): Promise<void> {
   const e = etat28(page);
-  await ecrireLaFileDeRevision(profilDe(famille, prenom).id, lignes.map((l) => questionEnBase(l, e.debut)));
+  await ecrireLaFileDeRevision(profilDe(famille, prenom).id, lignes.map((l, rang) => questionEnBase(l, e.debut, rang)));
   if (prenom !== "Léa") return;
   e.retenues.push(...lignes);
   // La file du serveur n'est lue qu'une fois par profil : on recharge pour qu'elle soit lue avec ces questions.
@@ -328,7 +328,7 @@ async function jouerUneSeance(
     if (quitterApres === q.question) {
       await avancerJusquAuxChoix(page);
       await mauvaiseReponse(page, q.reponse);
-      await page.getByRole("banner").getByRole("button", { name: "Retour", exact: true }).click();
+      await page.getByRole("button", { name: "Retour", exact: true }).click();
       await expect(recipient(page)).toHaveCount(0);
       return;
     }
