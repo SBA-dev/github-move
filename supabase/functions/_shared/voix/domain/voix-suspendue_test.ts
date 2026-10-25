@@ -1,5 +1,6 @@
 import { assertEquals } from "@std/assert";
 import { LectureAVoixHaute } from "./lecture-a-voix-haute.ts";
+import { ChoixDeVoix } from "./choix-de-voix.ts";
 import type { CaractereDeLaVoix } from "./caractere-de-la-voix.ts";
 import type { VoixDisponible } from "./voix-disponible.ts";
 import { LecteurEnMemoire } from "../test_utils/lecteur-en-memoire.ts";
@@ -52,6 +53,24 @@ Deno.test("reprendre la voix ne remet pas le son : en Muet, rien n'est lu", asyn
   lecture.reprendre();
 
   await lecture.lire("Écoute bien.");
+
+  assertEquals(lecteur.lectures.length, 0);
+});
+
+Deno.test("essayer une voix pendant que la voix est suspendue lit quand même la phrase d'essai", async () => {
+  const { lecture, lecteur } = uneLecture();
+  lecture.suspendre();
+
+  await lecture.essayerUneVoix(ChoixDeVoix.imposee("Denise (Natural)"), "Noisette");
+
+  assertEquals(lecteur.lectures.length, 1);
+});
+
+Deno.test("essayer une voix en Muet, voix suspendue, ne lit rien", async () => {
+  const { lecture, lecteur } = uneLecture({ muet: true });
+  lecture.suspendre();
+
+  await lecture.essayerUneVoix(ChoixDeVoix.imposee("Denise (Natural)"), "Noisette");
 
   assertEquals(lecteur.lectures.length, 0);
 });
