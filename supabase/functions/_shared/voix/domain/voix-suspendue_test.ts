@@ -10,7 +10,7 @@ import { ChoixDeVoixEnMemoire } from "../test_utils/choix-de-voix-en-memoire.ts"
 const CARACTERE_NOISETTE: CaractereDeLaVoix = { sexe: "feminine", hauteur: 1.25, rythme: 1 };
 const DENISE: VoixDisponible = { nom: "Denise (Natural)", langue: "fr-FR" };
 
-function uneLecture() {
+function uneLecture(options: { muet?: boolean } = {}) {
   const lecteur = new LecteurEnMemoire();
   const lecture = new LectureAVoixHaute({
     lecteur,
@@ -18,7 +18,7 @@ function uneLecture() {
     choixDeVoix: new ChoixDeVoixEnMemoire(),
     hasard: hasardFixe(0.5),
     caractereDuPersonnageGuide: () => CARACTERE_NOISETTE,
-    etatInitial: "son",
+    etatInitial: options.muet ? "muet" : "son",
     onVoixBloquee: () => {},
   });
   return { lecture, lecteur };
@@ -33,4 +33,25 @@ Deno.test("suspendre la voix arrête la lecture en cours et plus rien n'est lu",
 
   assertEquals(lecteur.appels.slice(0, 3), ["arreter", "lire", "arreter"]);
   assertEquals(lecteur.lectures.length, 1);
+});
+
+Deno.test("reprendre la voix ne lit rien d'elle-même, puis la lecture redevient possible", async () => {
+  const { lecture, lecteur } = uneLecture();
+  lecture.suspendre();
+
+  lecture.reprendre();
+  assertEquals(lecteur.lectures.length, 0);
+
+  await lecture.lire("Écoute bien.");
+  assertEquals(lecteur.lectures.length, 1);
+});
+
+Deno.test("reprendre la voix ne remet pas le son : en Muet, rien n'est lu", async () => {
+  const { lecture, lecteur } = uneLecture({ muet: true });
+  lecture.suspendre();
+  lecture.reprendre();
+
+  await lecture.lire("Écoute bien.");
+
+  assertEquals(lecteur.lectures.length, 0);
 });
