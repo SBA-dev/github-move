@@ -380,12 +380,13 @@ function uneSeanceJoueeEtEnvoyee(
   plan: PlanDeSeanceDeRevision,
   lecons: readonly Lecon[],
 ): { resultats: ReturnType<SeanceDeRevision["resultats"]>; envoi: SeanceDeRevisionTermineeAEnregistrer } {
+  const tireurDuNavigateur = tireurAuHasard(hasardQuiAlterne());
   const seance = SeanceDeRevision.commencer({
     id: "revision-1",
     enfant: "profil-lea",
     plan,
     lecons,
-    tireurDe: () => tireurAuHasard(hasardQuiAlterne()),
+    tireurDe: () => tireurDuNavigateur,
     niveau: CE1,
   });
   jouerEnRatantLaPremiere(seance);

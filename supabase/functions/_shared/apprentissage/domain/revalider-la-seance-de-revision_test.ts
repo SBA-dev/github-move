@@ -61,7 +61,7 @@ Deno.test("un envoi cohérent de séance de révision est revalidé et redonne l
     enfant: "profil-lea",
     plan: fileDuNavigateur.planDeLaSeanceDeRevision(jourDeLaRevision),
     lecons: [leconDesSyllabes],
-    tireur: tireurAuHasard(hasardSansMelange()),
+    tireurDe: () => tireurAuHasard(hasardSansMelange()),
     niveau: CE1,
   });
   const [premiere, seconde] = seance.resultats().map(({ identite }) => identite);
@@ -97,7 +97,7 @@ function jouer(
     enfant: "profil-lea",
     plan: { questions: questions ?? file.planDeLaSeanceDeRevision(jourDeLaRevision).questions },
     lecons: [leconDesSyllabes],
-    tireur: tireurAuHasard(hasardSansMelange()),
+    tireurDe: () => tireurAuHasard(hasardSansMelange()),
     niveau: CE1,
   });
   seance.resultats().forEach(({ identite }, rang) => {
@@ -150,7 +150,7 @@ Deno.test("une séance de révision de plus de 10 questions est refusée comme i
     enfant: "profil-lea",
     plan: { questions: file.questions },
     lecons: [grandeLecon],
-    tireur: tireurAuHasard(hasardSansMelange()),
+    tireurDe: () => tireurAuHasard(hasardSansMelange()),
     niveau: CE1,
   });
   file.questions.forEach(() => seance.repondre(Reponse.choix("a")));
