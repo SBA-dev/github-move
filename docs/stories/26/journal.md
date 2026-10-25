@@ -22,3 +22,5 @@ Branche de base : `main` (`2173dba`). Branche : `feature/26-lecons-des-classes-d
 - `po-acceptance` : critères validés (`0d71753`) : 6 règles, 48 scénarios (56 cas), 0 `@a-valider`, 3 `@depend-de-27`.
 - `domain-modeler` : modèle validé, glossaire et context map complétés par ajouts seulement (`4229b9e`) : « Matière réussie », décisions n°36 et n°37 du glossaire (n°35 laissée à #27).
 - À reprendre hors vague (ajouts seulement pendant la vague) : réécrire les lignes « Leçon des classes d'avant » et « Leçon à découvrir » du glossaire selon la décision n°36.
+- 08:32 UTC : annonce `MAIN A BOUGÉ : #27 mergée` ; `main` (`89b5729`) intégrée en `b987f07`, seul conflit sur des ajouts au glossaire (les deux gardés). `@depend-de-27` levés (`2b0f53f`).
+- TDD bloc A (parcours) : comportement 1 RED `eafb1ca` → GREEN `381bb5b` ; comportements 2, 3, 4 écrits comme tests de caractérisation (`7591f39`, `36f1f00`, `6a4a57a`) : l'extraction de `etatHorsDuParcours` au GREEN 1 les donnait déjà. Revue delta du bloc A depuis `b987f07`.
