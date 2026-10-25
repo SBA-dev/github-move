@@ -207,3 +207,38 @@ export class PasDeLettreAEffacer extends Error {
     this.name = "PasDeLettreAEffacer";
   }
 }
+
+export class QuestionHorsDuTestDeDepart extends Error {
+  constructor(readonly type: string) {
+    super(`Un exercice de type « ${type} » ne pose pas de question au test de départ.`);
+    this.name = "QuestionHorsDuTestDeDepart";
+  }
+}
+
+export class TestDeDepartDejaFini extends Error {
+  constructor() {
+    super("Ce test de départ est déjà fini.");
+    this.name = "TestDeDepartDejaFini";
+  }
+}
+
+export class TestDeDepartNonFini extends Error {
+  constructor() {
+    super("Ce test de départ n'est pas fini.");
+    this.name = "TestDeDepartNonFini";
+  }
+}
+
+export class TestDeDepartDUnAutreEnfant extends Error {
+  constructor() {
+    super("Ce test de départ est celui d'un autre enfant.");
+    this.name = "TestDeDepartDUnAutreEnfant";
+  }
+}
+
+export class TestDeDepartIncoherent extends Error {
+  constructor(override readonly cause: Error) {
+    super(`Le test de départ envoyé est incohérent : ${cause.message}`);
+    this.name = "TestDeDepartIncoherent";
+  }
+}

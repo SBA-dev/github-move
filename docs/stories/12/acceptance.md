@@ -54,6 +54,14 @@ Validation n°1 du lot 2 par le PO, le 2026-10-22 (`docs/stories/lot-2-decisions
 | M9. Deux salutations « Bonjour Léa ! » | **Gardées** : celle du choix du profil (#11, toujours dite) et celle de « tout lire » (accueil de l'enfant, avec la série). | Le scénario « le personnage guide salue l'enfant » est retiré : sur la page de démonstration il ne se distinguait pas de la salutation de #11, et l'accueil avec la série arrive aux lots 3 et 4 (hors périmètre). La règle R5 ne parle plus que des choix proposés. | Proposition appliquée |
 | (sans numéro) Muet | En Muet, rien n'est lu, comme dans le legacy. | `@a-valider` retiré. | Proposition appliquée |
 
+### Après la création d'un profil (story #27)
+
+Décision de #27 (réponses 27.16 et 27.19, PO, 2026-10-24, « 27# reco OK ») : après la création d'un profil enfant dans l'espace parent, l'espace parent se ferme, le profil créé devient le profil en cours et la proposition du test de départ s'affiche ; « Plus tard » mène à l'accueil de cet enfant. Sans bibliothèque chargée, on va directement à l'accueil de l'enfant (réponse 27.5). Pour créer un autre profil, le parent rentre dans l'espace parent (contrôle parental).
+
+Effet ici : aucun texte de scénario ne change ; adaptation dans les steps (`e2e-tester` de #27).
+- « Les réglages se choisissent dès la création du profil » : « les réglages de Léa indiquent « mode dys » : « oui » » et « les autres réglages de Léa ont leurs valeurs par défaut » rentrent dans l'espace parent s'il n'est plus affiché.
+- « Un profil créé sans toucher aux réglages reçoit les réglages par défaut » : l'étape « Paul est dans l'espace parent » qui suit la création y rentre déjà ; inchangé.
+
 ## Questions ouvertes
 
 Aucune n'est bloquante. Celles du modèle restent ouvertes : n°1 (expliquer au parent que le mode dys est une donnée gardée sur l'enfant) et la question technique T3 (emplacement du découpage en syllabes).

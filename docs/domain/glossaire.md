@@ -92,12 +92,12 @@ Le glossaire garde l'orthographe française.
 | Meilleures étoiles | Le plus grand nombre d'étoiles gagné sur une leçon ; il ne baisse jamais (#24). | Apprentissage | meilleur score, record |
 | Jour de séance | Jour où l'enfant a terminé au moins une séance ; sert à la série et aux épisodes (lot 5) (#24). | Apprentissage | jour joué, connexion |
 | Étoile | Récompense d'une séance, de 1 à 3 : 3 sans erreur, 2 avec 1 à 3 erreurs, 1 au-delà. Une leçon garde ses meilleures étoiles. | Apprentissage | point, note, score |
-| Leçon réussie | Leçon pour laquelle l'enfant a gagné au moins 1 étoile. | Apprentissage | leçon terminée, faite |
-| Leçon acquise | Leçon réussie avec au moins 2 étoiles, ou validée par le test de départ. | Apprentissage | maîtrisée, validée |
+| Leçon réussie | Leçon pour laquelle l'enfant a gagné au moins 1 étoile, ou leçon réussie au test de départ (réponse 27.1 du PO). | Apprentissage | leçon terminée, faite |
+| Leçon acquise | Leçon réussie avec au moins 2 étoiles (le test de départ ne rend pas une leçon acquise : réponse 27.1 du PO). | Apprentissage | maîtrisée, validée |
 | Parcours | Suite ordonnée des leçons d'une matière pour le niveau de l'enfant. | Apprentissage | chemin, programme, carte |
 | Leçon verrouillée | Leçon du parcours que l'enfant ne peut pas encore commencer, parce que la précédente n'est pas réussie. | Apprentissage | bloquée, fermée |
 | Parcours libre | Réglage qui ouvre toutes les leçons du parcours. L'ordre conseillé reste affiché. | Apprentissage | mode libre, déverrouillage |
-| Test de départ (à valider) | Série de questions de français et de maths, jusqu'au niveau de l'enfant, pour savoir où commencer. Il s'arrête après 3 erreurs de suite. | Apprentissage | évaluation, examen, test (seul) |
+| Test de départ | Série de questions de français et de maths, jusqu'au niveau de l'enfant, pour savoir où commencer. Il s'arrête après 3 questions fausses de suite (réponse 27.13 du PO). | Apprentissage | évaluation, examen, test (seul) |
 | Révision (à valider) | Séance qui reprend les questions ratées dont la date de révision est arrivée (10 au plus). | Apprentissage | rattrapage, revoir |
 | Leçon des classes d'avant (à valider) | Leçon d'un niveau inférieur, proposée sans verrou pour réviser. | Apprentissage | ancienne leçon |
 | Prochaine leçon | Première leçon non réussie du parcours d'une matière ; au plus une par matière, aucune quand toutes sont réussies. Elle est mise en avant et ne ferme aucune autre leçon ; une leçon réussie plus loin ne la déplace pas (#25, réponse N8). Interface : « À toi ! ». | Apprentissage | leçon en cours, leçon débloquée |
@@ -106,6 +106,14 @@ Le glossaire garde l'orthographe française.
 | Matière du parcours | Matière qui a au moins une leçon du niveau de l'enfant ; elle a un onglet dans « Mon parcours ». Une matière qui n'a que des leçons réussies d'une classe au-dessus n'en est pas une (#25, réponses 25.4, N7). | Apprentissage | onglet (dans le code), discipline |
 | Place | Numéro d'une leçon dans son parcours (1, 2, …), tiré de l'`ordre`. Interface : « Leçon 1 » (#25, réponse 25.8). Ne pas confondre avec la place d'une étiquette dans un exercice `ordre` (Placement). | Apprentissage | rang, étape, numéro d'étape |
 | Leçon réussie d'une classe au-dessus | Leçon réussie d'un niveau supérieur à celui de l'enfant (enfant redescendu de classe). Elle reste visible avec son niveau et ses étoiles, à part, sous les leçons du parcours de sa matière (« Déjà réussies en CE2 ») ; elle s'ouvre pour être rejouée, ne compte pas dans le parcours, n'est jamais la prochaine leçon et n'a pas de leçon suivante (#25, réponses 25.12, N1, N9, N10). | Apprentissage | leçon perdue, leçon cachée |
+| Proposition du test de départ | Moment où le personnage guide propose le test de départ, avec « Oui, on y va ! » et « Plus tard » : après la création d'un profil, depuis l'accueil de l'enfant tant que le test de départ n'est pas fait, ou depuis l'espace parent (#27). | Apprentissage | invitation (réservé à Famille), test (seul) |
+| Réserve du test de départ | Leçons qui peuvent fournir une question du test de départ : bibliothèque seulement, `francais` et `maths`, niveau inférieur ou égal à celui de l'enfant (#27). | Apprentissage | banque de questions, pool |
+| Question du test de départ | Une seule question tirée au hasard d'un exercice d'une leçon de la réserve, et rattachée à cette leçon ; au plus 12, une par leçon, de la plus facile à la plus difficile (#27). | Apprentissage | item, épreuve |
+| Question juste, question fausse (au test de départ) | Juste : question du test de départ réussie sans aucune erreur. Fausse : au moins une réponse fausse ou « Je ne sais pas » ; l'enfant donne quand même la bonne réponse avant de continuer (#27). Ne pas confondre avec une **Réponse** juste ou fausse. | Apprentissage | question ratée, échec |
+| Arrêt du test de départ | Fin anticipée du test de départ après 3 questions fausses de suite ; une question juste remet le compte à zéro. Un test de départ arrêté est fait (#27). | Apprentissage | abandon, élimination |
+| Leçon réussie au test de départ | Leçon que le test de départ compte comme réussie, sans étoile : elle fait avancer le parcours, ne donne ni étoile, ni badge, ni compétence acquise (#27, réponses 27.1 et 27.2 du PO). Une séance terminée ensuite lui donne ses étoiles. | Apprentissage | acquise au test, validée, cochée (dans le code) |
+| Résultat du test de départ | Pour un enfant : la date du dernier test de départ fait et les leçons réussies au test de départ. Il ne modifie jamais une étoile (#27). | Apprentissage | progression, score, note |
+| Test de départ fait | Le profil a fini au moins un test de départ, par toutes ses questions ou par un arrêt ; quitter en cours ne compte pas (#27). | Apprentissage | test passé, testFait (dans le code) |
 
 ## Motivation
 
@@ -161,6 +169,7 @@ Le glossaire garde l'orthographe française.
 | E-mail de connexion | E-mail que reçoit le parent quand il demande à se connecter : sujet et texte en français, qui contiennent le lien de connexion et le code de connexion de la même demande. Composé par le domaine Famille (décision 0011) ; il n'utilise que l'adresse du parent. | Famille | courriel, courriel de connexion, mail, message, e-mail magique, OTP, modèle d'e-mail |
 | Déconnexion (à valider) | Fin de la connexion du parent sur un appareil, faite depuis l'espace parent. Elle ne ferme pas les autres appareils. Plus aucune donnée de la famille n'y reste visible. | Famille | logout |
 | Appareil (à valider) | Tablette, téléphone ou ordinateur où l'application est ouverte. Certaines préférences y sont mémorisées (Son/Muet, choix de voix), jamais les réglages d'un profil. | Famille (utilisé partout) | device, navigateur, poste |
+| Accueil de l'enfant | Écran de l'enfant après le choix de son profil dans « Qui joue ? » : son personnage guide le salue ; il mène à « Mon parcours » et, tant que le test de départ n'est pas fait, à « Mon test de départ ». #29 dira s'il devient « Aujourd'hui » (#27, réponse 27.22 du PO). | Famille | écran d'accueil, home, tableau de bord |
 
 ## Accompagnement
 
@@ -227,6 +236,7 @@ Sous-domaine décidé à la validation n°1 du lot 1 (décision 0007). Ses terme
 32. **« Relance »** (#18, ancien conflit n°5) : parole de **Motivation**, tirée **au hasard** parmi les trois phrases. Apprentissage dit seulement quelle **Parole due** (`felicitation`, `felicitationUneFoisSurDeux`, `relance`) ; en `classer`, Motivation tire la félicitation une fois sur deux, et la dernière étiquette est toujours félicitée (tranché par le PO le 2026-10-24).
 33. **« Leçon verrouillée »** (#25) : **abandonné par la réponse 25.1** (aucun verrou : toutes les leçons du parcours s'ouvrent, la prochaine leçon est seulement mise en avant). La ligne « Leçon verrouillée » d'Apprentissage est gardée pour l'historique, mais le terme n'est plus employé (ni code, ni interface, ni scénario) ; « Plus tard » et le cadenas disparaissent. De même, « ouvre la leçon suivante » (Décision n°3) se lit « fait avancer le parcours », et « sans verrou » ne distingue plus une **Leçon des classes d'avant** (tranché par le PO le 2026-10-24, réponse N3).
 34. **Termes du parcours** (#25) : **Prochaine leçon**, **Leçon à découvrir** (remplace « leçon ouverte »), **Leçon suivante**, **Matière du parcours**, **Place** et **Leçon réussie d'une classe au-dessus** sont validés (tranché par le PO le 2026-10-24, réponse N11). Restent des mots d'interface : « Mon parcours », « À toi ! », « À découvrir », « Déjà réussies en CE2 ». « Carte », « chemin », « étape » et « rang » ne désignent jamais une leçon du parcours.
+35. **Termes du test de départ** (#27) : **Test de départ**, **Proposition du test de départ**, **Réserve du test de départ**, **Question du test de départ**, **Question juste, question fausse (au test de départ)**, **Arrêt du test de départ**, **Leçon réussie au test de départ**, **Résultat du test de départ**, **Test de départ fait** et **Accueil de l'enfant** sont validés (tranché par le PO le 2026-10-24, réponses 27.1 à 27.23 : « reco OK »). Une leçon validée par le test de départ est **réussie**, sans étoile, jamais **acquise** (réponse 27.1) ; l'arrêt porte sur 3 **questions fausses** de suite, pas sur 3 erreurs (réponse 27.13). Restent des mots d'interface : « Mon test de départ », « Fin du test de départ », « Voir mon parcours », « Pour savoir où commencer ».
 
 ## Conflits à trancher
 
@@ -258,6 +268,9 @@ Lot 4 (#25, `docs/stories/25/domain-model.md`) : le PO a répondu **aucun verrou
 Restent, sans blocage pour #25 :
 - « Parcours libre » : réglage sans effet ; retiré de l'interface et du glossaire par une story de Famille dédiée, créée par le responsable (réponse N2). La ligne reste ici jusque-là ;
 - « Leçon des classes d'avant » : définition à revoir avec #26 (renommée « Leçons des classes d'avant », réponse N2).
+
+Lot 4 (#27, `docs/stories/27/domain-model.md`) : le PO a suivi toutes les recommandations 27.1 à 27.23 (2026-10-24) ; voir Décision n°35. Reste, sans blocage pour #27 :
+- « Objectif du jour » (« Joue 2 leçons aujourd'hui ») : employé par l'issue #27, absent du glossaire ; terme de Motivation, à définir par #29 ou #30.
 
 Lot 5 (#65, `docs/stories/65/domain-model.md`) : à trancher par le PO.
 - Nom de l'écran des récompenses de l'enfant : tranché, « Mes médailles » (décision 65.1 du PO ; « médaille » retiré des synonymes interdits de Badge, « trophée » reste interdit) ;

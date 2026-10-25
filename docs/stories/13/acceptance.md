@@ -73,6 +73,12 @@ Droits d'accès (`@acces`) : un parent non rattaché ne peut pas inviter ; Marie
 | Ancienne question 7. Hors ligne | Inviter demande le réseau : « Il faut être connecté à Internet pour inviter l'autre parent. » Nouveau scénario « Sans réseau, Paul ne peut pas inviter et en est informé ». | Proposition appliquée |
 | Ancienne question 8. Lien ouvert hors de l'application installée | Il suffit de l'accepter dans le navigateur ; le profil apparaît ensuite partout. Nouveau scénario « Marie accepte l'invitation dans le navigateur… ». | Proposition appliquée |
 
+### Après la création d'un profil (story #27)
+
+Décision de #27 (réponses 27.16 et 27.19, PO, 2026-10-24, « 27# reco OK ») : après la création d'un profil enfant dans l'espace parent, l'espace parent se ferme, le profil créé devient le profil en cours et la proposition du test de départ s'affiche ; « Plus tard » mène à l'accueil de cet enfant. Sans bibliothèque chargée, on va directement à l'accueil de l'enfant (réponse 27.5). Pour créer un autre profil, le parent rentre dans l'espace parent (contrôle parental).
+
+Effet ici : aucun. Les scénarios de #13 ne créent aucun profil enfant par l'écran (profils préparés) ; aucun scénario touché.
+
 ## Questions ouvertes
 
 Aucune n'est bloquante pour la story.

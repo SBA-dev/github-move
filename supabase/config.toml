@@ -437,3 +437,7 @@ verify_jwt = true
 [functions.terminer-la-seance]
 enabled = true
 verify_jwt = true
+
+[functions.terminer-le-test-de-depart]
+enabled = true
+verify_jwt = true

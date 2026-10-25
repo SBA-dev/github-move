@@ -1,10 +1,11 @@
 import { avecLesReglagesPrevus } from "../support/reglages-prevus.ts";
 import { servirLaBibliothequeDuParcours } from "../support/bibliotheque-du-parcours.ts";
+import { servirLaBibliothequeDuTestDeDepart } from "../support/bibliotheque-du-test-de-depart.ts";
 import { readFileSync } from "node:fs";
 import { expect, type Locator, type Page } from "@playwright/test";
 import { Given, type ProfilPrepare, Then, When } from "./fixtures.ts";
 import { cleDe } from "./univers.steps.ts";
-import { estSurUnProfilReel, jouerAvecLeProfilReel, ouvrirLaLeconDansLApplication } from "./profil-reel.ts";
+import { estSurUnProfilReel, jouerAvecLeProfilReel, ouvrirLaLeconDansLApplication, rechargerAvecLeProfilReel } from "./profil-reel.ts";
 import {
   attendreUneLecture,
   journal,
@@ -89,6 +90,7 @@ function bullesDeTest(titre: string | undefined, questions: string[]): Record<st
 
 export async function injecter(page: Page, lecon: LeconBrute) {
   etat(page).injectees.push(lecon);
+  if (estSurUnProfilReel(page)) await rechargerAvecLeProfilReel(page);
 }
 
 export async function interceptertLaBibliotheque(page: Page) {
@@ -205,7 +207,11 @@ Given(/^Léa a un profil enfant préparé de niveau (\S+) dans l'univers « (.+)
   // Story #24 : les séances terminées s'enregistrent pour un vrai profil ; Léa joue donc avec le même profil, créé pour Paul.
   // Story #25 : le parcours lit la progression du vrai profil, et la bibliothèque de test remplace celle de l'application.
   if ($tags.includes("@issue-25")) await servirLaBibliothequeDuParcours(page);
-  if ($tags.includes("@issue-24") || $tags.includes("@issue-25")) await jouerAvecLeProfilReel(famille, monde, page);
+  // Story #27 : la bibliothèque de test du test de départ est servie de nouveau, après l'interception ci-dessus qui l'aurait masquée.
+  if ($tags.includes("@issue-27")) await servirLaBibliothequeDuTestDeDepart(page);
+  if ($tags.includes("@issue-24") || $tags.includes("@issue-25") || $tags.includes("@issue-27")) {
+    await jouerAvecLeProfilReel(famille, monde, page);
+  }
 });
 
 Given(/^une leçon de test « (.+) » a un exercice calcul sans titre$/, async ({ page }, titre: string) => {
