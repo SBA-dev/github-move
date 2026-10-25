@@ -24,6 +24,11 @@ export const NOMBRE_MAXIMAL_DE_QUESTIONS_PAR_SEANCE_DE_REVISION = 10;
 
 export type PlanDeSeanceDeRevision = { readonly questions: readonly QuestionRetenue[] };
 
+export type ResultatDeRevision = {
+  readonly identite: CleDeQuestion;
+  readonly juste: boolean;
+};
+
 export type DonneesDeFileDeRevision = {
   readonly enfant: string;
   readonly questions: readonly QuestionRetenue[];
@@ -34,7 +39,7 @@ export class FileDeRevision {
   private constructor(
     readonly enfant: string,
     private questionsRetenues: QuestionRetenue[],
-    readonly erreursCorrigeesPourDeBon: number,
+    private nombreDErreursCorrigeesPourDeBon: number,
   ) {}
 
   static vide(enfant: string): FileDeRevision {
@@ -43,6 +48,10 @@ export class FileDeRevision {
 
   static reconstituer(donnees: DonneesDeFileDeRevision): FileDeRevision {
     return new FileDeRevision(donnees.enfant, [...donnees.questions], donnees.erreursCorrigeesPourDeBon);
+  }
+
+  get erreursCorrigeesPourDeBon(): number {
+    return this.nombreDErreursCorrigeesPourDeBon;
   }
 
   get questions(): readonly QuestionRetenue[] {
@@ -61,6 +70,35 @@ export class FileDeRevision {
       }
     }
     this.oublierLesPlusAnciennesAuDelaDeLaLimite();
+  }
+
+  enregistrerLaRevision(resultats: readonly ResultatDeRevision[], jour: Jour, termineeLe: Date): void {
+    for (const resultat of resultats) {
+      const index = this.questionsRetenues.findIndex(
+        (retenue) => retenue.identite.valeur === resultat.identite.valeur,
+      );
+      if (index !== -1) this.appliquer(index, resultat.juste, jour, termineeLe);
+    }
+  }
+
+  private appliquer(index: number, juste: boolean, jour: Jour, termineeLe: Date): void {
+    const retenue = this.questionsRetenues[index];
+    if (termineeLe.getTime() < retenue.derniereErreurLe.getTime()) return;
+    if (!juste) {
+      this.questionsRetenues[index] = rateeDeNouveau(retenue, jour, termineeLe);
+      return;
+    }
+    const suite = retenue.intervalle.suivant();
+    if (suite.corrigeePourDeBon) {
+      this.questionsRetenues.splice(index, 1);
+      this.nombreDErreursCorrigeesPourDeBon++;
+      return;
+    }
+    this.questionsRetenues[index] = {
+      ...retenue,
+      intervalle: suite.intervalle,
+      dateDeRevision: jour.plus(suite.intervalle.jours),
+    };
   }
 
   questionsDues(jour: Jour): readonly QuestionRetenue[] {
