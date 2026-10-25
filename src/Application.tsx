@@ -91,10 +91,18 @@ export function Application() {
     if (lieu !== lieuDemande) remplacer(lieu);
   }, [lieu, lieuDemande, remplacer]);
   const [matiereDuParcours, setMatiereDuParcours] = useState<CodeDeMatiere | undefined>();
+  const [classesDAvantDeplieesPour, setClassesDAvantDeplieesPour] = useState<ReadonlySet<CodeDeMatiere>>(new Set());
+  const basculerLesClassesDAvant = (matiere: CodeDeMatiere) =>
+    setClassesDAvantDeplieesPour((actuelles) => {
+      const suivantes = new Set(actuelles);
+      if (!suivantes.delete(matiere)) suivantes.add(matiere);
+      return suivantes;
+    });
   const [deconnexionEchouee, setDeconnexionEchouee] = useState(false);
   const oublierLeProfilEtSaProgression = () => {
     oublierLeProfilEnCours();
     setMatiereDuParcours(undefined);
+    setClassesDAvantDeplieesPour(new Set());
   };
   const seDeconnecter = async () => {
     setDeconnexionEchouee(false);
@@ -193,6 +201,8 @@ export function Application() {
                 profil={profilEnCours}
                 matiereChoisie={matiereDuParcours}
                 onChoisirLaMatiere={setMatiereDuParcours}
+                classesDAvantDeplieesPour={classesDAvantDeplieesPour}
+                onBasculerLesClassesDAvant={basculerLesClassesDAvant}
                 onOuvrirLaLecon={(leconId) => aller({ ecran: "lecon", leconId })}
               />
             )}
