@@ -46,7 +46,7 @@ Fonctionnalité: L'écran « Mes médailles » réunit ce que l'enfant a gagné
       Alors « Mes records de calcul rapide » est la dernière section de l'écran
       Mais aucune section n'annonce un contenu à venir
 
-    @depend-de-31 @depend-de-32 @depend-de-33
+    @depend-de-31 @depend-de-33
     Scénario: Les quatre sections apparaissent dans l'ordre cabane, histoire, badges, records
       Étant donné que Léa a un record de 12 à la fluence « Calcul rapide : tables de 3 et 4 »
       Quand Léa ouvre « Mes médailles » depuis son accueil
@@ -71,15 +71,17 @@ Fonctionnalité: L'écran « Mes médailles » réunit ce que l'enfant a gagné
       Quand Léa ouvre « Mes médailles » depuis son accueil
       Alors aucune section « Mes records de calcul rapide » n'apparaît
 
-    Scénario: Sans rien à montrer, le personnage guide invite l'enfant à gagner un premier record
+    # Mise à jour par #32 (décisions 32.9 et 32.21) : « rien à montrer » veut dire aucun objet dans la cabane et aucun record
+    Scénario: Sans rien à montrer, le personnage guide invite l'enfant à gagner des étoiles
       Étant donné que Léa n'a pas encore de record à la fluence « Calcul rapide : tables de 3 et 4 »
       Quand Léa ouvre « Mes médailles » depuis son accueil
-      Alors Léa lit « Fais un calcul rapide pour gagner ton premier record ! »
+      Alors Léa lit « Gagne des étoiles pour remplir la cabane ! »
 
-    Scénario: Avec un profil de démonstration, l'écran s'ouvre sans section des records
-      Étant donné que Léa joue avec un profil de démonstration, sans compte parent
+    # Mise à jour par #32 (décisions 32.9, 32.21 et 32.22 ; décision d'architecture 0021 : profil préparé)
+    Scénario: Avec le profil préparé, sans profil réel au serveur, l'écran s'ouvre sans section des records
+      Étant donné que Léa joue avec le profil préparé, sans profil réel au serveur
       Quand Léa ouvre « Mes médailles » depuis son accueil
-      Alors Léa lit « Fais un calcul rapide pour gagner ton premier record ! »
+      Alors Léa lit « Gagne des étoiles pour remplir la cabane ! »
       Mais aucune section « Mes records de calcul rapide » n'apparaît
 
     Scénario: Les pastilles suivent l'ordre du parcours, pas l'ordre où les records ont été gagnés
@@ -158,16 +160,19 @@ Fonctionnalité: L'écran « Mes médailles » réunit ce que l'enfant a gagné
         | princesse | Princesses et fées  | Lumi             |
         | pompier   | Pompiers            | Capitaine Sam    |
 
+    # Mise à jour par #32 (décisions 32.8, 32.10 et 32.21) : la section de la cabane, toujours là, est lue avant les records
     Scénario: Avec « tout lire à voix haute », le titre puis chaque section sont lus à l'ouverture
       Étant donné que Paul a réglé « tout lire à voix haute » sur « oui » pour Léa
       Et que Léa a un record de 12 à la fluence « Calcul rapide : tables de 3 et 4 »
       Quand Léa ouvre « Mes médailles » depuis son accueil
       Alors Léa entend Noisette lire, dans l'ordre :
-        | texte                                                          |
-        | Regarde tout ce que tu as gagné !                              |
-        | Mes médailles                                                    |
-        | Mes records de calcul rapide                                   |
-        | Calcul rapide : tables de 3 et 4 : ton record est de 12 calculs |
+        | texte                                                               |
+        | Regarde tout ce que tu as gagné !                                   |
+        | Mes médailles                                                       |
+        | La cabane de Noisette                                               |
+        | Tu as 0 étoile. Encore 3 étoiles et Noisette recevra une lanterne ! |
+        | Mes records de calcul rapide                                        |
+        | Calcul rapide : tables de 3 et 4 : ton record est de 12 calculs     |
 
     Scénario: Revenir à l'accueil pendant la lecture coupe la voix : la suite de l'écran n'est pas lue sur l'accueil
       Étant donné que Paul a réglé « tout lire à voix haute » sur « oui » pour Léa
@@ -185,11 +190,12 @@ Fonctionnalité: L'écran « Mes médailles » réunit ce que l'enfant a gagné
       Alors Léa entend Noisette dire « Regarde tout ce que tu as gagné ! »
       Mais Léa n'entend pas Noisette lire « Mes records de calcul rapide »
 
-    Scénario: Sans rien à montrer, le personnage guide ne dit qu'une phrase à l'ouverture, même avec « tout lire à voix haute »
+    # Mise à jour par #32 (décisions 32.9 et 32.21) : une seule phrase d'accueil ; avec « tout lire », la cabane est ensuite lue
+    Scénario: Sans rien à montrer, le personnage guide ne dit qu'une phrase d'accueil à l'ouverture, même avec « tout lire à voix haute »
       Étant donné que Paul a réglé « tout lire à voix haute » sur « oui » pour Léa
       Et que Léa n'a pas encore de record à la fluence « Calcul rapide : tables de 3 et 4 »
       Quand Léa ouvre « Mes médailles » depuis son accueil
-      Alors Léa entend Noisette dire « Fais un calcul rapide pour gagner ton premier record ! »
+      Alors Léa entend Noisette dire « Gagne des étoiles pour remplir la cabane ! »
       Mais Léa n'entend pas Noisette lire « Regarde tout ce que tu as gagné ! »
 
     Plan du Scénario: Sans « tout lire à voix haute », l'enfant fait lire les records à la demande (<record>)
