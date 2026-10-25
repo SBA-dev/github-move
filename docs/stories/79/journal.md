@@ -81,3 +81,5 @@ Branche de base : `main`. Aucun numéro de décision réservé (prochain libre :
   présentation (en lecture : tout le texte relu). Non bloquant : `9cfa5d8` n'a pas de RED dédié (à tracer).
   **ESCALADE** #79.12 (règle des 3 cycles) : bouton « Relire la consigne » inactif pendant la présentation (reco A)
   ou actif avec reprise type par type (B). Rien n'est mergé ; le périmètre E2E final continue.
+- 21:30 UTC — RELIS #64 : `MAIN A BOUGÉ` (#39 mergée, `906c749`). Intégration à la fin du run E2E en cours (jamais
+  pendant un run), `@issue-39` ajouté au périmètre. #79 n'ajoute aucun écran (rien à classer pour 73.7).
