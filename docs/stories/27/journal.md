@@ -35,3 +35,17 @@ Branche : `feature/27-test-de-depart`, partie de `main` 50f0a55. Branche de base
 - 00:10 UTC : PR #80 ouverte en brouillon. **MAIN A BOUGÉ** (#65 mergée, `2173dba`) pendant la non-régression complète : run laissé à son terme (décision 0020) ; `main` sera intégrée ensuite (conflit attendu sur `AccueilDeLEnfant.tsx` : garder « Mes médailles » et « Mon test de départ ») et la non-régression relancée une fois. #26 démarre son cadrage et partira du code de #27.
 - 01:15 UTC : non-régression complète (avant #65) : 1093/1100 au premier run ; KO : 1 timeout de #21 (vert en relance `--workers=1`) et 3 scénarios de #20 × 2 projets dus au step de rechargement de #27 qui cherchait toujours Léa (corrigé 4667461, #20 86/86). Aucun bug applicatif.
 - 01:20 UTC : **intégration de `main` 2173dba (#65)** : conflits sur `AccueilDeLEnfant.tsx` (« Mon parcours », « Mes médailles », « Mon test de départ », « Changer d'enfant »), `navigation.ts`, `Application.tsx`, glossaire, context map (résolus par l'`implementer`) et `classer-ordre-trous.steps.ts` (`e2e-tester`) ; merge 605d4e2. Revue delta de l'intégration : **APPROUVÉ** (ligne vide du glossaire corrigée 216a7d3). Non-régression complète relancée une fois, avec `@issue-65`.
+- 02:35 UTC : **non-régression complète** (après intégration de #65), tablette + téléphone, tags `@socle`, #5, 6, 7, 10, 11, 12, 15 à 25, 27, 65 : **1251/1256** en 46 min ; les 5 KO (#11 hors ligne ×2, #24 ×2 tablette, #10 téléphone) passent tous en relance `--workers=1` (8/8) : instabilités sous charge, hors périmètre. #27 : 60/60 cas par projet ; #65 : 36/36 par projet, vert avec le chargement de la bibliothèque dès l'accueil. Un premier run a été invalidé (serveur Vite arrêté par erreur, 934 `ERR_CONNECTION_REFUSED`). PR #80 passée en « prête ». PRÊTE À MERGER.
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Durée, du lancement au PRÊTE À MERGER | 2026-10-24 20:04 → 2026-10-25 ~02:40 UTC, soit ≈ 6 h 35 |
+| Temps d'attente | validation PO ≈ 35 min (21:08 → 20:45 annonce… réponse reçue à 20:45 après CADRAGE PRÊT de 20:27) ; limite d'utilisation de l'API ≈ 15 min (21:05 → 21:20) ; verrou base : aucune attente (accordé en 5 min, demandé à l'avance) ; `main` : deux runs E2E complets (le premier invalidé par le merge de #65 survenu pendant le run, ≈ 40 min) |
+| Cycles de review À CORRIGER | bloc A : 1 ; bloc B : 1 ; bloc C : 0 ; bloc D : 2 ; revue finale : 0 ; intégration de `main` : 0 |
+| Allers-retours implementer ⇄ test-writer (test contesté) | 3 (A4 leçon mal formée, C1 attendu non trié, tirages groupés par question en D1) |
+| Cycles E2E KO | mise au point : 1 (15 KO #24 dus aux steps, aucun bug applicatif) ; non-régression : 1 (step de rechargement, #20) + 1 run invalidé (Vite arrêté) |
+| Intégrations de `main` | 3 : #22 (sans conflit), #21 (sans conflit de code, 2 tests adaptés), #65 (conflits sur 6 fichiers) |
+| Régression découverte sur `main` après le merge | — (à relever par le responsable) |
+| Tokens et coût | relevés par le responsable (`get_session`) |
