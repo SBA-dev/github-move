@@ -3,6 +3,7 @@ import { lireLecon, Niveau } from "../../catalogue/domain/index.ts";
 import type { Lecon } from "../../catalogue/domain/index.ts";
 import { Etoiles } from "./etoiles.ts";
 import { matieresDuParcours, parcoursDeLaMatiere } from "./parcours.ts";
+import type { LeconId } from "./parcours.ts";
 
 function lecon(id: string, matiere: string, niveau: string, ordre: number): Lecon {
   return lireLecon({
@@ -180,7 +181,7 @@ Deno.test("les leçons réussies des classes au-dessus ne comptent pas dans le p
 });
 
 function parcoursAvecTestDeDepart(
-  meilleuresEtoiles: Map<string, Etoiles>,
+  meilleuresEtoiles: Map<LeconId, Etoiles>,
   leconsReussiesAuTestDeDepart: string[],
 ) {
   return parcoursDeLaMatiere(
@@ -252,7 +253,7 @@ Deno.test("sans aucune réussite, un enfant de CE2 retrouve les leçons de la ma
   const lecturesDuCE1 = lecon("fr-ce1-lectures", "francais", "CE1", 10);
   const mathsDuCP = lecon("ma-cp-nombres", "maths", "CP", 10);
   const entrees = {
-    lecons: [lecturesDuCE1, consonnes, mathsDuCP, futurDuCE2, voyelles],
+    lecons: [lecturesDuCE1, consonnes, mathsDuCP, futurDuCE2, francaisDuCM1, voyelles],
     niveau: Niveau.de("CE2"),
     meilleuresEtoiles: new Map(),
   };
@@ -278,8 +279,8 @@ const voyellesDuCP = lecon("fr-cp-voyelles", "francais", "CP", 10);
 const lecturesDuCE1 = lecon("fr-ce1-lectures", "francais", "CE1", 10);
 
 function etatsDesClassesDAvant(
-  meilleuresEtoiles: Map<string, Etoiles>,
-  leconsReussiesAuTestDeDepart: string[] = [],
+  meilleuresEtoiles: Map<LeconId, Etoiles>,
+  leconsReussiesAuTestDeDepart: LeconId[] = [],
 ) {
   const parcours = parcoursDeLaMatiere(
     {
