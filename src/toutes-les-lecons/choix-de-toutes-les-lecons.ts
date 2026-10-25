@@ -18,8 +18,9 @@ export function useChoixDeToutesLesLecons() {
     () => setChoix((actuel) => ({ ...actuel, sectionDesClassesDAvantDeployee: !actuel.sectionDesClassesDAvantDeployee })),
     [],
   );
+  const deplierLaSection = useCallback(() => setChoix((actuel) => ({ ...actuel, sectionDesClassesDAvantDeployee: true })), []);
   const oublier = useCallback(() => setChoix(AUCUN_CHOIX), []);
-  return { choix, choisirLaMatiere, choisirLeNiveau, basculerLaSection, oublier };
+  return { choix, choisirLaMatiere, choisirLeNiveau, basculerLaSection, deplierLaSection, oublier };
 }
 
 export type ChoixEnCours = ReturnType<typeof useChoixDeToutesLesLecons>;

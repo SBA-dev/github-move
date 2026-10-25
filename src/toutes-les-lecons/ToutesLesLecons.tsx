@@ -1,4 +1,4 @@
-import { type ChangeEvent, useId } from "react";
+import { type ChangeEvent, useEffect, useId } from "react";
 import { type ChoixDuFiltre, choixDuFiltre, type EntreesDuParcours, toutesLesLecons } from "@domain/apprentissage";
 import type { CodeDeMatiere } from "@domain/catalogue";
 import type { ProfilEnCours } from "@domain/famille";
@@ -44,11 +44,15 @@ function LeconsDuNiveau({ entrees, choix, onOuvrirLaLecon }: PropsDuNiveau) {
   const proposes = choixDuFiltre(entrees);
   const matiere = proposes.matieres.find(({ code }) => code === choisi.matiere);
   const niveau = proposes.niveaux.find(({ valeur }) => valeur === choisi.niveau);
-  const { lecons, leconsDesClassesDAvant } = toutesLesLecons(entrees, { matiere, niveau });
+  const { lecons, leconsDesClassesDAvant, nombreDeLecons: nombre, seulementLesClassesDAvant } = toutesLesLecons(
+    entrees,
+    { matiere, niveau },
+  );
+  const { deplierLaSection } = choix;
+  useEffect(() => {
+    if (seulementLesClassesDAvant) deplierLaSection();
+  }, [seulementLesClassesDAvant, deplierLaSection]);
   const nombreDansLaSection = leconsDesClassesDAvant.reduce((somme, classe) => somme + classe.lecons.length, 0);
-  const nombre = lecons.length + nombreDansLaSection;
-  const matiereDeLaLecon = new Map(entrees.lecons.map((lecon) => [lecon.id, lecon.matiere.code]));
-  const classeDAvantChoisie = niveau !== undefined && entrees.niveau.estAuDessusDe(niveau);
   return (
     <>
       <ListesDeChoix
@@ -80,29 +84,25 @@ function LeconsDuNiveau({ entrees, choix, onOuvrirLaLecon }: PropsDuNiveau) {
       {nombreDansLaSection > 0 && (
         <SectionDesClassesDAvant
           nombre={nombreDansLaSection}
-          deplie={choisi.sectionDesClassesDAvantDeployee || classeDAvantChoisie}
+          deplie={choisi.sectionDesClassesDAvantDeployee}
           onBasculer={choix.basculerLaSection}
         >
           {leconsDesClassesDAvant.map((classe) => (
             <div key={classe.niveau.valeur} className="lecons-d-une-classe-d-avant">
               <h4>{classe.niveau.valeur}</h4>
               <ul className="lecons-du-parcours">
-                {classe.lecons.map((lecon) => {
-                  const matiereDeLecon = matiereDeLaLecon.get(lecon.lecon);
-                  if (!matiereDeLecon) return null;
-                  return (
-                    <li key={lecon.lecon}>
-                      <BoutonDeLecon
-                        titre={lecon.titre}
-                        repere={libelleDeLOnglet(matiereDeLecon)}
-                        etat={lecon.etat}
-                        annonce={annonceDeLaLeconDeToutesLesLecons(lecon, matiereDeLecon)}
-                        testid="lecon-des-classes-d-avant"
-                        onOuvrir={() => onOuvrirLaLecon(lecon.lecon)}
-                      />
-                    </li>
-                  );
-                })}
+                {classe.lecons.map((lecon) => (
+                  <li key={lecon.lecon}>
+                    <BoutonDeLecon
+                      titre={lecon.titre}
+                      repere={libelleDeLOnglet(lecon.matiere.code)}
+                      etat={lecon.etat}
+                      annonce={annonceDeLaLeconDeToutesLesLecons(lecon, lecon.matiere.code)}
+                      testid="lecon-des-classes-d-avant"
+                      onOuvrir={() => onOuvrirLaLecon(lecon.lecon)}
+                    />
+                  </li>
+                ))}
               </ul>
             </div>
           ))}
