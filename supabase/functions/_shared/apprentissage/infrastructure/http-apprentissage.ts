@@ -7,7 +7,7 @@ import {
   repondre,
   type SessionDuParent,
 } from "../../famille/infrastructure/http-famille.ts";
-import { LeconIntrouvable, ParentNonRattache, SeanceIncoherente } from "../domain/erreurs.ts";
+import { LeconIntrouvable, ParentNonRattache, SeanceIncoherente, TestDeDepartIncoherent } from "../domain/erreurs.ts";
 
 export { EntreeInvalide };
 
@@ -18,6 +18,9 @@ export function statutEtMessage(cause: unknown): { statut: number; message: stri
   }
   if (cause instanceof LeconIntrouvable) return { statut: 404, message: "Cette leçon est introuvable." };
   if (cause instanceof SeanceIncoherente) return { statut: 422, message: "Cette séance n'a pas pu être vérifiée." };
+  if (cause instanceof TestDeDepartIncoherent) {
+    return { statut: 422, message: "Ce test de départ n'a pas pu être vérifié." };
+  }
   if (cause instanceof EntreeInvalide) return { statut: 400, message: cause.message };
   return { statut: 500, message: "La séance n'a pas pu être enregistrée." };
 }

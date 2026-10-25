@@ -53,3 +53,9 @@ Deno.test("une leçon d'un autre niveau que celui de l'enfant n'a pas de leçon 
   const leconDuCE2 = lecon("fr-ce2-a", "francais", 1, "CE2");
   assertEquals(leconSuivanteDansLeParcours(entrees([leconDuCE2.id], [leconDuCE2]), leconDuCE2.id), undefined);
 });
+
+Deno.test("la leçon suivante saute les leçons d'après réussies au test de départ", () => {
+  const avecTestDeDepart = { ...entrees([]), leconsReussiesAuTestDeDepart: new Set([c.id]) };
+
+  assertEquals(leconSuivanteDansLeParcours(avecTestDeDepart, b.id), d.id);
+});
