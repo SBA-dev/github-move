@@ -24,8 +24,14 @@ function useChargement<T>(cle: string | undefined, charger: (cle: string) => Pro
   return resultat?.pour === cle ? resultat : undefined;
 }
 
-export function useLecon(identifiant: string): LeconChargee {
-  const resultat = useChargement(identifiant, chargerLaLecon);
+function chargerLaLeconDeLaCle(cle: string): Promise<Lecon | undefined> {
+  const [profil = "", identifiant = ""] = cle.split("/");
+  return chargerLaLecon(identifiant, profil);
+}
+
+/** La leçon de la bibliothèque, sinon une leçon personnelle du profil. */
+export function useLecon(identifiant: string, profil: string): LeconChargee {
+  const resultat = useChargement(`${profil}/${identifiant}`, chargerLaLeconDeLaCle);
   if (!resultat) return { type: "chargement" };
   return resultat.valeur ? { type: "trouvee", lecon: resultat.valeur } : { type: "introuvable" };
 }

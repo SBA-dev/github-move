@@ -73,7 +73,7 @@ function commencerLaSeance(
 }
 
 export function EcranDeSeance({ leconId, ...reste }: Props) {
-  const chargee = useLecon(leconId);
+  const chargee = useLecon(leconId, reste.profilId);
   if (chargee.type === "chargement") return <p>Chargement de la leçon…</p>;
   if (chargee.type === "introuvable") return <JeuIntrouvable onRetour={reste.onRetour} />;
   return <SeanceDeLaLecon lecon={chargee.lecon} {...reste} />;
