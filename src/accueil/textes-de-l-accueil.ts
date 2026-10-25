@@ -1,4 +1,9 @@
 export const TITRE_DU_DOCK = "Mes écrans";
+export const MES_MATIERES = "Mes matières";
+export const A_FAIRE_AUJOURD_HUI = "À faire aujourd'hui";
+export const MON_PARCOURS = "Mon parcours";
+export const ACCUEIL = "Accueil";
+export const TOUTES_LES_LECONS = "Toutes les leçons";
 export const COMMENCER = "Commencer";
 export const PARCOURS_FINI_FELICITATION = "Bravo !";
 export const PARCOURS_FINI = "Tu as fini ton parcours";

@@ -129,6 +129,7 @@ export function Application() {
   };
   /** Depuis l'accueil le dock ouvre un écran ; entre deux écrans du dock il le remplace, pour que le retour mène toujours à l'accueil. */
   const ouvrirParLeDock = (destination: EcranDuDock) => {
+    if (ecran === destination) return;
     if (destination === "jeu") revenirA("jeu");
     else if (ecran === "jeu") aller(destination);
     else remplacer(destination);
