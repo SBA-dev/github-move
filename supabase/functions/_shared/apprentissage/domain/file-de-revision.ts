@@ -48,10 +48,7 @@ export class FileDeRevision {
 
   static reconstituer(donnees: DonneesDeFileDeRevision): FileDeRevision {
     verifierLaCoherence(donnees);
-    const questions = donnees.questions.map((question) => ({
-      ...question,
-      derniereErreurLe: new Date(question.derniereErreurLe),
-    }));
+    const questions = donnees.questions.map(copieDeLaQuestion);
     return new FileDeRevision(donnees.enfant, questions, donnees.erreursCorrigeesPourDeBon);
   }
 
@@ -60,7 +57,7 @@ export class FileDeRevision {
   }
 
   get questions(): readonly QuestionRetenue[] {
-    return this.questionsRetenues;
+    return this.questionsRetenues.map(copieDeLaQuestion);
   }
 
   retenir(questions: readonly QuestionRateeARetenir[], jour: Jour, termineeLe: Date): void {
@@ -108,7 +105,9 @@ export class FileDeRevision {
   }
 
   questionsDues(jour: Jour): readonly QuestionRetenue[] {
-    return this.questionsRetenues.filter((question) => question.dateDeRevision.estAvantOuEgal(jour));
+    return this.questionsRetenues
+      .filter((question) => question.dateDeRevision.estAvantOuEgal(jour))
+      .map(copieDeLaQuestion);
   }
 
   planDeLaSeanceDeRevision(jour: Jour): PlanDeSeanceDeRevision {
@@ -189,4 +188,8 @@ function verifierLaCoherence({ questions, erreursCorrigeesPourDeBon }: DonneesDe
     throw new FileDeRevisionIncoherente("une question est retenue deux fois");
   }
   if (erreursCorrigeesPourDeBon < 0) throw new FileDeRevisionIncoherente("compteur d'erreurs corrigées négatif");
+}
+
+function copieDeLaQuestion(question: QuestionRetenue): QuestionRetenue {
+  return { ...question, derniereErreurLe: new Date(question.derniereErreurLe) };
 }
