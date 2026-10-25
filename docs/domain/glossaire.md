@@ -193,6 +193,16 @@ Le glossaire garde l'orthographe française.
 | Leçon personnelle (à valider) | Leçon créée par un parent à partir de son propre texte ou d'une photo, avec l'aide de l'IA. Elle n'est visible que dans sa famille. | Accompagnement | leçon custom, leçon adulte |
 | Enregistrement de lecture (à valider) | Audio de l'enfant qui lit à voix haute, écoutable par le parent. Il expire au bout de 30 jours. | Accompagnement | audio, voix, fichier |
 | Traduction des consignes (à valider) | Traduction d'une consigne dans la langue du parent, faite par l'IA depuis une Edge Function. Seul le texte de la consigne est envoyé (lot 6). | Accompagnement | traduction de l'enfant |
+| Suivi, précision de #34 (à valider) | Vue calculée à l'affichage, sans aucune donnée propre : pour chaque profil enfant rattaché au parent, les chiffres du suivi, la carte des compétences et les leçons jouées (puis les enregistrements de lecture, #38). Elle lit les faits d'Apprentissage et ne recalcule ni ne modifie jamais une étoile (#34). | Accompagnement | tableau de bord, dashboard, statistiques |
+| Chiffres du suivi (à valider) | Les quatre nombres en tête du suivi d'un profil enfant : leçons réussies (au moins 1 étoile ou réussie au test de départ, toutes classes), total des étoiles, séances jouées, erreurs corrigées pour de bon (#34, questions 34.3 et 34.5). | Accompagnement | KPI, indicateurs, statistiques, score |
+| Total des étoiles (à valider) | Somme des meilleures étoiles de toutes les leçons d'un profil enfant. Une leçon réussie au test de départ n'y ajoute rien (#34 ; #32 pourra reprendre la même règle). | Accompagnement | score, points |
+| Séances jouées (à valider) | Nombre de séances terminées (complètes, d'un exercice, de fluence seule) et de séances de révision terminées d'un profil enfant ; le test de départ n'en est pas une (#34, question 34.5). | Accompagnement | sessions, parties |
+| Leçon jouée (à valider) | Leçon qui a au moins une séance terminée, ou qui est réussie au test de départ ; elle a une ligne dans le tableau des leçons jouées du suivi. Interface : « Toutes les leçons jouées » (#34). | Accompagnement | leçon faite, leçon commencée, progression |
+| Erreurs de la dernière séance (à valider) | Nombre d'erreurs de la séance terminée la plus récente d'une leçon. Interface : « Erreurs (dernière fois) » (#34, question 34.7). | Accompagnement | fautes, échecs |
+| Dernière séance (à valider) | Date de la séance terminée la plus récente d'une leçon, ou date du dernier test de départ pour une leçon seulement réussie au test de départ (#34, question 34.14). | Accompagnement | dernière mise à jour, maj |
+| Carte des compétences, définition proposée par #34 (à valider) | Pour un profil enfant, chaque section du programme qui couvre son niveau, avec son état de la section et les titres de ses leçons, regroupée par matière puis par domaine. Remplacerait la définition « par compétence » si la question 34.1 est retenue (conflit n°8). | Accompagnement | skill map, carte (seule), carte des compétences du programme (mot d'interface) |
+| Ligne de la carte (à valider) | Une section du programme dans la carte des compétences : son intitulé, son état de la section et les titres des leçons qui s'y rattachent (`programme.section`), quel que soit leur niveau (#34, question 34.9). | Accompagnement | compétence (pour la ligne), rubrique |
+| État de la section (à valider) | État d'une ligne de la carte : **acquise** (au moins une leçon acquise), **en cours** (au moins une leçon jouée, réussie au test de départ comprise, aucune acquise), **à faire** (des leçons, aucune jouée), **pas encore de leçon** (aucune leçon rattachée) (#34, questions 34.2, 34.4, 34.10). | Accompagnement | acquis (au masculin), validée, terminée, vide |
 
 ## Voix (sous-domaine générique)
 
@@ -263,6 +273,7 @@ Sous-domaine décidé à la validation n°1 du lot 1 (décision 0007). Ses terme
 5. **« Relance »** (#18) : **tranché par le PO le 2026-10-24** : voir Décision n°32.
 6. **« Essai »** (#72) : **tranché par le PO le 2026-10-24** : voir Décision n°35.
 7. **« Création du compte »** (#72) : **tranché par le PO le 2026-10-24** : voir Décision n°34.
+8. **« Carte des compétences »** (#34) : la ligne d'Accompagnement la définit par **compétence** (à faire, en cours, acquise) ; le legacy et l'issue #34 la construisent par **section du programme**, avec un quatrième état « pas encore de leçon ». Proposition (question 34.1) : par section du programme ; « compétence » reste le nom du badge (#31). Voir les lignes « Carte des compétences, définition proposée par #34 », « Ligne de la carte » et « État de la section ».
 
 Les anciens conflits n°3 à n°7 (compte, session, lien magique, voix, monde) sont tranchés : voir Décisions n°10 à n°15. Ceux du lot 2 (espace adulte, lien, supprimer / détacher, la voix des guides, progression) : voir Décisions n°17 à n°21.
 Ceux du lot 3 (anciens n°8 à n°14 : jeu, maison, rang, énoncé, essai, étape, progression) : voir Décisions n°23 à n°29.
@@ -295,3 +306,8 @@ Lot 5 (#65, `docs/stories/65/domain-model.md`) : à trancher par le PO.
 - « Section de l'écran » et « Pastille de record » : termes du domaine ou mots d'interface (#65).
 
 Lot 4 (#26, `docs/stories/26/domain-model.md`) : tout est tranché (réponses 26.1 à 26.20) ; « Leçon des classes d'avant » est redéfinie (Décision n°36). Reste le nom **Matière réussie** `(à valider)`.
+
+Lot 6 (#34, `docs/stories/34/domain-model.md`) : à trancher par le PO (questions 34.1 à 34.22).
+- Carte des compétences par section du programme ou par compétence (34.1, conflit n°8) ; libellé « acquise » plutôt que « acquis » (34.2) ;
+- leçons réussies au test de départ comptées dans les leçons réussies (34.3), et section « en cours », jamais « acquise », par elles seules (34.4, conforme à la réponse 27.1) ;
+- termes nouveaux : Chiffres du suivi, Total des étoiles, Séances jouées, Leçon jouée, Erreurs de la dernière séance, Dernière séance, Ligne de la carte, État de la section (34.22).
