@@ -42,23 +42,23 @@ Ce que la story **ne fait pas** :
 
 | Terme | Statut | Remarque |
 |---|---|---|
-| Révision | au glossaire (à valider) | La ligne dit « Séance qui reprend les questions ratées… ». Le modèle distingue la **séance de révision** (la séance) et la **file de révision** (ce qui est retenu). Proposition : garder « Révision » pour le mécanisme seulement (28.7) |
-| Séance de révision | **nouveau** (à valider) | Séance sans leçon ni étape de leçon, qui pose les questions dues, 10 au plus. Interface : « Je révise mes erreurs ». **Conflit** avec « Séance » (« une leçon jouée par un enfant ») : voir 28.16 |
-| File de révision | **nouveau** (à valider) | Pour un profil enfant, toutes ses questions retenues, et le nombre d'erreurs corrigées pour de bon |
-| Question ratée | **nouveau au glossaire** (à valider), déjà dans le code (`QuestionRatee`, #24) | Question d'une séance qui a coûté au moins une erreur (réponse fausse ou « Je ne sais pas »). Le glossaire interdit « question ratée » comme synonyme de « question fausse (au test de départ) » : pas de conflit, le test de départ n'en produit jamais |
-| Question retenue | **nouveau** (à valider) | Question ratée gardée dans la file de révision, avec son origine, son intervalle de révision, sa date de révision et son nombre de fois ratée. Le legacy dit « retenir » (`remember`) |
-| Leçon d'origine | **nouveau** (à valider) | Leçon de la séance où la question a été ratée. Elle ne change jamais, même si la question est ratée de nouveau pendant une séance de révision (défaut 1 corrigé) |
-| Intervalle de révision | **nouveau** (à valider), remplace « boîte » | 1, 3 ou 7 jours : écart entre le jour du dernier passage et la date de révision. **« Boîte » est interdit** : c'est déjà la boîte à jetons, et un synonyme interdit de Groupe (28.7) |
-| Date de révision | **nouveau** (à valider) | Jour à partir duquel une question retenue est due. C'est un jour, pas une heure : « demain » commence à minuit, heure de l'appareil |
-| Question due | **nouveau** (à valider) | Question retenue dont la date de révision est aujourd'hui ou avant |
-| Question juste, question fausse (en révision) | **nouveau** (à valider), même règle qu'au test de départ | Juste : réussie sans aucune erreur. Fausse : au moins une réponse fausse ou « Je ne sais pas » ; l'enfant donne quand même la bonne réponse avant de continuer |
-| Erreur corrigée pour de bon | **nouveau** (à valider) | Question retenue juste en séance de révision à l'intervalle de 7 jours : elle sort de la file. Le legacy dit `acquis` : à ne pas confondre avec **Leçon acquise** |
-| Nombre de fois ratée | **nouveau** (à valider) | Combien de fois une question retenue a été ratée (séances et séances de révision). Sert au conseil du parent (lot 6). « Échec » est un synonyme interdit d'Erreur : le legacy `fails` ne donne pas son nom |
-| Jour | **nouveau** (à valider), partagé avec #30 | Jour du calendrier de l'appareil (date sans heure). Sert à la date de révision ici, au jour de séance et à la série au lot 5 |
-| Question oubliée | **nouveau** (à valider), seulement si la limite de 250 est gardée (28.3) | Question retirée de la file sans être corrigée : limite atteinte, ou leçon retirée de la bibliothèque (28.15). Elle ne compte pas comme corrigée |
+| Révision | au glossaire, **précisé** (réponse 28.7) | Désigne le mécanisme seulement (questions ratées qui reviennent à 1, 3 puis 7 jours). Le modèle distingue la **séance de révision** (la séance) et la **file de révision** (ce qui est retenu). Précision ajoutée au glossaire par une note, la ligne existante n'est pas réécrite |
+| Séance de révision | **validé** | Séance sans leçon ni étape de leçon, qui pose les questions dues, 10 au plus. Interface : « Je révise mes erreurs ». Conflit avec « Séance » levé : « Séance » inclut la séance de révision (réponse 28.16) |
+| File de révision | **validé** | Pour un profil enfant, toutes ses questions retenues, et le nombre d'erreurs corrigées pour de bon |
+| Question ratée | **validé**, déjà dans le code (`QuestionRatee`, #24) | Question d'une séance qui a coûté au moins une erreur (réponse fausse ou « Je ne sais pas »). Le glossaire interdit « question ratée » comme synonyme de « question fausse (au test de départ) » : pas de conflit, le test de départ n'en produit jamais |
+| Question retenue | **validé** | Question ratée gardée dans la file de révision, avec son origine, son intervalle de révision, sa date de révision et son nombre de fois ratée. Le legacy dit « retenir » (`remember`) |
+| Leçon d'origine | **validé** | Leçon de la séance où la question a été ratée. Elle ne change jamais, même si la question est ratée de nouveau pendant une séance de révision (défaut 1 corrigé) |
+| Intervalle de révision | **validé**, remplace « boîte » | 1, 3 ou 7 jours : écart entre le jour du dernier passage et la date de révision. **« Boîte » est interdit** : c'est déjà la boîte à jetons, et un synonyme interdit de Groupe (28.7) |
+| Date de révision | **validé** | Jour à partir duquel une question retenue est due. C'est un jour, pas une heure : « demain » commence à minuit, heure de l'appareil |
+| Question due | **validé** | Question retenue dont la date de révision est aujourd'hui ou avant |
+| Question juste, question fausse (en révision) | **validé**, même règle qu'au test de départ | Juste : réussie sans aucune erreur. Fausse : au moins une réponse fausse ou « Je ne sais pas » ; l'enfant donne quand même la bonne réponse avant de continuer |
+| Erreur corrigée pour de bon | **validé** | Question retenue juste en séance de révision à l'intervalle de 7 jours : elle sort de la file. Le legacy dit `acquis` : à ne pas confondre avec **Leçon acquise** |
+| Nombre de fois ratée | **validé** | Combien de fois une question retenue a été ratée (séances et séances de révision). Sert au conseil du parent (lot 6). « Échec » est un synonyme interdit d'Erreur : le legacy `fails` ne donne pas son nom |
+| Jour | **validé**, partagé avec #30 | Jour du calendrier de l'appareil (date sans heure). Sert à la date de révision ici, au jour de séance et à la série au lot 5 |
+| Question oubliée | **validé** (limite de 250 gardée, réponse 28.3) | Question retirée de la file sans être corrigée : limite atteinte, ou leçon retirée de la bibliothèque (28.15). Elle ne compte pas comme corrigée |
 | Erreur | au glossaire (validé) | « Je ne sais pas » coûte une erreur : une question avec « Je ne sais pas » est donc toujours ratée (28.4) |
-| Étoile | au glossaire (validé) | « Récompense d'une séance… ». La séance de révision n'en donne pas, si 28.2 est suivie |
-| Jour de séance | au glossaire (validé) | « Jour où l'enfant a terminé au moins une séance » : à étendre aux séances de révision (28.16) |
+| Étoile | au glossaire (validé) | « Récompense d'une séance… ». La séance de révision n'en donne pas (réponse 28.2) |
+| Jour de séance | au glossaire (validé), **précisé** (réponse 28.16) | Jour où l'enfant a terminé au moins une séance ou une séance de révision (note ajoutée au glossaire) |
 | « À revoir », « Je révise mes erreurs », « Révision » (sous-titre), « petite erreur des jours passés » | mots d'interface | Hors glossaire. « Revoir » et « rattrapage » restent interdits dans le domaine |
 
 ## Modèle
@@ -74,7 +74,7 @@ classDiagram
   class FileDeRevision {
     <<agrégat (racine)>>
     ProfilEnfantId enfant
-    QuestionRetenue[] questions (250 au plus, 28.3)
+    QuestionRetenue[] questions (250 au plus)
     erreursCorrigeesPourDeBon
     retenir(QuestionRateeARetenir[], Jour, termineeLe)
     enregistrerLaRevision(ResultatDeRevision[], Jour, termineeLe)
@@ -153,7 +153,7 @@ classDiagram
 
 - **Racine** : identifiée par le `ProfilEnfantId`. Une seule par profil. Elle existe vide tant qu'aucune question n'est ratée.
 - **Contient** : les questions retenues (entités, identifiées dans la file par leur `CleDeQuestion` d'origine), et le compteur `erreursCorrigeesPourDeBon`.
-- **Pourquoi un agrégat par profil, et pas un par question** : la limite de 250 et l'oubli des plus anciennes portent sur toute la file (28.3). Si le PO abandonne la limite, l'agrégat peut se réduire à la question retenue, et le compteur devient un petit agrégat à part.
+- **Pourquoi un agrégat par profil, et pas un par question** : la limite de 250 et l'oubli des plus anciennes portent sur toute la file. La limite est gardée (réponse 28.3) : `FileDeRevision` reste un agrégat par profil.
 - **Pourquoi à part de `ResultatDeLaLecon`** : la file ne touche aucune étoile ; une même question peut venir de plusieurs séances ; une séance de révision touche plusieurs leçons d'origine.
 
 `retenir(questionsRatees, jour, termineeLe)`, appelé pour chaque séance terminée (pas pour le test de départ, qui n'est pas une séance) :
@@ -161,7 +161,7 @@ classDiagram
 - question absente : elle entre avec l'intervalle 1, la date de révision `jour + 1`, nombre de fois ratée 1 ;
 - question déjà retenue : intervalle 1, date de révision `jour + 1`, nombre de fois ratée + 1, **origine inchangée** (28.18) ;
 - `derniereErreurLe` = `termineeLe` ;
-- au-delà de 250 questions, les questions dont la dernière erreur est la plus ancienne sont oubliées (si 28.3 est suivie).
+- au-delà de 250 questions, les questions dont la dernière erreur est la plus ancienne sont oubliées (réponse 28.3).
 
 `enregistrerLaRevision(resultats, jour, termineeLe)`, appelé pour chaque séance de révision terminée :
 - question juste : l'intervalle passe à 3, puis à 7 ; la date de révision devient `jour + intervalle`. Juste à l'intervalle 7 : la question sort de la file et `erreursCorrigeesPourDeBon + 1` ;
@@ -198,7 +198,7 @@ La séance la calcule elle-même pour chaque question ratée (`QuestionRateeARet
 - `terminer(maintenant, jour)` produit `SeanceDeRevisionTerminee` : identifiant, enfant, date, jour, et pour chaque question son identité et `juste`. Refusé si une question n'est pas réussie (`SeanceDeRevisionNonFinie`) ou si c'est déjà fait (`SeanceDeRevisionDejaTerminee`).
 - `aEnregistrer()` produit l'envoi `SeanceDeRevisionTermineeAEnregistrer` : identifiant, enfant, identités des questions dans l'ordre, tirages, réponses de chaque question, date de fin, jour.
 - **Quitter en cours** : rien n'est produit ni envoyé ; la file ne change pas.
-- **Étoiles** : aucune, si 28.2 est suivie. `ResultatDeLaLecon` n'est jamais touché.
+- **Étoiles** : aucune (réponse 28.2). `ResultatDeLaLecon` n'est jamais touché.
 
 ### Question de révision (`questionDeRevision`, fonction pure)
 
@@ -253,7 +253,7 @@ Après une séance (ordinaire ou de révision) terminée, le front applique la m
 6. Une question juste en révision est une question réussie **sans aucune erreur** ; une réponse fausse ou « Je ne sais pas » la rend fausse.
 7. Une séance de révision pose **au plus 10** questions, toutes dues, les plus anciennes d'abord, chacune une seule fois.
 8. Le compteur d'erreurs corrigées pour de bon ne baisse jamais. Une question oubliée ne le fait pas monter.
-9. La file a **au plus 250** questions (si 28.3 est suivie).
+9. La file a **au plus 250** questions (réponse 28.3).
 10. Une séance de révision ne modifie **aucune étoile** ni aucun résultat de la leçon, et ne change pas le parcours.
 11. Le serveur recalcule les questions ratées, leur origine, et les questions justes d'une séance de révision. Il n'accepte qu'un envoi cohérent ; un même envoi n'est compté qu'une fois.
 12. Un parent ne lit et ne modifie la file de révision que des enfants auxquels il est rattaché (domaine et RLS).
@@ -304,7 +304,7 @@ Toutes supprimées en **cascade** avec le profil et incluses dans l'**export** (
 
 ## Données d'enfants
 
-**Nouvelles données personnelles** : les questions que l'enfant a ratées (clé, leçon d'origine, dates), leur nombre de fois ratée, le nombre d'erreurs corrigées pour de bon, et les séances de révision terminées (date, nombre de questions, questions justes). Elles servent directement l'apprentissage (révisions) et le suivi parental déclaré (lot 6) : conforme à la minimisation, si 28.20 est suivie.
+**Nouvelles données personnelles** : les questions que l'enfant a ratées (clé, leçon d'origine, dates), leur nombre de fois ratée, le nombre d'erreurs corrigées pour de bon, et les séances de révision terminées (date, nombre de questions, questions justes). Elles servent directement l'apprentissage (révisions) et le suivi parental déclaré (lot 6) : conforme à la minimisation (réponse 28.20).
 
 À respecter :
 - RLS fondée sur le rattachement ; écriture par le serveur seul ;
@@ -355,56 +355,58 @@ supabase/functions/_shared/motivation/domain/     # paroles de la séance de ré
 
 ## Questions ouvertes
 
+**Toutes tranchées.** Le PO a retenu toutes les recommandations 28.1 à 28.28 (réponse « #28 reco OK », 2026-10-25, annonce https://github.com/SBA-dev/github-move/issues/64#issuecomment-6396299951). Les questions 28.1 à 28.21 sont ci-dessous, les questions 28.22 à 28.28 dans `acceptance.md`. Il ne reste aucune question ouverte sur le modèle.
+
 Les questions 28.1 à 28.7 reprennent celles de l'issue, dans l'ordre. Les suivantes viennent du passage à la cible.
 
-**28.1. Corriger les deux défauts du legacy ?** (titre de la leçon d'origine perdu quand la question est ratée pendant une révision ; question retenue deux fois sous deux clés.)
-- **Recommandation** : **oui**, comme écarts voulus. Ils disparaissent par construction : la leçon d'origine ne change jamais (invariant 4), et le résultat d'une révision s'applique par l'identité d'origine (invariant 3).
+**28.1. Corriger les deux défauts du legacy ?** (titre de la leçon d'origine perdu quand la question est ratée pendant une révision ; question retenue deux fois sous deux clés.) **Tranchée : recommandation retenue** (PO, 2026-10-25).
+- **Recommandation (retenue)** : **oui**, comme écarts voulus. Ils disparaissent par construction : la leçon d'origine ne change jamais (invariant 4), et le résultat d'une révision s'applique par l'identité d'origine (invariant 3).
 
-**28.2. Les étoiles de la séance de révision.** Le legacy les montre (« Tu gagnes 2 étoiles, Léa. ») mais elles ne comptent nulle part.
+**28.2. Les étoiles de la séance de révision.** Le legacy les montre (« Tu gagnes 2 étoiles, Léa. ») mais elles ne comptent nulle part. **Tranchée : recommandation retenue** (PO, 2026-10-25).
 - (a) les garder à l'écran de fin seulement ; (b) les retirer ; (c) les compter (cabane).
-- **Recommandation** : **(b)**. Une étoile est la récompense d'une leçon ; une étoile qui ne compte nulle part trompe l'enfant, et (c) donnerait des étoiles sans leçon. L'écran de fin montre une phrase du personnage guide qui dit les erreurs effacées, sans étoile ni nombre de fautes, par exemple : « Bravo Léa ! 3 erreurs s'effacent un peu plus. » (texte à valider). Un seul bouton « Accueil ».
+- **Recommandation (retenue)** : **(b)**. Une étoile est la récompense d'une leçon ; une étoile qui ne compte nulle part trompe l'enfant, et (c) donnerait des étoiles sans leçon. L'écran de fin montre une phrase du personnage guide qui dit les erreurs effacées, sans étoile ni nombre de fautes, par exemple : « Bravo Léa ! 3 erreurs s'effacent un peu plus. » (texte à valider). Un seul bouton « Accueil ».
 
-**28.3. Garder la limite de 250 questions retenues, et l'oubli des plus anciennes ?**
-- **Recommandation** : **oui**, oublier celles dont la dernière erreur est la plus ancienne. C'est la minimisation (la file ne grossit pas sans fin) et un enfant n'en révise que 10 par séance. Conséquence : la file est un agrégat par profil. Si non, l'agrégat se réduit à la question retenue.
+**28.3. Garder la limite de 250 questions retenues, et l'oubli des plus anciennes ?** **Tranchée : recommandation retenue** (PO, 2026-10-25).
+- **Recommandation (retenue)** : **oui**, oublier celles dont la dernière erreur est la plus ancienne. C'est la minimisation (la file ne grossit pas sans fin) et un enfant n'en révise que 10 par séance. Conséquence : la file est un agrégat par profil. Si non, l'agrégat se réduit à la question retenue.
 
-**28.4. « Je ne sais pas » compte-t-il comme une erreur à retenir ?**
-- **Recommandation** : **oui**, comme aujourd'hui. C'est cohérent avec le glossaire (« Je ne sais pas » coûte une erreur) et avec #23. En séance de révision, « Je ne sais pas » rend la question fausse : retour à 1 jour.
+**28.4. « Je ne sais pas » compte-t-il comme une erreur à retenir ?** **Tranchée : recommandation retenue** (PO, 2026-10-25).
+- **Recommandation (retenue)** : **oui**, comme aujourd'hui. C'est cohérent avec le glossaire (« Je ne sais pas » coûte une erreur) et avec #23. En séance de révision, « Je ne sais pas » rend la question fausse : retour à 1 jour.
 
-**28.5. Leçons des classes d'avant, leçons personnelles, leçons d'une classe au-dessus.** Une erreur y est-elle retenue comme les autres ?
-- **Recommandation** : **oui** : toute séance terminée, quelle que soit sa leçon. Les leçons personnelles (lot 6) suivront la même règle sans changement.
+**28.5. Leçons des classes d'avant, leçons personnelles, leçons d'une classe au-dessus.** Une erreur y est-elle retenue comme les autres ? **Tranchée : recommandation retenue** (PO, 2026-10-25).
+- **Recommandation (retenue)** : **oui** : toute séance terminée, quelle que soit sa leçon. Les leçons personnelles (lot 6) suivront la même règle sans changement.
 
-**28.6. Après un changement de classe, les questions retenues restent-elles dans la file ?**
-- **Recommandation** : **oui** (décision n°7 du lot 2 : changer de classe garde la progression). Une question de CE1 reste à réviser en CE2.
+**28.6. Après un changement de classe, les questions retenues restent-elles dans la file ?** **Tranchée : recommandation retenue** (PO, 2026-10-25).
+- **Recommandation (retenue)** : **oui** (décision n°7 du lot 2 : changer de classe garde la progression). Une question de CE1 reste à réviser en CE2.
 
-**28.7. Termes.** « Révision » et « Erreur » sont dans le glossaire ; « boîte » et « date de révision » manquent.
-- **Recommandation** :
+**28.7. Termes.** « Révision » et « Erreur » sont dans le glossaire ; « boîte » et « date de révision » manquent. **Tranchée : recommandation retenue** (PO, 2026-10-25).
+- **Recommandation (retenue)** :
   - **« Boîte » n'entre pas** au domaine : il désigne déjà la boîte à jetons et il est interdit pour Groupe. On dit **Intervalle de révision** (1, 3 ou 7 jours) ;
   - ajouter **File de révision**, **Question ratée**, **Question retenue**, **Leçon d'origine**, **Date de révision**, **Question due**, **Séance de révision**, **Question juste / fausse (en révision)**, **Erreur corrigée pour de bon**, **Nombre de fois ratée**, **Jour**, **Question oubliée** (lignes ajoutées en « à valider ») ;
   - la ligne « Révision » du glossaire ne désigne plus la séance : la remplacer par « Mécanisme qui fait revenir les questions ratées à intervalles de plus en plus longs (1, 3 puis 7 jours) » ;
   - « Erreur » ne change pas.
 
-**28.8. Accès à la séance de révision avant l'écran « Aujourd'hui » (#29).**
-- **Recommandation** : un bouton **« Je révise mes erreurs »** sur l'accueil de l'enfant, affiché seulement s'il y a au moins une question due, avec en dessous « 3 petites erreurs des jours passés » (« 1 petite erreur des jours passés » au singulier ; on compte les questions dues, même au-delà de 10). Le retour et « Accueil » mènent à l'accueil de l'enfant. #29 remplacera ce bouton par la tuile « À revoir », comme pour le test de départ (27.10).
+**28.8. Accès à la séance de révision avant l'écran « Aujourd'hui » (#29).** **Tranchée : recommandation retenue** (PO, 2026-10-25).
+- **Recommandation (retenue)** : un bouton **« Je révise mes erreurs »** sur l'accueil de l'enfant, affiché seulement s'il y a au moins une question due, avec en dessous « 3 petites erreurs des jours passés » (« 1 petite erreur des jours passés » au singulier ; on compte les questions dues, même au-delà de 10). Le retour et « Accueil » mènent à l'accueil de l'enfant. #29 remplacera ce bouton par la tuile « À revoir », comme pour le test de départ (27.10).
 
-**28.9. Fuseau horaire : qu'est-ce que « demain » sur le serveur ?** Le legacy compte les jours à minuit, heure de l'appareil. Le serveur ne connaît que l'heure UTC de fin.
+**28.9. Fuseau horaire : qu'est-ce que « demain » sur le serveur ?** Le legacy compte les jours à minuit, heure de l'appareil. Le serveur ne connaît que l'heure UTC de fin. **Tranchée : recommandation retenue** (PO, 2026-10-25).
 - (a) L'appareil envoie son **jour** (date locale de la fin) avec la séance ; le serveur vérifie qu'il est cohérent avec l'heure de fin, à 14 heures près. (b) Fuseau fixe `Europe/Paris` pour tous. (c) Jour UTC.
-- **Recommandation** : **(a)**. Il reste fidèle à l'heure de l'appareil, marche pour les familles des outre-mer et de l'étranger, et sert aussi au jour de séance et à la série (#30). (c) rendrait une erreur de 23 h 30 « due » le matin même.
+- **Recommandation (retenue)** : **(a)**. Il reste fidèle à l'heure de l'appareil, marche pour les familles des outre-mer et de l'étranger, et sert aussi au jour de séance et à la série (#30). (c) rendrait une erreur de 23 h 30 « due » le matin même.
 
-**28.10. La file : table propre, ou déduite des questions des séances (`questions_des_seances`) ?**
-- **Recommandation** : **table propre** (voir « Base de données attendue »). La clé seule ne permet pas de rejouer une question générée ni une addition, et les résultats des révisions n'existent pas ailleurs. `questions_des_seances` reste l'histoire, sans changement.
+**28.10. La file : table propre, ou déduite des questions des séances (`questions_des_seances`) ?** **Tranchée : recommandation retenue** (PO, 2026-10-25).
+- **Recommandation (retenue)** : **table propre** (voir « Base de données attendue »). La clé seule ne permet pas de rejouer une question générée ni une addition, et les résultats des révisions n'existent pas ailleurs. `questions_des_seances` reste l'histoire, sans changement.
 
-**28.11. Quand la file est-elle mise à jour après une séance ordinaire ?** Séparément après la séance, au risque de perdre les questions ratées si cette écriture échoue (la séance renvoyée est « déjà enregistrée ») ; ou dans le **même enregistrement** que la séance et le résultat de la leçon.
-- **Recommandation** : **le même enregistrement, tout ou rien**, comme la séance et le résultat de la leçon (#24). Une séance renvoyée deux fois ne retient rien de plus. L'écriture reste optimiste (version de la file) en cas de deux envois proches.
+**28.11. Quand la file est-elle mise à jour après une séance ordinaire ?** Séparément après la séance, au risque de perdre les questions ratées si cette écriture échoue (la séance renvoyée est « déjà enregistrée ») ; ou dans le **même enregistrement** que la séance et le résultat de la leçon. **Tranchée : recommandation retenue** (PO, 2026-10-25).
+- **Recommandation (retenue)** : **le même enregistrement, tout ou rien**, comme la séance et le résultat de la leçon (#24). Une séance renvoyée deux fois ne retient rien de plus. L'écriture reste optimiste (version de la file) en cas de deux envois proches.
 
-**28.12. Revalidation d'une séance de révision faite hors ligne.** Entre la fin et l'envoi, la file a pu changer (autre appareil, autre séance), et une leçon d'origine a pu disparaître.
-- **Recommandation** :
+**28.12. Revalidation d'une séance de révision faite hors ligne.** Entre la fin et l'envoi, la file a pu changer (autre appareil, autre séance), et une leçon d'origine a pu disparaître. **Tranchée : recommandation retenue** (PO, 2026-10-25).
+- **Recommandation (retenue)** :
   - refuser l'envoi entier seulement s'il est incohérent en lui-même (plus de 10 questions, doublon, tirage ou réponses invalides, jour incohérent) ;
   - ignorer une question qui n'est plus dans la file, n'était pas due au jour envoyé ou dont la leçon a disparu ; appliquer les autres ;
   - ignorer un résultat plus ancien que la dernière erreur de la question ;
   - ne pas revérifier l'ordre « plus anciennes d'abord ».
   - La fusion de deux files modifiées sur deux appareils hors ligne reste pour le lot 7.
 
-**28.13. Quelles questions retient-on, et sous quelle forme sont-elles rejouées ?**
+**28.13. Quelles questions retient-on, et sous quelle forme sont-elles rejouées ?** **Tranchée : recommandation retenue** (PO, 2026-10-25).
 
 | Question ratée en séance | Retenue ? | Rejouée en séance de révision |
 |---|---|---|
@@ -420,34 +422,34 @@ Les questions 28.1 à 28.7 reprennent celles de l'issue, dans l'ordre. Les suiva
 | `dictee` | oui | le mot dicté, avec le clavier des dictées du profil |
 | `ordre`, `memoriser`, `fluence` | **non** | — (une place de liste ou un mot caché n'a pas de sens seul ; une fluence ne coûte pas d'erreur). Comme le legacy |
 
-- **Recommandation** : **oui à ce tableau**, boîte rejouée en boîte comprise.
+- **Recommandation (retenue)** : **oui à ce tableau**, boîte rejouée en boîte comprise.
 
-**28.14. Une question générée (calcul à générateur, addition tirée) : que retient-on ?**
-- **Recommandation** : son **tirage** (l'opération, les nombres de l'addition), dans son origine : sans lui, on ne peut pas la reposer. C'est du contenu, pas une donnée sur l'enfant. On ne retient jamais le texte entier d'une question écrite dans la bibliothèque : on la retrouve par sa clé.
+**28.14. Une question générée (calcul à générateur, addition tirée) : que retient-on ?** **Tranchée : recommandation retenue** (PO, 2026-10-25).
+- **Recommandation (retenue)** : son **tirage** (l'opération, les nombres de l'addition), dans son origine : sans lui, on ne peut pas la reposer. C'est du contenu, pas une donnée sur l'enfant. On ne retient jamais le texte entier d'une question écrite dans la bibliothèque : on la retrouve par sa clé.
 
-**28.15. Une question dont la leçon a été retirée de la bibliothèque, ou dont le texte a changé.**
-- **Recommandation** : elle est **oubliée sans bruit** à la prochaine séance de révision (ni posée, ni comptée comme corrigée), et la séance prend la suivante. L'enfant ne voit aucun message.
+**28.15. Une question dont la leçon a été retirée de la bibliothèque, ou dont le texte a changé.** **Tranchée : recommandation retenue** (PO, 2026-10-25).
+- **Recommandation (retenue)** : elle est **oubliée sans bruit** à la prochaine séance de révision (ni posée, ni comptée comme corrigée), et la séance prend la suivante. L'enfant ne voit aucun message.
 
-**28.16. La séance de révision est-elle une « séance » ?** Le glossaire dit « Séance : une leçon jouée par un enfant », et « Jour de séance : jour où l'enfant a terminé au moins une séance ». La séance de révision n'a pas de leçon ; l'issue la fait compter pour la série.
-- **Recommandation** :
+**28.16. La séance de révision est-elle une « séance » ?** Le glossaire dit « Séance : une leçon jouée par un enfant », et « Jour de séance : jour où l'enfant a terminé au moins une séance ». La séance de révision n'a pas de leçon ; l'issue la fait compter pour la série. **Tranchée : recommandation retenue** (PO, 2026-10-25).
+- **Recommandation (retenue)** :
   - garder le terme **Séance de révision** et préciser « Séance » : « une leçon jouée par un enfant, ou une séance de révision » ;
   - publier un événement à part, **`SeanceDeRevisionTerminee`**, et non `SeanceTerminee`, qui porte une leçon et des étoiles et met à jour le résultat de la leçon ;
   - préciser « Jour de séance » : jour où l'enfant a terminé au moins une séance ou une séance de révision. #30 lira les deux.
 
-**28.17. Une question retenue réussie sans erreur dans une séance ordinaire (en rejouant la leçon) avance-t-elle dans la file ?**
-- **Recommandation** : **non**, comme le legacy : seule la séance de révision fait avancer une question. La règle reste simple et l'enfant revoit la question à la date prévue.
+**28.17. Une question retenue réussie sans erreur dans une séance ordinaire (en rejouant la leçon) avance-t-elle dans la file ?** **Tranchée : recommandation retenue** (PO, 2026-10-25).
+- **Recommandation (retenue)** : **non**, comme le legacy : seule la séance de révision fait avancer une question. La règle reste simple et l'enfant revoit la question à la date prévue.
 
-**28.18. Une question déjà retenue, ratée de nouveau dans une séance ordinaire.**
-- **Recommandation** : comme le legacy : retour à 1 jour, due le lendemain, nombre de fois ratée + 1. Sa leçon d'origine reste la première (invariant 4), même si elle vient d'une autre leçon qui contient la même question.
+**28.18. Une question déjà retenue, ratée de nouveau dans une séance ordinaire.** **Tranchée : recommandation retenue** (PO, 2026-10-25).
+- **Recommandation (retenue)** : comme le legacy : retour à 1 jour, due le lendemain, nombre de fois ratée + 1. Sa leçon d'origine reste la première (invariant 4), même si elle vient d'une autre leçon qui contient la même question.
 
-**28.19. Ordre des questions dues à égalité de date de révision** (souvent : toutes les erreurs de la veille).
-- **Recommandation** : date de révision, puis dernière erreur la plus ancienne, puis clé. L'ordre est le même sur l'appareil et sur le serveur.
+**28.19. Ordre des questions dues à égalité de date de révision** (souvent : toutes les erreurs de la veille). **Tranchée : recommandation retenue** (PO, 2026-10-25).
+- **Recommandation (retenue)** : date de révision, puis dernière erreur la plus ancienne, puis clé. L'ordre est le même sur l'appareil et sur le serveur.
 
-**28.20. Suivi du parent (lot 6) : retenir dès maintenant le nombre de fois ratée et le nombre d'erreurs corrigées pour de bon ?** Ils ne sont pas affichés avant #34 et #35.
-- **Recommandation** : **oui**, deux nombres seulement : le nombre de fois ratée par question (une erreur en séance de révision compte aussi) et le compteur par profil. Ils servent au conseil « Certaines erreurs reviennent souvent » et au compteur du suivi, finalités déclarées ; le compteur ne pourrait pas être reconstitué plus tard. Les titres des leçons se lisent dans le Catalogue par la leçon d'origine : rien de plus à garder.
+**28.20. Suivi du parent (lot 6) : retenir dès maintenant le nombre de fois ratée et le nombre d'erreurs corrigées pour de bon ?** Ils ne sont pas affichés avant #34 et #35. **Tranchée : recommandation retenue** (PO, 2026-10-25).
+- **Recommandation (retenue)** : **oui**, deux nombres seulement : le nombre de fois ratée par question (une erreur en séance de révision compte aussi) et le compteur par profil. Ils servent au conseil « Certaines erreurs reviennent souvent » et au compteur du suivi, finalités déclarées ; le compteur ne pourrait pas être reconstitué plus tard. Les titres des leçons se lisent dans le Catalogue par la leçon d'origine : rien de plus à garder.
 
-**28.21. Sans réseau, avant #44.**
-- **Recommandation** : comme le test de départ (27.5) :
+**28.21. Sans réseau, avant #44.** **Tranchée : recommandation retenue** (PO, 2026-10-25).
+- **Recommandation (retenue)** : comme le test de départ (27.5) :
   - sans file connue sur l'appareil, pas de bouton, sans message ;
   - une séance de révision finie hors ligne est gardée sur l'appareil et renvoyée au retour du réseau ;
   - une seule fois grâce à son identifiant.
