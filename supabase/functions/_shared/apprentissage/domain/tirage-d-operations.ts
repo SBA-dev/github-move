@@ -51,7 +51,7 @@ export function relireLesOperations(generateur: GenerateurComplet, tirage: reado
   });
 }
 
-function lireUneOperation(ligne: string): Operation {
+export function lireUneOperation(ligne: string): Operation {
   const coupure = ligne.lastIndexOf(" = ");
   return { q: ligne.slice(0, coupure), r: Number(ligne.slice(coupure + 3)) };
 }
