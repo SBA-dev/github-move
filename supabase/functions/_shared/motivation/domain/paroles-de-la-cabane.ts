@@ -37,10 +37,3 @@ export function annonceDeLObjetRecu(objet: ObjetDeLaCabane): string {
 export function finDePhraseDuPersonnageGuide(objet: ObjetDeLaCabane): string {
   return `${NOM_DU_PERSONNAGE_DE_LA_CABANE} a reçu ${objet.nom} pour sa cabane.`;
 }
-
-export function phraseDeFinAvecLaCabane(
-  phraseDeFin: string,
-  objet: ObjetDeLaCabane | undefined,
-): string {
-  return objet ? `${phraseDeFin} ${finDePhraseDuPersonnageGuide(objet)}` : phraseDeFin;
-}
