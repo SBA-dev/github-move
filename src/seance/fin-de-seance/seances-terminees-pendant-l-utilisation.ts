@@ -1,8 +1,11 @@
-export type SeanceTermineeConnue = { readonly lecon: string; readonly termineeLe: Date };
+import type { Jour } from "@domain/apprentissage";
+
+/** Une séance terminée : sa leçon, sa date de fin, et le jour du calendrier de l'appareil où elle a été finie. */
+export type SeanceTermineeConnue = { readonly lecon: string; readonly termineeLe: Date; readonly jour: Jour };
 
 const terminees = new Map<string, readonly SeanceTermineeConnue[]>();
 
-/** Retient la leçon et la date de fin d'une séance terminée dans ce navigateur, même si le serveur l'a refusée ou ne l'a pas reçue. */
+/** Retient la leçon, la date et le jour de fin d'une séance terminée dans ce navigateur, même si le serveur l'a refusée ou ne l'a pas reçue. */
 export function retenirLaSeanceTerminee(profil: string, seance: SeanceTermineeConnue): void {
   terminees.set(profil, [...seancesTermineesPendantLUtilisation(profil), seance]);
 }
