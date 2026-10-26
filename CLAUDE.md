@@ -50,6 +50,12 @@ Règles de cohabitation :
 | Tous les tests E2E (non-régression, **une fois** par story, juste avant la PR prête) | `npx bddgen --tags "<stories livrées : @socle or @issue-5 or …>" && NODE_USE_ENV_PROXY=1 npx playwright test --grep-invert "@depend-de|@envoi-email|@hors-beta"` (sans `--tags`, `bddgen` échoue sur les étapes des stories à venir). Scénarios en parallèle sur 3 workers (`E2E_WORKERS=<k>` pour changer) |
 | Tests E2E qui envoient un vrai e-mail de connexion (avant un merge qui touche la connexion, ou la mise en ligne) | `npx bddgen --tags "@issue-5" && NODE_USE_ENV_PROXY=1 npx playwright test --grep @envoi-email` (pendant la beta, tous ces scénarios sont aussi `@hors-beta` : la commande ne sert plus avant #45) |
 | Tests E2E de la PWA (#8, build de production) | `npx bddgen -c playwright.pwa.config.ts && npx playwright test -c playwright.pwa.config.ts` |
+| Vérifier un build avant publication (V1) | `python3 scripts/exploitation/secrets_du_build.py dist` |
+| Contrôles après publication (V2 à V12) | `env -u SUPABASE_SERVICE_ROLE_KEY python3 scripts/exploitation/controles_production.py` |
+| Scénarios `@production` (après publication, sur `tablette` et `telephone`) | `env -u SUPABASE_SERVICE_ROLE_KEY npx bddgen -c playwright.production.config.ts && env -u SUPABASE_SERVICE_ROLE_KEY npx playwright test -c playwright.production.config.ts` |
+| Migrations de production | `python3 scripts/exploitation/migrations.py` |
+| Envoi du front (WebDAV) | `python3 scripts/exploitation/envoi_webdav.py dist` |
+| Garder le projet de production actif (tâche planifiée) | `python3 scripts/exploitation/garder_actif.py` |
 | Regénérer la bibliothèque | `python3 scripts/build_bibliotheque.py` |
 | Regénérer l'index des programmes | `python3 scripts/index_programmes.py` |
 | Tests du pipeline de contenu | `python3 -m pytest scripts/tests` |
@@ -58,6 +64,7 @@ Règles de cohabitation :
 
 > ⚠️ Tous les agents se fient à ce tableau. Tenez-le à jour quand un script change.
 > Dans un conteneur cloud, Chromium est déjà installé : Playwright le trouve via `PLAYWRIGHT_BROWSERS_PATH`. Ne lancez jamais `playwright install`. Les steps E2E qui appellent Supabase doivent y être lancés avec `NODE_USE_ENV_PROXY=1` (sinon le processus Node de Playwright ne passe pas par le proxy HTTPS du conteneur) ; les scénarios tagués `@envoi-email` (18 cas de #5, plus quelques-uns de #10, #11 et #13) consomment environ 44 des 100 e-mails de connexion autorisés par heure sur le projet de développement : ils sont exclus des exécutions courantes. Les scénarios tagués `@hors-beta` (connexion par lien ou code de connexion reçu par e-mail, décision 0019) décrivent un comportement retiré pendant la beta, où le parent se connecte par mot de passe du parent (#72) : `bddgen --tags` les génère encore, c'est `--grep-invert "…|@hors-beta"` qui les exclut ; #45 retire ce tag en rétablissant l'e-mail.
+> Les scénarios `@production` et `@pwa` sont exclus par la configuration principale ; la publication suit `docs/publication.md`.
 > Le hook `.claude/hooks/session-start.sh` installe Deno, pytest et les dépendances npm (dont la CLI Supabase : `npx supabase …`) au démarrage de chaque session cloud.
 > `supabase start` a besoin de Docker, absent du conteneur cloud : les scénarios qui touchent Supabase tournent donc contre le projet de développement en ligne `savanturier-dev` (décision 0010, sur une branche suivante), et les migrations s'y appliquent par l'API de gestion.
 
