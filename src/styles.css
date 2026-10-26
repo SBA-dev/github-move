@@ -430,7 +430,7 @@ button.tuile .nom-de-la-tuile, button.tuile .nom-de-la-matiere { font-size: 1.1r
   word-spacing: inherit;
   line-height: inherit;
 }
-[data-mode-dys="true"] :is(.consigne, .bulle, .pastille, .pastille-de-serie, .question, .bulle-de-choix, .etiquette, .texte-a-trous, .carte-de-la-poesie) {
+[data-mode-dys="true"] :is(.consigne, .bulle, .pastille, .pastille-de-serie, .question, .bulle-de-choix, .etiquette, .texte-a-trous, .carte-de-la-poesie, .texte-de-l-episode, .ecran-de-l-episode h1) {
   overflow-wrap: anywhere;
   line-height: inherit;
 }
