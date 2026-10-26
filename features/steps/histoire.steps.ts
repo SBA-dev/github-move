@@ -3,7 +3,7 @@ import type { DataTable } from "playwright-bdd";
 import { ecrireDesSeancesTermineesPourLaSerie, jourPrepare } from "../support/serie-api.ts";
 import { lireEnRest } from "../support/seances-api.ts";
 import { EXPRESSIONS_PAR_PERSONNAGE, FELICITATIONS_COMMUNES } from "./univers.steps.ts";
-import { bulle, entendu, toutesLesParoles } from "./etapes-puis-exercices.steps.ts";
+import { bulle, entendu, jouerLaSeanceComplete, toutesLesParoles } from "./etapes-puis-exercices.steps.ts";
 import { ecranDe, leaJoueAvecSonVraiProfil, lecturesParLot, ouvrirLEcran } from "./ecran-mes-medailles.steps.ts";
 import { demarrer } from "./exercices-a-choix.steps.ts";
 import { Given, Then, When } from "./fixtures.ts";
@@ -12,7 +12,6 @@ import { attendreLaFinDeLaSeance, jouerJusquALaFinDeLaSeance, partie } from "./e
 import { estSurUnProfilReel } from "./profil-reel.ts";
 import { jetonDe, profilDe } from "./profils-enfants.steps.ts";
 import { verifierModeDys } from "./reglages.steps.ts";
-import { jouerLaSeanceComplete } from "./etapes-puis-exercices.steps.ts";
 import { journal, normaliser, terminerLaLecture } from "./voix.steps.ts";
 import { preparerLaFluence } from "./calcul-pour-les-autres-stories.steps.ts";
 

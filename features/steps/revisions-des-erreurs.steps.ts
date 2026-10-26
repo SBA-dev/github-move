@@ -588,11 +588,6 @@ Then(/^ni « ([^«»]+) » ni « ([^«»]+) »$/, async ({ page }, a: string, b:
 
 // --- Alors : la fin
 
-Then(/^la fin de la séance de révision propose seulement « Accueil »$/, async ({ page }) => {
-  await expect(finDeLaRevision(page)).toBeVisible({ timeout: DELAI_DE_LA_TRANSITION_MS });
-  await expect(finDeLaRevision(page).getByRole("button").filter({ hasNotText: "Réécouter" })).toHaveText(["Accueil"]);
-});
-
 Then(/^la fin de la séance de révision propose « Accueil » et « Lire l'épisode »$/, async ({ page }) => {
   await expect(finDeLaRevision(page)).toBeVisible({ timeout: DELAI_DE_LA_TRANSITION_MS });
   await expect(finDeLaRevision(page).getByRole("button").filter({ hasNotText: "Réécouter" })).toHaveText(["Accueil", "Lire l'épisode"]);
