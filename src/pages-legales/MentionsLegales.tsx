@@ -21,11 +21,14 @@ export function MentionsLegales({ libelleDuRetour, onRetour }: Props) {
       </section>
       <section aria-labelledby="hebergeur-du-site">
         <h2 id="hebergeur-du-site">Hébergeur du site</h2>
-        <p>alwaysdata SARL, Paris, France.</p>
+        <p>alwaysdata, France. Adresse et téléphone : à compléter par l'éditeur.</p>
       </section>
       <section aria-labelledby="hebergeur-des-donnees">
         <h2 id="hebergeur-des-donnees">Hébergeur des données</h2>
-        <p>Supabase, région Irlande (eu-west-1).</p>
+        <p>
+          Supabase Inc., société américaine. Base de données et fonctions hébergées dans la région Irlande (eu-west-1), donc dans l'Union
+          européenne. Adresse et téléphone : à compléter par l'éditeur.
+        </p>
       </section>
     </PageLegale>
   );

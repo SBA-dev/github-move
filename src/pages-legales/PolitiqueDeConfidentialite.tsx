@@ -21,6 +21,8 @@ export function PolitiqueDeConfidentialite({ libelleDuRetour, onRetour }: Props)
           <li>Le compte du parent : son adresse e-mail et son mot de passe, gardé de façon sécurisée par Supabase Auth.</li>
           <li>Les profils des enfants : un prénom ou un pseudo, la classe et les réglages.</li>
           <li>Les séances, les résultats, les records et le test de départ.</li>
+          <li>La file de révision de chaque enfant et ses séances de révision.</li>
+          <li>Les leçons personnelles que le parent écrit pour son enfant.</li>
           <li>Aucune voix n'est enregistrée pendant la beta.</li>
         </ul>
         <p>Seul le parent a un compte. L'enfant n'a ni adresse e-mail, ni mot de passe, ni date de naissance.</p>
@@ -32,8 +34,9 @@ export function PolitiqueDeConfidentialite({ libelleDuRetour, onRetour }: Props)
       <section aria-labelledby="hebergement">
         <h2 id="hebergement">Où sont les données</h2>
         <p>
-          Tout reste dans l'Union européenne. Le site est hébergé par alwaysdata, en France. La base de données et les fonctions sont
-          hébergées par Supabase, en Irlande (région eu-west-1).
+          Les données sont hébergées dans l'Union européenne, en Irlande, par un prestataire américain. Le site est hébergé par
+          alwaysdata, en France. La base de données et les fonctions sont hébergées par Supabase Inc., société américaine, dans la région
+          Irlande (eu-west-1).
         </p>
         <p>
           alwaysdata et Supabase gardent des journaux techniques, qui contiennent des adresses IP. Savanturier n'utilise aucun traceur
@@ -62,7 +65,12 @@ export function PolitiqueDeConfidentialite({ libelleDuRetour, onRetour }: Props)
         <h2 id="appareil">Ce qui reste sur l'appareil</h2>
         <p>
           Le navigateur garde sur l'appareil le profil en cours, le réglage Son ou Muet, la voix choisie et les leçons pour jouer sans
-          réseau. Pour tout effacer, supprime les données du site dans les réglages du navigateur.
+          réseau. Il garde aussi la liste des profils du parent connecté (prénom ou pseudo, classe et réglages), ainsi que les séances,
+          les tests de départ et les séances de révision qui ne sont pas encore envoyés.
+        </p>
+        <p>
+          Pour effacer la liste des profils, le parent se déconnecte. Pour tout effacer, supprime les données du site dans les réglages
+          du navigateur, ou désinstalle l'application de l'écran d'accueil.
         </p>
       </section>
     </PageLegale>
