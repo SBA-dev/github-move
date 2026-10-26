@@ -86,3 +86,4 @@ export {
   type SeancesConnues,
   type SeanceTermineeDUnJour,
 } from "./faits-du-jour.ts";
+export { type Badge, badgesDuProfil, nomDuBadge } from "./badges.ts";
