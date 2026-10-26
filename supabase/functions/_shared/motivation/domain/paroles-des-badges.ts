@@ -1,6 +1,8 @@
 import { accorder } from "./accord.ts";
 import type { Badge } from "./badges.ts";
 import type { ObjetDeLaCabane } from "./cabane.ts";
+import type { Episode } from "./histoire.ts";
+import { finDePhraseDeLEpisode } from "./paroles-de-l-histoire.ts";
 import { finDePhraseDuPersonnageGuide } from "./paroles-de-la-cabane.ts";
 
 export function titreDeLaSectionDesBadges(): string {
@@ -33,10 +35,11 @@ export function finDePhraseDuBadge(badge: Badge): string {
 
 export function phraseDeFinAvecLesNouveautes(
   phraseDeFin: string,
-  { objet, badge }: { objet: ObjetDeLaCabane | undefined; badge: Badge | undefined },
+  { objet, episode, badge }: { objet?: ObjetDeLaCabane; episode?: Episode; badge?: Badge },
 ): string {
   const fins = [
     objet && finDePhraseDuPersonnageGuide(objet),
+    episode && finDePhraseDeLEpisode(),
     badge && finDePhraseDuBadge(badge),
   ].filter((fin) => fin !== undefined);
   return [phraseDeFin, ...fins].join(" ");
