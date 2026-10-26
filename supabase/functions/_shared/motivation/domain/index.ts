@@ -114,3 +114,14 @@ export {
 } from "./histoire.ts";
 export { SeancesTermineesDuProfil } from "./seances-terminees-du-profil.ts";
 export { type TuileDEpisode, tuilesDeLHistoire } from "./tuiles-de-l-histoire.ts";
+export {
+  annonceDeLEpisodeOuvert,
+  annonceLueDeLEpisodeOuvert,
+  finDePhraseDeLEpisode,
+  parolesDeLaSectionDeLHistoire,
+  positionDeLEpisode,
+  sousTitreDeLaSectionDeLHistoire,
+  texteALireDeLEpisode,
+  titreDeLAnnonceDeLEpisode,
+  titreDeLaSectionDeLHistoire,
+} from "./paroles-de-l-histoire.ts";
