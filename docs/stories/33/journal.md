@@ -32,3 +32,12 @@ Bloc « Motivation, histoire » (domaine) :
 
 - 11:58 UTC : revue intermédiaire en mode delta (`bebb52e..904ced7`) : **APPROUVÉ**, aucun bloquant. Dernier commit relu : `904ced7`.
   Non bloquants : suffixe « (red) » non homogène ; RED des cycles 2 à 4 posés ensemble avant les GREEN ; `cartePliee` dans un test ; libellés des tuiles hors de `paroles-de-l-histoire.ts` ; deux critères de lecture des sections dans `parolesALOuverture` ; test 33.23 de `SeancesTermineesDuProfil` peu probant (33.23 à couvrir au câblage) ; `episodeSuivant` ne vérifie pas que le numéro reçu est ouvert. Repris au refactor du câblage s'il touche ces fichiers.
+
+### Câblage et revue globale
+
+- 11:52-12:00 UTC : câblage du front, partie A (`3655b3c` lecture des séances terminées par identifiant, `941b99c` section de l'histoire et écran d'un épisode) et partie B (`6993e98` épisode ouvert par la séance à l'écran de fin, fluence seule, révision). Pas de migration, pas d'Edge Function.
+- 12:01 UTC : tags `@depend-de-28/31/32` retirés de `features/33-…`, et `@depend-de-31 @depend-de-33` du scénario de #65 (`6c86040`).
+- 12:05 UTC : revue globale, cycle 1 : **À CORRIGER**, 2 bloquants :
+  1. le nombre « avant » retombait sur la dernière lecture du serveur gardée en mémoire (contraire à 33.9 et 33.10 b). Arbitrage : le repli reste pour « Mes médailles » et l'écran de l'épisode (33.10 c le prévoit explicitement : « si le nombre a été lu plus tôt pendant l'utilisation, la section reste ») ; il est retiré du nombre « avant ».
+  2. alignement du surlignage (mots du titre retranchés) recopié dans React : cycle TDD 7 (`7c81bd3` RED, `rangDansLeTexteDeLEpisode`).
+  Non bloquants repris : `catch` générique, constante de délai dans `src/reseau/`, `useHistoire` dans `src/histoire/`, mémoire vidée à la déconnexion. Laissés : paroles de fin de fluence redites avec l'épisode (conforme à 33.12, à signaler dans la PR) ; `aria-label` sur `role="status"` (contenu visible équivalent).
