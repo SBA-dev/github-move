@@ -25,6 +25,17 @@ export function badgesDuProfil(acquises: ReadonlySet<string>, lecons: readonly L
   }));
 }
 
+export function badgeGagneParLaSeance(
+  acquisesAvant: ReadonlySet<string>,
+  leconAcquise: string | undefined,
+  lecons: readonly Lecon[],
+): Badge | undefined {
+  if (leconAcquise === undefined) return undefined;
+  const [badge] = badgesDuProfil(new Set([leconAcquise]), lecons);
+  const dejaGagne = badgesDuProfil(acquisesAvant, lecons).some(({ cle }) => cle === badge?.cle);
+  return dejaGagne ? undefined : badge;
+}
+
 function competenceDe(lecon: Lecon): string | undefined {
   const competence = lecon.competence?.trim();
   return competence ? competence : undefined;
