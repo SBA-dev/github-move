@@ -164,6 +164,12 @@ Le glossaire garde l'orthographe française.
 | Total des étoiles | Somme des meilleures étoiles de toutes les leçons du profil, toutes classes confondues ; le test de départ n'y ajoute rien. Il ne baisse jamais. Interface : « Tu as 12 étoiles » (#32, validé par le PO le 2026-10-25). | Motivation | score, points, note |
 | Palier de la cabane | Seuil du total des étoiles qui fait recevoir un objet de la cabane : 3, 6, 10, 15, 20, 26, 33, 40, 48, 56, 65, 75 (legacy). Deux paliers sont espacés d'au moins 3 : une séance fait recevoir au plus un objet. Interface : pastille « 10 ★ », dite « 10 étoiles » (#32, validé par le PO le 2026-10-25, décision 32.11). | Motivation | niveau, étape, seuil (seul) |
 | Objet de la cabane | Ce que reçoit la cabane quand le total des étoiles atteint un palier (« une lanterne »). Il ne se perd jamais. Les 12 objets reçus : la cabane est complète. Les noms des objets sont du contenu, pas des termes du domaine (#32, validé par le PO le 2026-10-25). | Motivation | badge, trophée, récompense (seul), objet débloqué |
+| Badge, précision | Décidé par #31 (2026-10-25) : un badge existe dès qu'une leçon de la bibliothèque est **acquise** (au moins 2 meilleures étoiles), jamais par le test de départ ; **un seul badge par compétence** (une leçon sans compétence a le sien). Il se recalcule à partir des meilleures étoiles, n'est pas enregistré et ne se perd jamais tant que sa leçon est dans la bibliothèque. **Une leçon personnelle ne donne pas de badge** (décision du PO, 39.12). | Motivation | trophée, médaille (« Mes médailles » est le nom de l'écran, jamais celui d'un badge : décision 31.21) |
+| Nom du badge | La compétence de la leçon acquise, sinon « Je sais : `<titre de la leçon>` » (#31, décision 31.20). | Motivation | titre du badge, intitulé |
+| Badge gagné par la séance | Badge que la séance vient de faire gagner : la leçon jouée n'était pas acquise avant la séance et l'est après, et sa compétence n'était pas déjà un badge. Au plus un par séance ; jamais pour une leçon personnelle. Interface : encart « Nouveau badge » de l'écran de fin (#31). | Motivation | nouveau trophée, badge débloqué |
+| Épisode, nouvelle définition | Une des 20 parties de l'histoire des Savanturiers, numérotées de 1 à 20 (titre et texte, lus à voix haute par le personnage guide du profil). Un épisode s'ouvre à **chaque séance terminée** (séance de révision comprise, test de départ exclu), dans l'ordre, quel que soit l'univers ; aucun après le 20e (#33, décisions 33.1, 33.2, 33.3 et 33.7 du PO, 2026-10-25). Remplace la ligne **Épisode** ci-dessus, qui dit « histoire de l'univers » et « à chaque jour de séance ». | Motivation | chapitre, histoire (pour un seul épisode), niveau |
+| Histoire des Savanturiers | Suite des 20 épisodes, la même pour tous les profils ; l'histoire de Noisette (#33, décisions 33.2, 33.6 et 33.27). Interface : section « L'histoire des Savanturiers » de « Mes médailles ». | Motivation | histoire de l'univers, livre, saga |
+| Épisode ouvert | Épisode dont le numéro est inférieur ou égal au nombre de séances terminées du profil (20 au plus). Il se recalcule à partir des séances terminées et des séances de révision terminées d'Apprentissage, n'est pas enregistré et ne se referme jamais. Contraire : épisode fermé, interface « À découvrir » (#33, décisions 33.1, 33.8 et 33.27). « Nombre de séances terminées » et « épisode ouvert par la séance » sont des noms de calcul, pas des termes du glossaire (décision 33.27). | Motivation | épisode débloqué, épisode gagné |
 
 ## Famille
 
@@ -331,7 +337,7 @@ Termes d'exploitation et juridiques : ils ne vont pas dans `domain/`.
 
 ## Conflits à trancher
 
-1. **« Étoile »** est aussi le nom de l'« Étoile du savoir » dans l'histoire. Proposition : **Étoile** reste la récompense. L'objet de l'histoire n'est pas un terme du domaine.
+1. **« Étoile »** (« Étoile du savoir », #33) : **tranché par le PO le 2026-10-25** (décision 33.4) : **Étoile** reste la récompense. « L'Étoile du savoir » est un titre d'épisode et un objet de l'histoire, pas un terme du domaine ; elle ne compte dans aucun total d'étoiles.
 2. **« Test »** : on dit toujours **Test de départ**, pour ne pas confondre avec les tests logiciels.
 3. **« Courriel »** (story #5, décision 0011) : **tranché par le PO le 2026-10-23** : on dit **E-mail de connexion** partout, « courriel » est interdit.
 4. **« Plateau »** (#18) : **tranché par le PO le 2026-10-24** : voir Décision n°31.
@@ -346,6 +352,11 @@ Termes d'exploitation et juridiques : ils ne vont pas dans `domain/`.
 
 Les anciens conflits n°3 à n°7 (compte, session, lien magique, voix, monde) sont tranchés : voir Décisions n°10 à n°15. Ceux du lot 2 (espace adulte, lien, supprimer / détacher, la voix des guides, progression) : voir Décisions n°17 à n°21.
 Ceux du lot 3 (anciens n°8 à n°14 : jeu, maison, rang, énoncé, essai, étape, progression) : voir Décisions n°23 à n°29.
+
+Ajouts de #33 (tranchés par le PO le 2026-10-25, « 33. reco OK » ; numéros à attribuer à la fusion des branches du lot 5) :
+- **« Histoire »** (#33) : **Histoire des Savanturiers** entre au glossaire comme nom de l'ensemble des 20 épisodes (« L'histoire des Savanturiers ») ; « histoire » reste interdit pour désigner **un** épisode (décision 33.27).
+- **« Leçon terminée »** (#33) : le sous-titre du legacy (« Un nouvel épisode s'ouvre à chaque leçon terminée. ») est abandonné ; le sous-titre devient « Un nouvel épisode s'ouvre à chaque séance terminée. » (décisions 33.1 et 33.6).
+- Conflit n°1 (**Étoile du savoir**) : tranché comme ci-dessus (décision 33.4).
 
 ## Questions ouvertes
 
@@ -428,3 +439,14 @@ Lot 6 (#38, `docs/stories/38/domain-model.md`) : à trancher par le PO (question
 - termes nouveaux : Sorte d'enregistrement, Expiration d'un enregistrement de lecture, Date d'expiration, Durée maximale d'un enregistrement, Garder un enregistrement de lecture.
 
 Lot 6 (#39, `docs/stories/39/domain-model.md`) : le PO a suivi toutes les recommandations 39.1 à 39.21 sauf 39.13 (le texte du parent est conservé) le 2026-10-25 ; voir Décision n°38. Reste, hors vague : réécrire la ligne « Leçon personnelle » d'Accompagnement (#39.21).
+
+Lot 5 (#31, `docs/stories/31/domain-model.md`) : tranché par le PO le 2026-10-25 (toutes les recommandations, sauf les leçons personnelles, qui ne donnent pas de badge).
+- Un badge par compétence (31.2), recalculé (31.3) ; « Nom du badge » et « Badge gagné par la séance » sont des termes du domaine ;
+- « Médaille » : nom de l'écran seulement, jamais pour un badge (31.21) ;
+- Leçon personnelle : ne donne pas de badge (réponse « A », 39.12) ;
+- Reste : **Carte des compétences**, conflit de sens (la définition dit « par compétence », le legacy calcule par section du programme, test de départ compris) ; renvoyé à #34 (31.17).
+
+Lot 5 (#33, `docs/stories/33/domain-model.md`) : tranché par le PO le 2026-10-25 (« 33. reco OK » : toutes les recommandations).
+- Règle d'ouverture d'un épisode : chaque séance terminée (33.1) ; la ligne **Jour de séance** (« sert à la série et aux épisodes ») doit perdre « et aux épisodes » (modification d'une ligne existante, laissée au responsable) ;
+- histoire de Noisette pour tous, racontée par le personnage guide du profil (33.2) : nouvelle définition de **Épisode** (qui remplace l'ancienne ligne **Épisode**), **Histoire des Savanturiers** et **Épisode ouvert** validés ;
+- « Nombre de séances terminées » et « Épisode ouvert par la séance » : simples noms de calcul, retirés du glossaire (33.27).
