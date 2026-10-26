@@ -298,3 +298,4 @@ Réponse du PO le 2026-10-25 ([commentaire](https://github.com/SBA-dev/github-mo
 - **31.26** : une séance d'un seul exercice qui rend la leçon acquise donne le badge (Q69), sauf une fluence seule.
 - **Leçons personnelles** (réponse « A », 39.12) : elles ne donnent jamais de badge.
 - **33.13** (commune avec #33) : ordre des nouveautés **cabane, épisode, badge**, dans la zone « nouveautés » et dans la phrase du personnage guide.
+- **31.27** (PO, 2026-10-26, [commentaire](https://github.com/SBA-dev/github-move/issues/31#issuecomment-6410141496)) : la phrase sans badge dit « gagner » : « Gagne au moins 2 étoiles dans une leçon pour gagner son badge. » ; les scénarios, qui disaient « recevoir » comme le legacy, sont alignés.

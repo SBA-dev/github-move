@@ -50,16 +50,16 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
         | 2       |
         | 3       |
 
-    # Décision 31.10 (phrase sans badge)
+    # Décisions 31.10 et 31.27 (phrase sans badge)
     Scénario: Une leçon réussie avec 1 étoile ne donne pas de badge
       Étant donné que Léa a pour meilleures étoiles :
         | leçon         | étoiles |
         | Les syllabes  | 1       |
       Quand Léa ouvre « Mes médailles » depuis son accueil
       Alors aucune pastille de badge n'apparaît
-      Et Léa lit « Gagne au moins 2 étoiles dans une leçon pour recevoir son badge. »
+      Et Léa lit « Gagne au moins 2 étoiles dans une leçon pour gagner son badge. »
 
-    # Décisions 31.1 (comme 27.1 et 27.2) et 31.10 (phrase sans badge)
+    # Décisions 31.1 (comme 27.1 et 27.2), 31.10 et 31.27 (phrase sans badge)
     Scénario: Une leçon réussie au test de départ ne donne pas de badge
       Étant donné que Léa a pour leçons réussies au test de départ :
         | leçon               |
@@ -67,7 +67,7 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
         | Utiliser le bon mot |
       Quand Léa ouvre « Mes médailles » depuis son accueil
       Alors aucune pastille de badge n'apparaît
-      Et Léa lit « Gagne au moins 2 étoiles dans une leçon pour recevoir son badge. »
+      Et Léa lit « Gagne au moins 2 étoiles dans une leçon pour gagner son badge. »
 
     # Décision 31.1
     Scénario: Une leçon réussie au test de départ puis rejouée avec 2 étoiles donne son badge
@@ -142,12 +142,12 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
 
   Règle: La section « Mes badges » de « Mes médailles » montre une pastille par badge du profil en cours, toujours dans le même ordre
 
-    # Décision 31.10
+    # Décisions 31.10 et 31.27
     Scénario: Sans badge, la section invite l'enfant à gagner au moins 2 étoiles
       Étant donné que Léa n'a encore jamais terminé de séance de la leçon « Les syllabes »
       Quand Léa ouvre « Mes médailles » depuis son accueil
       Alors Léa lit « Mes badges »
-      Et Léa lit « Gagne au moins 2 étoiles dans une leçon pour recevoir son badge. »
+      Et Léa lit « Gagne au moins 2 étoiles dans une leçon pour gagner son badge. »
 
     # Décision 31.7
     Scénario: Les badges suivent l'ordre du catalogue : matière, puis niveau, puis ordre de la leçon

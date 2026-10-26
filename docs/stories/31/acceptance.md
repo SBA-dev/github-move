@@ -11,7 +11,7 @@ En tant qu'**enfant**, je veux recevoir un badge qui dit ce que je sais faire qu
 
 La story remplit la section « Mes badges » de l'écran « Mes médailles » (#65, 3e section réservée : cabane, histoire, badges, records) et ajoute l'encart « Nouveau badge » à la zone « nouveautés » de l'écran de fin (ouverte par #32). Le badge ne fait que **constater** qu'une leçon de la bibliothèque est **acquise** (au moins 2 meilleures étoiles) : il ne modifie aucune étoile, n'est pas enregistré (décision 31.3 : pas de migration, pas d'Edge Function) et ne se perd jamais tant que sa leçon est dans la bibliothèque. Une leçon personnelle ne donne pas de badge (décision du PO, comme 39.12).
 
-Comportement actuel (`app/app.js`, `badgesOf`, `showTrophees`, fin de séance l. 1895 et 1946) repris comme premiers exemples : un badge par leçon à 2 étoiles ou plus, hors test de départ ; nom = compétence, sinon « Je sais : `<titre>` » ; section toujours affichée, phrase « Gagne au moins 2 étoiles dans une leçon pour recevoir son badge. » ; icône de la matière ; encart « Nouveau badge » seulement quand le nombre de badges augmente. Écarts décidés (issue et décisions) : un seul badge par compétence (31.2), ordre du catalogue (31.7), annonce par le personnage guide (31.4, décision Q74 de #24), ordre des nouveautés cabane, épisode, badge (33.13), lecture à voix haute (31.9), 360 px, mouvements réduits, **aucun badge pour une leçon personnelle** (le legacy en donnait un).
+Comportement actuel (`app/app.js`, `badgesOf`, `showTrophees`, fin de séance l. 1895 et 1946) repris comme premiers exemples : un badge par leçon à 2 étoiles ou plus, hors test de départ ; nom = compétence, sinon « Je sais : `<titre>` » ; section toujours affichée, phrase « Gagne au moins 2 étoiles dans une leçon pour recevoir son badge. » (devenue « … pour gagner son badge. », 31.27) ; icône de la matière ; encart « Nouveau badge » seulement quand le nombre de badges augmente. Écarts décidés (issue et décisions) : un seul badge par compétence (31.2), ordre du catalogue (31.7), annonce par le personnage guide (31.4, décision Q74 de #24), ordre des nouveautés cabane, épisode, badge (33.13), lecture à voix haute (31.9), 360 px, mouvements réduits, **aucun badge pour une leçon personnelle** (le legacy en donnait un).
 
 ## Example mapping
 
@@ -105,7 +105,7 @@ Question commune avec #33 : **33.13**, reco retenue, un seul ordre des nouveaut�
 | 31.7 | Reco retenue pour les leçons de la bibliothèque : ordre du catalogue, matière (français, maths, sciences, histoire, anglais, EMC), puis niveau, puis `ordre`. La partie « leçons personnelles à la fin, par titre » est **sans objet**. |
 | 31.8 | Reco retenue : icône de la matière du legacy sur la pastille, décorative pour le lecteur d'écran. |
 | 31.9 | Reco retenue : avec « tout lire », « Mes badges » puis « Tu as N badge(s). » à l'ouverture ; sinon bouton « Écouter » ; toucher une pastille lit son nom. |
-| 31.10 | Reco retenue : section toujours affichée quand les étoiles ont pu être lues, avec la phrase du legacy « Gagne au moins 2 étoiles dans une leçon pour recevoir son badge. ». |
+| 31.10 | Reco retenue : section toujours affichée quand les étoiles ont pu être lues, avec la phrase « Gagne au moins 2 étoiles dans une leçon pour gagner son badge. » (« gagner » au lieu du « recevoir » du legacy, 31.27). |
 | 31.11 | Reco retenue : un badge compte pour « Regarde tout ce que tu as gagné ! ». |
 | 31.12 | Reco retenue : encart « Nouveau badge » (titre et nom, sans icône) après « Pour la cabane » et après l'épisode (33.13). |
 | 31.13 | Reco retenue : une leçon qui n'est plus dans la bibliothèque ne donne pas de badge. |
@@ -122,6 +122,7 @@ Question commune avec #33 : **33.13**, reco retenue, un seul ordre des nouveaut�
 | 31.24 | Reco retenue : la liste porte le libellé « Mes badges, avec N badge(s) », puis chaque pastille annonce le seul nom du badge. |
 | 31.25 | Reco retenue : même forme pour un nom de repli, « Nouveau badge : Je sais : `<titre>` ! » (cas qui disparaît quand les 12 leçons ont une compétence, 31.20). |
 | 31.26 | Reco retenue : une séance d'un exercice qui rend la leçon acquise donne le badge et l'annonce, sans règle propre au badge. |
+| 31.27 | Question : quel verbe pour la phrase sans badge, « recevoir » (legacy, scénarios) ou « gagner » (modèle du domaine, 31.10) ? Les deux se contredisaient. Réponse du PO le 2026-10-26 ([commentaire](https://github.com/SBA-dev/github-move/issues/31#issuecomment-6410141496), « 31 reco ok ») : « gagner » : « Gagne au moins 2 étoiles dans une leçon pour gagner son badge. ». |
 
 ## Questions ouvertes
 
