@@ -145,3 +145,6 @@ Branche de base : `main`. Aucun numéro de décision réservé (prochain libre :
 - 02:35 UTC — RELIS #64 : correctif #107 mergé (`9cdab61`, un step de la dictée). Intégration sans conflit
   (`86fa2db`) ; périmètre de #107 (0022) : `@issue-19` **29/29** sur `telephone`. Verrou `merge` toujours gelé
   jusqu'à la non-régression de `main` ; #79.13 toujours sans réponse.
+- 02:50 UTC — Réponse du PO à #79.13, mot pour mot : « Oui » (directement à l'équipe). Décision consignée et dernier
+  `@a-valider` retiré (`49d910f`). `main` `9cdab61` intégrée, verrou `merge` dégelé (NR `main` 1012/1012).
+  `PRÊTE À MERGER` et `VERROU merge` demandés.
