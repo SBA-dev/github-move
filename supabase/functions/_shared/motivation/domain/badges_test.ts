@@ -1,6 +1,6 @@
 import { assertEquals } from "@std/assert";
 import { type Lecon, lireLecon } from "../../catalogue/domain/index.ts";
-import { badgesDuProfil, nomDuBadge } from "./badges.ts";
+import { badgeGagneParLaSeance, badgesDuProfil, nomDuBadge } from "./badges.ts";
 
 type Gabarit = Readonly<{
   id: string;
@@ -128,4 +128,53 @@ Deno.test("une leçon de la bibliothèque non acquise ne donne pas de badge", ()
   ];
 
   assertEquals(idsDesBadges(["fr-cp-a"], lecons), ["fr-cp-a"]);
+});
+
+Deno.test("sans leçon acquise par la séance, aucun badge n'est gagné", () => {
+  const lecons = [leconDe({ id: "fr-cp-lire", competence: "Je lis des mots simples" })];
+
+  assertEquals(badgeGagneParLaSeance(new Set(), undefined, lecons), undefined);
+});
+
+Deno.test("la leçon acquise par la séance, avec compétence, fait gagner le badge de cette compétence", () => {
+  const lecons = [leconDe({ id: "ma-ce1-sommes", matiere: "maths", niveau: "CE1", competence: "Je calcule des sommes" })];
+
+  assertEquals(badgeGagneParLaSeance(new Set(), "ma-ce1-sommes", lecons), {
+    cle: "Je calcule des sommes",
+    nom: "Je calcule des sommes",
+    matiere: "maths",
+    lecons: ["ma-ce1-sommes"],
+  });
+});
+
+Deno.test("la leçon acquise par la séance, sans compétence, fait gagner le badge « Je sais : » suivi du titre", () => {
+  const lecons = [leconDe({ id: "fr-cp-etre-avoir", titre: "Être et avoir" })];
+
+  assertEquals(badgeGagneParLaSeance(new Set(), "fr-cp-etre-avoir", lecons)?.nom, "Je sais : Être et avoir");
+});
+
+Deno.test("une compétence déjà gagnée par une autre leçon acquise avant la séance ne fait pas gagner de nouveau badge", () => {
+  const competence = "J'écris des mots invariables sans erreur";
+  const lecons = [
+    leconDe({ id: "fr-ce1-invariables", niveau: "CE1", competence }),
+    leconDe({ id: "fr-ce2-invariables", niveau: "CE2", competence }),
+  ];
+
+  assertEquals(badgeGagneParLaSeance(new Set(["fr-ce1-invariables"]), "fr-ce2-invariables", lecons), undefined);
+});
+
+Deno.test("une leçon acquise introuvable dans la bibliothèque (leçon personnelle) ne fait gagner aucun badge", () => {
+  const lecons = [leconDe({ id: "fr-cp-lire", competence: "Je lis des mots simples" })];
+
+  assertEquals(badgeGagneParLaSeance(new Set(), "perso-12", lecons), undefined);
+});
+
+Deno.test("le badge gagné ne garde que la leçon acquise, pas une leçon de même compétence non acquise", () => {
+  const competence = "J'écris des mots invariables sans erreur";
+  const lecons = [
+    leconDe({ id: "fr-ce1-invariables", niveau: "CE1", competence }),
+    leconDe({ id: "fr-ce2-invariables", niveau: "CE2", competence }),
+  ];
+
+  assertEquals(badgeGagneParLaSeance(new Set(), "fr-ce2-invariables", lecons)?.lecons, ["fr-ce2-invariables"]);
 });
