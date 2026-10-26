@@ -47,3 +47,24 @@ Bloc C, front :
 - Review complète : **APPROUVÉ**, 0 bloquant. Non bloquants corrigés : 3562ac9 (lecture `select("jour")` pour la série), 9009c83 (bulle affichée tout de suite, seule la voix attend la série ; `montrer` ajouté à `usePersonnageQuiParle`).
 - Revue delta 3562ac9..9009c83 : **APPROUVÉ**. Restent non bloquants : `montrer` ne remet pas à zéro le surlignage (sans effet sur l'accueil) ; une ligne de `seances_terminees` à `jour` nul est ignorée par la lecture de la série (n'existe plus après la migration).
 - Glossaire : « Série (à valider) » est encore à corriger (réponses 30.2, 30.12) ; pendant la vague, le glossaire ne reçoit que des ajouts → au responsable, en fin de vague.
+
+### Verrou base et déploiement
+- 08:00 UTC : non-régression sur `main` `0c6641c` OK (1046/1046) ; **VERROU base** accordé à 08:02.
+- 08:02 UTC : migration `20261026090000` appliquée à `savanturier-dev` (API de gestion, une transaction, inscrite dans `schema_migrations`) : 9/9 séances existantes avec `jour`, 3 fonctions avec `p_jour`, `service_role` seul. Cache PostgREST rechargé. `terminer-la-seance` redéployée depuis `73fd180` (401 sans JWT). Annoncé sur #30 avant et après.
+
+### Étape 5, E2E (`telephone`, `--workers=2`)
+- Steps : 73fd180 (écriture), c1cb4bf (corrections de steps : re-choisir Léa après « revient à l'accueil par le nom de l'application » ; relire les profils après un réglage changé par Paul). `@depend-de-28`, `@depend-de-29` et `@wip` retirés, texte des scénarios inchangé. Steps partagés : seulement `@issue-30` ajouté à deux conditions (« Léa a un profil enfant préparé… », « Paul a changé … le niveau »).
+- #30 : 1er run 15/30 (2 défauts de steps), puis 30/30 après correction ; KO de timeout sous charge relancés seuls en `--workers=1`, tous verts.
+- Périmètre #24, #27, #28, #29 : 185/207 en `--workers=2` (38,8 min), les 22 KO (timeouts sous charge : #24 15, #27 1, #28 1, #29 5) relancés en `--workers=1` : 22/22. **207/207**.
+- Aucun bug applicatif. Environnement : Playwright cherche la build Chromium 1194, le conteneur a la 1243 ; contournement par une config locale non commitée (`executablePath`), supprimée après les runs (point déjà noté par le responsable pour `CLAUDE.md`).
+- Vérifications finales sur `c1cb4bf` : 2343 unitaires, lint, fmt, `tsc`, build OK. `main` inchangé (`0c6641c`).
+
+## Mesures
+| Mesure | Valeur |
+|---|---|
+| Durée, du lancement au PRÊTE À MERGER | 06:45 → ~09:40 UTC, environ 3 h |
+| Attente | verrou `base` / non-régression sur `main` : ~55 min (07:07 → 08:02), sans blocage (front et steps faits pendant l'attente) |
+| Cycles de review À CORRIGER | 0 (bloc A, review complète et delta : APPROUVÉ ; 2 non bloquants corrigés) |
+| Cycles E2E KO | 1 (2 défauts de steps), plus des timeouts de charge relancés seuls |
+| Intégrations de `main` | 0 (`main` n'a pas bougé) |
+| Régression sur `main` après merge | à relever par la prochaine non-régression |
