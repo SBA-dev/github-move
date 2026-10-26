@@ -52,3 +52,10 @@ Bloc B « Exploitation, vérifications scriptées » : module Python `scripts/ex
 | B9 | `version.py` | V11 : `version_du_service_worker(texte)` et `ecarts_de_version(servie, attendue)` |
 | B10 | `garder_actif.py` | 45.31 : lecture REST avec la clé `anon` puis connexion du parent de test (identifiants dans l'environnement), rapport sans aucune donnée ; écart si le projet ne répond pas |
 | B11 | `controles_production.py` | orchestration de V2 à V12 contre la production (variables d'environnement lues, refus si `SUPABASE_SERVICE_ROLE_KEY` est présente), code de sortie non nul au premier écart |
+
+### Cycles TDD (bloc B)
+
+| Cycle | RED | GREEN / REFACTOR | Note |
+|---|---|---|---|
+| B1. V1 secrets du build | `8b52393` | `75775b0` | `dist/` du conteneur : aucun écart |
+| B2. V2 RLS | `888c178` | `11f8c39` | lancée en lecture seule sur `savanturier-dev` : 14 tables, aucun écart. L'API de gestion refuse l'agent `Python-urllib` : B11 doit envoyer un `User-Agent` explicite |
