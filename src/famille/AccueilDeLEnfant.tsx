@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import { leconDuJour, tuilesDeMatiere, tuilesDuJour } from "@domain/apprentissage";
 import type { CodeDeMatiere } from "@domain/catalogue";
 import type { ProfilEnCours } from "@domain/famille";
-import { saluer, type Univers } from "@domain/motivation";
+import { saluer, saluerAvecLaSerie, type Serie, type Univers } from "@domain/motivation";
 import { dateDuJourPourLesMachines, dateEnToutesLettres } from "../accueil/date-du-jour.ts";
+import { PastilleDeSerie } from "../accueil/PastilleDeSerie.tsx";
+import { useSerie } from "../accueil/useSerie.ts";
 import { ObjectifDuJourDeLAccueil } from "../accueil/ObjectifDuJourDeLAccueil.tsx";
 import { useObjectifDuJour } from "../accueil/useObjectifDuJour.ts";
 import { LeconDuJourDeLAccueil } from "../accueil/LeconDuJourDeLAccueil.tsx";
@@ -33,6 +35,16 @@ type Props = {
   readonly onChangerDEnfant: () => void;
 };
 
+/**
+ * Ce que dit le personnage guide en arrivant. Avec « tout lire à voix haute », une seule lecture : la salutation puis la pastille de série,
+ * qu'il faut donc attendre (`undefined` tant que la série n'est pas lue) ; sans série connue (`null`), la salutation seule.
+ */
+function phraseDeLaSalutation(prenom: string, toutLire: boolean, serie: Serie | null | undefined): string | undefined {
+  if (!toutLire) return saluer(prenom);
+  if (serie === undefined) return undefined;
+  return serie === null ? saluer(prenom) : saluerAvecLaSerie(prenom, serie);
+}
+
 /** Là où arrive l'enfant qui vient de choisir son profil : la date, son personnage guide qui le salue, puis ce qu'il peut faire aujourd'hui. */
 export function AccueilDeLEnfant(
   { profil, univers, voix, saluer: aSaluer, testDeDepartAProposer, questionsDuesALaRevision, onMonTestDeDepart, onJeRevise, onCommencerLaLecon, onOuvrirLaMatiere, onChangerDEnfant }: Props,
@@ -49,10 +61,14 @@ export function AccueilDeLEnfant(
   }, []);
   const entrees = useEntreesDuJour(profil);
   const objectif = useObjectifDuJour(profil.id, maintenant);
+  const serie = useSerie(profil.id, maintenant);
+  const [serieDeLaSalutation, setSerieDeLaSalutation] = useState(serie);
+  if (serieDeLaSalutation === undefined && serie !== undefined) setSerieDeLaSalutation(serie);
+  const phraseALire = phraseDeLaSalutation(profil.prenom, profil.reglages.toutLireAVoixHaute, serieDeLaSalutation);
   useEffect(() => {
-    if (salutationALire) void dire({ texte: saluer(profil.prenom), nature: "accueil" });
+    if (salutationALire && phraseALire !== undefined) void dire({ texte: saluer(profil.prenom), nature: "accueil", aLire: phraseALire });
     return faireSilence;
-  }, [salutationALire, profil.prenom, dire, faireSilence]);
+  }, [salutationALire, profil.prenom, phraseALire, dire, faireSilence]);
 
   return (
     <section className="accueil-de-l-enfant" aria-label={`Accueil de ${profil.prenom}`}>
@@ -63,6 +79,7 @@ export function AccueilDeLEnfant(
         <PersonnageGuide univers={univers} humeur={humeur} />
         <BulleDuPersonnageGuide texte={parole?.texte} nature={parole?.nature} rangDuMotPrononce={rangDuMotPrononce} />
       </div>
+      {serie && <PastilleDeSerie serie={serie} />}
       <TuilesDuJourDeLAccueil
         tuiles={tuilesDuJour({ nombreDeQuestionsDues: questionsDuesALaRevision, testDeDepartAProposer })}
         onMonTestDeDepart={onMonTestDeDepart}
