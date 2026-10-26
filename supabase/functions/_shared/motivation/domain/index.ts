@@ -100,3 +100,29 @@ export {
   titreDeLaSectionDesBadges,
 } from "./paroles-des-badges.ts";
 export { parolesDeLaSectionDesBadgesOuSansBadge } from "./paroles-de-l-ecran-des-medailles.ts";
+export {
+  type Episode,
+  EpisodeInconnu,
+  EpisodeNonOuvert,
+  episodeOuvert,
+  episodeOuvertParLaSeance,
+  episodeSuivant,
+  type EtatDeLHistoire,
+  HISTOIRE_DES_SAVANTURIERS,
+  histoireDe,
+  NombreDeSeancesInvalide,
+} from "./histoire.ts";
+export { SeancesTermineesDuProfil } from "./seances-terminees-du-profil.ts";
+export { type TuileDEpisode, tuilesDeLHistoire } from "./tuiles-de-l-histoire.ts";
+export {
+  annonceDeLEpisodeOuvert,
+  annonceLueDeLEpisodeOuvert,
+  finDePhraseDeLEpisode,
+  parolesDeLaSectionDeLHistoire,
+  positionDeLEpisode,
+  rangDansLeTexteDeLEpisode,
+  sousTitreDeLaSectionDeLHistoire,
+  texteALireDeLEpisode,
+  titreDeLAnnonceDeLEpisode,
+  titreDeLaSectionDeLHistoire,
+} from "./paroles-de-l-histoire.ts";

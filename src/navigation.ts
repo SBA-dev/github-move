@@ -3,10 +3,14 @@ import { useCallback, useEffect, useState } from "react";
 export type EcranSimple =
   | "accueil" | "jeu" | "parcours" | "toutes-les-lecons" | "medailles" | "test-de-depart" | "espace-parent" | "revision";
 
+/** Où l'enfant était quand il a ouvert un épisode : « Fermer le livre » l'y ramène. */
+export type OrigineDeLEpisode = "medailles" | "fin-de-seance";
+
 export type Lieu =
   | { readonly ecran: EcranSimple }
   | { readonly ecran: "lecon"; readonly leconId: string }
-  | { readonly ecran: "seance"; readonly leconId: string; readonly exercice?: number };
+  | { readonly ecran: "seance"; readonly leconId: string; readonly exercice?: number }
+  | { readonly ecran: "episode"; readonly numero: number; readonly origine: OrigineDeLEpisode };
 
 export type Ecran = Lieu["ecran"];
 
@@ -25,6 +29,8 @@ const CHEMINS: Readonly<Record<EcranSimple, string>> = {
 
 const PAGE_D_UNE_LECON = /^\/lecon\/([^/]+)(?:\/(seance)(?:\/(\d+))?)?\/?$/;
 
+const PAGE_D_UN_EPISODE = /^\/histoire\/(\d+)\/?$/;
+
 function enLieu(destination: Destination): Lieu {
   return typeof destination === "string" ? { ecran: destination } : destination;
 }
@@ -35,6 +41,8 @@ function cheminDe(lieu: Lieu): string {
       return `/lecon/${encodeURIComponent(lieu.leconId)}`;
     case "seance":
       return `/lecon/${encodeURIComponent(lieu.leconId)}/seance${lieu.exercice === undefined ? "" : `/${lieu.exercice}`}`;
+    case "episode":
+      return `/histoire/${lieu.numero}`;
     default:
       return CHEMINS[lieu.ecran];
   }
@@ -43,6 +51,8 @@ function cheminDe(lieu: Lieu): string {
 function lieuDe(chemin: string): Lieu {
   const ecranSimple = (Object.keys(CHEMINS) as EcranSimple[]).find((ecran) => CHEMINS[ecran] === chemin);
   if (ecranSimple) return { ecran: ecranSimple };
+  const episode = PAGE_D_UN_EPISODE.exec(chemin);
+  if (episode?.[1] !== undefined) return { ecran: "episode", numero: Number(episode[1]), origine: "medailles" };
   const [, identifiant, seance, exercice] = PAGE_D_UNE_LECON.exec(chemin) ?? [];
   if (identifiant === undefined) return { ecran: "accueil" };
   try {

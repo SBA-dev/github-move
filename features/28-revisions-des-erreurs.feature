@@ -239,15 +239,16 @@ Fonctionnalité: Révisions des erreurs
   Règle: La fin de la séance de révision ne donne pas d'étoiles : le personnage guide dit les erreurs qui s'effacent, et l'enfant revient à son accueil
 
     # Réponse 28.2 : écart voulu avec le legacy, qui montrait des étoiles comptées nulle part
-    Scénario: La fin de la séance de révision ne montre aucune étoile et propose seulement « Accueil »
+    # Mise à jour par #33 (décisions 33.12 et 33.20) : la séance de révision ouvre un épisode, la fin propose aussi « Lire l'épisode »
+    Scénario: La fin de la séance de révision ne montre aucune étoile et propose « Accueil » et « Lire l'épisode »
       Étant donné que Léa a 3 questions dues de la leçon « Les nombres de révision »
       Et que Léa a commencé la séance de révision
       Quand Léa répond juste à toutes les questions de la séance de révision
-      Alors la fin de la séance de révision propose seulement « Accueil »
+      Alors la fin de la séance de révision propose « Accueil » et « Lire l'épisode »
       Et la fin de la séance de révision ne montre aucune étoile
       Et le focus est sur « Accueil »
 
-    # Réponses 28.2 et 28.23
+    # Réponses 28.2 et 28.23 ; mise à jour par #33 (décisions 33.12 et 33.13) : la séance de révision ouvre un épisode
     Plan du Scénario: Avec <justes> question(s) juste(s), le personnage guide dit « <phrase> »
       Étant donné que Léa a pour questions retenues de la leçon « Les sons de révision » :
         | question               | date de révision |
@@ -259,10 +260,10 @@ Fonctionnalité: Révisions des erreurs
       Alors Noisette dit « <phrase> »
 
       Exemples:
-        | justes | déroulé                                                    | phrase                                                               |
-        | 3      | juste à toutes les questions                               | Bravo Léa ! 3 erreurs s'effacent un peu plus.                        |
-        | 1      | juste seulement à « Quel mot a le son ou ? »               | Bravo Léa ! 1 erreur s'efface un peu plus.                           |
-        | 0      | en se trompant à toutes les questions                      | Merci Léa ! Ces erreurs reviendront demain : on les effacera ensemble. |
+        | justes | déroulé                                      | phrase                                                                                                           |
+        | 3      | juste à toutes les questions                 | Bravo Léa ! 3 erreurs s'effacent un peu plus. Un nouvel épisode de l'histoire t'attend !                         |
+        | 1      | juste seulement à « Quel mot a le son ou ? » | Bravo Léa ! 1 erreur s'efface un peu plus. Un nouvel épisode de l'histoire t'attend !                            |
+        | 0      | en se trompant à toutes les questions        | Merci Léa ! Ces erreurs reviendront demain : on les effacera ensemble. Un nouvel épisode de l'histoire t'attend ! |
 
     # Réponse 28.8
     Scénario: « Accueil » ramène à l'accueil, qui ne propose plus la séance de révision quand plus rien n'est dû
@@ -294,12 +295,13 @@ Fonctionnalité: Révisions des erreurs
       Alors l'accueil de Léa propose la séance de révision, avec « 1 petite erreur des jours passés »
 
     # Réponse 28.21
+    # Mise à jour par #33 (décisions 33.10 et 33.12) : commencée avec le réseau, la séance de révision ouvre un épisode, la fin propose aussi « Lire l'épisode »
     Scénario: Sans réseau, la séance de révision se joue jusqu'au bout et sa fin dit que la progression est gardée sur l'appareil
       Étant donné que Léa a 3 questions dues de la leçon « Les nombres de révision »
       Et que Léa a commencé la séance de révision
       Et que le réseau est coupé
       Quand Léa répond juste à toutes les questions de la séance de révision
-      Alors la fin de la séance de révision propose seulement « Accueil »
+      Alors la fin de la séance de révision propose « Accueil » et « Lire l'épisode »
       Et elle voit le message « Sauvegarde en ligne impossible : la progression est gardée sur cet appareil. »
 
     # Réponse 28.21

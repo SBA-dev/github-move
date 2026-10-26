@@ -3,6 +3,7 @@ import type { FileDeRevision } from "@domain/apprentissage";
 import type { Lecon, Niveau } from "@domain/catalogue";
 import type { ProfilEnCours } from "@domain/famille";
 import type { Univers } from "@domain/motivation";
+import { lireLeNombreDeSeancesAvantLaSeance } from "../histoire/nombre-de-seances-avant-la-seance.ts";
 import { niveauDuProfil } from "../parcours/niveau-du-profil.ts";
 import { useLeconsPersonnellesDuProfil } from "../accompagnement/useLeconsPersonnellesDuProfil.ts";
 import { jourDuNavigateur } from "../seance/jour-du-navigateur.ts";
@@ -18,6 +19,8 @@ type Props = {
   readonly profil: ProfilEnCours;
   readonly univers: Univers;
   readonly voix: Voix;
+  /** « Lire l'épisode » à la fin : l'épisode que la révision vient d'ouvrir. */
+  readonly onLireLEpisode: (numero: number) => void;
   /** « Accueil » à la fin, ou rien à réviser : retour à l'accueil de l'enfant. */
   readonly onAccueil: () => void;
 };
@@ -39,13 +42,14 @@ type PropsChargees = Props & {
   readonly niveau: Niveau | undefined;
 };
 
-function RevisionChargee({ lecons, file, niveau, profil, univers, voix, onAccueil }: PropsChargees) {
+function RevisionChargee({ lecons, file, niveau, profil, univers, voix, onLireLEpisode, onAccueil }: PropsChargees) {
   const personnage = usePersonnageQuiParle(voix);
   const [revision] = useState<RevisionCommencee | undefined>(() =>
     file && niveau
       ? commencerLaRevision({ file, jour: jourDuNavigateur(new Date()), enfant: profil.id, lecons, niveau })
       : undefined
   );
+  const [nombreDeSeancesAvant] = useState(() => lireLeNombreDeSeancesAvantLaSeance(profil.id));
   const [fini, setFini] = useState(false);
   const sortie = useRef(false);
   /** Un double toucher ne doit pas quitter deux écrans. */
@@ -74,6 +78,8 @@ function RevisionChargee({ lecons, file, niveau, profil, univers, voix, onAccuei
             prenom={profil.prenom}
             personnage={personnage}
             univers={univers}
+            nombreDeSeancesAvant={nombreDeSeancesAvant}
+            onLireLEpisode={onLireLEpisode}
             onAccueil={retournerALAccueil}
           />
         )

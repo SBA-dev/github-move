@@ -18,6 +18,7 @@ import {
 } from "./famille/index.ts";
 import { DockDeLEnfant, type EcranDuDock, estUnEcranDuDock } from "./accueil/index.ts";
 import { LeconsPersonnellesDuParent } from "./accompagnement/index.ts";
+import { EcranDeLEpisode } from "./histoire/index.ts";
 import { MesMedailles } from "./medailles/index.ts";
 import { SuiviDeLEspaceParent } from "./suivi/index.ts";
 import { MonParcours } from "./parcours/index.ts";
@@ -28,6 +29,7 @@ import { type Lieu, useNavigation } from "./navigation.ts";
 import { EcranDeSeance, PageDeLaLecon, useRenvoiDesSeancesGardees } from "./seance/index.ts";
 import { oublierLesEtoilesGagnees } from "./seance/fin-de-seance/etoiles-gagnees-pendant-l-utilisation.ts";
 import { oublierLesSeancesDeRevisionTerminees } from "./revision/seances-de-revision-terminees-pendant-l-utilisation.ts";
+import { oublierLesDernieresLecturesDuServeur } from "./histoire/seances-terminees-du-profil.ts";
 import { oublierLesSeancesTerminees } from "./seance/fin-de-seance/seances-terminees-pendant-l-utilisation.ts";
 import {
   EcranDuTestDeDepart,
@@ -44,7 +46,8 @@ const ACCUEIL: Lieu = { ecran: "accueil" };
 
 function estPageDeLEnfant(lieu: Lieu): boolean {
   return lieu.ecran === "jeu" || lieu.ecran === "parcours" || lieu.ecran === "toutes-les-lecons" || lieu.ecran === "medailles" ||
-    lieu.ecran === "test-de-depart" || lieu.ecran === "revision" || lieu.ecran === "lecon" || lieu.ecran === "seance";
+    lieu.ecran === "test-de-depart" || lieu.ecran === "revision" || lieu.ecran === "lecon" || lieu.ecran === "seance" ||
+    lieu.ecran === "episode";
 }
 
 function ecranAffiche(lieu: Lieu, espaceParent: EtatDeLEspaceParent["type"], connecte: boolean): EcranDuDomaine {
@@ -58,6 +61,8 @@ function ecranAffiche(lieu: Lieu, espaceParent: EtatDeLEspaceParent["type"], con
       return "accueil-de-l-enfant";
     case "lecon":
       return "page-de-la-lecon";
+    case "episode":
+      return "medailles";
     case "parcours":
     case "toutes-les-lecons":
     case "medailles":
@@ -142,6 +147,7 @@ export function Application() {
       oublierLeProfilEtSaProgression();
       oublierLesEtoilesGagnees();
       oublierLesSeancesTerminees();
+      oublierLesDernieresLecturesDuServeur();
       oublierLesSeancesDeRevisionTerminees();
       oublierLesTestsDeDepartFaits();
       remplacer("accueil");
@@ -246,6 +252,7 @@ export function Application() {
                 profil={profilEnCours}
                 univers={univers}
                 voix={voix}
+                onLireLEpisode={(numero) => aller({ ecran: "episode", numero, origine: "fin-de-seance" })}
                 onAccueil={() => revenirA("jeu")}
               />
             )}
@@ -267,7 +274,22 @@ export function Application() {
               />
             )}
             {lieu.ecran === "medailles" && profilCharge && profilEnCours && (
-              <MesMedailles profil={profilEnCours} univers={univers} voix={voix} />
+              <MesMedailles
+                profil={profilEnCours}
+                univers={univers}
+                voix={voix}
+                onOuvrirLEpisode={(numero) => aller({ ecran: "episode", numero, origine: "medailles" })}
+              />
+            )}
+            {lieu.ecran === "episode" && profilCharge && profilEnCours && (
+              <EcranDeLEpisode
+                profil={profilEnCours}
+                univers={univers}
+                voix={voix}
+                numero={lieu.numero}
+                onFermerLeLivre={() => revenirA(lieu.origine === "medailles" ? "medailles" : "jeu")}
+                onEpisodeSuivant={(numero) => remplacer({ ecran: "episode", numero, origine: lieu.origine })}
+              />
             )}
             {lieu.ecran === "lecon" && profilCharge && profilEnCours && (
               <PageDeLaLecon
@@ -295,6 +317,7 @@ export function Application() {
                 toutLireAVoixHaute={profilEnCours.reglages.toutLireAVoixHaute}
                 clavierDesDictees={profilEnCours.reglages.clavierDesDictees.valeur}
                 onRetour={() => revenirA({ ecran: "lecon", leconId: lieu.leconId })}
+                onLireLEpisode={(numero) => aller({ ecran: "episode", numero, origine: "fin-de-seance" })}
                 onLeconSuivante={(leconId) => aller({ ecran: "lecon", leconId })}
                 onToutesLesLecons={() => {
                   remplacer("jeu");

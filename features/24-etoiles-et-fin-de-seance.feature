@@ -53,6 +53,7 @@ Fonctionnalité: Étoiles et fin de la séance
 
     # Mise à jour par #32 (décision 32.25)
     # Mise à jour par #31 (décision 31.23)
+    # Mise à jour par #33 (décision 33.13) : la séance ouvre un épisode, annoncé en fin de phrase
     Scénario: Avec 3 étoiles, le personnage guide dit son expression et salue l'enfant
       Étant donné que Léa a gagné 6 étoiles en tout
       Et que Léa a pour meilleures étoiles :
@@ -61,9 +62,10 @@ Fonctionnalité: Étoiles et fin de la séance
       Et que Léa joue la séance complète de la leçon « Les sons de test »
       Et que Léa n'a fait aucune erreur pendant la séance
       Quand Léa réussit la dernière question de la séance
-      Alors Noisette dit l'une de ses expressions, suivie de « Trois étoiles, Léa ! Tu es incroyable ! »
+      Alors Noisette dit l'une de ses expressions, suivie de « Trois étoiles, Léa ! Tu es incroyable ! Un nouvel épisode de l'histoire t'attend ! »
 
     # Mise à jour par #31 (décision 31.23)
+    # Mise à jour par #33 (décision 33.13) : la séance ouvre un épisode, annoncé en fin de phrase
     Plan du Scénario: Avec <étoiles>, le personnage guide propose de rejouer pour les autres étoiles
       Étant donné que Léa a pour meilleures étoiles :
         | leçon            | étoiles |
@@ -74,9 +76,9 @@ Fonctionnalité: Étoiles et fin de la séance
       Alors Noisette dit une félicitation, suivie de « <phrase> »
 
       Exemples:
-        | erreurs | étoiles   | phrase                                                                  |
-        | 2       | 2 étoiles | Tu gagnes 2 étoiles, Léa. Tu rejoues pour aller chercher les autres ?   |
-        | 5       | 1 étoile  | Tu gagnes 1 étoile, Léa. Tu rejoues pour aller chercher les autres ?    |
+        | erreurs | étoiles   | phrase                                                                                                           |
+        | 2       | 2 étoiles | Tu gagnes 2 étoiles, Léa. Tu rejoues pour aller chercher les autres ? Un nouvel épisode de l'histoire t'attend ! |
+        | 5       | 1 étoile  | Tu gagnes 1 étoile, Léa. Tu rejoues pour aller chercher les autres ? Un nouvel épisode de l'histoire t'attend !  |
 
   Règle: Une séance d'un exercice donne aussi les étoiles de la leçon, sauf une séance faite seulement d'une fluence
 
@@ -120,10 +122,11 @@ Fonctionnalité: Étoiles et fin de la séance
 
   Règle: À la fin de la séance, l'enfant rejoue, passe à la leçon suivante ou revient à l'accueil
 
+    # Mise à jour par #33 (décisions 33.12 et 33.20) : la séance ouvre un épisode, la fin propose aussi « Lire l'épisode »
     Scénario: La fin de la séance propose la leçon suivante, l'accueil et de rejouer
       Étant donné que Léa joue la séance complète de la leçon « Les sons de test »
       Quand Léa réussit la dernière question de la séance
-      Alors la fin de la séance propose « Leçon suivante », « Accueil » et « Rejouer »
+      Alors la fin de la séance propose « Leçon suivante », « Accueil », « Rejouer » et « Lire l'épisode »
       Et le focus est sur « Accueil »
 
     Scénario: La leçon suivante est la première leçon d'après non réussie de la même matière et du même niveau

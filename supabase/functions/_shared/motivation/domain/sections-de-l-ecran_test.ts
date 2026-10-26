@@ -1,6 +1,7 @@
 import { assertEquals } from "@std/assert";
 import type { Badge } from "./badges.ts";
 import { cabaneDe } from "./cabane.ts";
+import { histoireDe } from "./histoire.ts";
 import type { PastilleDeRecord } from "./records-de-calcul-rapide.ts";
 import { sectionsAAfficher, sectionsDeLEcran } from "./sections-de-l-ecran.ts";
 
@@ -77,4 +78,27 @@ Deno.test("quand les badges n'ont pas pu être lus, la section des badges n'est 
   const sections = sectionsDeLEcran({ pastilles: [], cabane: cabaneDe(3), badges: undefined });
 
   assertEquals(sections, ["cabane"]);
+});
+
+Deno.test("avec une histoire à 0 épisode ouvert, la section de l'histoire est quand même affichée", () => {
+  const sections = sectionsDeLEcran({ pastilles: [], cabane: undefined, histoire: histoireDe(0) });
+
+  assertEquals(sections, ["histoire"]);
+});
+
+Deno.test("sans histoire connue, la section de l'histoire n'est pas affichée", () => {
+  const sections = sectionsDeLEcran({ pastilles: [], cabane: cabaneDe(3), histoire: undefined });
+
+  assertEquals(sections, ["cabane"]);
+});
+
+Deno.test("la section de l'histoire est affichée entre la cabane et les badges", () => {
+  const sections = sectionsDeLEcran({
+    pastilles: [pastille],
+    cabane: cabaneDe(3),
+    histoire: histoireDe(2),
+    badges: [badge],
+  });
+
+  assertEquals(sections, ["cabane", "histoire", "badges", "recordsDeFluence"]);
 });

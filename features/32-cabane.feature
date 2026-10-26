@@ -161,13 +161,13 @@ Fonctionnalité: La cabane reçoit des objets à chaque palier du total des éto
       Quand Léa réussit la dernière question de la séance
       Alors la fin de la séance annonce pour la cabane « Noisette a reçu un tapis tout doux ! »
 
-    # Décision 32.12
+    # Décision 32.12 ; mise à jour par #33 (décision 33.13) : l'épisode après l'objet reçu
     Scénario: Le personnage guide termine sa phrase de fin par l'objet reçu
       Étant donné que Léa a gagné 5 étoiles en tout
       Et que Léa joue la séance complète de la leçon « Les sons de test »
       Et que Léa a fait 5 erreurs pendant la séance
       Quand Léa réussit la dernière question de la séance
-      Alors Noisette dit une félicitation, suivie de « Tu gagnes 1 étoile, Léa. Tu rejoues pour aller chercher les autres ? Noisette a reçu un tapis tout doux pour sa cabane. »
+      Alors Noisette dit une félicitation, suivie de « Tu gagnes 1 étoile, Léa. Tu rejoues pour aller chercher les autres ? Noisette a reçu un tapis tout doux pour sa cabane. Un nouvel épisode de l'histoire t'attend ! »
 
     Scénario: Rejouer mieux une leçon n'ajoute au total que les étoiles en plus
       Étant donné que Léa a pour meilleures étoiles :
@@ -217,20 +217,21 @@ Fonctionnalité: La cabane reçoit des objets à chaque palier du total des éto
         | sports    |
         | princesse |
 
-    # Décision 32.1
+    # Décision 32.1 ; mise à jour par #33 (décision 33.13) : l'épisode après l'objet reçu
     Scénario: Dans l'univers Sports, Coach Léo annonce que Noisette a reçu un objet
       Étant donné que Léa a choisi l'univers sports
       Et que Léa a gagné 5 étoiles en tout
       Et que Léa joue la séance complète de la leçon « Les sons de test »
       Et que Léa a fait 5 erreurs pendant la séance
       Quand Léa réussit la dernière question de la séance
-      Alors Coach Léo dit une félicitation, suivie de « Tu gagnes 1 étoile, Léa. Tu rejoues pour aller chercher les autres ? Noisette a reçu un tapis tout doux pour sa cabane. »
+      Alors Coach Léo dit une félicitation, suivie de « Tu gagnes 1 étoile, Léa. Tu rejoues pour aller chercher les autres ? Noisette a reçu un tapis tout doux pour sa cabane. Un nouvel épisode de l'histoire t'attend ! »
 
   Règle: La cabane se lit à voix haute, au lecteur d'écran, en mode dys, sans mouvement et sur un petit écran
 
     # Décisions 32.9 et 32.10 ; décision 32.21 : scénarios de #65 mis à jour
     # Mise à jour par #31 (décisions 31.9, 31.10 et 31.23) : la section des badges est lue après la cabane ; les étoiles
     # préparées « en tout » sont sur des leçons absentes de la bibliothèque, elles ne donnent aucun badge (31.13)
+    # Mise à jour par #33 (décision 33.22) : la section de l'histoire, même sans épisode, est lue entre la cabane et les badges
     Scénario: Avec « tout lire à voix haute », le titre de la cabane puis sa phrase sont lus à l'ouverture
       Étant donné que Paul a réglé « tout lire à voix haute » sur « oui » pour Léa
       Et que Léa a gagné 3 étoiles en tout
@@ -241,6 +242,8 @@ Fonctionnalité: La cabane reçoit des objets à chaque palier du total des éto
         | Mes médailles                                                              |
         | La cabane de Noisette                                                      |
         | Tu as 3 étoiles. Encore 3 étoiles et Noisette recevra un tapis tout doux ! |
+        | L'histoire des Savanturiers                                                |
+        | Un nouvel épisode s'ouvre à chaque séance terminée.                        |
         | Mes badges                                                                 |
         | Gagne au moins 2 étoiles dans une leçon pour gagner son badge.             |
 

@@ -8,7 +8,8 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
   L'histoire ne fait que compter les séances terminées du profil en cours : elle ne modifie aucune séance,
   aucune étoile et n'enregistre rien (modèle : docs/stories/33/domain-model.md). Le PO a validé le cadrage le
   2026-10-25 (« 33. reco OK ») : les décisions 33.1 à 33.31 sont dans docs/stories/33/acceptance.md, et le
-  commentaire au-dessus d'un scénario rappelle la décision qu'il illustre. Le code commence après le merge de #30.
+  commentaire au-dessus d'un scénario rappelle la décision qu'il illustre. Ses dépendances (#28, #30, #31, #32)
+  sont mergées.
 
   Les 20 épisodes (titres du legacy, dans l'ordre) : 1 « La carte froissée », 2 « Le premier indice »,
   3 « Le pont des lettres », 4 « Pipo le hérisson », 5 « La forêt qui chuchote », 6 « Le moulin des nombres »,
@@ -24,8 +25,8 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
   besoin, « Léa a gagné N étoiles en tout » fixe ce total, séances préparées comprises. Comme toute étape qui écrit en base, elle suppose que Léa joue avec un profil réel,
   créé pour Paul (features/steps/profil-reel.ts, décision 0021, point 5) ; les séances partent avec le profil enfant.
   « Les sons de test » est la leçon de test de #24 (10 questions : 0 erreur donne 3 étoiles, 5 erreurs 1 étoile).
-  La zone « nouveautés » de l'écran de fin et la phrase de fin avec la cabane viennent de #32 : la story se code
-  après son merge ; seuls les scénarios qui font aussi recevoir un objet à la cabane portent @depend-de-32.
+  La zone « nouveautés » de l'écran de fin et la phrase de fin avec la cabane viennent de #32, mergée : tous les
+  scénarios, y compris ceux qui font aussi recevoir un objet à la cabane, sont exécutables.
   Paul et Marie sont les deux parents rattachés au profil enfant de Léa ; Tom est un autre enfant de Paul ;
   Claire n'est rattachée à aucun des deux.
 
@@ -122,7 +123,6 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
       Et les tuiles 2 à 20 de l'histoire montrent « À découvrir »
 
     # Décision 33.7 (et décision 28.16 : la séance de révision est une séance)
-    @depend-de-28
     Scénario: Une séance de révision terminée ouvre un épisode
       Étant donné que la bibliothèque de test des révisions est servie
       Et que Léa a terminé 1 séance
@@ -181,7 +181,6 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
       Et Noisette termine les paroles de fin de fluence par « Un nouvel épisode de l'histoire t'attend ! »
 
     # Décisions 33.12 et 33.7
-    @depend-de-28
     Scénario: À la fin d'une séance de révision, la fin annonce aussi le nouvel épisode
       Étant donné que la bibliothèque de test des révisions est servie
       Et que Léa a terminé 1 séance
@@ -190,7 +189,6 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
       Alors la fin de la séance de révision annonce « Nouvel épisode ! » avec « Le premier indice »
 
     # Décision 33.13 : ordre de « Mes médailles », cabane puis épisode
-    @depend-de-32
     Scénario: Quand la séance fait aussi recevoir un objet à la cabane, la cabane est annoncée avant l'épisode
       Étant donné que Léa a gagné 5 étoiles en tout
       Et que Léa a terminé 3 séances
@@ -201,7 +199,6 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
       Et Noisette dit une félicitation, suivie de « Tu gagnes 1 étoile, Léa. Tu rejoues pour aller chercher les autres ? Noisette a reçu un tapis tout doux pour sa cabane. Un nouvel épisode de l'histoire t'attend ! »
 
     # Décision 33.13 : badge en dernier
-    @depend-de-31 @depend-de-32
     Scénario: Quand la séance donne aussi un objet de la cabane et un badge, l'ordre est cabane, épisode, badge
       Étant donné que Léa a gagné 5 étoiles en tout
       Et que Léa a terminé 3 séances
@@ -388,7 +385,6 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
   Règle: L'histoire se lit à voix haute, au lecteur d'écran, au clavier, en mode dys, sans mouvement et sur un petit écran
 
     # Décisions 33.6 et 33.22
-    @depend-de-32
     Scénario: Avec « tout lire à voix haute », le titre de l'histoire puis son sous-titre sont lus après la cabane
       Étant donné que Paul a réglé « tout lire à voix haute » sur « oui » pour Léa
       Et que Léa a gagné 3 étoiles en tout
@@ -413,7 +409,6 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
       Alors Léa entend Noisette lire « L'histoire des Savanturiers », puis « Un nouvel épisode s'ouvre à chaque séance terminée. »
 
     # Décision 33.22 (a) et décision 32.9
-    @depend-de-32
     Scénario: Un épisode ouvert suffit pour que le personnage guide dise « Regarde tout ce que tu as gagné ! »
       Étant donné que Léa a gagné 2 étoiles en tout
       Et que Léa a terminé 1 séance

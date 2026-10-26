@@ -517,7 +517,7 @@ Given(/^Léa a répondu juste à la question « ([^«»]+) » de la séance de r
   await questionOuFin(page, enonce);
 });
 
-Given(/^Léa a fait la séance de révision, (.+)$/, async ({ page }, deroule: string) => {
+Given(/^Léa (?:a fait|fait) la séance de révision, (.+)$/, async ({ page }, deroule: string) => {
   await commencerLaRevision(page);
   await jouerLaRevision(page, derouleDe(deroule));
 });
@@ -588,9 +588,9 @@ Then(/^ni « ([^«»]+) » ni « ([^«»]+) »$/, async ({ page }, a: string, b:
 
 // --- Alors : la fin
 
-Then(/^la fin de la séance de révision propose seulement « Accueil »$/, async ({ page }) => {
+Then(/^la fin de la séance de révision propose « Accueil » et « Lire l'épisode »$/, async ({ page }) => {
   await expect(finDeLaRevision(page)).toBeVisible({ timeout: DELAI_DE_LA_TRANSITION_MS });
-  await expect(finDeLaRevision(page).getByRole("button").filter({ hasNotText: "Réécouter" })).toHaveText(["Accueil"]);
+  await expect(finDeLaRevision(page).getByRole("button").filter({ hasNotText: "Réécouter" })).toHaveText(["Accueil", "Lire l'épisode"]);
 });
 
 Then(/^la fin de la séance de révision ne montre aucune étoile$/, async ({ page }) => {

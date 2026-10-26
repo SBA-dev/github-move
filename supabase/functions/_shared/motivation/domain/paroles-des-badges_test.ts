@@ -1,6 +1,7 @@
 import { assertEquals } from "@std/assert";
 import type { Badge } from "./badges.ts";
 import { PALIERS_DE_LA_CABANE } from "./cabane.ts";
+import { HISTOIRE_DES_SAVANTURIERS } from "./histoire.ts";
 import {
   finDePhraseDuBadge,
   libelleDeLaListeDesBadges,
@@ -11,8 +12,13 @@ import {
   titreDeLAnnonceDuBadge,
   titreDeLaSectionDesBadges,
 } from "./paroles-des-badges.ts";
+import { parolesDeFinDeFluence } from "./paroles-de-fluence.ts";
+import { parolesDeFinDeRevision } from "./paroles-de-revision.ts";
 
 const lanterne = PALIERS_DE_LA_CABANE[0].objet;
+const tapis = PALIERS_DE_LA_CABANE[1].objet;
+const premierEpisode = HISTOIRE_DES_SAVANTURIERS[0];
+const FIN_DE_L_EPISODE = "Un nouvel épisode de l'histoire t'attend !";
 
 function unBadge(nom: string): Badge {
   return { cle: nom, nom, matiere: "francais", lecons: [] };
@@ -98,5 +104,51 @@ Deno.test("avec un objet et un badge, la cabane est annoncée avant le badge", (
   assertEquals(
     phraseDeFinAvecLesNouveautes(PHRASE_DE_FIN, { objet: lanterne, badge: badgeDesSons }),
     "Tu gagnes 2 étoiles, Léa. Tu rejoues pour aller chercher les autres ? Noisette a reçu une lanterne pour sa cabane. Nouveau badge : Je reconnais les sons de test !",
+  );
+});
+
+Deno.test("avec un épisode seul, la phrase de fin se termine par l'épisode qui attend l'enfant", () => {
+  assertEquals(
+    phraseDeFinAvecLesNouveautes(PHRASE_DE_FIN, { episode: premierEpisode }),
+    `${PHRASE_DE_FIN} ${FIN_DE_L_EPISODE}`,
+  );
+});
+
+Deno.test("avec un objet et un épisode, la cabane est annoncée avant l'épisode", () => {
+  assertEquals(
+    phraseDeFinAvecLesNouveautes(PHRASE_DE_FIN, { objet: tapis, episode: premierEpisode }),
+    `${PHRASE_DE_FIN} Noisette a reçu un tapis tout doux pour sa cabane. ${FIN_DE_L_EPISODE}`,
+  );
+});
+
+Deno.test("avec un objet, un épisode et un badge, la cabane précède l'épisode, qui précède le badge", () => {
+  assertEquals(
+    phraseDeFinAvecLesNouveautes(PHRASE_DE_FIN, { objet: tapis, episode: premierEpisode, badge: badgeDesSons }),
+    `${PHRASE_DE_FIN} Noisette a reçu un tapis tout doux pour sa cabane. ${FIN_DE_L_EPISODE} Nouveau badge : Je reconnais les sons de test !`,
+  );
+});
+
+Deno.test("sans épisode, la phrase de fin avec un objet et un badge reste inchangée", () => {
+  assertEquals(
+    phraseDeFinAvecLesNouveautes(PHRASE_DE_FIN, { objet: lanterne, episode: undefined, badge: badgeDesSons }),
+    `${PHRASE_DE_FIN} Noisette a reçu une lanterne pour sa cabane. Nouveau badge : Je reconnais les sons de test !`,
+  );
+});
+
+Deno.test("les paroles de fin de fluence se terminent par l'épisode qui attend l'enfant", () => {
+  const paroles = parolesDeFinDeFluence({ score: 8, issue: "premierRecord" });
+
+  assertEquals(
+    phraseDeFinAvecLesNouveautes(paroles, { episode: premierEpisode }),
+    `${paroles} ${FIN_DE_L_EPISODE}`,
+  );
+});
+
+Deno.test("les paroles de fin de révision se terminent par l'épisode qui attend l'enfant", () => {
+  const paroles = parolesDeFinDeRevision({ prenom: "Léa", questionsJustes: 3 });
+
+  assertEquals(
+    phraseDeFinAvecLesNouveautes(paroles, { episode: premierEpisode }),
+    `${paroles} ${FIN_DE_L_EPISODE}`,
   );
 });

@@ -8,6 +8,8 @@ import {
   titreDeLAnnonce,
   titreDeLAnnonceDuBadge,
 } from "@domain/motivation";
+import { AnnonceDuNouvelEpisode } from "../../histoire/AnnonceDuNouvelEpisode.tsx";
+import { useEpisodeOuvertParLaSeance } from "../../histoire/useEpisodeOuvertParLaSeance.ts";
 import { niveauDuProfil } from "../../parcours/index.ts";
 import { lireLEtatDuTestDeDepart } from "../../test-de-depart/etat-du-test-de-depart.ts";
 import { chargerToutesLesLecons } from "../bibliotheque.ts";
@@ -33,7 +35,10 @@ type Props = {
   readonly onDireLaFin: (etoiles: number | undefined, nouveautes: NouveautesDeFin) => void;
   /** Les meilleures étoiles du profil lues au lancement de la séance, avant que celle-ci ne les change ; `undefined` si elles n'ont pas pu être lues. */
   readonly meilleuresEtoilesAvant: Promise<MeilleuresEtoilesDuProfil | undefined>;
+  /** Le nombre de séances terminées lu au lancement de la séance, avant que celle-ci ne s'y ajoute ; `undefined` s'il n'a pas pu être lu. */
+  readonly nombreDeSeancesAvant: Promise<number | undefined>;
   readonly onRejouer: () => void;
+  readonly onLireLEpisode: (numero: number) => void;
   readonly onLeconSuivante: (leconId: string) => void;
   readonly onToutesLesLecons: () => void;
   readonly onAccueil: () => void;
@@ -74,7 +79,7 @@ function useLaSuite(seance: Seance, niveau: string): LaSuite | undefined {
 }
 
 /** La fin de la séance : étoiles gagnées (dessinées et écrites), paroles du personnage guide, et la suite à choisir. */
-export function EcranDeFin({ seance, niveau, onDireLaFin, meilleuresEtoilesAvant, onRejouer, onLeconSuivante, onToutesLesLecons, onAccueil }: Props) {
+export function EcranDeFin({ seance, niveau, onDireLaFin, meilleuresEtoilesAvant, nombreDeSeancesAvant, onRejouer, onLireLEpisode, onLeconSuivante, onToutesLesLecons, onAccueil }: Props) {
   const { terminee, message } = useSauvegardeDeLaSeance(seance);
   const suite = useLaSuite(seance, niveau);
   const suivante = suite?.suivante;
@@ -90,16 +95,17 @@ export function EcranDeFin({ seance, niveau, onDireLaFin, meilleuresEtoilesAvant
     terminee !== undefined,
     terminee?.etoiles,
   );
+  const { pret: episodePret, episode } = useEpisodeOuvertParLaSeance(nombreDeSeancesAvant, terminee !== undefined);
   const accueil = useRef<HTMLButtonElement>(null);
   const dite = useRef(false);
   useEffect(() => {
     accueil.current?.focus();
   }, []);
   useEffect(() => {
-    if (dite.current || terminee === undefined || !pret || !badgePret) return;
+    if (dite.current || terminee === undefined || !pret || !episodePret || !badgePret) return;
     dite.current = true;
-    onDireLaFin(terminee.etoiles, { objet, badge });
-  }, [terminee, pret, objet, badgePret, badge, onDireLaFin]);
+    onDireLaFin(terminee.etoiles, { objet, episode, badge });
+  }, [terminee, pret, objet, episodePret, episode, badgePret, badge, onDireLaFin]);
 
   const etoiles = terminee?.etoiles;
   const scores = Object.entries(terminee?.scoresDeFluence ?? {});
@@ -120,6 +126,7 @@ export function EcranDeFin({ seance, niveau, onDireLaFin, meilleuresEtoilesAvant
           </>
         )}
       </div>
+      <AnnonceDuNouvelEpisode episode={episode} />
       <div className="pour-le-badge" role="status" data-testid="annonce-de-nouveau-badge">
         {badge && (
           <>
@@ -142,6 +149,7 @@ export function EcranDeFin({ seance, niveau, onDireLaFin, meilleuresEtoilesAvant
         {suivante && <button type="button" onClick={() => onLeconSuivante(suivante.id)}>Leçon suivante</button>}
         <button type="button" ref={accueil} onClick={onAccueil}>Accueil</button>
         <button type="button" onClick={onRejouer}>Rejouer</button>
+        {episode && <button type="button" onClick={() => onLireLEpisode(episode.numero)}>Lire l'épisode</button>}
         {suite && !suivante && <button type="button" onClick={onToutesLesLecons}>Toutes les leçons</button>}
       </div>
       <p className="message-erreur" role="status" data-testid="sauvegarde">{message}</p>

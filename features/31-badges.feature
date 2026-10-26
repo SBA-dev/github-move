@@ -227,14 +227,14 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
       Quand Léa réussit la dernière question de la séance
       Alors la fin de la séance annonce un nouveau badge « Je sais : Les sons de test »
 
-    # Décision 31.4 (décision Q74 de #24)
+    # Décision 31.4 (décision Q74 de #24) ; mise à jour par #33 (décision 33.13) : l'épisode avant le badge
     Scénario: Le personnage guide termine sa phrase de fin par le nouveau badge
       Étant donné que la leçon de test « Les sons de test » a pour compétence « Je reconnais les sons de test »
       Et que Léa n'a encore jamais terminé de séance de la leçon « Les sons de test »
       Et que Léa joue la séance complète de la leçon « Les sons de test »
       Et que Léa a fait 2 erreurs pendant la séance
       Quand Léa réussit la dernière question de la séance
-      Alors Noisette dit une félicitation, suivie de « Tu gagnes 2 étoiles, Léa. Tu rejoues pour aller chercher les autres ? Nouveau badge : Je reconnais les sons de test ! »
+      Alors Noisette dit une félicitation, suivie de « Tu gagnes 2 étoiles, Léa. Tu rejoues pour aller chercher les autres ? Un nouvel épisode de l'histoire t'attend ! Nouveau badge : Je reconnais les sons de test ! »
 
     Plan du Scénario: Sans leçon devenue acquise, la fin de la séance n'annonce aucun badge (<cas>)
       Étant donné que Léa a pour meilleures étoiles :
@@ -280,7 +280,7 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
       Et que Léa a fait 2 erreurs pendant la séance
       Quand Léa réussit la dernière question de la séance
       Alors la fin de la séance montre, dans l'ordre, l'annonce pour la cabane puis l'annonce de nouveau badge
-      Et Noisette dit une félicitation, suivie de « Tu gagnes 2 étoiles, Léa. Tu rejoues pour aller chercher les autres ? Noisette a reçu une lanterne pour sa cabane. Nouveau badge : Je reconnais les sons de test ! »
+      Et Noisette dit une félicitation, suivie de « Tu gagnes 2 étoiles, Léa. Tu rejoues pour aller chercher les autres ? Noisette a reçu une lanterne pour sa cabane. Un nouvel épisode de l'histoire t'attend ! Nouveau badge : Je reconnais les sons de test ! »
 
     # Décision 31.16
     Scénario: Avec les mouvements réduits, l'annonce du nouveau badge apparaît sans mouvement
@@ -295,6 +295,7 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
 
     # Décisions 31.9 et 31.11 ; la cabane est lue avant les badges (#32). Si #33 est livrée avant #31,
     # le titre et la phrase de l'histoire s'insèrent entre la cabane et les badges.
+    # Mise à jour par #33 (décision 33.22) : la section de l'histoire, même sans épisode, est lue entre la cabane et les badges
     Scénario: Avec « tout lire à voix haute », le titre des badges puis leur nombre sont lus à l'ouverture
       Étant donné que Paul a réglé « tout lire à voix haute » sur « oui » pour Léa
       Et que Léa a pour meilleures étoiles :
@@ -307,6 +308,8 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
         | Mes médailles                                                       |
         | La cabane de Noisette                                               |
         | Tu as 2 étoiles. Encore 1 étoile et Noisette recevra une lanterne ! |
+        | L'histoire des Savanturiers                                         |
+        | Un nouvel épisode s'ouvre à chaque séance terminée.                 |
         | Mes badges                                                          |
         | Tu as 1 badge.                                                      |
 

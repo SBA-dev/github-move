@@ -1,12 +1,10 @@
 import { meilleuresEtoilesReunies } from "@domain/apprentissage";
 import type { MeilleuresEtoilesDuProfil } from "@domain/motivation";
 import { avecDelaiMaximal } from "../../reseau/avec-delai-maximal.ts";
+import { DELAI_MAXIMAL_DE_LECTURE_EN_MS } from "../../reseau/delai-maximal-de-lecture.ts";
 import { reseauDisponible } from "../../reseau/reseau-disponible.ts";
 import { etoilesGagneesPendantLUtilisation } from "./etoiles-gagnees-pendant-l-utilisation.ts";
 import { lireToutesLesMeilleuresEtoilesSiPossible } from "./lecture-des-meilleures-etoiles-supabase.ts";
-
-/** Au-delà, la lecture des étoiles d'avant la séance est abandonnée : la félicitation est dite sans objet plutôt que d'attendre sans fin. */
-export const DELAI_MAXIMAL_DE_LECTURE_EN_MS = 5000;
 
 /** Les meilleures étoiles du profil telles que la cabane et les badges les comptent ; `undefined` quand les étoiles du serveur ne peuvent pas être lues (sans réseau, ou lecture en échec). */
 export async function lireLesMeilleuresEtoilesDuProfilSiLisibles(profil: string): Promise<MeilleuresEtoilesDuProfil | undefined> {

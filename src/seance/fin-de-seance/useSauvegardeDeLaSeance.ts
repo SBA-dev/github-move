@@ -28,7 +28,7 @@ export function useSauvegardeDeLaSeance(seance: Seance) {
     const jour = jourDuNavigateur(maintenant);
     const terminee = seance.terminer(maintenant, jour);
     setTerminee(terminee);
-    retenirLaSeanceTerminee(seance.enfant, { lecon: seance.lecon, termineeLe: maintenant, jour });
+    retenirLaSeanceTerminee(seance.enfant, { lecon: seance.lecon, termineeLe: maintenant, jour }, seance.id.valeur);
     retenirLesQuestionsRatees(seance.enfant, terminee.questionsRateesARetenir, jour, maintenant);
     if (terminee.etoiles !== undefined) retenirLesEtoilesGagnees(seance.enfant, seance.lecon, seance.etoiles());
     void sauvegarderLaSeance(seance.aEnregistrer()).then(setSauvegarde);
