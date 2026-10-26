@@ -1,6 +1,6 @@
 import { FunctionsHttpError } from "@supabase/supabase-js";
 import type { SeanceDeRevisionTermineeAEnregistrer } from "@domain/apprentissage";
-import { clientSupabase } from "../connexion/client-supabase.ts";
+import { appelerUneFonction } from "../connexion/client-supabase.ts";
 import { parentConnecte } from "../famille/profils/lecture-des-profils-supabase.ts";
 import { estUnIdentifiantDeProfil } from "../seance/fin-de-seance/corps-de-la-seance.ts";
 import { type IssueDeLEnvoi, issueDuStatut, type Sauvegarde } from "../seance/fin-de-seance/sauvegarde-de-la-seance.ts";
@@ -9,7 +9,7 @@ import { SeancesDeRevisionGardeesSurLAppareil } from "./seances-de-revision-gard
 
 async function envoyer(corps: CorpsDeLaSeanceDeRevision): Promise<IssueDeLEnvoi> {
   try {
-    const { error } = await clientSupabase().functions.invoke("terminer-la-seance-de-revision", { body: corps });
+    const { error } = await appelerUneFonction("terminer-la-seance-de-revision", corps);
     if (!error) return "enregistree";
     return error instanceof FunctionsHttpError ? issueDuStatut(error.context.status) : "impossible";
   } catch {
