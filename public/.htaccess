@@ -1,0 +1,26 @@
+# Configuration d'alwaysdata (site « Fichiers statiques », Apache). La redirection HTTP vers HTTPS
+# est l'option « Forcer HTTPS » du site, pas une règle d'ici.
+DirectoryIndex index.html
+
+# La connexion sécurisée est exigée pendant un an. Pas de « preload » (décision 45.23).
+Header always set Strict-Transport-Security "max-age=31536000"
+
+# Les fichiers qui portent la version de l'application sont revalidés à chaque chargement.
+<FilesMatch "^(index\.html|sw\.js|manifest\.webmanifest|bibliotheque\.json|programmes-index\.json)$">
+  Header set Cache-Control "no-cache"
+</FilesMatch>
+
+# Les fichiers de /assets/ portent leur empreinte dans leur nom : ils ne changent jamais.
+<IfModule mod_headers.c>
+  <If "%{REQUEST_URI} =~ m#^/assets/#">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </If>
+</IfModule>
+
+# Toute adresse qui n'est pas un fichier existant sert l'application (écrans /espace-parent, /lecon/…),
+# sauf sous /assets/ : un fichier manquant doit rester une erreur 404, jamais une page mise en cache pour un an.
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/assets/
+RewriteRule ^ index.html [L]
