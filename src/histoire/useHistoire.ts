@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { type EtatDeLHistoire, histoireDe } from "@domain/motivation";
-import { seancesTermineesDuProfilAvecRepliSurLaDerniereLecture } from "../histoire/seances-terminees-du-profil.ts";
+import { seancesTermineesDuProfilAvecRepliSurLaDerniereLecture } from "./seances-terminees-du-profil.ts";
 
 export type LectureDeLHistoire = {
   readonly chargee: boolean;

@@ -24,7 +24,7 @@ import { SectionDeLHistoire } from "./SectionDeLHistoire.tsx";
 import { SectionDesBadges } from "./SectionDesBadges.tsx";
 import { useBadges } from "./useBadges.ts";
 import { useCabane } from "./useCabane.ts";
-import { useHistoire } from "./useHistoire.ts";
+import { useHistoire } from "../histoire/useHistoire.ts";
 import { usePastillesDesRecords } from "./usePastillesDesRecords.ts";
 
 type Props = {

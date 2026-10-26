@@ -2,6 +2,8 @@ import { useCallback, useEffect } from "react";
 import {
   type Episode,
   type EtatDeLHistoire,
+  EpisodeInconnu,
+  EpisodeNonOuvert,
   episodeOuvert,
   episodeSuivant,
   positionDeLEpisode,
@@ -10,7 +12,7 @@ import {
   type Univers,
 } from "@domain/motivation";
 import type { ProfilEnCours } from "@domain/famille";
-import { useHistoire } from "../medailles/useHistoire.ts";
+import { useHistoire } from "./useHistoire.ts";
 import { TexteSurligne } from "../seance/TexteSurligne.tsx";
 import { usePersonnageQuiParle } from "../seance/usePersonnageQuiParle.ts";
 import { PersonnageGuide } from "../univers/index.ts";
@@ -29,8 +31,9 @@ function episodeALire(histoire: EtatDeLHistoire | undefined, numero: number): Ep
   if (histoire === undefined) return undefined;
   try {
     return episodeOuvert(histoire, numero);
-  } catch {
-    return undefined;
+  } catch (erreur) {
+    if (erreur instanceof EpisodeInconnu || erreur instanceof EpisodeNonOuvert) return undefined;
+    throw erreur;
   }
 }
 

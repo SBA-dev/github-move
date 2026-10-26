@@ -12,6 +12,10 @@ import { identifiantsDesSeancesTermineesPendantLUtilisation } from "../seance/fi
 /** Les derniers identifiants lus au serveur, par profil : ils servent à « Mes médailles » et à l'écran de l'épisode quand une lecture ultérieure échoue (sans réseau). */
 const derniersIdentifiantsLusAuServeur = new Map<string, readonly string[]>();
 
+export function oublierLesDernieresLecturesDuServeur(): void {
+  derniersIdentifiantsLusAuServeur.clear();
+}
+
 /** Les identifiants des séances que l'appareil connaît en dehors du serveur : séances gardées et séances jouées dans ce navigateur. */
 async function identifiantsConnusDeLAppareil(profil: string): Promise<readonly string[]> {
   const parent = await parentConnecte();

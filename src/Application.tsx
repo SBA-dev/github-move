@@ -29,6 +29,7 @@ import { type Lieu, useNavigation } from "./navigation.ts";
 import { EcranDeSeance, PageDeLaLecon, useRenvoiDesSeancesGardees } from "./seance/index.ts";
 import { oublierLesEtoilesGagnees } from "./seance/fin-de-seance/etoiles-gagnees-pendant-l-utilisation.ts";
 import { oublierLesSeancesDeRevisionTerminees } from "./revision/seances-de-revision-terminees-pendant-l-utilisation.ts";
+import { oublierLesDernieresLecturesDuServeur } from "./histoire/seances-terminees-du-profil.ts";
 import { oublierLesSeancesTerminees } from "./seance/fin-de-seance/seances-terminees-pendant-l-utilisation.ts";
 import {
   EcranDuTestDeDepart,
@@ -146,6 +147,7 @@ export function Application() {
       oublierLeProfilEtSaProgression();
       oublierLesEtoilesGagnees();
       oublierLesSeancesTerminees();
+      oublierLesDernieresLecturesDuServeur();
       oublierLesSeancesDeRevisionTerminees();
       oublierLesTestsDeDepartFaits();
       remplacer("accueil");
