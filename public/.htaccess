@@ -3,7 +3,9 @@
 DirectoryIndex index.html
 
 # La connexion sécurisée est exigée pendant un an. Pas de « preload » (décision 45.23).
-Header always set Strict-Transport-Security "max-age=31536000"
+<IfModule mod_headers.c>
+  Header always set Strict-Transport-Security "max-age=31536000"
+</IfModule>
 
 # Les fichiers qui portent la version de l'application sont revalidés à chaque chargement.
 <FilesMatch "^(index\.html|sw\.js|manifest\.webmanifest|bibliotheque\.json|programmes-index\.json)$">
