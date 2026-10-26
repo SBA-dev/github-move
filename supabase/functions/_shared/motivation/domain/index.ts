@@ -97,3 +97,4 @@ export {
   titreDeLAnnonceDuBadge,
   titreDeLaSectionDesBadges,
 } from "./paroles-des-badges.ts";
+export { parolesDeLaSectionDesBadgesOuSansBadge } from "./paroles-de-l-ecran-des-medailles.ts";

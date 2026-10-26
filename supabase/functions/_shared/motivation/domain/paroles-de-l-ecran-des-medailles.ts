@@ -15,7 +15,7 @@ type ContenuDeLEcran = {
   badges?: readonly Badge[];
 };
 
-function parolesDeLaSectionDesBadgesOuSansBadge(badges: readonly Badge[]): string[] {
+export function parolesDeLaSectionDesBadgesOuSansBadge(badges: readonly Badge[]): string[] {
   return badges.length > 0 ? parolesDeLaSectionDesBadges(badges) : [titreDeLaSectionDesBadges(), phraseSansBadge()];
 }
 
