@@ -142,3 +142,6 @@ Branche de base : `main`. Aucun numéro de décision réservé (prochain libre :
   « Coucou »). Vérifié : les steps ajoutés par #79 attendent la parole vérifiée (texte de la lecture en cours). Le
   compte de lectures par défaut du step « Léa entend de nouveau Noisette lire » (2 lots) existait avant #79 : à
   reprendre dans #87. Rappel du responsable : 3 équipes au plus, périmètres au plus juste (limites d'utilisation).
+- 02:35 UTC — RELIS #64 : correctif #107 mergé (`9cdab61`, un step de la dictée). Intégration sans conflit
+  (`86fa2db`) ; périmètre de #107 (0022) : `@issue-19` **29/29** sur `telephone`. Verrou `merge` toujours gelé
+  jusqu'à la non-régression de `main` ; #79.13 toujours sans réponse.
