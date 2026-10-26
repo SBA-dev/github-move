@@ -1,4 +1,5 @@
 import { assertEquals } from "@std/assert";
+import type { Badge } from "./badges.ts";
 import { cabaneDe } from "./cabane.ts";
 import type { PastilleDeRecord } from "./records-de-calcul-rapide.ts";
 import {
@@ -145,4 +146,65 @@ Deno.test("avec « Tout lire à voix haute » et les étoiles non lues, la caban
     "Mes records de calcul rapide",
     "Calcul rapide : tables de 3 et 4 : ton record est de 12 calculs",
   ]);
+});
+
+const badge: Badge = { cle: "Additionner", nom: "Additionner", matiere: "maths", lecons: ["cp-calcul-addition"] };
+
+Deno.test("le personnage guide invite l'enfant à regarder ce qu'il a gagné quand il y a un badge, sans objet ni record", () => {
+  const paroles = parolesDuGuideALOuverture({ cabane: cabaneDe(2), pastilles: [], badges: [badge] });
+
+  assertEquals(paroles, "Regarde tout ce que tu as gagné !");
+});
+
+Deno.test("le personnage guide invite l'enfant à gagner des étoiles quand la liste des badges est vide et qu'il n'y a rien d'autre", () => {
+  const paroles = parolesDuGuideALOuverture({ cabane: cabaneDe(2), pastilles: [], badges: [] });
+
+  assertEquals(paroles, "Gagne des étoiles pour remplir la cabane !");
+});
+
+Deno.test("avec « Tout lire à voix haute », les badges sont lus après la cabane", () => {
+  const paroles = parolesALOuverture({ toutLire: true, pastilles: [], cabane: cabaneDe(2), badges: [badge] });
+
+  assertEquals(paroles, [
+    "Regarde tout ce que tu as gagné !",
+    "Mes médailles",
+    "La cabane de Noisette",
+    "Tu as 2 étoiles. Encore 1 étoile et Noisette recevra une lanterne !",
+    "Mes badges",
+    "Tu as 1 badge.",
+  ]);
+});
+
+Deno.test("avec « Tout lire à voix haute » et aucun badge gagné, la phrase sans badge suit le titre des badges", () => {
+  const paroles = parolesALOuverture({ toutLire: true, pastilles: [], cabane: cabaneDe(2), badges: [] });
+
+  assertEquals(paroles, [
+    "Gagne des étoiles pour remplir la cabane !",
+    "Mes médailles",
+    "La cabane de Noisette",
+    "Tu as 2 étoiles. Encore 1 étoile et Noisette recevra une lanterne !",
+    "Mes badges",
+    "Gagne au moins 2 étoiles dans une leçon pour gagner son badge.",
+  ]);
+});
+
+Deno.test("avec « Tout lire à voix haute », les records sont lus après les badges", () => {
+  const paroles = parolesALOuverture({ toutLire: true, pastilles: [pastille(12)], cabane: cabaneDe(2), badges: [badge] });
+
+  assertEquals(paroles, [
+    "Regarde tout ce que tu as gagné !",
+    "Mes médailles",
+    "La cabane de Noisette",
+    "Tu as 2 étoiles. Encore 1 étoile et Noisette recevra une lanterne !",
+    "Mes badges",
+    "Tu as 1 badge.",
+    "Mes records de calcul rapide",
+    "Calcul rapide : tables de 3 et 4 : ton record est de 12 calculs",
+  ]);
+});
+
+Deno.test("sans « Tout lire à voix haute », les badges ne sont pas lus : seule la phrase du personnage guide l'est", () => {
+  const paroles = parolesALOuverture({ toutLire: false, pastilles: [], cabane: cabaneDe(2), badges: [badge] });
+
+  assertEquals(paroles, ["Regarde tout ce que tu as gagné !"]);
 });
