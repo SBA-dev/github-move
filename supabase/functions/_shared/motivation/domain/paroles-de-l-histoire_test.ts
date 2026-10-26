@@ -6,6 +6,7 @@ import {
   finDePhraseDeLEpisode,
   parolesDeLaSectionDeLHistoire,
   positionDeLEpisode,
+  rangDansLeTexteDeLEpisode,
   sousTitreDeLaSectionDeLHistoire,
   texteALireDeLEpisode,
   titreDeLAnnonceDeLEpisode,
@@ -65,4 +66,33 @@ Deno.test("l'annonce lue de l'épisode ouvert commence par « Nouvel épisode ! 
 
 Deno.test("le personnage guide termine sa phrase de fin en annonçant un nouvel épisode", () => {
   assertEquals(finDePhraseDeLEpisode(), "Un nouvel épisode de l'histoire t'attend !");
+});
+
+Deno.test("un mot du titre de l'épisode, lu avant le texte, n'a aucun rang à surligner dans le texte", () => {
+  assertEquals([0, 1, 2].map((rangLu) => rangDansLeTexteDeLEpisode(cartePliee, rangLu)), [
+    undefined,
+    undefined,
+    undefined,
+  ]);
+});
+
+Deno.test("le premier mot lu après le titre est le mot de rang 0 du texte de l'épisode", () => {
+  assertEquals(rangDansLeTexteDeLEpisode(cartePliee, 3), 0);
+});
+
+Deno.test("le deuxième mot lu après le titre est le mot de rang 1 du texte de l'épisode", () => {
+  assertEquals(rangDansLeTexteDeLEpisode(cartePliee, 4), 1);
+});
+
+Deno.test("une apostrophe ne coupe pas un mot : « L'Étoile » compte pour un seul mot du titre", () => {
+  const etoileDuSavoir = HISTOIRE_DES_SAVANTURIERS[18];
+
+  assertEquals(rangDansLeTexteDeLEpisode(etoileDuSavoir, 2), undefined);
+  assertEquals(rangDansLeTexteDeLEpisode(etoileDuSavoir, 3), 0);
+});
+
+Deno.test("le dernier mot lu est le dernier mot du texte de l'épisode", () => {
+  const etoileDuSavoir = HISTOIRE_DES_SAVANTURIERS[18];
+
+  assertEquals(rangDansLeTexteDeLEpisode(etoileDuSavoir, 30), 27);
 });
