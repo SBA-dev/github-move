@@ -104,10 +104,9 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
       Alors aucune pastille de badge n'apparaît
 
     # Décision du PO (2026-10-25) : les leçons personnelles ne donnent pas de badge (comme 39.12)
-    @depend-de-39
     Scénario: Une leçon personnelle acquise ne donne pas de badge
-      Étant donné que Paul a créé la leçon personnelle « Dictée : chaton, maison, poisson »
-      Et que Léa a gagné 2 étoiles à la leçon personnelle « Dictée : chaton, maison, poisson »
+      Étant donné que Paul a créé pour Léa une leçon personnelle à partir du texte « chaton, maison, poisson, garçon »
+      Et que Léa a gagné 2 étoiles à la leçon « Dictée : chaton, maison, poisson… » sur la tablette
       Quand Léa ouvre « Mes médailles » depuis son accueil
       Alors aucune pastille de badge n'apparaît
 
@@ -274,7 +273,6 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
       Alors aucune annonce de nouveau badge n'apparaît à la fin de la séance
 
     # Décisions 31.4, 31.12 et 33.13 : cabane, épisode, badge
-    @depend-de-32
     Scénario: Quand la séance fait recevoir un objet et gagner un badge, la cabane est annoncée avant le badge
       Étant donné que la leçon de test « Les sons de test » a pour compétence « Je reconnais les sons de test »
       Et que Léa a gagné 1 étoile en tout
@@ -297,7 +295,6 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
 
     # Décisions 31.9 et 31.11 ; la cabane est lue avant les badges (#32). Si #33 est livrée avant #31,
     # le titre et la phrase de l'histoire s'insèrent entre la cabane et les badges.
-    @depend-de-32
     Scénario: Avec « tout lire à voix haute », le titre des badges puis leur nombre sont lus à l'ouverture
       Étant donné que Paul a réglé « tout lire à voix haute » sur « oui » pour Léa
       Et que Léa a pour meilleures étoiles :
@@ -334,7 +331,6 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
       Alors Léa entend Noisette lire « Je découpe un mot en syllabes »
 
     # Décision 31.11 ; sans badge, la phrase de la décision 32.9 reste
-    @depend-de-32
     Scénario: Avec un badge, même sans objet ni record, le personnage guide dit « Regarde tout ce que tu as gagné ! »
       Étant donné que Léa a pour meilleures étoiles :
         | leçon        | étoiles |
