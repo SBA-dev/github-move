@@ -80,6 +80,13 @@ Deno.test("une origine de la liste des origines autorisées reçoit les en-tête
   assertEquals(reponse.get("Access-Control-Allow-Origin"), ORIGINE_AUTORISEE);
 });
 
+Deno.test("les fonctions acceptent l'en-tête x-region du front", () => {
+  const reponse = entetes(ORIGINE_AUTORISEE, originesAutorisees(ORIGINE_AUTORISEE));
+
+  const autorises = (reponse.get("Access-Control-Allow-Headers") ?? "").split(",").map((nom) => nom.trim());
+  assertEquals(autorises.includes("x-region"), true);
+});
+
 Deno.test("une origine refusée ne reçoit aucun en-tête CORS", () => {
   const reponse = entetes(ORIGINE_REFUSEE, originesAutorisees(ORIGINE_AUTORISEE));
 
