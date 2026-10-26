@@ -49,7 +49,7 @@ function phraseDeLaSalutation(prenom: string, toutLire: boolean, serie: Serie | 
 export function AccueilDeLEnfant(
   { profil, univers, voix, saluer: aSaluer, testDeDepartAProposer, questionsDuesALaRevision, onMonTestDeDepart, onJeRevise, onCommencerLaLecon, onOuvrirLaMatiere, onChangerDEnfant }: Props,
 ) {
-  const { parole, rangDuMotPrononce, humeur, dire, faireSilence } = usePersonnageQuiParle(voix);
+  const { parole, rangDuMotPrononce, humeur, dire, montrer, faireSilence } = usePersonnageQuiParle(voix);
   const [salutationALire] = useState(aSaluer);
   const [maintenant, setMaintenant] = useState(() => horlogeDuNavigateur.maintenant());
   useEffect(() => {
@@ -66,9 +66,13 @@ export function AccueilDeLEnfant(
   if (serieDeLaSalutation === undefined && serie !== undefined) setSerieDeLaSalutation(serie);
   const phraseALire = phraseDeLaSalutation(profil.prenom, profil.reglages.toutLireAVoixHaute, serieDeLaSalutation);
   useEffect(() => {
-    if (salutationALire && phraseALire !== undefined) void dire({ texte: saluer(profil.prenom), nature: "accueil", aLire: phraseALire });
+    if (salutationALire) {
+      const salutation = { texte: saluer(profil.prenom), nature: "accueil" } as const;
+      if (phraseALire === undefined) montrer(salutation);
+      else void dire({ ...salutation, aLire: phraseALire });
+    }
     return faireSilence;
-  }, [salutationALire, profil.prenom, phraseALire, dire, faireSilence]);
+  }, [salutationALire, profil.prenom, phraseALire, dire, montrer, faireSilence]);
 
   return (
     <section className="accueil-de-l-enfant" aria-label={`Accueil de ${profil.prenom}`}>
