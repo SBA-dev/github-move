@@ -21,7 +21,7 @@ Une session créée avant les réglages ne voit ni l'hôte du site ni celui de l
 2. Créer le site du front : type **« Fichiers statiques »**, racine **`www/`**, adresse du compte.
 3. Onglet SSL du site : cocher **« Forcer HTTPS »** (la redirection de `http://` est faite par alwaysdata, pas par `.htaccess`).
 4. Activer l'**accès WebDAV** (« Accès distant » / WebDAV), avec un utilisateur et un mot de passe dédiés à l'envoi du front, limité au dossier `www/`. Ces identifiants ne servent qu'à l'envoi (variables `ALWAYSDATA_WEBDAV_URL`, `ALWAYSDATA_WEBDAV_UTILISATEUR`, `ALWAYSDATA_WEBDAV_MOT_DE_PASSE`).
-5. Facultatif, pour le repli (§ 3.9) : un accès SSH avec une clé, depuis la machine du PO.
+5. Facultatif, pour le repli (§ 3.7) : un accès SSH avec une clé, depuis la machine du PO.
 6. Le quota gratuit est d'environ 100 Mo : le build doit y tenir.
 
 ### 2.2 Projet Supabase de production (PO, P3, P4)
@@ -45,14 +45,20 @@ Le PO règle l'environnement avant de créer la session (liste commentée dans `
 | `PARENT_DE_TEST_PRODUCTION_EMAIL`, `PARENT_DE_TEST_PRODUCTION_MOT_DE_PASSE` | parent de test de la production |
 | `ALWAYSDATA_WEBDAV_URL`, `ALWAYSDATA_WEBDAV_UTILISATEUR`, `ALWAYSDATA_WEBDAV_MOT_DE_PASSE` | envoi du front |
 | `VITE_EDITEUR`, `VITE_DIRECTEUR_DE_PUBLICATION`, `VITE_ADRESSE_DE_CONTACT` | identité de l'éditeur des pages légales, lue au build (P6, P7, P8) |
-| `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` | projet visé par le build du front : ceux de la **production** |
+
+Dans la session de publication, `VITE_SUPABASE_URL` et `VITE_SUPABASE_ANON_KEY` ne sont **pas** posées dans l'environnement : elles ne servent qu'au **build de production** (§ 3.7), posées pour cette seule commande à partir de `SUPABASE_PRODUCTION_URL` et `SUPABASE_PRODUCTION_ANON_KEY`. Ainsi aucune commande de test ne vise la production par erreur.
 
 Le réseau de la session autorise : l'hôte du site, l'hôte WebDAV, l'API de gestion de Supabase et le projet de production.
 Absentes de cet environnement, toujours : `SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`, `SEND_EMAIL_HOOK_SECRET`, `MODE_EMAIL`.
 
 ### 2.4 Adresse de contact et textes légaux (PO, P6, P7, P8)
 
-L'adresse de contact est une boîte que le PO lit : c'est le moyen de la demande de suppression des données (§ 10). Les textes de la politique de confidentialité et des mentions légales sont relus et complétés par le PO, qui en reste responsable (identité de l'éditeur, directeur de publication, hébergeurs : alwaysdata pour le front, Supabase en Irlande pour les données).
+L'adresse de contact est une boîte que le PO lit : c'est le moyen de la demande de suppression des données (§ 8). Les textes de la politique de confidentialité et des mentions légales sont relus et complétés par le PO, qui en reste responsable (identité de l'éditeur, directeur de publication, hébergeurs : alwaysdata pour le front, Supabase Inc. pour les données).
+
+Points à relire par le PO (45.9) avant la première publication :
+- hébergeur des données = **Supabase Inc.**, société américaine, base et fonctions dans la région Irlande (`eu-west-1`) : la phrase « hébergées dans l'Union européenne, en Irlande, par un prestataire américain » remplace « tout reste dans l'Union européenne » ;
+- **adresse et téléphone** des deux hébergeurs, marqués « à compléter par l'éditeur » dans les mentions légales ;
+- la liste des **données gardées** et de ce qui reste sur l'appareil (profils, séances en attente, file de révision, leçons personnelles).
 
 ### 2.5 Après la première publication seulement (PO, 45.18, 45.24)
 
@@ -64,31 +70,26 @@ Les scénarios `@production` et la tâche planifiée du § 7 s'en servent. Aucun
 
 ## 3. Publier une version
 
-Toujours dans cet ordre. Au premier échec, on s'arrête, on corrige sur `main` et on reprend à l'étape 1 sur le nouveau commit.
+Toujours dans cet ordre. Au premier échec, on s'arrête, on corrige sur `main` et on reprend à l'étape 3.1 sur le nouveau commit.
 
-Rien ne part en ligne sans non-régression E2E complète verte sur **le commit publié** (décision 0023).
+Rien ne part en ligne sans non-régression E2E complète verte sur **le commit publié** (décision 0023). Cette non-régression se fait **avant** la publication, dans une session de **développement** (§ 3.1), pas dans la session de publication.
 
-### 3.1 Vérifications sur le commit publié
+### 3.1 Vérifications sur le commit publié (session de développement, avant la publication)
+
+Dans une session de **développement**, contre `savanturier-dev`, sur le commit à publier :
 
 ```
 deno test --permit-no-files supabase/functions/
 deno lint --permit-no-files supabase/functions/ && deno fmt --check --permit-no-files supabase/functions/
 npx tsc --noEmit
-```
-
-Build avec l'identité de l'éditeur et le projet de **production** (variables du § 2.3 : `VITE_EDITEUR`, `VITE_DIRECTEUR_DE_PUBLICATION`, `VITE_ADRESSE_DE_CONTACT`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`) :
-
-```
-npm run build
-python3 scripts/exploitation/secrets_du_build.py dist      # V1
 python3 -m pytest scripts/tests
 ```
 
-V1 échoue si `dist/` contient une clé `service_role`, un nom de secret interdit, un jeton de gestion, `profil-prepare` ou les valeurs fictives des pages légales (`exemple.test`, signe que l'identité de l'éditeur n'était pas dans l'environnement du build). Seules l'adresse du projet et la clé publique `anon` sont permises.
+**Non-régression E2E complète, verte sur les deux projets (`tablette` et `telephone`), sur le commit publié**, avec toutes les stories livrées (le tableau des commandes de `CLAUDE.md` donne la ligne, avec les exclusions `@depend-de`, `@envoi-email`, `@hors-beta`). Les scénarios `@production` et `@pwa` en sont exclus par la configuration principale.
 
-**Non-régression E2E complète, verte sur les deux projets (`tablette` et `telephone`), sur le commit publié**, contre `savanturier-dev`, avec toutes les stories livrées (le tableau des commandes de `CLAUDE.md` donne la ligne, avec les exclusions `@depend-de`, `@envoi-email`, `@hors-beta`). Les scénarios `@production` et `@pwa` en sont exclus par la configuration principale.
+Tests de la PWA sur le build de production (ligne « Tests E2E de la PWA » de `CLAUDE.md`), toujours contre `savanturier-dev`.
 
-Tests de la PWA sur le build de production (ligne « Tests E2E de la PWA » de `CLAUDE.md`).
+La **session de publication** ne relance pas ces tests : elle vérifie seulement que **ce commit est vert** (lien vers le résultat publié de la session de développement ou de la PR) et que `git rev-parse HEAD` est bien ce commit. Un commit sans résultat vert, on ne publie pas.
 
 ### 3.2 Projet actif (V12)
 
@@ -133,11 +134,11 @@ done
 La liste est celle des dossiers de `supabase/functions/` **sans `envoyer-email`** : aucun e-mail n'est envoyé pendant la beta (décision 0019, 45.5). Si une nouvelle fonction est ajoutée au dépôt, l'ajouter à la liste (sauf `envoyer-email`).
 
 Secrets des fonctions (noms seulement ici) :
-- `ORIGINES_AUTORISEES` = l'adresse de production **seule** (pas de `localhost`) ;
+- `ORIGINES_AUTORISEES` = l'adresse de production **seule**, sans `/` final (pas de `localhost`) ;
 - **ni** `ANTHROPIC_API_KEY` (pas encore d'IA), **ni** `MODE_EMAIL` (`boite-de-test` est interdit en production), **ni** `SEND_EMAIL_HOOK_SECRET`.
 
 ```
-npx supabase secrets set ORIGINES_AUTORISEES="$ADRESSE_DE_PRODUCTION" --project-ref "$SUPABASE_PRODUCTION_REF"
+npx supabase secrets set ORIGINES_AUTORISEES="${ADRESSE_DE_PRODUCTION%/}" --project-ref "$SUPABASE_PRODUCTION_REF"
 ```
 
 Les fonctions sont appelées dans la région `eu-west-1` : le front fixe l'en-tête `x-region` à chaque appel (C12), et le contrôle V3 lit `x-sb-edge-region` dans la réponse.
@@ -156,13 +157,24 @@ Elle affiche le statut HTTP (200 attendu) et rien d'autre. Les contrôles V6 et 
 
 ### 3.7 Front, par WebDAV (45.33)
 
+**Build de production et V1, en dernier**, juste avant l'envoi : l'identité de l'éditeur (`VITE_EDITEUR`, `VITE_DIRECTEUR_DE_PUBLICATION`, `VITE_ADRESSE_DE_CONTACT`) est dans l'environnement de la session ; le projet de production n'est posé que pour cette commande.
+
+```
+VITE_SUPABASE_URL=$SUPABASE_PRODUCTION_URL VITE_SUPABASE_ANON_KEY=$SUPABASE_PRODUCTION_ANON_KEY npm run build
+python3 scripts/exploitation/secrets_du_build.py dist      # V1
+```
+
+V1 échoue si `dist/` contient une clé `service_role`, un nom de secret interdit, un jeton de gestion, `profil-prepare` ou les valeurs fictives des pages légales (`exemple.test`, signe que l'identité de l'éditeur n'était pas dans l'environnement du build). Seules l'adresse du projet et la clé publique `anon` sont permises. Au premier échec, on n'envoie rien.
+
+Puis l'envoi :
+
 ```
 python3 scripts/exploitation/envoi_webdav.py dist
 ```
 
 Le script crée les dossiers (`MKCOL`), envoie `/assets/` d'abord, puis le reste, **`index.html` et `sw.js` en dernier** : aucune page servie ne vise un fichier pas encore envoyé. Il refuse un `dist/` construit pour le développement et une adresse WebDAV qui ne commence pas par `https://`.
 
-**Repli** si WebDAV échoue : le PO envoie `dist/` (construit à l'étape 3.1, copié sur sa machine) avec `rsync -av --delete-after dist/ <compte>@ssh-<compte>.alwaysdata.net:www/`, **`--delete-after`** pour ne retirer les anciens fichiers qu'une fois les nouveaux en place.
+**Repli** si WebDAV échoue : le PO envoie `dist/` (construit au § 3.7, copié sur sa machine) avec `rsync -av --delete-after dist/ <compte>@ssh-<compte>.alwaysdata.net:www/`, **`--delete-after`** pour ne retirer les anciens fichiers qu'une fois les nouveaux en place.
 
 ### 3.8 Contrôles après publication
 
@@ -183,7 +195,7 @@ Ces scénarios n'écrivent qu'une séance terminée du profil « Pilote » (pare
 
 ### 3.9 Journal des publications
 
-Le PO (ou la session, qui le lui transmet) ajoute une ligne à son journal, **hors du dépôt** s'il y met un emplacement de sauvegarde : date, commit publié, emplacement de la sauvegarde (sans son contenu), résultat de chaque contrôle (V1, E2E, PWA, V2 à V12, `@production`). Le contrôle manuel sur tablette (M1) est fait par le PO après la première publication, puis après une petite version pour vérifier qu'elle s'applique au lancement suivant sans recharger l'écran de l'enfant.
+Le PO (ou la session, qui le lui transmet) ajoute une ligne à son journal, **hors du dépôt** s'il y met un emplacement de sauvegarde : date, commit publié, emplacement de la sauvegarde (sans son contenu), résultat de chaque contrôle (V1, lien du résultat vert E2E et PWA, V2 à V12, `@production`). Le contrôle manuel sur tablette (M1) est fait par le PO après la première publication, puis après une petite version pour vérifier qu'elle s'applique au lancement suivant sans recharger l'écran de l'enfant.
 
 ## 4. Première publication
 
@@ -193,7 +205,7 @@ Ce qui change la première fois :
 2. **`.htaccess`** : vérifier que le fichier publié avec `dist/` est bien lu par alwaysdata (V4 : les en-têtes `no-cache`, `immutable` et HSTS sont présents). Si le serveur refuse la directive `<If>` (erreur 500 sur `/assets/`), la remplacer : retirer le bloc `<If>` du `.htaccess` à la racine et placer dans `assets/` (donc dans `public/assets/`) un `.htaccess` contenant `Header set Cache-Control "public, max-age=31536000, immutable"`. Si `.htaccess` n'est pas lu du tout, les réglages se font dans l'interface du site : le noter à la décision 0025.
 3. **Parent de test et profil « Pilote »** : créés à la main (§ 2.5), puis lancer les scénarios `@production`.
 4. **Restauration d'essai (PO, M2, 45.32)**, avant d'inviter les familles, **sur la machine du PO** et nulle part ailleurs (ni production, ni `savanturier-dev`) : installer Docker, `supabase start` ; restaurer avec `psql --single-transaction --file roles.sql --file schema.sql --file data.sql --dbname postgresql://postgres:postgres@127.0.0.1:54322/postgres` ; comparer le **nombre** de parents, de profils et de séances terminées avec ceux de la production au moment de la sauvegarde ; puis effacer : `supabase stop --no-backup`, et supprimer les fichiers de la sauvegarde d'essai.
-5. **Retour en arrière du front essayé une fois** (§ 5) et **demande de suppression essayée sur un parent de test** (§ 10, M4).
+5. **Retour en arrière du front essayé une fois** (§ 5) et **demande de suppression essayée sur un parent de test** (§ 8, M4).
 6. **Tâche planifiée** (§ 7), créée **après** cette première publication.
 7. Inviter les familles seulement ensuite (P11) : le PO leur donne l'adresse à la main.
 
@@ -201,7 +213,7 @@ Ce qui change la première fois :
 
 | Quoi | Comment |
 |---|---|
-| **Front** | republier le `dist/` du commit précédent : `git checkout <commit précédent>`, reconstruire (§ 3.1, mêmes variables), puis `envoi_webdav.py dist`. Le service worker de l'ancienne version est servi au lancement suivant |
+| **Front** | republier le `dist/` du commit précédent : `git checkout <commit précédent>`, reconstruire (§ 3.7, mêmes variables), puis `envoi_webdav.py dist`. Le service worker de l'ancienne version est servi au lancement suivant |
 | **Edge Functions** | redéployer le commit précédent (§ 3.5 depuis ce commit) |
 | **Migrations** | **aucun retour automatique pendant la beta** (45.22) : elles sont additives. La **sauvegarde du § 3.3 est le seul recours** ; sa restauration en production est une décision du PO, jamais automatique |
 
@@ -254,46 +266,52 @@ Pendant la beta, ni #13 ni #14 : la demande passe par écrit, à l'adresse de co
 
 ### 8.2 Les requêtes
 
-Elles se lancent par l'API de gestion (`POST /v1/projects/{ref}/database/query`, jeton de `SUPABASE_ACCESS_TOKEN`) ou dans l'éditeur SQL du tableau de bord. Remplacer `:parent` ou `:profil` par l'identifiant (uuid) ; ne jamais le copier dans une issue.
+Elles se lancent par l'API de gestion (`POST /v1/projects/{ref}/database/query`, jeton de `SUPABASE_ACCESS_TOKEN`) ou dans l'éditeur SQL du tableau de bord. Remplacer `:parent` et `:profil` par l'identifiant (uuid) **entre apostrophes** (`'<uuid>'`) ; ne jamais le copier dans une issue.
 
-**Comptage par table, avant et après** (sans contenu), pour un **profil** :
+**Comptage par table, avant et après** (sans contenu), pour un **profil** (`'<uuid>'` : l'identifiant du profil, entre apostrophes) :
 
 ```sql
-select 'profils_enfants' as table_, count(*) from public.profils_enfants where id = :profil
-union all select 'rattachements', count(*) from public.rattachements where profil = :profil
-union all select 'seances_terminees', count(*) from public.seances_terminees where profil = :profil
-union all select 'questions_des_seances', count(*) from public.questions_des_seances q join public.seances_terminees s on s.id = q.seance where s.profil = :profil
-union all select 'resultats_des_lecons', count(*) from public.resultats_des_lecons where profil = :profil
-union all select 'records_de_fluence', count(*) from public.records_de_fluence where profil = :profil
-union all select 'resultats_des_tests_de_depart', count(*) from public.resultats_des_tests_de_depart where profil = :profil
-union all select 'tests_de_depart_comptes', count(*) from public.tests_de_depart_comptes where profil = :profil
-union all select 'files_de_revision', count(*) from public.files_de_revision where profil = :profil
-union all select 'questions_retenues', count(*) from public.questions_retenues where profil = :profil
-union all select 'seances_de_revision_terminees', count(*) from public.seances_de_revision_terminees where profil = :profil
-union all select 'lecons_personnelles', count(*) from public.lecons_personnelles where profil = :profil;
+select 'profils_enfants' as table_, count(*) from public.profils_enfants where id = '<uuid>'::uuid
+union all select 'rattachements', count(*) from public.rattachements where profil = '<uuid>'::uuid
+union all select 'seances_terminees', count(*) from public.seances_terminees where profil = '<uuid>'::uuid
+union all select 'questions_des_seances', count(*) from public.questions_des_seances q join public.seances_terminees s on s.id = q.seance where s.profil = '<uuid>'::uuid
+union all select 'resultats_des_lecons', count(*) from public.resultats_des_lecons where profil = '<uuid>'::uuid
+union all select 'records_de_fluence', count(*) from public.records_de_fluence where profil = '<uuid>'::uuid
+union all select 'resultats_des_tests_de_depart', count(*) from public.resultats_des_tests_de_depart where profil = '<uuid>'::uuid
+union all select 'tests_de_depart_comptes', count(*) from public.tests_de_depart_comptes where profil = '<uuid>'::uuid
+union all select 'files_de_revision', count(*) from public.files_de_revision where profil = '<uuid>'::uuid
+union all select 'questions_retenues', count(*) from public.questions_retenues where profil = '<uuid>'::uuid
+union all select 'seances_de_revision_terminees', count(*) from public.seances_de_revision_terminees where profil = '<uuid>'::uuid
+union all select 'lecons_personnelles', count(*) from public.lecons_personnelles where profil = '<uuid>'::uuid;
 ```
 
-Pour un **parent**, même requête avec `profil in (select profil from public.rattachements where parent = :parent)` à la place de `= :profil` (et `id in (…)` pour `profils_enfants`), plus `select 'utilisateur', count(*) from auth.users where id = :parent`. Relever d'abord les profils dont ce parent est le **seul** parent (un profil avec deux parents survit au départ de l'un, décision 0014).
+Pour un **parent**, **relever avant la suppression** la liste des identifiants de ses profils, puis faire les comptages avant **et** après sur cette liste littérale (après la suppression, `rattachements` ne permet plus de la retrouver) :
+
+```sql
+select profil from public.rattachements where parent = '<uuid du parent>'::uuid;
+```
+
+Même requête de comptage avec `profil in ('<uuid 1>'::uuid, '<uuid 2>'::uuid)` à la place de `= '<uuid>'::uuid` (et `id in (…)` pour `profils_enfants`), plus `select 'utilisateur', count(*) from auth.users where id = '<uuid du parent>'::uuid`. Relever aussi les profils dont ce parent est le **seul** parent (un profil avec deux parents survit au départ de l'un, décision 0014) : ce sont ceux dont les lignes doivent tomber à 0 ; les autres restent.
 
 **(a) Supprimer un profil** (les données suivent par cascade) :
 
 ```sql
-delete from public.profils_enfants where id = :profil;
+delete from public.profils_enfants where id = '<uuid>'::uuid;
 ```
 
 **(b) Supprimer le compte du parent** :
 
 ```sql
-delete from auth.users where id = :parent;
+delete from auth.users where id = '<uuid du parent>'::uuid;
 ```
 
-**Cascade** (décision 0014) : la suppression de l'utilisateur supprime ses rattachements, puis chaque profil dont il était le **dernier** parent, puis toutes les données de ces profils (séances terminées et leurs questions, résultats des leçons, records de fluence, tests de départ et leurs comptes, file de révision et séances de révision, leçons personnelles). Les essais de réinitialisation liés à son adresse s'effacent seuls sous 24 h (tâche planifiée).
+**Cascade** (décision 0014) : la suppression de l'utilisateur supprime ses rattachements, puis chaque profil dont il était le **dernier** parent, puis toutes les données de ces profils (séances terminées et leurs questions, résultats des leçons, records de fluence, tests de départ et leurs comptes, file de révision, questions retenues, séances de révision, leçons personnelles). Les essais de réinitialisation liés à son adresse s'effacent seuls sous 24 h (tâche planifiée).
 
 ### 8.3 Après
 
-1. Relancer le comptage : **toutes les lignes à 0**. Sinon, ne pas répondre : corriger et en faire une issue sans donnée.
+1. Relancer le même comptage, sur la **même liste littérale** de profils : **toutes les lignes à 0** (pour un parent, seuls les profils dont il était le dernier parent ; les profils partagés avec un autre parent restent, comptés à part). Sinon, ne pas répondre : corriger et en faire une issue sans donnée.
 2. Vérifier qu'**aucun autre parent** n'est touché (nombre de parents et de profils avant/après : écart égal à ce qui était demandé).
-3. **Répondre par écrit au parent**, à l'adresse de son compte : ce qui a été supprimé, la date, et ce qui **reste sur ses appareils** : le profil en cours, le choix Son/Muet et le choix de la voix sont gardés dans le stockage local du navigateur (le service worker ne garde aucune donnée de famille, #8) ; il peut les effacer en supprimant les données du site dans les réglages du navigateur, et en désinstallant l'application de l'écran d'accueil.
+3. **Répondre par écrit au parent**, à l'adresse de son compte : ce qui a été supprimé, la date, et ce qui **reste sur ses appareils** : le profil en cours, le choix Son/Muet et le choix de la voix (stockage local du navigateur) ; la liste des profils du parent (prénom ou pseudo, classe, réglages) et les séances, tests de départ et séances de révision pas encore envoyés (IndexedDB) ; le service worker ne garde aucune donnée de famille (#8). Il peut les effacer en se déconnectant (la liste des profils), en supprimant les données du site dans les réglages du navigateur, et en désinstallant l'application de l'écran d'accueil. Les données déjà envoyées à Supabase sont, elles, supprimées par le traitement.
 4. **Registre des demandes**, tenu par le PO **hors de la base de production** : date de la demande, date du traitement, identifiant technique. Ni prénom, ni contenu.
 5. **Sauvegardes** : une sauvegarde faite avant le traitement contient encore les données effacées. Elle est gardée **30 jours** puis effacée (§ 3.3) ; la politique de confidentialité le dit, et la réponse au parent aussi.
 
