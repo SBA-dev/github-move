@@ -239,11 +239,12 @@ Fonctionnalité: Révisions des erreurs
   Règle: La fin de la séance de révision ne donne pas d'étoiles : le personnage guide dit les erreurs qui s'effacent, et l'enfant revient à son accueil
 
     # Réponse 28.2 : écart voulu avec le legacy, qui montrait des étoiles comptées nulle part
-    Scénario: La fin de la séance de révision ne montre aucune étoile et propose seulement « Accueil »
+    # Mise à jour par #33 (décisions 33.12 et 33.20) : la séance de révision ouvre un épisode, la fin propose aussi « Lire l'épisode »
+    Scénario: La fin de la séance de révision ne montre aucune étoile et propose « Accueil » et « Lire l'épisode »
       Étant donné que Léa a 3 questions dues de la leçon « Les nombres de révision »
       Et que Léa a commencé la séance de révision
       Quand Léa répond juste à toutes les questions de la séance de révision
-      Alors la fin de la séance de révision propose seulement « Accueil »
+      Alors la fin de la séance de révision propose « Accueil » et « Lire l'épisode »
       Et la fin de la séance de révision ne montre aucune étoile
       Et le focus est sur « Accueil »
 
@@ -294,12 +295,13 @@ Fonctionnalité: Révisions des erreurs
       Alors l'accueil de Léa propose la séance de révision, avec « 1 petite erreur des jours passés »
 
     # Réponse 28.21
+    # Mise à jour par #33 (décisions 33.10 et 33.12) : commencée avec le réseau, la séance de révision ouvre un épisode, la fin propose aussi « Lire l'épisode »
     Scénario: Sans réseau, la séance de révision se joue jusqu'au bout et sa fin dit que la progression est gardée sur l'appareil
       Étant donné que Léa a 3 questions dues de la leçon « Les nombres de révision »
       Et que Léa a commencé la séance de révision
       Et que le réseau est coupé
       Quand Léa répond juste à toutes les questions de la séance de révision
-      Alors la fin de la séance de révision propose seulement « Accueil »
+      Alors la fin de la séance de révision propose « Accueil » et « Lire l'épisode »
       Et elle voit le message « Sauvegarde en ligne impossible : la progression est gardée sur cet appareil. »
 
     # Réponse 28.21
