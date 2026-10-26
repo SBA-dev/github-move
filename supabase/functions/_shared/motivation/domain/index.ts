@@ -74,7 +74,6 @@ export {
   finDePhraseDuPersonnageGuide,
   libelleDuPalier,
   libelleLuDuPalier,
-  phraseDeFinAvecLaCabane,
   phraseDeLEtat,
   titreDeLAnnonce,
   titreDeLaSection,
@@ -89,3 +88,15 @@ export {
 export { JoursDeSeance } from "./jours-de-seance.ts";
 export { type Serie, serieDeJours } from "./serie.ts";
 export { saluerAvecLaSerie, texteDeLaPastille } from "./paroles-de-la-serie.ts";
+export { type Badge, badgeGagneParLaSeance, badgesDuProfil, nomDuBadge } from "./badges.ts";
+export {
+  finDePhraseDuBadge,
+  libelleDeLaListeDesBadges,
+  parolesDeLaSectionDesBadges,
+  phraseDeFinAvecLesNouveautes,
+  phraseDeLaSectionDesBadges,
+  phraseSansBadge,
+  titreDeLAnnonceDuBadge,
+  titreDeLaSectionDesBadges,
+} from "./paroles-des-badges.ts";
+export { parolesDeLaSectionDesBadgesOuSansBadge } from "./paroles-de-l-ecran-des-medailles.ts";

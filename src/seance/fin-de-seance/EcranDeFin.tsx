@@ -1,7 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { leconSuivanteEnFinDeSeance, type Seance } from "@domain/apprentissage";
 import { pageDeLaLecon } from "@domain/catalogue";
-import { annonceDeLObjetRecu, calculsReussis, type MeilleuresEtoilesDuProfil, type ObjetDeLaCabane, titreDeLAnnonce } from "@domain/motivation";
+import {
+  annonceDeLObjetRecu,
+  calculsReussis,
+  type MeilleuresEtoilesDuProfil,
+  titreDeLAnnonce,
+  titreDeLAnnonceDuBadge,
+} from "@domain/motivation";
 import { niveauDuProfil } from "../../parcours/index.ts";
 import { lireLEtatDuTestDeDepart } from "../../test-de-depart/etat-du-test-de-depart.ts";
 import { chargerToutesLesLecons } from "../bibliotheque.ts";
@@ -9,6 +15,8 @@ import { EtoilesDessinees } from "./EtoilesDessinees.tsx";
 import { Etincelles } from "./Etincelles.tsx";
 import { lireLesMeilleuresEtoilesDuProfil } from "./meilleures-etoiles-du-profil.ts";
 import { etoilesSurTrois } from "./texte-des-etoiles.ts";
+import type { NouveautesDeFin } from "./nouveautes-de-fin.ts";
+import { useBadgeGagneParLaSeance } from "./useBadgeGagneParLaSeance.ts";
 import { useObjetRecuParLaSeance } from "./useObjetRecuParLaSeance.ts";
 import { useSauvegardeDeLaSeance } from "./useSauvegardeDeLaSeance.ts";
 
@@ -22,7 +30,7 @@ type Props = {
   /** Niveau du profil en cours : la leçon suivante se cherche dans le parcours de ce niveau. */
   readonly niveau: string;
   /** Fait dire au personnage guide ses paroles de fin ; sans étoiles (fluence seule), il a déjà tout dit. */
-  readonly onDireLaFin: (etoiles: number | undefined, objetRecu: ObjetDeLaCabane | undefined) => void;
+  readonly onDireLaFin: (etoiles: number | undefined, nouveautes: NouveautesDeFin) => void;
   /** Les meilleures étoiles du profil lues au lancement de la séance, avant que celle-ci ne les change ; `undefined` si elles n'ont pas pu être lues. */
   readonly meilleuresEtoilesAvant: Promise<MeilleuresEtoilesDuProfil | undefined>;
   readonly onRejouer: () => void;
@@ -76,16 +84,22 @@ export function EcranDeFin({ seance, niveau, onDireLaFin, meilleuresEtoilesAvant
     terminee !== undefined,
     terminee?.etoiles,
   );
+  const { pret: badgePret, badge } = useBadgeGagneParLaSeance(
+    meilleuresEtoilesAvant,
+    seance.lecon,
+    terminee !== undefined,
+    terminee?.etoiles,
+  );
   const accueil = useRef<HTMLButtonElement>(null);
   const dite = useRef(false);
   useEffect(() => {
     accueil.current?.focus();
   }, []);
   useEffect(() => {
-    if (dite.current || terminee === undefined || !pret) return;
+    if (dite.current || terminee === undefined || !pret || !badgePret) return;
     dite.current = true;
-    onDireLaFin(terminee.etoiles, objet);
-  }, [terminee, pret, objet, onDireLaFin]);
+    onDireLaFin(terminee.etoiles, { objet, badge });
+  }, [terminee, pret, objet, badgePret, badge, onDireLaFin]);
 
   const etoiles = terminee?.etoiles;
   const scores = Object.entries(terminee?.scoresDeFluence ?? {});
@@ -103,6 +117,14 @@ export function EcranDeFin({ seance, niveau, onDireLaFin, meilleuresEtoilesAvant
           <>
             <strong>{titreDeLAnnonce()}</strong>
             <p>{annonceDeLObjetRecu(objet)}</p>
+          </>
+        )}
+      </div>
+      <div className="pour-le-badge" role="status" data-testid="annonce-de-nouveau-badge">
+        {badge && (
+          <>
+            <strong>{titreDeLAnnonceDuBadge()}</strong>
+            <p>{badge.nom}</p>
           </>
         )}
       </div>

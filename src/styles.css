@@ -834,3 +834,32 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-width: 4px; background:
 .texte-colle summary { display: flex; align-items: center; min-height: 44px; font-weight: 700; cursor: pointer; }
 .texte-colle pre { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; }
 .lecons-personnelles-du-parent summary:focus-visible { outline: 3px solid #1f2a1f; outline-offset: 2px; }
+
+/* Badges (#31) */
+.pastilles-de-badge { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; width: 100%; margin: 0; padding: 0; list-style: none; }
+.pastille-de-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 44px;
+  min-height: 44px;
+  max-width: 100%;
+  padding: 6px 14px;
+  border: 3px solid var(--accent-fonce);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .95);
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.icone-de-matiere { display: inline-flex; flex: none; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; color: #fff; font-size: .8rem; font-weight: 800; }
+.phrase-sans-badge { margin: 0; padding: 6px 14px; border-radius: 16px; background: rgba(255, 255, 255, .85); font-weight: 700; overflow-wrap: anywhere; }
+[data-mode-dys="true"] :is(.pastille-de-badge, .phrase-sans-badge, .pour-le-badge) { overflow-wrap: anywhere; line-height: inherit; }
+.pour-le-badge { display: grid; justify-items: center; gap: 4px; max-width: 100%; padding: 8px 16px; border: 3px solid var(--accent-fonce); border-radius: 16px; background: rgba(255, 255, 255, .95); overflow-wrap: anywhere; animation: arrivee-d-un-objet .4s ease-out; }
+.pour-le-badge:empty { display: none; }
+.pour-le-badge p { margin: 0; font-weight: 700; }
+@media (prefers-reduced-motion: reduce) {
+  .pour-le-badge { animation: none; }
+}

@@ -6,7 +6,6 @@ import {
   finDePhraseDuPersonnageGuide,
   libelleDuPalier,
   libelleLuDuPalier,
-  phraseDeFinAvecLaCabane,
   phraseDeLEtat,
   titreDeLAnnonce,
   titreDeLaSection,
@@ -88,27 +87,5 @@ Deno.test("le personnage guide termine sa phrase de fin par l'objet reçu pour l
   assertEquals(
     finDePhraseDuPersonnageGuide(tapis.objet),
     "Noisette a reçu un tapis tout doux pour sa cabane.",
-  );
-});
-
-const PHRASE_DE_FIN = "Tu gagnes 1 étoile, Léa. Tu rejoues pour aller chercher les autres ?";
-
-Deno.test("sans objet reçu, la phrase de fin reste inchangée", () => {
-  assertEquals(phraseDeFinAvecLaCabane(PHRASE_DE_FIN, undefined), PHRASE_DE_FIN);
-});
-
-Deno.test("avec un objet reçu, la phrase de fin se termine par l'objet reçu pour la cabane", () => {
-  assertEquals(
-    phraseDeFinAvecLaCabane(PHRASE_DE_FIN, tapis.objet),
-    "Tu gagnes 1 étoile, Léa. Tu rejoues pour aller chercher les autres ? Noisette a reçu un tapis tout doux pour sa cabane.",
-  );
-});
-
-Deno.test("la phrase de fin d'un autre personnage guide annonce toujours que Noisette a reçu l'objet", () => {
-  const phraseDeCoachLeo = "Tu gagnes 1 étoile, Léa. On remet ça, champion ?";
-
-  assertEquals(
-    phraseDeFinAvecLaCabane(phraseDeCoachLeo, tapis.objet),
-    "Tu gagnes 1 étoile, Léa. On remet ça, champion ? Noisette a reçu un tapis tout doux pour sa cabane.",
   );
 });

@@ -1,4 +1,5 @@
 import { assertEquals } from "@std/assert";
+import type { Badge } from "./badges.ts";
 import { cabaneDe } from "./cabane.ts";
 import type { PastilleDeRecord } from "./records-de-calcul-rapide.ts";
 import { sectionsAAfficher, sectionsDeLEcran } from "./sections-de-l-ecran.ts";
@@ -56,4 +57,24 @@ Deno.test("quand les étoiles n'ont pas pu être lues, la cabane n'est pas affic
   const sections = sectionsDeLEcran({ pastilles: [pastille], cabane: undefined });
 
   assertEquals(sections, ["recordsDeFluence"]);
+});
+
+const badge: Badge = { cle: "Additionner", nom: "Additionner", matiere: "maths", lecons: ["cp-calcul-addition"] };
+
+Deno.test("avec des badges, la section des badges est affichée entre la cabane et les records de fluence", () => {
+  const sections = sectionsDeLEcran({ pastilles: [pastille], cabane: cabaneDe(3), badges: [badge] });
+
+  assertEquals(sections, ["cabane", "badges", "recordsDeFluence"]);
+});
+
+Deno.test("sans aucun badge gagné, la section des badges est quand même affichée", () => {
+  const sections = sectionsDeLEcran({ pastilles: [], cabane: undefined, badges: [] });
+
+  assertEquals(sections, ["badges"]);
+});
+
+Deno.test("quand les badges n'ont pas pu être lus, la section des badges n'est pas affichée", () => {
+  const sections = sectionsDeLEcran({ pastilles: [], cabane: cabaneDe(3), badges: undefined });
+
+  assertEquals(sections, ["cabane"]);
 });
