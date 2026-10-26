@@ -64,3 +64,12 @@ Bloc B « Exploitation, vérifications scriptées » : module Python `scripts/ex
 | B5. Secrets des fonctions | `2a87fd0` | `7477bad` | |
 
 - 15:45 → 20:06 UTC : **arrêt** (limite hebdomadaire d'usage atteinte pendant le RED de B6/B7, rien de perdu : tout était poussé jusqu'à `7477bad`). Reprise annoncée par le responsable sur #64 à 20:06.
+| B6. V5 origines | `5fcc4fa` | `3468bc2` | |
+| B7. V3/V12 projet | `2f365f8` | `407bf03` | |
+| B8. V9/V10 données de test, tâche planifiée | `f5d40b1` | `0329772` | sur dev : tâche active ; 9 parents de test (normal sur dev) |
+| B9. V11 version | `9821664` | `eb79c22` | |
+| B10. Garder le projet actif (45.31) | `d176fe7` | en cours | |
+
+- 20:10 UTC : ESCALADE groupée P1 à P12 publiée sur #45 (questions 45.33 à 45.35).
+- 20:11 UTC : réponse du PO relayée par le responsable : 45.34 = 30 jours, 45.35 = tous les 2 jours la nuit ; 45.33 = **la session publie le front elle-même, variante WebDAV d'alwaysdata** (repli : rsync depuis la machine du PO) ; compte alwaysdata créé par le PO ; projet Supabase de production créé par l'API seulement si le PO dit oui.
+- 20:14 UTC : constats réseau. `*.alwaysdata.com` et `*.alwaysdata.net` sont refusés par le proxy du conteneur (403 au CONNECT) : le PO doit autoriser l'hôte du site et l'hôte WebDAV dans « Network access » de l'environnement. Le `SUPABASE_ACCESS_TOKEN` du conteneur ne voit **aucune organisation** (seulement le projet de dev) : il ne peut pas créer le projet de production ; le PO le crée (P3) ou fournit un jeton qui voit son organisation.
