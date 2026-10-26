@@ -14,7 +14,7 @@ const DEUX_JOURS_EN_MS = 2 * UN_JOUR_EN_MS;
 export const NOMBRE_DE_JOURS_LUS_POUR_LA_SERIE = 400;
 
 type LigneDeSeance = { readonly lecon?: unknown; readonly termine_le?: unknown; readonly jour?: unknown };
-type LigneDeRevision = { readonly jour?: unknown };
+type LigneAvecJour = { readonly jour?: unknown };
 
 function peutLire(profil: string): boolean {
   return estUnIdentifiantDeProfil(profil) && reseauDisponible();
@@ -25,10 +25,10 @@ export function lireLesSeancesTermineesRecentes(profil: string, maintenant: Date
   return avecDelaiMaximal(lireLesSeances(profil, new Date(maintenant.getTime() - DEUX_JOURS_EN_MS)), DELAI_MAXIMAL_DE_LECTURE_EN_MS);
 }
 
-/** Lecture sous RLS des séances terminées de la fenêtre de la série. */
-export function lireLesSeancesTermineesPourLaSerie(profil: string, maintenant: Date): Promise<readonly SeanceTermineeConnue[] | undefined> {
+/** Lecture sous RLS des seuls jours des séances terminées de la fenêtre de la série. */
+export function lireLesJoursDesSeancesTermineesPourLaSerie(profil: string, maintenant: Date): Promise<readonly string[] | undefined> {
   const depuis = new Date(maintenant.getTime() - NOMBRE_DE_JOURS_LUS_POUR_LA_SERIE * UN_JOUR_EN_MS);
-  return avecDelaiMaximal(lireLesSeances(profil, depuis), DELAI_MAXIMAL_DE_LECTURE_EN_MS);
+  return avecDelaiMaximal(lireLesJoursDesSeances(profil, depuis), DELAI_MAXIMAL_DE_LECTURE_EN_MS);
 }
 
 /** Lecture sous RLS des jours des séances de révision terminées depuis la veille. */
@@ -61,13 +61,30 @@ function lireUneSeance(ligne: LigneDeSeance): readonly SeanceTermineeConnue[] {
   return [{ lecon: ligne.lecon, termineeLe, jour: jourDeLaSeance(ligne.jour, termineeLe) }];
 }
 
+async function lireLesJoursDesSeances(profil: string, depuis: Date): Promise<readonly string[] | undefined> {
+  if (!peutLire(profil)) return undefined;
+  try {
+    await attendreLesEnvoisEnCours();
+    const { data, error } = await clientSupabase()
+      .from("seances_terminees")
+      .select("jour")
+      .eq("profil", profil)
+      .gte("termine_le", depuis.toISOString())
+      .order("termine_le", { ascending: false });
+    if (error || data === null) return undefined;
+    return (data as readonly LigneAvecJour[]).flatMap((ligne) => (typeof ligne.jour === "string" ? [ligne.jour] : []));
+  } catch {
+    return undefined;
+  }
+}
+
 async function lireLesRevisions(profil: string, depuis: string): Promise<readonly string[] | undefined> {
   if (!peutLire(profil)) return undefined;
   try {
     const { data, error } = await clientSupabase().from("seances_de_revision_terminees").select("jour").eq("profil", profil).gte("jour", depuis)
       .order("jour", { ascending: false });
     if (error || data === null) return undefined;
-    return (data as readonly LigneDeRevision[]).flatMap((ligne) => (typeof ligne.jour === "string" ? [ligne.jour] : []));
+    return (data as readonly LigneAvecJour[]).flatMap((ligne) => (typeof ligne.jour === "string" ? [ligne.jour] : []));
   } catch {
     return undefined;
   }

@@ -7,7 +7,7 @@ import { jourDuNavigateur } from "../seance/jour-du-navigateur.ts";
 import { joursDesRevisionsGardees, seancesGardees } from "./faits-du-jour-du-profil.ts";
 import {
   lireLesJoursDesSeancesDeRevisionRecentes,
-  lireLesSeancesTermineesPourLaSerie,
+  lireLesJoursDesSeancesTermineesPourLaSerie,
   NOMBRE_DE_JOURS_LUS_POUR_LA_SERIE,
 } from "./lecture-des-seances-du-jour-supabase.ts";
 
@@ -31,12 +31,12 @@ async function joursConnusDeLAppareil(profil: string): Promise<JoursDeSeance> {
 export async function joursDeSeanceDuProfil(profil: string, maintenant: Date): Promise<JoursDeSeance | undefined> {
   const depuis = jourDuNavigateur(maintenant).plus(-NOMBRE_DE_JOURS_LUS_POUR_LA_SERIE).toString();
   const [seancesDuServeur, revisionsDuServeur, deLAppareil] = await Promise.all([
-    lireLesSeancesTermineesPourLaSerie(profil, maintenant),
+    lireLesJoursDesSeancesTermineesPourLaSerie(profil, maintenant),
     lireLesJoursDesSeancesDeRevisionRecentes(profil, depuis),
     joursConnusDeLAppareil(profil),
   ]);
   if (seancesDuServeur !== undefined && revisionsDuServeur !== undefined) {
-    const duServeur = JoursDeSeance.reunir(seancesDuServeur.map(({ jour }) => jour), revisionsDuServeur.map((jour) => Jour.de(jour)));
+    const duServeur = JoursDeSeance.reunir(seancesDuServeur.map((jour) => Jour.de(jour)), revisionsDuServeur.map((jour) => Jour.de(jour)));
     derniersJoursLus.set(profil, duServeur);
   }
   const derniersLus = derniersJoursLus.get(profil);
