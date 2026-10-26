@@ -42,3 +42,11 @@ Bloc « Motivation, histoire » (domaine) :
   2. alignement du surlignage (mots du titre retranchés) recopié dans React : cycle TDD 7 (`7c81bd3` RED, `rangDansLeTexteDeLEpisode`).
   Non bloquants repris : `catch` générique, constante de délai dans `src/reseau/`, `useHistoire` dans `src/histoire/`, mémoire vidée à la déconnexion. Laissés : paroles de fin de fluence redites avec l'épisode (conforme à 33.12, à signaler dans la PR) ; `aria-label` sur `role="status"` (contenu visible équivalent).
 - 12:20 UTC : corrections (`7c81bd3` RED, `507b4a4` GREEN, `5dc1b56` fix, `c3d0805` refactor), relues en delta : **APPROUVÉ** (cycle 2), aucun bloquant. Non bloquants : décalage du titre à dériver de `texteALireDeLEpisode` ; dépendance Motivation → Voix (domaine) à noter à la context map ; un `map` dans un test.
+
+### E2E
+
+- 12:13 UTC : annonce du responsable sur #64 : non-régression de `main` `9bf0fa1` OK (1119/1119), E2E de périmètre autorisés.
+- Steps E2E (`439973e`) : 64/65 sur `telephone` pour `@issue-33` plus le scénario de #65 « Les quatre sections… ». Le KO restant était un bug applicatif : le texte de l'épisode n'était pas en mode dys (interligne 1,7 au lieu de 1,9). Corrigé en CSS (`16e50e2`, sans test unitaire possible), et le scénario passe.
+- Environnement : en plus du lien `chromium_headless_shell-1194 → 1243`, deux liens ont été ajoutés dans le dossier 1243 (`chrome-linux → chrome-headless-shell-linux64`, `headless_shell → chrome-headless-shell`), hors du dépôt.
+- Scénarios d'autres stories rendus faux par la fin de phrase de l'épisode : leurs phrases attendues ont été mises à jour en application de la décision 33.13 (validée par le PO, valable pour #31, #32 et #33), sur le modèle de 31.23, sans changer ni la règle ni les « Étant donné » (`a8a8a1d`). Sont concernés #24 (2), #28 (1 plan), #31 (2) et #32 (2).
+- 12:35 UTC : périmètre lancé sur `telephone` en `--workers=2` : #20, #24, #28, #29, #30, #31, #32, #33 et #65 (fichiers touchés : écran de fin, fluence, révision, séances retenues pendant l'utilisation, « Mes médailles »).
