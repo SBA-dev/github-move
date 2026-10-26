@@ -863,3 +863,41 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-width: 4px; background:
 @media (prefers-reduced-motion: reduce) {
   .pour-le-badge { animation: none; }
 }
+
+/* L'histoire des Savanturiers : tuiles de « Mes médailles » et écran d'un épisode (#33), sans animation hormis le surlignage */
+.sous-titre-de-l-histoire { margin: 0; text-align: center; overflow-wrap: anywhere; }
+.tuiles-de-l-histoire {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+  gap: 8px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.tuile-d-episode {
+  width: 100%;
+  min-height: 56px;
+  padding: 8px 12px;
+  border: 3px solid var(--accent-fonce);
+  border-radius: 16px;
+  color: var(--texte);
+  background: #fff;
+  overflow-wrap: anywhere;
+}
+.tuile-d-episode:hover:not(:disabled) { background: #fdf3ea; }
+.tuile-d-episode:disabled { border-style: dashed; color: var(--texte); background: rgba(255, 255, 255, .6); cursor: default; }
+.ecran-de-l-episode { display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 36rem; }
+.ecran-de-l-episode h1, .position-de-l-episode { margin: 0; text-align: center; overflow-wrap: anywhere; }
+.position-de-l-episode { font-weight: 700; }
+.texte-de-l-episode {
+  width: 100%;
+  margin: 0;
+  padding: 12px 16px;
+  border-radius: 16px;
+  background: #fff;
+  font-size: 1.25rem;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+.actions-de-l-episode { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; width: 100%; }

@@ -18,6 +18,7 @@ import {
 } from "./famille/index.ts";
 import { DockDeLEnfant, type EcranDuDock, estUnEcranDuDock } from "./accueil/index.ts";
 import { LeconsPersonnellesDuParent } from "./accompagnement/index.ts";
+import { EcranDeLEpisode } from "./histoire/index.ts";
 import { MesMedailles } from "./medailles/index.ts";
 import { SuiviDeLEspaceParent } from "./suivi/index.ts";
 import { MonParcours } from "./parcours/index.ts";
@@ -44,7 +45,8 @@ const ACCUEIL: Lieu = { ecran: "accueil" };
 
 function estPageDeLEnfant(lieu: Lieu): boolean {
   return lieu.ecran === "jeu" || lieu.ecran === "parcours" || lieu.ecran === "toutes-les-lecons" || lieu.ecran === "medailles" ||
-    lieu.ecran === "test-de-depart" || lieu.ecran === "revision" || lieu.ecran === "lecon" || lieu.ecran === "seance";
+    lieu.ecran === "test-de-depart" || lieu.ecran === "revision" || lieu.ecran === "lecon" || lieu.ecran === "seance" ||
+    lieu.ecran === "episode";
 }
 
 function ecranAffiche(lieu: Lieu, espaceParent: EtatDeLEspaceParent["type"], connecte: boolean): EcranDuDomaine {
@@ -58,6 +60,8 @@ function ecranAffiche(lieu: Lieu, espaceParent: EtatDeLEspaceParent["type"], con
       return "accueil-de-l-enfant";
     case "lecon":
       return "page-de-la-lecon";
+    case "episode":
+      return "medailles";
     case "parcours":
     case "toutes-les-lecons":
     case "medailles":
@@ -267,7 +271,22 @@ export function Application() {
               />
             )}
             {lieu.ecran === "medailles" && profilCharge && profilEnCours && (
-              <MesMedailles profil={profilEnCours} univers={univers} voix={voix} />
+              <MesMedailles
+                profil={profilEnCours}
+                univers={univers}
+                voix={voix}
+                onOuvrirLEpisode={(numero) => aller({ ecran: "episode", numero, origine: "medailles" })}
+              />
+            )}
+            {lieu.ecran === "episode" && profilCharge && profilEnCours && (
+              <EcranDeLEpisode
+                profil={profilEnCours}
+                univers={univers}
+                voix={voix}
+                numero={lieu.numero}
+                onFermerLeLivre={() => revenirA(lieu.origine === "medailles" ? "medailles" : "jeu")}
+                onEpisodeSuivant={(numero) => remplacer({ ecran: "episode", numero, origine: lieu.origine })}
+              />
             )}
             {lieu.ecran === "lecon" && profilCharge && profilEnCours && (
               <PageDeLaLecon
