@@ -112,3 +112,4 @@ export {
   histoireDe,
   NombreDeSeancesInvalide,
 } from "./histoire.ts";
+export { SeancesTermineesDuProfil } from "./seances-terminees-du-profil.ts";
