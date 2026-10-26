@@ -28,7 +28,7 @@ export function titreDeLAnnonceDuBadge(): string {
 }
 
 export function finDePhraseDuBadge(badge: Badge): string {
-  return `${titreDeLAnnonceDuBadge()} : ${badge.nom}`;
+  return `${titreDeLAnnonceDuBadge()} : ${badge.nom} !`;
 }
 
 export function phraseDeFinAvecLesNouveautes(
