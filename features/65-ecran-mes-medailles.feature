@@ -46,7 +46,6 @@ Fonctionnalité: L'écran « Mes médailles » réunit ce que l'enfant a gagné
       Alors « Mes records de calcul rapide » est la dernière section de l'écran
       Mais aucune section n'annonce un contenu à venir
 
-    @depend-de-31 @depend-de-33
     Scénario: Les quatre sections apparaissent dans l'ordre cabane, histoire, badges, records
       Étant donné que Léa a un record de 12 à la fluence « Calcul rapide : tables de 3 et 4 »
       Quand Léa ouvre « Mes médailles » depuis son accueil
