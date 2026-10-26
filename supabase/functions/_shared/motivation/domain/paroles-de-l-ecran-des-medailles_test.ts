@@ -5,6 +5,7 @@ import type { PastilleDeRecord } from "./records-de-calcul-rapide.ts";
 import {
   NOM_DE_L_ECRAN_DES_MEDAILLES,
   parolesALOuverture,
+  parolesDeLaSectionDesBadgesOuSansBadge,
   parolesDeLaSectionDesRecords,
   parolesDuGuideALOuverture,
   phraseLueDeLaPastille,
@@ -212,4 +213,20 @@ Deno.test("sans « Tout lire à voix haute », les badges ne sont pas lus : seul
   const paroles = parolesALOuverture({ toutLire: false, pastilles: [], cabane: cabaneDe(2), badges: [badge] });
 
   assertEquals(paroles, ["Regarde tout ce que tu as gagné !"]);
+});
+
+Deno.test("le bouton « Écouter » de la section des badges lit son titre puis la phrase sans badge quand il n'y en a aucun", () => {
+  assertEquals(parolesDeLaSectionDesBadgesOuSansBadge([]), [
+    "Mes badges",
+    "Gagne au moins 2 étoiles dans une leçon pour gagner son badge.",
+  ]);
+});
+
+Deno.test("le bouton « Écouter » de la section des badges lit son titre puis le nombre de badges gagnés", () => {
+  const autreBadge: Badge = { cle: "Soustraire", nom: "Soustraire", matiere: "maths", lecons: [] };
+
+  assertEquals(parolesDeLaSectionDesBadgesOuSansBadge([badge, autreBadge]), [
+    "Mes badges",
+    "Tu as 2 badges.",
+  ]);
 });
