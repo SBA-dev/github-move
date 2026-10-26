@@ -89,6 +89,19 @@ Deno.test("deux leçons acquises sans compétence donnent deux badges, chacun de
   assertEquals(badges.map((badge) => badge.cle), ["lecon:fr-cp-etre-avoir", "lecon:fr-cp-masculin-feminin"]);
 });
 
+Deno.test("une leçon acquise dont la compétence est blanche donne le badge « Je sais : » suivi du titre, de clé « lecon: » suivie de l'identifiant", () => {
+  const lecons = [leconDe({ id: "fr-cp-etre-avoir", titre: "Être et avoir", competence: "   " })];
+
+  assertEquals(badgesDuProfil(new Set(["fr-cp-etre-avoir"]), lecons), [
+    {
+      cle: "lecon:fr-cp-etre-avoir",
+      nom: "Je sais : Être et avoir",
+      matiere: "francais",
+      lecons: ["fr-cp-etre-avoir"],
+    },
+  ]);
+});
+
 Deno.test("les badges suivent l'ordre des matières, puis des leçons, quel que soit l'ordre du catalogue donné", () => {
   const lecons = [
     leconDe({ id: "ma-ce2-a", matiere: "maths", niveau: "CE2", ordre: 1, competence: "Je calcule" }),
