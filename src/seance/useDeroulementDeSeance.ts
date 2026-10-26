@@ -318,13 +318,21 @@ export function useDeroulementDeSeance(
     relire();
   }, [reussite.figee, presentationEnCours, ouvrirLExercice, personnage.parole, relireLaPresentation, relireLaQuestion, memorisation.reecouter, relire]);
 
+  const { parolesDeFin: parolesDeFinDeLaFluence } = fluence;
+  /** Une fluence seule a déjà dit ses paroles de fin : elles sont reprises avec ce que la séance a fait gagner. */
+  const direLaFinDeLaFluenceSeule = useCallback(({ episode }: NouveautesDeFin) => {
+    const paroles = parolesDeFinDeLaFluence.current;
+    if (paroles === undefined || episode === undefined) return;
+    void dire({ texte: phraseDeFinAvecLesNouveautes(paroles, { episode }), nature: "felicitation", humeur: "applaudit" });
+  }, [dire, parolesDeFinDeLaFluence]);
+
   const direLaFin = useCallback((etoiles: number | undefined, nouveautes: NouveautesDeFin) => {
     sequence.current++;
-    if (etoiles === undefined) return;
+    if (etoiles === undefined) return direLaFinDeLaFluenceSeule(nouveautes);
     const felicitation = parolesDeFinDeSeance(etoiles, prenom, personnageGuide, hasardDuNavigateur);
     const texte = phraseDeFinAvecLesNouveautes(felicitation, nouveautes);
     void dire({ texte, nature: "felicitation", humeur: "applaudit" });
-  }, [dire, prenom, personnageGuide]);
+  }, [dire, prenom, personnageGuide, direLaFinDeLaFluenceSeule]);
 
   const abandonner = useCallback(() => {
     vivant.current = false;

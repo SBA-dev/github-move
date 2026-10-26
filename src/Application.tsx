@@ -250,6 +250,7 @@ export function Application() {
                 profil={profilEnCours}
                 univers={univers}
                 voix={voix}
+                onLireLEpisode={(numero) => aller({ ecran: "episode", numero, origine: "fin-de-seance" })}
                 onAccueil={() => revenirA("jeu")}
               />
             )}
@@ -314,6 +315,7 @@ export function Application() {
                 toutLireAVoixHaute={profilEnCours.reglages.toutLireAVoixHaute}
                 clavierDesDictees={profilEnCours.reglages.clavierDesDictees.valeur}
                 onRetour={() => revenirA({ ecran: "lecon", leconId: lieu.leconId })}
+                onLireLEpisode={(numero) => aller({ ecran: "episode", numero, origine: "fin-de-seance" })}
                 onLeconSuivante={(leconId) => aller({ ecran: "lecon", leconId })}
                 onToutesLesLecons={() => {
                   remplacer("jeu");

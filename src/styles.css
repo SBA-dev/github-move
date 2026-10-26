@@ -864,6 +864,14 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-width: 4px; background:
   .pour-le-badge { animation: none; }
 }
 
+[data-mode-dys="true"] .pour-l-episode { overflow-wrap: anywhere; line-height: inherit; }
+.pour-l-episode { display: grid; justify-items: center; gap: 4px; max-width: 100%; padding: 8px 16px; border: 3px solid var(--accent-fonce); border-radius: 16px; background: rgba(255, 255, 255, .95); overflow-wrap: anywhere; animation: arrivee-d-un-objet .4s ease-out; }
+.pour-l-episode:empty { display: none; }
+.pour-l-episode p { margin: 0; font-weight: 700; }
+@media (prefers-reduced-motion: reduce) {
+  .pour-l-episode { animation: none; }
+}
+
 /* L'histoire des Savanturiers : tuiles de « Mes médailles » et écran d'un épisode (#33), sans animation hormis le surlignage */
 .sous-titre-de-l-histoire { margin: 0; text-align: center; overflow-wrap: anywhere; }
 .tuiles-de-l-histoire {
