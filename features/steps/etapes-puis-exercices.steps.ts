@@ -96,11 +96,21 @@ export async function injecter(page: Page, lecon: LeconBrute) {
   if (estSurUnProfilReel(page)) await rechargerAvecLeProfilReel(page);
 }
 
+// Story #31 : une leçon personnelle n'est jamais dans la bibliothèque (elle vient du serveur, pour son profil seulement).
+const sansLeconsPersonnellesDansLaBibliotheque = new WeakSet<Page>();
+
+export function neServirQueLaBibliothequeSansLeconsPersonnelles(page: Page): void {
+  sansLeconsPersonnellesDansLaBibliotheque.add(page);
+}
+
 export async function interceptertLaBibliotheque(page: Page) {
   await page.route("**/bibliotheque.json", async (route) => {
     const reponse = await route.fetch();
     const bibliotheque: unknown[] = await reponse.json();
-    await route.fulfill({ response: reponse, json: [...bibliotheque, ...etat(page).injectees] });
+    const injectees = sansLeconsPersonnellesDansLaBibliotheque.has(page)
+      ? etat(page).injectees.filter((lecon) => !lecon.id.startsWith("perso-"))
+      : etat(page).injectees;
+    await route.fulfill({ response: reponse, json: [...bibliotheque, ...injectees] });
   });
 }
 
@@ -212,6 +222,7 @@ Given(/^Léa a un profil enfant préparé de niveau (\S+) dans l'univers « (.+)
     [CLE_PROFIL_PREPARE, JSON.stringify(avecLesReglagesPrevus(page, profil))] as const,
   );
   await interceptertLaBibliotheque(page);
+  if ($tags.includes("@issue-31")) neServirQueLaBibliothequeSansLeconsPersonnelles(page);
   // Story #24 : les séances terminées s'enregistrent pour un vrai profil ; Léa joue donc avec le même profil, créé pour Paul.
   // Story #25 : le parcours lit la progression du vrai profil, et la bibliothèque de test remplace celle de l'application.
   if ($tags.includes("@issue-25")) await servirLaBibliothequeDuParcours(page);

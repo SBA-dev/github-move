@@ -252,6 +252,14 @@ async function attendreLEnregistrement(famille: Famille, lecon: LeconBrute, etoi
   await expect.poll(() => meilleuresEtoilesEnRest(jeton, profil.id, lecon.id), { timeout: DELAI_DE_LA_FONCTION_MS }).toBe(etoiles);
 }
 
+/** Gagne les étoiles voulues en jouant le premier exercice à choix de la leçon, puis attend leur enregistrement. */
+export async function gagnerDesEtoilesParUnExerciceSeul(famille: Famille, page: Page, titre: string, etoiles: number): Promise<void> {
+  const lecon = leconDeTitre(page, titre);
+  etat(page).courante = lecon;
+  await jouerUnExerciceSeul(famille, page, lecon, premierExerciceAChoix(lecon), ERREURS_POUR_ETOILES[etoiles] ?? 0);
+  await attendreLEnregistrement(famille, lecon, etoiles);
+}
+
 Given(
   /^Léa a (?:déjà )?gagné (\d) étoiles? à la leçon « ([^«»]+) »(?: avec (\d+) erreurs)?( sur la tablette)?(, sans réseau)?$/,
   async ({ famille, page }, etoiles: string, titre: string, erreurs: string | undefined, _sur: string | undefined, sansReseau: string | undefined) => {
