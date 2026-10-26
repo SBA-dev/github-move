@@ -59,3 +59,8 @@ Bloc B « Exploitation, vérifications scriptées » : module Python `scripts/ex
 |---|---|---|---|
 | B1. V1 secrets du build | `8b52393` | `75775b0` | `dist/` du conteneur : aucun écart |
 | B2. V2 RLS | `888c178` | `11f8c39` | lancée en lecture seule sur `savanturier-dev` : 14 tables, aucun écart. L'API de gestion refuse l'agent `Python-urllib` : B11 doit envoyer un `User-Agent` explicite |
+| B3. V4 en-têtes | `5de4eb7` | `4a6c4ea` | |
+| B4. Auth de production | `bc5e4ee` | `66bd06d` | |
+| B5. Secrets des fonctions | `2a87fd0` | `7477bad` | |
+
+- 15:45 → 20:06 UTC : **arrêt** (limite hebdomadaire d'usage atteinte pendant le RED de B6/B7, rien de perdu : tout était poussé jusqu'à `7477bad`). Reprise annoncée par le responsable sur #64 à 20:06.
