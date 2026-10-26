@@ -4,10 +4,16 @@ import type { Jour } from "@domain/apprentissage";
 export type SeanceTermineeConnue = { readonly lecon: string; readonly termineeLe: Date; readonly jour: Jour };
 
 const terminees = new Map<string, readonly SeanceTermineeConnue[]>();
+const identifiants = new Map<string, readonly string[]>();
 
-/** Retient la leçon, la date et le jour de fin d'une séance terminée dans ce navigateur, même si le serveur l'a refusée ou ne l'a pas reçue. */
-export function retenirLaSeanceTerminee(profil: string, seance: SeanceTermineeConnue): void {
+/** Retient l'identifiant, la leçon, la date et le jour de fin d'une séance terminée dans ce navigateur, même si le serveur l'a refusée ou ne l'a pas reçue. */
+export function retenirLaSeanceTerminee(profil: string, seance: SeanceTermineeConnue, identifiant: string): void {
   terminees.set(profil, [...seancesTermineesPendantLUtilisation(profil), seance]);
+  identifiants.set(profil, [...identifiantsDesSeancesTermineesPendantLUtilisation(profil), identifiant]);
+}
+
+export function identifiantsDesSeancesTermineesPendantLUtilisation(profil: string): readonly string[] {
+  return identifiants.get(profil) ?? [];
 }
 
 export function seancesTermineesPendantLUtilisation(profil: string): readonly SeanceTermineeConnue[] {
@@ -23,4 +29,5 @@ export function derniereSeanceTermineePendantLUtilisation(profil: string): Seanc
 
 export function oublierLesSeancesTerminees(): void {
   terminees.clear();
+  identifiants.clear();
 }

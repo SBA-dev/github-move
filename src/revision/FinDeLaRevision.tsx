@@ -35,7 +35,7 @@ export function FinDeLaRevision({ seance, prenom, personnage, univers, onAccueil
     const maintenant = new Date();
     const terminee = seance.terminer(maintenant, jourDuNavigateur(maintenant));
     enregistrerLaRevisionSurLAppareil(terminee.enfant, terminee.resultats, terminee.jour, terminee.termineeLe);
-    retenirLaSeanceDeRevisionTerminee(terminee.enfant, terminee.jour.toString());
+    retenirLaSeanceDeRevisionTerminee(terminee.enfant, terminee.jour.toString(), terminee.id);
     setPret(true);
     if (affichee.current) {
       void dire({
