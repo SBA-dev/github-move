@@ -177,11 +177,12 @@ Fonctionnalité: Leçons personnelles créées à partir d'un texte
       Alors « Dictée : chaton, maison, poisson… » n'apparaît pas dans le parcours
 
     # #39.3
+    # Mise à jour par #33 (décisions 33.12 et 33.20 ; « Toutes les leçons » : règle 3 de #29)
     Scénario: Après une leçon personnelle, aucune leçon suivante n'est proposée
       Étant donné que Paul a créé pour Léa une leçon personnelle à partir du texte « chanter, finir, prendre, manger »
       Et que Léa joue la séance complète de la leçon « Les verbes : chanter, finir, prendre… »
       Quand Léa réussit la dernière question de la séance
-      Alors la fin de la séance propose « Accueil » et « Rejouer »
+      Alors la fin de la séance propose « Accueil », « Rejouer », « Lire l'épisode » et « Toutes les leçons »
       Mais aucune leçon suivante n'est proposée
 
     # #39.12 (sans badge)
