@@ -5,10 +5,10 @@ import {
   episodeOuvert,
   episodeSuivant,
   positionDeLEpisode,
+  rangDansLeTexteDeLEpisode,
   texteALireDeLEpisode,
   type Univers,
 } from "@domain/motivation";
-import { motsDeLaConsigne } from "@domain/voix";
 import type { ProfilEnCours } from "@domain/famille";
 import { useHistoire } from "../medailles/useHistoire.ts";
 import { TexteSurligne } from "../seance/TexteSurligne.tsx";
@@ -32,10 +32,6 @@ function episodeALire(histoire: EtatDeLHistoire | undefined, numero: number): Ep
   } catch {
     return undefined;
   }
-}
-
-function nombreDeMots(texte: string): number {
-  return motsDeLaConsigne(texte).filter(({ rang }) => rang !== undefined).length;
 }
 
 /** L'écran d'un épisode ouvert : le texte lu par le personnage guide du profil, mot à mot. Un épisode fermé ou illisible ramène d'où l'enfant vient. */
@@ -75,7 +71,7 @@ function LectureDeLEpisode({ episode, suivant, univers, voix, onFermerLeLivre, o
     return faireSilence;
   }, [lire, faireSilence]);
 
-  const rangDansLeTexte = rangDuMotPrononce === undefined ? undefined : rangDuMotPrononce - nombreDeMots(episode.titre);
+  const rangDansLeTexte = rangDuMotPrononce === undefined ? undefined : rangDansLeTexteDeLEpisode(episode, rangDuMotPrononce);
   const fermerLeLivre = () => {
     faireSilence();
     onFermerLeLivre();

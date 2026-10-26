@@ -120,6 +120,7 @@ export {
   finDePhraseDeLEpisode,
   parolesDeLaSectionDeLHistoire,
   positionDeLEpisode,
+  rangDansLeTexteDeLEpisode,
   sousTitreDeLaSectionDeLHistoire,
   texteALireDeLEpisode,
   titreDeLAnnonceDeLEpisode,

@@ -1,3 +1,4 @@
+import { motsDeLaConsigne } from "../../voix/domain/index.ts";
 import { type Episode, HISTOIRE_DES_SAVANTURIERS } from "./histoire.ts";
 
 export function titreDeLaSectionDeLHistoire(): string {
@@ -34,4 +35,13 @@ export function annonceLueDeLEpisodeOuvert(episode: Episode): string {
 
 export function finDePhraseDeLEpisode(): string {
   return "Un nouvel épisode de l'histoire t'attend !";
+}
+
+function nombreDeMotsAAfficher(texte: string): number {
+  return motsDeLaConsigne(texte).filter(({ rang }) => rang !== undefined).length;
+}
+
+export function rangDansLeTexteDeLEpisode(episode: Episode, rangLu: number): number | undefined {
+  const rang = rangLu - nombreDeMotsAAfficher(episode.titre);
+  return rang < 0 ? undefined : rang;
 }
