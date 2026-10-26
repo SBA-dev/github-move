@@ -92,3 +92,17 @@ Bloc B « Exploitation, vérifications scriptées » : module Python `scripts/ex
 - 21:20 UTC : revue globale, cycle 1 : **À CORRIGER**, 3 bloquants (procédure : E2E et build mélangeant dev et production ; comptage de vérification d'une suppression de parent qui ne vérifie rien ; politique de confidentialité incomplète sur les données gardées et sur l'appareil). Corrections en cours (documentation et textes), plus le non bloquant n°4 retenu en TDD (l'envoi WebDAV refuse un `dist/` sans `sw.js` ou qui échoue à V1). Non bloquant n°5 (assertion E2E sur `x-region` côté front) laissé en dette : vérifié dans `functions-js` et par la pré-requête déployée.
 - 21:45 UTC : corrections de la revue globale : `b8177dc`, `817e38c`, `10525f2` ; envoi WebDAV RED `d1d7326`, GREEN `a3414a7` ; steps `015dd33` (séance lente par `$test.slow()`, étape propre à `@issue-45`, `@wip` retiré). `main` `a3f4d71` intégrée (merge `fa64a64`, sans conflit). Revue globale cycle 2 : **APPROUVÉ** (3 non bloquants en cours de correction).
 - 21:55 UTC : vérifications sur `fa64a64` : Deno 2463/2463, pytest 1565/1565, lint, fmt, tsc OK. **E2E `telephone`, `--workers=2`, périmètre #45 + #5 + #72 + #12 : 135/135 verts** (8,1 min, aucun KO).
+- 22:05 UTC : non bloquants du cycle 2 : `f972a97`, `32b4cde`, `70793ad` (texte seulement). Sur le dernier commit : **tests PWA 34/34** (#8 et `@pwa` de #45, tablette et téléphone) et **`@issue-45` sur `telephone` 11/11**. PR #112 ouverte en brouillon, puis passée en prête.
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Lancement → PRÊTE À MERGER | 15:31 → 22:10 UTC, soit 6 h 40 min, dont **4 h 20 min d'arrêt** (limite hebdomadaire d'usage, 15:45 → 20:06) : ≈ 2 h 20 min de travail |
+| Attentes | réponses du PO aux escalades : 1 min (relayées aussitôt par le responsable) ; résultat de la non-régression de `main` avant le déploiement : ≈ 35 min, sans blocage (le code continuait) |
+| Cycles TDD | bloc A : 1 ; bloc B : 13 (dont 2 RED corrigés en cours : B10 après l'essai réel, B13 pour le contrat du client) ; corrections de revue : 2 (scripts, envoi WebDAV) ; CORS `x-region` : 1 |
+| Cycles de review | revue intermédiaire du bloc B : 1 À CORRIGER, puis corrigée ; revue globale : 1 À CORRIGER (3 bloquants de procédure et de texte), puis APPROUVÉ au cycle 2 |
+| Cycles d'E2E | mise au point `@issue-45` : 2 (1 KO de durée, réglé par `$test.slow()`) ; périmètre #45/#5/#72/#12 : 1 run, 135/135 ; PWA : 1 run, 34/34 ; relance `@issue-45` sur le dernier commit : 11/11 |
+| Intégrations de `main` | 1 (`a3f4d71`, `fix(#33)`), 0 conflit |
+| Verrous | `base` (20:28 →, redéploiement des 9 fonctions pour le CORS `x-region`, à rendre au merge) |
+| Escalades | 2 au PO (P1 à P12 et 45.33 à 45.35 ; réseau et jeton de gestion) |
