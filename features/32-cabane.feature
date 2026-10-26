@@ -231,6 +231,7 @@ Fonctionnalité: La cabane reçoit des objets à chaque palier du total des éto
     # Décisions 32.9 et 32.10 ; décision 32.21 : scénarios de #65 mis à jour
     # Mise à jour par #31 (décisions 31.9, 31.10 et 31.23) : la section des badges est lue après la cabane ; les étoiles
     # préparées « en tout » sont sur des leçons absentes de la bibliothèque, elles ne donnent aucun badge (31.13)
+    # Mise à jour par #33 (décision 33.22) : la section de l'histoire, même sans épisode, est lue entre la cabane et les badges
     Scénario: Avec « tout lire à voix haute », le titre de la cabane puis sa phrase sont lus à l'ouverture
       Étant donné que Paul a réglé « tout lire à voix haute » sur « oui » pour Léa
       Et que Léa a gagné 3 étoiles en tout
@@ -241,6 +242,8 @@ Fonctionnalité: La cabane reçoit des objets à chaque palier du total des éto
         | Mes médailles                                                              |
         | La cabane de Noisette                                                      |
         | Tu as 3 étoiles. Encore 3 étoiles et Noisette recevra un tapis tout doux ! |
+        | L'histoire des Savanturiers                                                |
+        | Un nouvel épisode s'ouvre à chaque séance terminée.                        |
         | Mes badges                                                                 |
         | Gagne au moins 2 étoiles dans une leçon pour gagner son badge.             |
 

@@ -122,10 +122,11 @@ Fonctionnalité: Étoiles et fin de la séance
 
   Règle: À la fin de la séance, l'enfant rejoue, passe à la leçon suivante ou revient à l'accueil
 
+    # Mise à jour par #33 (décisions 33.12 et 33.20) : la séance ouvre un épisode, la fin propose aussi « Lire l'épisode »
     Scénario: La fin de la séance propose la leçon suivante, l'accueil et de rejouer
       Étant donné que Léa joue la séance complète de la leçon « Les sons de test »
       Quand Léa réussit la dernière question de la séance
-      Alors la fin de la séance propose « Leçon suivante », « Accueil » et « Rejouer »
+      Alors la fin de la séance propose « Leçon suivante », « Accueil », « Rejouer » et « Lire l'épisode »
       Et le focus est sur « Accueil »
 
     Scénario: La leçon suivante est la première leçon d'après non réussie de la même matière et du même niveau

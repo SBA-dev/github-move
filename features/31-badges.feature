@@ -295,6 +295,7 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
 
     # Décisions 31.9 et 31.11 ; la cabane est lue avant les badges (#32). Si #33 est livrée avant #31,
     # le titre et la phrase de l'histoire s'insèrent entre la cabane et les badges.
+    # Mise à jour par #33 (décision 33.22) : la section de l'histoire, même sans épisode, est lue entre la cabane et les badges
     Scénario: Avec « tout lire à voix haute », le titre des badges puis leur nombre sont lus à l'ouverture
       Étant donné que Paul a réglé « tout lire à voix haute » sur « oui » pour Léa
       Et que Léa a pour meilleures étoiles :
@@ -307,6 +308,8 @@ Fonctionnalité: Un badge par leçon acquise, au nom de sa compétence
         | Mes médailles                                                       |
         | La cabane de Noisette                                               |
         | Tu as 2 étoiles. Encore 1 étoile et Noisette recevra une lanterne ! |
+        | L'histoire des Savanturiers                                         |
+        | Un nouvel épisode s'ouvre à chaque séance terminée.                 |
         | Mes badges                                                          |
         | Tu as 1 badge.                                                      |
 

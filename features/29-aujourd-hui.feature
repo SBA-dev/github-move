@@ -206,15 +206,17 @@ Fonctionnalité: Écran « Aujourd'hui » : l'accueil de l'enfant
 
     # Réponses 29.8 et 29.25
     # Réponse 29.26
+    # Mise à jour par #33 (décisions 33.12 et 33.20) : la séance ouvre un épisode, la fin propose aussi « Lire l'épisode »
     Scénario: Quand une leçon suivante est proposée, la fin de la séance ne propose pas « Toutes les leçons »
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa joue la séance complète de la leçon « Le son in »
       Quand Léa réussit la dernière question de la séance
-      Alors la fin de la séance propose « Leçon suivante », « Accueil » et « Rejouer »
+      Alors la fin de la séance propose « Leçon suivante », « Accueil », « Rejouer » et « Lire l'épisode »
       Mais la fin de la séance ne propose pas « Toutes les leçons »
 
     # Réponses 29.8 et 29.25
     # Réponse 29.26
+    # Mise à jour par #33 (décisions 33.12 et 33.20) : la séance ouvre un épisode, la fin propose aussi « Lire l'épisode »
     Scénario: Quand la séance termine tout le parcours, la fin de la séance propose « Toutes les leçons » à la place d'une leçon suivante
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a réussi 3 leçons de français du CE1
@@ -226,16 +228,17 @@ Fonctionnalité: Écran « Aujourd'hui » : l'accueil de l'enfant
         | Le respect des autres    | 1       |
       Et que Léa joue la séance complète de la leçon « Le pluriel des noms »
       Quand Léa réussit la dernière question de la séance
-      Alors la fin de la séance propose « Accueil », « Rejouer » et « Toutes les leçons »
+      Alors la fin de la séance propose « Accueil », « Rejouer », « Lire l'épisode » et « Toutes les leçons »
       Mais aucune leçon suivante n'est proposée
 
     # Réponse 29.25
     # Réponse 29.26
+    # Mise à jour par #33 (décisions 33.12 et 33.20) : la séance ouvre un épisode, la fin propose aussi « Lire l'épisode »
     Scénario: Sans aucune leçon pour sa classe, après une leçon des classes d'avant, la fin de la séance propose « Toutes les leçons »
       Étant donné que Léa a un profil enfant préparé de niveau CM2 dans l'univers « Animaux de la forêt »
       Et que Léa joue la séance complète de la leçon « Le futur »
       Quand Léa réussit la dernière question de la séance
-      Alors la fin de la séance propose « Accueil », « Rejouer » et « Toutes les leçons »
+      Alors la fin de la séance propose « Accueil », « Rejouer », « Lire l'épisode » et « Toutes les leçons »
       Mais aucune leçon suivante n'est proposée
 
     # Réponse 29.25
