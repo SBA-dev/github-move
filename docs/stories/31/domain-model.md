@@ -299,3 +299,10 @@ Réponse du PO le 2026-10-25 ([commentaire](https://github.com/SBA-dev/github-mo
 - **Leçons personnelles** (réponse « A », 39.12) : elles ne donnent jamais de badge.
 - **33.13** (commune avec #33) : ordre des nouveautés **cabane, épisode, badge**, dans la zone « nouveautés » et dans la phrase du personnage guide.
 - **31.27** (PO, 2026-10-26, [commentaire](https://github.com/SBA-dev/github-move/issues/31#issuecomment-6410141496)) : la phrase sans badge dit « gagner » : « Gagne au moins 2 étoiles dans une leçon pour gagner son badge. » ; les scénarios, qui disaient « recevoir » comme le legacy, sont alignés.
+
+## Notes d'implémentation (2026-10-26)
+
+1. **`LeconDuBadge` n'a pas été créé.** `badgesDuProfil`, `nomDuBadge` et `badgeGagneParLaSeance` (`supabase/functions/_shared/motivation/domain/badges.ts`) prennent directement la `Lecon` du Catalogue, Published Language déjà consommé par `records-de-calcul-rapide.ts`. La règle « compétence blanche = absente » est tenue par `badges.ts`. Le diagramme et le tableau des value objects se lisent avec `Lecon` à la place de `LeconDuBadge`.
+2. **Renommage de la remarque n°2 fait.** `src/seance/fin-de-seance/meilleures-etoiles-pour-la-cabane.ts` est devenu `src/seance/fin-de-seance/meilleures-etoiles-du-profil-lues.ts`, et `lireLesMeilleuresEtoilesPourLaCabane` est devenue `lireLesMeilleuresEtoilesDuProfilSiLisibles` : même règle, utilisée par la cabane et par les badges (`lireLesMeilleuresEtoilesAvantLaSeance` garde son nom).
+3. **Remarque n°3.** La composition est `phraseDeFinAvecLesNouveautes(phraseDeFin, { objet, badge })` dans `paroles-des-badges.ts` ; `phraseDeFinAvecLaCabane` a été retirée. #33 l'étendra avec l'épisode, entre cabane et badge (33.13).
+4. **Dette notée.** Le comparateur de niveaux et le rang de matière sont copiés dans Motivation (`badges.ts`, `records-de-calcul-rapide.ts`) et dans Apprentissage (`ordre-des-lecons.ts`, `reserve-du-test-de-depart.ts`). À exposer par `@domain/catalogue` dans une story qui touche le Catalogue.

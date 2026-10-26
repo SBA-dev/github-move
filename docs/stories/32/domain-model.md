@@ -337,3 +337,5 @@ Toutes les questions du cadrage sont tranchées : le PO a retenu chaque recomman
 ## Questions ouvertes
 
 Aucune.
+
+Note (#31) : la lecture `lireLesMeilleuresEtoilesPourLaCabane` (`src/seance/fin-de-seance/meilleures-etoiles-pour-la-cabane.ts`) s'appelle désormais `lireLesMeilleuresEtoilesDuProfilSiLisibles` (`src/seance/fin-de-seance/meilleures-etoiles-du-profil-lues.ts`), même règle, partagée par la cabane et les badges.
