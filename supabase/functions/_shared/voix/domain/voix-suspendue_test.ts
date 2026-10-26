@@ -21,6 +21,7 @@ function uneLecture(options: { muet?: boolean } = {}) {
     caractereDuPersonnageGuide: () => CARACTERE_NOISETTE,
     etatInitial: options.muet ? "muet" : "son",
     onVoixBloquee: () => {},
+    onFinDeLaVoixBloquee: () => {},
   });
   return { lecture, lecteur };
 }

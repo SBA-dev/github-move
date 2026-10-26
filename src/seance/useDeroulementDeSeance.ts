@@ -1,6 +1,6 @@
-import { useCallback, useReducer, useRef } from "react";
+import { useCallback, useReducer, useRef, useState } from "react";
 import {
-  consigneLueAuDebut,
+  consigneAffichee,
   type FaitDeSeance,
   indicationDuGeste,
   Reponse,
@@ -56,6 +56,9 @@ export function useDeroulementDeSeance(
   const [, redessiner] = useReducer((compteur: number) => compteur + 1, 0);
   const sequence = useRef(0);
   const vivant = useRef(true);
+  /** Numéro de la séquence qui présente l'exercice ; tout geste de l'enfant ouvre une nouvelle séquence et met donc fin à la présentation. */
+  const presentation = useRef<number | undefined>(undefined);
+  const [presentationAffichee, setPresentationAffichee] = useState(false);
   const pause = useRef(PAUSE_ENTRE_DEUX_PAROLES_MS);
   pause.current = useReducedMotion() ? PAUSE_AVEC_MOUVEMENTS_REDUITS_MS : PAUSE_ENTRE_DEUX_PAROLES_MS;
 
@@ -64,7 +67,7 @@ export function useDeroulementDeSeance(
     [],
   );
 
-  const reussite = useQuestionFigee();
+  const reussite = useQuestionFigee(seance, personnage.paroleEntendue);
   const questions = useQuestionsAChoix({
     seance,
     lecon,
@@ -118,34 +121,61 @@ export function useDeroulementDeSeance(
     presenterUneQuestion: ouvrir,
   });
 
+  const consigneDeLExercice = useCallback(() => {
+    const position = seance.exerciceEnCours()?.position;
+    const exercice = position === undefined ? undefined : lecon.exercices[position];
+    return exercice && consigneAffichee(exercice);
+  }, [seance, lecon]);
+
   const lireLaConsigneDeLExercice = useCallback(async () => {
     const position = seance.exerciceEnCours()?.position;
     const exercice = position === undefined ? undefined : lecon.exercices[position];
-    if (!exercice?.consigne || !consigneLueAuDebut(exercice.type)) return;
-    if (!(await dire({ texte: exercice.consigne, nature: "consigne" }))) return;
+    const consigne = consigneDeLExercice();
+    if (!exercice || consigne === undefined) return;
+    if (!(await dire({ texte: consigne, nature: "consigne" }))) return;
     const indication = indicationDuGeste(exercice.type);
     if (indication) await dire({ texte: indication, nature: "consigne" });
-  }, [seance, lecon, dire]);
+  }, [seance, lecon, dire, consigneDeLExercice]);
+
+  const presentationEnCours = useCallback(() => presentation.current === sequence.current, []);
+
+  const commencerLaPresentation = useCallback((numero: number) => {
+    presentation.current = numero;
+    setPresentationAffichee(true);
+  }, []);
+
+  const terminerLaPresentation = useCallback((numero: number) => {
+    if (presentation.current !== numero) return;
+    presentation.current = undefined;
+    setPresentationAffichee(false);
+  }, []);
 
   const presenterLaQuestionDeLExercice = useCallback(async (numero: number) => {
     const position = seance.exerciceEnCours()?.position;
     switch (position === undefined ? undefined : lecon.exercices[position]?.type) {
       case "calcul":
-        return await calcul.presenter();
+        await calcul.presenter();
+        break;
       case "boite":
       case "barres":
-        return await illustree.presenter();
+        await illustree.presenter();
+        break;
       case "fluence":
-        return await fluence.presenter();
+        await fluence.presenter();
+        break;
       case "addition":
-        return await addition.presenter();
+        await addition.presenter();
+        break;
       case "dictee":
-        return await presenterLaDictee();
+        await presenterLaDictee();
+        break;
       case "memoriser":
-        return await memorisation.presenter(numero);
+        await memorisation.presenter(numero);
+        break;
       default:
-        return await ouvrir(numero);
+        await ouvrir(numero);
     }
+    terminerLaPresentation(numero);
   }, [
     seance,
     lecon,
@@ -156,12 +186,21 @@ export function useDeroulementDeSeance(
     presenterLaDictee,
     memorisation.presenter,
     ouvrir,
+    terminerLaPresentation,
   ]);
 
   const ouvrirLExercice = useCallback(async (numero: number) => {
+    commencerLaPresentation(numero);
     await lireLaConsigneDeLExercice();
     if (numero === sequence.current) await presenterLaQuestionDeLExercice(numero);
-  }, [lireLaConsigneDeLExercice, presenterLaQuestionDeLExercice]);
+  }, [commencerLaPresentation, lireLaConsigneDeLExercice, presenterLaQuestionDeLExercice]);
+
+  /** Dit seulement la consigne : la question reste posée. Sans effet pendant la présentation de l'exercice. */
+  const relireLaConsigne = useCallback(() => {
+    const consigne = consigneDeLExercice();
+    if (consigne === undefined || presentationEnCours() || reussite.estFigee.current) return;
+    void dire({ texte: consigne, nature: "consigne" });
+  }, [consigneDeLExercice, presentationEnCours, reussite.estFigee, dire]);
 
   const direLeFait = useCallback((fait: FaitDeSeance): Promise<boolean> => {
     if (fait.type === "EtapesDeLeconFinies") {
@@ -172,12 +211,14 @@ export function useDeroulementDeSeance(
   }, [dire]);
 
   const enchainerSurLExercice = useCallback(async (numero: number, faits: readonly FaitDeSeance[]) => {
+    commencerLaPresentation(numero);
     for (const fait of faits) {
       if (!(await direLeFait(fait))) return;
+      if (!(await reussite.attendreLEcranSuivant()) || numero !== sequence.current) return;
     }
     await attendreUnPeu();
     if (numero === sequence.current) await ouvrirLExercice(numero);
-  }, [direLeFait, attendreUnPeu, ouvrirLExercice]);
+  }, [commencerLaPresentation, direLeFait, attendreUnPeu, ouvrirLExercice, reussite.attendreLEcranSuivant]);
 
   const commencer = useCallback(async () => {
     vivant.current = true;
@@ -267,11 +308,15 @@ export function useDeroulementDeSeance(
 
   const reecouter = useCallback(() => {
     if (reussite.figee) return;
+    if (presentationEnCours() && personnage.parole?.nature === "consigne") {
+      void ouvrirLExercice(++sequence.current);
+      return;
+    }
     if (personnage.parole?.nature === "question" && (relireLaPresentation() || relireLaQuestion())) return;
     if (memorisation.reecouter()) return;
     sequence.current++;
     relire();
-  }, [reussite.figee, personnage.parole, relireLaPresentation, relireLaQuestion, memorisation.reecouter, relire]);
+  }, [reussite.figee, presentationEnCours, ouvrirLExercice, personnage.parole, relireLaPresentation, relireLaQuestion, memorisation.reecouter, relire]);
 
   const direLaFin = useCallback((etoiles: number | undefined, objetRecu: ObjetDeLaCabane | undefined) => {
     sequence.current++;
@@ -284,8 +329,9 @@ export function useDeroulementDeSeance(
   const abandonner = useCallback(() => {
     vivant.current = false;
     sequence.current++;
+    reussite.continuer();
     faireSilence();
-  }, [faireSilence]);
+  }, [faireSilence, reussite.continuer]);
 
   const { parole, rangDuMotPrononce, humeur } = personnage;
   const { figee, avancementAnnonce } = reussite;
@@ -342,6 +388,10 @@ export function useDeroulementDeSeance(
     jeNeSaisPasDeLAddition,
     demarrerLaFluence,
     relireLaPhrase,
+    relireLaConsigne,
+    presentationEnCours: presentationAffichee && presentationEnCours(),
+    enfantAttendu: reussite.enfantAttendu,
+    continuerApresLaReussite: reussite.continuer,
     commencer,
     continuer,
     direLaFin,

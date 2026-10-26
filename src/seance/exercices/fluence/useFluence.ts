@@ -48,7 +48,7 @@ function finDeFluence(seance: Seance, exercice: string, score: number, recordCon
 export function useFluence(
   { seance, horloge, dire, faireSilence, sequence, vivant, redessiner, reussite }: Dependances,
 ) {
-  const { estFigee, figer, annoncerLAvancement } = reussite;
+  const { estFigee, figer, annoncerLAvancement, attendreLEcranSuivant } = reussite;
   const [record, setRecord] = useState<number | undefined>();
   const [demarree, setDemarree] = useState(false);
   /** La fluence finie, montrée telle quelle le temps de dire sa phrase de fin. */
@@ -92,11 +92,11 @@ export function useFluence(
     const fin = finDeFluence(seance, nom, fluence.score, record);
     setRecord(fin.meilleurScore);
     await dire({ texte: fin.texte, nature: "felicitation", humeur: humeurApresReponse(fluence.score > 0) });
-    if (!vivant.current) return;
+    if (!(await attendreLEcranSuivant()) || !vivant.current) return;
     figer(undefined);
     setFluenceFinie(undefined);
     await suite(++sequence.current, seance.retirerFaits(), true);
-  }, [seance, horloge, record, estFigee, figer, sequence, faireSilence, annoncerLAvancement, dire, vivant]);
+  }, [seance, horloge, record, estFigee, figer, sequence, faireSilence, annoncerLAvancement, dire, vivant, attendreLEcranSuivant]);
 
   /** Une réponse fausse s'efface sans rien dire ; une réponse donnée après la fin du temps n'est pas prise. */
   const repondre = useCallback(async (nombre: number, suite: SuiteDuCalcul) => {

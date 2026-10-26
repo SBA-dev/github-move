@@ -30,6 +30,8 @@ export function usePersonnageQuiParle({ lire, couperLaVoix }: Pick<Voix, "lire" 
   const [humeur, setHumeur] = useState<Humeur>(HUMEUR_PAR_DEFAUT);
   const derniereLecture = useRef(0);
   const derniereParole = useRef<ParoleADire | undefined>(undefined);
+  /** Vrai tant que la dernière parole a été entendue, ou qu'il n'y en a pas eu : le silence ne prive l'enfant de rien. */
+  const paroleEntendue = useRef(true);
 
   /** Rend `true` si la phrase est allée jusqu'au bout, `false` si une autre parole ou le silence l'a interrompue. */
   const dire = useCallback(async (aDire: ParoleADire): Promise<boolean> => {
@@ -39,10 +41,11 @@ export function usePersonnageQuiParle({ lire, couperLaVoix }: Pick<Voix, "lire" 
     setParole(aDire);
     setHumeur(aDire.humeur ?? HUMEUR_PAR_DEFAUT);
     setRangDuMotPrononce(undefined);
-    await lire(aDire.aLire ?? aDire.texte, {
+    const { entendue } = await lire(aDire.aLire ?? aDire.texte, {
       onMot: (rang) => estLaDerniere() && setRangDuMotPrononce(rang),
       onFin: () => estLaDerniere() && setRangDuMotPrononce(undefined),
     });
+    if (estLaDerniere()) paroleEntendue.current = entendue;
     return estLaDerniere();
   }, [lire]);
 
@@ -55,8 +58,9 @@ export function usePersonnageQuiParle({ lire, couperLaVoix }: Pick<Voix, "lire" 
 
   const faireSilence = useCallback(() => {
     derniereLecture.current++;
+    paroleEntendue.current = true;
     couperLaVoix();
   }, [couperLaVoix]);
 
-  return { parole, rangDuMotPrononce, humeur, dire, reecouter, faireSilence, montrerHumeur };
+  return { parole, rangDuMotPrononce, humeur, paroleEntendue, dire, reecouter, faireSilence, montrerHumeur };
 }

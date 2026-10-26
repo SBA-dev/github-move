@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { type PersonnageGuide, presentationAuRetourDuSon } from "@domain/motivation";
-import { type ChoixDeVoix, type EtatDuSon, LectureAVoixHaute, type VoixDisponible } from "@domain/voix";
+import { type ChoixDeVoix, type EtatDuSon, LectureAVoixHaute, type ParoleEntendue, type VoixDisponible } from "@domain/voix";
 import { hasardDuNavigateur } from "../hasard-navigateur.ts";
 import { ChoixDeVoixMemoriseSurLAppareil } from "./choix-de-voix-memorise.ts";
 import { DeverrouillageAudio, deverrouillerAuToucher } from "./deverrouillage-audio.ts";
@@ -13,7 +13,7 @@ export type OptionsDeLecture = Parameters<LectureAVoixHaute["lire"]>[1];
 export type Voix = {
   readonly son: EtatDuSon;
   readonly nomDuPersonnageGuideDeLaVoixBloquee: string | undefined;
-  readonly lire: (texte: string, options?: OptionsDeLecture) => Promise<void>;
+  readonly lire: (texte: string, options?: OptionsDeLecture) => Promise<ParoleEntendue>;
   readonly couperLaVoix: () => void;
   readonly basculerLeSon: () => void;
   readonly suspendre: () => void;
@@ -48,6 +48,7 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
       caractereDuPersonnageGuide: () => personnageGuideEnCours.current.caractere,
       etatInitial: son,
       onVoixBloquee: () => setNomDuPersonnageGuideDeLaVoixBloquee(personnageGuideEnCours.current.nom),
+      onFinDeLaVoixBloquee: () => setNomDuPersonnageGuideDeLaVoixBloquee(undefined),
     })
   );
 
@@ -61,10 +62,7 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
     [voixDeLAppareil],
   );
 
-  const lire = useCallback((texte: string, options?: OptionsDeLecture) => {
-    setNomDuPersonnageGuideDeLaVoixBloquee(undefined);
-    return lecture.lire(texte, options);
-  }, [lecture]);
+  const lire = useCallback((texte: string, options?: OptionsDeLecture) => lecture.lire(texte, options), [lecture]);
 
   const couperLaVoix = useCallback(() => lecture.couperLaVoix(), [lecture]);
 

@@ -745,6 +745,11 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-width: 4px; background:
   .pour-la-cabane { animation: none; }
 }
 
+/* Consigne de l'exercice : une place à elle, visible pendant tout l'exercice (#79) */
+.consigne-de-l-exercice { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 12px; max-width: 100%; }
+.consigne-de-l-exercice .consigne { overflow-wrap: anywhere; max-width: 100%; }
+.relire-la-consigne[aria-disabled="true"] { opacity: .45; cursor: default; }
+.continuer-apres-la-reussite { min-width: 44px; }
 /* Suivi de l'espace parent : une colonne, tout passe à la ligne, aucune largeur fixe (360 px sans défilement horizontal). */
 .suivi-de-l-espace-parent {
   display: grid;

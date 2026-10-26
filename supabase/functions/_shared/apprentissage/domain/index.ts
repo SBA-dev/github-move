@@ -125,6 +125,9 @@ export type { TestDeDepartTermine } from "./test-de-depart.ts";
 export type { TestDeDepartTermineAEnregistrer } from "./test-de-depart-termine-a-enregistrer.ts";
 export { TestDeDepartId } from "./test-de-depart-id.ts";
 export { reserveDuTestDeDepart } from "./reserve-du-test-de-depart.ts";
+export { attenteAvantLEcranSuivant, DUREE_D_AFFICHAGE_SANS_VOIX_MS } from "./attente-avant-l-ecran-suivant.ts";
+export type { AttenteAvantLEcranSuivant } from "./attente-avant-l-ecran-suivant.ts";
+export { consigneAffichee } from "./exercices/consigne-affichee.ts";
 export { FileDeRevision } from "./file-de-revision.ts";
 export type {
   PlanDeSeanceDeRevision,

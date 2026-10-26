@@ -11,7 +11,7 @@ import {
 } from "./etapes-puis-exercices.steps.ts";
 import { estSurUnProfilReel } from "./profil-reel.ts";
 import { choisirSonProfil, modifierLeProfil } from "./profils-enfants.steps.ts";
-import { allerALaQuestion } from "./exercices-a-choix.steps.ts";
+import { allerALaQuestion, avancerJusquAuxChoix, bulleDeChoix, demarrer, textesDesChoix } from "./exercices-a-choix.steps.ts";
 import { After, Given, Then, When } from "./fixtures.ts";
 
 // --- Préparation du scénario (avant l'ouverture de la page)
@@ -28,6 +28,10 @@ export type Scenario = {
   prenom: string;
   sansProfil: boolean;
   voixImposee: string | undefined;
+  /** #79 : Léa relit la consigne pendant que Noisette lit la question ; `lotsAvant` = lectures déjà faites à ce moment-là. */
+  relitPendantLaQuestion: { relue: boolean; lotsAvant: number | undefined } | undefined;
+  /** #7 : Léa réécoute la consigne d'ouverture pendant qu'elle est lue (« Réécouter », actif pendant la présentation, 79.12). */
+  reecouteLaConsigneDOuverture: boolean;
 };
 
 const CLE_PROFIL_PREPARE = "savanturier:profil-prepare";
@@ -61,6 +65,8 @@ export function scenario(page: Page): Scenario {
       prenom: "Léa",
       sansProfil: false,
       voixImposee: undefined,
+      relitPendantLaQuestion: undefined,
+      reecouteLaConsigneDOuverture: false,
     };
     scenarios.set(page, etat);
   }
@@ -303,7 +309,7 @@ async function commencerLaSeanceDeTest(page: Page, etat: Scenario) {
   lecturesApresLaConsigne.set(page, (await journal(page)).lots);
 }
 
-/** La séance d'un exercice bulles dont la consigne est celle du scénario : Léa l'entend et la voit dans la bulle du personnage guide. */
+/** La séance d'un exercice bulles dont la consigne est celle du scénario : Léa l'entend et la voit affichée. */
 export async function ouvrir(page: Page) {
   const etat = scenario(page);
   if (etat.ouvert) return;
@@ -421,16 +427,24 @@ Given(/^Savanturier n'a jamais été ouvert sur la tablette$/, async ({ page }) 
   scenario(page).muet = false;
 });
 
+// Quand la page est déjà préparée (profil préparé du Contexte, #79), l'état de l'appareil choisi ensuite est réappliqué.
+async function reappliquerSiLaPageEstPreparee(page: Page) {
+  if (pagesPreparees.has(page)) await reappliquerLAppareil(page);
+}
+
 Given(/^la tablette est en Muet$/, async ({ page }) => {
   scenario(page).muet = true;
+  await reappliquerSiLaPageEstPreparee(page);
 });
 
 Given(/^le navigateur bloque la voix$/, async ({ page }) => {
   scenario(page).bloque = true;
+  await reappliquerSiLaPageEstPreparee(page);
 });
 
 Given(/^le navigateur ne sait pas lire à voix haute$/, async ({ page }) => {
   scenario(page).absent = true;
+  await reappliquerSiLaPageEstPreparee(page);
 });
 
 Given(/^le navigateur ne bloque plus la voix$/, async ({ page }) => {
@@ -442,6 +456,7 @@ Given(/^le navigateur ne bloque plus la voix$/, async ({ page }) => {
 
 Given(/^Noisette est en train de lire la consigne « (.+) »$/, async ({ page }, texte: string) => {
   scenario(page).consigne.texte = texte;
+  scenario(page).reecouteLaConsigneDOuverture = true;
   await ouvrir(page);
   await attendreUneLecture(page);
   expect((await journal(page)).actifs).toBeGreaterThan(0);
@@ -484,7 +499,27 @@ When(/^la consigne suivante s'affiche$/, async ({ page }) => {
 });
 
 When(/^Léa demande à réécouter la consigne$/, async ({ page }) => {
-  await page.getByRole("button", { name: "Réécouter" }).click();
+  await demarrer(page);
+  const etat = scenario(page);
+  const relire = page.getByRole("button", { name: "Relire la consigne", exact: true });
+  if (etat.relitPendantLaQuestion) {
+    await attendreUneLecture(page);
+    await terminerLaLecture(page);
+    // Le StrictMode du mode développement peut lire la consigne en deux lots : on attend la lecture de la question.
+    await expect.poll(async () => (await journal(page)).lecture.texte).toContain("Combien font");
+    // 79.12 : pendant la présentation de l'exercice, relire la consigne est inactif.
+    await expect(relire).toHaveAttribute("aria-disabled", "true");
+    // La présentation finie (les choix apparaissent), il devient actif.
+    await avancerJusquAuxChoix(page);
+    await expect(relire).not.toHaveAttribute("aria-disabled", "true");
+    etat.relitPendantLaQuestion.relue = true;
+    etat.relitPendantLaQuestion.lotsAvant = (await journal(page)).lots;
+  }
+  // #7 : la consigne d'ouverture est réécoutée pendant sa lecture, avec « Réécouter » (« Relire la consigne » y est inactif).
+  const bouton = etat.reecouteLaConsigneDOuverture
+    ? page.getByRole("button", { name: "Réécouter", exact: true })
+    : relire;
+  await bouton.click();
 });
 
 When(/^Léa quitte l'écran de la consigne$/, async ({ page }) => {
@@ -539,7 +574,8 @@ async function texteLuAvantLaLectureDesChoix(page: Page): Promise<string> {
 }
 
 Then(/^Léa entend de nouveau Noisette lire « ([^«»]+) »$/, async ({ page }, texte: string) => {
-  await expect.poll(async () => (await journal(page)).lots).toBe(2);
+  const lotsAvant = scenario(page).relitPendantLaQuestion?.lotsAvant;
+  await expect.poll(async () => (await journal(page)).lots).toBe(lotsAvant === undefined ? 2 : lotsAvant + 1);
   expect((await journal(page)).lecture.texte).toBe(normaliser(texte));
 });
 
@@ -581,6 +617,11 @@ Then(/^la lecture reprend depuis le début de la consigne$/, async ({ page }) =>
   await expect.poll(async () => (await journal(page)).lots).toBe((lecturesApresLaConsigne.get(page) ?? 1) + 1);
   const { lecture } = await journal(page);
   expect(lecture.texte).toBe(normaliser(scenario(page).consigne.texte));
+  // La reprise va jusqu'au bout : la consigne relue terminée, l'exercice s'ouvre sur sa question et ses choix.
+  await terminerLaLecture(page);
+  await expect(bulle(page)).toContainText(QUESTION_DE_LA_LECON_DE_TEST);
+  await avancerJusquAuxChoix(page);
+  for (const choix of ["1", "2", "3"]) await expect(bulleDeChoix(page, choix)).toBeVisible();
 });
 
 Then(/^Léa n'entend jamais deux lectures en même temps$/, async ({ page }) => {
@@ -636,18 +677,42 @@ Then(/^Léa entend Noisette lire la consigne$/, async ({ page }) => {
 
 // --- Alors : affichage
 
+/** La consigne affichée, à sa place à elle au-dessus de l'exercice (#79), en dehors de la bulle du personnage guide. */
+export function consigneAffichee(page: Page) {
+  return page.getByTestId("consigne");
+}
+
 Then(/^Léa voit la consigne « (.+) »$/, async ({ page }, texte: string) => {
-  await expect(bulle(page)).toHaveText(normaliser(texte));
+  await expect(consigneAffichee(page)).toHaveText(normaliser(texte));
 });
 
 Then(/^Léa voit la question « (.+) »$/, async ({ page }, question: string) => {
   await expect(page.getByTestId("question")).toHaveText(normaliser(question));
+  if (scenario(page).relitPendantLaQuestion?.relue) {
+    // La question reste posée : on termine les lectures en cours, et les choix doivent venir.
+    await avancerJusquAuxChoix(page);
+    await expect(page.getByTestId("question")).toHaveText(normaliser(question));
+    expect([...(await textesDesChoix(page))].sort()).toEqual(["1", "2", "3"]);
+  }
 });
 
 Then(/^Léa voit le message « (.+) »$/, async ({ page }, message: string) => {
   const statut = page.getByRole("status").filter({ hasText: message });
   const messageDeLEcoute = page.getByTestId("ecoute-sans-son").filter({ hasText: message });
   await expect(statut.or(messageDeLEcoute)).toHaveCount(1);
+});
+
+Then(/^Léa voit un seul message de voix bloquée$/, async ({ page }) => {
+  await expect(messageDeVoixBloquee(page)).toHaveCount(1);
+  await expect(page.getByText("est bloquée par ce navigateur")).toHaveCount(1);
+});
+
+// Le faux navigateur ne termine une lecture que sur demande : la lecture réussie de la voix revenue se termine ici.
+Then(/^Léa ne voit plus le message de voix bloquée$/, async ({ page }) => {
+  await expect.poll(async () => {
+    await terminerLaLecture(page);
+    return await messageDeVoixBloquee(page).count();
+  }, { intervals: [100] }).toBe(0);
 });
 
 Then(/^le message de voix bloquée n'apparaît pas de nouveau$/, async ({ page }) => {
@@ -658,7 +723,7 @@ Then(/^le message de voix bloquée n'apparaît pas de nouveau$/, async ({ page }
 
 Then(/^chaque mot de la consigne est surligné au moment où Noisette le prononce$/, async ({ page }) => {
   await attendreUneLecture(page);
-  const mots = await bulle(page).locator("[data-mot]").allTextContents();
+  const mots = await consigneAffichee(page).locator("[data-mot]").allTextContents();
   expect(mots.length).toBeGreaterThan(0);
   for (const [rang, mot] of mots.entries()) {
     await page.evaluate((rangDuMot) => {
@@ -677,7 +742,7 @@ Then(/^chaque mot de la consigne est surligné au moment où Noisette le prononc
         motsAvant += debuts.length;
       }
     }, rang);
-    const surligne = bulle(page).locator("[data-prononce='true']");
+    const surligne = consigneAffichee(page).locator("[data-prononce='true']");
     await expect(surligne).toHaveCount(1);
     await expect(surligne).toHaveText(mot);
     await expect(surligne).toHaveAttribute("data-mot", String(rang));
@@ -686,7 +751,7 @@ Then(/^chaque mot de la consigne est surligné au moment où Noisette le prononc
 
 Then(/^plus aucun mot n'est surligné quand la lecture est finie$/, async ({ page }) => {
   await terminerLaLecture(page);
-  await expect(bulle(page).locator("[data-prononce='true']")).toHaveCount(0);
+  await expect(consigneAffichee(page).locator("[data-prononce='true']")).toHaveCount(0);
 });
 
 // --- Alors : Son / Muet

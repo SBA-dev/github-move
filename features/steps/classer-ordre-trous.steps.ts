@@ -63,7 +63,7 @@ function itemsDe(exercice: Exercice): Item[] {
   return exercice.items as Item[];
 }
 
-function elementsDe(exercice: Exercice): string[] {
+export function elementsDe(exercice: Exercice): string[] {
   return exercice.elements as string[];
 }
 
@@ -71,7 +71,7 @@ function motsAttendusDe(exercice: Exercice): string[] {
   return [...(exercice.texte as string).matchAll(/\[([^\]]+)\]/g)].flatMap((m) => (m[1] === undefined ? [] : [m[1]]));
 }
 
-async function exerciceEnCours(page: Page): Promise<Exercice> {
+export async function exerciceEnCours(page: Page): Promise<Exercice> {
   const zone = page.getByTestId("exercice-en-cours");
   await expect(zone).toBeVisible();
   const position = Number(await zone.getAttribute("data-position"));
@@ -161,7 +161,7 @@ async function toucherUneEtiquetteDeLOrdre(page: Page, etiquette: string, quelle
   await (quelle === "premiere" ? boutons.first() : boutons.last()).click();
 }
 
-async function poserEtAttendreLOrdre(page: Page, etiquette: string) {
+export async function poserEtAttendreLOrdre(page: Page, etiquette: string) {
   const avant = await page.locator('[data-testid="place"][data-remplie="true"]').count();
   await toucherUneEtiquetteDeLOrdre(page, etiquette);
   await expect(page.locator('[data-testid="place"][data-remplie="true"]')).toHaveCount(avant + 1);
@@ -280,7 +280,7 @@ When(/^Tom choisit seulement l'exercice « (.+) »$/, async ({ page }, titre: st
   await commencerSeulementLExercice(page, titre);
 });
 
-async function jouerJusquAuxEtiquettes(page: Page) {
+export async function jouerJusquAuxEtiquettes(page: Page) {
   const continuer = page.getByRole("button", { name: "Continuer", exact: true });
   await expect.poll(async () => {
     if (await page.getByTestId("etiquettes").isVisible()) return true;

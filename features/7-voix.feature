@@ -142,7 +142,7 @@ Fonctionnalité: Lecture à voix haute par le personnage guide
       Étant donné que le navigateur bloque la voix
       Et que Léa a déjà vu le message de voix bloquée
       Quand la consigne suivante s'affiche
-      Alors le message de voix bloquée n'apparaît pas de nouveau
+      Alors Léa voit un seul message de voix bloquée
 
     @issue-58
     Scénario: Réécouter permet de réessayer quand la voix était bloquée
