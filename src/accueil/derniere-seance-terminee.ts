@@ -4,13 +4,17 @@ import {
   derniereSeanceTermineePendantLUtilisation,
   type SeanceTermineeConnue,
 } from "../seance/fin-de-seance/seances-terminees-pendant-l-utilisation.ts";
+import { jourDeLaSeance } from "../seance/jour-de-la-seance.ts";
 import { lireLaDerniereSeanceTerminee } from "./lecture-de-la-derniere-seance-terminee-supabase.ts";
 
 async function seancesGardeesDuProfil(profil: string): Promise<SeanceTermineeConnue[]> {
   const parent = await parentConnecte();
   if (parent === undefined) return [];
   const gardees = await new SeancesGardeesSurLAppareil().lire(parent);
-  return gardees.filter((corps) => corps.enfant === profil).map((corps) => ({ lecon: corps.lecon, termineeLe: new Date(corps.termineeLe) }));
+  return gardees.filter((corps) => corps.enfant === profil).map((corps) => {
+    const termineeLe = new Date(corps.termineeLe);
+    return { lecon: corps.lecon, termineeLe, jour: jourDeLaSeance(corps.jour, termineeLe) };
+  });
 }
 
 function laPlusRecente(seances: readonly SeanceTermineeConnue[]): SeanceTermineeConnue | undefined {

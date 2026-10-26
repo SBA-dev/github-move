@@ -49,6 +49,12 @@ export function usePersonnageQuiParle({ lire, couperLaVoix }: Pick<Voix, "lire" 
     return estLaDerniere();
   }, [lire]);
 
+  /** Affiche la phrase dans la bulle sans la dire : la voix la dira plus tard, ou pas. */
+  const montrer = useCallback((aMontrer: ParoleADire) => {
+    derniereParole.current = aMontrer;
+    setParole(aMontrer);
+  }, []);
+
   const reecouter = useCallback(() => {
     if (derniereParole.current) void dire(derniereParole.current);
   }, [dire]);
@@ -62,5 +68,5 @@ export function usePersonnageQuiParle({ lire, couperLaVoix }: Pick<Voix, "lire" 
     couperLaVoix();
   }, [couperLaVoix]);
 
-  return { parole, rangDuMotPrononce, humeur, paroleEntendue, dire, reecouter, faireSilence, montrerHumeur };
+  return { parole, rangDuMotPrononce, humeur, paroleEntendue, dire, reecouter, faireSilence, montrerHumeur, montrer };
 }

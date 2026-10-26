@@ -1,5 +1,5 @@
 # language: fr
-@issue-30 @wip
+@issue-30
 Fonctionnalité: Série : jours d'affilée avec au moins une séance
   En tant qu'enfant
   Je veux voir combien de jours d'affilée j'ai joué
@@ -117,7 +117,6 @@ Fonctionnalité: Série : jours d'affilée avec au moins une séance
       Quand Léa revient à l'accueil par le nom de l'application
       Alors la pastille de série dit « Une petite leçon pour bien commencer ? »
 
-    @depend-de-28
     Scénario: Une séance de révision terminée aujourd'hui compte tout de suite pour la série
       Étant donné que la bibliothèque de test des révisions est servie
       Et que Léa a terminé une séance chacun de ces jours : hier
@@ -126,7 +125,6 @@ Fonctionnalité: Série : jours d'affilée avec au moins une séance
       Quand Léa choisit « Accueil » à la fin de la séance de révision
       Alors la pastille de série dit « 2 jours d'affilée, bravo ! »
 
-    @depend-de-28
     Scénario: Les séances de révision et les séances terminées comptent ensemble pour la série
       Étant donné que Léa a terminé une séance chacun de ces jours : aujourd'hui et il y a 2 jours
       Et que Léa a terminé une séance de révision chacun de ces jours : aujourd'hui et hier
@@ -158,7 +156,6 @@ Fonctionnalité: Série : jours d'affilée avec au moins une séance
 
   Règle: La pastille de série se lit à voix haute, tient dans un petit écran et reste immobile avec les mouvements réduits
 
-    @depend-de-29
     Scénario: Avec « tout lire à voix haute », le personnage guide dit la salutation et la pastille de série en une seule lecture
       Étant donné que Paul a réglé « tout lire à voix haute » sur « oui » pour Léa
       Et que Léa a terminé une séance chacun de ces jours : aujourd'hui, hier et il y a 2 jours

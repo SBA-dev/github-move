@@ -85,6 +85,9 @@ export {
   type SeancesConnues,
   type SeanceTermineeDUnJour,
 } from "./faits-du-jour.ts";
+export { JoursDeSeance } from "./jours-de-seance.ts";
+export { type Serie, serieDeJours } from "./serie.ts";
+export { saluerAvecLaSerie, texteDeLaPastille } from "./paroles-de-la-serie.ts";
 export { type Badge, badgeGagneParLaSeance, badgesDuProfil, nomDuBadge } from "./badges.ts";
 export {
   finDePhraseDuBadge,

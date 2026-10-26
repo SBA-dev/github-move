@@ -20,6 +20,7 @@ const fait: SeanceTerminee = {
   lecon: "ma-cp-calcul",
   choix: ChoixDeSeance.unExercice(1),
   termineeLe: new Date("2026-10-23T10:15:00.000Z"),
+  jour: Jour.de("2026-10-23"),
   etoiles: 2,
   erreurs: 3,
   questionsRatees: [
@@ -37,6 +38,7 @@ Deno.test("la séance terminée devient une ligne de seances_terminees", () => {
     lecon: "ma-cp-calcul",
     choix: { genre: "unExercice", position: 1 },
     termine_le: "2026-10-23T10:15:00.000Z",
+    jour: "2026-10-23",
     etoiles: 2,
     erreurs: 3,
     par_type: { bulles: { reussites: 4, erreurs: 2 }, ecoute: { reussites: 2, erreurs: 1 } },
@@ -49,6 +51,7 @@ Deno.test("la ligne d'une séance ne garde que son résumé : ni réponse, ni ti
     "erreurs",
     "etoiles",
     "id",
+    "jour",
     "lecon",
     "par_type",
     "profil",
@@ -71,6 +74,12 @@ Deno.test("la ligne d'une séance de fluence seule, sans étoiles, a etoiles à 
   const { etoiles: _etoiles, ...sansEtoiles } = fait;
 
   assertEquals(ligneDeLaSeanceTerminee(sansEtoiles).etoiles, null);
+});
+
+const { jour: _jour, ...faitSansJour } = fait;
+
+Deno.test("la séance envoyée sans jour par une ancienne version du front a jour à null", () => {
+  assertEquals(ligneDeLaSeanceTerminee(faitSansJour).jour, null);
 });
 
 const resultat = ResultatDeLaLecon.reconstituer({
@@ -100,6 +109,7 @@ const parametresSansFile = {
   p_lecon: "ma-cp-calcul",
   p_choix: { genre: "unExercice", position: 1 },
   p_termine_le: "2026-10-23T10:15:00.000Z",
+  p_jour: "2026-10-23",
   p_etoiles: 2,
   p_erreurs: 3,
   p_par_type: { bulles: { reussites: 4, erreurs: 2 }, ecoute: { reussites: 2, erreurs: 1 } },
@@ -160,4 +170,40 @@ Deno.test("sans file de révision, l'enregistrement de la séance appelle toujou
 
   assertEquals(faux.appels, [{ fonction: "enregistrer_la_seance_terminee", parametres: parametresSansFile }]);
   assertEquals(issue, "enregistree");
+});
+
+Deno.test("sans jour de l'appareil, la fonction Postgres reçoit p_jour à null", async () => {
+  const faux = clientSupabaseFactice({ reponseDeFonction: { data: true } });
+
+  await new SeancesTermineesSupabase(faux.client).enregistrerAvecLeResultat(faitSansJour, resultat, 3);
+
+  assertEquals(faux.appels, [{
+    fonction: "enregistrer_la_seance_terminee",
+    parametres: { ...parametresSansFile, p_jour: null },
+  }]);
+});
+
+Deno.test("avec une file de révision, la fonction Postgres reçoit aussi le jour de l'appareil", async () => {
+  const faux = clientSupabaseFactice({ reponseDeFonction: { data: "enregistree" } });
+
+  await new SeancesTermineesSupabase(faux.client)
+    .enregistrerAvecLeResultat(fait, resultat, 3, { file, versionLue: 6 });
+
+  assertEquals(faux.appels[0].parametres.p_jour, "2026-10-23");
+});
+
+Deno.test("la séance enregistrée sans résultat transmet le jour de l'appareil, ou null s'il manque", async () => {
+  const faux = clientSupabaseFactice({ reponseDeFonction: { data: true } });
+  const seances = new SeancesTermineesSupabase(faux.client);
+
+  await seances.enregistrerSansResultat(fait);
+  await seances.enregistrerSansResultat(faitSansJour);
+
+  assertEquals(
+    faux.appels.map((appel) => [appel.fonction, appel.parametres.p_jour]),
+    [
+      ["enregistrer_la_seance_terminee_sans_resultat", "2026-10-23"],
+      ["enregistrer_la_seance_terminee_sans_resultat", null],
+    ],
+  );
 });

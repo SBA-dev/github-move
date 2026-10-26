@@ -237,7 +237,8 @@ Given(/^Léa a un profil enfant préparé de niveau (\S+) dans l'univers « (.+)
   // Les scénarios de #24, #25 et #26 réécrits par #29 gardent la bibliothèque de leur story.
   const accueilSeul = utiliseLaBibliothequeDeLAccueil($tags);
   if (accueilSeul) await servirLaBibliothequeDeLAccueil(page);
-  if ($tags.includes("@issue-24") || accueilSeul || $tags.includes("@issue-25") || $tags.includes("@issue-26") || $tags.includes("@issue-27") || cabaneSurLeServeur) {
+  // Story #30 : les jours de séance sont lus sous RLS pour le vrai profil de Léa.
+  if ($tags.includes("@issue-24") || accueilSeul || $tags.includes("@issue-25") || $tags.includes("@issue-26") || $tags.includes("@issue-27") || $tags.includes("@issue-30") || cabaneSurLeServeur) {
     await jouerAvecLeProfilReel(famille, monde, page);
   }
 });

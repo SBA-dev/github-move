@@ -389,6 +389,15 @@ button.secondaire:hover { background: #fdf3ea; }
 .accueil-de-l-enfant { display: grid; justify-items: center; gap: 12px; max-width: 100%; }
 .accueil-de-l-enfant > * { max-width: 100%; }
 .date-du-jour { margin: 0; padding: 6px 14px; border-radius: 16px; background: rgba(255, 255, 255, .85); font-weight: 700; }
+.pastille-de-serie { display: flex; align-items: center; justify-content: center; gap: 8px; max-width: min(100%, 480px); margin: 0; padding: 6px 14px; border-radius: 16px; background: rgba(255, 255, 255, .85); font-weight: 700; text-align: center; overflow-wrap: anywhere; }
+.flamme-de-la-serie { flex: none; display: inline-block; }
+@media (prefers-reduced-motion: no-preference) {
+  .flamme-de-la-serie { animation: vacillement-de-la-flamme 2.4s ease-in-out infinite; transform-origin: 50% 90%; }
+}
+@keyframes vacillement-de-la-flamme {
+  0%, 100% { transform: scale(1) rotate(-2deg); }
+  50% { transform: scale(1.08) rotate(2deg); }
+}
 .grande-tuile { display: grid; justify-items: center; gap: 8px; width: min(100%, 480px); margin: 0; padding: 16px; border: 3px solid var(--accent-fonce); border-radius: 20px; background: #fff; overflow-wrap: anywhere; }
 .grande-tuile h2, .grande-tuile p { margin: 0; }
 .grande-tuile .matiere-et-niveau { font-weight: 700; color: var(--accent-fonce); }
@@ -421,7 +430,7 @@ button.tuile .nom-de-la-tuile, button.tuile .nom-de-la-matiere { font-size: 1.1r
   word-spacing: inherit;
   line-height: inherit;
 }
-[data-mode-dys="true"] :is(.consigne, .bulle, .pastille, .question, .bulle-de-choix, .etiquette, .texte-a-trous, .carte-de-la-poesie) {
+[data-mode-dys="true"] :is(.consigne, .bulle, .pastille, .pastille-de-serie, .question, .bulle-de-choix, .etiquette, .texte-a-trous, .carte-de-la-poesie) {
   overflow-wrap: anywhere;
   line-height: inherit;
 }
