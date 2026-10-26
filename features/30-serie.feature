@@ -1,5 +1,5 @@
 # language: fr
-@issue-30 @wip
+@issue-30
 Fonctionnalité: Série : jours d'affilée avec au moins une séance
   En tant qu'enfant
   Je veux voir combien de jours d'affilée j'ai joué

@@ -1,5 +1,6 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 import { decalagesDesJoursDits, ecrireDesSeancesDeRevisionPourLaSerie, ecrireDesSeancesTermineesPourLaSerie, jourPrepare, lireLesJoursDeSeanceEnRest } from "../support/serie-api.ts";
+import { reglagesPrevus } from "../support/reglages-prevus.ts";
 import { lireEnRest } from "../support/seances-api.ts";
 import { entendu } from "./etapes-puis-exercices.steps.ts";
 import { partie } from "./etoiles-et-fin-de-seance.steps.ts";
@@ -34,17 +35,47 @@ async function allerDansLApplication(page: Page, chemin: string): Promise<void> 
   }, chemin);
 }
 
-/**
- * Léa quitte son accueil puis y revient, sans recharger l'application, et attend que la pastille de série soit là : les jours de
- * séance que le serveur vient de recevoir sont alors lus (et gardés par l'application pour un passage sans réseau).
- */
-async function repasserParLAccueil(page: Page): Promise<void> {
-  if (!(await accueilDeLEnfant(page).isVisible())) return;
+/** Léa quitte son accueil puis y revient, sans recharger l'application : les jours de séance que le serveur vient de recevoir sont lus. */
+async function repasserParLAccueilSansRecharger(page: Page): Promise<void> {
   await allerDansLApplication(page, "/medailles");
   await expect(accueilDeLEnfant(page)).toHaveCount(0);
   await allerDansLApplication(page, "/jeu");
+}
+
+/**
+ * Quand Paul a changé un réglage de Léa (« tout lire à voix haute »), la copie des profils gardée sur l'appareil est périmée : on
+ * rouvre Savanturier et on attend la liste relue avant de choisir Léa, pour que ses réglages soient ceux de Paul.
+ */
+async function rouvrirEtChoisirLea(page: Page): Promise<void> {
+  const listeRelue = page.waitForResponse((reponse) =>
+    reponse.url().includes("/rest/v1/profils_enfants") && reponse.request().method() === "GET"
+  );
+  await page.goto("/");
+  await listeRelue;
+  await deuxImages(page);
+  await choisirSonProfil(page, "Léa");
+}
+
+/**
+ * Léa passe par son accueil et attend la pastille de série : l'application lit les jours de séance que le serveur vient de recevoir
+ * et les garde pour un passage sans réseau.
+ */
+async function repasserParLAccueil(page: Page): Promise<void> {
+  if (!(await accueilDeLEnfant(page).isVisible())) return;
+  if (Object.keys(reglagesPrevus(page, "Léa")).length > 0) await rouvrirEtChoisirLea(page);
+  else await repasserParLAccueilSansRecharger(page);
   await expect(accueilDeLEnfant(page)).toBeVisible();
   await expect(pastilleDeSerie(page)).toBeVisible({ timeout: DELAI_D_UN_APPEL_SERVEUR_MS });
+}
+
+/**
+ * L'accueil de Léa. Le nom de l'application ramène à « Qui joue ? » : Léa s'y choisit de nouveau, dans l'application (sans recharger,
+ * ce qui effacerait les séances jouées pendant l'utilisation), comme le font les étapes de #29.
+ */
+async function surLAccueilDeLea(page: Page): Promise<void> {
+  await accueilDeLEnfant(page).or(page.getByTestId("qui-joue")).first().waitFor({ timeout: DELAI_D_UN_APPEL_SERVEUR_MS });
+  if (!(await accueilDeLEnfant(page).isVisible())) await choisirSonProfil(page, "Léa");
+  await expect(accueilDeLEnfant(page)).toBeVisible();
 }
 
 // --- Étant donné : les profils
@@ -105,6 +136,7 @@ When(/^Claire demande les jours de séance du profil enfant de Léa$/, async ({ 
 // --- Alors : la pastille de série
 
 async function verifierLaPastille(page: Page, texte: string): Promise<void> {
+  await surLAccueilDeLea(page);
   const pastille = pastilleDeSerie(page);
   await expect(pastille).toBeVisible({ timeout: DELAI_D_UN_APPEL_SERVEUR_MS });
   await expect(pastille.getByText(texte, { exact: true })).toBeVisible();
@@ -127,7 +159,7 @@ Then(/^la pastille de série dit « ([^«»]+) » sur le téléphone de Paul$/, 
 
 // L'absence ne prouve rien tant que l'accueil n'a pas fini de lire : on attend la fin des échanges et deux images, plusieurs fois.
 Then(/^l'accueil de Léa n'affiche pas de pastille de série$/, async ({ page }) => {
-  await expect(accueilDeLEnfant(page)).toBeVisible({ timeout: DELAI_D_UN_APPEL_SERVEUR_MS });
+  await surLAccueilDeLea(page);
   for (let essai = 0; essai < 3; essai++) {
     await page.waitForLoadState("networkidle");
     await deuxImages(page);
@@ -142,6 +174,7 @@ type LectureDeLaPastille = { texte: string; cachee: boolean };
 // Même texte que l'étape de #25 (bouton du parcours) : ici, c'est le texte de la pastille de série que lit un lecteur d'écran,
 // sans ce qui est caché (la flamme).
 Then(/^les lecteurs d'écran annoncent « ([^«»]+) »$/, { tags: "@issue-30" }, async ({ page }, annonce: string) => {
+  await surLAccueilDeLea(page);
   const pastille = pastilleDeSerie(page);
   await expect(pastille).toBeVisible({ timeout: DELAI_D_UN_APPEL_SERVEUR_MS });
   const lue = await pastille.evaluate((element): LectureDeLaPastille => {
@@ -215,7 +248,9 @@ Then(/^Léa entend Noisette lire « ([^«»]+) »$/, { tags: "@issue-30" }, asyn
     if (lots.includes(voulu)) return true;
     if (lots.length > 0) await terminerLaLecture(page);
     return false;
-  }, { intervals: [100], timeout: DELAI_D_UN_APPEL_SERVEUR_MS }).toBe(true);
+  }, { intervals: [100], timeout: DELAI_D_UN_APPEL_SERVEUR_MS }).toBe(true).catch(async (ecart: unknown) => {
+    throw new Error(`« ${voulu} » n'est pas lu ; lectures : ${JSON.stringify(await lecturesParLot(page))}`, { cause: ecart });
+  });
 });
 
 Then(/^Léa entend la salutation une seule fois$/, async ({ page }) => {
