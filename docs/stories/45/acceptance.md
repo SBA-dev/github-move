@@ -58,7 +58,7 @@ Chaque vérification est un script (avec son test) lancé par la procédure de p
 
 | # | Vérification | Exemple qui passe | Exemple qui échoue | Quand |
 |---|---|---|---|---|
-| V1 | **Aucun secret dans `dist/`** (C6) | seules l'adresse du projet et la clé publique `anon` sont présentes | le build contient une clé dont le rôle est `service_role`, ou le texte `SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`, `SEND_EMAIL_HOOK_SECRET`, un jeton de gestion (`sbp_…`), `profil-prepare` (0021) | après `npm run build`, avant toute publication |
+| V1 | **Aucun secret dans `dist/`** (C6) | seules l'adresse du projet et la clé publique `anon` sont présentes | le build contient une clé dont le rôle est `service_role`, ou le texte `SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`, `SEND_EMAIL_HOOK_SECRET`, un jeton de gestion (`sbp_…`), `profil-prepare` (0021), ou les valeurs fictives des pages légales du développement (`exemple.test`) | après `npm run build`, avant toute publication |
 | V2 | **RLS active sur chaque table de `public`** (C10) | toutes les tables ont la RLS ; seules `boite_de_test_emails`, `essais_de_reinitialisation` et `tests_de_depart_comptes` n'ont aucune policy (liste fermée, 45.27) | une table sans RLS, ou une autre table sans policy | sur `savanturier-dev` à chaque story qui ajoute une migration ; sur la production après les migrations |
 | V3 | **Région Irlande** (45.4) | le projet de production est en Irlande (`eu-west-1`) ; une Edge Function répond depuis cette région (en-tête de réponse) | projet ou fonction hors de l'Irlande | après la création du projet ; après chaque publication des fonctions |
 | V4 | **En-têtes de l'adresse publiée chez alwaysdata** (C1) | `sw.js` et `index.html` : `no-cache` ; `manifest.webmanifest`, `bibliotheque.json`, `programmes-index.json` : revalidés ; `/assets/<nom haché>` : cache long immuable ; `http://` redirigé vers `https://` ; HSTS d'un an sans « preload » (45.23). Ces en-têtes viennent de la configuration d'alwaysdata (`.htaccess` publié avec le front, ou réglages du site, C1) | `sw.js` ou `index.html` gardés par le navigateur (`max-age` > 0 sans revalidation) ; en-têtes par défaut d'alwaysdata (signe que la configuration n'est pas lue) ; pas de redirection vers HTTPS | après chaque publication du front |
@@ -67,7 +67,7 @@ Chaque vérification est un script (avec son test) lancé par la procédure de p
 | V7 | **Configuration d'Auth de production** (C7) | adresse du site et adresses de retour sur l'adresse de production (alwaysdata) ; inscriptions publiques fermées (un `signUp` public est refusé) ; confirmations désactivées ; longueur minimale 8 | une adresse en `localhost` ou sur `savanturier-dev` ; inscription publique ouverte | après le réglage d'Auth |
 | V8 | **Secrets des fonctions** (C9) | aucun `ANTHROPIC_API_KEY` tant que l'IA n'est pas là | une clé d'IA présente sans story qui l'utilise | après la publication des fonctions |
 | V9 | **Aucune donnée de test en production** (C13) | aucun parent en `@exemple.test` ; `seed.sql` jamais appliqué | un parent ou un profil de test des scénarios courants en production | après les migrations |
-| V10 | **Tâche planifiée active** (C11) | l'effacement des essais de réinitialisation de plus de 24 h est planifié en production | tâche absente ou en échec | après les migrations |
+| V10 | **Tâche planifiée active** (C11) | l'effacement des essais de réinitialisation de plus de 24 h est planifié en production, et son dernier passage (`cron.job_run_details`) a réussi | tâche absente, ou dernier passage en échec | après les migrations |
 | V11 | **Version publiée** | la version du service worker servi par l'adresse de production est celle du commit publié | ancienne version encore servie | après la publication du front |
 | V12 | **Projet de production actif** (offre Free) | le projet répond (il n'est pas en pause) | projet en pause : la procédure dit de le réveiller avant de continuer | au début de chaque publication, et à chaque passage de la tâche planifiée qui maintient le projet actif (voir M5) |
 
@@ -146,6 +146,10 @@ Réponses du PO le **2026-10-26** (commentaire `[Responsable]` sur #45, 15:30 UT
   Décision : **une tâche planifiée Claude maintient le projet de production actif**, par une activité réelle, plus souvent qu'une fois par semaine. La procédure (C14, M5) garde le **réveil manuel** depuis le tableau de bord de Supabase, en secours. Dans la story, l'équipe vérifie : ce que Supabase compte comme activité pour l'offre gratuite ; que le conteneur cloud atteint l'adresse de production ; qu'aucune donnée d'enfant n'est lue (parent de test seulement, aucun secret dans le prompt de la tâche).
 - **45.32 Où faire la restauration d'essai ?** Réponse : « Reco ».
   Décision : la restauration d'essai se fait sur une **base locale de la machine du PO** (`supabase start`, avec Docker), effacée juste après l'essai, qui a lieu avant l'arrivée des familles. Ni la production ni `savanturier-dev` (0010 n°3).
+- **45.33 à 45.35** (réponse du PO du 2026-10-26, relayée par le responsable à 20:11 UTC, mot pour mot : « 45. Reco OK mais tu'peux pas publier le site toi même et créer le compte always data également »). Lecture :
+  - **45.33 Qui publie le front ?** La session de publication, par **WebDAV** d'alwaysdata (repli : `rsync` depuis la machine du PO). Le compte alwaysdata et le projet Supabase de production sont créés par le **PO**.
+  - **45.34 Durée de garde d'une sauvegarde manuelle** : **30 jours**, puis effacée.
+  - **45.35 Fréquence de la tâche planifiée** (45.31) : **tous les 2 jours, la nuit**.
 
 ## Questions ouvertes
 
