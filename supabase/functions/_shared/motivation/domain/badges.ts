@@ -12,16 +12,18 @@ export function nomDuBadge(lecon: Lecon): string {
 }
 
 export function badgesDuProfil(acquises: ReadonlySet<string>, lecons: readonly Lecon[]): Badge[] {
-  const leconsParCle = new Map<string, Lecon[]>();
+  const regroupement = new Map<string, { premiere: Lecon; ids: string[] }>();
   for (const lecon of lecons.filter((candidate) => acquises.has(candidate.id)).sort(comparerDansLeCatalogue)) {
     const cle = cleDuBadge(lecon);
-    leconsParCle.set(cle, [...(leconsParCle.get(cle) ?? []), lecon]);
+    const existant = regroupement.get(cle);
+    if (existant) existant.ids.push(lecon.id);
+    else regroupement.set(cle, { premiere: lecon, ids: [lecon.id] });
   }
-  return [...leconsParCle].map(([cle, leconsDuBadge]) => ({
+  return [...regroupement].map(([cle, { premiere, ids }]) => ({
     cle,
-    nom: nomDuBadge(leconsDuBadge[0]),
-    matiere: leconsDuBadge[0].matiere.code,
-    lecons: leconsDuBadge.map((lecon) => lecon.id),
+    nom: nomDuBadge(premiere),
+    matiere: premiere.matiere.code,
+    lecons: ids,
   }));
 }
 
