@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { leconsAcquises } from "@domain/apprentissage";
 import { type Badge, badgesDuProfil } from "@domain/motivation";
-import { lireLesMeilleuresEtoilesDuProfil } from "../seance/fin-de-seance/meilleures-etoiles-du-profil-lues.ts";
+import { lireLesMeilleuresEtoilesDuProfilSiLisibles } from "../seance/fin-de-seance/meilleures-etoiles-du-profil-lues.ts";
 import { chargerToutesLesLecons } from "../seance/bibliotheque.ts";
 
 export type LectureDesBadges = {
@@ -11,7 +11,7 @@ export type LectureDesBadges = {
 };
 
 async function lesBadgesDuProfil(profil: string): Promise<readonly Badge[] | undefined> {
-  const meilleures = await lireLesMeilleuresEtoilesDuProfil(profil);
+  const meilleures = await lireLesMeilleuresEtoilesDuProfilSiLisibles(profil);
   if (meilleures === undefined) return undefined;
   return badgesDuProfil(leconsAcquises(meilleures), await chargerToutesLesLecons());
 }
