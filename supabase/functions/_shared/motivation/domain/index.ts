@@ -113,3 +113,4 @@ export {
   NombreDeSeancesInvalide,
 } from "./histoire.ts";
 export { SeancesTermineesDuProfil } from "./seances-terminees-du-profil.ts";
+export { type TuileDEpisode, tuilesDeLHistoire } from "./tuiles-de-l-histoire.ts";
