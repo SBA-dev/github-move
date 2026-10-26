@@ -126,12 +126,11 @@ Fonctionnalité: Mise en ligne de Savanturier pour la beta
       Quand Paul ouvre la politique de confidentialité depuis l'écran de connexion
       Alors il y lit qu'une demande de suppression des données envoyée depuis l'adresse e-mail de son compte est traitée sous 7 jours
 
-    @depend-de-73
     Scénario: Sur les pages légales, le personnage guide ne lit rien de lui-même
       Étant donné que personne n'est connecté sur la tablette
       Quand Paul ouvre la politique de confidentialité depuis l'écran de connexion
       Alors il lit la politique de confidentialité de Savanturier
-      Mais le personnage guide ne lit rien de lui-même
+      Mais Paul n'entend aucune voix
 
     Plan du Scénario: La page « <page> » tient dans la largeur d'un téléphone de 360 px
       Étant donné que l'écran de l'appareil mesure 360 px de large
