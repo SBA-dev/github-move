@@ -6,6 +6,7 @@ import { lireEnRestLeNiveauDuProfil } from "../support/profils-api.ts";
 import { meilleuresEtoilesEnRest } from "../support/seances-api.ts";
 import { After, Given, Then, When } from "./fixtures.ts";
 import { commencerLaSeanceComplete, etat as etatDeLaLecon, type LeconBrute, leconDeTitre, ouvrirLaPageDeLaLecon } from "./etapes-puis-exercices.steps.ts";
+import { gagnerDesEtoilesParUnExerciceSeul } from "./etoiles-et-fin-de-seance.steps.ts";
 import { choisirLeaSur } from "./profil-reel.ts";
 import { choisirSonProfil, connecterSiBesoin, etat as etatDeLaFamille, jetonDe, ouvrirQuiJoue, profilDe } from "./profils-enfants.steps.ts";
 import { preparerLaPage, scenario, terminerLaLecture } from "./voix.steps.ts";
@@ -320,9 +321,14 @@ async function jouerLaSeanceJusquALaFin(page: Page, lecon: LeconBrute, erreurs: 
 
 Given(
   /^Léa a gagné 2 étoiles à la leçon « ([^«»]+) » sur la tablette$/,
-  { tags: "@issue-39" },
-  async ({ famille, page }, titre: string) => {
+  { tags: "@issue-39 or @issue-31" },
+  async ({ famille, page, $tags }, titre: string) => {
     const lecon = leconDeTitre(page, titre);
+    // Story #31 : une leçon de la bibliothèque se joue par un exercice seul (la séance complète dépasse le délai d'un scénario).
+    if ($tags.includes("@issue-31") && !lecon.id.startsWith("perso-")) {
+      await gagnerDesEtoilesParUnExerciceSeul(famille, page, titre, 2);
+      return;
+    }
     await jouerAvecLeaReelle(page);
     await ouvrirLaPageDeLaLecon(page, titre);
     await commencerLaSeanceComplete(page);

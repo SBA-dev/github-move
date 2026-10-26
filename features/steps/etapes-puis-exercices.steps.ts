@@ -96,11 +96,21 @@ export async function injecter(page: Page, lecon: LeconBrute) {
   if (estSurUnProfilReel(page)) await rechargerAvecLeProfilReel(page);
 }
 
+// Story #31 : une leçon personnelle n'est jamais dans la bibliothèque (elle vient du serveur, pour son profil seulement).
+const sansLeconsPersonnellesDansLaBibliotheque = new WeakSet<Page>();
+
+export function neServirQueLaBibliothequeSansLeconsPersonnelles(page: Page): void {
+  sansLeconsPersonnellesDansLaBibliotheque.add(page);
+}
+
 export async function interceptertLaBibliotheque(page: Page) {
   await page.route("**/bibliotheque.json", async (route) => {
     const reponse = await route.fetch();
     const bibliotheque: unknown[] = await reponse.json();
-    await route.fulfill({ response: reponse, json: [...bibliotheque, ...etat(page).injectees] });
+    const injectees = sansLeconsPersonnellesDansLaBibliotheque.has(page)
+      ? etat(page).injectees.filter((lecon) => !lecon.id.startsWith("perso-"))
+      : etat(page).injectees;
+    await route.fulfill({ response: reponse, json: [...bibliotheque, ...injectees] });
   });
 }
 
@@ -212,13 +222,15 @@ Given(/^Léa a un profil enfant préparé de niveau (\S+) dans l'univers « (.+)
     [CLE_PROFIL_PREPARE, JSON.stringify(avecLesReglagesPrevus(page, profil))] as const,
   );
   await interceptertLaBibliotheque(page);
+  if ($tags.includes("@issue-31")) neServirQueLaBibliothequeSansLeconsPersonnelles(page);
   // Story #24 : les séances terminées s'enregistrent pour un vrai profil ; Léa joue donc avec le même profil, créé pour Paul.
   // Story #25 : le parcours lit la progression du vrai profil, et la bibliothèque de test remplace celle de l'application.
   if ($tags.includes("@issue-25")) await servirLaBibliothequeDuParcours(page);
   // Story #27 : la bibliothèque de test du test de départ est servie de nouveau, après l'interception ci-dessus qui l'aurait masquée.
   if ($tags.includes("@issue-27")) await servirLaBibliothequeDuTestDeDepart(page);
   // Story #32 : la cabane lit les étoiles du serveur ; seul le scénario du profil préparé garde le profil sans identifiant.
-  const cabaneSurLeServeur = $tags.includes("@issue-32") && !$testInfo.title.includes("sans profil réel au serveur");
+  // Story #31 : les badges lisent les étoiles du serveur, comme la cabane (décision 0021, point 5).
+  const cabaneSurLeServeur = ($tags.includes("@issue-32") || $tags.includes("@issue-31")) && !$testInfo.title.includes("sans profil réel au serveur");
   // Story #26 : la bibliothèque de test des leçons des classes d'avant est servie avant l'accueil, qui la charge dès son ouverture.
   if ($tags.includes("@issue-26")) await servirLaBibliothequeDesClassesDAvant(page);
   // Story #29 : la bibliothèque de test de l'accueil est servie de la même façon.

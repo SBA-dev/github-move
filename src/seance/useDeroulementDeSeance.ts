@@ -11,11 +11,11 @@ import type { EtapeDeLecon, Lecon } from "@domain/catalogue";
 import {
   annoncerExerciceSuivant,
   inviterAJouerApresLesEtapes,
-  type ObjetDeLaCabane,
   type PersonnageGuide,
   parolesDeFinDeSeance,
-  phraseDeFinAvecLaCabane,
+  phraseDeFinAvecLesNouveautes,
 } from "@domain/motivation";
+import type { NouveautesDeFin } from "./fin-de-seance/nouveautes-de-fin.ts";
 import { useReducedMotion } from "motion/react";
 import { hasardDuNavigateur } from "../hasard-navigateur.ts";
 import type { Voix } from "../voix/index.ts";
@@ -318,11 +318,11 @@ export function useDeroulementDeSeance(
     relire();
   }, [reussite.figee, presentationEnCours, ouvrirLExercice, personnage.parole, relireLaPresentation, relireLaQuestion, memorisation.reecouter, relire]);
 
-  const direLaFin = useCallback((etoiles: number | undefined, objetRecu: ObjetDeLaCabane | undefined) => {
+  const direLaFin = useCallback((etoiles: number | undefined, nouveautes: NouveautesDeFin) => {
     sequence.current++;
     if (etoiles === undefined) return;
     const felicitation = parolesDeFinDeSeance(etoiles, prenom, personnageGuide, hasardDuNavigateur);
-    const texte = phraseDeFinAvecLaCabane(felicitation, objetRecu);
+    const texte = phraseDeFinAvecLesNouveautes(felicitation, nouveautes);
     void dire({ texte, nature: "felicitation", humeur: "applaudit" });
   }, [dire, prenom, personnageGuide]);
 

@@ -52,15 +52,23 @@ Fonctionnalité: Étoiles et fin de la séance
   Règle: À la fin de la séance, le personnage guide dit à l'enfant combien d'étoiles il a gagnées
 
     # Mise à jour par #32 (décision 32.25)
+    # Mise à jour par #31 (décision 31.23)
     Scénario: Avec 3 étoiles, le personnage guide dit son expression et salue l'enfant
       Étant donné que Léa a gagné 6 étoiles en tout
+      Et que Léa a pour meilleures étoiles :
+        | leçon            | étoiles |
+        | Les sons de test | 2       |
       Et que Léa joue la séance complète de la leçon « Les sons de test »
       Et que Léa n'a fait aucune erreur pendant la séance
       Quand Léa réussit la dernière question de la séance
       Alors Noisette dit l'une de ses expressions, suivie de « Trois étoiles, Léa ! Tu es incroyable ! »
 
+    # Mise à jour par #31 (décision 31.23)
     Plan du Scénario: Avec <étoiles>, le personnage guide propose de rejouer pour les autres étoiles
-      Étant donné que Léa joue la séance complète de la leçon « Les sons de test »
+      Étant donné que Léa a pour meilleures étoiles :
+        | leçon            | étoiles |
+        | Les sons de test | 2       |
+      Et que Léa joue la séance complète de la leçon « Les sons de test »
       Et que Léa a fait <erreurs> erreurs pendant la séance
       Quand Léa réussit la dernière question de la séance
       Alors Noisette dit une félicitation, suivie de « <phrase> »

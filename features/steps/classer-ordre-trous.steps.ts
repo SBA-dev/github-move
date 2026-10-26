@@ -263,7 +263,7 @@ Given(/^Tom a un profil enfant préparé de niveau (\S+)$/, async ({ page, monde
   // Story #27 : le résultat du test de départ de Tom est lu sous RLS, comme sa progression.
   // Story #34 : son suivi ne reprend rien de celui de Léa.
   // Story #65 : ses records sont lus sous RLS. Story #32 : ses étoiles ne comptent pas dans la cabane de Léa.
-  if ($tags.includes("@issue-25") || $tags.includes("@issue-27") || $tags.includes("@issue-65") || $tags.includes("@issue-32") || $tags.includes("@issue-34") || $tags.includes("@issue-29")) {
+  if ($tags.includes("@issue-25") || $tags.includes("@issue-27") || $tags.includes("@issue-65") || $tags.includes("@issue-32") || $tags.includes("@issue-31") || $tags.includes("@issue-34") || $tags.includes("@issue-29")) {
     await creerLeProfil(famille, "Paul", { prenom: "Tom", niveau, libelleUnivers: "Animaux de la forêt" });
     return;
   }
