@@ -240,9 +240,7 @@ Given(/^Léa a un profil enfant préparé de niveau (\S+) dans l'univers « (.+)
   const accueilSeul = utiliseLaBibliothequeDeLAccueil($tags);
   if (accueilSeul) await servirLaBibliothequeDeLAccueil(page);
   // Story #30 : les jours de séance sont lus sous RLS pour le vrai profil de Léa.
-  // Story #45 : la séance terminée du scénario « aucun autre site » s'envoie à l'Edge Function, donc au vrai profil de Léa.
-  const seanceEnvoyee = $tags.includes("@issue-45") && $testInfo.title.includes("séance terminée");
-  if ($tags.includes("@issue-24") || seanceEnvoyee || accueilSeul || $tags.includes("@issue-25") || $tags.includes("@issue-26") || $tags.includes("@issue-27") || $tags.includes("@issue-30") || cabaneSurLeServeur) {
+  if ($tags.includes("@issue-24") || accueilSeul || $tags.includes("@issue-25") || $tags.includes("@issue-26") || $tags.includes("@issue-27") || $tags.includes("@issue-30") || cabaneSurLeServeur) {
     await jouerAvecLeProfilReel(famille, monde, page);
   }
 });

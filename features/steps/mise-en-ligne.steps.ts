@@ -2,10 +2,10 @@ import { createBdd } from "playwright-bdd";
 import { expect, type Locator, type Page } from "@playwright/test";
 import { Given, test, Then, When } from "./fixtures.ts";
 import { attendreLaFinDeLaSeance, boutonContinuerApresLaReussite, continuerApresLaReussite } from "./etoiles-et-fin-de-seance.steps.ts";
-import { commencerLaSeanceComplete, etat as etatDeLaLecon, leconCourante, leconDeTitre } from "./etapes-puis-exercices.steps.ts";
+import { commencerLaSeanceComplete, etat as etatDeLaLecon, jouerLaSeanceComplete, leconCourante, leconDeTitre } from "./etapes-puis-exercices.steps.ts";
 import { bulleDeChoix, questionsDeLaLecon } from "./exercices-a-choix.steps.ts";
 import { assurerLeProfil, choisirSonProfil, ouvrirQuiJoue } from "./profils-enfants.steps.ts";
-import { ouvrirLaLeconDansLApplication } from "./profil-reel.ts";
+import { estSurUnProfilReel, jouerAvecLeProfilReel, ouvrirLaLeconDansLApplication } from "./profil-reel.ts";
 import { attendreServiceWorkerActif, chargerUneFois, emulerNavigateur, tabletteAndroid, verifierPageControleeParServiceWorker } from "./pwa.steps.ts";
 import { DENISE, installerLeFaux, normaliser, terminerLaLecture } from "./voix.steps.ts";
 
@@ -177,7 +177,16 @@ Given(/^Pilote joue la séance complète de la leçon « (.+) » à l'adresse de
   await commencerLaSeanceComplete(page);
 });
 
-When(/^Pilote réussit la dernière question de la séance$/, async ({ page }) => {
+// La séance complète dure par nature plus de 30 s (animation de chaque bonne réponse, Edge Function) : délai triplé pour ces scénarios seuls.
+// Le séance terminée s'envoie à l'Edge Function : Léa joue avec son vrai profil (le profil préparé n'existe que sur l'appareil).
+Given(/^Léa joue la séance complète de la leçon « (.+) »$/, { tags: "@issue-45" }, async ({ famille, monde, page, $test }, titre: string) => {
+  $test.slow();
+  if (!estSurUnProfilReel(page)) await jouerAvecLeProfilReel(famille, monde, page);
+  await jouerLaSeanceComplete(page, titre);
+});
+
+When(/^Pilote réussit la dernière question de la séance$/, async ({ page, $test }) => {
+  $test.slow();
   await jouerLaSeanceCompleteSansErreur(page);
 });
 

@@ -1,5 +1,5 @@
 # language: fr
-@issue-45 @wip
+@issue-45
 Fonctionnalité: Mise en ligne de Savanturier pour la beta
   En tant que parent
   Je veux ouvrir Savanturier à une adresse stable pendant toute la beta et l'installer sur mes appareils
