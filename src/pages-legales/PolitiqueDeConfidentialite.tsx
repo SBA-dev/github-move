@@ -64,12 +64,12 @@ export function PolitiqueDeConfidentialite({ libelleDuRetour, onRetour }: Props)
       <section aria-labelledby="appareil">
         <h2 id="appareil">Ce qui reste sur l'appareil</h2>
         <p>
-          Le navigateur garde sur l'appareil le profil en cours, le réglage Son ou Muet, la voix choisie et les leçons pour jouer sans
-          réseau. Il garde aussi la liste des profils du parent connecté (prénom ou pseudo, classe et réglages), ainsi que les séances,
-          les tests de départ et les séances de révision qui ne sont pas encore envoyés.
+          Le navigateur garde sur l'appareil le réglage Son ou Muet, la voix choisie et les leçons pour jouer sans réseau. Il garde aussi
+          la liste des profils du parent connecté (prénom ou pseudo, classe et réglages), ainsi que les séances, les tests de départ et
+          les séances de révision qui ne sont pas encore envoyés.
         </p>
         <p>
-          Pour effacer la liste des profils, le parent se déconnecte. Pour tout effacer, supprime les données du site dans les réglages
+          En se déconnectant, le parent efface de l'appareil la liste des profils, ainsi que les séances, les tests de départ et les séances de révision pas encore envoyés. Le réglage Son ou Muet et la voix choisie restent. Pour tout effacer, supprime les données du site dans les réglages
           du navigateur, ou désinstalle l'application de l'écran d'accueil.
         </p>
       </section>
