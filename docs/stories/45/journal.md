@@ -77,3 +77,9 @@ Bloc B « Exploitation, vérifications scriptées » : module Python `scripts/ex
 - 20:12 UTC : le responsable précise que les réglages d'environnement ne valent que pour les sessions créées après eux. La vérification WebDAV et les étapes `@production` se feront dans une **nouvelle session de publication**, lancée après le merge ; `docs/publication.md` dit ce qu'elle doit faire. Ajout d'un cycle **B12** : envoi du front par WebDAV (`MKCOL` des dossiers, `PUT` des fichiers, `/assets/` d'abord puis `index.html` et `sw.js` en dernier, pour qu'aucune page servie ne vise un fichier pas encore envoyé).
 - 20:20 UTC : B10 vert (`c75081e` RED bis, `8678eed` fix ; 1497 tests pytest). Essai sur dev avec un parent inexistant : connexion 400, aucune lecture.
 - Cycles ajoutés au bloc B : **B12** `envoi_webdav.py` (45.33 : envoi du front par WebDAV, ordre `/assets/` puis le reste, `index.html` et `sw.js` en dernier) ; **B13** `migrations.py` (migrations de production par l'API de gestion, 0010 n°2 : versions déjà appliquées lues dans `supabase_migrations.schema_migrations`, seules les manquantes appliquées dans l'ordre et enregistrées).
+| B10. Garder actif (45.31) | `d176fe7`, `c75081e` | `58a4f6b`, `8678eed` | lecture avec le JWT du parent de test (la clé `anon` n'a aucun droit) |
+| B11. Contrôles après publication | `457d4fe` | `80c14fe` | essai contre dev : aucune exception, écarts lisibles ; la région des fonctions est bien fixée par `x-region` |
+| B12. Envoi WebDAV (45.33) | `25e40f5` | `309fcef` | non essayé : alwaysdata refusé par le réseau de cette session |
+| B13. Migrations par l'API | `894d30d`, `59bb9be` | `0e07624` | lecture sur dev : 13 appliquées, aucune à appliquer ; l'API répond 201 au `database/query` (tout 2xx accepté) |
+
+- 20:45 UTC : bloc B terminé (1539 tests pytest). Revue intermédiaire du bloc B (delta `7e06dcb..0e07624`) lancée en parallèle du câblage du front.
