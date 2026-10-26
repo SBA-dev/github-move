@@ -349,7 +349,7 @@ async function paroles(page: Page): Promise<string[]> {
 }
 
 // Une lecture peut se découper en plusieurs énoncés (après « : ») : ce que l'enfant entend, c'est un lot.
-async function lecturesParLot(page: Page): Promise<string[]> {
+export async function lecturesParLot(page: Page): Promise<string[]> {
   return await page.evaluate(() => {
     const faux = Reflect.get(window, "__faux") as { journal: Array<{ type: string; lot: number; texte: string }> };
     const parLot = new Map<number, string[]>();
@@ -368,7 +368,7 @@ Then(/^Léa entend Noisette lire, dans l'ordre :$/, async ({ page }, tableau: Da
   }, { intervals: [100], timeout: DELAI_D_UN_APPEL_SERVEUR_MS }).toEqual(attendues);
 });
 
-Then(/^Léa entend Noisette lire « ([^«»]+) », puis « ([^«»]+) »$/, { tags: "@issue-65 or @issue-32" }, async ({ page }, premier: string, second: string) => {
+Then(/^Léa entend Noisette lire « ([^«»]+) », puis « ([^«»]+) »$/, { tags: "@issue-65 or @issue-32 or @issue-31" }, async ({ page }, premier: string, second: string) => {
   const [premiere, seconde] = [normaliser(entendu(premier)), normaliser(entendu(second))];
   await expect.poll(async () => {
     const lots = await lecturesParLot(page);

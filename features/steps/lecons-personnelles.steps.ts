@@ -320,7 +320,7 @@ async function jouerLaSeanceJusquALaFin(page: Page, lecon: LeconBrute, erreurs: 
 
 Given(
   /^Léa a gagné 2 étoiles à la leçon « ([^«»]+) » sur la tablette$/,
-  { tags: "@issue-39" },
+  { tags: "@issue-39 or @issue-31" },
   async ({ famille, page }, titre: string) => {
     const lecon = leconDeTitre(page, titre);
     await jouerAvecLeaReelle(page);
