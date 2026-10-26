@@ -137,7 +137,9 @@ Deno.test("sans leçon acquise par la séance, aucun badge n'est gagné", () => 
 });
 
 Deno.test("la leçon acquise par la séance, avec compétence, fait gagner le badge de cette compétence", () => {
-  const lecons = [leconDe({ id: "ma-ce1-sommes", matiere: "maths", niveau: "CE1", competence: "Je calcule des sommes" })];
+  const lecons = [
+    leconDe({ id: "ma-ce1-sommes", matiere: "maths", niveau: "CE1", competence: "Je calcule des sommes" }),
+  ];
 
   assertEquals(badgeGagneParLaSeance(new Set(), "ma-ce1-sommes", lecons), {
     cle: "Je calcule des sommes",
