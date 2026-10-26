@@ -1,10 +1,7 @@
+import { accorder } from "./accord.ts";
 import type { EtatDeLaCabane, ObjetDeLaCabane, PalierDeLaCabane } from "./cabane.ts";
 
 const NOM_DU_PERSONNAGE_DE_LA_CABANE = "Noisette";
-
-function accorder(nombre: number, singulier: string): string {
-  return `${nombre} ${singulier}${nombre > 1 ? "s" : ""}`;
-}
 
 export function titreDeLaSection(): string {
   return `La cabane de ${NOM_DU_PERSONNAGE_DE_LA_CABANE}`;

@@ -87,3 +87,13 @@ export {
   type SeanceTermineeDUnJour,
 } from "./faits-du-jour.ts";
 export { type Badge, badgeGagneParLaSeance, badgesDuProfil, nomDuBadge } from "./badges.ts";
+export {
+  finDePhraseDuBadge,
+  libelleDeLaListeDesBadges,
+  parolesDeLaSectionDesBadges,
+  phraseDeFinAvecLesNouveautes,
+  phraseDeLaSectionDesBadges,
+  phraseSansBadge,
+  titreDeLAnnonceDuBadge,
+  titreDeLaSectionDesBadges,
+} from "./paroles-des-badges.ts";
