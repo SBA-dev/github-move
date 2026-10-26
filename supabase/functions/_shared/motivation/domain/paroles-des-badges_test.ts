@@ -85,6 +85,15 @@ Deno.test("avec un objet seul, la phrase de fin se termine par l'objet reçu pou
   );
 });
 
+Deno.test("la phrase de fin d'un autre personnage guide annonce toujours que Noisette a reçu l'objet", () => {
+  const phraseDeCoachLeo = "Tu gagnes 1 étoile, Léa. On remet ça, champion ?";
+
+  assertEquals(
+    phraseDeFinAvecLesNouveautes(phraseDeCoachLeo, { objet: lanterne, badge: undefined }),
+    "Tu gagnes 1 étoile, Léa. On remet ça, champion ? Noisette a reçu une lanterne pour sa cabane.",
+  );
+});
+
 Deno.test("avec un objet et un badge, la cabane est annoncée avant le badge", () => {
   assertEquals(
     phraseDeFinAvecLesNouveautes(PHRASE_DE_FIN, { objet: lanterne, badge: badgeDesSons }),
