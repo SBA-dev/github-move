@@ -18,7 +18,7 @@ function unBadge(nom: string): Badge {
   return { cle: nom, nom, matiere: "francais", lecons: [] };
 }
 
-const badgeDesSons = unBadge("Je reconnais les sons de test !");
+const badgeDesSons = unBadge("Je reconnais les sons de test");
 const badgeSansCompetence = unBadge("Je sais : Les sons de test");
 const deuxBadges = [badgeDesSons, badgeSansCompetence];
 
@@ -59,7 +59,7 @@ Deno.test("le personnage guide termine sa phrase de fin par le nom du badge gagn
 });
 
 Deno.test("un badge sans compétence garde son nom « Je sais : … » dans la fin de phrase", () => {
-  assertEquals(finDePhraseDuBadge(badgeSansCompetence), "Nouveau badge : Je sais : Les sons de test");
+  assertEquals(finDePhraseDuBadge(badgeSansCompetence), "Nouveau badge : Je sais : Les sons de test !");
 });
 
 const PHRASE_DE_FIN = "Tu gagnes 2 étoiles, Léa. Tu rejoues pour aller chercher les autres ?";
