@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { type EtatDeLHistoire, histoireDe } from "@domain/motivation";
-import { seancesTermineesDuProfil } from "../histoire/seances-terminees-du-profil.ts";
+import { seancesTermineesDuProfilAvecRepliSurLaDerniereLecture } from "../histoire/seances-terminees-du-profil.ts";
 
 export type LectureDeLHistoire = {
   readonly chargee: boolean;
@@ -13,7 +13,7 @@ export function useHistoire(profil: string): LectureDeLHistoire {
   const [lecture, setLecture] = useState<LectureDeLHistoire>({ chargee: false, histoire: undefined });
   useEffect(() => {
     let annule = false;
-    void seancesTermineesDuProfil(profil)
+    void seancesTermineesDuProfilAvecRepliSurLaDerniereLecture(profil)
       .then((seances) => (seances === undefined ? undefined : histoireDe(seances.nombre())))
       .catch(() => undefined)
       .then((histoire) => {

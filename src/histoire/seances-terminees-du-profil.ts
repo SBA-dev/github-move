@@ -9,7 +9,7 @@ import {
 import { SeancesGardeesSurLAppareil } from "../seance/fin-de-seance/seances-gardees-sur-l-appareil.ts";
 import { identifiantsDesSeancesTermineesPendantLUtilisation } from "../seance/fin-de-seance/seances-terminees-pendant-l-utilisation.ts";
 
-/** Les derniers identifiants lus au serveur, par profil : ils servent quand une lecture ultérieure échoue (sans réseau). */
+/** Les derniers identifiants lus au serveur, par profil : ils servent à « Mes médailles » et à l'écran de l'épisode quand une lecture ultérieure échoue (sans réseau). */
 const derniersIdentifiantsLusAuServeur = new Map<string, readonly string[]>();
 
 /** Les identifiants des séances que l'appareil connaît en dehors du serveur : séances gardées et séances jouées dans ce navigateur. */
@@ -26,19 +26,35 @@ async function identifiantsConnusDeLAppareil(profil: string): Promise<readonly s
   ];
 }
 
-/**
- * Les séances terminées du profil, comptées par identifiant : serveur (séances et séances de révision), séances gardées sur l'appareil,
- * séances jouées dans ce navigateur. `undefined` quand le serveur n'a jamais pu être lu pour ce profil : on ne dit rien.
- */
-export async function seancesTermineesDuProfil(profil: string): Promise<SeancesTermineesDuProfil | undefined> {
-  const [seancesDuServeur, revisionsDuServeur, deLAppareil] = await Promise.all([
+/** Les identifiants lus au serveur à l'instant, ou `undefined` quand le serveur n'a pas pu être lu ; une lecture réussie est gardée en mémoire. */
+async function lireLesIdentifiantsAuServeur(profil: string): Promise<readonly string[] | undefined> {
+  const [seancesDuServeur, revisionsDuServeur] = await Promise.all([
     lireLesIdentifiantsDesSeancesTerminees(profil),
     lireLesIdentifiantsDesSeancesDeRevisionTerminees(profil),
-    identifiantsConnusDeLAppareil(profil),
   ]);
-  if (seancesDuServeur !== undefined && revisionsDuServeur !== undefined) {
-    derniersIdentifiantsLusAuServeur.set(profil, [...seancesDuServeur, ...revisionsDuServeur]);
-  }
-  const derniersLus = derniersIdentifiantsLusAuServeur.get(profil);
-  return derniersLus && SeancesTermineesDuProfil.reunir(derniersLus, deLAppareil);
+  if (seancesDuServeur === undefined || revisionsDuServeur === undefined) return undefined;
+  const identifiants = [...seancesDuServeur, ...revisionsDuServeur];
+  derniersIdentifiantsLusAuServeur.set(profil, identifiants);
+  return identifiants;
+}
+
+async function reunirAvecLAppareil(profil: string, duServeur: readonly string[] | undefined): Promise<SeancesTermineesDuProfil | undefined> {
+  return duServeur && SeancesTermineesDuProfil.reunir(duServeur, await identifiantsConnusDeLAppareil(profil));
+}
+
+/**
+ * Les séances terminées du profil lues au serveur à l'instant (séances et séances de révision), avec celles de l'appareil.
+ * `undefined` quand le serveur ne peut pas être lu : jamais de repli sur une lecture ancienne, pour ne pas annoncer à tort un épisode.
+ */
+export async function seancesTermineesDuProfilLuesAuServeur(profil: string): Promise<SeancesTermineesDuProfil | undefined> {
+  return reunirAvecLAppareil(profil, await lireLesIdentifiantsAuServeur(profil));
+}
+
+/**
+ * Les séances terminées du profil, avec repli sur la dernière lecture du serveur gardée en mémoire (sans réseau).
+ * `undefined` quand le serveur n'a jamais pu être lu pour ce profil : on ne dit rien.
+ */
+export async function seancesTermineesDuProfilAvecRepliSurLaDerniereLecture(profil: string): Promise<SeancesTermineesDuProfil | undefined> {
+  const duServeur = await lireLesIdentifiantsAuServeur(profil);
+  return reunirAvecLAppareil(profil, duServeur ?? derniersIdentifiantsLusAuServeur.get(profil));
 }
