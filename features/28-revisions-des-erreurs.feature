@@ -247,7 +247,7 @@ Fonctionnalité: Révisions des erreurs
       Et la fin de la séance de révision ne montre aucune étoile
       Et le focus est sur « Accueil »
 
-    # Réponses 28.2 et 28.23
+    # Réponses 28.2 et 28.23 ; mise à jour par #33 (décisions 33.12 et 33.13) : la séance de révision ouvre un épisode
     Plan du Scénario: Avec <justes> question(s) juste(s), le personnage guide dit « <phrase> »
       Étant donné que Léa a pour questions retenues de la leçon « Les sons de révision » :
         | question               | date de révision |
@@ -259,10 +259,10 @@ Fonctionnalité: Révisions des erreurs
       Alors Noisette dit « <phrase> »
 
       Exemples:
-        | justes | déroulé                                                    | phrase                                                               |
-        | 3      | juste à toutes les questions                               | Bravo Léa ! 3 erreurs s'effacent un peu plus.                        |
-        | 1      | juste seulement à « Quel mot a le son ou ? »               | Bravo Léa ! 1 erreur s'efface un peu plus.                           |
-        | 0      | en se trompant à toutes les questions                      | Merci Léa ! Ces erreurs reviendront demain : on les effacera ensemble. |
+        | justes | déroulé                                      | phrase                                                                                                           |
+        | 3      | juste à toutes les questions                 | Bravo Léa ! 3 erreurs s'effacent un peu plus. Un nouvel épisode de l'histoire t'attend !                         |
+        | 1      | juste seulement à « Quel mot a le son ou ? » | Bravo Léa ! 1 erreur s'efface un peu plus. Un nouvel épisode de l'histoire t'attend !                            |
+        | 0      | en se trompant à toutes les questions        | Merci Léa ! Ces erreurs reviendront demain : on les effacera ensemble. Un nouvel épisode de l'histoire t'attend ! |
 
     # Réponse 28.8
     Scénario: « Accueil » ramène à l'accueil, qui ne propose plus la séance de révision quand plus rien n'est dû
