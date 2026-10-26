@@ -39,12 +39,13 @@ Total : 6 règles, 36 scénarios (43 cas), dont 4 `@acces` ; aucun `@depend-de`,
 
 L'ordre des sections de « Mes médailles » (cabane, histoire, badges, records) n'a pas de scénario ici : il est déjà couvert par le scénario de #65 « Les quatre sections apparaissent dans l'ordre cabane, histoire, badges, records » (`@depend-de-31 @depend-de-33`), qui reste en attente de #33.
 
-### Scénarios de #65 et #32 mis à jour (décision 31.23)
+### Scénarios de #65, #32 et #24 mis à jour (décision 31.23)
 
 Sans changer leur règle, la liste lue « dans l'ordre » s'allonge de la section des badges, lue sans badge (« Mes badges », puis « Gagne au moins 2 étoiles dans une leçon pour gagner son badge. ») :
 
 - #65, « Avec « tout lire à voix haute », le titre puis chaque section sont lus à l'ouverture » : les deux lignes de la section des badges s'insèrent entre la phrase de la cabane et « Mes records de calcul rapide ».
 - #32, « Avec « tout lire à voix haute », le titre de la cabane puis sa phrase sont lus à l'ouverture » : les deux lignes s'ajoutent après la phrase de la cabane (les étoiles préparées « en tout » sont sur des leçons absentes de la bibliothèque : aucun badge, 31.13).
+- #24, « Avec 3 étoiles, le personnage guide dit son expression et salue l'enfant » et le plan « Avec <étoiles>, le personnage guide propose de rejouer pour les autres étoiles » : un état de départ « Léa a pour meilleures étoiles : | Les sons de test | 2 | » s'ajoute, pour que la leçon soit déjà acquise avant la séance et qu'aucun badge ne soit gagné ; sinon la première séance à 2 ou 3 étoiles de « Les sons de test » (sans compétence) ferait finir la phrase par « Nouveau badge : Je sais : Les sons de test ! ». La phrase attendue ne change pas, ni pour 2 étoiles ni pour 1 (elle dit les étoiles de la séance). Aucun objet de la cabane n'est reçu : 8 étoiles en tout avant la séance à 3 étoiles, 9 après (paliers 6 et 10) ; 2 avant et après pour le plan (les meilleures étoiles ne baissent pas, palier 3 non atteint).
 
 Aucun scénario de #65 ni de #32 n'affirme « aucune autre section » ; aucune phrase d'accueil du personnage guide n'y change, faute de badge dans leurs données (« Léa a gagné N étoiles en tout » ne donne aucun badge, un record non plus).
 
