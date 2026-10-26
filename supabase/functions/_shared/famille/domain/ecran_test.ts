@@ -14,6 +14,17 @@ Deno.test("la connexion, le choix de qui joue, le contrôle parental et l'espace
   assertEquals(reponses, [true, true, true, true]);
 });
 
+Deno.test("la politique de confidentialité et les mentions légales sont des écrans du parent", () => {
+  const pagesLegales: Ecran[] = [
+    "politique-de-confidentialite",
+    "mentions-legales",
+  ];
+
+  const reponses = pagesLegales.map(estUnEcranDuParent);
+
+  assertEquals(reponses, [true, true]);
+});
+
 Deno.test("les écrans où l'enfant apprend ne sont pas des écrans du parent", () => {
   const ecransDeLEnfant: Ecran[] = [
     "accueil-de-l-enfant",
