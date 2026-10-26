@@ -35,3 +35,4 @@ Une décision n'est jamais réécrite : si elle change, une nouvelle décision l
 | [0028](0028-regle-absolue-etendue-a-tous-les-contenus.md) | La règle de 0027 s'étend à tous les contenus (textes, sons, IA, saisies du parent, données de test) ; aucune commande ni aucun agent ne peut l'ignorer | Acceptée, précisée par 0029 |
 | [0029](0029-fait-historique-et-contenu-violent.md) | Un fait du programme (une guerre en histoire) est accepté s'il est factuel, neutre, sans détail violent ni image de combat ; ses mots n'entrent jamais dans la liste des termes refusés | Acceptée |
 | [0030](0030-traces-des-refus-lues-par-le-po-dans-supabase.md) | Les traces des refus (#103) sont lues par le PO dans le tableau de bord Supabase ; pas de rôle d'administration dans l'application | Acceptée |
+| [0031](0031-skills-d-animation-et-de-design-tiers.md) | Skills tiers `motion-design` et `design-dna` copiés, plugin `genjutsu` figé (sans `bunshin`) ; GSAP et three.js écartés | Acceptée |

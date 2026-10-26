@@ -204,6 +204,8 @@ Décisions déjà prises, à respecter partout (code, interface, scénarios) :
 | `.claude/skills/craftsmanship/` | Checklist de review, code smells, refactorings, sécurité |
 | `.claude/skills/gamification/` | Boucle de jeu, retours animés et sonores, garde-fous éthiques, plugins de design et de pédagogie |
 | `.claude/skills/illustration/` | Style des dessins SVG, méthode de l'illustrateur, outil de rendu en planche PNG |
+| `.claude/skills/motion-design/` | Skill tiers (LottieFiles) : principes d'animation, rythme, courbes, enchaînements |
+| `.claude/skills/design-dna/` | Skill tiers (zanwei) : profil de design tiré d'images de référence |
 
 ## Workflow de livraison
 

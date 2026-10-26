@@ -153,12 +153,18 @@ L'application s'adresse à des enfants de 6 à 11 ans. Les décisions déjà pri
 - [ ] Les animations ont leur variante mouvements réduits et une annonce accessible.
 - [ ] Pas de régression de performance visible (animation de `width`, `top`, ombres animées sur une longue liste…).
 
-## 7. Plugins de design et de pédagogie installés dans le projet
+## 7. Plugins et skills tiers de design, d'animation et de pédagogie
 
-`.claude/settings.json` active trois plugins (décision 0025). Ils **conseillent**, ce skill et `CLAUDE.md` **décident** : en cas de conflit (police, couleurs, mécanique interdite), les règles du projet gagnent.
+`.claude/settings.json` active quatre plugins (décisions 0025 et 0031), et deux skills tiers sont copiés dans `.claude/skills/` (décision 0031). Ils **conseillent**, ce skill et `CLAUDE.md` **décident** : en cas de conflit (police, couleurs, mécanique interdite), les règles du projet gagnent.
 
 | Plugin | Skill à utiliser | Quand |
 |---|---|---|
 | `frontend-design` (Anthropic) | `frontend-design` | Concevoir ou rafraîchir un écran de l'enfant : identité visuelle forte, micro-interactions, mise en scène des récompenses. Garder la police Andika, le mode dys et les couleurs des colonnes. |
 | `design` (Anthropic) | `design-critique`, `ux-copy`, `accessibility-review`, `design-system` | Critiquer un écran existant, écrire les paroles du personnage guide et les encouragements, auditer l'accessibilité d'une animation. Ses connecteurs (Figma, Slack…) sont facultatifs et inutiles au projet. |
 | `education-agent-skills` (Gareth Manning) | `flow-state-condition-designer`, `motivation-diagnostic-task-redesign`, `self-efficacy-builder-sequence`, `progressive-hint-ladder`, `retrieval-practice-generator`, `spaced-practice-scheduler`, `cognitive-load-analyser` | Vérifier qu'une mécanique sert vraiment l'apprentissage : difficulté, aides graduées, révisions espacées, charge cognitive d'un écran animé. Ses propositions restent soumises aux programmes officiels (`sources/`). |
+| `genjutsu` (AThevon, v4.1.1) | `cast`, `paint` | `cast` : ajouter du mouvement et des micro-interactions à un écran existant (il charge ses modules `framer-motion` et `motion-principles`, compatibles avec Motion). `paint` : concevoir l'univers visuel d'un écran ou d'un univers. **Ne pas utiliser `bunshin`** : il construit un site entier avec de nombreux agents en parallèle, ce qui doublonne `/feature` et coûte cher. Ne pas suivre ses propositions de GSAP ou de three.js : la bibliothèque d'animation du projet est Motion. |
+
+| Skill tiers (`.claude/skills/`) | Quand |
+|---|---|
+| `motion-design` (LottieFiles) | Avant d'écrire une animation : choisir le rythme, les courbes de vitesse, l'enchaînement et l'intention (joie, encouragement, découverte). C'est la référence pour les retours de la section 3 et les célébrations (#97, #106). |
+| `design-dna` (zanwei) | Quand le PO fournit des images de référence : en tirer un profil de design (couleurs mesurées, style, effets), puis les jetons de la refonte visuelle (#96). Ses scripts de mesure demandent `sharp` (voir sa `PROVENANCE.md`). |
