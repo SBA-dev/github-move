@@ -130,7 +130,6 @@ Fonctionnalité: La consigne d'un exercice reste visible pendant tout l'exercice
       Alors Léa entend de nouveau Noisette lire « Touche le bon nombre. »
       Et Léa voit la question « Combien font 2 + 1 ? »
 
-    @a-valider
     Scénario: Dans un exercice bulles, relire la consigne pendant la lecture de la question suivante laisse ses choix venir
       Étant donné qu'une leçon de test « Compter » a un exercice bulles de consigne « Touche le bon nombre. » qui pose « Combien font 2 + 1 ? » puis « Combien font 1 + 1 ? »
       Et que Léa joue la séance complète de la leçon « Compter »
