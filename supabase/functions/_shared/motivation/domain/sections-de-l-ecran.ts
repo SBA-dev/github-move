@@ -1,3 +1,4 @@
+import type { Badge } from "./badges.ts";
 import type { EtatDeLaCabane } from "./cabane.ts";
 import type { PastilleDeRecord } from "./records-de-calcul-rapide.ts";
 
@@ -21,13 +22,15 @@ export function sectionsAAfficher(
 }
 
 export function sectionsDeLEcran(
-  { pastilles, cabane }: {
+  { pastilles, cabane, badges }: {
     pastilles: readonly PastilleDeRecord[];
     cabane: EtatDeLaCabane | undefined;
+    badges?: readonly Badge[];
   },
 ): SectionDeLEcran[] {
   const disponibles: SectionDeLEcran[] = [];
   if (cabane !== undefined) disponibles.push("cabane");
+  if (badges !== undefined) disponibles.push("badges");
   if (pastilles.length > 0) disponibles.push("recordsDeFluence");
   return sectionsAAfficher(disponibles);
 }

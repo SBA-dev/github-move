@@ -1,5 +1,7 @@
+import type { Badge } from "./badges.ts";
 import type { EtatDeLaCabane } from "./cabane.ts";
 import { calculs } from "./paroles-de-fluence.ts";
+import { parolesDeLaSectionDesBadges, phraseSansBadge, titreDeLaSectionDesBadges } from "./paroles-des-badges.ts";
 import { phraseDeLEtat, titreDeLaSection } from "./paroles-de-la-cabane.ts";
 import type { PastilleDeRecord } from "./records-de-calcul-rapide.ts";
 import { sectionsDeLEcran } from "./sections-de-l-ecran.ts";
@@ -10,10 +12,15 @@ export const TITRE_DES_RECORDS_DE_CALCUL_RAPIDE = "Mes records de calcul rapide"
 type ContenuDeLEcran = {
   pastilles: readonly PastilleDeRecord[];
   cabane: EtatDeLaCabane | undefined;
+  badges?: readonly Badge[];
 };
 
-function aQuelqueChoseAMontrer({ cabane, pastilles }: ContenuDeLEcran): boolean {
-  return pastilles.length > 0 || (cabane?.objetsRecus.length ?? 0) > 0;
+function parolesDeLaSectionDesBadgesOuSansBadge(badges: readonly Badge[]): string[] {
+  return badges.length > 0 ? parolesDeLaSectionDesBadges(badges) : [titreDeLaSectionDesBadges(), phraseSansBadge()];
+}
+
+function aQuelqueChoseAMontrer({ cabane, pastilles, badges }: ContenuDeLEcran): boolean {
+  return pastilles.length > 0 || (cabane?.objetsRecus.length ?? 0) > 0 || (badges?.length ?? 0) > 0;
 }
 
 export function parolesDuGuideALOuverture(contenu: ContenuDeLEcran): string {
@@ -31,12 +38,13 @@ export function parolesDeLaSectionDesRecords(pastilles: readonly PastilleDeRecor
 }
 
 export function parolesALOuverture(
-  { toutLire, pastilles, cabane }: { toutLire: boolean } & ContenuDeLEcran,
+  { toutLire, pastilles, cabane, badges }: { toutLire: boolean } & ContenuDeLEcran,
 ): string[] {
-  const guide = parolesDuGuideALOuverture({ pastilles, cabane });
+  const guide = parolesDuGuideALOuverture({ pastilles, cabane, badges });
   if (!toutLire) return [guide];
-  const sections = sectionsDeLEcran({ pastilles, cabane });
+  const sections = sectionsDeLEcran({ pastilles, cabane, badges });
   const cabaneLue = cabane !== undefined ? [titreDeLaSection(), phraseDeLEtat(cabane)] : [];
+  const badgesLus = badges !== undefined ? parolesDeLaSectionDesBadgesOuSansBadge(badges) : [];
   const recordsLus = sections.includes("recordsDeFluence") ? parolesDeLaSectionDesRecords(pastilles) : [];
-  return [guide, NOM_DE_L_ECRAN_DES_MEDAILLES, ...cabaneLue, ...recordsLus];
+  return [guide, NOM_DE_L_ECRAN_DES_MEDAILLES, ...cabaneLue, ...badgesLus, ...recordsLus];
 }
