@@ -189,7 +189,12 @@ Deno.test("avec « Tout lire à voix haute » et aucun badge gagné, la phrase s
 });
 
 Deno.test("avec « Tout lire à voix haute », les records sont lus après les badges", () => {
-  const paroles = parolesALOuverture({ toutLire: true, pastilles: [pastille(12)], cabane: cabaneDe(2), badges: [badge] });
+  const paroles = parolesALOuverture({
+    toutLire: true,
+    pastilles: [pastille(12)],
+    cabane: cabaneDe(2),
+    badges: [badge],
+  });
 
   assertEquals(paroles, [
     "Regarde tout ce que tu as gagné !",
