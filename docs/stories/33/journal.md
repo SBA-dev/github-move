@@ -18,3 +18,17 @@ Bloc « Motivation, histoire » (domaine) :
 4. `paroles-de-l-histoire.ts` : titre, sous-titre, position, texte à lire (titre puis texte), annonce, fin de phrase.
 5. `phraseDeFinAvecLesNouveautes` étendue avec `episode` (cabane, épisode, badge), et fins de fluence et de révision (33.12).
 6. `sectionsDeLEcran` (section `histoire`) et paroles d'ouverture de « Mes médailles » (33.22).
+
+### Cycles TDD (bloc domaine)
+
+| Cycle | RED | GREEN / REFACTOR |
+|---|---|---|
+| 1. Histoire, épisodes ouverts, suivant | `4297af6` | `f979a43` |
+| 2. Séances terminées du profil | `fdf6408` | `e324e6d` |
+| 3. Tuiles de l'histoire | `d7cf57e` | `e8c4860` |
+| 4. Paroles de l'histoire | `bc3dfb2` | `852defd` |
+| 5. Phrase de fin avec l'épisode (cabane, épisode, badge ; fluence, révision) | `74ab10c` | `aac8510` |
+| 6. Section de l'histoire dans « Mes médailles » | `c4769cc` | `904ced7` |
+
+- 11:58 UTC : revue intermédiaire en mode delta (`bebb52e..904ced7`) : **APPROUVÉ**, aucun bloquant. Dernier commit relu : `904ced7`.
+  Non bloquants : suffixe « (red) » non homogène ; RED des cycles 2 à 4 posés ensemble avant les GREEN ; `cartePliee` dans un test ; libellés des tuiles hors de `paroles-de-l-histoire.ts` ; deux critères de lecture des sections dans `parolesALOuverture` ; test 33.23 de `SeancesTermineesDuProfil` peu probant (33.23 à couvrir au câblage) ; `episodeSuivant` ne vérifie pas que le numéro reçu est ouvert. Repris au refactor du câblage s'il touche ces fichiers.
