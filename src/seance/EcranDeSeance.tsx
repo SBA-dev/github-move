@@ -17,7 +17,7 @@ import { PersonnageGuide } from "../univers/index.ts";
 import type { Voix } from "../voix/index.ts";
 import { BulleDuPersonnageGuide } from "./BulleDuPersonnageGuide.tsx";
 import { EcranDeFin } from "./fin-de-seance/EcranDeFin.tsx";
-import { lireLesMeilleuresEtoilesAvantLaSeance } from "./fin-de-seance/meilleures-etoiles-pour-la-cabane.ts";
+import { lireLesMeilleuresEtoilesAvantLaSeance } from "./fin-de-seance/meilleures-etoiles-du-profil-lues.ts";
 import { useFaciliteDeLaSeance } from "./difficulte/useFaciliteDeLaSeance.ts";
 import { ExerciceDAdditionPosee } from "./exercices/addition/ExerciceDAdditionPosee.tsx";
 import { ExerciceAChoix } from "./exercices/ExerciceAChoix.tsx";

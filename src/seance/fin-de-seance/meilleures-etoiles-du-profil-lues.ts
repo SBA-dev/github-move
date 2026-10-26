@@ -9,7 +9,7 @@ import { lireToutesLesMeilleuresEtoilesSiPossible } from "./lecture-des-meilleur
 export const DELAI_MAXIMAL_DE_LECTURE_EN_MS = 5000;
 
 /** Les meilleures étoiles du profil telles que la cabane les compte ; `undefined` quand les étoiles du serveur ne peuvent pas être lues (sans réseau, ou lecture en échec). */
-export async function lireLesMeilleuresEtoilesPourLaCabane(profil: string): Promise<MeilleuresEtoilesDuProfil | undefined> {
+export async function lireLesMeilleuresEtoilesDuProfil(profil: string): Promise<MeilleuresEtoilesDuProfil | undefined> {
   if (!reseauDisponible()) return undefined;
   const duServeur = await lireToutesLesMeilleuresEtoilesSiPossible(profil);
   if (duServeur === undefined) return undefined;
@@ -19,5 +19,5 @@ export async function lireLesMeilleuresEtoilesPourLaCabane(profil: string): Prom
 
 /** Les étoiles d'avant la séance, ou `undefined` si leur lecture dépasse le délai maximal. */
 export function lireLesMeilleuresEtoilesAvantLaSeance(profil: string): Promise<MeilleuresEtoilesDuProfil | undefined> {
-  return avecDelaiMaximal(lireLesMeilleuresEtoilesPourLaCabane(profil), DELAI_MAXIMAL_DE_LECTURE_EN_MS);
+  return avecDelaiMaximal(lireLesMeilleuresEtoilesDuProfil(profil), DELAI_MAXIMAL_DE_LECTURE_EN_MS);
 }

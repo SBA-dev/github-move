@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { cabaneDe, type EtatDeLaCabane, totalDesEtoiles } from "@domain/motivation";
-import { lireLesMeilleuresEtoilesPourLaCabane } from "../seance/fin-de-seance/meilleures-etoiles-pour-la-cabane.ts";
+import { lireLesMeilleuresEtoilesDuProfil } from "../seance/fin-de-seance/meilleures-etoiles-du-profil-lues.ts";
 
 export type LectureDeLaCabane = {
   readonly chargee: boolean;
@@ -13,7 +13,7 @@ export function useCabane(profil: string): LectureDeLaCabane {
   const [lecture, setLecture] = useState<LectureDeLaCabane>({ chargee: false, cabane: undefined });
   useEffect(() => {
     let annule = false;
-    void lireLesMeilleuresEtoilesPourLaCabane(profil)
+    void lireLesMeilleuresEtoilesDuProfil(profil)
       .then((meilleures) => (meilleures === undefined ? undefined : cabaneDe(totalDesEtoiles(meilleures))))
       .catch(() => undefined)
       .then((cabane) => {
