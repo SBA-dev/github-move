@@ -32,3 +32,23 @@ Le proxy du conteneur bloque `help.alwaysdata.com` : pour alwaysdata, seuls des 
 - **Région des Edge Functions** : par défaut la plus proche de l'appelant ; fixée par l'en-tête `x-region: eu-west-1` (ou `region` de `functions.invoke`, ou `forceFunctionRegion`) ; lue dans l'en-tête de réponse `x-sb-edge-region`. Aucun réglage par projet trouvé : le front doit fixer la région à chaque appel (C12).
 - **Sauvegarde** : `supabase db dump --db-url … -f roles.sql --role-only`, `-f schema.sql`, `-f data.sql --use-copy --data-only` ; restauration locale par `psql --single-transaction … --dbname postgresql://postgres:postgres@127.0.0.1:54322/postgres` après `supabase start`.
 - **45.31, tâche planifiée** : l'activité retenue est une vraie requête à la base : lecture par l'API REST avec la clé publique `anon` (la RLS ne renvoie rien) puis connexion du parent de test (identifiants dans l'environnement de la tâche, jamais dans son prompt). Aucune donnée d'enfant lue en dehors du profil fictif « Pilote ».
+
+### Découpage TDD
+
+Bloc A « Famille, pages légales » : 1. les pages légales sont des écrans du parent (`4f13bdc` RED, `7e06dcb` GREEN, 2462 tests verts).
+
+Bloc B « Exploitation, vérifications scriptées » : module Python `scripts/exploitation/` (paquet, bibliothèque standard seulement), tests `scripts/tests/test_exploitation_<sujet>.py`. Chaque vérification est une **fonction pure** qui reçoit ce qui a été lu (fichiers, lignes SQL, en-têtes, JSON de l'API) et rend la **liste des écarts** (messages en français qui nomment le problème ; liste vide = OK). Les lectures (HTTP, API de gestion) sont faites par un petit client passé en paramètre, remplacé par un faux dans les tests. Aucune valeur de secret n'est jamais affichée : seulement son nom ou son emplacement.
+
+| Cycle | Fichier | Comportement |
+|---|---|---|
+| B1 | `secrets_du_build.py` | V1 : `ecarts_du_build(fichiers: dict[str, str])` signale une clé JWT dont le rôle est `service_role` (l'`anon` est permise), les noms `SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`, `SEND_EMAIL_HOOK_SECRET`, un jeton de gestion `sbp_…`, `profil-prepare` (0021), et les valeurs fictives des pages légales du développement (`exemple.test`) ; nomme le fichier, jamais la valeur |
+| B2 | `rls.py` | V2 : `REQUETE_RLS` (SQL en lecture seule) et `ecarts_de_la_rls(lignes)` : table de `public` sans RLS ; table sans policy hors de la liste fermée 45.27 |
+| B3 | `en_tetes.py` | V4 : `ecarts_des_en_tetes(chemin, en_tetes)` : `sw.js` et `/` (`index.html`) en `no-cache` ; `manifest.webmanifest`, `bibliotheque.json`, `programmes-index.json` revalidés ; `/assets/…` cache long `immutable` ; HSTS `max-age=31536000` sans `preload` ; et `ecarts_de_la_redirection(statut, location, adresse)` (`http://` → même adresse en `https://`) |
+| B4 | `auth_de_production.py` | C7 : `configuration_d_auth(adresse_de_production)` (corps du `PATCH /v1/projects/{ref}/config/auth` : `site_url`, `uri_allow_list`, `disable_signup`, `mailer_autoconfirm`, `password_min_length`, `hook_send_email_enabled=False`) ; V6/V7 : `ecarts_de_l_auth(config_lue, adresse)` |
+| B5 | `secrets_des_fonctions.py` | V6/V8/C9 : `ecarts_des_secrets(noms)` : `ORIGINES_AUTORISEES` présent ; `ANTHROPIC_API_KEY`, `MODE_EMAIL`, `SEND_EMAIL_HOOK_SECRET` absents pendant la beta |
+| B6 | `origines.py` | V5 : `ecarts_des_origines(reponses)` à partir de l'en-tête `Access-Control-Allow-Origin` d'un appel `OPTIONS` d'une Edge Function, depuis l'adresse de production (acceptée) et depuis `http://localhost:5173` (refusée) |
+| B7 | `projet.py` | V3/V12 : `ecarts_du_projet(projet)` (`region` = `eu-west-1`, `status` = `ACTIVE_HEALTHY`, sinon « réveiller le projet ») ; `ecarts_de_la_region_des_fonctions(en_tetes)` (`x-sb-edge-region` = `eu-west-1`) |
+| B8 | `donnees.py` | V9/V10 : `REQUETE_DONNEES_DE_TEST` + `ecarts_des_donnees_de_test(lignes)` ; `REQUETE_TACHES_PLANIFIEES` + `ecarts_des_taches_planifiees(lignes)` |
+| B9 | `version.py` | V11 : `version_du_service_worker(texte)` et `ecarts_de_version(servie, attendue)` |
+| B10 | `garder_actif.py` | 45.31 : lecture REST avec la clé `anon` puis connexion du parent de test (identifiants dans l'environnement), rapport sans aucune donnée ; écart si le projet ne répond pas |
+| B11 | `controles_production.py` | orchestration de V2 à V12 contre la production (variables d'environnement lues, refus si `SUPABASE_SERVICE_ROLE_KEY` est présente), code de sortie non nul au premier écart |
