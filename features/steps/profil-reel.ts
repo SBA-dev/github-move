@@ -60,3 +60,16 @@ export async function ouvrirLaLeconDansLApplication(page: Page, leconId: string)
   }
   await allerDansLApplication(page, chemin);
 }
+
+/**
+ * Paul vient de changer un réglage de Léa sur le serveur : la copie des profils gardée sur l'appareil est périmée. On rouvre
+ * Savanturier, on attend la liste relue, puis Léa se choisit de nouveau pour jouer avec ses réglages à jour.
+ */
+export async function rechoisirLeaApresUnReglage(page: Page, prenom = surUnProfilReel.get(page) ?? "Léa"): Promise<void> {
+  const listeRelue = page.waitForResponse((reponse) =>
+    reponse.url().includes("/rest/v1/profils_enfants") && reponse.request().method() === "GET"
+  );
+  await page.goto("/");
+  await listeRelue;
+  await choisirSonProfil(page, prenom);
+}

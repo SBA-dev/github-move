@@ -153,7 +153,7 @@ export async function commencerSeulementLExercice(page: Page, titre: string) {
   await expect(recipient(page)).toBeVisible();
 }
 
-async function jouerLaSeanceComplete(page: Page, titre: string) {
+export async function jouerLaSeanceComplete(page: Page, titre: string) {
   await ouvrirLaPageDeLaLecon(page, titre);
   await commencerLaSeanceComplete(page);
 }
@@ -230,7 +230,9 @@ Given(/^Léa a un profil enfant préparé de niveau (\S+) dans l'univers « (.+)
   if ($tags.includes("@issue-27")) await servirLaBibliothequeDuTestDeDepart(page);
   // Story #32 : la cabane lit les étoiles du serveur ; seul le scénario du profil préparé garde le profil sans identifiant.
   // Story #31 : les badges lisent les étoiles du serveur, comme la cabane (décision 0021, point 5).
-  const cabaneSurLeServeur = ($tags.includes("@issue-32") || $tags.includes("@issue-31")) && !$testInfo.title.includes("sans profil réel au serveur");
+  // Story #33 : l'histoire lit les séances du serveur ; seuls les scénarios du profil préparé et du profil de démonstration gardent le profil sans identifiant.
+  const cabaneSurLeServeur = ($tags.includes("@issue-32") || $tags.includes("@issue-31") || $tags.includes("@issue-33")) &&
+    !$testInfo.title.includes("sans profil réel au serveur") && !$testInfo.title.includes("profil de démonstration");
   // Story #26 : la bibliothèque de test des leçons des classes d'avant est servie avant l'accueil, qui la charge dès son ouverture.
   if ($tags.includes("@issue-26")) await servirLaBibliothequeDesClassesDAvant(page);
   // Story #29 : la bibliothèque de test de l'accueil est servie de la même façon.

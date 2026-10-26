@@ -517,7 +517,7 @@ Given(/^Léa a répondu juste à la question « ([^«»]+) » de la séance de r
   await questionOuFin(page, enonce);
 });
 
-Given(/^Léa a fait la séance de révision, (.+)$/, async ({ page }, deroule: string) => {
+Given(/^Léa (?:a fait|fait) la séance de révision, (.+)$/, async ({ page }, deroule: string) => {
   await commencerLaRevision(page);
   await jouerLaRevision(page, derouleDe(deroule));
 });

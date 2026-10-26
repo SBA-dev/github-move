@@ -18,6 +18,7 @@ import {
   pageDansLEspaceParent,
   profilDe,
 } from "./profils-enfants.steps.ts";
+import { estSurUnProfilReel, rechoisirLeaApresUnReglage } from "./profil-reel.ts";
 import { preparerProfil } from "./univers.steps.ts";
 import { journal, laisserPasserLeDelaiDeLecture, normaliser } from "./voix.steps.ts";
 
@@ -198,15 +199,18 @@ async function prevoirUnReglage(
 
 Given(
   /^Paul a (?:ensuite )?réglé « ([^«»]+) » sur « ([^«»]+) » pour (Léa|Tom)( sur la tablette| sur le téléphone)?$/,
-  async ({ famille, page, monde }, reglage: string, valeur: string, prenom: string, appareil?: string) => {
+  async ({ famille, page, monde, $tags }, reglage: string, valeur: string, prenom: string, appareil?: string) => {
     await prevoirUnReglage(famille, page, monde, prenom, reglageConnu(reglage), valeur, typeof appareil === "string");
+    // Story #33 : Léa joue déjà avec son vrai profil ; elle se choisit de nouveau pour que le réglage s'applique.
+    if ($tags.includes("@issue-33") && prenom === "Léa" && estSurUnProfilReel(page)) await rechoisirLeaApresUnReglage(page);
   },
 );
 
 Given(
   /^le réglage « ([^«»]+) » de (Léa|Tom) est sur « ([^«»]+) »$/,
-  async ({ famille, page, monde }, reglage: string, prenom: string, valeur: string) => {
+  async ({ famille, page, monde, $tags }, reglage: string, prenom: string, valeur: string) => {
     await prevoirUnReglage(famille, page, monde, prenom, reglageConnu(reglage), valeur, false);
+    if ($tags.includes("@issue-33") && prenom === "Léa" && estSurUnProfilReel(page)) await rechoisirLeaApresUnReglage(page);
   },
 );
 

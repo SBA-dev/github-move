@@ -401,7 +401,7 @@ Given(/^l'appareil a une voix française et une voix anglaise$/, async ({ page }
 Given(/^Léa a choisi l'univers (animaux|princesse|sports|pompier)$/, async ({ page, monde, famille, $tags }, univers: string) => {
   scenario(page).univers = univers;
   // Story #32 : le profil réel de Léa est déjà créé ; son univers change sur le serveur, puis Léa se choisit de nouveau.
-  if ($tags.includes("@issue-32") && estSurUnProfilReel(page)) {
+  if (($tags.includes("@issue-32") || $tags.includes("@issue-33")) && estSurUnProfilReel(page)) {
     await modifierLeProfil(famille, "Léa", { univers });
     // « Qui joue ? » montre d'abord la copie gardée de l'ancien univers : on attend qu'il ait relu la liste sur le serveur.
     const listeRelue = page.waitForResponse((reponse) => reponse.url().includes("/rest/v1/profils_enfants"));
