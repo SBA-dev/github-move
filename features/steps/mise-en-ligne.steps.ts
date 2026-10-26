@@ -178,7 +178,7 @@ Given(/^Pilote joue la séance complète de la leçon « (.+) » à l'adresse de
 });
 
 // La séance complète dure par nature plus de 30 s (animation de chaque bonne réponse, Edge Function) : délai triplé pour ces scénarios seuls.
-// Le séance terminée s'envoie à l'Edge Function : Léa joue avec son vrai profil (le profil préparé n'existe que sur l'appareil).
+// La séance terminée s'envoie à l'Edge Function : Léa joue avec son vrai profil (le profil préparé n'existe que sur l'appareil).
 Given(/^Léa joue la séance complète de la leçon « (.+) »$/, { tags: "@issue-45" }, async ({ famille, monde, page, $test }, titre: string) => {
   $test.slow();
   if (!estSurUnProfilReel(page)) await jouerAvecLeProfilReel(famille, monde, page);
