@@ -490,7 +490,7 @@ Then(/^l'écran indique en texte « (\d) étoiles?(?:\(s\))? sur 3 »$/, async (
   await expect(page.getByTestId("etoiles-gagnees")).toHaveText(texteDesEtoiles(Number(etoiles)));
 });
 
-Then(/^Léa voit ses étoiles$/, async ({ page }) => {
+Then(/^(?:Léa|Pilote) voit ses étoiles$/, async ({ page }) => {
   await attendreLaFinDeLaSeance(page);
   await expect(page.getByTestId("etoiles-gagnees")).toHaveText(/^[123] étoiles? sur 3$/);
 });
