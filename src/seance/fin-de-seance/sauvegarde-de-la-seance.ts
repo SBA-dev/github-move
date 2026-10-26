@@ -1,6 +1,6 @@
 import { FunctionsHttpError } from "@supabase/supabase-js";
 import type { SeanceTermineeAEnregistrer } from "@domain/apprentissage";
-import { clientSupabase } from "../../connexion/client-supabase.ts";
+import { appelerUneFonction } from "../../connexion/client-supabase.ts";
 import { parentConnecte } from "../../famille/profils/lecture-des-profils-supabase.ts";
 import { type CorpsDeLaSeance, enCorps, estUnIdentifiantDeProfil } from "./corps-de-la-seance.ts";
 import { SeancesGardeesSurLAppareil } from "./seances-gardees-sur-l-appareil.ts";
@@ -27,7 +27,7 @@ export function issueDuStatut(statut: number): IssueDeLEnvoi {
 
 async function envoyer(corps: CorpsDeLaSeance): Promise<IssueDeLEnvoi> {
   try {
-    const { error } = await clientSupabase().functions.invoke("terminer-la-seance", { body: corps });
+    const { error } = await appelerUneFonction("terminer-la-seance", corps);
     if (!error) return "enregistree";
     return error instanceof FunctionsHttpError ? issueDuStatut(error.context.status) : "impossible";
   } catch {

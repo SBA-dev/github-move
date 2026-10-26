@@ -909,3 +909,22 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-width: 4px; background:
   overflow-wrap: anywhere;
 }
 .actions-de-l-episode { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; width: 100%; }
+.liens-legaux { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 16px; font-size: .9rem; }
+.liens-legaux a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 4px; color: var(--texte); }
+.page-legale {
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+  width: min(100%, 44rem);
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .92);
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.page-legale h1, .page-legale h2, .page-legale p, .page-legale ul { margin: 0; }
+.page-legale h1 { font-size: 1.5rem; }
+.page-legale h2 { font-size: 1.15rem; }
+.page-legale section { display: grid; gap: 6px; }
+.page-legale a { display: inline-flex; align-items: center; min-height: 44px; color: var(--texte); }
+.page-legale button { justify-self: center; }

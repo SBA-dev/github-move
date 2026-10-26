@@ -24,6 +24,7 @@ import { SuiviDeLEspaceParent } from "./suivi/index.ts";
 import { MonParcours } from "./parcours/index.ts";
 import { EcranDeRevision, useQuestionsDuesALAccueil, useRenvoiDesSeancesDeRevisionGardees } from "./revision/index.ts";
 import { ToutesLesLecons, useChoixDeToutesLesLecons } from "./toutes-les-lecons/index.ts";
+import { MentionsLegales, type PageLegale, PolitiqueDeConfidentialite } from "./pages-legales/index.ts";
 import { AideEcranDAccueil } from "./installation/index.ts";
 import { type Lieu, useNavigation } from "./navigation.ts";
 import { EcranDeSeance, PageDeLaLecon, useRenvoiDesSeancesGardees } from "./seance/index.ts";
@@ -63,6 +64,8 @@ function ecranAffiche(lieu: Lieu, espaceParent: EtatDeLEspaceParent["type"], con
       return "page-de-la-lecon";
     case "episode":
       return "medailles";
+    case "politique-de-confidentialite":
+    case "mentions-legales":
     case "parcours":
     case "toutes-les-lecons":
     case "medailles":
@@ -94,6 +97,7 @@ export function Application() {
   const testDeDepartAFaire = useTestDeDepartAFaire(profilEnCours, ecran === "jeu");
   const questionsDuesALaRevision = useQuestionsDuesALAccueil(profilEnCours?.id, ecran === "jeu");
   const ecranDemande = lieuDemande.ecran;
+  const estUnePageLegale = ecranDemande === "politique-de-confidentialite" || ecranDemande === "mentions-legales";
   const profil = estPageDeLEnfant(lieu) ? profilEnCours : undefined;
   const univers = universDe(profil?.univers);
   const palette = PALETTES[univers.cle];
@@ -117,8 +121,8 @@ export function Application() {
     ouvrirLEspaceParentConnecte();
   }, [connecte, arriveParLeLien, consommerLArrivee, ouvrirLEspaceParentConnecte]);
   useEffect(() => {
-    if (ecranDemande !== "espace-parent") fermerEspaceParent();
-  }, [ecranDemande, fermerEspaceParent]);
+    if (ecranDemande !== "espace-parent" && !estUnePageLegale) fermerEspaceParent();
+  }, [ecranDemande, estUnePageLegale, fermerEspaceParent]);
   useEffect(() => {
     if (lieu !== lieuDemande) remplacer(lieu);
   }, [lieu, lieuDemande, remplacer]);
@@ -163,6 +167,9 @@ export function Application() {
     remplacer("jeu");
     aller("test-de-depart");
   };
+  const ouvrirUnePageLegale = (page: PageLegale) => aller(page);
+  const revenirDeLaPageLegale = () => (retourPossible ? revenir() : remplacer(connecte ? "espace-parent" : "accueil"));
+  const libelleDuRetourDeLaPageLegale = connecte ? "Revenir à l'espace parent" : "Revenir à la connexion";
   const entrerDansLEspaceParent = () => {
     if (connecte) acces.demanderLEntree();
     aller("espace-parent");
@@ -198,7 +205,7 @@ export function Application() {
             </div>
             {ecran === "accueil" && (
               <>
-                {connexion.etat === "deconnecte" && <EcranDeConnexion connexion={connexion} onConnecte={ouvrirLEspaceParentConnecte} />}
+                {connexion.etat === "deconnecte" && <EcranDeConnexion connexion={connexion} onConnecte={ouvrirLEspaceParentConnecte} onOuvrirUnePageLegale={ouvrirUnePageLegale} />}
                 <p>Réviser le programme du CP au CM2, en jouant.</p>
                 {connecte
                   ? (
@@ -326,8 +333,14 @@ export function Application() {
                 onAccueil={() => aller("accueil")}
               />
             )}
+            {ecran === "politique-de-confidentialite" && (
+              <PolitiqueDeConfidentialite libelleDuRetour={libelleDuRetourDeLaPageLegale} onRetour={revenirDeLaPageLegale} />
+            )}
+            {ecran === "mentions-legales" && (
+              <MentionsLegales libelleDuRetour={libelleDuRetourDeLaPageLegale} onRetour={revenirDeLaPageLegale} />
+            )}
             {ecran === "espace-parent" && connexion.etat === "deconnecte" && (
-              <EcranDeConnexion connexion={connexion} onConnecte={ouvrirLEspaceParentConnecte} />
+              <EcranDeConnexion connexion={connexion} onConnecte={ouvrirLEspaceParentConnecte} onOuvrirUnePageLegale={ouvrirUnePageLegale} />
             )}
             {ecran === "espace-parent" && connecte && etatEspaceParent.type === "questionPosee" && (
               <ControleParental
@@ -344,6 +357,7 @@ export function Application() {
                 }}
                 onSeDeconnecter={seDeconnecter}
                 deconnexionEchouee={deconnexionEchouee}
+                onOuvrirUnePageLegale={ouvrirUnePageLegale}
               >
                 <SuiviDeLEspaceParent etat={profilsDuParent.etat} />
                 <ProfilsDeLEspaceParent

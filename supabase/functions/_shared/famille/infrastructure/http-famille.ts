@@ -102,7 +102,7 @@ export function entetes(origine: string | null, origines: readonly string[]): He
   const resultat = new Headers({ "Content-Type": "application/json", "Vary": "Origin" });
   if (origine !== null && origines.includes(origine)) {
     resultat.set("Access-Control-Allow-Origin", origine);
-    resultat.set("Access-Control-Allow-Headers", "authorization, x-client-info, apikey, content-type");
+    resultat.set("Access-Control-Allow-Headers", "authorization, x-client-info, apikey, content-type, x-region");
     resultat.set("Access-Control-Allow-Methods", "POST, OPTIONS");
   }
   return resultat;

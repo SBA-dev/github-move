@@ -1,6 +1,6 @@
 import { FunctionsHttpError } from "@supabase/supabase-js";
 import type { ProfilEnCours } from "@domain/famille";
-import { clientSupabase } from "../../connexion/client-supabase.ts";
+import { appelerUneFonction } from "../../connexion/client-supabase.ts";
 import type { ReglagesComplets } from "../../reglages/index.ts";
 import { profilCreeCommeProfilEnCours } from "./profil-cree.ts";
 
@@ -28,7 +28,7 @@ async function messageDeLaReponse(reponse: Response): Promise<string> {
 }
 
 async function appeler(fonction: string, corps: object): Promise<unknown> {
-  const { data, error } = await clientSupabase().functions.invoke(fonction, { body: corps });
+  const { data, error } = await appelerUneFonction(fonction, corps);
   if (error instanceof FunctionsHttpError) throw new EcritureDeProfilRefusee(await messageDeLaReponse(error.context));
   if (error) throw new EcritureDeProfilRefusee(SANS_RESEAU);
   return data;

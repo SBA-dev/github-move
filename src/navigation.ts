@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
+import { CHEMINS_DES_PAGES_LEGALES, type PageLegale } from "./pages-legales/pages.ts";
 
 export type EcranSimple =
-  | "accueil" | "jeu" | "parcours" | "toutes-les-lecons" | "medailles" | "test-de-depart" | "espace-parent" | "revision";
+  | "accueil" | "jeu" | "parcours" | "toutes-les-lecons" | "medailles" | "test-de-depart" | "espace-parent" | "revision" | PageLegale;
 
 /** Où l'enfant était quand il a ouvert un épisode : « Fermer le livre » l'y ramène. */
 export type OrigineDeLEpisode = "medailles" | "fin-de-seance";
@@ -25,6 +26,7 @@ const CHEMINS: Readonly<Record<EcranSimple, string>> = {
   "test-de-depart": "/test-de-depart",
   "espace-parent": "/espace-parent",
   "revision": "/revision",
+  ...CHEMINS_DES_PAGES_LEGALES,
 };
 
 const PAGE_D_UNE_LECON = /^\/lecon\/([^/]+)(?:\/(seance)(?:\/(\d+))?)?\/?$/;

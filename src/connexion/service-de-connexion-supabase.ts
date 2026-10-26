@@ -12,7 +12,7 @@ import {
   ServiceDeConnexionIndisponible,
   TropDEssaisDeReinitialisation,
 } from "@domain/famille";
-import { clientSupabase } from "./client-supabase.ts";
+import { appelerUneFonction, clientSupabase } from "./client-supabase.ts";
 
 const STATUT_SERVICE_INDISPONIBLE = 503;
 const STATUT_REFUS_DES_IDENTIFIANTS = 400;
@@ -36,9 +36,7 @@ export class EnvoiDuLienImpossible extends Error {
 
 export class ServiceDeConnexionSupabase implements ServiceDeConnexion {
   async inscrire(adresse: AdresseEmail, motDePasse: string): Promise<void> {
-    const { error } = await clientSupabase().functions.invoke("inscrire-le-parent", {
-      body: { adresse: adresse.valeur, motDePasse },
-    });
+    const { error } = await appelerUneFonction("inscrire-le-parent", { adresse: adresse.valeur, motDePasse });
     if (estUneReponseDeLaFonction(error, 409)) throw new AdresseDejaUtilisee();
     if (estUneReponseDeLaFonction(error, STATUT_SERVICE_INDISPONIBLE)) throw new ServiceDeConnexionIndisponible();
     if (error) throw error;
@@ -79,9 +77,7 @@ export class ServiceDeConnexionSupabase implements ServiceDeConnexion {
   }
 
   async reinitialiserLeMotDePasse(adresse: AdresseEmail, prenom: Prenom, motDePasse: string): Promise<void> {
-    const { error } = await clientSupabase().functions.invoke("reinitialiser-le-mot-de-passe", {
-      body: { adresse: adresse.valeur, prenom: prenom.valeur, motDePasse },
-    });
+    const { error } = await appelerUneFonction("reinitialiser-le-mot-de-passe", { adresse: adresse.valeur, prenom: prenom.valeur, motDePasse });
     if (estUneReponseDeLaFonction(error, 401)) throw new InformationsDeReinitialisationIncorrectes();
     if (estUneReponseDeLaFonction(error, 429)) throw new TropDEssaisDeReinitialisation();
     if (estUneReponseDeLaFonction(error, STATUT_SERVICE_INDISPONIBLE)) throw new ServiceDeConnexionIndisponible();
