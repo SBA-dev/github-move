@@ -50,3 +50,23 @@ Bloc « Motivation, histoire » (domaine) :
 - Environnement : en plus du lien `chromium_headless_shell-1194 → 1243`, deux liens ont été ajoutés dans le dossier 1243 (`chrome-linux → chrome-headless-shell-linux64`, `headless_shell → chrome-headless-shell`), hors du dépôt.
 - Scénarios d'autres stories rendus faux par la fin de phrase de l'épisode : leurs phrases attendues ont été mises à jour en application de la décision 33.13 (validée par le PO, valable pour #31, #32 et #33), sur le modèle de 31.23, sans changer ni la règle ni les « Étant donné » (`a8a8a1d`). Sont concernés #24 (2), #28 (1 plan), #31 (2) et #32 (2).
 - 12:35 UTC : périmètre lancé sur `telephone` en `--workers=2` : #20, #24, #28, #29, #30, #31, #32, #33 et #65 (fichiers touchés : écran de fin, fluence, révision, séances retenues pendant l'utilisation, « Mes médailles »).
+- 13:38 UTC : périmètre terminé : 386/398. Les 12 KO se répartissent ainsi :
+  - 3 timeouts sous charge ;
+  - 9 scénarios d'autres stories rendus faux par leur texte : « Lire l'épisode » dans les boutons de fin (33.12, 33.20), lecture « tout lire » avec l'histoire (33.22).
+  Ces 9 scénarios ont été mis à jour sur le modèle de 31.23 (`dad95a7`, `6c92b68`), avec une nouvelle step pour la fin de révision (`c611acf`). Le titre d'un scénario de #28 devient « … propose « Accueil » et « Lire l'épisode » ».
+- 13:45 UTC : les 12 relancés seuls en `--workers=1` : 12/12. **Périmètre : 398/398.**
+- 13:47 UTC : revue du delta depuis `c3d0805` (correction CSS, steps, scénarios des autres stories) : **APPROUVÉ**. Review finale publiée sur la PR #110. Nettoyage des steps (`f2a79ff`).
+- 13:48 UTC : `main` n'a pas bougé depuis le départ (`9bf0fa1`) : aucune intégration à faire.
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Durée, du lancement à PRÊTE À MERGER | 11:36 → ~13:50 UTC, environ 2 h 15 |
+| Temps passé à attendre | environ 35 min sans E2E de périmètre (non-régression de `main` jusqu'à 12:13) ; travail continué pendant ce temps (câblage, revue, steps ciblés). Aucune attente du PO ni de verrou |
+| Cycles TDD | 7 (6 dans le bloc domaine, 1 pendant la revue) |
+| Cycles de review À CORRIGER | 1 (revue globale : 2 bloquants) |
+| Cycles E2E KO | 2 : un bug applicatif (mode dys) ; 9 scénarios d'autres stories rendus faux par leur texte, plus 3 timeouts sous charge |
+| Intégrations de `main` | 0, sans conflit |
+| Run de périmètre | 1 h pour 398 scénarios sur `telephone`, en `--workers=2` |
+| Ressources | aucune : pas de migration, pas d'Edge Function, aucun verrou `base` |
