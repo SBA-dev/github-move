@@ -26,3 +26,9 @@ Bloc C, front :
 8. Pastille de série sur l'accueil de l'enfant, lecture « tout lire ».
 
 ## Cycles
+
+### Bloc A, Motivation (07:00 → 07:25)
+- Comportement 1 `JoursDeSeance` : RED 48238dc, GREEN d7755c6.
+- Comportement 2 `serieDeJours` : RED 7328319, GREEN e02f5b6 (10 cas, dont jour futur ignoré et 365 jours).
+- Comportements 3-4 `texteDeLaPastille`, `saluerAvecLaSerie` : RED d80519f, GREEN 48bf95c ; exports `index.ts` 8572c11 (ajouts en fin de fichier, #31 Badges travaille en parallèle dans Motivation).
+- Revue delta `b63a662..8572c11` : **APPROUVÉ**, 0 bloquant. Non bloquants retenus pour la suite : `Serie` est un type simple (seul `serieDeJours` en produit) ; `reunir`/`contient` en O(n²) (à revoir si #33 lit un long historique) ; 30.7 et 30.8 (après minuit, changement d'heure) sont couverts par les tests de `Jour`/`jourDe` de #28 (`apprentissage/domain/jour_test.ts`), pas de test côté Motivation.
