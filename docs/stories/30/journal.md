@@ -68,3 +68,8 @@ Bloc C, front :
 | Cycles E2E KO | 1 (2 défauts de steps), plus des timeouts de charge relancés seuls |
 | Intégrations de `main` | 0 (`main` n'a pas bougé) |
 | Régression sur `main` après merge | à relever par la prochaine non-régression |
+
+## Merge (verrou `merge` accordé à 09:42 UTC)
+- `main` a reçu #31 (`607eabb`) : intégrée par le merge `78237b2`. Un conflit d'ajouts dans `motivation/domain/index.ts`, résolu en gardant les deux blocs. Relecture du delta : **APPROUVÉ**.
+- Sur le head intégré : 2393 unitaires, lint, fmt, `tsc`, build OK ; E2E `telephone` #30 + #31 : 60/73 en `--workers=2` (17 min), 13 timeouts de charge relancés seuls en `--workers=1` : **73/73**. Pas de CI configurée sur la PR.
+- Mesures mises à jour : 1 intégration de `main`, 1 conflit (ajouts, résolu sans `implementer`) ; attente du verrou `merge` ~5 min (#31 avant).
