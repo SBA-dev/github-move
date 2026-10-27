@@ -59,7 +59,7 @@ export const UNIVERS: readonly Univers[] = [
       nom: "Agent Max",
       titre: "le détective futé",
       expressions: ["Enquête résolue !", "Bien vu, détective !", "Affaire classée !"],
-      caractere: { sexe: "feminine", hauteur: 1.05, rythme: 1.0 },
+      caractere: { sexe: "masculine", hauteur: 1.05, rythme: 1.0 },
     },
   },
   {
