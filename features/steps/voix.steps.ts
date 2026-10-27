@@ -226,6 +226,34 @@ export async function terminerLaLecture(page: Page) {
   });
 }
 
+/**
+ * Termine la lecture en cours seulement si ce n'est pas `voulu`, et le décide dans la page, sans rendre la main entre la lecture
+ * du journal et la fin : sinon, l'application peut passer à la lecture voulue entre les deux, et l'étape la terminerait à tort.
+ * Rend vrai quand la lecture en cours est `voulu`.
+ */
+export async function terminerLaLectureSiCenEstPas(page: Page, voulu: string): Promise<boolean> {
+  return await page.evaluate((texteVoulu) => {
+    const faux = Reflect.get(window, "__faux") as {
+      journal: Array<{ type: string; lot: number; texte: string }>;
+      enonces: Array<{ lot: number; enonce: { onend: (() => void) | null } }>;
+      actifs: unknown[];
+      lot: number;
+    };
+    const lue = faux.journal
+      .filter((e) => e.type === "speak" && e.lot === faux.lot)
+      .map((e) => e.texte)
+      .join(" ")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (lue === texteVoulu) return true;
+    if (lue !== "") {
+      faux.actifs = [];
+      faux.enonces[faux.enonces.length - 1]?.enonce.onend?.();
+    }
+    return false;
+  }, voulu);
+}
+
 // Les étapes de voix appliquées après la préparation de la page (voix de l'appareil, Muet) : le scénario #17 les règle
 // après le Contexte, qui a déjà préparé la page. Cette préparation s'exécute après l'autre, donc la dernière gagne.
 export async function reappliquerLAppareil(page: Page) {

@@ -5,7 +5,7 @@ import { bulle, injecter, type LeconBrute, leconDeTest, leconDeTitre } from "./e
 import { avancerJusquAuxChoix, demarrer, etatDesChoix, lancer, questionsReussies } from "./exercices-a-choix.steps.ts";
 import { figee, repondreAuNombre } from "./calcul-fluence-addition.steps.ts";
 import { cleDe, EXPRESSIONS_PAR_PERSONNAGE, FELICITATIONS_COMMUNES, preparerProfil } from "./univers.steps.ts";
-import { journal, normaliser, terminerLaLecture } from "./voix.steps.ts";
+import { journal, normaliser, terminerLaLecture, terminerLaLectureSiCenEstPas } from "./voix.steps.ts";
 
 // Story #21 : boîte à jetons et schéma en barres.
 //
@@ -384,12 +384,7 @@ Then(/^(Léa|Tom) répond au clavier de cristaux$/, async ({ page }, _enfant: st
 
 Then(/^Léa entend Noisette lire « ([^«»]+) »$/, async ({ page }, texte: string) => {
   const voulu = normaliser(texte);
-  await expect.poll(async () => {
-    const lue = (await journal(page)).lecture.texte;
-    if (lue === voulu) return true;
-    if (lue !== "") await terminerLaLecture(page);
-    return false;
-  }, { intervals: [100], timeout: DELAI_D_UN_APPEL_SERVEUR_MS }).toBe(true);
+  await expect.poll(() => terminerLaLectureSiCenEstPas(page, voulu), { intervals: [100], timeout: DELAI_D_UN_APPEL_SERVEUR_MS }).toBe(true);
   await expect(page.getByTestId("enonce-du-probleme")).toHaveText(voulu);
 });
 
