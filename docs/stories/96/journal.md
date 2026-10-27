@@ -20,3 +20,5 @@
 - Bloc TDD 1 « Motivation, Agent Max » (3 comportements) :
   - B1 nom et titre : RED `ec92025` (échec vérifié), GREEN `72084c4`. Le changement a rendu rouge `paroles_test.ts` (phrase de présentation) : l'attente a été mise à jour par `test-writer` (`b781b7c`), verte d'emblée puisque la phrase vient du nom et du titre.
   - B2 voix masculine : RED `8571613` (échec vérifié), GREEN `cb7f9a8`. 2462 tests verts, lint, fmt, `tsc` OK.
+- Revue intermédiaire du bloc 1 (delta `ec92025..cb7f9a8`) : **APPROUVÉ**, aucun bloquant. Non bloquants : le `feat` `72084c4` a laissé `paroles_test.ts` rouge jusqu'à `b781b7c` (à l'avenir, test-writer cherche avant le RED tous les tests qui dépendent d'une donnée renommée) ; `docs/stories/7/domain-model.md:36` et `docs/maquettes/README.md:80` citent encore Agente Mila ; apparence d'Agent Max à faire dans le bloc des dessins. Dernier commit relu : `cb7f9a8`.
+- Glossaire (ajouts) : `c19d556`. Scénarios de #6 (Agent Max) : `d26e869`.
