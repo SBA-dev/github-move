@@ -106,3 +106,10 @@ Bloc B « Exploitation, vérifications scriptées » : module Python `scripts/ex
 | Intégrations de `main` | 1 (`a3f4d71`, `fix(#33)`), 0 conflit |
 | Verrous | `base` (20:28 →, redéploiement des 9 fonctions pour le CORS `x-region`, à rendre au merge) |
 | Escalades | 2 au PO (P1 à P12 et 45.33 à 45.35 ; réseau et jeton de gestion) |
+
+## 2026-10-27 : 45.36, pas de pages légales pendant la beta
+
+- 00:06 UTC : décision du PO (« Réponse A », commentaire `[Responsable]` sur #45). Passe `tablette` de la non-régression sur `9d1a392` arrêtée (elle ne valait plus pour le commit publié). `telephone` sur `9d1a392` : 1191/1195 (4 KO de durée, sans lien avec #45). La passe `tablette` avait été interrompue une première fois à 490/1195 par la limite d'usage (23:36 UTC).
+- Branche `feature/45-mise-en-ligne` recréée depuis `main` `9d1a392`. Critères `92e0e6a` (règle 3 retirée, décision 45.36 ; 4 règles, 14 scénarios) ; tests `729f68a` (RED : `exemple.test` n'est plus un écart de V1) ; code `7019d55` (V1), `9969a1a` (front et domaine remis à leur état de `953f527`) ; docs `b0e504b`, `7b28431`, `b9206c6` (test de l'environnement de la session de publication : `/auth/v1/settings`, pas `/rest/v1/`) ; steps `2be9b9a`.
+- Revue du delta : **APPROUVÉ** (non bloquants de documentation repris dans `7b28431`).
+- Vérifications : Deno 2462/2462, pytest 1564/1564, lint, fmt, tsc et build OK, V1 sur le build : 0. **E2E `telephone`, `--workers=2`** : #5, #10, #11, #12, #39, #45, #72 et #73 : **255/255** ; **PWA 34/34**.
