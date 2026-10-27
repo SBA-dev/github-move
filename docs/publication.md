@@ -31,7 +31,7 @@ Une session créée avant les réglages ne voit ni l'hôte du site ni celui de l
 3. **Ne jamais** mettre la clé `service_role` de production dans l'environnement de la session ni dans un fichier : les scripts et la configuration `@production` refusent de démarrer si `SUPABASE_SERVICE_ROLE_KEY` est présente.
 4. Connaître les limites de l'offre Free : pause après environ une semaine sans activité (voir § 7), aucune sauvegarde automatique, environ 500 Mo de base, 1 Go de fichiers, 5 Go de trafic par mois.
 
-### 2.3 Variables d'environnement de la session de publication (PO, P5, P8)
+### 2.3 Variables d'environnement de la session de publication (PO, P5)
 
 Le PO règle l'environnement avant de créer la session (liste commentée dans `.env.example`) :
 
@@ -44,7 +44,6 @@ Le PO règle l'environnement avant de créer la session (liste commentée dans `
 | `SUPABASE_ACCESS_TOKEN` | jeton de gestion (API de gestion, migrations, fonctions, secrets, Auth) |
 | `PARENT_DE_TEST_PRODUCTION_EMAIL`, `PARENT_DE_TEST_PRODUCTION_MOT_DE_PASSE` | parent de test de la production |
 | `ALWAYSDATA_WEBDAV_URL`, `ALWAYSDATA_WEBDAV_UTILISATEUR`, `ALWAYSDATA_WEBDAV_MOT_DE_PASSE` | envoi du front |
-| `VITE_EDITEUR`, `VITE_DIRECTEUR_DE_PUBLICATION`, `VITE_ADRESSE_DE_CONTACT` | identité de l'éditeur des pages légales, lue au build (P6, P7, P8) |
 
 Dans la session de publication, `VITE_SUPABASE_URL` et `VITE_SUPABASE_ANON_KEY` ne sont **pas** posées dans l'environnement : elles ne servent qu'au **build de production** (§ 3.7), posées pour cette seule commande à partir de `SUPABASE_PRODUCTION_URL` et `SUPABASE_PRODUCTION_ANON_KEY`. Ainsi aucune commande de test ne vise la production par erreur.
 
@@ -53,12 +52,7 @@ Absentes de cet environnement, toujours : `SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPI
 
 ### 2.4 Adresse de contact et textes légaux (PO, P6, P7, P8)
 
-L'adresse de contact est une boîte que le PO lit : c'est le moyen de la demande de suppression des données (§ 8). Les textes de la politique de confidentialité et des mentions légales sont relus et complétés par le PO, qui en reste responsable (identité de l'éditeur, directeur de publication, hébergeurs : alwaysdata pour le front, Supabase Inc. pour les données).
-
-Points à relire par le PO (45.9) avant la première publication :
-- hébergeur des données = **Supabase Inc.**, société américaine, base et fonctions dans la région Irlande (`eu-west-1`) : la phrase « hébergées dans l'Union européenne, en Irlande, par un prestataire américain » remplace « tout reste dans l'Union européenne » ;
-- **adresse et téléphone** des deux hébergeurs, marqués « à compléter par l'éditeur » dans les mentions légales ;
-- la liste des **données gardées** et de ce qui reste sur l'appareil (profils, séances en attente, file de révision, leçons personnelles).
+P6 et P7 sans objet pendant la beta (45.36) ; l'adresse de contact reste le moyen des demandes de suppression des données (§ 8).
 
 ### 2.5 Après la première publication seulement (PO, 45.18, 45.24)
 
@@ -157,14 +151,14 @@ Elle affiche le statut HTTP (200 attendu) et rien d'autre. Les contrôles V6 et 
 
 ### 3.7 Front, par WebDAV (45.33)
 
-**Build de production et V1, en dernier**, juste avant l'envoi : l'identité de l'éditeur (`VITE_EDITEUR`, `VITE_DIRECTEUR_DE_PUBLICATION`, `VITE_ADRESSE_DE_CONTACT`) est dans l'environnement de la session ; le projet de production n'est posé que pour cette commande.
+**Build de production et V1, en dernier**, juste avant l'envoi : le projet de production n'est posé que pour cette commande.
 
 ```
 VITE_SUPABASE_URL=$SUPABASE_PRODUCTION_URL VITE_SUPABASE_ANON_KEY=$SUPABASE_PRODUCTION_ANON_KEY npm run build
 python3 scripts/exploitation/secrets_du_build.py dist      # V1
 ```
 
-V1 échoue si `dist/` contient une clé `service_role`, un nom de secret interdit, un jeton de gestion, `profil-prepare` ou les valeurs fictives des pages légales (`exemple.test`, signe que l'identité de l'éditeur n'était pas dans l'environnement du build). Seules l'adresse du projet et la clé publique `anon` sont permises. Au premier échec, on n'envoie rien.
+V1 échoue si `dist/` contient une clé `service_role`, un nom de secret interdit, un jeton de gestion, `profil-prepare`. Seules l'adresse du projet et la clé publique `anon` sont permises. Au premier échec, on n'envoie rien.
 
 Puis l'envoi :
 

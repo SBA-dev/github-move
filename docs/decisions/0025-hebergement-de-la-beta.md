@@ -32,3 +32,7 @@ Le PO veut mettre la beta en ligne sans dépense (« je veux une solution gratui
 - La tâche Claude consomme la limite d'usage et dépend du réseau de la session vers la production ; le réveil manuel depuis le tableau de bord reste le secours.
 - Les certitudes sur alwaysdata (lecture de `.htaccess`, directive `<If>`, WebDAV, SSH sur l'offre gratuite) sont à confirmer par la première publication ; la procédure donne le repli de chaque cas.
 - Avant l'ouverture au public (45b) : Supabase Pro (sauvegardes, pas de pause), domaine définitif, fournisseur d'e-mails européen, CI.
+
+## Note du 2026-10-27
+
+Pages légales retirées pendant la beta (45.36), rétablies avec 45b. L'adresse de contact reste le moyen des demandes de suppression des données.
