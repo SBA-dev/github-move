@@ -65,6 +65,23 @@ Les mises à jour remplacent seulement le nom. Le sens d'une étape existante ne
   - `univers_test.ts` et `paroles_test.ts` ;
   - `docs/stories/7/domain-model.md` : tableau des voix, pour l'historique.
 
+### Scénarios d'autres stories mis à jour
+
+Raison : décision 96.5 (B), précisée par 96.8. Le personnage guide de l'univers « Police » s'appelle désormais **Agent Max**, « le détective futé », à la place d'Agente Mila. Il garde les mêmes trois expressions. Seul le nom change, avec l'accord des mots qui en dépendent. Le sens des scénarios ne change pas, et leurs tags non plus.
+
+| Fichier | Scénario | Avant | Après |
+|---|---|---|---|
+| `features/6-univers-et-personnage-guide.feature` (l. 24) | Plan « Dans l'univers « <univers> », le personnage guide est <personnage guide> », ligne Police | `Agente Mila` | `Agent Max` |
+| `features/6-univers-et-personnage-guide.feature` (l. 97) | Plan des expressions de chaque personnage guide, ligne Police | `Agente Mila` (mêmes trois expressions) | `Agent Max` (mêmes trois expressions) |
+| `features/6-univers-et-personnage-guide.feature` (l. 106) | « Les félicitations communes sont les mêmes dans tous les univers » (`@issue-58`) | « dite par Agente Mila » | « dite par Agent Max » |
+
+Aucun autre `.feature` ne citait Agente Mila. Les mentions restantes sont dans `features/96-refonte-visuelle.feature` et sont voulues (description, vérification que l'ancien nom n'apparaît plus, rappel de la réponse 96.8).
+
+Étapes à adapter par `e2e-tester` (non modifiées ici) :
+- `features/steps/univers.steps.ts` (l. 216) : la table des expressions est indexée par `"Agente Mila"` ; il faut la clé `"Agent Max"`.
+- `features/steps/profils-enfants.steps.ts` (l. 449) : l'expression régulière `(Lumi|Coach Léo|Agente Mila|Capitaine Sam|Lili) dit « Bonjour … »` doit accepter `Agent Max`.
+- `features/steps/exercices-a-choix.steps.ts` (l. 673) : « la félicitation commune dite par (.+) » accepte déjà tout nom ; rien à changer.
+
 ## Hors périmètre
 
 - Retours de réponse et effets sonores, dont le son au toucher d'un bouton : #97. Les boutons de #96 sont muets.

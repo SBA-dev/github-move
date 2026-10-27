@@ -21,7 +21,7 @@ Fonctionnalité: Univers et personnage guide
         | Princesses et fées  | Lumi             |
         | Animaux de la forêt | Noisette         |
         | Sports              | Coach Léo        |
-        | Police              | Agente Mila      |
+        | Police              | Agent Max        |
         | Pompiers            | Capitaine Sam    |
         | Danse               | Lili             |
 
@@ -94,7 +94,7 @@ Fonctionnalité: Univers et personnage guide
         | Princesses et fées  | Lumi             | « Abracadabra ! », « Par ma baguette, bravo ! », « Magique ! »         |
         | Animaux de la forêt | Noisette         | « Youpi ! », « Hop hop hop, bravo ! », « Trop fort, ça ! »             |
         | Sports              | Coach Léo        | « Allez, on y va ! », « Et c'est le but ! », « Quelle équipe ! »       |
-        | Police              | Agente Mila      | « Enquête résolue ! », « Bien vu, détective ! », « Affaire classée ! » |
+        | Police              | Agent Max        | « Enquête résolue ! », « Bien vu, détective ! », « Affaire classée ! » |
         | Pompiers            | Capitaine Sam    | « Mission accomplie ! », « Pin-pon, bravo ! », « Sauvetage réussi ! »  |
         | Danse               | Lili             | « Et hop, une pirouette ! », « En rythme, bravo ! », « Quelle grâce ! » |
 
@@ -103,7 +103,7 @@ Fonctionnalité: Univers et personnage guide
       Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Police »
       Et que Léa joue une leçon de test de deux questions à quatre choix
       Quand Léa répond « 7 »
-      Alors la félicitation commune dite par Agente Mila fait partie de « Bravo ! », « Super ! », « Ouah, bien joué ! », « Exactement ! », « Génial ! », « Tu gères ! », « Parfait ! », « Oui, c'est ça ! »
+      Alors la félicitation commune dite par Agent Max fait partie de « Bravo ! », « Super ! », « Ouah, bien joué ! », « Exactement ! », « Génial ! », « Tu gères ! », « Parfait ! », « Oui, c'est ça ! »
 
     @issue-58
     Scénario: Après une erreur, le personnage guide encourage sans punir
