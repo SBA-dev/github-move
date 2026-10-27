@@ -213,7 +213,7 @@ export const EXPRESSIONS_PAR_PERSONNAGE: Readonly<Record<string, readonly string
   "Lumi": ["Abracadabra !", "Par ma baguette, bravo !", "Magique !"],
   "Noisette": ["Youpi !", "Hop hop hop, bravo !", "Trop fort, ça !"],
   "Coach Léo": ["Allez, on y va !", "Et c'est le but !", "Quelle équipe !"],
-  "Agente Mila": ["Enquête résolue !", "Bien vu, détective !", "Affaire classée !"],
+  "Agent Max": ["Enquête résolue !", "Bien vu, détective !", "Affaire classée !"],
   "Capitaine Sam": ["Mission accomplie !", "Pin-pon, bravo !", "Sauvetage réussi !"],
   "Lili": ["Et hop, une pirouette !", "En rythme, bravo !", "Quelle grâce !"],
 };
