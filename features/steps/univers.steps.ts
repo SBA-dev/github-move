@@ -144,7 +144,7 @@ When(/^Léa et Tom commencent à jouer, chacun sur sa tablette$/, async ({ brows
     await ouvrirLAccueilDeLEnfant(page, profil.univers);
     const paysage = await page.getByTestId("paysage").getAttribute("data-univers");
     const couleur = await page.locator(".application").evaluate((el) =>
-      getComputedStyle(el).getPropertyValue("--accent").trim()
+      getComputedStyle(el).getPropertyValue("--principale").trim()
     );
     monde.tablettes.set(prenom, { paysage, couleur });
     await contexte.close();
