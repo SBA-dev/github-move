@@ -105,7 +105,7 @@ export const CoachLeo: DessinDuPersonnage = ({ humeur, id }) => (
             </g>
             <Yeux>
               <g transform="translate(-11.2 -5) scale(0.93 1)">
-                <ellipse rx="7.4" ry="9.6" fill="#FFFFFF" stroke="#D9A67A" strokeWidth="1" />
+                <ellipse rx="7.4" ry="9.6" fill="#FFFFFF" />
                 <g transform={choisir(humeur, undefined, undefined, "translate(0 -0.1) scale(1.05)")}>
                   <circle cx=".5" cy="3" r="4.8" fill="#6B4226" />
                   <circle cx=".5" cy="3" r="2.5" fill="#1B1530" />
@@ -121,7 +121,7 @@ export const CoachLeo: DessinDuPersonnage = ({ humeur, id }) => (
             </Yeux>
             <Yeux>
               <g transform="translate(11.2 -5) scale(0.93 1)">
-                <ellipse rx="7.4" ry="9.6" fill="#FFFFFF" stroke="#D9A67A" strokeWidth="1" />
+                <ellipse rx="7.4" ry="9.6" fill="#FFFFFF" />
                 <g transform={choisir(humeur, undefined, undefined, "translate(0 -0.1) scale(1.05)")}>
                   <circle cx=".5" cy="3" r="4.8" fill="#6B4226" />
                   <circle cx=".5" cy="3" r="2.5" fill="#1B1530" />
@@ -135,7 +135,7 @@ export const CoachLeo: DessinDuPersonnage = ({ humeur, id }) => (
                 <path d="M-4.5 8.8 Q0 10.6 4.5 8.8" fill="none" stroke="#33304A" strokeWidth="1" strokeLinecap="round" opacity=".4" />
               </g>
             </Yeux>
-            <circle r="3.6" fill="#E9A77A" stroke="#33304A" strokeWidth="2.2" />
+            <circle cy="2.5" r="3.4" fill="#E9A77A" stroke="#33304A" strokeWidth="2.2" />
             <circle cx="-1" cy="-1" r="1" fill="#FFD9BC" />
             <g transform="translate(0 -1)">
               {bouche(humeur, id)}

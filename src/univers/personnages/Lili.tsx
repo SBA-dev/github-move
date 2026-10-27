@@ -64,7 +64,6 @@ export const Lili: DessinDuPersonnage = ({ humeur, id }) => (
       <g transform="translate(12.8 59.9)">
         {CHAUSSURE}
       </g>
-      <path fill="#E6B5E8" stroke="#33304A" strokeWidth="3" strokeLinejoin="round" d="M-49 -8 Q-40.8 25 -32.7 16 Q-24.5 25 -16.3 16 Q-8.2 25 0 16 Q8.2 25 16.3 16 Q24.5 25 32.7 16 Q40.8 25 49 16 L49 -8 Q0 -4 -49 -8 Z" />
       <path fill="#F3C9F2" stroke="#33304A" strokeWidth="3" strokeLinejoin="round" d="M-44 -5 Q-37.7 28 -31.4 19 Q-25.1 28 -18.9 19 Q-12.6 28 -6.3 19 Q0 28 6.3 19 Q12.6 28 18.9 19 Q25.1 28 31.4 19 Q37.7 28 44 19 L44 -5 Q0 -1 -44 -5 Z" />
       <path fill="#D9A6DE" d="M13.2 8 Q41.8 -2 44 12 Q30.8 18 13.2 17 Z" />
       <path fill="none" stroke="#b55bd6" strokeWidth="5" strokeLinecap="round" d="M-24.2 -5 Q0 2 24.2 -5" />
@@ -108,7 +107,7 @@ export const Lili: DessinDuPersonnage = ({ humeur, id }) => (
             </g>
             <Yeux>
               <g transform="translate(-13.1 -5) scale(0.91 1)">
-                <ellipse rx="7.4" ry="9.6" fill="#FFFFFF" stroke="#C9956E" strokeWidth="1" />
+                <ellipse rx="7.4" ry="9.6" fill="#FFFFFF" />
                 <g transform={choisir(humeur, undefined, undefined, "translate(0 -0.1) scale(1.05)")}>
                   <circle cx=".5" cy="3" r="4.8" fill="#2F6B3C" />
                   <circle cx=".5" cy="3" r="3.9" fill="#4E9A5B" />
@@ -126,7 +125,7 @@ export const Lili: DessinDuPersonnage = ({ humeur, id }) => (
             </Yeux>
             <Yeux>
               <g transform="translate(13.1 -5) scale(0.91 1)">
-                <ellipse rx="7.4" ry="9.6" fill="#FFFFFF" stroke="#C9956E" strokeWidth="1" />
+                <ellipse rx="7.4" ry="9.6" fill="#FFFFFF" />
                 <g transform={choisir(humeur, undefined, undefined, "translate(0 -0.1) scale(1.05)")}>
                   <circle cx=".5" cy="3" r="4.8" fill="#2F6B3C" />
                   <circle cx=".5" cy="3" r="3.9" fill="#4E9A5B" />
@@ -143,7 +142,7 @@ export const Lili: DessinDuPersonnage = ({ humeur, id }) => (
               </g>
             </Yeux>
             <g transform="translate(0 8)">
-              <circle r="3.2" fill="#E9A77A" stroke="#33304A" strokeWidth="2.2" />
+              <circle cy="2.5" r="3" fill="#E9A77A" stroke="#33304A" strokeWidth="2.2" />
               <circle cx="-1" cy="-1" r="1" fill="#FFD9BC" />
             </g>
             <g transform="translate(0 1)">

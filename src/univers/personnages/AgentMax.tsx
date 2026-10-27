@@ -129,13 +129,13 @@ export const AgentMax: DessinDuPersonnage = ({ humeur, id }) => (
             {bouche(humeur, id)}
           </g>
           <g transform="translate(0 8)">
-            <circle r="4.6" fill="#E9A77A" stroke="#33304A" strokeWidth="2.6" />
+            <circle cy="3" r="3.8" fill="#E9A77A" stroke="#33304A" strokeWidth="2.6" />
             <circle cx="-1.2" cy="-1.2" r="1.3" fill="#FFD9BC" />
           </g>
           <g transform="scale(1.3)" data-testid="visage" data-humeur={humeur}>
             <Yeux>
               <g transform="translate(-12 0)">
-                <ellipse rx="7.4" ry="9.6" fill="#FFFFFF" stroke="#E3AE85" strokeWidth="1" />
+                <ellipse rx="7.4" ry="9.6" fill="#FFFFFF" />
                 <g transform={choisir(humeur, undefined, undefined, "translate(0 -0.1) scale(1.05)")}>
                   <circle cx=".5" cy="3" r="4.8" fill="#6B4226" />
                   <circle cx=".5" cy="3" r="2.5" fill="#1B1530" />
@@ -151,7 +151,7 @@ export const AgentMax: DessinDuPersonnage = ({ humeur, id }) => (
             </Yeux>
             <Yeux>
               <g transform="translate(12 0)">
-                <ellipse rx="7.4" ry="9.6" fill="#FFFFFF" stroke="#E3AE85" strokeWidth="1" />
+                <ellipse rx="7.4" ry="9.6" fill="#FFFFFF" />
                 <g transform={choisir(humeur, undefined, undefined, "translate(0 -0.1) scale(1.05)")}>
                   <circle cx=".5" cy="3" r="4.8" fill="#6B4226" />
                   <circle cx=".5" cy="3" r="2.5" fill="#1B1530" />
@@ -173,7 +173,6 @@ export const AgentMax: DessinDuPersonnage = ({ humeur, id }) => (
             <path d="M-8 0 Q0 -5 8 0" fill="none" stroke="#3A2314" strokeWidth="4.2" strokeLinecap="round" />
           </g>
           <path fill="#4a2f1d" stroke="#33304A" strokeWidth="3.6" strokeLinejoin="round" d="M-41 -14 Q-45 -46 0 -50 Q45 -46 41 -14 Q41 -5 36 -5 Q31 -5 31 -14 V-22 Q0 -30 -31 -22 V-14 Q-31 -5 -36 -5 Q-41 -5 -41 -14 Z" />
-          <path fill="#70492E" d="M0 0" />
           <path fill="none" stroke="#70492E" strokeWidth="2.6" strokeLinecap="round" d="M-37 -10 Q-37 -20 -34 -26" />
           <path d="M-40 -34 Q-42 -70 0 -74 Q42 -70 40 -34 Q0 -42 -40 -34 Z" fill="#3450C8" stroke="#33304A" strokeWidth="3" strokeLinejoin="round" />
           <path d="M12 -70 Q36 -64 38 -36 Q24 -42 12 -42 Z" fill="#253B9C" />
