@@ -38,3 +38,17 @@ Validée par le PO le 2026-10-27. Même moteur et même style que Coach Léo, da
 - Contrôles : « Réussir », « Rater », A / B / C ; `?anim=jete|ruban|sauts|echec&t=…`, `?planche=tetes|mains`.
 
 **Limites connues** : le ruban est un trait qui suit la main ; le grand jeté est dessiné de profil sans vrai volume ; pas de son. L'apparence de Lili dans l'application (`src/univers/apparences.ts`, cheveux bruns en chignon) n'est pas encore modifiée.
+
+## `noisette-animaux.html` : univers Animaux, Noisette
+
+Validée par le PO le 2026-10-27, après une reprise complète (la première version, en forêt avec des sauts de branche en branche, a été rejetée). Même rendu que Coach Léo et Lili (contours, aplat + ombre + lumière, mêmes yeux, mains à cinq doigts), mais un **petit écureuil rond de dessin animé** : très grosse tête, joues rebondies (réduites à la demande du PO), deux petites dents, ventre clair, bras et jambes courts et dodus, grands pieds ronds, grosse queue en panache (chaîne de segments à ressorts). Inspiré du style général des rongeurs de dessins animés classiques, **sans copier aucun personnage existant**.
+
+- **Pas de retournement** : Noisette reste de face ou de trois-quarts face. C'est ce qui évite le défaut de retournement des premiers essais.
+- **Décor simple** : prairie, un arbre à côté de lui avec des noisettes dorées, quelques noisettes dans l'herbe, ciel clair.
+- **Action** : une noisette dorée tombe de l'arbre, il l'attrape.
+- **Trois célébrations tirées au hasard** : il jongle avec trois noisettes ; il croque la noisette (joues qui gonflent, miettes) puis se tapote le ventre ; il remplit ses joues de noisettes. Puis « Hourra ! » et « Chapitre réussi ! ».
+- **Échec jamais punitif** : une noisette lui tombe doucement sur la tête (« toc ! », sans bosse ni douleur), il est étourdi un instant (étoiles qui tournent), puis il rit et lève le pouce, « Presque ! On réessaie ? ».
+- Contrôles : « Réussir », « Rater », A / B / C ; `?anim=jongle|mange|joues|echec&t=…`, `?planche=tetes|mains`.
+
+**Limites connues** : la queue part plutôt à l'horizontale derrière lui ; les noisettes du jonglage sont petites ; pas de son. Le dessin de Noisette dans l'application (`src/univers/dessins.tsx`, `Ecureuil`) n'est pas encore modifié.
+
