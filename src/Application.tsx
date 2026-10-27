@@ -1,4 +1,4 @@
-import { type CSSProperties, useCallback, useEffect, useLayoutEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { MotionConfig } from "motion/react";
 import { type Ecran as EcranDuDomaine, type EtatDeLEspaceParent, estUnEcranDuParent } from "@domain/famille";
 import type { CodeDeMatiere } from "@domain/catalogue";
@@ -38,9 +38,7 @@ import {
   useTestDeDepartAFaire,
 } from "./test-de-depart/index.ts";
 import { ChoixDeLaVoix, useVoix } from "./voix/index.ts";
-import { PALETTES, Paysage, PersonnageGuide } from "./univers/index.ts";
-
-type Habillage = CSSProperties & { readonly "--accent": string; readonly "--accent-fonce": string };
+import { HABILLAGE_DU_PARENT, habillageDeLUnivers, Paysage, PersonnageGuide } from "./univers/index.ts";
 
 const ACCUEIL: Lieu = { ecran: "accueil" };
 
@@ -96,7 +94,6 @@ export function Application() {
   const ecranDemande = lieuDemande.ecran;
   const profil = estPageDeLEnfant(lieu) ? profilEnCours : undefined;
   const univers = universDe(profil?.univers);
-  const palette = PALETTES[univers.cle];
   const voix = useVoix(universDe(profilEnCours?.univers).personnageGuide);
   const parent = estUnEcranDuParent(ecranAffiche(lieu, acces.etat.type, connecte));
   const { suspendre: suspendreLaVoix, reprendre: reprendreLaVoix } = voix;
@@ -174,7 +171,7 @@ export function Application() {
     else if (ecran === "jeu") aller(destination);
     else remplacer(destination);
   };
-  const habillage: Habillage = { "--accent": palette.principale, "--accent-fonce": palette.foncee };
+  const habillage = parent ? HABILLAGE_DU_PARENT : habillageDeLUnivers(univers.cle);
 
   return (
     <MotionConfig reducedMotion="user">
