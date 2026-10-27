@@ -2,6 +2,8 @@
 
 **État : validé par le PO le 2026-10-25** (commentaire `[Responsable] VALIDÉ` sur #45, 17:48 UTC). Les questions 45.1 à 45.22 ont chacune leur décision, plus bas ; les questions 45.23 à 45.30 sont tranchées dans `acceptance.md`.
 
+2026-10-27 : pas de pages légales pendant la beta (45.36) ; C5 et P6/P7 reportés à 45b.
+
 Story transverse, lot 7 (Bascule), dernière du chemin critique de la beta. Cadrage du 2026-10-25, sans code. Le code de 45a se fait en fin de chemin critique ; la partie configuration (C1 à C16) peut commencer plus tôt si une place se libère.
 
 **Choix de la beta, en bref** : front chez **alwaysdata** (offre gratuite, environ 100 Mo), à **l'adresse gratuite d'alwaysdata** (par exemple `savanturier.alwaysdata.net`), sans domaine acheté ; **Supabase Free** en **Irlande (`eu-west-1`)**, avec une **sauvegarde manuelle avant chaque publication** ; aucun e-mail (45b) ; beta **sur invitation**. Passage à Supabase Pro avant l'ouverture au public.
@@ -19,8 +21,8 @@ Entrées : issue #45 et le commentaire `[Responsable]` du 2026-10-25 (décision 
 
 **Concepts examinés** :
 
-- **Demande de suppression des données** : concept **métier mais hors application** pendant la beta. Le parent l'écrit (adresse de contact de la politique de confidentialité) ; l'équipe l'exécute à la main. Elle n'a ni agrégat ni écran : c'est une **procédure** écrite dans `docs/`, avec un script d'exploitation. Son effet doit être **exactement** celui de la future **Suppression du profil** (#14) ou de la suppression du compte du parent (décision 0014), pour que #14 la remplace sans changer la promesse faite aux familles. Terme présent au glossaire.
-- **Production**, **procédure de publication**, **politique de confidentialité**, **mentions légales** : termes d'exploitation ou juridiques, utiles dans les docs, les issues et l'interface (liens en pied de page). Ce ne sont pas des concepts du domaine : rien dans `domain/`.
+- **Demande de suppression des données** : concept **métier mais hors application** pendant la beta. Le parent l'écrit (à l'adresse de contact donnée par l'invitation ; la politique de confidentialité est sans objet pendant la beta, 45.36) ; l'équipe l'exécute à la main. Elle n'a ni agrégat ni écran : c'est une **procédure** écrite dans `docs/`, avec un script d'exploitation. Son effet doit être **exactement** celui de la future **Suppression du profil** (#14) ou de la suppression du compte du parent (décision 0014), pour que #14 la remplace sans changer la promesse faite aux familles. Terme présent au glossaire.
+- **Production**, **procédure de publication**, **politique de confidentialité**, **mentions légales** : termes d'exploitation ou juridiques, utiles dans les docs et les issues (pages sans objet pendant la beta, 45.36 ; liens en pied de page prévus avec 45b). Ce ne sont pas des concepts du domaine : rien dans `domain/`.
 - **Beta** : déjà employé partout (feuille de route, décision 0019, tag `@hors-beta`) ; présent au glossaire (section Exploitation).
 
 Conflit de langage à éviter : « suppression à la main » ne doit pas devenir un second sens de **Suppression du profil** (#14 : action du parent dans l'application, immédiate). On parle de **demande de suppression des données** (ce que fait le parent) et de son **traitement** (ce que fait l'équipe).
@@ -36,8 +38,8 @@ Décisions et comptes qu'aucune équipe ne peut prendre à sa place. Les éléme
 | P3 | **Créer le projet Supabase de production** en **Irlande (`eu-west-1`)**, distinct de `savanturier-dev` (45.3, 45.4) | 0010 n°3 : jamais de données d'un vrai enfant sur le projet de développement | [beta] |
 | P4 | Prendre l'**offre Supabase Free**, sans coût (45.3), en connaissant ses limites : **pause du projet après environ une semaine sans activité**, pas de sauvegarde automatique, quotas (environ 500 Mo de base, 1 Go de fichiers, 5 Go de trafic par mois). **Désigner qui réveille le projet** s'il est en pause, et comment on le voit (voir « Risques ») ; passer à Pro avant l'ouverture au public | une famille ne doit pas trouver l'application en panne après une semaine de vacances | [beta] |
 | P5 | Fournir à la session de publication les **accès au projet de production** (référence, jeton de gestion) sans les écrire dans le dépôt, et autoriser l'adresse alwaysdata et le projet de production dans le proxy du conteneur (45.29) | migrations, déploiement des fonctions, contrôles après publication | [beta] |
-| P6 | **Politique de confidentialité** : relire et compléter le brouillon de l'équipe (45.9) : responsable, données gardées, finalité, hébergement UE (alwaysdata pour le front, Supabase en Irlande pour les données), durée, absence de traceur, droits, **moyen de faire une demande de suppression des données** et son délai de 7 jours (45.15) | RGPD, commentaire du PO du 25/10 | [beta] |
-| P7 | **Mentions légales** : éditeur, directeur de publication, hébergeur (alwaysdata : nom, adresse ; Supabase pour les données) | obligation légale d'un site édité en France | [beta] |
+| P6 | **Politique de confidentialité** : relire et compléter le brouillon de l'équipe (45.9) : responsable, données gardées, finalité, hébergement UE (alwaysdata pour le front, Supabase en Irlande pour les données), durée, absence de traceur, droits, **moyen de faire une demande de suppression des données** et son délai de 7 jours (45.15) | RGPD, commentaire du PO du 25/10 | sans objet pendant la beta (45.36) |
+| P7 | **Mentions légales** : éditeur, directeur de publication, hébergeur (alwaysdata : nom, adresse ; Supabase pour les données) | obligation légale d'un site édité en France | sans objet pendant la beta (45.36) |
 | P8 | **Adresse de contact** pour les demandes (boîte e-mail qu'il lit) | moyen écrit de la demande | [beta] |
 | P9 | Choisir un **fournisseur d'e-mails européen avec offre gratuite** et une adresse d'expéditeur (45.5) | réinitialisation par e-mail | après la beta (45b) |
 | P10 | **Contrôle manuel sur une vraie tablette** (et un téléphone) sur l'adresse de production | voir « Vérification finale » | [beta] |
@@ -56,7 +58,7 @@ Chaque élément suit TDD/BDD comme une story ordinaire. **[beta]** = bloquant p
 | C2 | **Police Andika auto-hébergée** pour le mode dys : `src/styles.css` la nomme déjà mais ne la charge pas (repli sur Trebuchet MS). Fichiers `woff2` sous licence libre (SIL OFL) servis par l'adresse de production, `@font-face`, ajout à la coquille du service worker pour le mode dys sans réseau. Pas de Lexend (45.6) | [beta] (45.6) |
 | C3 | **Aucun Google Fonts** : la cible n'en charge aucun aujourd'hui (vérifié : `index.html`, `src/`). Le test C4 le garantit pour l'avenir. `app/` et `prototype/` ne sont pas publiés (45.12) | [beta] via C4 |
 | C4 | **Scénario E2E des origines appelées** : en ouvrant Savanturier, en se connectant et en jouant une séance, toute requête part vers l'origine du front ou celle du projet Supabase configuré ; aucune autre. Tourne aussi contre la production (compte de test du PO, 45.18, 45.24) | [beta] |
-| C5 | **Pages légales dans le front** : « Politique de confidentialité » et « Mentions légales », accessibles sans connexion (écran de connexion et Espace parent), textes du PO (P6, P7), 360 px, sans lecture automatique à voix haute (écrans du parent, #73) | [beta] |
+| C5 | **Pages légales dans le front** : « Politique de confidentialité » et « Mentions légales », accessibles sans connexion (écran de connexion et Espace parent), textes du PO (P6, P7), 360 px, sans lecture automatique à voix haute (écrans du parent, #73) | sans objet pendant la beta (45.36) |
 | C6 | **Recherche de secrets dans `dist/`** : script lancé après `npm run build`, échoue si le build contient une clé `service_role`, `SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`, `SEND_EMAIL_HOOK_SECRET`, un jeton de gestion, ou `profil-prepare` (0021) ; seules l'adresse du projet et la clé publique `anon` sont permises | [beta] |
 
 ### Supabase de production
@@ -93,7 +95,7 @@ Le script (exploitation, sous `scripts/` ou `supabase/`, avec test) prend l'iden
 
 **Vérification de l'identité** : la demande doit venir de l'adresse e-mail du compte ; traitement **sous 7 jours**, réponse écrite au parent une fois fait (45.15). **Trace** : un registre des demandes traitées (date de la demande, date du traitement, identifiant technique) tenu **par le PO**, **hors** de la base de production, sans prénom ni contenu (45.16).
 
-**Sauvegardes** : une sauvegarde manuelle faite avant le traitement contient encore les données effacées. La politique de confidentialité le dit, et la procédure dit combien de temps on garde une sauvegarde (à écrire avec P6).
+**Sauvegardes** : une sauvegarde manuelle faite avant le traitement contient encore les données effacées. Pendant la beta (45.36), l'invitation (P11) et la réponse écrite au parent le disent (politique de confidentialité sans objet), et la procédure dit combien de temps on garde une sauvegarde.
 
 ### Dettes de #72 (C18)
 
@@ -125,7 +127,7 @@ Une seule fois, juste avant la mise en ligne, sur le **commit publié** de `main
 2. **non-régression E2E complète sur les deux projets, `tablette` et `telephone`**, avec toutes les stories livrées, contre `savanturier-dev` (exclusions habituelles `@depend-de`, `@envoi-email`, `@hors-beta`) ;
 3. tests de la PWA sur le build de production (`playwright.pwa.config.ts`) ;
 4. après publication, contre la **production** (adresse alwaysdata), avec le compte de test du PO : en-têtes (C1), origines appelées (C4), RLS (C10), région Irlande des fonctions (C12) ;
-5. **contrôle manuel du PO sur une vraie tablette** (et un téléphone) : ouvrir l'adresse, installer sur l'écran d'accueil, s'inscrire, créer un profil, jouer une séance, mode dys, voix, Son/Muet, ouvrir les pages légales ; puis publier une petite version et vérifier qu'elle s'applique au lancement suivant sans recharger l'écran de l'enfant (#8, règle 4).
+5. **contrôle manuel du PO sur une vraie tablette** (et un téléphone) : ouvrir l'adresse, installer sur l'écran d'accueil, s'inscrire, créer un profil, jouer une séance, mode dys, voix, Son/Muet ; puis publier une petite version et vérifier qu'elle s'applique au lancement suivant sans recharger l'écran de l'enfant (#8, règle 4).
 
 ## Découpage décidé (45.19)
 
@@ -141,8 +143,8 @@ Aucun fichier sous `supabase/functions/_shared/<contexte>/domain/`.
 - `docs/publication.md` : procédure de publication et traitement d'une demande de suppression des données.
 - `public/.htaccess` (copié dans `dist/`) : configuration d'alwaysdata, si le type de site la lit (C1, à vérifier).
 - `public/polices/` : police Andika (`woff2`) et sa licence.
-- `src/` : pages « Politique de confidentialité » et « Mentions légales ».
-- `features/45-mise-en-ligne.feature` et `features/steps/` : origines appelées, en-têtes, pages légales.
+- `src/` : pages « Politique de confidentialité » et « Mentions légales » (sans objet pendant la beta, 45.36 ; reportées à 45b).
+- `features/45-mise-en-ligne.feature` et `features/steps/` : origines appelées, en-têtes (pages légales sans objet pendant la beta, 45.36).
 - `scripts/` ou `supabase/` : vérification de la RLS, recherche de secrets dans `dist/`, script de suppression à la main, avec leurs tests.
 - `supabase/config.toml` : configuration de production (C7) ; `.env.example` : `ORIGINES_AUTORISEES`.
 - `docs/decisions/` : une décision pour l'hébergement et la production (alwaysdata gratuit, Supabase Free en Irlande, sauvegarde manuelle) ; en 45b, une décision qui remplace 0019.
@@ -150,7 +152,7 @@ Aucun fichier sous `supabase/functions/_shared/<contexte>/domain/`.
 
 ## Données d'enfants
 
-Aucune donnée nouvelle sur l'enfant. #45 met en production les données déjà décrites par les stories livrées (profil : prénom ou pseudo, niveau, réglages ; séances, résultats, records, test de départ). Points RGPD de la story : hébergement UE (front chez alwaysdata, base **et** fonctions en Irlande), aucun tiers dans le navigateur (C4), suppression à la main (C15), journaux d'alwaysdata et de Supabase (adresses IP) mentionnés dans la politique de confidentialité, aucune donnée d'enfant dans les issues, la procédure ni le registre des demandes. Les sauvegardes manuelles (P12) contiennent des données d'enfants : jamais dans le dépôt ni dans le conteneur, gardées par le PO, durée écrite dans la politique de confidentialité.
+Aucune donnée nouvelle sur l'enfant. #45 met en production les données déjà décrites par les stories livrées (profil : prénom ou pseudo, niveau, réglages ; séances, résultats, records, test de départ). Points RGPD de la story : hébergement UE (front chez alwaysdata, base **et** fonctions en Irlande), aucun tiers dans le navigateur (C4), suppression à la main (C15), journaux d'alwaysdata et de Supabase (adresses IP) à mentionner dans la politique de confidentialité (sans objet pendant la beta, 45.36 ; reportée à 45b), aucune donnée d'enfant dans les issues, la procédure ni le registre des demandes. Les sauvegardes manuelles (P12) contiennent des données d'enfants : jamais dans le dépôt ni dans le conteneur, gardées par le PO, durée écrite dans la procédure, l'invitation et la réponse au parent (45.36).
 
 ## Questions au PO et décisions
 
@@ -164,7 +166,7 @@ Réponses du PO (2026-10-25, mot pour mot) : « #45 : je veux une solution gratu
 6. **45.6 Polices** : Décision : auto-hébergées ; **Andika** seulement, dès la beta, y compris sans réseau ; pas de Lexend.
 7. **45.7 Publication automatique** : Décision : **à la main en suivant la procédure** pour la beta ; CI en 45b.
 8. **45.8 Erreurs en production** : Décision : journaux de Supabase, regardés après chaque publication et une fois par jour ; plus les retours des familles par l'adresse de contact.
-9. **45.9 Politique de confidentialité et mentions légales** : Décision : **avec 45a** ; l'équipe propose un brouillon à partir des faits du dépôt, le PO le relit, le complète (identité, adresse) et en reste responsable.
+9. **45.9 Politique de confidentialité et mentions légales** (remplacée par 45.36 pour la beta) : Décision : **avec 45a** ; l'équipe propose un brouillon à partir des faits du dépôt, le PO le relit, le complète (identité, adresse) et en reste responsable.
 10. **45.10 Fichiers servis par le CDN** (MP3 des voix) : Décision : **hors de 45a** ; à décider avec la story des MP3, de préférence par l'hébergeur du front (même origine, pas de tiers), dans la limite du quota d'alwaysdata.
 11. **45.11 Environnement de recette** : Décision : **aucun pour la beta** ; `savanturier-dev`, la vérification finale et le contrôle sur tablette en tiennent lieu.
 12. **45.12 `prototype/`** : Décision : jamais publié (hors du build) ; son sort est reporté à #46.

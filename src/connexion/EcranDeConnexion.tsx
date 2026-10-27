@@ -2,13 +2,11 @@ import { useState } from "react";
 import { FormulaireDeConnexion } from "./FormulaireDeConnexion.tsx";
 import { FormulaireDeReinitialisation } from "./FormulaireDeReinitialisation.tsx";
 import { FormulaireDInscription } from "./FormulaireDInscription.tsx";
-import { LiensVersLesPagesLegales, type PageLegale } from "../pages-legales/index.ts";
 import type { Connexion } from "./useConnexion.ts";
 
 type Props = {
   readonly connexion: Connexion;
   readonly onConnecte: () => void;
-  readonly onOuvrirUnePageLegale: (page: PageLegale) => void;
 };
 
 type Ecran = "connexion" | "inscription" | "reinitialisation";
@@ -19,7 +17,7 @@ const TITRES: Record<Ecran, string> = {
   reinitialisation: "Mot de passe oublié",
 };
 
-export function EcranDeConnexion({ connexion, onConnecte, onOuvrirUnePageLegale }: Props) {
+export function EcranDeConnexion({ connexion, onConnecte }: Props) {
   const [ecran, setEcran] = useState<Ecran>("connexion");
   const aller = (suivant: Ecran) => () => setEcran(suivant);
 
@@ -44,7 +42,6 @@ export function EcranDeConnexion({ connexion, onConnecte, onOuvrirUnePageLegale 
           onSeConnecter={aller("connexion")}
         />
       )}
-      <LiensVersLesPagesLegales onOuvrir={onOuvrirUnePageLegale} />
     </section>
   );
 }

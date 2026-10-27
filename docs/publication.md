@@ -31,7 +31,7 @@ Une session créée avant les réglages ne voit ni l'hôte du site ni celui de l
 3. **Ne jamais** mettre la clé `service_role` de production dans l'environnement de la session ni dans un fichier : les scripts et la configuration `@production` refusent de démarrer si `SUPABASE_SERVICE_ROLE_KEY` est présente.
 4. Connaître les limites de l'offre Free : pause après environ une semaine sans activité (voir § 7), aucune sauvegarde automatique, environ 500 Mo de base, 1 Go de fichiers, 5 Go de trafic par mois.
 
-### 2.3 Variables d'environnement de la session de publication (PO, P5, P8)
+### 2.3 Variables d'environnement de la session de publication (PO, P5)
 
 Le PO règle l'environnement avant de créer la session (liste commentée dans `.env.example`) :
 
@@ -44,21 +44,56 @@ Le PO règle l'environnement avant de créer la session (liste commentée dans `
 | `SUPABASE_ACCESS_TOKEN` | jeton de gestion (API de gestion, migrations, fonctions, secrets, Auth) |
 | `PARENT_DE_TEST_PRODUCTION_EMAIL`, `PARENT_DE_TEST_PRODUCTION_MOT_DE_PASSE` | parent de test de la production |
 | `ALWAYSDATA_WEBDAV_URL`, `ALWAYSDATA_WEBDAV_UTILISATEUR`, `ALWAYSDATA_WEBDAV_MOT_DE_PASSE` | envoi du front |
-| `VITE_EDITEUR`, `VITE_DIRECTEUR_DE_PUBLICATION`, `VITE_ADRESSE_DE_CONTACT` | identité de l'éditeur des pages légales, lue au build (P6, P7, P8) |
 
 Dans la session de publication, `VITE_SUPABASE_URL` et `VITE_SUPABASE_ANON_KEY` ne sont **pas** posées dans l'environnement : elles ne servent qu'au **build de production** (§ 3.7), posées pour cette seule commande à partir de `SUPABASE_PRODUCTION_URL` et `SUPABASE_PRODUCTION_ANON_KEY`. Ainsi aucune commande de test ne vise la production par erreur.
 
 Le réseau de la session autorise : l'hôte du site, l'hôte WebDAV, l'API de gestion de Supabase et le projet de production.
 Absentes de cet environnement, toujours : `SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`, `SEND_EMAIL_HOOK_SECRET`, `MODE_EMAIL`.
 
-### 2.4 Adresse de contact et textes légaux (PO, P6, P7, P8)
+#### Test de l'environnement
 
-L'adresse de contact est une boîte que le PO lit : c'est le moyen de la demande de suppression des données (§ 8). Les textes de la politique de confidentialité et des mentions légales sont relus et complétés par le PO, qui en reste responsable (identité de l'éditeur, directeur de publication, hébergeurs : alwaysdata pour le front, Supabase Inc. pour les données).
+À faire au début de chaque session de publication. Lecture seule, aucune valeur affichée (les commandes ne renvoient que des codes HTTP ou des booléens).
 
-Points à relire par le PO (45.9) avant la première publication :
-- hébergeur des données = **Supabase Inc.**, société américaine, base et fonctions dans la région Irlande (`eu-west-1`) : la phrase « hébergées dans l'Union européenne, en Irlande, par un prestataire américain » remplace « tout reste dans l'Union européenne » ;
-- **adresse et téléphone** des deux hébergeurs, marqués « à compléter par l'éditeur » dans les mentions légales ;
-- la liste des **données gardées** et de ce qui reste sur l'appareil (profils, séances en attente, file de révision, leçons personnelles).
+```bash
+# 1. Variables présentes (§ 2.3), SUPABASE_SERVICE_ROLE_KEY absente
+for v in ADRESSE_DE_PRODUCTION SUPABASE_PRODUCTION_REF SUPABASE_PRODUCTION_URL \
+  SUPABASE_PRODUCTION_ANON_KEY SUPABASE_ACCESS_TOKEN \
+  PARENT_DE_TEST_PRODUCTION_EMAIL PARENT_DE_TEST_PRODUCTION_MOT_DE_PASSE \
+  ALWAYSDATA_WEBDAV_URL ALWAYSDATA_WEBDAV_UTILISATEUR ALWAYSDATA_WEBDAV_MOT_DE_PASSE; do
+  [ -n "${!v}" ] && echo "$v présente" || echo "$v MANQUANTE"
+done
+[ -z "${SUPABASE_SERVICE_ROLE_KEY+x}" ] && echo "SUPABASE_SERVICE_ROLE_KEY absente (attendu)" || echo "SUPABASE_SERVICE_ROLE_KEY PRÉSENTE (anormal)"
+
+# 2. Le front répond : 200
+curl -s -o /dev/null -w '%{http_code}\n' "$ADRESSE_DE_PRODUCTION"
+
+# 3. http:// redirige vers https:// : 301
+curl -s -o /dev/null -w '%{http_code} %{redirect_url}\n' "http://${ADRESSE_DE_PRODUCTION#https://}"
+
+# 4. WebDAV, authentification Basic : 207
+curl -s -o /dev/null -w '%{http_code}\n' -X PROPFIND -H 'Depth: 0' \
+  -u "$ALWAYSDATA_WEBDAV_UTILISATEUR:$ALWAYSDATA_WEBDAV_MOT_DE_PASSE" "$ALWAYSDATA_WEBDAV_URL"
+
+# 5. Accès au projet Supabase avec la clé anon : 200
+curl -s -o /dev/null -w '%{http_code}\n' -H "apikey: $SUPABASE_PRODUCTION_ANON_KEY" \
+  "$SUPABASE_PRODUCTION_URL/auth/v1/settings"
+
+# 6. API de gestion : 200, puis région et état (aucun secret dans la sortie)
+curl -s -o /dev/null -w '%{http_code}\n' -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+  "https://api.supabase.com/v1/projects/$SUPABASE_PRODUCTION_REF"
+curl -s -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+  "https://api.supabase.com/v1/projects/$SUPABASE_PRODUCTION_REF" \
+  | python3 -I -c "import json,sys; p=json.load(sys.stdin); print(p.get('region'), p.get('status'))"
+# attendu : eu-west-1 ACTIVE_HEALTHY
+```
+
+Ne pas contrôler l'accès au projet par `GET /rest/v1/` : la racine est réservée à `service_role` et répond **401** à la clé `anon`, ce qui n'est pas une panne. Les scripts de `scripts/exploitation/` ne lisent pas cette racine.
+
+Un refus **403 au `CONNECT`** signale un domaine non autorisé dans le réseau de l'environnement : le PO l'ajoute (§ 2.3, liste des hôtes autorisés) avant de poursuivre.
+
+### 2.4 Adresse de contact (PO, P8)
+
+P6 et P7 sans objet pendant la beta (45.36) ; l'adresse de contact reste le moyen des demandes de suppression des données (§ 8).
 
 ### 2.5 Après la première publication seulement (PO, 45.18, 45.24)
 
@@ -107,7 +142,7 @@ supabase db dump --db-url "$URL_DE_LA_BASE" -f data.sql    --use-copy --data-onl
 
 (`$URL_DE_LA_BASE` : chaîne de connexion du tableau de bord, mot de passe de la base inclus ; elle reste dans le terminal du PO.)
 
-La sauvegarde est **notée au journal des publications** (date, emplacement sur la machine du PO, jamais son contenu) et **gardée 30 jours**, puis effacée (45.34). La politique de confidentialité le dit.
+La sauvegarde est **notée au journal des publications** (date, emplacement sur la machine du PO, jamais son contenu) et **gardée 30 jours**, puis effacée (45.34). Pendant la beta (45.36), les familles en sont informées par l'invitation (P11) et par la réponse écrite au parent.
 
 ### 3.4 Migrations (45.22)
 
@@ -157,14 +192,14 @@ Elle affiche le statut HTTP (200 attendu) et rien d'autre. Les contrôles V6 et 
 
 ### 3.7 Front, par WebDAV (45.33)
 
-**Build de production et V1, en dernier**, juste avant l'envoi : l'identité de l'éditeur (`VITE_EDITEUR`, `VITE_DIRECTEUR_DE_PUBLICATION`, `VITE_ADRESSE_DE_CONTACT`) est dans l'environnement de la session ; le projet de production n'est posé que pour cette commande.
+**Build de production et V1, en dernier**, juste avant l'envoi : le projet de production n'est posé que pour cette commande.
 
 ```
 VITE_SUPABASE_URL=$SUPABASE_PRODUCTION_URL VITE_SUPABASE_ANON_KEY=$SUPABASE_PRODUCTION_ANON_KEY npm run build
 python3 scripts/exploitation/secrets_du_build.py dist      # V1
 ```
 
-V1 échoue si `dist/` contient une clé `service_role`, un nom de secret interdit, un jeton de gestion, `profil-prepare` ou les valeurs fictives des pages légales (`exemple.test`, signe que l'identité de l'éditeur n'était pas dans l'environnement du build). Seules l'adresse du projet et la clé publique `anon` sont permises. Au premier échec, on n'envoie rien.
+V1 échoue si `dist/` contient une clé `service_role`, un nom de secret interdit, un jeton de gestion, ou `profil-prepare`. Seules l'adresse du projet et la clé publique `anon` sont permises. Au premier échec, on n'envoie rien.
 
 Puis l'envoi :
 
@@ -208,6 +243,7 @@ Ce qui change la première fois :
 5. **Retour en arrière du front essayé une fois** (§ 5) et **demande de suppression essayée sur un parent de test** (§ 8, M4).
 6. **Tâche planifiée** (§ 7), créée **après** cette première publication.
 7. Inviter les familles seulement ensuite (P11) : le PO leur donne l'adresse à la main.
+   *Recommandation au PO (pas une obligation nouvelle)* : l'invitation donne aussi l'adresse de contact pour une demande de suppression des données, le délai de 7 jours (45.15) et la garde des sauvegardes (30 jours, 45.34). Pendant la beta, c'est le seul canal d'information (45.36).
 
 ## 5. Retour en arrière
 
@@ -313,7 +349,7 @@ delete from auth.users where id = '<uuid du parent>'::uuid;
 2. Vérifier qu'**aucun autre parent** n'est touché (nombre de parents et de profils avant/après : écart égal à ce qui était demandé).
 3. **Répondre par écrit au parent**, à l'adresse de son compte : ce qui a été supprimé, la date, et ce qui **reste sur ses appareils** : le choix Son/Muet et le choix de la voix (stockage local du navigateur) ; la liste des profils du parent (prénom ou pseudo, classe, réglages) et les séances, tests de départ et séances de révision pas encore envoyés (IndexedDB) ; le service worker ne garde aucune donnée de famille (#8). Il peut les effacer en se déconnectant (la liste des profils et ce qui n'est pas encore envoyé ; le choix Son/Muet et la voix restent), en supprimant les données du site dans les réglages du navigateur, et en désinstallant l'application de l'écran d'accueil. Les données déjà envoyées à Supabase sont, elles, supprimées par le traitement.
 4. **Registre des demandes**, tenu par le PO **hors de la base de production** : date de la demande, date du traitement, identifiant technique. Ni prénom, ni contenu.
-5. **Sauvegardes** : une sauvegarde faite avant le traitement contient encore les données effacées. Elle est gardée **30 jours** puis effacée (§ 3.3) ; la politique de confidentialité le dit, et la réponse au parent aussi.
+5. **Sauvegardes** : une sauvegarde faite avant le traitement contient encore les données effacées. Elle est gardée **30 jours** puis effacée (§ 3.3) ; pendant la beta (45.36), les familles en sont informées par l'invitation (P11) et par la réponse écrite au parent.
 
 Le script de traitement est prévu en 45b (C15) ; en attendant, ce sont ces requêtes.
 

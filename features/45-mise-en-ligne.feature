@@ -100,56 +100,6 @@ Fonctionnalité: Mise en ligne de Savanturier pour la beta
       Alors Pilote voit ses étoiles
       Et le navigateur n'a contacté aucun autre site que Savanturier
 
-  Règle: La politique de confidentialité et les mentions légales se lisent sans connexion, depuis l'écran de connexion et depuis l'espace parent
-
-    Scénario: Sans connexion, Paul lit la politique de confidentialité depuis l'écran de connexion
-      Étant donné que personne n'est connecté sur la tablette
-      Quand Paul ouvre la politique de confidentialité depuis l'écran de connexion
-      Alors il lit la politique de confidentialité de Savanturier
-      Et il y trouve l'adresse de contact pour faire une demande de suppression des données
-
-    Scénario: Sans connexion, Paul lit les mentions légales depuis l'écran de connexion
-      Étant donné que personne n'est connecté sur la tablette
-      Quand Paul ouvre les mentions légales depuis l'écran de connexion
-      Alors il lit les mentions légales de Savanturier
-      Et il y trouve le nom de l'éditeur et celui de l'hébergeur
-
-    Scénario: Depuis l'espace parent, Paul lit la politique de confidentialité
-      Étant donné que Paul est connecté sur la tablette
-      Et que Paul est dans l'espace parent
-      Quand Paul ouvre la politique de confidentialité depuis l'espace parent
-      Alors il lit la politique de confidentialité de Savanturier
-      Et il peut revenir à l'espace parent
-
-    Scénario: La politique de confidentialité donne le délai de traitement d'une demande de suppression des données
-      Étant donné que personne n'est connecté sur la tablette
-      Quand Paul ouvre la politique de confidentialité depuis l'écran de connexion
-      Alors il y lit qu'une demande de suppression des données envoyée depuis l'adresse e-mail de son compte est traitée sous 7 jours
-
-    Scénario: Sur les pages légales, le personnage guide ne lit rien de lui-même
-      Étant donné que personne n'est connecté sur la tablette
-      Quand Paul ouvre la politique de confidentialité depuis l'écran de connexion
-      Alors il lit la politique de confidentialité de Savanturier
-      Mais Paul n'entend aucune voix
-
-    Plan du Scénario: La page « <page> » tient dans la largeur d'un téléphone de 360 px
-      Étant donné que l'écran de l'appareil mesure 360 px de large
-      Et que personne n'est connecté sur la tablette
-      Quand Paul ouvre <ouverture> depuis l'écran de connexion
-      Alors la page tient dans la largeur de l'écran
-
-      Exemples:
-        | page                         | ouverture                        |
-        | Politique de confidentialité | la politique de confidentialité  |
-        | Mentions légales             | les mentions légales             |
-
-    @production
-    Scénario: À l'adresse de production, la politique de confidentialité se lit sans connexion
-      Étant donné que personne n'est connecté sur la tablette
-      Quand Paul ouvre la politique de confidentialité depuis l'écran de connexion de l'adresse de production
-      Alors il lit la politique de confidentialité de Savanturier
-      Et il y trouve l'adresse de contact pour faire une demande de suppression des données
-
   Règle: Avec le mode dys, le texte s'affiche vraiment en police Andika, servie par Savanturier, même sans réseau
 
     Scénario: Avec le mode dys, l'étape de leçon s'affiche dans la police Andika chargée par Savanturier
