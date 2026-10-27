@@ -65,3 +65,16 @@ Validée par le PO le 2026-10-27. Même rendu que les personnages précédents, 
 
 **Limites connues** : de face, les mèches extérieures restent proches du visage ; les ailes battent sans vrai volume ; pas de son.
 
+## `agent-max-police.html` : univers Police, Agent Max
+
+Validée par le PO le 2026-10-27, après une reprise complète (la première version, au corps et aux membres propres, a été rejetée : bras et jambes raides, buste qui se lisait comme une jupe). **Corps, membres, mains et moteur d'animation repris tels quels de Coach Léo** : seuls la tête, la tenue et les couleurs changent. C'est la méthode à suivre pour les prochains personnages humains.
+
+- **Agent Max, « le détective futé »** : un garçon à la peau claire (`#f2cba5`), cheveux châtain foncé courts, yeux bruns ; casquette de police à étoile dorée (visière pleine), chemise bleue à manches courtes ajustées rentrée dans un **vrai pantalon** bleu foncé (une jambe de chaque côté, ceinture fine), insigne étoile, carnet, loupe, chaussures noires.
+- **Décor** : place de quartier devant le commissariat (banc, buisson, arbres, passage piéton).
+- **Action** : il suit des traces de pattes à la loupe et retrouve un **chiot perdu** qui sort du buisson et lui saute dans les bras ; le chiot reste à côté de lui ensuite.
+- **Trois célébrations tirées au hasard** : chef d'orchestre (gants blancs, sifflet « tuut ! », trois petites voitures qui passent en rythme, révérence) ; tour en trottinette (casque, poussées du pied, glisse, « dring ! », retour et arrêt en douceur) ; danse de la victoire (pas chassés, saut, casquette lancée et rattrapée, clin d'œil). Puis « Enquête résolue ! » et « Chapitre réussi ! ».
+- **Échec jamais punitif** : le chiot lui prend sa casquette, fait un petit tour et la lui rapporte ; Max rit, la remet, lève le pouce, « Presque ! On réessaie ? ».
+- **Règle absolue** : un policier qui aide ; ni arme, ni menottes, ni arrestation, ni gyrophare.
+- Contrôles : « Réussir », « Rater », A / B / C ; `?anim=orchestre|trottinette|danse|echec&t=…`, `?planche=tetes|mains`.
+
+**Limites connues** : en glisse, la jambe levée reste basse ; le demi-tour de la trottinette est un basculement rapide ; comme chez Léo, les pieds glissent un peu pendant la marche ; le chiot est dessiné simplement ; pas de son. Dans l'application, le guide Police est encore « Agente Mila » (`src/univers/apparences.ts`) : le passage à Agent Max revient à une story (#96 ou #106).
