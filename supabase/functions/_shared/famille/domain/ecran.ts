@@ -3,8 +3,6 @@ export type Ecran =
   | "qui-joue"
   | "controle-parental"
   | "espace-parent"
-  | "politique-de-confidentialite"
-  | "mentions-legales"
   | "accueil-de-l-enfant"
   | "parcours"
   | "toutes-les-lecons"
@@ -21,8 +19,6 @@ const PUBLIC_DE_L_ECRAN: Readonly<Record<Ecran, PublicDeLEcran>> = {
   "qui-joue": "parent",
   "controle-parental": "parent",
   "espace-parent": "parent",
-  "politique-de-confidentialite": "parent",
-  "mentions-legales": "parent",
   "accueil-de-l-enfant": "enfant",
   "parcours": "enfant",
   "toutes-les-lecons": "enfant",

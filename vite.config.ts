@@ -19,13 +19,6 @@ export default defineConfig(({ mode }) => {
     define: {
       "import.meta.env.VITE_SUPABASE_URL": JSON.stringify(env.VITE_SUPABASE_URL || env.SUPABASE_URL || ""),
       "import.meta.env.VITE_SUPABASE_ANON_KEY": JSON.stringify(env.VITE_SUPABASE_ANON_KEY || env.SUPABASE_ANON_KEY || ""),
-      // Identité de l'éditeur des pages légales : jamais dans le dépôt. Sans elle, des valeurs fictives que
-      // scripts/exploitation/secrets_du_build.py refuse dans un build de production.
-      "import.meta.env.VITE_EDITEUR": JSON.stringify(env.VITE_EDITEUR || "Éditeur de démonstration (exemple.test)"),
-      "import.meta.env.VITE_DIRECTEUR_DE_PUBLICATION": JSON.stringify(
-        env.VITE_DIRECTEUR_DE_PUBLICATION || "Directeur de démonstration (exemple.test)",
-      ),
-      "import.meta.env.VITE_ADRESSE_DE_CONTACT": JSON.stringify(env.VITE_ADRESSE_DE_CONTACT || "contact@exemple.test"),
     },
   };
 });
