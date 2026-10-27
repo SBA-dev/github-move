@@ -52,3 +52,16 @@ Validée par le PO le 2026-10-27, après une reprise complète (la première ver
 
 **Limites connues** : la queue part plutôt à l'horizontale derrière lui ; les noisettes du jonglage sont petites ; pas de son. Le dessin de Noisette dans l'application (`src/univers/dessins.tsx`, `Ecureuil`) n'est pas encore modifié.
 
+## `lumi-princesse.html` : univers Princesses et fées, Lumi
+
+Validée par le PO le 2026-10-27. Même rendu que les personnages précédents, avec les leçons acquises appliquées d'emblée (yeux sans effet « lunettes », sourcils au-dessus, aucune mèche sur les joues, pas de retournement de dos, caméra rapprochée).
+
+- **Décor** : jardin féerique (prairie fleurie, petit château rose et violet au loin, ciel mauve, lucioles).
+- **Lumi** : flotte au-dessus du sol, ailes translucides qui battent ; longs cheveux blonds **d'un seul tenant** (cinq mèches ondulées qui naissent du crâne et tombent derrière les épaules), petite tiare ; robe rose **jusqu'aux genoux** à manches bouffantes, col rond et jupe à plis qui bouge, **legging**, ballerines : tenue adaptée aux enfants ; baguette à étoile avec traînée d'étincelles.
+- **Action** : un sort fait éclore une grande fleur magique.
+- **Trois célébrations tirées au hasard** : arc-en-ciel puis couronne d'étoiles ; envol en boucle avec traînée d'étoiles (« Magique ! » n'apparaît qu'après la redescente) ; chiffres et lettres lumineux (1, 2, 3, A, B, C) qui dansent puis deviennent des étoiles. Puis « Magique ! » et « Chapitre réussi ! ».
+- **Échec jamais punitif** : « pschitt ! », le sort donne des bulles colorées ; Lumi rit, souffle dessus, lève le pouce, « Presque ! On réessaie ? ».
+- Contrôles : « Réussir », « Rater », A / B / C ; `?anim=arc|envol|signes|echec&t=…`, `?planche=tetes|mains`.
+
+**Limites connues** : de face, les mèches extérieures restent proches du visage ; les ailes battent sans vrai volume ; pas de son.
+
