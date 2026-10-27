@@ -37,6 +37,8 @@ Résumé des règles lues dans le code (les nombres sont ceux du legacy) :
   | pompier (Capitaine Sam) | m | 0,95 | 1,0 |
   | danse (Lili) | f | 1,2 | 1,02 |
 
+  > Note du 2026-10-27 (#96) : le personnage guide de l'univers police est désormais Agent Max (un garçon, voix masculine) ; Agente Mila a disparu. La ligne ci-dessus garde l'état d'origine de la story #7.
+
 - Voix plus grave : personnage guide masculin et voix choisie non reconnue comme masculine → hauteur −0,25.
 - Intonation : phrase finissant par « ! » → hauteur +0,08 ; petite variation au hasard de ±0,03 par phrase. Hauteur bornée entre 0,5 et 2. Rythme = rythme du caractère × rythme demandé, au plus 1,4.
 - Nettoyage (`toSpeech`) : balises et entités retirées, `+` lu « plus », `=` lu « égale », deux soulignés ou plus lus comme un silence (« ... »), guillemets « » retirés, espaces réduits.
