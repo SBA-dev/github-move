@@ -30,7 +30,7 @@ const catalogueAttendu = [
     cle: "police",
     libelle: "Police",
     royaume: "le Commissariat des Savanturiers",
-    personnageGuide: { nom: "Agente Mila", titre: "la policière détective" },
+    personnageGuide: { nom: "Agent Max", titre: "le détective futé" },
   },
   {
     cle: "pompier",
