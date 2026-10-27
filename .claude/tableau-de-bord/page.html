@@ -66,6 +66,7 @@
   <section class="sv-kpis" id="chiffres">
     <div class="sv-kpi"><span class="lbl">Avancement de la beta</span><span class="val dash-skeleton" data-source="kpi" data-field="avancement_beta" data-row="0">—</span><span class="sub">34 stories, stories en cours comptées au prorata</span></div>
     <div class="sv-kpi"><span class="lbl">Avancement de toute la réécriture</span><span class="val dash-skeleton" data-source="kpi" data-field="avancement_projet" data-row="0">—</span><span class="sub">43 stories, beta et après la beta</span></div>
+    <div class="sv-kpi"><span class="lbl">Avancement des leçons plus ludiques</span><span class="val dash-skeleton" data-source="kpi" data-field="avancement_ludique" data-row="0">—</span><span class="sub"><span data-source="kpi" data-field="livrees_ludique" data-row="0">—</span> livrées sur <span data-source="kpi" data-field="total_ludique" data-row="0">—</span>, épopée #95 après la beta</span></div>
     <div class="sv-kpi"><span class="lbl">Fin estimée de la beta</span><span class="val dash-skeleton" data-source="previsions" data-field="fin_estimee" data-where="perimetre=Beta">—</span><span class="sub">dans <span data-source="previsions" data-field="jours_restants" data-where="perimetre=Beta">—</span> jours, limitée par le <span data-source="previsions" data-field="limite" data-where="perimetre=Beta">—</span></span></div>
     <div class="sv-kpi"><span class="lbl">Couverture des lignes (Deno)</span><span class="val dash-skeleton" data-source="kpi" data-field="couverture_lignes" data-row="0">—</span><span class="sub">branches : <span data-source="kpi" data-field="couverture_branches" data-row="0">—</span></span></div>
     <div class="sv-kpi"><span class="lbl">Usage de la réécriture (équivalent API)</span><span class="val dash-skeleton" data-source="kpi" data-field="cout_total" data-row="0">—</span><span class="sub">en moyenne <span data-source="kpi" data-field="cout_moyen" data-row="0">—</span> par story</span></div>
@@ -103,6 +104,19 @@
       <div class="sv-tablebox">
         <table data-source="previsions" data-row-key="perimetre" id="table-previsions">
           <thead><tr><th data-field="perimetre">Périmètre</th><th data-field="fin_estimee">Fin estimée</th><th data-field="jours_restants" class="num">Jours restants</th><th data-field="reste_stories" class="num">Stories restantes</th><th data-field="jours_selon_vitesse" class="num">Selon la vitesse</th><th data-field="jours_chemin_critique" class="num">Selon le chemin critique</th><th data-field="vitesse_par_jour" class="num">Stories par jour</th><th data-field="duree_mediane_story_h" class="num">Durée médiane d'une story</th><th data-field="stories_chemin_critique">Chemin critique</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="sv-sec" id="ludique">
+    <h2>Leçons plus ludiques (épopée #95)</h2>
+    <p class="note">Stories de gamification (label <code>ludique</code>), après la beta. Elles commencent par la refonte visuelle (#96), puis trois branches avancent en parallèle.</p>
+    <div class="sv-card">
+      <div class="sv-tablebox">
+        <table data-source="stories" data-row-key="story" id="table-ludique">
+          <thead><tr><th data-field="story">Story</th><th data-field="titre">Titre</th><th data-field="etat">État</th><th data-field="avancement" class="num">Avancement</th><th data-field="depend_de">Dépend de</th></tr></thead>
           <tbody></tbody>
         </table>
       </div>
@@ -159,11 +173,16 @@ dash.calc('kpi', {
   fn: (stories, sessions, couverture) => {
     const somme = (xs) => xs.reduce((t, x) => t + Number(x || 0), 0);
     const beta = stories.filter((s) => s.beta === 'oui');
+    const ludique = stories.filter((s) => s.lot === '8. Leçons plus ludiques');
+    const reecriture = stories.filter((s) => s.lot !== '8. Leçons plus ludiques');
     const terminees = stories.filter((s) => s.etat === 'Livrée' || s.etat === 'En revue');
     const coutMoyen = somme(terminees.map((s) => s.cout_usd)) / terminees.length;
     return [{
       avancement_beta: somme(beta.map((s) => s.avancement)) / beta.length,
-      avancement_projet: somme(stories.map((s) => s.avancement)) / stories.length,
+      avancement_projet: somme(reecriture.map((s) => s.avancement)) / reecriture.length,
+      avancement_ludique: ludique.length ? somme(ludique.map((s) => s.avancement)) / ludique.length : 0,
+      livrees_ludique: ludique.filter((s) => s.etat === 'Livrée').length,
+      total_ludique: ludique.length,
       livrees_beta: beta.filter((s) => s.etat === 'Livrée').length,
       total_beta: beta.length,
       en_cours: stories.filter((s) => s.etat === 'En cours' || s.etat === 'En revue').length,
@@ -249,7 +268,8 @@ function svKpis() {
   });
   const r = dash.data('kpi');
   const fmt = {
-    avancement_beta: svPct0.format, avancement_projet: svPct0.format,
+    avancement_beta: svPct0.format, avancement_projet: svPct0.format, avancement_ludique: svPct0.format,
+    livrees_ludique: svFr.format, total_ludique: svFr.format,
     couverture_lignes: svPct1.format, couverture_branches: svPct1.format,
     cout_total: svUsd.format, cout_moyen: svUsd.format, cout_restant_beta: svUsd.format,
     livrees_beta: svFr.format, total_beta: svFr.format, en_cours: svFr.format
@@ -468,6 +488,9 @@ dash.onData(() => {
   svTable(document.getElementById('table-couts'), 'stories',
     [['story'], ['titre'], ['etat', 'pill'], ['temps_actif_h', svHeures, true], ['duree_calendaire_h', svHeures, true], ['cout_usd', (v) => (v === null || v === undefined ? '—' : svUsd2.format(v)), true], ['methode_cout']],
     (s) => s.cout_usd != null || s.temps_actif_h != null);
+  svTable(document.getElementById('table-ludique'), 'stories',
+    [['story'], ['titre'], ['etat', 'pill'], ['avancement', svPct0.format, true], ['depend_de']],
+    (s) => s.lot === '8. Leçons plus ludiques');
   svTable(document.getElementById('table-previsions'), 'previsions',
     [['perimetre'], ['fin_estimee', svDate], ['jours_restants', svJours, true], ['reste_stories', (v) => svDec.format(v), true], ['jours_selon_vitesse', svJours, true], ['jours_chemin_critique', svJours, true], ['vitesse_par_jour', (v) => svDec.format(v), true], ['duree_mediane_story_h', svHeures, true], ['stories_chemin_critique']]);
   svTable(document.getElementById('table-sessions'), 'sessions',

@@ -32,6 +32,13 @@ SESSIONS_PARTAGEES = {
 SESSIONS_PILOTAGE = {"session_018DHEojxGzCST2osos9gKVm", "session_015JPSRQbSeUWinMuhQJ4URi"}
 DEBUT_REECRITURE = "2026-10-22T15:00"
 
+# Épopée « Leçons plus ludiques » (#95), après la beta : ses stories portent le label `ludique`.
+# Dépendances et chemin critique recopiés de l'issue #95, tant qu'elles manquent à docs/graphe/stories.md.
+LUDIQUE = "ludique"
+LOT_LUDIQUE = "8. Leçons plus ludiques"
+DEPENDANCES_LUDIQUE = {96: "#45", 97: "#96", 98: "#97", 99: "#96", 100: "#98, #99", 101: "#99", 102: "#96", 106: "#100, #96"}
+CHEMIN_CRITIQUE_LUDIQUE = [96, 97, 98, 100, 106]
+
 
 def lire(chemin, defaut=None):
     try:
@@ -48,7 +55,14 @@ def noms_labels(issue):
 LOTS_AJOUTES = {72: "2. Famille", 73: "2. Famille"}
 
 
-def lot(n):
+def est_story(issue):
+    labels = noms_labels(issue)
+    return "reecriture" in labels or (LUDIQUE in labels and not issue["title"].startswith("[Épopée]"))
+
+
+def lot(n, labels=()):
+    if LUDIQUE in labels:
+        return LOT_LUDIQUE
     if n in LOTS_AJOUTES:
         return LOTS_AJOUTES[n]
     for borne, nom in ((8, "1. Socle"), (15, "2. Famille"), (24, "3. Jouer une leçon"), (29, "4. Parcours")):
@@ -220,7 +234,8 @@ def previsions(lignes_stories, temps, maintenant):
     # Après la beta, le retrait de app/ (#46) attend toutes les autres stories : il allonge le chemin d'une story.
     for perimetre, filtre, critique in (
         ("Beta", lambda s: s["beta"] == "oui", critique_beta),
-        ("Toute la réécriture", lambda s: True, critique_beta + [46]),
+        ("Toute la réécriture", lambda s: s["lot"] != LOT_LUDIQUE, critique_beta + [46]),
+        ("Leçons plus ludiques", lambda s: s["lot"] == LOT_LUDIQUE, CHEMIN_CRITIQUE_LUDIQUE),
     ):
         reste = sum(1 - s["avancement"] for s in lignes_stories if filtre(s))
         jours_vitesse = reste / vitesse if vitesse else None
@@ -256,10 +271,11 @@ def main(dossier):
     graphe = lire_graphe()
     date = max((i.get("updated_at", "") for i in issues), default="")[:10]
 
-    stories = {i["number"]: i for i in issues if "reecriture" in noms_labels(i)}
+    stories = {i["number"]: i for i in issues if est_story(i)}
     fermees = {n for n, i in stories.items() if i["state"].upper() == "CLOSED"}
     ouvertes = set(stories) - fermees
-    beta_ouvertes = {n for n in ouvertes if graphe.get(n, {}).get("beta", True)}
+    reecriture_ouvertes = {n for n in ouvertes if LUDIQUE not in noms_labels(stories[n])}
+    beta_ouvertes = {n for n in reecriture_ouvertes if graphe.get(n, {}).get("beta", True)}
     pr_ouvertes = {}
     for pr in prs:
         m = re.match(r"\D*#(\d+)", pr.get("title", ""))
@@ -295,8 +311,10 @@ def main(dossier):
     temps = {n: t for n in stories if (t := temps_de_developpement(n))}
     lignes_stories, lignes_equipes, lignes_etapes = [], [], []
     for n in sorted(stories):
-        g = graphe.get(n, {"beta": True, "depend_de": "—", "niveau": None})
         labels = noms_labels(stories[n])
+        ludique = LUDIQUE in labels
+        defaut = {"beta": not ludique, "depend_de": DEPENDANCES_LUDIQUE.get(n, "—"), "niveau": None}
+        g = graphe.get(n, defaut)
         en_cours = any(l.startswith("graphe:") and l != "graphe:coordination" for l in labels)
         avancement_equipe = lire_avancement(lire(dossier / "comments" / f"{n}.json", []))
         if avancement_equipe and "graphe:revue" in labels:
@@ -315,14 +333,14 @@ def main(dossier):
             poids = {"fait": 1, "en cours": 0.5, "en attente": 0.5, "à faire": 0}
             etapes = avancement_equipe["etapes"] if avancement_equipe else {}
             avancement = round(sum(poids[etapes.get(e, ("à faire",))[0]] for e in ETAPES) / len(ETAPES), 4)
-        elif not (dependances(g["depend_de"], ouvertes, beta_ouvertes) & ouvertes):
+        elif not (dependances(g["depend_de"], reecriture_ouvertes, beta_ouvertes) & ouvertes):
             etat, avancement = "Prête", 0.0
         else:
             etat, avancement = "Bloquée", 0.0
         c = couts.get(n)
         t = temps.get(n)
         lignes_stories.append({
-            "story": f"#{n}", "numero": n, "titre": stories[n]["title"], "lot": lot(n), "beta": "oui" if g["beta"] else "non",
+            "story": f"#{n}", "numero": n, "titre": stories[n]["title"], "lot": lot(n, labels), "beta": "oui" if g["beta"] else "non",
             "etat": etat, "avancement": avancement, "depend_de": "—" if n in fermees else g["depend_de"], "niveau": g["niveau"],
             "cout_usd": c[0] if c else None, "methode_cout": c[1] if c else None,
             "temps_actif_h": round(t["actif_h"], 1) if t else None,
@@ -337,7 +355,7 @@ def main(dossier):
             pas_fait = next((e for e in ETAPES if etapes.get(e, ("à faire",))[0] != "fait"), "Merge")
             pr = pr_ouvertes.get(n)
             lignes_equipes.append({
-                "story": f"#{n}", "equipe": s.get("title", "—").split("—")[0].strip(), "titre": stories[n]["title"],
+                "story": f"#{n}", "equipe": (s.get("title") or "").split("—")[0].strip() or f"Équipe #{n}", "titre": stories[n]["title"],
                 "branche": a.get("branche") or (pr or {}).get("head", {}).get("ref", "—"),
                 "etape": f"{pas_fait} : {etapes.get(pas_fait, ('', 'à faire'))[1]}" if a else f"PR #{pr['number']} ouverte" if pr else pas_fait,
                 "avancement": avancement, "attend": a.get("attend", "merge par le PO" if pr else "—"), "verrou": a.get("verrou", "aucun"),

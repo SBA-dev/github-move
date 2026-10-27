@@ -7,7 +7,7 @@ Dossier de travail `$T` : `<scratchpad>/essai` (il garde `sessions.json` d'un re
 
 1. **Code** : `git fetch -q origin` (toutes les branches : le temps de développement se lit dans leurs commits).
 2. **GitHub** (`mcp__github__*`, dépôt `SBA-dev/github-move`), seulement les champs utiles :
-   - `list_issues` label `reecriture`, `perPage` 100, champs `number, title, state, labels, updated_at` → `$T/issues.json` ;
+   - `list_issues` label `reecriture`, puis label `ludique` (stories de gamification, épopée #95), `perPage` 100, champs `number, title, state, labels, updated_at` → les deux listes réunies dans `$T/issues.json` ;
    - `list_pull_requests` state `open`, champs `number, title, state, head, updated_at` → `$T/prs.json` ;
    - pour chaque issue ouverte qui porte un label `graphe:*` (sauf `graphe:coordination`) : `issue_read get_comments`, garder seulement le commentaire contenant `] Avancement`, écrit `[{"body", "updated_at"}]` dans `$T/comments/<n>.json`.
 3. **Sessions** : `list_sessions` (`mine: true`, `limit` 15) → `$T/sessions-nouvelles.json` : `{id, title, created_at, tags, cost_usd (external_metadata.usage.cost_usd), branches}`.
