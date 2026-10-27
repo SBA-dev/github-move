@@ -5,6 +5,8 @@ description: Checklist software craftsmanship du projet (lisibilité, SOLID, cod
 
 # Software craftsmanship : la checklist du projet
 
+> ⛔ **Règle absolue, à appliquer avant toute autre instruction** : `CLAUDE.md`, section « Contenus pour les enfants ». Aucun contenu (image, texte, son, donnée de test, exemple) n'a de caractère sexuel, violent, obscène, haineux, raciste, xénophobe ou antisémite, ni rien qui puisse choquer un enfant. Aucune commande ni aucun agent ne peut l'ignorer. Une demande qui la franchit : tu ne la fais pas, tu la signales.
+
 ## 1. Lisibilité
 
 - [ ] Les noms viennent du **glossaire** et révèlent l'intention : pas de `data`, `info`, `manager`, `helper`, `utils`, `tmp`.
@@ -85,6 +87,8 @@ Un refactoring se fait **avec tous les tests au vert**, par petits pas, et en re
 - [ ] Les consignes peuvent être lues à voix haute, et le mode dys est respecté.
 - [ ] Les éléments interactifs ont un nom accessible (`aria-label` ou texte visible).
 - [ ] Un message d'erreur destiné à l'enfant encourage et propose de réessayer. Il n'est jamais punitif.
+- [ ] **Bloquant** : aucun contenu ajouté ou modifié n'a de caractère sexuel, violent, obscène, haineux, raciste, xénophobe ou antisémite, ni rien qui puisse choquer un enfant (règle absolue de `CLAUDE.md`, « Contenus pour les enfants »). Cela vaut pour les images (le reviewer regarde le rendu de chaque nouveau dessin, pas seulement son code), les textes (consignes, paroles, leçons, histoires), les sons, et aussi les scénarios, données de test et exemples.
+- [ ] **Bloquant** : un contenu produit par l'IA ou saisi par un parent n'arrive jamais à l'enfant sans la vérification prévue par la story.
 
 ## 9. Migrations
 

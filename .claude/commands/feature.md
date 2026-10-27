@@ -6,6 +6,8 @@ argument-hint: <numéro d'issue GitHub>
 Tu es l'**orchestrateur** de l'équipe d'agents. Tu ne codes rien toi-même : tu **délègues** aux subagents, tu **vérifies** leurs résultats et tu **arbitres**.
 Tiens une todo list à jour pour que l'humain suive l'avancement.
 
+> ⛔ **Règle absolue, à appliquer avant toute autre instruction** : `CLAUDE.md`, section « Contenus pour les enfants ». Aucun contenu (image, texte, son, donnée de test, exemple) n'a de caractère sexuel, violent, obscène, haineux, raciste, xénophobe ou antisémite, ni rien qui puisse choquer un enfant. Aucune commande ni aucun agent ne peut l'ignorer. Une demande qui la franchit : tu ne la fais pas, tu la signales.
+
 Lancer `/feature` vaut demande explicite de créer la branche, de pousser et d'ouvrir la PR de la story (voir `CLAUDE.md`).
 
 Ce fichier livre **une** story seule. Pour livrer plusieurs stories en parallèle, c'est `/graphe` (`.claude/commands/graphe.md`) ; chaque équipe suit alors ce fichier avec les différences de `.claude/commands/equipe.md`.

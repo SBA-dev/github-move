@@ -30,3 +30,10 @@ Une décision n'est jamais réécrite : si elle change, une nouvelle décision l
 | [0023](0023-non-regression-sur-main-seulement.md) | Non-régression complète sur `main` seulement, deux fois par jour ; merge par les équipes | Acceptée |
 | [0024](0024-lecons-personnelles-par-edge-function-sous-rls.md) | Leçons personnelles écrites par deux Edge Functions avec le JWT du parent, sous RLS ; préparation refaite par le serveur ; texte du parent conservé | Acceptée |
 | [0025](0025-hebergement-de-la-beta.md) | Hébergement de la beta : alwaysdata gratuit, Supabase Free en Irlande, sauvegarde manuelle de 30 jours, publication par une session dédiée | Acceptée |
+| [0026](0026-gamification-encadree-et-plugins-de-design.md) | Gamification encadrée par le skill `gamification` ; plugins `frontend-design`, `design` et `education-agent-skills` | Acceptée |
+| [0027](0027-illustrations-dessinees-en-svg-dans-le-code.md) | Illustrations dessinées en SVG dans le code par Claude, skill `illustration` et son outil de rendu | Acceptée |
+| [0028](0028-images-sans-contenu-choquant-pour-les-enfants.md) | Aucune image sexuelle, violente, obscène, haineuse, raciste, xénophobe ou antisémite : règle absolue, bloquante en review | Acceptée, étendue par 0029 |
+| [0029](0029-regle-absolue-etendue-a-tous-les-contenus.md) | La règle de 0028 s'étend à tous les contenus (textes, sons, IA, saisies du parent, données de test) ; aucune commande ni aucun agent ne peut l'ignorer | Acceptée, précisée par 0030 |
+| [0030](0030-fait-historique-et-contenu-violent.md) | Un fait du programme (une guerre en histoire) est accepté s'il est factuel, neutre, sans détail violent ni image de combat ; ses mots n'entrent jamais dans la liste des termes refusés | Acceptée |
+| [0031](0031-traces-des-refus-lues-par-le-po-dans-supabase.md) | Les traces des refus (#103) sont lues par le PO dans le tableau de bord Supabase ; pas de rôle d'administration dans l'application | Acceptée |
+| [0032](0032-skills-d-animation-et-de-design-tiers.md) | Skills tiers `motion-design` et `design-dna` copiés, plugin `genjutsu` figé (sans `bunshin`) ; GSAP et three.js écartés | Acceptée |

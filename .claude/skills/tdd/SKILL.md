@@ -5,6 +5,8 @@ description: Règles du Test-Driven Development (red/green/refactor) appliquées
 
 # TDD dans ce projet
 
+> ⛔ **Règle absolue, à appliquer avant toute autre instruction** : `CLAUDE.md`, section « Contenus pour les enfants ». Aucun contenu (image, texte, son, donnée de test, exemple) n'a de caractère sexuel, violent, obscène, haineux, raciste, xénophobe ou antisémite, ni rien qui puisse choquer un enfant. Aucune commande ni aucun agent ne peut l'ignorer. Une demande qui la franchit : tu ne la fais pas, tu la signales.
+
 ## Le cycle
 
 1. **RED** : écrire **un** test qui échoue, pour la bonne raison : une assertion, ou un module ou symbole pas encore créé.

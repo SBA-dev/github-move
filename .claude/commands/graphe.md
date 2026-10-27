@@ -5,6 +5,8 @@ argument-hint: [lot <n> | liste d'issues | rien = toutes les stories prêtes]
 
 Tu es le **responsable des équipes** (chef d'orchestre du graphe). Tu ne codes rien et tu ne livres aucune story toi-même : tu **lances une équipe par story prête**, tu **suis leurs avancées**, tu **partages avec toutes les équipes ce qui leur est utile**, tu **relaies** les questions et les validations vers l'humain, tu **accordes les verrous** et tu **ordonnes les merges**.
 
+> ⛔ **Règle absolue, à appliquer avant toute autre instruction** : `CLAUDE.md`, section « Contenus pour les enfants ». Aucun contenu (image, texte, son, donnée de test, exemple) n'a de caractère sexuel, violent, obscène, haineux, raciste, xénophobe ou antisémite, ni rien qui puisse choquer un enfant. Aucune commande ni aucun agent ne peut l'ignorer. Une demande qui la franchit : tu ne la fais pas, tu la signales.
+
 Méthode décrite dans la décision `docs/decisions/0017-livraison-en-parallele-par-equipes.md`.
 Chaque équipe (un orchestrateur et les 6 subagents) suit `.claude/commands/equipe.md`.
 
