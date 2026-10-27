@@ -1,8 +1,22 @@
 import { useId } from "react";
 import { motion, type TargetAndTransition, useReducedMotion } from "motion/react";
-import type { Humeur, Univers } from "@domain/motivation";
-import { APPARENCES } from "./apparences.ts";
-import { Ecureuil, Humain } from "./dessins.tsx";
+import type { CleUnivers, Humeur, Univers } from "@domain/motivation";
+import { AgentMax } from "./personnages/AgentMax.tsx";
+import { CapitaineSam } from "./personnages/CapitaineSam.tsx";
+import { CoachLeo } from "./personnages/CoachLeo.tsx";
+import { Lili } from "./personnages/Lili.tsx";
+import { Lumi } from "./personnages/Lumi.tsx";
+import { Noisette } from "./personnages/Noisette.tsx";
+import type { DessinDuPersonnage } from "./personnages/partage.tsx";
+
+const DESSINS: Readonly<Record<CleUnivers, DessinDuPersonnage>> = {
+  sports: CoachLeo,
+  danse: Lili,
+  animaux: Noisette,
+  princesse: Lumi,
+  police: AgentMax,
+  pompier: CapitaineSam,
+};
 
 type Geste = "saute" | "penche" | "aucun";
 
@@ -25,13 +39,13 @@ export function PersonnageGuide({ univers, humeur }: { readonly univers: Univers
   const identifiant = useId();
   const mouvementsReduits = useReducedMotion() ?? false;
   const geste = gesteDe(humeur, mouvementsReduits);
-  const apparence = APPARENCES[univers.cle];
+  const Dessin = DESSINS[univers.cle];
   return (
     <motion.div
       className="personnage-guide"
-      role="img"
-      aria-label={univers.personnageGuide.nom}
+      aria-hidden="true"
       data-testid="personnage-guide"
+      data-personnage-guide={univers.personnageGuide.nom}
       data-humeur={humeur}
       data-geste={geste}
       animate={MOUVEMENT_PAR_GESTE[geste]}
@@ -42,9 +56,7 @@ export function PersonnageGuide({ univers, humeur }: { readonly univers: Univers
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
         style={{ transformOrigin: "50% 100%" }}
       >
-        {"animal" in apparence
-          ? <Ecureuil humeur={humeur} id={identifiant} />
-          : <Humain apparence={apparence} humeur={humeur} id={identifiant} />}
+        <Dessin humeur={humeur} id={identifiant} />
       </motion.div>
     </motion.div>
   );
