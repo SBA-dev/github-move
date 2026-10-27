@@ -50,7 +50,7 @@ Dans la session de publication, `VITE_SUPABASE_URL` et `VITE_SUPABASE_ANON_KEY` 
 Le réseau de la session autorise : l'hôte du site, l'hôte WebDAV, l'API de gestion de Supabase et le projet de production.
 Absentes de cet environnement, toujours : `SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`, `SEND_EMAIL_HOOK_SECRET`, `MODE_EMAIL`.
 
-### 2.4 Adresse de contact et textes légaux (PO, P6, P7, P8)
+### 2.4 Adresse de contact (PO, P8)
 
 P6 et P7 sans objet pendant la beta (45.36) ; l'adresse de contact reste le moyen des demandes de suppression des données (§ 8).
 
@@ -101,7 +101,7 @@ supabase db dump --db-url "$URL_DE_LA_BASE" -f data.sql    --use-copy --data-onl
 
 (`$URL_DE_LA_BASE` : chaîne de connexion du tableau de bord, mot de passe de la base inclus ; elle reste dans le terminal du PO.)
 
-La sauvegarde est **notée au journal des publications** (date, emplacement sur la machine du PO, jamais son contenu) et **gardée 30 jours**, puis effacée (45.34). La politique de confidentialité le dit.
+La sauvegarde est **notée au journal des publications** (date, emplacement sur la machine du PO, jamais son contenu) et **gardée 30 jours**, puis effacée (45.34). Pendant la beta (45.36), les familles en sont informées par l'invitation (P11) et par la réponse écrite au parent.
 
 ### 3.4 Migrations (45.22)
 
@@ -158,7 +158,7 @@ VITE_SUPABASE_URL=$SUPABASE_PRODUCTION_URL VITE_SUPABASE_ANON_KEY=$SUPABASE_PROD
 python3 scripts/exploitation/secrets_du_build.py dist      # V1
 ```
 
-V1 échoue si `dist/` contient une clé `service_role`, un nom de secret interdit, un jeton de gestion, `profil-prepare`. Seules l'adresse du projet et la clé publique `anon` sont permises. Au premier échec, on n'envoie rien.
+V1 échoue si `dist/` contient une clé `service_role`, un nom de secret interdit, un jeton de gestion, ou `profil-prepare`. Seules l'adresse du projet et la clé publique `anon` sont permises. Au premier échec, on n'envoie rien.
 
 Puis l'envoi :
 
@@ -202,6 +202,7 @@ Ce qui change la première fois :
 5. **Retour en arrière du front essayé une fois** (§ 5) et **demande de suppression essayée sur un parent de test** (§ 8, M4).
 6. **Tâche planifiée** (§ 7), créée **après** cette première publication.
 7. Inviter les familles seulement ensuite (P11) : le PO leur donne l'adresse à la main.
+   *Recommandation au PO (pas une obligation nouvelle)* : l'invitation donne aussi l'adresse de contact pour une demande de suppression des données, le délai de 7 jours (45.15) et la garde des sauvegardes (30 jours, 45.34). Pendant la beta, c'est le seul canal d'information (45.36).
 
 ## 5. Retour en arrière
 
@@ -307,7 +308,7 @@ delete from auth.users where id = '<uuid du parent>'::uuid;
 2. Vérifier qu'**aucun autre parent** n'est touché (nombre de parents et de profils avant/après : écart égal à ce qui était demandé).
 3. **Répondre par écrit au parent**, à l'adresse de son compte : ce qui a été supprimé, la date, et ce qui **reste sur ses appareils** : le choix Son/Muet et le choix de la voix (stockage local du navigateur) ; la liste des profils du parent (prénom ou pseudo, classe, réglages) et les séances, tests de départ et séances de révision pas encore envoyés (IndexedDB) ; le service worker ne garde aucune donnée de famille (#8). Il peut les effacer en se déconnectant (la liste des profils et ce qui n'est pas encore envoyé ; le choix Son/Muet et la voix restent), en supprimant les données du site dans les réglages du navigateur, et en désinstallant l'application de l'écran d'accueil. Les données déjà envoyées à Supabase sont, elles, supprimées par le traitement.
 4. **Registre des demandes**, tenu par le PO **hors de la base de production** : date de la demande, date du traitement, identifiant technique. Ni prénom, ni contenu.
-5. **Sauvegardes** : une sauvegarde faite avant le traitement contient encore les données effacées. Elle est gardée **30 jours** puis effacée (§ 3.3) ; la politique de confidentialité le dit, et la réponse au parent aussi.
+5. **Sauvegardes** : une sauvegarde faite avant le traitement contient encore les données effacées. Elle est gardée **30 jours** puis effacée (§ 3.3) ; pendant la beta (45.36), les familles en sont informées par l'invitation (P11) et par la réponse écrite au parent.
 
 Le script de traitement est prévu en 45b (C15) ; en attendant, ce sont ces requêtes.
 

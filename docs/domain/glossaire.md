@@ -285,7 +285,7 @@ Termes d'exploitation et juridiques : ils ne vont pas dans `domain/`.
 | Beta | Première mise en ligne (alwaysdata, Supabase Free en Irlande), réservée aux familles invitées, sans e-mail, sans export ni suppression dans l'application (#45, 0019). | Exploitation | version d'essai, alpha |
 | Production | Projet Supabase et adresse du front utilisés par les familles, distincts de `savanturier-dev` (#45). | Exploitation | prod (dans l'interface), live |
 | Procédure de publication | Suite écrite des vérifications puis des étapes (migrations, Edge Functions, front) qui publie une version, avec son retour en arrière (#45). | Exploitation | déploiement manuel, mise en prod |
-| Politique de confidentialité | Page qui dit quelles données sont gardées, où, combien de temps, et comment faire une demande de suppression des données (#45). | Exploitation | charte, RGPD (pour la page) |
+| Politique de confidentialité | Page qui dit quelles données sont gardées, où, combien de temps, et comment faire une demande de suppression des données (#45). Pas de politique de confidentialité dans l'application pendant la beta (45.36) ; rétablie avec 45b. | Exploitation | charte, RGPD (pour la page) |
 | Mentions légales | Page qui nomme l'éditeur, le directeur de publication et l'hébergeur (#45). | Exploitation | CGU |
 
 ## Décisions

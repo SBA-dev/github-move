@@ -21,8 +21,8 @@ Entrées : issue #45 et le commentaire `[Responsable]` du 2026-10-25 (décision 
 
 **Concepts examinés** :
 
-- **Demande de suppression des données** : concept **métier mais hors application** pendant la beta. Le parent l'écrit (adresse de contact de la politique de confidentialité) ; l'équipe l'exécute à la main. Elle n'a ni agrégat ni écran : c'est une **procédure** écrite dans `docs/`, avec un script d'exploitation. Son effet doit être **exactement** celui de la future **Suppression du profil** (#14) ou de la suppression du compte du parent (décision 0014), pour que #14 la remplace sans changer la promesse faite aux familles. Terme présent au glossaire.
-- **Production**, **procédure de publication**, **politique de confidentialité**, **mentions légales** : termes d'exploitation ou juridiques, utiles dans les docs, les issues et l'interface (liens en pied de page). Ce ne sont pas des concepts du domaine : rien dans `domain/`.
+- **Demande de suppression des données** : concept **métier mais hors application** pendant la beta. Le parent l'écrit (à l'adresse de contact donnée par l'invitation ; la politique de confidentialité est sans objet pendant la beta, 45.36) ; l'équipe l'exécute à la main. Elle n'a ni agrégat ni écran : c'est une **procédure** écrite dans `docs/`, avec un script d'exploitation. Son effet doit être **exactement** celui de la future **Suppression du profil** (#14) ou de la suppression du compte du parent (décision 0014), pour que #14 la remplace sans changer la promesse faite aux familles. Terme présent au glossaire.
+- **Production**, **procédure de publication**, **politique de confidentialité**, **mentions légales** : termes d'exploitation ou juridiques, utiles dans les docs et les issues (pages sans objet pendant la beta, 45.36 ; liens en pied de page prévus avec 45b). Ce ne sont pas des concepts du domaine : rien dans `domain/`.
 - **Beta** : déjà employé partout (feuille de route, décision 0019, tag `@hors-beta`) ; présent au glossaire (section Exploitation).
 
 Conflit de langage à éviter : « suppression à la main » ne doit pas devenir un second sens de **Suppression du profil** (#14 : action du parent dans l'application, immédiate). On parle de **demande de suppression des données** (ce que fait le parent) et de son **traitement** (ce que fait l'équipe).
@@ -95,7 +95,7 @@ Le script (exploitation, sous `scripts/` ou `supabase/`, avec test) prend l'iden
 
 **Vérification de l'identité** : la demande doit venir de l'adresse e-mail du compte ; traitement **sous 7 jours**, réponse écrite au parent une fois fait (45.15). **Trace** : un registre des demandes traitées (date de la demande, date du traitement, identifiant technique) tenu **par le PO**, **hors** de la base de production, sans prénom ni contenu (45.16).
 
-**Sauvegardes** : une sauvegarde manuelle faite avant le traitement contient encore les données effacées. La politique de confidentialité le dit, et la procédure dit combien de temps on garde une sauvegarde (à écrire avec P6).
+**Sauvegardes** : une sauvegarde manuelle faite avant le traitement contient encore les données effacées. Pendant la beta (45.36), l'invitation (P11) et la réponse écrite au parent le disent (politique de confidentialité sans objet), et la procédure dit combien de temps on garde une sauvegarde.
 
 ### Dettes de #72 (C18)
 
@@ -127,7 +127,7 @@ Une seule fois, juste avant la mise en ligne, sur le **commit publié** de `main
 2. **non-régression E2E complète sur les deux projets, `tablette` et `telephone`**, avec toutes les stories livrées, contre `savanturier-dev` (exclusions habituelles `@depend-de`, `@envoi-email`, `@hors-beta`) ;
 3. tests de la PWA sur le build de production (`playwright.pwa.config.ts`) ;
 4. après publication, contre la **production** (adresse alwaysdata), avec le compte de test du PO : en-têtes (C1), origines appelées (C4), RLS (C10), région Irlande des fonctions (C12) ;
-5. **contrôle manuel du PO sur une vraie tablette** (et un téléphone) : ouvrir l'adresse, installer sur l'écran d'accueil, s'inscrire, créer un profil, jouer une séance, mode dys, voix, Son/Muet, ouvrir les pages légales ; puis publier une petite version et vérifier qu'elle s'applique au lancement suivant sans recharger l'écran de l'enfant (#8, règle 4).
+5. **contrôle manuel du PO sur une vraie tablette** (et un téléphone) : ouvrir l'adresse, installer sur l'écran d'accueil, s'inscrire, créer un profil, jouer une séance, mode dys, voix, Son/Muet ; puis publier une petite version et vérifier qu'elle s'applique au lancement suivant sans recharger l'écran de l'enfant (#8, règle 4).
 
 ## Découpage décidé (45.19)
 
@@ -143,8 +143,8 @@ Aucun fichier sous `supabase/functions/_shared/<contexte>/domain/`.
 - `docs/publication.md` : procédure de publication et traitement d'une demande de suppression des données.
 - `public/.htaccess` (copié dans `dist/`) : configuration d'alwaysdata, si le type de site la lit (C1, à vérifier).
 - `public/polices/` : police Andika (`woff2`) et sa licence.
-- `src/` : pages « Politique de confidentialité » et « Mentions légales ».
-- `features/45-mise-en-ligne.feature` et `features/steps/` : origines appelées, en-têtes, pages légales.
+- `src/` : pages « Politique de confidentialité » et « Mentions légales » (sans objet pendant la beta, 45.36 ; reportées à 45b).
+- `features/45-mise-en-ligne.feature` et `features/steps/` : origines appelées, en-têtes (pages légales sans objet pendant la beta, 45.36).
 - `scripts/` ou `supabase/` : vérification de la RLS, recherche de secrets dans `dist/`, script de suppression à la main, avec leurs tests.
 - `supabase/config.toml` : configuration de production (C7) ; `.env.example` : `ORIGINES_AUTORISEES`.
 - `docs/decisions/` : une décision pour l'hébergement et la production (alwaysdata gratuit, Supabase Free en Irlande, sauvegarde manuelle) ; en 45b, une décision qui remplace 0019.
@@ -152,7 +152,7 @@ Aucun fichier sous `supabase/functions/_shared/<contexte>/domain/`.
 
 ## Données d'enfants
 
-Aucune donnée nouvelle sur l'enfant. #45 met en production les données déjà décrites par les stories livrées (profil : prénom ou pseudo, niveau, réglages ; séances, résultats, records, test de départ). Points RGPD de la story : hébergement UE (front chez alwaysdata, base **et** fonctions en Irlande), aucun tiers dans le navigateur (C4), suppression à la main (C15), journaux d'alwaysdata et de Supabase (adresses IP) mentionnés dans la politique de confidentialité, aucune donnée d'enfant dans les issues, la procédure ni le registre des demandes. Les sauvegardes manuelles (P12) contiennent des données d'enfants : jamais dans le dépôt ni dans le conteneur, gardées par le PO, durée écrite dans la politique de confidentialité.
+Aucune donnée nouvelle sur l'enfant. #45 met en production les données déjà décrites par les stories livrées (profil : prénom ou pseudo, niveau, réglages ; séances, résultats, records, test de départ). Points RGPD de la story : hébergement UE (front chez alwaysdata, base **et** fonctions en Irlande), aucun tiers dans le navigateur (C4), suppression à la main (C15), journaux d'alwaysdata et de Supabase (adresses IP) à mentionner dans la politique de confidentialité (sans objet pendant la beta, 45.36 ; reportée à 45b), aucune donnée d'enfant dans les issues, la procédure ni le registre des demandes. Les sauvegardes manuelles (P12) contiennent des données d'enfants : jamais dans le dépôt ni dans le conteneur, gardées par le PO, durée écrite dans la procédure, l'invitation et la réponse au parent (45.36).
 
 ## Questions au PO et décisions
 
@@ -166,7 +166,7 @@ Réponses du PO (2026-10-25, mot pour mot) : « #45 : je veux une solution gratu
 6. **45.6 Polices** : Décision : auto-hébergées ; **Andika** seulement, dès la beta, y compris sans réseau ; pas de Lexend.
 7. **45.7 Publication automatique** : Décision : **à la main en suivant la procédure** pour la beta ; CI en 45b.
 8. **45.8 Erreurs en production** : Décision : journaux de Supabase, regardés après chaque publication et une fois par jour ; plus les retours des familles par l'adresse de contact.
-9. **45.9 Politique de confidentialité et mentions légales** : Décision : **avec 45a** ; l'équipe propose un brouillon à partir des faits du dépôt, le PO le relit, le complète (identité, adresse) et en reste responsable.
+9. **45.9 Politique de confidentialité et mentions légales** (remplacée par 45.36 pour la beta) : Décision : **avec 45a** ; l'équipe propose un brouillon à partir des faits du dépôt, le PO le relit, le complète (identité, adresse) et en reste responsable.
 10. **45.10 Fichiers servis par le CDN** (MP3 des voix) : Décision : **hors de 45a** ; à décider avec la story des MP3, de préférence par l'hébergeur du front (même origine, pas de tiers), dans la limite du quota d'alwaysdata.
 11. **45.11 Environnement de recette** : Décision : **aucun pour la beta** ; `savanturier-dev`, la vérification finale et le contrôle sur tablette en tiennent lieu.
 12. **45.12 `prototype/`** : Décision : jamais publié (hors du build) ; son sort est reporté à #46.
