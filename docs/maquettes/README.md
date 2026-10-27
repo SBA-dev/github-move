@@ -78,3 +78,17 @@ Validée par le PO le 2026-10-27, après une reprise complète (la première ver
 - Contrôles : « Réussir », « Rater », A / B / C ; `?anim=orchestre|trottinette|danse|echec&t=…`, `?planche=tetes|mains`.
 
 **Limites connues** : en glisse, la jambe levée reste basse ; le demi-tour de la trottinette est un basculement rapide ; comme chez Léo, les pieds glissent un peu pendant la marche ; le chiot est dessiné simplement ; pas de son. Dans l'application, le guide Police est encore « Agente Mila » (`src/univers/apparences.ts`) : le passage à Agent Max revient à une story (#96 ou #106).
+
+## `capitaine-sam-pompier.html` : univers Pompiers, Capitaine Sam
+
+Validée par le PO le 2026-10-27, après une reprise complète des animations. Même méthode qu'Agent Max : corps, membres, mains et moteur d'animation de Coach Léo, vrai pantalon ; seuls la tête, la tenue, le décor et les animations changent.
+
+- **Capitaine Sam** : un garçon à la peau claire (`#f3c9a5`) avec quelques taches de rousseur, cheveux roux courts (`#a8461c`), yeux verts ; casque rouge avec un écusson doré à **étoile** (jamais de croix, qui pourrait se lire comme un symbole religieux ou la Croix-Rouge), veste et pantalon rouges à bandes jaunes, bottes noires, gants quand il tient la lance.
+- **Décor** : cour de la caserne (grande porte, cloche dorée), camion rouge, cible d'entraînement, bouche d'incendie, fleurs ; palette pompier de l'application.
+- **Action** : exercice sur cible ; le jet touche le centre, la cible tourne et montre une étoile.
+- **Trois célébrations tirées au hasard** : arc-en-ciel d'eau et salut ; grande échelle (il grimpe **derrière** l'échelle, barreaux devant lui, salue depuis la nacelle, redescend du même côté) ; cloche de la caserne (« ding ding ! »), pas de danse, pose fière et clin d'œil. Puis « Mission réussie ! » et « Chapitre réussi ! ».
+- **Échec jamais punitif** : la lance lui glisse des mains et tombe loin de lui, une petite fontaine en arc retombe en gouttes sur son casque ; il rit, la ramasse, lève le pouce, « Presque ! On réessaie ? ».
+- **Règle absolue** : aucune flamme, aucun feu, personne en danger. **Lance à eau** : toujours tenue à deux mains à hauteur d'épaule, sur le côté ; le tuyau ne passe jamais devant le bassin ni entre les jambes, et aucun jet ne part du bas du corps (une première version, lance à hauteur du bassin, donnait une lecture vulgaire : à ne jamais reproduire).
+- Contrôles : « Réussir », « Rater », A / B / C ; `?anim=arc|echelle|cloche|echec&t=…`, `?planche=tetes|mains`.
+
+**Limites connues** : l'échelle est dressée près du camion au lieu d'en être l'échelle dépliée ; en haut, Sam semble debout sur la nacelle plutôt que dedans ; à la visée, la main arrière reste près du menton ; pas de son. Le guide Pompiers de l'application (`src/univers/apparences.ts`) n'est pas encore modifié : ce sera le rôle d'une story (#96 ou #106).
