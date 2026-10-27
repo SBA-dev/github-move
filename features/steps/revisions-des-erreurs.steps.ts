@@ -632,7 +632,9 @@ async function telephoneDe(famille: Famille, browser: Browser, baseURL: string |
   return cible;
 }
 
-After(async ({ famille }) => {
+// Les téléphones ouverts par telephoneDe sont fermés à la fin, pour les seules stories qui les ouvrent : un hook sans
+// tag instancierait la fixture famille (et son nettoyage sur savanturier-dev) jusque dans les scénarios @production.
+After({ tags: "@issue-28 or @issue-29 or @issue-30" }, async ({ famille }) => {
   for (const contexte of contextes.get(famille) ?? []) await contexte.close();
 });
 

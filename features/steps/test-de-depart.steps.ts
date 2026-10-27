@@ -145,7 +145,8 @@ async function telephoneDePaul(famille: Famille, browser: Browser, baseURL: stri
   return cible;
 }
 
-After(async ({ famille }) => {
+// Réservé à la story : un hook sans tag instancierait la fixture famille jusque dans les scénarios @production.
+After({ tags: "@issue-27" }, async ({ famille }) => {
   await contextesOuverts.get(famille)?.close();
 });
 
