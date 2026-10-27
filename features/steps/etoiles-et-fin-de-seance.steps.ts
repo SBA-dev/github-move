@@ -141,10 +141,27 @@ async function faireUneErreur(page: Page): Promise<void> {
   await repondre(page, fausse);
 }
 
+// Sans voix, la félicitation de la dernière bonne réponse attend que l'enfant appuie sur « Continuer » (#79).
+const continuesApresLaReussite = new WeakSet<Page>();
+
+export function boutonContinuerApresLaReussite(page: Page) {
+  return page.locator(".continuer-apres-la-reussite");
+}
+
+export function aContinueApresLaReussite(page: Page): boolean {
+  return continuesApresLaReussite.has(page);
+}
+
+export async function continuerApresLaReussite(page: Page): Promise<void> {
+  await boutonContinuerApresLaReussite(page).click();
+  continuesApresLaReussite.add(page);
+}
+
 export async function attendreLaFinDeLaSeance(page: Page): Promise<void> {
   const fin = page.getByTestId("fin-de-seance");
   await expect.poll(async () => {
     if (await fin.isVisible()) return true;
+    if (await boutonContinuerApresLaReussite(page).isVisible()) await continuerApresLaReussite(page);
     await terminerLaLecture(page);
     return false;
   }, { intervals: [100] }).toBe(true);
@@ -161,6 +178,11 @@ async function jouerJusquALaFin(page: Page, partieEnCours: Partie): Promise<void
     if (rang < questions.length - 1) await expect(recipient(page)).toHaveAttribute("data-questions-reussies", String(rang + 1));
   }
   await attendreLaFinDeLaSeance(page);
+}
+
+/** Joue les questions restantes de la séance ouverte, avec les erreurs prévues du scénario, jusqu'à l'écran de fin. */
+export async function jouerJusquALaFinDeLaSeance(famille: Famille, page: Page): Promise<void> {
+  await jouerJusquALaFin(page, partie(famille));
 }
 
 async function reposerLesErreurs(famille: Famille, page: Page): Promise<Partie> {
@@ -228,6 +250,14 @@ async function attendreLEnregistrement(famille: Famille, lecon: LeconBrute, etoi
   const profil = profilDe(famille, "Léa");
   const jeton = await jetonDe(famille, "Paul");
   await expect.poll(() => meilleuresEtoilesEnRest(jeton, profil.id, lecon.id), { timeout: DELAI_DE_LA_FONCTION_MS }).toBe(etoiles);
+}
+
+/** Gagne les étoiles voulues en jouant le premier exercice à choix de la leçon, puis attend leur enregistrement. */
+export async function gagnerDesEtoilesParUnExerciceSeul(famille: Famille, page: Page, titre: string, etoiles: number): Promise<void> {
+  const lecon = leconDeTitre(page, titre);
+  etat(page).courante = lecon;
+  await jouerUnExerciceSeul(famille, page, lecon, premierExerciceAChoix(lecon), ERREURS_POUR_ETOILES[etoiles] ?? 0);
+  await attendreLEnregistrement(famille, lecon, etoiles);
 }
 
 Given(
@@ -460,7 +490,7 @@ Then(/^l'écran indique en texte « (\d) étoiles?(?:\(s\))? sur 3 »$/, async (
   await expect(page.getByTestId("etoiles-gagnees")).toHaveText(texteDesEtoiles(Number(etoiles)));
 });
 
-Then(/^Léa voit ses étoiles$/, async ({ page }) => {
+Then(/^(?:Léa|Pilote) voit ses étoiles$/, async ({ page }) => {
   await attendreLaFinDeLaSeance(page);
   await expect(page.getByTestId("etoiles-gagnees")).toHaveText(/^[123] étoiles? sur 3$/);
 });

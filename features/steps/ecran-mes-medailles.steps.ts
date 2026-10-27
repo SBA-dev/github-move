@@ -70,7 +70,7 @@ Given(
 
 // --- Les records (profil réel de Léa ou de Tom)
 
-async function leaJoueAvecSonVraiProfil(famille: Famille, monde: Monde, page: Page): Promise<string> {
+export async function leaJoueAvecSonVraiProfil(famille: Famille, monde: Monde, page: Page): Promise<string> {
   if (!estSurUnProfilReel(page)) {
     if ((await famille.session(page)) === null) await famille.connecterSansEmail("tablette", "Paul");
     await jouerAvecLeProfilReel(famille, monde, page, "Léa");
@@ -135,7 +135,8 @@ function accueil(page: Page): Locator {
 }
 
 function boutonDAcces(page: Page): Locator {
-  return accueil(page).getByRole("button", { name: ECRAN, exact: true });
+  // Story #29 : l'accès à l'écran est le bouton du dock.
+  return page.getByRole("navigation", { name: "Mes écrans", exact: true }).getByRole("button", { name: ECRAN, exact: true });
 }
 
 function titreDeLEcran(page: Page): Locator {
@@ -210,7 +211,7 @@ async function atteindreLAccueilDeLea(famille: Famille, page: Page): Promise<voi
   await expect(accueil(page)).toBeVisible();
 }
 
-async function ouvrirLEcran(famille: Famille, page: Page, moyen: "toucher" | "clavier"): Promise<void> {
+export async function ouvrirLEcran(famille: Famille, page: Page, moyen: "toucher" | "clavier"): Promise<void> {
   await atteindreLAccueilDeLea(famille, page);
   await ouvrirDepuisLAccueil(page, moyen);
 }
@@ -285,8 +286,11 @@ Then(/^aucune section n'annonce un contenu à venir$/, async ({ page }) => {
 
 Then(
   /^les sections de l'écran sont, dans l'ordre : la cabane, l'histoire, les badges, puis les records de calcul rapide$/,
-  async () => {
-    throw new Error("Étape non implémentée : les sections de la cabane, de l'histoire et des badges dépendent des stories #32, #33 et #31.");
+  async ({ page }) => {
+    const sections = sectionsDeLEcran(ecranDe(page));
+    await expect(sections).toHaveCount(4, { timeout: DELAI_D_UN_APPEL_SERVEUR_MS });
+    const noms = ["La cabane de Noisette", "L'histoire des Savanturiers", "Mes badges", SECTION_DES_RECORDS];
+    for (const [rang, nom] of noms.entries()) await expect(sections.nth(rang)).toHaveAccessibleName(nom);
   },
 );
 
@@ -348,7 +352,7 @@ async function paroles(page: Page): Promise<string[]> {
 }
 
 // Une lecture peut se découper en plusieurs énoncés (après « : ») : ce que l'enfant entend, c'est un lot.
-async function lecturesParLot(page: Page): Promise<string[]> {
+export async function lecturesParLot(page: Page): Promise<string[]> {
   return await page.evaluate(() => {
     const faux = Reflect.get(window, "__faux") as { journal: Array<{ type: string; lot: number; texte: string }> };
     const parLot = new Map<number, string[]>();
@@ -367,7 +371,7 @@ Then(/^Léa entend Noisette lire, dans l'ordre :$/, async ({ page }, tableau: Da
   }, { intervals: [100], timeout: DELAI_D_UN_APPEL_SERVEUR_MS }).toEqual(attendues);
 });
 
-Then(/^Léa entend Noisette lire « ([^«»]+) », puis « ([^«»]+) »$/, { tags: "@issue-65 or @issue-32" }, async ({ page }, premier: string, second: string) => {
+Then(/^Léa entend Noisette lire « ([^«»]+) », puis « ([^«»]+) »$/, { tags: "@issue-65 or @issue-32 or @issue-31 or @issue-33" }, async ({ page }, premier: string, second: string) => {
   const [premiere, seconde] = [normaliser(entendu(premier)), normaliser(entendu(second))];
   await expect.poll(async () => {
     const lots = await lecturesParLot(page);

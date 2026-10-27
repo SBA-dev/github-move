@@ -1,0 +1,58 @@
+# Journal : issue #29, Écran « Aujourd'hui » (accueil de l'enfant)
+
+Équipe lancée par `/graphe` (session session_014Tk5o75ngb8dMADiGZ9mr4), branche `feature/29-aujourd-hui`, base `main`.
+
+## 2026-10-25
+
+- 17:03 Lancement. Branche créée depuis `feature/lot-29-30-modele-et-scenarios` (`8201960`).
+- 17:04 Intégration de `main` (`8448f19`) : conflits d'ajouts dans `glossaire.md` et `context-map.md`, les deux côtés gardés.
+- Étapes 1 et 2 sautées : modèle et scénarios faits au cadrage anticipé, validés par le PO (« OK #29 #30 reco partout », 29.25, 29.26). CADRAGE PRÊT pour information.
+- #26 est mergée : les tags `@depend-de-26` de `features/29-aujourd-hui.feature` sont à lever. #28 ne l'est pas encore : l'objectif du jour (il utilise `Jour` de #28) et la tuile « À revoir » attendent son merge.
+
+### Comportements TDD prévus
+
+1. `leconDuJour` (Apprentissage) : inconnue, aucune leçon pour la classe, parcours fini, alternance français/maths puis autres matières.
+2. `tuilesDeMatiere` (Apprentissage) : une par matière du parcours, compteur du parcours.
+3. `tuilesDuJour` (Apprentissage) : « À revoir » si au moins une question due, test de départ s'il est à proposer, ordre fixe.
+4. `leconSuivanteEnFinDeSeance` (Apprentissage, 29.8) : leçon suivante du parcours, sinon leçon du jour si elle n'est pas la leçon jouée.
+5. `objectifDuJour` (Motivation, 29.2, 29.3) : après le merge de #28.
+- 17:20 RED faits : leçon du jour (`d02e12d`), tuiles de matière (`7f8d6f3`), tuiles du jour (`b7b622c`), leçon suivante en fin de séance (`fa53c5f`). GREEN leçon du jour (`eb73b91`).
+- 17:22 `po-acceptance` (`fbfc481`) : `@depend-de-26` retiré de #29 ; action 2 faite (scénarios de #24, #25 ×2, #26 ×2 réécrits avec la leçon du jour, tag `@issue-29` ajouté). Doutes notés, tranchés par l'orchestrateur sans changement métier : libellés des règles de #25 et #26 à compléter par « sinon la leçon du jour » (conséquence directe de 29.8) ; doublons #25/#29 gardés (l'action 2 laissait le choix) ; scénario #24 lié à la vraie bibliothèque (risque accepté, noté en dette) ; anciens commentaires N10/26.8/26.19 gardés comme historique sous les nouveaux.
+- 17:15 Revue intermédiaire du bloc domaine (`0b4c5b1..3050181`) : **APPROUVÉ**, aucun bloquant. Dernier commit relu : `3050181`. Non bloquants retenus : branche défensive inaccessible dans `lecon-du-jour.ts` (refactor après le câblage), note du glossaire « Leçon suivante » et écarts du modèle (confiés à `domain-modeler`), réutiliser `useTestDeDepartAFaire` au câblage. Gardés tels quels : nom `aucuneLeconPourTaClasse` (cosmétique), recherche dupliquée (2 occurrences), fixtures dupliquées, test symétrique (cas couvert par `lecon-suivante-en-fin-de-seance_test.ts`).
+- 17:25 Câblage UI (`7a5484e`) : accueil (date, salutation, tuiles du jour sans « À revoir », leçon du jour, tuiles de matière), dock, fin de séance (leçon du jour, « Toutes les leçons »), mémoire des séances terminées pendant l'utilisation, lecture de la dernière séance terminée sous RLS. Refactor `lecon-du-jour.ts` (`c16d70a`).
+- 17:30 Revue intermédiaire du câblage (`7a5484e`) : **APPROUVÉ**, aucun bloquant. Non bloquants corrigés tout de suite : mode dys dans le dock, délai de 5 s sur la lecture de la dernière séance, nom accessible des tuiles (titre seul, sous-texte en description), export inutile, textes regroupés, « Accueil » du dock sans effet sur l'accueil. Gardé : historique après « Toutes les leçons » en fin de séance (même schéma que `proposerLeTestDeDepart`).
+- 17:30 `e2e-tester` lancé : steps de #29 (hors `@depend-de-28`), action 1 (accès provisoires de #25, #26, #27, #65 par le dock ou la tuile), mise au point sur `telephone`.
+- 17:55 E2E, mise au point 1 (`telephone`, périmètre #29, #24, #25, #26, #27, #65, 3 workers, lancé avant la consigne `--workers=2`) : **272/281**, 22 min, aucun timeout. Les 9 KO sont les scénarios de l'objectif du jour, pas encore câblé (attend `Jour` de #28). Steps `102e15a` : bibliothèque `e2e-29-`, étapes de #29, action 1 (#65 par le dock, #27 par la tuile ; #25 et #26 trouvent déjà le bouton du dock). `features/steps/aujourd-hui-attend-28.steps.ts` : 5 étapes provisoires, à supprimer au merge de #28. Une séance refusée par le serveur reste bien dans la mémoire de l'accueil.
+- 17:57 Nom accessible des tuiles : `aria-describedby` ne suffit pas (nom calculé sur tout le contenu), correction par `aria-labelledby`.
+- Environnement : Playwright 1.56.1 cherche `chromium_headless_shell-1194`, le conteneur a la 1243 ; lien symbolique hors dépôt créé par l'`e2e-tester` (à refaire dans un autre conteneur).
+- 18:00 Objectif du jour, règle de comptage (Motivation) : RED `96ed2e2`, GREEN `f49802d`. Le filtrage au `Jour` de l'appareil attend #28. Correction du nom accessible des tuiles par `aria-labelledby` (`e0803a8`). PR #90 ouverte en brouillon.
+- 18:30 À SAVOIR de #73 (relayé par le responsable) : après son merge, chaque lieu de `navigation.ts` doit être classé parent/enfant dans `ecranAffiche`. #29 n'ajoute aucun lieu (le dock n'en est pas un, « Toutes les leçons » existe déjà) : à vérifier à l'intégration si #73 merge avant.
+- 18:45 `MAIN A BOUGÉ : #28 mergée` (`be8f648`). Intégration : conflits d'ajouts dans le glossaire (résolus par l'orchestrateur, les deux côtés gardés) et conflits de code dans `Application.tsx`, `AccueilDeLEnfant.tsx`, `useSauvegardeDeLaSeance.ts`, `styles.css` (résolus par `implementer`, `c10d6d8`). Le bouton provisoire « Je révise mes erreurs » devient la tuile du jour « À revoir » (29.7 b). Tous les tests unitaires verts (2036).
+- 18:50 `@depend-de-28` levés (`2e90f79`). Objectif du jour : RED `e0cdbf5` (faits du jour au `Jour` de l'appareil), GREEN `8bac9ee`, câblage `d848b7b` (séances terminées et séances de révision terminées du jour, sous RLS, plus celles gardées sur l'appareil et en mémoire). 2041 tests verts. Revue delta (intégration de #28 + objectif) lancée ; `e2e-tester` sur les steps de #28 par la tuile « À revoir ».
+- 19:05 Revue delta (intégration de #28 + objectif du jour) : **APPROUVÉ**. Non bloquants corrigés (`bde9790`, `4935695`, `8f9551a`, `d8c259a`) : séance invalide écartée seule, recalcul au retour au premier plan (29.13), titre « Objectif du jour », import de `Jour` par l'index, lecture unique du parent. Note des écarts complétée (`eb75cc6`). Lignes de fin de ces 4 commits collées au sujet (pas de réécriture : branche poussée).
+- 19:30 E2E, mise au point 2 (`--workers=2`) : #29 71/71, #28 + #27 107/107 (steps `227ed2c`, `c354ff5` ; étapes provisoires supprimées ; action 1 de #28 par la tuile « À revoir »). Le serveur Vite tué par un `pkill` a causé un run perdu (98 `ERR_CONNECTION_REFUSED`), relancé.
+- 19:35 `MAIN A BOUGÉ : #73 mergée` (`26116ae`) : intégrée sans conflit (`47b5c9b`) ; 2049 tests, lint, fmt, tsc, build verts. Les écrans de #29 (`jeu`, `toutes-les-lecons`, `revision`) sont classés dans `ecranAffiche`.
+- 19:36 Périmètre avant PRÊTE À MERGER lancé (0023) : #29, #24, #25, #26, #27, #28, #65, #73, #32, #6, #11, #12 sur `telephone`, `--workers=2`. Review finale lancée en parallèle.
+- 19:45 Review finale (cycle 1) : **À CORRIGER**, 1 bloquant dans les steps (« Léa ouvre « … » par le dock » rechargeait l'accueil avant de toucher le dock : le scénario « Accueil » du dock ne vérifiait rien). Correction confiée à l'`e2e-tester` après la fin du périmètre en cours, avec 3 non bloquants de steps. Gardé : `@wip` (comme les autres stories livrées). Description de la PR à compléter (cadrage de #30 inclus dans la branche).
+- 20:45 Périmètre avant PRÊTE À MERGER (0023, `47b5c9b`, `telephone`, `--workers=2`, 45 min) : **504/504** après relance seule de 2 timeouts (#24 « second parent… étoiles », #32 « fait lire la cabane » : charge du serveur partagé). Correction du bloquant de la review finale (`9e4558f`) puis 224/224 sur #29, #25, #26, #27.
+- 20:50 `MAIN A BOUGÉ : #39 mergée` (`906c749`) : seul conflit les imports de `Application.tsx` (`2411bd2`, résolu par `implementer`) ; 2260 tests, lint, fmt, tsc, build verts. Lancés : périmètre #29, #39, #26, #24 sur `telephone` ; review finale cycle 2.
+- 21:15 Review finale cycle 2 : **APPROUVÉ** (publiée sur la PR #90). Périmètre après intégration de #39 (`2411bd2`, `telephone`, `--workers=2`) : 186/187 ; #24 30/30, #26 56/56, #29 71/71, #39 31/32. KO reproductible : « Après une leçon personnelle, aucune leçon suivante n'est proposée » (#39.3) : `leconSuivanteEnFinDeSeance` propose la leçon du jour après une leçon personnelle. Pas d'escalade : la décision #39.3 du PO tranche (la note « à revoir avec #39 » des écarts du modèle). Cycle TDD de correction lancé (E2E cycle 1 KO).
+- `MAIN A BOUGÉ : #34 mergée` (`759203f`) : à intégrer sous le verrou `merge`.
+- 21:35 Fix #39.3 : RED `29f5bed`, GREEN `8bcd7b9` (leçon jouée absente de la bibliothèque → aucune leçon suivante ; la fin de séance propose « Toutes les leçons »), doc `f783a54`. Revue delta : **APPROUVÉ**. E2E (`telephone`, `--workers=2`) : **#29 71/71, #39 33/33** (104/104, 11 min). Unitaires 2261 verts, lint, fmt, tsc, build verts.
+- 21:40 `PRÊTE À MERGER` ; PR #90 passée en « prête » ; `VERROU merge` demandé. Sous le verrou : intégrer `main` (#34 depuis `759203f`, et ce qui aura bougé), relancer unitaires, lint, fmt, tsc, build, puis sur `telephone` le périmètre de #29 et des stories mergées depuis.
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Durée (lancement → PRÊTE À MERGER) | ~4 h 35 (17:03 → 21:40 UTC) |
+| Temps d'attente de dépendance | ~1 h 45 (merge de #28 attendu de 17:05 à 18:45 ; travail non dépendant fait pendant ce temps : domaine, câblage, E2E 272/281) |
+| Attente du PO | aucune (cadrage validé avant le lancement) |
+| Comportements TDD | 7 (leçon du jour, tuiles de matière, tuiles du jour, leçon suivante en fin de séance, objectif du jour, faits du jour, fix #39.3) ; 0 désaccord test-writer/implementer |
+| Revues | 4 revues intermédiaires delta APPROUVÉES (domaine, câblage, intégration de #28 + objectif, fix #39.3) ; review finale : cycle 1 À CORRIGER (1 bloquant de step), cycle 2 APPROUVÉ |
+| Cycles E2E | mise au point 1 : 272/281 (objectif pas encore câblé) ; 2 : #29 71/71, #28+#27 107/107 ; périmètre 0023 : 504/504 (2 timeouts relancés) ; après #39 : 186/187 (1 KO applicatif, interaction #39) ; après fix : 104/104. 1 run perdu (serveur Vite tué par un `pkill`) |
+| Intégrations de `main` | 4 : départ (`8448f19`, conflits d'ajouts doc), #28 (`c10d6d8`, 4 conflits de code + glossaire), #73 (`47b5c9b`, sans conflit), #39 (`2411bd2`, 1 conflit d'imports) ; #34 à intégrer sous verrou |
+| Escalades | aucune |
+| Verrous | aucun (`base` non nécessaire : pas de migration) |
+- 21:50 VERROU merge accordé (annonce [Responsable] du 21:43 ; merge autorisé pour la vague par le PO). Intégration de `main` `759203f` (#34) : conflits d'ajouts dans `context-map.md` et dans la condition du step « Tom a un profil enfant préparé » (`classer-ordre-trous.steps.ts` : union `@issue-34` et `@issue-29`), résolus par l'orchestrateur (`5ccfb27`, mécanique, aucun sens changé). Code de production de #29 inchangé (#34 ajoute seulement `SuiviDeLEspaceParent` dans l'Espace parent). 2297 tests, lint, fmt, tsc, build verts. Périmètre #29 + #34 sur `telephone` lancé.
+- 22:05 Périmètre sous verrou (`telephone`, `--workers=2`, 12 min) : **#29 71/71, #34 49/49** (120/120). Step « Claire demande les séances terminées… » en double avec #34 : celui de #29 retiré au profit de celui de #34, même sens (`cdb9461`). `main` n'a pas bougé (`759203f`). Pas de CI configurée sur la PR. Code de production inchangé par l'intégration : pas de nouvelle revue. Merge.

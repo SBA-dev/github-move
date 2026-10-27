@@ -1,6 +1,6 @@
 import { FunctionsHttpError } from "@supabase/supabase-js";
 import type { TestDeDepartTermineAEnregistrer } from "@domain/apprentissage";
-import { clientSupabase } from "../connexion/client-supabase.ts";
+import { appelerUneFonction } from "../connexion/client-supabase.ts";
 import { parentConnecte } from "../famille/profils/lecture-des-profils-supabase.ts";
 import { estUnIdentifiantDeProfil } from "../seance/fin-de-seance/corps-de-la-seance.ts";
 import { type IssueDeLEnvoi, issueDuStatut, type Sauvegarde } from "../seance/fin-de-seance/sauvegarde-de-la-seance.ts";
@@ -11,7 +11,7 @@ const envoisEnCours = new Set<Promise<unknown>>();
 
 async function envoyer(corps: CorpsDuTestDeDepart): Promise<IssueDeLEnvoi> {
   try {
-    const { error } = await clientSupabase().functions.invoke("terminer-le-test-de-depart", { body: corps });
+    const { error } = await appelerUneFonction("terminer-le-test-de-depart", corps);
     if (!error) return "enregistree";
     return error instanceof FunctionsHttpError ? issueDuStatut(error.context.status) : "impossible";
   } catch {

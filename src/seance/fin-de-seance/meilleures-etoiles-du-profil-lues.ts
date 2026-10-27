@@ -1,0 +1,21 @@
+import { meilleuresEtoilesReunies } from "@domain/apprentissage";
+import type { MeilleuresEtoilesDuProfil } from "@domain/motivation";
+import { avecDelaiMaximal } from "../../reseau/avec-delai-maximal.ts";
+import { DELAI_MAXIMAL_DE_LECTURE_EN_MS } from "../../reseau/delai-maximal-de-lecture.ts";
+import { reseauDisponible } from "../../reseau/reseau-disponible.ts";
+import { etoilesGagneesPendantLUtilisation } from "./etoiles-gagnees-pendant-l-utilisation.ts";
+import { lireToutesLesMeilleuresEtoilesSiPossible } from "./lecture-des-meilleures-etoiles-supabase.ts";
+
+/** Les meilleures étoiles du profil telles que la cabane et les badges les comptent ; `undefined` quand les étoiles du serveur ne peuvent pas être lues (sans réseau, ou lecture en échec). */
+export async function lireLesMeilleuresEtoilesDuProfilSiLisibles(profil: string): Promise<MeilleuresEtoilesDuProfil | undefined> {
+  if (!reseauDisponible()) return undefined;
+  const duServeur = await lireToutesLesMeilleuresEtoilesSiPossible(profil);
+  if (duServeur === undefined) return undefined;
+  const reunies = meilleuresEtoilesReunies(duServeur, etoilesGagneesPendantLUtilisation(profil));
+  return new Map([...reunies].map(([lecon, etoiles]) => [lecon, etoiles.nombre]));
+}
+
+/** Les étoiles d'avant la séance, ou `undefined` si leur lecture dépasse le délai maximal. */
+export function lireLesMeilleuresEtoilesAvantLaSeance(profil: string): Promise<MeilleuresEtoilesDuProfil | undefined> {
+  return avecDelaiMaximal(lireLesMeilleuresEtoilesDuProfilSiLisibles(profil), DELAI_MAXIMAL_DE_LECTURE_EN_MS);
+}

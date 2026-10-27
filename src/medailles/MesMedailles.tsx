@@ -1,8 +1,11 @@
 import { useCallback, useEffect } from "react";
 import type { ProfilEnCours } from "@domain/famille";
 import {
+  type Badge,
   type PastilleDeRecord,
   parolesALOuverture,
+  parolesDeLaSectionDeLHistoire,
+  parolesDeLaSectionDesBadgesOuSansBadge,
   parolesDeLaSectionDesRecords,
   phraseLueDeLaPastille,
   phraseDeLEtat,
@@ -17,19 +20,26 @@ import { usePersonnageQuiParle } from "../seance/usePersonnageQuiParle.ts";
 import { PersonnageGuide } from "../univers/index.ts";
 import type { Voix } from "../voix/index.ts";
 import { SectionDeLaCabane } from "./SectionDeLaCabane.tsx";
+import { SectionDeLHistoire } from "./SectionDeLHistoire.tsx";
+import { SectionDesBadges } from "./SectionDesBadges.tsx";
+import { useBadges } from "./useBadges.ts";
 import { useCabane } from "./useCabane.ts";
+import { useHistoire } from "../histoire/useHistoire.ts";
 import { usePastillesDesRecords } from "./usePastillesDesRecords.ts";
 
 type Props = {
   readonly profil: ProfilEnCours;
   readonly univers: Univers;
   readonly voix: Voix;
+  readonly onOuvrirLEpisode: (numero: number) => void;
 };
 
 /** L'écran « Mes médailles » : il affiche ce que le domaine calcule et lit ce que le domaine lui dit de lire. */
-export function MesMedailles({ profil, univers, voix }: Props) {
+export function MesMedailles({ profil, univers, voix, onOuvrirLEpisode }: Props) {
   const pastilles = usePastillesDesRecords(profil.id);
   const { chargee: cabaneChargee, cabane } = useCabane(profil.id);
+  const { chargee: histoireChargee, histoire } = useHistoire(profil.id);
+  const { charges: badgesCharges, badges } = useBadges(profil.id);
   const { parole, rangDuMotPrononce, humeur, dire, faireSilence } = usePersonnageQuiParle(voix);
   const toutLire = profil.reglages.toutLireAVoixHaute;
 
@@ -38,20 +48,27 @@ export function MesMedailles({ profil, univers, voix }: Props) {
   }, [dire]);
 
   useEffect(() => {
-    if (pastilles === undefined || !cabaneChargee) return;
-    const [accueil = "", ...suite] = parolesALOuverture({ toutLire, pastilles, cabane });
+    if (pastilles === undefined || !cabaneChargee || !histoireChargee || !badgesCharges) return;
+    const [accueil = "", ...suite] = parolesALOuverture({ toutLire, pastilles, cabane, histoire, badges });
     void (async () => {
       if (!(await dire({ texte: accueil, nature: "accueil" }))) return;
       await direLaSuite(suite);
     })();
     return faireSilence;
-  }, [pastilles, cabaneChargee, cabane, toutLire, dire, direLaSuite, faireSilence]);
+  }, [pastilles, cabaneChargee, cabane, histoireChargee, histoire, badgesCharges, badges, toutLire, dire, direLaSuite, faireSilence]);
 
   const ecouterLesRecords = () => direLaSuite(parolesDeLaSectionDesRecords(pastilles ?? []));
   const ecouterLaCabane = async () => {
     if (cabane) await direLaSuite([titreDeLaSection(), phraseDeLEtat(cabane)]);
   };
-  const sections = sectionsDeLEcran({ pastilles: pastilles ?? [], cabane });
+  const ecouterLHistoire = () => direLaSuite(parolesDeLaSectionDeLHistoire());
+  const ecouterLesBadges = async () => {
+    if (badges) await direLaSuite(parolesDeLaSectionDesBadgesOuSansBadge(badges));
+  };
+  const lireLeBadge = async (badge: Badge) => {
+    await direLaSuite([badge.nom]);
+  };
+  const sections = sectionsDeLEcran({ pastilles: pastilles ?? [], cabane, histoire, badges });
 
   return (
     <section className="mes-medailles" aria-labelledby="titre-de-mes-medailles">
@@ -62,6 +79,12 @@ export function MesMedailles({ profil, univers, voix }: Props) {
       </div>
       {cabane !== undefined && sections.includes("cabane") && (
         <SectionDeLaCabane cabane={cabane} onEcouter={ecouterLaCabane} />
+      )}
+      {histoire !== undefined && sections.includes("histoire") && (
+        <SectionDeLHistoire histoire={histoire} onEcouter={ecouterLHistoire} onOuvrirLEpisode={onOuvrirLEpisode} />
+      )}
+      {badges !== undefined && sections.includes("badges") && (
+        <SectionDesBadges badges={badges} onEcouter={ecouterLesBadges} onLireLeBadge={lireLeBadge} />
       )}
       {pastilles !== undefined && sections.includes("recordsDeFluence") && (
         <SectionDesRecords pastilles={pastilles} onEcouter={ecouterLesRecords} />

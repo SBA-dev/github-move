@@ -46,7 +46,6 @@ Fonctionnalité: L'écran « Mes médailles » réunit ce que l'enfant a gagné
       Alors « Mes records de calcul rapide » est la dernière section de l'écran
       Mais aucune section n'annonce un contenu à venir
 
-    @depend-de-31 @depend-de-33
     Scénario: Les quatre sections apparaissent dans l'ordre cabane, histoire, badges, records
       Étant donné que Léa a un record de 12 à la fluence « Calcul rapide : tables de 3 et 4 »
       Quand Léa ouvre « Mes médailles » depuis son accueil
@@ -161,6 +160,8 @@ Fonctionnalité: L'écran « Mes médailles » réunit ce que l'enfant a gagné
         | pompier   | Pompiers            | Capitaine Sam    |
 
     # Mise à jour par #32 (décisions 32.8, 32.10 et 32.21) : la section de la cabane, toujours là, est lue avant les records
+    # Mise à jour par #31 (décisions 31.9, 31.10 et 31.23) : la section des badges, même sans badge, est lue entre la cabane et les records
+    # Mise à jour par #33 (décision 33.22) : la section de l'histoire, même sans épisode, est lue entre la cabane et les badges
     Scénario: Avec « tout lire à voix haute », le titre puis chaque section sont lus à l'ouverture
       Étant donné que Paul a réglé « tout lire à voix haute » sur « oui » pour Léa
       Et que Léa a un record de 12 à la fluence « Calcul rapide : tables de 3 et 4 »
@@ -171,6 +172,10 @@ Fonctionnalité: L'écran « Mes médailles » réunit ce que l'enfant a gagné
         | Mes médailles                                                       |
         | La cabane de Noisette                                               |
         | Tu as 0 étoile. Encore 3 étoiles et Noisette recevra une lanterne ! |
+        | L'histoire des Savanturiers                                         |
+        | Un nouvel épisode s'ouvre à chaque séance terminée.                 |
+        | Mes badges                                                          |
+        | Gagne au moins 2 étoiles dans une leçon pour gagner son badge.      |
         | Mes records de calcul rapide                                        |
         | Calcul rapide : tables de 3 et 4 : ton record est de 12 calculs     |
 

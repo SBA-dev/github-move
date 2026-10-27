@@ -1,5 +1,5 @@
 import { FunctionsHttpError } from "@supabase/supabase-js";
-import { clientSupabase } from "../connexion/client-supabase.ts";
+import { appelerUneFonction } from "../connexion/client-supabase.ts";
 
 /** Une écriture refusée ou impossible, avec le message à montrer au parent (jamais punitif). */
 export class EcritureDeLeconRefusee extends Error {}
@@ -25,7 +25,7 @@ async function messageDeLaReponse(reponse: Response): Promise<string> {
 }
 
 async function appeler(fonction: string, corps: object): Promise<void> {
-  const { error } = await clientSupabase().functions.invoke(fonction, { body: corps });
+  const { error } = await appelerUneFonction(fonction, corps);
   if (error instanceof FunctionsHttpError) throw new EcritureDeLeconRefusee(await messageDeLaReponse(error.context));
   if (error) throw new EcritureDeLeconRefusee(PAS_DE_RESEAU);
 }

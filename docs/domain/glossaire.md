@@ -115,6 +115,8 @@ Le glossaire garde l'orthographe française.
 | Leçon réussie au test de départ | Leçon que le test de départ compte comme réussie, sans étoile : elle fait avancer le parcours, ne donne ni étoile, ni badge, ni compétence acquise (#27, réponses 27.1 et 27.2 du PO). Une séance terminée ensuite lui donne ses étoiles. | Apprentissage | acquise au test, validée, cochée (dans le code) |
 | Résultat du test de départ | Pour un enfant : la date du dernier test de départ fait et les leçons réussies au test de départ. Il ne modifie jamais une étoile (#27). | Apprentissage | progression, score, note |
 | Test de départ fait | Le profil a fini au moins un test de départ, par toutes ses questions ou par un arrêt ; quitter en cours ne compte pas (#27). | Apprentissage | test passé, testFait (dans le code) |
+| Leçon du jour | Leçon proposée par la grande tuile de l'accueil de l'enfant : une prochaine leçon, choisie parmi celles des matières du parcours, en alternant français et maths selon la matière de la dernière séance terminée, puis les autres matières dans l'ordre du Catalogue (réponse 29.1). Aucune quand toutes les matières du parcours sont réussies ; jamais une leçon des classes d'avant ni d'une classe au-dessus (réponse 29.9). Une fin de séance sans leçon suivante la propose (réponse 29.8). Calculée, jamais enregistrée (#29). | Apprentissage | prochaine leçon (au singulier, il y en a une par matière), leçon conseillée, mission du jour |
+| Tuile du jour | Ce que l'accueil de l'enfant propose de faire aujourd'hui, en plus de la leçon du jour, seulement quand c'est dû, dans un ordre fixe : devoirs et dictée du jour (lot 6), révision (« À revoir », s'il y a au moins une question due), test de départ (tant qu'il n'est pas fait). Terme du domaine (réponse 29.17) (#29). | Apprentissage | tâche (interdit pour Devoir), activité (interdit pour Exercice), notification |
 | Question ratée | Question d'une séance terminée qui a coûté au moins une erreur (réponse fausse ou « Je ne sais pas ») ; `QuestionRatee` dans le code (#24, #28). Le test de départ n'en produit pas : on y dit **question fausse**. | Apprentissage | question fausse (réservé au test de départ et à la séance de révision), faute |
 | File de révision | Pour un profil enfant : toutes ses questions retenues et le nombre d'erreurs corrigées pour de bon ; 250 questions au plus (#28, réponse 28.3). | Apprentissage | liste d'erreurs, à revoir (mot d'interface), carnet |
 | Question retenue | Question ratée gardée dans la file de révision, une seule fois par profil, avec sa leçon d'origine, son intervalle de révision, sa date de révision et son nombre de fois ratée. Une addition ratée donne une seule question retenue (#28). | Apprentissage | erreur à revoir, question à rattraper |
@@ -130,7 +132,10 @@ Le glossaire garde l'orthographe française.
 | Question oubliée | Question retirée de la file de révision sans être corrigée : limite de 250 atteinte, ou leçon d'origine retirée de la bibliothèque. Elle ne compte pas comme erreur corrigée pour de bon (#28, questions 28.3 et 28.15). | Apprentissage | question supprimée, question perdue |
 | Matière réussie (à valider) | Matière dont l'enfant a réussi toutes les leçons de sa classe (au moins 1 étoile ou réussie au test de départ). Dans « Toutes les leçons », elle montre les leçons de cette matière de la classe **juste** au-dessus, et pas au-delà. Une matière sans leçon dans la classe n'est jamais réussie. Calculée à chaque affichage (#26, réponses 26.1, 26.1a, 26.1b, 26.18). | Apprentissage | classe finie, matière terminée, matière validée |
 | Message de voix bloquée | Message affiché quand le navigateur bloque la voix ; un seul exemplaire, visible pendant la séance tant que la voix est bloquée (jusqu'à une lecture réussie ou le passage en Muet), annoncé une fois aux lecteurs d'écran (#79, décisions 79.5 et 79.6). | Apprentissage | alerte son, popup |
-| Relire la consigne | Faire lire à nouveau la consigne de l'exercice en cours, à la demande de l'enfant ; distinct de « Réécouter » (#79, question 79.7). | Apprentissage | répéter |
+| Relire la consigne | Faire lire à nouveau la consigne de l'exercice en cours, à la demande de l'enfant ; distinct de « Réécouter ». Inactif pendant la présentation de l'exercice, actif ensuite jusqu'à la fin de l'exercice (#79, décisions 79.7 et 79.12). | Apprentissage | répéter |
+| Consigne affichée (à valider) | Consigne de l'exercice en cours, visible en entier dans une place à elle, hors de la bulle du personnage guide, du début à la fin de l'exercice, qu'elle ait été lue ou non. Seulement pour les exercices dont la consigne est lue au début (tous sauf `dictee` et `memoriser`), consigne par défaut comprise (#79, décisions 79.1 et 79.8). | Apprentissage | rappel de consigne, titre, énoncé (seul) |
+| Durée d'affichage sans voix (à valider) | Environ 2 s pendant lesquelles une parole non entendue du personnage guide (félicitation entre deux questions, annonce du nouveau défi, invitation à jouer après les étapes de la leçon) reste visible avant que l'écran suivant vienne seul. Après la dernière bonne réponse, il n'y a pas de durée : la félicitation non entendue reste jusqu'à ce que l'enfant appuie sur « Continuer » (#79, décisions 79.3, 79.4 et 79.11). | Apprentissage | délai, temporisation, pause |
+| Fin de la séance (à valider) | Écran affiché après une séance terminée (étoiles, félicitation finale). Le fait enregistré garde le nom **Séance terminée** (#24, #79). | Apprentissage | écran de fin, bilan, résultat (seul) |
 
 ## Motivation
 
@@ -154,9 +159,17 @@ Le glossaire garde l'orthographe française.
 | Section de l'écran (à valider) | Une des parties de l'écran des récompenses de l'enfant : cabane (#32), histoire (#33), badges (#31), records de calcul rapide (#65), toujours dans cet ordre. Peut-être un simple mot d'interface (#65). | Motivation | onglet, rubrique |
 | Records de calcul rapide (à valider) | Section de l'écran des récompenses de l'enfant qui montre les records de fluence du profil en cours, un par exercice de fluence ; absente quand le profil n'a aucun record. Les records sont lus dans Apprentissage, jamais modifiés. Interface : « Mes records de calcul rapide » (#65). | Motivation | trophées, meilleurs scores, high scores |
 | Pastille de record (à valider) | Libellé d'un exercice de fluence et meilleur score du record de fluence correspondant, dans les records de calcul rapide. Libellé proposé : le titre de l'exercice (question n°3 de #65). Peut-être un simple mot d'interface (#65). | Motivation | badge, médaille, trophée |
+| Objectif du jour | Encouragement de l'accueil de l'enfant : jouer 2 leçons dans la journée (jour de l'appareil). Compte chaque leçon distincte qui a une séance terminée ce jour-là, et 1 de plus s'il y a au moins une séance de révision terminée (réponse 29.2) ; jamais le test de départ (réponse 27.4). Il ne limite rien et ne modifie aucune note. Calculé, jamais enregistré. Contexte : Motivation, en lecture seule (réponse 29.3) (#29). | Motivation | défi, quota, limite, temps d'écran, mission du jour |
+
 | Total des étoiles | Somme des meilleures étoiles de toutes les leçons du profil, toutes classes confondues ; le test de départ n'y ajoute rien. Il ne baisse jamais. Interface : « Tu as 12 étoiles » (#32, validé par le PO le 2026-10-25). | Motivation | score, points, note |
 | Palier de la cabane | Seuil du total des étoiles qui fait recevoir un objet de la cabane : 3, 6, 10, 15, 20, 26, 33, 40, 48, 56, 65, 75 (legacy). Deux paliers sont espacés d'au moins 3 : une séance fait recevoir au plus un objet. Interface : pastille « 10 ★ », dite « 10 étoiles » (#32, validé par le PO le 2026-10-25, décision 32.11). | Motivation | niveau, étape, seuil (seul) |
 | Objet de la cabane | Ce que reçoit la cabane quand le total des étoiles atteint un palier (« une lanterne »). Il ne se perd jamais. Les 12 objets reçus : la cabane est complète. Les noms des objets sont du contenu, pas des termes du domaine (#32, validé par le PO le 2026-10-25). | Motivation | badge, trophée, récompense (seul), objet débloqué |
+| Badge, précision | Décidé par #31 (2026-10-25) : un badge existe dès qu'une leçon de la bibliothèque est **acquise** (au moins 2 meilleures étoiles), jamais par le test de départ ; **un seul badge par compétence** (une leçon sans compétence a le sien). Il se recalcule à partir des meilleures étoiles, n'est pas enregistré et ne se perd jamais tant que sa leçon est dans la bibliothèque. **Une leçon personnelle ne donne pas de badge** (décision du PO, 39.12). | Motivation | trophée, médaille (« Mes médailles » est le nom de l'écran, jamais celui d'un badge : décision 31.21) |
+| Nom du badge | La compétence de la leçon acquise, sinon « Je sais : `<titre de la leçon>` » (#31, décision 31.20). | Motivation | titre du badge, intitulé |
+| Badge gagné par la séance | Badge que la séance vient de faire gagner : la leçon jouée n'était pas acquise avant la séance et l'est après, et sa compétence n'était pas déjà un badge. Au plus un par séance ; jamais pour une leçon personnelle. Interface : encart « Nouveau badge » de l'écran de fin (#31). | Motivation | nouveau trophée, badge débloqué |
+| Épisode, nouvelle définition | Une des 20 parties de l'histoire des Savanturiers, numérotées de 1 à 20 (titre et texte, lus à voix haute par le personnage guide du profil). Un épisode s'ouvre à **chaque séance terminée** (séance de révision comprise, test de départ exclu), dans l'ordre, quel que soit l'univers ; aucun après le 20e (#33, décisions 33.1, 33.2, 33.3 et 33.7 du PO, 2026-10-25). Remplace la ligne **Épisode** ci-dessus, qui dit « histoire de l'univers » et « à chaque jour de séance ». | Motivation | chapitre, histoire (pour un seul épisode), niveau |
+| Histoire des Savanturiers | Suite des 20 épisodes, la même pour tous les profils ; l'histoire de Noisette (#33, décisions 33.2, 33.6 et 33.27). Interface : section « L'histoire des Savanturiers » de « Mes médailles ». | Motivation | histoire de l'univers, livre, saga |
+| Épisode ouvert | Épisode dont le numéro est inférieur ou égal au nombre de séances terminées du profil (20 au plus). Il se recalcule à partir des séances terminées et des séances de révision terminées d'Apprentissage, n'est pas enregistré et ne se referme jamais. Contraire : épisode fermé, interface « À découvrir » (#33, décisions 33.1, 33.8 et 33.27). « Nombre de séances terminées » et « épisode ouvert par la séance » sont des noms de calcul, pas des termes du glossaire (décision 33.27). | Motivation | épisode débloqué, épisode gagné |
 
 ## Famille
 
@@ -259,6 +272,9 @@ Sous-domaine décidé à la validation n°1 du lot 1 (décision 0007). Ses terme
 | Muet (à valider) | Choix de l'appareil qui coupe la voix (et les effets sonores, à confirmer avec leur story). Son contraire est « Son ». | Voix | silencieux, mute |
 | Voix bloquée (à valider) | Le navigateur refuse de lire alors qu'il sait lire à voix haute. L'enfant est prévenu une fois par ouverture de l'application, sans être bloqué. Le message de voix bloquée reste visible tant que la voix est bloquée (#79, décision 79.5). | Voix | voix cassée, erreur de son |
 | Voix suspendue | État de la voix sur un écran du parent : le personnage guide ne lit rien de lui-même, seul l'essai de voix demandé par le parent est entendu. Ce n'est pas Muet : le choix Son/Muet ne change pas (#73). | Voix | silencieux, muet temporaire |
+| Parole entendue (à valider) | Phrase que la lecture à voix haute a lue jusqu'au bout. Une parole n'est pas entendue en Muet, quand la voix est bloquée, quand le navigateur ne sait pas lire à voix haute, ou quand le texte n'a rien à prononcer (#79). | Voix | parole lue, son joué |
+| Fin de la voix bloquée (à valider) | Moment où une voix bloquée signalée cesse de l'être : une lecture entendue ou le passage en Muet. Le message de voix bloquée disparaît ; un nouveau blocage, même dans la même ouverture de l'application, le fait réapparaître (#79, décisions 79.5, 79.6 et 79.10). | Voix | déblocage, voix réparée |
+| Voix bloquée : précisé par #79 (2026-10-25) | Note, sans changer la définition de **Voix bloquée** : « prévenu une fois » se lit « un seul message de voix bloquée à la fois, visible jusqu'à la fin de la voix bloquée » (décision 79.5). Après une fin de la voix bloquée, un nouveau blocage dans la même ouverture de l'application fait réapparaître le message (décision 79.10). | Voix | |
 
 ## Exploitation (#45)
 
@@ -269,7 +285,7 @@ Termes d'exploitation et juridiques : ils ne vont pas dans `domain/`.
 | Beta | Première mise en ligne (alwaysdata, Supabase Free en Irlande), réservée aux familles invitées, sans e-mail, sans export ni suppression dans l'application (#45, 0019). | Exploitation | version d'essai, alpha |
 | Production | Projet Supabase et adresse du front utilisés par les familles, distincts de `savanturier-dev` (#45). | Exploitation | prod (dans l'interface), live |
 | Procédure de publication | Suite écrite des vérifications puis des étapes (migrations, Edge Functions, front) qui publie une version, avec son retour en arrière (#45). | Exploitation | déploiement manuel, mise en prod |
-| Politique de confidentialité | Page qui dit quelles données sont gardées, où, combien de temps, et comment faire une demande de suppression des données (#45). | Exploitation | charte, RGPD (pour la page) |
+| Politique de confidentialité | Page qui dit quelles données sont gardées, où, combien de temps, et comment faire une demande de suppression des données (#45). Pas de politique de confidentialité dans l'application pendant la beta (45.36) ; rétablie avec 45b. | Exploitation | charte, RGPD (pour la page) |
 | Mentions légales | Page qui nomme l'éditeur, le directeur de publication et l'hébergeur (#45). | Exploitation | CGU |
 
 ## Décisions
@@ -321,7 +337,7 @@ Termes d'exploitation et juridiques : ils ne vont pas dans `domain/`.
 
 ## Conflits à trancher
 
-1. **« Étoile »** est aussi le nom de l'« Étoile du savoir » dans l'histoire. Proposition : **Étoile** reste la récompense. L'objet de l'histoire n'est pas un terme du domaine.
+1. **« Étoile »** (« Étoile du savoir », #33) : **tranché par le PO le 2026-10-25** (décision 33.4) : **Étoile** reste la récompense. « L'Étoile du savoir » est un titre d'épisode et un objet de l'histoire, pas un terme du domaine ; elle ne compte dans aucun total d'étoiles.
 2. **« Test »** : on dit toujours **Test de départ**, pour ne pas confondre avec les tests logiciels.
 3. **« Courriel »** (story #5, décision 0011) : **tranché par le PO le 2026-10-23** : on dit **E-mail de connexion** partout, « courriel » est interdit.
 4. **« Plateau »** (#18) : **tranché par le PO le 2026-10-24** : voir Décision n°31.
@@ -336,6 +352,11 @@ Termes d'exploitation et juridiques : ils ne vont pas dans `domain/`.
 
 Les anciens conflits n°3 à n°7 (compte, session, lien magique, voix, monde) sont tranchés : voir Décisions n°10 à n°15. Ceux du lot 2 (espace adulte, lien, supprimer / détacher, la voix des guides, progression) : voir Décisions n°17 à n°21.
 Ceux du lot 3 (anciens n°8 à n°14 : jeu, maison, rang, énoncé, essai, étape, progression) : voir Décisions n°23 à n°29.
+
+Ajouts de #33 (tranchés par le PO le 2026-10-25, « 33. reco OK » ; numéros à attribuer à la fusion des branches du lot 5) :
+- **« Histoire »** (#33) : **Histoire des Savanturiers** entre au glossaire comme nom de l'ensemble des 20 épisodes (« L'histoire des Savanturiers ») ; « histoire » reste interdit pour désigner **un** épisode (décision 33.27).
+- **« Leçon terminée »** (#33) : le sous-titre du legacy (« Un nouvel épisode s'ouvre à chaque leçon terminée. ») est abandonné ; le sous-titre devient « Un nouvel épisode s'ouvre à chaque séance terminée. » (décisions 33.1 et 33.6).
+- Conflit n°1 (**Étoile du savoir**) : tranché comme ci-dessus (décision 33.4).
 
 ## Questions ouvertes
 
@@ -363,6 +384,30 @@ Lot 4 (#27, `docs/stories/27/domain-model.md`) : le PO a suivi toutes les recomm
 Lot 5 (#65, `docs/stories/65/domain-model.md`) : à trancher par le PO.
 - Nom de l'écran des récompenses de l'enfant : tranché, « Mes médailles » (décision 65.1 du PO ; « médaille » retiré des synonymes interdits de Badge, « trophée » reste interdit) ;
 - « Section de l'écran » et « Pastille de record » : termes du domaine ou mots d'interface (#65).
+
+Lot 4 (#29, `docs/stories/29/domain-model.md`) : questions 29.1 à 29.18, tranchées le 2026-10-25 (voir la note suivante).
+- « Objectif du jour » : ajouté `(à valider)` en Motivation (signalé par #27) ; contexte (Apprentissage ou Motivation) : question 29.3 ;
+- « Leçon du jour » et « Tuile du jour » : ajoutés `(à valider)` en Apprentissage (questions 29.17, 29.18) ;
+- « Aujourd'hui » : proposé comme simple mot de cadrage, l'écran étant l'**Accueil de l'enfant** (question 29.5, qui répond à 27.22). Si c'est retenu, la ligne « Devoir » se lit « mis en avant sur l'accueil de l'enfant » (ligne non réécrite) ;
+- « Mes trophées » reste interdit : le dock dira « Mes médailles » (65.1, question 29.7).
+
+Lot 5 (#30, `docs/stories/30/domain-model.md`) : questions 30.1 à 30.12, tranchées le 2026-10-25 (voir la note suivante).
+- « Série » : la règle « jusqu'à aujourd'hui ou hier » est celle du legacy ; « (à valider) » retiré si 30.2 est retenue. La série est **calculée** à partir des **jours de séance**, jamais enregistrée ;
+- « Jour de séance » reste dans Apprentissage (proposition 30.5) : déduit des séances terminées et des séances de révision terminées (28.16), au **Jour** de l'appareil à la fin de la séance (28.9, proposition 30.6) ; le test de départ n'en donne pas (27.4) ;
+- « Pastille de série » et « Série jusqu'à hier » : ajoutés `(à valider)` en Motivation ; termes du domaine, mot d'interface ou simple état (question 30.12) ;
+- « Minutes jouées » : pas ajouté ; elles ne servent qu'au rapport de la semaine (lot 6, décision 0005), à définir par #34 ou #35 ;
+- « streak », « flamme » (l'icône), « jour joué », « connexion » restent interdits ; pas de « record de série ».
+
+Lot 4 et lot 5 (#29, #30) : tranché par le PO le 2026-10-25, « OK #29 #30 reco partout » (réponses 29.1 à 29.24 et 30.1 à 30.14).
+- **Leçon du jour**, **Tuile du jour** et **Objectif du jour** (Motivation, réponse 29.3) sont validés ;
+- « Aujourd'hui » n'est pas un terme du domaine : l'écran est l'**Accueil de l'enfant** (réponse 29.5, qui répond « oui » à 27.22). Les lignes « Accueil de l'enfant » et « Devoir » se lisent en conséquence (« mis en avant sur l'accueil de l'enfant ») ; l'équipe de #29 les réécrit après la vague ;
+- **Série** est validée avec la règle « jusqu'à aujourd'hui ou hier » (réponse 30.2) : « (à valider) » est à retirer de sa ligne par l'équipe de #30 après la vague ;
+- « Pastille de série » est un mot d'interface et « Série jusqu'à hier » un simple état de la série (réponse 30.12) : ni l'un ni l'autre n'entre au glossaire ;
+- **Jour de séance** reste dans Apprentissage (réponse 30.5) ; une séance terminée garde le jour envoyé par l'appareil, comme la séance de révision (réponse 30.6 : colonne de jour sur les séances terminées).
+
+Lot 4 (#29), note du 2026-10-25 sur la **Leçon suivante** (réponses 29.8, 29.24, 29.25, 29.26) : la ligne « Leçon suivante » dit encore « ni vers une autre matière avant #29 » ; elle se lit désormais ainsi.
+- Depuis #29, quand la matière n'a plus de leçon suivante dans le parcours (dernière leçon du parcours, leçon des classes d'avant, leçon d'une classe au-dessus), la leçon suivante est la **leçon du jour**, si elle existe et n'est pas la leçon jouée (29.8, 29.24). La leçon du jour devient donc la leçon suivante dans ces cas (code : `leconSuivanteEnFinDeSeance`) ;
+- quand aucune leçon suivante n'est proposée, la fin de séance propose le bouton « Toutes les leçons » (29.25, 29.26 ; mot d'interface, pas un terme du domaine).
 
 Lot 4 (#28, `docs/stories/28/domain-model.md`) : le PO a suivi toutes les recommandations 28.1 à 28.28 (2026-10-25, « #28 reco OK ») ; voir Décision n°38. Propositions retenues (réponses 28.7 et 28.16) :
 - « Boîte » (legacy `box`) n'entre pas au domaine : il désigne la boîte à jetons et il est interdit pour Groupe. Proposition : **Intervalle de révision** ;
@@ -394,3 +439,14 @@ Lot 6 (#38, `docs/stories/38/domain-model.md`) : à trancher par le PO (question
 - termes nouveaux : Sorte d'enregistrement, Expiration d'un enregistrement de lecture, Date d'expiration, Durée maximale d'un enregistrement, Garder un enregistrement de lecture.
 
 Lot 6 (#39, `docs/stories/39/domain-model.md`) : le PO a suivi toutes les recommandations 39.1 à 39.21 sauf 39.13 (le texte du parent est conservé) le 2026-10-25 ; voir Décision n°38. Reste, hors vague : réécrire la ligne « Leçon personnelle » d'Accompagnement (#39.21).
+
+Lot 5 (#31, `docs/stories/31/domain-model.md`) : tranché par le PO le 2026-10-25 (toutes les recommandations, sauf les leçons personnelles, qui ne donnent pas de badge).
+- Un badge par compétence (31.2), recalculé (31.3) ; « Nom du badge » et « Badge gagné par la séance » sont des termes du domaine ;
+- « Médaille » : nom de l'écran seulement, jamais pour un badge (31.21) ;
+- Leçon personnelle : ne donne pas de badge (réponse « A », 39.12) ;
+- Reste : **Carte des compétences**, conflit de sens (la définition dit « par compétence », le legacy calcule par section du programme, test de départ compris) ; renvoyé à #34 (31.17).
+
+Lot 5 (#33, `docs/stories/33/domain-model.md`) : tranché par le PO le 2026-10-25 (« 33. reco OK » : toutes les recommandations).
+- Règle d'ouverture d'un épisode : chaque séance terminée (33.1) ; la ligne **Jour de séance** (« sert à la série et aux épisodes ») doit perdre « et aux épisodes » (modification d'une ligne existante, laissée au responsable) ;
+- histoire de Noisette pour tous, racontée par le personnage guide du profil (33.2) : nouvelle définition de **Épisode** (qui remplace l'ancienne ligne **Épisode**), **Histoire des Savanturiers** et **Épisode ouvert** validés ;
+- « Nombre de séances terminées » et « Épisode ouvert par la séance » : simples noms de calcul, retirés du glossaire (33.27).

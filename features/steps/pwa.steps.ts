@@ -20,12 +20,12 @@ type Manifeste = {
 
 // --- Appareils (l'émulation ne change que l'identité du navigateur : le moteur reste Chromium)
 
-async function emulerNavigateur(page: Page, userAgent: string) {
+export async function emulerNavigateur(page: Page, userAgent: string) {
   const session = await page.context().newCDPSession(page);
   await session.send("Emulation.setUserAgentOverride", { userAgent });
 }
 
-const tabletteAndroid = () => devices["Galaxy Tab S4"].userAgent;
+export const tabletteAndroid = () => devices["Galaxy Tab S4"].userAgent;
 // Depuis iPadOS 13, Safari se présente comme un Mac ; seul maxTouchPoints trahit l'écran tactile.
 const USER_AGENT_SAFARI_IPAD =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15";
@@ -37,7 +37,7 @@ async function emulerSafariIpad(page: Page) {
 
 // --- Service worker
 
-async function attendreServiceWorkerActif(page: Page) {
+export async function attendreServiceWorkerActif(page: Page) {
   await expect
     .poll(() =>
       page.evaluate(async () => {
@@ -47,7 +47,7 @@ async function attendreServiceWorkerActif(page: Page) {
     .toBe("activated");
 }
 
-async function verifierPageControleeParServiceWorker(page: Page) {
+export async function verifierPageControleeParServiceWorker(page: Page) {
   await expect
     .poll(() => page.evaluate(() => navigator.serviceWorker?.controller?.state ?? "page non contrôlée"), {
       message: "le service worker doit contrôler la page",
@@ -61,7 +61,7 @@ async function surLeServeurDeDeveloppement(page: Page): Promise<boolean> {
   return page.evaluate(() => document.querySelector('script[src="/@vite/client"]') !== null);
 }
 
-async function chargerUneFois(page: Page) {
+export async function chargerUneFois(page: Page) {
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1, name: NOM_APPLICATION })).toBeVisible();
   if (await surLeServeurDeDeveloppement(page)) {

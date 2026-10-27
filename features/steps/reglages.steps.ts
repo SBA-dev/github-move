@@ -18,6 +18,7 @@ import {
   pageDansLEspaceParent,
   profilDe,
 } from "./profils-enfants.steps.ts";
+import { estSurUnProfilReel, rechoisirLeaApresUnReglage } from "./profil-reel.ts";
 import { preparerProfil } from "./univers.steps.ts";
 import { journal, laisserPasserLeDelaiDeLecture, normaliser } from "./voix.steps.ts";
 
@@ -198,15 +199,18 @@ async function prevoirUnReglage(
 
 Given(
   /^Paul a (?:ensuite )?réglé « ([^«»]+) » sur « ([^«»]+) » pour (Léa|Tom)( sur la tablette| sur le téléphone)?$/,
-  async ({ famille, page, monde }, reglage: string, valeur: string, prenom: string, appareil?: string) => {
+  async ({ famille, page, monde, $tags }, reglage: string, valeur: string, prenom: string, appareil?: string) => {
     await prevoirUnReglage(famille, page, monde, prenom, reglageConnu(reglage), valeur, typeof appareil === "string");
+    // Story #33 : Léa joue déjà avec son vrai profil ; elle se choisit de nouveau pour que le réglage s'applique.
+    if ($tags.includes("@issue-33") && prenom === "Léa" && estSurUnProfilReel(page)) await rechoisirLeaApresUnReglage(page);
   },
 );
 
 Given(
   /^le réglage « ([^«»]+) » de (Léa|Tom) est sur « ([^«»]+) »$/,
-  async ({ famille, page, monde }, reglage: string, prenom: string, valeur: string) => {
+  async ({ famille, page, monde, $tags }, reglage: string, prenom: string, valeur: string) => {
     await prevoirUnReglage(famille, page, monde, prenom, reglageConnu(reglage), valeur, false);
+    if ($tags.includes("@issue-33") && prenom === "Léa" && estSurUnProfilReel(page)) await rechoisirLeaApresUnReglage(page);
   },
 );
 
@@ -484,12 +488,12 @@ Then(/^(Léa|Tom) voit son accueil (en mode dys|sans le mode dys)$/, async ({ pa
 });
 
 Then(/^Léa voit la consigne « ([^«»]+) » en mode dys : .+$/, async ({ page }, texte: string) => {
-  await expect(page.getByTestId("parole")).toHaveText(normaliser(texte));
-  await verifierModeDys(page, [page.getByTestId("parole")], true);
+  await expect(page.getByTestId("consigne")).toHaveText(normaliser(texte));
+  await verifierModeDys(page, [page.getByTestId("consigne")], true);
 });
 
 Then(/^la consigne ne s'affiche pas en mode dys$/, async ({ page }) => {
-  await verifierModeDys(page, [page.getByTestId("parole")], false);
+  await verifierModeDys(page, [page.getByTestId("consigne")], false);
 });
 
 Then(/^la félicitation de Noisette s'affiche en mode dys$/, async ({ page }) => {
@@ -502,7 +506,7 @@ const COULEURS_DES_SYLLABES = ["rgb(29, 78, 216)", "rgb(180, 35, 24)"];
 Then(
   /^Léa voit « ([^«»]+) » en deux syllabes de couleurs alternées, « ([^«»]+) » puis « ([^«»]+) »$/,
   async ({ page }, mot: string, premiere: string, seconde: string) => {
-    const enSyllabes = page.getByTestId("parole").getByTestId("mot-en-syllabes");
+    const enSyllabes = page.getByTestId("consigne").getByTestId("mot-en-syllabes");
     await expect(enSyllabes).toHaveCount(1);
     await expect(enSyllabes).toHaveText(mot);
     const syllabes = enSyllabes.getByText(/./);
@@ -515,7 +519,7 @@ Then(
 );
 
 Then(/^« ([^«»]+) », « ([^«»]+) » et « ([^«»]+) » restent d'une seule couleur$/, async ({ page }, a: string, b: string, c: string) => {
-  const consigne = page.getByTestId("parole");
+  const consigne = page.getByTestId("consigne");
   const couleurDuTexte = await consigne.evaluate((el) => getComputedStyle(el).color);
   expect(COULEURS_DES_SYLLABES).not.toContain(couleurDuTexte);
   for (const mot of [a, b, c]) {

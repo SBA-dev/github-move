@@ -130,6 +130,14 @@ Fonctionnalité: La consigne d'un exercice reste visible pendant tout l'exercice
       Alors Léa entend de nouveau Noisette lire « Touche le bon nombre. »
       Et Léa voit la question « Combien font 2 + 1 ? »
 
+    Scénario: Dans un exercice bulles, relire la consigne pendant la lecture de la question suivante laisse ses choix venir
+      Étant donné qu'une leçon de test « Compter » a un exercice bulles de consigne « Touche le bon nombre. » qui pose « Combien font 2 + 1 ? » puis « Combien font 1 + 1 ? »
+      Et que Léa joue la séance complète de la leçon « Compter »
+      Et que Léa a répondu « 3 »
+      Quand Léa demande à réécouter la consigne pendant que Noisette lit la question « Combien font 1 + 1 ? »
+      Alors Léa entend de nouveau Noisette lire « Touche le bon nombre. »
+      Et Léa voit la question « Combien font 1 + 1 ? » avec ses choix
+
     Scénario: En Muet, demander à relire la consigne ne fait rien entendre et la consigne reste visible
       Étant donné que la tablette est en Muet
       Et que Léa joue seulement l'exercice « Les maisons des sons » de la leçon « Les sons ou, on, an »

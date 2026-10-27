@@ -618,7 +618,7 @@ async function reussirUnCalculDeFluence(page: Page): Promise<void> {
   await expect(page.getByTestId("calculs-reussis")).toHaveAttribute("data-score", String(avant + 1));
 }
 
-async function reussirDesCalculsDeFluence(page: Page, nombre: number): Promise<void> {
+export async function reussirDesCalculsDeFluence(page: Page, nombre: number): Promise<void> {
   for (let rang = 0; rang < nombre; rang++) await reussirUnCalculDeFluence(page);
 }
 

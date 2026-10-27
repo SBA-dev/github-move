@@ -3,7 +3,17 @@
     "allow": [
       "Bash(curl * https://api.supabase.com/v1/projects/*/database/*)",
       "mcp__github__merge_pull_request",
-      "Bash(gh pr merge * --merge*)"
+      "Bash(gh pr merge * --merge*)",
+      "Bash(python3 scripts/exploitation/migrations.py*)",
+      "Bash(python3 scripts/exploitation/deploiement_des_fonctions.py*)",
+      "Bash(npx supabase secrets set *)",
+      "Bash(PYTHONPATH=scripts python3 -c *auth_de_production*)",
+      "Bash(VITE_SUPABASE_URL=* VITE_SUPABASE_ANON_KEY=* npm run build*)",
+      "Bash(python3 scripts/exploitation/secrets_du_build.py*)",
+      "Bash(python3 scripts/exploitation/envoi_webdav.py*)",
+      "Bash(env -u SUPABASE_SERVICE_ROLE_KEY python3 scripts/exploitation/controles_production.py*)",
+      "Bash(env -u SUPABASE_SERVICE_ROLE_KEY npx bddgen -c playwright.production.config.ts*)",
+      "Bash(env -u SUPABASE_SERVICE_ROLE_KEY npx playwright test -c playwright.production.config.ts*)"
     ]
   },
   "extraKnownMarketplaces": {

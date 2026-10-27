@@ -72,6 +72,13 @@ export type {
   LeconsDUnNiveau,
   ToutesLesLecons,
 } from "./toutes-les-lecons.ts";
+export { leconDuJour } from "./lecon-du-jour.ts";
+export type { EntreesDuJour, LeconDuJour } from "./lecon-du-jour.ts";
+export { tuilesDeMatiere } from "./tuiles-de-matiere.ts";
+export type { TuileDeMatiere } from "./tuiles-de-matiere.ts";
+export { tuilesDuJour } from "./tuiles-du-jour.ts";
+export type { EntreesDesTuilesDuJour, TuileDuJour } from "./tuiles-du-jour.ts";
+export { leconSuivanteEnFinDeSeance } from "./lecon-suivante-en-fin-de-seance.ts";
 export { leconSuivanteDansLeParcours } from "./lecon-suivante-dans-le-parcours.ts";
 export type {
   EntreesDuParcours,
@@ -118,6 +125,9 @@ export type { TestDeDepartTermine } from "./test-de-depart.ts";
 export type { TestDeDepartTermineAEnregistrer } from "./test-de-depart-termine-a-enregistrer.ts";
 export { TestDeDepartId } from "./test-de-depart-id.ts";
 export { reserveDuTestDeDepart } from "./reserve-du-test-de-depart.ts";
+export { attenteAvantLEcranSuivant, DUREE_D_AFFICHAGE_SANS_VOIX_MS } from "./attente-avant-l-ecran-suivant.ts";
+export type { AttenteAvantLEcranSuivant } from "./attente-avant-l-ecran-suivant.ts";
+export { consigneAffichee } from "./exercices/consigne-affichee.ts";
 export { FileDeRevision } from "./file-de-revision.ts";
 export type {
   PlanDeSeanceDeRevision,
@@ -137,3 +147,4 @@ export { AucuneQuestionDue } from "./erreurs.ts";
 export { cleDeLaBoite, QuestionDeBoite } from "./question-de-boite.ts";
 export { QuestionDeProblemeEnBarres } from "./question-de-probleme-en-barres.ts";
 export { estUnTypeDeQuestion } from "./cle-de-question.ts";
+export { leconAcquiseParLaSeance, leconsAcquises } from "./lecons-acquises.ts";

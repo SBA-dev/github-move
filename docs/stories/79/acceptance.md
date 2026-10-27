@@ -22,7 +22,7 @@ Défauts constatés dans la cible (`src/seance/`) :
 |---|---|
 | 1. La consigne est visible dès le début de l'exercice, qu'elle ait été lue ou non | Muet, voix bloquée, navigateur sans lecture à voix haute → « Range chaque mot dans la maison de son son. » au début de « Les maisons des sons » · Muet → « Remets les syllabes dans l'ordre pour écrire « domino ». » · bulles de test : consigne « Touche le bon nombre. » et question « Combien font 2 + 1 ? » visibles ensemble · consigne par défaut de classer, ordre, trous · avec la voix : consigne lue, puis l'indication du geste ou la question, et la consigne toujours visible |
 | 2. La consigne reste visible jusqu'à la fin de l'exercice, quoi que dise le personnage guide | après une étiquette bien posée (« loup » dans « ou ») · après une erreur (« mi » en premier) · pendant un encouragement · à l'exercice suivant, « caramel » remplace « domino » · à la fin de la séance, plus de consigne |
-| 3. La consigne peut être relue à voix haute pendant tout l'exercice | après « do » posée, la consigne de « domino » est relue et « do » reste à sa place · en bulles, la consigne est relue et la question reste posée · en Muet, rien n'est lu et la consigne reste visible |
+| 3. La consigne peut être relue à voix haute pendant tout l'exercice | après « do » posée, la consigne de « domino » est relue et « do » reste à sa place · en bulles, la consigne est relue et la question reste posée · en bulles, la consigne relue pendant la lecture de « Combien font 1 + 1 ? » laisse venir ses choix (décision 79.13) · en Muet, rien n'est lu et la consigne reste visible |
 | 4. Quand la voix est bloquée, le message qui le dit reste visible pendant la séance | au début de l'exercice · après une étiquette posée · jamais deux messages · disparaît quand la voix revient (« Réécouter » réussi) |
 | 5. Sans voix, la félicitation est visible avant l'écran suivant, et celle de la dernière bonne réponse attend que l'enfant continue | ordre, dernière étiquette « no » : Muet, voix bloquée, navigateur sans lecture → félicitation, « Continuer » proposé, pas de fin de séance d'elle-même · classer, dernière étiquette « dent » · « 7 » à « Combien font 3 + 4 ? », puis Léa continue → fin de la séance · avec la voix, pas de « Continuer » · entre deux questions et entre deux exercices : félicitation visible, puis l'écran suivant vient seul |
 | 6. La consigne visible se lit en mode dys et tient sur un petit écran | mode dys : police Andika, espacements · 360 px : la page tient dans la largeur, consigne visible |
@@ -36,13 +36,13 @@ La story compte **7 règles**, une de plus que le seuil habituel de 6. La règle
 |---|---|---|---|
 | 1 | La consigne est visible dès le début de l'exercice, qu'elle ait été lue ou non | Quand <situation>, la consigne d'un exercice classer est visible dès le début (3 cas : Muet, voix bloquée, navigateur qui ne sait pas lire à voix haute) · En Muet, la consigne d'un exercice ordre est visible dès le début · En Muet, la consigne d'un exercice bulles est visible avec la question · En Muet, un exercice <type> sans consigne montre sa consigne par défaut (3 cas : classer, ordre, trous) · Avec la voix, la consigne d'un exercice ordre reste visible après sa lecture · Avec la voix, la consigne d'un exercice bulles reste visible quand la question est lue | 79.1, 79.8, 79.9 |
 | 2 | La consigne reste visible jusqu'à la fin de l'exercice, quoi que dise le personnage guide | En Muet, la consigne d'un exercice classer reste visible après une étiquette bien posée · En Muet, la consigne d'un exercice ordre reste visible après une erreur · Avec la voix, la consigne reste visible pendant l'encouragement du personnage guide · Au début de l'exercice suivant, sa consigne remplace celle de l'exercice fini · À la fin de la séance, la consigne du dernier exercice n'est plus affichée | 79.1 |
-| 3 | La consigne peut être relue à voix haute pendant tout l'exercice | L'enfant fait relire la consigne au milieu d'un exercice ordre · Dans un exercice bulles, relire la consigne laisse la question posée · En Muet, demander à relire la consigne ne fait rien entendre et la consigne reste visible | 79.7 |
+| 3 | La consigne peut être relue à voix haute pendant tout l'exercice | L'enfant fait relire la consigne au milieu d'un exercice ordre · Dans un exercice bulles, relire la consigne laisse la question posée · Dans un exercice bulles, relire la consigne pendant la lecture de la question suivante laisse ses choix venir · En Muet, demander à relire la consigne ne fait rien entendre et la consigne reste visible | 79.7, 79.12, 79.13 |
 | 4 | Quand la voix est bloquée, le message qui le dit reste visible pendant la séance | Le message de voix bloquée est visible quand l'exercice commence · Le message de voix bloquée reste visible après une réponse · Le message de voix bloquée n'est jamais affiché deux fois · Quand la voix revient, le message de voix bloquée disparaît | 79.5, 79.6 |
 | 5 | Sans voix, la félicitation est visible avant l'écran suivant, et celle de la dernière bonne réponse attend que l'enfant continue | Quand <situation>, la félicitation de la dernière étiquette d'un exercice ordre reste visible jusqu'à ce que Léa continue (3 cas : Muet, voix bloquée, navigateur qui ne sait pas lire à voix haute) · En Muet, la félicitation de la dernière étiquette d'un exercice classer reste visible jusqu'à ce que Léa continue · En Muet, la fin de la séance s'affiche quand Léa continue après la félicitation de la dernière question · Avec la voix, la fin de la séance vient après la félicitation de la dernière étiquette, sans que Léa continue · En Muet, la félicitation d'une question est visible, puis la question suivante vient d'elle-même · En Muet, après la dernière étiquette d'un exercice qui n'est pas le dernier, l'exercice suivant vient de lui-même | 79.3, 79.4 |
 | 6 | La consigne visible se lit en mode dys et tient sur un petit écran | Avec le mode dys, la consigne restée visible s'affiche en mode dys · La consigne, les maisons et les étiquettes tiennent ensemble dans un écran de 360 px de large | 79.1 |
 | 7 | Le texte d'une étape de leçon reste visible jusqu'à ce que l'enfant continue | En Muet, le texte de la première étape de leçon reste visible jusqu'à ce que Léa continue | 79.2 |
 
-Total : 7 règles, 27 scénarios dont 3 plans (33 cas exécutés), aucun `@a-valider`, aucun `@acces`.
+Total : 7 règles, 28 scénarios dont 3 plans (34 cas exécutés), aucun `@a-valider`, aucun `@acces`.
 
 Droits d'accès : aucun scénario `@acces`. La story n'écrit rien en base et ne crée aucune table : l'affichage de la consigne, du message de voix bloquée et de la félicitation se joue dans le navigateur, sur des leçons de la bibliothèque. Rien de ce que produit l'enfant ne part ailleurs.
 
@@ -62,6 +62,7 @@ Les six scénarios `@issue-7 @issue-58` doivent rester verts **sans changer un m
 ### Scénarios voisins à exécuter avec la story
 
 - #7, non porté par #58 : **« Le message de voix bloquée n'apparaît qu'une fois »**. Il vérifie qu'à la consigne suivante, **aucun** message de voix bloquée n'est affiché. Ce comportement est justement le défaut n°2 : ce scénario **contredit la règle 4**. Décision 79.5 : **travail de l'équipe de #79** (pas fait au cadrage) : réécrire ce scénario dans `features/7-voix.feature`, sous le même titre, pour qu'il vérifie qu'un **seul** message est affiché (« Alors Léa voit un seul message de voix bloquée » au lieu de « Alors le message de voix bloquée n'apparaît pas de nouveau »). Le scénario « Le message de voix bloquée n'est jamais affiché deux fois » de #79 vérifie la même chose sur une vraie séance.
+  - **Fait le 2026-10-25** : dans `features/7-voix.feature`, le scénario « Le message de voix bloquée n'apparaît qu'une fois » garde son titre, ses tags et ses autres étapes ; sa dernière étape est désormais « Alors Léa voit un seul message de voix bloquée ».
 - #7 « Le mot prononcé est surligné pendant la lecture » et #12 « En mode dys, le mot prononcé est toujours surligné pendant la lecture » : le mot prononcé doit rester surligné dans la consigne lue, où qu'elle soit affichée.
 - #12, scénarios du mode dys sur la consigne (« Avec le mode dys, la consigne s'affiche en police Andika… », « Sans le mode dys, la consigne s'affiche comme d'habitude », syllabes en couleurs alternées).
 - #16 « « Réécouter » relit la dernière phrase du personnage guide » et #17 « L'enfant peut réécouter la question » : « Réécouter » garde son comportement (décision 79.7).
@@ -77,7 +78,7 @@ Commande de mise au point proposée : `npx bddgen --tags "@issue-79 or @issue-7 
 |---|---|---|
 | Les sons ou, on, an | `fr-cp-sons-ou-on-an` | classer « Les maisons des sons » (consigne « Range chaque mot dans la maison de son son. », maisons « ou », « on », « an », 9 étiquettes) ; bulles « Quel son entends-tu ? » (sans consigne) ; première étape de leçon |
 | Les syllabes | `fr-cp-syllabes` | ordre « Le mot en morceaux » (« domino » : « do », « mi », « no »), puis ordre « Encore un mot » (« caramel ») dans la séance complète |
-| Compter (leçon de test) | injectée par les steps | un exercice bulles de consigne « Touche le bon nombre. » qui pose « Combien font 2 + 1 ? » |
+| Compter (leçon de test) | injectée par les steps | un exercice bulles de consigne « Touche le bon nombre. » qui pose « Combien font 2 + 1 ? » ; pour 79.13, la même consigne, qui pose « Combien font 2 + 1 ? » (réponse « 3 ») puis « Combien font 1 + 1 ? » |
 | Question de test « Combien font 3 + 4 ? » | injectée par les steps (#17, #58) | choix « 6 », « 7 », « 8 », « 9 », réponse « 7 », seule question de sa séance |
 | Leçon de test sans consigne | injectée par les steps (#18) | consignes par défaut de classer, ordre, trous |
 
@@ -98,6 +99,9 @@ Formulations nouvelles :
 - « Léa n'a pas eu à continuer »
 - « ensuite seulement, Léa voit la consigne « … » »
 - « Léa voit le texte de l'étape de leçon « … » »
+- « une leçon de test « … » a un exercice bulles de consigne « … » qui pose « … » puis « … » » (79.13, variante à deux questions de la formulation ci-dessus)
+- « Léa demande à réécouter la consigne pendant que Noisette lit la question « … » » (79.13)
+- « Léa voit la question « … » avec ses choix » (79.13)
 
 Le step existant « Léa voit la consigne « … » » cherche la consigne dans la bulle du personnage guide. Il devra la chercher là où la consigne est affichée une fois la décision 79.1 prise, sans changer de texte.
 
@@ -140,6 +144,19 @@ Décisions qui en découlent :
 - **79.8 Types d'exercice concernés** : reco retenue. Tous ceux dont la consigne est lue au début (tous sauf `dictee` et `memoriser`), consigne par défaut de classer, ordre et trous comprise.
 - **79.9 Indication du geste** : reco retenue. Elle reste dans la bulle jusqu'à la parole suivante ; seule la consigne a une place fixe.
 
+Annonce du responsable sur l'issue #79, le 2026-10-25. Réponse du PO, mot pour mot : « 79.2 : A ». Le responsable la lit comme **79.12 : A**, seule question avec un choix A.
+
+- **79.12 Relire la consigne pendant la présentation** : choix A. Pendant que le personnage guide présente l'exercice (consigne, texte, question), le bouton « Relire la consigne » est inactif (grisé, `aria-disabled`). Il devient actif dès que la présentation est finie et le reste jusqu'à la fin de l'exercice. La consigne reste visible tout le temps. Origine : 3e cycle « À CORRIGER » de la review (relire pendant la présentation coupait l'ouverture de l'exercice). Le texte des scénarios ne change pas.
+
+Complément du responsable sur l'issue #79, le 2026-10-25. Réponse du PO à 79.10 et 79.11, mot pour mot : « oui pour les 2 ».
+
+- **79.10 Nouveau blocage de la voix** : oui. Si la voix revient puis se bloque de nouveau pendant la même ouverture de l'application, le message de voix bloquée réapparaît.
+- **79.11 Invitation à jouer sans voix** : oui. Sans voix, l'invitation à jouer après les étapes de la leçon reste visible environ 2 s, puis l'exercice vient seul, comme l'annonce du nouveau défi (79.4).
+
+Question 79.13 posée à l'équipe de #79. Réponse du PO, mot pour mot, le 2026-10-26 : « Oui ».
+
+- **79.13 Relire la consigne pendant la question suivante** : oui. Le scénario de non-régression « Dans un exercice bulles, relire la consigne pendant la lecture de la question suivante laisse ses choix venir » est ajouté à la règle 3 (tag `@a-valider` retiré). Il prouve que relire la consigne pendant la lecture d'une question suivante n'enlève jamais ses choix. Origine : défaut trouvé en review ; selon 79.12, le bouton « Relire la consigne » est actif après la présentation d'ouverture jusqu'à la fin de l'exercice, donc aussi pendant la lecture de la question suivante.
+
 ## Questions ouvertes
 
-Aucune. Les questions du cadrage (79.1 à 79.9) sont tranchées : voir « Décisions ».
+Aucune. Les questions 79.1 à 79.13 sont tranchées : voir « Décisions ».

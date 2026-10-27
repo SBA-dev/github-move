@@ -17,7 +17,7 @@
 - **Variantes déguisées retirées** : darwiin contient 2 161 variantes où des lettres sont remplacées par des chiffres ou des symboles (`0` pour `o`, `1` pour `i`, `@` pour `a`…). Toutes se ramènent à une des formes simples gardées. La vérification de #103 doit donc **décoder** ces substitutions (et ignorer majuscules, accents, lettres répétées et espaces entre les lettres) avant de comparer, plutôt que de lister chaque variante.
 - **Écarté** : `chatte`, mot du vocabulaire des leçons (femelle du chat), présent dans `app/bibliotheque.json`.
 - **Retirés à la relecture du PO** (2026-10-25) : `épais` et sa forme sans accent `epais`, `gueule`. Mots courants, utiles dans des leçons (« la gueule du loup », « un épais brouillard »).
-- **Vérifié absent** : les mots que le programme d'histoire emploie (guerre, arme, mort, soldat, bataille, esclavage…). Ils ne doivent jamais entrer dans cette liste (décision 0029).
+- **Vérifié absent** : les mots que le programme d'histoire emploie (guerre, arme, mort, soldat, bataille, esclavage…). Ils ne doivent jamais entrer dans cette liste (décision 0030).
 
 ## Limites
 

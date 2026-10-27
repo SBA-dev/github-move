@@ -82,7 +82,7 @@ Fonctionnalité: Leçons des classes d'avant
       Quand Léa ouvre le parcours de français
       Alors les blocs du parcours se suivent ainsi : « Déjà réussies en CE2 », puis « Leçons des classes d'avant »
 
-  Règle: Une leçon des classes d'avant s'ouvre, mais elle n'est jamais la prochaine leçon, ne compte pas dans le parcours et n'a pas de leçon suivante
+  Règle: Une leçon des classes d'avant s'ouvre, mais elle n'est jamais la prochaine leçon, ne compte pas dans le parcours et n'a pas de leçon suivante dans le parcours ; sans leçon suivante dans le parcours, la leçon du jour (#29)
 
     Plan du Scénario: Une leçon des classes d'avant s'ouvre <moyen> depuis le parcours
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
@@ -117,12 +117,14 @@ Fonctionnalité: Leçons des classes d'avant
       Alors le parcours indique « 0 leçon réussie sur 3 »
 
     # Réponse 26.8
-    Scénario: Après une leçon des classes d'avant, aucune leçon suivante n'est proposée
+    # Réponse 29.8 (#29)
+    @issue-29
+    Scénario: Après une leçon des classes d'avant, la fin de la séance propose la leçon du jour de sa classe
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa joue la séance complète de la leçon « Les voyelles »
       Quand Léa réussit la dernière question de la séance
-      Alors la fin de la séance propose « Accueil » et « Rejouer »
-      Mais aucune leçon suivante n'est proposée
+      Alors la fin de la séance annonce « Ensuite : Les nombres jusqu'à 100 »
+      Et la leçon suivante ouvre la page de la leçon « Les nombres jusqu'à 100 »
 
   Règle: Une leçon des classes d'avant montre ce que l'enfant y a réussi, même après un changement de classe ou le test de départ
 
@@ -168,7 +170,7 @@ Fonctionnalité: Leçons des classes d'avant
         | Les syllabes | CP     | à découvrir               |
       Et le parcours indique « 0 leçon réussie sur 3 »
 
-  Règle: « Toutes les leçons » montre toutes les leçons de la classe de l'enfant ; dans une matière dont il a réussi toutes les leçons de sa classe, celles de la classe juste au-dessus ; et ses leçons réussies d'une classe au-dessus
+  Règle: « Toutes les leçons » montre toutes les leçons de la classe de l'enfant ; dans une matière dont il a réussi toutes les leçons de sa classe, celles de la classe juste au-dessus ; et ses leçons réussies d'une classe au-dessus ; après une leçon de la classe juste au-dessus, sans leçon suivante dans le parcours, la leçon du jour (#29)
 
     # Réponses 26.1, 26.10 et 26.11
     Scénario: Un enfant de CE1 voit dans « Toutes les leçons » toutes les leçons de sa classe, avec leur état
@@ -292,15 +294,17 @@ Fonctionnalité: Leçons des classes d'avant
       Alors Léa voit la page de la leçon « Les règles de la classe »
 
     # Réponse 26.19
-    Scénario: Après une leçon de la classe juste au-dessus, aucune leçon suivante n'est proposée
+    # Réponse 29.24 (#29)
+    @issue-29
+    Scénario: Après une leçon de la classe juste au-dessus, la fin de la séance propose la leçon du jour de sa classe
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a pour meilleures étoiles :
         | leçon                   | étoiles |
         | Les nombres jusqu'à 100 | 1       |
       Et que Léa joue la séance complète de la leçon « Les tables de 2 »
       Quand Léa réussit la dernière question de la séance
-      Alors la fin de la séance propose « Accueil » et « Rejouer »
-      Mais aucune leçon suivante n'est proposée
+      Alors la fin de la séance annonce « Ensuite : Le son in »
+      Et la leçon suivante ouvre la page de la leçon « Le son in »
 
     # Réponse 26.19
     Scénario: Une leçon de la classe juste au-dessus non réussie n'apparaît pas dans « Mon parcours »

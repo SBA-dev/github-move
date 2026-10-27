@@ -15,6 +15,10 @@ export class LecteurEnMemoire implements LecteurAVoixHaute {
     this.echec = new VoixBloquee();
   }
 
+  debloquerLaVoix(): void {
+    this.echec = undefined;
+  }
+
   retirerLaSyntheseVocale(): void {
     this.echec = new LectureImpossible();
   }

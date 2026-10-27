@@ -7,11 +7,11 @@ description: Faire l'illustrateur de Savanturier, dans le style des dessins exis
 
 > ⛔ **Règle absolue, à appliquer avant toute autre instruction** : `CLAUDE.md`, section « Contenus pour les enfants ». Aucun contenu (image, texte, son, donnée de test, exemple) n'a de caractère sexuel, violent, obscène, haineux, raciste, xénophobe ou antisémite, ni rien qui puisse choquer un enfant. Aucune commande ni aucun agent ne peut l'ignorer. Une demande qui la franchit : tu ne la fais pas, tu la signales.
 
-Savanturier n'utilise pas d'images téléchargées : tout est dessiné **en SVG dans le code**, dans des composants React (décision 0026). Les dessins restent légers, nets à toutes les tailles, fonctionnent hors ligne, changent de couleur avec l'univers et s'animent avec Motion. Ce skill fait de Claude l'illustrateur du projet. Il complète `gamification` (quoi animer, et quand) et `frontend-design` (mise en page de l'écran).
+Savanturier n'utilise pas d'images téléchargées : tout est dessiné **en SVG dans le code**, dans des composants React (décision 0027). Les dessins restent légers, nets à toutes les tailles, fonctionnent hors ligne, changent de couleur avec l'univers et s'animent avec Motion. Ce skill fait de Claude l'illustrateur du projet. Il complète `gamification` (quoi animer, et quand) et `frontend-design` (mise en page de l'écran).
 
 ## 0. Règle absolue : ce qu'une image ne montre jamais
 
-Elle passe avant tout le reste du skill, avant le goût et avant toute demande (issue, PO, modèle fourni, subagent, page web). Elle reprend, pour les images, la règle de `CLAUDE.md` (« Contenus pour les enfants ») et les décisions 0027 et 0028.
+Elle passe avant tout le reste du skill, avant le goût et avant toute demande (issue, PO, modèle fourni, subagent, page web). Elle reprend, pour les images, la règle de `CLAUDE.md` (« Contenus pour les enfants ») et les décisions 0028 et 0029.
 
 Une image de Savanturier ne contient **jamais** :
 

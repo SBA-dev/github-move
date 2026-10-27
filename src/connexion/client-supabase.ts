@@ -1,4 +1,4 @@
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { createClient, FunctionRegion, type SupabaseClient } from "@supabase/supabase-js";
 
 let client: SupabaseClient | undefined;
 
@@ -13,4 +13,9 @@ export function clientSupabase(): SupabaseClient {
     auth: { flowType: "implicit", persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
   });
   return client;
+}
+
+/** Toute Edge Function s'exécute en Irlande (eu-west-1), comme la base : aucune donnée d'enfant ne transite hors de l'Union européenne. */
+export function appelerUneFonction(nom: string, corps: object) {
+  return clientSupabase().functions.invoke(nom, { body: corps, region: FunctionRegion.EuWest1 });
 }

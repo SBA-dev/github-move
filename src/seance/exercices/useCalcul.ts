@@ -22,7 +22,7 @@ export type SuiteDuCalcul = (numero: number, faits: FaitDeSeance[], nouvelExerci
 export function useCalcul(
   { seance, personnageGuide, dire, faireSilence, sequence, vivant, redessiner, reussite }: Dependances,
 ) {
-  const { estFigee, figer, annoncerLAvancement } = reussite;
+  const { estFigee, figer, annoncerLAvancement, attendreLEcranSuivant } = reussite;
   /** Le calcul réussi, montré tel quel le temps de le féliciter. */
   const [calculFige, setCalculFige] = useState<CalculEnCours | undefined>();
 
@@ -47,12 +47,12 @@ export function useCalcul(
     setCalculFige(calcul);
     annoncerLAvancement(seance.avancement());
     await dire(feliciterUnCalcul(personnageGuide));
-    if (!vivant.current) return;
+    if (!(await attendreLEcranSuivant()) || !vivant.current) return;
     figer(undefined);
     setCalculFige(undefined);
     const nouvelExercice = seance.exerciceEnCours()?.position !== exercice.position;
     await suite(++sequence.current, seance.retirerFaits(), nouvelExercice);
-  }, [seance, personnageGuide, dire, sequence, redessiner, figer, annoncerLAvancement, vivant, estFigee]);
+  }, [seance, personnageGuide, dire, sequence, redessiner, figer, annoncerLAvancement, vivant, estFigee, attendreLEcranSuivant]);
 
   const jeNeSaisPas = useCallback(async () => {
     const calcul = seance.calculEnCours();

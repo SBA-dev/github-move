@@ -74,8 +74,55 @@ export {
   finDePhraseDuPersonnageGuide,
   libelleDuPalier,
   libelleLuDuPalier,
-  phraseDeFinAvecLaCabane,
   phraseDeLEtat,
   titreDeLAnnonce,
   titreDeLaSection,
 } from "./paroles-de-la-cabane.ts";
+export { type FaitsDuJour, type ObjectifDuJour, objectifDuJour } from "./objectif-du-jour.ts";
+export {
+  faitsDuJour,
+  type SeanceDeRevisionTermineeDUnJour,
+  type SeancesConnues,
+  type SeanceTermineeDUnJour,
+} from "./faits-du-jour.ts";
+export { JoursDeSeance } from "./jours-de-seance.ts";
+export { type Serie, serieDeJours } from "./serie.ts";
+export { saluerAvecLaSerie, texteDeLaPastille } from "./paroles-de-la-serie.ts";
+export { type Badge, badgeGagneParLaSeance, badgesDuProfil, nomDuBadge } from "./badges.ts";
+export {
+  finDePhraseDuBadge,
+  libelleDeLaListeDesBadges,
+  parolesDeLaSectionDesBadges,
+  phraseDeFinAvecLesNouveautes,
+  phraseDeLaSectionDesBadges,
+  phraseSansBadge,
+  titreDeLAnnonceDuBadge,
+  titreDeLaSectionDesBadges,
+} from "./paroles-des-badges.ts";
+export { parolesDeLaSectionDesBadgesOuSansBadge } from "./paroles-de-l-ecran-des-medailles.ts";
+export {
+  type Episode,
+  EpisodeInconnu,
+  EpisodeNonOuvert,
+  episodeOuvert,
+  episodeOuvertParLaSeance,
+  episodeSuivant,
+  type EtatDeLHistoire,
+  HISTOIRE_DES_SAVANTURIERS,
+  histoireDe,
+  NombreDeSeancesInvalide,
+} from "./histoire.ts";
+export { SeancesTermineesDuProfil } from "./seances-terminees-du-profil.ts";
+export { type TuileDEpisode, tuilesDeLHistoire } from "./tuiles-de-l-histoire.ts";
+export {
+  annonceDeLEpisodeOuvert,
+  annonceLueDeLEpisodeOuvert,
+  finDePhraseDeLEpisode,
+  parolesDeLaSectionDeLHistoire,
+  positionDeLEpisode,
+  rangDansLeTexteDeLEpisode,
+  sousTitreDeLaSectionDeLHistoire,
+  texteALireDeLEpisode,
+  titreDeLAnnonceDeLEpisode,
+  titreDeLaSectionDeLHistoire,
+} from "./paroles-de-l-histoire.ts";

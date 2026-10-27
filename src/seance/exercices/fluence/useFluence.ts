@@ -48,12 +48,14 @@ function finDeFluence(seance: Seance, exercice: string, score: number, recordCon
 export function useFluence(
   { seance, horloge, dire, faireSilence, sequence, vivant, redessiner, reussite }: Dependances,
 ) {
-  const { estFigee, figer, annoncerLAvancement } = reussite;
+  const { estFigee, figer, annoncerLAvancement, attendreLEcranSuivant } = reussite;
   const [record, setRecord] = useState<number | undefined>();
   const [demarree, setDemarree] = useState(false);
   /** La fluence finie, montrée telle quelle le temps de dire sa phrase de fin. */
   const [fluenceFinie, setFluenceFinie] = useState<FluenceEnCours | undefined>();
   const derniereSeconde = useRef<number | undefined>(undefined);
+  /** Les paroles de fin de la fluence, gardées pour que l'écran de fin d'une fluence seule y ajoute les nouveautés. */
+  const parolesDeFin = useRef<string | undefined>(undefined);
 
   const presenter = useCallback(async () => {
     const nom = seance.exerciceEnCours()?.scoreDeFluence()?.nom;
@@ -91,12 +93,13 @@ export function useFluence(
     annoncerLAvancement(seance.avancement());
     const fin = finDeFluence(seance, nom, fluence.score, record);
     setRecord(fin.meilleurScore);
+    parolesDeFin.current = fin.texte;
     await dire({ texte: fin.texte, nature: "felicitation", humeur: humeurApresReponse(fluence.score > 0) });
-    if (!vivant.current) return;
+    if (!(await attendreLEcranSuivant()) || !vivant.current) return;
     figer(undefined);
     setFluenceFinie(undefined);
     await suite(++sequence.current, seance.retirerFaits(), true);
-  }, [seance, horloge, record, estFigee, figer, sequence, faireSilence, annoncerLAvancement, dire, vivant]);
+  }, [seance, horloge, record, estFigee, figer, sequence, faireSilence, annoncerLAvancement, dire, vivant, attendreLEcranSuivant]);
 
   /** Une réponse fausse s'efface sans rien dire ; une réponse donnée après la fin du temps n'est pas prise. */
   const repondre = useCallback(async (nombre: number, suite: SuiteDuCalcul) => {
@@ -117,7 +120,7 @@ export function useFluence(
     redessiner();
   }, [seance, horloge, estFigee, terminer, redessiner]);
 
-  return { demarree, fluenceFinie, presenter, demarrer, repondre, battre };
+  return { demarree, fluenceFinie, parolesDeFin, presenter, demarrer, repondre, battre };
 }
 
 /** Fait battre l'horloge tant que la fluence court : chaque battement redessine le temps, ou finit la fluence. */

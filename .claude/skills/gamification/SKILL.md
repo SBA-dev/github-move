@@ -155,7 +155,7 @@ L'application s'adresse à des enfants de 6 à 11 ans. Les décisions déjà pri
 
 ## 7. Plugins et skills tiers de design, d'animation et de pédagogie
 
-`.claude/settings.json` active quatre plugins (décisions 0025 et 0031), et deux skills tiers sont copiés dans `.claude/skills/` (décision 0031). Ils **conseillent**, ce skill et `CLAUDE.md` **décident** : en cas de conflit (police, couleurs, mécanique interdite), les règles du projet gagnent.
+`.claude/settings.json` active quatre plugins (décisions 0026 et 0032), et deux skills tiers sont copiés dans `.claude/skills/` (décision 0032). Ils **conseillent**, ce skill et `CLAUDE.md` **décident** : en cas de conflit (police, couleurs, mécanique interdite), les règles du projet gagnent.
 
 | Plugin | Skill à utiliser | Quand |
 |---|---|---|
