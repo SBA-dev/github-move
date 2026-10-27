@@ -57,10 +57,10 @@ async function ouvrirLAccueilDeLEnfant(page: Page, universAttendu: string) {
 
 /**
  * Le dessin d'un personnage guide, par son nom : accessible (role img) ou, depuis #96, caché des lecteurs d'écran sur les écrans
- * de l'enfant et repéré alors par `data-nom` sur l'élément `data-testid="personnage-guide"`.
+ * de l'enfant et repéré alors par `data-personnage-guide` sur l'élément `data-testid="personnage-guide"`.
  */
 export function leGuide(page: Page, nom: string): Locator {
-  return page.getByRole("img", { name: nom, exact: true }).or(page.locator(`[data-testid="personnage-guide"][data-nom="${nom}"]`)).first();
+  return page.getByRole("img", { name: nom, exact: true }).or(page.locator(`[data-testid="personnage-guide"][data-personnage-guide="${nom}"]`)).first();
 }
 
 function guide(page: Page) {
