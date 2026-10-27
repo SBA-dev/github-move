@@ -28,18 +28,6 @@ Before({ tags: "@issue-45" }, async ({ context, page }) => {
   context.on("request", (requete) => vues.push({ url: requete.url(), ressource: requete.resourceType() }));
 });
 
-// Le personnage guide des pages légales : l'espion de la synthèse vocale est installé avant la première page, comme pour
-// les écrans du parent de #73 (aucun-son-cote-parent.steps.ts). Réservé à ce scénario : les autres ne veulent pas de voix
-// simulée (ils jouent des séances préparées par leurs propres étapes).
-Before({ tags: "@issue-45" }, async ({ page, $testInfo }) => {
-  if (!$testInfo.title.includes("le personnage guide ne lit rien")) return;
-  await page.addInitScript(installerLeFaux, {
-    voix: [DENISE, { nom: "Henri", langue: "fr-FR" }],
-    bloque: false,
-    absent: false,
-  });
-});
-
 function variable(nom: string): string {
   const valeur = process.env[nom];
   if (!valeur) throw new Error(`Variable d'environnement absente : ${nom}`);
@@ -208,63 +196,6 @@ Then(/^aucune police n'a été chargée depuis un autre site que Savanturier$/, 
     requete.ressource === "font" || /\.(woff2?|ttf|otf)(\?|$)/i.test(requete.url) || /fonts\.(googleapis|gstatic)\.com/.test(requete.url)
   );
   expect(etrangeres, `une police ne vient que de ${permises.join(" ou ")}`).toEqual([]);
-});
-
-// --- Pages légales
-
-const PAGES_LEGALES: Readonly<Record<string, { lien: string; titre: string }>> = {
-  "la politique de confidentialité": { lien: "Politique de confidentialité", titre: "Politique de confidentialité" },
-  "les mentions légales": { lien: "Mentions légales", titre: "Mentions légales" },
-};
-
-function liensLegaux(page: Page): Locator {
-  return page.getByRole("navigation", { name: "Informations légales" });
-}
-
-When(
-  /^Paul ouvre (la politique de confidentialité|les mentions légales) depuis l'écran de connexion(?: de l'adresse de production)?$/,
-  async ({ page }, ouverture: string) => {
-    await page.goto("/");
-    await expect(page.getByRole("heading", { level: 2, name: "Se connecter" })).toBeVisible();
-    await expect(liensLegaux(page)).toBeVisible();
-    await liensLegaux(page).getByRole("link", { name: PAGES_LEGALES[ouverture]?.lien }).click();
-  },
-);
-
-When(/^Paul ouvre la politique de confidentialité depuis l'espace parent$/, async ({ page }) => {
-  await expect(page.getByRole("heading", { name: "Espace parent" })).toBeVisible();
-  await liensLegaux(page).getByRole("link", { name: "Politique de confidentialité" }).click();
-});
-
-Then(/^il lit (la politique de confidentialité|les mentions légales) de Savanturier$/, async ({ page }, lecture: string) => {
-  await expect(page.getByRole("heading", { level: 1, name: PAGES_LEGALES[lecture]?.titre })).toBeVisible();
-});
-
-Then(/^il y trouve l'adresse de contact pour faire une demande de suppression des données$/, async ({ page, $tags }) => {
-  await expect(page.getByText("Demande de suppression des données")).toBeVisible();
-  const contact = page.getByRole("link").and(page.locator('a[href^="mailto:"]')).first();
-  await expect(contact).toBeVisible();
-  const adresse = (await contact.getAttribute("href"))?.replace(/^mailto:/, "") ?? "";
-  expect(adresse).toMatch(/^[^@\s]+@[^@\s]+\.[^@\s]+$/);
-  if ($tags.includes("@production")) expect(adresse, "l'adresse de contact de la production n'est pas la valeur fictive").not.toMatch(/exemple\.test$/);
-});
-
-Then(/^il y lit qu'une demande de suppression des données envoyée depuis l'adresse e-mail de son compte est traitée sous (\d+) jours$/, async ({ page }, jours: string) => {
-  const demande = page.getByRole("paragraph").filter({ hasText: "Demande de suppression des données" });
-  await expect(demande).toContainText("adresse e-mail de ton compte");
-  await expect(demande).toContainText(`traitée sous ${jours} jours`);
-});
-
-Then(/^il y trouve le nom de l'éditeur et celui de l'hébergeur$/, async ({ page }) => {
-  const section = (titre: string) => page.getByRole("region", { name: titre, exact: true });
-  await expect(section("Éditeur")).toContainText(/Savanturier est édité par\s+\S+/);
-  await expect(section("Hébergeur du site")).toContainText("alwaysdata");
-  await expect(section("Hébergeur des données")).toContainText("Supabase");
-});
-
-Then(/^il peut revenir à l'espace parent$/, async ({ page }) => {
-  await page.getByRole("button", { name: "Revenir à l'espace parent" }).click();
-  await expect(page.getByRole("heading", { name: "Espace parent" })).toBeVisible();
 });
 
 // --- Accès aux profils en production
