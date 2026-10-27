@@ -19,3 +19,6 @@ npm install --no-audit --no-fund
 
 # graphify : graphe de connaissances du code (compétence /graphify et hooks PreToolUse).
 command -v graphify >/dev/null 2>&1 || uv tool install --quiet graphifyy==0.9.97 || pip install --quiet graphifyy==0.9.97
+
+# Graphe du code (AST seul, sans IA), reconstruit en arrière-plan pour ne pas ralentir le démarrage.
+nohup graphify update . >/dev/null 2>&1 &

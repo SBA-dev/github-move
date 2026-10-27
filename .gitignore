@@ -16,3 +16,6 @@ __pycache__/
 .features-gen-pwa/
 .features-gen-production/
 test-results-production/
+
+# graphify : graphe reconstruit au démarrage des sessions (graphify update .)
+graphify-out/
