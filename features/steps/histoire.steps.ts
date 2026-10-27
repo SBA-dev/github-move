@@ -190,7 +190,10 @@ When(/^Léa choisit la tuile « ([^«»]+) », au clavier seulement$/, async ({ 
 When(/^Léa choisit la tuile (\d+) de l'histoire$/, async ({ page }, numero: string) => {
   await attendreLaSection(page);
   // Une tuile « À découvrir » est désactivée : l'enfant a beau la toucher, rien ne s'ouvre.
-  await tuileNumero(page, Number(numero)).click({ force: true });
+  // Sur tablette, la tuile peut finir sous la barre de navigation fixe : on la centre avant de la toucher, sinon le toucher tomberait sur la barre.
+  const tuile = tuileNumero(page, Number(numero));
+  await tuile.evaluate((element) => element.scrollIntoView({ block: "center" }));
+  await tuile.click({ force: true });
 });
 
 // --- L'écran d'un épisode
