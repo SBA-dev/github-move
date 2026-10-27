@@ -56,8 +56,8 @@ export const UNIVERS: readonly Univers[] = [
     libelle: "Police",
     royaume: "le Commissariat des Savanturiers",
     personnageGuide: {
-      nom: "Agente Mila",
-      titre: "la policière détective",
+      nom: "Agent Max",
+      titre: "le détective futé",
       expressions: ["Enquête résolue !", "Bien vu, détective !", "Affaire classée !"],
       caractere: { sexe: "feminine", hauteur: 1.05, rythme: 1.0 },
     },
