@@ -66,7 +66,7 @@ Règles de cohabitation :
 > ⚠️ Tous les agents se fient à ce tableau. Tenez-le à jour quand un script change.
 > Dans un conteneur cloud, Chromium est déjà installé : Playwright le trouve via `PLAYWRIGHT_BROWSERS_PATH`. Ne lancez jamais `playwright install`. Les steps E2E qui appellent Supabase doivent y être lancés avec `NODE_USE_ENV_PROXY=1` (sinon le processus Node de Playwright ne passe pas par le proxy HTTPS du conteneur) ; les scénarios tagués `@envoi-email` (18 cas de #5, plus quelques-uns de #10, #11 et #13) consomment environ 44 des 100 e-mails de connexion autorisés par heure sur le projet de développement : ils sont exclus des exécutions courantes. Les scénarios tagués `@hors-beta` (connexion par lien ou code de connexion reçu par e-mail, décision 0019) décrivent un comportement retiré pendant la beta, où le parent se connecte par mot de passe du parent (#72) : `bddgen --tags` les génère encore, c'est `--grep-invert "…|@hors-beta"` qui les exclut ; #45 retire ce tag en rétablissant l'e-mail.
 > Les scénarios `@production` et `@pwa` sont exclus par la configuration principale ; la publication suit `docs/publication.md`.
-> Le hook `.claude/hooks/session-start.sh` installe Deno, pytest et les dépendances npm (dont la CLI Supabase : `npx supabase …`) au démarrage de chaque session cloud.
+> Le hook `.claude/hooks/session-start.sh` installe Deno, pytest, graphify et les dépendances npm (dont la CLI Supabase : `npx supabase …`) au démarrage de chaque session cloud.
 > `supabase start` a besoin de Docker, absent du conteneur cloud : les scénarios qui touchent Supabase tournent donc contre le projet de développement en ligne `savanturier-dev` (décision 0010, sur une branche suivante), et les migrations s'y appliquent par l'API de gestion.
 
 ## Architecture (hexagonale, DDD)
@@ -219,3 +219,14 @@ Voir `.claude/commands/feature.md`.
 | `e2e-tester` | Exécution des scénarios BDD | `features/steps/` uniquement |
 
 Le contenu pédagogique (`scripts/lecons/`) n'est pas une story DDD. Il est produit par la session principale, en respectant les règles pédagogiques ci-dessus.
+
+## graphify
+
+This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
+
+Rules:
+- When graphify-out/graph.json exists, run `graphify query "<question>"` before your first grep, search or source-file read for a codebase question, and put this rule in every subagent prompt that explores code. Read raw files only for lines the graph or an earlier read already located. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
+- If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
+- Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
+- After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).
+- A committed graphify-out/graph.json is rewritten whole on every build, so a large diff to it in a pull request is expected. Do not flag it as churn or suggest skipping the graph rebuild or its hooks.
