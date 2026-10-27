@@ -2,11 +2,11 @@ import { expect, type Locator, type Page } from "@playwright/test";
 import type { DataTable } from "playwright-bdd";
 import { ecrireDesSeancesTermineesPourLaSerie, jourPrepare } from "../support/serie-api.ts";
 import { lireEnRest } from "../support/seances-api.ts";
-import { EXPRESSIONS_PAR_PERSONNAGE, FELICITATIONS_COMMUNES } from "./univers.steps.ts";
+import { EXPRESSIONS_PAR_PERSONNAGE, FELICITATIONS_COMMUNES, leGuide } from "./univers.steps.ts";
 import { bulle, entendu, jouerLaSeanceComplete, toutesLesParoles } from "./etapes-puis-exercices.steps.ts";
 import { ecranDe, leaJoueAvecSonVraiProfil, lecturesParLot, ouvrirLEcran } from "./ecran-mes-medailles.steps.ts";
 import { demarrer } from "./exercices-a-choix.steps.ts";
-import { Given, Then, When } from "./fixtures.ts";
+import { Given, type Monde, Then, When } from "./fixtures.ts";
 import { donnerLeSignalDeDepart, laisserPasserLeTemps, reussirDesCalculsDeFluence } from "./calcul-fluence-addition.steps.ts";
 import { attendreLaFinDeLaSeance, jouerJusquALaFinDeLaSeance, partie } from "./etoiles-et-fin-de-seance.steps.ts";
 import { estSurUnProfilReel } from "./profil-reel.ts";
@@ -205,6 +205,13 @@ async function ouvrirLEpisodeDepuisMesMedailles(famille: Parameters<typeof ouvri
   await expect(ecranDeLEpisode(page)).toBeVisible();
 }
 
+/** Story #96 : Léa a terminé une séance (préparée en base), puis lit l'épisode depuis « Mes médailles ». */
+export async function arriverSurLEpisode(famille: Parameters<typeof ouvrirLEcran>[0], monde: Monde, page: Page, titre: string): Promise<void> {
+  const profil = await leaJoueAvecSonVraiProfil(famille, monde, page);
+  await ecrireDesSeancesTermineesPourLaSerie(profil, [jourPrepare(-1)]);
+  await ouvrirLEpisodeDepuisMesMedailles(famille, page, titre);
+}
+
 Given(/^Léa lit l'épisode « ([^«»]+) » depuis « Mes médailles »$/, async ({ famille, page }, titre: string) => {
   await ouvrirLEpisodeDepuisMesMedailles(famille, page, titre);
 });
@@ -261,7 +268,7 @@ Then(
     await expect(ecranDeLEpisode(page).getByRole("heading", { level: 1, name: titre, exact: true })).toBeVisible({
       timeout: DELAI_D_UN_APPEL_SERVEUR_MS,
     });
-    await expect(ecranDeLEpisode(page).getByRole("img", { name: personnage, exact: true })).toBeVisible();
+    await expect(leGuide(page, personnage)).toBeVisible();
   },
 );
 

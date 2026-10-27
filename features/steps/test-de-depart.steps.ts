@@ -28,6 +28,7 @@ import {
   textesDesChoixPossibles,
 } from "./exercices-a-choix.steps.ts";
 import { Given, After, Then, When } from "./fixtures.ts";
+import { rechargerAvecLeProfilReel } from "./profil-reel.ts";
 import { choisirSonProfil, jetonDe, profilDe } from "./profils-enfants.steps.ts";
 import { normaliser, terminerLaLecture } from "./voix.steps.ts";
 
@@ -299,6 +300,18 @@ async function refaireLeTestDepuisLEspaceParent(famille: Famille, page: Page): P
   const profil = page.getByTestId("profil-enfant").filter({ hasText: "Léa" });
   await profil.getByRole("button", { name: "Refaire le test de départ de Léa" }).click();
   await expect(proposition(page)).toBeVisible();
+}
+
+/** Story #96 : arrive sur la proposition du test de départ, ou sur sa fin après avoir répondu juste à tout. */
+export async function arriverSurLeTestDeDepart(page: Page, jusquALaFin: boolean): Promise<void> {
+  if (!etatDeLaLecon(page).injectees.some((l) => l.id.startsWith("e2e-27-"))) {
+    etatDeLaLecon(page).injectees.push(...(LECONS_DU_TEST_DE_DEPART as LeconBrute[]));
+    suivreLesLecturesDuResultat(page);
+    await servirLaBibliothequeDuTestDeDepart(page);
+    await rechargerAvecLeProfilReel(page);
+  }
+  if (jusquALaFin) await faireLeTest(page, TOUTES_JUSTES);
+  else await ouvrirLaProposition(page);
 }
 
 // --- Étant donné : la bibliothèque

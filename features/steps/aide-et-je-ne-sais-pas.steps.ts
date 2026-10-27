@@ -18,7 +18,8 @@ import {
 import { verifierModeDys } from "./reglages.steps.ts";
 import { cleDe, preparerProfil } from "./univers.steps.ts";
 import { normaliser } from "./voix.steps.ts";
-import type { ProfilPrepare } from "./fixtures.ts";
+import type { Monde, ProfilPrepare } from "./fixtures.ts";
+import { preparerUnExercice } from "./calcul-fluence-addition.steps.ts";
 import {
   additionAPoserAffichee,
   commencerUnCalculDeTest,
@@ -194,8 +195,15 @@ function leconDeTestDuType(type: string) {
   return exercice === undefined ? undefined : leconDeTest(`test-je-ne-sais-pas-${type}`, `Leçon de test ${type}`, [exercice]);
 }
 
+async function commencerUneAdditionPoseeDeTest(page: Page, monde: Monde): Promise<void> {
+  preparerUnExercice(page, monde, { type: "addition", titre: "Addition de test", operations: [[23, 14]], etapes: ["poser"] });
+  await demarrer(page);
+  await expect(page.getByTestId("addition-posee")).toBeVisible({ timeout: 20_000 });
+}
+
 When(/^(Léa|Tom) commence un exercice (\S+) d'une leçon de test$/, async ({ page, monde }, enfant: string, type: string) => {
   if (type === "calcul") return await commencerUnCalculDeTest(page, monde, enfant as "Léa" | "Tom");
+  if (type === "addition") return await commencerUneAdditionPoseeDeTest(page, monde);
   const lecon = leconDeTestDuType(type);
   if (lecon === undefined) {
     if (type === "boite" || type === "barres") return await commencerUneQuestionIllustreeDeTest(page, monde, type, enfant as "Léa" | "Tom");

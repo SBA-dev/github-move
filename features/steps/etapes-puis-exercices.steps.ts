@@ -240,7 +240,8 @@ Given(/^Léa a un profil enfant préparé de niveau (\S+) dans l'univers « (.+)
   const accueilSeul = utiliseLaBibliothequeDeLAccueil($tags);
   if (accueilSeul) await servirLaBibliothequeDeLAccueil(page);
   // Story #30 : les jours de séance sont lus sous RLS pour le vrai profil de Léa.
-  if ($tags.includes("@issue-24") || accueilSeul || $tags.includes("@issue-25") || $tags.includes("@issue-26") || $tags.includes("@issue-27") || $tags.includes("@issue-30") || cabaneSurLeServeur) {
+  // Story #96 : les écrans de l'enfant se jouent avec le vrai profil de Léa (parcours, médailles, séances, révision, épisode).
+  if ($tags.includes("@issue-96") || $tags.includes("@issue-24") || accueilSeul || $tags.includes("@issue-25") || $tags.includes("@issue-26") || $tags.includes("@issue-27") || $tags.includes("@issue-30") || cabaneSurLeServeur) {
     await jouerAvecLeProfilReel(famille, monde, page);
   }
 });
@@ -268,7 +269,12 @@ Given(/^Léa est sur la page de la leçon « (.+) »$/, async ({ page }, titre: 
   await ouvrirLaPageDeLaLecon(page, titre);
 });
 
-Given(/^Léa joue la séance complète de la leçon « (.+) »$/, async ({ page }, titre: string) => {
+Given(/^Léa joue la séance complète de la leçon « (.+) »$/, async ({ page, $tags }, titre: string) => {
+  // Story #96 : la leçon de test « Les sons de test » est servie par l'étape elle-même.
+  if ($tags.includes("@issue-96") && titre === "Les sons de test") {
+    const { injecterLesLeconsDeTestDesSons } = await import("./etoiles-et-fin-de-seance.steps.ts");
+    await injecterLesLeconsDeTestDesSons(page);
+  }
   await jouerLaSeanceComplete(page, titre);
 });
 
