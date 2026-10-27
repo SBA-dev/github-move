@@ -84,7 +84,7 @@ Deno.test("chaque personnage guide a le caractère de sa voix (sexe, hauteur, ry
     ["princesse", { sexe: "feminine", hauteur: 1.25, rythme: 1.0 }],
     ["animaux", { sexe: "feminine", hauteur: 1.45, rythme: 1.08 }],
     ["sports", { sexe: "masculine", hauteur: 1.05, rythme: 1.07 }],
-    ["police", { sexe: "feminine", hauteur: 1.05, rythme: 1.0 }],
+    ["police", { sexe: "masculine", hauteur: 1.05, rythme: 1.0 }],
     ["pompier", { sexe: "masculine", hauteur: 0.95, rythme: 1.0 }],
     ["danse", { sexe: "feminine", hauteur: 1.2, rythme: 1.02 }],
   ] as const;
