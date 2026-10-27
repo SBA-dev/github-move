@@ -150,7 +150,9 @@ Given(/^Léa a réussi (\d+) leçons?(?:\(s\))? de français du CE1$/, async ({ 
   await preparerLesEtoiles(famille, page, "Léa", lecons);
 });
 
-Given(/^Léa a terminé une séance de la leçon « ([^«»]+) » avec (\d) étoiles?$/, async ({ page }, titre: string, etoiles: string) => {
+Given(/^Léa a terminé une séance de la leçon « ([^«»]+) » avec (\d) étoiles?$/, async ({ page, $test, $tags }, titre: string, etoiles: string) => {
+  // #33 joue deux séances complètes dans un même scénario : plus de 30 s, délai triplé pour ces scénarios seuls.
+  if ($tags.includes("@issue-33")) $test.slow();
   await jouerLaSeanceCompleteAvecErreurs(page, titre, ETOILES_PAR_SEANCE[Number(etoiles)] ?? 0);
   await page.getByTestId("fin-de-seance").getByRole("button", { name: "Accueil", exact: true }).click();
 });
