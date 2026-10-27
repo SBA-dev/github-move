@@ -143,6 +143,10 @@ button[data-son="muet"] { background: var(--principale-foncee); }
 .titre-avec-guide { display: flex; align-items: center; justify-content: center; gap: 12px; }
 .titre-avec-guide h2 { margin: 0; }
 .titre-avec-guide .personnage-guide { width: 72px; flex: none; }
+@media (max-width: 480px) {
+  /* Petit sur téléphone : la consigne et les choix restent visibles sans défiler. */
+  .guide-et-parole .personnage-guide { width: 112px; }
+}
 .guide-et-parole { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; }
 .bulle:empty { display: none; }
 .bulle {
