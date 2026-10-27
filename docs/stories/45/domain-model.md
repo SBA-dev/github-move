@@ -2,6 +2,8 @@
 
 **État : validé par le PO le 2026-10-25** (commentaire `[Responsable] VALIDÉ` sur #45, 17:48 UTC). Les questions 45.1 à 45.22 ont chacune leur décision, plus bas ; les questions 45.23 à 45.30 sont tranchées dans `acceptance.md`.
 
+2026-10-27 : pas de pages légales pendant la beta (45.36) ; C5 et P6/P7 reportés à 45b.
+
 Story transverse, lot 7 (Bascule), dernière du chemin critique de la beta. Cadrage du 2026-10-25, sans code. Le code de 45a se fait en fin de chemin critique ; la partie configuration (C1 à C16) peut commencer plus tôt si une place se libère.
 
 **Choix de la beta, en bref** : front chez **alwaysdata** (offre gratuite, environ 100 Mo), à **l'adresse gratuite d'alwaysdata** (par exemple `savanturier.alwaysdata.net`), sans domaine acheté ; **Supabase Free** en **Irlande (`eu-west-1`)**, avec une **sauvegarde manuelle avant chaque publication** ; aucun e-mail (45b) ; beta **sur invitation**. Passage à Supabase Pro avant l'ouverture au public.
