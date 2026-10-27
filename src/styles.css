@@ -84,6 +84,7 @@ body {
   overflow-x: clip;
 }
 .ecran-qui-arrive { display: grid; justify-items: center; gap: 12px; width: 100%; outline: none; }
+.application[data-registre="parent"] { background: var(--fond); }
 .paysage {
   position: fixed;
   inset: 0;
@@ -139,6 +140,9 @@ button[data-son="muet"] { background: var(--principale-foncee); }
 }
 .personnage-guide { width: min(200px, 50vw); }
 .personnage-guide svg { width: 100%; height: auto; display: block; }
+.titre-avec-guide { display: flex; align-items: center; justify-content: center; gap: 12px; }
+.titre-avec-guide h2 { margin: 0; }
+.titre-avec-guide .personnage-guide { width: 72px; flex: none; }
 .guide-et-parole { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; }
 .bulle:empty { display: none; }
 .bulle {

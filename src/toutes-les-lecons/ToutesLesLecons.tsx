@@ -2,6 +2,8 @@ import { type ChangeEvent, useId } from "react";
 import { type ChoixDuFiltre, choixDuFiltre, type EntreesDuParcours, toutesLesLecons } from "@domain/apprentissage";
 import type { CodeDeMatiere } from "@domain/catalogue";
 import type { ProfilEnCours } from "@domain/famille";
+import type { Univers } from "@domain/motivation";
+import { PersonnageGuide } from "../univers/index.ts";
 import { useLeconsPersonnellesDuProfil } from "../accompagnement/useLeconsPersonnellesDuProfil.ts";
 import {
   AUCUNE_LECON_POUR_LA_CLASSE,
@@ -24,19 +26,23 @@ import {
 
 type Props = {
   readonly profil: ProfilEnCours;
+  readonly univers: Univers;
   readonly choix: ChoixEnCours;
   readonly onOuvrirLaLecon: (leconId: string) => void;
 };
 
 /** L'écran « Toutes les leçons » : la classe de l'enfant et ce qu'il peut voir au-dessus, puis les classes d'avant. Il n'affiche que ce que le domaine calcule. */
-export function ToutesLesLecons({ profil, choix, onOuvrirLaLecon }: Props) {
+export function ToutesLesLecons({ profil, univers, choix, onOuvrirLaLecon }: Props) {
   const lecturesDuParcours = useLecturesDuParcours(profil.id);
   const leconsPersonnelles = useLeconsPersonnellesDuProfil(profil.id);
   const lectures = lecturesDuParcours && leconsPersonnelles ? { ...lecturesDuParcours, leconsPersonnelles } : undefined;
   const niveau = niveauDuProfil(profil.niveau);
   return (
     <section className="toutes-les-lecons" aria-labelledby="titre-de-toutes-les-lecons">
-      <h2 id="titre-de-toutes-les-lecons">Toutes les leçons</h2>
+      <div className="titre-avec-guide">
+        <PersonnageGuide univers={univers} humeur="content" />
+        <h2 id="titre-de-toutes-les-lecons">Toutes les leçons</h2>
+      </div>
       {lectures === undefined && <p role="status">Chargement des leçons…</p>}
       {lectures !== undefined && niveau === undefined && <p>{AUCUNE_LECON_POUR_LA_CLASSE}</p>}
       {lectures !== undefined && niveau !== undefined && (
@@ -46,7 +52,7 @@ export function ToutesLesLecons({ profil, choix, onOuvrirLaLecon }: Props) {
   );
 }
 
-type PropsDuNiveau = Omit<Props, "profil"> & { readonly entrees: EntreesDuParcours };
+type PropsDuNiveau = Omit<Props, "profil" | "univers"> & { readonly entrees: EntreesDuParcours };
 
 function LeconsDuNiveau({ entrees, choix, onOuvrirLaLecon }: PropsDuNiveau) {
   const { choix: choisi } = choix;

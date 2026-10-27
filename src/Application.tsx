@@ -39,7 +39,7 @@ import {
   useTestDeDepartAFaire,
 } from "./test-de-depart/index.ts";
 import { ChoixDeLaVoix, useVoix } from "./voix/index.ts";
-import { HABILLAGE_DU_PARENT, habillageDeLUnivers, Paysage, PersonnageGuide } from "./univers/index.ts";
+import { HABILLAGE_DU_PARENT, habillageDeLUnivers, Paysage } from "./univers/index.ts";
 
 const ACCUEIL: Lieu = { ecran: "accueil" };
 
@@ -177,7 +177,7 @@ export function Application() {
   return (
     <MotionConfig reducedMotion="user">
       <div className="application" style={habillage} data-univers={univers.cle} data-registre={parent ? "parent" : "enfant"}>
-        <Paysage univers={univers.cle} />
+        {!parent && <Paysage univers={univers.cle} />}
         <EnTete
           surAccueil={ecran === "accueil"}
           enfant={profil}
@@ -199,18 +199,16 @@ export function Application() {
                 <>
                   {connexion.etat === "deconnecte" && <EcranDeConnexion connexion={connexion} onConnecte={ouvrirLEspaceParentConnecte} />}
                   <p>Réviser le programme du CP au CM2, en jouant.</p>
-                  {connecte
-                    ? (
-                      <QuiJoue
-                        etat={profilsDuParent.etat}
-                        onChoisir={(profilChoisi) => {
-                          choisirQuiJoue.executer(profilChoisi);
-                          aller("jeu");
-                        }}
-                        onAjouterUnEnfant={entrerDansLEspaceParent}
-                      />
-                    )
-                    : <PersonnageGuide univers={univers} humeur="content" />}
+                  {connecte && (
+                    <QuiJoue
+                      etat={profilsDuParent.etat}
+                      onChoisir={(profilChoisi) => {
+                        choisirQuiJoue.executer(profilChoisi);
+                        aller("jeu");
+                      }}
+                      onAjouterUnEnfant={entrerDansLEspaceParent}
+                    />
+                  )}
                   <AideEcranDAccueil />
                 </>
               )}
@@ -258,6 +256,7 @@ export function Application() {
               {lieu.ecran === "parcours" && profilCharge && profilEnCours && (
                 <MonParcours
                   profil={profilEnCours}
+                  univers={univers}
                   matiereChoisie={matiereDuParcours}
                   onChoisirLaMatiere={setMatiereDuParcours}
                   classesDAvantDeplieesPour={classesDAvantDeplieesPour}
@@ -268,6 +267,7 @@ export function Application() {
               {lieu.ecran === "toutes-les-lecons" && profilCharge && profilEnCours && (
                 <ToutesLesLecons
                   profil={profilEnCours}
+                  univers={univers}
                   choix={choixDeToutesLesLecons}
                   onOuvrirLaLecon={(leconId) => aller({ ecran: "lecon", leconId })}
                 />

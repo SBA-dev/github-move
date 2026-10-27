@@ -2,6 +2,8 @@ import { type KeyboardEvent, useEffect, useRef } from "react";
 import { type LeconDesClassesDAvant, type LeconReussieDUneClasseAuDessus, matieresDuParcours, type Parcours, parcoursDeLaMatiere } from "@domain/apprentissage";
 import type { CodeDeMatiere, Matiere, Niveau } from "@domain/catalogue";
 import type { ProfilEnCours } from "@domain/famille";
+import type { Univers } from "@domain/motivation";
+import { PersonnageGuide } from "../univers/index.ts";
 import {
   annonceDeLaLecon,
   annonceDeLaLeconDesClassesDAvant,
@@ -16,6 +18,7 @@ import { type LecturesDuParcours, useLecturesDuParcours } from "./useLecturesDuP
 
 type Props = {
   readonly profil: ProfilEnCours;
+  readonly univers: Univers;
   /** La dernière matière choisie pendant l'utilisation en cours. */
   readonly matiereChoisie: CodeDeMatiere | undefined;
   readonly onChoisirLaMatiere: (matiere: CodeDeMatiere) => void;
@@ -32,13 +35,16 @@ function matiereOuverte(matieres: readonly Matiere[], choisie: CodeDeMatiere | u
 
 /** L'écran « Mon parcours » : les leçons du niveau de l'enfant, matière par matière. Il n'affiche que ce que le domaine calcule. */
 export function MonParcours(
-  { profil, matiereChoisie, onChoisirLaMatiere, classesDAvantDeplieesPour, onBasculerLesClassesDAvant, onOuvrirLaLecon }: Props,
+  { profil, univers, matiereChoisie, onChoisirLaMatiere, classesDAvantDeplieesPour, onBasculerLesClassesDAvant, onOuvrirLaLecon }: Props,
 ) {
   const lectures = useLecturesDuParcours(profil.id);
   const niveau = niveauDuProfil(profil.niveau);
   return (
     <section className="mon-parcours" aria-labelledby="titre-de-mon-parcours">
-      <h2 id="titre-de-mon-parcours">Mon parcours</h2>
+      <div className="titre-avec-guide">
+        <PersonnageGuide univers={univers} humeur="content" />
+        <h2 id="titre-de-mon-parcours">Mon parcours</h2>
+      </div>
       {lectures === undefined && <p role="status">Chargement du parcours…</p>}
       {lectures !== undefined && niveau === undefined && <p>{AUCUNE_LECON_POUR_LA_CLASSE}</p>}
       {lectures !== undefined && niveau !== undefined && (
@@ -56,7 +62,7 @@ export function MonParcours(
   );
 }
 
-type PropsDuNiveau = Omit<Props, "profil"> & { readonly lectures: LecturesDuParcours; readonly niveau: Niveau };
+type PropsDuNiveau = Omit<Props, "profil" | "univers"> & { readonly lectures: LecturesDuParcours; readonly niveau: Niveau };
 
 function ParcoursDuNiveau(
   { lectures, niveau, matiereChoisie, onChoisirLaMatiere, classesDAvantDeplieesPour, onBasculerLesClassesDAvant, onOuvrirLaLecon }: PropsDuNiveau,
