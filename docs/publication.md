@@ -50,6 +50,47 @@ Dans la session de publication, `VITE_SUPABASE_URL` et `VITE_SUPABASE_ANON_KEY` 
 Le réseau de la session autorise : l'hôte du site, l'hôte WebDAV, l'API de gestion de Supabase et le projet de production.
 Absentes de cet environnement, toujours : `SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`, `SEND_EMAIL_HOOK_SECRET`, `MODE_EMAIL`.
 
+#### Test de l'environnement
+
+À faire au début de chaque session de publication. Lecture seule, aucune valeur affichée (les commandes ne renvoient que des codes HTTP ou des booléens).
+
+```bash
+# 1. Variables présentes (§ 2.3), SUPABASE_SERVICE_ROLE_KEY absente
+for v in ADRESSE_DE_PRODUCTION SUPABASE_PRODUCTION_REF SUPABASE_PRODUCTION_URL \
+  SUPABASE_PRODUCTION_ANON_KEY SUPABASE_ACCESS_TOKEN \
+  PARENT_DE_TEST_PRODUCTION_EMAIL PARENT_DE_TEST_PRODUCTION_MOT_DE_PASSE \
+  ALWAYSDATA_WEBDAV_URL ALWAYSDATA_WEBDAV_UTILISATEUR ALWAYSDATA_WEBDAV_MOT_DE_PASSE; do
+  [ -n "${!v}" ] && echo "$v présente" || echo "$v MANQUANTE"
+done
+[ -z "${SUPABASE_SERVICE_ROLE_KEY+x}" ] && echo "SUPABASE_SERVICE_ROLE_KEY absente (attendu)" || echo "SUPABASE_SERVICE_ROLE_KEY PRÉSENTE (anormal)"
+
+# 2. Le front répond : 200
+curl -s -o /dev/null -w '%{http_code}\n' "$ADRESSE_DE_PRODUCTION"
+
+# 3. http:// redirige vers https:// : 301
+curl -s -o /dev/null -w '%{http_code} %{redirect_url}\n' "http://${ADRESSE_DE_PRODUCTION#https://}"
+
+# 4. WebDAV, authentification Basic : 207
+curl -s -o /dev/null -w '%{http_code}\n' -X PROPFIND -H 'Depth: 0' \
+  -u "$ALWAYSDATA_WEBDAV_UTILISATEUR:$ALWAYSDATA_WEBDAV_MOT_DE_PASSE" "$ALWAYSDATA_WEBDAV_URL"
+
+# 5. Accès au projet Supabase avec la clé anon : 200
+curl -s -o /dev/null -w '%{http_code}\n' -H "apikey: $SUPABASE_PRODUCTION_ANON_KEY" \
+  "$SUPABASE_PRODUCTION_URL/auth/v1/settings"
+
+# 6. API de gestion : 200, puis région et état (aucun secret dans la sortie)
+curl -s -o /dev/null -w '%{http_code}\n' -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+  "https://api.supabase.com/v1/projects/$SUPABASE_PRODUCTION_REF"
+curl -s -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+  "https://api.supabase.com/v1/projects/$SUPABASE_PRODUCTION_REF" \
+  | python3 -I -c "import json,sys; p=json.load(sys.stdin); print(p.get('region'), p.get('status'))"
+# attendu : eu-west-1 ACTIVE_HEALTHY
+```
+
+Ne pas contrôler l'accès au projet par `GET /rest/v1/` : la racine est réservée à `service_role` et répond **401** à la clé `anon`, ce qui n'est pas une panne. Les scripts de `scripts/exploitation/` ne lisent pas cette racine.
+
+Un refus **403 au `CONNECT`** signale un domaine non autorisé dans le réseau de l'environnement : le PO l'ajoute (§ 2.3, liste des hôtes autorisés) avant de poursuivre.
+
 ### 2.4 Adresse de contact (PO, P8)
 
 P6 et P7 sans objet pendant la beta (45.36) ; l'adresse de contact reste le moyen des demandes de suppression des données (§ 8).
