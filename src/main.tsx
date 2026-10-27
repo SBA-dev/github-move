@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Application } from "./Application.tsx";
+import { brancherLeRessortDesBoutons } from "./boutons/ressort-des-boutons.ts";
 import { enregistrerLeServiceWorker } from "./installation/index.ts";
 import "@fontsource/andika/latin-400.css";
 import "@fontsource/andika/latin-700.css";
@@ -16,4 +17,5 @@ createRoot(racine).render(
   </StrictMode>,
 );
 
+brancherLeRessortDesBoutons();
 enregistrerLeServiceWorker();

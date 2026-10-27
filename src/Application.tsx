@@ -175,7 +175,7 @@ export function Application() {
 
   return (
     <MotionConfig reducedMotion="user">
-      <div className="application" style={habillage} data-univers={univers.cle}>
+      <div className="application" style={habillage} data-univers={univers.cle} data-registre={parent ? "parent" : "enfant"}>
         <Paysage univers={univers.cle} />
         <EnTete
           surAccueil={ecran === "accueil"}
