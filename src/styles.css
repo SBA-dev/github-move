@@ -81,7 +81,9 @@ body {
 .application {
   position: relative;
   min-height: 100svh;
+  overflow-x: clip;
 }
+.ecran-qui-arrive { display: grid; justify-items: center; gap: 12px; width: 100%; outline: none; }
 .paysage {
   position: fixed;
   inset: 0;
@@ -115,6 +117,8 @@ button {
   cursor: pointer;
 }
 button:hover { background: var(--principale-foncee); }
+/* Un bouton pressé s'enfonce (Motion pilote `transform` ; ici, le relief) : le fond s'assombrit aussi avec les mouvements réduits. */
+button[data-bouton] { transition: box-shadow var(--duree-courte) ease-out; }
 button[data-son="muet"] { background: var(--principale-foncee); }
 .nom-application button { font-size: inherit; }
 .enfant {
