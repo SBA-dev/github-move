@@ -156,17 +156,17 @@ Le script lit les versions déjà appliquées dans `supabase_migrations.schema_m
 
 ### 3.5 Edge Functions et secrets
 
-Déployer chaque fonction, par l'API de gestion, vers le projet de production (le jeton est lu dans `SUPABASE_ACCESS_TOKEN`) :
+Déployer les fonctions, par l'API de gestion, vers le projet de production (le jeton est lu dans `SUPABASE_ACCESS_TOKEN`) :
 
 ```
-for f in creer-profil-enfant creer-une-lecon-personnelle inscrire-le-parent modifier-profil-enfant \
-         reinitialiser-le-mot-de-passe supprimer-une-lecon-personnelle terminer-la-seance \
-         terminer-la-seance-de-revision terminer-le-test-de-depart; do
-  npx supabase functions deploy "$f" --project-ref "$SUPABASE_PRODUCTION_REF" --use-api
-done
+python3 scripts/exploitation/deploiement_des_fonctions.py
 ```
 
-La liste est celle des dossiers de `supabase/functions/` **sans `envoyer-email`** : aucun e-mail n'est envoyé pendant la beta (décision 0019, 45.5). Si une nouvelle fonction est ajoutée au dépôt, l'ajouter à la liste (sauf `envoyer-email`).
+**Ne pas lancer `npx supabase functions deploy` depuis le dépôt.** La CLI lit alors `supabase/config.toml`, qui décrit le développement : son hook `send_email` exige `SEND_EMAIL_HOOK_SECRET`, absent de cet environnement (§ 2.3), et la CLI refuse de déployer. Ne jamais donner de valeur factice à cette variable pour la contourner.
+
+Le script copie `supabase/functions/` dans un dossier de travail temporaire, avec les fichiers que leur code importe hors de ce dossier (`app/bibliotheque.json`, `app/programmes-index.json`) et un `config.toml` réduit à `project_id` et aux sections `[functions.<nom>]` du dépôt (même `verify_jwt` qu'en développement, sans `auth` ni hook), puis lance `npx supabase functions deploy <nom> --project-ref "$SUPABASE_PRODUCTION_REF" --use-api --workdir <dossier>` pour chaque fonction. Il efface le dossier à la fin et s'arrête au premier échec. Il refuse de démarrer si `SUPABASE_SERVICE_ROLE_KEY` ou `SEND_EMAIL_HOOK_SECRET` est présente.
+
+La liste est celle des dossiers de `supabase/functions/` qui ont un `index.ts`, **sans `envoyer-email`** : aucun e-mail n'est envoyé pendant la beta (décision 0019, 45.5). Une nouvelle fonction est donc prise en compte sans rien changer. Pour n'en redéployer que quelques-unes, les nommer : `python3 scripts/exploitation/deploiement_des_fonctions.py terminer-la-seance`.
 
 Secrets des fonctions (noms seulement ici) :
 - `ORIGINES_AUTORISEES` = l'adresse de production **seule**, sans `/` final (pas de `localhost`) ;

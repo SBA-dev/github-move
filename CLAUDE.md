@@ -54,6 +54,7 @@ Règles de cohabitation :
 | Contrôles après publication (V2 à V12) | `env -u SUPABASE_SERVICE_ROLE_KEY python3 scripts/exploitation/controles_production.py` |
 | Scénarios `@production` (après publication, sur `tablette` et `telephone`) | `env -u SUPABASE_SERVICE_ROLE_KEY npx bddgen -c playwright.production.config.ts && env -u SUPABASE_SERVICE_ROLE_KEY npx playwright test -c playwright.production.config.ts` |
 | Migrations de production | `python3 scripts/exploitation/migrations.py` |
+| Edge Functions de production (sans la configuration de développement) | `python3 scripts/exploitation/deploiement_des_fonctions.py [<fonction> …]` |
 | Envoi du front (WebDAV) | `python3 scripts/exploitation/envoi_webdav.py dist` |
 | Garder le projet de production actif (tâche planifiée) | `python3 scripts/exploitation/garder_actif.py` |
 | Regénérer la bibliothèque | `python3 scripts/build_bibliotheque.py` |
