@@ -12,17 +12,26 @@ Fonctionnalité: Refonte visuelle de l'application de l'enfant
   titres en Baloo 2, texte en Andika, tout en Andika en mode dys ; pas de mode sombre.
 
   Mots employés dans ces scénarios :
-  - « écrans de l'enfant » (glossaire, #73) : l'accueil de l'enfant, « Mon parcours », « Toutes les leçons »,
-    « Mes médailles », la page de la leçon, la séance et sa fin, le test de départ ; la séance de révision et
-    l'épisode sont à confirmer (question #96.7) ;
+  - « écrans de l'enfant » (glossaire, #73, complété par la réponse 96.7 du PO) : l'accueil de l'enfant,
+    « Mon parcours », « Toutes les leçons », « Mes médailles », la page de la leçon, la séance et sa fin,
+    le test de départ et sa fin, la séance de révision et sa fin, l'épisode ;
+  - « écrans du parent » (glossaire, #73) : la connexion du parent, « Qui joue ? », la question du contrôle parental
+    et l'Espace parent ; ils suivent tous la même règle que l'Espace parent (réponse 96.13 du PO) ;
   - « Léa ouvre tour à tour chaque écran de l'enfant » : elle passe par tous ces écrans, dans l'ordre de la liste ;
   - « en glissant » : l'écran qui arrive glisse sur le côté, dans le sens où l'on avance (accueil, « Mon parcours »,
-    page de la leçon, séance), dans l'autre sens quand on revient ; « en fondu » : il apparaît en fondu ;
-    dans les deux cas en 300 ms au plus (réponse 96.6 du PO) ;
+    « Toutes les leçons », page de la leçon, séance, test de départ, séance de révision), dans l'autre sens quand
+    on revient ; « en fondu » : il apparaît en fondu (« Mes médailles », l'épisode, la fin de la séance) ;
+    dans les deux cas en 300 ms au plus (réponses 96.6 et 96.12 du PO) ;
+  - « la couleur principale se voit sur un écran » : au moins sur son bouton principal ou sur l'élément marqué comme
+    en cours (bouton du dock de l'écran ouvert, leçon marquée « À toi ! »), et sur ses titres (réponse 96.15 du PO) ;
   - « paysage », « couleur principale », « mouvements réduits » : mots d'interface (décision n°16 du glossaire) ;
   - « dessin validé » : le dessin fixe du personnage guide dans sa maquette validée par le PO (docs/maquettes/) ;
   - « capture de référence » : image d'un écran clé, validée par le PO, à laquelle l'écran est comparé
     (tests visuels, réponse 5 du PO sur #95) ; ces scénarios portent le tag @visuel pour être lancés à part.
+
+  Agent Max, « le détective futé », est le personnage guide de l'univers « Police » : il garde les trois expressions
+  d'Agente Mila et parle avec une voix masculine ; son royaume reste « le Commissariat des Savanturiers »
+  (réponse 96.8 du PO).
 
   Leçon de la bibliothèque utilisée : « Les sons ou, on, an » (première leçon de français du CP, avec son
   exercice bulles « Quel son entends-tu ? »). La question de test « Combien font 3 + 4 ? » est celle de #6
@@ -49,12 +58,22 @@ Fonctionnalité: Refonte visuelle de l'application de l'enfant
         | Danse               | la séance de la leçon « Les sons ou, on, an »           |
         | Sports              | la fin de la séance de la leçon « Les sons ou, on, an » |
         | Pompiers            | le test de départ                                       |
+        | Animaux de la forêt | la fin du test de départ                                |
+        | Police              | la séance de révision                                   |
+        | Princesses et fées  | la fin de la séance de révision                         |
+        | Danse               | l'épisode « La carte froissée »                         |
 
-      @a-valider
-      Exemples: Écrans dont la liste est à confirmer (question #96.7)
-        | univers             | écran                    |
-        | Police              | la séance de révision    |
-        | Danse               | un épisode ouvert        |
+    # Réponse 96.15 : bouton principal ou élément marqué comme en cours, et titres.
+    Plan du Scénario: Sur <écran>, la couleur principale de l'univers « Sports » se voit sur <élément> et sur les titres
+      Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Sports »
+      Quand Léa arrive sur <écran>
+      Alors la couleur principale de l'univers « Sports » se voit sur <élément>
+      Et elle se voit sur les titres de <écran>
+
+      Exemples:
+        | écran            | élément                                                                       |
+        | son accueil      | « Commencer » et le bouton « Accueil » du dock, marqué comme l'écran en cours |
+        | « Mon parcours » | la leçon marquée « À toi ! » et le bouton « Mon parcours » du dock            |
 
     # Réponse 96.4 : texte et boutons à 4,5:1 au moins sur leur fond (aujourd'hui, Animaux est à 4,26:1).
     Plan du Scénario: Dans l'univers « <univers> », tout texte et chaque bouton des écrans de l'enfant se lisent bien <mode>
@@ -137,12 +156,10 @@ Fonctionnalité: Refonte visuelle de l'application de l'enfant
         | Pompiers            | Capitaine Sam    | la séance de la leçon « Les sons ou, on, an »           |
         | Animaux de la forêt | Noisette         | la fin de la séance de la leçon « Les sons ou, on, an » |
         | Sports              | Coach Léo        | le test de départ                                       |
-
-      @a-valider
-      Exemples: Écrans dont la liste est à confirmer (question #96.7)
-        | univers             | personnage guide | écran                 |
-        | Pompiers            | Capitaine Sam    | la séance de révision |
-        | Princesses et fées  | Lumi             | un épisode ouvert     |
+        | Danse               | Lili             | la fin du test de départ                                |
+        | Pompiers            | Capitaine Sam    | la séance de révision                                   |
+        | Police              | Agent Max        | la fin de la séance de révision                         |
+        | Princesses et fées  | Lumi             | l'épisode « La carte froissée »                         |
 
     # Réponse 96.5 : dessin fixe des maquettes ; Capitaine Sam garde son dessin actuel ; animations de célébration dans #106.
     Plan du Scénario: Dans l'univers « <univers> », <personnage guide> a <son dessin>
@@ -166,7 +183,7 @@ Fonctionnalité: Refonte visuelle de l'application de l'enfant
       Alors Agent Max dit « Bonjour Léa ! »
       Mais le nom « Agente Mila » n'apparaît nulle part
 
-    @a-valider
+    # Réponse 96.8 : Agent Max garde les trois expressions d'Agente Mila.
     Scénario: Après une bonne réponse, Agent Max dit une félicitation commune ou une de ses expressions
       Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Police »
       Et que Léa joue la question de test « Combien font 3 + 4 ? »
@@ -174,7 +191,7 @@ Fonctionnalité: Refonte visuelle de l'application de l'enfant
       Alors Agent Max dit une félicitation commune ou l'une de ses expressions : « Enquête résolue ! », « Bien vu, détective ! », « Affaire classée ! »
       Mais jamais l'expression d'un autre personnage guide
 
-    @a-valider
+    # Réponse 96.8 : voix masculine, comme Coach Léo et Capitaine Sam.
     Scénario: Agent Max lit la consigne avec une voix masculine
       Étant donné que l'appareil a une voix française féminine et une voix française masculine
       Et que Léa a choisi l'univers police
@@ -241,7 +258,7 @@ Fonctionnalité: Refonte visuelle de l'application de l'enfant
       Alors « Commencer » change de couleur
       Mais « Commencer » ne bouge pas
 
-    @a-valider
+    # Réponse 96.11
     Scénario: Un bouton touché puis quitté du doigt revient à sa place sans rien ouvrir
       Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Sports »
       Et que Léa est sur son accueil
@@ -263,9 +280,9 @@ Fonctionnalité: Refonte visuelle de l'application de l'enfant
       Quand Léa arrive sur son accueil
       Alors « Commencer », chaque tuile de l'accueil et chaque bouton du dock mesurent au moins 44 px de haut
 
-  Règle: Avancer d'un écran de l'enfant au suivant le fait arriver en glissant, revenir le fait glisser dans l'autre sens, « Mes médailles » arrive en fondu ; avec les mouvements réduits, aucun mouvement
+  Règle: Avancer d'un écran de l'enfant au suivant le fait arriver en glissant, revenir le fait glisser dans l'autre sens ; « Mes médailles », l'épisode et la fin de la séance arrivent en fondu ; avec les mouvements réduits, aucun mouvement
 
-    # Réponse 96.6
+    # Réponses 96.6 et 96.12
     Plan du Scénario: <écran> arrive <transition>
       Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Danse »
       Et que <départ>
@@ -273,17 +290,17 @@ Fonctionnalité: Refonte visuelle de l'application de l'enfant
       Alors <écran> arrive <transition>
 
       Exemples:
-        | départ                                                 | action                                                         | écran                                         | transition                   |
-        | Léa a choisi son profil enfant dans « Qui joue ? »     | Léa ouvre « Mon parcours » par le dock                         | « Mon parcours »                              | en glissant                  |
-        | Léa a ouvert son parcours depuis son accueil           | Léa ouvre la leçon « Les sons ou, on, an » depuis son parcours | la page de la leçon « Les sons ou, on, an »   | en glissant                  |
-        | Léa a ouvert la leçon « Les sons ou, on, an » depuis son parcours | Léa commence la séance de la leçon « Les sons ou, on, an » | la séance de la leçon « Les sons ou, on, an » | en glissant                  |
-        | Léa a ouvert la leçon « Les sons ou, on, an » depuis son parcours | Léa revient en arrière                              | « Mon parcours »                              | en glissant dans l'autre sens |
-        | Léa a choisi son profil enfant dans « Qui joue ? »     | Léa ouvre « Mes médailles » par le dock                        | « Mes médailles »                             | en fondu                     |
-
-      @a-valider
-      Exemples: Transitions à confirmer (question #96.12)
-        | départ                                                 | action                                                         | écran                 | transition  |
-        | Léa a choisi son profil enfant dans « Qui joue ? »     | Léa ouvre « Toutes les leçons » par le dock                    | « Toutes les leçons » | en glissant |
+        | départ                                                            | action                                                           | écran                                                | transition                    |
+        | Léa a choisi son profil enfant dans « Qui joue ? »                | Léa ouvre « Mon parcours » par le dock                           | « Mon parcours »                                     | en glissant                   |
+        | Léa a ouvert son parcours depuis son accueil                      | Léa ouvre la leçon « Les sons ou, on, an » depuis son parcours   | la page de la leçon « Les sons ou, on, an »          | en glissant                   |
+        | Léa a ouvert la leçon « Les sons ou, on, an » depuis son parcours | Léa commence la séance de la leçon « Les sons ou, on, an »       | la séance de la leçon « Les sons ou, on, an »        | en glissant                   |
+        | Léa a ouvert la leçon « Les sons ou, on, an » depuis son parcours | Léa revient en arrière                                           | « Mon parcours »                                     | en glissant dans l'autre sens |
+        | Léa a choisi son profil enfant dans « Qui joue ? »                | Léa ouvre « Toutes les leçons » par le dock                      | « Toutes les leçons »                                | en glissant                   |
+        | Léa a choisi son profil enfant dans « Qui joue ? »                | Léa ouvre « Mon test de départ » depuis son accueil              | le test de départ                                    | en glissant                   |
+        | Léa a 3 questions dues de la leçon « Les nombres de révision »    | Léa commence la séance de révision                               | la séance de révision                                | en glissant                   |
+        | Léa a choisi son profil enfant dans « Qui joue ? »                | Léa ouvre « Mes médailles » par le dock                          | « Mes médailles »                                    | en fondu                      |
+        | Léa a terminé 1 séance                                            | Léa lit l'épisode « La carte froissée » depuis « Mes médailles » | l'épisode « La carte froissée »                      | en fondu                      |
+        | Léa joue la séance complète de la leçon « Les sons de test »      | Léa réussit la dernière question de la séance                    | la fin de la séance de la leçon « Les sons de test » | en fondu                      |
 
     Scénario: Avec les mouvements réduits, la page de la leçon s'affiche sans aucun mouvement
       Étant donné que l'appareil demande des mouvements réduits
@@ -301,7 +318,7 @@ Fonctionnalité: Refonte visuelle de l'application de l'enfant
       Alors le titre de l'écran est « Mes médailles »
       Et « Mes médailles » s'affiche sans aucun mouvement
 
-    @a-valider
+    # Réponse 96.11
     Scénario: Toucher deux fois de suite une leçon n'ouvre sa page qu'une seule fois
       Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Danse »
       Et que Léa a ouvert son parcours depuis son accueil
@@ -327,14 +344,15 @@ Fonctionnalité: Refonte visuelle de l'application de l'enfant
         | la séance de la leçon « Les sons ou, on, an »           |
         | la fin de la séance de la leçon « Les sons ou, on, an » |
         | le test de départ                                       |
+        | la fin du test de départ                                |
+        | la séance de révision                                   |
+        | la fin de la séance de révision                         |
+        | l'épisode « La carte froissée »                         |
 
-      @a-valider
-      Exemples: Écrans dont la liste est à confirmer (question #96.7)
-        | écran                 |
-        | la séance de révision |
-        | un épisode ouvert     |
-
-    @visuel @a-valider
+    # Réponse 96.9 : 4 captures dans le seul univers Sports, en 360 px, en mouvements réduits, avec une date,
+    # des données et un hasard fixés, sur le seul projet telephone. Une différence fait échouer le scénario ;
+    # une capture ne change qu'après validation du PO, dans un commit dédié.
+    @visuel
     Plan du Scénario: <écran> ressemble à sa capture de référence « <capture> »
       Étant donné que l'écran de l'appareil mesure 360 px de large
       Et que l'appareil demande des mouvements réduits
@@ -350,7 +368,7 @@ Fonctionnalité: Refonte visuelle de l'application de l'enfant
         | l'exercice « Quel son entends-tu ? » de la leçon « Les sons ou, on, an » | exercice-en-seance |
         | la fin de la séance de la leçon « Les sons ou, on, an »                  | fin-de-la-seance   |
 
-  Règle: L'Espace parent reprend les jetons de l'enfant, mais reste sobre : ni couleur de l'univers de l'enfant, ni paysage, ni personnage guide, ni rebond
+  Règle: Les écrans du parent reprennent les jetons de l'enfant, mais restent sobres : ni couleur de l'univers de l'enfant, ni paysage, ni glissement, ni rebond ; seul « Qui joue ? » montre le personnage guide de chaque profil enfant
 
     Scénario: L'Espace parent ne prend pas la couleur principale de l'univers de l'enfant qui jouait
       Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Danse »
@@ -374,18 +392,51 @@ Fonctionnalité: Refonte visuelle de l'application de l'enfant
       Alors les titres de l'espace parent s'affichent en Baloo 2
       Et le texte de l'espace parent s'affiche en Andika
 
-    @a-valider
-    Scénario: Dans l'Espace parent, un bouton touché s'enfonce et revient sans rebondir
+    # Réponse 96.13 : même relief, sans ressort ni rebond.
+    Plan du Scénario: Sur <écran du parent>, un bouton touché s'enfonce et revient sans rebondir
       Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Sports »
-      Et que Paul est entré dans l'espace parent
-      Quand Paul touche le profil enfant de Léa dans l'espace parent
-      Alors le profil enfant de Léa s'enfonce puis revient à sa place
+      Et que <départ>
+      Quand Paul touche <bouton>
+      Alors <bouton> s'enfonce puis revient à sa place
       Mais il ne rebondit pas
 
-    @a-valider
-    Scénario: Entrer dans l'Espace parent se fait sans glissement
+      Exemples:
+        | écran du parent | départ                              | bouton                                       |
+        | l'Espace parent | Paul est entré dans l'espace parent | le profil enfant de Léa dans l'espace parent |
+        | « Qui joue ? »  | Paul est sur « Qui joue ? »         | le profil enfant de Léa dans « Qui joue ? »  |
+
+    # Réponse 96.13 : l'écran du parent s'affiche aussitôt.
+    Plan du Scénario: <écran du parent> s'affiche sans glissement
       Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Sports »
-      Et que Léa jouait avant que Paul entre dans l'espace parent
-      Quand Paul entre dans l'espace parent
-      Alors il voit l'espace parent
-      Et l'espace parent s'affiche sans glisser ni rebondir
+      Et que <départ>
+      Quand <action>
+      Alors <écran du parent> s'affiche sans glisser ni rebondir
+
+      Exemples:
+        | écran du parent                  | départ                                               | action                                  |
+        | l'espace parent                  | Léa jouait avant que Paul entre dans l'espace parent | Paul entre dans l'espace parent         |
+        | « Qui joue ? »                   | Paul est dans l'espace parent                        | Paul quitte l'espace parent             |
+        | la question du contrôle parental | Léa joue                                             | Léa demande l'entrée de l'espace parent |
+
+    # Réponse 96.13 : aujourd'hui, le paysage d'« Animaux de la forêt » s'affiche derrière les écrans du parent ; il en est retiré.
+    Plan du Scénario: <écran du parent> n'a ni paysage ni couleur de l'univers de l'enfant
+      Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
+      Et que <départ>
+      Quand <action>
+      Alors Paul voit <écran du parent>
+      Mais aucun paysage n'y apparaît
+      Et la couleur principale de l'univers « Animaux de la forêt » ne s'y voit pas
+
+      Exemples:
+        | écran du parent                  | départ                        | action                                  |
+        | l'écran « Se connecter »         | Paul est dans l'espace parent | Paul se déconnecte sur la tablette      |
+        | « Qui joue ? »                   | Paul est dans l'espace parent | Paul quitte l'espace parent             |
+        | la question du contrôle parental | Léa joue                      | Léa demande l'entrée de l'espace parent |
+
+    # Réponse 96.13 : l'enfant se reconnaît au personnage guide de son profil.
+    Scénario: Dans « Qui joue ? », chaque profil enfant garde le dessin de son personnage guide
+      Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Police »
+      Et que Tom a un profil enfant préparé de niveau CP dans l'univers « Sports »
+      Quand Paul ouvre « Qui joue ? » sur la tablette
+      Alors le profil enfant de Léa montre le dessin validé d'Agent Max
+      Et le profil enfant de Tom montre le dessin validé de Coach Léo
