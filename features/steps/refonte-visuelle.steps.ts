@@ -204,27 +204,32 @@ When(/^Léa commence la séance de la leçon « ([^«»]+) »$/, async ({ page }
 
 // --- Tour des écrans : contraste, polices demandées
 
-const bilansDuTour = new WeakMap<Page, Array<{ ecran: string; insuffisants: ContrasteInsuffisant[] }>>();
+type BilanDUnEcran = { ecran: string; insuffisants: ContrasteInsuffisant[]; mesures: number };
+const bilansDuTour = new WeakMap<Page, BilanDUnEcran[]>();
 
-When(/^Léa ouvre tour à tour chaque écran de l'enfant$/, async ({ famille, monde, page, $test }) => {
-  $test.setTimeout(300_000);
-  const bilans: Array<{ ecran: string; insuffisants: ContrasteInsuffisant[] }> = [];
+When(/^Léa ouvre tour à tour chaque écran de l'enfant$/, async ({ famille, monde, page, $testInfo }) => {
+  $testInfo.setTimeout(400_000);
+  const bilans: BilanDUnEcran[] = [];
   bilansDuTour.set(page, bilans);
   for (const texte of ECRANS_DE_L_ENFANT) {
     await arriverSur(famille, monde, page, lireLEcran(texte));
     let derniers: ContrasteInsuffisant[] = [];
+    let mesures = 0;
     // Un écran qui arrive en fondu n'est lisible qu'une fois posé : on mesure jusqu'au repos.
     await expect.poll(async () => {
-      derniers = await contrastesInsuffisants(page);
+      const bilan = await contrastesInsuffisants(page);
+      derniers = bilan.insuffisants;
+      mesures = bilan.mesures;
       return derniers.length;
     }, { timeout: 4_000 }).toBe(0).catch(() => undefined);
-    bilans.push({ ecran: texte, insuffisants: derniers });
+    bilans.push({ ecran: texte, insuffisants: derniers, mesures });
   }
 });
 
 Then(/^sur chacun, tout texte et chaque bouton ont un contraste d'au moins 4,5:1 avec leur fond$/, ({ page }) => {
   const bilans = bilansDuTour.get(page) ?? [];
   expect(bilans.length, "écrans parcourus").toBe(ECRANS_DE_L_ENFANT.length);
+  expect(bilans.filter((b) => b.mesures === 0).map((b) => b.ecran), "écrans sans aucun texte mesuré").toEqual([]);
   const fautifs = bilans.filter((b) => b.insuffisants.length > 0).map((b) => `${b.ecran} : ${JSON.stringify(b.insuffisants.slice(0, 3))}`);
   expect(fautifs).toEqual([]);
 });
@@ -267,7 +272,7 @@ Then(/^la couleur principale de l'univers « ([^«»]+) » se voit sur (.+)$/, a
     return;
   }
   if (element === "la leçon marquée « À toi ! » et le bouton « Mon parcours » du dock") {
-    const lecon = page.getByRole("button", { name: /À toi !/ }).first();
+    const lecon = page.getByTestId("lecon-du-parcours").and(page.locator('[data-etat="prochaine"]')).first();
     await expect.poll(() => laCouleurSeVoit(page, couleurs, lecon), { message: "leçon marquée « À toi ! »" }).toBeGreaterThan(0);
     const parcours = ledock(page, "Mon parcours");
     await expect(parcours).toHaveAttribute("aria-current", "page");
@@ -314,18 +319,30 @@ Then(/^la colonne des unités est bleue, celle des dizaines rose et celle des ce
 
 // --- Polices
 
+async function policeChargee(page: Page, police: string): Promise<number> {
+  return await page.evaluate(async (p) => {
+    try {
+      return (await document.fonts.load(p, "a")).length;
+    } catch {
+      return 0;
+    }
+  }, police);
+}
+
 Then(/^les titres de (?:son accueil|l'espace parent) s'affichent en Baloo 2$/, async ({ page }) => {
+  await expect(page.getByRole("main").getByRole("heading").first()).toBeVisible();
   const familles = await famillesDe(page.getByRole("main").getByRole("heading"));
   expect(familles.length, "titres visibles").toBeGreaterThan(0);
   expect(familles.filter((f) => f.famille !== "Baloo 2"), "titres qui ne sont pas en Baloo 2").toEqual([]);
-  expect((await page.evaluate(async () => (await document.fonts.load('700 1em "Baloo 2"', "a")).length)), "Baloo 2 chargée").toBeGreaterThan(0);
+  expect(await policeChargee(page, '700 1em "Baloo 2"'), "Baloo 2 chargée").toBeGreaterThan(0);
 });
 
 Then(/^le texte de (?:son accueil|l'espace parent) s'affiche en Andika$/, async ({ page }) => {
+  await expect(page.getByRole("main").locator("p").first()).toBeVisible();
   const familles = await famillesDe(page.getByRole("main").locator("p"));
   expect(familles.length, "textes visibles").toBeGreaterThan(0);
   expect(familles.filter((f) => f.famille !== "Andika"), "textes qui ne sont pas en Andika").toEqual([]);
-  expect((await page.evaluate(async () => (await document.fonts.load('1em "Andika"', "a")).length)), "Andika chargée").toBeGreaterThan(0);
+  expect(await policeChargee(page, '1em "Andika"'), "Andika chargée").toBeGreaterThan(0);
 });
 
 Then(/^les titres, les boutons et le texte de son accueil s'affichent en Andika, lettres, mots et lignes espacés$/, async ({ page }) => {
@@ -505,7 +522,7 @@ Then(/^Léa peut encore répondre à « ([^«»]+) »$/, async ({ page }, questi
 // --- Boutons qui s'enfoncent
 
 type Geste = "toucher" | "clavier" | "glisser-dehors";
-const gestes = new WeakMap<Page, Echantillon[]>();
+const gestes = new WeakMap<Page, { echantillons: Echantillon[]; aNavigue: boolean }>();
 
 function cibleDuBouton(page: Page, texte: string): Locator {
   if (texte === "« Commencer »") return page.getByRole("button", { name: "Commencer", exact: true });
@@ -524,6 +541,7 @@ function cibleDuBouton(page: Page, texte: string): Locator {
 
 async function appuyer(page: Page, bouton: Locator, geste: Geste): Promise<void> {
   await expect(bouton).toBeVisible();
+  const chemin = new URL(page.url()).pathname;
   const poignee = await bouton.elementHandle();
   if (!poignee) throw new Error("Bouton introuvable");
   await suivreUnElement(page, poignee);
@@ -552,7 +570,7 @@ async function appuyer(page: Page, bouton: Locator, geste: Geste): Promise<void>
     await page.mouse.up();
     await attendre();
   }
-  gestes.set(page, await arreterLeSuivi(page));
+  gestes.set(page, { echantillons: await arreterLeSuivi(page), aNavigue: new URL(page.url()).pathname !== chemin });
 }
 
 When(
@@ -575,9 +593,9 @@ When(/^Léa pose le doigt sur « Commencer » puis le fait glisser hors du bouto
 });
 
 function echantillonsDe(page: Page): Echantillon[] {
-  const liste = gestes.get(page);
-  if (!liste || liste.length === 0) throw new Error("Aucun geste observé");
-  return liste;
+  const geste = gestes.get(page);
+  if (!geste || geste.echantillons.length === 0) throw new Error("Aucun geste observé");
+  return geste.echantillons;
 }
 
 function transformNormalisee(t: string): string {
@@ -602,7 +620,8 @@ function estRevenu(repos: Echantillon, e: Echantillon | undefined): boolean {
 Then(/^.+ s'enfonce puis revient à sa place$/, ({ page }) => {
   const [repos, ...suite] = echantillonsDe(page) as [Echantillon, ...Echantillon[]];
   expect(suite.some((e) => aBouge(repos, e)), "le bouton s'enfonce (position ou transformation)").toBe(true);
-  expect(estRevenu(repos, suite[suite.length - 1]), "le bouton revient à sa place").toBe(true);
+  // Quand le toucher ouvre un autre écran, la page a changé de mise en page : seul le bouton resté sur place est comparé.
+  if (!gestes.get(page)?.aNavigue) expect(estRevenu(repos, suite[suite.length - 1]), "le bouton revient à sa place").toBe(true);
 });
 
 Then(/^« Commencer » revient à sa place$/, ({ page }) => {

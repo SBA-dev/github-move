@@ -196,7 +196,7 @@ function leconDeTestDuType(type: string) {
 }
 
 async function commencerUneAdditionPoseeDeTest(page: Page, monde: Monde): Promise<void> {
-  preparerUnExercice(page, monde, { type: "addition", titre: "Addition de test", operations: [[23, 14]], etapes: ["poser"] });
+  preparerUnExercice(page, monde, { type: "addition", titre: "Addition de test", operations: [[123, 145]], etapes: ["poser"] });
   await demarrer(page);
   await expect(page.getByTestId("addition-posee")).toBeVisible({ timeout: 20_000 });
 }

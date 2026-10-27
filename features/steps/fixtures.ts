@@ -35,8 +35,12 @@ export const test = base.extend<{
   requetesVues: RequetesVues;
 }>({
   // Story #96 : enregistreurs de mouvements (injectés avant toute navigation) et des requêtes de polices.
-  requetesVues: [async ({ page, $tags }, use) => {
-    if ($tags.includes("@issue-96")) await installerLesEnregistreurs(page);
+  requetesVues: [async ({ page, $tags, $testInfo }, use) => {
+    if ($tags.includes("@issue-96")) {
+      // Le vrai profil de Léa, ses réglages et les écrans joués jusqu'à leur fin passent par le serveur.
+      $testInfo.setTimeout(120_000);
+      await installerLesEnregistreurs(page);
+    }
     await use(new RequetesVues(page));
   }, { auto: true }],
 

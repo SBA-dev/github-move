@@ -57,7 +57,7 @@ export async function elementsAvecCesCouleurs(page: Page, couleurs: readonly str
 export type ContrasteInsuffisant = { texte: string; rapport: number; couleur: string; fond: string };
 
 /** Les textes et boutons visibles dont le contraste avec leur fond effectif est inférieur à 4,5:1. */
-export async function contrastesInsuffisants(page: Page): Promise<ContrasteInsuffisant[]> {
+export async function contrastesInsuffisants(page: Page): Promise<{ insuffisants: ContrasteInsuffisant[]; mesures: number }> {
   return await page.evaluate(() => {
     const canvas = document.createElement("canvas").getContext("2d");
     type Rgba = [number, number, number, number];
@@ -111,6 +111,7 @@ export async function contrastesInsuffisants(page: Page): Promise<ContrasteInsuf
       return o;
     };
     const resultats: Array<{ texte: string; rapport: number; couleur: string; fond: string }> = [];
+    let mesures = 0;
     const racine = document.querySelector(".application") ?? document.body;
     for (const el of [racine, ...Array.from(racine.querySelectorAll("*"))]) {
       if (el.closest('[data-testid="paysage"], [data-testid="personnage-guide"], svg')) continue;
@@ -120,6 +121,7 @@ export async function contrastesInsuffisants(page: Page): Promise<ContrasteInsuf
       const s = getComputedStyle(el);
       if (boite.width === 0 || boite.height === 0 || s.visibility === "hidden" || s.display === "none") continue;
       if (el.closest("[disabled], [aria-disabled='true']")) continue;
+      mesures++;
       const opacite = opaciteEffective(el);
       const couleur = lire(s.color);
       const couches = fondsPossibles(el);
@@ -137,7 +139,7 @@ export async function contrastesInsuffisants(page: Page): Promise<ContrasteInsuf
         }
       }
     }
-    return resultats;
+    return { insuffisants: resultats, mesures };
   });
 }
 
