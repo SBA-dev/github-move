@@ -26,3 +26,15 @@ Validée par le PO le 2026-10-27, après six tours de retouches. Dessinée et an
 **Règles respectées** : règle absolue sur les contenus pour les enfants (`CLAUDE.md`) ; mouvements réduits (état final affiché directement, sans mouvement) ; annonce unique au lecteur d'écran (`aria-live`) ; cibles d'au moins 44 px ; tient à 360 px de large.
 
 **Limites connues** : le personnage reste une « poupée articulée » réglée angle par angle (pas de plis de vêtements, pas de cinématique inverse) ; pas de son dans la maquette. L'apparence de Coach Léo dans l'application (`src/univers/apparences.ts`, avec casquette) n'est pas encore modifiée : ce sera le rôle d'une story (#96 ou #106).
+
+## `lili-danse.html` : univers Danse, Lili
+
+Validée par le PO le 2026-10-27. Même moteur et même style que Coach Léo, dans un **décor de théâtre** : plancher de scène sombre avec nez de scène doré et rampe de lumières, rideaux de velours violet, coulisses, faisceaux de projecteurs avec poussière lumineuse, cercle de lumière qui suit Lili, silhouettes discrètes du public au premier plan.
+
+- **Action** : Lili entre en scène et fait une pirouette complète.
+- **Trois célébrations tirées au hasard** : grand jeté puis révérence ; le ruban dessine une étoile autour d'elle ; petits sauts puis grand saut bras en couronne avec clin d'œil. Puis « Bravo ! » et « Chapitre réussi ! » ; fleurs et pétales lancés depuis la salle.
+- **Échec jamais punitif** : réception déséquilibrée, elle se rattrape sans tomber, sourit, lève le pouce, « Presque ! On réessaie ? ».
+- **Lili** : cheveux longs blond foncé en **queue de cheval haute** (chouchou rose à petit nœud) qui ondule et suit le mouvement, frange, visage dégagé, **yeux verts** ; justaucorps violet à manches bouffantes, tutu rose court, **collant opaque**, demi-pointes roses à rubans : tenue adaptée aux enfants, poses de danse classique.
+- Contrôles : « Réussir », « Rater », A / B / C ; `?anim=jete|ruban|sauts|echec&t=…`, `?planche=tetes|mains`.
+
+**Limites connues** : le ruban est un trait qui suit la main ; le grand jeté est dessiné de profil sans vrai volume ; pas de son. L'apparence de Lili dans l'application (`src/univers/apparences.ts`, cheveux bruns en chignon) n'est pas encore modifiée.
