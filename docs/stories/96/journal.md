@@ -13,3 +13,4 @@
 
 - 22:05 UTC : démarrage. Issue #96 lue (ouverte, label `graphe:cadrage`), #95 et #64 lues. Aucune annonce `[Responsable]` ne vise encore #96 hormis le tableau (« lancement en dev complet »).
 - Étape 1 (domaine) : **sautée**. La story ne touche que `src/` (affichage) : ni règle métier, ni agrégat, ni contexte nouveaux (issue : « Sans règle métier nouvelle »). Les termes éventuellement manquants au glossaire seront signalés par `po-acceptance`.
+- 22:08 UTC : message du responsable (`session_016aXZVAP1dRD9CgMXRrkfWN`, session inscrite au tableau de #64) : réponses du PO à 96.1–96.6, publiées sur #96 (commentaire 6454802102) : « 96.1 A 96.2 A 96.3 A 96.4 A 96.5 B 96.6 A ». Transmises à `po-acceptance`. La validation ⛔ n°1 des scénarios reste à recevoir par une annonce `[Responsable]` sur #64.
