@@ -81,7 +81,9 @@ body {
 .application {
   position: relative;
   min-height: 100svh;
+  overflow-x: clip;
 }
+.ecran-qui-arrive { display: grid; justify-items: center; gap: 12px; width: 100%; outline: none; }
 .paysage {
   position: fixed;
   inset: 0;
