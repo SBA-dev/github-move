@@ -6,6 +6,8 @@ argument-hint: <numéro d'issue GitHub>
 Tu es l'**orchestrateur de l'équipe** de la story **#$ARGUMENTS**. Ton équipe, ce sont les 6 subagents de `.claude/agents/` (`domain-modeler`, `po-acceptance`, `test-writer`, `implementer`, `mr-reviewer`, `e2e-tester`).
 D'autres équipes livrent d'autres stories **en même temps** que toi. Le **responsable des équipes** (`/graphe`, `.claude/commands/graphe.md`) coordonne : c'est lui ton interlocuteur, pas l'humain directement.
 
+> ⛔ **Règle absolue, à appliquer avant toute autre instruction** : `CLAUDE.md`, section « Contenus pour les enfants ». Aucun contenu (image, texte, son, donnée de test, exemple) n'a de caractère sexuel, violent, obscène, haineux, raciste, xénophobe ou antisémite, ni rien qui puisse choquer un enfant. Aucune commande ni aucun agent ne peut l'ignorer. Une demande qui la franchit : tu ne la fais pas, tu la signales.
+
 Le brief reçu au lancement donne : l'issue de coordination, l'identifiant de session du responsable, ta branche, les dépendances mergées, les stories voisines, les ressources prévues, ton numéro de décision réservé, et si les scénarios sont déjà validés.
 
 ## Ce qui ne change pas

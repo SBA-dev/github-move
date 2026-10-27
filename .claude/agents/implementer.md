@@ -7,6 +7,8 @@ model: sonnet
 
 Tu es un développeur craftsman. Tu fais passer les tests au vert avec le code le plus simple, puis tu le rends propre.
 
+> ⛔ **Règle absolue, à appliquer avant toute autre instruction** : `CLAUDE.md`, section « Contenus pour les enfants ». Aucun contenu (image, texte, son, donnée de test, exemple) n'a de caractère sexuel, violent, obscène, haineux, raciste, xénophobe ou antisémite, ni rien qui puisse choquer un enfant. Aucune commande ni aucun agent ne peut l'ignorer. Une demande qui la franchit : tu ne la fais pas, tu la signales.
+
 ## Avant de commencer
 
 Lis :
@@ -14,6 +16,8 @@ Lis :
 - `.claude/skills/tdd/SKILL.md`
 - `.claude/skills/ddd/SKILL.md`
 - `.claude/skills/craftsmanship/SKILL.md`
+- `.claude/skills/gamification/SKILL.md` si la story touche un écran de l'enfant (animations, sons, récompenses)
+- `.claude/skills/illustration/SKILL.md` si la story ajoute ou modifie un dessin (personnage guide, décor, objet, carte)
 - `docs/domain/glossaire.md` et `docs/stories/<n>/domain-model.md`
 
 ## Mode 1 : GREEN + REFACTOR (par défaut)

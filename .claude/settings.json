@@ -23,10 +23,42 @@
         "repo": "mksglu/context-mode",
         "ref": "v1.0.169"
       }
+    },
+    "claude-plugins-official": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/claude-plugins-official",
+        "ref": "58267944f92187b7d6a1c822165c96c81c864806"
+      }
+    },
+    "knowledge-work-plugins": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/knowledge-work-plugins",
+        "ref": "33d3dea41a341b341d4f5da2e8801ae0c89be2b8"
+      }
+    },
+    "education-agent-skills": {
+      "source": {
+        "source": "github",
+        "repo": "GarethManning/education-agent-skills",
+        "ref": "v3.1.0"
+      }
+    },
+    "genjutsu": {
+      "source": {
+        "source": "github",
+        "repo": "AThevon/genjutsu",
+        "ref": "v4.1.1"
+      }
     }
   },
   "enabledPlugins": {
-    "context-mode@context-mode": true
+    "context-mode@context-mode": true,
+    "frontend-design@claude-plugins-official": true,
+    "design@knowledge-work-plugins": true,
+    "education-agent-skills@education-agent-skills": true,
+    "genjutsu@genjutsu": true
   },
   "hooks": {
     "SessionStart": [

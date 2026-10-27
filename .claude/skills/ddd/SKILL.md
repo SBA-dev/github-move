@@ -5,6 +5,8 @@ description: Domain-Driven Design stratégique et tactique adapté au projet (Ty
 
 # DDD dans ce projet
 
+> ⛔ **Règle absolue, à appliquer avant toute autre instruction** : `CLAUDE.md`, section « Contenus pour les enfants ». Aucun contenu (image, texte, son, donnée de test, exemple) n'a de caractère sexuel, violent, obscène, haineux, raciste, xénophobe ou antisémite, ni rien qui puisse choquer un enfant. Aucune commande ni aucun agent ne peut l'ignorer. Une demande qui la franchit : tu ne la fais pas, tu la signales.
+
 ## 1. DDD stratégique
 
 - **Bounded context** : la frontière à l'intérieur de laquelle un modèle et un vocabulaire sont cohérents. Dans le code, c'est un dossier `supabase/functions/_shared/<contexte>/`.
