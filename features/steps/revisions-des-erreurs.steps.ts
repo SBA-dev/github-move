@@ -240,7 +240,32 @@ Given(
   },
 );
 
-Given(/^Léa a (\d+) questions dues de la leçon « ([^«»]+) »$/, async ({ famille, page }, n: string, lecon: string) => {
+/** Story #96 : la bibliothèque de test des révisions et le suivi de la file, servis une seule fois par page. */
+async function servirLesRevisionsUneFois(page: Page): Promise<void> {
+  if (etatDeLaLecon(page).injectees.some((l) => l.id.startsWith("e2e-28-"))) return;
+  etatDeLaLecon(page).injectees.push(...(LECONS_DES_REVISIONS as LeconBrute[]));
+  suivreLaFile(page);
+  await servirLaBibliothequeDesRevisions(page);
+}
+
+/** Story #96 : arrive sur la séance de révision (ou sa fin) de Léa, avec 3 questions dues de la leçon « Les nombres de révision ». */
+export async function arriverSurLaRevision(famille: Famille, page: Page, jusquALaFin: boolean): Promise<void> {
+  await servirLesRevisionsUneFois(page);
+  if (etat28(page).retenues.length === 0) {
+    const nombres = QUESTIONS_DE_REVISION.filter((q) => q.leconTitre === "Les nombres de révision").slice(0, 3);
+    await preparerLesQuestions(
+      famille,
+      page,
+      "Léa",
+      nombres.map((q, i) => ligneDe(page, q.enonce, 3 - i === 1 ? "hier" : `il y a ${3 - i} jours`)),
+    );
+  }
+  await commencerLaRevision(page);
+  if (jusquALaFin) await jouerLaRevision(page, TOUT_JUSTE);
+}
+
+Given(/^Léa a (\d+) questions dues de la leçon « ([^«»]+) »$/, async ({ famille, page, $tags }, n: string, lecon: string) => {
+  if ($tags.includes("@issue-96")) await servirLesRevisionsUneFois(page);
   const nombre = Number(n);
   const nombres = QUESTIONS_DE_REVISION.filter((q) => q.leconTitre === lecon).slice(0, nombre);
   const lignes = nombres.map((q, i) => ligneDe(page, q.enonce, nombre - i === 1 ? "hier" : `il y a ${nombre - i} jours`));
