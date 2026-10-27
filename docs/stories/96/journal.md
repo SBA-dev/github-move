@@ -22,3 +22,8 @@
   - B2 voix masculine : RED `8571613` (échec vérifié), GREEN `cb7f9a8`. 2462 tests verts, lint, fmt, `tsc` OK.
 - Revue intermédiaire du bloc 1 (delta `ec92025..cb7f9a8`) : **APPROUVÉ**, aucun bloquant. Non bloquants : le `feat` `72084c4` a laissé `paroles_test.ts` rouge jusqu'à `b781b7c` (à l'avenir, test-writer cherche avant le RED tous les tests qui dépendent d'une donnée renommée) ; `docs/stories/7/domain-model.md:36` et `docs/maquettes/README.md:80` citent encore Agente Mila ; apparence d'Agent Max à faire dans le bloc des dessins. Dernier commit relu : `cb7f9a8`.
 - Glossaire (ajouts) : `c19d556`. Scénarios de #6 (Agent Max) : `d26e869`.
+- 23:00–23:40 UTC : câblage (front seul, pas de verrou).
+  - C1 jetons, palettes, polices : `819c25d`, `c8e47fc`. Animaux `principale` `#C03E29` (5,30:1 sur blanc ; 4,71:1 sur le fond). Texte des colonnes de l'addition en noir (blanc < 4,5:1), couleurs des colonnes inchangées. `--accent` renommé `--principale` : le step `univers.steps.ts:147` est à adapter (même sens).
+  - C4 dessins fixes des personnages guides (worktree à part) : `ecef5f0`, `68d694f`, `17916ab`. Effet « lunettes » corrigé sur Léo, Max, Lili (écart volontaire avec la maquette) ; couche arrière du tutu de Lili retirée. Bundle JS +11 kB gzip. Planche montrée au PO dans la session.
+  - C2 boutons à ressort et transitions : `901deb3`, `9573d48`. Mesures : glissement ≈ 225 ms, fondu ≈ 238 ms, rien avec mouvements réduits ni vers les écrans du parent. E2E #25 verts ; 16 KO `@wip` de #29 (voix), dont 2 reproduits sans C2.
+  - C3 décor et écrans du parent : en cours. #96.16 (bulle de Noisette de #73) laissée telle quelle en attendant le PO.
