@@ -130,7 +130,7 @@ export function EcranDeFin({ seance, niveau, onDireLaFin, meilleuresEtoilesAvant
       animate={{ opacity: 1 }}
       transition={{ duration: 0.25, ease: "easeOut" }}
     >
-      {(etoiles === undefined || etoilesAffichees) && <Confettis />}
+      {terminee !== undefined && (etoiles === undefined || etoilesAffichees) && <Confettis />}
       {etoiles !== undefined && (
         <>
           <EtoilesGagnees nombre={etoiles} onToutesAffichees={afficherToutesLesEtoiles} />
