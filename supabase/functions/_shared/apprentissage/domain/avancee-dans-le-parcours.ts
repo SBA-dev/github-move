@@ -22,10 +22,13 @@ function destination(nouvelleProchaineLecon: LeconId | undefined): AvanceeDansLe
 }
 
 function recule(prochaineLeconConnue: LeconId, parcours: Parcours): boolean {
-  return parcours.lecons.some((nouvelle) =>
-    nouvelle.lecon === parcours.prochaineLecon &&
-    parcours.lecons.some((connue) => connue.lecon === prochaineLeconConnue && nouvelle.place < connue.place)
-  );
+  const placeConnue = placeDe(prochaineLeconConnue, parcours);
+  const nouvellePlace = placeDe(parcours.prochaineLecon, parcours);
+  return placeConnue !== undefined && nouvellePlace !== undefined && nouvellePlace < placeConnue;
+}
+
+function placeDe(lecon: LeconId | undefined, parcours: Parcours): number | undefined {
+  return parcours.lecons.find((uneLecon) => uneLecon.lecon === lecon)?.place;
 }
 
 function estDevenueReussie(lecon: LeconId, parcours: Parcours): boolean {
