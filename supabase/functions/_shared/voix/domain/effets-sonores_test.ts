@@ -306,7 +306,7 @@ Deno.test("passer en Muet pendant le bouton touchÃ© laisse finir l'effet et empÃ
   assertEquals(lecteur.lectures.length, 0);
 });
 
-Deno.test("voix suspendue, toucher un bouton ne joue aucun effet", async () => {
+Deno.test("voix suspendue, toucher un bouton ne joue aucun effet", () => {
   const { lecture, lecteurDEffetsSonores } = uneLecture();
   lecture.suspendre();
 
