@@ -149,6 +149,7 @@ function Colonne({ colonne, brille, enCours, pose, chiffreChoisi, chiffresAPoser
         type="button"
         className="maison-de-la-colonne"
         data-testid="maison-de-la-colonne"
+        data-donne-une-reponse="true"
         aria-label={`Poser dans la colonne des ${NOMS_DES_COLONNES_A_L_ECRAN[rang].toLowerCase()}`}
         aria-disabled={pose && chiffreChoisi !== undefined ? undefined : true}
         onClick={() => pose && chiffreChoisi !== undefined && onPoser(chiffreChoisi, rang)}

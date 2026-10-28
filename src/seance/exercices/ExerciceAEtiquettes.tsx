@@ -58,6 +58,7 @@ export function ExerciceAEtiquettes({ exercice, etiquettesAPlacer, etiquettesPos
               aFocaliser={rang === 0 ? premiere : undefined}
               brille={brille(etiquette, rang)}
               appuyee={exercice.type === "classer" ? choisie === etiquette : undefined}
+              poseALeToucher={exercice.type === "ordre"}
               onToucher={() => exercice.type === "ordre" ? poser(etiquette) : setChoisie(choisie === etiquette ? undefined : etiquette)}
             />
           </li>
@@ -116,6 +117,7 @@ function Maisons({ exercice, posees, etiquettesAPlacer, choisie, maisonQuiBrille
           <button
             type="button"
             className="porte-de-la-maison"
+            data-donne-une-reponse="true"
             aria-label={`Poser dans la maison « ${groupe.nom} »`}
             aria-disabled={choisie === undefined ? true : undefined}
             onClick={() => choisie !== undefined && onPoser(choisie, groupe.id)}
@@ -148,11 +150,13 @@ type PropsDeLEtiquette = {
   readonly aFocaliser: RefObject<HTMLButtonElement | null> | undefined;
   readonly brille: boolean;
   readonly appuyee: boolean | undefined;
+  /** Toucher l'étiquette la pose tout de suite : c'est une réponse (sinon elle est seulement choisie). */
+  readonly poseALeToucher: boolean;
   readonly onToucher: () => void;
 };
 
 /** Une étiquette à poser : elle se balance quand elle est mal posée. */
-function Etiquette({ texte, aFocaliser, brille, appuyee, onToucher }: PropsDeLEtiquette) {
+function Etiquette({ texte, aFocaliser, brille, appuyee, poseALeToucher, onToucher }: PropsDeLEtiquette) {
   const retour = useRetourDe<HTMLButtonElement>(texte);
   return (
     <button
@@ -163,6 +167,7 @@ function Etiquette({ texte, aFocaliser, brille, appuyee, onToucher }: PropsDeLEt
       type="button"
       className="etiquette"
       data-testid="etiquette"
+      data-donne-une-reponse={poseALeToucher ? "true" : undefined}
       data-brille={brille ? "true" : undefined}
       {...retour.attributs}
       aria-pressed={appuyee}

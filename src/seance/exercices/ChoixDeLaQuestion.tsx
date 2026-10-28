@@ -66,6 +66,7 @@ function BulleDeChoix({ texte, ecarte, brille, eclatee, reussie, aFocaliser, onC
       type="button"
       className="bulle-de-choix"
       data-testid="choix"
+      data-donne-une-reponse="true"
       data-ecarte={ecarte ? "true" : undefined}
       data-brille={brille ? "true" : undefined}
       data-eclatee={eclatee ? "true" : undefined}

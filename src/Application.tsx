@@ -38,6 +38,7 @@ import {
   useRenvoiDesTestsDeDepartGardes,
   useTestDeDepartAFaire,
 } from "./test-de-depart/index.ts";
+import { brancherLeSonDesBoutons } from "./boutons/son-des-boutons.ts";
 import { ChoixDeLaVoix, useVoix } from "./voix/index.ts";
 import { HABILLAGE_DU_PARENT, habillageDeLUnivers, Paysage } from "./univers/index.ts";
 
@@ -97,7 +98,8 @@ export function Application() {
   const univers = universDe(profil?.univers);
   const voix = useVoix(universDe(profilEnCours?.univers).personnageGuide);
   const parent = estUnEcranDuParent(ecranAffiche(lieu, acces.etat.type, connecte));
-  const { suspendre: suspendreLaVoix, reprendre: reprendreLaVoix } = voix;
+  const { suspendre: suspendreLaVoix, reprendre: reprendreLaVoix, toucherUnBouton } = voix;
+  useEffect(() => brancherLeSonDesBoutons(toucherUnBouton), [toucherUnBouton]);
   useLayoutEffect(() => {
     if (parent) suspendreLaVoix();
     else reprendreLaVoix();

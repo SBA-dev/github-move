@@ -98,6 +98,7 @@ export function ClavierDeCristaux({ onValider, chiffresQuiBrillent = [], desacti
           type="button"
           className="cristal action valider"
           data-testid="valider"
+          data-donne-une-reponse="true"
           {...retour.attributs}
           aria-disabled={desactive ? true : undefined}
           onClick={() => !desactive && valider()}
