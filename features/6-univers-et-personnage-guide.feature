@@ -33,11 +33,12 @@ Fonctionnalité: Univers et personnage guide
 
   Règle: Sans univers connu, l'enfant joue dans l'univers « Animaux de la forêt », avec Noisette
 
-    @a-valider
-    Scénario: Sans profil enfant en cours, Noisette accueille l'enfant
+    # Réponse 96.17 (A) : sans profil enfant en cours, l'écran est celui du parent, sobre comme l'Espace parent (#96).
+    Scénario: Sans profil enfant en cours, Savanturier ouvre l'écran « Se connecter », sans paysage ni Noisette
       Étant donné qu'aucun profil enfant n'est en cours sur l'appareil
       Quand j'ouvre Savanturier
-      Alors je vois Noisette dans le paysage de l'univers « Animaux de la forêt »
+      Alors Paul voit l'écran « Se connecter »
+      Mais aucun paysage ni aucun personnage guide n'y apparaît
 
     Plan du Scénario: Un profil enfant <cas> joue avec Noisette
       Étant donné que Léa a un profil enfant préparé <cas>
@@ -127,12 +128,13 @@ Fonctionnalité: Univers et personnage guide
       Alors je vois le nom de l'application
       Mais l'en-tête n'affiche aucun prénom ni aucun niveau
 
-    @a-valider
+    # Réponse 96.17 (A) : l'accueil sans profil enfant en cours est l'écran « Se connecter », sobre (#96).
     Scénario: Le nom de l'application ramène à l'accueil
       Étant donné que Léa a un profil enfant préparé dans l'univers « Danse »
       Et que Léa joue
       Quand Léa revient à l'accueil par le nom de l'application
-      Alors je vois Noisette dans le paysage de l'univers « Animaux de la forêt »
+      Alors Paul voit l'écran « Se connecter »
+      Mais aucun paysage ni aucun personnage guide n'y apparaît
       Et l'en-tête n'affiche aucun prénom ni aucun niveau
 
     @a-valider

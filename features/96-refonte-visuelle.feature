@@ -370,6 +370,10 @@ Fonctionnalité: Refonte visuelle de l'application de l'enfant
 
   Règle: Les écrans du parent reprennent les jetons de l'enfant, mais restent sobres : ni couleur de l'univers de l'enfant, ni paysage, ni glissement, ni rebond ; seul « Qui joue ? » montre le personnage guide de chaque profil enfant
 
+    # Réponse 96.16 : seule exception, la bulle de Noisette qui invite à créer le premier profil enfant reste dans
+    # l'Espace parent et dans « Qui joue ? » quand il n'y a aucun profil (scénarios de #73, inchangés).
+    # Réponse 96.17 (A) : l'écran « Se connecter » n'a ni paysage ni Noisette (scénarios de #6 mis à jour).
+
     Scénario: L'Espace parent ne prend pas la couleur principale de l'univers de l'enfant qui jouait
       Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Danse »
       Et que Léa jouait avant que Paul entre dans l'espace parent

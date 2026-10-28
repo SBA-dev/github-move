@@ -2,7 +2,7 @@
 
 Scénarios : `features/96-refonte-visuelle.feature`. Tags :
 - `@issue-96 @wip` sur la fonctionnalité ;
-- plus aucun `@a-valider` : les questions 96.1 à 96.15 sont réglées (voir « Décisions ») ;
+- plus aucun `@a-valider` : les questions 96.1 à 96.17 sont réglées (voir « Décisions ») ;
 - `@visuel` pour les captures de référence, lancées à part.
 
 ## Objectif
@@ -25,7 +25,7 @@ La story ne change que l'affichage, à une exception près : le personnage guide
 | R3 | Un bouton de l'enfant réagit dès qu'on le touche : il s'enfonce puis revient ; avec les mouvements réduits, il change seulement de couleur | Plan « Toucher <bouton> le fait s'enfoncer puis revenir à sa place » · « Au clavier, valider un bouton le fait aussi s'enfoncer puis revenir » · « Avec les mouvements réduits, un bouton touché change seulement de couleur » · « Un bouton touché puis quitté du doigt revient à sa place sans rien ouvrir » (96.11) · « Après une erreur, le choix touché revient à sa place et Léa a une nouvelle chance » · « Avec leur relief, les boutons de l'accueil restent assez grands pour un doigt d'enfant » |
 | R4 | Avancer d'un écran de l'enfant au suivant le fait arriver en glissant, revenir le fait glisser dans l'autre sens ; « Mes médailles », l'épisode et la fin de la séance arrivent en fondu ; avec les mouvements réduits, aucun mouvement | Plan « <écran> arrive <transition> » : en glissant « Mon parcours », la page de la leçon, la séance, « Toutes les leçons », le test de départ, la séance de révision ; retour en arrière en glissant dans l'autre sens ; en fondu « Mes médailles », l'épisode « La carte froissée », la fin de la séance (96.6, 96.12) · « Avec les mouvements réduits, la page de la leçon s'affiche sans aucun mouvement » · « Avec les mouvements réduits, « Mes médailles » s'affiche sans fondu » · « Toucher deux fois de suite une leçon n'ouvre sa page qu'une seule fois » (96.11) |
 | R5 | Les écrans de l'enfant tiennent à 360 px de large, et les écrans clés gardent l'apparence validée par le PO | Plan « À 360 px de large, <écran> s'affiche sans défilement horizontal » : les 12 écrans (96.7) · `@visuel` Plan « <écran> ressemble à sa capture de référence « <capture> » » : accueil (« aujourd-hui »), « Mon parcours », un exercice en séance, fin de la séance, dans l'univers Sports (96.9) |
-| R6 | Les écrans du parent reprennent les jetons de l'enfant, mais restent sobres : ni couleur de l'univers de l'enfant, ni paysage, ni glissement, ni rebond ; seul « Qui joue ? » montre le personnage guide de chaque profil enfant | « L'Espace parent ne prend pas la couleur principale de l'univers de l'enfant qui jouait » · « L'Espace parent n'a ni paysage ni personnage guide » · « Les titres de l'Espace parent s'affichent en Baloo 2 et son texte en Andika » · Plan « Sur <écran du parent>, un bouton touché s'enfonce et revient sans rebondir » : Espace parent, « Qui joue ? » · Plan « <écran du parent> s'affiche sans glissement » : Espace parent, « Qui joue ? », question du contrôle parental · Plan « <écran du parent> n'a ni paysage ni couleur de l'univers de l'enfant » : écran « Se connecter », « Qui joue ? », question du contrôle parental, en univers Animaux de la forêt · « Dans « Qui joue ? », chaque profil enfant garde le dessin de son personnage guide » (96.13) |
+| R6 | Les écrans du parent reprennent les jetons de l'enfant, mais restent sobres : ni couleur de l'univers de l'enfant, ni paysage, ni glissement, ni rebond ; seul « Qui joue ? » montre le personnage guide de chaque profil enfant | « L'Espace parent ne prend pas la couleur principale de l'univers de l'enfant qui jouait » · « L'Espace parent n'a ni paysage ni personnage guide » · « Les titres de l'Espace parent s'affichent en Baloo 2 et son texte en Andika » · Plan « Sur <écran du parent>, un bouton touché s'enfonce et revient sans rebondir » : Espace parent, « Qui joue ? » · Plan « <écran du parent> s'affiche sans glissement » : Espace parent, « Qui joue ? », question du contrôle parental · Plan « <écran du parent> n'a ni paysage ni couleur de l'univers de l'enfant » : écran « Se connecter », « Qui joue ? », question du contrôle parental, en univers Animaux de la forêt · « Dans « Qui joue ? », chaque profil enfant garde le dessin de son personnage guide » (96.13) · seule exception, la bulle de Noisette sans aucun profil, couverte par #73 (96.16) |
 
 Au total : **6 règles, 36 scénarios** (dont 14 plans de scénario). Plus aucun tag `@a-valider`.
 
@@ -82,6 +82,17 @@ Aucun autre `.feature` ne citait Agente Mila. Les mentions restantes sont dans `
 - `features/steps/profils-enfants.steps.ts` (l. 449) : l'expression régulière `(Lumi|Coach Léo|Agente Mila|Capitaine Sam|Lili) dit « Bonjour … »` doit accepter `Agent Max`.
 - `features/steps/exercices-a-choix.steps.ts` (l. 673) : « la félicitation commune dite par (.+) » accepte déjà tout nom ; rien à changer.
 
+Raison : décision 96.17 (A). Sans profil enfant en cours, l'accueil est l'écran « Se connecter », écran du parent sobre comme l'Espace parent : ni paysage d'« Animaux de la forêt » ni Noisette (96.13). L'intention des scénarios ne change pas ; `@a-valider` est retiré, puisque le PO a tranché (questions 2 et 3 de #6).
+
+| Fichier | Scénario | Avant | Après |
+|---|---|---|---|
+| `features/6-univers-et-personnage-guide.feature` (l. 37) | Avant : « Sans profil enfant en cours, Noisette accueille l'enfant » (`@a-valider`). Après : « Sans profil enfant en cours, Savanturier ouvre l'écran « Se connecter », sans paysage ni Noisette » | `Alors je vois Noisette dans le paysage de l'univers « Animaux de la forêt »` | `Alors Paul voit l'écran « Se connecter »` · `Mais aucun paysage ni aucun personnage guide n'y apparaît` |
+| `features/6-univers-et-personnage-guide.feature` (l. 132) | « Le nom de l'application ramène à l'accueil » (`@a-valider` retiré) | `Alors je vois Noisette dans le paysage de l'univers « Animaux de la forêt »` · `Et l'en-tête n'affiche aucun prénom ni aucun niveau` | `Alors Paul voit l'écran « Se connecter »` · `Mais aucun paysage ni aucun personnage guide n'y apparaît` · `Et l'en-tête n'affiche aucun prénom ni aucun niveau` |
+
+Les étapes sont celles de R6 de #96 et de #6 ; aucune étape nouvelle. Le premier scénario reste dans la règle « Sans univers connu… » de #6, où il était.
+
+Raison : décision 96.16 (reco). Les scénarios de `features/73-aucun-son-sur-les-ecrans-du-parent.feature` où Noisette dit « Bonjour ! Pour commencer, crée le profil… » ne changent pas ; un commentaire de R6 rappelle l'exception.
+
 ## Hors périmètre
 
 - Retours de réponse et effets sonores, dont le son au toucher d'un bouton : #97. Les boutons de #96 sont muets.
@@ -99,11 +110,7 @@ Aucun autre `.feature` ne citait Agente Mila. Les mentions restantes sont dans `
 
 ## Questions ouvertes
 
-Les questions 96.1 à 96.15 sont réglées (voir « Décisions »).
-
-**#96.16 Le personnage guide qui parle sur un écran du parent (#73) reste-t-il ?**
-Les scénarios de `features/73-aucun-son-sur-les-ecrans-du-parent.feature` font dire à Noisette « Bonjour ! Pour commencer, crée le profil de l'enfant qui va jouer… » dans l'Espace parent sans profil enfant et dans « Qui joue ? » sans profil. Or la réponse 96.3 dit : l'Espace parent sans personnage guide, et la réponse 96.13 ne garde dans « Qui joue ? » que le dessin du personnage guide de chaque profil.
-Reco : garder cette bulle de Noisette pour l'invitation à créer le premier profil, seule exception, car elle s'adresse à la famille qui découvre l'application ; sinon, #73 est à mettre à jour. Aucun scénario de #96 ne tranche ce point.
+Aucune. Les questions 96.1 à 96.17 sont réglées (voir « Décisions »).
 
 ## Termes à signaler (glossaire)
 
@@ -140,3 +147,10 @@ Réponses du PO du 2026-10-27 aux questions 96.7 à 96.15, mot pour mot : « 96 
 | 96.13 Écrans du parent | « 96 partout » | Reco validée : boutons au même relief, qui s'enfoncent puis reviennent sans ressort ni rebond ; entrée sans glissement ; « Qui joue ? », la connexion et le contrôle parental suivent la même règle que l'Espace parent ; « Qui joue ? » garde le dessin du personnage guide de chaque profil ; le paysage d'« Animaux de la forêt » est retiré des écrans du parent | R6 étendue aux écrans du parent : 3 plans (bouton sans rebond, sans glissement, sans paysage ni couleur de l'univers) et un scénario « Qui joue ? » |
 | 96.14 Fluidité | « 96 partout » | Reco validée : vérification manuelle du PO sur le Honor Magic avant le merge (accueil, « Mon parcours », page de la leçon, séance), notée dans `docs/stories/96/journal.md` ; la review vérifie que seules `transform` et `opacity` sont animées | Pas de scénario |
 | 96.15 Couleur principale | « 96 partout » | Reco validée : au moins le bouton principal ou l'élément marqué comme en cours (bouton du dock, « À toi ! »), et les titres | Définition dans la description ; nouveau Plan sur l'accueil et « Mon parcours » |
+
+Réponses du PO du 2026-10-28 aux questions 96.16 et 96.17, relayées sur #96 (commentaires 6463255484, 07:26 UTC, et 6463290124, 07:28 UTC). Mot pour mot : « 96.16 reco 96.17 pas écran sombre », puis, la question 96.17 reposée (« écran sobre », pas « écran sombre ») : « 96.17.A ».
+
+| Question | Réponse | Ce qu'elle veut dire | Effet sur les scénarios |
+|---|---|---|---|
+| 96.16 Bulle de Noisette sur un écran du parent (#73) | « 96.16 reco » | Reco validée : la bulle de Noisette (« Bonjour ! Pour commencer, crée le profil… ») reste dans l'Espace parent et sur « Qui joue ? » quand il n'y a aucun profil enfant ; c'est la seule exception à 96.3 et 96.13 | Scénarios de #73 inchangés ; commentaire ajouté sous R6 ; aucun scénario de #96 ne la disait absente |
+| 96.17 Écran « Se connecter » sans profil enfant en cours (#6) | « 96.17.A » | A (reco) : on applique 96.13 ; « Se connecter » garde le fond clair et les couleurs de l'application, sans paysage d'« Animaux de la forêt » ni Noisette, comme l'Espace parent | Les deux scénarios de #6 (« Sans profil enfant en cours… », « Le nom de l'application ramène à l'accueil ») attendent l'écran « Se connecter » sans paysage ni personnage guide ; `@a-valider` retiré (voir « Scénarios d'autres stories mis à jour ») |
