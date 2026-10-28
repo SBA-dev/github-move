@@ -9,3 +9,5 @@ Numéro de décision réservé : 0035.
 
 - 08:30 UTC : démarrage. Commentaire `Avancement` créé sur #98. Cadrages voisins lus : `docs/stories/96/` (branche `feature/96-refonte-visuelle`, `a52f6ff`) et `docs/stories/97/` (branche `feature/97-retours-animes-et-sonores`, `78fcd4a`).
 - 08:35 UTC : étape 1, délégation à `domain-modeler` (la story touche l'affichage seulement, mais introduit des concepts nouveaux, habillage de jeu, glisser-déposer, record de fluence présenté comme une course, et un découpage à proposer).
+- 08:41 UTC : `domain-modeler` rend `domain-model.md` : aucun agrégat nouveau, affichage seulement. Répartition avec #97 posée. Découpage proposé en 98a à 98e (98a = socle du glisser + `classer`, `ordre`, ordre des vers de `memoriser`). 17 questions (98.1 à 98.17).
+- 08:42 UTC : étape 2, délégation à `po-acceptance` pour les scénarios de la tranche 98a seulement (les autres tranches deviendraient de nouvelles issues créées par le PO).
