@@ -233,3 +233,14 @@ Deno.test("deux lectures rapides avec effets sonores : seule la seconde parole e
 
   assertEquals(lecteur.lectures.map((demandee) => demandee.phrases.map((phrase) => phrase.phrase)), [["Second."]]);
 });
+
+Deno.test("jouer des effets sonores arrête d'abord la parole en cours", async () => {
+  const { lecture, lecteur, journal } = uneLecture();
+  lecteur.lireSansTerminerAutomatiquement();
+  lecture.lire("Bravo !");
+  await Promise.resolve();
+
+  await lecture.jouer(["reponseJuste"]);
+
+  assertEquals(journal, ["parole", "arret-parole", "effet:reponseJuste"]);
+});

@@ -5,12 +5,18 @@ export class LecteurEnMemoire implements LecteurAVoixHaute {
   readonly lectures: LectureDemandee[] = [];
   readonly appels: Array<"arreter" | "lire"> = [];
   private echec: Error | undefined;
+  private finDeLaParole: (() => void) | undefined;
+  private finAutomatique = true;
   private motsAnnonces: Array<{ phrase: number; position: number }> = [];
 
   constructor(private readonly journal: string[] = []) {}
 
   prononcerLesMots(...annonces: Array<{ phrase: number; position: number }>): void {
     this.motsAnnonces = annonces;
+  }
+
+  lireSansTerminerAutomatiquement(): void {
+    this.finAutomatique = false;
   }
 
   bloquerLaVoix(): void {
@@ -30,10 +36,16 @@ export class LecteurEnMemoire implements LecteurAVoixHaute {
     this.lectures.push(lecture);
     this.journal.push("parole");
     for (const { phrase, position } of this.motsAnnonces) lecture.onMot?.(phrase, position);
-    return this.echec ? Promise.reject(this.echec) : Promise.resolve();
+    if (this.echec) return Promise.reject(this.echec);
+    if (this.finAutomatique) return Promise.resolve();
+    return new Promise((resolve) => this.finDeLaParole = resolve);
   }
 
   arreter(): void {
     this.appels.push("arreter");
+    if (!this.finDeLaParole) return;
+    this.journal.push("arret-parole");
+    this.finDeLaParole();
+    this.finDeLaParole = undefined;
   }
 }
