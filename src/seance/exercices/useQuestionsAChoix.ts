@@ -9,6 +9,7 @@ import {
   type Seance,
 } from "@domain/apprentissage";
 import type { Lecon } from "@domain/catalogue";
+import type { EffetSonore } from "@domain/voix";
 import {
   direLeTexteComplet,
   type Humeur,
@@ -19,6 +20,7 @@ import {
   reagirALaReponse,
 } from "@domain/motivation";
 import { hasardDuNavigateur } from "../../hasard-navigateur.ts";
+import { effetsApresUneBonneReponse, type SignalerUnRetour } from "../../retours/index.ts";
 import type { Voix } from "../../voix/index.ts";
 import type { ParoleADire } from "../usePersonnageQuiParle.ts";
 import { attendre } from "./attendre.ts";
@@ -33,6 +35,8 @@ type Dependances = {
   readonly toutLireAVoixHaute: boolean;
   readonly lire: Voix["lire"];
   readonly dire: (parole: ParoleADire) => Promise<boolean>;
+  readonly jouer: Voix["jouer"];
+  readonly signaler: SignalerUnRetour;
   readonly faireSilence: () => void;
   readonly montrerHumeur: (humeur: Humeur) => void;
   /** Numéro de la séquence en cours : une action plus récente interrompt les suites en attente. */
@@ -49,7 +53,7 @@ type SuiteDeLaReponse = (numero: number, faits: FaitDeSeance[], nouvelExercice: 
 
 /** Le déroulé des exercices à choix (bulles, lecture, écoute) : la question est lue, puis les choix apparaissent. */
 export function useQuestionsAChoix(
-  { seance, lecon, personnageGuide, toutLireAVoixHaute, lire, dire, faireSilence, montrerHumeur, sequence, vivant, redessiner, reussite }:
+  { seance, lecon, personnageGuide, toutLireAVoixHaute, lire, dire, jouer, signaler, faireSilence, montrerHumeur, sequence, vivant, redessiner, reussite }:
     Dependances,
 ) {
   const { estFigee, figer, annoncerLAvancement, attendreLEcranSuivant } = reussite;
@@ -132,19 +136,19 @@ export function useQuestionsAChoix(
 
   const encourager = useCallback(async (numero: number, reaction: Reaction, question: QuestionJouee) => {
     const texte = `${reaction.parole.texte} ${question.aideApresErreur()}`;
-    const jusquAuBout = await dire({ texte, nature: "encouragement", humeur: reaction.humeur });
+    const jusquAuBout = await dire({ texte, nature: "encouragement", humeur: reaction.humeur, effetsAvant: [reaction.effetSonore] });
     if (jusquAuBout) await direLeMotAEcouter(numero, question);
   }, [dire, direLeMotAEcouter]);
 
   /** La bulle affiche la phrase entière ; l'explication est lue morceau par morceau, chacun dans sa langue, le reste avec la voix du personnage guide. */
-  const feliciter = useCallback(async (numero: number, reaction: Reaction, question: QuestionJouee) => {
+  const feliciter = useCallback(async (numero: number, reaction: Reaction, question: QuestionJouee, effetsAvant: readonly EffetSonore[]) => {
     const explication = question.explication();
     if (explication === undefined) {
-      await dire({ texte: reaction.parole.texte, nature: "felicitation", humeur: reaction.humeur });
+      await dire({ texte: reaction.parole.texte, nature: "felicitation", humeur: reaction.humeur, effetsAvant });
       return;
     }
     const texte = `${reaction.parole.texte} ${explication.texte}`;
-    if (!(await dire({ texte, aLire: reaction.parole.texte, nature: "felicitation", humeur: reaction.humeur }))) return;
+    if (!(await dire({ texte, aLire: reaction.parole.texte, nature: "felicitation", humeur: reaction.humeur, effetsAvant }))) return;
     for (const morceau of explication.morceaux) {
       await lire(morceau.texte, { langue: morceau.langue });
       if (numero !== sequence.current) return;
@@ -164,39 +168,51 @@ export function useQuestionsAChoix(
   }, [lecon, seance, personnageGuide]);
 
   /** En conjugaison, une bonne forme fait applaudir le personnage guide sans qu'il félicite : seule la dernière personne est félicitée. */
-  const applaudirEnSilence = useCallback(async (humeur: Humeur) => {
+  const applaudirEnSilence = useCallback(async (humeur: Humeur, effets: readonly EffetSonore[]) => {
     faireSilence();
     montrerHumeur(humeur);
+    void jouer(effets);
     await attendre(PAUSE_DES_APPLAUDISSEMENTS_MS);
-  }, [faireSilence, montrerHumeur]);
+  }, [faireSilence, montrerHumeur, jouer]);
 
-  const reagirALaBonneReponse = useCallback((numero: number, reaction: Reaction, question: QuestionJouee, position: number) => {
+  const reagirALaBonneReponse = useCallback((
+    numero: number,
+    reaction: Reaction,
+    question: QuestionJouee,
+    position: number,
+    effets: readonly EffetSonore[],
+  ) => {
     const paroleDue = seance.paroleDueApresLaDerniereReponse();
     return paroleDue === "applaudir"
-      ? applaudirEnSilence(reaction.humeur)
-      : feliciter(numero, avecLaFinDeLExercice(reaction, position, paroleDue), question);
+      ? applaudirEnSilence(reaction.humeur, effets)
+      : feliciter(numero, avecLaFinDeLExercice(reaction, position, paroleDue), question, effets);
   }, [seance, applaudirEnSilence, feliciter, avecLaFinDeLExercice]);
 
   const repondre = useCallback(async (texte: string, suite: SuiteDeLaReponse) => {
     const courante = laQuestionEnCours();
     if (!courante || estFigee.current) return;
     const { exercice, question } = courante;
+    const questionsReussiesAvant = seance.avancement().questionsReussies;
     const resultat = seance.repondre(Reponse.choix(texte));
     if (resultat === "dejaEcartee") return;
     const numero = ++sequence.current;
     redessiner();
     const reaction = reagirALaReponse(resultat === "juste", personnageGuide, hasardDuNavigateur);
-    if (resultat === "fausse") return await encourager(numero, reaction, question);
+    if (resultat === "fausse") {
+      signaler("fausse", texte);
+      return await encourager(numero, reaction, question);
+    }
     figer({ position: exercice.position, exercice, question });
     setBulleEclatee(texte);
     annoncerLAvancement(seance.avancement());
-    await reagirALaBonneReponse(numero, reaction, question, exercice.position);
+    signaler("juste", texte, seance.exerciceCompleteParLaDerniereReponse());
+    await reagirALaBonneReponse(numero, reaction, question, exercice.position, effetsApresUneBonneReponse(seance, questionsReussiesAvant));
     if (!(await attendreLEcranSuivant()) || !vivant.current) return;
     figer(undefined);
     setBulleEclatee(undefined);
     const nouvelExercice = seance.exerciceEnCours()?.position !== exercice.position;
     await suite(++sequence.current, seance.retirerFaits(), nouvelExercice);
-  }, [laQuestionEnCours, seance, sequence, redessiner, personnageGuide, encourager, figer, reagirALaBonneReponse, vivant, estFigee, annoncerLAvancement, attendreLEcranSuivant]);
+  }, [laQuestionEnCours, seance, sequence, redessiner, personnageGuide, signaler, encourager, figer, reagirALaBonneReponse, vivant, estFigee, annoncerLAvancement, attendreLEcranSuivant]);
 
   const jeNeSaisPas = useCallback(async () => {
     const courante = laQuestionEnCours();

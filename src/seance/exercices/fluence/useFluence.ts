@@ -3,10 +3,16 @@ import { type FluenceEnCours, RecordDeFluence, Reponse, type Seance } from "@dom
 import {
   accueilDeLaFluence,
   type FinDeFluence,
+  effetsSonoresApresUneBonneReponse,
   humeurApresReponse,
   parolesDeFinDeFluence,
+  type PersonnageGuide,
+  reagirALaReponse,
   SIGNAL_DE_DEPART,
 } from "@domain/motivation";
+import { hasardDuNavigateur } from "../../../hasard-navigateur.ts";
+import { CIBLE_DE_LA_ZONE_DE_REPONSE, type SignalerUnRetour } from "../../../retours/index.ts";
+import type { Voix } from "../../../voix/index.ts";
 import type { Horloge } from "../../horloge.ts";
 import type { ParoleADire } from "../../usePersonnageQuiParle.ts";
 import type { SuiteDuCalcul } from "../useCalcul.ts";
@@ -17,8 +23,11 @@ const BATTEMENT_EN_MS = 250;
 
 type Dependances = {
   readonly seance: Seance;
+  readonly personnageGuide: PersonnageGuide;
   readonly horloge: Horloge;
   readonly dire: (parole: ParoleADire) => Promise<boolean>;
+  readonly jouer: Voix["jouer"];
+  readonly signaler: SignalerUnRetour;
   readonly faireSilence: () => void;
   readonly sequence: MutableRefObject<number>;
   readonly vivant: MutableRefObject<boolean>;
@@ -46,7 +55,7 @@ function finDeFluence(seance: Seance, exercice: string, score: number, recordCon
 
 /** Le déroulé d'une fluence : l'accueil et le record, le signal de départ, le temps qui passe, puis la phrase de fin. */
 export function useFluence(
-  { seance, horloge, dire, faireSilence, sequence, vivant, redessiner, reussite }: Dependances,
+  { seance, personnageGuide, horloge, dire, jouer, signaler, faireSilence, sequence, vivant, redessiner, reussite }: Dependances,
 ) {
   const { estFigee, figer, annoncerLAvancement, attendreLEcranSuivant } = reussite;
   const [record, setRecord] = useState<number | undefined>();
@@ -101,15 +110,31 @@ export function useFluence(
     await suite(++sequence.current, seance.retirerFaits(), true);
   }, [seance, horloge, record, estFigee, figer, sequence, faireSilence, annoncerLAvancement, dire, vivant, attendreLEcranSuivant]);
 
-  /** Une réponse fausse s'efface sans rien dire ; une réponse donnée après la fin du temps n'est pas prise. */
+  /** Pendant le chrono, chaque calcul a son effet sonore, sans point du récipient et sans parole ; une réponse donnée après la fin du temps n'est pas prise. */
+  const reagirAuCalcul = useCallback((juste: boolean) => {
+    const questionsReussies = seance.avancement().questionsReussies;
+    const effets = juste
+      ? effetsSonoresApresUneBonneReponse({
+        questionsReussiesAvant: questionsReussies,
+        questionsReussiesApres: questionsReussies,
+        exerciceComplete: false,
+        pendantLeChronoDUneFluence: true,
+      })
+      : [reagirALaReponse(false, personnageGuide, hasardDuNavigateur).effetSonore];
+    signaler(juste ? "juste" : "fausse", CIBLE_DE_LA_ZONE_DE_REPONSE);
+    void jouer(effets);
+  }, [seance, personnageGuide, signaler, jouer]);
+
+  /** Une réponse fausse s'efface sans rien dire. */
   const repondre = useCallback(async (nombre: number, suite: SuiteDuCalcul) => {
     const maintenant = horloge.maintenant();
     const fluence = seance.fluenceEnCours(maintenant);
     if (!fluence?.demarree || estFigee.current) return;
     if (fluence.finie) return await terminer(suite);
-    seance.repondre(Reponse.nombre(nombre), maintenant);
+    const resultat = seance.repondre(Reponse.nombre(nombre), maintenant);
+    if (resultat !== "dejaEcartee") reagirAuCalcul(resultat === "juste");
     redessiner();
-  }, [seance, horloge, estFigee, terminer, redessiner]);
+  }, [seance, horloge, estFigee, terminer, reagirAuCalcul, redessiner]);
 
   const battre = useCallback(async (suite: SuiteDuCalcul) => {
     const fluence = seance.fluenceEnCours(horloge.maintenant());

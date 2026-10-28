@@ -18,6 +18,7 @@ import {
 import type { NouveautesDeFin } from "./fin-de-seance/nouveautes-de-fin.ts";
 import { useReducedMotion } from "motion/react";
 import { hasardDuNavigateur } from "../hasard-navigateur.ts";
+import { useRetourDeLaReponse } from "../retours/index.ts";
 import type { Voix } from "../voix/index.ts";
 import { useAdditionPosee } from "./exercices/addition/useAdditionPosee.ts";
 import { useBattementDeLaFluence, useFluence } from "./exercices/fluence/useFluence.ts";
@@ -45,14 +46,15 @@ function paroleDeLEtape(etape: EtapeDeLecon): ParoleADire {
 export function useDeroulementDeSeance(
   seance: Seance,
   lecon: Lecon,
-  voix: Pick<Voix, "lire" | "couperLaVoix">,
+  voix: Pick<Voix, "lire" | "jouer" | "couperLaVoix">,
   personnageGuide: PersonnageGuide,
   toutLireAVoixHaute: boolean,
   prenom: string,
   horloge: Horloge = horlogeDuNavigateur,
 ) {
   const personnage = usePersonnageQuiParle(voix);
-  const { dire, faireSilence, montrerHumeur, reecouter: relire } = personnage;
+  const { dire, jouer, faireSilence, montrerHumeur, reecouter: relire } = personnage;
+  const { retour, signaler } = useRetourDeLaReponse();
   const [, redessiner] = useReducer((compteur: number) => compteur + 1, 0);
   const sequence = useRef(0);
   const vivant = useRef(true);
@@ -75,6 +77,8 @@ export function useDeroulementDeSeance(
     toutLireAVoixHaute,
     lire: voix.lire,
     dire,
+    jouer,
+    signaler,
     faireSilence,
     montrerHumeur,
     sequence,
@@ -87,6 +91,7 @@ export function useDeroulementDeSeance(
     personnageGuide,
     lire: voix.lire,
     dire,
+    signaler,
     faireSilence,
     sequence,
     vivant,
@@ -97,6 +102,8 @@ export function useDeroulementDeSeance(
     seance,
     personnageGuide,
     dire,
+    jouer,
+    signaler,
     faireSilence,
     montrerHumeur,
     sequence,
@@ -106,11 +113,11 @@ export function useDeroulementDeSeance(
   });
   const { presenter: presenterLaDictee, taper: taperUneLettre } = dictee;
   const { ouvrir, presenter, repondre: repondreALaQuestion, relireLaQuestion } = questions;
-  const dependancesDuCalcul = { seance, personnageGuide, dire, faireSilence, sequence, vivant, redessiner, reussite };
+  const dependancesDuCalcul = { seance, personnageGuide, dire, signaler, faireSilence, sequence, vivant, redessiner, reussite };
   const calcul = useCalcul(dependancesDuCalcul);
   const illustree = useQuestionIllustree(dependancesDuCalcul);
-  const fluence = useFluence({ seance, horloge, dire, faireSilence, sequence, vivant, redessiner, reussite });
-  const addition = useAdditionPosee({ ...dependancesDuCalcul, montrerHumeur });
+  const fluence = useFluence({ seance, personnageGuide, horloge, dire, jouer, signaler, faireSilence, sequence, vivant, redessiner, reussite });
+  const addition = useAdditionPosee({ ...dependancesDuCalcul, jouer, montrerHumeur });
   const memorisation = useMemorisation({
     seance,
     lecon,
@@ -356,6 +363,7 @@ export function useDeroulementDeSeance(
     parole,
     rangDuMotPrononce,
     humeur,
+    retour,
     figee,
     choixVisiblesPour,
     positionDuTexteEcoute,

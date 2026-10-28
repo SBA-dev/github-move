@@ -1,4 +1,5 @@
 import type { CalculEnCours } from "@domain/apprentissage";
+import type { EffetSonore } from "@domain/voix";
 import {
   direJeNeSaisPasAuClavierDeCristaux,
   type PersonnageGuide,
@@ -10,21 +11,25 @@ import type { ParoleADire } from "../usePersonnageQuiParle.ts";
 
 /** Après une erreur de calcul : un encouragement, puis l'aide de l'opération (ou de la colonne) quand il y en a une. */
 export function encouragerApresUneErreurDeCalcul(personnageGuide: PersonnageGuide, aide: string | undefined): ParoleADire {
-  const { humeur, parole } = reagirALaReponse(false, personnageGuide, hasardDuNavigateur);
+  const { humeur, parole, effetSonore } = reagirALaReponse(false, personnageGuide, hasardDuNavigateur);
   const texte = aide === undefined ? parole.texte : `${parole.texte} ${aide}`;
-  return { texte, nature: "encouragement", humeur };
+  return { texte, nature: "encouragement", humeur, effetsAvant: [effetSonore] };
 }
 
-export function feliciterUnCalcul(personnageGuide: PersonnageGuide, suite?: string): ParoleADire {
+export function feliciterUnCalcul(personnageGuide: PersonnageGuide, suite?: string, effetsAvant?: readonly EffetSonore[]): ParoleADire {
   const { humeur, parole } = reagirALaReponse(true, personnageGuide, hasardDuNavigateur);
   const texte = suite === undefined ? parole.texte : `${suite} ${parole.texte}`;
-  return { texte, nature: "felicitation", humeur };
+  return { texte, nature: "felicitation", humeur, ...(effetsAvant ? { effetsAvant } : {}) };
 }
 
 /** Une félicitation, puis l'explication de la réponse (le problème en barres). */
-export function feliciterPuisExpliquer(personnageGuide: PersonnageGuide, explication: string): ParoleADire {
+export function feliciterPuisExpliquer(
+  personnageGuide: PersonnageGuide,
+  explication: string,
+  effetsAvant?: readonly EffetSonore[],
+): ParoleADire {
   const { humeur, parole } = reagirALaReponse(true, personnageGuide, hasardDuNavigateur);
-  return { texte: `${parole.texte} ${explication}`, nature: "felicitation", humeur };
+  return { texte: `${parole.texte} ${explication}`, nature: "felicitation", humeur, ...(effetsAvant ? { effetsAvant } : {}) };
 }
 
 /** « Je ne sais pas » : avec les choix, la bonne réponse brille ; au clavier de cristaux, le personnage guide la dit. */
