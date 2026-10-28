@@ -244,3 +244,73 @@ Deno.test("jouer des effets sonores arrête d'abord la parole en cours", async (
 
   assertEquals(journal, ["parole", "arret-parole", "effet:reponseJuste"]);
 });
+
+Deno.test("la parole qui suit un bouton touché attend la fin de son effet sans l'arrêter", async () => {
+  const { lecture, lecteurDEffetsSonores, lecteur, journal } = uneLecture();
+  lecteurDEffetsSonores.jouerSansTerminerAutomatiquement();
+  lecture.toucherUnBouton();
+  const parole = lecture.lire("Bravo !");
+  await Promise.resolve();
+  await Promise.resolve();
+
+  assertEquals(lecteurDEffetsSonores.nombreDArrets, 0);
+  assertEquals(lecteur.lectures.length, 0);
+
+  lecteurDEffetsSonores.terminerLEffetEnCours();
+  await parole;
+
+  assertEquals(journal, ["effet:boutonTouche", "parole"]);
+});
+
+Deno.test("couper la voix pendant le bouton touché empêche la parole qui le suit", async () => {
+  const { lecture, lecteurDEffetsSonores, lecteur } = uneLecture();
+  lecteurDEffetsSonores.jouerSansTerminerAutomatiquement();
+  lecture.toucherUnBouton();
+  const parole = lecture.lire("Bravo !");
+  await Promise.resolve();
+
+  lecture.couperLaVoix();
+  lecteurDEffetsSonores.terminerLEffetEnCours();
+
+  assertEquals(await parole, { entendue: false });
+  assertEquals(lecteur.lectures.length, 0);
+});
+
+Deno.test("suspendre la voix pendant le bouton touché arrête l'effet et empêche la parole qui le suit", async () => {
+  const { lecture, lecteurDEffetsSonores, lecteur } = uneLecture();
+  lecteurDEffetsSonores.jouerSansTerminerAutomatiquement();
+  lecture.toucherUnBouton();
+  const parole = lecture.lire("Bravo !");
+  await Promise.resolve();
+
+  lecture.suspendre();
+  lecteurDEffetsSonores.terminerLEffetEnCours();
+
+  assertEquals(await parole, { entendue: false });
+  assertEquals(lecteurDEffetsSonores.nombreDArrets, 1);
+  assertEquals(lecteur.lectures.length, 0);
+});
+
+Deno.test("passer en Muet pendant le bouton touché laisse finir l'effet et empêche la parole qui le suit", async () => {
+  const { lecture, lecteurDEffetsSonores, lecteur } = uneLecture();
+  lecteurDEffetsSonores.jouerSansTerminerAutomatiquement();
+  lecture.toucherUnBouton();
+  const parole = lecture.lire("Bravo !");
+  await Promise.resolve();
+
+  lecture.passerEnMuet();
+  lecteurDEffetsSonores.terminerLEffetEnCours();
+
+  assertEquals(await parole, { entendue: false });
+  assertEquals(lecteurDEffetsSonores.nombreDArrets, 0);
+  assertEquals(lecteur.lectures.length, 0);
+});
+
+Deno.test("voix suspendue, toucher un bouton ne joue aucun effet", async () => {
+  const { lecture, lecteurDEffetsSonores } = uneLecture();
+  lecture.suspendre();
+
+  lecture.toucherUnBouton();
+
+  assertEquals(lecteurDEffetsSonores.effetsJoues, []);
+});
