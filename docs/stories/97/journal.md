@@ -51,3 +51,8 @@ Puis câblage : adaptateur navigateur, `useVoix`, déroulement de la séance, r�
 - TDD terminé : 13/13 comportements, 2507 tests unitaires.
 - Câblage K1 (`f76cb9f`) : adaptateur navigateur des effets sonores (garde de 3 s, amorçage iPhone/iPad dans le déverrouillage audio), `useVoix.jouer`, `effetsAvant` dans `usePersonnageQuiParle`, 8 sons précachés par `public/sw.js` (y compris les requêtes `Range`). Observation E2E prévue : faux `HTMLMediaElement.play/pause` par `addInitScript`.
 - Câblage K2 en cours : retours après chaque réponse (séance, révision, test de départ, fluence) et animations.
+- Câblage K2 (`31cc25f`, `d448bb0`, `1f2a182`, `a2f2ca4`) : retours après chaque réponse (séance, fluence, révision, test de départ), dossier `src/retours/`.
+- Câblage K3 (`a5fcc36`) : célébration de fin (étoiles une à une, confettis, annonce unique), sons de fin, compteur du record. `Etincelles.tsx` supprimé (remplacé par les confettis, 1,45 s au total ; seul #24 l. 238 les citait, pour leur absence).
+- Une règle était restée dans React (« le record déjà fêté n'est pas rejoué ») : passée dans le domaine par un cycle TDD (`8de5939` rouge, `705b231`). Changement de règle : `effetsSonoresDeLaFin` ne rejoue plus `grandeVictoire` pour un record (invariant 9).
+- Câblage K4 (`6bbff4d`) : « bouton touché » par un écouteur à part du ressort de #96, marquage `data-donne-une-reponse` et `data-bascule-du-son`.
+- Étape 4 : review complète lancée sur le câblage.
