@@ -1,7 +1,7 @@
 # Critères d'acceptance : story #96, refonte visuelle de l'application de l'enfant
 
 Scénarios : `features/96-refonte-visuelle.feature`. Tags :
-- `@issue-96 @wip` sur la fonctionnalité ;
+- `@issue-96` sur la fonctionnalité (`@wip` retiré : la story est livrée) ;
 - plus aucun `@a-valider` : les questions 96.1 à 96.17 sont réglées (voir « Décisions ») ;
 - `@visuel` pour les captures de référence, lancées à part.
 
@@ -154,3 +154,10 @@ Réponses du PO du 2026-10-28 aux questions 96.16 et 96.17, relayées sur #96 (c
 |---|---|---|---|
 | 96.16 Bulle de Noisette sur un écran du parent (#73) | « 96.16 reco » | Reco validée : la bulle de Noisette (« Bonjour ! Pour commencer, crée le profil… ») reste dans l'Espace parent et sur « Qui joue ? » quand il n'y a aucun profil enfant ; c'est la seule exception à 96.3 et 96.13 | Scénarios de #73 inchangés ; commentaire ajouté sous R6 ; aucun scénario de #96 ne la disait absente |
 | 96.17 Écran « Se connecter » sans profil enfant en cours (#6) | « 96.17.A » | A (reco) : on applique 96.13 ; « Se connecter » garde le fond clair et les couleurs de l'application, sans paysage d'« Animaux de la forêt » ni Noisette, comme l'Espace parent | Les deux scénarios de #6 (« Sans profil enfant en cours… », « Le nom de l'application ramène à l'accueil ») attendent l'écran « Se connecter » sans paysage ni personnage guide ; `@a-valider` retiré (voir « Scénarios d'autres stories mis à jour ») |
+
+Réponses du PO du 2026-10-28 aux deux points restants avant le merge, mot pour mot : « 1.ok 2.je le ferai plus tard ».
+
+| Point | Réponse | Ce qu'elle veut dire | Effet sur les scénarios |
+|---|---|---|---|
+| 1. Captures de référence (`d225ff0`) | « 1.ok » | Le PO valide les captures de référence mises à jour au commit `d225ff0` (exercice en séance, fin de la séance, « Mon parcours ») | Captures `@visuel` validées ; `@wip` retiré de la fonctionnalité |
+| 2. Fluidité sur le Honor Magic (96.14) | « 2.je le ferai plus tard » | Le PO fera plus tard la vérification manuelle sur le Honor Magic ; point restant, non bloquant pour le merge | Pas de scénario ; vérification à noter dans `docs/stories/96/journal.md` quand elle sera faite |

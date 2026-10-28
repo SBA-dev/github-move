@@ -1,5 +1,5 @@
 # language: fr
-@issue-96 @wip
+@issue-96
 Fonctionnalité: Refonte visuelle de l'application de l'enfant
   En tant qu'enfant
   Je veux une application colorée et vivante, qui ressemble à mon univers
