@@ -12,6 +12,13 @@
   --texte-doux: #4a4a5e;
   --contour: #33304a;
   --sur-principale: #ffffff;
+  /* Pastilles de matière : chacune atteint au moins 4,7:1 sous le texte blanc. */
+  --matiere-francais: #ce3970;
+  --matiere-maths: #2f6fd1;
+  --matiere-sciences: #197e8a;
+  --matiere-histoire: #9e6725;
+  --matiere-anglais: #7a4fd6;
+  --matiere-emc: #2d8254;
 
   --avertissement-fond: #fff3cd;
   --surbrillance: #ffd23f;
@@ -959,6 +966,12 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
   overflow-wrap: anywhere;
 }
 .icone-de-matiere { display: inline-flex; flex: none; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; color: var(--sur-principale); font-size: .8rem; font-weight: 800; }
+.icone-de-matiere[data-matiere="francais"] { background: var(--matiere-francais); }
+.icone-de-matiere[data-matiere="maths"] { background: var(--matiere-maths); }
+.icone-de-matiere[data-matiere="sciences"] { background: var(--matiere-sciences); }
+.icone-de-matiere[data-matiere="histoire"] { background: var(--matiere-histoire); }
+.icone-de-matiere[data-matiere="anglais"] { background: var(--matiere-anglais); }
+.icone-de-matiere[data-matiere="emc"] { background: var(--matiere-emc); }
 .phrase-sans-badge { margin: 0; padding: 6px 14px; border-radius: var(--rayon); background: var(--surface-voilee); font-weight: 700; overflow-wrap: anywhere; }
 [data-mode-dys="true"] :is(.pastille-de-badge, .phrase-sans-badge, .pour-le-badge) { overflow-wrap: anywhere; line-height: inherit; }
 .pour-le-badge { display: grid; justify-items: center; gap: 4px; max-width: 100%; padding: 8px 16px; border: 3px solid var(--contour); border-radius: var(--rayon); background: var(--surface-dense); overflow-wrap: anywhere; animation: arrivee-d-un-objet .4s ease-out; }
