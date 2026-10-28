@@ -2,7 +2,7 @@
 
 Contexte : **Motivation** (quel effet sonore pour quel fait d'Apprentissage) et **Voix** (sous-domaine générique : jouer un effet sonore, effet sonore avant la parole, rien en voix suspendue). Apprentissage publie une lecture de plus, l'**exercice complété** (décision 97.6), sans changer aucune règle de correction. Aucun agrégat, aucun événement enregistré, aucune migration, aucune Edge Function, aucune donnée d'enfant nouvelle.
 
-État : **cadrage seulement**. #97 dépend de #96 (PR #124, non mergée) : aucun code avant son merge. Question 1 de l'issue réglée par le PO le 2026-10-25 (8 sons dans `public/sons/`, provenance `docs/sons.md`). Questions 97.2 à 97.19 réglées par le PO le 2026-10-28 (section « Réponses du PO ») ; deux écarts à la recommandation (97.2, 97.17) ouvrent les questions 97.20 à 97.24 (section « Questions nouvelles (escalade) »).
+État : **cadrage seulement**. #97 dépend de #96 (PR #124, non mergée) : aucun code avant son merge. Question 1 de l'issue réglée par le PO le 2026-10-25 (8 sons dans `public/sons/`, provenance `docs/sons.md`). Questions 97.2 à 97.19 réglées par le PO le 2026-10-28 (section « Réponses du PO ») ; deux écarts à la recommandation (97.2, 97.17) ont ouvert les questions 97.20 à 97.24, réglées par le PO le 2026-10-28 (« 97 reco partout », section « Questions nouvelles, réglées le 2026-10-28 »). Aucune question ouverte.
 
 ## Contexte
 
@@ -48,7 +48,7 @@ Le **son du bouton touché** n'est pas une réaction à un fait : `src/` le dema
 |---|---|
 | Réponse, Erreur, Avancement de la séance, Texte complet, Parole due, Séance terminée, Fin de la séance, Record de fluence, Leçon acquise, Badge gagné par la séance, Objet de la cabane, Épisode ouvert, Humeur du personnage guide, Félicitation, Encouragement, Relance, Muet, Voix suspendue, Parole entendue, Voix bloquée | existants, réutilisés tels quels |
 | **Effet sonore** | nouveau (à valider), contexte Voix : ajouté en fin de section Voix du glossaire. Coupé par la voix suspendue, pas par le Muet (97.2, 97.13) |
-| **Muet, précisé par #97** | précision (à valider), sans réécrire la ligne **Muet** : le Muet coupe **seulement la voix**, pas les effets sonores (décision 97.2) |
+| **Muet, précisé par #97** | précision (à valider), sans réécrire la ligne **Muet** : le Muet coupe **la voix du personnage guide**, pas les effets sonores ; le mot « Muet » est gardé (décisions 97.2, 97.20, 97.24) |
 | **Exercice complété** | nouveau (à valider), contexte Apprentissage (décision 97.6) : la dernière réponse d'un exercice à plusieurs réponses sur le même écran (texte à trous, `ordre`, `classer`, `conjugaison`, `memoriser`) le complète. Élargit **Texte complet** sans le remplacer. Ajouté en fin de section Apprentissage du glossaire |
 | Les 8 valeurs de l'effet sonore (`reponseJuste`, `reponseFausse`, `pointDuRecipient`, `texteComplet`, `seanceTerminee`, `grandeVictoire`, `decouverte`, `boutonTouche`) | noms des fichiers choisis par le PO ; ce sont des valeurs, pas des termes du glossaire. La valeur `texteComplet` (nom du fichier) se joue pour tout exercice complété |
 | Célébration, retour, juice, confettis, étincelles | **mots d'interface** du skill, pas des termes du domaine : rien n'est ajouté |
@@ -118,7 +118,7 @@ classDiagram
 - **`LectureAVoixHaute`** reçoit le lecteur d'effets sonores dans ses dépendances et gagne :
   - `jouer(effets)` : joue une suite d'effets sonores sans parole (bonne étiquette sans félicitation, point du récipient, bouton touché) ;
   - une option de `lire(texte, { effetsAvant })` : joue les effets, puis lit la parole. **En Muet**, les effets sont joués et la parole ne l'est pas (décision 97.2).
-  - `passerEnMuet()` arrête la parole en cours, **pas** l'effet sonore en cours (conséquence de 97.2, à confirmer : question 97.24).
+  - `passerEnMuet()` arrête la parole en cours, **pas** l'effet sonore en cours : l'effet finit, la parole qui devait le suivre n'est pas lue (décision 97.24).
 - Pas d'erreur métier nouvelle : un effet qui ne peut pas être joué (fichier absent, audio refusé) est absorbé, comme `LectureImpossible`.
 
 ### Motivation
@@ -140,7 +140,7 @@ Pas de commande métier ni d'événement de domaine : jouer un son n'est pas un 
 ## Invariants
 
 **Voix (`LectureAVoixHaute`)**
-1. Le **Muet ne coupe que la voix** : en Muet, les effets sonores sont joués comme en Son, la parole ne l'est pas (décision 97.2). Passer en Muet arrête la parole en cours, pas l'effet sonore en cours (question 97.24). Il n'y a pas de réglage séparé pour les effets sonores.
+1. Le **Muet ne coupe que la voix** : en Muet, les effets sonores sont joués comme en Son, la parole ne l'est pas (décision 97.2). Passer en Muet pendant un effet sonore laisse l'effet finir ; seule la parole s'arrête, et celle qui devait suivre l'effet n'est pas lue (décision 97.24). Il n'y a pas de réglage séparé pour les effets sonores : hors des écrans du parent (voix suspendue), rien ne coupe les effets sonores, et c'est voulu (décision 97.20). Le bouton garde le nom **Muet** : il coupe la voix du personnage guide (décision 97.20).
 2. En **voix suspendue** (écrans du parent, #73), aucun effet sonore n'est joué, en Muet comme en Son ; arriver sur un écran du parent arrête l'effet sonore en cours (décision 97.13). Cohérent avec 97.2 : la voix suspendue n'est pas le Muet, c'est l'état des écrans du parent qui promet « aucun son » (#73) ; elle ne change jamais le choix Son/Muet.
 3. **Un effet sonore et une parole ne se chevauchent jamais** : la parole commence quand les effets demandés avec elle sont finis ; deux effets d'une même suite se jouent l'un après l'autre. L'ordre « effet avant la parole » reste en Muet (il n'y a alors pas de parole).
 4. Une nouvelle lecture, `couperLaVoix` ou `faireSilence` arrête l'effet sonore en cours, comme la parole (une réponse rapide ne laisse pas deux sons se superposer).
@@ -185,7 +185,7 @@ Tout est dans le navigateur, hors ligne compris : `@domain/voix` exporte `EffetS
 - Confettis aussi à la fin de la séance de révision et du test de départ, sans étoiles (décision 97.16).
 - Le son du bouton touché : un écouteur à part de `ressort-des-boutons.ts` (même registre `data-registre`, pour se taire dans les écrans du parent), qui demande `boutonTouche` à Voix.
 - Mouvements réduits : les étoiles s'affichent sans animation, sans confettis ; « Tu as gagné <n> étoile(s) » annoncé une seule fois, quand toutes les étoiles sont affichées ; aucune annonce de plus sans étoile (décision 97.15).
-- Pendant la célébration de la fin, **un toucher ne fait rien** : il n'arrête ni les confettis ni le son de fin (décision 97.17). Ce que fait un bouton touché pendant la célébration est en escalade (97.22) ; le clavier n'est jamais bloqué (règle de `CLAUDE.md`).
+- Pendant la célébration de la fin, **un toucher en dehors des boutons ne fait rien** : il n'arrête ni les confettis ni le son de fin (décision 97.17). Un **bouton touché** pendant la célébration (« Accueil », « Leçon suivante », « Rejouer ») lance **tout de suite** son action ; quitter l'écran arrête les confettis et l'effet sonore de fin (décision 97.22, invariant 4). Une célébration ne retient jamais l'enfant : elle dure 1,5 s au plus, ses boutons et le clavier restent utilisables (décision 97.23), y compris à la fin de la séance de révision et du test de départ (97.16).
 - Les animations des personnages guides restent pour #106 ; #97 ne change pas les humeurs.
 
 Remarque pour l'implémentation : au test de départ, le front compte lui-même les questions réussies (`setQuestionsReussies`). Le point gagné doit s'y lire comme ailleurs (questions réussies avant et après), sans ajouter de comptage dans React.
@@ -215,7 +215,7 @@ Réponse relayée par le responsable (commentaire 6464291037 de l'issue #97) : �
 
 | Question | Réponse | Effet sur le modèle |
 |---|---|---|
-| 97.2 Réglage « effets sonores » séparé, ou seulement le Muet ? | **Écart à la reco** : le Muet coupe **seulement la voix** ; pas de réglage séparé | Invariant 1 réécrit : en Muet, effets sonores joués, parole non lue. Seule la voix suspendue coupe les effets (invariants 2, 5, 7). Glossaire : note « Muet, précisé par #97 » corrigée. Questions 97.20, 97.21, 97.24 |
+| 97.2 Réglage « effets sonores » séparé, ou seulement le Muet ? | **Écart à la reco** : le Muet coupe **seulement la voix** ; pas de réglage séparé | Invariant 1 réécrit : en Muet, effets sonores joués, parole non lue. Seule la voix suspendue coupe les effets (invariants 2, 5, 7). Glossaire : note « Muet, précisé par #97 » corrigée. Suites réglées par 97.20, 97.21, 97.24 |
 | 97.3 Vibration ? | Non (= reco) | Rien : pas de vibration, pas de terme |
 | 97.4 Son de réponse fausse ? | Son doux (= reco) | `Reaction.effetSonore` = `reponseFausse` (invariant 8) |
 | 97.5 Ordre son de réponse, « pop », parole ; le son du texte complet remplace celui de la réponse juste ? | Reco : oui aux deux | `effetsSonoresApresUneBonneReponse` (invariants 3, 9) |
@@ -230,13 +230,25 @@ Réponse relayée par le responsable (commentaire 6464291037 de l'issue #97) : �
 | 97.14 Effets sonores quand la voix manque, et avec mouvements réduits ? | Reco : oui dans les trois cas | Invariant 5 |
 | 97.15 Annonce aux lecteurs d'écran | Reco : « Tu as gagné <n> étoile(s) », une fois ; rien sans étoile | Dans `src/` |
 | 97.16 Confettis à la fin de la séance de révision et du test de départ ? | Oui (= reco) | Dans `src/`. La reco disait « passés d'un toucher » : remplacé par 97.17 |
-| 97.17 Que fait un toucher pendant la célébration ? | **Écart à la reco** : **rien** ; il n'arrête ni les confettis ni le son de fin | Dans `src/` (aucune règle de domaine). Contredit le texte de l'issue et le skill : questions 97.22, 97.23 |
+| 97.17 Que fait un toucher pendant la célébration ? | **Écart à la reco** : **rien** ; il n'arrête ni les confettis ni le son de fin | Dans `src/` (aucune règle de domaine). Contredit le texte de l'issue et le skill : suites réglées par 97.22, 97.23 |
 | 97.18 Effet de fin d'une séance faite seulement d'une fluence ? | Reco : « grande-victoire » s'il y a un record (une seule fois), sinon « seance-terminee » ; puis « decouverte » | `effetsSonoresDeLaFin` reçoit le record (invariant 9) |
 | 97.19 « Je ne sais pas » puis la bonne réponse : quels sons ? | Reco : « bouton touché », puis « réponse juste » (et « pop ») | Événements ; invariant 8 |
 
-## Questions nouvelles (escalade)
+### Questions nouvelles 97.20 à 97.24 (2026-10-28)
 
-Soulevées par les deux écarts à la reco (97.2 et 97.17). Non tranchées : le modèle ci-dessus applique les réponses du PO telles quelles et ne suppose rien de plus.
+Réponse relayée par le responsable (commentaire 6466985516 de l'issue #97) : « 97 reco partout ». Toutes les recos s'appliquent.
+
+| Question | Réponse | Effet sur le modèle |
+|---|---|---|
+| 97.20 Plus rien ne coupe les effets sonores hors écrans du parent : voulu ? Garde-t-on « Muet » ? | Reco : oui, accepté pour cette story ; on garde « Muet », défini comme « coupe la voix du personnage guide » | Invariant 1. Glossaire : note « Muet, précisé par #97 » validée. Feuille de route (par le responsable) : story possible « Effets sonores : oui / non » dans les réglages du parent, si un parent la demande |
+| 97.21 Reformuler les scénarios « En Muet, Léa n'entend rien » qui touchent un bouton (#33, #65, #79) ? | Reco : oui, sans changer le sens : « n'entend aucune voix », dans la story #97, par `po-acceptance` ; le PO corrige le texte de l'issue | Rien dans le modèle (scénarios) |
+| 97.22 Un bouton touché pendant la célébration agit-il tout de suite ? | Reco : oui ; quitter l'écran arrête les confettis et l'effet sonore de fin | « Ce qui reste dans `src/` » ; invariant 4 |
+| 97.23 97.17 contredit l'issue et le skill `gamification` : lequel corrige-t-on ? | Reco : suivre 97.17 ; règle reformulée « une célébration ne retient jamais l'enfant : 1,5 s au plus, boutons et clavier utilisables » ; le PO corrige l'issue, le responsable fait corriger le skill | « Ce qui reste dans `src/` » (aucune règle de domaine) |
+| 97.24 Passer en Muet pendant un effet sonore : l'effet finit, seule la parole s'arrête ? | Reco : oui ; la parole qui suit l'effet n'est pas lue | Invariant 1 ; `passerEnMuet()` |
+
+## Questions nouvelles, réglées le 2026-10-28
+
+Soulevées par les deux écarts à la reco (97.2 et 97.17). Texte d'origine, gardé pour la trace ; réponses dans le tableau « Questions nouvelles 97.20 à 97.24 » ci-dessus. Il ne reste aucune question ouverte.
 
 **#97.20 Avec 97.2, plus rien dans l'application ne coupe les effets sonores (hors écrans du parent). Est-ce voulu, et garde-t-on le mot « Muet » pour un bouton qui laisse entendre des sons ?**
 Exemple : Léa joue dans une salle d'attente ; son parent passe la tablette en Muet ; « ding », « pop » et les sons de fin se font toujours entendre.
@@ -254,7 +266,7 @@ Reco : **suivre la réponse du PO** et reformuler la règle en « une célébrat
 
 **#97.24 Passer en Muet pendant un effet sonore : l'effet finit-il, et seule la voix s'arrête ?**
 Exemple : « séance terminée » joue (1,36 s) ; Léa touche Muet à 0,5 s.
-Reco : **oui, l'effet finit, la parole qui suit n'est pas lue** : c'est la suite logique de 97.2, et l'effet est court. C'est déjà ce que décrit le scénario « Passer en Muet pendant l'effet sonore de fin le laisse finir, sans phrase de fin dite » : à confirmer par le PO, car 97.2 ne le dit pas.
+Reco : **oui, l'effet finit, la parole qui suit n'est pas lue** : c'est la suite logique de 97.2, et l'effet est court. C'est déjà ce que décrit le scénario « Passer en Muet pendant l'effet sonore de fin le laisse finir, sans phrase de fin dite ». Réponse : reco.
 
 ## Questions posées au cadrage (réglées le 2026-10-28)
 
