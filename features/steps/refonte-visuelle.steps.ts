@@ -20,7 +20,10 @@ import { arriverSurLEpisode } from "./histoire.steps.ts";
 import { arriverSurLaRevision } from "./revisions-des-erreurs.steps.ts";
 import { arriverSurLeTestDeDepart } from "./test-de-depart.steps.ts";
 import { jouerJusquALaFinDeLaSeance } from "./etoiles-et-fin-de-seance.steps.ts";
+import { ecrireUnResultatDeLecon } from "../support/supabase-test.ts";
+import { ouvrirLEcran as ouvrirMesMedailles, leaJoueAvecSonVraiProfil } from "./ecran-mes-medailles.steps.ts";
 import {
+  BIBLIOTHEQUE,
   commencerLaSeanceComplete,
   commencerSeulementLExercice,
   etat as etatDeLaLecon,
@@ -207,12 +210,26 @@ When(/^Léa commence la séance de la leçon « ([^«»]+) »$/, async ({ page }
 type BilanDUnEcran = { ecran: string; insuffisants: ContrasteInsuffisant[]; mesures: number };
 const bilansDuTour = new WeakMap<Page, BilanDUnEcran[]>();
 
+/** « Mes médailles » n'est mesuré que s'il montre des badges : une leçon acquise (2 étoiles) par matière du niveau de Léa. */
+async function ouvrirMesMedaillesAvecDesBadges(famille: Famille, monde: Monde, page: Page): Promise<void> {
+  const niveau = monde.profils.get("Léa")?.niveau ?? "CP";
+  const profil = await leaJoueAvecSonVraiProfil(famille, monde, page);
+  const parMatiere = new Map<string, string>();
+  for (const lecon of BIBLIOTHEQUE) {
+    if (lecon.niveau === niveau && !parMatiere.has(lecon.matiere)) parMatiere.set(lecon.matiere, lecon.id);
+  }
+  for (const lecon of parMatiere.values()) await ecrireUnResultatDeLecon(profil, lecon, 2);
+  await ouvrirMesMedailles(famille, page, "toucher");
+  await expect(page.getByTestId("pastille-de-badge")).toHaveCount(parMatiere.size, { timeout: 20_000 });
+}
+
 When(/^Léa ouvre tour à tour chaque écran de l'enfant$/, async ({ famille, monde, page, $testInfo }) => {
   $testInfo.setTimeout(400_000);
   const bilans: BilanDUnEcran[] = [];
   bilansDuTour.set(page, bilans);
   for (const texte of ECRANS_DE_L_ENFANT) {
-    await arriverSur(famille, monde, page, lireLEcran(texte));
+    if (texte === "« Mes médailles »") await ouvrirMesMedaillesAvecDesBadges(famille, monde, page);
+    else await arriverSur(famille, monde, page, lireLEcran(texte));
     let derniers: ContrasteInsuffisant[] = [];
     let mesures = 0;
     // Un écran qui arrive en fondu n'est lisible qu'une fois posé : on mesure jusqu'au repos.
