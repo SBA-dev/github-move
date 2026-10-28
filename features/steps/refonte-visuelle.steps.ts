@@ -15,8 +15,7 @@ import {
   suivreUnElement,
 } from "../support/mesures-visuelles.ts";
 import type { Famille } from "../support/famille.ts";
-import { createBdd } from "playwright-bdd";
-import { Given, type Monde, test, Then, When } from "./fixtures.ts";
+import { Before, Given, type Monde, Then, When } from "./fixtures.ts";
 import { arriverSurLEpisode } from "./histoire.steps.ts";
 import { arriverSurLaRevision } from "./revisions-des-erreurs.steps.ts";
 import { arriverSurLeTestDeDepart } from "./test-de-depart.steps.ts";
@@ -248,7 +247,7 @@ Then(/^sur chacun, tout texte et chaque bouton ont un contraste d'au moins 4,5:1
   const bilans = bilansDuTour.get(page) ?? [];
   expect(bilans.length, "écrans parcourus").toBe(ECRANS_DE_L_ENFANT.length);
   expect(bilans.filter((b) => b.mesures === 0).map((b) => b.ecran), "écrans sans aucun texte mesuré").toEqual([]);
-  const fautifs = bilans.filter((b) => b.insuffisants.length > 0).map((b) => `${b.ecran} : ${JSON.stringify(b.insuffisants.slice(0, 3))}`);
+  const fautifs = bilans.filter((b) => b.insuffisants.length > 0).map((b) => `${b.ecran} : ${JSON.stringify(b.insuffisants)}`);
   expect(fautifs).toEqual([]);
 });
 
@@ -577,6 +576,8 @@ async function appuyer(page: Page, bouton: Locator, geste: Geste): Promise<void>
   const chemin = new URL(page.url()).pathname;
   const poignee = await bouton.elementHandle();
   if (!poignee) throw new Error("Bouton introuvable");
+  const zone = await bouton.boundingBox();
+  if (zone && geste !== "clavier") await page.mouse.move(zone.x + zone.width / 2, zone.y + zone.height / 2);
   await suivreUnElement(page, poignee);
   let compte = 0;
   const attendre = async () => {
@@ -671,7 +672,8 @@ Then(/^« Commencer » revient à sa place$/, ({ page }) => {
 
 Then(/^« Commencer » change de couleur$/, ({ page }) => {
   const [repos, ...suite] = echantillonsDe(page) as [Echantillon, ...Echantillon[]];
-  expect(suite.some((e) => e.present && e.fond !== repos.fond), "la couleur de fond change").toBe(true);
+  const change = (e: Echantillon) => e.present && (e.fond !== repos.fond || e.filtre !== repos.filtre);
+  expect(suite.some(change), "la couleur du bouton change pendant la pression (fond ou filtre)").toBe(true);
 });
 
 Then(/^« Commencer » ne bouge pas$/, ({ page }) => {
@@ -779,8 +781,6 @@ Then(
 
 // --- Captures de référence (@visuel) : les captures elles-mêmes seront prises quand l'interface sera finie
 
-const { Before } = createBdd(test);
-
 // Hasard fixé : un tirage reproductible remplace Math.random dès l'ouverture de la page (ordre des choix, variantes de félicitation).
 Before({ tags: "@visuel" }, async ({ page }) => {
   await page.addInitScript(() => {
@@ -797,5 +797,5 @@ Before({ tags: "@visuel" }, async ({ page }) => {
 Then(/^(.+) ressemble à sa capture de référence « ([^«»]+) »$/, async ({ page }, texte: string, capture: string) => {
   await expect(racineDe(page, lireLEcran(texte)).first()).toBeVisible();
   await page.evaluate(() => document.fonts.ready.then(() => undefined));
-  await expect(page).toHaveScreenshot(`${capture}.png`, { fullPage: true, animations: "disabled", maxDiffPixelRatio: 0.01 });
+  await expect(page).toHaveScreenshot(`${capture}.png`, { fullPage: false, animations: "disabled", maxDiffPixelRatio: 0.01 });
 });

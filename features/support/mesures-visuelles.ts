@@ -54,7 +54,7 @@ export async function elementsAvecCesCouleurs(page: Page, couleurs: readonly str
   }, [couleurs as string[], racine] as const);
 }
 
-export type ContrasteInsuffisant = { texte: string; rapport: number; couleur: string; fond: string };
+export type ContrasteInsuffisant = { selecteur: string; texte: string; rapport: number; couleur: string; fond: string };
 
 /** Les textes et boutons visibles dont le contraste avec leur fond effectif est inférieur à 4,5:1. */
 export async function contrastesInsuffisants(page: Page): Promise<{ insuffisants: ContrasteInsuffisant[]; mesures: number }> {
@@ -91,9 +91,28 @@ export async function contrastesInsuffisants(page: Page): Promise<{ insuffisants
     const couleursDuDegrade = (image: string): Rgba[] =>
       (image.match(/rgba?\([^)]*\)|color\([^)]*\)/g) ?? []).map(lire);
     // Les fonds possibles du texte : une couleur, ou toutes les couleurs d'un dégradé (le pire cas compte).
+    // Les couleurs du paysage de l'univers (ciel, lointain, collines, arbres), lues dans le DOM de son SVG : le pire cas compte.
+    const couleursDuPaysage = (): Rgba[] => {
+      const paysage = document.querySelector('[data-testid="paysage"]');
+      if (!paysage) return [];
+      const couleurs = [lire(getComputedStyle(paysage).backgroundColor)];
+      for (const forme of Array.from(paysage.querySelectorAll("svg stop, svg path, svg g, svg rect"))) {
+        const s = getComputedStyle(forme);
+        const brute = forme.tagName === "stop" ? s.stopColor : s.fill;
+        if (brute && brute !== "none" && !brute.startsWith("url(")) couleurs.push(lire(brute));
+      }
+      return couleurs.filter((c) => c[3] >= 0.999);
+    };
+    // Les fonds possibles du texte : une couleur, ou toutes les couleurs d'un dégradé (le pire cas compte).
+    // Sans fond opaque parmi les ancêtres (le fond du body est caché par le décor), le texte est sur le paysage.
     const fondsPossibles = (el: Element): Rgba[][] => {
       const pile: Rgba[][] = [];
+      const paysage = couleursDuPaysage();
       for (let courant: Element | null = el; courant; courant = courant.parentElement) {
+        if (paysage.length > 0 && (courant === document.body || courant === document.documentElement)) {
+          pile.push(paysage);
+          return pile;
+        }
         const s = getComputedStyle(courant);
         const couches: Rgba[] = [];
         const image = s.backgroundImage;
@@ -110,7 +129,11 @@ export async function contrastesInsuffisants(page: Page): Promise<{ insuffisants
       for (let c: Element | null = el; c; c = c.parentElement) o *= parseFloat(getComputedStyle(c).opacity);
       return o;
     };
-    const resultats: Array<{ texte: string; rapport: number; couleur: string; fond: string }> = [];
+    const decrire = (e: Element): string => {
+      const id = e.getAttribute("data-testid");
+      return e.tagName.toLowerCase() + (id ? `[data-testid=${id}]` : "") + (typeof e.className === "string" && e.className ? "." + e.className.trim().split(/\s+/).join(".") : "");
+    };
+    const resultats: Array<{ selecteur: string; texte: string; rapport: number; couleur: string; fond: string }> = [];
     let mesures = 0;
     const racine = document.querySelector(".application") ?? document.body;
     for (const el of [racine, ...Array.from(racine.querySelectorAll("*"))]) {
@@ -134,7 +157,7 @@ export async function contrastesInsuffisants(page: Page): Promise<{ insuffisants
         const texteVisible = sur([couleur[0], couleur[1], couleur[2], couleur[3] * opacite], fond);
         const r = rapport(texteVisible, fond);
         if (r < 4.5) {
-          resultats.push({ texte: texte.slice(0, 40), rapport: Math.round(r * 100) / 100, couleur: s.color, fond: `rgb(${fond.slice(0, 3).map(Math.round).join(", ")})` });
+          resultats.push({ selecteur: decrire(el), texte: texte.slice(0, 40), rapport: Math.round(r * 100) / 100, couleur: s.color, fond: `rgb(${fond.slice(0, 3).map(Math.round).join(", ")})` });
           break;
         }
       }
@@ -192,17 +215,17 @@ export async function bilanDesMouvementsDe(page: Page, racine: ElementHandle<Ele
 
 // --- Bouton qui s'enfonce
 
-export type Echantillon = { haut: number; gauche: number; transform: string; fond: string; present: boolean };
+export type Echantillon = { haut: number; gauche: number; transform: string; fond: string; filtre: string; present: boolean };
 
 /** Observe un élément à chaque image jusqu'à l'arrêt : sa position, sa transformation, son fond. */
 export async function suivreUnElement(page: Page, element: ElementHandle<Element>): Promise<void> {
   await page.evaluate((el) => {
-    const suivi = { echantillons: [] as Array<{ haut: number; gauche: number; transform: string; fond: string; present: boolean }>, arret: false };
+    const suivi = { echantillons: [] as Array<{ haut: number; gauche: number; transform: string; fond: string; filtre: string; present: boolean }>, arret: false };
     Reflect.set(window, "__suivi", suivi);
     const image = () => {
       const boite = el.getBoundingClientRect();
       const s = getComputedStyle(el);
-      suivi.echantillons.push({ haut: boite.top, gauche: boite.left, transform: s.transform, fond: s.backgroundColor, present: el.isConnected });
+      suivi.echantillons.push({ haut: boite.top, gauche: boite.left, transform: s.transform, fond: s.backgroundColor, filtre: s.filter, present: el.isConnected });
       if (!suivi.arret) requestAnimationFrame(image);
     };
     image();
@@ -215,7 +238,7 @@ export async function suivreUnElement(page: Page, element: ElementHandle<Element
  */
 export async function attendreQueLElementSeStabilise(page: Page, depuis: number): Promise<void> {
   await page.waitForFunction((debut) => {
-    const suivi = Reflect.get(window, "__suivi") as { echantillons: Array<{ haut: number; gauche: number; transform: string; fond: string; present: boolean }> };
+    const suivi = Reflect.get(window, "__suivi") as { echantillons: Array<{ haut: number; gauche: number; transform: string; fond: string; filtre: string; present: boolean }> };
     const apres = suivi.echantillons.slice(debut);
     const reference = JSON.stringify(suivi.echantillons[debut - 1]);
     const dernier = apres[apres.length - 1];
@@ -234,7 +257,7 @@ export async function nombreDEchantillons(page: Page): Promise<number> {
 
 export async function arreterLeSuivi(page: Page): Promise<Echantillon[]> {
   return await page.evaluate(() => {
-    const suivi = Reflect.get(window, "__suivi") as { echantillons: Array<{ haut: number; gauche: number; transform: string; fond: string; present: boolean }>; arret: boolean };
+    const suivi = Reflect.get(window, "__suivi") as { echantillons: Array<{ haut: number; gauche: number; transform: string; fond: string; filtre: string; present: boolean }>; arret: boolean };
     suivi.arret = true;
     return suivi.echantillons;
   });
