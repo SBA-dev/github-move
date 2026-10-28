@@ -13,6 +13,7 @@ function uneLecture(etatInitial: "son" | "muet" = "son") {
   const journal: string[] = [];
   const lecteur = new LecteurEnMemoire(journal);
   const lecteurDEffetsSonores = new LecteurDEffetsSonoresEnMemoire(journal);
+  const signalementsDeVoixBloquee: number[] = [];
   const lecture = new LectureAVoixHaute({
     lecteur,
     lecteurDEffetsSonores,
@@ -21,10 +22,10 @@ function uneLecture(etatInitial: "son" | "muet" = "son") {
     hasard: hasardFixe(0.5),
     caractereDuPersonnageGuide: () => CARACTERE_NOISETTE,
     etatInitial,
-    onVoixBloquee: () => {},
+    onVoixBloquee: () => signalementsDeVoixBloquee.push(1),
     onFinDeLaVoixBloquee: () => {},
   });
-  return { lecture, lecteurDEffetsSonores, lecteur, journal };
+  return { lecture, lecteurDEffetsSonores, lecteur, journal, signalementsDeVoixBloquee };
 }
 
 Deno.test("une suite d'effets sonores est jouée dans l'ordre demandé", async () => {
@@ -152,4 +153,42 @@ Deno.test("une nouvelle lecture arrête d'abord l'effet sonore en cours", async 
   await Promise.resolve();
 
   assertEquals(journal, ["effet:reponseJuste", "arret-effet", "effet:pointDuRecipient"]);
+});
+
+Deno.test("un effet sonore impossible n'empêche pas la parole et n'est pas pris pour une voix bloquée", async () => {
+  const { lecture, lecteurDEffetsSonores, lecteur, signalementsDeVoixBloquee } = uneLecture();
+  lecteurDEffetsSonores.faireEchouerLesEffets();
+
+  const parole = await lecture.lire("Bravo !", { effetsAvant: ["reponseJuste"] });
+
+  assertEquals(lecteur.lectures.length, 1);
+  assertEquals(parole, { entendue: true });
+  assertEquals(signalementsDeVoixBloquee, []);
+});
+
+Deno.test("jouer des effets sonores impossibles ne fait pas échouer l'appel", async () => {
+  const { lecture, lecteurDEffetsSonores, signalementsDeVoixBloquee } = uneLecture();
+  lecteurDEffetsSonores.faireEchouerLesEffets();
+
+  await lecture.jouer(["reponseJuste", "pointDuRecipient"]);
+
+  assertEquals(signalementsDeVoixBloquee, []);
+});
+
+Deno.test("voix bloquée, les effets sonores demandés avant la parole sont quand même joués", async () => {
+  const { lecture, lecteurDEffetsSonores, lecteur } = uneLecture();
+  lecteur.bloquerLaVoix();
+
+  await lecture.lire("Bravo !", { effetsAvant: ["reponseJuste"] });
+
+  assertEquals(lecteurDEffetsSonores.effetsJoues, ["reponseJuste"]);
+});
+
+Deno.test("sans synthèse vocale, les effets sonores demandés avant la parole sont quand même joués", async () => {
+  const { lecture, lecteurDEffetsSonores, lecteur } = uneLecture();
+  lecteur.retirerLaSyntheseVocale();
+
+  await lecture.lire("Bravo !", { effetsAvant: ["reponseJuste"] });
+
+  assertEquals(lecteurDEffetsSonores.effetsJoues, ["reponseJuste"]);
 });
