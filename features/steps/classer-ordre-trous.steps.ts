@@ -37,7 +37,7 @@ import { journal, laisserPasserLeDelaiDeLecture, normaliser, terminerLaLecture }
 type Exercice = Record<string, unknown>;
 type Groupe = { id: string; nom: string };
 type Item = { texte: string; groupe: string; aide?: string };
-type Geste = "toucher" | "glisser" | "clavier";
+export type Geste = "toucher" | "glisser" | "clavier";
 
 const TYPES_JOUES = ["classer", "ordre", "trous", "conjugaison", "dictee", "memoriser"];
 const EXERCICE_DE_TEST = "Exercice";
@@ -103,7 +103,7 @@ function etiquettesPoseesDans(page: Page, nom: string, texte: string) {
 }
 
 const dernieresPosees = new WeakMap<Page, string>();
-const etiquettesVisees = new WeakMap<Page, string>();
+export const etiquettesVisees = new WeakMap<Page, string>();
 
 // --- Poser une étiquette
 
@@ -117,12 +117,12 @@ async function focalise(page: Page, repere: { testid?: string; label?: string; t
   }, repere);
 }
 
-async function atteindreAuClavier(page: Page, repere: { testid?: string; label?: string; texte?: string }) {
+export async function atteindreAuClavier(page: Page, repere: { testid?: string; label?: string; texte?: string }) {
   for (let essai = 0; essai < 40 && !(await focalise(page, repere)); essai++) await page.keyboard.press("Tab");
   expect(await focalise(page, repere), `élément atteint au clavier : ${JSON.stringify(repere)}`).toBe(true);
 }
 
-async function poserDansLaMaison(page: Page, etiquette: string, nomDeLaMaison: string, geste: Geste) {
+export async function poserDansLaMaison(page: Page, etiquette: string, nomDeLaMaison: string, geste: Geste) {
   await demarrer(page);
   dernieresPosees.set(page, etiquette);
   if (geste === "glisser") {
@@ -145,7 +145,7 @@ async function nombreAPoser(page: Page): Promise<number> {
   return await page.getByTestId("etiquette").count();
 }
 
-async function poserEtAttendre(page: Page, etiquette: string, nomDeLaMaison: string, issue: "bien" | "mal") {
+export async function poserEtAttendre(page: Page, etiquette: string, nomDeLaMaison: string, issue: "bien" | "mal") {
   await demarrer(page);
   const avant = await nombreAPoser(page);
   const paroles = (await journal(page)).speaks;
