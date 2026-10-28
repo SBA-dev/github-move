@@ -93,7 +93,7 @@ export {
   effetSonoreDuRecord,
   effetsSonoresApresUneBonneReponse,
   effetsSonoresDeLaFin,
-  type FinDeParcours,
+  type FaitsDeLaFin,
 } from "./effets-sonores.ts";
 export { type Badge, badgeGagneParLaSeance, badgesDuProfil, nomDuBadge } from "./badges.ts";
 export {

@@ -21,7 +21,7 @@ export function effetSonoreDuRecord(issue: IssueDuRecord): EffetSonore | undefin
   return issue === "premierRecord" || issue === "nouveauRecord" ? "grandeVictoire" : undefined;
 }
 
-export interface FinDeParcours {
+export interface FaitsDeLaFin {
   readonly fin: "seance" | "seanceDeRevision" | "testDeDepart";
   readonly leconAcquise: boolean;
   readonly issueDuRecord: IssueDuRecord;
@@ -29,10 +29,10 @@ export interface FinDeParcours {
   readonly episodeOuvert: boolean;
 }
 
-export function effetsSonoresDeLaFin(parcours: FinDeParcours): readonly EffetSonore[] {
-  if (parcours.fin === "testDeDepart") return ["seanceTerminee"];
-  const victoire = parcours.leconAcquise || effetSonoreDuRecord(parcours.issueDuRecord) !== undefined;
+export function effetsSonoresDeLaFin(faits: FaitsDeLaFin): readonly EffetSonore[] {
+  if (faits.fin === "testDeDepart") return ["seanceTerminee"];
+  const victoire = faits.leconAcquise || effetSonoreDuRecord(faits.issueDuRecord) !== undefined;
   const effets: EffetSonore[] = [victoire ? "grandeVictoire" : "seanceTerminee"];
-  if (parcours.objetRecu || parcours.episodeOuvert) effets.push("decouverte");
+  if (faits.objetRecu || faits.episodeOuvert) effets.push("decouverte");
   return effets;
 }
