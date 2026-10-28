@@ -123,10 +123,18 @@ export class LectureAVoixHaute {
     for (const effet of effets) {
       if (suite !== this.suiteDEffets) return false;
       this.effetEnCours = true;
-      await this.dependances.lecteurDEffetsSonores.jouer(effet);
+      await this.jouerSansEchec(effet);
       if (suite === this.suiteDEffets) this.effetEnCours = false;
     }
     return suite === this.suiteDEffets;
+  }
+
+  private async jouerSansEchec(effet: EffetSonore): Promise<void> {
+    try {
+      await this.dependances.lecteurDEffetsSonores.jouer(effet);
+    } catch {
+      // Un effet impossible ne doit jamais empêcher la parole.
+    }
   }
 
   private arreterLesEffets(): void {
