@@ -12,6 +12,8 @@ const testDir = defineBddConfig({
 });
 
 const HORS_DU_SERVEUR_DE_DEV = /@production|@pwa/;
+// Réponse 96.9 : les captures de référence @visuel sont prises sur le seul projet telephone.
+const SANS_CAPTURES = /@production|@pwa|@visuel/;
 
 // Décision 0020 : les scénarios attendent surtout le réseau (projet Supabase en ligne), pas le processeur.
 // Chaque scénario prépare ses propres données (suffixe propre au worker, features/steps/fixtures.ts) :
@@ -30,7 +32,7 @@ export default defineConfig({
     screenshot: "only-on-failure",
   },
   projects: [
-    { name: "tablette", use: { ...devices["Desktop Chrome"], viewport: { width: 820, height: 1180 } }, grepInvert: HORS_DU_SERVEUR_DE_DEV },
+    { name: "tablette", use: { ...devices["Desktop Chrome"], viewport: { width: 820, height: 1180 } }, grepInvert: SANS_CAPTURES },
     { name: "telephone", use: { ...devices["Desktop Chrome"], viewport: { width: 360, height: 740 }, hasTouch: true }, grepInvert: HORS_DU_SERVEUR_DE_DEV },
   ],
   webServer: {
