@@ -72,6 +72,7 @@ export class LectureAVoixHaute {
   private voixSuspendue = false;
   private suiteDEffets = 0;
   private effetEnCours = false;
+  private sonDuBouton: Promise<boolean> | undefined;
   private voixBloqueeSignalee = false;
 
   constructor(private readonly dependances: DependancesDeLectureAVoixHaute) {
@@ -80,6 +81,7 @@ export class LectureAVoixHaute {
 
   async lire(brut: string, options: OptionsDeLecture = {}): Promise<ParoleEntendue> {
     if (this.voixSuspendue) return PAROLE_NON_ENTENDUE;
+    if (this.sonDuBouton && !await this.sonDuBouton) return PAROLE_NON_ENTENDUE;
     this.arreterLesEffets();
     if (options.effetsAvant && !await this.jouerLesEffets(options.effetsAvant)) return PAROLE_NON_ENTENDUE;
     if (this.etat === "muet") return PAROLE_NON_ENTENDUE;
@@ -116,6 +118,15 @@ export class LectureAVoixHaute {
     this.dependances.lecteur.arreter();
     this.arreterLesEffets();
     await this.jouerLesEffets(effets);
+  }
+
+  toucherUnBouton(): void {
+    this.dependances.lecteur.arreter();
+    this.arreterLesEffets();
+    const sonDuBouton = this.jouerLesEffets(["boutonTouche"]).finally(() => {
+      if (this.sonDuBouton === sonDuBouton) this.sonDuBouton = undefined;
+    });
+    this.sonDuBouton = sonDuBouton;
   }
 
   private async jouerLesEffets(effets: readonly EffetSonore[]): Promise<boolean> {

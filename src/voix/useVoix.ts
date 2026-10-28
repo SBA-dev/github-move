@@ -67,34 +67,22 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
     [voixDeLAppareil],
   );
 
-  const sonDuBouton = useRef<Promise<void>>(Promise.resolve());
-  const numeroDeCoupure = useRef(0);
-
-  /** La parole que le bouton déclenche attend la fin de « bouton touché » (sinon elle le coupe), sauf si la voix a été coupée entre-temps. */
-  const lire = useCallback(async (texte: string, options?: OptionsDeLecture) => {
-    const numeroALAppel = numeroDeCoupure.current;
-    await sonDuBouton.current;
-    if (numeroALAppel !== numeroDeCoupure.current) return { entendue: false };
-    return lecture.lire(texte, options);
-  }, [lecture]);
+  const lire = useCallback(
+    (texte: string, options?: OptionsDeLecture) => lecture.lire(texte, options),
+    [lecture],
+  );
 
   const jouer = useCallback((effets: readonly EffetSonore[]) => lecture.jouer(effets), [lecture]);
 
-  const toucherUnBouton = useCallback(() => {
-    sonDuBouton.current = lecture.jouer(["boutonTouche"]);
-  }, [lecture]);
+  const toucherUnBouton = useCallback(() => lecture.toucherUnBouton(), [lecture]);
 
-  const couperLaVoix = useCallback(() => {
-    numeroDeCoupure.current++;
-    lecture.couperLaVoix();
-  }, [lecture]);
+  const couperLaVoix = useCallback(() => lecture.couperLaVoix(), [lecture]);
 
   const basculerLeSon = useCallback(() => {
     const suivant: EtatDuSon = son === "son" ? "muet" : "son";
     memoriserLEtatDuSon(suivant);
     setSon(suivant);
     if (suivant === "muet") {
-      numeroDeCoupure.current++;
       lecture.passerEnMuet();
       deverrouillage.relacher();
       return;
@@ -104,7 +92,6 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
   }, [son, lecture, deverrouillage]);
 
   const suspendre = useCallback(() => {
-    numeroDeCoupure.current++;
     lecture.suspendre();
   }, [lecture]);
 
