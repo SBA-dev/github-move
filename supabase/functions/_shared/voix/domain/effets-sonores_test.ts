@@ -385,3 +385,15 @@ Deno.test("la parole en cours pendant laquelle un bouton est touché finit et es
   lecteur.terminerLaParole();
   assertEquals(await parole, { entendue: true });
 });
+
+Deno.test("une parole précédée d'effets arrête d'abord la parole en cours", async () => {
+  const { lecture, lecteur, journal } = uneLecture();
+  lecteur.lireSansTerminerAutomatiquement();
+  lecture.lire("Bravo !");
+  await Promise.resolve();
+
+  lecture.lire("Encore bravo !", { effetsAvant: ["reponseJuste"] });
+  await Promise.resolve();
+
+  assertEquals(journal, ["parole", "arret-parole", "effet:reponseJuste"]);
+});
