@@ -22,9 +22,10 @@ function destination(nouvelleProchaineLecon: LeconId | undefined): AvanceeDansLe
 }
 
 function recule(prochaineLeconConnue: LeconId, parcours: Parcours): boolean {
-  const nouvelleProchaineLecon = parcours.prochaineLecon;
-  return nouvelleProchaineLecon !== undefined &&
-    placeDe(nouvelleProchaineLecon, parcours) < placeDe(prochaineLeconConnue, parcours);
+  return parcours.lecons.some((nouvelle) =>
+    nouvelle.lecon === parcours.prochaineLecon &&
+    parcours.lecons.some((connue) => connue.lecon === prochaineLeconConnue && nouvelle.place < connue.place)
+  );
 }
 
 function estDevenueReussie(lecon: LeconId, parcours: Parcours): boolean {
@@ -33,8 +34,4 @@ function estDevenueReussie(lecon: LeconId, parcours: Parcours): boolean {
       uneLecon.lecon === lecon &&
       (uneLecon.etat.genre === "reussie" || uneLecon.etat.genre === "reussieAuTestDeDepart"),
   );
-}
-
-function placeDe(lecon: LeconId, parcours: Parcours): number {
-  return parcours.lecons.findIndex((uneLecon) => uneLecon.lecon === lecon);
 }
