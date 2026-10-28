@@ -1,6 +1,6 @@
 # 0033 : Système de design de l'enfant : jetons par rôle, polices servies par le projet, ressort des boutons et transitions
 
-**Statut** : Acceptée · 2026-10-28 (story #96, réponses du PO 96.1 à 96.6 et 96.11)
+**Statut** : Acceptée · 2026-10-28 (story #96, réponses du PO 96.1 à 96.6, 96.11, 96.12 et 96.13)
 
 ## Contexte
 
