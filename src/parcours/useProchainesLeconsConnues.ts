@@ -34,7 +34,10 @@ export function useProchainesLeconsConnues(profil: ProfilEnCours | undefined) {
     let annule = false;
     void lireLesLecturesDuParcours(profil.id).then((lectures) => {
       if (annule) return;
-      setReleve((actuel) => actuel?.profil === profil.id ? actuel : { profil: profil.id, parMatiere: prochainesLecons(lectures, profil) });
+      setReleve((actuel) => {
+        const dejaMemorisees = actuel?.profil === profil.id ? actuel.parMatiere : AUCUNE;
+        return { profil: profil.id, parMatiere: new Map([...prochainesLecons(lectures, profil), ...dejaMemorisees]) };
+      });
     });
     return () => {
       annule = true;
