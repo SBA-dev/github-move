@@ -238,6 +238,10 @@ export class Seance {
     return this.dernierExerciceRepondu?.conjugaisonCompleteParLaDerniereReponse() ?? false;
   }
 
+  exerciceCompleteParLaDerniereReponse(): boolean {
+    return this.dernierExerciceRepondu?.exerciceCompleteParLaDerniereReponse() ?? false;
+  }
+
   questionEstReussie(rang: number): boolean {
     return this.questions()[rang]?.reussie ?? false;
   }

@@ -247,6 +247,11 @@ export class ExerciceJoue {
     return this.contenu.formes !== undefined && this.derniereReponseCompleteLExercice();
   }
 
+  exerciceCompleteParLaDerniereReponse(): boolean {
+    return this.contenu.etiquettes?.derniereReponseCompleteLExercice() ??
+      (this.texteCompleteParLaDerniereReponse() || this.conjugaisonCompleteParLaDerniereReponse());
+  }
+
   scoreDeFluence(): { nom: string; score: number; reponsesFausses: number } | undefined {
     const chronometre = this.contenu.chronometre;
     if (!chronometre) return undefined;
