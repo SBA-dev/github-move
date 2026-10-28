@@ -77,4 +77,4 @@ Validée par le PO le 2026-10-27, après une reprise complète (la première ver
 - **Règle absolue** : un policier qui aide ; ni arme, ni menottes, ni arrestation, ni gyrophare.
 - Contrôles : « Réussir », « Rater », A / B / C ; `?anim=orchestre|trottinette|danse|echec&t=…`, `?planche=tetes|mains`.
 
-**Limites connues** : en glisse, la jambe levée reste basse ; le demi-tour de la trottinette est un basculement rapide ; comme chez Léo, les pieds glissent un peu pendant la marche ; le chiot est dessiné simplement ; pas de son. Dans l'application, le guide Police est Agent Max (`src/univers/personnages/AgentMax.tsx`), qui remplace Agente Mila (fait dans #96 : dessin fixe ; animations : #106).
+**Limites connues** : en glisse, la jambe levée reste basse ; le demi-tour de la trottinette est un basculement rapide ; comme chez Léo, les pieds glissent un peu pendant la marche ; le chiot est dessiné simplement ; pas de son. Dans l'application, le personnage guide Police est Agent Max (`src/univers/personnages/AgentMax.tsx`), qui remplace Agente Mila (fait dans #96 : dessin fixe ; animations : #106).
