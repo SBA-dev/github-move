@@ -45,3 +45,4 @@ Bloc C — Apprentissage
 - C1 `exerciceCompleteParLaDerniereReponse` : texte à trous, `ordre`, `classer`, `conjugaison`, `memoriser` (97.6).
 
 Puis câblage : adaptateur navigateur, `useVoix`, déroulement de la séance, révision, test de départ, fin de séance (animations, confettis, annonce), son des boutons, `public/sw.js`.
+- Bloc A (Voix) : A1 à A8 verts en 5 cycles (`3a1134a` → `2c28a81`). Revue intermédiaire delta `ee04c19..2c28a81` : À CORRIGER (cycle 1), 2 bloquants : tests manquants sur une suite d'effets interrompue, et `jouer` ne coupait pas la parole en cours (invariant 3). Corrigés par `b1cdbdc`, `9f005e0` (rouge), `290eda8` (fix), `825a7ad`. Revue du delta : **APPROUVÉ**. Dernier commit relu : `825a7ad`. Note pour le câblage : passer l'effet par `effetsAvant`, pas par deux appels séparés (en Muet, un `lire` sans effets arrête l'effet en cours).
