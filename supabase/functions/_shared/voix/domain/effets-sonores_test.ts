@@ -357,3 +357,31 @@ Deno.test("une parole demandée juste après avoir coupé la voix suit un bouton
   assertEquals(await parole, { entendue: true });
   assertEquals(journal, ["effet:boutonTouche", "parole"]);
 });
+
+Deno.test("un bouton touché pendant une parole en cours ne coupe pas la parole et ne joue aucun effet", async () => {
+  const { lecture, lecteur, journal } = uneLecture();
+  lecteur.lireSansTerminerAutomatiquement();
+  lecture.lire("Bravo !");
+  await Promise.resolve();
+
+  lecture.toucherUnBouton();
+  await Promise.resolve();
+
+  assertEquals(journal, ["parole"]);
+});
+
+Deno.test("la parole en cours pendant laquelle un bouton est touché finit et est entendue", async () => {
+  const { lecture, lecteur } = uneLecture();
+  lecteur.lireSansTerminerAutomatiquement();
+  const parole = lecture.lire("Bravo !");
+  await Promise.resolve();
+  let terminee = false;
+  parole.then(() => terminee = true);
+
+  lecture.toucherUnBouton();
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  assertEquals(terminee, false);
+
+  lecteur.terminerLaParole();
+  assertEquals(await parole, { entendue: true });
+});

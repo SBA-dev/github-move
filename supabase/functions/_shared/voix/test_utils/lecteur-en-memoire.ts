@@ -19,6 +19,11 @@ export class LecteurEnMemoire implements LecteurAVoixHaute {
     this.finAutomatique = false;
   }
 
+  terminerLaParole(): void {
+    this.finDeLaParole?.();
+    this.finDeLaParole = undefined;
+  }
+
   bloquerLaVoix(): void {
     this.echec = new VoixBloquee();
   }
