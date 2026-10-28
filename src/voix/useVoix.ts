@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { type PersonnageGuide, presentationAuRetourDuSon } from "@domain/motivation";
-import { type ChoixDeVoix, type EtatDuSon, LectureAVoixHaute, type ParoleEntendue, type VoixDisponible } from "@domain/voix";
+import { type ChoixDeVoix, type EffetSonore, type EtatDuSon, LectureAVoixHaute, type ParoleEntendue, type VoixDisponible } from "@domain/voix";
 import { hasardDuNavigateur } from "../hasard-navigateur.ts";
 import { ChoixDeVoixMemoriseSurLAppareil } from "./choix-de-voix-memorise.ts";
 import { DeverrouillageAudio, deverrouillerAuToucher } from "./deverrouillage-audio.ts";
-import { LecteurDEffetsSonoresSilencieux } from "./lecteur-d-effets-sonores-silencieux.ts";
+import { LecteurDEffetsSonoresDuNavigateur } from "./lecteur-d-effets-sonores-du-navigateur.ts";
 import { LecteurSyntheseVocale, syntheseVocale } from "./lecteur-synthese-vocale.ts";
 import { lireLEtatDuSon, memoriserLEtatDuSon } from "./memoire-du-son.ts";
 import { VoixDeLAppareilNavigateur } from "./voix-de-l-appareil-navigateur.ts";
@@ -15,6 +15,7 @@ export type Voix = {
   readonly son: EtatDuSon;
   readonly nomDuPersonnageGuideDeLaVoixBloquee: string | undefined;
   readonly lire: (texte: string, options?: OptionsDeLecture) => Promise<ParoleEntendue>;
+  readonly jouer: (effets: readonly EffetSonore[]) => Promise<void>;
   readonly couperLaVoix: () => void;
   readonly basculerLeSon: () => void;
   readonly suspendre: () => void;
@@ -34,7 +35,8 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
   });
   const [son, setSon] = useState(lireLEtatDuSon);
   const [nomDuPersonnageGuideDeLaVoixBloquee, setNomDuPersonnageGuideDeLaVoixBloquee] = useState<string | undefined>();
-  const [deverrouillage] = useState(() => new DeverrouillageAudio());
+  const [effetsSonores] = useState(() => new LecteurDEffetsSonoresDuNavigateur());
+  const [deverrouillage] = useState(() => new DeverrouillageAudio(() => effetsSonores.amorcer()));
   const [voixDeLAppareil] = useState(() => new VoixDeLAppareilNavigateur());
   const [choixMemorise] = useState(() => new ChoixDeVoixMemoriseSurLAppareil());
   const [syntheseVocalePresente] = useState(() => syntheseVocale() !== undefined);
@@ -43,7 +45,7 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
   const [lecture] = useState(() =>
     new LectureAVoixHaute({
       lecteur: new LecteurSyntheseVocale(),
-      lecteurDEffetsSonores: new LecteurDEffetsSonoresSilencieux(),
+      lecteurDEffetsSonores: effetsSonores,
       voixDeLAppareil,
       choixDeVoix: choixMemorise,
       hasard: hasardDuNavigateur,
@@ -65,6 +67,8 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
   );
 
   const lire = useCallback((texte: string, options?: OptionsDeLecture) => lecture.lire(texte, options), [lecture]);
+
+  const jouer = useCallback((effets: readonly EffetSonore[]) => lecture.jouer(effets), [lecture]);
 
   const couperLaVoix = useCallback(() => lecture.couperLaVoix(), [lecture]);
 
@@ -104,6 +108,7 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
     son,
     nomDuPersonnageGuideDeLaVoixBloquee,
     lire,
+    jouer,
     couperLaVoix,
     basculerLeSon,
     suspendre,

@@ -1,10 +1,21 @@
 // Service worker de Savanturier : coquille de l'application et bibliothèque disponibles sans réseau.
 // Au build, le plugin « pwa » remplace VERSION et FICHIERS_DU_BUILD (voir vite-plugins/pwa.ts).
 const VERSION = "developpement";
-const COQUILLE = ["/", "/manifest.webmanifest", "/icones/icone-192.png", "/icones/icone-512.png", "/bibliotheque.json"];
+const SONS = [
+  "reponse-juste",
+  "reponse-fausse",
+  "point-du-recipient",
+  "texte-complet",
+  "seance-terminee",
+  "grande-victoire",
+  "decouverte",
+  "bouton-touche",
+].map((nom) => `/sons/${nom}.mp3`);
+const COQUILLE = ["/", "/manifest.webmanifest", "/icones/icone-192.png", "/icones/icone-512.png", "/bibliotheque.json", ...SONS];
 const FICHIERS_DU_BUILD = [];
 const NOM_DU_CACHE = `savanturier-${VERSION}`;
 const PREFIXE_DES_FICHIERS_HACHES = "/assets/";
+const PREFIXE_DES_SONS = "/sons/";
 
 self.addEventListener("install", (evenement) => {
   evenement.waitUntil(precacherLaCoquille().then(() => self.skipWaiting()));
@@ -24,6 +35,8 @@ self.addEventListener("fetch", (evenement) => {
     evenement.respondWith(reseauPuisCache(requete, url.pathname));
   } else if (url.pathname.startsWith(PREFIXE_DES_FICHIERS_HACHES)) {
     evenement.respondWith(cachePuisReseau(requete));
+  } else if (url.pathname.startsWith(PREFIXE_DES_SONS)) {
+    evenement.respondWith(sonDuCache(requete));
   }
 });
 
@@ -60,4 +73,22 @@ async function cachePuisReseau(requete) {
   const reponse = await fetch(requete);
   if (reponse.ok) await cache.put(requete, reponse.clone());
   return reponse;
+}
+
+// Safari ne lit un son que si le serveur répond aux requêtes « Range » par un 206 : on le fait depuis le cache.
+async function sonDuCache(requete) {
+  const reponse = await cachePuisReseau(new Request(requete.url));
+  const plage = /^bytes=(\d+)-(\d*)$/.exec(requete.headers.get("range") ?? "");
+  if (!plage || !reponse.ok) return reponse;
+  const octets = await reponse.arrayBuffer();
+  const debut = Number(plage[1]);
+  const fin = plage[2] === "" ? octets.byteLength - 1 : Math.min(Number(plage[2]), octets.byteLength - 1);
+  return new Response(octets.slice(debut, fin + 1), {
+    status: 206,
+    headers: {
+      "content-type": "audio/mpeg",
+      "content-range": `bytes ${debut}-${fin}/${octets.byteLength}`,
+      "content-length": String(fin - debut + 1),
+    },
+  });
 }
