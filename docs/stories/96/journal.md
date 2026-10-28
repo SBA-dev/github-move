@@ -35,3 +35,6 @@
 - 2 KO restants : scénarios de #6 qui attendent le paysage sur « Se connecter » (contredit 96.13). ESCALADE #96.17 publiée (reco : appliquer 96.13). #96.16 toujours en attente.
 - Contrôle de la règle absolue : l'objet à la ceinture d'Agent Max est la loupe de la maquette (manche brun, cercle doré, verre), pas une arme.
 - Leçon d'outillage : lancer les longues exécutions E2E avec `setsid nohup` (un serveur Vite perdu en cours de route sinon).
+- Review complète, cycle 1 : **À CORRIGER**, 1 bloquant (pastilles de matière de « Mes médailles » en dur et sous 4,5:1). RED `98a32cb`, correctif `1b8eeae` ; non bloquants : `313f6af`, `2e28f79`, `c386b95`, `36692c6`, décision 0033 `9447f54`, `deno.lock` `fbed264`.
+- Paysage sur toute la hauteur `4280844` ; captures versionnées `features/captures/` (`17bbe4b`), `@visuel` hors `tablette` (`698e7f3`) ; hasard à graine fixe et attente des polices `0ba2f8f` ; 4 captures `e4a037f` (stables 2 × 4/4), montrées au PO, validation attendue.
+- Review delta, cycle 2 : **À CORRIGER**, 1 bloquant nouveau : des titres sans voile posés sur le paysage (« Français · CP » de « Mon parcours », titre de classe de « Toutes les leçons ») sont sous 4,5:1, et la mesure du tour des contrastes ignorait le paysage. RED en cours (`e2e-tester`), puis correctif.
