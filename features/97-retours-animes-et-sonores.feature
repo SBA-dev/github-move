@@ -1,5 +1,5 @@
 # language: fr
-@issue-97 @wip
+@issue-97
 Fonctionnalité: Retours animés et sonores pendant la séance
   En tant qu'enfant
   Je veux que chaque réponse, chaque point gagné et chaque fin de séance se voient et s'entendent

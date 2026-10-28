@@ -1,7 +1,7 @@
 # Critères d'acceptance : story #97, retours animés et sonores pendant la séance
 
 Scénarios : `features/97-retours-animes-et-sonores.feature`. Tags :
-- `@issue-97 @wip` sur la fonctionnalité ;
+- `@issue-97` sur la fonctionnalité (`@wip` retiré : les scénarios sont verts) ;
 - aucun `@a-valider` : toutes les questions sont réglées ; les scénarios réglés par le PO portent un commentaire « Décision 97.n » ;
 - `@pwa` sur le scénario hors ligne, lancé avec `playwright.pwa.config.ts` comme ceux de #8.
 
