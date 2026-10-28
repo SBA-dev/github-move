@@ -89,7 +89,10 @@ export class LectureAVoixHaute {
     if (this.sonDuBouton && !await this.sonDuBouton) return PAROLE_NON_ENTENDUE;
     if (coupuresALaDemande !== this.coupuresDeLaVoix) return PAROLE_NON_ENTENDUE;
     this.arreterLesEffets();
-    if (options.effetsAvant && !await this.jouerLesEffets(options.effetsAvant)) return PAROLE_NON_ENTENDUE;
+    if (options.effetsAvant) {
+      this.dependances.lecteur.arreter();
+      if (!await this.jouerLesEffets(options.effetsAvant)) return PAROLE_NON_ENTENDUE;
+    }
     if (this.etat === "muet") return PAROLE_NON_ENTENDUE;
     return await this.lireLeTexte(brut, options);
   }
