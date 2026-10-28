@@ -93,3 +93,19 @@ Deno.test("la réponse d'un exercice à une seule réponse ne complète pas l'ex
 
   assertEquals(seance.exerciceCompleteParLaDerniereReponse(), false);
 });
+
+Deno.test("le dernier vers placé ne complète pas l'exercice de mémorisation tant que des mots cachés restent à trouver", () => {
+  const exerciceJoue = poesieAvecTousLesVersPlaces();
+
+  assertEquals(exerciceJoue.exerciceCompleteParLaDerniereReponse(), false);
+});
+
+Deno.test("« Je ne sais pas » sur la dernière étiquette d'un exercice d'ordre ne complète pas l'exercice", () => {
+  const seance = seanceCommencee(leconDOrdreDuMot());
+  seance.repondre(Reponse.placement("do"));
+  seance.repondre(Reponse.placement("mi"));
+
+  seance.direJeNeSaisPas("no");
+
+  assertEquals(seance.exerciceCompleteParLaDerniereReponse(), false);
+});
