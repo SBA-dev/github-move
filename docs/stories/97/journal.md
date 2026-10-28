@@ -17,3 +17,31 @@ Numéro de décision réservé : 0034.
 - `ESCALADE` publiée sur #97 pour les questions #97.20 à #97.24. Toujours pas de code : #96 n'est pas mergée.
 - 10:47 UTC : réponse du PO aux questions 97.20 à 97.24, « 97 reco partout » (annonce [Responsable] sur #97, commentaire 6466985516). Report par `domain-modeler` (`5fc3f0a`) et `po-acceptance` (`ecdbeca`) : 7 règles, 49 scénarios, 0 `@a-valider`. Titre seul du scénario de #79 (l. 141) renommé (97.21), avec `docs/stories/79/acceptance.md`. Le skill `gamification` (97.23) sera corrigé par le responsable en fin de vague, sauf si on le fait dans la PR.
 - Cadrage terminé. Attente : merge de #96 (annoncé par le responsable) avant le TDD.
+
+### TDD (à partir du 2026-10-28 15:55 UTC)
+
+- 15:53 UTC : annonce [Responsable] sur #64 (commentaire 6473782758) : #96 mergée (`2896d8e`), code autorisé. `main` intégrée par un merge commit (`e0d9b79`), sans conflit. Unitaires : 2462 verts.
+- Consigne PO (#64, 07:18 UTC) : avant la PR, ne lancer que les scénarios `@issue-97`.
+
+Comportements, dans l'ordre :
+
+Bloc A — Voix
+- A1 `EffetSonore` : liste fermée des 8 effets sonores.
+- A2 `LectureAVoixHaute.jouer(effets)` joue les effets l'un après l'autre par le port `LecteurDEffetsSonores`.
+- A3 `lire(texte, { effetsAvant })` : effets puis parole, jamais en même temps.
+- A4 En Muet, les effets sont joués et la parole ne l'est pas (97.2).
+- A5 Passer en Muet pendant un effet : l'effet finit, la parole qui suivait n'est pas lue (97.24).
+- A6 Voix suspendue : aucun effet ; la suspension arrête l'effet en cours (97.13).
+- A7 Une nouvelle lecture, `couperLaVoix` ou `faireSilence` arrête l'effet en cours.
+- A8 Un effet impossible n'empêche pas la parole et ne signale pas la voix bloquée ; sans synthèse vocale, les effets sont joués (97.14).
+
+Bloc B — Motivation
+- B1 `Reaction.effetSonore` : `reponseJuste` / `reponseFausse` ; aucun pour « Je ne sais pas » (97.4, 97.11).
+- B2 `effetsSonoresApresUneBonneReponse` : réponse juste, point du récipient si un point est gagné, texte complet à la place de la réponse juste pour un exercice complété ; pas de point pendant la fluence (97.5, 97.6, 97.10).
+- B3 `effetSonoreDuRecord` : grande victoire pour un premier ou un nouveau record (97.8).
+- B4 `effetsSonoresDeLaFin` : séance terminée ou grande victoire, puis découverte une seule fois ; test de départ ; séance faite seulement d'une fluence (97.7, 97.9, 97.18).
+
+Bloc C — Apprentissage
+- C1 `exerciceCompleteParLaDerniereReponse` : texte à trous, `ordre`, `classer`, `conjugaison`, `memoriser` (97.6).
+
+Puis câblage : adaptateur navigateur, `useVoix`, déroulement de la séance, révision, test de départ, fin de séance (animations, confettis, annonce), son des boutons, `public/sw.js`.
