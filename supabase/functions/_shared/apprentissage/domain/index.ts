@@ -80,6 +80,8 @@ export { tuilesDuJour } from "./tuiles-du-jour.ts";
 export type { EntreesDesTuilesDuJour, TuileDuJour } from "./tuiles-du-jour.ts";
 export { leconSuivanteEnFinDeSeance } from "./lecon-suivante-en-fin-de-seance.ts";
 export { leconSuivanteDansLeParcours } from "./lecon-suivante-dans-le-parcours.ts";
+export { avanceeDansLeParcours } from "./avancee-dans-le-parcours.ts";
+export type { AvanceeDansLeParcours } from "./avancee-dans-le-parcours.ts";
 export type {
   EntreesDuParcours,
   EtatDansLeParcours,
