@@ -8,11 +8,12 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : glisser les étique
   Tranche 98a de la story #98 (docs/stories/98/domain-model.md, « Découpage révisé ») : le geste glisser au doigt,
   les invariants, et l'exercice classer avec la maison dessinée dans chacun des 6 univers (décision 98.2 :
   habillage par univers). Le petit train de l'exercice ordre et de l'ordre des vers de memoriser sort de cette tranche
-  (question 98.30) ; les autres types d'exercices sont dans les tranches suivantes (#126 à #129). La story ne change
-  que l'affichage : la correction, les erreurs, « Je ne sais pas », l'aide et les étoiles restent celles du domaine
-  (#18, #22, #23, #24), et les retours de #97 (effet sonore, étincelles) ne sont pas redécrits.
-  Les commentaires « Décision 98.n » renvoient aux questions de docs/stories/98/acceptance.md. Les scénarios à valider
-  par le PO portent un tag : ils dépendent d'une question encore ouverte (98.25 à 98.31).
+  vers #130 (décision 98.30) ; les autres types d'exercices sont dans les tranches suivantes (#126, #127, #131, #128,
+  #129). La story ne change que l'affichage : la correction, les erreurs, « Je ne sais pas », l'aide et les étoiles
+  restent celles du domaine (#18, #22, #23, #24), et les retours de #97 (effet sonore, étincelles) ne sont pas
+  redécrits.
+  Les commentaires « Décision 98.n » renvoient aux questions de docs/stories/98/acceptance.md. Le cadrage est validé
+  par le PO (98.25 à 98.31 tranchées le 2026-10-28) : aucun scénario n'attend plus de réponse.
 
   Mots employés dans ces scénarios (mots d'interface, pas des termes du domaine) :
   - « faire glisser du doigt » : le geste glisser au toucher, sur la tablette et sur le téléphone (décision 98.17).
@@ -21,7 +22,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : glisser les étique
     s'ouvre et qui s'allume quand une étiquette y est bien rangée (décision 98.6). Le mot « maison » reste le même
     dans les 6 univers, à l'écran comme à la voix ;
   - « le dessin de l'univers » : la maison a un dessin propre à chaque univers (décision 98.2). Les scénarios ne
-    décrivent jamais ce qui est dessiné : l'objet de chaque univers est choisi par le PO (question 98.25) et validé
+    décrivent jamais ce qui est dessiné : l'objet de chaque univers est choisi par le PO (décision 98.25) et validé
     sur une planche, pas par un scénario ;
   - « s'allume » n'est jamais « brille » : « brille » reste réservé à la bonne réponse montrée après « Je ne sais pas »,
     de la même façon dans les 6 univers ;
@@ -138,7 +139,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : glisser les étique
       Et Noisette ne dit aucun encouragement
 
     # Décisions 98.8 et 98.22. Le glisser au doigt arrive avec cette tranche : il ne doit pas poser une étiquette
-    # d'un ordre, qui se pose toujours en la touchant (le petit train viendra avec la tranche suivante, 98.30).
+    # d'un ordre, qui se pose toujours en la touchant (le petit train viendra avec #130, décision 98.30).
     Scénario: Dans un ordre, essayer de glisser une étiquette ne la pose pas : on la touche
       Étant donné que Léa joue seulement l'exercice « Le mot en morceaux » de la leçon « Les syllabes »
       Quand Léa essaie de faire glisser du doigt l'étiquette « do » vers les places à remplir
@@ -185,8 +186,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : glisser les étique
 
   Règle: Dans chacun des 6 univers, les maisons de classer ont le dessin de cet univers ; changer d'univers ne change ni les gestes, ni les textes lus, ni les étoiles, ni la façon dont brille la bonne réponse montrée ; un profil sans univers connu voit les maisons de l'univers « Animaux de la forêt »
 
-    # Décision 98.2 ; questions 98.30 et 98.31 (une maison de chaque univers dans cette tranche, la PR attend les 6)
-    @a-valider
+    # Décisions 98.2, 98.30 et 98.31 (une maison de chaque univers dans cette tranche, la PR attend les 6)
     Plan du Scénario: Dans l'univers « <univers> », les maisons ont le dessin de cet univers et s'annoncent toujours « Maison « … » »
       Étant donné que Léa a choisi l'univers <clé>
       Et que Léa est sur la page de la leçon « Les sons ou, on, an »
