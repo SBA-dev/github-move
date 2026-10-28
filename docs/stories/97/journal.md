@@ -56,3 +56,10 @@ Puis câblage : adaptateur navigateur, `useVoix`, déroulement de la séance, r�
 - Une règle était restée dans React (« le record déjà fêté n'est pas rejoué ») : passée dans le domaine par un cycle TDD (`8de5939` rouge, `705b231`). Changement de règle : `effetsSonoresDeLaFin` ne rejoue plus `grandeVictoire` pour un record (invariant 9).
 - Câblage K4 (`6bbff4d`) : « bouton touché » par un écouteur à part du ressort de #96, marquage `data-donne-une-reponse` et `data-bascule-du-son`.
 - Étape 4 : review complète lancée sur le câblage.
+
+### Review (étape 4)
+
+- Cycle 1 : À CORRIGER, 2 bloquants. Étincelles du texte complet invisibles, car leur CSS avait été supprimé avec `Etincelles.tsx` (`50475e1`). Attente « bouton touché » puis parole codée dans `useVoix` sans test : passée dans le domaine par `toucherUnBouton` (`55c8c97` rouge, `f7ef9cf`). Non bloquants traités : fait `fluenceSeule` (`9f4fae4`, `74da717`, `f42552f`), vrais nombres de la fluence, dépendances de `useRetourDe`, 416 et `bytes=-N` dans `sw.js` (`bc6d4ef`), lint (`401a2b1`), test de la protection d'un bouton coupé (`d1bd813`).
+- Cycle 2 : À CORRIGER, 1 bloquant (bug de `f7ef9cf`). Après `faireSilence()`, la parole d'un gestionnaire de bouton était perdue et « bouton touché » était coupé. Corrigé par `95c6b1a` (rouge) puis `ae1552d`.
+- Cycle 3 : **APPROUVÉ** (2520 tests unitaires).
+- Restent pour l'E2E : le step `etoiles-et-fin-de-seance.steps.ts:577` vise `etincelles`, il doit viser `confettis` (sens inchangé). Question au PO : un bouton touché pendant la consigne coupe la consigne (invariant 3, jamais par-dessus).
