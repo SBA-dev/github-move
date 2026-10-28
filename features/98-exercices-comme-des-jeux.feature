@@ -9,17 +9,17 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : glisser les étique
   au doigt et les invariants, pour les exercices classer, ordre et l'ordre des vers de memoriser. Les autres types
   d'exercices sont hors de cette tranche (98b à 98e). La story ne change que l'affichage : la correction, les erreurs,
   « Je ne sais pas », l'aide et les étoiles restent celles du domaine (#18, #22, #23, #24).
-  Les commentaires « Question 98.n » renvoient aux questions ouvertes de docs/stories/98/acceptance.md ; les scénarios
-  qui en dépendent portent le tag @a-valider. Les scénarios qui s'appuient sur un retour de #97 (effet sonore,
-  étincelles) portent le tag @depend-de-97 : ils ne redécrivent pas ces retours.
+  Cadrage validé par le PO le 2026-10-28 : les commentaires « Décision 98.n » renvoient aux questions tranchées de
+  docs/stories/98/acceptance.md. Les scénarios qui s'appuient sur un retour de #97 (effet sonore, étincelles)
+  portent le tag @depend-de-97 : ils ne redécrivent pas ces retours.
 
   Mots employés dans ces scénarios (mots d'interface, pas des termes du domaine) :
-  - « faire glisser du doigt » : le geste glisser au toucher, sur la tablette et sur le téléphone (Question 98.17).
+  - « faire glisser du doigt » : le geste glisser au toucher, sur la tablette et sur le téléphone (décision 98.17).
     La réponse qu'il produit reste un placement. Les scénarios sans précision de geste valent pour tous les gestes ;
   - « la maison » : l'interface d'un groupe de classer (décision n°24), dessinée en petite maison dont la porte
-    s'ouvre et qui s'allume quand une étiquette y est bien rangée (Question 98.6) ;
+    s'ouvre et qui s'allume quand une étiquette y est bien rangée (décision 98.6) ;
   - « s'allume » n'est jamais « brille » : « brille » reste réservé à la bonne réponse montrée après « Je ne sais pas » ;
-  - « le petit train », « un wagon » : l'interface des places d'un ordre et de l'ordre des vers (Question 98.1).
+  - « le petit train », « un wagon » : l'interface des places d'un ordre et de l'ordre des vers (décision 98.1).
     Le petit train avance d'un wagon à chaque bon placement ;
   - « revient en glissant » : l'étiquette lâchée retourne à sa place parmi les étiquettes à poser par un mouvement,
     au lieu de réapparaître d'un coup ; durées pour l'implémentation et la review, jamais dans les étapes :
@@ -86,8 +86,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : glisser les étique
         | 3       | 2 étoiles |
         | 4       | 1 étoile  |
 
-    # Question 98.18
-    @a-valider
+    # Décision 98.18
     Plan du Scénario: <Où>, une question de classer reste une question à choix, sans étiquette à faire glisser
       Étant donné que <situation>
       Quand <début>
@@ -101,8 +100,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : glisser les étique
 
   Règle: Une étiquette de classer se glisse du doigt jusqu'à une maison ; seul un lâcher sur une maison est une réponse : lâchée ailleurs, elle revient à sa place sans coûter d'erreur ; toucher puis toucher et le clavier restent possibles, et une étiquette rangée ne se déplace plus
 
-    # Question 98.17
-    @a-valider
+    # Décision 98.17
     Scénario: Glissée du doigt dans la maison « ou », l'étiquette « loup » y reste
       Étant donné que Léa joue seulement l'exercice « Les maisons des sons » de la leçon « Les sons ou, on, an »
       Quand Léa fait glisser du doigt l'étiquette « loup » dans la maison « ou »
@@ -110,8 +108,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : glisser les étique
       Et Noisette applaudit en sautant
       Et il reste 8 étiquettes à poser
 
-    # Questions 98.17 et 98.24
-    @a-valider
+    # Décisions 98.17 et 98.24
     Scénario: Sur un écran de 360 px, Léa glisse du doigt une étiquette jusqu'à la dernière maison
       Étant donné que l'écran de l'appareil mesure 360 px de large
       Et que Léa joue seulement l'exercice « Les maisons des sons » de la leçon « Les sons ou, on, an »
@@ -119,8 +116,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : glisser les étique
       Alors l'étiquette « dent » reste dans la maison « an »
       Et la page tient dans la largeur de l'écran
 
-    # Question 98.20
-    @a-valider
+    # Décision 98.20
     Scénario: Une étiquette qui passe au-dessus d'une maison, sans être lâchée, ne donne aucune réponse
       Étant donné que Léa joue seulement l'exercice « Les maisons des sons » de la leçon « Les sons ou, on, an »
       Quand Léa fait passer du doigt l'étiquette « loup » au-dessus de la maison « on », sans la lâcher
@@ -128,8 +124,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : glisser les étique
       Et la maison « on » se signale comme toute maison survolée, sans dire si c'est la bonne
       Mais Noisette ne dit aucun encouragement
 
-    # Question 98.11
-    @a-valider
+    # Décision 98.11
     Scénario: Lâchée hors de toute maison, l'étiquette revient à sa place, sans encouragement
       Étant donné que Léa joue seulement l'exercice « Les maisons des sons » de la leçon « Les sons ou, on, an »
       Quand Léa fait glisser du doigt l'étiquette « loup » et la lâche hors de toute maison
@@ -137,16 +132,15 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : glisser les étique
       Et Noisette ne dit aucun encouragement
       Et il reste 9 étiquettes à poser
 
-    # Question 98.11
-    @a-valider @depend-de-97
+    # Décision 98.11
+    @depend-de-97
     Scénario: Lâchée hors de toute maison, l'étiquette ne fait entendre aucun son de réponse
       Étant donné que Léa joue seulement l'exercice « Les maisons des sons » de la leçon « Les sons ou, on, an »
       Quand Léa fait glisser du doigt l'étiquette « loup » et la lâche hors de toute maison
       Alors Léa n'entend pas l'effet sonore « réponse fausse »
       Et Léa n'entend pas l'effet sonore « réponse juste »
 
-    # Question 98.11
-    @a-valider
+    # Décision 98.11
     Scénario: Lâcher 5 fois une étiquette hors de toute maison ne coûte aucune étoile
       Étant donné qu'une leçon de test a un seul exercice classer de deux étiquettes, « loup » pour « ou » et « pont » pour « on »
       Et que Léa a lâché 5 fois l'étiquette « loup » hors de toute maison
@@ -161,8 +155,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : glisser les étique
       Alors l'étiquette « loup » reste dans la maison « ou »
       Et Noisette ne dit aucun encouragement
 
-    # Questions 98.8 et 98.22
-    @a-valider
+    # Décisions 98.8 et 98.22
     Scénario: Dans un ordre, essayer de glisser une étiquette ne la pose pas : on la touche
       Étant donné que Léa joue seulement l'exercice « Le mot en morceaux » de la leçon « Les syllabes »
       Quand Léa essaie de faire glisser du doigt l'étiquette « do » jusqu'au petit train
@@ -170,8 +163,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : glisser les étique
       Et le petit train n'a aucun wagon
       Et Noisette ne dit aucun encouragement
 
-    # Question 98.15
-    @a-valider
+    # Décision 98.15
     Scénario: Au clavier, les flèches passent d'une maison à l'autre
       Étant donné que Léa joue seulement l'exercice « Les maisons des sons » de la leçon « Les sons ou, on, an »
       Quand Léa pose l'étiquette « loup » dans la maison « ou » au clavier, en passant d'une maison à l'autre avec les flèches
@@ -179,16 +171,14 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : glisser les étique
 
   Règle: Dans classer, la bonne maison ouvre sa porte, garde l'étiquette et s'allume ; dans une mauvaise maison, l'étiquette revient en glissant parmi les étiquettes à poser, avec l'encouragement de #18, sans retarder l'effet sonore de #97
 
-    # Question 98.6
-    @a-valider
+    # Décision 98.6
     Scénario: Au début de l'exercice, les trois maisons sont fermées et éteintes
       Étant donné que Léa est sur la page de la leçon « Les sons ou, on, an »
       Quand Léa choisit seulement l'exercice « Les maisons des sons »
       Alors Léa voit les maisons « ou », « on » et « an », et 9 étiquettes à poser
       Et les maisons « ou », « on » et « an » ont la porte fermée et sont éteintes
 
-    # Question 98.6
-    @a-valider
+    # Décision 98.6
     Scénario: L'étiquette « loup » bien rangée fait ouvrir la porte de la maison « ou », qui s'allume
       Étant donné que Léa joue seulement l'exercice « Les maisons des sons » de la leçon « Les sons ou, on, an »
       Quand Léa pose l'étiquette « loup » dans la maison « ou »
@@ -196,8 +186,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : glisser les étique
       Et la porte de la maison « ou » s'ouvre, puis la maison s'allume
       Mais la maison « ou » ne brille pas comme une bonne réponse montrée
 
-    # Question 98.6
-    @a-valider
+    # Décision 98.6
     Scénario: Glissée du doigt dans la mauvaise maison, l'étiquette revient en glissant, avec l'aide par défaut
       Étant donné que Léa joue seulement l'exercice « Les maisons des sons » de la leçon « Les sons ou, on, an »
       Quand Léa fait glisser du doigt l'étiquette « loup » dans la maison « on »
@@ -214,24 +203,21 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : glisser les étique
 
   Règle: Dans un ordre et dans l'ordre des vers, chaque bonne étiquette s'accroche comme un wagon au petit train, qui avance d'un wagon ; une mauvaise étiquette ne s'accroche pas ; la dernière garde les étincelles de #97
 
-    # Question 98.1
-    @a-valider
+    # Décision 98.1
     Scénario: La bonne première étiquette « do » devient le premier wagon du petit train
       Étant donné que Léa joue seulement l'exercice « Le mot en morceaux » de la leçon « Les syllabes »
       Quand Léa pose l'étiquette « do »
       Alors l'étiquette « do » prend la première place
       Et le petit train avance d'un wagon, avec « do » dans le premier wagon
 
-    # Question 98.1
-    @a-valider
+    # Décision 98.1
     Scénario: La deuxième bonne étiquette s'accroche derrière la première
       Étant donné que Léa joue seulement l'exercice « Le mot en morceaux » de la leçon « Les syllabes »
       Et que Léa a posé l'étiquette « do »
       Quand Léa pose l'étiquette « mi »
       Alors le petit train a 2 wagons, « do » puis « mi »
 
-    # Question 98.1
-    @a-valider
+    # Décision 98.1
     Scénario: Une mauvaise première étiquette ne s'accroche pas, et le petit train n'avance pas
       Étant donné que Léa joue seulement l'exercice « Le mot en morceaux » de la leçon « Les syllabes »
       Quand Léa pose l'étiquette « mi »
@@ -239,8 +225,8 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : glisser les étique
       Et le petit train n'a aucun wagon
       Et Noisette dit un encouragement, suivi de « Ce n'est pas le début. Lequel vient en premier ? »
 
-    # Question 98.1
-    @a-valider @depend-de-97
+    # Décision 98.1
+    @depend-de-97
     Scénario: La dernière étiquette accroche le dernier wagon, puis les étincelles de #97 apparaissent
       Étant donné que Léa joue seulement l'exercice « Le mot en morceaux » de la leçon « Les syllabes »
       Et que Léa a posé les étiquettes « do » et « mi »
@@ -248,8 +234,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : glisser les étique
       Alors le petit train a 3 wagons, « do », « mi » puis « no »
       Et des étincelles apparaissent autour des étiquettes
 
-    # Questions 98.1 et 98.21
-    @a-valider
+    # Décisions 98.1 et 98.21
     Scénario: Le bon premier vers devient le premier wagon du petit train
       Étant donné que Léa remet dans l'ordre les vers de « Le début de la fable »
       Quand Léa pose le vers « La Cigale, ayant chanté » en premier
@@ -307,8 +292,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : glisser les étique
         | une étiquette lâchée hors de toute maison    | Les maisons des sons | Les sons ou, on, an | Léa fait glisser du doigt l'étiquette « loup » et la lâche hors de toute maison | il reste 9 étiquettes à poser                       | l'étiquette « loup » réapparaît à sa place, sans glisser             |
         | une bonne étiquette d'un ordre               | Le mot en morceaux   | Les syllabes        | Léa pose l'étiquette « do »                                               | l'étiquette « do » prend la première place               | « do » apparaît dans le premier wagon, sans que le petit train roule |
 
-    # Question 98.23
-    @a-valider
+    # Décision 98.23
     Scénario: Avec les mouvements réduits, l'étiquette suit toujours le doigt de l'enfant
       Étant donné que l'appareil demande des mouvements réduits
       Et que Léa joue seulement l'exercice « Les maisons des sons » de la leçon « Les sons ou, on, an »
@@ -322,8 +306,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : glisser les étique
       Alors la bonne maison de l'étiquette choisie brille
       Et aucune maison ne bouge
 
-    # Question 98.21
-    @a-valider
+    # Décision 98.21
     Scénario: À 360 px, le petit train de 10 wagons tient dans la largeur de l'écran
       Étant donné que l'écran de l'appareil mesure 360 px de large
       Et que Léa joue seulement l'exercice « De dix en dix » de la leçon « Compter jusqu'à 100 »
@@ -332,8 +315,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : glisser les étique
       Alors la page tient dans la largeur de l'écran
       Et chaque wagon mesure au moins 44 px de haut et de large
 
-    # Question 98.21
-    @a-valider
+    # Décision 98.21
     Scénario: À 360 px, les vers accrochés au petit train se lisent en entier
       Étant donné que l'écran de l'appareil mesure 360 px de large
       Et que Léa remet dans l'ordre les vers de « Le début de la fable »

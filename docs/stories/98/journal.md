@@ -13,3 +13,5 @@ Numéro de décision réservé : 0035.
 - 08:42 UTC : étape 2, délégation à `po-acceptance` pour les scénarios de la tranche 98a seulement (les autres tranches deviendraient de nouvelles issues créées par le PO).
 - 08:55 UTC : `po-acceptance` rend `acceptance.md` et `features/98-exercices-comme-des-jeux.feature` (tranche 98a) : 6 règles, 34 scénarios (8 plans), 21 `@a-valider`, 4 `@depend-de-97`. Questions nouvelles 98.18 à 98.24.
 - 08:56 UTC : CADRAGE PRÊT publié sur #98. Arrêt : on attend la validation du PO, transmise par une annonce `[Responsable]`. Pas de code avant le merge de #97.
+- 16:22 UTC : ⛔ validation n°1 levée par le responsable (#64) : réponse du PO « 98# reco partout ». Les 24 questions sont tranchées selon la reco et le découpage 98a à 98e est validé.
+- 18:15 UTC : `po-acceptance` reporte les réponses dans `acceptance.md` et `domain-model.md`, et retire les `@a-valider` du `.feature`. Arrêt de l'équipe jusqu'au merge de #97 (la session de code sera relancée).

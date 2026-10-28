@@ -2,7 +2,7 @@
 
 Épopée #95, story 3. Dépend de #97 (retours animés et sonores), qui dépend de #96 (refonte visuelle, PR #124).
 
-État : **cadrage seulement** (décision 0020). Aucun code avant le merge de #97.
+État : **cadrage seulement** (décision 0020). Aucun code avant le merge de #97. Cadrage validé par le PO le 2026-10-28 : questions 98.1 à 98.17 tranchées selon la reco, découpage 98a à 98e validé.
 
 ## Contexte
 
@@ -253,15 +253,17 @@ Dépendances : 98a. 98.12 tranchée. Petite story : elle peut rejoindre 98c ou 9
 
 **Ordre proposé** : 98a → 98b → 98c → 98d → 98e. 98b vient tôt parce que la bulle de choix est l'écran le plus vu. 98d vient tard parce qu'elle a le plus de questions.
 
-## Questions ouvertes
+## Questions tranchées
 
-**98.1 (question 1 de l'issue) Les pistes du tableau te plaisent-elles ? Lesquelles changer ?**
+Toutes tranchées le 2026-10-28 par le PO (« 98# reco partout », issue #64) : la reco de chaque question est retenue, les options restent écrites pour mémoire.
+
+**98.1 (question 1 de l'issue) Les pistes du tableau te plaisent-elles ? Lesquelles changer ?** *Tranchée le 2026-10-28 : reco.*
 Reco : **garder** les bulles, les wagons, les maisons de l'addition, les jetons qui tombent, les barres en jauge et le parchemin. **Changer** trois pistes :
 - l'éclat en étincelles de la bonne bulle (98.5) ;
 - le feu d'artifice du mot dicté (98.7) ;
 - les coffres de `classer` (98.6).
 
-**98.2 (question 2 de l'issue) Un habillage par type, le même dans tous les univers, ou un habillage par univers ?**
+**98.2 (question 2 de l'issue) Un habillage par type, le même dans tous les univers, ou un habillage par univers ?** *Tranchée le 2026-10-28 : reco.*
 Exemple : des bulles pour « Animaux de la forêt », des ballons pour « Sports ».
 Reco : **par type, le même dans tous les univers**, coloré par les jetons de l'univers (#96). Les colonnes de l'addition gardent leurs couleurs communes. Raisons :
 - un seul dessin par type à valider (skill `illustration`) au lieu de six ;
@@ -270,21 +272,21 @@ Reco : **par type, le même dans tous les univers**, coloré par les jetons de l
 
 Option B : habillage par univers (travail fois 6). Option C : par type, plus un petit motif par univers sur la bulle.
 
-**98.3 (question 3 de l'issue) Des bulles qui bougent sont-elles faciles à toucher au CP ? Faut-il qu'elles s'arrêtent quand le doigt approche ?**
+**98.3 (question 3 de l'issue) Des bulles qui bougent sont-elles faciles à toucher au CP ? Faut-il qu'elles s'arrêtent quand le doigt approche ?** *Tranchée le 2026-10-28 : reco.*
 Sur une tablette, on ne sait pas qu'un doigt approche : l'écran ne sent que le toucher.
 Reco : **mouvement très léger** (le dessin ondule de quelques pixels, lentement), **cible fixe** d'au moins 44 px qui ne bouge pas avec le dessin, **immobile pendant la lecture de la consigne**, et immobile pour de bon dès le premier toucher sur une bulle.
 Options : A, bulles immobiles au CP et flottantes à partir du CE1 ; B, bulles immobiles partout (seulement la forme change).
 
-**98.4 Les « bulles qui flottent » valent-elles pour toutes les bulles de choix, ou seulement pour `bulles` et `ecoute` ?**
+**98.4 Les « bulles qui flottent » valent-elles pour toutes les bulles de choix, ou seulement pour `bulles` et `ecoute` ?** *Tranchée le 2026-10-28 : reco.*
 Le même composant sert aux choix de 10 types, dont le mode par choix du calcul, de la boîte, des barres et de l'addition.
 Reco : la **forme** de bulle pour tous les choix (cohérence), le **flottement** seulement pour `bulles` et `ecoute`. Ailleurs, l'enfant regarde déjà un texte, un tableau, une boîte ou un schéma : un mouvement de plus détourne l'attention (charge cognitive).
 Options : A, flottement partout ; B, rien ne change hors `bulles` et `ecoute`.
 
-**98.5 Après le rebond de #97, la bonne bulle s'efface-t-elle en douceur, sans étincelles ?**
+**98.5 Après le rebond de #97, la bonne bulle s'efface-t-elle en douceur, sans étincelles ?** *Tranchée le 2026-10-28 : reco.*
 Reco : **oui**. #97 réserve les étincelles au texte complet (récompense moyenne). En mettre à chaque bonne bulle les rendrait banales et doublerait le retour d'une même réponse. La bulle juste disparaît déjà aujourd'hui : #98 la redessine en bulle de savon qui s'efface.
 Option : de petites étincelles, plus discrètes que celles du texte complet.
 
-**98.6 `classer` : des paniers, des coffres ou des maisons ?**
+**98.6 `classer` : des paniers, des coffres ou des maisons ?** *Tranchée le 2026-10-28 : reco.*
 L'interface dit « maison » (décision n°24), et la consigne et l'Indication du geste disent « touche une maison ». Les scénarios de #18 et #97 aussi.
 Reco : **garder « maison »**, dessinée en petite maison dont la porte s'ouvre et qui s'allume quand l'étiquette est bien rangée. Raisons :
 - aucun mot ni scénario existant ne change ;
@@ -293,21 +295,21 @@ Reco : **garder « maison »**, dessinée en petite maison dont la porte s'ouvre
 
 Option A : des paniers. Le mot d'interface change alors partout : consignes par défaut, Indication du geste, libellés lus (« Poser dans le panier « on » »), scénarios de #18 et #97. Option B : des coffres (déconseillé).
 
-**98.7 Dictée : la case s'allume-t-elle quand une lettre y est écrite (sans dire si elle est juste), puis toutes les cases s'illuminent quand le mot est juste, sans feu d'artifice ?**
+**98.7 Dictée : la case s'allume-t-elle quand une lettre y est écrite (sans dire si elle est juste), puis toutes les cases s'illuminent quand le mot est juste, sans feu d'artifice ?** *Tranchée le 2026-10-28 : reco.*
 Exemple : « chat ». L'enfant tape « c », « h », « o » : trois cases allumées, aucune n'est jugée. Il tape « t » : le mot est corrigé comme aujourd'hui, une erreur, « o » montré faux.
 Reco : **oui**. Allumer la case parce que la lettre est juste montrerait la faute avant la fin du mot. L'enfant l'effacerait sans qu'elle compte : moins d'erreurs et d'autres étoiles pour les mêmes frappes, ce qui rompt la promesse de la story. Le domaine ne le sait d'ailleurs pas aujourd'hui. Un feu d'artifice à chaque mot serait aussi une récompense trop grande pour une seule réponse, et ses détonations peuvent inquiéter un jeune enfant.
 Option : juger la lettre à la frappe. Ce serait une nouvelle règle de correction de la dictée, à part de #98, qui change les erreurs.
 
-**98.8 `ordre` : peut-on aussi glisser une étiquette sur le train, en plus de la toucher ?**
+**98.8 `ordre` : peut-on aussi glisser une étiquette sur le train, en plus de la toucher ?** *Tranchée le 2026-10-28 : reco.*
 Reco : **non**, toucher suffit. Le domaine n'a qu'une place possible, la suivante : glisser vers un wagon précis laisserait croire qu'on choisit la place. Le texte « Touche d'abord celle qui vient en premier » reste juste.
 Option : oui, l'étiquette glissée sur le train prend la place suivante, et l'Indication du geste de `ordre` et `memoriser` change (texte d'Apprentissage, à fixer).
 
-**98.9 Calcul : les cristaux « brillent » quand on les touche ?**
+**98.9 Calcul : les cristaux « brillent » quand on les touche ?** *Tranchée le 2026-10-28 : reco.*
 « Briller » montre déjà la bonne réponse après « Je ne sais pas » (cristaux, bulles, maisons, touches de la dictée).
 Reco : un cristal touché **s'illumine brièvement, d'une autre façon** que la bonne réponse montrée (éclat court, sans halo qui dure). Le halo qui dure reste réservé à « Je ne sais pas ».
 Option : pas d'effet au toucher (le bouton en relief de #96 suffit).
 
-**98.10 (question 4 de l'issue) Fluence : peut-on la présenter comme une course contre son record, compatible avec « pas de chrono imposé » ? Et le record se voit-il pendant la fluence ?**
+**98.10 (question 4 de l'issue) Fluence : peut-on la présenter comme une course contre son record, compatible avec « pas de chrono imposé » ? Et le record se voit-il pendant la fluence ?** *Tranchée le 2026-10-28 : reco.*
 Le chrono est la nature de l'exercice (`duree` dans le format), pas une pénalité : il ne limite pas le temps de jeu et ne retire rien.
 Reco : **oui, sous trois conditions** :
 - le mot « course » ne s'affiche pas (pas de concurrent, pas de comparaison sociale) ;
@@ -317,29 +319,29 @@ Reco : **oui, sous trois conditions** :
 Cela demande une **lecture pure dans `RecordDeFluence`** (le score dépasse-t-il le record ?), pour que React ne refasse pas la règle « 0 n'est jamais un record ».
 Options : A, record montré mais pas de changement au dépassement (aucun changement du domaine) ; B, rien de plus pendant la fluence, la course n'est que la fête de fin de #97.
 
-**98.11 Un glisser lâché hors de toute cible : l'étiquette revient-elle sans coûter d'erreur ?**
+**98.11 Un glisser lâché hors de toute cible : l'étiquette revient-elle sans coûter d'erreur ?** *Tranchée le 2026-10-28 : reco.*
 Reco : **oui**. Ce n'est pas une réponse (invariant 2) : pas d'erreur, pas de son de réponse fausse, pas d'encouragement. Seul un lâcher sur une mauvaise maison est une réponse fausse.
 
-**98.12 `lecture`, `memoriser` : le parchemin cache-t-il les lignes pas encore lues ?**
+**98.12 `lecture`, `memoriser` : le parchemin cache-t-il les lignes pas encore lues ?** *Tranchée le 2026-10-28 : reco.*
 Reco : **seulement le temps de la première lecture** par le personnage guide, puis tout reste visible. L'enfant doit pouvoir relire le texte pour répondre aux questions ou pour réciter. En Muet, sans voix ou avec la voix bloquée, tout est visible tout de suite. Un enfant qui lit seul n'attend jamais la voix.
 Option : pas de dévoilement, seulement le dessin du parchemin.
 
-**98.13 L'habillage vaut-il aussi en séance de révision et au test de départ ?**
+**98.13 L'habillage vaut-il aussi en séance de révision et au test de départ ?** *Tranchée le 2026-10-28 : reco.*
 Reco : **oui**, ce sont les mêmes questions, avec les mêmes composants. Un enfant ne doit pas réapprendre un geste.
 
-**98.14 « Habillage de jeu » : terme du domaine, ou mot de cadrage ?**
+**98.14 « Habillage de jeu » : terme du domaine, ou mot de cadrage ?** *Tranchée le 2026-10-28 : reco.*
 La ligne **Univers** dit déjà « Habillage choisi par l'enfant ».
 Reco : **mot de cadrage seulement**, toujours avec son complément, jamais dans le code du domaine ni à l'écran. Aucune règle n'y vit. Ajouter au glossaire la note « « habillage » seul désigne l'univers ».
 
-**98.15 Au clavier, les flèches passent-elles d'une bulle à l'autre, et d'une maison à l'autre ?**
+**98.15 Au clavier, les flèches passent-elles d'une bulle à l'autre, et d'une maison à l'autre ?** *Tranchée le 2026-10-28 : reco.*
 L'issue demande « Tab, Entrée, flèches ». Aujourd'hui, seuls Tab et Entrée marchent.
 Reco : **oui pour les bulles de choix et les maisons** (groupe de boutons), en plus de Tab. Les étiquettes à placer gardent Tab.
 Option : Tab et Entrée seulement, comme aujourd'hui.
 
-**98.16 Découpage : d'accord pour cinq stories, 98a (#98, socle et étiquettes), puis 98b bulles, 98c quantités, 98d claviers, 98e textes, dans cet ordre ?**
+**98.16 Découpage : d'accord pour cinq stories, 98a (#98, socle et étiquettes), puis 98b bulles, 98c quantités, 98d claviers, 98e textes, dans cet ordre ?** *Tranchée le 2026-10-28 : reco (98b à 98e : nouvelles issues créées par le PO).*
 Reco : **oui**. 98e peut rejoindre 98c ou 98d si tu préfères moins d'issues. Une story ne commence son code qu'après #97 et 98a.
 
-**98.17 Le glisser au doigt doit-il marcher sur l'iPad et l'iPhone autant que sur Android ?**
+**98.17 Le glisser au doigt doit-il marcher sur l'iPad et l'iPhone autant que sur Android ?** *Tranchée le 2026-10-28 : reco.*
 Le glisser actuel ne se prouve qu'à la souris.
 Reco : **oui**, sur les deux, prouvé sur le projet `tablette` et le projet `telephone`. Sinon, l'enfant n'a que toucher puis toucher, qui reste toujours possible.
 
