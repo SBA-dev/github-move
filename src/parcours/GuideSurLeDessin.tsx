@@ -31,8 +31,8 @@ export function GuideSurLeDessin({ univers, emplacements, noms, arret, marche, o
   const [enMarche, setEnMarche] = useState(marche !== undefined);
   const arrivee = emplacements[arret];
   if (!arrivee) return null;
-  const chemin = marche && enMarche ? emplacements.slice(marche.depuis, marche.jusqua + 1) : [arrivee];
-  const depart = chemin[0] ?? arrivee;
+  const pointsDeLaMarche = marche && enMarche ? emplacements.slice(marche.depuis, marche.jusqua + 1) : [arrivee];
+  const depart = pointsDeLaMarche[0] ?? arrivee;
   const arriver = () => {
     if (!enMarche) return;
     setEnMarche(false);
@@ -46,8 +46,8 @@ export function GuideSurLeDessin({ univers, emplacements, noms, arret, marche, o
       data-marche={marche === undefined ? "aucune" : enMarche ? "en-cours" : "terminee"}
       {...(marche ? { "data-marche-depuis": noms[marche.depuis], "data-marche-vers": noms[marche.jusqua], "data-marche-par": noms.slice(marche.depuis + 1, marche.jusqua).join(",") } : {})}
       initial={{ x: depart.x, y: depart.y }}
-      animate={{ x: chemin.map((point) => point.x), y: chemin.map((point) => point.y) }}
-      transition={{ duration: enMarche ? dureeDeLaMarche(chemin.length - 1) : 0, ease: "easeInOut" }}
+      animate={{ x: pointsDeLaMarche.map((point) => point.x), y: pointsDeLaMarche.map((point) => point.y) }}
+      transition={{ duration: enMarche ? dureeDeLaMarche(pointsDeLaMarche.length - 1) : 0, ease: "easeInOut" }}
       onAnimationComplete={arriver}
     >
       <PersonnageGuide univers={univers} humeur="content" />
