@@ -77,6 +77,7 @@ export class LectureAVoixHaute {
   private versionDuSonDuBouton = 0;
   private coupuresDeLaVoix = 0;
   private voixBloqueeSignalee = false;
+  private parolesEnCours = 0;
 
   constructor(private readonly dependances: DependancesDeLectureAVoixHaute) {
     this.etat = dependances.etatInitial;
@@ -101,6 +102,7 @@ export class LectureAVoixHaute {
     const langue = options.langue ?? LANGUE_FRANCAISE;
     const voix = this.voixPour(langue, options.choix ?? this.choixMemorise());
     const caractere = estFrancais(langue) ? this.dependances.caractereDuPersonnageGuide() : CARACTERE_LANGUE_ETRANGERE;
+    this.parolesEnCours++;
     try {
       await lecteur.lire({
         voix,
@@ -115,6 +117,7 @@ export class LectureAVoixHaute {
       this.absorber(erreur);
       return PAROLE_NON_ENTENDUE;
     } finally {
+      this.parolesEnCours--;
       options.onFin?.();
     }
   }
@@ -126,6 +129,7 @@ export class LectureAVoixHaute {
   }
 
   toucherUnBouton(): void {
+    if (this.parolesEnCours > 0) return;
     this.dependances.lecteur.arreter();
     this.arreterLesEffets();
     this.arreterLeSonDuBouton();
