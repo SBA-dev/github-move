@@ -329,3 +329,31 @@ Deno.test("après un bouton touché puis la voix coupée, la parole suivante est
   assertEquals(parole, { entendue: true });
   assertEquals(lecteur.lectures.length, 1);
 });
+
+Deno.test("couper la voix juste après un bouton touché ne l'arrête pas", () => {
+  const { lecture, lecteurDEffetsSonores } = uneLecture();
+  lecteurDEffetsSonores.jouerSansTerminerAutomatiquement();
+
+  lecture.toucherUnBouton();
+  lecture.couperLaVoix();
+
+  assertEquals(lecteurDEffetsSonores.nombreDArrets, 0);
+});
+
+Deno.test("une parole demandée juste après avoir coupé la voix suit un bouton touché : elle attend la fin de l'effet puis est lue", async () => {
+  const { lecture, lecteurDEffetsSonores, lecteur, journal } = uneLecture();
+  lecteurDEffetsSonores.jouerSansTerminerAutomatiquement();
+
+  lecture.toucherUnBouton();
+  lecture.couperLaVoix();
+  const parole = lecture.lire("Je ne sais pas.");
+  await Promise.resolve();
+  await Promise.resolve();
+  assertEquals(lecteurDEffetsSonores.nombreDArrets, 0);
+  assertEquals(lecteur.lectures.length, 0);
+
+  lecteurDEffetsSonores.terminerLEffetEnCours();
+
+  assertEquals(await parole, { entendue: true });
+  assertEquals(journal, ["effet:boutonTouche", "parole"]);
+});
