@@ -1,6 +1,7 @@
 import { type DragEvent, useState } from "react";
 import { useReducedMotion } from "motion/react";
 import { NOMS_DES_COLONNES_A_L_ECRAN, type VueAddition, type VueColonne } from "@domain/apprentissage";
+import { CIBLE_DES_COLONNES, useRetourDe } from "../../../retours/index.ts";
 import { ReponseAuCalcul } from "../ReponseAuCalcul.tsx";
 
 type Rang = VueColonne["rang"];
@@ -24,6 +25,7 @@ export function ExerciceDAdditionPosee(props: Props) {
   const [choisi, setChoisi] = useState<number | undefined>();
   const chiffresAPoser = addition.chiffresAPoser ?? [];
   const chiffreChoisi = choisi === undefined ? undefined : chiffresAPoser[choisi];
+  const retourDesColonnes = useRetourDe<HTMLDivElement>(CIBLE_DES_COLONNES);
 
   const poser = (chiffre: string, rang: Rang) => {
     setChoisi(undefined);
@@ -33,7 +35,7 @@ export function ExerciceDAdditionPosee(props: Props) {
   return (
     <div className="addition-posee" data-testid="addition-posee" data-etape={addition.etape}>
       <p className="operation-posee" data-testid="operation-posee">{addition.nombres.join(" + ")}</p>
-      <div className="colonnes" role="group" aria-label="Addition en colonnes" data-testid="colonnes">
+      <div ref={retourDesColonnes.ref} {...retourDesColonnes.attributs} className="colonnes" role="group" aria-label="Addition en colonnes" data-testid="colonnes">
         {[...addition.colonnes].reverse().map((colonne) => (
           <Colonne
             key={colonne.rang}
@@ -147,6 +149,7 @@ function Colonne({ colonne, brille, enCours, pose, chiffreChoisi, chiffresAPoser
         type="button"
         className="maison-de-la-colonne"
         data-testid="maison-de-la-colonne"
+        data-donne-une-reponse="true"
         aria-label={`Poser dans la colonne des ${NOMS_DES_COLONNES_A_L_ECRAN[rang].toLowerCase()}`}
         aria-disabled={pose && chiffreChoisi !== undefined ? undefined : true}
         onClick={() => pose && chiffreChoisi !== undefined && onPoser(chiffreChoisi, rang)}

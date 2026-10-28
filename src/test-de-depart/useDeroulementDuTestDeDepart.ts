@@ -10,8 +10,9 @@ import {
   type ReponseParChoix,
   type TestDeDepart,
 } from "@domain/apprentissage";
-import { type PersonnageGuide, reagirAJeNeSaisPas } from "@domain/motivation";
+import { effetsSonoresApresUneBonneReponse, type PersonnageGuide, reagirAJeNeSaisPas } from "@domain/motivation";
 import { useReducedMotion } from "motion/react";
+import { CIBLE_DE_LA_ZONE_DE_REPONSE, useRetourDeLaReponse } from "../retours/index.ts";
 import { attendre } from "../seance/exercices/attendre.ts";
 import {
   aiderQuandOnNeSaitPas,
@@ -56,6 +57,7 @@ export function useDeroulementDuTestDeDepart(
 ) {
   const { dire, faireSilence, reecouter: relire } = personnage;
   const [, redessiner] = useReducer((compteur: number) => compteur + 1, 0);
+  const { retour, signaler } = useRetourDeLaReponse();
   const sequence = useRef(0);
   const vivant = useRef(true);
   const estFigee = useRef(false);
@@ -111,7 +113,13 @@ export function useDeroulementDuTestDeDepart(
     const reussies = questionsReussies + 1;
     setQuestionsReussies(reussies);
     setAvancementAnnonce(`${reussies} sur ${nombreDeQuestions}`);
-    await dire(feliciterUnCalcul(personnageGuide));
+    const effets = effetsSonoresApresUneBonneReponse({
+      questionsReussiesAvant: questionsReussies,
+      questionsReussiesApres: reussies,
+      exerciceComplete: false,
+      pendantLeChronoDUneFluence: false,
+    });
+    await dire(feliciterUnCalcul(personnageGuide, undefined, effets));
     if (!vivant.current) return;
     figer(undefined);
     setBulleEclatee(undefined);
@@ -126,9 +134,10 @@ export function useDeroulementDuTestDeDepart(
     if (resultat === "dejaEcartee") return;
     const numero = ++sequence.current;
     redessiner();
+    signaler(resultat, reponse.genre === "choix" ? reponse.texte : CIBLE_DE_LA_ZONE_DE_REPONSE);
     if (resultat === "fausse") return await encourager(numero, question);
     await feliciterEtPasserALaSuite(question, reponse.genre === "choix" ? reponse.texte : undefined);
-  }, [test, encourager, feliciterEtPasserALaSuite]);
+  }, [test, signaler, encourager, feliciterEtPasserALaSuite]);
 
   const repondreParUnChoix = useCallback((texte: string) => repondre(Reponse.choix(texte)), [repondre]);
   const repondreParUnNombre = useCallback((nombre: number) => repondre(Reponse.nombre(nombre)), [repondre]);
@@ -179,6 +188,7 @@ export function useDeroulementDuTestDeDepart(
   }, [faireSilence]);
 
   return {
+    retour,
     figee,
     choixVisiblesPour,
     bulleEclatee,

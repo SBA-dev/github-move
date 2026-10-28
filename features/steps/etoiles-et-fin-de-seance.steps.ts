@@ -193,7 +193,7 @@ async function reposerLesErreurs(famille: Famille, page: Page): Promise<Partie> 
   return courante;
 }
 
-async function jouerUnExerciceSeul(famille: Famille, page: Page, lecon: LeconBrute, position: number, erreurs: number) {
+export async function jouerUnExerciceSeul(famille: Famille, page: Page, lecon: LeconBrute, position: number, erreurs: number) {
   const courante = await reposerLesErreurs(famille, page);
   courante.erreursEnTout = erreurs;
   await ouvrirLaPageDeLaLecon(page, lecon.titre);
@@ -574,7 +574,7 @@ Then(/^plus aucune séance terminée ni aucune étoile de Léa n'est gardée par
 Then(/^Léa voit ses étoiles sans étincelles ni mouvement$/, async ({ page }) => {
   await attendreLaFinDeLaSeance(page);
   await expect(page.getByTestId("etoiles-dessinees")).toBeVisible();
-  await expect(page.getByTestId("etincelles")).toHaveCount(0);
+  await expect(page.getByTestId("confettis")).toHaveCount(0);
 });
 
 Then(/^« Leçon suivante », « Accueil » et « Rejouer » mesurent au moins 44 px de haut$/, async ({ page }) => {

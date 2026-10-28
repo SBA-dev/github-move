@@ -385,7 +385,7 @@ Given(/^Léa joue l'item « ([^«»]+) » de l'exercice « ([^«»]+) »$/, asyn
   await allerAuRang(page, rang, true);
 });
 
-const QUESTIONS_DE_TEST: Readonly<Record<string, { choix: string[]; reponse: string }>> = {
+export const QUESTIONS_DE_TEST: Readonly<Record<string, { choix: string[]; reponse: string }>> = {
   "Combien font 3 + 4 ?": { choix: ["6", "7", "8", "9"], reponse: "7" },
 };
 

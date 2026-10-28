@@ -2,6 +2,7 @@ import { type MutableRefObject, useCallback, useRef, useState } from "react";
 import { type CorrectionDuMot, type FaitDeSeance, type QuestionDeDictee, type Seance } from "@domain/apprentissage";
 import { type PersonnageGuide, paroleApresUneBonneReponse, reagirAJeNeSaisPasEnDictee, reagirALaReponse } from "@domain/motivation";
 import { hasardDuNavigateur } from "../../hasard-navigateur.ts";
+import { CIBLE_DE_LA_ZONE_DE_REPONSE, effetsApresUneBonneReponse, type SignalerUnRetour } from "../../retours/index.ts";
 import type { Voix } from "../../voix/index.ts";
 import type { ParoleADire } from "../usePersonnageQuiParle.ts";
 import { attendre } from "./attendre.ts";
@@ -15,6 +16,7 @@ type Dependances = {
   readonly personnageGuide: PersonnageGuide;
   readonly lire: Voix["lire"];
   readonly dire: (parole: ParoleADire) => Promise<boolean>;
+  readonly signaler: SignalerUnRetour;
   readonly faireSilence: () => void;
   readonly sequence: MutableRefObject<number>;
   readonly vivant: MutableRefObject<boolean>;
@@ -26,7 +28,7 @@ type SuiteDeLaDictee = (numero: number, faits: FaitDeSeance[], nouvelExercice: b
 
 /** Le déroulé d'une dictée : le mot est dit, les lettres s'écrivent case par case, la dernière case corrige. */
 export function useDictee(
-  { seance, personnageGuide, lire, dire, faireSilence, sequence, vivant, redessiner, reussite }: Dependances,
+  { seance, personnageGuide, lire, dire, signaler, faireSilence, sequence, vivant, redessiner, reussite }: Dependances,
 ) {
   const { estFigee, figer, annoncerLAvancement, attendreLEcranSuivant } = reussite;
   /** Les lettres fausses restent en rouge un instant : pendant ce temps, rien ne s'écrit. */
@@ -79,10 +81,10 @@ export function useDictee(
     const reaction = reagirALaReponse(false, personnageGuide, hasardDuNavigateur);
     const aide = seance.aideApresLaDerniereErreur();
     const texte = aide === undefined ? reaction.parole.texte : `${reaction.parole.texte} ${aide}`;
-    if (await dire({ texte, nature: "encouragement", humeur: reaction.humeur })) await lire(question.motADire());
+    if (await dire({ texte, nature: "encouragement", humeur: reaction.humeur, effetsAvant: [reaction.effetSonore] })) await lire(question.motADire());
   }, [seance, personnageGuide, dire, lire]);
 
-  const feliciter = useCallback(async () => {
+  const feliciter = useCallback(async (questionsReussiesAvant: number) => {
     const { humeur } = reagirALaReponse(true, personnageGuide, hasardDuNavigateur);
     const felicitation = paroleApresUneBonneReponse(
       paroleDueDeMotivation(seance.paroleDueApresLaDerniereReponse()),
@@ -91,7 +93,7 @@ export function useDictee(
     );
     const suite = seance.suiteDeLaFelicitation();
     const texte = [felicitation, suite].filter((morceau) => morceau !== undefined).join(" ");
-    await dire({ texte, nature: "felicitation", humeur });
+    await dire({ texte, nature: "felicitation", humeur, effetsAvant: effetsApresUneBonneReponse(seance, questionsReussiesAvant) });
   }, [seance, personnageGuide, dire]);
 
   const taper = useCallback(async (lettre: string, suite: SuiteDeLaDictee) => {
@@ -100,6 +102,7 @@ export function useDictee(
     const minuscule = lettre.toLowerCase();
     if (!exercice || !question || !peutEcrire()) return;
     if (!question.rangeesDuClavier().flat().some((touche) => touche.lettre === minuscule && touche.disponible)) return;
+    const questionsReussiesAvant = seance.avancement().questionsReussies;
     const resultat = seance.taper(minuscule);
     setToucheQuiBrille(undefined);
     redessiner();
@@ -108,16 +111,18 @@ export function useDictee(
     if (resultat === "fausse") {
       const correction = seance.derniereCorrection();
       if (correction) montrerLesLettresFausses(correction);
+      signaler("fausse", CIBLE_DE_LA_ZONE_DE_REPONSE);
       return await encourager(question);
     }
     figer({ position: exercice.position, exercice, question: undefined, questionDeDictee: question });
     annoncerLAvancement(seance.avancement());
-    await feliciter();
+    signaler("juste", CIBLE_DE_LA_ZONE_DE_REPONSE);
+    await feliciter(questionsReussiesAvant);
     if (!(await attendreLEcranSuivant()) || !vivant.current) return;
     figer(undefined);
     const nouvelExercice = seance.exerciceEnCours()?.position !== exercice.position;
     await suite(++sequence.current, seance.retirerFaits(), nouvelExercice);
-  }, [seance, laQuestion, peutEcrire, redessiner, sequence, montrerLesLettresFausses, encourager, figer, annoncerLAvancement, feliciter, vivant, attendreLEcranSuivant]);
+  }, [seance, laQuestion, peutEcrire, redessiner, sequence, montrerLesLettresFausses, signaler, encourager, figer, annoncerLAvancement, feliciter, vivant, attendreLEcranSuivant]);
 
   const effacer = useCallback(() => {
     if (!peutEcrire()) return;

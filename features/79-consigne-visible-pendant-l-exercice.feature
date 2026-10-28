@@ -138,7 +138,7 @@ Fonctionnalité: La consigne d'un exercice reste visible pendant tout l'exercice
       Alors Léa entend de nouveau Noisette lire « Touche le bon nombre. »
       Et Léa voit la question « Combien font 1 + 1 ? » avec ses choix
 
-    Scénario: En Muet, demander à relire la consigne ne fait rien entendre et la consigne reste visible
+    Scénario: En Muet, demander à relire la consigne ne fait rien lire et la consigne reste visible
       Étant donné que la tablette est en Muet
       Et que Léa joue seulement l'exercice « Les maisons des sons » de la leçon « Les sons ou, on, an »
       Quand Léa demande à réécouter la consigne

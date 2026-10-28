@@ -1,7 +1,8 @@
-import { type DragEvent, useEffect, useRef, useState } from "react";
+import { type DragEvent, type RefObject, useEffect, useRef, useState } from "react";
 import type { EtiquettePosee } from "@domain/apprentissage";
 import type { Exercice } from "@domain/catalogue";
 import { TexteEnSyllabes } from "../../reglages/index.ts";
+import { useRetourDe } from "../../retours/index.ts";
 
 type Props = {
   readonly exercice: Extract<Exercice, { type: "classer" | "ordre" }>;
@@ -52,17 +53,14 @@ export function ExerciceAEtiquettes({ exercice, etiquettesAPlacer, etiquettesPos
             draggable={exercice.type === "classer"}
             onDragStart={(evenement) => evenement.dataTransfer.setData(TYPE_DE_L_ETIQUETTE, etiquette)}
           >
-            <button
-              ref={rang === 0 ? premiere : undefined}
-              type="button"
-              className="etiquette"
-              data-testid="etiquette"
-              data-brille={brille(etiquette, rang) ? "true" : undefined}
-              aria-pressed={exercice.type === "classer" ? choisie === etiquette : undefined}
-              onClick={() => exercice.type === "ordre" ? poser(etiquette) : setChoisie(choisie === etiquette ? undefined : etiquette)}
-            >
-              <TexteEnSyllabes texte={etiquette} />
-            </button>
+            <Etiquette
+              texte={etiquette}
+              aFocaliser={rang === 0 ? premiere : undefined}
+              brille={brille(etiquette, rang)}
+              appuyee={exercice.type === "classer" ? choisie === etiquette : undefined}
+              poseALeToucher={exercice.type === "ordre"}
+              onToucher={() => exercice.type === "ordre" ? poser(etiquette) : setChoisie(choisie === etiquette ? undefined : etiquette)}
+            />
           </li>
         ))}
       </ul>
@@ -119,6 +117,7 @@ function Maisons({ exercice, posees, etiquettesAPlacer, choisie, maisonQuiBrille
           <button
             type="button"
             className="porte-de-la-maison"
+            data-donne-une-reponse="true"
             aria-label={`Poser dans la maison « ${groupe.nom} »`}
             aria-disabled={choisie === undefined ? true : undefined}
             onClick={() => choisie !== undefined && onPoser(choisie, groupe.id)}
@@ -127,9 +126,7 @@ function Maisons({ exercice, posees, etiquettesAPlacer, choisie, maisonQuiBrille
           </button>
           <ul aria-label={`Étiquettes dans la maison « ${groupe.nom} »`}>
             {posees.filter((posee) => posee.groupe === groupe.id).map((posee, rang) => (
-              <li key={`${posee.texte}-${rang}`} className="etiquette posee" data-testid="etiquette-posee">
-                <TexteEnSyllabes texte={posee.texte} />
-              </li>
+              <EtiquettePosee key={`${posee.texte}-${rang}`} texte={posee.texte} />
             ))}
           </ul>
         </section>
@@ -142,10 +139,61 @@ function Places({ exercice, nombrePosees }: { readonly exercice: Extract<Exercic
   return (
     <ol className="places" aria-label="Ordre des étiquettes" data-testid="places">
       {exercice.elements.map((element, rang) => (
-        <li key={rang} className="place" data-testid="place" data-remplie={rang < nombrePosees ? "true" : undefined}>
-          {rang < nombrePosees ? <TexteEnSyllabes texte={element} /> : <span className="visuellement-cache">place libre</span>}
-        </li>
+        <Place key={rang} element={element} remplie={rang < nombrePosees} />
       ))}
     </ol>
+  );
+}
+
+type PropsDeLEtiquette = {
+  readonly texte: string;
+  readonly aFocaliser: RefObject<HTMLButtonElement | null> | undefined;
+  readonly brille: boolean;
+  readonly appuyee: boolean | undefined;
+  /** Toucher l'étiquette la pose tout de suite : c'est une réponse (sinon elle est seulement choisie). */
+  readonly poseALeToucher: boolean;
+  readonly onToucher: () => void;
+};
+
+/** Une étiquette à poser : elle se balance quand elle est mal posée. */
+function Etiquette({ texte, aFocaliser, brille, appuyee, poseALeToucher, onToucher }: PropsDeLEtiquette) {
+  const retour = useRetourDe<HTMLButtonElement>(texte);
+  return (
+    <button
+      ref={(bouton) => {
+        retour.ref.current = bouton;
+        if (aFocaliser) aFocaliser.current = bouton;
+      }}
+      type="button"
+      className="etiquette"
+      data-testid="etiquette"
+      data-donne-une-reponse={poseALeToucher ? "true" : undefined}
+      data-brille={brille ? "true" : undefined}
+      {...retour.attributs}
+      aria-pressed={appuyee}
+      onClick={onToucher}
+    >
+      <TexteEnSyllabes texte={texte} />
+    </button>
+  );
+}
+
+/** Une étiquette bien posée dans sa maison : elle rebondit. */
+function EtiquettePosee({ texte }: { readonly texte: string }) {
+  const retour = useRetourDe<HTMLLIElement>(texte);
+  return (
+    <li ref={retour.ref} className="etiquette posee" data-testid="etiquette-posee" {...retour.attributs}>
+      <TexteEnSyllabes texte={texte} />
+    </li>
+  );
+}
+
+/** Une place de l'ordre : l'étiquette qui vient d'y être posée rebondit. */
+function Place({ element, remplie }: { readonly element: string; readonly remplie: boolean }) {
+  const retour = useRetourDe<HTMLLIElement>(remplie ? element : "");
+  return (
+    <li ref={retour.ref} className="place" data-testid="place" data-remplie={remplie ? "true" : undefined} {...retour.attributs}>
+      {remplie ? <TexteEnSyllabes texte={element} /> : <span className="visuellement-cache">place libre</span>}
+    </li>
   );
 }

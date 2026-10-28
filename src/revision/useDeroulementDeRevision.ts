@@ -16,8 +16,15 @@ import {
   type SchemaResolu,
   type SeanceDeRevision,
 } from "@domain/apprentissage";
-import { accueillirEnRevision, type PersonnageGuide, reagirAJeNeSaisPas, reagirAJeNeSaisPasEnDictee } from "@domain/motivation";
+import {
+  accueillirEnRevision,
+  effetsSonoresApresUneBonneReponse,
+  type PersonnageGuide,
+  reagirAJeNeSaisPas,
+  reagirAJeNeSaisPasEnDictee,
+} from "@domain/motivation";
 import { useReducedMotion } from "motion/react";
+import { CIBLE_DE_LA_ZONE_DE_REPONSE, useRetourDeLaReponse } from "../retours/index.ts";
 import { attendre } from "../seance/exercices/attendre.ts";
 import { aiderQuandOnNeSaitPas } from "../seance/exercices/paroles-du-calcul.ts";
 import type { usePersonnageQuiParle } from "../seance/usePersonnageQuiParle.ts";
@@ -66,6 +73,7 @@ export function useDeroulementDeRevision(
 ) {
   const { dire, faireSilence, reecouter: relire } = personnage;
   const [, redessiner] = useReducer((compteur: number) => compteur + 1, 0);
+  const { retour, signaler } = useRetourDeLaReponse();
   const sequence = useRef(0);
   const vivant = useRef(true);
   const estFigee = useRef(false);
@@ -166,7 +174,13 @@ export function useDeroulementDeRevision(
     const reussies = questionsReussies + 1;
     setQuestionsReussies(reussies);
     setAvancementAnnonce(`${reussies} sur ${nombreDeQuestions}`);
-    await dire(feliciterLaReponse(courante, personnageGuide));
+    const effets = effetsSonoresApresUneBonneReponse({
+      questionsReussiesAvant: questionsReussies,
+      questionsReussiesApres: reussies,
+      exerciceComplete: false,
+      pendantLeChronoDUneFluence: false,
+    });
+    await dire(feliciterLaReponse(courante, personnageGuide, effets));
     if (!vivant.current) return;
     figer(undefined);
     setBulleEclatee(undefined);
@@ -181,12 +195,13 @@ export function useDeroulementDeRevision(
     if (resultat === "dejaEcartee") return;
     const numero = ++sequence.current;
     redessiner();
+    signaler(resultat, texte ?? CIBLE_DE_LA_ZONE_DE_REPONSE);
     if (resultat === "juste") return await feliciterEtPasserALaSuite(courante, texte);
     const jusquAuBout = await dire(encouragerLaReponse(courante, personnageGuide));
     if (!jusquAuBout) return;
     if (courante.dictee) await lire(courante.dictee.motADire());
     else await direLeMotAEcouter(numero, courante.question);
-  }, [feliciterEtPasserALaSuite, dire, personnageGuide, lire, direLeMotAEcouter]);
+  }, [signaler, feliciterEtPasserALaSuite, dire, personnageGuide, lire, direLeMotAEcouter]);
 
   const repondre = useCallback(async (reponse: ReponseParChoix | ReponseEnNombre) => {
     const courante = seance.questionEnCours();
@@ -300,6 +315,7 @@ export function useDeroulementDeRevision(
   }, [faireSilence]);
 
   return {
+    retour,
     figee,
     choixVisiblesPour,
     bulleEclatee,

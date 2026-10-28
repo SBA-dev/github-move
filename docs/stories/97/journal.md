@@ -1,0 +1,94 @@
+# Journal de la story #97 : retours animés et sonores pendant la séance
+
+Équipe lancée par le responsable des équipes (`/graphe`, vague 1), issue de coordination #64.
+Branche : `feature/97-retours-animes-et-sonores`, partie de `main` `ea2cca3`. Branche de base : `main`.
+Numéro de décision réservé : 0034.
+
+## 2026-10-28
+
+- 07:30 UTC : démarrage. #97 dépend de #96 (PR #124, revue approuvée, non mergée). **Démarrage anticipé : cadrage seulement** (domaine + scénarios), aucun code avant le merge de #96.
+- Question 1 de l'issue (source et licence des sons) déjà réglée par le PO le 2026-10-25 : 8 fichiers dans `public/sons/`, provenance dans `docs/sons.md`.
+- Alignement sur `feature/96-refonte-visuelle` : jetons (`src/univers/jetons.ts`), transitions (`src/transitions/`, 300 ms au plus, `transform` et `opacity`), boutons en relief muets (`src/boutons/ressort-des-boutons.ts`) ; « Retours de réponse et effets sonores, dont le son au toucher d'un bouton : #97 » (hors périmètre de #96).
+- 07:45 UTC : étape 1, `domain-modeler` : Motivation choisit l'effet sonore (à côté de l'humeur dans `Reaction`), Voix le joue et applique le Muet ; aucun changement d'Apprentissage. Ajouts au glossaire (fin de la section Voix) et à la context map. Questions #97.2 à #97.14. Commit `e80111a`.
+- 08:00 UTC : étape 2, `po-acceptance` : 7 règles, 47 scénarios (9 plans, 25 `@a-valider`). Questions #97.15 à #97.19. Aucun scénario existant ne change de sens. R4 (record) et R7 (bouton touché) peuvent partir dans de petites stories si la story doit maigrir.
+- `CADRAGE PRÊT` publié sur #97 ; attente de la validation du PO par le responsable. Pas de TDD tant que #96 n'est pas mergée.
+- 08:28 UTC : ✅ validation n°1 annoncée par le responsable (#64, commentaire 6464291857 ; réponses mot pour mot sur #97, commentaire 6464291037). Écarts à la reco : 97.2 (le Muet coupe seulement la voix) et 97.17 (un toucher ne fait rien pendant la célébration). Toutes les autres questions suivent la reco ; 97.16 = oui.
+- 09:00 UTC : réponses reportées par `domain-modeler` (`bf06eda`) et `po-acceptance` (`9c61d92`) : 7 règles, 49 scénarios, 3 `@a-valider` restants. Les deux agents avaient numéroté leurs questions chacun de leur côté : une seule liste, #97.20 à #97.24.
+- `ESCALADE` publiée sur #97 pour les questions #97.20 à #97.24. Toujours pas de code : #96 n'est pas mergée.
+- 10:47 UTC : réponse du PO aux questions 97.20 à 97.24, « 97 reco partout » (annonce [Responsable] sur #97, commentaire 6466985516). Report par `domain-modeler` (`5fc3f0a`) et `po-acceptance` (`ecdbeca`) : 7 règles, 49 scénarios, 0 `@a-valider`. Titre seul du scénario de #79 (l. 141) renommé (97.21), avec `docs/stories/79/acceptance.md`. Le skill `gamification` (97.23) sera corrigé par le responsable en fin de vague, sauf si on le fait dans la PR.
+- Cadrage terminé. Attente : merge de #96 (annoncé par le responsable) avant le TDD.
+
+### TDD (à partir du 2026-10-28 15:55 UTC)
+
+- 15:53 UTC : annonce [Responsable] sur #64 (commentaire 6473782758) : #96 mergée (`2896d8e`), code autorisé. `main` intégrée par un merge commit (`e0d9b79`), sans conflit. Unitaires : 2462 verts.
+- Consigne PO (#64, 07:18 UTC) : avant la PR, ne lancer que les scénarios `@issue-97`.
+
+Comportements, dans l'ordre :
+
+Bloc A — Voix
+- A1 `EffetSonore` : liste fermée des 8 effets sonores.
+- A2 `LectureAVoixHaute.jouer(effets)` joue les effets l'un après l'autre par le port `LecteurDEffetsSonores`.
+- A3 `lire(texte, { effetsAvant })` : effets puis parole, jamais en même temps.
+- A4 En Muet, les effets sont joués et la parole ne l'est pas (97.2).
+- A5 Passer en Muet pendant un effet : l'effet finit, la parole qui suivait n'est pas lue (97.24).
+- A6 Voix suspendue : aucun effet ; la suspension arrête l'effet en cours (97.13).
+- A7 Une nouvelle lecture, `couperLaVoix` ou `faireSilence` arrête l'effet en cours.
+- A8 Un effet impossible n'empêche pas la parole et ne signale pas la voix bloquée ; sans synthèse vocale, les effets sont joués (97.14).
+
+Bloc B — Motivation
+- B1 `Reaction.effetSonore` : `reponseJuste` / `reponseFausse` ; aucun pour « Je ne sais pas » (97.4, 97.11).
+- B2 `effetsSonoresApresUneBonneReponse` : réponse juste, point du récipient si un point est gagné, texte complet à la place de la réponse juste pour un exercice complété ; pas de point pendant la fluence (97.5, 97.6, 97.10).
+- B3 `effetSonoreDuRecord` : grande victoire pour un premier ou un nouveau record (97.8).
+- B4 `effetsSonoresDeLaFin` : séance terminée ou grande victoire, puis découverte une seule fois ; test de départ ; séance faite seulement d'une fluence (97.7, 97.9, 97.18).
+
+Bloc C — Apprentissage
+- C1 `exerciceCompleteParLaDerniereReponse` : texte à trous, `ordre`, `classer`, `conjugaison`, `memoriser` (97.6).
+
+Puis câblage : adaptateur navigateur, `useVoix`, déroulement de la séance, révision, test de départ, fin de séance (animations, confettis, annonce), son des boutons, `public/sw.js`.
+- Bloc A (Voix) : A1 à A8 verts en 5 cycles (`3a1134a` → `2c28a81`). Revue intermédiaire delta `ee04c19..2c28a81` : À CORRIGER (cycle 1), 2 bloquants : tests manquants sur une suite d'effets interrompue, et `jouer` ne coupait pas la parole en cours (invariant 3). Corrigés par `b1cdbdc`, `9f005e0` (rouge), `290eda8` (fix), `825a7ad`. Revue du delta : **APPROUVÉ**. Dernier commit relu : `825a7ad`. Note pour le câblage : passer l'effet par `effetsAvant`, pas par deux appels séparés (en Muet, un `lire` sans effets arrête l'effet en cours).
+- Bloc B (Motivation) : B1 à B4 verts en 3 cycles (`91593a9` → `a6dfff4`). Revue intermédiaire delta `defa35f..a6dfff4` : **APPROUVÉ** (cycle 1). Non bloquants : `FinDeParcours` renommé `FaitsDeLaFin` (`1875e99`) ; union discriminée non faite (un test passe exprès des faits sans effet pour le test de départ). Note pour le câblage (invariant 9) : pour une séance faite seulement d'une fluence, ne jouer `grandeVictoire` qu'une fois (soit à la fin de la fluence, soit à la fin de la séance), à vérifier par le scénario R4 (97.18).
+- Bloc C (Apprentissage) : C1 vert (`587baba`, `da87127`). Revue delta : **APPROUVÉ**. Non bloquant traité : 2 cas négatifs verrouillés par mutation (`d97834f`). La séance de révision et le test de départ n'ont pas besoin de la lecture « exercice complété » (une question à la fois).
+- TDD terminé : 13/13 comportements, 2507 tests unitaires.
+- Câblage K1 (`f76cb9f`) : adaptateur navigateur des effets sonores (garde de 3 s, amorçage iPhone/iPad dans le déverrouillage audio), `useVoix.jouer`, `effetsAvant` dans `usePersonnageQuiParle`, 8 sons précachés par `public/sw.js` (y compris les requêtes `Range`). Observation E2E prévue : faux `HTMLMediaElement.play/pause` par `addInitScript`.
+- Câblage K2 en cours : retours après chaque réponse (séance, révision, test de départ, fluence) et animations.
+- Câblage K2 (`31cc25f`, `d448bb0`, `1f2a182`, `a2f2ca4`) : retours après chaque réponse (séance, fluence, révision, test de départ), dossier `src/retours/`.
+- Câblage K3 (`a5fcc36`) : célébration de fin (étoiles une à une, confettis, annonce unique), sons de fin, compteur du record. `Etincelles.tsx` supprimé (remplacé par les confettis, 1,45 s au total ; seul #24 l. 238 les citait, pour leur absence).
+- Une règle était restée dans React (« le record déjà fêté n'est pas rejoué ») : passée dans le domaine par un cycle TDD (`8de5939` rouge, `705b231`). Changement de règle : `effetsSonoresDeLaFin` ne rejoue plus `grandeVictoire` pour un record (invariant 9).
+- Câblage K4 (`6bbff4d`) : « bouton touché » par un écouteur à part du ressort de #96, marquage `data-donne-une-reponse` et `data-bascule-du-son`.
+- Étape 4 : review complète lancée sur le câblage.
+
+### Review (étape 4)
+
+- Cycle 1 : À CORRIGER, 2 bloquants. Étincelles du texte complet invisibles, car leur CSS avait été supprimé avec `Etincelles.tsx` (`50475e1`). Attente « bouton touché » puis parole codée dans `useVoix` sans test : passée dans le domaine par `toucherUnBouton` (`55c8c97` rouge, `f7ef9cf`). Non bloquants traités : fait `fluenceSeule` (`9f4fae4`, `74da717`, `f42552f`), vrais nombres de la fluence, dépendances de `useRetourDe`, 416 et `bytes=-N` dans `sw.js` (`bc6d4ef`), lint (`401a2b1`), test de la protection d'un bouton coupé (`d1bd813`).
+- Cycle 2 : À CORRIGER, 1 bloquant (bug de `f7ef9cf`). Après `faireSilence()`, la parole d'un gestionnaire de bouton était perdue et « bouton touché » était coupé. Corrigé par `95c6b1a` (rouge) puis `ae1552d`.
+- Cycle 3 : **APPROUVÉ** (2520 tests unitaires).
+- Restent pour l'E2E : le step `etoiles-et-fin-de-seance.steps.ts:577` vise `etincelles`, il doit viser `confettis` (sens inchangé). Question au PO : un bouton touché pendant la consigne coupe la consigne (invariant 3, jamais par-dessus).
+
+### E2E (étape 5)
+
+- Périmètre (PO, 28/10) : scénarios `@issue-97` seulement, sur `telephone`. Chromium : liens vers `chromium-1243` dans le scratchpad (`PLAYWRIGHT_BROWSERS_PATH`).
+- Cycle 1 : 58/63 verts (`39c0dcb`, steps). 5 KO, plus le scénario `@pwa` non lancé :
+  - **Bug** : les confettis tombaient avant les étoiles pendant la sauvegarde. Corrigé dans `33aa4b8`.
+  - **Bug, régression de #17** : un bouton touché pendant la félicitation la coupait (toucher la question, `exercices-a-choix.steps.ts` l. 694). Règle déduite de #17 et de l'invariant 3 : un bouton touché pendant une parole ne la coupe pas et ne joue rien (`15db2cc` rouge, `3c90d9e`). Cela règle aussi la question en suspens « un bouton touché coupe la consigne » : il ne la coupe plus.
+  - **Observation** : `lire` avec `effetsAvant` jouait l'effet par-dessus la parole en cours (invariant 3). Corrigé par `e51b645` (rouge) puis `83a70a0`.
+  - **Données de scénarios** (`b98dcc2`, `po-acceptance`) : leçon déjà acquise rejouée, le seuil de la lanterne faisait entendre « découverte » ; « Accueil » mène à « Qui joue ? » (étape de #73).
+- Cycle 2 lancé, avec une revue du delta de production en parallèle.
+- Cycle 2 : **63/63** `@issue-97` sur `telephone` ; #17 « La félicitation est dite en entier… » 1/1 (régression levée) ; PWA (#8, #45, #97) 36/36 sur `tablette` et `telephone` (`1f1377c`). Le scénario hors ligne de #97 passe par le relais de test (`publier-lecon-de-test`) ; limite : `context.setOffline` n'atteint pas le service worker, le scénario vérifie l'effet et le précache. Étape « avant que le personnage guide parle » rendue stricte.
+- Revue du delta de production de l'étape E2E (`e575bde..33aa4b8`) : **APPROUVÉ**.
+- `@wip` retiré (`b3bf8b7`).
+
+### Point à signaler au PO
+
+- Un bouton touché pendant que le personnage guide parle ne coupe pas la parole et ne fait pas entendre « bouton touché » (exception à R7, déduite de #17 et de l'invariant 3). Si le PO préfère que le son coupe la parole, c'est une petite story.
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Durée, du lancement au merge | lancement 2026-10-28 07:17 UTC ; PR prête vers 19:00 UTC (merge : à compléter) |
+| Temps passé à attendre | PO : environ 55 min (97.2 à 97.19), puis environ 2 h (97.20 à 97.24) ; merge de #96 : environ 5 h (11:00 → 15:53), cadrage fini avant ; verrou : aucun ; `main` : aucune attente |
+| Tokens et coût | relevés par le responsable |
+| Cycles de review À CORRIGER | revues intermédiaires : 1 (bloc Voix) ; review complète : 2 (cycles 1 et 2), APPROUVÉ au cycle 3 ; delta de l'E2E : 0 |
+| Cycles E2E KO | 1 (5 KO : 2 bugs, 1 effet par-dessus la parole, 2 données de scénario) ; vert au cycle 2 |
+| Intégrations de `main` | 1 (`e0d9b79`, après le merge de #96), sans conflit |
+| Régression sur `main` après le merge | à compléter |

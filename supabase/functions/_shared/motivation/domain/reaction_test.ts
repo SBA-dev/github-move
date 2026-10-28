@@ -9,19 +9,31 @@ const noisette = universDe("animaux").personnageGuide;
 Deno.test("le personnage guide applaudit et félicite une réponse juste", () => {
   const reaction = reagirALaReponse(true, noisette, hasardFixe(0.9, 0));
 
-  assertEquals(reaction, {
-    humeur: "applaudit",
-    parole: { nature: "felicitation", texte: "Bravo !" },
-  });
+  assertEquals(
+    { humeur: reaction.humeur, parole: reaction.parole },
+    { humeur: "applaudit", parole: { nature: "felicitation", texte: "Bravo !" } },
+  );
+});
+
+Deno.test("une réponse juste fait jouer l'effet sonore de la réponse juste", () => {
+  const reaction = reagirALaReponse(true, noisette, hasardFixe(0.9, 0));
+
+  assertEquals(reaction.effetSonore, "reponseJuste");
+});
+
+Deno.test("une réponse fausse fait jouer l'effet sonore de la réponse fausse", () => {
+  const reaction = reagirALaReponse(false, noisette, hasardFixe(0));
+
+  assertEquals(reaction.effetSonore, "reponseFausse");
 });
 
 Deno.test("le personnage guide réfléchit et encourage une réponse fausse", () => {
   const reaction = reagirALaReponse(false, noisette, hasardFixe(0));
 
-  assertEquals(reaction, {
-    humeur: "reflechit",
-    parole: { nature: "encouragement", texte: "Oups, presque !" },
-  });
+  assertEquals(
+    { humeur: reaction.humeur, parole: reaction.parole },
+    { humeur: "reflechit", parole: { nature: "encouragement", texte: "Oups, presque !" } },
+  );
 });
 
 Deno.test("à « Je ne sais pas », le personnage guide réfléchit et rassure avec l'aide", () => {

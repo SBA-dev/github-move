@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState } from "react";
 import { HUMEUR_PAR_DEFAUT, type Humeur } from "@domain/motivation";
+import type { EffetSonore } from "@domain/voix";
 import type { Voix } from "../voix/index.ts";
 
 export type NatureDeParole =
@@ -21,10 +22,12 @@ export type ParoleADire = {
   /** Ce que la voix prononce, quand ce n'est pas exactement le texte affiché (les exemples d'une étape de leçon). */
   readonly aLire?: string;
   readonly humeur?: Humeur;
+  /** Effets sonores joués avant la parole, qui n'est dite qu'une fois ces effets terminés. */
+  readonly effetsAvant?: readonly EffetSonore[];
 };
 
 /** La bulle du personnage guide : la phrase affichée, le mot prononcé et l'humeur. */
-export function usePersonnageQuiParle({ lire, couperLaVoix }: Pick<Voix, "lire" | "couperLaVoix">) {
+export function usePersonnageQuiParle({ lire, jouer, couperLaVoix }: Pick<Voix, "lire" | "jouer" | "couperLaVoix">) {
   const [parole, setParole] = useState<ParoleADire | undefined>();
   const [rangDuMotPrononce, setRangDuMotPrononce] = useState<number | undefined>();
   const [humeur, setHumeur] = useState<Humeur>(HUMEUR_PAR_DEFAUT);
@@ -44,6 +47,7 @@ export function usePersonnageQuiParle({ lire, couperLaVoix }: Pick<Voix, "lire" 
     const { entendue } = await lire(aDire.aLire ?? aDire.texte, {
       onMot: (rang) => estLaDerniere() && setRangDuMotPrononce(rang),
       onFin: () => estLaDerniere() && setRangDuMotPrononce(undefined),
+      ...(aDire.effetsAvant ? { effetsAvant: aDire.effetsAvant } : {}),
     });
     if (estLaDerniere()) paroleEntendue.current = entendue;
     return estLaDerniere();
@@ -68,5 +72,5 @@ export function usePersonnageQuiParle({ lire, couperLaVoix }: Pick<Voix, "lire" 
     couperLaVoix();
   }, [couperLaVoix]);
 
-  return { parole, rangDuMotPrononce, humeur, paroleEntendue, dire, reecouter, faireSilence, montrerHumeur, montrer };
+  return { parole, rangDuMotPrononce, humeur, paroleEntendue, dire, jouer, reecouter, faireSilence, montrerHumeur, montrer };
 }

@@ -98,6 +98,10 @@ export abstract class EtiquettesAPlacer {
     return this.dernierResultat === "juste" ? this.paroleDueApresUneBonneEtiquette() : undefined;
   }
 
+  derniereReponseCompleteLExercice(): boolean {
+    return this.dernierResultat === "juste" && this.restantes.length === 0;
+  }
+
   protected etiquetteHorsDesRestantes(etiquette: string): Error {
     return this.estUneEtiquetteDeLExercice(etiquette)
       ? new EtiquetteDejaPlacee(etiquette)
