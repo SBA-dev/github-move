@@ -1,5 +1,5 @@
 # language: fr
-@issue-99 @wip
+@issue-99
 Fonctionnalité: « Mon parcours » se dessine dans le royaume du personnage guide
   En tant qu'enfant
   Je veux voir le parcours de chaque matière dessiné dans le paysage de mon univers, avec mon personnage guide

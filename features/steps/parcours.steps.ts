@@ -1,6 +1,7 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 import type { DataTable } from "playwright-bdd";
 import { LECONS_DU_PARCOURS, servirLaBibliothequeDuParcours } from "../support/bibliotheque-du-parcours.ts";
+import { LECONS_DU_DESSIN } from "../support/bibliotheque-du-dessin-du-parcours.ts";
 import { servirLaBibliothequeDuTestDeDepart } from "../support/bibliotheque-du-test-de-depart.ts";
 import type { Famille } from "../support/famille.ts";
 import { lireEnRestLeNiveauDuProfil } from "../support/profils-api.ts";
@@ -38,7 +39,18 @@ function pageDuParcours(famille: Famille, page: Page): Page {
 // --- Ouvrir le parcours, choisir une matière
 
 const DELAI_DE_LA_LECTURE_SANS_RESEAU_MS = 25_000;
-const ETOILES_PAR_SEANCE: Readonly<Record<number, number>> = { 1: 4, 2: 1, 3: 0 };
+/** Les séances jouées par l'interface dans le scénario : ce que le serveur gardera de leçons qu'il connaît (story #99, application rouverte). */
+const seancesJouees = new WeakMap<Page, Array<{ titre: string; etoiles: number }>>();
+
+export function seancesJoueesDe(page: Page): ReadonlyArray<{ titre: string; etoiles: number }> {
+  return seancesJouees.get(page) ?? [];
+}
+
+export function noterUneSeanceJouee(page: Page, titre: string, etoiles: number): void {
+  seancesJouees.set(page, [...seancesJoueesDe(page), { titre, etoiles }]);
+}
+
+export const ETOILES_PAR_SEANCE: Readonly<Record<number, number>> = { 1: 4, 2: 1, 3: 0 };
 
 function boutonMonParcours(page: Page): Locator {
   return page.getByRole("button", { name: "Mon parcours", exact: true });
@@ -56,7 +68,7 @@ function titreDuParcours(page: Page): Locator {
   return page.getByTestId("titre-du-parcours");
 }
 
-function leconsDuParcours(page: Page): Locator {
+function leconsDuParcours(page: Page | Locator): Locator {
   return page.getByTestId("lecon-du-parcours");
 }
 
@@ -110,7 +122,7 @@ async function faireUneErreur(page: Page): Promise<void> {
   await repondre(page, fausse);
 }
 
-async function jouerLaSeanceCompleteAvecErreurs(page: Page, titre: string, erreurs: number): Promise<void> {
+export async function jouerLaSeanceCompleteAvecErreurs(page: Page, titre: string, erreurs: number): Promise<void> {
   await ouvrirLaPageDeLaLecon(page, titre);
   await commencerLaSeanceComplete(page);
   const questions = questionsDeLaSeance(page);
@@ -130,7 +142,7 @@ Given(/^la bibliothèque de test du parcours est servie$/, async ({ page }) => {
   etat(page).injectees.push(...(LECONS_DU_PARCOURS as LeconBrute[]));
 });
 
-async function preparerLesEtoiles(famille: Famille, page: Page, prenom: string, lecons: ReadonlyArray<{ titre: string; etoiles: number }>) {
+export async function preparerLesEtoiles(famille: Famille, page: Page, prenom: string, lecons: ReadonlyArray<{ titre: string; etoiles: number }>) {
   const profil = profilDe(famille, prenom);
   for (const { titre, etoiles } of lecons) await ecrireUnResultatDeLecon(profil.id, leconDeTitre(page, titre).id, etoiles);
 }
@@ -142,7 +154,10 @@ Given(/^(Léa|Tom) a pour meilleures étoiles :$/, async ({ famille, page }, pre
 
 Given(/^Léa a réussi (\d+) leçons?(?:\(s\))? de français du CE1$/, async ({ famille, page, $tags }, nombre: string) => {
   // Story #26 : la bibliothèque de test des leçons des classes d'avant a ses propres identifiants (étape « … est servie »).
-  const bibliotheque = $tags.includes("@issue-26") || utiliseLaBibliothequeDeLAccueil($tags) ? etat(page).injectees : LECONS_DU_PARCOURS;
+  // Story #99 : la bibliothèque de test du dessin du parcours (identifiants « e2e-99- ») a ses propres leçons.
+  const bibliotheque = $tags.includes("@issue-99")
+    ? LECONS_DU_DESSIN
+    : $tags.includes("@issue-26") || utiliseLaBibliothequeDeLAccueil($tags) ? etat(page).injectees : LECONS_DU_PARCOURS;
   const lecons = bibliotheque.filter((l) => l.matiere === "francais" && l.niveau === "CE1")
     .sort((a, b) => a.ordre - b.ordre)
     .slice(0, Number(nombre))
@@ -152,8 +167,9 @@ Given(/^Léa a réussi (\d+) leçons?(?:\(s\))? de français du CE1$/, async ({ 
 
 Given(/^Léa a terminé une séance de la leçon « ([^«»]+) » avec (\d) étoiles?$/, async ({ page, $test, $tags }, titre: string, etoiles: string) => {
   // #33 joue deux séances complètes dans un même scénario : plus de 30 s, délai triplé pour ces scénarios seuls.
-  if ($tags.includes("@issue-33")) $test.slow();
+  if ($tags.includes("@issue-33") || $tags.includes("@issue-99")) $test.slow();
   await jouerLaSeanceCompleteAvecErreurs(page, titre, ETOILES_PAR_SEANCE[Number(etoiles)] ?? 0);
+  noterUneSeanceJouee(page, titre, Number(etoiles));
   await page.getByTestId("fin-de-seance").getByRole("button", { name: "Accueil", exact: true }).click();
 });
 
@@ -276,7 +292,7 @@ Then(/^les leçons du parcours sont numérotées (« .+ »)$/, async ({ famille,
 
 const ETATS_DU_PARCOURS = /^(à toi|à découvrir|réussie au test de départ|réussie, (\d) étoiles?)$/;
 
-async function verifierUneLecon(cible: Page, rang: number, titre: string, etatAttendu: string): Promise<void> {
+export async function verifierUneLecon(cible: Page | Locator, rang: number, titre: string, etatAttendu: string): Promise<void> {
   const lecon = leconsDuParcours(cible).nth(rang);
   const correspondance = ETATS_DU_PARCOURS.exec(etatAttendu);
   if (!correspondance) throw new Error(`État de leçon inconnu : « ${etatAttendu} »`);

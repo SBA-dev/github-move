@@ -2,6 +2,7 @@ import { avecLesReglagesPrevus } from "../support/reglages-prevus.ts";
 import { servirLaBibliothequeDeLAccueil, utiliseLaBibliothequeDeLAccueil } from "../support/bibliotheque-de-l-accueil.ts";
 import { servirLaBibliothequeDesClassesDAvant } from "../support/bibliotheque-des-classes-d-avant.ts";
 import { servirLaBibliothequeDuParcours } from "../support/bibliotheque-du-parcours.ts";
+import { servirLaBibliothequeDuDessin } from "../support/bibliotheque-du-dessin-du-parcours.ts";
 import { servirLaBibliothequeDuTestDeDepart } from "../support/bibliotheque-du-test-de-depart.ts";
 import { readFileSync } from "node:fs";
 import { expect, type Locator, type Page } from "@playwright/test";
@@ -235,13 +236,15 @@ Given(/^Léa a un profil enfant préparé de niveau (\S+) dans l'univers « (.+)
     !$testInfo.title.includes("sans profil réel au serveur") && !$testInfo.title.includes("profil de démonstration");
   // Story #26 : la bibliothèque de test des leçons des classes d'avant est servie avant l'accueil, qui la charge dès son ouverture.
   if ($tags.includes("@issue-26")) await servirLaBibliothequeDesClassesDAvant(page);
+  // Story #99 : la bibliothèque de test du dessin du parcours (identifiants « e2e-99- »), servie de la même façon.
+  if ($tags.includes("@issue-99")) await servirLaBibliothequeDuDessin(page);
   // Story #29 : la bibliothèque de test de l'accueil est servie de la même façon.
   // Les scénarios de #24, #25 et #26 réécrits par #29 gardent la bibliothèque de leur story.
   const accueilSeul = utiliseLaBibliothequeDeLAccueil($tags);
   if (accueilSeul) await servirLaBibliothequeDeLAccueil(page);
   // Story #30 : les jours de séance sont lus sous RLS pour le vrai profil de Léa.
   // Story #96 : les écrans de l'enfant se jouent avec le vrai profil de Léa (parcours, médailles, séances, révision, épisode).
-  if ($tags.includes("@issue-97") || $tags.includes("@issue-96") || $tags.includes("@issue-24") || accueilSeul || $tags.includes("@issue-25") || $tags.includes("@issue-26") || $tags.includes("@issue-27") || $tags.includes("@issue-30") || cabaneSurLeServeur) {
+  if ($tags.includes("@issue-99") || $tags.includes("@issue-97") || $tags.includes("@issue-96") || $tags.includes("@issue-24") || accueilSeul || $tags.includes("@issue-25") || $tags.includes("@issue-26") || $tags.includes("@issue-27") || $tags.includes("@issue-30") || cabaneSurLeServeur) {
     await jouerAvecLeProfilReel(famille, monde, page);
   }
 });
