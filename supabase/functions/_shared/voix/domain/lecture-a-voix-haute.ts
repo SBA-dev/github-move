@@ -77,8 +77,9 @@ export class LectureAVoixHaute {
   }
 
   async lire(brut: string, options: OptionsDeLecture = {}): Promise<ParoleEntendue> {
-    if (this.etat === "muet" || this.voixSuspendue) return PAROLE_NON_ENTENDUE;
+    if (this.voixSuspendue) return PAROLE_NON_ENTENDUE;
     if (options.effetsAvant) await this.jouer(options.effetsAvant);
+    if (this.etat === "muet") return PAROLE_NON_ENTENDUE;
     return await this.lireLeTexte(brut, options);
   }
 
