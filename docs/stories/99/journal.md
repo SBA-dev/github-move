@@ -46,7 +46,7 @@ Bloc A — Apprentissage, `avanceeDansLeParcours` (`supabase/functions/_shared/a
 - 22:10–22:45 UTC : bloc A vert en 5 cycles RED/GREEN (A1, A2, A4, A7 rouges puis verts ; A3/A5 et A6/A2 bis écrits verts, car la branche était déjà écrite pour que le type compile). 2531 tests unitaires verts. Dernier commit : `2726151`.
 - Revue intermédiaire du bloc A (`mr-reviewer`, delta `24cfde3..2726151`) : **APPROUVÉ**. Non bloquants : `placeDe` renvoie un index (lire `place`), commentaire « API attendue » à retirer du test, test explicite « changement de classe » facultatif. Repris au câblage. Point de départ du delta suivant : `2726151`.
 
-## Câblage, review, E2E (22:50 – 00:10 UTC)
+## Câblage, review, E2E (22:15 – 23:05 UTC)
 
 - Câblage (`implementer`) : `3988707` (refactor domaine), `eb1f761` (front : dessin du parcours, personnage guide, marche, sous-titre « Ma carte au trésor », fanion, mémoire de la prochaine leçon connue dans `Application.tsx`), `8ac7083` (planche). tsc, build et unitaires verts.
 - Planche publiée sur #99 (#99.33) ; validée par le PO (« #99. 33 ok », annonce [Responsable] 6482160144).
@@ -58,3 +58,27 @@ Bloc A — Apprentissage, `avanceeDansLeParcours` (`supabase/functions/_shared/a
 - Capture de référence `mon-parcours` de #96 remplacée dans un commit dédié (`78c6315`, réponse 99.17), même cadre que 96.9 ; le cas `@visuel` passe.
 - Environnement : le Chromium du conteneur (1243) ne correspond pas à celui attendu par Playwright 1.56.1 (1194). Runs faits avec une config temporaire `executablePath`, non commitée (pas de `playwright install`).
 - Non-régression (décision du PO du 28/10) : seuls les scénarios `@issue-99`, plus le cas `@visuel` de #96 touché. La non-régression complète tourne la nuit.
+
+## Fin : relecture finale et PR (23:05 UTC)
+
+- PR #132 ouverte en brouillon. Relecture du delta `8ac7083..af5bdfa` par `mr-reviewer` : **APPROUVÉ**, publiée sur la PR (commentaire 6482859964).
+- Deux non bloquants corrigés avant de passer la PR en « prête » : `11d4032` (question « le son ou » des données de test avec une seule bonne réponse) et `396235e` (`indexDuPrecedent`). Run final `@issue-99` sur `telephone`, au commit `396235e` : 26/26, sans relance.
+- Restent non bloquants :
+  - fusion du relevé tardif sans test unitaire (pas de runner côté front) ;
+  - `@wip` retiré par `e2e-tester` ;
+  - même liste de mots (« mouton ») dans `bibliotheque-du-parcours.ts` et `bibliotheque-des-classes-d-avant.ts`, hors périmètre.
+- La PR n'a aucune vérification CI configurée (0 check run).
+- `main` n'a pas bougé depuis le départ (`c477f3b`) : aucune intégration.
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Durée, du lancement au merge | lancement 2026-10-28 19:16 UTC ; PR prête à 23:05 UTC (merge : à compléter) |
+| Temps passé à attendre | PO : environ 2 h (99.1 à 99.22, 19:45 → 21:38), puis environ 10 min (99.23 à 99.32), puis environ 10 min pour la planche (99.33, sans bloquer) ; verrou : aucun ; `main` : aucune attente |
+| Tokens et coût | relevés par le responsable |
+| Cycles TDD | 7 comportements : 5 cycles RED/GREEN, plus 2 commits de tests verts dès l'écriture |
+| Cycles de review À CORRIGER | revue intermédiaire : 0 ; revue complète : 0 (APPROUVÉ au cycle 1, 8 non bloquants corrigés) ; delta final : 0 |
+| Cycles E2E KO | 0 bug applicatif ; des timeouts sous charge (4 sur `tablette`, 1 sur `telephone`), verts une fois relancés seuls ; 1 KO de donnée ponctuel, pas revenu |
+| Intégrations de `main` | 0 (`main` immobile), aucun conflit |
+| Régression sur `main` après le merge | à compléter |
