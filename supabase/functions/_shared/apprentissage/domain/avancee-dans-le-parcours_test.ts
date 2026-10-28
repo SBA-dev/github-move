@@ -96,3 +96,12 @@ Deno.test("quand la prochaine leçon connue est réussie au test de départ, l'a
 
   assertEquals(avanceeDansLeParcours(a.id, parcours), { depuis: a.id, jusqua: { genre: "lecon", lecon: b.id } });
 });
+
+Deno.test("si une leçon non réussie est apparue avant la prochaine leçon connue, il n'y a pas d'avancée : le parcours ne recule jamais", () => {
+  const parcours = parcoursDeLaMatiere(
+    { lecons: [a, b, c], niveau: Niveau.de("CE1"), meilleuresEtoiles: new Map([[b.id, Etoiles.de(1)]]) },
+    a.matiere,
+  );
+
+  assertEquals(avanceeDansLeParcours(b.id, parcours), undefined);
+});
