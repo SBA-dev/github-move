@@ -11,3 +11,5 @@ Numéro de décision réservé : 0035.
 - 08:35 UTC : étape 1, délégation à `domain-modeler` (la story touche l'affichage seulement, mais introduit des concepts nouveaux, habillage de jeu, glisser-déposer, record de fluence présenté comme une course, et un découpage à proposer).
 - 08:41 UTC : `domain-modeler` rend `domain-model.md` : aucun agrégat nouveau, affichage seulement. Répartition avec #97 posée. Découpage proposé en 98a à 98e (98a = socle du glisser + `classer`, `ordre`, ordre des vers de `memoriser`). 17 questions (98.1 à 98.17).
 - 08:42 UTC : étape 2, délégation à `po-acceptance` pour les scénarios de la tranche 98a seulement (les autres tranches deviendraient de nouvelles issues créées par le PO).
+- 08:55 UTC : `po-acceptance` rend `acceptance.md` et `features/98-exercices-comme-des-jeux.feature` (tranche 98a) : 6 règles, 34 scénarios (8 plans), 21 `@a-valider`, 4 `@depend-de-97`. Questions nouvelles 98.18 à 98.24.
+- 08:56 UTC : CADRAGE PRÊT publié sur #98. Arrêt : on attend la validation du PO, transmise par une annonce `[Responsable]`. Pas de code avant le merge de #97.
