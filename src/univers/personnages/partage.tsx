@@ -4,8 +4,7 @@ import type { Humeur } from "@domain/motivation";
 
 export type DessinDuPersonnage = (props: { readonly humeur: Humeur; readonly id: string }) => ReactNode;
 
-export function choisir<T>(humeur: Humeur, content: T, reflechit: T, applaudit: T): T {
-  const parHumeur: Readonly<Record<Humeur, T>> = { content, reflechit, applaudit };
+export function choisir<T>(humeur: Humeur, parHumeur: Readonly<Record<Humeur, T>>): T {
   return parHumeur[humeur];
 }
 

@@ -108,14 +108,14 @@ export const CoachLeo: DessinDuPersonnage = ({ humeur, id }) => (
             <Yeux>
               <g transform="translate(-11.2 -5) scale(0.93 1)">
                 <ellipse rx="7.4" ry="9.6" fill="#FFFFFF" />
-                <g transform={choisir(humeur, undefined, undefined, "translate(0 -0.1) scale(1.05)")}>
+                <g transform={choisir(humeur, { content: undefined, reflechit: undefined, applaudit: "translate(0 -0.1) scale(1.05)" })}>
                   <circle cx=".5" cy="3" r="4.8" fill="#6B4226" />
                   <circle cx=".5" cy="3" r="2.5" fill="#1B1530" />
                   <circle cx="-1.4" cy=".6" r="1.8" fill="#FFFFFF" />
                   <circle cx="2.5" cy="4.8" r=".9" fill="#FFFFFF" />
                 </g>
                 <g clipPath={`url(#${id}oeil)`}>
-                  <ellipse rx="10" ry="10.6" fill="#f1c39a" stroke="#33304A" strokeWidth="2.6" transform={choisir(humeur, "translate(0 -21)", "translate(0 -14.7)", "translate(0 -21)")} />
+                  <ellipse rx="10" ry="10.6" fill="#f1c39a" stroke="#33304A" strokeWidth="2.6" transform={choisir(humeur, { content: "translate(0 -21)", reflechit: "translate(0 -14.7)", applaudit: "translate(0 -21)" })} />
                 </g>
                 <path d="M-7 0 A7.4 9.6 0 0 1 7 0" fill="none" stroke="#33304A" strokeWidth="2.8" strokeLinecap="round" />
                 <path d="M-4.5 8.8 Q0 10.6 4.5 8.8" fill="none" stroke="#33304A" strokeWidth="1" strokeLinecap="round" opacity=".4" />
@@ -124,14 +124,14 @@ export const CoachLeo: DessinDuPersonnage = ({ humeur, id }) => (
             <Yeux>
               <g transform="translate(11.2 -5) scale(0.93 1)">
                 <ellipse rx="7.4" ry="9.6" fill="#FFFFFF" />
-                <g transform={choisir(humeur, undefined, undefined, "translate(0 -0.1) scale(1.05)")}>
+                <g transform={choisir(humeur, { content: undefined, reflechit: undefined, applaudit: "translate(0 -0.1) scale(1.05)" })}>
                   <circle cx=".5" cy="3" r="4.8" fill="#6B4226" />
                   <circle cx=".5" cy="3" r="2.5" fill="#1B1530" />
                   <circle cx="-1.4" cy=".6" r="1.8" fill="#FFFFFF" />
                   <circle cx="2.5" cy="4.8" r=".9" fill="#FFFFFF" />
                 </g>
                 <g clipPath={`url(#${id}oeil)`}>
-                  <ellipse rx="10" ry="10.6" fill="#f1c39a" stroke="#33304A" strokeWidth="2.6" transform={choisir(humeur, "translate(0 -21)", "translate(0 -14.7)", "translate(0 -21)")} />
+                  <ellipse rx="10" ry="10.6" fill="#f1c39a" stroke="#33304A" strokeWidth="2.6" transform={choisir(humeur, { content: "translate(0 -21)", reflechit: "translate(0 -14.7)", applaudit: "translate(0 -21)" })} />
                 </g>
                 <path d="M-7 0 A7.4 9.6 0 0 1 7 0" fill="none" stroke="#33304A" strokeWidth="2.8" strokeLinecap="round" />
                 <path d="M-4.5 8.8 Q0 10.6 4.5 8.8" fill="none" stroke="#33304A" strokeWidth="1" strokeLinecap="round" opacity=".4" />
@@ -151,10 +151,10 @@ export const CoachLeo: DessinDuPersonnage = ({ humeur, id }) => (
           <path fill="#5a3a22" stroke="#33304A" strokeWidth="3.2" strokeLinejoin="round" d="M10 -25 Q22 -36 24 -22 Q18 -24 14 -20 Z" />
           <path fill="#5a3a22" stroke="#33304A" strokeWidth="3" strokeLinejoin="round" d="M-4 -29 Q-14 -42 -18 -31 Q-12 -32 -10 -27 Z" />
           </g>
-          <g transform={choisir(humeur, "translate(-11.2 -21) scale(0.93 1) rotate(-3)", "translate(-11.2 -16) scale(0.93 1) rotate(10)", "translate(-11.2 -23) scale(0.93 1) rotate(-4)")}>
+          <g transform={choisir(humeur, { content: "translate(-11.2 -21) scale(0.93 1) rotate(-3)", reflechit: "translate(-11.2 -16) scale(0.93 1) rotate(10)", applaudit: "translate(-11.2 -23) scale(0.93 1) rotate(-4)" })}>
             <path d="M-7 0 Q0 -4 7 0" fill="none" stroke="#43291A" strokeWidth="3.6" strokeLinecap="round" />
           </g>
-          <g transform={choisir(humeur, "translate(11.2 -21) scale(0.93 1) rotate(3)", "translate(11.2 -16) scale(0.93 1) rotate(-10)", "translate(11.2 -23) scale(0.93 1) rotate(4)")}>
+          <g transform={choisir(humeur, { content: "translate(11.2 -21) scale(0.93 1) rotate(3)", reflechit: "translate(11.2 -16) scale(0.93 1) rotate(-10)", applaudit: "translate(11.2 -23) scale(0.93 1) rotate(4)" })}>
             <path d="M-7 0 Q0 -4 7 0" fill="none" stroke="#43291A" strokeWidth="3.6" strokeLinecap="round" />
           </g>
         </g>

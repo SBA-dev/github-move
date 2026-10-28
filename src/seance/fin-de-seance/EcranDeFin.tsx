@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
-import { mouvementsReduits } from "../../transitions/mouvements-reduits.ts";
+import { mouvementsReduits } from "../../transitions/index.ts";
 import { leconSuivanteEnFinDeSeance, type Seance } from "@domain/apprentissage";
 import { pageDeLaLecon } from "@domain/catalogue";
 import {

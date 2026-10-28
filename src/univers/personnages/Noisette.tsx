@@ -105,7 +105,7 @@ export const Noisette: DessinDuPersonnage = ({ humeur, id }) => (
         <Yeux>
           <g transform="translate(-16 -9)">
             <ellipse rx="9" ry="11" fill="#FFFFFF" stroke="#E09A5A" strokeWidth="1" />
-            <g transform={choisir(humeur, undefined, undefined, "translate(0 -0.1) scale(1.05)")}>
+            <g transform={choisir(humeur, { content: undefined, reflechit: undefined, applaudit: "translate(0 -0.1) scale(1.05)" })}>
               <circle cx=".5" cy="3" r="5.4" fill="#3E2A1A" />
               <circle cx=".5" cy="3" r="4.4" fill="#6B4226" />
               <circle cx=".5" cy="3" r="2.6" fill="#1B1530" />
@@ -113,7 +113,7 @@ export const Noisette: DessinDuPersonnage = ({ humeur, id }) => (
               <circle cx="2.8" cy="5" r="1" fill="#FFFFFF" />
             </g>
             <g clipPath={`url(#${id}oeil)`}>
-              <ellipse rx="11" ry="12" fill="#F48C3C" stroke="#33304A" strokeWidth="2.6" transform={choisir(humeur, "translate(0 -23)", "translate(0 -16.1)", "translate(0 -23)")} />
+              <ellipse rx="11" ry="12" fill="#F48C3C" stroke="#33304A" strokeWidth="2.6" transform={choisir(humeur, { content: "translate(0 -23)", reflechit: "translate(0 -16.1)", applaudit: "translate(0 -23)" })} />
             </g>
             <path d="M-8.5 0 A9 11 0 0 1 8.5 0" fill="none" stroke="#33304A" strokeWidth="3" strokeLinecap="round" />
             <path d="M-5 10.2 Q0 12 5 10.2" fill="none" stroke="#33304A" strokeWidth="1" strokeLinecap="round" opacity=".4" />
@@ -123,7 +123,7 @@ export const Noisette: DessinDuPersonnage = ({ humeur, id }) => (
         <Yeux>
           <g transform="translate(16 -9)">
             <ellipse rx="9" ry="11" fill="#FFFFFF" stroke="#E09A5A" strokeWidth="1" />
-            <g transform={choisir(humeur, undefined, undefined, "translate(0 -0.1) scale(1.05)")}>
+            <g transform={choisir(humeur, { content: undefined, reflechit: undefined, applaudit: "translate(0 -0.1) scale(1.05)" })}>
               <circle cx=".5" cy="3" r="5.4" fill="#3E2A1A" />
               <circle cx=".5" cy="3" r="4.4" fill="#6B4226" />
               <circle cx=".5" cy="3" r="2.6" fill="#1B1530" />
@@ -131,17 +131,17 @@ export const Noisette: DessinDuPersonnage = ({ humeur, id }) => (
               <circle cx="2.8" cy="5" r="1" fill="#FFFFFF" />
             </g>
             <g clipPath={`url(#${id}oeil)`}>
-              <ellipse rx="11" ry="12" fill="#F48C3C" stroke="#33304A" strokeWidth="2.6" transform={choisir(humeur, "translate(0 -23)", "translate(0 -16.1)", "translate(0 -23)")} />
+              <ellipse rx="11" ry="12" fill="#F48C3C" stroke="#33304A" strokeWidth="2.6" transform={choisir(humeur, { content: "translate(0 -23)", reflechit: "translate(0 -16.1)", applaudit: "translate(0 -23)" })} />
             </g>
             <path d="M-8.5 0 A9 11 0 0 1 8.5 0" fill="none" stroke="#33304A" strokeWidth="3" strokeLinecap="round" />
             <path d="M-5 10.2 Q0 12 5 10.2" fill="none" stroke="#33304A" strokeWidth="1" strokeLinecap="round" opacity=".4" />
             <path d="M7 -8 l2.6 -2.4" fill="none" stroke="#33304A" strokeWidth="2.2" strokeLinecap="round" />
           </g>
         </Yeux>
-        <g transform={choisir(humeur, "translate(-16 -27)", "translate(-16 -25) rotate(-10)", "translate(-16 -31)")}>
+        <g transform={choisir(humeur, { content: "translate(-16 -27)", reflechit: "translate(-16 -25) rotate(-10)", applaudit: "translate(-16 -31)" })}>
           <path d="M-8 0 Q0 -5 8 0" fill="none" stroke="#C9601C" strokeWidth="3.6" strokeLinecap="round" />
         </g>
-        <g transform={choisir(humeur, "translate(16 -27)", "translate(16 -25) rotate(10)", "translate(16 -31)")}>
+        <g transform={choisir(humeur, { content: "translate(16 -27)", reflechit: "translate(16 -25) rotate(10)", applaudit: "translate(16 -31)" })}>
           <path d="M-8 0 Q0 -5 8 0" fill="none" stroke="#C9601C" strokeWidth="3.6" strokeLinecap="round" />
         </g>
       </g>

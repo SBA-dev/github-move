@@ -138,7 +138,7 @@ export const Lumi: DessinDuPersonnage = ({ humeur, id }) => (
         <Yeux>
           <g transform="translate(-15 -6)">
             <ellipse rx="9" ry="11" fill="#FFFFFF" stroke="#E8B48C" strokeWidth="1" />
-            <g transform={choisir(humeur, undefined, undefined, "translate(0 -0.1) scale(1.05)")}>
+            <g transform={choisir(humeur, { content: undefined, reflechit: undefined, applaudit: "translate(0 -0.1) scale(1.05)" })}>
               <circle cx=".5" cy="3" r="5.4" fill="#2F5F8A" />
               <circle cx=".5" cy="3" r="4.4" fill="#4C8FF5" />
               <circle cx=".5" cy="3" r="2.6" fill="#1B1530" />
@@ -146,7 +146,7 @@ export const Lumi: DessinDuPersonnage = ({ humeur, id }) => (
               <circle cx="2.8" cy="5" r="1" fill="#FFFFFF" />
             </g>
             <g clipPath={`url(#${id}oeil)`}>
-              <ellipse rx="11" ry="12" fill="#ffd9b8" stroke="#33304A" strokeWidth="2.6" transform={choisir(humeur, "translate(0 -23)", "translate(0 -16.1)", "translate(0 -23)")} />
+              <ellipse rx="11" ry="12" fill="#ffd9b8" stroke="#33304A" strokeWidth="2.6" transform={choisir(humeur, { content: "translate(0 -23)", reflechit: "translate(0 -16.1)", applaudit: "translate(0 -23)" })} />
             </g>
             <path d="M-8.5 0 A9 11 0 0 1 8.5 0" fill="none" stroke="#33304A" strokeWidth="3" strokeLinecap="round" />
             <path d="M-5 10.2 Q0 12 5 10.2" fill="none" stroke="#33304A" strokeWidth="1" strokeLinecap="round" opacity=".4" />
@@ -156,7 +156,7 @@ export const Lumi: DessinDuPersonnage = ({ humeur, id }) => (
         <Yeux>
           <g transform="translate(15 -6)">
             <ellipse rx="9" ry="11" fill="#FFFFFF" stroke="#E8B48C" strokeWidth="1" />
-            <g transform={choisir(humeur, undefined, undefined, "translate(0 -0.1) scale(1.05)")}>
+            <g transform={choisir(humeur, { content: undefined, reflechit: undefined, applaudit: "translate(0 -0.1) scale(1.05)" })}>
               <circle cx=".5" cy="3" r="5.4" fill="#2F5F8A" />
               <circle cx=".5" cy="3" r="4.4" fill="#4C8FF5" />
               <circle cx=".5" cy="3" r="2.6" fill="#1B1530" />
@@ -164,17 +164,17 @@ export const Lumi: DessinDuPersonnage = ({ humeur, id }) => (
               <circle cx="2.8" cy="5" r="1" fill="#FFFFFF" />
             </g>
             <g clipPath={`url(#${id}oeil)`}>
-              <ellipse rx="11" ry="12" fill="#ffd9b8" stroke="#33304A" strokeWidth="2.6" transform={choisir(humeur, "translate(0 -23)", "translate(0 -16.1)", "translate(0 -23)")} />
+              <ellipse rx="11" ry="12" fill="#ffd9b8" stroke="#33304A" strokeWidth="2.6" transform={choisir(humeur, { content: "translate(0 -23)", reflechit: "translate(0 -16.1)", applaudit: "translate(0 -23)" })} />
             </g>
             <path d="M-8.5 0 A9 11 0 0 1 8.5 0" fill="none" stroke="#33304A" strokeWidth="3" strokeLinecap="round" />
             <path d="M-5 10.2 Q0 12 5 10.2" fill="none" stroke="#33304A" strokeWidth="1" strokeLinecap="round" opacity=".4" />
             <path d="M7 -8 l2.6 -2.4 M8.6 -4 l3 -1.2" fill="none" stroke="#33304A" strokeWidth="2.2" strokeLinecap="round" />
           </g>
         </Yeux>
-        <g transform={choisir(humeur, "translate(-15 -24)", "translate(-15 -22) rotate(-10)", "translate(-15 -28)")}>
+        <g transform={choisir(humeur, { content: "translate(-15 -24)", reflechit: "translate(-15 -22) rotate(-10)", applaudit: "translate(-15 -28)" })}>
           <path d="M-8 0 Q0 -5 8 0" fill="none" stroke="#D9A92C" strokeWidth="3.4" strokeLinecap="round" />
         </g>
-        <g transform={choisir(humeur, "translate(15 -24)", "translate(15 -22) rotate(10)", "translate(15 -28)")}>
+        <g transform={choisir(humeur, { content: "translate(15 -24)", reflechit: "translate(15 -22) rotate(10)", applaudit: "translate(15 -28)" })}>
           <path d="M-8 0 Q0 -5 8 0" fill="none" stroke="#D9A92C" strokeWidth="3.4" strokeLinecap="round" />
         </g>
         <path fill="#f7cc4f" stroke="#33304A" strokeWidth="3" strokeLinejoin="round" d="M-42 -24 Q-44 -46 -26 -52 Q-12 -58 0 -54 Q12 -58 26 -52 Q44 -46 42 -24 Q36 -34 30 -29 Q22 -40 12 -30 Q4 -42 -6 -30 Q-14 -42 -24 -30 Q-34 -36 -42 -24 Z" />
