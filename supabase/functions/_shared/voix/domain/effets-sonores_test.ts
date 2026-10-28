@@ -314,3 +314,18 @@ Deno.test("voix suspendue, toucher un bouton ne joue aucun effet", () => {
 
   assertEquals(lecteurDEffetsSonores.effetsJoues, []);
 });
+
+Deno.test("après un bouton touché puis la voix coupée, la parole suivante est lue", async () => {
+  const { lecture, lecteurDEffetsSonores, lecteur } = uneLecture();
+  lecteurDEffetsSonores.jouerSansTerminerAutomatiquement();
+  lecture.toucherUnBouton();
+  await Promise.resolve();
+  lecture.couperLaVoix();
+  lecteurDEffetsSonores.terminerLEffetEnCours();
+  await new Promise((resolve) => setTimeout(resolve, 0));
+
+  const parole = await lecture.lire("Bravo !");
+
+  assertEquals(parole, { entendue: true });
+  assertEquals(lecteur.lectures.length, 1);
+});
