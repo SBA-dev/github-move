@@ -34,7 +34,7 @@ Ce que cela implique en pratique :
 
 ## 1. Le style maison
 
-Le style vient de `src/univers/personnages/` (Noisette, personnages humains), `src/univers/Paysage.tsx` et `src/medailles/DessinDeLaCabane.tsx`. Avant de dessiner, **relire ces trois fichiers**.
+Le style vient de `src/univers/personnages/` (Noisette, personnages humains), `src/univers/Paysage.tsx` et `src/medailles/DessinDeLaCabane.tsx`. Avant de dessiner, **relire ce dossier et ces deux fichiers**.
 
 | Trait du style | Règle |
 |---|---|
