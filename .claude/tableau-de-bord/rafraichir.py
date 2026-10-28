@@ -36,7 +36,8 @@ DEBUT_REECRITURE = "2026-10-22T15:00"
 # Dépendances et chemin critique recopiés de l'issue #95, tant qu'elles manquent à docs/graphe/stories.md.
 LUDIQUE = "ludique"
 LOT_LUDIQUE = "8. Leçons plus ludiques"
-DEPENDANCES_LUDIQUE = {96: "#45", 97: "#96", 98: "#97", 99: "#96", 100: "#98, #99", 101: "#99", 102: "#96", 106: "#100, #96"}
+DEPENDANCES_LUDIQUE = {96: "#45", 97: "#96", 98: "#97", 99: "#96", 100: "#98, #99", 101: "#99", 102: "#96", 106: "#100, #96",
+                       126: "#97, #98", 127: "#97, #98", 128: "#97, #98", 129: "#97, #98"}
 CHEMIN_CRITIQUE_LUDIQUE = [96, 97, 98, 100, 106]
 
 
