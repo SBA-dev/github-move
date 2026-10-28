@@ -90,8 +90,8 @@ export async function contrastesInsuffisants(page: Page): Promise<{ insuffisants
     };
     const couleursDuDegrade = (image: string): Rgba[] =>
       (image.match(/rgba?\([^)]*\)|color\([^)]*\)/g) ?? []).map(lire);
-    // Les fonds possibles du texte : une couleur, ou toutes les couleurs d'un dégradé (le pire cas compte).
     // Les couleurs du paysage de l'univers (ciel, lointain, collines, arbres), lues dans le DOM de son SVG : le pire cas compte.
+    // Le lointain (opacity .7) et les nuages (.85) sont comptés comme opaques : l'écart est négligeable avec ces palettes de teintes voisines.
     const couleursDuPaysage = (): Rgba[] => {
       const paysage = document.querySelector('[data-testid="paysage"]');
       if (!paysage) return [];
@@ -105,9 +105,9 @@ export async function contrastesInsuffisants(page: Page): Promise<{ insuffisants
     };
     // Les fonds possibles du texte : une couleur, ou toutes les couleurs d'un dégradé (le pire cas compte).
     // Sans fond opaque parmi les ancêtres (le fond du body est caché par le décor), le texte est sur le paysage.
+    const paysage = couleursDuPaysage();
     const fondsPossibles = (el: Element): Rgba[][] => {
       const pile: Rgba[][] = [];
-      const paysage = couleursDuPaysage();
       for (let courant: Element | null = el; courant; courant = courant.parentElement) {
         if (paysage.length > 0 && (courant === document.body || courant === document.documentElement)) {
           pile.push(paysage);
@@ -124,6 +124,10 @@ export async function contrastesInsuffisants(page: Page): Promise<{ insuffisants
       }
       return pile;
     };
+    // Masqué pour l'œil mais lu par les lecteurs d'écran (clip à 1 px, taille de 1 px) : aucun contraste visuel à mesurer.
+    const masquePourLOeil = (el: Element, boite: DOMRect, s: CSSStyleDeclaration): boolean =>
+      (boite.width <= 1 && boite.height <= 1) || s.clipPath === "inset(50%)" || /^rect\(0(px)?,? 0(px)?,? 0(px)?,? 0(px)?\)$/.test(s.clip) ||
+      /(^|[-_])(sr-only|visually-hidden|visuellement-masque)($|[-_])/.test(typeof el.className === "string" ? el.className : "");
     const opaciteEffective = (el: Element): number => {
       let o = 1;
       for (let c: Element | null = el; c; c = c.parentElement) o *= parseFloat(getComputedStyle(c).opacity);
@@ -143,6 +147,7 @@ export async function contrastesInsuffisants(page: Page): Promise<{ insuffisants
       const boite = el.getBoundingClientRect();
       const s = getComputedStyle(el);
       if (boite.width === 0 || boite.height === 0 || s.visibility === "hidden" || s.display === "none") continue;
+      if (masquePourLOeil(el, boite, s)) continue;
       if (el.closest("[disabled], [aria-disabled='true']")) continue;
       mesures++;
       const opacite = opaciteEffective(el);
