@@ -22,7 +22,7 @@ export function EnTete({ surAccueil, enfant, son, retourPossible, onBasculerLeSo
       </Titre>
       <div className="outils">
         {enfant && <span className="enfant" data-testid="enfant-en-cours">{enfant.prenom} · {enfant.niveau}</span>}
-        <button type="button" aria-label="Son" aria-pressed={son === "son"} data-son={son} onClick={onBasculerLeSon}>
+        <button type="button" aria-label="Son" aria-pressed={son === "son"} data-son={son} data-bascule-du-son="true" onClick={onBasculerLeSon}>
           <span aria-hidden="true">{son === "son" ? "🔊" : "🔇"}</span> Son
         </button>
         {retourPossible && <button type="button" onClick={onRetour}>Retour</button>}

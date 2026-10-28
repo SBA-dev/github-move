@@ -426,7 +426,7 @@ Given(/^l'appareil a une voix française et une voix anglaise$/, async ({ page }
   scenario(page).voix = [DENISE, SAMANTHA];
 });
 
-Given(/^Léa a choisi l'univers (animaux|princesse|sports|pompier)$/, async ({ page, monde, famille, $tags }, univers: string) => {
+Given(/^Léa a choisi l'univers (animaux|princesse|sports|pompier|police|danse)$/, async ({ page, monde, famille, $tags }, univers: string) => {
   scenario(page).univers = univers;
   // Story #32 : le profil réel de Léa est déjà créé ; son univers change sur le serveur, puis Léa se choisit de nouveau.
   if (($tags.includes("@issue-32") || $tags.includes("@issue-33")) && estSurUnProfilReel(page)) {
@@ -663,7 +663,7 @@ Then(/^Léa n'entend jamais deux lectures en même temps$/, async ({ page }) => 
 const VOIX_ATTENDUE: Readonly<Record<string, string>> = { "féminine": DENISE.nom, "masculine": HENRI.nom };
 
 Then(
-  /^Léa entend (?:Noisette|Lumi|Coach Léo|Capitaine Sam) lire la consigne avec une voix (féminine|masculine)$/,
+  /^Léa entend (?:Noisette|Lumi|Coach Léo|Agent Max|Capitaine Sam|Lili) lire la consigne avec une voix (féminine|masculine)$/,
   async ({ page }, sexe: string) => {
     await attendreUneLecture(page);
     const { lecture } = await journal(page);

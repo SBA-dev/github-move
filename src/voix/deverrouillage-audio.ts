@@ -42,6 +42,8 @@ export class DeverrouillageAudio {
   private piste: HTMLAudioElement | undefined;
   private deverrouille = false;
 
+  constructor(private readonly amorcerLesEffets: () => void = () => undefined) {}
+
   deverrouiller(): void {
     ignorerLEchec(() => {
       this.contexte ??= new AudioContext();
@@ -52,6 +54,7 @@ export class DeverrouillageAudio {
     ignorerLEchec(() => this.demarrerLaPisteSilencieuse());
     ignorerLEchec(() => this.amorcerLeContexte());
     ignorerLEchec(() => this.amorcerLaSynthese());
+    ignorerLEchec(() => this.amorcerLesEffets());
   }
 
   relacher(): void {

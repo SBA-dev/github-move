@@ -4,6 +4,7 @@ import { ChoixDeVoix } from "./choix-de-voix.ts";
 import type { CaractereDeLaVoix } from "./caractere-de-la-voix.ts";
 import type { VoixDisponible } from "./voix-disponible.ts";
 import { LecteurEnMemoire } from "../test_utils/lecteur-en-memoire.ts";
+import { LecteurDEffetsSonoresEnMemoire } from "../test_utils/lecteur-d-effets-sonores-en-memoire.ts";
 import { voixEnMemoire } from "../test_utils/voix-en-memoire.ts";
 import { hasardFixe } from "../test_utils/hasard-fixe.ts";
 import { ChoixDeVoixEnMemoire } from "../test_utils/choix-de-voix-en-memoire.ts";
@@ -15,6 +16,7 @@ function uneLecture(options: { muet?: boolean } = {}) {
   const lecteur = new LecteurEnMemoire();
   const lecture = new LectureAVoixHaute({
     lecteur,
+    lecteurDEffetsSonores: new LecteurDEffetsSonoresEnMemoire(),
     voixDeLAppareil: voixEnMemoire([DENISE]),
     choixDeVoix: new ChoixDeVoixEnMemoire(),
     hasard: hasardFixe(0.5),

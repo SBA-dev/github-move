@@ -34,7 +34,7 @@ Ce que cela implique en pratique :
 
 ## 1. Le style maison
 
-Le style vient de `src/univers/dessins.tsx` (Noisette, personnages humains), `src/univers/Paysage.tsx` et `src/medailles/DessinDeLaCabane.tsx`. Avant de dessiner, **relire ces trois fichiers**.
+Le style vient de `src/univers/personnages/` (Noisette, personnages humains), `src/univers/Paysage.tsx` et `src/medailles/DessinDeLaCabane.tsx`. Avant de dessiner, **relire ce dossier et ces deux fichiers**.
 
 | Trait du style | Règle |
 |---|---|
@@ -46,7 +46,7 @@ Le style vient de `src/univers/dessins.tsx` (Noisette, personnages humains), `sr
 | Cadre | `viewBox` carré (`0 0 200 200`) pour un objet ou un personnage, `0 0 1200 800` pour un décor. `overflow="visible"` si une partie dépasse (queue, accessoire). |
 | Ton | Doux, joyeux, rassurant. Rien d'effrayant, de violent ni de moqueur. Pas de texte dans le dessin (il ne serait ni lu à voix haute ni traduit). |
 
-Diversité : les personnages humains varient déjà la couleur de peau et de cheveux (`apparences.ts`). Un nouveau personnage respecte cet équilibre, sans caricature.
+Diversité : les personnages humains varient déjà la couleur de peau et de cheveux (`PersonnageGuide.tsx`). Un nouveau personnage respecte cet équilibre, sans caricature.
 
 ## 2. Méthode : esquisser, voir, corriger, intégrer
 

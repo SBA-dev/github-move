@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { SeanceDeRevision } from "@domain/apprentissage";
-import { parolesDeFinDeRevision, phraseDeFinAvecLesNouveautes, type Univers } from "@domain/motivation";
+import { effetsSonoresDeLaFin, parolesDeFinDeRevision, phraseDeFinAvecLesNouveautes, type Univers } from "@domain/motivation";
+import { Confettis } from "../celebration/index.ts";
 import { AnnonceDuNouvelEpisode } from "../histoire/AnnonceDuNouvelEpisode.tsx";
 import { useEpisodeOuvertParLaSeance } from "../histoire/useEpisodeOuvertParLaSeance.ts";
 import { messageDeSauvegarde } from "../seance/fin-de-seance/useSauvegardeDeLaSeance.ts";
@@ -56,6 +57,14 @@ export function FinDeLaRevision({ seance, prenom, personnage, univers, nombreDeS
       texte: phraseDeFinAvecLesNouveautes(parolesDeFinDeRevision({ prenom, questionsJustes }), { episode }),
       nature: "felicitation",
       humeur: "applaudit",
+      effetsAvant: effetsSonoresDeLaFin({
+        fin: "seanceDeRevision",
+        leconAcquise: false,
+        fluenceSeule: false,
+        issueDuRecord: "aucunRecord",
+        objetRecu: false,
+        episodeOuvert: episode !== undefined,
+      }),
     });
   }, [pret, episodePret, episode, prenom, questionsJustes, dire]);
 
@@ -72,6 +81,7 @@ export function FinDeLaRevision({ seance, prenom, personnage, univers, nombreDeS
 
   return (
     <div className="fin-de-seance fin-de-la-revision" data-testid="fin-de-la-revision">
+      {pret && <Confettis />}
       <ParoleDuGuide personnage={personnage} univers={univers} onReecouter={reecouter} />
       {pret && <AnnonceDuNouvelEpisode episode={episode} />}
       {pret && (

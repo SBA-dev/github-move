@@ -193,7 +193,7 @@ async function reposerLesErreurs(famille: Famille, page: Page): Promise<Partie> 
   return courante;
 }
 
-async function jouerUnExerciceSeul(famille: Famille, page: Page, lecon: LeconBrute, position: number, erreurs: number) {
+export async function jouerUnExerciceSeul(famille: Famille, page: Page, lecon: LeconBrute, position: number, erreurs: number) {
   const courante = await reposerLesErreurs(famille, page);
   courante.erreursEnTout = erreurs;
   await ouvrirLaPageDeLaLecon(page, lecon.titre);
@@ -382,7 +382,7 @@ function leconDeFrancais(id: string, titre: string, ordre: number, exercices: Ar
   };
 }
 
-Given(/^les leçons de test « Les sons de test » et « La suite de test » sont dans la bibliothèque$/, async ({ page }) => {
+export async function injecterLesLeconsDeTestDesSons(page: Page): Promise<void> {
   await injecter(page, leconDeFrancais("test-les-sons", "Les sons de test", 901, [
     bullesDeTest("Premières bulles", "Touche le mot qui a le son ou."),
     bullesDeTest("Dernières bulles", "Touche le mot qui a le son on."),
@@ -390,6 +390,10 @@ Given(/^les leçons de test « Les sons de test » et « La suite de test » son
   await injecter(page, leconDeFrancais("test-la-suite", "La suite de test", 903, [
     bullesDeTest("Bulles de la suite", "Touche le mot qui a le son an."),
   ]));
+}
+
+Given(/^les leçons de test « Les sons de test » et « La suite de test » sont dans la bibliothèque$/, async ({ page }) => {
+  await injecterLesLeconsDeTestDesSons(page);
 });
 
 async function envoyerLaSeanceDeTest(famille: Famille, page: Page, exercice: string, titre: string, erreurs: number, supplement: object) {
@@ -570,7 +574,7 @@ Then(/^plus aucune séance terminée ni aucune étoile de Léa n'est gardée par
 Then(/^Léa voit ses étoiles sans étincelles ni mouvement$/, async ({ page }) => {
   await attendreLaFinDeLaSeance(page);
   await expect(page.getByTestId("etoiles-dessinees")).toBeVisible();
-  await expect(page.getByTestId("etincelles")).toHaveCount(0);
+  await expect(page.getByTestId("confettis")).toHaveCount(0);
 });
 
 Then(/^« Leçon suivante », « Accueil » et « Rejouer » mesurent au moins 44 px de haut$/, async ({ page }) => {

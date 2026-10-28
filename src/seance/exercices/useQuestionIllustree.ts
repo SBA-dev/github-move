@@ -8,6 +8,8 @@ import type {
   Seance,
 } from "@domain/apprentissage";
 import type { PersonnageGuide } from "@domain/motivation";
+import type { EffetSonore } from "@domain/voix";
+import { cibleDeLaReponse, effetsApresUneBonneReponse, type SignalerUnRetour } from "../../retours/index.ts";
 import type { ParoleADire } from "../usePersonnageQuiParle.ts";
 import {
   aiderQuandOnNeSaitPas,
@@ -22,6 +24,7 @@ type Dependances = {
   readonly seance: Seance;
   readonly personnageGuide: PersonnageGuide;
   readonly dire: (parole: ParoleADire) => Promise<boolean>;
+  readonly signaler: SignalerUnRetour;
   readonly faireSilence: () => void;
   readonly sequence: MutableRefObject<number>;
   readonly vivant: MutableRefObject<boolean>;
@@ -42,7 +45,7 @@ export function seJoueCommeUneQuestionIllustree(type: string | undefined): boole
  * la réponse est corrigée comme un calcul, puis la boîte s'ouvre ou le « ? » du schéma est remplacé.
  */
 export function useQuestionIllustree(
-  { seance, personnageGuide, dire, faireSilence, sequence, vivant, redessiner, reussite }: Dependances,
+  { seance, personnageGuide, dire, signaler, faireSilence, sequence, vivant, redessiner, reussite }: Dependances,
 ) {
   const { estFigee, figer, annoncerLAvancement, attendreLEcranSuivant } = reussite;
   const [phrasesDites, setPhrasesDites] = useState(0);
@@ -77,12 +80,13 @@ export function useQuestionIllustree(
   }, [seance, estFigee, sequence, faireSilence, presenter]);
 
   const feliciterLaBoite = useCallback(
-    (ouverte: BoiteOuverte) => dire(feliciterUnCalcul(personnageGuide, ouverte.ouverture)),
+    (ouverte: BoiteOuverte, effets: readonly EffetSonore[]) => dire(feliciterUnCalcul(personnageGuide, ouverte.ouverture, effets)),
     [dire, personnageGuide],
   );
 
   const feliciterLeSchema = useCallback(
-    (resolu: SchemaResolu) => dire(feliciterPuisExpliquer(personnageGuide, resolu.explication)),
+    (resolu: SchemaResolu, effets: readonly EffetSonore[]) =>
+      dire(feliciterPuisExpliquer(personnageGuide, resolu.explication, effets)),
     [dire, personnageGuide],
   );
 
@@ -91,24 +95,28 @@ export function useQuestionIllustree(
     const schema = seance.schemaEnCours();
     const exercice = seance.exerciceEnCours();
     if (!(boite ?? schema) || !exercice || estFigee.current) return;
+    const questionsReussiesAvant = seance.avancement().questionsReussies;
     const resultat = seance.repondre(reponse);
     if (resultat === "dejaEcartee") return;
     sequence.current++;
     redessiner();
     if (resultat === "fausse") {
+      signaler("fausse", cibleDeLaReponse(reponse));
       await dire(encouragerApresUneErreurDeCalcul(personnageGuide, seance.aideApresLaDerniereErreur()));
       return;
     }
     figer({ position: exercice.position, exercice, question: undefined });
     annoncerLAvancement(seance.avancement());
+    signaler("juste", cibleDeLaReponse(reponse));
+    const effets = effetsApresUneBonneReponse(seance, questionsReussiesAvant);
     const ouverte = seance.boiteApresLaDerniereReponse();
     const resolu = seance.schemaApresLaDerniereReponse();
     if (boite && ouverte) {
       setBoiteReussie({ enCours: boite, ouverte });
-      await feliciterLaBoite(ouverte);
+      await feliciterLaBoite(ouverte, effets);
     } else if (schema && resolu) {
       setSchemaReussi({ enCours: schema, resolu });
-      await feliciterLeSchema(resolu);
+      await feliciterLeSchema(resolu, effets);
     }
     if (!(await attendreLEcranSuivant()) || !vivant.current) return;
     figer(undefined);
@@ -121,6 +129,7 @@ export function useQuestionIllustree(
     seance,
     personnageGuide,
     dire,
+    signaler,
     sequence,
     redessiner,
     figer,

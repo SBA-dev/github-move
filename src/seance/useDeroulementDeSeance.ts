@@ -8,6 +8,7 @@ import {
   texteALireDeLEtape,
 } from "@domain/apprentissage";
 import type { EtapeDeLecon, Lecon } from "@domain/catalogue";
+import type { EffetSonore } from "@domain/voix";
 import {
   annoncerExerciceSuivant,
   inviterAJouerApresLesEtapes,
@@ -15,9 +16,11 @@ import {
   parolesDeFinDeSeance,
   phraseDeFinAvecLesNouveautes,
 } from "@domain/motivation";
+import { effetsDeLaFinDeSeance } from "./fin-de-seance/effets-de-la-fin.ts";
 import type { NouveautesDeFin } from "./fin-de-seance/nouveautes-de-fin.ts";
 import { useReducedMotion } from "motion/react";
 import { hasardDuNavigateur } from "../hasard-navigateur.ts";
+import { useRetourDeLaReponse } from "../retours/index.ts";
 import type { Voix } from "../voix/index.ts";
 import { useAdditionPosee } from "./exercices/addition/useAdditionPosee.ts";
 import { useBattementDeLaFluence, useFluence } from "./exercices/fluence/useFluence.ts";
@@ -45,14 +48,15 @@ function paroleDeLEtape(etape: EtapeDeLecon): ParoleADire {
 export function useDeroulementDeSeance(
   seance: Seance,
   lecon: Lecon,
-  voix: Pick<Voix, "lire" | "couperLaVoix">,
+  voix: Pick<Voix, "lire" | "jouer" | "couperLaVoix">,
   personnageGuide: PersonnageGuide,
   toutLireAVoixHaute: boolean,
   prenom: string,
   horloge: Horloge = horlogeDuNavigateur,
 ) {
   const personnage = usePersonnageQuiParle(voix);
-  const { dire, faireSilence, montrerHumeur, reecouter: relire } = personnage;
+  const { dire, jouer, faireSilence, montrerHumeur, reecouter: relire } = personnage;
+  const { retour, signaler } = useRetourDeLaReponse();
   const [, redessiner] = useReducer((compteur: number) => compteur + 1, 0);
   const sequence = useRef(0);
   const vivant = useRef(true);
@@ -75,6 +79,8 @@ export function useDeroulementDeSeance(
     toutLireAVoixHaute,
     lire: voix.lire,
     dire,
+    jouer,
+    signaler,
     faireSilence,
     montrerHumeur,
     sequence,
@@ -87,6 +93,7 @@ export function useDeroulementDeSeance(
     personnageGuide,
     lire: voix.lire,
     dire,
+    signaler,
     faireSilence,
     sequence,
     vivant,
@@ -97,6 +104,8 @@ export function useDeroulementDeSeance(
     seance,
     personnageGuide,
     dire,
+    jouer,
+    signaler,
     faireSilence,
     montrerHumeur,
     sequence,
@@ -106,11 +115,11 @@ export function useDeroulementDeSeance(
   });
   const { presenter: presenterLaDictee, taper: taperUneLettre } = dictee;
   const { ouvrir, presenter, repondre: repondreALaQuestion, relireLaQuestion } = questions;
-  const dependancesDuCalcul = { seance, personnageGuide, dire, faireSilence, sequence, vivant, redessiner, reussite };
+  const dependancesDuCalcul = { seance, personnageGuide, dire, signaler, faireSilence, sequence, vivant, redessiner, reussite };
   const calcul = useCalcul(dependancesDuCalcul);
   const illustree = useQuestionIllustree(dependancesDuCalcul);
-  const fluence = useFluence({ seance, horloge, dire, faireSilence, sequence, vivant, redessiner, reussite });
-  const addition = useAdditionPosee({ ...dependancesDuCalcul, montrerHumeur });
+  const fluence = useFluence({ seance, personnageGuide, horloge, dire, jouer, signaler, faireSilence, sequence, vivant, redessiner, reussite });
+  const addition = useAdditionPosee({ ...dependancesDuCalcul, jouer, montrerHumeur });
   const memorisation = useMemorisation({
     seance,
     lecon,
@@ -318,21 +327,26 @@ export function useDeroulementDeSeance(
     relire();
   }, [reussite.figee, presentationEnCours, ouvrirLExercice, personnage.parole, relireLaPresentation, relireLaQuestion, memorisation.reecouter, relire]);
 
-  const { parolesDeFin: parolesDeFinDeLaFluence } = fluence;
-  /** Une fluence seule a déjà dit ses paroles de fin : elles sont reprises avec ce que la séance a fait gagner. */
-  const direLaFinDeLaFluenceSeule = useCallback(({ episode }: NouveautesDeFin) => {
+  const { parolesDeFin: parolesDeFinDeLaFluence, issueDuRecord } = fluence;
+  /** Une fluence seule a déjà dit ses paroles de fin : elles sont reprises avec ce que la séance a fait gagner. Sans épisode, seuls les effets de la fin sont joués. */
+  const direLaFinDeLaFluenceSeule = useCallback(({ episode }: NouveautesDeFin, effetsAvant: readonly EffetSonore[]) => {
     const paroles = parolesDeFinDeLaFluence.current;
-    if (paroles === undefined || episode === undefined) return;
-    void dire({ texte: phraseDeFinAvecLesNouveautes(paroles, { episode }), nature: "felicitation", humeur: "applaudit" });
-  }, [dire, parolesDeFinDeLaFluence]);
+    if (paroles === undefined) return;
+    if (episode === undefined) {
+      if (effetsAvant.length > 0) void jouer(effetsAvant);
+      return;
+    }
+    void dire({ texte: phraseDeFinAvecLesNouveautes(paroles, { episode }), nature: "felicitation", humeur: "applaudit", effetsAvant });
+  }, [dire, jouer, parolesDeFinDeLaFluence]);
 
   const direLaFin = useCallback((etoiles: number | undefined, nouveautes: NouveautesDeFin) => {
     sequence.current++;
-    if (etoiles === undefined) return direLaFinDeLaFluenceSeule(nouveautes);
+    const effetsAvant = effetsDeLaFinDeSeance(etoiles, nouveautes, issueDuRecord.current);
+    if (etoiles === undefined) return direLaFinDeLaFluenceSeule(nouveautes, effetsAvant);
     const felicitation = parolesDeFinDeSeance(etoiles, prenom, personnageGuide, hasardDuNavigateur);
     const texte = phraseDeFinAvecLesNouveautes(felicitation, nouveautes);
-    void dire({ texte, nature: "felicitation", humeur: "applaudit" });
-  }, [dire, prenom, personnageGuide, direLaFinDeLaFluenceSeule]);
+    void dire({ texte, nature: "felicitation", humeur: "applaudit", effetsAvant });
+  }, [dire, prenom, personnageGuide, issueDuRecord, direLaFinDeLaFluenceSeule]);
 
   const abandonner = useCallback(() => {
     vivant.current = false;
@@ -356,6 +370,7 @@ export function useDeroulementDeSeance(
     parole,
     rangDuMotPrononce,
     humeur,
+    retour,
     figee,
     choixVisiblesPour,
     positionDuTexteEcoute,
@@ -389,6 +404,7 @@ export function useDeroulementDeSeance(
     additionFigee: addition.additionFigee,
     colonneQuiBrille: addition.colonneQuiBrille,
     fluenceFinie: fluence.fluenceFinie,
+    recordBattu: fluence.recordBattu,
     repondreParUnNombre,
     choisirUneReponseDeCalcul,
     poserUnChiffre,

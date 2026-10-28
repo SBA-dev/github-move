@@ -842,6 +842,7 @@
     "packageJson": {
       "dependencies": [
         "npm:@fontsource/andika@^5.3.0",
+        "npm:@fontsource/baloo-2@5.3.0",
         "npm:@playwright/test@^1.56.1",
         "npm:@supabase/supabase-js@^2.118.0",
         "npm:@types/node@^26.6.5",

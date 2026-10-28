@@ -1,3 +1,4 @@
+import type { EffetSonore } from "../../voix/domain/index.ts";
 import type { Hasard } from "./hasard.ts";
 import { type Humeur, humeurApresReponse } from "./humeur.ts";
 import { direJeNeSaisPasAvecLesChoix, direJeNeSaisPasEnDictee, encourager, feliciter } from "./paroles.ts";
@@ -8,7 +9,11 @@ export type Parole = {
   readonly texte: string;
 };
 
-export type Reaction = { readonly humeur: Humeur; readonly parole: Parole };
+export type Reaction = {
+  readonly humeur: Humeur;
+  readonly parole: Parole;
+  readonly effetSonore: EffetSonore;
+};
 
 export function reagirALaReponse(
   juste: boolean,
@@ -18,7 +23,8 @@ export function reagirALaReponse(
   const parole: Parole = juste
     ? { nature: "felicitation", texte: feliciter(personnageGuide, hasard).texte }
     : { nature: "encouragement", texte: encourager(hasard).texte };
-  return { humeur: humeurApresReponse(juste), parole };
+  const effetSonore: EffetSonore = juste ? "reponseJuste" : "reponseFausse";
+  return { humeur: humeurApresReponse(juste), parole, effetSonore };
 }
 
 export type ReactionAJeNeSaisPas = { readonly humeur: Humeur; readonly parole: string };

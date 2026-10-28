@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { QuestionDeCalcul, QuestionJouee, type TestDeDepart } from "@domain/apprentissage";
 import type { PersonnageGuide, Univers } from "@domain/motivation";
+import { ContexteDuRetour } from "../retours/index.ts";
 import { ExerciceDeCalcul } from "../seance/exercices/ExerciceDeCalcul.tsx";
 import { QuestionAChoix } from "../seance/exercices/QuestionAChoix.tsx";
 import { RecipientDeProgression } from "../seance/RecipientDeProgression.tsx";
@@ -42,7 +43,7 @@ export function DeroulementDuTestDeDepart(
   const { figee } = deroulement;
   const question = figee ?? test.questionEnCours();
   return (
-    <>
+    <ContexteDuRetour.Provider value={deroulement.retour}>
       <RecipientDeProgression avancement={deroulement.avancement} libelle="Avancement du test de départ" />
       <ParoleDuGuide personnage={personnage} univers={univers} onReecouter={deroulement.reecouter} />
       <div className="annonce-d-avancement" role="status" data-testid="annonce-d-avancement">
@@ -79,6 +80,6 @@ export function DeroulementDuTestDeDepart(
           )}
         </div>
       )}
-    </>
+    </ContexteDuRetour.Provider>
   );
 }

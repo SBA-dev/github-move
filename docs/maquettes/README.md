@@ -25,7 +25,7 @@ Validée par le PO le 2026-10-27, après six tours de retouches. Dessinée et an
 
 **Règles respectées** : règle absolue sur les contenus pour les enfants (`CLAUDE.md`) ; mouvements réduits (état final affiché directement, sans mouvement) ; annonce unique au lecteur d'écran (`aria-live`) ; cibles d'au moins 44 px ; tient à 360 px de large.
 
-**Limites connues** : le personnage reste une « poupée articulée » réglée angle par angle (pas de plis de vêtements, pas de cinématique inverse) ; pas de son dans la maquette. L'apparence de Coach Léo dans l'application (`src/univers/apparences.ts`, avec casquette) n'est pas encore modifiée : ce sera le rôle d'une story (#96 ou #106).
+**Limites connues** : le personnage reste une « poupée articulée » réglée angle par angle (pas de plis de vêtements, pas de cinématique inverse) ; pas de son dans la maquette. Le dessin fixe de Coach Léo dans l'application (`src/univers/personnages/CoachLeo.tsx`, sans casquette) reprend cette maquette (fait dans #96 : dessin fixe ; animations : #106).
 
 ## `lili-danse.html` : univers Danse, Lili
 
@@ -37,7 +37,7 @@ Validée par le PO le 2026-10-27. Même moteur et même style que Coach Léo, da
 - **Lili** : cheveux longs blond foncé en **queue de cheval haute** (chouchou rose à petit nœud) qui ondule et suit le mouvement, frange, visage dégagé, **yeux verts** ; justaucorps violet à manches bouffantes, tutu rose court, **collant opaque**, demi-pointes roses à rubans : tenue adaptée aux enfants, poses de danse classique.
 - Contrôles : « Réussir », « Rater », A / B / C ; `?anim=jete|ruban|sauts|echec&t=…`, `?planche=tetes|mains`.
 
-**Limites connues** : le ruban est un trait qui suit la main ; le grand jeté est dessiné de profil sans vrai volume ; pas de son. L'apparence de Lili dans l'application (`src/univers/apparences.ts`, cheveux bruns en chignon) n'est pas encore modifiée.
+**Limites connues** : le ruban est un trait qui suit la main ; le grand jeté est dessiné de profil sans vrai volume ; pas de son. Le dessin fixe de Lili dans l'application (`src/univers/personnages/Lili.tsx`) reprend cette maquette (fait dans #96 : dessin fixe ; animations : #106).
 
 ## `noisette-animaux.html` : univers Animaux, Noisette
 
@@ -50,7 +50,7 @@ Validée par le PO le 2026-10-27, après une reprise complète (la première ver
 - **Échec jamais punitif** : une noisette lui tombe doucement sur la tête (« toc ! », sans bosse ni douleur), il est étourdi un instant (étoiles qui tournent), puis il rit et lève le pouce, « Presque ! On réessaie ? ».
 - Contrôles : « Réussir », « Rater », A / B / C ; `?anim=jongle|mange|joues|echec&t=…`, `?planche=tetes|mains`.
 
-**Limites connues** : la queue part plutôt à l'horizontale derrière lui ; les noisettes du jonglage sont petites ; pas de son. Le dessin de Noisette dans l'application (`src/univers/dessins.tsx`, `Ecureuil`) n'est pas encore modifié.
+**Limites connues** : la queue part plutôt à l'horizontale derrière lui ; les noisettes du jonglage sont petites ; pas de son. Le dessin fixe de Noisette dans l'application (`src/univers/personnages/Noisette.tsx`) reprend cette maquette (fait dans #96 : dessin fixe ; animations : #106).
 
 ## `lumi-princesse.html` : univers Princesses et fées, Lumi
 
@@ -63,7 +63,7 @@ Validée par le PO le 2026-10-27. Même rendu que les personnages précédents, 
 - **Échec jamais punitif** : « pschitt ! », le sort donne des bulles colorées ; Lumi rit, souffle dessus, lève le pouce, « Presque ! On réessaie ? ».
 - Contrôles : « Réussir », « Rater », A / B / C ; `?anim=arc|envol|signes|echec&t=…`, `?planche=tetes|mains`.
 
-**Limites connues** : de face, les mèches extérieures restent proches du visage ; les ailes battent sans vrai volume ; pas de son.
+**Limites connues** : de face, les mèches extérieures restent proches du visage ; les ailes battent sans vrai volume ; pas de son. Le dessin fixe de Lumi dans l'application (`src/univers/personnages/Lumi.tsx`) reprend cette maquette (fait dans #96 : dessin fixe ; animations : #106).
 
 ## `agent-max-police.html` : univers Police, Agent Max
 
@@ -77,4 +77,4 @@ Validée par le PO le 2026-10-27, après une reprise complète (la première ver
 - **Règle absolue** : un policier qui aide ; ni arme, ni menottes, ni arrestation, ni gyrophare.
 - Contrôles : « Réussir », « Rater », A / B / C ; `?anim=orchestre|trottinette|danse|echec&t=…`, `?planche=tetes|mains`.
 
-**Limites connues** : en glisse, la jambe levée reste basse ; le demi-tour de la trottinette est un basculement rapide ; comme chez Léo, les pieds glissent un peu pendant la marche ; le chiot est dessiné simplement ; pas de son. Dans l'application, le guide Police est encore « Agente Mila » (`src/univers/apparences.ts`) : le passage à Agent Max revient à une story (#96 ou #106).
+**Limites connues** : en glisse, la jambe levée reste basse ; le demi-tour de la trottinette est un basculement rapide ; comme chez Léo, les pieds glissent un peu pendant la marche ; le chiot est dessiné simplement ; pas de son. Dans l'application, le personnage guide Police est Agent Max (`src/univers/personnages/AgentMax.tsx`), qui remplace Agente Mila (fait dans #96 : dessin fixe ; animations : #106).

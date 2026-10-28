@@ -124,7 +124,7 @@ const presentationsAttendues: [CleUnivers, string][] = [
   ["princesse", "Je suis Lumi, la fée des nombres et des mots du Royaume des Savanturiers."],
   ["animaux", "Je suis Noisette, l'écureuil savant de la Forêt des Savanturiers."],
   ["sports", "Je suis Coach Léo, l'entraîneur des champions du Stade des Savanturiers."],
-  ["police", "Je suis Agente Mila, la policière détective du Commissariat des Savanturiers."],
+  ["police", "Je suis Agent Max, le détective futé du Commissariat des Savanturiers."],
   ["pompier", "Je suis Capitaine Sam, le pompier courageux de la Caserne des Savanturiers."],
   ["danse", "Je suis Lili, la danseuse étoile de l'Opéra des Savanturiers."],
 ];

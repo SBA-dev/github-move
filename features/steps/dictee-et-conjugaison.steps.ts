@@ -1,4 +1,5 @@
 import { expect, type Locator, type Page } from "@playwright/test";
+import { leGuide } from "./univers.steps.ts";
 import { Given, Then, When } from "./fixtures.ts";
 import { bulle, etat, injecter, type LeconBrute, leconDeTest, leconDeTitre, toutesLesParoles } from "./etapes-puis-exercices.steps.ts";
 import {
@@ -483,7 +484,7 @@ Then(/^Léa voit « ([^«»]+) » dans le tableau$/, async ({ page }, ligne: str
 });
 
 Then(/^Noisette applaudit en sautant, sans dire de félicitation$/, async ({ page }) => {
-  const personnage = page.getByRole("img", { name: "Noisette", exact: true });
+  const personnage = leGuide(page, "Noisette");
   await expect(personnage).toHaveAttribute("data-humeur", "applaudit");
   await expect(personnage).toHaveAttribute("data-geste", "saute");
   expect(await bulle(page).getAttribute("data-nature")).not.toBe("felicitation");

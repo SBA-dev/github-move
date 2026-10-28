@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { leconsNouvellementReussies, leconsReussiesAuTestDeDepart, type TestDeDepart } from "@domain/apprentissage";
 import type { Lecon, Niveau } from "@domain/catalogue";
-import type { Univers } from "@domain/motivation";
+import { effetsSonoresDeLaFin, type Univers } from "@domain/motivation";
+import { Confettis } from "../celebration/index.ts";
 import { lireLesMeilleuresEtoilesDuProfil } from "../seance/fin-de-seance/meilleures-etoiles-du-profil.ts";
 import { messageDeSauvegarde } from "../seance/fin-de-seance/useSauvegardeDeLaSeance.ts";
 import { lireLEtatDuTestDeDepart } from "./etat-du-test-de-depart.ts";
@@ -48,7 +49,19 @@ export function FinDuTestDeDepart({ test, prenom, lecons, niveau, personnage, un
       retenirLeTestDeDepartFait(terminee.enfant, reussiesAuTest);
       setPret(true);
       if (affichee.current) {
-        void dire({ texte: remercierApresLeTestDeDepart(prenom, nouvelles.size), nature: "felicitation", humeur: "applaudit" });
+        void dire({
+          texte: remercierApresLeTestDeDepart(prenom, nouvelles.size),
+          nature: "felicitation",
+          humeur: "applaudit",
+          effetsAvant: effetsSonoresDeLaFin({
+            fin: "testDeDepart",
+            leconAcquise: false,
+            fluenceSeule: false,
+            issueDuRecord: "aucunRecord",
+            objetRecu: false,
+            episodeOuvert: false,
+          }),
+        });
       }
       setMessage(messageDeSauvegarde(await sauvegarderLeTestDeDepart(test.aEnregistrer(), reussiesAuTest)));
     })();
@@ -67,6 +80,7 @@ export function FinDuTestDeDepart({ test, prenom, lecons, niveau, personnage, un
 
   return (
     <div className="fin-de-seance fin-du-test-de-depart" data-testid="fin-du-test-de-depart">
+      {pret && <Confettis />}
       <ParoleDuGuide personnage={personnage} univers={univers} onReecouter={reecouter} />
       {pret && (
         <div className="actions-de-fin">
