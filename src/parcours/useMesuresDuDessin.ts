@@ -1,5 +1,5 @@
 import { type RefObject, useLayoutEffect, useState } from "react";
-import { type Boite, centreDe, emplacementAcoteDeLaLecon, emplacementSurLaColline, type Point } from "./geometrie-du-dessin.ts";
+import { type Boite, centreDe, centreDeLaFin, emplacementAcoteDeLaLecon, emplacementSurLaColline, type Point } from "./geometrie-du-dessin.ts";
 
 /** Ce que le dessin du parcours lit sur l'écran : où sont les leçons, et où le personnage guide peut se tenir. */
 export type MesuresDuDessin = {
@@ -26,7 +26,7 @@ function mesurer(dessin: HTMLElement): MesuresDuDessin {
   return {
     largeur,
     hauteur: dessin.offsetHeight,
-    centres: [...lecons.map(centreDe), ...(boiteDeLaFin ? [{ x: boiteDeLaFin.x + boiteDeLaFin.largeur * 0.62, y: boiteDeLaFin.y + boiteDeLaFin.hauteur * 0.5 }] : [])],
+    centres: [...lecons.map(centreDe), ...(boiteDeLaFin ? [centreDeLaFin(boiteDeLaFin)] : [])],
     emplacements: [
       ...lecons.map((lecon) => emplacementAcoteDeLaLecon(lecon, largeur)),
       ...(boiteDeLaFin ? [emplacementSurLaColline(boiteDeLaFin)] : []),

@@ -5,6 +5,8 @@ export type Boite = { readonly x: number; readonly y: number; readonly largeur: 
 
 export const COTE_DU_PERSONNAGE_GUIDE_EN_PX = 52;
 
+const POSITION_HORIZONTALE_DU_CENTRE_DE_LA_FIN = 0.62;
+const POSITION_VERTICALE_DU_CENTRE_DE_LA_FIN = 0.5;
 const MARGE_DU_PERSONNAGE_GUIDE_EN_PX = 6;
 
 /** Le tracé serpente : les leçons se posent tour à tour à gauche, au centre, à droite, au centre (en % de la largeur). */
@@ -16,6 +18,14 @@ export function centreDeLaLeconEnPourcent(indexDAffichage: number): number {
 
 export function centreDe(boite: Boite): Point {
   return { x: boite.x + boite.largeur / 2, y: boite.y + boite.hauteur / 2 };
+}
+
+/** Le centre de la fin du dessin : le fanion, plutôt à droite de la colline. */
+export function centreDeLaFin(fin: Boite): Point {
+  return {
+    x: fin.x + fin.largeur * POSITION_HORIZONTALE_DU_CENTRE_DE_LA_FIN,
+    y: fin.y + fin.hauteur * POSITION_VERTICALE_DU_CENTRE_DE_LA_FIN,
+  };
 }
 
 /** Le personnage guide se tient à côté de la leçon, du côté où il y a le plus de place, pour ne rien en cacher. */
