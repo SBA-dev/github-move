@@ -46,3 +46,20 @@
 - #96.17 : réponse du PO à préciser (« pas écran sombre »), reposée par le responsable. Rien de codé en attendant.
 - #96.17 : **A (reco)** du PO (« 96.17.A », relayée sur #96 07:28 UTC). Scénarios de #6 réécrits pour « Se connecter » sobre : `a52f6ff`.
 - Scénarios `@issue-96` (+ 2 de #6), **2 projets** : un 1er run perdu (serveur Vite de la non-régression arrêtée resté vivant puis mort : 156 `ERR_CONNECTION_REFUSED`) ; relance sur serveur neuf : 210/214, 4 KO de step (capture du paysage pleine hauteur recousue par tuiles ; horloge de l'enregistreur des mouvements sous charge), corrigés en `29bf1d3` et `d96a2f8` ; les 4 relancés verts, 70/70 sur les scénarios de mouvement sous 3 workers. Aucun bug applicatif.
+- PO, 28/10 (dans la session de l'équipe), mot pour mot « 1.ok 2.je le ferai plus tard » : captures de référence validées ; fluidité sur le Honor Magic (96.14) vérifiée plus tard par le PO (point restant). `@wip` retiré : `13d6779`.
+- Review finale (delta `4448312..13d6779`) : **APPROUVÉ**, publiée sur la PR #124. Vérifications finales sur `13d6779` : 2462 tests unitaires, lint, fmt, `tsc`, build verts ; `main` toujours `ea2cca3` (aucune intégration nécessaire).
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Durée | 2026-10-27 22:01 UTC → 2026-10-28 ~09:20 UTC, soit ~11 h 20 (dont ~4 h de non-régression complète arrêtée sur décision du PO, et un redémarrage du conteneur) |
+| Temps d'attente du PO | cadrage : 22:45 (questions 96.1–96.6 répondues avant le `CADRAGE PRÊT`, 96.7–96.15 ~30 min après) ; #96.16 ~8 h 30 ; #96.17 ~6 h 20 ; captures ~6 h. Le travail a continué pendant ces attentes (aucune n'était bloquante pour le TDD) |
+| Cycles TDD | 1 bloc, 2 comportements (Agent Max : nom et titre, voix masculine) ; le reste est de l'affichage couvert par les E2E (RED par steps avant correctifs : `98a32cb`, `ca3b501`) |
+| Cycles de review | bloc Agent Max : 1 (APPROUVÉ) ; review complète : 3 cycles (À CORRIGER, À CORRIGER, APPROUVÉ) + 1 delta final APPROUVÉ |
+| Cycles E2E | mise au point : 3 (119/138 → 129/138 → 136/138 puis 138) ; story sur 2 projets : 2 (1 run perdu par un serveur Vite résiduel, puis 210/214 → 4 KO de step corrigés) |
+| Non-régression complète | lancée une fois, arrêtée à 2274/2586 sans échec (décision du PO : seulement `@issue-96` avant la PR) |
+| Intégrations de `main` | 0 (`main` inchangé à `ea2cca3`), aucun conflit |
+| Verrous | aucun (front seul) |
+| Escalades | 2 questions nouvelles (#96.16, #96.17), toutes deux réglées par le PO |
+| Tokens | relevés par le responsable |
