@@ -1,21 +1,21 @@
 # Critères d'acceptance : story #98, des exercices qui ressemblent à des jeux (tranche 98a)
 
-**Cadrage à revalider par le PO.** Le 2026-10-28, le PO avait validé tout le cadrage (« 98# reco partout », issue #64 : questions 98.1 à 98.24 et découpage 98a à 98e). Il a ensuite **changé 98.2 : habillage par univers** (chaque type d'exercice a un dessin différent dans chacun des 6 univers), et confirmé 98.1, 98.3 et 98.10. Ce cadrage est donc repris : le modèle (`docs/stories/98/domain-model.md`, « Habillage par univers », invariants 14 à 20, « Validation des dessins par le PO », « Découpage révisé ») pose les questions **98.25 à 98.31**, et ces critères suivent leurs recos en attendant la réponse du PO.
+**Cadrage validé par le PO (2026-10-28).** Le PO avait d'abord validé tout le cadrage (« 98# reco partout », issue #64 : questions 98.1 à 98.24 et découpage 98a à 98e). Il a ensuite **changé 98.2 : habillage par univers** (chaque type d'exercice a un dessin différent dans chacun des 6 univers), et confirmé 98.1, 98.3 et 98.10. Le cadrage repris (`docs/stories/98/domain-model.md`, « Habillage par univers », invariants 14 à 20, « Validation des dessins par le PO », « Découpage révisé ») a posé les questions **98.25 à 98.31** ; le PO les a toutes tranchées selon la reco (« 98 reco partout », commentaire 6481197702 sur #98, confirmé par l'annonce du responsable 6481224058 sur #64).
 
 Scénarios : `features/98-exercices-comme-des-jeux.feature`. Tags :
 - `@issue-98 @wip` sur la fonctionnalité ;
-- `@a-valider` sur le seul scénario qui dépend d'une question encore ouverte (98.30 et 98.31) ;
+- plus aucun `@a-valider` : 98.30 et 98.31 sont tranchées (reco) ;
 - plus aucun `@depend-de-97` : #97 est mergée dans `main` (`c477f3b`), ses étapes existent (`retours-animes-et-sonores.steps.ts`), les 2 scénarios qui s'appuient sur ses retours tournent donc avec les autres.
 
 Les commentaires « Décision 98.n » du `.feature` renvoient aux questions ci-dessous.
 
-État : **cadrage repris, à revalider ; aucun code** (décision 0020). #97 est mergée : le code pourra commencer dès la validation. Modèle : `docs/stories/98/domain-model.md`.
+État : **cadrage validé** (décision 0020) ; aucun code encore. #97 est mergée : le code peut commencer. Modèle : `docs/stories/98/domain-model.md`.
 
 ## Objectif
 
 En tant qu'**enfant**, je veux glisser mes étiquettes du doigt dans des maisons de mon univers, qui s'ouvrent et s'allument, afin que ranger ressemble à un petit jeu dans mon univers, et d'avoir envie de faire la question suivante.
 
-Cette tranche (98a) est celle que garde l'issue #98. Elle pose le **geste glisser au doigt**, qui servira aussi à l'addition (98c), les **invariants transverses** du modèle (mêmes faits, même résultat ; aucune réponse de plus ni de moins ; « Je ne sais pas » reconnaissable ; mouvements réduits ; 44 px ; 360 px ; mode dys ; lecteurs d'écran), et la **maison de `classer` dessinée dans chacun des 6 univers** (98.2). Le petit train (`ordre`, ordre des vers de `memoriser`) sort de 98a vers une nouvelle tranche (reco de 98.30, voir « Hors périmètre »).
+Cette tranche (98a) est celle que garde l'issue #98. Elle pose le **geste glisser au doigt**, qui servira aussi à l'addition (#127), les **invariants transverses** du modèle (mêmes faits, même résultat ; aucune réponse de plus ni de moins ; « Je ne sais pas » reconnaissable ; mouvements réduits ; 44 px ; 360 px ; mode dys ; lecteurs d'écran), et la **maison de `classer` dessinée dans chacun des 6 univers** (98.2). Le petit train (`ordre`, ordre des vers de `memoriser`) sort de 98a vers **#130** (décision 98.30, voir « Hors périmètre »).
 
 Besoins nourris (skill `gamification`, section 1) :
 - **compétence** : chaque bon placement se voit (la maison s'ouvre et s'allume), et la progression de l'exercice reste visible (maisons remplies) ;
@@ -30,11 +30,11 @@ La story ne change que l'affichage : aucune règle de correction, aucune erreur,
 | R1 | Pour les mêmes réponses, l'habillage de jeu ne change rien : mêmes erreurs, même avancement de la séance, mêmes étoiles ; un exercice `classer` se termine au doigt comme au clavier seulement ; en séance de révision et au test de départ, une question de `classer` reste une question à choix | Plan « Léa range toutes les étiquettes <geste>, sans erreur, et gagne 3 étoiles » : glisser du doigt, toucher puis toucher, clavier seulement · Plan « Avec <erreurs> mauvais placement(s) faits en glissant du doigt, Léa gagne <résultat>, comme en touchant » : 0 → 3, 1 → 2, 3 → 2, 4 → 1 · Plan « <Où>, une question de classer reste une question à choix, sans étiquette à faire glisser » : séance de révision, test de départ (98.18) |
 | R2 | Une étiquette de `classer` se glisse du doigt jusqu'à une maison ; seul un lâcher sur une maison est une réponse : lâchée ailleurs, elle revient à sa place sans coûter d'erreur ; toucher puis toucher et le clavier restent possibles, et une étiquette rangée ne se déplace plus | « Glissée du doigt dans la maison « ou », l'étiquette « loup » y reste » (98.17) · « Sur un écran de 360 px, Léa glisse du doigt une étiquette jusqu'à la dernière maison » (98.17, 98.24) · « Une étiquette qui passe au-dessus d'une maison, sans être lâchée, ne donne aucune réponse » (98.20) · « Lâchée hors de toute maison, l'étiquette revient à sa place, sans encouragement » (98.11) · « Lâchée hors de toute maison, l'étiquette ne fait entendre aucun son de réponse » (98.11) · « Lâcher 5 fois une étiquette hors de toute maison ne coûte aucune étoile » (98.11) · « Une étiquette rangée dans sa maison ne se déplace plus » · « Dans un ordre, essayer de glisser une étiquette ne la pose pas : on la touche » (98.8, 98.22) · « Au clavier, les flèches passent d'une maison à l'autre » (98.15) |
 | R3 | Dans `classer`, la bonne maison ouvre sa porte, garde l'étiquette et s'allume ; dans une mauvaise maison, l'étiquette revient en glissant parmi les étiquettes à poser, avec l'encouragement de #18, sans retarder l'effet sonore de #97 | « Au début de l'exercice, les trois maisons sont fermées et éteintes » (98.6) · « L'étiquette « loup » bien rangée fait ouvrir la porte de la maison « ou », qui s'allume » (98.6) · « Glissée du doigt dans la mauvaise maison, l'étiquette revient en glissant, avec l'aide par défaut » (98.6) · « Le retour de l'étiquette ne retarde ni « réponse fausse » ni l'encouragement » |
-| R4 | **Nouvelle (98.2)** : dans chacun des 6 univers, les maisons de `classer` ont le dessin de cet univers ; changer d'univers ne change ni les gestes, ni les textes lus, ni les étoiles, ni la façon dont brille la bonne réponse montrée ; un profil sans univers connu voit les maisons de l'univers « Animaux de la forêt » | Plan « Dans l'univers « <univers> », les maisons ont le dessin de cet univers et s'annoncent toujours « Maison « … » » » : les 6 univers (`@a-valider`, 98.30 et 98.31) · Plan « Dans l'univers « <univers> », l'étiquette glissée du doigt dans la bonne maison fait ouvrir sa porte, et la maison s'allume » : les 6 univers · Plan « Dans l'univers « <univers> », une mauvaise maison fait dire à <personnage guide> la même aide que dans tous les univers » : Sports (Coach Léo), Police (Agent Max) · Plan « Dans l'univers « <univers> », un mauvais placement fait en glissant du doigt donne 2 étoiles, comme dans l'univers « Animaux de la forêt » » : Princesses et fées, Pompiers · Plan « Dans l'univers « <univers> », la maison montrée par « Je ne sais pas » brille comme dans tous les univers » : les 5 univers autres qu'Animaux de la forêt · Plan « Un profil enfant <cas> voit les maisons de l'univers « Animaux de la forêt » » : sans univers, univers inconnu |
+| R4 | **Nouvelle (98.2)** : dans chacun des 6 univers, les maisons de `classer` ont le dessin de cet univers ; changer d'univers ne change ni les gestes, ni les textes lus, ni les étoiles, ni la façon dont brille la bonne réponse montrée ; un profil sans univers connu voit les maisons de l'univers « Animaux de la forêt » | Plan « Dans l'univers « <univers> », les maisons ont le dessin de cet univers et s'annoncent toujours « Maison « … » » » : les 6 univers (98.30 et 98.31) · Plan « Dans l'univers « <univers> », l'étiquette glissée du doigt dans la bonne maison fait ouvrir sa porte, et la maison s'allume » : les 6 univers · Plan « Dans l'univers « <univers> », une mauvaise maison fait dire à <personnage guide> la même aide que dans tous les univers » : Sports (Coach Léo), Police (Agent Max) · Plan « Dans l'univers « <univers> », un mauvais placement fait en glissant du doigt donne 2 étoiles, comme dans l'univers « Animaux de la forêt » » : Princesses et fées, Pompiers · Plan « Dans l'univers « <univers> », la maison montrée par « Je ne sais pas » brille comme dans tous les univers » : les 5 univers autres qu'Animaux de la forêt · Plan « Un profil enfant <cas> voit les maisons de l'univers « Animaux de la forêt » » : sans univers, univers inconnu |
 | R5 | « Je ne sais pas » montre toujours la bonne maison, reconnaissable dans le nouveau dessin et jamais confondue avec une maison allumée ; l'enfant y pose ensuite l'étiquette lui-même, au doigt ou au clavier | « « Je ne sais pas » dans un exercice classer : la bonne maison brille, et aucune maison n'ouvre sa porte » · « Après « Je ne sais pas », Léa glisse elle-même l'étiquette dans la maison qui brille » · « Après « Je ne sais pas », un mauvais placement fait en glissant ne coûte plus d'erreur » |
 | R6 | Avec les mouvements réduits, rien ne glisse ni ne s'ouvre de lui-même, et l'information reste ; dans chacun des 6 univers, étiquettes et maisons gardent 44 px et tiennent à 360 px de large ; elles s'affichent en mode dys et gardent ce que lisent les lecteurs d'écran | Plan « Avec les mouvements réduits, <cas> se voit sans mouvement » : étiquette bien rangée, mauvaise maison, lâchée hors de toute maison · « Avec les mouvements réduits, l'étiquette suit toujours le doigt de l'enfant » (98.23) · « Avec les mouvements réduits, la maison montrée par « Je ne sais pas » brille sans bouger » · Plan « Dans l'univers « <univers> », les maisons et les étiquettes tiennent dans un écran de 360 px et gardent 44 px » : les 6 univers · Plan « Dans l'univers « <univers> », avec les mouvements réduits, la maison bien rangée s'allume sans bouger » : les 5 univers autres qu'Animaux de la forêt (déjà couvert par le premier Plan) · « En mode dys, les étiquettes et le nom de chaque maison s'affichent en mode dys » · « Les lecteurs d'écran annoncent les maisons comme avant, sans décrire leur dessin » |
 
-Au total : **6 règles, 32 scénarios** (dont 12 plans de scénario, 46 exemples). **1** porte `@a-valider`. Aucun ne porte plus `@depend-de-97`.
+Au total : **6 règles, 32 scénarios** (dont 12 plans de scénario, 46 exemples). Aucun ne porte plus `@a-valider`. Aucun ne porte plus `@depend-de-97`.
 
 Les Plans sur les univers sont sobres : les 6 univers là où le dessin peut changer ce qu'on vérifie (dessin de la maison, zone où l'on lâche l'étiquette, tenue à 360 px et 44 px) ; les 5 autres univers là où Animaux de la forêt est déjà couvert par un autre scénario (« Je ne sais pas », mouvements réduits) ; 2 univers là où le dessin ne peut rien changer, pour prouver la règle sans la répéter (aide lue, étoiles).
 
@@ -43,7 +43,7 @@ Checklist `po-acceptance` du skill `gamification` :
 - déclencheur métier de chaque retour : un **Placement** juste (maison qui s'ouvre et s'allume), un placement faux (retour en glissant), « Je ne sais pas » (bonne réponse montrée) ; aucune récompense nouvelle ; le dessin de l'univers n'est déclenché par rien, il est là dès le début de l'exercice ;
 - retour après une erreur : R3 (« Glissée du doigt dans la mauvaise maison… », encouragement et nouvelle chance), et R4 pour les autres univers (même aide, même personnage guide que l'univers) ;
 - mouvements réduits : R6, l'information reste (maison allumée, étiquette revenue), dans chaque univers ;
-- aucun garde-fou franchi ; les pistes retenues (maison qui s'ouvre) sont validées par le PO (98.1, 98.6) ; les objets dessinés dans chaque univers attendent 98.25.
+- aucun garde-fou franchi ; les pistes retenues (maison qui s'ouvre) sont validées par le PO (98.1, 98.6) ; les objets dessinés dans chaque univers suivent 98.25 (reco A) et seront validés sur la planche (98.28).
 
 ### Droits d'accès
 
@@ -76,7 +76,7 @@ La story ne crée, ne lit et n'enregistre aucune donnée nouvelle : **pas de sc�
 | `features/23-aide-et-je-ne-sais-pas.feature` (l. 118-127) | Plan « « Je ne sais pas » dans un exercice <type> … », exemple `classer` | L'étape vérifie `data-brille="true"` sur une seule maison : la maison allumée (bon placement) ne doit **pas** porter `data-brille`. |
 | `features/97-retours-animes-et-sonores.feature` | « Une étiquette posée dans la mauvaise maison fait entendre « réponse fausse » et revient » | Rien : il est joué par toucher. Le scénario de R3 ajoute seulement que le retour en glissant ne retarde pas ce son. |
 
-Les places d'un `ordre` et des vers (`data-testid="place"`, `data-remplie`) ne changent pas dans 98a ; elles concernent la tranche du petit train.
+Les places d'un `ordre` et des vers (`data-testid="place"`, `data-remplie`) ne changent pas dans 98a ; elles concernent #130.
 
 ### Options écartées le 2026-10-28 (pour mémoire)
 
@@ -88,9 +88,9 @@ Les places d'un `ordre` et des vers (`data-testid="place"`, `data-remplie`) ne c
 
 ## Hors périmètre
 
-### Nouvelle tranche proposée : le petit train (reco de 98.30, issue à créer par le PO)
+### #130 : le petit train (décision 98.30)
 
-`ordre`, ordre des vers de `memoriser`, petit train **dessiné dans chacun des 6 univers** (98.26). Elle dépend de 98a (geste, invariants, signal « bonne réponse montrée » commun). Ses scénarios ont été écrits et validés le 2026-10-28 dans le cadrage de 98a ; ils sont retirés du `.feature` de #98 et **gardés ici pour mémoire**, pour que cette tranche les reprenne (il lui faudra ajouter la règle « petit train de l'univers », sur le modèle de R4).
+`ordre`, ordre des vers de `memoriser`, petit train **dessiné dans chacun des 6 univers** (98.26). #130 dépend de 98a (geste, invariants, signal « bonne réponse montrée » commun). Ses scénarios ont été écrits et validés le 2026-10-28 dans le cadrage de 98a ; ils sont retirés du `.feature` de #98 et **gardés ici pour mémoire**, pour que #130 les reprenne (il lui faudra ajouter la règle « petit train de l'univers », sur le modèle de R4).
 
 | Règle d'origine | Scénario retiré de 98a (texte validé le 2026-10-28) | Décisions |
 |---|---|---|
@@ -99,19 +99,20 @@ Les places d'un `ordre` et des vers (`data-testid="place"`, `data-remplie`) ne c
 | ancienne R4 « Dans un `ordre` et dans l'ordre des vers, chaque bonne étiquette s'accroche comme un wagon au petit train, qui avance d'un wagon ; une mauvaise étiquette ne s'accroche pas ; la dernière garde les étincelles de #97 » | « La bonne première étiquette « do » devient le premier wagon du petit train » · « La deuxième bonne étiquette s'accroche derrière la première » (« le petit train a 2 wagons, « do » puis « mi » ») · « Une mauvaise première étiquette ne s'accroche pas, et le petit train n'avance pas » (« Ce n'est pas le début. Lequel vient en premier ? ») · « La dernière étiquette accroche le dernier wagon, puis les étincelles de #97 apparaissent » · « Le bon premier vers devient le premier wagon du petit train » (« le vers se lit en entier dans son wagon ») | 98.1, 98.21 |
 | R5 | Exemple `ordre` du Plan « « Je ne sais pas » dans un exercice <type>… » : « l'étiquette qui vient ensuite brille », « le petit train n'a aucun wagon » · « Après « Je ne sais pas », l'étiquette qui brille devient le premier wagon quand Léa la pose » (« plus aucune étiquette ne brille ») | — |
 | R6 | Exemple « une bonne étiquette d'un ordre » du Plan des mouvements réduits : « « do » apparaît dans le premier wagon, sans que le petit train roule » · « À 360 px, le petit train de 10 wagons tient dans la largeur de l'écran » (« De dix en dix », de « 10 » à « 100 », chaque wagon d'au moins 44 px) · « À 360 px, les vers accrochés au petit train se lisent en entier » (« Pas un seul petit morceau ») · exemple « Le mot en morceaux » du Plan du mode dys (« les étiquettes à poser ») | 98.21, 98.23 |
-| R2 | « Dans un ordre, essayer de glisser une étiquette ne la pose pas » **reste dans 98a**, sans le train (voir ci-dessous) ; la tranche du train le reprendra avec « le petit train n'a aucun wagon » | 98.8, 98.22 |
+| R2 | « Dans un ordre, essayer de glisser une étiquette ne la pose pas » **reste dans 98a**, sans le train (voir ci-dessous) ; #130 le reprendra avec « le petit train n'a aucun wagon » | 98.8, 98.22 |
 
 **Pourquoi ce scénario reste dans 98a** : c'est 98a qui introduit le glisser au doigt sur les étiquettes, avec un composant que `classer` et `ordre` peuvent partager. Le garder protège l'invariant 2 (aucune réponse de plus) au moment même où le geste arrive, sans rien dire du train : l'étiquette ne se pose pas, aucune place n'est remplie.
 
 ### Tranches suivantes (aucun scénario ici)
 
-Le détail est dans `docs/stories/98/domain-model.md`, « Proposition de découpage » et « Découpage révisé ». Avec l'habillage par univers, **chaque tranche gagne une règle « dessin de l'univers » et une planche à valider** (reco de 98.30).
+Le détail est dans `docs/stories/98/domain-model.md`, « Proposition de découpage » et « Découpage révisé ». Avec l'habillage par univers, **chaque tranche gagne une règle « dessin de l'univers » et une planche à valider** (décision 98.30). Ordre retenu par le PO : #98 → #130 → #126 → #127 → #131 → #128 → #129.
 
 | Tranche | Issue | Types | Contenu retenu | Questions qui la cadrent |
 |---|---|---|---|---|
-| **petit train** | à créer | `ordre`, ordre des vers de `memoriser` | Voir ci-dessus ; petit train de l'univers | 98.1, 98.8, 98.21, 98.22, 98.26 |
+| **petit train** | #130 | `ordre`, ordre des vers de `memoriser` | Voir ci-dessus ; petit train de l'univers | 98.1, 98.8, 98.21, 98.22, 98.26 |
 | **98b** bulles de choix | #126 | `bulles`, `ecoute`, questions de `lecture`, `trous`, `conjugaison`, mots cachés de `memoriser` (et le mode par choix de `calcul`, `boite`, `barres`, `addition`) | Bulle de l'univers ; flottement léger après la consigne, cible fixe ; bulle juste qui s'efface en douceur (un ballon ne crève jamais) ; flèches entre les bulles | 98.3, 98.4, 98.5, 98.15 |
-| **98c** quantités | #127, coupée en « addition » et « boîte et barres » (reco de 98.30) | `addition`, `boite`, `barres` | Chiffre glissé au doigt (geste de 98a) ; maison de colonne de l'univers, **couleurs des colonnes communes** ; retenue qui saute ; jetons, boîte (jamais un coffre) et jauge de l'univers | 98.2, invariant 19 |
+| **98c** addition | #127 (réduite à l'addition, décision 98.30) | `addition` | Chiffre glissé au doigt (geste de 98a) ; maison de colonne de l'univers, **couleurs des colonnes communes** ; retenue qui saute | 98.2, invariant 19 |
+| **98c** boîte et barres | #131 (décision 98.30) | `boite`, `barres` | Jetons, boîte (jamais un coffre) et jauge de l'univers | 98.2, 98.6 |
 | **98d** claviers | #128 | `dictee`, `calcul`, `fluence` | Case, touche et marque du record de l'univers ; record de fluence montré pendant la fluence, sans course | 98.7, 98.9, 98.10 |
 | **98e** textes qui se dévoilent | #129, à part | `lecture`, `memoriser` (écoute des vers) | Parchemin de l'univers, qui se déroule pendant la première lecture | 98.12 |
 
@@ -126,25 +127,29 @@ Le détail est dans `docs/stories/98/domain-model.md`, « Proposition de découp
 
 L'habillage par univers **n'est plus hors périmètre** (98.2 changée) : il fait la règle R4 de 98a.
 
-## Questions ouvertes (habillage par univers)
+## Questions ouvertes
 
-Posées par le modèle (`docs/stories/98/domain-model.md`, « Questions ouvertes (habillage par univers) »), avec leurs options. Ces critères suivent la reco de chacune. La dernière colonne dit ce qui change dans 98a si le PO choisit une autre option.
+Aucune.
 
-| # | Question | Reco suivie ici | Scénarios de 98a touchés par une autre option |
+## Questions tranchées (habillage par univers)
+
+Posées par le modèle (`docs/stories/98/domain-model.md`, « Questions tranchées (habillage par univers) »), avec leurs options. **Toutes tranchées le 2026-10-28 selon la reco** (réponse du PO « 98 reco partout », commentaire 6481197702 sur #98). La dernière colonne dit ce qui aurait changé dans 98a avec une autre option (pour mémoire).
+
+| # | Question | Reco retenue (2026-10-28) | Scénarios de 98a qu'une autre option aurait touchés |
 |---|---|---|---|
 | 98.25 | Quelle maison dessine-t-on dans chaque univers ? | **A** : maison dans un tronc d'arbre (Animaux de la forêt), petit château à une tour (Princesses et fées), petit vestiaire en forme de maison (Sports), petit commissariat sans barreaux (Police), petite caserne sans flamme, porte de garage qui se lève (Pompiers), petit opéra en forme de maison, porte à rideau (Danse) | **Aucun texte** : les scénarios ne nomment jamais l'objet dessiné, seulement « le dessin de l'univers » ; l'objet est validé sur la planche `classer-maison.png`. Seule condition : avec l'option C, l'objet choisi doit garder une **porte** qui s'ouvre et un intérieur qui s'allume, sinon R3 (« porte fermée », « la porte … s'ouvre ») et les Plans de R4 et R6 deviennent faux |
-| 98.26 | Le petit train change-t-il d'objet selon l'univers ? | A : le même train, décoré par univers | Aucun dans 98a (le train sort de 98a) ; il cadre la tranche du petit train |
+| 98.26 | Le petit train change-t-il d'objet selon l'univers ? | A : le même train, décoré par univers | Aucun dans 98a (le train sort de 98a) ; il cadre #130 |
 | 98.27 | Les étiquettes changent-elles de dessin selon l'univers ? | Non : même forme, couleur de l'univers seulement | Aucun texte ; avec l'option (petit motif dans un coin), le Plan du mode dys et les Plans 360 px et 44 px de R6 vérifieraient aussi l'étiquette décorée |
 | 98.28 | Une planche par cible, une ligne par univers, une colonne par état, réponse univers par univers ? | Oui (planche `classer-maison.png` : 6 lignes × 4 colonnes : fermée, survolée, porte ouverte et allumée, « Je ne sais pas ») | Aucun scénario : c'est la validation des dessins, pas un E2E |
 | 98.29 | Les captures de l'écran réel dans les 6 univers deviennent-elles des captures de référence ? | Non : 6 captures `classer` jointes à la PR, sans `@visuel` | Avec l'option, R4 gagnerait un Plan `@visuel` sur les 6 univers (6 captures de référence de `classer`) |
-| 98.30 | Revoir le découpage : sortir le petit train de 98a, couper 98c en deux ? | Oui : 98a = glisser au doigt + `classer` et sa maison par univers ; le petit train dans une nouvelle tranche | **Option A** (mécanique d'abord dans le seul univers Animaux) : le Plan `@a-valider` de R4 se réduit à Animaux de la forêt, les 5 autres univers montrant un dessin commun provisoire ; le train revient dans 98a. **Option B** (garder 98a entière) : les scénarios du train (« Hors périmètre ») reviennent, R4 est fondue dans R6, et une règle « petit train de l'univers » s'ajoute aux Plans |
-| 98.31 | Si les dessins d'un univers ne sont pas validés au moment de la PR, la PR attend-elle ? | Oui, elle attend les 6 univers | Avec l'option (dessin commun provisoire), le Plan `@a-valider` de R4 ne pourrait pas passer pour cet univers : la maison n'y aurait pas le dessin de l'univers |
+| 98.30 | Revoir le découpage : sortir le petit train de 98a, couper 98c en deux ? | Oui : 98a = glisser au doigt + `classer` et sa maison par univers ; le petit train dans #130 ; #127 réduite à l'addition, #131 pour boîte et barres | **Option A** (mécanique d'abord dans le seul univers Animaux) : le premier Plan de R4 se réduit à Animaux de la forêt, les 5 autres univers montrant un dessin commun provisoire ; le train revient dans 98a. **Option B** (garder 98a entière) : les scénarios du train (« Hors périmètre ») reviennent, R4 est fondue dans R6, et une règle « petit train de l'univers » s'ajoute aux Plans |
+| 98.31 | Si les dessins d'un univers ne sont pas validés au moment de la PR, la PR attend-elle ? | Oui, elle attend les 6 univers | Avec l'option (dessin commun provisoire), le premier Plan de R4 ne pourrait pas passer pour cet univers : la maison n'y aurait pas le dessin de l'univers |
 
-Aucune question nouvelle (98.32 et suivantes) : l'habillage par univers ne rend incohérent aucun scénario ni aucune question déjà tranchée, sous la condition de 98.25 (une porte dans chaque maison).
+Aucune question nouvelle (98.32 et suivantes) n'a été posée : l'habillage par univers ne rend incohérent aucun scénario ni aucune question déjà tranchée, sous la condition de 98.25 (une porte dans chaque maison).
 
 ## Questions tranchées
 
-Les questions 98.1 à 98.24 ont été tranchées le 2026-10-28 (« 98# reco partout », issue #64). Le PO a ensuite répondu aux 4 questions de l'issue : **98.2 change** (« PAR UNIVERS ») ; 98.1, 98.3 et 98.10 sont **confirmées**. Les autres restent tranchées selon la reco.
+Les questions 98.1 à 98.24 ont été tranchées le 2026-10-28 (« 98# reco partout », issue #64). Le PO a ensuite répondu aux 4 questions de l'issue : **98.2 change** (« PAR UNIVERS ») ; 98.1, 98.3 et 98.10 sont **confirmées**. Les autres restent tranchées selon la reco. Les questions 98.25 à 98.31 sont tranchées plus haut.
 
 ### Questions du modèle (98.1 à 98.17)
 
@@ -152,7 +157,7 @@ Le détail et les options sont dans `docs/stories/98/domain-model.md`, « Questi
 
 | # | Question | Reco retenue | Réponse du PO | Scénarios de 98a qu'une autre option aurait touchés |
 |---|---|---|---|---|
-| 98.1 | Les pistes du tableau de l'issue te plaisent-elles ? | Garder bulles, wagons, maisons, jetons, jauge, parchemin ; changer l'éclat de la bonne bulle (98.5), le feu d'artifice de la dictée (98.7), les coffres (98.6) | 2026-10-28 : reco, puis confirmée (« OK ») | Aucun dans 98a depuis que le train en sort (98.30) ; il cadre la tranche du petit train |
+| 98.1 | Les pistes du tableau de l'issue te plaisent-elles ? | Garder bulles, wagons, maisons, jetons, jauge, parchemin ; changer l'éclat de la bonne bulle (98.5), le feu d'artifice de la dictée (98.7), les coffres (98.6) | 2026-10-28 : reco, puis confirmée (« OK ») | Aucun dans 98a depuis que le train en sort (98.30) ; il cadre #130 |
 | 98.2 | Habillage par type, ou par univers ? | Reco d'origine : par type, le même dans tous les univers (écartée) | 2026-10-28 : reco, puis **changée : « PAR UNIVERS »** (option B) : chaque type d'exercice a un dessin différent dans chacun des 6 univers ; gestes, textes lus, signaux d'état et couleurs des colonnes de l'addition restent communs | Nouvelle règle R4 ; Plans sur les 6 univers dans R6 ; captures dans les 6 univers ; nouvelles questions 98.25 à 98.31 |
 | 98.3 | Des bulles qui bougent sont-elles faciles à toucher au CP ? | Mouvement très léger, cible fixe d'au moins 44 px, immobile pendant la consigne | 2026-10-28 : reco, puis confirmée (« les bulles doivent bouger mais légèrement ») | Aucun (98b) |
 | 98.4 | Le flottement vaut-il pour toutes les bulles de choix ? | Forme de bulle partout, flottement seulement pour `bulles` et `ecoute` | 2026-10-28 : reco | Aucun (98b) ; les choix de la question de `classer` en révision (Plan 98.18) prendront la forme de 98b |
@@ -193,7 +198,7 @@ Scénario touché : « Une étiquette qui passe au-dessus d'une maison, sans êt
 **98.21 Comment le petit train tient-il à 360 px ?**
 Reco : **le train passe à la ligne** ; un vers par wagon, sur toute la largeur. Option : pas de train pour les vers.
 Scénarios touchés : ceux du train, sortis de 98a (voir « Hors périmètre »).
-**Réponse du PO (2026-10-28) : reco.** Elle cadre la tranche du petit train.
+**Réponse du PO (2026-10-28) : reco.** Elle cadre #130.
 
 **98.22 Si 98.8 = non : que se passe-t-il quand l'enfant essaie de glisser une étiquette d'un `ordre` ?**
 Reco : **l'étiquette ne se soulève pas**, rien ne bouge, aucune réponse, aucune erreur. Option : un glisser vers le train compte comme un toucher.
@@ -218,5 +223,6 @@ Aucun terme nouveau du domaine. Mots d'interface employés : maison (déjà, dé
 
 - **2026-10-28, PO** (annonce du responsable sur l'issue #64, réponse « 98# reco partout ») : les questions 98.1 à 98.24 sont tranchées selon la reco.
 - **2026-10-28, PO** : le découpage en tranches 98a à 98e est validé (98.16). #98 garde 98a ; 98b à 98e sont les issues #126 à #129.
-- **2026-10-28, PO** (commentaires du responsable sur #98) : **98.2 = « PAR UNIVERS »** ; 98.1, 98.3 et 98.10 confirmées. Conséquences dans ces critères : nouvelle règle R4 (maison de l'univers), Plans sur les univers dans R6, scénarios du petit train retirés vers une nouvelle tranche (reco de 98.30, en attente), `@depend-de-97` retiré (#97 mergée). Le cadrage est **à revalider** sur 98.25 à 98.31.
+- **2026-10-28, PO** (commentaires du responsable sur #98) : **98.2 = « PAR UNIVERS »** ; 98.1, 98.3 et 98.10 confirmées. Conséquences dans ces critères : nouvelle règle R4 (maison de l'univers), Plans sur les univers dans R6, scénarios du petit train retirés vers une nouvelle tranche (98.30), `@depend-de-97` retiré (#97 mergée). Le cadrage restait à revalider sur 98.25 à 98.31.
+- **2026-10-28, PO** (commentaire 6481197702 sur #98, « 98 reco partout », confirmé par l'annonce du responsable 6481224058 sur #64) : **98.25 à 98.31 tranchées selon la reco**. Cadrage validé. Le `@a-valider` du premier Plan de R4 est retiré, sans changer son texte. Découpage révisé appliqué par le PO : **#130** (nouvelle : petit train, `ordre` et ordre des vers), **#127** réduite à l'addition, **#131** (nouvelle : boîte et barres) ; #126, #128 et #129 reçoivent la règle « dessin par univers ». Ordre : #98 → #130 → #126 → #127 → #131 → #128 → #129.
 - Le glossaire n'est pas modifié par ce cadrage : les propositions de la section « Termes à signaler » du modèle restent à reporter.

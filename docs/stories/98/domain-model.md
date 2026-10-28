@@ -2,7 +2,7 @@
 
 Épopée #95, story 3. Dépend de #97 (retours animés et sonores), qui dépend de #96 (refonte visuelle, PR #124).
 
-État : **cadrage repris, à valider de nouveau** (décision 0020). #96 et #97 sont mergées et intégrées dans la branche : le code peut commencer **après** la validation de ce cadrage repris.
+État : **cadrage validé** le 2026-10-28 (décision 0020). #96 et #97 sont mergées et intégrées dans la branche : le code peut commencer.
 
 Historique :
 - 2026-10-28 : cadrage validé par le PO (« 98# reco partout ») : questions 98.1 à 98.24 tranchées selon la reco, découpage 98a à 98e validé (issues #126 à #129 créées par le PO).
@@ -12,6 +12,7 @@ Historique :
   - 98.3 : « LES BULLES DOIVENT BOUGER MAIS LEGEREMENT » (reco confirmée) ;
   - 98.10 : « A on garde le chrono » (reco confirmée).
 - Ce qui change dans ce cadrage : la section « Habillage par univers », les invariants 14 à 20, la section « Validation des dessins par le PO », le « Découpage révisé » et les questions 98.25 à 98.31. Le reste du modèle ne change pas.
+- 2026-10-28, ensuite : réponse du PO « 98 reco partout » aux questions 98.25 à 98.31 (commentaire 6481197702 sur #98, confirmé par l'annonce du responsable 6481224058 sur #64) : toutes tranchées selon la reco. Le PO applique le découpage révisé : **#130** (nouvelle : petit train, `ordre` et ordre des vers), **#127** réduite à l'addition, **#131** (nouvelle : boîte et barres) ; #126, #128 et #129 reçoivent la règle « dessin par univers ». Ordre : #98 → #130 → #126 → #127 → #131 → #128 → #129.
 
 ## Contexte
 
@@ -432,14 +433,14 @@ Limite : 6 règles par story. 98a en a déjà 6 (R1 à R6, `acceptance.md`), 98b
 
 | Tranche | Issue | Contenu | Règles | Ce qu'il faut ajouter à l'issue |
 |---|---|---|---|---|
-| **98a** | #98 | Glisser au doigt, invariants transverses, `classer` et sa maison par univers | 6 : R1 (sans les Plans `ordre` et vers), R2, R3, R5 (`classer` seulement), R6, et **R4 remplacée** par « une maison de l'univers » | Règle « dessin par univers » ; planche `classer-maison.png` à valider ; captures dans les 6 univers ; « `ordre` et ordre des vers : voir la nouvelle tranche » |
-| **98a-train** (nouvelle, nom à choisir par le PO) | à créer par le PO | `ordre`, ordre des vers de `memoriser`, petit train par univers | 5 : wagon accroché et train qui avance (ancienne R4) ; mauvaise étiquette qui ne s'accroche pas ; « Je ne sais pas » en `ordre` ; tenue à 360 px et vers en entier (98.21) ; petit train de l'univers | Toute l'issue ; dépend de 98a (scénarios d'invariants) |
+| **98a** | #98 | Glisser au doigt, invariants transverses, `classer` et sa maison par univers | 6 : R1 (sans les Plans `ordre` et vers), R2, R3, R5 (`classer` seulement), R6, et **R4 remplacée** par « une maison de l'univers » | Règle « dessin par univers » ; planche `classer-maison.png` à valider ; captures dans les 6 univers ; « `ordre` et ordre des vers : voir #130 » |
+| **98a-train** (nouvelle) | #130 | `ordre`, ordre des vers de `memoriser`, petit train par univers | 5 : wagon accroché et train qui avance (ancienne R4) ; mauvaise étiquette qui ne s'accroche pas ; « Je ne sais pas » en `ordre` ; tenue à 360 px et vers en entier (98.21) ; petit train de l'univers | Toute l'issue ; dépend de 98a (scénarios d'invariants) |
 | **98b** | #126 | Bulles de choix | 6 : fusionner les règles 1 et 2 (flottement et mouvements réduits), ajouter « bulle de l'univers » | Règle « dessin par univers » ; planche `bulle-de-choix.png` ; rappel : la bulle de l'univers sert aux 10 types (98.4), un ballon ne crève jamais (98.5) |
-| **98c** | #127 | Quantités | 6 + 1 = 7 : **trop**. Couper en **98c-addition** (`addition` : glisser le chiffre, maison qui s'allume, retenue qui saute, maison et retenue de l'univers, couleurs des colonnes communes) et **98c-boîte et barres** (jetons, boîte, jauge de l'univers ; jamais un coffre) | Règle « dessin par univers » dans chacune ; 2 ou 3 planches ; rappel de l'invariant 19 |
+| **98c** | #127 (addition) et #131 (boîte et barres) | Quantités | 6 + 1 = 7 : **trop**. Couper en **98c-addition**, #127 (`addition` : glisser le chiffre, maison qui s'allume, retenue qui saute, maison et retenue de l'univers, couleurs des colonnes communes) et **98c-boîte et barres**, #131 (jetons, boîte, jauge de l'univers ; jamais un coffre) | Règle « dessin par univers » dans chacune ; 2 ou 3 planches ; rappel de l'invariant 19 |
 | **98d** | #128 | Claviers | 5 + 1 = 6 | Règle « dessin par univers » (case, touche, marque du record) ; planche ; question sur le mot **Clavier de cristaux** si la touche n'est plus un cristal ; marque du record sans ligne d'arrivée ni podium (98.10) |
 | **98e** | #129 | Parchemin | 3 + 1 = 4 | Règle « dessin par univers » ; planche `parchemin.png`. Ne plus la fondre dans 98c ou 98d : avec 6 dessins, elle n'est plus « petite » |
 
-Ordre : 98a → 98a-train → 98b → 98c-addition → 98c-boîte et barres → 98d → 98e. Raisons : 98a reste le socle du glisser et des invariants, avec moitié moins de dessins à attendre ; le train n'a pas besoin du glisser (98.8 = non) et peut partir dès que 98a a posé ses scénarios.
+Ordre : 98a → 98a-train → 98b → 98c-addition → 98c-boîte et barres → 98d → 98e, soit #98 → #130 → #126 → #127 → #131 → #128 → #129 (appliqué par le PO le 2026-10-28). Raisons : 98a reste le socle du glisser et des invariants, avec moitié moins de dessins à attendre ; le train n'a pas besoin du glisser (98.8 = non) et peut partir dès que 98a a posé ses scénarios.
 
 ### Alternative 1 : la mécanique d'abord dans un univers, puis les 5 autres
 
@@ -452,7 +453,7 @@ Ordre : 98a → 98a-train → 98b → 98c-addition → 98c-boîte et barres → 
 - La règle « dessin par univers » est fondue dans R6 (affichage : 44 px, 360 px, mode dys, lecteurs d'écran, univers).
 - Avantage : aucune issue de plus. Inconvénient : R6 devient très large, et 98a attend 24 dessins validés avant sa PR.
 
-Dans tous les cas, **je ne modifie aucune issue** : le texte ci-dessus est une proposition pour le PO (98.30).
+Dans tous les cas, **je ne modifie aucune issue** : le texte ci-dessus était une proposition pour le PO (98.30). Le PO l'a retenue le 2026-10-28 (reco) et a créé #130 et #131 lui-même.
 
 ## Questions tranchées
 
@@ -549,11 +550,11 @@ Note du 2026-10-28 : avec 98.2 = « PAR UNIVERS », ce découpage est revu (« D
 Le glisser actuel ne se prouve qu'à la souris.
 Reco : **oui**, sur les deux, prouvé sur le projet `tablette` et le projet `telephone`. Sinon, l'enfant n'a que toucher puis toucher, qui reste toujours possible.
 
-## Questions ouvertes (habillage par univers)
+## Questions tranchées (habillage par univers)
 
-Nouvelles questions, posées après la réponse « PAR UNIVERS » à 98.2. Elles ne reposent aucune question déjà tranchée.
+Nouvelles questions, posées après la réponse « PAR UNIVERS » à 98.2. Elles ne reposent aucune question déjà tranchée. **Toutes tranchées le 2026-10-28 selon la reco** (réponse du PO « 98 reco partout », commentaire 6481197702 sur #98, confirmé par l'annonce du responsable 6481224058 sur #64).
 
-**98.25 Dans `classer`, quelle maison dessine-t-on dans chaque univers ?**
+**98.25 Dans `classer`, quelle maison dessine-t-on dans chaque univers ?** *Tranchée le 2026-10-28 : reco.*
 Le mot affiché et lu reste « maison » (consigne, « Poser dans la maison « on » », voix enregistrées) : chaque univers dessine donc une maison de cet univers, avec une porte qui s'ouvre et un intérieur qui s'allume quand l'étiquette est bien rangée.
 Reco : **A**
 - Animaux de la forêt : maison dans un tronc d'arbre, porte ronde ;
@@ -565,26 +566,26 @@ Reco : **A**
 
 Options : B, une même petite maison partout, dont seuls le toit et le décor changent (plus simple, moins « univers ») ; C, tu donnes toi-même un objet pour un ou plusieurs univers (il doit se lire comme une maison).
 
-**98.26 Dans `ordre`, le petit train change-t-il d'objet selon l'univers, ou est-ce le même train décoré à la manière de l'univers ?**
+**98.26 Dans `ordre`, le petit train change-t-il d'objet selon l'univers, ou est-ce le même train décoré à la manière de l'univers ?** *Tranchée le 2026-10-28 : reco.*
 Les scénarios disent « le petit train » et « wagon » ; un vers de poésie occupe un wagon sur toute la largeur de l'écran.
 Reco : **A, le même train, décoré par univers** : train en bois à toit de feuilles (Animaux), train de conte à cheminée en étoile (Princesses), train aux couleurs de maillots sans numéro (Sports), train bleu avec une étoile d'insigne (Police), train rouge avec une cloche et une petite échelle (Pompiers), train de manège avec des notes de musique (Danse). Les mots « petit train » et « wagon » restent justes, et un long vers tient dans un wagon.
 Options : B, un autre objet par univers (chenille, carrosses, bus d'équipe, camion de pompiers et remorques, farandole de chaussons) : « petit train » et « wagon » deviennent faux dans 5 univers, et les scénarios changent ; C, un mélange (dis lesquels).
 
-**98.27 Les étiquettes qu'on déplace (« loup », « do », un vers) changent-elles aussi de dessin selon l'univers ?**
+**98.27 Les étiquettes qu'on déplace (« loup », « do », un vers) changent-elles aussi de dessin selon l'univers ?** *Tranchée le 2026-10-28 : reco.*
 Reco : **non**. Elles portent le texte à lire : même forme dans les 6 univers, couleur de l'univers seulement (jetons de #96), pour garder la lecture et le mode dys pareils partout. L'univers se voit dans les maisons et le train.
 Option : oui, un petit motif de l'univers dans un coin de l'étiquette (une feuille, une étoile…), sans toucher au texte.
 
-**98.28 Pour valider les dessins, d'accord pour une planche par cible, avec une ligne par univers et une colonne par état, et une réponse univers par univers ?**
+**98.28 Pour valider les dessins, d'accord pour une planche par cible, avec une ligne par univers et une colonne par état, et une réponse univers par univers ?** *Tranchée le 2026-10-28 : reco.*
 Exemple pour la maison : 6 lignes (animaux, princesse, sports, police, pompier, danse) × 4 colonnes (fermée, survolée, porte ouverte et allumée, « Je ne sais pas »), à la taille réelle sur un téléphone et au double, sur fond clair et sombre. Annoncée par `PLANCHES PRÊTES` sur #98. Tu réponds par exemple « maison : animaux OK, sports à refaire (toit trop petit) ». Le code avance pendant que tu regardes ; seuls les dessins définitifs t'attendent.
 Reco : **oui**.
 Options : A, d'abord une planche d'un seul univers (Animaux) pour valider le style, puis les 5 autres (deux attentes, moins de dessins à refaire si le style ne plaît pas) ; B, pas de planche, seulement les captures de l'écran réel avec la PR.
 
-**98.29 Les captures de l'écran réel dans les 6 univers (jointes à la PR) deviennent-elles des captures de référence qui font échouer un test si l'écran change ?**
+**98.29 Les captures de l'écran réel dans les 6 univers (jointes à la PR) deviennent-elles des captures de référence qui font échouer un test si l'écran change ?** *Tranchée le 2026-10-28 : reco.*
 Exemple : 12 captures pour 98a (`classer` et `ordre`, 6 univers).
 Reco : **non**, elles sont jointes à la PR pour que tu les regardes, sans test. Une capture de référence par univers et par écran rendrait chaque retouche de dessin coûteuse (réponse 96.9 : captures de référence dans le seul univers Sports).
 Option : oui, une capture de référence par univers pour `classer` seulement (6 captures `@visuel`).
 
-**98.30 D'accord pour revoir le découpage ainsi : sortir le petit train de 98a dans une nouvelle tranche, et couper 98c en deux ?**
+**98.30 D'accord pour revoir le découpage ainsi : sortir le petit train de 98a dans une nouvelle tranche, et couper 98c en deux ?** *Tranchée le 2026-10-28 : reco ; le PO a créé #130 (petit train) et #131 (boîte et barres), et réduit #127 à l'addition.*
 Avec un dessin par univers, chaque tranche gagne une règle et une planche, et la limite est de 6 règles par story.
 Reco : **oui**
 - 98a (#98) : glisser au doigt et `classer`, maison par univers ;
@@ -595,7 +596,7 @@ Reco : **oui**
 Tu crées la nouvelle issue et tu complètes les issues existantes (texte proposé dans « Découpage révisé »).
 Options : A, la mécanique d'abord dans le seul univers Animaux, puis une tranche « les 5 autres univers » pour chaque famille de gestes ; B, garder 98a entière, la règle « dessin par univers » fondue dans la règle sur l'affichage.
 
-**98.31 Si, au moment de la PR, les dessins d'un univers ne sont pas encore validés, la PR attend-elle ?**
+**98.31 Si, au moment de la PR, les dessins d'un univers ne sont pas encore validés, la PR attend-elle ?** *Tranchée le 2026-10-28 : reco.*
 Reco : **oui, elle attend les 6 univers**. Sinon, un enfant de cet univers verrait un dessin provisoire ou l'ancien écran.
 Option : la PR part avec un dessin commun provisoire pour l'univers en attente, remplacé par une petite PR ensuite.
 
