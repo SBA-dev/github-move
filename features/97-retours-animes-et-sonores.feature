@@ -7,8 +7,11 @@ Fonctionnalité: Retours animés et sonores pendant la séance
 
   La story ajoute des effets sonores et des animations, dans tous les types d'exercices, en séance de révision
   et au test de départ. Elle ne change aucune étoile, aucun avancement, aucun record ni aucune parole du personnage
-  guide (règle d'or de Motivation). Les commentaires « Question 97.n » renvoient aux questions ouvertes de
-  docs/stories/97/acceptance.md ; les scénarios qui en dépendent portent le tag @a-valider.
+  guide (règle d'or de Motivation). Les commentaires « Décision 97.n » renvoient aux décisions du PO de
+  docs/stories/97/acceptance.md ; « Question 97.n » renvoie à une question encore ouverte, et le scénario qui en
+  dépend porte le tag @a-valider.
+  Le Muet coupe la parole, pas les effets sonores (décision 97.2) ; seuls les écrans du parent n'en font entendre
+  aucun (décision 97.13).
 
   Mots employés dans ces scénarios :
   - « l'effet sonore « … » » : un des 8 effets sonores choisis par le PO (docs/sons.md), nommés par leur événement :
@@ -16,6 +19,8 @@ Fonctionnalité: Retours animés et sonores pendant la séance
     « grande victoire », « découverte », « bouton touché ». Ce sont des sons d'interface courts, sans voix ni parole ;
   - « Léa entend l'effet sonore « … », puis Noisette dit … » : la parole commence quand l'effet sonore est fini,
     jamais par-dessus ; « avant que Noisette dise … » laisse la place à d'autres effets sonores entre les deux ;
+  - « Léa n'entend aucune parole » : ni le personnage guide ni aucune lecture à voix haute ; un effet sonore peut
+    se faire entendre (c'est ce qui se passe en Muet) ;
   - « le choix « … » rebondit » : il grossit un peu puis revient à sa taille, avec la couleur de réussite
     (skill gamification, section 3 : 1 → 1,15 → 1) ; « se balance doucement » : léger balancement de côté
     (±6 px, 2 allers-retours) ;
@@ -47,8 +52,7 @@ Fonctionnalité: Retours animés et sonores pendant la séance
       Et le choix « 7 » rebondit
       Et Noisette applaudit en sautant
 
-    # Question 97.4
-    @a-valider
+    # Décision 97.4
     Scénario: Une réponse fausse fait entendre un son doux, puis l'encouragement, sans croix ni rouge plein écran
       Étant donné que Léa joue la question de test « Combien font 3 + 4 ? »
       Quand Léa répond « 8 »
@@ -80,8 +84,7 @@ Fonctionnalité: Retours animés et sonores pendant la séance
       Alors Léa entend l'effet sonore « réponse fausse », puis Noisette dit un encouragement
       Et l'étiquette « loup » revient parmi les étiquettes à poser
 
-    # Question 97.11
-    @a-valider
+    # Décision 97.11
     Scénario: « Je ne sais pas » ne fait entendre aucun son d'erreur
       Étant donné qu'une question de test bulles « Combien font 3 + 4 ? » n'a pas d'aide
       Quand Léa dit « Je ne sais pas »
@@ -89,8 +92,7 @@ Fonctionnalité: Retours animés et sonores pendant la séance
       Et seul le choix « 7 » reste, et il brille
       Et Noisette dit « Pas de souci, on apprend ensemble ! La bonne réponse brille : touche-la. »
 
-    # Question 97.19
-    @a-valider
+    # Décision 97.19
     Scénario: Après « Je ne sais pas », la bonne réponse donnée par l'enfant fait entendre « réponse juste »
       Étant donné que Léa a dit « Je ne sais pas » à la question « Quel mot est bien écrit ? » dont la réponse est « chat »
       Quand Léa répond « chat »
@@ -111,8 +113,7 @@ Fonctionnalité: Retours animés et sonores pendant la séance
       Quand Léa répond juste à la question de « Les voyelles »
       Alors Léa entend l'effet sonore « réponse juste »
 
-    # Question 97.10
-    @a-valider
+    # Décision 97.10
     Plan du Scénario: Pendant la fluence, une <réponse> fait entendre « <effet sonore> », sans point qui vole
       Étant donné que Léa fait la fluence « Calcul rapide : les doubles », avec 3 calculs réussis
       Quand Léa donne une <réponse>
@@ -124,10 +125,9 @@ Fonctionnalité: Retours animés et sonores pendant la séance
         | bonne réponse  | réponse juste  |
         | réponse fausse | réponse fausse |
 
-  Règle: Une question réussie fait voler un point jusqu'au récipient avec « point du récipient » ; la dernière réponse d'un texte à trous ou d'un ordre fait pleuvoir des étincelles avec « texte complet », à la place de « réponse juste »
+  Règle: Une question réussie fait voler un point jusqu'au récipient avec « point du récipient » ; la dernière réponse d'un exercice à plusieurs réponses sur le même écran (texte à trous, ordre, classer, conjugaison, memoriser) fait pleuvoir des étincelles avec « texte complet », à la place de « réponse juste »
 
-    # Question 97.5
-    @a-valider
+    # Décision 97.5
     Scénario: Une question réussie fait voler un point jusqu'au récipient, après le son de la réponse juste
       Étant donné que Léa joue la séance complète de la leçon « Les sons ou, on, an »
       Et que Léa en est à la question « Dans le mot « poule », quel son entends-tu ? »
@@ -151,8 +151,7 @@ Fonctionnalité: Retours animés et sonores pendant la séance
       Alors un point vole jusqu'au récipient
       Et Léa entend l'effet sonore « point du récipient »
 
-    # Question 97.5
-    @a-valider
+    # Décision 97.5
     Scénario: Au dernier trou, des étincelles et « texte complet » remplacent « réponse juste »
       Étant donné que Léa joue seulement l'exercice « Les phrases magiques » de la leçon « Être et avoir au présent »
       Et que Léa a rempli les trois premiers trous
@@ -161,8 +160,7 @@ Fonctionnalité: Retours animés et sonores pendant la séance
       Et Léa entend l'effet sonore « texte complet » avant que Noisette dise une félicitation, suivie de « Le texte est complet ! »
       Mais Léa n'entend pas l'effet sonore « réponse juste »
 
-    # Question 97.5
-    @a-valider
+    # Décision 97.5
     Scénario: La dernière étiquette d'un ordre fait pleuvoir des étincelles avec « texte complet »
       Étant donné que Léa joue seulement l'exercice « Le mot en morceaux » de la leçon « Les syllabes »
       Et que Léa a posé les étiquettes « do » et « mi »
@@ -177,8 +175,7 @@ Fonctionnalité: Retours animés et sonores pendant la séance
       Alors aucune étincelle n'apparaît
       Et Léa n'entend pas l'effet sonore « texte complet »
 
-    # Question 97.6
-    @a-valider
+    # Décision 97.6
     Plan du Scénario: <dernière réponse> fait aussi pleuvoir des étincelles avec « texte complet »
       Étant donné que Léa joue seulement l'exercice « <exercice> » de la leçon « <leçon> »
       Et que <où en est Léa>
@@ -191,6 +188,7 @@ Fonctionnalité: Retours animés et sonores pendant la séance
         | dernière réponse                       | exercice             | leçon                     | où en est Léa                                   | réponse de Léa                                      |
         | La dernière étiquette d'un classer     | Les maisons des sons | Les sons ou, on, an       | il ne reste que l'étiquette « dent » à poser    | Léa pose l'étiquette « dent » dans la maison « an » |
         | La dernière personne d'une conjugaison | Le verbe être        | Être et avoir au présent  | Léa en est à « ils … ? »                        | Léa répond « sont »                                 |
+        | Le dernier mot caché d'un memoriser    | Au clair de la lune  | Chanson : Au clair de la lune | il ne reste que le mot caché « amour » à retrouver | Léa répond « amour »                       |
 
   Règle: La fin d'une séance se fête : les étoiles apparaissent une à une, des confettis tombent, et un effet sonore de fin se fait entendre avant la phrase de fin ; « grande victoire » quand la séance rend la leçon acquise, puis « découverte » pour un nouvel objet de la cabane ou un nouvel épisode
 
@@ -202,8 +200,7 @@ Fonctionnalité: Retours animés et sonores pendant la séance
       Alors les 3 étoiles apparaissent une à une, puis des confettis tombent
       Et l'écran indique en texte « 3 étoiles sur 3 »
 
-    # Question 97.7
-    @a-valider
+    # Décision 97.7
     Plan du Scénario: Une séance terminée <cas> fait entendre <effets sonores> avant la phrase de fin
       Étant donné que les leçons de test « Les sons de test » et « La suite de test » sont dans la bibliothèque
       Et que Léa a terminé <séances avant>
@@ -221,8 +218,7 @@ Fonctionnalité: Retours animés et sonores pendant la séance
         | qui rend la leçon acquise et fait recevoir un objet       | 20 séances    | 8           | 2       | les effets sonores « grande victoire » puis « découverte »  |
         | qui fait recevoir un objet et ouvre un épisode            | 0 séance      | 8           | 2       | les effets sonores « grande victoire » puis « découverte »  |
 
-    # Question 97.7
-    @a-valider
+    # Décision 97.7
     Scénario: Rejouer une leçon déjà acquise fait entendre « séance terminée », pas « grande victoire »
       Étant donné que les leçons de test « Les sons de test » et « La suite de test » sont dans la bibliothèque
       Et que Léa a terminé 20 séances
@@ -234,8 +230,7 @@ Fonctionnalité: Retours animés et sonores pendant la séance
       Alors Léa entend l'effet sonore « séance terminée », puis Noisette dit sa phrase de fin
       Mais Léa n'entend pas l'effet sonore « grande victoire »
 
-    # Questions 97.9 et 97.16
-    @a-valider
+    # Décisions 97.9 et 97.16
     Scénario: La fin de la séance de révision fait entendre « séance terminée » et « découverte », avec des confettis, sans étoile
       Étant donné que la bibliothèque de test des révisions est servie
       Et que Léa a 3 questions dues de la leçon « Les nombres de révision »
@@ -245,8 +240,7 @@ Fonctionnalité: Retours animés et sonores pendant la séance
       Et des confettis tombent
       Mais la fin de la séance de révision ne montre aucune étoile
 
-    # Questions 97.9 et 97.16
-    @a-valider
+    # Décisions 97.9 et 97.16
     Scénario: La fin du test de départ fait entendre seulement « séance terminée », avec des confettis
       Étant donné que la bibliothèque de test du test de départ est servie
       Et que Léa a répondu au test de départ jusqu'à « Les additions »
@@ -257,8 +251,7 @@ Fonctionnalité: Retours animés et sonores pendant la séance
 
   Règle: Un record de fluence se fête : le compteur défile jusqu'au nouveau record et « grande victoire » se fait entendre avant que le personnage guide l'annonce ; sans record, rien de plus
 
-    # Question 97.8
-    @a-valider
+    # Décision 97.8
     Plan du Scénario: À la fin de la fluence, <cas> fait défiler le compteur et entendre « grande victoire »
       Étant donné que Léa <record avant> à la fluence « Calcul rapide : les doubles »
       Et que Léa fait cette fluence
@@ -285,8 +278,7 @@ Fonctionnalité: Retours animés et sonores pendant la séance
       Alors aucun compteur ne défile jusqu'à un record
       Et Léa n'entend pas l'effet sonore « grande victoire »
 
-    # Question 97.18
-    @a-valider
+    # Décision 97.18
     Scénario: Une séance faite seulement d'une fluence, avec un record, fait entendre « grande victoire » une seule fois
       Étant donné que Léa a un record de 10 à la fluence « Calcul rapide : les doubles »
       Et que Léa joue seulement l'exercice « Calcul rapide : les doubles »
@@ -294,7 +286,7 @@ Fonctionnalité: Retours animés et sonores pendant la séance
       Alors Léa entend une seule fois l'effet sonore « grande victoire »
       Et Léa n'entend pas l'effet sonore « séance terminée »
 
-  Règle: Un effet sonore passe avant la parole, jamais par-dessus, et suit le son de l'appareil : en Muet, ni effet sonore ni parole ; sur un écran du parent, aucun effet sonore ; quand la voix manque, les effets sonores restent
+  Règle: Un effet sonore passe avant la parole, jamais par-dessus : le Muet coupe la parole, pas les effets sonores ; sur un écran du parent, aucun effet sonore ; quand la voix manque, les effets sonores restent
 
     Scénario: Un effet sonore et la parole du personnage guide ne se chevauchent jamais
       Étant donné que Léa joue la séance complète de la leçon « Les sons ou, on, an »
@@ -302,36 +294,40 @@ Fonctionnalité: Retours animés et sonores pendant la séance
       Quand Léa répond « ou »
       Alors Léa n'entend jamais un effet sonore et Noisette en même temps
 
-    Scénario: En Muet, une réponse juste ne fait entendre ni effet sonore ni parole, mais se voit toujours
+    # Décision 97.2
+    Scénario: En Muet, une réponse juste fait entendre « réponse juste », sans parole, et se voit toujours
       Étant donné que la tablette est en Muet
       Et que Léa joue la question de test « Combien font 3 + 4 ? »
       Quand Léa répond « 7 »
-      Alors Léa n'entend rien
-      Mais le choix « 7 » rebondit
-      Et Noisette applaudit en sautant
+      Alors Léa entend l'effet sonore « réponse juste »
+      Mais Léa n'entend aucune parole
+      Et le choix « 7 » rebondit
 
-    Scénario: En Muet, la fin de la séance se fête sans aucun son
+    # Décision 97.2
+    Scénario: En Muet, la fin de la séance fait entendre son effet sonore, sans phrase de fin dite
       Étant donné que la tablette est en Muet
       Et que les leçons de test « Les sons de test » et « La suite de test » sont dans la bibliothèque
       Et que Léa joue la séance complète de la leçon « Les sons de test »
+      Et que Léa a fait 5 erreurs pendant la séance
       Quand Léa réussit la dernière question de la séance
-      Alors Léa n'entend rien
-      Mais les étoiles apparaissent une à une, puis des confettis tombent
+      Alors Léa entend l'effet sonore « séance terminée »
+      Mais Léa n'entend aucune parole
 
-    Scénario: Passer en Muet arrête l'effet sonore en cours
+    # Décision 97.2, question 97.24
+    @a-valider
+    Scénario: Passer en Muet pendant l'effet sonore de fin le laisse finir, sans phrase de fin dite
       Étant donné que les leçons de test « Les sons de test » et « La suite de test » sont dans la bibliothèque
       Et que Léa entend l'effet sonore « séance terminée » à la fin de la séance de la leçon « Les sons de test »
       Quand Léa passe en Muet
-      Alors Léa n'entend plus l'effet sonore « séance terminée »
-      Et Léa n'entend aucune voix
+      Alors Léa entend l'effet sonore « séance terminée » jusqu'au bout
+      Mais Léa n'entend aucune parole
 
     Scénario: Pendant la fluence, une nouvelle réponse coupe l'effet sonore de la précédente
       Étant donné que Léa fait la fluence « Calcul rapide : les doubles », avec 3 calculs réussis
       Quand Léa donne deux bonnes réponses aussitôt l'une après l'autre
       Alors Léa n'entend jamais deux effets sonores en même temps
 
-    # Question 97.13
-    @a-valider
+    # Décision 97.13
     Scénario: En arrivant sur un écran du parent, l'effet sonore en cours s'arrête
       Étant donné que les leçons de test « Les sons de test » et « La suite de test » sont dans la bibliothèque
       Et que Léa entend l'effet sonore « séance terminée » à la fin de la séance de la leçon « Les sons de test »
@@ -339,8 +335,7 @@ Fonctionnalité: Retours animés et sonores pendant la séance
       Alors Léa voit une question du contrôle parental
       Et Léa n'entend plus l'effet sonore « séance terminée »
 
-    # Question 97.14
-    @a-valider
+    # Décision 97.14
     Scénario: Quand le navigateur ne sait pas lire à voix haute, les effets sonores se font quand même entendre
       Étant donné que le navigateur ne sait pas lire à voix haute
       Et que Léa joue la question de test « Combien font 3 + 4 ? »
@@ -348,8 +343,7 @@ Fonctionnalité: Retours animés et sonores pendant la séance
       Alors Léa entend l'effet sonore « réponse juste »
       Et Noisette applaudit en sautant
 
-    # Question 97.14
-    @a-valider
+    # Décision 97.14
     Scénario: Un effet sonore qui ne peut pas être joué n'empêche jamais la parole
       Étant donné que l'appareil ne peut pas jouer les effets sonores
       Et que Léa joue la question de test « Combien font 3 + 4 ? »
@@ -365,7 +359,7 @@ Fonctionnalité: Retours animés et sonores pendant la séance
       Quand Léa répond « 7 »
       Alors Léa entend l'effet sonore « réponse juste »
 
-  Règle: Une célébration ne retient jamais l'enfant et se vit sans mouvement : avec les mouvements réduits, l'information reste sans animation ; un toucher la passe ; le clavier n'est jamais bloqué ; le lecteur d'écran annonce le résultat une seule fois
+  Règle: Une célébration ne retient jamais l'enfant et se vit sans mouvement : avec les mouvements réduits, l'information reste sans animation ; un toucher hors des boutons ne l'interrompt pas ; les boutons et le clavier ne sont jamais bloqués ; le lecteur d'écran annonce le résultat une seule fois
 
     Scénario: Avec les mouvements réduits, les étoiles de fin s'affichent sans animation et sans confettis
       Étant donné que l'appareil demande des mouvements réduits
@@ -392,23 +386,29 @@ Fonctionnalité: Retours animés et sonores pendant la séance
       Alors le choix « 8 » ne se balance pas
       Et Noisette dit un encouragement
 
-    # Question 97.14
-    @a-valider
+    # Décision 97.14
     Scénario: Avec les mouvements réduits, les effets sonores se font toujours entendre
       Étant donné que l'appareil demande des mouvements réduits
       Et que Léa joue la question de test « Combien font 3 + 4 ? »
       Quand Léa répond « 7 »
       Alors Léa entend l'effet sonore « réponse juste » avant que Noisette dise une félicitation
 
-    # Question 97.17
-    @a-valider
-    Scénario: Toucher l'écran pendant les confettis passe la célébration
+    # Décision 97.17
+    Scénario: Toucher l'écran en dehors des boutons pendant les confettis ne change rien
       Étant donné que les leçons de test « Les sons de test » et « La suite de test » sont dans la bibliothèque
       Et que Léa voit tomber les confettis de la fin de la séance de la leçon « Les sons de test »
       Quand Léa touche l'écran en dehors des boutons
-      Alors les confettis disparaissent
-      Et toutes les étoiles gagnées sont affichées
-      Et la fin de la séance propose « Leçon suivante », « Accueil », « Rejouer » et « Lire l'épisode »
+      Alors les confettis tombent toujours
+      Et Léa entend l'effet sonore de fin jusqu'au bout
+
+    # Question 97.22
+    @a-valider
+    Scénario: Pendant les confettis, toucher « Accueil » mène tout de suite à l'accueil
+      Étant donné que les leçons de test « Les sons de test » et « La suite de test » sont dans la bibliothèque
+      Et que Léa voit tomber les confettis de la fin de la séance de la leçon « Les sons de test »
+      Quand Léa choisit « Accueil »
+      Alors Léa voit son accueil
+      Et Léa n'entend plus l'effet sonore de fin
 
     Scénario: Pendant les confettis, le clavier n'est jamais bloqué
       Étant donné que les leçons de test « Les sons de test » et « La suite de test » sont dans la bibliothèque
@@ -416,8 +416,7 @@ Fonctionnalité: Retours animés et sonores pendant la séance
       Quand Léa choisit « Accueil » au clavier
       Alors Léa voit son accueil
 
-    # Question 97.15
-    @a-valider
+    # Décision 97.15
     Plan du Scénario: Les lecteurs d'écran annoncent une seule fois « <annonce> »
       Étant donné que les leçons de test « Les sons de test » et « La suite de test » sont dans la bibliothèque
       Et que Léa joue la séance complète de la leçon « Les sons de test »
@@ -432,8 +431,7 @@ Fonctionnalité: Retours animés et sonores pendant la séance
 
   Règle: Toucher un bouton d'un écran de l'enfant fait entendre « bouton touché » ; un bouton qui donne une réponse garde le son de la réponse, et les écrans du parent restent sans effet sonore
 
-    # Question 97.12
-    @a-valider
+    # Décision 97.12
     Plan du Scénario: <geste> fait entendre « bouton touché »
       Étant donné que <situation>
       Quand <geste>
@@ -445,24 +443,31 @@ Fonctionnalité: Retours animés et sonores pendant la séance
         | Léa ouvre « Mes médailles » depuis son accueil  | Léa a terminé 1 séance                                                                    |
         | Léa rejoue                                      | Léa a terminé une séance de l'exercice « Dernières bulles » seul                          |
 
-    # Question 97.12
-    @a-valider
+    # Décision 97.12
     Scénario: Un choix de réponse fait entendre le son de la réponse, pas « bouton touché »
       Étant donné que Léa joue la question de test « Combien font 3 + 4 ? »
       Quand Léa répond « 7 »
       Alors Léa entend l'effet sonore « réponse juste »
       Mais Léa n'entend pas l'effet sonore « bouton touché »
 
-    # Question 97.19
-    @a-valider
+    # Décision 97.19
     Scénario: « Je ne sais pas » fait entendre « bouton touché », jamais « réponse fausse »
       Étant donné qu'une question de test bulles « Combien font 3 + 4 ? » n'a pas d'aide
       Quand Léa dit « Je ne sais pas »
       Alors Léa entend l'effet sonore « bouton touché »
       Mais Léa n'entend pas l'effet sonore « réponse fausse »
 
-    # Question 97.12
+    # Question 97.21
     @a-valider
+    Scénario: En Muet, demander à réécouter la consigne fait entendre « bouton touché », sans parole
+      Étant donné que la tablette est en Muet
+      Et que Léa joue seulement l'exercice « Les maisons des sons » de la leçon « Les sons ou, on, an »
+      Quand Léa demande à réécouter la consigne
+      Alors Léa entend l'effet sonore « bouton touché »
+      Mais Léa n'entend aucune parole
+      Et Léa voit la consigne « Range chaque mot dans la maison de son son. »
+
+    # Décision 97.12
     Plan du Scénario: Remettre le son <écran> ne fait entendre aucun effet sonore
       Étant donné que la tablette est en Muet
       Et que <situation>
@@ -474,8 +479,7 @@ Fonctionnalité: Retours animés et sonores pendant la séance
         | pendant une séance        | Léa joue la question de test « Combien font 3 + 4 ? »     | Léa  |
         | dans l'espace parent      | l'espace parent est affiché sur la tablette               | Paul |
 
-    # Questions 97.12 et 97.13
-    @a-valider
+    # Décisions 97.12 et 97.13
     Plan du Scénario: Sur <écran du parent>, toucher un bouton ne fait entendre aucun effet sonore
       Étant donné que <situation>
       Quand <geste>
