@@ -2,6 +2,7 @@ import { assertEquals } from "@std/assert";
 import { lireLecon, Niveau } from "../../catalogue/domain/index.ts";
 import type { Lecon } from "../../catalogue/domain/index.ts";
 import { avanceeDansLeParcours } from "./avancee-dans-le-parcours.ts";
+import { Etoiles } from "./etoiles.ts";
 import { parcoursDeLaMatiere } from "./parcours.ts";
 
 // API attendue : AvanceeDansLeParcours = { depuis: LeconId; jusqua: { genre: "lecon"; lecon: LeconId } | { genre: "finDuParcours" } }
@@ -18,7 +19,7 @@ function lecon(id: string, ordre: number): Lecon {
   });
 }
 
-const [a, b] = [lecon("fr-ce1-a", 1), lecon("fr-ce1-b", 2)];
+const [a, b, c] = [lecon("fr-ce1-a", 1), lecon("fr-ce1-b", 2), lecon("fr-ce1-c", 3)];
 
 Deno.test("sans prochaine leçon connue, il n'y a pas d'avancée dans le parcours, même s'il reste une leçon à découvrir", () => {
   const parcours = parcoursDeLaMatiere(
@@ -27,4 +28,13 @@ Deno.test("sans prochaine leçon connue, il n'y a pas d'avancée dans le parcour
   );
 
   assertEquals(avanceeDansLeParcours(undefined, parcours), undefined);
+});
+
+Deno.test("quand la prochaine leçon connue est devenue réussie, l'avancée va de cette leçon jusqu'à la nouvelle prochaine leçon du parcours", () => {
+  const parcours = parcoursDeLaMatiere(
+    { lecons: [a, b, c], niveau: Niveau.de("CE1"), meilleuresEtoiles: new Map([[a.id, Etoiles.de(1)]]) },
+    a.matiere,
+  );
+
+  assertEquals(avanceeDansLeParcours(a.id, parcours), { depuis: a.id, jusqua: { genre: "lecon", lecon: b.id } });
 });
