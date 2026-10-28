@@ -9,7 +9,7 @@ export function avanceeDansLeParcours(
   prochaineLeconConnue: LeconId | undefined,
   parcours: Parcours,
 ): AvanceeDansLeParcours | undefined {
-  if (prochaineLeconConnue === undefined) return undefined;
+  if (prochaineLeconConnue === undefined || !estDevenueReussie(prochaineLeconConnue, parcours)) return undefined;
   const nouvelleProchaineLecon = parcours.prochaineLecon;
   return {
     depuis: prochaineLeconConnue,
@@ -17,4 +17,12 @@ export function avanceeDansLeParcours(
       ? { genre: "finDuParcours" }
       : { genre: "lecon", lecon: nouvelleProchaineLecon },
   };
+}
+
+function estDevenueReussie(lecon: LeconId, parcours: Parcours): boolean {
+  return parcours.lecons.some(
+    (uneLecon) =>
+      uneLecon.lecon === lecon &&
+      (uneLecon.etat.genre === "reussie" || uneLecon.etat.genre === "reussieAuTestDeDepart"),
+  );
 }
