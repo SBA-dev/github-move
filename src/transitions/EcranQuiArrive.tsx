@@ -5,6 +5,7 @@ import type { Transition } from "./transition-d-ecran.ts";
 
 const DUREE_EN_SECONDES = 0.25;
 const SECURITE_DE_DEBLOCAGE_EN_MS = 290;
+const VERROU_DES_MOUVEMENTS_REDUITS_EN_MS = 250;
 const DISTANCE_DU_GLISSEMENT_EN_PX = 48;
 const DEPART: Readonly<Record<Transition, { x?: number; opacity?: number }>> = {
   avancer: { x: DISTANCE_DU_GLISSEMENT_EN_PX, opacity: 0 },
@@ -22,7 +23,8 @@ type Props = {
 /**
  * L'écran qui arrive remplace tout de suite le précédent (aucun écran sortant à attendre) et glisse ou apparaît en moins de 300 ms,
  * sur `transform` et `opacity` seulement. Le premier écran affiché, et les mouvements réduits, n'animent rien.
- * Pendant le mouvement, les touchers sont ignorés : le second toucher d'un double toucher ne tombe pas sur l'écran qui arrive.
+ * À l'arrivée, les touchers sont ignorés (le temps du mouvement, ou 250 ms avec les mouvements réduits) : le second toucher
+ * d'un double toucher ne tombe pas sur l'écran qui arrive. Le clavier n'est jamais bloqué.
  */
 export function EcranQuiArrive({ cle, transition, children }: Props) {
   const premiereCle = useRef(cle);
@@ -42,15 +44,17 @@ export function EcranQuiArrive({ cle, transition, children }: Props) {
     aFocaliser.focus({ preventScroll: true });
   }, [cle]);
 
-  const enMouvement = animer && !mouvementsReduits() && transition !== "aucune";
-  const touchersIgnores = enMouvement && cleDebloquee !== cle;
-  const depart = animer && !mouvementsReduits() ? DEPART[transition] : {};
+  const reduits = mouvementsReduits();
+  const enArrivee = animer && transition !== "aucune";
+  const touchersIgnores = enArrivee && cleDebloquee !== cle;
+  const depart = animer && !reduits ? DEPART[transition] : {};
 
   useEffect(() => {
-    if (!enMouvement) return;
-    const minuteur = setTimeout(() => setCleDebloquee(cle), SECURITE_DE_DEBLOCAGE_EN_MS);
+    if (!enArrivee) return;
+    const delai = reduits ? VERROU_DES_MOUVEMENTS_REDUITS_EN_MS : SECURITE_DE_DEBLOCAGE_EN_MS;
+    const minuteur = setTimeout(() => setCleDebloquee(cle), delai);
     return () => clearTimeout(minuteur);
-  }, [cle, enMouvement]);
+  }, [cle, enArrivee, reduits]);
 
   return (
     <motion.div
@@ -58,11 +62,11 @@ export function EcranQuiArrive({ cle, transition, children }: Props) {
       ref={racine}
       className="ecran-qui-arrive"
       tabIndex={-1}
-      data-transition={animer && !mouvementsReduits() ? transition : "aucune"}
+      data-transition={animer && !reduits ? transition : "aucune"}
       initial={depart}
       style={touchersIgnores ? { pointerEvents: "none" } : undefined}
       animate={{ x: 0, opacity: 1 }}
-      onAnimationComplete={() => setCleDebloquee(cle)}
+      onAnimationComplete={() => !reduits && setCleDebloquee(cle)}
       transition={{ duration: DUREE_EN_SECONDES, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
