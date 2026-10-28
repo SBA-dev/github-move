@@ -63,3 +63,13 @@ Puis câblage : adaptateur navigateur, `useVoix`, déroulement de la séance, r�
 - Cycle 2 : À CORRIGER, 1 bloquant (bug de `f7ef9cf`). Après `faireSilence()`, la parole d'un gestionnaire de bouton était perdue et « bouton touché » était coupé. Corrigé par `95c6b1a` (rouge) puis `ae1552d`.
 - Cycle 3 : **APPROUVÉ** (2520 tests unitaires).
 - Restent pour l'E2E : le step `etoiles-et-fin-de-seance.steps.ts:577` vise `etincelles`, il doit viser `confettis` (sens inchangé). Question au PO : un bouton touché pendant la consigne coupe la consigne (invariant 3, jamais par-dessus).
+
+### E2E (étape 5)
+
+- Périmètre (PO, 28/10) : scénarios `@issue-97` seulement, sur `telephone`. Chromium : liens vers `chromium-1243` dans le scratchpad (`PLAYWRIGHT_BROWSERS_PATH`).
+- Cycle 1 : 58/63 verts (`39c0dcb`, steps). 5 KO, plus le scénario `@pwa` non lancé :
+  - **Bug** : les confettis tombaient avant les étoiles pendant la sauvegarde. Corrigé dans `33aa4b8`.
+  - **Bug, régression de #17** : un bouton touché pendant la félicitation la coupait (toucher la question, `exercices-a-choix.steps.ts` l. 694). Règle déduite de #17 et de l'invariant 3 : un bouton touché pendant une parole ne la coupe pas et ne joue rien (`15db2cc` rouge, `3c90d9e`). Cela règle aussi la question en suspens « un bouton touché coupe la consigne » : il ne la coupe plus.
+  - **Observation** : `lire` avec `effetsAvant` jouait l'effet par-dessus la parole en cours (invariant 3). Corrigé par `e51b645` (rouge) puis `83a70a0`.
+  - **Données de scénarios** (`b98dcc2`, `po-acceptance`) : leçon déjà acquise rejouée, le seuil de la lanterne faisait entendre « découverte » ; « Accueil » mène à « Qui joue ? » (étape de #73).
+- Cycle 2 lancé, avec une revue du delta de production en parallèle.
