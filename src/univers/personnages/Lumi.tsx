@@ -58,6 +58,7 @@ export const Lumi: DessinDuPersonnage = ({ humeur, id }) => (
           <stop offset="1" stopColor="#9CCFFF" stopOpacity=".6" />
         </linearGradient>
     </defs>
+      <g data-signe="ailes">
       <g transform="translate(-12 -104) scale(0.94 1)">
         <path d="M0 0 Q-18 -34 -44 -40 Q-58 -36 -50 -18 Q-42 -4 -12 2 Q-44 6 -48 22 Q-44 36 -26 32 Q-8 26 0 8 Z" fill={`url(#${id}aile)`} stroke="#9CCFFF" strokeWidth="2.4" strokeLinejoin="round" />
         <path d="M-6 -2 Q-26 -22 -42 -30 M-8 6 Q-26 14 -38 22" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" opacity=".8" />
@@ -65,6 +66,7 @@ export const Lumi: DessinDuPersonnage = ({ humeur, id }) => (
       <g transform="translate(12 -104) scale(0.94 1)">
         <path d="M0 0 Q18 -34 44 -40 Q58 -36 50 -18 Q42 -4 12 2 Q44 6 48 22 Q44 36 26 32 Q8 26 0 8 Z" fill={`url(#${id}aile)`} stroke="#9CCFFF" strokeWidth="2.4" strokeLinejoin="round" />
         <path d="M6 -2 Q26 -22 42 -30 M8 6 Q26 14 38 22" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" opacity=".8" />
+      </g>
       </g>
       <g transform="translate(0 -150) translate(0 150)">
         <path fill="#f7cc4f" stroke="#33304A" strokeWidth="3" strokeLinejoin="round" d="M-42 -150 Q-46 -192 -22 -200 Q-10 -206 0 -200 Q10 -206 22 -200 Q46 -192 42 -150 Q44 -126 32 -116 Q0 -124 -32 -116 Q-44 -126 -42 -150 Z" />
@@ -96,6 +98,7 @@ export const Lumi: DessinDuPersonnage = ({ humeur, id }) => (
       <g transform="translate(12 1.9) rotate(71.2)">
         {CHAUSSURE}
       </g>
+      <g data-signe="robe-rose-aux-genoux">
       <path fill="#E07AA0" stroke="#33304A" strokeWidth="3" strokeLinejoin="round" d="M-22 -80 Q-50 -52 -48 -30 Q0 -20 48 -30 Q50 -52 22 -80 Z" transform="translate(0 -82) skewX(0) translate(0 82)" />
       <path fill="#ff9cbc" stroke="#33304A" strokeWidth="3" strokeLinejoin="round" d="M-22 -82 Q-46 -56 -46 -34 Q-34.5 -24 -23 -34 Q-11.5 -24 0 -34 Q11.5 -24 23 -34 Q34.5 -24 46 -34 Q46 -56 22 -82 Z" transform="translate(0 -82) skewX(0) translate(0 82)" />
       <path fill="#D96A90" opacity=".9" d="M-11.9 -80 Q-16.1 -56 -30 -33 Q-23 -30 -17 -33 Q-17.2 -56 -7.9 -80 Z M-2 -80 Q0 -56 -7 -33 Q0 -30 6 -33 Q0 -56 2 -80 Z M7.9 -80 Q16.1 -56 16 -33 Q23 -30 29 -33 Q17.3 -56 11.9 -80 Z" transform="translate(0 -82) skewX(0) translate(0 82)" />
@@ -107,6 +110,7 @@ export const Lumi: DessinDuPersonnage = ({ humeur, id }) => (
       <path fill="#ffd9b8" stroke="#33304A" strokeWidth="2.4" d="M-9 -109 Q0 -100 9 -109 Q0 -113 -9 -109 Z" />
       <g transform="translate(0 -94)">
         <path d="M0 -5 L1.5 -1.5 L5 0 L1.5 1.5 L0 5 L-1.5 1.5 L-5 0 L-1.5 -1.5 Z" fill="#FFC93C" stroke="#33304A" strokeWidth="1.2" />
+      </g>
       </g>
       <path d="M-6 -118 V-104 H6 V-118 Z" fill="#ffd9b8" stroke="#33304A" strokeWidth="2.6" />
       <g transform="translate(0 -150)" data-testid="visage" data-humeur={humeur}>
@@ -176,10 +180,12 @@ export const Lumi: DessinDuPersonnage = ({ humeur, id }) => (
         <path fill="#f7cc4f" stroke="#33304A" strokeWidth="3" strokeLinejoin="round" d="M-42 -24 Q-44 -46 -26 -52 Q-12 -58 0 -54 Q12 -58 26 -52 Q44 -46 42 -24 Q36 -34 30 -29 Q22 -40 12 -30 Q4 -42 -6 -30 Q-14 -42 -24 -30 Q-34 -36 -42 -24 Z" />
         <path fill="none" stroke="#D9A92C" strokeWidth="2" strokeLinecap="round" opacity=".8" d="M-6 -52 Q-2 -44 -8 -32 M14 -50 Q18 -42 13 -31 M-26 -46 Q-24 -40 -25 -31" />
         <path fill="none" stroke="#FFE992" strokeWidth="3" strokeLinecap="round" d="M-30 -44 Q-20 -52 -10 -46 M2 -48 Q10 -54 20 -46" />
+        <g data-signe="tiare">
         <g transform="translate(0 -40)">
           <path d="M-16 -2 L-11 -14 L-5 -4 L0 -18 L5 -4 L11 -14 L16 -2 Z" fill="#FFC93C" stroke="#33304A" strokeWidth="2.4" strokeLinejoin="round" />
           <circle cy="-10" r="3.2" fill="#FF8FB8" stroke="#33304A" strokeWidth="1.6" />
           <path d="M-16 -2 H16" stroke="#D99A12" strokeWidth="2" />
+        </g>
         </g>
       </g>
       <path fill="none" stroke="#33304A" strokeWidth="19" strokeLinecap="round" strokeLinejoin="round" d="M-23.3 -97.4Q-26 -77.5 -34.6 -65.2" />

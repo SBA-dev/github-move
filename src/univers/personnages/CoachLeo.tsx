@@ -73,10 +73,12 @@ export const CoachLeo: DessinDuPersonnage = ({ humeur, id }) => (
       <path fill="#FFFFFF" stroke="#33304A" strokeWidth="3" strokeLinejoin="round" d="M-23 -4 Q0 2 23 -4 L26 16 Q11 20 2.2 18 Q0 14 -2.2 18 Q-11 20 -26 16 Z" />
       <path fill="#D9E3F2" d="M4.4 8 Q23 0 24 14 Q13.2 18 3.3 17 Z" />
       <path fill="none" stroke="#2a63d4" strokeWidth="2.4" strokeLinecap="round" d="M-24 0 L-25 14 M24 0 L25 14" />
+      <g data-signe="maillot-bleu">
       <path fill="#2a63d4" stroke="#33304A" strokeWidth="3.4" strokeLinejoin="round" d="M-18 -40 Q-24 -12 -22 6 Q0 14 22 6 Q24 -12 18 -40 Q0 -47 -18 -40 Z" />
       <path fill="#1F4CB0" d="M5.4 -42 Q21 -30 22 4 Q13.2 10 7.7 9 Q19 -20 5.4 -42 Z" />
       <path fill="#5A8BE8" d="M-16.2 -36 Q-7.2 -42 1.8 -40 Q-7.2 -37 -14.4 -30 Z" />
       <path fill="none" stroke="#FFFFFF" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" d="M-7 -44 L0 -35 L7 -44" />
+      </g>
       <g transform="translate(-9 -24)">
         <circle r="6" fill="#FFFFFF" stroke="#33304A" strokeWidth="1.8" />
         <circle r="2.6" fill="#E8604C" />
@@ -141,12 +143,14 @@ export const CoachLeo: DessinDuPersonnage = ({ humeur, id }) => (
               {bouche(humeur, id)}
             </g>
           </g>
+          <g data-signe="cheveux-courts">
           <path fill="#5a3a22" stroke="#33304A" strokeWidth="3.6" strokeLinejoin="round" d="M-29 -20.8L-24.2 -19.8L-19.3 -19.6L-14.5 -17.5L-9.7 -14L-4.8 -18.4L0 -19.1L4.8 -14.3L9.7 -16.7L14.5 -19.9L19.3 -15.4L24.2 -20.1L29 -24.8 Q32 -14 18 -25 Q0 -37 -18 -25 Q-32 -14 -29 -22 Z" />
           <path fill="none" stroke="#8A5E3B" strokeWidth="3" strokeLinecap="round" d="M-16 -22 Q-4 -29 8 -26" />
           <path fill="#5a3a22" stroke="#33304A" strokeWidth="3.2" strokeLinejoin="round" d="M-12 -25 Q-16 -39 -2 -36 Q-4 -31 2 -27 Z" />
           <path fill="#5a3a22" stroke="#33304A" strokeWidth="3.2" strokeLinejoin="round" d="M0 -27 Q6 -41 16 -34 Q10 -33 10 -26 Z" />
           <path fill="#5a3a22" stroke="#33304A" strokeWidth="3.2" strokeLinejoin="round" d="M10 -25 Q22 -36 24 -22 Q18 -24 14 -20 Z" />
           <path fill="#5a3a22" stroke="#33304A" strokeWidth="3" strokeLinejoin="round" d="M-4 -29 Q-14 -42 -18 -31 Q-12 -32 -10 -27 Z" />
+          </g>
           <g transform={choisir(humeur, "translate(-11.2 -21) scale(0.93 1) rotate(-3)", "translate(-11.2 -16) scale(0.93 1) rotate(10)", "translate(-11.2 -23) scale(0.93 1) rotate(-4)")}>
             <path d="M-7 0 Q0 -4 7 0" fill="none" stroke="#43291A" strokeWidth="3.6" strokeLinecap="round" />
           </g>

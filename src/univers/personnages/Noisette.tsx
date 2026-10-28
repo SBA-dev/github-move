@@ -53,17 +53,20 @@ export const Noisette: DessinDuPersonnage = ({ humeur, id }) => (
         <path d="M-12 0 Q0 22 12 0 Z" />
       </clipPath>
     </defs>
+      <g data-signe="queue-en-panache">
       <path fill="#F48C3C" stroke="#33304A" strokeWidth="3.4" strokeLinejoin="round" d="M8.7 -39.9 Q12.6 -49.2 5.5 -49.9 Q9.4 -59.1 2.3 -59.8 Q6.2 -69 -1 -69.7 Q-1.6 -79.6 -10 -78.2 Q-10.6 -88.1 -19 -86.7 Q-19.6 -96.6 -28.1 -95.2 Q-33.5 -102.6 -40.7 -96.6 Q-46.1 -104 -53.4 -98 Q-58.8 -105.4 -66 -99.5 Q-73.5 -102.5 -75.8 -93.1 Q-83.3 -96.2 -85.6 -86.8 Q-93.1 -89.9 -95.4 -80.4 Q-101.5 -81 -97.9 -71.7 Q-104 -72.2 -100.4 -62.9 Q-106.5 -63.4 -102.9 -54.1 Q-109 -46.2 -103.6 -36.9 Q-93.3 -33.9 -87.1 -41.8 Q-79.4 -37.7 -81.4 -43.5 Q-73.6 -39.5 -75.7 -45.3 Q-67.9 -41.2 -69.9 -47 Q-65.6 -40.6 -66.3 -46.6 Q-62 -40.2 -62.8 -46.3 Q-58.4 -39.8 -59.2 -45.9 Q-58.5 -38.8 -56 -45.1 Q-55.3 -38 -52.8 -44.3 Q-52.1 -37.2 -49.6 -43.5 Q-51 -37 -44.6 -41.8 Q-46 -35.3 -39.6 -40.1 Q-41 -33.6 -34.6 -38.4 Q-37.1 -31.7 -28.6 -33.6 Q-31.2 -27 -22.7 -28.8 Q-25.2 -22.2 -16.7 -24.1 Z" />
       <path fill="#FFE0BF" d="M-21.1 -50.9 Q-41 -64.2 -51.4 -65.7 Q-61.9 -67.3 -71 -63.8 Q-80.1 -60.4 -86.8 -53.6 L-93.4 -46.7 L-88.4 -42.8L-88.4 -42.8 Q-72 -49.7 -65.8 -49.9 Q-59.7 -50.2 -53.8 -48.9 Q-47.8 -47.6 -39.9 -44.2 L-31.9 -40.9 Z" />
       <path fill="none" stroke="#C9601C" strokeWidth="4" strokeLinecap="round" opacity=".8" d="M-7 -64.1 Q-31.9 -85.9 -48.4 -87.8 Q-64.8 -89.8 -77.8 -82.1 Q-90.8 -74.4 -95.4 -63.2 L-100 -51.9" />
       <path fill="none" stroke="#FFC28A" strokeWidth="3" strokeLinecap="round" d="M-1.5 -33.6 Q-14.4 -57.2 -25.5 -65.8 Q-36.7 -74.5 -50 -76.3 L-63.3 -78" />
       <path fill="none" stroke="#C9601C" strokeWidth="1.4" strokeLinecap="round" opacity=".55" d="M-34.5 -79.7 Q-63.9 -83.4 -75.9 -76.9 Q-87.8 -70.4 -93 -60.4 L-98.1 -50.4 M-17.8 -54 Q-38.8 -69.3 -50.7 -71 Q-62.6 -72.7 -72.6 -68.2 L-82.7 -63.7" />
+      </g>
       <ellipse cx="-17" cy="-5" rx="16" ry="9" fill="#F48C3C" stroke="#33304A" strokeWidth="3" />
       <path d="M-26 -1 q4 3 7 0 M-19 1 q4 3 7 0 M-12 -1 q3 2 6 0" fill="none" stroke="#33304A" strokeWidth="1.5" opacity=".7" />
       <ellipse cx="17" cy="-5" rx="16" ry="9" fill="#F48C3C" stroke="#33304A" strokeWidth="3" />
       <path d="M8 -1 q4 3 7 0 M15 1 q4 3 7 0 M22 -1 q3 2 6 0" fill="none" stroke="#33304A" strokeWidth="1.5" opacity=".7" />
       <path d="M-20 -30 Q-26 -14 -20 -6 Q-12 -2 -8 -8 Q-6 -20 -10 -30 Z" fill="#F48C3C" stroke="#33304A" strokeWidth="3" strokeLinejoin="round" />
       <path d="M20 -30 Q26 -14 20 -6 Q12 -2 8 -8 Q6 -20 10 -30 Z" fill="#F48C3C" stroke="#33304A" strokeWidth="3" strokeLinejoin="round" />
+      <g data-signe="ecureuil-rond">
       <ellipse cx="0" cy="-50" rx="36" ry="40" fill="#F48C3C" stroke="#33304A" strokeWidth="3.6" />
       <path d="M10 -14 A36 40 0 0 0 34 -62 A30 34 0 0 1 10 -14 Z" fill="#C9601C" />
       <ellipse cx="-1" cy="-42" rx="24" ry="29" fill="#FFE0BF" />
@@ -141,6 +144,7 @@ export const Noisette: DessinDuPersonnage = ({ humeur, id }) => (
         <g transform={choisir(humeur, "translate(16 -27)", "translate(16 -25) rotate(10)", "translate(16 -31)")}>
           <path d="M-8 0 Q0 -5 8 0" fill="none" stroke="#C9601C" strokeWidth="3.6" strokeLinecap="round" />
         </g>
+      </g>
       </g>
       <path fill="none" stroke="#33304A" strokeWidth="21" strokeLinecap="round" strokeLinejoin="round" d="M-30.2 -67.4Q-32.3 -47.5 -40.4 -34.8" />
       <path fill="none" stroke="#F48C3C" strokeWidth="15" strokeLinecap="round" strokeLinejoin="round" d="M-30 -70Q-31.8 -48.2 -40.4 -34.8" />

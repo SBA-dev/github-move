@@ -64,14 +64,19 @@ export const Lili: DessinDuPersonnage = ({ humeur, id }) => (
       <g transform="translate(12.8 59.9)">
         {CHAUSSURE}
       </g>
+      <g data-signe="tutu-rose">
       <path fill="#F3C9F2" stroke="#33304A" strokeWidth="3" strokeLinejoin="round" d="M-44 -5 Q-37.7 28 -31.4 19 Q-25.1 28 -18.9 19 Q-12.6 28 -6.3 19 Q0 28 6.3 19 Q12.6 28 18.9 19 Q25.1 28 31.4 19 Q37.7 28 44 19 L44 -5 Q0 -1 -44 -5 Z" />
       <path fill="#D9A6DE" d="M13.2 8 Q41.8 -2 44 12 Q30.8 18 13.2 17 Z" />
+      </g>
+      <g data-signe="justaucorps-violet">
       <path fill="none" stroke="#b55bd6" strokeWidth="5" strokeLinecap="round" d="M-24.2 -5 Q0 2 24.2 -5" />
       <path fill="#b55bd6" stroke="#33304A" strokeWidth="3.4" strokeLinejoin="round" d="M-18 -40 Q-24 -12 -18.7 0 Q0 6 18.7 0 Q24 -12 18 -40 Q0 -47 -18 -40 Z" />
       <path fill="#8E3FB0" d="M5.4 -42 Q21 -30 18.7 0 Q13.2 4 7.7 3 Q19 -20 5.4 -42 Z" />
       <path fill="#D08AE8" d="M-16.2 -36 Q-7.2 -42 1.8 -40 Q-7.2 -37 -14.4 -30 Z" />
       <path fill="none" stroke="#FFFFFF" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" d="M-9 -44 Q0 -34 9 -44" />
+      </g>
       <g transform="translate(-9 -24)" />
+      <g data-signe="queue-de-cheval-haute">
       <g transform="translate(0 -48) translate(0 -26)">
         <path fill="#B8873E" stroke="#33304A" strokeWidth="3" strokeLinejoin="round" d="M-6.3 -22.1 Q0.8 -4.8 6.3 1.4 Q11.7 7.6 16.6 13.3 Q21.6 19 26.2 24.4 L30.8 29.9 Q38.3 41.7 38.5 51 L39.9 38 L48.2 45 Q43.3 40.2 42.9 25.1L42.9 25.1 Q38.9 9 35.1 1.4 Q31.2 -6.3 26.3 -13.6 Q21.4 -20.8 13.8 -26.4 L6.3 -31.9 Z" />
         <path fill="none" stroke="#8F6528" strokeWidth="3" strokeLinecap="round" d="M5.3 -8.4 Q16 4.6 20.7 10.7 Q25.4 16.8 29.4 22.8 Q33.5 28.8 36.4 35.1 L39.4 41.3" />
@@ -82,6 +87,7 @@ export const Lili: DessinDuPersonnage = ({ humeur, id }) => (
           <path d="M0 -1 l-6 -5 q-3 3 0 6 Z M0 -1 l6 -5 q3 3 0 6 Z" fill="#FF8FB8" stroke="#33304A" strokeWidth="1.6" strokeLinejoin="round" />
           <circle cy="-1" r="2" fill="#FFC9DE" stroke="#33304A" strokeWidth="1.2" />
         </g>
+      </g>
       </g>
       <path fill="#e8b58c" stroke="#33304A" strokeWidth="3" d="M-5.5 -52 V-38 H5.5 V-52 Z" />
       <path d="M-5.5 -52 V-44 Q0 -42 5.5 -44 V-52 Z" fill="#C9956E" />

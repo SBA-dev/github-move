@@ -60,6 +60,7 @@ export const AgentMax: DessinDuPersonnage = ({ humeur, id }) => (
           <stop offset="1" stopColor="#9FC8FF" stopOpacity=".35" />
         </radialGradient>
     </defs>
+      <g data-signe="pantalon">
       <path fill="none" stroke="#33304A" strokeWidth="23" strokeLinecap="round" strokeLinejoin="round" d="M-10.3 7.5Q-12.7 34.4 -14.7 57.8" />
       <path fill="none" stroke="#253B9C" strokeWidth="16" strokeLinecap="round" strokeLinejoin="round" d="M-10 4Q-12.5 32.9 -14.7 57.8" />
       <path fill="none" stroke="#1B2C78" strokeWidth="5.5" strokeLinecap="round" strokeLinejoin="round" d="M-8.1 22.2Q-9.1 33.8 -10.1 44.7" />
@@ -79,6 +80,8 @@ export const AgentMax: DessinDuPersonnage = ({ humeur, id }) => (
       <path fill="#253B9C" stroke="#33304A" strokeWidth="3" strokeLinejoin="round" d="M-22 -1 Q0 2 22 -1 L23 12 Q10.5 15 2.5 11 Q0 8 -2.5 11 Q-10.5 15 -23 12 Z" />
       <path fill="#1B2C78" d="M4.2 5 Q22 0 23 12 Q12.6 15 3.2 11 Z" />
       <path fill="none" stroke="#1B2C78" strokeWidth="2" strokeLinecap="round" d="M0 2 V9" />
+      </g>
+      <g data-signe="chemise-bleue">
       <path fill="#4C78E8" stroke="#33304A" strokeWidth="3.4" strokeLinejoin="round" d="M-18 -40 Q-24 -12 -21 1 Q0 4 21 1 Q24 -12 18 -40 Q0 -47 -18 -40 Z" />
       <path fill="#3450C8" d="M5.4 -42 Q21 -30 21 0 Q12.6 3 7.4 2 Q19 -20 5.4 -42 Z" />
       <path fill="#86A5F2" d="M-16.2 -36 Q-7.2 -42 1.8 -40 Q-7.2 -37 -14.4 -30 Z" />
@@ -99,9 +102,12 @@ export const AgentMax: DessinDuPersonnage = ({ humeur, id }) => (
         <rect x="-4.5" y="-8" width="8" height="6.5" rx="1.2" fill="#FFF7E0" stroke="#33304A" strokeWidth="1.4" />
         <path d="M-2.5 -6.2 H2 M-2.5 -4.4 H1.2 M-2.5 -2.6 H2" stroke="#8E9BBE" strokeWidth=".9" strokeLinecap="round" />
       </g>
+      </g>
+      <g data-signe="etoile-doree">
       <g transform="translate(-8 -25)">
         <path d="M0 -6 L1.7 -1.9 L6 -1.9 L2.7 .8 L3.8 5.2 L0 2.7 L-3.8 5.2 L-2.7 .8 L-6 -1.9 L-1.7 -1.9 Z" fill="#FFC93C" stroke="#33304A" strokeWidth="1.4" strokeLinejoin="round" />
         <circle r="1.5" fill="#FFF1A8" />
+      </g>
       </g>
       <path fill="#f2cba5" stroke="#33304A" strokeWidth="3" d="M-5.5 -52 V-38 H5.5 V-52 Z" />
       <path d="M-5.5 -52 V-44 Q0 -42 5.5 -44 V-52 Z" fill="#E3AE85" />
@@ -174,6 +180,7 @@ export const AgentMax: DessinDuPersonnage = ({ humeur, id }) => (
           </g>
           <path fill="#4a2f1d" stroke="#33304A" strokeWidth="3.6" strokeLinejoin="round" d="M-41 -14 Q-45 -46 0 -50 Q45 -46 41 -14 Q41 -5 36 -5 Q31 -5 31 -14 V-22 Q0 -30 -31 -22 V-14 Q-31 -5 -36 -5 Q-41 -5 -41 -14 Z" />
           <path fill="none" stroke="#70492E" strokeWidth="2.6" strokeLinecap="round" d="M-37 -10 Q-37 -20 -34 -26" />
+          <g data-signe="casquette-de-police">
           <path d="M-40 -34 Q-42 -70 0 -74 Q42 -70 40 -34 Q0 -42 -40 -34 Z" fill="#3450C8" stroke="#33304A" strokeWidth="3" strokeLinejoin="round" />
           <path d="M12 -70 Q36 -64 38 -36 Q24 -42 12 -42 Z" fill="#253B9C" />
           <path d="M-28 -56 Q-16 -66 -2 -66 Q-14 -62 -22 -52 Z" fill="#6484EA" />
@@ -181,6 +188,7 @@ export const AgentMax: DessinDuPersonnage = ({ humeur, id }) => (
           <path d="M-30 -33 Q0 -26 30 -33" fill="none" stroke="#5A5A70" strokeWidth="1.6" strokeLinecap="round" />
           <g transform="translate(0 -54)">
             <path d="M0 -7 L2 -2 L7 -2 L3 1 L4.4 6 L0 3 L-4.4 6 L-3 1 L-7 -2 L-2 -2 Z" fill="#FFC93C" stroke="#33304A" strokeWidth="1.4" strokeLinejoin="round" />
+          </g>
           </g>
         </g>
       </g>

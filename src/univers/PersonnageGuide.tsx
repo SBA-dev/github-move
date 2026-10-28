@@ -18,6 +18,9 @@ const DESSINS: Readonly<Record<CleUnivers, DessinDuPersonnage>> = {
   pompier: CapitaineSam,
 };
 
+/** Capitaine Sam garde son dessin d'avant la refonte. */
+const DESSINS_REDESSINES: ReadonlySet<CleUnivers> = new Set(["sports", "danse", "animaux", "princesse", "police"]);
+
 type Geste = "saute" | "penche" | "aucun";
 
 const MOUVEMENT_PAR_GESTE: Readonly<Record<Geste, TargetAndTransition>> = {
@@ -47,6 +50,7 @@ export function PersonnageGuide({ univers, humeur }: { readonly univers: Univers
       data-testid="personnage-guide"
       data-personnage-guide={univers.personnageGuide.nom}
       data-humeur={humeur}
+      {...(DESSINS_REDESSINES.has(univers.cle) ? { "data-dessin": "valide" } : {})}
       data-geste={geste}
       animate={MOUVEMENT_PAR_GESTE[geste]}
       transition={{ duration: DUREE_PAR_GESTE[geste], ease: "easeInOut" }}
