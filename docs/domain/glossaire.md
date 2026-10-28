@@ -275,6 +275,8 @@ Sous-domaine décidé à la validation n°1 du lot 1 (décision 0007). Ses terme
 | Parole entendue (à valider) | Phrase que la lecture à voix haute a lue jusqu'au bout. Une parole n'est pas entendue en Muet, quand la voix est bloquée, quand le navigateur ne sait pas lire à voix haute, ou quand le texte n'a rien à prononcer (#79). | Voix | parole lue, son joué |
 | Fin de la voix bloquée (à valider) | Moment où une voix bloquée signalée cesse de l'être : une lecture entendue ou le passage en Muet. Le message de voix bloquée disparaît ; un nouveau blocage, même dans la même ouverture de l'application, le fait réapparaître (#79, décisions 79.5, 79.6 et 79.10). | Voix | déblocage, voix réparée |
 | Voix bloquée : précisé par #79 (2026-10-25) | Note, sans changer la définition de **Voix bloquée** : « prévenu une fois » se lit « un seul message de voix bloquée à la fois, visible jusqu'à la fin de la voix bloquée » (décision 79.5). Après une fin de la voix bloquée, un nouveau blocage dans la même ouverture de l'application fait réapparaître le message (décision 79.10). | Voix | |
+| Effet sonore (à valider) | Son court, sans voix ni parole, joué pour un fait de la séance ou un bouton touché : un des 8 sons choisis par le PO (`docs/sons.md`). Il est joué avant la parole du personnage guide, jamais par-dessus. Motivation choisit l'effet sonore de chaque fait ; Voix le joue (#97). | Voix | bruitage, SFX, sound, jingle (seul) |
+| Muet, précisé par #97 (à valider) | Note, sans changer la définition de **Muet** : le Muet coupe aussi les effets sonores (texte de l'issue #97). La voix suspendue des écrans du parent aussi (question 97.13). | Voix | |
 
 ## Exploitation (#45)
 
