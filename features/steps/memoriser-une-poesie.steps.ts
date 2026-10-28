@@ -23,7 +23,7 @@ const observations = new WeakMap<Page, ObservationDUnVers[]>();
 
 // --- Lire les données de la poésie jouée
 
-function poesieJouee(page: Page): { titre: string; vers: string[] } {
+export function poesieJouee(page: Page): { titre: string; vers: string[] } {
   const exercice = leconCourante(page).exercices.find((candidat) => candidat.type === "memoriser");
   if (!exercice) throw new Error("La leçon ouverte n'a pas d'exercice memoriser");
   return { titre: exercice.titre as string, vers: exercice.vers as string[] };
@@ -52,7 +52,7 @@ function motsDe(vers: readonly string[]): string[] {
   return vers.flatMap((unVers) => [...unVers.matchAll(MOTS)].map((brut) => brut[0].replace(ELISION, "")).filter((mot) => mot.length >= 3));
 }
 
-function motsCachesDe(vers: readonly string[]): string[] {
+export function motsCachesDe(vers: readonly string[]): string[] {
   return vers.flatMap((unVers) => motCacheDe(unVers)?.mot ?? []);
 }
 
@@ -198,7 +198,7 @@ async function poserLesVersDansLOrdre(page: Page, vers: readonly string[]) {
   }
 }
 
-async function remettreTousLesVersDansLOrdre(page: Page) {
+export async function remettreTousLesVersDansLOrdre(page: Page) {
   await entrerDansLOrdreDesVers(page);
   await poserLesVersDansLOrdre(page, poesieJouee(page).vers);
   await expect(texteATrous(page)).toBeVisible({ timeout: 10_000 });

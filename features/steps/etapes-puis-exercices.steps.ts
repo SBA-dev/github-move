@@ -241,7 +241,7 @@ Given(/^Léa a un profil enfant préparé de niveau (\S+) dans l'univers « (.+)
   if (accueilSeul) await servirLaBibliothequeDeLAccueil(page);
   // Story #30 : les jours de séance sont lus sous RLS pour le vrai profil de Léa.
   // Story #96 : les écrans de l'enfant se jouent avec le vrai profil de Léa (parcours, médailles, séances, révision, épisode).
-  if ($tags.includes("@issue-96") || $tags.includes("@issue-24") || accueilSeul || $tags.includes("@issue-25") || $tags.includes("@issue-26") || $tags.includes("@issue-27") || $tags.includes("@issue-30") || cabaneSurLeServeur) {
+  if ($tags.includes("@issue-97") || $tags.includes("@issue-96") || $tags.includes("@issue-24") || accueilSeul || $tags.includes("@issue-25") || $tags.includes("@issue-26") || $tags.includes("@issue-27") || $tags.includes("@issue-30") || cabaneSurLeServeur) {
     await jouerAvecLeProfilReel(famille, monde, page);
   }
 });
