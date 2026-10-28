@@ -26,5 +26,6 @@ export class LecteurDEffetsSonoresEnMemoire implements LecteurDEffetsSonores {
 
   arreter(): void {
     this.arrets.push(1);
+    this.journal.push("arret-effet");
   }
 }

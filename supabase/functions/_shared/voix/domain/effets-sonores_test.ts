@@ -95,3 +95,61 @@ Deno.test("passer en Muet pendant un effet sonore ne l'arrête pas et la parole 
   assertEquals(lecteurDEffetsSonores.arrets, []);
   assertEquals(lecteur.lectures.length, 0);
 });
+
+Deno.test("voix suspendue, aucun effet sonore n'est joué ; après la reprise, ils le sont de nouveau", async () => {
+  const { lecture, lecteurDEffetsSonores } = uneLecture();
+  lecture.suspendre();
+
+  await lecture.jouer(["reponseJuste"]);
+  assertEquals(lecteurDEffetsSonores.effetsJoues, []);
+
+  lecture.reprendre();
+  await lecture.jouer(["reponseJuste"]);
+  assertEquals(lecteurDEffetsSonores.effetsJoues, ["reponseJuste"]);
+});
+
+Deno.test("suspendre la voix pendant un effet sonore arrête cet effet", async () => {
+  const { lecture, lecteurDEffetsSonores } = uneLecture();
+  lecteurDEffetsSonores.jouerSansTerminerAutomatiquement();
+  lecture.jouer(["reponseJuste"]);
+  await Promise.resolve();
+
+  lecture.suspendre();
+
+  assertEquals(lecteurDEffetsSonores.arrets.length, 1);
+});
+
+Deno.test("couper la voix pendant un effet sonore arrête cet effet", async () => {
+  const { lecture, lecteurDEffetsSonores } = uneLecture();
+  lecteurDEffetsSonores.jouerSansTerminerAutomatiquement();
+  lecture.jouer(["reponseJuste"]);
+  await Promise.resolve();
+
+  lecture.couperLaVoix();
+
+  assertEquals(lecteurDEffetsSonores.arrets.length, 1);
+});
+
+Deno.test("de nouveaux effets sonores arrêtent d'abord l'effet en cours", async () => {
+  const { lecture, lecteurDEffetsSonores, journal } = uneLecture();
+  lecteurDEffetsSonores.jouerSansTerminerAutomatiquement();
+  lecture.jouer(["reponseJuste"]);
+  await Promise.resolve();
+
+  lecture.jouer(["reponseFausse"]);
+  await Promise.resolve();
+
+  assertEquals(journal, ["effet:reponseJuste", "arret-effet", "effet:reponseFausse"]);
+});
+
+Deno.test("une nouvelle lecture arrête d'abord l'effet sonore en cours", async () => {
+  const { lecture, lecteurDEffetsSonores, journal } = uneLecture();
+  lecteurDEffetsSonores.jouerSansTerminerAutomatiquement();
+  lecture.jouer(["reponseJuste"]);
+  await Promise.resolve();
+
+  lecture.lire("Bravo !", { effetsAvant: ["pointDuRecipient"] });
+  await Promise.resolve();
+
+  assertEquals(journal, ["effet:reponseJuste", "arret-effet", "effet:pointDuRecipient"]);
+});
