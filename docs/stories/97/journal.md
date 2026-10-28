@@ -73,3 +73,22 @@ Puis câblage : adaptateur navigateur, `useVoix`, déroulement de la séance, r�
   - **Observation** : `lire` avec `effetsAvant` jouait l'effet par-dessus la parole en cours (invariant 3). Corrigé par `e51b645` (rouge) puis `83a70a0`.
   - **Données de scénarios** (`b98dcc2`, `po-acceptance`) : leçon déjà acquise rejouée, le seuil de la lanterne faisait entendre « découverte » ; « Accueil » mène à « Qui joue ? » (étape de #73).
 - Cycle 2 lancé, avec une revue du delta de production en parallèle.
+- Cycle 2 : **63/63** `@issue-97` sur `telephone` ; #17 « La félicitation est dite en entier… » 1/1 (régression levée) ; PWA (#8, #45, #97) 36/36 sur `tablette` et `telephone` (`1f1377c`). Le scénario hors ligne de #97 passe par le relais de test (`publier-lecon-de-test`) ; limite : `context.setOffline` n'atteint pas le service worker, le scénario vérifie l'effet et le précache. Étape « avant que le personnage guide parle » rendue stricte.
+- Revue du delta de production de l'étape E2E (`e575bde..33aa4b8`) : **APPROUVÉ**.
+- `@wip` retiré (`b3bf8b7`).
+
+### Point à signaler au PO
+
+- Un bouton touché pendant que le personnage guide parle ne coupe pas la parole et ne fait pas entendre « bouton touché » (exception à R7, déduite de #17 et de l'invariant 3). Si le PO préfère que le son coupe la parole, c'est une petite story.
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Durée, du lancement au merge | lancement 2026-10-28 07:17 UTC ; PR prête vers 19:00 UTC (merge : à compléter) |
+| Temps passé à attendre | PO : environ 55 min (97.2 à 97.19), puis environ 2 h (97.20 à 97.24) ; merge de #96 : environ 5 h (11:00 → 15:53), cadrage fini avant ; verrou : aucun ; `main` : aucune attente |
+| Tokens et coût | relevés par le responsable |
+| Cycles de review À CORRIGER | revues intermédiaires : 1 (bloc Voix) ; review complète : 2 (cycles 1 et 2), APPROUVÉ au cycle 3 ; delta de l'E2E : 0 |
+| Cycles E2E KO | 1 (5 KO : 2 bugs, 1 effet par-dessus la parole, 2 données de scénario) ; vert au cycle 2 |
+| Intégrations de `main` | 1 (`e0d9b79`, après le merge de #96), sans conflit |
+| Régression sur `main` après le merge | à compléter |
