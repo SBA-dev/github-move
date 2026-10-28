@@ -99,13 +99,13 @@ Deno.test("un nouvel épisode seul fait jouer la séance terminée puis la déco
 });
 
 Deno.test("un nouveau record déjà fêté à la fin de la fluence ne fait rejouer ni la grande victoire ni la séance terminée", () => {
-  const effets = effetsSonoresDeLaFin({ ...seanceSansEvenement, issueDuRecord: "nouveauRecord" });
+  const effets = effetsSonoresDeLaFin({ ...seanceSansEvenement, fluenceSeule: true, issueDuRecord: "nouveauRecord" });
 
   assertEquals(effets, []);
 });
 
 Deno.test("un premier record déjà fêté à la fin de la fluence ne fait rejouer ni la grande victoire ni la séance terminée", () => {
-  const effets = effetsSonoresDeLaFin({ ...seanceSansEvenement, issueDuRecord: "premierRecord" });
+  const effets = effetsSonoresDeLaFin({ ...seanceSansEvenement, fluenceSeule: true, issueDuRecord: "premierRecord" });
 
   assertEquals(effets, []);
 });
@@ -113,6 +113,7 @@ Deno.test("un premier record déjà fêté à la fin de la fluence ne fait rejou
 Deno.test("un record déjà fêté et un nouvel épisode font jouer seulement la découverte", () => {
   const effets = effetsSonoresDeLaFin({
     ...seanceSansEvenement,
+    fluenceSeule: true,
     issueDuRecord: "nouveauRecord",
     episodeOuvert: true,
   });
