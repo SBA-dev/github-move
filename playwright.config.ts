@@ -21,6 +21,9 @@ export default defineConfig({
   testDir,
   fullyParallel: true,
   workers: Number(process.env.E2E_WORKERS ?? 3),
+  // Captures de référence @visuel (réponse 96.9) : versionnées, sans suffixe de plateforme, seul le projet telephone en prend.
+  snapshotPathTemplate: "features/captures/{arg}-{projectName}{ext}",
+  expect: { toHaveScreenshot: { maxDiffPixelRatio: 0.01 } },
   use: {
     baseURL: "http://localhost:5173",
     trace: "retain-on-failure",
