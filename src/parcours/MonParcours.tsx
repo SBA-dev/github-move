@@ -1,4 +1,4 @@
-import { type KeyboardEvent, useRef } from "react";
+import { type KeyboardEvent, useCallback, useRef } from "react";
 import {
   type LeconDesClassesDAvant,
   type LeconDuParcours,
@@ -103,10 +103,15 @@ function ParcoursDuNiveau(
   const entrees = { ...lectures, niveau };
   const matieres = matieresDuParcours(entrees);
   const ouverte = matiereOuverte(matieres, matiereChoisie);
+  const codeDeLaMatiere = ouverte?.code;
+  const memoriser = useCallback(
+    (leconId: string | undefined) => {
+      if (codeDeLaMatiere !== undefined) onMemoriserLaProchaineLecon(codeDeLaMatiere, leconId);
+    },
+    [onMemoriserLaProchaineLecon, codeDeLaMatiere],
+  );
   if (!ouverte) return <p className="etiquette-sur-le-decor">{AUCUNE_LECON_POUR_LA_CLASSE}</p>;
   const parcours = parcoursDeLaMatiere(entrees, ouverte);
-  const codeDeLaMatiere = ouverte.code;
-  const memoriser = (leconId: string | undefined) => onMemoriserLaProchaineLecon(codeDeLaMatiere, leconId);
   return (
     <>
       <OngletsDesMatieres matieres={matieres} ouverte={ouverte.code} onChoisir={onChoisirLaMatiere} />
@@ -146,9 +151,9 @@ function OngletsDesMatieres({ matieres, ouverte, onChoisir }: PropsDesOnglets) {
     onglets.current.get(matiere.code)?.focus();
   };
   const surUneTouche = (evenement: KeyboardEvent) => {
-    const rang = matieres.findIndex((matiere) => matiere.code === ouverte);
+    const indexDeLaMatiere = matieres.findIndex((matiere) => matiere.code === ouverte);
     const voisine = { ArrowRight: 1, ArrowLeft: -1 }[evenement.key];
-    if (voisine !== undefined) choisir(matieres[(rang + voisine + matieres.length) % matieres.length]);
+    if (voisine !== undefined) choisir(matieres[(indexDeLaMatiere + voisine + matieres.length) % matieres.length]);
     else if (evenement.key === "Home") choisir(matieres[0]);
     else if (evenement.key === "End") choisir(matieres[matieres.length - 1]);
     else return;
