@@ -27,3 +27,11 @@
   - C4 dessins fixes des personnages guides (worktree à part) : `ecef5f0`, `68d694f`, `17916ab`. Effet « lunettes » corrigé sur Léo, Max, Lili (écart volontaire avec la maquette) ; couche arrière du tutu de Lili retirée. Bundle JS +11 kB gzip. Planche montrée au PO dans la session.
   - C2 boutons à ressort et transitions : `901deb3`, `9573d48`. Mesures : glissement ≈ 225 ms, fondu ≈ 238 ms, rien avec mouvements réduits ni vers les écrans du parent. E2E #25 verts ; 16 KO `@wip` de #29 (voix), dont 2 reproduits sans C2.
   - C3 décor et écrans du parent : en cours. #96.16 (bulle de Noisette de #73) laissée telle quelle en attendant le PO.
+
+## 2026-10-28
+
+- Redémarrage du conteneur pendant C3 et l'écriture des steps : rien de perdu (commits locaux). C3 : `af870d9`, `1e01e85`. Steps (worktree) fusionnés : `60d7674`.
+- E2E mise au point `@issue-96 or @issue-6`, `telephone` : 1er passage 119/138. Diagnostic `e2e-tester` : 10 bugs de step corrigés (`df796d3`, `b874e57`), 1 timeout ; 7 KO applicatifs corrigés par `implementer` (`9c77357` dessins validés et signes par partie, `8dca23d` touchers ignorés pendant l'arrivée d'un écran). Résultat : **136/138**.
+- 2 KO restants : scénarios de #6 qui attendent le paysage sur « Se connecter » (contredit 96.13). ESCALADE #96.17 publiée (reco : appliquer 96.13). #96.16 toujours en attente.
+- Contrôle de la règle absolue : l'objet à la ceinture d'Agent Max est la loupe de la maquette (manche brun, cercle doré, verre), pas une arme.
+- Leçon d'outillage : lancer les longues exécutions E2E avec `setsid nohup` (un serveur Vite perdu en cours de route sinon).
