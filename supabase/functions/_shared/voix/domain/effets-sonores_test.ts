@@ -93,7 +93,7 @@ Deno.test("passer en Muet pendant un effet sonore ne l'arrête pas et la parole 
   lecteurDEffetsSonores.terminerLEffetEnCours();
   await parole;
 
-  assertEquals(lecteurDEffetsSonores.arrets, []);
+  assertEquals(lecteurDEffetsSonores.nombreDArrets, 0);
   assertEquals(lecteur.lectures.length, 0);
 });
 
@@ -117,7 +117,7 @@ Deno.test("suspendre la voix pendant un effet sonore arrête cet effet", async (
 
   lecture.suspendre();
 
-  assertEquals(lecteurDEffetsSonores.arrets.length, 1);
+  assertEquals(lecteurDEffetsSonores.nombreDArrets, 1);
 });
 
 Deno.test("couper la voix pendant un effet sonore arrête cet effet", async () => {
@@ -128,7 +128,7 @@ Deno.test("couper la voix pendant un effet sonore arrête cet effet", async () =
 
   lecture.couperLaVoix();
 
-  assertEquals(lecteurDEffetsSonores.arrets.length, 1);
+  assertEquals(lecteurDEffetsSonores.nombreDArrets, 1);
 });
 
 Deno.test("de nouveaux effets sonores arrêtent d'abord l'effet en cours", async () => {
@@ -191,4 +191,45 @@ Deno.test("sans synthèse vocale, les effets sonores demandés avant la parole s
   await lecture.lire("Bravo !", { effetsAvant: ["reponseJuste"] });
 
   assertEquals(lecteurDEffetsSonores.effetsJoues, ["reponseJuste"]);
+});
+
+Deno.test("couper la voix pendant une suite d'effets sonores ne joue pas les suivants", async () => {
+  const { lecture, lecteurDEffetsSonores } = uneLecture();
+  lecteurDEffetsSonores.jouerSansTerminerAutomatiquement();
+  const suite = lecture.jouer(["reponseJuste", "pointDuRecipient"]);
+  await Promise.resolve();
+
+  lecture.couperLaVoix();
+  lecteurDEffetsSonores.terminerLEffetEnCours();
+  await suite;
+
+  assertEquals(lecteurDEffetsSonores.effetsJoues, ["reponseJuste"]);
+});
+
+Deno.test("couper la voix pendant l'effet sonore qui précède la parole empêche la parole", async () => {
+  const { lecture, lecteurDEffetsSonores, lecteur } = uneLecture();
+  lecteurDEffetsSonores.jouerSansTerminerAutomatiquement();
+  const parole = lecture.lire("Bravo !", { effetsAvant: ["reponseJuste"] });
+  await Promise.resolve();
+
+  lecture.couperLaVoix();
+  lecteurDEffetsSonores.terminerLEffetEnCours();
+
+  assertEquals(await parole, { entendue: false });
+  assertEquals(lecteur.lectures.length, 0);
+});
+
+Deno.test("deux lectures rapides avec effets sonores : seule la seconde parole est lue", async () => {
+  const { lecture, lecteurDEffetsSonores, lecteur } = uneLecture();
+  lecteurDEffetsSonores.jouerSansTerminerAutomatiquement();
+  const premiere = lecture.lire("Premier.", { effetsAvant: ["reponseJuste"] });
+  await Promise.resolve();
+  const seconde = lecture.lire("Second.", { effetsAvant: ["reponseFausse"] });
+  await Promise.resolve();
+
+  lecteurDEffetsSonores.terminerLEffetEnCours();
+  lecteurDEffetsSonores.terminerLEffetEnCours();
+  await Promise.all([premiere, seconde]);
+
+  assertEquals(lecteur.lectures.map((demandee) => demandee.phrases.map((phrase) => phrase.phrase)), [["Second."]]);
 });

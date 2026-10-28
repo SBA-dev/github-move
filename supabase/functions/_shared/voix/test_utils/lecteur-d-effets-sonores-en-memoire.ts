@@ -3,7 +3,8 @@ import type { LecteurDEffetsSonores } from "../domain/lecteur-d-effets-sonores.t
 
 export class LecteurDEffetsSonoresEnMemoire implements LecteurDEffetsSonores {
   readonly effetsJoues: EffetSonore[] = [];
-  readonly arrets: number[] = [];
+  nombreDArrets = 0;
+  private echec = false;
   private finsEnAttente: Array<() => void> = [];
   private finAutomatique = true;
 
@@ -16,8 +17,6 @@ export class LecteurDEffetsSonoresEnMemoire implements LecteurDEffetsSonores {
   terminerLEffetEnCours(): void {
     this.finsEnAttente.shift()?.();
   }
-
-  private echec = false;
 
   faireEchouerLesEffets(): void {
     this.echec = true;
@@ -32,7 +31,7 @@ export class LecteurDEffetsSonoresEnMemoire implements LecteurDEffetsSonores {
   }
 
   arreter(): void {
-    this.arrets.push(1);
+    this.nombreDArrets++;
     this.journal.push("arret-effet");
   }
 }
