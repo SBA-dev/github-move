@@ -5,7 +5,7 @@ Scénarios : `features/97-retours-animes-et-sonores.feature`. Tags :
 - aucun `@a-valider` : toutes les questions sont réglées ; les scénarios réglés par le PO portent un commentaire « Décision 97.n » ;
 - `@pwa` sur le scénario hors ligne, lancé avec `playwright.pwa.config.ts` comme ceux de #8.
 
-État : **cadrage seulement**. #97 dépend de #96 (PR #124, non mergée) : aucun code avant son merge.
+État : **livrée**. Le code a été fait après le merge de #96 (PR #124) et les scénarios sont verts.
 
 ## Objectif
 
