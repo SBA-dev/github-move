@@ -16,10 +16,21 @@ import {
   taperLesChiffres,
   valider,
 } from "./calcul-fluence-addition.steps.ts";
-import { BIBLIOTHEQUE, bulle, entendu, etat, jouerLaSeanceComplete, type LeconBrute } from "./etapes-puis-exercices.steps.ts";
+import { BIBLIOTHEQUE, bulle, entendu, etat, injecter, jouerLaSeanceComplete, type LeconBrute } from "./etapes-puis-exercices.steps.ts";
 import { attendreLaFinDeLaSeance, injecterLesLeconsDeTestDesSons, jouerJusquALaFinDeLaSeance, jouerUnExerciceSeul, partie } from "./etoiles-et-fin-de-seance.steps.ts";
-import { avancerJusquAuxChoix, bulleDeChoix, demarrer, leconDeLExercice, positionDeLExercice, textesDesChoix } from "./exercices-a-choix.steps.ts";
-import { Before, Given, test, Then, When } from "./fixtures.ts";
+import {
+  avancerJusquAuxChoix,
+  bulleDeChoix,
+  demarrageDeLExercice,
+  demarrer,
+  etatDesChoix,
+  leconAChoix,
+  leconDeLExercice,
+  positionDeLExercice,
+  QUESTIONS_DE_TEST,
+  textesDesChoix,
+} from "./exercices-a-choix.steps.ts";
+import { Before, BeforeStep, Given, test, Then, When } from "./fixtures.ts";
 import { motsCachesDe, poesieJouee, remettreTousLesVersDansLOrdre } from "./memoriser-une-poesie.steps.ts";
 import { LECONS_DU_TEST_DE_DEPART, servirLaBibliothequeDuTestDeDepart, suivreLesLecturesDuResultat } from "../support/bibliotheque-du-test-de-depart.ts";
 import { estSurUnProfilReel, rechargerAvecLeProfilReel } from "./profil-reel.ts";
@@ -261,6 +272,27 @@ Before({ tags: "@issue-97" }, async ({ page, $testInfo }) => {
   await page.addInitScript(installerLesFauxDeLaStory97, { ...configuration(page) });
 });
 
+// Un bouton touché pendant que le personnage guide parle ne joue rien : dans le vrai navigateur la parole finit d'elle-même,
+// la fausse synthèse ne finit que sur demande. Avant ces gestes, Léa a donc attendu la fin de la parole.
+const GESTES_APRES_LA_PAROLE = ["Léa rejoue", "Léa ouvre « Mes médailles » depuis son accueil"];
+
+BeforeStep({ tags: "@issue-97" }, async ({ page, $step }) => {
+  if (GESTES_APRES_LA_PAROLE.includes($step.title.replace(/^(Étant donné que|Quand|Alors|Et que|Et|Mais) /, ""))) await laisserLaParoleFinir(page);
+});
+
+/** Finit les paroles une à une (la phrase de fin en a plusieurs), jusqu'à ce que plus rien ne se dise pendant un moment. */
+async function laisserLaParoleFinir(page: Page): Promise<void> {
+  let precedent = -1;
+  await expect.poll(async () => {
+    await terminerLaLecture(page);
+    await laisserPasserLeDelaiDeLecture(page);
+    const { paroles } = await observer(page);
+    const stable = paroles.length === precedent;
+    precedent = paroles.length;
+    return stable;
+  }, { intervals: [100], timeout: DELAI_DE_L_ATTENTE_MS }).toBe(true);
+}
+
 // --- Lire ce que le navigateur a noté
 
 const OBSERVATION_VIDE: Observation = { entrees: [], vu: [], annonces: [], marque: 0, marqueParoles: 0, paroles: [] };
@@ -395,7 +427,7 @@ async function effetPuisParole(page: Page, effets: readonly string[], nature: Na
   const observation = await observer(page);
   const effet = trouve?.effet as Entree;
   for (const entree of depuisLaMarque(observation).filter((candidat) => fichiers.includes(candidat.nom))) {
-    expect(sansChevauchement(observation, entree), `l'effet « ${entree.nom} » joue seul, avant toute parole`).toBe(true);
+    expect(sansChevauchement(observation, entree) && sansParoleEnCours(entree), `l'effet « ${entree.nom} » joue seul, avant toute parole`).toBe(true);
   }
   await verifierLaNature(page, nature);
   await verifierQueLaParoleEstCelleDeLaBulle(page, trouve?.parole ?? "");
@@ -873,3 +905,18 @@ GivenDeLaStory97(/^Léa a terminé une séance de l'exercice « ([^«»]+) » se
 function toutesLesLeconsDeLaPage(page: Page): LeconBrute[] {
   return [...etat(page).injectees, ...BIBLIOTHEQUE];
 }
+
+// --- Sans réseau (scénario @pwa, build de production) : l'interception de page ne voit pas les requêtes du service worker.
+// Le relais de test (features/support/serveur-pwa.mjs) ajoute donc la leçon de test à la bibliothèque, et le service worker la garde.
+
+const { Given: GivenHorsLigne } = createBdd(test, { tags: "@issue-97 and @pwa" });
+
+GivenHorsLigne(/^Léa joue la question de test « (.+) »$/, async ({ page, baseURL }, question: string) => {
+  const donnees = QUESTIONS_DE_TEST[question];
+  if (!donnees) throw new Error(`Question de test inconnue : ${question}`);
+  const lecon = leconAChoix("test-question-a-choix", question, donnees.choix, donnees.reponse);
+  const reponse = await fetch(`${baseURL}/__test/publier-lecon-de-test`, { method: "POST", body: JSON.stringify(lecon) });
+  expect(reponse.ok, "le relais de test garde la leçon").toBe(true);
+  await injecter(page, lecon);
+  etatDesChoix(page).demarrage = demarrageDeLExercice(page, lecon, undefined);
+});

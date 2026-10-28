@@ -10,7 +10,7 @@ const SUFFIXE_VERSION = "-test-nouvelle";
 const MOTIF_VERSION = /const VERSION = "([^"]*)"/;
 const LECON_AJOUTEE = "lecon-ajoutee-par-le-test";
 
-const etat = { versionPubliee: false, leconPubliee: false };
+const etat = { versionPubliee: false, leconPubliee: false, leconDeTest: null };
 
 function interroger(requete) {
   return new Promise((resolve, reject) => {
@@ -39,21 +39,40 @@ function versionPubliee(source) {
   return { source: source.replace(MOTIF_VERSION, `const VERSION = "${trouvee[1]}${SUFFIXE_VERSION}"`), version: `${trouvee[1]}${SUFFIXE_VERSION}` };
 }
 
+function avecLeconDeTest(texte) {
+  return JSON.stringify([...JSON.parse(texte), etat.leconDeTest]);
+}
+
+function corpsDe(requete) {
+  return new Promise((resolve, reject) => {
+    const morceaux = [];
+    requete.on("data", (m) => morceaux.push(m));
+    requete.on("end", () => resolve(Buffer.concat(morceaux).toString("utf8")));
+    requete.on("error", reject);
+  });
+}
+
 function avecLeconAjoutee(texte) {
   const lecons = JSON.parse(texte);
   const ajoutee = { ...lecons[0], id: LECON_AJOUTEE, titre: "Leçon ajoutée par le test" };
   return JSON.stringify([...lecons, ajoutee]);
 }
 
-async function commande(nom, reponse) {
+async function commande(nom, reponse, requete) {
   if (nom === "reinitialiser") {
     etat.versionPubliee = false;
     etat.leconPubliee = false;
+    etat.leconDeTest = null;
     return repondre(reponse, 200, { "content-type": "application/json" }, Buffer.from("{}"));
   }
   if (nom === "publier-lecon") {
     etat.leconPubliee = true;
     return repondre(reponse, 200, { "content-type": "application/json" }, Buffer.from(JSON.stringify({ id: LECON_AJOUTEE })));
+  }
+  if (nom === "publier-lecon-de-test") {
+    // #97 : la leçon de test (corps JSON) est ajoutée à la bibliothèque, que le service worker garde ensuite pour le hors ligne.
+    etat.leconDeTest = JSON.parse(await corpsDe(requete));
+    return repondre(reponse, 200, { "content-type": "application/json" }, Buffer.from("{}"));
   }
   if (nom === "publier-version") {
     const sw = await interroger({ url: "/sw.js", method: "GET", headers: {} });
@@ -72,6 +91,9 @@ async function relayer(requete, reponse) {
     const publiee = versionPubliee(amont.corps.toString("utf8"));
     if (publiee !== null) return repondre(reponse, 200, amont.entetes, Buffer.from(publiee.source));
   }
+  if (chemin === "/bibliotheque.json" && etat.leconDeTest !== null && amont.statut === 200) {
+    return repondre(reponse, 200, amont.entetes, Buffer.from(avecLeconDeTest(amont.corps.toString("utf8"))));
+  }
   if (chemin === "/bibliotheque.json" && etat.leconPubliee && amont.statut === 200) {
     return repondre(reponse, 200, amont.entetes, Buffer.from(avecLeconAjoutee(amont.corps.toString("utf8"))));
   }
@@ -81,7 +103,7 @@ async function relayer(requete, reponse) {
 http
   .createServer((requete, reponse) => {
     const traitement = requete.method === "POST" && requete.url?.startsWith("/__test/")
-      ? commande(requete.url.slice("/__test/".length), reponse)
+      ? commande(requete.url.slice("/__test/".length), reponse, requete)
       : relayer(requete, reponse);
     traitement.catch(() => {
       reponse.writeHead(502);
