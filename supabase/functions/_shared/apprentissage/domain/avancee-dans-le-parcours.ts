@@ -11,6 +11,12 @@ export function avanceeDansLeParcours(
 ): AvanceeDansLeParcours | undefined {
   if (prochaineLeconConnue === undefined || !estDevenueReussie(prochaineLeconConnue, parcours)) return undefined;
   const nouvelleProchaineLecon = parcours.prochaineLecon;
+  if (
+    nouvelleProchaineLecon !== undefined &&
+    placeDe(nouvelleProchaineLecon, parcours) < placeDe(prochaineLeconConnue, parcours)
+  ) {
+    return undefined;
+  }
   return {
     depuis: prochaineLeconConnue,
     jusqua: nouvelleProchaineLecon === undefined
@@ -25,4 +31,8 @@ function estDevenueReussie(lecon: LeconId, parcours: Parcours): boolean {
       uneLecon.lecon === lecon &&
       (uneLecon.etat.genre === "reussie" || uneLecon.etat.genre === "reussieAuTestDeDepart"),
   );
+}
+
+function placeDe(lecon: LeconId, parcours: Parcours): number {
+  return parcours.lecons.findIndex((uneLecon) => uneLecon.lecon === lecon);
 }
