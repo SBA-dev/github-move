@@ -2,7 +2,6 @@ import { animate } from "motion";
 
 const ENFONCEMENT_EN_PX = 3;
 const DUREE_MINIMALE_ENFONCE_EN_MS = 90;
-const ASSOMBRISSEMENT = "color-mix(in srgb, %COULEUR% 82%, black)";
 
 type Registre = "enfant" | "parent";
 
@@ -11,7 +10,6 @@ type Pression = {
   readonly depuis: number;
   readonly registre: Registre;
   readonly mouvementsReduits: boolean;
-  readonly fondAvant: string;
   readonly reliefAvant: string;
   readonly reliefEnfonce: string | undefined;
   minuteur?: ReturnType<typeof setTimeout>;
@@ -36,18 +34,15 @@ function reliefEnfonceDe(bouton: HTMLButtonElement): string | undefined {
 }
 
 function enfoncer(bouton: HTMLButtonElement): Pression {
-  const style = getComputedStyle(bouton);
   const pression: Pression = {
     bouton,
     depuis: performance.now(),
     registre: registreDe(bouton),
     mouvementsReduits: matchMedia("(prefers-reduced-motion: reduce)").matches,
-    fondAvant: bouton.style.backgroundColor,
     reliefAvant: bouton.style.boxShadow,
     reliefEnfonce: reliefEnfonceDe(bouton),
   };
   bouton.dataset.bouton = "enfonce";
-  bouton.style.backgroundColor = ASSOMBRISSEMENT.replace("%COULEUR%", style.backgroundColor);
   if (!pression.mouvementsReduits) {
     if (pression.reliefEnfonce) bouton.style.boxShadow = pression.reliefEnfonce;
     animate(bouton, { y: ENFONCEMENT_EN_PX }, { duration: 0.06, ease: "easeOut" });
@@ -57,7 +52,6 @@ function enfoncer(bouton: HTMLButtonElement): Pression {
 
 function laisserRevenir(pression: Pression): void {
   const { bouton } = pression;
-  bouton.style.backgroundColor = pression.fondAvant;
   if (pression.mouvementsReduits) {
     delete bouton.dataset.bouton;
     return;
@@ -91,7 +85,7 @@ export function brancherLeRessortDesBoutons(): () => void {
     pression.minuteur = setTimeout(() => terminer(pression), reste);
   };
   const presser = (bouton: HTMLButtonElement | null) => {
-    if (!bouton || bouton.disabled) return;
+    if (!bouton || bouton.disabled || bouton.ariaDisabled === "true") return;
     if (courante) terminer(courante);
     courante = enfoncer(bouton);
   };

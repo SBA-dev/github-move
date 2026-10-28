@@ -125,8 +125,8 @@ button {
   cursor: pointer;
 }
 button:hover { background: var(--principale-foncee); }
-/* Un bouton pressé s'enfonce (Motion pilote `transform` ; ici, le relief) : le fond s'assombrit aussi avec les mouvements réduits. */
-button[data-bouton] { transition: box-shadow var(--duree-courte) ease-out; }
+/* Un bouton pressé s'enfonce (Motion pilote `transform`) : le relief change à l'instant et le fond s'assombrit, même avec les mouvements réduits. */
+button[data-bouton="enfonce"] { filter: brightness(.82); }
 button[data-son="muet"] { background: var(--principale-foncee); }
 .nom-application button { font-size: inherit; }
 .enfant {
@@ -347,7 +347,7 @@ button:focus-visible, summary:focus-visible { outline: 3px solid var(--texte); o
   font-weight: 700;
   overflow-wrap: anywhere;
   cursor: pointer;
-  transition: opacity .3s, transform .3s;
+  transition: opacity .3s, scale .3s;
 }
 .bulle-de-choix[aria-disabled="true"], .reecouter[aria-disabled="true"] { opacity: .45; cursor: default; }
 .je-ne-sais-pas {
@@ -370,7 +370,8 @@ button:focus-visible, summary:focus-visible { outline: 3px solid var(--texte); o
   animation: brille 1.2s ease-in-out infinite alternate;
 }
 @keyframes brille { from { box-shadow: 0 0 0 4px var(--surbrillance), 0 0 8px 2px var(--surbrillance); } to { box-shadow: 0 0 0 8px var(--surbrillance), 0 0 22px 10px var(--surbrillance); } }
-.bulle-de-choix[data-eclatee="true"] { opacity: 0; transform: scale(1.5); }
+/* `scale` et non `transform` : Motion pilote `transform` pour le ressort du bouton, l'éclatement ne doit pas lutter avec lui. */
+.bulle-de-choix[data-eclatee="true"] { opacity: 0; scale: 1.5; }
 .question:hover { background: var(--surface); }
 .texte-a-trous { max-width: min(100%, 36rem); margin: 0; padding: 12px 18px; border-radius: var(--rayon); background: var(--surface); font-size: 1.25rem; line-height: 1.6; overflow-wrap: anywhere; }
 .trou { display: inline-block; min-width: 2.5rem; padding: 0 6px; border-bottom: 3px solid var(--contour); text-align: center; font-weight: 700; }
