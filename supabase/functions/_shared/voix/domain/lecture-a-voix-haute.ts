@@ -40,6 +40,7 @@ type OptionsDeLecture = {
   langue?: string;
   choix?: ChoixDeVoix;
   lent?: boolean;
+  effetsAvant?: readonly EffetSonore[];
   onMot?: (rang: number) => void;
   onFin?: () => void;
 };
@@ -77,6 +78,7 @@ export class LectureAVoixHaute {
 
   async lire(brut: string, options: OptionsDeLecture = {}): Promise<ParoleEntendue> {
     if (this.etat === "muet" || this.voixSuspendue) return PAROLE_NON_ENTENDUE;
+    if (options.effetsAvant) await this.jouer(options.effetsAvant);
     return await this.lireLeTexte(brut, options);
   }
 
