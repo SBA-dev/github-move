@@ -64,3 +64,12 @@ Deno.test("quand la dernière leçon de la matière est réussie, l'avancée va 
 
   assertEquals(avanceeDansLeParcours(c.id, parcours), { depuis: c.id, jusqua: { genre: "finDuParcours" } });
 });
+
+Deno.test("si la prochaine leçon connue n'est pas réussie, il n'y a pas d'avancée, même si une leçon plus loin est devenue réussie", () => {
+  const parcours = parcoursDeLaMatiere(
+    { lecons: [a, b, c], niveau: Niveau.de("CE1"), meilleuresEtoiles: new Map([[c.id, Etoiles.de(1)]]) },
+    a.matiere,
+  );
+
+  assertEquals(avanceeDansLeParcours(a.id, parcours), undefined);
+});
