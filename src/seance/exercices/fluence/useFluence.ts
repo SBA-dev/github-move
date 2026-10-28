@@ -125,12 +125,11 @@ export function useFluence(
   }, [seance, horloge, record, estFigee, figer, sequence, faireSilence, annoncerLAvancement, dire, vivant, attendreLEcranSuivant]);
 
   /** Pendant le chrono, chaque calcul a son effet sonore, sans point du récipient et sans parole ; une réponse donnée après la fin du temps n'est pas prise. */
-  const reagirAuCalcul = useCallback((juste: boolean) => {
-    const questionsReussies = seance.avancement().questionsReussies;
+  const reagirAuCalcul = useCallback((juste: boolean, questionsReussiesAvant: number) => {
     const effets = juste
       ? effetsSonoresApresUneBonneReponse({
-        questionsReussiesAvant: questionsReussies,
-        questionsReussiesApres: questionsReussies,
+        questionsReussiesAvant,
+        questionsReussiesApres: seance.avancement().questionsReussies,
         exerciceComplete: false,
         pendantLeChronoDUneFluence: true,
       })
@@ -145,8 +144,9 @@ export function useFluence(
     const fluence = seance.fluenceEnCours(maintenant);
     if (!fluence?.demarree || estFigee.current) return;
     if (fluence.finie) return await terminer(suite);
+    const questionsReussiesAvant = seance.avancement().questionsReussies;
     const resultat = seance.repondre(Reponse.nombre(nombre), maintenant);
-    if (resultat !== "dejaEcartee") reagirAuCalcul(resultat === "juste");
+    if (resultat !== "dejaEcartee") reagirAuCalcul(resultat === "juste", questionsReussiesAvant);
     redessiner();
   }, [seance, horloge, estFigee, terminer, reagirAuCalcul, redessiner]);
 

@@ -78,16 +78,19 @@ async function cachePuisReseau(requete) {
 // Safari ne lit un son que si le serveur répond aux requêtes « Range » par un 206 : on le fait depuis le cache.
 async function sonDuCache(requete) {
   const reponse = await cachePuisReseau(new Request(requete.url));
-  const plage = /^bytes=(\d+)-(\d*)$/.exec(requete.headers.get("range") ?? "");
-  if (!plage || !reponse.ok) return reponse;
+  const plage = /^bytes=(\d*)-(\d*)$/.exec(requete.headers.get("range") ?? "");
+  if (!plage || (plage[1] === "" && plage[2] === "") || !reponse.ok) return reponse;
   const octets = await reponse.arrayBuffer();
-  const debut = Number(plage[1]);
-  const fin = plage[2] === "" ? octets.byteLength - 1 : Math.min(Number(plage[2]), octets.byteLength - 1);
+  const taille = octets.byteLength;
+  const suffixe = plage[1] === "";
+  const debut = suffixe ? Math.max(0, taille - Number(plage[2])) : Number(plage[1]);
+  if (debut >= taille) return new Response(null, { status: 416, headers: { "content-range": `bytes */${taille}` } });
+  const fin = suffixe || plage[2] === "" ? taille - 1 : Math.min(Number(plage[2]), taille - 1);
   return new Response(octets.slice(debut, fin + 1), {
     status: 206,
     headers: {
       "content-type": "audio/mpeg",
-      "content-range": `bytes ${debut}-${fin}/${octets.byteLength}`,
+      "content-range": `bytes ${debut}-${fin}/${taille}`,
       "content-length": String(fin - debut + 1),
     },
   });

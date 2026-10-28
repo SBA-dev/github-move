@@ -24,7 +24,7 @@ export function useRetourDe<E extends HTMLElement>(cible: string) {
     const animation = genre === "juste" ? rebondir(element) : balancer(element);
     void animation.then(() => setMouvement(undefined));
     return () => animation.cancel();
-  }, [numero]);
+  }, [numero, genre, mouvementsReduits]);
 
   const attributs = {
     "data-retour": mouvement,
