@@ -80,3 +80,15 @@ export function annonceDuBlocDesClassesDAvant(nombre: number): string {
 export function annonceDeLaLeconDesClassesDAvant(lecon: { readonly titre: string; readonly niveau: Niveau; readonly etat: EtatDansLeParcours }): string {
   return `${lecon.titre}, ${lecon.niveau.valeur} : ${reussiteDeLEtat(lecon.etat)}`;
 }
+
+export const SOUS_TITRE_DU_PARCOURS = "Ma carte au trésor";
+
+/** Le nom de l'arrêt où le personnage guide se tient quand la matière est réussie. */
+export const NOM_DE_LA_FIN_DU_DESSIN = "fin";
+
+/** Ce que lit un lecteur d'écran quand le personnage guide arrive, une seule fois. */
+export function annonceDeLArriveeDuPersonnageGuide(nomDuPersonnageGuide: string, arret: string): string {
+  return arret === NOM_DE_LA_FIN_DU_DESSIN
+    ? `${nomDuPersonnageGuide} arrive à la fin du parcours`
+    : `${nomDuPersonnageGuide} arrive à la leçon ${arret}`;
+}
