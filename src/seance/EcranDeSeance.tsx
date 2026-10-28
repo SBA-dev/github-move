@@ -79,7 +79,7 @@ function commencerLaSeance(
 
 export function EcranDeSeance({ leconId, ...reste }: Props) {
   const chargee = useLecon(leconId, reste.profilId);
-  if (chargee.type === "chargement") return <p>Chargement de la leçon…</p>;
+  if (chargee.type === "chargement") return <p className="etiquette-sur-le-decor">Chargement de la leçon…</p>;
   if (chargee.type === "introuvable") return <JeuIntrouvable onRetour={reste.onRetour} />;
   return <SeanceDeLaLecon lecon={chargee.lecon} {...reste} />;
 }
@@ -114,7 +114,7 @@ type PropsDUnePartie = PropsDeLaLecon & { readonly onRejouer: () => void };
 
 function UnePartie({ lecon, exercice, profilId, ...reste }: PropsDUnePartie) {
   const facilite = useFaciliteDeLaSeance(profilId, lecon);
-  if (facilite === undefined) return <p>Chargement de la leçon…</p>;
+  if (facilite === undefined) return <p className="etiquette-sur-le-decor">Chargement de la leçon…</p>;
   return <PartieCommencee lecon={lecon} exercice={exercice} profilId={profilId} facilite={facilite} {...reste} />;
 }
 

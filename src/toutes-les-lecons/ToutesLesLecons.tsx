@@ -43,8 +43,8 @@ export function ToutesLesLecons({ profil, univers, choix, onOuvrirLaLecon }: Pro
         <PersonnageGuide univers={univers} humeur="content" />
         <h2 id="titre-de-toutes-les-lecons">Toutes les leçons</h2>
       </div>
-      {lectures === undefined && <p role="status">Chargement des leçons…</p>}
-      {lectures !== undefined && niveau === undefined && <p>{AUCUNE_LECON_POUR_LA_CLASSE}</p>}
+      {lectures === undefined && <p role="status" className="etiquette-sur-le-decor">Chargement des leçons…</p>}
+      {lectures !== undefined && niveau === undefined && <p className="etiquette-sur-le-decor">{AUCUNE_LECON_POUR_LA_CLASSE}</p>}
       {lectures !== undefined && niveau !== undefined && (
         <LeconsDuNiveau entrees={{ ...lectures, niveau }} choix={choix} onOuvrirLaLecon={onOuvrirLaLecon} />
       )}

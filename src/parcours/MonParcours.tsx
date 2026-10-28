@@ -45,8 +45,8 @@ export function MonParcours(
         <PersonnageGuide univers={univers} humeur="content" />
         <h2 id="titre-de-mon-parcours">Mon parcours</h2>
       </div>
-      {lectures === undefined && <p role="status">Chargement du parcours…</p>}
-      {lectures !== undefined && niveau === undefined && <p>{AUCUNE_LECON_POUR_LA_CLASSE}</p>}
+      {lectures === undefined && <p role="status" className="etiquette-sur-le-decor">Chargement du parcours…</p>}
+      {lectures !== undefined && niveau === undefined && <p className="etiquette-sur-le-decor">{AUCUNE_LECON_POUR_LA_CLASSE}</p>}
       {lectures !== undefined && niveau !== undefined && (
         <ParcoursDuNiveau
           lectures={lectures}
@@ -70,7 +70,7 @@ function ParcoursDuNiveau(
   const entrees = { ...lectures, niveau };
   const matieres = matieresDuParcours(entrees);
   const ouverte = matiereOuverte(matieres, matiereChoisie);
-  if (!ouverte) return <p>{AUCUNE_LECON_POUR_LA_CLASSE}</p>;
+  if (!ouverte) return <p className="etiquette-sur-le-decor">{AUCUNE_LECON_POUR_LA_CLASSE}</p>;
   const parcours = parcoursDeLaMatiere(entrees, ouverte);
   return (
     <>

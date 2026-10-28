@@ -528,12 +528,13 @@ button.tuile .nom-de-la-tuile, button.tuile .nom-de-la-matiere { font-size: 1.1r
   background: var(--surface-voilee);
 }
 
-/* Règle générale : un texte de l'écran de l'enfant posé directement sur le paysage est dans une étiquette en --surface
+/* Règle générale (classe .etiquette-sur-le-decor pour tout nouveau texte) : un texte de l'écran de l'enfant posé directement sur le paysage est dans une étiquette en --surface
    (opaque), au contour des panneaux d'aventure. Le contraste est ainsi celui de --texte sur --surface, quel que soit l'univers. */
 :is(
   .parcours-de-la-matiere > h3, .toutes-les-lecons h3, .choix-des-lecons label, .sous-titre-de-l-histoire,
   .position-de-l-episode, .page-de-la-lecon > p, .seance > p, [data-testid="niveau-et-matiere"],
-  [data-testid="ensuite"], [data-testid="sous-titre-du-test-de-depart"], [data-testid="sous-titre-de-la-revision"]
+  [data-testid="ensuite"], [data-testid="sous-titre-du-test-de-depart"], [data-testid="sous-titre-de-la-revision"],
+  .etiquette-sur-le-decor
 ) {
   padding: 4px 14px;
   border: var(--epaisseur-du-contour) solid var(--contour);
@@ -542,7 +543,6 @@ button.tuile .nom-de-la-tuile, button.tuile .nom-de-la-matiere { font-size: 1.1r
   color: var(--texte);
   box-shadow: var(--ombre-de-panneau);
 }
-.annonce-d-avancement { background: var(--surface); color: var(--texte); }
 
 /* Mode dys du profil en cours : tout en Andika (titres et boutons compris), lettres, mots et lignes espacés, syllabes en couleurs alternées. */
 [data-mode-dys="true"] {
