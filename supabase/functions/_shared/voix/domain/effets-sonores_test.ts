@@ -10,9 +10,11 @@ import { ChoixDeVoixEnMemoire } from "../test_utils/choix-de-voix-en-memoire.ts"
 const CARACTERE_NOISETTE: CaractereDeLaVoix = { sexe: "feminine", hauteur: 1.25, rythme: 1 };
 
 function uneLecture() {
-  const lecteurDEffetsSonores = new LecteurDEffetsSonoresEnMemoire();
+  const journal: string[] = [];
+  const lecteur = new LecteurEnMemoire(journal);
+  const lecteurDEffetsSonores = new LecteurDEffetsSonoresEnMemoire(journal);
   const lecture = new LectureAVoixHaute({
-    lecteur: new LecteurEnMemoire(),
+    lecteur,
     lecteurDEffetsSonores,
     voixDeLAppareil: voixEnMemoire([]),
     choixDeVoix: new ChoixDeVoixEnMemoire(),
@@ -22,7 +24,7 @@ function uneLecture() {
     onVoixBloquee: () => {},
     onFinDeLaVoixBloquee: () => {},
   });
-  return { lecture, lecteurDEffetsSonores };
+  return { lecture, lecteurDEffetsSonores, lecteur, journal };
 }
 
 Deno.test("une suite d'effets sonores est jouée dans l'ordre demandé", async () => {
@@ -48,4 +50,25 @@ Deno.test("un effet sonore ne commence qu'après la fin de l'effet précédent",
 
   lecteurDEffetsSonores.terminerLEffetEnCours();
   await suite;
+});
+
+Deno.test("les effets sonores passent avant la parole", async () => {
+  const { lecture, journal } = uneLecture();
+
+  await lecture.lire("Bravo !", { effetsAvant: ["reponseJuste"] });
+
+  assertEquals(journal, ["effet:reponseJuste", "parole"]);
+});
+
+Deno.test("la parole ne commence qu'à la fin du dernier effet sonore", async () => {
+  const { lecture, lecteurDEffetsSonores, lecteur } = uneLecture();
+  lecteurDEffetsSonores.jouerSansTerminerAutomatiquement();
+
+  const parole = lecture.lire("Bravo !", { effetsAvant: ["reponseJuste"] });
+  await Promise.resolve();
+  assertEquals(lecteur.lectures.length, 0);
+
+  lecteurDEffetsSonores.terminerLEffetEnCours();
+  await parole;
+  assertEquals(lecteur.lectures.length, 1);
 });

@@ -7,6 +7,8 @@ export class LecteurEnMemoire implements LecteurAVoixHaute {
   private echec: Error | undefined;
   private motsAnnonces: Array<{ phrase: number; position: number }> = [];
 
+  constructor(private readonly journal: string[] = []) {}
+
   prononcerLesMots(...annonces: Array<{ phrase: number; position: number }>): void {
     this.motsAnnonces = annonces;
   }
@@ -26,6 +28,7 @@ export class LecteurEnMemoire implements LecteurAVoixHaute {
   lire(lecture: LectureDemandee): Promise<void> {
     this.appels.push("lire");
     this.lectures.push(lecture);
+    this.journal.push("parole");
     for (const { phrase, position } of this.motsAnnonces) lecture.onMot?.(phrase, position);
     return this.echec ? Promise.reject(this.echec) : Promise.resolve();
   }
