@@ -539,9 +539,23 @@ function cibleDuBouton(page: Page, texte: string): Locator {
   throw new Error(`Bouton inconnu : ${texte}`);
 }
 
+/** Le bouton peut encore se placer (défilement, mise en page, arrivée de l'écran) : on le presse une fois immobile. */
+async function attendreQueLeBoutonNeBougePlus(bouton: Locator): Promise<void> {
+  let precedente = "";
+  let identiques = 0;
+  await expect.poll(async () => {
+    const courante = JSON.stringify(await bouton.boundingBox());
+    identiques = courante === precedente ? identiques + 1 : 0;
+    precedente = courante;
+    return identiques;
+  }, { message: "le bouton est immobile avant d'être touché", intervals: [250] }).toBeGreaterThanOrEqual(4);
+}
+
 async function appuyer(page: Page, bouton: Locator, geste: Geste): Promise<void> {
   await expect(bouton).toBeVisible();
+  await page.waitForLoadState("networkidle");
   await bouton.scrollIntoViewIfNeeded();
+  await attendreQueLeBoutonNeBougePlus(bouton);
   const chemin = new URL(page.url()).pathname;
   const poignee = await bouton.elementHandle();
   if (!poignee) throw new Error("Bouton introuvable");
