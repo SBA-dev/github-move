@@ -139,7 +139,7 @@ Le glossaire garde l'orthographe française.
 | Exercice complété (à valider) | Moment où la dernière réponse d'un exercice à plusieurs réponses sur le même écran (texte à trous, `ordre`, `classer`, `conjugaison`, `memoriser`) complète l'exercice : dernier trou, dernière étiquette, dernière personne, dernier mot. Il élargit **Texte complet** sans le remplacer : un texte complet est un exercice complété (#97, décision 97.6). | Apprentissage | exercice fini, exercice terminé, dernière étiquette (seul) |
 | Avancée dans le parcours | Passage de la prochaine leçon connue d'une matière à une leçon plus loin du parcours, ou à la fin du parcours quand la matière devient réussie, parce qu'elle est devenue réussie (étoiles ou test de départ). Jamais en arrière ; une leçon réussie plus loin que la prochaine leçon n'en fait pas une (réponse N8). Le personnage guide la montre en marchant sur le dessin de « Mon parcours » (#99, validé par le PO le 2026-10-28, 99.15). | Apprentissage | progression, déplacement, étape suivante, niveau suivant |
 | Prochaine leçon connue | Prochaine leçon d'une matière telle que le front l'a vue en dernier pendant l'utilisation en cours ; point de départ de l'avancée dans le parcours. Gardée en mémoire le temps de l'utilisation, jamais enregistrée (#99, validé par le PO le 2026-10-28, 99.15). | Apprentissage | ancienne prochaine leçon, dernière leçon vue |
-| Partie du parcours (à valider #99, nom proposé) | Suite de leçons consécutives du parcours d'une matière qui ont la même section du programme (`programme.section`) ; chacune a son dessin sur « Mon parcours ». Mises bout à bout, les parties redonnent le parcours dans le même ordre ; une section dont les leçons ne se suivent pas forme plusieurs parties. Numérotées dans l'ordre du parcours, recalculées, jamais enregistrées ; la partie de la prochaine leçon s'ouvre d'abord (réponse 99.6 b ; nom, règle de découpage et lien avec le chapitre de #100 : #99.24 à #99.26, #99.32). | Apprentissage | chapitre, étape, groupe (seul), section (seule), carte, zone, monde, niveau |
+| Partie du parcours (nom réservé par le PO pour #100 (99.24), le 2026-10-28) | Nom réservé à un futur découpage du parcours d'une matière en suites de leçons, chacune avec son dessin sur « Mon parcours ». **Pas employé dans #99**, qui garde un seul dessin par matière (99.25 C) ; la règle de découpage et le lien avec le chapitre du défi sont décidés avec #100 (99.32). Chiffres mesurés pour #100 : `docs/stories/99/domain-model.md`, « Réservé pour #100 ». | Apprentissage | chapitre, étape, groupe (seul), section (seule), carte, zone, monde, niveau |
 
 ## Motivation
 
@@ -367,7 +367,7 @@ Ajouts de #33 (tranchés par le PO le 2026-10-25, « 33. reco OK » ; numéros �
 - **« Leçon terminée »** (#33) : le sous-titre du legacy (« Un nouvel épisode s'ouvre à chaque leçon terminée. ») est abandonné ; le sous-titre devient « Un nouvel épisode s'ouvre à chaque séance terminée. » (décisions 33.1 et 33.6).
 - Conflit n°1 (**Étoile du savoir**) : tranché comme ci-dessus (décision 33.4).
 
-Ajouts de #99 (à valider #99, `docs/stories/99/domain-model.md`, questions #99.1 à #99.5 ; non tranchés) :
+Ajouts de #99 (`docs/stories/99/domain-model.md`, questions #99.1 à #99.5 ; **tranchés** par le PO le 2026-10-28, voir ci-dessous) :
 - **« Carte », « carte au trésor »** (#99) : employé par l'issue pour le dessin de « Mon parcours » ; c'est un synonyme interdit de **Parcours** (Décision n°34), déjà pris par **Carte des compétences** (conflit n°10) et par « carte de la question » (Décision n°30). Proposition : « Mon parcours » à l'écran, **Parcours** dans le domaine, « dessin du parcours » dans les scénarios (#99.1).
 - **« Chemin »** (#99) : synonyme interdit de **Parcours** (Décision n°34). Proposition : reste interdit, le tracé n'a pas de nom (#99.2).
 - **« Étape »** (#99) : synonyme interdit de **Place** (Décisions n°28 et n°34). Proposition : « Leçon 4 » sur le dessin, « le personnage guide se tient sur la leçon 4 » dans les scénarios (#99.3).
@@ -377,6 +377,13 @@ Réponses du PO à #99 (2026-10-28, « 99'reco sauf 99.1 b 99.6 b », puis « Pa
 - **« Carte au trésor »** (99.1 b) : devient un **mot d'écran** (sous-titre proposé « Ma carte au trésor », #99.23) ; il reste hors du domaine et du glossaire de domaine : **Parcours** dans le code, « dessin du parcours » dans les scénarios. Décision n°34 inchangée ;
 - **« Chemin »**, **« Étape »**, **« Leçon verrouillée »** : reco suivie (99.2 à 99.4), rien ne change ;
 - **Groupes de leçons** (99.6 b) : un dessin par groupe de leçons d'une même section du programme ; nom proposé **Partie du parcours** (à valider, #99.24 ; « chapitre » et « Groupe » seul restent interdits).
+
+Réponses du PO à #99.23 à #99.32 (2026-10-28, « 99# reco ») : **conflits de #99 tous tranchés**.
+- **« Carte au trésor »** (99.23 A) : sous-titre « Ma carte au trésor » sous « Mon parcours », en vrai texte ; mot d'interface, hors du domaine ;
+- **Groupes de leçons** (99.25 C, remplace 99.6 b) : un seul dessin par matière dans #99 ; découpage décidé avec #100 ;
+- **Partie du parcours** (99.24) : nom réservé au concept, pour #100 ; « chapitre » et « Groupe » seul restent interdits pour ce concept ;
+- **Décor d'arrivée** (99.31, remplace le coffre de 99.12) : un fanion à la couleur de l'univers sur une petite colline fleurie, sans étoile ni texte ; mot d'interface, aucun coffre (réponse 98.6 respectée) ;
+- **Chapitre de #100** (99.32) : #99 ne prépare pas le défi.
 
 ## Questions ouvertes
 
@@ -480,3 +487,5 @@ Lot « ludique » (#99), réponses du PO du 2026-10-28 : reco suivie sauf 99.1 b
 - texte et place du mot d'écran « carte au trésor » (#99.23) ;
 - nom du groupe de leçons d'une même section : **Partie du parcours** proposé (#99.24) ; découpage par section, par domaine du programme, ou un seul dessin jusqu'à #100, au vu des chiffres (88 % des groupes par section n'ont qu'une leçon, #99.25) ; section dont les leçons ne se suivent pas (#99.26) ;
 - décor d'arrivée sans coffre, en conflit avec la réponse 98.6 (#99.31) ; lien avec le « chapitre » de #100 (#99.32).
+
+Lot « ludique » (#99), réponses du PO du 2026-10-28 à #99.23 à #99.32 (« 99# reco ») : **plus rien à trancher**. Un seul dessin par matière (99.25 C) ; « Ma carte au trésor » en sous-titre (99.23 A) ; **Partie du parcours** réservé pour #100 (99.24) ; fanion sur une colline fleurie à la place du coffre (99.31) ; #99 ne prépare pas le défi (99.32).
