@@ -54,11 +54,6 @@ export const AgentMax: DessinDuPersonnage = ({ humeur, id }) => (
       <clipPath id={`${id}bouche`}>
         <path d="M-11 11 Q0 27 11 11 Z" />
       </clipPath>
-        <radialGradient id={`${id}verre`} cx=".35" cy=".3" r=".7">
-          <stop offset="0" stopColor="#FFFFFF" stopOpacity=".9" />
-          <stop offset=".5" stopColor="#D8ECFF" stopOpacity=".45" />
-          <stop offset="1" stopColor="#9FC8FF" stopOpacity=".35" />
-        </radialGradient>
     </defs>
       <g data-signe="pantalon">
       <path fill="none" stroke="#33304A" strokeWidth="23" strokeLinecap="round" strokeLinejoin="round" d="M-10.3 7.5Q-12.7 34.4 -14.7 57.8" />
@@ -88,14 +83,6 @@ export const AgentMax: DessinDuPersonnage = ({ humeur, id }) => (
       <path fill="none" stroke="#3450C8" strokeWidth="1.6" strokeLinecap="round" strokeDasharray="1 6" d="M0 -34 V-4" />
       <path fill="#2B2B3A" stroke="#33304A" strokeWidth="2.4" strokeLinejoin="round" d="M-22 -2 Q0 1 22 -2 L22 3 Q0 6 -22 3 Z" />
       <rect x="-4" y="-3.2" width="8" height="6.4" rx="1.6" fill="#FFC93C" stroke="#33304A" strokeWidth="1.5" transform="translate(0 1)" />
-      <g transform="translate(23 10)">
-        <g transform="scale(.5) rotate(25)">
-          <line x1="0" y1="8" x2="0" y2="-16" stroke="#33304A" strokeWidth="6.5" strokeLinecap="round" />
-          <line x1="0" y1="8" x2="0" y2="-16" stroke="#A86E3A" strokeWidth="3.4" strokeLinecap="round" />
-          <circle cy="-27" r="13" fill="#FFC93C" stroke="#33304A" strokeWidth="2.6" />
-          <circle cy="-27" r="9" fill={`url(#${id}verre)`} stroke="#33304A" strokeWidth="1.6" />
-        </g>
-      </g>
       <path fill="#4C78E8" stroke="#33304A" strokeWidth="2.4" strokeLinejoin="round" d="M-8 -44 L-3 -37 L0 -41 L3 -37 L8 -44 Q0 -47 -8 -44 Z" />
       <g transform="translate(9 -24)">
         <rect x="-6.5" y="-4.5" width="13" height="10" rx="1.6" fill="#3450C8" stroke="#33304A" strokeWidth="1.6" />
@@ -142,14 +129,14 @@ export const AgentMax: DessinDuPersonnage = ({ humeur, id }) => (
             <Yeux>
               <g transform="translate(-12 0)">
                 <ellipse rx="7.4" ry="9.6" fill="#FFFFFF" />
-                <g transform={choisir(humeur, undefined, undefined, "translate(0 -0.1) scale(1.05)")}>
+                <g transform={choisir(humeur, { content: undefined, reflechit: undefined, applaudit: "translate(0 -0.1) scale(1.05)" })}>
                   <circle cx=".5" cy="3" r="4.8" fill="#6B4226" />
                   <circle cx=".5" cy="3" r="2.5" fill="#1B1530" />
                   <circle cx="-1.4" cy=".6" r="1.8" fill="#FFFFFF" />
                   <circle cx="2.5" cy="4.8" r=".9" fill="#FFFFFF" />
                 </g>
                 <g clipPath={`url(#${id}oeil)`}>
-                  <ellipse rx="10" ry="10.6" fill="#f2cba5" stroke="#33304A" strokeWidth="2.6" transform={choisir(humeur, "translate(0 -21)", "translate(0 -14.7)", "translate(0 -21)")} />
+                  <ellipse rx="10" ry="10.6" fill="#f2cba5" stroke="#33304A" strokeWidth="2.6" transform={choisir(humeur, { content: "translate(0 -21)", reflechit: "translate(0 -14.7)", applaudit: "translate(0 -21)" })} />
                 </g>
                 <path d="M-7 0 A7.4 9.6 0 0 1 7 0" fill="none" stroke="#33304A" strokeWidth="2.8" strokeLinecap="round" />
                 <path d="M-4.5 8.8 Q0 10.6 4.5 8.8" fill="none" stroke="#33304A" strokeWidth="1" strokeLinecap="round" opacity=".4" />
@@ -158,24 +145,24 @@ export const AgentMax: DessinDuPersonnage = ({ humeur, id }) => (
             <Yeux>
               <g transform="translate(12 0)">
                 <ellipse rx="7.4" ry="9.6" fill="#FFFFFF" />
-                <g transform={choisir(humeur, undefined, undefined, "translate(0 -0.1) scale(1.05)")}>
+                <g transform={choisir(humeur, { content: undefined, reflechit: undefined, applaudit: "translate(0 -0.1) scale(1.05)" })}>
                   <circle cx=".5" cy="3" r="4.8" fill="#6B4226" />
                   <circle cx=".5" cy="3" r="2.5" fill="#1B1530" />
                   <circle cx="-1.4" cy=".6" r="1.8" fill="#FFFFFF" />
                   <circle cx="2.5" cy="4.8" r=".9" fill="#FFFFFF" />
                 </g>
                 <g clipPath={`url(#${id}oeil)`}>
-                  <ellipse rx="10" ry="10.6" fill="#f2cba5" stroke="#33304A" strokeWidth="2.6" transform={choisir(humeur, "translate(0 -21)", "translate(0 -14.7)", "translate(0 -21)")} />
+                  <ellipse rx="10" ry="10.6" fill="#f2cba5" stroke="#33304A" strokeWidth="2.6" transform={choisir(humeur, { content: "translate(0 -21)", reflechit: "translate(0 -14.7)", applaudit: "translate(0 -21)" })} />
                 </g>
                 <path d="M-7 0 A7.4 9.6 0 0 1 7 0" fill="none" stroke="#33304A" strokeWidth="2.8" strokeLinecap="round" />
                 <path d="M-4.5 8.8 Q0 10.6 4.5 8.8" fill="none" stroke="#33304A" strokeWidth="1" strokeLinecap="round" opacity=".4" />
               </g>
             </Yeux>
           </g>
-          <g transform={choisir(humeur, "translate(-15.6 -17)", "translate(-15.6 -15) rotate(-10)", "translate(-15.6 -21)")}>
+          <g transform={choisir(humeur, { content: "translate(-15.6 -17)", reflechit: "translate(-15.6 -15) rotate(-10)", applaudit: "translate(-15.6 -21)" })}>
             <path d="M-8 0 Q0 -5 8 0" fill="none" stroke="#3A2314" strokeWidth="4.2" strokeLinecap="round" />
           </g>
-          <g transform={choisir(humeur, "translate(15.6 -17)", "translate(15.6 -15) rotate(10)", "translate(15.6 -21)")}>
+          <g transform={choisir(humeur, { content: "translate(15.6 -17)", reflechit: "translate(15.6 -15) rotate(10)", applaudit: "translate(15.6 -21)" })}>
             <path d="M-8 0 Q0 -5 8 0" fill="none" stroke="#3A2314" strokeWidth="4.2" strokeLinecap="round" />
           </g>
           <path fill="#4a2f1d" stroke="#33304A" strokeWidth="3.6" strokeLinejoin="round" d="M-41 -14 Q-45 -46 0 -50 Q45 -46 41 -14 Q41 -5 36 -5 Q31 -5 31 -14 V-22 Q0 -30 -31 -22 V-14 Q-31 -5 -36 -5 Q-41 -5 -41 -14 Z" />
