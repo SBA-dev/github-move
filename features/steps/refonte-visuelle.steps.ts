@@ -15,7 +15,8 @@ import {
   suivreUnElement,
 } from "../support/mesures-visuelles.ts";
 import type { Famille } from "../support/famille.ts";
-import { Given, type Monde, Then, When } from "./fixtures.ts";
+import { createBdd } from "playwright-bdd";
+import { Given, type Monde, test, Then, When } from "./fixtures.ts";
 import { arriverSurLEpisode } from "./histoire.steps.ts";
 import { arriverSurLaRevision } from "./revisions-des-erreurs.steps.ts";
 import { arriverSurLeTestDeDepart } from "./test-de-depart.steps.ts";
@@ -778,7 +779,23 @@ Then(
 
 // --- Captures de référence (@visuel) : les captures elles-mêmes seront prises quand l'interface sera finie
 
+const { Before } = createBdd(test);
+
+// Hasard fixé : un tirage reproductible remplace Math.random dès l'ouverture de la page (ordre des choix, variantes de félicitation).
+Before({ tags: "@visuel" }, async ({ page }) => {
+  await page.addInitScript(() => {
+    let graine = 96;
+    Math.random = () => {
+      graine = (graine + 0x6d2b79f5) | 0;
+      let t = Math.imul(graine ^ (graine >>> 15), 1 | graine);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  });
+});
+
 Then(/^(.+) ressemble à sa capture de référence « ([^«»]+) »$/, async ({ page }, texte: string, capture: string) => {
   await expect(racineDe(page, lireLEcran(texte)).first()).toBeVisible();
+  await page.evaluate(() => document.fonts.ready.then(() => undefined));
   await expect(page).toHaveScreenshot(`${capture}.png`, { fullPage: true, animations: "disabled", maxDiffPixelRatio: 0.01 });
 });
