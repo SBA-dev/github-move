@@ -4,6 +4,7 @@ import { type ChoixDeVoix, type EtatDuSon, LectureAVoixHaute, type ParoleEntendu
 import { hasardDuNavigateur } from "../hasard-navigateur.ts";
 import { ChoixDeVoixMemoriseSurLAppareil } from "./choix-de-voix-memorise.ts";
 import { DeverrouillageAudio, deverrouillerAuToucher } from "./deverrouillage-audio.ts";
+import { LecteurDEffetsSonoresSilencieux } from "./lecteur-d-effets-sonores-silencieux.ts";
 import { LecteurSyntheseVocale, syntheseVocale } from "./lecteur-synthese-vocale.ts";
 import { lireLEtatDuSon, memoriserLEtatDuSon } from "./memoire-du-son.ts";
 import { VoixDeLAppareilNavigateur } from "./voix-de-l-appareil-navigateur.ts";
@@ -42,6 +43,7 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
   const [lecture] = useState(() =>
     new LectureAVoixHaute({
       lecteur: new LecteurSyntheseVocale(),
+      lecteurDEffetsSonores: new LecteurDEffetsSonoresSilencieux(),
       voixDeLAppareil,
       choixDeVoix: choixMemorise,
       hasard: hasardDuNavigateur,

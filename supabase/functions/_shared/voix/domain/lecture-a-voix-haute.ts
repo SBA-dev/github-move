@@ -2,8 +2,10 @@ import type { CaractereDeLaVoix } from "./caractere-de-la-voix.ts";
 import { CARACTERE_LANGUE_ETRANGERE, choisirVoix, choisirVoixDeLangue, ChoixDeVoix } from "./choix-de-voix.ts";
 import type { ChoixDeVoixDeLAppareil } from "./choix-de-voix-de-l-appareil.ts";
 import { LectureImpossible, VoixBloquee } from "./erreurs.ts";
+import type { EffetSonore } from "./effet-sonore.ts";
 import type { Hasard } from "./hasard.ts";
 import type { LecteurAVoixHaute } from "./lecteur-a-voix-haute.ts";
+import type { LecteurDEffetsSonores } from "./lecteur-d-effets-sonores.ts";
 import { phraseDEssai } from "./phrase-d-essai.ts";
 import { reglerPhrases } from "./reglage-de-phrase.ts";
 import { rangAffichePourChaqueMotPrononce } from "./mots-de-la-consigne.ts";
@@ -19,6 +21,7 @@ export type EtatDuSon = "son" | "muet";
 
 export type DependancesDeLectureAVoixHaute = {
   readonly lecteur: LecteurAVoixHaute;
+  readonly lecteurDEffetsSonores: LecteurDEffetsSonores;
   readonly voixDeLAppareil: VoixDeLAppareil;
   readonly choixDeVoix: ChoixDeVoixDeLAppareil;
   readonly hasard: Hasard;
@@ -101,6 +104,10 @@ export class LectureAVoixHaute {
     } finally {
       options.onFin?.();
     }
+  }
+
+  async jouer(effets: readonly EffetSonore[]): Promise<void> {
+    for (const effet of effets) await this.dependances.lecteurDEffetsSonores.jouer(effet);
   }
 
   couperLaVoix(): void {

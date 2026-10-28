@@ -26,3 +26,6 @@ export { motsDeLaConsigne } from "./mots-de-la-consigne.ts";
 export type { SegmentDeConsigne } from "./mots-de-la-consigne.ts";
 export { syllabesDuMot, syllabesDuTexte } from "./syllabes.ts";
 export type { SegmentSyllabe } from "./syllabes.ts";
+export { EFFETS_SONORES } from "./effet-sonore.ts";
+export type { EffetSonore } from "./effet-sonore.ts";
+export type { LecteurDEffetsSonores } from "./lecteur-d-effets-sonores.ts";
