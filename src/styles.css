@@ -93,11 +93,12 @@ body {
 .ecran-qui-arrive { display: grid; justify-items: center; gap: 12px; width: 100%; outline: none; }
 .application[data-registre="parent"] { background: var(--fond); }
 .paysage {
-  position: fixed;
+  position: absolute;
   inset: 0;
   z-index: 0;
+  overflow: clip;
 }
-.paysage svg { width: 100%; height: 100%; display: block; }
+.paysage svg { position: sticky; top: 0; width: 100%; height: 100svh; display: block; }
 .en-tete, .ecran { position: relative; z-index: 1; }
 .en-tete {
   display: flex;
