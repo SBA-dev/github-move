@@ -20,3 +20,10 @@ Branche de base : `main`. Décision réservée : 0036.
 
 - `po-acceptance` (`b9381e6`) : `features/99-dessin-du-parcours.feature`, 5 règles, 24 scénarios (14 `@a-valider`). Aucun scénario existant modifié ; la capture `@visuel` `mon-parcours` de #96 changera de sens (#99.17). Questions #99.16 à #99.22.
 - `CADRAGE PRÊT` publié sur #99. Attente de la validation du PO par le responsable : pas de TDD avant.
+
+## Réponses du PO et reprise du cadrage (21:40 UTC)
+
+- Réponses du PO publiées sur #99 (commentaire 6481296784), confirmées par le responsable (message de 21:38) : « 99'reco sauf 99.1 b 99.6 b », puis « Par section du programme ».
+- `domain-modeler` (`428d26d`) : concept proposé « Partie du parcours » (fonctions pures `partiesDuParcours`, `partieAOuvrir`). Mesure sur `app/bibliotheque.json` : un découpage par section donne 245 parties de leçons consécutives, dont 93 % d'une seule leçon. Le choix du PO est donc à reconfirmer (#99.25) avant de revoir les scénarios.
+- Conflit du coffre (99.12) avec la règle 98.6 de #98, signalé au PO (#99.31).
+- `CADRAGE PRÊT` n°2 publié avec les questions #99.23 à #99.32. Les scénarios seront revus après la réponse à #99.25, qui décide de leur forme.
