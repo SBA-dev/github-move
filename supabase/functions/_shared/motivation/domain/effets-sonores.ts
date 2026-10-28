@@ -31,8 +31,11 @@ export interface FaitsDeLaFin {
 
 export function effetsSonoresDeLaFin(faits: FaitsDeLaFin): readonly EffetSonore[] {
   if (faits.fin === "testDeDepart") return ["seanceTerminee"];
-  const victoire = faits.leconAcquise || effetSonoreDuRecord(faits.issueDuRecord) !== undefined;
-  const effets: EffetSonore[] = [victoire ? "grandeVictoire" : "seanceTerminee"];
+  const recordDejaFete = effetSonoreDuRecord(faits.issueDuRecord) !== undefined;
+  const effets: EffetSonore[] = [];
+  if (!recordDejaFete) {
+    effets.push(faits.leconAcquise ? "grandeVictoire" : "seanceTerminee");
+  }
   if (faits.objetRecu || faits.episodeOuvert) effets.push("decouverte");
   return effets;
 }

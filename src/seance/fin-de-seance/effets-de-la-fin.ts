@@ -1,5 +1,5 @@
 import type { IssueDuRecord } from "@domain/apprentissage";
-import { effetSonoreDuRecord, effetsSonoresDeLaFin } from "@domain/motivation";
+import { effetsSonoresDeLaFin } from "@domain/motivation";
 import type { EffetSonore } from "@domain/voix";
 import type { NouveautesDeFin } from "./nouveautes-de-fin.ts";
 
@@ -12,14 +12,11 @@ export function effetsDeLaFinDeSeance(
   nouveautes: NouveautesDeFin,
   issueDeLaFluence: IssueDuRecord,
 ): readonly EffetSonore[] {
-  const fluenceSeule = etoiles === undefined;
-  const effets = effetsSonoresDeLaFin({
+  return effetsSonoresDeLaFin({
     fin: "seance",
     leconAcquise: nouveautes.leconAcquise,
-    issueDuRecord: fluenceSeule ? issueDeLaFluence : "aucunRecord",
+    issueDuRecord: etoiles === undefined ? issueDeLaFluence : "aucunRecord",
     objetRecu: nouveautes.objet !== undefined,
     episodeOuvert: nouveautes.episode !== undefined,
   });
-  const recordDejaFete = fluenceSeule && effetSonoreDuRecord(issueDeLaFluence) !== undefined;
-  return recordDejaFete ? effets.slice(1) : effets;
 }
