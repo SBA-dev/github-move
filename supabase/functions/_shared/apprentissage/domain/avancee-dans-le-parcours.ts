@@ -6,8 +6,15 @@ export type AvanceeDansLeParcours = Readonly<{
 }>;
 
 export function avanceeDansLeParcours(
-  _prochaineLeconConnue: LeconId | undefined,
-  _parcours: Parcours,
+  prochaineLeconConnue: LeconId | undefined,
+  parcours: Parcours,
 ): AvanceeDansLeParcours | undefined {
-  return undefined;
+  if (prochaineLeconConnue === undefined) return undefined;
+  const nouvelleProchaineLecon = parcours.prochaineLecon;
+  return {
+    depuis: prochaineLeconConnue,
+    jusqua: nouvelleProchaineLecon === undefined
+      ? { genre: "finDuParcours" }
+      : { genre: "lecon", lecon: nouvelleProchaineLecon },
+  };
 }
