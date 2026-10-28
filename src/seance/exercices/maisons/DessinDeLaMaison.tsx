@@ -3,7 +3,7 @@ import { motion, useReducedMotion } from "motion/react";
 import type { CleUnivers } from "@domain/motivation";
 import { DESSINS_DES_MAISONS } from "./dessins/index.ts";
 
-const DUREE_DE_L_OUVERTURE_S = 0.35;
+export const DUREE_DE_L_OUVERTURE_S = 0.35;
 
 type Props = {
   readonly univers: CleUnivers;

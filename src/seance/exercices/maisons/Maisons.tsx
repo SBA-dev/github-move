@@ -1,4 +1,4 @@
-import { Fragment, type KeyboardEvent, type RefObject, useRef } from "react";
+import { type KeyboardEvent, type RefObject, useRef } from "react";
 import type { EtiquettePosee } from "@domain/apprentissage";
 import type { Exercice } from "@domain/catalogue";
 import { useRetourDe } from "../../../retours/index.ts";
@@ -32,21 +32,19 @@ export function Maisons({ exercice, posees, choisie, maisonQuiBrille, maisonSurv
   return (
     <div className="maisons" ref={conteneur}>
       {exercice.groupes.map((groupe, rang) => (
-        <Fragment key={groupe.id}>
-          <Maison
-            groupe={groupe}
-            posees={posees.filter((posee) => posee.groupe === groupe.id)}
-            choisie={choisie}
-            brille={groupe.id === maisonQuiBrille}
-            survolee={groupe.id === maisonSurvolee}
-            refDeLaPorte={(porte) => {
-              portes.current[rang] = porte;
-            }}
-            onFleche={(evenement) => passerALaMaisonVoisine(rang, evenement)}
-            onPoser={onPoser}
-          />
-          {" "}
-        </Fragment>
+        <Maison
+          key={groupe.id}
+          groupe={groupe}
+          posees={posees.filter((posee) => posee.groupe === groupe.id)}
+          choisie={choisie}
+          brille={groupe.id === maisonQuiBrille}
+          survolee={groupe.id === maisonSurvolee}
+          refDeLaPorte={(porte) => {
+            portes.current[rang] = porte;
+          }}
+          onFleche={(evenement) => passerALaMaisonVoisine(rang, evenement)}
+          onPoser={onPoser}
+        />
       ))}
     </div>
   );

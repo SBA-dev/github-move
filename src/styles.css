@@ -413,7 +413,7 @@ li.etiquette.posee { display: flex; align-items: center; cursor: default; border
 .maison .porte-de-la-maison[aria-disabled="true"]:hover { background: var(--surface); }
 /* « Bonne réponse montrée » : halo jaune, le même dans les 6 univers ; seule la taille pulse (`scale`), pour que ses autres styles restent fixes. */
 .signal-brille, .signal-de-survol { position: absolute; inset: 0; border-radius: var(--rayon); pointer-events: none; }
-.signal-brille { border: 6px solid #ffd23f; box-shadow: 0 0 18px 8px rgba(255, 210, 63, .85); animation: pulse-de-la-bonne-reponse 1.2s ease-in-out infinite alternate; }
+.signal-brille { border: 6px solid var(--surbrillance); box-shadow: 0 0 18px 8px color-mix(in srgb, var(--surbrillance) 85%, transparent); animation: pulse-de-la-bonne-reponse 1.2s ease-in-out infinite alternate; }
 @keyframes pulse-de-la-bonne-reponse { from { scale: 1; } to { scale: 1.04; } }
 /* Maison survolée par une étiquette tenue au doigt : contour sombre doublé de blanc, qui ne dit pas si c'est la bonne. */
 .signal-de-survol { border: 4px solid #33304a; box-shadow: 0 0 0 3px #fff, inset 0 0 0 3px #fff; }
