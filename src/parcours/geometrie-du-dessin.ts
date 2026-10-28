@@ -50,8 +50,8 @@ export function emplacementSurLaColline(fin: Boite): Point {
 export function tracePassantPar(points: readonly Point[]): string {
   const [premier, ...suivants] = points;
   if (!premier) return "";
-  const segments = suivants.map((point, indexDAffichage) => {
-    const precedent = points[indexDAffichage] ?? premier;
+  const segments = suivants.map((point, indexDuPrecedent) => {
+    const precedent = points[indexDuPrecedent] ?? premier;
     const milieu = (precedent.y + point.y) / 2;
     return `C ${precedent.x} ${milieu} ${point.x} ${milieu} ${point.x} ${point.y}`;
   });
