@@ -166,9 +166,12 @@ export type BilanDesMouvements = { recents: Excursion[]; tous: Excursion[]; term
 /** Les excursions des éléments qui contiennent la racine de l'écran (ou qu'elle contient), les plus récentes à part. */
 export async function bilanDesMouvementsDe(page: Page, racine: ElementHandle<Element>): Promise<BilanDesMouvements> {
   return await page.evaluate((cible) => {
-    const depuis = (window.__mouvements?.insertion(cible) ?? 0) - 50;
+    // L'arrivée est le mouvement de l'écran lui-même ou de son enveloppe (`data-transition`), pas ceux de son contenu :
+    // le contenu d'un écran peut s'insérer plus tard que l'enveloppe qui glisse ou apparaît.
+    const enveloppe = cible.closest("[data-transition]") ?? cible;
+    const depuis = (window.__mouvements?.insertion(enveloppe) ?? 0) - 50;
     const liees = (window.__mouvements?.excursions ?? []).filter((e) =>
-      e.element.isConnected && e.debut >= depuis && (e.element.contains(cible) || cible.contains(e.element))
+      e.element.isConnected && e.debut >= depuis && e.element.contains(cible)
     );
     const copie = (e: (typeof liees)[number]): Excursion => ({
       debut: e.debut,

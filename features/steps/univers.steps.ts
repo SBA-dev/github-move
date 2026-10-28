@@ -64,7 +64,7 @@ export function leGuide(page: Page, nom: string): Locator {
 }
 
 function guide(page: Page) {
-  return page.getByTestId("personnage-guide");
+  return page.getByTestId("personnage-guide").first();
 }
 
 // --- Étant donné : profils préparés
@@ -241,7 +241,7 @@ Then(
 
 Then(/^jamais l'expression d'un autre personnage guide$/, async ({ page }) => {
   const texte = ((await page.getByTestId("parole").textContent()) ?? "").trim();
-  const nom = (await guide(page).getAttribute("aria-label")) ?? "";
+  const nom = (await guide(page).getAttribute("data-personnage-guide")) ?? "";
   const autres = Object.entries(EXPRESSIONS_PAR_PERSONNAGE).filter(([autre]) => autre !== nom).flatMap(([, liste]) => liste);
   expect(autres).not.toContain(texte);
 });

@@ -541,6 +541,7 @@ function cibleDuBouton(page: Page, texte: string): Locator {
 
 async function appuyer(page: Page, bouton: Locator, geste: Geste): Promise<void> {
   await expect(bouton).toBeVisible();
+  await bouton.scrollIntoViewIfNeeded();
   const chemin = new URL(page.url()).pathname;
   const poignee = await bouton.elementHandle();
   if (!poignee) throw new Error("Bouton introuvable");
@@ -614,7 +615,14 @@ function estRevenu(repos: Echantillon, e: Echantillon | undefined): boolean {
   if (!e) return false;
   // Une page qui a changé d'écran a emporté le bouton : il n'est plus enfoncé.
   if (!e.present) return true;
-  return ecartDe(repos, e) < 0.5 && transformNormalisee(e.transform) === transformNormalisee(repos.transform);
+  return ecartDe(repos, e) < 0.5 && transformationsProches(e.transform, repos.transform);
+}
+
+/** Le ressort s'éteint par de très petites oscillations : moins d'un demi-pixel d'écart, c'est revenu à sa place. */
+function transformationsProches(a: string, b: string): boolean {
+  const valeurs = (t: string) => (/matrix\(([^)]*)\)/.exec(transformNormalisee(t))?.[1] ?? "").split(",").map(Number);
+  const [va, vb] = [valeurs(a), valeurs(b)];
+  return va.length === vb.length && va.every((v, i) => Math.abs(v - (vb[i] ?? NaN)) < (i < 4 ? 0.01 : 0.5));
 }
 
 Then(/^.+ s'enfonce puis revient à sa place$/, ({ page }) => {
