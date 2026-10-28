@@ -137,6 +137,8 @@ Le glossaire garde l'orthographe française.
 | Durée d'affichage sans voix (à valider) | Environ 2 s pendant lesquelles une parole non entendue du personnage guide (félicitation entre deux questions, annonce du nouveau défi, invitation à jouer après les étapes de la leçon) reste visible avant que l'écran suivant vienne seul. Après la dernière bonne réponse, il n'y a pas de durée : la félicitation non entendue reste jusqu'à ce que l'enfant appuie sur « Continuer » (#79, décisions 79.3, 79.4 et 79.11). | Apprentissage | délai, temporisation, pause |
 | Fin de la séance (à valider) | Écran affiché après une séance terminée (étoiles, félicitation finale). Le fait enregistré garde le nom **Séance terminée** (#24, #79). | Apprentissage | écran de fin, bilan, résultat (seul) |
 | Exercice complété (à valider) | Moment où la dernière réponse d'un exercice à plusieurs réponses sur le même écran (texte à trous, `ordre`, `classer`, `conjugaison`, `memoriser`) complète l'exercice : dernier trou, dernière étiquette, dernière personne, dernier mot. Il élargit **Texte complet** sans le remplacer : un texte complet est un exercice complété (#97, décision 97.6). | Apprentissage | exercice fini, exercice terminé, dernière étiquette (seul) |
+| Avancée dans le parcours (à valider #99) | Passage de la prochaine leçon connue d'une matière à une leçon plus loin du parcours, ou à la fin du parcours quand la matière devient réussie, parce qu'elle est devenue réussie (étoiles ou test de départ). Jamais en arrière ; une leçon réussie plus loin que la prochaine leçon n'en fait pas une (réponse N8). Le personnage guide la montre en marchant sur le dessin de « Mon parcours » (#99). | Apprentissage | progression, déplacement, étape suivante, niveau suivant |
+| Prochaine leçon connue (à valider #99) | Prochaine leçon d'une matière telle que le front l'a vue en dernier pendant l'utilisation en cours ; point de départ de l'avancée dans le parcours. Gardée en mémoire le temps de l'utilisation, jamais enregistrée (#99). | Apprentissage | ancienne prochaine leçon, dernière leçon vue |
 
 ## Motivation
 
@@ -364,6 +366,12 @@ Ajouts de #33 (tranchés par le PO le 2026-10-25, « 33. reco OK » ; numéros �
 - **« Leçon terminée »** (#33) : le sous-titre du legacy (« Un nouvel épisode s'ouvre à chaque leçon terminée. ») est abandonné ; le sous-titre devient « Un nouvel épisode s'ouvre à chaque séance terminée. » (décisions 33.1 et 33.6).
 - Conflit n°1 (**Étoile du savoir**) : tranché comme ci-dessus (décision 33.4).
 
+Ajouts de #99 (à valider #99, `docs/stories/99/domain-model.md`, questions #99.1 à #99.5 ; non tranchés) :
+- **« Carte », « carte au trésor »** (#99) : employé par l'issue pour le dessin de « Mon parcours » ; c'est un synonyme interdit de **Parcours** (Décision n°34), déjà pris par **Carte des compétences** (conflit n°10) et par « carte de la question » (Décision n°30). Proposition : « Mon parcours » à l'écran, **Parcours** dans le domaine, « dessin du parcours » dans les scénarios (#99.1).
+- **« Chemin »** (#99) : synonyme interdit de **Parcours** (Décision n°34). Proposition : reste interdit, le tracé n'a pas de nom (#99.2).
+- **« Étape »** (#99) : synonyme interdit de **Place** (Décisions n°28 et n°34). Proposition : « Leçon 4 » sur le dessin, « le personnage guide se tient sur la leçon 4 » dans les scénarios (#99.3).
+- **« Leçon verrouillée », cadenas** (#99) : abandonnés (Décision n°33). Proposition : aucun cadenas sur le dessin (#99.4).
+
 ## Questions ouvertes
 
 Les trois questions de rattachement (mêmes droits des deux parents, durée et usage unique d'une invitation, visibilité des autres enfants) sont tranchées par la validation n°1 du lot 2 (décisions n°1, n°2 et n°3). Restent, sans blocage :
@@ -456,3 +464,8 @@ Lot 5 (#33, `docs/stories/33/domain-model.md`) : tranché par le PO le 2026-10-2
 - Règle d'ouverture d'un épisode : chaque séance terminée (33.1) ; la ligne **Jour de séance** (« sert à la série et aux épisodes ») doit perdre « et aux épisodes » (modification d'une ligne existante, laissée au responsable) ;
 - histoire de Noisette pour tous, racontée par le personnage guide du profil (33.2) : nouvelle définition de **Épisode** (qui remplace l'ancienne ligne **Épisode**), **Histoire des Savanturiers** et **Épisode ouvert** validés ;
 - « Nombre de séances terminées » et « Épisode ouvert par la séance » : simples noms de calcul, retirés du glossaire (33.27).
+
+Lot « ludique » (#99, `docs/stories/99/domain-model.md`) : à trancher par le PO (questions #99.1 à #99.15).
+- Conflits « carte », « chemin », « étape », « leçon verrouillée » (voir « Ajouts de #99 » dans « Conflits à trancher ») ; « parcours libre » sans effet, non lu (#99.5) ;
+- termes nouveaux : **Avancée dans le parcours**, **Prochaine leçon connue** (#99.15) ;
+- « groupe de leçons » / « chapitre » : pas un terme, à nommer avec la story 5 si le PO veut des groupes (#99.6).
