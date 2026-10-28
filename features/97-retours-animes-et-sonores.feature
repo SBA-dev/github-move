@@ -8,8 +8,7 @@ Fonctionnalité: Retours animés et sonores pendant la séance
   La story ajoute des effets sonores et des animations, dans tous les types d'exercices, en séance de révision
   et au test de départ. Elle ne change aucune étoile, aucun avancement, aucun record ni aucune parole du personnage
   guide (règle d'or de Motivation). Les commentaires « Décision 97.n » renvoient aux décisions du PO de
-  docs/stories/97/acceptance.md ; « Question 97.n » renvoie à une question encore ouverte, et le scénario qui en
-  dépend porte le tag @a-valider.
+  docs/stories/97/acceptance.md.
   Le Muet coupe la parole, pas les effets sonores (décision 97.2) ; seuls les écrans du parent n'en font entendre
   aucun (décision 97.13).
 
@@ -313,8 +312,7 @@ Fonctionnalité: Retours animés et sonores pendant la séance
       Alors Léa entend l'effet sonore « séance terminée »
       Mais Léa n'entend aucune parole
 
-    # Décision 97.2, question 97.24
-    @a-valider
+    # Décisions 97.2 et 97.24
     Scénario: Passer en Muet pendant l'effet sonore de fin le laisse finir, sans phrase de fin dite
       Étant donné que les leçons de test « Les sons de test » et « La suite de test » sont dans la bibliothèque
       Et que Léa entend l'effet sonore « séance terminée » à la fin de la séance de la leçon « Les sons de test »
@@ -401,8 +399,7 @@ Fonctionnalité: Retours animés et sonores pendant la séance
       Alors les confettis tombent toujours
       Et Léa entend l'effet sonore de fin jusqu'au bout
 
-    # Question 97.22
-    @a-valider
+    # Décision 97.22
     Scénario: Pendant les confettis, toucher « Accueil » mène tout de suite à l'accueil
       Étant donné que les leçons de test « Les sons de test » et « La suite de test » sont dans la bibliothèque
       Et que Léa voit tomber les confettis de la fin de la séance de la leçon « Les sons de test »
@@ -457,8 +454,7 @@ Fonctionnalité: Retours animés et sonores pendant la séance
       Alors Léa entend l'effet sonore « bouton touché »
       Mais Léa n'entend pas l'effet sonore « réponse fausse »
 
-    # Question 97.21
-    @a-valider
+    # Décision 97.21
     Scénario: En Muet, demander à réécouter la consigne fait entendre « bouton touché », sans parole
       Étant donné que la tablette est en Muet
       Et que Léa joue seulement l'exercice « Les maisons des sons » de la leçon « Les sons ou, on, an »
