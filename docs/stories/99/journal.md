@@ -45,3 +45,16 @@ Bloc A — Apprentissage, `avanceeDansLeParcours` (`supabase/functions/_shared/a
 - A7 jamais en arrière (leçon ajoutée avant) : aucune avancée (inv. 2)
 - 22:10–22:45 UTC : bloc A vert en 5 cycles RED/GREEN (A1, A2, A4, A7 rouges puis verts ; A3/A5 et A6/A2 bis écrits verts, car la branche était déjà écrite pour que le type compile). 2531 tests unitaires verts. Dernier commit : `2726151`.
 - Revue intermédiaire du bloc A (`mr-reviewer`, delta `24cfde3..2726151`) : **APPROUVÉ**. Non bloquants : `placeDe` renvoie un index (lire `place`), commentaire « API attendue » à retirer du test, test explicite « changement de classe » facultatif. Repris au câblage. Point de départ du delta suivant : `2726151`.
+
+## Câblage, review, E2E (22:50 – 00:10 UTC)
+
+- Câblage (`implementer`) : `3988707` (refactor domaine), `eb1f761` (front : dessin du parcours, personnage guide, marche, sous-titre « Ma carte au trésor », fanion, mémoire de la prochaine leçon connue dans `Application.tsx`), `8ac7083` (planche). tsc, build et unitaires verts.
+- Planche publiée sur #99 (#99.33) ; validée par le PO (« #99. 33 ok », annonce [Responsable] 6482160144).
+- Review complète (`mr-reviewer`, cycle 1) : **APPROUVÉ**, 8 non bloquants. Corrigés par `implementer` (`06d2604..b60f8f2` : « chemin » et « rang » retirés du code, `useCallback`, fusion du relevé tardif, `centreDeLaFin`, `placeDe`) et `test-writer` (`f4243dd`, commentaire de phase rouge). Le point 3 (fusion du relevé tardif) n'a pas de test : le front n'a pas de runner unitaire.
+- E2E (`e2e-tester`, `d7248ab`) : steps dans `features/steps/dessin-du-parcours.steps.ts`, bibliothèque `e2e-99-` dans `features/support/`. Ajouts scopés `@issue-99` dans `parcours.steps.ts`, `etapes-puis-exercices.steps.ts` et `profils-enfants.steps.ts`, sans changer le sens pour les autres stories.
+  - `telephone` : 26/26. `tablette` : 22/26, puis 4 timeouts relancés seuls avec `--workers=1`, OK.
+  - Run final sur le dernier commit (`telephone`) : 25/26, puis 1 timeout relancé seul, OK : 26/26.
+  - Un KO de donnée ponctuel au premier run (« Le son in » affiché « prochaine ») n'est pas revenu ; à surveiller.
+- Capture de référence `mon-parcours` de #96 remplacée dans un commit dédié (`78c6315`, réponse 99.17), même cadre que 96.9 ; le cas `@visuel` passe.
+- Environnement : le Chromium du conteneur (1243) ne correspond pas à celui attendu par Playwright 1.56.1 (1194). Runs faits avec une config temporaire `executablePath`, non commitée (pas de `playwright install`).
+- Non-régression (décision du PO du 28/10) : seuls les scénarios `@issue-99`, plus le cas `@visuel` de #96 touché. La non-régression complète tourne la nuit.
