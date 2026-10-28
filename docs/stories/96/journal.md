@@ -38,3 +38,9 @@
 - Review complète, cycle 1 : **À CORRIGER**, 1 bloquant (pastilles de matière de « Mes médailles » en dur et sous 4,5:1). RED `98a32cb`, correctif `1b8eeae` ; non bloquants : `313f6af`, `2e28f79`, `c386b95`, `36692c6`, décision 0033 `9447f54`, `deno.lock` `fbed264`.
 - Paysage sur toute la hauteur `4280844` ; captures versionnées `features/captures/` (`17bbe4b`), `@visuel` hors `tablette` (`698e7f3`) ; hasard à graine fixe et attente des polices `0ba2f8f` ; 4 captures `e4a037f` (stables 2 × 4/4), montrées au PO, validation attendue.
 - Review delta, cycle 2 : **À CORRIGER**, 1 bloquant nouveau : des titres sans voile posés sur le paysage (« Français · CP » de « Mon parcours », titre de classe de « Toutes les leçons ») sont sous 4,5:1, et la mesure du tour des contrastes ignorait le paysage. RED en cours (`e2e-tester`), puis correctif.
+- Review delta cycle 3 : **APPROUVÉ** (`79e9b74..4448312`). Non bloquants traités : `3c37a23` (mesure : éléments masqués ignorés), `82c1c94` (classe `.etiquette-sur-le-decor` pour les états de chargement et vides), `4e164e9` (statut de 0033).
+- Captures de référence régénérées (`d225ff0`, fenêtre seule, étiquettes) et montrées au PO ; validation attendue.
+- PR #124 ouverte en brouillon.
+- Non-régression complète lancée à 03:23 UTC (2 projets, 2 workers, 2586 cas) ; **arrêtée à 07:25 UTC à 2274/2586, 0 échec**, sur décision du PO relayée sur #64 (07:18 UTC) : avant la PR, seulement les scénarios `@issue-96` ; la non-régression complète se joue une fois avant la publication.
+- #96.16 : **reco validée par le PO** (« 96.16 reco », relayée sur #96 07:26 UTC) : la bulle de Noisette reste dans l'Espace parent et « Qui joue ? » sans profil ; scénarios de #73 inchangés ; comportement déjà en place.
+- #96.17 : réponse du PO à préciser (« pas écran sombre »), reposée par le responsable. Rien de codé en attendant.
