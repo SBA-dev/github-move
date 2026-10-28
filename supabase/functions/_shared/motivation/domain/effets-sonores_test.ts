@@ -68,6 +68,7 @@ const seanceSansEvenement = {
   issueDuRecord: "aucunRecord",
   objetRecu: false,
   episodeOuvert: false,
+  fluenceSeule: false,
 } as const;
 
 Deno.test("une séance terminée sans leçon acquise, sans objet et sans épisode fait jouer la séance terminée", () => {
@@ -139,4 +140,33 @@ Deno.test("une séance de révision terminée fait jouer la séance terminée pu
   });
 
   assertEquals(effets, ["seanceTerminee", "decouverte"]);
+});
+
+Deno.test("une séance qui n'est pas faite seulement d'une fluence ne tient pas compte de l'issue du record", () => {
+  const sansRecord = effetsSonoresDeLaFin({ ...seanceSansEvenement, leconAcquise: true });
+  const avecRecord = effetsSonoresDeLaFin({
+    ...seanceSansEvenement,
+    leconAcquise: true,
+    issueDuRecord: "nouveauRecord",
+  });
+
+  assertEquals(avecRecord, sansRecord);
+  assertEquals(avecRecord, ["grandeVictoire"]);
+});
+
+Deno.test("une séance faite seulement d'une fluence avec un record ne rejoue ni la grande victoire ni la séance terminée", () => {
+  const effets = effetsSonoresDeLaFin({ ...seanceSansEvenement, fluenceSeule: true, issueDuRecord: "nouveauRecord" });
+
+  assertEquals(effets, []);
+});
+
+Deno.test("une séance faite seulement d'une fluence avec un record et un nouvel épisode fait jouer seulement la découverte", () => {
+  const effets = effetsSonoresDeLaFin({
+    ...seanceSansEvenement,
+    fluenceSeule: true,
+    issueDuRecord: "premierRecord",
+    episodeOuvert: true,
+  });
+
+  assertEquals(effets, ["decouverte"]);
 });
