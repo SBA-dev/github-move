@@ -584,7 +584,8 @@ button.tuile .nom-de-la-tuile, button.tuile .nom-de-la-matiere { font-size: 1.1r
 .compteur-du-record { margin: 0; padding: 6px 14px; border-radius: var(--rayon); background: var(--surface-voilee); font-size: 1.5rem; font-weight: 700; font-variant-numeric: tabular-nums; }
 /* Retours de réponse : la réussite prend la couleur de réussite, avec ou sans mouvement ; une erreur ne prend jamais de rouge. */
 [data-reussite="true"] { background: var(--succes-fond); border-color: var(--succes); }
-.etincelles-du-texte { z-index: 1; }
+.etincelles-du-texte { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+.etincelles-du-texte span { position: absolute; top: 40px; width: 12px; height: 12px; border-radius: 50%; background: var(--or); }
 .meilleures-etoiles { display: grid; justify-items: center; gap: 4px; }
 .meilleures-etoiles .etoiles-dessinees svg { width: 36px; height: 36px; }
 .meilleures-etoiles p { padding: 4px 12px; border-radius: var(--rayon); background: var(--surface-voilee); font-weight: 700; }

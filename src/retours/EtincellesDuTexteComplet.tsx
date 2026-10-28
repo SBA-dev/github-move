@@ -16,7 +16,7 @@ export function EtincellesDuTexteComplet() {
   const mouvementsReduits = useReducedMotion();
   if (!retour?.complet || mouvementsReduits) return null;
   return (
-    <div key={retour.numero} className="etincelles etincelles-du-texte" aria-hidden="true" data-testid="etincelles-du-texte" data-etincelles="texte-complet">
+    <div key={retour.numero} className="etincelles-du-texte" aria-hidden="true" data-testid="etincelles-du-texte" data-etincelles="texte-complet">
       {ETINCELLES.map(({ gauche, delai }) => (
         <motion.span
           key={gauche}
