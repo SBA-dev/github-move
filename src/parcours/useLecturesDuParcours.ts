@@ -13,20 +13,25 @@ export type LecturesDuParcours = {
   readonly leconsReussiesAuTestDeDepart: ReadonlySet<string>;
 };
 
-/** Les leçons de la bibliothèque, les meilleures étoiles du profil et ses leçons réussies au test de départ ; `undefined` pendant la lecture. */
+/** Les leçons de la bibliothèque, les meilleures étoiles du profil et ses leçons réussies au test de départ. */
+export async function lireLesLecturesDuParcours(profil: string): Promise<LecturesDuParcours> {
+  if (reseauDisponible()) await attendreLesEnvoisEnCours();
+  const [lecons, meilleuresEtoiles, testDeDepart] = await Promise.all([
+    chargerToutesLesLecons(),
+    lireLesMeilleuresEtoilesDuProfil(profil),
+    lireLEtatDuTestDeDepart(profil),
+  ]);
+  return { lecons, meilleuresEtoiles, leconsReussiesAuTestDeDepart: testDeDepart.leconsReussies };
+}
+
+/** Les lectures du parcours du profil ; `undefined` pendant la lecture. */
 export function useLecturesDuParcours(profil: string): LecturesDuParcours | undefined {
   const [lectures, setLectures] = useState<LecturesDuParcours | undefined>();
   useEffect(() => {
     let annule = false;
-    void (async () => {
-      if (reseauDisponible()) await attendreLesEnvoisEnCours();
-      const [lecons, meilleuresEtoiles, testDeDepart] = await Promise.all([
-        chargerToutesLesLecons(),
-        lireLesMeilleuresEtoilesDuProfil(profil),
-        lireLEtatDuTestDeDepart(profil),
-      ]);
-      if (!annule) setLectures({ lecons, meilleuresEtoiles, leconsReussiesAuTestDeDepart: testDeDepart.leconsReussies });
-    })();
+    void lireLesLecturesDuParcours(profil).then((lues) => {
+      if (!annule) setLectures(lues);
+    });
     return () => {
       annule = true;
     };

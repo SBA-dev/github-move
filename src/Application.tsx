@@ -21,7 +21,7 @@ import { LeconsPersonnellesDuParent } from "./accompagnement/index.ts";
 import { EcranDeLEpisode } from "./histoire/index.ts";
 import { MesMedailles } from "./medailles/index.ts";
 import { SuiviDeLEspaceParent } from "./suivi/index.ts";
-import { MonParcours } from "./parcours/index.ts";
+import { MonParcours, useProchainesLeconsConnues } from "./parcours/index.ts";
 import { EcranDeRevision, useQuestionsDuesALAccueil, useRenvoiDesSeancesDeRevisionGardees } from "./revision/index.ts";
 import { ToutesLesLecons, useChoixDeToutesLesLecons } from "./toutes-les-lecons/index.ts";
 import { AideEcranDAccueil } from "./installation/index.ts";
@@ -124,6 +124,8 @@ export function Application() {
   }, [lieu, lieuDemande, remplacer]);
   const [matiereDuParcours, setMatiereDuParcours] = useState<CodeDeMatiere | undefined>();
   const [classesDAvantDeplieesPour, setClassesDAvantDeplieesPour] = useState<ReadonlySet<CodeDeMatiere>>(new Set());
+  const { connues: prochainesLeconsConnues, memoriser: memoriserLaProchaineLecon, oublier: oublierLesProchainesLeconsConnues } =
+    useProchainesLeconsConnues(profilEnCours);
   const choixDeToutesLesLecons = useChoixDeToutesLesLecons();
   const { oublier: oublierLesChoixDeToutesLesLecons } = choixDeToutesLesLecons;
   const basculerLesClassesDAvant = (matiere: CodeDeMatiere) =>
@@ -137,6 +139,7 @@ export function Application() {
     oublierLeProfilEnCours();
     setMatiereDuParcours(undefined);
     setClassesDAvantDeplieesPour(new Set());
+    oublierLesProchainesLeconsConnues();
     oublierLesChoixDeToutesLesLecons();
   };
   const seDeconnecter = async () => {
@@ -265,6 +268,8 @@ export function Application() {
                     classesDAvantDeplieesPour={classesDAvantDeplieesPour}
                     onBasculerLesClassesDAvant={basculerLesClassesDAvant}
                     onOuvrirLaLecon={(leconId) => aller({ ecran: "lecon", leconId })}
+                    prochainesLeconsConnues={prochainesLeconsConnues}
+                    onMemoriserLaProchaineLecon={memoriserLaProchaineLecon}
                   />
                 )}
                 {lieu.ecran === "toutes-les-lecons" && profilCharge && profilEnCours && (

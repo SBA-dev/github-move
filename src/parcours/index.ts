@@ -11,3 +11,4 @@ export {
   nombreDeLecons,
   reussiteDeLEtat,
 } from "./textes-du-parcours.ts";
+export { useProchainesLeconsConnues } from "./useProchainesLeconsConnues.ts";
