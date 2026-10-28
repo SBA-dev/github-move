@@ -36,19 +36,20 @@ export function useGlisserUneEtiquette<E extends HTMLElement>({ glissable, onSur
     element.style.translate = `${point.x - depart.x}px ${point.y - depart.y}px`;
   };
 
+  const remettreEnPlace = (element: HTMLElement) => {
+    element.style.translate = "";
+    setEtat("a-poser");
+  };
+
   const revenir = (element: HTMLElement) => {
     const depuis = element.style.translate;
     if (mouvementsReduits) {
-      element.style.translate = "";
-      setEtat("a-poser");
+      remettreEnPlace(element);
       return;
     }
     setEtat("revient");
     retour.current = element.animate({ translate: [depuis, "0px 0px"] }, { duration: DUREE_DU_RETOUR_MS, easing: "ease-out" });
-    void retour.current.finished.then(() => {
-      element.style.translate = "";
-      setEtat("a-poser");
-    }, () => undefined);
+    void retour.current.finished.then(() => remettreEnPlace(element), () => undefined);
   };
 
   const terminer = (evenement: PointerEvent<E>, lacher: boolean) => {
@@ -65,7 +66,10 @@ export function useGlisserUneEtiquette<E extends HTMLElement>({ glissable, onSur
     ? {
       onPointerDown: (evenement: PointerEvent<E>) => {
         if (evenement.pointerType === "mouse" && evenement.button !== 0) return;
-        retour.current?.cancel();
+        if (retour.current?.playState === "running") {
+          retour.current.cancel();
+          remettreEnPlace(evenement.currentTarget);
+        }
         aGlisse.current = false;
         geste.current = { pointeur: evenement.pointerId, depart: { x: evenement.clientX, y: evenement.clientY }, glisse: false };
         evenement.currentTarget.setPointerCapture(evenement.pointerId);
