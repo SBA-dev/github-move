@@ -4,7 +4,7 @@ import type { Univers } from "@domain/motivation";
 import { PersonnageGuide } from "../univers/index.ts";
 import type { Point } from "./geometrie-du-dessin.ts";
 
-/** Une marche, d'un arrêt à un autre du dessin : des rangs, la fin du dessin étant l'arrêt qui suit la dernière leçon. */
+/** Une marche, d'un arrêt à un autre du dessin : des indices d'affichage, la fin du dessin étant l'arrêt qui suit la dernière leçon. */
 export type Marche = { readonly depuis: number; readonly jusqua: number };
 
 const DUREE_MAXIMALE_DE_LA_MARCHE_EN_SECONDES = 1.8;

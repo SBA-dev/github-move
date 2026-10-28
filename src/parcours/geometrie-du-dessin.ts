@@ -10,8 +10,8 @@ const MARGE_DU_PERSONNAGE_GUIDE_EN_PX = 6;
 /** Le tracé serpente : les leçons se posent tour à tour à gauche, au centre, à droite, au centre (en % de la largeur). */
 const CENTRES_DES_LECONS_EN_POURCENT = [32, 50, 68, 50] as const;
 
-export function centreDeLaLeconEnPourcent(rang: number): number {
-  return CENTRES_DES_LECONS_EN_POURCENT[rang % CENTRES_DES_LECONS_EN_POURCENT.length] ?? 50;
+export function centreDeLaLeconEnPourcent(indexDAffichage: number): number {
+  return CENTRES_DES_LECONS_EN_POURCENT[indexDAffichage % CENTRES_DES_LECONS_EN_POURCENT.length] ?? 50;
 }
 
 export function centreDe(boite: Boite): Point {
@@ -40,8 +40,8 @@ export function emplacementSurLaColline(fin: Boite): Point {
 export function tracePassantPar(points: readonly Point[]): string {
   const [premier, ...suivants] = points;
   if (!premier) return "";
-  const segments = suivants.map((point, rang) => {
-    const precedent = points[rang] ?? premier;
+  const segments = suivants.map((point, indexDAffichage) => {
+    const precedent = points[indexDAffichage] ?? premier;
     const milieu = (precedent.y + point.y) / 2;
     return `C ${precedent.x} ${milieu} ${point.x} ${milieu} ${point.x} ${point.y}`;
   });

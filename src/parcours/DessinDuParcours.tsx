@@ -21,21 +21,21 @@ type Props = {
 
 function marcheDe(avancee: AvanceeDansLeParcours | undefined, parcours: Parcours): Marche | undefined {
   if (!avancee) return undefined;
-  const rangDe = (leconId: string) => parcours.lecons.findIndex((lecon) => lecon.lecon === leconId);
+  const indexDAffichageDe = (leconId: string) => parcours.lecons.findIndex((lecon) => lecon.lecon === leconId);
   return {
-    depuis: rangDe(avancee.depuis),
-    jusqua: avancee.jusqua.genre === "lecon" ? rangDe(avancee.jusqua.lecon) : parcours.lecons.length,
+    depuis: indexDAffichageDe(avancee.depuis),
+    jusqua: avancee.jusqua.genre === "lecon" ? indexDAffichageDe(avancee.jusqua.lecon) : parcours.lecons.length,
   };
 }
 
-function arretDe(parcours: Parcours): number {
-  const rang = parcours.lecons.findIndex((lecon) => lecon.lecon === parcours.prochaineLecon);
-  return rang === -1 ? parcours.lecons.length : rang;
+function emplacementDe(parcours: Parcours): number {
+  const indexDAffichage = parcours.lecons.findIndex((lecon) => lecon.lecon === parcours.prochaineLecon);
+  return indexDAffichage === -1 ? parcours.lecons.length : indexDAffichage;
 }
 
 type StyleDeLaLecon = CSSProperties & { readonly "--centre": number };
 
-const styleDeLaLecon = (rang: number): StyleDeLaLecon => ({ "--centre": centreDeLaLeconEnPourcent(rang) });
+const styleDeLaLecon = (indexDAffichage: number): StyleDeLaLecon => ({ "--centre": centreDeLaLeconEnPourcent(indexDAffichage) });
 
 /** La page s'ouvre sur la prochaine leçon, ou sur la fin du dessin quand la matière est réussie. */
 function defilerJusqua(dessin: HTMLElement | null, arret: number, nombreDeLecons: number): void {
@@ -53,7 +53,7 @@ export function DessinDuParcours({ parcours, univers, prochaineLeconConnue, onMe
   const mesures = useMesuresDuDessin(dessin);
   const [marche] = useState(() => (mouvementsReduits() ? undefined : marcheDe(avanceeDansLeParcours(prochaineLeconConnue, parcours), parcours)));
   const [annonce, setAnnonce] = useState("");
-  const arret = arretDe(parcours);
+  const arret = emplacementDe(parcours);
   const noms = [...parcours.lecons.map((lecon) => String(lecon.place)), NOM_DE_LA_FIN_DU_DESSIN];
   const { prochaineLecon } = parcours;
   useEffect(() => onMemoriserLaProchaineLecon(prochaineLecon), [prochaineLecon, onMemoriserLaProchaineLecon]);
@@ -62,8 +62,8 @@ export function DessinDuParcours({ parcours, univers, prochaineLeconConnue, onMe
     <div className="dessin-du-parcours" data-testid="dessin-du-parcours" ref={dessin}>
       {mesures && <TraceDuParcours mesures={mesures} />}
       <ol className="lecons-du-dessin">
-        {parcours.lecons.map((lecon, rang) => (
-          <li key={lecon.lecon} style={styleDeLaLecon(rang)}>
+        {parcours.lecons.map((lecon, indexDAffichage) => (
+          <li key={lecon.lecon} style={styleDeLaLecon(indexDAffichage)}>
             {renduDeLaLecon(lecon)}
           </li>
         ))}
