@@ -134,7 +134,7 @@ export class LectureAVoixHaute {
     try {
       await this.dependances.lecteurDEffetsSonores.jouer(effet);
     } catch {
-      // Un effet impossible ne doit jamais empêcher la parole.
+      return;
     }
   }
 
