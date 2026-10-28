@@ -70,6 +70,8 @@ function rangDesMots(
 export class LectureAVoixHaute {
   private etat: EtatDuSon;
   private voixSuspendue = false;
+  private suiteDEffets = 0;
+  private effetEnCours = false;
   private voixBloqueeSignalee = false;
 
   constructor(private readonly dependances: DependancesDeLectureAVoixHaute) {
@@ -78,7 +80,8 @@ export class LectureAVoixHaute {
 
   async lire(brut: string, options: OptionsDeLecture = {}): Promise<ParoleEntendue> {
     if (this.voixSuspendue) return PAROLE_NON_ENTENDUE;
-    if (options.effetsAvant) await this.jouer(options.effetsAvant);
+    this.arreterLesEffets();
+    if (options.effetsAvant && !await this.jouerLesEffets(options.effetsAvant)) return PAROLE_NON_ENTENDUE;
     if (this.etat === "muet") return PAROLE_NON_ENTENDUE;
     return await this.lireLeTexte(brut, options);
   }
@@ -110,11 +113,32 @@ export class LectureAVoixHaute {
   }
 
   async jouer(effets: readonly EffetSonore[]): Promise<void> {
-    for (const effet of effets) await this.dependances.lecteurDEffetsSonores.jouer(effet);
+    this.arreterLesEffets();
+    await this.jouerLesEffets(effets);
+  }
+
+  private async jouerLesEffets(effets: readonly EffetSonore[]): Promise<boolean> {
+    if (this.voixSuspendue) return false;
+    const suite = this.suiteDEffets;
+    for (const effet of effets) {
+      if (suite !== this.suiteDEffets) return false;
+      this.effetEnCours = true;
+      await this.dependances.lecteurDEffetsSonores.jouer(effet);
+      if (suite === this.suiteDEffets) this.effetEnCours = false;
+    }
+    return suite === this.suiteDEffets;
+  }
+
+  private arreterLesEffets(): void {
+    this.suiteDEffets++;
+    if (!this.effetEnCours) return;
+    this.effetEnCours = false;
+    this.dependances.lecteurDEffetsSonores.arreter();
   }
 
   couperLaVoix(): void {
     this.dependances.lecteur.arreter();
+    this.arreterLesEffets();
   }
 
   suspendre(): void {
@@ -128,7 +152,7 @@ export class LectureAVoixHaute {
 
   passerEnMuet(): void {
     this.etat = "muet";
-    this.couperLaVoix();
+    this.dependances.lecteur.arreter();
     this.signalerLaFinDeLaVoixBloquee();
   }
 
