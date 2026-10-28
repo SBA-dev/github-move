@@ -43,3 +43,5 @@ Bloc A — Apprentissage, `avanceeDansLeParcours` (`supabase/functions/_shared/a
 - A5 matière réussie : avancée jusqu'à la fin du parcours (inv. 5)
 - A6 prochaine leçon connue qui n'est plus dans le parcours (classe changée) : aucune avancée (inv. 1)
 - A7 jamais en arrière (leçon ajoutée avant) : aucune avancée (inv. 2)
+- 22:10–22:45 UTC : bloc A vert en 5 cycles RED/GREEN (A1, A2, A4, A7 rouges puis verts ; A3/A5 et A6/A2 bis écrits verts, car la branche était déjà écrite pour que le type compile). 2531 tests unitaires verts. Dernier commit : `2726151`.
+- Revue intermédiaire du bloc A (`mr-reviewer`, delta `24cfde3..2726151`) : **APPROUVÉ**. Non bloquants : `placeDe` renvoie un index (lire `place`), commentaire « API attendue » à retirer du test, test explicite « changement de classe » facultatif. Repris au câblage. Point de départ du delta suivant : `2726151`.
