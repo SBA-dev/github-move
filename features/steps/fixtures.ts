@@ -1,5 +1,6 @@
 import { test as base, createBdd } from "playwright-bdd";
 import { Famille } from "../support/famille.ts";
+import { installerLesEnregistreurs, RequetesVues } from "../support/enregistreurs-visuels.ts";
 import { LecturesDesResultats } from "../support/lectures-des-resultats.ts";
 import type { ReglagesBruts } from "../support/reglages-prevus.ts";
 
@@ -26,7 +27,23 @@ export type Pwa = {
 // exécution à l'autre.
 const JETON_DU_WORKER = crypto.randomUUID().slice(0, 8);
 
-export const test = base.extend<{ monde: Monde; pwa: Pwa; famille: Famille; lecturesDesResultats: LecturesDesResultats }>({
+export const test = base.extend<{
+  monde: Monde;
+  pwa: Pwa;
+  famille: Famille;
+  lecturesDesResultats: LecturesDesResultats;
+  requetesVues: RequetesVues;
+}>({
+  // Story #96 : enregistreurs de mouvements (injectés avant toute navigation) et des requêtes de polices.
+  requetesVues: [async ({ page, $tags, $testInfo }, use) => {
+    if ($tags.includes("@issue-96")) {
+      // Le vrai profil de Léa, ses réglages et les écrans joués jusqu'à leur fin passent par le serveur.
+      $testInfo.setTimeout(120_000);
+      await installerLesEnregistreurs(page);
+    }
+    await use(new RequetesVues(page));
+  }, { auto: true }],
+
   // Story #5 : parents de test et boîte des e-mails de connexion (projet Supabase de développement).
   // Suffixe d'adresse propre au projet, au worker et à l'exécution : deux scénarios exécutés en même temps ne se
   // disputent pas le même parent de test (le nettoyage de l'un supprimait le parent de l'autre en pleine connexion).
@@ -70,4 +87,4 @@ export const test = base.extend<{ monde: Monde; pwa: Pwa; famille: Famille; lect
   },
 });
 
-export const { Given, When, Then, After } = createBdd(test);
+export const { Given, When, Then, After, Before } = createBdd(test);

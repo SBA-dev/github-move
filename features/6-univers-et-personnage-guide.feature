@@ -21,7 +21,7 @@ Fonctionnalité: Univers et personnage guide
         | Princesses et fées  | Lumi             |
         | Animaux de la forêt | Noisette         |
         | Sports              | Coach Léo        |
-        | Police              | Agente Mila      |
+        | Police              | Agent Max        |
         | Pompiers            | Capitaine Sam    |
         | Danse               | Lili             |
 
@@ -33,11 +33,12 @@ Fonctionnalité: Univers et personnage guide
 
   Règle: Sans univers connu, l'enfant joue dans l'univers « Animaux de la forêt », avec Noisette
 
-    @a-valider
-    Scénario: Sans profil enfant en cours, Noisette accueille l'enfant
+    # Réponse 96.17 (A) : sans profil enfant en cours, l'écran est celui du parent, sobre comme l'Espace parent (#96).
+    Scénario: Sans profil enfant en cours, Savanturier ouvre l'écran « Se connecter », sans paysage ni Noisette
       Étant donné qu'aucun profil enfant n'est en cours sur l'appareil
       Quand j'ouvre Savanturier
-      Alors je vois Noisette dans le paysage de l'univers « Animaux de la forêt »
+      Alors Paul voit l'écran « Se connecter »
+      Mais aucun paysage ni aucun personnage guide n'y apparaît
 
     Plan du Scénario: Un profil enfant <cas> joue avec Noisette
       Étant donné que Léa a un profil enfant préparé <cas>
@@ -94,7 +95,7 @@ Fonctionnalité: Univers et personnage guide
         | Princesses et fées  | Lumi             | « Abracadabra ! », « Par ma baguette, bravo ! », « Magique ! »         |
         | Animaux de la forêt | Noisette         | « Youpi ! », « Hop hop hop, bravo ! », « Trop fort, ça ! »             |
         | Sports              | Coach Léo        | « Allez, on y va ! », « Et c'est le but ! », « Quelle équipe ! »       |
-        | Police              | Agente Mila      | « Enquête résolue ! », « Bien vu, détective ! », « Affaire classée ! » |
+        | Police              | Agent Max        | « Enquête résolue ! », « Bien vu, détective ! », « Affaire classée ! » |
         | Pompiers            | Capitaine Sam    | « Mission accomplie ! », « Pin-pon, bravo ! », « Sauvetage réussi ! »  |
         | Danse               | Lili             | « Et hop, une pirouette ! », « En rythme, bravo ! », « Quelle grâce ! » |
 
@@ -103,7 +104,7 @@ Fonctionnalité: Univers et personnage guide
       Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Police »
       Et que Léa joue une leçon de test de deux questions à quatre choix
       Quand Léa répond « 7 »
-      Alors la félicitation commune dite par Agente Mila fait partie de « Bravo ! », « Super ! », « Ouah, bien joué ! », « Exactement ! », « Génial ! », « Tu gères ! », « Parfait ! », « Oui, c'est ça ! »
+      Alors la félicitation commune dite par Agent Max fait partie de « Bravo ! », « Super ! », « Ouah, bien joué ! », « Exactement ! », « Génial ! », « Tu gères ! », « Parfait ! », « Oui, c'est ça ! »
 
     @issue-58
     Scénario: Après une erreur, le personnage guide encourage sans punir
@@ -127,12 +128,13 @@ Fonctionnalité: Univers et personnage guide
       Alors je vois le nom de l'application
       Mais l'en-tête n'affiche aucun prénom ni aucun niveau
 
-    @a-valider
+    # Réponse 96.17 (A) : l'accueil sans profil enfant en cours est l'écran « Se connecter », sobre (#96).
     Scénario: Le nom de l'application ramène à l'accueil
       Étant donné que Léa a un profil enfant préparé dans l'univers « Danse »
       Et que Léa joue
       Quand Léa revient à l'accueil par le nom de l'application
-      Alors je vois Noisette dans le paysage de l'univers « Animaux de la forêt »
+      Alors Paul voit l'écran « Se connecter »
+      Mais aucun paysage ni aucun personnage guide n'y apparaît
       Et l'en-tête n'affiche aucun prénom ni aucun niveau
 
     @a-valider

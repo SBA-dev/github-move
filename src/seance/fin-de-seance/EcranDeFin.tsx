@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import { motion } from "motion/react";
+import { mouvementsReduits } from "../../transitions/index.ts";
 import { leconSuivanteEnFinDeSeance, type Seance } from "@domain/apprentissage";
 import { pageDeLaLecon } from "@domain/catalogue";
 import {
@@ -107,10 +109,18 @@ export function EcranDeFin({ seance, niveau, onDireLaFin, meilleuresEtoilesAvant
     onDireLaFin(terminee.etoiles, { objet, episode, badge });
   }, [terminee, pret, objet, episodePret, episode, badgePret, badge, onDireLaFin]);
 
+  const sansMouvement = mouvementsReduits();
   const etoiles = terminee?.etoiles;
   const scores = Object.entries(terminee?.scoresDeFluence ?? {});
   return (
-    <div className="fin-de-seance" data-testid="fin-de-seance">
+    <motion.div
+      className="fin-de-seance"
+      data-testid="fin-de-seance"
+      data-transition={sansMouvement ? "aucune" : "fondu"}
+      initial={sansMouvement ? false : { opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.25, ease: "easeOut" }}
+    >
       <Etincelles />
       {etoiles !== undefined && (
         <>
@@ -153,6 +163,6 @@ export function EcranDeFin({ seance, niveau, onDireLaFin, meilleuresEtoilesAvant
         {suite && !suivante && <button type="button" onClick={onToutesLesLecons}>Toutes les leçons</button>}
       </div>
       <p className="message-erreur" role="status" data-testid="sauvegarde">{message}</p>
-    </div>
+    </motion.div>
   );
 }

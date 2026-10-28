@@ -11,7 +11,7 @@ export function Paysage({ univers }: { readonly univers: CleUnivers }) {
   const ciel = `${identifiant}-ciel`;
   const soleil = `${identifiant}-soleil`;
   return (
-    <div className="paysage" data-testid="paysage" data-univers={univers} aria-hidden="true">
+    <div className="paysage" data-testid="paysage" data-univers={univers} aria-hidden="true" style={{ backgroundColor: palette.collines[2] }}>
       <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMax slice">
         <defs>
           <linearGradient id={ciel} x1="0" y1="0" x2="0" y2="1">
