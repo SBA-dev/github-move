@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { CIBLE_DE_LA_ZONE_DE_REPONSE, useRetourDe } from "../../retours/index.ts";
 
 const CHIFFRES_AU_PLUS = 4;
 const CHIFFRES = ["1", "2", "3", "4", "5", "6", "7", "8", "9"] as const;
@@ -62,6 +63,8 @@ function useClavierPhysique(actif: boolean, taper: (chiffre: string) => void, ef
 export function ClavierDeCristaux({ onValider, chiffresQuiBrillent = [], desactive = false }: Props) {
   const { saisie, taper, effacer, valider } = useSaisie(onValider);
   useClavierPhysique(!desactive, taper, effacer, valider);
+  /** La réponse est validée par « Valider » : c'est lui qui rebondit ou se balance. */
+  const retour = useRetourDe<HTMLButtonElement>(CIBLE_DE_LA_ZONE_DE_REPONSE);
   const touche = (chiffre: string) => (
     <button
       key={chiffre}
@@ -91,9 +94,11 @@ export function ClavierDeCristaux({ onValider, chiffresQuiBrillent = [], desacti
         </button>
         {touche("0")}
         <button
+          ref={retour.ref}
           type="button"
           className="cristal action valider"
           data-testid="valider"
+          {...retour.attributs}
           aria-disabled={desactive ? true : undefined}
           onClick={() => !desactive && valider()}
         >

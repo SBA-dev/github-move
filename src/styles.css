@@ -305,7 +305,7 @@ button:focus-visible, summary:focus-visible { outline: 3px solid var(--texte); o
   border-radius: var(--rayon);
   cursor: pointer;
 }
-.exercice-en-cours { display: grid; justify-items: center; gap: 12px; }
+.exercice-en-cours { position: relative; display: grid; justify-items: center; gap: 12px; }
 .annonce-d-avancement {
   position: absolute;
   width: 1px;
@@ -579,6 +579,9 @@ button.tuile .nom-de-la-tuile, button.tuile .nom-de-la-matiere { font-size: 1.1r
 .actions-de-fin { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 100%; }
 .etincelles { position: absolute; inset: 0; pointer-events: none; }
 .etincelles span { position: absolute; top: 40px; width: 12px; height: 12px; border-radius: 50%; background: var(--or); }
+/* Retours de réponse : la réussite prend la couleur de réussite, avec ou sans mouvement ; une erreur ne prend jamais de rouge. */
+[data-reussite="true"] { background: var(--succes-fond); border-color: var(--succes); }
+.etincelles-du-texte { z-index: 1; }
 .meilleures-etoiles { display: grid; justify-items: center; gap: 4px; }
 .meilleures-etoiles .etoiles-dessinees svg { width: 36px; height: 36px; }
 .meilleures-etoiles p { padding: 4px 12px; border-radius: var(--rayon); background: var(--surface-voilee); font-weight: 700; }

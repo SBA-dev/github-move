@@ -1,4 +1,5 @@
-import { useEffect, useRef } from "react";
+import { type RefObject, useEffect, useRef } from "react";
+import { useRetourDe } from "../../retours/index.ts";
 import { TexteEnSyllabes } from "../../reglages/index.ts";
 
 type Props = {
@@ -27,25 +28,52 @@ export function ChoixDeLaQuestion(
 
   return (
     <div className="choix-de-la-question" role="group" aria-label="Choix" data-testid="choix-de-la-question">
-      {textes.map((texte) => {
-        const ecarte = ecartes.includes(texte);
-        return (
-          <button
-            key={texte}
-            ref={texte === premierPossible ? bulleAFocaliser : undefined}
-            type="button"
-            className="bulle-de-choix"
-            data-testid="choix"
-            data-ecarte={ecarte ? "true" : undefined}
-            data-brille={texte === reponseQuiBrille && !reussie ? "true" : undefined}
-            data-eclatee={texte === bulleEclatee ? "true" : undefined}
-            aria-disabled={ecarte || reussie ? true : undefined}
-            onClick={() => onChoisir(texte)}
-          >
-            <TexteEnSyllabes texte={texte} />
-          </button>
-        );
-      })}
+      {textes.map((texte) => (
+        <BulleDeChoix
+          key={texte}
+          texte={texte}
+          ecarte={ecartes.includes(texte)}
+          brille={texte === reponseQuiBrille && !reussie}
+          eclatee={texte === bulleEclatee}
+          reussie={reussie}
+          aFocaliser={texte === premierPossible ? bulleAFocaliser : undefined}
+          onChoisir={onChoisir}
+        />
+      ))}
     </div>
+  );
+}
+
+type PropsDeLaBulle = {
+  readonly texte: string;
+  readonly ecarte: boolean;
+  readonly brille: boolean;
+  readonly eclatee: boolean;
+  readonly reussie: boolean;
+  /** Reçoit le focus quand le choix change : la première bulle encore possible. */
+  readonly aFocaliser: RefObject<HTMLButtonElement | null> | undefined;
+  readonly onChoisir: (texte: string) => void;
+};
+
+function BulleDeChoix({ texte, ecarte, brille, eclatee, reussie, aFocaliser, onChoisir }: PropsDeLaBulle) {
+  const retour = useRetourDe<HTMLButtonElement>(texte);
+  return (
+    <button
+      ref={(bouton) => {
+        retour.ref.current = bouton;
+        if (aFocaliser) aFocaliser.current = bouton;
+      }}
+      type="button"
+      className="bulle-de-choix"
+      data-testid="choix"
+      data-ecarte={ecarte ? "true" : undefined}
+      data-brille={brille ? "true" : undefined}
+      data-eclatee={eclatee ? "true" : undefined}
+      {...retour.attributs}
+      aria-disabled={ecarte || reussie ? true : undefined}
+      onClick={() => onChoisir(texte)}
+    >
+      <TexteEnSyllabes texte={texte} />
+    </button>
   );
 }

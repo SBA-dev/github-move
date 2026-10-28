@@ -1,4 +1,5 @@
 import type { CorrectionDuMot, QuestionDeDictee } from "@domain/apprentissage";
+import { CIBLE_DE_LA_ZONE_DE_REPONSE, useRetourDe } from "../../retours/index.ts";
 
 type Props = {
   readonly question: QuestionDeDictee;
@@ -30,8 +31,9 @@ function descriptionDeLaCase(rang: number, { lettre, fausse, montree }: LettreDe
 /** Une case par lettre à écrire ; espaces, apostrophes, tirets et points sont déjà écrits. Le mot n'apparaît que lettre après lettre. */
 export function CasesDeLaDictee({ question, lettresFausses }: Props) {
   let rang = 0;
+  const retour = useRetourDe<HTMLOListElement>(CIBLE_DE_LA_ZONE_DE_REPONSE);
   return (
-    <ol className="mot-a-ecrire" aria-label="Mot à écrire" data-testid="mot-a-ecrire">
+    <ol ref={retour.ref} {...retour.attributs} className="mot-a-ecrire" aria-label="Mot à écrire" data-testid="mot-a-ecrire">
       {question.cases().map((une, position) => {
         if (une.genre === "dejaEcrit") {
           return <li key={position} className="caractere-deja-ecrit" data-testid="caractere-deja-ecrit">{une.caractere}</li>;
