@@ -7,7 +7,7 @@ import type { LeconDuParcours } from "./bibliotheque-du-parcours.ts";
 
 const SECTION_DE_TEST = "c2-francais-cp-identifier-les-mots-de-maniere-de-plus-en-plus-aisee";
 const CITATION_DE_TEST = "Décoder et encoder de 25 à 30 CGP.";
-const MOTS = ["loup", "mouton", "ballon", "maman"];
+const MOTS = ["loup", "lapin", "ballon", "maman"];
 const NOMBRE_DE_LECONS_DE_MATHS = 31;
 
 function leconDeTest(matiere: string, niveau: string, ordre: number, titre: string): LeconDuParcours {
