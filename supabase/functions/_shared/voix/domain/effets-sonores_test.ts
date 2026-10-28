@@ -9,7 +9,7 @@ import { ChoixDeVoixEnMemoire } from "../test_utils/choix-de-voix-en-memoire.ts"
 
 const CARACTERE_NOISETTE: CaractereDeLaVoix = { sexe: "feminine", hauteur: 1.25, rythme: 1 };
 
-function uneLecture() {
+function uneLecture(etatInitial: "son" | "muet" = "son") {
   const journal: string[] = [];
   const lecteur = new LecteurEnMemoire(journal);
   const lecteurDEffetsSonores = new LecteurDEffetsSonoresEnMemoire(journal);
@@ -20,7 +20,7 @@ function uneLecture() {
     choixDeVoix: new ChoixDeVoixEnMemoire(),
     hasard: hasardFixe(0.5),
     caractereDuPersonnageGuide: () => CARACTERE_NOISETTE,
-    etatInitial: "son",
+    etatInitial,
     onVoixBloquee: () => {},
     onFinDeLaVoixBloquee: () => {},
   });
@@ -71,4 +71,27 @@ Deno.test("la parole ne commence qu'à la fin du dernier effet sonore", async ()
   lecteurDEffetsSonores.terminerLEffetEnCours();
   await parole;
   assertEquals(lecteur.lectures.length, 1);
+});
+
+Deno.test("en Muet, les effets sonores sont joués mais la parole n'est pas lue", async () => {
+  const { lecture, journal } = uneLecture("muet");
+
+  const parole = await lecture.lire("Bravo !", { effetsAvant: ["reponseJuste"] });
+
+  assertEquals(journal, ["effet:reponseJuste"]);
+  assertEquals(parole, { entendue: false });
+});
+
+Deno.test("passer en Muet pendant un effet sonore ne l'arrête pas et la parole qui suivait n'est pas lue", async () => {
+  const { lecture, lecteurDEffetsSonores, lecteur } = uneLecture();
+  lecteurDEffetsSonores.jouerSansTerminerAutomatiquement();
+
+  const parole = lecture.lire("Bravo !", { effetsAvant: ["reponseJuste"] });
+  await Promise.resolve();
+  lecture.passerEnMuet();
+  lecteurDEffetsSonores.terminerLEffetEnCours();
+  await parole;
+
+  assertEquals(lecteurDEffetsSonores.arrets, []);
+  assertEquals(lecteur.lectures.length, 0);
 });
