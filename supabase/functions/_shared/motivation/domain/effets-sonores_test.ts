@@ -1,9 +1,5 @@
 import { assertEquals } from "@std/assert";
-import {
-  effetsSonoresApresUneBonneReponse,
-  effetsSonoresDeLaFin,
-  effetSonoreDuRecord,
-} from "./effets-sonores.ts";
+import { effetSonoreDuRecord, effetsSonoresApresUneBonneReponse, effetsSonoresDeLaFin } from "./effets-sonores.ts";
 
 const sansPointGagne = {
   questionsReussiesAvant: 2,
