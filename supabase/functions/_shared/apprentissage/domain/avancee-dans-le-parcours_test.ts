@@ -5,8 +5,6 @@ import { avanceeDansLeParcours } from "./avancee-dans-le-parcours.ts";
 import { Etoiles } from "./etoiles.ts";
 import { parcoursDeLaMatiere } from "./parcours.ts";
 
-// API attendue : AvanceeDansLeParcours = { depuis: LeconId; jusqua: { genre: "lecon"; lecon: LeconId } | { genre: "finDuParcours" } }
-
 function lecon(id: string, ordre: number): Lecon {
   return lireLecon({
     id,
