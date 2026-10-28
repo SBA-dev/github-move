@@ -1,43 +1,47 @@
 # language: fr
 @issue-98 @wip
-Fonctionnalité: Des exercices qui ressemblent à des jeux : glisser les étiquettes, maisons et petit train
+Fonctionnalité: Des exercices qui ressemblent à des jeux : glisser les étiquettes dans les maisons de son univers
   En tant qu'enfant
-  Je veux glisser mes étiquettes du doigt dans des maisons qui s'ouvrent, et accrocher les bonnes à un petit train
-  Afin que ranger et remettre dans l'ordre ressemblent à un petit jeu, et d'avoir envie de faire la question suivante
+  Je veux glisser mes étiquettes du doigt dans des maisons de mon univers, qui s'ouvrent et s'allument
+  Afin que ranger ressemble à un petit jeu dans mon univers, et d'avoir envie de faire la question suivante
 
-  Tranche 98a de la story #98 (docs/stories/98/domain-model.md, « Proposition de découpage ») : le geste glisser
-  au doigt et les invariants, pour les exercices classer, ordre et l'ordre des vers de memoriser. Les autres types
-  d'exercices sont hors de cette tranche (98b à 98e). La story ne change que l'affichage : la correction, les erreurs,
-  « Je ne sais pas », l'aide et les étoiles restent celles du domaine (#18, #22, #23, #24).
-  Cadrage validé par le PO le 2026-10-28 : les commentaires « Décision 98.n » renvoient aux questions tranchées de
-  docs/stories/98/acceptance.md. Les scénarios qui s'appuient sur un retour de #97 (effet sonore, étincelles)
-  portent le tag @depend-de-97 : ils ne redécrivent pas ces retours.
+  Tranche 98a de la story #98 (docs/stories/98/domain-model.md, « Découpage révisé ») : le geste glisser au doigt,
+  les invariants, et l'exercice classer avec la maison dessinée dans chacun des 6 univers (décision 98.2 :
+  habillage par univers). Le petit train de l'exercice ordre et de l'ordre des vers de memoriser sort de cette tranche
+  (question 98.30) ; les autres types d'exercices sont dans les tranches suivantes (#126 à #129). La story ne change
+  que l'affichage : la correction, les erreurs, « Je ne sais pas », l'aide et les étoiles restent celles du domaine
+  (#18, #22, #23, #24), et les retours de #97 (effet sonore, étincelles) ne sont pas redécrits.
+  Les commentaires « Décision 98.n » renvoient aux questions de docs/stories/98/acceptance.md. Les scénarios à valider
+  par le PO portent un tag : ils dépendent d'une question encore ouverte (98.25 à 98.31).
 
   Mots employés dans ces scénarios (mots d'interface, pas des termes du domaine) :
   - « faire glisser du doigt » : le geste glisser au toucher, sur la tablette et sur le téléphone (décision 98.17).
     La réponse qu'il produit reste un placement. Les scénarios sans précision de geste valent pour tous les gestes ;
   - « la maison » : l'interface d'un groupe de classer (décision n°24), dessinée en petite maison dont la porte
-    s'ouvre et qui s'allume quand une étiquette y est bien rangée (décision 98.6) ;
-  - « s'allume » n'est jamais « brille » : « brille » reste réservé à la bonne réponse montrée après « Je ne sais pas » ;
-  - « le petit train », « un wagon » : l'interface des places d'un ordre et de l'ordre des vers (décision 98.1).
-    Le petit train avance d'un wagon à chaque bon placement ;
+    s'ouvre et qui s'allume quand une étiquette y est bien rangée (décision 98.6). Le mot « maison » reste le même
+    dans les 6 univers, à l'écran comme à la voix ;
+  - « le dessin de l'univers » : la maison a un dessin propre à chaque univers (décision 98.2). Les scénarios ne
+    décrivent jamais ce qui est dessiné : l'objet de chaque univers est choisi par le PO (question 98.25) et validé
+    sur une planche, pas par un scénario ;
+  - « s'allume » n'est jamais « brille » : « brille » reste réservé à la bonne réponse montrée après « Je ne sais pas »,
+    de la même façon dans les 6 univers ;
   - « revient en glissant » : l'étiquette lâchée retourne à sa place parmi les étiquettes à poser par un mouvement,
     au lieu de réapparaître d'un coup ; durées pour l'implémentation et la review, jamais dans les étapes :
     chemin d'un objet vers sa cible de 150 à 400 ms, effet sonore de #97 parti en moins de 300 ms.
 
   Leçons de la bibliothèque utilisées, toutes déjà employées par d'autres stories : « Les sons ou, on, an »
   (classer « Les maisons des sons » : maisons « ou », « on », « an », 9 étiquettes, #18) ; « Les syllabes » (ordre
-  « Le mot en morceaux » : « do », « mi », « no », #18) ; « Compter jusqu'à 100 » (ordre « De dix en dix » : « 10 »
-  à « 100 », 10 étiquettes, la plus longue liste d'un ordre de la bibliothèque) ; « Poésie : La Cigale et la Fourmi »
-  (memoriser « Le début de la fable », 6 vers, #22). Leçons de test de #18 et #23 : l'exercice classer de deux
-  étiquettes « loup » pour « ou » et « pont » pour « on », et les exercices classer et ordre de « Je ne sais pas ».
+  « Le mot en morceaux » : « do », « mi », « no », #18). Leçons de test de #18 et #23 : l'exercice classer de deux
+  étiquettes « loup » pour « ou » et « pont » pour « on », et l'exercice classer de « Je ne sais pas ».
+  Les 6 univers et leur personnage guide (#6, #96) : Animaux de la forêt (Noisette), Princesses et fées (Lumi),
+  Sports (Coach Léo), Police (Agent Max), Pompiers (Capitaine Sam), Danse (Lili).
   Paul est le parent de Léa ; Léa a un profil enfant de niveau CP dans l'univers « Animaux de la forêt » : son
-  personnage guide est Noisette.
+  personnage guide est Noisette. Quand Léa a choisi un autre univers, elle y garde son niveau CP.
 
   Contexte:
     Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
 
-  Règle: Pour les mêmes réponses, l'habillage de jeu ne change rien : mêmes erreurs, même avancement de la séance, mêmes étoiles ; un exercice classer, un ordre et l'ordre des vers se terminent au doigt comme au clavier seulement ; en séance de révision et au test de départ, une question de classer reste une question à choix
+  Règle: Pour les mêmes réponses, l'habillage de jeu ne change rien : mêmes erreurs, même avancement de la séance, mêmes étoiles ; un exercice classer se termine au doigt comme au clavier seulement ; en séance de révision et au test de départ, une question de classer reste une question à choix
 
     Plan du Scénario: Léa range toutes les étiquettes <geste>, sans erreur, et gagne 3 étoiles
       Étant donné que Léa joue seulement l'exercice « Les maisons des sons » de la leçon « Les sons ou, on, an »
@@ -50,27 +54,6 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : glisser les étique
         | en la faisant glisser du doigt              |
         | en la touchant, puis en touchant la maison  |
         | au clavier seulement                        |
-
-    Plan du Scénario: Léa remet « Le mot en morceaux » dans l'ordre <geste>, sans erreur, et gagne 3 étoiles
-      Étant donné que Léa joue seulement l'exercice « Le mot en morceaux » de la leçon « Les syllabes »
-      Quand Léa pose les étiquettes « do », « mi » puis « no » <geste>
-      Alors Léa voit 3 étoiles allumées sur 3
-
-      Exemples:
-        | geste                 |
-        | du doigt              |
-        | au clavier seulement  |
-
-    Plan du Scénario: Léa remet les 6 vers dans l'ordre <geste>, puis passe aux mots cachés
-      Étant donné que Léa remet dans l'ordre les vers de « Le début de la fable »
-      Quand Léa remet les 6 vers dans l'ordre <geste>
-      Alors l'avancement de la séance montre 6 questions réussies sur 12
-      Et Léa voit les vers joints par « / », avec un trou dans chaque vers
-
-      Exemples:
-        | geste                 |
-        | du doigt              |
-        | au clavier seulement  |
 
     Plan du Scénario: Avec <erreurs> mauvais placement(s) faits en glissant du doigt, Léa gagne <résultat>, comme en touchant
       Étant donné qu'une leçon de test a un seul exercice classer de deux étiquettes, « loup » pour « ou » et « pont » pour « on »
@@ -133,7 +116,6 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : glisser les étique
       Et il reste 9 étiquettes à poser
 
     # Décision 98.11
-    @depend-de-97
     Scénario: Lâchée hors de toute maison, l'étiquette ne fait entendre aucun son de réponse
       Étant donné que Léa joue seulement l'exercice « Les maisons des sons » de la leçon « Les sons ou, on, an »
       Quand Léa fait glisser du doigt l'étiquette « loup » et la lâche hors de toute maison
@@ -155,12 +137,13 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : glisser les étique
       Alors l'étiquette « loup » reste dans la maison « ou »
       Et Noisette ne dit aucun encouragement
 
-    # Décisions 98.8 et 98.22
+    # Décisions 98.8 et 98.22. Le glisser au doigt arrive avec cette tranche : il ne doit pas poser une étiquette
+    # d'un ordre, qui se pose toujours en la touchant (le petit train viendra avec la tranche suivante, 98.30).
     Scénario: Dans un ordre, essayer de glisser une étiquette ne la pose pas : on la touche
       Étant donné que Léa joue seulement l'exercice « Le mot en morceaux » de la leçon « Les syllabes »
-      Quand Léa essaie de faire glisser du doigt l'étiquette « do » jusqu'au petit train
+      Quand Léa essaie de faire glisser du doigt l'étiquette « do » vers les places à remplir
       Alors l'étiquette « do » reste parmi les étiquettes à poser
-      Et le petit train n'a aucun wagon
+      Et aucune place n'est remplie
       Et Noisette ne dit aucun encouragement
 
     # Décision 98.15
@@ -194,66 +177,114 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : glisser les étique
       Et Noisette dit un encouragement, suivi de « « loup » n'habite pas dans la maison « on ». Essaie une autre maison. »
       Et la porte de la maison « on » reste fermée
 
-    @depend-de-97
     Scénario: Le retour de l'étiquette ne retarde ni « réponse fausse » ni l'encouragement
       Étant donné que Léa joue seulement l'exercice « Les maisons des sons » de la leçon « Les sons ou, on, an »
       Quand Léa fait glisser du doigt l'étiquette « loup » dans la maison « on »
       Alors Léa entend l'effet sonore « réponse fausse », puis Noisette dit un encouragement
       Et l'effet sonore « réponse fausse » commence avant que l'étiquette « loup » soit revenue à sa place
 
-  Règle: Dans un ordre et dans l'ordre des vers, chaque bonne étiquette s'accroche comme un wagon au petit train, qui avance d'un wagon ; une mauvaise étiquette ne s'accroche pas ; la dernière garde les étincelles de #97
+  Règle: Dans chacun des 6 univers, les maisons de classer ont le dessin de cet univers ; changer d'univers ne change ni les gestes, ni les textes lus, ni les étoiles, ni la façon dont brille la bonne réponse montrée ; un profil sans univers connu voit les maisons de l'univers « Animaux de la forêt »
 
-    # Décision 98.1
-    Scénario: La bonne première étiquette « do » devient le premier wagon du petit train
-      Étant donné que Léa joue seulement l'exercice « Le mot en morceaux » de la leçon « Les syllabes »
-      Quand Léa pose l'étiquette « do »
-      Alors l'étiquette « do » prend la première place
-      Et le petit train avance d'un wagon, avec « do » dans le premier wagon
-
-    # Décision 98.1
-    Scénario: La deuxième bonne étiquette s'accroche derrière la première
-      Étant donné que Léa joue seulement l'exercice « Le mot en morceaux » de la leçon « Les syllabes »
-      Et que Léa a posé l'étiquette « do »
-      Quand Léa pose l'étiquette « mi »
-      Alors le petit train a 2 wagons, « do » puis « mi »
-
-    # Décision 98.1
-    Scénario: Une mauvaise première étiquette ne s'accroche pas, et le petit train n'avance pas
-      Étant donné que Léa joue seulement l'exercice « Le mot en morceaux » de la leçon « Les syllabes »
-      Quand Léa pose l'étiquette « mi »
-      Alors l'étiquette « mi » revient parmi les étiquettes à poser
-      Et le petit train n'a aucun wagon
-      Et Noisette dit un encouragement, suivi de « Ce n'est pas le début. Lequel vient en premier ? »
-
-    # Décision 98.1
-    @depend-de-97
-    Scénario: La dernière étiquette accroche le dernier wagon, puis les étincelles de #97 apparaissent
-      Étant donné que Léa joue seulement l'exercice « Le mot en morceaux » de la leçon « Les syllabes »
-      Et que Léa a posé les étiquettes « do » et « mi »
-      Quand Léa pose l'étiquette « no »
-      Alors le petit train a 3 wagons, « do », « mi » puis « no »
-      Et des étincelles apparaissent autour des étiquettes
-
-    # Décisions 98.1 et 98.21
-    Scénario: Le bon premier vers devient le premier wagon du petit train
-      Étant donné que Léa remet dans l'ordre les vers de « Le début de la fable »
-      Quand Léa pose le vers « La Cigale, ayant chanté » en premier
-      Alors le vers « La Cigale, ayant chanté » devient le premier wagon du petit train
-      Et le vers se lit en entier dans son wagon
-
-  Règle: « Je ne sais pas » montre toujours la bonne maison ou l'étiquette qui vient ensuite, reconnaissable dans le nouveau dessin et jamais confondue avec une maison allumée ; l'enfant la pose ensuite lui-même, au doigt ou au clavier
-
-    Plan du Scénario: « Je ne sais pas » dans un exercice <type> : <ce qui est montré>, et <ce qui ne bouge pas>
-      Étant donné que Léa joue un exercice <type> d'une leçon de test
-      Quand Léa dit « Je ne sais pas »
-      Alors <ce qui est montré>
-      Et <ce qui ne bouge pas>
-      Et Léa doit encore donner elle-même la bonne réponse
+    # Décision 98.2 ; questions 98.30 et 98.31 (une maison de chaque univers dans cette tranche, la PR attend les 6)
+    @a-valider
+    Plan du Scénario: Dans l'univers « <univers> », les maisons ont le dessin de cet univers et s'annoncent toujours « Maison « … » »
+      Étant donné que Léa a choisi l'univers <clé>
+      Et que Léa est sur la page de la leçon « Les sons ou, on, an »
+      Quand Léa choisit seulement l'exercice « Les maisons des sons »
+      Alors les maisons « ou », « on » et « an » ont le dessin de l'univers « <univers> »
+      Et les lecteurs d'écran annoncent « Maison « ou » », « Maison « on » » et « Maison « an » »
 
       Exemples:
-        | type    | ce qui est montré                              | ce qui ne bouge pas                     |
-        | classer | la bonne maison de l'étiquette choisie brille  | aucune maison n'ouvre sa porte          |
-        | ordre   | l'étiquette qui vient ensuite brille           | le petit train n'a aucun wagon          |
+        | clé       | univers             |
+        | animaux   | Animaux de la forêt |
+        | princesse | Princesses et fées  |
+        | sports    | Sports              |
+        | police    | Police              |
+        | pompier   | Pompiers            |
+        | danse     | Danse               |
+
+    # Décisions 98.2, 98.6 et 98.17
+    Plan du Scénario: Dans l'univers « <univers> », l'étiquette glissée du doigt dans la bonne maison fait ouvrir sa porte, et la maison s'allume
+      Étant donné que Léa a choisi l'univers <clé>
+      Et que Léa joue seulement l'exercice « Les maisons des sons » de la leçon « Les sons ou, on, an »
+      Quand Léa fait glisser du doigt l'étiquette « loup » dans la maison « ou »
+      Alors l'étiquette « loup » reste dans la maison « ou »
+      Et la porte de la maison « ou » s'ouvre, puis la maison s'allume
+      Mais la maison « ou » ne brille pas comme une bonne réponse montrée
+
+      Exemples:
+        | clé       | univers             |
+        | animaux   | Animaux de la forêt |
+        | princesse | Princesses et fées  |
+        | sports    | Sports              |
+        | police    | Police              |
+        | pompier   | Pompiers            |
+        | danse     | Danse               |
+
+    # Décision 98.2 : les textes lus et les voix restent les mêmes ; seul le personnage guide qui parle change (#6)
+    Plan du Scénario: Dans l'univers « <univers> », une mauvaise maison fait dire à <personnage guide> la même aide que dans tous les univers
+      Étant donné que Léa a choisi l'univers <clé>
+      Et que Léa joue seulement l'exercice « Les maisons des sons » de la leçon « Les sons ou, on, an »
+      Quand Léa fait glisser du doigt l'étiquette « loup » dans la maison « on »
+      Alors l'étiquette « loup » revient parmi les étiquettes à poser
+      Et <personnage guide> dit un encouragement, suivi de « « loup » n'habite pas dans la maison « on ». Essaie une autre maison. »
+
+      Exemples:
+        | clé     | univers  | personnage guide |
+        | sports  | Sports   | Coach Léo        |
+        | police  | Police   | Agent Max        |
+
+    # Décision 98.2
+    Plan du Scénario: Dans l'univers « <univers> », un mauvais placement fait en glissant du doigt donne 2 étoiles, comme dans l'univers « Animaux de la forêt »
+      Étant donné qu'une leçon de test a un seul exercice classer de deux étiquettes, « loup » pour « ou » et « pont » pour « on »
+      Et que Léa a choisi l'univers <clé>
+      Et que Léa a fait glisser du doigt 1 fois l'étiquette « loup » dans la maison « on »
+      Et que Léa a ensuite posé « loup » dans « ou »
+      Quand Léa fait glisser du doigt l'étiquette « pont » dans la maison « on »
+      Alors Léa gagne 2 étoiles
+
+      Exemples:
+        | clé       | univers             |
+        | princesse | Princesses et fées  |
+        | pompier   | Pompiers            |
+
+    # Décision 98.2 : le signal « bonne réponse montrée » est commun aux 6 univers
+    Plan du Scénario: Dans l'univers « <univers> », la maison montrée par « Je ne sais pas » brille comme dans tous les univers
+      Étant donné que Léa a choisi l'univers <clé>
+      Et que Léa joue un exercice classer d'une leçon de test
+      Quand Léa dit « Je ne sais pas »
+      Alors la bonne maison de l'étiquette choisie brille
+      Et elle brille de la même façon que dans l'univers « Animaux de la forêt »
+      Et aucune maison ne s'allume
+
+      Exemples:
+        | clé       | univers             |
+        | princesse | Princesses et fées  |
+        | sports    | Sports              |
+        | police    | Police              |
+        | pompier   | Pompiers            |
+        | danse     | Danse               |
+
+    Plan du Scénario: Un profil enfant <cas> voit les maisons de l'univers « Animaux de la forêt »
+      Étant donné que Léa a un profil enfant préparé <cas>
+      Et que Léa est sur la page de la leçon « Les sons ou, on, an »
+      Quand Léa choisit seulement l'exercice « Les maisons des sons »
+      Alors les maisons « ou », « on » et « an » ont le dessin de l'univers « Animaux de la forêt »
+      Et aucun message d'erreur n'apparaît
+
+      Exemples:
+        | cas                         |
+        | sans univers                |
+        | dont l'univers est inconnu  |
+
+  Règle: « Je ne sais pas » montre toujours la bonne maison, reconnaissable dans le nouveau dessin et jamais confondue avec une maison allumée ; l'enfant y pose ensuite l'étiquette lui-même, au doigt ou au clavier
+
+    Scénario: « Je ne sais pas » dans un exercice classer : la bonne maison brille, et aucune maison n'ouvre sa porte
+      Étant donné que Léa joue un exercice classer d'une leçon de test
+      Quand Léa dit « Je ne sais pas »
+      Alors la bonne maison de l'étiquette choisie brille
+      Et aucune maison n'ouvre sa porte
+      Et Léa doit encore donner elle-même la bonne réponse
 
     Scénario: Après « Je ne sais pas », Léa glisse elle-même l'étiquette dans la maison qui brille
       Étant donné que Léa joue un exercice classer d'une leçon de test
@@ -262,13 +293,6 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : glisser les étique
       Alors l'étiquette choisie reste dans cette maison
       Et la maison ne brille plus : sa porte s'ouvre et elle s'allume
 
-    Scénario: Après « Je ne sais pas », l'étiquette qui brille devient le premier wagon quand Léa la pose
-      Étant donné que Léa joue un exercice ordre d'une leçon de test
-      Et que Léa a dit « Je ne sais pas »
-      Quand Léa pose l'étiquette qui brille
-      Alors cette étiquette devient le premier wagon du petit train
-      Et plus aucune étiquette ne brille
-
     Scénario: Après « Je ne sais pas », un mauvais placement fait en glissant ne coûte plus d'erreur
       Étant donné qu'une leçon de test a un seul exercice classer de deux étiquettes, « loup » pour « ou » et « pont » pour « on »
       Et que Léa a dit « Je ne sais pas » pour l'étiquette « loup »
@@ -276,21 +300,20 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : glisser les étique
       Quand Léa pose l'étiquette « pont » dans la maison « on »
       Alors Léa gagne 2 étoiles
 
-  Règle: Avec les mouvements réduits, rien ne glisse, ne s'ouvre ni ne roule de lui-même, et l'information reste ; étiquettes, maisons et wagons gardent 44 px, tiennent à 360 px de large, s'affichent en mode dys et gardent ce que lisent les lecteurs d'écran
+  Règle: Avec les mouvements réduits, rien ne glisse ni ne s'ouvre de lui-même, et l'information reste ; dans chacun des 6 univers, étiquettes et maisons gardent 44 px et tiennent à 360 px de large ; elles s'affichent en mode dys et gardent ce que lisent les lecteurs d'écran
 
     Plan du Scénario: Avec les mouvements réduits, <cas> se voit sans mouvement
       Étant donné que l'appareil demande des mouvements réduits
-      Et que Léa joue seulement l'exercice « <exercice> » de la leçon « <leçon> »
+      Et que Léa joue seulement l'exercice « Les maisons des sons » de la leçon « Les sons ou, on, an »
       Quand <réponse de Léa>
       Alors <résultat>
       Et <sans mouvement>
 
       Exemples:
-        | cas                                          | exercice             | leçon               | réponse de Léa                                                            | résultat                                                 | sans mouvement                                                       |
-        | une étiquette bien rangée                    | Les maisons des sons | Les sons ou, on, an | Léa pose l'étiquette « loup » dans la maison « ou »                       | l'étiquette « loup » reste dans la maison « ou »         | la maison « ou » s'allume, sans que sa porte bouge                   |
-        | une étiquette posée dans la mauvaise maison  | Les maisons des sons | Les sons ou, on, an | Léa fait glisser du doigt l'étiquette « loup » dans la maison « on »      | l'étiquette « loup » revient parmi les étiquettes à poser | l'étiquette « loup » réapparaît à sa place, sans glisser             |
-        | une étiquette lâchée hors de toute maison    | Les maisons des sons | Les sons ou, on, an | Léa fait glisser du doigt l'étiquette « loup » et la lâche hors de toute maison | il reste 9 étiquettes à poser                       | l'étiquette « loup » réapparaît à sa place, sans glisser             |
-        | une bonne étiquette d'un ordre               | Le mot en morceaux   | Les syllabes        | Léa pose l'étiquette « do »                                               | l'étiquette « do » prend la première place               | « do » apparaît dans le premier wagon, sans que le petit train roule |
+        | cas                                          | réponse de Léa                                                                  | résultat                                                  | sans mouvement                                           |
+        | une étiquette bien rangée                    | Léa pose l'étiquette « loup » dans la maison « ou »                             | l'étiquette « loup » reste dans la maison « ou »          | la maison « ou » s'allume, sans que sa porte bouge       |
+        | une étiquette posée dans la mauvaise maison  | Léa fait glisser du doigt l'étiquette « loup » dans la maison « on »            | l'étiquette « loup » revient parmi les étiquettes à poser | l'étiquette « loup » réapparaît à sa place, sans glisser |
+        | une étiquette lâchée hors de toute maison    | Léa fait glisser du doigt l'étiquette « loup » et la lâche hors de toute maison | il reste 9 étiquettes à poser                             | l'étiquette « loup » réapparaît à sa place, sans glisser |
 
     # Décision 98.23
     Scénario: Avec les mouvements réduits, l'étiquette suit toujours le doigt de l'enfant
@@ -306,36 +329,48 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : glisser les étique
       Alors la bonne maison de l'étiquette choisie brille
       Et aucune maison ne bouge
 
-    # Décision 98.21
-    Scénario: À 360 px, le petit train de 10 wagons tient dans la largeur de l'écran
+    # Décision 98.2 : la mise en page ne dépend pas de l'univers
+    Plan du Scénario: Dans l'univers « <univers> », les maisons et les étiquettes tiennent dans un écran de 360 px et gardent 44 px
       Étant donné que l'écran de l'appareil mesure 360 px de large
-      Et que Léa joue seulement l'exercice « De dix en dix » de la leçon « Compter jusqu'à 100 »
-      Et que Léa a posé les étiquettes de « 10 » à « 90 »
-      Quand Léa pose l'étiquette « 100 »
+      Et que Léa a choisi l'univers <clé>
+      Et que Léa joue seulement l'exercice « Les maisons des sons » de la leçon « Les sons ou, on, an »
+      Quand Léa pose l'étiquette « loup » dans la maison « ou »
       Alors la page tient dans la largeur de l'écran
-      Et chaque wagon mesure au moins 44 px de haut et de large
-
-    # Décision 98.21
-    Scénario: À 360 px, les vers accrochés au petit train se lisent en entier
-      Étant donné que l'écran de l'appareil mesure 360 px de large
-      Et que Léa remet dans l'ordre les vers de « Le début de la fable »
-      Et que Léa a remis en place les quatre premiers vers
-      Quand Léa pose le vers « Pas un seul petit morceau »
-      Alors la page tient dans la largeur de l'écran
-      Et chaque vers posé se lit en entier dans son wagon
-
-    Plan du Scénario: En mode dys, <ce qui est vu> de « <exercice> » s'affichent en mode dys
-      Étant donné que Paul a réglé « mode dys » sur « oui » pour Léa
-      Quand Léa commence l'exercice « <exercice> » de la leçon « <leçon> »
-      Alors Léa voit <ce qui est vu> en mode dys : police Andika, lettres, mots et lignes espacés
+      Et chaque étiquette et chaque maison mesurent au moins 44 px de haut et de large
 
       Exemples:
-        | exercice             | leçon               | ce qui est vu                              |
-        | Les maisons des sons | Les sons ou, on, an | les étiquettes et le nom de chaque maison  |
-        | Le mot en morceaux   | Les syllabes        | les étiquettes à poser                     |
+        | clé       | univers             |
+        | animaux   | Animaux de la forêt |
+        | princesse | Princesses et fées  |
+        | sports    | Sports              |
+        | police    | Police              |
+        | pompier   | Pompiers            |
+        | danse     | Danse               |
+
+    # Décision 98.2 : avec les mouvements réduits, aucun dessin d'univers ne bouge de lui-même
+    Plan du Scénario: Dans l'univers « <univers> », avec les mouvements réduits, la maison bien rangée s'allume sans bouger
+      Étant donné que l'appareil demande des mouvements réduits
+      Et que Léa a choisi l'univers <clé>
+      Et que Léa joue seulement l'exercice « Les maisons des sons » de la leçon « Les sons ou, on, an »
+      Quand Léa pose l'étiquette « loup » dans la maison « ou »
+      Alors l'étiquette « loup » reste dans la maison « ou »
+      Et la maison « ou » s'allume, sans que sa porte bouge
+
+      Exemples:
+        | clé       | univers             |
+        | princesse | Princesses et fées  |
+        | sports    | Sports              |
+        | police    | Police              |
+        | pompier   | Pompiers            |
+        | danse     | Danse               |
+
+    Scénario: En mode dys, les étiquettes et le nom de chaque maison s'affichent en mode dys
+      Étant donné que Paul a réglé « mode dys » sur « oui » pour Léa
+      Quand Léa commence l'exercice « Les maisons des sons » de la leçon « Les sons ou, on, an »
+      Alors Léa voit les étiquettes et le nom de chaque maison en mode dys : police Andika, lettres, mots et lignes espacés
 
     Scénario: Les lecteurs d'écran annoncent les maisons comme avant, sans décrire leur dessin
       Étant donné que Léa est sur la page de la leçon « Les sons ou, on, an »
       Quand Léa choisit seulement l'exercice « Les maisons des sons »
       Alors les lecteurs d'écran annoncent « Maison « ou » », « Maison « on » » et « Maison « an » »
-      Mais les lecteurs d'écran n'annoncent ni porte, ni toit, ni lumière
+      Mais les lecteurs d'écran n'annoncent ni porte, ni toit, ni lumière, ni l'univers du dessin
