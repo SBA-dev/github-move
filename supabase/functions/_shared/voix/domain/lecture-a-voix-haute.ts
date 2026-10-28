@@ -113,6 +113,7 @@ export class LectureAVoixHaute {
   }
 
   async jouer(effets: readonly EffetSonore[]): Promise<void> {
+    this.dependances.lecteur.arreter();
     this.arreterLesEffets();
     await this.jouerLesEffets(effets);
   }
