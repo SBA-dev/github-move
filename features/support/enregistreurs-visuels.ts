@@ -103,8 +103,10 @@ function enregistrerLesMouvements(): void {
     }
   }
 
-  const boucle = (maintenant: number) => {
-    image(maintenant);
+  // L'heure de l'image (argument de rAF) est celle du début de l'image : sous charge elle précède l'insertion qui l'a causée.
+  // On date donc avec la même horloge que les insertions.
+  const boucle = () => {
+    image(performance.now());
     requestAnimationFrame(boucle);
   };
   requestAnimationFrame(boucle);
