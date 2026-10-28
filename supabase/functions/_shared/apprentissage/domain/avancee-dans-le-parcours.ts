@@ -9,20 +9,22 @@ export function avanceeDansLeParcours(
   prochaineLeconConnue: LeconId | undefined,
   parcours: Parcours,
 ): AvanceeDansLeParcours | undefined {
-  if (prochaineLeconConnue === undefined || !estDevenueReussie(prochaineLeconConnue, parcours)) return undefined;
+  if (prochaineLeconConnue === undefined) return undefined;
+  if (!estDevenueReussie(prochaineLeconConnue, parcours)) return undefined;
+  if (recule(prochaineLeconConnue, parcours)) return undefined;
+  return { depuis: prochaineLeconConnue, jusqua: destination(parcours.prochaineLecon) };
+}
+
+function destination(nouvelleProchaineLecon: LeconId | undefined): AvanceeDansLeParcours["jusqua"] {
+  return nouvelleProchaineLecon === undefined
+    ? { genre: "finDuParcours" }
+    : { genre: "lecon", lecon: nouvelleProchaineLecon };
+}
+
+function recule(prochaineLeconConnue: LeconId, parcours: Parcours): boolean {
   const nouvelleProchaineLecon = parcours.prochaineLecon;
-  if (
-    nouvelleProchaineLecon !== undefined &&
-    placeDe(nouvelleProchaineLecon, parcours) < placeDe(prochaineLeconConnue, parcours)
-  ) {
-    return undefined;
-  }
-  return {
-    depuis: prochaineLeconConnue,
-    jusqua: nouvelleProchaineLecon === undefined
-      ? { genre: "finDuParcours" }
-      : { genre: "lecon", lecon: nouvelleProchaineLecon },
-  };
+  return nouvelleProchaineLecon !== undefined &&
+    placeDe(nouvelleProchaineLecon, parcours) < placeDe(prochaineLeconConnue, parcours);
 }
 
 function estDevenueReussie(lecon: LeconId, parcours: Parcours): boolean {
