@@ -2,7 +2,16 @@
 
 Épopée #95, story 3. Dépend de #97 (retours animés et sonores), qui dépend de #96 (refonte visuelle, PR #124).
 
-État : **cadrage seulement** (décision 0020). Aucun code avant le merge de #97. Cadrage validé par le PO le 2026-10-28 : questions 98.1 à 98.17 tranchées selon la reco, découpage 98a à 98e validé.
+État : **cadrage repris, à valider de nouveau** (décision 0020). #96 et #97 sont mergées et intégrées dans la branche : le code peut commencer **après** la validation de ce cadrage repris.
+
+Historique :
+- 2026-10-28 : cadrage validé par le PO (« 98# reco partout ») : questions 98.1 à 98.24 tranchées selon la reco, découpage 98a à 98e validé (issues #126 à #129 créées par le PO).
+- 2026-10-28, plus tard : nouvelles réponses du PO aux 4 questions de l'issue (commentaires du responsable 6478159395 et 6478171371). Elles remplacent la reco là où elles diffèrent :
+  - 98.1 : « OK » (reco confirmée) ;
+  - **98.2 : « PAR UNIVERS »** (la reco était « par type ») : chaque type d'exercice a un dessin différent dans chacun des 6 univers ;
+  - 98.3 : « LES BULLES DOIVENT BOUGER MAIS LEGEREMENT » (reco confirmée) ;
+  - 98.10 : « A on garde le chrono » (reco confirmée).
+- Ce qui change dans ce cadrage : la section « Habillage par univers », les invariants 14 à 20, la section « Validation des dessins par le PO », le « Découpage révisé » et les questions 98.25 à 98.31. Le reste du modèle ne change pas.
 
 ## Contexte
 
@@ -16,6 +25,7 @@ Conséquences :
 - **Catalogue pédagogique** ne change pas : le format des leçons (`docs/format-lecons.md`) reste le même, aucun champ « habillage ».
 - **Voix** ne change pas.
 - Tout se passe dans `src/` : dessins SVG dans le code (décision 0027), animations Motion, gestes. Le domaine dit **ce qui** est arrivé, le front choisit **comment** le montrer (skill, section 3).
+- Avec 98.2 = « PAR UNIVERS », le front lit aussi la **clé d'univers** (`CleUnivers`, Motivation) pour choisir le dessin de chaque cible. Il la reçoit déjà : l'écran de séance reçoit l'`Univers` du profil (`EcranDeSeance`, prop `univers`). Aucune relation nouvelle entre contextes : la context map ne change pas.
 
 Il n'y a donc **ni commande, ni événement de domaine, ni erreur métier, ni migration, ni Edge Function, ni donnée d'enfant nouvelle**.
 
@@ -30,8 +40,8 @@ Trois exceptions possibles, chacune soumise au PO (voir « Faits du domaine manq
 |---|---|---|
 | Couleur principale de l'univers, polices, jetons de design, boutons en relief qui s'enfoncent, transitions entre écrans, paysage et dessin fixe du personnage guide | #96 | Utilise les jetons. Ne touche ni `src/univers/jetons.ts`, ni `src/transitions/`, ni `src/boutons/ressort-des-boutons.ts` |
 | Effets sonores (8 sons), rebond d'une réponse juste, balancement d'une réponse fausse, point qui vole vers le récipient, étincelles du texte complet (dernier trou, dernière étiquette d'un `ordre`, et selon 97.6 dernière étiquette de `classer`, dernière personne de `conjugaison`), confettis et étoiles une à une à la fin, compteur qui défile pour un record de fluence, étiquette posée dans la mauvaise maison qui revient avec « réponse fausse », mouvements réduits de ces retours, son « bouton touché » | #97 | **Ne redéfinit aucun de ces retours.** Il les reçoit sur ses nouvelles formes (une bulle, un wagon, un panier rebondissent comme un choix) |
-| Animations des personnages guides (danse, badge qui tourne) | #106 | Rien |
-| Forme de chaque cible de réponse (bulle, panier, wagon, maison, case, cristal, jauge, parchemin), son mouvement propre au repos, le chemin d'un objet vers sa cible (mot qui rejoint son trou, wagon qui s'accroche, jeton qui tombe, retenue qui saute), le geste glisser au doigt | — | **#98** |
+| Animations des personnages guides (danse, badge qui tourne), nouveaux paysages par univers (réponse 96.10) | #106 | Rien. Les dessins de #98 ne reprennent pas le décor du paysage |
+| Forme de chaque cible de réponse (bulle, wagon, maison, case, cristal, jauge, parchemin) **dans chacun des 6 univers** (98.2), son mouvement propre au repos, le chemin d'un objet vers sa cible (mot qui rejoint son trou, wagon qui s'accroche, jeton qui tombe, retenue qui saute), le geste glisser au doigt | — | **#98** et ses tranches |
 
 ### Recouvrements repérés entre le tableau de l'issue et #97
 
@@ -89,7 +99,10 @@ Le front n'invente jamais une règle. Pour chaque piste, le fait existe-t-il ?
 |---|---|
 | Exercice, type d'exercice (les 14), Question, Choix, Choix écarté, Bonne réponse montrée, Je ne sais pas, Réponse, Erreur, Nouvelle chance, Étiquette, Placement, Indication du geste, Étiquettes mélangées, Groupe, Texte à trous, Trou, Distracteur, Mot dicté, Caractère déjà écrit, Clavier de cristaux, Mode de réponse, Colonne, Rang, Retenue, Boîte à jetons, Jeton, Schéma en barres, Valeur cherchée, Poésie, Vers, Mot caché, Score de fluence, Record de fluence, Avancement de la séance, Étoile, Texte complet, Univers, Personnage guide, Consigne affichée | Existants, réutilisés tels quels |
 | Effet sonore, Exercice complété | Apportés par #97 (à valider dans #97), pas redéfinis ici |
-| **Habillage de jeu** | **En conflit** : la ligne **Univers** du glossaire dit déjà « Habillage choisi par l'enfant ». Deux sens pour « habillage ». Proposition : **mot de cadrage seulement**, toujours avec son complément (« habillage de jeu d'un type d'exercice »), jamais dans le domaine. Aucune règle n'y vit. Question 98.14 |
+| **Habillage de jeu** | **En conflit** : la ligne **Univers** du glossaire dit déjà « Habillage choisi par l'enfant ». Deux sens pour « habillage ». Proposition : **mot de cadrage seulement**, toujours avec son complément (« habillage de jeu d'un type d'exercice »), jamais dans le domaine. Aucune règle n'y vit. Question 98.14. Avec 98.2 = « PAR UNIVERS », les deux sens se rapprochent : voir « Termes à signaler ». Le front a déjà un type `Habillage` (`src/univers/jetons.ts`, couleur principale de l'univers) : encore un sens de plus, technique |
+| **Dessin de l'univers** (mot de cadrage) | Nouveau, pour 98.2 : le dessin d'une cible (maison, petit train…) propre à un univers. Mot de cadrage et de planche, jamais à l'écran ni dans le domaine. Le domaine fournit seulement la **clé d'univers** |
+| **Signal d'état** (mot de cadrage) | Nouveau : marque visuelle commune aux 6 univers qui dit l'état d'une cible (survolée, allumée, choix écarté, bonne réponse montrée). Mot de cadrage, hors glossaire |
+| **Planche** | Mot du skill `illustration` (image de relecture d'un dessin). Mot d'outillage, hors glossaire |
 | **Glisser** (le geste) | **Conflit léger** : **Placement** interdit « glisser-déposer » comme synonyme. Proposition : « glisser » désigne le **geste** (déjà dans l'Indication du geste : « Fais glisser chaque étiquette… ») ; la réponse qu'il produit reste un **Placement**. « glisser-déposer » et « drop » restent interdits dans le code et les scénarios |
 | **Panier** | Nouveau **mot d'interface** pour un **Groupe** de `classer`, en concurrence avec « maison » (décision n°24). Question 98.6 |
 | **Coffre** | **À éviter** : le skill associe le coffre aux récompenses (révélation de la cabane) et interdit le coffre au contenu tiré au hasard. Un coffre comme cible de réponse brouillerait le sens. Question 98.6 |
@@ -137,15 +150,114 @@ classDiagram
     chemin vers la cible
     geste glisser
   }
+  class DessinsDeLUnivers {
+    <<#98, src seulement>>
+    Record~CleUnivers, dessin~ par cible
+    maison, petit train, wagon...
+  }
+  class SignauxDEtat {
+    <<#98, src, communs aux 6 univers>>
+    survolee
+    allumee
+    choix ecarte
+    bonne reponse montree
+  }
+  class CleUnivers {
+    <<existant, Motivation/domain>>
+    animaux, princesse, sports
+    police, pompier, danse
+    universDe : repli sur animaux
+  }
   HabillageDeJeu ..> FaitsDApprentissage : lit, ne modifie rien
   HabillageDeJeu ..> RetoursDe97 : les recoit sur ses formes
+  HabillageDeJeu *-- DessinsDeLUnivers : choisit le dessin
+  HabillageDeJeu *-- SignauxDEtat : pose par-dessus le dessin
+  DessinsDeLUnivers ..> CleUnivers : indexe par
 ```
+
+Le dessin change avec l'univers. Le **signal d'état**, lui, est le même partout, posé par-dessus le dessin. C'est ce qui garde « Je ne sais pas » reconnaissable dans les 6 univers (invariant 15).
 
 ### Si le PO ouvre une des trois exceptions
 
 - **98.10 = oui** (record montré pendant la fluence) : une lecture pure sur `RecordDeFluence`, par exemple « ce score serait-il un record ? », qui ne modifie ni le meilleur score ni les faits, et respecte les règles existantes (0 n'est jamais un record ; sans record connu, le premier score positif en est un). `proposer` ne change pas. Apprentissage, dans `record-de-fluence.ts`.
 - **98.8 = oui** (glisser une étiquette d'`ordre`) : `indicationDuGeste("ordre")` et `indicationDuGeste("memoriser")` changent de texte, comme celui de `classer`. Le placement reste « la place suivante » : une étiquette glissée sur le train prend la place suivante, quel que soit le wagon visé. Apprentissage, dans `exercices/indication-du-geste.ts`.
 - **98.7 = lettre juste** (contraire à la reco) : ce n'est plus un habillage. Ce serait une nouvelle règle de correction de la dictée, qui change les erreurs et les étoiles. Elle sortirait de #98 pour une story d'Apprentissage à part.
+
+## Habillage par univers (98.2 = « PAR UNIVERS »)
+
+Chaque type d'exercice a un dessin différent dans chacun des 6 univers : Animaux de la forêt (`animaux`), Princesses et fées (`princesse`), Sports (`sports`), Police (`police`), Pompiers (`pompier`), Danse (`danse`). Exemple du PO : des bulles pour Animaux, des ballons pour Sports.
+
+### Ce qui change selon l'univers
+
+- Le **dessin** de chaque cible : la maison de `classer` (fermée, puis porte ouverte et allumée), le petit train et ses wagons d'`ordre`, et, dans les tranches suivantes, la bulle de choix, la maison d'une colonne, la boîte à jetons, les jetons, la jauge, la case de la dictée, la touche du clavier de cristaux, la marque du record, le parchemin.
+- Les couleurs du dessin, prises dans la palette de l'univers (`src/univers/palettes.ts`), sauf les exceptions ci-dessous.
+- Le **décor** du mouvement au repos (une bulle qui ondule, un ballon qui se balance), dans les mêmes limites d'amplitude et de durée pour tous les univers (invariants 5, 9 et 18).
+
+### Ce qui ne change jamais selon l'univers
+
+| Ce qui reste | Pourquoi |
+|---|---|
+| Les **gestes** (glisser, toucher puis toucher, clavier), l'**ordre** des choix et des étiquettes, les **règles** de correction, les erreurs, les étoiles | Apprentissage les fixe. La ligne **Univers** du glossaire le dit : « Il ne change ni le contenu ni les règles » |
+| Les **textes lus et écrits** : consigne, Indication du geste (« … touche une maison. »), libellés lus (« Maison « on » », « Poser dans la maison « on » »), annonces, mots d'interface (« maison », « petit train », « wagon ») | Ils viennent d'Apprentissage, de #18, #79 et de la décision n°24. Les **voix pré-générées** sont des MP3 communs : un mot propre à un univers demanderait 6 voix de plus par texte |
+| Les **signaux d'état** : survolée (98.20), allumée (bien rangée), choix écarté, et surtout **bonne réponse montrée** par « Je ne sais pas » | L'enfant qui change d'univers les reconnaît. Le signal « bonne réponse montrée » doit rester unique (invariant 4) |
+| La **zone de toucher** (44 px au moins), la place des cibles à l'écran, le passage à la ligne du train (98.21) | Invariant 7. Le dessin habille la zone, il ne la change pas |
+| Les **couleurs des colonnes** de l'addition posée (unités bleue, dizaines rose, centaines verte) | Glossaire, ligne **Colonne** : « mêmes couleurs dans tous les univers » (aussi réponse 96.4). Concerne 98c |
+| L'**étiquette** elle-même (le texte qu'on déplace) | Reco de 98.27 : elle porte le texte à lire, en mode dys, avec un contraste fixé |
+
+### D'où vient l'univers
+
+- Le domaine fournit la clé : `CleUnivers` (Motivation, `supabase/functions/_shared/motivation/domain/univers.ts`).
+- Le front choisit le dessin dans une table `Record<CleUnivers, …>` (skill `illustration`, section 3), comme `PALETTES` et `DESSINS` de `PersonnageGuide.tsx`. Une table indexée par `CleUnivers` oblige le compilateur à exiger un dessin pour chaque univers : un 7e univers sans dessin ne compile pas.
+- **Profil sans univers** : vérifié dans le code de #96. `universDe(cle)` rend `UNIVERS_PAR_DEFAUT`, « Animaux de la forêt », quand la clé est absente ou inconnue, et `Application.tsx` passe `universDe(profil?.univers)` aux écrans de l'enfant. Le scénario de #96 « Un profil enfant sans univers retrouve Noisette et son paysage » le prouve pour le personnage guide. Les dessins de #98 suivent la même règle : **repli sur « animaux »**, sans question à poser.
+- **Aucune règle métier nouvelle, aucun changement du domaine.** Le choix d'un dessin selon une clé n'est pas une règle : c'est de l'affichage (skill `gamification`, section 3). Le domaine ne connaît ni maison dessinée ni train.
+- **Écrans du parent** : aucun exercice n'y est joué. L'habillage par univers ne les touche pas (réponse 96.13).
+
+### Propositions d'objets pour 98a
+
+Les noms d'objets viennent du PO (skill `illustration`, section 2.1) : je propose, il tranche (98.25 et 98.26).
+
+**Maison de `classer`.** Le mot affiché et lu reste « maison » (décision n°24, voix pré-générées, scénarios de #18, #79 et #97). Chaque univers dessine donc **une maison de cet univers**, qui se lit comme une maison même à 48 px : un toit, une façade, une porte. États dessinés : fermée et éteinte (repos) ; porte ouverte et allumée (bien rangée).
+
+| Univers | Proposition (reco) | Porte ouverte et allumée | Autre idée | À éviter (section 0 et garde-fous) |
+|---|---|---|---|---|
+| Animaux de la forêt | **Maison dans un tronc d'arbre**, porte ronde, petite fenêtre, toit de feuilles | La porte ronde pivote, lumière chaude à l'intérieur | Maison champignon | Terrier (ne se lit pas comme une maison) |
+| Princesses et fées | **Petit château à une tour**, porte en arc, fanion | La porte en arc s'ouvre, l'intérieur s'allume | Maison de fée dans une fleur | Donjon, herse (évoque l'enfermement) |
+| Sports | **Petit vestiaire en forme de maison**, façade rayée comme un maillot, fanion sur le toit | La porte s'ouvre, lumière chaude | Maison avec un ballon sur la cheminée | Coupe, podium (classement, skill section 5) ; aucun chiffre ni nom d'équipe |
+| Police | **Petit commissariat** : maisonnette bleue, insigne en étoile au-dessus de la porte | La porte s'ouvre, l'intérieur s'allume | Même maisonnette avec une lampe bleue **fixe** sur le toit | Barreaux, grille, cellule, menottes, arme ; lampe qui clignote (alarme, photosensibilité) |
+| Pompiers | **Petite caserne** : maison rouge, grande porte de garage arrondie, cloche dorée | La porte de garage se lève, l'intérieur s'allume | Maisonnette rouge avec une échelle posée contre le mur | Flamme, fumée, maison qui brûle, sirène |
+| Danse | **Petit opéra en forme de maison**, toit en dôme, porte à rideau | Le rideau s'ouvre comme une porte, l'intérieur s'allume | Kiosque à musique fermé par un rideau | Tenue suggestive sur une affiche, personnage dessiné sur la façade |
+
+**Petit train et wagons d'`ordre`** (et ordre des vers de `memoriser`). Le mot « petit train » et le mot « wagon » sont dans les scénarios de 98a (R4, R5, R6). Deux façons de faire :
+- **A (reco) : un train décoré à la manière de l'univers.** La forme reste un train : une tête (locomotive) et des wagons rectangulaires. Seuls la tête et le décor des wagons changent. Raisons : un wagon rectangulaire reçoit un vers sur toute la largeur (98.21) ; le train passe à la ligne de la même façon partout ; les mots « petit train » et « wagon » des scénarios restent justes ; l'enfant reconnaît le même jeu dans les 6 univers.
+- **B : un vrai objet différent par univers.** Plus surprenant, mais « petit train » et « wagon » deviennent faux dans 5 univers sur 6, et une forme ronde (chenille) ne reçoit pas un long vers.
+
+| Univers | A, train décoré (reco) | B, autre objet | Remarque |
+|---|---|---|---|
+| Animaux de la forêt | Petit train en bois, toit de feuilles, glands sur les wagons | Une chenille dont chaque anneau est un wagon | La chenille déforme les vers longs |
+| Princesses et fées | Train de conte, locomotive dorée à cheminée en étoile, wagons à volutes | Des carrosses attelés à la suite | Pas de cheval qui tire avec effort |
+| Sports | Train aux couleurs de maillots, fanions sur les wagons | Un bus d'équipe et ses remorques | **Aucun numéro** sur les wagons : un chiffre dessiné se confondrait avec un `ordre` de nombres (« De dix en dix ») |
+| Police | Train bleu, insigne en étoile sur la locomotive | Un convoi de petites voitures de police | Le convoi évoque une poursuite : à éviter ; pas de gyrophare qui clignote |
+| Pompiers | Train rouge, cloche dorée sur la locomotive, petite échelle sur le toit | Un camion de pompiers et ses remorques | Ni flamme ni fumée ; la cheminée de la locomotive ne fume pas, ou fume en petits nuages blancs ronds |
+| Danse | Train de manège, wagons ornés de notes de musique et de rubans | Une farandole de chaussons de danse | Aucun personnage dans les wagons |
+
+Partout : **aucun texte, lettre ni chiffre dans le dessin** (skill `illustration`, section 1), le texte de l'étiquette reste celui du domaine.
+
+### Pistes pour les tranches suivantes (sans trancher)
+
+Pour chaque tranche, la liste des cibles à dessiner par univers. Ce sont des pistes à soumettre au PO dans le cadrage de chaque tranche ; rien n'est tranché ici.
+
+| Tranche | Cible à dessiner | Animaux | Princesse | Sports | Police | Pompier | Danse | Attention |
+|---|---|---|---|---|---|---|---|---|
+| **98b** (#126) | Bulle de choix (sert aux 10 types, 98.4) | Bulle de savon | Bulle magique irisée | Ballon (exemple du PO) | Jeton rond à étoile | Bulle de mousse | Bulle-paillette | La bulle juste **s'efface en douceur** (98.5) : un ballon ne **crève** jamais, aucune détonation. Toutes les bulles d'une question ont la même taille et la même forme (invariant 6). Le texte dedans reste à 4,5:1 sur le dessin (un ballon de foot à motifs gênerait la lecture) |
+| **98c** (#127) | Maison d'une colonne de l'addition | Tronc | Tour | Vestiaire | Maisonnette bleue | Caserne | Petit opéra | Mêmes formes que la maison de `classer` de l'univers, mais **couleurs des colonnes communes** (bleue, rose, verte) |
+| 98c | Retenue qui saute | Gland | Étoile | Petit ballon | Étoile d'insigne | Goutte d'eau | Note de musique | Le chiffre de la retenue reste du texte, pas dans le dessin |
+| 98c | Boîte à jetons | Panier | Boîte à bijoux | Sac de sport | Boîte bleue à insigne | Seau | Boîte à musique | **Jamais un coffre** (98.6, skill section 5), ni rien qui ressemble à une valise d'argent |
+| 98c | Jetons | Noisettes | Perles | Petits ballons | Étoiles | Casques | Chaussons | Tous identiques dans une même boîte, faciles à compter d'un coup d'œil |
+| 98c | Jauge du schéma en barres | Tige qui pousse | Ruban | Tube de couleur | Barre bleue | Tuyau qui se remplit d'eau | Ruban de danse | La jauge ne monte jamais jusqu'à la valeur cherchée avant la réponse (invariant 6) |
+| **98d** (#128) | Case de la dictée | Feuille | Pierre précieuse | Case du tableau de l'entraîneur | Case de carnet | Case de casier | Case de partition | Aucune case ne ressemble à un tableau de scores entre enfants (skill section 5) |
+| 98d | Touche du clavier de cristaux | Cristal vert | Cristal rose | Cristal bleu | Cristal argent | Cristal rouge | Cristal violet | **Conflit de mot** : le glossaire dit **Clavier de cristaux**. Si la touche n'est plus un cristal dans un univers, le terme devient faux (à poser dans 98d) |
+| 98d | Marque du record de fluence | Drapeau sur une branche | Étoile magique | Fanion | Étoile d'insigne | Cloche | Étoile de scène | **Pas de ligne d'arrivée, de podium ni de coupe** : 98.10 dit « rien ne la présente comme une course » |
+| **98e** (#129) | Parchemin | Grande feuille d'arbre | Parchemin royal | Tableau de l'entraîneur | Carnet d'enquête | Carnet de bord de la caserne | Partition | Le texte reste du texte, en mode dys, jamais dans le dessin |
 
 ## Invariants
 
@@ -165,17 +277,29 @@ Ces invariants valent pour toutes les stories du découpage. Ce sont des règles
 12. **Même habillage partout où le type est joué** : séance, séance de révision, test de départ (98.13).
 13. **Contenu (règle absolue de `CLAUDE.md`)** : aucun dessin ni mouvement effrayant ou agressif. Rien n'explose, rien ne se casse, aucune détonation. Une bulle s'efface en douceur, comme une bulle de savon. Les dessins suivent le skill `illustration`, section 0.
 
+Invariants ajoutés par l'habillage par univers (98.2 = « PAR UNIVERS ») :
+
+14. **Changer d'univers ne change que le dessin.** Pour les mêmes réponses, les 6 univers donnent les mêmes gestes, le même ordre des choix et des étiquettes, les mêmes erreurs, le même avancement, les mêmes étoiles. Les textes lus et écrits sont les mêmes : consigne, Indication du geste, libellés lus (« Maison « on » »), annonces, voix pré-générées, mots d'interface (« maison », « petit train », « wagon »).
+15. **Les signaux d'état sont communs aux 6 univers.** Survolée, allumée, choix écarté et bonne réponse montrée ont la même apparence et le même attribut dans chaque univers, posés par-dessus le dessin. Le signal « bonne réponse montrée » de « Je ne sais pas » est **identique dans les 6 univers**, et aucun élément d'un dessin d'univers ne lui ressemble (pas d'étoile, de lampe ni d'insigne qui brille de la même façon).
+16. **Chaque univers a un dessin pour chaque cible.** Aucune cible ne reste sans dessin dans un univers. Un profil sans univers, ou avec une clé inconnue, voit les dessins d'« Animaux de la forêt », comme son personnage guide et son paysage (`universDe`, #96).
+17. **La mise en page ne dépend pas de l'univers.** Même zone de toucher (44 px au moins), même place des cibles, même passage à la ligne du train, même tenue à 360 px dans les 6 univers. Le dessin habille la cible, il ne la déplace ni ne la rétrécit.
+18. **Le texte d'une cible se lit pareil dans chaque univers.** Contraste d'au moins 4,5:1 entre le texte et le dessin derrière lui, mode dys appliqué. Aucun texte, aucune lettre, aucun chiffre dans un dessin. Le mouvement au repos a la même amplitude et la même durée dans tous les univers.
+19. **Les couleurs des colonnes de l'addition sont communes** aux 6 univers (glossaire, ligne **Colonne**). Seule la forme de la maison d'une colonne peut changer (98c).
+20. **Chaque dessin d'univers respecte la règle absolue**, à toutes les tailles (skill `illustration`, section 0). En particulier : **Police**, aucune arme, menotte, barreau, cellule ni arrestation, aucune lampe qui clignote ; **Pompiers**, aucune flamme, fumée noire ni maison qui brûle, aucune sirène ; **Sports**, aucun coup, aucune coupe ni podium qui classe (skill `gamification`, section 5) ; **Princesses et fées** et **Danse**, aucune tenue suggestive ni stéréotype ; **tous**, aucun coffre comme cible, rien qui éclate avec un bruit.
+
 ## Événements
 
 Aucun événement de domaine nouveau. L'habillage réagit aux faits existants (`ResultatDeReponse`, placement, trou rempli, chiffre écrit, retenue, phrases dites, `SchemaResolu`, score de fluence) et aux retours de #97.
 
 ## Partage avec le front
 
-Tout est déjà dans le navigateur, hors ligne compris : les faits viennent de `@domain/apprentissage`. Les dessins sont des SVG dans le code (décision 0027), donc disponibles hors ligne sans fichier de plus. Si 98.10 ou 98.8 = oui, la lecture ajoutée est exportée par `@domain/apprentissage`.
+Tout est déjà dans le navigateur, hors ligne compris : les faits viennent de `@domain/apprentissage`, la clé d'univers de `@domain/motivation` (déjà importée par le front). Les dessins sont des SVG dans le code (décision 0027), donc disponibles hors ligne sans fichier de plus, dans les 6 univers. Si 98.10 ou 98.8 = oui, la lecture ajoutée est exportée par `@domain/apprentissage`.
+
+Poids : 6 dessins par cible au lieu d'un. Le bundle de #96 a pris environ 11 kB gzip pour 5 personnages guides. Si le poids gêne, chaque table de dessins d'univers peut être chargée à part, pour le seul univers du profil (choix de l'implementer, sans effet sur le domaine).
 
 ## Données d'enfants
 
-Aucune donnée nouvelle. Rien n'est enregistré ni envoyé, aucun service tiers. Le record de fluence est déjà lu.
+Aucune donnée nouvelle. Rien n'est enregistré ni envoyé, aucun service tiers. Le record de fluence est déjà lu. L'univers du profil est déjà enregistré (#6) et déjà lu par l'écran de séance.
 
 ## Emplacement
 
@@ -183,7 +307,9 @@ Domaine : **rien** par défaut. Seulement si le PO ouvre une exception :
 - 98.10 = oui : `supabase/functions/_shared/apprentissage/domain/record-de-fluence.ts` (+ `record-de-fluence_test.ts`), export dans `index.ts` ;
 - 98.8 = oui : `supabase/functions/_shared/apprentissage/domain/exercices/indication-du-geste.ts` (+ test).
 
-Front (indicatif, pour l'implementer) : `src/seance/exercices/` (formes par type, à côté des composants existants), un geste glisser commun aux étiquettes et aux chiffres de l'addition, dans `src/seance/exercices/`.
+Front (indicatif, pour l'implementer) : `src/seance/exercices/` (formes par type, à côté des composants existants), un geste glisser commun aux étiquettes et aux chiffres de l'addition, dans `src/seance/exercices/`. Les dessins d'univers dans des tables `Record<CleUnivers, …>` (par exemple une table pour la maison, une pour la tête du train et le wagon), et les signaux d'état dans un seul composant commun, hors de ces tables.
+
+Planches à valider : `docs/stories/98/planches/` (voir « Validation des dessins par le PO »).
 
 Le glisser actuel passe par le glisser-déposer HTML5 (`draggable`, `onDrop`), et les scénarios de #18 le font **à la souris** (`dragTo`). Le glisser **au doigt** sur tablette et sur téléphone n'est prouvé par aucun scénario. C'est le premier risque technique de la story socle.
 
@@ -253,26 +379,102 @@ Dépendances : 98a. 98.12 tranchée. Petite story : elle peut rejoindre 98c ou 9
 
 **Ordre proposé** : 98a → 98b → 98c → 98d → 98e. 98b vient tôt parce que la bulle de choix est l'écran le plus vu. 98d vient tard parce qu'elle a le plus de questions.
 
+Ce découpage a été validé le 2026-10-28 (98.16), **avant** la réponse « PAR UNIVERS ». Il est revu plus bas (« Découpage révisé »).
+
+## Validation des dessins par le PO
+
+Le goût est la décision du PO (décision 0027, point 4 ; skill `illustration`, section 2, étape 6). Pour #96, le PO a validé la planche de chaque personnage guide avant la PR, puis des captures de référence (`docs/stories/96/acceptance.md`, décision 0026). #98 reprend cette méthode, en deux temps et à l'échelle de 6 univers.
+
+### Avant de dessiner : les noms d'objets
+
+Les noms d'objets viennent du PO. Ils sont tranchés **avec le cadrage** (98.25, 98.26, 98.27), pendant la validation ⛔ n°1. On ne dessine pas un objet que le PO n'a pas nommé.
+
+### Premier temps : les planches (⛔ intermédiaire)
+
+1. **Esquisse** de chaque dessin d'univers en SVG pur dans le scratchpad, puis **contrôle** par l'illustrateur avec `node .claude/skills/illustration/rendre.mjs <dessin.svg> <controle.png>` (360, 120 et 48 px, fond clair et sombre) et la grille de la section 4, règle absolue d'abord (section 0). Ces planches de contrôle sont commitées dans `docs/stories/98/planches/controle/`, mais elles ne sont pas demandées au PO.
+2. **Planche de validation, une par cible** : une grille SVG, **une ligne par univers** dans un ordre fixe (animaux, princesse, sports, police, pompier, danse), **une colonne par état**. Chaque case est à la **taille réelle** de la cible sur un écran de 360 px. Rendue par `rendre.mjs` à deux largeurs : taille réelle et double, fond clair et fond sombre (`rendre.mjs <grille.svg> <planche.png> <largeur réelle>,<largeur double>`). Une rendue à 48 px d'une grille entière ne se lirait pas : la petite taille est vérifiée par le contrôle du point 1 et par la taille réelle.
+   - `classer-maison.png` : repos (fermée, éteinte) · survolée (98.20) · porte ouverte et allumée, avec une étiquette · bonne réponse montrée par « Je ne sais pas » ;
+   - `ordre-petit-train.png` : tête du train seule · un wagon accroché avec une étiquette courte (« do ») · trois wagons, dont le passage à la ligne · étiquette qui brille après « Je ne sais pas », à côté du train.
+   La dernière colonne montre que le signal « bonne réponse montrée » est le même sur les 6 lignes (invariant 15).
+3. Les grilles SVG et les planches PNG sont commitées dans `docs/stories/98/planches/` (commit `docs(#98): planches des dessins d'univers`).
+4. Annonce : un commentaire `[Équipe #98] PLANCHES PRÊTES` sur #98, avec les liens vers les PNG sur la branche et, pour chaque univers, l'objet dessiné (rappel de 98.25 et 98.26). Le responsable les porte au PO avec les autres validations.
+5. **Réponse du PO, univers par univers et planche par planche**, par exemple : « maison : animaux OK, princesse OK, sports à refaire (toit trop petit), police OK, pompier OK, danse OK ». Un univers « à refaire » repasse seul par les points 1 à 4.
+6. **Pendant l'attente**, le code avance : glisser au doigt, états, signaux communs, train qui avance, tables `Record<CleUnivers, …>` remplies avec les esquisses. Seuls les dessins définitifs attendent l'OK. Les scénarios ne lisent jamais un tracé (skill `illustration`, section 3) : un dessin refait ne casse aucun test.
+
+### Second temps : les captures de l'écran réel (avec la PR)
+
+Avant d'ouvrir la PR : une capture de l'écran réel à 360 px (projet `telephone`, mouvements réduits) **dans chacun des 6 univers**, pour `classer` (une maison allumée, une maison qui brille après « Je ne sais pas ») et pour `ordre` (deux wagons accrochés). Elles sont jointes à la PR et regardées par le PO avec le ⛔ du merge. Ce ne sont pas des captures de référence `@visuel` (réponse 96.9) : elles ne font échouer aucun test (98.29).
+
+### Combien de dessins pour 98a
+
+| Ce qui est dessiné | Par univers | Total |
+|---|---|---|
+| Maison de `classer` : fermée, porte ouverte et allumée | 2 | 12 |
+| Tête du train, wagon | 2 | 12 |
+| **Dessins d'univers** | **4** | **24** |
+| Signaux d'état communs : contour de survol, lumière « allumée », halo « bonne réponse montrée » | — | 3 |
+| Planches de validation (cases) | — | 2 planches, 48 cases |
+| Captures de l'écran réel | 2 | 12 |
+
+Avec le découpage révisé recommandé (train hors de 98a), 98a garde 12 dessins d'univers, 3 signaux, 1 planche de 24 cases et 6 captures ; la tranche du petit train prend le reste.
+
+## Découpage révisé
+
+### Ce que change le travail par univers
+
+- **Chaque tranche gagne une règle** : « dans chacun des 6 univers, la cible a le dessin de cet univers ; gestes, textes et signaux ne changent pas ». Elle se prouve par un Plan de scénario sur les 6 univers (un `data-univers` sur la cible, jamais un tracé).
+- **Chaque tranche gagne une planche à valider** (⛔ intermédiaire) et des captures dans les 6 univers.
+- Le travail de dessin est environ 6 fois plus grand. Le travail de code l'est peu : la mécanique est commune, seule une table de dessins grandit.
+
+Limite : 6 règles par story. 98a en a déjà 6 (R1 à R6, `acceptance.md`), 98b 6, 98c 6, 98d 5, 98e 3.
+
+### Reco : sortir le petit train de 98a
+
+| Tranche | Issue | Contenu | Règles | Ce qu'il faut ajouter à l'issue |
+|---|---|---|---|---|
+| **98a** | #98 | Glisser au doigt, invariants transverses, `classer` et sa maison par univers | 6 : R1 (sans les Plans `ordre` et vers), R2, R3, R5 (`classer` seulement), R6, et **R4 remplacée** par « une maison de l'univers » | Règle « dessin par univers » ; planche `classer-maison.png` à valider ; captures dans les 6 univers ; « `ordre` et ordre des vers : voir la nouvelle tranche » |
+| **98a-train** (nouvelle, nom à choisir par le PO) | à créer par le PO | `ordre`, ordre des vers de `memoriser`, petit train par univers | 5 : wagon accroché et train qui avance (ancienne R4) ; mauvaise étiquette qui ne s'accroche pas ; « Je ne sais pas » en `ordre` ; tenue à 360 px et vers en entier (98.21) ; petit train de l'univers | Toute l'issue ; dépend de 98a (scénarios d'invariants) |
+| **98b** | #126 | Bulles de choix | 6 : fusionner les règles 1 et 2 (flottement et mouvements réduits), ajouter « bulle de l'univers » | Règle « dessin par univers » ; planche `bulle-de-choix.png` ; rappel : la bulle de l'univers sert aux 10 types (98.4), un ballon ne crève jamais (98.5) |
+| **98c** | #127 | Quantités | 6 + 1 = 7 : **trop**. Couper en **98c-addition** (`addition` : glisser le chiffre, maison qui s'allume, retenue qui saute, maison et retenue de l'univers, couleurs des colonnes communes) et **98c-boîte et barres** (jetons, boîte, jauge de l'univers ; jamais un coffre) | Règle « dessin par univers » dans chacune ; 2 ou 3 planches ; rappel de l'invariant 19 |
+| **98d** | #128 | Claviers | 5 + 1 = 6 | Règle « dessin par univers » (case, touche, marque du record) ; planche ; question sur le mot **Clavier de cristaux** si la touche n'est plus un cristal ; marque du record sans ligne d'arrivée ni podium (98.10) |
+| **98e** | #129 | Parchemin | 3 + 1 = 4 | Règle « dessin par univers » ; planche `parchemin.png`. Ne plus la fondre dans 98c ou 98d : avec 6 dessins, elle n'est plus « petite » |
+
+Ordre : 98a → 98a-train → 98b → 98c-addition → 98c-boîte et barres → 98d → 98e. Raisons : 98a reste le socle du glisser et des invariants, avec moitié moins de dessins à attendre ; le train n'a pas besoin du glisser (98.8 = non) et peut partir dès que 98a a posé ses scénarios.
+
+### Alternative 1 : la mécanique d'abord dans un univers, puis les 5 autres
+
+- 98a fait toute sa mécanique (`classer` et `ordre`) avec les dessins d'« Animaux de la forêt » seulement, et un dessin commun provisoire pour les 5 autres univers.
+- Une tranche suivante, « 98a dans les autres univers », ajoute les 5 autres dessins et leur planche.
+- Avantage : la mécanique part vite, sans attendre 6 dessins. Inconvénient : un enfant de l'univers Sports voit un temps un dessin provisoire, et le même schéma se répète pour chaque tranche (deux stories par famille de gestes, 10 au lieu de 6).
+
+### Alternative 2 : garder 98a entière, une 7e règle fondue dans R6
+
+- La règle « dessin par univers » est fondue dans R6 (affichage : 44 px, 360 px, mode dys, lecteurs d'écran, univers).
+- Avantage : aucune issue de plus. Inconvénient : R6 devient très large, et 98a attend 24 dessins validés avant sa PR.
+
+Dans tous les cas, **je ne modifie aucune issue** : le texte ci-dessus est une proposition pour le PO (98.30).
+
 ## Questions tranchées
 
-Toutes tranchées le 2026-10-28 par le PO (« 98# reco partout », issue #64) : la reco de chaque question est retenue, les options restent écrites pour mémoire.
+Toutes tranchées le 2026-10-28 par le PO (« 98# reco partout », issue #64) : la reco de chaque question est retenue, les options restent écrites pour mémoire. **Exception** : le PO a ensuite répondu aux 4 questions de l'issue (commentaires du responsable 6478159395 et 6478171371). 98.2 change (« PAR UNIVERS ») ; 98.1, 98.3 et 98.10 sont confirmées. Les questions 98.18 à 98.24 sont dans `acceptance.md`, tranchées selon la reco.
 
-**98.1 (question 1 de l'issue) Les pistes du tableau te plaisent-elles ? Lesquelles changer ?** *Tranchée le 2026-10-28 : reco.*
+**98.1 (question 1 de l'issue) Les pistes du tableau te plaisent-elles ? Lesquelles changer ?** *Tranchée le 2026-10-28 : reco, puis confirmée le 2026-10-28 : « OK ».*
 Reco : **garder** les bulles, les wagons, les maisons de l'addition, les jetons qui tombent, les barres en jauge et le parchemin. **Changer** trois pistes :
 - l'éclat en étincelles de la bonne bulle (98.5) ;
 - le feu d'artifice du mot dicté (98.7) ;
 - les coffres de `classer` (98.6).
 
-**98.2 (question 2 de l'issue) Un habillage par type, le même dans tous les univers, ou un habillage par univers ?** *Tranchée le 2026-10-28 : reco.*
+**98.2 (question 2 de l'issue) Un habillage par type, le même dans tous les univers, ou un habillage par univers ?** *Tranchée le 2026-10-28 : « reco », puis **changée le 2026-10-28 : « PAR UNIVERS »** (option B).*
 Exemple : des bulles pour « Animaux de la forêt », des ballons pour « Sports ».
-Reco : **par type, le même dans tous les univers**, coloré par les jetons de l'univers (#96). Les colonnes de l'addition gardent leurs couleurs communes. Raisons :
+**Réponse retenue : option B, habillage par univers.** Chaque type d'exercice a un dessin différent dans chacun des 6 univers, soit environ 6 fois plus de dessins. Les gestes, les textes, les signaux d'état et les couleurs des colonnes de l'addition restent communs (section « Habillage par univers », invariants 14 à 20).
+Reco d'origine, écartée (pour mémoire) : **par type, le même dans tous les univers**, coloré par les jetons de l'univers (#96). Les colonnes de l'addition gardent leurs couleurs communes. Raisons :
 - un seul dessin par type à valider (skill `illustration`) au lieu de six ;
 - l'enfant qui change d'univers retrouve les mêmes gestes ;
 - un objet propre à un univers peut se discuter plus tard, univers par univers, avec #106.
 
 Option B : habillage par univers (travail fois 6). Option C : par type, plus un petit motif par univers sur la bulle.
 
-**98.3 (question 3 de l'issue) Des bulles qui bougent sont-elles faciles à toucher au CP ? Faut-il qu'elles s'arrêtent quand le doigt approche ?** *Tranchée le 2026-10-28 : reco.*
+**98.3 (question 3 de l'issue) Des bulles qui bougent sont-elles faciles à toucher au CP ? Faut-il qu'elles s'arrêtent quand le doigt approche ?** *Tranchée le 2026-10-28 : reco, puis confirmée le 2026-10-28 : « LES BULLES DOIVENT BOUGER MAIS LEGEREMENT ».*
 Sur une tablette, on ne sait pas qu'un doigt approche : l'écran ne sent que le toucher.
 Reco : **mouvement très léger** (le dessin ondule de quelques pixels, lentement), **cible fixe** d'au moins 44 px qui ne bouge pas avec le dessin, **immobile pendant la lecture de la consigne**, et immobile pour de bon dès le premier toucher sur une bulle.
 Options : A, bulles immobiles au CP et flottantes à partir du CE1 ; B, bulles immobiles partout (seulement la forme change).
@@ -309,7 +511,7 @@ Option : oui, l'étiquette glissée sur le train prend la place suivante, et l'I
 Reco : un cristal touché **s'illumine brièvement, d'une autre façon** que la bonne réponse montrée (éclat court, sans halo qui dure). Le halo qui dure reste réservé à « Je ne sais pas ».
 Option : pas d'effet au toucher (le bouton en relief de #96 suffit).
 
-**98.10 (question 4 de l'issue) Fluence : peut-on la présenter comme une course contre son record, compatible avec « pas de chrono imposé » ? Et le record se voit-il pendant la fluence ?** *Tranchée le 2026-10-28 : reco.*
+**98.10 (question 4 de l'issue) Fluence : peut-on la présenter comme une course contre son record, compatible avec « pas de chrono imposé » ? Et le record se voit-il pendant la fluence ?** *Tranchée le 2026-10-28 : reco, puis confirmée le 2026-10-28 : « A on garde le chrono ».* On garde le chrono de la fluence ; rien ne la présente comme une course ; le record est montré comme une marque à atteindre. Concerne 98d (#128).
 Le chrono est la nature de l'exercice (`duree` dans le format), pas une pénalité : il ne limite pas le temps de jeu et ne retire rien.
 Reco : **oui, sous trois conditions** :
 - le mot « course » ne s'affiche pas (pas de concurrent, pas de comparaison sociale) ;
@@ -332,6 +534,7 @@ Reco : **oui**, ce sont les mêmes questions, avec les mêmes composants. Un enf
 **98.14 « Habillage de jeu » : terme du domaine, ou mot de cadrage ?** *Tranchée le 2026-10-28 : reco.*
 La ligne **Univers** dit déjà « Habillage choisi par l'enfant ».
 Reco : **mot de cadrage seulement**, toujours avec son complément, jamais dans le code du domaine ni à l'écran. Aucune règle n'y vit. Ajouter au glossaire la note « « habillage » seul désigne l'univers ».
+Note du 2026-10-28, après 98.2 = « PAR UNIVERS » : l'habillage de jeu dépend désormais de l'univers, et les deux sens se rapprochent. La reco **tient encore** : l'univers reste ce que l'enfant choisit (Motivation), l'habillage de jeu reste la forme d'une cible, qui lit la clé d'univers ; aucun des deux n'entre dans le domaine d'Apprentissage. Pas de nouvelle question. Pour le dessin propre à un univers, ce cadrage dit « dessin de l'univers ».
 
 **98.15 Au clavier, les flèches passent-elles d'une bulle à l'autre, et d'une maison à l'autre ?** *Tranchée le 2026-10-28 : reco.*
 L'issue demande « Tab, Entrée, flèches ». Aujourd'hui, seuls Tab et Entrée marchent.
@@ -340,14 +543,73 @@ Option : Tab et Entrée seulement, comme aujourd'hui.
 
 **98.16 Découpage : d'accord pour cinq stories, 98a (#98, socle et étiquettes), puis 98b bulles, 98c quantités, 98d claviers, 98e textes, dans cet ordre ?** *Tranchée le 2026-10-28 : reco (98b à 98e : nouvelles issues créées par le PO).*
 Reco : **oui**. 98e peut rejoindre 98c ou 98d si tu préfères moins d'issues. Une story ne commence son code qu'après #97 et 98a.
+Note du 2026-10-28 : avec 98.2 = « PAR UNIVERS », ce découpage est revu (« Découpage révisé », question 98.30).
 
 **98.17 Le glisser au doigt doit-il marcher sur l'iPad et l'iPhone autant que sur Android ?** *Tranchée le 2026-10-28 : reco.*
 Le glisser actuel ne se prouve qu'à la souris.
 Reco : **oui**, sur les deux, prouvé sur le projet `tablette` et le projet `telephone`. Sinon, l'enfant n'a que toucher puis toucher, qui reste toujours possible.
 
+## Questions ouvertes (habillage par univers)
+
+Nouvelles questions, posées après la réponse « PAR UNIVERS » à 98.2. Elles ne reposent aucune question déjà tranchée.
+
+**98.25 Dans `classer`, quelle maison dessine-t-on dans chaque univers ?**
+Le mot affiché et lu reste « maison » (consigne, « Poser dans la maison « on » », voix enregistrées) : chaque univers dessine donc une maison de cet univers, avec une porte qui s'ouvre et un intérieur qui s'allume quand l'étiquette est bien rangée.
+Reco : **A**
+- Animaux de la forêt : maison dans un tronc d'arbre, porte ronde ;
+- Princesses et fées : petit château à une tour, porte en arc ;
+- Sports : petit vestiaire en forme de maison, façade rayée comme un maillot ;
+- Police : petit commissariat, maisonnette bleue avec une étoile d'insigne au-dessus de la porte (sans barreaux) ;
+- Pompiers : petite caserne rouge, grande porte de garage qui se lève, cloche dorée (sans flamme) ;
+- Danse : petit opéra en forme de maison, porte à rideau.
+
+Options : B, une même petite maison partout, dont seuls le toit et le décor changent (plus simple, moins « univers ») ; C, tu donnes toi-même un objet pour un ou plusieurs univers (il doit se lire comme une maison).
+
+**98.26 Dans `ordre`, le petit train change-t-il d'objet selon l'univers, ou est-ce le même train décoré à la manière de l'univers ?**
+Les scénarios disent « le petit train » et « wagon » ; un vers de poésie occupe un wagon sur toute la largeur de l'écran.
+Reco : **A, le même train, décoré par univers** : train en bois à toit de feuilles (Animaux), train de conte à cheminée en étoile (Princesses), train aux couleurs de maillots sans numéro (Sports), train bleu avec une étoile d'insigne (Police), train rouge avec une cloche et une petite échelle (Pompiers), train de manège avec des notes de musique (Danse). Les mots « petit train » et « wagon » restent justes, et un long vers tient dans un wagon.
+Options : B, un autre objet par univers (chenille, carrosses, bus d'équipe, camion de pompiers et remorques, farandole de chaussons) : « petit train » et « wagon » deviennent faux dans 5 univers, et les scénarios changent ; C, un mélange (dis lesquels).
+
+**98.27 Les étiquettes qu'on déplace (« loup », « do », un vers) changent-elles aussi de dessin selon l'univers ?**
+Reco : **non**. Elles portent le texte à lire : même forme dans les 6 univers, couleur de l'univers seulement (jetons de #96), pour garder la lecture et le mode dys pareils partout. L'univers se voit dans les maisons et le train.
+Option : oui, un petit motif de l'univers dans un coin de l'étiquette (une feuille, une étoile…), sans toucher au texte.
+
+**98.28 Pour valider les dessins, d'accord pour une planche par cible, avec une ligne par univers et une colonne par état, et une réponse univers par univers ?**
+Exemple pour la maison : 6 lignes (animaux, princesse, sports, police, pompier, danse) × 4 colonnes (fermée, survolée, porte ouverte et allumée, « Je ne sais pas »), à la taille réelle sur un téléphone et au double, sur fond clair et sombre. Annoncée par `PLANCHES PRÊTES` sur #98. Tu réponds par exemple « maison : animaux OK, sports à refaire (toit trop petit) ». Le code avance pendant que tu regardes ; seuls les dessins définitifs t'attendent.
+Reco : **oui**.
+Options : A, d'abord une planche d'un seul univers (Animaux) pour valider le style, puis les 5 autres (deux attentes, moins de dessins à refaire si le style ne plaît pas) ; B, pas de planche, seulement les captures de l'écran réel avec la PR.
+
+**98.29 Les captures de l'écran réel dans les 6 univers (jointes à la PR) deviennent-elles des captures de référence qui font échouer un test si l'écran change ?**
+Exemple : 12 captures pour 98a (`classer` et `ordre`, 6 univers).
+Reco : **non**, elles sont jointes à la PR pour que tu les regardes, sans test. Une capture de référence par univers et par écran rendrait chaque retouche de dessin coûteuse (réponse 96.9 : captures de référence dans le seul univers Sports).
+Option : oui, une capture de référence par univers pour `classer` seulement (6 captures `@visuel`).
+
+**98.30 D'accord pour revoir le découpage ainsi : sortir le petit train de 98a dans une nouvelle tranche, et couper 98c en deux ?**
+Avec un dessin par univers, chaque tranche gagne une règle et une planche, et la limite est de 6 règles par story.
+Reco : **oui**
+- 98a (#98) : glisser au doigt et `classer`, maison par univers ;
+- nouvelle tranche : `ordre` et ordre des vers, petit train par univers ;
+- 98b (#126) : bulles, en fondant flottement et mouvements réduits en une règle ;
+- 98c (#127) coupée en « addition » et « boîte et barres » ;
+- 98d (#128) et 98e (#129) gagnent une règle, sans changer de périmètre ; 98e reste à part.
+Tu crées la nouvelle issue et tu complètes les issues existantes (texte proposé dans « Découpage révisé »).
+Options : A, la mécanique d'abord dans le seul univers Animaux, puis une tranche « les 5 autres univers » pour chaque famille de gestes ; B, garder 98a entière, la règle « dessin par univers » fondue dans la règle sur l'affichage.
+
+**98.31 Si, au moment de la PR, les dessins d'un univers ne sont pas encore validés, la PR attend-elle ?**
+Reco : **oui, elle attend les 6 univers**. Sinon, un enfant de cet univers verrait un dessin provisoire ou l'ancien écran.
+Option : la PR part avec un dessin commun provisoire pour l'univers en attente, remplacé par une petite PR ensuite.
+
 ## Termes à signaler (glossaire)
 
-Rien n'est ajouté au glossaire par ce cadrage (consigne de l'orchestrateur). À proposer au PO :
+Rien n'est ajouté au glossaire par ce cadrage (consigne de l'orchestrateur ; pendant une vague, le glossaire ne reçoit que des ajouts). À proposer au PO :
+
+- **Dessin de l'univers** et **signal d'état** (nouveaux, 98.2) : mots de cadrage, hors glossaire. Le premier nomme le dessin d'une cible propre à un univers, le second la marque commune aux 6 univers (survolée, allumée, choix écarté, bonne réponse montrée). Aucun n'entre dans le domaine.
+- **Univers** : la ligne dit « Il ne change ni le contenu ni les règles ». Proposition d'ajout (pas de réécriture) en fin de section Motivation : « l'univers change aussi le dessin des cibles d'un exercice (#98), jamais les gestes, les textes ni les signaux d'état ».
+- **Habillage** : trois sens à l'œil : l'**Univers** (glossaire), l'« habillage de jeu » (cadrage, 98.14), et le type technique `Habillage` du front (`src/univers/jetons.ts`, couleur principale). La reco de 98.14 tient (voir sa note). Pas de nouvelle question.
+- **Clavier de cristaux** (pour 98d) : si la touche n'est plus dessinée en cristal dans un univers, le terme du glossaire devient trompeur. À poser dans le cadrage de 98d (#128), pas ici.
+- **Ballon** (pour 98b) : mot d'interface possible pour la bulle de choix dans Sports. « éclater » et « crever » restent à ne pas employer (98.5 : la bulle s'efface en douceur).
+- **Petit train**, **wagon** : restent les mots d'interface dans les 6 univers si 98.26 = A.
+- **Maison** : reste le mot d'interface de **Groupe** et **Colonne** dans les 6 univers (décision n°24), quel que soit le dessin (98.25).
 
 - **Habillage de jeu** : mot de cadrage, en conflit avec la définition d'**Univers** (« Habillage choisi par l'enfant »). Proposition : note dans **Décisions** : « « habillage » seul désigne l'univers ; « habillage de jeu » est un mot de cadrage, hors domaine » (98.14).
 - **Glisser** : geste, déjà dans l'Indication du geste. Préciser à la ligne **Placement** que « glisser » nomme le geste et que la réponse reste un placement. « glisser-déposer » et « drop » restent interdits.
