@@ -60,6 +60,7 @@ export function FinDeLaRevision({ seance, prenom, personnage, univers, nombreDeS
       effetsAvant: effetsSonoresDeLaFin({
         fin: "seanceDeRevision",
         leconAcquise: false,
+        fluenceSeule: false,
         issueDuRecord: "aucunRecord",
         objetRecu: false,
         episodeOuvert: episode !== undefined,

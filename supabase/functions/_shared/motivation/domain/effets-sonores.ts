@@ -24,6 +24,7 @@ export function effetSonoreDuRecord(issue: IssueDuRecord): EffetSonore | undefin
 export interface FaitsDeLaFin {
   readonly fin: "seance" | "seanceDeRevision" | "testDeDepart";
   readonly leconAcquise: boolean;
+  readonly fluenceSeule: boolean;
   readonly issueDuRecord: IssueDuRecord;
   readonly objetRecu: boolean;
   readonly episodeOuvert: boolean;
@@ -31,7 +32,8 @@ export interface FaitsDeLaFin {
 
 export function effetsSonoresDeLaFin(faits: FaitsDeLaFin): readonly EffetSonore[] {
   if (faits.fin === "testDeDepart") return ["seanceTerminee"];
-  const recordDejaFete = effetSonoreDuRecord(faits.issueDuRecord) !== undefined;
+  const recordDejaFete = faits.fin === "seance" && faits.fluenceSeule &&
+    effetSonoreDuRecord(faits.issueDuRecord) !== undefined;
   const effets: EffetSonore[] = [];
   if (!recordDejaFete) {
     effets.push(faits.leconAcquise ? "grandeVictoire" : "seanceTerminee");

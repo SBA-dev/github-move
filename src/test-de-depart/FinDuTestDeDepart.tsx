@@ -56,6 +56,7 @@ export function FinDuTestDeDepart({ test, prenom, lecons, niveau, personnage, un
           effetsAvant: effetsSonoresDeLaFin({
             fin: "testDeDepart",
             leconAcquise: false,
+            fluenceSeule: false,
             issueDuRecord: "aucunRecord",
             objetRecu: false,
             episodeOuvert: false,

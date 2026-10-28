@@ -15,7 +15,8 @@ export function effetsDeLaFinDeSeance(
   return effetsSonoresDeLaFin({
     fin: "seance",
     leconAcquise: nouveautes.leconAcquise,
-    issueDuRecord: etoiles === undefined ? issueDeLaFluence : "aucunRecord",
+    fluenceSeule: etoiles === undefined,
+    issueDuRecord: issueDeLaFluence,
     objetRecu: nouveautes.objet !== undefined,
     episodeOuvert: nouveautes.episode !== undefined,
   });
