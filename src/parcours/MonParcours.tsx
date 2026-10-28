@@ -1,20 +1,28 @@
-import { type KeyboardEvent, useEffect, useRef } from "react";
-import { type LeconDesClassesDAvant, type LeconReussieDUneClasseAuDessus, matieresDuParcours, type Parcours, parcoursDeLaMatiere } from "@domain/apprentissage";
+import { type KeyboardEvent, useRef } from "react";
+import {
+  type LeconDesClassesDAvant,
+  type LeconDuParcours,
+  type LeconReussieDUneClasseAuDessus,
+  matieresDuParcours,
+  type Parcours,
+  parcoursDeLaMatiere,
+} from "@domain/apprentissage";
 import type { CodeDeMatiere, Matiere, Niveau } from "@domain/catalogue";
 import type { ProfilEnCours } from "@domain/famille";
 import type { Univers } from "@domain/motivation";
-import { PersonnageGuide } from "../univers/index.ts";
 import {
   annonceDeLaLecon,
   annonceDeLaLeconDesClassesDAvant,
   annonceDeLaLeconDUneClasseAuDessus, AUCUNE_LECON_POUR_LA_CLASSE, compteurDuParcours, libelleDeLOnglet,
-  titreDesLeconsDejaReussies,
+  SOUS_TITRE_DU_PARCOURS, titreDesLeconsDejaReussies,
 } from "./textes-du-parcours.ts";
+import { DessinDuParcours } from "./DessinDuParcours.tsx";
 import { BoutonDeLecon } from "./BoutonDeLecon.tsx";
 import { EtatDeLaLecon } from "./EtatDeLaLecon.tsx";
 import { SectionDesClassesDAvant } from "./SectionDesClassesDAvant.tsx";
 import { niveauDuProfil } from "./niveau-du-profil.ts";
 import { type LecturesDuParcours, useLecturesDuParcours } from "./useLecturesDuParcours.ts";
+import type { ProchainesLeconsConnues } from "./useProchainesLeconsConnues.ts";
 
 type Props = {
   readonly profil: ProfilEnCours;
@@ -26,6 +34,9 @@ type Props = {
   readonly classesDAvantDeplieesPour: ReadonlySet<CodeDeMatiere>;
   readonly onBasculerLesClassesDAvant: (matiere: CodeDeMatiere) => void;
   readonly onOuvrirLaLecon: (leconId: string) => void;
+  /** La prochaine leçon vue la dernière fois dans chaque matière : d'où le personnage guide marche, si elle a avancé. */
+  readonly prochainesLeconsConnues: ProchainesLeconsConnues;
+  readonly onMemoriserLaProchaineLecon: (matiere: CodeDeMatiere, leconId: string | undefined) => void;
 };
 
 function matiereOuverte(matieres: readonly Matiere[], choisie: CodeDeMatiere | undefined): Matiere | undefined {
@@ -35,20 +46,29 @@ function matiereOuverte(matieres: readonly Matiere[], choisie: CodeDeMatiere | u
 
 /** L'écran « Mon parcours » : les leçons du niveau de l'enfant, matière par matière. Il n'affiche que ce que le domaine calcule. */
 export function MonParcours(
-  { profil, univers, matiereChoisie, onChoisirLaMatiere, classesDAvantDeplieesPour, onBasculerLesClassesDAvant, onOuvrirLaLecon }: Props,
+  {
+    profil,
+    univers,
+    matiereChoisie,
+    onChoisirLaMatiere,
+    classesDAvantDeplieesPour,
+    onBasculerLesClassesDAvant,
+    onOuvrirLaLecon,
+    prochainesLeconsConnues,
+    onMemoriserLaProchaineLecon,
+  }: Props,
 ) {
   const lectures = useLecturesDuParcours(profil.id);
   const niveau = niveauDuProfil(profil.niveau);
   return (
     <section className="mon-parcours" aria-labelledby="titre-de-mon-parcours">
-      <div className="titre-avec-guide">
-        <PersonnageGuide univers={univers} humeur="content" />
-        <h2 id="titre-de-mon-parcours">Mon parcours</h2>
-      </div>
+      <h2 id="titre-de-mon-parcours">Mon parcours</h2>
+      <p className="sous-titre-du-parcours etiquette-sur-le-decor" data-testid="sous-titre-du-parcours">{SOUS_TITRE_DU_PARCOURS}</p>
       {lectures === undefined && <p role="status" className="etiquette-sur-le-decor">Chargement du parcours…</p>}
       {lectures !== undefined && niveau === undefined && <p className="etiquette-sur-le-decor">{AUCUNE_LECON_POUR_LA_CLASSE}</p>}
       {lectures !== undefined && niveau !== undefined && (
         <ParcoursDuNiveau
+          univers={univers}
           lectures={lectures}
           niveau={niveau}
           matiereChoisie={matiereChoisie}
@@ -56,28 +76,50 @@ export function MonParcours(
           classesDAvantDeplieesPour={classesDAvantDeplieesPour}
           onBasculerLesClassesDAvant={onBasculerLesClassesDAvant}
           onOuvrirLaLecon={onOuvrirLaLecon}
+          prochainesLeconsConnues={prochainesLeconsConnues}
+          onMemoriserLaProchaineLecon={onMemoriserLaProchaineLecon}
         />
       )}
     </section>
   );
 }
 
-type PropsDuNiveau = Omit<Props, "profil" | "univers"> & { readonly lectures: LecturesDuParcours; readonly niveau: Niveau };
+type PropsDuNiveau = Omit<Props, "profil"> & { readonly lectures: LecturesDuParcours; readonly niveau: Niveau };
 
 function ParcoursDuNiveau(
-  { lectures, niveau, matiereChoisie, onChoisirLaMatiere, classesDAvantDeplieesPour, onBasculerLesClassesDAvant, onOuvrirLaLecon }: PropsDuNiveau,
+  {
+    univers,
+    lectures,
+    niveau,
+    matiereChoisie,
+    onChoisirLaMatiere,
+    classesDAvantDeplieesPour,
+    onBasculerLesClassesDAvant,
+    onOuvrirLaLecon,
+    prochainesLeconsConnues,
+    onMemoriserLaProchaineLecon,
+  }: PropsDuNiveau,
 ) {
   const entrees = { ...lectures, niveau };
   const matieres = matieresDuParcours(entrees);
   const ouverte = matiereOuverte(matieres, matiereChoisie);
   if (!ouverte) return <p className="etiquette-sur-le-decor">{AUCUNE_LECON_POUR_LA_CLASSE}</p>;
   const parcours = parcoursDeLaMatiere(entrees, ouverte);
+  const codeDeLaMatiere = ouverte.code;
+  const memoriser = (leconId: string | undefined) => onMemoriserLaProchaineLecon(codeDeLaMatiere, leconId);
   return (
     <>
       <OngletsDesMatieres matieres={matieres} ouverte={ouverte.code} onChoisir={onChoisirLaMatiere} />
       <div role="tabpanel" id="parcours-de-la-matiere" aria-labelledby={`onglet-${ouverte.code}`} className="parcours-de-la-matiere">
         <h3 data-testid="titre-du-parcours">{ouverte.libelle} · {niveau.valeur}</h3>
-        <LeconsDuParcours parcours={parcours} onOuvrirLaLecon={onOuvrirLaLecon} />
+        <LeconsDuParcours
+          key={ouverte.code}
+          parcours={parcours}
+          univers={univers}
+          prochaineLeconConnue={prochainesLeconsConnues.get(ouverte.code)}
+          onMemoriserLaProchaineLecon={memoriser}
+          onOuvrirLaLecon={onOuvrirLaLecon}
+        />
         <BlocsDesLeconsDejaReussies lecons={parcours.leconsReussiesDesClassesAuDessus} onOuvrirLaLecon={onOuvrirLaLecon} />
         <LeconsDesClassesDAvant
           lecons={parcours.leconsDesClassesDAvant}
@@ -136,41 +178,41 @@ function OngletsDesMatieres({ matieres, ouverte, onChoisir }: PropsDesOnglets) {
   );
 }
 
-function defilerJusqua(element: HTMLElement | null): void {
-  const sansAnimation = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  element?.scrollIntoView({ block: "nearest", behavior: sansAnimation ? "auto" : "smooth" });
-}
+type PropsDesLecons = {
+  readonly parcours: Parcours;
+  readonly univers: Univers;
+  readonly prochaineLeconConnue: string | undefined;
+  readonly onMemoriserLaProchaineLecon: (leconId: string | undefined) => void;
+  readonly onOuvrirLaLecon: (leconId: string) => void;
+};
 
-type PropsDesLecons = { readonly parcours: Parcours; readonly onOuvrirLaLecon: (leconId: string) => void };
-
-function LeconsDuParcours({ parcours, onOuvrirLaLecon }: PropsDesLecons) {
-  const prochaine = useRef<HTMLLIElement>(null);
-  const { prochaineLecon } = parcours;
-  useEffect(() => defilerJusqua(prochaine.current), [prochaineLecon]);
+function LeconsDuParcours({ parcours, univers, prochaineLeconConnue, onMemoriserLaProchaineLecon, onOuvrirLaLecon }: PropsDesLecons) {
   return (
     <>
       <div className="progression-du-parcours">
         <progress value={parcours.nombreDeLeconsReussies} max={parcours.nombreDeLecons} aria-hidden="true" />
         <p data-testid="compteur-du-parcours">{compteurDuParcours(parcours.nombreDeLeconsReussies, parcours.nombreDeLecons)}</p>
       </div>
-      <ol className="lecons-du-parcours">
-        {parcours.lecons.map((lecon) => (
-          <li key={lecon.lecon} ref={lecon.lecon === prochaineLecon ? prochaine : undefined}>
-            <button
-              type="button"
-              className="lecon-du-parcours"
-              data-testid="lecon-du-parcours"
-              data-etat={lecon.etat.genre}
-              aria-label={annonceDeLaLecon(lecon)}
-              onClick={() => onOuvrirLaLecon(lecon.lecon)}
-            >
-              <span className="place-de-la-lecon" data-testid="place-de-la-lecon">Leçon {lecon.place}</span>
-              <span className="titre-de-la-lecon">{lecon.titre}</span>
-              <EtatDeLaLecon etat={lecon.etat} />
-            </button>
-          </li>
-        ))}
-      </ol>
+      <DessinDuParcours
+        parcours={parcours}
+        univers={univers}
+        prochaineLeconConnue={prochaineLeconConnue}
+        onMemoriserLaProchaineLecon={onMemoriserLaProchaineLecon}
+        renduDeLaLecon={(lecon: LeconDuParcours) => (
+          <button
+            type="button"
+            className="lecon-du-parcours"
+            data-testid="lecon-du-parcours"
+            data-etat={lecon.etat.genre}
+            aria-label={annonceDeLaLecon(lecon)}
+            onClick={() => onOuvrirLaLecon(lecon.lecon)}
+          >
+            <span className="place-de-la-lecon" data-testid="place-de-la-lecon">Leçon {lecon.place}</span>
+            <span className="titre-de-la-lecon">{lecon.titre}</span>
+            <EtatDeLaLecon etat={lecon.etat} />
+          </button>
+        )}
+      />
     </>
   );
 }
