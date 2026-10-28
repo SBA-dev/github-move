@@ -446,7 +446,7 @@ Then(/^chaque profil enfant de « Qui joue \? » mesure au moins 44 px de haut e
 
 // --- Alors : l'enfant joue
 
-Then(/^(Lumi|Coach Léo|Agente Mila|Capitaine Sam|Lili) dit « (Bonjour [^«»]+) »$/, async ({ page }, _nom: string, texte: string) => {
+Then(/^(Lumi|Coach Léo|Agent Max|Capitaine Sam|Lili) dit « (Bonjour [^«»]+) »$/, async ({ page }, _nom: string, texte: string) => {
   const parole = page.getByTestId("parole");
   await expect(parole).toHaveAttribute("data-nature", "accueil");
   await expect(parole).toHaveText(texte);

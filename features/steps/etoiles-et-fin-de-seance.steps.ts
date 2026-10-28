@@ -382,7 +382,7 @@ function leconDeFrancais(id: string, titre: string, ordre: number, exercices: Ar
   };
 }
 
-Given(/^les leçons de test « Les sons de test » et « La suite de test » sont dans la bibliothèque$/, async ({ page }) => {
+export async function injecterLesLeconsDeTestDesSons(page: Page): Promise<void> {
   await injecter(page, leconDeFrancais("test-les-sons", "Les sons de test", 901, [
     bullesDeTest("Premières bulles", "Touche le mot qui a le son ou."),
     bullesDeTest("Dernières bulles", "Touche le mot qui a le son on."),
@@ -390,6 +390,10 @@ Given(/^les leçons de test « Les sons de test » et « La suite de test » son
   await injecter(page, leconDeFrancais("test-la-suite", "La suite de test", 903, [
     bullesDeTest("Bulles de la suite", "Touche le mot qui a le son an."),
   ]));
+}
+
+Given(/^les leçons de test « Les sons de test » et « La suite de test » sont dans la bibliothèque$/, async ({ page }) => {
+  await injecterLesLeconsDeTestDesSons(page);
 });
 
 async function envoyerLaSeanceDeTest(famille: Famille, page: Page, exercice: string, titre: string, erreurs: number, supplement: object) {

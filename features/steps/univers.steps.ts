@@ -1,4 +1,4 @@
-import { expect, type Page } from "@playwright/test";
+import { expect, type Locator, type Page } from "@playwright/test";
 import { avecLesReglagesPrevus, reglagesPrevus } from "../support/reglages-prevus.ts";
 import { Given, type Monde, type ProfilPrepare, Then, When } from "./fixtures.ts";
 
@@ -55,8 +55,16 @@ async function ouvrirLAccueilDeLEnfant(page: Page, universAttendu: string) {
   await expect(page.getByRole("region", { name: /^Accueil de / })).toBeVisible();
 }
 
+/**
+ * Le dessin d'un personnage guide, par son nom : accessible (role img) ou, depuis #96, caché des lecteurs d'écran sur les écrans
+ * de l'enfant et repéré alors par `data-personnage-guide` sur l'élément `data-testid="personnage-guide"`.
+ */
+export function leGuide(page: Page, nom: string): Locator {
+  return page.getByRole("img", { name: nom, exact: true }).or(page.locator(`[data-testid="personnage-guide"][data-personnage-guide="${nom}"]`)).first();
+}
+
 function guide(page: Page) {
-  return page.getByTestId("personnage-guide");
+  return page.getByTestId("personnage-guide").first();
 }
 
 // --- Étant donné : profils préparés
@@ -105,6 +113,8 @@ Given(/^l'appareil demande des mouvements réduits$/, async ({ page }) => {
 
 Given(/^Léa joue sur un ordinateur, au clavier$/, async ({ page, monde }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
+  // Story #96 : le profil déjà préparé (univers, niveau) est gardé.
+  if (monde.profils.has("Léa")) return;
   const profil = { prenom: "Léa", niveau: NIVEAU_PAR_DEFAUT, univers: cleDe(UNIVERS_PAR_DEFAUT) };
   monde.profils.set("Léa", profil);
   await preparerProfil(page, profil);
@@ -144,7 +154,7 @@ When(/^Léa et Tom commencent à jouer, chacun sur sa tablette$/, async ({ brows
     await ouvrirLAccueilDeLEnfant(page, profil.univers);
     const paysage = await page.getByTestId("paysage").getAttribute("data-univers");
     const couleur = await page.locator(".application").evaluate((el) =>
-      getComputedStyle(el).getPropertyValue("--accent").trim()
+      getComputedStyle(el).getPropertyValue("--principale").trim()
     );
     monde.tablettes.set(prenom, { paysage, couleur });
     await contexte.close();
@@ -166,7 +176,7 @@ When(/^Léa parcourt l'en-tête au clavier$/, async ({ page, monde }) => {
 
 Then(/^(?:elle|je) voi[st] (.+) dans le paysage de l'univers « (.+) »$/, async ({ page }, nom: string, univers: string) => {
   await expect(page.getByTestId("paysage")).toHaveAttribute("data-univers", cleDe(univers));
-  await expect(page.getByRole("img", { name: nom, exact: true })).toBeVisible();
+  await expect(leGuide(page, nom)).toBeVisible();
 });
 
 Then(/^le paysage et la couleur principale de Léa diffèrent de ceux de Tom$/, ({ monde }) => {
@@ -186,17 +196,17 @@ Then(/^aucun message d'erreur n'apparaît$/, async ({ page }) => {
 // --- Alors : humeur
 
 Then(/^(.+) est content$/, async ({ page }, nom: string) => {
-  await expect(page.getByRole("img", { name: nom, exact: true })).toHaveAttribute("data-humeur", "content");
+  await expect(leGuide(page, nom)).toHaveAttribute("data-humeur", "content");
 });
 
 Then(/^(.+) applaudit en sautant$/, async ({ page }, nom: string) => {
-  const personnage = page.getByRole("img", { name: nom, exact: true });
+  const personnage = leGuide(page, nom);
   await expect(personnage).toHaveAttribute("data-humeur", "applaudit");
   await expect(personnage).toHaveAttribute("data-geste", "saute");
 });
 
 Then(/^(.+) réfléchit en penchant la tête$/, async ({ page }, nom: string) => {
-  const personnage = page.getByRole("img", { name: nom, exact: true });
+  const personnage = leGuide(page, nom);
   await expect(personnage).toHaveAttribute("data-humeur", "reflechit");
   await expect(personnage).toHaveAttribute("data-geste", "penche");
 });
@@ -213,7 +223,7 @@ export const EXPRESSIONS_PAR_PERSONNAGE: Readonly<Record<string, readonly string
   "Lumi": ["Abracadabra !", "Par ma baguette, bravo !", "Magique !"],
   "Noisette": ["Youpi !", "Hop hop hop, bravo !", "Trop fort, ça !"],
   "Coach Léo": ["Allez, on y va !", "Et c'est le but !", "Quelle équipe !"],
-  "Agente Mila": ["Enquête résolue !", "Bien vu, détective !", "Affaire classée !"],
+  "Agent Max": ["Enquête résolue !", "Bien vu, détective !", "Affaire classée !"],
   "Capitaine Sam": ["Mission accomplie !", "Pin-pon, bravo !", "Sauvetage réussi !"],
   "Lili": ["Et hop, une pirouette !", "En rythme, bravo !", "Quelle grâce !"],
 };
@@ -231,7 +241,7 @@ Then(
 
 Then(/^jamais l'expression d'un autre personnage guide$/, async ({ page }) => {
   const texte = ((await page.getByTestId("parole").textContent()) ?? "").trim();
-  const nom = (await guide(page).getAttribute("aria-label")) ?? "";
+  const nom = (await guide(page).getAttribute("data-personnage-guide")) ?? "";
   const autres = Object.entries(EXPRESSIONS_PAR_PERSONNAGE).filter(([autre]) => autre !== nom).flatMap(([, liste]) => liste);
   expect(autres).not.toContain(texte);
 });
@@ -303,23 +313,33 @@ Then(/^elle atteint tour à tour l'accueil, le choix Son\/Muet et l'espace paren
 
 Then(/^le visage de (.+) montre qu'il (applaudit|réfléchit)$/, async ({ page }, nom: string, action: string) => {
   const humeur = action === "applaudit" ? "applaudit" : "reflechit";
-  const visage = page.getByRole("img", { name: nom, exact: true }).getByTestId("visage");
+  const visage = leGuide(page, nom).getByTestId("visage");
   await expect(visage).toHaveAttribute("data-humeur", humeur);
 });
 
 Then(/^(.+) ne saute pas$/, async ({ page }, nom: string) => {
-  await expect(page.getByRole("img", { name: nom, exact: true })).toHaveAttribute("data-geste", "aucun");
+  await expect(leGuide(page, nom)).toHaveAttribute("data-geste", "aucun");
 });
 
 Then(/^(.+) ne penche pas la tête$/, async ({ page }, nom: string) => {
-  await expect(page.getByRole("img", { name: nom, exact: true })).toHaveAttribute("data-geste", "aucun");
+  await expect(leGuide(page, nom)).toHaveAttribute("data-geste", "aucun");
 });
 
+/** Le paysage couvre toute la page et son dessin colle au haut de l'écran : on photographie ce que l'écran en montre, car une photo de toute la hauteur est recousue par tuiles et varie d'un point de couleur. */
+async function imagesDeLaZone(page: Page, zone: Locator): Promise<Buffer> {
+  const boite = await zone.boundingBox();
+  const ecran = page.viewportSize();
+  if (!boite || !ecran) throw new Error("Zone ou écran introuvable");
+  const haut = Math.max(boite.y, 0);
+  const bas = Math.min(boite.y + boite.height, ecran.height);
+  return page.screenshot({ animations: "allow", clip: { x: Math.max(boite.x, 0), y: haut, width: Math.min(boite.width, ecran.width), height: bas - haut } });
+}
+
 Then(/^rien ne bouge dans le paysage ni chez (.+)$/, async ({ page }, nom: string) => {
-  const zones = [page.getByTestId("paysage"), page.getByRole("img", { name: nom, exact: true })];
-  const avant = await Promise.all(zones.map((zone) => zone.screenshot({ animations: "allow" })));
+  const zones = [page.getByTestId("paysage"), leGuide(page, nom)];
+  const avant = await Promise.all(zones.map((zone) => imagesDeLaZone(page, zone)));
   const delai = await page.evaluate(() => new Promise<number>((r) => requestAnimationFrame(() => setTimeout(() => r(0), 600))));
   expect(delai).toBe(0);
-  const apres = await Promise.all(zones.map((zone) => zone.screenshot({ animations: "allow" })));
+  const apres = await Promise.all(zones.map((zone) => imagesDeLaZone(page, zone)));
   avant.forEach((image, i) => expect(apres[i]?.equals(image)).toBe(true));
 });
