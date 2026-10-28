@@ -27,3 +27,19 @@ Branche de base : `main`. Décision réservée : 0036.
 - `domain-modeler` (`428d26d`) : concept proposé « Partie du parcours » (fonctions pures `partiesDuParcours`, `partieAOuvrir`). Mesure sur `app/bibliotheque.json` : un découpage par section donne 245 parties de leçons consécutives, dont 93 % d'une seule leçon. Le choix du PO est donc à reconfirmer (#99.25) avant de revoir les scénarios.
 - Conflit du coffre (99.12) avec la règle 98.6 de #98, signalé au PO (#99.31).
 - `CADRAGE PRÊT` n°2 publié avec les questions #99.23 à #99.32. Les scénarios seront revus après la réponse à #99.25, qui décide de leur forme.
+
+## Validation n°1 levée (21:54 UTC)
+
+- Annonce [Responsable] sur #99 (commentaire 6481622839) : « 99# reco » pour #99.23 à #99.32. 99.25 C (un seul dessin par matière), 99.23 A (sous-titre « Ma carte au trésor »), 99.31 (fanion sur une colline fleurie à la place du coffre), « Partie du parcours » réservé pour #100.
+- Report : `domain-modeler` (`c04a5a5`), `po-acceptance` (`d58c718`) : 5 règles, 25 scénarios, 0 `@a-valider`. Seuls changements : sous-titre (nouveau scénario, titre de R4 complété) et fanion. Pas de nouvelle présentation au PO, le TDD commence (consigne du responsable).
+
+## Étape 3 : TDD (à partir de 22:05 UTC)
+
+Bloc A — Apprentissage, `avanceeDansLeParcours` (`supabase/functions/_shared/apprentissage/domain/avancee-dans-le-parcours.ts`) :
+- A1 sans prochaine leçon connue : aucune avancée (inv. 6)
+- A2 prochaine leçon connue devenue réussie : avancée jusqu'à la nouvelle prochaine leçon (inv. 1, 4)
+- A3 saut de plusieurs places (inv. 4)
+- A4 prochaine leçon connue pas réussie, leçon plus loin réussie : aucune avancée (inv. 3, N8)
+- A5 matière réussie : avancée jusqu'à la fin du parcours (inv. 5)
+- A6 prochaine leçon connue qui n'est plus dans le parcours (classe changée) : aucune avancée (inv. 1)
+- A7 jamais en arrière (leçon ajoutée avant) : aucune avancée (inv. 2)
