@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
+import { Confettis } from "../../celebration/index.ts";
 import { mouvementsReduits } from "../../transitions/index.ts";
 import { leconSuivanteEnFinDeSeance, type Seance } from "@domain/apprentissage";
 import { pageDeLaLecon } from "@domain/catalogue";
@@ -15,13 +16,13 @@ import { useEpisodeOuvertParLaSeance } from "../../histoire/useEpisodeOuvertParL
 import { niveauDuProfil } from "../../parcours/index.ts";
 import { lireLEtatDuTestDeDepart } from "../../test-de-depart/etat-du-test-de-depart.ts";
 import { chargerToutesLesLecons } from "../bibliotheque.ts";
-import { EtoilesDessinees } from "./EtoilesDessinees.tsx";
-import { Etincelles } from "./Etincelles.tsx";
+import { EtoilesGagnees } from "./EtoilesGagnees.tsx";
 import { lireLesMeilleuresEtoilesDuProfil } from "./meilleures-etoiles-du-profil.ts";
-import { etoilesSurTrois } from "./texte-des-etoiles.ts";
+import { annonceDesEtoiles, etoilesSurTrois } from "./texte-des-etoiles.ts";
 import type { NouveautesDeFin } from "./nouveautes-de-fin.ts";
 import { useBadgeGagneParLaSeance } from "./useBadgeGagneParLaSeance.ts";
 import { useObjetRecuParLaSeance } from "./useObjetRecuParLaSeance.ts";
+import { useLeconAcquiseParLaSeance } from "./useLeconAcquiseParLaSeance.ts";
 import { useSauvegardeDeLaSeance } from "./useSauvegardeDeLaSeance.ts";
 
 type Suivante = { readonly id: string; readonly titre: string };
@@ -97,6 +98,12 @@ export function EcranDeFin({ seance, niveau, onDireLaFin, meilleuresEtoilesAvant
     terminee !== undefined,
     terminee?.etoiles,
   );
+  const { pret: acquisePret, acquise: leconAcquise } = useLeconAcquiseParLaSeance(
+    meilleuresEtoilesAvant,
+    seance.lecon,
+    terminee !== undefined,
+    terminee?.etoiles,
+  );
   const { pret: episodePret, episode } = useEpisodeOuvertParLaSeance(nombreDeSeancesAvant, terminee !== undefined);
   const accueil = useRef<HTMLButtonElement>(null);
   const dite = useRef(false);
@@ -104,10 +111,12 @@ export function EcranDeFin({ seance, niveau, onDireLaFin, meilleuresEtoilesAvant
     accueil.current?.focus();
   }, []);
   useEffect(() => {
-    if (dite.current || terminee === undefined || !pret || !episodePret || !badgePret) return;
+    if (dite.current || terminee === undefined || !pret || !episodePret || !badgePret || !acquisePret) return;
     dite.current = true;
-    onDireLaFin(terminee.etoiles, { objet, episode, badge });
-  }, [terminee, pret, objet, episodePret, episode, badgePret, badge, onDireLaFin]);
+    onDireLaFin(terminee.etoiles, { objet, episode, badge, leconAcquise });
+  }, [terminee, pret, objet, episodePret, episode, badgePret, badge, acquisePret, leconAcquise, onDireLaFin]);
+  const [etoilesAffichees, setEtoilesAffichees] = useState(false);
+  const afficherToutesLesEtoiles = useCallback(() => setEtoilesAffichees(true), []);
 
   const sansMouvement = mouvementsReduits();
   const etoiles = terminee?.etoiles;
@@ -121,11 +130,14 @@ export function EcranDeFin({ seance, niveau, onDireLaFin, meilleuresEtoilesAvant
       animate={{ opacity: 1 }}
       transition={{ duration: 0.25, ease: "easeOut" }}
     >
-      <Etincelles />
+      {(etoiles === undefined || etoilesAffichees) && <Confettis />}
       {etoiles !== undefined && (
         <>
-          <EtoilesDessinees nombre={etoiles} />
+          <EtoilesGagnees nombre={etoiles} onToutesAffichees={afficherToutesLesEtoiles} />
           <p className="etoiles-gagnees" data-testid="etoiles-gagnees">{etoilesSurTrois(etoiles)}</p>
+          <p className="visuellement-cache" aria-live="polite" data-testid="annonce-des-etoiles">
+            {etoilesAffichees && etoiles > 0 ? annonceDesEtoiles(etoiles) : ""}
+          </p>
         </>
       )}
       <div className="pour-la-cabane" role="status" data-testid="annonce-de-la-cabane">

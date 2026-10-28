@@ -5,4 +5,6 @@ export type NouveautesDeFin = {
   readonly objet: ObjetDeLaCabane | undefined;
   readonly episode: Episode | undefined;
   readonly badge: Badge | undefined;
+  /** La séance rend la leçon acquise pour la première fois. */
+  readonly leconAcquise: boolean;
 };

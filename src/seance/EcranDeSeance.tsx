@@ -313,6 +313,7 @@ function SeanceEnCours(
             {exerciceDeLaLecon.type === "fluence" && fluence && (
               <ExerciceDeFluence
                 fluence={fluence}
+                recordBattu={deroulement.recordBattu}
                 onDemarrer={deroulement.demarrerLaFluence}
                 onValider={(nombre) => void deroulement.repondreParUnNombre(nombre)}
               />

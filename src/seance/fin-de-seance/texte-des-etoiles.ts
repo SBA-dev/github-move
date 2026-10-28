@@ -5,3 +5,7 @@ export function etoilesSurTrois(nombre: number): string {
 export function meilleuresEtoilesSurTrois(nombre: number): string {
   return `Tes meilleures étoiles : ${nombre} sur 3`;
 }
+
+export function annonceDesEtoiles(nombre: number): string {
+  return `Tu as gagné ${nombre} étoile${nombre > 1 ? "s" : ""}`;
+}

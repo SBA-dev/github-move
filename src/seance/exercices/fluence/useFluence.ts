@@ -1,8 +1,9 @@
 import { type MutableRefObject, useCallback, useEffect, useRef, useState } from "react";
-import { type FluenceEnCours, RecordDeFluence, Reponse, type Seance } from "@domain/apprentissage";
+import { type FluenceEnCours, type IssueDuRecord, RecordDeFluence, Reponse, type Seance } from "@domain/apprentissage";
 import {
   accueilDeLaFluence,
   type FinDeFluence,
+  effetSonoreDuRecord,
   effetsSonoresApresUneBonneReponse,
   humeurApresReponse,
   parolesDeFinDeFluence,
@@ -47,10 +48,10 @@ function finDeFluence(seance: Seance, exercice: string, score: number, recordCon
   const meilleurScore = record.meilleurScore;
   if (issue === "recordInchange") {
     if (meilleurScore === undefined) throw new Error("Un record inchangé suppose un record connu");
-    return { texte: parolesDeFinDeFluence({ score, issue, record: meilleurScore }), meilleurScore };
+    return { texte: parolesDeFinDeFluence({ score, issue, record: meilleurScore }), meilleurScore, issue };
   }
   const fin: FinDeFluence = { score, issue };
-  return { texte: parolesDeFinDeFluence(fin), meilleurScore };
+  return { texte: parolesDeFinDeFluence(fin), meilleurScore, issue };
 }
 
 /** Le déroulé d'une fluence : l'accueil et le record, le signal de départ, le temps qui passe, puis la phrase de fin. */
@@ -65,6 +66,10 @@ export function useFluence(
   const derniereSeconde = useRef<number | undefined>(undefined);
   /** Les paroles de fin de la fluence, gardées pour que l'écran de fin d'une fluence seule y ajoute les nouveautés. */
   const parolesDeFin = useRef<string | undefined>(undefined);
+  /** L'issue du record de la dernière fluence, gardée pour que l'écran de fin sache si « grande victoire » a déjà été entendue. */
+  const issueDuRecord = useRef<IssueDuRecord>("aucunRecord");
+  /** Le record que la fluence vient de battre, que le compteur rejoint en défilant ; `undefined` quand le record reste ou qu'il n'y a pas de score. */
+  const [recordBattu, setRecordBattu] = useState<number | undefined>();
 
   const presenter = useCallback(async () => {
     const nom = seance.exerciceEnCours()?.scoreDeFluence()?.nom;
@@ -103,9 +108,18 @@ export function useFluence(
     const fin = finDeFluence(seance, nom, fluence.score, record);
     setRecord(fin.meilleurScore);
     parolesDeFin.current = fin.texte;
-    await dire({ texte: fin.texte, nature: "felicitation", humeur: humeurApresReponse(fluence.score > 0) });
+    issueDuRecord.current = fin.issue;
+    const effetDuRecord = effetSonoreDuRecord(fin.issue);
+    setRecordBattu(effetDuRecord === undefined ? undefined : fin.meilleurScore);
+    await dire({
+      texte: fin.texte,
+      nature: "felicitation",
+      humeur: humeurApresReponse(fluence.score > 0),
+      ...(effetDuRecord === undefined ? {} : { effetsAvant: [effetDuRecord] }),
+    });
     if (!(await attendreLEcranSuivant()) || !vivant.current) return;
     figer(undefined);
+    setRecordBattu(undefined);
     setFluenceFinie(undefined);
     await suite(++sequence.current, seance.retirerFaits(), true);
   }, [seance, horloge, record, estFigee, figer, sequence, faireSilence, annoncerLAvancement, dire, vivant, attendreLEcranSuivant]);
@@ -145,7 +159,7 @@ export function useFluence(
     redessiner();
   }, [seance, horloge, estFigee, terminer, redessiner]);
 
-  return { demarree, fluenceFinie, parolesDeFin, presenter, demarrer, repondre, battre };
+  return { demarree, fluenceFinie, recordBattu, parolesDeFin, issueDuRecord, presenter, demarrer, repondre, battre };
 }
 
 /** Fait battre l'horloge tant que la fluence court : chaque battement redessine le temps, ou finit la fluence. */
