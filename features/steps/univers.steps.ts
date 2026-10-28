@@ -325,11 +325,21 @@ Then(/^(.+) ne penche pas la tête$/, async ({ page }, nom: string) => {
   await expect(leGuide(page, nom)).toHaveAttribute("data-geste", "aucun");
 });
 
+/** Le paysage couvre toute la page et son dessin colle au haut de l'écran : on photographie ce que l'écran en montre, car une photo de toute la hauteur est recousue par tuiles et varie d'un point de couleur. */
+async function imagesDeLaZone(page: Page, zone: Locator): Promise<Buffer> {
+  const boite = await zone.boundingBox();
+  const ecran = page.viewportSize();
+  if (!boite || !ecran) throw new Error("Zone ou écran introuvable");
+  const haut = Math.max(boite.y, 0);
+  const bas = Math.min(boite.y + boite.height, ecran.height);
+  return page.screenshot({ animations: "allow", clip: { x: Math.max(boite.x, 0), y: haut, width: Math.min(boite.width, ecran.width), height: bas - haut } });
+}
+
 Then(/^rien ne bouge dans le paysage ni chez (.+)$/, async ({ page }, nom: string) => {
   const zones = [page.getByTestId("paysage"), leGuide(page, nom)];
-  const avant = await Promise.all(zones.map((zone) => zone.screenshot({ animations: "allow" })));
+  const avant = await Promise.all(zones.map((zone) => imagesDeLaZone(page, zone)));
   const delai = await page.evaluate(() => new Promise<number>((r) => requestAnimationFrame(() => setTimeout(() => r(0), 600))));
   expect(delai).toBe(0);
-  const apres = await Promise.all(zones.map((zone) => zone.screenshot({ animations: "allow" })));
+  const apres = await Promise.all(zones.map((zone) => imagesDeLaZone(page, zone)));
   avant.forEach((image, i) => expect(apres[i]?.equals(image)).toBe(true));
 });
