@@ -88,6 +88,7 @@ export {
 export { JoursDeSeance } from "./jours-de-seance.ts";
 export { type Serie, serieDeJours } from "./serie.ts";
 export { saluerAvecLaSerie, texteDeLaPastille } from "./paroles-de-la-serie.ts";
+export { type BonneReponse, effetsSonoresApresUneBonneReponse } from "./effets-sonores.ts";
 export { type Badge, badgeGagneParLaSeance, badgesDuProfil, nomDuBadge } from "./badges.ts";
 export {
   finDePhraseDuBadge,
