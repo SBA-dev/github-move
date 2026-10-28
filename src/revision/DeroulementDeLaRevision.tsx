@@ -11,6 +11,7 @@ import {
 } from "@domain/apprentissage";
 import type { ItemDeBoite } from "@domain/catalogue";
 import type { Univers } from "@domain/motivation";
+import { ContexteDuRetour } from "../retours/index.ts";
 import { BoiteAJetons } from "../seance/exercices/boite/BoiteAJetons.tsx";
 import { ExerciceDeCalcul } from "../seance/exercices/ExerciceDeCalcul.tsx";
 import { ExerciceDeDictee } from "../seance/exercices/ExerciceDeDictee.tsx";
@@ -67,7 +68,7 @@ export function DeroulementDeLaRevision(
   const texteDeLaQuestion = courante && textes.get(courante.identite.valeur);
   const lectureEnAttente = texteDeLaQuestion !== undefined && deroulement.texteEcoutePour !== courante?.identite.valeur;
   return (
-    <>
+    <ContexteDuRetour.Provider value={deroulement.retour}>
       <RecipientDeProgression
         avancement={new Avancement(deroulement.questionsReussies, nombreDeQuestions)}
         libelle="Avancement de la révision"
@@ -158,6 +159,6 @@ export function DeroulementDeLaRevision(
           )}
         </div>
       )}
-    </>
+    </ContexteDuRetour.Provider>
   );
 }
