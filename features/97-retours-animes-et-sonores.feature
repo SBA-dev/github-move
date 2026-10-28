@@ -224,6 +224,7 @@ Fonctionnalité: Retours animés et sonores pendant la séance
       Et que Léa a pour meilleures étoiles :
         | leçon            | étoiles |
         | Les sons de test | 2       |
+        | La suite de test | 2       |
       Et que Léa joue la séance complète de la leçon « Les sons de test »
       Quand Léa réussit la dernière question de la séance
       Alors Léa entend l'effet sonore « séance terminée », puis Noisette dit sa phrase de fin
@@ -404,14 +405,14 @@ Fonctionnalité: Retours animés et sonores pendant la séance
       Étant donné que les leçons de test « Les sons de test » et « La suite de test » sont dans la bibliothèque
       Et que Léa voit tomber les confettis de la fin de la séance de la leçon « Les sons de test »
       Quand Léa choisit « Accueil »
-      Alors Léa voit son accueil
+      Alors Léa voit « Qui joue ? »
       Et Léa n'entend plus l'effet sonore de fin
 
     Scénario: Pendant les confettis, le clavier n'est jamais bloqué
       Étant donné que les leçons de test « Les sons de test » et « La suite de test » sont dans la bibliothèque
       Et que Léa voit tomber les confettis de la fin de la séance de la leçon « Les sons de test »
       Quand Léa choisit « Accueil » au clavier
-      Alors Léa voit son accueil
+      Alors Léa voit « Qui joue ? »
 
     # Décision 97.15
     Plan du Scénario: Les lecteurs d'écran annoncent une seule fois « <annonce> »
