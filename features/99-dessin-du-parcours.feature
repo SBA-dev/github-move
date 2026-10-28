@@ -9,10 +9,10 @@ Fonctionnalité: « Mon parcours » se dessine dans le royaume du personnage gui
   La story ne change aucune règle du parcours (#25, #26, #27) : prochaine leçon, leçon à découvrir, place, leçons
   des classes d'avant et leçons réussies d'une classe au-dessus restent celles du domaine Apprentissage. Aucune leçon
   n'est verrouillée (réponse 25.1, Décision n°33) : toutes les leçons du parcours s'ouvrent, comme dans #25.
-  Le tag @a-valider marque un scénario qui dépend d'une question ouverte (docs/stories/99/acceptance.md) ; le
-  commentaire au-dessus du scénario la nomme.
+  Le commentaire au-dessus d'un scénario nomme la réponse du PO qu'il illustre (docs/stories/99/acceptance.md,
+  section « Décisions »).
 
-  Mots employés dans ces scénarios (mots d'interface, en attendant les réponses #99.1 à #99.4) :
+  Mots employés dans ces scénarios (mots d'interface, réponses #99.1 à #99.4, #99.15 et #99.23) :
   - « le dessin du parcours » : les leçons du parcours d'une matière, placées le long d'un tracé dans le paysage
     de l'univers, sous les onglets de « Mon parcours » ; chaque leçon y garde son libellé « Leçon 4 » (sa place) ;
   - « la leçon 4 « … » » : la leçon du parcours de place 4 ;
@@ -21,11 +21,12 @@ Fonctionnalité: « Mon parcours » se dessine dans le royaume du personnage gui
     les deux, puis s'arrête sur la leçon 4 ; « Noisette est déjà sur la leçon 4, sans marcher » : il y est posé
     dès l'arrivée sur l'écran ;
   - « la fin du dessin du parcours » : l'endroit, après la dernière leçon, où le personnage guide se tient quand la
-    matière est réussie ;
+    matière est réussie ; on y voit un fanion à la couleur de l'univers, sur une petite colline fleurie, sans étoile
+    ni texte (réponse #99.31) ;
   - « brille » : la leçon marquée « À toi ! » ressort du dessin (éclat, contour lumineux) ; jamais plus de 3 éclats
     par seconde ;
   - durées, pour l'implémentation et la review, jamais dans les étapes : la marche dure 2 s au plus, quelle que
-    soit la distance (recommandation #99.10).
+    soit la distance (réponse #99.10).
 
   Pour ces scénarios, la bibliothèque servie au navigateur est remplacée par la bibliothèque de test du dessin
   du parcours (identifiants préfixés « e2e-99- », leçons servies dans le désordre, chacune faite d'un exercice
@@ -66,8 +67,7 @@ Fonctionnalité: « Mon parcours » se dessine dans le royaume du personnage gui
         | 5     | Le féminin des noms  | à découvrir                 |
         | 6     | Les accents          | à découvrir                 |
 
-    # Question #99.4 : aucun cadenas ; question #99.18 : l'éclat avec les mouvements réduits.
-    @a-valider
+    # Réponses #99.4 : aucun cadenas ; #99.18 : éclat fixe avec les mouvements réduits.
     Scénario: Seule la prochaine leçon brille, et aucune leçon du dessin du parcours n'a de cadenas
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Quand Léa ouvre le parcours de français
@@ -75,8 +75,7 @@ Fonctionnalité: « Mon parcours » se dessine dans le royaume du personnage gui
       Et aucune autre leçon du dessin du parcours ne brille
       Mais aucune leçon du dessin du parcours n'a de cadenas
 
-    # Question #99.7 : les leçons hors du parcours restent à part, sous le dessin.
-    @a-valider
+    # Réponse #99.7 : les leçons hors du parcours restent à part, sous le dessin.
     Scénario: Les leçons réussies d'une classe au-dessus et les leçons des classes d'avant restent à part, sous le dessin du parcours
       Étant donné que Léa a un profil enfant préparé de niveau CE2 dans l'univers « Animaux de la forêt »
       Et que Léa a pour meilleures étoiles :
@@ -103,8 +102,7 @@ Fonctionnalité: « Mon parcours » se dessine dans le royaume du personnage gui
         | Animaux de la forêt | Noisette         |
         | Sports              | Coach Léo        |
 
-    # Question #99.14 : un seul personnage guide sur l'écran ; il quitte le titre.
-    @a-valider
+    # Réponse #99.14 : un seul personnage guide sur l'écran ; il quitte le titre.
     Scénario: Le personnage guide n'est plus à côté du titre : il n'est que sur le dessin du parcours
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Quand Léa ouvre le parcours de français
@@ -112,13 +110,12 @@ Fonctionnalité: « Mon parcours » se dessine dans le royaume du personnage gui
       Et Noisette n'apparaît qu'une seule fois sur l'écran
       Mais Noisette n'est pas à côté du titre « Mon parcours »
 
-    # Question #99.12 : le décor d'arrivée (un coffre ouvert rempli d'étoiles dessinées) ne donne aucune récompense.
-    @a-valider
+    # Réponses #99.12 et #99.31 : le décor d'arrivée (un fanion sur une petite colline fleurie) ne donne aucune récompense.
     Scénario: Quand la matière est réussie, le personnage guide se tient à la fin du dessin du parcours, sans récompense de plus
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a réussi 6 leçons de français du CE1
       Quand Léa ouvre le parcours de français
-      Alors Noisette se tient à la fin du dessin du parcours, l'air content, près d'un coffre ouvert rempli d'étoiles dessinées
+      Alors Noisette se tient à la fin du dessin du parcours, l'air content, près d'un fanion à la couleur de l'univers, sur une petite colline fleurie, sans étoile ni texte
       Et aucune leçon du parcours n'est marquée « À toi ! »
       Mais aucune étoile, aucun badge ni aucun objet de la cabane n'est annoncé
 
@@ -148,8 +145,7 @@ Fonctionnalité: « Mon parcours » se dessine dans le royaume du personnage gui
       Quand Léa ouvre le parcours de français
       Alors Noisette est déjà sur la leçon 4 « Le pluriel des noms », sans marcher
 
-    # Question #99.10 : une seule marche, le long du tracé, qui ne s'allonge pas avec la distance.
-    @a-valider
+    # Réponse #99.10 : une seule marche, le long du tracé, qui ne s'allonge pas avec la distance.
     Scénario: Quand les leçons d'après sont déjà réussies, le personnage guide marche d'un trait jusqu'à la nouvelle prochaine leçon
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a pour meilleures étoiles :
@@ -165,8 +161,7 @@ Fonctionnalité: « Mon parcours » se dessine dans le royaume du personnage gui
       Quand Léa ouvre le parcours de français
       Alors Noisette marche de la leçon 3 jusqu'à la leçon 6 « Les accents », en passant par les leçons 4 et 5
 
-    # Question #99.11 (réponse N8 de #25) : la prochaine leçon ne bouge pas, le personnage guide non plus.
-    @a-valider
+    # Réponse #99.11 (N8 de #25) : la prochaine leçon ne bouge pas, le personnage guide non plus.
     Scénario: Une leçon réussie plus loin que la prochaine leçon ne fait pas marcher le personnage guide
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a pour meilleures étoiles :
@@ -191,8 +186,7 @@ Fonctionnalité: « Mon parcours » se dessine dans le royaume du personnage gui
       Quand Léa ouvre le parcours de français
       Alors Noisette est déjà sur la leçon 4 « Le pluriel des noms », sans marcher
 
-    # Question #99.9 : la prochaine leçon connue est relevée dès que le profil enfant est choisi.
-    @a-valider
+    # Réponse #99.9 : la prochaine leçon connue est relevée dès que le profil enfant est choisi.
     Scénario: Une leçon réussie avant d'ouvrir « Mon parcours » fait marcher le personnage guide à la première ouverture
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a terminé une séance de la leçon « Le son in » avec 1 étoile, sans avoir ouvert son parcours
@@ -200,8 +194,7 @@ Fonctionnalité: « Mon parcours » se dessine dans le royaume du personnage gui
       Alors Noisette marche de la leçon 1 à la leçon 2
       Et Noisette se tient sur la leçon 2 « L'ordre alphabétique »
 
-    # Question #99.9 : la prochaine leçon connue n'est gardée que pendant l'utilisation en cours.
-    @a-valider
+    # Réponse #99.9 : la prochaine leçon connue n'est gardée que pendant l'utilisation en cours.
     Scénario: Après une fermeture de l'application, le personnage guide est déjà sur sa leçon, sans marcher
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a ouvert le parcours de français
@@ -210,8 +203,7 @@ Fonctionnalité: « Mon parcours » se dessine dans le royaume du personnage gui
       Quand Léa ouvre le parcours de français
       Alors Noisette est déjà sur la leçon 2 « L'ordre alphabétique », sans marcher
 
-    # Question #99.16 : choisir de nouveau son profil enfant dans « Qui joue ? » garde la prochaine leçon connue.
-    @a-valider
+    # Réponse #99.16 : choisir de nouveau son profil enfant dans « Qui joue ? » garde la prochaine leçon connue.
     Scénario: Revenue par « Qui joue ? » après sa séance, l'enfant voit quand même le personnage guide marcher
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a ouvert le parcours de français
@@ -230,8 +222,7 @@ Fonctionnalité: « Mon parcours » se dessine dans le royaume du personnage gui
       Quand Léa ouvre le parcours de français
       Alors Noisette est déjà sur la leçon 1 « Le futur », sans marcher
 
-    # Question #99.12 : la marche va jusqu'à la fin du dessin du parcours.
-    @a-valider
+    # Réponse #99.12 : la marche va jusqu'à la fin du dessin du parcours.
     Scénario: Quand la dernière leçon devient réussie, le personnage guide marche jusqu'à la fin du dessin du parcours
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a réussi 5 leçons de français du CE1
@@ -241,8 +232,7 @@ Fonctionnalité: « Mon parcours » se dessine dans le royaume du personnage gui
       Alors Noisette marche de la leçon 6 jusqu'à la fin du dessin du parcours
       Et Noisette s'y tient, l'air content
 
-    # Question #99.21 : chaque matière garde sa prochaine leçon connue ; la marche se montre sur l'onglet de la matière.
-    @a-valider
+    # Réponse #99.21 : chaque matière garde sa prochaine leçon connue ; la marche se montre sur l'onglet de la matière.
     Scénario: Le personnage guide marche dans l'onglet de la matière où la prochaine leçon a avancé
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a terminé une séance de la leçon « Maths 1 » avec 1 étoile
@@ -251,8 +241,7 @@ Fonctionnalité: « Mon parcours » se dessine dans le royaume du personnage gui
       Alors Noisette marche de la leçon 1 à la leçon 2
       Et Noisette se tient sur la leçon 2 « Maths 2 »
 
-    # Question #99.20 : la marche ne bloque jamais l'enfant.
-    @a-valider
+    # Réponse #99.20 : la marche ne bloque jamais l'enfant.
     Scénario: Pendant la marche du personnage guide, une leçon s'ouvre tout de suite
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a ouvert le parcours de français
@@ -269,7 +258,14 @@ Fonctionnalité: « Mon parcours » se dessine dans le royaume du personnage gui
       Quand Léa ouvre le parcours de français
       Alors Noisette marche de la leçon 1 à la leçon 2
 
-  Règle: Le dessin du parcours est décoratif : lecteurs d'écran et clavier ont la liste ordonnée des leçons, dans l'ordre du parcours ; l'arrivée du personnage guide s'annonce une fois, sans effet sonore ni parole
+  Règle: Le dessin du parcours est décoratif : lecteurs d'écran et clavier ont la liste ordonnée des leçons, dans l'ordre du parcours ; l'arrivée du personnage guide s'annonce une fois, sans effet sonore ni parole ; le sous-titre « Ma carte au trésor » est un vrai texte, lu après le titre
+
+    # Réponses #99.1 b et #99.23 A : le sous-titre, sous « Mon parcours », en vrai texte.
+    Scénario: Sous le titre « Mon parcours », le sous-titre « Ma carte au trésor » se voit et se lit juste après le titre
+      Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
+      Quand Léa ouvre le parcours de français
+      Alors Léa voit le sous-titre « Ma carte au trésor » sous le titre « Mon parcours »
+      Et les lecteurs d'écran lisent « Mon parcours », puis « Ma carte au trésor »
 
     Scénario: Les lecteurs d'écran lisent les leçons comme une liste ordonnée, sans le dessin du parcours
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
@@ -296,8 +292,7 @@ Fonctionnalité: « Mon parcours » se dessine dans le royaume du personnage gui
       Alors le focus va, dans l'ordre, sur « Le son in », « L'ordre alphabétique », « Les mots contraires », « Le pluriel des noms », « Le féminin des noms » et « Les accents »
       Et chaque leçon qui a le focus est visible à l'écran
 
-    # Question #99.13 : une seule annonce, à l'arrivée ; ni effet sonore nouveau, ni parole.
-    @a-valider
+    # Réponse #99.13 : une seule annonce, à l'arrivée ; ni effet sonore nouveau, ni parole.
     Scénario: À l'arrivée du personnage guide, les lecteurs d'écran l'annoncent une fois, sans effet sonore ni parole
       Étant donné que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Léa a pour meilleures étoiles :
@@ -312,8 +307,7 @@ Fonctionnalité: « Mon parcours » se dessine dans le royaume du personnage gui
 
   Règle: Sur un écran de 360 px, le dessin du parcours défile verticalement, jamais horizontalement, s'ouvre sur la prochaine leçon et garde des cibles assez grandes pour un doigt d'enfant
 
-    # Question #99.6 : un seul dessin par matière, même long, qui s'ouvre sur la prochaine leçon.
-    @a-valider
+    # Réponses #99.6 et #99.25 C : un seul dessin par matière, même long, qui s'ouvre sur la prochaine leçon.
     Scénario: À 360 px, un parcours de 31 leçons tient dans la largeur et s'ouvre sur la prochaine leçon
       Étant donné que l'écran de l'appareil mesure 360 px de large
       Et que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
