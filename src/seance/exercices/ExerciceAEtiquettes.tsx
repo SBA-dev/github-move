@@ -1,8 +1,11 @@
-import { type DragEvent, type RefObject, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { EtiquettePosee } from "@domain/apprentissage";
 import type { Exercice } from "@domain/catalogue";
 import { TexteEnSyllabes } from "../../reglages/index.ts";
 import { useRetourDe } from "../../retours/index.ts";
+import { Etiquette } from "./etiquettes/Etiquette.tsx";
+import { groupeSousLePoint, type Point } from "./maisons/groupe-sous-le-doigt.ts";
+import { Maisons } from "./maisons/Maisons.tsx";
 
 type Props = {
   readonly exercice: Extract<Exercice, { type: "classer" | "ordre" }>;
@@ -18,11 +21,11 @@ type Props = {
   readonly onJeNeSaisPas: (etiquette?: string) => void;
 };
 
-const TYPE_DE_L_ETIQUETTE = "application/x-savanturier-etiquette";
-
 export function ExerciceAEtiquettes({ exercice, etiquettesAPlacer, etiquettesPosees, etiquetteViseeParJeNeSaisPas, bonnesReponsesMontrees, onPoser, onJeNeSaisPas }: Props) {
   const [choisie, setChoisie] = useState<string | undefined>();
+  const [maisonSurvolee, setMaisonSurvolee] = useState<string | undefined>();
   const premiere = useRef<HTMLButtonElement>(null);
+  const conteneurDesMaisons = useRef<HTMLDivElement>(null);
   const nombreRestant = etiquettesAPlacer.length;
   const dejaMonte = useRef(false);
   useEffect(() => {
@@ -41,6 +44,12 @@ export function ExerciceAEtiquettes({ exercice, etiquettesAPlacer, etiquettesPos
     setChoisie(etiquetteVisee);
     onJeNeSaisPas(etiquetteVisee);
   };
+  const survoler = (point: Point | undefined) =>
+    setMaisonSurvolee(point === undefined ? undefined : groupeSousLePoint(conteneurDesMaisons.current, point));
+  const lacher = (etiquette: string, point: Point) => {
+    const groupe = groupeSousLePoint(conteneurDesMaisons.current, point);
+    if (groupe !== undefined) poser(etiquette, groupe);
+  };
   const brille = (etiquette: string, rang: number) =>
     exercice.type === "ordre" && etiquette === bonneReponseMontree && rang === etiquettesAPlacer.indexOf(etiquette);
 
@@ -48,18 +57,17 @@ export function ExerciceAEtiquettes({ exercice, etiquettesAPlacer, etiquettesPos
     <div className="etiquettes" data-testid="etiquettes" data-type={exercice.type}>
       <ul className="etiquettes-a-placer" aria-label="Étiquettes à poser" data-testid="etiquettes-a-placer">
         {etiquettesAPlacer.map((etiquette, rang) => (
-          <li
-            key={`${etiquette}-${rang}`}
-            draggable={exercice.type === "classer"}
-            onDragStart={(evenement) => evenement.dataTransfer.setData(TYPE_DE_L_ETIQUETTE, etiquette)}
-          >
+          <li key={`${etiquette}-${rang}`}>
             <Etiquette
               texte={etiquette}
               aFocaliser={rang === 0 ? premiere : undefined}
               brille={brille(etiquette, rang)}
               appuyee={exercice.type === "classer" ? choisie === etiquette : undefined}
               poseALeToucher={exercice.type === "ordre"}
+              glissable={exercice.type === "classer"}
               onToucher={() => exercice.type === "ordre" ? poser(etiquette) : setChoisie(choisie === etiquette ? undefined : etiquette)}
+              onSurvol={survoler}
+              onLacher={(point) => lacher(etiquette, point)}
             />
           </li>
         ))}
@@ -76,61 +84,12 @@ export function ExerciceAEtiquettes({ exercice, etiquettesAPlacer, etiquettesPos
             posees={etiquettesPosees}
             choisie={choisie}
             maisonQuiBrille={bonneReponseMontree}
-            etiquettesAPlacer={etiquettesAPlacer}
+            maisonSurvolee={maisonSurvolee}
+            conteneur={conteneurDesMaisons}
             onPoser={poser}
           />
         )
         : <Places exercice={exercice} nombrePosees={exercice.elements.length - nombreRestant} />}
-    </div>
-  );
-}
-
-type PropsDesMaisons = {
-  readonly exercice: Extract<Exercice, { type: "classer" }>;
-  readonly posees: readonly EtiquettePosee[];
-  readonly etiquettesAPlacer: readonly string[];
-  readonly choisie: string | undefined;
-  readonly maisonQuiBrille: string | undefined;
-  readonly onPoser: (etiquette: string, groupe: string) => void;
-};
-
-function Maisons({ exercice, posees, etiquettesAPlacer, choisie, maisonQuiBrille, onPoser }: PropsDesMaisons) {
-  const lacher = (evenement: DragEvent, groupe: string) => {
-    evenement.preventDefault();
-    const etiquette = evenement.dataTransfer.getData(TYPE_DE_L_ETIQUETTE);
-    if (etiquettesAPlacer.includes(etiquette)) onPoser(etiquette, groupe);
-  };
-  return (
-    <div className="maisons">
-      {exercice.groupes.map((groupe) => (
-        <section
-          key={groupe.id}
-          className="maison"
-          role="group"
-          aria-label={`Maison « ${groupe.nom} »`}
-          data-testid="maison"
-          data-groupe={groupe.id}
-          data-brille={groupe.id === maisonQuiBrille ? "true" : undefined}
-          onDragOver={(evenement) => evenement.preventDefault()}
-          onDrop={(evenement) => lacher(evenement, groupe.id)}
-        >
-          <button
-            type="button"
-            className="porte-de-la-maison"
-            data-donne-une-reponse="true"
-            aria-label={`Poser dans la maison « ${groupe.nom} »`}
-            aria-disabled={choisie === undefined ? true : undefined}
-            onClick={() => choisie !== undefined && onPoser(choisie, groupe.id)}
-          >
-            <TexteEnSyllabes texte={groupe.nom} />
-          </button>
-          <ul aria-label={`Étiquettes dans la maison « ${groupe.nom} »`}>
-            {posees.filter((posee) => posee.groupe === groupe.id).map((posee, rang) => (
-              <EtiquettePosee key={`${posee.texte}-${rang}`} texte={posee.texte} />
-            ))}
-          </ul>
-        </section>
-      ))}
     </div>
   );
 }
@@ -142,49 +101,6 @@ function Places({ exercice, nombrePosees }: { readonly exercice: Extract<Exercic
         <Place key={rang} element={element} remplie={rang < nombrePosees} />
       ))}
     </ol>
-  );
-}
-
-type PropsDeLEtiquette = {
-  readonly texte: string;
-  readonly aFocaliser: RefObject<HTMLButtonElement | null> | undefined;
-  readonly brille: boolean;
-  readonly appuyee: boolean | undefined;
-  /** Toucher l'étiquette la pose tout de suite : c'est une réponse (sinon elle est seulement choisie). */
-  readonly poseALeToucher: boolean;
-  readonly onToucher: () => void;
-};
-
-/** Une étiquette à poser : elle se balance quand elle est mal posée. */
-function Etiquette({ texte, aFocaliser, brille, appuyee, poseALeToucher, onToucher }: PropsDeLEtiquette) {
-  const retour = useRetourDe<HTMLButtonElement>(texte);
-  return (
-    <button
-      ref={(bouton) => {
-        retour.ref.current = bouton;
-        if (aFocaliser) aFocaliser.current = bouton;
-      }}
-      type="button"
-      className="etiquette"
-      data-testid="etiquette"
-      data-donne-une-reponse={poseALeToucher ? "true" : undefined}
-      data-brille={brille ? "true" : undefined}
-      {...retour.attributs}
-      aria-pressed={appuyee}
-      onClick={onToucher}
-    >
-      <TexteEnSyllabes texte={texte} />
-    </button>
-  );
-}
-
-/** Une étiquette bien posée dans sa maison : elle rebondit. */
-function EtiquettePosee({ texte }: { readonly texte: string }) {
-  const retour = useRetourDe<HTMLLIElement>(texte);
-  return (
-    <li ref={retour.ref} className="etiquette posee" data-testid="etiquette-posee" {...retour.attributs}>
-      <TexteEnSyllabes texte={texte} />
-    </li>
   );
 }
 

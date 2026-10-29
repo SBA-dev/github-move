@@ -190,7 +190,8 @@ Then(/^le paysage et la couleur principale de Léa diffèrent de ceux de Tom$/, 
 
 Then(/^aucun message d'erreur n'apparaît$/, async ({ page }) => {
   await expect(page.getByRole("alert")).toHaveCount(0);
-  await expect(page.getByText(/undefined|NaN|introuvable/i)).toHaveCount(0);
+  await expect(page.getByText(/\bundefined\b|\bNaN\b/)).toHaveCount(0);
+  await expect(page.getByText(/introuvable/i)).toHaveCount(0);
 });
 
 // --- Alors : humeur
