@@ -1,5 +1,5 @@
 # language: fr
-@issue-102 @wip
+@issue-102
 Fonctionnalité: Le personnage guide reçoit des tenues avec les étoiles, et l'enfant choisit celle qu'il porte
   En tant qu'enfant
   Je veux que mon personnage guide reçoive de nouvelles tenues quand je gagne des étoiles, et choisir celle qu'il porte
