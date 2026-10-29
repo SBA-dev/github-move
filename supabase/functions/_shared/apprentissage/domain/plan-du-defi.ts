@@ -74,9 +74,8 @@ function partsParLecon(disponibles: readonly number[], hasard: Hasard): number[]
       aPoser -= prise;
     }
   }
-  const rangsAvecReste = avecReste().map(String);
-  for (const rang of melanger(rangsAvecReste, hasard).slice(0, aPoser)) {
-    parts[Number(rang)] = (parts[Number(rang)] as number) + 1;
+  for (const rang of melanger(avecReste(), hasard).slice(0, aPoser)) {
+    parts[rang] = (parts[rang] as number) + 1;
   }
   return parts;
 }
