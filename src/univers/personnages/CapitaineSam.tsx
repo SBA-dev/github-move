@@ -1,5 +1,6 @@
 import type { Humeur } from "@domain/motivation";
 import { type DessinDuPersonnage, Yeux } from "./partage.tsx";
+import { type Ancrage, TenueDerriere, TenueDevant } from "./tenues.tsx";
 
 const PEAU = "#f3c9a5";
 const CHEVEUX = "#a8461c";
@@ -12,7 +13,13 @@ function Bouche({ humeur }: { readonly humeur: Humeur }) {
   return <path d={trait} stroke={BOUCHE} strokeWidth="3" fill="none" strokeLinecap="round" />;
 }
 
-export const CapitaineSam: DessinDuPersonnage = ({ humeur, id }) => (
+const ANCRAGE: Ancrage = {
+  cou: { x: 45, y: 53, echelle: 0.72 },
+  dos: { x: 45, y: 76, echelle: 0.7, elargissement: 1.1 },
+  pieds: { gauche: { x: 34, y: 99, echelle: 0.6 }, droit: { x: 56, y: 99, echelle: 0.6 }, tige: 10, derriere: true },
+};
+
+export const CapitaineSam: DessinDuPersonnage = ({ humeur, id, tenue }) => (
   <svg viewBox="0 0 90 110" overflow="visible" aria-hidden="true">
     <defs>
       <radialGradient id={`${id}s`} cx="38%" cy="32%" r="75%">
@@ -26,6 +33,7 @@ export const CapitaineSam: DessinDuPersonnage = ({ humeur, id }) => (
         <stop offset="1" stopColor={TENUE} />
       </linearGradient>
     </defs>
+    <TenueDerriere tenue={tenue} ancrage={ANCRAGE} id={id} />
     <path d="M45 50 Q66 70 68 100 H22 Q24 70 45 50 Z" fill={`url(#${id}c)`} />
     <circle cx="45" cy="38" r="16" fill={`url(#${id}s)`} />
     <path d="M28 37 C29 17 61 15 62 37 C57 28 35 27 28 37 Z" fill={CHEVEUX} />
@@ -46,5 +54,6 @@ export const CapitaineSam: DessinDuPersonnage = ({ humeur, id }) => (
     <path d="M60 70 q18 0 20 -20" stroke="#5A5A5A" strokeWidth="5" fill="none" strokeLinecap="round" />
     <circle cx="82" cy="44" r="2.5" fill="#9CCFFF" />
     <circle cx="86" cy="38" r="2" fill="#9CCFFF" />
+    <TenueDevant tenue={tenue} ancrage={ANCRAGE} id={id} />
   </svg>
 );

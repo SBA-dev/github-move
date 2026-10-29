@@ -2,7 +2,9 @@ import type { ReactNode } from "react";
 import { motion, type SVGMotionProps } from "motion/react";
 import type { Humeur } from "@domain/motivation";
 
-export type DessinDuPersonnage = (props: { readonly humeur: Humeur; readonly id: string }) => ReactNode;
+export type DessinDuPersonnage = (
+  props: { readonly humeur: Humeur; readonly id: string; readonly tenue?: string },
+) => ReactNode;
 
 export function choisir<T>(humeur: Humeur, parHumeur: Readonly<Record<Humeur, T>>): T {
   return parHumeur[humeur];

@@ -38,7 +38,9 @@ function gesteDe(humeur: Humeur, mouvementsReduits: boolean): Geste {
   return "aucun";
 }
 
-export function PersonnageGuide({ univers, humeur }: { readonly univers: Univers; readonly humeur: Humeur }) {
+export function PersonnageGuide(
+  { univers, humeur, tenue }: { readonly univers: Univers; readonly humeur: Humeur; readonly tenue?: string },
+) {
   const identifiant = useId();
   const mouvementsReduits = useReducedMotion() ?? false;
   const geste = gesteDe(humeur, mouvementsReduits);
@@ -51,6 +53,7 @@ export function PersonnageGuide({ univers, humeur }: { readonly univers: Univers
       data-personnage-guide={univers.personnageGuide.nom}
       data-humeur={humeur}
       {...(DESSINS_REDESSINES.has(univers.cle) ? { "data-dessin": "valide" } : {})}
+      {...(tenue === undefined ? {} : { "data-tenue": tenue })}
       data-geste={geste}
       animate={MOUVEMENT_PAR_GESTE[geste]}
       transition={{ duration: DUREE_PAR_GESTE[geste], ease: "easeInOut" }}
@@ -60,7 +63,7 @@ export function PersonnageGuide({ univers, humeur }: { readonly univers: Univers
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
         style={{ transformOrigin: "50% 100%" }}
       >
-        <Dessin humeur={humeur} id={identifiant} />
+        <Dessin humeur={humeur} id={identifiant} tenue={tenue} />
       </motion.div>
     </motion.div>
   );

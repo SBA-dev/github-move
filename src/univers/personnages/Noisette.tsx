@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import type { Humeur } from "@domain/motivation";
 import { choisir, type DessinDuPersonnage, Yeux } from "./partage.tsx";
+import { type Ancrage, TenueDerriere, TenueDevant } from "./tenues.tsx";
 
 function bouche(humeur: Humeur, id: string): ReactNode {
   const bouches: Readonly<Record<Humeur, ReactNode>> = {
@@ -43,7 +44,13 @@ function bouche(humeur: Humeur, id: string): ReactNode {
   return bouches[humeur];
 }
 
-export const Noisette: DessinDuPersonnage = ({ humeur, id }) => (
+const ANCRAGE: Ancrage = {
+  cou: { x: 0, y: -79, echelle: 1.5 },
+  dos: { x: 0, y: -50, echelle: 1.5, elargissement: 1.35 },
+  pieds: { gauche: { x: -17, y: -4, echelle: 0.9 }, droit: { x: 17, y: -4, echelle: 0.9 }, tige: 12 },
+};
+
+export const Noisette: DessinDuPersonnage = ({ humeur, id, tenue }) => (
   <svg viewBox="-114 -178 175 190" overflow="visible" aria-hidden="true">
     <defs>
       <clipPath id={`${id}oeil`}>
@@ -60,6 +67,7 @@ export const Noisette: DessinDuPersonnage = ({ humeur, id }) => (
       <path fill="none" stroke="#FFC28A" strokeWidth="3" strokeLinecap="round" d="M-1.5 -33.6 Q-14.4 -57.2 -25.5 -65.8 Q-36.7 -74.5 -50 -76.3 L-63.3 -78" />
       <path fill="none" stroke="#C9601C" strokeWidth="1.4" strokeLinecap="round" opacity=".55" d="M-34.5 -79.7 Q-63.9 -83.4 -75.9 -76.9 Q-87.8 -70.4 -93 -60.4 L-98.1 -50.4 M-17.8 -54 Q-38.8 -69.3 -50.7 -71 Q-62.6 -72.7 -72.6 -68.2 L-82.7 -63.7" />
       </g>
+      <TenueDerriere tenue={tenue} ancrage={ANCRAGE} id={id} />
       <ellipse cx="-17" cy="-5" rx="16" ry="9" fill="#F48C3C" stroke="#33304A" strokeWidth="3" />
       <path d="M-26 -1 q4 3 7 0 M-19 1 q4 3 7 0 M-12 -1 q3 2 6 0" fill="none" stroke="#33304A" strokeWidth="1.5" opacity=".7" />
       <ellipse cx="17" cy="-5" rx="16" ry="9" fill="#F48C3C" stroke="#33304A" strokeWidth="3" />
@@ -176,5 +184,6 @@ export const Noisette: DessinDuPersonnage = ({ humeur, id }) => (
         <path d="M8.6 2 Q12 -0.1 14.5 -3.4 A1.9 1.9 0 0 0 12.1 -6.4 Q9.2 -3.7 5.4 -2 Z" fill="#FFC28A" />
         <path d="M3 8 Q7 4 7 -1" fill="none" stroke="#E09A5A" strokeWidth="2.2" strokeLinecap="round" />
       </g>
+    <TenueDevant tenue={tenue} ancrage={ANCRAGE} id={id} />
   </svg>
 );

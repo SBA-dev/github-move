@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import type { Humeur } from "@domain/motivation";
 import { choisir, type DessinDuPersonnage, Yeux } from "./partage.tsx";
+import { type Ancrage, TenueDerriere, TenueDevant } from "./tenues.tsx";
 
 const CHAUSSURE = (
   <>
@@ -44,7 +45,13 @@ function bouche(humeur: Humeur, id: string): ReactNode {
   return bouches[humeur];
 }
 
-export const Lumi: DessinDuPersonnage = ({ humeur, id }) => (
+const ANCRAGE: Ancrage = {
+  cou: { x: 0, y: -107, echelle: 1.1 },
+  dos: { x: 0, y: -84, echelle: 1.0, elargissement: 2 },
+  pieds: { gauche: { x: -12, y: 0, echelle: 0.75 }, droit: { x: 12, y: 0, echelle: 0.75 }, tige: 18 },
+};
+
+export const Lumi: DessinDuPersonnage = ({ humeur, id, tenue }) => (
   <svg viewBox="-98 -216 192 240" overflow="visible" aria-hidden="true">
     <defs>
       <clipPath id={`${id}oeil`}>
@@ -86,6 +93,7 @@ export const Lumi: DessinDuPersonnage = ({ humeur, id }) => (
         <path fill="none" stroke="#D9A92C" strokeWidth="1.4" strokeLinecap="round" d="M50.4 -149.8 Q63.2 -133.9 65.7 -125 Q68.2 -116 71.4 -108.1 L74.6 -100.2" />
         <path fill="none" stroke="#FFE992" strokeWidth="2.2" strokeLinecap="round" d="M26 -169.4 Q42.9 -144.3 49.6 -137.1 L56.3 -129.9" />
       </g>
+      <TenueDerriere tenue={tenue} ancrage={ANCRAGE} id={id} />
       <path fill="none" stroke="#33304A" strokeWidth="18" strokeLinecap="round" strokeLinejoin="round" d="M-10.2 -37.5Q-11.9 -18 -12 -2.1" />
       <path fill="none" stroke="#EBD9F7" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round" d="M-10 -40Q-11.8 -18.9 -12 -2.1" />
       <path fill="none" stroke="#CDB3E3" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" d="M-8.1 -26.8Q-9 -15 -9.2 -4.5" />
@@ -232,5 +240,6 @@ export const Lumi: DessinDuPersonnage = ({ humeur, id }) => (
         <path d="M-8.5 -6.5 q2.2 -1.8 4.4 0M-4.3 -6.5 q2.2 -1.8 4.4 0M-0.1 -6.5 q2.2 -1.8 4.4 0M4.1 -6.5 q2.2 -1.8 4.4 0" fill="none" stroke="#E8B48C" strokeWidth="1.4" strokeLinecap="round" />
         <path d="M7 2 q-5 3 -10 1" fill="none" stroke="#E8B48C" strokeWidth="1.8" strokeLinecap="round" />
       </g>
+    <TenueDevant tenue={tenue} ancrage={ANCRAGE} id={id} />
   </svg>
 );
