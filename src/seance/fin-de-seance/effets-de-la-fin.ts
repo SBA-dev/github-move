@@ -18,6 +18,7 @@ export function effetsDeLaFinDeSeance(
     fluenceSeule: etoiles === undefined,
     issueDuRecord: issueDeLaFluence,
     objetRecu: nouveautes.objet !== undefined,
+    tenueRecue: false,
     episodeOuvert: nouveautes.episode !== undefined,
   });
 }

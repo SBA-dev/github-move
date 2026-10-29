@@ -63,6 +63,7 @@ export function FinDeLaRevision({ seance, prenom, personnage, univers, nombreDeS
         fluenceSeule: false,
         issueDuRecord: "aucunRecord",
         objetRecu: false,
+        tenueRecue: false,
         episodeOuvert: episode !== undefined,
       }),
     });

@@ -59,6 +59,7 @@ export function FinDuTestDeDepart({ test, prenom, lecons, niveau, personnage, un
             fluenceSeule: false,
             issueDuRecord: "aucunRecord",
             objetRecu: false,
+            tenueRecue: false,
             episodeOuvert: false,
           }),
         });
