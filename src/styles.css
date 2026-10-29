@@ -1132,7 +1132,12 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 .pour-le-personnage-guide p { margin: 0; font-weight: 700; }
 .pour-le-personnage-guide .personnage-guide { width: 96px; }
 
-/* Quête du jour : la proposition du personnage guide, sous sa bulle ; deux boutons de 44 px au moins. */
-.quete-du-jour { display: grid; justify-items: center; gap: 8px; width: min(100%, 480px); text-align: center; overflow-wrap: anywhere; }
+/* Quête du jour : la proposition du personnage guide, collée à sa bulle (même encadré) ; deux boutons de 44 px au moins. */
+.guide-et-parole:focus-visible { outline: 3px solid var(--texte); outline-offset: 2px; }
+.quete-du-jour { display: grid; justify-items: center; gap: 8px; width: min(100%, 480px); margin-top: -8px; padding: 8px 16px; text-align: center; border: 3px solid var(--contour); border-radius: var(--rayon); background: var(--surface-dense); overflow-wrap: anywhere; }
 .quete-du-jour p { margin: 0; font-weight: 700; }
 .quete-du-jour .actions-de-la-quete { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+/* L'annonce de fin de séance : même cadre que celle de l'épisode, sans animation ; vide, elle disparaît. */
+.pour-la-quete { display: grid; justify-items: center; max-width: 100%; padding: 8px 16px; border: 3px solid var(--contour); border-radius: var(--rayon); background: var(--surface-dense); overflow-wrap: anywhere; }
+.pour-la-quete:empty { display: none; }
+.pour-la-quete p { margin: 0; font-weight: 700; }

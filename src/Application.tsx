@@ -26,6 +26,7 @@ import { MonParcours, useProchainesLeconsConnues } from "./parcours/index.ts";
 import { EcranDeRevision, useQuestionsDuesALAccueil, useRenvoiDesSeancesDeRevisionGardees } from "./revision/index.ts";
 import { ToutesLesLecons, useChoixDeToutesLesLecons } from "./toutes-les-lecons/index.ts";
 import { AideEcranDAccueil } from "./installation/index.ts";
+import { jourDuNavigateur } from "./seance/jour-du-navigateur.ts";
 import { type Lieu, useNavigation } from "./navigation.ts";
 import { EcranQuiArrive, cleDeLEcran, transitionVers } from "./transitions/index.ts";
 import { EcranDeSeance, PageDeLaLecon, useRenvoiDesSeancesGardees } from "./seance/index.ts";
@@ -231,8 +232,8 @@ export function Application() {
                       saluer={!viaRetour}
                       testDeDepartAProposer={testDeDepartAFaire}
                       questionsDues={questionsDues}
-                      queteRefusee={refusDeLaQuete.refus.has(profilEnCours.id)}
-                      onRefuserLaQuete={() => refusDeLaQuete.refuser(profilEnCours.id)}
+                      queteRefusee={refusDeLaQuete.refusee(profilEnCours.id, jourDuNavigateur(new Date()).toString())}
+                      onRefuserLaQuete={() => refusDeLaQuete.refuser(profilEnCours.id, jourDuNavigateur(new Date()).toString())}
                       onMonTestDeDepart={() => aller("test-de-depart")}
                       onJeRevise={() => aller("revision")}
                       onCommencerLaLecon={(leconId) => aller({ ecran: "lecon", leconId })}

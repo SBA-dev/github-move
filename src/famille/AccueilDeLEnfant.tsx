@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { leconDuJour, tuilesDeMatiere, tuilesDuJour } from "@domain/apprentissage";
 import type { CodeDeMatiere } from "@domain/catalogue";
 import type { ProfilEnCours } from "@domain/famille";
 import {
-  propositionDeLaQueteDuJour,
+  paroleDeLaQueteALAccueil,
   type QueteDuJour,
   reponseAuRefusDeLaQuete,
   saluer,
@@ -23,6 +23,7 @@ import { TuilesDeMatiereDeLAccueil } from "../accueil/TuilesDeMatiereDeLAccueil.
 import { TuilesDuJourDeLAccueil } from "../accueil/TuilesDuJourDeLAccueil.tsx";
 import { useEntreesDuJour } from "../accueil/useEntreesDuJour.ts";
 import { BulleDuPersonnageGuide } from "../seance/BulleDuPersonnageGuide.tsx";
+import { DELAI_MAXIMAL_DE_LECTURE_EN_MS } from "../reseau/delai-maximal-de-lecture.ts";
 import { horlogeDuNavigateur } from "../seance/horloge.ts";
 import { usePersonnageQuiParle } from "../seance/usePersonnageQuiParle.ts";
 import { PersonnageGuide } from "../univers/index.ts";
@@ -59,11 +60,12 @@ function phraseDeLaSalutation(
   toutLire: boolean,
   serie: Serie | null | undefined,
   quete: QueteDuJour | null | undefined,
+  queteRefusee: boolean,
 ): string | undefined {
   if (!toutLire) return saluer(prenom);
   if (serie === undefined || quete === undefined) return undefined;
   const salutation = serie === null ? saluer(prenom) : saluerAvecLaSerie(prenom, serie);
-  const proposition = quete && propositionDeLaQueteDuJour(quete);
+  const proposition = quete && paroleDeLaQueteALAccueil(quete, queteRefusee);
   return proposition ? `${salutation} ${proposition}` : salutation;
 }
 
@@ -89,7 +91,12 @@ export function AccueilDeLEnfant(
   const quete = useQueteDuJour(profil.id, maintenant, entrees, questionsDues.nombre, questionsDues.lue);
   const [queteDeLaSalutation, setQueteDeLaSalutation] = useState(quete);
   if (queteDeLaSalutation === undefined && quete !== undefined) setQueteDeLaSalutation(quete);
-  const phraseALire = phraseDeLaSalutation(profil.prenom, profil.reglages.toutLireAVoixHaute, serieDeLaSalutation, queteDeLaSalutation);
+  useEffect(() => {
+    const abandon = setTimeout(() => setQueteDeLaSalutation((attendue) => attendue ?? null), DELAI_MAXIMAL_DE_LECTURE_EN_MS);
+    return () => clearTimeout(abandon);
+  }, []);
+  const [queteRefuseeALArrivee] = useState(queteRefusee);
+  const phraseALire = phraseDeLaSalutation(profil.prenom, profil.reglages.toutLireAVoixHaute, serieDeLaSalutation, queteDeLaSalutation, queteRefuseeALArrivee);
   useEffect(() => {
     if (salutationALire) {
       const salutation = { texte: saluer(profil.prenom), nature: "accueil" } as const;
@@ -99,14 +106,16 @@ export function AccueilDeLEnfant(
     return faireSilence;
   }, [salutationALire, profil.prenom, phraseALire, dire, montrer, faireSilence]);
 
-  const queteProposee = quete && !(queteRefusee && quete.genre !== "accomplie") ? quete : undefined;
+  const paroleDeLaQuete = quete ? paroleDeLaQueteALAccueil(quete, queteRefusee) : undefined;
+  const guideEtParole = useRef<HTMLDivElement>(null);
   const accepterLaQuete = () => {
-    if (queteProposee?.genre === "revision") onJeRevise();
-    else if (queteProposee?.genre === "lecon") onCommencerLaLecon(queteProposee.lecon);
+    if (quete?.genre === "revision") onJeRevise();
+    else if (quete?.genre === "lecon") onCommencerLaLecon(quete.lecon);
   };
   const refuserLaQuete = () => {
     onRefuserLaQuete();
     void dire({ texte: reponseAuRefusDeLaQuete(), nature: "accueil" });
+    guideEtParole.current?.focus();
   };
 
   return (
@@ -114,12 +123,14 @@ export function AccueilDeLEnfant(
       <p className="date-du-jour">
         <time dateTime={dateDuJourPourLesMachines(maintenant)}>{dateEnToutesLettres(maintenant)}</time>
       </p>
-      <div className="guide-et-parole">
+      <div className="guide-et-parole" ref={guideEtParole} tabIndex={-1}>
         <PersonnageGuide univers={univers} humeur={humeur} />
         <BulleDuPersonnageGuide texte={parole?.texte} nature={parole?.nature} rangDuMotPrononce={rangDuMotPrononce} />
       </div>
+      {quete && paroleDeLaQuete && (
+        <QueteDuJourDeLAccueil parole={paroleDeLaQuete} accomplie={quete.genre === "accomplie"} onAccepter={accepterLaQuete} onAutreChose={refuserLaQuete} />
+      )}
       {serie && <PastilleDeSerie serie={serie} />}
-      {queteProposee && <QueteDuJourDeLAccueil quete={queteProposee} onAccepter={accepterLaQuete} onAutreChose={refuserLaQuete} />}
       <TuilesDuJourDeLAccueil
         tuiles={tuilesDuJour({ nombreDeQuestionsDues: questionsDues.nombre ?? 0, testDeDepartAProposer })}
         onMonTestDeDepart={onMonTestDeDepart}
