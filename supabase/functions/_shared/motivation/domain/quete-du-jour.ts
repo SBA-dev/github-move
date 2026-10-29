@@ -32,6 +32,9 @@ export function queteDuJour(
   if (nombreDeQuestionsDues > 0) {
     return { genre: "revision", nombreDeQuestionsDues };
   }
+  if (leconDuJour.genre === "aucuneLeconPourTaClasse") {
+    return { genre: "sansQuete" };
+  }
   if (faits.leconsDesSeancesTermineesDuJour.length > 0) {
     return { genre: "accomplie", quete: "lecon" };
   }
