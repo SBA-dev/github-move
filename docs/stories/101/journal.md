@@ -38,3 +38,13 @@ Liste des comportements :
 - Bloc 2, `paroles-de-la-quete.ts` et exports de `@domain/motivation` (ajouts en fin d'`index.ts`) : B9 `1aaaae2`, B10 `c71962a`.
 - 10 comportements, 10 cycles, aucun désaccord. 2603 tests verts, lint et fmt propres, `tsc` sans erreur.
 - Revue intermédiaire (mode delta `f6c982b..c71962a`) : **APPROUVÉ**, 5 non bloquants (étiquettes de commit, `petitesErreurs(0)` non protégé par le type, `LeconDuJourProposee` à nommer dans le modèle, export long d'`index.ts`). Dernier commit relu : `c71962a`.
+
+## Câblage (16:25 → 17:10 UTC)
+
+- `implementer` (`663fbe7` accueil, `68219ff` fin de séance et de révision) : front seulement, aucune migration. `useQuestionsDuesALAccueil` distingue désormais « inconnu » de « zéro ».
+- Une composition de parole était restée dans le front sans test : ramenée dans le domaine par un cycle B11 (`4a8589c` red, `ccaef8b` green, `c9c0acf` refactor).
+
+## Étape 4 : review (17:15 UTC)
+
+- Cycle 1 : **À CORRIGER**, 4 bloquants : (1) la quête « d'après » attend l'envoi de la séance (phrase de fin retardée jusqu'à 5 s, fête perdue sur réseau lent) ; (2) après « Autre chose », la proposition est relue à voix haute en revenant sur l'accueil (contraire à 101.9) ; (3) fête non dite après une séance de fluence seule (101.19) ; (4) quête rendue après la pastille de série, séparée de la bulle (101.15, 101.17 : « dans la bulle »). Choix : on suit la réponse du PO (bloc collé à la bulle), pas d'escalade.
+- (2) passe par un test du domaine (B12) ; (1), (3), (4) et les non bloquants 1 à 5 sont corrigés par `implementer`.
