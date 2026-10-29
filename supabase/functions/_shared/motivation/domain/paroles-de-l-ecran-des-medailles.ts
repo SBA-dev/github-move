@@ -1,5 +1,7 @@
+import type { DefiReleve } from "../../apprentissage/domain/index.ts";
 import type { Badge } from "./badges.ts";
 import type { EtatDeLaCabane } from "./cabane.ts";
+import { lignesDesDefisReleves } from "./defis-releves.ts";
 import type { EtatDeLHistoire } from "./histoire.ts";
 import { calculs } from "./paroles-de-fluence.ts";
 import { parolesDeLaSectionDesBadges, phraseSansBadge, titreDeLaSectionDesBadges } from "./paroles-des-badges.ts";
@@ -13,12 +15,14 @@ import type { EtatDesTenues } from "./tenues.ts";
 
 export const NOM_DE_L_ECRAN_DES_MEDAILLES = "Mes médailles";
 export const TITRE_DES_RECORDS_DE_CALCUL_RAPIDE = "Mes records de calcul rapide";
+export const TITRE_DES_DEFIS_RELEVES = "Mes défis relevés";
 
 type ContenuDeLEcran = {
   pastilles: readonly PastilleDeRecord[];
   cabane: EtatDeLaCabane | undefined;
   histoire?: EtatDeLHistoire;
   badges?: readonly Badge[];
+  defisReleves?: readonly DefiReleve[];
   tenues?: EtatDesTenues;
   personnage?: PersonnageGuide;
 };
@@ -46,12 +50,18 @@ export function parolesDeLaSectionDesRecords(pastilles: readonly PastilleDeRecor
   return [TITRE_DES_RECORDS_DE_CALCUL_RAPIDE, ...pastilles.map(phraseLueDeLaPastille)];
 }
 
+export function parolesDeLaSectionDesDefisReleves(defis: readonly DefiReleve[]): string[] {
+  return [TITRE_DES_DEFIS_RELEVES, ...lignesDesDefisReleves(defis)];
+}
+
 export function parolesALOuverture(
-  { toutLire, pastilles, cabane, histoire, badges, tenues, personnage }: { toutLire: boolean } & ContenuDeLEcran,
+  { toutLire, pastilles, cabane, histoire, badges, defisReleves, tenues, personnage }:
+    & { toutLire: boolean }
+    & ContenuDeLEcran,
 ): string[] {
   const guide = parolesDuGuideALOuverture({ pastilles, cabane, histoire, badges });
   if (!toutLire) return [guide];
-  const sections = sectionsDeLEcran({ pastilles, cabane, histoire, badges });
+  const sections = sectionsDeLEcran({ pastilles, cabane, histoire, badges, defisReleves });
   const cabaneLue = cabane !== undefined ? [titreDeLaSection(), phraseDeLEtat(cabane)] : [];
   const tenuesLues = tenues !== undefined && personnage !== undefined
     ? [titreDeLaSectionDesTenues(personnage), phraseDeLEtatDesTenues(personnage, tenues)]
@@ -59,6 +69,9 @@ export function parolesALOuverture(
   const histoireLue = sections.includes("histoire") ? parolesDeLaSectionDeLHistoire() : [];
   const badgesLus = badges !== undefined ? parolesDeLaSectionDesBadgesOuSansBadge(badges) : [];
   const recordsLus = sections.includes("recordsDeFluence") ? parolesDeLaSectionDesRecords(pastilles) : [];
+  const defisLus = defisReleves !== undefined && sections.includes("defisReleves")
+    ? parolesDeLaSectionDesDefisReleves(defisReleves)
+    : [];
   return [
     guide,
     NOM_DE_L_ECRAN_DES_MEDAILLES,
@@ -67,5 +80,6 @@ export function parolesALOuverture(
     ...histoireLue,
     ...badgesLus,
     ...recordsLus,
+    ...defisLus,
   ];
 }

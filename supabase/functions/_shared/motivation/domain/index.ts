@@ -57,9 +57,11 @@ export { type PastilleDeRecord, pastillesDesRecords, type RecordDuProfil } from 
 export {
   NOM_DE_L_ECRAN_DES_MEDAILLES,
   parolesALOuverture,
+  parolesDeLaSectionDesDefisReleves,
   parolesDeLaSectionDesRecords,
   parolesDuGuideALOuverture,
   phraseLueDeLaPastille,
+  TITRE_DES_DEFIS_RELEVES,
   TITRE_DES_RECORDS_DE_CALCUL_RAPIDE,
 } from "./paroles-de-l-ecran-des-medailles.ts";
 export {
