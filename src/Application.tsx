@@ -66,14 +66,13 @@ function ecranAffiche(lieu: Lieu, espaceParent: EtatDeLEspaceParent["type"], con
       return "page-de-la-lecon";
     case "episode":
       return "medailles";
-    case "defi":
-      return "seance"; // le défi se joue comme une séance : même registre enfant, mêmes règles d'écran
     case "parcours":
     case "toutes-les-lecons":
     case "medailles":
     case "test-de-depart":
     case "seance":
     case "revision":
+    case "defi":
       return lieu.ecran;
   }
 }

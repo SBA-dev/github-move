@@ -10,7 +10,8 @@ export type Ecran =
   | "test-de-depart"
   | "page-de-la-lecon"
   | "seance"
-  | "revision";
+  | "revision"
+  | "defi";
 
 type PublicDeLEcran = "parent" | "enfant";
 
@@ -27,6 +28,7 @@ const PUBLIC_DE_L_ECRAN: Readonly<Record<Ecran, PublicDeLEcran>> = {
   "page-de-la-lecon": "enfant",
   "seance": "enfant",
   "revision": "enfant",
+  "defi": "enfant",
 };
 
 export function estUnEcranDuParent(ecran: Ecran): boolean {
