@@ -153,5 +153,6 @@ export { leconAcquiseParLaSeance, leconsAcquises } from "./lecons-acquises.ts";
 export { partiesDuParcours } from "./partie-du-parcours.ts";
 export type { PartieDuParcours } from "./partie-du-parcours.ts";
 export { defisDeLaMatiere } from "./defis-de-la-matiere.ts";
+export { defiOuvertParLaSeance } from "./defis-de-la-matiere.ts";
 export { etatDuDefi } from "./defis-de-la-matiere.ts";
 export type { Defi, DefiReleve, EtatDuDefi } from "./defis-de-la-matiere.ts";

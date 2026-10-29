@@ -23,6 +23,19 @@ export function etatDuDefi(defi: Defi, parcours: Parcours, defisReleves: readonl
   return leconsRestantes === 0 ? { genre: "ouvert" } : { genre: "aVenir", leconsRestantes };
 }
 
+export function defiOuvertParLaSeance(
+  avant: Parcours,
+  apres: Parcours,
+  matiere: Matiere,
+  niveau: Niveau,
+  defisReleves: readonly DefiReleve[],
+): Defi | undefined {
+  return defisDeLaMatiere(apres, matiere, niveau).find((defi) =>
+    etatDuDefi(defi, avant, defisReleves).genre === "aVenir" &&
+    etatDuDefi(defi, apres, defisReleves).genre === "ouvert"
+  );
+}
+
 function estLeMemeDefi(a: DefiReleve, b: DefiReleve): boolean {
   return a.matiere.code === b.matiere.code && a.niveau.valeur === b.niveau.valeur && a.numero === b.numero;
 }
