@@ -1,6 +1,7 @@
 import { assertEquals } from "@std/assert";
 import {
   feteDeLaQueteAccomplie,
+  paroleDeLaQueteALAccueil,
   phraseDeFinAvecLaQuete,
   propositionDeLaQueteDuJour,
   queteAccomplieParLaSeance,
@@ -63,4 +64,18 @@ Deno.test("la phrase de fin est suivie de la fête seulement quand la séance ac
     "Bravo Léa ! Quête du jour accomplie ! Bravo Léa !",
   );
   assertEquals(phraseDeFinAvecLaQuete("Bravo Léa !", "Léa", false), "Bravo Léa !");
+});
+
+Deno.test("après « Autre chose », l'accueil ne redit pas la proposition mais dit encore la quête accomplie", () => {
+  const revision: QueteDuJour = { genre: "revision", nombreDeQuestionsDues: 3 };
+  const lecon: QueteDuJour = { genre: "lecon", lecon: "le-son-in", titre: "Le son in" };
+  const accomplie: QueteDuJour = { genre: "accomplie", quete: "revision" };
+
+  assertEquals(paroleDeLaQueteALAccueil(revision, true), undefined);
+  assertEquals(paroleDeLaQueteALAccueil(lecon, true), undefined);
+  assertEquals(paroleDeLaQueteALAccueil(accomplie, true), "Ta quête du jour est accomplie.");
+  assertEquals(
+    paroleDeLaQueteALAccueil(revision, false),
+    "Ta quête du jour : réviser 3 petites erreurs des jours passés. On y va ?",
+  );
 });
