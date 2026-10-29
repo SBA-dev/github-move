@@ -27,7 +27,7 @@ export function Paysage({ univers }: { readonly univers: CleUnivers }) {
         </defs>
         <rect width="1200" height="800" fill={`url(#${ciel})`} />
         <circle cx="960" cy="170" r="150" fill={`url(#${soleil})`} />
-        <motion.g fill="#FFFFFF" opacity=".85" animate={{ x: mouvementsReduits ? 0 : [0, 40] }} transition={mouvementsReduits ? { duration: 0 } : DERIVE_DES_NUAGES}>
+        <motion.g key={String(mouvementsReduits)} fill="#FFFFFF" opacity=".85" animate={{ x: mouvementsReduits ? 0 : [0, 40] }} transition={mouvementsReduits ? { duration: 0 } : DERIVE_DES_NUAGES}>
           <ellipse cx="210" cy="140" rx="74" ry="22" />
           <ellipse cx="250" cy="125" rx="46" ry="27" />
           <ellipse cx="650" cy="96" rx="60" ry="18" />

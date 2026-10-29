@@ -70,6 +70,7 @@ export function PersonnageGuide({ univers, humeur, tenue: tenueDemandee, libelle
       transition={{ duration: DUREE_PAR_GESTE[geste], ease: "easeInOut" }}
     >
       <motion.div
+        key={String(mouvementsReduits)}
         animate={{ scaleY: mouvementsReduits ? 1 : [1, 1.03, 1] }}
         transition={mouvementsReduits ? { duration: 0 } : { duration: 4, repeat: Infinity, ease: "easeInOut" }}
         style={{ transformOrigin: "50% 100%" }}

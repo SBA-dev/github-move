@@ -20,7 +20,7 @@ const CLIGNEMENT: SVGMotionProps<SVGGElement> = {
 export function Yeux({ children }: { readonly children: ReactNode }) {
   const mouvementsReduits = useReducedMotion() ?? false;
   return (
-    <motion.g {...CLIGNEMENT} animate={{ scaleY: mouvementsReduits ? 1 : CLIGNEMENT_ANIME }} transition={mouvementsReduits ? { duration: 0 } : TRANSITION_DU_CLIGNEMENT}>
+    <motion.g key={String(mouvementsReduits)} {...CLIGNEMENT} animate={{ scaleY: mouvementsReduits ? 1 : CLIGNEMENT_ANIME }} transition={mouvementsReduits ? { duration: 0 } : TRANSITION_DU_CLIGNEMENT}>
       {children}
     </motion.g>
   );
