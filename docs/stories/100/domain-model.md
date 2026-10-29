@@ -148,7 +148,7 @@ classDiagram
   }
   class DefiReleve {
     <<enregistré, serveur>>
-    profil ; matiere ; niveau ; numero ; seance ; jour ; termineLe
+    id (séance de défi) ; profil ; matiere ; classe (Niveau) ; numero ; termineLe ; jour
   }
   class FileDeRevision {
     <<agrégat existant, #28>>
@@ -256,10 +256,13 @@ Un défi est identifié par **(matière, classe, numéro de la partie)**. Le num
 
 ## Données persistées (verrou `base`)
 
-Migration additive : table **`defis_termines`** (Apprentissage). Une ligne par défi terminé, avec l'identifiant de la séance de défi, le profil, la matière, la classe, le numéro de la partie, les leçons du défi, le jour et l'heure de fin. Le défi relevé est lu comme « au moins une ligne pour (profil, matière, classe, numéro) ». On ne garde ni les réponses ni les erreurs (minimisation).
+Migration additive : table **`defis_termines`** (Apprentissage), migration `supabase/migrations/20261029100000_defis_termines.sql`. Une ligne par défi terminé, avec ces colonnes seulement : `id` (identifiant de la séance de défi), `profil`, `matiere`, `classe`, `numero` (de la partie du parcours), `termine_le` (heure de fin) et `jour`. La colonne `classe` porte le `Niveau` du domaine (CP à CM2), sous le nom de la décision 0038. Le défi relevé est lu comme « au moins une ligne pour (profil, matière, classe, numéro) ».
+
+**Ni les leçons du défi, ni les questions, ni les réponses, ni les erreurs ne sont gardées (minimisation, section RGPD de `CLAUDE.md`).** Un défi relevé se reconnaît à (matière, classe, numéro) ; ses leçons se déduisent de la partie du parcours (`partiesDuParcours`), recalculée à chaque lecture. La règle 7 (un défi relevé reste relevé même si la bibliothèque change, 100.15) ne demande pas les leçons : elle repose sur cette seule identité. Le fait `DefiTermine` porte bien les leçons du défi, mais elles ne servent qu'à la revalidation et ne sont pas enregistrées.
+
 - La file de révision ne change pas de forme : les questions ratées du défi y entrent comme celles d'une séance.
-- La RLS permet la **lecture seule** au parent rattaché. `anon` et `authenticated` n'ont aucun droit d'écriture. Seule l'Edge Function `terminer-le-defi` écrit, avec `service_role`, après la vérification sous JWT et la revalidation (décision 0016). L'écriture du défi terminé et de la file passe par une seule fonction d'enregistrement, non exécutable par `anon` et `authenticated`, comme pour la séance de révision.
-- Suppression en cascade avec le profil et ajout à l'export (#14), sans les réponses. Rien n'est envoyé à l'IA.
+- La RLS permet la **lecture seule** au parent rattaché. `anon` et `authenticated` n'ont aucun droit d'écriture. Seule l'Edge Function `terminer-le-defi` écrit, avec `service_role`, après la vérification sous JWT et la revalidation (décision 0016). L'écriture du défi terminé et de la file passe par une seule fonction d'enregistrement, `enregistrer_le_defi_termine`, en `security invoker` (elle s'exécute avec les droits de l'appelant) et exécutable par `service_role` seul (`anon`, `authenticated` et `public` n'ont pas le droit de l'exécuter), comme pour la séance de révision (décision 0016). Elle est idempotente par identifiant et rend `enregistree`, `dejaEnregistree` ou `conflit`.
+- Suppression en cascade avec le profil. **Contrat d'export (#14)** : l'export d'un profil doit contenir `defis_termines` (toutes ses colonnes : il n'y a ni réponse ni question à retirer). Rien n'est envoyé à l'IA.
 - **Donnée d'enfant nouvelle** : le seul fait d'avoir terminé un défi (quel défi, quel jour). Elle sert à l'apprentissage (repère, rejeu) ; elle respecte la section RGPD de `CLAUDE.md` (UE, minimisation, export, suppression). Les questions ratées sont la même donnée que celles d'une séance (#28).
 - Décision **0038** : `docs/decisions/0038-defi-de-la-partie-du-parcours-dans-apprentissage.md`.
 
