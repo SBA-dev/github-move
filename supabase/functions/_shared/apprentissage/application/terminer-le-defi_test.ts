@@ -186,6 +186,14 @@ Deno.test("un défi terminé ne crée aucune étoile et ne touche à aucun résu
   assertEquals(resultats.nombreDeSeances("profil-lea", "ma-ce1-6"), 0);
 });
 
+Deno.test("les étoiles du profil sont lues en une seule fois, quelle que soit la taille du catalogue", async () => {
+  const { resultats, terminer } = monde();
+
+  await terminer.executer({ parent: "parent-paul", defi: defiJoue() });
+
+  assertEquals(resultats.nombreDeLectures, 1);
+});
+
 Deno.test("un défi est enregistré quand la classe du profil, lue à part, est une autre instance de la même classe", async () => {
   const { defis, terminer } = monde(null, lecons, Niveau.de("CE1"));
 
