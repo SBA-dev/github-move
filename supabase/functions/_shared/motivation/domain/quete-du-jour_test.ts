@@ -51,3 +51,12 @@ Deno.test("sans question due, la quête du jour propose la leçon du jour", () =
 
   assertEquals(quete, { genre: "lecon", lecon: "le-son-in", titre: "Le son in" });
 });
+
+Deno.test("parcours fini sans question due ni séance du jour : aucune quête", () => {
+  const quete = queteDuJour(
+    { leconDuJour: { genre: "parcoursFini" }, nombreDeQuestionsDues: 0 },
+    faitsDUnJourSansSeance,
+  );
+
+  assertEquals(quete, { genre: "aucune" });
+});
