@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import type { SeanceDeRevision } from "@domain/apprentissage";
-import { effetsSonoresDeLaFin, parolesDeFinDeRevision, phraseDeFinAvecLaQuete, phraseDeFinAvecLesNouveautes, type QueteDuJour, type Univers } from "@domain/motivation";
+import { effetsSonoresDeLaFin, parolesDeFinDeRevision, phraseDeFinAvecLaQuete, phraseDeFinAvecLesNouveautes, type Univers } from "@domain/motivation";
 import { AnnonceDeLaQueteAccomplie } from "../accueil/AnnonceDeLaQueteAccomplie.tsx";
+import type { QueteLueAvantLaSeance } from "../accueil/lire-la-quete-du-jour.ts";
 import { useQueteAccomplieParLaSeance } from "../accueil/useQueteAccomplieParLaSeance.ts";
 import { Confettis } from "../celebration/index.ts";
 import { AnnonceDuNouvelEpisode } from "../histoire/AnnonceDuNouvelEpisode.tsx";
@@ -19,12 +20,10 @@ type Props = {
   readonly prenom: string;
   readonly personnage: Personnage;
   readonly univers: Univers;
-  /** Le niveau du profil, pour relire la quête du jour. */
-  readonly niveau: string;
   /** Le nombre de séances terminées lu au lancement de la révision, avant que celle-ci ne s'y ajoute ; `undefined` s'il n'a pas pu être lu. */
   readonly nombreDeSeancesAvant: Promise<number | undefined>;
   /** La quête du jour lue au lancement de la révision, avant que celle-ci ne la change ; `undefined` si elle n'a pas pu être lue. */
-  readonly queteAvant: Promise<QueteDuJour | undefined>;
+  readonly queteAvant: Promise<QueteLueAvantLaSeance | undefined>;
   readonly onLireLEpisode: (numero: number) => void;
   readonly onAccueil: () => void;
 };
@@ -33,14 +32,14 @@ type Props = {
  * La fin de la séance de révision : pas d'étoiles, le personnage guide dit combien d'erreurs s'effacent.
  * La copie de la file est mise à jour tout de suite par le domaine, puis la séance est envoyée au serveur en arrière-plan.
  */
-export function FinDeLaRevision({ seance, prenom, personnage, univers, niveau, nombreDeSeancesAvant, queteAvant, onLireLEpisode, onAccueil }: Props) {
+export function FinDeLaRevision({ seance, prenom, personnage, univers, nombreDeSeancesAvant, queteAvant, onLireLEpisode, onAccueil }: Props) {
   const { dire, faireSilence, reecouter } = personnage;
   const lancee = useRef(false);
   const affichee = useRef(true);
   const [pret, setPret] = useState(false);
   const [questionsJustes, setQuestionsJustes] = useState(0);
   const { pret: episodePret, episode } = useEpisodeOuvertParLaSeance(nombreDeSeancesAvant, pret);
-  const { prete: quetePrete, accomplie: queteAccomplie } = useQueteAccomplieParLaSeance(queteAvant, seance.enfant, niveau, pret);
+  const { prete: quetePrete, accomplie: queteAccomplie } = useQueteAccomplieParLaSeance(queteAvant, seance.enfant, pret);
   const dite = useRef(false);
   const [message, setMessage] = useState<string | undefined>();
   const accueil = useRef<HTMLButtonElement>(null);

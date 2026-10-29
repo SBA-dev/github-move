@@ -3,7 +3,7 @@ import type { FileDeRevision } from "@domain/apprentissage";
 import type { Lecon, Niveau } from "@domain/catalogue";
 import type { ProfilEnCours } from "@domain/famille";
 import type { Univers } from "@domain/motivation";
-import { lireLaQueteDuJour } from "../accueil/lire-la-quete-du-jour.ts";
+import { lireLaQueteAvantLaSeance } from "../accueil/lire-la-quete-du-jour.ts";
 import { lireLeNombreDeSeancesAvantLaSeance } from "../histoire/nombre-de-seances-avant-la-seance.ts";
 import { niveauDuProfil } from "../parcours/niveau-du-profil.ts";
 import { useLeconsPersonnellesDuProfil } from "../accompagnement/useLeconsPersonnellesDuProfil.ts";
@@ -51,7 +51,7 @@ function RevisionChargee({ lecons, file, niveau, profil, univers, voix, onLireLE
       : undefined
   );
   const [nombreDeSeancesAvant] = useState(() => lireLeNombreDeSeancesAvantLaSeance(profil.id));
-  const [queteAvant] = useState(() => lireLaQueteDuJour(profil.id, profil.niveau));
+  const [queteAvant] = useState(() => lireLaQueteAvantLaSeance(profil.id, profil.niveau));
   const [fini, setFini] = useState(false);
   const sortie = useRef(false);
   /** Un double toucher ne doit pas quitter deux écrans. */
@@ -80,7 +80,6 @@ function RevisionChargee({ lecons, file, niveau, profil, univers, voix, onLireLE
             prenom={profil.prenom}
             personnage={personnage}
             univers={univers}
-            niveau={profil.niveau}
             nombreDeSeancesAvant={nombreDeSeancesAvant}
             queteAvant={queteAvant}
             onLireLEpisode={onLireLEpisode}

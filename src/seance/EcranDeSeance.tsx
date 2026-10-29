@@ -10,8 +10,8 @@ import {
 } from "@domain/apprentissage";
 import { type Exercice, type Lecon, Niveau, pageDeLaLecon } from "@domain/catalogue";
 import type { ValeurDuClavierDesDictees } from "@domain/famille";
-import type { MeilleuresEtoilesDuProfil, QueteDuJour, Univers } from "@domain/motivation";
-import { lireLaQueteDuJour } from "../accueil/lire-la-quete-du-jour.ts";
+import type { MeilleuresEtoilesDuProfil, Univers } from "@domain/motivation";
+import { lireLaQueteAvantLaSeance, type QueteLueAvantLaSeance } from "../accueil/lire-la-quete-du-jour.ts";
 import { lireLeNombreDeSeancesAvantLaSeance } from "../histoire/nombre-de-seances-avant-la-seance.ts";
 import { TexteEnSyllabes } from "../reglages/index.ts";
 import { ContexteDuRetour, EtincellesDuTexteComplet } from "../retours/index.ts";
@@ -130,7 +130,7 @@ function PartieCommencee(
   );
   const [meilleuresEtoilesAvant] = useState(() => lireLesMeilleuresEtoilesAvantLaSeance(profilId));
   const [nombreDeSeancesAvant] = useState(() => lireLeNombreDeSeancesAvantLaSeance(profilId));
-  const [queteAvant] = useState(() => lireLaQueteDuJour(profilId, niveau));
+  const [queteAvant] = useState(() => lireLaQueteAvantLaSeance(profilId, niveau));
   if (!seance) return <JeuIntrouvable onRetour={reste.onRetour} />;
   return (
     <SeanceEnCours
@@ -154,7 +154,7 @@ type PropsEnCours = Omit<PropsDUnePartie, "exercice" | "profilId" | "clavierDesD
   readonly seance: Seance;
   readonly meilleuresEtoilesAvant: Promise<MeilleuresEtoilesDuProfil | undefined>;
   readonly nombreDeSeancesAvant: Promise<number | undefined>;
-  readonly queteAvant: Promise<QueteDuJour | undefined>;
+  readonly queteAvant: Promise<QueteLueAvantLaSeance | undefined>;
 };
 
 function SeanceEnCours(

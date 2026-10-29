@@ -9,5 +9,5 @@ export type NouveautesDeFin = {
   /** La séance rend la leçon acquise pour la première fois. */
   readonly leconAcquise: boolean;
   /** La séance accomplit la quête du jour : la fête est dite après la phrase de fin. */
-  readonly queteAccomplie?: boolean;
+  readonly queteAccomplie: boolean;
 };

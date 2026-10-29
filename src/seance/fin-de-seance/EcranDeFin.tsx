@@ -8,12 +8,13 @@ import {
   annonceDeLObjetRecu,
   calculsReussis,
   type MeilleuresEtoilesDuProfil,
-  type QueteDuJour,
+ 
   titreDeLAnnonce,
   titreDeLAnnonceDuBadge,
   type Univers,
 } from "@domain/motivation";
 import { AnnonceDeLaQueteAccomplie } from "../../accueil/AnnonceDeLaQueteAccomplie.tsx";
+import type { QueteLueAvantLaSeance } from "../../accueil/lire-la-quete-du-jour.ts";
 import { useQueteAccomplieParLaSeance } from "../../accueil/useQueteAccomplieParLaSeance.ts";
 import { AnnonceDuNouvelEpisode } from "../../histoire/AnnonceDuNouvelEpisode.tsx";
 import { useEpisodeOuvertParLaSeance } from "../../histoire/useEpisodeOuvertParLaSeance.ts";
@@ -49,7 +50,7 @@ type Props = {
   /** Le nombre de séances terminées lu au lancement de la séance, avant que celle-ci ne s'y ajoute ; `undefined` s'il n'a pas pu être lu. */
   readonly nombreDeSeancesAvant: Promise<number | undefined>;
   /** La quête du jour lue au lancement de la séance, avant que celle-ci ne la change ; `undefined` si elle n'a pas pu être lue. */
-  readonly queteAvant: Promise<QueteDuJour | undefined>;
+  readonly queteAvant: Promise<QueteLueAvantLaSeance | undefined>;
   /** Le prénom de l'enfant, pour la fête de la quête accomplie. */
   readonly prenom: string;
   readonly onRejouer: () => void;
@@ -123,7 +124,7 @@ export function EcranDeFin({ seance, univers, niveau, onDireLaFin, meilleuresEto
     terminee?.etoiles,
   );
   const { pret: episodePret, episode } = useEpisodeOuvertParLaSeance(nombreDeSeancesAvant, terminee !== undefined);
-  const { prete: quetePrete, accomplie: queteAccomplie } = useQueteAccomplieParLaSeance(queteAvant, seance.enfant, niveau, terminee !== undefined);
+  const { prete: quetePrete, accomplie: queteAccomplie } = useQueteAccomplieParLaSeance(queteAvant, seance.enfant, terminee !== undefined);
   const accueil = useRef<HTMLButtonElement>(null);
   const dite = useRef(false);
   useEffect(() => {
