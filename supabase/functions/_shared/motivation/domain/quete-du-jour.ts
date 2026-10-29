@@ -50,3 +50,10 @@ function queteDeLecon(
   }
   return { genre: "lecon", lecon: leconDuJour.lecon, titre: leconDuJour.titre };
 }
+
+export function queteAccomplieParLaSeance(
+  avant: QueteDuJour,
+  apres: QueteDuJour,
+): boolean {
+  return avant.genre !== "accomplie" && apres.genre === "accomplie";
+}
