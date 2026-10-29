@@ -29,3 +29,7 @@ export function reponseAuRefusDeLaQuete(): string {
 export function phraseDeFinAvecLaQuete(phraseDeFin: string, prenom: string, queteAccomplie: boolean): string {
   return queteAccomplie ? `${phraseDeFin} ${feteDeLaQueteAccomplie(prenom)}` : phraseDeFin;
 }
+
+export function paroleDeLaQueteALAccueil(quete: QueteDuJour, queteRefusee: boolean): string | undefined {
+  return queteRefusee && quete.genre !== "accomplie" ? undefined : propositionDeLaQueteDuJour(quete);
+}

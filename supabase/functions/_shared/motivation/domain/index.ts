@@ -167,6 +167,7 @@ export {
 } from "./quete-du-jour.ts";
 export {
   feteDeLaQueteAccomplie,
+  paroleDeLaQueteALAccueil,
   phraseDeFinAvecLaQuete,
   propositionDeLaQueteDuJour,
   reponseAuRefusDeLaQuete,
