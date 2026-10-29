@@ -1,6 +1,6 @@
 import type { Matiere, Niveau } from "../../catalogue/domain/index.ts";
 import { partiesDuParcours } from "./partie-du-parcours.ts";
-import type { LeconId, Parcours } from "./parcours.ts";
+import { estUneLeconReussie, type LeconId, type Parcours } from "./parcours.ts";
 
 export type Defi = Readonly<{ matiere: Matiere; niveau: Niveau; numero: number; lecons: readonly LeconId[] }>;
 
@@ -41,6 +41,6 @@ function estLeMemeDefi(a: DefiReleve, b: DefiReleve): boolean {
 }
 
 function estReussieDansLeParcours(parcours: Parcours, id: LeconId): boolean {
-  const etat = parcours.lecons.find(({ lecon }) => lecon === id)?.etat.genre;
-  return etat === "reussie" || etat === "reussieAuTestDeDepart";
+  const etat = parcours.lecons.find(({ lecon }) => lecon === id)?.etat;
+  return etat !== undefined && estUneLeconReussie(etat);
 }
