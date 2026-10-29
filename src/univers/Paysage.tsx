@@ -1,5 +1,6 @@
 import { useId } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
+import { useMouvementsReduits } from "../transitions/mouvements-reduits.ts";
 import type { CleUnivers } from "@domain/motivation";
 import { PALETTES } from "./palettes.ts";
 
@@ -7,7 +8,7 @@ const DERIVE_DES_NUAGES = { duration: 40, repeat: Infinity, repeatType: "reverse
 
 export function Paysage({ univers }: { readonly univers: CleUnivers }) {
   const palette = PALETTES[univers];
-  const mouvementsReduits = useReducedMotion() ?? false;
+  const mouvementsReduits = useMouvementsReduits();
   const identifiant = useId();
   const ciel = `${identifiant}-ciel`;
   const soleil = `${identifiant}-soleil`;

@@ -1,5 +1,6 @@
 import { useId } from "react";
-import { motion, type TargetAndTransition, useReducedMotion } from "motion/react";
+import { motion, type TargetAndTransition } from "motion/react";
+import { useMouvementsReduits } from "../transitions/mouvements-reduits.ts";
 import type { CleUnivers, Humeur, Univers } from "@domain/motivation";
 import { useTenueDuProfil } from "../tenue/TenueDuProfil.tsx";
 import { AgentMax } from "./personnages/AgentMax.tsx";
@@ -53,7 +54,7 @@ export function PersonnageGuide({ univers, humeur, tenue: tenueDemandee, libelle
   const tenueDuProfil = useTenueDuProfil();
   const tenue = tenueDemandee ?? tenueDuProfil;
   const identifiant = useId();
-  const mouvementsReduits = useReducedMotion() ?? false;
+  const mouvementsReduits = useMouvementsReduits();
   const geste = gesteDe(humeur, mouvementsReduits);
   const Dessin = DESSINS[univers.cle];
   return (

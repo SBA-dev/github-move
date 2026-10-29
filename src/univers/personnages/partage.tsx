@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
-import { motion, type SVGMotionProps, useReducedMotion } from "motion/react";
+import { motion, type SVGMotionProps } from "motion/react";
+import { useMouvementsReduits } from "../../transitions/mouvements-reduits.ts";
 import type { Humeur } from "@domain/motivation";
 
 export type DessinDuPersonnage = (
@@ -18,7 +19,7 @@ const CLIGNEMENT: SVGMotionProps<SVGGElement> = {
 };
 
 export function Yeux({ children }: { readonly children: ReactNode }) {
-  const mouvementsReduits = useReducedMotion() ?? false;
+  const mouvementsReduits = useMouvementsReduits();
   return (
     <motion.g key={String(mouvementsReduits)} {...CLIGNEMENT} animate={{ scaleY: mouvementsReduits ? 1 : CLIGNEMENT_ANIME }} transition={mouvementsReduits ? { duration: 0 } : TRANSITION_DU_CLIGNEMENT}>
       {children}
