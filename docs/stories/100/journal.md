@@ -46,3 +46,19 @@ Session : session_015z4jmMahATJuud1H1cNRHz. Décision réservée : 0038.
 - Review finale, cycle 2 (`e298948..574ef6f`) : **APPROUVÉ**.
 - Dettes consignées : magasins IndexedDB « gardés sur l'appareil » copiés (4e copie) ; défis gardés non relus après rechargement hors ligne (un défi relevé hors ligne s'affiche « ouvert » après relance, jusqu'à la synchronisation) ; un défi attend aussi les séances gardées des autres enfants du parent ; le correctif `574ef6f` n'a pas de test (pas de tests unitaires du front ; cas à couvrir en E2E) ; mapping ligne → `DefiReleve` écrit deux fois (front et adaptateur).
 - Étape 5 (E2E, `telephone`, périmètre `@issue-100` + scénario modifié de #16) lancée.
+- Étape 5, E2E sur `telephone`, périmètre de la story (décisions du PO du 28/10) : run 1, 34/36 (KO 4.1 sous-titre « Mathématiques » ; KO 5.3 aucun bouton pour rejouer un défi relevé). Corrections `5c77409` : `libelleCourtDe` ; le repère relevé garde « ✓ Défi relevé » et propose aussi « Relever le défi » (arbitrage de l'orchestrateur : texte déjà validé, 100.9 rejouable ; libellé à confirmer par le PO). Revue delta (steps `aaa3265` + `5c77409`) : APPROUVÉ.
+- Redémarrage du conteneur pendant la relance ; relancée depuis la branche distante (rien de perdu).
+- Run 2 : **tous les scénarios `@issue-100` verts** (8.6 `@depend-de-14` exclu) et le scénario modifié de #16 vert. Un KO de #16 hors périmètre (« L'avancement est complet quand la dernière question est réussie », délai de 30 s dans `classer-ordre-trous.steps.ts`), déjà diagnostiqué comme lenteur le 29/10 (#64, 6502873086) et corrigé par #136 ; le code de #100 ne touche pas cet écran. Step allégé `83941e0`, `@wip` retiré `a308a4f`.
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Durée, du lancement au merge | lancement 2026-10-29 14:13 UTC ; PR prête le 2026-10-30 (merge : à compléter) |
+| Temps passé à attendre | PO : environ 5 h 45 (CADRAGE PRÊT 14:30 → validation 20:14) ; verrou `base` : 0 (accordé en 7 min, puis immédiatement au redéploiement) ; `main` : aucune attente |
+| Tokens et coût | relevés par le responsable |
+| Cycles TDD | 13 comportements (24 commits RED/GREEN), plus 9 cycles de correction issus des revues |
+| Cycles de review À CORRIGER | revue delta A : 1 ; B : 2 (sécurité : classe prise dans l'envoi, puis comparaison par référence) ; C : 0 ; migration : 1 ; review finale : 1 (défi relevé perdu) ; delta E2E : 0 |
+| Cycles E2E KO | 1 (2 bugs applicatifs : 4.1, 5.3) ; 1 KO hors périmètre (#16, lenteur connue) |
+| Intégrations de `main` | 0 (`main` immobile à `439d4a2`), aucun conflit ; conflits prévus avec #101 dans 3 fichiers de fin de séance (voir la PR) |
+| Régression sur `main` après le merge | à compléter |
