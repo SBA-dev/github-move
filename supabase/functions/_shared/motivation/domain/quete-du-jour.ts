@@ -14,16 +14,20 @@ export type PropositionsDuJour = {
 export type QueteDuJour =
   | { genre: "revision"; nombreDeQuestionsDues: number }
   | { genre: "lecon"; lecon: string; titre: string }
+  | { genre: "accomplie"; quete: "revision" }
   | { genre: "aucune" }
   | { genre: "sansQuete" };
 
 export function queteDuJour(
   propositions: PropositionsDuJour,
-  _faits: FaitsDuJour,
+  faits: FaitsDuJour,
 ): QueteDuJour {
   const { leconDuJour, nombreDeQuestionsDues } = propositions;
   if (leconDuJour.genre === "inconnue" || nombreDeQuestionsDues === undefined) {
     return { genre: "sansQuete" };
+  }
+  if (faits.nombreDeSeancesDeRevisionTermineesDuJour > 0) {
+    return { genre: "accomplie", quete: "revision" };
   }
   if (nombreDeQuestionsDues > 0) {
     return { genre: "revision", nombreDeQuestionsDues };
