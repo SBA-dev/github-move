@@ -1,6 +1,6 @@
 # Critères d'acceptance : issue #100, Défi de fin de partie du parcours (« défi de fin de chapitre »)
 
-Scénarios : `features/100-defi-de-fin-de-partie-du-parcours.feature` (`@issue-100 @wip`).
+Scénarios : `features/100-defi-de-fin-de-partie-du-parcours.feature` (tag `@issue-100`).
 Modèle : `docs/stories/100/domain-model.md`.
 État : **cadrage validé le 2026-10-29**. Le PO a répondu aux questions #100.1 à #100.28 (commentaire 6507264741 de
 l'issue #100, annonce [Responsable] 6507280845 de #64). Il ne reste aucune question ouverte ni aucun scénario

@@ -1,5 +1,5 @@
 # language: fr
-@issue-100 @wip
+@issue-100
 Fonctionnalité: Défi de la partie du parcours
   En tant qu'enfant
   Je veux relever un défi qui mélange les questions des leçons que je viens de réussir
