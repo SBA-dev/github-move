@@ -41,3 +41,10 @@ Bloc C, paroles, sons, sections :
 - Revue intermédiaire bloc A (`86cb9f8..de8dce6`) : APPROUVÉ. Non bloquants à reprendre au refactor : sortir le total des étoiles de `cabane.ts` dans un module à part ; `verifierTotalDEtoiles` en garde ; exemple 36 → 37.
 - 4/9 `porterUneTenue` : `d5743e9` (red) → `0f63f84` ; format du test `bb56ca8`.
 - 5/9 `retirerLaTenue` : `73525d4` (red) → `4e5b19e`.
+- Revue intermédiaire bloc B (`de8dce6..70ab7fc`) : APPROUVÉ. Non bloquants repris au refactor `cf67318`.
+- 6/9 `tenueAMontrer` : `40ff18d` (red) → `0af9657`, refactors `ffe6530` (total des étoiles sorti de `cabane.ts`, non bloquant du bloc A) et `70ab7fc` (recherche d'une tenue par sa clé).
+- 7/9 paroles des tenues : `fa13a62` (red) → `70412f4`.
+- 8/9 « decouverte » pour une tenue reçue : `8bd0482` (red) → `1d8aee5` (`tenueRecue: false` provisoire à la fin de séance, définitif en révision et au test de départ).
+- 9/9 section des tenues : `66b9983` (red) → `760ef1a`, refactor `cf67318` (`estRecue`, `porterUneTenue` rend `TenuePortee`, `verifierTotalDEtoiles` en garde, exports de l'index).
+- 2586 tests unitaires verts, lint, fmt et `tsc` propres.
+- Câblage : les dessins des tenues sont nouveaux (skill `illustration`, étape 6) : planche montrée au PO (⛔ intermédiaire `PLANCHES PRÊTES`), comme #98.
