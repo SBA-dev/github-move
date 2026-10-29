@@ -166,3 +166,32 @@ Deno.test("un défi sans aucune question posable n'a pas de plan", () => {
 
   assertThrows(() => planDuDefi(defiDe(lecons), lecons, hasardSansMelange()), AucuneQuestionPourLeDefi);
 });
+
+Deno.test("une question d'addition d'une leçon du défi est posée comme un calcul, avec sa leçon et sa position", () => {
+  const addition = { type: "addition", operations: [[12, 29], [45, 37]], etapes: ["poser", "calculer"] };
+  const lecons = [lecon("ma-ce1-1", 0, [addition])];
+
+  const posables = questionsPosablesDuDefi(defiDe(lecons), lecons);
+
+  assertEquals(
+    posables.map(({ origine }) => origine),
+    [
+      { leconDOrigine: "ma-ce1-1", position: 0, type: "calcul" },
+      { leconDOrigine: "ma-ce1-1", position: 0, type: "calcul" },
+    ],
+  );
+});
+
+Deno.test("chaque mot d'une dictée d'une leçon du défi est une question posable", () => {
+  const dictee = {
+    type: "dictee",
+    consigne: "Écoute bien et écris le mot que tu entends.",
+    mots: [{ mot: "chat" }, { mot: "lapin" }],
+  };
+  const lecons = [lecon("ma-ce1-1", 0, [dictee])];
+
+  const posables = questionsPosablesDuDefi(defiDe(lecons), lecons);
+
+  assertEquals(posables.map(({ identite }) => identite.valeur).sort(), ["d:chat", "d:lapin"]);
+  assertEquals(posables.map(({ origine }) => origine.type), ["dictee", "dictee"]);
+});
