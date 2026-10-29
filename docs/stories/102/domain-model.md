@@ -160,7 +160,7 @@ Erreurs métier nommées : `TenueInconnue`, `TenueNonRecue` (nouvelles) ; `Total
 
 - Elle n'enregistre que ce que rend `porterUneTenue` ou `retirerLaTenue` : jamais une clé venue d'ailleurs.
 - Une valeur illisible se lit comme « aucune ».
-- Elle est effacée à la déconnexion du parent (ajout à `DonneesDeLAppareil`), et avec le profil quand il est supprimé depuis cet appareil.
+- Elle est effacée à la déconnexion du parent (ajout à `DonneesDeLAppareil`), et avec le profil supprimé depuis cet appareil, à câbler quand le front aura cette suppression (il ne l'a pas aujourd'hui).
 - Elle n'est pas retrouvée sur un autre appareil et n'est pas dans l'export (#102.8 A, accepté par le PO).
 
 ### Affichage (dans `src/`, sans règle)
