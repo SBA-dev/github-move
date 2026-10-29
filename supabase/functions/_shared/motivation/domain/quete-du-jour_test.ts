@@ -1,6 +1,6 @@
 import { assertEquals } from "@std/assert";
 import type { FaitsDuJour } from "./objectif-du-jour.ts";
-import { queteDuJour } from "./quete-du-jour.ts";
+import { type QueteDuJour, queteAccomplieParLaSeance, queteDuJour } from "./quete-du-jour.ts";
 
 const faitsDUnJourSansSeance: FaitsDuJour = {
   leconsDesSeancesTermineesDuJour: [],
@@ -145,4 +145,18 @@ Deno.test("une séance de leçon n'accomplit pas une quête de révision", () =>
   );
 
   assertEquals(quete, { genre: "revision", nombreDeQuestionsDues: 2 });
+});
+
+Deno.test("la fête est due seulement à la séance qui accomplit la quête du jour", () => {
+  const revision = (n: number): QueteDuJour => ({ genre: "revision", nombreDeQuestionsDues: n });
+  const lecon: QueteDuJour = { genre: "lecon", lecon: "le-son-in", titre: "Le son in" };
+  const revisionAccomplie: QueteDuJour = { genre: "accomplie", quete: "revision" };
+  const leconAccomplie: QueteDuJour = { genre: "accomplie", quete: "lecon" };
+  const sansQuete: QueteDuJour = { genre: "sansQuete" };
+
+  assertEquals(queteAccomplieParLaSeance(revision(3), revisionAccomplie), true);
+  assertEquals(queteAccomplieParLaSeance(lecon, leconAccomplie), true);
+  assertEquals(queteAccomplieParLaSeance(leconAccomplie, leconAccomplie), false);
+  assertEquals(queteAccomplieParLaSeance(revision(3), revision(2)), false);
+  assertEquals(queteAccomplieParLaSeance(sansQuete, sansQuete), false);
 });
