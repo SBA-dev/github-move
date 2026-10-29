@@ -48,3 +48,11 @@ Liste des comportements :
 
 - Cycle 1 : **À CORRIGER**, 4 bloquants : (1) la quête « d'après » attend l'envoi de la séance (phrase de fin retardée jusqu'à 5 s, fête perdue sur réseau lent) ; (2) après « Autre chose », la proposition est relue à voix haute en revenant sur l'accueil (contraire à 101.9) ; (3) fête non dite après une séance de fluence seule (101.19) ; (4) quête rendue après la pastille de série, séparée de la bulle (101.15, 101.17 : « dans la bulle »). Choix : on suit la réponse du PO (bloc collé à la bulle), pas d'escalade.
 - (2) passe par un test du domaine (B12) ; (1), (3), (4) et les non bloquants 1 à 5 sont corrigés par `implementer`.
+
+- Cycle 2 (delta `c9c0acf..e776884`) : **APPROUVÉ**. B12 en TDD (`a00d090` red, `6fc9385` green), corrections `0cd2b53` et `e776884`. Non bloquants laissés en dette : relectures en double, traduction `leconProposee` dans le front sans test, rangement de `AnnonceDeLaQueteAccomplie` et `useQueteAccomplieParLaSeance` dans `src/accueil/`, lecture des faits du jour « d'après » encore côté serveur (fête perdue au-delà de 5 s sur réseau très lent). Espace en trop dans `EcranDeFin.tsx:11`, à nettoyer après les E2E.
+
+## Étape 5 : E2E (17:20 UTC →)
+
+- `e2e-tester` (`5813fee`) : steps de #101 ; ajouts du tag `@issue-101` dans des conditions existantes, sans changer leur sens. Environnement : délai de 30 s insuffisant contre `savanturier-dev` derrière le proxy (même un scénario de #29 dure 28,5 s) : runs avec `--timeout=120000` en ligne de commande ; navigateur `/opt/pw-browsers/chromium-1243/chrome-linux64/chrome` par config temporaire non commitée.
+- Cycle 1 : **41/43** sur `telephone` (9,8 min). 2 KO, même cause : données de départ incohérentes avec #28 (séance « avec 1 étoile » jouée avec erreurs → questions dues le lendemain → la révision passe d'abord, comme le veut 101.1). Plus un scénario vert qui lisait la tablette au lieu du téléphone de Marie.
+- `po-acceptance` (`5ca5aff`) : « avec 3 étoiles » dans les deux scénarios, étape « … sur le téléphone de Marie » ; intention inchangée (section « Corrections de données après E2E » d'`acceptance.md`).

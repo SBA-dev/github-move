@@ -6,7 +6,7 @@ import { bulle, entendu, etat, leconDeTitre } from "./etapes-puis-exercices.step
 import { Given, Then, When } from "./fixtures.ts";
 import { ETOILES_PAR_SEANCE, jouerLaSeanceCompleteAvecErreurs, noterUneSeanceJouee } from "./parcours.steps.ts";
 import { profilDe } from "./profils-enfants.steps.ts";
-import { preparerLeScenarioDeLaRevision } from "./revisions-des-erreurs.steps.ts";
+import { pageDeMarieOuCourante, preparerLeScenarioDeLaRevision } from "./revisions-des-erreurs.steps.ts";
 import { leGuide } from "./univers.steps.ts";
 import { normaliser, terminerLaLecture } from "./voix.steps.ts";
 
@@ -256,4 +256,12 @@ Then(/^le mot « quête » n'apparaît pas dans l'Espace parent$/, async ({ fami
 Then(/^l'écran s'intitule « ([^«»]+) », avec « ([^«»]+) »$/, { tags: "@issue-101" }, async ({ page }, titre: string, sousTitre: string) => {
   await expect(page.getByRole("heading", { level: 2, name: titre, exact: true })).toBeVisible();
   await expect(page.getByTestId("sous-titre-de-la-revision")).toHaveText(sousTitre);
+});
+
+// --- Le téléphone du second parent
+
+Then(/^l'accueil de Léa affiche « ([^«»]+) » sur le téléphone de Marie$/, async ({ famille, page }, texte: string) => {
+  const telephone = pageDeMarieOuCourante(famille, page);
+  const zone = await surLAccueilDeLea(telephone);
+  await expect(zone.getByText(texte, { exact: true })).toBeVisible({ timeout: DELAI_DU_CALCUL_MS });
 });
