@@ -253,6 +253,8 @@ Then(/^chaque tenue à mettre et le choix de retirer la tenue mesurent au moins 
   await expect(sectionDesTenues(ecran)).toBeVisible({ timeout: DELAI_D_UN_APPEL_SERVEUR_MS });
   const boutons = await ecran.getByTestId("tenue-a-mettre").all();
   expect(boutons.length).toBe(4);
+  // Le choix de retirer n'existe que si une tenue est portée : on en met une, comme l'enfant, pour le mesurer.
+  await boutons[0]?.click();
   for (const bouton of [...boutons, ecran.getByTestId("retirer-la-tenue")]) {
     await bouton.scrollIntoViewIfNeeded();
     const boite = await bouton.boundingBox();
