@@ -25,7 +25,7 @@ export class NombreDEtoilesInvalide extends Error {
   }
 }
 
-function verifierNombreDEtoiles(etoiles: number): number {
+export function verifierNombreDEtoiles(etoiles: number): number {
   if (!Number.isInteger(etoiles) || etoiles < 1 || etoiles > 3) throw new NombreDEtoilesInvalide(etoiles);
   return etoiles;
 }
