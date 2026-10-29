@@ -19,6 +19,7 @@ import { defisDeLaMatiere } from "./defis-de-la-matiere.ts";
 import { type PlanDuDefi, planDuDefi, questionsPosablesDuDefi } from "./plan-du-defi.ts";
 import { Reponse } from "./reponse.ts";
 import { revaliderLeDefi } from "./revalider-le-defi.ts";
+import { REPONSES_AU_PLUS_PAR_QUESTION } from "./revalider-la-seance.ts";
 import { SeanceDeDefi } from "./seance-de-defi.ts";
 import { tireurAuHasard } from "./tireur.ts";
 
@@ -237,4 +238,105 @@ Deno.test("un tirage qui n'est pas un ordre possible des choix est refusé comme
   const tirages = envoiValide.tirages.map((tirage, rang) => rang === 0 ? ["inconnue", "autre"] : tirage);
 
   assertThrows(() => revalider({ ...envoiValide, tirages }), DefiIncoherent);
+});
+
+Deno.test("un défi envoyé pour une autre classe que celle du profil est refusé", () => {
+  const envoi = { ...envoiValide, defi: { ...envoiValide.defi, niveau: Niveau.de("CE2") } };
+
+  assertThrows(() => revalider(envoi), DefiInconnu);
+});
+
+Deno.test("un envoi qui a moins de tirages que de questions est refusé comme incohérent", () => {
+  const tirages = envoiValide.tirages.slice(0, 9);
+
+  assertThrows(() => revalider({ ...envoiValide, tirages }), DefiIncoherent);
+});
+
+Deno.test("un envoi qui a moins de listes de réponses que de questions est refusé comme incohérent", () => {
+  const reponses = envoiValide.reponses.slice(0, 9);
+
+  assertThrows(() => revalider({ ...envoiValide, reponses }), DefiIncoherent);
+});
+
+Deno.test("un envoi qui a plus de listes de réponses que de questions est refusé comme incohérent", () => {
+  const reponses = [...envoiValide.reponses, [bonneReponse]];
+
+  assertThrows(() => revalider({ ...envoiValide, reponses }), DefiIncoherent);
+});
+
+Deno.test("une question avec trop de réponses est refusée comme incohérente", () => {
+  const tropDeReponses = Array.from({ length: REPONSES_AU_PLUS_PAR_QUESTION + 1 }, () => mauvaiseReponse);
+  const reponses = envoiValide.reponses.map((donnees, rang) => rang === 4 ? tropDeReponses : donnees);
+
+  assertThrows(() => revalider({ ...envoiValide, reponses }), DefiIncoherent);
+});
+
+const CE2 = Niveau.de("CE2");
+
+function uneLeconDeCE2(index: number): Lecon {
+  return lireLecon({
+    id: `ma-ce2-${index}`,
+    matiere: "maths",
+    niveau: "CE2",
+    titre: `Leçon ${index}`,
+    ordre: index,
+    programme: { section: "c2-test", citation: "Citation de test." },
+    lecon: [],
+    exercices: [{
+      type: "bulles",
+      questions: [1, 2, 3, 4].map((rang) => ({
+        question: `Question ${rang} de la leçon ${index} ?`,
+        choix: ["oui", "non"],
+        reponse: "oui",
+      })),
+    }],
+  });
+}
+
+const leconsDesDeuxClasses = [...lecons, ...Array.from({ length: 10 }, (_, index) => uneLeconDeCE2(index + 1))];
+
+function entreesDuProfilEnCE2(reussies: readonly string[]): EntreesDuParcours {
+  return {
+    lecons: leconsDesDeuxClasses,
+    niveau: CE2,
+    meilleuresEtoiles: new Map(reussies.map((id) => [id, Etoiles.de(1)])),
+  };
+}
+
+const cinqLeconsDeCE2 = ["ma-ce2-1", "ma-ce2-2", "ma-ce2-3", "ma-ce2-4", "ma-ce2-5"];
+const defiCE2Numero1: Defi =
+  defisDeLaMatiere(parcoursDeLaMatiere(entreesDuProfilEnCE2(cinqLeconsDeCE2), maths), maths, CE2)[0];
+
+function jouerLeDefiDeCE2(): DefiTermineAEnregistrer {
+  const plan = planDuDefi(defiCE2Numero1, leconsDesDeuxClasses, hasardSansMelange());
+  const seance = SeanceDeDefi.commencer({
+    id: "defi-2",
+    enfant: "profil-lea",
+    defi: defiCE2Numero1,
+    plan,
+    lecons: leconsDesDeuxClasses,
+    tireurDe: () => tireurAuHasard(hasardSansMelange()),
+    niveau: CE2,
+  });
+  plan.questions.forEach(() => seance.repondre(bonneReponse));
+  seance.terminer(finDuDefi, jourDuDefi);
+  return seance.aEnregistrer();
+}
+
+Deno.test("le défi terminé d'un profil porte la classe du profil", () => {
+  const revalide = revaliderLeDefi(jouerLeDefiDeCE2(), entreesDuProfilEnCE2(cinqLeconsDeCE2), []);
+
+  assertEquals(revalide.defi.niveau, CE2);
+});
+
+Deno.test("un défi de CE1 déjà relevé n'ouvre pas le défi de CE2 de même numéro, qui reste à venir", () => {
+  const releves = [{ matiere: maths, niveau: CE1, numero: 1 }];
+
+  assertThrows(() => revaliderLeDefi(jouerLeDefiDeCE2(), entreesDuProfilEnCE2([]), releves), DefiAVenir);
+});
+
+Deno.test("un profil de CE2 ne peut pas faire passer un défi de CE1 relevé pour le défi de même numéro de sa classe", () => {
+  const releves = [{ matiere: maths, niveau: CE1, numero: 1 }];
+
+  assertThrows(() => revaliderLeDefi(envoiValide, entreesDuProfilEnCE2([]), releves), DefiInconnu);
 });

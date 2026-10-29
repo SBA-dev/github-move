@@ -232,3 +232,17 @@ Deno.test("l'envoi d'un défi qui n'a pas été terminé est refusé", () => {
 
   assertThrows(() => seance.aEnregistrer(), DefiNonFini);
 });
+
+Deno.test("dans un défi fini, répondre est refusé parce que le défi est déjà terminé", () => {
+  const seance = seanceSur(planDe(bateau));
+  seance.repondre(bonneReponseDe(bateau));
+
+  assertThrows(() => seance.repondre(bonneReponseDe(bateau)), DefiDejaTermine);
+});
+
+Deno.test("dans un défi fini, dire « Je ne sais pas » est refusé parce que le défi est déjà terminé", () => {
+  const seance = seanceSur(planDe(bateau));
+  seance.repondre(bonneReponseDe(bateau));
+
+  assertThrows(() => seance.direJeNeSaisPas(), DefiDejaTermine);
+});
