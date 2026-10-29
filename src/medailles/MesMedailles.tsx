@@ -26,7 +26,6 @@ import { usePersonnageQuiParle } from "../seance/usePersonnageQuiParle.ts";
 import { useTenuePortee } from "../tenue/index.ts";
 import { PersonnageGuide } from "../univers/index.ts";
 import type { Voix } from "../voix/index.ts";
-import { avecLesTenues } from "./avec-les-tenues.ts";
 import { SectionDeLaCabane } from "./SectionDeLaCabane.tsx";
 import { SectionDeLHistoire } from "./SectionDeLHistoire.tsx";
 import { SectionDesBadges } from "./SectionDesBadges.tsx";
@@ -70,17 +69,21 @@ export function MesMedailles({ profil, univers, voix, onOuvrirLEpisode }: Props)
 
   useEffect(() => {
     if (pastilles === undefined || !cabaneChargee || !tenuesChargees || !histoireChargee || !badgesCharges) return;
-    const [accueil = "", ...suite] = avecLesTenues(
-      parolesALOuverture({ toutLire, pastilles, cabane, histoire, badges }),
+    const [accueil = "", ...suite] = parolesALOuverture({
+      toutLire,
+      pastilles,
       cabane,
-      toutLire ? parolesDesTenues : [],
-    );
+      histoire,
+      badges,
+      tenues: tenuesAMontrer ? tenues : undefined,
+      personnage,
+    });
     void (async () => {
       if (!(await dire({ texte: accueil, nature: "accueil" }))) return;
       await direLaSuite(suite);
     })();
     return faireSilence;
-  }, [pastilles, cabaneChargee, cabane, tenuesChargees, parolesDesTenues, histoireChargee, histoire, badgesCharges, badges, toutLire, dire, direLaSuite, faireSilence]);
+  }, [pastilles, cabaneChargee, cabane, tenuesChargees, tenues, tenuesAMontrer, personnage, histoireChargee, histoire, badgesCharges, badges, toutLire, dire, direLaSuite, faireSilence]);
 
   const ecouterLesRecords = () => direLaSuite(parolesDeLaSectionDesRecords(pastilles ?? []));
   const ecouterLaCabane = async () => {
@@ -105,7 +108,7 @@ export function MesMedailles({ profil, univers, voix, onOuvrirLEpisode }: Props)
         <PersonnageGuide
           univers={univers}
           humeur={humeur}
-          libelle={tenuesAMontrer ? descriptionDuPersonnageGuide(personnage, tenueAMontrer(portee)) : undefined}
+          libelle={tenuesAMontrer ? descriptionDuPersonnageGuide(personnage, tenueAMontrer(portee, tenues)) : undefined}
         />
         <BulleDuPersonnageGuide texte={parole?.texte} nature={parole?.nature} rangDuMotPrononce={rangDuMotPrononce} />
       </div>
