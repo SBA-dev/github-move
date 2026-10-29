@@ -26,13 +26,22 @@ export function queteDuJour(
   if (leconDuJour.genre === "inconnue" || nombreDeQuestionsDues === undefined) {
     return { genre: "sansQuete" };
   }
-  const aFaitUneRevisionAujourdhui = faits.nombreDeSeancesDeRevisionTermineesDuJour > 0;
-  if (aFaitUneRevisionAujourdhui || nombreDeQuestionsDues > 0) {
-    return aFaitUneRevisionAujourdhui
-      ? { genre: "accomplie", quete: "revision" }
-      : { genre: "revision", nombreDeQuestionsDues };
+  if (
+    faits.nombreDeSeancesDeRevisionTermineesDuJour > 0 ||
+    nombreDeQuestionsDues > 0
+  ) {
+    return queteDeRevision(nombreDeQuestionsDues, faits);
   }
   return queteDeLecon(leconDuJour, faits);
+}
+
+function queteDeRevision(
+  nombreDeQuestionsDues: number,
+  faits: FaitsDuJour,
+): QueteDuJour {
+  return faits.nombreDeSeancesDeRevisionTermineesDuJour > 0
+    ? { genre: "accomplie", quete: "revision" }
+    : { genre: "revision", nombreDeQuestionsDues };
 }
 
 function queteDeLecon(
