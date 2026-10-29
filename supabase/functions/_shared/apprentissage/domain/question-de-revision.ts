@@ -34,7 +34,7 @@ export type QuestionDeRevision =
   | Readonly<{ identite: CleDeQuestion; dictee: QuestionDeDictee; question?: undefined }>;
 
 /** Une question que l'exercice sait poser : sa clé se connaît sans tirage, la question se pose avec le tireur. */
-export type Posable = Readonly<
+type Posable = Readonly<
   { cle: CleDeQuestion; poser: (tireur: Tireur, niveau: Niveau) => QuestionPosee | undefined }
 >;
 
