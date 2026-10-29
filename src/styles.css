@@ -1113,4 +1113,3 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 .pour-le-personnage-guide:empty { display: none; }
 .pour-le-personnage-guide p { margin: 0; font-weight: 700; }
 .pour-le-personnage-guide .personnage-guide { width: 96px; }
-[data-mode-dys="true"] :is(.phrase-des-tenues, .pastille-des-tenues, .tenue-a-mettre, .pour-le-personnage-guide) { overflow-wrap: anywhere; line-height: inherit; }
