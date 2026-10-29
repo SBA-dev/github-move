@@ -45,14 +45,25 @@ export {
   SIGNAL_DE_DEPART,
 } from "./paroles-de-fluence.ts";
 export { accueillirEnRevision, annonceDeLaSeanceDeRevision, parolesDeFinDeRevision } from "./paroles-de-revision.ts";
+export {
+  annonceDuDefiOuvert,
+  inviterARelever,
+  nomDuDefi,
+  parolesDeDebutDeDefi,
+  parolesDeFinDeDefi,
+  phraseDeFinAvecLeDefi,
+  titreDuDefiReleve,
+} from "./paroles-du-defi.ts";
 export { type SectionDeLEcran, sectionsAAfficher, sectionsDeLEcran } from "./sections-de-l-ecran.ts";
 export { type PastilleDeRecord, pastillesDesRecords, type RecordDuProfil } from "./records-de-calcul-rapide.ts";
 export {
   NOM_DE_L_ECRAN_DES_MEDAILLES,
   parolesALOuverture,
+  parolesDeLaSectionDesDefisReleves,
   parolesDeLaSectionDesRecords,
   parolesDuGuideALOuverture,
   phraseLueDeLaPastille,
+  TITRE_DES_DEFIS_RELEVES,
   TITRE_DES_RECORDS_DE_CALCUL_RAPIDE,
 } from "./paroles-de-l-ecran-des-medailles.ts";
 export {
@@ -158,3 +169,4 @@ export {
   titreDeLAnnonceDeLaTenue,
   titreDeLaSectionDesTenues,
 } from "./paroles-des-tenues.ts";
+export { defiReleveParLaSeance, lignesDesDefisReleves } from "./defis-releves.ts";

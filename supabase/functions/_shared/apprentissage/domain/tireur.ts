@@ -1,3 +1,4 @@
+import type { CleDeQuestion } from "./cle-de-question.ts";
 import type { GenerateurComplet, GenerateurDAdditions, Operation } from "../../catalogue/domain/index.ts";
 import { ChoixProposes } from "./choix-proposes.ts";
 import { ClavierPropose } from "./clavier-propose.ts";
@@ -82,4 +83,13 @@ function estUnTirageDeTrou(tirage: readonly string[], motAttendu: string, candid
 function motsEnPlus(candidats: readonly string[], hasard: Hasard): string[] {
   if (candidats.length <= NOMBRE_DE_MOTS_EN_PLUS) return [...candidats];
   return melanger(candidats, hasard).slice(0, NOMBRE_DE_MOTS_EN_PLUS);
+}
+
+/** Le tireur d'une question d'un envoi : il rejoue le tirage fait pour elle, un tirage par question de l'envoi. */
+export function tireurDeLaQuestionEnvoyee(
+  envoi: { readonly questions: readonly CleDeQuestion[]; readonly tirages: readonly (readonly string[])[] },
+  identite: CleDeQuestion,
+): Tireur {
+  const rang = envoi.questions.findIndex(({ valeur }) => valeur === identite.valeur);
+  return tireurSelonLesTirages([envoi.tirages[rang] ?? []].values());
 }

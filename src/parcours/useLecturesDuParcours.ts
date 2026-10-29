@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import type { Etoiles } from "@domain/apprentissage";
+import type { DefiReleve, Etoiles } from "@domain/apprentissage";
 import type { Lecon } from "@domain/catalogue";
+import { lireLesDefisReleves } from "../defis/lire-les-defis-releves.ts";
 import { chargerToutesLesLecons } from "../seance/bibliotheque.ts";
 import { lireLesMeilleuresEtoilesDuProfil } from "../seance/fin-de-seance/meilleures-etoiles-du-profil.ts";
 import { reseauDisponible } from "../reseau/reseau-disponible.ts";
@@ -11,17 +12,19 @@ export type LecturesDuParcours = {
   readonly lecons: readonly Lecon[];
   readonly meilleuresEtoiles: ReadonlyMap<string, Etoiles>;
   readonly leconsReussiesAuTestDeDepart: ReadonlySet<string>;
+  readonly defisReleves: readonly DefiReleve[];
 };
 
-/** Les leçons de la bibliothèque, les meilleures étoiles du profil et ses leçons réussies au test de départ. */
+/** Les leçons de la bibliothèque, les meilleures étoiles du profil, ses leçons réussies au test de départ et ses défis relevés. */
 export async function lireLesLecturesDuParcours(profil: string): Promise<LecturesDuParcours> {
   if (reseauDisponible()) await attendreLesEnvoisEnCours();
-  const [lecons, meilleuresEtoiles, testDeDepart] = await Promise.all([
+  const [lecons, meilleuresEtoiles, testDeDepart, defisReleves] = await Promise.all([
     chargerToutesLesLecons(),
     lireLesMeilleuresEtoilesDuProfil(profil),
     lireLEtatDuTestDeDepart(profil),
+    lireLesDefisReleves(profil),
   ]);
-  return { lecons, meilleuresEtoiles, leconsReussiesAuTestDeDepart: testDeDepart.leconsReussies };
+  return { lecons, meilleuresEtoiles, leconsReussiesAuTestDeDepart: testDeDepart.leconsReussies, defisReleves };
 }
 
 /** Les lectures du parcours du profil ; `undefined` pendant la lecture. */

@@ -19,6 +19,10 @@ export type EtatDansLeParcours =
   | { genre: "prochaine" }
   | { genre: "aDecouvrir" };
 
+export function estUneLeconReussie(etat: EtatDansLeParcours): boolean {
+  return etat.genre === "reussie" || etat.genre === "reussieAuTestDeDepart";
+}
+
 export type EtatHorsDuParcours = Exclude<EtatDansLeParcours, { genre: "prochaine" }>;
 
 export type LeconDuParcours = Readonly<{ lecon: LeconId; titre: string; place: number; etat: EtatDansLeParcours }>;

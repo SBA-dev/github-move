@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { FileDeRevision } from "@domain/apprentissage";
 import type { Lecon, Niveau } from "@domain/catalogue";
 import type { ProfilEnCours } from "@domain/famille";
-import type { Univers } from "@domain/motivation";
+import { accueillirEnRevision, type Univers } from "@domain/motivation";
 import { lireLeNombreDeSeancesAvantLaSeance } from "../histoire/nombre-de-seances-avant-la-seance.ts";
 import { niveauDuProfil } from "../parcours/niveau-du-profil.ts";
 import { useLeconsPersonnellesDuProfil } from "../accompagnement/useLeconsPersonnellesDuProfil.ts";
@@ -86,6 +86,8 @@ function RevisionChargee({ lecons, file, niveau, profil, univers, voix, onLireLE
         : (
           <DeroulementDeLaRevision
             seance={revision.seance}
+            parolesDeDebut={accueillirEnRevision()}
+            libelleDeLAvancement="Avancement de la révision"
             boites={revision.boites}
             textes={revision.textes}
             nombreDeQuestions={revision.seance.resultats().length}

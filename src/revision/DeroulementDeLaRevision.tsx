@@ -7,7 +7,6 @@ import {
   QuestionDeCalcul,
   QuestionDeProblemeEnBarres,
   QuestionJouee,
-  type SeanceDeRevision,
 } from "@domain/apprentissage";
 import type { ItemDeBoite } from "@domain/catalogue";
 import type { Univers } from "@domain/motivation";
@@ -22,11 +21,15 @@ import { RecipientDeProgression } from "../seance/RecipientDeProgression.tsx";
 import { ParoleDuGuide } from "../test-de-depart/ParoleDuGuide.tsx";
 import type { Voix } from "../voix/index.ts";
 import { TexteDeLecture as AffichageDuTexte } from "../seance/exercices/TexteDeLecture.tsx";
+import type { SeanceDeQuestions } from "./seance-de-questions.ts";
 import type { TexteDeLecture } from "./commencer-la-revision.ts";
 import { type Personnage, useDeroulementDeRevision } from "./useDeroulementDeRevision.ts";
 
 type Props = {
-  readonly seance: SeanceDeRevision;
+  readonly seance: SeanceDeQuestions;
+  readonly parolesDeDebut: string;
+  /** Le nom de la barre de progression pour les lecteurs d'écran, par exemple « Avancement de la révision ». */
+  readonly libelleDeLAvancement: string;
   readonly boites: ReadonlyMap<string, ItemDeBoite>;
   readonly textes: ReadonlyMap<string, TexteDeLecture>;
   readonly nombreDeQuestions: number;
@@ -38,12 +41,13 @@ type Props = {
   readonly onFini: () => void;
 };
 
-/** La séance de révision en cours : une question à la fois, sans étape de leçon, avec l'avancement de la séance. */
+/** Une séance de questions en cours (révision, défi) : une question à la fois, sans étape de leçon, avec l'avancement de la séance. */
 export function DeroulementDeLaRevision(
-  { seance, boites, textes, nombreDeQuestions, personnage, univers, voix, toutLireAVoixHaute, onFini }: Props,
+  { seance, parolesDeDebut, libelleDeLAvancement, boites, textes, nombreDeQuestions, personnage, univers, voix, toutLireAVoixHaute, onFini }: Props,
 ) {
   const deroulement = useDeroulementDeRevision({
     seance,
+    parolesDeDebut,
     nombreDeQuestions,
     textes,
     personnage,
@@ -71,7 +75,7 @@ export function DeroulementDeLaRevision(
     <ContexteDuRetour.Provider value={deroulement.retour}>
       <RecipientDeProgression
         avancement={new Avancement(deroulement.questionsReussies, nombreDeQuestions)}
-        libelle="Avancement de la révision"
+        libelle={libelleDeLAvancement}
       />
       <ParoleDuGuide personnage={personnage} univers={univers} onReecouter={deroulement.reecouter} />
       <div className="annonce-d-avancement" role="status" data-testid="annonce-d-avancement">

@@ -1,4 +1,4 @@
-import type { LeconId, Parcours } from "./parcours.ts";
+import { estUneLeconReussie, type LeconId, type Parcours } from "./parcours.ts";
 
 export type AvanceeDansLeParcours = Readonly<{
   depuis: LeconId;
@@ -33,8 +33,6 @@ function placeDe(lecon: LeconId | undefined, parcours: Parcours): number | undef
 
 function estDevenueReussie(lecon: LeconId, parcours: Parcours): boolean {
   return parcours.lecons.some(
-    (uneLecon) =>
-      uneLecon.lecon === lecon &&
-      (uneLecon.etat.genre === "reussie" || uneLecon.etat.genre === "reussieAuTestDeDepart"),
+    (uneLecon) => uneLecon.lecon === lecon && estUneLeconReussie(uneLecon.etat),
   );
 }

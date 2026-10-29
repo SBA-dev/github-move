@@ -410,7 +410,7 @@ async function verifierQueLaParoleEstCelleDeLaBulle(page: Page, parole: string) 
   expect(affichee, `la parole dite « ${parole} » est celle de la bulle`).toContain(dite);
 }
 
-async function effetPuisParole(page: Page, effets: readonly string[], nature: NatureAttendue, strict: boolean): Promise<Entree> {
+export async function effetPuisParole(page: Page, effets: readonly string[], nature: NatureAttendue, strict: boolean): Promise<Entree> {
   const fichiers = effets.map(fichierDe);
   let trouve: { effet: Entree; parole: string } | undefined;
   await attendre(page, (observation) => {

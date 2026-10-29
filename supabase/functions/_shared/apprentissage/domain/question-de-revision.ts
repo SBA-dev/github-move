@@ -34,7 +34,9 @@ export type QuestionDeRevision =
   | Readonly<{ identite: CleDeQuestion; dictee: QuestionDeDictee; question?: undefined }>;
 
 /** Une question que l'exercice sait poser : sa clé se connaît sans tirage, la question se pose avec le tireur. */
-type Posable = Readonly<{ cle: CleDeQuestion; poser: () => QuestionPosee | undefined }>;
+type Posable = Readonly<
+  { cle: CleDeQuestion; poser: (tireur: Tireur, niveau: Niveau) => QuestionPosee | undefined }
+>;
 
 /**
  * La question retenue, retrouvée par sa clé dans l'exercice d'où elle vient.
@@ -53,48 +55,48 @@ export function questionDeRevision(
     const mot = exercice.mots.find((candidat) => cleDeLaDictee(candidat).valeur === identite.valeur);
     return mot && { identite, dictee: questionDeDictee(exercice, mot, tireur) };
   }
-  const question = posables(exercice, origine, tireur, niveau)
-    .find((candidat) => candidat.cle.valeur === identite.valeur)?.poser();
+  const question = posables(exercice, origine)
+    .find((candidat) => candidat.cle.valeur === identite.valeur)?.poser(tireur, niveau);
   return question && { identite, question };
 }
 
-function posables(exercice: Exercice, origine: OrigineDeLaQuestion, tireur: Tireur, niveau: Niveau): Posable[] {
+export function posables(exercice: Exercice, origine: OrigineDeLaQuestion): Posable[] {
   switch (exercice.type) {
     case "bulles":
     case "lecture":
       return exercice.questions.map((q) => ({
         cle: cleDUneQuestionALire(exercice.type, q),
-        poser: () => questionsJoueesAvec({ ...exercice, questions: [q] }, tireur)[0],
+        poser: (tireur) => questionsJoueesAvec({ ...exercice, questions: [q] }, tireur)[0],
       }));
     case "ecoute":
       return exercice.items.map((item) => ({
         cle: cleDeLEcoute(item),
-        poser: () => questionsJoueesAvec({ ...exercice, items: [item] }, tireur)[0],
+        poser: (tireur) => questionsJoueesAvec({ ...exercice, items: [item] }, tireur)[0],
       }));
     case "trous":
       return questionsDeTrous(exercice).map((trou) => ({
         cle: cleDuTrou(trou.enonce),
-        poser: () => questionJoueeDuTrou(trou, tireur),
+        poser: (tireur) => questionJoueeDuTrou(trou, tireur),
       }));
     case "conjugaison":
       return exercice.formes.map((forme) => ({
         cle: CleDeQuestion.de("conjugaison", cleDeLaConjugaison(exercice, forme.pronom)),
-        poser: () => questionDeConjugaison(exercice, forme, tireur),
+        poser: (tireur) => questionDeConjugaison(exercice, forme, tireur),
       }));
     case "classer":
       return exercice.items.map((item) => ({
         cle: cleDuClasser(exercice, item),
-        poser: () => questionDeClassement(exercice, item, tireur),
+        poser: (tireur) => questionDeClassement(exercice, item, tireur),
       }));
     case "boite":
       return exercice.items.map((item) => ({
         cle: cleDeLaBoite(item),
-        poser: () => QuestionDeBoite.pour(item, tireur, niveau),
+        poser: (tireur, niveau) => QuestionDeBoite.pour(item, tireur, niveau),
       }));
     case "barres":
       return exercice.items.map((probleme) => ({
         cle: cleDesBarres(probleme),
-        poser: () => QuestionDeProblemeEnBarres.pour(probleme, tireur, niveau),
+        poser: (tireur, niveau) => QuestionDeProblemeEnBarres.pour(probleme, tireur, niveau),
       }));
     case "calcul": {
       const tiree = origine.tirage !== undefined && exercice.generateur
@@ -102,7 +104,7 @@ function posables(exercice: Exercice, origine: OrigineDeLaQuestion, tireur: Tire
         : undefined;
       return (exercice.operations ?? (tiree ? [tiree] : [])).map((operation) => ({
         cle: cleDuCalcul(operation.q),
-        poser: () => QuestionDeCalcul.pour(operation, tireur, niveau),
+        poser: (tireur, niveau) => QuestionDeCalcul.pour(operation, tireur, niveau),
       }));
     }
     case "addition": {
@@ -111,7 +113,7 @@ function posables(exercice: Exercice, origine: OrigineDeLaQuestion, tireur: Tire
         : undefined;
       return (exercice.operations ?? (tiree ? [tiree] : [])).map((addition) => ({
         cle: cleDeLAddition(addition),
-        poser: () => questionDeCalculEnLigne(addition, tireur, niveau),
+        poser: (tireur, niveau) => questionDeCalculEnLigne(addition, tireur, niveau),
       }));
     }
     default:

@@ -13,7 +13,7 @@ const QUESTIONS_AU_PLUS = NOMBRE_MAXIMAL_DE_QUESTIONS_PAR_SEANCE_DE_REVISION;
 /** Borne technique du corps HTTP : la revalidation du domaine applique la vraie limite de chaque question. */
 const REPONSES_AU_PLUS_PAR_QUESTION = 1000;
 
-function lireUneCle(brute: unknown): CleDeQuestion {
+export function lireUneCle(brute: unknown): CleDeQuestion {
   try {
     return CleDeQuestion.depuisLaValeur(texteCourt(brute, "questions"));
   } catch (cause) {
@@ -24,14 +24,14 @@ function lireUneCle(brute: unknown): CleDeQuestion {
   }
 }
 
-function lireLesTirages(corps: Record<string, unknown>): string[][] {
-  return listeDe(corps.tirages, "tirages", QUESTIONS_AU_PLUS).map((groupe) =>
+export function lireLesTirages(corps: Record<string, unknown>, auPlus = QUESTIONS_AU_PLUS): string[][] {
+  return listeDe(corps.tirages, "tirages", auPlus).map((groupe) =>
     listeDe(groupe, "tirages", NOMBRE_MAXIMAL_D_ETIQUETTES).map((choix) => texteCourt(choix, "tirages"))
   );
 }
 
-function lireLesReponses(corps: Record<string, unknown>): ReponseDonnee[][] {
-  return listeDe(corps.reponses, "reponses", QUESTIONS_AU_PLUS).map((groupe) =>
+export function lireLesReponses(corps: Record<string, unknown>, auPlus = QUESTIONS_AU_PLUS): ReponseDonnee[][] {
+  return listeDe(corps.reponses, "reponses", auPlus).map((groupe) =>
     listeDe(groupe, "reponses", REPONSES_AU_PLUS_PAR_QUESTION).map(lireUneReponse)
   );
 }

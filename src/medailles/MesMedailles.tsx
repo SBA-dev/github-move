@@ -7,6 +7,7 @@ import {
   parolesALOuverture,
   parolesDeLaSectionDeLHistoire,
   parolesDeLaSectionDesBadgesOuSansBadge,
+  parolesDeLaSectionDesDefisReleves,
   parolesDeLaSectionDesRecords,
   phraseLueDeLaPastille,
   phraseDeLEtat,
@@ -21,6 +22,7 @@ import {
   NOM_DE_L_ECRAN_DES_MEDAILLES,
   TITRE_DES_RECORDS_DE_CALCUL_RAPIDE,
 } from "@domain/motivation";
+import { useDefisReleves } from "../defis/useDefisReleves.ts";
 import { BulleDuPersonnageGuide } from "../seance/BulleDuPersonnageGuide.tsx";
 import { usePersonnageQuiParle } from "../seance/usePersonnageQuiParle.ts";
 import { useTenuePortee } from "../tenue/index.ts";
@@ -29,6 +31,7 @@ import type { Voix } from "../voix/index.ts";
 import { SectionDeLaCabane } from "./SectionDeLaCabane.tsx";
 import { SectionDeLHistoire } from "./SectionDeLHistoire.tsx";
 import { SectionDesBadges } from "./SectionDesBadges.tsx";
+import { SectionDesDefisReleves } from "./SectionDesDefisReleves.tsx";
 import { SectionDesTenues } from "./SectionDesTenues.tsx";
 import { useBadges } from "./useBadges.ts";
 import { useCabane } from "./useCabane.ts";
@@ -51,10 +54,11 @@ export function MesMedailles({ profil, univers, voix, onOuvrirLEpisode }: Props)
   const { chargees: tenuesChargees, tenues } = useTenues(profil.id);
   const [portee, changerLaTenue] = useTenuePortee(profil.id);
   const { charges: badgesCharges, badges } = useBadges(profil.id);
+  const { charges: defisCharges, defisReleves } = useDefisReleves(profil.id);
   const { parole, rangDuMotPrononce, humeur, dire, faireSilence } = usePersonnageQuiParle(voix);
   const toutLire = profil.reglages.toutLireAVoixHaute;
   const personnage = univers.personnageGuide;
-  const sections = sectionsDeLEcran({ pastilles: pastilles ?? [], cabane, tenues, histoire, badges });
+  const sections = sectionsDeLEcran({ pastilles: pastilles ?? [], cabane, tenues, histoire, badges, defisReleves });
   const tenuesAMontrer = tenues !== undefined && sections.includes("tenues");
   const parolesDesTenues = useMemo(
     () => tenues !== undefined && tenuesAMontrer
@@ -68,13 +72,14 @@ export function MesMedailles({ profil, univers, voix, onOuvrirLEpisode }: Props)
   }, [dire]);
 
   useEffect(() => {
-    if (pastilles === undefined || !cabaneChargee || !tenuesChargees || !histoireChargee || !badgesCharges) return;
+    if (pastilles === undefined || !cabaneChargee || !tenuesChargees || !histoireChargee || !badgesCharges || !defisCharges) return;
     const [accueil = "", ...suite] = parolesALOuverture({
       toutLire,
       pastilles,
       cabane,
       histoire,
       badges,
+      defisReleves,
       tenues: tenuesAMontrer ? tenues : undefined,
       personnage,
     });
@@ -83,7 +88,7 @@ export function MesMedailles({ profil, univers, voix, onOuvrirLEpisode }: Props)
       await direLaSuite(suite);
     })();
     return faireSilence;
-  }, [pastilles, cabaneChargee, cabane, tenuesChargees, tenues, tenuesAMontrer, personnage, histoireChargee, histoire, badgesCharges, badges, toutLire, dire, direLaSuite, faireSilence]);
+  }, [pastilles, cabaneChargee, cabane, tenuesChargees, tenues, tenuesAMontrer, personnage, histoireChargee, histoire, badgesCharges, badges, defisCharges, defisReleves, toutLire, dire, direLaSuite, faireSilence]);
 
   const ecouterLesRecords = () => direLaSuite(parolesDeLaSectionDesRecords(pastilles ?? []));
   const ecouterLaCabane = async () => {
@@ -97,6 +102,7 @@ export function MesMedailles({ profil, univers, voix, onOuvrirLEpisode }: Props)
   const ecouterLesBadges = async () => {
     if (badges) await direLaSuite(parolesDeLaSectionDesBadgesOuSansBadge(badges));
   };
+  const ecouterLesDefisReleves = () => direLaSuite(parolesDeLaSectionDesDefisReleves(defisReleves));
   const lireLeBadge = async (badge: Badge) => {
     await direLaSuite([badge.nom]);
   };
@@ -134,6 +140,7 @@ export function MesMedailles({ profil, univers, voix, onOuvrirLEpisode }: Props)
       {pastilles !== undefined && sections.includes("recordsDeFluence") && (
         <SectionDesRecords pastilles={pastilles} onEcouter={ecouterLesRecords} />
       )}
+      {sections.includes("defisReleves") && <SectionDesDefisReleves defis={defisReleves} onEcouter={ecouterLesDefisReleves} />}
     </section>
   );
 }
