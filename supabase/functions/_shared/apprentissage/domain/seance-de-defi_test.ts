@@ -32,7 +32,7 @@ const leconDesSyllabes = uneLecon("fr-ce1-syllabes", {
   type: "bulles",
   questions: [
     { question: "Combien de syllabes dans « bateau » ?", choix: ["1", "2"], reponse: "2" },
-    { question: "Combien de syllabes dans « chat » ?", choix: ["1", "2"], reponse: "1" },
+    { question: "Combien de syllabes dans « chat » ?", choix: ["1", "2", "3", "4"], reponse: "1" },
   ],
 });
 const leconDuCalcul = uneLecon("fr-ce1-calcul", { type: "calcul", operations: [{ q: "2 + 2", r: 4 }] });
@@ -106,14 +106,24 @@ Deno.test("une bonne réponse dans un défi fait passer à la question suivante,
   assertEquals(seance.estFinie(), true);
 });
 
-Deno.test("dans un défi, une réponse fausse laisse la même question pour une nouvelle chance, autant de fois qu'il faut", () => {
+Deno.test("dans un défi, des réponses fausses différentes laissent la même question pour une nouvelle chance, sans limite", () => {
   const seance = seanceSur(planDe(chat, bateau));
 
-  const resultats = [1, 2, 3].map(() => seance.repondre(mauvaiseReponseDe(chat)));
+  const resultats = ["2", "3", "4"].map((choix) => seance.repondre(Reponse.choix(choix)));
 
   assertEquals(resultats, ["fausse", "fausse", "fausse"]);
   assertEquals(seance.questionEnCours()?.identite, chat);
   assertEquals(seance.estFinie(), false);
+});
+
+Deno.test("dans un défi, renvoyer un choix déjà écarté ne change pas de question", () => {
+  const seance = seanceSur(planDe(chat, bateau));
+  seance.repondre(Reponse.choix("2"));
+
+  const resultat = seance.repondre(Reponse.choix("2"));
+
+  assertEquals(resultat, "dejaEcartee");
+  assertEquals(seance.questionEnCours()?.identite, chat);
 });
 
 Deno.test("dans un défi, « Je ne sais pas » donne l'aide et garde la même question", () => {
