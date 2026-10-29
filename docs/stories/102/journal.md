@@ -64,3 +64,5 @@ Bloc C, paroles, sons, sections :
   - Rouge 1, cause établie : `useReducedMotion()` de Motion prend une photo de la préférence au montage. Le paysage, monté avant le réglage, ne la relit jamais. `aa0b439` et `915701b` reposaient sur ce hook.
   - Rouge 2, instable : changement d'univers. Cause probable : `choisirSonProfil` clique avant que « Qui joue ? » ne montre le nouvel univers.
   - ESCALADE (#102.30) : 4e cycle proposé (hook réactif `useMouvementsReduits`, attente dans le step propre à #102). En attente de la réponse du responsable.
+- 06:50 UTC : ✅ réponse du PO publiée par le responsable (`[Responsable]`, sur #102 et non sur #64, et confirmée par message direct de sa session) : « 102 reco partout ». Planche des tenues validée (#102.28, #102.29). 4e cycle E2E autorisé (#102.30). Les autres usages de `useReducedMotion()` sont notés en dette de fin de vague par le responsable.
+- Correctif `9a21ae3` : hook réactif `useMouvementsReduits()` (`useSyncExternalStore` sur `matchMedia`) dans `Paysage`, `PersonnageGuide` et `partage.tsx`.
