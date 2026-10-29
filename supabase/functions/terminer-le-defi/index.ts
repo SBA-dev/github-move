@@ -47,7 +47,7 @@ Deno.serve((requete) =>
         new ResultatsDesLeconsSupabase(clientDuParent, lecons),
         new ResultatsDesTestsDeDepartSupabase(clientDuParent),
         new FilesDeRevisionSupabase(clientDuServeur),
-        new DefisTerminesSupabase(clientDuServeur),
+        new DefisTerminesSupabase(clientDuParent, clientDuServeur),
       ).executer({ parent, defi });
       const fait = faits[0];
       return {

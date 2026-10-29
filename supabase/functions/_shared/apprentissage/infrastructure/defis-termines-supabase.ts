@@ -19,17 +19,20 @@ function releveDeLaLigne({ matiere, classe, numero }: LigneDeDefi): DefiReleve |
 }
 
 export class DefisTerminesSupabase implements DefisTermines {
-  constructor(private readonly client: () => SupabaseClient) {}
+  constructor(
+    private readonly clientDuParent: () => SupabaseClient,
+    private readonly clientDuServeur: () => SupabaseClient,
+  ) {}
 
   async releves(enfant: string): Promise<readonly DefiReleve[]> {
-    const { data, error } = await this.client().from("defis_termines").select("matiere, classe, numero")
+    const { data, error } = await this.clientDuParent().from("defis_termines").select("matiere, classe, numero")
       .eq("profil", enfant);
     if (error) throw new Error(`Lecture des défis relevés impossible : ${error.message}`);
     return (data as LigneDeDefi[]).flatMap((ligne) => releveDeLaLigne(ligne) ?? []);
   }
 
   async enregistrer(fait: DefiTermine, { file, versionLue }: FileDeRevisionALEcrire) {
-    const { data, error } = await this.client().rpc("enregistrer_le_defi_termine", {
+    const { data, error } = await this.clientDuServeur().rpc("enregistrer_le_defi_termine", {
       p_id: fait.id,
       p_profil: fait.enfant,
       p_matiere: fait.defi.matiere.code,

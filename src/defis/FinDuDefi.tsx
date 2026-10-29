@@ -80,7 +80,7 @@ export function FinDuDefi({ seance, prenom, personnage, univers, relevesAvant, o
 
   return (
     <div className="fin-de-seance fin-du-defi" data-testid="fin-du-defi">
-      {issue && <Confettis />}
+      {issue?.annonce && <Confettis />}
       <ParoleDuGuide personnage={personnage} univers={univers} onReecouter={reecouter} />
       <div className="pour-le-defi" role="status" data-testid="annonce-du-defi-releve">
         {issue?.annonce && <p>{issue.annonce}</p>}

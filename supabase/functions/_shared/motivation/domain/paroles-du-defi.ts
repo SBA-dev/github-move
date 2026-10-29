@@ -20,3 +20,12 @@ export function annonceDuDefiOuvert(numeroDuDefi: number): string {
 export function titreDuDefiReleve(): string {
   return "Défi relevé !";
 }
+
+/** Le personnage guide propose le défi ouvert après sa phrase de fin ; il ne le lance pas. */
+export function phraseDeFinAvecLeDefi(phraseDeFin: string, prenom: string, numeroDuDefi: number | undefined): string {
+  return numeroDuDefi === undefined ? phraseDeFin : `${phraseDeFin} ${inviterARelever({ prenom, numeroDuDefi })}`;
+}
+
+export function nomDuDefi(numero: number): string {
+  return `Défi ${numero}`;
+}

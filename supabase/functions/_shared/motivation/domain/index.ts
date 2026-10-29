@@ -48,8 +48,10 @@ export { accueillirEnRevision, annonceDeLaSeanceDeRevision, parolesDeFinDeRevisi
 export {
   annonceDuDefiOuvert,
   inviterARelever,
+  nomDuDefi,
   parolesDeDebutDeDefi,
   parolesDeFinDeDefi,
+  phraseDeFinAvecLeDefi,
   titreDuDefiReleve,
 } from "./paroles-du-defi.ts";
 export { type SectionDeLEcran, sectionsAAfficher, sectionsDeLEcran } from "./sections-de-l-ecran.ts";

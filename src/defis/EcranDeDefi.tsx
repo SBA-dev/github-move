@@ -2,9 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { AucuneQuestionPourLeDefi, type Defi, type DefiReleve } from "@domain/apprentissage";
 import type { Lecon, Niveau } from "@domain/catalogue";
 import type { ProfilEnCours } from "@domain/famille";
-import { parolesDeDebutDeDefi, type Univers } from "@domain/motivation";
+import { nomDuDefi, parolesDeDebutDeDefi, type Univers } from "@domain/motivation";
 import { niveauDuProfil } from "../parcours/niveau-du-profil.ts";
-import { nomDuDefi } from "../parcours/textes-du-parcours.ts";
 import { DeroulementDeLaRevision as DeroulementDesQuestions } from "../revision/DeroulementDeLaRevision.tsx";
 import { usePersonnageQuiParle } from "../seance/usePersonnageQuiParle.ts";
 import { useToutesLesLecons } from "../test-de-depart/useToutesLesLecons.ts";
@@ -59,7 +58,7 @@ function DefiCharge(
   };
   useEffect(() => {
     if (!commence) retourner(onMonParcours)();
-  }, [commence]);
+  }, [commence, onMonParcours]);
   if (!commence) return null;
 
   return (

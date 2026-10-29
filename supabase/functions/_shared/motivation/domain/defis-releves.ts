@@ -1,7 +1,7 @@
 import { libelleCourtDe, Niveau, toutesLesMatieres } from "../../catalogue/domain/index.ts";
 import type { DefiReleve } from "../../apprentissage/domain/index.ts";
 import type { EffetSonore } from "../../voix/domain/index.ts";
-import { titreDuDefiReleve } from "./paroles-du-defi.ts";
+import { nomDuDefi, titreDuDefiReleve } from "./paroles-du-defi.ts";
 
 export interface IssueDuDefi {
   readonly annonce: string | undefined;
@@ -31,5 +31,5 @@ export function lignesDesDefisReleves(defis: readonly DefiReleve[]): string[] {
   const sansDoublon = defis.filter((defi, i) => defis.findIndex((autre) => memeDefi(autre, defi)) === i);
   return sansDoublon
     .sort((a, b) => rangDeLaMatiere(a) - rangDeLaMatiere(b) || rangDuNiveau(a) - rangDuNiveau(b) || a.numero - b.numero)
-    .map((defi) => `Défi ${defi.numero} · ${libelleCourtDe(defi.matiere.code)} · ${defi.niveau.valeur}`);
+    .map((defi) => `${nomDuDefi(defi.numero)} · ${libelleCourtDe(defi.matiere.code)} · ${defi.niveau.valeur}`);
 }

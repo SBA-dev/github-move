@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { type Defi, defiOuvertParLaSeance, Etoiles, meilleuresEtoilesReunies, type NombreDEtoiles, parcoursDeLaMatiere } from "@domain/apprentissage";
+import { type Defi, defiOuvertParLaSeance, Etoiles, meilleuresEtoilesReunies, parcoursDeLaMatiere } from "@domain/apprentissage";
 import type { MeilleuresEtoilesDuProfil } from "@domain/motivation";
 import { niveauDuProfil } from "../parcours/niveau-du-profil.ts";
 import { chargerToutesLesLecons } from "../seance/bibliotheque.ts";
@@ -12,7 +12,10 @@ export type DefiOuvert = { readonly pret: boolean; readonly defi: Defi | undefin
 type Seance = { readonly enfant: string; readonly lecon: string };
 
 function enEtoiles(meilleures: MeilleuresEtoilesDuProfil): ReadonlyMap<string, Etoiles> {
-  return new Map([...meilleures].map(([lecon, nombre]) => [lecon, Etoiles.de(nombre as NombreDEtoiles)]));
+  const etoiles = [...meilleures].flatMap(([lecon, nombre]): [string, Etoiles][] =>
+    nombre === 1 || nombre === 2 || nombre === 3 ? [[lecon, Etoiles.de(nombre)]] : []
+  );
+  return new Map(etoiles);
 }
 
 async function defiOuvertParLaSeanceTerminee(

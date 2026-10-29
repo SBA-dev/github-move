@@ -1,6 +1,7 @@
 import { libelleCourtDe } from "@domain/catalogue";
 import type { CodeDeMatiere, Niveau } from "@domain/catalogue";
 import type { EtatDansLeParcours, EtatDuDefi, LeconDuParcours, LeconReussieDUneClasseAuDessus } from "@domain/apprentissage";
+import { nomDuDefi } from "@domain/motivation";
 import { etoilesSurTrois } from "../seance/fin-de-seance/texte-des-etoiles.ts";
 
 export const AUCUNE_LECON_POUR_LA_CLASSE = "Aucune leçon pour ta classe pour l'instant.";
@@ -88,10 +89,6 @@ export function annonceDeLArriveeDuPersonnageGuide(nomDuPersonnageGuide: string,
 export const BOUTON_RELEVER_LE_DEFI = "Relever le défi";
 
 export const DEFI_RELEVE = "Défi relevé";
-
-export function nomDuDefi(numero: number): string {
-  return `Défi ${numero}`;
-}
 
 export function leconsAvantLeDefi(restantes: number): string {
   return `Encore ${nombreDeLecons(restantes)} pour ouvrir le défi`;

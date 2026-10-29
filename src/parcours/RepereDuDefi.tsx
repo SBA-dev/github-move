@@ -1,10 +1,10 @@
 import type { Defi, EtatDuDefi } from "@domain/apprentissage";
+import { nomDuDefi } from "@domain/motivation";
 import {
   annonceDuRepereDuDefi,
   BOUTON_RELEVER_LE_DEFI,
   DEFI_RELEVE,
   leconsAvantLeDefi,
-  nomDuDefi,
 } from "./textes-du-parcours.ts";
 
 type Props = {
