@@ -371,7 +371,7 @@ Then(/^Léa entend Noisette lire, dans l'ordre :$/, async ({ page }, tableau: Da
   }, { intervals: [100], timeout: DELAI_D_UN_APPEL_SERVEUR_MS }).toEqual(attendues);
 });
 
-Then(/^Léa entend Noisette lire « ([^«»]+) », puis « ([^«»]+) »$/, { tags: "@issue-65 or @issue-32 or @issue-31 or @issue-33" }, async ({ page }, premier: string, second: string) => {
+Then(/^Léa entend Noisette lire « ([^«»]+) », puis « ([^«»]+) »$/, { tags: "@issue-65 or @issue-32 or @issue-31 or @issue-33 or @issue-102" }, async ({ page }, premier: string, second: string) => {
   const [premiere, seconde] = [normaliser(entendu(premier)), normaliser(entendu(second))];
   await expect.poll(async () => {
     const lots = await lecturesParLot(page);
