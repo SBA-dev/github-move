@@ -17,3 +17,11 @@ export function propositionDeLaQueteDuJour(quete: QueteDuJour): string | undefin
 function petitesErreurs(nombre: number): string {
   return nombre > 1 ? `${nombre} petites erreurs` : `${nombre} petite erreur`;
 }
+
+export function feteDeLaQueteAccomplie(prenom: string): string {
+  return `Quête du jour accomplie ! Bravo ${prenom} !`;
+}
+
+export function reponseAuRefusDeLaQuete(): string {
+  return "D'accord, choisis ce qui te fait envie !";
+}
