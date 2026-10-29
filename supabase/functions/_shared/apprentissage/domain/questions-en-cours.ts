@@ -6,7 +6,10 @@ import type { MotEcrit, ReponseEnNombre, ReponseParChoix, ResultatDeReponse } fr
 
 /** La boucle commune aux séances de questions rejouées : une question à la fois, jusqu'à ce qu'elle soit réussie. */
 export class QuestionsEnCours {
-  constructor(private readonly questions: readonly QuestionDeRevision[]) {}
+  constructor(
+    private readonly questions: readonly QuestionDeRevision[],
+    private readonly erreurSiFinie: () => Error = () => new SeanceDeRevisionDejaFinie(),
+  ) {}
 
   enCours(): QuestionDeRevision | undefined {
     return this.questions.find((posee) => !suivie(posee).reussie);
@@ -32,7 +35,7 @@ export class QuestionsEnCours {
 
   private aPoser(): QuestionDeRevision {
     const enCours = this.enCours();
-    if (!enCours) throw new SeanceDeRevisionDejaFinie();
+    if (!enCours) throw this.erreurSiFinie();
     return enCours;
   }
 }

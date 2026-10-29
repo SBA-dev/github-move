@@ -34,7 +34,7 @@ export class SeanceDeDefi {
     private readonly defi: Defi,
     private readonly questions: readonly { posee: QuestionDeRevision; ratable: QuestionRateeARetenir }[],
   ) {
-    this.enCours = new QuestionsEnCours(questions.map(({ posee }) => posee));
+    this.enCours = new QuestionsEnCours(questions.map(({ posee }) => posee), () => new DefiDejaTermine());
   }
 
   static commencer(
