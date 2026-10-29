@@ -1,6 +1,6 @@
 import { assertEquals } from "@std/assert";
 import type { FaitsDuJour } from "./objectif-du-jour.ts";
-import { type QueteDuJour, queteAccomplieParLaSeance, queteDuJour } from "./quete-du-jour.ts";
+import { queteAccomplieParLaSeance, type QueteDuJour, queteDuJour } from "./quete-du-jour.ts";
 
 const faitsDUnJourSansSeance: FaitsDuJour = {
   leconsDesSeancesTermineesDuJour: [],
