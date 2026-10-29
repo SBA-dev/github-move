@@ -150,3 +150,5 @@ export { cleDeLaBoite, QuestionDeBoite } from "./question-de-boite.ts";
 export { QuestionDeProblemeEnBarres } from "./question-de-probleme-en-barres.ts";
 export { estUnTypeDeQuestion } from "./cle-de-question.ts";
 export { leconAcquiseParLaSeance, leconsAcquises } from "./lecons-acquises.ts";
+export { partiesDuParcours } from "./partie-du-parcours.ts";
+export type { PartieDuParcours } from "./partie-du-parcours.ts";
