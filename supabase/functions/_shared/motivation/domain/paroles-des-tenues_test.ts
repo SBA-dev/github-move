@@ -1,6 +1,7 @@
 import { assertEquals } from "@std/assert";
 import {
   annonceDeLaTenueRecue,
+  descriptionDeLaSectionDesTenues,
   descriptionDuPersonnageGuide,
   phraseDeLEtatDesTenues,
   titreDeLAnnonceDeLaTenue,
@@ -49,4 +50,18 @@ Deno.test("à 11 étoiles, la phrase de l'état dit « Encore 1 étoile » au si
 
 Deno.test("quand toutes les tenues sont reçues, la phrase de l'état le dit", () => {
   assertEquals(phraseDeLEtatDesTenues(noisette, tenuesDe(37)), "Noisette a reçu toutes ses tenues !");
+});
+
+Deno.test("avec 1 tenue reçue, la section des tenues est décrite « avec 1 tenue » au singulier", () => {
+  assertEquals(
+    descriptionDeLaSectionDesTenues(noisette, tenuesDe(5)),
+    "Les tenues de Noisette, avec 1 tenue",
+  );
+});
+
+Deno.test("avec 2 tenues reçues, la section des tenues est décrite « avec 2 tenues » au pluriel", () => {
+  assertEquals(
+    descriptionDeLaSectionDesTenues(noisette, tenuesDe(12)),
+    "Les tenues de Noisette, avec 2 tenues",
+  );
 });
