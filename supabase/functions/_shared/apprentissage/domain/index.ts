@@ -159,3 +159,6 @@ export type { Defi, DefiReleve, EtatDuDefi } from "./defis-de-la-matiere.ts";
 export { planDuDefi, questionsPosablesDuDefi } from "./plan-du-defi.ts";
 export type { PlanDuDefi, QuestionDuDefi } from "./plan-du-defi.ts";
 export { AucuneQuestionPourLeDefi } from "./erreurs.ts";
+export { SeanceDeDefi } from "./seance-de-defi.ts";
+export type { DefiTermine } from "./seance-de-defi.ts";
+export { DefiDejaTermine, DefiNonFini } from "./erreurs.ts";

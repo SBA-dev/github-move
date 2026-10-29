@@ -319,3 +319,17 @@ export class AucuneQuestionPourLeDefi extends Error {
     this.name = "AucuneQuestionPourLeDefi";
   }
 }
+
+export class DefiNonFini extends Error {
+  constructor() {
+    super("Ce défi n'est pas fini : il ne peut pas être terminé.");
+    this.name = "DefiNonFini";
+  }
+}
+
+export class DefiDejaTermine extends Error {
+  constructor() {
+    super("Ce défi est déjà terminé.");
+    this.name = "DefiDejaTermine";
+  }
+}
