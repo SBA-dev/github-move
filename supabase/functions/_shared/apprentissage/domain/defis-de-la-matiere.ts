@@ -9,3 +9,25 @@ export function defisDeLaMatiere(parcours: Parcours, matiere: Matiere, niveau: N
     .slice(0, -1)
     .map(({ numero, lecons }) => ({ matiere, niveau, numero, lecons }));
 }
+
+export type DefiReleve = Readonly<{ matiere: Matiere; niveau: Niveau; numero: number }>;
+
+export type EtatDuDefi =
+  | { genre: "aVenir"; leconsRestantes: number }
+  | { genre: "ouvert" }
+  | { genre: "releve" };
+
+export function etatDuDefi(defi: Defi, parcours: Parcours, defisReleves: readonly DefiReleve[]): EtatDuDefi {
+  if (defisReleves.some((releve) => estLeMemeDefi(releve, defi))) return { genre: "releve" };
+  const leconsRestantes = defi.lecons.filter((lecon) => !estReussieDansLeParcours(parcours, lecon)).length;
+  return leconsRestantes === 0 ? { genre: "ouvert" } : { genre: "aVenir", leconsRestantes };
+}
+
+function estLeMemeDefi(a: DefiReleve, b: DefiReleve): boolean {
+  return a.matiere.code === b.matiere.code && a.niveau.valeur === b.niveau.valeur && a.numero === b.numero;
+}
+
+function estReussieDansLeParcours(parcours: Parcours, id: LeconId): boolean {
+  const etat = parcours.lecons.find(({ lecon }) => lecon === id)?.etat.genre;
+  return etat === "reussie" || etat === "reussieAuTestDeDepart";
+}
