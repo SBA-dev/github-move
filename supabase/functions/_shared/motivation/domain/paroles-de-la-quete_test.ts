@@ -1,6 +1,7 @@
 import { assertEquals } from "@std/assert";
 import {
   feteDeLaQueteAccomplie,
+  phraseDeFinAvecLaQuete,
   propositionDeLaQueteDuJour,
   queteAccomplieParLaSeance,
   type QueteDuJour,
@@ -54,4 +55,12 @@ Deno.test("le module public de Motivation propose la révision puis fête la qu�
     "Ta quête du jour : réviser 3 petites erreurs des jours passés. On y va ?",
   );
   assertEquals(queteAccomplieParLaSeance(avant, apres), true);
+});
+
+Deno.test("la phrase de fin est suivie de la fête seulement quand la séance accomplit la quête", () => {
+  assertEquals(
+    phraseDeFinAvecLaQuete("Bravo Léa !", "Léa", true),
+    "Bravo Léa ! Quête du jour accomplie ! Bravo Léa !",
+  );
+  assertEquals(phraseDeFinAvecLaQuete("Bravo Léa !", "Léa", false), "Bravo Léa !");
 });
