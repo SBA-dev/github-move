@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { Confettis } from "../../celebration/index.ts";
 import { mouvementsReduits } from "../../transitions/index.ts";
-import { leconSuivanteEnFinDeSeance, type Seance } from "@domain/apprentissage";
+import { type Defi, leconSuivanteEnFinDeSeance, type Seance } from "@domain/apprentissage";
 import { pageDeLaLecon } from "@domain/catalogue";
 import {
   annonceDeLObjetRecu,
@@ -12,9 +12,10 @@ import {
   titreDeLAnnonceDuBadge,
   type Univers,
 } from "@domain/motivation";
+import { AnnonceDuDefiOuvert, useDefiOuvertParLaSeance } from "../../defis/index.ts";
 import { AnnonceDuNouvelEpisode } from "../../histoire/AnnonceDuNouvelEpisode.tsx";
 import { useEpisodeOuvertParLaSeance } from "../../histoire/useEpisodeOuvertParLaSeance.ts";
-import { niveauDuProfil } from "../../parcours/index.ts";
+import { BOUTON_RELEVER_LE_DEFI, niveauDuProfil } from "../../parcours/index.ts";
 import { lireLEtatDuTestDeDepart } from "../../test-de-depart/etat-du-test-de-depart.ts";
 import { chargerToutesLesLecons } from "../bibliotheque.ts";
 import { AnnonceDeLaTenue } from "./AnnonceDeLaTenue.tsx";
@@ -49,6 +50,7 @@ type Props = {
   readonly onLireLEpisode: (numero: number) => void;
   readonly onLeconSuivante: (leconId: string) => void;
   readonly onToutesLesLecons: () => void;
+  readonly onReleverLeDefi?: (defi: Defi) => void;
   readonly onAccueil: () => void;
 };
 
@@ -87,7 +89,7 @@ function useLaSuite(seance: Seance, niveau: string): LaSuite | undefined {
 }
 
 /** La fin de la séance : étoiles gagnées (dessinées et écrites), paroles du personnage guide, et la suite à choisir. */
-export function EcranDeFin({ seance, univers, niveau, onDireLaFin, meilleuresEtoilesAvant, nombreDeSeancesAvant, onRejouer, onLireLEpisode, onLeconSuivante, onToutesLesLecons, onAccueil }: Props) {
+export function EcranDeFin({ seance, univers, niveau, onDireLaFin, meilleuresEtoilesAvant, nombreDeSeancesAvant, onRejouer, onLireLEpisode, onLeconSuivante, onToutesLesLecons, onReleverLeDefi, onAccueil }: Props) {
   const { terminee, message } = useSauvegardeDeLaSeance(seance);
   const suite = useLaSuite(seance, niveau);
   const suivante = suite?.suivante;
@@ -116,16 +118,17 @@ export function EcranDeFin({ seance, univers, niveau, onDireLaFin, meilleuresEto
     terminee?.etoiles,
   );
   const { pret: episodePret, episode } = useEpisodeOuvertParLaSeance(nombreDeSeancesAvant, terminee !== undefined);
+  const { pret: defiPret, defi: defiOuvert } = useDefiOuvertParLaSeance(seance, niveau, meilleuresEtoilesAvant, terminee !== undefined);
   const accueil = useRef<HTMLButtonElement>(null);
   const dite = useRef(false);
   useEffect(() => {
     accueil.current?.focus();
   }, []);
   useEffect(() => {
-    if (dite.current || terminee === undefined || !pret || !tenuePrete || !episodePret || !badgePret || !acquisePret) return;
+    if (dite.current || terminee === undefined || !pret || !tenuePrete || !episodePret || !badgePret || !acquisePret || !defiPret) return;
     dite.current = true;
-    onDireLaFin(terminee.etoiles, { objet, tenue, episode, badge, leconAcquise });
-  }, [terminee, pret, objet, tenuePrete, tenue, episodePret, episode, badgePret, badge, acquisePret, leconAcquise, onDireLaFin]);
+    onDireLaFin(terminee.etoiles, { objet, tenue, episode, badge, leconAcquise, defiOuvert });
+  }, [terminee, pret, objet, tenuePrete, tenue, episodePret, episode, badgePret, badge, acquisePret, leconAcquise, defiPret, defiOuvert, onDireLaFin]);
   const [etoilesAffichees, setEtoilesAffichees] = useState(false);
   const afficherToutesLesEtoiles = useCallback(() => setEtoilesAffichees(true), []);
 
@@ -178,12 +181,14 @@ export function EcranDeFin({ seance, univers, niveau, onDireLaFin, meilleuresEto
           ))}
         </ul>
       )}
+      <AnnonceDuDefiOuvert defi={defiOuvert} />
       {suivante && <p data-testid="ensuite">Ensuite : {suivante.titre}</p>}
       <div className="actions-de-fin">
         {suivante && <button type="button" onClick={() => onLeconSuivante(suivante.id)}>Leçon suivante</button>}
         <button type="button" ref={accueil} onClick={onAccueil}>Accueil</button>
         <button type="button" onClick={onRejouer}>Rejouer</button>
         {episode && <button type="button" onClick={() => onLireLEpisode(episode.numero)}>Lire l'épisode</button>}
+        {defiOuvert && <button type="button" onClick={() => onReleverLeDefi?.(defiOuvert)}>{BOUTON_RELEVER_LE_DEFI}</button>}
         {suite && !suivante && <button type="button" onClick={onToutesLesLecons}>Toutes les leçons</button>}
       </div>
       <p className="message-erreur" role="status" data-testid="sauvegarde">{message}</p>

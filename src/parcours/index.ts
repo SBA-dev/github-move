@@ -6,6 +6,7 @@ export { useLecturesDuParcours } from "./useLecturesDuParcours.ts";
 export type { LecturesDuParcours } from "./useLecturesDuParcours.ts";
 export {
   AUCUNE_LECON_POUR_LA_CLASSE,
+  BOUTON_RELEVER_LE_DEFI,
   compteurDuParcours,
   libelleDeLOnglet,
   nombreDeLecons,

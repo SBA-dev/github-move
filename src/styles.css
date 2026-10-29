@@ -673,6 +673,15 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
   0%, 100% { opacity: .35; }
   50% { opacity: 1; }
 }
+/* Le défi que la séance vient d'ouvrir, en dernier dans les nouveautés de la fin de séance. */
+[data-mode-dys="true"] .pour-le-defi { overflow-wrap: anywhere; line-height: inherit; }
+.pour-le-defi { display: grid; justify-items: center; gap: 4px; max-width: 100%; padding: 8px 16px; border: 3px solid var(--contour); border-radius: var(--rayon); background: var(--surface-dense); overflow-wrap: anywhere; animation: arrivee-d-un-objet .4s ease-out; }
+.pour-le-defi:empty { display: none; }
+.pour-le-defi p { margin: 0; font-weight: 700; }
+@media (prefers-reduced-motion: reduce) {
+  .pour-le-defi { animation: none; }
+}
+
 /* Le repère d'un défi : sur le sentier, juste après la dernière leçon de sa partie. Jamais un arrêt du personnage guide, jamais de cadenas. */
 .apres-la-lecon { position: relative; z-index: 1; display: flex; justify-content: center; }
 .repere-du-defi {

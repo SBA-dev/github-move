@@ -16,6 +16,7 @@ import {
   parolesDeFinDeSeance,
   phraseDeFinAvecLesNouveautes,
 } from "@domain/motivation";
+import { phraseDeFinAvecLeDefi } from "../defis/index.ts";
 import { effetsDeLaFinDeSeance } from "./fin-de-seance/effets-de-la-fin.ts";
 import type { NouveautesDeFin } from "./fin-de-seance/nouveautes-de-fin.ts";
 import { useReducedMotion } from "motion/react";
@@ -344,7 +345,7 @@ export function useDeroulementDeSeance(
     const effetsAvant = effetsDeLaFinDeSeance(etoiles, nouveautes, issueDuRecord.current);
     if (etoiles === undefined) return direLaFinDeLaFluenceSeule(nouveautes, effetsAvant);
     const felicitation = parolesDeFinDeSeance(etoiles, prenom, personnageGuide, hasardDuNavigateur);
-    const texte = phraseDeFinAvecLesNouveautes(felicitation, nouveautes);
+    const texte = phraseDeFinAvecLeDefi(phraseDeFinAvecLesNouveautes(felicitation, nouveautes), prenom, nouveautes.defiOuvert);
     void dire({ texte, nature: "felicitation", humeur: "applaudit", effetsAvant });
   }, [dire, prenom, personnageGuide, issueDuRecord, direLaFinDeLaFluenceSeule]);
 
