@@ -134,10 +134,17 @@ classDiagram
   class SeanceDeDefi {
     <<agrégat, navigateur et serveur>>
     id ; enfant ; defi ; questions
-    commencer(plan, lecons, tireur, niveau)
+    commencer(id, enfant, defi, plan, lecons, tireurDe, niveau)
+    questionEnCours() ; estFinie()
     repondre() ; direJeNeSaisPas()
     terminer(maintenant, jour) DefiTermine
-    aEnregistrer()
+    aEnregistrer() DefiTermineAEnregistrer
+  }
+  class DefiTermineAEnregistrer {
+    <<value object, envoyé par le navigateur>>
+    id ; enfant ; defi (matière, classe, numéro)
+    questions : clés ; tirages ; reponses
+    termineeLe ; jour
   }
   class DefiReleve {
     <<enregistré, serveur>>
@@ -153,6 +160,7 @@ classDiagram
   Defi ..> PlanDuDefi : planDuDefi(defi, lecons, hasard)
   PlanDuDefi *-- QuestionDuDefi
   SeanceDeDefi ..> PlanDuDefi : joue
+  SeanceDeDefi ..> DefiTermineAEnregistrer : garde sur l'appareil, envoie
   SeanceDeDefi ..> DefiReleve : DefiTermine, revalidé par TerminerLeDefi
   SeanceDeDefi ..> FileDeRevision : questions ratées, même enregistrement
 ```
@@ -167,18 +175,40 @@ Un défi est identifié par **(matière, classe, numéro de la partie)**. Le num
 - `defiOuvertParLaSeance(avant, apres, matiere, niveau, defisReleves)` → `Defi` ou rien : le défi passé de `aVenir` (parcours d'avant la séance) à `ouvert` (parcours d'après), pour l'annonce de la fin de la séance. Un défi déjà relevé n'est jamais annoncé. Il n'y en a jamais deux pour une même séance : une séance ne rend réussie qu'une leçon, qui n'est que dans une partie.
 - `questionsPosablesDuDefi(defi, lecons)` → `QuestionDuDefi[]` : les questions des leçons du défi qui se posent seules (règle 5), chacune avec sa clé de question (`identite`) et son origine (leçon d'origine, position de l'exercice, type).
 - `planDuDefi(defi, lecons, hasard)` → `PlanDuDefi` (`questions : QuestionDuDefi[]`, règle 5) ; `AucuneQuestionPourLeDefi` si aucune leçon du défi n'a de question posable. Le nombre de questions est `NOMBRE_DE_QUESTIONS_DU_DEFI` (10).
-- `revaliderLeDefi(defi, etat, lecons, defiTermineAEnregistrer)` → `DefiTermine` ou une erreur métier (règle 10), sur le modèle de `revaliderLaSeanceDeRevision`.
+- `revaliderLeDefi(envoi, entrees, defisReleves)` → `DefiTermine` ou une erreur métier (règle 10), sur le modèle de `revaliderLaSeanceDeRevision`. `envoi` est le `DefiTermineAEnregistrer` reçu, `entrees` les entrées du parcours relues par le serveur (leçons, classe du profil, meilleures étoiles, leçons réussies au test de départ), `defisReleves` les défis relevés du profil. Le défi est recalculé à partir de la classe du profil : l'envoi ne choisit que la matière et le numéro.
+
+### Agrégat `SeanceDeDefi` (`seance-de-defi.ts`)
+
+- `SeanceDeDefi.commencer({ id, enfant, defi, plan, lecons, tireurDe, niveau })` pose chaque question du plan avec `questionDeRevision` ; la boucle « une question à la fois, jusqu'à ce qu'elle soit réussie » est `QuestionsEnCours` (`questions-en-cours.ts`), commune avec la séance de révision.
+- `repondre`, `direJeNeSaisPas`, `questionEnCours`, `estFinie`.
+- `terminer(maintenant, jour)` → `DefiTermine` : `DefiNonFini` si une question n'est pas réussie ; `DefiDejaTermine` si le défi a déjà été terminé.
+- `aEnregistrer()` → `DefiTermineAEnregistrer` (`defi-termine-a-enregistrer.ts`) : ce que le navigateur garde et envoie (identifiant, enfant, défi par matière, classe et numéro, clés des questions dans l'ordre posé, tirage et réponses de chaque question, heure de fin, jour). `DefiNonFini` tant que le défi n'est pas terminé.
 
 ### Commande, événement, erreurs
 
 - Commande : **`TerminerLeDefi`** (cas d'usage serveur, Edge Function `terminer-le-defi`).
 - Événement : **`DefiTermine`**.
-- Erreurs métier : `DefiInconnu` (aucune partie du parcours de ce numéro, ou dernière partie de la matière : elle n'a pas de défi), `DefiAVenir`, `QuestionHorsDuDefi` (leçon hors du défi, exercice qui ne se pose pas seul, question posée deux fois), `PlanDuDefiIncoherent` (nombre de questions ou répartition contraire à la règle 5), `AucuneQuestionPourLeDefi`, `DefiNonFini` (une question ne finit pas par la bonne réponse), `DefiDejaTermine` (répondre après la fin). `ParentNonRattache` et `LeconIntrouvable` existent déjà.
+- Cas d'usage : `TerminerLeDefi.executer({ parent, defi })`, où `defi` est le `DefiTermineAEnregistrer` reçu ; il rend `[DefiTermine]` quand le défi est enregistré, `[]` quand il l'était déjà (idempotence).
+- Port nouveau `DefisTermines` (`application/ports/defis-termines.ts`) : `releves(enfant)` (les défis relevés du profil : matière, classe, numéro) et `enregistrer(fait, file)` (le défi terminé et la file de révision d'un seul geste ; issue `enregistree`, `dejaEnregistree` ou `conflit`, comme `SeancesTerminees`).
+- Erreurs métier :
+  - `DefiInconnu` : aucune partie du parcours de ce numéro, dernière partie de la matière (elle n'a pas de défi), ou **classe envoyée différente de la classe du profil** ;
+  - `DefiAVenir` ;
+  - `QuestionHorsDuDefi` : une clé envoyée n'est pas une question posable du défi (leçon hors du défi, exercice qui ne se pose pas seul) ;
+  - `PlanDuDefiIncoherent` : **question en double**, nombre de questions ou répartition contraire à la règle 5 ;
+  - `DefiIncoherent(cause)` : l'envoi est mal formé ou ne se rejoue pas, sur le modèle de `SeanceDeRevisionIncoherente` : pas un tirage et une liste de réponses par question, trop de réponses à une question, réponse donnée après la réussite de la question, ou une erreur du rejeu (choix inconnu, réponse incompatible, tirage manquant ou invalide, jour incohérent…), gardée comme `cause` ;
+  - `AucuneQuestionPourLeDefi` ;
+  - `DefiNonFini` : une question ne finit pas par la bonne réponse, ou `aEnregistrer()` avant la fin ;
+  - `DefiDejaTermine` : un second `terminer()`, **ou** répondre ou dire « Je ne sais pas » après la fin.
+  - `ParentNonRattache` et `LeconIntrouvable` existent déjà.
 
 ### Motivation (`@domain/motivation`)
 
 - `paroles-du-defi.ts` : proposition à la fin de la séance, parole du début, fin la première fois et quand le défi est rejoué (textes de 100.21) ; l'encouragement après une erreur reste celui de la séance.
-- `defis-releves.ts` : `defiReleveParLaSeance(relevesAvant, defi)` (première fois ou rejoué, pour l'annonce et l'effet sonore de 100.25) et la section « Mes défis relevés » (une ligne par défi relevé, « Défi 1 · Maths · CE1 », placée après les records de fluence, 100.27).
+- `paroles-du-defi.ts` expose `inviterARelever`, `parolesDeDebutDeDefi`, `parolesDeFinDeDefi` (avec « encore » quand le défi était déjà relevé), `annonceDuDefiOuvert` et `titreDuDefiReleve`.
+- `defis-releves.ts` :
+  - `defiReleveParLaSeance(relevesAvant, defi)` → `IssueDuDefi` (`annonce`, `effetSonore`) : la première fois, l'annonce « Défi relevé ! » et « grande victoire » ; rejoué, pas d'annonce et « séance terminée » (100.25) ;
+  - `lignesDesDefisReleves(defis)` : une ligne par défi relevé, sans doublon, triée par matière, classe puis numéro, « Défi 1 · Maths · CE1 ». Le nom court de la matière vient du Catalogue : `libelleCourtDe(code)` (`catalogue/domain/matiere.ts`).
+- `sections-de-l-ecran.ts` : nouvelle section **`defisReleves`** de « Mes médailles », après `recordsDeFluence` (100.27), affichée seulement quand le profil a au moins un défi relevé.
 - `paroles-de-seance.ts` : l'annonce « Nouveau défi » devient « Nouveau jeu » (100.4).
 
 ## Règles et invariants
@@ -213,14 +243,14 @@ Un défi est identifié par **(matière, classe, numéro de la partie)**. Le num
    - une question juste pendant le défi ne change rien à la file, même si elle y est retenue : comme en séance de leçon, seule la séance de révision fait avancer l'intervalle de révision ; le défi ne produit jamais `ErreursCorrigeesPourDeBon` ;
    - la limite de 250 questions retenues s'applique comme d'habitude ;
    - les questions ratées sont **calculées par le serveur** en rejouant les réponses ; celles que le front annonce ne sont pas lues.
-10. **Revalidation** : le serveur vérifie le rattachement (JWT), relit les leçons, le niveau, les meilleures étoiles, le test de départ et les défis relevés du profil, recalcule les parties et l'état du défi. Le défi doit exister (`DefiInconnu`) et être **ouvert ou relevé** (`DefiAVenir`). Le plan doit respecter la règle 5 (`QuestionHorsDuDefi`, `PlanDuDefiIncoherent`), puis les réponses sont rejouées : chaque question finit par la bonne réponse (`DefiNonFini`). Un défi incohérent est refusé sans rien enregistrer, ni défi terminé ni file de révision.
+10. **Revalidation** : le serveur vérifie le rattachement (JWT), relit les leçons, le niveau, les meilleures étoiles, le test de départ et les défis relevés du profil, recalcule les parties et l'état du défi. La classe du défi est **celle du profil** : un défi envoyé avec une autre classe est inconnu (`DefiInconnu`). Le défi doit exister (`DefiInconnu`) et être **ouvert ou relevé** (`DefiAVenir`). Chaque question envoyée doit être une question posable du défi (`QuestionHorsDuDefi`) ; le plan doit respecter la règle 5, sans question en double (`PlanDuDefiIncoherent`). Puis les réponses sont rejouées : l'envoi doit porter un tirage et une liste de réponses par question, sans réponse en trop ni réponse après la réussite (`DefiIncoherent`), et chaque question finit par la bonne réponse (`DefiNonFini`). Une erreur du rejeu devient `DefiIncoherent`, qui la garde comme cause. Un défi incohérent est refusé sans rien enregistrer, ni défi terminé ni file de révision.
 11. **Enregistrement tout ou rien et idempotent** : le défi terminé et la file de révision sont écrits d'un seul geste. Si la file a changé entre la lecture et l'écriture (une autre séance vient de s'enregistrer), on relit et l'on recommence, comme `TerminerLaSeance`. Un défi gardé sur l'appareil et renvoyé n'est compté qu'une fois : il ne retient pas deux fois ses questions ratées.
 12. **Motivation à part** : la récompense se recalcule à partir des défis relevés. Elle ne crée jamais d'étoile (100.13). Le défi terminé ne compte ni pour la série, ni pour les épisodes, ni pour l'objectif du jour, ni pour la quête du jour (100.11) : ces calculs ne lisent pas les défis terminés.
 13. **Contenu pour les enfants** : la mise en scène reste douce et sans danger. Il n'y a ni adversaire, ni combat, ni monstre, ni piège, ni compte à rebours, ni lieu effrayant, et l'on ne dit jamais « perdu » ni « raté ». Dessins par le skill `illustration`, section 0.
 
 ## Événements
 
-- `DefiTermine` (Apprentissage) : identifiant de la séance de défi, enfant, matière, classe, numéro de la partie, leçons du défi, questions posées (clés), jour, heure de fin, nombre de questions, **questions ratées à retenir** (clé et origine, calculées par la revalidation). `TerminerLeDefi` en tire le défi relevé enregistré et les questions retenues dans la file de révision.
+- `DefiTermine` (Apprentissage) : `id` (identifiant de la séance de défi), `enfant`, `defi` (matière, classe, numéro de la partie et leçons du défi), `nombreDeQuestions`, **`questionsRatees`** (questions ratées à retenir : clé et origine, calculées par la revalidation), `termineeLe` (heure de fin) et `jour`. Il ne porte **pas** les clés des questions posées : seules les questions ratées servent après le défi. `TerminerLeDefi` en tire le défi relevé enregistré et les questions retenues dans la file de révision.
 - Ni `SeanceTerminee`, ni `SeanceDeRevisionTerminee`, ni `LeconReussie`, ni `LeconAcquise`, ni `ErreursCorrigeesPourDeBon`. Il ne compte pas comme jour de séance et n'ouvre pas d'épisode (100.11).
 - Un défi déjà enregistré (même identifiant) ne publie rien de nouveau.
 
@@ -258,9 +288,11 @@ Ce que #100 prépare pour #137, sans le livrer : `defisDeLaMatiere` laisse la de
 ## Emplacement
 
 - `supabase/functions/_shared/apprentissage/domain/` : `partie-du-parcours.ts` (`partiesDuParcours`), `defis-de-la-matiere.ts` (`Defi`, `DefiReleve` lu, `EtatDuDefi`, `defisDeLaMatiere`, `etatDuDefi`, `defiOuvertParLaSeance`), `plan-du-defi.ts` (`QuestionDuDefi`, `PlanDuDefi`, `NOMBRE_DE_QUESTIONS_DU_DEFI`, `questionsPosablesDuDefi`, `planDuDefi`), `seance-de-defi.ts` (agrégat `SeanceDeDefi`, fait `DefiTermine`), `defi-termine-a-enregistrer.ts`, `revalider-le-defi.ts`, erreurs dans `erreurs.ts`, exports dans `index.ts` (chacun avec son `_test.ts`).
-- `apprentissage/application/terminer-le-defi.ts` (ports existants `LeconsDuCatalogue`, `RattachementsDuParent`, `ResultatsDesLecons`, `ResultatsDesTestsDeDepart`, `NiveauDuProfil`, `FilesDeRevision` ; port nouveau `application/ports/defis-termines.ts` : défis relevés du profil, et enregistrement du défi terminé avec la file, tout ou rien). `apprentissage/infrastructure/` : son adaptateur Supabase. `test_utils/` : son fake.
+- `apprentissage/application/terminer-le-defi.ts` (ports existants `LeconsDuCatalogue`, `RattachementsDuParent`, `ResultatsDesLecons`, `ResultatsDesTestsDeDepart`, `NiveauDuProfil`, `FilesDeRevision` ; port nouveau `application/ports/defis-termines.ts` : `DefisTermines { releves, enregistrer }`, défis relevés du profil, et enregistrement du défi terminé avec la file, tout ou rien). `apprentissage/infrastructure/` : son adaptateur Supabase. `test_utils/` : son fake.
 - `supabase/functions/terminer-le-defi/index.ts` (handler fin), `supabase/migrations/<horodatage>_defis_termines.sql`.
-- `supabase/functions/_shared/motivation/domain/` : `paroles-du-defi.ts`, `defis-releves.ts`, et la modification de `paroles-de-seance.ts` (« Nouveau jeu »).
+- `supabase/functions/_shared/apprentissage/domain/` aussi : `questions-en-cours.ts` (boucle des questions, commune avec la séance de révision) et `rejouer-la-reponse.ts` (rejeu des réponses d'un envoi, commun avec la séance de révision).
+- `supabase/functions/_shared/motivation/domain/` : `paroles-du-defi.ts`, `defis-releves.ts` (`defiReleveParLaSeance`, `lignesDesDefisReleves`), la section `defisReleves` dans `sections-de-l-ecran.ts`, et la modification de `paroles-de-seance.ts` (« Nouveau jeu »).
+- `supabase/functions/_shared/catalogue/domain/matiere.ts` : `libelleCourtDe(code)`, le nom court d'une matière (« Maths ») pour les lignes de « Mes défis relevés ».
 - Affichage, pour mémoire : `src/parcours/` (repères du défi), `src/defi/` (écran, mise en scène), fin de séance, garde sur l'appareil et renvoi (comme la séance de révision).
 
 ## Questions ouvertes
