@@ -83,13 +83,13 @@ async function surLAccueilDeLEnfant(page: Page): Promise<void> {
   await expect(accueilDeLEnfant(page)).toBeVisible();
 }
 
-async function ouvrirLaProposition(page: Page): Promise<void> {
+export async function ouvrirLaProposition(page: Page): Promise<void> {
   await surLAccueilDeLEnfant(page);
   await boutonMonTestDeDepart(page).click();
   await expect(proposition(page)).toBeVisible();
 }
 
-async function accepterLaProposition(page: Page, auClavier = false): Promise<void> {
+export async function accepterLaProposition(page: Page, auClavier = false): Promise<void> {
   await expect(boutonOui(page)).toBeVisible();
   if (auClavier) {
     await expect(boutonOui(page)).toBeFocused();

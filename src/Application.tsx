@@ -41,7 +41,7 @@ import {
 import { brancherLeSonDesBoutons } from "./boutons/son-des-boutons.ts";
 import { ChoixDeLaVoix, useVoix } from "./voix/index.ts";
 import { TenueDuProfil } from "./tenue/index.ts";
-import { HABILLAGE_DU_PARENT, habillageDeLUnivers, Paysage } from "./univers/index.ts";
+import { ContexteDeLUnivers, HABILLAGE_DU_PARENT, habillageDeLUnivers, Paysage } from "./univers/index.ts";
 
 const ACCUEIL: Lieu = { ecran: "accueil" };
 
@@ -182,7 +182,8 @@ export function Application() {
 
   return (
     <MotionConfig reducedMotion="user">
-      <TenueDuProfil profil={profil?.id}>
+      <ContexteDeLUnivers.Provider value={univers.cle}>
+        <TenueDuProfil profil={profil?.id}>
         <div className="application" style={habillage} data-univers={univers.cle} data-registre={parent ? "parent" : "enfant"}>
           {!parent && <Paysage univers={univers.cle} />}
           <EnTete
@@ -369,7 +370,8 @@ export function Application() {
             {profilCharge && profilEnCours && estUnEcranDuDock(ecran) && <DockDeLEnfant ecranEnCours={ecran} onOuvrir={ouvrirParLeDock} />}
           </ModeDys>
         </div>
-      </TenueDuProfil>
+        </TenueDuProfil>
+      </ContexteDeLUnivers.Provider>
     </MotionConfig>
   );
 }

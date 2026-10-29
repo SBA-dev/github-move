@@ -717,7 +717,7 @@ Then(/^Léa voit la consigne « (.+) »$/, async ({ page }, texte: string) => {
   await expect(consigneAffichee(page)).toHaveText(normaliser(texte));
 });
 
-Then(/^Léa voit la question « (.+) »$/, async ({ page }, question: string) => {
+Then(/^Léa voit la question « (?!.*», avec les choix)(.+) »$/, async ({ page }, question: string) => {
   await expect(page.getByTestId("question")).toHaveText(normaliser(question));
   if (scenario(page).relitPendantLaQuestion?.relue) {
     // La question reste posée : on termine les lectures en cours, et les choix doivent venir.

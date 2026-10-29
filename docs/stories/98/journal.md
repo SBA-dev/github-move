@@ -1,0 +1,62 @@
+# Journal : story #98, des exercices qui ressemblent à des jeux
+
+Équipe lancée par le responsable des équipes (vague 1, issue de coordination #64).
+Branche : `feature/98-exercices-comme-des-jeux`, partie de `main` (`ea2cca3`). Branche de base : `main`.
+**Cadrage seulement** (décision 0020, `graphe.md` étape 1 point 5) : domaine puis scénarios, puis CADRAGE PRÊT. Aucun code avant le merge de #97, qui dépend de #96 (PR #124).
+Numéro de décision réservé : 0035.
+
+## 2026-10-28
+
+- 08:30 UTC : démarrage. Commentaire `Avancement` créé sur #98. Cadrages voisins lus : `docs/stories/96/` (branche `feature/96-refonte-visuelle`, `a52f6ff`) et `docs/stories/97/` (branche `feature/97-retours-animes-et-sonores`, `78fcd4a`).
+- 08:35 UTC : étape 1, délégation à `domain-modeler` (la story touche l'affichage seulement, mais introduit des concepts nouveaux, habillage de jeu, glisser-déposer, record de fluence présenté comme une course, et un découpage à proposer).
+- 08:41 UTC : `domain-modeler` rend `domain-model.md` : aucun agrégat nouveau, affichage seulement. Répartition avec #97 posée. Découpage proposé en 98a à 98e (98a = socle du glisser + `classer`, `ordre`, ordre des vers de `memoriser`). 17 questions (98.1 à 98.17).
+- 08:42 UTC : étape 2, délégation à `po-acceptance` pour les scénarios de la tranche 98a seulement (les autres tranches deviendraient de nouvelles issues créées par le PO).
+- 08:55 UTC : `po-acceptance` rend `acceptance.md` et `features/98-exercices-comme-des-jeux.feature` (tranche 98a) : 6 règles, 34 scénarios (8 plans), 21 `@a-valider`, 4 `@depend-de-97`. Questions nouvelles 98.18 à 98.24.
+- 08:56 UTC : CADRAGE PRÊT publié sur #98. Arrêt : on attend la validation du PO, transmise par une annonce `[Responsable]`. Pas de code avant le merge de #97.
+- 16:22 UTC : ⛔ validation n°1 levée par le responsable (#64) : réponse du PO « 98# reco partout ». Les 24 questions sont tranchées selon la reco et le découpage 98a à 98e est validé.
+- 18:15 UTC : `po-acceptance` reporte les réponses dans `acceptance.md` et `domain-model.md`, et retire les `@a-valider` du `.feature`. Arrêt de l'équipe jusqu'au merge de #97 (la session de code sera relancée).
+
+## 2026-10-28 (reprise du cadrage)
+
+- 19:20 UTC : relance par le responsable (session_015z4jmKzYovHSW4cJ2TUKT7). Le PO a changé 98.2 : **habillage par univers** (commentaires [Responsable] 6478159395 et 6478171371 sur #98). 98.1 et 98.3 confirmées, 98.10 confirmée (« A on garde le chrono »). Le cadrage de 98a est à reprendre, et le découpage (#126 à #129) à revoir.
+- 19:22 UTC : #97 mergée dans `main` (`c477f3b`). `main` intégrée dans la branche (merge `6ffd582`, sans conflit). Pas de code avant la validation du nouveau cadrage.
+- 19:25 UTC : étape 1, délégation à `domain-modeler` (habillage par univers, objets par univers, validation des planches, découpage, questions à partir de 98.25).
+- 19:32 UTC : `domain-modeler` rend le modèle repris (`f237362`) : aucun changement du domaine, invariants 14 à 20 (dessin par univers, signaux d'état communs, repli sur « animaux », règle absolue univers par univers), objets proposés par univers, validation des dessins en deux temps (planches ⛔ intermédiaire, captures avec la PR), découpage révisé (train hors de 98a, 98c coupée en deux), questions 98.25 à 98.31.
+- 19:50 UTC : `po-acceptance` reprend les critères en suivant les recos de 98.25 à 98.31 : 6 règles, 32 scénarios (12 plans). Nouvelle R4 « maison de l'univers ». Le petit train sort de 98a (gardé pour mémoire dans `acceptance.md`). `@depend-de-97` retiré (#97 mergée). 1 `@a-valider`. Aucune question 98.32+.
+- 19:52 UTC : CADRAGE PRÊT publié sur #98. Attente de la validation du PO par une annonce `[Responsable]`.
+- 21:34 UTC : ⛔ validation n°1 levée (annonce [Responsable] 6481224058 sur #64, réponse du PO « 98 reco partout » à 98.25–98.31, vérifiée par le responsable). Découpage appliqué par le PO : #130 (petit train), #127 (addition), #131 (boîte et barres). #98 passe en `graphe:dev`.
+- 21:40 UTC : `po-acceptance` reporte les réponses (`acceptance.md`, `domain-model.md`) et retire le dernier `@a-valider`. 6 règles, 32 scénarios (12 plans, 46 exemples).
+- 21:40 UTC : liste des comportements unitaires : **aucun**. Le domaine ne change pas : l'état d'une maison (fermée, ouverte et allumée, qui brille) se lit dans les faits existants (`etiquettesPosees`, bonnes réponses montrées), et le dessin se choisit par la clé d'univers. Le RED passe par les étapes E2E de `@issue-98`, comme pour #96. Une règle qui apparaîtrait dans React pendant le câblage repasse par un cycle TDD dans le domaine.
+- 21:40 UTC : planches de la maison des 6 univers confiées à `implementer` en rôle d'illustrateur (worktree à part).
+- 21:55 UTC : planches de la maison des 6 univers rendues (`695ed1b`, cherry-pick du worktree). Corrections entre les passes : toit de Sports (tente de cirque), dôme de Danse remplacé par un pignon (risque d'évoquer un édifice religieux), contour de survol doublé d'un liseré blanc (fond sombre). Relue par l'orchestrateur contre la règle absolue : rien à signaler. `PLANCHES PRÊTES` publié sur #98 (6481343565) ; ⛔ intermédiaire, le code continue.
+- 21:50 UTC : `e2e-tester` écrit les étapes de `@issue-98` (RED).
+- 22:30 UTC : PO (annonces [Responsable] 6482196091 et 6482229050) : maisons Animaux, Princesses, Police, Pompiers et Danse **validées** ; Sports à refaire en « stade athlétisme avec un terrain ». Deux variantes rendues (`a72a948`, reco A), `PLANCHES PRÊTES` publié (6482268204).
+- 22:40 UTC : `e2e-tester` rend les étapes de `@issue-98` (`98d4a37`) : 15 verts (comportement existant), 51 rouges, tous pour une fonctionnalité absente (glisser au doigt sans effet, `data-etat`, `data-ouverte`/`data-allumee`, `data-univers`, `signal-brille`, flèches). Contrat d'attributs dans son rapport, transmis à `implementer`. Environnement : Chromium de `/opt/pw-browsers` en révision 1243 contre 1194 attendue (liens symboliques dans le scratchpad, sans `playwright install`) ; `webServer` instable, `npm run dev` lancé à part.
+- 22:41 UTC : PO (annonce [Responsable] 6482542711) : maison Sports validée en variante **A**. Les 6 maisons de `classer` sont validées (98.28, 98.31).
+- 23:30 UTC : câblage par `implementer` : `ce9d682` (toucher activé sur `tablette`, 98.19), `2df669a` (dessin de la maison par univers, porte puis lumière), `5de4036` (glisser par événements pointer, survol, retour animé, flèches). `@issue-98` : 66/66 sur `telephone` (un faux rouge `ECONNRESET` du serveur de dev, vert au second passage). `@issue-18` : 27/27 (glisser à la souris inchangé). tsc, build, 2523 tests unitaires verts. Aucune règle métier dans React.
+- 23:32 UTC : étape 4, review complète par `mr-reviewer`.
+- 23:45 UTC : review cycle 1 : **À CORRIGER**. Bloquant : une étiquette touchée pendant son retour (250 ms) reste décalée (`useGlisserUneEtiquette.ts`, `cancel()` sans remise en place). Non bloquants retenus : jeton `--surbrillance` pour `.signal-brille`, une seule constante pour la durée d'ouverture, étape « aucun message d'erreur » trop large (« on »+« an » → « nan ») à corriger côté steps pour retirer l'espace de contournement. Les autres (renommage de `.porte-de-la-maison`, flèches ↑/↓, deux voies pour l'univers) sont notés en dette.
+- 23:55 UTC : corrections du cycle 1 : `e248b4f` (fix : une étiquette touchée pendant son retour reprend sa place ; non couvert par un scénario, car en ajouter un changerait le texte validé : dette notée), `38ee13b` (jeton `--surbrillance`, durée d'ouverture unique, espace retiré), `e2833ce` (étape « aucun message d'erreur » resserrée). `@issue-98` 66/66.
+- 00:10 UTC : annonce [Responsable] 6483615943 : #99 mergée (`c8b0ed3`), À SAVOIR (Chromium 1243, `bddgen` après chaque step, données « le son ou »). `main` intégrée (merge `ebea261`) : conflit dans `src/Application.tsx`, résolu en gardant le Provider de #98 autour de la version de #99. Le conteneur a redémarré pendant la résolution ; vérifié après coup : aucun marqueur, tsc, build, 2531 tests unitaires verts.
+- 00:25 UTC : review cycle 2 (delta `823122c..HEAD`) : **APPROUVÉ**. Le correctif sans scénario est accepté ; une vérification ponctuelle par un script jetable (étiquette touchée pendant son retour) est demandée pour la trace. Non bloquants laissés : `/\bundefined\b/` sans `i`, constante de durée importée depuis un composant.
+- 00:55 UTC : E2E du périmètre `@issue-98` et `@issue-99` sur `tablette` et `telephone` : 181/184 au premier passage, les 3 rouges viennent du serveur de dev (`ECONNRESET`, `socket hang up`, un timeout sous charge) et sont verts rejoués seuls. Première passe de #98 sur `tablette` avec le toucher : verte. Vérification ponctuelle (script jetable) : une étiquette touchée pendant son retour revient à sa place (écart 0,1 px, `a-poser`, translate vide, aucune réponse). 6 captures de `classer` à 360 px (`3191d79`).
+- 00:58 UTC : écart constaté dans les captures : le dessin de la maison mesure environ 45 px à 360 px, contre 96 px sur la planche validée. Question posée au PO avec la PR (98.32).
+- 06:51 UTC : PO (annonce [Responsable] 6490015481) : « 98.32 reco ». Le dessin de la maison passe à environ 75 px sur téléphone, avec le nom en pastille sur le bas du dessin (ou la plus grande taille qui tient à 360 × 740).
+- 07:20 UTC : 98.32 fait (`9c1cb85`, CSS seul) : le dessin passe à 75,6 px à 360 × 740 (110 px plafond sur tablette), et le nom devient une pastille sur le bas du dessin ; le bas des maisons est à 716 px. `@issue-98` : 132/132 sur les deux projets. Captures refaites (`a63f3e7`). Revue du delta lancée.
+- 07:35 UTC : revue du delta 98.32 : **APPROUVÉ** (commentaire 6490532541 sur la PR #133). Non bloquants : `inset: 9px 0` et `margin-top: -28px` sans explication ; la pastille laisse environ 2 px de marge sous la porte (elle mordrait sur la porte sous 267 px de large). Pas de CI sur la PR (aucune vérification configurée).
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Durée (reprise du cadrage → PRÊTE À MERGER) | 2026-10-28 19:20 → 2026-10-29 07:40 UTC, soit 12 h 20 au total, dont environ 4 h 30 de travail |
+| Temps d'attente du PO | validation n°1 : 1 h 40 (19:52 → 21:34) ; planches : 45 min pour 5 univers, puis 15 min pour la maison Sports (deux allers-retours) ; 98.32 : 6 h 30 (nuit). Aucune attente n'a bloqué le travail, sauf 98.32 |
+| Cycles de review | 3 : cycle 1 À CORRIGER (1 bloquant), cycle 2 APPROUVÉ (delta), delta 98.32 APPROUVÉ |
+| Cycles TDD | 0 comportement du domaine. RED par 51 étapes E2E rouges, puis 3 commits de câblage |
+| Cycles E2E | 4 runs : RED sur `telephone` (15 min) ; câblage sur `telephone` ; périmètre #98 + #99 sur les deux projets (28 min, 3 rouges du serveur de dev, rejoués verts) ; après 98.32 sur les deux projets (23 min, 132/132) |
+| Intégrations de `main` | 2 : #97 (sans conflit) ; #99 (1 conflit, `src/Application.tsx`, résolu en gardant les deux changements) |
+| Escalades | 0. Une réponse du PO, arrivée hors du canal du responsable, a été vérifiée avant usage (confirmée sur #64) |
+| Verrous | aucun (front seul) |
+| Dessins | 12 dessins de maison et 2 signaux communs, puis 2 variantes de Sports ; 3 planches montrées au PO |
+| Incidents | un redémarrage du conteneur pendant la résolution du conflit (le merge était commité, il a été vérifié après coup) ; Chromium 1243 au lieu de 1194 (liens symboliques, sans `playwright install`) ; serveur de dev instable sous charge (`ECONNRESET`) |
+| Tokens | relevés par le responsable |
