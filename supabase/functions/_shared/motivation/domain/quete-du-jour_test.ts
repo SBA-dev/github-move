@@ -60,3 +60,24 @@ Deno.test("parcours fini sans question due ni séance du jour : aucune quête", 
 
   assertEquals(quete, { genre: "aucune" });
 });
+
+Deno.test("une séance de révision terminée aujourd'hui accomplit la quête de révision, même quand plus aucune question n'est due", () => {
+  const faitsApresUneRevision: FaitsDuJour = {
+    leconsDesSeancesTermineesDuJour: [],
+    nombreDeSeancesDeRevisionTermineesDuJour: 1,
+  };
+  const leconDuJour = {
+    genre: "aJouer",
+    lecon: "le-son-in",
+    titre: "Le son in",
+  } as const;
+
+  assertEquals(
+    queteDuJour({ leconDuJour, nombreDeQuestionsDues: 0 }, faitsApresUneRevision),
+    { genre: "accomplie", quete: "revision" },
+  );
+  assertEquals(
+    queteDuJour({ leconDuJour, nombreDeQuestionsDues: 2 }, faitsApresUneRevision),
+    { genre: "accomplie", quete: "revision" },
+  );
+});
