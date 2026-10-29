@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import type { CleDeTenue } from "@domain/motivation";
 
 const CONTOUR = "#33304A";
 
@@ -119,16 +120,40 @@ function BottesDePluie({ pieds }: { readonly pieds: Ancrage["pieds"] }) {
   );
 }
 
-export function TenueDerriere({ tenue, ancrage, id }: { readonly tenue?: string; readonly ancrage: Ancrage; readonly id: string }) {
-  if (tenue === "sac-a-dos-d-explorateur") return placer(ancrage.dos, <SacADos id={id} elargissement={ancrage.dos.elargissement} />);
-  if (tenue === "bottes-de-pluie" && ancrage.pieds.derriere) return <BottesDePluie pieds={ancrage.pieds} />;
-  return null;
+type Pose = (props: { readonly ancrage: Ancrage; readonly id: string }) => ReactNode;
+
+const SANS_DESSIN: Pose = () => null;
+const bottes: Pose = ({ ancrage }) => <BottesDePluie pieds={ancrage.pieds} />;
+
+const DESSINS_DES_TENUES: Readonly<Record<CleDeTenue, { readonly derriere: Pose; readonly devant: Pose }>> = {
+  "echarpe-rayee": {
+    derriere: SANS_DESSIN,
+    devant: ({ ancrage, id }) => placer(ancrage.cou, <Echarpe id={id} />),
+  },
+  "noeud-papillon": {
+    derriere: SANS_DESSIN,
+    devant: ({ ancrage }) => placer(ancrage.cou, <NoeudPapillon />),
+  },
+  "sac-a-dos-d-explorateur": {
+    derriere: ({ ancrage, id }) => placer(ancrage.dos, <SacADos id={id} elargissement={ancrage.dos.elargissement} />),
+    devant: ({ ancrage }) => placer(ancrage.dos, <BretellesDuSac />),
+  },
+  "bottes-de-pluie": {
+    derriere: (props) => (props.ancrage.pieds.derriere ? bottes(props) : null),
+    devant: (props) => (props.ancrage.pieds.derriere ? null : bottes(props)),
+  },
+};
+
+function dessinDeLaTenue(tenue: string | undefined) {
+  return tenue !== undefined && tenue in DESSINS_DES_TENUES ? DESSINS_DES_TENUES[tenue as CleDeTenue] : undefined;
 }
 
-export function TenueDevant({ tenue, ancrage, id }: { readonly tenue?: string; readonly ancrage: Ancrage; readonly id: string }) {
-  if (tenue === "echarpe-rayee") return placer(ancrage.cou, <Echarpe id={id} />);
-  if (tenue === "noeud-papillon") return placer(ancrage.cou, <NoeudPapillon />);
-  if (tenue === "sac-a-dos-d-explorateur") return placer(ancrage.dos, <BretellesDuSac />);
-  if (tenue === "bottes-de-pluie" && !ancrage.pieds.derriere) return <BottesDePluie pieds={ancrage.pieds} />;
-  return null;
+type PropsDeLaTenue = { readonly tenue?: string; readonly ancrage: Ancrage; readonly id: string };
+
+export function TenueDerriere({ tenue, ancrage, id }: PropsDeLaTenue) {
+  return dessinDeLaTenue(tenue)?.derriere({ ancrage, id }) ?? null;
+}
+
+export function TenueDevant({ tenue, ancrage, id }: PropsDeLaTenue) {
+  return dessinDeLaTenue(tenue)?.devant({ ancrage, id }) ?? null;
 }

@@ -135,6 +135,7 @@ export {
   titreDeLaSectionDeLHistoire,
 } from "./paroles-de-l-histoire.ts";
 export {
+  type CleDeTenue,
   type EtatDesTenues,
   PALIERS_DES_TENUES,
   type TenueDuPersonnageGuide,
