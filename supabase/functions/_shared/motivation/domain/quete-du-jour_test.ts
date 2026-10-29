@@ -81,3 +81,28 @@ Deno.test("une séance de révision terminée aujourd'hui accomplit la quête de
     { genre: "accomplie", quete: "revision" },
   );
 });
+
+Deno.test("une séance terminée aujourd'hui sur n'importe quelle leçon accomplit la quête de leçon, même quand elle finit le parcours", () => {
+  const faitsApresUneSeance: FaitsDuJour = {
+    leconsDesSeancesTermineesDuJour: ["une-autre-lecon"],
+    nombreDeSeancesDeRevisionTermineesDuJour: 0,
+  };
+
+  assertEquals(
+    queteDuJour(
+      {
+        leconDuJour: { genre: "aJouer", lecon: "le-son-in", titre: "Le son in" },
+        nombreDeQuestionsDues: 0,
+      },
+      faitsApresUneSeance,
+    ),
+    { genre: "accomplie", quete: "lecon" },
+  );
+  assertEquals(
+    queteDuJour(
+      { leconDuJour: { genre: "parcoursFini" }, nombreDeQuestionsDues: 0 },
+      faitsApresUneSeance,
+    ),
+    { genre: "accomplie", quete: "lecon" },
+  );
+});
