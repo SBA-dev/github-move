@@ -70,6 +70,9 @@ Bloc C, paroles, sons, sections :
 - Review delta, cycle 4 : APPROUVÉ. Non bloquants laissés : la constante `REQUETE` à remonter dans `mouvements-reduits.ts`, la déclaration de la `WeakMap` dans `profils-enfants.steps.ts`, la dette `useReducedMotion()` hors de #102.
 - Vérifications finales : 2590 tests unitaires, lint, fmt, `tsc` et build verts. `main` n'a pas bougé depuis le départ de la branche (`c8b0ed3`).
 
+- 07:58 UTC : ✅ merge autorisé par le PO (annonce `[Responsable]` sur #64). En file derrière #98.
+- 08:01 UTC : VERROU `merge` accordé (#64, tableau à jour). Intégration de `main` (`3e78770`, #98) : merge `fe52ee3`, réindentation `de77ad5`. Revue de l'intégration : APPROUVÉ. 2590 tests unitaires, lint, fmt, `tsc` et build verts. E2E `@issue-102` + `@issue-98` (décision 0022) sur `telephone` : 114/114 verts.
+
 ## Mesures
 
 | Mesure | Valeur |
@@ -83,6 +86,6 @@ Bloc C, paroles, sons, sections :
 | Revues intermédiaires | 3, toutes APPROUVÉ du premier coup |
 | Cycles de review | cycle 1 APPROUVÉ ; cycles 2 et 3 À CORRIGER (le 1er venait d'une consigne de l'orchestrateur, le 2e d'une erreur de l'orchestrateur sur un revert) ; cycle 4 APPROUVÉ |
 | Cycles E2E KO | 3, puis un 4e vert après escalade. Cause principale : `useReducedMotion()` de Motion ne lit la préférence qu'au montage (code de #96) |
-| Intégrations de `main` | 0 (`main` inchangée), aucun conflit |
+| Intégrations de `main` | 1 (sous verrou `merge`, `main` = `3e78770` avec #98), 2 conflits simples (`src/Application.tsx`, `features/steps/reglages.steps.ts`), résolus en gardant les deux ajouts |
 | Régression sur `main` après le merge | à relever après le merge |
 | Tokens et coût | relevés par le responsable |
