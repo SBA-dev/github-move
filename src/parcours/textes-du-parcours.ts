@@ -1,20 +1,12 @@
+import { libelleCourtDe } from "@domain/catalogue";
 import type { CodeDeMatiere, Niveau } from "@domain/catalogue";
 import type { EtatDansLeParcours, LeconDuParcours, LeconReussieDUneClasseAuDessus } from "@domain/apprentissage";
 import { etoilesSurTrois } from "../seance/fin-de-seance/texte-des-etoiles.ts";
 
 export const AUCUNE_LECON_POUR_LA_CLASSE = "Aucune leçon pour ta classe pour l'instant.";
 
-const LIBELLES_DES_ONGLETS: Readonly<Record<CodeDeMatiere, string>> = {
-  francais: "Français",
-  maths: "Maths",
-  sciences: "Sciences",
-  histoire: "Histoire-géo",
-  anglais: "Anglais",
-  emc: "Vivre ensemble",
-};
-
 export function libelleDeLOnglet(matiere: CodeDeMatiere): string {
-  return LIBELLES_DES_ONGLETS[matiere];
+  return libelleCourtDe(matiere);
 }
 
 export function compteurDuParcours(reussies: number, total: number): string {
