@@ -246,6 +246,15 @@ Deno.test("un défi envoyé pour une autre classe que celle du profil est refus�
   assertThrows(() => revalider(envoi), DefiInconnu);
 });
 
+Deno.test("un défi envoyé avec la classe du profil, reconstruite à part, est accepté", () => {
+  const envoi = { ...envoiValide, defi: { ...envoiValide.defi, niveau: Niveau.de("CE1") } };
+  const entreesDuProfil = { ...entrees(), niveau: Niveau.de("CE1") };
+
+  const revalide = revaliderLeDefi(envoi, entreesDuProfil, []);
+
+  assertEquals(revalide.defi.numero, 1);
+});
+
 Deno.test("un envoi qui a moins de tirages que de questions est refusé comme incohérent", () => {
   const tirages = envoiValide.tirages.slice(0, 9);
 

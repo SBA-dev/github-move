@@ -95,7 +95,7 @@ function laFileDuProfil(...questions: QuestionRetenue[]): FileDeRevision {
   return FileDeRevision.reconstituer({ enfant: "profil-lea", questions, erreursCorrigeesPourDeBon: 0 });
 }
 
-function monde(file: FileDeRevision | null = null, catalogue: Lecon[] = lecons) {
+function monde(file: FileDeRevision | null = null, catalogue: Lecon[] = lecons, niveauDuProfil: Niveau = CE1) {
   const files = new FilesDeRevisionEnMemoire();
   if (file) files.ecrire(file);
   const defis = new DefisTerminesEnMemoire(files);
@@ -108,7 +108,7 @@ function monde(file: FileDeRevision | null = null, catalogue: Lecon[] = lecons) 
   const terminer = new TerminerLeDefi(
     new RattachementsEnMemoire(["parent-paul", "profil-lea"]),
     new LeconsDuCatalogueEnMemoire(...catalogue),
-    new NiveauxDesProfilsEnMemoire(["profil-lea", CE1]),
+    new NiveauxDesProfilsEnMemoire(["profil-lea", niveauDuProfil]),
     resultats,
     new ResultatsDesTestsDeDepartEnMemoire(),
     files,
@@ -184,6 +184,14 @@ Deno.test("un défi terminé ne crée aucune étoile et ne touche à aucun résu
 
   assertEquals(resultats.nombreDeSeances("profil-lea", "ma-ce1-1"), 1);
   assertEquals(resultats.nombreDeSeances("profil-lea", "ma-ce1-6"), 0);
+});
+
+Deno.test("un défi est enregistré quand la classe du profil, lue à part, est une autre instance de la même classe", async () => {
+  const { defis, terminer } = monde(null, lecons, Niveau.de("CE1"));
+
+  await terminer.executer({ parent: "parent-paul", defi: defiJoue() });
+
+  assertEquals(defis.tous().map(({ id }) => id), ["defi-1"]);
 });
 
 Deno.test("un parent non rattaché au profil ne peut rien enregistrer", async () => {
