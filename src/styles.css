@@ -926,6 +926,8 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 .mes-medailles { display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 100%; }
 .mes-medailles h1, .mes-medailles h2 { margin: 0; overflow-wrap: anywhere; }
 .section-des-medailles { display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 32rem; }
+.lignes-de-defi-releve { display: grid; gap: 8px; width: 100%; margin: 0; padding: 0; list-style: none; }
+.lignes-de-defi-releve > li { min-height: 44px; display: flex; align-items: center; padding: 8px 14px; border: 3px solid var(--contour); border-radius: var(--rayon); background: var(--surface-dense); font-weight: 700; overflow-wrap: anywhere; }
 .pastilles-de-record { display: grid; gap: 8px; width: 100%; margin: 0; padding: 0; list-style: none; }
 .pastille-de-record {
   display: flex;
