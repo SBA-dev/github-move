@@ -1,5 +1,5 @@
 import { assertEquals } from "@std/assert";
-import { lireLecon, Niveau } from "../../catalogue/domain/index.ts";
+import { lireLecon, matiereDeCode, Niveau } from "../../catalogue/domain/index.ts";
 import type { Lecon } from "../../catalogue/domain/index.ts";
 import { defisDeLaMatiere } from "./defis-de-la-matiere.ts";
 import { parcoursDeLaMatiere } from "./parcours.ts";
@@ -38,7 +38,7 @@ Deno.test("une matière de 10 leçons a le Défi 1 pour les leçons 1 à 5, et p
 Deno.test("un défi porte la matière et la classe de son parcours", () => {
   const [defi] = defisPourUneClasseDe(10);
 
-  assertEquals([defi.matiere, defi.niveau], ["maths", Niveau.de("CE1")]);
+  assertEquals([defi.matiere, defi.niveau], [matiereDeCode("maths"), Niveau.de("CE1")]);
 });
 
 Deno.test("une matière de 12 leçons n'a que le Défi 1, car sa dernière partie rattache les leçons 11 et 12", () => {
