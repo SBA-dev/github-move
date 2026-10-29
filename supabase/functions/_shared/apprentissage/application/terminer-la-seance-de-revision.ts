@@ -26,16 +26,14 @@ export class TerminerLaSeanceDeRevision {
     const lecons = await this.lecons.toutes();
     const niveau = await this.niveaux.de(seance.enfant);
     // Si la file a changé entre la lecture et l'écriture, on la relit et on y réapplique la séance.
-    let faits: (SeanceDeRevisionTerminee | FaitDeFileDeRevision)[] = [];
-    const issue = await reessayerSurConflit(async () => {
+    const { issue, valeur: faits } = await reessayerSurConflit(async () => {
       const lue = await this.files.de(seance.enfant);
       const file = lue?.file ?? FileDeRevision.vide(seance.enfant);
       const { fait, questionsIntrouvables } = revaliderLaSeanceDeRevision(seance, file, lecons, niveau);
       questionsIntrouvables.forEach((cle) => file.oublier(cle));
       file.enregistrerLaRevision(fait.resultats, fait.jour, fait.termineeLe);
       const issue = await this.seances.enregistrer(fait, { file, versionLue: lue?.version ?? 0 });
-      if (issue === "enregistree") faits = [fait, ...file.retirerFaits()];
-      return issue;
+      return { issue, valeur: [fait, ...file.retirerFaits()] };
     }, "File de révision modifiée en continu : écriture abandonnée.");
     return issue === "enregistree" ? faits : [];
   }

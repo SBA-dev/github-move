@@ -33,13 +33,14 @@ export class TerminerLeDefi {
     const entrees = await this.entreesDuParcours(defi.enfant);
     const releves = await this.defis.releves(defi.enfant);
     const fait = revaliderLeDefi(defi, entrees, releves);
-    const issue = await reessayerSurConflit(async () => {
+    const { issue, valeur: faits } = await reessayerSurConflit(async () => {
       const lue = await this.files.de(defi.enfant);
       const file = lue?.file ?? FileDeRevision.vide(defi.enfant);
       file.retenir(fait.questionsRatees, fait.jour, fait.termineeLe);
-      return this.defis.enregistrer(fait, { file, versionLue: lue?.version ?? 0 });
+      const issue = await this.defis.enregistrer(fait, { file, versionLue: lue?.version ?? 0 });
+      return { issue, valeur: [fait] };
     }, "File de révision modifiée en continu : écriture abandonnée.");
-    return issue === "enregistree" ? [fait] : [];
+    return issue === "enregistree" ? faits : [];
   }
 
   private async entreesDuParcours(enfant: string): Promise<EntreesDuParcours> {

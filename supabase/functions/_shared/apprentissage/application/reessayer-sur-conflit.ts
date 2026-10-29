@@ -1,13 +1,15 @@
 const ESSAIS_AU_PLUS = 3;
 
+export type Tentative<Issue extends string, Valeur> = { issue: Issue; valeur: Valeur };
+
 /** Écriture optimiste : tant que la tentative signale un conflit, on la relance (3 essais au plus). */
-export async function reessayerSurConflit<Issue extends string>(
-  tenter: () => Promise<Issue>,
+export async function reessayerSurConflit<Issue extends string, Valeur>(
+  tenter: () => Promise<Tentative<Issue, Valeur>>,
   abandon: string,
-): Promise<Exclude<Issue, "conflit">> {
+): Promise<Tentative<Exclude<Issue, "conflit">, Valeur>> {
   for (let essai = 1; essai <= ESSAIS_AU_PLUS; essai++) {
-    const issue = await tenter();
-    if (issue !== "conflit") return issue as Exclude<Issue, "conflit">;
+    const tentative = await tenter();
+    if (tentative.issue !== "conflit") return tentative as Tentative<Exclude<Issue, "conflit">, Valeur>;
   }
   throw new Error(abandon);
 }
