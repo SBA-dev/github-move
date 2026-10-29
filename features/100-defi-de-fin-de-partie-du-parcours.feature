@@ -299,6 +299,7 @@ Fonctionnalité: Défi de la partie du parcours
       Alors l'enregistrement est refusé comme pour un profil introuvable
       Et sur le téléphone de Paul, le repère « Défi 1 » de Léa n'est pas relevé
 
+    @depend-de-14
     Scénario: L'export du profil contient les défis relevés, sans les réponses données
       Étant donné que Léa a relevé le défi 1 de maths
       Et que Paul est dans l'espace parent

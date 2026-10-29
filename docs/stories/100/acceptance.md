@@ -98,9 +98,20 @@ R6, R7 et R8.
 | **R5.** Un défi terminé est relevé, avec ou sans erreurs, et sa fin le fête ; quitté sans rien perdre ; rejoué sans nouvelle récompense ; retrouvé dans « Mes médailles » | 5.1 Un défi terminé sans erreur, ou avec une erreur à chaque question, est relevé, et sa fin le fête (plan, 2 cas) · 5.2 Un défi quitté en cours n'est pas relevé et reste ouvert, sans reproche · 5.3 Rejouer un défi relevé le fait rejouer en entier, sans nouvelle annonce de défi relevé · 5.4 « Mes médailles » montre les défis relevés, chacun une seule fois, dans sa dernière section |
 | **R6.** Sur « Mon parcours », chaque défi a son repère ; les lecteurs d'écran le lisent à sa place | 6.1 Le repère « Défi 1 » montre un défi ouvert ou relevé (plan, 2 cas) · 6.2 Les lecteurs d'écran lisent le défi dans la liste ordonnée, juste après sa dernière leçon |
 | **R7.** Sans réseau, sans mouvement, sur 360 px | 7.1 Sans réseau, le défi se joue jusqu'au bout et sa fin dit que la progression est gardée sur l'appareil · 7.2 Avec les mouvements réduits, la fin du défi garde son annonce, sans mouvement ni confettis · 7.3 Une question du défi tient dans un écran de 360 px, « Je ne sais pas » compris · 7.4 À 360 px, le repère du défi tient dans la largeur et est assez grand pour un doigt d'enfant |
-| **R8.** Le défi relevé est enregistré par le serveur, après vérification, seulement pour un parent rattaché ; il est compris dans les données du profil | 8.1 `@acces` Sur le téléphone du second parent rattaché, l'enfant retrouve son défi relevé · 8.2 Le serveur refuse un défi terminé incohérent : défi à venir, question d'une leçon hors du défi, question qui ne finit pas par la bonne réponse (plan, 3 cas) · 8.3 `@acces` Le défi relevé par un enfant ne se voit pas chez un autre enfant du même parent · 8.4 `@acces` Un parent qui n'est pas rattaché ne lit pas les défis relevés de Léa · 8.5 `@acces` Un parent qui n'est pas rattaché ne peut pas enregistrer un défi terminé pour Léa · 8.6 L'export du profil contient les défis relevés, sans les réponses données |
+| **R8.** Le défi relevé est enregistré par le serveur, après vérification, seulement pour un parent rattaché ; il est compris dans les données du profil | 8.1 `@acces` Sur le téléphone du second parent rattaché, l'enfant retrouve son défi relevé · 8.2 Le serveur refuse un défi terminé incohérent : défi à venir, question d'une leçon hors du défi, question qui ne finit pas par la bonne réponse (plan, 3 cas) · 8.3 `@acces` Le défi relevé par un enfant ne se voit pas chez un autre enfant du même parent · 8.4 `@acces` Un parent qui n'est pas rattaché ne lit pas les défis relevés de Léa · 8.5 `@acces` Un parent qui n'est pas rattaché ne peut pas enregistrer un défi terminé pour Léa · 8.6 `@depend-de-14` L'export du profil contient les défis relevés, sans les réponses données |
 
 Total : 8 règles, 28 scénarios (dont 7 plans du scénario), soit 37 cas générés ; 4 `@acces`, aucun `@a-valider`.
+
+Le scénario 8.6 est tagué `@depend-de-14` : l'export d'un profil (#14, `features/14-suppression-et-export.feature`,
+encore `@wip`, sortie de la beta) n'est pas livré ; il est exclu des exécutions jusqu'à #14, comme les scénarios
+d'export de #28. La migration porte déjà le contrat d'export (« Contrat d'export (#14) : ajouter `defis_termines` »).
+
+### Scénarios d'autres stories touchés
+
+- `features/16-etapes-puis-exercices.feature`, « Entre deux exercices, le personnage guide annonce le titre de
+  l'exercice suivant » : l'annonce attendue « Nouveau défi : Les maisons des sons ! » devient « Nouveau jeu : Les
+  maisons des sons ! » (décision 100.4). Le sens du scénario ne change pas (une des trois annonces) ; aucun step
+  n'est modifié.
 
 Critères de l'issue couverts : 4 leçons sur 5 → à venir (1.1) ; 5 sur 5 → ouvert et proposé par le personnage guide
 (1.3) ; questions des 5 leçons seulement (3.1) ; erreur → encouragement et aide (4.2) ; aucune étoile changée (2.2) ;
@@ -133,7 +144,8 @@ partie du parcours suivante ouverte sans le défi (2.1).
   modèle).
 - Un défi relevé qui reste relevé quand la bibliothèque change (100.15) : test unitaire du domaine.
 - L'annonce d'exercice « Nouveau défi » remplacée par « Nouveau jeu » (100.4) : test unitaire de
-  `paroles-de-seance.ts` ; le fichier de scénarios n'emploie jamais l'ancienne annonce.
+  `paroles-de-seance.ts` ; le fichier de scénarios n'emploie jamais l'ancienne annonce, et le scénario de #16
+  qui la citait est mis à jour (voir « Scénarios d'autres stories touchés »).
 - « Toutes les leçons », l'accueil de l'enfant (sauf « À revoir », 4.3) et la leçon du jour : inchangés.
 - Le jeu du défi au clavier : il reprend les commandes d'une séance (#28, « au clavier seulement »), sans scénario de
   plus.

@@ -119,7 +119,7 @@ Fonctionnalité: Étapes de leçon lues, puis exercices
       Étant donné que Léa joue la séance complète de la leçon « Les sons ou, on, an »
       Et que Léa en est à la dernière question de l'exercice « Quel son entends-tu ? », « Dans le mot « lampe », quel son entends-tu ? »
       Quand Léa répond « an »
-      Alors Noisette dit « Nouveau défi : Les maisons des sons ! », « Jeu suivant : Les maisons des sons ! » ou « Place au jeu : Les maisons des sons ! »
+      Alors Noisette dit « Nouveau jeu : Les maisons des sons ! », « Jeu suivant : Les maisons des sons ! » ou « Place au jeu : Les maisons des sons ! »
       Et l'exercice « Les maisons des sons » commence
 
     Scénario: Un exercice sans titre commence sans être annoncé
