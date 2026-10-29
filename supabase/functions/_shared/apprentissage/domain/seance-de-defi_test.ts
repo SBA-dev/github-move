@@ -1,4 +1,4 @@
-import { assertEquals, assertThrows } from "@std/assert";
+import { assertEquals, assertExists, assertThrows } from "@std/assert";
 import { type Lecon, lireLecon, matiereDeCode, Niveau } from "../../catalogue/domain/index.ts";
 import { hasardSansMelange } from "../test_utils/hasard-fixe.ts";
 import { CleDeQuestion } from "./cle-de-question.ts";
@@ -192,4 +192,43 @@ Deno.test("un défi déjà terminé ne peut pas l'être une seconde fois", () =>
   seance.terminer(finDuDefi, jourDuDefi);
 
   assertThrows(() => seance.terminer(finDuDefi, jourDuDefi), DefiDejaTermine);
+});
+
+function tirageDeLaQuestionEnCours(seance: SeanceDeDefi): string[] {
+  const posee = seance.questionEnCours()?.question;
+  assertExists(posee);
+  return posee.tirage();
+}
+
+Deno.test("l'envoi d'un défi terminé contient le défi, les questions, leurs tirages et leurs réponses dans l'ordre", () => {
+  const seance = seanceSur(planDe(chat, bateau));
+  const tirageDeChat = tirageDeLaQuestionEnCours(seance);
+  seance.repondre(mauvaiseReponseDe(chat));
+  seance.repondre(bonneReponseDe(chat));
+  const tirageDeBateau = tirageDeLaQuestionEnCours(seance);
+  seance.direJeNeSaisPas();
+  seance.repondre(bonneReponseDe(bateau));
+  seance.terminer(finDuDefi, jourDuDefi);
+
+  assertEquals(seance.aEnregistrer(), {
+    id: "defi-1",
+    enfant: "profil-lea",
+    defi: { matiere: defi.matiere, niveau: defi.niveau, numero: 1 },
+    questions: [chat, bateau],
+    tirages: [tirageDeChat, tirageDeBateau],
+    reponses: [
+      [mauvaiseReponseDe(chat), bonneReponseDe(chat)],
+      [{ genre: "jeNeSaisPas" }, bonneReponseDe(bateau)],
+    ],
+    termineeLe: finDuDefi,
+    jour: "2026-10-29",
+  });
+});
+
+Deno.test("l'envoi d'un défi qui n'a pas été terminé est refusé", () => {
+  const seance = seanceSur(planDe(chat, bateau));
+  seance.repondre(bonneReponseDe(chat));
+  seance.repondre(bonneReponseDe(bateau));
+
+  assertThrows(() => seance.aEnregistrer(), DefiNonFini);
 });
