@@ -46,12 +46,9 @@ export async function attendreLesEnvoisDesTestsDeDepart(): Promise<void> {
   await Promise.allSettled([...envoisEnCours]);
 }
 
-let renvoiEnCours = false;
+let renvoiEnCours: Promise<void> | undefined;
 
-/** Renvoie les tests de départ gardés sur l'appareil (retour du réseau, prochain lancement). S'arrête au premier échec ; un refus du serveur est définitif. */
-export async function renvoyerLesTestsDeDepartGardes(): Promise<void> {
-  if (renvoiEnCours) return;
-  renvoiEnCours = true;
+async function renvoyer(): Promise<void> {
   try {
     const parent = await parentConnecte();
     if (parent === undefined) return;
@@ -63,7 +60,26 @@ export async function renvoyerLesTestsDeDepartGardes(): Promise<void> {
     }
   } catch {
     // Le prochain retour du réseau réessaiera.
-  } finally {
-    renvoiEnCours = false;
   }
+}
+
+/** Renvoie les tests de départ gardés sur l'appareil (retour du réseau, prochain lancement). S'arrête au premier échec ; un refus du serveur est définitif. */
+export function renvoyerLesTestsDeDepartGardes(): Promise<void> {
+  if (renvoiEnCours) return Promise.resolve();
+  const renvoi = renvoyer().finally(() => {
+    renvoiEnCours = undefined;
+  });
+  renvoiEnCours = renvoi;
+  return renvoi;
+}
+
+/** Pour les écritures qui dépendent des tests de départ : attend le renvoi en cours, ou le fait. */
+export async function attendreLeRenvoiDesTestsDeDepartGardes(): Promise<void> {
+  await (renvoiEnCours ?? renvoyerLesTestsDeDepartGardes());
+}
+
+/** Un test de départ gardé n'a pas pu être envoyé : les étoiles du serveur ne le comptent pas encore. */
+export async function resteDesTestsDeDepartGardes(): Promise<boolean> {
+  const parent = await parentConnecte();
+  return parent !== undefined && (await new TestsDeDepartGardesSurLAppareil().lire(parent)).length > 0;
 }
