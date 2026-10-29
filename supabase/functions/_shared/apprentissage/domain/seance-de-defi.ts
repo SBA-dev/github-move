@@ -1,13 +1,14 @@
 import type { Lecon, Niveau } from "../../catalogue/domain/index.ts";
 import type { CleDeQuestion } from "./cle-de-question.ts";
 import type { Defi } from "./defis-de-la-matiere.ts";
-import { DefiDejaTermine, DefiNonFini, ReponseIncompatible, SeanceDeRevisionDejaFinie } from "./erreurs.ts";
+import { DefiDejaTermine, DefiNonFini } from "./erreurs.ts";
 import type { QuestionRateeARetenir } from "./file-de-revision.ts";
 import type { Jour } from "./jour.ts";
 import type { PlanDuDefi } from "./plan-du-defi.ts";
 import { type QuestionDeRevision, questionDeRevision } from "./question-de-revision.ts";
 import type { AideDonnee } from "./question-jouee.ts";
 import type { QuestionSuivie } from "./question-suivie.ts";
+import { QuestionsEnCours, suivie } from "./questions-en-cours.ts";
 import type { MotEcrit, ReponseEnNombre, ReponseParChoix, ResultatDeReponse } from "./reponse.ts";
 import type { Tireur } from "./tireur.ts";
 
@@ -24,13 +25,16 @@ export type DefiTermine = Readonly<{
 
 export class SeanceDeDefi {
   private termine = false;
+  private readonly enCours: QuestionsEnCours;
 
   private constructor(
     readonly id: string,
     readonly enfant: string,
     private readonly defi: Defi,
     private readonly questions: readonly { posee: QuestionDeRevision; ratable: QuestionRateeARetenir }[],
-  ) {}
+  ) {
+    this.enCours = new QuestionsEnCours(questions.map(({ posee }) => posee));
+  }
 
   static commencer(
     { id, enfant, defi, plan, lecons, tireurDe, niveau }: {
@@ -53,25 +57,19 @@ export class SeanceDeDefi {
   }
 
   questionEnCours(): QuestionDeRevision | undefined {
-    return this.questions.map(({ posee }) => posee).find((posee) => !suivie(posee).reussie);
+    return this.enCours.enCours();
   }
 
   repondre(reponse: ReponseParChoix | ReponseEnNombre | MotEcrit): ResultatDeReponse {
-    const { question, dictee } = this.questionAPoser();
-    if (dictee) {
-      if (reponse.genre !== "motEcrit") throw new ReponseIncompatible(reponse.genre);
-      return dictee.repondre(reponse);
-    }
-    if (reponse.genre === "motEcrit") throw new ReponseIncompatible(reponse.genre);
-    return question.repondre(reponse);
+    return this.enCours.repondre(reponse);
   }
 
   direJeNeSaisPas(): AideDonnee {
-    return suivie(this.questionAPoser()).direJeNeSaisPas();
+    return this.enCours.direJeNeSaisPas();
   }
 
   estFinie(): boolean {
-    return this.questionEnCours() === undefined;
+    return this.enCours.estFinie();
   }
 
   terminer(maintenant: Date, jour: Jour): DefiTermine {
@@ -91,20 +89,8 @@ export class SeanceDeDefi {
       jour,
     };
   }
-
-  private questionAPoser(): QuestionDeRevision {
-    const enCours = this.questionEnCours();
-    if (!enCours) throw new SeanceDeRevisionDejaFinie();
-    return enCours;
-  }
 }
 
 function estRatee({ erreurs, bonneReponseMontree }: QuestionSuivie): boolean {
   return erreurs > 0 || bonneReponseMontree;
-}
-
-function suivie(
-  { question, dictee }: QuestionDeRevision,
-): QuestionSuivie & { direJeNeSaisPas(): AideDonnee; tirage(): string[] } {
-  return question ?? dictee;
 }
