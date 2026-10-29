@@ -108,7 +108,7 @@ export function MesMedailles({ profil, univers, voix, onOuvrirLEpisode }: Props)
         <PersonnageGuide
           univers={univers}
           humeur={humeur}
-          libelle={tenuesAMontrer ? descriptionDuPersonnageGuide(personnage, tenueAMontrer(portee, tenues)) : undefined}
+          libelle={tenues === undefined || tenuesAMontrer ? descriptionDuPersonnageGuide(personnage, tenueAMontrer(portee, tenues)) : undefined}
         />
         <BulleDuPersonnageGuide texte={parole?.texte} nature={parole?.nature} rangDuMotPrononce={rangDuMotPrononce} />
       </div>

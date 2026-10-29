@@ -1,6 +1,5 @@
 import {
   annonceDeLaTenueRecue,
-  descriptionDuPersonnageGuide,
   type PersonnageGuide as PersonnageGuideDuDomaine,
   type TenueDuPersonnageGuide,
   titreDeLAnnonceDeLaTenue,
@@ -22,7 +21,6 @@ export function AnnonceDeLaTenue({ univers, tenue }: Props) {
             univers={univers}
             humeur="content"
             tenue={tenue.cle}
-            libelle={descriptionDuPersonnageGuide(personnage, tenue)}
             identifiantDeTest="personnage-guide-de-l-annonce"
           />
           <p>{annonceDeLaTenueRecue(personnage, tenue)}</p>
