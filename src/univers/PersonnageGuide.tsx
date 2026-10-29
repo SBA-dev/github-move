@@ -1,6 +1,7 @@
 import { useId } from "react";
 import { motion, type TargetAndTransition, useReducedMotion } from "motion/react";
 import type { CleUnivers, Humeur, Univers } from "@domain/motivation";
+import { useTenueDuProfil } from "../tenue/TenueDuProfil.tsx";
 import { AgentMax } from "./personnages/AgentMax.tsx";
 import { CapitaineSam } from "./personnages/CapitaineSam.tsx";
 import { CoachLeo } from "./personnages/CoachLeo.tsx";
@@ -38,9 +39,19 @@ function gesteDe(humeur: Humeur, mouvementsReduits: boolean): Geste {
   return "aucun";
 }
 
-export function PersonnageGuide(
-  { univers, humeur, tenue }: { readonly univers: Univers; readonly humeur: Humeur; readonly tenue?: string },
-) {
+type Props = {
+  readonly univers: Univers;
+  readonly humeur: Humeur;
+  /** Clé de la tenue à montrer ; à défaut, celle que l'enfant a choisie (aucune hors de ses écrans). */
+  readonly tenue?: string;
+  /** Là où la tenue compte, le dessin est annoncé aux lecteurs d'écran ; ailleurs il reste décoratif. */
+  readonly libelle?: string;
+  readonly identifiantDeTest?: string;
+};
+
+export function PersonnageGuide({ univers, humeur, tenue: tenueDemandee, libelle, identifiantDeTest }: Props) {
+  const tenueDuProfil = useTenueDuProfil();
+  const tenue = tenueDemandee ?? tenueDuProfil;
   const identifiant = useId();
   const mouvementsReduits = useReducedMotion() ?? false;
   const geste = gesteDe(humeur, mouvementsReduits);
@@ -48,8 +59,8 @@ export function PersonnageGuide(
   return (
     <motion.div
       className="personnage-guide"
-      aria-hidden="true"
-      data-testid="personnage-guide"
+      {...(libelle === undefined ? { "aria-hidden": "true" } : { role: "img", "aria-label": libelle })}
+      data-testid={identifiantDeTest ?? "personnage-guide"}
       data-personnage-guide={univers.personnageGuide.nom}
       data-humeur={humeur}
       {...(DESSINS_REDESSINES.has(univers.cle) ? { "data-dessin": "valide" } : {})}
