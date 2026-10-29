@@ -205,7 +205,7 @@ Tout fonctionne dans le navigateur, hors ligne compris, par `@domain/motivation`
 ## Données d'enfants
 
 - **Tenues reçues** : aucune donnée nouvelle (recalculées depuis les meilleures étoiles, déjà couvertes par la cascade et l'export de #14).
-- **Tenue portée** : une préférence de jeu (une clé de tenue, rien d'identifiant), **sur l'appareil seulement** (#102.8 A). Rien côté serveur : ni migration, ni RLS nouvelle, ni adaptateur d'export. Minimisation respectée ; effacée à la déconnexion du parent et avec le profil supprimé depuis l'appareil ; non exportée (elle n'est pas chez Savanturier).
+- **Tenue portée** : une préférence de jeu (une clé de tenue, rien d'identifiant), **sur l'appareil seulement** (#102.8 A). Rien côté serveur : ni migration, ni RLS nouvelle, ni adaptateur d'export. Minimisation respectée ; effacée à la déconnexion du parent et avec le profil supprimé depuis l'appareil (à câbler quand le front aura cette suppression, il ne l'a pas aujourd'hui) ; non exportée (elle n'est pas chez Savanturier).
 - Rien n'est envoyé à l'IA, aucun service tiers. Rien dans l'Espace parent (#102.19).
 
 ## Emplacement
