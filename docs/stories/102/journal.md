@@ -32,3 +32,12 @@ Bloc C, paroles, sons, sections :
 7. `paroles-des-tenues.ts` : annonce, titre de l'encart, description accessible, titre et phrase de la section.
 8. `effetsSonoresDeLaFin` : tenue reçue, « decouverte » une seule fois.
 9. `sectionsDeLEcran` : section `tenues` après la cabane, absente sans tenue reçue.
+
+### Cycles TDD
+
+- 1/9 paliers des tenues : `f91c991` (red) → `bb7ef3c`.
+- 2/9 `tenuesDe` : `320a960` (red) → `7600a76`, refactor `0f9f1ca` (vérification du total partagée avec la cabane).
+- 3/9 `tenueRecueParLaSeance` : `6e5ac73` (red) → `85dfd26`, refactor `de8dce6` (`totauxAvantEtApresLaSeance` partagé, cabane inchangée).
+- Revue intermédiaire bloc A (`86cb9f8..de8dce6`) : APPROUVÉ. Non bloquants à reprendre au refactor : sortir le total des étoiles de `cabane.ts` dans un module à part ; `verifierTotalDEtoiles` en garde ; exemple 36 → 37.
+- 4/9 `porterUneTenue` : `d5743e9` (red) → `0f63f84` ; format du test `bb56ca8`.
+- 5/9 `retirerLaTenue` : `73525d4` (red) → `4e5b19e`.
