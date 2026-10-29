@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import type { SeanceDeRevision } from "@domain/apprentissage";
-import { effetsSonoresDeLaFin, parolesDeFinDeRevision, phraseDeFinAvecLesNouveautes, type QueteDuJour, type Univers } from "@domain/motivation";
+import { effetsSonoresDeLaFin, parolesDeFinDeRevision, phraseDeFinAvecLaQuete, phraseDeFinAvecLesNouveautes, type QueteDuJour, type Univers } from "@domain/motivation";
 import { AnnonceDeLaQueteAccomplie } from "../accueil/AnnonceDeLaQueteAccomplie.tsx";
 import { useQueteAccomplieParLaSeance } from "../accueil/useQueteAccomplieParLaSeance.ts";
 import { Confettis } from "../celebration/index.ts";
 import { AnnonceDuNouvelEpisode } from "../histoire/AnnonceDuNouvelEpisode.tsx";
 import { useEpisodeOuvertParLaSeance } from "../histoire/useEpisodeOuvertParLaSeance.ts";
-import { phraseDeFinAvecLaQuete } from "../seance/fin-de-seance/phrase-de-fin-avec-la-quete.ts";
 import { messageDeSauvegarde } from "../seance/fin-de-seance/useSauvegardeDeLaSeance.ts";
 import { jourDuNavigateur } from "../seance/jour-du-navigateur.ts";
 import { ParoleDuGuide } from "../test-de-depart/ParoleDuGuide.tsx";
