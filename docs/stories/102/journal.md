@@ -55,3 +55,4 @@ Bloc C, paroles, sons, sections :
 - Deux règles écrites dans React faute de domaine, rendues au domaine : 11 « tout lire » lit les tenues (`e106df5` → `773b250`), 12 pastilles des tenues (`42fec92` → `4a331da`), refactor du front `9e0070c`.
 - Non fait, sans appelant : effacement de la tenue portée avec un profil supprimé depuis l'appareil (le front n'a pas cette suppression).
 - 2590 tests unitaires verts, `tsc` et build propres. Étape 4 : review complète ; étape 5 : steps E2E en parallèle.
+- Review complète, cycle 1 : APPROUVÉ. Non bloquants retenus pour un lot après l'E2E : encart de fin (dessin décoratif), libellé accessible de « Mes médailles » hors ligne, bouton « Retirer la tenue » seulement si une tenue est portée, dessins typés sur les clés du domaine, règle dys simplifiée, modèle mis à jour sur l'effacement avec un profil supprimé.
