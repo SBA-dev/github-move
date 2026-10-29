@@ -31,14 +31,14 @@ const deuxImages = (page: Page) =>
   page.evaluate(() => new Promise<void>((fait) => requestAnimationFrame(() => requestAnimationFrame(() => fait()))));
 
 /** Léa est sur son accueil : elle s'y choisit dans « Qui joue ? » (sans recharger la page) quand elle n'y est pas déjà. */
-async function surLAccueilDeLea(page: Page): Promise<Locator> {
+export async function surLAccueilDeLea(page: Page): Promise<Locator> {
   if (!(await accueil(page).isVisible())) await choisirSonProfil(page, "Léa");
   await expect(accueil(page)).toBeVisible();
   return accueil(page);
 }
 
 /** Ce que l'accueil calcule est affiché une fois les lectures revenues : avant, une absence ne prouve rien. */
-async function laisserLAccueilSeCalculer(page: Page): Promise<Locator> {
+export async function laisserLAccueilSeCalculer(page: Page): Promise<Locator> {
   const zone = await surLAccueilDeLea(page);
   await page.waitForLoadState("networkidle");
   await deuxImages(page);
