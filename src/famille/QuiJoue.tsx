@@ -28,15 +28,18 @@ export function QuiJoue({ etat, onChoisir, onAjouterUnEnfant }: Props) {
       {etat.type === "charges" && profils.length === 0 && <InvitationAffichee />}
       {profils.length > 0 && (
         <ul className="profils-a-choisir">
-          {profils.map((profil) => (
-            <li key={profil.id.valeur}>
-              <button type="button" className="profil-a-choisir" data-testid="profil-a-choisir" onClick={() => onChoisir(profil)}>
-                <PersonnageGuide univers={universDe(profil.univers)} humeur="content" />
-                <span className="prenom">{profil.prenom.valeur}</span>
-                <span className="classe-et-univers">{classeEtUnivers(profil)}</span>
-              </button>
-            </li>
-          ))}
+          {profils.map((profil) => {
+            const univers = universDe(profil.univers);
+            return (
+              <li key={profil.id.valeur}>
+                <button type="button" className="profil-a-choisir" data-testid="profil-a-choisir" onClick={() => onChoisir(profil)}>
+                  <PersonnageGuide univers={univers} humeur="content" libelle={univers.personnageGuide.nom} />
+                  <span className="prenom">{profil.prenom.valeur}</span>
+                  <span className="classe-et-univers">{classeEtUnivers(profil)}</span>
+                </button>
+              </li>
+            );
+          })}
         </ul>
       )}
       <button type="button" className="secondaire" onClick={onAjouterUnEnfant}>+ Ajouter un enfant</button>
