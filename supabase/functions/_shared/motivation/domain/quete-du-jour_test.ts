@@ -106,3 +106,43 @@ Deno.test("une séance terminée aujourd'hui sur n'importe quelle leçon accompl
     { genre: "accomplie", quete: "lecon" },
   );
 });
+
+Deno.test("sans leçon pour sa classe, une séance de leçon n'accomplit aucune quête", () => {
+  const leconDuJour = { genre: "aucuneLeconPourTaClasse" } as const;
+  const faitsApresUneSeanceDUneAutreClasse: FaitsDuJour = {
+    leconsDesSeancesTermineesDuJour: ["une-lecon-d-une-classe-d-avant"],
+    nombreDeSeancesDeRevisionTermineesDuJour: 0,
+  };
+
+  assertEquals(
+    queteDuJour(
+      { leconDuJour, nombreDeQuestionsDues: 0 },
+      faitsApresUneSeanceDUneAutreClasse,
+    ),
+    { genre: "sansQuete" },
+  );
+  assertEquals(
+    queteDuJour(
+      { leconDuJour, nombreDeQuestionsDues: 0 },
+      faitsDUnJourSansSeance,
+    ),
+    { genre: "sansQuete" },
+  );
+});
+
+Deno.test("une séance de leçon n'accomplit pas une quête de révision", () => {
+  const faitsApresUneSeanceDeLecon: FaitsDuJour = {
+    leconsDesSeancesTermineesDuJour: ["une-autre-lecon"],
+    nombreDeSeancesDeRevisionTermineesDuJour: 0,
+  };
+
+  const quete = queteDuJour(
+    {
+      leconDuJour: { genre: "aJouer", lecon: "le-son-in", titre: "Le son in" },
+      nombreDeQuestionsDues: 2,
+    },
+    faitsApresUneSeanceDeLecon,
+  );
+
+  assertEquals(quete, { genre: "revision", nombreDeQuestionsDues: 2 });
+});
