@@ -14,6 +14,10 @@ export const PALIERS_DES_TENUES: readonly PalierDesTenues[] = [
   { seuil: 37, tenue: { cle: "bottes-de-pluie", nom: "des bottes de pluie" } },
 ];
 
+export function tenueDesPaliers(cle: string | undefined): TenueDuPersonnageGuide | undefined {
+  return PALIERS_DES_TENUES.find((palier) => palier.tenue.cle === cle)?.tenue;
+}
+
 export type EtatDesTenues = {
   readonly total: number;
   readonly tenuesRecues: readonly TenueDuPersonnageGuide[];
