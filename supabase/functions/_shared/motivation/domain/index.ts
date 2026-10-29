@@ -68,6 +68,7 @@ export {
   TotalDEtoilesInvalide,
 } from "./cabane.ts";
 export { type PastilleDeLaCabane, pastillesDeLaCabane } from "./pastilles-de-la-cabane.ts";
+export { type PastilleDesTenues, pastillesDesTenues } from "./pastilles-des-tenues.ts";
 export {
   annonceDeLObjetRecu,
   descriptionDuDessin,
