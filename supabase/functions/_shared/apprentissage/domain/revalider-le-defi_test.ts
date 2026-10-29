@@ -3,7 +3,14 @@ import { type Lecon, lireLecon, matiereDeCode, Niveau } from "../../catalogue/do
 import { hasardSansMelange } from "../test_utils/hasard-fixe.ts";
 import { CleDeQuestion } from "./cle-de-question.ts";
 import type { Defi, DefiReleve } from "./defis-de-la-matiere.ts";
-import { DefiAVenir, DefiInconnu, DefiNonFini, PlanDuDefiIncoherent, QuestionHorsDuDefi } from "./erreurs.ts";
+import {
+  DefiAVenir,
+  DefiIncoherent,
+  DefiInconnu,
+  DefiNonFini,
+  PlanDuDefiIncoherent,
+  QuestionHorsDuDefi,
+} from "./erreurs.ts";
 import type { DefiTermineAEnregistrer } from "./defi-termine-a-enregistrer.ts";
 import { Etoiles } from "./etoiles.ts";
 import { Jour } from "./jour.ts";
@@ -209,4 +216,25 @@ Deno.test("une question sans aucune réponse est refusée", () => {
   const reponses = envoiValide.reponses.map((donnees, rang) => rang === 4 ? [] : donnees);
 
   assertThrows(() => revalider({ ...envoiValide, reponses }), DefiNonFini);
+});
+
+Deno.test("une réponse donnée après la réussite d'une question est refusée, sans être reportée sur la question suivante", () => {
+  const reponses = envoiValide.reponses.map((donnees, rang) => rang === 4 ? [...donnees, bonneReponse] : donnees);
+
+  assertThrows(() => revalider({ ...envoiValide, reponses }), DefiIncoherent);
+});
+
+Deno.test("une question sans réponse est refusée même quand la question précédente a une réponse de trop", () => {
+  const reponses = envoiValide.reponses.map((donnees, rang) => {
+    if (rang === 4) return [...donnees, bonneReponse];
+    return rang === 5 ? [] : donnees;
+  });
+
+  assertThrows(() => revalider({ ...envoiValide, reponses }), DefiIncoherent);
+});
+
+Deno.test("un tirage qui n'est pas un ordre possible des choix est refusé comme incohérent", () => {
+  const tirages = envoiValide.tirages.map((tirage, rang) => rang === 0 ? ["inconnue", "autre"] : tirage);
+
+  assertThrows(() => revalider({ ...envoiValide, tirages }), DefiIncoherent);
 });
