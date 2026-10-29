@@ -1,4 +1,4 @@
-import { type EtatDesTenues, PALIERS_DES_TENUES } from "./tenues.ts";
+import { type EtatDesTenues, PALIERS_DES_TENUES, type TenueDuPersonnageGuide } from "./tenues.ts";
 
 export type TenuePortee = string | undefined;
 
@@ -24,4 +24,14 @@ export function porterUneTenue(etatDesTenues: EtatDesTenues, cle: string): strin
 
 export function retirerLaTenue(): TenuePortee {
   return undefined;
+}
+
+export function tenueAMontrer(
+  tenuePortee: TenuePortee,
+  etatDesTenues?: EtatDesTenues,
+): TenueDuPersonnageGuide | undefined {
+  const palier = PALIERS_DES_TENUES.find((palier) => palier.tenue.cle === tenuePortee);
+  if (palier === undefined) return undefined;
+  if (etatDesTenues && !etatDesTenues.tenuesRecues.some((tenue) => tenue.cle === palier.tenue.cle)) return undefined;
+  return palier.tenue;
 }
