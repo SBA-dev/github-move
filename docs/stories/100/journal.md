@@ -23,3 +23,5 @@ Session : session_015z4jmMahATJuud1H1cNRHz. Décision réservée : 0038.
   4. `defiOuvertParLaSeance` : API fixée par l'orchestrateur sur le motif de `leconAcquiseParLaSeance` ; RED `e27296e`, GREEN `611edcf`.
   5-6. `questionsPosablesDuDefi`, `planDuDefi` : RED `903a4d7`, GREEN `86abc42` (refactor de `posables` et `melanger`). Deux branches écrites sans test (addition → calcul, dictée) : tests ajoutés `0bf7e46`, prouvés en cassant le code.
 - Revue delta du bloc A (`174542c..0bf7e46`) lancée.
+- Revue delta bloc A, cycle 1 : À CORRIGER, 1 bloquant (une même clé posée deux fois : boîte et calcul « 3 + 3 »). RED `fb3534a`, fix `47438ef`, refactors des non-bloquants `87a5548`, `4b65598`, `484a855`, `b30c7ec` ; modèle aligné sur le code `62a9d27`.
+- Revue delta bloc A, cycle 2 (`0bf7e46..b30c7ec`) : **APPROUVÉ**. Dernier commit relu : `b30c7ec`. Non-bloquant gardé pour un refactor : le `Set` modifié dans un `filter` de `plan-du-defi.ts`.
