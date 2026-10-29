@@ -165,4 +165,9 @@ export {
   type QueteDuJour,
   queteDuJour,
 } from "./quete-du-jour.ts";
-export { feteDeLaQueteAccomplie, propositionDeLaQueteDuJour, reponseAuRefusDeLaQuete } from "./paroles-de-la-quete.ts";
+export {
+  feteDeLaQueteAccomplie,
+  phraseDeFinAvecLaQuete,
+  propositionDeLaQueteDuJour,
+  reponseAuRefusDeLaQuete,
+} from "./paroles-de-la-quete.ts";

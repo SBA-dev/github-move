@@ -25,3 +25,7 @@ export function feteDeLaQueteAccomplie(prenom: string): string {
 export function reponseAuRefusDeLaQuete(): string {
   return "D'accord, choisis ce qui te fait envie !";
 }
+
+export function phraseDeFinAvecLaQuete(phraseDeFin: string, prenom: string, queteAccomplie: boolean): string {
+  return queteAccomplie ? `${phraseDeFin} ${feteDeLaQueteAccomplie(prenom)}` : phraseDeFin;
+}
