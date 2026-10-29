@@ -66,3 +66,23 @@ Bloc C, paroles, sons, sections :
   - ESCALADE (#102.30) : 4e cycle proposé (hook réactif `useMouvementsReduits`, attente dans le step propre à #102). En attente de la réponse du responsable.
 - 06:50 UTC : ✅ réponse du PO publiée par le responsable (`[Responsable]`, sur #102 et non sur #64, et confirmée par message direct de sa session) : « 102 reco partout ». Planche des tenues validée (#102.28, #102.29). 4e cycle E2E autorisé (#102.30). Les autres usages de `useReducedMotion()` sont notés en dette de fin de vague par le responsable.
 - Correctif `9a21ae3` : hook réactif `useMouvementsReduits()` (`useSyncExternalStore` sur `matchMedia`) dans `Paysage`, `PersonnageGuide` et `partage.tsx`.
+- E2E, 4e cycle : la course de « Qui joue ? » est corrigée dans les steps, sous `@issue-102` seulement (`19b0a96`). `@issue-102` : 48/48 verts sur `telephone`. Périmètre avec #96 : 153/155 au run complet, les 2 KO restants (« lecture à la demande » de #102, « s'enfonce puis revient » de #96) sont verts relancés seuls 3 fois chacun : instables sous charge. `@wip` retiré (`2c15662`).
+- Review delta, cycle 4 : APPROUVÉ. Non bloquants laissés : la constante `REQUETE` à remonter dans `mouvements-reduits.ts`, la déclaration de la `WeakMap` dans `profils-enfants.steps.ts`, la dette `useReducedMotion()` hors de #102.
+- Vérifications finales : 2590 tests unitaires, lint, fmt, `tsc` et build verts. `main` n'a pas bougé depuis le départ de la branche (`c8b0ed3`).
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Durée, du lancement à « PRÊTE À MERGER » | ≈ 8 h 10 (28/10 23:41 → 29/10 07:50 UTC), merge non compris |
+| Attente du PO, validation n°1 | 7 min (23:55 → 00:02), sans blocage |
+| Attente du PO, planches | aucune attente bloquante : le câblage a continué ; réponse reçue avec l'escalade |
+| Attente du PO, escalade #102.30 | ≈ 3 h 17 bloquantes (03:33 → 06:50 UTC, la nuit) |
+| Attente d'un verrou | aucune (aucune ressource partagée) |
+| Cycles TDD | 12 comportements (9 prévus, 1 ajouté après la revue du bloc C, 2 ajoutés après le câblage pour sortir des règles de React) |
+| Revues intermédiaires | 3, toutes APPROUVÉ du premier coup |
+| Cycles de review | cycle 1 APPROUVÉ ; cycles 2 et 3 À CORRIGER (le 1er venait d'une consigne de l'orchestrateur, le 2e d'une erreur de l'orchestrateur sur un revert) ; cycle 4 APPROUVÉ |
+| Cycles E2E KO | 3, puis un 4e vert après escalade. Cause principale : `useReducedMotion()` de Motion ne lit la préférence qu'au montage (code de #96) |
+| Intégrations de `main` | 0 (`main` inchangée), aucun conflit |
+| Régression sur `main` après le merge | à relever après le merge |
+| Tokens et coût | relevés par le responsable |
