@@ -12,6 +12,9 @@ const ENFANT = "9a1b2c3d-4e5f-4a6b-8c7d-0e1f2a3b4c5d";
 const AUTRE_ENFANT = "1d2c3b4a-5f6e-4d7c-8b9a-0f1e2d3c4b5a";
 const DEFI = "3f2b8c1e-5a4d-4e6f-9b7a-1c2d3e4f5a6b";
 
+const clientDuServeurInutilise = clientSupabaseFactice().client;
+const clientDuParentInutilise = clientSupabaseFactice().client;
+
 const fait: DefiTermine = {
   type: "DefiTermine",
   id: DEFI,
@@ -47,7 +50,7 @@ Deno.test("les défis relevés d'un enfant sont lus dans sa table et rendus avec
     },
   });
 
-  const releves = await new DefisTerminesSupabase(faux.client).releves(ENFANT);
+  const releves = await new DefisTerminesSupabase(faux.client, clientDuServeurInutilise).releves(ENFANT);
 
   assertEquals(releves, [
     { matiere: matiereDeCode("maths"), niveau: Niveau.de("CE1"), numero: 2 },
@@ -67,7 +70,7 @@ Deno.test("une ligne illisible des défis relevés (matière ou classe inconnue)
     },
   });
 
-  const releves = await new DefisTerminesSupabase(faux.client).releves(ENFANT);
+  const releves = await new DefisTerminesSupabase(faux.client, clientDuServeurInutilise).releves(ENFANT);
 
   assertEquals(releves, [{ matiere: matiereDeCode("emc"), niveau: Niveau.de("CM1"), numero: 1 }]);
 });
@@ -85,13 +88,20 @@ Deno.test("une erreur de la base à la lecture des défis relevés est remontée
     return c as never;
   };
 
-  await assertRejects(() => new DefisTerminesSupabase(client).releves(ENFANT), Error, "panne");
+  await assertRejects(
+    () => new DefisTerminesSupabase(client, clientDuServeurInutilise).releves(ENFANT),
+    Error,
+    "panne",
+  );
 });
 
 Deno.test("le défi terminé et la file sont écrits par la fonction Postgres dédiée", async () => {
   const faux = clientSupabaseFactice({ reponseDeFonction: { data: "enregistree" } });
 
-  const issue = await new DefisTerminesSupabase(faux.client).enregistrer(fait, { file, versionLue: 7 });
+  const issue = await new DefisTerminesSupabase(clientDuParentInutilise, faux.client).enregistrer(fait, {
+    file,
+    versionLue: 7,
+  });
 
   assertEquals(faux.appels, [{
     fonction: "enregistrer_le_defi_termine",
@@ -125,7 +135,10 @@ Deno.test("l'issue de la fonction Postgres du défi est rendue telle quelle : d�
   for (const issue of ["dejaEnregistree", "conflit"]) {
     const faux = clientSupabaseFactice({ reponseDeFonction: { data: issue } });
 
-    assertEquals(await new DefisTerminesSupabase(faux.client).enregistrer(fait, { file, versionLue: 0 }), issue);
+    assertEquals(
+      await new DefisTerminesSupabase(clientDuParentInutilise, faux.client).enregistrer(fait, { file, versionLue: 0 }),
+      issue,
+    );
   }
 });
 
@@ -133,8 +146,31 @@ Deno.test("une erreur de la base lors de l'enregistrement d'un défi terminé es
   const faux = clientSupabaseFactice({ reponseDeFonction: { data: null, error: { message: "panne" } } });
 
   await assertRejects(
-    () => new DefisTerminesSupabase(faux.client).enregistrer(fait, { file, versionLue: 1 }),
+    () => new DefisTerminesSupabase(clientDuParentInutilise, faux.client).enregistrer(fait, { file, versionLue: 1 }),
     Error,
     "panne",
   );
+});
+
+Deno.test("les défis relevés sont lus avec le client du parent, sous RLS, et jamais avec celui du serveur", async () => {
+  const duParent = clientSupabaseFactice({
+    tables: { defis_termines: [{ profil: ENFANT, matiere: "maths", classe: "CE1", numero: 2 }] },
+  });
+  const duServeur = clientSupabaseFactice();
+
+  const releves = await new DefisTerminesSupabase(duParent.client, duServeur.client).releves(ENFANT);
+
+  assertEquals(releves.length, 1);
+  assertEquals(duParent.lectures.length, 1);
+  assertEquals(duServeur.lectures, []);
+});
+
+Deno.test("le défi terminé est enregistré avec le client du serveur, jamais avec celui du parent", async () => {
+  const duParent = clientSupabaseFactice();
+  const duServeur = clientSupabaseFactice({ reponseDeFonction: { data: "enregistree" } });
+
+  await new DefisTerminesSupabase(duParent.client, duServeur.client).enregistrer(fait, { file, versionLue: 7 });
+
+  assertEquals(duServeur.appels.map((appel) => appel.fonction), ["enregistrer_le_defi_termine"]);
+  assertEquals(duParent.appels, []);
 });
