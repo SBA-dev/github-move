@@ -57,7 +57,7 @@ Réponse du PO du 2026-10-25 : le défi arrive « à la fin d'un chapitre ou d'u
 ### Ce qui est réutilisé tel quel
 
 - `parcoursDeLaMatiere` (place, état, prochaine leçon), `estReussie`, `matieresDuParcours` (#25, #26, #27).
-- Pour poser une question seule : `questionDeRevision` (#28), qui sait le faire pour bulles, lecture, écoute, trous, conjugaison, classer, boîte, barres, calcul, addition et dictée. Le principe du plan du test de départ (`planDuTestDeDepart`, port `Hasard`, #27) sert à tirer les questions.
+- Pour poser une question seule : `questionDeRevision` et `posables` (#28), qui savent le faire pour bulles, lecture, écoute, trous, conjugaison, classer, boîte, barres, calcul, addition et dictée. Pour le calcul et l'addition, seules les opérations écrites dans la leçon (`operations`) se posent seules : un exercice qui n'a qu'un `generateur` ne donne une question qu'avec un tirage d'origine, ce qu'a une question ratée en révision mais pas une question du défi (règle 5). Le principe du plan du test de départ (`planDuTestDeDepart`, port `Hasard`, #27) sert à tirer les questions.
 - Pour retenir les questions ratées : `FileDeRevision.retenir` et le type `QuestionRateeARetenir` (#28), sans changement de règle.
 - Le chemin d'écriture de la séance de révision : Edge Function, JWT de l'appelant, revalidation, écriture `service_role`, idempotence par identifiant, écriture de la file « tout ou rien » avec sa version lue (décisions 0013, 0016).
 - Les exercices **ne changent pas** : aucune question nouvelle n'est écrite pour le défi.
@@ -76,7 +76,7 @@ Il y a 265 leçons et 26 couples matière et classe. Le français et les maths o
 
 Avec 1.b, la dernière partie de chaque matière n'a pas de défi : #100 donne donc **31 défis** (41 − 10 dernières parties des grands couples ; les 16 petits couples n'en ont aucun).
 
-Questions posables (types de la révision) : au moins 8 par bloc de 5 ; la médiane est de 4 par leçon. Cinq leçons n'en ont aucune (deux chansons, deux poèmes, une leçon de sciences en `ordre`). Les types `ordre`, `memoriser` et `fluence` ne se posent pas seuls, et la fluence est chronométrée.
+Questions posables (types de la révision) : au moins 8 par bloc de 5 ; la médiane est de 4 par leçon. Cinq leçons n'en ont aucune (deux chansons, deux poèmes, une leçon de sciences en `ordre`). Les types `ordre`, `memoriser` et `fluence` ne se posent pas seuls, et la fluence est chronométrée. Les exercices `calcul` et `addition` qui n'ont qu'un `generateur` ne donnent pas non plus de question au défi (règle 5).
 
 ## Termes
 
@@ -106,7 +106,7 @@ classDiagram
   direction LR
   class PartieDuParcours {
     <<value object, calculé>>
-    matiere ; niveau ; numero
+    numero
     lecons : LeconId[]
   }
   class Defi {
@@ -116,11 +116,20 @@ classDiagram
   }
   class EtatDuDefi {
     <<value object>>
-    aVenir(leconsRestantes) | ouvert | releve
+    genre : aVenir(leconsRestantes) | ouvert | releve
+  }
+  class DefiReleveLu {
+    <<value object>>
+    matiere ; niveau ; numero
   }
   class PlanDuDefi {
     <<value object>>
-    questions : QuestionPrevue[] (leçon, position de l'exercice, question)
+    questions : QuestionDuDefi[]
+  }
+  class QuestionDuDefi {
+    <<value object>>
+    identite : clé de question
+    origine : leçon d'origine, position de l'exercice, type
   }
   class SeanceDeDefi {
     <<agrégat, navigateur et serveur>>
@@ -139,23 +148,25 @@ classDiagram
     retenir(questionsRatees, jour, termineeLe)
   }
   PartieDuParcours ..> Defi : toutes sauf la dernière
-  Defi ..> EtatDuDefi : lu avec le parcours et les défis relevés
+  Defi ..> EtatDuDefi : etatDuDefi(defi, parcours, defisReleves)
+  DefiReleveLu ..> EtatDuDefi : même matière, classe, numéro
   Defi ..> PlanDuDefi : planDuDefi(defi, lecons, hasard)
+  PlanDuDefi *-- QuestionDuDefi
   SeanceDeDefi ..> PlanDuDefi : joue
   SeanceDeDefi ..> DefiReleve : DefiTermine, revalidé par TerminerLeDefi
   SeanceDeDefi ..> FileDeRevision : questions ratées, même enregistrement
 ```
 
-Un défi est identifié par **(matière, classe, numéro de la partie)**. Le numéro est celui de la partie du parcours : « Défi 1 » est le défi de la partie 1.
+Un défi est identifié par **(matière, classe, numéro de la partie)**. Le numéro est celui de la partie du parcours : « Défi 1 » est le défi de la partie 1. Une partie du parcours ne porte que son numéro et ses leçons : la matière et la classe sont celles du parcours dont elle est tirée, et le défi les reçoit de qui le demande. `DefiReleveLu` est, dans le code, le type `DefiReleve` de `defis-de-la-matiere.ts` : la forme lue d'un défi relevé (matière, classe, numéro), distincte de la ligne enregistrée `DefiReleve` du diagramme.
 
 ### Fonctions pures d'Apprentissage (`@domain/apprentissage`, navigateur et serveur)
 
-- `partiesDuParcours(parcours)` → `PartieDuParcours[]` : les leçons de la classe, dans l'ordre des places, découpées en blocs de 5 ; un dernier bloc de 1 ou 2 leçons rejoint le précédent. Parties numérotées à partir de 1.
-- `defisDeLaMatiere(parcours, defisReleves)` → les défis de la matière, un par partie **sauf la dernière**, chacun avec son `EtatDuDefi`. Une matière d'une seule partie n'en a aucun.
-- `etatDuDefi(defi, parcours, defisReleves)` : `releve` si un défi relevé a la même matière, la même classe et le même numéro (règle 7) ; sinon `ouvert` si toutes ses leçons sont réussies ; sinon `aVenir`, avec le nombre de leçons qui manquent.
-- `defiOuvertParLaSeance(avant, apres)` (nom de calcul) : le défi passé de `aVenir` à `ouvert` par la séance, pour l'annonce de la fin de la séance. Il n'y en a jamais deux pour une même séance : une séance ne rend réussie qu'une leçon, qui n'est que dans une partie.
-- `questionsPosablesDuDefi(defi, lecons)` : les questions des leçons du défi qui se posent seules (types de `questionDeRevision`), sans fluence, `ordre` ni `memoriser`.
-- `planDuDefi(defi, lecons, hasard)` → `PlanDuDefi` (règle 5).
+- `partiesDuParcours(parcours)` → `PartieDuParcours[]` (numéro, leçons) : les leçons du parcours, dans l'ordre des places, découpées en blocs de 5 ; un dernier bloc de 1 ou 2 leçons rejoint le précédent. Parties numérotées à partir de 1.
+- `defisDeLaMatiere(parcours, matiere, niveau)` → `Defi[]` : les défis de la matière, un par partie **sauf la dernière**, **sans leur état**. Une matière d'une seule partie n'en a aucun.
+- `etatDuDefi(defi, parcours, defisReleves)` → `EtatDuDefi` : `releve` si un défi relevé a la même matière, la même classe et le même numéro (règle 7) ; sinon `ouvert` si toutes ses leçons sont réussies dans le parcours ; sinon `aVenir`, avec le nombre de leçons qui manquent (`leconsRestantes`).
+- `defiOuvertParLaSeance(avant, apres, matiere, niveau, defisReleves)` → `Defi` ou rien : le défi passé de `aVenir` (parcours d'avant la séance) à `ouvert` (parcours d'après), pour l'annonce de la fin de la séance. Un défi déjà relevé n'est jamais annoncé. Il n'y en a jamais deux pour une même séance : une séance ne rend réussie qu'une leçon, qui n'est que dans une partie.
+- `questionsPosablesDuDefi(defi, lecons)` → `QuestionDuDefi[]` : les questions des leçons du défi qui se posent seules (règle 5), chacune avec sa clé de question (`identite`) et son origine (leçon d'origine, position de l'exercice, type).
+- `planDuDefi(defi, lecons, hasard)` → `PlanDuDefi` (`questions : QuestionDuDefi[]`, règle 5) ; `AucuneQuestionPourLeDefi` si aucune leçon du défi n'a de question posable. Le nombre de questions est `NOMBRE_DE_QUESTIONS_DU_DEFI` (10).
 - `revaliderLeDefi(defi, etat, lecons, defiTermineAEnregistrer)` → `DefiTermine` ou une erreur métier (règle 10), sur le modèle de `revaliderLaSeanceDeRevision`.
 
 ### Commande, événement, erreurs
@@ -184,7 +195,9 @@ Un défi est identifié par **(matière, classe, numéro de la partie)**. Le num
 4. **Le défi ne bloque rien** : la prochaine leçon, l'avancée dans le parcours (#99) et la leçon du jour (#29) l'ignorent. La partie suivante est jouable sans lui.
 5. **Questions** (100.5, 100.6, 100.7, 100.22) :
    - elles viennent seulement des leçons du défi, et seulement d'exercices qui se posent seuls, sans chrono (pas de fluence, d'`ordre` ni de `memoriser`) ;
+   - les exercices `calcul` et `addition` qui n'ont qu'un `generateur` (sans `operations` écrites) ne donnent **aucune question** au défi : une opération générée ne se pose seule qu'avec son tirage d'origine, qu'une question du défi n'a pas, comme dans la révision (#28) ; leurs `operations` écrites, elles, se posent ;
    - chaque question posable est posée **au plus une fois** dans un défi ;
+   - une question que partagent deux leçons du défi (même clé de question, par exemple « 3 + 3 » dans une boîte d'une leçon et dans un calcul d'une autre) ne compte qu'**une fois** : elle garde sa **première occurrence** (la première leçon où elle apparaît, puis le premier exercice de cette leçon), qui donne sa leçon d'origine ; la leçon suivante ne la compte pas parmi ses questions posables ;
    - il y en a **10**, ou **toutes les questions posables, une fois chacune**, quand il y en a moins de 10 ;
    - elles sont réparties à parts égales entre les leçons qui en ont : une leçon en donne au plus une de plus qu'une autre ; les questions en plus vont à des leçons tirées au hasard ; une leçon qui n'a pas assez de questions posables pour sa part les donne toutes, et les autres leçons complètent (exemple : 1, 4, 4, 4 et 4 questions posables → 1, puis 3, 2, 2, 2 tirés au hasard) ;
    - une leçon sans question posable n'en donne pas ; un défi sans aucune question posable n'est jamais joué (`AucuneQuestionPourLeDefi`) ;
@@ -244,7 +257,7 @@ Ce que #100 prépare pour #137, sans le livrer : `defisDeLaMatiere` laisse la de
 
 ## Emplacement
 
-- `supabase/functions/_shared/apprentissage/domain/` : `partie-du-parcours.ts` (`partiesDuParcours`), `defis-de-la-matiere.ts` (`Defi`, `EtatDuDefi`, `defisDeLaMatiere`, `etatDuDefi`, `defiOuvertParLaSeance`), `plan-du-defi.ts` (`questionsPosablesDuDefi`, `planDuDefi`), `seance-de-defi.ts` (agrégat `SeanceDeDefi`, fait `DefiTermine`), `defi-termine-a-enregistrer.ts`, `revalider-le-defi.ts`, erreurs dans `erreurs.ts`, exports dans `index.ts` (chacun avec son `_test.ts`).
+- `supabase/functions/_shared/apprentissage/domain/` : `partie-du-parcours.ts` (`partiesDuParcours`), `defis-de-la-matiere.ts` (`Defi`, `DefiReleve` lu, `EtatDuDefi`, `defisDeLaMatiere`, `etatDuDefi`, `defiOuvertParLaSeance`), `plan-du-defi.ts` (`QuestionDuDefi`, `PlanDuDefi`, `NOMBRE_DE_QUESTIONS_DU_DEFI`, `questionsPosablesDuDefi`, `planDuDefi`), `seance-de-defi.ts` (agrégat `SeanceDeDefi`, fait `DefiTermine`), `defi-termine-a-enregistrer.ts`, `revalider-le-defi.ts`, erreurs dans `erreurs.ts`, exports dans `index.ts` (chacun avec son `_test.ts`).
 - `apprentissage/application/terminer-le-defi.ts` (ports existants `LeconsDuCatalogue`, `RattachementsDuParent`, `ResultatsDesLecons`, `ResultatsDesTestsDeDepart`, `NiveauDuProfil`, `FilesDeRevision` ; port nouveau `application/ports/defis-termines.ts` : défis relevés du profil, et enregistrement du défi terminé avec la file, tout ou rien). `apprentissage/infrastructure/` : son adaptateur Supabase. `test_utils/` : son fake.
 - `supabase/functions/terminer-le-defi/index.ts` (handler fin), `supabase/migrations/<horodatage>_defis_termines.sql`.
 - `supabase/functions/_shared/motivation/domain/` : `paroles-du-defi.ts`, `defis-releves.ts`, et la modification de `paroles-de-seance.ts` (« Nouveau jeu »).
