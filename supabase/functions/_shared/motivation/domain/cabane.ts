@@ -1,3 +1,16 @@
+import {
+  type MeilleuresEtoilesDuProfil,
+  totauxAvantEtApresLaSeance,
+  verifierTotalDEtoiles,
+} from "./total-des-etoiles.ts";
+
+export {
+  type MeilleuresEtoilesDuProfil,
+  NombreDEtoilesInvalide,
+  totalDesEtoiles,
+  TotalDEtoilesInvalide,
+} from "./total-des-etoiles.ts";
+
 export type ObjetDeLaCabane = { readonly cle: string; readonly nom: string };
 export type PalierDeLaCabane = { readonly seuil: number; readonly objet: ObjetDeLaCabane };
 
@@ -16,26 +29,6 @@ export const PALIERS_DE_LA_CABANE: readonly PalierDeLaCabane[] = [
   { seuil: 75, objet: { cle: "etoile-magique", nom: "l'étoile magique" } },
 ];
 
-export type MeilleuresEtoilesDuProfil = ReadonlyMap<string, number>;
-
-export class NombreDEtoilesInvalide extends Error {
-  constructor(readonly etoiles: number) {
-    super(`${etoiles} n'est pas un nombre d'étoiles valide : une leçon rapporte de 1 à 3 étoiles.`);
-    this.name = "NombreDEtoilesInvalide";
-  }
-}
-
-function verifierNombreDEtoiles(etoiles: number): number {
-  if (!Number.isInteger(etoiles) || etoiles < 1 || etoiles > 3) throw new NombreDEtoilesInvalide(etoiles);
-  return etoiles;
-}
-
-export function totalDesEtoiles(meilleures: MeilleuresEtoilesDuProfil): number {
-  let total = 0;
-  for (const etoiles of meilleures.values()) total += verifierNombreDEtoiles(etoiles);
-  return total;
-}
-
 export type EtatDeLaCabane = {
   readonly total: number;
   readonly objetsRecus: readonly ObjetDeLaCabane[];
@@ -47,13 +40,6 @@ export type EtatDeLaCabane = {
   readonly complete: boolean;
 };
 
-export class TotalDEtoilesInvalide extends Error {
-  constructor(readonly total: number) {
-    super(`${total} n'est pas un total d'étoiles valide : il faut un nombre entier positif ou nul.`);
-    this.name = "TotalDEtoilesInvalide";
-  }
-}
-
 function prochainPalierDe(total: number): EtatDeLaCabane["prochainPalier"] {
   const prochain = PALIERS_DE_LA_CABANE.find((palier) => palier.seuil > total);
   if (prochain === undefined) return undefined;
@@ -61,7 +47,7 @@ function prochainPalierDe(total: number): EtatDeLaCabane["prochainPalier"] {
 }
 
 export function cabaneDe(total: number): EtatDeLaCabane {
-  if (!Number.isInteger(total) || total < 0) throw new TotalDEtoilesInvalide(total);
+  verifierTotalDEtoiles(total);
   const objetsRecus = PALIERS_DE_LA_CABANE.filter((palier) => palier.seuil <= total).map((palier) => palier.objet);
   const prochainPalier = prochainPalierDe(total);
   return {
@@ -78,11 +64,8 @@ export function objetRecuParLaSeance(
   etoilesDeLaSeance: number | undefined,
 ): ObjetDeLaCabane | undefined {
   if (etoilesDeLaSeance === undefined) return undefined;
-  const etoilesValides = verifierNombreDEtoiles(etoilesDeLaSeance);
-  const meilleurAvant = meilleuresAvant.get(lecon) ?? 0;
-  const totalAvant = totalDesEtoiles(meilleuresAvant);
-  const totalApres = totalAvant - meilleurAvant + Math.max(meilleurAvant, etoilesValides);
-  const objetsAvant = cabaneDe(totalAvant).objetsRecus;
-  const objetsApres = cabaneDe(totalApres).objetsRecus;
+  const { avant, apres } = totauxAvantEtApresLaSeance(meilleuresAvant, lecon, etoilesDeLaSeance);
+  const objetsAvant = cabaneDe(avant).objetsRecus;
+  const objetsApres = cabaneDe(apres).objetsRecus;
   return objetsApres.length > objetsAvant.length ? objetsApres.at(-1) : undefined;
 }

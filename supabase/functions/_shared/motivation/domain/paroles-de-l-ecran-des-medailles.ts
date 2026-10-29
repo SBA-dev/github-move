@@ -6,7 +6,10 @@ import { parolesDeLaSectionDesBadges, phraseSansBadge, titreDeLaSectionDesBadges
 import { parolesDeLaSectionDeLHistoire } from "./paroles-de-l-histoire.ts";
 import { phraseDeLEtat, titreDeLaSection } from "./paroles-de-la-cabane.ts";
 import type { PastilleDeRecord } from "./records-de-calcul-rapide.ts";
+import { phraseDeLEtatDesTenues, titreDeLaSectionDesTenues } from "./paroles-des-tenues.ts";
+import type { PersonnageGuide } from "./personnage-guide.ts";
 import { sectionsDeLEcran } from "./sections-de-l-ecran.ts";
+import type { EtatDesTenues } from "./tenues.ts";
 
 export const NOM_DE_L_ECRAN_DES_MEDAILLES = "Mes médailles";
 export const TITRE_DES_RECORDS_DE_CALCUL_RAPIDE = "Mes records de calcul rapide";
@@ -16,6 +19,8 @@ type ContenuDeLEcran = {
   cabane: EtatDeLaCabane | undefined;
   histoire?: EtatDeLHistoire;
   badges?: readonly Badge[];
+  tenues?: EtatDesTenues;
+  personnage?: PersonnageGuide;
 };
 
 export function parolesDeLaSectionDesBadgesOuSansBadge(badges: readonly Badge[]): string[] {
@@ -42,14 +47,25 @@ export function parolesDeLaSectionDesRecords(pastilles: readonly PastilleDeRecor
 }
 
 export function parolesALOuverture(
-  { toutLire, pastilles, cabane, histoire, badges }: { toutLire: boolean } & ContenuDeLEcran,
+  { toutLire, pastilles, cabane, histoire, badges, tenues, personnage }: { toutLire: boolean } & ContenuDeLEcran,
 ): string[] {
   const guide = parolesDuGuideALOuverture({ pastilles, cabane, histoire, badges });
   if (!toutLire) return [guide];
   const sections = sectionsDeLEcran({ pastilles, cabane, histoire, badges });
   const cabaneLue = cabane !== undefined ? [titreDeLaSection(), phraseDeLEtat(cabane)] : [];
+  const tenuesLues = tenues !== undefined && personnage !== undefined
+    ? [titreDeLaSectionDesTenues(personnage), phraseDeLEtatDesTenues(personnage, tenues)]
+    : [];
   const histoireLue = sections.includes("histoire") ? parolesDeLaSectionDeLHistoire() : [];
   const badgesLus = badges !== undefined ? parolesDeLaSectionDesBadgesOuSansBadge(badges) : [];
   const recordsLus = sections.includes("recordsDeFluence") ? parolesDeLaSectionDesRecords(pastilles) : [];
-  return [guide, NOM_DE_L_ECRAN_DES_MEDAILLES, ...cabaneLue, ...histoireLue, ...badgesLus, ...recordsLus];
+  return [
+    guide,
+    NOM_DE_L_ECRAN_DES_MEDAILLES,
+    ...cabaneLue,
+    ...tenuesLues,
+    ...histoireLue,
+    ...badgesLus,
+    ...recordsLus,
+  ];
 }

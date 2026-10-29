@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import type { Humeur } from "@domain/motivation";
 import { choisir, type DessinDuPersonnage, Yeux } from "./partage.tsx";
+import { type Ancrage, TenueDerriere, TenueDevant } from "./tenues.tsx";
 
 const CHAUSSURE = (
   <>
@@ -34,7 +35,13 @@ function bouche(humeur: Humeur, id: string): ReactNode {
   return bouches[humeur];
 }
 
-export const Lili: DessinDuPersonnage = ({ humeur, id }) => (
+const ANCRAGE: Ancrage = {
+  cou: { x: 0, y: -41, echelle: 1 },
+  dos: { x: 0, y: -16, echelle: 1.15, elargissement: 1.55 },
+  pieds: { gauche: { x: -14.7, y: 60, echelle: 1 }, droit: { x: 14.7, y: 60, echelle: 1 }, tige: 24 },
+};
+
+export const Lili: DessinDuPersonnage = ({ humeur, id, tenue }) => (
   <svg viewBox="-83 -119 166 208" overflow="visible" aria-hidden="true">
     <defs>
       <clipPath id={`${id}oeil`}>
@@ -44,6 +51,7 @@ export const Lili: DessinDuPersonnage = ({ humeur, id }) => (
         <path d="M-11 11 Q0 27 11 11 Z" />
       </clipPath>
     </defs>
+      <TenueDerriere tenue={tenue} ancrage={ANCRAGE} id={id} />
       <path fill="none" stroke="#33304A" strokeWidth="20" strokeLinecap="round" strokeLinejoin="round" d="M-9.2 7.5Q-11.2 34.3 -12.8 57.9" />
       <path fill="none" stroke="#FBEFF9" strokeWidth="13" strokeLinecap="round" strokeLinejoin="round" d="M-9 4Q-11.1 32.8 -12.8 57.9" />
       <path fill="none" stroke="#E2CCE0" strokeWidth="5.5" strokeLinecap="round" strokeLinejoin="round" d="M-6.8 22.2Q-7.6 33.9 -8.4 44.8" />
@@ -205,5 +213,6 @@ export const Lili: DessinDuPersonnage = ({ humeur, id }) => (
         <path d="M-5.8 -9 l0.6 -4M-1.9 -9 l0.2 -4M1.9 -9 l-0.2 -4M5.8 -9 l-0.6 -4" fill="none" stroke="#C9956E" strokeWidth="1.2" strokeLinecap="round" opacity=".7" />
         <path d="M3 8 Q7 4 7 -1" fill="none" stroke="#C9956E" strokeWidth="2.2" strokeLinecap="round" />
       </g>
+    <TenueDevant tenue={tenue} ancrage={ANCRAGE} id={id} />
   </svg>
 );

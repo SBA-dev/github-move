@@ -202,7 +202,7 @@ Given(
   async ({ famille, page, monde, $tags }, reglage: string, valeur: string, prenom: string, appareil?: string) => {
     await prevoirUnReglage(famille, page, monde, prenom, reglageConnu(reglage), valeur, typeof appareil === "string");
     // Story #33 : Léa joue déjà avec son vrai profil ; elle se choisit de nouveau pour que le réglage s'applique.
-    if (($tags.includes("@issue-33") || $tags.includes("@issue-96") || $tags.includes("@issue-98")) && prenom === "Léa" && estSurUnProfilReel(page)) await rechoisirLeaApresUnReglage(page);
+    if (($tags.includes("@issue-33") || $tags.includes("@issue-96") || $tags.includes("@issue-98") || $tags.includes("@issue-102")) && prenom === "Léa" && estSurUnProfilReel(page)) await rechoisirLeaApresUnReglage(page);
   },
 );
 
@@ -210,7 +210,7 @@ Given(
   /^le réglage « ([^«»]+) » de (Léa|Tom) est sur « ([^«»]+) »$/,
   async ({ famille, page, monde, $tags }, reglage: string, prenom: string, valeur: string) => {
     await prevoirUnReglage(famille, page, monde, prenom, reglageConnu(reglage), valeur, false);
-    if (($tags.includes("@issue-33") || $tags.includes("@issue-96") || $tags.includes("@issue-98")) && prenom === "Léa" && estSurUnProfilReel(page)) await rechoisirLeaApresUnReglage(page);
+    if (($tags.includes("@issue-33") || $tags.includes("@issue-96") || $tags.includes("@issue-98") || $tags.includes("@issue-102")) && prenom === "Léa" && estSurUnProfilReel(page)) await rechoisirLeaApresUnReglage(page);
   },
 );
 

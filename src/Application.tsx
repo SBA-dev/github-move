@@ -40,6 +40,7 @@ import {
 } from "./test-de-depart/index.ts";
 import { brancherLeSonDesBoutons } from "./boutons/son-des-boutons.ts";
 import { ChoixDeLaVoix, useVoix } from "./voix/index.ts";
+import { TenueDuProfil } from "./tenue/index.ts";
 import { ContexteDeLUnivers, HABILLAGE_DU_PARENT, habillageDeLUnivers, Paysage } from "./univers/index.ts";
 
 const ACCUEIL: Lieu = { ecran: "accueil" };
@@ -182,192 +183,194 @@ export function Application() {
   return (
     <MotionConfig reducedMotion="user">
       <ContexteDeLUnivers.Provider value={univers.cle}>
-        <div className="application" style={habillage} data-univers={univers.cle} data-registre={parent ? "parent" : "enfant"}>
-          {!parent && <Paysage univers={univers.cle} />}
-          <EnTete
-            surAccueil={ecran === "accueil"}
-            enfant={profil}
-            son={voix.son}
-            retourPossible={retourPossible && ecran !== "seance"}
-            onBasculerLeSon={voix.basculerLeSon}
-            onAccueil={() => aller("accueil")}
-            onRetour={revenir}
-            onEspaceParent={entrerDansLEspaceParent}
-          />
-          <ModeDys value={profil?.reglages.modeDys ?? false}>
-            <main className="ecran" data-mode-dys={profil?.reglages.modeDys ? "true" : undefined}>
-              <div role="status" className="voix-bloquee">
-                {voix.nomDuPersonnageGuideDeLaVoixBloquee &&
-                  `La voix de ${voix.nomDuPersonnageGuideDeLaVoixBloquee} est bloquée par ce navigateur. Touche « Réécouter » pour réessayer, ou lis avec un adulte.`}
-              </div>
-              <EcranQuiArrive cle={cleDeLEcran(lieu)} transition={transitionVers(lieu, viaRetour)}>
-                {ecran === "accueil" && (
-                  <>
-                    {connexion.etat === "deconnecte" && <EcranDeConnexion connexion={connexion} onConnecte={ouvrirLEspaceParentConnecte} />}
-                    <p>Réviser le programme du CP au CM2, en jouant.</p>
-                    {connecte && (
-                      <QuiJoue
-                        etat={profilsDuParent.etat}
-                        onChoisir={(profilChoisi) => {
-                          choisirQuiJoue.executer(profilChoisi);
-                          aller("jeu");
-                        }}
-                        onAjouterUnEnfant={entrerDansLEspaceParent}
-                      />
-                    )}
-                    <AideEcranDAccueil />
-                  </>
-                )}
-                {lieu.ecran === "jeu" && profilCharge && profilEnCours && (
-                  <AccueilDeLEnfant
-                    profil={profilEnCours}
-                    univers={univers}
-                    voix={voix}
-                    saluer={!viaRetour}
-                    testDeDepartAProposer={testDeDepartAFaire}
-                    questionsDuesALaRevision={questionsDuesALaRevision}
-                    onMonTestDeDepart={() => aller("test-de-depart")}
-                    onJeRevise={() => aller("revision")}
-                    onCommencerLaLecon={(leconId) => aller({ ecran: "lecon", leconId })}
-                    onOuvrirLaMatiere={(matiere) => {
-                      setMatiereDuParcours(matiere);
-                      aller("parcours");
-                    }}
-                    onChangerDEnfant={() => {
-                      aller("accueil");
-                      oublierLeProfilEtSaProgression();
-                    }}
-                  />
-                )}
-                {lieu.ecran === "test-de-depart" && profilCharge && profilEnCours && (
-                  <EcranDuTestDeDepart
-                    key={profilEnCours.id}
-                    profil={profilEnCours}
-                    univers={univers}
-                    voix={voix}
-                    onPlusTard={() => revenirA("jeu")}
-                    onVoirMonParcours={() => remplacer("parcours")}
-                  />
-                )}
-                {lieu.ecran === "revision" && profilCharge && profilEnCours && (
-                  <EcranDeRevision
-                    key={profilEnCours.id}
-                    profil={profilEnCours}
-                    univers={univers}
-                    voix={voix}
-                    onLireLEpisode={(numero) => aller({ ecran: "episode", numero, origine: "fin-de-seance" })}
-                    onAccueil={() => revenirA("jeu")}
-                  />
-                )}
-                {lieu.ecran === "parcours" && profilCharge && profilEnCours && (
-                  <MonParcours
-                    profil={profilEnCours}
-                    univers={univers}
-                    matiereChoisie={matiereDuParcours}
-                    onChoisirLaMatiere={setMatiereDuParcours}
-                    classesDAvantDeplieesPour={classesDAvantDeplieesPour}
-                    onBasculerLesClassesDAvant={basculerLesClassesDAvant}
-                    onOuvrirLaLecon={(leconId) => aller({ ecran: "lecon", leconId })}
-                    prochainesLeconsConnues={prochainesLeconsConnues}
-                    onMemoriserLaProchaineLecon={memoriserLaProchaineLecon}
-                  />
-                )}
-                {lieu.ecran === "toutes-les-lecons" && profilCharge && profilEnCours && (
-                  <ToutesLesLecons
-                    profil={profilEnCours}
-                    univers={univers}
-                    choix={choixDeToutesLesLecons}
-                    onOuvrirLaLecon={(leconId) => aller({ ecran: "lecon", leconId })}
-                  />
-                )}
-                {lieu.ecran === "medailles" && profilCharge && profilEnCours && (
-                  <MesMedailles
-                    profil={profilEnCours}
-                    univers={univers}
-                    voix={voix}
-                    onOuvrirLEpisode={(numero) => aller({ ecran: "episode", numero, origine: "medailles" })}
-                  />
-                )}
-                {lieu.ecran === "episode" && profilCharge && profilEnCours && (
-                  <EcranDeLEpisode
-                    profil={profilEnCours}
-                    univers={univers}
-                    voix={voix}
-                    numero={lieu.numero}
-                    onFermerLeLivre={() => revenirA(lieu.origine === "medailles" ? "medailles" : "jeu")}
-                    onEpisodeSuivant={(numero) => remplacer({ ecran: "episode", numero, origine: lieu.origine })}
-                  />
-                )}
-                {lieu.ecran === "lecon" && profilCharge && profilEnCours && (
-                  <PageDeLaLecon
-                    key={lieu.leconId}
-                    leconId={lieu.leconId}
-                    profilId={profilEnCours.id}
-                    prenom={profilEnCours.prenom}
-                    univers={univers}
-                    voix={voix}
-                    accueillir={!viaRetour}
-                    onCommencer={(exercice) => aller({ ecran: "seance", leconId: lieu.leconId, exercice })}
-                    onRetourALAccueil={() => aller("accueil")}
-                  />
-                )}
-                {lieu.ecran === "seance" && profilCharge && profilEnCours && (
-                  <EcranDeSeance
-                    key={`${lieu.leconId}/${lieu.exercice ?? "complete"}`}
-                    leconId={lieu.leconId}
-                    exercice={lieu.exercice}
-                    profilId={profilEnCours.id}
-                    prenom={profilEnCours.prenom}
-                    niveau={profilEnCours.niveau}
-                    univers={univers}
-                    voix={voix}
-                    toutLireAVoixHaute={profilEnCours.reglages.toutLireAVoixHaute}
-                    clavierDesDictees={profilEnCours.reglages.clavierDesDictees.valeur}
-                    onRetour={() => revenirA({ ecran: "lecon", leconId: lieu.leconId })}
-                    onLireLEpisode={(numero) => aller({ ecran: "episode", numero, origine: "fin-de-seance" })}
-                    onLeconSuivante={(leconId) => aller({ ecran: "lecon", leconId })}
-                    onToutesLesLecons={() => {
-                      remplacer("jeu");
-                      aller("toutes-les-lecons");
-                    }}
-                    onAccueil={() => aller("accueil")}
-                  />
-                )}
-                {ecran === "espace-parent" && connexion.etat === "deconnecte" && (
-                  <EcranDeConnexion connexion={connexion} onConnecte={ouvrirLEspaceParentConnecte} />
-                )}
-                {ecran === "espace-parent" && connecte && etatEspaceParent.type === "questionPosee" && (
-                  <ControleParental
-                    enonce={etatEspaceParent.enonce}
-                    onReponse={acces.repondre}
-                    onRenoncer={() => (retourPossible ? revenir() : remplacer("accueil"))}
-                  />
-                )}
-                {ecran === "espace-parent" && connecte && etatEspaceParent.type === "ouvert" && (
-                  <EspaceParent
-                    onQuitter={() => {
-                      fermerEspaceParent();
-                      remplacer("accueil");
-                    }}
-                    onSeDeconnecter={seDeconnecter}
-                    deconnexionEchouee={deconnexionEchouee}
-                  >
-                    <SuiviDeLEspaceParent etat={profilsDuParent.etat} />
-                    <ProfilsDeLEspaceParent
-                      etat={profilsDuParent.etat}
-                      onModifie={profilsDuParent.relire}
-                      onCree={(profilCree) => proposerLeTestDeDepart(() => definir(profilCree))}
-                      onRefaireLeTestDeDepart={(profilExistant) => proposerLeTestDeDepart(() => choisirQuiJoue.executer(profilExistant))}
+        <TenueDuProfil profil={profil?.id}>
+          <div className="application" style={habillage} data-univers={univers.cle} data-registre={parent ? "parent" : "enfant"}>
+            {!parent && <Paysage univers={univers.cle} />}
+            <EnTete
+              surAccueil={ecran === "accueil"}
+              enfant={profil}
+              son={voix.son}
+              retourPossible={retourPossible && ecran !== "seance"}
+              onBasculerLeSon={voix.basculerLeSon}
+              onAccueil={() => aller("accueil")}
+              onRetour={revenir}
+              onEspaceParent={entrerDansLEspaceParent}
+            />
+            <ModeDys value={profil?.reglages.modeDys ?? false}>
+              <main className="ecran" data-mode-dys={profil?.reglages.modeDys ? "true" : undefined}>
+                <div role="status" className="voix-bloquee">
+                  {voix.nomDuPersonnageGuideDeLaVoixBloquee &&
+                    `La voix de ${voix.nomDuPersonnageGuideDeLaVoixBloquee} est bloquée par ce navigateur. Touche « Réécouter » pour réessayer, ou lis avec un adulte.`}
+                </div>
+                <EcranQuiArrive cle={cleDeLEcran(lieu)} transition={transitionVers(lieu, viaRetour)}>
+                  {ecran === "accueil" && (
+                    <>
+                      {connexion.etat === "deconnecte" && <EcranDeConnexion connexion={connexion} onConnecte={ouvrirLEspaceParentConnecte} />}
+                      <p>Réviser le programme du CP au CM2, en jouant.</p>
+                      {connecte && (
+                        <QuiJoue
+                          etat={profilsDuParent.etat}
+                          onChoisir={(profilChoisi) => {
+                            choisirQuiJoue.executer(profilChoisi);
+                            aller("jeu");
+                          }}
+                          onAjouterUnEnfant={entrerDansLEspaceParent}
+                        />
+                      )}
+                      <AideEcranDAccueil />
+                    </>
+                  )}
+                  {lieu.ecran === "jeu" && profilCharge && profilEnCours && (
+                    <AccueilDeLEnfant
+                      profil={profilEnCours}
+                      univers={univers}
+                      voix={voix}
+                      saluer={!viaRetour}
+                      testDeDepartAProposer={testDeDepartAFaire}
+                      questionsDuesALaRevision={questionsDuesALaRevision}
+                      onMonTestDeDepart={() => aller("test-de-depart")}
+                      onJeRevise={() => aller("revision")}
+                      onCommencerLaLecon={(leconId) => aller({ ecran: "lecon", leconId })}
+                      onOuvrirLaMatiere={(matiere) => {
+                        setMatiereDuParcours(matiere);
+                        aller("parcours");
+                      }}
+                      onChangerDEnfant={() => {
+                        aller("accueil");
+                        oublierLeProfilEtSaProgression();
+                      }}
                     />
-                    <LeconsPersonnellesDuParent profils={profilsDuParent.etat.type === "charges" ? profilsDuParent.etat.profils : undefined} />
-                    <ChoixDeLaVoix voix={voix} />
-                  </EspaceParent>
-                )}
-              </EcranQuiArrive>
-            </main>
-            {profilCharge && profilEnCours && estUnEcranDuDock(ecran) && <DockDeLEnfant ecranEnCours={ecran} onOuvrir={ouvrirParLeDock} />}
-          </ModeDys>
-        </div>
+                  )}
+                  {lieu.ecran === "test-de-depart" && profilCharge && profilEnCours && (
+                    <EcranDuTestDeDepart
+                      key={profilEnCours.id}
+                      profil={profilEnCours}
+                      univers={univers}
+                      voix={voix}
+                      onPlusTard={() => revenirA("jeu")}
+                      onVoirMonParcours={() => remplacer("parcours")}
+                    />
+                  )}
+                  {lieu.ecran === "revision" && profilCharge && profilEnCours && (
+                    <EcranDeRevision
+                      key={profilEnCours.id}
+                      profil={profilEnCours}
+                      univers={univers}
+                      voix={voix}
+                      onLireLEpisode={(numero) => aller({ ecran: "episode", numero, origine: "fin-de-seance" })}
+                      onAccueil={() => revenirA("jeu")}
+                    />
+                  )}
+                  {lieu.ecran === "parcours" && profilCharge && profilEnCours && (
+                    <MonParcours
+                      profil={profilEnCours}
+                      univers={univers}
+                      matiereChoisie={matiereDuParcours}
+                      onChoisirLaMatiere={setMatiereDuParcours}
+                      classesDAvantDeplieesPour={classesDAvantDeplieesPour}
+                      onBasculerLesClassesDAvant={basculerLesClassesDAvant}
+                      onOuvrirLaLecon={(leconId) => aller({ ecran: "lecon", leconId })}
+                      prochainesLeconsConnues={prochainesLeconsConnues}
+                      onMemoriserLaProchaineLecon={memoriserLaProchaineLecon}
+                    />
+                  )}
+                  {lieu.ecran === "toutes-les-lecons" && profilCharge && profilEnCours && (
+                    <ToutesLesLecons
+                      profil={profilEnCours}
+                      univers={univers}
+                      choix={choixDeToutesLesLecons}
+                      onOuvrirLaLecon={(leconId) => aller({ ecran: "lecon", leconId })}
+                    />
+                  )}
+                  {lieu.ecran === "medailles" && profilCharge && profilEnCours && (
+                    <MesMedailles
+                      profil={profilEnCours}
+                      univers={univers}
+                      voix={voix}
+                      onOuvrirLEpisode={(numero) => aller({ ecran: "episode", numero, origine: "medailles" })}
+                    />
+                  )}
+                  {lieu.ecran === "episode" && profilCharge && profilEnCours && (
+                    <EcranDeLEpisode
+                      profil={profilEnCours}
+                      univers={univers}
+                      voix={voix}
+                      numero={lieu.numero}
+                      onFermerLeLivre={() => revenirA(lieu.origine === "medailles" ? "medailles" : "jeu")}
+                      onEpisodeSuivant={(numero) => remplacer({ ecran: "episode", numero, origine: lieu.origine })}
+                    />
+                  )}
+                  {lieu.ecran === "lecon" && profilCharge && profilEnCours && (
+                    <PageDeLaLecon
+                      key={lieu.leconId}
+                      leconId={lieu.leconId}
+                      profilId={profilEnCours.id}
+                      prenom={profilEnCours.prenom}
+                      univers={univers}
+                      voix={voix}
+                      accueillir={!viaRetour}
+                      onCommencer={(exercice) => aller({ ecran: "seance", leconId: lieu.leconId, exercice })}
+                      onRetourALAccueil={() => aller("accueil")}
+                    />
+                  )}
+                  {lieu.ecran === "seance" && profilCharge && profilEnCours && (
+                    <EcranDeSeance
+                      key={`${lieu.leconId}/${lieu.exercice ?? "complete"}`}
+                      leconId={lieu.leconId}
+                      exercice={lieu.exercice}
+                      profilId={profilEnCours.id}
+                      prenom={profilEnCours.prenom}
+                      niveau={profilEnCours.niveau}
+                      univers={univers}
+                      voix={voix}
+                      toutLireAVoixHaute={profilEnCours.reglages.toutLireAVoixHaute}
+                      clavierDesDictees={profilEnCours.reglages.clavierDesDictees.valeur}
+                      onRetour={() => revenirA({ ecran: "lecon", leconId: lieu.leconId })}
+                      onLireLEpisode={(numero) => aller({ ecran: "episode", numero, origine: "fin-de-seance" })}
+                      onLeconSuivante={(leconId) => aller({ ecran: "lecon", leconId })}
+                      onToutesLesLecons={() => {
+                        remplacer("jeu");
+                        aller("toutes-les-lecons");
+                      }}
+                      onAccueil={() => aller("accueil")}
+                    />
+                  )}
+                  {ecran === "espace-parent" && connexion.etat === "deconnecte" && (
+                    <EcranDeConnexion connexion={connexion} onConnecte={ouvrirLEspaceParentConnecte} />
+                  )}
+                  {ecran === "espace-parent" && connecte && etatEspaceParent.type === "questionPosee" && (
+                    <ControleParental
+                      enonce={etatEspaceParent.enonce}
+                      onReponse={acces.repondre}
+                      onRenoncer={() => (retourPossible ? revenir() : remplacer("accueil"))}
+                    />
+                  )}
+                  {ecran === "espace-parent" && connecte && etatEspaceParent.type === "ouvert" && (
+                    <EspaceParent
+                      onQuitter={() => {
+                        fermerEspaceParent();
+                        remplacer("accueil");
+                      }}
+                      onSeDeconnecter={seDeconnecter}
+                      deconnexionEchouee={deconnexionEchouee}
+                    >
+                      <SuiviDeLEspaceParent etat={profilsDuParent.etat} />
+                      <ProfilsDeLEspaceParent
+                        etat={profilsDuParent.etat}
+                        onModifie={profilsDuParent.relire}
+                        onCree={(profilCree) => proposerLeTestDeDepart(() => definir(profilCree))}
+                        onRefaireLeTestDeDepart={(profilExistant) => proposerLeTestDeDepart(() => choisirQuiJoue.executer(profilExistant))}
+                      />
+                      <LeconsPersonnellesDuParent profils={profilsDuParent.etat.type === "charges" ? profilsDuParent.etat.profils : undefined} />
+                      <ChoixDeLaVoix voix={voix} />
+                    </EspaceParent>
+                  )}
+                </EcranQuiArrive>
+              </main>
+              {profilCharge && profilEnCours && estUnEcranDuDock(ecran) && <DockDeLEnfant ecranEnCours={ecran} onOuvrir={ouvrirParLeDock} />}
+            </ModeDys>
+          </div>
+        </TenueDuProfil>
       </ContexteDeLUnivers.Provider>
     </MotionConfig>
   );

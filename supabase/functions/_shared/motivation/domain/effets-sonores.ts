@@ -27,6 +27,7 @@ export interface FaitsDeLaFin {
   readonly fluenceSeule: boolean;
   readonly issueDuRecord: IssueDuRecord;
   readonly objetRecu: boolean;
+  readonly tenueRecue: boolean;
   readonly episodeOuvert: boolean;
 }
 
@@ -38,6 +39,6 @@ export function effetsSonoresDeLaFin(faits: FaitsDeLaFin): readonly EffetSonore[
   if (!recordDejaFete) {
     effets.push(faits.leconAcquise ? "grandeVictoire" : "seanceTerminee");
   }
-  if (faits.objetRecu || faits.episodeOuvert) effets.push("decouverte");
+  if (faits.objetRecu || faits.tenueRecue || faits.episodeOuvert) effets.push("decouverte");
   return effets;
 }

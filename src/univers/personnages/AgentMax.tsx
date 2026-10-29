@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import type { Humeur } from "@domain/motivation";
 import { choisir, type DessinDuPersonnage, Yeux } from "./partage.tsx";
+import { type Ancrage, TenueDerriere, TenueDevant } from "./tenues.tsx";
 
 const CHAUSSURE = (
   <>
@@ -45,7 +46,13 @@ function bouche(humeur: Humeur, id: string): ReactNode {
   return bouches[humeur];
 }
 
-export const AgentMax: DessinDuPersonnage = ({ humeur, id }) => (
+const ANCRAGE: Ancrage = {
+  cou: { x: 0, y: -41, echelle: 1 },
+  dos: { x: 0, y: -16, echelle: 1.15, elargissement: 1.55 },
+  pieds: { gauche: { x: -14.7, y: 60, echelle: 1 }, droit: { x: 14.7, y: 60, echelle: 1 }, tige: 24 },
+};
+
+export const AgentMax: DessinDuPersonnage = ({ humeur, id, tenue }) => (
   <svg viewBox="-82 -137 181 227" overflow="visible" aria-hidden="true">
     <defs>
       <clipPath id={`${id}oeil`}>
@@ -55,6 +62,7 @@ export const AgentMax: DessinDuPersonnage = ({ humeur, id }) => (
         <path d="M-11 11 Q0 27 11 11 Z" />
       </clipPath>
     </defs>
+      <TenueDerriere tenue={tenue} ancrage={ANCRAGE} id={id} />
       <g data-signe="pantalon">
       <path fill="none" stroke="#33304A" strokeWidth="23" strokeLinecap="round" strokeLinejoin="round" d="M-10.3 7.5Q-12.7 34.4 -14.7 57.8" />
       <path fill="none" stroke="#253B9C" strokeWidth="16" strokeLinecap="round" strokeLinejoin="round" d="M-10 4Q-12.5 32.9 -14.7 57.8" />
@@ -219,5 +227,6 @@ export const AgentMax: DessinDuPersonnage = ({ humeur, id }) => (
         <path d="M-6.8 -9 l-0.6 -4M-2.3 -9 l-0.2 -4M2.3 -9 l0.2 -4M6.8 -9 l0.6 -4" fill="none" stroke="#E3AE85" strokeWidth="1.2" strokeLinecap="round" opacity=".7" />
         <path d="M3 8 Q7 4 7 -1" fill="none" stroke="#E3AE85" strokeWidth="2.2" strokeLinecap="round" />
       </g>
+    <TenueDevant tenue={tenue} ancrage={ANCRAGE} id={id} />
   </svg>
 );

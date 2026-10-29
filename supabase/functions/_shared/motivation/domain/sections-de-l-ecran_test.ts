@@ -4,6 +4,7 @@ import { cabaneDe } from "./cabane.ts";
 import { histoireDe } from "./histoire.ts";
 import type { PastilleDeRecord } from "./records-de-calcul-rapide.ts";
 import { sectionsAAfficher, sectionsDeLEcran } from "./sections-de-l-ecran.ts";
+import { tenuesDe } from "./tenues.ts";
 
 Deno.test("la seule section disponible est affichée seule", () => {
   const sections = sectionsAAfficher(["recordsDeFluence"]);
@@ -101,4 +102,34 @@ Deno.test("la section de l'histoire est affichée entre la cabane et les badges"
   });
 
   assertEquals(sections, ["cabane", "histoire", "badges", "recordsDeFluence"]);
+});
+
+Deno.test("les sections disponibles sont rangées dans l'ordre cabane, tenues, histoire, badges, records de fluence", () => {
+  const sections = sectionsAAfficher(["recordsDeFluence", "badges", "histoire", "tenues", "cabane"]);
+
+  assertEquals(sections, ["cabane", "tenues", "histoire", "badges", "recordsDeFluence"]);
+});
+
+Deno.test("la section des tenues vient juste après la cabane", () => {
+  const sections = sectionsDeLEcran({
+    pastilles: [pastille],
+    cabane: cabaneDe(5),
+    tenues: tenuesDe(5),
+    histoire: histoireDe(2),
+    badges: [badge],
+  });
+
+  assertEquals(sections, ["cabane", "tenues", "histoire", "badges", "recordsDeFluence"]);
+});
+
+Deno.test("avant le premier palier des tenues, la section des tenues n'apparaît pas", () => {
+  const sections = sectionsDeLEcran({ pastilles: [], cabane: cabaneDe(4), tenues: tenuesDe(4) });
+
+  assertEquals(sections, ["cabane"]);
+});
+
+Deno.test("quand les étoiles n'ont pas pu être lues, la section des tenues n'apparaît pas", () => {
+  const sections = sectionsDeLEcran({ pastilles: [], cabane: undefined, tenues: undefined });
+
+  assertEquals(sections, []);
 });

@@ -174,7 +174,7 @@ When(/^Léa parcourt l'en-tête au clavier$/, async ({ page, monde }) => {
 
 // --- Alors : paysage et personnage guide
 
-Then(/^(?:elle|je) voi[st] (.+) dans le paysage de l'univers « (.+) »$/, async ({ page }, nom: string, univers: string) => {
+Then(/^(?:elle|je) voi[st] ((?:(?! avec « ).)+) dans le paysage de l'univers « (.+) »$/, async ({ page }, nom: string, univers: string) => {
   await expect(page.getByTestId("paysage")).toHaveAttribute("data-univers", cleDe(univers));
   await expect(leGuide(page, nom)).toBeVisible();
 });

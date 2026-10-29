@@ -242,6 +242,7 @@ function SeanceEnCours(
         {finie && (
           <EcranDeFin
             seance={seance}
+            univers={univers}
             niveau={niveau}
             onDireLaFin={deroulement.direLaFin}
             meilleuresEtoilesAvant={meilleuresEtoilesAvant}

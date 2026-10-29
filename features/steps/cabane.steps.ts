@@ -70,7 +70,7 @@ When(/^Léa demande à écouter la cabane$/, async ({ page }) => {
   await sectionDeLaCabane(page).getByRole("button", { name: "Écouter", exact: true }).click();
 });
 
-Then(/^Léa lit « ([^«»]+) »$/, { tags: "@issue-32 or @issue-31" }, async ({ page }, message: string) => {
+Then(/^Léa lit « ([^«»]+) »$/, { tags: "@issue-32 or @issue-31 or @issue-102" }, async ({ page }, message: string) => {
   await expect(ecranDe(page).getByText(message, { exact: true })).toBeVisible({ timeout: DELAI_D_UN_APPEL_SERVEUR_MS });
 });
 

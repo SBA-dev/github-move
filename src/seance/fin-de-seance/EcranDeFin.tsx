@@ -10,18 +10,21 @@ import {
   type MeilleuresEtoilesDuProfil,
   titreDeLAnnonce,
   titreDeLAnnonceDuBadge,
+  type Univers,
 } from "@domain/motivation";
 import { AnnonceDuNouvelEpisode } from "../../histoire/AnnonceDuNouvelEpisode.tsx";
 import { useEpisodeOuvertParLaSeance } from "../../histoire/useEpisodeOuvertParLaSeance.ts";
 import { niveauDuProfil } from "../../parcours/index.ts";
 import { lireLEtatDuTestDeDepart } from "../../test-de-depart/etat-du-test-de-depart.ts";
 import { chargerToutesLesLecons } from "../bibliotheque.ts";
+import { AnnonceDeLaTenue } from "./AnnonceDeLaTenue.tsx";
 import { EtoilesGagnees } from "./EtoilesGagnees.tsx";
 import { lireLesMeilleuresEtoilesDuProfil } from "./meilleures-etoiles-du-profil.ts";
 import { annonceDesEtoiles, etoilesSurTrois } from "./texte-des-etoiles.ts";
 import type { NouveautesDeFin } from "./nouveautes-de-fin.ts";
 import { useBadgeGagneParLaSeance } from "./useBadgeGagneParLaSeance.ts";
 import { useObjetRecuParLaSeance } from "./useObjetRecuParLaSeance.ts";
+import { useTenueRecueParLaSeance } from "./useTenueRecueParLaSeance.ts";
 import { useLeconAcquiseParLaSeance } from "./useLeconAcquiseParLaSeance.ts";
 import { useSauvegardeDeLaSeance } from "./useSauvegardeDeLaSeance.ts";
 
@@ -32,6 +35,8 @@ type LaSuite = { readonly suivante: Suivante | undefined };
 
 type Props = {
   readonly seance: Seance;
+  /** L'univers du profil : son personnage guide reçoit les tenues. */
+  readonly univers: Univers;
   /** Niveau du profil en cours : la leçon suivante se cherche dans le parcours de ce niveau. */
   readonly niveau: string;
   /** Fait dire au personnage guide ses paroles de fin ; sans étoiles (fluence seule), il a déjà tout dit. */
@@ -82,11 +87,17 @@ function useLaSuite(seance: Seance, niveau: string): LaSuite | undefined {
 }
 
 /** La fin de la séance : étoiles gagnées (dessinées et écrites), paroles du personnage guide, et la suite à choisir. */
-export function EcranDeFin({ seance, niveau, onDireLaFin, meilleuresEtoilesAvant, nombreDeSeancesAvant, onRejouer, onLireLEpisode, onLeconSuivante, onToutesLesLecons, onAccueil }: Props) {
+export function EcranDeFin({ seance, univers, niveau, onDireLaFin, meilleuresEtoilesAvant, nombreDeSeancesAvant, onRejouer, onLireLEpisode, onLeconSuivante, onToutesLesLecons, onAccueil }: Props) {
   const { terminee, message } = useSauvegardeDeLaSeance(seance);
   const suite = useLaSuite(seance, niveau);
   const suivante = suite?.suivante;
   const { pret, objet } = useObjetRecuParLaSeance(
+    meilleuresEtoilesAvant,
+    seance.lecon,
+    terminee !== undefined,
+    terminee?.etoiles,
+  );
+  const { prete: tenuePrete, tenue } = useTenueRecueParLaSeance(
     meilleuresEtoilesAvant,
     seance.lecon,
     terminee !== undefined,
@@ -111,10 +122,10 @@ export function EcranDeFin({ seance, niveau, onDireLaFin, meilleuresEtoilesAvant
     accueil.current?.focus();
   }, []);
   useEffect(() => {
-    if (dite.current || terminee === undefined || !pret || !episodePret || !badgePret || !acquisePret) return;
+    if (dite.current || terminee === undefined || !pret || !tenuePrete || !episodePret || !badgePret || !acquisePret) return;
     dite.current = true;
-    onDireLaFin(terminee.etoiles, { objet, episode, badge, leconAcquise });
-  }, [terminee, pret, objet, episodePret, episode, badgePret, badge, acquisePret, leconAcquise, onDireLaFin]);
+    onDireLaFin(terminee.etoiles, { objet, tenue, episode, badge, leconAcquise });
+  }, [terminee, pret, objet, tenuePrete, tenue, episodePret, episode, badgePret, badge, acquisePret, leconAcquise, onDireLaFin]);
   const [etoilesAffichees, setEtoilesAffichees] = useState(false);
   const afficherToutesLesEtoiles = useCallback(() => setEtoilesAffichees(true), []);
 
@@ -148,6 +159,7 @@ export function EcranDeFin({ seance, niveau, onDireLaFin, meilleuresEtoilesAvant
           </>
         )}
       </div>
+      <AnnonceDeLaTenue univers={univers} tenue={tenue} />
       <AnnonceDuNouvelEpisode episode={episode} />
       <div className="pour-le-badge" role="status" data-testid="annonce-de-nouveau-badge">
         {badge && (

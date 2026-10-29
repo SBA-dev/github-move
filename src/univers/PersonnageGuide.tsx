@@ -1,6 +1,8 @@
 import { useId } from "react";
-import { motion, type TargetAndTransition, useReducedMotion } from "motion/react";
+import { motion, type TargetAndTransition } from "motion/react";
+import { useMouvementsReduits } from "../transitions/mouvements-reduits.ts";
 import type { CleUnivers, Humeur, Univers } from "@domain/motivation";
+import { useTenueDuProfil } from "../tenue/TenueDuProfil.tsx";
 import { AgentMax } from "./personnages/AgentMax.tsx";
 import { CapitaineSam } from "./personnages/CapitaineSam.tsx";
 import { CoachLeo } from "./personnages/CoachLeo.tsx";
@@ -38,29 +40,43 @@ function gesteDe(humeur: Humeur, mouvementsReduits: boolean): Geste {
   return "aucun";
 }
 
-export function PersonnageGuide({ univers, humeur }: { readonly univers: Univers; readonly humeur: Humeur }) {
+type Props = {
+  readonly univers: Univers;
+  readonly humeur: Humeur;
+  /** Clé de la tenue à montrer ; à défaut, celle que l'enfant a choisie (aucune hors de ses écrans). */
+  readonly tenue?: string;
+  /** Là où la tenue compte, le dessin est annoncé aux lecteurs d'écran ; ailleurs il reste décoratif. */
+  readonly libelle?: string;
+  readonly identifiantDeTest?: string;
+};
+
+export function PersonnageGuide({ univers, humeur, tenue: tenueDemandee, libelle, identifiantDeTest }: Props) {
+  const tenueDuProfil = useTenueDuProfil();
+  const tenue = tenueDemandee ?? tenueDuProfil;
   const identifiant = useId();
-  const mouvementsReduits = useReducedMotion() ?? false;
+  const mouvementsReduits = useMouvementsReduits();
   const geste = gesteDe(humeur, mouvementsReduits);
   const Dessin = DESSINS[univers.cle];
   return (
     <motion.div
       className="personnage-guide"
-      aria-hidden="true"
-      data-testid="personnage-guide"
+      {...(libelle === undefined ? { "aria-hidden": "true" } : { role: "img", "aria-label": libelle })}
+      data-testid={identifiantDeTest ?? "personnage-guide"}
       data-personnage-guide={univers.personnageGuide.nom}
       data-humeur={humeur}
       {...(DESSINS_REDESSINES.has(univers.cle) ? { "data-dessin": "valide" } : {})}
+      {...(tenue === undefined ? {} : { "data-tenue": tenue })}
       data-geste={geste}
       animate={MOUVEMENT_PAR_GESTE[geste]}
       transition={{ duration: DUREE_PAR_GESTE[geste], ease: "easeInOut" }}
     >
       <motion.div
-        animate={{ scaleY: [1, 1.03, 1] }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        key={String(mouvementsReduits)}
+        animate={{ scaleY: mouvementsReduits ? 1 : [1, 1.03, 1] }}
+        transition={mouvementsReduits ? { duration: 0 } : { duration: 4, repeat: Infinity, ease: "easeInOut" }}
         style={{ transformOrigin: "50% 100%" }}
       >
-        <Dessin humeur={humeur} id={identifiant} />
+        <Dessin humeur={humeur} id={identifiant} tenue={tenue} />
       </motion.div>
     </motion.div>
   );

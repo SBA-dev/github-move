@@ -143,6 +143,8 @@ Note (#97, cadrage, à valider) : **effets sonores**. Voix publie le value objec
 
 Note (#99, cadrage, à valider) : **dessin de « Mon parcours »**. Aucune relation nouvelle. Apprentissage publie une lecture pure de plus dans `@domain/apprentissage`, l'**avancée dans le parcours** (de la prochaine leçon connue à la nouvelle prochaine leçon), que le front montre par la marche du personnage guide (Motivation, composants de #96). Motivation ne lit ni ne modifie le parcours ; aucun effet sonore nouveau ; la prochaine leçon connue reste en mémoire le temps de l'utilisation, jamais enregistrée.
 
+Note (#102, réponses du PO du 2026-10-29) : **tenues du personnage guide**. Aucune relation nouvelle. Les tenues reçues se recalculent comme la cabane (décision 32.20), à partir du même total des étoiles (lecture « Apprentissage → Motivation (cabane) », inchangée) : `tenuesDe`, `tenueRecueParLaSeance` (`@domain/motivation`). La tenue portée est gardée sur l'appareil, par profil (réponse 102.8 A), par un adaptateur de `src/` ajouté à `DonneesDeLAppareil` (Famille) : ni migration, ni Edge Function, ni événement, ni donnée d'enfant côté serveur, donc rien de nouveau dans le contrat de données personnelles (#14). Une story suivante qui retrouverait la tenue portée sur tous les appareils ajouterait une donnée de Motivation sous RLS et son adaptateur d'export et de suppression.
+
 ## Décisions
 
 - Les leçons personnelles appartiennent à Accompagnement. Elles respectent le même format JSON que la bibliothèque, pour qu'Apprentissage les joue de la même façon.

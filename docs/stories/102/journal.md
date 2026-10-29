@@ -1,0 +1,91 @@
+# Journal de la story #102 : Le personnage guide évolue avec les étoiles
+
+Équipe lancée par le responsable des équipes (`/graphe`, vague 1, issue de coordination #64).
+Branche de base : `main` (départ `c8b0ed3`). Branche : `feature/102-personnage-guide-evolue`.
+Décision réservée : 0036.
+
+## 2026-10-28
+
+- 23:45 UTC : démarrage. Issue lue, annonces `[Responsable]` de #64 lues. Dépendances mergées : #96, #97, #99.
+- Étape 1 (domaine) : nécessaire, la story introduit un concept absent du glossaire (tenue ou évolution du personnage guide). Délégation à `domain-modeler`.
+- 00:05 UTC (29/10) : modèle de domaine rendu (`domain-model.md`). Contexte Motivation, tenues reçues recalculées depuis le total des étoiles (comme la cabane, sans la modifier), tenue portée seule donnée gardée. Questions #102.1 à #102.20. Délégation à `po-acceptance`.
+- 00:25 UTC : critères rendus par `po-acceptance` : 6 règles, 39 scénarios (48 cas), tranche minimale #102.17. Questions #102.21 à #102.27 ajoutées. CADRAGE PRÊT publié sur #102, attente de la validation du PO par le responsable.
+
+## 2026-10-29
+
+- 00:02 UTC : ✅ validation n°1 levée par le responsable sur #64 (réponse du PO : « #102 reco tout »). Aucune ressource partagée. Danses confiées à #106.
+- 00:15 UTC : réponses reportées dans `domain-model.md` (invariant 3 revu pour #102.24 B), `acceptance.md`, `.feature` ; termes ajoutés au glossaire et note à la context map.
+
+### Liste des comportements (TDD)
+
+Bloc A, tenues reçues (`tenues.ts`) :
+1. `PALIERS_DES_TENUES` : 5, 12, 23, 37, croissants, écart ≥ 3, clés uniques, aucune clé de la cabane.
+2. `tenuesDe(total)` : tenues reçues, prochain palier, toutes reçues, total invalide.
+3. `tenueRecueParLaSeance` : tenue reçue par la séance (calcul du total après la séance partagé avec la cabane).
+
+Bloc B, tenue portée (`tenue-portee.ts`) :
+4. `porterUneTenue` : tenue reçue acceptée, `TenueInconnue`, `TenueNonRecue`.
+5. `retirerLaTenue`.
+6. `tenueAMontrer` : clé inconnue, étoiles lues, étoiles non lues (#102.24 B).
+
+Bloc C, paroles, sons, sections :
+7. `paroles-des-tenues.ts` : annonce, titre de l'encart, description accessible, titre et phrase de la section.
+8. `effetsSonoresDeLaFin` : tenue reçue, « decouverte » une seule fois.
+9. `sectionsDeLEcran` : section `tenues` après la cabane, absente sans tenue reçue.
+
+### Cycles TDD
+
+- 1/9 paliers des tenues : `f91c991` (red) → `bb7ef3c`.
+- 2/9 `tenuesDe` : `320a960` (red) → `7600a76`, refactor `0f9f1ca` (vérification du total partagée avec la cabane).
+- 3/9 `tenueRecueParLaSeance` : `6e5ac73` (red) → `85dfd26`, refactor `de8dce6` (`totauxAvantEtApresLaSeance` partagé, cabane inchangée).
+- Revue intermédiaire bloc A (`86cb9f8..de8dce6`) : APPROUVÉ. Non bloquants à reprendre au refactor : sortir le total des étoiles de `cabane.ts` dans un module à part ; `verifierTotalDEtoiles` en garde ; exemple 36 → 37.
+- 4/9 `porterUneTenue` : `d5743e9` (red) → `0f63f84` ; format du test `bb56ca8`.
+- 5/9 `retirerLaTenue` : `73525d4` (red) → `4e5b19e`.
+- Revue intermédiaire bloc B (`de8dce6..70ab7fc`) : APPROUVÉ. Non bloquants repris au refactor `cf67318`.
+- 6/9 `tenueAMontrer` : `40ff18d` (red) → `0af9657`, refactors `ffe6530` (total des étoiles sorti de `cabane.ts`, non bloquant du bloc A) et `70ab7fc` (recherche d'une tenue par sa clé).
+- 7/9 paroles des tenues : `fa13a62` (red) → `70412f4`.
+- 8/9 « decouverte » pour une tenue reçue : `8bd0482` (red) → `1d8aee5` (`tenueRecue: false` provisoire à la fin de séance, définitif en révision et au test de départ).
+- 9/9 section des tenues : `66b9983` (red) → `760ef1a`, refactor `cf67318` (`estRecue`, `porterUneTenue` rend `TenuePortee`, `verifierTotalDEtoiles` en garde, exports de l'index).
+- 2586 tests unitaires verts, lint, fmt et `tsc` propres.
+- Câblage : les dessins des tenues sont nouveaux (skill `illustration`, étape 6) : planche montrée au PO (⛔ intermédiaire `PLANCHES PRÊTES`), comme #98.
+- Revue intermédiaire bloc C (`70ab7fc..cf67318`) : APPROUVÉ. Non bloquant n°2 (libellé de la section composé en React) → comportement 10.
+- 10 libellé accessible de la section : `9ac49c9` (red) → `e7b4e4f`.
+- Câblage 1, dessins des 4 tenues pour les 6 personnages guides : `d41c314`, planches `docs/stories/102/planches/`. `PLANCHES PRÊTES` publié (questions #102.28, #102.29), en attente du PO.
+- Câblage 2 : mémoire de la tenue portée (`b7f4203`), tenue sur les écrans (`8659967`), annonce à l'écran de fin (`0cc8b66`), section de « Mes médailles » (`1d56e4a`).
+- Deux règles écrites dans React faute de domaine, rendues au domaine : 11 « tout lire » lit les tenues (`e106df5` → `773b250`), 12 pastilles des tenues (`42fec92` → `4a331da`), refactor du front `9e0070c`.
+- Non fait, sans appelant : effacement de la tenue portée avec un profil supprimé depuis l'appareil (le front n'a pas cette suppression).
+- 2590 tests unitaires verts, `tsc` et build propres. Étape 4 : review complète ; étape 5 : steps E2E en parallèle.
+- Review complète, cycle 1 : APPROUVÉ. Non bloquants retenus pour un lot après l'E2E : encart de fin (dessin décoratif), libellé accessible de « Mes médailles » hors ligne, bouton « Retirer la tenue » seulement si une tenue est portée, dessins typés sur les clés du domaine, règle dys simplifiée, modèle mis à jour sur l'effacement avec un profil supprimé.
+- E2E (`telephone`, `@issue-102`) : 47/48 au premier run. KO « mouvements réduits » : les nuages du paysage (#96) continuent de dériver quand la préférence arrive après le premier rendu. Correctifs `aa0b439`, puis `915701b` (une `key` remonte les animations infinies). Lot des non bloquants de la review : `8c396f3`, `f4de377`, `1fef2f6`, `b06ce00`, `d9d364d`.
+- Review delta, cycle 2 : À CORRIGER. Le bouton « Retirer la tenue » caché sans tenue portée cassait un scénario et contredisait le modèle (consigne de l'orchestrateur, erronée) → `705b7f7`. Garde `Object.hasOwn` → `9df0873`.
+- Erreur de l'orchestrateur : `df24eda`, présenté comme l'annulation d'une adaptation de step, l'a en fait ajoutée (le commit annulé n'était pas dans l'historique). Relevée par la review du cycle 3, que l'on rend à `e2e-tester`.
+- Note (non bloquant) : la `key` de la respiration de `PersonnageGuide` remonte tout le dessin quand la préférence change. Aucun état local ni animation d'entrée ne doit être placé sous ce nœud.
+- E2E, 3e cycle (`@issue-102` + `@issue-96`, `telephone`) : 153/155. Step des 44 px remis dans son état validé (`0da2615`).
+  - Rouge 1, cause établie : `useReducedMotion()` de Motion prend une photo de la préférence au montage. Le paysage, monté avant le réglage, ne la relit jamais. `aa0b439` et `915701b` reposaient sur ce hook.
+  - Rouge 2, instable : changement d'univers. Cause probable : `choisirSonProfil` clique avant que « Qui joue ? » ne montre le nouvel univers.
+  - ESCALADE (#102.30) : 4e cycle proposé (hook réactif `useMouvementsReduits`, attente dans le step propre à #102). En attente de la réponse du responsable.
+- 06:50 UTC : ✅ réponse du PO publiée par le responsable (`[Responsable]`, sur #102 et non sur #64, et confirmée par message direct de sa session) : « 102 reco partout ». Planche des tenues validée (#102.28, #102.29). 4e cycle E2E autorisé (#102.30). Les autres usages de `useReducedMotion()` sont notés en dette de fin de vague par le responsable.
+- Correctif `9a21ae3` : hook réactif `useMouvementsReduits()` (`useSyncExternalStore` sur `matchMedia`) dans `Paysage`, `PersonnageGuide` et `partage.tsx`.
+- E2E, 4e cycle : la course de « Qui joue ? » est corrigée dans les steps, sous `@issue-102` seulement (`19b0a96`). `@issue-102` : 48/48 verts sur `telephone`. Périmètre avec #96 : 153/155 au run complet, les 2 KO restants (« lecture à la demande » de #102, « s'enfonce puis revient » de #96) sont verts relancés seuls 3 fois chacun : instables sous charge. `@wip` retiré (`2c15662`).
+- Review delta, cycle 4 : APPROUVÉ. Non bloquants laissés : la constante `REQUETE` à remonter dans `mouvements-reduits.ts`, la déclaration de la `WeakMap` dans `profils-enfants.steps.ts`, la dette `useReducedMotion()` hors de #102.
+- Vérifications finales : 2590 tests unitaires, lint, fmt, `tsc` et build verts. `main` n'a pas bougé depuis le départ de la branche (`c8b0ed3`).
+
+- 07:58 UTC : ✅ merge autorisé par le PO (annonce `[Responsable]` sur #64). En file derrière #98.
+- 08:01 UTC : VERROU `merge` accordé (#64, tableau à jour). Intégration de `main` (`3e78770`, #98) : merge `fe52ee3`, réindentation `de77ad5`. Revue de l'intégration : APPROUVÉ. 2590 tests unitaires, lint, fmt, `tsc` et build verts. E2E `@issue-102` + `@issue-98` (décision 0022) sur `telephone` : 114/114 verts.
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Durée, du lancement à « PRÊTE À MERGER » | ≈ 8 h 10 (28/10 23:41 → 29/10 07:50 UTC), merge non compris |
+| Attente du PO, validation n°1 | 7 min (23:55 → 00:02), sans blocage |
+| Attente du PO, planches | aucune attente bloquante : le câblage a continué ; réponse reçue avec l'escalade |
+| Attente du PO, escalade #102.30 | ≈ 3 h 17 bloquantes (03:33 → 06:50 UTC, la nuit) |
+| Attente d'un verrou | aucune (aucune ressource partagée) |
+| Cycles TDD | 12 comportements (9 prévus, 1 ajouté après la revue du bloc C, 2 ajoutés après le câblage pour sortir des règles de React) |
+| Revues intermédiaires | 3, toutes APPROUVÉ du premier coup |
+| Cycles de review | cycle 1 APPROUVÉ ; cycles 2 et 3 À CORRIGER (le 1er venait d'une consigne de l'orchestrateur, le 2e d'une erreur de l'orchestrateur sur un revert) ; cycle 4 APPROUVÉ |
+| Cycles E2E KO | 3, puis un 4e vert après escalade. Cause principale : `useReducedMotion()` de Motion ne lit la préférence qu'au montage (code de #96) |
+| Intégrations de `main` | 1 (sous verrou `merge`, `main` = `3e78770` avec #98), 2 conflits simples (`src/Application.tsx`, `features/steps/reglages.steps.ts`), résolus en gardant les deux ajouts |
+| Régression sur `main` après le merge | à relever après le merge |
+| Tokens et coût | relevés par le responsable |

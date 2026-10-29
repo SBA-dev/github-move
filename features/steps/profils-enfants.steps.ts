@@ -243,11 +243,15 @@ Given(
 
 Given(
   new RegExp(`^Paul a changé l'univers du profil enfant de (\\S+) en ${UNIVERS_LIBELLE}$`),
-  async ({ famille }, prenom: string, libelleUnivers: string) => {
+  async ({ famille, $tags }, prenom: string, libelleUnivers: string) => {
     await modifierLeProfil(famille, prenom, { univers: cleDe(libelleUnivers) });
+    if ($tags.includes("@issue-102")) universChoisiParLeParent.set(famille, libelleUnivers);
     await connecterSiBesoin(famille, "tablette", "Paul");
   },
 );
+
+// Story #102 : « Qui joue ? » peut encore montrer la liste d'avant le changement ; l'enfant se choisit une fois le nouvel univers affiché.
+const universChoisiParLeParent = new WeakMap<Famille, string>();
 
 // Story #25 : le changement de niveau fait perdre le profil en cours (rechargement de la page). L'enfant se choisit de nouveau
 // dans « Qui joue ? » une fois la liste à jour, pour que la séance suivante se joue avec son vrai profil et son nouveau niveau.
@@ -344,8 +348,14 @@ When(
 
 // --- Quand : l'enfant
 
-When(/^Léa choisit son profil enfant dans « Qui joue \? »$/, async ({ famille }) => {
-  await choisirSonProfil(await connecterSiBesoin(famille, "tablette", "Paul"), "Léa");
+When(/^Léa choisit son profil enfant dans « Qui joue \? »$/, async ({ famille, $tags }) => {
+  const page = await connecterSiBesoin(famille, "tablette", "Paul");
+  const univers = universChoisiParLeParent.get(famille);
+  if ($tags.includes("@issue-102") && univers !== undefined) {
+    const liste = await ouvrirQuiJoue(page);
+    await expect(liste.getByTestId("profil-a-choisir").filter({ hasText: "Léa" }).first()).toContainText(univers);
+  }
+  await choisirSonProfil(page, "Léa");
 });
 
 When(/^Léa demande à ajouter un enfant$/, async ({ famille }) => {
