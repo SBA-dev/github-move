@@ -68,6 +68,7 @@ const seanceSansEvenement = {
   issueDuRecord: "aucunRecord",
   objetRecu: false,
   episodeOuvert: false,
+  tenueRecue: false,
   fluenceSeule: false,
 } as const;
 
@@ -170,4 +171,33 @@ Deno.test("une séance faite seulement d'une fluence avec un record et un nouvel
   });
 
   assertEquals(effets, ["decouverte"]);
+});
+
+Deno.test("une séance à 1 étoile qui fait recevoir une tenue fait jouer la séance terminée puis la découverte", () => {
+  const effets = effetsSonoresDeLaFin({ ...seanceSansEvenement, tenueRecue: true });
+
+  assertEquals(effets, ["seanceTerminee", "decouverte"]);
+});
+
+Deno.test("une séance qui rend la leçon acquise et fait recevoir une tenue et un objet fait jouer la découverte une seule fois", () => {
+  const effets = effetsSonoresDeLaFin({
+    ...seanceSansEvenement,
+    leconAcquise: true,
+    tenueRecue: true,
+    objetRecu: true,
+  });
+
+  assertEquals(effets, ["grandeVictoire", "decouverte"]);
+});
+
+Deno.test("une séance qui fait recevoir une tenue et ouvrir un épisode fait jouer la découverte une seule fois", () => {
+  const effets = effetsSonoresDeLaFin({ ...seanceSansEvenement, tenueRecue: true, episodeOuvert: true });
+
+  assertEquals(effets, ["seanceTerminee", "decouverte"]);
+});
+
+Deno.test("un test de départ qui fait recevoir une tenue fait jouer seulement la séance terminée", () => {
+  const effets = effetsSonoresDeLaFin({ ...seanceSansEvenement, fin: "testDeDepart", tenueRecue: true });
+
+  assertEquals(effets, ["seanceTerminee"]);
 });
