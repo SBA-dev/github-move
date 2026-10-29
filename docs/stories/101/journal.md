@@ -18,3 +18,15 @@ Branche de base : `main`. Décision réservée : 0037.
 
 - `po-acceptance` (`dd40c2d`) : `features/101-quete-du-jour.feature`, 6 règles, 37 scénarios (42 cas), 33 `@a-valider`. Aucun scénario ni step existant modifié. Questions #101.16 à #101.22.
 - `CADRAGE PRÊT` publié sur #101. Attente de la validation du PO par le responsable : pas de TDD avant.
+
+## Validation du PO (14:14 UTC)
+
+- Annonce `[Responsable]` sur #64 (commentaire 6499060322) : réponse du PO « 101 reco », toutes les recommandations retenues (#101.4 : le parent ne voit pas les quêtes ; #101.6 B : rien d'enregistré, donc aucune ressource partagée). #101 passe en `graphe:dev`.
+- `po-acceptance` (`c657de6`, `b8ce80a`, `d21be58`) : réponses reportées, scénario de 101.21 (a) ajouté, plus aucun `@a-valider`. 6 règles, 38 scénarios, 43 cas. Termes Quête du jour et Quête accomplie validés au glossaire.
+- Story voisine #100 lancée à 14:13 (session à part, décision 0038), aussi dans Motivation : surveiller les fichiers communs (`motivation/domain/index.ts`, fin de séance).
+
+## Étape 3 : TDD
+
+Liste des comportements :
+- Bloc 1, `motivation/domain/quete-du-jour.ts` : B1 sans quête si une donnée est inconnue ; B2 révision si au moins une question due ; B3 sinon la leçon du jour ; B4 aucune (parcours fini) ou sans quête (aucune leçon pour ta classe) ; B5 accomplie par une séance de révision du jour ; B6 accomplie par une séance de leçon du jour (aussi quand elle finit le parcours) ; B7 une séance de leçon n'accomplit pas une quête de révision ; B8 `queteAccomplieParLaSeance`.
+- Bloc 2, `paroles-de-la-quete.ts` et exports de `@domain/motivation`.
