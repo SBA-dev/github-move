@@ -1,5 +1,5 @@
 import { assertEquals, assertThrows } from "@std/assert";
-import { TenueInconnue, TenueNonRecue, porterUneTenue } from "./tenue-portee.ts";
+import { porterUneTenue, TenueInconnue, TenueNonRecue } from "./tenue-portee.ts";
 import { tenuesDe } from "./tenues.ts";
 
 Deno.test("l'enfant porte une tenue qu'il a reçue", () => {
