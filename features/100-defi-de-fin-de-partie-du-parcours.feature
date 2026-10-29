@@ -1,23 +1,24 @@
 # language: fr
 @issue-100 @wip
-Fonctionnalité: Défi de la partie du parcours et grand défi de la matière
+Fonctionnalité: Défi de la partie du parcours
   En tant qu'enfant
   Je veux relever un défi qui mélange les questions des leçons que je viens de réussir
   Afin de me prouver que je suis devenu fort, sans rien risquer de perdre
 
   Contexte Apprentissage pour le défi, Motivation pour sa mise en scène (docs/stories/100/domain-model.md).
   Le défi ne donne aucune étoile, ne change aucun résultat de la leçon et ne bloque rien : une erreur suit les
-  règles d'une séance (encouragement, aide, nouvelle chance, « Je ne sais pas »), sans vie ni temps limité.
-  Ces scénarios suivent les recommandations des questions #100.1 à #100.20 du modèle, que le PO n'a pas encore
-  validées ; docs/stories/100/acceptance.md dit quel scénario dépend de quelle question. Le tag « à valider »
-  (a-valider) marque les scénarios qui dépendent d'une question nouvelle (#100.21 et suivantes).
+  règles d'une séance (encouragement, aide, nouvelle chance, « Je ne sais pas »), sans vie ni temps limité, et la
+  question ratée entre dans la file de révision. Cadrage validé par le PO le 2026-10-29 (réponses 100.1 à 100.28,
+  docs/stories/100/acceptance.md). Le grand défi de la matière n'est pas dans cette story : il viendra avec #137.
 
-  Mots employés dans ces scénarios (mots d'interface proposés, #100.3 A, #100.16 A et #100.21) :
-  - une partie du parcours : 5 leçons consécutives du parcours d'une matière (#100.1 A) ;
-  - « Défi 1 » : le défi de la première partie du parcours d'une matière ; « Grand défi » : le défi de la matière ;
+  Mots employés dans ces scénarios (mots d'interface validés, 100.3, 100.16, 100.21 et 100.24) :
+  - une partie du parcours : 5 leçons consécutives du parcours d'une matière et d'une classe ; un dernier bloc de
+    1 ou 2 leçons rejoint le précédent (100.1 A) ;
+  - « Défi 1 » : le défi de la première partie du parcours d'une matière ; chaque partie du parcours a son défi,
+    sauf la dernière de la matière (une matière d'une seule partie du parcours n'en a donc aucun) ;
   - « le repère « Défi 1 » » : la place du défi sur le dessin du parcours, juste après la dernière leçon de sa
-    partie du parcours ; celui du grand défi est près du fanion, à la fin du dessin du parcours ;
-  - « à venir », « ouvert », « relevé » : l'état d'un défi ; un défi à venir n'a pas de cadenas ;
+    partie du parcours ;
+  - « à venir », « ouvert », « relevé » : l'état d'un défi ; un défi à venir n'a pas de cadenas et ne se touche pas ;
   - « la fin du défi » : l'écran qui suit la dernière question du défi.
 
   Pour ces scénarios, la bibliothèque servie au navigateur est remplacée par la bibliothèque de test du défi
@@ -28,8 +29,8 @@ Fonctionnalité: Défi de la partie du parcours et grand défi de la matière
   - sciences du CE1 : « Les êtres vivants » (10), « Les saisons » (20), « L'eau » (30), chacune un exercice bulles
     de 2 questions à 3 choix, sans aide (par exemple « Quelle saison vient après l'hiver ? ») ;
   - aucune autre leçon.
-  Avec des parties du parcours de 5 leçons, les maths du CE1 en ont deux (« Maths 1 » à « Maths 5 », puis
-  « Maths 6 » à « Maths 10 ») ; les sciences du CE1 en ont une seule.
+  Les maths du CE1 ont deux parties du parcours (« Maths 1 » à « Maths 5 », puis « Maths 6 » à « Maths 10 ») et
+  donc un seul défi, le défi 1 ; les sciences du CE1 ont une seule partie du parcours et aucun défi.
   Paul et Marie sont les deux parents rattachés au profil enfant de Léa ; Tom est un autre enfant de Paul ;
   Claire n'est rattachée à aucun d'eux.
 
@@ -38,7 +39,7 @@ Fonctionnalité: Défi de la partie du parcours et grand défi de la matière
     Et que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
     Et que la bibliothèque de test du défi est servie
 
-  Règle: Le défi d'une partie du parcours s'ouvre quand toutes ses leçons sont réussies ; avant, il est à venir, visible et sans cadenas
+  Règle: Chaque partie du parcours, sauf la dernière de sa matière, a un défi ; il s'ouvre quand toutes ses leçons sont réussies ; avant, il est à venir, visible et sans cadenas
 
     Plan du Scénario: Avec <réussies> leçon(s) réussie(s) sur 5, le défi 1 est à venir
       Étant donné que Léa a réussi les <réussies> premières leçons de maths du CE1
@@ -73,13 +74,29 @@ Fonctionnalité: Défi de la partie du parcours et grand défi de la matière
       Et la fin de la séance propose « Relever le défi » et « Leçon suivante »
       Mais aucun défi ne commence sans que Léa le choisisse
 
-    Scénario: Rejouer une leçon dont le défi est déjà ouvert ne l'annonce pas de nouveau
-      Étant donné que Léa a réussi les 5 premières leçons de maths du CE1
-      Et que Léa joue la séance complète de la leçon « Maths 3 »
+    Plan du Scénario: Une séance qui n'ouvre aucun défi n'annonce aucun défi (<cas>)
+      Étant donné que Léa a réussi les <réussies> premières leçons de maths du CE1
+      Et que Léa joue la séance complète de la leçon « <leçon> »
       Quand Léa réussit la dernière question de la séance
       Alors aucune annonce de défi ouvert n'apparaît à la fin de la séance
 
-  Règle: Le défi ne bloque rien et ne change aucune note : ni étoile, ni prochaine leçon, ni file de révision ; il ne donne ni objet de la cabane, ni tenue, ni badge, ni épisode
+      Exemples:
+        | cas                                                      | réussies | leçon    |
+        | leçon rejouée alors que son défi est déjà ouvert         | 5        | Maths 3  |
+        | dernière leçon de la dernière partie du parcours         | 9        | Maths 10 |
+
+    Plan du Scénario: <cas> n'a pas de défi
+      Étant donné que Léa a réussi les <réussies> premières leçons de <matière> du CE1
+      Quand Léa choisit « <Matière> » dans son parcours
+      Alors le dessin du parcours montre <repères>
+      Mais aucun repère de défi n'apparaît après la leçon « <dernière> »
+
+      Exemples:
+        | cas                                              | réussies | matière  | Matière  | repères                                           | dernière |
+        | La dernière partie du parcours des maths         | 10       | maths    | Maths    | un seul repère de défi, « Défi 1 », après la leçon 5 | Maths 10 |
+        | Une matière d'une seule partie du parcours       | 3        | sciences | Sciences | aucun repère de défi                              | L'eau    |
+
+  Règle: Le défi ne bloque rien et ne change aucune note : ni étoile, ni prochaine leçon ; il ne donne ni objet de la cabane, ni tenue, ni badge, ni épisode
 
     Scénario: Sans avoir fait le défi 1, l'enfant continue son parcours, et le personnage guide se tient sur la leçon 6
       Étant donné que Léa a réussi les 5 premières leçons de maths du CE1
@@ -108,13 +125,7 @@ Fonctionnalité: Défi de la partie du parcours et grand défi de la matière
       Et aucune annonce pour la cabane, de nouvelle tenue, de nouveau badge ni de nouvel épisode n'apparaît à la fin du défi
       Et la fin du défi ne propose pas « Lire l'épisode »
 
-    Scénario: Une question où l'enfant s'est trompé pendant le défi ne revient pas en révision
-      Étant donné que Léa a réussi les 5 premières leçons de maths du CE1
-      Et que Léa a relevé le défi 1 de maths, en se trompant à « Combien font 2 + 1 ? »
-      Quand Léa revient à son accueil le lendemain
-      Alors l'accueil de Léa ne propose pas de séance de révision
-
-  Règle: Le défi pose 10 questions pour une partie du parcours et 12 pour la matière, prises seulement dans ses leçons, parmi les questions qui se posent seules et sans temps limité, réparties entre les leçons et mélangées
+  Règle: Le défi pose 10 questions prises seulement dans les leçons de sa partie du parcours, parmi les questions qui se posent seules et sans temps limité, réparties à parts égales entre les leçons et mélangées
 
     Scénario: Le défi 1 pose 2 questions de chacune des leçons 1 à 5, mélangées, jamais d'une autre leçon ni d'une fluence
       Étant donné que Léa a réussi les 10 premières leçons de maths du CE1
@@ -124,22 +135,7 @@ Fonctionnalité: Défi de la partie du parcours et grand défi de la matière
       Mais aucune question des leçons « Maths 6 » à « Maths 10 »
       Et aucun calcul en temps limité
 
-    Scénario: Le grand défi des maths pose 12 questions, au moins une de chacune des 10 leçons
-      Étant donné que Léa a réussi les 10 premières leçons de maths du CE1
-      Et que Léa a commencé le grand défi des maths
-      Quand Léa répond juste à toutes les questions du défi
-      Alors Léa a eu 12 questions, au moins une de chacune des leçons « Maths 1 » à « Maths 10 »
-      Mais aucune question de sciences
-
-    @a-valider
-    Scénario: Quand la matière a moins de 12 questions qui se posent seules, le grand défi les pose toutes, une seule fois chacune
-      Étant donné que Léa a réussi les 3 leçons de sciences du CE1
-      Et que Léa a commencé le grand défi des sciences
-      Quand Léa répond juste à toutes les questions du défi
-      Alors Léa a eu 6 questions, les 2 de chacune des leçons « Les êtres vivants », « Les saisons » et « L'eau »
-      Mais aucune question deux fois
-
-  Règle: Pendant le défi, une erreur suit les règles d'une séance : encouragement, aide, nouvelle chance sans limite ; il n'y a ni vie, ni temps limité, ni compte des erreurs
+  Règle: Pendant le défi, une erreur suit les règles d'une séance : encouragement, aide, nouvelle chance sans limite, sans vie, ni temps limité, ni compte des erreurs ; la question ratée entre dans la file de révision
 
     Scénario: Le défi commence par une parole du personnage guide, sans vie ni temps qui passe
       Étant donné que Léa a réussi les 5 premières leçons de maths du CE1
@@ -156,6 +152,18 @@ Fonctionnalité: Défi de la partie du parcours et grand défi de la matière
       Alors Noisette dit un encouragement, suivi de « Essaie une autre bulle. »
       Et la question « Combien font 2 + 1 ? » reste posée
 
+    Plan du Scénario: Après un défi relevé <déroulé>, l'accueil du lendemain <révision>
+      Étant donné que Léa a réussi les 5 premières leçons de maths du CE1
+      Et que Léa a relevé le défi 1 de maths, <déroulé>
+      Quand Léa revient à son accueil le lendemain
+      Alors l'accueil de Léa <révision>
+
+      Exemples:
+        | déroulé                                                  | révision                                                                  |
+        | en se trompant à « Combien font 2 + 1 ? »                | propose la séance de révision, avec « 1 petite erreur des jours passés »  |
+        | en disant « Je ne sais pas » à « Combien font 2 + 1 ? »  | propose la séance de révision, avec « 1 petite erreur des jours passés »  |
+        | sans erreur                                              | ne propose pas de séance de révision                                      |
+
   Règle: Un défi terminé est relevé, avec ou sans erreurs, et la fin du défi le fête ; on peut le quitter sans rien perdre et le rejouer sans nouvelle récompense ; les défis relevés se retrouvent dans « Mes médailles »
 
     Plan du Scénario: Un défi terminé <déroulé> est relevé, et sa fin le fête
@@ -163,7 +171,7 @@ Fonctionnalité: Défi de la partie du parcours et grand défi de la matière
       Et que Léa a commencé le défi 1 de maths
       Quand Léa répond au défi, <déroulé>
       Alors la fin du défi annonce « Défi relevé ! »
-      Et Noisette dit « Bravo Léa ! Tu as relevé le défi 1 ! »
+      Et Léa entend l'effet sonore « grande victoire », puis Noisette dit « Bravo Léa ! Tu as relevé le défi 1 ! »
       Et la fin du défi propose « Mon parcours » et « Accueil »
       Mais la fin du défi ne propose pas « Leçon suivante »
 
@@ -185,41 +193,14 @@ Fonctionnalité: Défi de la partie du parcours et grand défi de la matière
       Et que Léa a relevé le défi 1 de maths
       Et que Léa a commencé de nouveau le défi 1 de maths
       Quand Léa répond juste à toutes les questions du défi
-      Alors Noisette dit « Bravo Léa ! Tu as encore relevé le défi 1 ! »
+      Alors Léa entend l'effet sonore « séance terminée », puis Noisette dit « Bravo Léa ! Tu as encore relevé le défi 1 ! »
       Mais la fin du défi n'annonce pas « Défi relevé ! »
 
-    Scénario: « Mes médailles » montre les défis relevés, chacun une seule fois
+    Scénario: « Mes médailles » montre les défis relevés, chacun une seule fois, dans sa dernière section
       Étant donné que Léa a relevé deux fois le défi 1 de maths
-      Et que Léa a relevé le grand défi des sciences
       Quand Léa ouvre « Mes médailles » depuis son accueil
-      Alors la section « Mes défis relevés » montre « Défi 1 · Maths · CE1 » et « Grand défi · Sciences · CE1 »
-      Mais « Défi 1 · Maths · CE1 » n'y est qu'une fois
-
-  Règle: Le grand défi de la matière s'ouvre quand la matière est réussie ; une matière d'une seule partie du parcours n'a que le grand défi
-
-    @a-valider
-    Scénario: La matière réussie, le grand défi est ouvert près du fanion, à la place du défi de la dernière partie du parcours
-      Étant donné que Léa a réussi les 10 premières leçons de maths du CE1
-      Quand Léa choisit « Maths » dans son parcours
-      Alors Noisette se tient à la fin du dessin du parcours, près du fanion
-      Et le dessin du parcours montre le repère « Grand défi » ouvert, près du fanion, avec « Relever le défi »
-      Et le dessin du parcours montre le repère « Défi 1 » ouvert, après la leçon 5
-      Mais le dessin du parcours ne montre aucun repère « Défi 2 »
-
-    @a-valider
-    Scénario: La séance qui rend la matière réussie annonce le grand défi
-      Étant donné que Léa a réussi les 9 premières leçons de maths du CE1
-      Et que Léa joue la séance complète de la leçon « Maths 10 »
-      Quand Léa réussit la dernière question de la séance
-      Alors la fin de la séance annonce « Le grand défi des maths est ouvert ! »
-      Et Noisette dit « Bravo Léa ! Tu as réussi toutes les leçons de maths. Le grand défi t'attend ! »
-      Mais aucune annonce « Le défi 2 est ouvert ! » n'apparaît
-
-    Scénario: Une matière qui n'a qu'une partie du parcours n'a que le grand défi, à venir tant que la matière n'est pas réussie
-      Étant donné que Léa a réussi « Les êtres vivants » et « Les saisons »
-      Quand Léa choisit « Sciences » dans son parcours
-      Alors le dessin du parcours montre le repère « Grand défi » à venir, près du fanion, avec « Encore 1 leçon pour ouvrir le défi »
-      Mais le dessin du parcours ne montre aucun repère « Défi 1 »
+      Alors la section « Mes défis relevés » montre « Défi 1 · Maths · CE1 » une seule fois
+      Et « Mes défis relevés » est la dernière section de « Mes médailles »
 
   Règle: Sur « Mon parcours », chaque défi a son repère, à venir, ouvert ou relevé ; les lecteurs d'écran le lisent dans la liste des leçons, à sa place
 
@@ -238,7 +219,7 @@ Fonctionnalité: Défi de la partie du parcours et grand défi de la matière
       Étant donné que Léa a réussi les 4 premières leçons de maths du CE1
       Quand Léa choisit « Maths » dans son parcours
       Alors les lecteurs d'écran annoncent, après « Maths 5 : à toi ! », la ligne « Défi 1 : à venir, encore 1 leçon pour ouvrir le défi »
-      Et les lecteurs d'écran annoncent, après « Maths 10 : à découvrir », la ligne « Grand défi : à venir, encore 6 leçons pour ouvrir le défi »
+      Mais les lecteurs d'écran n'annoncent aucune ligne de défi après « Maths 10 : à découvrir »
 
   Règle: Le défi se joue sans réseau, sans mouvement quand l'appareil le demande, et sur un écran de 360 px
 
@@ -266,12 +247,12 @@ Fonctionnalité: Défi de la partie du parcours et grand défi de la matière
       Et chaque choix mesure au moins 44 px de haut et de large
       Et « Je ne sais pas » mesure au moins 44 px de haut
 
-    Scénario: À 360 px, les repères des défis tiennent dans la largeur et sont assez grands pour un doigt d'enfant
+    Scénario: À 360 px, le repère du défi tient dans la largeur et est assez grand pour un doigt d'enfant
       Étant donné que l'écran de l'appareil mesure 360 px de large
-      Et que Léa a réussi les 10 premières leçons de maths du CE1
+      Et que Léa a réussi les 5 premières leçons de maths du CE1
       Quand Léa choisit « Maths » dans son parcours
       Alors la page tient dans la largeur de l'écran
-      Et les repères « Défi 1 » et « Grand défi » mesurent au moins 44 px de haut
+      Et le repère « Défi 1 » mesure au moins 44 px de haut
 
   Règle: Le défi relevé est enregistré par le serveur, après vérification, et seulement pour un parent rattaché au profil enfant ; il est compris dans les données du profil
 
