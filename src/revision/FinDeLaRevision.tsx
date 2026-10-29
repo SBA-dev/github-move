@@ -1,9 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import type { SeanceDeRevision } from "@domain/apprentissage";
-import { effetsSonoresDeLaFin, parolesDeFinDeRevision, phraseDeFinAvecLesNouveautes, type Univers } from "@domain/motivation";
+import { effetsSonoresDeLaFin, parolesDeFinDeRevision, phraseDeFinAvecLesNouveautes, type QueteDuJour, type Univers } from "@domain/motivation";
+import { AnnonceDeLaQueteAccomplie } from "../accueil/AnnonceDeLaQueteAccomplie.tsx";
+import { useQueteAccomplieParLaSeance } from "../accueil/useQueteAccomplieParLaSeance.ts";
 import { Confettis } from "../celebration/index.ts";
 import { AnnonceDuNouvelEpisode } from "../histoire/AnnonceDuNouvelEpisode.tsx";
 import { useEpisodeOuvertParLaSeance } from "../histoire/useEpisodeOuvertParLaSeance.ts";
+import { phraseDeFinAvecLaQuete } from "../seance/fin-de-seance/phrase-de-fin-avec-la-quete.ts";
 import { messageDeSauvegarde } from "../seance/fin-de-seance/useSauvegardeDeLaSeance.ts";
 import { jourDuNavigateur } from "../seance/jour-du-navigateur.ts";
 import { ParoleDuGuide } from "../test-de-depart/ParoleDuGuide.tsx";
@@ -17,8 +20,12 @@ type Props = {
   readonly prenom: string;
   readonly personnage: Personnage;
   readonly univers: Univers;
+  /** Le niveau du profil, pour relire la quête du jour. */
+  readonly niveau: string;
   /** Le nombre de séances terminées lu au lancement de la révision, avant que celle-ci ne s'y ajoute ; `undefined` s'il n'a pas pu être lu. */
   readonly nombreDeSeancesAvant: Promise<number | undefined>;
+  /** La quête du jour lue au lancement de la révision, avant que celle-ci ne la change ; `undefined` si elle n'a pas pu être lue. */
+  readonly queteAvant: Promise<QueteDuJour | undefined>;
   readonly onLireLEpisode: (numero: number) => void;
   readonly onAccueil: () => void;
 };
@@ -27,13 +34,14 @@ type Props = {
  * La fin de la séance de révision : pas d'étoiles, le personnage guide dit combien d'erreurs s'effacent.
  * La copie de la file est mise à jour tout de suite par le domaine, puis la séance est envoyée au serveur en arrière-plan.
  */
-export function FinDeLaRevision({ seance, prenom, personnage, univers, nombreDeSeancesAvant, onLireLEpisode, onAccueil }: Props) {
+export function FinDeLaRevision({ seance, prenom, personnage, univers, niveau, nombreDeSeancesAvant, queteAvant, onLireLEpisode, onAccueil }: Props) {
   const { dire, faireSilence, reecouter } = personnage;
   const lancee = useRef(false);
   const affichee = useRef(true);
   const [pret, setPret] = useState(false);
   const [questionsJustes, setQuestionsJustes] = useState(0);
   const { pret: episodePret, episode } = useEpisodeOuvertParLaSeance(nombreDeSeancesAvant, pret);
+  const { prete: quetePrete, accomplie: queteAccomplie } = useQueteAccomplieParLaSeance(queteAvant, seance.enfant, niveau, pret);
   const dite = useRef(false);
   const [message, setMessage] = useState<string | undefined>();
   const accueil = useRef<HTMLButtonElement>(null);
@@ -51,10 +59,14 @@ export function FinDeLaRevision({ seance, prenom, personnage, univers, nombreDeS
   }, [seance]);
 
   useEffect(() => {
-    if (dite.current || !pret || !episodePret || !affichee.current) return;
+    if (dite.current || !pret || !episodePret || !quetePrete || !affichee.current) return;
     dite.current = true;
     void dire({
-      texte: phraseDeFinAvecLesNouveautes(parolesDeFinDeRevision({ prenom, questionsJustes }), { episode }),
+      texte: phraseDeFinAvecLaQuete(
+        phraseDeFinAvecLesNouveautes(parolesDeFinDeRevision({ prenom, questionsJustes }), { episode }),
+        prenom,
+        queteAccomplie,
+      ),
       nature: "felicitation",
       humeur: "applaudit",
       effetsAvant: effetsSonoresDeLaFin({
@@ -67,7 +79,7 @@ export function FinDeLaRevision({ seance, prenom, personnage, univers, nombreDeS
         episodeOuvert: episode !== undefined,
       }),
     });
-  }, [pret, episodePret, episode, prenom, questionsJustes, dire]);
+  }, [pret, episodePret, episode, quetePrete, queteAccomplie, prenom, questionsJustes, dire]);
 
   useEffect(() => {
     affichee.current = true;
@@ -85,6 +97,7 @@ export function FinDeLaRevision({ seance, prenom, personnage, univers, nombreDeS
       {pret && <Confettis />}
       <ParoleDuGuide personnage={personnage} univers={univers} onReecouter={reecouter} />
       {pret && <AnnonceDuNouvelEpisode episode={episode} />}
+      {pret && <AnnonceDeLaQueteAccomplie prenom={prenom} accomplie={queteAccomplie} />}
       {pret && (
         <div className="actions-de-fin">
           <button type="button" className="action-principale" ref={accueil} onClick={onAccueil}>Accueil</button>
