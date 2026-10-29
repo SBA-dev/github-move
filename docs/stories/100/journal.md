@@ -15,3 +15,11 @@ Session : session_015z4jmMahATJuud1H1cNRHz. Décision réservée : 0038.
 - 20:20 → 20:27 UTC : `domain-modeler` (`317534c`) : modèle « cadrage validé », glossaire (ajouts + « Nouveau défi » → « Nouveau jeu », 100.4), context map, décision 0038. Rappel : option A = blocs de 5, un dernier bloc de 1 ou 2 leçons rattaché au précédent (texte présenté au PO).
 - 20:28 → 20:45 UTC : `po-acceptance` (`84e7288`) : 8 règles, 28 scénarios, 37 cas. 100.22, `DefiInconnu`, `AucuneQuestionPourLeDefi` et « Nouveau jeu » couverts en tests unitaires.
 - Étape 3 : liste ordonnée des comportements (13) reprise du modèle : partiesDuParcours, defisDeLaMatiere, etatDuDefi, defiOuvertParLaSeance, questionsPosablesDuDefi, planDuDefi, SeanceDeDefi, aEnregistrer, revaliderLeDefi, TerminerLeDefi, « Nouveau jeu », paroles du défi, defiReleveParLaSeance + « Mes défis relevés ». Blocs de revue : (A) Apprentissage calculs purs 1-6, (B) Apprentissage séance + revalidation + cas d'usage 7-10, (C) Motivation 11-13.
+- 20:27 UTC : annonce du responsable : VERROU base accordé à #100 (migration `defis_termines`).
+- Bloc A (Apprentissage, calculs purs), cycles TDD :
+  1. `partiesDuParcours` : RED `c27c38f`, GREEN `2dc54ed`.
+  2. `defisDeLaMatiere` : RED `241c096`. L'implementer conteste une assertion (comparaison de `Matiere` à une chaîne) ; arbitrage : `Defi.matiere` reste une `Matiere`, comme partout dans le domaine ; test corrigé `9f02296`, GREEN `1f94280`.
+  3. `etatDuDefi` : RED `53aad6a`, GREEN `8eecba8` (doute : règle « leçon réussie » relue sur `Parcours` plutôt que via `estReussie`).
+  4. `defiOuvertParLaSeance` : API fixée par l'orchestrateur sur le motif de `leconAcquiseParLaSeance` ; RED `e27296e`, GREEN `611edcf`.
+  5-6. `questionsPosablesDuDefi`, `planDuDefi` : RED `903a4d7`, GREEN `86abc42` (refactor de `posables` et `melanger`). Deux branches écrites sans test (addition → calcul, dictée) : tests ajoutés `0bf7e46`, prouvés en cassant le code.
+- Revue delta du bloc A (`174542c..0bf7e46`) lancée.
