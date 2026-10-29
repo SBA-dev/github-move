@@ -2,9 +2,9 @@
 
 Scénarios : `features/101-quete-du-jour.feature` (`@issue-101 @wip`).
 Modèle : `docs/stories/101/domain-model.md` (questions #101.1 à #101.15).
-État : **à valider par le PO**. Les scénarios suivent les recommandations du modèle (option B de #101.6). Un scénario
-tagué `@a-valider` dépend d'une question encore ouverte, nommée dans le commentaire au-dessus de lui. Les scénarios
-sans ce tag illustrent directement un critère de l'issue ou un garde-fou du skill `gamification` (section 5).
+État : **validé par le PO le 2026-10-29** (« 101 reco ») : toutes les recommandations des questions #101.1 à #101.22
+sont retenues (section « Réponses du PO (2026-10-29) »). Plus aucun scénario n'est `@a-valider` ; le commentaire
+au-dessus d'un scénario nomme la réponse ou le critère de l'issue qu'il illustre.
 
 ## Objectif
 
@@ -24,16 +24,16 @@ compte à rebours, aucune étoile ni récompense de plus, rien d'aléatoire.
 
 ## Règles et scénarios
 
-| Règle | Scénarios | Questions |
+| Règle | Scénarios | Réponses |
 |---|---|---|
 | **R1.** La quête du jour propose la séance de révision s'il y a au moins une question due, sinon la leçon du jour ; quand il n'y a rien à proposer, il n'y a pas de quête | Avec 1 ou 3 questions dues, Noisette propose la séance de révision (plan) · Sans question due, Noisette propose la leçon du jour · Après une séance de français, la quête propose la leçon du jour en maths · Tout le parcours réussi et des questions dues : révision · **Tout le parcours réussi et aucune question due : pas de quête, l'accueil félicite** · Sans leçon pour sa classe : pas de quête, sans félicitation · Le test de départ n'est jamais proposé · Sans bibliothèque ou sans file de révision lue : pas de quête, sans message d'erreur (plan) | #101.1, #101.6, #101.10 |
 | **R2.** Le personnage guide propose la quête à l'accueil ; l'enfant l'accepte, ou choisit « Autre chose » sans rien perdre | « Oui, on y va ! » commence la séance de révision · « Oui, on y va ! » ouvre la page de la leçon · Après « Autre chose », réponse douce et tout reste ouvert · Après « Autre chose », plus de quête en revenant sur l'accueil · À la prochaine ouverture, la quête revient sans reproche · Dans l'univers Sports, Coach Léo propose | #101.6, #101.9, #101.15 |
-| **R3.** La quête est accomplie par une séance du même genre terminée aujourd'hui ; fête une seule fois, à la fin de cette séance ; une seule quête par jour | Fête à la fin de la séance de révision · Fête à la fin de la séance de la leçon proposée · Séance de révision avec des erreurs : accomplie quand même · Une autre leçon de la classe ou une leçon des classes d'avant accomplit la quête (plan) · La séance qui finit le parcours accomplit la quête · Une séance de leçon n'accomplit pas une quête de révision · Ni le test de départ ni une séance quittée (plan) · Accomplie : l'accueil le dit calmement, pas d'autre quête · Une séance de plus ne fête pas de nouveau · Épisode puis quête accomplie, dans cet ordre · Sans réseau, accomplie tout de suite | #101.2, #101.8, #101.11, #101.12, #101.17 |
+| **R3.** La quête est accomplie par une séance du même genre terminée aujourd'hui ; fête une seule fois, à la fin de cette séance ; une seule quête par jour | Fête à la fin de la séance de révision · Fête à la fin de la séance de la leçon proposée · Séance de révision avec des erreurs : accomplie quand même · Une autre leçon de la classe ou une leçon des classes d'avant accomplit la quête (plan) · La séance qui finit le parcours accomplit la quête · Une séance de leçon n'accomplit pas une quête de révision · Après « Autre chose », la séance de révision faite plus tard accomplit quand même la quête · Ni le test de départ ni une séance quittée (plan) · Accomplie : l'accueil le dit calmement, pas d'autre quête · Une séance de plus ne fête pas de nouveau · Épisode puis quête accomplie, dans cet ordre · Sans réseau, accomplie tout de suite | #101.2, #101.8, #101.11, #101.12, #101.17, #101.21 |
 | **R4.** Jamais punitive : une quête non faite disparaît le lendemain sans message ; la quête accomplie ne change aucune récompense existante | **Revenue le lendemain ou 3 jours plus tard, aucune quête passée n'est évoquée** (plan) · Le lendemain d'une quête accomplie, nouvelle quête · Aucune étoile, aucun objet de la cabane, aucune tenue de plus · L'objectif du jour ne change pas | #101.2, #101.3, #101.5, #101.8 |
 | **R5.** Voix haute, clavier, petit écran, mouvements réduits | Lue après la salutation · Acceptée au clavier · 360 px et boutons de 44 px · Mouvements réduits : la fête apparaît sans mouvement et garde son texte | #101.11, #101.15, #101.16 |
 | **R6.** (`@acces`) La quête d'un enfant ne tient compte que de ses séances et questions dues, et ne se montre ni dans l'Espace parent ni à un autre enfant | Les séances de Tom n'accomplissent pas la quête de Léa · Les questions dues de Tom ne deviennent pas la quête de Léa · Sur le téléphone de Marie, la quête accomplie se retrouve · L'Espace parent ne montre pas la quête | #101.4, #101.8 |
 
-Total : 6 règles, 37 scénarios (dont 5 plans du scénario), soit 42 cas générés ; 33 sont `@a-valider`. Un parent non rattaché ne lit déjà ni
+Total : 6 règles, 38 scénarios (dont 5 plans du scénario), soit 43 cas générés ; aucun n'est `@a-valider`. Un parent non rattaché ne lit déjà ni
 les séances terminées ni la file de révision de Léa (#29, #28) : la quête ne lit rien d'autre, aucun scénario de plus.
 
 Les critères de l'issue sont tous couverts : questions dues → révision (R1), sans question due → leçon du jour (R1),
@@ -58,14 +58,50 @@ question due → pas de quête et félicitation (R1). S'y ajoutent le refus « A
 - Le choix de la leçon du jour (29.1), la file de révision (#28), l'objectif du jour (#29), la série (#30), les
   épisodes (#33), la cabane (#32), les tenues (#102), les badges (#31) : inchangés.
 - Toute notification ou rappel hors de l'application (aucun, par principe).
-- Un historique des quêtes, un compteur de quêtes, une récompense propre à la quête (selon #101.3 a et #101.4 a).
-- Les devoirs (lot 6) : leur place dans la quête sera revue avec leur story (#101.10).
+- Un historique des quêtes, un compteur de quêtes, une récompense propre à la quête (réponses 101.3 a et 101.4 a).
+- Les quêtes dans l'Espace parent (réponse 101.4 a).
+- Un effet sonore propre à la fête de la quête (réponse 101.18 a).
+- Les devoirs (lot 6) : leur place dans la quête sera revue avec leur story (réponse 101.10 a).
 - Un dessin pour la quête (parchemin, boussole…) : seulement si le PO le demande, par le skill `illustration`.
+
+## Réponses du PO (2026-10-29)
+
+Réponse du PO, mot pour mot : « 101 reco » (annonce du responsable sur #64). Toutes les recommandations des questions
+#101.1 à #101.22 sont retenues ; les tags `@a-valider` sont retirés et les paroles proposées deviennent définitives.
+
+| Question | Réponse retenue | Effet sur les scénarios |
+|---|---|---|
+| #101.1 Choix de la quête | **(a)** : révision d'abord s'il y a au moins une question due, sinon la leçon du jour telle quelle (29.1) | inchangés (R1) |
+| #101.2 Une quête par jour | **(a)** : une seule ; accomplie jusqu'au lendemain | inchangés (R3, R4) |
+| #101.3 Récompense | **(a)** : rien de plus que la fête | inchangé (R4) |
+| #101.4 Parent | **(a)** : le parent ne voit pas les quêtes | inchangé (R6) |
+| #101.5 Série, épisodes, objectif du jour | **(a)** : la quête s'ajoute sans rien remplacer, sans compteur | inchangé (R4) |
+| #101.6 Nature du concept | **(B)** : calculée, sans règle de choix propre, jamais enregistrée | inchangés |
+| #101.7 Nom | **(a)** : Quête du jour et Quête accomplie, termes validés du glossaire | aucun |
+| #101.8 Quête accomplie plus tard dans la journée | **(A)** : calculée à partir des faits du jour | inchangés (R3, R4, R6) |
+| #101.9 Refus | **(a)** : « Autre chose », réponse douce, pas reproposée pendant l'utilisation, revient à la prochaine ouverture | inchangés (R2) |
+| #101.10 Ce que la quête ne propose jamais | **(a)** : ni test de départ, ni leçon personnelle, ni autre classe ; rien sans leçon pour la classe | inchangés (R1) |
+| #101.11 Lieu de la fête | **(a)** : fin de la séance qui accomplit, après les annonces existantes ; accueil calme | inchangés (R3, R5) |
+| #101.12 Séance qui accomplit | **(a)** : toute séance du même genre terminée aujourd'hui | inchangés (R3) |
+| #101.13 Contexte | **(a)** : Motivation | aucun |
+| #101.14 Histoire des Savanturiers | **(a)** : aucun lien | aucun |
+| #101.15 Place sur l'accueil | **(a)** : bulle du personnage guide, tuiles inchangées en dessous | inchangés (R2, R5) |
+| #101.16 Lecture à voix haute de la proposition | **(a)** : dans la même lecture, après la salutation et la pastille de série | inchangé (R5) |
+| #101.17 Accueil après la quête accomplie | **(a)** : « Ta quête du jour est accomplie. », sans boutons, sans son, sans confettis | inchangés (R3) |
+| #101.18 Effet sonore de la fête | **(a)** : aucun de plus ; parole, humeur `applaudit`, confettis | aucun |
+| #101.19 Fête lue à voix haute | **(a)** : oui, une fois, après la phrase de fin du personnage guide | aucun |
+| #101.20 Parole après une révision toute fausse | **(a)** : la même fête, « Quête du jour accomplie ! Bravo Léa ! » | inchangé (R3) |
+| #101.21 Fête après « Autre chose » | **(a)** : oui, la séance du même genre faite plus tard accomplit la quête | **ajouté** (R3) |
+| #101.22 « Fête » | **(a)** : mot courant, pas de terme nouveau | aucun |
 
 ## Questions ouvertes
 
-Les questions **#101.1 à #101.15** du modèle (`docs/stories/101/domain-model.md`) restent ouvertes ; les scénarios
-suivent leurs recommandations. Questions nouvelles, venues de l'écriture des scénarios :
+Aucune.
+
+## Décisions
+
+Les questions #101.1 à #101.22 sont tranchées (section « Réponses du PO (2026-10-29) »). Rappel des questions posées
+par ce document (#101.16 à #101.22) et de leur recommandation, toutes retenues :
 
 **#101.16. La quête est-elle lue avec la salutation ?** Avec « tout lire à voix haute », le personnage guide dit déjà
 « Bonjour Léa ! » et la pastille de série en une seule lecture (#30).
@@ -111,8 +147,8 @@ leçon, puis plus tard fait quand même la séance de révision.
   modèle).
 - (b) Non : une quête écartée n'est plus fêtée ce jour-là (il faudrait garder le refus, #101.9 c).
 
-**Recommandation : (a).** Écarter ne coûte rien ; rien n'est enregistré. Pas encore de scénario : à ajouter selon la
-réponse.
+**Recommandation : (a).** Écarter ne coûte rien ; rien n'est enregistré. Retenue : scénario « Après « Autre chose », la
+séance de révision faite plus tard dans la journée accomplit quand même la quête du jour » (R3).
 
 **#101.22. « Fête » : mot courant ou terme du glossaire ?** La définition de « Quête accomplie » dit « le personnage
 guide la fête ». « Félicitation » est un terme (phrase qui salue une bonne réponse).
