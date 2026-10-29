@@ -25,7 +25,7 @@ export function revaliderLeDefi(
   defisReleves: readonly DefiReleve[],
 ): DefiTermine {
   const { matiere, numero } = envoi.defi;
-  if (envoi.defi.niveau !== entrees.niveau) throw new DefiInconnu();
+  if (envoi.defi.niveau.valeur !== entrees.niveau.valeur) throw new DefiInconnu();
   const parcours = parcoursDeLaMatiere(entrees, matiere);
   const defi = defisDeLaMatiere(parcours, matiere, entrees.niveau).find((candidat) => candidat.numero === numero);
   if (!defi) throw new DefiInconnu();
