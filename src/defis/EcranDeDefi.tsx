@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { AucuneQuestionPourLeDefi, type Defi, type DefiReleve } from "@domain/apprentissage";
-import type { Lecon, Niveau } from "@domain/catalogue";
+import { type Lecon, libelleCourtDe, type Niveau } from "@domain/catalogue";
 import type { ProfilEnCours } from "@domain/famille";
 import { nomDuDefi, parolesDeDebutDeDefi, type Univers } from "@domain/motivation";
 import { niveauDuProfil } from "../parcours/niveau-du-profil.ts";
@@ -66,7 +66,7 @@ function DefiCharge(
       <div className="entete-de-seance">
         <div>
           <h2 id="titre-du-defi">{nomDuDefi(defi.numero)}</h2>
-          <p data-testid="sous-titre-du-defi">{defi.matiere.libelle}</p>
+          <p data-testid="sous-titre-du-defi">{libelleCourtDe(defi.matiere.code)}</p>
         </div>
         {!fini && (
           <button type="button" className="secondaire" data-testid="quitter-le-defi" onClick={retourner(onMonParcours)}>

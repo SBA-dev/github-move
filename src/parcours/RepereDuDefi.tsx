@@ -15,7 +15,7 @@ type Props = {
 
 /**
  * Le repère d'un défi sur le dessin du parcours, juste après la dernière leçon de sa partie. À venir, il est visible et ne se touche pas
- * (ni bouton ni cadenas) ; ouvert, il propose de relever le défi ; relevé, il le garde. Le lecteur d'écran lit l'état du défi.
+ * (ni bouton ni cadenas) ; ouvert, il propose de relever le défi ; relevé, il garde sa marque et propose de le rejouer. Le lecteur d'écran lit l'état du défi.
  */
 export function RepereDuDefi({ defi, etat, onRelever }: Props) {
   return (
@@ -29,10 +29,10 @@ export function RepereDuDefi({ defi, etat, onRelever }: Props) {
     >
       <span className="nom-du-defi" aria-hidden="true">{nomDuDefi(defi.numero)}</span>
       {etat.genre === "aVenir" && <span className="etat-du-defi" aria-hidden="true">{leconsAvantLeDefi(etat.leconsRestantes)}</span>}
-      {etat.genre === "ouvert" && (
+      {etat.genre === "releve" && <span className="etat-du-defi" aria-hidden="true">✓ {DEFI_RELEVE}</span>}
+      {(etat.genre === "ouvert" || etat.genre === "releve") && (
         <button type="button" className="relever-le-defi" onClick={() => onRelever(defi)}>{BOUTON_RELEVER_LE_DEFI}</button>
       )}
-      {etat.genre === "releve" && <span className="etat-du-defi" aria-hidden="true">✓ {DEFI_RELEVE}</span>}
     </div>
   );
 }
