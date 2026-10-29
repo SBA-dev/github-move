@@ -5,7 +5,7 @@ import { servirLaBibliothequeDuParcours } from "../support/bibliotheque-du-parco
 import { servirLaBibliothequeDuDessin } from "../support/bibliotheque-du-dessin-du-parcours.ts";
 import { servirLaBibliothequeDuTestDeDepart } from "../support/bibliotheque-du-test-de-depart.ts";
 import { readFileSync } from "node:fs";
-import { expect, type Locator, type Page } from "@playwright/test";
+import { type APIResponse, expect, type Locator, type Page, type Route } from "@playwright/test";
 import { Given, type ProfilPrepare, Then, When } from "./fixtures.ts";
 import { assurerLeProfil } from "./profils-enfants.steps.ts";
 import { cleDe } from "./univers.steps.ts";
@@ -104,9 +104,19 @@ export function neServirQueLaBibliothequeSansLeconsPersonnelles(page: Page): voi
   sansLeconsPersonnellesDansLaBibliotheque.add(page);
 }
 
+// Le serveur Vite local coupe parfois la connexion (ECONNRESET) : on retente deux fois avant d'échouer.
+async function chargerAvecNouveauxEssais(route: Route, essais = 3): Promise<APIResponse> {
+  try {
+    return await route.fetch();
+  } catch (erreur) {
+    if (essais <= 1) throw erreur;
+    return chargerAvecNouveauxEssais(route, essais - 1);
+  }
+}
+
 export async function interceptertLaBibliotheque(page: Page) {
   await page.route("**/bibliotheque.json", async (route) => {
-    const reponse = await route.fetch();
+    const reponse = await chargerAvecNouveauxEssais(route);
     const bibliotheque: unknown[] = await reponse.json();
     const injectees = sansLeconsPersonnellesDansLaBibliotheque.has(page)
       ? etat(page).injectees.filter((lecon) => !lecon.id.startsWith("perso-"))
