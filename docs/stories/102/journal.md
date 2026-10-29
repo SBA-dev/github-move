@@ -60,3 +60,7 @@ Bloc C, paroles, sons, sections :
 - Review delta, cycle 2 : À CORRIGER. Le bouton « Retirer la tenue » caché sans tenue portée cassait un scénario et contredisait le modèle (consigne de l'orchestrateur, erronée) → `705b7f7`. Garde `Object.hasOwn` → `9df0873`.
 - Erreur de l'orchestrateur : `df24eda`, présenté comme l'annulation d'une adaptation de step, l'a en fait ajoutée (le commit annulé n'était pas dans l'historique). Relevée par la review du cycle 3, que l'on rend à `e2e-tester`.
 - Note (non bloquant) : la `key` de la respiration de `PersonnageGuide` remonte tout le dessin quand la préférence change. Aucun état local ni animation d'entrée ne doit être placé sous ce nœud.
+- E2E, 3e cycle (`@issue-102` + `@issue-96`, `telephone`) : 153/155. Step des 44 px remis dans son état validé (`0da2615`).
+  - Rouge 1, cause établie : `useReducedMotion()` de Motion prend une photo de la préférence au montage. Le paysage, monté avant le réglage, ne la relit jamais. `aa0b439` et `915701b` reposaient sur ce hook.
+  - Rouge 2, instable : changement d'univers. Cause probable : `choisirSonProfil` clique avant que « Qui joue ? » ne montre le nouvel univers.
+  - ESCALADE (#102.30) : 4e cycle proposé (hook réactif `useMouvementsReduits`, attente dans le step propre à #102). En attente de la réponse du responsable.
