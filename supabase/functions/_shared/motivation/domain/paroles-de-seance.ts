@@ -12,7 +12,7 @@ const INVITATIONS_A_JOUER: readonly string[] = [
 ];
 
 const ANNONCES_D_EXERCICE: readonly string[] = [
-  "Nouveau défi",
+  "Nouveau jeu",
   "Jeu suivant",
   "Place au jeu",
 ];
