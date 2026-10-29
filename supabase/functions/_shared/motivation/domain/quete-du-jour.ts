@@ -14,6 +14,7 @@ export type PropositionsDuJour = {
 export type QueteDuJour =
   | { genre: "revision"; nombreDeQuestionsDues: number }
   | { genre: "lecon"; lecon: string; titre: string }
+  | { genre: "aucune" }
   | { genre: "sansQuete" };
 
 export function queteDuJour(
@@ -33,6 +34,9 @@ export function queteDuJour(
       lecon: leconDuJour.lecon,
       titre: leconDuJour.titre,
     };
+  }
+  if (leconDuJour.genre === "parcoursFini") {
+    return { genre: "aucune" };
   }
   return { genre: "sansQuete" };
 }
