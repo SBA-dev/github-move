@@ -4,7 +4,7 @@ Contexte recommandé : **Motivation**. La quête du jour est une mécanique de j
 
 Proposition de cadrage (option B de #101.6) : **aucun agrégat, aucune commande, aucun événement enregistré, aucune migration, aucune Edge Function, aucune donnée d'enfant nouvelle**. Deux fonctions pures de plus dans `motivation/domain/`, importées par le front via `@domain/motivation`. Elles marchent hors ligne et utilisent seulement des données que l'accueil lit déjà : la leçon du jour, le nombre de questions dues et les faits du jour.
 
-État : **cadrage à valider**. Les questions #101.1 à #101.15 attendent le PO. Chacune a des options et une recommandation. La plus importante est **#101.6** : la quête est-elle un concept nouveau, ou un autre nom pour ce qui existe ?
+État : **validé par le PO le 2026-10-29** (« 101 reco ») : toutes les recommandations des questions #101.1 à #101.22 sont retenues, dont **#101.6 B** (section « Réponses du PO (2026-10-29) »). Les termes Quête du jour et Quête accomplie sont validés au glossaire, section Motivation.
 
 ## Contexte
 
@@ -54,8 +54,8 @@ Le reste existe déjà. Créer un concept qui choisit de nouveau une leçon fera
 | Leçon du jour, Tuile du jour, Prochaine leçon, Séance de révision, Question due, Séance terminée, Jour, Jour de séance | au glossaire (validés) | Réutilisés tels quels. La quête **ne les redéfinit pas** |
 | Objectif du jour, Série, Épisode, Objet de la cabane, Tenue du personnage guide, Personnage guide, Félicitation | au glossaire (Motivation) | Inchangés (#101.5, #101.3) |
 | Accueil de l'enfant | au glossaire (Famille, validé) | L'écran où la quête est proposée |
-| **Quête du jour** | **nouveau** `(à valider)`, Motivation | Selon #101.6 B : la proposition unique que le personnage guide fait à l'accueil, la séance de révision s'il y a au moins une question due, sinon la leçon du jour. Calculée, jamais enregistrée. Avec #101.6 A, ce serait un simple mot d'écran, hors du glossaire |
-| **Quête accomplie** | **nouveau** `(à valider)`, Motivation | État de la quête du jour quand une séance du même genre a été terminée aujourd'hui (règle de #101.8 et #101.12). Calculé à partir des faits du jour |
+| **Quête du jour** | **nouveau**, validé (réponse 101.7), Motivation | Selon #101.6 B : la proposition unique que le personnage guide fait à l'accueil, la séance de révision s'il y a au moins une question due, sinon la leçon du jour. Calculée, jamais enregistrée. Avec #101.6 A, ce serait un simple mot d'écran, hors du glossaire |
+| **Quête accomplie** | **nouveau**, validé (réponse 101.7), Motivation | État de la quête du jour quand une séance du même genre a été terminée aujourd'hui (règle de #101.8 et #101.12). Calculé à partir des faits du jour |
 | « Autre chose » (refus) | mot d'écran proposé | Bouton qui refuse la quête (#101.9). « Refuser la quête » n'est pas proposé comme terme du domaine : rien n'est enregistré |
 | « quête accomplie par la séance » | nom de calcul | Comme « objet reçu par la séance » ou « tenue reçue par la séance » : pas un terme du glossaire |
 | mission du jour, mission | **interdits** | « Mission du jour » est interdit pour Leçon du jour et Objectif du jour, « mission » pour Devoir. « Mission accomplie ! » reste une **expression** du personnage guide de l'univers « Pompiers » (`univers.ts`) : c'est du contenu, pas un terme. Elle peut sonner comme un écho de la quête accomplie, sans conflit de sens |
@@ -83,7 +83,7 @@ classDiagram
     nombreDeSeancesDeRevisionTermineesDuJour : number
   }
   class QueteDuJour {
-    <<value object, nouveau, à valider>>
+    <<value object, nouveau>>
     revision(nombreDeQuestionsDues)
     lecon(lecon, titre)
     accomplie(genre : revision | lecon)
@@ -104,7 +104,7 @@ classDiagram
   queteAccomplieParLaSeance ..> QueteDuJour : compare
 ```
 
-### 1. Quête du jour (`queteDuJour`), selon les recommandations
+### 1. Quête du jour (`queteDuJour`), réponses du PO
 
 On lit d'abord le **genre** de la quête du jour, puis on dit si elle est **accomplie** :
 
@@ -122,7 +122,7 @@ Exemple (règle recommandée) : Léa, CE1, a 3 questions dues. À l'accueil, Noi
 
 À la fin d'une séance ou d'une séance de révision, le front calcule la quête du jour **avant** la séance (au lancement, comme les meilleures étoiles d'avant pour la cabane) et **après**. La fête est due si la quête n'était pas accomplie avant et l'est après. Elle se montre une seule fois, à la fin de la séance qui l'accomplit (#101.11). Sur l'accueil, la quête accomplie est ensuite montrée calmement, sans nouvelle fête.
 
-### 3. Paroles (Motivation, contenu à valider avec les critères)
+### 3. Paroles (Motivation, contenu validé par le PO)
 
 Phrases proposées, sans « mission », sans « défi », sans délai ni menace :
 - révision : « Ta quête du jour : réviser `<n>` petites erreurs des jours passés. On y va ? » ;
@@ -202,9 +202,9 @@ Affichage (pour mémoire, précisé par les critères) :
 
 Décision 0037 (réservée) : **pas nécessaire** avec la recommandation. À écrire seulement si le PO retient #101.8 C (première donnée de Motivation enregistrée sur le serveur) ou #101.6 C/D.
 
-## Questions ouvertes
+## Questions posées au PO
 
-Les questions #101.1 à #101.5 reprennent les cinq questions de l'issue. Les suivantes viennent du recouvrement avec #29, #30, #32, #33 et #102.
+Toutes tranchées (section « Réponses du PO (2026-10-29) » plus bas). Les questions #101.1 à #101.5 reprennent les cinq questions de l'issue. Les suivantes viennent du recouvrement avec #29, #30, #32, #33 et #102.
 
 **#101.1. Comment choisir la quête** (question n°1 de l'issue).
 - (a) Révision d'abord s'il y a au moins une question due, sinon la **leçon du jour** telle quelle (alternance français et maths, 29.1).
@@ -306,3 +306,38 @@ Exemple pour (a) : Tom a 2 questions dues. La quête propose « Je révise mes e
 - (b) La quête prend la place de la grande tuile.
 
 **Recommandation : (a).** Elle ne change pas l'écran validé par #29 et garde toutes les autres options visibles (autonomie, refus possible).
+
+## Réponses du PO (2026-10-29)
+
+Réponse mot pour mot : « 101 reco » (annonce du responsable sur #64). Chaque question prend sa recommandation, y compris #101.16 à #101.22 posées par `docs/stories/101/acceptance.md`.
+
+| Question | Réponse retenue |
+|---|---|
+| #101.1 Choix de la quête | **(a)** : révision d'abord s'il y a au moins une question due, sinon la leçon du jour telle quelle (29.1). |
+| #101.2 Une quête par jour | **(a)** : une seule ; une fois accomplie, elle le reste jusqu'au lendemain. |
+| #101.3 Récompense | **(a)** : rien de plus que la fête (parole, humeur `applaudit`, confettis sauf mouvements réduits). |
+| #101.4 Parent | **(a)** : le parent ne voit pas les quêtes ; rien dans l'Espace parent. |
+| #101.5 Série, épisodes, objectif du jour | **(a)** : la quête s'ajoute sans rien remplacer, sans compteur. |
+| #101.6 Nature du concept | **(B)** : calculée, sans règle de choix propre, jamais enregistrée. Aucune migration, aucune Edge Function, pas de décision 0037. |
+| #101.7 Nom | **(a)** : Quête du jour et Quête accomplie, en Motivation. |
+| #101.8 Quête accomplie plus tard dans la journée | **(A)** : calculée à partir des faits du jour, même résultat sur tous les appareils. |
+| #101.9 Refus | **(a)** : « Autre chose » ; « D'accord, choisis ce qui te fait envie ! » ; pas reproposée pendant l'utilisation (en mémoire), revient à la prochaine ouverture, sans reproche. |
+| #101.10 Ce que la quête ne propose jamais | **(a)** : ni test de départ, ni leçon personnelle, ni leçon d'une autre classe ; rien quand la classe n'a aucune leçon, sans félicitation. Devoirs : avec leur story. |
+| #101.11 Lieu de la fête | **(a)** : à la fin de la séance qui accomplit la quête, après les annonces existantes ; l'accueil le dit calmement. |
+| #101.12 Séance qui accomplit | **(a)** : toute séance du même genre terminée aujourd'hui (révision pour révision, n'importe quelle leçon pour une leçon). |
+| #101.13 Contexte | **(a)** : Motivation. |
+| #101.14 Histoire des Savanturiers | **(a)** : aucun lien. |
+| #101.15 Place sur l'accueil | **(a)** : bulle du personnage guide, après la salutation, avec ses deux boutons ; tuiles inchangées en dessous. |
+| #101.16 Lecture à voix haute de la proposition | **(a)** : dans la même lecture, après la salutation et la pastille de série. |
+| #101.17 Accueil après la quête accomplie | **(a)** : « Ta quête du jour est accomplie. », sans boutons, sans effet sonore, sans confettis. |
+| #101.18 Effet sonore de la fête | **(a)** : aucun de plus. |
+| #101.19 Fête lue à voix haute | **(a)** : oui, une fois, après la phrase de fin du personnage guide. |
+| #101.20 Parole après une révision toute fausse | **(a)** : la même fête, « Quête du jour accomplie ! Bravo `<prénom>` ! ». |
+| #101.21 Fête après « Autre chose » | **(a)** : oui ; la quête reste la même, non proposée, et une séance du même genre faite plus tard l'accomplit (rien n'est enregistré). |
+| #101.22 « Fête » | **(a)** : mot courant, pas de terme nouveau. |
+
+Les paroles proposées (Modèle, section 3) sont validées.
+
+## Questions ouvertes
+
+Aucune. Les questions #101.1 à #101.22 ont reçu leur réponse le 2026-10-29.
