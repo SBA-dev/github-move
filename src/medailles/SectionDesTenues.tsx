@@ -53,11 +53,9 @@ export function SectionDesTenues({ personnage, tenues, portee, onEcouter, onMett
           </li>
         ))}
       </ul>
-      {portee !== undefined && (
-        <button type="button" className="secondaire" data-testid="retirer-la-tenue" onClick={onRetirer}>
-          Retirer la tenue
-        </button>
-      )}
+      <button type="button" className="secondaire" data-testid="retirer-la-tenue" onClick={onRetirer}>
+        Retirer la tenue
+      </button>
     </section>
   );
 }
