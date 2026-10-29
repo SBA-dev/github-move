@@ -1,5 +1,9 @@
 import { type KeyboardEvent, useCallback, useRef } from "react";
 import {
+  type Defi,
+  defisDeLaMatiere,
+  type DefiReleve,
+  etatDuDefi,
   type LeconDesClassesDAvant,
   type LeconDuParcours,
   type LeconReussieDUneClasseAuDessus,
@@ -18,6 +22,7 @@ import {
 } from "./textes-du-parcours.ts";
 import { DessinDuParcours } from "./DessinDuParcours.tsx";
 import { BoutonDeLecon } from "./BoutonDeLecon.tsx";
+import { RepereDuDefi } from "./RepereDuDefi.tsx";
 import { EtatDeLaLecon } from "./EtatDeLaLecon.tsx";
 import { SectionDesClassesDAvant } from "./SectionDesClassesDAvant.tsx";
 import { niveauDuProfil } from "./niveau-du-profil.ts";
@@ -37,6 +42,8 @@ type Props = {
   /** La prochaine leçon vue la dernière fois dans chaque matière : d'où le personnage guide marche, si elle a avancé. */
   readonly prochainesLeconsConnues: ProchainesLeconsConnues;
   readonly onMemoriserLaProchaineLecon: (matiere: CodeDeMatiere, leconId: string | undefined) => void;
+  /** L'enfant choisit de relever un défi ouvert. */
+  readonly onReleverLeDefi?: (defi: Defi) => void;
 };
 
 function matiereOuverte(matieres: readonly Matiere[], choisie: CodeDeMatiere | undefined): Matiere | undefined {
@@ -56,6 +63,7 @@ export function MonParcours(
     onOuvrirLaLecon,
     prochainesLeconsConnues,
     onMemoriserLaProchaineLecon,
+    onReleverLeDefi,
   }: Props,
 ) {
   const lectures = useLecturesDuParcours(profil.id);
@@ -78,6 +86,7 @@ export function MonParcours(
           onOuvrirLaLecon={onOuvrirLaLecon}
           prochainesLeconsConnues={prochainesLeconsConnues}
           onMemoriserLaProchaineLecon={onMemoriserLaProchaineLecon}
+          onReleverLeDefi={onReleverLeDefi}
         />
       )}
     </section>
@@ -98,6 +107,7 @@ function ParcoursDuNiveau(
     onOuvrirLaLecon,
     prochainesLeconsConnues,
     onMemoriserLaProchaineLecon,
+    onReleverLeDefi,
   }: PropsDuNiveau,
 ) {
   const entrees = { ...lectures, niveau };
@@ -120,10 +130,13 @@ function ParcoursDuNiveau(
         <LeconsDuParcours
           key={ouverte.code}
           parcours={parcours}
+          defis={defisDeLaMatiere(parcours, ouverte, niveau)}
+          defisReleves={lectures.defisReleves}
           univers={univers}
           prochaineLeconConnue={prochainesLeconsConnues.get(ouverte.code)}
           onMemoriserLaProchaineLecon={memoriser}
           onOuvrirLaLecon={onOuvrirLaLecon}
+          onReleverLeDefi={onReleverLeDefi}
         />
         <BlocsDesLeconsDejaReussies lecons={parcours.leconsReussiesDesClassesAuDessus} onOuvrirLaLecon={onOuvrirLaLecon} />
         <LeconsDesClassesDAvant
@@ -185,13 +198,19 @@ function OngletsDesMatieres({ matieres, ouverte, onChoisir }: PropsDesOnglets) {
 
 type PropsDesLecons = {
   readonly parcours: Parcours;
+  readonly defis: readonly Defi[];
+  readonly defisReleves: readonly DefiReleve[];
   readonly univers: Univers;
   readonly prochaineLeconConnue: string | undefined;
   readonly onMemoriserLaProchaineLecon: (leconId: string | undefined) => void;
   readonly onOuvrirLaLecon: (leconId: string) => void;
+  readonly onReleverLeDefi: ((defi: Defi) => void) | undefined;
 };
 
-function LeconsDuParcours({ parcours, univers, prochaineLeconConnue, onMemoriserLaProchaineLecon, onOuvrirLaLecon }: PropsDesLecons) {
+function LeconsDuParcours(
+  { parcours, defis, defisReleves, univers, prochaineLeconConnue, onMemoriserLaProchaineLecon, onOuvrirLaLecon, onReleverLeDefi }: PropsDesLecons,
+) {
+  const defiApres = (lecon: LeconDuParcours) => defis.find((defi) => defi.lecons.at(-1) === lecon.lecon);
   return (
     <>
       <div className="progression-du-parcours">
@@ -217,6 +236,10 @@ function LeconsDuParcours({ parcours, univers, prochaineLeconConnue, onMemoriser
             <EtatDeLaLecon etat={lecon.etat} />
           </button>
         )}
+        renduApresLaLecon={(lecon: LeconDuParcours) => {
+          const defi = defiApres(lecon);
+          return defi && <RepereDuDefi defi={defi} etat={etatDuDefi(defi, parcours, defisReleves)} onRelever={(choisi) => onReleverLeDefi?.(choisi)} />;
+        }}
       />
     </>
   );

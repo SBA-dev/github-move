@@ -1,6 +1,6 @@
 import { libelleCourtDe } from "@domain/catalogue";
 import type { CodeDeMatiere, Niveau } from "@domain/catalogue";
-import type { EtatDansLeParcours, LeconDuParcours, LeconReussieDUneClasseAuDessus } from "@domain/apprentissage";
+import type { EtatDansLeParcours, EtatDuDefi, LeconDuParcours, LeconReussieDUneClasseAuDessus } from "@domain/apprentissage";
 import { etoilesSurTrois } from "../seance/fin-de-seance/texte-des-etoiles.ts";
 
 export const AUCUNE_LECON_POUR_LA_CLASSE = "Aucune leçon pour ta classe pour l'instant.";
@@ -83,4 +83,28 @@ export function annonceDeLArriveeDuPersonnageGuide(nomDuPersonnageGuide: string,
   return arret === NOM_DE_LA_FIN_DU_DESSIN
     ? `${nomDuPersonnageGuide} arrive à la fin du parcours`
     : `${nomDuPersonnageGuide} arrive à la leçon ${arret}`;
+}
+
+export const BOUTON_RELEVER_LE_DEFI = "Relever le défi";
+
+export const DEFI_RELEVE = "Défi relevé";
+
+export function nomDuDefi(numero: number): string {
+  return `Défi ${numero}`;
+}
+
+export function leconsAvantLeDefi(restantes: number): string {
+  return `Encore ${nombreDeLecons(restantes)} pour ouvrir le défi`;
+}
+
+/** Ce que lit un lecteur d'écran pour le repère d'un défi : son état, et ce qu'il reste à faire pour l'ouvrir. */
+export function annonceDuRepereDuDefi(numero: number, etat: EtatDuDefi): string {
+  switch (etat.genre) {
+    case "aVenir":
+      return `${nomDuDefi(numero)} : à venir, encore ${nombreDeLecons(etat.leconsRestantes)} pour ouvrir le défi`;
+    case "ouvert":
+      return `${nomDuDefi(numero)} : ouvert`;
+    case "releve":
+      return `${nomDuDefi(numero)} : relevé`;
+  }
 }

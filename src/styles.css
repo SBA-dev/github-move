@@ -673,6 +673,28 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
   0%, 100% { opacity: .35; }
   50% { opacity: 1; }
 }
+/* Le repère d'un défi : sur le sentier, juste après la dernière leçon de sa partie. Jamais un arrêt du personnage guide, jamais de cadenas. */
+.apres-la-lecon { position: relative; z-index: 1; display: flex; justify-content: center; }
+.repere-du-defi {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  box-sizing: border-box;
+  width: min(100%, 16rem);
+  min-height: 56px;
+  padding: 8px 16px;
+  border: 3px solid var(--principale);
+  border-radius: var(--rayon);
+  color: var(--texte);
+  background: var(--surface);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+.repere-du-defi[data-etat="aVenir"] { border-style: dashed; border-color: var(--contour); background: var(--surface-voilee); }
+.repere-du-defi[data-etat="releve"] { background: var(--avertissement-fond); }
+.repere-du-defi .nom-du-defi { font-family: var(--police-titres); font-weight: 700; }
+.repere-du-defi .etat-du-defi { font-size: .9em; }
+.repere-du-defi .relever-le-defi { width: 100%; min-height: 44px; overflow-wrap: anywhere; }
 .fin-du-dessin { position: relative; z-index: 1; margin-top: 20px; }
 .fin-du-dessin svg { display: block; width: 100%; height: auto; }
 .guide-du-dessin { position: absolute; top: 0; left: 0; z-index: 2; width: 52px; pointer-events: none; }
