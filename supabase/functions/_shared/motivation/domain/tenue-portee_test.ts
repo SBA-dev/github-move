@@ -1,5 +1,5 @@
 import { assertEquals, assertThrows } from "@std/assert";
-import { porterUneTenue, TenueInconnue, TenueNonRecue } from "./tenue-portee.ts";
+import { porterUneTenue, retirerLaTenue, TenueInconnue, TenueNonRecue } from "./tenue-portee.ts";
 import { tenuesDe } from "./tenues.ts";
 
 Deno.test("l'enfant porte une tenue qu'il a reçue", () => {
@@ -28,4 +28,21 @@ Deno.test("une tenue pas encore reçue ne peut pas être portée", () => {
   const etat = tenuesDe(5);
 
   assertThrows(() => porterUneTenue(etat, "bottes-de-pluie"), TenueNonRecue);
+});
+
+Deno.test("l'enfant peut retirer la tenue : le personnage guide ne porte plus rien", () => {
+  const tenuePortee = retirerLaTenue();
+
+  assertEquals(tenuePortee, undefined);
+});
+
+Deno.test("une tenue retirée reste reçue et peut être portée à nouveau", () => {
+  const etat = tenuesDe(5);
+  const avant = tenuesDe(5);
+  porterUneTenue(etat, "echarpe-rayee");
+
+  retirerLaTenue();
+
+  assertEquals(etat, avant);
+  assertEquals(porterUneTenue(etat, "echarpe-rayee"), "echarpe-rayee");
 });
