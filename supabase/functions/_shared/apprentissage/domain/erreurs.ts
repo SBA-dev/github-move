@@ -333,3 +333,31 @@ export class DefiDejaTermine extends Error {
     this.name = "DefiDejaTermine";
   }
 }
+
+export class DefiInconnu extends Error {
+  constructor() {
+    super("Ce défi n'existe pas dans le parcours de cette matière.");
+    this.name = "DefiInconnu";
+  }
+}
+
+export class DefiAVenir extends Error {
+  constructor() {
+    super("Ce défi n'est pas encore ouvert : toutes ses leçons ne sont pas réussies.");
+    this.name = "DefiAVenir";
+  }
+}
+
+export class QuestionHorsDuDefi extends Error {
+  constructor() {
+    super("Une question envoyée n'est posée dans aucune leçon de ce défi.");
+    this.name = "QuestionHorsDuDefi";
+  }
+}
+
+export class PlanDuDefiIncoherent extends Error {
+  constructor() {
+    super("Les questions envoyées ne peuvent pas venir du plan d'un défi.");
+    this.name = "PlanDuDefiIncoherent";
+  }
+}

@@ -161,4 +161,13 @@ export type { PlanDuDefi, QuestionDuDefi } from "./plan-du-defi.ts";
 export { AucuneQuestionPourLeDefi } from "./erreurs.ts";
 export { SeanceDeDefi } from "./seance-de-defi.ts";
 export type { DefiTermine } from "./seance-de-defi.ts";
-export { DefiDejaTermine, DefiNonFini } from "./erreurs.ts";
+export {
+  DefiAVenir,
+  DefiDejaTermine,
+  DefiInconnu,
+  DefiNonFini,
+  PlanDuDefiIncoherent,
+  QuestionHorsDuDefi,
+} from "./erreurs.ts";
+export { revaliderLeDefi } from "./revalider-le-defi.ts";
+export type { DefiTermineAEnregistrer } from "./defi-termine-a-enregistrer.ts";

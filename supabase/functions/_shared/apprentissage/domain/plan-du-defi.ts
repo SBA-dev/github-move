@@ -56,8 +56,30 @@ function questionsPosablesDeLaLecon(lecon: Lecon): QuestionDuDefi[] {
   });
 }
 
-/** Parts égales entre les leçons ; ce qu'une leçon ne peut pas donner est repris par les autres, le reste est tiré au hasard. */
+/** Un plan envoyé est possible s'il pourrait sortir de `planDuDefi` : sans doublon, complet, réparti à parts égales. */
+export function estUnPlanPossible(defi: Defi, lecons: readonly Lecon[], retenues: readonly CleDeQuestion[]): boolean {
+  const parLecon = questionsPosablesParLecon(defi, lecons).filter((questions) => questions.length > 0);
+  const disponibles = parLecon.map((questions) => questions.length);
+  const { parts, reste } = partsEgales(disponibles);
+  const choisies = parLecon.map((questions) =>
+    retenues.filter((cle) => questions.some(({ identite }) => identite.valeur === cle.valeur)).length
+  );
+  return new Set(retenues.map(({ valeur }) => valeur)).size === retenues.length &&
+    retenues.length === parts.reduce((a, b) => a + b, 0) + reste &&
+    choisies.every((nombre, rang) => nombre >= (parts[rang] as number) && nombre <= (parts[rang] as number) + 1);
+}
+
 function partsParLecon(disponibles: readonly number[], hasard: Hasard): number[] {
+  const { parts, reste } = partsEgales(disponibles);
+  const avecReste = parts.flatMap((part, rang) => part < (disponibles[rang] as number) ? [rang] : []);
+  for (const rang of melanger(avecReste, hasard).slice(0, reste)) {
+    parts[rang] = (parts[rang] as number) + 1;
+  }
+  return parts;
+}
+
+/** Parts égales entre les leçons ; ce qu'une leçon ne peut pas donner est repris par les autres. `reste` est à répartir au hasard. */
+function partsEgales(disponibles: readonly number[]): { parts: number[]; reste: number } {
   const parts = disponibles.map(() => 0);
   const avecReste = () => parts.flatMap((part, rang) => part < (disponibles[rang] as number) ? [rang] : []);
   let aPoser = Math.min(NOMBRE_DE_QUESTIONS_DU_DEFI, disponibles.reduce((a, b) => a + b, 0));
@@ -68,8 +90,5 @@ function partsParLecon(disponibles: readonly number[], hasard: Hasard): number[]
       aPoser -= prise;
     }
   }
-  for (const rang of melanger(avecReste(), hasard).slice(0, aPoser)) {
-    parts[rang] = (parts[rang] as number) + 1;
-  }
-  return parts;
+  return { parts, reste: aPoser };
 }

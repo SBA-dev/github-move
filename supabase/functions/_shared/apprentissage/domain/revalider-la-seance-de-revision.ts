@@ -20,11 +20,11 @@ import type { FileDeRevision, QuestionRetenue } from "./file-de-revision.ts";
 import { questionDeRevision } from "./question-de-revision.ts";
 import type { Jour } from "./jour.ts";
 import { jourDeLAppareil } from "./jour-de-l-appareil.ts";
-import type { ReponseDonnee } from "./reponse.ts";
+import { rejouerLaReponse } from "./rejouer-la-reponse.ts";
 import { REPONSES_AU_PLUS_PAR_QUESTION } from "./revalider-la-seance.ts";
 import { SeanceDeRevision, type SeanceDeRevisionTerminee, seanceDeRevisionTerminee } from "./seance-de-revision.ts";
 import type { SeanceDeRevisionTermineeAEnregistrer } from "./seance-de-revision-terminee-a-enregistrer.ts";
-import { type Tireur, tireurSelonLesTirages } from "./tireur.ts";
+import { tireurDeLaQuestionEnvoyee } from "./tireur.ts";
 
 const NOMBRE_MAXIMAL_DE_QUESTIONS = 10;
 
@@ -83,7 +83,7 @@ function rejouer(
     enfant: envoi.enfant,
     plan: { questions: rejouables.map(({ retenue }) => retenue) },
     lecons,
-    tireurDe: (identite) => tireurDeLaQuestion(envoi, identite),
+    tireurDe: (identite) => tireurDeLaQuestionEnvoyee(envoi, identite),
     niveau,
   });
   rejouables.forEach(({ rang, retenue: { identite } }) => {
@@ -132,12 +132,7 @@ function estPosable(
 ): boolean {
   const lecon = lecons.find(({ id }) => id === origine.leconDOrigine);
   return lecon !== undefined &&
-    questionDeRevision(lecon, origine, identite, tireurDeLaQuestion(envoi, identite), niveau) !== undefined;
-}
-
-function tireurDeLaQuestion(envoi: SeanceDeRevisionTermineeAEnregistrer, identite: CleDeQuestion): Tireur {
-  const rang = envoi.questions.findIndex(({ valeur }) => valeur === identite.valeur);
-  return tireurSelonLesTirages([envoi.tirages[rang] ?? []].values());
+    questionDeRevision(lecon, origine, identite, tireurDeLaQuestionEnvoyee(envoi, identite), niveau) !== undefined;
 }
 
 function verifierLaForme(envoi: SeanceDeRevisionTermineeAEnregistrer): void {
@@ -148,12 +143,6 @@ function verifierLaForme(envoi: SeanceDeRevisionTermineeAEnregistrer): void {
   }
   if (tirages.length !== questions.length) throw incoherente("il faut un tirage par question");
   if (reponses.length !== questions.length) throw incoherente("il faut une liste de réponses par question");
-}
-
-function rejouerLaReponse(seance: SeanceDeRevision, reponse: ReponseDonnee): void {
-  if (reponse.genre === "jeNeSaisPas") seance.direJeNeSaisPas();
-  else if (reponse.genre === "placement") throw new ReponseIncompatible(reponse.genre);
-  else seance.repondre(reponse);
 }
 
 function incoherente(raison: string): SeanceDeRevisionIncoherente {
