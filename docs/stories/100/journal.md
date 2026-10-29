@@ -54,7 +54,7 @@ Session : session_015z4jmMahATJuud1H1cNRHz. Décision réservée : 0038.
 
 | Mesure | Valeur |
 |---|---|
-| Durée, du lancement au merge | lancement 2026-10-29 14:13 UTC ; PR prête le 2026-10-30 (merge : à compléter) |
+| Durée, du lancement au merge | lancement 2026-10-29 14:13 UTC ; PR #139 prête le 2026-10-29 vers 23:35 UTC (merge : à compléter) |
 | Temps passé à attendre | PO : environ 5 h 45 (CADRAGE PRÊT 14:30 → validation 20:14) ; verrou `base` : 0 (accordé en 7 min, puis immédiatement au redéploiement) ; `main` : aucune attente |
 | Tokens et coût | relevés par le responsable |
 | Cycles TDD | 13 comportements (24 commits RED/GREEN), plus 9 cycles de correction issus des revues |
@@ -62,3 +62,4 @@ Session : session_015z4jmMahATJuud1H1cNRHz. Décision réservée : 0038.
 | Cycles E2E KO | 1 (2 bugs applicatifs : 4.1, 5.3) ; 1 KO hors périmètre (#16, lenteur connue) |
 | Intégrations de `main` | 0 (`main` immobile à `439d4a2`), aucun conflit ; conflits prévus avec #101 dans 3 fichiers de fin de séance (voir la PR) |
 | Régression sur `main` après le merge | à compléter |
+- 23:35 UTC : PR #139 ouverte en brouillon, review finale publiée (APPROUVÉ, 6510985532), pas de CI dans le dépôt ; PR passée en « prête », `PRÊTE À MERGER` publié.
