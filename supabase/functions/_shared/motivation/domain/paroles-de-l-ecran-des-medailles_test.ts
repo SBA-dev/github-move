@@ -2,6 +2,9 @@ import { assertEquals } from "@std/assert";
 import type { Badge } from "./badges.ts";
 import { cabaneDe } from "./cabane.ts";
 import { histoireDe } from "./histoire.ts";
+import { phraseDeLEtat } from "./paroles-de-la-cabane.ts";
+import { tenuesDe } from "./tenues.ts";
+import { universDe } from "./univers.ts";
 import type { PastilleDeRecord } from "./records-de-calcul-rapide.ts";
 import {
   NOM_DE_L_ECRAN_DES_MEDAILLES,
@@ -285,4 +288,25 @@ Deno.test("avec « Tout lire à voix haute » et sans histoire connue, rien de l
   const paroles = parolesALOuverture({ toutLire: true, pastilles: [], cabane: undefined, histoire: undefined });
 
   assertEquals(paroles, ["Gagne des étoiles pour remplir la cabane !", "Mes médailles"]);
+});
+
+Deno.test("avec « Tout lire à voix haute » et une tenue reçue, le titre des tenues puis leur phrase suivent la cabane", () => {
+  const noisette = universDe("animaux").personnageGuide;
+
+  const paroles = parolesALOuverture({
+    toutLire: true,
+    pastilles: [],
+    cabane: cabaneDe(5),
+    tenues: tenuesDe(5),
+    personnage: noisette,
+  });
+
+  assertEquals(paroles, [
+    "Regarde tout ce que tu as gagné !",
+    "Mes médailles",
+    "La cabane de Noisette",
+    phraseDeLEtat(cabaneDe(5)),
+    "Les tenues de Noisette",
+    "Encore 7 étoiles et Noisette recevra un nœud papillon !",
+  ]);
 });
