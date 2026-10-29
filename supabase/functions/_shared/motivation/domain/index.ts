@@ -150,6 +150,7 @@ export {
 } from "./tenue-portee.ts";
 export {
   annonceDeLaTenueRecue,
+  descriptionDeLaSectionDesTenues,
   descriptionDuPersonnageGuide,
   phraseDeLEtatDesTenues,
   titreDeLAnnonceDeLaTenue,

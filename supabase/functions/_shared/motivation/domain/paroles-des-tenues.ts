@@ -26,3 +26,7 @@ export function phraseDeLEtatDesTenues(personnage: PersonnageGuide, { prochainPa
   const manquantes = accorder(prochainPalier.etoilesManquantes, "étoile");
   return `Encore ${manquantes} et ${personnage.nom} recevra ${prochainPalier.tenue.nom} !`;
 }
+
+export function descriptionDeLaSectionDesTenues(personnage: PersonnageGuide, { tenuesRecues }: EtatDesTenues): string {
+  return `${titreDeLaSectionDesTenues(personnage)}, avec ${accorder(tenuesRecues.length, "tenue")}`;
+}
