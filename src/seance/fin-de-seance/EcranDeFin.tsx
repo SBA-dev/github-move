@@ -8,7 +8,6 @@ import {
   annonceDeLObjetRecu,
   calculsReussis,
   type MeilleuresEtoilesDuProfil,
- 
   titreDeLAnnonce,
   titreDeLAnnonceDuBadge,
   type Univers,
