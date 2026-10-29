@@ -312,3 +312,10 @@ export class CleDeQuestionInvalide extends Error {
     this.name = "CleDeQuestionInvalide";
   }
 }
+
+export class AucuneQuestionPourLeDefi extends Error {
+  constructor() {
+    super("Aucune question ne peut être posée dans les leçons de ce défi : il n'y a pas de plan à faire.");
+    this.name = "AucuneQuestionPourLeDefi";
+  }
+}

@@ -156,3 +156,6 @@ export { defisDeLaMatiere } from "./defis-de-la-matiere.ts";
 export { defiOuvertParLaSeance } from "./defis-de-la-matiere.ts";
 export { etatDuDefi } from "./defis-de-la-matiere.ts";
 export type { Defi, DefiReleve, EtatDuDefi } from "./defis-de-la-matiere.ts";
+export { planDuDefi, questionsPosablesDuDefi } from "./plan-du-defi.ts";
+export type { PlanDuDefi, QuestionDuDefi } from "./plan-du-defi.ts";
+export { AucuneQuestionPourLeDefi } from "./erreurs.ts";
