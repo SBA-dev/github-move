@@ -34,3 +34,9 @@ Session : session_015z4jmMahATJuud1H1cNRHz. Décision réservée : 0038.
 - Revue delta bloc B, cycle 2 (`2d821d6..809f94a`) : À CORRIGER, la garde de classe comparait deux `Niveau` par référence (tout défi refusé au câblage). RED `200a2b0`, fix `c9d0f06`.
 - Revue delta bloc B cycle 3 + bloc C (`200a2b0..c9d0f06`, `f97cf96..f663167`) : **APPROUVÉ** pour les deux. Dernier commit relu : `c9d0f06`. Modèle aligné `81d56f7`. Non-bloquants gardés : test propre de `libelleCourtDe`, titre et lecture à voix haute de « Mes défis relevés » à faire dans le domaine au câblage, précision de la context map (Motivation conformiste sur `DefiReleve`).
 - TDD : 13/13 comportements verts, 2713 tests.
+- Domaine, non-bloquants de la revue du bloc C : test propre de `libelleCourtDe` `6683b9a` ; titre et lecture à voix haute de « Mes défis relevés » RED `011727d`, GREEN `cd3b314`.
+- Câblage serveur :
+  - migration `20261029100000_defis_termines.sql` (`cafad8e`). Revue : À CORRIGER (`security definer` à aligner sur #28 et la décision 0016 ; leçons du défi absentes de la table). Fix `eb90be2` (`security invoker`) ; choix de l'orchestrateur : on ne garde pas les leçons, par minimisation (doc `7bdee5f`, décision 0038 amendée).
+  - adaptateur `DefisTerminesSupabase` et parseur `lireLeDefiTermine` : RED `b8a6d5a`, GREEN `8ae2a5a` ; Edge Function `terminer-le-defi` `2af7355` ; erreurs du défi en 422 et lecture groupée des étoiles : RED `dccfb40`, GREEN `ae5f885`.
+  - Migration appliquée à `savanturier-dev` et `terminer-le-defi` déployée (verrou base) ; `LIBÈRE base` publié, comme le demandait l'annonce du responsable.
+- Export du profil (#14) pas encore livré (`@wip`) : le scénario 8.6 attendra #14 (`@depend-de-14`), contrat d'export noté dans la migration comme #28.
