@@ -145,7 +145,7 @@ const DESSINS_DES_TENUES: Readonly<Record<CleDeTenue, { readonly derriere: Pose;
 };
 
 function dessinDeLaTenue(tenue: string | undefined) {
-  return tenue !== undefined && tenue in DESSINS_DES_TENUES ? DESSINS_DES_TENUES[tenue as CleDeTenue] : undefined;
+  return tenue !== undefined && Object.hasOwn(DESSINS_DES_TENUES, tenue) ? DESSINS_DES_TENUES[tenue as CleDeTenue] : undefined;
 }
 
 type PropsDeLaTenue = { readonly tenue?: string; readonly ancrage: Ancrage; readonly id: string };
