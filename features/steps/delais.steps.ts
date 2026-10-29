@@ -1,7 +1,7 @@
 import { Before } from "./fixtures.ts";
 
 // Diagnostic du 29/10 : un scénario qui joue une séance complète ou utilise deux appareils dure 19 à 53 s, au-delà du délai
-// de 30 s. On ne baisse jamais un délai déjà plus long (#96, #98 et #102 en fixent 120 s).
+// de 30 s. On ne baisse jamais un délai déjà plus long (#96 à #102 en fixent 120 s).
 const DELAI_D_UN_SCENARIO_LONG_MS = 90_000;
 
 Before({

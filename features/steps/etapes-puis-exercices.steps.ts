@@ -105,11 +105,14 @@ export function neServirQueLaBibliothequeSansLeconsPersonnelles(page: Page): voi
 }
 
 // Le serveur Vite local coupe parfois la connexion (ECONNRESET) : on retente deux fois avant d'échouer.
+const PAUSE_AVANT_UN_NOUVEL_ESSAI_MS = 150;
+
 async function chargerAvecNouveauxEssais(route: Route, essais = 3): Promise<APIResponse> {
   try {
     return await route.fetch();
   } catch (erreur) {
     if (essais <= 1) throw erreur;
+    await new Promise((fin) => setTimeout(fin, PAUSE_AVANT_UN_NOUVEL_ESSAI_MS));
     return chargerAvecNouveauxEssais(route, essais - 1);
   }
 }
