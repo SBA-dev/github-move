@@ -1,13 +1,12 @@
 import type { Lecon } from "../../catalogue/domain/index.ts";
 import type { Defi } from "./defis-de-la-matiere.ts";
 import { AucuneQuestionPourLeDefi } from "./erreurs.ts";
-import { type CleDeQuestion, estUnTypeDeQuestion } from "./cle-de-question.ts";
+import { type CleDeQuestion, typeDeQuestionDeLExercice } from "./cle-de-question.ts";
 import { cleDeLaDictee } from "./cles-des-questions.ts";
 import type { Hasard } from "./hasard.ts";
 import { melanger } from "./melange.ts";
 import type { OrigineDeLaQuestion } from "./origine-de-la-question.ts";
 import { posables } from "./question-de-revision.ts";
-import type { TypeDeQuestion } from "./question-suivie.ts";
 
 export type QuestionDuDefi = {
   readonly identite: CleDeQuestion;
@@ -55,11 +54,6 @@ function questionsPosablesDeLaLecon(lecon: Lecon): QuestionDuDefi[] {
     }
     return posables(exercice, origine).map(({ cle }) => ({ identite: cle, origine }));
   });
-}
-
-function typeDeQuestionDeLExercice(typeDExercice: string): TypeDeQuestion | undefined {
-  if (typeDExercice === "addition") return "calcul";
-  return estUnTypeDeQuestion(typeDExercice) ? typeDExercice : undefined;
 }
 
 /** Parts égales entre les leçons ; ce qu'une leçon ne peut pas donner est repris par les autres, le reste est tiré au hasard. */
