@@ -2,9 +2,19 @@ import { useEffect, useState } from "react";
 import { leconDuJour, tuilesDeMatiere, tuilesDuJour } from "@domain/apprentissage";
 import type { CodeDeMatiere } from "@domain/catalogue";
 import type { ProfilEnCours } from "@domain/famille";
-import { saluer, saluerAvecLaSerie, type Serie, type Univers } from "@domain/motivation";
+import {
+  propositionDeLaQueteDuJour,
+  type QueteDuJour,
+  reponseAuRefusDeLaQuete,
+  saluer,
+  saluerAvecLaSerie,
+  type Serie,
+  type Univers,
+} from "@domain/motivation";
 import { dateDuJourPourLesMachines, dateEnToutesLettres } from "../accueil/date-du-jour.ts";
 import { PastilleDeSerie } from "../accueil/PastilleDeSerie.tsx";
+import { QueteDuJourDeLAccueil } from "../accueil/QueteDuJourDeLAccueil.tsx";
+import { useQueteDuJour } from "../accueil/useQueteDuJour.ts";
 import { useSerie } from "../accueil/useSerie.ts";
 import { ObjectifDuJourDeLAccueil } from "../accueil/ObjectifDuJourDeLAccueil.tsx";
 import { useObjectifDuJour } from "../accueil/useObjectifDuJour.ts";
@@ -16,6 +26,7 @@ import { BulleDuPersonnageGuide } from "../seance/BulleDuPersonnageGuide.tsx";
 import { horlogeDuNavigateur } from "../seance/horloge.ts";
 import { usePersonnageQuiParle } from "../seance/usePersonnageQuiParle.ts";
 import { PersonnageGuide } from "../univers/index.ts";
+import type { QuestionsDuesALAccueil } from "../revision/index.ts";
 import type { Voix } from "../voix/index.ts";
 
 type Props = {
@@ -27,8 +38,11 @@ type Props = {
   /** Vrai tant que le test de départ n'est pas fait et qu'il a des questions à poser. */
   readonly testDeDepartAProposer: boolean;
   readonly onMonTestDeDepart: () => void;
-  /** Le nombre de questions dues de la file de révision ; zéro tant que la file n'est pas connue. */
-  readonly questionsDuesALaRevision: number;
+  /** Les questions dues de la file de révision ; sans nombre tant que la file n'est pas connue. */
+  readonly questionsDues: QuestionsDuesALAccueil;
+  /** Vrai quand l'enfant a choisi « Autre chose » à la quête du jour pendant cette utilisation. */
+  readonly queteRefusee: boolean;
+  readonly onRefuserLaQuete: () => void;
   readonly onJeRevise: () => void;
   readonly onCommencerLaLecon: (leconId: string) => void;
   readonly onOuvrirLaMatiere: (matiere: CodeDeMatiere) => void;
@@ -36,18 +50,26 @@ type Props = {
 };
 
 /**
- * Ce que dit le personnage guide en arrivant. Avec « tout lire à voix haute », une seule lecture : la salutation puis la pastille de série,
- * qu'il faut donc attendre (`undefined` tant que la série n'est pas lue) ; sans série connue (`null`), la salutation seule.
+ * Ce que dit le personnage guide en arrivant. Avec « tout lire à voix haute », une seule lecture : la salutation, la pastille de série
+ * puis la quête du jour, qu'il faut donc attendre (`undefined` tant que la série ou la quête n'est pas lue) ;
+ * sans série connue (`null`) ni quête (`null`, ou rien à proposer), elles ne sont pas dites.
  */
-function phraseDeLaSalutation(prenom: string, toutLire: boolean, serie: Serie | null | undefined): string | undefined {
+function phraseDeLaSalutation(
+  prenom: string,
+  toutLire: boolean,
+  serie: Serie | null | undefined,
+  quete: QueteDuJour | null | undefined,
+): string | undefined {
   if (!toutLire) return saluer(prenom);
-  if (serie === undefined) return undefined;
-  return serie === null ? saluer(prenom) : saluerAvecLaSerie(prenom, serie);
+  if (serie === undefined || quete === undefined) return undefined;
+  const salutation = serie === null ? saluer(prenom) : saluerAvecLaSerie(prenom, serie);
+  const proposition = quete && propositionDeLaQueteDuJour(quete);
+  return proposition ? `${salutation} ${proposition}` : salutation;
 }
 
 /** Là où arrive l'enfant qui vient de choisir son profil : la date, son personnage guide qui le salue, puis ce qu'il peut faire aujourd'hui. */
 export function AccueilDeLEnfant(
-  { profil, univers, voix, saluer: aSaluer, testDeDepartAProposer, questionsDuesALaRevision, onMonTestDeDepart, onJeRevise, onCommencerLaLecon, onOuvrirLaMatiere, onChangerDEnfant }: Props,
+  { profil, univers, voix, saluer: aSaluer, testDeDepartAProposer, questionsDues, queteRefusee, onRefuserLaQuete, onMonTestDeDepart, onJeRevise, onCommencerLaLecon, onOuvrirLaMatiere, onChangerDEnfant }: Props,
 ) {
   const { parole, rangDuMotPrononce, humeur, dire, montrer, faireSilence } = usePersonnageQuiParle(voix);
   const [salutationALire] = useState(aSaluer);
@@ -64,7 +86,10 @@ export function AccueilDeLEnfant(
   const serie = useSerie(profil.id, maintenant);
   const [serieDeLaSalutation, setSerieDeLaSalutation] = useState(serie);
   if (serieDeLaSalutation === undefined && serie !== undefined) setSerieDeLaSalutation(serie);
-  const phraseALire = phraseDeLaSalutation(profil.prenom, profil.reglages.toutLireAVoixHaute, serieDeLaSalutation);
+  const quete = useQueteDuJour(profil.id, maintenant, entrees, questionsDues.nombre, questionsDues.lue);
+  const [queteDeLaSalutation, setQueteDeLaSalutation] = useState(quete);
+  if (queteDeLaSalutation === undefined && quete !== undefined) setQueteDeLaSalutation(quete);
+  const phraseALire = phraseDeLaSalutation(profil.prenom, profil.reglages.toutLireAVoixHaute, serieDeLaSalutation, queteDeLaSalutation);
   useEffect(() => {
     if (salutationALire) {
       const salutation = { texte: saluer(profil.prenom), nature: "accueil" } as const;
@@ -73,6 +98,16 @@ export function AccueilDeLEnfant(
     }
     return faireSilence;
   }, [salutationALire, profil.prenom, phraseALire, dire, montrer, faireSilence]);
+
+  const queteProposee = quete && !(queteRefusee && quete.genre !== "accomplie") ? quete : undefined;
+  const accepterLaQuete = () => {
+    if (queteProposee?.genre === "revision") onJeRevise();
+    else if (queteProposee?.genre === "lecon") onCommencerLaLecon(queteProposee.lecon);
+  };
+  const refuserLaQuete = () => {
+    onRefuserLaQuete();
+    void dire({ texte: reponseAuRefusDeLaQuete(), nature: "accueil" });
+  };
 
   return (
     <section className="accueil-de-l-enfant" aria-label={`Accueil de ${profil.prenom}`}>
@@ -84,8 +119,9 @@ export function AccueilDeLEnfant(
         <BulleDuPersonnageGuide texte={parole?.texte} nature={parole?.nature} rangDuMotPrononce={rangDuMotPrononce} />
       </div>
       {serie && <PastilleDeSerie serie={serie} />}
+      {queteProposee && <QueteDuJourDeLAccueil quete={queteProposee} onAccepter={accepterLaQuete} onAutreChose={refuserLaQuete} />}
       <TuilesDuJourDeLAccueil
-        tuiles={tuilesDuJour({ nombreDeQuestionsDues: questionsDuesALaRevision, testDeDepartAProposer })}
+        tuiles={tuilesDuJour({ nombreDeQuestionsDues: questionsDues.nombre ?? 0, testDeDepartAProposer })}
         onMonTestDeDepart={onMonTestDeDepart}
         onJeRevise={onJeRevise}
       />
