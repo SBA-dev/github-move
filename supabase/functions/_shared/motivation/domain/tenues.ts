@@ -1,9 +1,4 @@
-import {
-  type MeilleuresEtoilesDuProfil,
-  totalDesEtoiles,
-  verifierNombreDEtoiles,
-  verifierTotalDEtoiles,
-} from "./cabane.ts";
+import { type MeilleuresEtoilesDuProfil, totauxAvantEtApresLaSeance, verifierTotalDEtoiles } from "./cabane.ts";
 
 export type TenueDuPersonnageGuide = { readonly cle: string; readonly nom: string };
 export type PalierDesTenues = { readonly seuil: number; readonly tenue: TenueDuPersonnageGuide };
@@ -50,11 +45,8 @@ export function tenueRecueParLaSeance(
   etoilesDeLaSeance: number | undefined,
 ): TenueDuPersonnageGuide | undefined {
   if (etoilesDeLaSeance === undefined) return undefined;
-  const etoilesValides = verifierNombreDEtoiles(etoilesDeLaSeance);
-  const meilleurAvant = meilleuresAvant.get(lecon) ?? 0;
-  const totalAvant = totalDesEtoiles(meilleuresAvant);
-  const totalApres = totalAvant - meilleurAvant + Math.max(meilleurAvant, etoilesValides);
-  const tenuesAvant = tenuesDe(totalAvant).tenuesRecues;
-  const tenuesApres = tenuesDe(totalApres).tenuesRecues;
+  const { avant, apres } = totauxAvantEtApresLaSeance(meilleuresAvant, lecon, etoilesDeLaSeance);
+  const tenuesAvant = tenuesDe(avant).tenuesRecues;
+  const tenuesApres = tenuesDe(apres).tenuesRecues;
   return tenuesApres.length > tenuesAvant.length ? tenuesApres.at(-1) : undefined;
 }

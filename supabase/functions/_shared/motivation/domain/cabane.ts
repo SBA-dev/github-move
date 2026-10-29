@@ -25,7 +25,7 @@ export class NombreDEtoilesInvalide extends Error {
   }
 }
 
-export function verifierNombreDEtoiles(etoiles: number): number {
+function verifierNombreDEtoiles(etoiles: number): number {
   if (!Number.isInteger(etoiles) || etoiles < 1 || etoiles > 3) throw new NombreDEtoilesInvalide(etoiles);
   return etoiles;
 }
@@ -77,17 +77,27 @@ export function cabaneDe(total: number): EtatDeLaCabane {
   };
 }
 
+export type TotauxAvantEtApresLaSeance = { readonly avant: number; readonly apres: number };
+
+export function totauxAvantEtApresLaSeance(
+  meilleuresAvant: MeilleuresEtoilesDuProfil,
+  lecon: string,
+  etoilesDeLaSeance: number,
+): TotauxAvantEtApresLaSeance {
+  const etoilesValides = verifierNombreDEtoiles(etoilesDeLaSeance);
+  const meilleurAvant = meilleuresAvant.get(lecon) ?? 0;
+  const avant = totalDesEtoiles(meilleuresAvant);
+  return { avant, apres: avant - meilleurAvant + Math.max(meilleurAvant, etoilesValides) };
+}
+
 export function objetRecuParLaSeance(
   meilleuresAvant: MeilleuresEtoilesDuProfil,
   lecon: string,
   etoilesDeLaSeance: number | undefined,
 ): ObjetDeLaCabane | undefined {
   if (etoilesDeLaSeance === undefined) return undefined;
-  const etoilesValides = verifierNombreDEtoiles(etoilesDeLaSeance);
-  const meilleurAvant = meilleuresAvant.get(lecon) ?? 0;
-  const totalAvant = totalDesEtoiles(meilleuresAvant);
-  const totalApres = totalAvant - meilleurAvant + Math.max(meilleurAvant, etoilesValides);
-  const objetsAvant = cabaneDe(totalAvant).objetsRecus;
-  const objetsApres = cabaneDe(totalApres).objetsRecus;
+  const { avant, apres } = totauxAvantEtApresLaSeance(meilleuresAvant, lecon, etoilesDeLaSeance);
+  const objetsAvant = cabaneDe(avant).objetsRecus;
+  const objetsApres = cabaneDe(apres).objetsRecus;
   return objetsApres.length > objetsAvant.length ? objetsApres.at(-1) : undefined;
 }
