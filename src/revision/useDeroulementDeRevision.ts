@@ -14,10 +14,8 @@ import {
   type ReponseParChoix,
   type ResultatDeReponse,
   type SchemaResolu,
-  type SeanceDeRevision,
 } from "@domain/apprentissage";
 import {
-  accueillirEnRevision,
   effetsSonoresApresUneBonneReponse,
   type PersonnageGuide,
   reagirAJeNeSaisPas,
@@ -30,6 +28,7 @@ import { aiderQuandOnNeSaitPas } from "../seance/exercices/paroles-du-calcul.ts"
 import type { usePersonnageQuiParle } from "../seance/usePersonnageQuiParle.ts";
 import type { Voix } from "../voix/index.ts";
 import type { TexteDeLecture } from "./commencer-la-revision.ts";
+import type { SeanceDeQuestions } from "./seance-de-questions.ts";
 import { encouragerLaReponse, feliciterLaReponse, vueDuCalcul } from "./paroles-de-la-revision.ts";
 
 export type Personnage = ReturnType<typeof usePersonnageQuiParle>;
@@ -39,7 +38,9 @@ const PAUSE_AVEC_MOUVEMENTS_REDUITS_MS = 150;
 const DUREE_DES_LETTRES_FAUSSES_MS = 1300;
 
 type Parametres = {
-  readonly seance: SeanceDeRevision;
+  readonly seance: SeanceDeQuestions;
+  /** Ce que le personnage guide dit en commençant. */
+  readonly parolesDeDebut: string;
   readonly nombreDeQuestions: number;
   /** Les textes des questions de lecture, par clé de question : ils sont lus avant la question. */
   readonly textes: ReadonlyMap<string, TexteDeLecture>;
@@ -69,7 +70,7 @@ function jeNeSaisPasPropose(question: QuestionPosee): boolean {
  * Chaque action repart d'une nouvelle « séquence » : une parole ou un abandon plus récent interrompt les suites en attente.
  */
 export function useDeroulementDeRevision(
-  { seance, nombreDeQuestions, textes, personnage, lire, personnageGuide, toutLireAVoixHaute, onFini }: Parametres,
+  { seance, parolesDeDebut, nombreDeQuestions, textes, personnage, lire, personnageGuide, toutLireAVoixHaute, onFini }: Parametres,
 ) {
   const { dire, faireSilence, reecouter: relire } = personnage;
   const [, redessiner] = useReducer((compteur: number) => compteur + 1, 0);
@@ -161,10 +162,10 @@ export function useDeroulementDeRevision(
   const commencer = useCallback(async () => {
     vivant.current = true;
     const numero = ++sequence.current;
-    if (!(await dire({ texte: accueillirEnRevision(), nature: "consigne" }))) return;
+    if (!(await dire({ texte: parolesDeDebut, nature: "consigne" }))) return;
     await attendre(pause.current);
     if (numero === sequence.current) await ouvrir(numero);
-  }, [dire, ouvrir]);
+  }, [dire, parolesDeDebut, ouvrir]);
 
   const feliciterEtPasserALaSuite = useCallback(async (courante: QuestionDeRevision, texte: string | undefined) => {
     figer(courante);
