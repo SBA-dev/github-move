@@ -24,9 +24,10 @@ export function revaliderLeDefi(
   entrees: EntreesDuParcours,
   defisReleves: readonly DefiReleve[],
 ): DefiTermine {
-  const { matiere, niveau, numero } = envoi.defi;
+  const { matiere, numero } = envoi.defi;
+  if (envoi.defi.niveau !== entrees.niveau) throw new DefiInconnu();
   const parcours = parcoursDeLaMatiere(entrees, matiere);
-  const defi = defisDeLaMatiere(parcours, matiere, niveau).find((candidat) => candidat.numero === numero);
+  const defi = defisDeLaMatiere(parcours, matiere, entrees.niveau).find((candidat) => candidat.numero === numero);
   if (!defi) throw new DefiInconnu();
   if (etatDuDefi(defi, parcours, defisReleves).genre === "aVenir") throw new DefiAVenir();
 
