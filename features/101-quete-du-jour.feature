@@ -59,7 +59,7 @@ Fonctionnalité: Quête du jour : le personnage guide propose une seule chose à
 
     # Réponse 101.1 : la quête suit l'alternance du français et des maths de la leçon du jour, sans autre règle
     Scénario: Après une séance de français, la quête du jour propose la leçon du jour en maths
-      Étant donné que Léa a terminé hier une séance de la leçon « Le son in » avec 1 étoile
+      Étant donné que Léa a terminé hier une séance de la leçon « Le son in » avec 3 étoiles
       Quand Léa choisit son profil enfant dans « Qui joue ? »
       Alors la quête du jour de Léa propose la leçon « Les nombres jusqu'à 100 »
       Et la leçon du jour de Léa est « Les nombres jusqu'à 100 », avec « Maths · CE1 »
@@ -284,7 +284,7 @@ Fonctionnalité: Quête du jour : le personnage guide propose une seule chose à
 
     # Réponses 101.2 (a) et 101.8 (A) : le lendemain, tout se recalcule
     Scénario: Le lendemain d'une quête accomplie, une nouvelle quête du jour est proposée
-      Étant donné que Léa a terminé une séance de la leçon « Le son in » avec 1 étoile
+      Étant donné que Léa a terminé une séance de la leçon « Le son in » avec 3 étoiles
       Quand Léa revient à son accueil le lendemain
       Alors l'accueil de Léa n'affiche pas « Ta quête du jour est accomplie. »
       Et la quête du jour de Léa propose la leçon « Les nombres jusqu'à 100 »
@@ -365,7 +365,7 @@ Fonctionnalité: Quête du jour : le personnage guide propose une seule chose à
       Étant donné que Marie est rattachée au profil enfant de Léa
       Et que Léa a terminé une séance de la leçon « Le son in » avec 1 étoile
       Quand Léa choisit son profil enfant sur le téléphone de Marie
-      Alors l'accueil de Léa affiche « Ta quête du jour est accomplie. »
+      Alors l'accueil de Léa affiche « Ta quête du jour est accomplie. » sur le téléphone de Marie
 
     # Réponse 101.4 (a) : le suivi ne montre pas les quêtes
     @acces

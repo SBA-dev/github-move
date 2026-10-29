@@ -157,3 +157,15 @@ guide la fête ». « Félicitation » est un terme (phrase qui salue une bonne 
 
 **Recommandation : (a)**, la fête est un retour animé ordinaire (skill `gamification`, section 2), pas un concept
 métier.
+
+## Corrections de données après E2E, intention inchangée
+
+Les steps E2E (commit 5813fee) ont montré deux données de départ incohérentes avec une règle validée, et une étape
+qui ne visait pas le bon appareil. Seules la donnée de départ et la formulation d'étape changent ; les règles, les
+réponses du PO et l'intention des scénarios restent les mêmes.
+
+| Scénario | Avant | Après | Pourquoi |
+|---|---|---|---|
+| Après une séance de français, la quête du jour propose la leçon du jour en maths (R1) | Léa a terminé hier une séance de « Le son in » avec 1 étoile | … avec 3 étoiles | Une séance à 1 étoile a des erreurs, retenues (#28) et dues le lendemain : la révision passe d'abord (#101.1) et la leçon n'est pas proposée. Sans erreur, seule l'alternance des matières (#29.1) joue. |
+| Le lendemain d'une quête accomplie, une nouvelle quête du jour est proposée (R4) | Léa a terminé une séance de « Le son in » avec 1 étoile | … avec 3 étoiles | Même raison : le lendemain, les erreurs de la veille seraient dues et la quête serait la séance de révision. |
+| Sur le téléphone du second parent rattaché, Léa retrouve sa quête du jour accomplie (R6) | Alors l'accueil de Léa affiche « Ta quête du jour est accomplie. » | … sur le téléphone de Marie | L'étape lisait l'accueil de la tablette de Paul : elle ne prouvait pas que la quête accomplie se retrouve sur l'autre appareil. |
