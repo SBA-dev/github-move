@@ -6,6 +6,7 @@ import { FileDeRevision } from "../domain/file-de-revision.ts";
 import type { EntreesDuParcours } from "../domain/parcours.ts";
 import { revaliderLeDefi } from "../domain/revalider-le-defi.ts";
 import type { DefiTermine } from "../domain/seance-de-defi.ts";
+import { reessayerSurConflit } from "./reessayer-sur-conflit.ts";
 import type { DefisTermines } from "./ports/defis-termines.ts";
 import type { FilesDeRevision } from "./ports/files-de-revision.ts";
 import type { LeconsDuCatalogue } from "./ports/lecons-du-catalogue.ts";
@@ -13,8 +14,6 @@ import type { NiveauDuProfil } from "./ports/niveau-du-profil.ts";
 import type { RattachementsDuParent } from "./ports/rattachements-du-parent.ts";
 import type { ResultatsDesLecons } from "./ports/resultats-des-lecons.ts";
 import type { ResultatsDesTestsDeDepart } from "./ports/resultats-des-tests-de-depart.ts";
-
-const ESSAIS_AU_PLUS = 3;
 
 export class TerminerLeDefi {
   constructor(
@@ -34,16 +33,13 @@ export class TerminerLeDefi {
     const entrees = await this.entreesDuParcours(defi.enfant);
     const releves = await this.defis.releves(defi.enfant);
     const fait = revaliderLeDefi(defi, entrees, releves);
-    // Écriture optimiste : si la file a changé entre la lecture et l'écriture, on la relit et on y réapplique le défi.
-    for (let essai = 1; essai <= ESSAIS_AU_PLUS; essai++) {
+    const issue = await reessayerSurConflit(async () => {
       const lue = await this.files.de(defi.enfant);
       const file = lue?.file ?? FileDeRevision.vide(defi.enfant);
       file.retenir(fait.questionsRatees, fait.jour, fait.termineeLe);
-      const issue = await this.defis.enregistrer(fait, { file, versionLue: lue?.version ?? 0 });
-      if (issue === "dejaEnregistree") return [];
-      if (issue === "enregistree") return [fait];
-    }
-    throw new Error("File de révision modifiée en continu : écriture abandonnée.");
+      return this.defis.enregistrer(fait, { file, versionLue: lue?.version ?? 0 });
+    }, "File de révision modifiée en continu : écriture abandonnée.");
+    return issue === "enregistree" ? [fait] : [];
   }
 
   private async entreesDuParcours(enfant: string): Promise<EntreesDuParcours> {
