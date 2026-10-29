@@ -11,11 +11,20 @@ export type PropositionsDuJour = {
   nombreDeQuestionsDues: number | undefined;
 };
 
-export type QueteDuJour = { genre: "sansQuete" };
+export type QueteDuJour =
+  | { genre: "revision"; nombreDeQuestionsDues: number }
+  | { genre: "sansQuete" };
 
 export function queteDuJour(
-  _propositions: PropositionsDuJour,
+  propositions: PropositionsDuJour,
   _faits: FaitsDuJour,
 ): QueteDuJour {
+  const { leconDuJour, nombreDeQuestionsDues } = propositions;
+  if (leconDuJour.genre === "inconnue" || nombreDeQuestionsDues === undefined) {
+    return { genre: "sansQuete" };
+  }
+  if (nombreDeQuestionsDues > 0) {
+    return { genre: "revision", nombreDeQuestionsDues };
+  }
   return { genre: "sansQuete" };
 }
