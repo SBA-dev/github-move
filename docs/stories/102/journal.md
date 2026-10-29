@@ -48,3 +48,10 @@ Bloc C, paroles, sons, sections :
 - 9/9 section des tenues : `66b9983` (red) → `760ef1a`, refactor `cf67318` (`estRecue`, `porterUneTenue` rend `TenuePortee`, `verifierTotalDEtoiles` en garde, exports de l'index).
 - 2586 tests unitaires verts, lint, fmt et `tsc` propres.
 - Câblage : les dessins des tenues sont nouveaux (skill `illustration`, étape 6) : planche montrée au PO (⛔ intermédiaire `PLANCHES PRÊTES`), comme #98.
+- Revue intermédiaire bloc C (`70ab7fc..cf67318`) : APPROUVÉ. Non bloquant n°2 (libellé de la section composé en React) → comportement 10.
+- 10 libellé accessible de la section : `9ac49c9` (red) → `e7b4e4f`.
+- Câblage 1, dessins des 4 tenues pour les 6 personnages guides : `d41c314`, planches `docs/stories/102/planches/`. `PLANCHES PRÊTES` publié (questions #102.28, #102.29), en attente du PO.
+- Câblage 2 : mémoire de la tenue portée (`b7f4203`), tenue sur les écrans (`8659967`), annonce à l'écran de fin (`0cc8b66`), section de « Mes médailles » (`1d56e4a`).
+- Deux règles écrites dans React faute de domaine, rendues au domaine : 11 « tout lire » lit les tenues (`e106df5` → `773b250`), 12 pastilles des tenues (`42fec92` → `4a331da`), refactor du front `9e0070c`.
+- Non fait, sans appelant : effacement de la tenue portée avec un profil supprimé depuis l'appareil (le front n'a pas cette suppression).
+- 2590 tests unitaires verts, `tsc` et build propres. Étape 4 : review complète ; étape 5 : steps E2E en parallèle.
