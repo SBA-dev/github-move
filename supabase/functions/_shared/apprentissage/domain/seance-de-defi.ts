@@ -1,5 +1,6 @@
 import type { Lecon, Niveau } from "../../catalogue/domain/index.ts";
 import type { CleDeQuestion } from "./cle-de-question.ts";
+import type { DefiTermineAEnregistrer } from "./defi-termine-a-enregistrer.ts";
 import type { Defi } from "./defis-de-la-matiere.ts";
 import { DefiDejaTermine, DefiNonFini } from "./erreurs.ts";
 import type { QuestionRateeARetenir } from "./file-de-revision.ts";
@@ -24,7 +25,7 @@ export type DefiTermine = Readonly<{
 }>;
 
 export class SeanceDeDefi {
-  private termine = false;
+  private termine: { termineeLe: Date; jour: Jour } | undefined;
   private readonly enCours: QuestionsEnCours;
 
   private constructor(
@@ -75,7 +76,7 @@ export class SeanceDeDefi {
   terminer(maintenant: Date, jour: Jour): DefiTermine {
     if (this.termine) throw new DefiDejaTermine();
     if (!this.estFinie()) throw new DefiNonFini();
-    this.termine = true;
+    this.termine = { termineeLe: maintenant, jour };
     return {
       type: "DefiTermine",
       id: this.id,
@@ -87,6 +88,21 @@ export class SeanceDeDefi {
         .map(({ ratable: { identite, origine } }) => ({ identite, origine })),
       termineeLe: maintenant,
       jour,
+    };
+  }
+
+  aEnregistrer(): DefiTermineAEnregistrer {
+    if (!this.termine) throw new DefiNonFini();
+    const { matiere, niveau, numero } = this.defi;
+    return {
+      id: this.id,
+      enfant: this.enfant,
+      defi: { matiere, niveau, numero },
+      questions: this.questions.map(({ ratable }) => ratable.identite),
+      tirages: this.questions.map(({ posee }) => suivie(posee).tirage()),
+      reponses: this.questions.map(({ posee }) => suivie(posee).reponses()),
+      termineeLe: this.termine.termineeLe,
+      jour: this.termine.jour.toString(),
     };
   }
 }
