@@ -50,7 +50,7 @@ type Props = {
   readonly onLireLEpisode: (numero: number) => void;
   readonly onLeconSuivante: (leconId: string) => void;
   readonly onToutesLesLecons: () => void;
-  readonly onReleverLeDefi?: (defi: Defi) => void;
+  readonly onReleverLeDefi: (defi: Defi) => void;
   readonly onAccueil: () => void;
 };
 
@@ -188,7 +188,7 @@ export function EcranDeFin({ seance, univers, niveau, onDireLaFin, meilleuresEto
         <button type="button" ref={accueil} onClick={onAccueil}>Accueil</button>
         <button type="button" onClick={onRejouer}>Rejouer</button>
         {episode && <button type="button" onClick={() => onLireLEpisode(episode.numero)}>Lire l'épisode</button>}
-        {defiOuvert && <button type="button" onClick={() => onReleverLeDefi?.(defiOuvert)}>{BOUTON_RELEVER_LE_DEFI}</button>}
+        {defiOuvert && <button type="button" onClick={() => onReleverLeDefi(defiOuvert)}>{BOUTON_RELEVER_LE_DEFI}</button>}
         {suite && !suivante && <button type="button" onClick={onToutesLesLecons}>Toutes les leçons</button>}
       </div>
       <p className="message-erreur" role="status" data-testid="sauvegarde">{message}</p>

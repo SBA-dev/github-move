@@ -1,4 +1,5 @@
 import type { DonneesDeLAppareil } from "@domain/famille";
+import { DefisGardesSurLAppareil } from "../defis/defis-gardes-sur-l-appareil.ts";
 import { oublierLesDefisReleves } from "../defis/defis-releves-sur-l-appareil.ts";
 import { ProfilsGardesSurLAppareil } from "../famille/profils/profils-gardes-sur-l-appareil.ts";
 import { oublierLesFilesDeRevision } from "../revision/copie-de-la-file-sur-l-appareil.ts";
@@ -11,7 +12,7 @@ import { TestsDeDepartGardesSurLAppareil } from "../test-de-depart/tests-de-depa
 // la liste « Qui joue ? » du parent (story #11) les séances terminées pas encore enregistrées (story #24)
 // les tests de départ terminés pas encore enregistrés (story #27),
 // les séances de révision terminées pas encore enregistrées et la copie de la file de révision (story #28),
-// les défis relevés connus de l'appareil (story #100),
+// les défis relevés connus de l'appareil et les défis terminés pas encore enregistrés (story #100),
 // la tenue portée par le personnage guide de chaque enfant (story #102).
 export class DonneesDeLAppareilNavigateur implements DonneesDeLAppareil {
   effacer(): Promise<void> {
@@ -23,6 +24,7 @@ export class DonneesDeLAppareilNavigateur implements DonneesDeLAppareil {
       new SeancesGardeesSurLAppareil().effacer(),
       new TestsDeDepartGardesSurLAppareil().effacer(),
       new SeancesDeRevisionGardeesSurLAppareil().effacer(),
+      new DefisGardesSurLAppareil().effacer(),
     ]).then(() => undefined);
   }
 }

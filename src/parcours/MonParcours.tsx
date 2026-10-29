@@ -43,7 +43,7 @@ type Props = {
   readonly prochainesLeconsConnues: ProchainesLeconsConnues;
   readonly onMemoriserLaProchaineLecon: (matiere: CodeDeMatiere, leconId: string | undefined) => void;
   /** L'enfant choisit de relever un défi ouvert. */
-  readonly onReleverLeDefi?: (defi: Defi) => void;
+  readonly onReleverLeDefi: (defi: Defi) => void;
 };
 
 function matiereOuverte(matieres: readonly Matiere[], choisie: CodeDeMatiere | undefined): Matiere | undefined {
@@ -204,7 +204,7 @@ type PropsDesLecons = {
   readonly prochaineLeconConnue: string | undefined;
   readonly onMemoriserLaProchaineLecon: (leconId: string | undefined) => void;
   readonly onOuvrirLaLecon: (leconId: string) => void;
-  readonly onReleverLeDefi: ((defi: Defi) => void) | undefined;
+  readonly onReleverLeDefi: (defi: Defi) => void;
 };
 
 function LeconsDuParcours(
@@ -238,7 +238,7 @@ function LeconsDuParcours(
         )}
         renduApresLaLecon={(lecon: LeconDuParcours) => {
           const defi = defiApres(lecon);
-          return defi && <RepereDuDefi defi={defi} etat={etatDuDefi(defi, parcours, defisReleves)} onRelever={(choisi) => onReleverLeDefi?.(choisi)} />;
+          return defi && <RepereDuDefi defi={defi} etat={etatDuDefi(defi, parcours, defisReleves)} onRelever={onReleverLeDefi} />;
         }}
       />
     </>

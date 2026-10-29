@@ -551,7 +551,7 @@ button.tuile .nom-de-la-tuile, button.tuile .nom-de-la-matiere { font-size: 1.1r
 :is(
   .parcours-de-la-matiere > h3, .toutes-les-lecons h3, .choix-des-lecons label, .sous-titre-de-l-histoire,
   .position-de-l-episode, .page-de-la-lecon > p, .seance > p, [data-testid="niveau-et-matiere"],
-  [data-testid="ensuite"], [data-testid="sous-titre-du-test-de-depart"], [data-testid="sous-titre-de-la-revision"],
+  [data-testid="ensuite"], [data-testid="sous-titre-du-test-de-depart"], [data-testid="sous-titre-de-la-revision"], [data-testid="sous-titre-du-defi"],
   .etiquette-sur-le-decor
 ) {
   padding: 4px 14px;
