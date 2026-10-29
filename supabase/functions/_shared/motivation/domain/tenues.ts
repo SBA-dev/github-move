@@ -1,4 +1,8 @@
-import { type MeilleuresEtoilesDuProfil, totauxAvantEtApresLaSeance, verifierTotalDEtoiles } from "./cabane.ts";
+import {
+  type MeilleuresEtoilesDuProfil,
+  totauxAvantEtApresLaSeance,
+  verifierTotalDEtoiles,
+} from "./total-des-etoiles.ts";
 
 export type TenueDuPersonnageGuide = { readonly cle: string; readonly nom: string };
 export type PalierDesTenues = { readonly seuil: number; readonly tenue: TenueDuPersonnageGuide };
