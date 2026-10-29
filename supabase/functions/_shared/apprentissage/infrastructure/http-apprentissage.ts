@@ -8,14 +8,31 @@ import {
   type SessionDuParent,
 } from "../../famille/infrastructure/http-famille.ts";
 import {
+  AucuneQuestionPourLeDefi,
+  DefiAVenir,
+  DefiIncoherent,
+  DefiInconnu,
+  DefiNonFini,
   LeconIntrouvable,
   ParentNonRattache,
+  PlanDuDefiIncoherent,
+  QuestionHorsDuDefi,
   SeanceDeRevisionIncoherente,
   SeanceIncoherente,
   TestDeDepartIncoherent,
 } from "../domain/erreurs.ts";
 
 export { EntreeInvalide };
+
+const erreursDuDefi = [
+  DefiInconnu,
+  DefiAVenir,
+  QuestionHorsDuDefi,
+  PlanDuDefiIncoherent,
+  DefiNonFini,
+  DefiIncoherent,
+  AucuneQuestionPourLeDefi,
+];
 
 export function statutEtMessage(cause: unknown): { statut: number; message: string } {
   if (cause instanceof NonAuthentifie) return { statut: 401, message: "Connecte-toi pour continuer." };
@@ -29,6 +46,9 @@ export function statutEtMessage(cause: unknown): { statut: number; message: stri
   }
   if (cause instanceof TestDeDepartIncoherent) {
     return { statut: 422, message: "Ce test de départ n'a pas pu être vérifié." };
+  }
+  if (erreursDuDefi.some((erreur) => cause instanceof erreur)) {
+    return { statut: 422, message: "Ce défi n'a pas pu être vérifié." };
   }
   if (cause instanceof EntreeInvalide) return { statut: 400, message: cause.message };
   return { statut: 500, message: "La séance n'a pas pu être enregistrée." };

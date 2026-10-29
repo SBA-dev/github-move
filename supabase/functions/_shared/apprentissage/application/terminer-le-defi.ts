@@ -1,4 +1,3 @@
-import type { Lecon } from "../../catalogue/domain/index.ts";
 import { ParentNonRattache } from "../domain/erreurs.ts";
 import type { DefiTermineAEnregistrer } from "../domain/defi-termine-a-enregistrer.ts";
 import { Etoiles } from "../domain/etoiles.ts";
@@ -50,17 +49,13 @@ export class TerminerLeDefi {
     return {
       lecons,
       niveau,
-      meilleuresEtoiles: await this.meilleuresEtoiles(enfant, lecons),
+      meilleuresEtoiles: await this.meilleuresEtoiles(enfant),
       leconsReussiesAuTestDeDepart: testDeDepart?.leconsReussies,
     };
   }
 
-  private async meilleuresEtoiles(enfant: string, lecons: readonly Lecon[]): Promise<Map<string, Etoiles>> {
-    const meilleures = new Map<string, Etoiles>();
-    for (const { id } of lecons) {
-      const nombre = (await this.resultats.de(enfant, id))?.meilleures;
-      if (nombre !== undefined) meilleures.set(id, Etoiles.de(nombre));
-    }
-    return meilleures;
+  private async meilleuresEtoiles(enfant: string): Promise<Map<string, Etoiles>> {
+    const meilleures = await this.resultats.meilleuresEtoilesDe(enfant);
+    return new Map([...meilleures].map(([lecon, nombre]) => [lecon, Etoiles.de(nombre)]));
   }
 }
