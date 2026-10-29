@@ -26,27 +26,27 @@ export function queteDuJour(
   if (leconDuJour.genre === "inconnue" || nombreDeQuestionsDues === undefined) {
     return { genre: "sansQuete" };
   }
-  if (faits.nombreDeSeancesDeRevisionTermineesDuJour > 0) {
-    return { genre: "accomplie", quete: "revision" };
+  const aFaitUneRevisionAujourdhui = faits.nombreDeSeancesDeRevisionTermineesDuJour > 0;
+  if (aFaitUneRevisionAujourdhui || nombreDeQuestionsDues > 0) {
+    return aFaitUneRevisionAujourdhui
+      ? { genre: "accomplie", quete: "revision" }
+      : { genre: "revision", nombreDeQuestionsDues };
   }
-  if (nombreDeQuestionsDues > 0) {
-    return { genre: "revision", nombreDeQuestionsDues };
-  }
+  return queteDeLecon(leconDuJour, faits);
+}
+
+function queteDeLecon(
+  leconDuJour: Exclude<LeconDuJourProposee, { genre: "inconnue" }>,
+  faits: FaitsDuJour,
+): QueteDuJour {
   if (leconDuJour.genre === "aucuneLeconPourTaClasse") {
     return { genre: "sansQuete" };
   }
   if (faits.leconsDesSeancesTermineesDuJour.length > 0) {
     return { genre: "accomplie", quete: "lecon" };
   }
-  if (leconDuJour.genre === "aJouer") {
-    return {
-      genre: "lecon",
-      lecon: leconDuJour.lecon,
-      titre: leconDuJour.titre,
-    };
-  }
   if (leconDuJour.genre === "parcoursFini") {
     return { genre: "aucune" };
   }
-  return { genre: "sansQuete" };
+  return { genre: "lecon", lecon: leconDuJour.lecon, titre: leconDuJour.titre };
 }
