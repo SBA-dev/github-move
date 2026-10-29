@@ -654,7 +654,8 @@ Then(/^le dessin du parcours montre un seul repère de défi, « Défi (\d+) »,
   const cible = pageDuParcours(famille, page);
   await expect(dessin(cible).getByTestId("lecon-du-parcours").first()).toBeVisible();
   await expect(repere(cible)).toHaveCount(1);
-  const unique = await verifierLeRepere(cible, numero, "ouvert", `Défi ${numero} : ouvert`).catch(() => repereDuDefi(cible, numero));
+  const unique = repereDuDefi(cible, numero);
+  await expect(unique).toHaveCount(1);
   expect(await laLeconAvantLeRepere(unique), "leçon juste avant le repère").toBe(`Leçon ${place}`);
 });
 
