@@ -6,20 +6,21 @@ Fonctionnalité: Le personnage guide reçoit des tenues avec les étoiles, et l'
   Afin de voir mes efforts sur mon compagnon de jeu
 
   Contexte Motivation : les tenues reçues se déduisent du total des étoiles (#32), comme les objets de la cabane,
-  sans modifier aucune étoile. La cabane ne change pas. Seule la tenue portée, choisie par l'enfant, est gardée
-  (sur l'appareil, hypothèse #102.8 A). Modèle : docs/stories/102/domain-model.md ; critères et questions :
-  docs/stories/102/acceptance.md. Les commentaires « #102.n » renvoient aux questions ouvertes ; un scénario qui
-  porte le tag « a-valider » dépend d'une réponse du PO qui n'est pas encore donnée.
+  sans modifier aucune étoile. La cabane ne change pas. Seule la tenue portée, choisie par l'enfant, est gardée,
+  sur l'appareil (réponse #102.8 A). Modèle : docs/stories/102/domain-model.md ; critères et réponses du PO :
+  docs/stories/102/acceptance.md (section « Réponses du PO (2026-10-29) »). Le commentaire au-dessus d'un scénario
+  nomme la réponse du PO qu'il illustre.
 
-  Tranche minimale (#102.17). Les danses du personnage guide sont hors de cette story (#102.7, story #106).
+  Tranche minimale (réponse #102.17). Les danses du personnage guide sont hors de cette story (réponse #102.7,
+  story #106).
 
-  Valeurs provisoires, à fixer par le PO (#102.1, #102.5, #102.15, #102.18, #102.27) : elles se retrouvent dans
-  tous les scénarios ; quand le PO les fixe, on remplace les valeurs, la forme des scénarios ne change pas.
-  - Paliers des tenues et tenues, communes à tous les univers (#102.2 A) : 5 une écharpe rayée, 12 un nœud papillon,
-    23 un sac à dos d'explorateur, 37 des bottes de pluie.
+  Valeurs fixées par le PO (réponses #102.1, #102.5, #102.15, #102.18, #102.26, #102.27) :
+  - Paliers des tenues et tenues, communes à tous les univers (réponse #102.2) : 5 une écharpe rayée, 12 un nœud
+    papillon, 23 un sac à dos d'explorateur, 37 des bottes de pluie.
   - Textes : encart « Pour <personnage guide> » de la fin de la séance, annonce « <personnage guide> a reçu <tenue> ! »,
     section « Les tenues de <personnage guide> » de « Mes médailles », phrase « Encore N étoiles et <personnage guide>
-    recevra <tenue> ! », libellé accessible « <personnage guide>, avec <tenue> ».
+    recevra <tenue> ! », phrase « <personnage guide> a reçu toutes ses tenues ! » quand les 4 tenues sont reçues,
+    libellé accessible « <personnage guide>, avec <tenue> ».
 
   Paliers de la cabane (inchangés, #32) : 3, 6, 10, 15, 20, 26, 33, 40, 48, 56, 65, 75.
   « Léa a gagné N étoiles en tout » prépare des meilleures étoiles sur des leçons de test absentes de la
@@ -35,7 +36,7 @@ Fonctionnalité: Le personnage guide reçoit des tenues avec les étoiles, et l'
 
   Règle: Le personnage guide a une tenue reçue par palier des tenues atteint par le total des étoiles ; rien ne se perd
 
-    # #102.1 : paliers décalés de ceux de la cabane
+    # Réponse #102.1 : paliers décalés de ceux de la cabane
     Plan du Scénario: Avec <total> en tout, Noisette a <tenues>
       Étant donné que Léa a gagné <total> en tout
       Quand Léa ouvre « Mes médailles » depuis son accueil
@@ -58,8 +59,7 @@ Fonctionnalité: Le personnage guide reçoit des tenues avec les étoiles, et l'
         | 23 ★              |
         | 37 ★              |
 
-    # #102.26 : phrase quand toutes les tenues sont reçues
-    @a-valider
+    # Réponse #102.26 : phrase quand toutes les tenues sont reçues
     Scénario: Au-delà du dernier palier, Noisette a reçu toutes ses tenues
       Étant donné que Léa a gagné 40 étoiles en tout
       Quand Léa ouvre « Mes médailles » depuis son accueil
@@ -96,7 +96,7 @@ Fonctionnalité: Le personnage guide reçoit des tenues avec les étoiles, et l'
         | 4     | 5     | une écharpe rayée |
         | 11    | 12    | un nœud papillon  |
 
-    # #102.1 : les paliers des tenues sont distincts des paliers de la cabane
+    # Réponse #102.1 : les paliers des tenues sont distincts des paliers de la cabane
     Scénario: Atteindre un palier de la cabane sans atteindre un palier des tenues n'annonce aucune tenue
       Étant donné que Léa a gagné 5 étoiles en tout
       Et que Léa joue la séance complète de la leçon « Les sons de test »
@@ -120,8 +120,7 @@ Fonctionnalité: Le personnage guide reçoit des tenues avec les étoiles, et l'
         | leçon rejouée avec moins d'étoiles  | 3     |
         | leçon rejouée avec autant d'étoiles | 1     |
 
-    # #102.13 (deux encarts) et #102.22 (la tenue juste après la cabane)
-    @a-valider
+    # Réponses #102.13 (deux encarts) et #102.22 (la tenue juste après la cabane)
     Scénario: Une séance qui fait recevoir un objet de la cabane et une tenue annonce la cabane, puis la tenue
       Étant donné que Léa a gagné 4 étoiles en tout
       Et que Léa joue la séance complète de la leçon « Les sons de test »
@@ -129,8 +128,7 @@ Fonctionnalité: Le personnage guide reçoit des tenues avec les étoiles, et l'
       Quand Léa réussit la dernière question de la séance
       Alors la fin de la séance annonce, dans l'ordre, « Noisette a reçu un tapis tout doux ! » puis « Noisette a reçu une écharpe rayée ! »
 
-    # #102.11 : c'est le personnage guide du profil qui reçoit la tenue
-    @a-valider
+    # Réponse #102.11 : c'est le personnage guide du profil qui reçoit la tenue
     Scénario: Dans l'univers Sports, c'est Coach Léo qui reçoit la tenue
       Étant donné que Léa a choisi l'univers sports
       Et que Léa a gagné 4 étoiles en tout
@@ -139,8 +137,7 @@ Fonctionnalité: Le personnage guide reçoit des tenues avec les étoiles, et l'
       Quand Léa réussit la dernière question de la séance
       Alors la fin de la séance annonce pour Coach Léo « Coach Léo a reçu une écharpe rayée ! »
 
-    # #102.16 : l'effet sonore « découverte » existant, une seule fois
-    @a-valider
+    # Réponse #102.16 : l'effet sonore « découverte » existant, une seule fois
     Plan du Scénario: Une séance qui fait recevoir une tenue <cas> fait entendre <effets sonores> avant la phrase de fin
       Étant donné que Léa a terminé 20 séances
       Et que Léa a gagné 4 étoiles en tout
@@ -154,8 +151,7 @@ Fonctionnalité: Le personnage guide reçoit des tenues avec les étoiles, et l'
         | à 1 étoile, sans autre nouveauté                                    | 5       | les effets sonores « séance terminée » puis « découverte » |
         | qui rend la leçon acquise et fait aussi recevoir un objet de cabane | 2       | les effets sonores « grande victoire » puis « découverte » |
 
-    # #102.12 : la phrase de fin du personnage guide ne change pas
-    @a-valider
+    # Réponse #102.12 : la phrase de fin du personnage guide ne change pas
     Scénario: La phrase de fin du personnage guide ne parle pas de la tenue reçue
       Étant donné que Léa a terminé 20 séances
       Et que Léa a gagné 4 étoiles en tout
@@ -182,8 +178,7 @@ Fonctionnalité: Le personnage guide reçoit des tenues avec les étoiles, et l'
       Alors Léa voit Noisette avec « une écharpe rayée »
       Et les lecteurs d'écran annoncent « Noisette, avec une écharpe rayée »
 
-    # #102.9 : une seule tenue à la fois
-    @a-valider
+    # Réponse #102.9 : une seule tenue à la fois
     Scénario: Mettre une autre tenue remplace la tenue portée
       Étant donné que Léa a gagné 12 étoiles en tout
       Et que Léa a mis « une écharpe rayée » à Noisette
@@ -192,8 +187,7 @@ Fonctionnalité: Le personnage guide reçoit des tenues avec les étoiles, et l'
       Alors Léa voit Noisette avec « un nœud papillon »
       Mais Léa ne voit plus Noisette avec « une écharpe rayée »
 
-    # #102.25 : libellé accessible sans tenue, « Noisette » seul
-    @a-valider
+    # Réponse #102.25 : libellé accessible sans tenue, « Noisette » seul
     Scénario: Retirer la tenue laisse le personnage guide sans tenue, et la tenue reste reçue
       Étant donné que Léa a gagné 5 étoiles en tout
       Et que Léa a mis « une écharpe rayée » à Noisette
@@ -210,31 +204,27 @@ Fonctionnalité: Le personnage guide reçoit des tenues avec les étoiles, et l'
       Alors Léa voit Noisette sans tenue
       Et aucun message d'erreur n'apparaît
 
-    # #102.10 : la tenue reçue n'est pas mise d'office
-    @a-valider
+    # Réponse #102.10 : la tenue reçue n'est pas mise d'office
     Scénario: Une tenue qui vient d'être reçue n'est pas mise d'office
       Étant donné que Léa a gagné 4 étoiles en tout
       Et que Léa a terminé une séance de la leçon « Les sons de test » avec 1 étoile
       Quand Léa arrive sur son accueil
       Alors elle voit Noisette dans le paysage de l'univers « Animaux de la forêt », sans tenue
 
-    # #102.4 : la section des tenues juste après la cabane
-    @a-valider
+    # Réponse #102.4 : la section des tenues juste après la cabane
     Scénario: La section des tenues vient juste après la cabane
       Étant donné que Léa a gagné 5 étoiles en tout
       Quand Léa ouvre « Mes médailles » depuis son accueil
       Alors les sections de l'écran sont, dans l'ordre : la cabane, les tenues, l'histoire, puis les badges
 
-    # #102.21 : pas de section des tenues avant la première tenue reçue
-    @a-valider
+    # Réponse #102.21 : pas de section des tenues avant la première tenue reçue
     Scénario: Avant le premier palier des tenues, la section des tenues n'apparaît pas
       Étant donné que Léa a gagné 4 étoiles en tout
       Quand Léa ouvre « Mes médailles » depuis son accueil
       Alors aucune section « Les tenues de Noisette » n'apparaît
       Et aucun message d'erreur n'apparaît
 
-    # #102.2 et #102.11 : les mêmes tenues dans tous les univers, portées par le personnage guide du profil
-    @a-valider
+    # Réponses #102.2 et #102.11 : les mêmes tenues dans tous les univers, portées par le personnage guide du profil
     Scénario: Dans l'univers Sports, la section montre les tenues de Coach Léo
       Étant donné que Léa a choisi l'univers sports
       Et que Léa a gagné 5 étoiles en tout
@@ -242,8 +232,7 @@ Fonctionnalité: Le personnage guide reçoit des tenues avec les étoiles, et l'
       Alors Léa lit « Les tenues de Coach Léo »
       Et Léa lit « Encore 7 étoiles et Coach Léo recevra un nœud papillon ! »
 
-    # #102.4 et #102.21 : la section des tenues est lue entre la cabane et l'histoire
-    @a-valider
+    # Réponses #102.4 et #102.21 : la section des tenues est lue entre la cabane et l'histoire
     Scénario: Avec « tout lire à voix haute », le titre des tenues puis leur phrase sont lus après la cabane
       Étant donné que Paul a réglé « tout lire à voix haute » sur « oui » pour Léa
       Et que Léa a gagné 5 étoiles en tout
@@ -290,8 +279,7 @@ Fonctionnalité: Le personnage guide reçoit des tenues avec les étoiles, et l'
       Quand Léa relance Savanturier
       Alors elle voit Noisette avec « une écharpe rayée » dans le paysage de l'univers « Animaux de la forêt »
 
-    # #102.2 et #102.3 : les tenues sont communes et suivent le profil, pas l'univers
-    @a-valider
+    # Réponses #102.2 et #102.3 : les tenues sont communes et suivent le profil, pas l'univers
     Scénario: Après un changement d'univers, le nouveau personnage guide porte la même tenue
       Étant donné que Léa a gagné 5 étoiles en tout
       Et que Léa a mis « une écharpe rayée » à Noisette
@@ -299,28 +287,25 @@ Fonctionnalité: Le personnage guide reçoit des tenues avec les étoiles, et l'
       Quand Léa choisit son profil enfant dans « Qui joue ? »
       Alors elle voit Coach Léo avec « une écharpe rayée » dans le paysage de l'univers « Sports »
 
-    # #102.23 : « Qui joue ? » est un écran du parent, le dessin validé y reste sans tenue
-    @a-valider
+    # Réponse #102.23 : « Qui joue ? » est un écran du parent, le dessin validé y reste sans tenue
     Scénario: Dans « Qui joue ? », le profil enfant garde le dessin de son personnage guide, sans tenue
       Étant donné que Léa a gagné 5 étoiles en tout
       Et que Léa a mis « une écharpe rayée » à Noisette
       Quand Paul ouvre « Qui joue ? » sur la tablette
       Alors le profil enfant de Léa montre le dessin validé de Noisette, sans tenue
 
-    # #102.24 : hors ligne, la tenue portée n'est pas montrée tant que les étoiles ne sont pas lues (tolérance du modèle)
-    @a-valider
-    Scénario: Sans réseau, le personnage guide s'affiche sans tenue, sans message d'erreur
+    # Réponse #102.24 B : sans réseau, la tenue portée se montre quand même (le total des étoiles ne baisse jamais)
+    Scénario: Sans réseau, le personnage guide porte toujours la tenue choisie, sans message d'erreur
       Étant donné que Léa a gagné 5 étoiles en tout
       Et que Léa a mis « une écharpe rayée » à Noisette
       Et que le réseau est coupé
       Quand Léa arrive sur son accueil
-      Alors elle voit Noisette dans le paysage de l'univers « Animaux de la forêt », sans tenue
+      Alors elle voit Noisette avec « une écharpe rayée » dans le paysage de l'univers « Animaux de la forêt »
       Et aucun message d'erreur n'apparaît
 
   Règle: La tenue se lit au lecteur d'écran là où elle compte, se choisit au clavier, et reste lisible sur un petit écran, en mode dys et sans mouvement
 
-    # #102.14 : ailleurs que dans « Mes médailles », le personnage guide reste décoratif
-    @a-valider
+    # Réponse #102.14 : ailleurs que dans « Mes médailles », le personnage guide reste décoratif
     Scénario: Sur « Mon parcours », les lecteurs d'écran n'annoncent ni le personnage guide ni sa tenue
       Étant donné que Léa a gagné 5 étoiles en tout
       Et que Léa a mis « une écharpe rayée » à Noisette
@@ -384,8 +369,8 @@ Fonctionnalité: Le personnage guide reçoit des tenues avec les étoiles, et l'
       Quand Tom choisit son profil enfant dans « Qui joue ? »
       Alors il voit Noisette dans le paysage de l'univers « Animaux de la forêt », sans tenue
 
-    # #102.21 : sans tenue reçue, pas de section des tenues
-    @acces @a-valider
+    # Réponse #102.21 : sans tenue reçue, pas de section des tenues
+    @acces
     Scénario: Les étoiles d'un autre enfant du même parent ne font recevoir aucune tenue
       Étant donné que Tom a un profil enfant préparé de niveau CP
       Et que Tom a gagné 30 étoiles en tout
@@ -393,8 +378,8 @@ Fonctionnalité: Le personnage guide reçoit des tenues avec les étoiles, et l'
       Quand Léa ouvre « Mes médailles » depuis son accueil
       Alors aucune section « Les tenues de Noisette » n'apparaît
 
-    # #102.8 A : les tenues reçues se retrouvent partout, la tenue portée reste sur l'appareil où elle a été choisie
-    @acces @a-valider
+    # Réponse #102.8 A : les tenues reçues se retrouvent partout, la tenue portée reste sur l'appareil où elle a été choisie
+    @acces
     Scénario: Sur le téléphone du second parent, l'enfant retrouve ses tenues reçues, mais pas la tenue choisie sur la tablette
       Étant donné que Marie est rattachée au profil enfant de Léa
       Et que Léa a gagné 5 étoiles en tout
@@ -403,8 +388,8 @@ Fonctionnalité: Le personnage guide reçoit des tenues avec les étoiles, et l'
       Alors les tenues de Noisette montrent toujours « une écharpe rayée »
       Mais Léa voit Noisette sans tenue
 
-    # #102.8 A : la tenue portée s'efface à la déconnexion du parent, les tenues reçues restent
-    @acces @a-valider
+    # Réponse #102.8 A : la tenue portée s'efface à la déconnexion du parent, les tenues reçues restent
+    @acces
     Scénario: Après la déconnexion du parent, le personnage guide n'a plus de tenue, mais garde ses tenues reçues
       Étant donné que Léa a gagné 5 étoiles en tout
       Et que Léa a mis « une écharpe rayée » à Noisette
@@ -413,8 +398,8 @@ Fonctionnalité: Le personnage guide reçoit des tenues avec les étoiles, et l'
       Alors Léa voit Noisette sans tenue
       Et les tenues de Noisette montrent toujours « une écharpe rayée »
 
-    # #102.19 : rien dans l'Espace parent
-    @acces @a-valider
+    # Réponse #102.19 : rien dans l'Espace parent
+    @acces
     Scénario: L'Espace parent ne montre pas les tenues de l'enfant
       Étant donné que Léa a gagné 5 étoiles en tout
       Et que Léa a mis « une écharpe rayée » à Noisette
