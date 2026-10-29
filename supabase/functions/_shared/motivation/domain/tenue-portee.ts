@@ -21,3 +21,7 @@ export function porterUneTenue(etatDesTenues: EtatDesTenues, cle: string): strin
   if (!etatDesTenues.tenuesRecues.some((tenue) => tenue.cle === cle)) throw new TenueNonRecue(cle);
   return cle;
 }
+
+export function retirerLaTenue(): TenuePortee {
+  return undefined;
+}
