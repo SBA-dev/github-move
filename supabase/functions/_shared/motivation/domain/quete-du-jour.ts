@@ -14,7 +14,7 @@ export type PropositionsDuJour = {
 export type QueteDuJour =
   | { genre: "revision"; nombreDeQuestionsDues: number }
   | { genre: "lecon"; lecon: string; titre: string }
-  | { genre: "accomplie"; quete: "revision" }
+  | { genre: "accomplie"; quete: "revision" | "lecon" }
   | { genre: "aucune" }
   | { genre: "sansQuete" };
 
@@ -31,6 +31,9 @@ export function queteDuJour(
   }
   if (nombreDeQuestionsDues > 0) {
     return { genre: "revision", nombreDeQuestionsDues };
+  }
+  if (faits.leconsDesSeancesTermineesDuJour.length > 0) {
+    return { genre: "accomplie", quete: "lecon" };
   }
   if (leconDuJour.genre === "aJouer") {
     return {
