@@ -265,3 +265,17 @@ Then(/^l'accueil de Léa affiche « ([^«»]+) » sur le téléphone de Marie$/,
   const zone = await surLAccueilDeLea(telephone);
   await expect(zone.getByText(texte, { exact: true })).toBeVisible({ timeout: DELAI_DU_CALCUL_MS });
 });
+
+// Le serveur ne connaît pas les leçons de test : la séance jouée par l'interface n'y arrive pas. Pour les scénarios @acces
+// (autre appareil, Espace parent), la séance que le serveur aurait enregistrée est aussi préparée en base.
+Given(
+  /^Léa a terminé une séance de la leçon « ([^«»]+) » avec (\d) étoiles?$/,
+  { tags: "@issue-101 and @acces" },
+  async ({ famille, page, $test }, titre: string, etoiles: string) => {
+    $test.slow();
+    await jouerLaSeanceCompleteAvecErreurs(page, titre, ETOILES_PAR_SEANCE[Number(etoiles)] ?? 0);
+    noterUneSeanceJouee(page, titre, Number(etoiles));
+    await page.getByTestId("fin-de-seance").getByRole("button", { name: "Accueil", exact: true }).click();
+    await ecrireUneSeanceTermineePourLeProfil(profilDe(famille, "Léa").id, leconDeTitre(page, titre).id, Number(etoiles));
+  },
+);

@@ -1,5 +1,5 @@
 # language: fr
-@issue-101 @wip
+@issue-101
 Fonctionnalité: Quête du jour : le personnage guide propose une seule chose à faire aujourd'hui
   En tant qu'enfant
   Je veux que mon personnage guide me propose, en arrivant sur mon accueil, une quête du jour
