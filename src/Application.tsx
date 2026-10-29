@@ -17,6 +17,7 @@ import {
   useProfilsDuParent,
 } from "./famille/index.ts";
 import { DockDeLEnfant, type EcranDuDock, estUnEcranDuDock } from "./accueil/index.ts";
+import { useRefusDeLaQuete } from "./accueil/useRefusDeLaQuete.ts";
 import { LeconsPersonnellesDuParent } from "./accompagnement/index.ts";
 import { EcranDeLEpisode } from "./histoire/index.ts";
 import { MesMedailles } from "./medailles/index.ts";
@@ -25,6 +26,7 @@ import { MonParcours, useProchainesLeconsConnues } from "./parcours/index.ts";
 import { EcranDeRevision, useQuestionsDuesALAccueil, useRenvoiDesSeancesDeRevisionGardees } from "./revision/index.ts";
 import { ToutesLesLecons, useChoixDeToutesLesLecons } from "./toutes-les-lecons/index.ts";
 import { AideEcranDAccueil } from "./installation/index.ts";
+import { jourDuNavigateur } from "./seance/jour-du-navigateur.ts";
 import { type Lieu, useNavigation } from "./navigation.ts";
 import { EcranQuiArrive, cleDeLEcran, transitionVers } from "./transitions/index.ts";
 import { EcranDeSeance, PageDeLaLecon, useRenvoiDesSeancesGardees } from "./seance/index.ts";
@@ -93,7 +95,7 @@ export function Application() {
   const lieu = enfantAbsent ? ACCUEIL : lieuPossible;
   const ecran = lieu.ecran;
   const testDeDepartAFaire = useTestDeDepartAFaire(profilEnCours, ecran === "jeu");
-  const questionsDuesALaRevision = useQuestionsDuesALAccueil(profilEnCours?.id, ecran === "jeu");
+  const questionsDues = useQuestionsDuesALAccueil(profilEnCours?.id, ecran === "jeu");
   const ecranDemande = lieuDemande.ecran;
   const profil = estPageDeLEnfant(lieu) ? profilEnCours : undefined;
   const univers = universDe(profil?.univers);
@@ -127,6 +129,7 @@ export function Application() {
   const [classesDAvantDeplieesPour, setClassesDAvantDeplieesPour] = useState<ReadonlySet<CodeDeMatiere>>(new Set());
   const { connues: prochainesLeconsConnues, memoriser: memoriserLaProchaineLecon, oublier: oublierLesProchainesLeconsConnues } =
     useProchainesLeconsConnues(profilEnCours);
+  const refusDeLaQuete = useRefusDeLaQuete();
   const choixDeToutesLesLecons = useChoixDeToutesLesLecons();
   const { oublier: oublierLesChoixDeToutesLesLecons } = choixDeToutesLesLecons;
   const basculerLesClassesDAvant = (matiere: CodeDeMatiere) =>
@@ -149,6 +152,7 @@ export function Application() {
       await connexion.seDeconnecter.executer();
       fermerEspaceParent();
       oublierLeProfilEtSaProgression();
+      refusDeLaQuete.oublier();
       oublierLesEtoilesGagnees();
       oublierLesSeancesTerminees();
       oublierLesDernieresLecturesDuServeur();
@@ -227,7 +231,9 @@ export function Application() {
                       voix={voix}
                       saluer={!viaRetour}
                       testDeDepartAProposer={testDeDepartAFaire}
-                      questionsDuesALaRevision={questionsDuesALaRevision}
+                      questionsDues={questionsDues}
+                      queteRefusee={refusDeLaQuete.refusee(profilEnCours.id, jourDuNavigateur(new Date()).toString())}
+                      onRefuserLaQuete={() => refusDeLaQuete.refuser(profilEnCours.id, jourDuNavigateur(new Date()).toString())}
                       onMonTestDeDepart={() => aller("test-de-depart")}
                       onJeRevise={() => aller("revision")}
                       onCommencerLaLecon={(leconId) => aller({ ecran: "lecon", leconId })}
