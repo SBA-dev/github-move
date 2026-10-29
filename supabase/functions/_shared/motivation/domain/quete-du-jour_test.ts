@@ -27,3 +27,15 @@ Deno.test("sans quête tant que le nombre de questions dues est inconnu", () => 
 
   assertEquals(quete, { genre: "sansQuete" });
 });
+
+Deno.test("la quête du jour propose la révision quand au moins une question est due", () => {
+  const quete = queteDuJour(
+    {
+      leconDuJour: { genre: "aJouer", lecon: "lecon-a", titre: "Le son ou" },
+      nombreDeQuestionsDues: 3,
+    },
+    faitsDUnJourSansSeance,
+  );
+
+  assertEquals(quete, { genre: "revision", nombreDeQuestionsDues: 3 });
+});
