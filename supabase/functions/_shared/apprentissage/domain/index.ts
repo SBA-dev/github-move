@@ -164,6 +164,7 @@ export type { DefiTermine } from "./seance-de-defi.ts";
 export {
   DefiAVenir,
   DefiDejaTermine,
+  DefiIncoherent,
   DefiInconnu,
   DefiNonFini,
   PlanDuDefiIncoherent,

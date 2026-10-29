@@ -250,6 +250,13 @@ export class SeanceDeRevisionIncoherente extends Error {
   }
 }
 
+export class DefiIncoherent extends Error {
+  constructor(override readonly cause: Error) {
+    super(`Le défi envoyé est incohérent : ${cause.message}`);
+    this.name = "DefiIncoherent";
+  }
+}
+
 export class JourIncoherent extends Error {
   constructor(readonly jour: string) {
     super(`Le jour ${jour} ne correspond pas à la date de fin envoyée.`);

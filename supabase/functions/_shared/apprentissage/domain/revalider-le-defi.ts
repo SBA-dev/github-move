@@ -1,7 +1,18 @@
-import { DefiAVenir, DefiInconnu, DefiNonFini, PlanDuDefiIncoherent, QuestionHorsDuDefi } from "./erreurs.ts";
+import {
+  DefiAVenir,
+  DefiIncoherent,
+  DefiInconnu,
+  DefiNonFini,
+  PlanDuDefiIncoherent,
+  QuestionHorsDuDefi,
+} from "./erreurs.ts";
 import type { DefiTermineAEnregistrer } from "./defi-termine-a-enregistrer.ts";
 import { type Defi, type DefiReleve, defisDeLaMatiere, etatDuDefi } from "./defis-de-la-matiere.ts";
-import { rejouerLaReponse } from "./rejouer-la-reponse.ts";
+import {
+  enveloppantLesErreursDeRejeu,
+  rejouerLesReponsesDeLaQuestion,
+  verifierUnTirageEtDesReponsesParQuestion,
+} from "./rejouer-la-reponse.ts";
 import { jourDeLAppareil } from "./jour-de-l-appareil.ts";
 import { type EntreesDuParcours, parcoursDeLaMatiere } from "./parcours.ts";
 import { estUnPlanPossible, type QuestionDuDefi, questionsPosablesDuDefi } from "./plan-du-defi.ts";
@@ -27,7 +38,10 @@ export function revaliderLeDefi(
   });
   if (!estUnPlanPossible(defi, entrees.lecons, envoi.questions)) throw new PlanDuDefiIncoherent();
 
-  return rejouer(envoi, entrees, questions, defi);
+  return enveloppantLesErreursDeRejeu(
+    () => rejouer(envoi, entrees, questions, defi),
+    (cause) => new DefiIncoherent(cause),
+  );
 }
 
 function rejouer(
@@ -36,6 +50,7 @@ function rejouer(
   questions: readonly QuestionDuDefi[],
   defi: Defi,
 ): DefiTermine {
+  verifierUnTirageEtDesReponsesParQuestion(envoi, incoherente);
   const jour = jourDeLAppareil(envoi.jour, envoi.termineeLe);
   const seance = SeanceDeDefi.commencer({
     id: envoi.id,
@@ -46,9 +61,14 @@ function rejouer(
     tireurDe: (identite) => tireurDeLaQuestionEnvoyee(envoi, identite),
     niveau: entrees.niveau,
   });
-  questions.forEach((_, rang) => {
-    for (const reponse of envoi.reponses[rang] ?? []) rejouerLaReponse(seance, reponse);
+  questions.forEach(({ identite }, rang) => {
+    rejouerLesReponsesDeLaQuestion(seance, identite, envoi.reponses[rang] ?? [], incoherente);
+    if (seance.questionEnCours()?.identite.valeur === identite.valeur) throw new DefiNonFini();
   });
   if (!seance.estFinie()) throw new DefiNonFini();
   return seance.terminer(envoi.termineeLe, jour);
+}
+
+function incoherente(raison: string): DefiIncoherent {
+  return new DefiIncoherent(new Error(raison));
 }
