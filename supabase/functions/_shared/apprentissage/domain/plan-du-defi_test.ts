@@ -195,3 +195,39 @@ Deno.test("chaque mot d'une dictée d'une leçon du défi est une question posab
   assertEquals(posables.map(({ identite }) => identite.valeur).sort(), ["d:chat", "d:lapin"]);
   assertEquals(posables.map(({ origine }) => origine.type), ["dictee", "dictee"]);
 });
+
+const boiteTroisPlusTrois = { type: "boite", items: [{ a: 3, b: 3 }] };
+const calculTroisPlusTrois = { type: "calcul", operations: [{ q: "3 + 3", r: 6 }] };
+const calculQuatrePlusQuatre = { type: "calcul", operations: [{ q: "3 + 3", r: 6 }, { q: "4 + 4", r: 8 }] };
+
+Deno.test("une question posable par deux leçons du défi n'est posable qu'une fois, avec sa première occurrence", () => {
+  const lecons = [
+    lecon("ma-ce1-1", 0, [boiteTroisPlusTrois]),
+    lecon("ma-ce1-2", 0, [calculTroisPlusTrois]),
+  ];
+
+  const posables = questionsPosablesDuDefi(defiDe(lecons), lecons);
+
+  assertEquals(posables.map(({ identite }) => identite.valeur), ["n:3 + 3"]);
+  assertEquals(posables.map(({ origine }) => origine), [{ leconDOrigine: "ma-ce1-1", position: 0, type: "boite" }]);
+});
+
+Deno.test("avec moins de 10 questions posables, une question partagée par deux leçons n'est posée qu'une fois", () => {
+  const lecons = [
+    lecon("ma-ce1-1", 0, [boiteTroisPlusTrois]),
+    lecon("ma-ce1-2", 0, [calculQuatrePlusQuatre]),
+  ];
+
+  const { questions } = planDuDefi(defiDe(lecons), lecons, hasardSansMelange());
+
+  assertEquals(questions.map(({ identite }) => identite.valeur).sort(), ["n:3 + 3", "n:4 + 4"]);
+});
+
+Deno.test("le nombre de questions d'une leçon est compté sans les questions déjà posables par une leçon précédente", () => {
+  const lecons = [
+    lecon("ma-ce1-1", 0, [boiteTroisPlusTrois]),
+    lecon("ma-ce1-2", 0, [calculTroisPlusTrois]),
+  ];
+
+  assertEquals(questionsParLecon(lecons), [1, 0]);
+});
