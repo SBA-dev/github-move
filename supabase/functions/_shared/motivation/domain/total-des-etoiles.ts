@@ -25,9 +25,8 @@ export class TotalDEtoilesInvalide extends Error {
   }
 }
 
-export function verifierTotalDEtoiles(total: number): number {
+export function verifierTotalDEtoiles(total: number): void {
   if (!Number.isInteger(total) || total < 0) throw new TotalDEtoilesInvalide(total);
-  return total;
 }
 
 export type TotauxAvantEtApresLaSeance = { readonly avant: number; readonly apres: number };

@@ -35,6 +35,10 @@ function prochainPalierDesTenuesDe(total: number): EtatDesTenues["prochainPalier
   return { tenue: prochain.tenue, seuil: prochain.seuil, etoilesManquantes: prochain.seuil - total };
 }
 
+export function estRecue(etatDesTenues: EtatDesTenues, cle: string): boolean {
+  return etatDesTenues.tenuesRecues.some((tenue) => tenue.cle === cle);
+}
+
 export function tenuesDe(total: number): EtatDesTenues {
   verifierTotalDEtoiles(total);
   const tenuesRecues = PALIERS_DES_TENUES.filter((palier) => palier.seuil <= total).map((palier) => palier.tenue);

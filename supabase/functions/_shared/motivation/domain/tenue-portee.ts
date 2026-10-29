@@ -1,4 +1,4 @@
-import { type EtatDesTenues, tenueDesPaliers, type TenueDuPersonnageGuide } from "./tenues.ts";
+import { estRecue, type EtatDesTenues, tenueDesPaliers, type TenueDuPersonnageGuide } from "./tenues.ts";
 
 export type TenuePortee = string | undefined;
 
@@ -16,9 +16,9 @@ export class TenueNonRecue extends Error {
   }
 }
 
-export function porterUneTenue(etatDesTenues: EtatDesTenues, cle: string): string {
+export function porterUneTenue(etatDesTenues: EtatDesTenues, cle: string): TenuePortee {
   if (tenueDesPaliers(cle) === undefined) throw new TenueInconnue(cle);
-  if (!etatDesTenues.tenuesRecues.some((tenue) => tenue.cle === cle)) throw new TenueNonRecue(cle);
+  if (!estRecue(etatDesTenues, cle)) throw new TenueNonRecue(cle);
   return cle;
 }
 
@@ -32,6 +32,6 @@ export function tenueAMontrer(
 ): TenueDuPersonnageGuide | undefined {
   const tenue = tenueDesPaliers(tenuePortee);
   if (tenue === undefined) return undefined;
-  if (etatDesTenues && !etatDesTenues.tenuesRecues.some((recue) => recue.cle === tenue.cle)) return undefined;
+  if (etatDesTenues && !estRecue(etatDesTenues, tenue.cle)) return undefined;
   return tenue;
 }

@@ -133,3 +133,25 @@ export {
   titreDeLAnnonceDeLEpisode,
   titreDeLaSectionDeLHistoire,
 } from "./paroles-de-l-histoire.ts";
+export {
+  type EtatDesTenues,
+  PALIERS_DES_TENUES,
+  type TenueDuPersonnageGuide,
+  tenueRecueParLaSeance,
+  tenuesDe,
+} from "./tenues.ts";
+export {
+  porterUneTenue,
+  retirerLaTenue,
+  tenueAMontrer,
+  TenueInconnue,
+  TenueNonRecue,
+  type TenuePortee,
+} from "./tenue-portee.ts";
+export {
+  annonceDeLaTenueRecue,
+  descriptionDuPersonnageGuide,
+  phraseDeLEtatDesTenues,
+  titreDeLAnnonceDeLaTenue,
+  titreDeLaSectionDesTenues,
+} from "./paroles-des-tenues.ts";
