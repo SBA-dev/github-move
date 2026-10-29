@@ -1,4 +1,4 @@
-import { TotalDEtoilesInvalide } from "./cabane.ts";
+import { verifierTotalDEtoiles } from "./cabane.ts";
 
 export type TenueDuPersonnageGuide = { readonly cle: string; readonly nom: string };
 export type PalierDesTenues = { readonly seuil: number; readonly tenue: TenueDuPersonnageGuide };
@@ -28,7 +28,7 @@ function prochainPalierDesTenuesDe(total: number): EtatDesTenues["prochainPalier
 }
 
 export function tenuesDe(total: number): EtatDesTenues {
-  if (!Number.isInteger(total) || total < 0) throw new TotalDEtoilesInvalide(total);
+  verifierTotalDEtoiles(total);
   const tenuesRecues = PALIERS_DES_TENUES.filter((palier) => palier.seuil <= total).map((palier) => palier.tenue);
   const prochainPalier = prochainPalierDesTenuesDe(total);
   return {

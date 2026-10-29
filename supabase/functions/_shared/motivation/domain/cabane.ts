@@ -54,6 +54,11 @@ export class TotalDEtoilesInvalide extends Error {
   }
 }
 
+export function verifierTotalDEtoiles(total: number): number {
+  if (!Number.isInteger(total) || total < 0) throw new TotalDEtoilesInvalide(total);
+  return total;
+}
+
 function prochainPalierDe(total: number): EtatDeLaCabane["prochainPalier"] {
   const prochain = PALIERS_DE_LA_CABANE.find((palier) => palier.seuil > total);
   if (prochain === undefined) return undefined;
@@ -61,7 +66,7 @@ function prochainPalierDe(total: number): EtatDeLaCabane["prochainPalier"] {
 }
 
 export function cabaneDe(total: number): EtatDeLaCabane {
-  if (!Number.isInteger(total) || total < 0) throw new TotalDEtoilesInvalide(total);
+  verifierTotalDEtoiles(total);
   const objetsRecus = PALIERS_DE_LA_CABANE.filter((palier) => palier.seuil <= total).map((palier) => palier.objet);
   const prochainPalier = prochainPalierDe(total);
   return {
