@@ -19,15 +19,25 @@ export type PlanDuDefi = { readonly questions: readonly QuestionDuDefi[] };
 export const NOMBRE_DE_QUESTIONS_DU_DEFI = 10;
 
 export function questionsPosablesDuDefi(defi: Defi, lecons: readonly Lecon[]): QuestionDuDefi[] {
+  return questionsPosablesParLecon(defi, lecons).flat();
+}
+
+function questionsPosablesParLecon(defi: Defi, lecons: readonly Lecon[]): QuestionDuDefi[][] {
+  const dejaPosables = new Set<string>();
   return lecons
     .filter(({ id }) => defi.lecons.includes(id))
-    .flatMap(questionsPosablesDeLaLecon);
+    .map((lecon) =>
+      questionsPosablesDeLaLecon(lecon).filter(({ identite }) => {
+        if (dejaPosables.has(identite.valeur)) return false;
+        dejaPosables.add(identite.valeur);
+        return true;
+      })
+    );
 }
 
 export function planDuDefi(defi: Defi, lecons: readonly Lecon[], hasard: Hasard): PlanDuDefi {
-  const reserves = lecons
-    .filter(({ id }) => defi.lecons.includes(id))
-    .map((lecon) => melanger(questionsPosablesDeLaLecon(lecon), hasard))
+  const reserves = questionsPosablesParLecon(defi, lecons)
+    .map((questions) => melanger(questions, hasard))
     .filter((reserve) => reserve.length > 0);
   if (reserves.length === 0) throw new AucuneQuestionPourLeDefi();
   const parts = partsParLecon(reserves.map((reserve) => reserve.length), hasard);
