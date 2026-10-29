@@ -165,3 +165,4 @@ export {
   titreDeLAnnonceDeLaTenue,
   titreDeLaSectionDesTenues,
 } from "./paroles-des-tenues.ts";
+export { defiReleveParLaSeance, lignesDesDefisReleves } from "./defis-releves.ts";

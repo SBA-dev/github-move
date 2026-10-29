@@ -1,3 +1,4 @@
+import type { DefiReleve } from "../../apprentissage/domain/index.ts";
 import type { Badge } from "./badges.ts";
 import type { EtatDeLaCabane } from "./cabane.ts";
 import type { EtatDeLHistoire } from "./histoire.ts";
@@ -9,7 +10,8 @@ export type SectionDeLEcran =
   | "tenues"
   | "histoire"
   | "badges"
-  | "recordsDeFluence";
+  | "recordsDeFluence"
+  | "defisReleves";
 
 const ORDRE_DES_SECTIONS: readonly SectionDeLEcran[] = [
   "cabane",
@@ -17,6 +19,7 @@ const ORDRE_DES_SECTIONS: readonly SectionDeLEcran[] = [
   "histoire",
   "badges",
   "recordsDeFluence",
+  "defisReleves",
 ];
 
 export function sectionsAAfficher(
@@ -26,12 +29,13 @@ export function sectionsAAfficher(
 }
 
 export function sectionsDeLEcran(
-  { pastilles, cabane, tenues, histoire, badges }: {
+  { pastilles, cabane, tenues, histoire, badges, defisReleves }: {
     pastilles: readonly PastilleDeRecord[];
     cabane: EtatDeLaCabane | undefined;
     tenues?: EtatDesTenues;
     histoire?: EtatDeLHistoire;
     badges?: readonly Badge[];
+    defisReleves?: readonly DefiReleve[];
   },
 ): SectionDeLEcran[] {
   const disponibles: SectionDeLEcran[] = [];
@@ -40,5 +44,6 @@ export function sectionsDeLEcran(
   if (histoire !== undefined) disponibles.push("histoire");
   if (badges !== undefined) disponibles.push("badges");
   if (pastilles.length > 0) disponibles.push("recordsDeFluence");
+  if (defisReleves !== undefined && defisReleves.length > 0) disponibles.push("defisReleves");
   return sectionsAAfficher(disponibles);
 }
