@@ -1,5 +1,5 @@
 import { useId } from "react";
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import type { CleUnivers } from "@domain/motivation";
 import { PALETTES } from "./palettes.ts";
 
@@ -7,6 +7,7 @@ const DERIVE_DES_NUAGES = { duration: 40, repeat: Infinity, repeatType: "reverse
 
 export function Paysage({ univers }: { readonly univers: CleUnivers }) {
   const palette = PALETTES[univers];
+  const mouvementsReduits = useReducedMotion() ?? false;
   const identifiant = useId();
   const ciel = `${identifiant}-ciel`;
   const soleil = `${identifiant}-soleil`;
@@ -26,7 +27,7 @@ export function Paysage({ univers }: { readonly univers: CleUnivers }) {
         </defs>
         <rect width="1200" height="800" fill={`url(#${ciel})`} />
         <circle cx="960" cy="170" r="150" fill={`url(#${soleil})`} />
-        <motion.g fill="#FFFFFF" opacity=".85" animate={{ x: [0, 40] }} transition={DERIVE_DES_NUAGES}>
+        <motion.g fill="#FFFFFF" opacity=".85" animate={{ x: mouvementsReduits ? 0 : [0, 40] }} transition={mouvementsReduits ? { duration: 0 } : DERIVE_DES_NUAGES}>
           <ellipse cx="210" cy="140" rx="74" ry="22" />
           <ellipse cx="250" cy="125" rx="46" ry="27" />
           <ellipse cx="650" cy="96" rx="60" ry="18" />
