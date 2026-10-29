@@ -43,3 +43,20 @@ Numéro de décision réservé : 0035.
 - 00:58 UTC : écart constaté dans les captures : le dessin de la maison mesure environ 45 px à 360 px, contre 96 px sur la planche validée. Question posée au PO avec la PR (98.32).
 - 06:51 UTC : PO (annonce [Responsable] 6490015481) : « 98.32 reco ». Le dessin de la maison passe à environ 75 px sur téléphone, avec le nom en pastille sur le bas du dessin (ou la plus grande taille qui tient à 360 × 740).
 - 07:20 UTC : 98.32 fait (`9c1cb85`, CSS seul) : le dessin passe à 75,6 px à 360 × 740 (110 px plafond sur tablette), et le nom devient une pastille sur le bas du dessin ; le bas des maisons est à 716 px. `@issue-98` : 132/132 sur les deux projets. Captures refaites (`a63f3e7`). Revue du delta lancée.
+- 07:35 UTC : revue du delta 98.32 : **APPROUVÉ** (commentaire 6490532541 sur la PR #133). Non bloquants : `inset: 9px 0` et `margin-top: -28px` sans explication ; la pastille laisse environ 2 px de marge sous la porte (elle mordrait sur la porte sous 267 px de large). Pas de CI sur la PR (aucune vérification configurée).
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Durée (reprise du cadrage → PRÊTE À MERGER) | 2026-10-28 19:20 → 2026-10-29 07:40 UTC, soit 12 h 20 au total, dont environ 4 h 30 de travail |
+| Temps d'attente du PO | validation n°1 : 1 h 40 (19:52 → 21:34) ; planches : 45 min pour 5 univers, puis 15 min pour la maison Sports (deux allers-retours) ; 98.32 : 6 h 30 (nuit). Aucune attente n'a bloqué le travail, sauf 98.32 |
+| Cycles de review | 3 : cycle 1 À CORRIGER (1 bloquant), cycle 2 APPROUVÉ (delta), delta 98.32 APPROUVÉ |
+| Cycles TDD | 0 comportement du domaine. RED par 51 étapes E2E rouges, puis 3 commits de câblage |
+| Cycles E2E | 4 runs : RED sur `telephone` (15 min) ; câblage sur `telephone` ; périmètre #98 + #99 sur les deux projets (28 min, 3 rouges du serveur de dev, rejoués verts) ; après 98.32 sur les deux projets (23 min, 132/132) |
+| Intégrations de `main` | 2 : #97 (sans conflit) ; #99 (1 conflit, `src/Application.tsx`, résolu en gardant les deux changements) |
+| Escalades | 0. Une réponse du PO, arrivée hors du canal du responsable, a été vérifiée avant usage (confirmée sur #64) |
+| Verrous | aucun (front seul) |
+| Dessins | 12 dessins de maison et 2 signaux communs, puis 2 variantes de Sports ; 3 planches montrées au PO |
+| Incidents | un redémarrage du conteneur pendant la résolution du conflit (le merge était commité, il a été vérifié après coup) ; Chromium 1243 au lieu de 1194 (liens symboliques, sans `playwright install`) ; serveur de dev instable sous charge (`ECONNRESET`) |
+| Tokens | relevés par le responsable |
