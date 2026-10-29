@@ -152,3 +152,5 @@ export { estUnTypeDeQuestion } from "./cle-de-question.ts";
 export { leconAcquiseParLaSeance, leconsAcquises } from "./lecons-acquises.ts";
 export { partiesDuParcours } from "./partie-du-parcours.ts";
 export type { PartieDuParcours } from "./partie-du-parcours.ts";
+export { defisDeLaMatiere } from "./defis-de-la-matiere.ts";
+export type { Defi } from "./defis-de-la-matiere.ts";
