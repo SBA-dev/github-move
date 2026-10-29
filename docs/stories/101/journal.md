@@ -30,3 +30,11 @@ Branche de base : `main`. Décision réservée : 0037.
 Liste des comportements :
 - Bloc 1, `motivation/domain/quete-du-jour.ts` : B1 sans quête si une donnée est inconnue ; B2 révision si au moins une question due ; B3 sinon la leçon du jour ; B4 aucune (parcours fini) ou sans quête (aucune leçon pour ta classe) ; B5 accomplie par une séance de révision du jour ; B6 accomplie par une séance de leçon du jour (aussi quand elle finit le parcours) ; B7 une séance de leçon n'accomplit pas une quête de révision ; B8 `queteAccomplieParLaSeance`.
 - Bloc 2, `paroles-de-la-quete.ts` et exports de `@domain/motivation`.
+
+## Étape 3 : TDD du domaine (14:30 → 16:20 UTC)
+
+- Bloc 1, `quete-du-jour.ts` : B1 `8522e9b`, B2 `18b9049`, B3 `ef0e771`, B4 `012ca02`, B5 `1d7bcfa`, B6 `9274dd5`, B7 `ceb2ef8` + refactor `5f68c23`, B8 `43543b0` + refactor `fa61868`. Trou relevé par `implementer` après B6 (séance d'une classe d'avant avec `aucuneLeconPourTaClasse` → quête accomplie à tort) : couvert par le test B7.
+- Formatage du test `3ec99e5` (fmt rouge après le RED de B8, corrigé par `test-writer`).
+- Bloc 2, `paroles-de-la-quete.ts` et exports de `@domain/motivation` (ajouts en fin d'`index.ts`) : B9 `1aaaae2`, B10 `c71962a`.
+- 10 comportements, 10 cycles, aucun désaccord. 2603 tests verts, lint et fmt propres, `tsc` sans erreur.
+- Revue intermédiaire (mode delta `f6c982b..c71962a`) : **APPROUVÉ**, 5 non bloquants (étiquettes de commit, `petitesErreurs(0)` non protégé par le type, `LeconDuJourProposee` à nommer dans le modèle, export long d'`index.ts`). Dernier commit relu : `c71962a`.
