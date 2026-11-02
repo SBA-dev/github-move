@@ -239,7 +239,7 @@ Then(/^aucune bulle de choix ne flotte plus jusqu'à la fin de la question$/, as
 });
 
 Then(
-  /^aucune bulle de choix ne flotte pendant que (?:Noisette relit la consigne|la voix anglaise redit « ([^«»]+) »)$/,
+  /^aucune bulle de choix ne flotte pendant que (?:Noisette relit la question|la voix anglaise redit « ([^«»]+) »)$/,
   async ({ page }, mot: string | null | undefined) => {
     await expect.poll(async () => (await journal(page)).actifs, { message: "une parole est en cours" }).toBeGreaterThan(0);
     if (mot != null) expect((await journal(page)).lecture.texte, "la voix anglaise redit le mot").toContain(mot);
