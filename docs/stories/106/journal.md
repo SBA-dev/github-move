@@ -13,3 +13,9 @@ Branche de base : `main` (`47a6d34`). Branche : `feature/106-celebration-de-l-un
 - 21:05 UTC : #100 mergée (`f8a4787`, annonce [Responsable] sur #64). Reste une condition avant le code : la validation du cadrage par le PO. `main` sera intégrée après cette validation.
 - 21:10 UTC : réponse du PO « 106 reco tout » (annonce [Responsable] sur #106 et #64). Validation levée, #106 en `graphe:dev`. On livre 106a (mécanisme, défi relevé, Sports), musique « grande victoire » en attendant le choix du PO (106.27 : accès réseau à ouvrir par le PO).
 - 21:12 UTC : `main` intégrée (`f8a4787`, avec #100), sans conflit.
+
+### TDD, bloc « Motivation, domaine de la célébration de l'univers »
+- B1 moment de célébration : RED `989fec9`, GREEN `01aa7eb`.
+- B2 célébration de l'univers Sports (cri, musique, variante au hasard) : RED `834478e`, GREEN `8a77a22` (`tirerDans` rendu générique dans le même commit, nécessaire à la compilation).
+- B3 univers pas encore livré : test `f12d9d7`, vert d'emblée (le type `Partial` du catalogue impose déjà le cas) ; prouvé par mutation (entrée `danse` ajoutée → échec, puis annulée).
+- `deno test` : 2771 verts.
