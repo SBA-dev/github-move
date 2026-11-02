@@ -10,3 +10,5 @@
 - Étape 1 : `domain-modeler` lancé (lecture pure dans `RecordDeFluence`, habillage par univers des cases, touches et marque).
 - Étape 1 faite : `docs/stories/128/domain-model.md`. Lecture pure `RecordDeFluence.estDepassePar(score)`, règles R1 à R6, 36 dessins (6 univers), 12 questions ouvertes. Glossaire : 2 ajouts en fin de section Apprentissage. Point de fusion signalé : `src/seance/EcranDeSeance.tsx` (prop du record vers `ExerciceDeFluence`).
 - Étape 2 : `po-acceptance` lancé.
+- Étape 2 faite : `features/128-claviers.feature` (52 scénarios, 11 `@a-valider`), `docs/stories/128/acceptance.md`. Questions #128.13 et #128.14 ajoutées.
+- CADRAGE PRÊT publié sur #128, en attente de la validation du PO (annonce [Responsable] sur #64).
