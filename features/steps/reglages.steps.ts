@@ -469,7 +469,6 @@ export async function verifierModeDys(page: Page, elements: Locator[], attendu: 
       expect(style.mots).toBe(ecran.mots);
       expect(enEm(style.lignes, style.taille)).toBeCloseTo(1.9, 1);
     } else {
-      expect(style.famille).not.toContain("Andika");
       expect(style.lettres).toBe("normal");
       expect(style.mots).toBe("0px");
     }

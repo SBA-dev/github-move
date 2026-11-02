@@ -280,6 +280,9 @@ When(/^Tom choisit seulement l'exercice « (.+) »$/, async ({ page }, titre: st
   await commencerSeulementLExercice(page, titre);
 });
 
+// Seul, ce parcours dure 24 s ; à 3 workers il dépasse 25 s. L'attente reste sous le délai d'un scénario long (delais.steps.ts).
+const DELAI_POUR_JOUER_JUSQU_AUX_ETIQUETTES_MS = 80_000;
+
 export async function jouerJusquAuxEtiquettes(page: Page) {
   const continuer = page.getByRole("button", { name: "Continuer", exact: true });
   await expect.poll(async () => {
@@ -295,7 +298,7 @@ export async function jouerJusquAuxEtiquettes(page: Page) {
     }
     await terminerLaLecture(page);
     return false;
-  }, { intervals: [100], timeout: 25_000 }).toBe(true);
+  }, { intervals: [100], timeout: DELAI_POUR_JOUER_JUSQU_AUX_ETIQUETTES_MS }).toBe(true);
 }
 
 Given(/^il ne reste que l'étiquette « ([^«»]+) » à poser$/, async ({ page }, derniere: string) => {

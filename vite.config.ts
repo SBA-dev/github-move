@@ -15,7 +15,13 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: [{ find: /^@domain\/([^/]+)$/, replacement: `${partage}/$1/domain/index.ts` }],
     },
-    server: { port: 5173, strictPort: true },
+    server: {
+      port: 5173,
+      strictPort: true,
+      // Chaque échec Playwright écrit une trace dans test-results/ : Vite rechargeait alors toutes les pages ouvertes
+      // et les échecs se répercutaient en cascade pendant les E2E (diagnostic du 29/10).
+      watch: { ignored: ["**/test-results*/**", "**/playwright-report/**", "**/blob-report/**", "**/.features-gen*/**"] },
+    },
     define: {
       "import.meta.env.VITE_SUPABASE_URL": JSON.stringify(env.VITE_SUPABASE_URL || env.SUPABASE_URL || ""),
       "import.meta.env.VITE_SUPABASE_ANON_KEY": JSON.stringify(env.VITE_SUPABASE_ANON_KEY || env.SUPABASE_ANON_KEY || ""),
