@@ -391,6 +391,9 @@ Then(/^Léa n'entend pas Noisette lire « ([^«»]+) »$/, async ({ page }, text
 });
 
 When(/^Léa demande à écouter les records de calcul rapide$/, async ({ page }) => {
+  // L'écran lit son accueil dès que tout est chargé, et cette lecture coupe celle que l'enfant vient de demander si elle
+  // démarre après son geste : on touche « Écouter » une fois l'accueil lancé (la bulle du personnage guide est affichée).
+  await expect(page.getByTestId("parole")).toBeVisible({ timeout: DELAI_D_UN_APPEL_SERVEUR_MS });
   await sectionDesRecords(page).getByRole("button", { name: "Écouter", exact: true }).click();
 });
 
