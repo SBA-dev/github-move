@@ -81,7 +81,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les choix sont des 
 
       Exemples:
         | parole                 | préalable                                                                         | situation                                                                            | demande de Léa                      | pendant                                      |
-        | la consigne relue      | Léa joue l'exercice « Quel son entends-tu ? » de la leçon « Les sons ou, on, an » | Noisette a fini de lire la question « Dans le mot « poule », quel son entends-tu ? » | Léa demande à réécouter la consigne | pendant que Noisette relit la consigne       |
+        | la question relue      | Léa joue l'exercice « Quel son entends-tu ? » de la leçon « Les sons ou, on, an » | Noisette a fini de lire la question « Dans le mot « poule », quel son entends-tu ? » | Léa demande à réécouter la question | pendant que Noisette relit la question       |
         | le mot à écouter redit | l'appareil a une voix française et une voix anglaise                              | Léa joue l'item « a cat » de l'exercice « Quel animal ? »                            | Léa demande à écouter de nouveau    | pendant que la voix anglaise redit « a cat » |
 
     # Décision 98.4 : la forme de bulle de choix pour tous les choix, le flottement pour bulles et ecoute seulement
