@@ -2,6 +2,7 @@ import type { Defi, EtatDuDefi } from "@domain/apprentissage";
 import { nomDuDefi } from "@domain/motivation";
 import {
   annonceDuRepereDuDefi,
+  BOUTON_REJOUER_LE_DEFI,
   BOUTON_RELEVER_LE_DEFI,
   DEFI_RELEVE,
   leconsAvantLeDefi,
@@ -15,7 +16,7 @@ type Props = {
 
 /**
  * Le repère d'un défi sur le dessin du parcours, juste après la dernière leçon de sa partie. À venir, il est visible et ne se touche pas
- * (ni bouton ni cadenas) ; ouvert, il propose de relever le défi ; relevé, il garde sa marque et propose de le rejouer. Le lecteur d'écran lit l'état du défi.
+ * (ni bouton ni cadenas) ; ouvert, il propose de relever le défi ; relevé, il garde sa marque et propose de le rejouer (bouton « Rejouer le défi », même action que « Relever le défi »). Le lecteur d'écran lit l'état du défi.
  */
 export function RepereDuDefi({ defi, etat, onRelever }: Props) {
   return (
@@ -31,7 +32,7 @@ export function RepereDuDefi({ defi, etat, onRelever }: Props) {
       {etat.genre === "aVenir" && <span className="etat-du-defi" aria-hidden="true">{leconsAvantLeDefi(etat.leconsRestantes)}</span>}
       {etat.genre === "releve" && <span className="etat-du-defi" aria-hidden="true">✓ {DEFI_RELEVE}</span>}
       {(etat.genre === "ouvert" || etat.genre === "releve") && (
-        <button type="button" className="relever-le-defi" onClick={() => onRelever(defi)}>{BOUTON_RELEVER_LE_DEFI}</button>
+        <button type="button" className="relever-le-defi" onClick={() => onRelever(defi)}>{etat.genre === "releve" ? BOUTON_REJOUER_LE_DEFI : BOUTON_RELEVER_LE_DEFI}</button>
       )}
     </div>
   );

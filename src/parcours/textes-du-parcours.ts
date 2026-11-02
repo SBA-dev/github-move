@@ -87,6 +87,7 @@ export function annonceDeLArriveeDuPersonnageGuide(nomDuPersonnageGuide: string,
 }
 
 export const BOUTON_RELEVER_LE_DEFI = "Relever le défi";
+export const BOUTON_REJOUER_LE_DEFI = "Rejouer le défi";
 
 export const DEFI_RELEVE = "Défi relevé";
 
