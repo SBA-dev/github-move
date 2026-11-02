@@ -12,8 +12,8 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les maisons de l'ad
   #24), et les retours de #97 (effet sonore, rebond) ne sont pas redécrits. Les scénarios de
   features/20-calcul-fluence-addition-posee.feature restent vrais sans changement.
   Les bulles de choix de l'étape calculer sont hors périmètre (#126) : ici on y répond comme dans #20.
-  Les commentaires « Question 127.n » renvoient aux questions de docs/stories/127/acceptance.md. Les scénarios marqués
-  « a-valider » dépendent d'une réponse du PO (127.3 et 127.5) et sont écrits selon la recommandation du modèle.
+  Les commentaires « Question 127.n » renvoient aux questions de docs/stories/127/acceptance.md. Les questions 127.1
+  à 127.11 ont été tranchées par le PO le 2026-11-02, toutes selon la recommandation.
 
   Mots employés dans ces scénarios (mots d'interface, pas des termes du domaine) :
   - « la maison des unités » (des dizaines, des centaines) : l'interface d'une colonne (décision n°24), dessinée en
@@ -189,16 +189,14 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les maisons de l'ad
       Et aucune maison ne s'allume
       Et Léa doit encore donner elle-même la bonne réponse
 
-    # Question 127.3 (reco A) : à l'étape poser, la porte s'ouvre et la maison reste éteinte
-    @a-valider
+    # Question 127.3 (tranchée : A) : à l'étape poser, la porte s'ouvre et la maison reste éteinte
     Scénario: À l'étape poser, un chiffre juste fait ouvrir la porte de sa maison, qui reste éteinte
       Étant donné que Léa joue l'exercice « La leçon en action : 45 + 37 » à l'étape poser
       Quand Léa pose le chiffre « 5 » de 45 dans la colonne des unités
       Alors la porte de la maison des unités s'ouvre
       Mais la maison des unités reste éteinte
 
-    # Question 127.3 : vrai avec A et B, faux avec C
-    @a-valider
+    # Question 127.3 (tranchée : A)
     Scénario: Au début de l'étape calculer, aucune maison n'est allumée
       Étant donné que Léa joue l'exercice « La leçon en action : 45 + 37 » à l'étape poser
       Et que Léa a posé le nombre 45
@@ -244,23 +242,21 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les maisons de l'ad
       Alors aucune retenue ne saute
       Et aucune retenue n'apparaît en haut de la maison des dizaines
 
-    # Question 127.5 : vrai avec A et B (le saut ne retarde jamais l'effet sonore de #97)
+    # Question 127.5 (tranchée : A ; le saut ne retarde jamais l'effet sonore de #97)
     Scénario: Le saut de la retenue ne retarde pas l'effet sonore « réponse juste »
       Étant donné que Léa joue l'exercice « La leçon en action : 45 + 37 » à l'étape calculer
       Quand Léa répond « 12 » pour la colonne des unités
       Alors Léa entend l'effet sonore « réponse juste »
       Et l'effet sonore « réponse juste » commence avant que la retenue « 1 » ait fini de sauter
 
-    # Question 127.5 (reco A) : la retenue saute tout de suite après le rebond, sans attendre la voix
-    @a-valider
+    # Question 127.5 (tranchée : A) : la retenue saute tout de suite après le rebond, sans attendre la voix
     Scénario: La retenue saute sans attendre la parole du personnage guide
       Étant donné que Léa joue l'exercice « La leçon en action : 45 + 37 » à l'étape calculer
       Quand Léa répond « 12 » pour la colonne des unités
       Alors la retenue « 1 » saute de la maison des unités jusqu'en haut de la maison des dizaines
       Et le saut commence avant que Noisette dise « monte en retenue »
 
-    # Question 127.5 (reco A)
-    @a-valider
+    # Question 127.5 (tranchée : A)
     Scénario: En Muet, la retenue saute de la même façon
       Étant donné que la tablette est en Muet
       Et que Léa joue l'exercice « La leçon en action : 45 + 37 » à l'étape calculer

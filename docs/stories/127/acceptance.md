@@ -1,14 +1,16 @@
 # Critères d'acceptance : story #127, maisons de l'addition posée (98c-addition)
 
+Historique : 2026-11-02 21:38 UTC, cadrage validé par le PO (« 127 reco tout », annonce [Responsable] 6589102464 sur #64) : #127.1 à #127.11 tranchées selon la reco, `@a-valider` retirés.
+
 Scénarios : `features/127-maisons-de-l-addition.feature`. Modèle : `docs/stories/127/domain-model.md` (invariants propres 1 à 10, questions #127.1 à #127.7).
 
 Tags :
 - `@issue-127 @wip` sur la fonctionnalité ;
-- `@a-valider` sur les 4 scénarios qui dépendent de #127.3 ou de #127.5, écrits selon la recommandation du modèle ;
+- aucun `@a-valider` : les 4 scénarios qui dépendaient de #127.3 ou de #127.5 sont confirmés (reco retenue le 2026-11-02) ;
 - aucun `@acces` (aucune donnée nouvelle, voir « Droits d'accès ») ;
 - aucun `@depend-de-…` : #97 et #98 (98a) sont mergées.
 
-État : **critères proposés**, en attente de la validation du PO (⛔). Aucun code.
+État : **critères validés** par le PO le 2026-11-02 (toutes les questions selon la reco). `@wip` reste jusqu'au passage des steps E2E (convention du projet : il n'exclut aucun scénario des runs).
 
 ## Objectif
 
@@ -22,7 +24,7 @@ La story ne change que l'affichage : aucune règle de correction, aucune erreur,
 
 Décisions déjà prises, appliquées sans les reposer : habillage par univers (98.2) ; couleurs des colonnes communes aux 6 univers ; la retenue saute d'une maison à la suivante et, avec mouvements réduits, apparaît en haut de la maison ; aucun geste de l'habillage ne produit de réponse ; les retours de #97 passent d'abord ; mêmes erreurs, avancement et étoiles ; 360 px, mode dys, lecteurs d'écran inchangés ; règle absolue de contenu univers par univers ; planches et 6 captures (98.28, 98.29, 98.31).
 
-**Les scénarios ne lisent jamais un tracé** (skill `illustration`, section 3) : ils restent vrais quelle que soit la réponse à #127.1 (réutiliser ou redessiner la maison), #127.2 (objet de la retenue), #127.4 (partie colorée), #127.6 (taille) et #127.7 (chiffre sur l'objet ou pastille). Ce qui est dessiné se valide sur les planches, pas par un scénario.
+**Les scénarios ne lisent jamais un tracé** (skill `illustration`, section 3) : ils restent vrais quelle qu'ait été la réponse à #127.1 (réutiliser ou redessiner la maison), #127.2 (objet de la retenue), #127.4 (partie colorée), #127.6 (taille) et #127.7 (chiffre sur l'objet ou pastille). Ce qui est dessiné se valide sur les planches, pas par un scénario.
 
 ## Règles (example mapping)
 
@@ -30,12 +32,12 @@ Décisions déjà prises, appliquées sans les reposer : habillage par univers (
 |---|---|---|
 | R1 | Pour les mêmes réponses, l'habillage ne change rien : mêmes erreurs, même avancement, mêmes étoiles ; une addition posée se termine au doigt comme au clavier seulement ; en séance de révision et au test de départ, une addition reste un calcul en ligne | Plan « Léa pose chaque chiffre <geste>, calcule chaque colonne sans erreur, et gagne 3 étoiles » : glisser du doigt, toucher puis toucher, clavier seulement · Plan « Avec <erreurs> chiffre(s) glissé(s) du doigt dans la mauvaise maison, Léa gagne <résultat>, comme en touchant » : 0 → 3, 1 → 2, 3 → 2 · « Un chiffre glissé du doigt dans sa maison fait avancer la séance comme un chiffre touché » · Plan « <Où>, une addition reste un calcul en ligne, sans maison ni chiffre à faire glisser » : séance de révision, test de départ (#127.9) |
 | R2 | À l'étape poser, un chiffre se glisse du doigt jusqu'à une maison ; seul un lâcher sur une maison est une réponse : lâché ailleurs, il revient à sa place sans coûter d'erreur ; toucher puis toucher et le clavier restent possibles, et un chiffre posé ne se déplace plus | Plan « Le chiffre « 5 » de 45 se pose dans la maison des unités <geste> » : 3 gestes · « Glissé du doigt dans la mauvaise maison, le chiffre revient en glissant, avec l'aide de son rang » · « Le retour du chiffre ne retarde ni « réponse fausse » ni l'encouragement » · « Un chiffre qui passe au-dessus d'une maison, sans être lâché, ne donne aucune réponse » · « Lâché hors de toute maison, le chiffre revient à sa place, sans encouragement » · « Lâché hors de toute maison, le chiffre ne fait entendre aucun son de réponse » · « Lâcher 5 fois un chiffre hors de toute maison ne coûte aucune étoile » · « Un chiffre posé dans sa maison ne se déplace plus » · « À l'étape calculer, toucher une maison ne donne aucune réponse » (#127.8) |
-| R3 | À l'étape calculer, une maison s'allume quand le chiffre de sa colonne est juste, jamais avant, jamais au survol, jamais à cause de « Je ne sais pas » ; une maison allumée ne brille pas comme une bonne réponse montrée | « La colonne des unités juste fait s'allumer la maison des unités » · « Une somme fausse laisse la maison éteinte et donne une nouvelle chance » · « La dernière colonne juste allume la dernière maison : toutes les maisons sont allumées » · « « Je ne sais pas » à l'étape calculer montre la bonne somme, sans allumer la maison » · « « Je ne sais pas » à l'étape poser fait briller la bonne maison, sans en allumer aucune » · `@a-valider` « À l'étape poser, un chiffre juste fait ouvrir la porte de sa maison, qui reste éteinte » (#127.3) · `@a-valider` « Au début de l'étape calculer, aucune maison n'est allumée » (#127.3) |
-| R4 | La retenue posée par le domaine saute de la maison dont le chiffre vient d'être écrit jusqu'en haut de la maison suivante ; sans retenue, rien ne saute ; le saut ne retarde ni l'effet sonore, ni la parole, ni la suite | « La retenue « 1 » saute de la maison des unités jusqu'en haut de la maison des dizaines » · « La retenue « 1 » saute de la maison des dizaines jusqu'en haut de la maison des centaines » · « Une colonne dont la somme est plus petite que 10 ne fait sauter aucune retenue » · « La dernière colonne écrit toute sa somme, sans faire sauter de retenue ni ajouter de maison » · « Une somme fausse ne fait sauter aucune retenue » · « Le saut de la retenue ne retarde pas l'effet sonore « réponse juste » » · `@a-valider` « La retenue saute sans attendre la parole du personnage guide » (#127.5) · `@a-valider` « En Muet, la retenue saute de la même façon » (#127.5) |
+| R3 | À l'étape calculer, une maison s'allume quand le chiffre de sa colonne est juste, jamais avant, jamais au survol, jamais à cause de « Je ne sais pas » ; une maison allumée ne brille pas comme une bonne réponse montrée | « La colonne des unités juste fait s'allumer la maison des unités » · « Une somme fausse laisse la maison éteinte et donne une nouvelle chance » · « La dernière colonne juste allume la dernière maison : toutes les maisons sont allumées » · « « Je ne sais pas » à l'étape calculer montre la bonne somme, sans allumer la maison » · « « Je ne sais pas » à l'étape poser fait briller la bonne maison, sans en allumer aucune » · « À l'étape poser, un chiffre juste fait ouvrir la porte de sa maison, qui reste éteinte » (#127.3) · « Au début de l'étape calculer, aucune maison n'est allumée » (#127.3) |
+| R4 | La retenue posée par le domaine saute de la maison dont le chiffre vient d'être écrit jusqu'en haut de la maison suivante ; sans retenue, rien ne saute ; le saut ne retarde ni l'effet sonore, ni la parole, ni la suite | « La retenue « 1 » saute de la maison des unités jusqu'en haut de la maison des dizaines » · « La retenue « 1 » saute de la maison des dizaines jusqu'en haut de la maison des centaines » · « Une colonne dont la somme est plus petite que 10 ne fait sauter aucune retenue » · « La dernière colonne écrit toute sa somme, sans faire sauter de retenue ni ajouter de maison » · « Une somme fausse ne fait sauter aucune retenue » · « Le saut de la retenue ne retarde pas l'effet sonore « réponse juste » » · « La retenue saute sans attendre la parole du personnage guide » (#127.5) · « En Muet, la retenue saute de la même façon » (#127.5) |
 | R5 | Dans chacun des 6 univers, la maison et la retenue ont le dessin de cet univers, et les colonnes gardent leurs couleurs (unités bleue, dizaines rose, centaines verte) ; changer d'univers ne change ni les gestes, ni les textes lus, ni les étoiles, ni la façon dont brille la bonne réponse montrée ; un profil sans univers connu voit les dessins de « Animaux de la forêt » | Plan « …les maisons gardent les couleurs des colonnes » : 6 univers · Plan « …la retenue ne prend jamais la couleur d'une autre maison » : 6 univers (invariant propre 2) · Plan « …la maison et la retenue ont le dessin de cet univers » : 6 univers · Plan « …la retenue saute de la maison des unités jusqu'en haut de la maison des dizaines » : 5 univers autres qu'Animaux (déjà couvert en R4) · Plan « …un chiffre dans la mauvaise maison fait dire à <personnage guide> la même aide, avec la même couleur de maison » : Sports, Police · Plan « …un chiffre glissé dans la mauvaise maison donne 2 étoiles, comme dans l'univers « Animaux de la forêt » » : Princesses et fées, Pompiers · Plan « …la maison montrée par « Je ne sais pas » brille comme dans tous les univers » : 5 univers · Plan « Un profil enfant <cas> voit la maison et la retenue de l'univers « Animaux de la forêt » » : sans univers, univers inconnu |
 | R6 | Avec les mouvements réduits, rien ne glisse, ne saute ni ne s'ouvre de lui-même, et l'information reste ; dans chacun des 6 univers, une addition à trois colonnes tient à 360 px avec des cibles de 44 px ; chiffres, noms des maisons et retenue s'affichent en mode dys ; les lecteurs d'écran lisent les mêmes libellés qu'avant | Plan « …avec les mouvements réduits, la maison s'allume et la retenue apparaît en haut de la maison, sans mouvement » : 6 univers · « Avec les mouvements réduits, un chiffre posé dans la mauvaise maison réapparaît à sa place, sans glisser » · « Avec les mouvements réduits, le chiffre suit toujours le doigt de l'enfant » (98.23) · « Sur un écran de 360 px, Léa glisse du doigt un chiffre jusqu'à la maison des centaines » · Plan « …une addition à trois colonnes tient dans un écran de 360 px et garde des cibles de 44 px » : 6 univers · « Sur un écran de 360 px, la retenue et le chiffre écrit restent lisibles dans une addition à trois colonnes » · « En mode dys, les chiffres à poser et le nom de chaque maison s'affichent en mode dys » · « En mode dys, le chiffre de la retenue reste un texte affiché en mode dys » (invariant propre 3) · Plan « …les lecteurs d'écran lisent les maisons et la retenue comme avant, sans décrire leur dessin » : 6 univers |
 
-Au total : **6 règles, 45 scénarios** (dont 15 plans de scénario, 63 exemples). 4 scénarios portent `@a-valider`.
+Au total : **6 règles, 45 scénarios** (dont 15 plans de scénario, 63 exemples). Aucun scénario ne porte plus `@a-valider`.
 
 Les Plans sur les univers suivent la sobriété de 98a : les 6 univers là où le dessin peut changer ce qu'on vérifie (couleur, dessin, retenue, 360 px et 44 px, mouvements réduits, lecteurs d'écran) ; 5 univers là où Animaux de la forêt est déjà couvert ailleurs (saut, « Je ne sais pas ») ; 2 univers là où le dessin ne peut rien changer (aide lue, étoiles).
 
@@ -54,23 +56,18 @@ Les Plans sur les univers suivent la sobriété de 98a : les 6 univers là où l
 ### Checklist `po-acceptance` du skill `gamification`
 
 - besoin nourri : compétence et autonomie (ci-dessus) ;
-- déclencheur métier de chaque retour : un **Placement** juste (chiffre qui reste, et porte qui s'ouvre si #127.3 = A), un placement faux (retour en glissant, aide de #20), un **chiffre écrit** à l'étape calculer (maison allumée), une **retenue** posée par le domaine (saut), « Je ne sais pas » (bonne réponse montrée) ; aucune récompense nouvelle ; le dessin de l'univers n'est déclenché par rien ;
+- déclencheur métier de chaque retour : un **Placement** juste (chiffre qui reste, et porte qui s'ouvre, #127.3 tranchée A), un placement faux (retour en glissant, aide de #20), un **chiffre écrit** à l'étape calculer (maison allumée), une **retenue** posée par le domaine (saut), « Je ne sais pas » (bonne réponse montrée) ; aucune récompense nouvelle ; le dessin de l'univers n'est déclenché par rien ;
 - retour après une erreur : R2 (encouragement et nouvelle chance, aide « … il va dans la maison rose. »), R3 (somme fausse : nouvelle chance) ;
 - mouvements réduits : R6, l'information reste (maison allumée, retenue en haut de la maison, chiffre revenu), dans chaque univers ;
-- aucun garde-fou franchi ; les objets de la retenue sont à trancher (#127.2) : le modèle déconseille l'étoile (confusion avec la récompense et avec la bonne réponse montrée) et le ballon (confusion avec une bulle de choix de #126).
+- aucun garde-fou franchi ; objets de la retenue tranchés (#127.2, reco) : gland, petite fleur, gourde, loupe, goutte blanche, note de musique ; le modèle écartait l'étoile (confusion avec la récompense et avec la bonne réponse montrée) et le ballon (confusion avec une bulle de choix de #126).
 
 ### Droits d'accès
 
 La story ne crée, ne lit et n'enregistre aucune donnée nouvelle : **pas de scénario `@acces`**. L'univers est lu sur le profil enfant en cours (#6, #96). Les séances terminées restent enregistrées comme aujourd'hui (#24), par un parent rattaché seulement. Les écrans du parent ne montrent aucune addition posée.
 
-## Scénarios qui dépendent d'une réponse du PO
+## Scénarios qui dépendaient d'une réponse du PO (variantes écartées)
 
-| Question | Scénarios | Écrits selon | Si le PO choisit autre chose |
-|---|---|---|---|
-| **#127.3** (étape poser : que fait la maison quand un chiffre juste y est rangé ?) | `@a-valider` « À l'étape poser, un chiffre juste fait ouvrir la porte de sa maison, qui reste éteinte » · `@a-valider` « Au début de l'étape calculer, aucune maison n'est allumée » | **A** : la porte s'ouvre, la maison reste éteinte | **B** : le premier scénario devient « …la porte de la maison des unités reste fermée, et la maison reste éteinte » ; le second reste vrai. **C** : le premier devient « …la porte s'ouvre, puis la maison s'allume » ; le second est supprimé, et « « Je ne sais pas » à l'étape calculer… sans allumer la maison » et « La colonne des unités juste fait s'allumer… » perdent leur sens (toutes les maisons seraient déjà allumées) |
-| **#127.5** (quand la retenue saute-t-elle ?) | `@a-valider` « La retenue saute sans attendre la parole du personnage guide » · `@a-valider` « En Muet, la retenue saute de la même façon » | **A** : tout de suite après le rebond, sans attendre la voix | **B** : le premier devient « …la retenue saute quand Noisette dit « monte en retenue » » ; le second doit dire ce qui se passe sans voix (question à poser alors). « Le saut de la retenue ne retarde pas l'effet sonore « réponse juste » » reste vrai dans les deux cas |
-
-Les questions #127.1, #127.2, #127.4, #127.6 et #127.7 ne changent **aucun** scénario : elles se tranchent sur les planches.
+Les 4 scénarios liés à #127.3 et #127.5 étaient écrits selon la reco A ; le PO l'a retenue le 2026-11-02. Leur texte ne change pas, les tags `@a-valider` sont retirés. Les variantes « si le PO choisit B ou C » sont **écartées** et retirées de ce document.
 
 ## Hors périmètre
 
@@ -164,27 +161,40 @@ Les questions #127.1, #127.2, #127.4, #127.6 et #127.7 ne changent **aucun** sc�
 
 ## Questions ouvertes
 
-Les questions **#127.1 à #127.7** sont posées dans `docs/stories/127/domain-model.md` (avec options et recommandation). Rappel de leur effet sur les scénarios :
-- #127.1, #127.2, #127.4, #127.6, #127.7 : **aucun scénario ne change** (planches) ;
-- #127.3 et #127.5 : 4 scénarios `@a-valider`, voir « Scénarios qui dépendent d'une réponse du PO ».
+Aucune.
 
-Questions nouvelles :
+## Décisions
 
-**#127.8 À l'étape calculer, que fait une maison qu'on touche ?** Exemple : 45 + 37, la colonne des unités est à calculer, Léa touche la maison des unités.
+Toutes tranchées le 2026-11-02 par le PO, selon la reco (« 127 reco tout »). Les options sont gardées pour mémoire.
+
+Les questions **#127.1 à #127.7** sont dans `docs/stories/127/domain-model.md` (options, reco et décision) :
+- **#127.1 Tranchée le 2026-11-02 : reco (A)**, maisons de `classer` de 98a réutilisées ;
+- **#127.2 Tranchée le 2026-11-02 : reco (A)**, gland (Animaux), petite fleur (Princesses et fées), gourde (Sports), loupe (Police), goutte blanche au contour de la couleur de la maison d'arrivée (Pompiers), note de musique (Danse) ;
+- **#127.3 Tranchée le 2026-11-02 : reco (A)**, à l'étape poser la porte s'ouvre et la maison reste éteinte ;
+- **#127.4 Tranchée le 2026-11-02 : reco (A)**, façade aux couleurs de la colonne ;
+- **#127.5 Tranchée le 2026-11-02 : reco (A)**, saut juste après le rebond, sans attendre la voix ;
+- **#127.6 Tranchée le 2026-11-02 : reco (A)**, maison au plus 75 px avec le nom en pastille ;
+- **#127.7 Tranchée le 2026-11-02 : reco (A)**, le chiffre sur l'objet, sur fond clair à 4,5:1.
+
+#127.1, #127.2, #127.4, #127.6 et #127.7 ne changent aucun scénario (planches). #127.3 et #127.5 confirment les 4 scénarios concernés, sans `@a-valider`.
+
+Questions posées ici :
+
+**#127.8 À l'étape calculer, que fait une maison qu'on touche ?** **Tranchée le 2026-11-02 : reco (A)**, **rien** : la maison n'est pas une cible à l'étape calculer. Exemple : 45 + 37, la colonne des unités est à calculer, Léa touche la maison des unités.
 - A (reco) : **rien** (ni son, ni mouvement, ni parole). La maison n'est pas une cible à l'étape calculer ; on évite que l'enfant croie avoir répondu.
 - B : un petit retour décoratif (la maison frémit), sans son ni réponse.
 - C : le personnage guide relit la phrase de la colonne (comme toucher la phrase aujourd'hui).
 Le scénario « À l'étape calculer, toucher une maison ne donne aucune réponse » est vrai avec A, B et C (il ne vérifie que l'absence de réponse et d'encouragement). Seul A garde la règle « aucun geste de l'habillage » au plus simple.
 
-**#127.9 En séance de révision et au test de départ, l'addition reste-t-elle un calcul en ligne ?** L'issue reprend l'invariant commun « même habillage en séance, en révision et au test de départ » ; le domaine pose aujourd'hui une addition retenue ou du test de départ comme un calcul en ligne (« 45 + 37 = ? »), sans colonne (invariant propre 9).
+**#127.9 En séance de révision et au test de départ, l'addition reste-t-elle un calcul en ligne ?** **Tranchée le 2026-11-02 : reco (A)**, **oui, calcul en ligne, sans maison**. L'issue reprend l'invariant commun « même habillage en séance, en révision et au test de départ » ; le domaine pose aujourd'hui une addition retenue ou du test de départ comme un calcul en ligne (« 45 + 37 = ? »), sans colonne (invariant propre 9).
 - A (reco) : **oui, calcul en ligne, sans maison** : il n'y a rien à habiller, comme une question de `classer` qui reste une question à choix (98.18). Le Plan de R1 le vérifie.
 - B : l'addition y devient une addition posée, avec ses maisons. Ce serait un changement du domaine (question de révision, test de départ, avancement), hors de cette story d'affichage : une story à part.
 
-**#127.10 Faut-il une Indication du geste pour l'addition, comme pour `classer` ?** `classer` lit « Fais glisser chaque étiquette, ou touche-la puis touche une maison. » (#18). L'addition lit seulement « Pose l'addition 45 + 37 : range chaque chiffre dans sa maison. Le chiffre des unités va toujours dans la maison bleue, tout à droite. »
+**#127.10 Faut-il une Indication du geste pour l'addition, comme pour `classer` ?** **Tranchée le 2026-11-02 : reco (A)**, **non, texte inchangé**, aucun MP3 à regénérer. `classer` lit « Fais glisser chaque étiquette, ou touche-la puis touche une maison. » (#18). L'addition lit seulement « Pose l'addition 45 + 37 : range chaque chiffre dans sa maison. Le chiffre des unités va toujours dans la maison bleue, tout à droite. »
 - A (reco) : **non, texte inchangé**. La consigne ne dit pas de geste et reste vraie avec les trois gestes ; les textes lus et les voix ne changent pas (inv. 98-14), aucun MP3 à regénérer.
 - B : ajouter une Indication du geste lue après la consigne. Change un texte du domaine et demande de nouveaux MP3 : à faire dans une story à part.
 
-**#127.11 Plan des étoiles : 3 erreurs sur un même chiffre.** Le Plan « Avec <erreurs> chiffre(s) glissé(s)… » s'arrête à 3 erreurs (→ 2 étoiles) : #24 limite à 3 les erreurs comptées par question, et chaque chiffre à poser est une question de l'addition. Je n'ai pas écrit d'exemple « 4 erreurs → 1 étoile » sur un même chiffre (98a le fait pour `classer`) pour ne pas inventer de règle.
+**#127.11 Plan des étoiles : 3 erreurs sur un même chiffre.** **Tranchée le 2026-11-02 : reco (A)**, garder 0, 1 et 3 erreurs. Le Plan « Avec <erreurs> chiffre(s) glissé(s)… » s'arrête à 3 erreurs (→ 2 étoiles) : #24 limite à 3 les erreurs comptées par question, et chaque chiffre à poser est une question de l'addition. Je n'ai pas écrit d'exemple « 4 erreurs → 1 étoile » sur un même chiffre (98a le fait pour `classer`) pour ne pas inventer de règle.
 - A (reco) : garder 0, 1 et 3 erreurs, qui suffisent à prouver « comme en touchant ».
 - B : ajouter un exemple à 4 erreurs **réparties sur deux chiffres** (3 sur le « 4 », 1 sur le « 3 »), qui doit donner 1 étoile si la règle de #24 s'applique telle quelle.
 
