@@ -39,7 +39,7 @@ Branche de base : `main` (`47a6d34`). Branche : `feature/106-celebration-de-l-un
 
 | Mesure | Valeur |
 |---|---|
-| Durée | 2026-11-02 20:30 UTC → PRÊTE À MERGER le même soir (environ 4 h 30) |
+| Durée | 2026-11-02 20:30 UTC → 22:30 UTC, PRÊTE À MERGER (environ 2 h) |
 | Attente | validation du cadrage par le PO : environ 35 min ; merge de #100 : levé pendant le cadrage |
 | Cycles TDD | 4 comportements (B1, B2, B3 vert d'emblée prouvé par mutation, correction `celebrationDeLaFin`) |
 | Review | 1 revue de bloc (APPROUVÉ), 2 cycles sur la branche (À CORRIGER puis APPROUVÉ), 1 review finale (APPROUVÉ) |
