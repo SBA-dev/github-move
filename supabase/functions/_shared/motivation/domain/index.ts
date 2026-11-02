@@ -178,6 +178,11 @@ export {
   queteDuJour,
 } from "./quete-du-jour.ts";
 export {
+  type FaitsDeLaFinPourLaCelebration,
+  type MomentDeCelebration,
+  momentDeCelebrationDeLaFin,
+} from "./moment-de-celebration.ts";
+export {
   feteDeLaQueteAccomplie,
   paroleDeLaQueteALAccueil,
   phraseDeFinAvecLaQuete,
