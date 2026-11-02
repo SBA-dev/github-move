@@ -33,3 +33,18 @@ Branche de base : `main` (`47a6d34`). Branche : `feature/106-celebration-de-l-un
 - 2e run, HEAD `7840e18` : **25/25 verts** (5,3 min, 3 workers).
 - Même contexte : `@issue-100` + `@issue-97` 98/99 ; le KO (#97, « Rejouer une leçon déjà acquise… », effet « découverte » après « séance terminée ») échoue aussi sur `main` `f8a4787` : préexistant, signalé (APPRIS).
 - Navigateur : config locale non commitée (`executablePath` Chromium 1243), sans `playwright install`.
+- PR #142 ouverte en brouillon. Review finale publiée sur la PR : APPROUVÉ, aucun bloquant (steps partagés : rien ne change de sens).
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Durée | 2026-11-02 20:30 UTC → PRÊTE À MERGER le même soir (environ 4 h 30) |
+| Attente | validation du cadrage par le PO : environ 35 min ; merge de #100 : levé pendant le cadrage |
+| Cycles TDD | 4 comportements (B1, B2, B3 vert d'emblée prouvé par mutation, correction `celebrationDeLaFin`) |
+| Review | 1 revue de bloc (APPROUVÉ), 2 cycles sur la branche (À CORRIGER puis APPROUVÉ), 1 review finale (APPROUVÉ) |
+| E2E | 2 runs de mise au point sur `telephone` (24/25, puis 25/25) ; 1 run du même contexte (`@issue-100`, `@issue-97` : 98/99, KO préexistant sur `main`) |
+| Intégrations de `main` | 1 (`f8a4787`), sans conflit |
+| Escalades | 1 (accès réseau aux musiques, #106.27) |
+| Verrous | aucun |
+| Tokens | relevés par le responsable |
