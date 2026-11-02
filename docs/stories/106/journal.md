@@ -48,3 +48,8 @@ Branche de base : `main` (`47a6d34`). Branche : `feature/106-celebration-de-l-un
 | Escalades | 1 (accès réseau aux musiques, #106.27) |
 | Verrous | aucun |
 | Tokens | relevés par le responsable |
+
+### Merge (verrou merge accordé le 2026-11-02 22:39 UTC)
+- Autorisation du PO : « merge 106 OK, 106.28 cacher » (annonce [Responsable] sur #64).
+- 106.28 : scénario `17e99ae`, steps rouges `ad08395` (R1 rouge pour la bonne raison, R3 vert), feat `2a69ea2` (`ParoleDuGuide` reçoit `sansPersonnage` pendant la célébration de l'univers).
+- `main` inchangée depuis `f8a4787` : rien à intégrer.
