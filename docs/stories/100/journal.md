@@ -63,3 +63,11 @@ Session : session_015z4jmMahATJuud1H1cNRHz. Décision réservée : 0038.
 | Intégrations de `main` | 0 (`main` immobile à `439d4a2`), aucun conflit ; conflits prévus avec #101 dans 3 fichiers de fin de séance (voir la PR) |
 | Régression sur `main` après le merge | à compléter |
 - 23:35 UTC : PR #139 ouverte en brouillon, review finale publiée (APPROUVÉ, 6510985532), pas de CI dans le dépôt ; PR passée en « prête », `PRÊTE À MERGER` publié.
+
+## 2026-11-02
+
+- 19:12 UTC : annonce [Responsable] (tableau de #64) : merge autorisé par le PO (« merge 101 et 100 OK »), après #101. Réponses du PO : 100.29 « Rejouer le défi », 100.30 oui (« aucun nouveau jeu » dans #16).
+- 100.29 et 100.30 : scénarios `a9652c4`, front `c1a8439`, steps `2c8c062`. E2E `telephone` : `@issue-100` tout vert ; #16 : un KO déjà connu (« L'avancement est complet… », lenteur).
+- 19:26 UTC : VERROU merge accordé (tableau de #64). Intégration de `main` `47a6d34` (#136, #101) : merge `9b1ad11`, 5 conflits résolus en gardant les deux ajouts, la quête avant le défi (100.17). Revue du delta : APPROUVÉ. `deno test` 2766 verts, lint, fmt, tsc, build OK. Délai E2E aligné sur #136 (`Math.max`), `cbd1efe`.
+- E2E après intégration (`telephone`) : `@issue-100` et le scénario de #16 verts ; `@issue-101` 9/43 à 3 workers. Comparaison avec `main` seul : 9/43 aussi, mêmes durées : #100 ne ralentit pas #101 (le temps se perd dans la préparation, avant l'écran de fin). `@issue-101` à 1 worker sur la branche : 40/43, 3 délais de 30 s dépassés (Supabase lent), dont un vert en relance.
+- Condition de merge « périmètre des stories mergées vert sur le dernier commit » non remplie → pas de merge, `LIBÈRE merge`, question au responsable. APPRIS publié (`delais.steps.ts` ne couvre pas `@issue-101`).
