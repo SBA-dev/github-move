@@ -1,0 +1,11 @@
+# Journal de la story #127 : maisons de l'addition posée (98c-addition)
+
+Équipe lancée par `/graphe` (« Graphe 127 »), vague 1, issue de coordination #64.
+Branche `feature/127-addition`, partie de `main` (`f8a4787`). Base : `main`.
+Session : session_015z4jmQ9o3CKmJiuvCfr2me. Décision : prochain numéro libre 0040, si besoin.
+Équipes voisines : #106 (fin de séance, Motivation), #126 (bulles de choix).
+
+## 2026-11-02
+
+- 21:15 UTC : démarrage. Lecture de #127 (aucun commentaire), de #64 (annonces jusqu'au lancement de #127, « À SAVOIR » du 28/10 23:40), du cadrage de #98.
+- Étape 1 (domaine) : déléguée à `domain-modeler`, pour un modèle court propre à #127 (pas de nouveau contexte attendu : tout est cadré par #98).
