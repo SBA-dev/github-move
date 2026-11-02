@@ -158,3 +158,17 @@ export {
   titreDeLAnnonceDeLaTenue,
   titreDeLaSectionDesTenues,
 } from "./paroles-des-tenues.ts";
+export {
+  type LeconDuJourProposee,
+  type PropositionsDuJour,
+  queteAccomplieParLaSeance,
+  type QueteDuJour,
+  queteDuJour,
+} from "./quete-du-jour.ts";
+export {
+  feteDeLaQueteAccomplie,
+  paroleDeLaQueteALAccueil,
+  phraseDeFinAvecLaQuete,
+  propositionDeLaQueteDuJour,
+  reponseAuRefusDeLaQuete,
+} from "./paroles-de-la-quete.ts";

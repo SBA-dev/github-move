@@ -23,3 +23,6 @@ export const OBJECTIF_ATTEINT = "Objectif atteint, bravo !";
 export function avancementDeLObjectif(nombreJoue: number, nombreVise: number): string {
   return `${nombreJoue} sur ${nombreVise}`;
 }
+
+export const OUI_ON_Y_VA = "Oui, on y va !";
+export const AUTRE_CHOSE = "Autre chose";

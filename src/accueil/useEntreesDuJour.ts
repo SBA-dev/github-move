@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import type { EntreesDuJour } from "@domain/apprentissage";
 import type { ProfilEnCours } from "@domain/famille";
-import { niveauDuProfil, useLecturesDuParcours } from "../parcours/index.ts";
+import { useLecturesDuParcours } from "../parcours/index.ts";
 import { derniereSeanceTerminee } from "./derniere-seance-terminee.ts";
+import { entreesDuJour } from "./entrees-du-jour.ts";
 
 function useLeconDeLaDerniereSeance(profil: string): { readonly lecon: string | undefined } | undefined {
   const [lue, setLue] = useState<{ readonly pour: string; readonly lecon: string | undefined } | undefined>();
@@ -26,11 +27,5 @@ export function useEntreesDuJour(profil: ProfilEnCours): EntreesDuJour | undefin
   const lectures = useLecturesDuParcours(profil.id);
   const derniere = useLeconDeLaDerniereSeance(profil.id);
   if (lectures === undefined || derniere === undefined) return undefined;
-  const niveau = niveauDuProfil(profil.niveau);
-  const bibliothequeChargee = lectures.lecons.length > 0;
-  const matiereDeLaDerniereSeance = lectures.lecons.find((lecon) => lecon.id === derniere.lecon)?.matiere.code;
-  return {
-    parcours: bibliothequeChargee && niveau ? { ...lectures, niveau } : undefined,
-    matiereDeLaDerniereSeance,
-  };
+  return entreesDuJour(lectures, derniere.lecon, profil.niveau);
 }

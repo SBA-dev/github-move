@@ -11,6 +11,7 @@ import {
 import { type Exercice, type Lecon, Niveau, pageDeLaLecon } from "@domain/catalogue";
 import type { ValeurDuClavierDesDictees } from "@domain/famille";
 import type { MeilleuresEtoilesDuProfil, Univers } from "@domain/motivation";
+import { lireLaQueteAvantLaSeance, type QueteLueAvantLaSeance } from "../accueil/lire-la-quete-du-jour.ts";
 import { lireLeNombreDeSeancesAvantLaSeance } from "../histoire/nombre-de-seances-avant-la-seance.ts";
 import { TexteEnSyllabes } from "../reglages/index.ts";
 import { ContexteDuRetour, EtincellesDuTexteComplet } from "../retours/index.ts";
@@ -129,6 +130,7 @@ function PartieCommencee(
   );
   const [meilleuresEtoilesAvant] = useState(() => lireLesMeilleuresEtoilesAvantLaSeance(profilId));
   const [nombreDeSeancesAvant] = useState(() => lireLeNombreDeSeancesAvantLaSeance(profilId));
+  const [queteAvant] = useState(() => lireLaQueteAvantLaSeance(profilId, niveau));
   if (!seance) return <JeuIntrouvable onRetour={reste.onRetour} />;
   return (
     <SeanceEnCours
@@ -137,6 +139,7 @@ function PartieCommencee(
       niveau={niveau}
       meilleuresEtoilesAvant={meilleuresEtoilesAvant}
       nombreDeSeancesAvant={nombreDeSeancesAvant}
+      queteAvant={queteAvant}
       {...reste}
     />
   );
@@ -151,10 +154,11 @@ type PropsEnCours = Omit<PropsDUnePartie, "exercice" | "profilId" | "clavierDesD
   readonly seance: Seance;
   readonly meilleuresEtoilesAvant: Promise<MeilleuresEtoilesDuProfil | undefined>;
   readonly nombreDeSeancesAvant: Promise<number | undefined>;
+  readonly queteAvant: Promise<QueteLueAvantLaSeance | undefined>;
 };
 
 function SeanceEnCours(
-  { seance, lecon, prenom, niveau, univers, voix, toutLireAVoixHaute, meilleuresEtoilesAvant, nombreDeSeancesAvant, onRetour, onRejouer, onLireLEpisode, onLeconSuivante, onToutesLesLecons, onAccueil }: PropsEnCours,
+  { seance, lecon, prenom, niveau, univers, voix, toutLireAVoixHaute, meilleuresEtoilesAvant, nombreDeSeancesAvant, queteAvant, onRetour, onRejouer, onLireLEpisode, onLeconSuivante, onToutesLesLecons, onAccueil }: PropsEnCours,
 ) {
   const deroulement = useDeroulementDeSeance(seance, lecon, voix, univers.personnageGuide, toutLireAVoixHaute, prenom);
   const { commencer, abandonner } = deroulement;
@@ -247,6 +251,8 @@ function SeanceEnCours(
             onDireLaFin={deroulement.direLaFin}
             meilleuresEtoilesAvant={meilleuresEtoilesAvant}
             nombreDeSeancesAvant={nombreDeSeancesAvant}
+            queteAvant={queteAvant}
+            prenom={prenom}
             onRejouer={onRejouer}
             onLireLEpisode={onLireLEpisode}
             onLeconSuivante={onLeconSuivante}

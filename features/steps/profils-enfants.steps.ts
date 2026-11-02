@@ -271,7 +271,7 @@ Given(
     await page.goto("/");
     await famille.allerDansLEspaceParent("tablette");
     await modifierParLInterface(page, prenom, { niveau });
-    if ($tags.includes("@issue-25") || $tags.includes("@issue-26") || $tags.includes("@issue-29") || $tags.includes("@issue-30") || $tags.includes("@issue-99")) await rechoisirLEnfantApresLeChangement(famille, page, prenom);
+    if ($tags.includes("@issue-25") || $tags.includes("@issue-26") || $tags.includes("@issue-29") || $tags.includes("@issue-30") || $tags.includes("@issue-99") || $tags.includes("@issue-101")) await rechoisirLEnfantApresLeChangement(famille, page, prenom);
   },
 );
 

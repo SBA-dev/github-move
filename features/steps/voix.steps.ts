@@ -429,7 +429,7 @@ Given(/^l'appareil a une voix française et une voix anglaise$/, async ({ page }
 Given(/^Léa a choisi l'univers (animaux|princesse|sports|pompier|police|danse)$/, async ({ page, monde, famille, $tags }, univers: string) => {
   scenario(page).univers = univers;
   // Story #32 : le profil réel de Léa est déjà créé ; son univers change sur le serveur, puis Léa se choisit de nouveau.
-  if (($tags.includes("@issue-32") || $tags.includes("@issue-33") || $tags.includes("@issue-102")) && estSurUnProfilReel(page)) {
+  if (($tags.includes("@issue-32") || $tags.includes("@issue-33") || $tags.includes("@issue-102") || $tags.includes("@issue-101")) && estSurUnProfilReel(page)) {
     await modifierLeProfil(famille, "Léa", { univers });
     // « Qui joue ? » montre d'abord la copie gardée de l'ancien univers : on attend qu'il ait relu la liste sur le serveur.
     const listeRelue = page.waitForResponse((reponse) => reponse.url().includes("/rest/v1/profils_enfants"));
@@ -575,7 +575,7 @@ When(/^Léa relance Savanturier$/, async ({ page, $tags }) => {
   await expect(page.getByRole("banner")).toBeVisible();
   // Story #102 : le profil en cours n'est jamais gardé d'une ouverture à l'autre (décision n°7 du lot 2), et le rechargement ramène
   // le profil préparé, sans identifiant : Léa, qui jouait avec son vrai profil, s'y choisit de nouveau.
-  if ($tags.includes("@issue-102") && estSurUnProfilReel(page)) await choisirSonProfil(page, "Léa");
+  if (($tags.includes("@issue-102") || $tags.includes("@issue-101")) && estSurUnProfilReel(page)) await choisirSonProfil(page, "Léa");
 });
 
 // --- Alors : ce que Léa entend
