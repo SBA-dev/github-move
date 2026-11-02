@@ -9,9 +9,10 @@ Fonctionnalité: Défi de la partie du parcours
   Le défi ne donne aucune étoile, ne change aucun résultat de la leçon et ne bloque rien : une erreur suit les
   règles d'une séance (encouragement, aide, nouvelle chance, « Je ne sais pas »), sans vie ni temps limité, et la
   question ratée entre dans la file de révision. Cadrage validé par le PO le 2026-10-29 (réponses 100.1 à 100.28,
-  docs/stories/100/acceptance.md). Le grand défi de la matière n'est pas dans cette story : il viendra avec #137.
+  puis 100.29 et 100.30 le 2026-11-02, docs/stories/100/acceptance.md). Le grand défi de la matière n'est pas dans
+  cette story : il viendra avec #137.
 
-  Mots employés dans ces scénarios (mots d'interface validés, 100.3, 100.16, 100.21 et 100.24) :
+  Mots employés dans ces scénarios (mots d'interface validés, 100.3, 100.16, 100.21, 100.24 et 100.29) :
   - une partie du parcours : 5 leçons consécutives du parcours d'une matière et d'une classe ; un dernier bloc de
     1 ou 2 leçons rejoint le précédent (100.1 A) ;
   - « Défi 1 » : le défi de la première partie du parcours d'une matière ; chaque partie du parcours a son défi,
@@ -19,6 +20,7 @@ Fonctionnalité: Défi de la partie du parcours
   - « le repère « Défi 1 » » : la place du défi sur le dessin du parcours, juste après la dernière leçon de sa
     partie du parcours ;
   - « à venir », « ouvert », « relevé » : l'état d'un défi ; un défi à venir n'a pas de cadenas et ne se touche pas ;
+    le repère d'un défi ouvert propose « Relever le défi », celui d'un défi relevé « Rejouer le défi » (100.29) ;
   - « la fin du défi » : l'écran qui suit la dernière question du défi.
 
   Pour ces scénarios, la bibliothèque servie au navigateur est remplacée par la bibliothèque de test du défi
@@ -191,7 +193,7 @@ Fonctionnalité: Défi de la partie du parcours
     Scénario: Rejouer un défi relevé le fait rejouer en entier, sans nouvelle annonce de défi relevé
       Étant donné que Léa a réussi les 5 premières leçons de maths du CE1
       Et que Léa a relevé le défi 1 de maths
-      Et que Léa a commencé de nouveau le défi 1 de maths
+      Et que Léa a choisi « Rejouer le défi » sur le repère « Défi 1 » de maths
       Quand Léa répond juste à toutes les questions du défi
       Alors Léa entend l'effet sonore « séance terminée », puis Noisette dit « Bravo Léa ! Tu as encore relevé le défi 1 ! »
       Mais la fin du défi n'annonce pas « Défi relevé ! »
@@ -208,12 +210,12 @@ Fonctionnalité: Défi de la partie du parcours
       Étant donné que Léa a réussi les 5 premières leçons de maths du CE1
       Et que Léa <relevé>
       Quand Léa choisit « Maths » dans son parcours
-      Alors le dessin du parcours montre le repère « Défi 1 » <état>, avec « <texte> »
+      Alors le dessin du parcours montre le repère « Défi 1 » <état>, avec <textes>
 
       Exemples:
-        | état    | relevé                             | texte            |
-        | ouvert  | n'a pas encore relevé le défi 1    | Relever le défi  |
-        | relevé  | a relevé le défi 1 de maths        | Défi relevé      |
+        | état    | relevé                             | textes                                |
+        | ouvert  | n'a pas encore relevé le défi 1    | « Relever le défi »                   |
+        | relevé  | a relevé le défi 1 de maths        | « Défi relevé » et « Rejouer le défi » |
 
     Scénario: Les lecteurs d'écran lisent le défi dans la liste ordonnée, juste après sa dernière leçon
       Étant donné que Léa a réussi les 4 premières leçons de maths du CE1
@@ -262,7 +264,7 @@ Fonctionnalité: Défi de la partie du parcours
       Et que Léa a réussi les 5 premières leçons de maths du CE1
       Et que Léa a relevé le défi 1 de maths sur la tablette
       Quand Léa ouvre le parcours de maths sur le téléphone de Marie
-      Alors le dessin du parcours montre le repère « Défi 1 » relevé, avec « Défi relevé »
+      Alors le dessin du parcours montre le repère « Défi 1 » relevé, avec « Défi relevé » et « Rejouer le défi »
 
     Plan du Scénario: Le serveur refuse un défi terminé incohérent, et le défi n'est pas relevé (<cas>)
       Étant donné que Léa a réussi les <réussies> premières leçons de maths du CE1

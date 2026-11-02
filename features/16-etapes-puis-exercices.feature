@@ -127,7 +127,7 @@ Fonctionnalité: Étapes de leçon lues, puis exercices
       Et que Léa en est à la dernière question du premier exercice de la séance complète de « Compter »
       Quand Léa donne la bonne réponse
       Alors le second exercice commence
-      Mais Noisette n'annonce aucun nouveau défi
+      Mais Noisette n'annonce aucun nouveau jeu
 
     Scénario: Tant que la question en cours n'est pas réussie, l'exercice suivant ne commence pas
       Étant donné que Léa joue la séance complète de la leçon « Les sons ou, on, an »

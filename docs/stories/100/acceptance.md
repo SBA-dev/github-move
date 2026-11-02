@@ -186,10 +186,12 @@ pour alléger la story », puis « 1.b 2.a » aux deux précisions).
 | 100.26 Défi quitté | Ne se reprend pas ; reste ouvert, se rejoue avec un nouveau tirage | 5.2 |
 | 100.27 Place de « Mes défis relevés » | À la fin de « Mes médailles », après les records de fluence | 5.4 |
 | 100.28 « Fin du défi », écrans de l'enfant | Ajoutés au glossaire | Vocabulaire du fichier |
+| 100.29 Bouton du repère d'un défi relevé (2026-11-02) | « Rejouer le défi » ; « Relever le défi » reste le texte du défi ouvert et de la fin de séance | 5.3, 6.1 (ligne « relevé »), 8.1 |
+| 100.30 Scénario de #16 « aucun nouveau défi » (2026-11-02) | oui : renommé « aucun nouveau jeu » (« défi » réservé au défi d'une partie du parcours, annonce « Nouveau jeu » depuis 100.4) | `features/16-etapes-puis-exercices.feature`, « Un exercice sans titre commence sans être annoncé » |
 
 Textes validés (100.21) :
 - repère à venir : « Encore 1 leçon pour ouvrir le défi » / « Encore 5 leçons pour ouvrir le défi » ; ouvert :
-  « Relever le défi » ; relevé : « Défi relevé » ;
+  « Relever le défi » ; relevé : « Défi relevé », avec le bouton « Rejouer le défi » (100.29) ;
 - annonce de fin de séance : « Le défi 1 est ouvert ! » ;
 - proposition de Noisette : « Bravo Léa ! Tu as réussi toutes les leçons avant le défi 1. Tu veux le relever ? » ;
 - début du défi : titre « Défi 1 », avec « Maths » ; Noisette : « Voici des questions de 5 leçons que tu connais.
@@ -221,4 +223,5 @@ Ils ne sont plus dans le fichier `.feature` ; #137 les reprendra et les adaptera
 
 ## Questions ouvertes
 
-Aucune. Toutes les questions #100.1 à #100.28 ont reçu une réponse du PO le 2026-10-29 (section « Décisions »).
+Aucune. Toutes les questions #100.1 à #100.28 ont reçu une réponse du PO le 2026-10-29, puis #100.29 et #100.30
+le 2026-11-02 (section « Décisions »).
