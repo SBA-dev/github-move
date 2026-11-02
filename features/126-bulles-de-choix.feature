@@ -10,7 +10,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les choix sont des 
   #22, #23, #24), et les retours de #97 (effet sonore, rebond, balancement, étincelles du dernier trou) passent
   d'abord, sans être redécrits.
   Les commentaires « Décision 98.n » renvoient à docs/stories/98/acceptance.md ; « Question #126.n » renvoie aux
-  questions ouvertes de docs/stories/126/acceptance.md. Un scénario tagué @a-valider attend la réponse du PO.
+  questions de docs/stories/126/acceptance.md, toutes tranchées le 2026-11-02 selon la reco.
 
   Mots employés dans ces scénarios (mots d'interface, pas des termes du domaine) :
   - « la bulle de choix » : l'interface d'un Choix (décision n°30). On n'écrit jamais « bulle » seul : la bulle du
@@ -65,15 +65,13 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les choix sont des 
         | premier toucher    | toucher de Léa    |
         | une réponse fausse | Léa répond « on » |
 
-      # Question #126.4 : « Je ne sais pas » arrête-t-il aussi les bulles de choix ? (reco : oui)
-      @a-valider
+      # Question #126.4 : « Je ne sais pas » arrête-t-il aussi les bulles de choix ? (tranchée le 2026-11-02 : reco, oui)
       Exemples:
         | premier toucher    | toucher de Léa             |
         | « Je ne sais pas » | Léa dit « Je ne sais pas » |
 
-    # Question #126.4 : les relectures arrêtent-elles les bulles de choix ? (reco : oui, toute lecture)
-    # Question #126.11 : le mot à écouter, redit par la voix anglaise, les arrête-t-il ? (reco : oui)
-    @a-valider
+    # Question #126.4 : les relectures arrêtent-elles les bulles de choix ? (tranchée le 2026-11-02 : reco, oui, toute lecture)
+    # Question #126.11 : le mot à écouter, redit par la voix anglaise, les arrête-t-il ? (tranchée le 2026-11-02 : reco, oui)
     Plan du Scénario: Pendant <parole>, les bulles de choix ne flottent pas, puis reprennent
       Étant donné que <préalable>
       Et que <situation>
@@ -127,7 +125,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les choix sont des 
         | pompier   | Pompiers            |
         | danse     | Danse               |
 
-    # Question #126.2 : la bulle de choix s'allonge avec le texte (reco : la même capsule dans les 6 univers)
+    # Question #126.2 : la bulle de choix s'allonge avec le texte (tranchée le 2026-11-02 : reco, la même capsule dans les 6 univers)
     Scénario: Sur un écran de 360 px, une bulle de choix au texte long passe sur plusieurs lignes et se lit en entier
       Étant donné que l'écran de l'appareil mesure 360 px de large
       Et qu'une question de test « Que fait Plume ? » a les choix « Plume dort en boule sur le grand tapis bleu du salon, tout près de la fenêtre ouverte au soleil. », « Plume joue. » et « Plume mange. », de réponse « Plume joue. »
@@ -136,15 +134,13 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les choix sont des 
       Et la consigne et tous les choix de la question restent visibles en entier
       Et chaque choix mesure au moins 44 px de haut et de large
 
-    # Question #126.3 : toutes les bulles de choix d'une question ont-elles la même largeur ? (reco : oui)
-    @a-valider
+    # Question #126.3 : toutes les bulles de choix d'une question ont-elles la même largeur ? (tranchée le 2026-11-02 : reco, oui)
     Scénario: Les bulles de choix d'une même question ont la même largeur, celle du choix le plus long
       Étant donné qu'une question de test « Quel mot a le son ou ? » a les choix « sac », « loup » et « crocodile », de réponse « loup »
       Quand la question « Quel mot a le son ou ? » s'affiche
       Alors les bulles de choix « sac », « loup » et « crocodile » ont la même largeur et la même hauteur
 
-    # Question #126.5 : en séance de révision, la question d'un classer a-t-elle des bulles de choix qui flottent ? (reco : oui)
-    @a-valider
+    # Question #126.5 : en séance de révision, la question d'un classer a-t-elle des bulles de choix qui flottent ? (tranchée le 2026-11-02 : reco, oui)
     Scénario: En séance de révision, la question d'un classer a des bulles de choix qui flottent
       Étant donné que Léa a pour question retenue l'étiquette « loup » de l'exercice « Les maisons des sons », due aujourd'hui
       Quand Léa commence la séance de révision
@@ -282,8 +278,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les choix sont des 
       Alors le mot « suis » apparaît dans le trou de « Je … dans le jardin. », sans voyager
       Et Léa voit « Je suis dans le jardin. »
 
-    # Question #126.6 : que devient la bulle de choix juste ? (reco : le mot seul voyage, la bulle vide s'efface sur place)
-    @a-valider
+    # Question #126.6 : que devient la bulle de choix juste ? (tranchée le 2026-11-02 : reco, le mot seul voyage, la bulle vide s'efface sur place)
     Scénario: Dans un texte à trous, seul le mot voyage jusqu'au trou, et sa bulle de choix vide s'efface à sa place
       Étant donné que Léa joue seulement l'exercice « Les phrases magiques » de la leçon « Être et avoir au présent »
       Quand Léa répond « suis »
@@ -292,7 +287,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les choix sont des 
 
   Règle: Sur une bulle de choix, le choix écarté et la bonne réponse montrée restent reconnaissables, par un signal d'état identique dans les 6 univers, posé par-dessus le dessin
 
-    # Décision 98.2 et invariant 15. Question #126.10 : l'apparence du choix écarté (reco : gris pâle, sans décor)
+    # Décision 98.2 et invariant 15. Question #126.10 : l'apparence du choix écarté (tranchée le 2026-11-02 : reco, gris pâle, sans décor)
     Plan du Scénario: Dans l'univers « <univers> », un choix écarté se voit comme dans tous les univers
       Étant donné que Léa a choisi l'univers <clé>
       Et que Léa joue l'exercice « Quel son entends-tu ? » de la leçon « Les sons ou, on, an »
@@ -342,8 +337,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les choix sont des 
       Alors Noisette applaudit en sautant
       Et la question « Combien font 3 + 4 ? » est réussie
 
-    # Question #126.7 : les flèches passent-elles les choix écartés et s'arrêtent-elles aux bouts ? (reco : oui)
-    @a-valider
+    # Question #126.7 : les flèches passent-elles les choix écartés et s'arrêtent-elles aux bouts ? (tranchée le 2026-11-02 : reco, oui)
     Scénario: Les flèches passent le choix écarté et s'arrêtent à la dernière bulle de choix
       Étant donné que Léa joue la question de test « Combien font 3 + 4 ? »
       Et que les choix sont affichés dans l'ordre « 6 », « 7 », « 8 », « 9 »

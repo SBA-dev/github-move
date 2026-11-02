@@ -2,6 +2,8 @@
 
 Épopée #95. Tranche **98b** du découpage de #98 (`docs/stories/98/domain-model.md`, abrégé « #98 » ci-dessous). Dépendances mergées : #97 (retours animés et sonores) et #98 (98a : socle, maison de `classer`).
 
+État : **cadrage validé** par le PO le 2026-11-02 (« 126 reco tout », réponse à l'annonce [Responsable] 6589102464 sur l'issue #64). Les questions #126.1 à #126.11 sont tranchées selon la reco. Les planches de la bulle de choix attendent encore la validation du PO univers par univers (98.28).
+
 Ce modèle ne recopie pas #98. Il renvoie à ses **invariants** (I1 à I20) et à ses **questions tranchées** (98.1 à 98.32), et ne garde que ce qui est propre aux bulles de choix.
 
 ## Contexte
@@ -53,7 +55,7 @@ Invariants de #98 qui s'appliquent sans changement : I1, I2, I3, I5, I12 (séanc
 
 ## Objets par univers (bulle de choix)
 
-Ils partent de la ligne 98b du tableau « Pistes pour les tranches suivantes » de #98. Les noms d'objets viennent du PO (skill `illustration`, section 2.1). Les propositions ci-dessous sont **des questions** (#126.1), pas des décisions.
+Ils partent de la ligne 98b du tableau « Pistes pour les tranches suivantes » de #98. Les noms d'objets viennent du PO (skill `illustration`, section 2.1). Les propositions ci-dessous étaient **des questions** (#126.1) : la reco A est retenue le 2026-11-02 (« reco tout »). Les dessins restent soumis au PO sur la planche, univers par univers (98.28).
 
 ### Contraintes communes à tous les univers
 
@@ -71,7 +73,7 @@ Ils partent de la ligne 98b du tableau « Pistes pour les tranches suivantes » 
 | Animaux de la forêt | **Bulle de savon** : capsule claire, reflet irisé sur le bord haut, petit reflet blanc en haut à gauche | Bulle de rosée posée sur une feuille | Bulle transparente (le texte ne se lit plus sur le fond) |
 | Princesses et fées | **Bulle magique irisée** : contour aux couleurs de l'arc-en-ciel pâle, petite étoile fixe sur un bout | Perle nacrée | Halo doré ou étoile qui scintille (I15) |
 | Sports | **Ballon de sport** : capsule claire avec les coutures d'un ballon sur les deux bouts seulement (exemple du PO : « des ballons pour Sports ») | Ballon de rugby ovale (forme propre à l'univers, voir #126.2) | Ballon de baudruche (il crève, ficelle) ; ballon de foot à motifs derrière le texte (contraste) ; numéro, coupe, podium |
-| Police | **Bulle bleue à étoile d'insigne** : capsule bleu très clair, petite étoile d'insigne fixe sur un bout | Bulle bleue à liseré de casquette | « Jeton » (terme du glossaire, Boîte à jetons) et « badge » (Motivation) comme noms ; arme, menottes ; gyrophare ou lampe qui clignote |
+| Police | **Bulle bleue à étoile d'insigne** : capsule bleu très clair, petite étoile d'insigne fixe sur un bout (retenue par « reco tout », alors que #127.2 l'écarte pour la retenue : voir « Décisions ») | Bulle bleue à liseré de casquette | « Jeton » (terme du glossaire, Boîte à jetons) et « badge » (Motivation) comme noms ; arme, menottes ; gyrophare ou lampe qui clignote |
 | Pompiers | **Bulle d'eau** : capsule bleu-vert claire, reflet en goutte, comme une bulle sortie de la lance à eau | Bulle de mousse (la piste de #98) | La mousse d'un extincteur, qui fait penser au feu ; flamme, fumée, sirène |
 | Danse | **Bulle à paillettes** : capsule claire, paillettes **fixes** sur le contour seulement | Bulle-ruban (un ruban de danse fait le tour) | Paillettes derrière le texte (contraste) ou qui scintillent (I15, étincelles de #97) ; personnage, tenue |
 
@@ -125,69 +127,81 @@ Tout se passe déjà dans le navigateur, hors ligne compris (`@domain/apprentiss
 - Planches : `docs/stories/126/planches/`. Captures : `docs/stories/126/captures/`.
 - Scénarios : `features/126-bulles-de-choix.feature`. Les dessins ne sont jamais lus par un tracé : on lit `data-univers` et les attributs d'état.
 
-## Questions ouvertes
+## Questions (toutes tranchées le 2026-11-02)
 
-Ces questions ne reposent aucune question déjà tranchée (98.1 à 98.32).
+Ces questions ne reposent aucune question déjà tranchée (98.1 à 98.32). Le PO les a toutes tranchées selon la reco (« 126 reco tout »). #126.11 est posée dans `acceptance.md`.
 
-**#126.1 Quel objet dessine-t-on pour la bulle de choix dans chaque univers ?**
+**#126.1 Quel objet dessine-t-on pour la bulle de choix dans chaque univers ?** Tranchée le 2026-11-02 : reco.
 Contexte : 98.2 (un dessin par univers). La piste de #98 est reprise, avec deux changements : « jeton » (Police) est déjà un terme du glossaire, et la « mousse » (Pompiers) fait penser à un extincteur.
 Exemple : en Sports, une question « le / la / les » montre trois ballons clairs, avec des coutures sur les bouts et le mot au milieu.
 Reco : **A**. Animaux : bulle de savon. Princesses : bulle magique irisée. Sports : ballon de sport, coutures sur les bouts. Police : bulle bleue à étoile d'insigne. Pompiers : bulle d'eau. Danse : bulle à paillettes fixes sur le contour.
 Options : B, la piste de #98 telle quelle (jeton rond à étoile, bulle de mousse, bulle-paillette) ; C, tu donnes l'objet d'un ou de plusieurs univers.
 
-**#126.2 La bulle a-t-elle la même forme de capsule dans les 6 univers, l'univers ne changeant que son décor ?**
+**#126.2 La bulle a-t-elle la même forme de capsule dans les 6 univers, l'univers ne changeant que son décor ?** Tranchée le 2026-11-02 : reco.
 Contexte : un choix va jusqu'à 97 caractères et passe sur 2 ou 3 lignes à 360 px. Un rond ou un ballon de taille fixe ne le reçoit pas.
 Exemple : en Sports, « Le chat dort sur le tapis du salon. » est un ballon allongé sur deux lignes, avec ses coutures aux deux bouts.
 Reco : **oui**. Même capsule partout ; le décor (reflet, coutures, étoile, paillettes) est sur le contour et les bouts.
 Options : A, une forme propre à l'univers quand elle peut s'allonger (ballon de rugby ovale en Sports) ; B, rond pour les choix courts, capsule pour les longs (la forme dépend alors du texte).
 
-**#126.3 Toutes les bulles d'une question ont-elles la même largeur ?**
+**#126.3 Toutes les bulles d'une question ont-elles la même largeur ?** Tranchée le 2026-11-02 : reco.
 Contexte : I6 (« même taille et même forme »). Aujourd'hui, la largeur suit le texte.
 Exemple : « il / ils / elles » : trois bulles de la même largeur, celle de « elles ».
 Reco : **oui**. Même largeur, celle du choix le plus long, sans dépasser l'écran ; même hauteur sur une même ligne.
 Option : la largeur suit le texte comme aujourd'hui, seules la forme et la hauteur sont communes.
 
-**#126.4 Quand les bulles sont-elles immobiles ?**
+**#126.4 Quand les bulles sont-elles immobiles ?** Tranchée le 2026-11-02 : reco.
 Contexte : 98.3 dit « immobile pendant la lecture de la consigne, et pour de bon dès le premier toucher ». Les choix n'apparaissent qu'après la lecture de la question. Mais trois cas ne sont pas tranchés : « Relire la consigne », la question relue quand on la touche, et les choix lus à voix haute (réglage « tout lire à voix haute »).
 Exemple : Léa touche « Relire la consigne » pendant qu'elle cherche ; les bulles s'arrêtent tant que la consigne est lue, puis reprennent.
 Reco : immobiles **pendant toute lecture** de la consigne, de la question ou des choix (relectures comprises), puis elles flottent ; immobiles pour de bon dès le premier toucher **sur une bulle ou sur « Je ne sais pas »**. En Muet ou sans voix, elles flottent dès qu'elles apparaissent.
 Options : A, seule la première lecture de la consigne les arrête ; B, « Je ne sais pas » ne les arrête pas.
 
-**#126.5 En séance de révision et au test de départ, la question d'un `classer` (« « loup » va dans quelle maison ? ») a-t-elle des bulles qui flottent ?**
+**#126.5 En séance de révision et au test de départ, la question d'un `classer` (« « loup » va dans quelle maison ? ») a-t-elle des bulles qui flottent ?** Tranchée le 2026-11-02 : reco.
 Contexte : 98.4 réserve le flottement à `bulles` et `ecoute`. Le domaine donne à cette question le type `bulles` (Plan 98.18).
 Exemple : en révision, Léa voit « « loup » va dans quelle maison ? » et trois bulles « ou », « on », « an ».
 Reco : **oui**, elles flottent. À l'écran, c'est une question à bulles comme une autre, et aucun fait n'est à ajouter au domaine.
 Option : non. Le domaine dirait alors le type d'exercice d'origine de la question (un petit changement d'Apprentissage, par TDD).
 
-**#126.6 Dans `trous`, `conjugaison` et les mots cachés, que devient la bulle juste ?**
+**#126.6 Dans `trous`, `conjugaison` et les mots cachés, que devient la bulle juste ?** Tranchée le 2026-11-02 : reco.
 Contexte : règle 3 (la bulle s'efface) et règle 4 (le mot rejoint son trou).
 Exemple : « Le … dort » ; Léa touche « chat ». La bulle rebondit, le mot « chat » part vers le trou et s'y écrit, le trou s'éclaire un instant, et la bulle vide s'efface sur place.
 Reco : **le mot seul voyage** jusqu'au trou ou à la ligne (moins de 400 ms), et la bulle s'efface sur place. L'éclat du trou est court, sans halo qui dure. Si le trou n'est pas visible à l'écran, le mot apparaît dans le trou sans voyager.
 Options : A, toute la bulle voyage, puis s'efface dans le trou ; B, pas de voyage : la bulle s'efface et le mot apparaît dans le trou en s'éclairant.
 
-**#126.7 Que font les flèches du clavier sur les bulles ?**
+**#126.7 Que font les flèches du clavier sur les bulles ?** Tranchée le 2026-11-02 : reco.
 Contexte : 98.15. Les maisons de 98a ne suivent que ← et →, et s'arrêtent aux bouts. Mais à 360 px, les bulles longues sont en colonne.
 Exemple : focus sur « le » ; → va sur « la », ↓ aussi ; sur la dernière bulle, → ne fait rien.
 Reco : ← → ↑ ↓ suivent l'ordre des bulles et s'arrêtent aux bouts, comme les maisons. Elles **passent les choix écartés**, qui ne répondent plus.
 Options : A, ← → seulement, comme les maisons ; B, les écartés restent atteignables, comme avec Tab.
 
-**#126.8 Quelles 6 captures joindre à la PR ?**
+**#126.8 Quelles 6 captures joindre à la PR ?** Tranchée le 2026-11-02 : reco.
 Contexte : 98.29 (une capture par univers, sans test). Les états « bonne réponse montrée » et « juste » sont déjà sur la planche.
 Exemple : univers Police, à 360 px, avec les mouvements réduits : une question de `bulles` à trois choix, dont un écarté.
 Reco : **une question de `bulles` à 3 choix, après une erreur** (un choix écarté, deux au repos), à 360 px, avec les mouvements réduits, dans chacun des 6 univers.
 Options : A, 12 captures (en plus, un `trous` avec la bonne réponse montrée) ; B, un choix long sur deux lignes à la place.
 
-**#126.9 Les bulles flottent-elles toutes ensemble, ou chacune à son tour ?**
+**#126.9 Les bulles flottent-elles toutes ensemble, ou chacune à son tour ?** Tranchée le 2026-11-02 : reco.
 Contexte : I6 (« toutes flottent pareil ») et I3 (pas de hasard dans l'habillage).
 Exemple : trois bulles qui ondulent de 3 px en 3 s ; la deuxième part un tiers de temps après la première.
 Reco : même amplitude (3 px au plus) et même durée ; un **décalage régulier selon le rang**, jamais tiré au hasard.
 Option : toutes en même temps, du même mouvement.
 
-**#126.10 Un choix écarté : comment le montrer sur un dessin d'univers ?**
+**#126.10 Un choix écarté : comment le montrer sur un dessin d'univers ?** Tranchée le 2026-11-02 : reco.
 Contexte : aujourd'hui, la bulle écartée est pâle (opacité 0,45). Sur un dessin coloré, le texte devient difficile à lire.
 Exemple : en Danse, « ils » est écarté : la bulle devient gris pâle, sans paillettes, et le mot reste lisible.
 Reco : un **signal commun** : le dessin passe en gris pâle, sans décor de l'univers, et le texte garde un contraste d'au moins 4,5:1. Il est identique dans les 6 univers.
 Option : comme aujourd'hui, toute la bulle pâlit, dessin compris.
+
+## Décisions
+
+- **2026-11-02** : le PO répond « 126 reco tout » à l'annonce [Responsable] 6589102464 (issue #64). #126.1 à #126.11 sont tranchées selon la reco.
+- **Planches** : `docs/stories/126/planches/` (commit `b637063`) attendent la validation du PO univers par univers (98.28) ; la PR attend les 6 dessins validés (98.31).
+- **À SAVOIR du responsable (commentaire 6588890640)** : #127.2 écarte l'étoile d'insigne pour la retenue de l'addition. Pour la bulle de choix Police, la reco de #126.1 (bulle bleue à étoile d'insigne fixe) est retenue par « reco tout » ; la planche Police reste soumise au PO.
+
+## Historique
+
+| Date | Changement |
+|---|---|
+| 2026-11-02 | Cadrage validé par le PO (« 126 reco tout ») : #126.1 à #126.11 tranchées selon la reco ; planches encore soumises au PO univers par univers (98.28). |
 
 ## Termes à signaler (glossaire, ajouts seulement)
 
