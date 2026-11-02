@@ -18,3 +18,11 @@ Deno.test("la variante de la célébration Sports est tirée par le hasard parmi
 
   assertEquals(variantes, ["glissade", "avion", "danse"]);
 });
+
+for (const cle of ["danse", "animaux", "princesse", "police", "pompier"] as const) {
+  Deno.test(`l'univers ${cle}, pas encore livré, n'a pas de célébration de l'univers : la fin garde la célébration commune`, () => {
+    const celebration = celebrationDe("defiReleve", cle, hasardFixe(0));
+
+    assertEquals(celebration, undefined);
+  });
+}
