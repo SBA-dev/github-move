@@ -20,3 +20,8 @@ Branche de base : `main` (`47a6d34`). Branche : `feature/106-celebration-de-l-un
 - B3 univers pas encore livré : test `f12d9d7`, vert d'emblée (le type `Partial` du catalogue impose déjà le cas) ; prouvé par mutation (entrée `danse` ajoutée → échec, puis annulée).
 - `deno test` : 2771 verts.
 - Revue delta du bloc (`989fec9..f12d9d7`) : APPROUVÉ, aucun bloquant. Non bloquant retenu pour le câblage : aucun `switch` sur `MomentDeCelebration` avec des branches que 106a ne déclenche pas. Dernier commit relu : `f12d9d7`.
+
+### Câblage et review
+- Câblage 106a : `088c27c` (scène de Coach Léo, moteur des maquettes isolé), `11ffa1d` (branchement dans la fin du défi). Durée ramenée à 3 s par variante.
+- Review, cycle 1 : À CORRIGER. Un bloquant : un défi rejoué n'avait pas les confettis de la célébration commune (106.25, scénario R3), et le choix entre les deux célébrations se faisait dans React. Correction : le domaine rend la célébration de la fin (`celebrationDeLaFin`) ; RED `e31daf8`.
+- Notés (non bloquants) : pas d'animation de sortie avec Motion (voulu : aucun écran sortant à attendre, `EcranQuiArrive.tsx`, écart de lettre avec 0039 §3) ; Coach Léo affiché deux fois (scène + bulle) : question au PO ; captures à refaire depuis l'écran réel (banc d'essai sans thème) ; avant 106b : clés de variante liées au domaine, scènes chargées à la demande (+39 kB pour Sports), identifiants SVG préfixés.
