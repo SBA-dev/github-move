@@ -95,7 +95,12 @@ export function FinDuDefi({ seance, prenom, personnage, univers, relevesAvant, o
     <div className="fin-de-seance fin-du-defi" data-testid="fin-du-defi">
       {celebration?.sorte === "commune" && <Confettis />}
       {celebration?.sorte === "univers" && <SceneDeCelebration celebration={celebration.celebration} />}
-      <ParoleDuGuide personnage={personnage} univers={univers} onReecouter={reecouter} />
+      <ParoleDuGuide
+        personnage={personnage}
+        univers={univers}
+        onReecouter={reecouter}
+        sansPersonnage={celebration?.sorte === "univers"}
+      />
       <div className="pour-le-defi" role="status" data-testid="annonce-du-defi-releve">
         {issue?.annonce && <p>{issue.annonce}</p>}
       </div>
