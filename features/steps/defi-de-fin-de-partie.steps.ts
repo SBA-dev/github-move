@@ -101,7 +101,7 @@ async function servirLaBibliothequeDuDefi(page: Page): Promise<void> {
   await page.route("**/bibliotheque.json", servir);
 }
 
-function leconsDeTestDeLaMatiere(matiere: "maths" | "sciences", nombre: number) {
+export function leconsDeTestDeLaMatiere(matiere: "maths" | "sciences", nombre: number) {
   return LECONS_DU_DEFI.filter((lecon) => lecon.matiere === matiere && lecon.niveau === "CE1")
     .sort((a, b) => a.ordre - b.ordre)
     .slice(0, nombre)
@@ -319,7 +319,7 @@ const dessin = (page: Page): Locator => page.getByTestId("dessin-du-parcours");
 const repere = (page: Page): Locator => page.getByTestId("repere-du-defi");
 const jeNeSaisPas = (page: Page): Locator => page.getByTestId("je-ne-sais-pas");
 const ecranDuDefi = (page: Page): Locator => page.getByTestId("ecran-du-defi");
-const finDuDefi = (page: Page): Locator => page.getByTestId("fin-du-defi");
+export const finDuDefi = (page: Page): Locator => page.getByTestId("fin-du-defi");
 
 async function ouvrirLeParcoursDeMaths(page: Page, enfant = "Léa"): Promise<void> {
   const titre = page.getByRole("heading", { level: 2, name: "Mon parcours", exact: true });
@@ -341,8 +341,8 @@ async function releverLeDefi(page: Page): Promise<void> {
   await expect(ecranDuDefi(page)).toBeVisible();
 }
 
-async function commencerLeDefi(page: Page): Promise<void> {
-  await ouvrirLeParcoursDeMaths(page);
+export async function commencerLeDefi(page: Page, enfant = "Léa"): Promise<void> {
+  await ouvrirLeParcoursDeMaths(page, enfant);
   await releverLeDefi(page);
 }
 
@@ -375,7 +375,7 @@ async function verifierLeRepere(page: Page, numero: string, genre: "aVenir" | "o
 type Maniere = "juste" | "erreur" | "jeNeSaisPas";
 type Deroule = (enonce: string) => Maniere;
 
-const TOUT_JUSTE: Deroule = () => "juste";
+export const TOUT_JUSTE: Deroule = () => "juste";
 
 async function enonceAffiche(page: Page): Promise<string | null> {
   const question = page.getByTestId("question");
@@ -425,7 +425,7 @@ async function repondreALaQuestion(page: Page, enonce: string, maniere: Maniere)
 }
 
 /** Joue le défi ouvert jusqu'à sa fin, ou jusqu'à la question `arret` (posée, pas encore répondue) ; rend l'ordre des questions posées. */
-async function jouerLeDefi(page: Page, deroule: Deroule, arret?: { nombre?: number; question?: string }): Promise<void> {
+export async function jouerLeDefi(page: Page, deroule: Deroule, arret?: { nombre?: number; question?: string }): Promise<void> {
   const posees = partie100(page).posees;
   posees.length = 0;
   let apres: string | undefined;
@@ -468,7 +468,7 @@ Given(/^la bibliothèque de test du défi est servie$/, async ({ famille, monde,
   if (!estSurUnProfilReel(page)) await jouerAvecLeProfilReel(famille, monde, page);
 });
 
-Given(/^Tom a un profil enfant préparé de niveau (\S+)$/, { tags: "@issue-100" }, async ({ famille }, niveau: string) => {
+Given(/^Tom a un profil enfant préparé de niveau (\S+)$/, { tags: "@issue-100 or @issue-106" }, async ({ famille }, niveau: string) => {
   await creerLeProfil(famille, "Paul", { prenom: "Tom", niveau, libelleUnivers: "Animaux de la forêt" });
 });
 
@@ -515,6 +515,10 @@ Given(/^Léa a commencé le défi 1 de maths$/, async ({ page }) => {
   await commencerLeDefi(page);
 });
 
+Given(/^Tom a commencé le défi 1 de maths$/, async ({ page }) => {
+  await commencerLeDefi(page, "Tom");
+});
+
 // Rejouer : le repère d'un défi relevé propose « Rejouer le défi » (100.9, 100.29).
 Given(/^Léa a choisi « Rejouer le défi » sur le repère « Défi (\d+) » de maths$/, async ({ page }, numero: string) => {
   await ouvrirLeParcoursDeMaths(page);
@@ -547,6 +551,10 @@ When(/^Tom choisit « Maths » dans son parcours$/, async ({ page }) => {
 });
 
 When(/^Léa répond juste à toutes les questions du défi$/, async ({ page }) => {
+  await jouerLeDefi(page, TOUT_JUSTE);
+});
+
+When(/^Tom répond juste à toutes les questions du défi$/, async ({ page }) => {
   await jouerLeDefi(page, TOUT_JUSTE);
 });
 
@@ -685,16 +693,24 @@ Then(/^le repère « Défi (\d+) » mesure au moins 44 px de haut$/, async ({ fa
   expect(boite?.height ?? 0).toBeGreaterThanOrEqual(44);
 });
 
-Then(/^Noisette se tient sur la leçon (\d+) « ([^«»]+) », marquée « À toi ! »$/, async ({ famille, page }, place: string, titre: string) => {
+async function leGuideSeTientSurLaLecon(famille: Famille, page: Page, personnage: string, place: string, titre: string): Promise<void> {
   const cible = pageDuParcours(famille, page);
   const guide = cible.getByTestId("guide-du-dessin");
   await expect(guide).toHaveAttribute("data-marche", /^(aucune|terminee)$/, { timeout: 10_000 });
   await expect(guide).toHaveAttribute("data-place", String(place));
-  await expect(guide.getByTestId("personnage-guide")).toHaveAttribute("data-personnage-guide", "Noisette");
+  await expect(guide.getByTestId("personnage-guide")).toHaveAttribute("data-personnage-guide", personnage);
   const lecon = dessin(cible).getByRole("button", { name: `${titre} : à toi !`, exact: true });
   await expect(lecon).toHaveCount(1);
   await expect(lecon.getByTestId("etat-de-la-lecon")).toHaveText("À toi !");
   await expect(lecon.getByTestId("place-de-la-lecon")).toHaveText(`Leçon ${place}`);
+}
+
+Then(/^Noisette se tient sur la leçon (\d+) « ([^«»]+) », marquée « À toi ! »$/, async ({ famille, page }, place: string, titre: string) => {
+  await leGuideSeTientSurLaLecon(famille, page, "Noisette", place, titre);
+});
+
+Then(/^Coach Léo se tient sur la leçon (\d+) « ([^«»]+) », marquée « À toi ! »$/, async ({ famille, page }, place: string, titre: string) => {
+  await leGuideSeTientSurLaLecon(famille, page, "Coach Léo", place, titre);
 });
 
 // --- Alors : les lecteurs d'écran
