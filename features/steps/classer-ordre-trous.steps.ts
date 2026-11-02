@@ -263,7 +263,7 @@ Given(/^Tom a un profil enfant préparé de niveau (\S+)$/, async ({ page, monde
   // Story #27 : le résultat du test de départ de Tom est lu sous RLS, comme sa progression.
   // Story #34 : son suivi ne reprend rien de celui de Léa.
   // Story #65 : ses records sont lus sous RLS. Story #32 : ses étoiles ne comptent pas dans la cabane de Léa.
-  if ($tags.includes("@issue-25") || $tags.includes("@issue-27") || $tags.includes("@issue-65") || $tags.includes("@issue-32") || $tags.includes("@issue-31") || $tags.includes("@issue-34") || $tags.includes("@issue-29") || $tags.includes("@issue-33") || $tags.includes("@issue-102")) {
+  if ($tags.includes("@issue-25") || $tags.includes("@issue-27") || $tags.includes("@issue-65") || $tags.includes("@issue-32") || $tags.includes("@issue-31") || $tags.includes("@issue-34") || $tags.includes("@issue-29") || $tags.includes("@issue-101") || $tags.includes("@issue-33") || $tags.includes("@issue-102")) {
     await creerLeProfil(famille, "Paul", { prenom: "Tom", niveau, libelleUnivers: "Animaux de la forêt" });
     return;
   }
@@ -280,6 +280,9 @@ When(/^Tom choisit seulement l'exercice « (.+) »$/, async ({ page }, titre: st
   await commencerSeulementLExercice(page, titre);
 });
 
+// Seul, ce parcours dure 24 s ; à 3 workers il dépasse 25 s. L'attente reste sous le délai d'un scénario long (delais.steps.ts).
+const DELAI_POUR_JOUER_JUSQU_AUX_ETIQUETTES_MS = 80_000;
+
 export async function jouerJusquAuxEtiquettes(page: Page) {
   const continuer = page.getByRole("button", { name: "Continuer", exact: true });
   await expect.poll(async () => {
@@ -295,7 +298,7 @@ export async function jouerJusquAuxEtiquettes(page: Page) {
     }
     await terminerLaLecture(page);
     return false;
-  }, { intervals: [100], timeout: 25_000 }).toBe(true);
+  }, { intervals: [100], timeout: DELAI_POUR_JOUER_JUSQU_AUX_ETIQUETTES_MS }).toBe(true);
 }
 
 Given(/^il ne reste que l'étiquette « ([^«»]+) » à poser$/, async ({ page }, derniere: string) => {

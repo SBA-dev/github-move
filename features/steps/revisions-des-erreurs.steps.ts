@@ -437,7 +437,7 @@ function planDeLaRevision(page: Page): Plan {
     .map((l) => l.q);
 }
 
-function preparerLeScenarioDeLaRevision(page: Page): void {
+export function preparerLeScenarioDeLaRevision(page: Page): void {
   const plan = planDeLaRevision(page);
   const premiere = plan[0];
   if (!premiere) return;
@@ -659,7 +659,7 @@ async function telephoneDe(famille: Famille, browser: Browser, baseURL: string |
 
 // Les téléphones ouverts par telephoneDe sont fermés à la fin, pour les seules stories qui les ouvrent : un hook sans
 // tag instancierait la fixture famille (et son nettoyage sur savanturier-dev) jusque dans les scénarios @production.
-After({ tags: "@issue-28 or @issue-29 or @issue-30" }, async ({ famille }) => {
+After({ tags: "@issue-28 or @issue-29 or @issue-30 or @issue-101" }, async ({ famille }) => {
   for (const contexte of contextes.get(famille) ?? []) await contexte.close();
 });
 
@@ -685,7 +685,7 @@ export function pageDeMarieOuCourante(famille: Famille, page: Page): Page {
 When(/^Léa choisit son profil enfant sur le téléphone de Marie$/, async ({ famille, browser, baseURL, $tags }) => {
   const telephone = await telephoneDe(famille, browser, baseURL, "Marie");
   // Story #29 : le téléphone de Marie lit la même bibliothèque de test que la tablette de Paul.
-  if ($tags.includes("@issue-29")) await servirLaBibliothequeDeLAccueil(telephone);
+  if ($tags.includes("@issue-29") || $tags.includes("@issue-101")) await servirLaBibliothequeDeLAccueil(telephone);
   await telephone.goto("/");
   await choisirSonProfil(telephone, "Léa");
   partieDeMarie.set(famille, telephone);

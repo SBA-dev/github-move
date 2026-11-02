@@ -13,6 +13,9 @@ import {
   type Univers,
 } from "@domain/motivation";
 import { AnnonceDuDefiOuvert, useDefiOuvertParLaSeance } from "../../defis/index.ts";
+import { AnnonceDeLaQueteAccomplie } from "../../accueil/AnnonceDeLaQueteAccomplie.tsx";
+import type { QueteLueAvantLaSeance } from "../../accueil/lire-la-quete-du-jour.ts";
+import { useQueteAccomplieParLaSeance } from "../../accueil/useQueteAccomplieParLaSeance.ts";
 import { AnnonceDuNouvelEpisode } from "../../histoire/AnnonceDuNouvelEpisode.tsx";
 import { useEpisodeOuvertParLaSeance } from "../../histoire/useEpisodeOuvertParLaSeance.ts";
 import { BOUTON_RELEVER_LE_DEFI, niveauDuProfil } from "../../parcours/index.ts";
@@ -46,6 +49,10 @@ type Props = {
   readonly meilleuresEtoilesAvant: Promise<MeilleuresEtoilesDuProfil | undefined>;
   /** Le nombre de séances terminées lu au lancement de la séance, avant que celle-ci ne s'y ajoute ; `undefined` s'il n'a pas pu être lu. */
   readonly nombreDeSeancesAvant: Promise<number | undefined>;
+  /** La quête du jour lue au lancement de la séance, avant que celle-ci ne la change ; `undefined` si elle n'a pas pu être lue. */
+  readonly queteAvant: Promise<QueteLueAvantLaSeance | undefined>;
+  /** Le prénom de l'enfant, pour la fête de la quête accomplie. */
+  readonly prenom: string;
   readonly onRejouer: () => void;
   readonly onLireLEpisode: (numero: number) => void;
   readonly onLeconSuivante: (leconId: string) => void;
@@ -89,7 +96,7 @@ function useLaSuite(seance: Seance, niveau: string): LaSuite | undefined {
 }
 
 /** La fin de la séance : étoiles gagnées (dessinées et écrites), paroles du personnage guide, et la suite à choisir. */
-export function EcranDeFin({ seance, univers, niveau, onDireLaFin, meilleuresEtoilesAvant, nombreDeSeancesAvant, onRejouer, onLireLEpisode, onLeconSuivante, onToutesLesLecons, onReleverLeDefi, onAccueil }: Props) {
+export function EcranDeFin({ seance, univers, niveau, onDireLaFin, meilleuresEtoilesAvant, nombreDeSeancesAvant, queteAvant, prenom, onRejouer, onLireLEpisode, onLeconSuivante, onToutesLesLecons, onReleverLeDefi, onAccueil }: Props) {
   const { terminee, message } = useSauvegardeDeLaSeance(seance);
   const suite = useLaSuite(seance, niveau);
   const suivante = suite?.suivante;
@@ -119,16 +126,17 @@ export function EcranDeFin({ seance, univers, niveau, onDireLaFin, meilleuresEto
   );
   const { pret: episodePret, episode } = useEpisodeOuvertParLaSeance(nombreDeSeancesAvant, terminee !== undefined);
   const { pret: defiPret, defi: defiOuvert } = useDefiOuvertParLaSeance(seance, niveau, meilleuresEtoilesAvant, terminee !== undefined);
+  const { prete: quetePrete, accomplie: queteAccomplie } = useQueteAccomplieParLaSeance(queteAvant, seance.enfant, terminee !== undefined);
   const accueil = useRef<HTMLButtonElement>(null);
   const dite = useRef(false);
   useEffect(() => {
     accueil.current?.focus();
   }, []);
   useEffect(() => {
-    if (dite.current || terminee === undefined || !pret || !tenuePrete || !episodePret || !badgePret || !acquisePret || !defiPret) return;
+    if (dite.current || terminee === undefined || !pret || !tenuePrete || !episodePret || !badgePret || !acquisePret || !quetePrete || !defiPret) return;
     dite.current = true;
-    onDireLaFin(terminee.etoiles, { objet, tenue, episode, badge, leconAcquise, defiOuvert });
-  }, [terminee, pret, objet, tenuePrete, tenue, episodePret, episode, badgePret, badge, acquisePret, leconAcquise, defiPret, defiOuvert, onDireLaFin]);
+    onDireLaFin(terminee.etoiles, { objet, tenue, episode, badge, leconAcquise, queteAccomplie, defiOuvert });
+  }, [terminee, pret, objet, tenuePrete, tenue, episodePret, episode, badgePret, badge, acquisePret, leconAcquise, quetePrete, queteAccomplie, defiPret, defiOuvert, onDireLaFin]);
   const [etoilesAffichees, setEtoilesAffichees] = useState(false);
   const afficherToutesLesEtoiles = useCallback(() => setEtoilesAffichees(true), []);
 
@@ -172,6 +180,7 @@ export function EcranDeFin({ seance, univers, niveau, onDireLaFin, meilleuresEto
           </>
         )}
       </div>
+      <AnnonceDeLaQueteAccomplie prenom={prenom} accomplie={queteAccomplie} />
       {scores.length > 0 && (
         <ul className="scores-de-fluence" aria-label="Scores de fluence" data-testid="scores-de-fluence">
           {scores.map(([exercice, score]) => (

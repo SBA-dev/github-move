@@ -14,6 +14,7 @@ import {
   inviterAJouerApresLesEtapes,
   type PersonnageGuide,
   parolesDeFinDeSeance,
+  phraseDeFinAvecLaQuete,
   phraseDeFinAvecLeDefi,
   phraseDeFinAvecLesNouveautes,
 } from "@domain/motivation";
@@ -329,23 +330,28 @@ export function useDeroulementDeSeance(
   }, [reussite.figee, presentationEnCours, ouvrirLExercice, personnage.parole, relireLaPresentation, relireLaQuestion, memorisation.reecouter, relire]);
 
   const { parolesDeFin: parolesDeFinDeLaFluence, issueDuRecord } = fluence;
-  /** Une fluence seule a déjà dit ses paroles de fin : elles sont reprises avec ce que la séance a fait gagner. Sans épisode, seuls les effets de la fin sont joués. */
-  const direLaFinDeLaFluenceSeule = useCallback(({ episode }: NouveautesDeFin, effetsAvant: readonly EffetSonore[]) => {
+  /** Une fluence seule a déjà dit ses paroles de fin : elles sont reprises avec ce que la séance a fait gagner. Sans épisode ni quête accomplie, seuls les effets de la fin sont joués. */
+  const direLaFinDeLaFluenceSeule = useCallback(({ episode, queteAccomplie }: NouveautesDeFin, effetsAvant: readonly EffetSonore[]) => {
     const paroles = parolesDeFinDeLaFluence.current;
     if (paroles === undefined) return;
-    if (episode === undefined) {
+    if (episode === undefined && !queteAccomplie) {
       if (effetsAvant.length > 0) void jouer(effetsAvant);
       return;
     }
-    void dire({ texte: phraseDeFinAvecLesNouveautes(paroles, { episode }), nature: "felicitation", humeur: "applaudit", effetsAvant });
-  }, [dire, jouer, parolesDeFinDeLaFluence]);
+    const texte = phraseDeFinAvecLaQuete(phraseDeFinAvecLesNouveautes(paroles, { episode }), prenom, queteAccomplie);
+    void dire({ texte, nature: "felicitation", humeur: "applaudit", effetsAvant });
+  }, [dire, jouer, parolesDeFinDeLaFluence, prenom]);
 
   const direLaFin = useCallback((etoiles: number | undefined, nouveautes: NouveautesDeFin) => {
     sequence.current++;
     const effetsAvant = effetsDeLaFinDeSeance(etoiles, nouveautes, issueDuRecord.current);
     if (etoiles === undefined) return direLaFinDeLaFluenceSeule(nouveautes, effetsAvant);
     const felicitation = parolesDeFinDeSeance(etoiles, prenom, personnageGuide, hasardDuNavigateur);
-    const texte = phraseDeFinAvecLeDefi(phraseDeFinAvecLesNouveautes(felicitation, nouveautes), prenom, nouveautes.defiOuvert?.numero);
+    const texte = phraseDeFinAvecLeDefi(
+      phraseDeFinAvecLaQuete(phraseDeFinAvecLesNouveautes(felicitation, nouveautes), prenom, nouveautes.queteAccomplie),
+      prenom,
+      nouveautes.defiOuvert?.numero,
+    );
     void dire({ texte, nature: "felicitation", humeur: "applaudit", effetsAvant });
   }, [dire, prenom, personnageGuide, issueDuRecord, direLaFinDeLaFluenceSeule]);
 
