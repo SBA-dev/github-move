@@ -1,5 +1,5 @@
 # language: fr
-@issue-106 @wip
+@issue-106
 Fonctionnalité: Une célébration propre à chaque univers
   En tant qu'enfant
   Je veux que mon personnage guide fête mon défi relevé à la façon de mon univers
@@ -156,7 +156,7 @@ Fonctionnalité: Une célébration propre à chaque univers
     Scénario: Pendant la célébration de l'univers, le clavier n'est jamais bloqué
       Étant donné que Léa voit la célébration de l'univers « Sports » à la fin du défi 1 de maths
       Quand Léa choisit « Accueil » au clavier
-      Alors Léa voit « Qui joue ? »
+      Alors Léa voit son accueil
 
     Scénario: À 360 px, la célébration de l'univers tient dans la largeur et ses boutons restent assez grands
       Étant donné que l'écran de l'appareil mesure 360 px de large
