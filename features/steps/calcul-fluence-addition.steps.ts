@@ -32,7 +32,7 @@ import { attendreUneLecture, journal, laisserPasserLeDelaiDeLecture, normaliser,
 // Fluence : la durée passe en figeant l'horloge du navigateur (page.clock.setFixedTime), jamais en attendant 45 s.
 // Les leçons de test sont ajoutées à la réponse de /bibliotheque.json par le navigateur du test (voir #16).
 
-const { Given, When, Then } = createBdd(test, { tags: "@issue-20 or @issue-65" });
+const { Given, When, Then } = createBdd(test, { tags: "@issue-20 or @issue-65 or @issue-127" });
 
 type Acteur = "Léa" | "Tom" | "Nina";
 type Exercice = Record<string, unknown>;
@@ -49,7 +49,7 @@ const ENCOURAGEMENTS_DE_NOISETTE = [
   "Presque ! Regarde bien.",
 ];
 const FELICITATIONS_DE_NOISETTE = [...FELICITATIONS_COMMUNES, ...(EXPRESSIONS_PAR_PERSONNAGE["Noisette"] ?? [])];
-const RANGS: Readonly<Record<string, string>> = { unités: "unites", dizaines: "dizaines" };
+const RANGS: Readonly<Record<string, string>> = { unités: "unites", dizaines: "dizaines", centaines: "centaines" };
 const COULEURS_DE_FOND: Readonly<Record<string, string>> = { rose: "rgb(255, 220, 238)", bleue: "rgb(220, 236, 255)" };
 
 // --- Ce que le scénario prépare, page par page
@@ -93,11 +93,11 @@ export function partie20(page: Page): Partie20 {
   return courante;
 }
 
-function echapper(texte: string): string {
+export function echapper(texte: string): string {
   return texte.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-function exactement(texte: string): RegExp {
+export function exactement(texte: string): RegExp {
   return new RegExp(`^\\s*${echapper(texte)}\\s*$`);
 }
 
@@ -141,7 +141,7 @@ function carteCorrespond(carte: string, enonce: string): boolean {
   return enonceDeLaCarte(carte) === enonce;
 }
 
-function sommeDeLaPhrase(phrase: string): number {
+export function sommeDeLaPhrase(phrase: string): number {
   const termes = /combien font (.+) \?/.exec(normaliser(phrase))?.[1];
   if (termes === undefined) throw new Error(`Phrase de colonne inattendue : « ${phrase} »`);
   return termes.split(" + ").reduce((total, terme) => total + Number(terme), 0);
@@ -151,11 +151,11 @@ function sommeDeLaPhrase(phrase: string): number {
 
 export const carteDuCalcul = (page: Page) => page.getByTestId("carte-du-calcul");
 export const clavier = (page: Page) => page.getByTestId("clavier-de-cristaux");
-const choixDeLaQuestion = (page: Page) => page.getByTestId("choix-de-la-question");
+export const choixDeLaQuestion = (page: Page) => page.getByTestId("choix-de-la-question");
 const nombreTape = (page: Page) => page.getByTestId("nombre-tape");
 export const fluence = (page: Page) => page.getByTestId("fluence");
 export const finDeSeance = (page: Page) => page.getByTestId("fin-de-seance");
-const phraseDeLaColonne = (page: Page) => page.getByTestId("phrase-de-la-colonne");
+export const phraseDeLaColonne = (page: Page) => page.getByTestId("phrase-de-la-colonne");
 
 export function colonne(page: Page, libelle: string): Locator {
   return page.getByRole("group", { name: `Colonne des ${libelle}`, exact: true });
@@ -166,7 +166,7 @@ export async function lireLaCarte(page: Page): Promise<string> {
   return normaliser((await carteDuCalcul(page).textContent()) ?? "");
 }
 
-async function questionsReussies(page: Page): Promise<number> {
+export async function questionsReussies(page: Page): Promise<number> {
   return Number((await recipient(page).getAttribute("data-questions-reussies")) ?? "0");
 }
 
@@ -828,11 +828,11 @@ Then(
   },
 );
 
-async function attendreLEtape(page: Page, etape: "poser" | "calculer"): Promise<void> {
+export async function attendreLEtape(page: Page, etape: "poser" | "calculer"): Promise<void> {
   await expect(page.getByTestId("addition-posee")).toHaveAttribute("data-etape", etape, { timeout: DELAI_D_UN_APPEL_SERVEUR_MS });
 }
 
-async function chiffresDeLAddition(page: Page): Promise<number[]> {
+export async function chiffresDeLAddition(page: Page): Promise<number[]> {
   const operation = normaliser((await page.getByTestId("operation-posee").textContent()) ?? "");
   return operation.split(" + ").map(Number);
 }
@@ -841,7 +841,7 @@ async function nombreDeChiffresPoses(page: Page): Promise<number> {
   return await page.getByTestId("chiffre-pose").count();
 }
 
-async function poserUnChiffre(page: Page, chiffre: string, libelleDuRang: string): Promise<void> {
+export async function poserUnChiffre(page: Page, chiffre: string, libelleDuRang: string): Promise<void> {
   const poses = await nombreDeChiffresPoses(page);
   const paroles = (await journal(page)).speaks;
   await page.getByTestId("chiffre-a-poser").filter({ hasText: exactement(chiffre) }).first().click();
@@ -851,7 +851,7 @@ async function poserUnChiffre(page: Page, chiffre: string, libelleDuRang: string
 
 const LIBELLES_DES_RANGS = ["unités", "dizaines", "centaines"] as const;
 
-async function poserLeNombre(page: Page, nombre: number): Promise<void> {
+export async function poserLeNombre(page: Page, nombre: number): Promise<void> {
   const chiffres = String(nombre).split("");
   for (const [position, chiffre] of chiffres.entries()) {
     const libelle = LIBELLES_DES_RANGS[chiffres.length - 1 - position] ?? "unités";
@@ -880,7 +880,7 @@ Given(/^une leçon de test a une addition posée « ([^«»]+) » à l'étape (p
   preparerUnExercice(page, monde, { type: "addition", titre: "Addition de test", operations: [nombres], etapes: [etape] });
 });
 
-async function commencerLAdditionDeTest(page: Page): Promise<void> {
+export async function commencerLAdditionDeTest(page: Page): Promise<void> {
   await demarrer(page);
   await expect(page.getByTestId("addition-posee")).toBeVisible({ timeout: DELAI_D_UN_APPEL_SERVEUR_MS });
 }
@@ -891,14 +891,14 @@ Given(/^Léa a posé le nombre ([0-9]+)$/, async ({ page }, nombre: string) => {
 });
 
 When(
-  /^Léa (?:a posé|pose) le (?:premier |second )?(?:chiffre )?« (\d) » (?:de|du nombre) ([0-9]+) dans la colonne des (unités|dizaines)$/,
+  /^Léa (?:a posé|pose) le (?:premier |second )?(?:chiffre )?« (\d) » (?:de|du nombre) ([0-9]+) dans la colonne des (unités|dizaines|centaines)$/,
   async ({ page }, chiffre: string, _nombre: string, rang: string) => {
     await commencerLAdditionDeTest(page);
     await poserUnChiffre(page, chiffre, rang);
   },
 );
 
-Then(/^le chiffre « (\d) » reste dans la colonne des (unités|dizaines)$/, async ({ page }, chiffre: string, rang: string) => {
+Then(/^le chiffre « (\d) » reste dans la colonne des (unités|dizaines|centaines)$/, async ({ page }, chiffre: string, rang: string) => {
   await expect(colonne(page, rang).getByTestId("chiffre-pose").filter({ hasText: exactement(chiffre) })).toHaveCount(1);
 });
 
@@ -909,7 +909,7 @@ Then(/^le chiffre « (\d) » revient parmi les chiffres à poser$/, async ({ pag
 
 // --- L'étape calculer
 
-async function colonneEnCours(page: Page): Promise<string> {
+export async function colonneEnCours(page: Page): Promise<string> {
   const rang = await page.getByTestId("colonne").evaluateAll((colonnes) =>
     colonnes.find((c) => c.getAttribute("data-en-cours") === "true")?.getAttribute("data-rang") ?? ""
   );
@@ -929,7 +929,7 @@ async function calculerLaColonneEnCours(page: Page): Promise<void> {
   await expect.poll(async () => await questionsReussies(page)).toBeGreaterThan(reussies);
 }
 
-Given(/^Léa a calculé la colonne des (unités|dizaines)$/, async ({ page }, libelle: string) => {
+Given(/^Léa a calculé la colonne des (unités|dizaines|centaines)$/, async ({ page }, libelle: string) => {
   await commencerLAdditionDeTest(page);
   await attendreLEtape(page, "calculer");
   await verifierLaColonneEnCours(page, libelle);
@@ -937,7 +937,7 @@ Given(/^Léa a calculé la colonne des (unités|dizaines)$/, async ({ page }, li
 });
 
 When(
-  /^Léa répond « ([0-9]+) » pour la colonne des (unités|dizaines)$/,
+  /^Léa répond « ([0-9]+) » pour la colonne des (unités|dizaines|centaines)$/,
   async ({ page }, nombre: string, libelle: string) => {
     await verifierLaColonneEnCours(page, libelle);
     const reussies = await questionsReussies(page);
@@ -947,7 +947,7 @@ When(
   },
 );
 
-When(/^la colonne des (unités|dizaines) est à calculer$/, async ({ page }, libelle: string) => {
+When(/^la colonne des (unités|dizaines|centaines) est à calculer$/, async ({ page }, libelle: string) => {
   await attendreLEtape(page, "calculer");
   await verifierLaColonneEnCours(page, libelle);
 });
@@ -959,14 +959,14 @@ Then(/^Léa voit les choix « ([0-9]+) », « ([0-9]+) », « ([0-9]+) » et « 
 });
 
 Then(
-  /^Léa voit « ([0-9]+) » écrit sous la colonne des (unités|dizaines), et la retenue « ([0-9]+) » en haut de la colonne des (unités|dizaines)$/,
+  /^Léa voit « ([0-9]+) » écrit sous la colonne des (unités|dizaines|centaines), et la retenue « ([0-9]+) » en haut de la colonne des (unités|dizaines|centaines)$/,
   async ({ page }, ecrit: string, rangEcrit: string, retenue: string, rangRetenue: string) => {
     await expect(colonne(page, rangEcrit).getByTestId("chiffre-ecrit")).toHaveText(ecrit);
     await expect(colonne(page, rangRetenue).getByTestId("retenue")).toHaveText(retenue);
   },
 );
 
-Then(/^la retenue « ([0-9]+) » apparaît en haut de la colonne des (unités|dizaines), sans mouvement$/, async ({ page }, retenue: string, rang: string) => {
+Then(/^la retenue « ([0-9]+) » apparaît en haut de la colonne des (unités|dizaines|centaines), sans mouvement$/, async ({ page }, retenue: string, rang: string) => {
   const marque = colonne(page, rang).getByTestId("retenue");
   await expect(marque).toHaveText(retenue);
   await expect(marque).toHaveAttribute("data-mouvement", "aucun");
