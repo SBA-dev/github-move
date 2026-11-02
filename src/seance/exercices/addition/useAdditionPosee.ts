@@ -17,6 +17,7 @@ import {
 } from "../paroles-du-calcul.ts";
 import type { SuiteDuCalcul } from "../useCalcul.ts";
 import type { QuestionFigee } from "../useQuestionFigee.ts";
+import { type DepartsDesRetenues, departsDesRetenuesPoseesParLaReponse } from "./saut-de-la-retenue.ts";
 
 type Dependances = {
   readonly seance: Seance;
@@ -51,6 +52,8 @@ export function useAdditionPosee(
   const [additionFigee, setAdditionFigee] = useState<VueAddition | undefined>();
   /** La colonne que « Je ne sais pas » fait briller. */
   const [colonneQuiBrille, setColonneQuiBrille] = useState<Rang | undefined>();
+  /** D'où vient chaque retenue posée dans l'addition en cours, pour la faire sauter. */
+  const [departsDesRetenues, setDepartsDesRetenues] = useState<DepartsDesRetenues>({});
 
   const presenter = useCallback(async () => {
     const vue = seance.additionEnCours();
@@ -91,6 +94,7 @@ export function useAdditionPosee(
     if (!(await attendreLEcranSuivant()) || !vivant.current) return;
     figer(undefined);
     setAdditionFigee(undefined);
+    setDepartsDesRetenues({});
     const nouvelExercice = seance.exerciceEnCours()?.position !== exercice.position;
     await suite(++sequence.current, seance.retirerFaits(), nouvelExercice);
   }, [seance, figer, dire, personnageGuide, vivant, sequence, attendreLEcranSuivant]);
@@ -104,6 +108,8 @@ export function useAdditionPosee(
     if (resultat === "dejaEcartee") return;
     sequence.current++;
     setColonneQuiBrille(undefined);
+    const apres = resultat === "fausse" ? undefined : seance.additionApresLaDerniereReponse();
+    if (apres) setDepartsDesRetenues((departs) => ({ ...departs, ...departsDesRetenuesPoseesParLaReponse(avant, apres) }));
     redessiner();
     const cible = reponse.genre === "placement" ? CIBLE_DES_COLONNES : cibleDeLaReponse(reponse);
     if (resultat === "fausse") {
@@ -111,7 +117,6 @@ export function useAdditionPosee(
       await dire(encouragerApresUneErreurDeCalcul(personnageGuide, seance.aideApresLaDerniereErreur()));
       return;
     }
-    const apres = seance.additionApresLaDerniereReponse();
     if (!apres) return;
     annoncerLAvancement(seance.avancement());
     signaler("juste", cible);
@@ -143,5 +148,5 @@ export function useAdditionPosee(
     }
   }, [seance, estFigee, sequence, faireSilence, redessiner, dire]);
 
-  return { additionFigee, colonneQuiBrille, presenter, repondre, placer, jeNeSaisPas };
+  return { additionFigee, colonneQuiBrille, departsDesRetenues, presenter, repondre, placer, jeNeSaisPas };
 }

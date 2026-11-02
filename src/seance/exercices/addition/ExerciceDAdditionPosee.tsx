@@ -1,8 +1,13 @@
-import { type DragEvent, useState } from "react";
-import { useReducedMotion } from "motion/react";
+import { useRef, useState } from "react";
 import { NOMS_DES_COLONNES_A_L_ECRAN, type VueAddition, type VueColonne } from "@domain/apprentissage";
 import { CIBLE_DES_COLONNES, useRetourDe } from "../../../retours/index.ts";
+import { useUnivers } from "../../../univers/index.ts";
+import { maisonSousLePoint, type Point } from "../maisons/groupe-sous-le-doigt.ts";
 import { ReponseAuCalcul } from "../ReponseAuCalcul.tsx";
+import { ChiffreAPoser } from "./ChiffreAPoser.tsx";
+import { DessinDeLaMaisonDeColonne } from "./DessinDeLaMaisonDeColonne.tsx";
+import { RetenueDessinee } from "./RetenueDessinee.tsx";
+import type { DepartsDesRetenues } from "./saut-de-la-retenue.ts";
 
 type Rang = VueColonne["rang"];
 
@@ -11,6 +16,8 @@ type Props = {
   /** L'addition est terminée : on la félicite avant de passer à la suivante. */
   readonly reussie: boolean;
   readonly colonneQuiBrille: Rang | undefined;
+  /** D'où vient chaque retenue posée, pour la faire sauter. */
+  readonly departsDesRetenues: DepartsDesRetenues;
   readonly onPoser: (chiffre: string, rang: Rang) => void;
   readonly onRelire: (phrase: string) => void;
   readonly onChoisir: (texte: string) => void;
@@ -18,33 +25,55 @@ type Props = {
   readonly onJeNeSaisPas: (chiffre?: string) => void;
 };
 
-const TYPE_DU_CHIFFRE = "application/x-savanturier-chiffre";
+const MAISONS_DES_COLONNES = '[data-testid="maison-de-la-colonne"]';
 
 export function ExerciceDAdditionPosee(props: Props) {
-  const { addition, reussie, colonneQuiBrille, onPoser, onRelire, onJeNeSaisPas } = props;
+  const { addition, reussie, colonneQuiBrille, departsDesRetenues, onPoser, onRelire, onJeNeSaisPas } = props;
   const [choisi, setChoisi] = useState<number | undefined>();
+  const [rangSurvole, setRangSurvole] = useState<Rang | undefined>();
   const chiffresAPoser = addition.chiffresAPoser ?? [];
   const chiffreChoisi = choisi === undefined ? undefined : chiffresAPoser[choisi];
   const retourDesColonnes = useRetourDe<HTMLDivElement>(CIBLE_DES_COLONNES);
+  const conteneurDesColonnes = useRef<HTMLDivElement | null>(null);
 
   const poser = (chiffre: string, rang: Rang) => {
     setChoisi(undefined);
     onPoser(chiffre, rang);
   };
+  const rangDeLaMaison = (point: Point): Rang | undefined => {
+    const rang = maisonSousLePoint(conteneurDesColonnes.current, MAISONS_DES_COLONNES, point)?.dataset.rang;
+    return addition.colonnes.find((colonne) => colonne.rang === rang)?.rang;
+  };
+  const survoler = (point: Point | undefined) =>
+    setRangSurvole(point === undefined ? undefined : rangDeLaMaison(point));
+  const lacher = (chiffre: string, point: Point) => {
+    const rang = rangDeLaMaison(point);
+    if (rang !== undefined) poser(chiffre, rang);
+  };
 
   return (
     <div className="addition-posee" data-testid="addition-posee" data-etape={addition.etape}>
       <p className="operation-posee" data-testid="operation-posee">{addition.nombres.join(" + ")}</p>
-      <div ref={retourDesColonnes.ref} {...retourDesColonnes.attributs} className="colonnes" role="group" aria-label="Addition en colonnes" data-testid="colonnes">
+      <div
+        ref={(conteneur) => {
+          retourDesColonnes.ref.current = conteneur;
+          conteneurDesColonnes.current = conteneur;
+        }}
+        {...retourDesColonnes.attributs} className="colonnes"
+        role="group"
+        aria-label="Addition en colonnes"
+        data-testid="colonnes"
+      >
         {[...addition.colonnes].reverse().map((colonne) => (
           <Colonne
             key={colonne.rang}
             colonne={colonne}
             brille={colonne.rang === colonneQuiBrille}
             enCours={colonne.rang === addition.colonneEnCours}
+            survolee={colonne.rang === rangSurvole}
+            departDeLaRetenue={departsDesRetenues[colonne.rang]}
             pose={addition.etape === "poser" && !reussie}
             chiffreChoisi={chiffreChoisi}
-            chiffresAPoser={chiffresAPoser}
             onPoser={poser}
           />
         ))}
@@ -59,22 +88,14 @@ export function ExerciceDAdditionPosee(props: Props) {
           <p className="invite-de-pose" data-testid="invite-de-pose">{addition.invite}</p>
           <ul className="chiffres-a-poser" aria-label="Chiffres à poser" data-testid="chiffres-a-poser">
             {chiffresAPoser.map((chiffre, rang) => (
-              <li
-                key={`${chiffre}-${rang}`}
-                draggable
-                onDragStart={(evenement) => {
-                  evenement.dataTransfer.setData(TYPE_DU_CHIFFRE, chiffre);
-                }}
-              >
-                <button
-                  type="button"
-                  className="etiquette chiffre-a-poser"
-                  data-testid="chiffre-a-poser"
-                  aria-pressed={choisi === rang}
-                  onClick={() => setChoisi(choisi === rang ? undefined : rang)}
-                >
-                  {chiffre}
-                </button>
+              <li key={`${chiffre}-${rang}`}>
+                <ChiffreAPoser
+                  chiffre={chiffre}
+                  choisi={choisi === rang}
+                  onToucher={() => setChoisi(choisi === rang ? undefined : rang)}
+                  onSurvol={survoler}
+                  onLacher={(point) => lacher(chiffre, point)}
+                />
               </li>
             ))}
           </ul>
@@ -117,21 +138,19 @@ type PropsDeLaColonne = {
   readonly colonne: VueColonne;
   readonly brille: boolean;
   readonly enCours: boolean;
+  readonly survolee: boolean;
+  readonly departDeLaRetenue: Rang | undefined;
   readonly pose: boolean;
   readonly chiffreChoisi: string | undefined;
-  readonly chiffresAPoser: readonly string[];
   readonly onPoser: (chiffre: string, rang: Rang) => void;
 };
 
 /** Une colonne : sa maison, la retenue en haut, les chiffres posés, le chiffre écrit en bas. Ses couleurs ne changent jamais. */
-function Colonne({ colonne, brille, enCours, pose, chiffreChoisi, chiffresAPoser, onPoser }: PropsDeLaColonne) {
-  const mouvementsReduits = useReducedMotion() ?? false;
+function Colonne({ colonne, brille, enCours, survolee, departDeLaRetenue, pose, chiffreChoisi, onPoser }: PropsDeLaColonne) {
+  const univers = useUnivers();
   const { rang, couleur, chiffresPoses, retenue, chiffreEcrit } = colonne;
-  const lacher = (evenement: DragEvent) => {
-    evenement.preventDefault();
-    const chiffre = evenement.dataTransfer.getData(TYPE_DU_CHIFFRE);
-    if (chiffresAPoser.includes(chiffre)) onPoser(chiffre, rang);
-  };
+  const allumee = chiffreEcrit !== undefined;
+  const ouverte = chiffresPoses.length > 0 || allumee;
   return (
     <section
       className="colonne"
@@ -142,33 +161,28 @@ function Colonne({ colonne, brille, enCours, pose, chiffreChoisi, chiffresAPoser
       data-couleur={couleur}
       data-brille={brille ? "true" : undefined}
       data-en-cours={enCours ? "true" : undefined}
-      onDragOver={(evenement) => evenement.preventDefault()}
-      onDrop={lacher}
     >
       <button
         type="button"
         className="maison-de-la-colonne"
         data-testid="maison-de-la-colonne"
         data-donne-une-reponse="true"
+        data-rang={rang}
+        data-univers={univers}
+        data-ouverte={String(ouverte)}
+        data-allumee={String(allumee)}
+        data-survolee={survolee ? "true" : undefined}
         aria-label={`Poser dans la colonne des ${NOMS_DES_COLONNES_A_L_ECRAN[rang].toLowerCase()}`}
         aria-disabled={pose && chiffreChoisi !== undefined ? undefined : true}
         onClick={() => pose && chiffreChoisi !== undefined && onPoser(chiffreChoisi, rang)}
       >
-        {NOMS_DES_COLONNES_A_L_ECRAN[rang]}
+        <DessinDeLaMaisonDeColonne univers={univers} couleur={couleur} ouverte={ouverte} allumee={allumee} />
+        <span className="nom-de-la-colonne">{NOMS_DES_COLONNES_A_L_ECRAN[rang]}</span>
+        {survolee && <span className="signal-de-survol" data-testid="signal-de-survol" aria-hidden="true" />}
       </button>
+      {brille && <span className="signal-brille" data-testid="signal-brille" data-brille="true" aria-hidden="true" />}
       <div className="place-de-la-retenue">
-        {retenue !== undefined && (
-          <span
-            key={retenue}
-            className="retenue"
-            data-testid="retenue"
-            data-mouvement={mouvementsReduits ? "aucun" : "monte"}
-            role="img"
-            aria-label={`Retenue ${retenue}`}
-          >
-            {retenue}
-          </span>
-        )}
+        {retenue !== undefined && <RetenueDessinee retenue={retenue} univers={univers} couleur={couleur} depart={departDeLaRetenue} />}
       </div>
       <ul className="chiffres-poses" aria-label="Chiffres posés" data-testid="chiffres-poses">
         {chiffresPoses.map((chiffre, position) => (
