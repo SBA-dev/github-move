@@ -59,10 +59,12 @@ export function useAdditionPosee(
     const vue = seance.additionEnCours();
     if (!vue) return;
     if (vue.etape === "poser") {
+      const numero = sequence.current;
       if (vue.consigne !== undefined && !(await dire({ texte: vue.consigne, nature: "consigne" }))) return;
+      if (sequence.current !== numero) return;
       if (vue.invite !== undefined) await dire({ texte: vue.invite, nature: "question" });
     } else if (vue.calcul) await dire({ texte: vue.calcul.phrase, nature: "question" });
-  }, [seance, dire]);
+  }, [seance, dire, sequence]);
 
   /** Les effets sonores précèdent la première parole de la suite ; sans parole, ils sont joués seuls. */
   const direLaSuite = useCallback(async (avant: VueAddition, apres: VueAddition, effets: readonly EffetSonore[]) => {
