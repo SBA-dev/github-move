@@ -154,7 +154,7 @@ function pageDuParcours(famille: Famille, page: Page): Page {
 
 Before({ tags: "@issue-100" }, async ({ page, $testInfo }) => {
   // Le vrai profil de Léa, les défis joués jusqu'à leur fin (10 questions) et les écrans de fin passent par le serveur.
-  $testInfo.setTimeout(90_000);
+  $testInfo.setTimeout(Math.max($testInfo.timeout, 90_000));
   await page.addInitScript(installerLesFauxDeLaStory97, { echec: false, retenir: [] });
 });
 
