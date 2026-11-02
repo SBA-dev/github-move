@@ -177,6 +177,7 @@ export {
   type QueteDuJour,
   queteDuJour,
 } from "./quete-du-jour.ts";
+export { type CelebrationDeLaFin, celebrationDeLaFin } from "./celebration-de-la-fin.ts";
 export {
   type FaitsDeLaFinPourLaCelebration,
   type MomentDeCelebration,
