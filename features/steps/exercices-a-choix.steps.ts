@@ -762,10 +762,10 @@ Then(/^le second exercice commence$/, async ({ page }) => {
   await finirLaParoleJusqua(page, { type: "exercice", position: 1 });
 });
 
-Then(/^Noisette n'annonce aucun nouveau défi$/, async ({ page }) => {
+Then(/^Noisette n'annonce aucun nouveau jeu$/, async ({ page }) => {
   await laisserPasserLeDelaiDeLecture(page);
   expect(await bulle(page).getAttribute("data-nature")).not.toBe("annonce");
-  for (const parole of await toutesLesParoles(page)) expect(parole).not.toMatch(/Nouveau défi|Jeu suivant|Place au jeu/);
+  for (const parole of await toutesLesParoles(page)) expect(parole).not.toMatch(/Nouveau défi|Nouveau jeu|Jeu suivant|Place au jeu/);
 });
 
 Then(/^les lecteurs d'écran annoncent « ([^«»]+) », sans couper Noisette$/, async ({ page }, annonce: string) => {

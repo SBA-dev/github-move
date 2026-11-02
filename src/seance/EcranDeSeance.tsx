@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import {
   ChoixDeSeance,
   consigneAffichee,
+  type Defi,
   exerciceDemandeLeSon,
   ExerciceIntrouvable,
   LeconSansExercice,
@@ -58,6 +59,8 @@ type Props = {
   readonly onLireLEpisode: (numero: number) => void;
   readonly onLeconSuivante: (leconId: string) => void;
   readonly onToutesLesLecons: () => void;
+  /** L'enfant choisit de relever le défi que la séance vient d'ouvrir. */
+  readonly onReleverLeDefi: (defi: Defi) => void;
   readonly onAccueil: () => void;
 };
 
@@ -158,7 +161,7 @@ type PropsEnCours = Omit<PropsDUnePartie, "exercice" | "profilId" | "clavierDesD
 };
 
 function SeanceEnCours(
-  { seance, lecon, prenom, niveau, univers, voix, toutLireAVoixHaute, meilleuresEtoilesAvant, nombreDeSeancesAvant, queteAvant, onRetour, onRejouer, onLireLEpisode, onLeconSuivante, onToutesLesLecons, onAccueil }: PropsEnCours,
+  { seance, lecon, prenom, niveau, univers, voix, toutLireAVoixHaute, meilleuresEtoilesAvant, nombreDeSeancesAvant, queteAvant, onRetour, onRejouer, onLireLEpisode, onLeconSuivante, onToutesLesLecons, onReleverLeDefi, onAccueil }: PropsEnCours,
 ) {
   const deroulement = useDeroulementDeSeance(seance, lecon, voix, univers.personnageGuide, toutLireAVoixHaute, prenom);
   const { commencer, abandonner } = deroulement;
@@ -257,6 +260,7 @@ function SeanceEnCours(
             onLireLEpisode={onLireLEpisode}
             onLeconSuivante={onLeconSuivante}
             onToutesLesLecons={onToutesLesLecons}
+            onReleverLeDefi={onReleverLeDefi}
             onAccueil={onAccueil}
           />
         )}

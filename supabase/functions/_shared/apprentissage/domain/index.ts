@@ -150,3 +150,25 @@ export { cleDeLaBoite, QuestionDeBoite } from "./question-de-boite.ts";
 export { QuestionDeProblemeEnBarres } from "./question-de-probleme-en-barres.ts";
 export { estUnTypeDeQuestion } from "./cle-de-question.ts";
 export { leconAcquiseParLaSeance, leconsAcquises } from "./lecons-acquises.ts";
+export { partiesDuParcours } from "./partie-du-parcours.ts";
+export type { PartieDuParcours } from "./partie-du-parcours.ts";
+export { defisDeLaMatiere } from "./defis-de-la-matiere.ts";
+export { defiOuvertParLaSeance } from "./defis-de-la-matiere.ts";
+export { etatDuDefi } from "./defis-de-la-matiere.ts";
+export type { Defi, DefiReleve, EtatDuDefi } from "./defis-de-la-matiere.ts";
+export { planDuDefi, questionsPosablesDuDefi } from "./plan-du-defi.ts";
+export type { PlanDuDefi, QuestionDuDefi } from "./plan-du-defi.ts";
+export { AucuneQuestionPourLeDefi } from "./erreurs.ts";
+export { SeanceDeDefi } from "./seance-de-defi.ts";
+export type { DefiTermine } from "./seance-de-defi.ts";
+export {
+  DefiAVenir,
+  DefiDejaTermine,
+  DefiIncoherent,
+  DefiInconnu,
+  DefiNonFini,
+  PlanDuDefiIncoherent,
+  QuestionHorsDuDefi,
+} from "./erreurs.ts";
+export { revaliderLeDefi } from "./revalider-le-defi.ts";
+export type { DefiTermineAEnregistrer } from "./defi-termine-a-enregistrer.ts";

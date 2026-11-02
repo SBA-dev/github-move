@@ -3,10 +3,10 @@ import {
   cleDeLaBoite,
   type FileDeRevision,
   type Jour,
-  type PlanDeSeanceDeRevision,
   SeanceDeRevision,
   tireurAuHasard,
 } from "@domain/apprentissage";
+import type { CleDeQuestion, OrigineDeLaQuestion } from "@domain/apprentissage";
 import type { ItemDeBoite, Lecon, Niveau } from "@domain/catalogue";
 import { generateurIdDuNavigateur } from "../seance/generateur-id-navigateur.ts";
 import { hasardDuNavigateur } from "../seance/hasard-navigateur.ts";
@@ -21,7 +21,10 @@ export type RevisionCommencee = {
 
 export type TexteDeLecture = { readonly titre: string | undefined; readonly texte: string };
 
-function textesDuPlan(plan: PlanDeSeanceDeRevision, lecons: readonly Lecon[]): Map<string, TexteDeLecture> {
+/** Un plan de séance de questions : celui d'une révision ou celui d'un défi. */
+export type PlanDeQuestions = { readonly questions: readonly { readonly identite: CleDeQuestion; readonly origine: OrigineDeLaQuestion }[] };
+
+export function textesDuPlan(plan: PlanDeQuestions, lecons: readonly Lecon[]): Map<string, TexteDeLecture> {
   const textes = new Map<string, TexteDeLecture>();
   for (const { identite, origine } of plan.questions) {
     const exercice = lecons.find(({ id }) => id === origine.leconDOrigine)?.exercices[origine.position];
@@ -30,7 +33,7 @@ function textesDuPlan(plan: PlanDeSeanceDeRevision, lecons: readonly Lecon[]): M
   return textes;
 }
 
-function boitesDuPlan(plan: PlanDeSeanceDeRevision, lecons: readonly Lecon[]): Map<string, ItemDeBoite> {
+export function boitesDuPlan(plan: PlanDeQuestions, lecons: readonly Lecon[]): Map<string, ItemDeBoite> {
   const boites = new Map<string, ItemDeBoite>();
   for (const { identite, origine } of plan.questions) {
     const exercice = lecons.find(({ id }) => id === origine.leconDOrigine)?.exercices[origine.position];

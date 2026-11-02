@@ -1,17 +1,11 @@
 import type { Lecon, Niveau } from "../../catalogue/domain/index.ts";
-import {
-  AucuneQuestionDue,
-  ReponseIncompatible,
-  SeanceDeRevisionDejaFinie,
-  SeanceDeRevisionDejaTerminee,
-  SeanceDeRevisionNonFinie,
-} from "./erreurs.ts";
+import { AucuneQuestionDue, SeanceDeRevisionDejaTerminee, SeanceDeRevisionNonFinie } from "./erreurs.ts";
 import type { PlanDeSeanceDeRevision, ResultatDeRevision } from "./file-de-revision.ts";
 import type { CleDeQuestion } from "./cle-de-question.ts";
 import type { Jour } from "./jour.ts";
 import type { AideDonnee } from "./question-jouee.ts";
 import { type QuestionDeRevision, questionDeRevision } from "./question-de-revision.ts";
-import type { QuestionSuivie } from "./question-suivie.ts";
+import { QuestionsEnCours, suivie } from "./questions-en-cours.ts";
 import type { MotEcrit, ReponseEnNombre, ReponseParChoix, ResultatDeReponse } from "./reponse.ts";
 import type { SeanceDeRevisionTermineeAEnregistrer } from "./seance-de-revision-terminee-a-enregistrer.ts";
 import type { Tireur } from "./tireur.ts";
@@ -48,12 +42,15 @@ export function seanceDeRevisionTerminee(
 export class SeanceDeRevision {
   private termineeLe: Date | undefined;
   private jour: Jour | undefined;
+  private readonly enCours: QuestionsEnCours;
 
   private constructor(
     readonly id: string,
     readonly enfant: string,
     private readonly questions: readonly QuestionDeRevision[],
-  ) {}
+  ) {
+    this.enCours = new QuestionsEnCours(questions);
+  }
 
   static commencer(
     { id, enfant, plan, lecons, tireurDe, niveau }: {
@@ -75,25 +72,19 @@ export class SeanceDeRevision {
   }
 
   questionEnCours(): QuestionDeRevision | undefined {
-    return this.questions.find((posee) => !suivie(posee).reussie);
+    return this.enCours.enCours();
   }
 
   repondre(reponse: ReponseParChoix | ReponseEnNombre | MotEcrit): ResultatDeReponse {
-    const { question, dictee } = this.questionAPoser();
-    if (dictee) {
-      if (reponse.genre !== "motEcrit") throw new ReponseIncompatible(reponse.genre);
-      return dictee.repondre(reponse);
-    }
-    if (reponse.genre === "motEcrit") throw new ReponseIncompatible(reponse.genre);
-    return question.repondre(reponse);
+    return this.enCours.repondre(reponse);
   }
 
   direJeNeSaisPas(): AideDonnee {
-    return suivie(this.questionAPoser()).direJeNeSaisPas();
+    return this.enCours.direJeNeSaisPas();
   }
 
   estFinie(): boolean {
-    return this.questionEnCours() === undefined;
+    return this.enCours.estFinie();
   }
 
   resultats(): ResultatDeRevision[] {
@@ -126,16 +117,4 @@ export class SeanceDeRevision {
       jour: this.jour.toString(),
     };
   }
-
-  private questionAPoser(): QuestionDeRevision {
-    const enCours = this.questionEnCours();
-    if (!enCours) throw new SeanceDeRevisionDejaFinie();
-    return enCours;
-  }
-}
-
-function suivie(
-  { question, dictee }: QuestionDeRevision,
-): QuestionSuivie & { direJeNeSaisPas(): AideDonnee; tirage(): string[] } {
-  return question ?? dictee;
 }
