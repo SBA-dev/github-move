@@ -176,6 +176,33 @@ Then(/^la célébration commune n'est pas jouée$/, async ({ page }) => {
   expect(jouees, "l'effet sonore de la célébration commune ne s'y ajoute pas").not.toContain("seance-terminee");
 });
 
+// --- Alors : le petit personnage guide à côté de la bulle
+
+const petitPersonnage = (page: Page): Locator => page.getByTestId("personnage-guide");
+
+async function verifierQueLaBulleGardeSesParoles(page: Page): Promise<void> {
+  await expect(bulle(page)).toBeVisible({ timeout: DELAI_DE_L_ATTENTE_MS });
+  await expect(bulle(page)).not.toHaveText("");
+  await expect(finDuDefi(page).getByRole("button", { name: "Réécouter", exact: true })).toBeVisible();
+}
+
+Then(
+  /^Coach Léo n'apparaît qu'une fois, dans la célébration de l'univers, la bulle gardant ses paroles$/,
+  async ({ page }) => {
+    await attendreLaScene(page);
+    await verifierQueLaBulleGardeSesParoles(page);
+    await expect(petitPersonnage(page), "le petit personnage guide à côté de la bulle").toHaveCount(0);
+  },
+);
+
+Then(/^Coach Léo apparaît à côté de la bulle de ses paroles$/, async ({ page }) => {
+  await attendreLaFinDuDefi(page);
+  await verifierQueLaBulleGardeSesParoles(page);
+  await expect(petitPersonnage(page)).toHaveCount(1);
+  await expect(petitPersonnage(page)).toHaveAttribute("data-personnage-guide", "Coach Léo");
+  await expect(petitPersonnage(page)).toBeVisible();
+});
+
 // --- Alors : la musique
 
 Then(/^Léa entend la musique de la célébration de Coach Léo$/, async ({ page }) => {
