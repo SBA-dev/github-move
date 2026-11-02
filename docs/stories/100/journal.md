@@ -71,3 +71,11 @@ Session : session_015z4jmMahATJuud1H1cNRHz. Décision réservée : 0038.
 - 19:26 UTC : VERROU merge accordé (tableau de #64). Intégration de `main` `47a6d34` (#136, #101) : merge `9b1ad11`, 5 conflits résolus en gardant les deux ajouts, la quête avant le défi (100.17). Revue du delta : APPROUVÉ. `deno test` 2766 verts, lint, fmt, tsc, build OK. Délai E2E aligné sur #136 (`Math.max`), `cbd1efe`.
 - E2E après intégration (`telephone`) : `@issue-100` et le scénario de #16 verts ; `@issue-101` 9/43 à 3 workers. Comparaison avec `main` seul : 9/43 aussi, mêmes durées : #100 ne ralentit pas #101 (le temps se perd dans la préparation, avant l'écran de fin). `@issue-101` à 1 worker sur la branche : 40/43, 3 délais de 30 s dépassés (Supabase lent), dont un vert en relance.
 - Condition de merge « périmètre des stories mergées vert sur le dernier commit » non remplie → pas de merge, `LIBÈRE merge`, question au responsable. APPRIS publié (`delais.steps.ts` ne couvre pas `@issue-101`).
+- 20:44 UTC : réponse du responsable à l'ESCALADE (#64, 6588018379) : KO de #101 préexistants ; ajouter `@issue-100` et `@issue-101` aux délais longs dans cette PR. VERROU merge de nouveau accordé. `fe13c8d` (`delais.steps.ts`, aucun scénario changé).
+- E2E `telephone`, 3 workers : `@issue-100` 36/36, `@issue-101` 43/43 (15,7 min). `deno test` 2766 verts, `tsc` OK. Merge de la PR #139.
+
+| Mesure (complément) | Valeur |
+|---|---|
+| Durée, du lancement au merge | 2026-10-29 14:13 UTC → 2026-11-02 ~21:20 UTC (dont ~3 j 19 h d'attente de l'autorisation de merge et du tour de #101) |
+| Intégrations de `main` | 1 (`47a6d34`, #136 et #101), 5 conflits résolus (fin de séance, révision, index Motivation) |
+| Cycles E2E KO | + 1 après intégration (délais de #101, préexistants sur `main`) |
