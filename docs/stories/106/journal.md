@@ -27,3 +27,9 @@ Branche de base : `main` (`47a6d34`). Branche : `feature/106-celebration-de-l-un
 - Notés (non bloquants) : pas d'animation de sortie avec Motion (voulu : aucun écran sortant à attendre, `EcranQuiArrive.tsx`, écart de lettre avec 0039 §3) ; Coach Léo affiché deux fois (scène + bulle) : question au PO ; captures à refaire depuis l'écran réel (banc d'essai sans thème) ; avant 106b : clés de variante liées au domaine, scènes chargées à la demande (+39 kB pour Sports), identifiants SVG préfixés.
 - Correction : GREEN `8668e66` (`celebrationDeLaFin`, la fin du défi l'appelle ; défi rejoué → confettis de la célébration commune), refactor `c628a78` (ids SVG préfixés `sports-`, deux `as` retirés).
 - Review, cycle 2 : APPROUVÉ (aucun bloquant). Non bloquants : React choisit encore entre deux sons fournis par le domaine ; 1er test de `celebrationDeLaFin` calcule sa valeur attendue par `celebrationDe`.
+
+### E2E (mise au point, `telephone`)
+- Steps : `b478f00`. 1er run : 24/25 ; KO « le clavier n'est jamais bloqué » dû au texte du scénario (« Accueil » à la fin d'un défi mène à l'accueil de l'enfant depuis #100, pas à « Qui joue ? ») : phrase corrigée `7840e18`, `@wip` retiré.
+- 2e run, HEAD `7840e18` : **25/25 verts** (5,3 min, 3 workers).
+- Même contexte : `@issue-100` + `@issue-97` 98/99 ; le KO (#97, « Rejouer une leçon déjà acquise… », effet « découverte » après « séance terminée ») échoue aussi sur `main` `f8a4787` : préexistant, signalé (APPRIS).
+- Navigateur : config locale non commitée (`executablePath` Chromium 1243), sans `playwright install`.
