@@ -5,7 +5,7 @@ import { Before } from "./fixtures.ts";
 const DELAI_D_UN_SCENARIO_LONG_MS = 120_000;
 
 Before({
-  tags: "@issue-16 or @issue-20 or @issue-24 or @issue-25 or @issue-27 or @issue-28 or @issue-29 or @issue-30 or @issue-31 or @issue-32 or @issue-33 or @issue-39 or @issue-65 or @issue-79",
+  tags: "@issue-16 or @issue-20 or @issue-24 or @issue-25 or @issue-27 or @issue-28 or @issue-29 or @issue-30 or @issue-31 or @issue-32 or @issue-33 or @issue-39 or @issue-65 or @issue-79 or @issue-100 or @issue-101",
 }, async ({ $testInfo }) => {
   $testInfo.setTimeout(Math.max($testInfo.timeout, DELAI_D_UN_SCENARIO_LONG_MS));
 });
