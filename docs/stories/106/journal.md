@@ -7,3 +7,5 @@ Branche de base : `main` (`47a6d34`). Branche : `feature/106-celebration-de-l-un
 
 - 20:30 UTC : démarrage anticipé. Cadrage seulement (domaine + scénarios). Aucun code avant le merge de #100 (PR #139) et la validation du cadrage par le PO.
 - Contradiction relevée : l'issue dit « un toucher passe la célébration » ; 97.17 dit qu'un toucher ne fait rien pendant la célébration. Question au PO.
+- 20:45 UTC : modèle de domaine (`domain-modeler`) : contexte Motivation, lecture pure dans `@domain/motivation`, aucune table ni migration. 23 questions (106.1 à 106.23).
+- 21:00 UTC : scénarios (`po-acceptance`) : `features/106-celebration-de-l-univers.feature`, 17 scénarios pour 106a, 5 pour les livraisons suivantes (`@hors-106a`). 3 questions de plus (106.24 à 106.26). CADRAGE PRÊT publié sur #106.
