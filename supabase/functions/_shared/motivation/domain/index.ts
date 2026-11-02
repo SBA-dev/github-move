@@ -189,3 +189,9 @@ export {
   propositionDeLaQueteDuJour,
   reponseAuRefusDeLaQuete,
 } from "./paroles-de-la-quete.ts";
+export {
+  celebrationDe,
+  type CelebrationDeLUnivers,
+  type CriDeVictoire,
+  type VarianteDeLaCelebration,
+} from "./celebrations-des-univers.ts";
