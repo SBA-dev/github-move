@@ -515,12 +515,13 @@ Given(/^Léa a commencé le défi 1 de maths$/, async ({ page }) => {
   await commencerLeDefi(page);
 });
 
-// Rejouer : le repère d'un défi relevé doit proposer de le relever de nouveau (100.9).
-Given(/^Léa a commencé de nouveau le défi 1 de maths$/, async ({ page }) => {
+// Rejouer : le repère d'un défi relevé propose « Rejouer le défi » (100.9, 100.29).
+Given(/^Léa a choisi « Rejouer le défi » sur le repère « Défi (\d+) » de maths$/, async ({ page }, numero: string) => {
   await ouvrirLeParcoursDeMaths(page);
-  const cible = await verifierLeRepere(page, "1", "releve", "Défi 1 : relevé");
+  const cible = await verifierLeRepere(page, numero, "releve", `Défi ${numero} : relevé`);
   await expect(cible.getByRole("button"), "le repère d'un défi relevé propose de le rejouer").toHaveCount(1);
-  await releverLeDefi(page);
+  await cible.getByRole("button", { name: "Rejouer le défi", exact: true }).click();
+  await expect(ecranDuDefi(page)).toBeVisible();
 });
 
 Given(/^Léa a répondu juste à (\d+) questions du défi 1 de maths$/, async ({ page }, nombre: string) => {
@@ -645,9 +646,10 @@ Then(
   },
 );
 
-Then(/^le dessin du parcours montre le repère « Défi (\d+) » relevé, avec « Défi relevé »$/, async ({ famille, page }, numero: string) => {
+Then(/^le dessin du parcours montre le repère « Défi (\d+) » relevé, avec « Défi relevé » et « Rejouer le défi »$/, async ({ famille, page }, numero: string) => {
   const cible = await verifierLeRepere(pageDuParcours(famille, page), numero, "releve", `Défi ${numero} : relevé`);
   await expect(cible).toContainText("Défi relevé");
+  await expect(cible.getByRole("button", { name: "Rejouer le défi", exact: true })).toBeVisible();
 });
 
 Then(/^le dessin du parcours montre un seul repère de défi, « Défi (\d+) », après la leçon (\d+)$/, async ({ famille, page }, numero: string, place: string) => {
