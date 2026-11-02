@@ -333,24 +333,41 @@ button:focus-visible, summary:focus-visible { outline: 3px solid var(--texte); o
 .un-vers[data-lu="true"] { background: var(--surbrillance-fond); border-left-color: var(--surbrillance); font-weight: 700; }
 .ecoute { display: grid; justify-items: center; gap: 8px; }
 .ecoute-sans-son { margin: 0; padding: 10px 16px; border-radius: var(--rayon); background: var(--avertissement-fond); font-weight: 700; }
+/* Bulles de choix (#126) : le bouton est la zone de toucher et ne bouge jamais ; seul le calque `.flottement` flotte, de quelques pixels.
+   Le dessin (SVG, un par univers) se pose derrière le texte, qui reste sur un centre uni et clair. */
 .choix-de-la-question { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; max-width: 100%; }
-.bulle-de-choix {
+.bulle-de-choix, .bulle-de-choix:hover {
+  box-shadow: none;
+  position: relative;
+  width: var(--largeur-des-bulles, auto);
   min-width: 44px;
-  min-height: 44px;
+  min-height: 56px;
   max-width: 100%;
-  padding: 10px 22px;
-  border: 3px solid var(--contour);
+  padding: 0;
+  border: 0;
   border-radius: 999px;
-  background: var(--surface);
+  background: transparent;
   color: var(--texte);
   font: inherit;
   font-size: 1.35rem;
   font-weight: 700;
   overflow-wrap: anywhere;
   cursor: pointer;
-  transition: opacity .3s, scale .3s;
+  transition: opacity .3s;
 }
-.bulle-de-choix[aria-disabled="true"], .reecouter[aria-disabled="true"] { opacity: .45; cursor: default; }
+.flottement { position: relative; box-sizing: border-box; display: grid; place-items: center; height: 100%; min-height: 56px; padding: 10px 28px; text-align: center; }
+.bulle-de-choix[data-flotte="true"] .flottement { animation: flotter 3s ease-in-out infinite alternate; }
+@keyframes flotter { from { translate: 0 0; } to { translate: 0 -3px; } }
+.dessin-de-la-bulle { position: absolute; inset: 0; pointer-events: none; }
+.dessin-de-la-bulle svg { display: block; overflow: visible; }
+.decor-de-la-bulle * { vector-effect: non-scaling-stroke; }
+.texte-de-la-bulle { position: relative; }
+.bulle-de-choix[data-vide="true"] .texte-de-la-bulle { visibility: hidden; }
+.bulle-de-choix:hover:not([aria-disabled="true"]) .dessin-de-la-bulle { filter: brightness(.95); }
+/* Choix écarté : le dessin passe en gris pâle sans décor (voir DessinDeLaBulle), le texte garde plus de 4,5:1. */
+.bulle-de-choix[data-ecarte="true"] { opacity: .85; color: #3a3f4d; }
+.bulle-de-choix[aria-disabled="true"], .reecouter[aria-disabled="true"] { cursor: default; }
+.reecouter[aria-disabled="true"] { opacity: .45; }
 .je-ne-sais-pas {
   box-shadow: none;
   min-width: 44px;
@@ -365,14 +382,22 @@ button:focus-visible, summary:focus-visible { outline: 3px solid var(--texte); o
   font-weight: 700;
   cursor: pointer;
 }
-.bulle-de-choix[data-brille="true"], .etiquette[data-brille="true"], .touche[data-brille="true"] {
+.etiquette[data-brille="true"], .touche[data-brille="true"] {
   background: var(--surbrillance-fond);
   box-shadow: 0 0 0 6px var(--surbrillance), 0 0 18px 8px var(--surbrillance);
   animation: brille 1.2s ease-in-out infinite alternate;
 }
 @keyframes brille { from { box-shadow: 0 0 0 4px var(--surbrillance), 0 0 8px 2px var(--surbrillance); } to { box-shadow: 0 0 0 8px var(--surbrillance), 0 0 22px 10px var(--surbrillance); } }
-/* `scale` et non `transform` : Motion pilote `transform` pour le ressort du bouton, l'éclatement ne doit pas lutter avec lui. */
-.bulle-de-choix[data-eclatee="true"] { opacity: 0; scale: 1.5; }
+/* La bulle juste s'efface sur place, après son rebond : elle garde sa place, rien ne grandit ni n'éclate. */
+.bulle-de-choix[data-eclatee="true"] { opacity: 0; }
+.bulle-de-choix .signal-brille { border-radius: 999px; }
+/* Le mot juste rejoint sa place, qui s'illumine un instant : un éclat vert doux, qui ne ressemble pas au halo jaune de la bonne réponse montrée. */
+.mot-qui-voyage { position: fixed; z-index: 30; padding: 0 6px; translate: -50% -50%; border-radius: var(--rayon-petit); background: var(--surface); color: var(--principale-foncee); font-size: 1.25rem; font-weight: 700; pointer-events: none; }
+.mot-du-trou[data-en-route="true"] { visibility: hidden; }
+.trou[data-eclat="true"] { animation: eclat-d-un-trou .4s ease-out; }
+.tableau-de-conjugaison li[data-eclat="true"] { animation: eclat-d-une-ligne .4s ease-out; }
+@keyframes eclat-d-un-trou { from { background-color: var(--succes-fond); scale: 1.15; } to { background-color: transparent; scale: 1; } }
+@keyframes eclat-d-une-ligne { from { background-color: var(--succes-fond); } to { background-color: transparent; } }
 .question:hover { background: var(--surface); }
 .texte-a-trous { max-width: min(100%, 36rem); margin: 0; padding: 12px 18px; border-radius: var(--rayon); background: var(--surface); font-size: 1.25rem; line-height: 1.6; overflow-wrap: anywhere; }
 .trou { display: inline-block; min-width: 2.5rem; padding: 0 6px; border-bottom: 3px solid var(--contour); text-align: center; font-weight: 700; }
@@ -437,8 +462,6 @@ li.etiquette.posee { display: flex; align-items: center; cursor: default; border
 .porte-de-la-maison[aria-disabled="true"]:hover { background: transparent; }
 .place { min-width: 44px; min-height: 44px; padding: 6px 12px; border: 3px dashed var(--contour); border-radius: var(--rayon); background: var(--surface-voilee); font-size: 1.25rem; font-weight: 700; }
 .place[data-remplie="true"] { border-style: solid; background: var(--succes-fond); }
-.bulle-de-choix:hover:not([aria-disabled="true"]) { background: var(--surbrillance-fond); }
-.bulle-de-choix[aria-disabled="true"]:hover { background: var(--surface); }
 button.secondaire { color: var(--texte); background: var(--surface); border: 2px solid var(--contour); }
 button.secondaire:hover { background: var(--fond-doux); }
 .visuellement-cache {
