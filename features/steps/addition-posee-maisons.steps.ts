@@ -395,7 +395,9 @@ When(
 );
 
 When(new RegExp(`^Léa touche la maison des ${RANG}$`), async ({ page }, rang: string) => {
-  await maisonDe(page, rang).click();
+  // Un vrai toucher au centre de la maison : la maison peut être désactivée à l'étape calculer, ce qu'un click() refuserait d'attendre.
+  const centre = await centreDe(page, maisonDe(page, rang), `la maison des ${rang}`);
+  await page.mouse.click(centre.x, centre.y);
 });
 
 When(/^Léa pose les chiffres de (\d+) dans leurs colonnes$/, async ({ page }, nombre: string) => {
