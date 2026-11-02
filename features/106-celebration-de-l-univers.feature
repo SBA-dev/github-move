@@ -7,20 +7,23 @@ Fonctionnalité: Une célébration propre à chaque univers
 
   Contexte Motivation (docs/stories/106/domain-model.md). La célébration de l'univers est une mise en scène :
   elle ne change ni le défi relevé, ni les étoiles, ni la suite du parcours, et rien n'est enregistré.
-  Cadrage en attente de validation du PO (docs/stories/106/acceptance.md, questions 106.1 à 106.26).
-  Hypothèse de travail : les recommandations du modèle du domaine, et le découpage 106.17. Ce fichier couvre la
-  livraison 106a (mécanisme, moment « défi relevé » la première fois, univers « Sports » et sa musique). Les
-  scénarios tagués @hors-106a décrivent les livraisons suivantes (106b à 106h) et sont exclus de 106a.
+  Cadrage validé par le PO le 2026-11-02 (« 106 reco tout » : toutes les recommandations des questions 106.1 à
+  106.27, docs/stories/106/acceptance.md). Ce fichier couvre la livraison 106a (mécanisme, moment « défi relevé » la
+  première fois, univers « Sports » et sa musique). Les scénarios tagués @hors-106a décrivent les livraisons suivantes
+  (106b à 106h) : ils sont exclus de 106a et restent @a-valider jusqu'à leur livraison.
 
-  Mots employés dans ces scénarios (mots d'interface à valider, 106.1, 106.2 et 106.14) :
+  Mots employés dans ces scénarios (validés, 106.1, 106.2 et 106.14) :
   - « la célébration de l'univers « Sports » » : Coach Léo marque un but, puis fait une des trois variantes de la
-    célébration, tirée au hasard : « la glissade à genoux », « l'avion » ou « la danse avec clin d'œil » ;
+    célébration, tirée au hasard : « la glissade à genoux », « l'avion » ou « la danse avec clin d'œil ». Les
+    confettis de la scène de Coach Léo font partie de sa célébration de l'univers (106.24) ;
   - « BUT ! » : le cri de victoire de l'univers « Sports », affiché et jamais lu ;
   - « la célébration commune » : les confettis et l'effet sonore de la fin, les mêmes dans tous les univers (#97) ;
-  - « la musique de la célébration de Coach Léo » : son effet sonore, choisi par le PO à l'écoute (106.12) ;
-    « grande victoire » en attendant ce choix ;
-  - « l'image fixe de la célébration » : la même scène, dans son état final, quand l'appareil demande des
-    mouvements réduits (106.15).
+    quand la célébration de l'univers est jouée, ni ses confettis ni son effet sonore ne s'y ajoutent ;
+  - « la musique de la célébration de Coach Léo » : son effet sonore, qui remplace « grande victoire » (106.12).
+    Le PO la choisira à l'écoute ; d'ici là, c'est « grande victoire », entendu une seule fois ;
+  - « l'image fixe de la célébration » : la même scène, dans l'état final de la variante tirée, quand l'appareil
+    demande des mouvements réduits (106.15) ; aucun confetti ne tombe, ni ceux de Coach Léo ni ceux de la
+    célébration commune (106.24).
   Durées, pour l'implémentation et la review, jamais dans les étapes : 3 s au plus (106.9 B), boutons, clavier
   et annonce disponibles dès la première image.
 
@@ -45,7 +48,6 @@ Fonctionnalité: Une célébration propre à chaque univers
       Et Léa entend la musique de la célébration de Coach Léo, puis Coach Léo dit « Bravo Léa ! Tu as relevé le défi 1 ! »
       Mais la célébration commune n'est pas jouée
 
-    @a-valider
     Plan du Scénario: Le hasard ne choisit que la variante : avec « <variante> », Coach Léo marque toujours son but
       Étant donné que Léa a réussi les 5 premières leçons de maths du CE1
       Et que Léa a commencé le défi 1 de maths
