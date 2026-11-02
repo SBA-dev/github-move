@@ -1,4 +1,4 @@
-import { type CSSProperties, type ReactNode, useEffect, useRef, useState } from "react";
+import { type CSSProperties, Fragment, type ReactNode, useEffect, useRef, useState } from "react";
 import { type AvanceeDansLeParcours, avanceeDansLeParcours, type LeconDuParcours, type Parcours } from "@domain/apprentissage";
 import type { Univers } from "@domain/motivation";
 import { mouvementsReduits } from "../transitions/index.ts";
@@ -17,6 +17,8 @@ type Props = {
   readonly onMemoriserLaProchaineLecon: (leconId: string | undefined) => void;
   /** Le bouton d'une leçon du parcours. */
   readonly renduDeLaLecon: (lecon: LeconDuParcours) => ReactNode;
+  /** Ce qui se pose juste après une leçon (le repère d'un défi), sur le dessin comme dans la liste ordonnée ; ce n'est jamais un arrêt du personnage guide. */
+  readonly renduApresLaLecon: (lecon: LeconDuParcours) => ReactNode;
 };
 
 function marcheDe(avancee: AvanceeDansLeParcours | undefined, parcours: Parcours): Marche | undefined {
@@ -39,7 +41,7 @@ const styleDeLaLecon = (indexDAffichage: number): StyleDeLaLecon => ({ "--centre
 
 /** La page s'ouvre sur la prochaine leçon, ou sur la fin du dessin quand la matière est réussie. */
 function defilerJusqua(dessin: HTMLElement | null, arret: number, nombreDeLecons: number): void {
-  const arrivee = arret === nombreDeLecons ? dessin?.querySelector('[data-testid="fin-du-dessin"]') : dessin?.querySelector(`ol > li:nth-child(${arret + 1})`);
+  const arrivee = arret === nombreDeLecons ? dessin?.querySelector('[data-testid="fin-du-dessin"]') : dessin?.querySelectorAll("ol > li[data-lecon]")[arret];
   arrivee?.scrollIntoView({ block: "center", behavior: mouvementsReduits() ? "auto" : "smooth" });
 }
 
@@ -48,11 +50,15 @@ function defilerJusqua(dessin: HTMLElement | null, arret: number, nombreDeLecons
  * Le dessin est décoratif ; les leçons restent une liste ordonnée de boutons, dans l'ordre du parcours.
  * Le personnage guide se tient sur la prochaine leçon. Quand elle a avancé depuis la dernière fois, il marche jusqu'à elle, une seule fois.
  */
-export function DessinDuParcours({ parcours, univers, prochaineLeconConnue, onMemoriserLaProchaineLecon, renduDeLaLecon }: Props) {
+export function DessinDuParcours({ parcours, univers, prochaineLeconConnue, onMemoriserLaProchaineLecon, renduDeLaLecon, renduApresLaLecon }: Props) {
   const dessin = useRef<HTMLDivElement>(null);
   const mesures = useMesuresDuDessin(dessin);
   const [marche] = useState(() => (mouvementsReduits() ? undefined : marcheDe(avanceeDansLeParcours(prochaineLeconConnue, parcours), parcours)));
   const [annonce, setAnnonce] = useState("");
+  const apresLaLecon = (lecon: LeconDuParcours) => {
+    const apres = renduApresLaLecon(lecon);
+    return apres && <li className="apres-la-lecon">{apres}</li>;
+  };
   const arret = emplacementDe(parcours);
   const noms = [...parcours.lecons.map((lecon) => String(lecon.place)), NOM_DE_LA_FIN_DU_DESSIN];
   const { prochaineLecon } = parcours;
@@ -63,9 +69,12 @@ export function DessinDuParcours({ parcours, univers, prochaineLeconConnue, onMe
       {mesures && <TraceDuParcours mesures={mesures} />}
       <ol className="lecons-du-dessin">
         {parcours.lecons.map((lecon, indexDAffichage) => (
-          <li key={lecon.lecon} style={styleDeLaLecon(indexDAffichage)}>
-            {renduDeLaLecon(lecon)}
-          </li>
+          <Fragment key={lecon.lecon}>
+            <li data-lecon={lecon.lecon} style={styleDeLaLecon(indexDAffichage)}>
+              {renduDeLaLecon(lecon)}
+            </li>
+            {apresLaLecon(lecon)}
+          </Fragment>
         ))}
       </ol>
       <FinDuDessin univers={univers.cle} />

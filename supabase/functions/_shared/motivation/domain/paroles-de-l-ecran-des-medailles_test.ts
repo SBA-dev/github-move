@@ -1,4 +1,5 @@
 import { assertEquals } from "@std/assert";
+import { matiereDeCode, Niveau } from "../../catalogue/domain/index.ts";
 import type { Badge } from "./badges.ts";
 import { cabaneDe } from "./cabane.ts";
 import { histoireDe } from "./histoire.ts";
@@ -10,9 +11,11 @@ import {
   NOM_DE_L_ECRAN_DES_MEDAILLES,
   parolesALOuverture,
   parolesDeLaSectionDesBadgesOuSansBadge,
+  parolesDeLaSectionDesDefisReleves,
   parolesDeLaSectionDesRecords,
   parolesDuGuideALOuverture,
   phraseLueDeLaPastille,
+  TITRE_DES_DEFIS_RELEVES,
   TITRE_DES_RECORDS_DE_CALCUL_RAPIDE,
 } from "./paroles-de-l-ecran-des-medailles.ts";
 
@@ -308,5 +311,33 @@ Deno.test("avec « Tout lire à voix haute » et une tenue reçue, le titre des 
     phraseDeLEtat(cabaneDe(5)),
     "Les tenues de Noisette",
     "Encore 7 étoiles et Noisette recevra un nœud papillon !",
+  ]);
+});
+
+const defiMathsCe1 = { matiere: matiereDeCode("maths"), niveau: Niveau.de("CE1"), numero: 1 };
+
+Deno.test("la section des défis relevés s'appelle « Mes défis relevés »", () => {
+  assertEquals(TITRE_DES_DEFIS_RELEVES, "Mes défis relevés");
+});
+
+Deno.test("le bouton « Écouter » de la section des défis relevés lit son titre puis la ligne de chaque défi", () => {
+  const paroles = parolesDeLaSectionDesDefisReleves([defiMathsCe1]);
+
+  assertEquals(paroles, ["Mes défis relevés", "Défi 1 · Maths · CE1"]);
+});
+
+Deno.test("avec « Tout lire à voix haute », les défis relevés sont lus après les records", () => {
+  const paroles = parolesALOuverture({
+    toutLire: true,
+    pastilles: [pastille(12)],
+    cabane: undefined,
+    defisReleves: [defiMathsCe1],
+  });
+
+  assertEquals(paroles.slice(-4), [
+    "Mes records de calcul rapide",
+    "Calcul rapide : tables de 3 et 4 : ton record est de 12 calculs",
+    "Mes défis relevés",
+    "Défi 1 · Maths · CE1",
   ]);
 });

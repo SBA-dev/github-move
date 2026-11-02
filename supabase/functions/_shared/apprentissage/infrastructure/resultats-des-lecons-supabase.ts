@@ -54,4 +54,16 @@ export class ResultatsDesLeconsSupabase implements ResultatsDesLecons {
     if (!catalogue) throw new LeconIntrouvable(lecon);
     return resultatDepuisLaLigne(data, catalogue.competence);
   }
+
+  async meilleuresEtoilesDe(enfant: string): Promise<Map<string, NombreDEtoiles>> {
+    const { data, error } = await this.client().from("resultats_des_lecons").select(COLONNES)
+      .eq("profil", enfant);
+    if (error) throw new Error(`Lecture des résultats du profil impossible : ${error.message}`);
+    const meilleures = new Map<string, NombreDEtoiles>();
+    for (const ligne of data as LigneDeResultat[]) {
+      const etoiles = etoilesDeLaLigne(ligne.meilleures_etoiles);
+      if (etoiles !== undefined) meilleures.set(ligne.lecon, etoiles);
+    }
+    return meilleures;
+  }
 }

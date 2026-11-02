@@ -1,5 +1,6 @@
 import { assertEquals } from "@std/assert";
 import type { Badge } from "./badges.ts";
+import { matiereDeCode, Niveau } from "../../catalogue/domain/index.ts";
 import { cabaneDe } from "./cabane.ts";
 import { histoireDe } from "./histoire.ts";
 import type { PastilleDeRecord } from "./records-de-calcul-rapide.ts";
@@ -132,4 +133,24 @@ Deno.test("quand les étoiles n'ont pas pu être lues, la section des tenues n'a
   const sections = sectionsDeLEcran({ pastilles: [], cabane: undefined, tenues: undefined });
 
   assertEquals(sections, []);
+});
+
+Deno.test("« Mes défis relevés » est la dernière section, après les records de fluence", () => {
+  const sections = sectionsAAfficher(["defisReleves", "recordsDeFluence", "cabane", "badges"]);
+
+  assertEquals(sections, ["cabane", "badges", "recordsDeFluence", "defisReleves"]);
+});
+
+Deno.test("avec un défi relevé, « Mes défis relevés » s'ajoute à la fin sans déplacer les autres sections", () => {
+  const defi = { matiere: matiereDeCode("maths"), niveau: Niveau.de("CE1"), numero: 1 };
+
+  const sections = sectionsDeLEcran({ pastilles: [pastille], cabane: cabaneDe(3), defisReleves: [defi] });
+
+  assertEquals(sections, ["cabane", "recordsDeFluence", "defisReleves"]);
+});
+
+Deno.test("sans défi relevé, la section « Mes défis relevés » n'est pas affichée", () => {
+  const sections = sectionsDeLEcran({ pastilles: [pastille], cabane: cabaneDe(3), defisReleves: [] });
+
+  assertEquals(sections, ["cabane", "recordsDeFluence"]);
 });

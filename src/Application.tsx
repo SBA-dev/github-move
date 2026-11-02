@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { MotionConfig } from "motion/react";
 import { type Ecran as EcranDuDomaine, type EtatDeLEspaceParent, estUnEcranDuParent } from "@domain/famille";
+import type { Defi } from "@domain/apprentissage";
 import type { CodeDeMatiere } from "@domain/catalogue";
 import { universDe } from "@domain/motivation";
 import { EcranDeConnexion, useConnexion } from "./connexion/index.ts";
@@ -20,6 +21,7 @@ import { DockDeLEnfant, type EcranDuDock, estUnEcranDuDock } from "./accueil/ind
 import { useRefusDeLaQuete } from "./accueil/useRefusDeLaQuete.ts";
 import { LeconsPersonnellesDuParent } from "./accompagnement/index.ts";
 import { EcranDeLEpisode } from "./histoire/index.ts";
+import { EcranDeDefi, useRenvoiDesDefisGardes } from "./defis/index.ts";
 import { MesMedailles } from "./medailles/index.ts";
 import { SuiviDeLEspaceParent } from "./suivi/index.ts";
 import { MonParcours, useProchainesLeconsConnues } from "./parcours/index.ts";
@@ -49,7 +51,7 @@ const ACCUEIL: Lieu = { ecran: "accueil" };
 
 function estPageDeLEnfant(lieu: Lieu): boolean {
   return lieu.ecran === "jeu" || lieu.ecran === "parcours" || lieu.ecran === "toutes-les-lecons" || lieu.ecran === "medailles" ||
-    lieu.ecran === "test-de-depart" || lieu.ecran === "revision" || lieu.ecran === "lecon" || lieu.ecran === "seance" ||
+    lieu.ecran === "test-de-depart" || lieu.ecran === "revision" || lieu.ecran === "defi" || lieu.ecran === "lecon" || lieu.ecran === "seance" ||
     lieu.ecran === "episode";
 }
 
@@ -72,6 +74,7 @@ function ecranAffiche(lieu: Lieu, espaceParent: EtatDeLEspaceParent["type"], con
     case "test-de-depart":
     case "seance":
     case "revision":
+    case "defi":
       return lieu.ecran;
   }
 }
@@ -82,6 +85,7 @@ function lieuAffiche(demande: Lieu, espaceParent: EtatDeLEspaceParent["type"], c
 }
 
 export function Application() {
+  const [defiEnCours, setDefiEnCours] = useState<Defi | undefined>();
   const { lieu: lieuDemande, retourPossible, viaRetour, aller, remplacer, revenir, revenirA } = useNavigation();
   const acces = useAccesALEspaceParent();
   const connexion = useConnexion();
@@ -89,6 +93,7 @@ export function Application() {
   useRenvoiDesSeancesGardees(connecte);
   useRenvoiDesTestsDeDepartGardes(connecte);
   useRenvoiDesSeancesDeRevisionGardees(connecte);
+  useRenvoiDesDefisGardes(connecte);
   const lieuPossible = lieuAffiche(lieuDemande, acces.etat.type, connecte);
   const { profil: profilEnCours, charge: profilCharge, choisirQuiJoue, definir, oublier: oublierLeProfilEnCours } = useProfilEnCours();
   const enfantAbsent = profilCharge && !profilEnCours && estPageDeLEnfant(lieuPossible);
@@ -122,6 +127,10 @@ export function Application() {
   useEffect(() => {
     if (ecranDemande !== "espace-parent") fermerEspaceParent();
   }, [ecranDemande, fermerEspaceParent]);
+  const defiAbsent = lieu.ecran === "defi" && defiEnCours === undefined;
+  useEffect(() => {
+    if (defiAbsent) remplacer("jeu");
+  }, [defiAbsent, remplacer]);
   useEffect(() => {
     if (lieu !== lieuDemande) remplacer(lieu);
   }, [lieu, lieuDemande, remplacer]);
@@ -138,10 +147,15 @@ export function Application() {
       if (!suivantes.delete(matiere)) suivantes.add(matiere);
       return suivantes;
     });
+  const releverLeDefi = (defi: Defi) => {
+    setDefiEnCours(defi);
+    aller("defi");
+  };
   const [deconnexionEchouee, setDeconnexionEchouee] = useState(false);
   const oublierLeProfilEtSaProgression = () => {
     oublierLeProfilEnCours();
     setMatiereDuParcours(undefined);
+    setDefiEnCours(undefined);
     setClassesDAvantDeplieesPour(new Set());
     oublierLesProchainesLeconsConnues();
     oublierLesChoixDeToutesLesLecons();
@@ -194,7 +208,7 @@ export function Application() {
               surAccueil={ecran === "accueil"}
               enfant={profil}
               son={voix.son}
-              retourPossible={retourPossible && ecran !== "seance"}
+              retourPossible={retourPossible && ecran !== "seance" && ecran !== "defi"}
               onBasculerLeSon={voix.basculerLeSon}
               onAccueil={() => aller("accueil")}
               onRetour={revenir}
@@ -267,6 +281,17 @@ export function Application() {
                       onAccueil={() => revenirA("jeu")}
                     />
                   )}
+                  {lieu.ecran === "defi" && profilCharge && profilEnCours && defiEnCours && (
+                    <EcranDeDefi
+                      key={`${profilEnCours.id}/${defiEnCours.matiere.code}/${defiEnCours.numero}`}
+                      profil={profilEnCours}
+                      defi={defiEnCours}
+                      univers={univers}
+                      voix={voix}
+                      onMonParcours={() => revenirA("parcours")}
+                      onAccueil={() => revenirA("jeu")}
+                    />
+                  )}
                   {lieu.ecran === "parcours" && profilCharge && profilEnCours && (
                     <MonParcours
                       profil={profilEnCours}
@@ -276,6 +301,7 @@ export function Application() {
                       classesDAvantDeplieesPour={classesDAvantDeplieesPour}
                       onBasculerLesClassesDAvant={basculerLesClassesDAvant}
                       onOuvrirLaLecon={(leconId) => aller({ ecran: "lecon", leconId })}
+                      onReleverLeDefi={releverLeDefi}
                       prochainesLeconsConnues={prochainesLeconsConnues}
                       onMemoriserLaProchaineLecon={memoriserLaProchaineLecon}
                     />
@@ -334,6 +360,7 @@ export function Application() {
                       onRetour={() => revenirA({ ecran: "lecon", leconId: lieu.leconId })}
                       onLireLEpisode={(numero) => aller({ ecran: "episode", numero, origine: "fin-de-seance" })}
                       onLeconSuivante={(leconId) => aller({ ecran: "lecon", leconId })}
+                      onReleverLeDefi={releverLeDefi}
                       onToutesLesLecons={() => {
                         remplacer("jeu");
                         aller("toutes-les-lecons");

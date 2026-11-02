@@ -59,12 +59,9 @@ export async function attendreLesEnvoisEnCours(): Promise<void> {
   await Promise.allSettled([...envoisEnCours]);
 }
 
-let renvoiEnCours = false;
+let renvoiEnCours: Promise<void> | undefined;
 
-/** Renvoie les séances gardées sur l'appareil (retour du réseau, prochain lancement). S'arrête au premier échec. */
-export async function renvoyerLesSeancesGardees(): Promise<void> {
-  if (renvoiEnCours) return;
-  renvoiEnCours = true;
+async function renvoyer(): Promise<void> {
   try {
     const parent = await parentConnecte();
     if (parent === undefined) return;
@@ -76,7 +73,26 @@ export async function renvoyerLesSeancesGardees(): Promise<void> {
     }
   } catch {
     // Le prochain retour du réseau réessaiera.
-  } finally {
-    renvoiEnCours = false;
   }
+}
+
+/** Renvoie les séances gardées sur l'appareil (retour du réseau, prochain lancement). S'arrête au premier échec. */
+export function renvoyerLesSeancesGardees(): Promise<void> {
+  if (renvoiEnCours) return Promise.resolve();
+  const renvoi = renvoyer().finally(() => {
+    renvoiEnCours = undefined;
+  });
+  renvoiEnCours = renvoi;
+  return renvoi;
+}
+
+/** Pour les écritures qui dépendent des séances : attend le renvoi en cours, ou le fait. */
+export async function attendreLeRenvoiDesSeancesGardees(): Promise<void> {
+  await (renvoiEnCours ?? renvoyerLesSeancesGardees());
+}
+
+/** Une séance gardée n'a pas pu être envoyée : les étoiles du serveur ne la comptent pas encore. */
+export async function resteDesSeancesGardees(): Promise<boolean> {
+  const parent = await parentConnecte();
+  return parent !== undefined && (await new SeancesGardeesSurLAppareil().lire(parent)).length > 0;
 }

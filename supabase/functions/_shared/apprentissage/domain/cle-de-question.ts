@@ -22,6 +22,14 @@ export function estUnTypeDeQuestion(valeur: string): valeur is TypeDeQuestion {
   return Object.hasOwn(PREFIXES, valeur);
 }
 
+export const TYPE_DE_QUESTION_DES_ADDITIONS: TypeDeQuestion = "calcul";
+
+/** Le type de la question qu'un exercice pose, ou rien si l'exercice ne pose pas de question suivie. */
+export function typeDeQuestionDeLExercice(typeDExercice: string): TypeDeQuestion | undefined {
+  if (typeDExercice === "addition") return TYPE_DE_QUESTION_DES_ADDITIONS;
+  return estUnTypeDeQuestion(typeDExercice) ? typeDExercice : undefined;
+}
+
 export class CleDeQuestion {
   private constructor(readonly valeur: string) {}
 

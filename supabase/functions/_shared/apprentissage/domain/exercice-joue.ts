@@ -23,7 +23,7 @@ import { QuestionJouee, questionsJoueesAvec } from "./question-jouee.ts";
 import type { QuestionPosee } from "./question-posee.ts";
 import type { ParoleDue } from "./parole-due.ts";
 import type { QuestionSuivie, TypeDeQuestion } from "./question-suivie.ts";
-import { CleDeQuestion } from "./cle-de-question.ts";
+import { CleDeQuestion, TYPE_DE_QUESTION_DES_ADDITIONS } from "./cle-de-question.ts";
 import {
   questionsDeBoite,
   questionsDeCalcul,
@@ -147,7 +147,7 @@ export class ExerciceJoue {
     if (this.contenu.additions) {
       return this.contenu.additions.additionsRatees().map(({ enonce, tiree }) => ({
         cle: cleDuCalcul(enonce),
-        type: "calcul",
+        type: TYPE_DE_QUESTION_DES_ADDITIONS,
         ...(tiree && { tirage: enonce }),
       }));
     }

@@ -30,3 +30,11 @@ Deno.test("les écrans où l'enfant apprend ne sont pas des écrans du parent", 
 
   assertEquals(reponses, ecransDeLEnfant.map(() => false));
 });
+
+Deno.test("la séance de défi et sa fin sont un écran de l'enfant, pas du parent", () => {
+  const ecran: Ecran = "defi";
+
+  const estDuParent = estUnEcranDuParent(ecran);
+
+  assertEquals(estDuParent, false);
+});

@@ -1,8 +1,15 @@
 import { assertEquals } from "@std/assert";
 import { ProfilEnfantIntrouvable } from "../../famille/domain/erreurs.ts";
 import {
+  AucuneQuestionPourLeDefi,
+  DefiAVenir,
+  DefiIncoherent,
+  DefiInconnu,
+  DefiNonFini,
   LeconIntrouvable,
   ParentNonRattache,
+  PlanDuDefiIncoherent,
+  QuestionHorsDuDefi,
   SeanceDeRevisionIncoherente,
   SeanceIncoherente,
   TestDeDepartIncoherent,
@@ -48,6 +55,22 @@ Deno.test("un test de départ incohérent est un 422 sans détail sur la cause",
   assertEquals(statut, 422);
   assertEquals(message.includes(cause.message), false);
 });
+
+const erreursDuDefi: [string, Error][] = [
+  ["un défi inconnu", new DefiInconnu()],
+  ["un défi à venir", new DefiAVenir()],
+  ["une question hors du défi", new QuestionHorsDuDefi()],
+  ["un plan du défi incohérent", new PlanDuDefiIncoherent()],
+  ["un défi non fini", new DefiNonFini()],
+  ["un défi incohérent", new DefiIncoherent(new TirageInvalide())],
+  ["un défi sans aucune question à poser", new AucuneQuestionPourLeDefi()],
+];
+
+for (const [nom, erreur] of erreursDuDefi) {
+  Deno.test(`${nom} est un 422 propre au défi, sans détail sur la cause`, () => {
+    assertEquals(statutEtMessage(erreur), { statut: 422, message: "Ce défi n'a pas pu être vérifié." });
+  });
+}
 
 Deno.test("une entrée invalide est un 400 avec son message", () => {
   assertEquals(statutEtMessage(new EntreeInvalide("Le champ « lecon » est obligatoire.")), {

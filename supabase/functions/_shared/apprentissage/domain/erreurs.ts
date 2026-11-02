@@ -250,6 +250,13 @@ export class SeanceDeRevisionIncoherente extends Error {
   }
 }
 
+export class DefiIncoherent extends Error {
+  constructor(override readonly cause: Error) {
+    super(`Le défi envoyé est incohérent : ${cause.message}`);
+    this.name = "DefiIncoherent";
+  }
+}
+
 export class JourIncoherent extends Error {
   constructor(readonly jour: string) {
     super(`Le jour ${jour} ne correspond pas à la date de fin envoyée.`);
@@ -310,5 +317,54 @@ export class CleDeQuestionInvalide extends Error {
   constructor(readonly valeur: string) {
     super(`« ${valeur} » n'est pas une clé de question valide.`);
     this.name = "CleDeQuestionInvalide";
+  }
+}
+
+export class AucuneQuestionPourLeDefi extends Error {
+  constructor() {
+    super("Aucune question ne peut être posée dans les leçons de ce défi : il n'y a pas de plan à faire.");
+    this.name = "AucuneQuestionPourLeDefi";
+  }
+}
+
+export class DefiNonFini extends Error {
+  constructor() {
+    super("Ce défi n'est pas fini : il ne peut pas être terminé.");
+    this.name = "DefiNonFini";
+  }
+}
+
+export class DefiDejaTermine extends Error {
+  constructor() {
+    super("Ce défi est déjà terminé.");
+    this.name = "DefiDejaTermine";
+  }
+}
+
+export class DefiInconnu extends Error {
+  constructor() {
+    super("Ce défi n'existe pas dans le parcours de cette matière.");
+    this.name = "DefiInconnu";
+  }
+}
+
+export class DefiAVenir extends Error {
+  constructor() {
+    super("Ce défi n'est pas encore ouvert : toutes ses leçons ne sont pas réussies.");
+    this.name = "DefiAVenir";
+  }
+}
+
+export class QuestionHorsDuDefi extends Error {
+  constructor() {
+    super("Une question envoyée n'est posée dans aucune leçon de ce défi.");
+    this.name = "QuestionHorsDuDefi";
+  }
+}
+
+export class PlanDuDefiIncoherent extends Error {
+  constructor() {
+    super("Les questions envoyées ne peuvent pas venir du plan d'un défi.");
+    this.name = "PlanDuDefiIncoherent";
   }
 }

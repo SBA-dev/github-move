@@ -41,10 +41,10 @@ Deno.test("à la fin des étapes de leçon, le personnage guide applaudit", () =
   assertEquals(parole.humeur, "applaudit");
 });
 
-Deno.test("l'annonce de l'exercice suivant commence par « Nouveau défi » au premier tirage", () => {
+Deno.test("l'annonce de l'exercice suivant commence par « Nouveau jeu » au premier tirage", () => {
   const texte = annoncerExerciceSuivant("Les maisons des sons", hasardFixe(0));
 
-  assertEquals(texte, "Nouveau défi : Les maisons des sons !");
+  assertEquals(texte, "Nouveau jeu : Les maisons des sons !");
 });
 
 Deno.test("l'annonce de l'exercice suivant commence par « Jeu suivant » au tirage du milieu", () => {

@@ -11,7 +11,7 @@ export type MesuresDuDessin = {
   readonly emplacements: readonly Point[];
 };
 
-const SELECTEUR_DES_LECONS = "ol > li > button";
+const SELECTEUR_DES_LECONS = "ol > li[data-lecon] > button";
 const SELECTEUR_DE_LA_FIN = '[data-testid="fin-du-dessin"]';
 
 function boiteDe(element: HTMLElement): Boite {
