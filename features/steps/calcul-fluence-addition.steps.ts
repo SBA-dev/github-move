@@ -939,6 +939,8 @@ Given(/^Léa a calculé la colonne des (unités|dizaines|centaines)$/, async ({ 
 When(
   /^Léa répond « ([0-9]+) » pour la colonne des (unités|dizaines|centaines)$/,
   async ({ page }, nombre: string, libelle: string) => {
+    // #127 : « Léa répond » suit parfois directement la leçon de test, sans que l'exercice soit commencé.
+    if (!(await page.getByTestId("addition-posee").isVisible())) await commencerLAdditionDeTest(page);
     await verifierLaColonneEnCours(page, libelle);
     const reussies = await questionsReussies(page);
     const paroles = (await journal(page)).speaks;

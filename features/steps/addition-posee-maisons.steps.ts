@@ -11,6 +11,7 @@ import {
   choixDeLaQuestion,
   colonne,
   commencerLAdditionDeTest,
+  partie20,
   exactement,
   finDeSeance,
   phraseDeLaColonne,
@@ -186,7 +187,13 @@ async function journal127(page: Page): Promise<{ passages: Passage[]; depuisLeGe
   return { passages: lu.passages, depuisLeGeste: lu.passages.slice(lu.marque) };
 }
 
+/** Début d'un geste : « Noisette ne dit aucun encouragement » (étape de #20) compare aux paroles dites jusque-là. */
+async function noterLesParolesDejaDites(page: Page): Promise<void> {
+  partie20(page).paroles = (await journal(page)).speaks;
+}
+
 async function marquerLeGesteTactile(page: Page): Promise<void> {
+  await noterLesParolesDejaDites(page);
   await page.evaluate(() => {
     const brut = Reflect.get(window, "__jeu127") as Journal127 | undefined;
     if (brut) brut.marque = brut.passages.length;
@@ -396,6 +403,7 @@ When(
 
 When(new RegExp(`^Léa touche la maison des ${RANG}$`), async ({ page }, rang: string) => {
   // Un vrai toucher au centre de la maison : la maison peut être désactivée à l'étape calculer, ce qu'un click() refuserait d'attendre.
+  await noterLesParolesDejaDites(page);
   const centre = await centreDe(page, maisonDe(page, rang), `la maison des ${rang}`);
   await page.mouse.click(centre.x, centre.y);
 });
@@ -529,7 +537,7 @@ Then(/^Léa voit toujours (\d+) maisons$/, async ({ page }, nombre: string) => {
 });
 
 Then(new RegExp(`^Léa voit « (\\d+) » écrit sous la colonne des ${RANG}$`), async ({ page }, ecrit: string, rang: string) => {
-  await expect(colonne(page, rang).getByTestId("chiffre-ecrit")).toHaveText(ecrit);
+  await expect(colonne(page, rang).getByTestId("chiffre-ecrit")).toHaveText(String(ecrit));
 });
 
 // --- Alors : la retenue qui saute
