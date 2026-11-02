@@ -46,6 +46,7 @@ Fonctionnalité: Une célébration propre à chaque univers
       Alors Coach Léo joue la célébration de l'univers « Sports » : il marque un but, puis fait la glissade à genoux, l'avion ou la danse avec clin d'œil
       Et Léa lit « BUT ! »
       Et Léa entend la musique de la célébration de Coach Léo, puis Coach Léo dit « Bravo Léa ! Tu as relevé le défi 1 ! »
+      Et Coach Léo n'apparaît qu'une fois, dans la célébration de l'univers, la bulle gardant ses paroles
       Mais la célébration commune n'est pas jouée
 
     Plan du Scénario: Le hasard ne choisit que la variante : avec « <variante> », Coach Léo marque toujours son but
@@ -110,6 +111,7 @@ Fonctionnalité: Une célébration propre à chaque univers
       Quand Léa répond juste à toutes les questions du défi
       Alors Léa entend l'effet sonore « séance terminée », puis Coach Léo dit « Bravo Léa ! Tu as encore relevé le défi 1 ! »
       Et des confettis tombent
+      Et Coach Léo apparaît à côté de la bulle de ses paroles
       Mais Coach Léo ne joue pas la célébration de l'univers
 
   Règle: La célébration jouée est celle de l'univers du profil au moment du défi relevé ; un univers dont la célébration n'est pas encore livrée garde la célébration commune
