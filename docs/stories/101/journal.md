@@ -75,3 +75,9 @@ Note : les heures des titres de ce journal ont été corrigées le 2026-10-29 à
 | Intégrations de `main` | 0 (`main` inchangé), 0 conflit |
 | Verrous | aucun |
 | Escalades | aucune |
+
+## Merge (2026-11-02)
+
+- 19:12 UTC : annonce `[Responsable]` sur #64 (commentaire 6586073146) : merge autorisé par le PO (« merge 101 et 100 OK… »), VERROU merge accordé à #101, tableau à jour.
+- Intégration de `main` `57e49ff` (#136) par merge commit, sans conflit. Après intégration : 2605 tests Deno, lint, fmt, `tsc` et build verts ; `bddgen` puis **43/43** `@issue-101` sur `telephone` (9,5 min), aucun step à adapter. Relecture de l'intégration par `mr-reviewer` : APPROUVÉ (non bloquant : `delais.steps.ts` ne liste pas `@issue-101` ; les scénarios longs de #101 utilisent déjà `$test.slow()`). Le dépôt n'a pas de CI de PR.
+- Mesures, complément : 1 intégration de `main`, 0 conflit ; attente de l'autorisation de merge du 2026-10-29 15:40 au 2026-11-02 19:12.
