@@ -1,0 +1,264 @@
+# Modèle du domaine : issue #106, une célébration propre à chaque univers
+
+Contexte : **Motivation**. La story choisit **comment fêter** un fait déjà connu (défi relevé, matière réussie, tenue reçue) selon l'univers du profil. Elle ne crée ni étoile, ni défi relevé, ni tenue, et ne change aucun résultat. Apprentissage publie une lecture pure de plus, la « matière réussie par la séance » (106.4 A, livraison 106g). Aucun agrégat, aucun événement enregistré, aucune migration, aucune Edge Function, aucune donnée d'enfant nouvelle.
+
+État : **cadrage validé par le PO le 2026-11-02** (« 106 reco tout », commentaire https://github.com/SBA-dev/github-move/issues/106#issuecomment-6588450629) : les recommandations des questions 106.1 à 106.27 sont retenues. #100 est mergée (`f8a4787`), #96 aussi. Le TDD commence par la livraison **106a** (mécanisme, défi relevé, Sports).
+
+## Contexte
+
+### Pourquoi Motivation
+
+- La context map dit : « Motivation décide seule des récompenses ; une récompense ne modifie jamais une note ». Une célébration est une mise en scène de récompense : même place que les annonces de la fin (#32, #33, #102) et les effets sonores de la fin (#97).
+- L'univers, le personnage guide, ses dessins et ses tenues appartiennent déjà à Motivation (`univers.ts`, `personnage-guide.ts`, `tenues.ts`, `src/univers/`).
+- #100 a mis la mise en scène du défi dans Motivation (décision 0038, point 5) : `defiReleveParLaSeance(relevesAvant, defi)` (`motivation/domain/defis-releves.ts`) rend l'`IssueDuDefi` (`annonce` « Défi relevé ! » la première fois, `undefined` quand il est rejoué ; `effetSonore` `grandeVictoire` ou `seanceTerminee`). #106 s'y branche, dans `src/defis/FinDuDefi.tsx`.
+
+### Faits lus, sans rien écrire
+
+| Fait | Contexte qui le décide | Disponible |
+|---|---|---|
+| Défi relevé pour la première fois, ou rejoué | Apprentissage (#100), mis en scène par Motivation | Oui : `defiReleveParLaSeance(relevesAvant, defi)` → `IssueDuDefi` ; première fois ⇔ `annonce !== undefined` (c'est déjà la règle de `FinDuDefi.tsx` pour `dejaReleve`) |
+| Tenue reçue par la séance (paliers 5, 12, 23, 37) | Motivation (#102) | Oui : `tenueRecueParLaSeance(meilleuresAvant, lecon, etoilesDeLaSeance)` → `TenueDuPersonnageGuide \| undefined` |
+| Matière réussie par la séance | Apprentissage (#26) | **À ajouter en 106g** (106.4 A) : `matiereReussieDuNiveau(entrees: EntreesDuParcours, matiere)` existe dans `toutes-les-lecons.ts` (non exporté par `index.ts`), mais pas le passage « pas réussie avant la séance, réussie après ». Même schéma que `defiOuvertParLaSeance(avant, apres, matiere, niveau, defisReleves)` |
+| Univers du profil en cours | Famille → Motivation (#6) | Oui : `universDe(cle)`, clé inconnue → `animaux` |
+| Tenue portée | Motivation, mémoire de l'appareil (#102) | Oui : `tenueAMontrer` |
+
+Le test de départ n'est pas lu (il n'est pas une séance, réponse 27.4). La séance de révision ne rend aucune leçon réussie : elle ne déclenche aucun moment.
+
+### Ce qui existe et ne change pas
+
+- **Célébration commune (#97)** : confettis (`src/celebration/Confettis.tsx`), 1,5 s au plus, un toucher hors des boutons ne fait rien (97.17), boutons et clavier utilisables tout de suite (97.22, 97.23). Elle reste la célébration de toute fin qui n'a pas de moment de célébration, d'un défi rejoué (106.3, 106.25) et de tout univers pas encore livré (106.18). La durée de 1,5 s ne change pas pour elle.
+- **Fin du défi (#100)** : annonce « Défi relevé ! » et « grande victoire » la première fois, « séance terminée » quand il est rejoué (100.25), paroles de fin du défi (`parolesDeFinDeDefi`, humeur `applaudit`), boutons « Mon parcours » et « Accueil ».
+- **Personnage guide** : humeurs `content`, `reflechit`, `applaudit` et gestes communs (`saute`, `penche`) dans `src/univers/PersonnageGuide.tsx`. Ils ne changent pas.
+- **Muet** : coupe seulement la voix ; les effets sonores, donc la musique de la célébration, restent (97.2, 97.20, 106.11) ; seule la voix suspendue des écrans du parent les coupe (97.13).
+
+### Communication entre contextes
+
+Aucune relation nouvelle. La lecture « Apprentissage → Motivation (défis relevés, #100) » et la lecture des meilleures étoiles (#32, #102) suffisent. En 106g, Apprentissage publie une lecture pure de plus (`matiereReussieParLaSeance`), même schéma que `defiOuvertParLaSeance` (#100) et l'avancée dans le parcours (#99). Motivation importe le type `EffetSonore` de Voix (Published Language existant, #97) ; Voix ne connaît toujours pas les univers : les musiques y sont nommées d'après le son, pas d'après l'univers (106.12).
+
+## Termes
+
+| Terme | Statut | Remarque |
+|---|---|---|
+| Univers, Personnage guide, Agent Max, Défi, Défi relevé, Fin du défi, Partie du parcours, Matière réussie, Fin de la séance, Tenue du personnage guide, Palier des tenues, Tenue reçue, Tenue portée, Effet sonore, Muet, Humeur du personnage guide | existants | Réutilisés sans les redéfinir |
+| **Célébration de l'univers** | **nouveau, validé (106.1)** | Mise en scène propre à l'univers du profil, jouée par son personnage guide au moment de célébration. Synonymes interdits : « animation de victoire », « cinématique », « cutscene », « célébration » seul |
+| **Célébration commune** | **nouveau, validé (106.1)** | Les confettis et l'effet sonore de la fin de #97, les mêmes dans tous les univers. Lève le conflit : les docs de #97 disaient « célébration » seul |
+| **Variante de la célébration** | nouveau, validé (106.1, 106.13) | Une des façons de célébrer d'un univers, tirée au hasard (Sports : glissade à genoux, avion, danse avec clin d'œil). Synonymes interdits : « figure », « numéro », « skin » |
+| **Moment de célébration** | nouveau, validé (106.3 à 106.7) | Fait qui fait jouer la célébration de l'univers : premier défi relevé, matière réussie par la séance, tenue reçue. Synonymes interdits : « déclencheur », « trigger », « fin de chapitre » |
+| **Cri de victoire** | nouveau, validé (106.14) | Mot affiché par la célébration, propre à l'univers (« BUT ! », « Bravo ! », « Hourra ! », « Magique ! », « Enquête résolue ! », « Mission accomplie ! »). Distinct de l'**expression du personnage guide** (félicitation tirée au hasard pendant la séance), même si deux textes se ressemblent. « Cri » seul reste interdit (synonyme interdit de l'expression du personnage guide) |
+| **Danse de victoire** | **nouveau, validé (106.6 A)** | Confiée à #106 par #102.7. Ce n'est pas une animation de plus : c'est la célébration de l'univers jouée au moment « tenue reçue », le personnage guide portant la tenue reçue (106h). Une variante par palier (106.6 B) est écartée |
+| « Chapitre », « Chapitre réussi ! » | **interdits** | Les maquettes affichent « Chapitre réussi ! » : remplacé par l'annonce du moment (« Défi relevé ! », « Matière réussie ! »). Décisions 99.24 et #100 |
+| « Agente Mila » | **interdit** | Le tableau de l'issue la cite encore : c'est **Agent Max** (96.5, 96.8) |
+| « Accessoire » | pas un terme | Le ballon, la baguette, la loupe, le ruban, la lance sont des éléments du dessin (`src/`), pas du domaine. #102 a écarté « accessoire » pour les tenues |
+| « Coffre », « coupe », « podium » | interdits dans les célébrations | 98.6, skill `gamification` section 5 |
+| Animation d'échec des maquettes (« Presque ! On réessaie ? ») | hors de #106 (106.20) | Ce serait un retour de réponse fausse (#97), story à part. « échec » n'est pas un mot de l'enfant |
+| Noisette | existant | **« elle »** (106.19), comme `univers.ts` (voix féminine) et l'issue ; le README des maquettes, qui dit « il », est à corriger |
+
+## Modèle
+
+Pas d'agrégat : rien ne change d'état, rien n'est enregistré, aucun invariant ne lie deux faits dans une même transaction. Le modèle est fait de **value objects** et de **fonctions pures** (des lectures), comme la cabane (#32) et les tenues reçues (#102).
+
+```mermaid
+classDiagram
+  class MomentDeCelebration {
+    <<value object>>
+    defiReleve
+    matiereReussie
+    tenueRecue
+  }
+  class FaitsDeLaFinPourLaCelebration {
+    <<value object>>
+    defiRelevePourLaPremiereFois : booleen
+    matiereReussieParLaSeance : booleen
+    tenueRecue : TenueDuPersonnageGuide ou rien
+  }
+  class CelebrationsDUnUnivers {
+    <<value object>>
+    univers : CleUnivers
+    variantes : VarianteDeLaCelebration[1..n]
+    cri : CriDeVictoire
+    musique : EffetSonore
+  }
+  class VarianteDeLaCelebration {
+    <<value object>>
+    cle : texte
+  }
+  class CelebrationDeLUnivers {
+    <<value object>>
+    univers : CleUnivers
+    moment : MomentDeCelebration
+    variante : VarianteDeLaCelebration
+    cri : CriDeVictoire
+    musique : EffetSonore
+  }
+  class CELEBRATIONS_DES_UNIVERS {
+    <<catalogue>>
+    une entrée par univers livré
+  }
+  FaitsDeLaFinPourLaCelebration ..> MomentDeCelebration : momentDeCelebrationDeLaFin
+  CELEBRATIONS_DES_UNIVERS o-- CelebrationsDUnUnivers
+  CelebrationsDUnUnivers o-- VarianteDeLaCelebration
+  CelebrationsDUnUnivers ..> CelebrationDeLUnivers : celebrationDe(moment, cleUnivers, hasard)
+```
+
+`FaitsDeLaFinPourLaCelebration` est un nom distinct de `FaitsDeLaFin` (`effets-sonores.ts`, #97), qui existe déjà avec un autre contenu (`fin`, `leconAcquise`, `tenueRecue : booleen`…) : les deux ne se fusionnent pas. La fin du défi n'entre pas dans `FaitsDeLaFin` (`fin` n'y vaut que `seance`, `seanceDeRevision` ou `testDeDepart`).
+
+### Value objects et règles de validité
+
+- **`MomentDeCelebration`** : `"defiReleve" | "matiereReussie" | "tenueRecue"` (106.3, 106.4 A, 106.6 A). Pas de « fin de séance » (106.8 non). En 106a, seul `defiReleve` est produit ; `matiereReussie` arrive en 106g, `tenueRecue` en 106h.
+- **`VarianteDeLaCelebration`** : une clé propre à l'univers, d'après les maquettes validées (106.2). Les noms en clair des variantes (« le grand jeté »…) ne sont pas montrés à l'enfant ; ceux des univers 106b à 106e sont fixés à la livraison de chacun (106.26).
+
+| Univers | Personnage guide | Action (toujours la même) | Variantes tirées au hasard | Cri de victoire (106.14) | Livraison |
+|---|---|---|---|---|---|
+| Sports | Coach Léo | tir de dos, le ballon entre dans le but ; confettis de la scène (106.24) | `glissade`, `avion`, `danse` | « BUT ! » | 106a |
+| Danse | Lili | entrée en scène, pirouette | `jete`, `ruban`, `sauts` | « Bravo ! » | 106b |
+| Animaux | Noisette (elle) | attrape une noisette dorée | `jongle`, `mange`, `joues` | « Hourra ! » | 106c |
+| Princesses et fées | Lumi | un sort fait éclore une fleur | `arc`, `envol`, `signes` | « Magique ! » | 106d |
+| Police | Agent Max | retrouve un chiot perdu | `orchestre`, `trottinette`, `danse` | « Enquête résolue ! » | 106e |
+| Pompiers | Capitaine Sam | planche et maquette à dessiner puis à valider par le PO (106.16 : eau, arc-en-ciel, cloche de la caserne) | à dessiner | « Mission accomplie ! » | 106f |
+
+  Validité : au moins une variante par univers livré ; clés uniques dans un univers. Un univers pas encore livré n'a pas d'entrée : `celebrationDe` rend « aucune célébration de l'univers » et la fin garde la célébration commune (106.18). Quand les six univers sont livrés, le catalogue peut devenir exhaustif sur `CleUnivers` (un univers ajouté sans célébration ne compile plus).
+- **`CriDeVictoire`** : texte court, fixe par univers ; du contenu pour l'enfant, soumis à la règle absolue. Affiché, jamais lu à part (106.14).
+- **`musique`** : un `EffetSonore` de Voix, choisi par le PO à l'écoute parmi les sons Kenney CC0 (106.12, 106.27). En attendant son choix : **`grandeVictoire`** (existant) pour tous les univers. Elle **remplace** l'effet sonore de l'`IssueDuDefi` (un seul son à la fin) et passe avant la parole de fin du défi.
+- **`CelebrationDeLUnivers`** : ce que le domaine rend au front. Il dit **ce qui** est fêté et **quelle variante** ; le front choisit **comment** la dessiner (skill `gamification`, section 3).
+
+### Lectures (fonctions pures, `@domain/motivation`)
+
+- `momentDeCelebrationDeLaFin(faits: FaitsDeLaFinPourLaCelebration)` → `MomentDeCelebration | undefined`. Au plus un moment par fin. Quand deux faits arrivent ensemble : `matiereReussie` passe avant `tenueRecue`, la tenue restant annoncée dans les nouveautés comme dans #102 (106.7). `defiReleve` ne se combine avec rien : la séance de défi ne donne aucune étoile (100.13), donc ni tenue ni leçon réussie. À la fin du défi, `defiRelevePourLaPremiereFois` vient de l'`IssueDuDefi` (`annonce !== undefined`).
+- `celebrationDe(moment, cleUnivers, hasard: Hasard)` → `CelebrationDeLUnivers | undefined` (`undefined` pour un univers pas encore livré). Univers par `universDe` (clé inconnue → `animaux`). Variante tirée uniformément, sans mémoire (106.13), avec le port `Hasard` (`motivation/domain/hasard.ts`, `tirage` qui lève `TirageHorsIntervalle`). Le tirage d'un élément dans une liste existe déjà : `tirerDans(textes: readonly string[], hasard)` dans `paroles.ts` (non exporté par `index.ts`). Il est typé pour des textes : le généraliser à une liste de n'importe quel type (refactor) plutôt que de convertir le résultat.
+- 106g, dans `@domain/apprentissage` : `matiereReussieParLaSeance(avant: EntreesDuParcours, apres: EntreesDuParcours, matiere: Matiere)` → booléen, vrai quand `matiereReussieDuNiveau` passe de faux à vrai. La règle de réussite reste dans Apprentissage ; `index.ts` exporte la nouvelle lecture.
+
+### Commandes, événements, erreurs
+
+- **Aucune commande** : rien ne change d'état.
+- **Aucun événement de domaine nouveau, rien d'enregistré.** Les faits déclencheurs existent déjà (défi relevé, tenue reçue) ou sont recalculés (matière réussie).
+- **Aucune erreur métier nouvelle.** `TirageHorsIntervalle` (existante) protège le tirage.
+
+### Ce qui reste dans `src/` (affichage, aucune règle)
+
+- Les dessins animés de chaque univers (`src/univers/celebrations/`), portés depuis les maquettes de `docs/maquettes/`, avec la tenue portée (106.23).
+- Le **moteur d'animation des maquettes** (personnage articulé animé en JavaScript), porté dans **un composant isolé** de `src/univers/celebrations/` ; **Motion** pour l'entrée et la sortie de la scène (106.22, décision 0039).
+- L'image fixe en mouvements réduits (état final de la variante tirée, avec le cri de victoire et l'annonce, sans confettis : 106.15, 106.24), l'annonce `aria-live` unique, le dessin `aria-hidden`.
+- Le fichier MP3 de chaque musique (`src/voix/`, `public/sons/`, licences, `docs/sons.md`), quand le PO les aura choisies.
+- La durée (jusqu'à 3 s, 106.9) et le comportement d'un toucher (sans effet, 106.10) et des boutons (utilisables dès la première image).
+
+## Invariants
+
+1. **L'univers ne change que la mise en scène.** Pour un même fait, tous les univers ont le même moment, la même annonce (« Défi relevé ! »), les mêmes étoiles, les mêmes boutons, la même suite du parcours. Les célébrations des six univers durent à peu près pareil (équité). Une matière réussie a la même célébration qu'un défi relevé, seule l'annonce change (« Matière réussie ! », 106.5).
+2. **Au plus une célébration par fin.** Une fin qui a un moment de célébration joue la célébration de l'univers à la place de la célébration commune de #97, jamais les deux (106.7, 106.12). Les confettis de la scène de Coach Léo font partie de sa célébration de l'univers (106.24).
+3. **Le hasard ne choisit que la variante.** Il ne décide jamais si l'enfant est fêté, ni de ce qu'il reçoit (skill `gamification`, section 5). Le tirage passe par le port `Hasard` ; rien n'est tiré par `Math.random()` dans un composant. La même variante peut revenir deux fois de suite (106.13).
+4. **Univers du moment.** La célébration est celle de l'univers du profil au moment où elle est jouée. Un enfant qui change d'univers voit celle du nouvel univers au moment suivant, rien n'est perdu (106.21).
+5. **Défi relevé : une fois.** La célébration de l'univers est jouée au premier défi relevé seulement ; rejoué, la fin garde la célébration commune (confettis compris) et « séance terminée » (100.25, 106.3, 106.25).
+6. **Elle ne retient jamais l'enfant.** Elle dure **jusqu'à 3 s** (106.9, écart à 97.23 accepté par le PO, décision 0039), à condition que les boutons et le clavier soient utilisables **dès la première image**. Un bouton touché agit tout de suite et arrête la célébration et sa musique (97.22). Un toucher hors des boutons ne fait rien : il ne passe pas la célébration (97.17, 106.10).
+7. **Mouvements réduits : rien ne bouge, l'information reste.** Image fixe de la même scène (état final de la variante tirée), le cri de victoire et l'annonce du moment ; aucun confetti (106.15, 106.24).
+8. **Une seule annonce aux lecteurs d'écran**, celle du moment (« Défi relevé ! », « Matière réussie ! »). Le dessin et le cri de victoire ne sont pas annoncés (106.14).
+9. **Son.** La musique est un effet sonore : jouée en Muet comme en Son, coupée par la voix suspendue des écrans du parent (97.2, 97.13, 106.11). Elle remplace « grande victoire » (un seul son) et passe avant la parole du personnage guide, jamais par-dessus ; elle ne dure pas plus longtemps que la célébration (106.12). « Grande victoire » en attendant le choix du PO.
+10. **Règle absolue sur les contenus**, à toutes les tailles et sur l'image fixe : Police, une enquête qui aide (ni arme, ni menottes, ni arrestation, ni gyrophare) ; Pompiers, de l'eau et un arc-en-ciel (ni flamme, ni fumée, ni sirène, ni maison qui brûle) ; Sports, une fête joyeuse (ni adversaire moqué, ni coupe, ni podium, ni classement) ; Princesses et fées et Danse, tenues adaptées aux enfants, sans stéréotype ; tous : aucun coffre.
+11. **Motivation à part.** Rien n'est enregistré ; aucune étoile, aucun défi relevé, aucune tenue n'est créé ou changé par la célébration.
+
+## Événements
+
+Aucun événement nouveau. #106 **lit** des faits existants au moment d'afficher la fin :
+
+| Fait lu | Fin | Source | Livraison |
+|---|---|---|---|
+| Défi relevé pour la première fois | Fin du défi (`src/defis/FinDuDefi.tsx`) | `defiReleveParLaSeance` (#100) : `IssueDuDefi.annonce` présente | 106a |
+| Matière réussie par la séance | Fin de la séance | `matiereReussieParLaSeance` (Apprentissage, à ajouter) | 106g |
+| Tenue reçue par la séance | Fin de la séance | `tenueRecueParLaSeance` (#102) | 106h |
+
+## Emplacement
+
+Aucune migration, aucune table, aucune Edge Function, aucun `application/` ni `infrastructure/` : le choix de la célébration est une lecture pure faite dans le navigateur, hors ligne compris, et rien n'est enregistré. Le serveur n'a rien à revalider (aucun résultat n'en dépend).
+
+```
+supabase/functions/_shared/motivation/domain/
+  celebrations-des-univers.ts         # CELEBRATIONS_DES_UNIVERS, VarianteDeLaCelebration, CriDeVictoire, CelebrationDeLUnivers, celebrationDe
+  celebrations-des-univers_test.ts
+  moment-de-celebration.ts            # MomentDeCelebration, FaitsDeLaFinPourLaCelebration, momentDeCelebrationDeLaFin
+  moment-de-celebration_test.ts
+  paroles.ts                          # tirerDans généralisé (refactor)
+  index.ts                            # exports
+supabase/functions/_shared/apprentissage/domain/       (106g)
+  matiere-reussie-par-la-seance.ts    # matiereReussieParLaSeance
+  matiere-reussie-par-la-seance_test.ts
+  index.ts
+supabase/functions/_shared/voix/domain/effet-sonore.ts # musiques choisies par le PO (noms d'après le son, 106.12), plus tard
+src/univers/celebrations/             # une scène animée par personnage guide, image fixe, moteur isolé (106.22)
+src/defis/FinDuDefi.tsx               # branchement de la célébration de l'univers (106a)
+src/voix/                             # fichier MP3 de chaque musique, plus tard
+public/sons/                          # MP3 et licences Kenney ; docs/sons.md, plus tard
+```
+
+**Décision 0039** (`docs/decisions/0039-celebration-de-l-univers-jusqu-a-3-s-et-moteur-isole.md`) : durée jusqu'à 3 s (écart à 97.23, 106.9) et moteur d'animation des maquettes porté dans un composant isolé, Motion pour l'entrée et la sortie (106.22).
+
+**Données d'enfants** : aucune. La variante tirée n'est pas gardée (106.13) ; l'univers est déjà dans le profil ; rien n'est envoyé au serveur ni à l'IA.
+
+Glossaire : les termes célébration de l'univers, célébration commune, variante de la célébration, moment de célébration, cri de victoire et danse de victoire sont ajoutés en fin de la section Motivation de `docs/domain/glossaire.md`. Context map : une note « Apprentissage publie une lecture pure de plus, la matière réussie par la séance (#106, 106g) », sans relation nouvelle.
+
+## Découpage validé (106.17)
+
+| Livraison | Contenu | Dépend de |
+|---|---|---|
+| **106a** | Mécanisme : `MomentDeCelebration` (défi relevé seulement), catalogue, tirage de la variante, image fixe, annonce, boutons ; **Sports** (Coach Léo, maquette de référence), avec « grande victoire » en attendant sa musique ; les cinq autres univers gardent la célébration commune | #100 (mergée) |
+| 106b à 106e | Un univers par livraison : Danse, Animaux, Princesses et fées, Police (port de la maquette, musique choisie, planche relue, noms des variantes fixés : 106.26) | 106a |
+| 106f | Pompiers : planche et maquette d'abord, validées par le PO, puis livraison | 106a, maquette validée |
+| 106g | Moment « matière réussie » (106.4 A, 106.5) | 106a |
+| 106h | Danses de victoire aux paliers des tenues (106.6 A) | 106a |
+| Hors #106 | Petites célébrations à chaque fin de séance (106.8 non) ; réaction animée à une réponse fausse (106.20) ; grand défi de la matière (#137, qui dira si le grand défi relevé a sa célébration) | — |
+
+Chaque livraison est une issue que le PO crée.
+
+## Questions ouvertes
+
+Aucune question ouverte pour 106a. Toutes les questions sont **tranchées le 2026-11-02** par le PO (« 106 reco tout ») : la recommandation est retenue pour chacune.
+
+Reste une action du PO, qui ne bloque pas 106a : ajouter `opengameart.org` ou `kenney.nl` aux domaines autorisés de l'environnement (106.27), pour préparer l'écoute des musiques ; d'ici là, « grande victoire ».
+
+### Questions tranchées
+
+**106.1 Nom.** *Tranchée (reco retenue, 2026-11-02)* : **« Célébration de l'univers »** pour le concept, **« Célébration commune »** pour celle de #97 ; « célébration » seul est évité.
+
+**106.2 Référence.** *Tranchée (reco retenue, 2026-11-02)* : les cinq maquettes validées (action fixe, puis une variante sur trois tirée au hasard) remplacent le tableau de l'issue (Police : chiot retrouvé ; Animaux : jonglage). L'issue est à corriger (Agent Max, pas Agente Mila ; « Défi relevé ! » à la place de « Chapitre réussi ! »).
+
+**106.3 Défi rejoué.** *Tranchée (reco retenue, 2026-11-02)* : célébration de l'univers au **premier** défi relevé seulement ; un défi rejoué garde la célébration commune et « séance terminée » (100.25).
+
+**106.4 Fin d'une matière.** *Tranchée (reco retenue, 2026-11-02)* : **A**, la célébration est jouée quand une séance rend la **matière réussie** (#26), en livraison 106g ; #137 dira si le grand défi relevé a aussi la sienne. Le test de départ ne déclenche rien (27.4).
+
+**106.5 Matière plus grande ?** *Tranchée (reco retenue, 2026-11-02)* : oui, la **même** célébration que le défi d'une partie, avec seulement une autre annonce (« Matière réussie ! »).
+
+**106.6 Danses de victoire (#102.7).** *Tranchée (reco retenue, 2026-11-02)* : **A**, au palier des tenues (5, 12, 23, 37 étoiles), le personnage guide joue sa célébration de l'univers en portant la tenue reçue (106h). B (une variante de plus par palier) pourra faire l'objet d'une story plus tard.
+
+**106.7 Deux moments à la même fin.** *Tranchée (reco retenue, 2026-11-02)* : une seule célébration, celle de la matière ; la tenue reste annoncée dans les nouveautés comme dans #102.
+
+**106.8 Fin de chaque séance.** *Tranchée (reco retenue, 2026-11-02)* : **non** dans #106 ; story à part si le PO la veut.
+
+**106.9 Durée.** *Tranchée (reco retenue, 2026-11-02)* : **B**, jusqu'à **3 s**, avec les boutons, le clavier et l'annonce disponibles dès la première image ; écart à 97.23 noté dans la décision 0039.
+
+**106.10 Toucher.** *Tranchée (reco retenue, 2026-11-02)* : on suit 97.17, un toucher hors des boutons **ne fait rien** ; seuls les boutons agissent, tout de suite. L'issue est à corriger.
+
+**106.11 Muet.** *Tranchée (reco retenue, 2026-11-02)* : on suit 97.2, la musique est **jouée en Muet**, coupée seulement sur les écrans du parent. L'issue est à corriger.
+
+**106.12 Musique.** *Tranchée (reco retenue, 2026-11-02)* : la musique de l'univers **remplace** « grande victoire » (un seul son), la parole de fin du défi vient après elle ; le PO choisit les six musiques à l'écoute (sons Kenney CC0), nommées d'après le son. **« Grande victoire » en attendant son choix.** Une musique ne dure pas plus longtemps que la célébration.
+
+**106.13 Hasard.** *Tranchée (reco retenue, 2026-11-02)* : tirage à chaque fois, sans mémoire ; la même variante peut revenir deux fois de suite.
+
+**106.14 Cri de victoire.** *Tranchée (reco retenue, 2026-11-02)* : affiché mais pas lu ; le lecteur d'écran n'annonce que le moment. Pompiers : « Mission accomplie ! ».
+
+**106.15 Mouvements réduits.** *Tranchée (reco retenue, 2026-11-02)* : image fixe de l'état final de la variante tirée, avec le cri et l'annonce.
+
+**106.16 Pompiers.** *Tranchée (reco retenue, 2026-11-02)* : planche puis maquette de Capitaine Sam (eau, arc-en-ciel, cloche de la caserne ; jamais de flammes, de fumée ni de sirène), validées par le PO avant la livraison 106f.
+
+**106.17 Découpage.** *Tranchée (reco retenue, 2026-11-02)* : 106a (mécanisme, défi relevé, Sports), puis un univers par livraison (106b à 106f), puis la matière réussie (106g) et les danses de victoire (106h) ; chaque livraison est une issue créée par le PO.
+
+**106.18 Univers pas encore livrés.** *Tranchée (reco retenue, 2026-11-02)* : un univers sans célébration garde la célébration commune de #97.
+
+**106.19 Noisette.** *Tranchée (reco retenue, 2026-11-02)* : **« elle »**, comme aujourd'hui ; le README des maquettes est à corriger.
+
+**106.20 Réponse fausse animée.** *Tranchée (reco retenue, 2026-11-02)* : l'animation « Presque ! On réessaie ? » sort de #106 (story à part liée à #97).
+
+**106.21 Changement d'univers.** *Tranchée (reco retenue, 2026-11-02)* : la célébration du nouvel univers dès le moment suivant.
+
+**106.22 Moteur d'animation.** *Tranchée (reco retenue, 2026-11-02)* : le moteur des maquettes est porté dans un composant isolé de `src/univers/celebrations/`, avec Motion pour l'entrée et la sortie de la scène ; décision 0039.
+
+**106.23 Tenue portée.** *Tranchée (reco retenue, 2026-11-02)* : le personnage guide garde sa tenue portée (#102) pendant la célébration.
+
+**106.24 à 106.27** (posées dans `docs/stories/106/acceptance.md` et sur l'issue). *Tranchées (reco retenue, 2026-11-02)* : les confettis de la scène de Coach Léo font partie de sa célébration, aucun confetti en mouvements réduits (106.24) ; un défi rejoué garde les confettis de la célébration commune (106.25) ; les noms des variantes des autres univers sont fixés à la livraison de chacun (106.26) ; accès réseau pour les musiques : oui, à faire par le PO dans l'environnement, 106a part avec « grande victoire » (106.27).
