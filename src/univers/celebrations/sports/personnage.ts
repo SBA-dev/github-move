@@ -76,7 +76,7 @@ export function creerCoachLeo(racine: SVGSVGElement) {
   const n = elementsDe(racine);
   n("leo").innerHTML = STRUCTURE_DE_COACH_LEO;
   const bras = { g: creerLeBras("g"), d: creerLeBras("d") };
-  const bouches = [...n("bouches").children] as SVGElement[];
+  const bouches = [...n("bouches").children];
   const q1 = (g: ParentNode, classe: string) => trouver(g, `.${classe}`);
   let vueCourante = 0;
 
@@ -98,7 +98,7 @@ export function creerCoachLeo(racine: SVGSVGElement) {
     poser(q1(g, "ombre"), "d", trace(decaler(m, 3.2, 1.4), .32, .92));
     poser(q1(g, "lumiere"), "d", trace(decaler(m, -3.2, -1.4), .34, .9));
     poser(q1(g, "manche-ombre"), "d", trace(decaler(m, 4, 1), .04, .26, 2));
-    const mainG = trouver(g, `#main-${c}`);
+    const mainG = trouver(g, `#sports-main-${c}`);
     deplacer(mainG, `translate(${r1(m.W.x)} ${r1(m.W.y)}) rotate(${r1(m.dir)}) scale(.86)`);
     const versCentre = c === "g" ? 1 : -1, score = Math.cos(m.dir * DEG) * versCentre - Math.sin(m.dir * DEG) * .8;
     const cote: CoteDeMain = score > 0 ? "miroir" : "droit";
@@ -170,7 +170,7 @@ export function creerCoachLeo(racine: SVGSVGElement) {
     poser(n("bouche"), "opacity", b.z > .05 ? 1 : 0);
     deplacer(n("bouche"), `translate(${r1(b.x)} -1) scale(${r3(Math.max(.3, b.z))} 1)`);
     for (const m of bouches) {
-      const e = m.dataset["emo"];
+      const e = m.getAttribute("data-emo");
       poser(m, "opacity", e === ex.emo ? u : e === ex.prec ? 1 - u : 0);
       if (e === ex.emo) deplacer(m, `scale(${r3(lerp(.7, 1, E.retour(u)))})`);
     }

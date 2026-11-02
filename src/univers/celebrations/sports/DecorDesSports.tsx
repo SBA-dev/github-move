@@ -54,27 +54,27 @@ export function DecorDesSports({ racine, cri }: Props) {
 
       <g>
         <path d="M117.8 305.7 V239 H242.2 V305.7" fill="none" stroke="#FFFFFF" strokeWidth="4" strokeLinecap="round" opacity=".95" />
-        <g id="filet-fond" fill="none" stroke="#FFFFFF" strokeWidth="1.3" opacity=".8" />
-        <g id="ballon-couche" />
-        <g id="filet-cotes" fill="none" stroke="#FFFFFF" strokeWidth="1.1" opacity=".55" />
+        <g id="sports-filet-fond" fill="none" stroke="#FFFFFF" strokeWidth="1.3" opacity=".8" />
+        <g id="sports-ballon-couche" />
+        <g id="sports-filet-cotes" fill="none" stroke="#FFFFFF" strokeWidth="1.1" opacity=".55" />
         <path d="M105 232 L117.8 239 M255 232 L242.2 239 M105 312 L117.8 305.7 M255 312 L242.2 305.7" fill="none" stroke="#FFFFFF" strokeWidth="4" strokeLinecap="round" opacity=".95" />
         <g fill="none" stroke="#33304A" strokeWidth="12" strokeLinecap="round" strokeLinejoin="round"><path d="M105 312 V232 H255" /></g>
         <g fill="none" stroke="#FFFFFF" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round"><path d="M105 312 V232 H255" /></g>
         <path d="M255 232 V312" fill="none" stroke="#33304A" strokeWidth="12" strokeLinecap="round" />
         <path d="M255 232 V312" fill="none" stroke="#FFFFFF" strokeWidth="7" strokeLinecap="round" />
       </g>
-      <g id="impact" fill="none" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" opacity="0" />
+      <g id="sports-impact" fill="none" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" opacity="0" />
 
-      <ellipse id="ombre-leo" cx="70" cy="420" rx="34" ry="8" fill="#15502B" opacity=".25" />
-      <g id="poussiere" fill="#EAF6D2" stroke="#BFE39C" strokeWidth="1.5" />
-      <g id="vitesse" fill="none" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" opacity="0" />
-      <g id="leo" />
-      <g id="etoiles" opacity="0" fill="#FFC93C" stroke="#33304A" strokeWidth="1.8" strokeLinejoin="round" />
-      <g id="gouttes" opacity="0" fill="#9FD3FF" stroke="#33304A" strokeWidth="1.5" />
+      <ellipse id="sports-ombre-leo" cx="70" cy="420" rx="34" ry="8" fill="#15502B" opacity=".25" />
+      <g id="sports-poussiere" fill="#EAF6D2" stroke="#BFE39C" strokeWidth="1.5" />
+      <g id="sports-vitesse" fill="none" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" opacity="0" />
+      <g id="sports-leo" />
+      <g id="sports-etoiles" opacity="0" fill="#FFC93C" stroke="#33304A" strokeWidth="1.8" strokeLinejoin="round" />
+      <g id="sports-gouttes" opacity="0" fill="#9FD3FF" stroke="#33304A" strokeWidth="1.5" />
 
       <g transform="translate(180 112)">
-        <g id="rayons" opacity="0" />
-        <g id="cri" opacity="0">
+        <g id="sports-rayons" opacity="0" />
+        <g id="sports-cri" opacity="0">
           <text x="3" y="4" textAnchor="middle" dominantBaseline="middle" className="cri-de-victoire-ombre" fontWeight="800" fontSize="70" fill="#FFC93C" stroke="#33304A" strokeWidth="12" strokeLinejoin="round" paintOrder="stroke" data-testid="ombre-du-cri-de-victoire">{cri}</text>
           <text x="0" y="0" textAnchor="middle" dominantBaseline="middle" className="cri-de-victoire" fontWeight="800" fontSize="70" fill="#1F63D8" stroke="#FFFFFF" strokeWidth="6" strokeLinejoin="round" paintOrder="stroke" data-testid="cri-de-victoire">{cri}</text>
         </g>

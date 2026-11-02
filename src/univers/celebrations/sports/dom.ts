@@ -12,7 +12,7 @@ export function elementsDe(racine: ParentNode): (id: string) => SVGElement {
   return (id) => {
     const connu = memo.get(id);
     if (connu) return connu;
-    const trouve = trouver(racine, `#${id}`);
+    const trouve = trouver(racine, `#sports-${id}`);
     memo.set(id, trouve);
     return trouve;
   };

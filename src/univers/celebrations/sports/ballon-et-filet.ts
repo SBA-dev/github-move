@@ -1,6 +1,6 @@
 import { CONTOUR } from "./dessin-du-personnage.ts";
 import { clamp01, DEG, E, fenetre, lerp, r1, r3 } from "./courbes.ts";
-import { creerUnGroupe, deplacer, elementsDe, NS, poser } from "./dom.ts";
+import { creerUnGroupe, deplacer, elementsDe, NS, poser, trouver } from "./dom.ts";
 import { T_FRAPPE, T_IMPACT } from "./poses.ts";
 
 type Point = { readonly x: number; readonly y: number };
@@ -59,7 +59,7 @@ export function creerLeBallon(racine: SVGSVGElement) {
   const n = elementsDe(racine);
   const ballon = creerUnGroupe();
   ballon.innerHTML = BALLON;
-  const forme = ballon.firstElementChild as SVGElement;
+  const forme = trouver(ballon, ".forme-du-ballon");
   const trainee = creerUnGroupe({ fill: "#FFFFFF" });
   trainee.innerHTML = `<circle opacity=".4"/><circle opacity=".25"/><circle opacity=".12"/>`;
   const traits = creerUnGroupe({ fill: "none", stroke: "#FFFFFF", "stroke-width": "2.5", "stroke-linecap": "round" });
