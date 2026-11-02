@@ -19,3 +19,4 @@ Branche de base : `main` (`47a6d34`). Branche : `feature/106-celebration-de-l-un
 - B2 célébration de l'univers Sports (cri, musique, variante au hasard) : RED `834478e`, GREEN `8a77a22` (`tirerDans` rendu générique dans le même commit, nécessaire à la compilation).
 - B3 univers pas encore livré : test `f12d9d7`, vert d'emblée (le type `Partial` du catalogue impose déjà le cas) ; prouvé par mutation (entrée `danse` ajoutée → échec, puis annulée).
 - `deno test` : 2771 verts.
+- Revue delta du bloc (`989fec9..f12d9d7`) : APPROUVÉ, aucun bloquant. Non bloquant retenu pour le câblage : aucun `switch` sur `MomentDeCelebration` avec des branches que 106a ne déclenche pas. Dernier commit relu : `f12d9d7`.
