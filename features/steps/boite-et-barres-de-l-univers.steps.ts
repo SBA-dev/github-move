@@ -250,12 +250,17 @@ async function lireLeJournal(page: Page): Promise<Journal131> {
   };
 }
 
+/** Une parole est en cours : on ne compte une fin de lecture que si elle en termine une (pause entre deux paroles, en séance de révision). */
+async function uneParoleEstEnCours(page: Page): Promise<boolean> {
+  return await page.evaluate(() => ((Reflect.get(window, "__faux") as { actifs: unknown[] } | undefined)?.actifs.length ?? 0) > 0);
+}
+
 /** Attend que le journal (ou l'écran) dise ce qu'on attend, en laissant finir la parole en cours au plus `terminaisons` fois. */
 async function attendreQue(page: Page, vrai: () => Promise<boolean>, message: string, terminaisons = 3): Promise<void> {
   let restantes = terminaisons;
   await expect.poll(async () => {
     if (await vrai()) return true;
-    if (restantes > 0) {
+    if (restantes > 0 && (await uneParoleEstEnCours(page))) {
       restantes--;
       await terminerLaLecture(page);
     }
@@ -936,7 +941,8 @@ Then(/^les barres de (\d+) et de (\d+) se remplissent comme une jauge, jusqu'au 
 });
 
 Then(/^la barre de (\d+) se remplit comme une jauge, jusqu'au bout de sa barre$/, async ({ page }, valeur: string) => {
-  await attendreLeRemplissage(page, [valeur], true);
+  const aRepondu = (await schema(page).getAttribute("data-resolu")) === "true";
+  await attendreLeRemplissage(page, [valeur], aRepondu);
   const lu = await lireLeJournal(page);
   expect(etatsDeLaJaugeDeLaBarre(lu, valeur), `la barre de ${valeur} se remplit avant d'être pleine`).toContain("se-remplit");
   await verifierQueLaJaugeVaJusquAuBout(page, valeur, lu);
@@ -1016,7 +1022,8 @@ Then(/^les barres de (\d+) et de (\d+) restent pleines, sans se remplir de nouve
 });
 
 Then(/^la barre de (\d+) a la même largeur que la barre « \? » avant la réponse$/, async ({ page }, valeur: string) => {
-  await attendreLeRemplissage(page, [valeur], true);
+  const aRepondu = (await schema(page).getAttribute("data-resolu")) === "true";
+  await attendreLeRemplissage(page, [valeur], aRepondu);
   const lu = await lireLeJournal(page);
   const avant = lu.largeurs.filter((l) => l.valeur === "?").at(-1);
   const apres = lu.largeurs.filter((l) => l.valeur === String(valeur)).at(-1);
@@ -1026,7 +1033,8 @@ Then(/^la barre de (\d+) a la même largeur que la barre « \? » avant la répo
 });
 
 Then(/^l'effet sonore « réponse juste » commence avant que la barre de (\d+) se remplisse$/, async ({ page }, valeur: string) => {
-  await attendreLeRemplissage(page, [valeur], true);
+  const aRepondu = (await schema(page).getAttribute("data-resolu")) === "true";
+  await attendreLeRemplissage(page, [valeur], aRepondu);
   const lu = await lireLeJournal(page);
   const son = sonsDuJournal(lu.evenements).find((s) => s.nom === "reponse-juste");
   expect(son, "l'effet sonore « réponse juste » a été entendu").toBeDefined();
