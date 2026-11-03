@@ -877,6 +877,8 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
   line-height: 1.4;
   overflow-wrap: anywhere;
 }
+/* Mode dys : l'espacement des lettres élargit « Centaines » ; le nom rétrécit au lieu de se couper au milieu du mot. */
+[data-mode-dys="true"] .nom-de-la-colonne { font-size: .7rem; overflow-wrap: normal; }
 .maison-de-la-colonne:hover:not([aria-disabled="true"]) .nom-de-la-colonne { background: var(--surbrillance-fond); }
 .place-de-la-retenue { display: flex; align-items: center; justify-content: center; min-height: 56px; }
 /* La retenue : l'objet de l'univers, son chiffre en texte par-dessus. Elle saute (animation de la Web Animations API) ; avec les mouvements réduits, elle apparaît. */
