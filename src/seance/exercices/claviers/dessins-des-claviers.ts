@@ -11,7 +11,8 @@ const UNIVERS_PAR_DEFAUT: CleUnivers = "animaux";
 
 function contenuDe(nomDuFichier: string): string | undefined {
   const source = SOURCES[`./dessins/${nomDuFichier}.svg`];
-  return source === undefined ? undefined : CONTENU_D_UN_SVG.exec(source)?.[1];
+  /** Sans les retours à la ligne entre les tracés : le texte d'une touche ou d'une case reste celui de sa lettre ou de son chiffre. */
+  return source === undefined ? undefined : CONTENU_D_UN_SVG.exec(source)?.[1]?.replace(/>\s+</g, "><").trim();
 }
 
 /** Le dessin de l'univers, ou celui des animaux de la forêt quand l'univers n'en a pas. */
