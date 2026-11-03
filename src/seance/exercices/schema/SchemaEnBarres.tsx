@@ -93,6 +93,7 @@ function MorceauDeBarre({ morceau, rempli }: { readonly morceau: Morceau; readon
   const etatDeLaJauge = useEtatDeLaJauge(rempli, mouvementsReduits);
   const cherche = morceau.valeur === null && morceau.role !== "suite";
   const aUneJauge = morceau.vide !== true;
+  const { contour, rayon, decoupe } = DESSINS_DES_JAUGES[univers];
   return (
     <div
       className="morceau-de-barre"
@@ -102,12 +103,22 @@ function MorceauDeBarre({ morceau, rempli }: { readonly morceau: Morceau; readon
       data-cherchee={cherche ? "true" : undefined}
       data-jauge={aUneJauge ? etatDeLaJauge : undefined}
       data-univers={univers}
-      style={styleDeLaTaille(morceau.taille)}
+      style={{ ...styleDeLaTaille(morceau.taille), ...silhouetteDeLaJauge(contour, rayon, decoupe) }}
     >
       {aUneJauge && etatDeLaJauge !== "vide" && <JaugeDeLaBarre role={morceau.role} univers={univers} />}
       <span className="valeur-de-la-barre" data-testid={cherche ? "valeur-cherchee" : undefined}>{libelle(morceau)}</span>
     </div>
   );
+}
+
+type Silhouette = CSSProperties & Record<`--${string}`, string>;
+
+function silhouetteDeLaJauge(contour: string, rayon: string, decoupe: string | undefined): Silhouette {
+  return {
+    "--contour-de-la-jauge": contour,
+    "--rayon-de-la-jauge": rayon,
+    ...(decoupe === undefined ? {} : { "--decoupe-de-la-jauge": decoupe }),
+  };
 }
 
 function JaugeDeLaBarre({ role, univers }: { readonly role: string; readonly univers: CleUnivers }) {
@@ -120,8 +131,8 @@ function JaugeDeLaBarre({ role, univers }: { readonly role: string; readonly uni
       aria-hidden="true"
       style={{ backgroundColor: ROLES_DU_TOUT.includes(role) ? tout : partie }}
     >
-      <svg className="bout-de-jauge" viewBox="0 0 24 44" focusable="false">{boutGauche}</svg>
-      <svg className="bout-de-jauge" viewBox="0 0 24 44" focusable="false">{boutDroit}</svg>
+      <svg className="bout-de-jauge" viewBox="0 0 24 44" preserveAspectRatio="none" focusable="false">{boutGauche}</svg>
+      <svg className="bout-de-jauge" viewBox="0 0 24 44" preserveAspectRatio="none" focusable="false">{boutDroit}</svg>
     </div>
   );
 }

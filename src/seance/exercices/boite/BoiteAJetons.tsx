@@ -5,7 +5,7 @@ import type { ItemDeBoite } from "@domain/catalogue";
 import { useUnivers } from "../../../univers/index.ts";
 import { ReponseAuCalcul } from "../ReponseAuCalcul.tsx";
 import { DESSINS_DES_BOITES } from "./dessins/boites.tsx";
-import { nombreDeRangees, RangeesDeJetons } from "./RangeesDeJetons.tsx";
+import { RangeesDeJetons } from "./RangeesDeJetons.tsx";
 
 type Props = {
   readonly boite: BoiteEnCours;
@@ -20,8 +20,6 @@ type Props = {
   readonly onJeNeSaisPas: () => void;
 };
 
-const RANGEES_MAXIMUM_A_TAILLE_NORMALE = 4;
-
 export function BoiteAJetons({ boite, item, phrasesDites, ouverte, ...reponse }: Props) {
   const mouvementsReduits = useReducedMotion() ?? false;
   const univers = useUnivers();
@@ -29,7 +27,6 @@ export function BoiteAJetons({ boite, item, phrasesDites, ouverte, ...reponse }:
   const deroulee = phrasesDites >= boite.deroulement.length;
   const etat = ouverte !== undefined || !deroulee ? "ouverte" : "fermee";
   const dessin = DESSINS_DES_BOITES[univers];
-  const rangees = item === undefined ? 0 : nombreDeRangees(item.a) + (item.sens === "retrait" ? 0 : nombreDeRangees(item.b));
   return (
     <div
       className="boite-a-jetons"
@@ -42,7 +39,6 @@ export function BoiteAJetons({ boite, item, phrasesDites, ouverte, ...reponse }:
         data-testid="boite"
         data-etat={etat}
         data-univers={univers}
-        data-serree={rangees > RANGEES_MAXIMUM_A_TAILLE_NORMALE ? "true" : undefined}
         role="img"
         aria-label={libelleDeLaBoite(etat, ouverte)}
       >

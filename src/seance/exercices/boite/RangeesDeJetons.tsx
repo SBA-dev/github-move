@@ -14,15 +14,11 @@ type Props = {
 
 const JETONS_PAR_RANGEE = 5;
 
-export function nombreDeRangees(nombre: number): number {
-  return Math.ceil(nombre / JETONS_PAR_RANGEE);
-}
-
 /** Des jetons rangés par 5, le cinquième de chaque rangée marqué. Avec les mouvements réduits, rien ne tombe ni ne bouge. */
 export function RangeesDeJetons({ nombre, nouveaux = false, sortants = 0, mouvement }: Props) {
   const univers = useUnivers();
   const mouvementsReduits = useReducedMotion() ?? false;
-  const rangees = Array.from({ length: nombreDeRangees(nombre) }, (_, rang) => rang);
+  const rangees = Array.from({ length: Math.ceil(nombre / JETONS_PAR_RANGEE) }, (_, rang) => rang);
   const etatDuJeton = (rang: number) => nouveaux ? "nouveau" : rang >= nombre - sortants ? "sortant" : undefined;
   const mouvementDuJeton = (etat: string | undefined) => {
     if (mouvementsReduits) return "pose";
@@ -48,10 +44,10 @@ export function RangeesDeJetons({ nombre, nouveaux = false, sortants = 0, mouvem
                   data-etat={etat}
                   data-mouvement={mouvementDuJeton(etat)}
                 >
-                  {cinquieme && <span className="marque-du-cinquieme" data-testid="marque-du-cinquieme" data-marque="commune" />}
                   <svg className="dessin-du-jeton" data-testid="dessin-du-jeton" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
                     {DESSINS_DES_JETONS[univers]}
                   </svg>
+                  {cinquieme && <span className="marque-du-cinquieme" data-testid="marque-du-cinquieme" data-marque="commune" />}
                 </span>
               );
             },

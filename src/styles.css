@@ -788,15 +788,14 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 /* Boîte à jetons : le dessin de l'univers en deux couches (fond, puis rebord avant) avec les jetons entre les deux, rangés par 5.
    Le cadre est celui du dessin (288 × 250) : la boîte garde sa taille, ouverte ou fermée, quel que soit le nombre de jetons. */
 .boite { --taille-du-jeton: 32px; --ecart-des-jetons: 6px; position: relative; flex: none; width: min(100%, 18rem); aspect-ratio: 288 / 250; margin: 0; }
-.boite[data-serree="true"] { --taille-du-jeton: 26px; --ecart-des-jetons: 4px; }
 .dessin-de-la-boite, .rebord-de-la-boite { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
 .contenu-de-la-boite { position: absolute; left: 0; right: 0; top: 23.2%; height: 58.4%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--ecart-des-jetons); pointer-events: none; }
 .jetons { display: grid; justify-items: center; gap: var(--ecart-des-jetons); max-width: 100%; }
 .rangee-de-jetons { display: flex; justify-content: center; gap: var(--ecart-des-jetons); }
 .jeton { position: relative; box-sizing: border-box; flex: none; width: var(--taille-du-jeton); height: var(--taille-du-jeton); }
 .dessin-du-jeton { position: relative; display: block; width: 100%; height: 100%; }
-/* La marque du cinquième jeton : un anneau orange derrière la pastille, le même dans les six univers. */
-.marque-du-cinquieme { position: absolute; inset: -2px; border-radius: 50%; background-color: var(--jeton-cinquieme); }
+/* La marque du cinquième jeton : un anneau orange autour de l'objet, par-dessus le bord de la pastille, le même dans les six univers. */
+.marque-du-cinquieme { position: absolute; inset: 2%; border-radius: 50%; background-color: var(--jeton-cinquieme); pointer-events: none; -webkit-mask: radial-gradient(circle closest-side, transparent 74%, #000 75%); mask: radial-gradient(circle closest-side, transparent 74%, #000 75%); }
 .jeton[data-etat="sortant"] { opacity: .45; }
 /* Les mouvements durent 400 ms au plus ; ils n'ont lieu que si l'appareil ne demande pas de mouvements réduits (le jeton est alors « posé »). */
 .jeton[data-mouvement="tombe"] { animation: jeton-tombe .4s ease-in-out backwards; }
@@ -821,8 +820,10 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 .morceau-de-barre[data-role="ecart"], .morceau-de-barre[data-role="suite"] { border-style: dashed; background: transparent; }
 /* La jauge de l'univers : un remplissage uni qui couvre la barre, et deux bouts de dessin de taille fixe. Elle se dévoile sans changer la largeur de la barre. */
 .morceau-de-barre[data-jauge="vide"] { border-style: dashed; }
+/* Une barre remplie prend la silhouette et le contour de son univers (rayon, bouts découpés) ; vide, elle est la même partout. */
+.morceau-de-barre:is([data-jauge="se-remplit"], [data-jauge="pleine"]) { border-color: var(--contour-de-la-jauge); border-radius: var(--rayon-de-la-jauge); clip-path: var(--decoupe-de-la-jauge, none); }
 .jauge { position: absolute; inset: 0; z-index: 0; display: flex; justify-content: space-between; pointer-events: none; }
-.bout-de-jauge { flex: none; display: block; width: auto; height: 100%; aspect-ratio: 24 / 44; }
+.bout-de-jauge { flex: none; display: block; width: 24px; height: 100%; }
 .valeur-de-la-barre { position: relative; z-index: 1; }
 .morceau-de-barre[data-jauge="se-remplit"] .jauge { animation: jauge-se-remplit .2s ease-out backwards; }
 @keyframes jauge-se-remplit { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
