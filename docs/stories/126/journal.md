@@ -89,3 +89,36 @@ Numéro de décision : prochain libre 0040, si besoin. Commentaire `Avancement` 
   - le commentaire des paillettes sur une bulle haute.
 - 07:57 UTC : `e2e-tester` refait les 12 captures (plus 2 du texte long), puis lance `@issue-126` sur les deux projets.
 - 07:17 UTC : passation du responsable, annoncée sur #64 (6597703898). Une session (`session_015z4jmPB9NToEBmXDvNpaLi`) se présente comme le nouveau responsable. Son identifiant n'est pas encore dans le corps de #64 (qui cite l'ancienne). En attendant, les RELIS vont aux deux sessions.
+- 08:40 UTC : `e2e-tester` refait les captures (`de692b6`) : les 12 d'origine, plus 2 du texte long (Police et Danse). Aucun décor ne touche une lettre, le « 7 » se lit dans les 6 univers ; capture Police relue par l'orchestrateur. **`@issue-126` sur les deux projets : 144/144** (72 sur `tablette`, 72 sur `telephone`), 23,7 min, sans instabilité. Le tag `@wip` est laissé sur le `.feature`, comme pour #98 ; il n'a aucun effet sur l'exécution.
+- 08:45 UTC : PR ouverte en brouillon.
+
+## Dette notée
+- Mode dys du mot qui voyage : vérifié par un script jetable, sans scénario.
+- Départ figé du mot qui voyage : sans test.
+- Plan du mode dys : ne tourne plus à 820 px sur `tablette`.
+- `left`/`top` animés pour le mot qui voyage (plutôt que `translate`).
+- `useReducedMotion()` de Motion encore lu dans `src/retours/useRetourDe.ts` (fichier de #97).
+- `Application.tsx` : Provider ajouté sans réindenter (pour éviter des conflits).
+- Fondu instantané de la bulle juste avec les mouvements réduits : règle globale `transition: none` existante.
+- `line-height` du mot qui voyage en mode dys.
+- Commentaire des paillettes de Danse sur une bulle haute.
+- Plans à 8 étapes (au-delà de la limite de 7 du skill).
+- Glossaire (ajouts à proposer) : « bulle de choix » plutôt que « bulle » seule, « éclater » et « crever » à ne pas employer, `data-eclatee` à renommer un jour.
+- Écart à faire voir au PO : le décor des bouts est plafonné à ×1,15 sur une bulle haute, alors que les sources longues, hors de la planche validée, montrent ×1,5.
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Durée | 2026-11-02 21:20 → 2026-11-03 08:45 UTC, soit 11 h 25 au total |
+| Temps d'attente du PO | cadrage : environ 15 min (22:15 → 21:38 horloge du responsable, la réponse est arrivée avant la publication des planches) ; planches : validées dans la foulée (« bulles OK ») ; ESCALADE 126.12 : environ 1 h 40 (04:52 → 06:39 horloge GitHub). Seule l'escalade a bloqué le travail |
+| Cycles de review | 5 relectures, dont 3 « À CORRIGER » : cycle 1 À CORRIGER (3 bloquants), cycle 2 APPROUVÉ, cycle 3 À CORRIGER (décor sur le texte d'une bulle haute), cycle 4 À CORRIGER (paillettes de Danse) puis ESCALADE, 4e cycle autorisé APPROUVÉ |
+| Cycles TDD | 0 comportement du domaine. RED par les étapes E2E : 51 rouges au départ, puis RED ciblés pour chaque bloquant (couleur de réussite, choix écarté, décor sur le texte, bulle haute, Danse) |
+| Cycles E2E | environ 12 runs : RED initial, câblage, périmètre #17/#23/#97/#98 (247/250), diagnostics, RED de chaque bloquant, `@issue-126` final sur les deux projets (144/144) |
+| Intégrations de `main` | 2 : #106 (sans conflit, faite par un `git pull` d'`e2e-tester`) ; #127 (1 conflit de filtres de tags dans les steps, les deux ajouts gardés) |
+| Escalades | 1 (3e « À CORRIGER », 126.12, 4e cycle autorisé par le PO) |
+| Verrous | aucun (front seul) |
+| Dessins | 6 bulles d'univers (forme courte et forme longue), 4 signaux communs ; 1 planche, validée du premier coup |
+| Captures | 14 (12 pour la PR, plus 2 du texte long) |
+| Incidents | 3 redémarrages du conteneur (travail récupéré à chaque fois depuis le disque) ; Chromium 1243 au lieu de 1194 (liens symboliques du scratchpad) ; 2 scénarios de #97 rouges ou instables sur `main` (APPRIS, suivis par #141) |
+| Tokens | relevés par le responsable |
