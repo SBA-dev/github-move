@@ -23,3 +23,6 @@
 - 06:50 UTC : planches de dessins (`implementer` en illustrateur) et revue delta du bloc domaine (`mr-reviewer`, `ce34c1b..fe69fed`) lancées en parallèle.
 - 06:55 UTC : revue delta du bloc domaine (`ce34c1b..fe69fed`) : APPROUVÉ, aucun bloquant. Non bloquants notés : identifiant `dépasse` accentué dans le test (à renommer en `depasse` au prochain passage de `test-writer`), garde redondante assumée dans `proposer`, refactor dans le commit `feat`. Dernier commit relu : `fe69fed`.
 - 06:56 UTC : `e2e-tester` écrit les étapes de `@issue-128` (sans exécution) et le contrat des repères DOM pour le câblage.
+- 07:00 UTC : planches rendues (`03d4c2a`, 36 SVG, 3 planches), relues par l'orchestrateur contre la règle absolue : rien à signaler. `PLANCHES PRÊTES` publié sur #128 (6597369156), 6 choix à confirmer (P1 à P6).
+- 07:10 UTC : étapes E2E écrites (`ab8a3f9`) et contrat des repères DOM dans `acceptance.md`. `bddgen` vert pour `@issue-98`, `@issue-127` et `@issue-128`. Deux steps de #98 exclus pour #127 et #128 (`not @issue-127 and not @issue-128`), leur sens ne change pas pour #98.
+- 07:12 UTC : câblage du front lancé (`implementer`).
