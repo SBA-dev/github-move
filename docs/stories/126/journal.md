@@ -46,3 +46,8 @@ Numéro de décision : prochain libre 0040, si besoin. Commentaire `Avancement` 
   - indentation d'`Application.tsx` ;
   - fondu instantané avec les mouvements réduits (règle globale existante).
 - Ordre : à la fin du run E2E en cours, `e2e-tester` rend les étapes 1 et 2 plus strictes (RED), puis `implementer` corrige les 3 bloquants et les non bloquants retenus.
+- 02:45 UTC : run du périmètre sur la branche (`telephone`, #126, #17, #23, #97, #98) : 247 verts, 3 rouges, en 32 min. #17, #23 et #98 sont entièrement verts. Les étapes de `a9881d8` font passer le plan « question relue ». Les 3 rouges :
+  - #126, conjugaison « suis » : éclat pas vu ;
+  - #97 « Rejouer une leçon déjà acquise… séance terminée » : **rouge aussi sur `main`** (worktree de `origin/main`, 62/63 sur #97), l'effet « découverte » se joue avec « séance terminée » ; il ne vient pas de #126 ;
+  - #97 « Léa rejoue fait entendre « bouton touché » » : vert sur `main`, rouge sur la branche, possible régression.
+- 02:47 UTC : `e2e-tester` diagnostique les deux rouges non expliqués et rend plus strictes les étapes des bloquants 1 et 2 de la review (RED).
