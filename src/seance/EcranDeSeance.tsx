@@ -18,7 +18,7 @@ import { TexteEnSyllabes } from "../reglages/index.ts";
 import { ContexteDuRetour, EtincellesDuTexteComplet } from "../retours/index.ts";
 import { TexteSurligne } from "./TexteSurligne.tsx";
 import { PersonnageGuide } from "../univers/index.ts";
-import type { Voix } from "../voix/index.ts";
+import { laVoixNeLitPas, type Voix } from "../voix/index.ts";
 import { BulleDuPersonnageGuide } from "./BulleDuPersonnageGuide.tsx";
 import { EcranDeFin } from "./fin-de-seance/EcranDeFin.tsx";
 import { lireLesMeilleuresEtoilesAvantLaSeance } from "./fin-de-seance/meilleures-etoiles-du-profil-lues.ts";
@@ -164,7 +164,7 @@ function SeanceEnCours(
   { seance, lecon, prenom, niveau, univers, voix, toutLireAVoixHaute, meilleuresEtoilesAvant, nombreDeSeancesAvant, queteAvant, onRetour, onRejouer, onLireLEpisode, onLeconSuivante, onToutesLesLecons, onReleverLeDefi, onAccueil }: PropsEnCours,
 ) {
   const deroulement = useDeroulementDeSeance(seance, lecon, voix, univers.personnageGuide, toutLireAVoixHaute, prenom);
-  const voixCoupee = voix.son === "muet" || !voix.syntheseVocalePresente || voix.nomDuPersonnageGuideDeLaVoixBloquee !== undefined;
+  const voixCoupee = laVoixNeLitPas(voix);
   const { commencer, abandonner } = deroulement;
   useEffect(() => {
     void commencer();

@@ -24,6 +24,7 @@ export function useDeroulementDuParchemin({ rangCommence, texteEnLecture, toutOu
   const [ouvert, setOuvert] = useState(false);
   const [rangDevoile, setRangDevoile] = useState(-1);
   const ouvertMaintenant = ouvert || toutOuvrir || mouvementsReduits;
+  // Mises à jour d'état gardées pendant le rendu : elles retiennent ce qui a été dévoilé, même quand l'entrée repart en arrière.
   if (ouvertMaintenant && !ouvert) setOuvert(true);
   if (rangCommence !== undefined && rangCommence > rangDevoile) setRangDevoile(rangCommence);
   const rangAffiche = Math.max(rangDevoile, rangCommence ?? -1);

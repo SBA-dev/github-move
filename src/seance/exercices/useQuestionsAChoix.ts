@@ -1,7 +1,6 @@
 import { type MutableRefObject, useCallback, useRef, useState } from "react";
 import {
   type FaitDeSeance,
-  INTRODUCTION_DE_LA_LECTURE,
   lectureDesChoix,
   type ParoleDue,
   type QuestionJouee,
@@ -23,7 +22,7 @@ import { hasardDuNavigateur } from "../../hasard-navigateur.ts";
 import { effetsApresUneBonneReponse, type SignalerUnRetour } from "../../retours/index.ts";
 import type { Voix } from "../../voix/index.ts";
 import type { ParoleADire } from "../usePersonnageQuiParle.ts";
-import type { LectureDuTexte } from "../parchemin/LectureDuTexte.ts";
+import { useLectureDuTexte } from "../parchemin/useLectureDuTexte.ts";
 import { attendre } from "./attendre.ts";
 import { paroleDueDeMotivation } from "./paroleDueDeMotivation.ts";
 import type { QuestionFigee } from "./useQuestionFigee.ts";
@@ -60,8 +59,12 @@ export function useQuestionsAChoix(
   const { estFigee, figer, annoncerLAvancement, attendreLEcranSuivant } = reussite;
   const [choixVisiblesPour, setChoixVisiblesPour] = useState<QuestionJouee | undefined>();
   const [positionDuTexteEcoute, setPositionDuTexteEcoute] = useState<number | undefined>();
-  const [rangDuMotDuTexte, setRangDuMotDuTexte] = useState<number | undefined>();
-  const [lectureDuTexte, setLectureDuTexte] = useState<LectureDuTexte>("avant");
+  const { rangDuMotDuTexte, lectureDuTexte, avantLaLecture, lireLeTexte, relireLeTexte, effacerLeRang } = useLectureDuTexte({
+    lire,
+    dire,
+    faireSilence,
+    sequence,
+  });
   const [bulleEclatee, setBulleEclatee] = useState<string | undefined>();
   const numeroDePresentation = useRef(0);
 
@@ -95,22 +98,10 @@ export function useQuestionsAChoix(
     if (lectureDesChoixProposes !== undefined) await lire(lectureDesChoixProposes);
   }, [laQuestionEnCours, dire, direLeMotAEcouter, toutLireAVoixHaute, lire, vivant, estFigee]);
 
-  const lireLeTexte = useCallback(async (numero: number, texte: string) => {
-    if (!(await dire({ texte: INTRODUCTION_DE_LA_LECTURE, nature: "introduction" }))) return;
-    const estLaDerniere = () => numero === sequence.current;
-    setLectureDuTexte("en-cours");
-    await lire(texte, {
-      onMot: (rang) => estLaDerniere() && setRangDuMotDuTexte(rang),
-      onFin: () => estLaDerniere() && setRangDuMotDuTexte(undefined),
-    });
-    if (estLaDerniere()) setLectureDuTexte("finie");
-  }, [dire, lire, sequence]);
-
   const ouvrir = useCallback(async (numero: number) => {
     const position = seance.exerciceEnCours()?.position;
     const exercice = position === undefined ? undefined : lecon.exercices[position];
     if (exercice?.type === "lecture") {
-      setLectureDuTexte("avant");
       await lireLeTexte(numero, exercice.texte);
     }
     else await presenter(numero);
@@ -119,10 +110,10 @@ export function useQuestionsAChoix(
   const jAiEcoute = useCallback(async () => {
     const numero = ++sequence.current;
     faireSilence();
-    setRangDuMotDuTexte(undefined);
+    effacerLeRang();
     setPositionDuTexteEcoute(seance.exerciceEnCours()?.position);
     await presenter(numero);
-  }, [sequence, faireSilence, seance, presenter]);
+  }, [sequence, faireSilence, effacerLeRang, seance, presenter]);
 
   const ecouterLeMot = useCallback(async () => {
     const courante = laQuestionEnCours();
@@ -239,6 +230,8 @@ export function useQuestionsAChoix(
     positionDuTexteEcoute,
     rangDuMotDuTexte,
     lectureDuTexte,
+    avantLaLecture,
+    relireLeTexte,
     bulleEclatee,
     ouvrir,
     presenter,

@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { motsDeLaConsigne, phrasesDesMotsAffiches, type SegmentDeConsigne } from "@domain/voix";
 import { Parchemin } from "../parchemin/Parchemin.tsx";
 import type { LectureDuTexte } from "../parchemin/LectureDuTexte.ts";
@@ -18,8 +19,7 @@ type Props = {
 type Phrase = { readonly rang: number; readonly segments: SegmentDeConsigne[] };
 
 /** Les segments du texte rangés par phrase ; un bout de texte sans mot suit le mot qui le précède. */
-function phrasesDuTexte(texte: string): Phrase[] {
-  const rangsDePhrase = phrasesDesMotsAffiches(texte);
+function phrasesDuTexte(texte: string, rangsDePhrase: readonly number[]): Phrase[] {
   const phrases: Phrase[] = [];
   for (const segment of motsDeLaConsigne(texte)) {
     const rang = segment.rang === undefined ? phrases.at(-1)?.rang ?? 0 : rangsDePhrase[segment.rang] ?? 0;
@@ -31,7 +31,8 @@ function phrasesDuTexte(texte: string): Phrase[] {
 }
 
 export function TexteDeLecture({ titre, texte, rangDuMotPrononce, lecture, texteEcoute, voixCoupee }: Props) {
-  const rangsDePhrase = phrasesDesMotsAffiches(texte);
+  const rangsDePhrase = useMemo(() => phrasesDesMotsAffiches(texte), [texte]);
+  const phrases = useMemo(() => phrasesDuTexte(texte, rangsDePhrase), [texte, rangsDePhrase]);
   const phraseLue = rangDuMotPrononce === undefined ? undefined : rangsDePhrase[rangDuMotPrononce];
   const { deroule, devoilee } = useDeroulementDuParchemin({
     rangCommence: phraseLue,
@@ -43,7 +44,7 @@ export function TexteDeLecture({ titre, texte, rangDuMotPrononce, lecture, texte
       <article className="texte-de-lecture" data-testid="texte-de-lecture">
         {titre && <h3>{titre}</h3>}
         <p>
-          {phrasesDuTexte(texte).map(({ rang, segments }) => (
+          {phrases.map(({ rang, segments }) => (
             <span key={rang} className="phrase" data-testid="phrase" data-devoilee={devoilee(rang) ? "oui" : "non"}>
               {segments.map((segment, i) => <SegmentSurligne key={i} segment={segment} rangDuMotPrononce={rangDuMotPrononce} />)}
             </span>
