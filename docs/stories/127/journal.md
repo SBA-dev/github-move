@@ -43,6 +43,7 @@ Session : session_015z4jmQ9o3CKmJiuvCfr2me. Décision : prochain numéro libre 0
 - Revue du delta (`acdc176..HEAD`) confiée à `mr-reviewer`.
 - 03:45 UTC : PR #143 ouverte en brouillon, captures jointes. `REVUE` publié sur #127 (6593937877). Review finale publiée sur la PR par `mr-reviewer` (6593940151) : APPROUVÉ.
 - 04:10 UTC : `@issue-127` + `@issue-20` sur `tablette` : 136/136, sans rejeu (le glisser au doigt marche au toucher). `main` n'a pas bougé depuis l'intégration (`8757070`). PR passée en « prête », `PRÊTE À MERGER` publié. Attente de l'autorisation de merge du PO par une annonce `[Responsable]`.
+- 06:40 UTC : merge autorisé par le PO (annonce [Responsable] 6597204667 sur #64, « merge 127 on »), VERROU merge accordé à #127 (tableau de #64 vérifié). `main` n'a pas bougé (`8757070`). Sur la tête : `deno test` 2778/2778, lint, format, tsc et build OK ; E2E du dernier code (`8db8329`, `f9f7479`) : 136/136 sur `telephone` et sur `tablette`, aucun code changé depuis (journal seulement). Review APPROUVÉ. Merge de la PR #143 par l'équipe.
 
 ## Mesures
 
