@@ -1,6 +1,6 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 import { createBdd } from "playwright-bdd";
-import { Before, test } from "./fixtures.ts";
+import { Before, BeforeStep, test } from "./fixtures.ts";
 import {
   clavier,
   donnerLeSignalDeDepart,
@@ -19,7 +19,7 @@ import { demarrer } from "./exercices-a-choix.steps.ts";
 import { verifierModeDys } from "./reglages.steps.ts";
 import { fichierDe, observer } from "./retours-animes-et-sonores.steps.ts";
 import { cleDe } from "./univers.steps.ts";
-import { attendreUneLecture } from "./voix.steps.ts";
+import { attendreUneLecture, journal, laisserPasserLeDelaiDeLecture, terminerLaLecture } from "./voix.steps.ts";
 
 // Story #128 : cases de la dictée qui s'allument, cristaux qui ont un éclat, marque du record de fluence.
 // Les repères du DOM que ces étapes attendent sont décrits dans docs/stories/128/acceptance.md (« Précisions pour les étapes »).
@@ -113,6 +113,14 @@ export function installerLEnregistreurDeLaStory128() {
 
 Before({ tags: "@issue-128" }, async ({ page }) => {
   await page.addInitScript(installerLEnregistreurDeLaStory128);
+});
+
+// « Noisette ne dit rien » (#20) compare les paroles à celles comptées avant le geste de l'enfant : ici le geste est la bonne réponse
+// qui dépasse le record, les paroles de l'accueil et du départ sont déjà dites.
+BeforeStep({ tags: "@issue-128" }, async ({ page, $step }) => {
+  if ($step.title.replace(/^(Étant donné que|Quand|Alors|Et que|Et|Mais) /, "") !== "Léa donne une bonne réponse") return;
+  await laisserPasserLeDelaiDeLecture(page);
+  partie20(page).paroles = (await journal(page)).speaks;
 });
 
 async function journal128(page: Page): Promise<Journal128> {
@@ -211,7 +219,7 @@ Then(/^les (\d+) cases s'illuminent l'une après l'autre, de la première à la 
 
 Then(/^toutes les cases du mot s'illuminent l'une après l'autre, la case de la lettre montrée comprise$/, async ({ page }) => {
   const lues = await verifierLIlluminationUneAUne(page, undefined);
-  expect(lues[0]?.etat, "la case de la lettre montrée est la première à s'illuminer").toBe("montree");
+  expect(lues[0]?.rang, "la case de la lettre montrée, la première du mot, est la première à s'illuminer").toBe(0);
 });
 
 Then(/^les (\d+) cases s'illuminent toutes ensemble, sans cascade ni mouvement$/, async ({ page }, nombre: string) => {
@@ -246,9 +254,19 @@ Then(/^cette case se voit comme une lettre montrée par le personnage guide, pas
   await expect(premiere).not.toHaveAttribute("data-illuminee", "true");
 });
 
+// Après « Je ne sais pas », la lettre montrée est une aide posée dans la case : l'enfant l'écrit lui-même, puis écrit la suite.
 When(/^Léa écrit la fin du mot$/, async ({ page }) => {
-  const mot = etatDeLaDictee(page).mot ?? "";
-  await ecrire(page, [...mot].slice(1).join(""));
+  const montree = page.locator(`${SELECTEUR_DES_CASES}[data-etat="montree"]`);
+  // La lettre montrée apparaît quand le personnage guide a fini sa phrase : Léa attend de la voir avant d'écrire.
+  await expect.poll(async () => {
+    if ((await montree.count()) === 1) return true;
+    await terminerLaLecture(page);
+    return false;
+  }, { intervals: [100] }).toBe(true);
+  const [premiere = "", ...suite] = [...(etatDeLaDictee(page).mot ?? "")];
+  await page.locator(`[data-testid="touche"][data-lettre="${premiere}"]:not([aria-disabled="true"])`).first().click();
+  await expect(cases(page).first()).toHaveAttribute("data-etat", "ecrite");
+  await ecrire(page, suite.join(""));
 });
 
 async function verifierQueLaCaseNeBougePas(page: Page, numero: string): Promise<void> {
@@ -392,14 +410,17 @@ When(/^(?:Tom|Léa) touche la touche « (\d) » du clavier de cristaux$/, async 
   await touche(page, chiffre).click({ force: true });
 });
 
-When(/^Tom tape « (\d+) » au clavier seulement$/, async ({ page }, nombre: string) => {
+// Le moteur convertit en nombre une capture `(\d+)` : les étapes en refont le texte des chiffres.
+When(/^Tom tape « (\d+) » au clavier seulement$/, async ({ page }, capture: string | number) => {
+  const nombre = String(capture);
   await expect(clavier(page)).toBeVisible();
   await marquerLesEclats(page);
   for (const chiffre of nombre) await page.keyboard.press(chiffre);
   await expect(nombreTape(page)).toHaveText(nombre);
 });
 
-Given(/^Tom a tapé « (\d+) »$/, async ({ page }, nombre: string) => {
+Given(/^Tom a tapé « (\d+) »$/, async ({ page }, capture: string | number) => {
+  const nombre = String(capture);
   await attendreUneLecture(page);
   await taperLesChiffres(page, nombre);
   await expect(nombreTape(page)).toHaveText(nombre);
@@ -546,12 +567,10 @@ Then(/^« Effacer » et « Valider » ont le même aspect que dans l'univers « 
     await expect(bouton).toBeVisible();
     await expect(bouton).not.toHaveAttribute("data-univers", /.+/);
     await expect(bouton.getByTestId("dessin-du-cristal")).toHaveCount(0);
-    const dans = await bouton.evaluate((element) => getComputedStyle(element).cssText.length > 0 ? JSON.stringify({
-      couleur: getComputedStyle(element).color,
-      fond: getComputedStyle(element).backgroundColor,
-      bordure: getComputedStyle(element).borderTopColor,
-      ombre: getComputedStyle(element).boxShadow,
-    }) : "");
+    const dans = await bouton.evaluate((element) => {
+      const style = getComputedStyle(element);
+      return JSON.stringify({ couleur: style.color, fond: style.backgroundColor, bordure: style.borderTopColor, ombre: style.boxShadow });
+    });
     const reference = await bouton.evaluate((element) => {
       const reperes = [...document.querySelectorAll("[data-univers]")].map((un) => [un, un.getAttribute("data-univers")] as const);
       for (const [un] of reperes) un.setAttribute("data-univers", "animaux");
@@ -564,8 +583,8 @@ Then(/^« Effacer » et « Valider » ont le même aspect que dans l'univers « 
   }
 });
 
-Then(/^Léa voit « (\d+) » dans le nombre tapé$/, async ({ page }, nombre: string) => {
-  await expect(nombreTape(page)).toHaveText(nombre);
+Then(/^Léa voit « (\d+) » dans le nombre tapé$/, async ({ page }, nombre: string | number) => {
+  await expect(nombreTape(page)).toHaveText(String(nombre));
 });
 
 // --- La fluence : la marque du record
@@ -693,11 +712,11 @@ Then(/^les lecteurs d'écran n'annoncent ni la marque du record ni son changemen
 
 Then(
   /^Léa voit en entier la marque du record « ([^«»]+) », le temps qui reste et (\d+) calculs? réussis?$/,
-  async ({ page }, texte: string, reussis: string) => {
+  async ({ page }, texte: string, reussis: string | number) => {
     const largeur = page.viewportSize()?.width ?? 0;
     await expect(marqueDuRecord(page)).toHaveText(texte);
     await expect(page.getByTestId("temps-restant")).toBeVisible();
-    await expect(page.getByTestId("calculs-reussis")).toHaveAttribute("data-score", reussis);
+    await expect(page.getByTestId("calculs-reussis")).toHaveAttribute("data-score", String(reussis));
     for (const element of [marqueDuRecord(page), page.getByTestId("temps-restant"), page.getByTestId("calculs-reussis")]) {
       await expect(element).toBeVisible();
       const boite = await element.boundingBox();

@@ -6,6 +6,7 @@ import { avancerJusquAuxChoix, demarrer, etatDesChoix, lancer, questionsReussies
 import { figee, repondreAuNombre } from "./calcul-fluence-addition.steps.ts";
 import { cleDe, EXPRESSIONS_PAR_PERSONNAGE, FELICITATIONS_COMMUNES, preparerProfil } from "./univers.steps.ts";
 import { journal, normaliser, terminerLaLecture, terminerLaLectureSiCenEstPas } from "./voix.steps.ts";
+import { estSurUnProfilReel, jouerAvecLeProfilReel } from "./profil-reel.ts";
 
 // Story #21 : boîte à jetons et schéma en barres.
 //
@@ -257,8 +258,10 @@ Given(
 
 // --- Quand
 
-WhenDe21Et128(/^(Léa|Tom) joue cette boîte à jetons et que la boîte est fermée$/, async ({ page }, enfant: string) => {
+WhenDe21Et128(/^(Léa|Tom) joue cette boîte à jetons et que la boîte est fermée$/, async ({ page, monde, famille, $tags }, enfant: string) => {
   partie21(page).acteur = enfant as Acteur;
+  // Story #128 : le Contexte met Léa sur son vrai profil ; Tom joue avec le sien (son niveau, son univers), pas avec celui de Léa.
+  if (enfant === "Tom" && $tags.includes("@issue-128") && estSurUnProfilReel(page)) await jouerAvecLeProfilReel(famille, monde, page, "Tom");
   await demarrer(page);
   await laBoiteEstFermeeEtLEnfantPeutRepondre(page);
 });

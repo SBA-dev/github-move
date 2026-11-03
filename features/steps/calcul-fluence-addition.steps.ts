@@ -33,6 +33,9 @@ import { attendreUneLecture, journal, laisserPasserLeDelaiDeLecture, normaliser,
 // Les leçons de test sont ajoutées à la réponse de /bibliotheque.json par le navigateur du test (voir #16).
 
 const { Given, When, Then } = createBdd(test, { tags: "@issue-20 or @issue-65 or @issue-127 or @issue-128" });
+// #128 joue aussi la fluence seule d'une séance (« Léa joue seulement l'exercice ») : son étape « le temps de la fluence est écoulé »
+// est celle de #97, qui démarre la partie d'abord.
+const { When: WhenSansLa128 } = createBdd(test, { tags: "@issue-20 or @issue-65 or @issue-127" });
 
 type Acteur = "Léa" | "Tom" | "Nina";
 type Exercice = Record<string, unknown>;
@@ -63,6 +66,7 @@ type Partie20 = {
   tirage: number[] | undefined;
   nombreTape: string | undefined;
   paroles: number;
+  calculsReussis: number;
   maintenant: Date;
   fluence: string | undefined;
   accueilsDeFluenceDits: number;
@@ -83,6 +87,7 @@ export function partie20(page: Page): Partie20 {
       tirage: undefined,
       nombreTape: undefined,
       paroles: 0,
+      calculsReussis: 0,
       maintenant: new Date(Date.now() - DIX_MINUTES_EN_MS),
       fluence: undefined,
       accueilsDeFluenceDits: 0,
@@ -616,6 +621,7 @@ async function reussirUnCalculDeFluence(page: Page): Promise<void> {
   const carte = await lireLaCarte(page);
   await repondreAuNombre(page, resultatDeLaCarte(partie20(page).lecon, carte));
   await expect(page.getByTestId("calculs-reussis")).toHaveAttribute("data-score", String(avant + 1));
+  partie20(page).calculsReussis += 1;
 }
 
 export async function reussirDesCalculsDeFluence(page: Page, nombre: number): Promise<void> {
@@ -718,7 +724,7 @@ Given(/^Léa fait cette fluence$/, async ({ page }) => {
   await donnerLeSignalDeDepart(page);
 });
 
-When(/^le temps de la fluence est écoulé avec ([0-9]+) calculs? réussis?$/, async ({ page }, reussis: string) => {
+WhenSansLa128(/^le temps de la fluence est écoulé avec ([0-9]+) calculs? réussis?$/, async ({ page }, reussis: string) => {
   await reussirDesCalculsDeFluence(page, Number(reussis));
   await laisserPasserLeTemps(page);
 });
@@ -777,8 +783,10 @@ Then(/^les lecteurs d'écran peuvent lire le temps qui reste et le nombre de cal
   const annonce = page.getByTestId("annonce-de-fluence");
   await expect(annonce).toHaveAttribute("role", "status");
   await expect(annonce).toHaveAttribute("aria-live", "polite");
-  await expect(annonce).toHaveText(/^Il reste (plus de \d+|moins de \d+) secondes\. 1 calcul réussi\.$/);
-  await expect(page.getByTestId("calculs-reussis")).toHaveText("1 calcul réussi");
+  const reussis = partie20(page).calculsReussis;
+  const calculs = `${reussis} calcul${reussis > 1 ? "s" : ""} réussi${reussis > 1 ? "s" : ""}`;
+  await expect(annonce).toHaveText(new RegExp(`^Il reste (plus de \\d+|moins de \\d+) secondes\\. ${calculs}\\.$`));
+  await expect(page.getByTestId("calculs-reussis")).toHaveText(calculs);
 });
 
 When(/^Léa réussit un calcul$/, async ({ page }) => {
