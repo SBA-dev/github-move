@@ -12,3 +12,7 @@
 - Étape 2 : `po-acceptance` lancé.
 - Étape 2 faite : `features/128-claviers.feature` (52 scénarios, 11 `@a-valider`), `docs/stories/128/acceptance.md`. Questions #128.13 et #128.14 ajoutées.
 - CADRAGE PRÊT publié sur #128, en attente de la validation du PO (annonce [Responsable] sur #64).
+
+## 2026-11-03
+
+- 00:36 UTC : RELIS #64. Cadrage présenté au PO (validation n°1, 23:06 UTC), pas encore de réponse. À SAVOIR de #127 noté : `EcranDeSeance.tsx`, `useDeroulementDeSeance.ts` et `styles.css` (bloc `@media (max-width: 480px)` avec `.addition-posee`) bougeront à l'intégration de `main` ; vérifier le clavier de cristaux dans l'addition à 360 px après le merge de #127.
