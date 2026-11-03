@@ -81,6 +81,7 @@ Numéro de décision : prochain libre 0040, si besoin. Commentaire `Avancement` 
 - 06:42 UTC : `po-acceptance` ajoute l'exemple Danse au choix long en mode dys (bulle haute).
 - 07:10 UTC : `po-acceptance` ajoute l'exemple Danse au choix long à 375 px (`7b6ccd5`) : colonne `<largeur>` dans le Plan du mode dys, 360 pour les 5 exemples existants, 72 cas.
 - 07:15 UTC : **#127 mergée** (`227ec44`). `main` intégrée par l'orchestrateur, en merge. Un seul conflit, dans `features/steps/exercices-comme-des-jeux.steps.ts` : #126 et #127 élargissaient les mêmes filtres de tags ; les deux ajouts sont gardés (`@issue-98 or @issue-126 or @issue-127`). `styles.css`, `EcranDeSeance.tsx` et `useDeroulementDeSeance.ts` fusionnés sans conflit. Aucun marqueur ; tsc, build et 2778 tests unitaires verts. Le delta de `main` dans le code de production sera relu avec le 4e cycle.
+- 07:17 UTC : passation du responsable, annoncée sur #64 (6597703898). Une session (`session_015z4jmPB9NToEBmXDvNpaLi`) se présente comme le nouveau responsable. Son identifiant n'est pas encore dans le corps de #64 (qui cite l'ancienne). En attendant, les RELIS vont aux deux sessions.
 - 07:20 UTC : RED vérifié par `e2e-tester`. Sur `telephone`, l'exemple Danse au choix long à 375 px est rouge : paillettes `<path>` de 5 × 7 px et `<circle>` de 5 × 6 px dans le texte. Les 5 autres exemples du Plan sont verts.
 - 07:35 UTC : correction par `implementer` (`31c9184`). Les paillettes de Danse sont calculées en coordonnées de référence et posées par `Fixe`, qui les plafonne et les recentre. La bulle courte reste identique à la source validée. Le commentaire du plafond est corrigé (45,45 px pour une zone de 46). `@issue-126` 72/72 sur `telephone` ; tsc, build et 2778 tests unitaires verts.
 - 07:37 UTC : review du delta du 4e cycle autorisé (`3189145..HEAD`, avec l'intégration de #127).
@@ -88,7 +89,6 @@ Numéro de décision : prochain libre 0040, si besoin. Commentaire `Avancement` 
   - le Plan du mode dys ne tourne plus à 820 px sur `tablette` ;
   - le commentaire des paillettes sur une bulle haute.
 - 07:57 UTC : `e2e-tester` refait les 12 captures (plus 2 du texte long), puis lance `@issue-126` sur les deux projets.
-- 07:17 UTC : passation du responsable, annoncée sur #64 (6597703898). Une session (`session_015z4jmPB9NToEBmXDvNpaLi`) se présente comme le nouveau responsable. Son identifiant n'est pas encore dans le corps de #64 (qui cite l'ancienne). En attendant, les RELIS vont aux deux sessions.
 - 08:40 UTC : `e2e-tester` refait les captures (`de692b6`) : les 12 d'origine, plus 2 du texte long (Police et Danse). Aucun décor ne touche une lettre, le « 7 » se lit dans les 6 univers ; capture Police relue par l'orchestrateur. **`@issue-126` sur les deux projets : 144/144** (72 sur `tablette`, 72 sur `telephone`), 23,7 min, sans instabilité. Le tag `@wip` est laissé sur le `.feature`, comme pour #98 ; il n'a aucun effet sur l'exécution.
 - 08:45 UTC : PR ouverte en brouillon.
 
@@ -111,7 +111,7 @@ Numéro de décision : prochain libre 0040, si besoin. Commentaire `Avancement` 
 | Mesure | Valeur |
 |---|---|
 | Durée | 2026-11-02 21:20 → 2026-11-03 08:45 UTC, soit 11 h 25 au total |
-| Temps d'attente du PO | cadrage : environ 15 min (22:15 → 21:38 horloge du responsable, la réponse est arrivée avant la publication des planches) ; planches : validées dans la foulée (« bulles OK ») ; ESCALADE 126.12 : environ 1 h 40 (04:52 → 06:39 horloge GitHub). Seule l'escalade a bloqué le travail |
+| Temps d'attente du PO | cadrage : environ 11 min selon l'horloge de GitHub (CADRAGE PRÊT publié à 21:27, réponse du PO annoncée à 21:38 ; les heures du journal autour de 22:00 sont celles, approximatives, de l'orchestrateur) ; planches : validées dans la foulée (« bulles OK ») ; ESCALADE 126.12 : environ 1 h 40 (04:52 → 06:39 horloge GitHub). Seule l'escalade a bloqué le travail |
 | Cycles de review | 5 relectures, dont 3 « À CORRIGER » : cycle 1 À CORRIGER (3 bloquants), cycle 2 APPROUVÉ, cycle 3 À CORRIGER (décor sur le texte d'une bulle haute), cycle 4 À CORRIGER (paillettes de Danse) puis ESCALADE, 4e cycle autorisé APPROUVÉ |
 | Cycles TDD | 0 comportement du domaine. RED par les étapes E2E : 51 rouges au départ, puis RED ciblés pour chaque bloquant (couleur de réussite, choix écarté, décor sur le texte, bulle haute, Danse) |
 | Cycles E2E | environ 12 runs : RED initial, câblage, périmètre #17/#23/#97/#98 (247/250), diagnostics, RED de chaque bloquant, `@issue-126` final sur les deux projets (144/144) |
