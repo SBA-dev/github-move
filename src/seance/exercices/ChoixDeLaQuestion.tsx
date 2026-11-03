@@ -1,6 +1,6 @@
 import { type KeyboardEvent, type RefObject, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useRetourDe } from "../../retours/index.ts";
-import { TexteEnSyllabes } from "../../reglages/index.ts";
+import { TexteEnSyllabes, useModeDys } from "../../reglages/index.ts";
 import { useMouvementsReduits } from "../../transitions/mouvements-reduits.ts";
 import { useUnivers } from "../../univers/index.ts";
 import { useLectureEnCours } from "../../voix/index.ts";
@@ -54,6 +54,8 @@ export function ChoixDeLaQuestion(
   const bulleAFocaliser = useRef<HTMLButtonElement>(null);
   const conteneur = useRef<HTMLDivElement>(null);
   const mouvementsReduits = useMouvementsReduits();
+  const modeDys = useModeDys();
+  const clefDesTextes = textes.join("\u0000");
   const lectureEnCours = useLectureEnCours();
   const repondue = ecartes.length > 0 || reussie || reponseQuiBrille !== undefined;
   const flotte = flottantes && !lectureEnCours && !repondue && !mouvementsReduits;
@@ -64,10 +66,18 @@ export function ChoixDeLaQuestion(
     const element = conteneur.current;
     if (element === null) return;
     accorderLesLargeurs(element);
-    const observateur = new ResizeObserver(() => accorderLesLargeurs(element));
+    const accorder = () => accorderLesLargeurs(element);
+    const observateur = new ResizeObserver(accorder);
     observateur.observe(element);
-    return () => observateur.disconnect();
-  }, [textes]);
+    let abandonne = false;
+    document.fonts.ready.then(() => {
+      if (!abandonne) accorder();
+    });
+    return () => {
+      abandonne = true;
+      observateur.disconnect();
+    };
+  }, [clefDesTextes, modeDys]);
 
   return (
     <div
@@ -120,6 +130,9 @@ function BulleDeChoix({ texte, rang, ecarte, brille, eclatee, reussie, flotte, m
   useEffect(() => {
     if (rebondEnCours) setRebondVu(true);
   }, [rebondEnCours]);
+  useEffect(() => {
+    if (!eclatee) setRebondVu(false);
+  }, [eclatee]);
   /** La bulle juste s'efface une fois son rebond fini ; avec les mouvements réduits, il n'y a pas de rebond à attendre. */
   const sEfface = eclatee && (mouvementsReduits || (rebondVu && !rebondEnCours));
   return (
