@@ -13,11 +13,11 @@ import { journal, normaliser, terminerLaLecture, terminerLaLectureSiCenEstPas } 
 // précèdent celle d'un scénario sont calculées par le test, à partir de la leçon, jamais lues dans l'application.
 // Les leçons de test sont ajoutées à la réponse de /bibliotheque.json par le navigateur du test (voir #16).
 
-const { Given, When, Then } = createBdd(test, { tags: "@issue-21" });
+const { Given, When, Then } = createBdd(test, { tags: "@issue-21 or @issue-131" });
 
 type Acteur = "Léa" | "Tom";
-type Mecanique = "boite" | "barres";
-type Item = Record<string, unknown>;
+export type Mecanique = "boite" | "barres";
+export type Item = Record<string, unknown>;
 
 type Partie21 = {
   acteur: Acteur;
@@ -33,7 +33,7 @@ type Partie21 = {
 
 const parties = new WeakMap<Page, Partie21>();
 
-function partie21(page: Page): Partie21 {
+export function partie21(page: Page): Partie21 {
   let courante = parties.get(page);
   if (!courante) {
     courante = { acteur: "Léa", lecon: undefined, mecanique: "boite", rang: 0, titreDeLExercice: "", tomPrepare: false, leconDeTest: false };
@@ -87,7 +87,7 @@ function reponseDuProbleme(item: Item): number {
   return tout - (parties.find((partie) => partie !== null) ?? 0);
 }
 
-function reponseDe(mecanique: Mecanique, item: Item): number {
+export function reponseDe(mecanique: Mecanique, item: Item): number {
   return mecanique === "boite" ? reponseDeLaBoite(item) : reponseDuProbleme(item);
 }
 
@@ -96,7 +96,7 @@ function itemsDe(partie: Partie21): Item[] {
   return (exercice?.items ?? []) as Item[];
 }
 
-function bonneReponseCourante(page: Page): number {
+export function bonneReponseCourante(page: Page): number {
   const partie = partie21(page);
   const item = itemsDe(partie)[partie.rang];
   if (!item) throw new Error(`Pas de question n°${partie.rang + 1} dans « ${partie.titreDeLExercice} »`);
@@ -119,7 +119,7 @@ async function preparerTomSiBesoin(page: Page, monde: Monde): Promise<void> {
   await preparerProfil(page, prepare);
 }
 
-async function repondreJusteAuxQuestionsQuiPrecedent(page: Page): Promise<void> {
+export async function repondreJusteAuxQuestionsQuiPrecedent(page: Page): Promise<void> {
   const partie = partie21(page);
   const items = itemsDe(partie);
   for (let rang = 0; rang < partie.rang; rang++) {
@@ -141,7 +141,7 @@ async function repondreJusteAuxQuestionsQuiPrecedent(page: Page): Promise<void> 
 }
 
 /** La séance (cet exercice seulement) commence au premier pas qui en a besoin : l'enfant arrive à la question voulue. */
-function preparerLaPartie(page: Page, monde: Monde, lecon: LeconBrute, mecanique: Mecanique, rang: number, deTest = false): void {
+export function preparerLaPartie(page: Page, monde: Monde, lecon: LeconBrute, mecanique: Mecanique, rang: number, deTest = false): void {
   const partie = partie21(page);
   partie.lecon = lecon;
   partie.leconDeTest = deTest;
@@ -219,7 +219,7 @@ async function toutesLesParoles(page: Page): Promise<string[]> {
   });
 }
 
-async function laBoiteEstFermeeEtLEnfantPeutRepondre(page: Page): Promise<void> {
+export async function laBoiteEstFermeeEtLEnfantPeutRepondre(page: Page): Promise<void> {
   await expect.poll(async () => {
     const prete = (await boite(page).getAttribute("data-etat")) === "fermee" && (await clavier(page).or(choixDeLaQuestion(page)).isVisible());
     if (!prete) await terminerLaLecture(page);
