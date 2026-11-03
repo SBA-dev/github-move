@@ -799,7 +799,7 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 .jeton[data-etat="sortant"] { opacity: .45; }
 /* Les mouvements durent 400 ms au plus ; ils n'ont lieu que si l'appareil ne demande pas de mouvements réduits (le jeton est alors « posé »). */
 .jeton[data-mouvement="tombe"] { animation: jeton-tombe .4s ease-in-out backwards; }
-.jeton[data-mouvement="s-en-va"] { transform: translateY(4px); transition: opacity .4s ease, transform .4s ease; }
+.jeton[data-mouvement="s-en-va"] { transform: translateY(-4px); transition: opacity .4s ease, transform .4s ease; }
 @keyframes jeton-tombe {
   0% { transform: translateY(-48px); opacity: .25; }
   55% { transform: translateY(0); opacity: 1; }
