@@ -4,8 +4,7 @@ import type { CleUnivers } from "@domain/motivation";
 /**
  * Le dessin d'un jeton dans chaque univers (cadre 100 × 100) : une pastille mate, jamais dorée, et l'objet de l'univers
  * (gland, petite fleur, plot, casquette, casque, chausson). Tous les jetons d'une boîte ont le même dessin ;
- * la marque du cinquième jeton est un disque derrière la pastille, commun aux six univers.
- * Source proposée : docs/stories/131/planches/sources/jeton-*.svg.
+ * la marque du cinquième jeton est un anneau posé par-dessus la pastille, commun aux six univers.
  */
 export const DESSINS_DES_JETONS: Readonly<Record<CleUnivers, ReactNode>> = {
   animaux: (
