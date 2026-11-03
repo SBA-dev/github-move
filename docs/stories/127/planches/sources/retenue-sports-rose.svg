@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+<!-- bouchon -->
+<rect x="76" y="14" width="48" height="30" rx="9" fill="#6B7A99" stroke="#E0559B" stroke-width="6" stroke-linejoin="round"/>
+<!-- col -->
+<rect x="84" y="42" width="32" height="18" fill="#DDE3EC" stroke="#E0559B" stroke-width="6" stroke-linejoin="round"/>
+<!-- corps -->
+<path d="M40 78 Q40 56 68 58 H132 Q160 56 160 78 V160 Q160 188 130 188 H70 Q40 188 40 160 Z" fill="#EEF2F7" stroke="#E0559B" stroke-width="6" stroke-linejoin="round"/>
+<!-- plaque claire pour le chiffre -->
+<rect x="54" y="80" width="92" height="68" rx="14" fill="#FFFFFF"/></svg>

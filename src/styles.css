@@ -58,7 +58,6 @@
   --colonne-rose-fond: #ffdcee;
   --colonne-verte: #3f9d45;
   --colonne-verte-fond: #dcf5dc;
-  --texte-sur-colonne: #000000;
 
   --rayon: 16px;
   --rayon-grand: 24px;
@@ -822,10 +821,12 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 .operation-posee { padding: 4px 14px; border-radius: var(--rayon); background: var(--surface-voilee); font-size: 1.5rem; font-weight: 800; }
 .colonnes { display: flex; justify-content: center; gap: 8px; width: 100%; max-width: 100%; }
 .colonne {
+  position: relative;
+  --taille-de-la-retenue: 56px;
   --couleur-de-la-colonne: var(--colonne-bleue);
   --fond-de-la-colonne: var(--colonne-bleue-fond);
   display: grid;
-  grid-template-rows: auto 2.5rem 1fr auto;
+  grid-template-rows: auto var(--taille-de-la-retenue) 1fr auto;
   justify-items: center;
   gap: 4px;
   flex: 1 1 0;
@@ -840,41 +841,93 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 .colonne[data-couleur="rose"] { --couleur-de-la-colonne: var(--colonne-rose); --fond-de-la-colonne: var(--colonne-rose-fond); }
 .colonne[data-couleur="verte"] { --couleur-de-la-colonne: var(--colonne-verte); --fond-de-la-colonne: var(--colonne-verte-fond); }
 .colonne[data-en-cours="true"] { box-shadow: 0 0 0 4px var(--surbrillance); }
-.colonne[data-brille="true"] { box-shadow: 0 0 0 6px var(--surbrillance), 0 0 18px 8px var(--surbrillance); animation: brille 1.2s ease-in-out infinite alternate; }
+/* La colonne désignée par « Je ne sais pas » brille par son signal commun (`.signal-brille`), comme une maison de classer. */
 .maison-de-la-colonne {
+  position: relative;
+  display: grid;
+  justify-items: center;
   box-shadow: none;
   width: 100%;
   min-height: 44px;
-  padding: 4px;
+  padding: 0;
   border: 0;
   border-radius: var(--rayon);
-  background: var(--couleur-de-la-colonne);
-  color: var(--texte-sur-colonne);
-  font-size: 1rem;
+  background: var(--fond-de-la-colonne);
+  color: var(--texte);
+  font: inherit;
+  cursor: pointer;
+}
+.maison-de-la-colonne:hover { background: var(--fond-de-la-colonne); }
+.maison-de-la-colonne[aria-disabled="true"] { cursor: default; }
+/* Le dessin tient en 75 px au plus ; le nom de la colonne est une pastille posée sur le bas du dessin (comme 98.32). */
+.maison-de-la-colonne .dessin-de-la-maison { width: min(100%, 75px); }
+.nom-de-la-colonne {
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+  right: 0;
+  width: max-content;
+  max-width: 100%;
+  margin-inline: auto;
+  padding: 0 8px;
+  border: 2px solid var(--couleur-de-la-colonne);
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: .8rem;
+  font-weight: 800;
+  line-height: 1.4;
   overflow-wrap: anywhere;
 }
-.maison-de-la-colonne[aria-disabled="true"] { cursor: default; }
-.maison-de-la-colonne:hover { filter: brightness(1.1); background: var(--couleur-de-la-colonne); }
-.place-de-la-retenue { display: flex; align-items: center; justify-content: center; min-height: 2.5rem; }
-.retenue {
-  display: inline-grid;
-  place-items: center;
-  min-width: 2rem;
-  min-height: 2rem;
-  border: 2px solid var(--couleur-de-la-colonne);
-  border-radius: 50%;
-  background: var(--surface);
-  font-weight: 800;
-  animation: la-retenue-monte .8s ease-out;
-}
-@keyframes la-retenue-monte { from { transform: translate(60%, 6rem) scale(.6); opacity: 0; } to { transform: none; opacity: 1; } }
-.retenue[data-mouvement="aucun"] { animation: none; transform: none; }
+/* Mode dys : l'espacement des lettres élargit « Centaines » ; le nom rétrécit au lieu de se couper au milieu du mot. */
+[data-mode-dys="true"] .nom-de-la-colonne { font-size: .7rem; overflow-wrap: normal; }
+.maison-de-la-colonne:hover:not([aria-disabled="true"]) .nom-de-la-colonne { background: var(--surbrillance-fond); }
+.place-de-la-retenue { display: flex; align-items: center; justify-content: center; min-height: var(--taille-de-la-retenue); }
+/* La retenue : l'objet de l'univers, son chiffre en texte par-dessus. Elle saute (animation de la Web Animations API) ; avec les mouvements réduits, elle apparaît. */
+.retenue { position: relative; display: block; width: var(--taille-de-la-retenue); height: var(--taille-de-la-retenue); }
+.dessin-de-la-retenue { display: block; width: 100%; height: 100%; pointer-events: none; }
+.chiffre-de-la-retenue { position: absolute; translate: -50% -50%; color: var(--texte); font-size: 1.3rem; font-weight: 800; line-height: 1; }
 .chiffres-poses { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; font-size: 1.75rem; font-weight: 800; text-align: center; }
 .chiffre-ecrit { display: block; min-height: 2.25rem; padding-top: 2px; border-top: 3px solid var(--couleur-de-la-colonne); font-size: 1.75rem; font-weight: 800; text-align: center; }
 .resultat-de-l-addition { padding: 4px 18px; border-radius: var(--rayon); background: var(--surface); font-size: 2rem; font-weight: 800; letter-spacing: .1em; }
 .chiffres-a-poser { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 0; padding: 0; list-style: none; }
-.chiffre-a-poser { font-size: 1.75rem; cursor: grab; }
+/* Glisser au doigt (#127) : touch-action: none, sinon le navigateur fait défiler la page et annule le geste. */
+.chiffre-a-poser { font-size: 1.75rem; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; }
 .invite-de-pose { padding: 6px 14px; border-radius: var(--rayon); background: var(--surface-voilee); font-weight: 700; }
+
+/* Addition posée sur téléphone : l'écran de 360 × 740 montre les trois maisons, les chiffres à poser et « Je ne sais pas » sans défiler (#127).
+   Les éléments de la séance se rangent côte à côte quand ils tiennent, au lieu d'une pile ; l'ordre du focus ne change pas ; seule la bulle passe visuellement après « Réécouter ». */
+@media (max-width: 480px) {
+  .en-tete:has(~ .ecran .addition-posee) { padding-block: 4px; gap: 4px; }
+  .en-tete:has(~ .ecran .addition-posee) .outils { gap: 4px 8px; }
+  .ecran:has(.addition-posee) { padding-top: 4px; }
+  .seance:has(.addition-posee) { --epaisseur-du-contour: 2px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 8px; }
+  .seance:has(.addition-posee) > * { max-width: 100%; }
+  .seance:has(.addition-posee) .entete-de-seance { flex: 1 1 100%; flex-wrap: nowrap; justify-content: flex-start; gap: 8px; }
+  .seance:has(.addition-posee) .entete-de-seance > div { display: grid; justify-items: start; gap: 2px; text-align: left; line-height: 1.2; }
+  .seance:has(.addition-posee) :is(h2, [data-testid="niveau-et-matiere"]) { padding: 0 8px; }
+  .seance:has(.addition-posee) h2 { font-size: 1.1rem; }
+  .seance:has(.addition-posee) [data-testid="niveau-et-matiere"] { font-size: .8rem; }
+  .seance:has(.addition-posee) .recipient { order: 1; padding: 4px 10px; }
+  .seance:has(.addition-posee) .reecouter { order: 2; }
+  .seance:has(.addition-posee) .guide-et-parole { order: 3; flex: 1 1 100%; flex-wrap: nowrap; justify-content: flex-start; gap: 8px; }
+  .seance:has(.addition-posee) .guide-et-parole .bulle { flex: 1 1 auto; min-width: 0; padding: 4px 10px; font-size: 1rem; line-height: 1.3; text-align: left; }
+  .seance:has(.addition-posee) :is(.consigne-de-l-exercice, .exercice-en-cours) { order: 4; }
+  .seance:has(.addition-posee) .recipient .point { width: 10px; height: 10px; }
+  .seance:has(.addition-posee) .recipient .compte { display: none; }
+  .seance:has(.addition-posee) .guide-et-parole .personnage-guide { width: 40px; }
+  .seance:has(.addition-posee) .consigne { padding: 4px 10px; font-size: 1rem; line-height: 1.3; }
+  .seance:has(.addition-posee) :is(.consigne-de-l-exercice, .exercice-en-cours) { flex: 1 1 100%; }
+  .addition-posee { width: 100%; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 8px; }
+  .addition-posee .operation-posee { padding: 0 12px; font-size: 1.25rem; }
+  .addition-posee .colonnes { flex: 1 1 100%; }
+  .addition-posee .colonne { --taille-de-la-retenue: 44px; }
+  .addition-posee .chiffres-poses { font-size: 1.3rem; }
+  .addition-posee .chiffre-ecrit { min-height: 2rem; font-size: 1.4rem; }
+  .addition-posee .invite-de-pose { flex: 1 1 100%; padding: 0 12px; }
+  .addition-posee .chiffres-a-poser { flex-wrap: nowrap; gap: 6px; }
+  .addition-posee .chiffre-a-poser { padding: 4px 12px; font-size: 1.5rem; }
+  .addition-posee .je-ne-sais-pas { padding: 6px 12px; }
+}
 
 .dictee { display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 100%; }
 .mot-a-ecrire { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 0; padding: 0; list-style: none; max-width: 100%; }
