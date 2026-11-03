@@ -815,10 +815,17 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 .ligne-du-schema { display: grid; gap: 2px; min-width: 0; }
 .nom-de-la-barre { font-weight: 700; overflow-wrap: anywhere; }
 .morceaux { display: flex; width: 100%; }
-.morceau-de-barre { box-sizing: border-box; display: grid; place-items: center; min-width: 0; min-height: 44px; border: 3px solid var(--contour); background: var(--surface); font-size: 1.5rem; font-weight: 800; overflow: hidden; }
+.morceau-de-barre { position: relative; box-sizing: border-box; display: grid; place-items: center; min-width: 0; min-height: 44px; border: 3px solid var(--contour); background: var(--surface); font-size: 1.5rem; font-weight: 800; overflow: hidden; }
 .morceau-de-barre[data-role="tout"], .morceau-de-barre[data-role="total"], .morceau-de-barre[data-role="grand"] { background: var(--barre-du-tout); }
 .morceau-de-barre[data-cherchee="true"] { background: var(--surbrillance-fond); border-style: dashed; }
 .morceau-de-barre[data-role="ecart"], .morceau-de-barre[data-role="suite"] { border-style: dashed; background: transparent; }
+/* La jauge de l'univers : un remplissage uni qui couvre la barre, et deux bouts de dessin de taille fixe. Elle se dévoile sans changer la largeur de la barre. */
+.morceau-de-barre[data-jauge="vide"] { border-style: dashed; }
+.jauge { position: absolute; inset: 0; z-index: 0; display: flex; justify-content: space-between; pointer-events: none; }
+.bout-de-jauge { flex: none; display: block; width: auto; height: 100%; aspect-ratio: 24 / 44; }
+.valeur-de-la-barre { position: relative; z-index: 1; }
+.morceau-de-barre[data-jauge="se-remplit"] .jauge { animation: jauge-se-remplit .2s ease-out backwards; }
+@keyframes jauge-se-remplit { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
 .clavier-de-cristaux { display: grid; justify-items: center; gap: 8px; width: min(100%, 20rem); max-width: 100%; }
 .nombre-tape {
   display: block;

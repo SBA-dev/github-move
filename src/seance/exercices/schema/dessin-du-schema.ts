@@ -13,6 +13,8 @@ export type Morceau = Readonly<{
   taille: Taille;
   /** Un morceau qui ne se dessine pas en barre : l'écart d'une comparaison, la suite des parts. */
   vide?: boolean;
+  /** Le morceau est la valeur cherchée du problème : sa barre reste vide jusqu'à la réponse, même une fois le « ? » remplacé. */
+  aTrouver?: boolean;
 }>;
 
 export type Ligne = Readonly<{ role: string; nom?: string; morceaux: readonly Morceau[] }>;
@@ -41,7 +43,7 @@ export function dessinerLeSchema(forme: FormeDeSchema, reponse?: number): readon
 type Lecture = (valeur: number | null) => number | null;
 
 function partiesEtTout({ parties: [premiere, seconde], tout }: Extract<FormeDeSchema, { genre: "partiesEtTout" }>, lu: Lecture): readonly Ligne[] {
-  const ligneDuTout: Ligne = { role: "tout", morceaux: [{ role: "tout", valeur: lu(tout), taille: reste }] };
+  const ligneDuTout: Ligne = { role: "tout", morceaux: [{ role: "tout", valeur: lu(tout), taille: reste, aTrouver: tout === null }] };
   const taille = (valeur: number | null): Taille =>
     tout === null ? poids(valeur ?? 0) : valeur === null ? reste : proportion(valeur, tout);
   return [
@@ -49,8 +51,8 @@ function partiesEtTout({ parties: [premiere, seconde], tout }: Extract<FormeDeSc
     {
       role: "parties",
       morceaux: [
-        { role: "partie", valeur: lu(premiere), taille: taille(premiere) },
-        { role: "partie", valeur: lu(seconde), taille: taille(seconde) },
+        { role: "partie", valeur: lu(premiere), taille: taille(premiere), aTrouver: premiere === null },
+        { role: "partie", valeur: lu(seconde), taille: taille(seconde), aTrouver: seconde === null },
       ],
     },
   ];
@@ -63,11 +65,11 @@ function comparaison(
   const ligneDuGrand: Ligne = {
     role: "grand",
     nom: nomDuGrand,
-    morceaux: [{ role: "grand", valeur: lu(grand), taille: reste }],
+    morceaux: [{ role: "grand", valeur: lu(grand), taille: reste, aTrouver: grand === null }],
   };
   const ligneDuPetit = (morceaux: readonly Morceau[]): Ligne => ({ role: "petit", nom: nomDuPetit, morceaux });
-  const morceauDuPetit = (taille: Taille): Morceau => ({ role: "petit", valeur: lu(petit), taille });
-  const morceauDeLEcart = (taille: Taille): Morceau => ({ role: "ecart", valeur: lu(ecart), taille, vide: true });
+  const morceauDuPetit = (taille: Taille): Morceau => ({ role: "petit", valeur: lu(petit), taille, aTrouver: petit === null });
+  const morceauDeLEcart = (taille: Taille): Morceau => ({ role: "ecart", valeur: lu(ecart), taille, vide: true, aTrouver: ecart === null });
   if (grand === null) {
     return [ligneDuGrand, ligneDuPetit([morceauDuPetit(poids(petit ?? 0)), morceauDeLEcart(poids(ecart ?? 0))])];
   }
@@ -83,12 +85,12 @@ function parts(
   reponse: number | undefined,
 ): readonly Ligne[] {
   const nombreDeParts = nb ?? reponse;
-  const unePart = (): Morceau => ({ role: "part", valeur: lu(valeur), taille: poids(1) });
+  const unePart = (): Morceau => ({ role: "part", valeur: lu(valeur), taille: poids(1), aTrouver: valeur === null });
   const morceaux: Morceau[] = nombreDeParts === undefined
     ? [unePart(), unePart(), { role: "suite", valeur: null, taille: poids(1), vide: true }]
     : Array.from({ length: nombreDeParts }, unePart);
   return [
-    { role: "total", morceaux: [{ role: "total", valeur: lu(total), taille: reste }] },
+    { role: "total", morceaux: [{ role: "total", valeur: lu(total), taille: reste, aTrouver: total === null }] },
     { role: "parts", morceaux },
   ];
 }
