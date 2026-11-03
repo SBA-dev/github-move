@@ -323,14 +323,19 @@ async function verifierQueLeDecorNeRecouvrePasLeTexte(page: Page) {
     const PAS = 1;
     const trouves: string[] = [];
     for (const choix of document.querySelectorAll('[data-testid="choix"]')) {
-      // Une boîte par ligne de texte : l'union des lignes couvrirait aussi le vide à côté d'une ligne courte centrée.
+      // Une bande par ligne de texte : l'union des lignes couvrirait aussi le vide à côté d'une ligne courte centrée.
       const lignes: DOMRect[] = [];
       const intervalle = document.createRange();
       const lecteur = document.createTreeWalker(choix, NodeFilter.SHOW_TEXT);
       for (let texte = lecteur.nextNode(); texte !== null; texte = lecteur.nextNode()) {
         intervalle.selectNodeContents(texte);
+        // Seule la bande de la police compte (zone où se dessinent les lettres), centrée dans la ligne : pas l'interligne.
+        const taillePolice = parseFloat(getComputedStyle(texte.parentElement ?? (choix as Element)).fontSize);
         for (const ligne of intervalle.getClientRects()) {
-          if (ligne.width > 0 && ligne.height > 0) lignes.push(ligne);
+          if (ligne.width <= 0 || ligne.height <= 0) continue;
+          const hauteurBande = Math.min(taillePolice, ligne.height);
+          const haut = ligne.top + (ligne.height - hauteurBande) / 2;
+          lignes.push(new DOMRect(ligne.left, haut, ligne.width, hauteurBande));
         }
       }
       if (lignes.length === 0) continue;
