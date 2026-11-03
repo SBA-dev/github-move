@@ -785,21 +785,28 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 .carte-du-calcul { font-size: 2rem; }
 .boite-a-jetons, .probleme-en-barres { display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 100%; }
 
-/* Boîte à jetons : le couvercle se lève ou se ferme, les jetons rangés par 5 */
-.boite { position: relative; box-sizing: border-box; display: grid; place-items: center; width: min(100%, 18rem); min-height: 128px; margin-top: 28px; padding: 12px; border: 4px solid var(--bois-fonce); border-radius: 6px 6px 16px 16px; background: var(--bois-clair); }
-.boite::before { content: ""; position: absolute; left: -4px; right: -4px; bottom: 100%; height: 22px; border: 4px solid var(--bois-fonce); border-radius: var(--rayon-petit); background: var(--bois); transform-origin: left bottom; transition: transform .5s ease-in-out; }
-.boite[data-etat="ouverte"]::before { transform: rotate(-35deg); }
-.boite[data-etat="fermee"] { background: var(--bois); }
-.boite[data-etat="fermee"] .contenu-de-la-boite { visibility: hidden; }
-.contenu-de-la-boite { display: grid; justify-items: center; gap: 8px; max-width: 100%; }
-.jetons { display: grid; justify-items: center; gap: 6px; max-width: 100%; }
-.rangee-de-jetons { display: flex; justify-content: center; gap: 6px; }
-.jeton { box-sizing: border-box; flex: none; width: 28px; height: 28px; border: 3px solid var(--or-contour); border-radius: 50%; background: var(--or); }
-.jeton[data-cinquieme="true"] { border-color: var(--contour); background: var(--jeton-cinquieme); }
-.jeton[data-etat="nouveau"] { animation: jeton-entre .6s ease-out; }
-.jeton[data-etat="sortant"] { opacity: .45; animation: jeton-sort .6s ease-in; }
-@keyframes jeton-entre { from { transform: translateY(-40px); opacity: 0; } to { transform: none; opacity: 1; } }
-@keyframes jeton-sort { from { transform: none; opacity: 1; } to { transform: translateY(-40px); opacity: .45; } }
+/* Boîte à jetons : le dessin de l'univers en deux couches (fond, puis rebord avant) avec les jetons entre les deux, rangés par 5.
+   Le cadre est celui du dessin (288 × 250) : la boîte garde sa taille, ouverte ou fermée, quel que soit le nombre de jetons. */
+.boite { --taille-du-jeton: 32px; --ecart-des-jetons: 6px; position: relative; flex: none; width: min(100%, 18rem); aspect-ratio: 288 / 250; margin: 0; }
+.boite[data-serree="true"] { --taille-du-jeton: 26px; --ecart-des-jetons: 4px; }
+.dessin-de-la-boite, .rebord-de-la-boite { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+.contenu-de-la-boite { position: absolute; left: 0; right: 0; top: 23.2%; height: 58.4%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--ecart-des-jetons); pointer-events: none; }
+.jetons { display: grid; justify-items: center; gap: var(--ecart-des-jetons); max-width: 100%; }
+.rangee-de-jetons { display: flex; justify-content: center; gap: var(--ecart-des-jetons); }
+.jeton { position: relative; box-sizing: border-box; flex: none; width: var(--taille-du-jeton); height: var(--taille-du-jeton); }
+.dessin-du-jeton { position: relative; display: block; width: 100%; height: 100%; }
+/* La marque du cinquième jeton : un anneau orange derrière la pastille, le même dans les six univers. */
+.marque-du-cinquieme { position: absolute; inset: -2px; border-radius: 50%; background-color: var(--jeton-cinquieme); }
+.jeton[data-etat="sortant"] { opacity: .45; }
+/* Les mouvements durent 400 ms au plus ; ils n'ont lieu que si l'appareil ne demande pas de mouvements réduits (le jeton est alors « posé »). */
+.jeton[data-mouvement="tombe"] { animation: jeton-tombe .4s ease-in-out backwards; }
+.jeton[data-mouvement="s-en-va"] { transform: translateY(4px); transition: opacity .4s ease, transform .4s ease; }
+@keyframes jeton-tombe {
+  0% { transform: translateY(-48px); opacity: .25; }
+  55% { transform: translateY(0); opacity: 1; }
+  75% { transform: translateY(-6px); }
+  100% { transform: translateY(0); }
+}
 
 /* Schéma en barres : des barres proportionnelles aux nombres, « ? » pour la valeur cherchée */
 .enonce-du-probleme { max-width: 100%; margin: 0; overflow-wrap: anywhere; }
