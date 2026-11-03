@@ -51,3 +51,8 @@ Numéro de décision : prochain libre 0040, si besoin. Commentaire `Avancement` 
   - #97 « Rejouer une leçon déjà acquise… séance terminée » : **rouge aussi sur `main`** (worktree de `origin/main`, 62/63 sur #97), l'effet « découverte » se joue avec « séance terminée » ; il ne vient pas de #126 ;
   - #97 « Léa rejoue fait entendre « bouton touché » » : vert sur `main`, rouge sur la branche, possible régression.
 - 02:47 UTC : `e2e-tester` diagnostique les deux rouges non expliqués et rend plus strictes les étapes des bloquants 1 et 2 de la review (RED).
+- 03:40 UTC : `e2e-tester` (`7b5a0f6`).
+  - A1, conjugaison « suis » : défaut d'étape. L'arrivée du mot était lue trop tôt dans le journal. Corrigé, 12/12 verts avec trace.
+  - A2, #97 « Léa rejoue… bouton touché » : instable **aussi sur `main`** (5 échecs sur 9). Piste : garde `parolesEnCours > 0` de `toucherUnBouton`. Ce n'est pas une régression de #126. Publié en APPRIS sur #126 (6594148597).
+  - Étapes rendues strictes : couleur de réussite lue sur le tracé du dessin ; signature du choix écarté (dessin présent, `fill` et `stroke`, aucun décor ni dégradé). `@issue-126` : 55 verts, 7 rouges, tous pour la couleur de réussite cachée (bug applicatif). L'étape « écarté » est prouvée stricte par une mutation temporaire (5/5 rouges).
+- 03:42 UTC : `implementer` corrige les 3 bloquants et les non bloquants retenus du cycle 1.
