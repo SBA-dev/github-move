@@ -119,7 +119,7 @@ async function journal98(page: Page): Promise<{ passages: Passage[]; depuisLeGes
 }
 
 /** Début d'un geste de l'enfant : ce que les étapes « Alors » regardent commence ici (les effets sonores de #97 aussi). */
-async function marquerLeGeste(page: Page): Promise<void> {
+export async function marquerLeGeste(page: Page): Promise<void> {
   await page.evaluate(() => {
     const brut = Reflect.get(window, "__jeu98") as Journal98 | undefined;
     if (brut) brut.marque = brut.passages.length;
@@ -155,13 +155,13 @@ async function nomsDesMaisons(page: Page): Promise<string[]> {
 
 // --- Le glisser au doigt : de vrais événements tactiles (CDP), jamais dragTo
 
-type Doigt = { session: CDPSession; x: number; y: number };
-const doigts = new WeakMap<Page, Doigt>();
+export type Doigt = { session: CDPSession; x: number; y: number };
+export const doigts = new WeakMap<Page, Doigt>();
 const PAS_DU_GESTE = 6;
 
-type Point = { x: number; y: number };
+export type Point = { x: number; y: number };
 
-async function centreDe(page: Page, cible: Locator, description: string): Promise<Point> {
+export async function centreDe(page: Page, cible: Locator, description: string): Promise<Point> {
   await expect(cible.first(), description).toBeVisible();
   const boite = await cible.first().boundingBox();
   if (boite === null) throw new Error(`${description} : introuvable à l'écran`);
@@ -178,7 +178,7 @@ async function centreDe(page: Page, cible: Locator, description: string): Promis
  * décision 98.24 (les étiquettes et les maisons tiennent ensemble). Si les deux ne peuvent pas tenir à l'écran, c'est un défaut
  * de l'application et le geste échoue avec ce message, il ne défile pas pendant le glisser.
  */
-async function montrerLeDepartEtLArrivee(page: Page, depart: Locator, arrivee: Locator, description: string): Promise<void> {
+export async function montrerLeDepartEtLArrivee(page: Page, depart: Locator, arrivee: Locator, description: string): Promise<void> {
   await expect(depart.first()).toBeVisible();
   await expect(arrivee.first()).toBeVisible();
   const boiteDuDepart = await depart.first().boundingBox();
@@ -195,7 +195,7 @@ async function montrerLeDepartEtLArrivee(page: Page, depart: Locator, arrivee: L
 
 const imageSuivante = (page: Page) => page.evaluate(() => new Promise<void>((fait) => requestAnimationFrame(() => fait())));
 
-async function poserLeDoigt(page: Page, depart: Point): Promise<void> {
+export async function poserLeDoigt(page: Page, depart: Point): Promise<void> {
   await marquerLeGeste(page);
   const session = await page.context().newCDPSession(page);
   doigts.set(page, { session, ...depart });
@@ -203,7 +203,7 @@ async function poserLeDoigt(page: Page, depart: Point): Promise<void> {
   await imageSuivante(page);
 }
 
-async function deplacerLeDoigt(page: Page, arrivee: Point): Promise<void> {
+export async function deplacerLeDoigt(page: Page, arrivee: Point): Promise<void> {
   const doigt = doigts.get(page);
   if (!doigt) throw new Error("Aucun doigt posé sur l'écran");
   for (let pas = 1; pas <= PAS_DU_GESTE; pas++) {
@@ -218,7 +218,7 @@ async function deplacerLeDoigt(page: Page, arrivee: Point): Promise<void> {
   doigt.y = arrivee.y;
 }
 
-async function leverLeDoigt(page: Page): Promise<void> {
+export async function leverLeDoigt(page: Page): Promise<void> {
   const doigt = doigts.get(page);
   if (!doigt) throw new Error("Aucun doigt posé sur l'écran");
   await doigt.session.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
@@ -662,7 +662,7 @@ Then(/^elle brille de la même façon que dans l'univers « Animaux de la forêt
 
 Given(
   /^Léa a un profil enfant préparé de niveau (\S+) dans l'univers « (.+) »$/,
-  { tags: "@issue-98 or @issue-126" },
+  { tags: "@issue-98 or @issue-126 or @issue-127" },
   async ({ page, monde, famille }, niveau: string, univers: string) => {
     // Ce .feature ne dit pas que Paul est connecté : le vrai profil de Léa, les séances terminées et les étoiles en ont besoin.
     await famille.connecterSansEmail("tablette", "Paul");
@@ -684,7 +684,7 @@ Given(
 type FamilleDeTest = Parameters<typeof modifierLeProfil>[0];
 const famillesParPage = new WeakMap<Page, FamilleDeTest>();
 
-async function modifierLeProfilEtRechoisir(page: Page, univers: string): Promise<void> {
+export async function modifierLeProfilEtRechoisir(page: Page, univers: string): Promise<void> {
   const famille = famillesParPage.get(page);
   if (!famille) throw new Error("Famille de test inconnue");
   await modifierLeProfil(famille, "Léa", { univers });
@@ -703,7 +703,7 @@ async function modifierLeProfilEtRechoisir(page: Page, univers: string): Promise
 
 Given(
   /^Léa a choisi l'univers (animaux|princesse|sports|pompier|police|danse)$/,
-  { tags: "@issue-98 or @issue-126" },
+  { tags: "@issue-98 or @issue-126 or @issue-127" },
   async ({ page, monde, famille }, univers: string) => {
     famillesParPage.set(page, famille);
     scenario(page).univers = univers;
@@ -727,13 +727,13 @@ async function arriverAvecUnProfilPrepare(page: Page, profil: { prenom: string; 
   await expect(page.locator(".application")).toHaveAttribute("data-univers", "animaux");
 }
 
-Given(/^Léa a un profil enfant préparé sans univers$/, { tags: "@issue-98 or @issue-126" }, async ({ page, monde }) => {
+Given(/^Léa a un profil enfant préparé sans univers$/, { tags: "@issue-98 or @issue-126 or @issue-127" }, async ({ page, monde }) => {
   const profil = { prenom: "Léa", niveau: "CP" };
   monde.profils.set("Léa", profil);
   await arriverAvecUnProfilPrepare(page, profil);
 });
 
-Given(/^Léa a un profil enfant préparé dont l'univers est inconnu$/, { tags: "@issue-98 or @issue-126" }, async ({ page, monde }) => {
+Given(/^Léa a un profil enfant préparé dont l'univers est inconnu$/, { tags: "@issue-98 or @issue-126 or @issue-127" }, async ({ page, monde }) => {
   const profil = { prenom: "Léa", niveau: "CP", univers: "pirates" };
   monde.profils.set("Léa", profil);
   await arriverAvecUnProfilPrepare(page, profil);

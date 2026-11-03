@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+<!-- manche -->
+<path d="M120 120 L172 172" stroke="#5E3416" stroke-width="22" stroke-linecap="round"/>
+<path d="M120 120 L172 172" stroke="#A8794A" stroke-width="10" stroke-linecap="round"/>
+<!-- verre et monture -->
+<circle cx="84" cy="84" r="62" fill="#F7FBFF" stroke="#3F9D45" stroke-width="14"/></svg>

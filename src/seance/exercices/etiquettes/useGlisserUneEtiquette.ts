@@ -10,7 +10,7 @@ const DUREE_DU_RETOUR_MS = 250;
 type Geste = { readonly pointeur: number; readonly depart: Point; glisse: boolean };
 
 type Options = {
-  /** Seules les étiquettes de classer se glissent. */
+  /** Les étiquettes de « classer » et les chiffres de l'addition posée se glissent ; les autres restent des boutons. */
   readonly glissable: boolean;
   /** Le doigt passe (ou ne passe plus) quelque part : pour signaler la maison survolée. */
   readonly onSurvol: (point: Point | undefined) => void;

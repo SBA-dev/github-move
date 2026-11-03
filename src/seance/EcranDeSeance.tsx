@@ -334,6 +334,7 @@ function SeanceEnCours(
                 addition={addition}
                 reussie={figee !== undefined}
                 colonneQuiBrille={deroulement.colonneQuiBrille}
+                departsDesRetenues={deroulement.departsDesRetenues}
                 onPoser={(chiffre, rang) => void deroulement.poserUnChiffre(chiffre, rang)}
                 onRelire={deroulement.relireLaPhrase}
                 onChoisir={(texte) => void deroulement.choisirUneReponseDeCalcul(texte)}

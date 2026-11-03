@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+<!-- queue -->
+<path d="M100 26 Q104 14 114 10" fill="none" stroke="#5E3416" stroke-width="6" stroke-linecap="round"/>
+<!-- noix -->
+<path d="M40 82 Q34 170 100 190 Q166 170 160 82 Z" fill="#FBEBC8" stroke="#E0559B" stroke-width="6" stroke-linejoin="round"/>
+<!-- cupule -->
+<path d="M30 86 Q28 36 100 32 Q172 36 170 86 Z" fill="#B07A45" stroke="#E0559B" stroke-width="6" stroke-linejoin="round"/>
+<path d="M62 62 H138 M54 76 H146" stroke="#7A4A22" stroke-width="4" stroke-linecap="round" opacity=".55"/></svg>
