@@ -5,7 +5,8 @@ import { MotQuiVoyage, type Trajet } from "./MotQuiVoyage.tsx";
 /** Le mot qu'un enfant vient de choisir, et d'où il part : le centre de sa bulle. */
 export type DepartDuMot = { readonly texte: string; readonly centre: { readonly x: number; readonly y: number } };
 
-type Arrivee = { readonly rang: number; readonly mot: string; readonly etape: "en-route" | "eclat" };
+/** Le départ est figé au moment où l'arrivée est calculée : un autre toucher pendant le voyage ne relance pas le trajet. */
+type Arrivee = { readonly rang: number; readonly mot: string; readonly depart: DepartDuMot; readonly etape: "en-route" | "eclat" };
 
 const DUREE_DE_L_ECLAT_MS = 400;
 
@@ -30,19 +31,19 @@ export function useMotQuiVoyage(mots: readonly (string | undefined)[], depart: D
     const rang = mots.findIndex((mot, r) => mot !== undefined && vus[r] === undefined);
     const mot = mots[rang];
     const nouvelleArrivee = vus.length === mots.length && mot !== undefined && mot === depart?.texte && !mouvementsReduits;
-    setArrivee(nouvelleArrivee ? { rang, mot, etape: "en-route" } : undefined);
+    setArrivee(nouvelleArrivee ? { rang, mot, depart, etape: "en-route" } : undefined);
   }
 
   useLayoutEffect(() => {
-    if (arrivee?.etape !== "en-route" || depart === undefined) return;
+    if (arrivee?.etape !== "en-route") return;
     const place = places.current[arrivee.rang]?.getBoundingClientRect();
     if (place === undefined || !estVisible(place)) {
       setArrivee({ ...arrivee, etape: "eclat" });
       return;
     }
     const rang = arrivee.rang;
-    setTrajet({ mot: arrivee.mot, de: depart.centre, versLaPlace: () => centreDe(places.current[rang]?.getBoundingClientRect() ?? place) });
-  }, [arrivee, depart]);
+    setTrajet({ mot: arrivee.mot, de: arrivee.depart.centre, versLaPlace: () => centreDe(places.current[rang]?.getBoundingClientRect() ?? place) });
+  }, [arrivee]);
 
   useEffect(() => {
     if (arrivee?.etape !== "eclat") return;
