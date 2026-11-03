@@ -72,3 +72,4 @@ Numéro de décision : prochain libre 0040, si besoin. Commentaire `Avancement` 
   - texte long, 5 univers sur 6 : étoile en Princesses (jusqu'à 59 × 34 px), Police (65 × 34) et Pompiers (29 × 34) ; Animaux et Sports, 2 à 5 px seulement ;
   - mode dys avec le choix long : Princesses et Police.
 - 08:42 UTC : décision de l'orchestrateur sur la mesure : on teste la bande de la police (hauteur de 1 em, centrée sur la ligne), et non la boîte de ligne, qui compte l'interligne (1,9 en mode dys). Les recouvrements de 2 à 5 px de l'interligne ne sont pas des lettres cachées.
+- 09:30 UTC : mesure sur la bande de la police (`9a08223`). Les 7 rouges restent. Tous sont de vrais recouvrements, y compris les coutures de Sports (3 × 21 px) et l'ellipse d'Animaux (12 × 11 px), qui touchent les lettres. `implementer` plafonne l'échelle du décor des bouts et le recentre verticalement (reco de la review du cycle 3).
