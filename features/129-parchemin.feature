@@ -10,8 +10,8 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les textes se dévo
   « Je suis prêt », l'avancement et les étoiles restent ceux du domaine (#17, #22, #24), et la voix, le mot prononcé
   surligné et le vers mis en avant restent ceux de #7, #17 et #22, sans être redécrits.
   Les commentaires « Décision 98.n » renvoient à docs/stories/98/acceptance.md ; « Question #129.n » renvoie aux
-  questions de docs/stories/129/acceptance.md. Les scénarios tagués @a-valider suivent la reco d'une question
-  encore ouverte.
+  questions de docs/stories/129/acceptance.md, toutes tranchées par le PO le 2026-11-03 (« 129 reco tout ») : la
+  reco de chaque question est retenue.
 
   Mots employés dans ces scénarios (mots d'interface, pas des termes du domaine) :
   - « le parchemin » : le support dessiné du texte d'une lecture et des vers d'une poésie (décision n°30). Il n'est
@@ -46,6 +46,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les textes se dévo
 
   Règle: Pendant la première lecture, le texte se déroule avec la voix : phrase après phrase en lecture, vers après vers en poésie ; le titre est visible dès l'ouverture ; ensuite, tout reste visible, pour les questions, pour redire et après « Réécouter » ; un toucher sur le parchemin ne fait rien
 
+    # Question #129.10 (tranchée : reco retenue) : le parchemin reste roulé, titre seul, pendant la présentation
     Plan du Scénario: À l'ouverture de <exercice>, le titre est visible et le parchemin est encore roulé
       Étant donné que Léa est sur la page de la leçon « <leçon> »
       Quand Léa choisit seulement l'exercice « <titre de l'exercice> »
@@ -57,8 +58,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les textes se dévo
         | une lecture  | Lecture : Le petit chat Plume   | Le petit chat Plume  | Le petit chat Plume                         | aucune phrase du texte  | présente l'histoire      |
         | une poésie   | Poésie : La Cigale et la Fourmi | Le début de la fable | Le début de la fable — Jean de La Fontaine  | aucun vers              | annonce l'écoute         |
 
-    # Question #129.1 : en lecture, le texte se déroule phrase après phrase (reco)
-    @a-valider
+    # Question #129.1 : en lecture, le texte se déroule phrase après phrase (tranchée : reco retenue)
     Scénario: En lecture, chaque phrase apparaît en entier quand Noisette commence à la lire
       Étant donné que Léa joue seulement l'exercice « Le petit chat Plume » de la leçon « Lecture : Le petit chat Plume »
       Quand Noisette lit le texte
@@ -66,8 +66,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les textes se dévo
       Et les phrases que Noisette n'a pas encore commencées restent cachées
       Et chaque mot du texte est surligné au moment où Noisette le prononce
 
-    # Question #129.1 : en lecture, le texte se déroule phrase après phrase (reco)
-    @a-valider
+    # Question #129.1 : en lecture, le texte se déroule phrase après phrase (tranchée : reco retenue)
     Plan du Scénario: Quand Noisette commence « <phrase lue> », les phrases d'avant sont visibles et la suivante est cachée
       Étant donné que Léa joue seulement l'exercice « Le petit chat Plume » de la leçon « Lecture : Le petit chat Plume »
       Quand Noisette commence à lire la phrase « <phrase lue> »
@@ -105,8 +104,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les textes se dévo
       Alors tout le texte est visible, de « Plume est un petit chat gris. » à « Alors Léa lui donne du lait, et Plume ronronne. »
       Et aucune phrase ne se cache de nouveau pendant que Noisette relit
 
-    # Question #129.4 : une reprise ne réenroule pas le parchemin (reco)
-    @a-valider
+    # Question #129.4 : une reprise ne réenroule pas le parchemin (tranchée : reco retenue)
     Scénario: En lecture, « Réécouter » pendant la première lecture ne cache pas les phrases déjà dévoilées
       Étant donné que Léa joue seulement l'exercice « Le petit chat Plume » de la leçon « Lecture : Le petit chat Plume »
       Et que Noisette en est à la phrase « Un matin, Plume voit une souris. »
@@ -139,8 +137,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les textes se dévo
       Alors Léa voit les 6 vers, un par ligne
       Et Léa peut dire qu'elle est prête
 
-    # Question #129.4 : une reprise ne réenroule pas le parchemin (reco)
-    @a-valider
+    # Question #129.4 : une reprise ne réenroule pas le parchemin (tranchée : reco retenue)
     Scénario: En poésie, « Réécouter » pendant l'écoute garde visibles les vers déjà dévoilés
       Étant donné que Léa joue seulement l'exercice « Le début de la fable » de la leçon « Poésie : La Cigale et la Fourmi »
       Et que Noisette a lu les 3 premiers vers de « Le début de la fable »
@@ -191,8 +188,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les textes se dévo
         | le navigateur bloque la voix                |
         | le navigateur ne sait pas lire à voix haute |
 
-    # Question #129.3 : une lecture arrêtée avant la fin ouvre tout le texte (reco)
-    @a-valider
+    # Question #129.3 : une lecture arrêtée avant la fin ouvre tout le texte (tranchée : reco retenue)
     Plan du Scénario: En lecture, quand <arrêt> au milieu du texte, tout le texte s'ouvre aussitôt
       Étant donné que Léa joue seulement l'exercice « Le petit chat Plume » de la leçon « Lecture : Le petit chat Plume »
       Et que Noisette en est à la phrase « Il dort sur le lit de Léa. »
@@ -205,8 +201,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les textes se dévo
         | Léa passe en Muet                 | Léa passe en Muet                                    |
         | la voix est bloquée               | le navigateur bloque la voix pendant que Noisette lit |
 
-    # Question #129.3 et invariant P2 : la question n'arrive jamais devant un texte caché
-    @a-valider
+    # Question #129.3 (tranchée : reco retenue) et invariant P2 : la question n'arrive jamais devant un texte caché
     Scénario: « J'ai écouté » à la deuxième phrase : la première question s'affiche sous tout le texte
       Étant donné que Léa joue seulement l'exercice « Le petit chat Plume » de la leçon « Lecture : Le petit chat Plume »
       Et que Noisette en est à la phrase « Il dort sur le lit de Léa. »
@@ -215,8 +210,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les textes se dévo
       Et Léa voit toujours le texte « Plume est un petit chat gris. … » au-dessus de la question « De quelle couleur est Plume ? »
       Et tout le texte est visible, de « Plume est un petit chat gris. » à « Alors Léa lui donne du lait, et Plume ronronne. »
 
-    # Question #129.3 : une lecture arrêtée avant la fin ouvre tout le texte (reco)
-    @a-valider
+    # Question #129.3 : une lecture arrêtée avant la fin ouvre tout le texte (tranchée : reco retenue)
     Plan du Scénario: En poésie, quand <arrêt> pendant l'écoute, les 6 vers s'ouvrent aussitôt
       Étant donné que Léa joue seulement l'exercice « Le début de la fable » de la leçon « Poésie : La Cigale et la Fourmi »
       Et que Noisette en est au vers « Tout l'été, »
@@ -228,8 +222,8 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les textes se dévo
         | Léa passe en Muet   | Léa passe en Muet                                     |
         | la voix est bloquée | le navigateur bloque la voix pendant que Noisette lit |
 
-    # Question #129.2 : une voix qui ne signale pas les mots ouvre tout le texte (reco : après 2 secondes sans mot signalé)
-    @a-valider
+    # Question #129.2 (tranchée : reco retenue) : si aucun mot n'est signalé dans les 2 premières secondes du texte, tout
+    # le texte s'ouvre ; la voix continue de lire jusqu'au bout
     Scénario: Si la voix lit sans signaler les mots, tout le texte s'ouvre sans attendre la fin de la lecture
       Étant donné que la voix de l'appareil lit sans signaler les mots qu'elle prononce
       Et que Léa joue seulement l'exercice « Le petit chat Plume » de la leçon « Lecture : Le petit chat Plume »
@@ -238,6 +232,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les textes se dévo
       Et Léa entend toujours Noisette lire le texte jusqu'au bout
 
     # Invariant 12 de docs/stories/98/domain-model.md et décision 98.13 : même parchemin en séance de révision
+    # Question #129.11 (tranchée : reco retenue) : la séance de révision s'enchaîne comme la séance, texte lu puis question
     Scénario: En séance de révision, en Muet, tout le texte de la question de lecture est visible tout de suite
       Étant donné que la tablette est en Muet
       Et que Léa a pour question retenue la question « Où dort Plume ? » de l'exercice « Le petit chat Plume », due aujourd'hui
@@ -269,7 +264,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les textes se dévo
 
   Règle: Dans chacun des 6 univers, le parchemin a le dessin de cet univers, en séance et en séance de révision ; le texte reste du texte, lisible, en mode dys aussi, et tient à 360 px ; changer d'univers ne change ni le texte, ni la voix, ni le déroulement, ni ce que lisent les lecteurs d'écran ; un profil sans univers connu voit le parchemin de l'univers « Animaux de la forêt »
 
-    # Décisions 98.2 et 98.31 (la PR attend les 6 dessins validés). Question #129.6
+    # Décisions 98.2 et 98.31 (la PR attend les 6 dessins validés). Question #129.6 (tranchée : reco retenue)
     Plan du Scénario: Dans l'univers « <univers> », le texte d'une lecture est sur le parchemin de cet univers, et les lecteurs d'écran ne lisent que le texte
       Étant donné que Léa a choisi l'univers <clé>
       Et que Léa joue seulement l'exercice « Le petit chat Plume » de la leçon « Lecture : Le petit chat Plume »
@@ -288,7 +283,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les textes se dévo
         | pompier   | Pompiers            | Capitaine Sam    |
         | danse     | Danse               | Lili             |
 
-    # Décisions 98.2 et 98.31. Question #129.6
+    # Décisions 98.2 et 98.31. Question #129.6 (tranchée : reco retenue)
     Plan du Scénario: Dans l'univers « <univers> », les vers d'une poésie sont sur le parchemin de cet univers
       Étant donné que Léa a choisi l'univers <clé>
       Et que Léa joue seulement l'exercice « Le début de la fable » de la leçon « Poésie : La Cigale et la Fourmi »
@@ -306,8 +301,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les textes se dévo
         | pompier   | Pompiers            | Capitaine Sam    |
         | danse     | Danse               | Lili             |
 
-    # Invariant P6 et question #129.1 : même déroulement dans les 6 univers
-    @a-valider
+    # Invariant P6 et question #129.1 (tranchée : reco retenue) : même déroulement dans les 6 univers
     Plan du Scénario: Dans l'univers « <univers> », <personnage guide> lit le texte, qui se déroule phrase après phrase comme dans tous les univers
       Étant donné que Léa a choisi l'univers <clé>
       Et que Léa joue seulement l'exercice « Le petit chat Plume » de la leçon « Lecture : Le petit chat Plume »
@@ -337,6 +331,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les textes se dévo
         | dont l'univers est inconnu |
 
     # Invariant 12 de docs/stories/98/domain-model.md et décision 98.13 : même parchemin en séance de révision
+    # Question #129.11 (tranchée : reco retenue) : texte lu, puis question
     Scénario: En séance de révision, le texte de la question de lecture est sur le parchemin de l'univers
       Étant donné que Léa a choisi l'univers sports
       Et que Léa a pour question retenue la question « Où dort Plume ? » de l'exercice « Le petit chat Plume », due aujourd'hui
@@ -387,8 +382,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les textes se dévo
 
   Règle: Le parchemin ne change ni la place du texte, ni ce que lisent les lecteurs d'écran, ni les erreurs, ni l'avancement, ni les étoiles ; il vaut aussi en séance de révision
 
-    # Question #129.5 : la place de tout le texte est gardée dès l'ouverture (reco)
-    @a-valider
+    # Question #129.5 : la place de tout le texte est gardée dès l'ouverture (tranchée : reco retenue)
     Plan du Scénario: Pendant que <contenu> se déroule, le parchemin a déjà sa taille finale et rien ne bouge sous le doigt
       Étant donné que Léa joue seulement l'exercice « <titre de l'exercice> » de la leçon « <leçon> »
       Quand <lecture>
@@ -400,8 +394,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les textes se dévo
         | le texte  | Le petit chat Plume  | Lecture : Le petit chat Plume   | Noisette lit le texte                | la première phrase  | « J'ai écouté »  |
         | la poésie | Le début de la fable | Poésie : La Cigale et la Fourmi | Noisette lit la poésie vers par vers | le premier vers     | « Réécouter »    |
 
-    # Question #129.5 et invariant P5 : les lecteurs d'écran lisent tout le texte, comme aujourd'hui (reco)
-    @a-valider
+    # Question #129.5 (tranchée : reco retenue) et invariant P5 : les lecteurs d'écran lisent tout le texte, comme aujourd'hui
     Plan du Scénario: Pendant que <contenu> se déroule, les lecteurs d'écran peuvent lire tout le texte
       Étant donné que Léa joue seulement l'exercice « <titre de l'exercice> » de la leçon « <leçon> »
       Quand Noisette commence à lire <début>
@@ -438,8 +431,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les textes se dévo
         | le texte  | Le petit chat Plume  | Lecture : Le petit chat Plume   | Noisette lit le texte                | 4     |
         | la poésie | Le début de la fable | Poésie : La Cigale et la Fourmi | Noisette lit la poésie vers par vers | 12    |
 
-    # Invariant 12 de docs/stories/98/domain-model.md, décision 98.13 et question #129.1
-    @a-valider
+    # Invariant 12 de docs/stories/98/domain-model.md, décision 98.13, questions #129.1 et #129.11 (tranchées : recos retenues)
     Scénario: En séance de révision, le texte de la question de lecture se déroule comme en séance
       Étant donné que Léa a pour question retenue la question « Où dort Plume ? » de l'exercice « Le petit chat Plume », due aujourd'hui
       Quand Léa commence la séance de révision

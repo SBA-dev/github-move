@@ -2,7 +2,7 @@
 
 Épopée #95. Tranche **98e** du découpage de #98 (`docs/stories/98/domain-model.md`, abrégé « #98 » ci-dessous). Dépendances mergées : #97 (retours animés et sonores), #98 (98a, socle) et #126 (98b, bulles de choix). Stories voisines en parallèle : #128 (claviers) et #131 (boîte et barres).
 
-État : **cadrage à valider** par le PO (questions #129.1 à #129.9).
+État : **validé par le PO le 2026-11-03 (« 129 reco tout »)** : toutes les recos des questions #129.1 à #129.11 sont retenues (#129.10 et #129.11 sont posées dans `acceptance.md`). La planche `parchemin.png` attend encore sa validation univers par univers (98.28).
 
 Ce modèle ne recopie pas #98. Il renvoie à ses **invariants** (I1 à I20) et à ses **questions tranchées** (98.1 à 98.32), et ne garde que ce qui est propre au parchemin.
 
@@ -160,60 +160,71 @@ Tout se passe dans le navigateur, hors ligne compris (`@domain/apprentissage`, `
 - Planches : `docs/stories/129/planches/`. Captures : `docs/stories/129/captures/`.
 - Scénarios : `features/129-parchemin.feature`.
 
-## Questions ouvertes
+## Questions tranchées
+
+Toutes tranchées par le PO le 2026-11-03 (« 129 reco tout ») : la reco est retenue à chaque question. #129.10 (parchemin roulé pendant la présentation de l'histoire) et #129.11 (la séance de révision s'enchaîne comme la séance) sont dans `acceptance.md`.
 
 **#129.1 En `lecture`, le texte se déroule-t-il phrase après phrase ?**
 Contexte : l'issue dit « ligne après ligne », mais un texte de `lecture` n'a pas de lignes : c'est un seul paragraphe de 170 à 489 caractères. Une ligne à l'écran dépend de la largeur et du mode dys ; « ligne » est aussi un synonyme interdit de **Vers**. Le personnage guide lit déjà « phrase par phrase » (glossaire).
 Exemple : « Le hérisson se réveille. Il cherche des pommes. » : la première phrase apparaît quand la voix dit « Le », la seconde quand elle dit « Il ».
 Reco : **oui, phrase après phrase**, avec la coupure de la voix (lecture pure dans `@domain/voix`, par TDD).
+Décision (PO, 2026-11-03, « 129 reco tout ») : **tranchée, reco retenue**.
 Options : A, ligne d'écran après ligne d'écran (affichage seul, sans domaine, mais le déroulement change avec la largeur et le mode dys) ; B, mot après mot.
 
 **#129.2 Si la voix lit sans signaler les mots, le texte s'ouvre-t-il en entier tout de suite ?**
 Contexte : certaines voix d'appareil lisent sans dire quel mot est prononcé. Sans cela, le parchemin resterait roulé jusqu'à la fin de la lecture.
 Exemple : sur une tablette dont la voix ne signale pas les mots, aucun mot n'est surligné après 2 secondes : le texte entier apparaît.
 Reco : **oui** : si aucun mot n'est signalé dans les 2 premières secondes du texte, tout s'ouvre.
+Décision (PO, 2026-11-03, « 129 reco tout ») : **tranchée, reco retenue**.
 Option : dévoiler les phrases à un rythme fixe, sans suivre la voix (risque de décalage avec ce qu'on entend).
 
 **#129.3 Si la lecture s'arrête avant la fin (« J'ai écouté », Muet, voix bloquée, sortie), tout le texte s'ouvre-t-il aussitôt ?**
 Contexte : règle 2 et 98.12 (« un enfant qui lit seul n'attend jamais la voix »).
 Exemple : Léa touche « J'ai écouté » à la deuxième phrase : le texte entier apparaît avec la question.
 Reco : **oui**, dans tous ces cas.
+Décision (PO, 2026-11-03, « 129 reco tout ») : **tranchée, reco retenue**.
 Option : seul « J'ai écouté » ouvre tout ; une voix coupée laisse le parchemin où il en est (l'enfant ne pourrait plus lire la suite).
 
 **#129.4 Quand la poésie reprend au premier vers (« Réécouter » pendant l'écoute), ou que l'exercice est rouvert, les vers déjà dévoilés restent-ils visibles ?**
 Contexte : 98.12 limite le parchemin à la **première** lecture.
 Exemple : Léa écoute trois vers, touche « Réécouter » : les trois vers restent visibles, le vers lu repasse au premier, puis le quatrième se dévoile à son tour.
 Reco : **oui** : ce qui est dévoilé ne se cache plus jusqu'à la fin de l'exercice.
+Décision (PO, 2026-11-03, « 129 reco tout ») : **tranchée, reco retenue**.
 Option : le parchemin se réenroule et se déroule à nouveau à chaque reprise.
 
 **#129.5 Pendant le déroulement, la place du texte entier est-elle gardée, et les lecteurs d'écran lisent-ils tout le texte ?**
 Contexte : I11 (lecteurs d'écran inchangés), et règle de #126 (rien ne saute sous le doigt).
 Exemple : pendant la lecture, le parchemin a déjà sa taille finale ; « J'ai écouté » ne descend pas au fil des phrases.
 Reco : **oui aux deux** : le déroulement est visible seulement à l'œil (le bas du parchemin descend dans une place déjà réservée).
+Décision (PO, 2026-11-03, « 129 reco tout ») : **tranchée, reco retenue**.
 Option : le parchemin grandit avec le texte, et « J'ai écouté » descend au fil des phrases.
 
 **#129.6 Quel parchemin dessine-t-on dans chaque univers ?**
 Contexte : 98.2 (un dessin par univers), piste de #98 reprise avec des précautions (tableau « Propositions »).
 Exemple : en Pompiers, le texte est écrit sur la page claire d'un carnet rouge clair, avec un petit casque sur la reliure.
 Reco : **A** : Animaux, grande feuille d'arbre ; Princesses et fées, parchemin royal ; Sports, tableau de l'entraîneur ; Police, carnet d'enquête ; Pompiers, carnet de bord de la caserne ; Danse, partition (portées en haut et en bas seulement).
+Décision (PO, 2026-11-03, « 129 reco tout ») : **tranchée, reco retenue**.
 Options : B, l'« autre idée » du tableau pour un ou plusieurs univers ; C, tu donnes l'objet.
 
 **#129.7 En Sports, le « tableau de l'entraîneur » est aussi la piste de la case de la dictée (#128). D'accord pour le garder pour le parchemin ?**
 Contexte : deux écrans différents avec le même objet pourraient se confondre ; #128 n'a pas encore tranché.
 Exemple : en dictée, les cases sont des cases d'un tableau ; en lecture, tout le texte est sur un tableau blanc.
 Reco : **oui**, le garder : la forme est différente (cases contre grand tableau) et l'univers reste reconnaissable.
+Décision (PO, 2026-11-03, « 129 reco tout ») : **tranchée, reco retenue**.
 Option : en Sports, le parchemin devient un carnet de l'entraîneur.
 
 **#129.8 En Police, garde-t-on « carnet d'enquête » comme nom de l'objet ?**
 Contexte : « enquête » peut faire penser à un délit ; le nom n'est jamais affiché ni lu, mais il guide le dessin.
 Exemple : un carnet bleu à spirale, avec une petite loupe dans un coin, sans aucun indice ni photo.
 Reco : **oui**, avec un dessin limité au carnet et à la loupe.
+Décision (PO, 2026-11-03, « 129 reco tout ») : **tranchée, reco retenue**.
 Option : « carnet de l'agent ».
 
 **#129.9 Quelles 6 captures joindre à la PR ?**
 Contexte : 98.29 (une capture par univers, sans test). Les captures se font avec les mouvements réduits : le texte y est donc entier (règle 3). Les états de déroulement sont sur la planche.
 Exemple : univers Danse, à 360 px : un texte de `lecture` ouvert, avec la première question en dessous.
 Reco : **un exercice de `lecture`, texte entier visible avec sa première question**, à 360 px, dans chacun des 6 univers.
+Décision (PO, 2026-11-03, « 129 reco tout ») : **tranchée, reco retenue**.
 Options : A, 12 captures (en plus, une poésie au temps « redire ») ; B, la capture en mode dys.
 
 ## Historique
@@ -221,3 +232,4 @@ Options : A, 12 captures (en plus, une poésie au temps « redire ») ; B, la ca
 | Date | Changement |
 |---|---|
 | 2026-11-03 | Cadrage de la tranche, questions #129.1 à #129.9 posées au PO. |
+| 2026-11-03 | Validé par le PO (« 129 reco tout ») : recos de #129.1 à #129.11 retenues. |
