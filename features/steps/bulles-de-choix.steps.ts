@@ -40,7 +40,7 @@ import { journal, terminerLaLecture } from "./voix.steps.ts";
 type Boite = { x: number; y: number; width: number; height: number };
 
 type PassageDeBulle =
-  | { t: number; genre: "choix"; rang: number; texte: string; retour: string; eclatee: string; flotte: string; vide: string }
+  | { t: number; genre: "choix"; rang: number; texte: string; retour: string; eclatee: string; flotte: string; vide: string; reussite: string; fondDuDessin: string }
   | { t: number; genre: "eclat"; testid: string; texte: string; eclat: string; boite: Boite }
   | { t: number; genre: "brille"; testid: string };
 
@@ -70,6 +70,7 @@ export function installerLEnregistreurDeLaStory126() {
     return { x: boite.x, y: boite.y, width: boite.width, height: boite.height };
   };
   const tousLesChoix = () => [...document.querySelectorAll('[data-testid="choix"]')];
+  const tracePourLeFond = (choix: Element) => choix.querySelector('[data-testid="dessin-de-la-bulle"] path');
 
   document.addEventListener("click", (evenement) => {
     const cible = evenement.target;
@@ -104,6 +105,9 @@ export function installerLEnregistreurDeLaStory126() {
         eclatee: attribut(element, "data-eclatee"),
         flotte: attribut(element, "data-flotte"),
         vide: attribut(element, "data-vide"),
+        reussite: attribut(element, "data-reussite"),
+        // Le tracé du fond du dessin est opaque : c'est lui, et non le fond du bouton, que l'enfant voit.
+        fondDuDessin: tracePourLeFond(element) ? getComputedStyle(tracePourLeFond(element) as Element).fill : "sans dessin",
       });
     }
     if (element.hasAttribute("data-eclat")) {
@@ -125,17 +129,28 @@ export function installerLEnregistreurDeLaStory126() {
     subtree: true,
     childList: true,
     attributes: true,
-    attributeFilter: ["data-retour", "data-eclatee", "data-flotte", "data-vide", "data-eclat", "data-brille"],
+    attributeFilter: ["data-retour", "data-eclatee", "data-flotte", "data-vide", "data-eclat", "data-brille", "data-reussite"],
   });
 
-  // Le mot juste en chemin : sa position est notée à chaque image.
+  // Le mot juste en chemin : sa position est notée à chaque image, et à chaque fois que la page le déplace (son style change).
+  // Quand le navigateur est chargé, les images de l'échantillonnage se font rares : le style, lui, ne bouge que dans les images de la page,
+  // et l'observateur le voit tout de suite, jusqu'à l'arrivée.
+  const noterLeVoyage = (mot: Element) => {
+    journal126.voyages.push({ t: performance.now(), texte: texteDe(mot), boite: boiteDe(mot) });
+  };
   const echantillonner = () => {
-    for (const mot of document.querySelectorAll('[data-testid="mot-qui-voyage"]')) {
-      journal126.voyages.push({ t: performance.now(), texte: texteDe(mot), boite: boiteDe(mot) });
-    }
+    // Une bulle de choix juste est notée à chaque image : sa couleur peut changer (transition) sans que ses attributs bougent.
+    document.querySelectorAll('[data-testid="choix"][data-reussite="true"]').forEach(noter);
+    document.querySelectorAll('[data-testid="mot-qui-voyage"]').forEach(noterLeVoyage);
     requestAnimationFrame(echantillonner);
   };
   requestAnimationFrame(echantillonner);
+  const estUnMotQuiVoyage = (element: Element) => element.getAttribute("data-testid") === "mot-qui-voyage";
+  new MutationObserver((enregistrements) => {
+    for (const enregistrement of enregistrements) {
+      if (enregistrement.target instanceof Element && estUnMotQuiVoyage(enregistrement.target)) noterLeVoyage(enregistrement.target);
+    }
+  }).observe(document, { subtree: true, attributes: true, attributeFilter: ["style"] });
 }
 
 Before({ tags: "@issue-126" }, async ({ page }) => {
@@ -385,6 +400,30 @@ async function verifierQueLaBulleSEffaceSurPlace(page: Page, texte: string): Pro
   expect(await bulle.evaluate((element) => getComputedStyle(element).scale), "la bulle effacée ne grandit pas").toMatch(/^(none|1)$/);
 }
 
+/**
+ * La couleur de réussite se voit sur le dessin de la bulle : son tracé de fond, opaque, cache le fond du bouton.
+ * Elle doit y être pendant que la bulle est juste (data-reussite), avant que la bulle s'efface.
+ */
+async function verifierQueLaBulleJustePrendLaCouleurDeReussite(page: Page, rang: number, texte: string): Promise<void> {
+  const attendue = await page.evaluate(() => {
+    const sonde = document.createElement("span");
+    sonde.style.backgroundColor = "var(--succes-fond)";
+    document.body.append(sonde);
+    const couleur = getComputedStyle(sonde).backgroundColor;
+    sonde.remove();
+    return couleur;
+  });
+  expect(attendue, "la couleur de réussite (--succes-fond) est définie").not.toBe("rgba(0, 0, 0, 0)");
+  const justes = passagesDeLaBulle(await lireLeJournal(page), rang).flatMap((passage) =>
+    passage.genre === "choix" && passage.reussite === "true" ? [passage] : []
+  );
+  // Avec les mouvements réduits, la bulle s'efface dès qu'elle est juste (même instant) : son fond se lit alors au premier relevé.
+  const avantLEffacement = justes.filter((passage) => passage.eclatee !== "true");
+  const vus = (avantLEffacement.length > 0 ? avantLEffacement : justes.slice(0, 1)).map((passage) => passage.fondDuDessin);
+  expect(vus, `la bulle de choix « ${texte} » est juste (data-reussite) avant de s'effacer`).not.toEqual([]);
+  expect(vus, `le tracé du fond du dessin de « ${texte} » prend la couleur de réussite ${attendue} (il cache le fond du bouton)`).toContain(attendue);
+}
+
 Then(/^le choix « ([^«»]+) » rebondit, puis sa bulle de choix s'efface en douceur à sa place, sans éclater$/, async ({ page }, texte: string) => {
   const clic = await leDernierClic(page);
   expect(clic.texte, "Léa a touché ce choix").toBe(texte);
@@ -393,6 +432,7 @@ Then(/^le choix « ([^«»]+) » rebondit, puis sa bulle de choix s'efface en do
     timeout: 20_000,
   }).toBe(true);
   await verifierQueLaBulleSEffaceSurPlace(page, texte);
+  await verifierQueLaBulleJustePrendLaCouleurDeReussite(page, clic.rang, texte);
   const passages = passagesDeLaBulle(await lireLeJournal(page), clic.rang);
   const rebond = passages.findIndex((p) => p.retour === "rebond");
   const efface = passages.findIndex((p) => p.eclatee === "true");
@@ -417,6 +457,7 @@ Then(/^les bulles de choix « ([^«»]+) » et « ([^«»]+) » restent à leur 
 Then(/^sa bulle de choix disparaît en fondu, sans grandir$/, async ({ page }) => {
   const clic = await leDernierClic(page);
   await verifierQueLaBulleSEffaceSurPlace(page, clic.texte);
+  await verifierQueLaBulleJustePrendLaCouleurDeReussite(page, clic.rang, clic.texte);
   const passages = passagesDeLaBulle(await lireLeJournal(page), clic.rang);
   expect(passages.filter((p) => p.retour === "rebond"), "aucun rebond avec les mouvements réduits").toEqual([]);
 });
@@ -451,7 +492,6 @@ Then(
     if (ligne != null) expect(normaliser(clic.ligneEnCours), "la ligne visée").toBe(normaliser(ligne.replace(/\s*\?$/, "")));
     const voyages = await attendreLeMotQuiVoyage(page, mot);
     const depart = voyages[0] as Voyage;
-    const arrivee = voyages[voyages.length - 1] as Voyage;
     expect(clic.boiteDuChoix, "boîte de la bulle touchée").not.toBeNull();
     expect(proche(centre(depart.boite), clic.boiteDuChoix as Boite, 60), "le mot part de la bulle de choix").toBe(true);
     const testidDeLaPlace = ligne != null ? "ligne-de-conjugaison" : "trou-rempli";
@@ -459,8 +499,11 @@ Then(
       message: `la place du mot « ${mot} » s'illumine (data-eclat sur ${testidDeLaPlace})`,
       timeout: 20_000,
     }).toBe(true);
-    const eclat = (await lireLeJournal(page)).passages.find((p) => p.genre === "eclat" && p.eclat === "true" && p.testid === testidDeLaPlace && p.texte.includes(mot));
+    // L'éclat vient quand le mot est posé : le journal est relu alors, pas avant (au premier relevé, le mot était encore en chemin).
+    const apresLEclat = await lireLeJournal(page);
+    const eclat = apresLEclat.passages.find((p) => p.genre === "eclat" && p.eclat === "true" && p.testid === testidDeLaPlace && p.texte.includes(mot));
     if (eclat?.genre !== "eclat") throw new Error("éclat introuvable");
+    const arrivee = apresLEclat.voyages.filter((voyage) => voyage.texte === mot).at(-1) as Voyage;
     expect(proche(centre(arrivee.boite), eclat.boite, 40), "le mot arrive à sa place").toBe(true);
     expect(Math.hypot(centre(arrivee.boite).x - centre(depart.boite).x, centre(arrivee.boite).y - centre(depart.boite).y), "le mot a voyagé").toBeGreaterThan(2);
     expect(eclat.t, "la place s'illumine après le départ du mot").toBeGreaterThan(depart.t);
@@ -536,6 +579,29 @@ async function signatureDe(page: Page, selecteur: string): Promise<SignatureDuSi
   });
 }
 
+/** Ce que montre le dessin d'un choix écarté : le même contour gris, sans décor ni dégradé, quel que soit l'univers. */
+async function signatureDuChoixEcarte(page: Page, selecteur: string): Promise<SignatureDuSignal> {
+  const commune = await signatureDe(page, selecteur);
+  const dessin = await page.locator(selecteur).evaluate((element) => {
+    const calque = element.querySelector('[data-testid="dessin-de-la-bulle"]');
+    const fond = calque?.querySelector("path") ?? null;
+    if (calque === null || fond === null) return { dessin: "sans dessin" } as Record<string, string>;
+    const fondStyle = getComputedStyle(fond);
+    const decors = [...calque.querySelectorAll(".decor-de-la-bulle")];
+    return {
+      dessin: "présent",
+      fondRemplissage: fondStyle.fill,
+      fondContour: fondStyle.stroke,
+      fondEnDegrade: String(fondStyle.fill.startsWith("url(") || fondStyle.stroke.startsWith("url(")),
+      degradesDefinis: String(calque.querySelectorAll("defs > *").length),
+      // Sans décor : aucun élément de décor dans le dessin (un décor masqué par le style compterait comme un décor gardé).
+      decorsPresents: String(decors.length),
+      elementsDeDecor: String(decors.reduce((total, decor) => total + decor.querySelectorAll("*").length, 0)),
+    };
+  });
+  return { ...commune, ...dessin };
+}
+
 /** Revient à l'univers « Animaux de la forêt » (même profil, même niveau), rejoue la même scène et rend la signature du signal. */
 async function signatureDansLUniversDeReference(
   page: Page,
@@ -543,6 +609,7 @@ async function signatureDansLUniversDeReference(
   rejouer: () => Promise<void>,
   selecteur: string,
   titreDeLExercice: string | undefined,
+  signature: (page: Page, selecteur: string) => Promise<SignatureDuSignal> = signatureDe,
 ): Promise<SignatureDuSignal> {
   const lecon = etatDeLaLecon(page).courante;
   if (lecon === undefined) throw new Error("Aucune leçon en cours");
@@ -555,7 +622,7 @@ async function signatureDansLUniversDeReference(
   etatDesChoix(page).demarrage = undefined;
   await lancer(page, lecon, titreDeLExercice);
   await rejouer();
-  return await signatureDe(page, selecteur);
+  return await signature(page, selecteur);
 }
 
 Then(/^il est écarté de la même façon que dans l'univers « Animaux de la forêt »$/, async ({ page, famille }) => {
@@ -569,12 +636,16 @@ Then(/^il est écarté de la même façon que dans l'univers « Animaux de la fo
   const ecarte = await page.locator("[data-testid='choix'][data-ecarte='true']").first().textContent();
   const texte = normaliser(ecarte ?? clic.texte);
   const selecteur = "[data-testid='choix'][data-ecarte='true']";
-  const dans = await signatureDe(page, selecteur);
+  const dans = await signatureDuChoixEcarte(page, selecteur);
+  expect(dans.dessin, "le choix écarté a son dessin (data-testid=dessin-de-la-bulle)").toBe("présent");
+  expect(dans.decorsPresents, "le choix écarté n'a plus le décor de son univers").toBe("0");
+  expect(dans.elementsDeDecor, "le choix écarté n'a plus d'élément de décor").toBe("0");
+  expect(dans.fondEnDegrade, "le choix écarté n'a ni dégradé ni couleur d'univers").toBe("false");
   const reference = await signatureDansLUniversDeReference(page, famille, async () => {
     await allerALaQuestion(page, question, true);
     await bulleDeChoix(page, texte).click();
     await expect(bulleDeChoix(page, texte)).toHaveAttribute("data-ecarte", "true");
-  }, selecteur, titre);
+  }, selecteur, titre, signatureDuChoixEcarte);
   expect(dans, "même signal d'état « écarté » que dans l'univers « Animaux de la forêt »").toEqual(reference);
 });
 
