@@ -40,7 +40,8 @@ export function useMotQuiVoyage(mots: readonly (string | undefined)[], depart: D
       setArrivee({ ...arrivee, etape: "eclat" });
       return;
     }
-    setTrajet({ mot: arrivee.mot, de: depart.centre, vers: centreDe(place) });
+    const rang = arrivee.rang;
+    setTrajet({ mot: arrivee.mot, de: depart.centre, versLaPlace: () => centreDe(places.current[rang]?.getBoundingClientRect() ?? place) });
   }, [arrivee, depart]);
 
   useEffect(() => {

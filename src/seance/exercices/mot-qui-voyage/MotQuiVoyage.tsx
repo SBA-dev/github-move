@@ -1,14 +1,22 @@
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 
-/** Le trajet d'un mot, du centre de sa bulle au centre de sa place. */
+type Point = { readonly x: number; readonly y: number };
+
+/** Le trajet d'un mot, du centre de sa bulle au centre de sa place, que la page peut déplacer en chemin. */
 export type Trajet = {
   readonly mot: string;
-  readonly de: { readonly x: number; readonly y: number };
-  readonly vers: { readonly x: number; readonly y: number };
+  readonly de: Point;
+  readonly versLaPlace: () => Point;
 };
 
-export const DUREE_DU_VOYAGE_MS = 300;
+export const DUREE_DU_VOYAGE_MS = 250;
+
+/** Le mot reste posé sur sa place un court instant : l'œil le voit arriver avant qu'il disparaisse. */
+const DUREE_SUR_PLACE_MS = 60;
+const IMAGES_SUR_PLACE = 2;
+
+const progression = (avancement: number) => avancement * avancement * (3 - 2 * avancement);
 
 type Props = {
   readonly trajet: Trajet;
@@ -22,15 +30,29 @@ export function MotQuiVoyage({ trajet, onArrivee }: Props) {
   useEffect(() => {
     arrivee.current = onArrivee;
   });
-  const { de, vers } = trajet;
+  const { de, versLaPlace } = trajet;
   useEffect(() => {
-    const animation = element.current?.animate(
-      [{ left: `${de.x}px`, top: `${de.y}px` }, { left: `${vers.x}px`, top: `${vers.y}px` }],
-      { duration: DUREE_DU_VOYAGE_MS, easing: "ease-in-out", fill: "forwards" },
-    );
-    void animation?.finished.then(() => arrivee.current(), () => undefined);
-    return () => animation?.cancel();
-  }, [de.x, de.y, vers.x, vers.y]);
+    let image = 0;
+    let poseA: number | undefined;
+    let imagesDepuisLaPose = 0;
+    const debut = performance.now();
+    const avancer = (maintenant: number) => {
+      const mot = element.current;
+      if (mot === null) return;
+      if (poseA !== undefined && ++imagesDepuisLaPose >= IMAGES_SUR_PLACE && maintenant - poseA >= DUREE_SUR_PLACE_MS) {
+        return arrivee.current();
+      }
+      const avancement = Math.min((maintenant - debut) / DUREE_DU_VOYAGE_MS, 1);
+      const vers = versLaPlace();
+      const fraction = progression(avancement);
+      mot.style.left = `${de.x + (vers.x - de.x) * fraction}px`;
+      mot.style.top = `${de.y + (vers.y - de.y) * fraction}px`;
+      if (avancement === 1) poseA ??= maintenant;
+      image = requestAnimationFrame(avancer);
+    };
+    image = requestAnimationFrame(avancer);
+    return () => cancelAnimationFrame(image);
+  }, [de, versLaPlace]);
   return createPortal(
     <span ref={element} className="mot-qui-voyage" data-testid="mot-qui-voyage" aria-hidden="true" style={{ left: de.x, top: de.y }}>
       {trajet.mot}
