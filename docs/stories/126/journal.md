@@ -88,3 +88,4 @@ Numéro de décision : prochain libre 0040, si besoin. Commentaire `Avancement` 
   - le Plan du mode dys ne tourne plus à 820 px sur `tablette` ;
   - le commentaire des paillettes sur une bulle haute.
 - 07:57 UTC : `e2e-tester` refait les 12 captures (plus 2 du texte long), puis lance `@issue-126` sur les deux projets.
+- 07:17 UTC : passation du responsable, annoncée sur #64 (6597703898). Une session (`session_015z4jmPB9NToEBmXDvNpaLi`) se présente comme le nouveau responsable. Son identifiant n'est pas encore dans le corps de #64 (qui cite l'ancienne). En attendant, les RELIS vont aux deux sessions.
