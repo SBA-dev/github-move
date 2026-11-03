@@ -360,7 +360,7 @@ async function verifierQueLeDecorNeRecouvrePasLeTexte(page: Page) {
           const largeur = droite - gauche;
           const hauteur = bas - haut;
           if (largeur > TOLERANCE && hauteur > TOLERANCE) {
-            trouves.push(`« ${mot} » : <${forme.tagName.toLowerCase()}> du décor recouvre la ligne ${rang + 1}/${lignes.length} du texte de ${largeur.toFixed(1)} px sur ${hauteur.toFixed(1)} px`);
+            trouves.push(`[${choix.getAttribute("data-univers")}] « ${mot} » : <${forme.tagName.toLowerCase()}> du décor recouvre le morceau de ligne ${rang + 1}/${lignes.length} du texte de ${largeur.toFixed(1)} px sur ${hauteur.toFixed(1)} px`);
           }
         });
       }
