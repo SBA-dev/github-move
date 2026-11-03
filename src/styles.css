@@ -33,7 +33,6 @@
   --erreur-fond: #ffe3e6;
   --piste: #eadfd2;
   --or: #ffd43b;
-  --or-contour: #b8860b;
   --or-texte: #8a6100;
   --syllabe-bleue: #1d4ed8;
   --syllabe-rouge: #b42318;
@@ -42,9 +41,6 @@
   --carte-acquise: #2e7d32;
   --carte-en-cours: #ef8a17;
 
-  --bois-fonce: #8a5a2b;
-  --bois: #c79a5b;
-  --bois-clair: #e8c48f;
   --jeton-cinquieme: #ff922b;
   --cristal-clair: #dff0ff;
   --cristal: #8cc4ff;
@@ -820,14 +816,14 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 .morceau-de-barre[data-role="ecart"], .morceau-de-barre[data-role="suite"] { border-style: dashed; background: transparent; }
 /* La jauge de l'univers : un remplissage uni qui couvre la barre, et deux bouts de dessin de taille fixe. Elle se dévoile sans changer la largeur de la barre. */
 .morceau-de-barre[data-jauge="vide"] { border-style: dashed; }
-/* Une barre remplie prend la silhouette et le contour de son univers (rayon, bouts découpés) ; vide, elle est la même partout. */
+/* Une barre remplie prend la silhouette et le contour de son univers (rayon, bouts découpés) ; vide, elle garde le décor en pointillés de son univers. */
 .morceau-de-barre[data-jauge] { border-radius: var(--rayon-de-la-jauge); clip-path: var(--decoupe-de-la-jauge, none); }
 .morceau-de-barre:is([data-jauge="se-remplit"], [data-jauge="pleine"]) { border-color: var(--contour-de-la-jauge); }
 .jauge, .decor-de-la-barre-vide { position: absolute; inset: 0; z-index: 0; display: flex; justify-content: space-between; pointer-events: none; }
 .decor-de-la-barre-vide :is(g, path, rect) { fill: none; stroke: var(--contour); stroke-dasharray: 4 3; }
 .bout-de-jauge { flex: none; display: block; width: 24px; height: 100%; }
 .valeur-de-la-barre { position: relative; z-index: 1; }
-.morceau-de-barre[data-jauge="se-remplit"] .jauge { animation: jauge-se-remplit .2s ease-out backwards; }
+.morceau-de-barre[data-jauge="se-remplit"] .jauge { animation: jauge-se-remplit var(--duree-du-remplissage) ease-out backwards; }
 @keyframes jauge-se-remplit { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
 .clavier-de-cristaux { display: grid; justify-items: center; gap: 8px; width: min(100%, 20rem); max-width: 100%; }
 .nombre-tape {

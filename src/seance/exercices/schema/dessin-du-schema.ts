@@ -6,18 +6,24 @@ export type Taille =
   | Readonly<{ genre: "poids"; valeur: number }>
   | Readonly<{ genre: "reste" }>;
 
+export type RoleDeMorceau = "tout" | "total" | "grand" | "partie" | "part" | "petit" | "ecart" | "suite";
+export type RoleDeLigne = "tout" | "parties" | "grand" | "petit" | "total" | "parts";
+
+/** Les morceaux qui sont le tout de leur schéma : leur barre a la couleur du tout. */
+export const estLeTout = (role: RoleDeMorceau): boolean => role === "tout" || role === "total" || role === "grand";
+
 export type Morceau = Readonly<{
-  role: string;
+  role: RoleDeMorceau;
   /** Le nombre écrit sur le morceau ; `null` pour le « ? » de la valeur cherchée. */
   valeur: number | null;
   taille: Taille;
   /** Un morceau qui ne se dessine pas en barre : l'écart d'une comparaison, la suite des parts. */
   vide?: boolean;
   /** Le morceau est la valeur cherchée du problème : sa barre reste vide jusqu'à la réponse, même une fois le « ? » remplacé. */
-  aTrouver?: boolean;
+  estLaValeurCherchee?: boolean;
 }>;
 
-export type Ligne = Readonly<{ role: string; nom?: string; morceaux: readonly Morceau[] }>;
+export type Ligne = Readonly<{ role: RoleDeLigne; nom?: string; morceaux: readonly Morceau[] }>;
 
 const reste: Taille = { genre: "reste" };
 const poids = (valeur: number): Taille => ({ genre: "poids", valeur });
@@ -43,7 +49,7 @@ export function dessinerLeSchema(forme: FormeDeSchema, reponse?: number): readon
 type Lecture = (valeur: number | null) => number | null;
 
 function partiesEtTout({ parties: [premiere, seconde], tout }: Extract<FormeDeSchema, { genre: "partiesEtTout" }>, lu: Lecture): readonly Ligne[] {
-  const ligneDuTout: Ligne = { role: "tout", morceaux: [{ role: "tout", valeur: lu(tout), taille: reste, aTrouver: tout === null }] };
+  const ligneDuTout: Ligne = { role: "tout", morceaux: [{ role: "tout", valeur: lu(tout), taille: reste, estLaValeurCherchee: tout === null }] };
   const taille = (valeur: number | null): Taille =>
     tout === null ? poids(valeur ?? 0) : valeur === null ? reste : proportion(valeur, tout);
   return [
@@ -51,8 +57,8 @@ function partiesEtTout({ parties: [premiere, seconde], tout }: Extract<FormeDeSc
     {
       role: "parties",
       morceaux: [
-        { role: "partie", valeur: lu(premiere), taille: taille(premiere), aTrouver: premiere === null },
-        { role: "partie", valeur: lu(seconde), taille: taille(seconde), aTrouver: seconde === null },
+        { role: "partie", valeur: lu(premiere), taille: taille(premiere), estLaValeurCherchee: premiere === null },
+        { role: "partie", valeur: lu(seconde), taille: taille(seconde), estLaValeurCherchee: seconde === null },
       ],
     },
   ];
@@ -65,11 +71,11 @@ function comparaison(
   const ligneDuGrand: Ligne = {
     role: "grand",
     nom: nomDuGrand,
-    morceaux: [{ role: "grand", valeur: lu(grand), taille: reste, aTrouver: grand === null }],
+    morceaux: [{ role: "grand", valeur: lu(grand), taille: reste, estLaValeurCherchee: grand === null }],
   };
   const ligneDuPetit = (morceaux: readonly Morceau[]): Ligne => ({ role: "petit", nom: nomDuPetit, morceaux });
-  const morceauDuPetit = (taille: Taille): Morceau => ({ role: "petit", valeur: lu(petit), taille, aTrouver: petit === null });
-  const morceauDeLEcart = (taille: Taille): Morceau => ({ role: "ecart", valeur: lu(ecart), taille, vide: true, aTrouver: ecart === null });
+  const morceauDuPetit = (taille: Taille): Morceau => ({ role: "petit", valeur: lu(petit), taille, estLaValeurCherchee: petit === null });
+  const morceauDeLEcart = (taille: Taille): Morceau => ({ role: "ecart", valeur: lu(ecart), taille, vide: true, estLaValeurCherchee: ecart === null });
   if (grand === null) {
     return [ligneDuGrand, ligneDuPetit([morceauDuPetit(poids(petit ?? 0)), morceauDeLEcart(poids(ecart ?? 0))])];
   }
@@ -85,12 +91,12 @@ function parts(
   reponse: number | undefined,
 ): readonly Ligne[] {
   const nombreDeParts = nb ?? reponse;
-  const unePart = (): Morceau => ({ role: "part", valeur: lu(valeur), taille: poids(1), aTrouver: valeur === null });
+  const unePart = (): Morceau => ({ role: "part", valeur: lu(valeur), taille: poids(1), estLaValeurCherchee: valeur === null });
   const morceaux: Morceau[] = nombreDeParts === undefined
     ? [unePart(), unePart(), { role: "suite", valeur: null, taille: poids(1), vide: true }]
     : Array.from({ length: nombreDeParts }, unePart);
   return [
-    { role: "total", morceaux: [{ role: "total", valeur: lu(total), taille: reste, aTrouver: total === null }] },
+    { role: "total", morceaux: [{ role: "total", valeur: lu(total), taille: reste, estLaValeurCherchee: total === null }] },
     { role: "parts", morceaux },
   ];
 }

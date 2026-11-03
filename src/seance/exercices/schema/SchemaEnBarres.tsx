@@ -4,10 +4,8 @@ import type { SchemaEnCours, SchemaResolu } from "@domain/apprentissage";
 import type { CleUnivers } from "@domain/motivation";
 import { useUnivers } from "../../../univers/index.ts";
 import { DESSINS_DES_JAUGES } from "./dessins/jauges.tsx";
-import { dessinerLeSchema, type Ligne, type Morceau, type Taille } from "./dessin-du-schema.ts";
-import { useEtatDeLaJauge } from "./useEtatDeLaJauge.ts";
-
-const ROLES_DU_TOUT = ["tout", "total", "grand"];
+import { dessinerLeSchema, estLeTout, type Ligne, type Morceau, type RoleDeMorceau, type Taille } from "./dessin-du-schema.ts";
+import { DUREE_DU_REMPLISSAGE_MS, useEtatDeLaJauge } from "./useEtatDeLaJauge.ts";
 
 type Props = {
   readonly schema: SchemaEnCours;
@@ -36,7 +34,13 @@ export function SchemaEnBarres({ schema, resolu, phrasesDites }: Props) {
     >
       <div className="dessin-du-schema" aria-hidden="true">
         {dessinerLeSchema(schema.forme, resolu?.reponse).map((ligne, rang) => (
-          <LigneDuSchema key={rang} ligne={ligne} connuesRemplies={connuesRemplies} trouvee={resolu !== undefined} />
+          <LigneDuSchema
+            key={rang}
+            ligne={ligne}
+            connuesRemplies={connuesRemplies}
+            trouvee={resolu !== undefined}
+            mouvementsReduits={mouvementsReduits}
+          />
         ))}
       </div>
     </div>
@@ -52,9 +56,14 @@ function useBarresConnuesRemplies(ontCommence: boolean): boolean {
   return remplies;
 }
 
-type PropsDeLaLigne = { readonly ligne: Ligne; readonly connuesRemplies: boolean; readonly trouvee: boolean };
+type PropsDeLaLigne = {
+  readonly ligne: Ligne;
+  readonly connuesRemplies: boolean;
+  readonly trouvee: boolean;
+  readonly mouvementsReduits: boolean;
+};
 
-function LigneDuSchema({ ligne, connuesRemplies, trouvee }: PropsDeLaLigne) {
+function LigneDuSchema({ ligne, connuesRemplies, trouvee, mouvementsReduits }: PropsDeLaLigne) {
   return (
     <div className="ligne-du-schema" data-testid="ligne-du-schema" data-role={ligne.role}>
       {ligne.nom !== undefined && <span className="nom-de-la-barre">{ligne.nom}</span>}
@@ -63,7 +72,8 @@ function LigneDuSchema({ ligne, connuesRemplies, trouvee }: PropsDeLaLigne) {
           <MorceauDeBarre
             key={`${morceau.role}-${rang}`}
             morceau={morceau}
-            rempli={morceau.aTrouver === true ? trouvee : connuesRemplies}
+            rempli={morceau.estLaValeurCherchee === true ? trouvee : connuesRemplies}
+            mouvementsReduits={mouvementsReduits}
           />
         ))}
       </div>
@@ -87,9 +97,10 @@ function libelle({ role, valeur }: Morceau): string {
   return valeur === null ? "?" : String(valeur);
 }
 
-function MorceauDeBarre({ morceau, rempli }: { readonly morceau: Morceau; readonly rempli: boolean }) {
+type PropsDuMorceau = { readonly morceau: Morceau; readonly rempli: boolean; readonly mouvementsReduits: boolean };
+
+function MorceauDeBarre({ morceau, rempli, mouvementsReduits }: PropsDuMorceau) {
   const univers = useUnivers();
-  const mouvementsReduits = useReducedMotion() ?? false;
   const etatDeLaJauge = useEtatDeLaJauge(rempli, mouvementsReduits);
   const cherche = morceau.valeur === null && morceau.role !== "suite";
   const aUneJauge = morceau.vide !== true;
@@ -119,6 +130,7 @@ function silhouetteDeLaJauge(contour: string, rayon: string, decoupe: string | u
   return {
     "--contour-de-la-jauge": contour,
     "--rayon-de-la-jauge": rayon,
+    "--duree-du-remplissage": `${DUREE_DU_REMPLISSAGE_MS}ms`,
     ...(decoupe === undefined ? {} : { "--decoupe-de-la-jauge": decoupe }),
   };
 }
@@ -142,7 +154,7 @@ function DecorDeLaBarreVide({ univers }: { readonly univers: CleUnivers }) {
   );
 }
 
-function JaugeDeLaBarre({ role, univers }: { readonly role: string; readonly univers: CleUnivers }) {
+function JaugeDeLaBarre({ role, univers }: { readonly role: RoleDeMorceau; readonly univers: CleUnivers }) {
   const { partie, tout } = DESSINS_DES_JAUGES[univers];
   return (
     <div
@@ -150,7 +162,7 @@ function JaugeDeLaBarre({ role, univers }: { readonly role: string; readonly uni
       data-testid="jauge"
       data-univers={univers}
       aria-hidden="true"
-      style={{ backgroundColor: ROLES_DU_TOUT.includes(role) ? tout : partie }}
+      style={{ backgroundColor: estLeTout(role) ? tout : partie }}
     >
       <BoutsDeLaJauge univers={univers} />
     </div>
