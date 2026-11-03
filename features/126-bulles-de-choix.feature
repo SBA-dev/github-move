@@ -360,7 +360,8 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les choix sont des 
 
     # Invariant 18 de docs/stories/98/domain-model.md : en mode dys, la bulle de choix est plus haute ; son décor ne cache pas son texte
     Plan du Scénario: En mode dys, dans l'univers « <univers> », les bulles de choix <choix> s'affichent en mode dys, sans que leur décor cache leur texte
-      Étant donné que Paul a réglé « mode dys » sur « oui » pour Léa
+      Étant donné que l'écran de l'appareil mesure <largeur> px de large
+      Et que Paul a réglé « mode dys » sur « oui » pour Léa
       Et que Léa a choisi l'univers <clé>
       Et que <situation>
       Quand la question « <question> » s'affiche
@@ -369,9 +370,10 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les choix sont des 
       Et le décor des bulles de choix ne cache pas leur texte
 
       Exemples:
-        | choix            | clé       | univers             | situation                                                                                                                                                                                                                   | question                                     |
-        | aux choix courts | animaux   | Animaux de la forêt | Léa joue l'exercice « Quel son entends-tu ? » de la leçon « Les sons ou, on, an »                                                                                                                                           | Dans le mot « poule », quel son entends-tu ? |
-        | aux choix courts | princesse | Princesses et fées  | Léa joue l'exercice « Quel son entends-tu ? » de la leçon « Les sons ou, on, an »                                                                                                                                           | Dans le mot « poule », quel son entends-tu ? |
-        | aux choix courts | police    | Police              | Léa joue l'exercice « Quel son entends-tu ? » de la leçon « Les sons ou, on, an »                                                                                                                                           | Dans le mot « poule », quel son entends-tu ? |
-        | au choix long    | princesse | Princesses et fées  | une question de test « Que fait Plume ? » a les choix « Plume dort en boule sur le grand tapis bleu du salon, tout près de la fenêtre ouverte au soleil. », « Plume joue. » et « Plume mange. », de réponse « Plume joue. » | Que fait Plume ?                             |
-        | au choix long    | police    | Police              | une question de test « Que fait Plume ? » a les choix « Plume dort en boule sur le grand tapis bleu du salon, tout près de la fenêtre ouverte au soleil. », « Plume joue. » et « Plume mange. », de réponse « Plume joue. » | Que fait Plume ?                             |
+        | largeur | choix            | clé       | univers             | situation                                                                                                                                                                                                                   | question                                     |
+        | 360     | aux choix courts | animaux   | Animaux de la forêt | Léa joue l'exercice « Quel son entends-tu ? » de la leçon « Les sons ou, on, an »                                                                                                                                           | Dans le mot « poule », quel son entends-tu ? |
+        | 360     | aux choix courts | princesse | Princesses et fées  | Léa joue l'exercice « Quel son entends-tu ? » de la leçon « Les sons ou, on, an »                                                                                                                                           | Dans le mot « poule », quel son entends-tu ? |
+        | 360     | aux choix courts | police    | Police              | Léa joue l'exercice « Quel son entends-tu ? » de la leçon « Les sons ou, on, an »                                                                                                                                           | Dans le mot « poule », quel son entends-tu ? |
+        | 360     | au choix long    | princesse | Princesses et fées  | une question de test « Que fait Plume ? » a les choix « Plume dort en boule sur le grand tapis bleu du salon, tout près de la fenêtre ouverte au soleil. », « Plume joue. » et « Plume mange. », de réponse « Plume joue. » | Que fait Plume ?                             |
+        | 360     | au choix long    | police    | Police              | une question de test « Que fait Plume ? » a les choix « Plume dort en boule sur le grand tapis bleu du salon, tout près de la fenêtre ouverte au soleil. », « Plume joue. » et « Plume mange. », de réponse « Plume joue. » | Que fait Plume ?                             |
+        | 375     | au choix long    | danse     | Danse               | une question de test « Que fait Plume ? » a les choix « Plume dort en boule sur le grand tapis bleu du salon, tout près de la fenêtre ouverte au soleil. », « Plume joue. » et « Plume mange. », de réponse « Plume joue. » | Que fait Plume ?                             |
