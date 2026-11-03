@@ -243,12 +243,23 @@ Given(
 
 Given(
   new RegExp(`^Paul a changé l'univers du profil enfant de (\\S+) en ${UNIVERS_LIBELLE}$`),
-  async ({ famille, $tags }, prenom: string, libelleUnivers: string) => {
+  async ({ famille, page, $tags }, prenom: string, libelleUnivers: string) => {
     await modifierLeProfil(famille, prenom, { univers: cleDe(libelleUnivers) });
     if ($tags.includes("@issue-102")) universChoisiParLeParent.set(famille, libelleUnivers);
     await connecterSiBesoin(famille, "tablette", "Paul");
+    if ($tags.includes("@issue-106")) await rechoisirLEnfantApresLeChangementDUnivers(page, prenom);
   },
 );
+
+// Story #106 : la célébration est celle de l'univers du profil choisi ; l'enfant se choisit de nouveau, une fois la liste relue.
+async function rechoisirLEnfantApresLeChangementDUnivers(page: Page, prenom: string): Promise<void> {
+  const listeRelue = page.waitForResponse((reponse) =>
+    reponse.url().includes("/rest/v1/profils_enfants") && reponse.request().method() === "GET"
+  );
+  await page.goto("/");
+  await listeRelue;
+  await choisirSonProfil(page, prenom);
+}
 
 // Story #102 : « Qui joue ? » peut encore montrer la liste d'avant le changement ; l'enfant se choisit une fois le nouvel univers affiché.
 const universChoisiParLeParent = new WeakMap<Famille, string>();

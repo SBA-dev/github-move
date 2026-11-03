@@ -625,6 +625,15 @@ button.tuile .nom-de-la-tuile, button.tuile .nom-de-la-matiere { font-size: 1.1r
 .confetti { position: absolute; top: 0; width: 10px; height: 14px; border-radius: 2px; background: var(--or); }
 .confetti:nth-child(3n+2) { background: var(--principale); }
 .confetti:nth-child(3n+3) { background: var(--succes); }
+/* Célébration de l'univers (#106) : la scène tient dans la largeur et dans la moitié de la hauteur, elle ne capte aucun toucher. */
+.celebration-de-l-univers { position: relative; flex: none; width: min(100%, 22rem, 40vh); aspect-ratio: 360 / 450; overflow: hidden; border-radius: var(--rayon); pointer-events: none; }
+.celebration-de-l-univers svg, .celebration-de-l-univers canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.celebration-de-l-univers .cri-de-victoire, .celebration-de-l-univers .cri-de-victoire-ombre { font-family: var(--police-titres); }
+@media (prefers-reduced-motion: no-preference) {
+  .celebration-de-l-univers .nuage { animation: derive-des-nuages 80s linear infinite; }
+  .celebration-de-l-univers .nuage.lent { animation-duration: 120s; }
+}
+@keyframes derive-des-nuages { from { transform: translateX(0); } to { transform: translateX(-420px); } }
 .compteur-du-record { margin: 0; padding: 6px 14px; border-radius: var(--rayon); background: var(--surface-voilee); font-size: 1.5rem; font-weight: 700; font-variant-numeric: tabular-nums; }
 /* Retours de réponse : la réussite prend la couleur de réussite, avec ou sans mouvement ; une erreur ne prend jamais de rouge. */
 [data-reussite="true"] { background: var(--succes-fond); border-color: var(--succes); }

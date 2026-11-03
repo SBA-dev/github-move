@@ -27,8 +27,8 @@ const ENCOURAGEMENTS: readonly string[] = [
   "Presque ! Regarde bien.",
 ];
 
-export function tirerDans(textes: readonly string[], hasard: Hasard): string {
-  return textes[Math.floor(tirage(hasard) * textes.length)] as string;
+export function tirerDans<T>(elements: readonly T[], hasard: Hasard): T {
+  return elements[Math.floor(tirage(hasard) * elements.length)] as T;
 }
 
 export function feliciter(
