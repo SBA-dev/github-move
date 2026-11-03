@@ -22,3 +22,8 @@
 - Question #146.5 (workers des non-régressions complètes, reco 3) posée au PO via le responsable. Verrou `base` gardé.
 - 20:24 UTC : non-régression complète n°1 lancée (`8918799`, 2 projets, 3 workers, 3652 scénarios, accord PO « 146.5 A »). Utilisateurs Auth : 142 au départ ; 150 à 30 min, 151 à 1 h 40, puis stable (parents de l'équipe 146 créés à leur premier usage, plafond 30 pour ce run).
 - Rythme ~7 scénarios/min : ~8 h 30 par run complet. Question #146.6, réponse du PO « 146.6 B » (22:39 UTC) : run n°1 complet = non-régression ; la mesure du critère 7 (second run sans nouvel utilisateur) se fait sur un run court d'échantillon, 2 projets, 3 workers. Le run n°2 enchaîné est retiré (le run n°1 continue).
+- 22:42 UTC : le conteneur a redémarré pendant l'attente ; la non-régression n°1 est perdue à 1068/3652. Utilisateurs Auth : 151 (stable depuis 1 h 40).
+  KO relevés avant l'arrêt (tous `tablette`) et rejoués un par un (1 worker) :
+  - 3 KO reproductibles, tous dus au texte « Quête du jour accomplie ! » ajouté par l'application : #24:70 (connu sur `main`), #102:153 (connu sur `main`, liste « #102:155 »), #28:239 (reproduit aussi sur `origin/main` le 03/11 à 22:47 : **préexistant**, pas dans la liste des KO connus) ;
+  - 7 KO non reproduits (#12:60/68/76, #26:253/466, #29:215, #30:102) : instabilité sous charge et coupure du conteneur.
+- 22:49 UTC : non-régression relancée en 6 tranches (`--shard=k/6`, 3 workers), reprise possible tranche par tranche après un redémarrage.
