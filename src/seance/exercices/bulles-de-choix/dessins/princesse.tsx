@@ -1,4 +1,4 @@
-import { BoutDroit, BoutGauche, type DessinDeBulle } from "./dessin-de-bulle.tsx";
+import { BoutDroit, Fixe, type DessinDeBulle } from "./dessin-de-bulle.tsx";
 
 /** Bulle magique irisée : contour aux couleurs de l'arc-en-ciel pâle, petite étoile fixe sur un bout. */
 export const BULLE_DES_PRINCESSES: DessinDeBulle = {
@@ -22,12 +22,16 @@ export const BULLE_DES_PRINCESSES: DessinDeBulle = {
           strokeWidth="2"
           strokeLinejoin="round"
         />
-        <circle cx="140.6" cy="43.4" r="2.2" fill="#9FD8F5" />
       </BoutDroit>
-      <BoutGauche mesures={mesures}>
-        <circle cx="17.36" cy="17.36" r="2.6" fill="#C9A8F2" />
-        <circle cx="11.2" cy="29.4" r="2" fill="#F5A9D2" />
-      </BoutGauche>
+      <Fixe mesures={mesures} cote="droit" x={140.6} y={43.4}>
+        <circle r="2.2" fill="#9FD8F5" />
+      </Fixe>
+      <Fixe mesures={mesures} cote="gauche" x={17.36} y={17.36}>
+        <circle r="2.6" fill="#C9A8F2" />
+      </Fixe>
+      <Fixe mesures={mesures} cote="gauche" x={11.2} y={29.4}>
+        <circle r="2" fill="#F5A9D2" />
+      </Fixe>
     </>
   ),
 };

@@ -15,4 +15,3 @@ export const DESSINS_DES_BULLES: Readonly<Record<CleUnivers, DessinDeBulle>> = {
   pompier: BULLE_DES_POMPIERS,
   danse: BULLE_DE_LA_DANSE,
 };
-export type { DessinDeBulle } from "./dessin-de-bulle.tsx";

@@ -30,3 +30,18 @@ export function BoutGauche({ mesures, children }: { readonly mesures: Mesures; r
 export function BoutDroit({ mesures, children }: { readonly mesures: Mesures; readonly children: ReactNode }) {
   return <g transform={`translate(${mesures.largeur} 0) scale(${mesures.echelle}) translate(${-LARGEUR_DE_REFERENCE} 0)`}>{children}</g>;
 }
+
+/** Un petit élément (point, paillette) : sa place suit la bulle, sa taille ne change pas. Il se dessine autour de (0, 0). */
+export function Fixe(
+  { mesures, cote, x, y, children }: {
+    readonly mesures: Mesures;
+    readonly cote: "gauche" | "droit";
+    readonly x: number;
+    readonly y: number;
+    readonly children: ReactNode;
+  },
+) {
+  const { echelle, largeur } = mesures;
+  const abscisse = cote === "gauche" ? x * echelle : largeur - (LARGEUR_DE_REFERENCE - x) * echelle;
+  return <g transform={`translate(${abscisse} ${y * echelle})`}>{children}</g>;
+}

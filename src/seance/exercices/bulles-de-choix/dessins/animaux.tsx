@@ -1,4 +1,4 @@
-import { BoutDroit, BoutGauche, type DessinDeBulle, type Mesures } from "./dessin-de-bulle.tsx";
+import { BoutGauche, Fixe, type DessinDeBulle, type Mesures } from "./dessin-de-bulle.tsx";
 
 const PARTIE_HAUTE = 0.32;
 
@@ -34,9 +34,9 @@ export const BULLE_DES_ANIMAUX: DessinDeBulle = {
       <BoutGauche mesures={mesures}>
         <ellipse cx="20.16" cy="15.4" rx="5.6" ry="2.8" transform="rotate(-35 20.16 15.4)" fill="#fff" />
       </BoutGauche>
-      <BoutDroit mesures={mesures}>
-        <circle cx="136.4" cy="40.6" r="2.6" fill="#fff" stroke="#9FD8F5" strokeWidth="1.2" />
-      </BoutDroit>
+      <Fixe mesures={mesures} cote="droit" x={136.4} y={40.6}>
+        <circle r="2.6" fill="#fff" stroke="#9FD8F5" strokeWidth="1.2" />
+      </Fixe>
     </>
   ),
 };
