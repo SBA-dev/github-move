@@ -23,7 +23,10 @@ export function useRetourDe<E extends HTMLElement>(cible: string) {
     setMouvement(genre === "juste" ? "rebond" : "balancement");
     const animation = genre === "juste" ? rebondir(element) : balancer(element);
     void animation.then(() => setMouvement(undefined));
-    return () => animation.cancel();
+    return () => {
+      animation.cancel();
+      setMouvement(undefined);
+    };
   }, [numero, genre, mouvementsReduits]);
 
   const attributs = {

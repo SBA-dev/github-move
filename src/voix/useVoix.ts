@@ -13,6 +13,8 @@ export type OptionsDeLecture = Parameters<LectureAVoixHaute["lire"]>[1];
 
 export type Voix = {
   readonly son: EtatDuSon;
+  /** Vrai tant qu'une lecture à voix haute est demandée et pas terminée. */
+  readonly lectureEnCours: boolean;
   readonly nomDuPersonnageGuideDeLaVoixBloquee: string | undefined;
   readonly lire: (texte: string, options?: OptionsDeLecture) => Promise<ParoleEntendue>;
   readonly jouer: (effets: readonly EffetSonore[]) => Promise<void>;
@@ -35,6 +37,7 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
     personnageGuideEnCours.current = personnageGuide;
   });
   const [son, setSon] = useState(lireLEtatDuSon);
+  const [lecturesEnCours, setLecturesEnCours] = useState(0);
   const [nomDuPersonnageGuideDeLaVoixBloquee, setNomDuPersonnageGuideDeLaVoixBloquee] = useState<string | undefined>();
   const [effetsSonores] = useState(() => new LecteurDEffetsSonoresDuNavigateur());
   const [deverrouillage] = useState(() => new DeverrouillageAudio(() => effetsSonores.amorcer()));
@@ -68,7 +71,14 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
   );
 
   const lire = useCallback(
-    (texte: string, options?: OptionsDeLecture) => lecture.lire(texte, options),
+    async (texte: string, options?: OptionsDeLecture) => {
+      setLecturesEnCours((nombre) => nombre + 1);
+      try {
+        return await lecture.lire(texte, options);
+      } finally {
+        setLecturesEnCours((nombre) => nombre - 1);
+      }
+    },
     [lecture],
   );
 
@@ -114,6 +124,7 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
 
   return {
     son,
+    lectureEnCours: lecturesEnCours > 0,
     nomDuPersonnageGuideDeLaVoixBloquee,
     lire,
     jouer,
