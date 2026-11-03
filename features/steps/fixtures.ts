@@ -1,7 +1,9 @@
+import { execFileSync } from "node:child_process";
 import { test as base, createBdd } from "playwright-bdd";
 import { Famille } from "../support/famille.ts";
 import { installerLesEnregistreurs, RequetesVues } from "../support/enregistreurs-visuels.ts";
 import { LecturesDesResultats } from "../support/lectures-des-resultats.ts";
+import { equipeDesTests, suffixeDesParentsDeTest } from "../support/parents-de-test.ts";
 import type { ReglagesBruts } from "../support/reglages-prevus.ts";
 
 // Les données de test (comptes, profils) viendront ici, préparées via l'API admin Supabase.
@@ -22,10 +24,16 @@ export type Pwa = {
   publierLecon(): Promise<void>;
 };
 
-// Tiré une fois par processus worker : deux exécutions lancées en même temps (deux équipes, deux sessions) contre le
-// même projet Supabase n'ont jamais le même suffixe, alors que le projet et l'index du worker se répètent d'une
-// exécution à l'autre.
-const JETON_DU_WORKER = crypto.randomUUID().slice(0, 8);
+function brancheCourante(): string | undefined {
+  try {
+    return execFileSync("git", ["rev-parse", "--abbrev-ref", "HEAD"], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
+  } catch {
+    return undefined;
+  }
+}
+
+// Calculée une fois par processus worker (décision 0040) : les parents de test sont stables d'une exécution à l'autre.
+const EQUIPE_DES_TESTS = equipeDesTests({ variable: process.env.E2E_EQUIPE, branche: brancheCourante() });
 
 export const test = base.extend<{
   monde: Monde;
@@ -45,10 +53,10 @@ export const test = base.extend<{
   }, { auto: true }],
 
   // Story #5 : parents de test et boîte des e-mails de connexion (projet Supabase de développement).
-  // Suffixe d'adresse propre au projet, au worker et à l'exécution : deux scénarios exécutés en même temps ne se
-  // disputent pas le même parent de test (le nettoyage de l'un supprimait le parent de l'autre en pleine connexion).
+  // Suffixe d'adresse stable, propre à l'équipe, au projet et au worker du projet (parallelIndex) : l'équipe isole les
+  // équipes entre elles, le projet et le worker isolent les scénarios exécutés en même temps.
   famille: async ({ page, browser, baseURL }, use, testInfo) => {
-    const suffixe = `${testInfo.project.name}${testInfo.parallelIndex}-${JETON_DU_WORKER}`;
+    const suffixe = suffixeDesParentsDeTest({ equipe: EQUIPE_DES_TESTS, projet: testInfo.project.name, indexDuWorker: testInfo.parallelIndex });
     const famille = new Famille(suffixe, page, browser, baseURL ?? "http://localhost:5173");
     await use(famille);
     await famille.nettoyer();
