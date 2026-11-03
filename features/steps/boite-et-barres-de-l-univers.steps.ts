@@ -72,17 +72,18 @@ type Evenement = EvenementDeJeton | EvenementDeBoite | EvenementDeBarre | Evenem
 type Position = { t: number; id: number; y: number; o: number };
 type Contenu = { t: number; groupes: number[][]; etat: string };
 type Largeur = { t: number; index: number; valeur: string; jauge: string; w: number; jw: number };
-type Journal131 = { evenements: Evenement[]; positions: Position[]; contenus: Contenu[]; largeurs: Largeur[]; marque: number };
+type Journal131 = { evenements: Evenement[]; positions: Position[]; contenus: Contenu[]; largeurs: Largeur[]; marque: number; debutDeQuestion: number };
 
 export function installerLEnregistreurDeLaStory131() {
   type Faux = { journal: Array<{ type: string; texte: string }> };
-  const journal: Journal131Local = { evenements: [], positions: [], contenus: [], largeurs: [], marque: 0 };
+  const journal: Journal131Local = { evenements: [], positions: [], contenus: [], largeurs: [], marque: 0, debutDeQuestion: 0 };
   type Journal131Local = {
     evenements: Array<Record<string, string | number>>;
     positions: Array<Record<string, number>>;
     contenus: Array<{ t: number; groupes: number[][]; etat: string }>;
     largeurs: Array<Record<string, string | number>>;
     marque: number;
+    debutDeQuestion: number;
   };
   Reflect.set(window, "__jeu131", journal);
   const attribut = (element: Element, nom: string) => element.getAttribute(nom) ?? "";
@@ -155,8 +156,15 @@ export function installerLEnregistreurDeLaStory131() {
   let contenu = "";
   const derniereLargeur = new Map<number, string>();
   const dernierePosition = new Map<number, string>();
+  let enonce = "";
   const regarder = () => {
     const t = performance.now();
+    // Une nouvelle question du problème en barres : le journal des barres repart de là.
+    const enonceLu = (document.querySelector('[data-testid="enonce-du-probleme"]')?.textContent ?? "").trim();
+    if (enonceLu !== "" && enonceLu !== enonce) {
+      enonce = enonceLu;
+      journal.debutDeQuestion = t - 100;
+    }
     const faux = Reflect.get(window, "__faux") as Faux | undefined;
     if (faux && faux.journal.length > paroles) {
       for (let rang = paroles; rang < faux.journal.length; rang++) {
@@ -225,13 +233,21 @@ Before({ tags: "@issue-131" }, async ({ page, $testInfo }) => {
   await page.addInitScript(installerLEnregistreurDeLaStory131);
 });
 
+/** Le journal du navigateur ; les barres et leurs largeurs ne sont que celles de la question en cours. */
 async function lireLeJournal(page: Page): Promise<Journal131> {
-  return await page.evaluate(() => {
+  const lu = await page.evaluate(() => {
     const brut = Reflect.get(window, "__jeu131") as Journal131 | undefined;
     return brut === undefined
-      ? { evenements: [], positions: [], contenus: [], largeurs: [], marque: 0 }
-      : { evenements: [...brut.evenements], positions: [...brut.positions], contenus: [...brut.contenus], largeurs: [...brut.largeurs], marque: brut.marque };
+      ? { evenements: [], positions: [], contenus: [], largeurs: [], marque: 0, debutDeQuestion: 0 }
+      : { evenements: [...brut.evenements], positions: [...brut.positions], contenus: [...brut.contenus], largeurs: [...brut.largeurs], marque: brut.marque, debutDeQuestion: brut.debutDeQuestion };
   });
+  const deLaQuestion = (e: Evenement) => e.genre !== "barre" || e.t >= lu.debutDeQuestion;
+  return {
+    ...lu,
+    evenements: lu.evenements.filter(deLaQuestion),
+    largeurs: lu.largeurs.filter((l) => l.t >= lu.debutDeQuestion),
+    marque: lu.evenements.slice(0, lu.marque).filter(deLaQuestion).length,
+  };
 }
 
 /** Attend que le journal (ou l'écran) dise ce qu'on attend, en laissant finir la parole en cours au plus `terminaisons` fois. */
@@ -876,13 +892,17 @@ Then(/^la barre « \? » reste vide, avec son « \? »$/, async ({ page }) => {
   expect(remplie, "la barre « ? » n'a jamais été remplie").toEqual([]);
 });
 
-async function attendreLeRemplissage(page: Page, valeurs: readonly string[]): Promise<void> {
+/**
+ * Attend que les barres soient pleines. Après la réponse, on ne termine aucune lecture : la félicitation se lit jusqu'au bout
+ * et la question suivante ne doit pas apparaître avant l'état « pleine ».
+ */
+async function attendreLeRemplissage(page: Page, valeurs: readonly string[], apresLaReponse = false): Promise<void> {
   await attendreQue(page, async () => {
     for (const valeur of valeurs) {
       if ((await barresDeValeur(page, valeur).getAttribute("data-jauge")) !== "pleine") return false;
     }
     return true;
-  }, `les barres de ${valeurs.join(" et de ")} sont pleines`, 4);
+  }, `les barres de ${valeurs.join(" et de ")} sont pleines`, apresLaReponse ? 0 : 4);
   await laisserFinirLeMouvement(page);
 }
 
@@ -916,7 +936,7 @@ Then(/^les barres de (\d+) et de (\d+) se remplissent comme une jauge, jusqu'au 
 });
 
 Then(/^la barre de (\d+) se remplit comme une jauge, jusqu'au bout de sa barre$/, async ({ page }, valeur: string) => {
-  await attendreLeRemplissage(page, [valeur]);
+  await attendreLeRemplissage(page, [valeur], true);
   const lu = await lireLeJournal(page);
   expect(etatsDeLaJaugeDeLaBarre(lu, valeur), `la barre de ${valeur} se remplit avant d'être pleine`).toContain("se-remplit");
   await verifierQueLaJaugeVaJusquAuBout(page, valeur, lu);
@@ -996,7 +1016,7 @@ Then(/^les barres de (\d+) et de (\d+) restent pleines, sans se remplir de nouve
 });
 
 Then(/^la barre de (\d+) a la même largeur que la barre « \? » avant la réponse$/, async ({ page }, valeur: string) => {
-  await attendreLeRemplissage(page, [valeur]);
+  await attendreLeRemplissage(page, [valeur], true);
   const lu = await lireLeJournal(page);
   const avant = lu.largeurs.filter((l) => l.valeur === "?").at(-1);
   const apres = lu.largeurs.filter((l) => l.valeur === String(valeur)).at(-1);
@@ -1006,7 +1026,7 @@ Then(/^la barre de (\d+) a la même largeur que la barre « \? » avant la répo
 });
 
 Then(/^l'effet sonore « réponse juste » commence avant que la barre de (\d+) se remplisse$/, async ({ page }, valeur: string) => {
-  await attendreLeRemplissage(page, [valeur]);
+  await attendreLeRemplissage(page, [valeur], true);
   const lu = await lireLeJournal(page);
   const son = sonsDuJournal(lu.evenements).find((s) => s.nom === "reponse-juste");
   expect(son, "l'effet sonore « réponse juste » a été entendu").toBeDefined();
