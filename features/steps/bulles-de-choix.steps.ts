@@ -320,31 +320,23 @@ Then(/^les bulles de choix de la question ont le dessin de l'univers « ([^«»]
 async function verifierQueLeDecorNeRecouvrePasLeTexte(page: Page) {
   const recouvrements = await page.evaluate(() => {
     const TOLERANCE = 1;
+    const PAS = 1;
     const trouves: string[] = [];
     for (const choix of document.querySelectorAll('[data-testid="choix"]')) {
+      // Une boîte par ligne de texte : l'union des lignes couvrirait aussi le vide à côté d'une ligne courte centrée.
+      const lignes: DOMRect[] = [];
       const intervalle = document.createRange();
       const lecteur = document.createTreeWalker(choix, NodeFilter.SHOW_TEXT);
-      let texte = lecteur.nextNode();
-      let boiteDuTexte: DOMRect | null = null;
-      while (texte !== null) {
+      for (let texte = lecteur.nextNode(); texte !== null; texte = lecteur.nextNode()) {
         intervalle.selectNodeContents(texte);
-        const boite = intervalle.getBoundingClientRect();
-        if (boite.width > 0 && boite.height > 0) {
-          boiteDuTexte = boiteDuTexte === null ? boite : new DOMRect(
-            Math.min(boiteDuTexte.left, boite.left),
-            Math.min(boiteDuTexte.top, boite.top),
-            Math.max(boiteDuTexte.right, boite.right) - Math.min(boiteDuTexte.left, boite.left),
-            Math.max(boiteDuTexte.bottom, boite.bottom) - Math.min(boiteDuTexte.top, boite.top),
-          );
+        for (const ligne of intervalle.getClientRects()) {
+          if (ligne.width > 0 && ligne.height > 0) lignes.push(ligne);
         }
-        texte = lecteur.nextNode();
       }
-      if (boiteDuTexte === null) continue;
-      const lu = boiteDuTexte;
+      if (lignes.length === 0) continue;
       const mot = (choix.textContent ?? "").replace(/\s+/g, " ").trim();
       // La boîte d'un reflet en arc est bien plus grande que son trait : on teste donc la forme elle-même (remplissage et trait),
-      // sur une grille de points posée sur la boîte du texte.
-      const PAS = 1;
+      // sur une grille de points posée sur chaque ligne du texte.
       for (const forme of choix.querySelectorAll(".decor-de-la-bulle *")) {
         if (!(forme instanceof SVGGeometryElement)) continue;
         // Un clipPath, un masque ou un défilé de dégradé ne se dessine pas : seul ce qui est peint peut cacher le texte.
@@ -355,26 +347,34 @@ async function verifierQueLeDecorNeRecouvrePasLeTexte(page: Page) {
         const style = getComputedStyle(forme);
         const rempli = style.fill !== "none" && style.fillOpacity !== "0";
         const trace = style.stroke !== "none" && style.strokeOpacity !== "0";
-        let gauche = Infinity, droite = -Infinity, haut = Infinity, bas = -Infinity;
-        for (let x = lu.left; x <= lu.right; x += PAS) {
-          for (let y = lu.top; y <= lu.bottom; y += PAS) {
-            const point = new DOMPoint(x, y).matrixTransform(inverse);
-            if ((rempli && forme.isPointInFill(point)) || (trace && forme.isPointInStroke(point))) {
-              gauche = Math.min(gauche, x); droite = Math.max(droite, x); haut = Math.min(haut, y); bas = Math.max(bas, y);
+        lignes.forEach((ligne, rang) => {
+          let gauche = Infinity, droite = -Infinity, haut = Infinity, bas = -Infinity;
+          for (let x = ligne.left; x <= ligne.right; x += PAS) {
+            for (let y = ligne.top; y <= ligne.bottom; y += PAS) {
+              const point = new DOMPoint(x, y).matrixTransform(inverse);
+              if ((rempli && forme.isPointInFill(point)) || (trace && forme.isPointInStroke(point))) {
+                gauche = Math.min(gauche, x); droite = Math.max(droite, x); haut = Math.min(haut, y); bas = Math.max(bas, y);
+              }
             }
           }
-        }
-        const largeur = droite - gauche;
-        const hauteur = bas - haut;
-        if (largeur > TOLERANCE && hauteur > TOLERANCE) {
-          trouves.push(`« ${mot} » : <${forme.tagName.toLowerCase()}> du décor recouvre le texte de ${largeur.toFixed(1)} px sur ${hauteur.toFixed(1)} px`);
-        }
+          const largeur = droite - gauche;
+          const hauteur = bas - haut;
+          if (largeur > TOLERANCE && hauteur > TOLERANCE) {
+            trouves.push(`« ${mot} » : <${forme.tagName.toLowerCase()}> du décor recouvre la ligne ${rang + 1}/${lignes.length} du texte de ${largeur.toFixed(1)} px sur ${hauteur.toFixed(1)} px`);
+          }
+        });
       }
     }
     return trouves;
   });
   expect(recouvrements, "le décor des bulles de choix ne recouvre pas leur texte").toEqual([]);
 }
+
+Then(/^le décor des bulles de choix ne cache pas leur texte$/, async ({ page }) => {
+  await bullesDeLaQuestion(page);
+  expect(await bulles(page).count()).toBeGreaterThan(0);
+  await verifierQueLeDecorNeRecouvrePasLeTexte(page);
+});
 
 Then(/^les lecteurs d'écran annoncent les choix (.+), sans décrire leur dessin ni leur mouvement$/, async ({ page }, liste: string) => {
   const attendus = listeDe(liste);
