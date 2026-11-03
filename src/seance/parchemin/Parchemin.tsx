@@ -21,7 +21,7 @@ export function Parchemin({ deroule, children }: Props) {
   );
 }
 
-function BandeDuDessin({ bande }: { readonly bande: { readonly fenetre: string; readonly hauteur: number; readonly formes: ReactNode } }) {
+function BandeDuDessin({ bande }: { readonly bande: { readonly fenetre: string; readonly formes: ReactNode } }) {
   return (
     <svg
       className="bande-du-parchemin"
@@ -29,8 +29,6 @@ function BandeDuDessin({ bande }: { readonly bande: { readonly fenetre: string; 
       aria-hidden="true"
       focusable="false"
       viewBox={bande.fenetre}
-      preserveAspectRatio="xMidYMid meet"
-      style={{ height: bande.hauteur }}
     >
       {bande.formes}
     </svg>
