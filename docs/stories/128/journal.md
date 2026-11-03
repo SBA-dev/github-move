@@ -83,3 +83,7 @@
 | Dessins | 36 SVG, 3 planches, validées au premier passage (« planches 128 OK ») ; 12 captures |
 | Incidents | Supabase de dev en 504 de 09:00 à 17:30 UTC ; contournement Chromium à refaire (liens symboliques insuffisants) ; passation du responsable en cours de story |
 | Tokens | relevés par le responsable |
+
+## Fin
+
+- 18:35 UTC : PR #145 ouverte en brouillon, review finale publiée (APPROUVÉ, 6612243566). `main` inchangé (`d609058`). PR passée en « prête », `PRÊTE À MERGER` publié. Plus aucun push sauf intégration de `main` sous verrou `merge`.
