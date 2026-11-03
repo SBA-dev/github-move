@@ -23,6 +23,9 @@
   --avertissement-fond: #fff3cd;
   --surbrillance: #ffd23f;
   --surbrillance-fond: #fff3c4;
+  --ecarte: #9aa1b2;
+  --ecarte-fond: #e9ebf1;
+  --ecarte-texte: #3a3f4d;
   --lecture-fond: #ffe066;
   --succes: #1b5e20;
   --succes-fond: #e8f7e4;
@@ -364,8 +367,14 @@ button:focus-visible, summary:focus-visible { outline: 3px solid var(--texte); o
 .texte-de-la-bulle { position: relative; }
 .bulle-de-choix[data-vide="true"] .texte-de-la-bulle { opacity: 0; }
 .bulle-de-choix:hover:not([aria-disabled="true"]) .dessin-de-la-bulle { filter: brightness(.95); }
-/* Choix écarté : le dessin passe en gris pâle sans décor (voir DessinDeLaBulle), le texte garde plus de 4,5:1. */
-.bulle-de-choix[data-ecarte="true"] { opacity: .85; color: #3a3f4d; }
+/* Le contour de la bulle (premier tracé du dessin) change de couleur selon l'état ; le décor de l'univers reste tel quel.
+   Choix écarté : gris pâle sans décor (voir DessinDeLaBulle), le texte garde plus de 4,5:1. */
+.bulle-de-choix[data-ecarte="true"] { opacity: .85; color: var(--ecarte-texte); }
+.bulle-de-choix[data-ecarte="true"] .dessin-de-la-bulle svg > path:first-of-type { fill: var(--ecarte-fond); stroke: var(--ecarte); }
+/* Bonne réponse montrée : le centre passe en jaune pâle, le décor de l'univers reste visible. */
+.bulle-de-choix[data-brille="true"] .dessin-de-la-bulle svg > path:first-of-type { fill: var(--surbrillance-fond); }
+/* Bonne réponse touchée : le tracé opaque du dessin ne doit pas cacher le fond de réussite. */
+.bulle-de-choix[data-reussite="true"] .dessin-de-la-bulle svg > path:first-of-type { fill: var(--succes-fond); stroke: var(--succes); }
 .bulle-de-choix[aria-disabled="true"], .reecouter[aria-disabled="true"] { cursor: default; }
 .reecouter[aria-disabled="true"] { opacity: .45; }
 .je-ne-sais-pas.place-gardee { visibility: hidden; }

@@ -3,9 +3,6 @@ import type { CleUnivers } from "@domain/motivation";
 import { DESSINS_DES_BULLES } from "./dessins/index.ts";
 import { HAUTEUR_DE_REFERENCE, LARGEUR_DE_REFERENCE } from "./dessins/dessin-de-bulle.tsx";
 
-/** Le choix écarté perd le décor de l'univers : un contour gris pâle, le même partout. */
-const FOND_DU_CHOIX_ECARTE = "#E9EBF1";
-const TRAIT_DU_CHOIX_ECARTE = "#9AA1B2";
 const EPAISSEUR_DU_TRAIT = 3;
 
 type Props = {
@@ -16,6 +13,7 @@ type Props = {
 /**
  * Le dessin de la bulle de choix : décor pour les yeux, jamais annoncé. Il prend la taille de la bulle, texte compris :
  * les bouts gardent leur rayon (la moitié de la hauteur) et le milieu s'étire, sans rien déformer.
+ * Les couleurs du fond et du trait changent selon l'état de la bulle (écartée, bonne réponse montrée, réussie) : voir `styles.css`.
  */
 export function DessinDeLaBulle({ univers, ecarte }: Props) {
   const p = useId();
@@ -47,8 +45,8 @@ export function DessinDeLaBulle({ univers, ecarte }: Props) {
         {!ecarte && <defs>{dessin.degrades?.(p)}</defs>}
         <path
           d={contour}
-          fill={ecarte ? FOND_DU_CHOIX_ECARTE : dessin.fond}
-          stroke={ecarte ? TRAIT_DU_CHOIX_ECARTE : dessin.trait(p)}
+          fill={dessin.fond}
+          stroke={dessin.trait(p)}
           strokeWidth={EPAISSEUR_DU_TRAIT}
         />
         {!ecarte && (
