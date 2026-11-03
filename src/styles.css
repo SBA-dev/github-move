@@ -392,6 +392,8 @@ button:focus-visible, summary:focus-visible { outline: 3px solid var(--texte); o
 /* La bulle juste s'efface sur place, après son rebond : elle garde sa place, rien ne grandit ni n'éclate. */
 .bulle-de-choix[data-eclatee="true"] { opacity: 0; }
 .bulle-de-choix .signal-brille { border-radius: 999px; }
+/* La bonne réponse montrée ne bouge pas : un halo posé, sans transition, en plus de l'anneau du calque `.signal-brille`. */
+.bulle-de-choix[data-brille="true"], .bulle-de-choix[data-brille="true"]:hover { box-shadow: 0 0 14px 6px var(--surbrillance); transition: none; }
 /* Le mot juste rejoint sa place, qui s'illumine un instant : un éclat vert doux, qui ne ressemble pas au halo jaune de la bonne réponse montrée. */
 .mot-qui-voyage { position: fixed; z-index: 30; padding: 0 6px; translate: -50% -50%; border-radius: var(--rayon-petit); background: var(--surface); color: var(--principale-foncee); font-size: 1.25rem; font-weight: 700; pointer-events: none; }
 .mot-du-trou[data-en-route="true"] { visibility: hidden; }
