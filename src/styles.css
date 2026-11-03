@@ -362,12 +362,13 @@ button:focus-visible, summary:focus-visible { outline: 3px solid var(--texte); o
 .dessin-de-la-bulle svg { display: block; overflow: visible; }
 .decor-de-la-bulle * { vector-effect: non-scaling-stroke; }
 .texte-de-la-bulle { position: relative; }
-.bulle-de-choix[data-vide="true"] .texte-de-la-bulle { visibility: hidden; }
+.bulle-de-choix[data-vide="true"] .texte-de-la-bulle { opacity: 0; }
 .bulle-de-choix:hover:not([aria-disabled="true"]) .dessin-de-la-bulle { filter: brightness(.95); }
 /* Choix écarté : le dessin passe en gris pâle sans décor (voir DessinDeLaBulle), le texte garde plus de 4,5:1. */
 .bulle-de-choix[data-ecarte="true"] { opacity: .85; color: #3a3f4d; }
 .bulle-de-choix[aria-disabled="true"], .reecouter[aria-disabled="true"] { cursor: default; }
 .reecouter[aria-disabled="true"] { opacity: .45; }
+.je-ne-sais-pas.place-gardee { visibility: hidden; }
 .je-ne-sais-pas {
   box-shadow: none;
   min-width: 44px;

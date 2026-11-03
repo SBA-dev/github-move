@@ -65,10 +65,14 @@ export function QuestionAChoix(props: Props) {
             motQuiPart={question.type === "trous" || question.type === "conjugaison"}
             onChoisir={props.onChoisir}
           />
-          {question.jeNeSaisPasPermis() && !question.bonneReponseMontree && !reussie && (
-            <button type="button" className="je-ne-sais-pas" data-testid="je-ne-sais-pas" onClick={props.onJeNeSaisPas}>
-              Je ne sais pas
-            </button>
+          {question.jeNeSaisPasPermis() && (
+            question.bonneReponseMontree || reussie
+              ? <div className="je-ne-sais-pas place-gardee" aria-hidden="true">Je ne sais pas</div>
+              : (
+                <button type="button" className="je-ne-sais-pas" data-testid="je-ne-sais-pas" onClick={props.onJeNeSaisPas}>
+                  Je ne sais pas
+                </button>
+              )
           )}
         </>
       )}
