@@ -84,3 +84,7 @@ Numéro de décision : prochain libre 0040, si besoin. Commentaire `Avancement` 
 - 07:20 UTC : RED vérifié par `e2e-tester`. Sur `telephone`, l'exemple Danse au choix long à 375 px est rouge : paillettes `<path>` de 5 × 7 px et `<circle>` de 5 × 6 px dans le texte. Les 5 autres exemples du Plan sont verts.
 - 07:35 UTC : correction par `implementer` (`31c9184`). Les paillettes de Danse sont calculées en coordonnées de référence et posées par `Fixe`, qui les plafonne et les recentre. La bulle courte reste identique à la source validée. Le commentaire du plafond est corrigé (45,45 px pour une zone de 46). `@issue-126` 72/72 sur `telephone` ; tsc, build et 2778 tests unitaires verts.
 - 07:37 UTC : review du delta du 4e cycle autorisé (`3189145..HEAD`, avec l'intégration de #127).
+- 07:55 UTC : review du delta du 4e cycle autorisé : **APPROUVÉ**. Le bloquant Danse est levé : la bulle courte est identique à la source, et sur une bulle haute les paillettes restent à environ 20,6 px du bord, à l'intérieur de la zone de 46 px. Le merge de #127 n'a pas d'effet croisé : les règles CSS de #127 sont limitées à l'addition posée, et celles des bulles sont intactes. Non bloquants, notés en dette :
+  - le Plan du mode dys ne tourne plus à 820 px sur `tablette` ;
+  - le commentaire des paillettes sur une bulle haute.
+- 07:57 UTC : `e2e-tester` refait les 12 captures (plus 2 du texte long), puis lance `@issue-126` sur les deux projets.
