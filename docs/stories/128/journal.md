@@ -27,3 +27,4 @@
 - 07:10 UTC : étapes E2E écrites (`ab8a3f9`) et contrat des repères DOM dans `acceptance.md`. `bddgen` vert pour `@issue-98`, `@issue-127` et `@issue-128`. Deux steps de #98 exclus pour #127 et #128 (`not @issue-127 and not @issue-128`), leur sens ne change pas pour #98.
 - 07:12 UTC : câblage du front lancé (`implementer`).
 - 07:11 UTC : planches validées par le PO (annonce [Responsable] 6597661184 sur #128, « planches 128 OK »), choix P1 à P6 compris. Condition 98.31 remplie.
+- 07:17 UTC : changement de session du responsable annoncé par `session_015z4jmPB9NToEBmXDvNpaLi`. Cohérent avec la PASSATION [Responsable] de #64 (6597703898), mais le corps de #64 nomme encore l'ancienne session : RELIS envoyés aux deux sessions jusqu'à la mise à jour du corps.
