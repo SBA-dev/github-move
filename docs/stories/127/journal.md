@@ -41,3 +41,21 @@ Session : session_015z4jmQ9o3CKmJiuvCfr2me. Décision : prochain numéro libre 0
 - À montrer au PO avec la PR : compteur « 3 / 10 » masqué et personnage guide à 40 px sur téléphone ; en mode dys à 360 × 740, « Je ne sais pas » demande un défilement vertical (consigne sur 4 lignes), sans défilement horizontal.
 - 03:30 UTC : retenue corrigée par `implementer` (`8db8329`) : place réservée en haut de chaque colonne, 44 px sur téléphone (56 px n'y tenait pas, PO d'accord jusqu'à 44 px), 56 px au-delà. Captures refaites, page en haut (`5b96f1e`) : la retenue ne touche plus aucun chiffre dans les 6 univers ni en mode dys. E2E `@issue-127` + `@issue-20` : 136/136 sur `telephone`, sans rejeu. À l'étape calculer, page en haut, les bulles de choix sont sous la ligne de flottaison (le focus fait défiler jusqu'à elles) ; seule l'étape poser est exigée sans défilement.
 - Revue du delta (`acdc176..HEAD`) confiée à `mr-reviewer`.
+- 03:45 UTC : PR #143 ouverte en brouillon, captures jointes. `REVUE` publié sur #127 (6593937877). Review finale publiée sur la PR par `mr-reviewer` (6593940151) : APPROUVÉ.
+- 04:10 UTC : `@issue-127` + `@issue-20` sur `tablette` : 136/136, sans rejeu (le glisser au doigt marche au toucher). `main` n'a pas bougé depuis l'intégration (`8757070`). PR passée en « prête », `PRÊTE À MERGER` publié. Attente de l'autorisation de merge du PO par une annonce `[Responsable]`.
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Durée (lancement → PRÊTE À MERGER) | 2026-11-02 21:15 → 2026-11-03 04:10 UTC, soit environ 7 h |
+| Temps d'attente du PO | validation n°1 : 12 min (21:26 → 21:38) ; planches : environ 20 min (22:00 → 22:21). Aucune attente n'a bloqué le travail |
+| Cycles de review | 2 : cycle 1 complet APPROUVÉ (aucun bloquant), delta APPROUVÉ |
+| Cycles TDD | 0 comportement du domaine (comme 98a). RED par l'E2E : 41 rouges sur 56 scénarios, puis 3 commits de câblage, 3 corrections d'étapes, 1 refactor, 2 fix (coupure dys, retenue qui chevauchait le chiffre, vu sur les captures) |
+| Cycles E2E | 6 runs : RED (`telephone`) ; câblage (`telephone`, périmètre élargi) ; mise au point avec `@issue-24` sur `main` ; après l'intégration de `main` avec `@issue-106` ; après le correctif de la retenue (136/136) ; `tablette` (136/136) |
+| Intégrations de `main` | 1 : #106 106a (1 conflit, `delais.steps.ts`, les deux tags gardés) |
+| Escalades | 0 |
+| Verrous | aucun (front seul) |
+| Dessins | 72 sources (54 maisons recolorées, 18 retenues), 2 planches, validées au premier passage ; 7 captures |
+| Incidents | redémarrage du conteneur pendant l'écriture des étapes (travail resté sur le disque, commité puis repris) ; 3 commits au `Claude-Session` faux (non réécrits) ; `@issue-24` (3 scénarios) rouge aussi sur `main` |
+| Tokens | relevés par le responsable |
