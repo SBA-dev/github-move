@@ -51,7 +51,7 @@ import { laisserPasserLeDelaiDeLecture, normaliser, reappliquerLAppareil, scenar
 
 type Configuration = { echec: boolean; retenir: string[] };
 
-type Entree = {
+export type Entree = {
   nom: string;
   debut: number;
   fin: number | null;
@@ -60,7 +60,7 @@ type Entree = {
   autreEffetEnCours: boolean;
 };
 
-type Observation = {
+export type Observation = {
   entrees: Entree[];
   vu: string[];
   annonces: string[];
@@ -69,8 +69,8 @@ type Observation = {
   paroles: Array<{ index: number; texte: string }>;
 };
 
-const DELAI_DE_L_ATTENTE_MS = 20_000;
-const EFFETS_DE_FIN = ["seance-terminee", "grande-victoire", "decouverte"];
+export const DELAI_DE_L_ATTENTE_MS = 20_000;
+export const EFFETS_DE_FIN = ["seance-terminee", "grande-victoire", "decouverte"];
 
 // --- Le faux des effets sonores et l'enregistreur de l'écran, installés avant le chargement de la page
 
@@ -256,7 +256,7 @@ function configuration(page: Page): Configuration {
   return courante;
 }
 
-async function configurer(page: Page, changement: Partial<Configuration>): Promise<void> {
+export async function configurer(page: Page, changement: Partial<Configuration>): Promise<void> {
   const courante = Object.assign(configuration(page), changement);
   await page.addInitScript(installerLesFauxDeLaStory97, { ...courante, retenir: [...courante.retenir] });
   // La page déjà chargée garde son faux : seuls les réglages changent, ni le journal ni la marque.
@@ -297,7 +297,7 @@ async function laisserLaParoleFinir(page: Page): Promise<void> {
 
 const OBSERVATION_VIDE: Observation = { entrees: [], vu: [], annonces: [], marque: 0, marqueParoles: 0, paroles: [] };
 
-async function observer(page: Page): Promise<Observation> {
+export async function observer(page: Page): Promise<Observation> {
   return await page.evaluate(() => {
     const etat = Reflect.get(window, "__effets") as
       | { entrees: unknown[]; vu: string[]; annonces: string[]; marque: number; marqueParoles: number }
@@ -316,15 +316,15 @@ async function observer(page: Page): Promise<Observation> {
   }) as Observation ?? OBSERVATION_VIDE;
 }
 
-function fichierDe(nom: string): string {
+export function fichierDe(nom: string): string {
   return nom.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/\s+/g, "-");
 }
 
-function depuisLaMarque(observation: Observation): Entree[] {
+export function depuisLaMarque(observation: Observation): Entree[] {
   return observation.entrees.slice(observation.marque);
 }
 
-function noms(entrees: readonly Entree[]): string[] {
+export function noms(entrees: readonly Entree[]): string[] {
   return entrees.map((entree) => entree.nom);
 }
 
@@ -333,7 +333,7 @@ function sansPonctuation(texte: string): string {
 }
 
 /** Laisse la scène se dérouler : plus aucun effet en cours, et rien de nouveau pendant deux lectures espacées. */
-async function laisserSeDerouler(page: Page): Promise<void> {
+export async function laisserSeDerouler(page: Page): Promise<void> {
   let precedent = -1;
   await expect.poll(async () => {
     const { entrees } = await observer(page);
@@ -345,7 +345,7 @@ async function laisserSeDerouler(page: Page): Promise<void> {
 }
 
 /** Attend une condition sur le journal en finissant les paroles qui précèdent : on ne coupe jamais celle qu'on attend (elle n'est vérifiée qu'une fois commencée). */
-async function attendre(page: Page, condition: (observation: Observation) => boolean): Promise<Observation> {
+export async function attendre(page: Page, condition: (observation: Observation) => boolean): Promise<Observation> {
   let derniere = OBSERVATION_VIDE;
   try {
     await expect.poll(async () => {
@@ -562,7 +562,7 @@ function dernierEffetDeFin(observation: Observation): Entree | undefined {
 }
 
 
-async function libererLesEffets(page: Page): Promise<void> {
+export async function libererLesEffets(page: Page): Promise<void> {
   let precedent = -1;
   await expect.poll(async () => {
     await terminerLesEffets(page);
@@ -626,7 +626,17 @@ When(/^Léa choisit « Accueil »$/, async ({ page }) => {
 });
 
 When(/^Léa choisit « Accueil » au clavier$/, async ({ page }) => {
-  const accueil = page.getByTestId("fin-de-seance").getByRole("button", { name: "Accueil", exact: true });
+  // Fin d'une séance : « Accueil » a le focus. Fin d'un défi : « Mon parcours » l'a, « Accueil » est le bouton suivant (Tab).
+  const finDuDefi = page.getByTestId("fin-du-defi");
+  const accueil = page.getByTestId("fin-de-seance").or(finDuDefi).getByRole("button", { name: "Accueil", exact: true });
+  if ((await finDuDefi.count()) > 0) {
+    await expect(accueil).toBeVisible();
+    await expect.poll(async () => {
+      if (await accueil.evaluate((bouton) => bouton === document.activeElement)) return true;
+      await page.keyboard.press("Tab");
+      return false;
+    }, { intervals: [100], timeout: DELAI_DE_L_ATTENTE_MS }).toBe(true);
+  }
   await expect(accueil).toBeFocused();
   await page.keyboard.press("Enter");
 });
@@ -650,7 +660,7 @@ Then(/^Léa entend l'effet sonore de fin jusqu'au bout$/, async ({ page }) => {
   for (const entree of jouees) expect(entree.arrete, `l'effet « ${entree.nom} » n'est pas coupé`).toBe(false);
 });
 
-async function verifierQueLEffetEstCoupe(page: Page, nomsDesEffets: readonly string[]): Promise<void> {
+export async function verifierQueLEffetEstCoupe(page: Page, nomsDesEffets: readonly string[]): Promise<void> {
   await expect.poll(async () => {
     const jouees = (await observer(page)).entrees.filter((entree) => nomsDesEffets.includes(entree.nom));
     return jouees.length > 0 && jouees.every((entree) => entree.fin !== null) && jouees.some((entree) => entree.arrete);
@@ -845,6 +855,7 @@ Then(/^Léa voit (\d) étoiles allumées sur 3, sans animation$/, async ({ page 
 Then(/^aucun confetti ne tombe$/, async ({ page }) => {
   await laisserSeDerouler(page);
   await expect(page.getByTestId("confettis")).toHaveCount(0);
+  await expect(page.getByTestId("confettis-de-la-celebration")).toHaveCount(0);
   expect((await observer(page)).vu.filter((vu) => vu.startsWith("confettis:"))).toEqual([]);
 });
 
@@ -856,6 +867,14 @@ Then(/^des confettis tombent$/, async ({ page }) => {
 });
 
 Then(/^les lecteurs d'écran annoncent une seule fois « ([^«»]+) »$/, async ({ page }, annonce: string) => {
+  if ((await page.getByTestId("fin-du-defi").count()) > 0) {
+    // Fin d'un défi (#106) : l'annonce « Défi relevé ! » est la seule région annoncée qui porte ce texte.
+    await expect(page.getByTestId("annonce-du-defi-releve")).toHaveText(annonce, { timeout: DELAI_DE_L_ATTENTE_MS });
+    await laisserSeDerouler(page);
+    await laisserPasserLeDelaiDeLecture(page);
+    await expect(page.locator("[aria-live], [role=status], [role=alert]").filter({ hasText: annonce })).toHaveCount(1);
+    return;
+  }
   await attendreLaFinDeLaSeance(page);
   await expect(page.getByTestId("annonce-des-etoiles")).toHaveText(annonce);
   await laisserSeDerouler(page);

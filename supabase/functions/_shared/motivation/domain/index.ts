@@ -177,6 +177,12 @@ export {
   type QueteDuJour,
   queteDuJour,
 } from "./quete-du-jour.ts";
+export { type CelebrationDeLaFin, celebrationDeLaFin } from "./celebration-de-la-fin.ts";
+export {
+  type FaitsDeLaFinPourLaCelebration,
+  type MomentDeCelebration,
+  momentDeCelebrationDeLaFin,
+} from "./moment-de-celebration.ts";
 export {
   feteDeLaQueteAccomplie,
   paroleDeLaQueteALAccueil,
@@ -184,3 +190,9 @@ export {
   propositionDeLaQueteDuJour,
   reponseAuRefusDeLaQuete,
 } from "./paroles-de-la-quete.ts";
+export {
+  celebrationDe,
+  type CelebrationDeLUnivers,
+  type CriDeVictoire,
+  type VarianteDeLaCelebration,
+} from "./celebrations-des-univers.ts";

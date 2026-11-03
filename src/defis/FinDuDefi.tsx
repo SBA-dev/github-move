@@ -1,12 +1,20 @@
 import { useEffect, useRef, useState } from "react";
 import type { DefiReleve, SeanceDeDefi } from "@domain/apprentissage";
-import { defiReleveParLaSeance, parolesDeFinDeDefi, type Univers } from "@domain/motivation";
+import {
+  type CelebrationDeLaFin,
+  celebrationDeLaFin,
+  defiReleveParLaSeance,
+  parolesDeFinDeDefi,
+  type Univers,
+} from "@domain/motivation";
 import { Confettis } from "../celebration/index.ts";
+import { hasardDuNavigateur } from "../hasard-navigateur.ts";
 import { retenirLesQuestionsRatees } from "../revision/copie-de-la-file-sur-l-appareil.ts";
 import type { Personnage } from "../revision/useDeroulementDeRevision.ts";
 import { messageDeSauvegarde } from "../seance/fin-de-seance/useSauvegardeDeLaSeance.ts";
 import { jourDuNavigateur } from "../seance/jour-du-navigateur.ts";
 import { ParoleDuGuide } from "../test-de-depart/ParoleDuGuide.tsx";
+import { SceneDeCelebration } from "../univers/celebrations/index.ts";
 import { defisRelevesDeLAppareil, retenirLesDefisReleves } from "./defis-releves-sur-l-appareil.ts";
 import { sauvegarderLeDefi } from "./sauvegarde-du-defi.ts";
 
@@ -25,8 +33,8 @@ type Props = {
 
 /**
  * La fin du défi : le défi est relevé (avec ou sans erreurs), sans étoile ni récompense de la cabane. La première fois il est annoncé
- * et fêté ; rejoué, il ne l'est plus. Les questions ratées entrent dans la file de révision de l'appareil, puis le défi est envoyé
- * au serveur en arrière-plan.
+ * et fêté par la célébration de l'univers de l'enfant si elle existe ; sinon, comme rejoué, par la célébration commune (confettis).
+ * Les questions ratées entrent dans la file de révision de l'appareil, puis le défi est envoyé au serveur en arrière-plan.
  */
 export function FinDuDefi({ seance, prenom, personnage, univers, relevesAvant, onMonParcours, onAccueil }: Props) {
   const { dire, faireSilence, reecouter } = personnage;
@@ -34,6 +42,7 @@ export function FinDuDefi({ seance, prenom, personnage, univers, relevesAvant, o
   const dite = useRef(false);
   const affichee = useRef(true);
   const [issue, setIssue] = useState<IssueDuDefi | undefined>();
+  const [celebration, setCelebration] = useState<CelebrationDeLaFin | undefined>();
   const [numero, setNumero] = useState(0);
   const [message, setMessage] = useState<string | undefined>();
   const parcours = useRef<HTMLButtonElement>(null);
@@ -51,10 +60,14 @@ export function FinDuDefi({ seance, prenom, personnage, univers, relevesAvant, o
       .then((avant) => {
         retenirLesDefisReleves(terminee.enfant, [releve]);
         setNumero(releve.numero);
-        setIssue(defiReleveParLaSeance(avant, releve));
+        const issueDuDefi = defiReleveParLaSeance(avant, releve);
+        setCelebration(
+          celebrationDeLaFin({ defiRelevePourLaPremiereFois: issueDuDefi.annonce !== undefined }, univers.cle, hasardDuNavigateur),
+        );
+        setIssue(issueDuDefi);
       });
     void sauvegarderLeDefi(seance.aEnregistrer()).then((sauvegarde) => setMessage(messageDeSauvegarde(sauvegarde)));
-  }, [seance, relevesAvant]);
+  }, [seance, relevesAvant, univers.cle]);
 
   useEffect(() => {
     if (dite.current || !issue || !affichee.current) return;
@@ -63,9 +76,9 @@ export function FinDuDefi({ seance, prenom, personnage, univers, relevesAvant, o
       texte: parolesDeFinDeDefi({ prenom, numeroDuDefi: numero, dejaReleve: issue.annonce === undefined }),
       nature: "felicitation",
       humeur: "applaudit",
-      effetsAvant: [issue.effetSonore],
+      effetsAvant: [celebration?.sorte === "univers" ? celebration.celebration.musique : issue.effetSonore],
     });
-  }, [issue, prenom, numero, dire]);
+  }, [issue, celebration, prenom, numero, dire]);
 
   useEffect(() => {
     affichee.current = true;
@@ -80,8 +93,14 @@ export function FinDuDefi({ seance, prenom, personnage, univers, relevesAvant, o
 
   return (
     <div className="fin-de-seance fin-du-defi" data-testid="fin-du-defi">
-      {issue?.annonce && <Confettis />}
-      <ParoleDuGuide personnage={personnage} univers={univers} onReecouter={reecouter} />
+      {celebration?.sorte === "commune" && <Confettis />}
+      {celebration?.sorte === "univers" && <SceneDeCelebration celebration={celebration.celebration} />}
+      <ParoleDuGuide
+        personnage={personnage}
+        univers={univers}
+        onReecouter={reecouter}
+        sansPersonnage={celebration?.sorte === "univers"}
+      />
       <div className="pour-le-defi" role="status" data-testid="annonce-du-defi-releve">
         {issue?.annonce && <p>{issue.annonce}</p>}
       </div>
