@@ -892,7 +892,7 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 .invite-de-pose { padding: 6px 14px; border-radius: var(--rayon); background: var(--surface-voilee); font-weight: 700; }
 
 /* Addition posée sur téléphone : l'écran de 360 × 740 montre les trois maisons, les chiffres à poser et « Je ne sais pas » sans défiler (#127).
-   Les éléments de la séance se rangent côte à côte quand ils tiennent, au lieu d'une pile ; le sens de lecture ne change pas. */
+   Les éléments de la séance se rangent côte à côte quand ils tiennent, au lieu d'une pile ; l'ordre du focus ne change pas ; seule la bulle passe visuellement après « Réécouter ». */
 @media (max-width: 480px) {
   .en-tete:has(~ .ecran .addition-posee) { padding-block: 4px; gap: 4px; }
   .en-tete:has(~ .ecran .addition-posee) .outils { gap: 4px 8px; }

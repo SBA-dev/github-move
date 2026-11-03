@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { NOMS_DES_COLONNES_A_L_ECRAN, type VueAddition, type VueColonne } from "@domain/apprentissage";
 import { CIBLE_DES_COLONNES, useRetourDe } from "../../../retours/index.ts";
 import { useUnivers } from "../../../univers/index.ts";
@@ -35,6 +35,11 @@ export function ExerciceDAdditionPosee(props: Props) {
   const chiffreChoisi = choisi === undefined ? undefined : chiffresAPoser[choisi];
   const retourDesColonnes = useRetourDe<HTMLDivElement>(CIBLE_DES_COLONNES);
   const conteneurDesColonnes = useRef<HTMLDivElement | null>(null);
+  const refDesColonnes = retourDesColonnes.ref;
+  const memoriserLesColonnes = useCallback((conteneur: HTMLDivElement | null) => {
+    refDesColonnes.current = conteneur;
+    conteneurDesColonnes.current = conteneur;
+  }, [refDesColonnes]);
 
   const poser = (chiffre: string, rang: Rang) => {
     setChoisi(undefined);
@@ -55,11 +60,9 @@ export function ExerciceDAdditionPosee(props: Props) {
     <div className="addition-posee" data-testid="addition-posee" data-etape={addition.etape}>
       <p className="operation-posee" data-testid="operation-posee">{addition.nombres.join(" + ")}</p>
       <div
-        ref={(conteneur) => {
-          retourDesColonnes.ref.current = conteneur;
-          conteneurDesColonnes.current = conteneur;
-        }}
-        {...retourDesColonnes.attributs} className="colonnes"
+        ref={memoriserLesColonnes}
+        {...retourDesColonnes.attributs}
+        className="colonnes"
         role="group"
         aria-label="Addition en colonnes"
         data-testid="colonnes"
