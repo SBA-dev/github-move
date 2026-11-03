@@ -1,14 +1,14 @@
 # Critères d'acceptance : story #128, claviers (dictée, calcul, fluence) (tranche 98d)
 
-Scénarios : `features/128-claviers.feature`. Modèle : `docs/stories/128/domain-model.md` (R1 à R6, lecture pure `RecordDeFluence.estDepassePar`, dessins par univers, questions #128.1 à #128.12).
+Scénarios : `features/128-claviers.feature`. Modèle : `docs/stories/128/domain-model.md` (R1 à R6, lecture pure `RecordDeFluence.estDepassePar`, dessins par univers, réponses #128.1 à #128.12).
 
 Tags :
 - `@issue-128 @wip` sur la fonctionnalité ;
-- `@a-valider` sur les **11 scénarios** qui suivent une recommandation encore à trancher par le PO (tableau « Scénarios qui attendent une réponse du PO ») ; un commentaire `# Question #128.n` les précède dans le `.feature` ;
+- plus aucun `@a-valider` : les 11 scénarios qui en portaient suivent les recommandations, toutes retenues par le PO le 2026-11-03 (tableau « Réponses du PO ») ; un commentaire `# Décision #128.n` les précède dans le `.feature` ;
 - aucun `@depend-de-<m>` : la story ne s'appuie que sur des stories mergées (#19, #20, #21, #23, #24, #97, #98). Elle ne touche ni aux bulles de choix ni au mode par choix du `calcul` (#126), ni à l'addition posée (#127), ni à #131 ;
 - aucun `@acces` (voir « Droits d'accès »).
 
-État : **critères rédigés, en attente de la validation du PO** (⛔). Aucun code.
+État : **critères validés par le PO le 2026-11-03** (« 128 reco tout »). Aucun code.
 
 ## Objectif
 
@@ -25,36 +25,38 @@ Besoins nourris (skill `gamification`, section 1) :
 | # | Règle | Exemples (scénarios) |
 |---|---|---|
 | I | Pour les mêmes réponses, l'habillage de jeu ne change rien : mêmes erreurs, même avancement de la séance, mêmes étoiles et même record de fluence qu'avant | « Un mot mal écrit puis bien écrit coûte toujours une seule erreur » · « Un mot bien écrit fait avancer la séance d'une question, comme avant » · « Au clavier de cristaux, un nombre faux s'efface toujours et laisse une nouvelle chance » · Plan « À la fin de la fluence, <cas>, comme avant » : nouveau record (10 → 12), record qui reste (15) |
-| R1 | Dictée : une case s'allume dès qu'une lettre y est écrite, sans la juger ; quand le mot est juste, ses cases s'illuminent l'une après l'autre, sans feu d'artifice ; un mot faux reste corrigé comme aujourd'hui, au mot complet | Plan « Une lettre écrite <moyen> allume sa case, sans dire si elle est juste » : clavier de la dictée, clavier seulement (« cho » : 3 cases allumées, « o » pas encore jugé) · « Une case allumée ne ressemble pas à une bonne réponse montrée » · « Effacer une lettre éteint sa case » · « Le mot juste fait s'illuminer ses cases l'une après l'autre, sans feu d'artifice » · « L'illumination du mot juste ne retarde pas l'effet sonore « réponse juste » » · « Dans un mot juste, les caractères déjà écrits ne s'illuminent pas » (« arc-en-ciel ») · « Un mot faux montre ses lettres fausses en rouge, comme aujourd'hui, et aucune case ne s'illumine » · « Après « Je ne sais pas », la lettre montrée par le personnage guide garde son signal, et ne s'allume pas » · « Après « Je ne sais pas », le mot juste s'illumine aussi sur la lettre montrée » (`@a-valider`, #128.14) · « En Muet, le mot juste s'illumine et « réponse juste » se fait entendre, sans parole » |
-| R2 | Clavier de cristaux : une touche de chiffre touchée a un éclat bref, qui ne ressemble jamais à la bonne réponse montrée par « Je ne sais pas » ; l'éclat ne donne aucune réponse | « Une touche de chiffre touchée a un éclat bref et écrit son chiffre » · « Pendant la fluence, une touche de chiffre touchée a le même éclat bref » · « Après « Je ne sais pas », la touche touchée a un éclat, et seule la bonne réponse brille » · « Un chiffre tapé au clavier de l'ordinateur donne le même éclat à sa touche » (`@a-valider`, #128.5) · « « Effacer » touché a un éclat bref et efface le dernier chiffre » (`@a-valider`, #128.4) · « « Valider » garde le rebond d'une réponse juste, sans éclat » (`@a-valider`, #128.4) · « Un cinquième chiffre ne s'écrit pas, et sa touche n'a pas d'éclat » (`@a-valider`, #128.13) · « Quand le temps de la fluence est écoulé, toucher une touche ne fait rien, pendant la fête du record » |
-| R3 | Fluence : le record de fluence se voit comme une marque à atteindre, jamais comme une course ; sans record connu, aucune marque ; le chrono reste | « Avec un record, la marque du record se voit dès le début de la fluence, avec le chrono » · « Sans record, aucune marque du record » · « Quand le record ne peut pas être lu, aucune marque, et aucun message d'erreur » (`@a-valider`, #128.8) · « Rien ne présente la fluence comme une course » · « La marque du record se pose à côté du score, pas sur la barre de temps » (`@a-valider`, #128.3) |
-| R4 | Fluence : quand le score dépasse le record, la marque change de couleur, sans son, sans arrêt et sans parole ; un score égal au record ne change rien ; la fête reste celle de la fin (#97) | Plan « Avec un record de 3, passer de <avant> à <après> calculs réussis laisse la marque <état> » : 1 → 2 à atteindre, 2 → 3 à atteindre (égal), 3 → 4 dépassée, 5 → 6 dépassée · « Dépasser le record ne fait entendre aucun son de plus, et la fluence continue » · « Une réponse fausse après le record dépassé laisse la marque dépassée » · « La marque dépassée ne ressemble ni à la bonne réponse montrée, ni à une erreur » · « Un record dépassé pendant la fluence est fêté à la fin seulement, une seule fois » · Plan « Quand le temps est écoulé, la marque du record disparaît (<cas>) » : record battu, record qui reste (`@a-valider`, #128.7) |
+| R1 | Dictée : une case s'allume dès qu'une lettre y est écrite, sans la juger ; quand le mot est juste, ses cases s'illuminent l'une après l'autre, sans feu d'artifice ; un mot faux reste corrigé comme aujourd'hui, au mot complet | Plan « Une lettre écrite <moyen> allume sa case, sans dire si elle est juste » : clavier de la dictée, clavier seulement (« cho » : 3 cases allumées, « o » pas encore jugé) · « Une case allumée ne ressemble pas à une bonne réponse montrée » · « Effacer une lettre éteint sa case » · « Le mot juste fait s'illuminer ses cases l'une après l'autre, sans feu d'artifice » · « L'illumination du mot juste ne retarde pas l'effet sonore « réponse juste » » · « Dans un mot juste, les caractères déjà écrits ne s'illuminent pas » (« arc-en-ciel ») · « Un mot faux montre ses lettres fausses en rouge, comme aujourd'hui, et aucune case ne s'illumine » · « Après « Je ne sais pas », la lettre montrée par le personnage guide garde son signal, et ne s'allume pas » · « Après « Je ne sais pas », le mot juste s'illumine aussi sur la lettre montrée » (#128.14) · « En Muet, le mot juste s'illumine et « réponse juste » se fait entendre, sans parole » |
+| R2 | Clavier de cristaux : une touche de chiffre touchée a un éclat bref, qui ne ressemble jamais à la bonne réponse montrée par « Je ne sais pas » ; l'éclat ne donne aucune réponse | « Une touche de chiffre touchée a un éclat bref et écrit son chiffre » · « Pendant la fluence, une touche de chiffre touchée a le même éclat bref » · « Après « Je ne sais pas », la touche touchée a un éclat, et seule la bonne réponse brille » · « Un chiffre tapé au clavier de l'ordinateur donne le même éclat à sa touche » (#128.5) · « « Effacer » touché a un éclat bref et efface le dernier chiffre » (#128.4) · « « Valider » garde le rebond d'une réponse juste, sans éclat » (#128.4) · « Un cinquième chiffre ne s'écrit pas, et sa touche n'a pas d'éclat » (#128.13) · « Quand le temps de la fluence est écoulé, toucher une touche ne fait rien, pendant la fête du record » |
+| R3 | Fluence : le record de fluence se voit comme une marque à atteindre, jamais comme une course ; sans record connu, aucune marque ; le chrono reste | « Avec un record, la marque du record se voit dès le début de la fluence, avec le chrono » · « Sans record, aucune marque du record » · « Quand le record ne peut pas être lu, aucune marque, et aucun message d'erreur » (#128.8) · « Rien ne présente la fluence comme une course » · « La marque du record se pose à côté du score, pas sur la barre de temps » (#128.3) |
+| R4 | Fluence : quand le score dépasse le record, la marque change de couleur, sans son, sans arrêt et sans parole ; un score égal au record ne change rien ; la fête reste celle de la fin (#97) | Plan « Avec un record de 3, passer de <avant> à <après> calculs réussis laisse la marque <état> » : 1 → 2 à atteindre, 2 → 3 à atteindre (égal), 3 → 4 dépassée, 5 → 6 dépassée · « Dépasser le record ne fait entendre aucun son de plus, et la fluence continue » · « Une réponse fausse après le record dépassé laisse la marque dépassée » · « La marque dépassée ne ressemble ni à la bonne réponse montrée, ni à une erreur » · « Un record dépassé pendant la fluence est fêté à la fin seulement, une seule fois » · Plan « Quand le temps est écoulé, la marque du record disparaît (<cas>) » : record battu, record qui reste (#128.7) |
 | R5 | Avec les mouvements réduits, rien ne bouge ; les lecteurs d'écran annoncent la même chose qu'avant | « … une lettre écrite allume sa case sans mouvement » · « … le mot juste s'illumine d'un coup, toutes ses cases ensemble » · « … l'éclat d'une touche est un bref changement de couleur, sans mouvement » · « … la marque change de couleur aussitôt, sans bouger » · « Le temps qui reste et le score restent annoncés comme avant, et la marque n'est pas annoncée » · « Les lecteurs d'écran annoncent les cases de la dictée comme avant, sans dire qu'elles sont allumées » |
-| R6 | Dans chacun des 6 univers, la case, la touche et la marque ont le dessin de l'univers ; changer d'univers ne change ni les gestes, ni les textes lus, ni les signaux communs ; un profil sans univers connu voit les dessins d'« Animaux de la forêt » | Plan « … les cases de la dictée ont le dessin de cet univers et s'annoncent comme avant » (6 univers) · Plan « … les touches du clavier de cristaux ont le dessin de cet univers, et le clavier s'annonce toujours « Clavier de cristaux » » (6 univers) · Plan « … la marque du record a le dessin de cet univers et change de couleur quand le record est dépassé » (6 univers) · « « Effacer » et « Valider » gardent leur aspect commun dans un autre univers » (`@a-valider`, #128.4) · Plan « … la touche montrée par « Je ne sais pas » brille comme dans tous les univers » (5 univers) · Plan « … une lettre fausse est montrée en rouge comme dans tous les univers » (Princesses et fées, Pompiers) · Plan « … un mot mal écrit puis bien écrit donne 2 étoiles… » (Police, Danse) · Plan « Un profil enfant <cas> voit <cible> avec le dessin de l'univers « Animaux de la forêt » » (sans univers, univers inconnu) · « Dans une boîte à jetons, le clavier de cristaux a aussi le dessin de l'univers » (`@a-valider`, #128.9) |
+| R6 | Dans chacun des 6 univers, la case, la touche et la marque ont le dessin de l'univers ; changer d'univers ne change ni les gestes, ni les textes lus, ni les signaux communs ; un profil sans univers connu voit les dessins d'« Animaux de la forêt » | Plan « … les cases de la dictée ont le dessin de cet univers et s'annoncent comme avant » (6 univers) · Plan « … les touches du clavier de cristaux ont le dessin de cet univers, et le clavier s'annonce toujours « Clavier de cristaux » » (6 univers) · Plan « … la marque du record a le dessin de cet univers et change de couleur quand le record est dépassé » (6 univers) · « « Effacer » et « Valider » gardent leur aspect commun dans un autre univers » (#128.4) · Plan « … la touche montrée par « Je ne sais pas » brille comme dans tous les univers » (5 univers) · Plan « … une lettre fausse est montrée en rouge comme dans tous les univers » (Princesses et fées, Pompiers) · Plan « … un mot mal écrit puis bien écrit donne 2 étoiles… » (Police, Danse) · Plan « Un profil enfant <cas> voit <cible> avec le dessin de l'univers « Animaux de la forêt » » (sans univers, univers inconnu) · « Dans une boîte à jetons, le clavier de cristaux a aussi le dessin de l'univers » (#128.9) |
 | A | Dans chacun des 6 univers, cases, touches et marque tiennent à 360 px, gardent 44 px et s'affichent en mode dys ; le texte reste du texte | Plan « … la fluence avec la marque du record tient dans un écran de 360 px » (6 univers) · Plan « … les 8 cases de « éléphant » tiennent dans un écran de 360 px » (6 univers) · « En mode dys, les lettres écrites dans les cases s'affichent en mode dys » · « En mode dys, les chiffres des touches et la marque du record s'affichent en mode dys » |
 
-Au total : **8 règles, 52 scénarios** (dont 13 plans de scénario, 51 exemples). **11** portent `@a-valider`.
+Au total : **8 règles, 52 scénarios** (dont 13 plans de scénario, 51 exemples). Aucun ne porte plus `@a-valider` (11 avant la validation du PO).
 
 Les Plans sur les univers suivent le style de #98 : les 6 univers là où le dessin peut changer ce qu'on vérifie (dessin de la case, de la touche, de la marque ; tenue à 360 px et 44 px) ; 5 univers là où « Animaux de la forêt » est déjà couvert (halo de « Je ne sais pas ») ; 2 univers là où le dessin ne peut rien changer (rouge d'une lettre fausse, étoiles). Pompiers est retenu pour le rouge : la plaque de casier proposée est rouge clair, elle ne doit pas se confondre avec le rouge d'une lettre fausse.
 
-### Scénarios qui attendent une réponse du PO
+### Réponses du PO
 
-| Question | Recommandation suivie | Scénarios `@a-valider` | Si le PO choisit une autre option |
-|---|---|---|---|
-| #128.1 Nom « Clavier de cristaux » | A : la touche reste un cristal dans les 6 univers | aucun `@a-valider`, mais le Plan « … les touches du clavier de cristaux ont le dessin de cet univers, et le clavier s'annonce toujours « Clavier de cristaux » » en dépend | B : renommer le libellé lu dans ce Plan et dans #20, #21 et #23, et changer le format ; C : rien à changer ici |
-| #128.2 Objet de la case | A : tableau du modèle | aucun (les scénarios ne décrivent jamais l'objet) | rien à changer dans les scénarios, seulement la planche |
-| #128.3 Objet et place de la marque | A : petite marque à côté du score | « La marque du record se pose à côté du score, pas sur la barre de temps » | B (jauge) : scénario à réécrire, et « Rien ne présente la fluence comme une course » est à revoir ; C : rien à changer dans les scénarios |
-| #128.4 « Effacer » et « Valider » | pas de dessin ; éclat sur « Effacer » ; pas d'éclat sur « Valider » | « « Effacer » touché a un éclat bref… », « « Valider » garde le rebond d'une réponse juste, sans éclat », « « Effacer » et « Valider » gardent leur aspect commun dans un autre univers » | A : les trois scénarios s'inversent (dessin et éclat sur les 12 touches) ; B : « Effacer » perd son éclat |
-| #128.5 Clavier physique | oui, le même éclat | « Un chiffre tapé au clavier de l'ordinateur donne le même éclat à sa touche » | non : le scénario devient « … ne fait pas briller sa touche » |
-| #128.6 Durée de l'illumination | 400 ms au plus en tout | aucun (les durées ne sont jamais dans les étapes) ; « L'illumination du mot juste ne retarde pas l'effet sonore « réponse juste » » reste vrai quelle que soit la réponse | pas de scénario à changer |
-| #128.7 La marque à la fin | elle disparaît dès que le temps est écoulé | Plan « Quand le temps est écoulé, la marque du record disparaît (<cas>) » | A : elle reste, avec sa couleur ; B : elle reste seulement quand le record n'est pas battu |
-| #128.8 Record illisible ou hors ligne | aucune marque | « Quand le record ne peut pas être lu, aucune marque, et aucun message d'erreur » | garder le record dans l'appareil : story à part (RGPD) |
-| #128.9 Clavier partout où il sert | oui, partout | « Dans une boîte à jetons, le clavier de cristaux a aussi le dessin de l'univers » | non : le scénario s'inverse |
-| #128.10 Nombre de captures | 12 | aucun (captures jointes à la PR, sans test) | — |
-| #128.11 Clavier de la dictée | rien dans cette story | aucun (hors périmètre) | A ou B : scénarios à ajouter |
-| #128.12 Glossaire | « Record dépassé » terme d'Apprentissage, « Marque du record » mot d'interface | aucun : les scénarios disent « la marque du record » et « est dépassée » dans les deux cas | — |
-| #128.13 Éclat d'une touche sans effet | pas d'éclat | « Un cinquième chiffre ne s'écrit pas, et sa touche n'a pas d'éclat » | le scénario s'inverse |
-| #128.14 Mot juste après « Je ne sais pas » | toutes les cases s'illuminent, lettre montrée comprise | « Après « Je ne sais pas », le mot juste s'illumine aussi sur la lettre montrée » | la case de la lettre montrée garde son signal et ne s'illumine pas |
+Le 2026-11-03, le PO a répondu, mot pour mot : « 128 reco tout » (annonce [Responsable] sur #64 et #128). Toutes les recommandations sont retenues ; les tags `@a-valider` sont retirés, les scénarios restent tels quels.
+
+| Question | Réponse retenue (2026-11-03) | Scénarios concernés (plus de `@a-valider`) |
+|---|---|---|
+| #128.1 Nom « Clavier de cristaux » | A : la touche reste un cristal dans les 6 univers ; le nom ne change pas | le Plan « … les touches du clavier de cristaux ont le dessin de cet univers, et le clavier s'annonce toujours « Clavier de cristaux » » |
+| #128.2 Objet de la case | A : tableau du modèle, sous réserve de la planche (98.28) | aucun (les scénarios ne décrivent jamais l'objet) |
+| #128.3 Objet et place de la marque | A : petite marque à côté du score ; objets du modèle, sous réserve de la planche (98.28) | « La marque du record se pose à côté du score, pas sur la barre de temps » |
+| #128.4 « Effacer » et « Valider » | pas de dessin ; éclat sur « Effacer » ; pas d'éclat sur « Valider » | « « Effacer » touché a un éclat bref… », « « Valider » garde le rebond d'une réponse juste, sans éclat », « « Effacer » et « Valider » gardent leur aspect commun dans un autre univers » |
+| #128.5 Clavier physique | oui, le même éclat | « Un chiffre tapé au clavier de l'ordinateur donne le même éclat à sa touche » |
+| #128.6 Durée de l'illumination | 400 ms au plus en tout | aucun (les durées ne sont jamais dans les étapes) |
+| #128.7 La marque à la fin | elle disparaît dès que le temps est écoulé | Plan « Quand le temps est écoulé, la marque du record disparaît (<cas>) » |
+| #128.8 Record illisible ou hors ligne | aucune marque ; rien de gardé dans l'appareil | « Quand le record ne peut pas être lu, aucune marque, et aucun message d'erreur » |
+| #128.9 Clavier partout où il sert | oui, partout | « Dans une boîte à jetons, le clavier de cristaux a aussi le dessin de l'univers » |
+| #128.10 Nombre de captures | 12 (2 par univers, 360 px, mouvements réduits) | aucun (captures jointes à la PR, sans test) |
+| #128.11 Clavier de la dictée | rien dans cette story | aucun (hors périmètre) |
+| #128.12 Glossaire | « Record dépassé » terme d'Apprentissage, « Marque du record » mot d'interface ; « (à valider) » retiré des deux lignes du glossaire | aucun |
+| #128.13 Éclat d'une touche sans effet | A : pas d'éclat | « Un cinquième chiffre ne s'écrit pas, et sa touche n'a pas d'éclat » |
+| #128.14 Mot juste après « Je ne sais pas » | A : toutes les cases s'illuminent, lettre montrée comprise | « Après « Je ne sais pas », le mot juste s'illumine aussi sur la lettre montrée » |
 
 ### Checklist `po-acceptance` du skill `gamification`
 
@@ -97,27 +99,32 @@ La story ne crée, ne lit et n'enregistre aucune donnée nouvelle : **pas de sc�
 
 ## Hors périmètre
 
-- Le **clavier de la dictée** (touches de lettres) : ni éclat ni dessin d'univers (#128.11, reco).
+- Le **clavier de la dictée** (touches de lettres) : ni éclat ni dessin d'univers (#128.11, reco retenue).
 - Le **mode par choix** du `calcul` au CP et la bulle de l'univers (#126) ; l'**addition posée** (#127) ; #131.
 - La fête de la fin de la fluence (#97, R4), les paroles de l'accueil de la fluence (« Ton record est de 12. »), les effets sonores : inchangés.
 - Garder le record dans l'appareil pour la fluence hors ligne (#128.8, option écartée : story à part).
-- Les objets dessinés dans chaque univers : choisis par le PO (#128.1 à #128.3) et validés sur les 3 planches (98.28), jamais par un scénario. Les captures jointes à la PR (#128.10) ne sont pas des tests.
+- Les objets dessinés dans chaque univers : recommandations retenues par le PO (#128.1 à #128.3) et validés sur les 3 planches (98.28), jamais par un scénario. Les captures jointes à la PR (#128.10) ne sont pas des tests.
 - Les écrans du parent.
 
 ## Questions ouvertes
 
-Les questions **#128.1 à #128.12** sont celles du modèle (`docs/stories/128/domain-model.md`, « Questions ouvertes »), avec leurs options et leurs recommandations. Le tableau « Scénarios qui attendent une réponse du PO » dit, pour chacune, quels scénarios en dépendent. Deux questions s'ajoutent :
-
-**#128.13 Une touche touchée qui ne fait rien a-t-elle un éclat ?**
-Exemple : Tom a déjà tapé « 1234 » (4 chiffres au plus) et touche « 5 » : rien ne s'écrit. De même, « Effacer » touché quand rien n'est tapé.
-- **A (reco) : pas d'éclat.** L'éclat dit toujours « ton chiffre est écrit », comme la case allumée de la dictée dit « ta lettre est écrite ». Une touche désactivée n'a déjà pas d'éclat (R2).
-- B : le même éclat à chaque toucher, que le chiffre s'écrive ou non. Plus simple, mais l'enfant peut croire que son cinquième chiffre est pris.
-
-**#128.14 Après « Je ne sais pas » dans la dictée, le mot juste s'illumine-t-il aussi sur la lettre montrée par le personnage guide ?**
-Exemple : « chat », Léa dit « Je ne sais pas » : le « c » est montré ; Léa écrit « hat » ; le mot est juste.
-- **A (reco) : oui, toutes les cases s'illuminent**, la lettre montrée comprise : le mot est réussi par l'enfant, qui a écrit les autres lettres. L'illumination remplace le signal « lettre montrée » à ce moment-là.
-- B : la case de la lettre montrée garde son signal et ne s'illumine pas ; seules les cases écrites par l'enfant s'illuminent.
+Aucune : toutes les questions ont reçu une réponse le 2026-11-03 (voir « Décisions »).
 
 ## Décisions
 
-Aucune pour l'instant : le cadrage attend la validation du PO.
+Réponse du PO le 2026-11-03, mot pour mot : « 128 reco tout ». Chaque question reçoit sa recommandation.
+
+- **#128.1** Que devient le terme « Clavier de cristaux » ? → **A** : la touche reste un cristal dans les 6 univers, le terme ne change pas.
+- **#128.2** Quelle case de la dictée dans chaque univers ? → **A** : le tableau du modèle (feuille, cadre doré de miroir, carré de pelouse, page de carnet d'enquête, plaque de casier, carreau de parquet), sous réserve de la planche.
+- **#128.3** La marque du record : quel objet, où ? → **A** : petite marque à côté du score, objets du modèle (fanion de feuille, lanterne de fée, fanion uni, loupe, cloche, ruban), sous réserve de la planche ; aucune étoile.
+- **#128.4** « Effacer » et « Valider » : dessin et éclat ? → pas de dessin ; éclat sur « Effacer » ; pas d'éclat sur « Valider ».
+- **#128.5** Un chiffre tapé au clavier physique a-t-il l'éclat ? → **oui**, le même éclat.
+- **#128.6** Durée de l'illumination du mot juste ? → 400 ms au plus en tout, quelle que soit la longueur du mot.
+- **#128.7** Que devient la marque à la fin ? → elle disparaît dès que le temps est écoulé.
+- **#128.8** Record illisible ou hors ligne ? → **oui, aucune marque** ; rien de nouveau gardé dans l'appareil.
+- **#128.9** Le clavier de cristaux a-t-il le dessin partout où il sert ? → **oui, partout**.
+- **#128.10** Combien de captures ? → **12** (2 par univers, à 360 px, en mouvements réduits).
+- **#128.11** Le clavier de la dictée reçoit-il l'éclat ou le dessin ? → **non dans cette story**.
+- **#128.12** « Record dépassé » et « Marque du record » au glossaire ? → « Record dépassé » terme d'Apprentissage, « Marque du record » mot d'interface, « course » synonyme interdit ; « (à valider) » retiré des deux lignes.
+- **#128.13** Une touche touchée qui ne fait rien a-t-elle un éclat ? (exemple : un cinquième chiffre, « Effacer » quand rien n'est tapé) → **A** : pas d'éclat.
+- **#128.14** Après « Je ne sais pas », le mot juste s'illumine-t-il sur la lettre montrée ? → **A** : oui, toutes les cases s'illuminent, la lettre montrée comprise.

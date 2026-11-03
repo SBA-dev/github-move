@@ -11,8 +11,8 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les cases de la dic
   La correction, les erreurs, « Je ne sais pas », l'aide, les étoiles, l'avancement et le record restent ceux de
   #19, #20, #23 et #24 ; les retours de #97 (rebond, effets sonores, fête de la fin de la fluence) passent d'abord.
   Le mode par choix du calcul (#126) et l'addition posée (#127) ne sont pas décrits ici.
-  Les commentaires « Question #128.n » renvoient aux questions de docs/stories/128/acceptance.md : les scénarios
-  tagués @a-valider suivent la recommandation et attendent la réponse du PO.
+  Les commentaires « Décision #128.n » renvoient aux réponses du PO dans docs/stories/128/acceptance.md
+  (2026-11-03, « 128 reco tout ») : toutes les recommandations sont retenues.
 
   Mots employés dans ces scénarios (mots d'interface, pas des termes du domaine) :
   - « la case » : la place d'une lettre à écrire du mot dicté (décision n°30). Les caractères déjà écrits (espace,
@@ -138,8 +138,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les cases de la dic
       Alors la lettre juste suivante s'écrit dans sa case, sans montrer tout le mot
       Et cette case se voit comme une lettre montrée par le personnage guide, pas comme une case allumée
 
-    # Question #128.14 (reco : le mot est réussi, toutes ses cases s'illuminent, la lettre montrée comprise)
-    @a-valider
+    # Décision #128.14 (reco retenue : le mot est réussi, toutes ses cases s'illuminent, la lettre montrée comprise)
     Scénario: Après « Je ne sais pas », le mot juste s'illumine aussi sur la lettre montrée
       Étant donné que Léa joue un exercice dictee d'une leçon de test
       Et que Léa a dit « Je ne sais pas »
@@ -176,8 +175,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les cases de la dic
       Alors la touche « 3 » a un éclat bref, puis redevient comme les autres touches
       Et seule la touche « 7 » brille
 
-    # Question #128.5 (reco : oui, le même éclat, quel que soit le moyen de taper)
-    @a-valider
+    # Décision #128.5 (reco retenue : oui, le même éclat, quel que soit le moyen de taper)
     Scénario: Un chiffre tapé au clavier de l'ordinateur donne le même éclat à sa touche
       Étant donné que Tom joue sur un ordinateur, au clavier
       Et que Tom en est au calcul « 12 − 5 » d'une leçon de test de niveau CE1
@@ -185,8 +183,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les cases de la dic
       Alors la touche « 7 » a un éclat bref, puis redevient comme les autres touches
       Et Tom voit « 7 »
 
-    # Question #128.4 (reco : éclat sur « Effacer »)
-    @a-valider
+    # Décision #128.4 (reco retenue : éclat sur « Effacer »)
     Scénario: « Effacer » touché a un éclat bref et efface le dernier chiffre
       Étant donné que Tom en est au calcul « 12 − 5 » d'une leçon de test de niveau CE1
       Et que Tom a tapé « 18 »
@@ -194,16 +191,14 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les cases de la dic
       Alors « Effacer » a un éclat bref, puis redevient comme avant
       Et Tom voit « 1 »
 
-    # Question #128.4 (reco : pas d'éclat sur « Valider », qui garde le rebond de #97)
-    @a-valider
+    # Décision #128.4 (reco retenue : pas d'éclat sur « Valider », qui garde le rebond de #97)
     Scénario: « Valider » garde le rebond d'une réponse juste, sans éclat
       Étant donné que Tom en est au calcul « 12 − 5 » d'une leçon de test de niveau CE1
       Quand Tom répond « 7 » au clavier de cristaux
       Alors « Valider » rebondit, sans éclat
       Et le calcul « 12 − 5 » est réussi
 
-    # Question #128.13 (reco : pas d'éclat quand le chiffre ne s'écrit pas)
-    @a-valider
+    # Décision #128.13 (reco retenue : pas d'éclat quand le chiffre ne s'écrit pas)
     Scénario: Un cinquième chiffre ne s'écrit pas, et sa touche n'a pas d'éclat
       Étant donné que Tom en est au calcul « 12 − 5 » d'une leçon de test de niveau CE1
       Et que Tom a tapé « 1234 »
@@ -238,8 +233,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les cases de la dic
       Alors Léa ne voit aucune marque du record
       Et Léa voit le temps qui reste, 45 secondes, et 0 calcul réussi
 
-    # Question #128.8 (reco : sans record lu, aucune marque, et rien n'est gardé dans l'appareil)
-    @a-valider
+    # Décision #128.8 (reco retenue : sans record lu, aucune marque, et rien n'est gardé dans l'appareil)
     Scénario: Quand le record ne peut pas être lu, aucune marque, et aucun message d'erreur
       Étant donné que Léa a un record de 12 à la fluence « Calcul rapide : les doubles »
       Mais que le record de Léa ne peut pas être lu
@@ -257,8 +251,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les cases de la dic
       Alors Léa voit la marque du record « Ton record : 12 »
       Mais Léa ne voit ni le mot « course », ni ligne d'arrivée, ni podium
 
-    # Question #128.3 (reco : une petite marque posée à côté du score, jamais sur la barre de temps)
-    @a-valider
+    # Décision #128.3 (reco retenue : une petite marque posée à côté du score, jamais sur la barre de temps)
     Scénario: La marque du record se pose à côté du score, pas sur la barre de temps
       Étant donné que Léa a un record de 12 à la fluence « Calcul rapide : les doubles »
       Et que Léa est sur la page de la leçon « Les doubles »
@@ -315,8 +308,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les cases de la dic
       Alors le compteur défile jusqu'au nouveau record, 5
       Et Léa entend une seule fois l'effet sonore « grande victoire »
 
-    # Question #128.7 (reco : la marque disparaît dès que le temps est écoulé ; la fin appartient à #97)
-    @a-valider
+    # Décision #128.7 (reco retenue : la marque disparaît dès que le temps est écoulé ; la fin appartient à #97)
     Plan du Scénario: Quand le temps est écoulé, la marque du record disparaît (<cas>)
       Étant donné que Léa a un record de <record> à la fluence « Calcul rapide : les doubles »
       Et que Léa fait cette fluence
@@ -393,7 +385,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les cases de la dic
         | pompier   | Pompiers            |
         | danse     | Danse               |
 
-    # Question #128.1 (reco A : la touche reste un cristal dans les 6 univers, le nom ne change pas)
+    # Décision #128.1 (reco A retenue : la touche reste un cristal dans les 6 univers, le nom ne change pas)
     Plan du Scénario: Dans l'univers « <univers> », les touches du clavier de cristaux ont le dessin de cet univers, et le clavier s'annonce toujours « Clavier de cristaux »
       Étant donné que Léa a choisi l'univers <clé>
       Et que Léa fait la fluence « Calcul rapide : les doubles »
@@ -411,7 +403,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les cases de la dic
         | pompier   | Pompiers            |
         | danse     | Danse               |
 
-    # Question #128.3 (objet de la marque, jamais une étoile)
+    # Décision #128.3 (objet de la marque, jamais une étoile)
     Plan du Scénario: Dans l'univers « <univers> », la marque du record a le dessin de cet univers et change de couleur quand le record est dépassé
       Étant donné que Léa a choisi l'univers <clé>
       Et que Léa a un record de 3 à la fluence « Calcul rapide : les doubles »
@@ -430,8 +422,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les cases de la dic
         | pompier   | Pompiers            |
         | danse     | Danse               |
 
-    # Question #128.4 (reco : « Effacer » et « Valider » gardent leur aspect commun)
-    @a-valider
+    # Décision #128.4 (reco retenue : « Effacer » et « Valider » gardent leur aspect commun)
     Scénario: « Effacer » et « Valider » gardent leur aspect commun dans un autre univers
       Étant donné que Léa a choisi l'univers sports
       Quand Léa fait la fluence « Calcul rapide : les doubles »
@@ -490,8 +481,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les cases de la dic
         | sans univers               | les 4 cases                                    | Léa joue le mot dicté « chat » de l'exercice « J'écris les animaux » | Léa écrit « c »             |
         | dont l'univers est inconnu | les touches de chiffres du clavier de cristaux | Léa fait la fluence « Calcul rapide : les doubles »                  | Léa donne une bonne réponse |
 
-    # Question #128.9 (reco : le clavier de cristaux a le dessin de l'univers partout où il sert)
-    @a-valider
+    # Décision #128.9 (reco retenue : le clavier de cristaux a le dessin de l'univers partout où il sert)
     Scénario: Dans une boîte à jetons, le clavier de cristaux a aussi le dessin de l'univers
       Étant donné que Tom a un profil enfant préparé de niveau CE1 dans l'univers « Sports »
       Et qu'une leçon de test a une boîte à jetons « 4 + 3 »

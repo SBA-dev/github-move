@@ -38,8 +38,8 @@ Il n'y a donc ni commande, ni événement de domaine, ni erreur métier, ni migr
 |---|---|
 | Exercice (`dictee`, `calcul`, `fluence`), Mot dicté, Caractère déjà écrit, Clavier de cristaux, Mode de réponse, Score de fluence, Record de fluence, Je ne sais pas, Erreur, Nouvelle chance, Univers, Personnage guide, Clavier des dictées | Existants, réutilisés tels quels |
 | Nouveau record, premier record, record inchangé | Existants dans le code (`IssueDuRecord`) : issue de la fin de la fluence, après `proposer`. Pas au glossaire, et ce n'est pas le sens de la lecture ajoutée |
-| **Record dépassé (à valider)** | **Nouveau** terme d'Apprentissage, ajouté en fin de section : pendant une fluence, le score de fluence est plus grand que le record de fluence connu au départ. Lecture seule, sans effet sur le record. À ne pas confondre avec **nouveau record**, qui n'existe qu'à la fin, après `proposer` |
-| **Marque du record (à valider)** | **Nouveau**, ajouté en fin de section : le record de fluence montré pendant la fluence, comme une marque à atteindre. Proposé par le cadrage de #98 (98.10). Peut-être un simple mot d'interface, comme la « Pastille de record » de #65 |
+| **Record dépassé** (validé, #128.12) | **Nouveau** terme d'Apprentissage, ajouté en fin de section : pendant une fluence, le score de fluence est plus grand que le record de fluence connu au départ. Lecture seule, sans effet sur le record. À ne pas confondre avec **nouveau record**, qui n'existe qu'à la fin, après `proposer` |
+| **Marque du record** (validé, #128.12) | **Nouveau**, ajouté en fin de section : le record de fluence montré pendant la fluence, comme une marque à atteindre. Proposé par le cadrage de #98 (98.10). Peut-être un simple mot d'interface, comme la « Pastille de record » de #65 |
 | **Clavier de cristaux** | **Conflit possible** si la touche n'est plus dessinée en cristal dans un univers : le libellé lu « Clavier de cristaux » (`aria-label`) et les scénarios de #20, #21 et #23 deviendraient faux. Question **#128.1** |
 | Case (de la dictée), touche, éclat, s'allumer, s'illuminer | **Mots d'interface** (comme « case » dans la décision n°30), hors glossaire |
 | Dessin de l'univers, signal d'état, planche | Mots de cadrage de #98, hors glossaire, repris tels quels |
@@ -140,7 +140,7 @@ classDiagram
 - Une case **s'allume** dès qu'une lettre y est écrite, au clavier de la dictée ou au clavier physique. Elle ne dit pas si la lettre est juste. Effacer une lettre éteint sa case.
 - L'état allumé ne ressemble ni au signal « bonne réponse montrée », ni à une couleur de réussite ou d'erreur (invariants 4 et 15 de #98).
 - Quand le **mot est juste**, toutes ses cases à écrire **s'illuminent l'une après l'autre**, de la première à la dernière. Les caractères déjà écrits (espace, apostrophe, tiret, point) ne s'illuminent pas : ce ne sont pas des cases. Pas de feu d'artifice, pas d'étincelles (celles-ci sont réservées au texte complet, #97 R2), pas de son de plus.
-- Le rebond de la zone de réponse et le son « réponse juste » de #97 partent d'abord. L'illumination ne retarde jamais l'écran suivant, qui attend la parole (#79). Durée : question **#128.6**.
+- Le rebond de la zone de réponse et le son « réponse juste » de #97 partent d'abord. L'illumination ne retarde jamais l'écran suivant, qui attend la parole (#79). Durée : réponse **#128.6**.
 - Un mot faux reste corrigé **comme aujourd'hui**, au mot complet seulement : le début juste est gardé, et les lettres fausses sont montrées en rouge. Aucune case ne s'illumine.
 - Une lettre montrée par le personnage guide (`montree`) garde son signal commun.
 - Exemple (98.7) : « chat ». L'enfant tape « c », « h », « o » : trois cases allumées, aucune jugée. Il tape « t » : une erreur, « o » montré faux, comme aujourd'hui. Il écrit ensuite « chat » : les 4 cases s'illuminent l'une après l'autre.
@@ -161,7 +161,7 @@ classDiagram
 - **Sans record, aucune marque.** C'est aussi le cas quand le record n'a pas pu être lu : profil préparé, lecture impossible ou hors ligne (`lireLeRecordDeFluence` rend `undefined`). Voir **#128.8**.
 - La marque montre le record **connu au départ**. Elle ne suit pas le score.
 - Rien ne présente la fluence comme une **course** : ni le mot « course », ni ligne d'arrivée, ni drapeau à damier, ni podium, ni coupe, ni concurrent. Le chrono, la barre de temps et le score restent les mêmes (« A on garde le chrono »).
-- La marque ne se pose pas sur la barre de temps : le temps n'est pas le record. Place : question **#128.3**.
+- La marque ne se pose pas sur la barre de temps : le temps n'est pas le record. Place : réponse **#128.3**.
 - Lecteurs d'écran : le tableau de fluence est déjà caché aux lecteurs d'écran, et l'annonce par paliers de 15 s ne change pas (R5). Le record est déjà dit à l'accueil par le personnage guide (« Ton record est de 12. »).
 
 ### R4. Fluence : quand le score dépasse le record, la marque change de couleur (98.10)
@@ -170,7 +170,7 @@ classDiagram
 - **Sans son, sans arrêt, sans célébration** : le chrono continue, le clavier reste actif, et le personnage guide ne dit rien.
 - Un score **égal** au record ne change rien (exemple 4).
 - La couleur « dépassée » ne ressemble ni au halo de « Je ne sais pas », ni au rouge d'erreur.
-- La **fête reste celle de la fin** (#97 R4) : le compteur défile jusqu'au nouveau record et « grande victoire » se fait entendre. Le résultat de la fin vient toujours de `proposer`, jamais de la marque. Ce que devient la marque à la fin : question **#128.7**.
+- La **fête reste celle de la fin** (#97 R4) : le compteur défile jusqu'au nouveau record et « grande victoire » se fait entendre. Le résultat de la fin vient toujours de `proposer`, jamais de la marque. Ce que devient la marque à la fin : réponse **#128.7**.
 
 ### R5. Avec mouvements réduits, rien ne bouge
 
@@ -290,7 +290,28 @@ Front (indicatif, pour l'implementer) :
 - signaux communs (éclat) hors des tables de dessins ;
 - planches : `docs/stories/128/planches/` ; captures : `docs/stories/128/captures/`.
 
-## Questions ouvertes
+## Réponses du PO
+
+Le 2026-11-03, le PO a validé le cadrage par « 128 reco tout » (annonce [Responsable] sur #64 et #128) : **toutes les recommandations sont retenues**. Aucune question ne reste ouverte.
+
+| Question | Réponse retenue (2026-11-03, « 128 reco tout ») |
+|---|---|
+| #128.1 Terme « Clavier de cristaux » | **A** : la touche reste un cristal dans les 6 univers, taillé et coloré à la manière de l'univers ; le terme, le libellé lu, le format et les scénarios ne changent pas |
+| #128.2 Case de la dictée | **A** : le tableau « Case de la dictée » (feuille, cadre doré de miroir, carré de pelouse, page de carnet d'enquête, plaque de casier, carreau de parquet), sous réserve de la planche (98.28) |
+| #128.3 Marque du record | **A** : petite marque à côté du score, avec le dessin de l'univers et « Ton record : 12 » en texte ; objets du tableau « Marque du record » (fanion de feuille, lanterne de fée, fanion uni, loupe, cloche, ruban), sous réserve de la planche (98.28) ; aucune étoile |
+| #128.4 « Effacer » et « Valider » | Pas de dessin d'univers ; éclat sur « Effacer » ; pas d'éclat sur « Valider », qui garde le rebond de #97 |
+| #128.5 Clavier physique | **Oui** : le même éclat, quel que soit le moyen de taper |
+| #128.6 Durée de l'illumination | 400 ms au plus en tout, quelle que soit la longueur du mot, en commençant avec le rebond de #97 ; elle ne retarde jamais l'écran suivant |
+| #128.7 La marque à la fin | Elle disparaît dès que le temps est écoulé ; la fin appartient à #97 |
+| #128.8 Record illisible ou hors ligne | **Oui, aucune marque**, comme sans record ; rien de nouveau n'est gardé dans l'appareil |
+| #128.9 Clavier partout où il sert | **Oui, partout** (calcul, fluence, boîte à jetons, schéma en barres, étape calculer de l'addition) |
+| #128.10 Nombre de captures | **12 captures**, 2 par univers, à 360 px en mouvements réduits (fluence avec marque dépassée ; dictée au mot juste illuminé) |
+| #128.11 Clavier de la dictée | **Non dans cette story** : il reste comme aujourd'hui |
+| #128.12 Glossaire | « Record dépassé » : terme d'Apprentissage ; « Marque du record » : mot d'interface ; « course » : synonyme interdit des deux. « (à valider) » retiré des deux lignes du glossaire |
+| #128.13 Éclat d'une touche sans effet (posée par le cadrage des critères) | **A** : pas d'éclat quand le chiffre ne s'écrit pas |
+| #128.14 Mot juste après « Je ne sais pas » (posée par le cadrage des critères) | **A** : toutes les cases s'illuminent, la lettre montrée comprise |
+
+### Questions posées (pour mémoire)
 
 **#128.1 (question prévue) Que devient le terme « Clavier de cristaux » si la touche n'est plus un cristal dans certains univers ?**
 Le terme est au glossaire, dans le format des leçons (`calcul` : « avec le clavier de cristaux ») et dans les scénarios de #20, #21 et #23. Les lecteurs d'écran le lisent aussi : c'est le libellé du clavier.
