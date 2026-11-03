@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+<!-- hampe et crochet -->
+<path d="M134 138 V28 Q134 22 140 24 Q184 34 176 80 Q172 62 150 56" fill="none" stroke="#3F9D45" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+<!-- tête de la note -->
+<ellipse cx="84" cy="142" rx="58" ry="46" fill="#FFFDF5" stroke="#3F9D45" stroke-width="8"/></svg>

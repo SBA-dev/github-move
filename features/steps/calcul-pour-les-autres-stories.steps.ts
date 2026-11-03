@@ -166,7 +166,7 @@ When(/^Tom donne la bonne réponse au second calcul$/, async ({ page }) => {
 
 const ADDITION_A_POSER = [23, 14];
 const RANG_DES_CHIFFRES: Readonly<Record<string, "dizaines" | "unités">> = { "2": "dizaines", "1": "dizaines", "3": "unités", "4": "unités" };
-const chiffresChoisis = new WeakMap<Page, string>();
+export const chiffresChoisis = new WeakMap<Page, string>();
 
 Given(/^Léa joue un exercice addition à l'étape poser d'une leçon de test$/, async ({ page, monde }) => {
   preparerUnExercice(page, monde, { type: "addition", titre: "Addition de test", operations: [ADDITION_A_POSER], etapes: ["poser"] });
@@ -175,7 +175,18 @@ Given(/^Léa joue un exercice addition à l'étape poser d'une leçon de test$/,
 });
 
 export async function additionAPoserAffichee(page: Page): Promise<boolean> {
-  return await additionPosee(page).isVisible();
+  const addition = additionPosee(page);
+  return (await addition.isVisible()) && (await addition.getAttribute("data-etape")) === "poser";
+}
+
+export async function additionACalculerAffichee(page: Page): Promise<boolean> {
+  const addition = additionPosee(page);
+  return (await addition.isVisible()) && (await addition.getAttribute("data-etape")) === "calculer";
+}
+
+export async function direJeNeSaisPasSurUneAdditionACalculer(page: Page): Promise<void> {
+  await jeNeSaisPas(page).click();
+  await expect(jeNeSaisPas(page)).toHaveCount(0);
 }
 
 export async function direJeNeSaisPasSurUneAdditionAPoser(page: Page): Promise<void> {

@@ -410,6 +410,7 @@ export function useDeroulementDeSeance(
     schemaReussi: illustree.schemaReussi,
     additionFigee: addition.additionFigee,
     colonneQuiBrille: addition.colonneQuiBrille,
+    departsDesRetenues: addition.departsDesRetenues,
     fluenceFinie: fluence.fluenceFinie,
     recordBattu: fluence.recordBattu,
     repondreParUnNombre,
