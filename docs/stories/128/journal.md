@@ -48,3 +48,38 @@
 - 12:21 UTC : sonde (000 en 30 s, 200 en 19 s, 200 en 1 s) : encore lent, surveillance toutes les 2 min.
 - 12:51 à 13:11 UTC : run `@issue-128` à un worker (#128.15 A), lancé sur sonde saine. 504 de Supabase dès 12:53 ; 9 joués (4 verts, 5 rouges, tous sur les appels admin de Supabase avant le front), 81 non joués ; run arrêté, sonde en timeout à 13:10-13:11. Nouvelle ESCALADE avec horaires (6604778352), question #128.16 (reco : attendre 15 min de stabilité mesurée).
 - 17:52 UTC : Supabase de dev sain depuis 17:35 (annonce [Responsable] sur #64). VERROU base accordé à #128 (tableau de #64 à jour ; file : #129 puis #131) pour le run complet à un worker. `main` déjà intégré (`d609058`). Sonde SAIN (1,1 s, 0,9 s, 0,6 s). Run complet `@issue-128` et 12 captures lancés (`e2e-tester`).
+- 18:21 UTC : run complet `@issue-128` (`telephone`, 1 worker) : **90/90 verts** en 27,9 min, aucun 504. Rejeu ×3 du scénario « L'illumination du mot juste ne retarde pas l'effet sonore » : 3/3. `@wip` retiré (`cb7036f`). 12 captures (`cfcaafc`), relues par l'orchestrateur (2 ouvertes) : conformes. LIBÈRE base publié (6612118311).
+- Le projet `tablette` n'a pas été joué pour `@issue-128` (décision du PO du 28/10 : avant la PR, seulement les scénarios de la story ; les runs passent un par un sous verrou `base`). Signalé au responsable dans PRÊTE À MERGER.
+
+## Bilan
+
+- Cycles TDD : 1 comportement du domaine (`RecordDeFluence.estDepassePar`, 9 exemples), RED `ce34c1b` → GREEN `fe69fed`. Le reste est du câblage, exigé par les 90 scénarios E2E (RED par les étapes `ab8a3f9`).
+- Revues : delta du domaine APPROUVÉ ; review complète APPROUVÉE (cycle 1, 0 bloquant) ; delta après corrections APPROUVÉ. Non bloquants traités : police de la fluence à 360 px, fond jaune du cristal qui brille (y compris au survol), refactors de `CasesDeLaDictee`, table des dessins, commentaire `dangerouslySetInnerHTML`.
+- Escalades : #128.15 et #128.16 (Supabase de dev en 504, environnement).
+- Verrous : `base` de 17:51 à 18:22 UTC (file de runs E2E, aucune migration).
+- Intégrations de `main` : 2 (#127 sans conflit ; #126 avec conflit de tags dans `exercices-comme-des-jeux.steps.ts`, les deux ajouts gardés).
+
+## Dette notée
+
+- Record d'un autre exercice affiché un instant si « C'est parti ! » est touché avant la fin de la lecture du record (`useFluence.ts`, `setRecord(undefined)` au début de `presenter`) ; défaut déjà présent pour `terminer`.
+- `dessins-des-claviers.ts` : un SVG mal formé fait tomber le module des claviers au chargement (pas détecté au build).
+- Phrase du scénario « Léa écrit la fin du mot » (`128-claviers.feature`) : l'étape tape aussi la lettre montrée ; à reformuler avec le PO.
+- `installerLeTirage` (`page.evaluate`) : risque faible d'instabilité pendant une navigation.
+- Contournement Chromium (dossier `pw/` du scratchpad) à documenter (APPRIS repris par le responsable).
+- Non-régression des voisins (#19, #20, #21, #65, #97, #98, #126, #127) non jouée avant la PR (décision du PO du 28/10) : elle passe par la tâche de nuit.
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Durée (lancement → PRÊTE À MERGER) | 2026-11-02 22:51 → 2026-11-03 18:30 UTC, soit environ 19 h 40, dont environ 8 h 30 d'attente de l'environnement (Supabase de dev) et 6 h 20 d'attente du PO dans la nuit |
+| Temps d'attente du PO | validation n°1 : 7 h 33 (23:06 → 06:39, nuit) ; planches : 20 min (06:51 → 07:11) ; #128.15 : 40 min ; #128.16 : environ 4 h 30 (jusqu'au retour de Supabase, 17:51) |
+| Cycles de review | 3 : delta domaine, complète (cycle 1), delta après corrections ; tous APPROUVÉS |
+| Cycles TDD | 1 comportement du domaine ; câblage en 3 blocs + 2 fix, puis 2 fix et 1 refactor de review |
+| Cycles E2E | 5 runs : câblage (~70/90), mise au point (67/90 puis 63/64 avant la dégradation), run à 3 workers tué (0/90, 504), run à 1 worker tué (4 verts / 5 rouges, 504), run final 90/90 |
+| Intégrations de `main` | 2 : #127 (sans conflit) ; #126 (1 conflit de tags, les deux gardés) |
+| Escalades | 2 (#128.15, #128.16 : environnement) |
+| Verrous | `base` 31 min (file des runs E2E) |
+| Dessins | 36 SVG, 3 planches, validées au premier passage (« planches 128 OK ») ; 12 captures |
+| Incidents | Supabase de dev en 504 de 09:00 à 17:30 UTC ; contournement Chromium à refaire (liens symboliques insuffisants) ; passation du responsable en cours de story |
+| Tokens | relevés par le responsable |
