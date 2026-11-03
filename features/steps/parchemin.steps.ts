@@ -60,6 +60,8 @@ type Journal129 = {
   lus: Record<string, number>;
   series: Array<{ oui: number; total: number; hauteur: number; boutons: Record<string, Point> }>;
   annonces: string[];
+  instantDuRefus: number | null;
+  instantToutOuvert: number | null;
 };
 
 export function installerLEnregistreurDeLaStory129() {
@@ -75,6 +77,8 @@ export function installerLEnregistreurDeLaStory129() {
     lus: {} as Record<string, number>,
     series: [] as Array<{ oui: number; total: number; hauteur: number; boutons: Record<string, { x: number; y: number }> }>,
     annonces: [] as string[],
+    instantDuRefus: null as number | null,
+    instantToutOuvert: null as number | null,
   };
   Reflect.set(window, "__parchemin129", journal129);
 
@@ -92,6 +96,9 @@ export function installerLEnregistreurDeLaStory129() {
     [...document.querySelectorAll("button")].find((bouton) => (bouton.textContent ?? "").trim() === texte) ?? null;
 
   const regarder = () => {
+    if (journal129.instantDuRefus === null && (document.body.textContent ?? "").includes("est bloquée par ce navigateur")) {
+      journal129.instantDuRefus = performance.now();
+    }
     const parchemin = document.querySelector('[data-testid="parchemin"]');
     if (parchemin === null) return;
     const maintenant = performance.now();
@@ -117,6 +124,7 @@ export function installerLEnregistreurDeLaStory129() {
     if (oui < journal129.maxOui) journal129.recache = true;
     journal129.maxOui = Math.max(journal129.maxOui, oui);
     journal129.total = unites.length;
+    if (oui === unites.length) journal129.instantToutOuvert ??= maintenant;
     const boutons: Record<string, { x: number; y: number }> = {};
     const jAiEcoute = positionAbsolue(document.querySelector('[data-testid="j-ai-ecoute"]'));
     const reecouter = positionAbsolue(boutonParTexte("Réécouter"));
@@ -456,11 +464,27 @@ async function toutEstVisible(page: Page, genre: Genre, premier: string, dernier
 
 /** La lecture n'a laissé voir aucun état caché ni parchemin roulé : tout était ouvert dès que le texte s'est affiché. */
 async function verifierQueRienNeSeDeroule(page: Page) {
+  if (scenario(page).bloque) return await verifierQueLeParcheminSOuvreDesLeRefusDeLaVoix(page);
   const vu = await lireLeJournal(page);
   expect(vu.total, "des phrases ou des vers ont été affichés").toBeGreaterThan(0);
   expect(vu.vuCache, "une phrase ou un vers a été vu caché (data-devoilee=non)").toBe(false);
   expect(vu.deroules.filter((etat) => etat !== "ouvert"), "états du parchemin vus (data-deroule)").toEqual([]);
   expect(vu.cacheOpaque, "une phrase cachée devait avoir une opacité nulle").toEqual([]);
+}
+
+/** #129.12 : voix bloquée, le parchemin reste roulé le temps de la première tentative de parole, puis s'ouvre aussitôt qu'elle est refusée. */
+async function verifierQueLeParcheminSOuvreDesLeRefusDeLaVoix(page: Page) {
+  await expect.poll(async () => (await lireLeJournal(page)).instantDuRefus, { message: "la voix est refusée (message « est bloquée par ce navigateur »)" }).not.toBeNull();
+  await expect.poll(async () => (await lireLeJournal(page)).instantToutOuvert, { message: "tout le texte s'ouvre après le refus de la voix" }).not.toBeNull();
+  const vu = await lireLeJournal(page);
+  const refus = vu.instantDuRefus as number;
+  const ouverture = vu.instantToutOuvert as number;
+  expect(ouverture - refus, "tout est visible au plus 1 s après le refus de la voix (ms)").toBeLessThanOrEqual(1_000);
+  expect(vu.total, "des phrases ou des vers ont été affichés").toBeGreaterThan(0);
+  expect(vu.deroules.filter((etat) => etat !== "roule" && etat !== "ouvert"), "aucun dévoilement partiel : seulement roulé puis ouvert (data-deroule)").toEqual([]);
+  expect(vu.deroules.at(-1), "le parchemin est ouvert").toBe("ouvert");
+  expect(vu.cacheOpaque, "une phrase cachée devait avoir une opacité nulle").toEqual([]);
+  expect(vu.recache, "rien ne se cache de nouveau après l'ouverture").toBe(false);
 }
 
 Then(
