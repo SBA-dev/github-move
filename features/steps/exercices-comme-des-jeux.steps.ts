@@ -551,7 +551,7 @@ Then(/^les lecteurs d'écran n'annoncent ni porte, ni toit, ni lumière, ni l'un
 
 // --- Alors : « Je ne sais pas »
 
-Given(/^Léa a dit « Je ne sais pas »$/, async ({ page }) => {
+Given(/^Léa a dit « Je ne sais pas »$/, { tags: "not @issue-127 and not @issue-128 and not @issue-131" }, async ({ page }) => {
   await demarrer(page);
   await direJeNeSaisPasSurDesEtiquettes(page);
 });
@@ -645,7 +645,7 @@ async function styleDuSignal(page: Page): Promise<Record<string, string>> {
   });
 }
 
-Then(/^elle brille de la même façon que dans l'univers « Animaux de la forêt »$/, async ({ page }) => {
+Then(/^elle brille de la même façon que dans l'univers « Animaux de la forêt »$/, { tags: "not @issue-127 and not @issue-128" }, async ({ page }) => {
   const dans = await styleDuSignal(page);
   const choisie = etiquetteChoisie(page);
   // Même exercice, même étiquette, dans l'univers Animaux de la forêt : on recharge avec ce profil-là et on refait « Je ne sais pas ».
@@ -662,7 +662,7 @@ Then(/^elle brille de la même façon que dans l'univers « Animaux de la forêt
 
 Given(
   /^Léa a un profil enfant préparé de niveau (\S+) dans l'univers « (.+) »$/,
-  { tags: "@issue-98 or @issue-126 or @issue-127 or @issue-131" },
+  { tags: "@issue-98 or @issue-126 or @issue-127 or @issue-128 or @issue-131" },
   async ({ page, monde, famille }, niveau: string, univers: string) => {
     // Ce .feature ne dit pas que Paul est connecté : le vrai profil de Léa, les séances terminées et les étoiles en ont besoin.
     await famille.connecterSansEmail("tablette", "Paul");
@@ -703,7 +703,7 @@ export async function modifierLeProfilEtRechoisir(page: Page, univers: string): 
 
 Given(
   /^Léa a choisi l'univers (animaux|princesse|sports|pompier|police|danse)$/,
-  { tags: "@issue-98 or @issue-126 or @issue-127 or @issue-131" },
+  { tags: "@issue-98 or @issue-126 or @issue-127 or @issue-128 or @issue-131" },
   async ({ page, monde, famille }, univers: string) => {
     famillesParPage.set(page, famille);
     scenario(page).univers = univers;
@@ -727,13 +727,13 @@ async function arriverAvecUnProfilPrepare(page: Page, profil: { prenom: string; 
   await expect(page.locator(".application")).toHaveAttribute("data-univers", "animaux");
 }
 
-Given(/^Léa a un profil enfant préparé sans univers$/, { tags: "@issue-98 or @issue-126 or @issue-127 or @issue-131" }, async ({ page, monde }) => {
+Given(/^Léa a un profil enfant préparé sans univers$/, { tags: "@issue-98 or @issue-126 or @issue-127 or @issue-128 or @issue-131" }, async ({ page, monde }) => {
   const profil = { prenom: "Léa", niveau: "CP" };
   monde.profils.set("Léa", profil);
   await arriverAvecUnProfilPrepare(page, profil);
 });
 
-Given(/^Léa a un profil enfant préparé dont l'univers est inconnu$/, { tags: "@issue-98 or @issue-126 or @issue-127 or @issue-131" }, async ({ page, monde }) => {
+Given(/^Léa a un profil enfant préparé dont l'univers est inconnu$/, { tags: "@issue-98 or @issue-126 or @issue-127 or @issue-128 or @issue-131" }, async ({ page, monde }) => {
   const profil = { prenom: "Léa", niveau: "CP", univers: "pirates" };
   monde.profils.set("Léa", profil);
   await arriverAvecUnProfilPrepare(page, profil);

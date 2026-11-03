@@ -42,7 +42,7 @@ export function ExerciceDeDictee(props: Props) {
           )}
         </div>
       )}
-      <CasesDeLaDictee question={question} lettresFausses={lettresFausses} />
+      <CasesDeLaDictee question={question} lettresFausses={lettresFausses} illuminee={reussie} />
       <button type="button" className="secondaire" data-testid="reecouter-le-mot" onClick={props.onReecouterLeMot}>
         Réécouter le mot
       </button>
