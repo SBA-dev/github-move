@@ -28,3 +28,21 @@ Numéro de décision : prochain libre 0040, si besoin. Commentaire `Avancement` 
 - 01:50 UTC : câblage terminé par `implementer` (`070b4ae`, `6529030`, `b6aa9f1`). `useRetourDe.ts` (#97) : modification gardée, car `animation.cancel()` ne résout pas `.then` et `data-retour="rebond"` restait accroché quand la cible change en plein rebond ; le comportement de #97 ne change pas. Autres corrections : réserve de place de « Je ne sais pas » (la bulle effacée bougeait de 60 px), mot qui voyage qui suit sa place, halo posé de la bonne réponse montrée (#23). Aucune règle métier dans React. `deno test` 2766 verts, `vite build` OK. `@issue-126` 61/62 sur `telephone`. Le rouge restant est l'étape du plan « question relue », qui ne termine pas la relecture dans le faux `speechSynthesis`. `tsc` échoue sur une fonction inutilisée des steps (`rangDeLaBulle`). #17, #23, #97 et #98 : 186 verts et 2 rouges ; #23 est corrigé (`b6aa9f1`) ; un scénario de #97 (« La fin d'une séance se fête… ») est rouge aussi à `3b51321`, avant tout code de #126.
 - 01:52 UTC : en parallèle, `e2e-tester` corrige les deux étapes, vérifie le rouge de #97 sur `main` et rejoue le périmètre ; `mr-reviewer` fait la review complète (cycle 1).
 - 01:09 UTC : `e2e-tester` corrige les deux étapes (`a9881d8`). Son `git pull` intègre aussi `main` dans la branche (`b2542c0`, merge sans conflit) : **#106 mergée** (`8757070`, PR #142). Vérifié après coup par l'orchestrateur : aucun marqueur, `tsc` OK, `vite build` OK, `deno test` 2778 verts. La review du cycle 1 se fait contre `origin/main` à jour.
+- 02:05 UTC : review cycle 1 (`mr-reviewer`, diff `origin/main...ef35b2d`) : **À CORRIGER**. Bloquants :
+  1. la couleur de réussite de #97 ne se voit plus sur la bulle : le dessin SVG opaque cache le fond du bouton. Avec les mouvements réduits, c'est le seul signal de réussite. L'étape ne lit que `data-reussite` ;
+  2. les 5 cas « écarté de la même façon » ne prouvent toujours rien : la signature ne lit ni le tracé ni le décor ;
+  3. le mot qui voyage, rendu en portail hors de `main.ecran[data-mode-dys]`, ignore le mode dys.
+  Non bloquants retenus pour ce cycle :
+  - `rebondVu` jamais remis à faux ;
+  - départ du voyage relancé par un autre toucher ;
+  - petits éléments des dessins longs agrandis par la mise à l'échelle ;
+  - fond de la bonne réponse montrée : jaune pâle sur la planche validée, fond de l'univers dans le code ;
+  - clé stable et `document.fonts.ready` pour la largeur commune ;
+  - code mort ;
+  - couleurs du choix écarté en variables.
+  Notés en dette :
+  - `left`/`top` du mot qui voyage ;
+  - `useReducedMotion()` dans `useRetourDe.ts` (#97) ;
+  - indentation d'`Application.tsx` ;
+  - fondu instantané avec les mouvements réduits (règle globale existante).
+- Ordre : à la fin du run E2E en cours, `e2e-tester` rend les étapes 1 et 2 plus strictes (RED), puis `implementer` corrige les 3 bloquants et les non bloquants retenus.
