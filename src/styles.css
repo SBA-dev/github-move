@@ -822,10 +822,11 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 .colonnes { display: flex; justify-content: center; gap: 8px; width: 100%; max-width: 100%; }
 .colonne {
   position: relative;
+  --taille-de-la-retenue: 56px;
   --couleur-de-la-colonne: var(--colonne-bleue);
   --fond-de-la-colonne: var(--colonne-bleue-fond);
   display: grid;
-  grid-template-rows: auto 2.5rem 1fr auto;
+  grid-template-rows: auto var(--taille-de-la-retenue) 1fr auto;
   justify-items: center;
   gap: 4px;
   flex: 1 1 0;
@@ -880,9 +881,9 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 /* Mode dys : l'espacement des lettres élargit « Centaines » ; le nom rétrécit au lieu de se couper au milieu du mot. */
 [data-mode-dys="true"] .nom-de-la-colonne { font-size: .7rem; overflow-wrap: normal; }
 .maison-de-la-colonne:hover:not([aria-disabled="true"]) .nom-de-la-colonne { background: var(--surbrillance-fond); }
-.place-de-la-retenue { display: flex; align-items: center; justify-content: center; min-height: 56px; }
+.place-de-la-retenue { display: flex; align-items: center; justify-content: center; min-height: var(--taille-de-la-retenue); }
 /* La retenue : l'objet de l'univers, son chiffre en texte par-dessus. Elle saute (animation de la Web Animations API) ; avec les mouvements réduits, elle apparaît. */
-.retenue { position: relative; display: block; width: 56px; height: 56px; }
+.retenue { position: relative; display: block; width: var(--taille-de-la-retenue); height: var(--taille-de-la-retenue); }
 .dessin-de-la-retenue { display: block; width: 100%; height: 100%; pointer-events: none; }
 .chiffre-de-la-retenue { position: absolute; translate: -50% -50%; color: var(--texte); font-size: 1.3rem; font-weight: 800; line-height: 1; }
 .chiffres-poses { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; font-size: 1.75rem; font-weight: 800; text-align: center; }
@@ -919,7 +920,7 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
   .addition-posee { width: 100%; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 8px; }
   .addition-posee .operation-posee { padding: 0 12px; font-size: 1.25rem; }
   .addition-posee .colonnes { flex: 1 1 100%; }
-  .addition-posee .place-de-la-retenue:empty { min-height: 0; }
+  .addition-posee .colonne { --taille-de-la-retenue: 44px; }
   .addition-posee .chiffres-poses { font-size: 1.3rem; }
   .addition-posee .chiffre-ecrit { min-height: 2rem; font-size: 1.4rem; }
   .addition-posee .invite-de-pose { flex: 1 1 100%; padding: 0 12px; }
