@@ -945,6 +945,11 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 .case-a-ecrire[data-etat="vide"] { border-style: dashed; background: var(--surface-voilee); }
 .case-a-ecrire[data-etat="montree"] { border-style: double; border-width: 5px; background: var(--surbrillance-fond); font-style: italic; }
 .case-a-ecrire[data-etat="fausse"] { border-color: var(--erreur); background: var(--erreur-fond); color: var(--erreur); text-decoration: underline wavy; }
+.case-a-ecrire { position: relative; }
+.case-a-ecrire[data-univers]:not([data-etat="fausse"], [data-etat="montree"]) { background: none; border-color: transparent; }
+.case-a-ecrire .dessin-de-la-case { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.case-a-ecrire:is([data-etat="fausse"], [data-etat="montree"]) .dessin-de-la-case { opacity: .35; }
+.lettre-de-la-case { position: relative; }
 .clavier-de-dictee { display: grid; justify-items: center; gap: 6px; max-width: 100%; }
 .rangee-de-touches { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; max-width: 100%; }
 .touche {

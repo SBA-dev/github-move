@@ -1,10 +1,21 @@
+import { useEffect, useState } from "react";
+import { flushSync } from "react-dom";
 import type { CorrectionDuMot, QuestionDeDictee } from "@domain/apprentissage";
 import { CIBLE_DE_LA_ZONE_DE_REPONSE, useRetourDe } from "../../retours/index.ts";
+import { useMouvementsReduits } from "../../transitions/mouvements-reduits.ts";
+import { useUnivers } from "../../univers/index.ts";
+import { DessinDeLUnivers } from "./claviers/DessinDeLUnivers.tsx";
+import { dessinDeLaCase, type EtatDeLaCase } from "./claviers/dessins-des-claviers.ts";
+
+/** Le mot juste s'illumine case après case, en 400 ms au plus quelle que soit sa longueur. */
+const DUREE_DE_L_ILLUMINATION_MS = 400;
 
 type Props = {
   readonly question: QuestionDeDictee;
   /** Juste après une faute : le début juste et les lettres fausses, ces dernières en rouge. */
   readonly lettresFausses: CorrectionDuMot | undefined;
+  /** Le mot est juste : les cases s'illuminent, la première d'abord. */
+  readonly illuminee: boolean;
 };
 
 type LettreDeLaCase = { readonly lettre: string | undefined; readonly fausse: boolean; readonly montree: boolean };
@@ -28,9 +39,34 @@ function descriptionDeLaCase(rang: number, { lettre, fausse, montree }: LettreDe
   return `Case ${rang + 1} : ${lettre}${fausse ? ", fausse" : ""}${montree ? ", lettre montrée par le personnage guide" : ""}`;
 }
 
+/** Combien de cases sont illuminées : une de plus à chaque rendu, ou toutes d'un coup avec les mouvements réduits. */
+function useCasesIlluminees(illuminee: boolean, nombreDeCases: number): number {
+  const mouvementsReduits = useMouvementsReduits();
+  const [illuminees, setIlluminees] = useState(0);
+  useEffect(() => {
+    if (!illuminee) return setIlluminees(0);
+    if (mouvementsReduits) return setIlluminees(nombreDeCases);
+    const pas = DUREE_DE_L_ILLUMINATION_MS / nombreDeCases;
+    const minuteries = Array.from(
+      { length: nombreDeCases },
+      (_, rang) => setTimeout(() => flushSync(() => setIlluminees(rang + 1)), rang * pas),
+    );
+    return () => minuteries.forEach(clearTimeout);
+  }, [illuminee, mouvementsReduits, nombreDeCases]);
+  return illuminees;
+}
+
+function etatDuDessin(etat: string, illuminee: boolean): EtatDeLaCase {
+  if (illuminee) return "illuminee";
+  return etat === "ecrite" ? "allumee" : "vide";
+}
+
 /** Une case par lettre à écrire ; espaces, apostrophes, tirets et points sont déjà écrits. Le mot n'apparaît que lettre après lettre. */
-export function CasesDeLaDictee({ question, lettresFausses }: Props) {
+export function CasesDeLaDictee({ question, lettresFausses, illuminee }: Props) {
   let rang = 0;
+  const univers = useUnivers();
+  const nombreDeCases = question.cases().filter((une) => une.genre !== "dejaEcrit").length;
+  const casesIlluminees = useCasesIlluminees(illuminee, nombreDeCases);
   const retour = useRetourDe<HTMLOListElement>(CIBLE_DE_LA_ZONE_DE_REPONSE);
   return (
     <ol ref={retour.ref} {...retour.attributs} className="mot-a-ecrire" aria-label="Mot à écrire" data-testid="mot-a-ecrire">
@@ -40,15 +76,21 @@ export function CasesDeLaDictee({ question, lettresFausses }: Props) {
         }
         const rangDeLaCase = rang++;
         const contenu = lettreDeLaCase(rangDeLaCase, une.lettre, une.montree === true, lettresFausses);
+        const etat = etatDeLaCase(contenu);
+        const estIlluminee = rangDeLaCase < casesIlluminees;
         return (
           <li
             key={position}
             className="case-a-ecrire"
             data-testid="case-a-ecrire"
-            data-etat={etatDeLaCase(contenu)}
+            data-etat={etat}
+            data-univers={univers}
+            data-allumee={etat === "ecrite" ? "true" : undefined}
+            data-illuminee={estIlluminee ? "true" : undefined}
             aria-label={descriptionDeLaCase(rangDeLaCase, contenu)}
           >
-            {contenu.lettre}
+            <DessinDeLUnivers identifiant="dessin-de-la-case" contenu={dessinDeLaCase(univers, etatDuDessin(etat, estIlluminee))} />
+            <span className="lettre-de-la-case">{contenu.lettre}</span>
           </li>
         );
       })}
