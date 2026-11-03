@@ -1,0 +1,134 @@
+# Journal : story #126, exercices comme des jeux (98b) : bulles de choix
+
+Équipe lancée par le responsable des équipes (vague 1, issue de coordination #64), à la demande du PO (« Graphe 126 »).
+Branche : `feature/126-bulles-de-choix`, partie de `main` (`f8a4787`). Branche de base : `main`.
+Dépendances mergées : #97 et #98 (98a). Le PO lance #126 avant #130 (petit train). Story voisine en parallèle : #106 (célébration de l'univers).
+Numéro de décision : prochain libre 0040, si besoin. Commentaire `Avancement` : 6588520873.
+
+## 2026-11-02
+
+- 21:20 UTC : démarrage. Lu : issue #126 et le découpage révisé du responsable (6481220011), #64 (annonces jusqu'à 6588499848), `docs/stories/98/domain-model.md`, `journal.md` de #98.
+- 21:22 UTC : étape 1, délégation à `domain-modeler` : la story n'ajoute aucun concept du domaine, mais elle introduit des dessins par univers (bulle de l'univers) dont les objets doivent être nommés par le PO, et des mots d'interface (ballon, bulle de savon). Modèle court, centré sur la tranche.
+- 21:45 UTC : `domain-modeler` rend `domain-model.md` (`36150f1`) : aucun changement du domaine. 6 règles. Bulle de l'univers pour les 10 types (98.4), flottement pour `bulles` et `ecoute`. Objets proposés par univers. Écart repéré : la question d'un `classer` en révision et au test de départ a le type `bulles`. Questions #126.1 à #126.10.
+- 21:46 UTC : étape 2, délégation à `po-acceptance`.
+- 22:10 UTC : `po-acceptance` rend `acceptance.md` et `features/126-bulles-de-choix.feature` (`43496ec`) : 6 règles, 26 scénarios (14 plans, 62 cas), 6 `@a-valider`. Nouvelle question #126.11. Aucune séance complète : `delais.steps.ts` inchangé. Contenu relu contre la règle absolue : rien à signaler.
+- 22:12 UTC : CADRAGE PRÊT publié sur #126. Attente de la validation du PO (annonce `[Responsable]`). Pendant l'attente : planches de la bulle de l'univers (⛔ intermédiaire, reco de #126.1), sans code de production.
+- 22:25 UTC : planches de la bulle de l'univers rendues par `implementer` en rôle d'illustrateur (`b637063`), selon la reco de 126.1. Une seule correction entre les passes : l'anneau du focus et l'opacité de « s'efface ». Relue par l'orchestrateur contre la règle absolue : rien à signaler. `PLANCHES PRÊTES` publié sur #126 (⛔ intermédiaire).
+- 21:38 UTC (horloge du responsable) : ⛔ validation n°1 levée (annonce [Responsable] 6589102464 sur #64, PO : « 126 reco tout »). #126 passe en `graphe:dev`. Les planches attendent encore la validation univers par univers. À SAVOIR du responsable (6588890640) : #127.2 écarte l'étoile d'insigne pour la retenue ; la reco de 126.1 (Police, étoile bleue fixe) est retenue par « reco tout », la planche reste soumise au PO.
+- Liste des comportements unitaires : **aucun**, comme pour #98. Le domaine ne change pas : flottement, bulle juste qui s'efface, mot qui rejoint son trou et dessin de l'univers se lisent dans les faits existants (`ecartes()`, `bonneReponseMontree`, `ResultatDeReponse`, trou en cours, type de la question) et la clé d'univers. Le RED passe par les étapes E2E de `@issue-126`. Une règle qui apparaîtrait dans React pendant le câblage repasse par un cycle TDD dans le domaine.
+- Délégations en parallèle : `po-acceptance` reporte les réponses et retire les `@a-valider` ; `e2e-tester` écrit les étapes de `@issue-126` (RED).
+- 21:39 UTC : commentaires [Responsable] sur #126 : 6589099383 (lecture de « 126 reco tout » : recos 126.1 à 126.11, décor gardé sous le halo, ce qu'il appelle #126.12 ; périmètre élargi aux 4 types par choix validé) et 6589115744 (planches : « bulles OK », les 6 univers validés tels quels, 98.31 remplie). La validation des planches n'est pas encore sur #64 : à confirmer avant la PR. Elle ne bloque pas le code.
+- 21:50 UTC : `po-acceptance` reporte les réponses (`4427434`) : `@a-valider` retirés, 26 scénarios (62 cas), aucune question ouverte.
+- ~22:00 UTC : **redémarrage du conteneur** pendant le travail d'`e2e-tester`. Son travail partiel (`features/steps/bulles-de-choix.steps.ts`, 684 lignes, et l'ouverture à `@issue-126` de 4 étapes et du `Before` de #98) est retrouvé sur disque, commité et poussé (`6feff1e`). Nouvelle délégation à `e2e-tester` pour terminer, avec consigne de commiter et pousser tôt.
+- 22:35 UTC : `e2e-tester` (reprise) rend le RED : aucune étape à ajouter (le travail de `6feff1e` était complet). Sur `telephone`, 11 verts (comportement existant) et 51 rouges, tous pour une fonctionnalité absente (`data-univers`, `data-flotte`, `flottement`, `dessin-de-la-bulle`, `mot-qui-voyage`, `trou-rempli`/`data-eclat`, bulle qui s'efface sur place, `signal-brille`, largeur commune, flèches), sauf un. Ce dernier, l'exemple « la consigne relue » en « Quel son entends-tu ? », ne peut pas se jouer : l'exercice n'a pas de consigne affichée, donc pas de bouton « Relire la consigne ». Chromium 1243 (liens symboliques du scratchpad).
+- 22:37 UTC : `po-acceptance` corrige l'exemple seulement (relecture de la question, étape existante) ; la règle 126.4 ne change pas. À signaler dans la PR. En parallèle, `implementer` commence le câblage selon le contrat d'attributs.
+- 22:45 UTC : exemple corrigé par `po-acceptance` (`f64796a`, la question relue avec « Réécouter », règle 126.4 inchangée) ; étape adaptée par `e2e-tester` (`3b51321`) : le plan est rouge au bon endroit (attente de `data-flotte`).
+- ~23:20 UTC : **second redémarrage du conteneur** pendant le câblage. Déjà poussés : `2097e6b` (la voix dit si une lecture est en cours) et `a57aae4` (bulles de l'univers, flottement, effacement, mot qui voyage). Une modification non commitée restait dans `src/retours/useRetourDe.ts` (fichier de #97) : laissée à l'appréciation du nouvel `implementer`, relancé pour finir le câblage.
+- 00:36 UTC (03/11) : À SAVOIR du responsable (#64) : #127 modifie `EcranDeSeance.tsx`, `useDeroulementDeSeance.ts` et `styles.css`. Conflits attendus (surtout `styles.css`) à l'intégration de `main` après le merge de #127.
+- 01:50 UTC : câblage terminé par `implementer` (`070b4ae`, `6529030`, `b6aa9f1`). `useRetourDe.ts` (#97) : modification gardée, car `animation.cancel()` ne résout pas `.then` et `data-retour="rebond"` restait accroché quand la cible change en plein rebond ; le comportement de #97 ne change pas. Autres corrections : réserve de place de « Je ne sais pas » (la bulle effacée bougeait de 60 px), mot qui voyage qui suit sa place, halo posé de la bonne réponse montrée (#23). Aucune règle métier dans React. `deno test` 2766 verts, `vite build` OK. `@issue-126` 61/62 sur `telephone`. Le rouge restant est l'étape du plan « question relue », qui ne termine pas la relecture dans le faux `speechSynthesis`. `tsc` échoue sur une fonction inutilisée des steps (`rangDeLaBulle`). #17, #23, #97 et #98 : 186 verts et 2 rouges ; #23 est corrigé (`b6aa9f1`) ; un scénario de #97 (« La fin d'une séance se fête… ») est rouge aussi à `3b51321`, avant tout code de #126.
+- 01:52 UTC : en parallèle, `e2e-tester` corrige les deux étapes, vérifie le rouge de #97 sur `main` et rejoue le périmètre ; `mr-reviewer` fait la review complète (cycle 1).
+- 01:09 UTC : `e2e-tester` corrige les deux étapes (`a9881d8`). Son `git pull` intègre aussi `main` dans la branche (`b2542c0`, merge sans conflit) : **#106 mergée** (`8757070`, PR #142). Vérifié après coup par l'orchestrateur : aucun marqueur, `tsc` OK, `vite build` OK, `deno test` 2778 verts. La review du cycle 1 se fait contre `origin/main` à jour.
+- 02:05 UTC : review cycle 1 (`mr-reviewer`, diff `origin/main...ef35b2d`) : **À CORRIGER**. Bloquants :
+  1. la couleur de réussite de #97 ne se voit plus sur la bulle : le dessin SVG opaque cache le fond du bouton. Avec les mouvements réduits, c'est le seul signal de réussite. L'étape ne lit que `data-reussite` ;
+  2. les 5 cas « écarté de la même façon » ne prouvent toujours rien : la signature ne lit ni le tracé ni le décor ;
+  3. le mot qui voyage, rendu en portail hors de `main.ecran[data-mode-dys]`, ignore le mode dys.
+  Non bloquants retenus pour ce cycle :
+  - `rebondVu` jamais remis à faux ;
+  - départ du voyage relancé par un autre toucher ;
+  - petits éléments des dessins longs agrandis par la mise à l'échelle ;
+  - fond de la bonne réponse montrée : jaune pâle sur la planche validée, fond de l'univers dans le code ;
+  - clé stable et `document.fonts.ready` pour la largeur commune ;
+  - code mort ;
+  - couleurs du choix écarté en variables.
+  Notés en dette :
+  - `left`/`top` du mot qui voyage ;
+  - `useReducedMotion()` dans `useRetourDe.ts` (#97) ;
+  - indentation d'`Application.tsx` ;
+  - fondu instantané avec les mouvements réduits (règle globale existante).
+- Ordre : à la fin du run E2E en cours, `e2e-tester` rend les étapes 1 et 2 plus strictes (RED), puis `implementer` corrige les 3 bloquants et les non bloquants retenus.
+- 02:45 UTC : run du périmètre sur la branche (`telephone`, #126, #17, #23, #97, #98) : 247 verts, 3 rouges, en 32 min. #17, #23 et #98 sont entièrement verts. Les étapes de `a9881d8` font passer le plan « question relue ». Les 3 rouges :
+  - #126, conjugaison « suis » : éclat pas vu ;
+  - #97 « Rejouer une leçon déjà acquise… séance terminée » : **rouge aussi sur `main`** (worktree de `origin/main`, 62/63 sur #97), l'effet « découverte » se joue avec « séance terminée » ; il ne vient pas de #126 ;
+  - #97 « Léa rejoue fait entendre « bouton touché » » : vert sur `main`, rouge sur la branche, possible régression.
+- 02:47 UTC : `e2e-tester` diagnostique les deux rouges non expliqués et rend plus strictes les étapes des bloquants 1 et 2 de la review (RED).
+- 03:40 UTC : `e2e-tester` (`7b5a0f6`).
+  - A1, conjugaison « suis » : défaut d'étape. L'arrivée du mot était lue trop tôt dans le journal. Corrigé, 12/12 verts avec trace.
+  - A2, #97 « Léa rejoue… bouton touché » : instable **aussi sur `main`** (5 échecs sur 9). Piste : garde `parolesEnCours > 0` de `toucherUnBouton`. Ce n'est pas une régression de #126. Publié en APPRIS sur #126 (6594148597).
+  - Étapes rendues strictes : couleur de réussite lue sur le tracé du dessin ; signature du choix écarté (dessin présent, `fill` et `stroke`, aucun décor ni dégradé). `@issue-126` : 55 verts, 7 rouges, tous pour la couleur de réussite cachée (bug applicatif). L'étape « écarté » est prouvée stricte par une mutation temporaire (5/5 rouges).
+- 03:42 UTC : `implementer` corrige les 3 bloquants et les non bloquants retenus du cycle 1.
+- 04:50 UTC : corrections du cycle 1 par `implementer` : `69be86d` (couleur de réussite sur le tracé, centre jaune pâle de la bonne réponse montrée comme sur la planche, variables `--ecarte*`), `6bf3ed3` (mot qui voyage en mode dys), `6972643` (départ figé du voyage), `8d8aef1` (`rebondVu`, clé stable, `document.fonts.ready`), `df3db6a` (petits éléments des dessins longs à taille fixe, comme les sources). Mode dys du mot qui voyage vérifié par un script jetable (Andika, deux syllabes) ; pas de scénario (dette). tsc, build, 2778 tests unitaires, lint, fmt verts. E2E `@issue-126`, `@issue-23`, `@issue-97` sur `telephone` : 154 verts, 1 rouge (#97 « Rejouer une leçon déjà acquise… », rouge sur `main`).
+- 04:52 UTC : review cycle 2 (delta `ef35b2d..HEAD`).
+- 05:15 UTC : review cycle 2 (delta `ef35b2d..df3db6a`) : **APPROUVÉ**. Les 3 bloquants et les 7 non bloquants retenus sont corrigés. Le mode dys du mot qui voyage, sans scénario, est accepté comme en #98 (élément décoratif `aria-hidden`, mécanisme dys partagé, vérifié par un script jetable) : dette notée. Non bloquants restants :
+  - épaisseur des traits mise à l'échelle sur les bulles longues (les sources gardent `stroke-width` constant) : **à corriger**, pour rester fidèle aux dessins validés ;
+  - sélecteur du fond dans l'étape à aligner sur le CSS (`svg > path:first-of-type`) : à corriger ;
+  - `line-height` du mot qui voyage en mode dys : noté.
+- 05:50 UTC : 12 captures à 360 px, mouvements réduits, 6 univers (`3a1b9ad`) : `bulles` avec un choix écarté, et « Je ne sais pas » sur une question à 4 choix. **Bug vu par l'orchestrateur** : sur les bulles étroites (4 choix), le décor du bout recouvre le texte. En Police, l'étoile cache entièrement le « 7 » de la bonne réponse montrée ; en Princesses et Police, elle chevauche « ou » et « an ». Les invariants 18 (texte lisible dans chaque univers) et 4 (bonne réponse montrée reconnaissable) sont rompus. Traité comme un bug : `e2e-tester` écrit d'abord le contrôle qui échoue (décor qui ne recouvre pas la boîte du texte), puis `implementer` corrige. Les captures seront refaites.
+- ~06:30 UTC : **troisième redémarrage du conteneur** pendant que `e2e-tester` écrivait le contrôle. Le contrôle, retrouvé sur disque, est commité (`5306465`) : grille de points sur la boîte du texte, `isPointInFill`/`isPointInStroke` sur chaque forme du décor ; le sélecteur du fond est aligné sur le CSS. Il est relancé par un nouvel `e2e-tester` : `@issue-126` 60/62. Les 2 rouges sont ceux attendus, Princesses (« on », « ou », « an » recouverts de 8 à 9 px sur 17) et Police (10 à 11 px sur 21). Les 4 autres univers sont verts, sans faux positif.
+- ~06:45 UTC : `implementer` corrige le recouvrement (zone décorée des bouts hors du texte, même marge dans les 6 univers) et l'épaisseur constante des traits sur les bulles longues (non bloquant du cycle 2).
+- 07:20 UTC : correction par `implementer` (`a57e9cc`, CSS seul) : `--zone-des-bouts: 46px`, utilisée comme marge horizontale du texte dans les 6 univers ; quatre choix courts passent à deux par rangée, avec la même largeur et la même hauteur. `@issue-126` 62/62 sur `telephone`. L'épaisseur des traits était déjà constante (`vector-effect: non-scaling-stroke` dans `styles.css`). Limite signalée : sur une bulle de deux lignes, le décor grandit avec la hauteur et peut dépasser la marge. Soumise à la review (cycle 3, delta `df3db6a..HEAD`).
+- 07:45 UTC : review cycle 3 (delta `df3db6a..e9b5fc8`) : **À CORRIGER** (2e « À CORRIGER », après le cycle 1). Bloquant : sur une bulle haute (choix long sur deux lignes, ou mode dys), le décor des bouts, mis à l'échelle de la hauteur, recouvre encore le texte. Mesures du reviewer : en Police, l'étoile dépasse la marge de 46 px dès 65 px de haut ; en Princesses, dès 68 px ; jusqu'à 25 px dans le texte en mode dys sur deux lignes. Aucun scénario ne le voit (le texte long ne se joue que dans l'univers par défaut). Correction recommandée : plafonner l'échelle du décor des bouts (environ 1,13) et le recentrer verticalement, plutôt qu'une marge proportionnelle (risque de boucle avec le recalcul des largeurs). Non bloquants : contrôle ligne par ligne (`getClientRects()`) ; épaisseur des traits réglée.
+- 07:55 UTC : `po-acceptance` ajoute des exemples, la règle ne change pas (`de78fcd`) : le texte long devient un Plan sur les 6 univers, et le mode dys un Plan (Animaux, Princesses, Police ; choix courts et choix long), avec l'étape « le décor des bulles de choix ne cache pas leur texte ». 26 scénarios, 71 cas. À signaler dans la PR. `e2e-tester` écrit l'étape (RED).
+- 08:40 UTC : étape « le décor des bulles de choix ne cache pas leur texte » écrite par `e2e-tester` (`d27b06b`, `4274563`). Contrôle ligne par ligne. Le mode dys est gardé quand l'univers change (le serveur fusionne les réglages). `@issue-126` : 64/71. Les rouges :
+  - texte long, 5 univers sur 6 : étoile en Princesses (jusqu'à 59 × 34 px), Police (65 × 34) et Pompiers (29 × 34) ; Animaux et Sports, 2 à 5 px seulement ;
+  - mode dys avec le choix long : Princesses et Police.
+- 08:42 UTC : décision de l'orchestrateur sur la mesure : on teste la bande de la police (hauteur de 1 em, centrée sur la ligne), et non la boîte de ligne, qui compte l'interligne (1,9 en mode dys). Les recouvrements de 2 à 5 px de l'interligne ne sont pas des lettres cachées.
+- 09:30 UTC : mesure sur la bande de la police (`9a08223`). Les 7 rouges restent. Tous sont de vrais recouvrements, y compris les coutures de Sports (3 × 21 px) et l'ellipse d'Animaux (12 × 11 px), qui touchent les lettres. `implementer` plafonne l'échelle du décor des bouts et le recentre verticalement (reco de la review du cycle 3).
+- 10:30 UTC : correction par `implementer` (`48e4c9d`) : `ECHELLE_MAX_DU_DECOR = 1.15` (l'étoile de Police reste sous la zone de 46 px) et décor des bouts recentré verticalement. `@issue-126` 71/71 sur `telephone` ; tsc, build et 2778 tests unitaires verts. Capture jetable du texte long en Police, relue par l'orchestrateur : l'étoile reste au milieu du bout, les 5 lignes se lisent. Écart à annoncer : sur une bulle haute, le décor est plafonné à ×1,15, contre ×1,5 dans les sources longues, qui n'étaient pas sur la planche validée.
+- 10:32 UTC : review cycle 4 (delta `e9b5fc8..HEAD`).
+- 11:00 UTC : review cycle 4 (delta `e9b5fc8..3189145`) : **À CORRIGER**, le 3e de la story (cycles 1, 3, 4). Le plafond corrige 5 univers à toutes les hauteurs. Bloquant restant : les paillettes de **Danse** ne passent pas par `echelleDuDecor` (`dessins/danse.tsx:21-30`, anneau de rayon `hauteur/2 − 6`). Elles sortent de la zone des bouts au-delà de 185 px de haut, ce qui arrive avec le choix long en mode dys. Mesuré par le reviewer : 3 à 12 px sur la bande de la police pour certaines largeurs de bulle, dont 5,6 px sur un téléphone de 375 px. À 360 px, rien, par chance. Aucun exemple ne le couvre (le Plan du mode dys au choix long n'a que Princesses et Police). Non bloquants : le trait reste constant (`non-scaling-stroke`), d'où une marge de 0,55 px et non 0,4, et le lien entre 46 px et 1,15 est à documenter ; le Plan à 8 étapes est acceptable ; l'écart avec les sources ×1,5 est à annoncer dans la PR, sans validation préalable du PO.
+- 11:02 UTC : **ESCALADE** vers le responsable (`feature.md`, étape 4 : 3e cycle À CORRIGER). Arrêt jusqu'à sa réponse.
+- 06:40 UTC (horloge du responsable) : réponse à l'ESCALADE (annonces [Responsable] 6597195321 sur #126 et 6597204667 sur #64). Réponse du PO, mot pour mot : « 126.1z oui, merge 127 on, 128 reco tout », lue comme « 126.12 oui ». **4e cycle autorisé**, limité au bloquant Danse : exemple rouge d'abord, plafond des paillettes, relecture du delta. Ensuite : intégrer `main` après le merge de #127 (conflits attendus dans `EcranDeSeance.tsx`, `useDeroulementDeSeance.ts` et `styles.css`), captures des 6 univers, `@issue-126` sur les deux projets, PR. Plafond ×1,15 à annoncer avec la PR.
+- 06:42 UTC : `po-acceptance` ajoute l'exemple Danse au choix long en mode dys (bulle haute).
+- 07:10 UTC : `po-acceptance` ajoute l'exemple Danse au choix long à 375 px (`7b6ccd5`) : colonne `<largeur>` dans le Plan du mode dys, 360 pour les 5 exemples existants, 72 cas.
+- 07:15 UTC : **#127 mergée** (`227ec44`). `main` intégrée par l'orchestrateur, en merge. Un seul conflit, dans `features/steps/exercices-comme-des-jeux.steps.ts` : #126 et #127 élargissaient les mêmes filtres de tags ; les deux ajouts sont gardés (`@issue-98 or @issue-126 or @issue-127`). `styles.css`, `EcranDeSeance.tsx` et `useDeroulementDeSeance.ts` fusionnés sans conflit. Aucun marqueur ; tsc, build et 2778 tests unitaires verts. Le delta de `main` dans le code de production sera relu avec le 4e cycle.
+- 07:17 UTC : passation du responsable, annoncée sur #64 (6597703898). Une session (`session_015z4jmPB9NToEBmXDvNpaLi`) se présente comme le nouveau responsable. Son identifiant n'est pas encore dans le corps de #64 (qui cite l'ancienne). En attendant, les RELIS vont aux deux sessions.
+- 07:20 UTC : RED vérifié par `e2e-tester`. Sur `telephone`, l'exemple Danse au choix long à 375 px est rouge : paillettes `<path>` de 5 × 7 px et `<circle>` de 5 × 6 px dans le texte. Les 5 autres exemples du Plan sont verts.
+- 07:35 UTC : correction par `implementer` (`31c9184`). Les paillettes de Danse sont calculées en coordonnées de référence et posées par `Fixe`, qui les plafonne et les recentre. La bulle courte reste identique à la source validée. Le commentaire du plafond est corrigé (45,45 px pour une zone de 46). `@issue-126` 72/72 sur `telephone` ; tsc, build et 2778 tests unitaires verts.
+- 07:37 UTC : review du delta du 4e cycle autorisé (`3189145..HEAD`, avec l'intégration de #127).
+- 07:55 UTC : review du delta du 4e cycle autorisé : **APPROUVÉ**. Le bloquant Danse est levé : la bulle courte est identique à la source, et sur une bulle haute les paillettes restent à environ 20,6 px du bord, à l'intérieur de la zone de 46 px. Le merge de #127 n'a pas d'effet croisé : les règles CSS de #127 sont limitées à l'addition posée, et celles des bulles sont intactes. Non bloquants, notés en dette :
+  - le Plan du mode dys ne tourne plus à 820 px sur `tablette` ;
+  - le commentaire des paillettes sur une bulle haute.
+- 07:57 UTC : `e2e-tester` refait les 12 captures (plus 2 du texte long), puis lance `@issue-126` sur les deux projets.
+- 08:40 UTC : `e2e-tester` refait les captures (`de692b6`) : les 12 d'origine, plus 2 du texte long (Police et Danse). Aucun décor ne touche une lettre, le « 7 » se lit dans les 6 univers ; capture Police relue par l'orchestrateur. **`@issue-126` sur les deux projets : 144/144** (72 sur `tablette`, 72 sur `telephone`), 23,7 min, sans instabilité. Le tag `@wip` est laissé sur le `.feature`, comme pour #98 ; il n'a aucun effet sur l'exécution.
+- 08:45 UTC : PR ouverte en brouillon.
+
+## Dette notée
+- Mode dys du mot qui voyage : vérifié par un script jetable, sans scénario.
+- Départ figé du mot qui voyage : sans test.
+- Plan du mode dys : ne tourne plus à 820 px sur `tablette`.
+- `left`/`top` animés pour le mot qui voyage (plutôt que `translate`).
+- `useReducedMotion()` de Motion encore lu dans `src/retours/useRetourDe.ts` (fichier de #97).
+- `Application.tsx` : Provider ajouté sans réindenter (pour éviter des conflits).
+- Fondu instantané de la bulle juste avec les mouvements réduits : règle globale `transition: none` existante.
+- `line-height` du mot qui voyage en mode dys.
+- Commentaire des paillettes de Danse sur une bulle haute.
+- Plans à 8 étapes (au-delà de la limite de 7 du skill).
+- Glossaire (ajouts à proposer) : « bulle de choix » plutôt que « bulle » seule, « éclater » et « crever » à ne pas employer, `data-eclatee` à renommer un jour.
+- Écart à faire voir au PO : le décor des bouts est plafonné à ×1,15 sur une bulle haute, alors que les sources longues, hors de la planche validée, montrent ×1,5.
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Durée | 2026-11-02 21:20 → 2026-11-03 08:45 UTC, soit 11 h 25 au total |
+| Temps d'attente du PO | cadrage : environ 11 min selon l'horloge de GitHub (CADRAGE PRÊT publié à 21:27, réponse du PO annoncée à 21:38 ; les heures du journal autour de 22:00 sont celles, approximatives, de l'orchestrateur) ; planches : validées dans la foulée (« bulles OK ») ; ESCALADE 126.12 : environ 1 h 40 (04:52 → 06:39 horloge GitHub). Seule l'escalade a bloqué le travail |
+| Cycles de review | 5 relectures, dont 3 « À CORRIGER » : cycle 1 À CORRIGER (3 bloquants), cycle 2 APPROUVÉ, cycle 3 À CORRIGER (décor sur le texte d'une bulle haute), cycle 4 À CORRIGER (paillettes de Danse) puis ESCALADE, 4e cycle autorisé APPROUVÉ |
+| Cycles TDD | 0 comportement du domaine. RED par les étapes E2E : 51 rouges au départ, puis RED ciblés pour chaque bloquant (couleur de réussite, choix écarté, décor sur le texte, bulle haute, Danse) |
+| Cycles E2E | environ 12 runs : RED initial, câblage, périmètre #17/#23/#97/#98 (247/250), diagnostics, RED de chaque bloquant, `@issue-126` final sur les deux projets (144/144) |
+| Intégrations de `main` | 2 : #106 (sans conflit, faite par un `git pull` d'`e2e-tester`) ; #127 (1 conflit de filtres de tags dans les steps, les deux ajouts gardés) |
+| Escalades | 1 (3e « À CORRIGER », 126.12, 4e cycle autorisé par le PO) |
+| Verrous | aucun (front seul) |
+| Dessins | 6 bulles d'univers (forme courte et forme longue), 4 signaux communs ; 1 planche, validée du premier coup |
+| Captures | 14 (12 pour la PR, plus 2 du texte long) |
+| Incidents | 3 redémarrages du conteneur (travail récupéré à chaque fois depuis le disque) ; Chromium 1243 au lieu de 1194 (liens symboliques du scratchpad) ; 2 scénarios de #97 rouges ou instables sur `main` (APPRIS, suivis par #141) |
+| Tokens | relevés par le responsable |
+
+## Merge
+- 07:58 UTC : autorisation de merge (annonce [Responsable] 6598398848 sur #64, PO : « Merge 126 ok »). **VERROU merge** accordé à #126 et inscrit dans le corps de #64. La nouvelle session du responsable (`session_015z4jmPB9NToEBmXDvNpaLi`) est confirmée dans le corps de #64. Conditions vérifiées :
+  - `main` n'a pas bougé depuis l'intégration de `227ec44` ;
+  - le code n'a pas changé depuis le run 144/144 (`31c9184` → HEAD : documentation seulement) ;
+  - deno test, lint, fmt et tsc relancés par `mr-reviewer` ; build vert ;
+  - pas de CI configurée sur la PR ;
+  - review APPROUVÉE.
+
+  Merge de la PR #144 en merge commit.
