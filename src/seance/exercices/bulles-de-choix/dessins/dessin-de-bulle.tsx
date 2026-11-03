@@ -7,7 +7,8 @@ export const LARGEUR_DE_REFERENCE = 156;
 /**
  * Le décor des bouts grandit avec la bulle, mais jamais au-delà de cette échelle : il doit tenir dans la zone des bouts
  * (`--zone-des-bouts`, 46 px, dans `styles.css`), où le texte n'entre pas. Le point le plus avancé des dessins est l'étoile de la police
- * (x = 38,65 en coordonnées de référence, plus la moitié de son trait) : 39,65 × 1,15 = 45,6 px, sous les 46 px.
+ * (x = 38,65 en coordonnées de référence). Son trait reste à 1 px grâce à `vector-effect: non-scaling-stroke` (`styles.css`),
+ * donc 38,65 × 1,15 + 1 = 45,45 px, sous les 46 px de la zone (marge de 0,55 px) : si la zone change, ce plafond doit suivre.
  */
 export const ECHELLE_MAX_DU_DECOR = 1.15;
 

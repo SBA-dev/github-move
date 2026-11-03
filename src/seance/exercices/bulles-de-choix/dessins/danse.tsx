@@ -1,4 +1,4 @@
-import type { DessinDeBulle, Mesures } from "./dessin-de-bulle.tsx";
+import { type DessinDeBulle, Fixe, HAUTEUR_DE_REFERENCE, LARGEUR_DE_REFERENCE, type Mesures } from "./dessin-de-bulle.tsx";
 
 const TRAIT = "#B565AE";
 const MARGE_DU_BORD = 6;
@@ -17,21 +17,21 @@ const Forme = ({ forme, couleur }: Omit<Paillette, "degres">) =>
     ? <circle r="2.6" fill={couleur} stroke={TRAIT} strokeWidth="1" />
     : <path d="M0 -3.4L2.4 0L0 3.4L-2.4 0Z" fill={couleur} stroke={TRAIT} strokeWidth="1" />;
 
-/** Les paillettes suivent le bout arrondi de la bulle ; leur taille, elle, ne change pas. Le bout droit est le miroir du gauche. */
-function Paillettes({ largeur, hauteur }: Mesures) {
-  const rayon = hauteur / 2;
+/** Les paillettes suivent le bout arrondi de la bulle de référence (56 sur 156), avec le plafond du décor ; leur taille, elle, ne change pas. Le bout droit est le miroir du gauche. */
+function Paillettes({ mesures }: { readonly mesures: Mesures }) {
+  const rayon = HAUTEUR_DE_REFERENCE / 2;
   const anneau = rayon - MARGE_DU_BORD;
   return (
     <>
       {([1, -1] as const).flatMap((cote) =>
         PAILLETTES.map(({ degres, ...paillette }) => {
           const radians = degres * Math.PI / 180;
-          const x = (cote === 1 ? rayon : largeur - rayon) - cote * anneau * Math.cos(radians);
+          const x = (cote === 1 ? rayon : LARGEUR_DE_REFERENCE - rayon) - cote * anneau * Math.cos(radians);
           const y = rayon + cote * anneau * Math.sin(radians);
           return (
-            <g key={`${cote}-${degres}`} transform={`translate(${x} ${y})`}>
+            <Fixe key={`${cote}-${degres}`} mesures={mesures} cote={cote === 1 ? "gauche" : "droit"} x={x} y={y}>
               <Forme {...paillette} />
-            </g>
+            </Fixe>
           );
         })
       )}
@@ -43,5 +43,5 @@ function Paillettes({ largeur, hauteur }: Mesures) {
 export const BULLE_DE_LA_DANSE: DessinDeBulle = {
   fond: "#FFFAFE",
   trait: () => TRAIT,
-  decor: (mesures) => <Paillettes {...mesures} />,
+  decor: (mesures) => <Paillettes mesures={mesures} />,
 };
