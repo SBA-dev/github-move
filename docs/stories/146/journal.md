@@ -17,3 +17,6 @@
 - 20:10 UTC : mise au point n°1 arrêtée volontairement après 37/178 (elle tournait sur `b87f5d2`, invalidé par la review). 1 KO : #11:36 (« profil créé sur la tablette retrouvé sur le téléphone »), probablement la remise à zéro répétée du parent (B1). Utilisateurs Auth : 140 → 142 (2 parents de l'équipe 146).
 - Corrections du cycle 1 intégrées (`84b38a6`, `9b4b282`, cherry-pick depuis le worktree pour remettre les messages de commit au format). Review delta cycle 2 : APPROUVÉ, 5 non-bloquants (AggregateError dans `toutEssayer`, adresse marquée préparée après succès, corps de l'erreur sur le 2e PUT, commentaire de classe, ligne sur les parents connectés par vrai lien) : à traiter après la mise au point, pour ne pas changer le code pendant un run.
 - Mise au point n°2 lancée sur `9b4b282`.
+- Mise au point n°2 (`9b4b282`, `telephone`, `@issue-72|73|11|10`, 1 worker) : **178/178** en 21,8 min. Utilisateurs Auth : 142 avant, 142 après (aucun parent créé ; les 20 adresses « libres » inscrites puis supprimées). Le KO #11:36 du premier essai ne revient pas.
+- Non-bloquants traités : `5769f00` (refactor), `8918799` (docs). Review delta cycle 3 : APPROUVÉ, sans remarque.
+- Question #146.5 (workers des non-régressions complètes, reco 3) posée au PO via le responsable. Verrou `base` gardé.
