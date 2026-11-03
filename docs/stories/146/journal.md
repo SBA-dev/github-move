@@ -20,3 +20,5 @@
 - Mise au point n°2 (`9b4b282`, `telephone`, `@issue-72|73|11|10`, 1 worker) : **178/178** en 21,8 min. Utilisateurs Auth : 142 avant, 142 après (aucun parent créé ; les 20 adresses « libres » inscrites puis supprimées). Le KO #11:36 du premier essai ne revient pas.
 - Non-bloquants traités : `5769f00` (refactor), `8918799` (docs). Review delta cycle 3 : APPROUVÉ, sans remarque.
 - Question #146.5 (workers des non-régressions complètes, reco 3) posée au PO via le responsable. Verrou `base` gardé.
+- 20:24 UTC : non-régression complète n°1 lancée (`8918799`, 2 projets, 3 workers, 3652 scénarios, accord PO « 146.5 A »). Utilisateurs Auth : 142 au départ ; 150 à 30 min, 151 à 1 h 40, puis stable (parents de l'équipe 146 créés à leur premier usage, plafond 30 pour ce run).
+- Rythme ~7 scénarios/min : ~8 h 30 par run complet. Question #146.6, réponse du PO « 146.6 B » (22:39 UTC) : run n°1 complet = non-régression ; la mesure du critère 7 (second run sans nouvel utilisateur) se fait sur un run court d'échantillon, 2 projets, 3 workers. Le run n°2 enchaîné est retiré (le run n°1 continue).
