@@ -17,7 +17,7 @@ import { rechoisirLeaApresUnReglage } from "./profil-reel.ts";
 import { allerAuCalcul, lancerLExerciceDeTest, partie20 } from "./calcul-fluence-addition.steps.ts";
 import { choisirSonProfil, modifierLeProfil } from "./profils-enfants.steps.ts";
 import { cleDe, listeDe } from "./univers.steps.ts";
-import { journal } from "./voix.steps.ts";
+import { journal, terminerLaLecture } from "./voix.steps.ts";
 
 // Story #126, tranche 98b de #98 : les choix de réponse sont des bulles de l'univers de l'enfant, qui flottent doucement.
 //
@@ -203,6 +203,7 @@ Then(/^aucune bulle de choix ne flotte tant que Noisette lit la question$/, asyn
 });
 
 Then(/^ensuite, les bulles de choix flottent doucement, toutes de la même façon$/, async ({ page }) => {
+  if ((await journal(page)).actifs > 0) await terminerLaLecture(page);
   await bullesDeLaQuestion(page);
   const nombre = await bulles(page).count();
   expect(nombre, "au moins deux bulles de choix").toBeGreaterThanOrEqual(2);
@@ -349,13 +350,6 @@ When(/^le calcul « ([^«»]+) » s'affiche$/, { tags: "@issue-126" }, async ({ 
 
 function passagesDeLaBulle(journal126: Journal126, rang: number) {
   return journal126.passages.flatMap((passage) => passage.genre === "choix" && passage.rang === rang ? [passage] : []);
-}
-
-async function rangDeLaBulle(page: Page, texte: string): Promise<number> {
-  const textes = await textesDesChoix(page);
-  const rang = textes.indexOf(texte);
-  expect(rang, `la bulle de choix « ${texte} » est à l'écran`).toBeGreaterThanOrEqual(0);
-  return rang;
 }
 
 /** La bulle effacée reste à sa place et ne grandit pas : sa boîte n'a jamais dépassé celle d'avant le toucher (une fois le rebond fini). */
