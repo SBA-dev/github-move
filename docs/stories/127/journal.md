@@ -24,3 +24,10 @@ Session : session_015z4jmQ9o3CKmJiuvCfr2me. Décision : prochain numéro libre 0
 - 22:50 UTC : RED rendu par `e2e-tester` (`28cde64`, `c4835ba`) : `@issue-127` 15/56 verts, 41 rouges, tous par fonctionnalité absente (glisser au doigt, attributs de la maison, signal, saut de la retenue, mise en page 360 × 740) ; `@issue-20` entièrement vert. Contrat d'attributs en tête de `features/steps/addition-posee-maisons.steps.ts`.
 - Étapes partagées : élargissements de tags (`@issue-127`) et de regex (`centaines`), `export` de fonctions, `@issue-127` dans les délais longs. **Un point à faire relire** : l'étape de #20 « Léa répond « N » pour la colonne des X » commence l'exercice de test s'il n'est pas encore affiché. Jugé compatible (le cas échouait avant, `@issue-20` reste vert), à confirmer par `mr-reviewer` ; sinon escalade.
 - Câblage délégué à `implementer`.
+
+## 2026-11-03
+
+- 00:40 UTC : câblage par `implementer` (`208b235` maisons, glisser au doigt, retenue qui saute ; `fe372e1` addition tenue dans 360 × 740 ; `acdc176` invite non redite après un chiffre posé). Domaine inchangé ; départ du saut lu par comparaison avant / après. E2E `telephone` : `@issue-20`, `@issue-23`, `@issue-65`, `@issue-98` verts ; 3 rouges de `@issue-127` attribués aux étapes ; 3 rouges de `@issue-24` (« Trop fort, ça ! ») à vérifier sur `main`.
+- Composant partagé modifié : `groupe-sous-le-doigt.ts` (ajout de `maisonSousLePoint`), une ligne dans `EcranDeSeance.tsx` et `useDeroulementDeSeance.ts`, compaction CSS limitée à `:has(.addition-posee)`. `APPRIS` publié sur #127 (6592191077), responsable prévenu pour relais sur #64.
+- Point d'attention : la compaction réordonne visuellement l'en-tête (`order`), à juger par la review (accessibilité).
+- Étape 4 : review complète par `mr-reviewer`, en parallèle de `e2e-tester` (3 étapes à corriger, vérification de `@issue-24` sur `main`).
