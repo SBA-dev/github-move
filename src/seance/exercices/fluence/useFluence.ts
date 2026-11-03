@@ -159,7 +159,11 @@ export function useFluence(
     redessiner();
   }, [seance, horloge, estFigee, terminer, redessiner]);
 
-  return { demarree, fluenceFinie, recordBattu, parolesDeFin, issueDuRecord, presenter, demarrer, repondre, battre };
+  const nomDeLExercice = seance.exerciceEnCours()?.scoreDeFluence()?.nom;
+  const recordDeDepart = nomDeLExercice === undefined || record === undefined
+    ? undefined
+    : RecordDeFluence.reconstituer({ enfant: seance.enfant, lecon: seance.lecon, exercice: nomDeLExercice, meilleurScore: record });
+  return { demarree, fluenceFinie, recordBattu, recordDeDepart, parolesDeFin, issueDuRecord, presenter, demarrer, repondre, battre };
 }
 
 /** Fait battre l'horloge tant que la fluence court : chaque battement redessine le temps, ou finit la fluence. */
