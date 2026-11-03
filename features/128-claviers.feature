@@ -1,5 +1,5 @@
 # language: fr
-@issue-128 @wip
+@issue-128
 Fonctionnalité: Des exercices qui ressemblent à des jeux : les cases de la dictée, les cristaux du calcul et la marque du record de fluence
   En tant qu'enfant
   Je veux que les cases de la dictée s'allument, que les cristaux du calcul brillent quand je les touche et voir mon record pendant la fluence
