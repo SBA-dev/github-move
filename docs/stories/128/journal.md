@@ -41,3 +41,5 @@
 - `bddgen` vert pour #19, #20, #21, #65, #97, #98, #126, #127, #128 après les élargissements d'étapes partagées.
 - APPRIS publié sur #128 (Supabase lent, contournement Chromium, étapes partagées élargies). RELIS envoyé à la nouvelle session du responsable.
 - Corrections des non bloquants de la review (`implementer`) et précisions du contrat (`po-acceptance`) lancées.
+- 12:00 UTC : corrections des non bloquants (`a1c6384` fix CSS, `82d0cea` refactor) et précisions du contrat (`2252f68`). Revue delta `e3c2410..HEAD` : APPROUVÉ, aucun bloquant. Non bloquants : survol qui efface le fond jaune du cristal qui brille (à corriger après le run E2E en cours), `throw` au chargement de la table des dessins, phrase « Léa écrit la fin du mot » à reformuler avec le PO, `page.evaluate` du tirage (risque faible d'instabilité).
+- 12:00 UTC : Supabase de dev de nouveau sain ; run complet `@issue-128` sur `telephone` lancé (`e2e-tester`).
