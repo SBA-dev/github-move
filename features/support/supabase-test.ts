@@ -75,12 +75,17 @@ export async function creerParent(email: string): Promise<ParentExistant> {
     method: "POST",
     body: JSON.stringify({ email, email_confirm: true }),
   });
+  if (reponse.ok) return memoriser((await reponse.json()) as UtilisateurAuth);
+  const corps = await reponse.text();
   if (reponse.status === 422) {
     const existant = await retrouverEnParcourantLaListe(email.toLowerCase());
     if (existant) return existant;
   }
-  if (!reponse.ok) throw new Error(`Supabase POST /auth/v1/admin/users : ${reponse.status}`);
-  return memoriser((await reponse.json()) as UtilisateurAuth);
+  throw new Error(`Supabase POST /auth/v1/admin/users : ${reponse.status} ${corps}`);
+}
+
+export async function trouverOuCreerParent(email: string): Promise<ParentExistant> {
+  return (await trouverParent(email)) ?? (await creerParent(email));
 }
 
 export async function supprimerParent(id: string): Promise<void> {
@@ -92,12 +97,26 @@ function motDePasseAleatoire(): string {
   return `${crypto.randomUUID()}Aa%`;
 }
 
-/** Aucun mot de passe d'un scénario précédent ne survit : celui du scénario, ou une valeur aléatoire. L'e-mail reste confirmé. */
-export async function remettreLeParentAZero(id: string, motDePasse: string = motDePasseAleatoire()): Promise<void> {
-  await appeler(`/auth/v1/admin/users/${id}`, {
+/**
+ * Aucun mot de passe d'un scénario précédent ne survit : celui du scénario, ou une valeur aléatoire. L'e-mail reste confirmé.
+ * Si le parent mis en cache n'existe plus (404), il est oublié, cherché de nouveau, et créé au besoin.
+ */
+export async function remettreLeParentAZero(parent: ParentExistant, motDePasse: string = motDePasseAleatoire()): Promise<ParentExistant> {
+  const reponse = await envoyer(`/auth/v1/admin/users/${parent.id}`, {
     method: "PUT",
     body: JSON.stringify({ email_confirm: true, password: motDePasse }),
   });
+  if (reponse.status === 404) {
+    parentsConnus.delete(parent.email);
+    const recree = await trouverOuCreerParent(parent.email);
+    await appeler(`/auth/v1/admin/users/${recree.id}`, {
+      method: "PUT",
+      body: JSON.stringify({ email_confirm: true, password: motDePasse }),
+    });
+    return recree;
+  }
+  if (!reponse.ok) throw new Error(`Supabase PUT /auth/v1/admin/users : ${reponse.status} ${await reponse.text()}`);
+  return parent;
 }
 
 /** Fin de scénario : les profils enfants du parent partent (rattachements et données en cascade), l'utilisateur Auth reste. */

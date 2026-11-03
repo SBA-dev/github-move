@@ -3,7 +3,6 @@ import { deposerLaSession, ouvrirUneSessionSansEmail } from "./connexion-sans-em
 import { installerLeHasardFixe } from "./hasard-fixe.ts";
 import { supprimerLesEssaisDuSuffixe } from "./mot-de-passe.ts";
 import {
-  creerParent,
   emailsRecus,
   emailsRecusParLesSuffixes,
   extraireLienEtCode,
@@ -13,6 +12,7 @@ import {
   remettreLeParentAZero,
   supprimerLesProfilsDuParent,
   supprimerParent,
+  trouverOuCreerParent,
   trouverParent,
   viderLaBoite,
 } from "./supabase-test.ts";
@@ -44,7 +44,7 @@ const PARTIE_LIBRE = ".libre";
  *
  * Réutilisation (décision 0040) : ces parents ne sont pas supprimés en fin de scénario, pour ne pas consommer le quota
  * d'utilisateurs actifs de Supabase. Au début, le parent est trouvé ou créé puis remis à zéro (mot de passe, e-mail
- * confirmé) ; à la fin, ses profils enfants sont supprimés, la boîte de test et les essais du suffixe sont vidés.
+ * confirmé) ; avant, ses profils enfants d'un scénario interrompu sont supprimés ; à la fin, ses profils enfants sont supprimés, la boîte de test et les essais du suffixe sont vidés. Au début, la boîte et les essais du suffixe sont aussi vidés.
  *
  * Adresse « libre » : quand un scénario affirme qu'aucun parent n'utilise une adresse, il va souvent l'inscrire pour de
  * vrai. Cette adresse prend alors une partie locale distincte (« paul.libre+<suffixe>@exemple.test ») pour ne pas
@@ -58,6 +58,7 @@ export class Famille {
   private readonly adressesUtilisees = new Set<string>();
   private readonly adressesLibres = new Set<string>();
   private readonly adressesLibresUtilisees = new Set<string>();
+  private readonly parentsPrepares = new Set<string>();
   private pageDuTelephone: Page | undefined;
   private contexteDuTelephone: Awaited<ReturnType<Browser["newContext"]>> | undefined;
 
@@ -77,11 +78,19 @@ export class Famille {
   adresse(brute: string): string {
     const adresse = this.transformer(brute);
     const normalisee = adresse.trim().toLowerCase();
-    if (normalisee.endsWith("@exemple.test")) {
+    if (this.estDuSuffixe(normalisee)) {
       this.adressesUtilisees.add(normalisee);
       if (this.adressesLibres.has(brute.trim().toLowerCase())) this.adressesLibresUtilisees.add(normalisee);
     }
     return adresse;
+  }
+
+  private estDuSuffixe(adresse: string): boolean {
+    return adresse.endsWith(`+${this.suffixe}@exemple.test`);
+  }
+
+  private garantirUneAdresseDuSuffixe(adresse: string): void {
+    if (!this.estDuSuffixe(adresse)) throw new Error(`Adresse hors du suffixe de ce scénario : ${adresse}`);
   }
 
   normalisee(brute: string): string {
@@ -181,11 +190,25 @@ export class Famille {
 
   // --- Parents préparés
 
+  /**
+   * Remise à zéro une seule fois par scénario et par adresse : profils enfants d'un scénario interrompu supprimés, puis
+   * mot de passe remis (celui demandé, ou une valeur aléatoire). Un appel ultérieur sans mot de passe ne touche à rien ;
+   * un mot de passe explicite est toujours posé.
+   */
   async preparerUnParent(brute: string, motDePasse?: string) {
     const adresse = this.normalisee(brute);
-    const parent = (await trouverParent(adresse)) ?? (await creerParent(adresse));
-    await remettreLeParentAZero(parent.id, motDePasse);
+    this.garantirUneAdresseDuSuffixe(adresse);
+    const parent = await trouverOuCreerParent(adresse);
+    const premiere = !this.parentsPrepares.has(adresse);
+    this.parentsPrepares.add(adresse);
+    if (premiere) await supprimerLesProfilsDuParent(parent.id);
+    if (premiere || motDePasse !== undefined) return remettreLeParentAZero(parent, motDePasse);
     return parent;
+  }
+
+  /** Début de scénario : les restes d'un scénario précédent de ce suffixe (nettoyage interrompu) sont effacés. */
+  async preparerLeDebut(): Promise<void> {
+    await toutEssayer([() => viderLaBoite(this.suffixe), () => supprimerLesEssaisDuSuffixe(this.suffixe)]);
   }
 
   async verifierQuAucunParentNUtilise(brute: string): Promise<void> {
@@ -195,6 +218,7 @@ export class Famille {
     }
     this.adressesLibres.add(habituelle);
     const libre = this.normalisee(brute);
+    this.garantirUneAdresseDuSuffixe(libre);
     const reste = await trouverParent(libre);
     if (reste) {
       await supprimerLesProfilsDuParent(reste.id);
@@ -283,13 +307,16 @@ export class Famille {
   // --- Nettoyage de fin de scénario : boîte de test, essais, profils des parents réutilisés, parents des adresses libres
 
   async nettoyer(): Promise<void> {
-    await this.contexteDuTelephone?.close();
-    await viderLaBoite(this.suffixe);
-    for (const adresse of this.adressesUtilisees) {
-      if (this.adressesLibresUtilisees.has(adresse)) await this.supprimerLeParentLibre(adresse);
-      else await nettoyerLeParent(adresse);
-    }
-    await supprimerLesEssaisDuSuffixe(this.suffixe);
+    await toutEssayer([
+      async () => {
+        await this.contexteDuTelephone?.close();
+      },
+      () => viderLaBoite(this.suffixe),
+      ...[...this.adressesUtilisees].map((adresse) => () =>
+        this.adressesLibresUtilisees.has(adresse) ? this.supprimerLeParentLibre(adresse) : nettoyerLeParent(adresse)
+      ),
+      () => supprimerLesEssaisDuSuffixe(this.suffixe),
+    ]);
   }
 
   private async supprimerLeParentLibre(adresse: string): Promise<void> {
@@ -298,4 +325,17 @@ export class Famille {
     await supprimerLesProfilsDuParent(parent.id);
     await supprimerParent(parent.id);
   }
+}
+
+/** Exécute toutes les étapes, même si l'une échoue, puis relève la première erreur. */
+async function toutEssayer(etapes: ReadonlyArray<() => Promise<void>>): Promise<void> {
+  const erreurs: unknown[] = [];
+  for (const etape of etapes) {
+    try {
+      await etape();
+    } catch (erreur) {
+      erreurs.push(erreur);
+    }
+  }
+  if (erreurs.length > 0) throw erreurs[0];
 }

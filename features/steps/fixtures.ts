@@ -58,6 +58,7 @@ export const test = base.extend<{
   famille: async ({ page, browser, baseURL }, use, testInfo) => {
     const suffixe = suffixeDesParentsDeTest({ equipe: EQUIPE_DES_TESTS, projet: testInfo.project.name, indexDuWorker: testInfo.parallelIndex });
     const famille = new Famille(suffixe, page, browser, baseURL ?? "http://localhost:5173");
+    await famille.preparerLeDebut();
     await use(famille);
     await famille.nettoyer();
   },
