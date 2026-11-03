@@ -31,3 +31,9 @@
 - 08:00 UTC : câblage du front fait (`9c692ed` cases de la dictée, `51d7c3e` clavier de cristaux, `cbc87cf` marque du record, correctifs `b4054a8` et `f585007`). `tsc`, build, 2787 tests unitaires, lint et format verts. Addition de #127 à 360 px : 24 scénarios « 360 px » de `@issue-127` verts. E2E `@issue-128` sur `telephone` : environ 70/90, rouges attribués aux étapes.
 - 08:05 UTC : intégration de `main` après le merge de #126 (`d609058`). Conflit sur les tags de 4 étapes partagées de `exercices-comme-des-jeux.steps.ts` : les deux ajouts gardés (`@issue-98 or @issue-126 or @issue-127 or @issue-128`). `bddgen` vert pour #98, #126, #127, #128 ; tests, `tsc` et build verts (`e3c2410`).
 - 08:10 UTC : mise au point E2E (`e2e-tester`) et review complète (`mr-reviewer`) lancées en parallèle.
+- 08:40 UTC : review complète, cycle 1 : APPROUVÉ, aucun bloquant. Non bloquants retenus pour un passage de l'`implementer` après la mise au point E2E (pas de changement du front pendant un run) :
+  - (1) police `.8rem` de `.tableau-de-fluence` à ≤ 480 px même sans record : recul de lisibilité pour #20 → garder `1rem`, faire passer le temps sur sa propre ligne ;
+  - (2) `.cristal[data-univers]` efface le fond jaune du halo de « Je ne sais pas » : écart avec la planche validée → rétablir le fond ;
+  - (5) `CasesDeLaDictee.tsx` : commentaire inexact, `return setIlluminees(0)` ; (6) table des dessins précalculée au chargement ; (7) commentaire sur `dangerouslySetInnerHTML` (SVG statique du dépôt seulement).
+  - (3) touche qui brille et touchée : accepté, phrase du contrat ajustée.
+  - (4) record d'un autre exercice affiché un instant si « C'est parti ! » est touché avant la fin de la lecture du record (défaut déjà présent pour `terminer`) : noté en dette dans la PR, non couvert par un test.
