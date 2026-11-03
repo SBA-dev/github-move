@@ -28,3 +28,6 @@
 - 07:12 UTC : câblage du front lancé (`implementer`).
 - 07:11 UTC : planches validées par le PO (annonce [Responsable] 6597661184 sur #128, « planches 128 OK »), choix P1 à P6 compris. Condition 98.31 remplie.
 - 07:17 UTC : changement de session du responsable annoncé par `session_015z4jmPB9NToEBmXDvNpaLi`. Cohérent avec la PASSATION [Responsable] de #64 (6597703898), mais le corps de #64 nomme encore l'ancienne session : RELIS envoyés aux deux sessions jusqu'à la mise à jour du corps.
+- 08:00 UTC : câblage du front fait (`9c692ed` cases de la dictée, `51d7c3e` clavier de cristaux, `cbc87cf` marque du record, correctifs `b4054a8` et `f585007`). `tsc`, build, 2787 tests unitaires, lint et format verts. Addition de #127 à 360 px : 24 scénarios « 360 px » de `@issue-127` verts. E2E `@issue-128` sur `telephone` : environ 70/90, rouges attribués aux étapes.
+- 08:05 UTC : intégration de `main` après le merge de #126 (`d609058`). Conflit sur les tags de 4 étapes partagées de `exercices-comme-des-jeux.steps.ts` : les deux ajouts gardés (`@issue-98 or @issue-126 or @issue-127 or @issue-128`). `bddgen` vert pour #98, #126, #127, #128 ; tests, `tsc` et build verts (`e3c2410`).
+- 08:10 UTC : mise au point E2E (`e2e-tester`) et review complète (`mr-reviewer`) lancées en parallèle.
