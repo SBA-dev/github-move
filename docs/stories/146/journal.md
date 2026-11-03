@@ -11,3 +11,6 @@
   Choix : un cycle par groupe de règles d'une même fonction (outillage, pas de domaine).
 - Câblage délégué à `implementer` : fixtures, supabase-test (recherche filtrée + cache), famille (réutilisation, adresses « libres » `prenom.libre+<suffixe>` pour les scénarios « aucun parent n'utilise… », supprimées en fin de scénario), étape « est inscrit avec … mot de passe … ».
   Pourquoi une variante « libre » : sans elle, chaque inscription de #72/#73 supprimerait aussi le Paul réutilisé, recréé au scénario suivant (2 MAU au lieu d'1).
+- 19:51 UTC : VERROU base accordé (le PO fait passer #146 en premier). Sonde 1,1 / 0,6 / 0,5 s. `SUPABASE_ACCESS_TOKEN` renouvelé : accepté pour le projet. Filtre `?filter=` de l'API d'administration vérifié (recherche sur une partie de l'adresse). 140 utilisateurs Auth avant tout run.
+- 19:52 UTC : mise au point lancée sur `telephone` (`@issue-72|73|11|10`, 178 scénarios, 1 worker, `E2E_EQUIPE=146`), sur `b87f5d2`.
+- Review cycle 1 : À CORRIGER. Bloquants : (1) `preparerUnParent` remettait un mot de passe aléatoire à chaque appel, y compris en plein scénario (#72 : 2 scénarios cassés) ; (2) aucun effacement au début du scénario des restes d'un scénario interrompu, alors que les suffixes sont désormais stables. Corrections déléguées à `implementer` dans un worktree isolé, pour ne pas changer le code pendant le run.
