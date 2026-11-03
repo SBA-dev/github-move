@@ -425,15 +425,21 @@ Then(/^les lecteurs d'écran lisent « ([^«»]+) »$/, async ({ page }, descrip
 Then(/^Léa voit la boîte ouverte et ses (\d+) jetons, sans mouvement$/, async ({ page }, total: string) => {
   await expect(boiteAJetons(page)).toHaveAttribute("data-mouvements-reduits", "true");
   await verifierLesJetonsRangesParCinq(page, Number(total));
-  for (const element of [boite(page), jetons(page).first()]) {
-    await expect(element).toHaveCSS("animation-name", "none");
-    await expect(element).toHaveCSS("transition-duration", "0s");
+  // Le couvercle est dessiné en SVG (sans pivot) : on contrôle la boîte, son dessin, les jetons et leurs dessins, avec tous leurs éléments.
+  const dessinDeLaBoite = boite(page).getByTestId("dessin-de-la-boite");
+  await expect(dessinDeLaBoite).toHaveCount(1);
+  await expect(jetons(page).first()).toBeVisible();
+  for (const racine of [boite(page), dessinDeLaBoite, jetons(page), page.getByTestId("dessin-du-jeton")]) {
+    const mouvements = await racine.evaluateAll((elements) =>
+      elements.flatMap((element) => [element, ...element.querySelectorAll("*")]).flatMap((cible) =>
+        ["", "::before", "::after"].map((pseudo) => {
+          const style = getComputedStyle(cible, pseudo || null);
+          return { animation: style.animationName, transition: style.transitionDuration, enCours: cible.getAnimations().length };
+        })
+      )
+    );
+    expect(mouvements.filter((m) => m.animation !== "none" || m.transition.split(",").some((d) => d.trim() !== "0s") || m.enCours > 0), "animation ou transition en cours").toEqual([]);
   }
-  const couvercle = await boite(page).evaluate((element) => {
-    const style = getComputedStyle(element, "::before");
-    return { transition: style.transitionDuration, animation: style.animationName };
-  });
-  expect(couvercle).toEqual({ transition: "0s", animation: "none" });
 });
 
 Then(/^les barres du schéma restent proportionnelles aux nombres (\d+) et (\d+)$/, async ({ page }, petit: string, grand: string) => {
