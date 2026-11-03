@@ -334,6 +334,8 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : la boîte à jetons
         | pompier   | Pompiers            |
         | danse     | Danse               |
 
+    # « De la même façon » : vide, contour en pointillés, fond, couleur du texte, opacité, taille, « ? » et aucune jauge.
+    # Le décor des bouts, lui, suit l'univers, en pointillés (planche validée P6, 2026-11-03 11:05 UTC) : le plan ne le compare pas.
     Plan du Scénario: Dans l'univers « <univers> », avant la bonne réponse, la barre « ? » reste vide comme dans tous les univers
       Étant donné que Léa a choisi l'univers <clé>
       Et que Léa joue le problème « Au marché, j'achète 4 pommes rouges et 2 pommes vertes. Combien ai-je de pommes ? » de la leçon « Problèmes : le tout et les parties »

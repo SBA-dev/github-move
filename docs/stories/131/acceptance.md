@@ -88,6 +88,8 @@ La story ne crée, ne lit et n'enregistre aucune donnée nouvelle : **pas de sc�
 
 **#131.9** (barre « ? » vide, contour en pointillés, puis remplie après le rebond) : la règle du PO transmise avec la demande (« la barre « ? » garde son « ? » et reste vide jusqu'à la bonne réponse ») correspond à la reco A. Les scénarios concernés étaient écrits **sans** `@a-valider` ; le cadrage validé le 2026-11-03 confirme #131.9 = A.
 
+> Précisé par la planche validée (P6, 2026-11-03 11:05 UTC) : le décor des bouts suit l'univers, en pointillés. Tout le reste est pareil dans les 6 univers : vide, contour en pointillés, « ? », largeur, aucune jauge. Le plan « …se voit de la même façon que dans l'univers « Animaux de la forêt » » compare le contour, le fond, la couleur du texte, l'opacité, la taille, le texte et l'absence de jauge, pas le décor des bouts : il reste vrai.
+
 ## Hors périmètre
 
 - Les **bulles de choix** du mode par choix (#126) et le **clavier de cristaux** (#128), même dans la boîte et le schéma : on y répond comme dans #21 (« Léa répond « 7 » »), quel que soit leur dessin. Aucun scénario ne décrit leur dessin.
@@ -202,7 +204,7 @@ Aucune.
 Les questions **#131.1 à #131.11** sont dans `docs/stories/131/domain-model.md` (options, reco et décision). Leur effet sur les scénarios :
 - #131.1 (objets du tableau, à valider sur planche univers par univers), #131.2 (pastille ronde mate qui porte l'objet), #131.11 (12 captures) : aucun scénario ne dépend d'elles (planches) ;
 - #131.3 (oui), #131.4 (ensemble, 400 ms au plus), #131.5 (oui), #131.6 (A), #131.7 (oui), #131.8 (une seule fois, toutes ensemble), #131.10 (oui, jauge sans échelle) : scénarios confirmés, `@a-valider` retiré ;
-- #131.9 (oui, reco A) : confirmée, scénarios inchangés.
+- #131.9 (oui, reco A) : confirmée, scénarios inchangés. Précisé par la planche validée (P6, 2026-11-03 11:05 UTC) : le décor des bouts suit l'univers, en pointillés. Tout le reste est pareil dans les 6 univers : vide, contour en pointillés, « ? », largeur, aucune jauge.
 
 Questions posées ici :
 

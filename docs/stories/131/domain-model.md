@@ -108,7 +108,7 @@ inv. 98-1 (mêmes erreurs, avancement, étoiles, revalidation), 98-4 et 98-15 (b
 
 ### Invariants propres à #131
 
-1. **La jauge ne donne jamais la réponse.** La barre de la valeur cherchée reste vide, avec son « ? » et son contour en pointillés, tant que le domaine n'a pas fourni `SchemaResolu`, c'est-à-dire jusqu'à la **bonne réponse** de l'enfant : ni après une erreur, ni après « Je ne sais pas », ni après « Réécouter », ni en Muet. Elle ne se remplit jamais à moitié, ni « presque », ni au rythme des autres.
+1. **La jauge ne donne jamais la réponse.** La barre de la valeur cherchée reste vide, avec son « ? » et son contour en pointillés, tant que le domaine n'a pas fourni `SchemaResolu`, c'est-à-dire jusqu'à la **bonne réponse** de l'enfant : ni après une erreur, ni après « Je ne sais pas », ni après « Réécouter », ni en Muet. Elle ne se remplit jamais à moitié, ni « presque », ni au rythme des autres. Précisé par la planche validée (P6, 2026-11-03 11:05 UTC) : le décor des bouts suit l'univers, en pointillés. Tout le reste est pareil dans les 6 univers : vide, contour en pointillés, « ? », largeur, aucune jauge.
 2. **La jauge n'a pas d'échelle.** Le remplissage est uni (couleur ou matière continue) : aucune graduation, aucun cran, aucun anneau, aucune feuille, aucune rayure en travers, aucun motif répété à intervalle régulier le long de la barre. Un décor d'univers ne se pose qu'aux bouts, toujours le même quelle que soit la longueur. La largeur de chaque morceau reste celle de `dessinerLeSchema` : la jauge se remplit **dans** le morceau, sans jamais animer sa largeur (scénario de #21 sur les proportions 37 et 43).
 3. **Les rôles des barres restent lisibles.** Le tout (ou le total, ou le grand) garde une teinte distincte des parties dans les 6 univers ; l'écart et la suite des parts restent en pointillés, jamais remplis ; le nombre écrit sur une barre reste du texte, à 4,5:1 sur la jauge, en mode dys.
 4. **Tous les jetons d'une boîte sont identiques et comptables d'un coup d'œil.** Même dessin, même taille, même orientation ; seul le cinquième de chaque rangée porte la marque commune aux 6 univers (#131.3). Un jeton n'est ni doré, ni métallique, ni marqué d'un symbole de monnaie ; il ne ressemble ni à une étoile, ni à la bulle de choix de son univers (#126).
@@ -230,6 +230,8 @@ Raisons de A : la jauge accompagne « Regarde le schéma » ; rien ne bouge pend
 Raisons de A : « vide » dit « c'est ce qu'on cherche » sans rien suggérer ; B ressemblerait à une barre connue.
 
 *Tranchée le 2026-11-03 : reco.* A.
+
+> Précisé par la planche validée (P6, 2026-11-03 11:05 UTC) : le décor des bouts suit l'univers, en pointillés. Tout le reste est pareil dans les 6 univers : vide, contour en pointillés, « ? », largeur, aucune jauge. (La mention « pareille dans les 6 univers » de la reco A ne vaut donc pas pour le décor des bouts.)
 
 **#131.10 La barre « ? » garde-t-elle une taille proportionnelle à la réponse, comme aujourd'hui ?**
 Exemple : « 4 pommes rouges, combien de vertes, 6 en tout ? » : la barre « ? » occupe déjà le tiers de la ligne (2 sur 6).
