@@ -25,19 +25,6 @@ function entetesAnon(): Record<string, string> {
   return { apikey: cle, Authorization: `Bearer ${cle}`, "Content-Type": "application/json" };
 }
 
-// --- Parent inscrit avec un mot de passe (préparation, API d'administration)
-
-export async function creerUnParentAvecMotDePasse(adresse: string, motDePasse: string): Promise<string> {
-  verifierAdresseDeTest(adresse);
-  const reponse = await fetch(`${variable("SUPABASE_URL")}/auth/v1/admin/users`, {
-    method: "POST",
-    headers: entetesServiceRole(),
-    body: JSON.stringify({ email: adresse, password: motDePasse, email_confirm: true }),
-  });
-  if (!reponse.ok) throw new Error(`Création du parent de test : ${reponse.status} ${await reponse.text()}`);
-  return ((await reponse.json()) as { id: string }).id;
-}
-
 // --- Ce que fait le parent, côté serveur, avec la seule clé publique
 
 export async function appelerLaReinitialisation(adresse: string, prenom: string, motDePasse: string): Promise<number> {

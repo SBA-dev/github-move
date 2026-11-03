@@ -8,8 +8,11 @@ import {
   emailsRecusParLesSuffixes,
   extraireLienEtCode,
   jetonAccepte,
+  nettoyerLeParent,
   reculerLEnvoi,
-  supprimerLesParentsDuSuffixe,
+  remettreLeParentAZero,
+  supprimerLesProfilsDuParent,
+  supprimerParent,
   trouverParent,
   viderLaBoite,
 } from "./supabase-test.ts";
@@ -28,21 +31,33 @@ const ADRESSE_BIEN_FORMEE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
 type SessionStockee = { access_token: string; user: { id: string; email: string } };
 
+const PARTIE_LIBRE = ".libre";
+
 /**
  * Le « monde » des scénarios de connexion : les appareils du parent (tablette = page du test, téléphone = second
  * contexte), les adresses de test et le suivi des e-mails reçus.
  *
  * Isolation : les projets Playwright (tablette, téléphone), leurs workers et les exécutions d'autres équipes tournent
- * en même temps sur le même projet Supabase avec les mêmes adresses de scénario. Chacun reçoit donc un suffixe :
- * « paul@exemple.test » devient « paul+<projet><worker>-<jeton>@exemple.test », en gardant la casse et les espaces de
- * l'adresse saisie. Le nettoyage de fin de
- * scénario (boîte de test, parents) ne touche que les adresses de son suffixe.
+ * en même temps sur le même projet Supabase avec les mêmes adresses de scénario. Chacun reçoit donc un suffixe stable :
+ * « paul@exemple.test » devient « paul+<équipe>-<projet><worker>@exemple.test », en gardant la casse et les espaces de
+ * l'adresse saisie.
+ *
+ * Réutilisation (décision 0040) : ces parents ne sont pas supprimés en fin de scénario, pour ne pas consommer le quota
+ * d'utilisateurs actifs de Supabase. Au début, le parent est trouvé ou créé puis remis à zéro (mot de passe, e-mail
+ * confirmé) ; à la fin, ses profils enfants sont supprimés, la boîte de test et les essais du suffixe sont vidés.
+ *
+ * Adresse « libre » : quand un scénario affirme qu'aucun parent n'utilise une adresse, il va souvent l'inscrire pour de
+ * vrai. Cette adresse prend alors une partie locale distincte (« paul.libre+<suffixe>@exemple.test ») pour ne pas
+ * toucher le parent réutilisé du même prénom ; son parent, créé par l'inscription, est supprimé en fin de scénario.
  */
 export class Famille {
   adresseCourante: string | undefined;
   lienUtilise: string | undefined;
   readonly requetesDeLien: string[] = [];
   private readonly envois = new Map<string, number>();
+  private readonly adressesUtilisees = new Set<string>();
+  private readonly adressesLibres = new Set<string>();
+  private readonly adressesLibresUtilisees = new Set<string>();
   private pageDuTelephone: Page | undefined;
   private contexteDuTelephone: Awaited<ReturnType<Browser["newContext"]>> | undefined;
 
@@ -60,11 +75,22 @@ export class Famille {
   // --- Adresses
 
   adresse(brute: string): string {
-    return brute.replace(ADRESSE_DE_TEST, `$1+${this.suffixe}$2`);
+    const adresse = this.transformer(brute);
+    const normalisee = adresse.trim().toLowerCase();
+    if (normalisee.endsWith("@exemple.test")) {
+      this.adressesUtilisees.add(normalisee);
+      if (this.adressesLibres.has(brute.trim().toLowerCase())) this.adressesLibresUtilisees.add(normalisee);
+    }
+    return adresse;
   }
 
   normalisee(brute: string): string {
     return this.adresse(brute).trim().toLowerCase();
+  }
+
+  private transformer(brute: string): string {
+    const partieLibre = this.adressesLibres.has(brute.trim().toLowerCase()) ? PARTIE_LIBRE : "";
+    return brute.replace(ADRESSE_DE_TEST, `$1${partieLibre}+${this.suffixe}$2`);
   }
 
   adresseDe(prenom: string): string {
@@ -155,13 +181,26 @@ export class Famille {
 
   // --- Parents préparés
 
-  async preparerUnParent(brute: string) {
+  async preparerUnParent(brute: string, motDePasse?: string) {
     const adresse = this.normalisee(brute);
-    return (await trouverParent(adresse)) ?? (await creerParent(adresse));
+    const parent = (await trouverParent(adresse)) ?? (await creerParent(adresse));
+    await remettreLeParentAZero(parent.id, motDePasse);
+    return parent;
   }
 
   async verifierQuAucunParentNUtilise(brute: string): Promise<void> {
-    expect(await trouverParent(this.normalisee(brute))).toBeUndefined();
+    const habituelle = brute.trim().toLowerCase();
+    if (this.adressesUtilisees.has(this.transformer(brute).trim().toLowerCase())) {
+      throw new Error(`L'adresse ${brute} a déjà servi dans ce scénario : elle ne peut plus être déclarée libre.`);
+    }
+    this.adressesLibres.add(habituelle);
+    const libre = this.normalisee(brute);
+    const reste = await trouverParent(libre);
+    if (reste) {
+      await supprimerLesProfilsDuParent(reste.id);
+      await supprimerParent(reste.id);
+    }
+    expect(await trouverParent(libre)).toBeUndefined();
   }
 
   async parent(adresse: string) {
@@ -241,12 +280,22 @@ export class Famille {
     await (await this.page(appareil)).getByRole("button", { name: "Se déconnecter" }).click();
   }
 
-  // --- Nettoyage de fin de scénario : boîte de test et parents créés pour ce suffixe
+  // --- Nettoyage de fin de scénario : boîte de test, essais, profils des parents réutilisés, parents des adresses libres
 
   async nettoyer(): Promise<void> {
     await this.contexteDuTelephone?.close();
     await viderLaBoite(this.suffixe);
-    await supprimerLesParentsDuSuffixe(this.suffixe);
+    for (const adresse of this.adressesUtilisees) {
+      if (this.adressesLibresUtilisees.has(adresse)) await this.supprimerLeParentLibre(adresse);
+      else await nettoyerLeParent(adresse);
+    }
     await supprimerLesEssaisDuSuffixe(this.suffixe);
+  }
+
+  private async supprimerLeParentLibre(adresse: string): Promise<void> {
+    const parent = await trouverParent(adresse);
+    if (!parent) return;
+    await supprimerLesProfilsDuParent(parent.id);
+    await supprimerParent(parent.id);
   }
 }
