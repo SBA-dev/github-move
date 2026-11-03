@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import { TexteEnSyllabes, useModeDys } from "../../../reglages/index.ts";
 
 type Point = { readonly x: number; readonly y: number };
 
@@ -10,7 +11,7 @@ export type Trajet = {
   readonly versLaPlace: () => Point;
 };
 
-export const DUREE_DU_VOYAGE_MS = 250;
+const DUREE_DU_VOYAGE_MS = 250;
 
 /** Le mot reste posé sur sa place un court instant : l'œil le voit arriver avant qu'il disparaisse. */
 const DUREE_SUR_PLACE_MS = 60;
@@ -26,6 +27,7 @@ type Props = {
 /** Le mot juste en chemin vers sa place : décor pour les yeux, jamais annoncé. */
 export function MotQuiVoyage({ trajet, onArrivee }: Props) {
   const element = useRef<HTMLSpanElement>(null);
+  const modeDys = useModeDys();
   const arrivee = useRef(onArrivee);
   useEffect(() => {
     arrivee.current = onArrivee;
@@ -54,8 +56,15 @@ export function MotQuiVoyage({ trajet, onArrivee }: Props) {
     return () => cancelAnimationFrame(image);
   }, [de, versLaPlace]);
   return createPortal(
-    <span ref={element} className="mot-qui-voyage" data-testid="mot-qui-voyage" aria-hidden="true" style={{ left: de.x, top: de.y }}>
-      {trajet.mot}
+    <span
+      ref={element}
+      className="mot-qui-voyage"
+      data-testid="mot-qui-voyage"
+      data-mode-dys={modeDys ? "true" : undefined}
+      aria-hidden="true"
+      style={{ left: de.x, top: de.y }}
+    >
+      <TexteEnSyllabes texte={trajet.mot} />
     </span>,
     document.body,
   );
