@@ -1,5 +1,7 @@
+import { useState } from "react";
 import type { LigneDuTableauDeConjugaison, QuestionJouee, SegmentDuTexteATrous } from "@domain/apprentissage";
 import type { Exercice } from "@domain/catalogue";
+import type { DepartDuMot } from "./mot-qui-voyage/useMotQuiVoyage.tsx";
 import { QuestionAChoix } from "./QuestionAChoix.tsx";
 import { TableauDeConjugaison } from "./TableauDeConjugaison.tsx";
 import { TexteATrous } from "./TexteATrous.tsx";
@@ -32,16 +34,22 @@ type Props = {
 export function ExerciceAChoix(props: Props) {
   const { exercice, question, choixVisibles, reussie, texteEcoute } = props;
   const lectureEnAttente = exercice.type === "lecture" && !texteEcoute;
+  const [motChoisi, setMotChoisi] = useState<DepartDuMot | undefined>();
+  const choisir = (texte: string, bulle: HTMLElement) => {
+    const { left, top, width, height } = bulle.getBoundingClientRect();
+    setMotChoisi({ texte, centre: { x: left + width / 2, y: top + height / 2 } });
+    props.onChoisir(texte);
+  };
   return (
     <>
       {exercice.type === "lecture" && (
         <TexteDeLecture titre={exercice.titre} texte={exercice.texte} rangDuMotPrononce={props.rangDuMotDuTexte} />
       )}
       {exercice.type === "trous" && (
-        <TexteATrous segments={props.texteATrous} phraseDuTrouEnCours={props.phraseDuTrouEnCours} />
+        <TexteATrous segments={props.texteATrous} phraseDuTrouEnCours={props.phraseDuTrouEnCours} motChoisi={motChoisi} />
       )}
       {exercice.type === "conjugaison" && (
-        <TableauDeConjugaison verbe={exercice.verbe} temps={exercice.temps} lignes={props.tableauDeConjugaison} />
+        <TableauDeConjugaison verbe={exercice.verbe} temps={exercice.temps} lignes={props.tableauDeConjugaison} motChoisi={motChoisi} />
       )}
       {lectureEnAttente && (
         <button type="button" className="action-principale" data-testid="j-ai-ecoute" onClick={props.onJAiEcoute}>
@@ -57,7 +65,7 @@ export function ExerciceAChoix(props: Props) {
         bulleEclatee={props.bulleEclatee}
         sonImpossible={props.sonImpossible}
         sonCoupe={props.sonCoupe}
-        onChoisir={props.onChoisir}
+        onChoisir={choisir}
         onRelireLaQuestion={props.onRelireLaQuestion}
         onJeNeSaisPas={props.onJeNeSaisPas}
         onEcouterLeMot={props.onEcouterLeMot}

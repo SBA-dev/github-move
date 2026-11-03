@@ -29,6 +29,8 @@ export function ReponseAuCalcul({ calcul, reussi, onChoisir, onValider, onJeNeSa
             reponseQuiBrille={calcul.jeNeSaisPasPropose ? undefined : possibles[0]}
             reussie={reussi}
             bulleEclatee={undefined}
+            flottantes={false}
+            motQuiPart={false}
             onChoisir={onChoisir}
           />
         )

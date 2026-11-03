@@ -43,7 +43,7 @@ import {
   useTestDeDepartAFaire,
 } from "./test-de-depart/index.ts";
 import { brancherLeSonDesBoutons } from "./boutons/son-des-boutons.ts";
-import { ChoixDeLaVoix, useVoix } from "./voix/index.ts";
+import { ChoixDeLaVoix, ContexteDeLaLecture, useVoix } from "./voix/index.ts";
 import { TenueDuProfil } from "./tenue/index.ts";
 import { ContexteDeLUnivers, HABILLAGE_DU_PARENT, habillageDeLUnivers, Paysage } from "./univers/index.ts";
 
@@ -201,6 +201,7 @@ export function Application() {
   return (
     <MotionConfig reducedMotion="user">
       <ContexteDeLUnivers.Provider value={univers.cle}>
+        <ContexteDeLaLecture.Provider value={voix.lectureEnCours}>
         <TenueDuProfil profil={profil?.id}>
           <div className="application" style={habillage} data-univers={univers.cle} data-registre={parent ? "parent" : "enfant"}>
             {!parent && <Paysage univers={univers.cle} />}
@@ -404,6 +405,7 @@ export function Application() {
             </ModeDys>
           </div>
         </TenueDuProfil>
+        </ContexteDeLaLecture.Provider>
       </ContexteDeLUnivers.Provider>
     </MotionConfig>
   );

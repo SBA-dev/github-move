@@ -14,7 +14,7 @@ type Props = {
   readonly bulleEclatee: string | undefined;
   readonly sonImpossible: boolean;
   readonly sonCoupe: boolean;
-  readonly onChoisir: (texte: string) => void;
+  readonly onChoisir: (texte: string, bulle: HTMLElement) => void;
   readonly onRelireLaQuestion: () => void;
   readonly onJeNeSaisPas: () => void;
   readonly onEcouterLeMot: () => void;
@@ -61,12 +61,18 @@ export function QuestionAChoix(props: Props) {
             reponseQuiBrille={question.bonneReponseMontree ? question.choix.possibles()[0] : undefined}
             reussie={reussie}
             bulleEclatee={props.bulleEclatee}
+            flottantes={question.type === "bulles" || question.type === "ecoute"}
+            motQuiPart={question.type === "trous" || question.type === "conjugaison"}
             onChoisir={props.onChoisir}
           />
-          {question.jeNeSaisPasPermis() && !question.bonneReponseMontree && !reussie && (
-            <button type="button" className="je-ne-sais-pas" data-testid="je-ne-sais-pas" onClick={props.onJeNeSaisPas}>
-              Je ne sais pas
-            </button>
+          {question.jeNeSaisPasPermis() && (
+            question.bonneReponseMontree || reussie
+              ? <div className="je-ne-sais-pas place-gardee" aria-hidden="true">Je ne sais pas</div>
+              : (
+                <button type="button" className="je-ne-sais-pas" data-testid="je-ne-sais-pas" onClick={props.onJeNeSaisPas}>
+                  Je ne sais pas
+                </button>
+              )
           )}
         </>
       )}
