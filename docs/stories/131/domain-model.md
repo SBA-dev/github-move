@@ -1,6 +1,8 @@
 # Modèle du domaine : issue #131, boîte à jetons et schéma en barres (98c-boîte et barres)
 
-État : **cadrage à valider par le PO** (questions #131.1 à #131.11).
+Historique : 2026-11-03 08:00 UTC, cadrage validé par le PO (« 131 reco tout », annonces [Responsable] 6598437358 sur #64 et 6598436875 sur #131).
+
+État : **cadrage validé** (questions #131.1 à #131.11 tranchées le 2026-11-03 : reco retenue partout).
 
 Tranche **98c-boîte et barres** de #98 (épopée #95), issue de la coupe de #127 (98.30). Dépend de #98 (98a) et de #127 (98c-addition), toutes deux mergées.
 
@@ -159,9 +161,9 @@ Scénarios de `features/21-boite-et-barres.feature` qui doivent rester verts : j
 | Jauge de l'univers, teinte du tout et teinte des parties | 6 |
 | **À valider** | **18 dessins** (6 univers × 3 objets) |
 | Planches (98.28) | **2** : `boite-a-jetons.png`, 6 lignes × 4 colonnes (boîte fermée · boîte ouverte avec 7 jetons · 8 − 3 avec 3 jetons sortants · 20 jetons à 360 px) = 24 cases ; `jauge-du-schema.png`, 6 lignes × 3 colonnes (parties et tout avant la réponse, barre « ? » vide · même schéma résolu · comparaison 37 / 43 à 360 px) = 18 cases |
-| Captures avec la PR (98.29) | voir #131.11 |
+| Captures avec la PR (98.29) | **12** (#131.11) |
 
-## Questions ouvertes
+## Questions (toutes tranchées le 2026-11-03)
 
 **#131.1 Quels objets pour la boîte, le jeton et la jauge dans chaque univers ?**
 Pistes de 98 vérifiées contre la règle absolue, l'invariant 98-15 et les objets déjà validés sur le même écran (bulle de l'univers de #126).
@@ -179,26 +181,40 @@ Si #131.2 = B, l'objet du jeton est le motif dessiné sur la pastille.
 
 Reco : **la colonne « reco »**. Raisons : aucun objet ne ressemble à une récompense (étoile), à une cible de réponse sur le même écran (ballon, bulle irisée), au personnage guide (noisette), à de l'argent ou à un trésor (coffre, bijoux, disque doré) ; aucune jauge n'a de motif comptable ; dans Pompiers, rien qui évoque le feu.
 
+*Tranchée le 2026-11-03 : reco.* Les objets de la colonne « reco », à valider sur planche univers par univers.
+
 **#131.2 Le jeton est-il l'objet seul (un gland), ou une pastille ronde qui porte l'objet dessiné ?**
 Exemple : Noisette dit « Je mets 4 jetons dans la boîte. ». A, Léa voit 4 glands. B, Léa voit 4 pastilles rondes mates, un petit gland dessiné sur chacune.
 Reco : **B**. Le mot lu reste vrai (« jetons ») dans les 6 univers (inv. 98-14) ; même forme ronde et même taille partout (inv. 98-17), donc la même lecture « rangées de 5 » ; la pastille mate, de la couleur de l'univers, remplace le disque doré qui ressemble aujourd'hui à une pièce. Risque : à 28 px, l'objet sur la pastille est petit ; à vérifier sur la planche à taille réelle.
 
+*Tranchée le 2026-11-03 : reco.* Pastille ronde mate qui porte l'objet (B).
+
 **#131.3 Le cinquième jeton de chaque rangée garde-t-il sa marque commune (orange), pareille dans les 6 univers ?**
 Reco : **oui**. C'est le repère « rangés par 5 » de #21, utile pour passer du comptage au calcul ; un signal commun aux 6 univers, posé sur le jeton, comme les signaux d'état de 98a (inv. 98-15).
 
+*Tranchée le 2026-11-03 : reco.* Oui.
+
 **#131.4 Comment tombent les jetons : tous ensemble (rangée par rangée, légèrement décalées), ou un par un ?**
 Reco : **tous ensemble, rangée par rangée**, en 400 ms au plus pour le groupe. Raisons : la boîte à jetons sert à « passer du comptage au calcul » (#21) ; une chute un par un invite à compter un à un et durerait plus de 400 ms pour 10 jetons.
+
+*Tranchée le 2026-11-03 : reco.* Tous ensemble, 400 ms au plus.
 
 **#131.5 Les jetons de la première phrase (« Je mets 4 jetons… ») tombent-ils aussi ?**
 Aujourd'hui ils apparaissent sans mouvement ; seuls les jetons ajoutés glissent.
 Reco : **oui**, même chute que les jetons ajoutés. « Je mets » est le même geste que « j'en mets encore ».
 
+*Tranchée le 2026-11-03 : reco.* Oui.
+
 **#131.6 Les jetons retirés : restent-ils pâles à leur place (A, comme aujourd'hui), ou quittent-ils la boîte et disparaissent (B) ?**
 Exemple : 8 − 3. A, Léa voit 5 jetons et 3 jetons pâles, montés un peu, jusqu'à la fermeture de la boîte. B, les 3 jetons s'élèvent hors de la boîte et s'effacent ; il en reste 5.
 Reco : **A**. Les 8 du départ restent visibles, ce qui soutient « Pars de 8 et recule de 3 » ; rien ne change pour les scénarios de #21 ; « en douceur » : ils montent et pâlissent en 400 ms au plus, rien ne disparaît brusquement.
 
+*Tranchée le 2026-11-03 : reco.* A.
+
 **#131.7 À l'ouverture après la bonne réponse, les jetons sont-ils déjà dans la boîte, sans chute ?**
 Reco : **oui**, seul le couvercle s'ouvre. Une chute à l'ouverture ferait croire qu'on en ajoute.
+
+*Tranchée le 2026-11-03 : reco.* Oui.
 
 **#131.8 Quand les barres connues se remplissent-elles ?**
 - A (reco) : **une seule fois, au début de l'explication du schéma** (« Regarde le schéma : le point d'interrogation, c'est ce qu'on cherche. »), toutes ensemble, en 400 ms au plus. « Réécouter » ne les vide pas. En Muet ou sans voix, dès l'affichage.
@@ -206,18 +222,26 @@ Reco : **oui**, seul le couvercle s'ouvre. Une chute à l'ouverture ferait croir
 - C : l'une après l'autre.
 Raisons de A : la jauge accompagne « Regarde le schéma » ; rien ne bouge pendant la lecture de l'énoncé (inv. 98-10) ; C prolongerait le mouvement au-delà de 400 ms.
 
+*Tranchée le 2026-11-03 : reco.* A : une seule fois, toutes ensemble.
+
 **#131.9 Avant la bonne réponse, à quoi ressemble la barre de la valeur cherchée ?**
 - A (reco) : **vide**, contour en pointillés, « ? », comme aujourd'hui, pareille dans les 6 univers ; après le rebond de la réponse juste, le « ? » devient le nombre et la barre se remplit de la jauge de l'univers.
 - B : remplie d'une teinte neutre sans motif, jusqu'à la réponse.
 Raisons de A : « vide » dit « c'est ce qu'on cherche » sans rien suggérer ; B ressemblerait à une barre connue.
 
+*Tranchée le 2026-11-03 : reco.* A.
+
 **#131.10 La barre « ? » garde-t-elle une taille proportionnelle à la réponse, comme aujourd'hui ?**
 Exemple : « 4 pommes rouges, combien de vertes, 6 en tout ? » : la barre « ? » occupe déjà le tiers de la ligne (2 sur 6).
 Reco : **oui**, sans rien changer. C'est le principe du schéma en barres du guide fondamental et du scénario de #21 ; sans échelle, la taille ne donne pas le nombre. La condition est l'invariant propre 2 : aucune graduation ni motif comptable sur la jauge. (Si la réponse est non, la story toucherait `dessin-du-schema.ts` et un scénario de #21 : ce ne serait plus de l'affichage seul.)
 
+*Tranchée le 2026-11-03 : reco.* Oui, jauge sans échelle.
+
 **#131.11 Captures avec la PR : 6 captures montrant la boîte, et 6 montrant le schéma (12), ou 6 en tout ?**
 98.29 prévoit 6 captures, une par univers, mais #131 a deux écrans.
 Reco : **12** : par univers, une boîte ouverte après la bonne réponse (7 jetons) et un schéma résolu, à 360 px, mouvements réduits. Elles ne servent pas de référence aux tests.
+
+*Tranchée le 2026-11-03 : reco.* 12 captures.
 
 ## Termes à signaler au glossaire
 

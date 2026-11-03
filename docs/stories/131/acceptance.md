@@ -1,14 +1,16 @@
 # Critères d'acceptance : story #131, boîte à jetons et schéma en barres de l'univers (98c-boîte et barres)
 
+Historique : 2026-11-03 08:00 UTC, cadrage validé par le PO (« 131 reco tout », annonces [Responsable] 6598437358 sur #64 et 6598436875 sur #131).
+
 Scénarios : `features/131-boite-et-barres-de-l-univers.feature`. Modèle : `docs/stories/131/domain-model.md` (invariants propres 1 à 13, questions #131.1 à #131.11).
 
 Tags :
 - `@issue-131 @wip` sur la fonctionnalité (`@wip` reste jusqu'au passage des steps E2E, convention du projet : il n'exclut aucun scénario des runs) ;
-- `@a-valider` sur **11 scénarios** qui suivent la reco d'une question encore ouverte (#131.3, #131.4, #131.5, #131.6, #131.7, #131.8, #131.10, #131.12, #131.13), chacun précédé d'un commentaire « Question 131.n » ;
+- plus aucun `@a-valider` : les 11 scénarios qui suivaient la reco d'une question (#131.3, #131.4, #131.5, #131.6, #131.7, #131.8, #131.10, #131.12, #131.13) gardent leur texte ; leur commentaire « Question 131.n » dit maintenant que la question est tranchée (reco retenue) ;
 - aucun `@acces` (aucune donnée nouvelle, voir « Droits d'accès ») ;
 - aucun `@depend-de-…` : #97, #98 (98a) et #127 sont mergées.
 
-État : **critères à valider par le PO** (questions #131.1 à #131.13).
+État : **cadrage validé** (2026-11-03 : reco retenue pour les questions #131.1 à #131.13, voir « Décisions »).
 
 ## Objectif
 
@@ -36,7 +38,7 @@ Décisions déjà prises, appliquées sans les reposer : habillage par univers d
 | R4 | Dans chacun des 6 univers, la boîte, les jetons et la jauge ont le dessin de cet univers ; changer d'univers ne change ni le nombre de jetons, ni leurs rangées, ni la taille des barres, ni les textes lus, ni les étoiles, ni la bonne réponse montrée ; un profil sans univers connu voit les dessins de « Animaux de la forêt » | Plan « …la boîte fermée a le dessin de cet univers et ne laisse voir aucun jeton » : 6 univers · Plan « …la boîte ouverte et ses jetons ont le dessin de cet univers, rangés par 5 » : 6 univers · Plan « …le cinquième jeton de chaque rangée porte la même marque que dans tous les univers » : 5 univers (#131.3) · Plan « …les barres ont la jauge de cet univers, et le tout garde une teinte à lui » : 6 univers (invariant propre 3) · Plan « …avant la bonne réponse, la barre « ? » reste vide comme dans tous les univers » : 5 univers · Plan « …après une erreur, <personnage guide> dit la même aide que dans tous les univers » : Sports (boîte), Police (schéma) · Plan « …« Je ne sais pas » montre la bonne réponse comme dans tous les univers, sans ouvrir la boîte » : Princesses et fées, Pompiers · Plan « Un profil enfant <cas> voit <objet> de l'univers « Animaux de la forêt » » : 4 exemples (sans univers, univers inconnu × boîte, jauge) |
 | R5 | Mouvements réduits : rien ne tombe ni ne se remplit progressivement, l'information reste ; 360 px dans les 6 univers ; nombres des barres lisibles (4,5:1) et en mode dys ; lecteurs d'écran inchangés ; aucun mouvement ne fait de bruit | Plan « …avec les mouvements réduits, la boîte s'ouvre sur ses 7 jetons, sans mouvement » : 6 univers · « Avec les mouvements réduits, les jetons ajoutés sont posés dans la boîte, sans tomber » · « Avec les mouvements réduits, les jetons retirés sont pâles à leur place, sans bouger » (#131.6) · Plan « …avec les mouvements réduits, les barres connues sont pleines dès l'affichage et la barre « ? » vide » : 6 univers · « Avec les mouvements réduits, à la bonne réponse, la barre « ? » est pleine d'un coup » · Plan « …la boîte fermée, les choix et « Je ne sais pas » tiennent dans un écran de 360 px » : 6 univers · Plan « …la boîte ouverte avec 20 jetons tient dans la largeur d'un écran de 360 px » : 6 univers · Plan « …le schéma d'une comparaison tient dans un écran de 360 px et reste proportionnel » : 6 univers · Plan « …chaque nombre écrit sur une barre pleine se lit sur sa jauge » : 6 univers · « En mode dys, les nombres écrits sur les barres s'affichent en mode dys » · Plan « …les lecteurs d'écran annoncent la boîte ouverte comme avant, sans décrire son dessin » : 6 univers · Plan « …les lecteurs d'écran lisent le schéma résolu comme avant, sans décrire la jauge » : 6 univers · Plan « Aucun effet sonore n'accompagne <le mouvement> » : chute, sortie, remplissage (invariant propre 9) |
 
-Au total : **5 règles, 49 scénarios** (dont 21 plans de scénario, 99 exemples), soit **127 cas** joués par projet. **11 scénarios** portent `@a-valider` (10 scénarios et 1 plan de 5 exemples, soit 15 cas).
+Au total : **5 règles, 49 scénarios** (dont 21 plans de scénario, 99 exemples), soit **127 cas** joués par projet. Aucun ne porte `@a-valider` (les 11 qui le portaient, soit 15 cas, sont confirmés par le PO le 2026-11-03).
 
 Les Plans sur les univers suivent la sobriété de 98a et de #127 : les 6 univers là où le dessin peut changer ce qu'on vérifie (dessin, teintes, 360 px, contraste, mouvements réduits, lecteurs d'écran) ; 5 univers là où « Animaux de la forêt » sert de référence (marque du cinquième jeton, barre « ? » vide) ; 2 univers là où le dessin ne peut rien changer (aide lue, bonne réponse montrée, révision).
 
@@ -68,9 +70,11 @@ Les Plans sur les univers suivent la sobriété de 98a et de #127 : les 6 univer
 
 La story ne crée, ne lit et n'enregistre aucune donnée nouvelle : **pas de scénario `@acces`**. L'univers est lu sur le profil enfant en cours (#6, #96). Les séances terminées et la file de révision restent enregistrées comme aujourd'hui (#24, #28), par un parent rattaché seulement. Les écrans du parent ne montrent ni boîte ni schéma.
 
-## Scénarios qui dépendent d'une réponse du PO (`@a-valider`)
+## Scénarios qui dépendaient d'une réponse du PO (anciens `@a-valider`)
 
-| Question | Scénarios (écrits selon la reco) | Si le PO choisit autrement |
+**Tableau caduc depuis le 2026-11-03** : le PO a retenu la reco partout, les scénarios restent tels qu'écrits ; la colonne « Si le PO choisit autrement » n'a plus d'objet, gardée pour l'historique.
+
+| Question | Scénarios (écrits selon la reco, confirmés) | Si le PO choisit autrement (caduc) |
 |---|---|---|
 | #131.3 (marque du cinquième jeton commune aux 6 univers) | Plan « …le cinquième jeton de chaque rangée porte la même marque que dans tous les univers » (5 exemples) | Non : le Plan est retiré ; le scénario de #21 « rangés par 5 » reste vrai |
 | #131.4 (tous ensemble, rangée par rangée) | « Les jetons ajoutés tombent ensemble, pas un par un » | Un par un : le scénario devient « …tombent l'un après l'autre » (et la durée de 400 ms est à revoir) |
@@ -82,7 +86,7 @@ La story ne crée, ne lit et n'enregistre aucune donnée nouvelle : **pas de sc�
 | #131.12 (écart cherché en pointillés) | « Quand l'écart est la valeur cherchée, il reçoit la réponse et reste en pointillés » | B : « …l'écart de 6 se remplit de la jauge » |
 | #131.13 (parts cherchées remplies d'un coup) | « Quand le nombre de parts est la valeur cherchée, les 6 parts apparaissent remplies à la bonne réponse » | B : « …les 6 parts apparaissent vides, puis se remplissent comme une jauge » |
 
-**#131.9** (barre « ? » vide, contour en pointillés, puis remplie après le rebond) : la règle du PO transmise avec la demande (« la barre « ? » garde son « ? » et reste vide jusqu'à la bonne réponse ») correspond à la reco A. Les scénarios concernés sont donc écrits **sans** `@a-valider` ; la validation du cadrage confirmera #131.9 = A.
+**#131.9** (barre « ? » vide, contour en pointillés, puis remplie après le rebond) : la règle du PO transmise avec la demande (« la barre « ? » garde son « ? » et reste vide jusqu'à la bonne réponse ») correspond à la reco A. Les scénarios concernés étaient écrits **sans** `@a-valider` ; le cadrage validé le 2026-11-03 confirme #131.9 = A.
 
 ## Hors périmètre
 
@@ -189,10 +193,16 @@ La story ne crée, ne lit et n'enregistre aucune donnée nouvelle : **pas de sc�
 
 ## Questions ouvertes
 
-Les questions **#131.1 à #131.11** sont dans `docs/stories/131/domain-model.md` (options et reco). Leur effet sur les scénarios :
-- #131.1 (objets), #131.2 (jeton seul ou pastille), #131.11 (captures) : aucun scénario ne dépend d'elles (planches) ;
-- #131.3, #131.4, #131.5, #131.6, #131.7, #131.8, #131.10 : scénarios `@a-valider` (tableau plus haut) ;
-- #131.9 : correspond à la règle du PO déjà transmise (reco A), scénarios sans `@a-valider`, à confirmer.
+Aucune.
+
+## Décisions
+
+2026-11-03 08:00 UTC, cadrage validé par le PO (« 131 reco tout », annonces [Responsable] 6598437358 sur #64 et 6598436875 sur #131). Toutes les recos sont retenues.
+
+Les questions **#131.1 à #131.11** sont dans `docs/stories/131/domain-model.md` (options, reco et décision). Leur effet sur les scénarios :
+- #131.1 (objets du tableau, à valider sur planche univers par univers), #131.2 (pastille ronde mate qui porte l'objet), #131.11 (12 captures) : aucun scénario ne dépend d'elles (planches) ;
+- #131.3 (oui), #131.4 (ensemble, 400 ms au plus), #131.5 (oui), #131.6 (A), #131.7 (oui), #131.8 (une seule fois, toutes ensemble), #131.10 (oui, jauge sans échelle) : scénarios confirmés, `@a-valider` retiré ;
+- #131.9 (oui, reco A) : confirmée, scénarios inchangés.
 
 Questions posées ici :
 
@@ -201,11 +211,15 @@ Exemple : « Léo a 37 billes, Lucie en a 43. Combien Lucie a-t-elle de billes d
 - A (reco) : **l'écart reste en pointillés**, sans jauge ; à la bonne réponse, son « ? » devient 6 et rien ne se remplit. L'écart n'est pas une quantité comme les deux barres, c'est la différence entre elles (guide fondamental) : le remplir le ferait lire comme une troisième barre.
 - B : l'écart se remplit de la jauge à la bonne réponse, comme toute barre « ? ».
 
+*Tranchée le 2026-11-03 : reco.* L'écart reste en pointillés.
+
 **#131.13 Quand le nombre de parts est la valeur cherchée, comment apparaissent les parts à la bonne réponse ?**
 Exemple : « Il y a 18 élèves. On fait des équipes de 3 élèves. Combien y aura-t-il d'équipes ? ». Avant la réponse : 2 parts, puis « … » ; après : 6 parts dessinées (`dessinerLeSchema`). Il n'y a pas de barre « ? » qui se remplit.
 - A (reco) : **les 6 parts apparaissent remplies de la jauge d'un coup**, après le rebond de #97. Les 2 parts du début sont des parts connues (remplies au début comme toute barre connue), la suite « … » reste en pointillés jusqu'à la réponse.
 - B : les 6 parts apparaissent vides, puis se remplissent comme une jauge.
 Raisons de A : un seul mouvement nouveau en 400 ms au plus ; B ferait se remplir 6 morceaux, ce qui invite à compter un par un.
+
+*Tranchée le 2026-11-03 : reco.* Les 6 parts apparaissent remplies d'un coup.
 
 ## Termes à signaler au glossaire
 

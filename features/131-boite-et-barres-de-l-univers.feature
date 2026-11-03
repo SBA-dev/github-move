@@ -15,8 +15,8 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : la boîte à jetons
   Le test de départ ne pose jamais de boîte à jetons ni de schéma en barres : il n'y a rien à y habiller, et aucun
   scénario ne le décrit.
   Les commentaires « Question 131.n » renvoient aux questions de docs/stories/131/domain-model.md (131.1 à 131.11) et
-  de docs/stories/131/acceptance.md (131.12 et 131.13). Les scénarios tagués @a-valider sont écrits selon la
-  recommandation d'une question encore ouverte.
+  de docs/stories/131/acceptance.md (131.12 et 131.13). Toutes ces questions ont été tranchées par le PO le
+  2026-11-03 : la recommandation est retenue partout.
 
   Mots employés dans ces scénarios (mots d'interface, pas des termes du domaine) :
   - « tomber dans la boîte, avec un petit rebond » : un jeton qui entre dans la boîte y arrive par un mouvement de
@@ -120,16 +120,14 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : la boîte à jetons
       Et les 3 jetons ajoutés tombent dans la boîte, avec un petit rebond
       Et Léa voit une rangée de 4 jetons et, à part, une rangée de 3 jetons
 
-    # Question 131.5 (reco : oui)
-    @a-valider
+    # Question 131.5 (tranchée le 2026-11-03, reco retenue : oui)
     Scénario: Les 4 premiers jetons tombent aussi dans la boîte
       Étant donné que Léa est sur la page de la leçon « La boîte à jetons : ajouter »
       Quand Léa choisit seulement l'exercice « Combien dans la boîte ? »
       Alors Noisette dit « Je mets 4 jetons dans la boîte. »
       Et les 4 premiers jetons tombent dans la boîte, avec un petit rebond
 
-    # Question 131.4 (reco : tous ensemble, rangée par rangée)
-    @a-valider
+    # Question 131.4 (tranchée le 2026-11-03, reco retenue : tous ensemble, rangée par rangée)
     Scénario: Les jetons ajoutés tombent ensemble, pas un par un
       Étant donné que Léa est sur la page de la leçon « La boîte à jetons : ajouter »
       Quand Léa choisit seulement l'exercice « Combien dans la boîte ? »
@@ -142,8 +140,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : la boîte à jetons
       Alors Noisette dit « Je mets 8 jetons dans la boîte. », puis « Maintenant, j'en retire 3. »
       Et les 3 derniers jetons s'en vont en douceur, sans disparaître d'un coup
 
-    # Question 131.6 (reco : A, les jetons retirés restent pâles à leur place)
-    @a-valider
+    # Question 131.6 (tranchée le 2026-11-03, reco retenue : A, les jetons retirés restent pâles à leur place)
     Scénario: Les jetons retirés restent visibles, pâles, à leur place, jusqu'à la fermeture de la boîte
       Étant donné que Léa est sur la page de la leçon « La boîte à jetons : retirer »
       Quand Léa choisit seulement l'exercice « Combien en reste-t-il ? »
@@ -168,8 +165,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : la boîte à jetons
         | 4 + 3  | 7      |
         | 12 + 8 | 20     |
 
-    # Question 131.7 (reco : oui, seul le couvercle s'ouvre)
-    @a-valider
+    # Question 131.7 (tranchée le 2026-11-03, reco retenue : oui, seul le couvercle s'ouvre)
     Scénario: À la bonne réponse, la boîte s'ouvre sur ses jetons, qui ne tombent pas de nouveau
       Étant donné que Léa joue la boîte à jetons « 4 + 3 » de la leçon « La boîte à jetons : ajouter »
       Quand Léa répond « 7 »
@@ -190,16 +186,14 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : la boîte à jetons
       Alors les barres de 4 et de 2 se remplissent comme une jauge, jusqu'au bout de leur barre
       Mais la barre « ? » reste vide, avec son « ? »
 
-    # Question 131.8 (reco : A, au début de l'explication du schéma)
-    @a-valider
+    # Question 131.8 (tranchée le 2026-11-03, reco retenue : A, au début de l'explication du schéma)
     Scénario: Les barres connues se remplissent quand Noisette commence à expliquer le schéma, pas pendant l'énoncé du problème
       Étant donné que Léa est sur la page de la leçon « Problèmes : le tout et les parties »
       Quand Léa choisit seulement l'exercice « Le tout ou une partie ? »
       Alors les barres de 4 et de 2 sont encore vides pendant que Noisette lit l'énoncé du problème
       Et les barres de 4 et de 2 se remplissent quand Noisette dit « Regarde le schéma : le point d'interrogation, c'est ce qu'on cherche. »
 
-    # Question 131.8 (reco : A, « Réécouter » ne vide pas les barres)
-    @a-valider
+    # Question 131.8 (tranchée le 2026-11-03, reco retenue : A, « Réécouter » ne vide pas les barres)
     Scénario: Réécouter la question ne vide pas les barres déjà remplies
       Étant donné que Léa joue le problème « Au marché, j'achète 4 pommes rouges et 2 pommes vertes. Combien ai-je de pommes ? » de la leçon « Problèmes : le tout et les parties »
       Et que les barres de 4 et de 2 sont pleines
@@ -245,8 +239,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : la boîte à jetons
       Alors le « ? » du schéma est remplacé par 3
       Et la barre de 3 se remplit comme une jauge, jusqu'au bout de sa barre
 
-    # Question 131.10 (reco : oui, la barre « ? » garde sa taille proportionnelle, sans rien changer)
-    @a-valider
+    # Question 131.10 (tranchée le 2026-11-03, reco retenue : oui, la barre « ? » garde sa taille proportionnelle, sans rien changer)
     Scénario: En se remplissant, la barre « ? » garde la largeur qu'elle avait avant la réponse
       Étant donné que Léa joue le problème « Lina a 9 crayons : 6 sont rouges, les autres sont bleus. Combien de crayons bleus ? » de la leçon « Problèmes : le tout et les parties »
       Quand Léa répond « 3 »
@@ -259,16 +252,14 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : la boîte à jetons
       Mais l'écart de 4 reste en pointillés, sans jauge
       Et la barre « ? » reste vide, avec son « ? »
 
-    # Question 131.12 (reco : A, l'écart reste en pointillés même quand c'est la valeur cherchée)
-    @a-valider
+    # Question 131.12 (tranchée le 2026-11-03, reco retenue : A, l'écart reste en pointillés même quand c'est la valeur cherchée)
     Scénario: Quand l'écart est la valeur cherchée, il reçoit la réponse et reste en pointillés
       Étant donné que Léa joue le problème « Léo a 37 billes, Lucie en a 43. Combien Lucie a-t-elle de billes de plus que Léo ? » de la leçon « Problèmes : combien de plus ? »
       Quand Léa répond « 6 »
       Alors le « ? » du schéma est remplacé par 6
       Mais l'écart de 6 reste en pointillés, sans jauge
 
-    # Question 131.13 (reco : A, les parts apparaissent remplies d'un coup, après le rebond)
-    @a-valider
+    # Question 131.13 (tranchée le 2026-11-03, reco retenue : A, les parts apparaissent remplies d'un coup, après le rebond)
     Scénario: Quand le nombre de parts est la valeur cherchée, les 6 parts apparaissent remplies à la bonne réponse
       Étant donné que Léa joue le problème « Il y a 18 élèves. On fait des équipes de 3 élèves. Combien y aura-t-il d'équipes ? » de la leçon « Plusieurs fois, partager »
       Quand Léa répond « 6 »
@@ -310,8 +301,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : la boîte à jetons
         | pompier   | Pompiers            |
         | danse     | Danse               |
 
-    # Question 131.3 (reco : oui, la marque du cinquième jeton est commune aux 6 univers)
-    @a-valider
+    # Question 131.3 (tranchée le 2026-11-03, reco retenue : oui, la marque du cinquième jeton est commune aux 6 univers)
     Plan du Scénario: Dans l'univers « <univers> », le cinquième jeton de chaque rangée porte la même marque que dans tous les univers
       Étant donné que Léa a choisi l'univers <clé>
       Et que Léa joue la boîte à jetons « 6 + 4 » de la leçon « La boîte à jetons : ajouter »
@@ -424,8 +414,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : la boîte à jetons
       Et les 3 jetons ajoutés sont posés dans la boîte, sans tomber
       Et Léa voit une rangée de 4 jetons et, à part, une rangée de 3 jetons
 
-    # Question 131.6 (reco : A, les jetons retirés restent pâles à leur place)
-    @a-valider
+    # Question 131.6 (tranchée le 2026-11-03, reco retenue : A, les jetons retirés restent pâles à leur place)
     Scénario: Avec les mouvements réduits, les jetons retirés sont pâles à leur place, sans bouger
       Étant donné que l'appareil demande des mouvements réduits
       Et que Léa est sur la page de la leçon « La boîte à jetons : retirer »
