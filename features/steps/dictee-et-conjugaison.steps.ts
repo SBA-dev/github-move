@@ -32,7 +32,7 @@ const CARACTERES_DEJA_ECRITS = [..." '’-.,"];
 type EtatDeLaDictee = { mot: string | undefined; paroles: number; rythmeNormal: number | undefined };
 const etats = new WeakMap<Page, EtatDeLaDictee>();
 
-function etatDeLaDictee(page: Page): EtatDeLaDictee {
+export function etatDeLaDictee(page: Page): EtatDeLaDictee {
   let courant = etats.get(page);
   if (!courant) {
     courant = { mot: undefined, paroles: 0, rythmeNormal: undefined };
@@ -184,7 +184,7 @@ function prevoirLeClavier(page: Page, texte: string) {
   if (enPlus.length > 0 && reglage !== "clavierComplet") choix.tirage = tirageDuClavier(mot, enPlus);
 }
 
-async function ecrire(page: Page, texte: string, geste: "touche" | "clavier" = "touche") {
+export async function ecrire(page: Page, texte: string, geste: "touche" | "clavier" = "touche") {
   prevoirLeClavier(page, texte);
   await commencerLaDictee(page);
   const lettres = aTaper(texte);

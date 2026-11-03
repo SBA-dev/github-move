@@ -14,6 +14,8 @@ import { journal, normaliser, terminerLaLecture, terminerLaLectureSiCenEstPas } 
 // Les leçons de test sont ajoutées à la réponse de /bibliotheque.json par le navigateur du test (voir #16).
 
 const { Given, When, Then } = createBdd(test, { tags: "@issue-21" });
+// Trois étapes servent aussi à #128 (clavier de cristaux d'une boîte à jetons) ; les autres restent à #21.
+const { Given: GivenDe21Et128, When: WhenDe21Et128, Then: ThenDe21Et128 } = createBdd(test, { tags: "@issue-21 or @issue-128" });
 
 type Acteur = "Léa" | "Tom";
 type Mecanique = "boite" | "barres";
@@ -237,7 +239,7 @@ Given(
   },
 );
 
-Given(/^une leçon de test a une boîte à jetons « (\d+) ([+−]) (\d+) »$/, async ({ page, monde }, a: string, signe: string, b: string) => {
+GivenDe21Et128(/^une leçon de test a une boîte à jetons « (\d+) ([+−]) (\d+) »$/, async ({ page, monde }, a: string, signe: string, b: string) => {
   const exercice = { type: "boite", titre: "Boîte de test", items: [{ a: Number(a), op: operationDe(signe), b: Number(b) }] };
   const lecon = leconDeTest("e2e-21-boite", "Leçon de test e2e-21", [exercice]);
   preparerLaPartie(page, monde, lecon, "boite", 0, true);
@@ -255,7 +257,7 @@ Given(
 
 // --- Quand
 
-When(/^(Léa|Tom) joue cette boîte à jetons et que la boîte est fermée$/, async ({ page }, enfant: string) => {
+WhenDe21Et128(/^(Léa|Tom) joue cette boîte à jetons et que la boîte est fermée$/, async ({ page }, enfant: string) => {
   partie21(page).acteur = enfant as Acteur;
   await demarrer(page);
   await laBoiteEstFermeeEtLEnfantPeutRepondre(page);
@@ -372,7 +374,7 @@ Then(/^(Léa|Tom) répond avec les choix (.+)$/, async ({ page }, _enfant: strin
   await repondreJuste(page);
 });
 
-Then(/^(Léa|Tom) répond au clavier de cristaux$/, async ({ page }, _enfant: string) => {
+ThenDe21Et128(/^(Léa|Tom) répond au clavier de cristaux$/, async ({ page }, _enfant: string) => {
   await expect(boiteAJetons(page)).toHaveAttribute("data-mode", "clavierDeCristaux");
   await expect(clavier(page)).toBeVisible();
   await expect(choixDeLaQuestion(page)).toHaveCount(0);
