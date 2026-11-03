@@ -70,7 +70,7 @@ export function installerLEnregistreurDeLaStory126() {
     return { x: boite.x, y: boite.y, width: boite.width, height: boite.height };
   };
   const tousLesChoix = () => [...document.querySelectorAll('[data-testid="choix"]')];
-  const tracePourLeFond = (choix: Element) => choix.querySelector('[data-testid="dessin-de-la-bulle"] path');
+  const tracePourLeFond = (choix: Element) => choix.querySelector('[data-testid="dessin-de-la-bulle"] svg > path:first-of-type');
 
   document.addEventListener("click", (evenement) => {
     const cible = evenement.target;
@@ -313,7 +313,68 @@ Then(/^les bulles de choix de la question ont le dessin de l'univers « ([^«»]
   await expect(page.locator(`[data-testid="choix"][data-univers="${cle}"]`)).toHaveCount(nombre);
   await expect(page.locator(`[data-testid="choix"]:not([data-univers="${cle}"])`)).toHaveCount(0);
   await expect(bulles(page).getByTestId("dessin-de-la-bulle")).toHaveCount(nombre);
+  await verifierQueLeDecorNeRecouvrePasLeTexte(page);
 });
+
+/** Invariant 18 de la story 98 : le décor habille le texte du choix sans le cacher (tolérance de 1 px). */
+async function verifierQueLeDecorNeRecouvrePasLeTexte(page: Page) {
+  const recouvrements = await page.evaluate(() => {
+    const TOLERANCE = 1;
+    const trouves: string[] = [];
+    for (const choix of document.querySelectorAll('[data-testid="choix"]')) {
+      const intervalle = document.createRange();
+      const lecteur = document.createTreeWalker(choix, NodeFilter.SHOW_TEXT);
+      let texte = lecteur.nextNode();
+      let boiteDuTexte: DOMRect | null = null;
+      while (texte !== null) {
+        intervalle.selectNodeContents(texte);
+        const boite = intervalle.getBoundingClientRect();
+        if (boite.width > 0 && boite.height > 0) {
+          boiteDuTexte = boiteDuTexte === null ? boite : new DOMRect(
+            Math.min(boiteDuTexte.left, boite.left),
+            Math.min(boiteDuTexte.top, boite.top),
+            Math.max(boiteDuTexte.right, boite.right) - Math.min(boiteDuTexte.left, boite.left),
+            Math.max(boiteDuTexte.bottom, boite.bottom) - Math.min(boiteDuTexte.top, boite.top),
+          );
+        }
+        texte = lecteur.nextNode();
+      }
+      if (boiteDuTexte === null) continue;
+      const lu = boiteDuTexte;
+      const mot = (choix.textContent ?? "").replace(/\s+/g, " ").trim();
+      // La boîte d'un reflet en arc est bien plus grande que son trait : on teste donc la forme elle-même (remplissage et trait),
+      // sur une grille de points posée sur la boîte du texte.
+      const PAS = 1;
+      for (const forme of choix.querySelectorAll(".decor-de-la-bulle *")) {
+        if (!(forme instanceof SVGGeometryElement)) continue;
+        // Un clipPath, un masque ou un défilé de dégradé ne se dessine pas : seul ce qui est peint peut cacher le texte.
+        if (forme.closest("clipPath, mask, defs") !== null) continue;
+        const matrice = forme.getScreenCTM();
+        if (matrice === null) continue;
+        const inverse = matrice.inverse();
+        const style = getComputedStyle(forme);
+        const rempli = style.fill !== "none" && style.fillOpacity !== "0";
+        const trace = style.stroke !== "none" && style.strokeOpacity !== "0";
+        let gauche = Infinity, droite = -Infinity, haut = Infinity, bas = -Infinity;
+        for (let x = lu.left; x <= lu.right; x += PAS) {
+          for (let y = lu.top; y <= lu.bottom; y += PAS) {
+            const point = new DOMPoint(x, y).matrixTransform(inverse);
+            if ((rempli && forme.isPointInFill(point)) || (trace && forme.isPointInStroke(point))) {
+              gauche = Math.min(gauche, x); droite = Math.max(droite, x); haut = Math.min(haut, y); bas = Math.max(bas, y);
+            }
+          }
+        }
+        const largeur = droite - gauche;
+        const hauteur = bas - haut;
+        if (largeur > TOLERANCE && hauteur > TOLERANCE) {
+          trouves.push(`« ${mot} » : <${forme.tagName.toLowerCase()}> du décor recouvre le texte de ${largeur.toFixed(1)} px sur ${hauteur.toFixed(1)} px`);
+        }
+      }
+    }
+    return trouves;
+  });
+  expect(recouvrements, "le décor des bulles de choix ne recouvre pas leur texte").toEqual([]);
+}
 
 Then(/^les lecteurs d'écran annoncent les choix (.+), sans décrire leur dessin ni leur mouvement$/, async ({ page }, liste: string) => {
   const attendus = listeDe(liste);
@@ -584,7 +645,7 @@ async function signatureDuChoixEcarte(page: Page, selecteur: string): Promise<Si
   const commune = await signatureDe(page, selecteur);
   const dessin = await page.locator(selecteur).evaluate((element) => {
     const calque = element.querySelector('[data-testid="dessin-de-la-bulle"]');
-    const fond = calque?.querySelector("path") ?? null;
+    const fond = calque?.querySelector("svg > path:first-of-type") ?? null;
     if (calque === null || fond === null) return { dessin: "sans dessin" } as Record<string, string>;
     const fondStyle = getComputedStyle(fond);
     const decors = [...calque.querySelectorAll(".decor-de-la-bulle")];
