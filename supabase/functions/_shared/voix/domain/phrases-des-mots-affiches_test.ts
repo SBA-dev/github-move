@@ -52,3 +52,33 @@ Deno.test("des guillemets français ne changent pas la coupure des phrases", () 
 Deno.test("un texte vide n'a aucun mot affiché", () => {
   assertEquals(phrasesDesMotsAffiches(""), []);
 });
+
+const TEXTE_ULYSSE = "Le Cyclope demande son nom à Ulysse. « Je m'appelle Personne », répond le héros.";
+
+function assertSansTrou(phrases: number[], nombreDeMots: number) {
+  assertEquals(phrases.length, nombreDeMots);
+  assertEquals(Array.from(phrases, (rang) => Number.isInteger(rang)), Array(nombreDeMots).fill(true));
+}
+
+Deno.test("un guillemet fermant suivi d'un point ne décale pas les phrases", () => {
+  assertEquals(
+    phrasesDesMotsAffiches("Léa dit : « Bonjour ». Plume ronronne. Il dort."),
+    [0, 0, 1, 2, 2, 3, 3],
+  );
+});
+
+Deno.test("un guillemet fermant suivi d'une virgule ne décale pas les phrases", () => {
+  assertEquals(phrasesDesMotsAffiches(TEXTE_ULYSSE), [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1]);
+});
+
+Deno.test("aucun mot affiché n'est sans phrase, même avec des guillemets fermants", () => {
+  const nombreDeMots = (texte: string) => motsDeLaConsigne(texte).filter(({ rang }) => rang !== undefined).length;
+
+  assertSansTrou(phrasesDesMotsAffiches(TEXTE_ULYSSE), nombreDeMots(TEXTE_ULYSSE));
+  assertSansTrou(phrasesDesMotsAffiches("Léa dit : « Bonjour ». Plume ronronne. Il dort."), 7);
+  assertSansTrou(phrasesDesMotsAffiches(TEXTE_PETIT_CHAT), nombreDeMots(TEXTE_PETIT_CHAT));
+});
+
+Deno.test("un mot affiché qui ne se prononce pas prend la phrase du mot précédent", () => {
+  assertEquals(phrasesDesMotsAffiches("Plume dort. <br> Léa rit."), [0, 0, 0, 1, 1]);
+});
