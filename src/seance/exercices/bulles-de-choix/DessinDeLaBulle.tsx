@@ -1,7 +1,7 @@
 import { useId, useLayoutEffect, useRef, useState } from "react";
 import type { CleUnivers } from "@domain/motivation";
 import { DESSINS_DES_BULLES } from "./dessins/index.ts";
-import { HAUTEUR_DE_REFERENCE, LARGEUR_DE_REFERENCE } from "./dessins/dessin-de-bulle.tsx";
+import { echelleDuDecor, HAUTEUR_DE_REFERENCE, LARGEUR_DE_REFERENCE } from "./dessins/dessin-de-bulle.tsx";
 
 const EPAISSEUR_DU_TRAIT = 3;
 
@@ -50,7 +50,7 @@ export function DessinDeLaBulle({ univers, ecarte }: Props) {
           strokeWidth={EPAISSEUR_DU_TRAIT}
         />
         {!ecarte && (
-          <g className="decor-de-la-bulle">{dessin.decor({ largeur, hauteur, echelle: hauteur / HAUTEUR_DE_REFERENCE, p })}</g>
+          <g className="decor-de-la-bulle">{dessin.decor({ largeur, hauteur, echelle: echelleDuDecor(hauteur), p })}</g>
         )}
       </svg>
     </span>

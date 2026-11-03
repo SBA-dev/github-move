@@ -338,7 +338,7 @@ button:focus-visible, summary:focus-visible { outline: 3px solid var(--texte); o
 .ecoute-sans-son { margin: 0; padding: 10px 16px; border-radius: var(--rayon); background: var(--avertissement-fond); font-weight: 700; }
 /* Bulles de choix (#126) : le bouton est la zone de toucher et ne bouge jamais ; seul le calque `.flottement` flotte, de quelques pixels.
    Le dessin (SVG, un par univers) se pose derrière le texte, qui reste sur un centre uni et clair. */
-/* La zone décorée de chaque bout (le décor mesure 40 px de large au plus, sur une bulle de 56 de haut) : le texte n'y entre jamais, dans aucun univers. */
+/* La zone décorée de chaque bout (le décor y tient grâce à `ECHELLE_MAX_DU_DECOR`, dans `dessins/dessin-de-bulle.tsx` : l'échelle du décor est plafonnée, quelle que soit la hauteur de la bulle) : le texte n'y entre jamais, dans aucun univers. */
 :root { --zone-des-bouts: 46px; }
 .choix-de-la-question { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; max-width: 100%; }
 .bulle-de-choix, .bulle-de-choix:hover {
