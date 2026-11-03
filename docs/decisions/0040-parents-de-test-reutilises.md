@@ -33,7 +33,8 @@ Trois causes se cumulent :
 
 La constante `PLAFOND_DES_PARENTS_DE_TEST` de `features/support/parents-de-test.ts` donne le nombre maximal d'adresses de test par mois :
 15 équipes actives × 2 projets × 3 workers × 5 adresses = **450**.
-Un test garde ce total sous 500.
+Un test garde ce total sous 500. Ce plafond suppose 3 workers : `E2E_WORKERS` au-delà l'augmente.
+Il ne compte pas les adresses `.libre` (coût à part, ci-dessous).
 
 S'y ajoute le coût accepté par le PO (146.1 A) des vraies inscriptions de #72 et #73 :
 - au plus 20 MAU par non-régression complète (2 projets) ;
@@ -49,6 +50,7 @@ S'y ajoute le coût accepté par le PO (146.1 A) des vraies inscriptions de #72 
 
 - Les anciens utilisateurs à suffixe aléatoire (environ 130) ne sont pas purgés (146.3). Ils ne comptent plus s'ils ne se connectent pas.
 - Deux équipes ne doivent pas forcer la même `E2E_EQUIPE`, sinon leurs scénarios se marchent dessus.
-- Un worker mort en cours de scénario laisse des données ; le scénario suivant du même suffixe les efface au début.
+- Un worker mort ou un nettoyage interrompu laisse des données. Le scénario suivant du même suffixe les efface au début : boîte de test et essais de réinitialisation du suffixe au démarrage de la fixture, profils enfants d'un parent réutilisé à sa première préparation. La remise à zéro (mot de passe) a lieu une seule fois par scénario et par adresse, sauf mot de passe explicite. Le nettoyage de fin exécute toutes ses étapes même si l'une échoue.
+- Les adresses enregistrées, nettoyées ou supprimées se terminent toujours par `+<suffixe>@exemple.test`.
 - Le compteur d'utilisateurs Auth reste stable d'un lancement à l'autre.
 - Le module est testé par `deno test features/support/parents-de-test_test.ts`. Le reste est vérifié par les E2E.
