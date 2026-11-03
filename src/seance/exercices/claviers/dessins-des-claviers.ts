@@ -9,11 +9,18 @@ export type EtatDeLaMarque = "a-atteindre" | "depassee";
 const CONTENU_D_UN_SVG = /^<svg[^>]*>([\s\S]*)<\/svg>\s*$/;
 const UNIVERS_PAR_DEFAUT: CleUnivers = "animaux";
 
-function contenuDe(nomDuFichier: string): string | undefined {
-  const source = SOURCES[`./dessins/${nomDuFichier}.svg`];
-  /** Sans les retours à la ligne entre les tracés : le texte d'une touche ou d'une case reste celui de sa lettre ou de son chiffre. */
-  return source === undefined ? undefined : CONTENU_D_UN_SVG.exec(source)?.[1]?.replace(/>\s+</g, "><").trim();
+/** Sans les retours à la ligne entre les tracés : le texte d'une touche ou d'une case reste celui de sa lettre ou de son chiffre. */
+function nettoye(source: string): string {
+  const contenu = CONTENU_D_UN_SVG.exec(source)?.[1];
+  if (contenu === undefined) throw new Error("Dessin illisible : ce n'est pas un SVG");
+  return contenu.replace(/>\s+</g, "><").trim();
 }
+
+const CONTENUS = new Map(
+  Object.entries(SOURCES).map(([chemin, source]) => [chemin.replace(/^\.\/dessins\/|\.svg$/g, ""), nettoye(source)]),
+);
+
+const contenuDe = (nomDuFichier: string): string | undefined => CONTENUS.get(nomDuFichier);
 
 /** Le dessin de l'univers, ou celui des animaux de la forêt quand l'univers n'en a pas. */
 function contenuDeLUnivers(univers: CleUnivers, nom: (univers: CleUnivers) => string): string {

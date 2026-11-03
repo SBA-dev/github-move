@@ -39,13 +39,19 @@ function descriptionDeLaCase(rang: number, { lettre, fausse, montree }: LettreDe
   return `Case ${rang + 1} : ${lettre}${fausse ? ", fausse" : ""}${montree ? ", lettre montrée par le personnage guide" : ""}`;
 }
 
-/** Combien de cases sont illuminées : une de plus à chaque rendu, ou toutes d'un coup avec les mouvements réduits. */
+/** Combien de cases sont illuminées : une de plus à chaque minuteur, ou toutes d'un coup avec les mouvements réduits. */
 function useCasesIlluminees(illuminee: boolean, nombreDeCases: number): number {
   const mouvementsReduits = useMouvementsReduits();
   const [illuminees, setIlluminees] = useState(0);
   useEffect(() => {
-    if (!illuminee) return setIlluminees(0);
-    if (mouvementsReduits) return setIlluminees(nombreDeCases);
+    if (!illuminee) {
+      setIlluminees(0);
+      return;
+    }
+    if (mouvementsReduits) {
+      setIlluminees(nombreDeCases);
+      return;
+    }
     const pas = DUREE_DE_L_ILLUMINATION_MS / nombreDeCases;
     const minuteries = Array.from(
       { length: nombreDeCases },
