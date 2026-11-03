@@ -821,8 +821,10 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 /* La jauge de l'univers : un remplissage uni qui couvre la barre, et deux bouts de dessin de taille fixe. Elle se dévoile sans changer la largeur de la barre. */
 .morceau-de-barre[data-jauge="vide"] { border-style: dashed; }
 /* Une barre remplie prend la silhouette et le contour de son univers (rayon, bouts découpés) ; vide, elle est la même partout. */
-.morceau-de-barre:is([data-jauge="se-remplit"], [data-jauge="pleine"]) { border-color: var(--contour-de-la-jauge); border-radius: var(--rayon-de-la-jauge); clip-path: var(--decoupe-de-la-jauge, none); }
-.jauge { position: absolute; inset: 0; z-index: 0; display: flex; justify-content: space-between; pointer-events: none; }
+.morceau-de-barre[data-jauge] { border-radius: var(--rayon-de-la-jauge); clip-path: var(--decoupe-de-la-jauge, none); }
+.morceau-de-barre:is([data-jauge="se-remplit"], [data-jauge="pleine"]) { border-color: var(--contour-de-la-jauge); }
+.jauge, .decor-de-la-barre-vide { position: absolute; inset: 0; z-index: 0; display: flex; justify-content: space-between; pointer-events: none; }
+.decor-de-la-barre-vide :is(g, path, rect) { fill: none; stroke: var(--contour); stroke-dasharray: 4 3; }
 .bout-de-jauge { flex: none; display: block; width: 24px; height: 100%; }
 .valeur-de-la-barre { position: relative; z-index: 1; }
 .morceau-de-barre[data-jauge="se-remplit"] .jauge { animation: jauge-se-remplit .2s ease-out backwards; }

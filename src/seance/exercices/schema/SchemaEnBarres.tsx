@@ -105,7 +105,9 @@ function MorceauDeBarre({ morceau, rempli }: { readonly morceau: Morceau; readon
       data-univers={univers}
       style={{ ...styleDeLaTaille(morceau.taille), ...silhouetteDeLaJauge(contour, rayon, decoupe) }}
     >
-      {aUneJauge && etatDeLaJauge !== "vide" && <JaugeDeLaBarre role={morceau.role} univers={univers} />}
+      {aUneJauge && (etatDeLaJauge === "vide"
+        ? <DecorDeLaBarreVide univers={univers} />
+        : <JaugeDeLaBarre role={morceau.role} univers={univers} />)}
       <span className="valeur-de-la-barre" data-testid={cherche ? "valeur-cherchee" : undefined}>{libelle(morceau)}</span>
     </div>
   );
@@ -121,8 +123,27 @@ function silhouetteDeLaJauge(contour: string, rayon: string, decoupe: string | u
   };
 }
 
+function BoutsDeLaJauge({ univers }: { readonly univers: CleUnivers }) {
+  const { boutGauche, boutDroit } = DESSINS_DES_JAUGES[univers];
+  return (
+    <>
+      <svg className="bout-de-jauge" viewBox="0 0 24 44" preserveAspectRatio="none" focusable="false">{boutGauche}</svg>
+      <svg className="bout-de-jauge" viewBox="0 0 24 44" preserveAspectRatio="none" focusable="false">{boutDroit}</svg>
+    </>
+  );
+}
+
+/** Une barre qui attend d'être remplie garde la silhouette de l'univers : ses bouts sont dessinés en pointillés, sans remplissage. */
+function DecorDeLaBarreVide({ univers }: { readonly univers: CleUnivers }) {
+  return (
+    <div className="decor-de-la-barre-vide" aria-hidden="true">
+      <BoutsDeLaJauge univers={univers} />
+    </div>
+  );
+}
+
 function JaugeDeLaBarre({ role, univers }: { readonly role: string; readonly univers: CleUnivers }) {
-  const { partie, tout, boutGauche, boutDroit } = DESSINS_DES_JAUGES[univers];
+  const { partie, tout } = DESSINS_DES_JAUGES[univers];
   return (
     <div
       className="jauge"
@@ -131,8 +152,7 @@ function JaugeDeLaBarre({ role, univers }: { readonly role: string; readonly uni
       aria-hidden="true"
       style={{ backgroundColor: ROLES_DU_TOUT.includes(role) ? tout : partie }}
     >
-      <svg className="bout-de-jauge" viewBox="0 0 24 44" preserveAspectRatio="none" focusable="false">{boutGauche}</svg>
-      <svg className="bout-de-jauge" viewBox="0 0 24 44" preserveAspectRatio="none" focusable="false">{boutDroit}</svg>
+      <BoutsDeLaJauge univers={univers} />
     </div>
   );
 }
