@@ -649,6 +649,13 @@ GivenDe129(/^la tablette est en Muet$/, async ({ page }) => {
   await rechargerAvecLeProfilReel(page);
 });
 
+GivenDe129(/^le navigateur ne sait pas lire à voix haute$/, async ({ page }) => {
+  scenario(page).absent = true;
+  await reappliquerLAppareil(page);
+  if (!estSurUnProfilReel(page)) return;
+  await rechargerAvecLeProfilReel(page);
+});
+
 GivenDe129(/^Paul a réglé « mode dys » sur « oui » pour Léa$/, async ({ famille, page }) => {
   await modifierLeProfil(famille, "Léa", { reglages: { modeDys: true } });
   // Léa joue déjà avec son vrai profil : elle se choisit de nouveau pour que le réglage s'applique.
