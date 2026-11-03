@@ -1,5 +1,5 @@
 # language: fr
-@issue-127 @wip
+@issue-127
 Fonctionnalité: Des exercices qui ressemblent à des jeux : les maisons de l'addition posée
   En tant qu'enfant
   Je veux glisser mes chiffres du doigt dans les maisons de mon univers, les voir s'allumer quand mon calcul est juste,
