@@ -37,3 +37,7 @@
   - (5) `CasesDeLaDictee.tsx` : commentaire inexact, `return setIlluminees(0)` ; (6) table des dessins précalculée au chargement ; (7) commentaire sur `dangerouslySetInnerHTML` (SVG statique du dépôt seulement).
   - (3) touche qui brille et touchée : accepté, phrase du contrat ajustée.
   - (4) record d'un autre exercice affiché un instant si « C'est parti ! » est touché avant la fin de la lecture du record (défaut déjà présent pour `terminer`) : noté en dette dans la PR, non couvert par un test.
+- 11:00 UTC : mise au point E2E, cycle 1 (`2419745`) : diagnostics vérifiés un par un, tous dus aux étapes, aucun bug du front. Le mode dys venait de l'étape de réglage, pas du front. Run initial 67/90 ; après corrections, 63/64 sur les premiers scénarios du run complet, puis tout en timeout : projet Supabase de dev lent (504 sur `/auth/v1/admin/users`). Pas de total fiable : run complet à relancer quand le projet est sain. Scénario « L'illumination du mot juste ne retarde pas l'effet sonore » à rejouer seul (rouge une fois).
+- `bddgen` vert pour #19, #20, #21, #65, #97, #98, #126, #127, #128 après les élargissements d'étapes partagées.
+- APPRIS publié sur #128 (Supabase lent, contournement Chromium, étapes partagées élargies). RELIS envoyé à la nouvelle session du responsable.
+- Corrections des non bloquants de la review (`implementer`) et précisions du contrat (`po-acceptance`) lancées.
