@@ -175,7 +175,18 @@ Given(/^Léa joue un exercice addition à l'étape poser d'une leçon de test$/,
 });
 
 export async function additionAPoserAffichee(page: Page): Promise<boolean> {
-  return await additionPosee(page).isVisible();
+  const addition = additionPosee(page);
+  return (await addition.isVisible()) && (await addition.getAttribute("data-etape")) === "poser";
+}
+
+export async function additionACalculerAffichee(page: Page): Promise<boolean> {
+  const addition = additionPosee(page);
+  return (await addition.isVisible()) && (await addition.getAttribute("data-etape")) === "calculer";
+}
+
+export async function direJeNeSaisPasSurUneAdditionACalculer(page: Page): Promise<void> {
+  await jeNeSaisPas(page).click();
+  await expect(jeNeSaisPas(page)).toHaveCount(0);
 }
 
 export async function direJeNeSaisPasSurUneAdditionAPoser(page: Page): Promise<void> {

@@ -37,7 +37,7 @@ import { rechargerAvecLeProfilReel } from "./profil-reel.ts";
 import { profilDe } from "./profils-enfants.steps.ts";
 import { accepterLaProposition, ouvrirLaProposition } from "./test-de-depart.steps.ts";
 import { cleDe } from "./univers.steps.ts";
-import { journal, terminerLaLecture } from "./voix.steps.ts";
+import { journal, laisserPasserLeDelaiDeLecture, terminerLaLecture } from "./voix.steps.ts";
 
 // Story #127, tranche 98c-addition de #98 : les maisons de l'addition posée (glisser au doigt, maison allumée, retenue qui saute).
 //
@@ -403,6 +403,7 @@ When(
 
 When(new RegExp(`^Léa touche la maison des ${RANG}$`), async ({ page }, rang: string) => {
   // Un vrai toucher au centre de la maison : la maison peut être désactivée à l'étape calculer, ce qu'un click() refuserait d'attendre.
+  await laisserPasserLeDelaiDeLecture(page);
   await noterLesParolesDejaDites(page);
   const centre = await centreDe(page, maisonDe(page, rang), `la maison des ${rang}`);
   await page.mouse.click(centre.x, centre.y);

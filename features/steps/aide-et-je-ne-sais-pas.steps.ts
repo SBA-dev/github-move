@@ -21,7 +21,9 @@ import { normaliser } from "./voix.steps.ts";
 import type { Monde, ProfilPrepare } from "./fixtures.ts";
 import { preparerUnExercice } from "./calcul-fluence-addition.steps.ts";
 import {
+  additionACalculerAffichee,
   additionAPoserAffichee,
+  direJeNeSaisPasSurUneAdditionACalculer,
   commencerUnCalculDeTest,
   direJeNeSaisPasSurUneAdditionAPoser,
   unCalculEstAffiche,
@@ -66,6 +68,7 @@ Given(/^Léa en est à la question « (.+) » dont la réponse est « ([^«»]+)
 
 async function direJeNeSaisPas(page: Page) {
   if (await additionAPoserAffichee(page)) return await direJeNeSaisPasSurUneAdditionAPoser(page);
+  if (await additionACalculerAffichee(page)) return await direJeNeSaisPasSurUneAdditionACalculer(page);
   if (await aDesEtiquettesAPlacer(page)) return await direJeNeSaisPasSurDesEtiquettes(page);
   if (await estUneDictee(page)) return await direJeNeSaisPasEnDictee(page);
   await avancerJusquAuxChoix(page);
