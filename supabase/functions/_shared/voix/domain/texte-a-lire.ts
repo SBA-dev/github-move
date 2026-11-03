@@ -16,6 +16,10 @@ export function textePrononce(brut: string): string {
     .trim();
 }
 
+export function motsPrononces(textePrononceOuPhrase: string): string[] {
+  return textePrononceOuPhrase.split(/\s+/).filter(Boolean);
+}
+
 export function texteALire(brut: string): TexteALire | undefined {
   const texte = textePrononce(brut);
   if (!/[\p{L}\p{N}]/u.test(texte)) return undefined;
