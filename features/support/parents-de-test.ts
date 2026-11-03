@@ -26,3 +26,26 @@ export function equipeDesTests(
   }
   return source.branche?.match(BRANCHE_DE_STORY)?.[1] ?? EQUIPE_PAR_DEFAUT;
 }
+
+export const ADRESSES_DES_SCENARIOS = [
+  "paul@exemple.test",
+  "claire@exemple.test",
+  "marie@exemple.test",
+  "inconnu@exemple.test",
+  "dupont@exemple.test",
+] as const;
+
+// Décision 0040 : le quota MAU de Supabase impose un plafond de quelques
+// centaines de parents de test par mois.
+const EQUIPES_ACTIVES_PAR_MOIS = 15;
+const PROJETS = 2;
+const WORKERS = 3;
+const ADRESSES = ADRESSES_DES_SCENARIOS.length;
+
+export const PLAFOND_DES_PARENTS_DE_TEST = {
+  equipesActivesParMois: EQUIPES_ACTIVES_PAR_MOIS,
+  projets: PROJETS,
+  workers: WORKERS,
+  adresses: ADRESSES,
+  total: EQUIPES_ACTIVES_PAR_MOIS * PROJETS * WORKERS * ADRESSES,
+} as const;
