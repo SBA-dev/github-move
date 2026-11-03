@@ -43,8 +43,11 @@ const PARTIE_LIBRE = ".libre";
  * l'adresse saisie.
  *
  * Réutilisation (décision 0040) : ces parents ne sont pas supprimés en fin de scénario, pour ne pas consommer le quota
- * d'utilisateurs actifs de Supabase. Au début, le parent est trouvé ou créé puis remis à zéro (mot de passe, e-mail
- * confirmé) ; avant, ses profils enfants d'un scénario interrompu sont supprimés ; à la fin, ses profils enfants sont supprimés, la boîte de test et les essais du suffixe sont vidés. Au début, la boîte et les essais du suffixe sont aussi vidés.
+ * d'utilisateurs actifs de Supabase.
+ * - Début du scénario : la boîte de test et les essais du suffixe sont vidés (restes d'un scénario interrompu).
+ * - Première préparation d'un parent : il est trouvé ou créé, ses profils enfants sont supprimés, puis il est remis à
+ *   zéro (mot de passe, e-mail confirmé).
+ * - Fin du scénario : ses profils enfants sont supprimés, la boîte de test et les essais du suffixe sont vidés.
  *
  * Adresse « libre » : quand un scénario affirme qu'aucun parent n'utilise une adresse, il va souvent l'inscrire pour de
  * vrai. Cette adresse prend alors une partie locale distincte (« paul.libre+<suffixe>@exemple.test ») pour ne pas
@@ -200,10 +203,11 @@ export class Famille {
     this.garantirUneAdresseDuSuffixe(adresse);
     const parent = await trouverOuCreerParent(adresse);
     const premiere = !this.parentsPrepares.has(adresse);
-    this.parentsPrepares.add(adresse);
     if (premiere) await supprimerLesProfilsDuParent(parent.id);
-    if (premiere || motDePasse !== undefined) return remettreLeParentAZero(parent, motDePasse);
-    return parent;
+    if (!premiere && motDePasse === undefined) return parent;
+    const remis = await remettreLeParentAZero(parent, motDePasse);
+    this.parentsPrepares.add(adresse);
+    return remis;
   }
 
   /** Début de scénario : les restes d'un scénario précédent de ce suffixe (nettoyage interrompu) sont effacés. */
@@ -327,7 +331,7 @@ export class Famille {
   }
 }
 
-/** Exécute toutes les étapes, même si l'une échoue, puis relève la première erreur. */
+/** Exécute toutes les étapes, même si l'une échoue, puis relève toutes les erreurs. */
 async function toutEssayer(etapes: ReadonlyArray<() => Promise<void>>): Promise<void> {
   const erreurs: unknown[] = [];
   for (const etape of etapes) {
@@ -337,5 +341,8 @@ async function toutEssayer(etapes: ReadonlyArray<() => Promise<void>>): Promise<
       erreurs.push(erreur);
     }
   }
-  if (erreurs.length > 0) throw erreurs[0];
+  if (erreurs.length > 0) {
+    const messages = erreurs.map((erreur) => (erreur instanceof Error ? erreur.message : String(erreur)));
+    throw new AggregateError(erreurs, messages.join(" | "));
+  }
 }

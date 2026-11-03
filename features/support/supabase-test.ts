@@ -109,10 +109,11 @@ export async function remettreLeParentAZero(parent: ParentExistant, motDePasse: 
   if (reponse.status === 404) {
     parentsConnus.delete(parent.email);
     const recree = await trouverOuCreerParent(parent.email);
-    await appeler(`/auth/v1/admin/users/${recree.id}`, {
+    const seconde = await envoyer(`/auth/v1/admin/users/${recree.id}`, {
       method: "PUT",
       body: JSON.stringify({ email_confirm: true, password: motDePasse }),
     });
+    if (!seconde.ok) throw new Error(`Supabase PUT /auth/v1/admin/users : ${seconde.status} ${await seconde.text()}`);
     return recree;
   }
   if (!reponse.ok) throw new Error(`Supabase PUT /auth/v1/admin/users : ${reponse.status} ${await reponse.text()}`);
