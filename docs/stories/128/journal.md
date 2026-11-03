@@ -16,3 +16,5 @@
 ## 2026-11-03
 
 - 00:36 UTC : RELIS #64. Cadrage présenté au PO (validation n°1, 23:06 UTC), pas encore de réponse. À SAVOIR de #127 noté : `EcranDeSeance.tsx`, `useDeroulementDeSeance.ts` et `styles.css` (bloc `@media (max-width: 480px)` avec `.addition-posee`) bougeront à l'intégration de `main` ; vérifier le clavier de cristaux dans l'addition à 360 px après le merge de #127.
+- 06:40 UTC : validation n°1 levée (annonce [Responsable] sur #64 et #128) : « 128 reco tout ». Toutes les recos #128.1 à #128.14 retenues. Merge de #127 autorisé : intégrer `main` après son merge.
+- Report des réponses (`po-acceptance`) et RED de `RecordDeFluence.estDepassePar` (`test-writer`) lancés en parallèle.
