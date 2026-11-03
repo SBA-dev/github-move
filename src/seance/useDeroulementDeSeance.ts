@@ -416,6 +416,7 @@ export function useDeroulementDeSeance(
     departsDesRetenues: addition.departsDesRetenues,
     fluenceFinie: fluence.fluenceFinie,
     recordBattu: fluence.recordBattu,
+    recordDeDepart: fluence.recordDeDepart,
     repondreParUnNombre,
     choisirUneReponseDeCalcul,
     poserUnChiffre,

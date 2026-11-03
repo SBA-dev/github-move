@@ -76,7 +76,7 @@ async function repondreFaux(page: Page, lecon: LeconBrute | undefined): Promise<
   await repondreEtLaisserDire(page, resultatDeLaCarte(lecon, carte) + 1);
 }
 
-async function direJeNeSaisPasAuClavier(page: Page): Promise<void> {
+export async function direJeNeSaisPasAuClavier(page: Page): Promise<void> {
   await attendreQueLaQuestionSoitLibre(page);
   const avant = (await journal(page)).speaks;
   await jeNeSaisPas(page).click();

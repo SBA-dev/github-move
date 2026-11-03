@@ -328,6 +328,7 @@ function SeanceEnCours(
               <ExerciceDeFluence
                 fluence={fluence}
                 recordBattu={deroulement.recordBattu}
+                recordDeDepart={deroulement.recordDeDepart}
                 onDemarrer={deroulement.demarrerLaFluence}
                 onValider={(nombre) => void deroulement.repondreParUnNombre(nombre)}
               />

@@ -135,14 +135,18 @@ export function questionsDeLaSeance(page: Page): Question[] {
 async function installerLeTirage(page: Page) {
   if (tiragesInstalles.has(page)) return;
   tiragesInstalles.add(page);
-  await page.addInitScript((cle) => {
+  const installer = (cle: string) => {
     const reel = Math.random.bind(Math);
     Math.random = () => {
       const file = Reflect.get(window, cle) as number[] | undefined;
       if (file && file.length > 0 && new Error().stack?.includes("/seance/hasard-navigateur")) return file.shift() as number;
       return reel();
     };
-  }, FILE_DU_TIRAGE);
+  };
+  await page.addInitScript(installer, FILE_DU_TIRAGE);
+  // Sur un vrai profil, la page de la leçon s'ouvre dans l'application déjà chargée, sans nouveau chargement :
+  // le script d'initialisation ne passerait pas, le hasard de la page courante est donc détourné tout de suite.
+  await page.evaluate(installer, FILE_DU_TIRAGE);
 }
 
 /** Les nombres à donner au mélange (Fisher-Yates, du dernier rang au deuxième) pour obtenir l'ordre voulu. */
