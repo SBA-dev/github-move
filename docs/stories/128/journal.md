@@ -21,3 +21,5 @@
 - 06:42 UTC : TDD, comportement 1/1 du domaine vert : `RecordDeFluence.estDepassePar` (RED `ce34c1b`, GREEN `fe69fed`, `proposer` la réutilise). 2787 tests verts.
 - 06:45 UTC : intégration de `main` après le merge de #127 (`227ec44`), sans conflit (`55b2247`). Tests unitaires et `tsc` verts. Le clavier dans l'addition à 360 px sera vérifié après le câblage du clavier.
 - 06:50 UTC : planches de dessins (`implementer` en illustrateur) et revue delta du bloc domaine (`mr-reviewer`, `ce34c1b..fe69fed`) lancées en parallèle.
+- 06:55 UTC : revue delta du bloc domaine (`ce34c1b..fe69fed`) : APPROUVÉ, aucun bloquant. Non bloquants notés : identifiant `dépasse` accentué dans le test (à renommer en `depasse` au prochain passage de `test-writer`), garde redondante assumée dans `proposer`, refactor dans le commit `feat`. Dernier commit relu : `fe69fed`.
+- 06:56 UTC : `e2e-tester` écrit les étapes de `@issue-128` (sans exécution) et le contrat des repères DOM pour le câblage.
