@@ -22,7 +22,7 @@ Trois causes se cumulent :
 2. **Parents réutilisés** : un parent existant n'est plus supprimé.
    - Au début du scénario, il est remis à zéro : mot de passe du scénario (ou valeur aléatoire si le scénario n'en donne pas), e-mail confirmé.
    - À la fin, ses données sont effacées : profils enfants et données en cascade, boîte de test, essais de réinitialisation.
-3. **Recherche par adresse** : l'API d'administration est interrogée avec un filtre sur l'adresse, avec contrôle exact. La correspondance adresse → identifiant est gardée en cache le temps du worker. La liste complète des utilisateurs disparaît. Un 422 à la création (adresse déjà prise) fait retrouver le parent par la recherche filtrée.
+3. **Recherche par adresse** : l'API d'administration est interrogée avec un filtre sur l'adresse, avec contrôle exact. La correspondance adresse → identifiant est gardée en cache le temps du worker. La liste complète des utilisateurs disparaît. Un 422 à la création (adresse déjà prise) fait parcourir une fois la liste paginée (`per_page=1000`), en filet de sécurité si l'API ignorait le filtre.
 4. **Adresses « libres »** : les scénarios « aucun parent n'utilise l'adresse … » qui réussissent une vraie inscription (#72, #73) utilisent `prenom.libre+<suffixe>@exemple.test`, supprimée en fin de scénario.
    - Une inscription réussie crée forcément un utilisateur Auth, donc 1 MAU.
    - Il faut une adresse libre au scénario suivant, donc supprimer ce parent.
