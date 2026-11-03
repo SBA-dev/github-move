@@ -26,3 +26,4 @@
 - 07:00 UTC : planches rendues (`03d4c2a`, 36 SVG, 3 planches), relues par l'orchestrateur contre la règle absolue : rien à signaler. `PLANCHES PRÊTES` publié sur #128 (6597369156), 6 choix à confirmer (P1 à P6).
 - 07:10 UTC : étapes E2E écrites (`ab8a3f9`) et contrat des repères DOM dans `acceptance.md`. `bddgen` vert pour `@issue-98`, `@issue-127` et `@issue-128`. Deux steps de #98 exclus pour #127 et #128 (`not @issue-127 and not @issue-128`), leur sens ne change pas pour #98.
 - 07:12 UTC : câblage du front lancé (`implementer`).
+- 07:11 UTC : planches validées par le PO (annonce [Responsable] 6597661184 sur #128, « planches 128 OK »), choix P1 à P6 compris. Condition 98.31 remplie.
