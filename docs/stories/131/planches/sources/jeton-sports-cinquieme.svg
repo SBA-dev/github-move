@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+<!-- pastille ronde mate -->
+<circle cx="50" cy="50" r="42" fill="#E3F2FF" stroke="#FF922B" stroke-width="12"/>
+<circle cx="50" cy="50" r="36" fill="none" stroke="#2F6FCF" stroke-width="2.5"/>
+<!-- petit plot d'entraînement -->
+<rect x="28" y="66" width="44" height="9" rx="4.5" fill="#C23B2A" stroke="#7A1F14" stroke-width="3" stroke-linejoin="round"/>
+<path d="M38 66 L46 28 Q50 24 54 28 L62 66 Z" fill="#E8604C" stroke="#7A1F14" stroke-width="3.5" stroke-linejoin="round"/>
+<path d="M41.5 50 H58.5" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 48">
+<!-- tige unie -->
+<rect x="4" y="13" width="84" height="26" rx="13" fill="#8FD39B" stroke="#2E7E52" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+<!-- une seule feuille, au bout -->
+<path d="M80 22 Q88 2 106 4 Q104 26 80 30 Z" fill="#4FB37A" stroke="#2E7E52" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+</svg>

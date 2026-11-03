@@ -1,0 +1,8 @@
+Contraste du nombre écrit sur la jauge (WCAG, seuil 4,5:1) et du « ? » sur la barre vide
+
+animaux    nombre #1B1530 sur jauge #8FD39B : 9.99:1   « ? » #1B1530 sur fond vide #FFF3C4 : 15.77:1   contour #2E7E52 sur fond clair #F3F8FD : 4.66:1
+princesse  nombre #1B1530 sur jauge #D9B3F0 : 9.74:1   « ? » #1B1530 sur fond vide #FFF3C4 : 15.77:1   contour #7E56BC sur fond clair #F3F8FD : 4.98:1
+sports     nombre #1B1530 sur jauge #8FC7F7 : 9.76:1   « ? » #1B1530 sur fond vide #FFF3C4 : 15.77:1   contour #164BA8 sur fond clair #F3F8FD : 7.54:1
+police     nombre #1B1530 sur jauge #9FB2E6 : 8.34:1   « ? » #1B1530 sur fond vide #FFF3C4 : 15.77:1   contour #1F2F82 sur fond clair #F3F8FD : 11.00:1
+pompier    nombre #1B1530 sur jauge #A8DFF5 : 12.15:1   « ? » #1B1530 sur fond vide #FFF3C4 : 15.77:1   contour #1F6F96 sur fond clair #F3F8FD : 5.21:1
+danse      nombre #1B1530 sur jauge #F7B3D6 : 10.34:1   « ? » #1B1530 sur fond vide #FFF3C4 : 15.77:1   contour #A24A9A sur fond clair #F3F8FD : 4.94:1
