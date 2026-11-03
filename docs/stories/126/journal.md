@@ -122,3 +122,13 @@ Numéro de décision : prochain libre 0040, si besoin. Commentaire `Avancement` 
 | Captures | 14 (12 pour la PR, plus 2 du texte long) |
 | Incidents | 3 redémarrages du conteneur (travail récupéré à chaque fois depuis le disque) ; Chromium 1243 au lieu de 1194 (liens symboliques du scratchpad) ; 2 scénarios de #97 rouges ou instables sur `main` (APPRIS, suivis par #141) |
 | Tokens | relevés par le responsable |
+
+## Merge
+- 07:58 UTC : autorisation de merge (annonce [Responsable] 6598398848 sur #64, PO : « Merge 126 ok »). **VERROU merge** accordé à #126 et inscrit dans le corps de #64. La nouvelle session du responsable (`session_015z4jmPB9NToEBmXDvNpaLi`) est confirmée dans le corps de #64. Conditions vérifiées :
+  - `main` n'a pas bougé depuis l'intégration de `227ec44` ;
+  - le code n'a pas changé depuis le run 144/144 (`31c9184` → HEAD : documentation seulement) ;
+  - deno test, lint, fmt et tsc relancés par `mr-reviewer` ; build vert ;
+  - pas de CI configurée sur la PR ;
+  - review APPROUVÉE.
+
+  Merge de la PR #144 en merge commit.
