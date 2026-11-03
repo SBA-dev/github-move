@@ -1,0 +1,3 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><g transform="translate(100 100) scale(.88) translate(-100 -100)"><rect x="16" y="16" width="168" height="168" rx="8" fill="#B97A45" stroke="#5E3416" stroke-width="4" stroke-linejoin="round"/>
+<path d="M16 16 L44 44 M184 16 L156 44 M16 184 L44 156 M184 184 L156 156" stroke="#5E3416" stroke-width="3" opacity=".6"/>
+<rect x="44" y="44" width="112" height="112" rx="3" fill="#F5DDB8" stroke="#5E3416" stroke-width="2.5"/></g></svg>

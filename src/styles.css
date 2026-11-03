@@ -848,7 +848,27 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
   box-shadow: 0 0 0 4px var(--surbrillance), 0 0 14px 6px var(--surbrillance);
   animation: brille 1.2s ease-in-out infinite alternate;
 }
+/* Claviers (#128) : le cristal prend le dessin de l'univers ; l'éclat d'un toucher est une couleur et des étincelles, sans mouvement. */
+.cristal { position: relative; }
+.cristal[data-univers] { background: none; border-color: transparent; }
+.cristal[data-univers]:hover { background: none; }
+.cristal[data-univers] .dessin-du-cristal { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.chiffre-du-cristal { position: relative; }
+.cristal[data-eclat="true"] { border-color: #0B7E91; background: #D9F5F8; filter: brightness(1.12) saturate(1.3); }
+.cristal[data-univers][data-eclat="true"] { background: none; }
+.cristal[data-univers][data-brille="true"] { background: var(--surbrillance-fond); }
+.cristal .eclat-de-la-touche { position: absolute; inset: -4px; width: calc(100% + 8px); height: calc(100% + 8px); pointer-events: none; }
 .tableau-de-fluence { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 16px; width: min(100%, 28rem); padding: 8px 14px; border-radius: var(--rayon-grand); background: var(--surface-dense); font-weight: 800; }
+.marque-du-record { display: inline-flex; align-items: center; gap: 6px; font-size: 1rem; }
+.marque-du-record .dessin-de-la-marque { flex: none; width: 28px; height: 28px; }
+@media (max-width: 480px) {
+  /* À 360 px, le temps a sa ligne ; le score et la marque du record tiennent ensemble sur la suivante. */
+  .tableau-de-fluence { gap: 4px 12px; padding: 8px 6px; }
+  .tableau-de-fluence .temps-restant { flex-basis: 100%; text-align: center; }
+  .tableau-de-fluence .marque-du-record { white-space: nowrap; }
+  .marque-du-record { gap: 4px; }
+  .marque-du-record .dessin-de-la-marque { width: 20px; height: 20px; }
+}
 .barre-de-temps { flex: 1 1 100%; height: 12px; border-radius: var(--rayon-petit); background: var(--piste); overflow: hidden; }
 .barre-de-temps i { display: block; height: 100%; background: var(--principale); transition: width .3s linear; }
 .scores-de-fluence { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
@@ -982,6 +1002,11 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 .case-a-ecrire[data-etat="vide"] { border-style: dashed; background: var(--surface-voilee); }
 .case-a-ecrire[data-etat="montree"] { border-style: double; border-width: 5px; background: var(--surbrillance-fond); font-style: italic; }
 .case-a-ecrire[data-etat="fausse"] { border-color: var(--erreur); background: var(--erreur-fond); color: var(--erreur); text-decoration: underline wavy; }
+.case-a-ecrire { position: relative; }
+.case-a-ecrire[data-univers]:not([data-etat="fausse"], [data-etat="montree"]) { background: none; border-color: transparent; }
+.case-a-ecrire .dessin-de-la-case { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.case-a-ecrire:is([data-etat="fausse"], [data-etat="montree"]) .dessin-de-la-case { opacity: .35; }
+.lettre-de-la-case { position: relative; }
 .clavier-de-dictee { display: grid; justify-items: center; gap: 6px; max-width: 100%; }
 .rangee-de-touches { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; max-width: 100%; }
 .touche {
