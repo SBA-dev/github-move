@@ -72,11 +72,11 @@ type Evenement = EvenementDeJeton | EvenementDeBoite | EvenementDeBarre | Evenem
 type Position = { t: number; id: number; y: number; o: number };
 type Contenu = { t: number; groupes: number[][]; etat: string };
 type Largeur = { t: number; index: number; valeur: string; jauge: string; w: number; jw: number };
-type Journal131 = { evenements: Evenement[]; positions: Position[]; contenus: Contenu[]; largeurs: Largeur[]; marque: number; debutDeQuestion: number };
+type Journal131 = { evenements: Evenement[]; positions: Position[]; contenus: Contenu[]; largeurs: Largeur[]; marque: number; debutDeQuestion: number; boutonsTouches: number };
 
 export function installerLEnregistreurDeLaStory131() {
   type Faux = { journal: Array<{ type: string; texte: string }> };
-  const journal: Journal131Local = { evenements: [], positions: [], contenus: [], largeurs: [], marque: 0, debutDeQuestion: 0 };
+  const journal: Journal131Local = { evenements: [], positions: [], contenus: [], largeurs: [], marque: 0, debutDeQuestion: 0, boutonsTouches: 0 };
   type Journal131Local = {
     evenements: Array<Record<string, string | number>>;
     positions: Array<Record<string, number>>;
@@ -84,6 +84,7 @@ export function installerLEnregistreurDeLaStory131() {
     largeurs: Array<Record<string, string | number>>;
     marque: number;
     debutDeQuestion: number;
+    boutonsTouches: number;
   };
   Reflect.set(window, "__jeu131", journal);
   const attribut = (element: Element, nom: string) => element.getAttribute(nom) ?? "";
@@ -157,12 +158,15 @@ export function installerLEnregistreurDeLaStory131() {
   const derniereLargeur = new Map<number, string>();
   const dernierePosition = new Map<number, string>();
   let enonce = "";
+  let touchesALaDerniereQuestion = -1;
   const regarder = () => {
     const t = performance.now();
     // Une nouvelle question du problème en barres : le journal des barres repart de là.
     const enonceLu = (document.querySelector('[data-testid="enonce-du-probleme"]')?.textContent ?? "").trim();
-    if (enonceLu !== "" && enonceLu !== enonce) {
+    // Un énoncé qui change avant tout toucher de bouton n'est pas une nouvelle question : le « ? » d'avant la réponse reste dans le journal.
+    if (enonceLu !== "" && enonceLu !== enonce && journal.boutonsTouches !== touchesALaDerniereQuestion) {
       enonce = enonceLu;
+      touchesALaDerniereQuestion = journal.boutonsTouches;
       journal.debutDeQuestion = t - 100;
     }
     const faux = Reflect.get(window, "__faux") as Faux | undefined;
@@ -222,7 +226,10 @@ export function installerLEnregistreurDeLaStory131() {
   // Début du geste de l'enfant : le dernier toucher d'un bouton.
   document.addEventListener("click", (evenement) => {
     const cible = evenement.target;
-    if (cible instanceof Element && cible.closest("button") !== null) journal.marque = journal.evenements.length;
+    if (cible instanceof Element && cible.closest("button") !== null) {
+      journal.marque = journal.evenements.length;
+      journal.boutonsTouches++;
+    }
   }, true);
 }
 
@@ -238,8 +245,8 @@ async function lireLeJournal(page: Page): Promise<Journal131> {
   const lu = await page.evaluate(() => {
     const brut = Reflect.get(window, "__jeu131") as Journal131 | undefined;
     return brut === undefined
-      ? { evenements: [], positions: [], contenus: [], largeurs: [], marque: 0, debutDeQuestion: 0 }
-      : { evenements: [...brut.evenements], positions: [...brut.positions], contenus: [...brut.contenus], largeurs: [...brut.largeurs], marque: brut.marque, debutDeQuestion: brut.debutDeQuestion };
+      ? { evenements: [], positions: [], contenus: [], largeurs: [], marque: 0, debutDeQuestion: 0, boutonsTouches: 0 }
+      : { evenements: [...brut.evenements], positions: [...brut.positions], contenus: [...brut.contenus], largeurs: [...brut.largeurs], marque: brut.marque, debutDeQuestion: brut.debutDeQuestion, boutonsTouches: brut.boutonsTouches };
   });
   const deLaQuestion = (e: Evenement) => e.genre !== "barre" || e.t >= lu.debutDeQuestion;
   return {
@@ -898,6 +905,17 @@ Then(/^la barre « \? » reste vide, avec son « \? »$/, async ({ page }) => {
 });
 
 /**
+ * Léa a touché un bouton (réponse, « Je ne sais pas ») : le schéma résolu va s'afficher, on l'attend avant de compter les fins de lecture,
+ * pour ne pas couper la félicitation si l'étape démarre juste après la réponse.
+ */
+async function laReponseAEteDonnee(page: Page): Promise<boolean> {
+  const touches = await page.evaluate(() => (Reflect.get(window, "__jeu131") as { boutonsTouches: number } | undefined)?.boutonsTouches ?? 0);
+  if (touches === 0) return (await schema(page).getAttribute("data-resolu")) === "true";
+  await expect(schema(page)).toHaveAttribute("data-resolu", "true", { timeout: DELAI_MS });
+  return true;
+}
+
+/**
  * Attend que les barres soient pleines. Après la réponse, on ne termine aucune lecture : la félicitation se lit jusqu'au bout
  * et la question suivante ne doit pas apparaître avant l'état « pleine ».
  */
@@ -941,7 +959,7 @@ Then(/^les barres de (\d+) et de (\d+) se remplissent comme une jauge, jusqu'au 
 });
 
 Then(/^la barre de (\d+) se remplit comme une jauge, jusqu'au bout de sa barre$/, async ({ page }, valeur: string) => {
-  const aRepondu = (await schema(page).getAttribute("data-resolu")) === "true";
+  const aRepondu = await laReponseAEteDonnee(page);
   await attendreLeRemplissage(page, [valeur], aRepondu);
   const lu = await lireLeJournal(page);
   expect(etatsDeLaJaugeDeLaBarre(lu, valeur), `la barre de ${valeur} se remplit avant d'être pleine`).toContain("se-remplit");
@@ -1022,7 +1040,7 @@ Then(/^les barres de (\d+) et de (\d+) restent pleines, sans se remplir de nouve
 });
 
 Then(/^la barre de (\d+) a la même largeur que la barre « \? » avant la réponse$/, async ({ page }, valeur: string) => {
-  const aRepondu = (await schema(page).getAttribute("data-resolu")) === "true";
+  const aRepondu = await laReponseAEteDonnee(page);
   await attendreLeRemplissage(page, [valeur], aRepondu);
   const lu = await lireLeJournal(page);
   const avant = lu.largeurs.filter((l) => l.valeur === "?").at(-1);
@@ -1033,7 +1051,7 @@ Then(/^la barre de (\d+) a la même largeur que la barre « \? » avant la répo
 });
 
 Then(/^l'effet sonore « réponse juste » commence avant que la barre de (\d+) se remplisse$/, async ({ page }, valeur: string) => {
-  const aRepondu = (await schema(page).getAttribute("data-resolu")) === "true";
+  const aRepondu = await laReponseAEteDonnee(page);
   await attendreLeRemplissage(page, [valeur], aRepondu);
   const lu = await lireLeJournal(page);
   const son = sonsDuJournal(lu.evenements).find((s) => s.nom === "reponse-juste");
