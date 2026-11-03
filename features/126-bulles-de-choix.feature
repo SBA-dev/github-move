@@ -126,13 +126,25 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les choix sont des 
         | danse     | Danse               |
 
     # Question #126.2 : la bulle de choix s'allonge avec le texte (tranchée le 2026-11-02 : reco, la même capsule dans les 6 univers)
-    Scénario: Sur un écran de 360 px, une bulle de choix au texte long passe sur plusieurs lignes et se lit en entier
+    # Invariant 18 de docs/stories/98/domain-model.md : le dessin habille le texte sans le cacher, aussi sur une bulle de choix haute
+    Plan du Scénario: Dans l'univers « <univers> », sur un écran de 360 px, une bulle de choix au texte long passe sur plusieurs lignes et se lit en entier
       Étant donné que l'écran de l'appareil mesure 360 px de large
+      Et que Léa a choisi l'univers <clé>
       Et qu'une question de test « Que fait Plume ? » a les choix « Plume dort en boule sur le grand tapis bleu du salon, tout près de la fenêtre ouverte au soleil. », « Plume joue. » et « Plume mange. », de réponse « Plume joue. »
       Quand la question « Que fait Plume ? » s'affiche
       Alors la page tient dans la largeur de l'écran
       Et la consigne et tous les choix de la question restent visibles en entier
       Et chaque choix mesure au moins 44 px de haut et de large
+      Et le décor des bulles de choix ne cache pas leur texte
+
+      Exemples:
+        | clé       | univers             |
+        | animaux   | Animaux de la forêt |
+        | princesse | Princesses et fées  |
+        | sports    | Sports              |
+        | police    | Police              |
+        | pompier   | Pompiers            |
+        | danse     | Danse               |
 
     # Question #126.3 : toutes les bulles de choix d'une question ont-elles la même largeur ? (tranchée le 2026-11-02 : reco, oui)
     Scénario: Les bulles de choix d'une même question ont la même largeur, celle du choix le plus long
@@ -346,9 +358,20 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : les choix sont des 
       Alors le focus passe, dans l'ordre, sur les bulles de choix « 6 », « 7 » et « 9 »
       Et le focus reste sur la bulle de choix « 9 »
 
-    Scénario: En mode dys, les bulles de choix de l'univers s'affichent en mode dys
+    # Invariant 18 de docs/stories/98/domain-model.md : en mode dys, la bulle de choix est plus haute ; son décor ne cache pas son texte
+    Plan du Scénario: En mode dys, dans l'univers « <univers> », les bulles de choix <choix> s'affichent en mode dys, sans que leur décor cache leur texte
       Étant donné que Paul a réglé « mode dys » sur « oui » pour Léa
-      Et que Léa joue l'exercice « Quel son entends-tu ? » de la leçon « Les sons ou, on, an »
-      Quand la question « Dans le mot « poule », quel son entends-tu ? » s'affiche
+      Et que Léa a choisi l'univers <clé>
+      Et que <situation>
+      Quand la question « <question> » s'affiche
       Alors Léa voit la question et les choix en mode dys : police Andika, lettres, mots et lignes espacés
-      Et les bulles de choix de la question ont le dessin de l'univers « Animaux de la forêt »
+      Et les bulles de choix de la question ont le dessin de l'univers « <univers> »
+      Et le décor des bulles de choix ne cache pas leur texte
+
+      Exemples:
+        | choix            | clé       | univers             | situation                                                                                                                                                                                                                   | question                                     |
+        | aux choix courts | animaux   | Animaux de la forêt | Léa joue l'exercice « Quel son entends-tu ? » de la leçon « Les sons ou, on, an »                                                                                                                                           | Dans le mot « poule », quel son entends-tu ? |
+        | aux choix courts | princesse | Princesses et fées  | Léa joue l'exercice « Quel son entends-tu ? » de la leçon « Les sons ou, on, an »                                                                                                                                           | Dans le mot « poule », quel son entends-tu ? |
+        | aux choix courts | police    | Police              | Léa joue l'exercice « Quel son entends-tu ? » de la leçon « Les sons ou, on, an »                                                                                                                                           | Dans le mot « poule », quel son entends-tu ? |
+        | au choix long    | princesse | Princesses et fées  | une question de test « Que fait Plume ? » a les choix « Plume dort en boule sur le grand tapis bleu du salon, tout près de la fenêtre ouverte au soleil. », « Plume joue. » et « Plume mange. », de réponse « Plume joue. » | Que fait Plume ?                             |
+        | au choix long    | police    | Police              | une question de test « Que fait Plume ? » a les choix « Plume dort en boule sur le grand tapis bleu du salon, tout près de la fenêtre ouverte au soleil. », « Plume joue. » et « Plume mange. », de réponse « Plume joue. » | Que fait Plume ?                             |
