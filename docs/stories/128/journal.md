@@ -18,3 +18,6 @@
 - 00:36 UTC : RELIS #64. Cadrage présenté au PO (validation n°1, 23:06 UTC), pas encore de réponse. À SAVOIR de #127 noté : `EcranDeSeance.tsx`, `useDeroulementDeSeance.ts` et `styles.css` (bloc `@media (max-width: 480px)` avec `.addition-posee`) bougeront à l'intégration de `main` ; vérifier le clavier de cristaux dans l'addition à 360 px après le merge de #127.
 - 06:40 UTC : validation n°1 levée (annonce [Responsable] sur #64 et #128) : « 128 reco tout ». Toutes les recos #128.1 à #128.14 retenues. Merge de #127 autorisé : intégrer `main` après son merge.
 - Report des réponses (`po-acceptance`) et RED de `RecordDeFluence.estDepassePar` (`test-writer`) lancés en parallèle.
+- 06:42 UTC : TDD, comportement 1/1 du domaine vert : `RecordDeFluence.estDepassePar` (RED `ce34c1b`, GREEN `fe69fed`, `proposer` la réutilise). 2787 tests verts.
+- 06:45 UTC : intégration de `main` après le merge de #127 (`227ec44`), sans conflit (`55b2247`). Tests unitaires et `tsc` verts. Le clavier dans l'addition à 360 px sera vérifié après le câblage du clavier.
+- 06:50 UTC : planches de dessins (`implementer` en illustrateur) et revue delta du bloc domaine (`mr-reviewer`, `ce34c1b..fe69fed`) lancées en parallèle.
