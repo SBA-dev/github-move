@@ -45,6 +45,11 @@ export class RecordDeFluence {
     return this.etat.meilleurScore;
   }
 
+  estDepassePar(score: number): boolean {
+    const record = this.etat.meilleurScore;
+    return record !== undefined && score > record;
+  }
+
   proposer(score: number): IssueDuRecord {
     if (score <= 0) return "aucunRecord";
 
@@ -53,7 +58,7 @@ export class RecordDeFluence {
       this.etat.meilleurScore = score;
       return "premierRecord";
     }
-    if (score <= ancienRecord) return "recordInchange";
+    if (!this.estDepassePar(score)) return "recordInchange";
 
     this.etat.meilleurScore = score;
     this.faits.push({
