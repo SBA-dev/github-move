@@ -70,6 +70,7 @@ export function DeroulementDeLaRevision(
   const repondreParUnNombre = (nombre: number) => void deroulement.repondreParUnNombre(nombre);
   const jeNeSaisPas = () => void deroulement.jeNeSaisPas();
   const texteDeLaQuestion = courante && textes.get(courante.identite.valeur);
+  const voixCoupee = voix.son === "muet" || !voix.syntheseVocalePresente || voix.nomDuPersonnageGuideDeLaVoixBloquee !== undefined;
   const lectureEnAttente = texteDeLaQuestion !== undefined && deroulement.texteEcoutePour !== courante?.identite.valeur;
   return (
     <ContexteDuRetour.Provider value={deroulement.retour}>
@@ -117,9 +118,13 @@ export function DeroulementDeLaRevision(
           )}
           {question instanceof QuestionJouee && texteDeLaQuestion && (
             <AffichageDuTexte
+              key={courante.identite.valeur}
               titre={texteDeLaQuestion.titre}
               texte={texteDeLaQuestion.texte}
               rangDuMotPrononce={deroulement.rangDuMotDuTexte}
+              lecture={deroulement.lectureDuTexte}
+              texteEcoute={!lectureEnAttente}
+              voixCoupee={voixCoupee}
             />
           )}
           {question instanceof QuestionJouee && lectureEnAttente && (

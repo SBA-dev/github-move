@@ -2,6 +2,8 @@ import { carteDeLaPoesie, type ExerciceJoue, PlanDeMemorisation, type QuestionJo
 import type { ExerciceMemoriser } from "@domain/catalogue";
 import { TexteEnSyllabes } from "../../reglages/index.ts";
 import { TexteSurligne } from "../TexteSurligne.tsx";
+import { Parchemin } from "../parchemin/Parchemin.tsx";
+import { useDeroulementDuParchemin } from "../parchemin/useDeroulementDuParchemin.ts";
 import { ExerciceAChoix } from "./ExerciceAChoix.tsx";
 import { ExerciceAEtiquettes } from "./ExerciceAEtiquettes.tsx";
 import type { TempsDeLaMemorisation, VersLu } from "./useMemorisation.ts";
@@ -24,29 +26,20 @@ type Props = PropsDeLEntrainement & {
   readonly exercice: ExerciceMemoriser;
   readonly temps: TempsDeLaMemorisation;
   readonly versLu: VersLu | undefined;
+  /** Muet, voix bloquée ou absente : les vers sont lus par l'enfant seul. */
+  readonly voixCoupee: boolean;
   readonly onJeSuisPret: () => void;
 };
 
 /** La poésie : sa carte, ses vers (le vers lu est mis en avant), puis les deux entraînements une fois l'enfant prêt. */
-export function ExerciceDeMemorisation({ exercice, temps, versLu, onJeSuisPret, ...entrainement }: Props) {
+export function ExerciceDeMemorisation({ exercice, temps, versLu, voixCoupee, onJeSuisPret, ...entrainement }: Props) {
   return (
     <div className="poesie" data-testid="poesie" data-temps={temps}>
       <article className="carte-de-la-poesie" data-testid="carte-de-la-poesie">
         <h3>
           <TexteEnSyllabes texte={carteDeLaPoesie(exercice)} />
         </h3>
-        {temps !== "entrainement" && (
-          <ol className="vers" aria-label="Vers de la poésie">
-            {exercice.vers.map((unVers, rang) => {
-              const lu = versLu?.rang === rang;
-              return (
-                <li key={rang} className="un-vers" data-testid="vers" data-lu={lu ? "true" : undefined} aria-current={lu ? "true" : undefined}>
-                  {lu ? <TexteSurligne texte={unVers} rangDuMotPrononce={versLu.rangDuMot} /> : <TexteEnSyllabes texte={unVers} />}
-                </li>
-              );
-            })}
-          </ol>
-        )}
+        {temps !== "entrainement" && <VersDeLaPoesie vers={exercice.vers} temps={temps} versLu={versLu} voixCoupee={voixCoupee} />}
       </article>
       {temps === "redire" && (
         <button type="button" className="action-principale" data-testid="je-suis-pret" onClick={onJeSuisPret}>
@@ -55,6 +48,35 @@ export function ExerciceDeMemorisation({ exercice, temps, versLu, onJeSuisPret, 
       )}
       {temps === "entrainement" && <Entrainement exercice={exercice} {...entrainement} />}
     </div>
+  );
+}
+
+function VersDeLaPoesie({ vers, temps, versLu, voixCoupee }: { readonly vers: readonly string[]; readonly temps: TempsDeLaMemorisation; readonly versLu: VersLu | undefined; readonly voixCoupee: boolean }) {
+  const { deroule, devoilee } = useDeroulementDuParchemin({
+    rangCommence: versLu?.rang,
+    texteEnLecture: false,
+    toutOuvrir: temps !== "ecoute" || voixCoupee,
+  });
+  return (
+    <Parchemin deroule={deroule}>
+      <ol className="vers" aria-label="Vers de la poésie">
+        {vers.map((unVers, rang) => {
+          const lu = versLu?.rang === rang;
+          return (
+            <li
+              key={rang}
+              className="un-vers"
+              data-testid="vers"
+              data-lu={lu ? "true" : undefined}
+              data-devoilee={devoilee(rang) ? "oui" : "non"}
+              aria-current={lu ? "true" : undefined}
+            >
+              {lu ? <TexteSurligne texte={unVers} rangDuMotPrononce={versLu.rangDuMot} /> : <TexteEnSyllabes texte={unVers} />}
+            </li>
+          );
+        })}
+      </ol>
+    </Parchemin>
   );
 }
 
@@ -73,6 +95,8 @@ function Entrainement({ exercice, exerciceJoue, ...reste }: PropsDeLEntrainement
         bulleEclatee={reste.bulleEclatee}
         texteEcoute={false}
         rangDuMotDuTexte={undefined}
+        lectureDuTexte="avant"
+        voixCoupee={false}
         sonImpossible={false}
         sonCoupe={false}
         onChoisir={reste.onChoisir}

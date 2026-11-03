@@ -28,6 +28,7 @@ import { aiderQuandOnNeSaitPas } from "../seance/exercices/paroles-du-calcul.ts"
 import type { usePersonnageQuiParle } from "../seance/usePersonnageQuiParle.ts";
 import type { Voix } from "../voix/index.ts";
 import type { TexteDeLecture } from "./commencer-la-revision.ts";
+import type { LectureDuTexte } from "../seance/parchemin/LectureDuTexte.ts";
 import type { SeanceDeQuestions } from "./seance-de-questions.ts";
 import { encouragerLaReponse, feliciterLaReponse, vueDuCalcul } from "./paroles-de-la-revision.ts";
 
@@ -91,6 +92,7 @@ export function useDeroulementDeRevision(
   const [toucheQuiBrille, setToucheQuiBrille] = useState<string | undefined>();
   const [texteEcoutePour, setTexteEcoutePour] = useState<string | undefined>();
   const [rangDuMotDuTexte, setRangDuMotDuTexte] = useState<number | undefined>();
+  const [lectureDuTexte, setLectureDuTexte] = useState<LectureDuTexte>("avant");
   const [questionsReussies, setQuestionsReussies] = useState(0);
   const [avancementAnnonce, setAvancementAnnonce] = useState("");
   const pause = useRef(PAUSE_ENTRE_DEUX_PAROLES_MS);
@@ -137,17 +139,22 @@ export function useDeroulementDeRevision(
   const lireLeTexte = useCallback(async (numero: number, texte: string) => {
     if (!(await dire({ texte: INTRODUCTION_DE_LA_LECTURE, nature: "introduction" }))) return;
     const estLaDerniere = () => numero === sequence.current;
+    setLectureDuTexte("en-cours");
     await lire(texte, {
       onMot: (rang) => estLaDerniere() && setRangDuMotDuTexte(rang),
       onFin: () => estLaDerniere() && setRangDuMotDuTexte(undefined),
     });
+    if (estLaDerniere()) setLectureDuTexte("finie");
   }, [dire, lire]);
 
   /** Une question de lecture commence par la lecture de son texte ; la question suit quand l'enfant dit « J'ai écouté ». */
   const ouvrir = useCallback(async (numero: number) => {
     const courante = seance.questionEnCours();
     const texte = courante && textes.get(courante.identite.valeur);
-    if (texte) await lireLeTexte(numero, texte.texte);
+    if (texte) {
+      setLectureDuTexte("avant");
+      await lireLeTexte(numero, texte.texte);
+    }
     else await presenter(numero);
   }, [seance, textes, lireLeTexte, presenter]);
 
@@ -323,6 +330,7 @@ export function useDeroulementDeRevision(
     phrasesDites,
     texteEcoutePour,
     rangDuMotDuTexte,
+    lectureDuTexte,
     jAiEcoute,
     boiteOuverte,
     schemaResolu,

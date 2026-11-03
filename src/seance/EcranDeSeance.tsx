@@ -164,6 +164,7 @@ function SeanceEnCours(
   { seance, lecon, prenom, niveau, univers, voix, toutLireAVoixHaute, meilleuresEtoilesAvant, nombreDeSeancesAvant, queteAvant, onRetour, onRejouer, onLireLEpisode, onLeconSuivante, onToutesLesLecons, onReleverLeDefi, onAccueil }: PropsEnCours,
 ) {
   const deroulement = useDeroulementDeSeance(seance, lecon, voix, univers.personnageGuide, toutLireAVoixHaute, prenom);
+  const voixCoupee = voix.son === "muet" || !voix.syntheseVocalePresente || voix.nomDuPersonnageGuideDeLaVoixBloquee !== undefined;
   const { commencer, abandonner } = deroulement;
   useEffect(() => {
     void commencer();
@@ -279,6 +280,8 @@ function SeanceEnCours(
                 bulleEclatee={deroulement.bulleEclatee}
                 texteEcoute={deroulement.positionDuTexteEcoute === position}
                 rangDuMotDuTexte={deroulement.rangDuMotDuTexte}
+                lectureDuTexte={deroulement.lectureDuTexte}
+                voixCoupee={voixCoupee}
                 sonImpossible={voix.son === "muet" || !voix.syntheseVocalePresente}
                 sonCoupe={voix.son === "muet"}
                 onChoisir={(texte) => void deroulement.repondre(texte)}
@@ -375,6 +378,7 @@ function SeanceEnCours(
                 exercice={exerciceDeLaLecon}
                 temps={deroulement.tempsDeLaMemorisation(position)}
                 versLu={deroulement.versLu}
+                voixCoupee={voixCoupee}
                 exerciceJoue={exerciceAffiche}
                 question={question}
                 choixVisibles={question !== undefined && deroulement.choixVisiblesPour === question}
