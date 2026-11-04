@@ -45,7 +45,7 @@ const AVEC_ARTICLE: Readonly<Record<CodeDeMatiere, string>> = {
   emc: "du vivre ensemble",
 };
 
-const APRES_DE: Readonly<Record<CodeDeMatiere, string>> = {
+const AVEC_DE: Readonly<Record<CodeDeMatiere, string>> = {
   francais: "de français",
   maths: "de maths",
   sciences: "de sciences",
@@ -59,5 +59,5 @@ export function matiereAvecArticle(code: CodeDeMatiere): string {
 }
 
 export function matiereAvecDe(code: CodeDeMatiere): string {
-  return APRES_DE[code];
+  return AVEC_DE[code];
 }
