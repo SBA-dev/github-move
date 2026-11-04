@@ -1,7 +1,13 @@
 import { assertEquals } from "@std/assert";
 import { lireLecon, matiereDeCode, Niveau } from "../../catalogue/domain/index.ts";
 import type { Lecon } from "../../catalogue/domain/index.ts";
-import { defisDeLaMatiere, defisDuParcours, grandDefiDeLaMatiere } from "./defis-de-la-matiere.ts";
+import {
+  type DefiReleve,
+  defisDeLaMatiere,
+  defisDuParcours,
+  estUnGrandDefi,
+  grandDefiDeLaMatiere,
+} from "./defis-de-la-matiere.ts";
 import { parcoursDeLaMatiere } from "./parcours.ts";
 
 function lecon(index: number): Lecon {
@@ -143,4 +149,23 @@ Deno.test("une matière d'une seule partie n'a que le grand défi", () => {
 
 Deno.test("une matière sans leçon dans la classe n'a aucun défi", () => {
   assertEquals(defisDuParcoursPour(3, "sciences"), []);
+});
+
+function nomDuDefiReleve(releve: DefiReleve): string {
+  const nomAvecNumero = (numero: number) => `défi ${numero}`;
+  if (estUnGrandDefi(releve)) return "grand défi";
+  return nomAvecNumero(releve.numero);
+}
+
+Deno.test("estUnGrandDefi distingue le grand défi au niveau des types : sinon le défi a un numéro", () => {
+  const niveau = Niveau.de("CE1");
+  const maths = matiereDeCode("maths");
+
+  assertEquals(
+    [
+      nomDuDefiReleve({ matiere: maths, niveau, grandDefi: true }),
+      nomDuDefiReleve({ matiere: maths, niveau, numero: 3 }),
+    ],
+    ["grand défi", "défi 3"],
+  );
 });
