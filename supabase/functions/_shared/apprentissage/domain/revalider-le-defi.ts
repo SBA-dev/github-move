@@ -11,6 +11,7 @@ import {
   type Defi,
   type DefiReleve,
   defisDeLaMatiere,
+  estUnGrandDefi,
   etatDuDefi,
   type GrandDefi,
   grandDefiDeLaMatiere,
@@ -55,7 +56,7 @@ export function revaliderLeDefi(
 function defiEnvoye(envoye: DefiReleve, parcours: Parcours, entrees: EntreesDuParcours): Defi | GrandDefi | undefined {
   const { matiere } = envoye;
   const { numero } = envoye;
-  return envoye.grandDefi === true
+  return estUnGrandDefi(envoye)
     ? grandDefiDeLaMatiere(parcours, matiere, entrees.niveau)
     : defisDeLaMatiere(parcours, matiere, entrees.niveau).find((candidat) => candidat.numero === numero);
 }

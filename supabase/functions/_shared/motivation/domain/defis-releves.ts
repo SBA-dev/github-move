@@ -1,7 +1,7 @@
 import { libelleCourtDe, Niveau, toutesLesMatieres } from "../../catalogue/domain/index.ts";
 import { type DefiReleve, estUnGrandDefi } from "../../apprentissage/domain/index.ts";
 import type { EffetSonore } from "../../voix/domain/index.ts";
-import { nomDuDefi, nomDuGrandDefi, titreDuDefiReleve, titreDuGrandDefiReleve } from "./paroles-du-defi.ts";
+import { nomDuDefiOuvert, titreDuDefiReleve, titreDuGrandDefiReleve } from "./paroles-du-defi.ts";
 
 export interface IssueDuDefi {
   readonly annonce: string | undefined;
@@ -10,7 +10,7 @@ export interface IssueDuDefi {
 
 function memeDefi(a: DefiReleve, b: DefiReleve): boolean {
   return a.matiere.code === b.matiere.code && a.niveau.valeur === b.niveau.valeur &&
-    estUnGrandDefi(a) === estUnGrandDefi(b) && a.numero === b.numero;
+    a.numero === b.numero;
 }
 
 export function defiReleveParLaSeance(relevesAvant: readonly DefiReleve[], defi: DefiReleve): IssueDuDefi {
@@ -29,11 +29,7 @@ function rangDuNiveau(defi: DefiReleve): number {
 }
 
 function rangDuNumero(defi: DefiReleve): number {
-  return defi.grandDefi === true ? Infinity : defi.numero;
-}
-
-function nomDuDefiReleve(defi: DefiReleve): string {
-  return defi.grandDefi === true ? nomDuGrandDefi() : nomDuDefi(defi.numero);
+  return estUnGrandDefi(defi) ? Infinity : defi.numero;
 }
 
 export function lignesDesDefisReleves(defis: readonly DefiReleve[]): string[] {
@@ -43,5 +39,5 @@ export function lignesDesDefisReleves(defis: readonly DefiReleve[]): string[] {
       rangDeLaMatiere(a) - rangDeLaMatiere(b) || rangDuNiveau(a) - rangDuNiveau(b) ||
       rangDuNumero(a) - rangDuNumero(b)
     )
-    .map((defi) => `${nomDuDefiReleve(defi)} · ${libelleCourtDe(defi.matiere.code)} · ${defi.niveau.valeur}`);
+    .map((defi) => `${nomDuDefiOuvert(defi)} · ${libelleCourtDe(defi.matiere.code)} · ${defi.niveau.valeur}`);
 }
