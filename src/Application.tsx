@@ -196,6 +196,7 @@ export function Application() {
     else if (ecran === "jeu") aller(destination);
     else remplacer(destination);
   };
+  const revenirALAccueilDeLEnfant = () => revenirA("jeu");
   const habillage = parent ? HABILLAGE_DU_PARENT : habillageDeLUnivers(univers.cle);
 
   return (
@@ -279,7 +280,7 @@ export function Application() {
                       univers={univers}
                       voix={voix}
                       onLireLEpisode={(numero) => aller({ ecran: "episode", numero, origine: "fin-de-seance" })}
-                      onAccueil={() => revenirA("jeu")}
+                      onAccueil={revenirALAccueilDeLEnfant}
                     />
                   )}
                   {lieu.ecran === "defi" && profilCharge && profilEnCours && defiEnCours && (
@@ -290,7 +291,7 @@ export function Application() {
                       univers={univers}
                       voix={voix}
                       onMonParcours={() => revenirA("parcours")}
-                      onAccueil={() => revenirA("jeu")}
+                      onAccueil={revenirALAccueilDeLEnfant}
                     />
                   )}
                   {lieu.ecran === "parcours" && profilCharge && profilEnCours && (
@@ -366,7 +367,7 @@ export function Application() {
                         remplacer("jeu");
                         aller("toutes-les-lecons");
                       }}
-                      onAccueil={() => aller("accueil")}
+                      onAccueil={revenirALAccueilDeLEnfant}
                     />
                   )}
                   {ecran === "espace-parent" && connexion.etat === "deconnecte" && (
