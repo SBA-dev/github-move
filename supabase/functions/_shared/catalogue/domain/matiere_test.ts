@@ -30,3 +30,18 @@ Deno.test("chaque matière se nomme avec son article défini contracté dans une
     assertEquals(matiereAvecArticle(code as CodeDeMatiere), forme);
   }
 });
+
+Deno.test("chaque matière se nomme après « de » dans une phrase", () => {
+  const formes: Record<CodeDeMatiere, string> = {
+    francais: "de français",
+    maths: "de maths",
+    sciences: "de sciences",
+    histoire: "d'histoire-géo",
+    anglais: "d'anglais",
+    emc: "de vivre ensemble",
+  };
+
+  for (const [code, forme] of Object.entries(formes)) {
+    assertEquals(matiereAvecDe(code as CodeDeMatiere), forme);
+  }
+});
