@@ -23,3 +23,7 @@ Nature : correctifs `fix(#141)`. Décisions du PO : « son A, accueil A, issue o
 - 08:53 UTC : VERROU base accordé. Sonde : 5,2 s au 1er essai (refaite), puis 0,51 / 0,42 / 0,25 s.
 - Run rouge « Accueil » : `src/Application.tsx` remis temporairement à l'état d'avant 682752e → les 2 scénarios « Pendant les confettis… » de #97 échouent sur « Léa voit son accueil » ; avec le fix : 2/2 verts (55,7 s).
 - Périmètre lancé (telephone, 1 worker) : `@issue-97|@issue-101` (106), famille « Quête du jour accomplie ! » (15), « Léa rejoue » ×5.
+- Résultats du périmètre (387776f, telephone, 1 worker) :
+  - « Léa rejoue » ×5 : 5/5 verts (défaut 3 corrigé).
+  - `@issue-97|@issue-101` : 104/106. KO : #101 « …se lit à voix haute… » (connu sur `main`, #101:313) ; #101 « Sans bibliothèque chargée… » (régression du changement d'`ouvrirQuiJoue` : plus de rechargement depuis `/jeu`).
+  - Famille « Quête du jour accomplie ! » : 4/15. La bulle n'a que la félicitation de la dernière réponse : même course que le défaut 3 (la phrase de fin attend la lecture de la quête de #101), pas seulement la phrase de la quête. → cycle E2E 2 (e2e-tester).
