@@ -18,5 +18,5 @@ export function sansLaQueteAccomplie(texteNormalise: string): string {
 /** Le texte attendu, suivi éventuellement de la seule phrase de la quête accomplie. */
 export function texteSuiviEventuellementDeLaQuete(attendu: string): RegExp {
   const echapper = (t: string) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  return new RegExp(`^${echapper(attendu)}(?: ${echapper(fete())})?$`);
+  return new RegExp(`^\\s*${echapper(attendu)}(?: ${echapper(fete())})?\\s*$`);
 }

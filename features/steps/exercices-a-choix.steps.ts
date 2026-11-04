@@ -1,5 +1,5 @@
-import { sansLaQueteAccomplie } from "../support/phrase-de-fin-avec-la-quete.ts";
 import { expect, type Page } from "@playwright/test";
+import { sansLaQueteAccomplie } from "../support/phrase-de-fin-avec-la-quete.ts";
 import { Given, Then, When } from "./fixtures.ts";
 import {
   BIBLIOTHEQUE,

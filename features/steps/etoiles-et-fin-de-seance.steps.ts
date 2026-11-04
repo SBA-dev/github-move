@@ -1,5 +1,5 @@
-import { sansLaQueteAccomplie } from "../support/phrase-de-fin-avec-la-quete.ts";
 import { expect, type Page } from "@playwright/test";
+import { sansLaQueteAccomplie } from "../support/phrase-de-fin-avec-la-quete.ts";
 import type { Famille } from "../support/famille.ts";
 import { LecturesDesResultats } from "../support/lectures-des-resultats.ts";
 import {

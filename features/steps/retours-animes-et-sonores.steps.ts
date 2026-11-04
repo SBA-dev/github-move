@@ -1,6 +1,6 @@
-import { sansLaQueteAccomplie } from "../support/phrase-de-fin-avec-la-quete.ts";
 import { createBdd } from "playwright-bdd";
 import { expect, type Page } from "@playwright/test";
+import { sansLaQueteAccomplie } from "../support/phrase-de-fin-avec-la-quete.ts";
 import { inscrireUnRecordDeFluence } from "../support/calcul-api.ts";
 import { ecrireDesSeancesTermineesPourLaSerie, jourPrepare } from "../support/serie-api.ts";
 import { ecrireDesResultatsDeLecons } from "../support/supabase-test.ts";
@@ -17,7 +17,7 @@ import {
   taperLesChiffres,
   valider,
 } from "./calcul-fluence-addition.steps.ts";
-import { BIBLIOTHEQUE, bulle, entendu, etat, injecter, jouerLaSeanceComplete, toutesLesParoles, type LeconBrute } from "./etapes-puis-exercices.steps.ts";
+import { BIBLIOTHEQUE, bulle, entendu, etat, injecter, jouerLaSeanceComplete, type LeconBrute } from "./etapes-puis-exercices.steps.ts";
 import { attendreLaFinDeLaSeance, injecterLesLeconsDeTestDesSons, jouerJusquALaFinDeLaSeance, jouerUnExerciceSeul, partie } from "./etoiles-et-fin-de-seance.steps.ts";
 import {
   avancerJusquAuxChoix,
@@ -94,6 +94,7 @@ export function installerLesFauxDeLaStory97(config: Configuration) {
     retenir: string[];
     marque: number;
     marqueParoles: number;
+    marqueDeLaFin: number;
     vu: string[];
     annonces: string[];
   };
@@ -110,6 +111,7 @@ export function installerLesFauxDeLaStory97(config: Configuration) {
     retenir: config.retenir,
     marque: 0,
     marqueParoles: 0,
+    marqueDeLaFin: 0,
     vu: [],
     annonces: [],
   } satisfies EtatDuFaux);
@@ -202,6 +204,8 @@ export function installerLesFauxDeLaStory97(config: Configuration) {
       if (element.getAttribute("data-reussite") === "true") noter(`reussite:${texteDe(element)}`);
       if (element.getAttribute("data-point-qui-vole") === "true") noter("point-qui-vole");
       const identifiant = element.getAttribute("data-testid");
+      // Le journal des paroles au montage de l'écran de fin : la phrase de fin ne peut être dite qu'après (elle attend les lectures).
+      if (identifiant === "fin-de-seance") etat().marqueDeLaFin = longueurDuJournal();
       if (identifiant === "etincelles-du-texte") {
         noter(`etincelles:${element.getAttribute("data-etincelles")}`);
         requestAnimationFrame(() => {
@@ -301,11 +305,12 @@ async function laisserLaParoleFinir(page: Page): Promise<void> {
  */
 async function laisserDireLaPhraseDeFin(page: Page): Promise<void> {
   const sansEspace = (t: string) => t.replace(/[\s,]+/g, "");
-  await expect(bulle(page)).toHaveAttribute("data-nature", /^(felicitation|encouragement)$/, { timeout: DELAI_DE_L_ATTENTE_MS });
+  // Seules comptent les paroles dites APRÈS le montage de la fin : la félicitation de la dernière réponse est restée dans la bulle.
   await expect.poll(async () => {
+    const dites = await parolesDitesDepuisLeMontageDeLaFin(page);
+    const nature = await bulle(page).getAttribute("data-nature");
     const texte = normaliser((await bulle(page).textContent()) ?? "");
-    const dites = sansEspace((await toutesLesParoles(page)).join(""));
-    if (texte !== "" && dites.includes(sansEspace(entendu(texte)))) return true;
+    if (nature !== null && /^(felicitation|encouragement)$/.test(nature) && texte !== "" && sansEspace(dites.join("")).includes(sansEspace(entendu(texte)))) return true;
     await terminerLaLecture(page);
     return false;
   }, { intervals: [100], timeout: DELAI_DE_L_ATTENTE_MS }).toBe(true);
@@ -314,6 +319,14 @@ async function laisserDireLaPhraseDeFin(page: Page): Promise<void> {
     async () => await page.evaluate(() => (Reflect.get(window, "__faux") as { actifs: unknown[] }).actifs.length),
     { intervals: [100], timeout: DELAI_DE_L_ATTENTE_MS },
   ).toBe(0);
+}
+
+async function parolesDitesDepuisLeMontageDeLaFin(page: Page): Promise<string[]> {
+  return await page.evaluate(() => {
+    const marque = (Reflect.get(window, "__effets") as { marqueDeLaFin: number }).marqueDeLaFin;
+    const faux = Reflect.get(window, "__faux") as { journal: Array<{ type: string; texte: string }> };
+    return faux.journal.filter((entree, index) => entree.type === "speak" && index >= marque).map((entree) => entree.texte);
+  });
 }
 
 // --- Lire ce que le navigateur a noté

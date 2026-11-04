@@ -1,6 +1,6 @@
-import { sansLaQueteAccomplie } from "../support/phrase-de-fin-avec-la-quete.ts";
 import { expect, type Locator, type Page } from "@playwright/test";
 import { createBdd } from "playwright-bdd";
+import { sansLaQueteAccomplie } from "../support/phrase-de-fin-avec-la-quete.ts";
 import { type Monde, type ProfilPrepare, test } from "./fixtures.ts";
 import { bulle, injecter, type LeconBrute, leconDeTest, leconDeTitre } from "./etapes-puis-exercices.steps.ts";
 import { avancerJusquAuxChoix, demarrer, etatDesChoix, lancer, questionsReussies } from "./exercices-a-choix.steps.ts";

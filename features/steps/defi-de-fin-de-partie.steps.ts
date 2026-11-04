@@ -1,5 +1,5 @@
-import { sansLaQueteAccomplie } from "../support/phrase-de-fin-avec-la-quete.ts";
 import { type Browser, expect, type Locator, type Page } from "@playwright/test";
+import { sansLaQueteAccomplie } from "../support/phrase-de-fin-avec-la-quete.ts";
 import { Jour } from "../../supabase/functions/_shared/apprentissage/domain/jour.ts";
 import { defisDeLaMatiere } from "../../supabase/functions/_shared/apprentissage/domain/defis-de-la-matiere.ts";
 import { parcoursDeLaMatiere } from "../../supabase/functions/_shared/apprentissage/domain/parcours.ts";

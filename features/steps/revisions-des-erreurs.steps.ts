@@ -1,6 +1,6 @@
-import { texteSuiviEventuellementDeLaQuete } from "../support/phrase-de-fin-avec-la-quete.ts";
 import { type Browser, expect, type Page } from "@playwright/test";
 import type { DataTable } from "playwright-bdd";
+import { texteSuiviEventuellementDeLaQuete } from "../support/phrase-de-fin-avec-la-quete.ts";
 import {
   LECONS_DES_REVISIONS,
   normaliserPourLaCle,
