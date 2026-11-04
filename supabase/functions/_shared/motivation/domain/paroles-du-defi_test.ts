@@ -7,6 +7,7 @@ import {
   nomDuDefi,
   nomDuGrandDefi,
   parolesDeDebutDeDefi,
+  parolesDeDebutDeGrandDefi,
   parolesDeFinDeDefi,
   phraseDeFinAvecLeDefi,
   titreDuDefiReleve,
@@ -70,4 +71,10 @@ Deno.test("à la fin de la séance qui rend la matière réussie, le personnage 
   const texte = inviterARelieverLeGrandDefi({ prenom: "Léa", matiere: "maths" });
 
   assertEquals(texte, "Bravo Léa ! Tu as réussi toutes les leçons de maths. Le grand défi t'attend !");
+});
+
+Deno.test("au début du grand défi, le personnage guide rassure en parlant de toutes les leçons de la matière", () => {
+  const texte = parolesDeDebutDeGrandDefi({ matiere: "maths" });
+
+  assertEquals(texte, "Voici des questions de toutes tes leçons de maths. Prends ton temps, je suis avec toi !");
 });
