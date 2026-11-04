@@ -35,3 +35,4 @@ Nature : correctif dans la stack cible (`fix(#140)`).
   demandée est coupée par l'accueil). Correctif restauré.
 - 21:55 UTC : run vert lancé : `@issue-140` et les 6 scénarios « … à la demande » qui touchent « Écouter »
   (65:206 plan, 31:317, 32:251, 33:404, 102:253), sans les attentes, `telephone`, 1 worker, `--repeat-each=3`.
+- 22:05 UTC : **vert** : 21/21 (7 tests × 3) en 6,7 min, sur `c9d2840` (code identique à `8aebd5b`). `LIBÈRE base`.
