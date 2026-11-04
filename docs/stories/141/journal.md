@@ -32,3 +32,19 @@ Nature : correctifs `fix(#141)`. Décisions du PO : « son A, accueil A, issue o
   - famille « Quête du jour accomplie ! » : **15/15** ;
   - « Léa rejoue » ×5 : **5/5** ;
   - `@issue-97|@issue-101|@issue-29` : **175/177**. KO : #101 « …se lit à voix haute… » (connu sur `main`, #101:313) ; #101 « Une séance terminée sur une leçon des classes d'avant accomplit la quête… », instable (vert au run 1, 3/3 verts au rejeu `--repeat-each=3`).
+- Nettoyages de review (652b554) : rejeu ciblé 9/9. Contrôles : deno test 2788/2788, lint, fmt, tsc, build OK. `main` inchangée depuis 46ca728.
+- 11:00 UTC : PR #150 ouverte en brouillon. LIBÈRE base. REVUE annoncée.
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Durée, du lancement au merge | lancement ≈ 07:45 UTC ; PR en brouillon à 11:00 UTC (≈ 3 h 15) ; merge : à compléter |
+| Attente du PO | ≈ 5 min (CADRAGE PRÊT 08:12 → réponse 08:17) |
+| Attente du verrou base | ≈ 35 min (demandé 08:18, accordé 08:53), sans blocage : TDD, steps et review faits pendant l'attente |
+| Attente de `main` | aucune |
+| Cycles de review À CORRIGER | 1 (cycle 1) ; cycles 2 et 3 APPROUVÉ |
+| Cycles E2E KO | 1 (run 1 : famille de la quête 4/15 et régression d'`ouvrirQuiJoue`) ; run 2 vert hors KO connus/instables |
+| Intégrations de `main` | 0 (aucun conflit) |
+| Temps des runs E2E | run 1 ≈ 40 min, run 2 ≈ 64 min, rejeux ciblés ≈ 15 min |
+| Régression sur `main` après le merge | à compléter |
