@@ -1373,8 +1373,12 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
   --texte-du-wagon: #1b1530;
   display: flow-root;
   width: 100%;
+  max-width: 40rem;
+  margin-inline: auto;
   text-align: left;
 }
+/* La zone de l'exercice s'ajuste à son contenu : sans cela, le train se recentrerait à chaque wagon. */
+.exercice-en-cours:has(.petit-train) { justify-self: stretch; }
 .petit-train[data-univers="princesse"] { --plaque: #fbf1ff; }
 .petit-train[data-univers="sports"] { --plaque: #f1f8ff; }
 .petit-train[data-univers="police"] { --plaque: #f3f6ff; }
