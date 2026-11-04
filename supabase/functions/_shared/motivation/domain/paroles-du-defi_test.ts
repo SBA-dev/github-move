@@ -3,6 +3,7 @@ import { matiereDeCode, Niveau } from "../../catalogue/domain/index.ts";
 import type { Defi, GrandDefi } from "../../apprentissage/domain/index.ts";
 import {
   annonceDuDefiOuvert,
+  annonceDuDefiOuvertPour,
   annonceDuGrandDefiOuvert,
   inviterARelever,
   inviterAReleverLeGrandDefi,
@@ -118,4 +119,11 @@ const grandDefiDesMaths: GrandDefi = { matiere: maths, niveau, grandDefi: true, 
 
 Deno.test("le repère d'un défi du parcours porte son numéro, celui du grand défi ne porte pas de numéro", () => {
   assertEquals([nomDuDefiOuvert(defiNumero2), nomDuDefiOuvert(grandDefiDesMaths)], ["Défi 2", "Grand défi"]);
+});
+
+Deno.test("l'annonce du défi ouvert nomme le numéro du défi, ou la matière du grand défi", () => {
+  assertEquals([annonceDuDefiOuvertPour(defiNumero2), annonceDuDefiOuvertPour(grandDefiDesMaths)], [
+    "Le défi 2 est ouvert !",
+    "Le grand défi des maths est ouvert !",
+  ]);
 });
