@@ -1,7 +1,7 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 import { createBdd } from "playwright-bdd";
 import { Before, BeforeStep, test } from "./fixtures.ts";
-import { bulle, commencerSeulementLExercice, leconCourante } from "./etapes-puis-exercices.steps.ts";
+import { bulle, commencerSeulementLExercice, entendu, leconCourante } from "./etapes-puis-exercices.steps.ts";
 import { demarrer, questionsReussies } from "./exercices-a-choix.steps.ts";
 import {
   atteindreAuClavier,
@@ -15,8 +15,8 @@ import { poesieJouee } from "./memoriser-une-poesie.steps.ts";
 import { depuisLaMarque, fichierDe, noms, observer } from "./retours-animes-et-sonores.steps.ts";
 import { verifierModeDys } from "./reglages.steps.ts";
 import { estSurUnProfilReel, rechargerAvecLeProfilReel } from "./profil-reel.ts";
-import { cleDe, listeDe } from "./univers.steps.ts";
-import { normaliser, reappliquerLAppareil, scenario, terminerLaLecture, journal } from "./voix.steps.ts";
+import { cleDe, EXPRESSIONS_PAR_PERSONNAGE, FELICITATIONS_COMMUNES, listeDe } from "./univers.steps.ts";
+import { normaliser, reappliquerLAppareil, scenario, terminerLaLecture, terminerLaLectureSiCenEstPas, journal } from "./voix.steps.ts";
 
 // Story #130 : le petit train de l'univers (tranche 98a-train). En ordre et dans l'ordre des vers de memoriser, les places
 // deviennent les wagons d'un petit train. Les scénarios ne lisent jamais un tracé : tout se lit par des attributs.
@@ -101,9 +101,11 @@ async function passagesDepuisLeGeste(page: Page): Promise<Passage[]> {
 
 async function positions(page: Page): Promise<Positions> {
   return await page.evaluate(() => {
+    // Relevées depuis le coin du petit train : la parole du personnage guide au-dessus peut grandir sans que le train bouge.
+    const origine = document.querySelector('[data-testid="petit-train"]')?.getBoundingClientRect();
     const boite = (element: Element): Boite => {
       const rect = element.getBoundingClientRect();
-      return { x: rect.x + window.scrollX, y: rect.y + window.scrollY, largeur: rect.width, hauteur: rect.height };
+      return { x: rect.x - (origine?.x ?? 0), y: rect.y - (origine?.y ?? 0), largeur: rect.width, hauteur: rect.height };
     };
     const tete = document.querySelector('[data-testid="tete-du-train"]');
     return {
@@ -125,7 +127,10 @@ const exerciceJoue = new WeakMap<Page, string>();
 BeforeStep({ tags: "@issue-130" }, async ({ page, $step }) => {
   const joue = /joue seulement l'exercice « ([^«»]+) »/.exec($step.title);
   if (joue?.[1] !== undefined) exerciceJoue.set(page, joue[1]);
-  if (!/^Quand /.test($step.title)) return;
+  // Le titre n'a pas le mot-clé : on reconnaît les gestes de l'enfant (les « Quand » de ce .feature).
+  if (!/^(Léa (pose|touche|dit|essaie|remet|termine)\b|Léa pose)/.test($step.title)) return;
+  // Le geste commence quand les placements précédents ont fini de s'accrocher.
+  if (await tete(page).count() > 0) await attendreLeRepos(page);
   await page.evaluate(() => {
     const brut = Reflect.get(window, "__train130") as { passages: unknown[]; marque: number } | undefined;
     if (brut) brut.marque = brut.passages.length;
@@ -155,6 +160,8 @@ Given(/^Léa a remis en place les (quatre|cinq) premiers vers$/, async ({ page }
   for (const [rang, unVers] of vers.entries()) {
     await etiquetteAPlacer(page, unVers).first().click();
     await expect(wagons(page)).toHaveCount(rang + 1);
+    // Une enfant patiente : la relance du vers posé est dite en entier avant le suivant.
+    await terminerLaLecture(page);
   }
 });
 
@@ -200,8 +207,10 @@ When(/^Léa remet les (\d+) vers dans l'ordre (du doigt|au clavier seulement)$/,
   const vers = poesieJouee(page).vers;
   expect(vers).toHaveLength(Number(nombre));
   for (const [rang, unVers] of vers.entries()) {
-    if (rang < vers.length - 1) await poserAuGeste(page, unVers, geste, rang);
-    else if (geste === "au clavier seulement") {
+    if (rang < vers.length - 1) {
+      await poserAuGeste(page, unVers, geste, rang);
+      await terminerLaLecture(page);
+    } else if (geste === "au clavier seulement") {
       await atteindreAuClavier(page, { testid: "etiquette", texte: unVers });
       await page.keyboard.press("Enter");
     } else await etiquetteAPlacer(page, unVers).first().tap();
@@ -377,15 +386,26 @@ Then(/^le petit train ne bouge pas$/, async ({ page }) => {
   if (avant === undefined) throw new Error("La position du petit train avant le placement n'a pas été notée");
   const apres = await positions(page);
   expect(apres.wagons.length, "aucun wagon de plus ni de moins").toBe(avant.wagons.length);
-  expect(memesBoites(avant.tete, apres.tete), "la tête").toBe(true);
+  expect(memesBoites(avant.tete, apres.tete), `la tête : ${JSON.stringify(avant.tete)} puis ${JSON.stringify(apres.tete)}`).toBe(true);
   for (const [rang, boite] of avant.wagons.entries()) expect(memesBoites(boite, apres.wagons[rang] ?? null), `le wagon ${rang + 1}`).toBe(true);
 });
 
 Then(/^Léa n'entend aucun autre effet sonore pendant que le petit train avance$/, async ({ page }) => {
   await expect.poll(async () => (await passagesDepuisLeGeste(page)).some((p) => p.genre === "train" && p.etat === "avance")).toBe(true);
   await attendreLeRepos(page);
-  const autres = noms(depuisLaMarque(await observer(page))).filter((nom) => nom !== fichierDe("réponse juste"));
-  expect(autres, "effets sonores autres que « réponse juste »").toEqual([]);
+  // Aucun fichier nouveau : seuls les retours de #97 d'une bonne réponse (l'effet et le point qui rejoint le récipient) ont joué.
+  const permis = [fichierDe("réponse juste"), fichierDe("point du récipient"), fichierDe("bouton touché")];
+  const autres = noms(depuisLaMarque(await observer(page))).filter((nom) => !permis.includes(nom));
+  expect(autres, "effets sonores autres que ceux de #97 pour une bonne réponse").toEqual([]);
+});
+
+Then(/^Noisette dit une félicitation commune ou l'une de ses expressions, en entier$/, async ({ page }) => {
+  await expect(bulle(page)).toHaveAttribute("data-nature", "felicitation");
+  const texte = normaliser((await bulle(page).textContent()) ?? "");
+  expect([...FELICITATIONS_COMMUNES, ...(EXPRESSIONS_PAR_PERSONNAGE["Noisette"] ?? [])]).toContain(texte);
+  // La consigne finit d'abord (la fausse voix ne finit rien seule), puis la félicitation est dite en entier.
+  await expect.poll(() => terminerLaLectureSiCenEstPas(page, entendu(texte)), { intervals: [100] }).toBe(true);
+  expect((await journal(page)).coupeApresLaDerniereParole).toBe(false);
 });
 
 // --- Alors : l'ordre des vers
@@ -396,7 +416,7 @@ Then(/^le vers « ([^«»]+) » devient le premier wagon du petit train$/, async
 });
 
 Then(/^le vers se lit en entier dans son wagon$/, async ({ page }) => {
-  await verifierQueLeTexteSeLitEnEntier(wagons(page));
+  await verifierQueLeTexteSeLitEnEntier(page, wagons(page));
 });
 
 Then(/^Léa voit le petit train de (\d+) wagons pendant que Noisette dit une félicitation$/, async ({ page }, nombre: string) => {
@@ -543,8 +563,9 @@ Then(
   },
 );
 
-async function verifierQueLeTexteSeLitEnEntier(cibles: Locator): Promise<void> {
+async function verifierQueLeTexteSeLitEnEntier(page: Page, cibles: Locator): Promise<void> {
   await expect(cibles.first()).toBeVisible();
+  await attendreLeRepos(page);
   const coupes = await cibles.evaluateAll((elements) =>
     elements.flatMap((element) => {
       const boite = element.getBoundingClientRect();
@@ -560,7 +581,7 @@ async function verifierQueLeTexteSeLitEnEntier(cibles: Locator): Promise<void> {
         plage.selectNodeContents(noeud);
         for (const rect of plage.getClientRects()) {
           if (rect.left < boite.left - 1 || rect.right > boite.right + 1 || rect.top < boite.top - 1 || rect.bottom > boite.bottom + 1) {
-            problemes.push("texte hors du wagon");
+            problemes.push(`texte hors du wagon (texte ${Math.round(rect.left)}-${Math.round(rect.right)} / ${Math.round(rect.top)}-${Math.round(rect.bottom)}, wagon ${Math.round(boite.left)}-${Math.round(boite.right)} / ${Math.round(boite.top)}-${Math.round(boite.bottom)})`);
             break;
           }
         }
@@ -576,7 +597,7 @@ Then(/^chaque vers posé se lit en entier, dans un wagon sur toute la largeur du
   const posees = await textesDesWagons(page);
   expect(posees.length).toBeGreaterThan(0);
   expect(posees).toEqual(vers.slice(0, posees.length));
-  await verifierQueLeTexteSeLitEnEntier(wagons(page));
+  await verifierQueLeTexteSeLitEnEntier(page, wagons(page));
   const liste = await page.getByTestId("places").boundingBox();
   expect(liste, "la liste des places est à l'écran").not.toBeNull();
   for (const wagon of await wagons(page).all()) {
