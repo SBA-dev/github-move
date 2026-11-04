@@ -37,17 +37,21 @@ function celebrer<U extends UniversCelebre>(univers: U, moment: MomentDeCelebrat
   return { univers, moment, variante: { cle }, ...CRIS_ET_MUSIQUES[univers] };
 }
 
+const CELEBRANTS: {
+  readonly [U in UniversCelebre]: (moment: MomentDeCelebration, hasard: Hasard) => CelebrationDe<U>;
+} = {
+  sports: (moment, hasard) => celebrer("sports", moment, hasard),
+  danse: (moment, hasard) => celebrer("danse", moment, hasard),
+};
+
+function estUniversCelebre(cle: CleUnivers): cle is UniversCelebre {
+  return cle in CELEBRANTS;
+}
+
 export function celebrationDe(
   moment: MomentDeCelebration,
   cle: CleUnivers,
   hasard: Hasard,
 ): CelebrationDeLUnivers | undefined {
-  switch (cle) {
-    case "sports":
-      return celebrer("sports", moment, hasard);
-    case "danse":
-      return celebrer("danse", moment, hasard);
-    default:
-      return undefined;
-  }
+  return estUniversCelebre(cle) ? CELEBRANTS[cle](moment, hasard) : undefined;
 }
