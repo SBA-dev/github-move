@@ -14,3 +14,4 @@ Session : session_015z4jmP7V7FhEFUJUzB9Zaf. Décision : aucune réservée (proch
 - 12:05 UTC : critères écrits (`5253846`) : 43 scénarios (13 plans, 89 cas par projet), 6 `@a-valider` ; questions #130.10 à #130.13. Séances complètes l.138 et l.435 : délais longs à ajouter pour `@issue-130`.
 - 12:08 UTC : CADRAGE PRÊT publié sur #130 ; attente de la validation du PO par le responsable.
 - 11:30 UTC : intégration de `main` après le merge de #129 (`db200e2`), sans conflit. #129 ne touche que la carte de la poésie (parchemin) ; l'entraînement (ordre des vers) est inchangé : le cadrage tient.
+- 11:32 UTC : intégration de `main` après le merge de #141 (`573659e`).
