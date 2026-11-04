@@ -10,12 +10,12 @@ Fonctionnalité: Grand défi de la matière
   couvrent déjà (aucune étoile, rien de bloqué, encouragement et nouvelle chance après une erreur, quitter sans rien
   perdre, sans réseau, mouvements réduits, refus du serveur). Ces scénarios ne décrivent que ce qui lui est propre.
   Décisions du PO gardées depuis #100 (réponse 2.a du 2026-10-29) : R6, 100.3, 100.5, 100.6, 100.7, 100.14, 100.20
-  à 100.23. Questions ouvertes #137.1 à #137.7 : docs/stories/137/acceptance.md ; les scénarios qui en dépendent
-  sont tagués @a-valider.
+  à 100.23. Décisions #137.1 à #137.7 du PO du 2026-11-04 (recommandations retenues) :
+  docs/stories/137/acceptance.md.
 
   Mots employés dans ces scénarios (en plus de ceux de features/100-defi-de-fin-de-partie-du-parcours.feature) :
   - « le grand défi des maths » : le défi dont les leçons sont toutes les leçons du parcours des maths de la classe
-    de Léa ; l'écran dit « Grand défi » (100.3) ; nom de référence selon #137.1 (recommandation : « grand défi ») ;
+    de Léa ; l'écran dit « Grand défi » (100.3) ; nom de référence « grand défi » (décision #137.1) ;
   - « le repère « Grand défi » » : la place du grand défi sur le dessin du parcours, après la dernière leçon de la
     matière, près du fanion de la fin du dessin du parcours (#99) ; il remplace le défi de la dernière partie du
     parcours (100.23) ;
@@ -63,8 +63,7 @@ Fonctionnalité: Grand défi de la matière
 
   Règle: La séance qui rend la matière réussie annonce le grand défi ; le personnage guide le propose sans le lancer
 
-    # Questions #137.4 (parole de Noisette) et #137.7 (autres boutons de la fin de la séance).
-    @a-valider
+    # Décisions #137.4 (parole de Noisette) et #137.7 (« Relever le défi » en plus des boutons habituels).
     Scénario: La séance qui rend réussie la dernière leçon de maths qui manquait annonce le grand défi, et le personnage guide le propose sans le lancer
       Étant donné que Léa a réussi les 9 premières leçons de maths du CE1
       Et que Léa joue la séance complète de la leçon « Maths 10 »
@@ -74,8 +73,7 @@ Fonctionnalité: Grand défi de la matière
       Et la fin de la séance propose « Relever le défi »
       Mais aucun défi ne commence sans que Léa le choisisse
 
-    # Question #137.2 (une séance qui ouvre deux défis), recommandation A.
-    @a-valider
+    # Décision #137.2 (une séance qui ouvre deux défis) : A, seulement l'annonce du grand défi.
     Scénario: Une séance qui ouvre à la fois le défi 1 et le grand défi n'annonce que le grand défi
       Étant donné que Léa a réussi toutes les leçons de maths du CE1, sauf « Maths 5 »
       Et que Léa joue la séance complète de la leçon « Maths 5 »
@@ -101,8 +99,7 @@ Fonctionnalité: Grand défi de la matière
 
   Règle: Le grand défi se joue et se fête comme un défi : écran « Grand défi », ni vie ni temps limité, relevé dès qu'il est terminé, rejouable sans nouvelle récompense, aucune étoile ; une question ratée entre dans la file de révision ; il se retrouve dans « Mes défis relevés »
 
-    # Question #137.5 (parole du début).
-    @a-valider
+    # Décision #137.5 (parole du début).
     Scénario: Le grand défi commence par une parole du personnage guide, sans vie ni temps qui passe
       Étant donné que Léa a réussi les 10 premières leçons de maths du CE1
       Quand Léa relève le grand défi des maths depuis son parcours
@@ -110,8 +107,7 @@ Fonctionnalité: Grand défi de la matière
       Et Noisette dit « Voici des questions de toutes tes leçons de maths. Prends ton temps, je suis avec toi ! »
       Mais l'écran ne montre ni vie, ni temps qui passe, ni nombre d'erreurs
 
-    # Question #137.5 (annonce et parole de la fin du défi), recommandation A pour l'annonce.
-    @a-valider
+    # Décision #137.5 (annonce et parole de la fin du défi) : A, « Grand défi relevé ! ».
     Scénario: Un grand défi terminé avec des erreurs est relevé, et sa fin le fête sans étoile
       Étant donné que Léa a réussi les 10 premières leçons de maths du CE1
       Et que Léa a commencé le grand défi des maths
@@ -121,8 +117,7 @@ Fonctionnalité: Grand défi de la matière
       Et la fin du défi ne montre aucune étoile
       Et la fin du défi propose « Mon parcours » et « Accueil »
 
-    # Question #137.5 (parole du grand défi rejoué).
-    @a-valider
+    # Décision #137.5 (parole du grand défi rejoué).
     Scénario: Rejouer le grand défi relevé le fait rejouer en entier, sans nouvelle annonce de grand défi relevé
       Étant donné que Léa a réussi les 10 premières leçons de maths du CE1
       Et que Léa a relevé le grand défi des maths
@@ -137,8 +132,7 @@ Fonctionnalité: Grand défi de la matière
       Quand Léa revient à son accueil le lendemain
       Alors l'accueil de Léa propose la séance de révision, avec « 1 petite erreur des jours passés »
 
-    # Question #137.6 (place du grand défi dans « Mes défis relevés »).
-    @a-valider
+    # Décision #137.6 (place du grand défi dans « Mes défis relevés »).
     Scénario: « Mes défis relevés » montre le grand défi après les défis de la même matière et de la même classe, une seule fois
       Étant donné que Léa a relevé le défi 1 de maths
       Et que Léa a relevé deux fois le grand défi des maths

@@ -2,9 +2,9 @@
 
 Scénarios : `features/137-grand-defi.feature` (tags `@issue-137 @wip`).
 Modèle : `docs/stories/137/domain-model.md`.
-État : **cadrage à valider**. Les décisions du PO gardées depuis #100 (réponse 2.a du 2026-10-29, commentaire
-6507264741 de l'issue #100) ne sont pas reposées. Restent les questions #137.1 à #137.7 ; les scénarios qui en
-dépendent sont tagués `@a-valider` et écrits selon la recommandation.
+État : **cadrage validé** le 2026-11-04 (réponse du PO : « 137 reco tout »). Les décisions du PO gardées depuis
+#100 (réponse 2.a du 2026-10-29, commentaire 6507264741 de l'issue #100) ne sont pas reposées. Les questions #137.1 à
+#137.7 sont tranchées selon les recommandations (section « Décisions du PO ») ; plus aucun scénario n'est `@a-valider`.
 
 ## Objectif
 
@@ -89,23 +89,23 @@ relevés ».
 | Règle | Scénarios |
 |---|---|
 | **R1.** Chaque matière a un grand défi, près du fanion, à la place du défi de la dernière partie du parcours ; il s'ouvre quand la matière est réussie ; avant, il est à venir, visible et sans cadenas | 1.1 Tant que la matière n'est pas réussie, le grand défi est à venir près du fanion, sans cadenas : maths 9 leçons réussies sur 10, sciences aucune leçon réussie (plan, 2 cas) · 1.2 La matière réussie, le grand défi est ouvert près du fanion et remplace le défi de la dernière partie du parcours : maths du CE1 (deux parties du parcours), sciences du CE1 (une seule partie du parcours) (plan, 2 cas) |
-| **R2.** La séance qui rend la matière réussie annonce le grand défi ; le personnage guide le propose sans le lancer | 2.1 `@a-valider` La séance qui rend réussie la dernière leçon de maths qui manquait annonce le grand défi, et le personnage guide le propose sans le lancer · 2.2 `@a-valider` Une séance qui ouvre à la fois le défi 1 et le grand défi n'annonce que le grand défi |
+| **R2.** La séance qui rend la matière réussie annonce le grand défi ; le personnage guide le propose sans le lancer | 2.1 La séance qui rend réussie la dernière leçon de maths qui manquait annonce le grand défi, et le personnage guide le propose sans le lancer · 2.2 Une séance qui ouvre à la fois le défi 1 et le grand défi n'annonce que le grand défi |
 | **R3.** 12 questions de toute la matière, au moins une de chaque leçon, à parts égales et mélangées ; moins de possibles : toutes, une fois chacune | 3.1 Le grand défi des maths pose 12 questions, au moins une de chacune des 10 leçons, mélangées, jamais d'une fluence · 3.2 Quand la matière a moins de 12 questions possibles, le grand défi les pose toutes, une seule fois chacune |
-| **R4.** Se joue et se fête comme un défi ; question ratée en révision ; « Mes défis relevés » | 4.1 `@a-valider` Le grand défi commence par une parole du personnage guide, sans vie ni temps qui passe · 4.2 `@a-valider` Un grand défi terminé avec des erreurs est relevé, et sa fin le fête sans étoile · 4.3 `@a-valider` Rejouer le grand défi relevé le fait rejouer en entier, sans nouvelle annonce de grand défi relevé · 4.4 Après un grand défi relevé avec une erreur, l'accueil du lendemain propose la séance de révision · 4.5 `@a-valider` « Mes défis relevés » montre le grand défi après les défis de la même matière et de la même classe, une seule fois |
+| **R4.** Se joue et se fête comme un défi ; question ratée en révision ; « Mes défis relevés » | 4.1 Le grand défi commence par une parole du personnage guide, sans vie ni temps qui passe · 4.2 Un grand défi terminé avec des erreurs est relevé, et sa fin le fête sans étoile · 4.3 Rejouer le grand défi relevé le fait rejouer en entier, sans nouvelle annonce de grand défi relevé · 4.4 Après un grand défi relevé avec une erreur, l'accueil du lendemain propose la séance de révision · 4.5 « Mes défis relevés » montre le grand défi après les défis de la même matière et de la même classe, une seule fois |
 | **R5.** Lecteurs d'écran et 360 px | 5.1 Les lecteurs d'écran lisent le grand défi dans la liste ordonnée, juste après la dernière leçon de la matière · 5.2 À 360 px, le repère du grand défi tient dans la largeur et est assez grand pour un doigt d'enfant |
 | **R6.** Enregistré par le serveur, lu seulement par un parent rattaché | 6.1 `@acces` Sur le téléphone du second parent rattaché, l'enfant retrouve son grand défi relevé · 6.2 `@acces` Un parent qui n'est pas rattaché ne lit pas les grands défis relevés de Léa |
 
 Total : 6 règles, 15 scénarios (dont 2 plans du scénario), soit **17 cas par projet** Playwright (`tablette` et
-`telephone`, 34 en tout) ; 2 `@acces`, 6 `@a-valider`.
+`telephone`, 34 en tout) ; 2 `@acces`.
 
 Scénarios qui jouent une séance complète ou un défi complet (délais longs, à ajouter au `Before` de
 `features/steps/delais.steps.ts`) : 2.1 et 2.2 (séance complète d'une leçon), 3.1, 3.2, 4.2, 4.3 (grand défi joué
 jusqu'au bout), 4.4 (le grand défi relevé « en se trompant » est joué dans le navigateur, comme dans #100) ; 6.1 utilise
 deux appareils. Soit 8 scénarios sur 15.
 
-Dépendances des `@a-valider` : 2.1 → #137.4 et #137.7 ; 2.2 → #137.2 ; 4.1, 4.2, 4.3 → #137.5 ; 4.5 → #137.6. Le
-vocabulaire de tout le fichier suit #137.1 (recommandation A, « grand défi ») et les textes « des maths », « des
-sciences », « de maths » suivent #137.3.
+Textes fixés par les décisions du PO : 2.1 → #137.4 et #137.7 ; 2.2 → #137.2 ; 4.1, 4.2, 4.3 → #137.5 ; 4.5 →
+#137.6. Le vocabulaire de tout le fichier suit #137.1 (« grand défi ») et les textes « des maths », « des sciences »,
+« de maths » suivent #137.3.
 
 ### Scénarios d'autres stories touchés
 
@@ -180,56 +180,23 @@ et « Rejouer le défi » sur le repère (100.29), « Mon parcours » et « Accu
 « grande victoire » et « séance terminée » (100.25), lignes des lecteurs d'écran « Grand défi : à venir, encore
 6 leçons pour ouvrir le défi » (ancien 7.2 de #100), « Grand défi : ouvert », « Grand défi : relevé ».
 
+## Décisions du PO
+
+Réponse du PO du 2026-11-04 : « 137 reco tout » (annonce du responsable, commentaire 6642164056 de l'issue #64).
+Toutes les recommandations sont retenues ; la décision 0041 (table `grands_defis_termines`) est validée aussi.
+Aucun texte des scénarios ne change.
+
+| Question | Réponse | Scénarios |
+|---|---|---|
+| #137.1 Nom de référence | A : **grand défi** (ce que l'enfant voit) ; « défi de la matière » permis pour l'expliquer | Vocabulaire de tout le fichier, glossaire |
+| #137.2 Une séance qui ouvre deux défis | A : seulement « Le grand défi des maths est ouvert ! » ; le défi 1 est ouvert sur « Mon parcours », sans annonce | 2.2 |
+| #137.3 Nom de la matière dans les textes | Oui : formes avec article du tableau (« du français », « des maths », « des sciences », « de l'histoire-géo », « de l'anglais », « du vivre ensemble » ; « de français », « de maths », « de sciences », « d'histoire-géo », « d'anglais », « de vivre ensemble ») | 2.1, 2.2, 4.1, 4.2, 4.3 |
+| #137.4 Proposition du personnage guide | Oui : « Bravo Léa ! Tu as réussi toutes les leçons de maths. Le grand défi t'attend ! » | 2.1 |
+| #137.5 Autres textes du grand défi | Textes proposés : début « Voici des questions de toutes tes leçons de maths. Prends ton temps, je suis avec toi ! », fin « Bravo Léa ! Tu as relevé le grand défi des maths ! », rejoué « Bravo Léa ! Tu as encore relevé le grand défi des maths ! » ; annonce A « Grand défi relevé ! » | 4.1, 4.2, 4.3 |
+| #137.6 Place dans « Mes défis relevés » | Oui : après les défis de la même matière et de la même classe | 4.5 |
+| #137.7 Boutons de la fin de la séance qui rend la matière réussie | A : « Relever le défi » en plus des boutons habituels, sans rien changer à ceux-ci | 2.1 |
+| Décision 0041 | Validée : table `grands_defis_termines` | 6.1, 6.2 |
+
 ## Questions ouvertes
 
-**#137.1 Nom de référence.** Les deux termes sont validés (100.20). Lequel est le nom de référence (code, scénarios,
-glossaire), l'autre restant permis dans une phrase d'explication ?
-- A. **Grand défi** (ce que l'enfant voit, 100.3) ; « défi de la matière » permis pour l'expliquer.
-- B. **Défi de la matière** ; « Grand défi » seulement à l'écran.
-- Recommandation : **A**. Les scénarios emploient « grand défi ».
-
-**#137.2 Une séance qui ouvre deux défis.** Léa a tout réussi en maths sauf « Maths 5 » ; en la réussissant, elle
-ouvre le défi 1 et le grand défi. Que dit la fin de la séance ?
-- A. Seulement « Le grand défi des maths est ouvert ! » ; le défi 1 est ouvert sur « Mon parcours », sans annonce.
-- B. Les deux annonces, le grand défi en dernier, un seul bouton « Relever le défi » (pour le grand défi).
-- C. Seulement « Le défi 1 est ouvert ! ».
-- Recommandation : **A**, une seule nouveauté de défi et un seul bouton. Scénario 2.2.
-
-**#137.3 Nom de la matière dans les textes.** Ces formes conviennent-elles pour chaque matière ?
-
-| Matière | Annonce « Le grand défi … est ouvert ! » | Parole « toutes les leçons … » |
-|---|---|---|
-| Français | du français | de français |
-| Maths | des maths | de maths |
-| Sciences | des sciences | de sciences |
-| Histoire-géo | de l'histoire-géo | d'histoire-géo |
-| Anglais | de l'anglais | d'anglais |
-| Vivre ensemble | du vivre ensemble | de vivre ensemble |
-
-- Recommandation : **oui**, ce tableau. Les scénarios emploient « des maths », « des sciences », « de maths ».
-
-**#137.4 Proposition du personnage guide à la fin de la séance.** On retient « Bravo Léa ! Tu as réussi toutes les
-leçons de maths. Le grand défi t'attend ! » (proposée dans #100, non validée à part) ?
-- Recommandation : **oui**. Scénario 2.1.
-
-**#137.5 Autres textes du grand défi.** La parole du début de #100 (« Voici des questions de 5 leçons que tu
-connais. ») serait fausse pour le grand défi. Propositions :
-- début : « Voici des questions de toutes tes leçons de maths. Prends ton temps, je suis avec toi ! » ;
-- fin : « Bravo Léa ! Tu as relevé le grand défi des maths ! » ; rejoué : « Bravo Léa ! Tu as encore relevé le grand
-  défi des maths ! » ;
-- annonce de la fin du défi (la première fois) : A « Grand défi relevé ! » ou B « Défi relevé ! » (comme #100 et le
-  moment de célébration de #106).
-- Recommandation : textes proposés, et **A** pour l'annonce. Scénarios 4.1, 4.2, 4.3.
-
-**#137.6 Place du grand défi dans « Mes défis relevés ».** Le grand défi d'une matière et d'une classe vient-il
-**après** ses défis (« Défi 1 · Maths · CE1 », puis « Grand défi · Maths · CE1 ») ?
-- Recommandation : **oui**. Scénario 4.5.
-
-**#137.7 Boutons de la fin de la séance qui rend la matière réussie.** Dans #100, l'annonce d'un défi ouvert vient avec
-« Relever le défi » et « Leçon suivante ». Quand la matière est réussie, il n'y a plus de leçon suivante dans le
-parcours de la classe. Que propose la fin de la séance ?
-- A. « Relever le défi » en plus des boutons que la fin de séance propose déjà quand la matière est réussie, sans
-  rien changer à ceux-ci.
-- B. Seulement « Relever le défi » et « Accueil ».
-- Recommandation : **A**, le grand défi ajoute une proposition et n'en retire aucune. Le scénario 2.1 ne vérifie que la
-  présence de « Relever le défi ».
+Aucune.
