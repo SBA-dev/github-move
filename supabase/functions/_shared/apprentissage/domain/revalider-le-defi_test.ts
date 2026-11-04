@@ -385,3 +385,9 @@ Deno.test("un grand défi envoyé pour une autre classe que celle du profil est 
 
   assertThrows(() => revalider(envoi, { reussies: toutesLesLecons }), DefiInconnu);
 });
+
+Deno.test("un grand défi d'une matière sans leçon dans la classe est refusé", () => {
+  const envoi = { ...envoiDuGrandDefi, defi: { ...envoiDuGrandDefi.defi, matiere: matiereDeCode("sciences") } };
+
+  assertThrows(() => revalider(envoi, { reussies: toutesLesLecons }), DefiInconnu);
+});
