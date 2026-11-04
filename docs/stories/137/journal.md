@@ -61,3 +61,7 @@
 - Revue de l'étape 4 (`origin/main...7ce25ae`) : **APPROUVÉ**, sans bloquant. Non bloquants 1, 2 et 5 (aiguillage
   « grand défi ou défi n » dans React, prédicat de type, `defisDuParcours`) repris par un cycle TDD pendant l'attente
   du verrou `base`. À rappeler dans la PR : appliquer la migration avant d'envoyer le front.
+- Cycle de reprise des non bloquants (aiguillage dans le domaine) : RED `c7bd609`..`5edfe20`, GREEN `a6db162`,
+  refactors `e2c0480`, `47cf431`. Revue delta : **APPROUVÉ**. Non bloquants laissés en dette : nom `nomDuDefiOuvert`
+  (sert aussi aux défis relevés), index de Motivation qui exporte encore les fonctions détaillées.
+- 23:25 UTC : intégration de `main` (`597a4a5`, #140) sans conflit : 2871 tests, lint, fmt, tsc, build, bddgen verts.
