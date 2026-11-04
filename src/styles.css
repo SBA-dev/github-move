@@ -638,7 +638,11 @@ button.tuile .nom-de-la-tuile, button.tuile .nom-de-la-matiere { font-size: 1.1r
 @media (prefers-reduced-motion: no-preference) {
   .celebration-de-l-univers .nuage { animation: derive-des-nuages 80s linear infinite; }
   .celebration-de-l-univers .nuage.lent { animation-duration: 120s; }
+  .celebration-de-l-univers .danse-poussiere-lumineuse circle { animation: scintille-des-projecteurs 3s ease-in-out infinite; }
+  .celebration-de-l-univers .danse-poussiere-lumineuse circle:nth-child(2n) { animation-delay: 1s; }
+  .celebration-de-l-univers .danse-poussiere-lumineuse circle:nth-child(3n) { animation-delay: 2s; }
 }
+@keyframes scintille-des-projecteurs { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
 @keyframes derive-des-nuages { from { transform: translateX(0); } to { transform: translateX(-420px); } }
 .compteur-du-record { margin: 0; padding: 6px 14px; border-radius: var(--rayon); background: var(--surface-voilee); font-size: 1.5rem; font-weight: 700; font-variant-numeric: tabular-nums; }
 /* Retours de réponse : la réussite prend la couleur de réussite, avec ou sans mouvement ; une erreur ne prend jamais de rouge. */
