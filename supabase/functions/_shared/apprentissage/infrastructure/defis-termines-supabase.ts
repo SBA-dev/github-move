@@ -19,6 +19,28 @@ function releveDeLaLigne({ matiere, classe, numero }: LigneDeDefi): DefiReleve |
   }
 }
 
+function appelDeLEnregistrement(
+  fait: DefiTermine,
+  file: FileDeRevisionALEcrire["file"],
+  versionLue: FileDeRevisionALEcrire["versionLue"],
+): [string, Record<string, unknown>] {
+  const { defi } = fait;
+  const commun = {
+    p_id: fait.id,
+    p_profil: fait.enfant,
+    p_matiere: defi.matiere.code,
+    p_classe: defi.niveau.valeur,
+    p_termine_le: fait.termineeLe.toISOString(),
+    p_jour: fait.jour.toString(),
+    p_version_de_la_file_lue: versionLue,
+    p_erreurs_corrigees_pour_de_bon: file.erreursCorrigeesPourDeBon,
+    p_questions_retenues: lignesDesQuestionsRetenues(file),
+  };
+  return defi.grandDefi === true
+    ? ["enregistrer_le_grand_defi_termine", commun]
+    : ["enregistrer_le_defi_termine", { ...commun, p_numero: defi.numero }];
+}
+
 export class DefisTerminesSupabase implements DefisTermines {
   constructor(
     private readonly clientDuParent: () => SupabaseClient,
@@ -32,21 +54,7 @@ export class DefisTerminesSupabase implements DefisTermines {
   }
 
   async enregistrer(fait: DefiTermine, { file, versionLue }: FileDeRevisionALEcrire) {
-    const { fonction, numero } = fait.defi.grandDefi === true
-      ? { fonction: "enregistrer_le_grand_defi_termine", numero: {} }
-      : { fonction: "enregistrer_le_defi_termine", numero: { p_numero: fait.defi.numero } };
-    const { data, error } = await this.clientDuServeur().rpc(fonction, {
-      p_id: fait.id,
-      p_profil: fait.enfant,
-      p_matiere: fait.defi.matiere.code,
-      p_classe: fait.defi.niveau.valeur,
-      ...numero,
-      p_termine_le: fait.termineeLe.toISOString(),
-      p_jour: fait.jour.toString(),
-      p_version_de_la_file_lue: versionLue,
-      p_erreurs_corrigees_pour_de_bon: file.erreursCorrigeesPourDeBon,
-      p_questions_retenues: lignesDesQuestionsRetenues(file),
-    });
+    const { data, error } = await this.clientDuServeur().rpc(...appelDeLEnregistrement(fait, file, versionLue));
     if (error) throw new Error(`Enregistrement du défi terminé impossible : ${error.message}`);
     return data as IssueDeLEnregistrement;
   }
