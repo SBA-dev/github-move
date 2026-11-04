@@ -32,3 +32,29 @@
   31 scénarios distincts en KO (la plupart sur les deux projets) : 102-personnage-guide-evolue:153:5 102-personnage-guide-evolue:245:5 24-etoiles-et-fin-de-seance:172:5 24-etoiles-et-fin-de-seance:70:5 24-etoiles-et-fin-de-seance:81:7 24-etoiles-et-fin-de-seance:89:7 26-lecons-des-classes-d-avant:253:5 26-lecons-des-classes-d-avant:466:5 28-revisions-des-erreurs:239:7 28-revisions-des-erreurs:246:7 28-revisions-des-erreurs:253:7 29-aujourd-hui:38:5 30-serie:194:5 30-serie:244:5 31-badges:197:5 31-badges:260:5 31-badges:290:5 32-cabane:138:5 32-cabane:207:5 32-cabane:227:5 33-episodes-de-l-histoire:160:5 33-episodes-de-l-histoire:175:5 33-episodes-de-l-histoire:191:5 33-episodes-de-l-histoire:347:5 33-episodes-de-l-histoire:403:5 33-episodes-de-l-histoire:512:5 96-refonte-visuelle:709:7 96-refonte-visuelle:718:7 97-retours-animes-et-sonores:266:5 97-retours-animes-et-sonores:519:7 99-dessin-du-parcours:45:7 
 - 06:10 → 06:40 UTC : **mesure du critère 7** (réponse du PO « 146.6 B ») : run court d'échantillon `@issue-72|11|24|10`, 2 projets, 3 workers, 354 scénarios (347 verts, 7 KO : #24:70/81/89 sur les deux projets, connus sur `main`, et #10:222 sur `tablette`, non vu en non-régression). **Utilisateurs Auth : 158 avant, 158 après** ; équipe 146 : 18 avant, 18 après ; aucune adresse « libre » restante. Un second passage ne crée aucun utilisateur.
 - Rejeu un par un (1 worker) des KO pas encore expliqués : 20 passent (instables sous charge : #10:222, #24:172, #26:253/466, #29:38, #30:244, #33:347/512, #99:45…). Reproductibles : #32:227, #96:709, #96:718 (`telephone`) → **reproduits aussi sur `origin/main`** : préexistants ; **#102:245 (`tablette`) : 2 KO sur 3 sur la branche, 3/3 verts sur `origin/main`** → régression probable de #146, diagnostic confié à `e2e-tester`.
+- Correction `a6765f6` (e2e-tester) : les 4 étapes « Léa demande à écouter … » de « Mes médailles » (tenues, cabane, badges, histoire) attendent la lecture d'accueil avant le clic, comme celle des records de calcul rapide. Cause démontrée par la trace des lectures : l'accueil démarré après le clic coupait la lecture demandée ; la réutilisation des parents accélère la préparation et expose la course. #102:245 : 5/5 sur `tablette` ; #102:245, #31:290, #32:227, #33:425 verts sur les 2 projets (#32:227 était aussi KO sur `main`). Review delta cycle 4 : APPROUVÉ (non-bloquant : garde dupliquée dans 5 fichiers de steps).
+- Contrôles sur `a6765f6` : `deno test supabase/functions/` 2787 verts, `deno test features/support/` 11 verts, lint, fmt, `tsc`, build verts. `main` n'a pas bougé (`5574d75`).
+- PR #147 ouverte en brouillon.
+
+## Bilan
+
+- Cycles TDD : 3 (module pur), tous RED → GREEN propres.
+- Reviews : 4 cycles (1 À CORRIGER, 3 APPROUVÉ).
+- Escalades / questions au PO : 6 (146.1 à 146.6), toutes réponses reçues via le responsable.
+- Verrous : `base` du 03/11 19:51 UTC au 04/11 (fin des runs), aucun autre.
+- Intégrations de `main` : 0 (`main` immobile pendant toute la story).
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Durée totale (lancement → PRÊTE À MERGER) | ~12 h (03/11 19:15 → 04/11 ~07:30 UTC) |
+| dont développement (cadrage → review APPROUVÉ) | ~1 h 15 |
+| dont E2E | ~10 h 30 (mise au point 2 × ~25 min, non-régression 7,2 h + 1 h perdue au redémarrage, mesure 30 min, rejeux ~45 min) |
+| Temps d'attente du PO | ~20 min (cadrage) + ~15 min (146.5) + ~1 h 40 (146.6, pendant le run) |
+| Temps d'attente du verrou `base` | 0 (accordé en priorité) |
+| Cycles de review | 4 (1 À CORRIGER) |
+| Cycles E2E | 2 mises au point, 1 non-régression complète (en 6 tranches), 1 run de mesure, 3 rejeux ciblés |
+| Intégrations de `main` / conflits | 0 / 0 |
+| Utilisateurs Auth créés par la story | 18 parents réutilisables + 2 de la mise au point n°1 (inclus) ; 140 → 158 ; second passage : +0 |
+| Incident | redémarrage du conteneur pendant l'attente (non-régression perdue à 1068/3652) : relance en tranches reprenables |
