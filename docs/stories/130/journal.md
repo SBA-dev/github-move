@@ -9,3 +9,5 @@ Session : session_015z4jmP7V7FhEFUJUzB9Zaf. Décision : aucune réservée (proch
 
 - 11:20 UTC : démarrage. Lecture de #130 (aucun commentaire), de #64 (tableau du 04/11 11:12), du cadrage de #98 (pistes du petit train, 98.8, 98.21, 98.26, 98.28, 98.29, 98.31).
 - Étape 1 (domaine) : déléguée à `domain-modeler`, modèle court propre à #130.
+- 11:45 UTC : modèle de domaine écrit (`f948a9b`). Apprentissage, affichage seulement ; aucun fait manquant. 5 invariants propres, questions #130.1 à #130.9. ordre et memoriser jamais en révision, défi ni test de départ. Fichiers communs avec #129 : ExerciceDeMemorisation.tsx, styles.css, exercices-comme-des-jeux.steps.ts, classer-ordre-trous.steps.ts.
+- Étape 2 (critères) : déléguée à `po-acceptance`.
