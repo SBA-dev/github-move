@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { ProfilEnCours } from "@domain/famille";
 import {
   type Badge,
@@ -22,6 +22,7 @@ import {
   NOM_DE_L_ECRAN_DES_MEDAILLES,
   TITRE_DES_RECORDS_DE_CALCUL_RAPIDE,
 } from "@domain/motivation";
+import { AccueilDeLEcran } from "@domain/voix";
 import { useDefisReleves } from "../defis/useDefisReleves.ts";
 import { BulleDuPersonnageGuide } from "../seance/BulleDuPersonnageGuide.tsx";
 import { usePersonnageQuiParle } from "../seance/usePersonnageQuiParle.ts";
@@ -56,6 +57,7 @@ export function MesMedailles({ profil, univers, voix, onOuvrirLEpisode }: Props)
   const { charges: badgesCharges, badges } = useBadges(profil.id);
   const { charges: defisCharges, defisReleves } = useDefisReleves(profil.id);
   const { parole, rangDuMotPrononce, humeur, dire, faireSilence } = usePersonnageQuiParle(voix);
+  const [accueilDeLEcran] = useState(() => new AccueilDeLEcran());
   const toutLire = profil.reglages.toutLireAVoixHaute;
   const personnage = univers.personnageGuide;
   const sections = sectionsDeLEcran({ pastilles: pastilles ?? [], cabane, tenues, histoire, badges, defisReleves });
@@ -71,7 +73,10 @@ export function MesMedailles({ profil, univers, voix, onOuvrirLEpisode }: Props)
     for (const texte of textes) if (!(await dire({ texte, nature: "annonce" }))) return;
   }, [dire]);
 
+  useEffect(() => faireSilence, [faireSilence]);
+
   useEffect(() => {
+    if (!accueilDeLEcran.peutEtreDit()) return;
     if (pastilles === undefined || !cabaneChargee || !tenuesChargees || !histoireChargee || !badgesCharges || !defisCharges) return;
     const [accueil = "", ...suite] = parolesALOuverture({
       toutLire,
@@ -87,24 +92,28 @@ export function MesMedailles({ profil, univers, voix, onOuvrirLEpisode }: Props)
       if (!(await dire({ texte: accueil, nature: "accueil" }))) return;
       await direLaSuite(suite);
     })();
-    return faireSilence;
-  }, [pastilles, cabaneChargee, cabane, tenuesChargees, tenues, tenuesAMontrer, personnage, histoireChargee, histoire, badgesCharges, badges, defisCharges, defisReleves, toutLire, dire, direLaSuite, faireSilence]);
+  }, [accueilDeLEcran, pastilles, cabaneChargee, cabane, tenuesChargees, tenues, tenuesAMontrer, personnage, histoireChargee, histoire, badgesCharges, badges, defisCharges, defisReleves, toutLire, dire, direLaSuite]);
 
-  const ecouterLesRecords = () => direLaSuite(parolesDeLaSectionDesRecords(pastilles ?? []));
-  const ecouterLaCabane = async () => {
-    if (cabane) await direLaSuite([titreDeLaSection(), phraseDeLEtat(cabane)]);
+  const direALaDemandeDeLEnfant = (textes: readonly string[]) => {
+    accueilDeLEcran.noterUneLectureDemandeeParLEnfant();
+    return direLaSuite(textes);
   };
-  const ecouterLesTenues = () => direLaSuite(parolesDesTenues);
+
+  const ecouterLesRecords = () => direALaDemandeDeLEnfant(parolesDeLaSectionDesRecords(pastilles ?? []));
+  const ecouterLaCabane = async () => {
+    if (cabane) await direALaDemandeDeLEnfant([titreDeLaSection(), phraseDeLEtat(cabane)]);
+  };
+  const ecouterLesTenues = () => direALaDemandeDeLEnfant(parolesDesTenues);
   const mettreLaTenue = (cle: string) => {
     if (tenues !== undefined) changerLaTenue(porterUneTenue(tenues, cle));
   };
-  const ecouterLHistoire = () => direLaSuite(parolesDeLaSectionDeLHistoire());
+  const ecouterLHistoire = () => direALaDemandeDeLEnfant(parolesDeLaSectionDeLHistoire());
   const ecouterLesBadges = async () => {
-    if (badges) await direLaSuite(parolesDeLaSectionDesBadgesOuSansBadge(badges));
+    if (badges) await direALaDemandeDeLEnfant(parolesDeLaSectionDesBadgesOuSansBadge(badges));
   };
-  const ecouterLesDefisReleves = () => direLaSuite(parolesDeLaSectionDesDefisReleves(defisReleves));
+  const ecouterLesDefisReleves = () => direALaDemandeDeLEnfant(parolesDeLaSectionDesDefisReleves(defisReleves));
   const lireLeBadge = async (badge: Badge) => {
-    await direLaSuite([badge.nom]);
+    await direALaDemandeDeLEnfant([badge.nom]);
   };
 
   return (

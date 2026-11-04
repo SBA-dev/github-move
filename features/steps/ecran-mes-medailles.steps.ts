@@ -389,11 +389,34 @@ Then(/^Léa n'entend pas Noisette lire « ([^«»]+) »$/, async ({ page }, text
   expect(await lecturesParLot(page)).not.toContain(normaliser(entendu(texte)));
 });
 
+// L'histoire est calculée à partir des séances terminées lues au serveur : on retient cette lecture, puis on la laisse
+// passer une fois le geste de Léa fait. Ainsi « Écouter » est touché avant la fin du chargement de l'écran, et la fin du
+// chargement (donc l'accueil, s'il devait être dit) a eu lieu avant que le scénario vérifie ce que Léa n'entend pas.
+const chargementsRetenus = new WeakMap<Page, () => void>();
+
+Given(/^l'histoire des Savanturiers tarde à se charger$/, { tags: "@issue-140" }, async ({ page }) => {
+  let relacher: () => void = () => undefined;
+  const retenue = new Promise<void>((resolve) => {
+    relacher = resolve;
+  });
+  chargementsRetenus.set(page, relacher);
+  await page.route(/\/rest\/v1\/seances_terminees\?/, async (route) => {
+    await retenue;
+    await route.continue();
+  });
+});
+
+async function laisserSeChargerLHistoire(page: Page): Promise<void> {
+  const relacher = chargementsRetenus.get(page);
+  if (!relacher) return;
+  chargementsRetenus.delete(page);
+  relacher();
+  await expect(page.getByTestId("section-de-l-histoire")).toBeVisible({ timeout: DELAI_D_UN_APPEL_SERVEUR_MS });
+}
+
 When(/^Léa demande à écouter les records de calcul rapide$/, async ({ page }) => {
-  // L'écran lit son accueil dès que tout est chargé, et cette lecture coupe celle que l'enfant vient de demander si elle
-  // démarre après son geste : on touche « Écouter » une fois l'accueil lancé (la bulle du personnage guide est affichée).
-  await expect(page.getByTestId("parole")).toBeVisible({ timeout: DELAI_D_UN_APPEL_SERVEUR_MS });
   await sectionDesRecords(page).getByRole("button", { name: "Écouter", exact: true }).click();
+  await laisserSeChargerLHistoire(page);
 });
 
 // --- Accessibilité
