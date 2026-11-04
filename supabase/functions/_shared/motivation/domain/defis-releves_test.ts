@@ -111,3 +111,25 @@ Deno.test("un grand défi relevé ne fait pas passer un défi d'une partie pour 
 Deno.test("un grand défi relevé s'écrit « Grand défi · Sciences · CE1 »", () => {
   assertEquals(lignesDesDefisReleves([grandDefi("sciences", "CE1")]), ["Grand défi · Sciences · CE1"]);
 });
+
+Deno.test("le grand défi est rangé après les défis de la même matière et de la même classe", () => {
+  const lignes = lignesDesDefisReleves([
+    grandDefi("maths", "CE1"),
+    defi("maths", "CE1", 2),
+    defi("maths", "CE1", 1),
+    defi("maths", "CE2", 1),
+  ]);
+
+  assertEquals(lignes, [
+    "Défi 1 · Maths · CE1",
+    "Défi 2 · Maths · CE1",
+    "Grand défi · Maths · CE1",
+    "Défi 1 · Maths · CE2",
+  ]);
+});
+
+Deno.test("un grand défi relevé et rejoué n'apparaît qu'une seule fois", () => {
+  const lignes = lignesDesDefisReleves([grandDefi("maths", "CE1"), grandDefi("maths", "CE1")]);
+
+  assertEquals(lignes, ["Grand défi · Maths · CE1"]);
+});
