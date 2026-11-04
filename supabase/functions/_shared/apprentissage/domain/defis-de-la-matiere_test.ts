@@ -1,16 +1,20 @@
 import { assertEquals } from "@std/assert";
 import { lireLecon, matiereDeCode, Niveau } from "../../catalogue/domain/index.ts";
 import type { Lecon } from "../../catalogue/domain/index.ts";
-import { defisDeLaMatiere } from "./defis-de-la-matiere.ts";
+import { defisDeLaMatiere, grandDefiDeLaMatiere } from "./defis-de-la-matiere.ts";
 import { parcoursDeLaMatiere } from "./parcours.ts";
 
 function lecon(index: number): Lecon {
+  return leconDe(`ma-ce1-${index}`, "maths", "CE1", index);
+}
+
+function leconDe(id: string, matiere: string, niveau: string, ordre: number): Lecon {
   return lireLecon({
-    id: `ma-ce1-${index}`,
-    matiere: "maths",
-    niveau: "CE1",
-    titre: `Titre de ma-ce1-${index}`,
-    ordre: index,
+    id,
+    matiere,
+    niveau,
+    titre: `Titre de ${id}`,
+    ordre,
     programme: { section: "section", citation: "citation" },
     exercices: [],
   });
@@ -55,4 +59,15 @@ Deno.test("une matière d'une seule partie n'a aucun défi", () => {
 
 Deno.test("une matière de 31 leçons a les Défis 1 à 5", () => {
   assertEquals(numeros(31), [1, 2, 3, 4, 5]);
+});
+
+Deno.test("le grand défi d'une matière de 13 leçons reprend les 13 leçons de la classe, dans l'ordre des places", () => {
+  const lecons = Array.from({ length: 13 }, (_, index) => lecon(index + 1));
+  const niveau = Niveau.de("CE1");
+  const maths = lecons[0].matiere;
+  const parcours = parcoursDeLaMatiere({ lecons: [...lecons].reverse(), niveau, meilleuresEtoiles: new Map() }, maths);
+
+  const grandDefi = grandDefiDeLaMatiere(parcours, maths, niveau);
+
+  assertEquals(grandDefi?.lecons, lecons.map(({ id }) => id));
 });
