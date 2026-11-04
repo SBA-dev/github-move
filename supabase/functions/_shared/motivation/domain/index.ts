@@ -47,12 +47,18 @@ export {
 export { accueillirEnRevision, annonceDeLaSeanceDeRevision, parolesDeFinDeRevision } from "./paroles-de-revision.ts";
 export {
   annonceDuDefiOuvert,
+  annonceDuGrandDefiOuvert,
   inviterARelever,
+  inviterAReleverLeGrandDefi,
   nomDuDefi,
+  nomDuGrandDefi,
   parolesDeDebutDeDefi,
+  parolesDeDebutDeGrandDefi,
   parolesDeFinDeDefi,
+  parolesDeFinDeGrandDefi,
   phraseDeFinAvecLeDefi,
   titreDuDefiReleve,
+  titreDuGrandDefiReleve,
 } from "./paroles-du-defi.ts";
 export { type SectionDeLEcran, sectionsAAfficher, sectionsDeLEcran } from "./sections-de-l-ecran.ts";
 export { type PastilleDeRecord, pastillesDesRecords, type RecordDuProfil } from "./records-de-calcul-rapide.ts";
