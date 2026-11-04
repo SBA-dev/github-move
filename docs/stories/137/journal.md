@@ -50,3 +50,14 @@
   la sorte par un seul marqueur ; `src/defis/lecture-des-defis-releves-supabase.ts` doit lire aussi
   `grands_defis_termines` (ajouté à la dette du câblage).
 - Verrou `base` demandé (22:05) ; #130 le détient, #137 est la suivante.
+
+## Câblage et revue
+
+- Câblage (`10a6c53`..`d20d30c`) : migration `20261104090000_grands_defis_termines.sql` écrite, non appliquée (verrou
+  `base` attendu) ; front (lecture des deux tables, repère, séance, fin de séance). Dette du câblage soldée, sauf la
+  clé `…/grand` (pas de tests unitaires front dans le dépôt ; couverte par le scénario 4.5).
+- Dernier cycle TDD : `e5d15e0` (red) → `e00a85d` (`phraseDeFinAvecLeGrandDefi`, React ne compose plus la parole) →
+  `7ce25ae` (union exclusive `DefiReleve`, un seul marqueur). Fixtures retypées avant (`bca402f`).
+- Revue de l'étape 4 (`origin/main...7ce25ae`) : **APPROUVÉ**, sans bloquant. Non bloquants 1, 2 et 5 (aiguillage
+  « grand défi ou défi n » dans React, prédicat de type, `defisDuParcours`) repris par un cycle TDD pendant l'attente
+  du verrou `base`. À rappeler dans la PR : appliquer la migration avant d'envoyer le front.
