@@ -249,3 +249,10 @@ Deno.test("le grand défi pose 12 questions, réparties à parts égales entre l
   assertEquals(parLecon.reduce((a, b) => a + b, 0), 12);
   assert(parLecon.every((nombre) => nombre >= 2 && nombre <= 3));
 });
+
+Deno.test("un grand défi de 31 leçons riches tire 12 leçons au hasard, une question chacune", () => {
+  const parLecon = questionsDuGrandDefiParLecon(leconsDe(...Array(31).fill(2)), hasardToujoursEnTete);
+
+  assertEquals(parLecon.filter((nombre) => nombre === 1).length, 12);
+  assertEquals(parLecon.filter((nombre) => nombre === 0).length, 19);
+});
