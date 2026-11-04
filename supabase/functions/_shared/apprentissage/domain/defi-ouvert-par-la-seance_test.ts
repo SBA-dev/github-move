@@ -78,3 +78,18 @@ Deno.test("la séance qui ouvre le défi 1 et le grand défi ne rend que le gran
 
   assertEquals(defi !== undefined && estUnGrandDefi(defi), true);
 });
+
+Deno.test("un grand défi déjà relevé ne s'ouvre pas de nouveau", () => {
+  const avant = parcoursAvecReussies([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+  const apres = parcoursAvecReussies([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+  const defisReleves = [{ matiere: maths, niveau: ce1, grandDefi: true as const }];
+
+  assertEquals(defiOuvertParLaSeance(avant, apres, maths, ce1, defisReleves), undefined);
+});
+
+Deno.test("une matière déjà réussie avant la séance n'ouvre pas le grand défi", () => {
+  const avant = parcoursAvecReussies([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+  const apres = parcoursAvecReussies([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+
+  assertEquals(defiOuvertParLaSeance(avant, apres, maths, ce1, []), undefined);
+});
