@@ -12,3 +12,10 @@ Nature : correctifs `fix(#141)`. Décisions du PO : « son A, accueil A, issue o
 - Famille « Quête du jour accomplie ! » : cause différente. Les steps de fin comparent la fin exacte de la phrase de fin ; quand la séance accomplit la quête, #101 y ajoute « Quête du jour accomplie ! Bravo Léa ! ». → question #141.2.
 - Défaut 3 : step fragile. `laisserLaParoleFinir` conclut avant que la phrase de fin (dite une fois toutes les lectures prêtes, dont celle de la quête ajoutée par #101) ne commence ; le clic sur « Rejouer » tombe pendant la parole, R7 s'applique. L'application est conforme ; correction dans le step (attendre la phrase de fin dite), sans changer son sens.
 - CADRAGE PRÊT publié, questions #141.1 à #141.3. Attente de l'annonce du responsable.
+- 08:17 UTC : réponse du PO « 141 reco tout » (annonce [Responsable] sur #64 et #141) : 141.1 A, 141.2 a, 141.3 (en-tête inchangé). Validation n°1 levée.
+- VERROU base demandé (3e dans la file : #131, #129, #141).
+- `po-acceptance` (ce8ee5a) : données du scénario « Rejouer une leçon déjà acquise… » (2 et 1 étoiles) ; deux scénarios « Accueil » de #97 attendent l'accueil de l'enfant ; tag `@issue-141`. Liste dans `criteres.md`.
+- `test-writer` (54d188f) : test de caractérisation 101.18 (a), vert dès le départ (validé par le PO : le défaut supposé n'existe pas).
+- `implementer` (682752e) : « Accueil » de la fin de séance → `revenirALAccueilDeLEnfant` (`revenirA("jeu")`), partagé avec les fins de révision et de défi. Le scénario qui l'exige précède le fix ; la fin de séance menait à « Qui joue ? » sur `main` (scénarios #97 verts sur `main` avec « Qui joue ? »), donc les nouvelles attentes sont rouges sans le fix : run rouge à confirmer sous verrou.
+- `e2e-tester` (5977f8a) : `laisserLaParoleFinir` attend la phrase de fin dite ; phrase de la quête acceptée en fin de phrase (`features/support/phrase-de-fin-avec-la-quete.ts`, texte importé du domaine) ; `ouvrirQuiJoue` passe par l'en-tête depuis `/jeu`.
+- Review complète lancée (mr-reviewer, cycle 1).
