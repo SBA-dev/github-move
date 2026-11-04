@@ -646,6 +646,7 @@ Then(/^les vers que Noisette n'a pas encore commencés restent cachés$/, async 
 
 Then(/^le vers « ([^«»]+) » est de nouveau mis en avant$/, async ({ page }, vers: string) => {
   const rang = rangDuVers(page, vers);
+  await expect.poll(() => leVersEstLuSinonTermine(page, rang, versEnvoyes(page, rang)), { intervals: [100], timeout: 20_000 }).toBe(true);
   await expect(page.getByTestId("vers").nth(rang)).toHaveAttribute("data-lu", "true");
   await expect(page.getByTestId("vers").nth(rang)).toHaveAttribute("aria-current", "true");
 });
