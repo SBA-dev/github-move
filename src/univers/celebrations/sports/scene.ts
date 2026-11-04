@@ -1,8 +1,9 @@
+import type { VarianteDe } from "@domain/motivation";
 import { creerLeBallon, creerLeFilet } from "./ballon-et-filet.ts";
 import { creerLesConfettis } from "./confettis.ts";
 import { creerLesEffets } from "./effets.ts";
 import { creerCoachLeo } from "./personnage.ts";
-import { scenarioDuBut, type VarianteDeSports } from "./poses.ts";
+import { scenarioDuBut } from "./poses.ts";
 
 /** La célébration de l'univers dure 3 s au plus, quelle que soit la variante (décision 0039). */
 export const DUREE_DE_LA_CELEBRATION_S = 3;
@@ -12,7 +13,7 @@ export const DUREE_DE_LA_CELEBRATION_S = 3;
  * Le temps de la maquette est accéléré pour que la scène entière tienne dans `DUREE_DE_LA_CELEBRATION_S`.
  * Sans toile (mouvements réduits), il n'y a pas de confettis.
  */
-export function creerLaScene(racine: SVGSVGElement, toile: HTMLCanvasElement | null, variante: VarianteDeSports) {
+export function creerLaScene(racine: SVGSVGElement, toile: HTMLCanvasElement | null, variante: VarianteDe<"sports">) {
   const scenario = scenarioDuBut(variante);
   const personnage = creerCoachLeo(racine);
   const ballon = creerLeBallon(racine);

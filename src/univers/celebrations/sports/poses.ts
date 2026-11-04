@@ -1,3 +1,4 @@
+import type { VarianteDe } from "@domain/motivation";
 import { type Courbe, E, lerp } from "./courbes.ts";
 
 /**
@@ -36,11 +37,6 @@ export type Pose = {
 
 export type ImageCle = { readonly t: number; readonly e: Courbe; readonly p: Pose };
 type ImagePartielle = { readonly t: number; readonly e: Courbe; readonly p: Partial<Pose> };
-
-export const VARIANTES_DE_SPORTS = ["glissade", "avion", "danse"] as const;
-export type VarianteDeSports = (typeof VARIANTES_DE_SPORTS)[number];
-
-export const estUneVarianteDeSports = (cle: string): cle is VarianteDeSports => (VARIANTES_DE_SPORTS as readonly string[]).includes(cle);
 
 const REPOS: Pose = {
   x: 70,
@@ -139,7 +135,7 @@ const danse = (t0: number): readonly ImagePartielle[] => {
 };
 
 /** La variante : ses images clés, et l'instant (depuis le début de la variante) où le personnage a fini de bouger. */
-const VARIANTES: Record<VarianteDeSports, { readonly images: (t0: number) => readonly ImagePartielle[]; readonly finDuMouvement: number }> = {
+const VARIANTES: Record<VarianteDe<"sports">, { readonly images: (t0: number) => readonly ImagePartielle[]; readonly finDuMouvement: number }> = {
   glissade: { images: glissade, finDuMouvement: 1.85 },
   avion: { images: avion, finDuMouvement: 2.40 },
   danse: { images: danse, finDuMouvement: 2.50 },
@@ -171,7 +167,7 @@ export function poseA(poses: readonly ImageCle[], t: number): Pose {
 export type Emotion = "concentration" | "surprise" | "joie";
 
 export type ScenarioDeBut = {
-  readonly variante: VarianteDeSports;
+  readonly variante: VarianteDe<"sports">;
   /** Fin de la scène, en secondes du temps de la maquette (la scène est ensuite accélérée pour tenir en 3 s). */
   readonly fin: number;
   readonly tTour: number;
@@ -187,7 +183,7 @@ const T_TOUR = 1.0;
 export const T_VARIANTE = T_TOUR + .54;
 const PAUSE_FINALE = .3;
 
-export function scenarioDuBut(variante: VarianteDeSports): ScenarioDeBut {
+export function scenarioDuBut(variante: VarianteDe<"sports">): ScenarioDeBut {
   const { images, finDuMouvement } = VARIANTES[variante];
   return {
     variante,

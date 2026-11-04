@@ -1,10 +1,9 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
-import type { CelebrationDeLUnivers } from "@domain/motivation";
+import type { CelebrationDeLUnivers, VarianteDe } from "@domain/motivation";
 import { useMouvementsReduits } from "../../transitions/mouvements-reduits.ts";
 import { DecorDesSports } from "./sports/DecorDesSports.tsx";
 import { creerLaScene } from "./sports/scene.ts";
-import { estUneVarianteDeSports, type VarianteDeSports } from "./sports/poses.ts";
 
 type Props = { readonly celebration: CelebrationDeLUnivers };
 
@@ -12,15 +11,14 @@ type Props = { readonly celebration: CelebrationDeLUnivers };
  * La célébration de l'univers, jouée à la place de la célébration commune : elle ne fait qu'afficher ce que le domaine a décidé
  * (la variante tirée, le cri de victoire). Dessin décoratif (`aria-hidden`) : l'annonce du moment est donnée ailleurs, une seule fois.
  * Elle ne capte aucun toucher et ne prend jamais le focus. Avec les mouvements réduits : l'image fixe de l'état final, sans confetti.
- * Seul l'univers « Sports » est livré ; pour tout autre, le domaine ne rend pas de célébration.
+ * La scène de l'univers « Danse » n'est pas encore dessinée : rien n'est montré en attendant.
  */
 export function SceneDeCelebration({ celebration }: Props) {
-  const { variante, cri, univers } = celebration;
-  if (univers !== "sports" || !estUneVarianteDeSports(variante.cle)) return null;
-  return <SceneDesSports cle={variante.cle} cri={cri} />;
+  if (celebration.univers === "sports") return <SceneDesSports cle={celebration.variante.cle} cri={celebration.cri} />;
+  return null;
 }
 
-type PropsDesSports = { readonly cle: VarianteDeSports; readonly cri: string };
+type PropsDesSports = { readonly cle: VarianteDe<"sports">; readonly cri: string };
 
 function SceneDesSports({ cle, cri }: PropsDesSports) {
   const reduits = useMouvementsReduits();
