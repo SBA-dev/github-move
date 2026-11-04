@@ -999,6 +999,15 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
   .addition-posee .je-ne-sais-pas { padding: 6px 12px; }
 }
 
+/* Boîte à jetons sur téléphone : la boîte fermée, les choix et « Je ne sais pas » tiennent dans l'écran de 360 px (#131). Seules les marges et le personnage guide se resserrent ; la boîte garde la taille de son dessin. */
+@media (max-width: 480px) {
+  .en-tete:has(~ .ecran .boite-a-jetons) { padding-block: 4px; gap: 4px; }
+  .en-tete:has(~ .ecran .boite-a-jetons) .outils { gap: 4px 8px; }
+  .ecran:has(.boite-a-jetons) { padding-top: 4px; }
+  .seance:has(.boite-a-jetons) { gap: 8px; }
+  .seance:has(.boite-a-jetons) .guide-et-parole .personnage-guide { width: 80px; }
+}
+
 .dictee { display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 100%; }
 .mot-a-ecrire { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 0; padding: 0; list-style: none; max-width: 100%; }
 .case-a-ecrire, .caractere-deja-ecrit {
