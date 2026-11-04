@@ -60,11 +60,13 @@ Règles de cohabitation :
 | Regénérer la bibliothèque | `python3 scripts/build_bibliotheque.py` |
 | Regénérer l'index des programmes | `python3 scripts/index_programmes.py` |
 | Tests du pipeline de contenu | `python3 -m pytest scripts/tests` |
+| Tests du support E2E (adresses des parents de test) | `deno test features/support/` |
 | Servir le legacy | `cd app && python3 -m http.server 8765` |
 | Tests de caractérisation du legacy | `npx playwright test -c playwright.legacy.config.ts` |
 
 > ⚠️ Tous les agents se fient à ce tableau. Tenez-le à jour quand un script change.
 > Dans un conteneur cloud, Chromium est déjà installé : Playwright le trouve via `PLAYWRIGHT_BROWSERS_PATH`. Ne lancez jamais `playwright install`. Les steps E2E qui appellent Supabase doivent y être lancés avec `NODE_USE_ENV_PROXY=1` (sinon le processus Node de Playwright ne passe pas par le proxy HTTPS du conteneur) ; les scénarios tagués `@envoi-email` (18 cas de #5, plus quelques-uns de #10, #11 et #13) consomment environ 44 des 100 e-mails de connexion autorisés par heure sur le projet de développement : ils sont exclus des exécutions courantes. Les scénarios tagués `@hors-beta` (connexion par lien ou code de connexion reçu par e-mail, décision 0019) décrivent un comportement retiré pendant la beta, où le parent se connecte par mot de passe du parent (#72) : `bddgen --tags` les génère encore, c'est `--grep-invert "…|@hors-beta"` qui les exclut ; #45 retire ce tag en rétablissant l'e-mail.
+> Les parents de test E2E ont des adresses stables `<prénom>+<équipe>-<projet><worker>@exemple.test` et sont réutilisés d'un scénario et d'un lancement à l'autre (décision 0040, quota MAU de Supabase). L'équipe vient de `E2E_EQUIPE`, sinon du n° de la branche `feature/<n>-…`, sinon `local` : deux sessions qui testent en même temps doivent avoir des équipes différentes.
 > Les scénarios `@production` et `@pwa` sont exclus par la configuration principale ; la publication suit `docs/publication.md`.
 > Le hook `.claude/hooks/session-start.sh` installe Deno, pytest et les dépendances npm (dont la CLI Supabase : `npx supabase …`) au démarrage de chaque session cloud.
 > `supabase start` a besoin de Docker, absent du conteneur cloud : les scénarios qui touchent Supabase tournent donc contre le projet de développement en ligne `savanturier-dev` (décision 0010, sur une branche suivante), et les migrations s'y appliquent par l'API de gestion.

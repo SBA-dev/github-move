@@ -373,6 +373,9 @@ Then(/^plus aucun mot n'est surligné quand la lecture est finie$/, { tags: "@is
 
 When(/^Léa demande à écouter l'histoire$/, async ({ page }) => {
   await attendreLaSection(page);
+  // L'écran lit son accueil dès que tout est chargé, et cette lecture coupe celle que l'enfant vient de demander si elle
+  // démarre après son geste : on touche « Écouter » une fois l'accueil lancé (la bulle du personnage guide est affichée).
+  await expect(page.getByTestId("parole")).toBeVisible({ timeout: DELAI_D_UN_APPEL_SERVEUR_MS });
   await sectionDeLHistoire(page).getByRole("button", { name: "Écouter", exact: true }).click();
 });
 

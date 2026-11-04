@@ -2,7 +2,6 @@ import { expect, type Locator, type Page } from "@playwright/test";
 import type { Famille } from "../support/famille.ts";
 import {
   appelerLaReinitialisation,
-  creerUnParentAvecMotDePasse,
   leJetonDeRenouvellementMarche,
   leMotDePasseOuvreUneConnexion,
   reculerLesEssais,
@@ -74,9 +73,7 @@ async function lesReglesRespectees(page: Page): Promise<boolean[]> {
 // --- Parents préparés
 
 async function inscrireParPreparation(famille: Famille, adresse: string, motDePasse: string): Promise<void> {
-  const normalisee = famille.normalisee(adresse);
-  expect(await famille.parent(normalisee), `le parent ${normalisee} ne doit pas déjà exister`).toBeUndefined();
-  await creerUnParentAvecMotDePasse(normalisee, motDePasse);
+  await famille.preparerUnParent(adresse, motDePasse);
 }
 
 Given(/^(\S+) est inscrite? avec "(.*)" et le mot de passe du parent "(.*)"$/, async ({ famille }, _prenom: string, adresse: string, motDePasse: string) => {
