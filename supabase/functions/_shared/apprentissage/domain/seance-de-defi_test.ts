@@ -250,6 +250,7 @@ Deno.test("dans un défi fini, dire « Je ne sais pas » est refusé parce que l
 const grandDefi: GrandDefi = {
   matiere: matiereDeCode("francais"),
   niveau: CE1,
+  grandDefi: true,
   lecons: [leconDesSyllabes.id, leconDuCalcul.id],
 };
 

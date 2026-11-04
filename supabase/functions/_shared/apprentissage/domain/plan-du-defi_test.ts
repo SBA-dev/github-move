@@ -43,7 +43,12 @@ function defiDe(lecons: readonly Lecon[]): Defi {
 }
 
 function grandDefiDe(lecons: readonly Lecon[]): GrandDefi {
-  return { matiere: matiereDeCode("maths"), niveau: Niveau.de("CE1"), lecons: lecons.map(({ id }) => id) };
+  return {
+    matiere: matiereDeCode("maths"),
+    niveau: Niveau.de("CE1"),
+    grandDefi: true,
+    lecons: lecons.map(({ id }) => id),
+  };
 }
 
 function questionsDuGrandDefiParLecon(lecons: readonly Lecon[], hasard: Hasard = hasardSansMelange()): number[] {

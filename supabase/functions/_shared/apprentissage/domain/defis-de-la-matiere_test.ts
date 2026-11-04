@@ -103,3 +103,17 @@ Deno.test("une matière d'une seule partie a un grand défi, une matière sans l
 
   assertEquals([avecTroisLecons?.lecons, sansLecon], [["ma-ce1-1", "ma-ce1-2", "ma-ce1-3"], undefined]);
 });
+
+Deno.test("le grand défi porte sa marque grandDefi, sans numéro", () => {
+  const lecons = [1, 2, 3].map(lecon);
+  const niveau = Niveau.de("CE1");
+  const maths = lecons[0].matiere;
+  const parcours = parcoursDeLaMatiere({ lecons, niveau, meilleuresEtoiles: new Map() }, maths);
+
+  assertEquals(grandDefiDeLaMatiere(parcours, maths, niveau), {
+    matiere: maths,
+    niveau,
+    grandDefi: true,
+    lecons: ["ma-ce1-1", "ma-ce1-2", "ma-ce1-3"],
+  });
+});
