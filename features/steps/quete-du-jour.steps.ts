@@ -53,8 +53,6 @@ Given(
     noterUneSeanceJouee(page, titre, Number(etoiles));
     await quitterLaFinDeSeanceVersQuiJoue(page);
     await page.clock.setFixedTime(maintenant);
-    // Le nom de l'application ramène à « Qui joue ? » sans recharger : ce que l'appareil sait des séances est en mémoire.
-    await page.getByRole("banner").getByRole("button", { name: "Savanturier" }).click();
     await expect(page.getByTestId("qui-joue")).toBeVisible();
   },
 );

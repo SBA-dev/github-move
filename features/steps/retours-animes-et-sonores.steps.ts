@@ -304,20 +304,6 @@ async function laisserLaParoleFinir(page: Page): Promise<void> {
 }
 
 /**
- * Attend que la bulle porte la phrase complète qui se termine par `suite` (éventuellement suivie de la phrase de la quête accomplie).
- * Sur l'écran de fin, la bulle ne porte d'abord que la félicitation de la dernière réponse : les lectures de l'écran (quête, objet,
- * badge, épisode…) passent avant la phrase de fin, on les termine une à une.
- */
-export async function attendreQueLaBulleSeTerminePar(page: Page, suite: string): Promise<void> {
-  await expect.poll(async () => {
-    const texte = sansLaQueteAccomplie(normaliser((await bulle(page).textContent().catch(() => null)) ?? ""));
-    if (texte.endsWith(` ${suite}`)) return true;
-    await terminerLaLecture(page);
-    return false;
-  }, { intervals: [100], timeout: DELAI_DE_L_ATTENTE_MS }).toBe(true);
-}
-
-/**
  * La phrase de fin n'est dite qu'une fois toutes les lectures de l'écran prêtes (quête, badge, épisode…) : on attend qu'elle ait
  * été DITE en entier (sa bulle est affichée et son texte est dans le journal), puis on la termine et on exige le silence.
  */

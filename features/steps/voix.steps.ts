@@ -1,5 +1,7 @@
 import { type BrowserContext, expect, type Page } from "@playwright/test";
 import type { Famille } from "../support/famille.ts";
+export { terminerLaLecture } from "../support/lecture-vocale.ts";
+import { terminerLaLecture } from "../support/lecture-vocale.ts";
 import { avecLesReglagesPrevus } from "../support/reglages-prevus.ts";
 import {
   bulle,
@@ -212,18 +214,6 @@ export async function attendreUneLecture(page: Page) {
 
 export async function laisserPasserLeDelaiDeLecture(page: Page) {
   await page.evaluate((delai) => new Promise<void>((fin) => setTimeout(fin, delai)), DELAI_POUR_PROUVER_LE_SILENCE_MS);
-}
-
-export async function terminerLaLecture(page: Page) {
-  await page.evaluate(() => {
-    const faux = Reflect.get(window, "__faux") as {
-      enonces: Array<{ lot: number; enonce: { onend: (() => void) | null } }>;
-      actifs: unknown[];
-    };
-    const dernier = faux.enonces[faux.enonces.length - 1];
-    faux.actifs = [];
-    dernier?.enonce.onend?.();
-  });
 }
 
 /**

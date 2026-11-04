@@ -1,5 +1,5 @@
 import { expect, type Page } from "@playwright/test";
-import { sansLaQueteAccomplie } from "../support/phrase-de-fin-avec-la-quete.ts";
+import { attendreQueLaBulleSeTerminePar, sansLaQueteAccomplie } from "../support/phrase-de-fin-avec-la-quete.ts";
 import type { Famille } from "../support/famille.ts";
 import { LecturesDesResultats } from "../support/lectures-des-resultats.ts";
 import {
@@ -9,7 +9,6 @@ import {
   meilleuresEtoilesEnRest,
   type ReponseDeLEnregistrement,
 } from "../support/seances-api.ts";
-import { attendreQueLaBulleSeTerminePar } from "./retours-animes-et-sonores.steps.ts";
 import { Given, Then, When } from "./fixtures.ts";
 import {
   commencerLaSeanceComplete,

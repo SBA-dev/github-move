@@ -129,13 +129,12 @@ Given(/^Léa a vu Noisette marcher jusqu'à la leçon (\d+), puis est revenue à
   await revenirALAccueil(page);
 });
 
-// « Accueil » mène à l'accueil de l'enfant ; le bandeau « Savanturier » ramène à « Qui joue ? » sans recharger la page.
+// La fin de séance quittée par « Accueil » puis par le nom de l'application (voir terminerUneSeance) ramène à « Qui joue ? » sans recharger.
 Given(
   /^Léa a terminé une séance de la leçon « ([^«»]+) » avec (\d) étoiles?, puis s'est choisie de nouveau dans « Qui joue \? »$/,
   async ({ page, $test }, titre: string, etoiles: string) => {
     $test.slow();
     await terminerUneSeance(page, titre, etoiles);
-    await page.getByRole("banner").getByRole("button", { name: "Savanturier" }).click();
     await choisirSonProfil(page, "Léa");
   },
 );

@@ -1,9 +1,8 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 import type { DataTable } from "playwright-bdd";
-import { sansLaQueteAccomplie } from "../support/phrase-de-fin-avec-la-quete.ts";
+import { attendreQueLaBulleSeTerminePar, sansLaQueteAccomplie } from "../support/phrase-de-fin-avec-la-quete.ts";
 import { ecrireDesSeancesTermineesPourLaSerie, jourPrepare } from "../support/serie-api.ts";
 import { lireEnRest } from "../support/seances-api.ts";
-import { attendreQueLaBulleSeTerminePar } from "./retours-animes-et-sonores.steps.ts";
 import { EXPRESSIONS_PAR_PERSONNAGE, FELICITATIONS_COMMUNES, leGuide } from "./univers.steps.ts";
 import { bulle, entendu, jouerLaSeanceComplete, toutesLesParoles } from "./etapes-puis-exercices.steps.ts";
 import { ecranDe, leaJoueAvecSonVraiProfil, lecturesParLot, ouvrirLEcran } from "./ecran-mes-medailles.steps.ts";
