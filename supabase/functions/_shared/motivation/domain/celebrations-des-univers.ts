@@ -45,7 +45,7 @@ const CELEBRANTS: {
 };
 
 function estUniversCelebre(cle: CleUnivers): cle is UniversCelebre {
-  return cle in CELEBRANTS;
+  return Object.hasOwn(CELEBRANTS, cle);
 }
 
 export function celebrationDe(
