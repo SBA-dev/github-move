@@ -107,3 +107,7 @@ Deno.test("un grand défi relevé ne fait pas passer un défi d'une partie pour 
 
   assertEquals(issue.annonce, "Défi relevé !");
 });
+
+Deno.test("un grand défi relevé s'écrit « Grand défi · Sciences · CE1 »", () => {
+  assertEquals(lignesDesDefisReleves([grandDefi("sciences", "CE1")]), ["Grand défi · Sciences · CE1"]);
+});
