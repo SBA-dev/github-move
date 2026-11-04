@@ -18,7 +18,7 @@ const NOMS = {
   animaux: ["Animaux de la forêt", "bois, toit de feuilles, gland"],
   princesse: ["Princesses et fées", "train de conte, couronne, volutes"],
   sports: ["Sports", "maillots, fanion, sans numéro"],
-  police: ["Police", "train bleu, écusson rond"],
+  police: ["Police", "train bleu, écusson en blason"],
   pompier: ["Pompiers", "train rouge, cloche, échelle"],
   danse: ["Danse", "manège, note de musique, ruban"],
 };
@@ -120,10 +120,10 @@ const DECOR_TETE = {
 <path d="M138 1 L120 5.5 L138 10 Z" fill="#FFC93C" ${trait("#A56F00", 2.5)}/>`,
   }),
   police: (c) => ({
-    sous: `<!-- écusson rond sans étoile, cheminée marine -->
-<circle cx="48" cy="62" r="16" fill="#F3F6FF" ${trait(c.contour, 3.5)}/>
-<circle cx="48" cy="62" r="10.5" fill="#3450C8"/>
-<circle cx="48" cy="62" r="6" fill="none" stroke="#F3F6FF" stroke-width="2.5"/>
+    sous: `<!-- écusson en blason, le même que la boîte de Police de #131 (réduit), sans étoile ; cheminée marine -->
+<g transform="translate(48 43) scale(0.36) translate(-144 -110)">
+<path d="M144 110 L184 122 V166 Q184 196 144 214 Q104 196 104 166 V122 Z" fill="#F3F6FF" stroke="#1F2F82" stroke-width="9" stroke-linejoin="round"/>
+<path d="M144 126 L170 134 V164 Q170 184 144 198 Q118 184 118 164 V134 Z" fill="#3450C8"/></g>
 <rect x="20" y="24" width="20" height="18" rx="3" fill="#1F2F82" ${trait(c.contour, 3.5)}/>`,
     dessus: `<!-- liseré blanc sur le toit -->
 <path d="M92 17 H110 M126 17 H144" fill="none" ${trait("#F3F6FF", 3)}/>`,

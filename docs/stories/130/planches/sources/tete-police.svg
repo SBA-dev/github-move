@@ -5,10 +5,10 @@
 <!-- chaudière et cabine -->
 <rect x="6" y="38" width="88" height="48" rx="16" fill="url(#t-police)" stroke="#1F2F82" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
 <rect x="90" y="20" width="54" height="66" rx="8" fill="url(#t-police)" stroke="#1F2F82" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
-<!-- écusson rond sans étoile, cheminée marine -->
-<circle cx="48" cy="62" r="16" fill="#F3F6FF" stroke="#1F2F82" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
-<circle cx="48" cy="62" r="10.5" fill="#3450C8"/>
-<circle cx="48" cy="62" r="6" fill="none" stroke="#F3F6FF" stroke-width="2.5"/>
+<!-- écusson en blason, le même que la boîte de Police de #131 (réduit), sans étoile ; cheminée marine -->
+<g transform="translate(48 43) scale(0.36) translate(-144 -110)">
+<path d="M144 110 L184 122 V166 Q184 196 144 214 Q104 196 104 166 V122 Z" fill="#F3F6FF" stroke="#1F2F82" stroke-width="9" stroke-linejoin="round"/>
+<path d="M144 126 L170 134 V164 Q170 184 144 198 Q118 184 118 164 V134 Z" fill="#3450C8"/></g>
 <rect x="20" y="24" width="20" height="18" rx="3" fill="#1F2F82" stroke="#1F2F82" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
 <!-- toit de la cabine -->
 <rect x="84" y="12" width="66" height="10" rx="5" fill="#2B43A8" stroke="#1F2F82" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
