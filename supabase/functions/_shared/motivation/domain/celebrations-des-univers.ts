@@ -13,8 +13,7 @@ export type UniversCelebre = keyof typeof CLES_DE_VARIANTE;
 
 export type VarianteDe<U extends UniversCelebre> = (typeof CLES_DE_VARIANTE)[U][number];
 
-export const VARIANTES_DES_UNIVERS: Readonly<Record<UniversCelebre, readonly VarianteDe<UniversCelebre>[]>> =
-  CLES_DE_VARIANTE;
+export const VARIANTES_DES_UNIVERS: { readonly [U in UniversCelebre]: readonly VarianteDe<U>[] } = CLES_DE_VARIANTE;
 
 export type CriDeVictoire = string;
 
