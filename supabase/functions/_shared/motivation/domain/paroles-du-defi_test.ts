@@ -11,6 +11,7 @@ import {
   parolesDeFinDeDefi,
   parolesDeFinDeGrandDefi,
   phraseDeFinAvecLeDefi,
+  phraseDeFinAvecLeGrandDefi,
   titreDuDefiReleve,
   titreDuGrandDefiReleve,
 } from "./paroles-du-defi.ts";
@@ -55,6 +56,15 @@ Deno.test("le personnage guide propose le défi ouvert après sa phrase de fin",
 
 Deno.test("sans défi ouvert, la phrase de fin reste seule", () => {
   assertEquals(phraseDeFinAvecLeDefi("À demain !", "Léa", undefined), "À demain !");
+});
+
+Deno.test("le personnage guide propose le grand défi après sa phrase de fin", () => {
+  const texte = phraseDeFinAvecLeGrandDefi("À demain !", "Léa", "maths");
+
+  assertEquals(
+    texte,
+    "À demain ! Bravo Léa ! Tu as réussi toutes les leçons de maths. Le grand défi t'attend !",
+  );
 });
 
 Deno.test("un défi se nomme « Défi » suivi de son numéro", () => {
