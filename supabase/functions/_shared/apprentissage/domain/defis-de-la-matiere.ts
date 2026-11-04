@@ -2,7 +2,9 @@ import type { Matiere, Niveau } from "../../catalogue/domain/index.ts";
 import { partiesDuParcours } from "./partie-du-parcours.ts";
 import { estUneLeconReussie, type LeconId, type Parcours } from "./parcours.ts";
 
-export type Defi = Readonly<{ matiere: Matiere; niveau: Niveau; numero: number; lecons: readonly LeconId[] }>;
+export type Defi = Readonly<
+  { matiere: Matiere; niveau: Niveau; numero: number; grandDefi?: undefined; lecons: readonly LeconId[] }
+>;
 
 export function defisDeLaMatiere(parcours: Parcours, matiere: Matiere, niveau: Niveau): Defi[] {
   return partiesDuParcours(parcours)
@@ -10,24 +12,24 @@ export function defisDeLaMatiere(parcours: Parcours, matiere: Matiere, niveau: N
     .map(({ numero, lecons }) => ({ matiere, niveau, numero, lecons }));
 }
 
-export type GrandDefi = Readonly<{ matiere: Matiere; niveau: Niveau; numero?: undefined; lecons: readonly LeconId[] }>;
+export type GrandDefi = Readonly<
+  { matiere: Matiere; niveau: Niveau; numero?: undefined; grandDefi: true; lecons: readonly LeconId[] }
+>;
 
 export function grandDefiDeLaMatiere(parcours: Parcours, matiere: Matiere, niveau: Niveau): GrandDefi | undefined {
   const lecons = partiesDuParcours(parcours).flatMap((partie) => partie.lecons);
-  return lecons.length === 0 ? undefined : { matiere, niveau, lecons };
+  return lecons.length === 0 ? undefined : { matiere, niveau, grandDefi: true, lecons };
 }
 
-export type DefiReleve =
-  | Readonly<{ matiere: Matiere; niveau: Niveau; numero: number }>
-  | Readonly<{ matiere: Matiere; niveau: Niveau; numero?: undefined; grandDefi: true }>;
+export type DefiReleve = Readonly<{ matiere: Matiere; niveau: Niveau; numero?: number; grandDefi?: true }>;
 
 export function releveDuDefi(defi: Defi | GrandDefi): DefiReleve {
   const { matiere, niveau } = defi;
-  return defi.numero === undefined ? { matiere, niveau, grandDefi: true } : { matiere, niveau, numero: defi.numero };
+  return defi.grandDefi === true ? { matiere, niveau, grandDefi: true } : { matiere, niveau, numero: defi.numero };
 }
 
 export function estUnGrandDefi(defi: Defi | GrandDefi | DefiReleve): boolean {
-  return defi.numero === undefined;
+  return defi.grandDefi === true;
 }
 
 export type EtatDuDefi =

@@ -1,5 +1,5 @@
 import type { Lecon } from "../../catalogue/domain/index.ts";
-import { type Defi, estUnGrandDefi, type GrandDefi } from "./defis-de-la-matiere.ts";
+import { type Defi, type DefiReleve, estUnGrandDefi, type GrandDefi } from "./defis-de-la-matiere.ts";
 import { AucuneQuestionPourLeDefi } from "./erreurs.ts";
 import { type CleDeQuestion, typeDeQuestionDeLExercice } from "./cle-de-question.ts";
 import { cleDeLaDictee } from "./cles-des-questions.ts";
@@ -18,7 +18,7 @@ export type PlanDuDefi = { readonly questions: readonly QuestionDuDefi[] };
 export const NOMBRE_DE_QUESTIONS_DU_DEFI = 10;
 export const NOMBRE_DE_QUESTIONS_DU_GRAND_DEFI = 12;
 
-function nombreDeQuestionsDuDefi(defi: Defi | GrandDefi): number {
+export function nombreDeQuestionsDuDefi(defi: Defi | GrandDefi | DefiReleve): number {
   return estUnGrandDefi(defi) ? NOMBRE_DE_QUESTIONS_DU_GRAND_DEFI : NOMBRE_DE_QUESTIONS_DU_DEFI;
 }
 

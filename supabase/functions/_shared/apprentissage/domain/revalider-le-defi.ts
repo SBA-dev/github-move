@@ -55,7 +55,7 @@ export function revaliderLeDefi(
 function defiEnvoye(envoye: DefiReleve, parcours: Parcours, entrees: EntreesDuParcours): Defi | GrandDefi | undefined {
   const { matiere } = envoye;
   const { numero } = envoye;
-  return numero === undefined
+  return envoye.grandDefi === true
     ? grandDefiDeLaMatiere(parcours, matiere, entrees.niveau)
     : defisDeLaMatiere(parcours, matiere, entrees.niveau).find((candidat) => candidat.numero === numero);
 }

@@ -157,7 +157,7 @@ export { defiOuvertParLaSeance } from "./defis-de-la-matiere.ts";
 export { estUnGrandDefi, etatDuDefi, releveDuDefi } from "./defis-de-la-matiere.ts";
 export { grandDefiDeLaMatiere } from "./defis-de-la-matiere.ts";
 export type { Defi, DefiReleve, EtatDuDefi, GrandDefi } from "./defis-de-la-matiere.ts";
-export { planDuDefi, questionsPosablesDuDefi } from "./plan-du-defi.ts";
+export { nombreDeQuestionsDuDefi, planDuDefi, questionsPosablesDuDefi } from "./plan-du-defi.ts";
 export type { PlanDuDefi, QuestionDuDefi } from "./plan-du-defi.ts";
 export { AucuneQuestionPourLeDefi } from "./erreurs.ts";
 export { SeanceDeDefi } from "./seance-de-defi.ts";

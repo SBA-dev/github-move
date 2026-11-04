@@ -6,12 +6,13 @@ import type { DefiReleve } from "../domain/defis-de-la-matiere.ts";
 import type { DefiTermine } from "../domain/seance-de-defi.ts";
 import { lignesDesQuestionsRetenues } from "./files-de-revision-supabase.ts";
 
-type LigneDeDefi = { matiere: string; classe: string; numero: number };
+type LigneDeDefi = { matiere: string; classe: string; numero?: number };
 
 function releveDeLaLigne({ matiere, classe, numero }: LigneDeDefi): DefiReleve | undefined {
   if (!estUneMatiere(matiere)) return undefined;
   try {
-    return { matiere: matiereDeCode(matiere), niveau: Niveau.de(classe), numero };
+    const defi = { matiere: matiereDeCode(matiere), niveau: Niveau.de(classe) };
+    return numero === undefined ? { ...defi, grandDefi: true } : { ...defi, numero };
   } catch (cause) {
     if (cause instanceof NiveauInconnu) return undefined;
     throw cause;
@@ -25,22 +26,21 @@ export class DefisTerminesSupabase implements DefisTermines {
   ) {}
 
   async releves(enfant: string): Promise<readonly DefiReleve[]> {
-    const { data, error } = await this.clientDuParent().from("defis_termines").select("matiere, classe, numero")
-      .eq("profil", enfant);
-    if (error) throw new Error(`Lecture des défis relevés impossible : ${error.message}`);
-    return (data as LigneDeDefi[]).flatMap((ligne) => releveDeLaLigne(ligne) ?? []);
+    const defis = await this.lire("defis_termines", "matiere, classe, numero", enfant);
+    const grandsDefis = await this.lire("grands_defis_termines", "matiere, classe", enfant);
+    return [...defis, ...grandsDefis].flatMap((ligne) => releveDeLaLigne(ligne) ?? []);
   }
 
   async enregistrer(fait: DefiTermine, { file, versionLue }: FileDeRevisionALEcrire) {
-    if (fait.defi.numero === undefined) {
-      throw new Error("L'enregistrement d'un grand défi n'est pas encore pris en charge.");
-    }
-    const { data, error } = await this.clientDuServeur().rpc("enregistrer_le_defi_termine", {
+    const { fonction, numero } = fait.defi.grandDefi === true
+      ? { fonction: "enregistrer_le_grand_defi_termine", numero: {} }
+      : { fonction: "enregistrer_le_defi_termine", numero: { p_numero: fait.defi.numero } };
+    const { data, error } = await this.clientDuServeur().rpc(fonction, {
       p_id: fait.id,
       p_profil: fait.enfant,
       p_matiere: fait.defi.matiere.code,
       p_classe: fait.defi.niveau.valeur,
-      p_numero: fait.defi.numero,
+      ...numero,
       p_termine_le: fait.termineeLe.toISOString(),
       p_jour: fait.jour.toString(),
       p_version_de_la_file_lue: versionLue,
@@ -49,5 +49,11 @@ export class DefisTerminesSupabase implements DefisTermines {
     });
     if (error) throw new Error(`Enregistrement du défi terminé impossible : ${error.message}`);
     return data as IssueDeLEnregistrement;
+  }
+
+  private async lire(table: string, colonnes: string, enfant: string): Promise<LigneDeDefi[]> {
+    const { data, error } = await this.clientDuParent().from(table).select(colonnes).eq("profil", enfant);
+    if (error) throw new Error(`Lecture des défis relevés impossible : ${error.message}`);
+    return data as unknown as LigneDeDefi[];
   }
 }
