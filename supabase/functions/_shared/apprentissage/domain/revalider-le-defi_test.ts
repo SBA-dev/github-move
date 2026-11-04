@@ -403,3 +403,15 @@ Deno.test("un grand défi à venir qui était déjà relevé, rejoué, est accep
 
   assertEquals(revalide.nombreDeQuestions, 12);
 });
+
+Deno.test("un grand défi de 13 questions est refusé comme incohérent", () => {
+  const supplementaire = questionsPosablesDuDefi(grandDefiDeMaths!, lecons)
+    .find(({ identite }) => !planDuGrandDefi.questions.some((q) => q.identite.valeur === identite.valeur));
+  assertExists(supplementaire);
+  const questions = [...planDuGrandDefi.questions, supplementaire];
+
+  assertThrows(
+    () => revalider(jouerLeGrandDefi({ questions }).envoi, { reussies: toutesLesLecons }),
+    PlanDuDefiIncoherent,
+  );
+});
