@@ -3,6 +3,7 @@ import {
   annonceDuDefiOuvert,
   annonceDuGrandDefiOuvert,
   inviterARelever,
+  inviterARelieverLeGrandDefi,
   nomDuDefi,
   nomDuGrandDefi,
   parolesDeDebutDeDefi,
@@ -63,4 +64,10 @@ Deno.test("le grand défi se nomme « Grand défi »", () => {
 
 Deno.test("la fin de séance annonce que le grand défi de la matière est ouvert", () => {
   assertEquals(annonceDuGrandDefiOuvert("maths"), "Le grand défi des maths est ouvert !");
+});
+
+Deno.test("à la fin de la séance qui rend la matière réussie, le personnage guide propose le grand défi", () => {
+  const texte = inviterARelieverLeGrandDefi({ prenom: "Léa", matiere: "maths" });
+
+  assertEquals(texte, "Bravo Léa ! Tu as réussi toutes les leçons de maths. Le grand défi t'attend !");
 });
