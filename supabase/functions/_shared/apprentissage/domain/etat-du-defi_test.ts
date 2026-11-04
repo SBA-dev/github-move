@@ -81,3 +81,17 @@ Deno.test("le grand défi est ouvert quand toutes les leçons de la classe sont 
 
   assertEquals(etatDuGrandDefi({ reussies: tout, releves: [] }), { genre: "ouvert" });
 });
+
+const grandDefiReleve = (matiere = maths, niveau = ce1): DefiReleve => ({ matiere, niveau, grandDefi: true });
+
+Deno.test("le grand défi relevé de la même matière et de la même classe rend le grand défi relevé", () => {
+  assertEquals(etatDuGrandDefi({ reussies: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], releves: [grandDefiReleve()] }), {
+    genre: "releve",
+  });
+});
+
+Deno.test("le grand défi relevé d'une autre classe ou d'une autre matière ne rend pas ce grand défi relevé", () => {
+  const releves = [grandDefiReleve(maths, Niveau.de("CE2")), grandDefiReleve(matiereDeCode("francais"), ce1)];
+
+  assertEquals(etatDuGrandDefi({ reussies: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], releves }), { genre: "ouvert" });
+});
