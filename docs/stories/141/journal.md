@@ -39,12 +39,16 @@ Nature : correctifs `fix(#141)`. Décisions du PO : « son A, accueil A, issue o
 
 | Mesure | Valeur |
 |---|---|
-| Durée, du lancement au merge | lancement ≈ 07:45 UTC ; PR en brouillon à 11:00 UTC (≈ 3 h 15) ; merge : à compléter |
+| Durée, du lancement au merge | lancement ≈ 07:45 UTC ; PR à 11:00 UTC ; merge ≈ 11:35 UTC (≈ 3 h 50) |
 | Attente du PO | ≈ 5 min (CADRAGE PRÊT 08:12 → réponse 08:17) |
 | Attente du verrou base | ≈ 35 min (demandé 08:18, accordé 08:53), sans blocage : TDD, steps et review faits pendant l'attente |
-| Attente de `main` | aucune |
+| Attente du verrou merge | ≈ 20 min (autorisé 11:08, accordé 11:28, 3e de la file) |
 | Cycles de review À CORRIGER | 1 (cycle 1) ; cycles 2 et 3 APPROUVÉ |
 | Cycles E2E KO | 1 (run 1 : famille de la quête 4/15 et régression d'`ouvrirQuiJoue`) ; run 2 vert hors KO connus/instables |
-| Intégrations de `main` | 0 (aucun conflit) |
+| Intégrations de `main` | 1 (db200e2, #131 et #129), sans conflit |
 | Temps des runs E2E | run 1 ≈ 40 min, run 2 ≈ 64 min, rejeux ciblés ≈ 15 min |
 | Régression sur `main` après le merge | à compléter |
+
+## Merge
+- 11:08 UTC : autorisation de merge du PO (« merge 131 129 141 OK »). 11:28 UTC : VERROU merge accordé.
+- Intégration de `main` (`db200e2`, #131 et #129) : sans conflit ; seul fichier commun `features/steps/boite-et-barres.steps.ts`, fusion automatique (seules les lignes de #141 s'ajoutent). bddgen, deno test (2802/2802), lint, fmt, tsc et build OK. Aucun code de production de #141 touché par l'intégration : pas de nouvelle relecture.
