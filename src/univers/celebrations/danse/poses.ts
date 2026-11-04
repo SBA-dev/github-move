@@ -74,7 +74,7 @@ const ELAN: Images = [
   { t: 1.12, e: E.lineaire, p: { vue: 160, rot: 0 } },
   { t: 1.22, e: E.lineaire, p: { vue: 250, rot: 2 } },
   { t: 1.34, e: E.lineaire, p: { vue: 360, rot: 0, sy: 1, sx: 1 } },
-  { t: 1.35, e: E.lineaire, p: { vue: 0 } },
+  { t: 1.35, e: E.instantanee, p: { vue: 0 } },
   { t: 1.50, e: E.sortie, p: { y: 378, sy: .92, sx: 1.06, lGt: 22, lGs: -18, lDt: -22, lDs: 18, tD: 1, ...SECONDE, pointe: 0, mG: 3, mD: 3 } },
   { t: 1.66, e: E.rebond, p: { y: 370, sy: 1, sx: 1, lGt: 6, lDt: -6, lGs: 0, lDs: 0 } },
 ];
@@ -109,7 +109,7 @@ const ruban = (t0: number): Images => [
   { t: t0 + 1.00, e: E.lineaire, p: { vue: 120 } },
   { t: t0 + 1.60, e: E.lineaire, p: { vue: 240 } },
   { t: t0 + 2.20, e: E.lineaire, p: { vue: 360 } },
-  { t: t0 + 2.21, e: E.lineaire, p: { vue: 0 } },
+  { t: t0 + 2.21, e: E.instantanee, p: { vue: 0 } },
   { t: t0 + 2.40, e: E.sortie, p: { y: 370, pointe: 0, tD: 1, lDt: -6, lDs: 0, aGu: 90, aGl: 10, mG: 3, aDu: -140, aDl: -30 } },
   { t: t0 + 2.80, e: E.douce, p: { aDu: -150, aDl: -20 } },
 ];

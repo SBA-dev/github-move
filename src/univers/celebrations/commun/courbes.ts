@@ -5,6 +5,8 @@ export type Courbe = (u: number) => number;
 /** Les courbes d'accélération des maquettes : toutes vont de 0 à 1 (le retour et le rebond dépassent 1 un instant). */
 export const E = {
   lineaire: (u) => u,
+  /** Le saut immédiat à la valeur d'arrivée : remet un tour complet à zéro sans repasser par les angles intermédiaires. */
+  instantanee: () => 1,
   sortie: (u) => 1 - Math.pow(1 - u, 3),
   entree: (u) => u * u * u,
   douce: (u) => (u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2),
