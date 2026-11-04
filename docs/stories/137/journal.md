@@ -42,3 +42,11 @@
   - `src/defis/defis-releves-sur-l-appareil.ts` : clé `…/grand` sans test.
 - Bloc Motivation (25 à 33) : RED `be2b3e1`..`78210bd`. 34 retiré : déjà couvert par les tests de
   `moment-de-celebration` (le moment ne dépend pas de la sorte du défi).
+- Blocs application et infrastructure (35 à 43) : RED `3032416`..`831b8d8` (marque `grandDefi: true` sur `GrandDefi`
+  demandée par la revue), 36 et 38 à 41 en caractérisation (`171925f`, `6c4b728`). GREEN Motivation `db9940e`,
+  refactors `180c539`, `71c9163` ; GREEN infrastructure `5418d20`, refactor `b6688c5`. 2857 tests verts.
+- Revue intermédiaire (delta `443e122..b6688c5`) : **APPROUVÉ**, sans bloquant. À faire avant la revue finale :
+  revenir à l'union exclusive pour `DefiReleve` (affaiblie en `numero?`/`grandDefi?` pour deux fixtures de test) et lire
+  la sorte par un seul marqueur ; `src/defis/lecture-des-defis-releves-supabase.ts` doit lire aussi
+  `grands_defis_termines` (ajouté à la dette du câblage).
+- Verrou `base` demandé (22:05) ; #130 le détient, #137 est la suivante.
