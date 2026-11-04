@@ -57,6 +57,7 @@ export {
   parolesDeFinDeDefi,
   parolesDeFinDeGrandDefi,
   phraseDeFinAvecLeDefi,
+  phraseDeFinAvecLeGrandDefi,
   titreDuDefiReleve,
   titreDuGrandDefiReleve,
 } from "./paroles-du-defi.ts";

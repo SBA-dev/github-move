@@ -58,3 +58,7 @@ export function parolesDeFinDeGrandDefi(
 export function titreDuGrandDefiReleve(): string {
   return "Grand défi relevé !";
 }
+
+export function phraseDeFinAvecLeGrandDefi(phraseDeFin: string, prenom: string, matiere: CodeDeMatiere): string {
+  return `${phraseDeFin} ${inviterAReleverLeGrandDefi({ prenom, matiere })}`;
+}
