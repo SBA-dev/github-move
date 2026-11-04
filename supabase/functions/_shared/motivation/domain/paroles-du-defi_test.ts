@@ -3,6 +3,7 @@ import {
   annonceDuDefiOuvert,
   inviterARelever,
   nomDuDefi,
+  nomDuGrandDefi,
   parolesDeDebutDeDefi,
   parolesDeFinDeDefi,
   phraseDeFinAvecLeDefi,
@@ -53,4 +54,8 @@ Deno.test("sans défi ouvert, la phrase de fin reste seule", () => {
 
 Deno.test("un défi se nomme « Défi » suivi de son numéro", () => {
   assertEquals(nomDuDefi(1), "Défi 1");
+});
+
+Deno.test("le grand défi se nomme « Grand défi »", () => {
+  assertEquals(nomDuGrandDefi(), "Grand défi");
 });
