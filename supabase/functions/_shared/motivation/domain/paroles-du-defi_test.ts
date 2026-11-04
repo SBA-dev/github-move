@@ -1,10 +1,13 @@
 import { assertEquals } from "@std/assert";
+import { matiereDeCode, Niveau } from "../../catalogue/domain/index.ts";
+import type { Defi, GrandDefi } from "../../apprentissage/domain/index.ts";
 import {
   annonceDuDefiOuvert,
   annonceDuGrandDefiOuvert,
   inviterARelever,
   inviterAReleverLeGrandDefi,
   nomDuDefi,
+  nomDuDefiOuvert,
   nomDuGrandDefi,
   parolesDeDebutDeDefi,
   parolesDeDebutDeGrandDefi,
@@ -106,4 +109,13 @@ Deno.test("à la fin d'un grand défi rejoué, le personnage guide dit que l'enf
 Deno.test("l'annonce de fin de grand défi s'intitule « Grand défi relevé ! », celle du défi d'une partie reste « Défi relevé ! »", () => {
   assertEquals(titreDuGrandDefiReleve(), "Grand défi relevé !");
   assertEquals(titreDuDefiReleve(), "Défi relevé !");
+});
+
+const maths = matiereDeCode("maths");
+const niveau = Niveau.de("CE1");
+const defiNumero2: Defi = { matiere: maths, niveau, numero: 2, lecons: ["ma-ce1-1", "ma-ce1-2", "ma-ce1-3"] };
+const grandDefiDesMaths: GrandDefi = { matiere: maths, niveau, grandDefi: true, lecons: ["ma-ce1-1", "ma-ce1-2"] };
+
+Deno.test("le repère d'un défi du parcours porte son numéro, celui du grand défi ne porte pas de numéro", () => {
+  assertEquals([nomDuDefiOuvert(defiNumero2), nomDuDefiOuvert(grandDefiDesMaths)], ["Défi 2", "Grand défi"]);
 });
