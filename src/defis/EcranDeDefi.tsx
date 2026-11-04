@@ -1,8 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import { AucuneQuestionPourLeDefi, type Defi, type DefiReleve } from "@domain/apprentissage";
+import { AucuneQuestionPourLeDefi, type Defi, type DefiReleve, type GrandDefi } from "@domain/apprentissage";
 import { type Lecon, libelleCourtDe, type Niveau } from "@domain/catalogue";
 import type { ProfilEnCours } from "@domain/famille";
-import { nomDuDefi, parolesDeDebutDeDefi, type Univers } from "@domain/motivation";
+import {
+  nomDuDefi,
+  nomDuGrandDefi,
+  parolesDeDebutDeDefi,
+  parolesDeDebutDeGrandDefi,
+  type Univers,
+} from "@domain/motivation";
 import { niveauDuProfil } from "../parcours/niveau-du-profil.ts";
 import { DeroulementDeLaRevision as DeroulementDesQuestions } from "../revision/DeroulementDeLaRevision.tsx";
 import { usePersonnageQuiParle } from "../seance/usePersonnageQuiParle.ts";
@@ -14,7 +20,7 @@ import { lireLesDefisReleves } from "./lire-les-defis-releves.ts";
 
 type Props = {
   readonly profil: ProfilEnCours;
-  readonly defi: Defi;
+  readonly defi: Defi | GrandDefi;
   readonly univers: Univers;
   readonly voix: Voix;
   /** « Mon parcours » à la fin, « Quitter le défi » en cours, ou rien à jouer : retour à la carte de la matière. */
@@ -23,7 +29,7 @@ type Props = {
 };
 
 /**
- * Le défi d'une partie du parcours : il se joue comme une séance de révision (mêmes questions, même aide, même nouvelle chance),
+ * Le défi d'une partie du parcours, ou le grand défi de la matière : il se joue comme une séance de révision (mêmes questions, même aide, même nouvelle chance),
  * sans vie, sans temps limité et sans compte des erreurs. Le quitter ne perd rien.
  */
 export function EcranDeDefi(props: Props) {
@@ -32,7 +38,7 @@ export function EcranDeDefi(props: Props) {
   return <DefiCharge lecons={lecons} niveau={niveauDuProfil(props.profil.niveau)} {...props} />;
 }
 
-function commencer(defi: Defi, enfant: string, lecons: readonly Lecon[], niveau: Niveau | undefined): DefiCommence | undefined {
+function commencer(defi: Defi | GrandDefi, enfant: string, lecons: readonly Lecon[], niveau: Niveau | undefined): DefiCommence | undefined {
   if (!niveau) return undefined;
   try {
     return commencerLeDefi({ defi, enfant, lecons, niveau });
@@ -65,7 +71,7 @@ function DefiCharge(
     <section className="seance revision defi" aria-labelledby="titre-du-defi" data-testid="ecran-du-defi">
       <div className="entete-de-seance">
         <div>
-          <h2 id="titre-du-defi">{nomDuDefi(defi.numero)}</h2>
+          <h2 id="titre-du-defi">{defi.grandDefi === true ? nomDuGrandDefi() : nomDuDefi(defi.numero)}</h2>
           <p data-testid="sous-titre-du-defi">{libelleCourtDe(defi.matiere.code)}</p>
         </div>
         {!fini && (
@@ -89,7 +95,9 @@ function DefiCharge(
         : (
           <DeroulementDesQuestions
             seance={commence.seance}
-            parolesDeDebut={parolesDeDebutDeDefi({ nombreDeLecons: defi.lecons.length })}
+            parolesDeDebut={defi.grandDefi === true
+              ? parolesDeDebutDeGrandDefi({ matiere: defi.matiere.code })
+              : parolesDeDebutDeDefi({ nombreDeLecons: defi.lecons.length })}
             libelleDeLAvancement="Avancement du défi"
             boites={commence.boites}
             textes={commence.textes}

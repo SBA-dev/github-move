@@ -5,6 +5,7 @@ import {
   celebrationDeLaFin,
   defiReleveParLaSeance,
   parolesDeFinDeDefi,
+  parolesDeFinDeGrandDefi,
   type Univers,
 } from "@domain/motivation";
 import { Confettis } from "../celebration/index.ts";
@@ -31,6 +32,13 @@ type Props = {
   readonly onAccueil: () => void;
 };
 
+function parolesDeFin(releve: DefiReleve, prenom: string, dejaReleve: boolean): string {
+  const { numero } = releve;
+  return numero === undefined
+    ? parolesDeFinDeGrandDefi({ prenom, matiere: releve.matiere.code, dejaReleve })
+    : parolesDeFinDeDefi({ prenom, numeroDuDefi: numero, dejaReleve });
+}
+
 /**
  * La fin du défi : le défi est relevé (avec ou sans erreurs), sans étoile ni récompense de la cabane. La première fois il est annoncé
  * et fêté par la célébration de l'univers de l'enfant si elle existe ; sinon, comme rejoué, par la célébration commune (confettis).
@@ -43,7 +51,7 @@ export function FinDuDefi({ seance, prenom, personnage, univers, relevesAvant, o
   const affichee = useRef(true);
   const [issue, setIssue] = useState<IssueDuDefi | undefined>();
   const [celebration, setCelebration] = useState<CelebrationDeLaFin | undefined>();
-  const [numero, setNumero] = useState(0);
+  const [releve, setReleve] = useState<DefiReleve | undefined>();
   const [message, setMessage] = useState<string | undefined>();
   const parcours = useRef<HTMLButtonElement>(null);
 
@@ -53,14 +61,14 @@ export function FinDuDefi({ seance, prenom, personnage, univers, relevesAvant, o
     const maintenant = new Date();
     const jour = jourDuNavigateur(maintenant);
     const terminee = seance.terminer(maintenant, jour);
-    const releve = releveDuDefi(terminee.defi);
+    const relevee = releveDuDefi(terminee.defi);
     retenirLesQuestionsRatees(terminee.enfant, terminee.questionsRatees, jour, maintenant);
     void relevesAvant
       .catch(() => defisRelevesDeLAppareil(terminee.enfant))
       .then((avant) => {
-        retenirLesDefisReleves(terminee.enfant, [releve]);
-        setNumero(releve.numero ?? 0);
-        const issueDuDefi = defiReleveParLaSeance(avant, releve);
+        retenirLesDefisReleves(terminee.enfant, [relevee]);
+        setReleve(relevee);
+        const issueDuDefi = defiReleveParLaSeance(avant, relevee);
         setCelebration(
           celebrationDeLaFin({ defiRelevePourLaPremiereFois: issueDuDefi.annonce !== undefined }, univers.cle, hasardDuNavigateur),
         );
@@ -70,15 +78,15 @@ export function FinDuDefi({ seance, prenom, personnage, univers, relevesAvant, o
   }, [seance, relevesAvant, univers.cle]);
 
   useEffect(() => {
-    if (dite.current || !issue || !affichee.current) return;
+    if (dite.current || !issue || !releve || !affichee.current) return;
     dite.current = true;
     void dire({
-      texte: parolesDeFinDeDefi({ prenom, numeroDuDefi: numero, dejaReleve: issue.annonce === undefined }),
+      texte: parolesDeFin(releve, prenom, issue.annonce === undefined),
       nature: "felicitation",
       humeur: "applaudit",
       effetsAvant: [celebration?.sorte === "univers" ? celebration.celebration.musique : issue.effetSonore],
     });
-  }, [issue, celebration, prenom, numero, dire]);
+  }, [issue, celebration, prenom, releve, dire]);
 
   useEffect(() => {
     affichee.current = true;
