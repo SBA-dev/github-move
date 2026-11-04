@@ -1,5 +1,5 @@
-import { assertEquals } from "@std/assert";
-import { celebrationDe } from "./celebrations-des-univers.ts";
+import { assert, assertArrayIncludes, assertEquals } from "@std/assert";
+import { celebrationDe, type UniversCelebre } from "./celebrations-des-univers.ts";
 import { VARIANTES_DES_UNIVERS } from "./index.ts";
 import { hasardFixe } from "../test_utils/hasard-fixe.ts";
 
@@ -47,10 +47,27 @@ Deno.test("le domaine publie les clés de variante de chaque univers célébré"
 for (const univers of ["sports", "danse"] as const) {
   Deno.test(`la variante tirée dans l'univers ${univers} appartient aux clés publiées par le domaine`, () => {
     const cle = celebrationDe("defiReleve", univers, hasardFixe(0.5))?.variante.cle;
+    const clesPubliees: readonly string[] = VARIANTES_DES_UNIVERS[univers];
 
-    assertEquals(cle !== undefined && VARIANTES_DES_UNIVERS[univers].includes(cle), true);
+    assert(cle !== undefined, `aucune célébration pour l'univers ${univers}`);
+    assertArrayIncludes(clesPubliees, [cle], `la variante « ${cle} » n'est pas publiée pour l'univers ${univers}`);
   });
 }
+
+Deno.test("chaque univers publié par le domaine a une célébration, dont la première variante publiée est tirée par un hasard à 0", () => {
+  for (const univers of Object.keys(VARIANTES_DES_UNIVERS) as UniversCelebre[]) {
+    const celebration = celebrationDe("defiReleve", univers, hasardFixe(0));
+
+    assertEquals(celebration?.univers, univers, `l'univers ${univers} n'a pas de célébration`);
+    assertEquals(celebration?.variante.cle, VARIANTES_DES_UNIVERS[univers][0]);
+  }
+});
+
+Deno.test("les clés de variante publiées pour Sports sont typées sur les seules variantes de Sports", () => {
+  const clesDesSports: readonly ("glissade" | "avion" | "danse")[] = VARIANTES_DES_UNIVERS.sports;
+
+  assertEquals(clesDesSports.length, 3);
+});
 
 for (const cle of ["animaux", "princesse", "police", "pompier"] as const) {
   Deno.test(`l'univers ${cle}, pas encore livré, n'a pas de célébration de l'univers : la fin garde la célébration commune`, () => {
