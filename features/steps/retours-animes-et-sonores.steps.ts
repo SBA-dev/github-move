@@ -191,6 +191,7 @@ export function installerLesFauxDeLaStory97(config: Configuration) {
       if (vu[vu.length - 1] !== cle) vu.push(cle);
     };
     const texteDe = (element: Element) => (element.textContent ?? "").replace(/\s+/g, " ").trim();
+    const finsMarquees = new WeakSet<Element>();
     const dernieresAnnonces = new WeakMap<Element, string>();
     const examinerLAnnonce = (element: Element) => {
       const texte = texteDe(element);
@@ -205,7 +206,10 @@ export function installerLesFauxDeLaStory97(config: Configuration) {
       if (element.getAttribute("data-point-qui-vole") === "true") noter("point-qui-vole");
       const identifiant = element.getAttribute("data-testid");
       // Le journal des paroles au montage de l'écran de fin : la phrase de fin ne peut être dite qu'après (elle attend les lectures).
-      if (identifiant === "fin-de-seance") etat().marqueDeLaFin = longueurDuJournal();
+      if (identifiant === "fin-de-seance" && !finsMarquees.has(element)) {
+        finsMarquees.add(element);
+        etat().marqueDeLaFin = longueurDuJournal();
+      }
       if (identifiant === "etincelles-du-texte") {
         noter(`etincelles:${element.getAttribute("data-etincelles")}`);
         requestAnimationFrame(() => {
