@@ -35,3 +35,29 @@ export function matiereDeCode(code: CodeDeMatiere): Matiere {
 export function libelleCourtDe(code: CodeDeMatiere): string {
   return LIBELLES_COURTS[code];
 }
+
+const AVEC_ARTICLE: Readonly<Record<CodeDeMatiere, string>> = {
+  francais: "du français",
+  maths: "des maths",
+  sciences: "des sciences",
+  histoire: "de l'histoire-géo",
+  anglais: "de l'anglais",
+  emc: "du vivre ensemble",
+};
+
+const APRES_DE: Readonly<Record<CodeDeMatiere, string>> = {
+  francais: "de français",
+  maths: "de maths",
+  sciences: "de sciences",
+  histoire: "d'histoire-géo",
+  anglais: "d'anglais",
+  emc: "de vivre ensemble",
+};
+
+export function matiereAvecArticle(code: CodeDeMatiere): string {
+  return AVEC_ARTICLE[code];
+}
+
+export function matiereAvecDe(code: CodeDeMatiere): string {
+  return APRES_DE[code];
+}
