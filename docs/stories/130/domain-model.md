@@ -1,8 +1,8 @@
 # Modèle du domaine : issue #130, le petit train de l'univers (98a-train)
 
-Historique : 2026-11-04, premier cadrage (`domain-modeler`), à valider par le PO.
+Historique : 2026-11-04, premier cadrage (`domain-modeler`), à valider par le PO. 2026-11-04, réponses du PO : « 130 reco tout » ([annonce](https://github.com/SBA-dev/github-move/issues/130#issuecomment-6641496239)), toutes les recos sont retenues.
 
-État : **cadrage à valider** (questions #130.1 à #130.9).
+État : **cadrage validé** (questions #130.1 à #130.9 tranchées le 2026-11-04 : reco, [annonce](https://github.com/SBA-dev/github-move/issues/130#issuecomment-6641496239)).
 
 Tranche **98a-train** de #98 (épopée #95), créée par le découpage révisé (98.30). Dépend de #98 (98a), mergée. Pas besoin du glisser : en `ordre`, toucher suffit (98.8).
 
@@ -89,7 +89,7 @@ inv. 98-1 (mêmes erreurs, avancement, étoiles, revalidation), 98-2 (aucun gest
 2. **Une mauvaise étiquette ne s'accroche pas.** Aucun wagon de plus, aucun wagon vide qui s'accroche, le train ne bouge pas ; l'étiquette se balance et reste parmi les étiquettes à poser, avec l'aide d'aujourd'hui. Le train ne recule jamais et ne perd jamais un wagon.
 3. **« Je ne sais pas » ne pose rien.** En `ordre` et dans l'ordre des vers, l'étiquette qui vient ensuite brille parmi les étiquettes à poser, avec le signal commun ; le train n'avance pas et ne gagne aucun wagon ; c'est l'enfant qui la pose, et elle devient alors le wagon suivant, comme un bon placement. Aucun élément du train (tête, wagon, décor) ne brille ni ne s'allume pour montrer une réponse.
 4. **360 px : le train passe à la ligne, un vers tient dans son wagon.** Les wagons gardent 44 px au moins et passent à la ligne sans défilement horizontal (« De dix en dix », 10 wagons) ; un vers occupe un wagon sur toute la largeur et se lit en entier, en mode dys aussi ; le texte d'un wagon est sur un fond uni et clair à 4,5:1, le décor reste sur les bords, le toit et les roues. La place de chaque wagon ne dépend pas de l'univers.
-5. **Le petit train de l'univers.** Le même train (une tête, des wagons rectangulaires) dans les 6 univers, décoré selon l'univers (98.26 ; objets à valider, #130.1). Les mots « petit train » et « wagon » restent justes partout ; aucun texte, aucun chiffre, aucun personnage dans un dessin ; aucun son nouveau (ni sifflet, ni cloche qui sonne, ni bruit de roues). Chaque dessin respecte la règle absolue à toutes les tailles (inv. 98-20).
+5. **Le petit train de l'univers.** Le même train (une tête, des wagons rectangulaires) dans les 6 univers, décoré selon l'univers (98.26 ; objets tranchés le 2026-11-04, #130.1, #130.4, #130.6, #130.7). Les mots « petit train » et « wagon » restent justes partout ; aucun texte, aucun chiffre, aucun personnage dans un dessin ; aucun son nouveau (ni sifflet, ni cloche qui sonne, ni bruit de roues). Chaque dessin respecte la règle absolue à toutes les tailles (inv. 98-20).
 
 Précisions communes aux 5 règles :
 - **Lecteurs d'écran inchangés** : la liste « Ordre des étiquettes », le texte de chaque place remplie et « place libre » restent les seuls textes lus ; la tête, les roues et le décor sont cachés aux lecteurs d'écran.
@@ -159,6 +159,10 @@ Commun aux 6 : le **centre du wagon**, derrière le texte, est une plaque unie e
 
 ## Questions ouvertes
 
+Aucune.
+
+## Décisions
+
 **#130.1 Police : quel décor sur la locomotive, à la place de l'« insigne en étoile » ?**
 L'étoile est la récompense (**Étoile**) et le signal « bonne réponse montrée » ne doit ressembler à aucun dessin (inv. 98-15). #127 (retenue : loupe), #128 (marque du record : loupe) et #131 (boîte : écusson rond sans étoile ; jetons : casquettes) l'ont écartée ; seule la bulle de choix Police de #126 la garde (choix du PO, « reco tout »), mais la bulle n'est pas sur l'écran d'un `ordre`.
 - A (reco) : **écusson rond sans étoile** sur l'avant de la locomotive, bleu et blanc. Raisons : même signe que la boîte de Police de #131, se lit « police » sans rien qui brille ; un rond plat ne ressemble pas au halo de la bonne réponse montrée.
@@ -166,33 +170,42 @@ L'étoile est la récompense (**Étoile**) et le signal « bonne réponse montr�
 - C : un **sifflet** accroché à la cabine (dessiné seulement, aucun son).
 - D : garder l'étoile d'insigne, petite et fixe, comme la bulle de #126.
 Reco : **A**.
+Tranchée le 2026-11-04 : reco ([annonce](https://github.com/SBA-dev/github-move/issues/130#issuecomment-6641496239)).
 
 **#130.2 « Le train avance d'un cran » : que voit l'enfant ?**
 Exemple : Léa touche « mi ». A, le wagon « mi » s'accroche derrière « do », les roues tournent et tout le train fait un petit à-coup vers l'avant (quelques pixels), puis revient, en 400 ms au plus ; rien ne change de place. B, le train se déplace d'une longueur de wagon sur l'écran.
 Reco : **A**. B ferait bouger toute la mise en page à chaque bon placement (inv. 98-17), et ne tient pas avec le passage à la ligne. Avec mouvements réduits : rien ne roule, le wagon apparaît à sa place.
+Tranchée le 2026-11-04 : reco ([annonce](https://github.com/SBA-dev/github-move/issues/130#issuecomment-6641496239)).
 
 **#130.3 L'étiquette touchée rejoint-elle son wagon par un petit chemin (comme le mot qui rejoint son trou de #126), ou le wagon apparaît-il directement avec son texte ?**
 Reco : **le chemin**, en 250 ms (durée du mot qui voyage de #126), parti après le rebond de #97 ; puis l'accroche. Le chemin d'un objet vers sa cible est prévu par #98 (« wagon qui s'accroche »). Option : pas de chemin, le wagon apparaît et l'étiquette disparaît du plateau.
+Tranchée le 2026-11-04 : reco ([annonce](https://github.com/SBA-dev/github-move/issues/130#issuecomment-6641496239)).
 
 **#130.4 Princesses : quelle cheminée, à la place de la « cheminée en étoile » ?**
 Même raison que #130.1. Reco : **une cheminée en couronne**, or mat, sans reflet qui scintille. Options : une petite fleur sur la cheminée (déjà la retenue de #127 et le jeton de #131 en Princesses) ; garder l'étoile.
+Tranchée le 2026-11-04 : reco ([annonce](https://github.com/SBA-dev/github-move/issues/130#issuecomment-6641496239)).
 
 **#130.5 Ordre des vers : après le dernier vers, le train complet reste-t-il à l'écran pendant la félicitation de Noisette, avant les mots cachés ?**
 Aujourd'hui, la liste des places disparaît au moment même où le dernier vers est posé : on passe aux mots cachés au même instant, et le dernier wagon ne serait jamais vu.
 Exemple : Léa pose le 6ᵉ vers. A (reco), le 6ᵉ wagon s'accroche, le train avance d'un cran, Noisette félicite ; à la consigne des mots cachés, le train laisse la place aux vers joints par « / ». B, comme aujourd'hui : les mots cachés tout de suite.
 Reco : **A**. Pas d'étincelles au dernier vers (ce n'est pas un exercice complété : la poésie continue avec les mots cachés), comme aujourd'hui. Rien ne change dans le domaine ni dans l'avancement.
+Tranchée le 2026-11-04 : reco ([annonce](https://github.com/SBA-dev/github-move/issues/130#issuecomment-6641496239)).
 
 **#130.6 La cheminée des locomotives fume-t-elle ?**
 Reco : **non, dans aucun univers**. Pas de fumée près du train des pompiers (règle absolue : rien qui évoque un feu), et un train qui fume serait une animation au repos de plus. Option : petits nuages blancs ronds, immobiles, sauf en Pompiers.
+Tranchée le 2026-11-04 : reco ([annonce](https://github.com/SBA-dev/github-move/issues/130#issuecomment-6641496239)).
 
 **#130.7 La locomotive a-t-elle un visage (yeux, sourire) ?**
 Reco : **non**. Le visage est celui du personnage guide ; un deuxième visage sur l'écran tirerait l'attention pendant la consigne (inv. 98-10). Option : un visage souriant, le même dans les 6 univers.
+Tranchée le 2026-11-04 : reco ([annonce](https://github.com/SBA-dev/github-move/issues/130#issuecomment-6641496239)).
 
 **#130.8 Planche : 5 colonnes, dont une avec un vers long dans son wagon à 360 px (en plus des 4 colonnes prévues par #98) ?**
 Reco : **oui**. Le vers sur toute la largeur (98.21) est le cas où le wagon s'étire le plus ; il doit être vu avant le code.
+Tranchée le 2026-11-04 : reco ([annonce](https://github.com/SBA-dev/github-move/issues/130#issuecomment-6641496239)).
 
 **#130.9 Captures avec la PR : 12 (un `ordre` et l'ordre des vers, par univers), ou 6 (seulement l'`ordre`, comme prévu par #98) ?**
 Reco : **12**, comme #131 pour ses deux écrans : le wagon d'un vers est le plus large et le plus risqué à 360 px.
+Tranchée le 2026-11-04 : reco ([annonce](https://github.com/SBA-dev/github-move/issues/130#issuecomment-6641496239)).
 
 ## Risques pour l'implementer
 

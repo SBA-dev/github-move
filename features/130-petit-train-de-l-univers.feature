@@ -15,7 +15,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : le petit train de l
   aucun scénario ne le décrit.
   Les commentaires « Décision 98.n » renvoient à docs/stories/98/acceptance.md ; les commentaires « Question #130.n »
   renvoient aux questions de docs/stories/130/domain-model.md (#130.1 à #130.9) et de docs/stories/130/acceptance.md
-  (#130.10 et suivantes). Les scénarios marqués @a-valider sont écrits selon la recommandation de la question citée.
+  (#130.10 et suivantes). Toutes ont été tranchées le 2026-11-04 : reco.
 
   Mots employés dans ces scénarios (mots d'interface, pas des termes du domaine) :
   - « le petit train » : l'interface des places d'un ordre et de l'ordre des vers. Il a une tête (la locomotive),
@@ -50,7 +50,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : le petit train de l
   Règle: Chaque bon placement accroche un wagon au petit train, derrière le dernier, et le train avance d'un cran ; le petit train a toujours autant de wagons que d'étiquettes posées, dans l'ordre ; la dernière étiquette d'un ordre garde les étincelles de #97 ; les étoiles et l'avancement restent ceux d'avant
 
     # Question #130.10 (reco : les places libres restent visibles, à la suite du train)
-    @a-valider
+    # Tranchée le 2026-11-04 : reco (https://github.com/SBA-dev/github-move/issues/130#issuecomment-6641496239)
     Scénario: Au début de l'exercice, le petit train n'a que sa tête, suivie des places libres
       Étant donné que Léa est sur la page de la leçon « Les syllabes »
       Quand Léa choisit seulement l'exercice « Le mot en morceaux »
@@ -72,7 +72,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : le petit train de l
       Alors le petit train a 2 wagons, « do » puis « mi »
 
     # Question #130.2 (reco A : un petit à-coup vers l'avant, puis le train revient à sa place)
-    @a-valider
+    # Tranchée le 2026-11-04 : reco (https://github.com/SBA-dev/github-move/issues/130#issuecomment-6641496239)
     Scénario: En avançant d'un cran, le petit train ne change pas de place sur l'écran
       Étant donné que Léa joue seulement l'exercice « Le mot en morceaux » de la leçon « Les syllabes »
       Et que Léa a posé l'étiquette « do »
@@ -81,7 +81,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : le petit train de l
       Et ensuite, la tête du petit train et le wagon « do » sont à la même place qu'avant
 
     # Question #130.3 (reco : l'étiquette rejoint son wagon par un petit chemin, puis s'accroche)
-    @a-valider
+    # Tranchée le 2026-11-04 : reco (https://github.com/SBA-dev/github-move/issues/130#issuecomment-6641496239)
     Scénario: L'étiquette touchée rejoint sa place au bout du petit train, puis s'y accroche
       Étant donné que Léa joue seulement l'exercice « Le mot en morceaux » de la leçon « Les syllabes »
       Quand Léa pose l'étiquette « do »
@@ -103,7 +103,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : le petit train de l
       Et des étincelles apparaissent autour des étiquettes
 
     # Question #130.6 (reco : aucune cheminée ne fume) ; aucun dessin ne bouge au repos
-    @a-valider
+    # Tranchée le 2026-11-04 : reco (https://github.com/SBA-dev/github-move/issues/130#issuecomment-6641496239)
     Scénario: Une fois le wagon accroché, le petit train reste immobile jusqu'au placement suivant
       Étant donné que Léa joue seulement l'exercice « Le mot en morceaux » de la leçon « Les syllabes »
       Quand Léa pose l'étiquette « do »
@@ -126,7 +126,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : le petit train de l
       Mais aucune étincelle n'apparaît
 
     # Question #130.5 (reco A : le train complet reste à l'écran pendant la félicitation, avant les mots cachés)
-    @a-valider
+    # Tranchée le 2026-11-04 : reco (https://github.com/SBA-dev/github-move/issues/130#issuecomment-6641496239)
     Scénario: Après le dernier vers, le petit train complet reste à l'écran pendant la félicitation
       Étant donné que Léa remet dans l'ordre les vers de « Le début de la fable »
       Et que Léa a remis en place les cinq premiers vers
@@ -267,7 +267,7 @@ Fonctionnalité: Des exercices qui ressemblent à des jeux : le petit train de l
         | danse     | Danse               |
 
     # Décision 98.21 ; question #130.13 (reco A : la tête à gauche, les wagons se lisent de gauche à droite)
-    @a-valider
+    # Tranchée le 2026-11-04 : reco (https://github.com/SBA-dev/github-move/issues/130#issuecomment-6641496239)
     Scénario: À 360 px, les wagons passés à la ligne se lisent dans l'ordre, de « 10 » à « 100 »
       Étant donné que l'écran de l'appareil mesure 360 px de large
       Et que Léa joue seulement l'exercice « De dix en dix » de la leçon « Compter jusqu'à 100 »

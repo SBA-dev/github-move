@@ -1,16 +1,16 @@
 # Critères d'acceptance : story #130, le petit train de l'univers (98a-train)
 
-Historique : 2026-11-04, premier jet (`po-acceptance`), à valider par le PO avec les questions #130.1 à #130.13.
+Historique : 2026-11-04, premier jet (`po-acceptance`), à valider par le PO avec les questions #130.1 à #130.13. 2026-11-04, réponses du PO : « 130 reco tout » ([annonce](https://github.com/SBA-dev/github-move/issues/130#issuecomment-6641496239)), toutes les recos sont retenues ; `@a-valider` retirés.
 
 Scénarios : `features/130-petit-train-de-l-univers.feature`. Modèle : `docs/stories/130/domain-model.md` (invariants propres 1 à 5, questions #130.1 à #130.9). Cadrage parent : `docs/stories/98/acceptance.md`, « Hors périmètre, #130 » (scénarios du train validés le 2026-10-28, repris ici).
 
 Tags :
 - `@issue-130 @wip` sur la fonctionnalité (`@wip` reste jusqu'au passage des steps E2E) ;
-- `@a-valider` sur les 6 scénarios écrits selon la reco d'une question encore ouverte (voir « Scénarios qui dépendent d'une réponse du PO ») ;
+- plus aucun `@a-valider` : les 6 scénarios écrits selon une reco sont confirmés par le PO (voir « Scénarios qui dépendaient d'une réponse du PO ») ;
 - aucun `@acces` (aucune donnée nouvelle, voir « Droits d'accès ») ;
 - aucun `@depend-de-…` : #97 et #98 (98a) sont mergées.
 
-État : **à valider** (questions #130.1 à #130.13).
+État : **validé** (questions #130.1 à #130.13 tranchées le 2026-11-04 : reco, [annonce](https://github.com/SBA-dev/github-move/issues/130#issuecomment-6641496239)).
 
 ## Objectif
 
@@ -38,7 +38,7 @@ Décisions déjà prises, appliquées sans les reposer : habillage par univers (
 | R4 | 360 px : le train passe à la ligne, sans défilement horizontal, wagons de 44 px, un vers par wagon sur toute la largeur, mise en page indépendante de l'univers ; mouvements réduits : rien ne roule ; texte des wagons en mode dys et à 4,5:1 ; lecteurs d'écran inchangés ; Muet ne coupe que la voix ; aucun son nouveau | l.251 Plan « …à 360 px, le petit train de 10 wagons passe à la ligne et tient dans la largeur de l'écran » (6 univers) · l.271 « À 360 px, les wagons passés à la ligne se lisent dans l'ordre, de « 10 » à « 100 » » (#130.13) · l.280 Plan « …à 360 px, chaque vers accroché se lit en entier, dans un wagon sur toute la largeur » (6 univers) · l.298 « À 360 px, les étiquettes à poser et « Je ne sais pas » restent visibles sous le petit train » · l.306 Plan « …avec les mouvements réduits, « do » apparaît dans le premier wagon, sans que le petit train roule » (6 univers) · l.323 « Avec les mouvements réduits, le bon vers apparaît dans son wagon, sans que le petit train roule » · l.329 « Avec les mouvements réduits, l'étiquette montrée par « Je ne sais pas » brille sans bouger » · l.336 Plan « …le texte de chaque wagon se lit sur son wagon » (6 univers, 4,5:1) · l.352 « En mode dys, les étiquettes à poser et le texte des wagons s'affichent en mode dys » · l.359 « En mode dys, à 360 px, chaque vers accroché se lit en entier dans son wagon » · l.368 Plan « …les lecteurs d'écran lisent les places comme avant, sans décrire le petit train » (6 univers) · l.385 « En Muet, le wagon s'accroche de la même façon » · l.392 « Aucun effet sonore nouveau n'accompagne le petit train qui avance » |
 | R5 | Le même petit train, avec le dessin de chacun des 6 univers ; changer d'univers ne change ni gestes, ni textes lus, ni erreurs, ni étoiles, ni la bonne réponse montrée ; un profil sans univers connu voit le train « Animaux de la forêt » | l.401 Plan « …le petit train d'un ordre a le dessin de cet univers » (6 univers) · l.418 Plan « …le petit train de l'ordre des vers a le dessin de cet univers » (6 univers) · l.435 Plan « …<erreurs> mauvais placement(s) dans « Le mot en morceaux » donnent <résultat>, comme avant » (0 → 3, 1 → 2, 3 → 2, 4 → 1 étoile) · l.450 Plan « …une mauvaise étiquette fait dire à <personnage guide> la même aide que dans tous les univers » (Sports, Police) · l.463 Plan « …l'étiquette montrée par « Je ne sais pas » brille comme dans tous les univers » (5 univers) · l.479 Plan « Un profil enfant <cas> voit le petit train de l'univers « Animaux de la forêt » » (sans univers, univers inconnu) |
 
-Au total : **5 règles, 43 scénarios** (dont 13 plans de scénario, 59 exemples), soit **89 cas** par projet. **6** portent `@a-valider` (6 cas).
+Au total : **5 règles, 43 scénarios** (dont 13 plans de scénario, 59 exemples), soit **89 cas** par projet. Aucun ne porte `@a-valider` (les 6 qui le portaient sont confirmés le 2026-11-04).
 
 Les Plans sur les univers suivent la sobriété de 98a et de #131 : les 6 univers là où le dessin peut changer ce qu'on vérifie (dessin, 360 px, contraste, mouvements réduits, lecteurs d'écran) ; 5 univers là où « Animaux de la forêt » sert de référence (bonne réponse montrée) ; 2 à 4 univers là où le dessin ne peut rien changer (aide lue, étoiles).
 
@@ -66,11 +66,11 @@ Les Plans sur les univers suivent la sobriété de 98a et de #131 : les 6 univer
 
 La story ne crée, ne lit et n'enregistre aucune donnée nouvelle : **pas de scénario `@acces`**. L'univers est lu sur le profil enfant en cours (#6, #96). Les séances terminées restent enregistrées comme aujourd'hui (#24), par un parent rattaché seulement. Les écrans du parent ne montrent pas de petit train.
 
-## Scénarios qui dépendent d'une réponse du PO
+## Scénarios qui dépendaient d'une réponse du PO
 
-Hypothèse : la reco de chaque question est retenue. Les scénarios sans `@a-valider` restent vrais quelle que soit la réponse.
+Le PO a retenu la reco de chaque question le 2026-11-04 ([annonce](https://github.com/SBA-dev/github-move/issues/130#issuecomment-6641496239)) : les scénarios ci-dessous sont gardés tels quels, sans `@a-valider`. La colonne « Si le PO choisit autrement » est gardée pour mémoire.
 
-| Question | Scénarios (`@a-valider`, écrits selon la reco) | Si le PO choisit autrement |
+| Question | Scénarios (écrits selon la reco, confirmés) | Si le PO choisit autrement |
 |---|---|---|
 | #130.1 (Police : écusson rond) · #130.4 (Princesses : cheminée en couronne) · #130.7 (pas de visage) | Aucun : planche seulement. « rien ne brille sur le petit train » (l.219, l.463) reste vrai avec toute réponse | Option D de #130.1 ou « garder l'étoile » de #130.4 : l.463 reste vrai (une étoile fixe ne brille pas), mais la review vérifiera qu'elle ne ressemble pas au signal |
 | #130.2 (A : à-coup, puis retour à sa place) | l.76 « En avançant d'un cran, le petit train ne change pas de place sur l'écran » | B (le train se déplace d'une longueur de wagon) : l.76 est inversé et les Plans 360 px (l.251, l.280) sont à revoir |
@@ -83,23 +83,31 @@ Hypothèse : la reco de chaque question est retenue. Les scénarios sans `@a-val
 
 ## Questions ouvertes
 
-Les questions #130.1 à #130.9 sont dans `docs/stories/130/domain-model.md`. Nouvelles questions :
+Aucune.
+
+## Décisions
+
+Les questions #130.1 à #130.9 sont dans `docs/stories/130/domain-model.md` (section « Décisions »), toutes tranchées le 2026-11-04 : reco. Questions de ce cadrage :
 
 **#130.10 Les places libres restent-elles visibles à la suite du petit train ?**
 Exemple : Léa commence « Le mot en morceaux ». A (reco), elle voit la tête du train suivie de 3 places libres en pointillés ; chaque bon placement remplace la première place libre par un wagon. B, elle ne voit que la tête ; les wagons apparaissent un par un.
 Reco : **A**. Les lecteurs d'écran lisent aujourd'hui « place libre » pour chaque place vide (inv. 98-11 : inchangé) ; l'enfant voit combien il en reste ; la mise en page ne saute pas à chaque wagon. Une place libre n'est pas dessinée comme un wagon (risque 2 du modèle). Scénarios : l.54, l.368.
+Tranchée le 2026-11-04 : reco ([annonce](https://github.com/SBA-dev/github-move/issues/130#issuecomment-6641496239)).
 
 **#130.11 Une leçon personnelle avec « Dans l'ordre » (#39) a-t-elle besoin d'un scénario dédié ?**
 L'invariant 98-12 vaut pour toute leçon jouée en séance, leçon personnelle comprise ; le composant est le même.
 Reco : **non**. Le cas se vérifie en review (même composant, aucune condition sur l'origine de la leçon) ; un scénario demanderait un vrai compte parent et un texte documentaire, pour un risque nul. Option : un scénario « Dans une leçon personnelle, les phrases remises dans l'ordre deviennent les wagons du petit train ».
+Tranchée le 2026-11-04 : reco ([annonce](https://github.com/SBA-dev/github-move/issues/130#issuecomment-6641496239)).
 
 **#130.12 À 360 px, dans l'ordre des vers, la tête du train est-elle seule sur sa ligne, devant le premier vers ?**
 Un vers occupe un wagon sur toute la largeur (98.21) : il ne tient pas à côté de la tête.
 Reco : **oui**, la tête reste en tête de la première ligne, à sa taille ; le premier vers passe à la ligne suivante, sur toute la largeur. Option : la tête rapetisse et se pose au-dessus du premier wagon. Aucun scénario n'en dépend (planche, colonne 5 de #130.8).
+Tranchée le 2026-11-04 : reco ([annonce](https://github.com/SBA-dev/github-move/issues/130#issuecomment-6641496239)).
 
 **#130.13 Dans quel sens roule le petit train ?**
 A (reco) : la tête à gauche de la première ligne ; les wagons suivent vers la droite, puis à la ligne, dans l'ordre de lecture ; le cran d'avance pousse vers la gauche. B : la tête à droite, comme un train qui roule vers la droite ; les wagons se liraient alors de droite à gauche.
 Reco : **A**. L'enfant lit le mot ou le poème dans l'ordre de lecture, et les lecteurs d'écran lisent la liste dans le même ordre (risque 5 du modèle). Scénario : l.271.
+Tranchée le 2026-11-04 : reco ([annonce](https://github.com/SBA-dev/github-move/issues/130#issuecomment-6641496239)).
 
 ## Hors périmètre
 
