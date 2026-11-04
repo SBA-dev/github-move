@@ -1,5 +1,6 @@
 import { createBdd } from "playwright-bdd";
 import { expect, type Page } from "@playwright/test";
+import { sansLaQueteAccomplie } from "../support/phrase-de-fin-avec-la-quete.ts";
 import { inscrireUnRecordDeFluence } from "../support/calcul-api.ts";
 import { ecrireDesSeancesTermineesPourLaSerie, jourPrepare } from "../support/serie-api.ts";
 import { ecrireDesResultatsDeLecons } from "../support/supabase-test.ts";
@@ -93,6 +94,7 @@ export function installerLesFauxDeLaStory97(config: Configuration) {
     retenir: string[];
     marque: number;
     marqueParoles: number;
+    marqueDeLaFin: number;
     vu: string[];
     annonces: string[];
   };
@@ -109,6 +111,7 @@ export function installerLesFauxDeLaStory97(config: Configuration) {
     retenir: config.retenir,
     marque: 0,
     marqueParoles: 0,
+    marqueDeLaFin: 0,
     vu: [],
     annonces: [],
   } satisfies EtatDuFaux);
@@ -188,6 +191,7 @@ export function installerLesFauxDeLaStory97(config: Configuration) {
       if (vu[vu.length - 1] !== cle) vu.push(cle);
     };
     const texteDe = (element: Element) => (element.textContent ?? "").replace(/\s+/g, " ").trim();
+    const finsMarquees = new WeakSet<Element>();
     const dernieresAnnonces = new WeakMap<Element, string>();
     const examinerLAnnonce = (element: Element) => {
       const texte = texteDe(element);
@@ -201,6 +205,11 @@ export function installerLesFauxDeLaStory97(config: Configuration) {
       if (element.getAttribute("data-reussite") === "true") noter(`reussite:${texteDe(element)}`);
       if (element.getAttribute("data-point-qui-vole") === "true") noter("point-qui-vole");
       const identifiant = element.getAttribute("data-testid");
+      // Le journal des paroles au montage de l'écran de fin : la phrase de fin ne peut être dite qu'après (elle attend les lectures).
+      if (identifiant === "fin-de-seance" && !finsMarquees.has(element)) {
+        finsMarquees.add(element);
+        etat().marqueDeLaFin = longueurDuJournal();
+      }
       if (identifiant === "etincelles-du-texte") {
         noter(`etincelles:${element.getAttribute("data-etincelles")}`);
         requestAnimationFrame(() => {
@@ -282,6 +291,7 @@ BeforeStep({ tags: "@issue-97 or @issue-102 or @issue-128" }, async ({ page, $st
 
 /** Finit les paroles une à une (la phrase de fin en a plusieurs), jusqu'à ce que plus rien ne se dise pendant un moment. */
 async function laisserLaParoleFinir(page: Page): Promise<void> {
+  if (await page.getByTestId("fin-de-seance").count() > 0) await laisserDireLaPhraseDeFin(page);
   let precedent = -1;
   await expect.poll(async () => {
     await terminerLaLecture(page);
@@ -291,6 +301,36 @@ async function laisserLaParoleFinir(page: Page): Promise<void> {
     precedent = paroles.length;
     return stable;
   }, { intervals: [100], timeout: DELAI_DE_L_ATTENTE_MS }).toBe(true);
+}
+
+/**
+ * La phrase de fin n'est dite qu'une fois toutes les lectures de l'écran prêtes (quête, badge, épisode…) : on attend qu'elle ait
+ * été DITE en entier (sa bulle est affichée et son texte est dans le journal), puis on la termine et on exige le silence.
+ */
+async function laisserDireLaPhraseDeFin(page: Page): Promise<void> {
+  const sansEspace = (t: string) => t.replace(/[\s,]+/g, "");
+  // Seules comptent les paroles dites APRÈS le montage de la fin : la félicitation de la dernière réponse est restée dans la bulle.
+  await expect.poll(async () => {
+    const dites = await parolesDitesDepuisLeMontageDeLaFin(page);
+    const nature = await bulle(page).getAttribute("data-nature");
+    const texte = normaliser((await bulle(page).textContent()) ?? "");
+    if (nature !== null && /^(felicitation|encouragement)$/.test(nature) && texte !== "" && sansEspace(dites.join("")).includes(sansEspace(entendu(texte)))) return true;
+    await terminerLaLecture(page);
+    return false;
+  }, { intervals: [100], timeout: DELAI_DE_L_ATTENTE_MS }).toBe(true);
+  await terminerLaLecture(page);
+  await expect.poll(
+    async () => await page.evaluate(() => (Reflect.get(window, "__faux") as { actifs: unknown[] }).actifs.length),
+    { intervals: [100], timeout: DELAI_DE_L_ATTENTE_MS },
+  ).toBe(0);
+}
+
+async function parolesDitesDepuisLeMontageDeLaFin(page: Page): Promise<string[]> {
+  return await page.evaluate(() => {
+    const marque = (Reflect.get(window, "__effets") as { marqueDeLaFin: number }).marqueDeLaFin;
+    const faux = Reflect.get(window, "__faux") as { journal: Array<{ type: string; texte: string }> };
+    return faux.journal.filter((entree, index) => entree.type === "speak" && index >= marque).map((entree) => entree.texte);
+  });
 }
 
 // --- Lire ce que le navigateur a noté
@@ -476,7 +516,7 @@ Then(
   /^Léa entend l'effet sonore « texte complet » avant que Noisette dise une félicitation, suivie de « ([^«»]+) »$/,
   async ({ page }, explication: string) => {
     await effetPuisParole(page, ["texte complet"], "felicitation", false);
-    const texte = normaliser((await bulleDuPersonnage(page).textContent()) ?? "");
+    const texte = sansLaQueteAccomplie(normaliser((await bulleDuPersonnage(page).textContent()) ?? ""));
     expect(texte.endsWith(` ${explication}`), texte).toBe(true);
   },
 );

@@ -217,14 +217,15 @@ Fonctionnalité: Retours animés et sonores pendant la séance
         | qui rend la leçon acquise et fait recevoir un objet       | 20 séances    | 8           | 2       | les effets sonores « grande victoire » puis « découverte »  |
         | qui fait recevoir un objet et ouvre un épisode            | 0 séance      | 8           | 2       | les effets sonores « grande victoire » puis « découverte »  |
 
-    # Décision 97.7
+    # Décision 97.7 ; données revues par #141 (réponse 141.1 A) : aucun palier franchi
+    @issue-141
     Scénario: Rejouer une leçon déjà acquise fait entendre « séance terminée », pas « grande victoire »
       Étant donné que les leçons de test « Les sons de test » et « La suite de test » sont dans la bibliothèque
       Et que Léa a terminé 20 séances
       Et que Léa a pour meilleures étoiles :
         | leçon            | étoiles |
         | Les sons de test | 2       |
-        | La suite de test | 2       |
+        | La suite de test | 1       |
       Et que Léa joue la séance complète de la leçon « Les sons de test »
       Quand Léa réussit la dernière question de la séance
       Alors Léa entend l'effet sonore « séance terminée », puis Noisette dit sa phrase de fin
@@ -401,18 +402,22 @@ Fonctionnalité: Retours animés et sonores pendant la séance
       Et Léa entend l'effet sonore de fin jusqu'au bout
 
     # Décision 97.22
+    # Réponse 141 « accueil A » : « Accueil » mène toujours à l'accueil de l'enfant
+    @issue-141
     Scénario: Pendant les confettis, toucher « Accueil » mène tout de suite à l'accueil
       Étant donné que les leçons de test « Les sons de test » et « La suite de test » sont dans la bibliothèque
       Et que Léa voit tomber les confettis de la fin de la séance de la leçon « Les sons de test »
       Quand Léa choisit « Accueil »
-      Alors Léa voit « Qui joue ? »
+      Alors Léa voit son accueil
       Et Léa n'entend plus l'effet sonore de fin
 
+    # Réponse 141 « accueil A » : « Accueil » mène toujours à l'accueil de l'enfant
+    @issue-141
     Scénario: Pendant les confettis, le clavier n'est jamais bloqué
       Étant donné que les leçons de test « Les sons de test » et « La suite de test » sont dans la bibliothèque
       Et que Léa voit tomber les confettis de la fin de la séance de la leçon « Les sons de test »
       Quand Léa choisit « Accueil » au clavier
-      Alors Léa voit « Qui joue ? »
+      Alors Léa voit son accueil
 
     # Décision 97.15
     Plan du Scénario: Les lecteurs d'écran annoncent une seule fois « <annonce> »

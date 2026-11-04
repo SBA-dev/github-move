@@ -1,5 +1,6 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 import type { DataTable } from "playwright-bdd";
+import { attendreQueLaBulleSeTerminePar, sansLaQueteAccomplie } from "../support/phrase-de-fin-avec-la-quete.ts";
 import { ecrireDesSeancesTermineesPourLaSerie, jourPrepare } from "../support/serie-api.ts";
 import { lireEnRest } from "../support/seances-api.ts";
 import { EXPRESSIONS_PAR_PERSONNAGE, FELICITATIONS_COMMUNES, leGuide } from "./univers.steps.ts";
@@ -480,8 +481,9 @@ Then(/^Noisette termine les paroles de fin de fluence par « ([^«»]+) »$/, as
 });
 
 Then(/^Capitaine Sam dit une félicitation, suivie de « (.+) »$/, async ({ page }, explication: string) => {
+  await attendreQueLaBulleSeTerminePar(page, explication);
   await expect(bulle(page)).toHaveAttribute("data-nature", "felicitation", { timeout: DELAI_D_UN_APPEL_SERVEUR_MS });
-  const texte = normaliser((await bulle(page).textContent()) ?? "");
+  const texte = sansLaQueteAccomplie(normaliser((await bulle(page).textContent()) ?? ""));
   expect(texte.endsWith(` ${explication}`), texte).toBe(true);
   const felicitations = [...FELICITATIONS_COMMUNES, ...(EXPRESSIONS_PAR_PERSONNAGE["Capitaine Sam"] ?? [])];
   expect(felicitations).toContain(texte.slice(0, texte.length - explication.length - 1));

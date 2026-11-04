@@ -5,7 +5,7 @@ import { laisserLAccueilSeCalculer, surLAccueilDeLea } from "./aujourd-hui.steps
 import { bulle, entendu, etat, leconDeTitre } from "./etapes-puis-exercices.steps.ts";
 import { Given, Then, When } from "./fixtures.ts";
 import { ETOILES_PAR_SEANCE, jouerLaSeanceCompleteAvecErreurs, noterUneSeanceJouee } from "./parcours.steps.ts";
-import { profilDe } from "./profils-enfants.steps.ts";
+import { profilDe, quitterLaFinDeSeanceVersQuiJoue } from "./profils-enfants.steps.ts";
 import { pageDeMarieOuCourante, preparerLeScenarioDeLaRevision } from "./revisions-des-erreurs.steps.ts";
 import { leGuide } from "./univers.steps.ts";
 import { normaliser, terminerLaLecture } from "./voix.steps.ts";
@@ -51,10 +51,8 @@ Given(
     await page.clock.setFixedTime(new Date(maintenant.getFullYear(), maintenant.getMonth(), maintenant.getDate() - 1, 10, 0, 0));
     await jouerLaSeanceCompleteAvecErreurs(page, titre, ETOILES_PAR_SEANCE[Number(etoiles)] ?? 0);
     noterUneSeanceJouee(page, titre, Number(etoiles));
-    await page.getByTestId("fin-de-seance").getByRole("button", { name: "Accueil", exact: true }).click();
+    await quitterLaFinDeSeanceVersQuiJoue(page);
     await page.clock.setFixedTime(maintenant);
-    // Le nom de l'application ramène à « Qui joue ? » sans recharger : ce que l'appareil sait des séances est en mémoire.
-    await page.getByRole("banner").getByRole("button", { name: "Savanturier" }).click();
     await expect(page.getByTestId("qui-joue")).toBeVisible();
   },
 );
@@ -275,7 +273,7 @@ Given(
     $test.slow();
     await jouerLaSeanceCompleteAvecErreurs(page, titre, ETOILES_PAR_SEANCE[Number(etoiles)] ?? 0);
     noterUneSeanceJouee(page, titre, Number(etoiles));
-    await page.getByTestId("fin-de-seance").getByRole("button", { name: "Accueil", exact: true }).click();
+    await quitterLaFinDeSeanceVersQuiJoue(page);
     await ecrireUneSeanceTermineePourLeProfil(profilDe(famille, "Léa").id, leconDeTitre(page, titre).id, Number(etoiles));
   },
 );

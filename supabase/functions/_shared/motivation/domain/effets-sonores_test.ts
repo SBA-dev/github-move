@@ -201,3 +201,7 @@ Deno.test("un test de départ qui fait recevoir une tenue fait jouer seulement l
 
   assertEquals(effets, ["seanceTerminee"]);
 });
+
+Deno.test("#141, règle 101.18 (a) : les faits de la fin ne portent pas la quête du jour, qui n'ajoute donc aucun effet sonore", () => {
+  assertEquals(effetsSonoresDeLaFin(seanceSansEvenement), ["seanceTerminee"]);
+});

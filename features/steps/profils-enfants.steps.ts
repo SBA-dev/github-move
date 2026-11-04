@@ -169,6 +169,14 @@ export async function ouvrirQuiJoue(page: Page): Promise<Locator> {
   return quiJoue(page);
 }
 
+/** Quitte l'écran de fin par « Accueil » (accueil de l'enfant), puis revient à « Qui joue ? » par le nom de l'application, sans recharger. */
+export async function quitterLaFinDeSeanceVersQuiJoue(page: Page): Promise<void> {
+  await page.getByTestId("fin-de-seance").getByRole("button", { name: "Accueil", exact: true }).click();
+  await expect(page).toHaveURL(/\/jeu$/);
+  await page.getByRole("banner").getByRole("button", { name: "Savanturier" }).click();
+  await expect(page).not.toHaveURL(/\/jeu$/);
+}
+
 function profilsAChoisir(page: Page): Locator {
   return page.getByTestId("profil-a-choisir");
 }

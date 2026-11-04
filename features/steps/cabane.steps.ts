@@ -1,5 +1,6 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 import type { DataTable } from "playwright-bdd";
+import { attendreQueLaBulleSeTerminePar, sansLaQueteAccomplie } from "../support/phrase-de-fin-avec-la-quete.ts";
 import { ecrireDesResultatsDeLecons } from "../support/supabase-test.ts";
 import { EXPRESSIONS_PAR_PERSONNAGE, FELICITATIONS_COMMUNES } from "./univers.steps.ts";
 import { bulle, entendu, toutesLesParoles } from "./etapes-puis-exercices.steps.ts";
@@ -130,8 +131,9 @@ Then(/^l'annonce pour la cabane apparaît sans mouvement$/, async ({ page }) => 
 });
 
 Then(/^Coach Léo dit une félicitation, suivie de « (.+) »$/, async ({ page }, explication: string) => {
+  await attendreQueLaBulleSeTerminePar(page, explication);
   await expect(bulle(page)).toHaveAttribute("data-nature", "felicitation", { timeout: DELAI_D_UN_APPEL_SERVEUR_MS });
-  const texte = normaliser((await bulle(page).textContent()) ?? "");
+  const texte = sansLaQueteAccomplie(normaliser((await bulle(page).textContent()) ?? ""));
   expect(texte.endsWith(` ${explication}`), texte).toBe(true);
   const felicitations = [...FELICITATIONS_COMMUNES, ...(EXPRESSIONS_PAR_PERSONNAGE["Coach Léo"] ?? [])];
   expect(felicitations).toContain(texte.slice(0, texte.length - explication.length - 1));
