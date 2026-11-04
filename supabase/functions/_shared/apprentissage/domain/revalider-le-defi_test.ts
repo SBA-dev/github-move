@@ -15,12 +15,12 @@ import type { DefiTermineAEnregistrer } from "./defi-termine-a-enregistrer.ts";
 import { Etoiles } from "./etoiles.ts";
 import { Jour } from "./jour.ts";
 import { type EntreesDuParcours, parcoursDeLaMatiere } from "./parcours.ts";
-import { defisDeLaMatiere } from "./defis-de-la-matiere.ts";
+import { defisDeLaMatiere, grandDefiDeLaMatiere } from "./defis-de-la-matiere.ts";
 import { type PlanDuDefi, planDuDefi, questionsPosablesDuDefi } from "./plan-du-defi.ts";
 import { Reponse } from "./reponse.ts";
 import { revaliderLeDefi } from "./revalider-le-defi.ts";
 import { REPONSES_AU_PLUS_PAR_QUESTION } from "./revalider-la-seance.ts";
-import { SeanceDeDefi } from "./seance-de-defi.ts";
+import { type DefiTermine, SeanceDeDefi } from "./seance-de-defi.ts";
 import { tireurAuHasard } from "./tireur.ts";
 
 const CE1 = Niveau.de("CE1");
@@ -348,4 +348,34 @@ Deno.test("un profil de CE2 ne peut pas faire passer un défi de CE1 relevé pou
   const releves = [{ matiere: maths, niveau: CE1, numero: 1 }];
 
   assertThrows(() => revaliderLeDefi(envoiValide, entreesDuProfilEnCE2([]), releves), DefiInconnu);
+});
+
+const toutesLesLecons = lecons.map(({ id }) => id);
+const grandDefiDeMaths = grandDefiDeLaMatiere(parcoursDeLaMatiere(entrees(toutesLesLecons), maths), maths, CE1);
+assertExists(grandDefiDeMaths);
+
+function jouerLeGrandDefi(plan: PlanDuDefi): { fait: DefiTermine; envoi: DefiTermineAEnregistrer } {
+  const seance = SeanceDeDefi.commencer({
+    id: "grand-defi-1",
+    enfant: "profil-lea",
+    defi: grandDefiDeMaths!,
+    plan,
+    lecons,
+    tireurDe: () => tireurAuHasard(hasardSansMelange()),
+    niveau: CE1,
+  });
+  plan.questions.forEach((_, rang) => {
+    if (rang === 0) seance.repondre(mauvaiseReponse);
+    seance.repondre(bonneReponse);
+  });
+  return { fait: seance.terminer(finDuDefi, jourDuDefi), envoi: seance.aEnregistrer() };
+}
+
+const planDuGrandDefi = planDuDefi(grandDefiDeMaths, lecons, hasardSansMelange());
+const { fait: faitDuGrandDefi, envoi: envoiDuGrandDefi } = jouerLeGrandDefi(planDuGrandDefi);
+
+Deno.test("un grand défi ouvert de 12 questions est revalidé et redonne le même défi terminé", () => {
+  const revalide = revalider(envoiDuGrandDefi, { reussies: toutesLesLecons });
+
+  assertEquals(revalide, faitDuGrandDefi);
 });
