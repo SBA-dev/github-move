@@ -112,3 +112,15 @@ Deno.test("le grand défi relevé ne rend relevé aucun défi d'une partie", () 
 
   assertEquals(etatDuDefi(defiDUnePartie, parcours, [grandDefiReleve()]), { genre: "ouvert" });
 });
+
+Deno.test("une leçon ajoutée à la matière laisse relevé un grand défi déjà relevé", () => {
+  const reussies = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+  assertEquals(etatDuGrandDefi({ nombreDeLecons: 11, reussies, releves: [grandDefiReleve()] }), { genre: "releve" });
+});
+
+Deno.test("une leçon ajoutée à la matière rend à venir un grand défi pas encore relevé", () => {
+  const reussies = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+  assertEquals(etatDuGrandDefi({ nombreDeLecons: 11, reussies }), { genre: "aVenir", leconsRestantes: 1 });
+});
