@@ -1,0 +1,42 @@
+Animaux de la forêt	texte/fond	#1F3324 sur #E9F7DE	12.09
+Animaux de la forêt	texte/mot surligné	#1F3324 sur #C8E8B0	10.03
+Animaux de la forêt	titre/fond	#245A38 sur #E9F7DE	7.26
+Animaux de la forêt	syllabe bleue/fond	#1d4ed8 sur #E9F7DE	6.01
+Animaux de la forêt	syllabe rouge/fond	#b42318 sur #E9F7DE	5.89
+Animaux de la forêt	syllabe bleue/surligné	#1d4ed8 sur #C8E8B0	4.99
+Animaux de la forêt	syllabe rouge/surligné	#b42318 sur #C8E8B0	4.89
+Princesses et fées	texte/fond	#3B2A1E sur #FFF6E2	12.72
+Princesses et fées	texte/mot surligné	#3B2A1E sur #F9D9EA	10.51
+Princesses et fées	titre/fond	#7C2690 sur #FFF6E2	7.70
+Princesses et fées	syllabe bleue/fond	#1d4ed8 sur #FFF6E2	6.23
+Princesses et fées	syllabe rouge/fond	#b42318 sur #FFF6E2	6.11
+Princesses et fées	syllabe bleue/surligné	#1d4ed8 sur #F9D9EA	5.15
+Princesses et fées	syllabe rouge/surligné	#b42318 sur #F9D9EA	5.05
+Sports	texte/fond	#1B2A4A sur #FFFFFF	14.22
+Sports	texte/mot surligné	#1B2A4A sur #D3E4FF	11.05
+Sports	titre/fond	#164BA8 sur #FFFFFF	8.06
+Sports	syllabe bleue/fond	#1d4ed8 sur #FFFFFF	6.70
+Sports	syllabe rouge/fond	#b42318 sur #FFFFFF	6.57
+Sports	syllabe bleue/surligné	#1d4ed8 sur #D3E4FF	5.21
+Sports	syllabe rouge/surligné	#b42318 sur #D3E4FF	5.11
+Police	texte/fond	#1B2350 sur #F2F5FF	13.74
+Police	texte/mot surligné	#1B2350 sur #D6DEFF	11.23
+Police	titre/fond	#253B9C sur #F2F5FF	8.83
+Police	syllabe bleue/fond	#1d4ed8 sur #F2F5FF	6.15
+Police	syllabe rouge/fond	#b42318 sur #F2F5FF	6.04
+Police	syllabe bleue/surligné	#1d4ed8 sur #D6DEFF	5.03
+Police	syllabe rouge/surligné	#b42318 sur #D6DEFF	4.93
+Pompiers	texte/fond	#3A1F18 sur #FFF8F1	14.36
+Pompiers	texte/mot surligné	#3A1F18 sur #FFDCCB	11.77
+Pompiers	titre/fond	#931F0C sur #FFF8F1	8.17
+Pompiers	syllabe bleue/fond	#1d4ed8 sur #FFF8F1	6.37
+Pompiers	syllabe rouge/fond	#b42318 sur #FFF8F1	6.25
+Pompiers	syllabe bleue/surligné	#1d4ed8 sur #FFDCCB	5.22
+Pompiers	syllabe rouge/surligné	#b42318 sur #FFDCCB	5.12
+Danse	texte/fond	#2B1740 sur #FFFCF6	15.78
+Danse	texte/mot surligné	#2B1740 sur #EBD6FA	11.95
+Danse	titre/fond	#5A1F9E sur #FFFCF6	9.65
+Danse	syllabe bleue/fond	#1d4ed8 sur #FFFCF6	6.54
+Danse	syllabe rouge/fond	#b42318 sur #FFFCF6	6.42
+Danse	syllabe bleue/surligné	#1d4ed8 sur #EBD6FA	4.96
+Danse	syllabe rouge/surligné	#b42318 sur #EBD6FA	4.86

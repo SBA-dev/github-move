@@ -2,7 +2,6 @@ import { useCallback, useReducer, useRef, useState } from "react";
 import {
   type BoiteOuverte,
   type CorrectionDuMot,
-  INTRODUCTION_DE_LA_LECTURE,
   lectureDesChoix,
   QuestionDeBoite,
   QuestionDeProblemeEnBarres,
@@ -28,6 +27,7 @@ import { aiderQuandOnNeSaitPas } from "../seance/exercices/paroles-du-calcul.ts"
 import type { usePersonnageQuiParle } from "../seance/usePersonnageQuiParle.ts";
 import type { Voix } from "../voix/index.ts";
 import type { TexteDeLecture } from "./commencer-la-revision.ts";
+import { useLectureDuTexte } from "../seance/parchemin/useLectureDuTexte.ts";
 import type { SeanceDeQuestions } from "./seance-de-questions.ts";
 import { encouragerLaReponse, feliciterLaReponse, vueDuCalcul } from "./paroles-de-la-revision.ts";
 
@@ -90,9 +90,14 @@ export function useDeroulementDeRevision(
   const [lettresFausses, setLettresFausses] = useState<CorrectionDuMot | undefined>();
   const [toucheQuiBrille, setToucheQuiBrille] = useState<string | undefined>();
   const [texteEcoutePour, setTexteEcoutePour] = useState<string | undefined>();
-  const [rangDuMotDuTexte, setRangDuMotDuTexte] = useState<number | undefined>();
   const [questionsReussies, setQuestionsReussies] = useState(0);
   const [avancementAnnonce, setAvancementAnnonce] = useState("");
+  const { rangDuMotDuTexte, lectureDuTexte, avantLaLecture, lireLeTexte, relireLeTexte, effacerLeRang } = useLectureDuTexte({
+    lire,
+    dire,
+    faireSilence,
+    sequence,
+  });
   const pause = useRef(PAUSE_ENTRE_DEUX_PAROLES_MS);
   pause.current = useReducedMotion() ? PAUSE_AVEC_MOUVEMENTS_REDUITS_MS : PAUSE_ENTRE_DEUX_PAROLES_MS;
 
@@ -134,30 +139,24 @@ export function useDeroulementDeRevision(
     if (choixLus !== undefined) await lire(choixLus);
   }, [seance, dire, presenterUneQuestionIllustree, direLeMotAEcouter, toutLireAVoixHaute, lire]);
 
-  const lireLeTexte = useCallback(async (numero: number, texte: string) => {
-    if (!(await dire({ texte: INTRODUCTION_DE_LA_LECTURE, nature: "introduction" }))) return;
-    const estLaDerniere = () => numero === sequence.current;
-    await lire(texte, {
-      onMot: (rang) => estLaDerniere() && setRangDuMotDuTexte(rang),
-      onFin: () => estLaDerniere() && setRangDuMotDuTexte(undefined),
-    });
-  }, [dire, lire]);
-
   /** Une question de lecture commence par la lecture de son texte ; la question suit quand l'enfant dit « J'ai écouté ». */
   const ouvrir = useCallback(async (numero: number) => {
     const courante = seance.questionEnCours();
     const texte = courante && textes.get(courante.identite.valeur);
-    if (texte) await lireLeTexte(numero, texte.texte);
+    if (texte) {
+      avantLaLecture();
+      await lireLeTexte(numero, texte.texte);
+    }
     else await presenter(numero);
-  }, [seance, textes, lireLeTexte, presenter]);
+  }, [seance, textes, avantLaLecture, lireLeTexte, presenter]);
 
   const jAiEcoute = useCallback(async () => {
     const numero = ++sequence.current;
     faireSilence();
-    setRangDuMotDuTexte(undefined);
+    effacerLeRang();
     setTexteEcoutePour(seance.questionEnCours()?.identite.valeur);
     await presenter(numero);
-  }, [faireSilence, seance, presenter]);
+  }, [faireSilence, effacerLeRang, seance, presenter]);
 
   const commencer = useCallback(async () => {
     vivant.current = true;
@@ -304,10 +303,10 @@ export function useDeroulementDeRevision(
   const reecouter = useCallback(() => {
     if (estFigee.current) return;
     const nature = personnage.parole?.nature;
-    if ((nature === "question" || nature === "dictee") && relireLaQuestion()) return;
+    if (relireLeTexte() || ((nature === "question" || nature === "dictee") && relireLaQuestion())) return;
     sequence.current++;
     relire();
-  }, [personnage.parole, relireLaQuestion, relire]);
+  }, [personnage.parole, relireLeTexte, relireLaQuestion, relire]);
 
   const abandonner = useCallback(() => {
     vivant.current = false;
@@ -323,6 +322,7 @@ export function useDeroulementDeRevision(
     phrasesDites,
     texteEcoutePour,
     rangDuMotDuTexte,
+    lectureDuTexte,
     jAiEcoute,
     boiteOuverte,
     schemaResolu,

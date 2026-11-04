@@ -1,4 +1,4 @@
-import { textePrononce } from "./texte-a-lire.ts";
+import { motsPrononces, textePrononce } from "./texte-a-lire.ts";
 
 export type SegmentDeConsigne = {
   readonly texte: string;
@@ -14,10 +14,18 @@ export function motsDeLaConsigne(texteAffiche: string): SegmentDeConsigne[] {
   );
 }
 
-function motsPrononces(texte: string): string[] {
-  return textePrononce(texte).split(/\s+/).filter(Boolean);
+function nombreDeMotsPrononces(texte: string): number {
+  return motsPrononces(textePrononce(texte)).length;
 }
 
-export function rangAffichePourChaqueMotPrononce(texteAffiche: string): Array<number | undefined> {
-  return motsDeLaConsigne(texteAffiche).flatMap(({ texte, rang }) => motsPrononces(texte).map(() => rang));
+export function rangAffichePourChaqueMotPrononce(texteAffiche: string): readonly (number | undefined)[] {
+  let debut = "";
+  let dejaPrononces = 0;
+  return motsDeLaConsigne(texteAffiche).flatMap(({ texte, rang }) => {
+    debut += texte;
+    const prononcesAvecCeMot = nombreDeMotsPrononces(debut);
+    const nouveaux = prononcesAvecCeMot - dejaPrononces;
+    dejaPrononces = prononcesAvecCeMot;
+    return Array.from({ length: nouveaux }, () => rang);
+  });
 }

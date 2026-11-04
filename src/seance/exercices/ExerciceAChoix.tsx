@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { LigneDuTableauDeConjugaison, QuestionJouee, SegmentDuTexteATrous } from "@domain/apprentissage";
 import type { Exercice } from "@domain/catalogue";
 import type { DepartDuMot } from "./mot-qui-voyage/useMotQuiVoyage.tsx";
+import type { LectureDuTexte } from "../parchemin/LectureDuTexte.ts";
 import { QuestionAChoix } from "./QuestionAChoix.tsx";
 import { TableauDeConjugaison } from "./TableauDeConjugaison.tsx";
 import { TexteATrous } from "./TexteATrous.tsx";
@@ -21,6 +22,9 @@ type Props = {
   /** Lecture : l'enfant a dit qu'elle avait écouté le texte. */
   readonly texteEcoute: boolean;
   readonly rangDuMotDuTexte: number | undefined;
+  readonly lectureDuTexte: LectureDuTexte;
+  /** Muet, voix bloquée ou absente : le texte est lu par l'enfant seul. */
+  readonly voixCoupee: boolean;
   readonly sonImpossible: boolean;
   readonly sonCoupe: boolean;
   readonly onChoisir: (texte: string) => void;
@@ -43,7 +47,15 @@ export function ExerciceAChoix(props: Props) {
   return (
     <>
       {exercice.type === "lecture" && (
-        <TexteDeLecture titre={exercice.titre} texte={exercice.texte} rangDuMotPrononce={props.rangDuMotDuTexte} />
+        <TexteDeLecture
+          key={exercice.texte}
+          titre={exercice.titre}
+          texte={exercice.texte}
+          rangDuMotPrononce={props.rangDuMotDuTexte}
+          lecture={props.lectureDuTexte}
+          texteEcoute={texteEcoute}
+          voixCoupee={props.voixCoupee}
+        />
       )}
       {exercice.type === "trous" && (
         <TexteATrous segments={props.texteATrous} phraseDuTrouEnCours={props.phraseDuTrouEnCours} motChoisi={motChoisi} />

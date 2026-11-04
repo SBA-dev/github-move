@@ -24,6 +24,7 @@ export type { VoixDeLAppareil } from "./voix-de-l-appareil.ts";
 export { LectureImpossible, VoixBloquee } from "./erreurs.ts";
 export { motsDeLaConsigne } from "./mots-de-la-consigne.ts";
 export type { SegmentDeConsigne } from "./mots-de-la-consigne.ts";
+export { phrasesDesMotsAffiches } from "./phrases-des-mots-affiches.ts";
 export { syllabesDuMot, syllabesDuTexte } from "./syllabes.ts";
 export type { SegmentSyllabe } from "./syllabes.ts";
 export type { EffetSonore } from "./effet-sonore.ts";
