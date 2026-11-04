@@ -285,3 +285,16 @@ Fonctionnalité: L'écran « Mes médailles » réunit ce que l'enfant a gagné
       Et que Claire est connectée sur le téléphone
       Quand Claire demande les records du profil enfant de Léa
       Alors Claire ne reçoit aucune donnée de Léa
+
+  # Ajoutée par #140 (correctif) : l'attendu de l'issue est validé par le PO ; l'équipe a choisi « elle est lue »
+  Règle: Une lecture demandée par l'enfant n'est jamais perdue : elle est lue jusqu'au bout, même si l'écran finit de se charger pendant ce temps
+
+    @issue-140
+    Scénario: Touché avant la fin du chargement de l'écran, « Écouter » lit les records jusqu'au bout, sans être coupé par l'accueil
+      Étant donné que le réglage « tout lire à voix haute » de Léa est sur « non »
+      Et que Léa a un record de 12 à la fluence « Calcul rapide : tables de 3 et 4 »
+      Et que l'histoire des Savanturiers tarde à se charger
+      Et que Léa a ouvert « Mes médailles » depuis son accueil
+      Quand Léa demande à écouter les records de calcul rapide
+      Alors Léa entend Noisette lire « Mes records de calcul rapide », puis « Calcul rapide : tables de 3 et 4 : ton record est de 12 calculs »
+      Mais Léa n'entend pas Noisette lire « Regarde tout ce que tu as gagné ! »
