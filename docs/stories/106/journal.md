@@ -64,3 +64,9 @@ Branche de base : `main` (`597a4a5`). Branche : `feature/106b-celebration-danse`
 ## 2026-11-04
 - 23:25 UTC : démarrage. Cadrage de #106 déjà validé (« 106 reco tout », 106.28 « cacher ») ; maquette `lili-danse.html` validée par le PO le 2026-10-27. Musique : « grande victoire » (106.27 toujours fermé).
 - 23:30 UTC : complément de modèle 106b (`domain-modeler`) et scénarios 106b (`po-acceptance`) lancés en parallèle. Dette de 106a à traiter : clés de variante liées au domaine, scènes chargées à la demande, ids SVG préfixés.
+- 23:45 UTC : CADRAGE PRÊT publié pour information (aucune question nouvelle) : noms des variantes « le grand jeté », « le ruban », « les petits sauts » (106.26) ; pétales de la salle = 106.24.
+
+### TDD, bloc « Motivation, célébration Danse et clés de variante »
+- RED `5916536` (rouge de compilation : `VARIANTES_DES_UNIVERS` non exporté), GREEN `9d9304d` (entrée `danse`, `VARIANTES_DES_UNIVERS`, `UniversCelebre`, `VarianteDe<U>`, union discriminée), refactor `389e62f` (le front tire les clés Sports du domaine).
+- `418a489` : le test « univers pas encore livré » de `celebrationDeLaFin` prend `animaux` (Danse est livré).
+- `deno test` : 2808 verts ; `tsc` OK.
