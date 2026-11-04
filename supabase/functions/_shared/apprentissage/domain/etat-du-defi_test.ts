@@ -75,3 +75,9 @@ function etatDuGrandDefi(
 Deno.test("un grand défi dont 4 leçons de la classe sur 10 sont réussies est à venir, avec encore 6 leçons", () => {
   assertEquals(etatDuGrandDefi({ reussies: [1, 2, 3, 4] }), { genre: "aVenir", leconsRestantes: 6 });
 });
+
+Deno.test("le grand défi est ouvert quand toutes les leçons de la classe sont réussies, même si le défi d'une partie n'est pas relevé", () => {
+  const tout = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+  assertEquals(etatDuGrandDefi({ reussies: tout, releves: [] }), { genre: "ouvert" });
+});
