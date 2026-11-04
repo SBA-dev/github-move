@@ -83,3 +83,4 @@ Session : session_015z4jmMgq1HB7F2nTVR6x1n. Décision : aucune réservée (proch
 | Dessins | 36 sources SVG, 2 planches validées au premier passage (6 choix P1 à P6) ; 12 captures |
 | Incidents | Supabase de dev restreint (quota MAU) de 09:00 à 17:35 UTC le 03/11, puis 504 sur la création d'utilisateur ; Vite orphelin ; Chromium 1243 sans le 1194 |
 | Tokens | relevés par le responsable |
+- 11:08 UTC : merge autorisé par le PO (« merge 131 129 141 OK », annonce [Responsable] 6629089326 sur #64), VERROU merge accordé à #131 (tableau vérifié). `main` n'a pas bougé depuis l'intégration (`46ca728`). Tête `191ee02` : `deno test` 2787/2787, lint, fmt, tsc, build OK ; E2E du dernier code (`9fbd825`) verts (`@issue-131` 127/127, #21 touchés 18/18), seuls `@wip`, captures et journal depuis ; review APPROUVÉ (4 passes, finale publiée sur la PR). Merge de la PR #148 par l'équipe.
