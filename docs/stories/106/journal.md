@@ -78,3 +78,8 @@ Branche de base : `main` (`597a4a5`). Branche : `feature/106b-celebration-danse`
 - `b1fbfb7` : scène Danse (Lili) chargée à la demande, ids `danse-`, pétales sur canvas, image fixe en mouvements réduits. Morceaux : principal 1 335 → 1 299 kB ; Sports 33,7 kB ; Danse 35,7 kB ; commun 5,5 kB ; tous précachés par le service worker.
 - `1314434` : planches de Lili (`captures/106b-lili-clair.png`, `106b-lili-sombre.png`), relues contre la règle absolue par l'orchestrateur : rien à signaler. Présentées au PO (#106.29 validation, #106.30 zone de peau sous la chevelure en vue de dos, comme la maquette).
 - Steps E2E `995ea86` (non lancés : verrou `base` demandé, 3e dans la file derrière #137 et #130).
+
+### Review de la branche
+- Cycle 1 (`68a2eab`) : À CORRIGER. Bloquant : premier `React.lazy` de l'application sans repli, un import de scène qui échoue (ancienne version après `skipWaiting`, hors ligne avant le précache) aurait laissé un écran blanc à la fin du défi (régression pour Sports). Non bloquants : saut de `vue` en fin de pirouette, lien générique univers/variante, tables de variantes des steps, `Object.hasOwn`, décalage de mise en page.
+- Corrections : steps `6271ec7` ; `c4bc8a0` (repli `chargerSansEchec`, espace réservé de même ratio sans `data-testid`), `70cdb85` (`E.instantanee`), `77d48d5` (générique), `a179a94` (`Object.hasOwn`). Repli vérifié par un script Playwright non commité (import coupé : espace réservé, boutons présents, aucune erreur).
+- Cycle 2 (`a179a94`) : APPROUVÉ. Non bloquants restants : repli de chargement sans test automatisé (pas de scénario : à proposer au PO), `a179a94` aurait pu être un `refactor`.
