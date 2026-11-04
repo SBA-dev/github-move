@@ -1,5 +1,5 @@
 # language: fr
-@issue-137 @wip
+@issue-137
 Fonctionnalité: Grand défi de la matière
   En tant qu'enfant
   Je veux relever un grand défi qui mélange les questions de toute une matière, quand je l'ai réussie

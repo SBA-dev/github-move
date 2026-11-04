@@ -206,7 +206,7 @@ Then(
     await expect(dessin(cible).getByTestId("lecon-du-parcours").first()).toBeVisible();
     await expect(reperesDUnePartie(cible)).toHaveCount(1);
     const unique = reperesDUnePartie(cible);
-    await expect(unique).toHaveAttribute("data-numero", numero);
+    await expect(unique).toHaveAttribute("data-numero", String(numero));
     expect(await laLeconAvantLeRepere(unique), "leçon juste avant le repère").toBe(`Leçon ${place}`);
   },
 );

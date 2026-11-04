@@ -334,7 +334,8 @@ export async function ouvrirLeParcoursDeMaths(page: Page, enfant = "Léa", matie
 }
 
 export async function releverLeDefi(page: Page): Promise<void> {
-  await page.getByRole("button", { name: "Relever le défi", exact: true }).click();
+  const defiDeLaPartie = page.getByTestId("repere-du-defi").filter({ hasText: "Défi 1" });
+  await defiDeLaPartie.getByRole("button", { name: "Relever le défi", exact: true }).click();
   await expect(ecranDuDefi(page)).toBeVisible();
 }
 
@@ -426,7 +427,7 @@ export async function jouerLeDefi(page: Page, deroule: Deroule, arret?: { nombre
   const posees = partie100(page).posees;
   posees.length = 0;
   let apres: string | undefined;
-  for (let i = 0; i < 12; i++) {
+  for (let i = 0; i <= 12; i++) {
     const courante = await questionOuFin(page, apres);
     if (courante.fin) return;
     posees.push(courante.enonce);
