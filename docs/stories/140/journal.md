@@ -47,3 +47,14 @@ Nature : correctif dans la stack cible (`fix(#140)`).
   disent aussi un accueil : hors périmètre.
 - Une relance de l'effet d'ouverture avant tout « Écouter » redit l'accueil (comportement antérieur, inchangé).
 - 140.1 : le câblage applique le choix A ; à reprendre si le PO choisit B.
+- 22:10 UTC (horloge du responsable 21:08 UTC) : `[Responsable]` sur #140 : réponse du PO « 140 reco tout » = **140.1 A**.
+  Le câblage l'applique déjà. Validation n°1 levée. `main` n'a pas bougé (`573659e`). PR #151 passée en « prête ».
+
+## Mesures
+
+- Durée : ≈ 1 h 30 de travail (démarrage → `PRÊTE À MERGER`), dont ≈ 15 min de runs E2E.
+- Temps d'attente : verrou `base` ≈ 15 min (tout le travail sans base a continué) ; réponse 140.1 ≈ 30 min
+  (TDD, câblage, E2E et revues faits pendant l'attente).
+- Cycles TDD : 1 comportement. Cycles de review : 2 (delta, finale), tous APPROUVÉS, aucun À CORRIGER.
+- Cycles E2E : 2 runs (rouge 3/3 KO, vert 21/21), aucun KO à corriger.
+- Intégrations de `main` : 0, conflits : 0.
