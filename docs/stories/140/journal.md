@@ -24,3 +24,14 @@ Nature : correctif dans la stack cible (`fix(#140)`).
   Le câblage s'applique aussi à « tout lire » sur « oui » (choix A de 140.1) ; à reprendre si le PO choisit B.
 - 21:20 UTC : `VERROU base` demandé. Steps E2E (`e2e-tester`, sans run) et revue delta (`mr-reviewer`) en parallèle.
   Navigateur : contournement `pw/` du scratchpad (`chromium_headless_shell-1194/chrome-linux` → fichiers de la 1243).
+- 21:30 UTC : steps E2E (`e2e-tester`) : `6b3073f` (step nouveau : retient `GET /rest/v1/seances_terminees` jusqu'au
+  geste de Léa, puis attend la section de l'histoire ; retrait de l'attente de `3d810cf`), `ae6ab80` (retrait des
+  attentes de `a6765f6` dans badges, cabane, histoire, tenues). Textes des steps inchangés.
+- 21:32 UTC : revue delta (`eaf5405^..ae90d1c`) **APPROUVÉE**, sans bloquant. Non bloquants appliqués : démontage sans
+  ref (`8aebd5b`, motif de `FinDeLaRevision.tsx`) ; glossaire « Accueil de l'écran (à valider) » (`c60d13d`, ajout).
+- 21:35 UTC : `VERROU base` accordé par le responsable. Sonde `admin/users` : 3 × 200 en < 1,5 s.
+- 21:50 UTC : **rouge prouvé** : correctif retiré de la copie de travail (non commité), `@issue-140` sur `telephone`,
+  1 worker, `--repeat-each=3` : **3/3 KO** sur « Léa entend Noisette lire « Mes records… », puis … » (la lecture
+  demandée est coupée par l'accueil). Correctif restauré.
+- 21:55 UTC : run vert lancé : `@issue-140` et les 6 scénarios « … à la demande » qui touchent « Écouter »
+  (65:206 plan, 31:317, 32:251, 33:404, 102:253), sans les attentes, `telephone`, 1 worker, `--repeat-each=3`.
