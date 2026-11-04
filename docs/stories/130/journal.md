@@ -15,3 +15,6 @@ Session : session_015z4jmP7V7FhEFUJUzB9Zaf. Décision : aucune réservée (proch
 - 12:08 UTC : CADRAGE PRÊT publié sur #130 ; attente de la validation du PO par le responsable.
 - 11:30 UTC : intégration de `main` après le merge de #129 (`db200e2`), sans conflit. #129 ne touche que la carte de la poésie (parchemin) ; l'entraînement (ordre des vers) est inchangé : le cadrage tient.
 - 11:32 UTC : intégration de `main` après le merge de #141 (`573659e`).
+- 20:37 UTC : réponse du PO « 130 reco tout » (annonces [Responsable] 6641496239 sur #130 et 20:36 sur #64, vérifiées) : les 13 recos s'appliquent. Validation n°1 levée, `graphe:dev`. `main` déjà intégrée (`573659e`).
+- En parallèle : `po-acceptance` reporte les réponses et retire les `@a-valider` ; `implementer`, en rôle d'illustrateur, prépare la planche `ordre-petit-train` (12 dessins, 5 colonnes) dans un worktree à part.
+- Liste des comportements unitaires : **aucun**, comme 98a, #127 et #131. Le domaine ne change pas (place suivante, placement refusé, dernière étiquette, étiquette qui brille) ; le dessin est choisi par la clé d'univers. Le RED passe par les étapes E2E de `@issue-130`. Une règle qui apparaîtrait dans React pendant le câblage serait remontée au domaine.
