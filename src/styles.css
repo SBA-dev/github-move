@@ -608,7 +608,7 @@ button.tuile .nom-de-la-tuile, button.tuile .nom-de-la-matiere { font-size: 1.1r
   word-spacing: inherit;
   line-height: inherit;
 }
-[data-mode-dys="true"] :is(.consigne, .bulle, .pastille, .pastille-de-serie, .question, .bulle-de-choix, .etiquette, .texte-a-trous, .carte-de-la-poesie, .texte-de-l-episode, .ecran-de-l-episode h1) {
+[data-mode-dys="true"] :is(.consigne, .bulle, .pastille, .pastille-de-serie, .question, .bulle-de-choix, .etiquette, .texte-a-trous, .texte-de-lecture, .carte-de-la-poesie, .texte-de-l-episode, .ecran-de-l-episode h1) {
   overflow-wrap: anywhere;
   line-height: inherit;
 }
@@ -1320,3 +1320,50 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 .pour-la-quete { display: grid; justify-items: center; max-width: 100%; padding: 8px 16px; border: 3px solid var(--contour); border-radius: var(--rayon); background: var(--surface-dense); overflow-wrap: anywhere; }
 .pour-la-quete:empty { display: none; }
 .pour-la-quete p { margin: 0; font-weight: 700; }
+
+/* parchemin (#129) : le texte d'une lecture et les vers d'une poésie sur le dessin de l'univers ; le texte se dévoile par l'opacité seule. */
+.parchemin {
+  --parchemin-fond: #e9f7de; --parchemin-trait: #3f9a63; --parchemin-texte: #1f3324; --parchemin-titre: #245a38; --parchemin-surligne: #c8e8b0;
+  width: 100%;
+  max-width: 330px; /* la largeur des dessins : le cadre reste continu, le texte garde sa colonne */
+  margin-inline: auto;
+  color: var(--parchemin-texte);
+}
+.parchemin[data-univers="princesse"] { --parchemin-fond: #fff6e2; --parchemin-trait: #e6c77a; --parchemin-texte: #3b2a1e; --parchemin-titre: #7c2690; --parchemin-surligne: #f9d9ea; }
+.parchemin[data-univers="sports"] { --parchemin-fond: #ffffff; --parchemin-trait: #164ba8; --parchemin-texte: #1b2a4a; --parchemin-titre: #164ba8; --parchemin-surligne: #d3e4ff; }
+.parchemin[data-univers="police"] { --parchemin-fond: #f2f5ff; --parchemin-trait: #253b9c; --parchemin-texte: #1b2350; --parchemin-titre: #253b9c; --parchemin-surligne: #d6deff; }
+.parchemin[data-univers="pompier"] { --parchemin-fond: #fff8f1; --parchemin-trait: #931f0c; --parchemin-texte: #3a1f18; --parchemin-titre: #931f0c; --parchemin-surligne: #ffdccb; }
+.parchemin[data-univers="danse"] { --parchemin-fond: #fffcf6; --parchemin-trait: #c79bd0; --parchemin-texte: #2b1740; --parchemin-titre: #5a1f9e; --parchemin-surligne: #ebd6fa; }
+.bande-du-parchemin { display: block; width: 100%; height: auto; overflow: visible; pointer-events: none; }
+.corps-du-parchemin { display: flow-root; /* les marges du texte restent dans la feuille, sans couture avec les bandes */ box-sizing: border-box; margin-inline: 4px; padding: 0 24px; background: var(--parchemin-fond); border-inline: 4px solid var(--parchemin-trait); }
+/* les nervures de la feuille d'animaux (planche : un trait en biais tous les 30 px, de chaque côté) */
+.parchemin[data-univers="animaux"] .corps-du-parchemin {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='330' height='30'%3E%3Cpath d='M8 10l9 -7M322 10l-9 -7' fill='none' stroke='%239CCF8B' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-size: 322px 30px;
+  background-position: -4px 0;
+  background-repeat: repeat-y;
+}
+.parchemin[data-univers="princesse"] .corps-du-parchemin { margin-inline: 19px; padding-inline: 16px; border-inline-width: 2.5px; }
+.parchemin[data-univers="danse"] .corps-du-parchemin { margin-inline: 4.5px; padding-inline: 26px; border-inline-width: 3px; }
+.parchemin .texte-de-lecture { max-width: none; padding: 0; border: 0; border-radius: 0; box-shadow: none; background: transparent; color: var(--parchemin-texte); }
+.parchemin .texte-de-lecture h3 { color: var(--parchemin-titre); }
+.parchemin .vers { padding: 6px 0; }
+.parchemin .mot[data-prononce], .parchemin .un-vers[data-lu="true"] { background: var(--parchemin-surligne); color: var(--parchemin-texte); }
+.phrase, .parchemin .un-vers { transition: opacity 0.3s ease; }
+.phrase[data-devoilee="non"], .un-vers[data-devoilee="non"] { opacity: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .phrase, .parchemin .un-vers { transition: none; }
+}
+/* sports, police, pompiers : un cadre de couleur (bords arrondis dans les bandes), le trait sombre dehors et dedans */
+.parchemin[data-univers="sports"] .corps-du-parchemin,
+.parchemin[data-univers="police"] .corps-du-parchemin,
+.parchemin[data-univers="pompier"] .corps-du-parchemin {
+  margin-inline: 6px;
+  padding-inline: 17px;
+  border-inline: 9px solid var(--parchemin-cadre);
+  box-shadow: inset 2px 0 0 var(--parchemin-trait), inset -2px 0 0 var(--parchemin-trait), -3.5px 0 0 var(--parchemin-trait), 3.5px 0 0 var(--parchemin-trait);
+}
+.parchemin[data-univers="sports"] { --parchemin-cadre: #1f63d8; }
+.parchemin[data-univers="police"] { --parchemin-cadre: #3450c8; }
+.parchemin[data-univers="pompier"] { --parchemin-cadre: #ef8f7f; }
+.parchemin[data-univers="sports"] .corps-du-parchemin { margin-inline: 8px 48px; padding-inline: 13px; }

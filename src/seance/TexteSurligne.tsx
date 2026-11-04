@@ -1,4 +1,4 @@
-import { motsDeLaConsigne } from "@domain/voix";
+import { motsDeLaConsigne, type SegmentDeConsigne } from "@domain/voix";
 import { TexteEnSyllabes } from "../reglages/index.ts";
 
 type Props = {
@@ -10,21 +10,21 @@ type Props = {
 export function TexteSurligne({ texte, rangDuMotPrononce }: Props) {
   return (
     <>
-      {motsDeLaConsigne(texte).map(({ texte: segment, rang }, i) => {
-        if (rang === undefined) return segment;
-        const prononce = rang === rangDuMotPrononce;
-        return (
-          <span
-            key={i}
-            className="mot"
-            data-mot={rang}
-            data-prononce={prononce ? "true" : undefined}
-            aria-current={prononce ? "true" : undefined}
-          >
-            <TexteEnSyllabes texte={segment} />
-          </span>
-        );
-      })}
+      {motsDeLaConsigne(texte).map((segment, i) => (
+        <SegmentSurligne key={i} segment={segment} rangDuMotPrononce={rangDuMotPrononce} />
+      ))}
     </>
+  );
+}
+
+/** Un mot (surligné s'il est prononcé) ou un bout de texte sans mot, tel quel. */
+export function SegmentSurligne({ segment, rangDuMotPrononce }: { readonly segment: SegmentDeConsigne; readonly rangDuMotPrononce: number | undefined }) {
+  const { texte, rang } = segment;
+  if (rang === undefined) return texte;
+  const prononce = rang === rangDuMotPrononce;
+  return (
+    <span className="mot" data-mot={rang} data-prononce={prononce ? "true" : undefined} aria-current={prononce ? "true" : undefined}>
+      <TexteEnSyllabes texte={texte} />
+    </span>
   );
 }
