@@ -1,6 +1,6 @@
 import { assertEquals } from "@std/assert";
 import { matiereDeCode, Niveau } from "../../catalogue/domain/index.ts";
-import type { Defi, GrandDefi } from "../../apprentissage/domain/index.ts";
+import type { Defi, DefiReleve, GrandDefi } from "../../apprentissage/domain/index.ts";
 import {
   annonceDuDefiOuvert,
   annonceDuDefiOuvertPour,
@@ -15,6 +15,7 @@ import {
   parolesDeDebutDuDefi,
   parolesDeFinDeDefi,
   parolesDeFinDeGrandDefi,
+  parolesDeFinDuDefiReleve,
   phraseDeFinAvecLeDefi,
   phraseDeFinAvecLeDefiOuvert,
   phraseDeFinAvecLeGrandDefi,
@@ -150,5 +151,18 @@ Deno.test("au début d'un défi, les paroles comptent les leçons du défi ; au 
   assertEquals([parolesDeDebutDuDefi(defiNumero2), parolesDeDebutDuDefi(grandDefiDesMaths)], [
     "Voici des questions de 3 leçons que tu connais. Prends ton temps, je suis avec toi !",
     "Voici des questions de toutes tes leçons de maths. Prends ton temps, je suis avec toi !",
+  ]);
+});
+
+Deno.test("à la fin d'un défi relevé, les paroles le nomment par son numéro ; à la fin du grand défi, par sa matière", () => {
+  const defiReleve: DefiReleve = { matiere: maths, niveau, numero: 2 };
+  const grandDefiReleve: DefiReleve = { matiere: maths, niveau, grandDefi: true };
+
+  assertEquals([
+    parolesDeFinDuDefiReleve({ prenom: "Léa", defi: defiReleve, dejaReleve: false }),
+    parolesDeFinDuDefiReleve({ prenom: "Léa", defi: grandDefiReleve, dejaReleve: true }),
+  ], [
+    "Bravo Léa ! Tu as relevé le défi 2 !",
+    "Bravo Léa ! Tu as encore relevé le grand défi des maths !",
   ]);
 });
