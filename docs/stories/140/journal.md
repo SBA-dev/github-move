@@ -12,3 +12,6 @@ Nature : correctif dans la stack cible (`fix(#140)`).
   montre son bouton « Écouter » dès que sa propre donnée est chargée : une demande faite entre les deux est coupée par
   `dire({ nature: "accueil" })`, qui devient la dernière parole (`usePersonnageQuiParle`, `derniereLecture`).
 - Étape 1 (domaine) : pas de `domain-modeler`. Pas de nouveau contexte ni d'agrégat ; une seule règle, dans Voix.
+- 21:00 UTC : étape 2 (`po-acceptance`) : une règle et un scénario `@issue-140` à la fin de
+  `features/65-ecran-mes-medailles.feature` (records, « tout lire » sur « non », l'histoire tarde à se charger).
+  Un step nouveau. Question 140.1 (cas « tout lire » sur « oui »). Critères : `docs/stories/140/criteres.md`.
