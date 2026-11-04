@@ -257,7 +257,7 @@ Then(/^aucun onglet « ([^«»]+) » n'est proposé$/, async ({ famille, page },
   await expect(ongletDe(cible, matiere)).toHaveCount(0);
 });
 
-Then(/^Léa lit « (?!BUT !)([^«»]+) »$/, async ({ page }, message: string) => {
+Then(/^Léa lit « (?!BUT !|Bravo ! »)([^«»]+) »$/, async ({ page }, message: string) => {
   await expect(page.getByText(message, { exact: true })).toBeVisible();
 });
 
