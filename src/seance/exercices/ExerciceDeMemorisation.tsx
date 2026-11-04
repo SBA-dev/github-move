@@ -6,6 +6,7 @@ import { Parchemin } from "../parchemin/Parchemin.tsx";
 import { useDeroulementDuParchemin } from "../parchemin/useDeroulementDuParchemin.ts";
 import { ExerciceAChoix } from "./ExerciceAChoix.tsx";
 import { ExerciceAEtiquettes } from "./ExerciceAEtiquettes.tsx";
+import { useTrainCompletRetenu } from "./petit-train/useTrainCompletRetenu.ts";
 import type { TempsDeLaMemorisation, VersLu } from "./useMemorisation.ts";
 
 type PropsDeLEntrainement = {
@@ -14,6 +15,8 @@ type PropsDeLEntrainement = {
   readonly choixVisibles: boolean;
   readonly reussie: boolean;
   readonly bulleEclatee: string | undefined;
+  /** La félicitation du dernier vers est finie : le train complet laisse la place aux mots cachés sans attendre. */
+  readonly felicitationFinie: boolean;
   readonly bonnesReponsesMontrees: Readonly<Record<string, string>>;
   readonly onPoser: (etiquette: string) => void;
   readonly onChoisir: (texte: string) => void;
@@ -82,7 +85,9 @@ function VersDeLaPoesie({ vers, temps, versLu, voixCoupee }: { readonly vers: re
 
 function Entrainement({ exercice, exerciceJoue, ...reste }: PropsDeLEntrainement & { readonly exercice: ExerciceMemoriser }) {
   const plan = PlanDeMemorisation.de(exercice);
-  if (exerciceJoue?.entrainementDeMemorisation() === "motsCaches") {
+  const motsCaches = exerciceJoue?.entrainementDeMemorisation() === "motsCaches";
+  const trainCompletRetenu = useTrainCompletRetenu(motsCaches, reste.felicitationFinie);
+  if (motsCaches && !trainCompletRetenu) {
     return (
       <ExerciceAChoix
         exercice={plan.motsCaches}
@@ -111,12 +116,13 @@ function Entrainement({ exercice, exerciceJoue, ...reste }: PropsDeLEntrainement
   return (
     <ExerciceAEtiquettes
       exercice={plan.ordreDesVers}
-      etiquettesAPlacer={exerciceJoue?.etiquettesAPlacer() ?? []}
+      etiquettesAPlacer={motsCaches ? [] : exerciceJoue?.etiquettesAPlacer() ?? []}
       etiquettesPosees={exerciceJoue?.etiquettesPosees() ?? []}
       etiquetteViseeParJeNeSaisPas={(choisie) => exerciceJoue?.etiquetteViseeParJeNeSaisPas(choisie)}
       bonnesReponsesMontrees={reste.bonnesReponsesMontrees}
       onPoser={reste.onPoser}
       onJeNeSaisPas={reste.onJeNeSaisPasDUneEtiquette}
+      versDeLaPoesie
     />
   );
 }

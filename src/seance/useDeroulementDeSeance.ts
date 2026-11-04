@@ -401,6 +401,7 @@ export function useDeroulementDeSeance(
     effacer: dictee.effacer,
     versLu: memorisation.versLu,
     tempsDeLaMemorisation: memorisation.tempsDe,
+    felicitationDuDernierVersFinie: memorisation.felicitationDuDernierVersFinie,
     jeSuisPret: memorisation.jeSuisPret,
     jeNeSaisPasEnDictee: dictee.jeNeSaisPas,
     taper,
