@@ -1,3 +1,4 @@
+import { sansLaQueteAccomplie } from "../support/phrase-de-fin-avec-la-quete.ts";
 import { type Browser, expect, type Locator, type Page } from "@playwright/test";
 import { Jour } from "../../supabase/functions/_shared/apprentissage/domain/jour.ts";
 import { defisDeLaMatiere } from "../../supabase/functions/_shared/apprentissage/domain/defis-de-la-matiere.ts";
@@ -748,7 +749,7 @@ Then(/^Noisette dit « ([^«»]+) »$/, { tags: "@issue-100" }, async ({ page },
   const voulu = normaliser(texte);
   await expect.poll(async () => {
     const dit = normaliser((await bulle(page).textContent().catch(() => null)) ?? "");
-    if (dit === voulu || dit.endsWith(` ${voulu}`)) return true;
+    if (dit === voulu || dit.endsWith(` ${voulu}`) || sansLaQueteAccomplie(dit).endsWith(` ${voulu}`)) return true;
     // La phrase de fin d'une séance vient après les paroles qui la précèdent : on les laisse finir, jamais la consigne d'un début de défi.
     if ((await bulle(page).getAttribute("data-nature").catch(() => null)) !== "consigne") await terminerLaLecture(page);
     return false;

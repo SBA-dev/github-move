@@ -1,3 +1,4 @@
+import { sansLaQueteAccomplie } from "../support/phrase-de-fin-avec-la-quete.ts";
 import { createBdd } from "playwright-bdd";
 import { expect, type Page } from "@playwright/test";
 import { inscrireUnRecordDeFluence } from "../support/calcul-api.ts";
@@ -16,7 +17,7 @@ import {
   taperLesChiffres,
   valider,
 } from "./calcul-fluence-addition.steps.ts";
-import { BIBLIOTHEQUE, bulle, entendu, etat, injecter, jouerLaSeanceComplete, type LeconBrute } from "./etapes-puis-exercices.steps.ts";
+import { BIBLIOTHEQUE, bulle, entendu, etat, injecter, jouerLaSeanceComplete, toutesLesParoles, type LeconBrute } from "./etapes-puis-exercices.steps.ts";
 import { attendreLaFinDeLaSeance, injecterLesLeconsDeTestDesSons, jouerJusquALaFinDeLaSeance, jouerUnExerciceSeul, partie } from "./etoiles-et-fin-de-seance.steps.ts";
 import {
   avancerJusquAuxChoix,
@@ -282,6 +283,7 @@ BeforeStep({ tags: "@issue-97 or @issue-102 or @issue-128" }, async ({ page, $st
 
 /** Finit les paroles une à une (la phrase de fin en a plusieurs), jusqu'à ce que plus rien ne se dise pendant un moment. */
 async function laisserLaParoleFinir(page: Page): Promise<void> {
+  if (await page.getByTestId("fin-de-seance").count() > 0) await laisserDireLaPhraseDeFin(page);
   let precedent = -1;
   await expect.poll(async () => {
     await terminerLaLecture(page);
@@ -291,6 +293,27 @@ async function laisserLaParoleFinir(page: Page): Promise<void> {
     precedent = paroles.length;
     return stable;
   }, { intervals: [100], timeout: DELAI_DE_L_ATTENTE_MS }).toBe(true);
+}
+
+/**
+ * La phrase de fin n'est dite qu'une fois toutes les lectures de l'écran prêtes (quête, badge, épisode…) : on attend qu'elle ait
+ * été DITE en entier (sa bulle est affichée et son texte est dans le journal), puis on la termine et on exige le silence.
+ */
+async function laisserDireLaPhraseDeFin(page: Page): Promise<void> {
+  const sansEspace = (t: string) => t.replace(/[\s,]+/g, "");
+  await expect(bulle(page)).toHaveAttribute("data-nature", /^(felicitation|encouragement)$/, { timeout: DELAI_DE_L_ATTENTE_MS });
+  await expect.poll(async () => {
+    const texte = normaliser((await bulle(page).textContent()) ?? "");
+    const dites = sansEspace((await toutesLesParoles(page)).join(""));
+    if (texte !== "" && dites.includes(sansEspace(entendu(texte)))) return true;
+    await terminerLaLecture(page);
+    return false;
+  }, { intervals: [100], timeout: DELAI_DE_L_ATTENTE_MS }).toBe(true);
+  await terminerLaLecture(page);
+  await expect.poll(
+    async () => await page.evaluate(() => (Reflect.get(window, "__faux") as { actifs: unknown[] }).actifs.length),
+    { intervals: [100], timeout: DELAI_DE_L_ATTENTE_MS },
+  ).toBe(0);
 }
 
 // --- Lire ce que le navigateur a noté
@@ -476,7 +499,7 @@ Then(
   /^Léa entend l'effet sonore « texte complet » avant que Noisette dise une félicitation, suivie de « ([^«»]+) »$/,
   async ({ page }, explication: string) => {
     await effetPuisParole(page, ["texte complet"], "felicitation", false);
-    const texte = normaliser((await bulleDuPersonnage(page).textContent()) ?? "");
+    const texte = sansLaQueteAccomplie(normaliser((await bulleDuPersonnage(page).textContent()) ?? ""));
     expect(texte.endsWith(` ${explication}`), texte).toBe(true);
   },
 );

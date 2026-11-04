@@ -1,3 +1,4 @@
+import { sansLaQueteAccomplie } from "../support/phrase-de-fin-avec-la-quete.ts";
 import { expect, type Locator, type Page } from "@playwright/test";
 import { createBdd } from "playwright-bdd";
 import { type Monde, type ProfilPrepare, test } from "./fixtures.ts";
@@ -341,7 +342,7 @@ function prononce(texte: string): string {
 
 Then(/^Noisette dit une félicitation, suivie de « (.+) »$/, async ({ page }, explication: string) => {
   await expect(bulle(page)).toHaveAttribute("data-nature", "felicitation");
-  const texte = normaliser((await bulle(page).textContent()) ?? "");
+  const texte = sansLaQueteAccomplie(normaliser((await bulle(page).textContent()) ?? ""));
   expect(texte.endsWith(` ${explication}`), texte).toBe(true);
   expect(FELICITATIONS_DE_NOISETTE).toContain(texte.slice(0, texte.length - explication.length - 1));
   const sansEspace = (t: string) => t.replace(/[\s,]+/g, "");

@@ -193,8 +193,7 @@ async function atteindreLAccueilDeLea(famille: Famille, page: Page): Promise<voi
     if (await accueil(page).isVisible()) return;
     if (await finDeSeance.isVisible()) {
       await finDeSeance.getByRole("button", { name: "Accueil", exact: true }).click();
-      // « Accueil » ramène à « Qui joue ? » sans recharger : Léa s'y choisit de nouveau, ses envois de séance suivent.
-      await choisirSonProfil(page, "Léa");
+      // « Accueil » mène à l'accueil de l'enfant, sans recharger : ce que l'appareil garde en mémoire (envois de séance) suit.
       await expect(accueil(page)).toBeVisible();
       return;
     }

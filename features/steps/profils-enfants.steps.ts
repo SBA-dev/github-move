@@ -158,7 +158,9 @@ export async function ouvrirQuiJoue(page: Page): Promise<Locator> {
   if (page.url() === "about:blank") await page.goto("/");
   // Story #27 : depuis le test de départ, on revient à « Qui joue ? » dans l'application, sans recharger la page (le test fait
   // pendant l'utilisation et le réseau coupé en dépendent).
-  if (new URL(page.url()).pathname === "/test-de-depart") {
+  // Même chose depuis l'accueil de l'enfant (où l'on arrive en quittant une fin de séance par « Accueil ») : le nom de l'application
+  // mène toujours à « Qui joue ? », et recharger la page perdrait ce que l'appareil garde en mémoire.
+  if (["/test-de-depart", "/jeu"].includes(new URL(page.url()).pathname)) {
     await page.getByRole("banner").getByRole("button", { name: "Savanturier" }).click();
   }
   const dejaLa = await quiJoue(page).or(quitter).waitFor({ timeout: 5_000 }).then(() => true, () => false);
