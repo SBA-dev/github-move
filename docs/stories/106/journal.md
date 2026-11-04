@@ -70,3 +70,11 @@ Branche de base : `main` (`597a4a5`). Branche : `feature/106b-celebration-danse`
 - RED `5916536` (rouge de compilation : `VARIANTES_DES_UNIVERS` non exporté), GREEN `9d9304d` (entrée `danse`, `VARIANTES_DES_UNIVERS`, `UniversCelebre`, `VarianteDe<U>`, union discriminée), refactor `389e62f` (le front tire les clés Sports du domaine).
 - `418a489` : le test « univers pas encore livré » de `celebrationDeLaFin` prend `animaux` (Danse est livré).
 - `deno test` : 2808 verts ; `tsc` OK.
+- Revue delta du bloc (`5916536..418a489`) : APPROUVÉ. Non bloquants : `418a489` aurait dû être dans le RED (précondition changée par Danse livré ; branche déjà poussée, pas de réécriture) ; type de `VARIANTES_DES_UNIVERS` trop large ; aucun garde-fou pour un univers oublié dans `celebrationDe`.
+- Correction des non bloquants : RED `97eb6cf` (test de typage TS2322, garde-fou d'exhaustivité), GREEN `3e53fef` (type mappé), refactor `a0a9d87` (table `CELEBRANTS` : un univers oublié ne compile plus). `deno test` : 2810 verts.
+
+### Câblage
+- `6142e72` : code commun des scènes dans `src/univers/celebrations/commun/`, Sports chargé à la demande.
+- `b1fbfb7` : scène Danse (Lili) chargée à la demande, ids `danse-`, pétales sur canvas, image fixe en mouvements réduits. Morceaux : principal 1 335 → 1 299 kB ; Sports 33,7 kB ; Danse 35,7 kB ; commun 5,5 kB ; tous précachés par le service worker.
+- `1314434` : planches de Lili (`captures/106b-lili-clair.png`, `106b-lili-sombre.png`), relues contre la règle absolue par l'orchestrateur : rien à signaler. Présentées au PO (#106.29 validation, #106.30 zone de peau sous la chevelure en vue de dos, comme la maquette).
+- Steps E2E `995ea86` (non lancés : verrou `base` demandé, 3e dans la file derrière #137 et #130).
