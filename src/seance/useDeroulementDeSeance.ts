@@ -15,6 +15,7 @@ import {
   type PersonnageGuide,
   parolesDeFinDeSeance,
   phraseDeFinAvecLaQuete,
+  inviterAReleverLeGrandDefi,
   phraseDeFinAvecLeDefi,
   phraseDeFinAvecLesNouveautes,
 } from "@domain/motivation";
@@ -348,11 +349,11 @@ export function useDeroulementDeSeance(
     const effetsAvant = effetsDeLaFinDeSeance(etoiles, nouveautes, issueDuRecord.current);
     if (etoiles === undefined) return direLaFinDeLaFluenceSeule(nouveautes, effetsAvant);
     const felicitation = parolesDeFinDeSeance(etoiles, prenom, personnageGuide, hasardDuNavigateur);
-    const texte = phraseDeFinAvecLeDefi(
-      phraseDeFinAvecLaQuete(phraseDeFinAvecLesNouveautes(felicitation, nouveautes), prenom, nouveautes.queteAccomplie),
-      prenom,
-      nouveautes.defiOuvert?.numero,
-    );
+    const phraseDeFin = phraseDeFinAvecLaQuete(phraseDeFinAvecLesNouveautes(felicitation, nouveautes), prenom, nouveautes.queteAccomplie);
+    const { defiOuvert } = nouveautes;
+    const texte = defiOuvert?.grandDefi === true
+      ? `${phraseDeFin} ${inviterAReleverLeGrandDefi({ prenom, matiere: defiOuvert.matiere.code })}`
+      : phraseDeFinAvecLeDefi(phraseDeFin, prenom, defiOuvert?.numero);
     void dire({ texte, nature: "felicitation", humeur: "applaudit", effetsAvant });
   }, [dire, prenom, personnageGuide, issueDuRecord, direLaFinDeLaFluenceSeule]);
 
