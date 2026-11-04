@@ -135,3 +135,9 @@ Deno.test("un jour de défi qui n'est pas au format AAAA-MM-JJ est refusé", () 
     assertThrows(() => lire({ ...corpsValide(), jour }), EntreeInvalide, "jour");
   }
 });
+
+Deno.test("le corps d'un grand défi est lu avec sa matière, sa classe et sa marque, sans numéro", () => {
+  const corps = { ...corpsValide(), defi: { matiere: "maths", niveau: "CE1", grandDefi: true } };
+
+  assertEquals(lire(corps).defi, { matiere: matiereDeCode("maths"), niveau: Niveau.de("CE1"), grandDefi: true });
+});
