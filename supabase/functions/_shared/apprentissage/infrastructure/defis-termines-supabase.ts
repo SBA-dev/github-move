@@ -12,7 +12,7 @@ function releveDeLaLigne({ matiere, classe, numero }: LigneDeDefi): DefiReleve |
   if (!estUneMatiere(matiere)) return undefined;
   try {
     const defi = { matiere: matiereDeCode(matiere), niveau: Niveau.de(classe) };
-    return numero === undefined ? { ...defi, grandDefi: true } : { ...defi, numero };
+    return numero === undefined ? { ...defi, grandDefi: true as const } : { ...defi, numero };
   } catch (cause) {
     if (cause instanceof NiveauInconnu) return undefined;
     throw cause;

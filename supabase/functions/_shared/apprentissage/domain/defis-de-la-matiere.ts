@@ -21,7 +21,9 @@ export function grandDefiDeLaMatiere(parcours: Parcours, matiere: Matiere, nivea
   return lecons.length === 0 ? undefined : { matiere, niveau, grandDefi: true, lecons };
 }
 
-export type DefiReleve = Readonly<{ matiere: Matiere; niveau: Niveau; numero?: number; grandDefi?: true }>;
+export type DefiReleve =
+  | Readonly<{ matiere: Matiere; niveau: Niveau; numero: number; grandDefi?: undefined }>
+  | Readonly<{ matiere: Matiere; niveau: Niveau; numero?: undefined; grandDefi: true }>;
 
 export function releveDuDefi(defi: Defi | GrandDefi): DefiReleve {
   const { matiere, niveau } = defi;
@@ -71,7 +73,7 @@ function vientDOuvrir(
 
 function estLeMemeDefi(a: DefiReleve, b: Defi | GrandDefi | DefiReleve): boolean {
   return a.matiere.code === b.matiere.code && a.niveau.valeur === b.niveau.valeur &&
-    a.numero === b.numero;
+    estUnGrandDefi(a) === estUnGrandDefi(b) && a.numero === b.numero;
 }
 
 function estReussieDansLeParcours(parcours: Parcours, id: LeconId): boolean {

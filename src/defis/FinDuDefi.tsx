@@ -33,10 +33,9 @@ type Props = {
 };
 
 function parolesDeFin(releve: DefiReleve, prenom: string, dejaReleve: boolean): string {
-  const { numero } = releve;
-  return numero === undefined
+  return releve.grandDefi === true
     ? parolesDeFinDeGrandDefi({ prenom, matiere: releve.matiere.code, dejaReleve })
-    : parolesDeFinDeDefi({ prenom, numeroDuDefi: numero, dejaReleve });
+    : parolesDeFinDeDefi({ prenom, numeroDuDefi: releve.numero, dejaReleve });
 }
 
 /**

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { MotionConfig } from "motion/react";
 import { type Ecran as EcranDuDomaine, type EtatDeLEspaceParent, estUnEcranDuParent } from "@domain/famille";
-import type { Defi, GrandDefi } from "@domain/apprentissage";
+import { type Defi, estUnGrandDefi, type GrandDefi } from "@domain/apprentissage";
 import type { CodeDeMatiere } from "@domain/catalogue";
 import { universDe } from "@domain/motivation";
 import { EcranDeConnexion, useConnexion } from "./connexion/index.ts";
@@ -285,7 +285,7 @@ export function Application() {
                   )}
                   {lieu.ecran === "defi" && profilCharge && profilEnCours && defiEnCours && (
                     <EcranDeDefi
-                      key={`${profilEnCours.id}/${defiEnCours.matiere.code}/${defiEnCours.numero ?? "grand"}`}
+                      key={`${profilEnCours.id}/${defiEnCours.matiere.code}/${estUnGrandDefi(defiEnCours) ? "grand" : defiEnCours.numero}`}
                       profil={profilEnCours}
                       defi={defiEnCours}
                       univers={univers}

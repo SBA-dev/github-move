@@ -10,7 +10,7 @@ export interface IssueDuDefi {
 
 function memeDefi(a: DefiReleve, b: DefiReleve): boolean {
   return a.matiere.code === b.matiere.code && a.niveau.valeur === b.niveau.valeur &&
-    a.numero === b.numero;
+    estUnGrandDefi(a) === estUnGrandDefi(b) && a.numero === b.numero;
 }
 
 export function defiReleveParLaSeance(relevesAvant: readonly DefiReleve[], defi: DefiReleve): IssueDuDefi {
@@ -28,8 +28,12 @@ function rangDuNiveau(defi: DefiReleve): number {
   return Niveau.tous().findIndex((niveau) => niveau.valeur === defi.niveau.valeur);
 }
 
+function rangDuNumero(defi: DefiReleve): number {
+  return defi.grandDefi === true ? Infinity : defi.numero;
+}
+
 function nomDuDefiReleve(defi: DefiReleve): string {
-  return defi.numero === undefined ? nomDuGrandDefi() : nomDuDefi(defi.numero);
+  return defi.grandDefi === true ? nomDuGrandDefi() : nomDuDefi(defi.numero);
 }
 
 export function lignesDesDefisReleves(defis: readonly DefiReleve[]): string[] {
@@ -37,7 +41,7 @@ export function lignesDesDefisReleves(defis: readonly DefiReleve[]): string[] {
   return sansDoublon
     .sort((a, b) =>
       rangDeLaMatiere(a) - rangDeLaMatiere(b) || rangDuNiveau(a) - rangDuNiveau(b) ||
-      (a.numero ?? Infinity) - (b.numero ?? Infinity)
+      rangDuNumero(a) - rangDuNumero(b)
     )
     .map((defi) => `${nomDuDefiReleve(defi)} · ${libelleCourtDe(defi.matiere.code)} · ${defi.niveau.valeur}`);
 }

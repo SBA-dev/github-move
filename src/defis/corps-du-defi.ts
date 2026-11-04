@@ -8,8 +8,7 @@ type DefiDuCorps =
 function enDefiDuCorps({ defi }: DefiTermineAEnregistrer): DefiDuCorps {
   const matiere = defi.matiere.code;
   const niveau = defi.niveau.valeur;
-  const { numero } = defi;
-  return numero === undefined ? { matiere, niveau, grandDefi: true } : { matiere, niveau, numero };
+  return defi.grandDefi === true ? { matiere, niveau, grandDefi: true } : { matiere, niveau, numero: defi.numero };
 }
 
 /** Le corps JSON attendu par l'Edge Function `terminer-le-defi`. */
