@@ -1,6 +1,7 @@
 import { assertEquals } from "@std/assert";
 import {
   annonceDuDefiOuvert,
+  annonceDuGrandDefiOuvert,
   inviterARelever,
   nomDuDefi,
   nomDuGrandDefi,
@@ -58,4 +59,8 @@ Deno.test("un défi se nomme « Défi » suivi de son numéro", () => {
 
 Deno.test("le grand défi se nomme « Grand défi »", () => {
   assertEquals(nomDuGrandDefi(), "Grand défi");
+});
+
+Deno.test("la fin de séance annonce que le grand défi de la matière est ouvert", () => {
+  assertEquals(annonceDuGrandDefiOuvert("maths"), "Le grand défi des maths est ouvert !");
 });
