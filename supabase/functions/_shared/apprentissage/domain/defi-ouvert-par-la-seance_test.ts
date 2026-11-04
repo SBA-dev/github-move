@@ -69,3 +69,12 @@ Deno.test("la séance qui réussit la dernière leçon manquante de la matière 
 
   assertEquals(defi !== undefined && estUnGrandDefi(defi), true);
 });
+
+Deno.test("la séance qui ouvre le défi 1 et le grand défi ne rend que le grand défi", () => {
+  const avant = parcoursAvecReussies([1, 2, 3, 4, 6, 7, 8, 9, 10]);
+  const apres = parcoursAvecReussies([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+
+  const defi = defiOuvertParLaSeance(avant, apres, maths, ce1, []);
+
+  assertEquals(defi !== undefined && estUnGrandDefi(defi), true);
+});
