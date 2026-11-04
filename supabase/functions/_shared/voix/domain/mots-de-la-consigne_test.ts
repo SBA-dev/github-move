@@ -1,5 +1,6 @@
 import { assertEquals } from "@std/assert";
-import { motsDeLaConsigne } from "./mots-de-la-consigne.ts";
+import { motsDeLaConsigne, rangAffichePourChaqueMotPrononce } from "./mots-de-la-consigne.ts";
+import { texteALire } from "./texte-a-lire.ts";
 
 function motsAvecRang(texteAffiche: string) {
   return motsDeLaConsigne(texteAffiche)
@@ -31,4 +32,13 @@ Deno.test("la concaténation des segments redonne le texte affiché", () => {
   const texte = "« Bonjour », dit  Lumi ___ ! 3 + 4.";
 
   assertEquals(motsDeLaConsigne(texte).map((segment) => segment.texte).join(""), texte);
+});
+
+Deno.test("il y a autant de rangs que de mots dans le texte prononcé par la voix", () => {
+  const texte = "« Bonjour ». Plume ronronne.";
+
+  assertEquals(
+    rangAffichePourChaqueMotPrononce(texte).length,
+    texteALire(texte)?.texte.split(/\s+/).length,
+  );
 });

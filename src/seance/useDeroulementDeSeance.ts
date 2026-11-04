@@ -116,7 +116,7 @@ export function useDeroulementDeSeance(
     reussite,
   });
   const { presenter: presenterLaDictee, taper: taperUneLettre } = dictee;
-  const { ouvrir, presenter, repondre: repondreALaQuestion, relireLaQuestion } = questions;
+  const { ouvrir, presenter, repondre: repondreALaQuestion, relireLaQuestion, relireLeTexte, avantLaLecture } = questions;
   const dependancesDuCalcul = { seance, personnageGuide, dire, signaler, faireSilence, sequence, vivant, redessiner, reussite };
   const calcul = useCalcul(dependancesDuCalcul);
   const illustree = useQuestionIllustree(dependancesDuCalcul);
@@ -153,7 +153,8 @@ export function useDeroulementDeSeance(
   const commencerLaPresentation = useCallback((numero: number) => {
     presentation.current = numero;
     setPresentationAffichee(true);
-  }, []);
+    avantLaLecture();
+  }, [avantLaLecture]);
 
   const terminerLaPresentation = useCallback((numero: number) => {
     if (presentation.current !== numero) return;
@@ -324,10 +325,10 @@ export function useDeroulementDeSeance(
       return;
     }
     if (personnage.parole?.nature === "question" && (relireLaPresentation() || relireLaQuestion())) return;
-    if (memorisation.reecouter()) return;
+    if (relireLeTexte() || memorisation.reecouter()) return;
     sequence.current++;
     relire();
-  }, [reussite.figee, presentationEnCours, ouvrirLExercice, personnage.parole, relireLaPresentation, relireLaQuestion, memorisation.reecouter, relire]);
+  }, [reussite.figee, presentationEnCours, ouvrirLExercice, personnage.parole, relireLaPresentation, relireLaQuestion, relireLeTexte, memorisation.reecouter, relire]);
 
   const { parolesDeFin: parolesDeFinDeLaFluence, issueDuRecord } = fluence;
   /** Une fluence seule a déjà dit ses paroles de fin : elles sont reprises avec ce que la séance a fait gagner. Sans épisode ni quête accomplie, seuls les effets de la fin sont joués. */
@@ -368,6 +369,7 @@ export function useDeroulementDeSeance(
     choixVisiblesPour,
     positionDuTexteEcoute,
     rangDuMotDuTexte,
+    lectureDuTexte,
     bulleEclatee,
     jAiEcoute,
     ecouterLeMot,
@@ -382,6 +384,7 @@ export function useDeroulementDeSeance(
     choixVisiblesPour,
     positionDuTexteEcoute,
     rangDuMotDuTexte,
+    lectureDuTexte,
     bulleEclatee,
     avancementAnnonce,
     jAiEcoute,

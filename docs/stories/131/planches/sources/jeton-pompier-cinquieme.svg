@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+<!-- pastille ronde mate -->
+<circle cx="50" cy="50" r="42" fill="#FFEBDD" stroke="#FF922B" stroke-width="12"/>
+<circle cx="50" cy="50" r="36" fill="none" stroke="#B5301A" stroke-width="2.5"/>
+<!-- casque jaune mat -->
+<path d="M24 66 Q24 30 50 30 Q76 30 76 66 Z" fill="#FFC93C" stroke="#A56F00" stroke-width="3.5" stroke-linejoin="round"/>
+<path d="M18 66 H82 Q82 74 74 74 H26 Q18 74 18 66 Z" fill="#F2B41E" stroke="#A56F00" stroke-width="3.5" stroke-linejoin="round"/>
+<path d="M50 30 V20" stroke="#A56F00" stroke-width="5" stroke-linecap="round"/>
+<path d="M50 30 V62" stroke="#E5A71A" stroke-width="5" stroke-linecap="round"/>
+</svg>

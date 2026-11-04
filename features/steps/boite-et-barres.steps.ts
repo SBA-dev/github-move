@@ -15,13 +15,13 @@ import { estSurUnProfilReel, jouerAvecLeProfilReel } from "./profil-reel.ts";
 // précèdent celle d'un scénario sont calculées par le test, à partir de la leçon, jamais lues dans l'application.
 // Les leçons de test sont ajoutées à la réponse de /bibliotheque.json par le navigateur du test (voir #16).
 
-const { Given, When, Then } = createBdd(test, { tags: "@issue-21" });
-// Trois étapes servent aussi à #128 (clavier de cristaux d'une boîte à jetons) ; les autres restent à #21.
-const { Given: GivenDe21Et128, When: WhenDe21Et128, Then: ThenDe21Et128 } = createBdd(test, { tags: "@issue-21 or @issue-128" });
+const { Given, When, Then } = createBdd(test, { tags: "@issue-21 or @issue-131" });
+// Trois étapes servent aussi à #128 (clavier de cristaux d'une boîte à jetons) ; les autres restent à #21 ; toutes servent aussi à #131.
+const { Given: GivenDe21Et128, When: WhenDe21Et128, Then: ThenDe21Et128 } = createBdd(test, { tags: "@issue-21 or @issue-128 or @issue-131" });
 
 type Acteur = "Léa" | "Tom";
-type Mecanique = "boite" | "barres";
-type Item = Record<string, unknown>;
+export type Mecanique = "boite" | "barres";
+export type Item = Record<string, unknown>;
 
 type Partie21 = {
   acteur: Acteur;
@@ -37,7 +37,7 @@ type Partie21 = {
 
 const parties = new WeakMap<Page, Partie21>();
 
-function partie21(page: Page): Partie21 {
+export function partie21(page: Page): Partie21 {
   let courante = parties.get(page);
   if (!courante) {
     courante = { acteur: "Léa", lecon: undefined, mecanique: "boite", rang: 0, titreDeLExercice: "", tomPrepare: false, leconDeTest: false };
@@ -91,7 +91,7 @@ function reponseDuProbleme(item: Item): number {
   return tout - (parties.find((partie) => partie !== null) ?? 0);
 }
 
-function reponseDe(mecanique: Mecanique, item: Item): number {
+export function reponseDe(mecanique: Mecanique, item: Item): number {
   return mecanique === "boite" ? reponseDeLaBoite(item) : reponseDuProbleme(item);
 }
 
@@ -100,7 +100,7 @@ function itemsDe(partie: Partie21): Item[] {
   return (exercice?.items ?? []) as Item[];
 }
 
-function bonneReponseCourante(page: Page): number {
+export function bonneReponseCourante(page: Page): number {
   const partie = partie21(page);
   const item = itemsDe(partie)[partie.rang];
   if (!item) throw new Error(`Pas de question n°${partie.rang + 1} dans « ${partie.titreDeLExercice} »`);
@@ -123,7 +123,7 @@ async function preparerTomSiBesoin(page: Page, monde: Monde): Promise<void> {
   await preparerProfil(page, prepare);
 }
 
-async function repondreJusteAuxQuestionsQuiPrecedent(page: Page): Promise<void> {
+export async function repondreJusteAuxQuestionsQuiPrecedent(page: Page): Promise<void> {
   const partie = partie21(page);
   const items = itemsDe(partie);
   for (let rang = 0; rang < partie.rang; rang++) {
@@ -145,7 +145,7 @@ async function repondreJusteAuxQuestionsQuiPrecedent(page: Page): Promise<void> 
 }
 
 /** La séance (cet exercice seulement) commence au premier pas qui en a besoin : l'enfant arrive à la question voulue. */
-function preparerLaPartie(page: Page, monde: Monde, lecon: LeconBrute, mecanique: Mecanique, rang: number, deTest = false): void {
+export function preparerLaPartie(page: Page, monde: Monde, lecon: LeconBrute, mecanique: Mecanique, rang: number, deTest = false): void {
   const partie = partie21(page);
   partie.lecon = lecon;
   partie.leconDeTest = deTest;
@@ -223,7 +223,7 @@ async function toutesLesParoles(page: Page): Promise<string[]> {
   });
 }
 
-async function laBoiteEstFermeeEtLEnfantPeutRepondre(page: Page): Promise<void> {
+export async function laBoiteEstFermeeEtLEnfantPeutRepondre(page: Page): Promise<void> {
   await expect.poll(async () => {
     const prete = (await boite(page).getAttribute("data-etat")) === "fermee" && (await clavier(page).or(choixDeLaQuestion(page)).isVisible());
     if (!prete) await terminerLaLecture(page);
@@ -432,15 +432,21 @@ Then(/^les lecteurs d'écran lisent « ([^«»]+) »$/, async ({ page }, descrip
 Then(/^Léa voit la boîte ouverte et ses (\d+) jetons, sans mouvement$/, async ({ page }, total: string) => {
   await expect(boiteAJetons(page)).toHaveAttribute("data-mouvements-reduits", "true");
   await verifierLesJetonsRangesParCinq(page, Number(total));
-  for (const element of [boite(page), jetons(page).first()]) {
-    await expect(element).toHaveCSS("animation-name", "none");
-    await expect(element).toHaveCSS("transition-duration", "0s");
+  // Le couvercle est dessiné en SVG (sans pivot) : on contrôle la boîte, son dessin, les jetons et leurs dessins, avec tous leurs éléments.
+  const dessinDeLaBoite = boite(page).getByTestId("dessin-de-la-boite");
+  await expect(dessinDeLaBoite).toHaveCount(1);
+  await expect(jetons(page).first()).toBeVisible();
+  for (const racine of [boite(page), dessinDeLaBoite, jetons(page), page.getByTestId("dessin-du-jeton")]) {
+    const mouvements = await racine.evaluateAll((elements) =>
+      elements.flatMap((element) => [element, ...element.querySelectorAll("*")]).flatMap((cible) =>
+        ["", "::before", "::after"].map((pseudo) => {
+          const style = getComputedStyle(cible, pseudo || null);
+          return { animation: style.animationName, transition: style.transitionDuration, enCours: cible.getAnimations().length };
+        })
+      )
+    );
+    expect(mouvements.filter((m) => m.animation !== "none" || m.transition.split(",").some((d) => d.trim() !== "0s") || m.enCours > 0), "animation ou transition en cours").toEqual([]);
   }
-  const couvercle = await boite(page).evaluate((element) => {
-    const style = getComputedStyle(element, "::before");
-    return { transition: style.transitionDuration, animation: style.animationName };
-  });
-  expect(couvercle).toEqual({ transition: "0s", animation: "none" });
 });
 
 Then(/^les barres du schéma restent proportionnelles aux nombres (\d+) et (\d+)$/, async ({ page }, petit: string, grand: string) => {

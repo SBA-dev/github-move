@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 48">
+<!-- bande unie, un embout à chaque bout -->
+<rect x="4" y="13" width="102" height="26" rx="4" fill="#9FB2E6" stroke="#1F2F82" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="4" y="13" width="12" height="26" rx="4" fill="#3450C8" stroke="#1F2F82" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/><rect x="94" y="13" width="12" height="26" rx="4" fill="#3450C8" stroke="#1F2F82" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+</svg>

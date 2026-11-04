@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 288 250">
+<defs><radialGradient id="b-sports-f-c" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#6FA6F0"/><stop offset="1" stop-color="#2F6FCF"/></radialGradient><radialGradient id="b-sports-f-l" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#8DB9F5"/><stop offset="1" stop-color="#3F7FE0"/></radialGradient><clipPath id="b-sports-f-corps"><path d="M18 72 H270 V204 Q270 246 228 246 H60 Q18 246 18 204 Z"/></clipPath><clipPath id="b-sports-f-rebord"><rect x="0" y="204" width="288" height="46"/></clipPath></defs>
+<!-- poignée --><path d="M96 48 Q96 12 144 12 Q192 12 192 48" fill="none" stroke="#164BA8" stroke-width="10" stroke-linecap="round"/>
+<!-- corps -->
+<path d="M18 72 H270 V204 Q270 246 228 246 H60 Q18 246 18 204 Z" fill="url(#b-sports-f-c)" stroke="#164BA8" stroke-width="4" stroke-linejoin="round"/>
+<g clip-path="url(#b-sports-f-corps)"><rect x="18" y="150" width="252" height="24" fill="#FFFFFF" opacity=".9"/></g>
+<!-- couvercle fermé : rien ne laisse deviner les jetons -->
+<path d="M16 60 Q16 40 40 40 H248 Q272 40 272 60 V84 Q272 112 244 112 H44 Q16 112 16 84 Z" fill="url(#b-sports-f-l)" stroke="#164BA8" stroke-width="4" stroke-linejoin="round"/>
+<path d="M144 40 V112" stroke="#FFFFFF" stroke-width="12" opacity=".9"/><circle cx="144" cy="106" r="9" fill="#FFFFFF" stroke="#164BA8" stroke-width="4"/>
+
+</svg>

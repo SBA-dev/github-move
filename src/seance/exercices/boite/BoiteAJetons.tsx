@@ -1,7 +1,10 @@
+import { useId } from "react";
 import { useReducedMotion } from "motion/react";
 import type { BoiteEnCours, BoiteOuverte } from "@domain/apprentissage";
 import type { ItemDeBoite } from "@domain/catalogue";
+import { useUnivers } from "../../../univers/index.ts";
 import { ReponseAuCalcul } from "../ReponseAuCalcul.tsx";
+import { DESSINS_DES_BOITES } from "./dessins/boites.tsx";
 import { RangeesDeJetons } from "./RangeesDeJetons.tsx";
 
 type Props = {
@@ -19,8 +22,11 @@ type Props = {
 
 export function BoiteAJetons({ boite, item, phrasesDites, ouverte, ...reponse }: Props) {
   const mouvementsReduits = useReducedMotion() ?? false;
+  const univers = useUnivers();
+  const p = useId();
   const deroulee = phrasesDites >= boite.deroulement.length;
   const etat = ouverte !== undefined || !deroulee ? "ouverte" : "fermee";
+  const dessin = DESSINS_DES_BOITES[univers];
   return (
     <div
       className="boite-a-jetons"
@@ -32,28 +38,41 @@ export function BoiteAJetons({ boite, item, phrasesDites, ouverte, ...reponse }:
         className="boite"
         data-testid="boite"
         data-etat={etat}
+        data-univers={univers}
         role="img"
         aria-label={libelleDeLaBoite(etat, ouverte)}
       >
-        <div className="contenu-de-la-boite">
-          {ouverte !== undefined
-            ? <RangeesDeJetons nombre={ouverte.jetons} />
-            : !deroulee && item && <JetonsDuDeroule item={item} phrasesDites={phrasesDites} />}
-        </div>
+        <svg className="dessin-de-la-boite" data-testid="dessin-de-la-boite" viewBox="0 0 288 250" aria-hidden="true" focusable="false">
+          {etat === "fermee" ? dessin.fermee(p) : dessin.ouverteDerriere(p)}
+        </svg>
+        {etat === "ouverte" && (
+          <>
+            <div className="contenu-de-la-boite">
+              {ouverte !== undefined
+                ? <RangeesDeJetons nombre={ouverte.jetons} mouvement="pose" />
+                : item && <JetonsDuDeroule item={item} phrasesDites={phrasesDites} />}
+            </div>
+            <svg className="rebord-de-la-boite" viewBox="0 0 288 250" aria-hidden="true" focusable="false">
+              {dessin.ouverteDevant(p)}
+            </svg>
+          </>
+        )}
       </div>
       {deroulee && <ReponseAuCalcul calcul={boite} reussi={ouverte !== undefined} {...reponse} />}
     </div>
   );
 }
 
+const PHRASE_DES_JETONS_AJOUTES_OU_RETIRES = 2;
+
+/** Les jetons du déroulé : les premiers tombent dans la boîte, puis on en ajoute (ils tombent à part) ou on en retire (ils pâlissent). */
 function JetonsDuDeroule({ item: { a, sens, b }, phrasesDites }: { readonly item: ItemDeBoite; readonly phrasesDites: number }) {
   if (phrasesDites === 0) return null;
-  if (phrasesDites === 1) return <RangeesDeJetons nombre={a} />;
-  if (sens === "retrait") return <RangeesDeJetons nombre={a} sortants={b} />;
+  const secondeEtape = phrasesDites >= PHRASE_DES_JETONS_AJOUTES_OU_RETIRES;
   return (
     <>
-      <RangeesDeJetons nombre={a} />
-      <RangeesDeJetons nombre={b} nouveaux />
+      <RangeesDeJetons nombre={a} mouvement="tombe" sortants={secondeEtape && sens === "retrait" ? b : 0} />
+      {secondeEtape && sens !== "retrait" && <RangeesDeJetons nombre={b} mouvement="tombe" nouveaux />}
     </>
   );
 }
