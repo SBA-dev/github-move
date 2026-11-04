@@ -1,7 +1,7 @@
 import { assertEquals } from "@std/assert";
 import { lireLecon, matiereDeCode, Niveau } from "../../catalogue/domain/index.ts";
 import type { Lecon } from "../../catalogue/domain/index.ts";
-import { defiOuvertParLaSeance } from "./defis-de-la-matiere.ts";
+import { defiOuvertParLaSeance, estUnGrandDefi } from "./defis-de-la-matiere.ts";
 import { Etoiles } from "./etoiles.ts";
 import { parcoursDeLaMatiere } from "./parcours.ts";
 
@@ -61,9 +61,11 @@ Deno.test("un défi déjà relevé ne s'ouvre pas de nouveau", () => {
   assertEquals(defiOuvertParLaSeance(avant, apres, maths, ce1, defisReleves), undefined);
 });
 
-Deno.test("terminer la dernière partie de la matière n'ouvre aucun défi", () => {
+Deno.test("la séance qui réussit la dernière leçon manquante de la matière ouvre le grand défi", () => {
   const avant = parcoursAvecReussies([1, 2, 3, 4, 5, 6, 7, 8, 9]);
   const apres = parcoursAvecReussies([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 
-  assertEquals(defiOuvertParLaSeance(avant, apres, maths, ce1, []), undefined);
+  const defi = defiOuvertParLaSeance(avant, apres, maths, ce1, []);
+
+  assertEquals(defi !== undefined && estUnGrandDefi(defi), true);
 });
