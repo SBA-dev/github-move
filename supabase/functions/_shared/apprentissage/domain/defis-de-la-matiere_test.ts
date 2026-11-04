@@ -1,7 +1,7 @@
 import { assertEquals } from "@std/assert";
 import { lireLecon, matiereDeCode, Niveau } from "../../catalogue/domain/index.ts";
 import type { Lecon } from "../../catalogue/domain/index.ts";
-import { defisDeLaMatiere, grandDefiDeLaMatiere } from "./defis-de-la-matiere.ts";
+import { defisDeLaMatiere, defisDuParcours, grandDefiDeLaMatiere } from "./defis-de-la-matiere.ts";
 import { parcoursDeLaMatiere } from "./parcours.ts";
 
 function lecon(index: number): Lecon {
@@ -116,4 +116,31 @@ Deno.test("le grand défi porte sa marque grandDefi, sans numéro", () => {
     grandDefi: true,
     lecons: ["ma-ce1-1", "ma-ce1-2", "ma-ce1-3"],
   });
+});
+
+function defisDuParcoursPour(nombreDeLecons: number, codeDeMatiere: "maths" | "sciences" = "maths") {
+  const lecons = Array.from({ length: nombreDeLecons }, (_, index) => lecon(index + 1));
+  const niveau = Niveau.de("CE1");
+  const matiere = matiereDeCode(codeDeMatiere);
+  const parcours = parcoursDeLaMatiere({ lecons, niveau, meilleuresEtoiles: new Map() }, matiere);
+  return defisDuParcours(parcours, matiere, niveau);
+}
+
+Deno.test("les défis du parcours sont ceux de ses parties, puis le grand défi en dernier", () => {
+  const defis = defisDuParcoursPour(13);
+
+  assertEquals(defis.map(({ numero, grandDefi }) => [numero, grandDefi]), [[1, undefined], [2, undefined], [
+    undefined,
+    true,
+  ]]);
+});
+
+Deno.test("une matière d'une seule partie n'a que le grand défi", () => {
+  const defis = defisDuParcoursPour(3);
+
+  assertEquals(defis.map(({ grandDefi, lecons }) => [grandDefi, lecons.length]), [[true, 3]]);
+});
+
+Deno.test("une matière sans leçon dans la classe n'a aucun défi", () => {
+  assertEquals(defisDuParcoursPour(3, "sciences"), []);
 });
