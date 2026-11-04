@@ -12,6 +12,7 @@ import {
   nomDuGrandDefi,
   parolesDeDebutDeDefi,
   parolesDeDebutDeGrandDefi,
+  parolesDeDebutDuDefi,
   parolesDeFinDeDefi,
   parolesDeFinDeGrandDefi,
   phraseDeFinAvecLeDefi,
@@ -143,4 +144,11 @@ Deno.test("la phrase de fin propose le défi que la séance vient d'ouvrir, comm
 
 Deno.test("la phrase de fin reste telle quelle quand la séance n'ouvre aucun défi", () => {
   assertEquals(phraseDeFinAvecLeDefiOuvert("À demain !", "Léa", undefined), "À demain !");
+});
+
+Deno.test("au début d'un défi, les paroles comptent les leçons du défi ; au début du grand défi, elles nomment la matière", () => {
+  assertEquals([parolesDeDebutDuDefi(defiNumero2), parolesDeDebutDuDefi(grandDefiDesMaths)], [
+    "Voici des questions de 3 leçons que tu connais. Prends ton temps, je suis avec toi !",
+    "Voici des questions de toutes tes leçons de maths. Prends ton temps, je suis avec toi !",
+  ]);
 });
