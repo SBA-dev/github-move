@@ -1,4 +1,4 @@
-import { type CSSProperties, type MutableRefObject, useCallback, useEffect, useState } from "react";
+import { type CSSProperties, type MutableRefObject, useCallback, useEffect, useRef, useState } from "react";
 import { TexteEnSyllabes } from "../../../reglages/index.ts";
 import { useRetourDe } from "../../../retours/index.ts";
 import { useMouvementsReduits } from "../../../transitions/mouvements-reduits.ts";
@@ -25,12 +25,13 @@ export function PetitTrain({ elements, nombrePosees, versDeLaPoesie, depart }: P
   const univers = useUnivers();
   const { tete, wagon } = DESSINS_DU_PETIT_TRAIN[univers];
   const [etat, setEtat] = useState<"au-repos" | "avance">("au-repos");
-  const avancerDUnCran = useCallback(() => setEtat("avance"), []);
-  useEffect(() => {
-    if (etat !== "avance") return;
-    const minuteur = setTimeout(() => setEtat("au-repos"), DUREE_DU_CRAN_MS);
-    return () => clearTimeout(minuteur);
-  }, [etat]);
+  const finDuCran = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const avancerDUnCran = useCallback(() => {
+    clearTimeout(finDuCran.current);
+    setEtat("avance");
+    finDuCran.current = setTimeout(() => setEtat("au-repos"), DUREE_DU_CRAN_MS);
+  }, []);
+  useEffect(() => () => clearTimeout(finDuCran.current), []);
 
   return (
     <div
