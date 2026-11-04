@@ -65,3 +65,10 @@
   refactors `e2c0480`, `47cf431`. Revue delta : **APPROUVÉ**. Non bloquants laissés en dette : nom `nomDuDefiOuvert`
   (sert aussi aux défis relevés), index de Motivation qui exporte encore les fonctions détaillées.
 - 23:25 UTC : intégration de `main` (`597a4a5`, #140) sans conflit : 2871 tests, lint, fmt, tsc, build, bddgen verts.
+
+## Étape 5 : E2E
+
+- 22:54 UTC : VERROU `base` accordé à #137 (annonce du responsable, tableau de #64). Sonde `admin/users` : 1,10 s,
+  0,50 s, 0,51 s. Registre de `savanturier-dev` : 14 migrations, seule `20261104090000_grands_defis_termines` en attente.
+  Appliquée par l'API de gestion (`scripts/exploitation/migrations.py` sur le projet de dev). `terminer-le-defi`
+  redéployée sur le projet de dev.
