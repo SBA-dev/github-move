@@ -1,11 +1,22 @@
 import { Jour, type DefiTermineAEnregistrer } from "@domain/apprentissage";
 import { enReponseEnvoyee, type ReponseEnvoyee } from "../seance/fin-de-seance/corps-de-la-seance.ts";
 
+type DefiDuCorps =
+  | { readonly matiere: string; readonly niveau: string; readonly numero: number }
+  | { readonly matiere: string; readonly niveau: string; readonly grandDefi: true };
+
+function enDefiDuCorps({ defi }: DefiTermineAEnregistrer): DefiDuCorps {
+  const matiere = defi.matiere.code;
+  const niveau = defi.niveau.valeur;
+  const { numero } = defi;
+  return numero === undefined ? { matiere, niveau, grandDefi: true } : { matiere, niveau, numero };
+}
+
 /** Le corps JSON attendu par l'Edge Function `terminer-le-defi`. */
 export type CorpsDuDefi = {
   readonly id: string;
   readonly enfant: string;
-  readonly defi: { readonly matiere: string; readonly niveau: string; readonly numero: number };
+  readonly defi: DefiDuCorps;
   readonly questions: readonly string[];
   readonly tirages: readonly (readonly string[])[];
   readonly reponses: readonly (readonly ReponseEnvoyee[])[];
@@ -14,12 +25,10 @@ export type CorpsDuDefi = {
 };
 
 export function enCorpsDuDefi(envoi: DefiTermineAEnregistrer): CorpsDuDefi {
-  const { numero } = envoi.defi;
-  if (numero === undefined) throw new Error("L'envoi d'un grand défi n'est pas encore pris en charge.");
   return {
     id: envoi.id,
     enfant: envoi.enfant,
-    defi: { matiere: envoi.defi.matiere.code, niveau: envoi.defi.niveau.valeur, numero },
+    defi: enDefiDuCorps(envoi),
     questions: envoi.questions.map(({ valeur }) => valeur),
     tirages: envoi.tirages,
     reponses: envoi.reponses.map((reponses) => reponses.map(enReponseEnvoyee)),
