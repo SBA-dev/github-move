@@ -146,13 +146,19 @@ Deno.test("une question répondue juste du premier coup n'est pas ratée", () =>
 });
 
 Deno.test("un défi dont le numéro n'existe pas est refusé", () => {
-  const envoi = { ...envoiValide, defi: { ...envoiValide.defi, numero: 99 } };
+  const envoi = {
+    ...envoiValide,
+    defi: { matiere: envoiValide.defi.matiere, niveau: envoiValide.defi.niveau, numero: 99 },
+  };
 
   assertThrows(() => revalider(envoi), DefiInconnu);
 });
 
 Deno.test("le défi de la dernière partie du parcours n'existe pas", () => {
-  const envoi = { ...envoiValide, defi: { ...envoiValide.defi, numero: 2 } };
+  const envoi = {
+    ...envoiValide,
+    defi: { matiere: envoiValide.defi.matiere, niveau: envoiValide.defi.niveau, numero: 2 },
+  };
 
   assertThrows(() => revalider(envoi, { reussies: lecons.map(({ id }) => id) }), DefiInconnu);
 });

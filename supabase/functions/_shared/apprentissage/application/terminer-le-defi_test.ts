@@ -217,7 +217,8 @@ Deno.test("un parent non rattaché au profil ne peut rien enregistrer", async ()
 
 Deno.test("un défi refusé par la revalidation n'écrit rien, ni défi ni file de révision", async () => {
   const { files, defis, terminer } = monde(laFileDuProfil());
-  const inconnu = { ...defiJoue(), defi: { ...defiJoue().defi, numero: 99 } };
+  const envoi = defiJoue();
+  const inconnu = { ...envoi, defi: { matiere: envoi.defi.matiere, niveau: envoi.defi.niveau, numero: 99 } };
 
   await assertRejects(() => terminer.executer({ parent: "parent-paul", defi: inconnu }), DefiInconnu);
   assertEquals(defis.tous(), []);
