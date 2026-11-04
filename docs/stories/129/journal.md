@@ -79,10 +79,16 @@ Numéro de décision : aucun réservé (prochain libre 0040, à demander par DÉ
 | Cycles de review | Revue intermédiaire Voix : 1 À CORRIGER (`».`, `»,`), puis APPROUVÉ. Review complète : 1 À CORRIGER (« Réécouter », cadre décollé), puis APPROUVÉ. Trois deltas APPROUVÉS du premier coup : intégration de `main`, étape #129.12, delta final |
 | Cycles TDD | 2 cycles dans le domaine Voix : `phrasesDesMotsAffiches`, puis le bug du guillemet fermant, corrigé à la source, ce qui répare aussi le surlignage existant |
 | Cycles E2E | 5 lancements. 3 rendus inexploitables par les 504 (61/98, 3/98, 64/77). 1 complet (73/77), puis les rejeux. Les KO venaient de 3 étapes (absence de synthèse, « Réécouter » en poésie, voix bloquée #129.12) et d'1 bug de l'application (interligne du mode dys) |
-| Intégrations de `main` | 2. #128 : 5 conflits de tags dans les steps, les deux ajouts gardés. #146 : sans conflit |
+| Intégrations de `main` | 3. #128 : 5 conflits de tags dans les steps, les deux ajouts gardés. #146 : sans conflit. #131 : 5 conflits de tags, les deux ajouts gardés |
 | Escalades | 1 : #129.12, réponse A |
 | Verrous | `base`, comme file des runs E2E (aucune migration), pris 2 fois |
 | Dessins | 6 parchemins d'univers, 1 planche validée du premier coup (« planche 129 OK ») |
 | Captures | 7 : 6 univers et la poésie en Danse |
 | Incidents | Supabase de dev restreint (quota MAU) : ESCALADE groupée, passage au plan Pro, #146. 1 worktree isolé pour corriger sans couper un run E2E |
 | Tokens | relevés par le responsable |
+
+## Merge
+- 11:08 UTC : autorisation de merge relayée par l'annonce [Responsable] 6629089326 sur #64. Réponse du PO : « merge 131 129 141 OK ». Les merges se font un par un, dans l'ordre #131, #129, #141.
+- 11:10 UTC : **VERROU merge** accordé à #129 (annonce 6629134649), et inscrit dans le tableau de #64. #131 est mergée (`8a16227`).
+- 11:15 UTC : **intégration de `main`**, la 3e (#131), en `157dfe1`. Conflits de tags seulement, dans `delais.steps.ts` (1) et `exercices-comme-des-jeux.steps.ts` (4) : les deux ajouts sont gardés. Fusion automatique de `src/styles.css`. Résultats : `tsc`, build, `deno test` (2801), lint, fmt et `bddgen` OK. Sonde OK. **`@issue-129` 77/77** sur `telephone` en 12,5 min avec 3 workers, rejoué en entier parce que les étapes en conflit servent à presque tous les scénarios. Revue du delta de l'intégration : **APPROUVÉ** (rien de caché dans `src/`, aucun sélecteur commun).
+- Conditions remplies : autorisation, verrou, tout vert sur le dernier commit (la PR n'a pas de CI), review APPROUVÉE, y compris sur le delta. Mesures mises à jour : 3 intégrations de `main`, dont 2 avec des conflits de tags.
