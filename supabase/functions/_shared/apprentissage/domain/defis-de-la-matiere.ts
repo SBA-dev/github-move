@@ -17,14 +17,24 @@ export function grandDefiDeLaMatiere(parcours: Parcours, matiere: Matiere, nivea
   return lecons.length === 0 ? undefined : { matiere, niveau, lecons };
 }
 
-export type DefiReleve = Readonly<{ matiere: Matiere; niveau: Niveau; numero: number }>;
+export type DefiReleve =
+  | Readonly<{ matiere: Matiere; niveau: Niveau; numero: number }>
+  | Readonly<{ matiere: Matiere; niveau: Niveau; grandDefi: true }>;
+
+export function estUnGrandDefi(defi: Defi | GrandDefi | DefiReleve): boolean {
+  return !("numero" in defi);
+}
 
 export type EtatDuDefi =
   | { genre: "aVenir"; leconsRestantes: number }
   | { genre: "ouvert" }
   | { genre: "releve" };
 
-export function etatDuDefi(defi: Defi, parcours: Parcours, defisReleves: readonly DefiReleve[]): EtatDuDefi {
+export function etatDuDefi(
+  defi: Defi | GrandDefi,
+  parcours: Parcours,
+  defisReleves: readonly DefiReleve[],
+): EtatDuDefi {
   if (defisReleves.some((releve) => estLeMemeDefi(releve, defi))) return { genre: "releve" };
   const leconsRestantes = defi.lecons.filter((lecon) => !estReussieDansLeParcours(parcours, lecon)).length;
   return leconsRestantes === 0 ? { genre: "ouvert" } : { genre: "aVenir", leconsRestantes };
@@ -43,8 +53,13 @@ export function defiOuvertParLaSeance(
   );
 }
 
-function estLeMemeDefi(a: DefiReleve, b: DefiReleve): boolean {
-  return a.matiere.code === b.matiere.code && a.niveau.valeur === b.niveau.valeur && a.numero === b.numero;
+function estLeMemeDefi(a: DefiReleve, b: Defi | GrandDefi | DefiReleve): boolean {
+  return a.matiere.code === b.matiere.code && a.niveau.valeur === b.niveau.valeur &&
+    numeroDuDefi(a) === numeroDuDefi(b);
+}
+
+export function numeroDuDefi(defi: Defi | GrandDefi | DefiReleve): number | undefined {
+  return "numero" in defi ? defi.numero : undefined;
 }
 
 function estReussieDansLeParcours(parcours: Parcours, id: LeconId): boolean {

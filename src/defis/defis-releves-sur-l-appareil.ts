@@ -1,8 +1,8 @@
-import type { DefiReleve } from "@domain/apprentissage";
+import { type DefiReleve, numeroDuDefi } from "@domain/apprentissage";
 
 const copies = new Map<string, readonly DefiReleve[]>();
 
-const cleDuDefi = ({ matiere, niveau, numero }: DefiReleve): string => `${matiere.code}/${niveau.valeur}/${numero}`;
+const cleDuDefi = (defi: DefiReleve): string => `${defi.matiere.code}/${defi.niveau.valeur}/${numeroDuDefi(defi) ?? "grand"}`;
 
 /** Un défi relevé ne se perd jamais : les nouveaux s'ajoutent à la copie, une seule fois chacun. */
 export function retenirLesDefisReleves(profil: string, defis: readonly DefiReleve[]): readonly DefiReleve[] {

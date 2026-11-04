@@ -1,5 +1,5 @@
 import { libelleCourtDe, Niveau, toutesLesMatieres } from "../../catalogue/domain/index.ts";
-import type { DefiReleve } from "../../apprentissage/domain/index.ts";
+import { type DefiReleve, numeroDuDefi } from "../../apprentissage/domain/index.ts";
 import type { EffetSonore } from "../../voix/domain/index.ts";
 import { nomDuDefi, titreDuDefiReleve } from "./paroles-du-defi.ts";
 
@@ -9,7 +9,8 @@ export interface IssueDuDefi {
 }
 
 function memeDefi(a: DefiReleve, b: DefiReleve): boolean {
-  return a.matiere.code === b.matiere.code && a.niveau.valeur === b.niveau.valeur && a.numero === b.numero;
+  return a.matiere.code === b.matiere.code && a.niveau.valeur === b.niveau.valeur &&
+    numeroDuDefi(a) === numeroDuDefi(b);
 }
 
 export function defiReleveParLaSeance(relevesAvant: readonly DefiReleve[], defi: DefiReleve): IssueDuDefi {
@@ -28,8 +29,17 @@ function rangDuNiveau(defi: DefiReleve): number {
 }
 
 export function lignesDesDefisReleves(defis: readonly DefiReleve[]): string[] {
-  const sansDoublon = defis.filter((defi, i) => defis.findIndex((autre) => memeDefi(autre, defi)) === i);
+  const defisDePartie = defis.flatMap((defi) => {
+    const numero = numeroDuDefi(defi);
+    return numero === undefined ? [] : [{ defi, numero }];
+  });
+  const sansDoublon = defisDePartie.filter(({ defi }, i) =>
+    defisDePartie.findIndex((autre) => memeDefi(autre.defi, defi)) === i
+  );
   return sansDoublon
-    .sort((a, b) => rangDeLaMatiere(a) - rangDeLaMatiere(b) || rangDuNiveau(a) - rangDuNiveau(b) || a.numero - b.numero)
-    .map((defi) => `${nomDuDefi(defi.numero)} · ${libelleCourtDe(defi.matiere.code)} · ${defi.niveau.valeur}`);
+    .sort((a, b) =>
+      rangDeLaMatiere(a.defi) - rangDeLaMatiere(b.defi) || rangDuNiveau(a.defi) - rangDuNiveau(b.defi) ||
+      a.numero - b.numero
+    )
+    .map(({ defi, numero }) => `${nomDuDefi(numero)} · ${libelleCourtDe(defi.matiere.code)} · ${defi.niveau.valeur}`);
 }
