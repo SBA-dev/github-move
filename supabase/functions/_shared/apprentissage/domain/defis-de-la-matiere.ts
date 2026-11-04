@@ -10,7 +10,7 @@ export function defisDeLaMatiere(parcours: Parcours, matiere: Matiere, niveau: N
     .map(({ numero, lecons }) => ({ matiere, niveau, numero, lecons }));
 }
 
-export type GrandDefi = Readonly<{ matiere: Matiere; niveau: Niveau; lecons: readonly LeconId[] }>;
+export type GrandDefi = Readonly<{ matiere: Matiere; niveau: Niveau; numero?: undefined; lecons: readonly LeconId[] }>;
 
 export function grandDefiDeLaMatiere(parcours: Parcours, matiere: Matiere, niveau: Niveau): GrandDefi | undefined {
   const lecons = partiesDuParcours(parcours).flatMap((partie) => partie.lecons);
@@ -19,10 +19,15 @@ export function grandDefiDeLaMatiere(parcours: Parcours, matiere: Matiere, nivea
 
 export type DefiReleve =
   | Readonly<{ matiere: Matiere; niveau: Niveau; numero: number }>
-  | Readonly<{ matiere: Matiere; niveau: Niveau; grandDefi: true }>;
+  | Readonly<{ matiere: Matiere; niveau: Niveau; numero?: undefined; grandDefi: true }>;
+
+export function releveDuDefi(defi: Defi | GrandDefi): DefiReleve {
+  const { matiere, niveau } = defi;
+  return defi.numero === undefined ? { matiere, niveau, grandDefi: true } : { matiere, niveau, numero: defi.numero };
+}
 
 export function estUnGrandDefi(defi: Defi | GrandDefi | DefiReleve): boolean {
-  return !("numero" in defi);
+  return defi.numero === undefined;
 }
 
 export type EtatDuDefi =
@@ -46,11 +51,20 @@ export function defiOuvertParLaSeance(
   matiere: Matiere,
   niveau: Niveau,
   defisReleves: readonly DefiReleve[],
-): Defi | undefined {
-  return defisDeLaMatiere(apres, matiere, niveau).find((defi) =>
-    etatDuDefi(defi, avant, defisReleves).genre === "aVenir" &&
-    etatDuDefi(defi, apres, defisReleves).genre === "ouvert"
-  );
+): Defi | GrandDefi | undefined {
+  const grandDefi = grandDefiDeLaMatiere(apres, matiere, niveau);
+  if (grandDefi && vientDOuvrir(grandDefi, avant, apres, defisReleves)) return grandDefi;
+  return defisDeLaMatiere(apres, matiere, niveau).find((defi) => vientDOuvrir(defi, avant, apres, defisReleves));
+}
+
+function vientDOuvrir(
+  defi: Defi | GrandDefi,
+  avant: Parcours,
+  apres: Parcours,
+  defisReleves: readonly DefiReleve[],
+): boolean {
+  return etatDuDefi(defi, avant, defisReleves).genre === "aVenir" &&
+    etatDuDefi(defi, apres, defisReleves).genre === "ouvert";
 }
 
 function estLeMemeDefi(a: DefiReleve, b: Defi | GrandDefi | DefiReleve): boolean {
@@ -59,7 +73,7 @@ function estLeMemeDefi(a: DefiReleve, b: Defi | GrandDefi | DefiReleve): boolean
 }
 
 export function numeroDuDefi(defi: Defi | GrandDefi | DefiReleve): number | undefined {
-  return "numero" in defi ? defi.numero : undefined;
+  return defi.numero;
 }
 
 function estReussieDansLeParcours(parcours: Parcours, id: LeconId): boolean {

@@ -32,6 +32,9 @@ export class DefisTerminesSupabase implements DefisTermines {
   }
 
   async enregistrer(fait: DefiTermine, { file, versionLue }: FileDeRevisionALEcrire) {
+    if (fait.defi.numero === undefined) {
+      throw new Error("L'enregistrement d'un grand défi n'est pas encore pris en charge.");
+    }
     const { data, error } = await this.clientDuServeur().rpc("enregistrer_le_defi_termine", {
       p_id: fait.id,
       p_profil: fait.enfant,

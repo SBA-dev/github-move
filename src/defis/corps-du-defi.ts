@@ -14,10 +14,12 @@ export type CorpsDuDefi = {
 };
 
 export function enCorpsDuDefi(envoi: DefiTermineAEnregistrer): CorpsDuDefi {
+  const { numero } = envoi.defi;
+  if (numero === undefined) throw new Error("L'envoi d'un grand défi n'est pas encore pris en charge.");
   return {
     id: envoi.id,
     enfant: envoi.enfant,
-    defi: { matiere: envoi.defi.matiere.code, niveau: envoi.defi.niveau.valeur, numero: envoi.defi.numero },
+    defi: { matiere: envoi.defi.matiere.code, niveau: envoi.defi.niveau.valeur, numero },
     questions: envoi.questions.map(({ valeur }) => valeur),
     tirages: envoi.tirages,
     reponses: envoi.reponses.map((reponses) => reponses.map(enReponseEnvoyee)),

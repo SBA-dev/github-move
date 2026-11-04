@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type { DefiReleve, SeanceDeDefi } from "@domain/apprentissage";
+import { type DefiReleve, releveDuDefi, type SeanceDeDefi } from "@domain/apprentissage";
 import {
   type CelebrationDeLaFin,
   celebrationDeLaFin,
@@ -53,13 +53,13 @@ export function FinDuDefi({ seance, prenom, personnage, univers, relevesAvant, o
     const maintenant = new Date();
     const jour = jourDuNavigateur(maintenant);
     const terminee = seance.terminer(maintenant, jour);
-    const releve = { matiere: terminee.defi.matiere, niveau: terminee.defi.niveau, numero: terminee.defi.numero };
+    const releve = releveDuDefi(terminee.defi);
     retenirLesQuestionsRatees(terminee.enfant, terminee.questionsRatees, jour, maintenant);
     void relevesAvant
       .catch(() => defisRelevesDeLAppareil(terminee.enfant))
       .then((avant) => {
         retenirLesDefisReleves(terminee.enfant, [releve]);
-        setNumero(releve.numero);
+        setNumero(releve.numero ?? 0);
         const issueDuDefi = defiReleveParLaSeance(avant, releve);
         setCelebration(
           celebrationDeLaFin({ defiRelevePourLaPremiereFois: issueDuDefi.annonce !== undefined }, univers.cle, hasardDuNavigateur),

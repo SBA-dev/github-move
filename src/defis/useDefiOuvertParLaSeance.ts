@@ -35,13 +35,14 @@ async function defiOuvertParLaSeanceTerminee(
   const entrees = { lecons, niveau: niveauDeLEnfant, leconsReussiesAuTestDeDepart: testDeDepart.leconsReussies };
   const etoilesAvant = enEtoiles(avant);
   const etoilesApres = meilleuresEtoilesReunies(etoilesAvant, etoilesGagneesPendantLUtilisation(enfant));
-  return defiOuvertParLaSeance(
+  const ouvert = defiOuvertParLaSeance(
     parcoursDeLaMatiere({ ...entrees, meilleuresEtoiles: etoilesAvant }, lecon.matiere),
     parcoursDeLaMatiere({ ...entrees, meilleuresEtoiles: etoilesApres }, lecon.matiere),
     lecon.matiere,
     niveauDeLEnfant,
     defisReleves,
   );
+  return ouvert?.numero === undefined ? undefined : ouvert;
 }
 
 /**
