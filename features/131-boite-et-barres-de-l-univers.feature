@@ -1,5 +1,5 @@
 # language: fr
-@issue-131 @wip
+@issue-131
 Fonctionnalité: Des exercices qui ressemblent à des jeux : la boîte à jetons et le schéma en barres de l'univers
   En tant qu'enfant
   Je veux voir les jetons tomber dans la boîte et les barres se remplir comme une jauge, aux couleurs et au dessin
