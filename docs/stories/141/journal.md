@@ -19,3 +19,7 @@ Nature : correctifs `fix(#141)`. Décisions du PO : « son A, accueil A, issue o
 - `implementer` (682752e) : « Accueil » de la fin de séance → `revenirALAccueilDeLEnfant` (`revenirA("jeu")`), partagé avec les fins de révision et de défi. Le scénario qui l'exige précède le fix ; la fin de séance menait à « Qui joue ? » sur `main` (scénarios #97 verts sur `main` avec « Qui joue ? »), donc les nouvelles attentes sont rouges sans le fix : run rouge à confirmer sous verrou.
 - `e2e-tester` (5977f8a) : `laisserLaParoleFinir` attend la phrase de fin dite ; phrase de la quête acceptée en fin de phrase (`features/support/phrase-de-fin-avec-la-quete.ts`, texte importé du domaine) ; `ouvrirQuiJoue` passe par l'en-tête depuis `/jeu`.
 - Review complète lancée (mr-reviewer, cycle 1).
+- Review : cycle 1 À CORRIGER (1 bloquant : `laisserDireLaPhraseDeFin` pouvait conclure sur la félicitation de la dernière réponse) ; corrigé (0f43d43, 387776f) ; cycle 2 (delta) APPROUVÉ.
+- 08:53 UTC : VERROU base accordé. Sonde : 5,2 s au 1er essai (refaite), puis 0,51 / 0,42 / 0,25 s.
+- Run rouge « Accueil » : `src/Application.tsx` remis temporairement à l'état d'avant 682752e → les 2 scénarios « Pendant les confettis… » de #97 échouent sur « Léa voit son accueil » ; avec le fix : 2/2 verts (55,7 s).
+- Périmètre lancé (telephone, 1 worker) : `@issue-97|@issue-101` (106), famille « Quête du jour accomplie ! » (15), « Léa rejoue » ×5.
