@@ -379,3 +379,9 @@ Deno.test("un grand défi ouvert de 12 questions est revalidé et redonne le mê
 
   assertEquals(revalide, faitDuGrandDefi);
 });
+
+Deno.test("un grand défi envoyé pour une autre classe que celle du profil est refusé", () => {
+  const envoi = { ...envoiDuGrandDefi, defi: { ...envoiDuGrandDefi.defi, niveau: CE2 } };
+
+  assertThrows(() => revalider(envoi, { reussies: toutesLesLecons }), DefiInconnu);
+});
