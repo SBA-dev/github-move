@@ -30,3 +30,15 @@
   non-régression.
   - Provisoire jusqu'au câblage : `useDefiOuvertParLaSeance` (front) ignore le grand défi, l'adaptateur Supabase et
     `enCorpsDuDefi` refusent explicitement un grand défi.
+- Revue intermédiaire (delta `48c0ed8..443e122`, Apprentissage + Catalogue) : **APPROUVÉ**, sans bloquant. Point de
+  départ du prochain delta : `443e122`. Non bloquants repris au refactor du bloc Motivation : marque explicite
+  `grandDefi: true` sur `GrandDefi`, suppression de `numeroDuDefi`, `APRES_DE` → `AVEC_DE`.
+- **Dette à solder au câblage** (sinon bloquant à la revue finale) :
+  - `apprentissage/infrastructure/defis-termines-supabase.ts` : `throw` sur un grand défi → écriture dans
+    `grands_defis_termines` (0041), avec tests ;
+  - `src/defis/corps-du-defi.ts` : refus du grand défi → contrat du corps étendu, avec `corps-du-defi-termine.ts` ;
+  - `src/defis/useDefiOuvertParLaSeance.ts` : grand défi filtré → annonce du grand défi (scénarios 2.1, 2.2) ;
+  - `src/defis/FinDuDefi.tsx` : `setNumero(releve.numero ?? 0)` (valeur magique) → la sorte du défi ;
+  - `src/defis/defis-releves-sur-l-appareil.ts` : clé `…/grand` sans test.
+- Bloc Motivation (25 à 33) : RED `be2b3e1`..`78210bd`. 34 retiré : déjà couvert par les tests de
+  `moment-de-celebration` (le moment ne dépend pas de la sorte du défi).
