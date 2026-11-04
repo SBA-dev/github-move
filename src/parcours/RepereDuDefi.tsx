@@ -1,5 +1,5 @@
 import type { Defi, EtatDuDefi, GrandDefi } from "@domain/apprentissage";
-import { nomDuDefi, nomDuGrandDefi } from "@domain/motivation";
+import { nomDuDefiOuvert } from "@domain/motivation";
 import {
   annonceDuRepereDuDefi,
   BOUTON_REJOUER_LE_DEFI,
@@ -19,7 +19,7 @@ type Props = {
  * (ni bouton ni cadenas) ; ouvert, il propose de relever le défi ; relevé, il garde sa marque et propose de le rejouer (bouton « Rejouer le défi », même action que « Relever le défi »). Le lecteur d'écran lit l'état du défi.
  */
 export function RepereDuDefi({ defi, etat, onRelever }: Props) {
-  const nom = defi.grandDefi === true ? nomDuGrandDefi() : nomDuDefi(defi.numero);
+  const nom = nomDuDefiOuvert(defi);
   return (
     <div
       className="repere-du-defi"

@@ -1,4 +1,4 @@
-import { Jour, type DefiTermineAEnregistrer } from "@domain/apprentissage";
+import { estUnGrandDefi, Jour, type DefiTermineAEnregistrer } from "@domain/apprentissage";
 import { enReponseEnvoyee, type ReponseEnvoyee } from "../seance/fin-de-seance/corps-de-la-seance.ts";
 
 type DefiDuCorps =
@@ -8,7 +8,7 @@ type DefiDuCorps =
 function enDefiDuCorps({ defi }: DefiTermineAEnregistrer): DefiDuCorps {
   const matiere = defi.matiere.code;
   const niveau = defi.niveau.valeur;
-  return defi.grandDefi === true ? { matiere, niveau, grandDefi: true } : { matiere, niveau, numero: defi.numero };
+  return estUnGrandDefi(defi) ? { matiere, niveau, grandDefi: true } : { matiere, niveau, numero: defi.numero };
 }
 
 /** Le corps JSON attendu par l'Edge Function `terminer-le-defi`. */

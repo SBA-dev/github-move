@@ -4,8 +4,7 @@ import {
   type CelebrationDeLaFin,
   celebrationDeLaFin,
   defiReleveParLaSeance,
-  parolesDeFinDeDefi,
-  parolesDeFinDeGrandDefi,
+  parolesDeFinDuDefiReleve,
   type Univers,
 } from "@domain/motivation";
 import { Confettis } from "../celebration/index.ts";
@@ -31,12 +30,6 @@ type Props = {
   readonly onMonParcours: () => void;
   readonly onAccueil: () => void;
 };
-
-function parolesDeFin(releve: DefiReleve, prenom: string, dejaReleve: boolean): string {
-  return releve.grandDefi === true
-    ? parolesDeFinDeGrandDefi({ prenom, matiere: releve.matiere.code, dejaReleve })
-    : parolesDeFinDeDefi({ prenom, numeroDuDefi: releve.numero, dejaReleve });
-}
 
 /**
  * La fin du défi : le défi est relevé (avec ou sans erreurs), sans étoile ni récompense de la cabane. La première fois il est annoncé
@@ -80,7 +73,7 @@ export function FinDuDefi({ seance, prenom, personnage, univers, relevesAvant, o
     if (dite.current || !issue || !releve || !affichee.current) return;
     dite.current = true;
     void dire({
-      texte: parolesDeFin(releve, prenom, issue.annonce === undefined),
+      texte: parolesDeFinDuDefiReleve({ prenom, defi: releve, dejaReleve: issue.annonce === undefined }),
       nature: "felicitation",
       humeur: "applaudit",
       effetsAvant: [celebration?.sorte === "univers" ? celebration.celebration.musique : issue.effetSonore],

@@ -15,8 +15,7 @@ import {
   type PersonnageGuide,
   parolesDeFinDeSeance,
   phraseDeFinAvecLaQuete,
-  phraseDeFinAvecLeDefi,
-  phraseDeFinAvecLeGrandDefi,
+  phraseDeFinAvecLeDefiOuvert,
   phraseDeFinAvecLesNouveautes,
 } from "@domain/motivation";
 import { effetsDeLaFinDeSeance } from "./fin-de-seance/effets-de-la-fin.ts";
@@ -351,9 +350,7 @@ export function useDeroulementDeSeance(
     const felicitation = parolesDeFinDeSeance(etoiles, prenom, personnageGuide, hasardDuNavigateur);
     const phraseDeFin = phraseDeFinAvecLaQuete(phraseDeFinAvecLesNouveautes(felicitation, nouveautes), prenom, nouveautes.queteAccomplie);
     const { defiOuvert } = nouveautes;
-    const texte = defiOuvert?.grandDefi === true
-      ? phraseDeFinAvecLeGrandDefi(phraseDeFin, prenom, defiOuvert.matiere.code)
-      : phraseDeFinAvecLeDefi(phraseDeFin, prenom, defiOuvert?.numero);
+    const texte = phraseDeFinAvecLeDefiOuvert(phraseDeFin, prenom, defiOuvert);
     void dire({ texte, nature: "felicitation", humeur: "applaudit", effetsAvant });
   }, [dire, prenom, personnageGuide, issueDuRecord, direLaFinDeLaFluenceSeule]);
 

@@ -2,13 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { AucuneQuestionPourLeDefi, type Defi, type DefiReleve, type GrandDefi } from "@domain/apprentissage";
 import { type Lecon, libelleCourtDe, type Niveau } from "@domain/catalogue";
 import type { ProfilEnCours } from "@domain/famille";
-import {
-  nomDuDefi,
-  nomDuGrandDefi,
-  parolesDeDebutDeDefi,
-  parolesDeDebutDeGrandDefi,
-  type Univers,
-} from "@domain/motivation";
+import { nomDuDefiOuvert, parolesDeDebutDuDefi, type Univers } from "@domain/motivation";
 import { niveauDuProfil } from "../parcours/niveau-du-profil.ts";
 import { DeroulementDeLaRevision as DeroulementDesQuestions } from "../revision/DeroulementDeLaRevision.tsx";
 import { usePersonnageQuiParle } from "../seance/usePersonnageQuiParle.ts";
@@ -71,7 +65,7 @@ function DefiCharge(
     <section className="seance revision defi" aria-labelledby="titre-du-defi" data-testid="ecran-du-defi">
       <div className="entete-de-seance">
         <div>
-          <h2 id="titre-du-defi">{defi.grandDefi === true ? nomDuGrandDefi() : nomDuDefi(defi.numero)}</h2>
+          <h2 id="titre-du-defi">{nomDuDefiOuvert(defi)}</h2>
           <p data-testid="sous-titre-du-defi">{libelleCourtDe(defi.matiere.code)}</p>
         </div>
         {!fini && (
@@ -95,9 +89,7 @@ function DefiCharge(
         : (
           <DeroulementDesQuestions
             seance={commence.seance}
-            parolesDeDebut={defi.grandDefi === true
-              ? parolesDeDebutDeGrandDefi({ matiere: defi.matiere.code })
-              : parolesDeDebutDeDefi({ nombreDeLecons: defi.lecons.length })}
+            parolesDeDebut={parolesDeDebutDuDefi(defi)}
             libelleDeLAvancement="Avancement du défi"
             boites={commence.boites}
             textes={commence.textes}

@@ -1,5 +1,5 @@
 import type { Defi, GrandDefi } from "@domain/apprentissage";
-import { annonceDuDefiOuvert, annonceDuGrandDefiOuvert } from "@domain/motivation";
+import { annonceDuDefiOuvertPour } from "@domain/motivation";
 
 type Props = { readonly defi: Defi | GrandDefi | undefined };
 
@@ -7,7 +7,7 @@ type Props = { readonly defi: Defi | GrandDefi | undefined };
 export function AnnonceDuDefiOuvert({ defi }: Props) {
   return (
     <div className="pour-le-defi" role="status" data-testid="annonce-du-defi-ouvert">
-      {defi && <p>{defi.grandDefi === true ? annonceDuGrandDefiOuvert(defi.matiere.code) : annonceDuDefiOuvert(defi.numero)}</p>}
+      {defi && <p>{annonceDuDefiOuvertPour(defi)}</p>}
     </div>
   );
 }

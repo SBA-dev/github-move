@@ -1,11 +1,10 @@
 import { type KeyboardEvent, useCallback, useRef } from "react";
 import {
   type Defi,
-  defisDeLaMatiere,
+  defisDuParcours,
   type DefiReleve,
   etatDuDefi,
   type GrandDefi,
-  grandDefiDeLaMatiere,
   type LeconDesClassesDAvant,
   type LeconDuParcours,
   type LeconReussieDUneClasseAuDessus,
@@ -132,7 +131,7 @@ function ParcoursDuNiveau(
         <LeconsDuParcours
           key={ouverte.code}
           parcours={parcours}
-          defis={[...defisDeLaMatiere(parcours, ouverte, niveau), ...grandDefiEnListe(parcours, ouverte, niveau)]}
+          defis={defisDuParcours(parcours, ouverte, niveau)}
           defisReleves={lectures.defisReleves}
           univers={univers}
           prochaineLeconConnue={prochainesLeconsConnues.get(ouverte.code)}
@@ -196,11 +195,6 @@ function OngletsDesMatieres({ matieres, ouverte, onChoisir }: PropsDesOnglets) {
       ))}
     </div>
   );
-}
-
-function grandDefiEnListe(parcours: Parcours, matiere: Matiere, niveau: Niveau): GrandDefi[] {
-  const grandDefi = grandDefiDeLaMatiere(parcours, matiere, niveau);
-  return grandDefi ? [grandDefi] : [];
 }
 
 type PropsDesLecons = {
