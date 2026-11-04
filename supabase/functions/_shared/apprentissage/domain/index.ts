@@ -152,7 +152,7 @@ export { estUnTypeDeQuestion } from "./cle-de-question.ts";
 export { leconAcquiseParLaSeance, leconsAcquises } from "./lecons-acquises.ts";
 export { partiesDuParcours } from "./partie-du-parcours.ts";
 export type { PartieDuParcours } from "./partie-du-parcours.ts";
-export { defisDeLaMatiere } from "./defis-de-la-matiere.ts";
+export { defisDeLaMatiere, defisDuParcours } from "./defis-de-la-matiere.ts";
 export { defiOuvertParLaSeance } from "./defis-de-la-matiere.ts";
 export { estUnGrandDefi, etatDuDefi, releveDuDefi } from "./defis-de-la-matiere.ts";
 export { grandDefiDeLaMatiere } from "./defis-de-la-matiere.ts";

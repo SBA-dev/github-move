@@ -27,11 +27,18 @@ export type DefiReleve =
 
 export function releveDuDefi(defi: Defi | GrandDefi): DefiReleve {
   const { matiere, niveau } = defi;
-  return defi.grandDefi === true ? { matiere, niveau, grandDefi: true } : { matiere, niveau, numero: defi.numero };
+  return estUnGrandDefi(defi) ? { matiere, niveau, grandDefi: true } : { matiere, niveau, numero: defi.numero };
 }
 
-export function estUnGrandDefi(defi: Defi | GrandDefi | DefiReleve): boolean {
+export function estUnGrandDefi(
+  defi: Defi | GrandDefi | DefiReleve,
+): defi is GrandDefi | Extract<DefiReleve, { grandDefi: true }> {
   return defi.grandDefi === true;
+}
+
+export function defisDuParcours(parcours: Parcours, matiere: Matiere, niveau: Niveau): readonly (Defi | GrandDefi)[] {
+  const grandDefi = grandDefiDeLaMatiere(parcours, matiere, niveau);
+  return [...defisDeLaMatiere(parcours, matiere, niveau), ...(grandDefi ? [grandDefi] : [])];
 }
 
 export type EtatDuDefi =
@@ -73,7 +80,7 @@ function vientDOuvrir(
 
 function estLeMemeDefi(a: DefiReleve, b: Defi | GrandDefi | DefiReleve): boolean {
   return a.matiere.code === b.matiere.code && a.niveau.valeur === b.niveau.valeur &&
-    estUnGrandDefi(a) === estUnGrandDefi(b) && a.numero === b.numero;
+    a.numero === b.numero;
 }
 
 function estReussieDansLeParcours(parcours: Parcours, id: LeconId): boolean {
