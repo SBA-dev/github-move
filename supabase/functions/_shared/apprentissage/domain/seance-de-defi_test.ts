@@ -2,7 +2,7 @@ import { assertEquals, assertExists, assertThrows } from "@std/assert";
 import { type Lecon, lireLecon, matiereDeCode, Niveau } from "../../catalogue/domain/index.ts";
 import { hasardSansMelange } from "../test_utils/hasard-fixe.ts";
 import { CleDeQuestion } from "./cle-de-question.ts";
-import type { Defi } from "./defis-de-la-matiere.ts";
+import type { Defi, GrandDefi } from "./defis-de-la-matiere.ts";
 import { DefiDejaTermine, DefiNonFini } from "./erreurs.ts";
 import { Jour } from "./jour.ts";
 import type { PlanDuDefi } from "./plan-du-defi.ts";
@@ -245,4 +245,32 @@ Deno.test("dans un défi fini, dire « Je ne sais pas » est refusé parce que l
   seance.repondre(bonneReponseDe(bateau));
 
   assertThrows(() => seance.direJeNeSaisPas(), DefiDejaTermine);
+});
+
+const grandDefi: GrandDefi = {
+  matiere: matiereDeCode("francais"),
+  niveau: CE1,
+  lecons: [leconDesSyllabes.id, leconDuCalcul.id],
+};
+
+function seanceDuGrandDefi(plan: PlanDuDefi): SeanceDeDefi {
+  return SeanceDeDefi.commencer({
+    id: "grand-defi-1",
+    enfant: "profil-lea",
+    defi: grandDefi,
+    plan,
+    lecons: [leconDesSyllabes, leconDuCalcul],
+    tireurDe: () => tireur,
+    niveau: CE1,
+  });
+}
+
+Deno.test("un grand défi terminé donne l'événement DefiTermine qui porte le grand défi", () => {
+  const seance = seanceDuGrandDefi(planDe(chat, bateau));
+  seance.repondre(bonneReponseDe(chat));
+  seance.repondre(bonneReponseDe(bateau));
+
+  const fait = seance.terminer(finDuDefi, jourDuDefi);
+
+  assertEquals(fait.defi, grandDefi);
 });
