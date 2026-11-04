@@ -4,7 +4,12 @@ import { hasardSansMelange } from "../test_utils/hasard-fixe.ts";
 import type { Defi, GrandDefi } from "./defis-de-la-matiere.ts";
 import { AucuneQuestionPourLeDefi } from "./erreurs.ts";
 import type { Hasard } from "./hasard.ts";
-import { estUnPlanPossible, NOMBRE_DE_QUESTIONS_DU_GRAND_DEFI, planDuDefi, questionsPosablesDuDefi } from "./plan-du-defi.ts";
+import {
+  estUnPlanPossible,
+  NOMBRE_DE_QUESTIONS_DU_GRAND_DEFI,
+  planDuDefi,
+  questionsPosablesDuDefi,
+} from "./plan-du-defi.ts";
 
 const programme = { section: "section", citation: "citation" };
 const hasardToujoursEnTete: Hasard = { entre0et1: () => 0 };
