@@ -395,3 +395,11 @@ Deno.test("un grand défi d'une matière sans leçon dans la classe est refusé"
 Deno.test("un grand défi dont la matière n'est pas réussie est à venir et refusé", () => {
   assertThrows(() => revalider(envoiDuGrandDefi, { reussies: toutesLesLecons.slice(0, 9) }), DefiAVenir);
 });
+
+Deno.test("un grand défi à venir qui était déjà relevé, rejoué, est accepté", () => {
+  const releves = [{ matiere: maths, niveau: CE1, grandDefi: true as const }];
+
+  const revalide = revalider(envoiDuGrandDefi, { reussies: [], releves });
+
+  assertEquals(revalide.nombreDeQuestions, 12);
+});
