@@ -266,3 +266,11 @@ Deno.test("avec moins de 12 questions posables, le grand défi les pose toutes, 
   assertEquals(questions.map(({ identite }) => identite.valeur).sort(), attendues);
   assertEquals(questions.length, 6);
 });
+
+Deno.test("le défi d'une partie garde 10 questions, même parmi 12 leçons riches", () => {
+  const lecons = leconsDe(...Array(12).fill(4));
+
+  const { questions } = planDuDefi(defiDe(lecons), lecons, hasardToujoursEnTete);
+
+  assertEquals(questions.length, 10);
+});
