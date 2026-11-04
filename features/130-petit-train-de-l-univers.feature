@@ -1,5 +1,5 @@
 # language: fr
-@issue-130 @wip
+@issue-130
 Fonctionnalité: Des exercices qui ressemblent à des jeux : le petit train de l'univers
   En tant qu'enfant
   Je veux que les étiquettes à remettre dans l'ordre deviennent les wagons d'un petit train décoré comme mon univers

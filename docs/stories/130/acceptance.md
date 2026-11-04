@@ -4,7 +4,7 @@ Historique : 2026-11-04, premier jet (`po-acceptance`), à valider par le PO ave
 
 Scénarios : `features/130-petit-train-de-l-univers.feature`. Modèle : `docs/stories/130/domain-model.md` (invariants propres 1 à 5, questions #130.1 à #130.9). Cadrage parent : `docs/stories/98/acceptance.md`, « Hors périmètre, #130 » (scénarios du train validés le 2026-10-28, repris ici).
 
-Tags :
+- `@issue-130` sur la fonctionnalité (`@wip` retiré : les 89 cas sont verts à l'E2E sur `telephone`) ;
 - `@issue-130 @wip` sur la fonctionnalité (`@wip` reste jusqu'au passage des steps E2E) ;
 - plus aucun `@a-valider` : les 6 scénarios écrits selon une reco sont confirmés par le PO (voir « Scénarios qui dépendaient d'une réponse du PO ») ;
 - aucun `@acces` (aucune donnée nouvelle, voir « Droits d'accès ») ;
