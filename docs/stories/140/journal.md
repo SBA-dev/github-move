@@ -36,3 +36,14 @@ Nature : correctif dans la stack cible (`fix(#140)`).
 - 21:55 UTC : run vert lancé : `@issue-140` et les 6 scénarios « … à la demande » qui touchent « Écouter »
   (65:206 plan, 31:317, 32:251, 33:404, 102:253), sans les attentes, `telephone`, 1 worker, `--repeat-each=3`.
 - 22:05 UTC : **vert** : 21/21 (7 tests × 3) en 6,7 min, sur `c9d2840` (code identique à `8aebd5b`). `LIBÈRE base`.
+- 22:15 UTC : **revue finale APPROUVÉE** (branche entière). Non bloquants laissés en dette (voir plus bas).
+
+## Dette notée
+
+- Le step « l'histoire des Savanturiers tarde à se charger » retient toutes les lectures `seances_terminees` de la page,
+  dont celles de l'accueil de l'enfant (posé avant l'ouverture de « Mes médailles »). Sans effet aujourd'hui ; à
+  restreindre si un step d'accueil attend un jour « les séances du jour ». `page.unroute` explicite : facultatif.
+- `AccueilDeLEcran` n'est câblé que dans « Mes médailles ». `AccueilDeLEnfant.tsx` et `PropositionDuTestDeDepart.tsx`
+  disent aussi un accueil : hors périmètre.
+- Une relance de l'effet d'ouverture avant tout « Écouter » redit l'accueil (comportement antérieur, inchangé).
+- 140.1 : le câblage applique le choix A ; à reprendre si le PO choisit B.
