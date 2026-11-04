@@ -6,7 +6,6 @@ import { Parchemin } from "../parchemin/Parchemin.tsx";
 import { useDeroulementDuParchemin } from "../parchemin/useDeroulementDuParchemin.ts";
 import { ExerciceAChoix } from "./ExerciceAChoix.tsx";
 import { ExerciceAEtiquettes } from "./ExerciceAEtiquettes.tsx";
-import { useTrainCompletRetenu } from "./petit-train/useTrainCompletRetenu.ts";
 import type { TempsDeLaMemorisation, VersLu } from "./useMemorisation.ts";
 
 type PropsDeLEntrainement = {
@@ -86,8 +85,8 @@ function VersDeLaPoesie({ vers, temps, versLu, voixCoupee }: { readonly vers: re
 function Entrainement({ exercice, exerciceJoue, ...reste }: PropsDeLEntrainement & { readonly exercice: ExerciceMemoriser }) {
   const plan = PlanDeMemorisation.de(exercice);
   const motsCaches = exerciceJoue?.entrainementDeMemorisation() === "motsCaches";
-  const trainCompletRetenu = useTrainCompletRetenu(motsCaches, reste.felicitationFinie);
-  if (motsCaches && !trainCompletRetenu) {
+  /** Le dernier wagon reste à l'écran tant que la félicitation du dernier vers n'est pas finie (#130.5). */
+  if (motsCaches && reste.felicitationFinie) {
     return (
       <ExerciceAChoix
         exercice={plan.motsCaches}
