@@ -197,3 +197,34 @@ Deno.test("le défi terminé est enregistré avec le client du serveur, jamais a
   assertEquals(duServeur.appels.map((appel) => appel.fonction), ["enregistrer_le_defi_termine"]);
   assertEquals(duParent.appels, []);
 });
+
+Deno.test("un grand défi terminé est écrit par sa fonction Postgres, sans numéro, avec la file de révision", async () => {
+  const faux = clientSupabaseFactice({ reponseDeFonction: { data: "enregistree" } });
+  const grandDefiTermine: DefiTermine = {
+    ...fait,
+    id: "grand-defi-1",
+    defi: { matiere: matiereDeCode("maths"), niveau: Niveau.de("CE1"), grandDefi: true, lecons: ["ma-ce1-addition"] },
+    nombreDeQuestions: 12,
+  };
+
+  const issue = await new DefisTerminesSupabase(clientDuParentInutilise, faux.client).enregistrer(grandDefiTermine, {
+    file,
+    versionLue: 7,
+  });
+
+  assertEquals(faux.appels.map((appel) => appel.fonction), ["enregistrer_le_grand_defi_termine"]);
+  assertEquals(Object.keys(faux.appels[0].parametres).sort(), [
+    "p_classe",
+    "p_erreurs_corrigees_pour_de_bon",
+    "p_id",
+    "p_jour",
+    "p_matiere",
+    "p_profil",
+    "p_questions_retenues",
+    "p_termine_le",
+    "p_version_de_la_file_lue",
+  ]);
+  assertEquals(faux.appels[0].parametres.p_id, "grand-defi-1");
+  assertEquals(faux.appels[0].parametres.p_classe, "CE1");
+  assertEquals(issue, "enregistree");
+});
