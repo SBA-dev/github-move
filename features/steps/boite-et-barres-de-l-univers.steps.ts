@@ -159,14 +159,16 @@ export function installerLEnregistreurDeLaStory131() {
   const dernierePosition = new Map<number, string>();
   let enonce = "";
   let touchesALaDerniereQuestion = -1;
+  let boutonsTouchesEnTout = 0;
   const regarder = () => {
     const t = performance.now();
     // Une nouvelle question du problème en barres : le journal des barres repart de là.
     const enonceLu = (document.querySelector('[data-testid="enonce-du-probleme"]')?.textContent ?? "").trim();
     // Un énoncé qui change avant tout toucher de bouton n'est pas une nouvelle question : le « ? » d'avant la réponse reste dans le journal.
-    if (enonceLu !== "" && enonceLu !== enonce && journal.boutonsTouches !== touchesALaDerniereQuestion) {
+    if (enonceLu !== "" && enonceLu !== enonce && boutonsTouchesEnTout !== touchesALaDerniereQuestion) {
       enonce = enonceLu;
-      touchesALaDerniereQuestion = journal.boutonsTouches;
+      touchesALaDerniereQuestion = boutonsTouchesEnTout;
+      journal.boutonsTouches = 0;
       journal.debutDeQuestion = t - 100;
     }
     const faux = Reflect.get(window, "__faux") as Faux | undefined;
@@ -228,7 +230,9 @@ export function installerLEnregistreurDeLaStory131() {
     const cible = evenement.target;
     if (cible instanceof Element && cible.closest("button") !== null) {
       journal.marque = journal.evenements.length;
-      journal.boutonsTouches++;
+      boutonsTouchesEnTout++;
+      // Seuls les boutons de réponse comptent, et depuis le début de la question en cours : une réponse donnée aux questions d'avant n'est pas celle-ci.
+      if (cible.closest('[data-testid="choix-de-la-question"], [data-testid="clavier-de-cristaux"], [data-testid="je-ne-sais-pas"]') !== null) journal.boutonsTouches++;
     }
   }, true);
 }
@@ -1195,7 +1199,7 @@ Then(/^les lecteurs d'écran n'annoncent ni le dessin de la boîte, ni celui des
   await verifierQueLeDessinEstCacheAuxLecteursDEcran(page, "dessin-de-la-boite");
   await verifierQueLeDessinEstCacheAuxLecteursDEcran(page, "dessin-du-jeton");
   const arbre = await boite(page).ariaSnapshot();
-  expect(arbre.split("\n").filter((ligne) => ligne.trim() !== ""), "ce que lisent les lecteurs d'écran").toEqual(['- img "Boîte ouverte : 7 jetons"']);
+  expect(arbre.split("\n").filter((ligne) => ligne.trim() !== ""), "ce que lisent les lecteurs d'écran").toEqual([`- 'img "Boîte ouverte : 7 jetons"'`]);
   expect(arbre).not.toMatch(/univers|dessin/i);
 });
 
@@ -1215,12 +1219,20 @@ const MOUVEMENTS_SANS_BRUIT = {
     await attendreQue(page, async () => barresDuJournal((await lireLeJournal(page)).evenements).some((b) => b.jauge === "se-remplit"), "des barres se remplissent"),
 } as const;
 
+// Le son du toucher d'un bouton précède le mouvement : on n'écoute qu'à partir du premier signe du mouvement.
+const DEBUTS_DE_MOUVEMENT = {
+  "la chute des jetons ajoutés": (evenements: readonly Evenement[]) => evenements.filter((e): e is EvenementDeJeton => e.genre === "jeton" && e.etat === "nouveau" && e.mouvement === "tombe"),
+  "la sortie des jetons retirés": (evenements: readonly Evenement[]) => evenements.filter((e): e is EvenementDeJeton => e.genre === "jeton" && e.etat === "sortant" && e.mouvement === "s-en-va"),
+  "le remplissage des barres": (evenements: readonly Evenement[]) => barresDuJournal(evenements).filter((b) => b.jauge === "se-remplit"),
+} as const;
+
 Then(
   /^Léa n'entend aucun effet sonore pendant que (la chute des jetons ajoutés|la sortie des jetons retirés|le remplissage des barres) a lieu$/,
   async ({ page }, mouvement: keyof typeof MOUVEMENTS_SANS_BRUIT) => {
     await MOUVEMENTS_SANS_BRUIT[mouvement](page);
     await laisserFinirLeMouvement(page);
     const lu = await lireLeJournal(page);
-    expect(sonsDuJournal(lu.evenements), "effets sonores entendus pendant le mouvement").toEqual([]);
+    const debutDuMouvement = Math.min(...DEBUTS_DE_MOUVEMENT[mouvement](lu.evenements).map((e) => e.t));
+    expect(sonsDuJournal(lu.evenements).filter((son) => son.t >= debutDuMouvement), "effets sonores entendus pendant le mouvement").toEqual([]);
   },
 );
