@@ -9,9 +9,9 @@ import { RattachementsEnMemoire } from "../test_utils/rattachements-en-memoire.t
 import { ResultatsDesLeconsEnMemoire } from "../test_utils/resultats-des-lecons-en-memoire.ts";
 import { ResultatsDesTestsDeDepartEnMemoire } from "../test_utils/resultats-des-tests-de-depart-en-memoire.ts";
 import { CleDeQuestion } from "../domain/cle-de-question.ts";
-import { type Defi, defisDeLaMatiere } from "../domain/defis-de-la-matiere.ts";
+import { type Defi, defisDeLaMatiere, type GrandDefi, grandDefiDeLaMatiere } from "../domain/defis-de-la-matiere.ts";
 import type { DefiTermineAEnregistrer } from "../domain/defi-termine-a-enregistrer.ts";
-import { DefiInconnu, ParentNonRattache } from "../domain/erreurs.ts";
+import { DefiAVenir, DefiInconnu, ParentNonRattache } from "../domain/erreurs.ts";
 import { Etoiles } from "../domain/etoiles.ts";
 import { FileDeRevision, type QuestionRetenue } from "../domain/file-de-revision.ts";
 import { IntervalleDeRevision } from "../domain/intervalle-de-revision.ts";
@@ -95,12 +95,17 @@ function laFileDuProfil(...questions: QuestionRetenue[]): FileDeRevision {
   return FileDeRevision.reconstituer({ enfant: "profil-lea", questions, erreursCorrigeesPourDeBon: 0 });
 }
 
-function monde(file: FileDeRevision | null = null, catalogue: Lecon[] = lecons, niveauDuProfil: Niveau = CE1) {
+function monde(
+  file: FileDeRevision | null = null,
+  catalogue: Lecon[] = lecons,
+  niveauDuProfil: Niveau = CE1,
+  reussies: readonly string[] = leconsReussies,
+) {
   const files = new FilesDeRevisionEnMemoire();
   if (file) files.ecrire(file);
   const defis = new DefisTerminesEnMemoire(files);
   const resultats = new ResultatsDesLeconsEnMemoire();
-  leconsReussies.forEach((id) => {
+  reussies.forEach((id) => {
     const resultat = ResultatDeLaLecon.commencer("profil-lea", id);
     resultat.enregistrerSeance(1);
     resultats.ecrire(resultat);
@@ -265,4 +270,71 @@ Deno.test("une file modifiée en continu par un autre appareil fait abandonner l
 
   await assertRejects(() => terminer.executer({ parent: "parent-paul", defi: defiJoue() }));
   assertEquals(defis.tous(), []);
+});
+
+const toutesLesLecons = lecons.map(({ id }) => id);
+const grandDefiDeMaths: GrandDefi = grandDefiDeLaMatiere(parcoursDeLaMatiere(entrees(), maths), maths, CE1)!;
+const planDuGrandDefi: PlanDuDefi = planDuDefi(grandDefiDeMaths, lecons, hasardSansMelange());
+
+function grandDefiJoue({ id = "grand-defi-1", fautes = 1 }: { id?: string; fautes?: number } = {}) {
+  const seance = SeanceDeDefi.commencer({
+    id,
+    enfant: "profil-lea",
+    defi: grandDefiDeMaths,
+    plan: planDuGrandDefi,
+    lecons,
+    tireurDe: () => tireurAuHasard(hasardSansMelange()),
+    niveau: CE1,
+  });
+  planDuGrandDefi.questions.forEach((_, rang) => {
+    if (rang < fautes) seance.repondre(Reponse.choix("non"));
+    seance.repondre(Reponse.choix("oui"));
+  });
+  seance.terminer(finDuDefi, jourDuDefi);
+  return seance.aEnregistrer();
+}
+
+Deno.test("un grand défi ouvert terminé est enregistré avec sa file de révision d'un seul geste", async () => {
+  const { files, defis, terminer } = monde(null, lecons, CE1, toutesLesLecons);
+
+  const faits = await terminer.executer({ parent: "parent-paul", defi: grandDefiJoue({ fautes: 1 }) });
+
+  assertEquals(faits.map((fait) => fait.type), ["DefiTermine"]);
+  assertEquals(defis.tous().map(({ id }) => id), ["grand-defi-1"]);
+  assertEquals(laFileApres(files).length, 1);
+});
+
+Deno.test("un grand défi renvoyé une seconde fois n'est enregistré qu'une fois", async () => {
+  const { files, defis, terminer } = monde(null, lecons, CE1, toutesLesLecons);
+  const envoi = grandDefiJoue({ fautes: 1 });
+  await terminer.executer({ parent: "parent-paul", defi: envoi });
+  const version = files.version("profil-lea");
+
+  const faits = await terminer.executer({ parent: "parent-paul", defi: envoi });
+
+  assertEquals(faits, []);
+  assertEquals(defis.tous().length, 1);
+  assertEquals(files.version("profil-lea"), version);
+});
+
+Deno.test("un grand défi à venir est refusé sans rien écrire", async () => {
+  const { files, defis, terminer } = monde();
+
+  await assertRejects(() => terminer.executer({ parent: "parent-paul", defi: grandDefiJoue() }), DefiAVenir);
+  assertEquals(defis.tous(), []);
+  assertEquals(files.version("profil-lea"), 0);
+});
+
+Deno.test("un grand défi inconnu est refusé", async () => {
+  const { defis, terminer } = monde(null, [], CE1, toutesLesLecons);
+
+  await assertRejects(() => terminer.executer({ parent: "parent-paul", defi: grandDefiJoue() }), DefiInconnu);
+  assertEquals(defis.tous(), []);
+});
+
+Deno.test("les grands défis relevés sont rendus avec les autres défis relevés", async () => {
+  const { defis, terminer } = monde(null, lecons, CE1, toutesLesLecons);
+  await terminer.executer({ parent: "parent-paul", defi: grandDefiJoue() });
+
+  assertEquals(await defis.releves("profil-lea"), [{ matiere: maths, niveau: CE1, grandDefi: true }]);
 });
