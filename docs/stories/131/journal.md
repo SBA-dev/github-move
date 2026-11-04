@@ -65,3 +65,21 @@ Session : session_015z4jmMgq1HB7F2nTVR6x1n. Décision : aucune réservée (proch
 - 08:00 UTC : run E2E sous verrou `base` (sondes sous 1,3 s, `E2E_WORKERS=3` selon la décision du PO, annonce [Responsable] 6625190628), 145 tests (127 `@issue-131` + 18 de #21), 26,9 min, aucun 504. #21 : 18/18. #131 : 111/127 au premier passage ; 10 rouges d'étape corrigés par `e2e-tester` (`96adc91` : réponse comptée depuis le début de la question, sons écoutés depuis le début du mouvement, arbre d'accessibilité entre apostrophes) et verts au rejeu ; **6 rouges applicatifs** (un par univers) : à 360 × 1180, les choix et « Je ne sais pas » descendent jusqu'à 1225 px (dépassement de 1 à 45 px), à cause de la nouvelle boîte dessinée, plus haute. `@wip` gardé. 12 captures prises dans l'application (`313c75e`), relues.
 - 08:05 UTC : correction confiée à `implementer` (GREEN, RED = les 6 scénarios rouges). Le verrou `base` est gardé pour le rejeu ciblé.
 - 08:20 UTC : `implementer` : correction de hauteur (`9fbd825`), bloc `@media (max-width: 480px)` limité par `:has(.boite-a-jetons)` (en-tête et espacements resserrés, personnage guide de 112 à 80 px) ; mesure sur page de test : « Je ne sais pas » remonte de 84 px dans les 6 univers ; 20 jetons de 32 px tiennent dans la boîte ouverte. Revue du delta (`a9bfed4..HEAD`) par `mr-reviewer` : **APPROUVÉ**, aucun bloquant. Non bloquants, notés pour la PR : le début du mouvement est relevé à la trame suivante (un son simultané pourrait échapper au filtre, d'une trame au plus) ; le filtre des débuts de mouvement est écrit deux fois ; le bloc s'applique aussi à la boîte en séance de révision (voulu). Rejeu ciblé sous verrou confié à `e2e-tester`.
+- 08:30 UTC : rejeu ciblé sous verrou `base` (`e2e-tester`, sondes sous 2,2 s, `E2E_WORKERS=3`, `telephone`) : **38/38 verts** (3 plans à 360 px × 6, dessins de boîte R4 × 12, boîte ouverte avec mouvements réduits × 6, #21 l.125 et l.131), 7,4 min, aucun 504. Les 6 rouges de 360 px sont corrigés par `9fbd825`. `@issue-131` entièrement vert (111 cas du run de 08:00 sur un code inchangé hors du bloc CSS, plus ces 38). `@wip` retiré (`086307e`). 6 captures de boîte refaites dans l'application (`cb9272c`), relues par l'orchestrateur : rien de choquant, boîte, jetons et choix dans l'écran. Incident d'environnement : Chromium 1243 sans le 1194 attendu par Playwright, contourné par `PLAYWRIGHT_BROWSERS_PATH` dans le scratchpad (rien dans le dépôt, aucun `playwright install`).
+- `LIBÈRE base` publié. Étape 6 : PR en brouillon.
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Durée (lancement → PR) | 2026-11-03 07:35 UTC → 2026-11-04 08:35 UTC, soit environ 25 h, dont environ 17 h d'attente des E2E (Supabase de dev restreint, quota MAU, file `base`, #146 passée devant) |
+| Temps d'attente du PO | validation n°1 : 20 min (07:45 → 08:00) ; planches : environ 2 h 30 (08:35 → 11:05), sans bloquer le câblage ; ESCALADE #131.14 : réponse par le passage au Pro et #146 |
+| Cycles de review | 4, tous APPROUVÉS : complet (cycle 1), delta (non bloquants et merge de #128), delta (fragilités des étapes), delta (correction de hauteur) |
+| Cycles TDD | 0 comportement du domaine (affichage seul) ; RED par l'E2E : 80 rouges sur 127 ; 2 fix applicatifs vus à l'E2E (opacité de départ de la chute, hauteur à 360 px) |
+| Cycles E2E | RED (127, 3 runs dont un perdu par Vite) ; 5 runs coupés par Supabase ; run complet du périmètre (145 tests, 129 verts, 10 rouges d'étape corrigés, 6 applicatifs) ; rejeu ciblé (38/38) |
+| Intégrations de `main` | 3 : #126 (sans conflit), #128 (conflits de tags dans 4 fichiers d'étapes, une ambiguïté levée), #146 (sans conflit) |
+| Escalades | 1 (#131.14, E2E bloqués par Supabase de dev) |
+| Verrous | `base` comme file E2E : accordé 3 fois (19:08 et 19:38 le 03/11, 07:24 le 04/11), rendu sans run 2 fois |
+| Dessins | 36 sources SVG, 2 planches validées au premier passage (6 choix P1 à P6) ; 12 captures |
+| Incidents | Supabase de dev restreint (quota MAU) de 09:00 à 17:35 UTC le 03/11, puis 504 sur la création d'utilisateur ; Vite orphelin ; Chromium 1243 sans le 1194 |
+| Tokens | relevés par le responsable |
