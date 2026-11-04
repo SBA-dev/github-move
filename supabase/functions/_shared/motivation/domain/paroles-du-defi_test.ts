@@ -12,6 +12,7 @@ import {
   parolesDeFinDeGrandDefi,
   phraseDeFinAvecLeDefi,
   titreDuDefiReleve,
+  titreDuGrandDefiReleve,
 } from "./paroles-du-defi.ts";
 
 Deno.test("à la fin de la séance qui ouvre le défi, le personnage guide propose de le relever", () => {
@@ -90,4 +91,9 @@ Deno.test("à la fin d'un grand défi rejoué, le personnage guide dit que l'enf
   const texte = parolesDeFinDeGrandDefi({ prenom: "Léa", matiere: "maths", dejaReleve: true });
 
   assertEquals(texte, "Bravo Léa ! Tu as encore relevé le grand défi des maths !");
+});
+
+Deno.test("l'annonce de fin de grand défi s'intitule « Grand défi relevé ! », celle du défi d'une partie reste « Défi relevé ! »", () => {
+  assertEquals(titreDuGrandDefiReleve(), "Grand défi relevé !");
+  assertEquals(titreDuDefiReleve(), "Défi relevé !");
 });
