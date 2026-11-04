@@ -119,7 +119,7 @@ function reponseDe(enonce: string): string {
   throw new Error(`Question inconnue de la bibliothèque de test du défi : « ${enonce} »`);
 }
 
-function leconDeLaQuestion(enonce: string): LeconBrute {
+export function leconDeLaQuestion(enonce: string): LeconBrute {
   const lecon = LECONS_DU_DEFI.find((candidate) =>
     candidate.exercices.some((exercice) => ((exercice.questions ?? []) as QuestionDeTest[]).some((question) => question.question === enonce))
   );
@@ -127,16 +127,12 @@ function leconDeLaQuestion(enonce: string): LeconBrute {
   return lecon;
 }
 
-function echapper(texte: string): string {
-  return texte.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
 // --- État du scénario
 
-type Partie100 = { posees: string[]; parolesAvantDeQuitter: number };
+export type Partie100 = { posees: string[]; parolesAvantDeQuitter: number };
 const parties = new WeakMap<Page, Partie100>();
 
-function partie100(page: Page): Partie100 {
+export function partie100(page: Page): Partie100 {
   let courante = parties.get(page);
   if (!courante) {
     courante = { posees: [], parolesAvantDeQuitter: 0 };
@@ -149,38 +145,38 @@ function partie100(page: Page): Partie100 {
 const pagesDuParcours = new WeakMap<Famille, Page>();
 const contextesOuverts = new WeakMap<Famille, Array<{ close(): Promise<void> }>>();
 
-function pageDuParcours(famille: Famille, page: Page): Page {
+export function pageDuParcours(famille: Famille, page: Page): Page {
   return pagesDuParcours.get(famille) ?? page;
 }
 
-Before({ tags: "@issue-100" }, async ({ page, $testInfo }) => {
+Before({ tags: "@issue-100 or @issue-137" }, async ({ page, $testInfo }) => {
   // Le vrai profil de Léa, les défis joués jusqu'à leur fin (10 questions) et les écrans de fin passent par le serveur.
   $testInfo.setTimeout(Math.max($testInfo.timeout, 90_000));
   await page.addInitScript(installerLesFauxDeLaStory97, { echec: false, retenir: [] });
 });
 
-After({ tags: "@issue-100" }, async ({ famille }) => {
+After({ tags: "@issue-100 or @issue-137" }, async ({ famille }) => {
   for (const contexte of contextesOuverts.get(famille) ?? []) await contexte.close();
 });
 
 // --- Préparation en base (clé service_role, réservée à cela)
 
-function variable(nom: string): string {
+export function variable(nom: string): string {
   const valeur = process.env[nom];
   if (!valeur) throw new Error(`Variable d'environnement absente : ${nom}`);
   return valeur;
 }
 
-function entetesServiceRole(): Record<string, string> {
+export function entetesServiceRole(): Record<string, string> {
   const cle = variable("SUPABASE_SERVICE_ROLE_KEY");
   return { apikey: cle, Authorization: `Bearer ${cle}`, "Content-Type": "application/json" };
 }
 
-function entetesDuParent(jeton: string): Record<string, string> {
+export function entetesDuParent(jeton: string): Record<string, string> {
   return { apikey: variable("SUPABASE_ANON_KEY"), Authorization: `Bearer ${jeton}`, "Content-Type": "application/json" };
 }
 
-function jourLocal(date: Date): string {
+export function jourLocal(date: Date): string {
   const deux = (n: number) => String(n).padStart(2, "0");
   return `${date.getFullYear()}-${deux(date.getMonth() + 1)}-${deux(date.getDate())}`;
 }
@@ -316,13 +312,13 @@ async function jetonDeClaire(famille: Famille): Promise<string> {
 
 // --- Le parcours de maths, le repère du défi
 
-const dessin = (page: Page): Locator => page.getByTestId("dessin-du-parcours");
-const repere = (page: Page): Locator => page.getByTestId("repere-du-defi");
+export const dessin = (page: Page): Locator => page.getByTestId("dessin-du-parcours");
+export const repere = (page: Page): Locator => page.getByTestId("repere-du-defi");
 const jeNeSaisPas = (page: Page): Locator => page.getByTestId("je-ne-sais-pas");
-const ecranDuDefi = (page: Page): Locator => page.getByTestId("ecran-du-defi");
+export const ecranDuDefi = (page: Page): Locator => page.getByTestId("ecran-du-defi");
 export const finDuDefi = (page: Page): Locator => page.getByTestId("fin-du-defi");
 
-async function ouvrirLeParcoursDeMaths(page: Page, enfant = "Léa"): Promise<void> {
+export async function ouvrirLeParcoursDeMaths(page: Page, enfant = "Léa", matiere = "Maths"): Promise<void> {
   const titre = page.getByRole("heading", { level: 2, name: "Mon parcours", exact: true });
   if (!(await titre.isVisible())) {
     const bouton = page.getByRole("button", { name: "Mon parcours", exact: true });
@@ -331,13 +327,13 @@ async function ouvrirLeParcoursDeMaths(page: Page, enfant = "Léa"): Promise<voi
     await expect(titre).toBeVisible();
   }
   await expect(page.getByText("Chargement du parcours")).toHaveCount(0, { timeout: 25_000 });
-  const onglet = page.getByRole("tab", { name: "Maths", exact: true });
+  const onglet = page.getByRole("tab", { name: matiere, exact: true });
   if ((await onglet.getAttribute("aria-selected")) !== "true") await onglet.click();
   await expect(onglet).toHaveAttribute("aria-selected", "true");
   await expect(dessin(page).getByTestId("lecon-du-parcours").first()).toBeVisible();
 }
 
-async function releverLeDefi(page: Page): Promise<void> {
+export async function releverLeDefi(page: Page): Promise<void> {
   await page.getByRole("button", { name: "Relever le défi", exact: true }).click();
   await expect(ecranDuDefi(page)).toBeVisible();
 }
@@ -347,7 +343,7 @@ export async function commencerLeDefi(page: Page, enfant = "Léa"): Promise<void
   await releverLeDefi(page);
 }
 
-async function laLeconAvantLeRepere(cible: Locator): Promise<string | null> {
+export async function laLeconAvantLeRepere(cible: Locator): Promise<string | null> {
   return await cible.evaluate((element) =>
     element.closest("li")?.previousElementSibling?.querySelector('[data-testid="place-de-la-lecon"]')?.textContent ?? null
   );
@@ -374,7 +370,7 @@ async function verifierLeRepere(page: Page, numero: string, genre: "aVenir" | "o
 // --- Jouer un défi, comme un enfant
 
 type Maniere = "juste" | "erreur" | "jeNeSaisPas";
-type Deroule = (enonce: string) => Maniere;
+export type Deroule = (enonce: string) => Maniere;
 
 export const TOUT_JUSTE: Deroule = () => "juste";
 
@@ -446,7 +442,7 @@ export async function jouerLeDefi(page: Page, deroule: Deroule, arret?: { nombre
   throw new Error("Le défi ne se termine pas");
 }
 
-function derouleDe(texte: string): Deroule {
+export function derouleDe(texte: string): Deroule {
   if (texte === "sans erreur") return TOUT_JUSTE;
   if (texte === "en se trompant une fois à chaque question") return () => "erreur";
   const erreur = /^en se trompant à « ([^«»]+) »$/.exec(texte);
@@ -456,7 +452,7 @@ function derouleDe(texte: string): Deroule {
   throw new Error(`Déroulé du défi inconnu : « ${texte} »`);
 }
 
-async function revenirAuParcours(page: Page): Promise<void> {
+export async function revenirAuParcours(page: Page): Promise<void> {
   await finDuDefi(page).getByRole("button", { name: "Mon parcours", exact: true }).click();
   await expect(dessin(page)).toBeVisible();
 }
@@ -605,7 +601,7 @@ When(/^l'appareil envoie pour Léa un défi 1 de maths terminé (.+)$/, async ({
   partie(famille).reponse = await envoyerUnDefi(await jetonDe(famille, "Paul"), await forgerUnDefiTermine(profil.id, maniere));
 });
 
-When(/^Claire demande les défis relevés du profil enfant de Léa$/, async ({ famille }) => {
+When(/^Claire demande les défis relevés du profil enfant de Léa$/, { tags: "@issue-100" }, async ({ famille }) => {
   const reponse = await fetch(
     `${variable("SUPABASE_URL")}/rest/v1/defis_termines?select=*&profil=eq.${encodeURIComponent(profilDe(famille, "Léa").id)}`,
     { headers: entetesDuParent(await jetonDeClaire(famille)) },
@@ -661,31 +657,6 @@ Then(/^le dessin du parcours montre le repère « Défi (\d+) » relevé, avec �
   await expect(cible.getByRole("button", { name: "Rejouer le défi", exact: true })).toBeVisible();
 });
 
-Then(/^le dessin du parcours montre un seul repère de défi, « Défi (\d+) », après la leçon (\d+)$/, async ({ famille, page }, numero: string, place: string) => {
-  const cible = pageDuParcours(famille, page);
-  await expect(dessin(cible).getByTestId("lecon-du-parcours").first()).toBeVisible();
-  await expect(repere(cible)).toHaveCount(1);
-  const unique = repereDuDefi(cible, numero);
-  await expect(unique).toHaveCount(1);
-  expect(await laLeconAvantLeRepere(unique), "leçon juste avant le repère").toBe(`Leçon ${place}`);
-});
-
-Then(/^le dessin du parcours montre aucun repère de défi$/, async ({ famille, page }) => {
-  const cible = pageDuParcours(famille, page);
-  await expect(dessin(cible).getByTestId("lecon-du-parcours").first()).toBeVisible();
-  await expect(repere(cible)).toHaveCount(0);
-});
-
-Then(/^aucun repère de défi n'apparaît après la leçon « ([^«»]+) »$/, async ({ famille, page }, titre: string) => {
-  const cible = pageDuParcours(famille, page);
-  const lecon = dessin(cible).getByRole("button", { name: new RegExp(`^${echapper(titre)} : `) });
-  await expect(lecon).toHaveCount(1);
-  const unRepereSuit = await lecon.evaluate(
-    (element) => element.closest("li")?.nextElementSibling?.querySelector('[data-testid="repere-du-defi"]') != null,
-  );
-  expect(unRepereSuit, `repère de défi juste après « ${titre} »`).toBe(false);
-});
-
 Then(/^le repère « Défi (\d+) » mesure au moins 44 px de haut$/, async ({ famille, page }, numero: string) => {
   const cible = repereDuDefi(pageDuParcours(famille, page), numero);
   await expect(cible).toBeVisible();
@@ -728,14 +699,6 @@ Then(/^les lecteurs d'écran annoncent, après « ([^«»]+) », la ligne « ([^
   await expect(cible.getByRole("group", { name: ligne, exact: true })).toHaveCount(1);
 });
 
-Then(/^les lecteurs d'écran n'annoncent aucune ligne de défi après « ([^«»]+) »$/, async ({ famille, page }, derniere: string) => {
-  const cible = pageDuParcours(famille, page);
-  const lecon = dessin(cible).getByRole("button", { name: derniere, exact: true });
-  await expect(lecon).toHaveCount(1);
-  const suivante = await lecon.evaluate((element) => element.closest("li")?.nextElementSibling !== null);
-  expect(suivante, "ligne juste après la dernière leçon").toBe(false);
-});
-
 // --- Alors : la fin de la séance
 
 Then(/^la fin de la séance annonce « Le défi (\d+) est ouvert ! »$/, { tags: "@issue-100" }, async ({ page }, numero: string) => {
@@ -745,7 +708,7 @@ Then(/^la fin de la séance annonce « Le défi (\d+) est ouvert ! »$/, { tags:
   await expect(annonce).toHaveAttribute("role", "status");
 });
 
-Then(/^Noisette dit « ([^«»]+) »$/, { tags: "@issue-100" }, async ({ page }, texte: string) => {
+Then(/^Noisette dit « ([^«»]+) »$/, { tags: "@issue-100 or @issue-137" }, async ({ page }, texte: string) => {
   const voulu = normaliser(texte);
   await expect.poll(async () => {
     const dit = normaliser((await bulle(page).textContent().catch(() => null)) ?? "");
@@ -756,7 +719,7 @@ Then(/^Noisette dit « ([^«»]+) »$/, { tags: "@issue-100" }, async ({ page },
   }, { intervals: [100], timeout: 20_000, message: `Noisette dit « ${texte} »` }).toBe(true);
 });
 
-Then(/^la fin de la séance propose (« .+ ») et (« [^«»]+ »)$/, { tags: "@issue-100" }, async ({ page }, premier: string, second: string) => {
+Then(/^la fin de la séance propose (« .+ ») et (« [^«»]+ »)$/, { tags: "@issue-100 or @issue-137" }, async ({ page }, premier: string, second: string) => {
   const noms = [...premier.matchAll(/« ([^«»]+) »/g)].map((m) => m[1] as string);
   noms.push(second.slice(2, -2));
   const fin = page.getByTestId("fin-de-seance");
@@ -780,7 +743,7 @@ Then(/^aucune annonce de défi ouvert n'apparaît à la fin de la séance$/, asy
 
 // --- Alors : pendant le défi
 
-Then(/^l'écran s'intitule « ([^«»]+) », avec « ([^«»]+) »$/, { tags: "@issue-100" }, async ({ page }, titre: string, sousTitre: string) => {
+Then(/^l'écran s'intitule « ([^«»]+) », avec « ([^«»]+) »$/, { tags: "@issue-100 or @issue-137" }, async ({ page }, titre: string, sousTitre: string) => {
   await expect(page.getByRole("heading", { level: 2, name: titre, exact: true })).toBeVisible();
   await expect(page.getByTestId("sous-titre-du-defi")).toHaveText(sousTitre);
 });
@@ -887,7 +850,7 @@ Then(/^Léa entend l'effet sonore « ([^«»]+) », puis Noisette dit « ([^«»
   expect(normaliser((await bulle(page).textContent()) ?? "")).toBe(normaliser(texte));
 });
 
-Then(/^elle voit le message « (.+) »$/, { tags: "@issue-100" }, async ({ page }, message: string) => {
+Then(/^elle voit le message « (.+) »$/, { tags: "@issue-100 or @issue-137" }, async ({ page }, message: string) => {
   // Sans réseau, l'envoi échoue après un délai : le message n'arrive pas tout de suite.
   await expect(page.getByTestId("sauvegarde")).toHaveText(message, { timeout: 25_000 });
   await expect(page.getByTestId("sauvegarde")).toHaveAttribute("role", "status");
