@@ -95,3 +95,20 @@ Deno.test("le grand défi relevé d'une autre classe ou d'une autre matière ne 
 
   assertEquals(etatDuGrandDefi({ reussies: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], releves }), { genre: "ouvert" });
 });
+
+Deno.test("un défi d'une partie relevé, même celui du numéro de la dernière partie, ne rend pas le grand défi relevé", () => {
+  const releves = [1, 2].map((numero) => ({ matiere: maths, niveau: ce1, numero }));
+
+  assertEquals(etatDuGrandDefi({ reussies: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], releves }), { genre: "ouvert" });
+});
+
+Deno.test("le grand défi relevé ne rend relevé aucun défi d'une partie", () => {
+  const parcours = parcoursDeLaMatiere({
+    lecons,
+    niveau: ce1,
+    meilleuresEtoiles: new Map([1, 2, 3, 4, 5].map((i) => [`ma-ce1-${i}`, Etoiles.de(1)])),
+  }, maths);
+  const [defiDUnePartie] = defisDeLaMatiere(parcours, maths, ce1);
+
+  assertEquals(etatDuDefi(defiDUnePartie, parcours, [grandDefiReleve()]), { genre: "ouvert" });
+});
