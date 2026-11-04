@@ -1,10 +1,10 @@
 import { assert, assertEquals, assertThrows } from "@std/assert";
 import { type Lecon, lireLecon, matiereDeCode, Niveau } from "../../catalogue/domain/index.ts";
 import { hasardSansMelange } from "../test_utils/hasard-fixe.ts";
-import type { Defi } from "./defis-de-la-matiere.ts";
+import type { Defi, GrandDefi } from "./defis-de-la-matiere.ts";
 import { AucuneQuestionPourLeDefi } from "./erreurs.ts";
 import type { Hasard } from "./hasard.ts";
-import { planDuDefi, questionsPosablesDuDefi } from "./plan-du-defi.ts";
+import { NOMBRE_DE_QUESTIONS_DU_GRAND_DEFI, planDuDefi, questionsPosablesDuDefi } from "./plan-du-defi.ts";
 
 const programme = { section: "section", citation: "citation" };
 const hasardToujoursEnTete: Hasard = { entre0et1: () => 0 };
@@ -35,6 +35,15 @@ function leconsDe(...nombresDeQuestions: number[]): Lecon[] {
 
 function defiDe(lecons: readonly Lecon[]): Defi {
   return { matiere: matiereDeCode("maths"), niveau: Niveau.de("CE1"), numero: 1, lecons: lecons.map(({ id }) => id) };
+}
+
+function grandDefiDe(lecons: readonly Lecon[]): GrandDefi {
+  return { matiere: matiereDeCode("maths"), niveau: Niveau.de("CE1"), lecons: lecons.map(({ id }) => id) };
+}
+
+function questionsDuGrandDefiParLecon(lecons: readonly Lecon[], hasard: Hasard = hasardSansMelange()): number[] {
+  const { questions } = planDuDefi(grandDefiDe(lecons), lecons, hasard);
+  return lecons.map(({ id }) => questions.filter(({ origine }) => origine.leconDOrigine === id).length);
 }
 
 function questionsParLecon(lecons: readonly Lecon[], hasard: Hasard = hasardSansMelange()): number[] {
@@ -230,4 +239,13 @@ Deno.test("le nombre de questions d'une leçon est compté sans les questions d�
   ];
 
   assertEquals(questionsParLecon(lecons), [1, 0]);
+});
+
+Deno.test("le grand défi pose 12 questions, réparties à parts égales entre les leçons", () => {
+  assertEquals(NOMBRE_DE_QUESTIONS_DU_GRAND_DEFI, 12);
+
+  const parLecon = questionsDuGrandDefiParLecon(leconsDe(4, 4, 4, 4, 4));
+
+  assertEquals(parLecon.reduce((a, b) => a + b, 0), 12);
+  assert(parLecon.every((nombre) => nombre >= 2 && nombre <= 3));
 });
