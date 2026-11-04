@@ -1,7 +1,7 @@
 import { assertEquals } from "@std/assert";
 import { lireLecon, matiereDeCode, Niveau } from "../../catalogue/domain/index.ts";
 import type { Lecon } from "../../catalogue/domain/index.ts";
-import { defisDeLaMatiere, etatDuDefi } from "./defis-de-la-matiere.ts";
+import { type DefiReleve, defisDeLaMatiere, etatDuDefi, grandDefiDeLaMatiere } from "./defis-de-la-matiere.ts";
 import { Etoiles } from "./etoiles.ts";
 import { parcoursDeLaMatiere } from "./parcours.ts";
 
@@ -59,4 +59,19 @@ Deno.test("un défi relevé reste relevé même si ses leçons ne sont plus tout
 
 Deno.test("le défi relevé d'un autre numéro ne rend pas ce défi relevé", () => {
   assertEquals(etatDuDefi1({ reussies: [1, 2, 3, 4, 5], releves: [{ numero: 2 }] }), { genre: "ouvert" });
+});
+
+function etatDuGrandDefi(
+  options: { nombreDeLecons?: number; reussies?: number[]; releves?: DefiReleve[] } = {},
+) {
+  const lesLecons = Array.from({ length: options.nombreDeLecons ?? 10 }, (_, index) => lecon(index + 1));
+  const meilleuresEtoiles = new Map((options.reussies ?? []).map((i) => [`ma-ce1-${i}`, Etoiles.de(1)]));
+  const parcours = parcoursDeLaMatiere({ lecons: lesLecons, niveau: ce1, meilleuresEtoiles }, maths);
+  const grandDefi = grandDefiDeLaMatiere(parcours, maths, ce1);
+  if (grandDefi === undefined) throw new Error("la matière a des leçons dans la classe");
+  return etatDuDefi(grandDefi, parcours, options.releves ?? []);
+}
+
+Deno.test("un grand défi dont 4 leçons de la classe sur 10 sont réussies est à venir, avec encore 6 leçons", () => {
+  assertEquals(etatDuGrandDefi({ reussies: [1, 2, 3, 4] }), { genre: "aVenir", leconsRestantes: 6 });
 });
