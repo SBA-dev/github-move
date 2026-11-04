@@ -91,7 +91,7 @@ R6, R7 et R8.
 
 | Règle | Scénarios |
 |---|---|
-| **R1.** Chaque partie du parcours, sauf la dernière de sa matière, a un défi ; il s'ouvre quand toutes ses leçons sont réussies ; avant, il est à venir, visible et sans cadenas | 1.1 Avec 0 ou 4 leçons réussies sur 5, le défi 1 est à venir (plan, 2 cas) · 1.2 Des leçons réussies au test de départ comptent pour ouvrir le défi · 1.3 La séance qui rend réussie la dernière leçon qui manquait ouvre le défi, et le personnage guide le propose sans le lancer · 1.4 Une séance qui n'ouvre aucun défi n'annonce aucun défi : leçon rejouée alors que son défi est déjà ouvert, dernière leçon de la dernière partie du parcours (plan, 2 cas) · 1.5 La dernière partie du parcours des maths, ou une matière d'une seule partie du parcours, n'a pas de défi (plan, 2 cas) |
+| **R1.** Chaque partie du parcours, sauf la dernière de sa matière, a un défi ; il s'ouvre quand toutes ses leçons sont réussies ; avant, il est à venir, visible et sans cadenas | 1.1 Avec 0 ou 4 leçons réussies sur 5, le défi 1 est à venir (plan, 2 cas) · 1.2 Des leçons réussies au test de départ comptent pour ouvrir le défi · 1.3 La séance qui rend réussie la dernière leçon qui manquait ouvre le défi, et le personnage guide le propose sans le lancer · 1.4 Une leçon rejouée alors que son défi est déjà ouvert n'annonce aucun défi |
 | **R2.** Le défi ne bloque rien et ne change aucune note ; il ne donne ni objet de la cabane, ni tenue, ni badge, ni épisode | 2.1 Sans avoir fait le défi 1, l'enfant continue son parcours, et le personnage guide se tient sur la leçon 6 · 2.2 Relever le défi ne change aucune étoile des leçons de la partie du parcours · 2.3 La fin du défi ne montre aucune étoile et n'annonce ni objet de la cabane, ni tenue, ni badge, ni épisode |
 | **R3.** 10 questions prises seulement dans les leçons de la partie du parcours, parmi celles qui se posent seules et sans temps limité, réparties à parts égales et mélangées | 3.1 Le défi 1 pose 2 questions de chacune des leçons 1 à 5, mélangées, jamais d'une autre leçon ni d'une fluence |
 | **R4.** Une erreur suit les règles d'une séance ; ni vie, ni temps limité, ni compte des erreurs ; la question ratée entre dans la file de révision | 4.1 Le défi commence par une parole du personnage guide, sans vie ni temps qui passe · 4.2 Après une erreur pendant le défi, le personnage guide encourage, donne l'aide, et la même question reste posée · 4.3 Après un défi relevé en se trompant, en disant « Je ne sais pas » ou sans erreur, l'accueil du lendemain propose ou non la séance de révision (plan, 3 cas) |
@@ -100,7 +100,18 @@ R6, R7 et R8.
 | **R7.** Sans réseau, sans mouvement, sur 360 px | 7.1 Sans réseau, le défi se joue jusqu'au bout et sa fin dit que la progression est gardée sur l'appareil · 7.2 Avec les mouvements réduits, la fin du défi garde son annonce, sans mouvement ni confettis · 7.3 Une question du défi tient dans un écran de 360 px, « Je ne sais pas » compris · 7.4 À 360 px, le repère du défi tient dans la largeur et est assez grand pour un doigt d'enfant |
 | **R8.** Le défi relevé est enregistré par le serveur, après vérification, seulement pour un parent rattaché ; il est compris dans les données du profil | 8.1 `@acces` Sur le téléphone du second parent rattaché, l'enfant retrouve son défi relevé · 8.2 Le serveur refuse un défi terminé incohérent : défi à venir, question d'une leçon hors du défi, question qui ne finit pas par la bonne réponse (plan, 3 cas) · 8.3 `@acces` Le défi relevé par un enfant ne se voit pas chez un autre enfant du même parent · 8.4 `@acces` Un parent qui n'est pas rattaché ne lit pas les défis relevés de Léa · 8.5 `@acces` Un parent qui n'est pas rattaché ne peut pas enregistrer un défi terminé pour Léa · 8.6 `@depend-de-14` L'export du profil contient les défis relevés, sans les réponses données |
 
-Total : 8 règles, 28 scénarios (dont 7 plans du scénario), soit 37 cas générés ; 4 `@acces`, aucun `@a-valider`.
+Total : 8 règles, 27 scénarios (dont 5 plans du scénario), soit 34 cas générés ; 4 `@acces`, aucun `@a-valider`.
+
+**Modifié par #137** (2026-11-04) : avec le grand défi, la dernière leçon de la dernière partie du parcours annonce le
+grand défi, et la dernière partie du parcours comme une matière d'une seule partie du parcours ont le repère « Grand
+défi ». Trois passages de ce fichier `.feature` devenaient faux ; ils sont retirés, et leur nouveau comportement est
+décrit par `features/137-grand-defi.feature` :
+- 1.4, 2e cas (« dernière leçon de la dernière partie du parcours », aucune annonce) : retiré ; 1.4 devient un
+  scénario simple. Remplacé par 137, règle 2 (« Le grand défi des maths est ouvert ! ») ;
+- 1.5 (« aucun repère de défi » après « Maths 10 » et pour les sciences) : retiré. Remplacé par 137, règle 1 (repère
+  « Grand défi » ; un seul défi d'une partie du parcours pour les maths, aucun pour les sciences) ;
+- 6.2, dernière ligne (« aucune ligne de défi après « Maths 10 : à découvrir » ») : retirée. Remplacée par 137,
+  règle 5 (« Grand défi : à venir, encore 6 leçons pour ouvrir le défi »).
 
 Le scénario 8.6 est tagué `@depend-de-14` : l'export d'un profil (#14, `features/14-suppression-et-export.feature`,
 encore `@wip`, sortie de la beta) n'est pas livré ; il est exclu des exécutions jusqu'à #14, comme les scénarios
