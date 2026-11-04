@@ -1,6 +1,6 @@
 import { ECHELLE_DE_BASE } from "./personnage.ts";
-import { E, fenetre, lerp, r1, r3 } from "./courbes.ts";
-import { deplacer, elementsDe, poser } from "./dom.ts";
+import { E, fenetre, lerp, r1, r3 } from "../commun/courbes.ts";
+import { deplacer, elementsDe, poser } from "../commun/dom.ts";
 import { POINT_DU_FILET } from "./ballon-et-filet.ts";
 import { type Pose, poseA, type ScenarioDeBut, T_IMPACT, T_VARIANTE } from "./poses.ts";
 
@@ -8,7 +8,7 @@ const COULEURS_DES_RAYONS = ["#1F63D8", "#FFC93C", "#FFFFFF", "#4C8FF5"];
 
 /** Le cri de victoire, les rayons, l'étoile et les gouttes de joie, la poussière de la glissade, l'impact, les traits de vitesse. */
 export function creerLesEffets(racine: SVGSVGElement) {
-  const n = elementsDe(racine);
+  const n = elementsDe(racine, "sports");
   n("etoiles").innerHTML = [0, 1, 2].map(() => `<path d="M0 -7 L2 -2 L7 0 L2 2 L0 7 L-2 2 L-7 0 L-2 -2 Z"/>`).join("");
   n("gouttes").innerHTML = [0, 1].map(() => `<path d="M0 -4 Q3 0 0 3 Q-3 0 0 -4 Z"/>`).join("");
   n("impact").innerHTML = Array.from({ length: 8 }, (_, i) => `<line x1="0" y1="-10" x2="0" y2="-18" transform="rotate(${i * 45})"/>`).join("");

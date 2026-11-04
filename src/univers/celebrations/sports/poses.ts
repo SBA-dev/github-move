@@ -1,5 +1,6 @@
 import type { VarianteDe } from "@domain/motivation";
-import { type Courbe, E, lerp } from "./courbes.ts";
+import { E, lerp } from "../commun/courbes.ts";
+import { compiler, type ImageCle, type ImagePartielle, poseA as poseDeLaScene } from "../commun/poses.ts";
 
 /**
  * Angles en degrés, positifs = sens horaire. g/d = côté gauche/droit de l'écran. `vue` : 180 = de dos, 90 = profil, 0 = de face.
@@ -35,9 +36,6 @@ export type Pose = {
   devant: number;
 };
 
-export type ImageCle = { readonly t: number; readonly e: Courbe; readonly p: Pose };
-type ImagePartielle = { readonly t: number; readonly e: Courbe; readonly p: Partial<Pose> };
-
 const REPOS: Pose = {
   x: 70,
   y: 370,
@@ -67,9 +65,8 @@ const REPOS: Pose = {
   lid: 0,
   devant: 0,
 };
-const CLES_DE_POSE = Object.keys(REPOS) as (keyof Pose)[];
 
-const FRAPPE: readonly ImagePartielle[] = [
+const FRAPPE: readonly ImagePartielle<Pose>[] = [
   { t: 0.00, e: E.douce, p: { tete: 4 } },
   { t: 0.26, e: E.douce, p: { x: 62, y: 374, rot: -9, torse: -8, tete: 10, aGu: 46, aGl: 26, aDu: -52, aDl: -34, lGt: 10, lGs: 8, lDt: 52, lDs: 58, fD: 1, mG: 1, mD: 1, sy: .96, sx: 1.04 } },
   { t: 0.38, e: E.douce, p: { lDt: 60, lDs: 70, rot: -11, torse: -10 } },
@@ -80,7 +77,7 @@ const FRAPPE: readonly ImagePartielle[] = [
 ];
 
 /** Retournement : dos, trois-quarts dos, profil, trois-quarts face, face, avec un saut. */
-const retournement = (t0: number, x: number): readonly ImagePartielle[] => [
+const retournement = (t0: number, x: number): readonly ImagePartielle<Pose>[] => [
   { t: t0, e: E.entree, p: { y: 378, sy: .9, sx: 1.08, vue: 165, torse: 3 } },
   { t: t0 + .12, e: E.sortie, p: { y: 346, sy: 1.1, sx: .94, vue: 135, x: lerp(70, x, .3), tete: 0, torse: -2, aGu: 40, aGl: 30, aDu: -40, aDl: -30 } },
   { t: t0 + .22, e: E.lineaire, p: { y: 336, sy: 1.04, sx: .98, vue: 90, x: lerp(70, x, .6) } },
@@ -91,7 +88,7 @@ const retournement = (t0: number, x: number): readonly ImagePartielle[] => [
 
 const V: Partial<Pose> = { aGu: 152, aGl: 20, aDu: -152, aDl: -20, mG: 3, mD: 3 };
 
-const glissade = (t0: number): readonly ImagePartielle[] => [
+const glissade = (t0: number): readonly ImagePartielle<Pose>[] => [
   { t: t0 + .00, e: E.douce, p: { y: 382, sy: .86, sx: 1.12, torse: 6, aGu: 48, aGl: 24, aDu: -48, aDl: -24, lGt: 30, lGs: -24, lDt: -30, lDs: 24, lid: 0, mG: 1, mD: 1 } },
   { t: t0 + .20, e: E.sortie, p: { y: 302, sy: 1.12, sx: .9, torse: -4, ...V, lGt: 18, lGs: 120, lDt: -18, lDs: -120, tG: .5, tD: .5, s: 1.04 } },
   { t: t0 + .42, e: E.entree, p: { x: 98, y: 374, sy: .92, sx: 1.08, torse: 4, aGu: 140, aDu: -140, lGt: 0, lGs: 0, lDt: 0, lDs: 0, tG: 1, tD: 1, s: 1.06, course: 1 } },
@@ -103,7 +100,7 @@ const glissade = (t0: number): readonly ImagePartielle[] => [
   { t: t0 + 1.85, e: E.douce, p: { x: 227, y: 414, torse: -2, aGu: 150, aDu: -162 } },
 ];
 
-const avion = (t0: number): readonly ImagePartielle[] => [
+const avion = (t0: number): readonly ImagePartielle<Pose>[] => [
   { t: t0 + .00, e: E.douce, p: { aGu: 60, aGl: 10, aDu: -60, aDl: -10, lid: 0, y: 376, sy: .94, sx: 1.05 } },
   { t: t0 + .25, e: E.sortie, p: { aGu: 96, aGl: 0, aDu: -96, aDl: 0, mG: 3, mD: 3, rot: -18, torse: -5, tete: -8, x: 96, y: 382, s: 1.06, course: 1, sy: 1, sx: 1 } },
   { t: t0 + .65, e: E.douce, p: { x: 176, y: 404, s: 1.18, rot: 0, torse: 0, tete: 0 } },
@@ -114,8 +111,8 @@ const avion = (t0: number): readonly ImagePartielle[] => [
   { t: t0 + 2.40, e: E.douce, p: { aGu: 146, aDu: -146 } },
 ];
 
-const danse = (t0: number): readonly ImagePartielle[] => {
-  const pas = (t: number, x: number, cote: 1 | -1): readonly ImagePartielle[] => [
+const danse = (t0: number): readonly ImagePartielle<Pose>[] => {
+  const pas = (t: number, x: number, cote: 1 | -1): readonly ImagePartielle<Pose>[] => [
     { t, e: E.sortie, p: { x: lerp(x, 70, .5), y: 348, sy: 1.06, sx: .96, rot: cote * -7, aGu: cote > 0 ? 152 : 62, aGl: cote > 0 ? 26 : -74, aDu: cote > 0 ? -62 : -152, aDl: cote > 0 ? 74 : -26, mG: cote > 0 ? 0 : 1, mD: cote > 0 ? 1 : 0, lGt: 24, lGs: -18, lDt: -24, lDs: 18, torse: cote * -6, tete: cote * 7 } },
     { t: t + .17, e: E.entree, p: { x, y: 374, rot: cote * -10, lGt: cote > 0 ? 18 : 4, lGs: 0, lDt: cote > 0 ? -4 : -18, lDs: 0, sy: .9, sx: 1.08 } },
     { t: t + .26, e: E.douce, p: { y: 370, sy: 1, sx: 1 } },
@@ -135,34 +132,13 @@ const danse = (t0: number): readonly ImagePartielle[] => {
 };
 
 /** La variante : ses images clés, et l'instant (depuis le début de la variante) où le personnage a fini de bouger. */
-const VARIANTES: Record<VarianteDe<"sports">, { readonly images: (t0: number) => readonly ImagePartielle[]; readonly finDuMouvement: number }> = {
+const VARIANTES: Record<VarianteDe<"sports">, { readonly images: (t0: number) => readonly ImagePartielle<Pose>[]; readonly finDuMouvement: number }> = {
   glissade: { images: glissade, finDuMouvement: 1.85 },
   avion: { images: avion, finDuMouvement: 2.40 },
   danse: { images: danse, finDuMouvement: 2.50 },
 };
 
-function compiler(liste: readonly ImagePartielle[]): readonly ImageCle[] {
-  let precedente = REPOS;
-  return liste.map(({ t, e, p }) => {
-    precedente = { ...precedente, ...p };
-    return { t, e, p: precedente };
-  });
-}
-
-export function poseA(poses: readonly ImageCle[], t: number): Pose {
-  const premiere = poses[0];
-  if (!premiere || t <= premiere.t) return premiere?.p ?? REPOS;
-  for (let i = 1; i < poses.length; i++) {
-    const k = poses[i];
-    const a = poses[i - 1];
-    if (!k || !a || t > k.t) continue;
-    const u = k.e((t - a.t) / (k.t - a.t));
-    const r = { ...REPOS };
-    for (const c of CLES_DE_POSE) r[c] = lerp(a.p[c], k.p[c], u);
-    return r;
-  }
-  return poses[poses.length - 1]?.p ?? REPOS;
-}
+export const poseA = (poses: readonly ImageCle<Pose>[], t: number): Pose => poseDeLaScene(REPOS, poses, t);
 
 export type Emotion = "concentration" | "surprise" | "joie";
 
@@ -171,7 +147,7 @@ export type ScenarioDeBut = {
   /** Fin de la scène, en secondes du temps de la maquette (la scène est ensuite accélérée pour tenir en 3 s). */
   readonly fin: number;
   readonly tTour: number;
-  readonly poses: readonly ImageCle[];
+  readonly poses: readonly ImageCle<Pose>[];
   readonly expressions: readonly { readonly t: number; readonly emo: Emotion }[];
   readonly tCri: number;
   readonly tJoie: number;
@@ -189,7 +165,7 @@ export function scenarioDuBut(variante: VarianteDe<"sports">): ScenarioDeBut {
     variante,
     fin: T_VARIANTE + finDuMouvement + PAUSE_FINALE,
     tTour: T_TOUR,
-    poses: compiler([...FRAPPE, ...retournement(T_TOUR, 70), ...images(T_VARIANTE)]),
+    poses: compiler(REPOS, [...FRAPPE, ...retournement(T_TOUR, 70), ...images(T_VARIANTE)]),
     expressions: [{ t: 0, emo: "concentration" }, { t: T_IMPACT + .02, emo: "surprise" }, { t: T_TOUR + .3, emo: "joie" }],
     tCri: T_IMPACT + .03,
     tJoie: T_VARIANTE + .1,

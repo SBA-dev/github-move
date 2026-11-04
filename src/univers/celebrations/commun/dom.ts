@@ -6,13 +6,13 @@ export function trouver(parent: ParentNode, selecteur: string): SVGElement {
   return element;
 }
 
-/** Retrouve un élément de la scène par son identifiant, une seule fois. */
-export function elementsDe(racine: ParentNode): (id: string) => SVGElement {
+/** Retrouve un élément de la scène par son identifiant (préfixé par celui de l'univers : `sports-leo`, `danse-lili`), une seule fois. */
+export function elementsDe(racine: ParentNode, prefixe: string): (id: string) => SVGElement {
   const memo = new Map<string, SVGElement>();
   return (id) => {
     const connu = memo.get(id);
     if (connu) return connu;
-    const trouve = trouver(racine, `#sports-${id}`);
+    const trouve = trouver(racine, `#${prefixe}-${id}`);
     memo.set(id, trouve);
     return trouve;
   };
