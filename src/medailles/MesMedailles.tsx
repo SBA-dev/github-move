@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { ProfilEnCours } from "@domain/famille";
 import {
   type Badge,
@@ -73,9 +73,7 @@ export function MesMedailles({ profil, univers, voix, onOuvrirLEpisode }: Props)
     for (const texte of textes) if (!(await dire({ texte, nature: "annonce" }))) return;
   }, [dire]);
 
-  const silenceALaSortie = useRef(faireSilence);
-  silenceALaSortie.current = faireSilence;
-  useEffect(() => () => silenceALaSortie.current(), []);
+  useEffect(() => faireSilence, [faireSilence]);
 
   useEffect(() => {
     if (!accueilDeLEcran.peutEtreDit()) return;
