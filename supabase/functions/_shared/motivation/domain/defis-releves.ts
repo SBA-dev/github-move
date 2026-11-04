@@ -1,5 +1,5 @@
 import { libelleCourtDe, Niveau, toutesLesMatieres } from "../../catalogue/domain/index.ts";
-import { type DefiReleve, estUnGrandDefi, numeroDuDefi } from "../../apprentissage/domain/index.ts";
+import { type DefiReleve, estUnGrandDefi } from "../../apprentissage/domain/index.ts";
 import type { EffetSonore } from "../../voix/domain/index.ts";
 import { nomDuDefi, nomDuGrandDefi, titreDuDefiReleve, titreDuGrandDefiReleve } from "./paroles-du-defi.ts";
 
@@ -10,7 +10,7 @@ export interface IssueDuDefi {
 
 function memeDefi(a: DefiReleve, b: DefiReleve): boolean {
   return a.matiere.code === b.matiere.code && a.niveau.valeur === b.niveau.valeur &&
-    numeroDuDefi(a) === numeroDuDefi(b);
+    a.numero === b.numero;
 }
 
 export function defiReleveParLaSeance(relevesAvant: readonly DefiReleve[], defi: DefiReleve): IssueDuDefi {

@@ -14,7 +14,6 @@ import {
   etatDuDefi,
   type GrandDefi,
   grandDefiDeLaMatiere,
-  numeroDuDefi,
 } from "./defis-de-la-matiere.ts";
 import {
   enveloppantLesErreursDeRejeu,
@@ -55,7 +54,7 @@ export function revaliderLeDefi(
 
 function defiEnvoye(envoye: DefiReleve, parcours: Parcours, entrees: EntreesDuParcours): Defi | GrandDefi | undefined {
   const { matiere } = envoye;
-  const numero = numeroDuDefi(envoye);
+  const { numero } = envoye;
   return numero === undefined
     ? grandDefiDeLaMatiere(parcours, matiere, entrees.niveau)
     : defisDeLaMatiere(parcours, matiere, entrees.niveau).find((candidat) => candidat.numero === numero);

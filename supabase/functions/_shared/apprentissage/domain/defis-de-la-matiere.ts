@@ -69,11 +69,7 @@ function vientDOuvrir(
 
 function estLeMemeDefi(a: DefiReleve, b: Defi | GrandDefi | DefiReleve): boolean {
   return a.matiere.code === b.matiere.code && a.niveau.valeur === b.niveau.valeur &&
-    numeroDuDefi(a) === numeroDuDefi(b);
-}
-
-export function numeroDuDefi(defi: Defi | GrandDefi | DefiReleve): number | undefined {
-  return defi.numero;
+    a.numero === b.numero;
 }
 
 function estReussieDansLeParcours(parcours: Parcours, id: LeconId): boolean {

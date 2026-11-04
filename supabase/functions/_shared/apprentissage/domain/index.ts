@@ -154,7 +154,7 @@ export { partiesDuParcours } from "./partie-du-parcours.ts";
 export type { PartieDuParcours } from "./partie-du-parcours.ts";
 export { defisDeLaMatiere } from "./defis-de-la-matiere.ts";
 export { defiOuvertParLaSeance } from "./defis-de-la-matiere.ts";
-export { estUnGrandDefi, etatDuDefi, numeroDuDefi, releveDuDefi } from "./defis-de-la-matiere.ts";
+export { estUnGrandDefi, etatDuDefi, releveDuDefi } from "./defis-de-la-matiere.ts";
 export { grandDefiDeLaMatiere } from "./defis-de-la-matiere.ts";
 export type { Defi, DefiReleve, EtatDuDefi, GrandDefi } from "./defis-de-la-matiere.ts";
 export { planDuDefi, questionsPosablesDuDefi } from "./plan-du-defi.ts";
