@@ -19,3 +19,14 @@
 - 21:10 UTC : critères (`e9a52e4`, `e8bd3e7`) : 6 règles, 15 scénarios, 17 cas par projet. Scénarios de #100 que le
   grand défi rend faux retirés (1.4 2e cas, 1.5, une ligne de 6.2). Questions #137.1 à #137.7.
 - CADRAGE PRÊT publié sur #137 ; attente de la validation n°1 (annonce [Responsable] sur #64).
+
+## Étape 3 : TDD
+
+- Bloc 1 (comportements 1 à 4, `grandDefiDeLaMatiere`) : RED `ccb9e77`..`ca819c3`, GREEN `5f5e2bc`. 4 = caractérisation (tests de #100).
+- Blocs 2 et 3 (5 à 14, état et plan à 12 questions) : RED `7cd4ca6`..`b356544`, GREEN `1927c86`. 13 = caractérisation.
+- Blocs 4 à 6 (15 à 24, ouverture par la séance, séance de défi, revalidation, formes de la matière) : RED
+  `ca25a1b`..`7dda31e`, GREEN `d33a63f`, `443e122`. Le test de #100 « terminer la dernière partie n'ouvre aucun défi »
+  est remplacé par le comportement 15. Les tests du comportement 16 passaient avant le GREEN : ajoutés ensuite comme
+  non-régression.
+  - Provisoire jusqu'au câblage : `useDefiOuvertParLaSeance` (front) ignore le grand défi, l'adaptateur Supabase et
+    `enCorpsDuDefi` refusent explicitement un grand défi.
