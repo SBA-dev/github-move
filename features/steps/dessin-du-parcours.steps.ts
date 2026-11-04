@@ -4,7 +4,7 @@ import { LECONS_DU_DESSIN } from "../support/bibliotheque-du-dessin-du-parcours.
 import { etat, type LeconBrute } from "./etapes-puis-exercices.steps.ts";
 import { ETOILES_PAR_SEANCE, jouerLaSeanceCompleteAvecErreurs, noterUneSeanceJouee, ouvrirLeParcoursDeFrancais, preparerLesEtoiles, seancesJoueesDe, verifierUneLecon } from "./parcours.steps.ts";
 import { rechargerAvecLeProfilReel } from "./profil-reel.ts";
-import { choisirSonProfil } from "./profils-enfants.steps.ts";
+import { choisirSonProfil, quitterLaFinDeSeanceVersQuiJoue } from "./profils-enfants.steps.ts";
 import { Given, Then, test, When } from "./fixtures.ts";
 
 // Story #99 : « Mon parcours » se dessine dans le paysage de l'univers, le personnage guide marche jusqu'à la nouvelle prochaine leçon.
@@ -101,7 +101,7 @@ Given(/^Léa a réussi les (\d+) premières leçons de maths du CE1$/, async ({ 
 async function terminerUneSeance(page: Page, titre: string, etoiles: string): Promise<void> {
   noterUneSeanceJouee(page, titre, Number(etoiles));
   await jouerLaSeanceCompleteAvecErreurs(page, titre, ETOILES_PAR_SEANCE[Number(etoiles)] ?? 0);
-  await page.getByTestId("fin-de-seance").getByRole("button", { name: "Accueil", exact: true }).click();
+  await quitterLaFinDeSeanceVersQuiJoue(page);
 }
 
 Given(

@@ -1,5 +1,6 @@
 import { expect, type Page } from "@playwright/test";
 import { sansLaQueteAccomplie } from "../support/phrase-de-fin-avec-la-quete.ts";
+import { attendreQueLaBulleSeTerminePar } from "./retours-animes-et-sonores.steps.ts";
 import { Given, Then, When } from "./fixtures.ts";
 import {
   BIBLIOTHEQUE,
@@ -708,6 +709,7 @@ Then(/^Noisette dit une félicitation commune ou l'une de ses expressions, en en
 });
 
 Then(/^Noisette dit une félicitation, suivie de « (.+) »$/, async ({ page }, explication: string) => {
+  await attendreQueLaBulleSeTerminePar(page, explication);
   await expect(bulle(page)).toHaveAttribute("data-nature", "felicitation");
   const texte = sansLaQueteAccomplie(normaliser((await bulle(page).textContent()) ?? ""));
   expect(texte.endsWith(` ${explication}`), texte).toBe(true);

@@ -9,6 +9,7 @@ import {
   meilleuresEtoilesEnRest,
   type ReponseDeLEnregistrement,
 } from "../support/seances-api.ts";
+import { attendreQueLaBulleSeTerminePar } from "./retours-animes-et-sonores.steps.ts";
 import { Given, Then, When } from "./fixtures.ts";
 import {
   commencerLaSeanceComplete,
@@ -512,6 +513,7 @@ Then(/^Léa ne voit aucun message de plus$/, async ({ famille, page }) => {
 });
 
 Then(/^Noisette dit l'une de ses expressions, suivie de « (.+) »$/, async ({ page }, suite: string) => {
+  await attendreQueLaBulleSeTerminePar(page, suite);
   await expect(bulle(page)).toHaveAttribute("data-nature", "felicitation");
   const texte = sansLaQueteAccomplie(normaliser((await bulle(page).textContent()) ?? ""));
   expect(texte.endsWith(` ${suite}`), texte).toBe(true);

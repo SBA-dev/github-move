@@ -1,6 +1,7 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 import { createBdd } from "playwright-bdd";
 import { sansLaQueteAccomplie } from "../support/phrase-de-fin-avec-la-quete.ts";
+import { attendreQueLaBulleSeTerminePar } from "./retours-animes-et-sonores.steps.ts";
 import { type Monde, type ProfilPrepare, test } from "./fixtures.ts";
 import { bulle, injecter, type LeconBrute, leconDeTest, leconDeTitre } from "./etapes-puis-exercices.steps.ts";
 import { avancerJusquAuxChoix, demarrer, etatDesChoix, lancer, questionsReussies } from "./exercices-a-choix.steps.ts";
@@ -341,6 +342,7 @@ function prononce(texte: string): string {
 }
 
 Then(/^Noisette dit une félicitation, suivie de « (.+) »$/, async ({ page }, explication: string) => {
+  await attendreQueLaBulleSeTerminePar(page, explication);
   await expect(bulle(page)).toHaveAttribute("data-nature", "felicitation");
   const texte = sansLaQueteAccomplie(normaliser((await bulle(page).textContent()) ?? ""));
   expect(texte.endsWith(` ${explication}`), texte).toBe(true);

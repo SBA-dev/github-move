@@ -3,6 +3,7 @@ import type { DataTable } from "playwright-bdd";
 import { sansLaQueteAccomplie } from "../support/phrase-de-fin-avec-la-quete.ts";
 import { ecrireDesSeancesTermineesPourLaSerie, jourPrepare } from "../support/serie-api.ts";
 import { lireEnRest } from "../support/seances-api.ts";
+import { attendreQueLaBulleSeTerminePar } from "./retours-animes-et-sonores.steps.ts";
 import { EXPRESSIONS_PAR_PERSONNAGE, FELICITATIONS_COMMUNES, leGuide } from "./univers.steps.ts";
 import { bulle, entendu, jouerLaSeanceComplete, toutesLesParoles } from "./etapes-puis-exercices.steps.ts";
 import { ecranDe, leaJoueAvecSonVraiProfil, lecturesParLot, ouvrirLEcran } from "./ecran-mes-medailles.steps.ts";
@@ -481,6 +482,7 @@ Then(/^Noisette termine les paroles de fin de fluence par « ([^«»]+) »$/, as
 });
 
 Then(/^Capitaine Sam dit une félicitation, suivie de « (.+) »$/, async ({ page }, explication: string) => {
+  await attendreQueLaBulleSeTerminePar(page, explication);
   await expect(bulle(page)).toHaveAttribute("data-nature", "felicitation", { timeout: DELAI_D_UN_APPEL_SERVEUR_MS });
   const texte = sansLaQueteAccomplie(normaliser((await bulle(page).textContent()) ?? ""));
   expect(texte.endsWith(` ${explication}`), texte).toBe(true);
