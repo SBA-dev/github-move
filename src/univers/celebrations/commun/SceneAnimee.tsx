@@ -1,23 +1,23 @@
 import { type ComponentType, type RefObject, useLayoutEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
-import type { UniversCelebre } from "@domain/motivation";
+import type { UniversCelebre, VarianteDe } from "@domain/motivation";
 import { useMouvementsReduits } from "../../../transitions/mouvements-reduits.ts";
 
 type ScenePrete = { jouer(quandTerminee: () => void): () => void; montrerLEtatFinal(): void };
 
-type Props<Cle extends string> = {
-  readonly univers: UniversCelebre;
-  readonly cle: Cle;
+type Props<U extends UniversCelebre> = {
+  readonly univers: U;
+  readonly cle: VarianteDe<U>;
   readonly cri: string;
   readonly Decor: ComponentType<{ readonly racine: RefObject<SVGSVGElement | null>; readonly cri: string }>;
-  readonly creerLaScene: (racine: SVGSVGElement, toile: HTMLCanvasElement | null, cle: Cle) => ScenePrete;
+  readonly creerLaScene: (racine: SVGSVGElement, toile: HTMLCanvasElement | null, cle: VarianteDe<U>) => ScenePrete;
 };
 
 /**
  * La scène d'un univers : son décor, la toile des confettis (ou des pétales) et le moteur qui les anime.
  * Entrée en fondu avec Motion ; l'image fixe de l'état final avec les mouvements réduits (pas de toile, donc pas de confettis).
  */
-export function SceneAnimee<Cle extends string>({ univers, cle, cri, Decor, creerLaScene }: Props<Cle>) {
+export function SceneAnimee<U extends UniversCelebre>({ univers, cle, cri, Decor, creerLaScene }: Props<U>) {
   const reduits = useMouvementsReduits();
   const racine = useRef<SVGSVGElement>(null);
   const toile = useRef<HTMLCanvasElement>(null);
