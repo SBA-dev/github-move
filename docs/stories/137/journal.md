@@ -13,3 +13,9 @@
   #137 dans `docs/stories/100/acceptance.md` (anciens 3.2, 3.3, 6.1 à 6.3, lignes retirées de 5.4, 7.2 et 8.4).
 - Étape 1 (domaine) : nécessaire. Le grand défi est un nouveau concept (défi de la matière, ouverture à la matière
   réussie, remplacement du défi de la dernière partie, tirage sur toute la matière).
+- 21:00 UTC : modèle du domaine (`8fbd38e`). Nouvelle table additive `grands_defis_termines` nécessaire
+  (`defis_termines.numero` est `check (numero >= 1)`) ; `terminer-le-defi` à étendre. Décision 0041 réservée par le
+  responsable (tableau de #64).
+- 21:10 UTC : critères (`e9a52e4`, `e8bd3e7`) : 6 règles, 15 scénarios, 17 cas par projet. Scénarios de #100 que le
+  grand défi rend faux retirés (1.4 2e cas, 1.5, une ligne de 6.2). Questions #137.1 à #137.7.
+- CADRAGE PRÊT publié sur #137 ; attente de la validation n°1 (annonce [Responsable] sur #64).
