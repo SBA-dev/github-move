@@ -71,3 +71,19 @@ Deno.test("le grand défi d'une matière de 13 leçons reprend les 13 leçons de
 
   assertEquals(grandDefi?.lecons, lecons.map(({ id }) => id));
 });
+
+Deno.test("le grand défi ne prend ni les leçons des classes d'avant, ni celles d'une classe au-dessus, ni les leçons personnelles", () => {
+  const delaClasse = [leconDe("ma-ce1-1", "maths", "CE1", 1), leconDe("ma-ce1-2", "maths", "CE1", 2)];
+  const niveau = Niveau.de("CE1");
+  const maths = delaClasse[0].matiere;
+  const parcours = parcoursDeLaMatiere({
+    lecons: [...delaClasse, leconDe("ma-cp-1", "maths", "CP", 1), leconDe("ma-ce2-1", "maths", "CE2", 1)],
+    niveau,
+    meilleuresEtoiles: new Map(),
+    leconsPersonnelles: [leconDe("ma-ce1-perso-doubles", "maths", "CE1", 0)],
+  }, maths);
+
+  const grandDefi = grandDefiDeLaMatiere(parcours, maths, niveau);
+
+  assertEquals(grandDefi?.lecons, ["ma-ce1-1", "ma-ce1-2"]);
+});
