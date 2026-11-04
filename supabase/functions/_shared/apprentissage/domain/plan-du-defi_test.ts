@@ -256,3 +256,13 @@ Deno.test("un grand défi de 31 leçons riches tire 12 leçons au hasard, une qu
   assertEquals(parLecon.filter((nombre) => nombre === 1).length, 12);
   assertEquals(parLecon.filter((nombre) => nombre === 0).length, 19);
 });
+
+Deno.test("avec moins de 12 questions posables, le grand défi les pose toutes, une fois chacune, mélangées", () => {
+  const lecons = leconsDe(2, 2, 1, 1);
+  const attendues = questionsPosablesDuDefi(grandDefiDe(lecons), lecons).map(({ identite }) => identite.valeur).sort();
+
+  const { questions } = planDuDefi(grandDefiDe(lecons), lecons, hasardToujoursEnTete);
+
+  assertEquals(questions.map(({ identite }) => identite.valeur).sort(), attendues);
+  assertEquals(questions.length, 6);
+});
