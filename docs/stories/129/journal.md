@@ -59,3 +59,11 @@ Numéro de décision : aucun réservé (prochain libre 0040, à demander par DÉ
 
 - 07:23 UTC : relu #64 depuis 19:40 UTC. #146 a passé sa non-régression : utilisateurs Auth stables, parents de test réutilisés. Son merge est autorisé (« merge 146 OK »), et #131 puis #129 passeront ensuite. La règle « 1 worker » (128.15 A) est maintenue. Rappel du PO (6625134010) : avant la PR, on ne joue que les scénarios de la story, plus ceux qui couvrent directement ce qu'elle modifie ; la non-régression complète tourne la nuit. Pour #129, cela donne `@issue-129` et, dans `@issue-22`, le seul scénario « La carte de la poésie… », dont une étape lit les vers à l'ouverture. Pas de `@issue-22` complet.
 - 07:30 UTC : **intégration de `main`** (#146 mergée, `46ca728`) sans conflit (`a55a7d9`). Rien ne change dans `src/` ni `supabase/`. `tsc`, `bddgen` et `deno test` (2801) OK. Les parents de test sont désormais réutilisés (décision 0040), et l'équipe est déduite de la branche (`129`) ou de `E2E_EQUIPE=129`. Pour le verrou base, #129 passe après #131.
+- 07:26 UTC : décision du PO, « workers 3 pour #131 et #129 ».
+- 08:28 UTC : VERROU base accordé à #129 (annonce 6626278530). La sonde répond en moins d'1 s.
+- 08:45 UTC : run `@issue-129` (`telephone`, 3 workers), 73/77 verts en 12,6 min, aucun 504.
+  - « Réécouter » en poésie : KO d'étape (l'annonce n'était pas laissée finir), corrigé (`249b347`).
+  - Mode dys en lecture (Animaux, Princesses, Police) : bug de l'application, interligne de 1,6 au lieu de 1,9. `.texte-de-lecture` manquait dans la liste du mode dys de `styles.css`. Corrigé par `implementer` (`aeb6930`). Ce point CSS n'a pas de test unitaire possible ; c'est le scénario E2E qui l'exige.
+  - Rejeux : « Réécouter » vert. Scénario de #22 « La carte de la poésie… » vert. Les 32 cas « mode dys » et « 360 px » verts en 6 min sur `aeb6930`. **`@issue-129` : 77/77.**
+  - 7 captures (`33f6b66`) : 6 univers et la poésie en Danse, à 360 px avec les mouvements réduits. Relues par l'orchestrateur : fidèles à la planche, rien à signaler au titre de la règle absolue. Fichiers temporaires de capture supprimés.
+- 09:05 UTC : `LIBÈRE base` (6626721897). Revue delta finale demandée à `mr-reviewer` (`f6ffcb6..HEAD`).
