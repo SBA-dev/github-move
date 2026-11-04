@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 288 250">
+<defs><radialGradient id="b-animaux-f-c" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#F3D08F"/><stop offset="1" stop-color="#D9A55B"/></radialGradient><radialGradient id="b-animaux-f-l" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#F7DCA6"/><stop offset="1" stop-color="#E2B567"/></radialGradient><clipPath id="b-animaux-f-corps"><path d="M26 72 H262 L250 236 Q248 246 238 246 H50 Q40 246 38 236 Z"/></clipPath><clipPath id="b-animaux-f-rebord"><rect x="0" y="204" width="288" height="46"/></clipPath></defs>
+<!-- poignée -->
+<!-- corps -->
+<path d="M26 72 H262 L250 236 Q248 246 238 246 H50 Q40 246 38 236 Z" fill="url(#b-animaux-f-c)" stroke="#7A4B1F" stroke-width="4" stroke-linejoin="round"/>
+<g clip-path="url(#b-animaux-f-corps)"><path d="M30 100 Q144 108 258 100" fill="none" stroke="#7A4B1F" stroke-width="3" opacity=".5"/><path d="M30 128 Q144 136 258 128" fill="none" stroke="#7A4B1F" stroke-width="3" opacity=".5"/><path d="M30 156 Q144 164 258 156" fill="none" stroke="#7A4B1F" stroke-width="3" opacity=".5"/><path d="M30 184 Q144 192 258 184" fill="none" stroke="#7A4B1F" stroke-width="3" opacity=".5"/><path d="M30 212 Q144 220 258 212" fill="none" stroke="#7A4B1F" stroke-width="3" opacity=".5"/><path d="M30 232 Q144 240 258 232" fill="none" stroke="#7A4B1F" stroke-width="3" opacity=".5"/></g>
+<!-- couvercle fermé : rien ne laisse deviner les jetons -->
+<rect x="20" y="46" width="248" height="34" rx="12" fill="url(#b-animaux-f-l)" stroke="#7A4B1F" stroke-width="4" stroke-linejoin="round"/>
+<circle cx="144" cy="36" r="13" fill="#E2B567" stroke="#7A4B1F" stroke-width="4"/><path d="M60 62 H228" stroke="#7A4B1F" stroke-width="3" stroke-linecap="round" opacity=".55"/>
+
+</svg>

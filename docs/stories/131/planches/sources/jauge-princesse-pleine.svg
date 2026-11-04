@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 48">
+<!-- ruban uni, bouts en queue d'aronde -->
+<path d="M4 13 H106 L92 26 L106 39 H4 L18 26 Z" fill="#D9B3F0" stroke="#7E56BC" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+</svg>

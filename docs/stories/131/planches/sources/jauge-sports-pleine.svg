@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 48">
+<!-- tube uni, deux embouts -->
+<rect x="4" y="13" width="102" height="26" rx="10" fill="#8FC7F7" stroke="#164BA8" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="4" y="13" width="14" height="26" rx="8" fill="#3F7FE0" stroke="#164BA8" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/><rect x="92" y="13" width="14" height="26" rx="8" fill="#3F7FE0" stroke="#164BA8" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+</svg>

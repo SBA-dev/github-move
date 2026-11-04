@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 48">
+<!-- tuyau d'eau claire, sans lance ni anneaux : seulement un raccord à chaque bout -->
+<rect x="8" y="13" width="94" height="26" rx="12" fill="#A8DFF5" stroke="#1F6F96" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="3" y="9" width="16" height="34" rx="6" fill="#FFC93C" stroke="#A56F00" stroke-width="3.5" stroke-linejoin="round"/><rect x="91" y="9" width="16" height="34" rx="6" fill="#FFC93C" stroke="#A56F00" stroke-width="3.5" stroke-linejoin="round"/>
+</svg>
