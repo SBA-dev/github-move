@@ -10,6 +10,13 @@ export function defisDeLaMatiere(parcours: Parcours, matiere: Matiere, niveau: N
     .map(({ numero, lecons }) => ({ matiere, niveau, numero, lecons }));
 }
 
+export type GrandDefi = Readonly<{ matiere: Matiere; niveau: Niveau; lecons: readonly LeconId[] }>;
+
+export function grandDefiDeLaMatiere(parcours: Parcours, matiere: Matiere, niveau: Niveau): GrandDefi | undefined {
+  const lecons = partiesDuParcours(parcours).flatMap((partie) => partie.lecons);
+  return lecons.length === 0 ? undefined : { matiere, niveau, lecons };
+}
+
 export type DefiReleve = Readonly<{ matiere: Matiere; niveau: Niveau; numero: number }>;
 
 export type EtatDuDefi =
