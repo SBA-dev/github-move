@@ -15,40 +15,115 @@ function entetesServiceRole(): Record<string, string> {
   return { apikey: cle, Authorization: `Bearer ${cle}`, "Content-Type": "application/json" };
 }
 
-async function appeler(chemin: string, init: RequestInit = {}): Promise<Response> {
-  const reponse = await fetch(`${urlSupabase()}${chemin}`, {
+async function envoyer(chemin: string, init: RequestInit = {}): Promise<Response> {
+  return fetch(`${urlSupabase()}${chemin}`, {
     ...init,
     headers: { ...entetesServiceRole(), ...init.headers },
   });
+}
+
+async function appeler(chemin: string, init: RequestInit = {}): Promise<Response> {
+  const reponse = await envoyer(chemin, init);
   if (!reponse.ok) throw new Error(`Supabase ${init.method ?? "GET"} ${chemin.split("?")[0]} : ${reponse.status}`);
   return reponse;
 }
 
 // --- Parents (API d'administration de Supabase Auth)
+// Les parents de test sont stables et réutilisés (décision 0040) : on les cherche par adresse, jamais en listant le projet.
 
 type ParentExistant = { readonly id: string; readonly email: string };
+type UtilisateurAuth = { id: string; email?: string };
 
-export async function parentsExistants(): Promise<ParentExistant[]> {
-  const reponse = await appeler("/auth/v1/admin/users?per_page=1000");
-  const { users } = (await reponse.json()) as { users: { id: string; email?: string }[] };
-  return users.map((u) => ({ id: u.id, email: (u.email ?? "").toLowerCase() }));
+const PAR_PAGE_DE_LA_RECHERCHE = 50;
+const PAR_PAGE_DU_PARCOURS = 1000;
+
+// Adresse → parent, le temps du worker. Une absence n'y entre jamais : l'application peut créer le parent entre-temps.
+const parentsConnus = new Map<string, ParentExistant>();
+
+function memoriser(utilisateur: UtilisateurAuth): ParentExistant {
+  const parent = { id: utilisateur.id, email: (utilisateur.email ?? "").toLowerCase() };
+  parentsConnus.set(parent.email, parent);
+  return parent;
+}
+
+async function utilisateursDe(chemin: string): Promise<UtilisateurAuth[]> {
+  const { users } = (await (await appeler(chemin)).json()) as { users: UtilisateurAuth[] };
+  return users;
 }
 
 export async function trouverParent(email: string): Promise<ParentExistant | undefined> {
-  return (await parentsExistants()).find((p) => p.email === email.toLowerCase());
+  const adresse = email.toLowerCase();
+  const connu = parentsConnus.get(adresse);
+  if (connu) return connu;
+  const trouves = await utilisateursDe(`/auth/v1/admin/users?filter=${encodeURIComponent(adresse)}&per_page=${PAR_PAGE_DE_LA_RECHERCHE}`);
+  const utilisateur = trouves.find((u) => (u.email ?? "").toLowerCase() === adresse);
+  return utilisateur ? memoriser(utilisateur) : undefined;
+}
+
+// Filet de sécurité si l'API ignorait `filter` : une adresse déjà utilisée (422) est retrouvée en parcourant la liste paginée.
+async function retrouverEnParcourantLaListe(adresse: string): Promise<ParentExistant | undefined> {
+  for (let page = 1;; page++) {
+    const utilisateurs = await utilisateursDe(`/auth/v1/admin/users?page=${page}&per_page=${PAR_PAGE_DU_PARCOURS}`);
+    const utilisateur = utilisateurs.find((u) => (u.email ?? "").toLowerCase() === adresse);
+    if (utilisateur) return memoriser(utilisateur);
+    if (utilisateurs.length < PAR_PAGE_DU_PARCOURS) return undefined;
+  }
 }
 
 export async function creerParent(email: string): Promise<ParentExistant> {
-  const reponse = await appeler("/auth/v1/admin/users", {
+  const reponse = await envoyer("/auth/v1/admin/users", {
     method: "POST",
     body: JSON.stringify({ email, email_confirm: true }),
   });
-  const { id } = (await reponse.json()) as { id: string };
-  return { id, email: email.toLowerCase() };
+  if (reponse.ok) return memoriser((await reponse.json()) as UtilisateurAuth);
+  const corps = await reponse.text();
+  if (reponse.status === 422) {
+    const existant = await retrouverEnParcourantLaListe(email.toLowerCase());
+    if (existant) return existant;
+  }
+  throw new Error(`Supabase POST /auth/v1/admin/users : ${reponse.status} ${corps}`);
+}
+
+export async function trouverOuCreerParent(email: string): Promise<ParentExistant> {
+  return (await trouverParent(email)) ?? (await creerParent(email));
 }
 
 export async function supprimerParent(id: string): Promise<void> {
   await appeler(`/auth/v1/admin/users/${id}`, { method: "DELETE" });
+  for (const [adresse, parent] of parentsConnus) if (parent.id === id) parentsConnus.delete(adresse);
+}
+
+function motDePasseAleatoire(): string {
+  return `${crypto.randomUUID()}Aa%`;
+}
+
+/**
+ * Aucun mot de passe d'un scénario précédent ne survit : celui du scénario, ou une valeur aléatoire. L'e-mail reste confirmé.
+ * Si le parent mis en cache n'existe plus (404), il est oublié, cherché de nouveau, et créé au besoin.
+ */
+export async function remettreLeParentAZero(parent: ParentExistant, motDePasse: string = motDePasseAleatoire()): Promise<ParentExistant> {
+  const reponse = await envoyer(`/auth/v1/admin/users/${parent.id}`, {
+    method: "PUT",
+    body: JSON.stringify({ email_confirm: true, password: motDePasse }),
+  });
+  if (reponse.status === 404) {
+    parentsConnus.delete(parent.email);
+    const recree = await trouverOuCreerParent(parent.email);
+    const seconde = await envoyer(`/auth/v1/admin/users/${recree.id}`, {
+      method: "PUT",
+      body: JSON.stringify({ email_confirm: true, password: motDePasse }),
+    });
+    if (!seconde.ok) throw new Error(`Supabase PUT /auth/v1/admin/users : ${seconde.status} ${await seconde.text()}`);
+    return recree;
+  }
+  if (!reponse.ok) throw new Error(`Supabase PUT /auth/v1/admin/users : ${reponse.status} ${await reponse.text()}`);
+  return parent;
+}
+
+/** Fin de scénario : les profils enfants du parent partent (rattachements et données en cascade), l'utilisateur Auth reste. */
+export async function nettoyerLeParent(adresse: string): Promise<void> {
+  const parent = await trouverParent(adresse);
+  if (parent) await supprimerLesProfilsDuParent(parent.id);
 }
 
 // --- Boîte de test des e-mails de connexion (table protégée par la RLS, sans policy)
@@ -89,15 +164,6 @@ export async function supprimerLesProfilsDuParent(parent: string): Promise<void>
 /** Préparation seulement (second parent, que la story #13 rattachera par invitation) : le rattachement est écrit directement. */
 export async function rattacherUnParent(profil: string, parent: string): Promise<void> {
   await appeler("/rest/v1/rattachements", { method: "POST", body: JSON.stringify({ profil, parent }) });
-}
-
-export async function supprimerLesParentsDuSuffixe(suffixe: string): Promise<void> {
-  const fin = `+${suffixe}@exemple.test`;
-  for (const parent of await parentsExistants()) {
-    if (!parent.email.endsWith(fin)) continue;
-    await supprimerLesProfilsDuParent(parent.id);
-    await supprimerParent(parent.id);
-  }
 }
 
 export function extraireLienEtCode(texte: string): { lien: string | undefined; code: string | undefined } {
