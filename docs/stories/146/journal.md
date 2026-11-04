@@ -1,0 +1,60 @@
+# Journal de #146 — Parents de test réutilisés (quota MAU)
+
+- Base : `main` (5574d75). Branche : `feature/146-parents-de-test-reutilises`. Décision réservée : 0040.
+- 2026-11-03 ~19:30 UTC : démarrage. Étape 1 (domaine) sautée : outillage de test, aucun concept métier. Étape 2 : cadrage court (`cadrage.md`) au lieu de scénarios Gherkin, les critères étant ceux de l'issue.
+- Sonde `admin/users?per_page=1` : 504 en 41 s. Le projet de dev est de nouveau lent.
+- 19:37 UTC : réponse du PO (annonce [Responsable] sur #146 et #64) « 146 reco tout » : 146.1 A, 146.2 (E2E_EQUIPE, sinon n° de branche, sinon `local`), 146.3 (pas de purge), 146.4 (Deno.test du module pur). `graphe:dev`. Runs E2E suspendus pour toutes les équipes (POST admin/users en 504), #146 3e dans la file `base`.
+- TDD, 3 cycles RED → GREEN (module pur `features/support/parents-de-test.ts`, 11 tests) :
+  1. suffixe stable `<équipe>-<projet><index>` : `a53b307` → `0ad33c2` ;
+  2. équipe tirée de `E2E_EQUIPE`, de la branche ou `local`, valeur refusée hors `[a-z0-9-]` : `8d23c15` → `84602ae` ;
+  3. plafond (15 × 2 × 3 × 5 = 450, garde-fou < 500) : `a2e2e6f` → `69ed181`.
+  Choix : un cycle par groupe de règles d'une même fonction (outillage, pas de domaine).
+- Câblage délégué à `implementer` : fixtures, supabase-test (recherche filtrée + cache), famille (réutilisation, adresses « libres » `prenom.libre+<suffixe>` pour les scénarios « aucun parent n'utilise… », supprimées en fin de scénario), étape « est inscrit avec … mot de passe … ».
+  Pourquoi une variante « libre » : sans elle, chaque inscription de #72/#73 supprimerait aussi le Paul réutilisé, recréé au scénario suivant (2 MAU au lieu d'1).
+- 19:51 UTC : VERROU base accordé (le PO fait passer #146 en premier). Sonde 1,1 / 0,6 / 0,5 s. `SUPABASE_ACCESS_TOKEN` renouvelé : accepté pour le projet. Filtre `?filter=` de l'API d'administration vérifié (recherche sur une partie de l'adresse). 140 utilisateurs Auth avant tout run.
+- 19:52 UTC : mise au point lancée sur `telephone` (`@issue-72|73|11|10`, 178 scénarios, 1 worker, `E2E_EQUIPE=146`), sur `b87f5d2`.
+- Review cycle 1 : À CORRIGER. Bloquants : (1) `preparerUnParent` remettait un mot de passe aléatoire à chaque appel, y compris en plein scénario (#72 : 2 scénarios cassés) ; (2) aucun effacement au début du scénario des restes d'un scénario interrompu, alors que les suffixes sont désormais stables. Corrections déléguées à `implementer` dans un worktree isolé, pour ne pas changer le code pendant le run.
+- 20:10 UTC : mise au point n°1 arrêtée volontairement après 37/178 (elle tournait sur `b87f5d2`, invalidé par la review). 1 KO : #11:36 (« profil créé sur la tablette retrouvé sur le téléphone »), probablement la remise à zéro répétée du parent (B1). Utilisateurs Auth : 140 → 142 (2 parents de l'équipe 146).
+- Corrections du cycle 1 intégrées (`84b38a6`, `9b4b282`, cherry-pick depuis le worktree pour remettre les messages de commit au format). Review delta cycle 2 : APPROUVÉ, 5 non-bloquants (AggregateError dans `toutEssayer`, adresse marquée préparée après succès, corps de l'erreur sur le 2e PUT, commentaire de classe, ligne sur les parents connectés par vrai lien) : à traiter après la mise au point, pour ne pas changer le code pendant un run.
+- Mise au point n°2 lancée sur `9b4b282`.
+- Mise au point n°2 (`9b4b282`, `telephone`, `@issue-72|73|11|10`, 1 worker) : **178/178** en 21,8 min. Utilisateurs Auth : 142 avant, 142 après (aucun parent créé ; les 20 adresses « libres » inscrites puis supprimées). Le KO #11:36 du premier essai ne revient pas.
+- Non-bloquants traités : `5769f00` (refactor), `8918799` (docs). Review delta cycle 3 : APPROUVÉ, sans remarque.
+- Question #146.5 (workers des non-régressions complètes, reco 3) posée au PO via le responsable. Verrou `base` gardé.
+- 20:24 UTC : non-régression complète n°1 lancée (`8918799`, 2 projets, 3 workers, 3652 scénarios, accord PO « 146.5 A »). Utilisateurs Auth : 142 au départ ; 150 à 30 min, 151 à 1 h 40, puis stable (parents de l'équipe 146 créés à leur premier usage, plafond 30 pour ce run).
+- Rythme ~7 scénarios/min : ~8 h 30 par run complet. Question #146.6, réponse du PO « 146.6 B » (22:39 UTC) : run n°1 complet = non-régression ; la mesure du critère 7 (second run sans nouvel utilisateur) se fait sur un run court d'échantillon, 2 projets, 3 workers. Le run n°2 enchaîné est retiré (le run n°1 continue).
+- 22:42 UTC : le conteneur a redémarré pendant l'attente ; la non-régression n°1 est perdue à 1068/3652. Utilisateurs Auth : 151 (stable depuis 1 h 40).
+  KO relevés avant l'arrêt (tous `tablette`) et rejoués un par un (1 worker) :
+  - 3 KO reproductibles, tous dus au texte « Quête du jour accomplie ! » ajouté par l'application : #24:70 (connu sur `main`), #102:153 (connu sur `main`, liste « #102:155 »), #28:239 (reproduit aussi sur `origin/main` le 03/11 à 22:47 : **préexistant**, pas dans la liste des KO connus) ;
+  - 7 KO non reproduits (#12:60/68/76, #26:253/466, #29:215, #30:102) : instabilité sous charge et coupure du conteneur.
+- 22:49 UTC : non-régression relancée en 6 tranches (`--shard=k/6`, 3 workers), reprise possible tranche par tranche après un redémarrage.
+- 22:49 → 06:10 UTC : non-régression complète en 6 tranches (`8918799`, 2 projets, 3 workers) : **3601 verts / 51 KO sur 3652**, 7,2 h. Tranches : 607/2, 590/19, 606/3, 608/1, 587/21, 603/5.
+  Utilisateurs Auth : 151 → 158 pendant les tranches ; chaque nouveau est le premier usage d'un couple (projet, worker, prénom) de l'équipe 146 (18 au total, plafond 30). Aucune adresse « libre » restante.
+  31 scénarios distincts en KO (la plupart sur les deux projets) : 102-personnage-guide-evolue:153:5 102-personnage-guide-evolue:245:5 24-etoiles-et-fin-de-seance:172:5 24-etoiles-et-fin-de-seance:70:5 24-etoiles-et-fin-de-seance:81:7 24-etoiles-et-fin-de-seance:89:7 26-lecons-des-classes-d-avant:253:5 26-lecons-des-classes-d-avant:466:5 28-revisions-des-erreurs:239:7 28-revisions-des-erreurs:246:7 28-revisions-des-erreurs:253:7 29-aujourd-hui:38:5 30-serie:194:5 30-serie:244:5 31-badges:197:5 31-badges:260:5 31-badges:290:5 32-cabane:138:5 32-cabane:207:5 32-cabane:227:5 33-episodes-de-l-histoire:160:5 33-episodes-de-l-histoire:175:5 33-episodes-de-l-histoire:191:5 33-episodes-de-l-histoire:347:5 33-episodes-de-l-histoire:403:5 33-episodes-de-l-histoire:512:5 96-refonte-visuelle:709:7 96-refonte-visuelle:718:7 97-retours-animes-et-sonores:266:5 97-retours-animes-et-sonores:519:7 99-dessin-du-parcours:45:7 
+- 06:10 → 06:40 UTC : **mesure du critère 7** (réponse du PO « 146.6 B ») : run court d'échantillon `@issue-72|11|24|10`, 2 projets, 3 workers, 354 scénarios (347 verts, 7 KO : #24:70/81/89 sur les deux projets, connus sur `main`, et #10:222 sur `tablette`, non vu en non-régression). **Utilisateurs Auth : 158 avant, 158 après** ; équipe 146 : 18 avant, 18 après ; aucune adresse « libre » restante. Un second passage ne crée aucun utilisateur.
+- Rejeu un par un (1 worker) des KO pas encore expliqués : 20 passent (instables sous charge : #10:222, #24:172, #26:253/466, #29:38, #30:244, #33:347/512, #99:45…). Reproductibles : #32:227, #96:709, #96:718 (`telephone`) → **reproduits aussi sur `origin/main`** : préexistants ; **#102:245 (`tablette`) : 2 KO sur 3 sur la branche, 3/3 verts sur `origin/main`** → régression probable de #146, diagnostic confié à `e2e-tester`.
+- Correction `a6765f6` (e2e-tester) : les 4 étapes « Léa demande à écouter … » de « Mes médailles » (tenues, cabane, badges, histoire) attendent la lecture d'accueil avant le clic, comme celle des records de calcul rapide. Cause démontrée par la trace des lectures : l'accueil démarré après le clic coupait la lecture demandée ; la réutilisation des parents accélère la préparation et expose la course. #102:245 : 5/5 sur `tablette` ; #102:245, #31:290, #32:227, #33:425 verts sur les 2 projets (#32:227 était aussi KO sur `main`). Review delta cycle 4 : APPROUVÉ (non-bloquant : garde dupliquée dans 5 fichiers de steps).
+- Contrôles sur `a6765f6` : `deno test supabase/functions/` 2787 verts, `deno test features/support/` 11 verts, lint, fmt, `tsc`, build verts. `main` n'a pas bougé (`5574d75`).
+- PR #147 ouverte en brouillon.
+
+## Bilan
+
+- Cycles TDD : 3 (module pur), tous RED → GREEN propres.
+- Reviews : 4 cycles (1 À CORRIGER, 3 APPROUVÉ).
+- Escalades / questions au PO : 6 (146.1 à 146.6), toutes réponses reçues via le responsable.
+- Verrous : `base` du 03/11 19:51 UTC au 04/11 (fin des runs), aucun autre.
+- Intégrations de `main` : 0 (`main` immobile pendant toute la story).
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Durée totale (lancement → PRÊTE À MERGER) | ~12 h (03/11 19:15 → 04/11 ~07:30 UTC) |
+| dont développement (cadrage → review APPROUVÉ) | ~1 h 15 |
+| dont E2E | ~10 h 30 (mise au point 2 × ~25 min, non-régression 7,2 h + 1 h perdue au redémarrage, mesure 30 min, rejeux ~45 min) |
+| Temps d'attente du PO | ~20 min (cadrage) + ~15 min (146.5) + ~1 h 40 (146.6, pendant le run) |
+| Temps d'attente du verrou `base` | 0 (accordé en priorité) |
+| Cycles de review | 4 (1 À CORRIGER) |
+| Cycles E2E | 2 mises au point, 1 non-régression complète (en 6 tranches), 1 run de mesure, 3 rejeux ciblés |
+| Intégrations de `main` / conflits | 0 / 0 |
+| Utilisateurs Auth créés par la story | 18 parents réutilisables + 2 de la mise au point n°1 (inclus) ; 140 → 158 ; second passage : +0 |
+| Incident | redémarrage du conteneur pendant l'attente (non-régression perdue à 1068/3652) : relance en tranches reprenables |

@@ -119,6 +119,9 @@ When(/^Léa choisit la pastille « ([^«»]+) »$/, { tags: "@issue-31" }, async
 });
 
 When(/^Léa demande à écouter les badges$/, async ({ page }) => {
+  // L'écran lit son accueil dès que tout est chargé, et cette lecture coupe celle que l'enfant vient de demander si elle
+  // démarre après son geste : on touche « Écouter » une fois l'accueil lancé (la bulle du personnage guide est affichée).
+  await expect(page.getByTestId("parole")).toBeVisible({ timeout: DELAI_D_UN_APPEL_SERVEUR_MS });
   const section = sectionDesBadges(ecranDe(page));
   await section.getByRole("button", { name: "Écouter", exact: true }).click();
 });
