@@ -274,3 +274,12 @@ Deno.test("un grand défi terminé donne l'événement DefiTermine qui porte le 
 
   assertEquals(fait.defi, grandDefi);
 });
+
+Deno.test("l'envoi d'un grand défi terminé porte la matière et la classe, sans numéro", () => {
+  const seance = seanceDuGrandDefi(planDe(chat, bateau));
+  seance.repondre(bonneReponseDe(chat));
+  seance.repondre(bonneReponseDe(bateau));
+  seance.terminer(finDuDefi, jourDuDefi);
+
+  assertEquals(seance.aEnregistrer().defi, { matiere: grandDefi.matiere, niveau: CE1, grandDefi: true });
+});
