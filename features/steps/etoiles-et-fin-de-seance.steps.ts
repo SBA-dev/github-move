@@ -1,4 +1,5 @@
 import { expect, type Page } from "@playwright/test";
+import { attendreQueLaBulleSeTerminePar, sansLaQueteAccomplie } from "../support/phrase-de-fin-avec-la-quete.ts";
 import type { Famille } from "../support/famille.ts";
 import { LecturesDesResultats } from "../support/lectures-des-resultats.ts";
 import {
@@ -511,8 +512,9 @@ Then(/^Léa ne voit aucun message de plus$/, async ({ famille, page }) => {
 });
 
 Then(/^Noisette dit l'une de ses expressions, suivie de « (.+) »$/, async ({ page }, suite: string) => {
+  await attendreQueLaBulleSeTerminePar(page, suite);
   await expect(bulle(page)).toHaveAttribute("data-nature", "felicitation");
-  const texte = normaliser((await bulle(page).textContent()) ?? "");
+  const texte = sansLaQueteAccomplie(normaliser((await bulle(page).textContent()) ?? ""));
   expect(texte.endsWith(` ${suite}`), texte).toBe(true);
   expect(EXPRESSIONS_PAR_PERSONNAGE["Noisette"]).toContain(texte.slice(0, texte.length - suite.length - 1));
   const sansEspace = (t: string) => t.replace(/[\s,]+/g, "");

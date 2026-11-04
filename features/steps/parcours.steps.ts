@@ -18,7 +18,7 @@ import {
   textesDesChoixPossibles,
 } from "./exercices-a-choix.steps.ts";
 import { choisirLeaSur } from "./profil-reel.ts";
-import { jetonDe, choisirSonProfil, ouvrirQuiJoue, profilDe } from "./profils-enfants.steps.ts";
+import { jetonDe, choisirSonProfil, ouvrirQuiJoue, profilDe, quitterLaFinDeSeanceVersQuiJoue } from "./profils-enfants.steps.ts";
 import { Given, Then, When } from "./fixtures.ts";
 import { verifierQueLaLigneDeLaCarteEstAnnoncee } from "./suivi.steps.ts";
 
@@ -170,7 +170,7 @@ Given(/^Léa a terminé une séance de la leçon « ([^«»]+) » avec (\d) éto
   if ($tags.includes("@issue-33") || $tags.includes("@issue-99")) $test.slow();
   await jouerLaSeanceCompleteAvecErreurs(page, titre, ETOILES_PAR_SEANCE[Number(etoiles)] ?? 0);
   noterUneSeanceJouee(page, titre, Number(etoiles));
-  await page.getByTestId("fin-de-seance").getByRole("button", { name: "Accueil", exact: true }).click();
+  await quitterLaFinDeSeanceVersQuiJoue(page);
 });
 
 Given(/^Léa a ouvert (?:son parcours|le parcours de français)(?: depuis son accueil)?$/, async ({ famille, page }) => {

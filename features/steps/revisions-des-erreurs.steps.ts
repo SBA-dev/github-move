@@ -1,5 +1,6 @@
 import { type Browser, expect, type Page } from "@playwright/test";
 import type { DataTable } from "playwright-bdd";
+import { texteSuiviEventuellementDeLaQuete } from "../support/phrase-de-fin-avec-la-quete.ts";
 import {
   LECONS_DES_REVISIONS,
   normaliserPourLaCle,
@@ -589,7 +590,7 @@ Then(/^l'écran s'intitule « ([^«»]+) », avec « ([^«»]+) »$/, { tags: "@
 });
 
 Then(/^Noisette dit « ([^«»]+) »$/, { tags: "@issue-28" }, async ({ page }, texte: string) => {
-  await expect(bulle(page)).toHaveText(normaliser(texte));
+  await expect(bulle(page)).toHaveText(texteSuiviEventuellementDeLaQuete(normaliser(texte)));
 });
 
 Then(/^Léa entend Noisette lire « ([^«»]+) »$/, { tags: "@issue-28" }, async ({ page }, texte: string) => {

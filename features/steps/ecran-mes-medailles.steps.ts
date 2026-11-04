@@ -165,8 +165,8 @@ async function appliquerLesReglagesPrevus(famille: Famille, page: Page): Promise
   return true;
 }
 
-// Depuis l'écran de fin, « Accueil » mène à « Qui joue ? » : le profil préparé n'y est pas listé. On rejoint son accueil dans
-// l'application, sans recharger la page (un rechargement perdrait les étoiles gagnées sur l'appareil).
+// Depuis un autre écran de l'application (médailles, parcours…), le profil de l'appareil n'est pas rechargé : on rejoint son
+// accueil dans l'application, sans recharger la page (un rechargement perdrait les étoiles gagnées sur l'appareil).
 async function revenirALAccueilDansLApplication(page: Page): Promise<void> {
   await page.evaluate(() => {
     history.pushState({ profondeur: 2, precedent: "/" }, "", "/jeu");
@@ -193,12 +193,11 @@ async function atteindreLAccueilDeLea(famille: Famille, page: Page): Promise<voi
     if (await accueil(page).isVisible()) return;
     if (await finDeSeance.isVisible()) {
       await finDeSeance.getByRole("button", { name: "Accueil", exact: true }).click();
-      // « Accueil » ramène à « Qui joue ? » sans recharger : Léa s'y choisit de nouveau, ses envois de séance suivent.
-      await choisirSonProfil(page, "Léa");
+      // « Accueil » mène à l'accueil de l'enfant, sans recharger : ce que l'appareil garde en mémoire (envois de séance) suit.
       await expect(accueil(page)).toBeVisible();
       return;
     }
-    // Story #32 : « Accueil » depuis l'écran de fin ramène à « Qui joue ? » : Léa s'y choisit de nouveau, sans recharger.
+    // L'application est sur « Qui joue ? » (page d'entrée, avant tout choix de profil) : Léa s'y choisit, sans recharger.
     if (new URL(page.url()).pathname === "/") {
       await choisirSonProfil(page, "Léa");
       await expect(accueil(page)).toBeVisible();
