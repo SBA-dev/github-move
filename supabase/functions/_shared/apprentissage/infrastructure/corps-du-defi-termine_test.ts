@@ -141,3 +141,14 @@ Deno.test("le corps d'un grand défi est lu avec sa matière, sa classe et sa ma
 
   assertEquals(lire(corps).defi, { matiere: matiereDeCode("maths"), niveau: Niveau.de("CE1"), grandDefi: true });
 });
+
+Deno.test("un corps qui donne à la fois un numéro et la marque du grand défi, ou ni l'un ni l'autre, est refusé", () => {
+  const defis = [
+    { matiere: "maths", niveau: "CE1", numero: 2, grandDefi: true },
+    { matiere: "maths", niveau: "CE1", grandDefi: false },
+    { matiere: "maths", niveau: "CE1" },
+  ];
+  for (const defi of defis) {
+    assertThrows(() => lire({ ...corpsValide(), defi }), EntreeInvalide, "defi");
+  }
+});
