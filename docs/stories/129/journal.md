@@ -67,3 +67,22 @@ Numéro de décision : aucun réservé (prochain libre 0040, à demander par DÉ
   - Rejeux : « Réécouter » vert. Scénario de #22 « La carte de la poésie… » vert. Les 32 cas « mode dys » et « 360 px » verts en 6 min sur `aeb6930`. **`@issue-129` : 77/77.**
   - 7 captures (`33f6b66`) : 6 univers et la poésie en Danse, à 360 px avec les mouvements réduits. Relues par l'orchestrateur : fidèles à la planche, rien à signaler au titre de la règle absolue. Fichiers temporaires de capture supprimés.
 - 09:05 UTC : `LIBÈRE base` (6626721897). Revue delta finale demandée à `mr-reviewer` (`f6ffcb6..HEAD`).
+- 09:15 UTC : revue finale en delta (`f6ffcb6..36ebf62`) : **APPROUVÉ**, sans bloquant. Deux remarques non bloquantes : les captures ne montrent pas le mode dys (il est couvert en E2E), et la question s'affiche deux fois sur l'écran de lecture, ce qui existait avant #129. Vérifications : `deno test` (2801), lint, fmt, `tsc` et build verts.
+- 09:20 UTC : PR ouverte en brouillon (étape 6).
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Durée | du 2026-11-03 08:10 UTC au 2026-11-04 09:20 UTC (PR en brouillon), soit environ 25 h, dont une nuit d'attente |
+| Temps d'attente | Cadrage du PO : environ 2 h (09:07 → 11:06). Planche : environ 2 h (09:27 → 11:31). ESCALADE #129.12 : environ 30 min (19:08 → 19:37). Supabase de dev indisponible : environ 09:00 → 17:35, puis 18:50 → 19:38 (quota MAU dépassé). File du verrou `base` : #128, #131 puis #146 passent devant, de 19:38 jusqu'au 04/11 08:28. **Environ 15 h d'attente au total, dont 13 h pour Supabase et la file E2E** |
+| Cycles de review | Revue intermédiaire Voix : 1 À CORRIGER (`».`, `»,`), puis APPROUVÉ. Review complète : 1 À CORRIGER (« Réécouter », cadre décollé), puis APPROUVÉ. Trois deltas APPROUVÉS du premier coup : intégration de `main`, étape #129.12, delta final |
+| Cycles TDD | 2 cycles dans le domaine Voix : `phrasesDesMotsAffiches`, puis le bug du guillemet fermant, corrigé à la source, ce qui répare aussi le surlignage existant |
+| Cycles E2E | 5 lancements. 3 rendus inexploitables par les 504 (61/98, 3/98, 64/77). 1 complet (73/77), puis les rejeux. Les KO venaient de 3 étapes (absence de synthèse, « Réécouter » en poésie, voix bloquée #129.12) et d'1 bug de l'application (interligne du mode dys) |
+| Intégrations de `main` | 2. #128 : 5 conflits de tags dans les steps, les deux ajouts gardés. #146 : sans conflit |
+| Escalades | 1 : #129.12, réponse A |
+| Verrous | `base`, comme file des runs E2E (aucune migration), pris 2 fois |
+| Dessins | 6 parchemins d'univers, 1 planche validée du premier coup (« planche 129 OK ») |
+| Captures | 7 : 6 univers et la poésie en Danse |
+| Incidents | Supabase de dev restreint (quota MAU) : ESCALADE groupée, passage au plan Pro, #146. 1 worktree isolé pour corriger sans couper un run E2E |
+| Tokens | relevés par le responsable |
