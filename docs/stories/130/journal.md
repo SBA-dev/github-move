@@ -32,3 +32,18 @@ Session : session_015z4jmP7V7FhEFUJUzB9Zaf. Décision : aucune réservée (proch
 - 23:05 UTC : E2E : les 4 KO verts (1,1 min). Run 2 élargi (#18, #22, #23, #79, #97, #98 : 136 scénarios à étiquettes, 23,6 min) : 125/136 ; 11 KO dans #98, glisser dans les maisons de `classer`, à comparer à `main` (`573659e`). Compléments lancés : #126 (ordre des vers), `@issue-130` entier, comparaison avec `main`.
 - 23:10 UTC : review delta cycle 2 (`2e67b05..HEAD`) : **APPROUVÉ**. `433089c` : ordonnancement des paroles, pas de règle métier, sans effet hors de `memoriser`. Non bloquants : cran pendant le cran précédent sans relance de l'animation ; `felicitationDuDernierVersFinie` remis à faux seulement dans `jeSuisPret` (à revoir si une reprise en plein mots cachés apparaît).
 - 23:20 UTC : 12 captures (`da8de95`), page de test qui monte les vrais composants, à 360 px, avec mouvements réduits. Relues par l'orchestrateur (Police, vers) : conformes à la planche, rien à signaler pour la règle absolue. Point d'attention : dans l'ordre des vers, la page défile verticalement (914 px), car les étiquettes de vers sont empilées au-dessus du train. Aucun défilement horizontal.
+- 23:40 UTC : compléments E2E (`telephone`, 1 worker) : `@issue-130` entier sur le dernier commit : **89/89** (20,1 min) ; #126, ordre des vers (`126-…:88` et `:258`, exemples « les mots cachés ») : 2/2. Les KO de #98 (glisser dans les maisons de `classer`, spec :95, :47, ainsi que :334 et :343) échouent aussi sur un worktree de `main` à `573659e`, avec la même erreur : **préexistants**, sans lien avec #130, à signaler au responsable.
+- 23:45 UTC : intégration de `main` (`597a4a5`, #140), sans conflit et sans fichier commun (médailles, voix). tsc, build, deno test (2804), lint, fmt verts. Périmètre E2E non rejoué : #140 ne touche ni `src/seance/` ni les steps des exercices. `@wip` retiré (`01de9ef`).
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Durée | 11:20 → 23:50 UTC (dont environ 9 h d'attente du PO pour la validation n°1, 11:24 → 20:37) |
+| Temps d'attente | validation n°1 : environ 9 h ; planche : 1 h (20:44 → 21:41), sans bloquer le câblage ; verrou base : environ 10 min (derrière #140) |
+| Cycles TDD | 0 comportement du domaine (affichage seul) ; RED par l'E2E ; 3 fix applicatifs vus à l'E2E, dont une course préexistante sur `main` (`433089c`) |
+| Cycles de review | 2 (À CORRIGER : plafond de 1,5 s, dû à une consigne erronée de l'orchestrateur ; puis APPROUVÉ) |
+| Cycles d'E2E | 3 runs de `@issue-130` (76/89 → 85/89 → 4/4 → 89/89) ; 1 run du périmètre élargi (136 scénarios, 125 verts, 11 KO préexistants de #98) ; #126 2/2 |
+| Intégrations de `main` | 3 (#129, #141, #140), aucun conflit |
+| Dessins | 12 sources SVG, 1 planche validée au premier passage (P1 à P7), un écusson Police écarté avant la présentation (cible) ; 12 captures |
+| Verrous | base (21:00 → fin des runs) |
