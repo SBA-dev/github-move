@@ -31,19 +31,30 @@ import { normaliser, reappliquerLAppareil, scenario } from "./voix.steps.ts";
 // variante reçoit une valeur par `features/support/hasard-fixe.ts`, comme celui du contrôle parental.
 
 const MUSIQUE = "grande victoire";
-const VARIANTES: Record<string, VarianteTiree> = {
+// Le tirage de la variante est `floor(r * 3)` pour les deux univers : `hasard-fixe.ts` nomme les rangs 0, 1 et 2 « glissade »,
+// « avion » et « danse ». Chaque libellé de variante est rangé ici sous son rang, quel que soit l'univers.
+const RANG_DU_TIRAGE: Record<string, VarianteTiree> = {
   "la glissade à genoux": "glissade",
   "l'avion": "avion",
   "la danse avec clin d'œil": "danse",
-  // Lili (106b) : le tirage `floor(r * 3)` prend le même rang, 0, 1 ou 2.
   "le grand jeté": "glissade",
   "le ruban": "avion",
   "les petits sauts": "danse",
 };
+const TEXTE_DU_TIRAGE = `(${Object.keys(RANG_DU_TIRAGE).join("|")})`;
+
+// Coach Léo (Sports) : libellé → valeur de `data-variante`.
+const VARIANTES_DE_COACH_LEO: Record<string, string> = {
+  "la glissade à genoux": "glissade",
+  "l'avion": "avion",
+  "la danse avec clin d'œil": "danse",
+};
 const VARIANTES_POSSIBLES = /^(glissade|avion|danse)$/;
-const VARIANTES_DE_LILI = /^(jete|ruban|sauts)$/;
-const CLE_DE_LA_VARIANTE_DE_LILI: Record<string, string> = { "le grand jeté": "jete", "le ruban": "ruban", "les petits sauts": "sauts" };
-const TEXTE_DES_VARIANTES = "(la glissade à genoux|l'avion|la danse avec clin d'œil|le grand jeté|le ruban|les petits sauts)";
+const TEXTE_DES_VARIANTES_DE_COACH_LEO = "(la glissade à genoux|l'avion|la danse avec clin d'œil)";
+
+// Lili (Danse) : libellé → valeur de `data-variante`.
+const VARIANTES_DE_LILI: Record<string, string> = { "le grand jeté": "jete", "le ruban": "ruban", "les petits sauts": "sauts" };
+const VARIANTES_POSSIBLES_DE_LILI = /^(jete|ruban|sauts)$/;
 const TEXTE_DES_VARIANTES_DE_LILI = "(le grand jeté|le ruban|les petits sauts)";
 
 Before({ tags: "@issue-106" }, async ({ page }) => {
@@ -82,9 +93,9 @@ async function attendreLaFinDuDefi(page: Page): Promise<void> {
 // --- Étant donné
 
 Given(
-  new RegExp(`^le hasard de la célébration de l'univers tire « ${TEXTE_DES_VARIANTES} »$`),
+  new RegExp(`^le hasard de la célébration de l'univers tire « ${TEXTE_DU_TIRAGE} »$`),
   async ({ page }, variante: string) => {
-    await fixerLeTirageDeLaCelebration(page, VARIANTES[variante] as VarianteTiree);
+    await fixerLeTirageDeLaCelebration(page, RANG_DU_TIRAGE[variante] as VarianteTiree);
   },
 );
 
@@ -129,9 +140,9 @@ Then(
   },
 );
 
-Then(new RegExp(`^Coach Léo marque un but, puis fait ${TEXTE_DES_VARIANTES}$`), async ({ page }, variante: string) => {
+Then(new RegExp(`^Coach Léo marque un but, puis fait ${TEXTE_DES_VARIANTES_DE_COACH_LEO}$`), async ({ page }, variante: string) => {
   const celebration = await attendreLaScene(page);
-  await expect(celebration).toHaveAttribute("data-variante", VARIANTES[variante] as VarianteTiree);
+  await expect(celebration).toHaveAttribute("data-variante", VARIANTES_DE_COACH_LEO[variante] as string);
   await attendreLeCri(page, "BUT !");
   await attendreLaFinDeLaScene(page);
 });
@@ -145,7 +156,7 @@ Then(
   /^Lili joue la célébration de l'univers « Danse » : elle entre en scène et fait une pirouette, puis le grand jeté, le ruban ou les petits sauts$/,
   async ({ page }) => {
     const celebration = await attendreLaScene(page, "danse");
-    await expect(celebration).toHaveAttribute("data-variante", VARIANTES_DE_LILI);
+    await expect(celebration).toHaveAttribute("data-variante", VARIANTES_POSSIBLES_DE_LILI);
     await attendreLeCri(page, "Bravo !");
     await attendreLaFinDeLaScene(page);
   },
@@ -153,7 +164,7 @@ Then(
 
 Then(new RegExp(`^Lili entre en scène et fait une pirouette, puis ${TEXTE_DES_VARIANTES_DE_LILI}$`), async ({ page }, variante: string) => {
   const celebration = await attendreLaScene(page, "danse");
-  await expect(celebration).toHaveAttribute("data-variante", CLE_DE_LA_VARIANTE_DE_LILI[variante] as string);
+  await expect(celebration).toHaveAttribute("data-variante", VARIANTES_DE_LILI[variante] as string);
   await attendreLeCri(page, "Bravo !");
   await attendreLaFinDeLaScene(page);
 });
@@ -184,7 +195,7 @@ Then(/^Léa voit l'image fixe de la célébration de l'univers « Sports », ave
 });
 
 Then(/^Léa voit l'image fixe de la célébration de l'univers « Danse », avec « Bravo ! », sans mouvement$/, async ({ page }) => {
-  await verifierLImageFixe(page, "danse", VARIANTES_DE_LILI, "Bravo !");
+  await verifierLImageFixe(page, "danse", VARIANTES_POSSIBLES_DE_LILI, "Bravo !");
 });
 
 async function verifierLImageFixe(page: Page, univers: "sports" | "danse", variantes: RegExp, cri: string): Promise<void> {
