@@ -27,3 +27,8 @@ Nature : correctifs `fix(#141)`. Décisions du PO : « son A, accueil A, issue o
   - « Léa rejoue » ×5 : 5/5 verts (défaut 3 corrigé).
   - `@issue-97|@issue-101` : 104/106. KO : #101 « …se lit à voix haute… » (connu sur `main`, #101:313) ; #101 « Sans bibliothèque chargée… » (régression du changement d'`ouvrirQuiJoue` : plus de rechargement depuis `/jeu`).
   - Famille « Quête du jour accomplie ! » : 4/15. La bulle n'a que la félicitation de la dernière réponse : même course que le défaut 3 (la phrase de fin attend la lecture de la quête de #101), pas seulement la phrase de la quête. → cycle E2E 2 (e2e-tester).
+- Review cycle 3 (delta steps 387776f..283d037) : APPROUVÉ, 3 non-bloquants (clics redondants, emplacement d'`attendreQueLaBulleSeTerminePar`).
+- Run 2 du périmètre (283d037, telephone, 1 worker) :
+  - famille « Quête du jour accomplie ! » : **15/15** ;
+  - « Léa rejoue » ×5 : **5/5** ;
+  - `@issue-97|@issue-101|@issue-29` : **175/177**. KO : #101 « …se lit à voix haute… » (connu sur `main`, #101:313) ; #101 « Une séance terminée sur une leçon des classes d'avant accomplit la quête… », instable (vert au run 1, 3/3 verts au rejeu `--repeat-each=3`).
