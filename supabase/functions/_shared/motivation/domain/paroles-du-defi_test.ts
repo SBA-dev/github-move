@@ -15,6 +15,7 @@ import {
   parolesDeFinDeDefi,
   parolesDeFinDeGrandDefi,
   phraseDeFinAvecLeDefi,
+  phraseDeFinAvecLeDefiOuvert,
   phraseDeFinAvecLeGrandDefi,
   titreDuDefiReleve,
   titreDuGrandDefiReleve,
@@ -126,4 +127,20 @@ Deno.test("l'annonce du défi ouvert nomme le numéro du défi, ou la matière d
     "Le défi 2 est ouvert !",
     "Le grand défi des maths est ouvert !",
   ]);
+});
+
+Deno.test("la phrase de fin propose le défi que la séance vient d'ouvrir, comme défi du parcours", () => {
+  const texte = phraseDeFinAvecLeDefiOuvert("À demain !", "Léa", defiNumero2);
+
+  assertEquals(texte, phraseDeFinAvecLeDefi("À demain !", "Léa", 2));
+});
+
+Deno.test("la phrase de fin propose le défi que la séance vient d'ouvrir, comme grand défi", () => {
+  const texte = phraseDeFinAvecLeDefiOuvert("À demain !", "Léa", grandDefiDesMaths);
+
+  assertEquals(texte, phraseDeFinAvecLeGrandDefi("À demain !", "Léa", "maths"));
+});
+
+Deno.test("la phrase de fin reste telle quelle quand la séance n'ouvre aucun défi", () => {
+  assertEquals(phraseDeFinAvecLeDefiOuvert("À demain !", "Léa", undefined), "À demain !");
 });
