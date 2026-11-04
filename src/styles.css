@@ -33,7 +33,6 @@
   --erreur-fond: #ffe3e6;
   --piste: #eadfd2;
   --or: #ffd43b;
-  --or-contour: #b8860b;
   --or-texte: #8a6100;
   --syllabe-bleue: #1d4ed8;
   --syllabe-rouge: #b42318;
@@ -42,9 +41,6 @@
   --carte-acquise: #2e7d32;
   --carte-en-cours: #ef8a17;
 
-  --bois-fonce: #8a5a2b;
-  --bois: #c79a5b;
-  --bois-clair: #e8c48f;
   --jeton-cinquieme: #ff922b;
   --cristal-clair: #dff0ff;
   --cristal: #8cc4ff;
@@ -785,21 +781,27 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 .carte-du-calcul { font-size: 2rem; }
 .boite-a-jetons, .probleme-en-barres { display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 100%; }
 
-/* Boîte à jetons : le couvercle se lève ou se ferme, les jetons rangés par 5 */
-.boite { position: relative; box-sizing: border-box; display: grid; place-items: center; width: min(100%, 18rem); min-height: 128px; margin-top: 28px; padding: 12px; border: 4px solid var(--bois-fonce); border-radius: 6px 6px 16px 16px; background: var(--bois-clair); }
-.boite::before { content: ""; position: absolute; left: -4px; right: -4px; bottom: 100%; height: 22px; border: 4px solid var(--bois-fonce); border-radius: var(--rayon-petit); background: var(--bois); transform-origin: left bottom; transition: transform .5s ease-in-out; }
-.boite[data-etat="ouverte"]::before { transform: rotate(-35deg); }
-.boite[data-etat="fermee"] { background: var(--bois); }
-.boite[data-etat="fermee"] .contenu-de-la-boite { visibility: hidden; }
-.contenu-de-la-boite { display: grid; justify-items: center; gap: 8px; max-width: 100%; }
-.jetons { display: grid; justify-items: center; gap: 6px; max-width: 100%; }
-.rangee-de-jetons { display: flex; justify-content: center; gap: 6px; }
-.jeton { box-sizing: border-box; flex: none; width: 28px; height: 28px; border: 3px solid var(--or-contour); border-radius: 50%; background: var(--or); }
-.jeton[data-cinquieme="true"] { border-color: var(--contour); background: var(--jeton-cinquieme); }
-.jeton[data-etat="nouveau"] { animation: jeton-entre .6s ease-out; }
-.jeton[data-etat="sortant"] { opacity: .45; animation: jeton-sort .6s ease-in; }
-@keyframes jeton-entre { from { transform: translateY(-40px); opacity: 0; } to { transform: none; opacity: 1; } }
-@keyframes jeton-sort { from { transform: none; opacity: 1; } to { transform: translateY(-40px); opacity: .45; } }
+/* Boîte à jetons : le dessin de l'univers en deux couches (fond, puis rebord avant) avec les jetons entre les deux, rangés par 5.
+   Le cadre est celui du dessin (288 × 250) : la boîte garde sa taille, ouverte ou fermée, quel que soit le nombre de jetons. */
+.boite { --taille-du-jeton: 32px; --ecart-des-jetons: 6px; position: relative; flex: none; width: min(100%, 18rem); aspect-ratio: 288 / 250; margin: 0; }
+.dessin-de-la-boite, .rebord-de-la-boite { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+.contenu-de-la-boite { position: absolute; left: 0; right: 0; top: 23.2%; height: 58.4%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--ecart-des-jetons); pointer-events: none; }
+.jetons { display: grid; justify-items: center; gap: var(--ecart-des-jetons); max-width: 100%; }
+.rangee-de-jetons { display: flex; justify-content: center; gap: var(--ecart-des-jetons); }
+.jeton { position: relative; box-sizing: border-box; flex: none; width: var(--taille-du-jeton); height: var(--taille-du-jeton); }
+.dessin-du-jeton { position: relative; display: block; width: 100%; height: 100%; }
+/* La marque du cinquième jeton : un anneau orange autour de l'objet, par-dessus le bord de la pastille, le même dans les six univers. */
+.marque-du-cinquieme { position: absolute; inset: 2%; border-radius: 50%; background-color: var(--jeton-cinquieme); pointer-events: none; -webkit-mask: radial-gradient(circle closest-side, transparent 74%, #000 75%); mask: radial-gradient(circle closest-side, transparent 74%, #000 75%); }
+.jeton[data-etat="sortant"] { opacity: .45; }
+/* Les mouvements durent 400 ms au plus ; ils n'ont lieu que si l'appareil ne demande pas de mouvements réduits (le jeton est alors « posé »). */
+.jeton[data-mouvement="tombe"] { animation: jeton-tombe .4s ease-in-out backwards; }
+.jeton[data-mouvement="s-en-va"] { transform: translateY(-4px); transition: opacity .4s ease, transform .4s ease; }
+@keyframes jeton-tombe {
+  0% { transform: translateY(-48px); opacity: .25; }
+  55% { transform: translateY(0); opacity: 1; }
+  75% { transform: translateY(-6px); }
+  100% { transform: translateY(0); }
+}
 
 /* Schéma en barres : des barres proportionnelles aux nombres, « ? » pour la valeur cherchée */
 .enonce-du-probleme { max-width: 100%; margin: 0; overflow-wrap: anywhere; }
@@ -808,10 +810,21 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 .ligne-du-schema { display: grid; gap: 2px; min-width: 0; }
 .nom-de-la-barre { font-weight: 700; overflow-wrap: anywhere; }
 .morceaux { display: flex; width: 100%; }
-.morceau-de-barre { box-sizing: border-box; display: grid; place-items: center; min-width: 0; min-height: 44px; border: 3px solid var(--contour); background: var(--surface); font-size: 1.5rem; font-weight: 800; overflow: hidden; }
+.morceau-de-barre { position: relative; box-sizing: border-box; display: grid; place-items: center; min-width: 0; min-height: 44px; border: 3px solid var(--contour); background: var(--surface); font-size: 1.5rem; font-weight: 800; overflow: hidden; }
 .morceau-de-barre[data-role="tout"], .morceau-de-barre[data-role="total"], .morceau-de-barre[data-role="grand"] { background: var(--barre-du-tout); }
 .morceau-de-barre[data-cherchee="true"] { background: var(--surbrillance-fond); border-style: dashed; }
 .morceau-de-barre[data-role="ecart"], .morceau-de-barre[data-role="suite"] { border-style: dashed; background: transparent; }
+/* La jauge de l'univers : un remplissage uni qui couvre la barre, et deux bouts de dessin de taille fixe. Elle se dévoile sans changer la largeur de la barre. */
+.morceau-de-barre[data-jauge="vide"] { border-style: dashed; }
+/* Une barre remplie prend la silhouette et le contour de son univers (rayon, bouts découpés) ; vide, elle garde le décor en pointillés de son univers. */
+.morceau-de-barre[data-jauge] { border-radius: var(--rayon-de-la-jauge); clip-path: var(--decoupe-de-la-jauge, none); }
+.morceau-de-barre:is([data-jauge="se-remplit"], [data-jauge="pleine"]) { border-color: var(--contour-de-la-jauge); }
+.jauge, .decor-de-la-barre-vide { position: absolute; inset: 0; z-index: 0; display: flex; justify-content: space-between; pointer-events: none; }
+.decor-de-la-barre-vide :is(g, path, rect) { fill: none; stroke: var(--contour); stroke-dasharray: 4 3; }
+.bout-de-jauge { flex: none; display: block; width: 24px; height: 100%; }
+.valeur-de-la-barre { position: relative; z-index: 1; }
+.morceau-de-barre[data-jauge="se-remplit"] .jauge { animation: jauge-se-remplit var(--duree-du-remplissage) ease-out backwards; }
+@keyframes jauge-se-remplit { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
 .clavier-de-cristaux { display: grid; justify-items: center; gap: 8px; width: min(100%, 20rem); max-width: 100%; }
 .nombre-tape {
   display: block;
@@ -984,6 +997,15 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
   .addition-posee .chiffres-a-poser { flex-wrap: nowrap; gap: 6px; }
   .addition-posee .chiffre-a-poser { padding: 4px 12px; font-size: 1.5rem; }
   .addition-posee .je-ne-sais-pas { padding: 6px 12px; }
+}
+
+/* Boîte à jetons sur téléphone : la boîte fermée, les choix et « Je ne sais pas » tiennent dans l'écran de 360 px (#131). Seules les marges et le personnage guide se resserrent ; la boîte garde la taille de son dessin. */
+@media (max-width: 480px) {
+  .en-tete:has(~ .ecran .boite-a-jetons) { padding-block: 4px; gap: 4px; }
+  .en-tete:has(~ .ecran .boite-a-jetons) .outils { gap: 4px 8px; }
+  .ecran:has(.boite-a-jetons) { padding-top: 4px; }
+  .seance:has(.boite-a-jetons) { gap: 8px; }
+  .seance:has(.boite-a-jetons) .guide-et-parole .personnage-guide { width: 80px; }
 }
 
 .dictee { display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 100%; }

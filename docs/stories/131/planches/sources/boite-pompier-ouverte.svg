@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 288 250">
+<defs><radialGradient id="b-pompier-o-c" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#F0705A"/><stop offset="1" stop-color="#C2341B"/></radialGradient><radialGradient id="b-pompier-o-l" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#D9503A"/><stop offset="1" stop-color="#A8281A"/></radialGradient><clipPath id="b-pompier-o-corps"><path d="M24 72 H264 V234 Q264 246 252 246 H36 Q24 246 24 234 Z"/></clipPath><clipPath id="b-pompier-o-rebord"><rect x="0" y="204" width="288" height="46"/></clipPath></defs>
+<!-- couvercle ouvert (derrière) -->
+<path d="M30 54 L44 8 Q46 4 52 4 H236 Q242 4 244 8 L258 54 Z" fill="url(#b-pompier-o-l)" stroke="#6E1708" stroke-width="4" stroke-linejoin="round"/>
+<rect x="98" y="14" width="92" height="16" rx="8" fill="#FFC93C" stroke="#A56F00" stroke-width="4"/>
+<!-- fond de la boîte : la zone des jetons va de y=58 à y=204 -->
+<path d="M24 72 H264 V234 Q264 246 252 246 H36 Q24 246 24 234 Z" transform="translate(0 -18)" fill="#8A2010" stroke="#6E1708" stroke-width="4" stroke-linejoin="round"/>
+<!-- rebord avant -->
+<g clip-path="url(#b-pompier-o-rebord)"><path d="M24 72 H264 V234 Q264 246 252 246 H36 Q24 246 24 234 Z" fill="url(#b-pompier-o-c)" stroke="#6E1708" stroke-width="4" stroke-linejoin="round"/><g clip-path="url(#b-pompier-o-corps)"><rect x="24" y="216" width="240" height="14" fill="#FFC93C"/></g></g>
+
+</svg>

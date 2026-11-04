@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 288 250">
+<defs><radialGradient id="b-danse-o-c" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#F8D2EF"/><stop offset="1" stop-color="#D68BC8"/></radialGradient><radialGradient id="b-danse-o-l" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#E6B3EC"/><stop offset="1" stop-color="#B96FCB"/></radialGradient><clipPath id="b-danse-o-corps"><path d="M24 72 H264 V228 Q264 246 246 246 H42 Q24 246 24 228 Z"/></clipPath><clipPath id="b-danse-o-rebord"><rect x="0" y="204" width="288" height="46"/></clipPath></defs>
+<!-- couvercle ouvert (derrière) -->
+<path d="M30 54 L44 8 Q46 4 52 4 H236 Q242 4 244 8 L258 54 Z" fill="url(#b-danse-o-l)" stroke="#7A35C8" stroke-width="4" stroke-linejoin="round"/>
+<path d="M56 30 H232" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" opacity=".85"/>
+<!-- fond de la boîte : la zone des jetons va de y=58 à y=204 -->
+<path d="M24 72 H264 V228 Q264 246 246 246 H42 Q24 246 24 228 Z" transform="translate(0 -18)" fill="#8E4BA8" stroke="#7A35C8" stroke-width="4" stroke-linejoin="round"/>
+<!-- rebord avant -->
+<g clip-path="url(#b-danse-o-rebord)"><path d="M24 72 H264 V228 Q264 246 246 246 H42 Q24 246 24 228 Z" fill="url(#b-danse-o-c)" stroke="#7A35C8" stroke-width="4" stroke-linejoin="round"/><g clip-path="url(#b-danse-o-corps)"><path d="M24 216 H264" stroke="#FFFFFF" stroke-width="6" opacity=".85"/></g></g>
+<path d="M264 150 H276" stroke="#7A35C8" stroke-width="6" stroke-linecap="round"/><circle cx="278" cy="150" r="8" fill="#F8D2EF" stroke="#7A35C8" stroke-width="4"/>
+</svg>

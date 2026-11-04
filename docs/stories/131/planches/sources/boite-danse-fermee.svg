@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 288 250">
+<defs><radialGradient id="b-danse-f-c" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#F8D2EF"/><stop offset="1" stop-color="#D68BC8"/></radialGradient><radialGradient id="b-danse-f-l" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#E6B3EC"/><stop offset="1" stop-color="#B96FCB"/></radialGradient><clipPath id="b-danse-f-corps"><path d="M24 72 H264 V228 Q264 246 246 246 H42 Q24 246 24 228 Z"/></clipPath><clipPath id="b-danse-f-rebord"><rect x="0" y="204" width="288" height="46"/></clipPath></defs>
+<!-- poignée -->
+<!-- corps -->
+<path d="M24 72 H264 V228 Q264 246 246 246 H42 Q24 246 24 228 Z" fill="url(#b-danse-f-c)" stroke="#7A35C8" stroke-width="4" stroke-linejoin="round"/>
+<g clip-path="url(#b-danse-f-corps)"><ellipse cx="124" cy="190" rx="14" ry="10" fill="#FFFFFF" transform="rotate(-20 124 190)"/><path d="M135 186 V132 Q146 140 160 146" fill="none" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></g>
+<!-- couvercle fermé : rien ne laisse deviner les jetons -->
+<rect x="14" y="46" width="260" height="34" rx="14" fill="url(#b-danse-f-l)" stroke="#7A35C8" stroke-width="4" stroke-linejoin="round"/>
+<path d="M40 63 H248" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" opacity=".85"/>
+<path d="M264 150 H276" stroke="#7A35C8" stroke-width="6" stroke-linecap="round"/><circle cx="278" cy="150" r="8" fill="#F8D2EF" stroke="#7A35C8" stroke-width="4"/>
+</svg>

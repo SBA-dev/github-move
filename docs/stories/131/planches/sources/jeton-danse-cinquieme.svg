@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+<!-- pastille ronde mate -->
+<circle cx="50" cy="50" r="42" fill="#FDE8F4" stroke="#FF922B" stroke-width="12"/>
+<circle cx="50" cy="50" r="36" fill="none" stroke="#A24A9A" stroke-width="2.5"/>
+<!-- chausson de danse -->
+<path d="M26 60 Q26 40 44 40 Q58 40 64 54 Q80 56 80 66 Q80 74 70 74 H34 Q26 74 26 60 Z" fill="#F6A5C8" stroke="#B0457F" stroke-width="3.5" stroke-linejoin="round"/>
+<path d="M40 48 Q50 58 62 56" fill="none" stroke="#B0457F" stroke-width="3" stroke-linecap="round"/>
+<ellipse cx="38" cy="66" rx="6" ry="4" fill="#FAC8DD"/>
+</svg>

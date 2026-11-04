@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 48">
+<!-- ruban uni sur une petite baguette -->
+<path d="M14 13 H106 L92 26 L106 39 H14 Z" fill="#F7B3D6" stroke="#A24A9A" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="3" y="3" width="11" height="42" rx="5.5" fill="#E8C48F" stroke="#8A5A2B" stroke-width="3.5" stroke-linejoin="round"/>
+</svg>

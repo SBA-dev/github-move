@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 288 250">
+<defs><radialGradient id="b-animaux-o-c" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#F3D08F"/><stop offset="1" stop-color="#D9A55B"/></radialGradient><radialGradient id="b-animaux-o-l" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#F7DCA6"/><stop offset="1" stop-color="#E2B567"/></radialGradient><clipPath id="b-animaux-o-corps"><path d="M26 72 H262 L250 236 Q248 246 238 246 H50 Q40 246 38 236 Z"/></clipPath><clipPath id="b-animaux-o-rebord"><rect x="0" y="204" width="288" height="46"/></clipPath></defs>
+<!-- couvercle ouvert (derrière) -->
+<path d="M30 54 L44 8 Q46 4 52 4 H236 Q242 4 244 8 L258 54 Z" fill="url(#b-animaux-o-l)" stroke="#7A4B1F" stroke-width="4" stroke-linejoin="round"/>
+<circle cx="144" cy="22" r="11" fill="#E2B567" stroke="#7A4B1F" stroke-width="4"/>
+<!-- fond de la boîte : la zone des jetons va de y=58 à y=204 -->
+<path d="M26 72 H262 L250 236 Q248 246 238 246 H50 Q40 246 38 236 Z" transform="translate(0 -18)" fill="#8F6232" stroke="#7A4B1F" stroke-width="4" stroke-linejoin="round"/>
+<!-- rebord avant -->
+<g clip-path="url(#b-animaux-o-rebord)"><path d="M26 72 H262 L250 236 Q248 246 238 246 H50 Q40 246 38 236 Z" fill="url(#b-animaux-o-c)" stroke="#7A4B1F" stroke-width="4" stroke-linejoin="round"/><g clip-path="url(#b-animaux-o-corps)"><path d="M30 218 Q144 226 258 218" fill="none" stroke="#7A4B1F" stroke-width="3" opacity=".5"/><path d="M30 234 Q144 242 258 234" fill="none" stroke="#7A4B1F" stroke-width="3" opacity=".5"/></g></g>
+
+</svg>
