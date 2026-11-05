@@ -1,0 +1,912 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Savanturier : Capitaine Sam, dessin animé</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Andika:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root { --principale: #C2341B; --foncee: #931F0C; --or: #FFC93C; --encre: #3A2219; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #2A1A16; }
+  body { font-family: "Andika", system-ui, sans-serif; color: var(--encre); display: flex; justify-content: center; padding: 10px 0; }
+  .telephone { width: 100%; max-width: 370px; height: 680px; border-radius: 28px; overflow: hidden; background: linear-gradient(#FFC9A8, #FFF0D9); display: flex; flex-direction: column; box-shadow: 0 12px 40px rgba(0,0,0,.35); }
+  .scene { position: relative; width: 100%; aspect-ratio: 360 / 450; flex: none; touch-action: manipulation; cursor: pointer; outline: none; }
+  .scene:focus-visible { box-shadow: inset 0 0 0 4px var(--or); }
+  .scene svg, .scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .scene canvas { pointer-events: none; }
+  .bandeau { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 4px; padding: 6px 14px 10px; text-align: center; }
+  .titre { margin: 0; min-height: 36px; font-family: "Baloo 2", "Andika", sans-serif; font-weight: 800; font-size: 30px; line-height: 1.15; color: var(--foncee); opacity: 0; transform: translateY(12px); }
+  .sous { margin: 0; min-height: 20px; font-size: 14px; line-height: 1.3; color: #6B3B28; opacity: 0; transform: translateY(8px); }
+  .boutons { display: flex; gap: 10px; margin-top: 6px; }
+  .btn { min-height: 48px; padding: 8px 20px; border: 0; border-radius: 999px; font: 700 17px "Baloo 2", "Andika", sans-serif; cursor: pointer; transition: transform .12s ease-out, box-shadow .12s ease-out; }
+  .btn:active { transform: translateY(3px); }
+  .btn:focus-visible { outline: 3px solid var(--or); outline-offset: 3px; }
+  .principal { background: var(--principale); color: #fff; box-shadow: 0 4px 0 var(--foncee); }
+  .principal:active { box-shadow: 0 1px 0 var(--foncee); }
+  .petits { display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap; justify-content: center; }
+  .petit { min-height: 44px; min-width: 44px; padding: 6px 12px; border: 2px solid #EBC3AE; border-radius: 12px; background: #fff; color: #6B3B28; font: 700 13px "Andika", sans-serif; cursor: pointer; }
+  .petit[aria-pressed="true"] { border-color: var(--principale); color: var(--principale); background: #FFEDE4; }
+  .petit:focus-visible { outline: 3px solid var(--or); outline-offset: 2px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .nuage { animation: derive 90s linear infinite; }
+  .nuage.lent { animation-duration: 130s; }
+  @keyframes derive { from { transform: translateX(0); } to { transform: translateX(-440px); } }
+  @media (prefers-reduced-motion: reduce) { .nuage { animation: none; } .btn { transition: none; } }
+</style>
+</head>
+<body>
+<div class="telephone">
+  <div class="scene" id="scene" tabindex="0" role="img" aria-label="Capitaine Sam arrose le jardin de la caserne. Touche la scène pour passer l'animation.">
+    <svg viewBox="0 0 360 450" aria-hidden="true" id="svg">
+      <defs>
+        <linearGradient id="ciel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFC9A8"/><stop offset="1" stop-color="#FFF0D9"/></linearGradient>
+        <linearGradient id="cour" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F7E4C6"/><stop offset="1" stop-color="#EED3AE"/></linearGradient>
+        <linearGradient id="herbe" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9AD48A"/><stop offset="1" stop-color="#74BC6C"/></linearGradient>
+        <clipPath id="clip-oeil"><ellipse rx="7.4" ry="9.6"/></clipPath>
+        <clipPath id="clip-bouche"><path d="M-11 11 Q0 27 11 11 Z"/></clipPath>
+      </defs>
+      <g id="repere"></g>
+
+      <!-- ciel, soleil, nuages blancs qui dérivent -->
+      <rect width="360" height="450" fill="url(#ciel)"/>
+      <circle cx="40" cy="116" r="18" fill="#FFE08A" stroke="#F7CB5A" stroke-width="3"/>
+      <g fill="#FFFFFF" stroke="#F3D9C8" stroke-width="2.5" stroke-linejoin="round">
+        <path class="nuage" d="M262 120 q-6 -18 14 -18 q6 -14 22 -8 q16 -6 20 10 q14 2 8 16 Z"/>
+        <path class="nuage lent" d="M430 150 q-4 -12 10 -12 q5 -9 15 -5 q11 -4 14 7 q9 2 5 10 Z" opacity=".9"/>
+      </g>
+      <!-- arc-en-ciel (variante B), derrière la caserne -->
+      <g id="arc-en-ciel" fill="none" stroke-linecap="round" opacity="0"></g>
+      <!-- collines douces -->
+      <path d="M0 238 C60 214 130 226 200 220 C260 214 310 206 360 222 V450 H0 Z" fill="#F3C2A6"/>
+      <path d="M0 268 C70 250 150 258 220 254 C290 250 330 244 360 254 V450 H0 Z" fill="#F2C08F"/>
+      <!-- arbre -->
+      <g stroke="#33304A" stroke-width="2.5" stroke-linejoin="round">
+        <rect x="318" y="262" width="9" height="40" rx="3" fill="#8A5A34"/>
+        <g fill="#6FBF6A"><circle cx="322" cy="246" r="26"/><circle cx="304" cy="262" r="15"/><circle cx="340" cy="262" r="15"/></g>
+      </g>
+      <circle cx="314" cy="236" r="5" fill="#A6E39A"/><circle cx="330" cy="250" r="3" fill="#A6E39A"/>
+      <!-- la Caserne des Savanturiers : bâtiment rouge et crème, sans texte -->
+      <g id="caserne" stroke="#33304A" stroke-width="2.6" stroke-linejoin="round">
+        <path d="M94 168 L152 86 L210 168 Z" fill="#C2341B"/>
+        <path d="M104 166 L152 98 L200 166" fill="none" stroke="#FFF0D9" stroke-width="4"/>
+        <path d="M136 152 V124 Q136 106 152 106 Q168 106 168 124 V152 Z" fill="#FFF0D9"/>
+        <rect x="56" y="166" width="192" height="134" fill="#C2341B"/>
+        <path d="M200 172 H246 V298 H226 Q232 230 200 172 Z" fill="#A82A16" stroke="none"/>
+        <rect x="50" y="160" width="204" height="12" rx="4" fill="#FFF0D9"/>
+        <g fill="#CFEBFF"><rect x="66" y="192" width="28" height="32" rx="4" stroke-width="3" stroke="#33304A"/><rect x="210" y="192" width="28" height="32" rx="4" stroke-width="3"/></g>
+        <g fill="none" stroke="#FFF0D9" stroke-width="2.4"><path d="M80 194 V222 M68 208 H92 M224 194 V222 M212 208 H236"/></g>
+        <path d="M64 230 H96 M208 230 H240" stroke="#FFF0D9" stroke-width="4" stroke-linecap="round"/>
+        <rect x="98" y="198" width="108" height="102" rx="6" fill="#931F0C"/>
+        <rect x="104" y="204" width="96" height="96" rx="4" fill="#FFF0D9"/>
+        <g fill="none" stroke="#E2C9A6" stroke-width="2"><path d="M106 244 H198 M106 262 H198 M106 280 H198"/></g>
+        <g fill="#CFEBFF" stroke-width="2.4"><circle cx="128" cy="224" r="8"/><circle cx="152" cy="224" r="8"/><circle cx="176" cy="224" r="8"/></g>
+        <g fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" opacity=".9"><path d="M124 221 Q126 218 129 218 M148 221 Q150 218 153 218 M172 221 Q174 218 177 218"/></g>
+      </g>
+      <!-- la cloche dorée et sa corde -->
+      <path id="corde" fill="none" stroke="#33304A" stroke-width="5" stroke-linecap="round"/>
+      <path id="corde-in" fill="none" stroke="#E7C58C" stroke-width="2.6" stroke-linecap="round"/>
+      <g id="pompon"><circle r="5" fill="#FFC93C" stroke="#33304A" stroke-width="2.2"/><path d="M-3 4 L-4 11 M0 5 V12 M3 4 L4 11" stroke="#33304A" stroke-width="2.6" stroke-linecap="round"/><path d="M-3 4 L-4 11 M0 5 V12 M3 4 L4 11" stroke="#FFC93C" stroke-width="1.2" stroke-linecap="round"/></g>
+      <g id="cloche"></g>
+      <!-- cour, herbe, jardin -->
+      <path d="M0 298 H360 V450 H0 Z" fill="url(#cour)"/>
+      <path d="M0 298 H360" stroke="#E2C29A" stroke-width="2.4"/>
+      <g stroke="#E8CFAA" stroke-width="1.4" opacity=".8"><path d="M0 330 H360 M0 362 H230 M40 298 V330 M120 298 V330 M200 298 V330 M280 298 V330 M80 330 V362 M160 330 V362"/></g>
+      <path d="M0 412 C70 404 150 408 220 404 C290 400 330 404 360 402 V450 H0 Z" fill="url(#herbe)" stroke="#5E9F58" stroke-width="2"/>
+      <g fill="none" stroke="#5E9F58" stroke-width="2" stroke-linecap="round"><path d="M30 430 l3 -7 l3 7 M110 438 l3 -7 l3 7 M200 432 l3 -7 l3 7 M290 440 l3 -7 l3 7"/></g>
+      <g id="parterre" stroke="#33304A" stroke-linejoin="round">
+        <path d="M232 380 Q232 364 250 364 H340 Q356 364 356 380 Q356 396 340 396 H250 Q232 396 232 380 Z" fill="#9A6440" stroke-width="2.6"/>
+        <path d="M240 372 Q248 368 260 368 H332 Q346 368 350 374" fill="none" stroke="#B9835A" stroke-width="3" stroke-linecap="round"/>
+      </g>
+      <g id="fleurs"></g>
+      <!-- dévidoir, tuyau, lance au sol, jet -->
+      <g id="devidoir"></g>
+      <path id="tuyau-contour" fill="none" stroke="#33304A" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      <path id="tuyau" fill="none" stroke="#EFE3C6" stroke-width="5.4" stroke-linecap="round" stroke-linejoin="round"/>
+      <path id="tuyau-ombre" fill="none" stroke="#D2C29C" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <ellipse id="ombre-sol" cx="132" cy="384" rx="34" ry="8" fill="#8A5A3A" opacity=".22"/>
+      <g id="lance-sol" opacity="0"></g>
+      <g id="jet">
+        <path class="jet-contour" fill="none" stroke="#3C8DDA" stroke-width="7.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <path class="jet-eau" fill="none" stroke="#BDE8FF" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <path class="jet-reflet" fill="none" stroke="#FFFFFF" stroke-width="1.4" stroke-linecap="round" opacity=".8"/>
+        <g class="gouttes" fill="#E6F7FF" stroke="#3C8DDA" stroke-width="1.2"></g>
+        <g class="eclabousse" fill="#BDE8FF" stroke="#3C8DDA" stroke-width="1.2"></g>
+      </g>
+      <g id="leo"></g>
+      <g id="pluie"></g>
+      <g id="ebroue" fill="#BDE8FF" stroke="#3C8DDA" stroke-width="1.2"></g>
+      <g id="notes"></g>
+      <g id="bulle-0" opacity="0"><rect x="-32" y="-16" width="64" height="30" rx="14" fill="#FFFFFF" stroke="#33304A" stroke-width="2.6"/><text y="6" text-anchor="middle" font-family="'Baloo 2', 'Andika', sans-serif" font-weight="800" font-size="17" fill="#931F0C"></text></g>
+      <g id="bulle-1" opacity="0"><rect x="-32" y="-16" width="64" height="30" rx="14" fill="#FFFFFF" stroke="#33304A" stroke-width="2.6"/><text y="6" text-anchor="middle" font-family="'Baloo 2', 'Andika', sans-serif" font-weight="800" font-size="17" fill="#931F0C"></text></g>
+      <g id="etoiles" opacity="0" fill="#FFC93C" stroke="#33304A" stroke-width="1.8" stroke-linejoin="round"></g>
+      <g id="etincelles" opacity="0" fill="#FFC93C" stroke="#33304A" stroke-width="1.5" stroke-linejoin="round"></g>
+      <g transform="translate(180 60)">
+        <g id="rayons" opacity="0"></g>
+        <g id="cri" opacity="0">
+          <text x="3" y="4" text-anchor="middle" dominant-baseline="middle" font-family="'Baloo 2', 'Andika', sans-serif" font-weight="800" font-size="36" fill="#FFC93C" stroke="#33304A" stroke-width="10" stroke-linejoin="round" paint-order="stroke">Mission accomplie !</text>
+          <text x="0" y="0" text-anchor="middle" dominant-baseline="middle" font-family="'Baloo 2', 'Andika', sans-serif" font-weight="800" font-size="36" fill="#C2341B" stroke="#FFFFFF" stroke-width="5" stroke-linejoin="round" paint-order="stroke">Mission accomplie !</text>
+        </g>
+      </g>
+      <g id="planche" opacity="0"></g>
+    </svg>
+    <canvas id="petales" aria-hidden="true"></canvas>
+  </div>
+  <div class="bandeau">
+    <p class="titre" id="titre"></p>
+    <p class="sous" id="sous"></p>
+    <div class="boutons">
+      <button class="btn principal" id="reussir" type="button">Réussir</button>
+    </div>
+    <div class="petits" role="group" aria-label="Choisir la variante">
+      <button class="petit" type="button" data-variante="cloche" aria-pressed="false">A · Cloche</button>
+      <button class="petit" type="button" data-variante="arc" aria-pressed="false">B · Arc-en-ciel</button>
+      <button class="petit" type="button" data-variante="pluie" aria-pressed="false">C · Pluie</button>
+    </div>
+  </div>
+  <p class="sr-only" id="annonce" aria-live="polite"></p>
+</div>
+
+<script>
+(() => {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const NS = "http://www.w3.org/2000/svg";
+  const mouvementsReduits = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const CONTOUR = "#33304A", PEAU = "#f3c9a5", PEAU_OMBRE = "#E2AE84", PEAU_LUMIERE = "#FFE6CF", CHEVEUX = "#a8461c", CHEVEUX_OMBRE = "#7E3212", CHEVEUX_LUMIERE = "#CC6A3C",
+    VESTE = "#d23a2a", VESTE_OMBRE = "#A82818", VESTE_LUMIERE = "#EE6A58", PANTALON = "#26335F", PANTALON_OMBRE = "#192448", PANTALON_LUMIERE = "#3D4E85",
+    BANDE = "#F5D33A", ARGENT = "#E9EEF3", CASQ = "#F2C230", CASQ_OMBRE = "#D49E17", CASQ_LUMIERE = "#FFE27A", ECUSSON = "#C2341B",
+    BOTTE = "#2B2B3A", CHAUSSURE = "#2B2B3A", CHAUSSURE_OMBRE = "#1B1B28", OR = "#FFC93C", METAL = "#C8D2E6", METAL_OMBRE = "#8E9BBE",
+    EAU = "#BDE8FF", EAU_CONTOUR = "#3C8DDA", TUYAU = "#EFE3C6";
+  const DEG = Math.PI / 180;
+
+  // ---------- Courbes (moteur de Coach Léo) ----------
+  const E = {
+    lineaire: (u) => u,
+    sortie: (u) => 1 - Math.pow(1 - u, 3),
+    entree: (u) => u * u * u,
+    douce: (u) => (u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2),
+    retour: (u) => { const c = 1.7; return 1 + (c + 1) * Math.pow(u - 1, 3) + c * Math.pow(u - 1, 2); },
+    rebond: (u) => { const c = 2.6; return 1 + (c + 1) * Math.pow(u - 1, 3) + c * Math.pow(u - 1, 2); },
+  };
+  const lerp = (a, b, u) => a + (b - a) * u, clamp01 = (u) => Math.max(0, Math.min(1, u));
+  const fenetre = (t, debut, duree, e = E.sortie) => e(clamp01((t - debut) / duree));
+  const r1 = (v) => Math.round(v * 10) / 10, r2 = (v) => Math.round(v * 100) / 100;
+  const tr = (el, v) => el.setAttribute("transform", v);
+  const att = (el, a, v) => el.setAttribute(a, v);
+  const BASE = 1.15, SOL = 382, Y_SOL = SOL - 58 * BASE;   // origine du personnage aux hanches, pieds 58 unités plus bas (comme Léo)
+  const alea = (i) => { const s = Math.sin(i * 12.9898 + 4.1) * 43758.5453; return s - Math.floor(s); };   // hasard fixe : même image à chaque rendu
+
+  // ---------- Géométrie des membres : une seule courbe souple par membre (Léo) ----------
+  const quad = (S, C, W, t) => ({ x: (1 - t) ** 2 * S.x + 2 * t * (1 - t) * C.x + t * t * W.x, y: (1 - t) ** 2 * S.y + 2 * t * (1 - t) * C.y + t * t * W.y });
+  function membre(S, a1, a2, L1, L2) {
+    const E1 = { x: S.x - Math.sin(a1 * DEG) * L1, y: S.y + Math.cos(a1 * DEG) * L1 };
+    const W = { x: E1.x - Math.sin((a1 + a2) * DEG) * L2, y: E1.y + Math.cos((a1 + a2) * DEG) * L2 };
+    const C = { x: 2 * E1.x - (S.x + W.x) / 2, y: 2 * E1.y - (S.y + W.y) / 2 };
+    const dir = Math.atan2(W.x - E1.x, -(W.y - E1.y)) / DEG;
+    return { S, E: E1, W, C, dir };
+  }
+  function trace(m, t0, t1, pas = 8) { let d = ""; for (let i = 0; i <= pas; i++) { const p = quad(m.S, m.C, m.W, lerp(t0, t1, i / pas)); d += `${i ? "L" : "M"}${r1(p.x)} ${r1(p.y)}`; } return d; }
+  const decale = (m, nx, ny) => ({ ...m, S: { x: m.S.x + nx, y: m.S.y + ny }, C: { x: m.C.x + nx, y: m.C.y + ny }, W: { x: m.W.x + nx, y: m.W.y + ny } });
+  const ligne = (classe, couleur, largeur, extra = "") => `<path class="${classe}" fill="none" stroke="${couleur}" stroke-width="${largeur}" stroke-linecap="round" stroke-linejoin="round" ${extra}/>`;
+  // angles de Léo (a1, a2) qui amènent l'extrémité d'un membre à une cible
+  function anglesVers(S, T, L1, L2, cote) {
+    const dx = T.x - S.x, dy = T.y - S.y, D = Math.hypot(dx, dy) || .001, Dc = Math.max(Math.abs(L1 - L2) + 1, Math.min((L1 + L2) * .985, D)), ux = dx / D, uy = dy / D;
+    const a = (L1 * L1 - L2 * L2 + Dc * Dc) / (2 * Dc), h = Math.sqrt(Math.max(0, L1 * L1 - a * a));
+    const Ex = S.x + ux * a + uy * h * cote, Ey = S.y + uy * a - ux * h * cote, Wx = S.x + ux * Dc, Wy = S.y + uy * Dc;
+    const a1 = Math.atan2(-(Ex - S.x), Ey - S.y) / DEG; let a2 = Math.atan2(-(Wx - Ex), Wy - Ey) / DEG - a1;
+    while (a2 > 180) a2 -= 360; while (a2 < -180) a2 += 360;
+    return { a1, a2 };
+  }
+  const EPAULE = (c) => ({ x: c === "g" ? -18 : 18, y: -38 });
+  // bras vers une cible (repère du buste) : coude vers l'extérieur et le bas ; S = épaule réelle si on la connaît
+  function brasVers(c, T, S = EPAULE(c)) {
+    const side = c === "g" ? -1 : 1, dx = T.x - S.x, dy = T.y - S.y, D = Math.hypot(dx, dy) || 1, nx = dy / D, ny = -dx / D;
+    const cote = Math.sign(nx * side + ny * .55) || side, r = anglesVers(S, T, 24, 22, cote);
+    return c === "g" ? { aGu: r.a1, aGl: r.a2 } : { aDu: r.a1, aDl: r.a2 };
+  }
+  // la main saisit un objet : le poignet s'arrête un peu avant le point saisi (le poing est au bout de l'avant-bras)
+  function brasSaisit(c, T, S) {
+    const dx = T.x - S.x, dy = T.y - S.y, D = Math.hypot(dx, dy) || 1, k = Math.max(0, D - 4) / D;
+    return brasVers(c, { x: S.x + dx * k, y: S.y + dy * k }, S);
+  }
+
+  // ---------- Mains à cinq doigts (Léo), mains nues ----------
+  function doigtForme(x, y0, a, L, b = 2.7, tp = 1.9) {
+    const dx = Math.sin(a * DEG), dy = -Math.cos(a * DEG), nx = -dy, ny = dx;
+    const tx = x + dx * L, ty = y0 + dy * L, mx = (x + tx) / 2 + nx * .7, my = (y0 + ty) / 2 + ny * .7, mw = (b + tp) / 2;
+    return `M${r1(x + nx * b)} ${r1(y0 + ny * b)} Q${r1(mx + nx * mw)} ${r1(my + ny * mw)} ${r1(tx + nx * tp)} ${r1(ty + ny * tp)} A${tp} ${tp} 0 0 0 ${r1(tx - nx * tp)} ${r1(ty - ny * tp)} Q${r1(mx - nx * mw)} ${r1(my - ny * mw)} ${r1(x - nx * b)} ${r1(y0 - ny * b)} Z`;
+  }
+  function main(pose, miroir, peau = PEAU, ombre = PEAU_OMBRE) {
+    const m = miroir ? -1 : 1, doigts = [-6.3, -2.1, 2.1, 6.3], angles = pose === 3 ? [-26, -9, 9, 26] : [-9, -3, 3, 9];
+    const paume = `M-8 9 V-3 Q-8 -8 -3 -8 H3 Q8 -8 8 -3 V9 Q0 12 -8 9 Z`, paumePoing = `M-8 8 V-2 Q-8 -9 0 -9 Q8 -9 8 -2 V8 Q0 12 -8 8 Z`;
+    const forme = (d, w) => `<path d="${d}" fill="none" stroke="${CONTOUR}" stroke-width="${w}" stroke-linejoin="round"/>`;
+    let contours = "", remplissages = "";
+    if (pose === 0 || pose === 3) {
+      const formes = doigts.map((x, i) => doigtForme(x, -6, angles[i] * m, 10.5 - Math.abs(i - 1.5) * .8)), pouce = doigtForme(-7 * m, 0, -52 * m, 9, 2.6, 1.9);
+      formes.concat(pouce).forEach((d) => (contours += forme(d, 5.2)));
+      remplissages += formes.concat(pouce).map((d) => `<path d="${d}" fill="${peau}"/>`).join("");
+      remplissages += doigts.map((x, i) => { const a = angles[i] * m * DEG; return `<path d="M${r1(x + Math.sin(a) * 3)} ${r1(-6 - Math.cos(a) * 3)} l${r1(Math.sin(a) * 4)} ${r1(-Math.cos(a) * 4)}" fill="none" stroke="${ombre}" stroke-width="1.2" stroke-linecap="round" opacity=".7"/>`; }).join("");
+      return `${contours}${forme(paume, 5.6)}<path d="${paume}" fill="${peau}"/>${remplissages}<path d="M3 8 Q7 4 7 -1" fill="none" stroke="${ombre}" stroke-width="2.2" stroke-linecap="round"/>`;
+    }
+    const pouce = pose === 2 ? doigtForme(-5 * m, -4, -10 * m, 13, 2.8, 2.1) : null;
+    if (pouce) contours += forme(pouce, 5.4);
+    doigts.forEach((x) => { contours += `<circle cx="${x}" cy="-8" r="5.4" fill="${CONTOUR}"/>`; });
+    let dessus = doigts.map((x) => `<circle cx="${x}" cy="-8" r="3.6" fill="${peau}"/>`).join("") + `<rect x="-8" y="-8" width="16" height="6" fill="${peau}"/>`;
+    dessus += doigts.map((x) => `<path d="M${x - 2.2} -6.5 q2.2 -1.8 4.4 0" fill="none" stroke="${ombre}" stroke-width="1.4" stroke-linecap="round"/>`).join("");
+    if (pouce) dessus += `<path d="${pouce}" fill="${peau}"/><path d="M${r1(-6 * m)} -3 l${r1(-1.5 * m)} -6" fill="none" stroke="${ombre}" stroke-width="1.6" stroke-linecap="round"/>`;
+    else dessus += `<path d="M${-7 * m} 2 q${r1(5 * m)} 3 ${r1(10 * m)} 1" fill="none" stroke="${ombre}" stroke-width="1.8" stroke-linecap="round"/>`;
+    return `${contours}${forme(paumePoing, 5.6)}<path d="${paumePoing}" fill="${peau}"/>${dessus}<path d="M3 7 Q7 3 7 -2" fill="none" stroke="${ombre}" stroke-width="2.2" stroke-linecap="round"/>`;
+  }
+  const MAINS = { peau: { droit: [0, 1, 2, 3].map((p) => main(p, false)), miroir: [0, 1, 2, 3].map((p) => main(p, true)) } };
+
+  // ---------- La lance à eau (repère de la lance : arrière à x = -9, embout vers +x, pointe à x = 36) ----------
+  const LANCE = `<path d="M-9 0 H22" stroke="${CONTOUR}" stroke-width="9.5" stroke-linecap="round"/><path d="M-9 0 H22" stroke="${METAL}" stroke-width="6" stroke-linecap="round"/><path d="M-8 1.6 H21" stroke="${METAL_OMBRE}" stroke-width="1.8" stroke-linecap="round"/><path d="M-7 -1.6 H20" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round" opacity=".8"/>
+    <rect x="-11" y="-6" width="5" height="12" rx="2" fill="${OR}" stroke="${CONTOUR}" stroke-width="1.8"/>
+    <rect x="6" y="-5.4" width="9" height="10.8" rx="3" fill="#4A4A5E" stroke="${CONTOUR}" stroke-width="1.8"/><path d="M8.5 -4 V4 M11 -4 V4 M13.5 -4 V4" stroke="#6E6E86" stroke-width="1"/>
+    <path d="M21 -6 L35 -3.2 Q37 0 35 3.2 L21 6 Z" fill="${OR}" stroke="${CONTOUR}" stroke-width="2" stroke-linejoin="round"/><path d="M23 -3.6 L33 -1.8" stroke="#FFF1A8" stroke-width="1.4" stroke-linecap="round"/>
+    <g class="m-pointe" transform="translate(37 0)"/><g class="m-axe"/><g class="m-arriere" transform="translate(-10 0)"/>`;
+
+  // ---------- Casque de pompier jaune (repère de la tête : rayon 40, réduit à 28 par le groupe de la tête) ----------
+  const CASQUE = `<path class="bord-arriere" d="M-52 -26 Q0 -44 52 -26 Q56 -19 46 -18 Q0 -32 -46 -18 Q-56 -19 -52 -26 Z" fill="${CASQ_OMBRE}" stroke="${CONTOUR}" stroke-width="2.8" stroke-linejoin="round"/>
+    <path d="M-42 -28 Q-45 -78 0 -82 Q45 -78 42 -28 Q0 -38 -42 -28 Z" fill="${CASQ}" stroke="${CONTOUR}" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M16 -78 Q40 -68 40 -32 Q28 -36 16 -37 Z" fill="${CASQ_OMBRE}"/>
+    <path d="M-32 -54 Q-22 -72 -6 -74 Q-20 -66 -26 -50 Z" fill="${CASQ_LUMIERE}"/>
+    <path class="crete" d="M-5 -81 Q0 -87 5 -81 L5 -66 H-5 Z" fill="${CASQ_LUMIERE}" stroke="${CONTOUR}" stroke-width="2.4" stroke-linejoin="round"/>
+    <path class="visiere" d="M-47 -30 Q0 -44 47 -30 Q0 -22 -47 -30 Z" fill="${CASQ_OMBRE}" stroke="${CONTOUR}" stroke-width="2.8" stroke-linejoin="round"/>
+    <g class="ecusson"><path d="M-10 -66 H10 V-56 Q10 -47 0 -43 Q-10 -47 -10 -56 Z" fill="${ECUSSON}" stroke="${CONTOUR}" stroke-width="2.2" stroke-linejoin="round"/><path d="M0 -62 Q4.5 -55.5 4.5 -53 A4.5 4.5 0 0 1 -4.5 -53 Q-4.5 -55.5 0 -62 Z" fill="#FFFFFF"/></g>`;
+
+  // ---------- Structure du personnage : corps de Coach Léo, tête et tenue de Sam ----------
+  // bras : le trait de bras de Léo, manche longue de la veste (bande réfléchissante jaune et argent), poignet et main nus
+  const brasHTML = (c) => `<g id="bras-${c}">
+      ${ligne("contour", CONTOUR, 20)}${ligne("rempli", PEAU, 13)}${ligne("ombre", PEAU_OMBRE, 5.5)}${ligne("lumiere", PEAU_LUMIERE, 3.2)}
+      ${ligne("manche-contour", CONTOUR, 23)}${ligne("manche", VESTE, 17)}${ligne("manche-ombre", VESTE_OMBRE, 5)}
+      <path class="bande" fill="none" stroke="${BANDE}" stroke-width="17" stroke-linecap="butt"/><path class="bande-argent" fill="none" stroke="${ARGENT}" stroke-width="17" stroke-linecap="butt"/>
+      <path class="manche-bord" fill="none" stroke="${VESTE_OMBRE}" stroke-width="17" stroke-linecap="butt"/>
+      <g id="main-${c}"><g class="pose-main"></g></g></g>`;
+  // jambe : le trait de jambe de Léo, pantalon bleu marine à bande jaune, botte noire
+  const jambeHTML = (c) => `<g id="jambe-${c}">
+      ${ligne("contour", CONTOUR, 23)}${ligne("rempli", PANTALON, 16)}${ligne("ombre", PANTALON_OMBRE, 5.5)}${ligne("lumiere", PANTALON_LUMIERE, 3)}
+      <path class="bande" fill="none" stroke="${BANDE}" stroke-width="16.5" stroke-linecap="butt"/>
+      <path class="botte" fill="none" stroke="${BOTTE}" stroke-width="17" stroke-linecap="round"/><path class="botte-bord" fill="none" stroke="#55556A" stroke-width="17" stroke-linecap="butt"/>
+      <g id="chaussure-${c}">
+        <ellipse class="contact" rx="12" ry="3.5" fill="#8A5A3A" opacity=".25"/>
+        <g class="vue-face"><path fill="${CHAUSSURE}" stroke="${CONTOUR}" stroke-width="3" stroke-linejoin="round" d="M-8 -8 Q-10 0 -10 5 Q-10 13 -3 14 Q0 15 3 14 Q10 13 10 5 Q10 0 8 -8 Q0 -10 -8 -8 Z"/><path fill="${CHAUSSURE_OMBRE}" d="M3 -7 Q8 0 8 5 Q8 11 3 14 Q6 9 5 4 Q4 -2 3 -7 Z"/><path d="M-8 9 Q0 13 8 9" fill="none" stroke="#8E8EA6" stroke-width="1.6" stroke-linecap="round" opacity=".9"/></g>
+        <g class="vue-profil"><path fill="${CHAUSSURE}" stroke="${CONTOUR}" stroke-width="3" stroke-linejoin="round" d="M-12 -7 Q-15 0 -13 7 Q-11 9 -6 9 H17 Q23 9 23 4 Q23 -1 15 -4 Q8 -7 2 -7 Q-6 -9 -12 -7 Z"/><path fill="${CHAUSSURE_OMBRE}" d="M-8 3 Q6 6 23 3 Q23 8 17 9 H-6 Q-12 9 -13 6 Z"/><path d="M-13 6 Q5 8 22 5" fill="none" stroke="#8E8EA6" stroke-width="1.6" stroke-linecap="round"/></g>
+        <g class="vue-semelle"><path fill="#3A3A4A" stroke="${CONTOUR}" stroke-width="2.4" stroke-linejoin="round" d="M-9 -10 Q-13 0 -10 10 Q-4 15 3 15 Q11 15 13 8 Q14 -2 10 -10 Q0 -13 -9 -10 Z"/><path fill="#55556A" d="M-7 -6 Q-10 0 -8 8 Q-3 12 3 12 Q9 12 11 7 Q12 -1 9 -7 Q1 -10 -7 -6 Z"/></g>
+      </g></g>`;
+  // yeux de Léo, iris brun-vert
+  const oeilHTML = (c) => `<g id="oeil-${c}"><ellipse rx="7.4" ry="9.6" fill="#FFFFFF" stroke="${PEAU_OMBRE}" stroke-width="1"/>
+      <g id="regard-${c}"><circle cx=".5" cy="3" r="4.8" fill="#6F6A30"/><circle cx=".5" cy="3" r="2.5" fill="#1B1530"/><circle cx="-1.4" cy=".6" r="1.8" fill="#FFFFFF"/><circle cx="2.5" cy="4.8" r=".9" fill="#FFFFFF"/></g>
+      <g clip-path="url(#clip-oeil)"><ellipse id="paupiere-${c}" rx="10" ry="10.6" fill="${PEAU}" stroke="${CONTOUR}" stroke-width="2.6"/></g>
+      <path d="M-7 0 A7.4 9.6 0 0 1 7 0" fill="none" stroke="${CONTOUR}" stroke-width="2.8" stroke-linecap="round"/>
+      <path d="M-4.5 8.8 Q0 10.6 4.5 8.8" fill="none" stroke="${CONTOUR}" stroke-width="1" stroke-linecap="round" opacity=".4"/></g>`;
+  $("leo").innerHTML = `
+    ${jambeHTML("g")}${jambeHTML("d")}
+    <g id="jambe-avant"></g>
+    <g id="bassin"><path class="forme" fill="${PANTALON}" stroke="${CONTOUR}" stroke-width="3" stroke-linejoin="round"/><path class="ombre" fill="${PANTALON_OMBRE}"/><path class="pli" fill="none" stroke="${PANTALON_OMBRE}" stroke-width="2" stroke-linecap="round"/></g>
+    <g id="haut">
+      <g id="torse"><path class="forme" fill="${VESTE}" stroke="${CONTOUR}" stroke-width="3.4" stroke-linejoin="round"/><path class="ombre" fill="${VESTE_OMBRE}"/><path class="lumiere" fill="${VESTE_LUMIERE}"/>
+        <path class="bande" fill="${BANDE}" stroke="${CONTOUR}" stroke-width="2" stroke-linejoin="round"/><path class="bande-argent" fill="none" stroke="${ARGENT}" stroke-width="2.2" stroke-linecap="round"/>
+        <path class="fermeture" fill="none" stroke="${VESTE_OMBRE}" stroke-width="2" stroke-linecap="round"/><rect class="tirette" x="-1.8" y="-3" width="3.6" height="6" rx="1.2" fill="${METAL}" stroke="${CONTOUR}" stroke-width="1.2"/>
+      </g>
+      <g id="bras-arriere"></g>
+      <g id="cou"><path fill="${PEAU}" stroke="${CONTOUR}" stroke-width="3" d="M-5.5 -52 V-38 H5.5 V-52 Z"/><path d="M-5.5 -52 V-44 Q0 -42 5.5 -44 V-52 Z" fill="${PEAU_OMBRE}"/></g>
+      <path id="col" fill="${VESTE}" stroke="${CONTOUR}" stroke-width="2.4" stroke-linejoin="round"/>
+      <g id="tete"><g id="tete-forme" transform="translate(0 -26) scale(.7)">
+        <circle id="cheveux-fond" cx="0" cy="-6" r="41" fill="${CHEVEUX}"/>
+        <circle r="40" fill="${PEAU}" stroke="${CONTOUR}" stroke-width="4.6"/>
+        <path d="M10 38 A40 40 0 0 0 38 -12 A33 33 0 0 1 10 38 Z" fill="${PEAU_OMBRE}"/>
+        <ellipse cx="-16" cy="-20" rx="10" ry="5" fill="${PEAU_LUMIERE}" opacity=".9"/>
+        <g id="oreille-g"><circle r="7.5" fill="${PEAU}" stroke="${CONTOUR}" stroke-width="3.6"/><circle r="2.8" fill="${PEAU_OMBRE}"/></g><g id="oreille-d"><circle r="7.5" fill="${PEAU}" stroke="${CONTOUR}" stroke-width="3.6"/><circle r="2.8" fill="${PEAU_OMBRE}"/></g>
+        <g id="joue-g"><ellipse rx="7" ry="4.5" fill="#FF8FA8" opacity=".5"/></g><g id="joue-d"><ellipse rx="7" ry="4.5" fill="#FF8FA8" opacity=".5"/></g>
+        <g id="bouche"><g transform="scale(1.3)">
+          <path data-emo="sourire" d="M-8 0 Q0 8 8 0" fill="none" stroke="${CONTOUR}" stroke-width="2.4" stroke-linecap="round"/>
+          <g data-emo="joie"><path d="M-11 0 Q0 20 11 0 Z" fill="#C9475A"/><g clip-path="url(#clip-bouche)" transform="translate(0 -11)"><ellipse cy="28" rx="7" ry="4.5" fill="#FF8FA8"/><path d="M-11 10.5 Q0 18 11 10.5 Z" fill="#FFFFFF"/></g><path d="M-11 0 Q0 20 11 0 Z" fill="none" stroke="${CONTOUR}" stroke-width="1.8" stroke-linejoin="round"/></g>
+          <path data-emo="concentration" d="M-5 1 Q-2 -1 0 1 Q2 3 5 1" fill="none" stroke="${CONTOUR}" stroke-width="2.4" stroke-linecap="round"/>
+          <ellipse data-emo="surprise" cy="4" rx="4.5" ry="6" fill="#C9475A" stroke="${CONTOUR}" stroke-width="1.8"/>
+          <path data-emo="coin" d="M-6 1 Q0 5 8 -2" fill="none" stroke="${CONTOUR}" stroke-width="2.4" stroke-linecap="round"/>
+          <path data-emo="hum" d="M-5 2 Q0 -1 5 2" fill="none" stroke="${CONTOUR}" stroke-width="2.4" stroke-linecap="round"/>
+        </g></g>
+        <g id="nez"><circle r="4.6" fill="#E9A77A" stroke="${CONTOUR}" stroke-width="2.6"/><circle cx="-1.2" cy="-1.2" r="1.3" fill="#FFD9BC"/></g>
+        <g id="taches"><g fill="#D98A5E" opacity=".7"><circle cx="-24" cy="6" r="1.4"/><circle cx="-19" cy="9" r="1.2"/><circle cx="-26" cy="11" r="1.1"/><circle cx="24" cy="6" r="1.4"/><circle cx="19" cy="9" r="1.2"/><circle cx="26" cy="11" r="1.1"/></g></g>
+        <g transform="scale(1.3)">${oeilHTML("g")}${oeilHTML("d")}</g>
+        <g id="sourcil-g"><path d="M-8 0 Q0 -5 8 0" fill="none" stroke="${CHEVEUX_OMBRE}" stroke-width="4.2" stroke-linecap="round"/></g>
+        <g id="sourcil-d"><path d="M-8 0 Q0 -5 8 0" fill="none" stroke="${CHEVEUX_OMBRE}" stroke-width="4.2" stroke-linecap="round"/></g>
+        <g id="cheveux"><path id="cheveux-forme" fill="${CHEVEUX}" stroke="${CONTOUR}" stroke-width="3.6" stroke-linejoin="round"/><path id="cheveux-meche" fill="${CHEVEUX_LUMIERE}"/><path id="cheveux-lumiere" fill="none" stroke="${CHEVEUX_LUMIERE}" stroke-width="2.6" stroke-linecap="round"/></g>
+        <path id="frange" fill="${CHEVEUX}" stroke="${CONTOUR}" stroke-width="3" stroke-linejoin="round"/>
+        <g id="casque">${CASQUE}</g>
+      </g></g>
+      <g id="lance-tenue">${LANCE}</g>
+      <g id="bras-avant"></g>
+    </g>`;
+  const N = {};
+  ["leo", "haut", "torse", "bassin", "cou", "col", "tete", "tete-forme", "cheveux-fond", "oreille-g", "oreille-d", "joue-g", "joue-d", "bouche", "nez", "taches", "oeil-g", "oeil-d", "regard-g", "regard-d", "paupiere-g", "paupiere-d", "sourcil-g", "sourcil-d", "cheveux-forme", "cheveux-meche", "cheveux-lumiere", "frange", "casque",
+    "jambe-g", "jambe-d", "jambe-avant", "chaussure-g", "chaussure-d", "bras-arriere", "bras-avant", "lance-tenue", "lance-sol", "ombre-sol", "repere", "jet", "tuyau", "tuyau-contour", "tuyau-ombre", "devidoir", "fleurs", "cloche", "corde", "corde-in", "pompon", "arc-en-ciel", "pluie", "ebroue", "notes",
+    "bulle-0", "bulle-1", "etoiles", "etincelles", "rayons", "cri", "titre", "sous", "annonce", "scene", "planche"].forEach((id) => (N[id] = $(id)));
+  const q1 = (g, cls) => g.querySelector("." + cls);
+  const BRAS = { g: null, d: null };
+  for (const c of ["g", "d"]) { const w = document.createElementNS(NS, "g"); w.innerHTML = brasHTML(c); BRAS[c] = w.firstElementChild; }
+  N["bras-arriere"].append(BRAS.g); N["bras-avant"].append(BRAS.d);
+  const JAMBES = { g: N["jambe-g"], d: N["jambe-d"] };
+  const BOUCHES = [...N.bouche.firstElementChild.children];
+  N["lance-sol"].innerHTML = LANCE;
+
+  // position d'un point d'un élément dans le repère de la scène (360 × 450)
+  function monde(el, x = 0, y = 0) {
+    const m = N.repere.getCTM().inverse().multiply(el.getCTM());
+    return { x: m.a * x + m.c * y + m.e, y: m.b * x + m.d * y + m.f };
+  }
+
+  // ---------- Décor animé ----------
+  const X_SAM = 108, VUE = 38, T1 = 2.0;
+  N.etoiles.innerHTML = [0, 1, 2].map(() => `<path d="M0 -7 L2 -2 L7 0 L2 2 L0 7 L-2 2 L-7 0 L-2 -2 Z"/>`).join("");
+  N.etincelles.innerHTML = [0, 1, 2, 3].map(() => `<path d="M0 -6 L1.8 -1.8 L6 0 L1.8 1.8 L0 6 L-1.8 1.8 L-6 0 L-1.8 -1.8 Z"/>`).join("");
+  N.rayons.innerHTML = Array.from({ length: 12 }, (_, i) => `<line x1="0" y1="-40" x2="0" y2="-64" transform="rotate(${i * 30})" stroke="${["#C2341B", "#FFC93C", "#FFFFFF", "#7CC6FF"][i % 4]}" stroke-width="5" stroke-linecap="round"/>`).join("");
+  // dévidoir rouge posé à gauche (tambour de tuyau sur deux roues)
+  const DEVIDOIR = { x: 50, y: 382 }, SORTIE = { x: 70, y: 362 };
+  N.devidoir.innerHTML = `<g transform="translate(${DEVIDOIR.x} ${DEVIDOIR.y})" stroke="${CONTOUR}" stroke-linejoin="round">
+      <path d="M-26 -62 Q-30 -66 -24 -68 H-12" fill="none" stroke-width="6" stroke-linecap="round"/><path d="M-26 -62 Q-30 -66 -24 -68 H-12" fill="none" stroke="#931F0C" stroke-width="3" stroke-linecap="round"/>
+      <path d="M-22 -2 L-14 -58 M22 -2 L14 -58" fill="none" stroke-width="7" stroke-linecap="round"/><path d="M-22 -2 L-14 -58 M22 -2 L14 -58" fill="none" stroke="#C2341B" stroke-width="4" stroke-linecap="round"/>
+      <circle cy="-34" r="25" fill="#C2341B" stroke-width="2.8"/>
+      <circle cy="-34" r="19" fill="${TUYAU}" stroke-width="2.2"/><g fill="none" stroke="#D2C29C" stroke-width="1.6"><circle cy="-34" r="15"/><circle cy="-34" r="11"/></g>
+      <circle cy="-34" r="7" fill="${OR}" stroke-width="2.2"/><circle cx="-2" cy="-36" r="2" fill="#FFF1A8" stroke="none"/>
+      <path d="M-16 -50 Q-8 -56 4 -56" fill="none" stroke="#E8604C" stroke-width="2.4" stroke-linecap="round" opacity=".9"/>
+      <g fill="#4A4A5E" stroke-width="2.4"><circle cx="-22" cy="-6" r="7"/><circle cx="22" cy="-6" r="7"/></g><g fill="${METAL}" stroke="none"><circle cx="-22" cy="-6" r="2.4"/><circle cx="22" cy="-6" r="2.4"/></g>
+    </g>`;
+  // la cloche dorée (pivot au crochet, en haut)
+  const CLOCHE = { x: 152, y: 110 }, CORDE_REPOS = 150;
+  N.cloche.innerHTML = `<g stroke="${CONTOUR}" stroke-linejoin="round"><circle r="3.5" fill="none" stroke-width="2.4"/>
+      <path d="M-4 3 Q-13 5 -13 17 Q-13 23 -17 27 H17 Q13 23 13 17 Q13 5 4 3 Z" fill="${OR}" stroke-width="2.6"/>
+      <path d="M5 4 Q11 7 11 17 Q11 23 14 27 H6 Q8 18 5 4 Z" fill="#E0A72A" stroke="none"/><path d="M-7 8 Q-9 12 -9 18" fill="none" stroke="#FFF1A8" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M-17 27 Q0 31 17 27" fill="none" stroke-width="2.4"/><circle class="battant" cy="30" r="3.6" fill="#E0A72A" stroke-width="2"/></g>`;
+  // le jardin : cinq boutons de fleurs fermés qui s'ouvrent sous l'eau (six pétales ronds, couleurs vives)
+  const FLEURS = [{ x: 252, y: 382, c: "#FF7FB0" }, { x: 274, y: 376, c: "#A47BFF" }, { x: 296, y: 383, c: "#FFD23F" }, { x: 318, y: 375, c: "#5FA8FF" }, { x: 340, y: 382, c: "#FF9ED0" }];
+  N.fleurs.innerHTML = FLEURS.map((f, i) => `<g class="fleur" transform="translate(${f.x} ${f.y})">
+      <path d="M0 0 Q-2 -10 0 -21" fill="none" stroke="${CONTOUR}" stroke-width="5" stroke-linecap="round"/><path d="M0 0 Q-2 -10 0 -21" fill="none" stroke="#4FB37A" stroke-width="2.6" stroke-linecap="round"/>
+      <path d="M-1 -8 Q${i % 2 ? -9 : 9} -15 ${i % 2 ? -11 : 11} -8 Q${i % 2 ? -6 : 6} -4 -1 -8 Z" fill="#5BC37C" stroke="${CONTOUR}" stroke-width="1.6"/>
+      <g class="tete-fleur" transform="translate(0 -23)">
+        <g class="bouton"><path d="M0 -9 Q6 -3 5 2 Q0 6 -5 2 Q-6 -3 0 -9 Z" fill="${f.c}" stroke="${CONTOUR}" stroke-width="1.8"/><path d="M-5 2 Q0 7 5 2 Q3 -2 0 1 Q-3 -2 -5 2 Z" fill="#4FB37A" stroke="${CONTOUR}" stroke-width="1.4"/></g>
+        <g class="corolle">${[0, 1, 2, 3, 4, 5].map((k) => `<circle cx="${r1(Math.cos(k * 60 * DEG) * 6.4)}" cy="${r1(Math.sin(k * 60 * DEG) * 6.4)}" r="5.2" fill="${f.c}" stroke="${CONTOUR}" stroke-width="1.6"/>`).join("")}<circle r="4.2" fill="${f.c === "#FFD23F" ? "#FFF7D6" : "#FFD54A"}" stroke="${CONTOUR}" stroke-width="1.6"/><circle cx="-1.2" cy="-1.2" r="1.2" fill="#FFFFFF" opacity=".8"/></g>
+      </g></g>`).join("");
+  // arc-en-ciel : six bandes, dévoilées de droite à gauche
+  const ARC = { x: 176, y: 330, r: 214 };
+  N["arc-en-ciel"].innerHTML = ["#FF6B6B", "#FFA94D", "#FFE066", "#69DB7C", "#4DABF7", "#9775FA"].map((c, i) => { const r = ARC.r - i * 7; return `<path pathLength="1" stroke-dasharray="1 1" d="M${ARC.x + r} ${ARC.y} A${r} ${r} 0 0 0 ${ARC.x - r} ${ARC.y}" stroke="${c}" stroke-width="7.4"/>`; }).join("");
+  // gouttes : le jet, l'éclaboussure, la pluie joyeuse, l'ébrouement
+  const GOUTTE = `<path d="M0 -5 Q3.6 -0.5 3.6 2.2 A3.6 3.6 0 0 1 -3.6 2.2 Q-3.6 -0.5 0 -5 Z"/>`;
+  const ETINCELLE = (couleur) => `<path d="M0 -6 L1.8 -1.8 L6 0 L1.8 1.8 L0 6 L-1.8 1.8 L-6 0 L-1.8 -1.8 Z" fill="${couleur}" stroke="${CONTOUR}" stroke-width="1.3" stroke-linejoin="round"/>`;
+  const N_GOUTTES_JET = 14, N_PLUIE = 34;
+  q1(N.jet, "gouttes").innerHTML = Array.from({ length: N_GOUTTES_JET }, () => `<circle r="2.4"/>`).join("");
+  q1(N.jet, "eclabousse").innerHTML = Array.from({ length: 4 }, () => `<g>${GOUTTE}</g>`).join("") + `<ellipse class="rond" rx="9" ry="2.6" fill="none" stroke="${EAU_CONTOUR}" stroke-width="1.6"/>`;
+  N.pluie.innerHTML = Array.from({ length: N_PLUIE }, (_, i) => i % 5 === 2 ? `<g class="scintille">${ETINCELLE(i % 2 ? "#FFFFFF" : OR)}</g>` : `<g fill="${EAU}" stroke="${EAU_CONTOUR}" stroke-width="1.3">${GOUTTE}</g>`).join("");
+  N.ebroue.innerHTML = Array.from({ length: 10 }, () => `<g>${GOUTTE}</g>`).join("");
+  // petites notes de musique (dessinées, pas écrites) qui s'envolent de la cloche
+  const NOTE = (c) => `<g stroke="${CONTOUR}" stroke-linejoin="round"><path d="M3.6 -1 V-16 Q10 -13 9 -6" fill="none" stroke-width="4.4" stroke-linecap="round"/><path d="M3.6 -1 V-16 Q10 -13 9 -6" fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round"/><ellipse rx="4.6" ry="3.4" transform="rotate(-20)" fill="${c}" stroke-width="2"/></g>`;
+  N.notes.innerHTML = ["#7A4FD6", "#FFC93C", "#4C8FF5"].map((c) => `<g opacity="0">${NOTE(c)}</g>`).join("");
+
+  // ---------- Poses : les paramètres de Coach Léo (angles des membres), plus la lance de Sam ----------
+  // lance : tenue (0/1, les deux mains sur la lance), lA = angle dans le repère du buste (0 = vers la droite), lX/lY = point tenu par la main arrière,
+  // sol (0→1 : la lance va se poser au sol), posee (lance au sol), jetA/jetB = tête et queue du jet (0→1), force = vitesse de l'eau
+  const REPOS = { x: X_SAM, y: Y_SOL, rot: 0, s: 1, sx: 1, sy: 1, torse: 0, tete: 0, vue: 0, regardX: 0, regardY: 0,
+    aGu: 8, aGl: 14, aDu: -8, aDl: -14, lGt: 5, lGs: 0, lDt: -5, lDs: 0, fG: 1, fD: 1, tG: 1, tD: 1, course: 0, marche: 0, mG: 0, mD: 0, clin: 0, lid: 0, devant: 0,
+    casq: 1, tenue: 1, lA: -18, lX: 10, lY: 2, sol: 0, posee: 0, jetA: 0, jetB: 0, force: 210, corde: 0, arc: 0 };
+  function compile(liste, base) { liste.reduce((prec, k) => (k.p = { ...prec, ...k.p }), base); return liste; }
+  function poseA(poses, t) {
+    if (t <= poses[0].t) return poses[0].p;
+    for (let i = 1; i < poses.length; i++) { const k = poses[i]; if (t <= k.t) { const a = poses[i - 1], u = k.e((t - a.t) / (k.t - a.t)), r = {}; for (const c in k.p) r[c] = lerp(a.p[c], k.p[c], u); return r; } }
+    return poses[poses.length - 1].p;
+  }
+  const BRAS_BAS = { aGu: 8, aGl: 14, aDu: -8, aDl: -14, mG: 0, mD: 0 }, V = { aGu: 152, aGl: 20, aDu: -152, aDl: -20, mG: 3, mD: 3 };
+  const DEBOUT = { lGt: 5, lGs: 0, lDt: -5, lDs: 0, fG: 1, fD: 1, tG: 1, tD: 1 }, ACCROUPI = { lGt: 30, lGs: -24, lDt: -30, lDs: 24 }, TRES_ACCROUPI = { lGt: 44, lGs: -46, lDt: -44, lDs: 46 };
+  const LANCE_SOL = { x: X_SAM + 34, y: SOL - 4, a: 0 };
+  // pose la lance au sol (accroupi), puis se relève : commune aux trois variantes
+  const poseLance = (t) => [
+    { t, e: E.douce, p: { torse: 26, y: Y_SOL + 20, ...TRES_ACCROUPI, sy: .95, sx: 1.03, regardY: 8, regardX: 6, tete: -4, vue: 26, sol: 1 } },
+    { t: t + .04, e: E.lineaire, p: { tenue: 0, posee: 1, aGu: -22, aGl: -8, aDu: -34, aDl: -8, mG: 3, mD: 3 } },
+  ];
+  const seRelever = (t, extra = {}) => ({ t, e: E.sortie, p: { torse: 0, y: Y_SOL, ...DEBOUT, sy: 1, sx: 1, devant: 0, ...BRAS_BAS, ...extra } });
+
+  // Action (toujours la même) : Sam arrose le jardin, le jet balaie le parterre de gauche à droite, les fleurs s'ouvrent une à une.
+  const ACTION = [
+    { t: 0.00, e: E.douce, p: { vue: VUE, devant: 1, tete: 4, regardX: 6, regardY: 4, force: 160, lA: -18 } },
+    { t: 0.12, e: E.douce, p: {} },
+    { t: 0.24, e: E.douce, p: { torse: -3, sy: .98, sx: 1.01 } },                                              // il ouvre la lance (petite anticipation)
+    { t: 0.50, e: E.sortie, p: { jetA: 1, torse: 2, sy: 1, sx: 1, force: 166 } },                              // le jet arrive sur la première fleur
+    { t: 0.95, e: E.douce, p: { force: 200, tete: 6, torse: 3 } },
+    { t: 1.40, e: E.douce, p: { force: 236, tete: 3, regardX: 8 } },
+    { t: 1.85, e: E.douce, p: { force: 294, lA: -20, torse: 4, tete: 5 } },                                     // la dernière fleur
+    { t: 2.00, e: E.douce, p: {} },
+  ];
+  const coupeJet = (t, d = .24) => [{ t: t + d, e: E.douce, p: { jetB: 1 } }, { t: t + d + .02, e: E.lineaire, p: { jetA: 0, jetB: 0 } }];
+  const VARIANTES = {
+    // A : il coupe l'eau, pose la lance, saute et tire la corde : la cloche sonne (« ding ! », « dong ! », notes de musique), saut de joie bras en V, clin d'œil.
+    cloche: (t0) => [
+      { t: t0, e: E.douce, p: {} },
+      ...coupeJet(t0, .2),
+      ...poseLance(t0 + .5),
+      seRelever(t0 + .74, { vue: 12, tete: -10, regardY: -7, regardX: 3 }),                                      // regarde la cloche
+      { t: t0 + .94, e: E.douce, p: { y: Y_SOL + 12, sy: .88, sx: 1.1, ...ACCROUPI, aGu: 30, aGl: 24, aDu: -30, aDl: -30, torse: 3 } },   // anticipation
+      { t: t0 + 1.16, e: E.sortie, p: { y: Y_SOL - 58, sy: 1.08, sx: .94, lGt: 16, lGs: 36, lDt: -8, lDs: 22, aDu: -172, aDl: 4, mD: 1, aGu: 70, aGl: 30, mG: 3, torse: -2, corde: 1 } },   // saute, attrape la corde
+      { t: t0 + 1.40, e: E.entree, p: { y: Y_SOL + 8, sy: .9, sx: 1.08, ...ACCROUPI, aDu: -150, aDl: -40, torse: 4 } },                    // tire : la cloche sonne
+      { t: t0 + 1.56, e: E.sortie, p: { y: Y_SOL, sy: 1, sx: 1, ...DEBOUT, aDu: -130, aDl: -44 } },
+      { t: t0 + 1.60, e: E.lineaire, p: { corde: 0, mD: 3 } },                                                                             // lâche la corde
+      { t: t0 + 1.78, e: E.douce, p: { vue: 0, aDu: -40, aDl: -20, aGu: 40, aGl: 20, mG: 0, mD: 0, tete: -6, regardY: -5, regardX: 2 } },
+      { t: t0 + 1.96, e: E.douce, p: { y: Y_SOL + 12, sy: .86, sx: 1.12, ...ACCROUPI, aGu: 44, aGl: 24, aDu: -44, aDl: -24, mG: 1, mD: 1, torse: 4, tete: 0, regardY: 0, regardX: 0 } },
+      { t: t0 + 2.18, e: E.sortie, p: { y: Y_SOL - 60, sy: 1.1, sx: .92, torse: -3, ...V, lGt: 18, lGs: 60, lDt: -18, lDs: -60, tG: .7, tD: .7, tete: -6 } },   // saut de joie, bras en V
+      { t: t0 + 2.40, e: E.entree, p: { y: Y_SOL + 8, sy: .9, sx: 1.08, torse: 2, ...ACCROUPI, tG: 1, tD: 1, tete: 3 } },
+      { t: t0 + 2.60, e: E.rebond, p: { y: Y_SOL, sy: 1, sx: 1, torse: 0, ...DEBOUT, aGu: 146, aGl: 22, aDu: -146, aDl: -22, tete: -2 } },
+      { t: t0 + 2.78, e: E.douce, p: { clin: 1, tete: -5 } },
+      { t: t0 + 3.12, e: E.douce, p: { clin: 0, tete: -3 } },
+    ],
+    // B : il lève la lance et balaie le ciel d'un grand arc d'eau, l'arc-en-ciel apparaît ; il pose la lance, pouce levé, clin d'œil.
+    arc: (t0) => [
+      { t: t0, e: E.douce, p: {} },
+      { t: t0 + .30, e: E.douce, p: { lA: -40, force: 300, torse: -3, tete: -4, regardY: -3, regardX: 6, lX: 14, lY: -2 } },
+      { t: t0 + .32, e: E.lineaire, p: { arc: 0 } },
+      { t: t0 + .80, e: E.douce, p: { lA: -56, force: 380, torse: -5, tete: -8, regardY: -6, lX: 16, lY: -4 } },
+      { t: t0 + 1.30, e: E.douce, p: { lA: -68, force: 450, torse: -7, tete: -10, regardY: -7, regardX: 4 } },                           // grand arc d'eau dans le ciel
+      { t: t0 + 1.42, e: E.douce, p: { arc: 1 } },
+      ...coupeJet(t0 + 1.30, .14),
+      ...poseLance(t0 + 1.76),
+      seRelever(t0 + 2.00, { vue: 0, tete: -5, regardY: -4, regardX: -2 }),                                     // admire l'arc-en-ciel
+      { t: t0 + 2.30, e: E.rebond, p: { aDu: -78, aDl: -100, mD: 2, tete: -6, regardX: 0, regardY: 0 } },        // pouce levé
+      { t: t0 + 2.52, e: E.douce, p: { clin: 1, tete: -7 } },
+      { t: t0 + 2.86, e: E.douce, p: { clin: 0, tete: -4 } },
+      { t: t0 + 3.10, e: E.douce, p: {} },
+    ],
+    // C : jet tout droit vers le haut, l'eau retombe en petite pluie scintillante ; il pose la lance, rit bras ouverts, s'ébroue, pouce levé.
+    pluie: (t0) => [
+      { t: t0, e: E.douce, p: {} },
+      { t: t0 + .32, e: E.douce, p: { lA: -78, lX: 18, lY: -6, force: 470, torse: -6, tete: -8, regardY: -7, regardX: 4, vue: 24 } },
+      { t: t0 + .74, e: E.douce, p: {} },
+      ...coupeJet(t0 + .74, .16),
+      ...poseLance(t0 + 1.12),
+      seRelever(t0 + 1.36, { vue: 0, aGu: 82, aGl: 12, aDu: -82, aDl: -12, mG: 3, mD: 3, tete: -10, regardY: -6, regardX: 0 }),   // rit sous la pluie, bras ouverts
+      { t: t0 + 1.56, e: E.douce, p: { aGu: 104, aGl: 16, aDu: -104, aDl: -16, tete: -8 } },
+      { t: t0 + 1.76, e: E.douce, p: { torse: 7, tete: -12, sx: 1.03, aGu: 60, aGl: 30, aDu: -60, aDl: -30, regardY: 0 } },              // s'ébroue gentiment
+      { t: t0 + 1.96, e: E.douce, p: { torse: -7, tete: 12, sx: .98 } },
+      { t: t0 + 2.16, e: E.douce, p: { torse: 5, tete: -9, sx: 1.02 } },
+      { t: t0 + 2.34, e: E.douce, p: { torse: 0, tete: 0, sx: 1, ...BRAS_BAS } },
+      { t: t0 + 2.56, e: E.rebond, p: { aDu: -78, aDl: -100, mD: 2, tete: -6 } },                                 // pouce levé
+      { t: t0 + 2.74, e: E.douce, p: { clin: 1, tete: -7 } },
+      { t: t0 + 3.06, e: E.douce, p: { clin: 0, tete: -4 } },
+    ],
+  };
+  // Fin de chaque scène (temps de maquette, en secondes) : tout est immobile et le titre est affiché.
+  const FIN_SCENE = { cloche: 5.3, arc: 5.2, pluie: 5.2 };
+  const T_CRI = { cloche: T1 + 2.40, arc: T1 + 2.30, pluie: T1 + 2.36 };
+  function construit(variante) {
+    const t0 = T1, tCri = T_CRI[variante];
+    const expressions = [{ t: 0, emo: "concentration" }, { t: .95, emo: "sourire" }, { t: 1.86, emo: "coin" }];
+    if (variante === "cloche") expressions.push({ t: t0 + .74, emo: "hum" }, { t: t0 + .94, emo: "concentration" }, { t: t0 + 1.4, emo: "joie" }, { t: t0 + 1.96, emo: "sourire" }, { t: t0 + 2.18, emo: "joie" });
+    if (variante === "arc") expressions.push({ t: t0 + .3, emo: "concentration" }, { t: t0 + .9, emo: "surprise" }, { t: t0 + 1.2, emo: "joie" }, { t: t0 + 1.76, emo: "sourire" }, { t: t0 + 2.3, emo: "joie" });
+    if (variante === "pluie") expressions.push({ t: t0 + .32, emo: "concentration" }, { t: t0 + .9, emo: "surprise" }, { t: t0 + 1.36, emo: "joie" }, { t: t0 + 2.34, emo: "sourire" }, { t: t0 + 2.56, emo: "joie" });
+    return {
+      variante, fin: FIN_SCENE[variante], poses: compile([...ACTION, ...VARIANTES[variante](t0)], REPOS), expressions,
+      titre: "Défi relevé !", sous: "Tu as réussi toutes les leçons de la Caserne des Savanturiers.", tCri, tTitre: tCri + .4, tPetales: tCri,
+      tJoie: null, tPouce: variante === "cloche" ? null : t0 + { arc: 2.3, pluie: 2.56 }[variante],
+      tTire: variante === "cloche" ? t0 + 1.40 : null, tLache: variante === "cloche" ? t0 + 1.60 : null,
+      tPluie: variante === "pluie" ? t0 + .62 : null, tEbroue: variante === "pluie" ? t0 + 1.72 : null,
+      bulles: variante === "cloche" ? [{ t: t0 + 1.46, texte: "ding !", x: 214, y: 100 }, { t: t0 + 1.78, texte: "dong !", x: 230, y: 142 }] : [],
+      fleursT: FLEURS.map(() => Infinity),
+    };
+  }
+
+  // ---------- Rendu : visage ----------
+  const EMOS = {
+    sourire: { s: [0, 0], lid: 0, pup: 1 }, joie: { s: [-4, 0], lid: 0, pup: 1.05 }, concentration: { s: [2, 10], lid: .3, pup: 1 }, surprise: { s: [-7, -4], lid: 0, pup: .85 }, coin: { s: [-2, -4], lid: 0, pup: 1 }, hum: { s: [1, 6], lid: .25, pup: 1 },
+  };
+  function expressionA(anim, t) {
+    let cour = anim.expressions[0], prec = null;
+    for (const e of anim.expressions) if (e.t <= t) { prec = cour === e ? prec : cour; cour = e; }
+    const u = prec && prec !== cour ? fenetre(t, cour.t, .14) : 1;
+    return { emo: cour.emo, prec: prec ? prec.emo : cour.emo, u };
+  }
+  const clignement = (t) => { const c = (t + .9) % 2.9; return c < .13 ? Math.sin(c / .13 * Math.PI) : 0; };
+  // la tête de Sam (rayon 40 dans son repère, réduite à 28 comme celle de Léo) : vue de face ou de trois-quarts, jamais de dos
+  function dessineTete(p, t, ex, lidBase, pup) {
+    const v = Math.max(-1, Math.min(1, Math.sin(p.vue * DEG) / Math.sin(VUE * DEG))), dx = v * 9;
+    tr(N["cheveux-fond"], `translate(${r1(-dx * .5)} 0)`);
+    for (const [id, sg] of [["oreille-g", -1], ["oreille-d", 1]]) { att(N[id], "opacity", sg * v < .5 ? 1 : 0); tr(N[id], `translate(${r1(sg * 39 + dx * 1.3)} 4) scale(${r2(Math.max(.3, 1 - Math.max(0, sg * v) * .9))} 1)`); }
+    tr(N["joue-g"], `translate(${r1(-22 + dx * 1.5)} 15) scale(${r2(1 + Math.min(0, v) * .25)} 1)`); tr(N["joue-d"], `translate(${r1(22 + dx * 1.5)} 15) scale(${r2(1 - Math.max(0, v) * .25)} 1)`);
+    tr(N.nez, `translate(${r1(dx * 1.7)} 8)`); tr(N.bouche, `translate(${r1(dx * 1.6)} 20)`); tr(N.taches, `translate(${r1(dx * 1.5)} 0)`);
+    const A = EMOS[ex.prec], B = EMOS[ex.emo], u = ex.u, s = [lerp(A.s[0], B.s[0], u), lerp(A.s[1], B.s[1], u)];
+    for (const m of BOUCHES) { const e = m.dataset.emo, o = e === ex.emo ? u : e === ex.prec ? 1 - u : 0; att(m, "opacity", o); if (e === ex.emo) tr(m, `scale(${r2(lerp(.7, 1, E.retour(u)))})`); }
+    for (const [c, sg, lidExtra] of [["g", -1, 0], ["d", 1, p.clin]]) {
+      const x = (sg * 12 + dx * 1.1), kx = 1 - Math.abs(v) * (sg * v > 0 ? .05 : .22);
+      tr(N["oeil-" + c], `translate(${r1(x)} 0) scale(${r2(kx)} 1)`);
+      tr(N["sourcil-" + c], `translate(${r1(x * 1.3)} ${r1(-17 + s[0])}) scale(${r2(kx)} 1) rotate(${r1(s[1] * sg)})`);
+      tr(N["paupiere-" + c], `translate(0 ${r1(-21 * (1 - Math.max(lidBase, lidExtra)))})`);
+      tr(N["regard-" + c], `translate(${r1(p.regardX * .8 + v * 1.6 - .5 * (pup - 1))} ${r1(p.regardY * .8 - 2.5 * (pup - 1))}) scale(${pup})`);
+    }
+    const fx = dx * .6;
+    if (p.casq > .5) {
+      // cheveux roux courts qui dépassent du casque : tempes et petite frange sous la visière
+      att(N["cheveux-forme"], "d", [-1, 1].map((k) => `M${r1(k * 43 + fx)} -30 Q${r1(k * 46 + fx)} -15 ${r1(k * 39 + fx)} -8 Q${r1(k * 34 + fx)} -10 ${r1(k * 32 + fx)} -18 Q${r1(k * 30 + fx)} -24 ${r1(k * 30 + fx)} -30 Z`).join(" "));
+      att(N["cheveux-meche"], "d", "M0 0"); att(N["cheveux-lumiere"], "d", `M${r1(-37 + fx)} -10 Q${r1(-37 + fx)} -20 ${r1(-34 + fx)} -26`);
+      const f = dx * 1.2;
+      att(N.frange, "d", `M${r1(-22 + f)} -31 Q${r1(-20 + f)} -21 ${r1(-13 + f)} -24 Q${r1(-9 + f)} -18 ${r1(-3 + f)} -24 Q${r1(2 + f)} -19 ${r1(7 + f)} -25 Q${r1(13 + f)} -21 ${r1(16 + f)} -30 Z`);
+    } else {
+      att(N["cheveux-forme"], "d", `M${r1(-42 + fx)} -12 Q${r1(-46 + fx)} -50 ${r1(fx)} -55 Q${r1(46 + fx)} -50 ${r1(42 + fx)} -12 Q${r1(42 + fx)} -5 ${r1(36 + fx)} -6 Q${r1(32 + fx)} -8 ${r1(32 + fx)} -16 Q${r1(28 + fx)} -29 ${r1(fx)} -31 Q${r1(-28 + fx)} -29 ${r1(-32 + fx)} -16 Q${r1(-32 + fx)} -8 ${r1(-36 + fx)} -6 Q${r1(-42 + fx)} -5 ${r1(-42 + fx)} -12 Z`);
+      att(N["cheveux-meche"], "d", `M${r1(-14 + fx)} -31 Q${r1(-6 + fx)} -42 ${r1(8 + fx)} -34 Q${r1(-2 + fx)} -35 ${r1(-14 + fx)} -31 Z`);
+      att(N["cheveux-lumiere"], "d", `M${r1(-26 + fx)} -38 Q${r1(-12 + fx)} -48 ${r1(4 + fx)} -46`);
+      att(N.frange, "d", `M${r1(-18 + fx)} -30 Q${r1(-10 + fx)} -22 ${r1(-2 + fx)} -29 Q${r1(6 + fx)} -22 ${r1(14 + fx)} -30 Z`);
+    }
+    att(N.casque, "opacity", p.casq > .5 ? 1 : 0); tr(N.casque, `translate(${r1(dx * .8)} 0) rotate(${r1(v * 5)})`);
+    tr(q1(N.casque, "ecusson"), `translate(${r1(dx * 1.1)} 0) scale(${r2(1 - Math.abs(v) * .25)} 1)`); tr(q1(N.casque, "crete"), `translate(${r1(dx * .9)} 0)`);
+    att(q1(N.casque, "visiere"), "d", `M-47 -30 Q${r1(v * 22)} -44 47 -30 Q${r1(v * 26)} -22 -47 -30 Z`);
+  }
+
+  // ---------- Rendu : membres (code de Coach Léo) ----------
+  function dessineBras(g, c, S, a1, a2, pose, couleur, L1 = 24, L2 = 22) {
+    const m = membre(S, a1, a2, L1, L2);
+    att(q1(g, "contour"), "d", trace(m, .09, 1)); att(q1(g, "rempli"), "d", trace(m, 0, 1));
+    att(q1(g, "ombre"), "d", trace(decale(m, 3.2, 1.4), .9, .97, 2)); att(q1(g, "lumiere"), "d", trace(decale(m, -3.2, -1.4), .9, .96, 2));
+    att(q1(g, "manche-contour"), "d", trace(m, .04, .86, 6)); att(q1(g, "manche"), "d", trace(m, 0, .86, 6)); att(q1(g, "manche-ombre"), "d", trace(decale(m, 3.6, 1), .06, .8, 5));
+    att(q1(g, "bande"), "d", trace(m, .5, .6, 2)); att(q1(g, "bande-argent"), "d", trace(m, .538, .562, 1)); att(q1(g, "manche-bord"), "d", trace(m, .83, .86, 1));
+    const mainG = g.querySelector("#main-" + c); tr(mainG, `translate(${r1(m.W.x)} ${r1(m.W.y)}) rotate(${r1(m.dir)}) scale(.86)`);
+    const versCentre = c === "g" ? 1 : -1, score = Math.cos(m.dir * DEG) * versCentre - Math.sin(m.dir * DEG) * .8;
+    const variante = score > 0 ? "miroir" : "droit", cle = couleur + variante + pose, slot = q1(mainG, "pose-main");
+    if (slot.dataset.pose !== cle) { slot.innerHTML = MAINS[couleur][variante][pose]; slot.dataset.pose = cle; }
+    return m;
+  }
+  function dessineJambe(g, c, S, a1, a2, f, sw, ft = 1, L1 = 28, L2 = 26) {
+    const m = membre(S, a1, a2, L1 * f, L2 * f * ft);
+    att(q1(g, "contour"), "d", trace(m, .06, 1)); att(q1(g, "rempli"), "d", trace(m, 0, 1));
+    att(q1(g, "ombre"), "d", trace(decale(m, 3.4, 1.2), .3, .72)); att(q1(g, "lumiere"), "d", trace(decale(m, -3.4, -1.2), .3, .7));
+    att(q1(g, "bande"), "d", trace(m, .64, .7, 1)); att(q1(g, "botte"), "d", trace(m, .8, 1, 2)); att(q1(g, "botte-bord"), "d", trace(m, .8, .815, 1));
+    const ch = N["chaussure-" + c], vx = m.W.x - m.E.x, vy = m.W.y - m.E.y, lv = Math.hypot(vx, vy) || 1;
+    const leve = clamp01((-vy / lv) * 1.6 - .2), profilF = clamp01((Math.abs(Math.sin(vueCourante * DEG)) - .45) / (Math.sin(VUE * DEG) - .45));
+    const sens = sw > .02 ? 1 : sw < -.02 ? -1 : 1;
+    tr(ch, `translate(${r1(m.W.x)} ${r1(m.W.y + 2)})`);
+    const pFace = q1(ch, "vue-face"), pProfil = q1(ch, "vue-profil"), pSem = q1(ch, "vue-semelle"), contact = q1(ch, "contact");
+    att(pFace, "opacity", r2((1 - profilF) * (1 - leve)));
+    att(pProfil, "opacity", r2(profilF * (1 - leve))); tr(pProfil, `scale(${r2(sens * (.6 + .4 * profilF))} 1) rotate(${r1(-Math.atan2(vx * sens, vy) / DEG * .25)})`);
+    const replie = clamp01((1 - ft) * 2.2), dehors = (c === "g" ? -1 : 1) * replie * 13;
+    if (replie > .3) { if (g.firstElementChild !== ch) g.prepend(ch); } else if (g.lastElementChild !== ch) g.append(ch);
+    att(pSem, "opacity", r2(Math.pow(leve, .8))); tr(pSem, `translate(${r1(dehors)} ${r1(-3 * leve + replie * 2)}) rotate(${r1(-dehors * 1.8)}) scale(${r2(.5 + .25 * leve)} ${r2(Math.max(.05, leve * .8))})`);
+    att(contact, "opacity", 0); tr(contact, `translate(${r1(profilF * sens * 5)} 12) scale(${r2(1 + profilF * .5)} 1)`);
+    return m;
+  }
+
+  // repère de la scène → repère du buste (pour poser la lance à un endroit précis du sol)
+  function versBuste(p, y, W) {
+    const ex = BASE * p.s * p.sx, ey = BASE * p.s * p.sy, cr = Math.cos(-p.rot * DEG), sr = Math.sin(-p.rot * DEG);
+    let dx = W.x - p.x, dy = W.y - y; [dx, dy] = [(dx * cr - dy * sr) / ex, (dx * sr + dy * cr) / ey];
+    const ct = Math.cos(-p.torse * DEG), st = Math.sin(-p.torse * DEG);
+    return { x: dx * ct - dy * st, y: dx * st + dy * ct };
+  }
+
+  let vueCourante = 0;
+  function dessineSam(anim, t) {
+    const p = { ...poseA(anim.poses, t) };
+    vueCourante = p.vue;
+    let { aGu, aGl, aDu, aDl, lGt, lGs, lDt, lDs, fG, fD, y } = p;
+    const w = p.vue, cw = Math.cos(w * DEG), sw = Math.sin(w * DEG), wf = lerp(.55, 1, Math.abs(cw)), f = sw >= 0 ? 1 : -1;
+    // marche et course (Léo) : conservées dans le moteur, pas utilisées par Sam ici
+    if (p.marche > 0) {
+      const ph = t * Math.PI * 2 * 2.1, a = Math.sin(ph), b = -a, k = p.marche;
+      lGt = lerp(lGt, -24 * a * f, k); lGs = lerp(lGs, 52 * Math.max(0, -a * f) + 6, k); lDt = lerp(lDt, -24 * b * f, k); lDs = lerp(lDs, 52 * Math.max(0, -b * f) + 6, k);
+      fG = lerp(fG, 1 - .12 * Math.max(0, a), k); fD = lerp(fD, 1 - .12 * Math.max(0, b), k);
+      aGu = lerp(aGu, 8 + 30 * a * f, k); aGl = lerp(aGl, 14 + 10 * Math.max(0, a * f), k);
+      y -= 3 * Math.abs(a) * k;
+    }
+    if (p.course > 0) {
+      const ph = t * Math.PI * 2 * 3.4, a = Math.max(0, Math.sin(ph)), b = Math.max(0, -Math.sin(ph));
+      fG = lerp(fG, 1 - .4 * a, p.course); fD = lerp(fD, 1 - .4 * b, p.course);
+      lGs = lerp(lGs, 64 * a, p.course); lDs = lerp(lDs, -64 * b, p.course); lGt = lerp(lGt, 10 - 6 * a, p.course); lDt = lerp(lDt, -10 + 6 * b, p.course);
+      y -= 5 * Math.abs(Math.sin(ph)) * p.course;
+    }
+    tr(N.leo, `translate(${r1(p.x)} ${r1(y)}) rotate(${r1(p.rot)}) scale(${r2(p.s * BASE * p.sx)} ${r2(p.s * BASE * p.sy)})`);
+    // buste en poire (Léo) : veste rouge, bande réfléchissante en bas, fermeture, col montant
+    const sh = 18 * wf, hp = 21 * wf;
+    att(q1(N.torse, "forme"), "d", `M${r1(-sh)} -40 Q${r1(-sh - 6)} -12 ${r1(-hp - 1)} 4 Q0 8 ${r1(hp + 1)} 4 Q${r1(sh + 6)} -12 ${r1(sh)} -40 Q0 -47 ${r1(-sh)} -40 Z`);
+    att(q1(N.torse, "ombre"), "d", `M${r1(sh * .3)} -42 Q${r1(sh + 3)} -30 ${r1(hp + 1)} 3 Q${r1(hp * .6)} 6 ${r1(hp * .35)} 5 Q${r1(sh + 1)} -20 ${r1(sh * .3)} -42 Z`);
+    att(q1(N.torse, "lumiere"), "d", `M${r1(-sh * .9)} -36 Q${r1(-sh * .4)} -42 ${r1(sh * .1)} -40 Q${r1(-sh * .4)} -37 ${r1(-sh * .8)} -30 Z`);
+    const hb = hp * .98 + 1;
+    att(q1(N.torse, "bande"), "d", `M${r1(-hb)} -7 Q0 -4 ${r1(hb)} -7 L${r1(hb + .6)} 0 Q0 3.6 ${r1(-hb - .6)} 0 Z`);
+    att(q1(N.torse, "bande-argent"), "d", `M${r1(-hb + 1)} -3.6 Q0 -.4 ${r1(hb - 1)} -3.6`);
+    att(q1(N.torse, "fermeture"), "d", `M${r1(4 * sw)} -42 V-8 M${r1(4 * sw)} 1 V5`); tr(q1(N.torse, "tirette"), `translate(${r1(4 * sw)} -30)`);
+    att(N.col, "d", `M${r1(-8 + 3 * sw)} -51 Q${r1(3 * sw)} -54 ${r1(8 + 3 * sw)} -51 L${r1(9 + 3 * sw)} -42 Q${r1(3 * sw)} -38 ${r1(-9 + 3 * sw)} -42 Z`);
+    // bassin étroit : deux tubes de pantalon partent des hanches (entrejambe visible)
+    att(q1(N.bassin, "forme"), "d", `M${r1(-hp - 1)} -1 Q0 2 ${r1(hp + 1)} -1 L${r1(hp + 2)} 12 Q${r1(hp * .5)} 15 ${r1(hp * .12)} 11 Q0 8 ${r1(-hp * .12)} 11 Q${r1(-hp * .5)} 15 ${r1(-hp - 2)} 12 Z`);
+    att(q1(N.bassin, "ombre"), "d", `M${r1(hp * .2)} 5 Q${r1(hp + 1)} 0 ${r1(hp + 2)} 12 Q${r1(hp * .6)} 15 ${r1(hp * .15)} 11 Z`);
+    att(q1(N.bassin, "pli"), "d", `M${r1(4 * sw)} 6 V10`);
+    tr(N.haut, `rotate(${r1(p.torse)})`);
+    const procheJ = sw >= 0 ? "d" : "g", loinJ = procheJ === "d" ? "g" : "d";
+    dessineJambe(N["jambe-g"], "g", { x: -10 * wf, y: 4 }, lGt, lGs, fG, sw, p.tG);
+    dessineJambe(N["jambe-d"], "d", { x: 10 * wf, y: 4 }, lDt, lDs, fD, sw, p.tD);
+    if (N["jambe-avant"].firstElementChild !== JAMBES[procheJ]) { N.leo.insertBefore(JAMBES[loinJ], N["jambe-avant"]); N["jambe-avant"].append(JAMBES[procheJ]); }
+    // lance tenue à deux mains : la main droite à l'arrière, la main gauche devant (repère du buste)
+    const S = (c) => ({ x: (c === "g" ? -1 : 1) * 18 * wf + 4 * sw, y: -38 });
+    const tenue = p.tenue > 0 && p.posee < .5;
+    att(N["lance-tenue"], "opacity", tenue ? 1 : 0);
+    if (tenue) {
+      let O = { x: p.lX, y: p.lY }, th = p.lA;
+      if (p.sol > 0) { const g = versBuste(p, y, LANCE_SOL); O = { x: lerp(O.x, g.x, p.sol), y: lerp(O.y, g.y, p.sol) }; th = lerp(th, LANCE_SOL.a - p.torse - p.rot, p.sol); }
+      const u = { x: Math.cos(th * DEG), y: Math.sin(th * DEG) }, k = p.tenue;
+      tr(N["lance-tenue"], `translate(${r1(O.x)} ${r1(O.y)}) rotate(${r1(th)})`);
+      const rD = brasSaisit("d", { x: O.x + u.x * 2, y: O.y + u.y * 2 }, S("d")), rG = brasSaisit("g", { x: O.x + u.x * 11, y: O.y + u.y * 11 }, S("g"));
+      aDu = lerp(aDu, rD.aDu, k); aDl = lerp(aDl, rD.aDl, k); aGu = lerp(aGu, rG.aGu, k); aGl = lerp(aGl, rG.aGl, k);
+    }
+    // bras : le bras loin derrière le buste, le bras proche devant (les deux devant quand il tient la lance)
+    const devant = p.devant > .5 || tenue, proche = sw > .05 ? "d" : "g", slotArriere = N["bras-arriere"], slotAvant = N["bras-avant"];
+    for (const c of ["g", "d"]) {
+      const cible = devant ? slotAvant : (c === proche || Math.abs(sw) <= .05 ? slotAvant : slotArriere);
+      if (BRAS[c].parentNode !== cible) cible.append(BRAS[c]);
+      const pose = tenue ? 1 : Math.round(c === "g" ? p.mG : p.mD);
+      dessineBras(BRAS[c], c, S(c), c === "g" ? aGu : aDu, c === "g" ? aGl : aDl, pose, "peau");
+    }
+    if (devant && slotAvant.firstElementChild !== BRAS.g) slotAvant.prepend(BRAS.g);
+    // tête
+    tr(N.tete, `translate(0 -48) rotate(${r1(p.tete)})`);
+    const ex = expressionA(anim, t), A = EMOS[ex.prec], B = EMOS[ex.emo], u = ex.u;
+    dessineTete(p, t, ex, Math.max(lerp(A.lid, B.lid, u), p.lid, clignement(t)), lerp(A.pup, B.pup, u));
+    // ombre au sol
+    const Sc = p.s * BASE, haut = Math.max(0, SOL - (y + 58 * Sc));
+    att(N["ombre-sol"], "cx", r1(p.x)); att(N["ombre-sol"], "cy", r1(SOL + 2)); att(N["ombre-sol"], "rx", r1(34 * Sc + haut * .2)); att(N["ombre-sol"], "ry", r1(8 * Sc)); att(N["ombre-sol"], "opacity", r2(Math.max(.07, .22 - haut * .003)));
+    p.yEff = y;
+    return p;
+  }
+
+  // ---------- La lance au sol, le tuyau, le jet ----------
+  const LT = { pointe: q1(N["lance-tenue"], "m-pointe"), axe: q1(N["lance-tenue"], "m-axe"), arriere: q1(N["lance-tenue"], "m-arriere") };
+  const LS = { arriere: q1(N["lance-sol"], "m-arriere"), axe: q1(N["lance-sol"], "m-axe") };
+  function dessineLanceSol(p) { att(N["lance-sol"], "opacity", p.posee > .5 ? 1 : 0); tr(N["lance-sol"], `translate(${LANCE_SOL.x} ${LANCE_SOL.y}) rotate(${LANCE_SOL.a}) scale(${BASE})`); }
+  function dessineTuyau(p) {
+    const auSol = p.posee > .5, A = monde(auSol ? LS.arriere : LT.arriere), X = monde(auSol ? LS.axe : LT.axe);
+    const dx = A.x - X.x, dy = A.y - X.y, l = Math.hypot(dx, dy) || 1, c2 = { x: A.x + dx / l * 30, y: A.y + dy / l * 30 }, pied = { x: Math.min(A.x - 14, p.x - 26), y: SOL + 5 };
+    const d = `M${SORTIE.x} ${SORTIE.y} C${SORTIE.x + 10} ${SORTIE.y + 22} ${SORTIE.x + 22} ${SOL + 6} ${r1((SORTIE.x + pied.x) / 2)} ${SOL + 6} S${r1(pied.x - 10)} ${r1(pied.y)} ${r1(pied.x)} ${r1(pied.y)} C${r1(pied.x + 16)} ${r1(pied.y)} ${r1(c2.x)} ${r1(Math.max(c2.y, A.y))} ${r1(A.x)} ${r1(A.y)}`;
+    for (const id of ["tuyau-contour", "tuyau", "tuyau-ombre"]) att(N[id], "d", d);
+  }
+  const G_JET = 560, Y_JET = 372;
+  function trajet(p) {
+    if (p.tenue < .5 || p.posee > .5 || p.jetA <= p.jetB + .002) return null;
+    const T = monde(LT.pointe), X = monde(LT.axe), dx = T.x - X.x, dy = T.y - X.y, l = Math.hypot(dx, dy) || 1, vx = dx / l * p.force, vy = dy / l * p.force, h = Y_JET - T.y;
+    const te = Math.min(2.4, h > 0 ? (-vy + Math.sqrt(vy * vy + 2 * G_JET * h)) / G_JET : .2);
+    return { te, pos: (tau) => ({ x: T.x + vx * tau, y: T.y + vy * tau + .5 * G_JET * tau * tau }), atterrit: te < 2.4 };
+  }
+  function dessineJet(p, t) {
+    const j = trajet(p), gouttes = q1(N.jet, "gouttes").children, ecl = q1(N.jet, "eclabousse");
+    if (!j) { att(N.jet, "opacity", 0); return null; }
+    att(N.jet, "opacity", 1);
+    let d = ""; for (let i = 0; i <= 26; i++) { const q = j.pos(lerp(p.jetB, p.jetA, i / 26) * j.te); d += `${i ? "L" : "M"}${r1(q.x)} ${r1(q.y)}`; }
+    for (const c of ["jet-contour", "jet-eau"]) att(q1(N.jet, c), "d", d);
+    let dr = ""; for (let i = 0; i <= 10; i++) { const q = j.pos(lerp(p.jetB, p.jetA, .05 + i / 10 * .5) * j.te); dr += `${i ? "L" : "M"}${r1(q.x - 1)} ${r1(q.y - 1.2)}`; }
+    att(q1(N.jet, "jet-reflet"), "d", dr);
+    [...gouttes].forEach((g, i) => { const fr = (i / N_GOUTTES_JET + t * 1.1) % 1; if (fr < p.jetB || fr > p.jetA) { att(g, "opacity", 0); return; } const q = j.pos(fr * j.te); att(g, "opacity", 1); att(g, "cx", r1(q.x + Math.sin(i * 2.1) * 2.5)); att(g, "cy", r1(q.y + Math.cos(i * 1.7) * 2.5)); });
+    const L = j.pos(j.te), visible = j.atterrit && p.jetA > .97 && p.jetB < .03;
+    att(ecl, "opacity", visible ? 1 : 0);
+    if (visible) {
+      [...ecl.children].forEach((g, i) => {
+        if (g.classList.contains("rond")) { tr(g, `translate(${r1(L.x)} ${r1(L.y + 2)}) scale(${r2(.8 + .3 * Math.sin(t * 7))} 1)`); return; }
+        const ph = (t * 2.4 + i / 4) % 1, sens = i % 2 ? 1 : -1, a = (i < 2 ? 12 : 20) * sens;
+        tr(g, `translate(${r1(L.x + a * ph)} ${r1(L.y - 18 * 4 * ph * (1 - ph))}) scale(${r2(.9 - .4 * ph)}) rotate(${r1(a * 2 * ph)})`); att(g, "opacity", r2(1 - ph * ph));
+      });
+    }
+    return visible ? L : null;
+  }
+  // les fleurs s'ouvrent quand l'eau les atteint : on rejoue l'arrosage une fois pour connaître ces instants (même résultat à chaque rendu)
+  function arrose(anim) {
+    for (let t = 0; t <= T1; t += 1 / 60) {
+      const p = dessineSam(anim, t), j = trajet(p);
+      if (!j || !j.atterrit || p.jetA < .97) continue;
+      const x = j.pos(j.te).x;
+      FLEURS.forEach((fl, i) => { if (anim.fleursT[i] === Infinity && Math.abs(x - fl.x) < 9) anim.fleursT[i] = t; });
+    }
+    anim.fleursT = anim.fleursT.map((v, i) => (v === Infinity ? T1 - .2 + i * .02 : v));
+    anim.tJoie = Math.max(...anim.fleursT) + .12;
+  }
+  function dessineFleurs(anim, t) {
+    [...N.fleurs.children].forEach((g, i) => {
+      const d = anim.fleursT[i], u = fenetre(t, d, .42, E.rebond), b = fenetre(t, d, .18), s = t - d, oscille = s > 0 && s < .6 ? Math.sin(s * 18) * Math.exp(-5 * s) * 10 : 0;
+      tr(q1(g, "tete-fleur"), `translate(0 -23) rotate(${r1(oscille)})`);
+      att(q1(g, "bouton"), "opacity", r2(1 - b)); tr(q1(g, "corolle"), `scale(${r2(Math.max(.001, u))}) rotate(${r1(lerp(-40, 0, clamp01(u)))})`);
+    });
+  }
+
+  // ---------- La cloche, la corde, les notes ----------
+  const angleCloche = (anim, t) => { const d = anim.tTire; if (d === null || t < d) return 0; const s = t - d; return 30 * Math.sin(s / .8 * Math.PI * 2) * Math.exp(-s * 1.1); };
+  function dessineCloche(anim, t, p) {
+    const a = angleCloche(anim, t);
+    tr(N.cloche, `translate(${CLOCHE.x} ${CLOCHE.y}) rotate(${r1(a)})`);
+    tr(q1(N.cloche, "battant"), `rotate(${r1(-a * .5)} 0 4)`);
+    const haut = { x: CLOCHE.x - Math.sin(a * DEG) * 31, y: CLOCHE.y + Math.cos(a * DEG) * 31 };
+    let bout;
+    if (p.corde > .5) bout = monde(BRAS.d.querySelector("#main-d"), 0, -4);
+    else { const s = anim.tLache === null || t < anim.tLache ? 9 : t - anim.tLache, ressort = 26 * Math.exp(-5 * s) * Math.cos(s * 13); bout = { x: CLOCHE.x - Math.sin(a * DEG) * 8, y: CORDE_REPOS + ressort }; }
+    const d = `M${r1(haut.x)} ${r1(haut.y)} Q${r1((haut.x + bout.x) / 2 + 3)} ${r1((haut.y + bout.y) / 2)} ${r1(bout.x)} ${r1(bout.y)}`;
+    att(N.corde, "d", d); att(N["corde-in"], "d", d); tr(N.pompon, `translate(${r1(bout.x)} ${r1(bout.y + 3)})`);
+    // le pompon passe devant Sam quand il tient la corde
+    const repereCorde = p.corde > .5 ? N.notes : N.cloche;
+    if (N.pompon.nextSibling !== repereCorde) repereCorde.before(N.corde, N["corde-in"], N.pompon);
+    [...N.notes.children].forEach((g, i) => {
+      const s = anim.tTire === null ? -1 : (t - anim.tTire - .1 - i * .22) / 1.1;
+      if (s < 0 || s > 1) { att(g, "opacity", 0); return; }
+      const sens = i % 2 ? 1 : -1;
+      att(g, "opacity", r2(Math.min(1, Math.sin(s * Math.PI) * 1.6)));
+      tr(g, `translate(${r1(CLOCHE.x + sens * (20 + s * 34) + Math.sin(s * 7) * 5)} ${r1(CLOCHE.y + 14 - s * 52)}) rotate(${r1(sens * 12 + Math.sin(s * 6) * 10)}) scale(${r2(.9 + s * .3)})`);
+    });
+  }
+  function dessineArcEnCiel(p) {
+    att(N["arc-en-ciel"], "opacity", p.arc > .001 ? .9 : 0);
+    [...N["arc-en-ciel"].children].forEach((b, i) => att(b, "stroke-dashoffset", r2(1 - clamp01(p.arc * 1.08 - i * .016))));
+  }
+
+  // ---------- La pluie joyeuse et l'ébrouement ----------
+  function dessinePluie(anim, t, p) {
+    const d = anim.tPluie;
+    if (d === null || t < d) { att(N.pluie, "opacity", 0); return; }
+    att(N.pluie, "opacity", 1);
+    const casqueY = p.yEff - 152 * BASE * p.s * p.sy * .99;
+    [...N.pluie.children].forEach((g, i) => {
+      const debut = d + (i % 17) / 17 * 1.15 + alea(i) * .12, x0 = 70 + alea(i + 40) * 284, v = 360 + alea(i + 80) * 80, y0 = -10 - alea(i + 120) * 40;
+      const surSam = Math.abs(x0 - p.x - 4) < 24, solY = surSam ? casqueY : 376 + alea(i + 160) * 30, duree = (solY - y0) / v, s = t - debut;
+      if (s < 0 || s > duree + .22) { att(g, "opacity", 0); return; }
+      const scintille = g.classList.contains("scintille");
+      if (s <= duree) { att(g, "opacity", 1); tr(g, `translate(${r1(x0 - s * 14)} ${r1(y0 + v * s)}) ${scintille ? `rotate(${r1(s * 120)}) scale(.8)` : "scale(.9 1.1)"}`); return; }
+      const k = (s - duree) / .22;                       // petite éclaboussure à l'arrivée
+      att(g, "opacity", r2(1 - k)); tr(g, `translate(${r1(x0 - duree * 14)} ${r1(solY - 4 * k)}) scale(${r2(1.2 + k * .6)} ${r2(.5 - k * .3)})`);
+    });
+  }
+  function dessineEbroue(anim, t, p) {
+    const d = anim.tEbroue, s = d === null ? -1 : (t - d) / .7;
+    if (s < 0 || s > 1) { att(N.ebroue, "opacity", 0); return; }
+    att(N.ebroue, "opacity", 1);
+    const cx = p.x, cy = p.yEff - 90 * BASE;
+    [...N.ebroue.children].forEach((g, i) => {
+      const a = -Math.PI + (i / 9) * Math.PI * 1.0 + (i % 2 ? .15 : -.15), u = clamp01(s * 1.3 - (i % 3) * .1), r = 30 + u * 46;
+      att(g, "opacity", r2(Math.sin(Math.min(1, u) * Math.PI)));
+      tr(g, `translate(${r1(cx + Math.cos(a) * r)} ${r1(cy + Math.sin(a) * r * .8 + u * u * 26)}) rotate(${r1(a / DEG + 90)}) scale(.9)`);
+    });
+  }
+
+  // ---------- Effets (moteur de Max) ----------
+  function dessineBulles(anim, t) {
+    [0, 1].forEach((n) => {
+      const el = N["bulle-" + n], b = anim.bulles[n];
+      if (!b || t < b.t || t >= b.t + .6) { att(el, "opacity", 0); return; }
+      const u = fenetre(t, b.t, .2, E.rebond), f = 1 - fenetre(t, b.t + .42, .18, E.entree), txt = el.querySelector("text");
+      if (txt.textContent !== b.texte) txt.textContent = b.texte;
+      att(el, "opacity", r2(f)); tr(el, `translate(${r1(b.x)} ${r1(b.y - 6 * u)}) scale(${r2(u)})`);
+    });
+  }
+  function dessineCri(anim, t) {
+    // le cri arrive avec un petit rebond ; les rayons s'ouvrent une seule fois puis s'effacent (ils ne tournent pas, ne clignotent pas)
+    const u = fenetre(t, anim.tCri, .5, E.rebond), repli = fenetre(t, anim.tTitre - .2, .5, E.douce);
+    att(N.cri, "opacity", r2(fenetre(t, anim.tCri, .12)));
+    tr(N.cri, `translate(0 ${r1(lerp(0, -14, repli))}) rotate(${r1(lerp(-8, 0, u))}) scale(${r2((0.2 + .8 * u) * lerp(1, .82, repli))})`);
+    const r = fenetre(t, anim.tCri, .55);
+    att(N.rayons, "opacity", r2((1 - fenetre(t, anim.tCri + .25, .35, E.entree)) * fenetre(t, anim.tCri, .08))); tr(N.rayons, `scale(${r2(.6 + r * .9)})`);
+  }
+  function dessineEtoiles(anim, t, p) {
+    const d = anim.tJoie;
+    if (d === null || t < d || t > d + 1) { att(N.etoiles, "opacity", 0); return; }
+    att(N.etoiles, "opacity", 1);
+    const cx = p.x, cy = p.yEff - 100 * BASE;
+    [...N.etoiles.children].forEach((e, i) => { const u = fenetre(t, d + i * .1, .7), k = Math.sin(Math.min(1, u) * Math.PI), a = -2.4 + i * 1.1; tr(e, `translate(${r1(cx + Math.cos(a) * (44 + u * 22))} ${r1(cy + Math.sin(a) * (28 + u * 14))}) rotate(${r1(u * 120)}) scale(${r2(k * 1.4)})`); });
+  }
+  function dessineEtincelles(anim, t) {
+    const d = anim.tPouce;
+    if (d === null || t < d || t > d + 1) { att(N.etincelles, "opacity", 0); return; }
+    att(N.etincelles, "opacity", 1);
+    const base = monde(BRAS.d.querySelector("#main-d"), 0, -12);
+    [...N.etincelles.children].forEach((e, i) => { const u = fenetre(t, d + i * .08, .6), a = -2.4 + i * 1.1, k = Math.sin(Math.min(1, u) * Math.PI); tr(e, `translate(${r1(base.x + Math.cos(a) * (12 + u * 20))} ${r1(base.y + Math.sin(a) * (12 + u * 16) - u * 6)}) rotate(${r1(u * 90)}) scale(${r2(k * 2.6)})`); });
+  }
+  function dessineTextes(anim, t) {
+    const u = fenetre(t, anim.tTitre, .45), v = fenetre(t, anim.tTitre + .2, .4);
+    N.titre.textContent = anim.titre; N.sous.textContent = anim.sous;
+    N.titre.style.opacity = u; N.titre.style.transform = `translateY(${r1(12 * (1 - u))}px) scale(${r2(.94 + .06 * u)})`;
+    N.sous.style.opacity = v; N.sous.style.transform = `translateY(${r1(8 * (1 - v))}px)`;
+  }
+
+  // ---------- Les pétales de la caserne (canvas) : pétales, gouttelettes et étincelles à quatre branches ----------
+  const canvas = $("petales"), ctx = canvas.getContext("2d");
+  const COULEURS_PETALES = ["#FF7FB0", "#A47BFF", "#FFD23F", "#FFFFFF", "#5FA8FF", "#FF9ED0"];
+  let petales = [];
+  function semePetales(actifs) {
+    petales = [];
+    if (!actifs) return;
+    for (let i = 0; i < 64; i++) {
+      const origine = i % 2 ? { x: 296, y: 356 } : { x: 60, y: 330 }, ang = -Math.PI / 2 + (Math.random() - .5) * 2.2, vv = 240 + Math.random() * 260;
+      const genre = i % 8 === 3 ? "etincelle" : i % 4 === 1 ? "goutte" : "petale";
+      petales.push({ x: origine.x + (Math.random() - .5) * 40, y: origine.y, vx: Math.cos(ang) * vv * .8 + (i % 2 ? -50 : 60) + (Math.random() - .5) * 120, vy: Math.sin(ang) * vv,
+        taille: 4 + Math.random() * 2.5, rot: Math.random() * Math.PI, vrot: (Math.random() - .5) * 6, phase: Math.random() * 6.3, sol: 330 + Math.random() * 115, genre, couleur: COULEURS_PETALES[i % COULEURS_PETALES.length], pose: false });
+    }
+  }
+  function avancePetales(dt) {
+    for (const c of petales) {
+      if (c.pose) continue;
+      c.vy += 700 * dt; c.vx *= 1 - 2.4 * dt; c.vy *= 1 - (c.genre === "petale" ? 2.2 : 1.4) * dt;
+      c.x += c.vx * dt + Math.sin(c.phase + c.y * .05) * 26 * dt; c.y += c.vy * dt; c.rot += c.vrot * dt; c.phase += dt * 7;
+      if (c.y >= c.sol) { c.y = c.sol; c.pose = true; }
+    }
+  }
+  const petalesPoses = () => petales.every((c) => c.pose);
+  function dessinePetales(t) {
+    if (t < anim.tPetales) { ctx.clearRect(0, 0, canvas.width, canvas.height); return; }
+    const largeur = canvas.clientWidth, dpr = Math.min(2, devicePixelRatio || 1);
+    if (canvas.width !== Math.round(largeur * dpr)) { canvas.width = Math.round(largeur * dpr); canvas.height = Math.round(largeur * 450 / 360 * dpr); }
+    ctx.setTransform(canvas.width / 360, 0, 0, canvas.width / 360, 0, 0); ctx.clearRect(0, 0, 360, 450);
+    ctx.lineJoin = "round";
+    for (const c of petales) {
+      ctx.save(); ctx.translate(c.x, c.y); ctx.rotate(c.rot); ctx.globalAlpha = c.pose ? .9 : 1;
+      const s = c.taille, repli = c.pose ? .7 : .45 + .55 * Math.abs(Math.cos(c.phase));
+      ctx.strokeStyle = CONTOUR; ctx.lineWidth = 1.2;
+      if (c.genre === "petale") { ctx.fillStyle = c.couleur; ctx.beginPath(); ctx.ellipse(0, 0, s, s * .62 * repli, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); }
+      else if (c.genre === "goutte") { ctx.fillStyle = EAU; ctx.strokeStyle = EAU_CONTOUR; ctx.rotate(-c.rot); ctx.beginPath(); ctx.moveTo(0, -s); ctx.quadraticCurveTo(s * .75, -s * .1, s * .7, s * .45); ctx.arc(0, s * .45, s * .7, 0, Math.PI); ctx.quadraticCurveTo(-s * .75, -s * .1, 0, -s); ctx.fill(); ctx.stroke(); }
+      else { ctx.fillStyle = OR; ctx.beginPath(); const b = s * 1.2, m = s * .35; ctx.moveTo(0, -b); ctx.lineTo(m, -m); ctx.lineTo(b, 0); ctx.lineTo(m, m); ctx.lineTo(0, b); ctx.lineTo(-m, m); ctx.lineTo(-b, 0); ctx.lineTo(-m, -m); ctx.closePath(); ctx.fill(); ctx.stroke(); }
+      ctx.restore();
+    }
+  }
+
+  // ---------- Horloge et commandes ----------
+  let anim = null, depart = 0, tPrecedent = 0, enCours = false, image = 0, annonceFaite = false;
+  function rend(t) {
+    const p = dessineSam(anim, t);
+    dessineLanceSol(p); dessineTuyau(p); dessineJet(p, t); dessineFleurs(anim, t); dessineCloche(anim, t, p); dessineArcEnCiel(p); dessinePluie(anim, t, p); dessineEbroue(anim, t, p);
+    dessineBulles(anim, t); dessineCri(anim, t); dessineEtoiles(anim, t, p); dessineEtincelles(anim, t); dessineTextes(anim, t); dessinePetales(t);
+  }
+  function boucle(maintenant) {
+    const brut = (maintenant - depart) / 1000, t = Math.min(anim.fin, brut);
+    if (brut >= anim.tPetales) avancePetales(Math.min(.05, brut - Math.max(tPrecedent, anim.tPetales)));
+    tPrecedent = brut; rend(t);
+    if (t >= anim.fin && !annonceFaite) annonce();
+    // la scène s'arrête à anim.fin ; les pétales finissent seulement de retomber (une demi-seconde au plus)
+    if (t >= anim.fin && (petalesPoses() || brut > anim.fin + 1.2)) { termine(); return; }
+    image = requestAnimationFrame(boucle);
+  }
+  function annonce() { annonceFaite = true; N.annonce.textContent = ""; requestAnimationFrame(() => { N.annonce.textContent = "Défi relevé !"; }); }
+  function termine() { enCours = false; cancelAnimationFrame(image); if (!annonceFaite) annonce(); }
+  function etatFinal() { for (let i = 0; i < 700; i++) avancePetales(1 / 60); tPrecedent = anim.fin; rend(anim.fin); termine(); }
+  const DESCRIPTIONS = {
+    cloche: "Capitaine Sam arrose le jardin de la caserne et les fleurs s'ouvrent. Puis il sonne la cloche de la caserne pour faire la fête et saute de joie. Touche la scène pour passer l'animation.",
+    arc: "Capitaine Sam arrose le jardin de la caserne et les fleurs s'ouvrent. Puis il dessine un arc-en-ciel avec l'eau et lève le pouce. Touche la scène pour passer l'animation.",
+    pluie: "Capitaine Sam arrose le jardin de la caserne et les fleurs s'ouvrent. Puis il fait tomber une petite pluie joyeuse, rit et lève le pouce. Touche la scène pour passer l'animation.",
+  };
+  function prepare(nouvelle) {
+    anim = nouvelle; arrose(anim); annonceFaite = false; semePetales(!mouvementsReduits);
+    document.querySelectorAll(".petit").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.variante === anim.variante)));
+    N.scene.setAttribute("aria-label", DESCRIPTIONS[anim.variante]);
+  }
+  function lance(nouvelle) { cancelAnimationFrame(image); prepare(nouvelle); if (mouvementsReduits) { etatFinal(); return; } enCours = true; depart = performance.now(); tPrecedent = 0; rend(0); image = requestAnimationFrame(boucle); }
+  const auHasard = () => ["cloche", "arc", "pluie"][Math.floor(Math.random() * 3)];
+  $("reussir").addEventListener("click", () => lance(construit(auHasard())));
+  document.querySelectorAll(".petit").forEach((b) => b.addEventListener("click", () => lance(construit(b.dataset.variante))));
+  const passe = () => { if (enCours) etatFinal(); };
+  N.scene.addEventListener("pointerdown", passe);
+  N.scene.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); passe(); } });
+
+  // Mise au point : « ?anim=cloche|arc|pluie&t=1.2 » rend l'image fixe ; « ?planche=mains » ou « ?planche=tetes » montre une planche.
+  const params = new URLSearchParams(location.search);
+  function rendStatique(nouvelle, t) { prepare(nouvelle); for (let s = anim.tPetales; s < t; s += 1 / 60) avancePetales(1 / 60); rend(Math.min(t, anim.fin)); }
+  function planche(quoi) {
+    N.planche.innerHTML = `<rect width="360" height="450" fill="#FFF0D9"/>`;
+    att(N.planche, "opacity", 1);
+    if (quoi === "mains") {
+      N.planche.innerHTML += [0, 1, 2, 3].map((p, i) => `<g transform="translate(${50 + i * 88} 110) scale(3)">${main(p, false)}</g><g transform="translate(${50 + i * 88} 290) scale(3)">${main(p, true)}</g>`).join("") + ["détendue", "poing", "pouce levé", "écartée"].map((l, i) => `<text x="${50 + i * 88}" y="200" text-anchor="middle" font-family="Andika" font-size="13" fill="#3A2219">${l}</text>`).join("");
+      return;
+    }
+    const cas = [["face", 0, "sourire", 1], ["¾ gauche", -VUE, "sourire", 1], ["¾ droit", VUE, "sourire", 1], ["joie", 0, "joie", 1], ["surprise", 0, "surprise", 1], ["concentration", 0, "concentration", 1], ["clin d'œil", 0, "joie", 1, 1], ["hum ?", 0, "hum", 1], ["sans casque", 0, "sourire", 0]];
+    prepare(construit("arc"));
+    cas.forEach(([libelle, vue, emo, casq, clin = 0], i) => {
+      const p = { ...REPOS, vue, casq, clin };
+      dessineTete(p, 0, { emo, prec: emo, u: 1 }, 0, 1);
+      const c = N["tete-forme"].cloneNode(true); c.removeAttribute("id"); c.querySelectorAll("[id]").forEach((e) => e.removeAttribute("id"));
+      const x = 60 + (i % 3) * 120, y = 72 + Math.floor(i / 3) * 145;
+      tr(c, `translate(${x} ${y}) scale(1.3) scale(.7)`); N.planche.append(c);
+      const txt = document.createElementNS(NS, "text"); att(txt, "x", x); att(txt, "y", y + 56); att(txt, "text-anchor", "middle"); att(txt, "font-family", "Andika"); att(txt, "font-size", "12"); att(txt, "fill", "#3A2219"); txt.textContent = libelle; N.planche.append(txt);
+    });
+  }
+  const polices = document.fonts && document.fonts.load ? document.fonts.load("800 40px 'Baloo 2'") : Promise.resolve();
+  Promise.race([polices, new Promise((r) => setTimeout(r, 1500))]).finally(() => {
+    const a = params.get("anim"), t = params.get("t"), pl = params.get("planche");
+    if (pl) { planche(pl); return; }
+    const nouvelle = construit(VARIANTES[a] ? a : auHasard());
+    if (t !== null) rendStatique(nouvelle, Number(t)); else lance(nouvelle);
+  });
+})();
+</script>
+</body>
+</html>
