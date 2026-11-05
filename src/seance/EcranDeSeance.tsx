@@ -380,6 +380,7 @@ function SeanceEnCours(
                 temps={deroulement.tempsDeLaMemorisation(position)}
                 versLu={deroulement.versLu}
                 voixCoupee={voixCoupee}
+                felicitationFinie={deroulement.felicitationDuDernierVersFinie}
                 exerciceJoue={exerciceAffiche}
                 question={question}
                 choixVisibles={question !== undefined && deroulement.choixVisiblesPour === question}

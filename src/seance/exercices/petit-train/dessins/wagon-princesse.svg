@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="110" viewBox="0 0 120 110">
+<defs><linearGradient id="w-princesse" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E2B4F0"/><stop offset="1" stop-color="#C48BDC"/></linearGradient></defs>
+<!-- roues (dans les coins du bas) -->
+<circle cx="20" cy="98" r="11" fill="#3A2F45" stroke="#F4EFE6" stroke-width="2.5"/><circle cx="20" cy="98" r="4.4" fill="#E0A92B"/><circle cx="100" cy="98" r="11" fill="#3A2F45" stroke="#F4EFE6" stroke-width="2.5"/><circle cx="100" cy="98" r="4.4" fill="#E0A92B"/>
+<!-- corps : dégradé vertical, identique sur toute la largeur -->
+<rect x="4" y="20" width="112" height="66" rx="8" fill="url(#w-princesse)" stroke="#7E56BC" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+<!-- châssis et attelages -->
+<rect x="4" y="86" width="112" height="6" fill="#E0A92B" stroke="#7E56BC" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="0" y="87.5" width="6" height="4" rx="2" fill="#7E56BC"/><rect x="114" y="87.5" width="6" height="4" rx="2" fill="#7E56BC"/>
+<!-- toit -->
+<rect x="2" y="12" width="116" height="10" rx="5" fill="#FFC93C" stroke="#7E56BC" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<!-- volutes dorées aux deux bouts du toit -->
+<path d="M32 13 Q32 2 21 2 Q10 2 10 10 Q10 17 17 17 Q22 17 22 12" fill="none" stroke="#C9921B" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M88 13 Q88 2 99 2 Q110 2 110 10 Q110 17 103 17 Q98 17 98 12" fill="none" stroke="#C9921B" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>
+<!-- plaque claire : le texte de l'étiquette (HTML) se pose dessus ; elle déborde de 4 px sur les bords de la case centrale -->
+<rect x="30" y="24" width="60" height="60" rx="4" fill="#FBF1FF" stroke="#7E56BC" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+</svg>
