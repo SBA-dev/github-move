@@ -27,12 +27,12 @@ async function defiOuvertParLaSeanceTerminee(
  */
 export function useDefiOuvertParLaSeance(
   enfant: string,
-  entrees: Promise<EntreesAvantEtApres | undefined>,
+  entrees: Promise<EntreesAvantEtApres | undefined> | undefined,
   terminee: boolean,
 ): DefiOuvert {
   const [ouvert, setOuvert] = useState<DefiOuvert>({ pret: false, defi: undefined });
   useEffect(() => {
-    if (!terminee) return;
+    if (!terminee || !entrees) return;
     let annule = false;
     void defiOuvertParLaSeanceTerminee(enfant, entrees)
       .catch(() => undefined)

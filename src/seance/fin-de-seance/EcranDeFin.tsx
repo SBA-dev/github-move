@@ -133,9 +133,11 @@ export function EcranDeFin({ seance, univers, niveau, onDireLaFin, meilleuresEto
     terminee !== undefined,
     terminee?.etoiles,
   );
+  const finie = terminee !== undefined;
+  // Lues une fois la séance terminée seulement : les étoiles gagnées sont alors déjà retenues pour « après ».
   const entrees = useMemo(
-    () => entreesAvantEtApresLaSeance({ enfant: seance.enfant, lecon: seance.lecon }, niveau, meilleuresEtoilesAvant).catch(() => undefined),
-    [seance.enfant, seance.lecon, niveau, meilleuresEtoilesAvant],
+    () => finie ? entreesAvantEtApresLaSeance({ enfant: seance.enfant, lecon: seance.lecon }, niveau, meilleuresEtoilesAvant).catch(() => undefined) : undefined,
+    [finie, seance.enfant, seance.lecon, niveau, meilleuresEtoilesAvant],
   );
   const { pret: episodePret, episode } = useEpisodeOuvertParLaSeance(nombreDeSeancesAvant, terminee !== undefined);
   const { pret: defiPret, defi: defiOuvert } = useDefiOuvertParLaSeance(seance.enfant, entrees, terminee !== undefined);
@@ -153,10 +155,10 @@ export function EcranDeFin({ seance, univers, niveau, onDireLaFin, meilleuresEto
     accueil.current?.focus();
   }, []);
   useEffect(() => {
-    if (dite.current || terminee === undefined || !pret || !tenuePrete || !episodePret || !badgePret || !acquisePret || !quetePrete || !defiPret || !matierePrete) return;
+    if (dite.current || terminee === undefined || celebration === undefined || !pret || !tenuePrete || !episodePret || !badgePret || !acquisePret || !quetePrete || !defiPret || !matierePrete) return;
     dite.current = true;
     onDireLaFin(terminee.etoiles, { objet, tenue, episode, badge, leconAcquise, queteAccomplie, defiOuvert, musiqueDeLaCelebration });
-  }, [terminee, pret, objet, tenuePrete, tenue, episodePret, episode, badgePret, badge, acquisePret, leconAcquise, quetePrete, queteAccomplie, defiPret, defiOuvert, matierePrete, musiqueDeLaCelebration, onDireLaFin]);
+  }, [terminee, pret, objet, tenuePrete, tenue, episodePret, episode, badgePret, badge, acquisePret, leconAcquise, quetePrete, queteAccomplie, defiPret, defiOuvert, matierePrete, celebration, musiqueDeLaCelebration, onDireLaFin]);
   const [etoilesAffichees, setEtoilesAffichees] = useState(false);
   const afficherToutesLesEtoiles = useCallback(() => setEtoilesAffichees(true), []);
 
@@ -179,11 +181,6 @@ export function EcranDeFin({ seance, univers, niveau, onDireLaFin, meilleuresEto
       transition={{ duration: 0.25, ease: "easeOut" }}
     >
       {celebrationAffichable && celebration?.sorte === "commune" && <Confettis />}
-      {celebration?.sorte === "univers" && (
-        <div className="place-de-la-celebration">
-          {celebrationAffichable && <SceneDeCelebration celebration={celebration.celebration} />}
-        </div>
-      )}
       {etoiles !== undefined && (
         <>
           <EtoilesGagnees nombre={etoiles} onToutesAffichees={afficherToutesLesEtoiles} />
@@ -192,6 +189,11 @@ export function EcranDeFin({ seance, univers, niveau, onDireLaFin, meilleuresEto
             {etoilesAffichees && etoiles > 0 ? annonceDesEtoiles(etoiles) : ""}
           </p>
         </>
+      )}
+      {celebration?.sorte === "univers" && celebrationAffichable && (
+        <div className="place-de-la-celebration">
+          <SceneDeCelebration celebration={celebration.celebration} />
+        </div>
       )}
       <div className="pour-la-matiere" role="status" data-testid="annonce-de-la-matiere-reussie">
         {matiereReussie && <p>{titreDeLaMatiereReussie()}</p>}

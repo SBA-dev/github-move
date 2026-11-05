@@ -9,12 +9,12 @@ export type MatiereReussie = { readonly pret: boolean; readonly reussie: boolean
  * Sans elles (lecture impossible ou sans bibliothèque), la matière n'est pas annoncée réussie.
  */
 export function useMatiereReussieParLaSeance(
-  entrees: Promise<EntreesAvantEtApres | undefined>,
+  entrees: Promise<EntreesAvantEtApres | undefined> | undefined,
   terminee: boolean,
 ): MatiereReussie {
   const [resultat, setResultat] = useState<MatiereReussie>({ pret: false, reussie: false });
   useEffect(() => {
-    if (!terminee) return;
+    if (!terminee || !entrees) return;
     let annule = false;
     void entrees
       .then((lues) => lues !== undefined && matiereReussieParLaSeance(lues.avant, lues.apres, lues.matiere))
