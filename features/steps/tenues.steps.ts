@@ -27,7 +27,7 @@ const CLE_DE_LA_TENUE: Readonly<Record<string, string>> = {
   "des bottes de pluie": "bottes-de-pluie",
 };
 
-function cleDeLaTenue(libelle: string): string {
+export function cleDeLaTenue(libelle: string): string {
   const cle = CLE_DE_LA_TENUE[libelle];
   if (cle === undefined) throw new Error(`Tenue inconnue : « ${libelle} »`);
   return cle;
@@ -98,7 +98,7 @@ async function mettreLaTenue(page: Page, libelle: string, moyen: "toucher" | "cl
   await expect(bouton).toHaveAttribute("aria-pressed", "true");
 }
 
-When(/^Léa met « ([^«»]+) » à (?:Noisette|Coach Léo|Capitaine Sam)$/, async ({ page }, libelle: string) => {
+When(/^Léa met « ([^«»]+) » à (?:Noisette|Coach Léo|Capitaine Sam|Lumi)$/, async ({ page }, libelle: string) => {
   await mettreLaTenue(page, libelle, "toucher");
 });
 
@@ -107,7 +107,7 @@ When(/^Léa met « ([^«»]+) » à Noisette, au clavier seulement$/, async ({ p
 });
 
 /** L'enfant a mis la tenue dans « Mes médailles » avant la scène : il revient ensuite à son accueil. */
-Given(/^Léa a mis « ([^«»]+) » à (?:Noisette|Coach Léo|Capitaine Sam)$/, async ({ famille, page }, libelle: string) => {
+Given(/^Léa a mis « ([^«»]+) » à (?:Noisette|Coach Léo|Capitaine Sam|Lumi)$/, async ({ famille, page }, libelle: string) => {
   await ouvrirLEcran(famille, page, "toucher");
   await mettreLaTenue(page, libelle, "toucher");
   await page.goBack();
@@ -213,7 +213,10 @@ Then(
     await expect(annonce).toBeVisible({ timeout: DELAI_D_UN_APPEL_SERVEUR_MS });
     await expect(annonce.getByText(`Pour ${nom}`, { exact: true })).toBeVisible();
     await expect(annonce.getByText(texte, { exact: true })).toBeVisible();
-    await expect(annonce.getByTestId("personnage-guide-de-l-annonce")).toBeVisible();
+    // 106.50 : pendant une célébration de l'univers, c'est la scène qui montre le personnage guide ; le petit dessin de l'encart est caché.
+    const dessin = annonce.getByTestId("personnage-guide-de-l-annonce");
+    if (await page.getByTestId("celebration-de-l-univers").count() === 0) await expect(dessin).toBeVisible();
+    else await expect(dessin).toHaveCount(0);
   },
 );
 
