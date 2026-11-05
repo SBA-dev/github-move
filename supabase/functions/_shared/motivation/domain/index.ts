@@ -194,6 +194,7 @@ export {
   type FaitsDeLaFinPourLaCelebration,
   type MomentDeCelebration,
   momentDeCelebrationDeLaFin,
+  titreDeLaMatiereReussie,
 } from "./moment-de-celebration.ts";
 export {
   feteDeLaQueteAccomplie,

@@ -283,6 +283,51 @@ Livraison **106e** : univers Police (Agent Max). Branche `feature/106e-celebrati
 | Escalades | aucune ; questions au cadrage 106.41 à 106.43 |
 | Verrous | base (12:51 → 13:20 UTC, puis 18:20 UTC pour le rejeu) ; merge (18:20 UTC) |
 | Tokens | relevés par le responsable |
+## 2026-11-05 (106g)
+
+Livraison **106g** : moment « matière réussie » à la fin de la séance. Branche `feature/106g-matiere-reussie`, partie de `main` (`e0d533f` : 106a à 106e, #155 et #158 mergées). Session `session_015z4jmNpBJSugNaG2jjcyUH`. Branche de base : `main`.
+106f (Pompiers) câble en parallèle dans `celebrations-des-univers` et le `.feature` de #106 : intégrer `main` après son merge, avant les E2E. Tant que 106f n'est pas mergée, Pompiers garde la célébration commune (106.18).
+
+- 12:05 UTC : démarrage. Cadrage de #106 déjà validé (« 106 reco tout », 106.28 « cacher », 106.31, 106.34 A / 106.35, 106.37 « garder », 106.38 A). Musique « grande victoire » (106.27 fermé). Aucun numéro de décision réservé.
+- Avancement publié sur #106 (commentaire 6657454000).
+- 12:10 UTC : modèle 106g (`domain-modeler`, avec le rapprochement de #137) et scénarios 106g (`po-acceptance`) lancés en parallèle.
+- 12:14 UTC : modèle 106g `b9735fc` : `matiereReussieParLaSeance` sur `EntreesDuParcours` ; champ obligatoire `matiereReussieParLaSeance` ; annonce `titreDeLaMatiereReussie()` liée au fait (gardée avec la célébration commune) ; musique à la place du son de fin ; 106.7 non préparé (106h). Rapprochement #137 : aucune duplication (le grand défi prend exactement les leçons de la classe) ; test de concordance au lieu d'un refactor. Questions nouvelles 106.44 à 106.46.
+- Scénarios 106g `f31ff65`, puis `d6f1e9e` : scénario Pompiers « pas encore livré » retiré par l'orchestrateur (sans sujet après le merge de 106f ; règle couverte par le domaine). 3 scénarios `@livraison-106g`.
+- 12:08 UTC : CADRAGE PRÊT publié (commentaire 6657586746), RELIS envoyé.
+- TDD (pendant l'attente des réponses) : (1) `matiereReussieParLaSeance` RED `0927032`, GREEN `86afe8b` ; (2) moment `matiereReussie` et annonce RED `9995f10`, GREEN `36a62d3` (FinDuDefi passe `false`) ; (3) musique à la place du son de fin RED `dd35cea` (cas rendu discriminant avec une autre valeur d'`EffetSonore`), GREEN `34a2e8d`, `decouverte` inchangé (106.46). `deno test` : 2900 verts. Point connu : `celebration-de-la-fin_test.ts` prend `pompier` comme univers non livré, à adapter à l'intégration de 106f.
+- Revue intermédiaire du domaine (`e0d533f..34a2e8d`) : **APPROUVÉ**. Non bloquants traités : tests précisés (`16ef9ae` : matière sans leçon dans la classe, test de départ isolé, musique fictive nommée) ; modèle aligné sur le code (`92da2b6`).
+- Câblage (`implementer`) : `cee4b72` (entrées avant/après partagées ; contient par erreur le hook encore inutilisé), `d00b276` (scène ou confettis, annonce « Matière réussie ! » dans sa zone `role="status"`, musique transmise au domaine, personnage guide caché pendant la scène). `deno test` 2901 ; tsc, build OK.
+- Steps E2E écrits sans run (`1a7a536`) : steps réservés à `@issue-106` pour l'annonce, le grand défi ouvert et l'annonce unique ; `attendreLaFinDuDefi` attend aussi la fin de la séance.
+- Review de la branche (`origin/main...d00b276`) : **APPROUVÉ**. Non bloquants traités dans `010658c` : guide gardé pendant les étoiles, tirage posé une fois, entrées lues une fois, place de la scène réservée (plus de saut des boutons), classe `pour-la-matiere`. Gardé : l'historique de `cee4b72` (pas de réécriture d'une branche poussée).
+- Revue delta `d00b276..010658c` : **À CORRIGER (cycle 1)**, 2 bloquants d'ordre d'exécution dans `EcranDeFin.tsx` introduits par le refactor : entrées lues avant que la séance ait retenu ses étoiles (hors ligne : ni matière réussie, ni défi ouvert annoncé, régression possible de #100/#137) ; musique perdue si le tirage arrive après `onDireLaFin`. Corrigés dans `803305d` (lecture après `terminee`, attente du tirage) ; steps renommés et step du grand défi sans copie (`c3ed26a`).
+- Revue delta `010658c..803305d` (cycle 2) : **APPROUVÉ**. Compromis gardé : la place de la scène n'est plus réservée avant les étoiles (plus de cadre vide), donc les boutons descendent une fois quand la scène arrive après les étoiles. Le wrapper `.place-de-la-celebration` est devenu inutile : à retirer avec le prochain changement du front.
+- Attente : réponses du PO (#106.44 à #106.46) ; merge de 106f, puis intégration de `main` et VERROU base pour les E2E.
+- 13:30 UTC : VERROU base demandé pour une mise au point courte avant le merge de 106f (commentaire 6659280499) ; accordé à 13:32 (annonce 6659293563, tableau de #64 vérifié). Sonde OK (3 × 200, 0,46 à 1,16 s).
+- E2E `@livraison-106g`, `telephone`, 1 worker, head `672355c` : 2/3 au premier run ; le KO venait du step « annoncent une seule fois » (il lisait l'enregistreur des annonces des étoiles) ; step corrigé (`0e03616`), scénario rejoué seul : vert. **3/3**. LIBÈRE base (commentaire 6659376953).
+- 18:18 UTC : réponse du PO (annonce [Responsable] 6665711170, vérifiée) : « 106g reco tout ». #106.44 oui (« (à valider) » retiré du terme au glossaire), #106.45 oui, #106.46 oui (la musique, puis « découverte », puis la parole). Cadrage validé. Reportées dans le modèle et l'acceptance (`2656a50`). 106.46 : test de caractérisation `16d5c5f` (vert du premier coup, le code faisait déjà cet ordre).
+- `f8860c9` : wrapper `.place-de-la-celebration` retiré (non bloquant de revue). `deno test` : 2902 verts.
+- Attente : merge de 106f (autorisé par le PO, en file derrière #161 pour le verrou merge), puis intégration de `main` et VERROU base pour le run de référence.
+- 18:24 UTC : 106f mergée (`2acfeac`). `main` intégrée (`96ef7cf`) : conflits dans le journal (résolu par l'orchestrateur, sections gardées), le modèle (`domain-modeler` : 106f puis 106g ; catalogue exhaustif, 106.18 sans cas réel) et le `.feature` (`po-acceptance` : 106f puis 106g, en-tête et séparateur 106h ; acceptance : règle 106f ajoutée en R15, mentions « Pompiers pas encore livré » retirées). Test de la célébration de la fin adapté (`test-writer` : matière réussie chez Pompiers → célébration de l'univers). `deno test` 2910 ; lint, fmt, tsc, build OK.
+- 18:28 UTC : VERROU base accordé pour le run de référence (message du responsable, tableau de #64 vérifié). Sonde OK (3 × 200, 0,50 à 1,01 s). Run lancé : `@issue-106` entier, puis fin de la séance (#97, #102, #137, et les scénarios de fin de séance de #100 et #99), `telephone`, 1 worker.
+- Run de référence, head `96ef7cf` : `@issue-106` **58/58** (22,8 min) ; fin de la séance (#97, #102, #137 entiers, scénarios de fin de séance de #100 et #99) **156/156** (49,1 min). Aucun KO, aucun step modifié. LIBÈRE base (commentaire 6667566261).
+
+## Mesures (106g)
+
+| Mesure | Valeur |
+|---|---|
+| Durée | 2026-11-05 12:05 UTC → environ 20:10 UTC (PR prête), soit environ 8 h, dont environ 6 h d'attente |
+| Attente | réponses du PO (#106.44 à #106.46) : 12:08 → 18:18 UTC ; merge de 106f : jusqu'à 18:24 UTC. Le domaine, le câblage, les revues, les steps et une mise au point E2E étaient faits pendant ce temps. VERROU base : environ 0 (accordé dans la minute, deux fois) |
+| Cycles TDD | 3 comportements (matière réussie par la séance ; moment et annonce ; musique à la place du son de fin), plus 1 test de caractérisation (106.46) |
+| Review | 1 revue intermédiaire du domaine (APPROUVÉ) ; 1 review de la branche (APPROUVÉ) ; 1 revue delta des refactors **À CORRIGER** (2 bloquants d'ordre d'exécution introduits par un refactor), puis APPROUVÉ au cycle 2 ; 1 revue delta finale |
+| E2E | mise au point `@livraison-106g` : 3/3 (un KO de step corrigé) ; run de référence : 58/58 et 156/156 |
+| Intégrations de `main` | 1 (`2acfeac`, 106f) : conflits seulement dans la documentation, le `.feature` et un test du domaine (catalogue devenu exhaustif) |
+| Escalades | aucune ; 3 questions nouvelles au cadrage (#106.44 à #106.46) |
+| Verrous | base deux fois (13:32 → 13:36 UTC, mise au point ; 18:28 → environ 20:00 UTC, référence) |
+| Leçon | un refactor « sans changement de comportement » du front a introduit deux bugs d'ordre d'exécution (lecture avant la sauvegarde de la séance ; tirage posé après les paroles de fin) : la revue delta les a trouvés, les E2E en ligne ne les auraient pas vus (latence réseau) |
+| Tokens | relevés par le responsable |
+- 20:10 UTC : PR #167 passée en « prête », PRÊTE À MERGER (commentaire 6667663360). Review finale publiée sur la PR (commentaire 6667650763) : APPROUVÉ. Non bloquants de documentation de la revue finale corrigés (`6bc74e0`, `dee4d01`).
+- 21:06 UTC : « merge 106g OK » (annonce [Responsable] 6669541270, vérifiée) ; VERROU merge inscrit au tableau de #64. `main` toujours `2acfeac`, déjà intégrée. Sur `dee4d01` : 2910 tests verts, lint, fmt, tsc, build OK ; E2E de référence (head `96ef7cf`, seules des docs ont changé depuis) 58/58 et 156/156 ; pas de CI sur la PR. Merge par merge commit.
+
 
 ## Livraison 106h : danses de victoire et tenue portée dans les scènes
 
@@ -298,3 +343,4 @@ Livraison **106e** : univers Police (Agent Max). Branche `feature/106e-celebrati
 - 19:34 UTC : réponse du PO à 106.51, vérifiée (annonce [Responsable] sur #106, commentaire 6667364482) : « Lili de face est pas bien faite. Améliore la ». Planche non validée. La retouche de Lili de face dans sa scène est déléguée à `implementer` : analyse du défaut, version améliorée, planche avant/après, et signalement du dessin fixe `Lili.tsx` s'il a le même défaut.
 - ~19:50 UTC : Lili de face retouchée (`1f16045`, scène de la danse : cheveux, visage, cou, buste, tutu, bras arrondis ; dos et profil inchangés) ; planches avant/après et des tenues refaites (`f194648`). Relues par l'orchestrateur : nettement mieux, rien contre la règle absolue. Présentées au PO (commentaire 6667593034). Question nouvelle 106.52 : le dessin fixe `Lili.tsx` a le même défaut, non corrigé (reco : issue à part).
 - 21:06 UTC : réponse du PO vérifiée (annonce [Responsable] sur #106, commentaire 6669541270), « merge 106g OK, 106h reco tout » : 106.51 oui (nouvelle Lili de face et planches des cinq autres personnages guides validées) ; 106.52 oui, issue à part #168 (dessin fixe `Lili.tsx`, non touché par 106h). Câblage après le merge de 106g, qui merge maintenant.
+- 106g mergée (`2a69a87`). `main` intégrée : le code passe sans conflit. Dans le modèle et l'acceptance, git avait entrelacé les sections 106g et 106h (mêmes sous-titres) : les deux fichiers sont reconstruits à partir de la version de `main`, avec la section 106h entière insérée avant « Questions ouvertes ». Journal : les deux ajouts gardés.
