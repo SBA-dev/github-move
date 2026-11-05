@@ -54,15 +54,33 @@ Deno.test("la variante de la célébration Animaux est tirée par le hasard parm
   assertEquals(variantes, ["jongle", "mange", "joues"]);
 });
 
+Deno.test("le défi relevé dans l'univers Princesses et fées est fêté par le cri de victoire « Magique ! » sur la grande victoire", () => {
+  const celebration = celebrationDe("defiReleve", "princesse", hasardFixe(0));
+
+  assertEquals(celebration?.univers, "princesse");
+  assertEquals(celebration?.moment, "defiReleve");
+  assertEquals(celebration?.cri, "Magique !");
+  assertEquals(celebration?.musique, "grandeVictoire");
+});
+
+Deno.test("la variante de la célébration Princesses et fées est tirée par le hasard parmi arc, envol et signes", () => {
+  const variantes = [0, 0.5, 0.99].map((tirage) =>
+    celebrationDe("defiReleve", "princesse", hasardFixe(tirage))?.variante.cle
+  );
+
+  assertEquals(variantes, ["arc", "envol", "signes"]);
+});
+
 Deno.test("le domaine publie les clés de variante de chaque univers célébré", () => {
   assertEquals(VARIANTES_DES_UNIVERS, {
     sports: ["glissade", "avion", "danse"],
     danse: ["jete", "ruban", "sauts"],
     animaux: ["jongle", "mange", "joues"],
+    princesse: ["arc", "envol", "signes"],
   });
 });
 
-for (const univers of ["sports", "danse", "animaux"] as const) {
+for (const univers of ["sports", "danse", "animaux", "princesse"] as const) {
   Deno.test(`la variante tirée dans l'univers ${univers} appartient aux clés publiées par le domaine`, () => {
     const cle = celebrationDe("defiReleve", univers, hasardFixe(0.5))?.variante.cle;
     const clesPubliees: readonly string[] = VARIANTES_DES_UNIVERS[univers];
@@ -87,7 +105,7 @@ Deno.test("les clés de variante publiées pour Sports sont typées sur les seul
   assertEquals(clesDesSports.length, 3);
 });
 
-for (const cle of ["princesse", "police", "pompier"] as const) {
+for (const cle of ["police", "pompier"] as const) {
   Deno.test(`l'univers ${cle}, pas encore livré, n'a pas de célébration de l'univers : la fin garde la célébration commune`, () => {
     const celebration = celebrationDe("defiReleve", cle, hasardFixe(0));
 

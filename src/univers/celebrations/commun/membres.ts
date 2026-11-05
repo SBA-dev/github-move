@@ -1,4 +1,5 @@
 import { DEG, lerp, r1 } from "./courbes.ts";
+import { au } from "./tableaux.ts";
 
 export type Point = { readonly x: number; readonly y: number };
 export type Membre = { readonly S: Point; readonly E: Point; readonly W: Point; readonly C: Point; readonly dir: number };
@@ -32,3 +33,15 @@ export const decaler = (m: Membre, dx: number, dy: number): Membre => ({
   C: { x: m.C.x + dx, y: m.C.y + dy },
   W: { x: m.W.x + dx, y: m.W.y + dy },
 });
+
+/** Une courbe lisse qui passe entre les points : chaque point est un point de contrôle, la courbe va aux milieux. Elle démarre par `M` (nouveau tracé) ou par `L` (suite d'un tracé). */
+export function courbe(P: readonly Point[], depart: "M" | "L" = "M"): string {
+  const premier = au(P, 0);
+  let d = `${depart}${r1(premier.x)} ${r1(premier.y)}`;
+  for (let i = 1; i < P.length - 1; i++) {
+    const a = au(P, i), b = au(P, i + 1);
+    d += ` Q${r1(a.x)} ${r1(a.y)} ${r1((a.x + b.x) / 2)} ${r1((a.y + b.y) / 2)}`;
+  }
+  const fin = au(P, P.length - 1);
+  return `${d} L${r1(fin.x)} ${r1(fin.y)}`;
+}
