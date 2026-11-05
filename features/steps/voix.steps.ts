@@ -244,6 +244,27 @@ export async function terminerLaLectureSiCenEstPas(page: Page, voulu: string): P
   }, voulu);
 }
 
+/**
+ * Termine la lecture en cours tant que `voulu` n'a pas été dit en entier (toutes paroles mises bout à bout, sans espaces ni virgules),
+ * et le décide dans la page, en un seul appel : sinon, l'application peut commencer la dernière parole entre la lecture du journal
+ * et la fin, et l'étape la terminerait à tort (#155, dictée passée au mot suivant). Rend vrai quand `voulu` a été dit.
+ */
+export async function terminerLaLectureJusquACeQueSoitDit(page: Page, voulu: string): Promise<boolean> {
+  return await page.evaluate((texteVoulu) => {
+    const faux = Reflect.get(window, "__faux") as {
+      journal: Array<{ type: string; texte: string }>;
+      enonces: Array<{ enonce: { onend: (() => void) | null } }>;
+      actifs: unknown[];
+    };
+    const sansEspace = (texte: string) => texte.replace(/[\s,]+/g, "");
+    const dites = faux.journal.filter((e) => e.type === "speak").map((e) => e.texte).join("");
+    if (sansEspace(dites).includes(sansEspace(texteVoulu))) return true;
+    faux.actifs = [];
+    faux.enonces[faux.enonces.length - 1]?.enonce.onend?.();
+    return false;
+  }, voulu);
+}
+
 // Les étapes de voix appliquées après la préparation de la page (voix de l'appareil, Muet) : le scénario #17 les règle
 // après le Contexte, qui a déjà préparé la page. Cette préparation s'exécute après l'autre, donc la dernière gagne.
 export async function reappliquerLAppareil(page: Page) {

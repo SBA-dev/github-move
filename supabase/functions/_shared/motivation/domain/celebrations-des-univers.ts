@@ -9,6 +9,7 @@ const CLES_DE_VARIANTE = {
   danse: ["jete", "ruban", "sauts"],
   animaux: ["jongle", "mange", "joues"],
   princesse: ["arc", "envol", "signes"],
+  police: ["orchestre", "trottinette", "danse"],
 } as const;
 
 export type UniversCelebre = keyof typeof CLES_DE_VARIANTE;
@@ -34,6 +35,7 @@ const CRIS_ET_MUSIQUES: Record<UniversCelebre, { readonly cri: CriDeVictoire; re
   danse: { cri: "Bravo !", musique: "grandeVictoire" },
   animaux: { cri: "Hourra !", musique: "grandeVictoire" },
   princesse: { cri: "Magique !", musique: "grandeVictoire" },
+  police: { cri: "Enquête résolue !", musique: "grandeVictoire" },
 };
 
 function celebrer<U extends UniversCelebre>(univers: U, moment: MomentDeCelebration, hasard: Hasard): CelebrationDe<U> {
@@ -48,6 +50,7 @@ const CELEBRANTS: {
   danse: (moment, hasard) => celebrer("danse", moment, hasard),
   animaux: (moment, hasard) => celebrer("animaux", moment, hasard),
   princesse: (moment, hasard) => celebrer("princesse", moment, hasard),
+  police: (moment, hasard) => celebrer("police", moment, hasard),
 };
 
 function estUniversCelebre(cle: CleUnivers): cle is UniversCelebre {

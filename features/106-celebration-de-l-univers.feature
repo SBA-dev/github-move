@@ -11,11 +11,11 @@ Fonctionnalité: Une célébration propre à chaque univers
   106.27, docs/stories/106/acceptance.md, puis 106.28 « cacher »). Ce fichier couvre la livraison 106a (mécanisme,
   moment « défi relevé » la première fois, univers « Sports » et sa musique), la livraison 106b (univers « Danse »,
   scénarios tagués @livraison-106b), la livraison 106c (univers « Animaux de la forêt », scénarios
-  tagués @livraison-106c), la livraison 106d (univers « Princesses et fées », scénarios tagués @livraison-106d)
-  et la livraison 106f (univers « Pompiers », scénarios tagués @livraison-106f).
-  Ce qui ne dépend pas de l'univers (toucher, clavier, Muet, espace parent, défi rejoué) n'est décrit qu'une fois,
-  avec Coach Léo. Les scénarios tagués @hors-106a décrivent les livraisons suivantes (106e, 106g et 106h) : ils sont
-  exclus et restent @a-valider jusqu'à leur livraison.
+  tagués @livraison-106c), la livraison 106d (univers « Princesses et fées », scénarios tagués @livraison-106d),
+  la livraison 106e (univers « Police », scénarios tagués @livraison-106e) et la livraison 106f (univers
+  « Pompiers », scénarios tagués @livraison-106f). Ce qui ne dépend pas de l'univers (toucher, clavier, Muet,
+  espace parent, défi rejoué) n'est décrit qu'une fois, avec Coach Léo. Les scénarios tagués @hors-106a décrivent
+  les livraisons suivantes (106g et 106h) : ils sont exclus et restent @a-valider jusqu'à leur livraison.
 
   Mots employés dans ces scénarios (validés, 106.1, 106.2, 106.14 et 106.26) :
   - « la célébration de l'univers « Sports » » : Coach Léo marque un but, puis fait une des trois variantes de la
@@ -33,16 +33,23 @@ Fonctionnalité: Une célébration propre à chaque univers
     « les feuilles de la forêt », font partie de sa célébration de l'univers, comme les confettis de la scène de
     Coach Léo (106.24) ;
   - « Hourra ! » : le cri de victoire de l'univers « Animaux de la forêt », affiché et jamais lu ;
+  - « la célébration de l'univers « Police » » : Agent Max retrouve un chiot perdu, content et en bonne santé, puis
+    fait une des trois variantes de la célébration, tirée au hasard : « le chef d'orchestre », « le tour en
+    trottinette » ou « la danse de la victoire » (noms fixés d'après la maquette validée, 106.26 ; toujours écrits en
+    entier, « la danse de la victoire » n'étant pas la danse de victoire du glossaire). Les confettis lancés sur la
+    place, appelés ici « les confettis du commissariat », font partie de sa célébration de l'univers, comme les
+    confettis de la scène de Coach Léo (106.24) ;
+  - « Enquête résolue ! » : le cri de victoire de l'univers « Police », affiché et jamais lu ;
   - « la célébration commune » : les confettis et l'effet sonore de la fin, les mêmes dans tous les univers (#97) ;
     quand la célébration de l'univers est jouée, ni ses confettis ni son effet sonore ne s'y ajoutent ;
   - « la musique de la célébration de Coach Léo », « la musique de la célébration de Lili », « la musique de la
-    célébration de Noisette » : l'effet sonore de leur
+    célébration de Noisette », « la musique de la célébration d'Agent Max » : l'effet sonore de leur
     célébration de l'univers, qui remplace « grande victoire » (106.12). Le PO les choisira à l'écoute ; d'ici là,
     c'est « grande victoire », entendu une seule fois ;
   - « l'image fixe de la célébration » : la même scène, dans l'état final de la variante tirée, quand l'appareil
     demande des mouvements réduits (106.15) ; rien ne tombe, ni les confettis de Coach Léo, ni les pétales de la
-    salle, ni les feuilles de la forêt, ni les étincelles du jardin, ni les pétales de la caserne, ni les confettis
-    de la célébration commune (106.24).
+    salle, ni les feuilles de la forêt, ni les étincelles du jardin, ni les confettis du commissariat, ni les
+    pétales de la caserne, ni les confettis de la célébration commune (106.24).
   Mots employés pour la livraison 106d (Lumi) :
   - « la célébration de l'univers « Princesses et fées » » : Lumi fait éclore une fleur magique d'un sort, puis fait
     une des trois variantes de la célébration, tirée au hasard : « l'arc-en-ciel », « l'envol » ou « les chiffres et
@@ -151,20 +158,7 @@ Fonctionnalité: Une célébration propre à chaque univers
       Et Coach Léo apparaît à côté de la bulle de ses paroles
       Mais Coach Léo ne joue pas la célébration de l'univers
 
-  Règle: La célébration jouée est celle de l'univers du profil au moment du défi relevé ; un univers dont la célébration n'est pas encore livrée garde la célébration commune
-
-    Plan du Scénario: Dans l'univers « <univers> », pas encore livré, le premier défi relevé garde la célébration commune
-      Étant donné que Paul a changé l'univers du profil enfant de Léa en « <univers> »
-      Et que Léa a réussi les 5 premières leçons de maths du CE1
-      Et que Léa a commencé le défi 1 de maths
-      Quand Léa répond juste à toutes les questions du défi
-      Alors des confettis tombent
-      Et Léa entend l'effet sonore « grande victoire », puis <personnage guide> dit « Bravo Léa ! Tu as relevé le défi 1 ! »
-      Mais aucune célébration de l'univers n'est jouée
-
-      Exemples:
-        | univers             | personnage guide |
-        | Police              | Agent Max        |
+  Règle: La célébration jouée est celle de l'univers du profil au moment du défi relevé
 
     Scénario: Un enfant passé dans l'univers « Sports » voit Coach Léo fêter son premier défi relevé
       Étant donné que Tom a un profil enfant préparé de niveau CE1
@@ -425,6 +419,69 @@ Fonctionnalité: Une célébration propre à chaque univers
       Et « Mon parcours » et « Accueil » mesurent au moins 44 px de haut
 
   # ---------------------------------------------------------------------------------------------------------
+  # Livraison 106e : univers « Police », Agent Max.
+  # ---------------------------------------------------------------------------------------------------------
+
+  Règle: Dans l'univers « Police », Agent Max joue au premier défi relevé sa célébration de l'univers à la place de la célébration commune, avec les mêmes garanties que Coach Léo : image fixe en mouvements réduits, cri de victoire jamais lu, place tenue à 360 px (106e)
+
+    Contexte:
+      Étant donné que Paul a changé l'univers du profil enfant de Léa en « Police »
+
+    @livraison-106e
+    Scénario: Au premier défi relevé dans l'univers « Police », Agent Max retrouve un chiot perdu et le fête, puis félicite Léa
+      Étant donné que Léa a réussi les 5 premières leçons de maths du CE1
+      Et que Léa a commencé le défi 1 de maths
+      Quand Léa répond juste à toutes les questions du défi
+      Alors Agent Max joue la célébration de l'univers « Police » : il retrouve un chiot perdu, puis le chef d'orchestre, le tour en trottinette ou la danse de la victoire
+      Et Léa lit « Enquête résolue ! »
+      Et Léa entend la musique de la célébration d'Agent Max, puis Agent Max dit « Bravo Léa ! Tu as relevé le défi 1 ! »
+      Et Agent Max n'apparaît qu'une fois, dans la célébration de l'univers, la bulle gardant ses paroles
+      Mais la célébration commune n'est pas jouée
+
+    @livraison-106e
+    Plan du Scénario: Le hasard ne choisit que la variante : avec « <variante> », Agent Max retrouve toujours le chiot perdu
+      Étant donné que Léa a réussi les 5 premières leçons de maths du CE1
+      Et que Léa a commencé le défi 1 de maths
+      Et que le hasard de la célébration de l'univers tire « <variante> »
+      Quand Léa répond juste à toutes les questions du défi
+      Alors Agent Max retrouve un chiot perdu, puis <variante>
+      Et la fin du défi annonce « Défi relevé ! »
+
+      Exemples:
+        | variante                 |
+        | le chef d'orchestre      |
+        | le tour en trottinette   |
+        | la danse de la victoire  |
+
+    @livraison-106e
+    Scénario: Avec les mouvements réduits, Léa voit l'image fixe de la célébration de l'univers « Police », sans mouvement, ni confettis, ni confettis du commissariat
+      Étant donné que l'appareil demande des mouvements réduits
+      Et que Léa a réussi les 5 premières leçons de maths du CE1
+      Et que Léa a commencé le défi 1 de maths
+      Quand Léa répond juste à toutes les questions du défi
+      Alors Léa voit l'image fixe de la célébration de l'univers « Police », avec « Enquête résolue ! », sans mouvement
+      Et la fin du défi annonce « Défi relevé ! », sans mouvement
+      Et ni les confettis de la célébration commune ni les confettis du commissariat ne tombent
+
+    @livraison-106e
+    Scénario: Dans l'univers « Police », les lecteurs d'écran annoncent une seule fois « Défi relevé ! », sans lire « Enquête résolue ! »
+      Étant donné que Léa a réussi les 5 premières leçons de maths du CE1
+      Et que Léa a commencé le défi 1 de maths
+      Quand Léa répond juste à toutes les questions du défi
+      Alors les lecteurs d'écran annoncent une seule fois « Défi relevé ! »
+      Mais les lecteurs d'écran n'annoncent ni « Enquête résolue ! » ni le dessin de la célébration
+
+    @livraison-106e
+    Scénario: À 360 px, la célébration de l'univers « Police » tient dans la largeur et ses boutons restent assez grands
+      Étant donné que l'écran de l'appareil mesure 360 px de large
+      Et que Léa a réussi les 5 premières leçons de maths du CE1
+      Et que Léa a commencé le défi 1 de maths
+      Quand Léa répond juste à toutes les questions du défi
+      Alors Léa lit « Enquête résolue ! »
+      Et la page tient dans la largeur de l'écran
+      Et « Mon parcours » et « Accueil » mesurent au moins 44 px de haut
+
+  # ---------------------------------------------------------------------------------------------------------
   # Livraison 106f : univers « Pompiers », Capitaine Sam.
   # ---------------------------------------------------------------------------------------------------------
 
@@ -488,24 +545,8 @@ Fonctionnalité: Une célébration propre à chaque univers
       Et « Mon parcours » et « Accueil » mesurent au moins 44 px de haut
 
   # ---------------------------------------------------------------------------------------------------------
-  # Livraisons suivantes (106e à 106h), exclues de 106a, de 106b, de 106c et de 106d. Leur mise en place sera reprise dans leur livraison.
+  # Livraisons suivantes (106g et 106h), exclues des livraisons 106a à 106f. Leur mise en place sera reprise dans leur livraison.
   # ---------------------------------------------------------------------------------------------------------
-
-  Règle: Chaque univers a sa célébration de l'univers, jouée par son personnage guide, avec son cri de victoire (106e)
-
-    @hors-106a @a-valider
-    Plan du Scénario: Dans l'univers « <univers> », <personnage guide> fête le premier défi relevé à sa façon
-      Étant donné que Paul a changé l'univers du profil enfant de Léa en « <univers> »
-      Et que Léa a réussi les 5 premières leçons de maths du CE1
-      Et que Léa a commencé le défi 1 de maths
-      Quand Léa répond juste à toutes les questions du défi
-      Alors <personnage guide> joue la célébration de l'univers « <univers> » : <action>, puis <variantes>
-      Et Léa lit « <cri> »
-      Et la fin du défi annonce « Défi relevé ! »
-
-      Exemples:
-        | univers             | personnage guide | action                               | variantes                                              | cri                 |
-        | Police              | Agent Max        | il retrouve un chiot perdu           | l'orchestre, la trottinette ou la danse                | Enquête résolue !   |
 
   Règle: La séance qui rend une matière réussie est fêtée par la célébration de l'univers, avec l'annonce « Matière réussie ! » (106g)
 

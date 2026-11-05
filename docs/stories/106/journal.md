@@ -208,6 +208,48 @@ Branche : `feature/106d-celebration-princesses`, partie de `main` (`adb9329`, me
 | Verrous | `base` une fois (08:34 → 09:15 UTC) |
 | Tokens | relevés par le responsable |
 
+## 2026-11-05 (106e)
+
+Livraison **106e** : univers Police (Agent Max). Branche `feature/106e-celebration-police`, partie de `main` (`dbbe378` : 106a, 106b, 106c mergées). Session `session_015z4jmME4gT4h3Qu6mRPUgM`. Branche de base : `main`.
+106d (Princesses) est en cours sur les mêmes fichiers : modèle, scénarios et planche d'abord ; catalogue et scène câblés sur la branche après le merge de 106d et l'intégration de `main`.
+
+- 08:20 UTC : démarrage. Cadrage de #106 déjà validé (« 106 reco tout », 106.28 « cacher », 106.31, 106.34 A / 106.35 oui). Musique « grande victoire » (106.27 fermé). Nom vérifié : « Agent Max » partout (`univers.ts`, glossaire, `AgentMax.tsx`) ; « Agente Mila » ne reste que dans le corps de l'issue (déjà noté dans le modèle) et dans le scénario de #96 qui vérifie son absence.
+- Avancement publié sur #106 (commentaire 6653230991).
+- 08:21 UTC : modèle 106e (`domain-modeler`) lancé. Worktree local `wip/106e` (base : `origin/feature/106d-celebration-princesses`, où Sports et Danse sont déjà sur `commun/`), jamais poussé, pour le domaine, la scène et la planche pendant l'attente du merge de 106d ; RED du catalogue Police lancé dedans.
+- 08:24 UTC : modèle 106e `d19be47` : entrée `police` ; libellés « le chef d'orchestre », « le tour en trottinette », « la danse de la victoire » (106.26) ; « les confettis du commissariat » (106.24) ; trois étoiles à cinq branches dans la maquette (casquette, insigne, plateau de la trottinette) → écusson sans étoile et plateau uni (106.34 A) ; chiot relu : rien de triste. Questions nouvelles : 106.38 (durée de la maquette 8,5 à 10,2 s), 106.39 (étoiles du dessin fixe `AgentMax.tsx` de #96, hors #106).
+- 08:25 UTC : scénarios 106e (`po-acceptance`) lancés.
+- Worktree : RED `179a3fe` vérifié (4 erreurs de typage, toutes sur `police` ; l'univers « pas encore livré » du test de la fin devient `pompier`, pour ne pas croiser 106d). GREEN, scène et planche (`implementer`) lancés, durée selon la reco A de 106.38.
+- 08:28 UTC : CADRAGE PRÊT publié (commentaire 6653348809), RELIS envoyé au responsable. Questions nouvelles : 106.38, 106.39.
+- Worktree (`wip/106e`, jamais poussé) : GREEN `edf66ad` (entrée `police`, `CELEBRANTS`) ; refactor `64980ed` (confettis de scène dans `commun/`, rendu de Sports inchangé) ; scène `deacf54` (`src/univers/celebrations/police/`, ids `police-`, chargée à la demande, 46,6 kB, précachée) ; refactor `94febf0` (`commun/trait.ts`) ; planche `9de2011`. `deno test` : 2881 verts ; `tsc` et build OK. Durée selon la reco A de 106.38 : maquette resserrée à 4,75 à 5,2 s, accélération 1,6 à 1,7.
+- 08:43 UTC : planche relue par l'orchestrateur contre la règle absolue (étincelles agrandies : quatre branches) : rien à signaler. Reportée sur la branche (`0e93603`). ESCALADE publiée (commentaire 6653634376, question 106.40, validation de la planche), RELIS envoyé.
+- Revue intermédiaire (delta du worktree, `64dbaaa..9de2011`) lancée.
+- 08:47 UTC : revue intermédiaire (delta du worktree `64dbaaa..9de2011`) : **APPROUVÉ**, aucun bloquant. Non bloquants : exports et champ `variante` inutiles dans `police/poses.ts` (corrigés, `ddc8123`) ; moteur de Max proche de celui de Léo (jambe, marche) à mettre dans `commun/` plus tard, comme pour Danse et Animaux ; steps à écrire ; correctif de `AgentMax.tsx` (106.39) avant la mise en ligne. Dernier commit relu : `9de2011`.
+- 08:49 UTC : modèle et scénarios reportés dans le worktree ; steps E2E 106e écrits (`5830325`, worktree) : `bddgen` sans étape manquante, `tsc` vert, aucun scénario lancé (verrou `base` chez 106d). Une ligne de `parcours.steps.ts` : « Enquête résolue ! » ajouté au lookahead du step générique « Léa lit », comme le prévoit son commentaire.
+- Attente : merge de 106d, réponses du PO (106.38 à 106.40).
+- 09:52 UTC : réponse du PO (annonce [Responsable] sur #106, commentaire 6654943666, vérifiée) : « merge 106d OK, 106e reco tout, 106.37 garder, 155.1 oui ». 106.38 A (durée resserrée, déjà appliquée dans la scène), 106.39 A (correctif du dessin fixe = issue #158, hors de 106e), 106.40 planche validée (`0e93603`). Réponses reportées dans le modèle. Câblage dès le merge de 106d (PR #157, verrou `merge` chez 106d).
+- 10:00 UTC : 106d mergée (`c744821`). `main` intégrée (`82ed727`) : conflits de documentation résolus en gardant les deux ajouts (modèle reconstruit : `main` + section 106e ; scénarios et acceptance par `po-acceptance` : 106d = R10, **106e = R11**, Plans « pas encore livré » et `@hors-106a` réduits à Pompiers).
+- Report du worktree sur la branche : RED `0f58ca3` (conflit résolu par `test-writer`, `princesse` gardé ; échec vérifié, 4 erreurs sur `police`), GREEN `682594f`, refactors `97462ca` et `c32fe23`, scène `de591d5`, `f874f32`, plus `8523887` (la scène des Princesses utilise aussi `commun/trait.ts`) par `implementer` ; steps `7006ddc` (conflits avec les steps de Lumi résolus par `e2e-tester`). `deno test` : 2883 verts ; lint, format, `tsc`, build OK ; `bddgen` sans étape manquante.
+- 10:10 UTC : review de la branche (`origin/main...0757ff4`) : **APPROUVÉ**, aucun bloquant. Non bloquants traités : `acceptance.md` aligné (106.38 à 106.40 tranchées, `1fa2f31`) ; steps : commentaire du tirage à jour et parole de fin attendue avec `toHaveText` pour les cinq univers. Gardé : la planche `106e-agent-max-ecusson.png` montre l'étoile de la maquette à côté de l'écusson, comme comparaison validée par le PO (jamais montrée à l'enfant).
+- VERROU base demandé (commentaire 6655143697) ; en file derrière #155 (run d'environ 50 min depuis 09:57 UTC, annonce du responsable 6655151738).
+- 10:48 UTC : VERROU base accordé (annonce [Responsable] 6656057787, tableau de #64 vérifié). Sonde OK (3 × 200, 0,46 à 0,71 s).
+- E2E `telephone`, 1 worker, head `6a5b0c0` : `@livraison-106e` **7/7** (2,8 min) ; `@issue-106` hors 106e et `@hors-106a` **42/42** (Sports, Danse, Animaux, Princesses). Le premier lancement du second run a été cassé par l'environnement (serveur Vite arrêté par un `pkill` de l'`e2e-tester` pendant le run : `ERR_CONNECTION_REFUSED`) ; les 17 cas touchés rejoués seuls : verts (8,5 min). Aucun step modifié.
+- 11:25 UTC : LIBÈRE base (commentaire 6656726855).
+
+## Mesures (106e)
+
+| Mesure | Valeur |
+|---|---|
+| Durée | 2026-11-05 08:20 UTC → environ 11:35 UTC (PRÊTE À MERGER) |
+| Attente | réponses du PO (#106.38 à #106.40) et merge de 106d : 08:50 → 10:00 UTC, sans travail en attente (domaine, scène, planche et steps prêts dans le worktree) ; VERROU base : environ 45 min (derrière #155) |
+| Cycles TDD | 1 comportement (entrée `police`, RED puis GREEN) |
+| Review | 1 revue intermédiaire (worktree, APPROUVÉ), 1 review de la branche (APPROUVÉ) ; non bloquants traités |
+| E2E | 2 runs sur `telephone` (7/7 ; 42/42 dont 17 rejoués après un incident d'environnement), aucun KO applicatif |
+| Intégrations de `main` | 1 (`c744821`, avec 106d) : 4 fichiers de documentation et de scénarios en conflit (attendus ; règle 106e renumérotée R11), puis conflits de report dans `celebrations-des-univers.ts`, son test, `SceneDeCelebration.tsx` et les steps (gardés des deux côtés) |
+| Escalades | 1 (planche d'Agent Max, #106.40) ; 2 questions au cadrage (#106.38, #106.39) |
+| Verrous | base (10:48 → 11:25 UTC) |
+| Méthode | comme 106c : worktree local basé sur la branche de 106d (où Sports et Danse étaient déjà sur `commun/`), reporté par cherry-pick après le merge. Leçon : le report a coûté 4 délégations de résolution de conflits (test, code, steps, scénarios) ; un `pkill -f "playwright test"` pendant un run tue aussi le serveur du run suivant |
+| Tokens | relevés par le responsable |
+
 ## Livraison 106f : Pompiers (Capitaine Sam)
 
 Équipe lancée le 2026-11-05 (« graphe 106f »), session `session_015z4jmNHAVw9mZYSfXRtpJx`, branche `feature/106f-celebration-pompiers` partie de `main` (`c744821`). Particularité : pas de maquette ; la maquette et la planche sont dessinées d'abord et validées par le PO avant le câblage. Le câblage attend le merge de 106e (mêmes fichiers).
@@ -217,3 +259,4 @@ Branche : `feature/106d-celebration-princesses`, partie de `main` (`adb9329`, me
 - Modèle (section « Livraison 106f ») et 5 scénarios `@livraison-106f` écrits par l'orchestrateur, sur le gabarit de 106d (aucun concept nouveau : entrée de catalogue, libellés, pétales de la caserne, catalogue exhaustif). Questions 106.41 à 106.43.
 - 11:15 UTC : maquette `docs/maquettes/capitaine-sam-pompiers.html` (dérivée d'Agent Max : corps et moteur de Coach Léo ; scènes de 5,2 à 5,3 s, cri vers 4,4 s) et planche `106f-capitaine-sam-{moments,clair,sombre,tetes}.png`. Relue par l'orchestrateur contre la règle absolue : ni flamme, ni fumée, ni sirène, ni étoile à cinq branches ; point soumis au PO : fronton rouge triangulaire de la caserne à 80 px. CADRAGE PRÊT.
 - 11:24 UTC : réponse du PO « 106f reco tout » ([annonce du responsable](https://github.com/SBA-dev/github-move/issues/106#issuecomment-6656757030)) : 106.41 noms retenus, 106.42 maquette et planche validées, 106.43 A (dessin fixe : issue #161). Reportées dans le modèle et le README des maquettes. Attente : merge de 106e avant le câblage.
+- 11:50 UTC : 106e mergée (PR #160, `8f976fa`). `main` intégrée : conflits de documentation et de scénarios résolus en gardant les deux ajouts (sections 106e puis 106f).
