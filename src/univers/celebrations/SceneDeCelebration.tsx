@@ -38,7 +38,7 @@ const SceneDesPrincesses = chargerSansEchec(chargerPrincesses);
 const SceneDeLaPolice = chargerSansEchec(chargerPolice);
 const SceneDesPompiers = chargerSansEchec(chargerPompiers);
 
-/** Un univers célébré sans chargeur ne compile pas : le préchargement ne peut pas oublier une scène. */
+/** Un univers sans chargeur ne compile pas : le préchargement ne peut pas oublier une scène. */
 const CHARGEURS_DES_SCENES: Record<CleUnivers, () => Promise<unknown>> = {
   sports: chargerSports,
   danse: chargerDanse,
