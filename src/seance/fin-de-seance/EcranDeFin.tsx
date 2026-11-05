@@ -146,11 +146,12 @@ export function EcranDeFin({ seance, univers, niveau, onDireLaFin, meilleuresEto
   const { pret: matierePrete, reussie: matiereReussie } = useMatiereReussieParLaSeance(entrees, terminee !== undefined);
   const [celebration, setCelebration] = useState<CelebrationDeLaFin | undefined>();
   const [tenuePortee] = useTenuePortee(seance.enfant);
+  const faitsDeLaFin = useMemo(() => ({ defiRelevePourLaPremiereFois: false, matiereReussieParLaSeance: matiereReussie, tenueRecue: tenue }), [matiereReussie, tenue]);
   useEffect(() => {
     if (!matierePrete || !tenuePrete || celebration) return;
-    setCelebration(celebrationDeLaFin({ defiRelevePourLaPremiereFois: false, matiereReussieParLaSeance: matiereReussie, tenueRecue: tenue }, univers.cle, hasardDuNavigateur));
-  }, [matierePrete, tenuePrete, matiereReussie, tenue, univers.cle, celebration]);
-  const tenueDeLaScene = celebration && cleDeTenueDeLaScene(tenueDeLaCelebrationDeLUnivers({ defiRelevePourLaPremiereFois: false, matiereReussieParLaSeance: matiereReussie, tenueRecue: tenue }, tenuePortee));
+    setCelebration(celebrationDeLaFin(faitsDeLaFin, univers.cle, hasardDuNavigateur));
+  }, [matierePrete, tenuePrete, faitsDeLaFin, univers.cle, celebration]);
+  const tenueDeLaScene = celebration && cleDeTenueDeLaScene(tenueDeLaCelebrationDeLUnivers(faitsDeLaFin, tenuePortee));
   const musiqueDeLaCelebration = celebration?.sorte === "univers" ? celebration.celebration.musique : undefined;
   const { prete: quetePrete, accomplie: queteAccomplie } = useQueteAccomplieParLaSeance(queteAvant, seance.enfant, terminee !== undefined);
   const accueil = useRef<HTMLButtonElement>(null);
@@ -208,7 +209,7 @@ export function EcranDeFin({ seance, univers, niveau, onDireLaFin, meilleuresEto
           </>
         )}
       </div>
-      <AnnonceDeLaTenue univers={univers} tenue={tenue} sansPersonnage={sceneAffichee} />
+      <AnnonceDeLaTenue univers={univers} tenue={tenue} sansPersonnageGuide={sceneAffichee} />
       <AnnonceDuNouvelEpisode episode={episode} />
       <div className="pour-le-badge" role="status" data-testid="annonce-de-nouveau-badge">
         {badge && (

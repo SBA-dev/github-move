@@ -33,6 +33,10 @@ type Props = {
   readonly onAccueil: () => void;
 };
 
+function faitsDeLaFinDuDefi(defiRelevePourLaPremiereFois: boolean) {
+  return { defiRelevePourLaPremiereFois, matiereReussieParLaSeance: false, tenueRecue: undefined };
+}
+
 /**
  * La fin du défi : le défi est relevé (avec ou sans erreurs), sans étoile ni récompense de la cabane. La première fois il est annoncé
  * et fêté par la célébration de l'univers de l'enfant si elle existe ; sinon, comme rejoué, par la célébration commune (confettis).
@@ -65,7 +69,7 @@ export function FinDuDefi({ seance, prenom, personnage, univers, relevesAvant, o
         setReleve(relevee);
         const issueDuDefi = defiReleveParLaSeance(avant, relevee);
         setCelebration(
-          celebrationDeLaFin({ defiRelevePourLaPremiereFois: issueDuDefi.annonce !== undefined, matiereReussieParLaSeance: false, tenueRecue: undefined }, univers.cle, hasardDuNavigateur),
+          celebrationDeLaFin(faitsDeLaFinDuDefi(issueDuDefi.annonce !== undefined), univers.cle, hasardDuNavigateur),
         );
         setIssue(issueDuDefi);
       });
@@ -97,15 +101,17 @@ export function FinDuDefi({ seance, prenom, personnage, univers, relevesAvant, o
   return (
     <div className="fin-de-seance fin-du-defi" data-testid="fin-du-defi">
       {celebration?.sorte === "commune" && <Confettis />}
-      {celebration?.sorte === "univers" && <SceneDeCelebration
+      {celebration?.sorte === "univers" && (
+        <SceneDeCelebration
           celebration={celebration.celebration}
-          tenue={cleDeTenueDeLaScene(tenueDeLaCelebrationDeLUnivers({ defiRelevePourLaPremiereFois: true, matiereReussieParLaSeance: false, tenueRecue: undefined }, tenuePortee))}
-        />}
+          tenue={cleDeTenueDeLaScene(tenueDeLaCelebrationDeLUnivers(faitsDeLaFinDuDefi(issue?.annonce !== undefined), tenuePortee))}
+        />
+      )}
       <ParoleDuGuide
         personnage={personnage}
         univers={univers}
         onReecouter={reecouter}
-        sansPersonnage={celebration?.sorte === "univers"}
+        sansPersonnageGuide={celebration?.sorte === "univers"}
       />
       <div className="pour-le-defi" role="status" data-testid="annonce-du-defi-releve">
         {issue?.annonce && <p>{issue.annonce}</p>}

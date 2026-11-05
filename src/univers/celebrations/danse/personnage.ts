@@ -120,16 +120,17 @@ export function creerLili(racine: SVGSVGElement, tenue?: CleDeTenue) {
     const recouvrement = clamp01((-cw - .05) / .2), basDeLaTete = (x: number) => Math.sqrt(Math.max(0, (R + 2) ** 2 - x * x)) + 1;
     // de face, la frange descend en douceur vers les tempes et la chevelure épouse le crâne : aucune mèche ne dépasse
     const descente = lerp(-cote, 14, deFace), bord = lerp(R + 1, Math.sqrt((R + 1.5) ** 2 - 11 ** 2), deFace);
-    const pointsDeLaFrange: number[] = [];
+    const hauteurDeLaFrange = (x: number) => {
+      const ligne = yC - (x / R) * sw * pente + descente * (Math.abs(x) / R) ** lerp(3, 1.6, deFace);
+      return lerp(ligne, basDeLaTete(x), recouvrement);
+    };
     let d = "";
     for (let i = 0; i <= 12; i++) {
       const x = -bord + 2 * bord * i / 12;
-      const ligne = yC - (x / R) * sw * pente + descente * (Math.abs(x) / R) ** lerp(3, 1.6, deFace);
-      const y = lerp(ligne, basDeLaTete(x), recouvrement);
-      pointsDeLaFrange.push(y);
+      const y = hauteurDeLaFrange(x);
       d += `${i ? "L" : "M"}${r1(x)} ${r1(y)}`;
     }
-    const yGauche = r1(pointsDeLaFrange[0] ?? 0);
+    const yGauche = r1(hauteurDeLaFrange(-bord));
     d += ` C${r1(bord + lerp(4, 3, deFace))} ${r1(lerp(-14, -20, deFace))} ${R - 10} -25 ${R - 10} -25 Q0 ${lerp(-37, -46, deFace)} ${-R + 10} -25 C${-R + 10} -25 ${r1(-bord - lerp(4, 3, deFace))} ${r1(lerp(-14, -20, deFace))} ${r1(-bord)} ${yGauche} Z`;
     poser(n("cheveux-forme"), "d", d);
     // nuque, visible de dos : l'ombre de la chevelure
