@@ -172,6 +172,7 @@ function SeanceEnCours(
     return abandonner;
   }, [commencer, abandonner]);
 
+  const [celebrationDeLUnivers, setCelebrationDeLUnivers] = useState(false);
   const { titre, niveauEtMatiere } = pageDeLaLecon(lecon);
   const etape = seance.etapeDeLeconEnCours();
   const exerciceJoue = seance.exerciceEnCours();
@@ -210,7 +211,7 @@ function SeanceEnCours(
         </div>
         {!finie && <RecipientDeProgression avancement={seance.avancement()} />}
         <div className="guide-et-parole">
-          <PersonnageGuide univers={univers} humeur={deroulement.humeur} />
+          {!celebrationDeLUnivers && <PersonnageGuide univers={univers} humeur={deroulement.humeur} />}
           <BulleDuPersonnageGuide
             texte={paroleDeLaBulle?.texte}
             nature={paroleDeLaBulle?.nature}
@@ -264,6 +265,7 @@ function SeanceEnCours(
             onToutesLesLecons={onToutesLesLecons}
             onReleverLeDefi={onReleverLeDefi}
             onAccueil={onAccueil}
+            onCelebrationDeLUnivers={setCelebrationDeLUnivers}
           />
         )}
         {!finie && position !== undefined && exerciceDeLaLecon && (

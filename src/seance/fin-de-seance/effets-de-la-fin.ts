@@ -20,6 +20,6 @@ export function effetsDeLaFinDeSeance(
     objetRecu: nouveautes.objet !== undefined,
     tenueRecue: nouveautes.tenue !== undefined,
     episodeOuvert: nouveautes.episode !== undefined,
-    musiqueDeLaCelebration: undefined,
+    musiqueDeLaCelebration: nouveautes.musiqueDeLaCelebration,
   });
 }
