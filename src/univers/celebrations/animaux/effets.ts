@@ -13,6 +13,8 @@ const NOISETTES_DU_JONGLAGE = 3;
 const HAUTEUR_DU_LANCER = 95;
 const NOMBRE_DE_MIETTES = 6;
 const NOMBRE_D_ETOILES = 3;
+const TRAITS_DE_L_ECLAT = 6;
+const NOMBRE_DE_RAYONS = 12;
 const DUREE_DE_LA_CROQUEE = 1.3;
 /** Le temps entre deux bouchées, en secondes du temps de la maquette. */
 const TEMPS_D_UNE_BOUCHEE = .24;
@@ -32,9 +34,9 @@ export function creerLesEffets(racine: SVGSVGElement) {
   n("noisette-devant").innerHTML = dessinDeLaNoisette(1);
   n("jonglage").innerHTML = Array.from({ length: NOISETTES_DU_JONGLAGE }, () => `<g>${dessinDeLaNoisette(.85)}</g>`).join("");
   n("miettes").innerHTML = Array.from({ length: NOMBRE_DE_MIETTES }, () => `<circle r="2"/>`).join("");
-  n("crunch").innerHTML = Array.from({ length: 6 }, (_, i) => `<line x1="0" y1="-14" x2="0" y2="-22" transform="rotate(${-60 + i * 24})"/>`).join("");
+  n("crunch").innerHTML = Array.from({ length: TRAITS_DE_L_ECLAT }, (_, i) => `<line x1="0" y1="-14" x2="0" y2="-22" transform="rotate(${-60 + i * 24})"/>`).join("");
   n("etoiles").innerHTML = Array.from({ length: NOMBRE_D_ETOILES }, () => etoile).join("");
-  n("rayons").innerHTML = Array.from({ length: 12 }, (_, i) => `<line x1="0" y1="-40" x2="0" y2="-64" transform="rotate(${i * 30})" stroke="${COULEURS_DES_RAYONS[i % 4]}" stroke-width="5" stroke-linecap="round"/>`).join("");
+  n("rayons").innerHTML = Array.from({ length: NOMBRE_DE_RAYONS }, (_, i) => `<line x1="0" y1="-40" x2="0" y2="-64" transform="rotate(${i * 30})" stroke="${COULEURS_DES_RAYONS[i % 4]}" stroke-width="5" stroke-linecap="round"/>`).join("");
 
   /** La noisette dorée : elle tombe de l'arbre, Noisette l'attrape, puis la tient (entre les deux mains ou dans une seule) ou la croque. */
   function dessinerLaNoisetteDoree(scenario: ScenarioDesAnimaux, t: number, { pose: p, mains }: Dessin) {

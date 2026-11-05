@@ -1,3 +1,4 @@
+import { au } from "../commun/tableaux.ts";
 import { suiteDeNombres } from "../commun/suite-de-nombres.ts";
 
 const COULEURS = ["#8FD98A", "#F7D86A", "#FFC93C", "#F4A83C", "#6CBF84"];
@@ -38,7 +39,7 @@ function semer(): Feuille[] {
     vrot: (suite() - .5) * 4,
     phase: suite() * 6.3,
     sol: 300 + suite() * 150,
-    couleur: COULEURS[i % COULEURS.length] ?? "#8FD98A",
+    couleur: au(COULEURS, i % COULEURS.length),
     pose: false,
     retard: suite() * 1.2,
   }));

@@ -15,10 +15,10 @@ const FESTONS_PAR_SEGMENT = 3;
 
 type Segment = { angle: number; vitesse: number };
 
-/** Une courbe lisse qui passe entre les points : chaque point est un point de contrôle, la courbe va aux milieux. */
-function courbe(P: readonly Point[]): string {
+/** Une courbe lisse qui passe entre les points : chaque point est un point de contrôle, la courbe va aux milieux. Elle démarre par `M` (nouveau tracé) ou par `L` (suite d'un tracé). */
+function courbe(P: readonly Point[], depart: "M" | "L" = "M"): string {
   const premier = au(P, 0);
-  let d = `M${r1(premier.x)} ${r1(premier.y)}`;
+  let d = `${depart}${r1(premier.x)} ${r1(premier.y)}`;
   for (let i = 1; i < P.length - 1; i++) {
     const a = au(P, i), b = au(P, i + 1);
     d += ` Q${r1(a.x)} ${r1(a.y)} ${r1((a.x + b.x) / 2)} ${r1((a.y + b.y) / 2)}`;
@@ -101,7 +101,7 @@ export function creerLaQueue(racine: SVGSVGElement) {
     const dedans = bande(.6), dehors = bande(.92), retour = dehors.slice(1, 6).reverse();
     const premierDuRetour = au(retour, 0);
     const dessinDuVentre = courbe(dedans.slice(1, 6)) + ` L${r1(premierDuRetour.x)} ${r1(premierDuRetour.y)}`
-      + courbe(retour).replace(/^M[^ ]+ [^ ]+/, (m) => "L" + m.slice(1)) + " Z";
+      + courbe(retour, "L") + " Z";
     poser(forme, "d", dessin);
     poser(ventre, "d", dessinDuVentre);
     poser(ombre, "d", courbe(bande(.18).slice(1, 6)));
