@@ -302,8 +302,9 @@ Example mapping :
   célébration commune, avec la même annonce « Matière réussie ! ». L'annonce dépend du fait, pas de la scène
   (invariants 1 et 8 ; `titreDeLaMatiereReussie()` hors de `CelebrationDeLUnivers`, modèle, section « Livraison 106g »).
   Le scénario E2E « Pompiers » (univers pas encore livré) est retiré : 106f, mergée avant les E2E de 106g, livre
-  Pompiers, il n'aurait plus de sujet. La règle reste couverte par les tests unitaires du domaine
-  (`celebration-de-la-fin_test.ts` : pompier → commune ; annonce tirée du seul fait).
+  Pompiers, il n'aurait plus de sujet. Depuis 106f, `celebration-de-la-fin_test.ts` vérifie Pompiers → célébration
+  de l'univers : le cas « univers sans célébration » n'a plus d'exemple, les six univers étant livrés. L'annonce
+  « Matière réussie ! » ne dépend toujours que du fait : `titreDeLaMatiereReussie()` ne prend aucun paramètre.
 - **R14** : mouvements réduits → image fixe de la scène de Coach Léo avec « BUT ! », « Matière réussie ! » sans
   mouvement, aucun confetti (ni ceux de la scène, ni ceux de la célébration commune ; 106.15, 106.24).
 
