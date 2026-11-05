@@ -14,3 +14,6 @@ Branche de base : `main` (`2a69a87`). Branche : `feature/163-reponse-fausse-anim
 - 23:30 UTC : réponses du PO intégrées : modèle et décision 0042 (`domain-modeler`), scénarios avec la dictée (`po-acceptance`, 41 scénarios, 51 cas). Dictée : la scène se joue au mot corrigé (lettre en rouge), car la dictée ne juge qu'au mot complet (#19, #128).
 - 23:45 UTC : maquette `docs/maquettes/reponse-fausse-coach-leo.html` et planche 163a (`docs/stories/163/captures/163a-coach-leo-*.png`) : 1,5 s mesurée, de face, ballon sur un petit poteau, image fixe sans bulle. Relue par l'orchestrateur au regard de la règle absolue : conforme.
 - Push refusé par GitHub (« fatal error in commit_refs_rules ») de 23:25 à au moins 23:45, pour tout commit, même trivial.
+- 23:55 UTC : planche 163a présentée au PO (163.19 à 163.21). Push rétabli (`ceed540`).
+- 00:00 à 00:20 UTC : TDD du domaine de 163a, 3 cycles (`d897efa`→`87a5b5b`, `34fab84`→`ea7d8eb`, `b2dfcfd`→`c2fe32d`), comportements 1 à 16 verts (2925 tests). Tests 9 à 11 verts dès leur écriture (caractérisation du catalogue).
+- Revue intermédiaire delta (`ceed540..c2fe32d`) : APPROUVÉ. Non bloquants corrigés : test du comportement 3 tautologique (`9c3de94`), renvois « à valider » de nos ajouts au glossaire et à la context map. Dernier commit relu : `c2fe32d`.
