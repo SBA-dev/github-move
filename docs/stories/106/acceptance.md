@@ -358,6 +358,12 @@ cri de victoire, le personnage guide portant la tenue reçue ; elle remplace la 
 Une séance complète est longue en E2E : 7 scénarios, dont un Plan de 3 exemples, avec Coach Léo (Contexte du fichier :
 Léa en « Sports ») sauf dans le Plan.
 
+Mise à jour de #102 : dans le Plan « Une séance qui fait recevoir une tenue <cas> fait entendre <effets sonores> avant
+la phrase de fin », l'exemple « à 1 étoile, sans autre nouveauté » attend désormais « grande victoire » puis
+« découverte » (au lieu de « séance terminée » puis « découverte ») : la danse de victoire joue la musique de la
+célébration de l'univers, encore « grande victoire » (106.12, 106.27), à la place du premier effet sonore (106.46).
+L'autre exemple est inchangé ; aucun autre scénario de #102 ne parle du petit dessin de l'encart (106.50).
+
 | # | Règle | Scénarios (106h) |
 |---|---|---|
 | R15 | Au palier des tenues, le personnage guide joue la danse de victoire : sa célébration de l'univers, à la place de la célébration commune, en portant la tenue reçue ; l'annonce de la tenue reçue (#102) reste | La séance qui fait recevoir une écharpe rayée fait jouer à Coach Léo sa célébration de l'univers en la portant · Coach Léo qui porte déjà une tenue fait sa danse de victoire avec la tenue qu'il vient de recevoir (petit dessin de l'encart caché, 106.50) |
