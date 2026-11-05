@@ -164,6 +164,7 @@ Fonctionnalité: Refonte visuelle de l'application de l'enfant
     # Réponse 96.5 : dessin fixe des maquettes ; Capitaine Sam garde son dessin actuel (jusqu'à #161) ; animations de célébration dans #106.
     # #158 (reco A de #106.39) : l'écusson bleu et blanc de #130/#131 et de 106e remplace les deux étoiles dorées (106.34, 106.35).
     # #161 (reco A de #106.43) : Capitaine Sam reçoit le dessin validé de 106f (#106.42), casque à écusson goutte d'eau sans étoile (106.34, 106.35).
+    # #168 (reco de #106.52) : Lili reçoit la Lili de face validée de 106h (#106.51), frange lisse et tutu à festons, sans étoile (106.34, 106.35).
     Plan du Scénario: Dans l'univers « <univers> », <personnage guide> a <son dessin>
       Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « <univers> »
       Quand Léa arrive sur son accueil
@@ -172,7 +173,7 @@ Fonctionnalité: Refonte visuelle de l'application de l'enfant
       Exemples:
         | univers             | personnage guide | son dessin                                                                                                                 |
         | Sports              | Coach Léo        | le dessin validé : cheveux courts, sans casquette, maillot bleu                                                            |
-        | Danse               | Lili             | le dessin validé : queue de cheval haute, justaucorps violet et tutu rose                                                  |
+        | Danse               | Lili             | le dessin validé : queue de cheval haute, frange lisse, justaucorps violet et tutu rose à festons, sans étoile             |
         | Animaux de la forêt | Noisette         | le dessin validé : petit écureuil rond à grosse queue en panache                                                           |
         | Princesses et fées  | Lumi             | le dessin validé : ailes, tiare et robe rose jusqu'aux genoux                                                              |
         | Police              | Agent Max        | le dessin validé : casquette de police à écusson bleu et blanc, chemise bleue et pantalon, sans étoile                     |
