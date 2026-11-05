@@ -37,14 +37,32 @@ Deno.test("la variante de la célébration Danse est tirée par le hasard parmi 
   assertEquals(variantes, ["jete", "ruban", "sauts"]);
 });
 
+Deno.test("le défi relevé dans l'univers Animaux est fêté par le cri de victoire « Hourra ! » sur la grande victoire", () => {
+  const celebration = celebrationDe("defiReleve", "animaux", hasardFixe(0));
+
+  assertEquals(celebration?.univers, "animaux");
+  assertEquals(celebration?.moment, "defiReleve");
+  assertEquals(celebration?.cri, "Hourra !");
+  assertEquals(celebration?.musique, "grandeVictoire");
+});
+
+Deno.test("la variante de la célébration Animaux est tirée par le hasard parmi jongle, mange et joues", () => {
+  const variantes = [0, 0.5, 0.99].map((tirage) =>
+    celebrationDe("defiReleve", "animaux", hasardFixe(tirage))?.variante.cle
+  );
+
+  assertEquals(variantes, ["jongle", "mange", "joues"]);
+});
+
 Deno.test("le domaine publie les clés de variante de chaque univers célébré", () => {
   assertEquals(VARIANTES_DES_UNIVERS, {
     sports: ["glissade", "avion", "danse"],
     danse: ["jete", "ruban", "sauts"],
+    animaux: ["jongle", "mange", "joues"],
   });
 });
 
-for (const univers of ["sports", "danse"] as const) {
+for (const univers of ["sports", "danse", "animaux"] as const) {
   Deno.test(`la variante tirée dans l'univers ${univers} appartient aux clés publiées par le domaine`, () => {
     const cle = celebrationDe("defiReleve", univers, hasardFixe(0.5))?.variante.cle;
     const clesPubliees: readonly string[] = VARIANTES_DES_UNIVERS[univers];
@@ -69,7 +87,7 @@ Deno.test("les clés de variante publiées pour Sports sont typées sur les seul
   assertEquals(clesDesSports.length, 3);
 });
 
-for (const cle of ["animaux", "princesse", "police", "pompier"] as const) {
+for (const cle of ["princesse", "police", "pompier"] as const) {
   Deno.test(`l'univers ${cle}, pas encore livré, n'a pas de célébration de l'univers : la fin garde la célébration commune`, () => {
     const celebration = celebrationDe("defiReleve", cle, hasardFixe(0));
 
