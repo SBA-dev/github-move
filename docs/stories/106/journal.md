@@ -231,3 +231,21 @@ Livraison **106e** : univers Police (Agent Max). Branche `feature/106e-celebrati
 - Report du worktree sur la branche : RED `0f58ca3` (conflit résolu par `test-writer`, `princesse` gardé ; échec vérifié, 4 erreurs sur `police`), GREEN `682594f`, refactors `97462ca` et `c32fe23`, scène `de591d5`, `f874f32`, plus `8523887` (la scène des Princesses utilise aussi `commun/trait.ts`) par `implementer` ; steps `7006ddc` (conflits avec les steps de Lumi résolus par `e2e-tester`). `deno test` : 2883 verts ; lint, format, `tsc`, build OK ; `bddgen` sans étape manquante.
 - 10:10 UTC : review de la branche (`origin/main...0757ff4`) : **APPROUVÉ**, aucun bloquant. Non bloquants traités : `acceptance.md` aligné (106.38 à 106.40 tranchées, `1fa2f31`) ; steps : commentaire du tirage à jour et parole de fin attendue avec `toHaveText` pour les cinq univers. Gardé : la planche `106e-agent-max-ecusson.png` montre l'étoile de la maquette à côté de l'écusson, comme comparaison validée par le PO (jamais montrée à l'enfant).
 - VERROU base demandé (commentaire 6655143697) ; en file derrière #155 (run d'environ 50 min depuis 09:57 UTC, annonce du responsable 6655151738).
+- 10:48 UTC : VERROU base accordé (annonce [Responsable] 6656057787, tableau de #64 vérifié). Sonde OK (3 × 200, 0,46 à 0,71 s).
+- E2E `telephone`, 1 worker, head `6a5b0c0` : `@livraison-106e` **7/7** (2,8 min) ; `@issue-106` hors 106e et `@hors-106a` **42/42** (Sports, Danse, Animaux, Princesses). Le premier lancement du second run a été cassé par l'environnement (serveur Vite arrêté par un `pkill` de l'`e2e-tester` pendant le run : `ERR_CONNECTION_REFUSED`) ; les 17 cas touchés rejoués seuls : verts (8,5 min). Aucun step modifié.
+- 11:25 UTC : LIBÈRE base (commentaire 6656726855).
+
+## Mesures (106e)
+
+| Mesure | Valeur |
+|---|---|
+| Durée | 2026-11-05 08:20 UTC → environ 11:35 UTC (PRÊTE À MERGER) |
+| Attente | réponses du PO (#106.38 à #106.40) et merge de 106d : 08:50 → 10:00 UTC, sans travail en attente (domaine, scène, planche et steps prêts dans le worktree) ; VERROU base : environ 45 min (derrière #155) |
+| Cycles TDD | 1 comportement (entrée `police`, RED puis GREEN) |
+| Review | 1 revue intermédiaire (worktree, APPROUVÉ), 1 review de la branche (APPROUVÉ) ; non bloquants traités |
+| E2E | 2 runs sur `telephone` (7/7 ; 42/42 dont 17 rejoués après un incident d'environnement), aucun KO applicatif |
+| Intégrations de `main` | 1 (`c744821`, avec 106d) : 4 fichiers de documentation et de scénarios en conflit (attendus ; règle 106e renumérotée R11), puis conflits de report dans `celebrations-des-univers.ts`, son test, `SceneDeCelebration.tsx` et les steps (gardés des deux côtés) |
+| Escalades | 1 (planche d'Agent Max, #106.40) ; 2 questions au cadrage (#106.38, #106.39) |
+| Verrous | base (10:48 → 11:25 UTC) |
+| Méthode | comme 106c : worktree local basé sur la branche de 106d (où Sports et Danse étaient déjà sur `commun/`), reporté par cherry-pick après le merge. Leçon : le report a coûté 4 délégations de résolution de conflits (test, code, steps, scénarios) ; un `pkill -f "playwright test"` pendant un run tue aussi le serveur du run suivant |
+| Tokens | relevés par le responsable |
