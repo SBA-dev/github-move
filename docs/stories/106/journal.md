@@ -117,6 +117,55 @@ Branche de base : `main` (`597a4a5`). Branche : `feature/106b-celebration-danse`
 - Pas de CI sur la PR.
 - Mesures mises à jour : intégrations de `main` 2 (`af47f19` sans conflit, `adb9329` avec 1 conflit d'imports) ; E2E 4 runs (dont le rejeu sous verrou `merge`) ; attente de l'autorisation de merge : environ 5 h 50 (nuit).
 
+---
+
+# Livraison 106c : univers Animaux de la forêt (Noisette)
+
+Branche de base : `main` (`af47f19`). Branche : `feature/106c-celebration-animaux`.
+Équipe lancée par `/graphe` (« graphe 106c », issue de coordination #64), session `session_015z4jmLxTprDR2qh6vJhusW`.
+106b (Danse, PR #154) est en cours sur les mêmes fichiers : modèle, scénarios et planche d'abord ; catalogue et scènes câblés après le merge de 106b et l'intégration de `main`.
+
+## 2026-11-05
+- 00:50 UTC : démarrage. Cadrage de #106 déjà validé (« 106 reco tout », 106.28 « cacher ») ; maquette `noisette-animaux.html` validée par le PO le 2026-10-27. Musique : « grande victoire » (106.27 toujours fermé). Structure reprise de la branche de 106b (`VARIANTES_DES_UNIVERS`, union discriminée, `React.lazy`, `commun/`, ids préfixés).
+- 00:55 UTC : complément de modèle 106c (`domain-modeler`) et scénarios 106c (`po-acceptance`) lancés en parallèle.
+- 01:00 UTC : modèle 106c `fc0db0d` (entrée `animaux` dans les structures de 106b ; libellés « le jonglage », « la noisette croquée », « les joues pleines » d'après la maquette, 106.26 ; « les feuilles de la forêt » = 106.24 ; règle absolue détaillée pour la noisette croquée et les joues pleines ; README des maquettes « il » → « elle » à corriger dans 106c).
+- 01:05 UTC : scénarios 106c `1f1f1a4` : Règle R9, 5 scénarios `@livraison-106c` (7 cas), sur le modèle de 106b. 12 étapes nouvelles (steps à écrire après le merge de 106b, qui pose `celebration-de-l-univers.steps.ts`).
+- Question nouvelle 106.31 (tenue portée pendant la célébration) : ni la scène Sports ni la scène Danse ne dessinent la tenue de #102 ; reco : renvoyer à 106h pour tous les univers.
+- TDD du domaine préparé dans un worktree local (106c + 106b, jamais poussé) : RED `b285360` vérifié (5 erreurs de typage, toutes sur `animaux`). Les commits seront repris sur la branche après le merge de 106b.
+- GREEN `564b353` (worktree) : entrée `animaux` (clés, « Hourra ! », `grandeVictoire`, `CELEBRANTS`). `deno test` : 2812 verts.
+- Câblage préparé dans le worktree : scène de Noisette `5ad4636` (`src/univers/celebrations/animaux/`, ids `animaux-`, chargée à la demande, 26,3 kB, précachée), `switch` exhaustif `b7fbe4f`, yeux grands ouverts en fin de noisette croquée `b69901d` (les paupières mi-closes de la maquette donnaient un air narquois). Bouches fermées, miettes réduites et sorties des mains (règle absolue).
+- Planche (`106c-noisette-clair.png`, `-sombre.png`, `-moments.png`) relue par l'orchestrateur contre la règle absolue : rien à signaler. Planche et README (« elle ») repris sur la branche (`972bea8`, `e8a44ff`) : fichiers sans conflit avec 106b. Présentée au PO (validation #106.32).
+
+### Revue intermédiaire du bloc (worktree, `2010ec8..ff5551d`)
+- À CORRIGER, un bloquant : un lien `node_modules` (créé par l'orchestrateur pour le worktree) commité dans le GREEN, car `.gitignore` ne couvre que `node_modules/`. Corrigé : historique local refait sans le lien (`wip/106c-propre` : GREEN `ceed1d7`, scène `e52c78a`, `switch` `2866d64`, yeux `fde10a7`), contenu identique ; `/node_modules` ajouté au `.gitignore` (`chore`).
+- Non bloquants traités : image fixe jamais sur un clignement, constantes nommées, tracé de la queue sans réécriture par regex. Notés pour après le merge de 106b : Sports et Danse passent sur `commun/expressions.ts` et `commun/tableaux.ts` (avant 106d) ; garde de type pour `PoseDeMain` dans `commun/mains.ts` ; `fix` des yeux à fusionner dans le câblage avant la PR ; modèle 106c à aligner sur la réponse à #106.31.
+- 07:07 UTC : réponse du PO (annonce [Responsable] sur #64) : « 106c reco tout ». 106.31 renvoyée à 106h (pas de tenue dans la scène), 106.32 planche validée, 106.33 jonglage comme la maquette ; 106.35 (posée par 106d, « oui ») : aucune étoile à cinq branches chez Noisette, appliquée directement dans 106c (scène pas encore mergée). Docs `dd59642`.
+- 07:24 UTC : 106b mergée (`4742309`, annonce [Responsable]). `main` intégrée (`9fedc68`) : conflits de documentation et de scénarios résolus en gardant 106b puis 106c ; ligne d'introduction qui commençait par un tag corrigée (`d664353`).
+- Report des commits du worktree : RED `b7acc83`, GREEN `378fc97`, scène `f37c35d` (correctif des yeux fusionné), `switch` exhaustif `dae19ef`, table des chargeurs du préchargement `4520f6b` (conflit avec le préchargement de 106b résolu par `implementer`), `ce6aa73`, `35b168b`, `a0d9e98` (106.35). `deno test` : 2879 verts ; `tsc` et build OK.
+- Steps E2E `c4cf357` (non lancés). VERROU base demandé, 2e derrière #155.
+- Review de la branche : APPROUVÉ. Non bloquants traités : `cc6891e` (préchargement sans conversion de type), `3a70063` (commentaire du `.gitignore`), `8a78a5a` (forme d'acceptance). Hors 106c : le ruban de Lili dessine encore une étoile à cinq branches (`danse/effets.ts`), 106.35 à appliquer à Lili (signalé au responsable).
+
+### E2E (mise au point, `telephone`, 1 worker, sous VERROU base)
+- VERROU base accordé à 07:35 UTC (2e dans la file, derrière #155). Sonde : 3 appels `admin/users` en 200, de 0,4 à 1,1 s.
+- HEAD `a34f9c7` : `@livraison-106c` **7/7 verts** (3,0 min) ; `@issue-106` hors 106c (Sports et Danse, qui partagent `SceneDeCelebration.tsx` et le préchargement) **30/30 verts** (10,4 min). Aucun KO, aucune relance. LIBÈRE base.
+- Navigateur : contournement `pw/` du scratchpad (`chromium_headless_shell-1194` qui pointe vers la 1243), sans `playwright install`.
+- PR #156 ouverte en brouillon.
+
+## Mesures (106c)
+
+| Mesure | Valeur |
+|---|---|
+| Durée | 2026-11-05 00:50 UTC → environ 08:00 UTC (PRÊTE À MERGER), dont environ 1 h 10 de travail le soir et 45 min le matin |
+| Attente | réponse du PO (#106.31 à #106.33) et merge de 106b : la nuit, de 01:55 à 07:07 UTC, sans travail en attente (domaine, scène et planche déjà prêts dans le worktree) ; VERROU base : environ 7 min |
+| Cycles TDD | 1 comportement (entrée `animaux`, RED puis GREEN) |
+| Review | 1 revue intermédiaire (À CORRIGER : lien `node_modules`, puis corrigé), 1 review de la branche (APPROUVÉ), 1 review finale du delta (steps) |
+| E2E | 2 runs sur `telephone` (7/7, puis 30/30), aucun KO |
+| Intégrations de `main` | 1 (`4742309`, avec 106b et #137) : 4 conflits de documentation et de scénarios (attendus, sections au même endroit), 1 conflit de code (`SceneDeCelebration.tsx`, préchargement de 106b) |
+| Escalades | 1 (planche de Noisette et #106.33) ; 1 question au cadrage (#106.31) |
+| Verrous | base (07:35 → 07:52 UTC) |
+| Méthode | domaine, scène et planche préparés dans un worktree local (106c + 106b, jamais poussé) pendant l'attente du merge de 106b, puis reportés par cherry-pick : aucun temps perdu, mais un risque de perte si le conteneur avait été repris |
+| Tokens | relevés par le responsable |
+
 ## Livraison 106d : Princesses et fées (Lumi)
 
 Branche : `feature/106d-celebration-princesses`, partie de `main` (`adb9329`, merge de #137). Base : `main`.
