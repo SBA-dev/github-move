@@ -77,6 +77,13 @@ export function creerLumi(racine: SVGSVGElement) {
     deplacer(n(`pied-${c}`), `translate(${r1(m.W.x)} ${r1(m.W.y + 4)}) rotate(${r1(m.dir * .4)})`);
   }
 
+  /** La frange, au-dessus des sourcils : elle s'arrête aux tempes (rien ne descend à côté des yeux). */
+  function dessinerLaFrange(fx: number) {
+    poser(n("frange-forme"), "d", `M${r1(-42 + fx)} -24 Q-44 -46 -26 -52 Q-12 -58 0 -54 Q12 -58 26 -52 Q44 -46 ${r1(42 + fx)} -24 Q${r1(36 + fx)} -34 ${r1(30 + fx)} -29 Q${r1(22 + fx)} -40 ${r1(12 + fx)} -30 Q${r1(4 + fx)} -42 ${r1(-6 + fx)} -30 Q${r1(-14 + fx)} -42 ${r1(-24 + fx)} -30 Q${r1(-34 + fx)} -36 ${r1(-42 + fx)} -24 Z`);
+    poser(n("frange-ombre"), "d", `M${r1(-6 + fx)} -52 Q${r1(-2 + fx)} -44 ${r1(-8 + fx)} -32 M${r1(14 + fx)} -50 Q${r1(18 + fx)} -42 ${r1(13 + fx)} -31 M${r1(-26 + fx)} -46 Q${r1(-24 + fx)} -40 ${r1(-25 + fx)} -31`);
+    poser(n("frange-lumiere"), "d", `M${r1(-30 + fx)} -44 Q${r1(-20 + fx)} -52 ${r1(-10 + fx)} -46 M${r1(2 + fx)} -48 Q${r1(10 + fx)} -54 ${r1(20 + fx)} -46`);
+  }
+
   function dessinerLaTete(p: Pose, ex: Expression<Emotion>, lidBase: number, pup: number) {
     const v = p.vue, dx = v * 9;
     for (const [id, sg] of [["oreille-g", -1], ["oreille-d", 1]] as const) {
@@ -100,11 +107,7 @@ export function creerLumi(racine: SVGSVGElement) {
       deplacer(n(`paupiere-${c}`), `translate(0 ${r1(-23 * (1 - Math.max(lidBase, lidExtra)))})`);
       deplacer(n(`regard-${c}`), `translate(${r1(p.regardX + v * 2 - .5 * (pup - 1))} ${r1(p.regardY - 2.5 * (pup - 1))}) scale(${pup})`);
     }
-    // frange : au-dessus des sourcils, elle s'arrête aux tempes (rien ne descend à côté des yeux)
-    const fx = dx * .6;
-    poser(n("frange-forme"), "d", `M${r1(-42 + fx)} -24 Q-44 -46 -26 -52 Q-12 -58 0 -54 Q12 -58 26 -52 Q44 -46 ${r1(42 + fx)} -24 Q${r1(36 + fx)} -34 ${r1(30 + fx)} -29 Q${r1(22 + fx)} -40 ${r1(12 + fx)} -30 Q${r1(4 + fx)} -42 ${r1(-6 + fx)} -30 Q${r1(-14 + fx)} -42 ${r1(-24 + fx)} -30 Q${r1(-34 + fx)} -36 ${r1(-42 + fx)} -24 Z`);
-    poser(n("frange-ombre"), "d", `M${r1(-6 + fx)} -52 Q${r1(-2 + fx)} -44 ${r1(-8 + fx)} -32 M${r1(14 + fx)} -50 Q${r1(18 + fx)} -42 ${r1(13 + fx)} -31 M${r1(-26 + fx)} -46 Q${r1(-24 + fx)} -40 ${r1(-25 + fx)} -31`);
-    poser(n("frange-lumiere"), "d", `M${r1(-30 + fx)} -44 Q${r1(-20 + fx)} -52 ${r1(-10 + fx)} -46 M${r1(2 + fx)} -48 Q${r1(10 + fx)} -54 ${r1(20 + fx)} -46`);
+    dessinerLaFrange(dx * .6);
     deplacer(n("tiare"), `translate(${r1(dx * .8)} -40) rotate(${r1(v * 6)})`);
   }
 
@@ -147,6 +150,30 @@ export function creerLumi(racine: SVGSVGElement) {
     deplacer(q1(robe, "etincelle-du-corsage"), `translate(${r1(dxr)} -94)`);
   }
 
+  /** Le bras loin de la caméra passe derrière la robe. */
+  function placerLesBras(p: Pose, v: number, w: number, dxr: number) {
+    for (const c of ["g", "d"] as const) {
+      const cote = c === "g" ? -1 : 1, derriere = v * cote < -.3, cible = derriere ? n("bras-arriere") : n("bras-avant");
+      if (bras[c].parentNode !== cible) cible.append(bras[c]);
+      const S = { x: cote * 23 * w + dxr, y: -100 };
+      const r = dessinerLeBras(bras[c], c, S, c === "g" ? p.aGu : -p.aDu, c === "g" ? p.aGl : -p.aDl, Math.round(c === "g" ? p.mG : p.mD));
+      if (c === "d") mainDroite = r;
+    }
+  }
+
+  /** La baguette est dans la main droite, dans le prolongement de l'avant-bras ; rend son bout. */
+  function dessinerLaBaguette(p: Pose): Point | null {
+    const main = dansLaScene(racine, n("lumi"), mainDroite.W);
+    const angle = mainDroite.dir + p.rot, echelle = BASE * .9;
+    let bout: Point | null = null;
+    if (main) {
+      deplacer(n("baguette"), `translate(${r1(main.x)} ${r1(main.y)}) rotate(${r1(angle)}) scale(${r3(echelle)})`);
+      const sens = angle * DEG;
+      bout = { x: main.x + Math.sin(sens) * 40 * echelle, y: main.y - Math.cos(sens) * 40 * echelle };
+    }
+    return bout;
+  }
+
   /** Dessine Lumi à l'instant `t` du scénario ; rend sa pose et le bout de sa baguette (les effets s'y accrochent). */
   function dessiner(scenario: ScenarioDesPrincesses, t: number): LumiDessinee {
     const p = poseA(scenario.poses, t), pAvant = poseA(scenario.poses, t - .06);
@@ -160,26 +187,11 @@ export function creerLumi(racine: SVGSVGElement) {
     const v = p.vue, w = 1 - Math.abs(v) * .15, dxr = v * 6;
     dessinerLaJambe("g", { x: -10 * w + dxr, y: -40 }, 4 - p.vol * 10, -2 + p.vol * 30);
     dessinerLaJambe("d", { x: 10 * w + dxr, y: -40 }, -4 - p.vol * 6, 2 + p.vol * 24);
-    // le bras loin de la caméra passe derrière la robe
-    for (const c of ["g", "d"] as const) {
-      const cote = c === "g" ? -1 : 1, derriere = v * cote < -.3, cible = derriere ? n("bras-arriere") : n("bras-avant");
-      if (bras[c].parentNode !== cible) cible.append(bras[c]);
-      const S = { x: cote * 23 * w + dxr, y: -100 };
-      const r = dessinerLeBras(bras[c], c, S, c === "g" ? p.aGu : -p.aDu, c === "g" ? p.aGl : -p.aDl, Math.round(c === "g" ? p.mG : p.mD));
-      if (c === "d") mainDroite = r;
-    }
+    placerLesBras(p, v, w, dxr);
     deplacer(n("tete"), `translate(${r1(v * 4)} -150) rotate(${r1(p.tete)})`);
     const ex = expressionA(scenario.expressions, t), A = EMOS[ex.prec], B = EMOS[ex.emo], u = ex.u;
     dessinerLaTete(p, ex, Math.max(lerp(A.lid, B.lid, u), clignement(t)), lerp(A.pup, B.pup, u));
-    // la baguette est dans la main droite, dans le prolongement de l'avant-bras
-    const main = dansLaScene(racine, n("lumi"), mainDroite.W);
-    const angle = mainDroite.dir + p.rot, echelle = BASE * .9;
-    let bout: Point | null = null;
-    if (main) {
-      deplacer(n("baguette"), `translate(${r1(main.x)} ${r1(main.y)}) rotate(${r1(angle)}) scale(${r3(echelle)})`);
-      const sens = angle * DEG;
-      bout = { x: main.x + Math.sin(sens) * 40 * echelle, y: main.y - Math.cos(sens) * 40 * echelle };
-    }
+    const bout = dessinerLaBaguette(p);
     const haut = Math.max(0, SOL.y - p.y - flotte), ombre = n("ombre-sol");
     poser(ombre, "cx", r1(p.x));
     poser(ombre, "rx", r1(Math.max(16, 40 - haut * .12)));
