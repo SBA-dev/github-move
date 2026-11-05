@@ -414,7 +414,7 @@ button:focus-visible, summary:focus-visible { outline: 3px solid var(--texte); o
 .trou[data-etat="rempli"] { color: var(--principale-foncee); }
 .etiquettes { display: grid; gap: 12px; width: 100%; max-width: 100%; }
 .etiquettes ul, .etiquettes ol { margin: 0; padding: 0; list-style: none; }
-.etiquettes-a-placer, .places { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.etiquettes-a-placer { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
 .etiquette {
   min-width: 44px;
   min-height: 44px;
@@ -470,7 +470,6 @@ li.etiquette.posee { display: flex; align-items: center; cursor: default; border
 .porte-de-la-maison[aria-disabled="true"] { cursor: default; }
 .porte-de-la-maison[aria-disabled="true"]:hover { background: transparent; }
 .place { min-width: 44px; min-height: 44px; padding: 6px 12px; border: 3px dashed var(--contour); border-radius: var(--rayon); background: var(--surface-voilee); font-size: 1.25rem; font-weight: 700; }
-.place[data-remplie="true"] { border-style: solid; background: var(--succes-fond); }
 button.secondaire { color: var(--texte); background: var(--surface); border: 2px solid var(--contour); }
 button.secondaire:hover { background: var(--fond-doux); }
 .visuellement-cache {
@@ -1367,3 +1366,47 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 .parchemin[data-univers="police"] { --parchemin-cadre: #3450c8; }
 .parchemin[data-univers="pompier"] { --parchemin-cadre: #ef8f7f; }
 .parchemin[data-univers="sports"] .corps-du-parchemin { margin-inline: 8px 48px; padding-inline: 13px; }
+
+/* Petit train de l'univers (#130) : la tête flotte à gauche, les places (les wagons) coulent à côté d'elle puis ligne après ligne. */
+.petit-train {
+  --plaque: #fff3df;
+  --texte-du-wagon: #1b1530;
+  display: flow-root;
+  width: 100%;
+  max-width: 40rem;
+  margin-inline: auto;
+  text-align: left;
+}
+/* La zone de l'exercice s'ajuste à son contenu : sans cela, le train se recentrerait à chaque wagon. */
+.exercice-en-cours:has(.petit-train) { justify-self: stretch; }
+.petit-train[data-univers="princesse"] { --plaque: #fbf1ff; }
+.petit-train[data-univers="sports"] { --plaque: #f1f8ff; }
+.petit-train[data-univers="police"] { --plaque: #f3f6ff; }
+.petit-train[data-univers="pompier"] { --plaque: #fff1e6; }
+.petit-train[data-univers="danse"] { --plaque: #fff0f8; }
+.tete-du-train { float: left; display: block; width: 150px; height: 110px; user-select: none; -webkit-user-select: none; }
+.petit-train .place:not([data-remplie="true"]) { display: inline-block; margin: 0 4px 30px; vertical-align: bottom; }
+/* Le wagon : une image découpée en neuf (décor dans les coins), qui s'étire avec le texte ; le texte est du HTML sur la plaque unie. */
+.petit-train .place[data-remplie="true"] {
+  display: inline-grid;
+  box-sizing: border-box;
+  min-width: 104px;
+  min-height: 110px;
+  padding: 0 2px;
+  vertical-align: bottom;
+  border: solid transparent;
+  border-width: 28px 34px 30px 34px;
+  border-radius: 0;
+  background: transparent;
+  border-image: var(--wagon) 28 34 30 34 fill / 28px 34px 30px 34px stretch;
+  color: var(--texte-du-wagon);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+.petit-train[data-vers="true"] .place[data-remplie="true"] { display: grid; width: 100%; }
+.puce-du-wagon { position: relative; display: grid; align-content: center; background: var(--plaque); }
+.place[data-etat="en-chemin"] .puce-du-wagon { z-index: 3; box-shadow: 0 4px 10px rgba(0, 0, 0, .25); }
+@media (prefers-reduced-motion: no-preference) {
+  .petit-train[data-etat="avance"] { animation: a-coup-du-petit-train .3s ease-in-out; }
+}
+@keyframes a-coup-du-petit-train { 50% { translate: 6px 0; } }

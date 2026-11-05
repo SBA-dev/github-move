@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import type { EtiquettePosee } from "@domain/apprentissage";
 import type { Exercice } from "@domain/catalogue";
-import { TexteEnSyllabes } from "../../reglages/index.ts";
-import { useRetourDe } from "../../retours/index.ts";
 import { Etiquette } from "./etiquettes/Etiquette.tsx";
 import { groupeSousLePoint, type Point } from "./maisons/groupe-sous-le-doigt.ts";
 import { Maisons } from "./maisons/Maisons.tsx";
+import { PetitTrain } from "./petit-train/PetitTrain.tsx";
 
 type Props = {
   readonly exercice: Extract<Exercice, { type: "classer" | "ordre" }>;
@@ -19,13 +18,17 @@ type Props = {
   readonly bonnesReponsesMontrees: Readonly<Record<string, string>>;
   readonly onPoser: (etiquette: string, groupe?: string) => void;
   readonly onJeNeSaisPas: (etiquette?: string) => void;
+  /** Les places de l'ordre sont les vers d'une poésie : un vers par wagon, sur toute la largeur. */
+  readonly versDeLaPoesie?: boolean;
 };
 
-export function ExerciceAEtiquettes({ exercice, etiquettesAPlacer, etiquettesPosees, etiquetteViseeParJeNeSaisPas, bonnesReponsesMontrees, onPoser, onJeNeSaisPas }: Props) {
+export function ExerciceAEtiquettes({ exercice, etiquettesAPlacer, etiquettesPosees, etiquetteViseeParJeNeSaisPas, bonnesReponsesMontrees, onPoser, onJeNeSaisPas, versDeLaPoesie = false }: Props) {
   const [choisie, setChoisie] = useState<string | undefined>();
   const [maisonSurvolee, setMaisonSurvolee] = useState<string | undefined>();
   const premiere = useRef<HTMLButtonElement>(null);
   const conteneurDesMaisons = useRef<HTMLDivElement>(null);
+  const plateau = useRef<HTMLUListElement>(null);
+  const departDeLEtiquette = useRef<Point | undefined>(undefined);
   const nombreRestant = etiquettesAPlacer.length;
   const dejaMonte = useRef(false);
   useEffect(() => {
@@ -34,6 +37,7 @@ export function ExerciceAEtiquettes({ exercice, etiquettesAPlacer, etiquettesPos
   }, [nombreRestant]);
 
   const poser = (etiquette: string, groupe?: string) => {
+    departDeLEtiquette.current = centreDeLEtiquette(plateau.current, etiquettesAPlacer.indexOf(etiquette));
     setChoisie(undefined);
     onPoser(etiquette, groupe);
   };
@@ -55,7 +59,7 @@ export function ExerciceAEtiquettes({ exercice, etiquettesAPlacer, etiquettesPos
 
   return (
     <div className="etiquettes" data-testid="etiquettes" data-type={exercice.type}>
-      <ul className="etiquettes-a-placer" aria-label="Étiquettes à poser" data-testid="etiquettes-a-placer">
+      <ul ref={plateau} className="etiquettes-a-placer" aria-label="Étiquettes à poser" data-testid="etiquettes-a-placer">
         {etiquettesAPlacer.map((etiquette, rang) => (
           <li key={`${etiquette}-${rang}`}>
             <Etiquette
@@ -89,27 +93,12 @@ export function ExerciceAEtiquettes({ exercice, etiquettesAPlacer, etiquettesPos
             onPoser={poser}
           />
         )
-        : <Places exercice={exercice} nombrePosees={exercice.elements.length - nombreRestant} />}
+        : <PetitTrain elements={exercice.elements} nombrePosees={exercice.elements.length - nombreRestant} versDeLaPoesie={versDeLaPoesie} depart={departDeLEtiquette} />}
     </div>
   );
 }
 
-function Places({ exercice, nombrePosees }: { readonly exercice: Extract<Exercice, { type: "ordre" }>; readonly nombrePosees: number }) {
-  return (
-    <ol className="places" aria-label="Ordre des étiquettes" data-testid="places">
-      {exercice.elements.map((element, rang) => (
-        <Place key={rang} element={element} remplie={rang < nombrePosees} />
-      ))}
-    </ol>
-  );
-}
-
-/** Une place de l'ordre : l'étiquette qui vient d'y être posée rebondit. */
-function Place({ element, remplie }: { readonly element: string; readonly remplie: boolean }) {
-  const retour = useRetourDe<HTMLLIElement>(remplie ? element : "");
-  return (
-    <li ref={retour.ref} className="place" data-testid="place" data-remplie={remplie ? "true" : undefined} {...retour.attributs}>
-      {remplie ? <TexteEnSyllabes texte={element} /> : <span className="visuellement-cache">place libre</span>}
-    </li>
-  );
+function centreDeLEtiquette(plateau: HTMLElement | null, rang: number): Point | undefined {
+  const boite = plateau?.children[rang]?.getBoundingClientRect();
+  return boite === undefined ? undefined : { x: boite.left + boite.width / 2, y: boite.top + boite.height / 2 };
 }
