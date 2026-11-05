@@ -33,8 +33,9 @@ import { normaliser, reappliquerLAppareil, scenario } from "./voix.steps.ts";
 type Univers = "sports" | "danse" | "animaux" | "princesse" | "police" | "pompier";
 
 const MUSIQUE = "grande victoire";
-// Le tirage de la variante est `floor(r * 3)` pour chacun des cinq univers : `hasard-fixe.ts` nomme les rangs 0, 1 et 2 « glissade »,
-// « avion » et « danse ». Chaque libellé de variante est rangé ici sous son rang, quel que soit l'univers.
+// Le tirage de la variante est `floor(r * 3)` pour chacun des six univers : `hasard-fixe.ts` nomme les rangs 0, 1 et 2 « glissade »,
+// « avion » et « danse ». Chaque libellé de variante est rangé ici sous son rang ; seule exception, « l'arc-en-ciel », rang 0 chez
+// Lumi et rang 1 chez Capitaine Sam (`RANG_DE_L_ARC_EN_CIEL_DES_POMPIERS`).
 const RANG_DU_TIRAGE: Record<string, VarianteTiree> = {
   "la glissade à genoux": "glissade",
   "l'avion": "avion",
@@ -138,10 +139,9 @@ async function attendreLaFinDuDefi(page: Page): Promise<void> {
 Given(
   new RegExp(`^le hasard de la célébration de l'univers tire « ${TEXTE_DU_TIRAGE} »$`),
   async ({ page }, variante: string) => {
-    const universDuProfil = await page.locator(".application").getAttribute("data-univers");
-    const rang = variante === "l'arc-en-ciel" && universDuProfil === "pompier"
-      ? RANG_DE_L_ARC_EN_CIEL_DES_POMPIERS
-      : RANG_DU_TIRAGE[variante] as VarianteTiree;
+    const arcEnCielDesPompiers = variante === "l'arc-en-ciel" &&
+      await page.locator(".application").getAttribute("data-univers") === "pompier";
+    const rang = arcEnCielDesPompiers ? RANG_DE_L_ARC_EN_CIEL_DES_POMPIERS : RANG_DU_TIRAGE[variante] as VarianteTiree;
     await fixerLeTirageDeLaCelebration(page, rang);
   },
 );
