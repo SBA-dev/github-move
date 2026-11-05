@@ -65,3 +65,7 @@ Branche de base : `main` (`af47f19`). Branche : `feature/106c-celebration-animau
 ## 2026-11-05
 - 00:50 UTC : démarrage. Cadrage de #106 déjà validé (« 106 reco tout », 106.28 « cacher ») ; maquette `noisette-animaux.html` validée par le PO le 2026-10-27. Musique : « grande victoire » (106.27 toujours fermé). Structure reprise de la branche de 106b (`VARIANTES_DES_UNIVERS`, union discriminée, `React.lazy`, `commun/`, ids préfixés).
 - 00:55 UTC : complément de modèle 106c (`domain-modeler`) et scénarios 106c (`po-acceptance`) lancés en parallèle.
+- 01:00 UTC : modèle 106c `fc0db0d` (entrée `animaux` dans les structures de 106b ; libellés « le jonglage », « la noisette croquée », « les joues pleines » d'après la maquette, 106.26 ; « les feuilles de la forêt » = 106.24 ; règle absolue détaillée pour la noisette croquée et les joues pleines ; README des maquettes « il » → « elle » à corriger dans 106c).
+- 01:05 UTC : scénarios 106c `1f1f1a4` : Règle R9, 5 scénarios `@livraison-106c` (7 cas), sur le modèle de 106b. 12 étapes nouvelles (steps à écrire après le merge de 106b, qui pose `celebration-de-l-univers.steps.ts`).
+- Question nouvelle 106.31 (tenue portée pendant la célébration) : ni la scène Sports ni la scène Danse ne dessinent la tenue de #102 ; reco : renvoyer à 106h pour tous les univers.
+- TDD du domaine préparé dans un worktree local (106c + 106b, jamais poussé) : RED `b285360` vérifié (5 erreurs de typage, toutes sur `animaux`). Les commits seront repris sur la branche après le merge de 106b.
