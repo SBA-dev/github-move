@@ -8,7 +8,9 @@ Fonctionnalité: Une réponse fausse animée par le personnage guide
   Contexte Motivation (docs/stories/163/domain-model.md). La scène de réponse fausse est une mise en scène : elle
   ne change ni l'erreur comptée, ni les étoiles, ni la question posée, ni le parcours, et rien n'est enregistré.
   Cadrage tranché par le PO le 2026-11-05 (« 163 reco tout ») : les recommandations des questions 163.1 à 163.18
-  sont retenues (docs/stories/163/acceptance.md, section « Décisions »).
+  sont retenues (docs/stories/163/acceptance.md, section « Décisions »). Le 2026-11-05 aussi (« 163a reco tout ») :
+  une scène qui ne se charge pas compte comme jouée pour la séance (163.19 A) ; la planche de Coach Léo est validée
+  (163.20) ; les bulles écrites sont cachées quand le dessin du personnage guide mesure moins de 100 px (163.21 A).
   Dictée (163.15 A) : un mot dicté est corrigé quand sa dernière case est remplie (#19, #128) ; la première lettre
   fausse de la séance fait donc jouer la scène au moment où elle est montrée en rouge.
   Livraisons (163.11) : la livraison 163a (mécanisme et Coach Léo, tag @livraison-163a), puis un personnage
@@ -31,12 +33,13 @@ Fonctionnalité: Une réponse fausse animée par le personnage guide
   - « Léa entend l'effet sonore « … », puis Coach Léo dit … » : même sens qu'en #97 (la parole commence quand
     l'effet sonore est fini).
   Durées, pour l'implémentation et la review, jamais dans les étapes : 1,5 s au plus (163.2 A) ; la question, ses
-  choix, le clavier et les boutons utilisables dès la première image.
+  choix, le clavier et les boutons utilisables dès la première image. Taille, pour les mêmes : les bulles écrites
+  ne sont montrées que si le dessin du personnage guide mesure au moins 100 px (163.21 A ; 80 px dans la boîte à jetons).
 
   Leçons utilisées, toutes déjà employées par d'autres stories : la question de test « Combien font 3 + 4 ? »
   (#6 : choix « 6 », « 7 », « 8 » et « 9 », de réponse « 7 ») ; « Les sons ou, on, an » (#16 à #18) ;
   « Dictée : les animaux » (#23) ; « Les syllabes » (#18) ; « Les doubles » et « La leçon en action : 45 + 37 »
-  (#20) ; les leçons de test de #23 ; la bibliothèque de test des révisions (#28), du test de départ (#27) et du
+  (#20) ; « La boîte à jetons : ajouter » (#21, #131) ; les leçons de test de #23 ; la bibliothèque de test des révisions (#28), du test de départ (#27) et du
   défi (#100, #137).
   Paul est le parent de Léa ; Léa a un profil enfant de niveau CE1 dans l'univers « Sports » : son personnage guide
   est Coach Léo.
@@ -122,6 +125,17 @@ Fonctionnalité: Une réponse fausse animée par le personnage guide
     Scénario: Une réponse fausse à une autre question de la même séance ne rejoue pas la scène
       Étant donné que Léa joue une leçon de test de deux questions à quatre choix
       Et qu'à la première question, Léa a fait une erreur, puis a donné la bonne réponse
+      Quand Léa fait une erreur à la deuxième question
+      Alors Coach Léo réfléchit en penchant la tête
+      Mais Coach Léo ne joue pas de scène de réponse fausse
+
+    # 163.19 A : une scène qui n'a pas pu être chargée compte comme jouée pour la séance
+    @livraison-163a
+    Scénario: Quand la scène de réponse fausse n'a pas pu être chargée, la réponse fausse suivante de la même séance ne la fait pas jouer non plus
+      Étant donné que Léa joue une leçon de test de deux questions à quatre choix
+      Et que la scène de réponse fausse de Coach Léo ne peut pas être chargée
+      Et qu'à la première question, Léa a fait une erreur, puis a donné la bonne réponse
+      Et que la scène de réponse fausse de Coach Léo peut de nouveau être chargée
       Quand Léa fait une erreur à la deuxième question
       Alors Coach Léo réfléchit en penchant la tête
       Mais Coach Léo ne joue pas de scène de réponse fausse
@@ -326,7 +340,7 @@ Fonctionnalité: Une réponse fausse animée par le personnage guide
       Mais aucun confetti ne tombe
       Et la scène de réponse fausse ne montre aucun cri de victoire et ne fait entendre aucun son
 
-  Règle: La scène de réponse fausse se vit sans mouvement, sans voix et sans voir l'écran : image fixe en mouvements réduits, effet sonore sans parole en Muet, une seule annonce aux lecteurs d'écran, mode dys, 360 px et boutons d'au moins 44 px
+  Règle: La scène de réponse fausse se vit sans mouvement, sans voix et sans voir l'écran : image fixe en mouvements réduits, effet sonore sans parole en Muet, une seule annonce aux lecteurs d'écran, mode dys, bulles écrites cachées sur un petit dessin, 360 px et boutons d'au moins 44 px
 
     @livraison-163a
     Scénario: Avec les mouvements réduits, Léa voit l'image fixe de la scène de réponse fausse, et l'encouragement est dit
@@ -363,6 +377,15 @@ Fonctionnalité: Une réponse fausse animée par le personnage guide
       Alors Coach Léo joue sa scène de réponse fausse
       Et Léa voit « Essaie une autre bulle. » dans la bulle de Coach Léo en mode dys
       Et les bulles écrites de la scène de réponse fausse s'affichent en mode dys
+
+    # 163.21 A : sous 100 px (80 px dans la boîte à jetons), la bulle écrite « oh ! » serait illisible
+    @livraison-163a
+    Scénario: Dans la boîte à jetons, où le dessin de Coach Léo est petit, la scène de réponse fausse se joue sans bulle écrite
+      Étant donné que Léa joue la boîte à jetons « 4 + 3 » de la leçon « La boîte à jetons : ajouter »
+      Quand Léa répond « 8 »
+      Alors Coach Léo joue sa scène de réponse fausse
+      Et Coach Léo dit un encouragement, suivi de « Mets 4 dans ta tête, et avance de 3. »
+      Mais la scène de réponse fausse ne montre aucune bulle écrite
 
     @livraison-163a
     Scénario: À 360 px, la scène de réponse fausse tient à la place du personnage guide, et les choix restent assez grands

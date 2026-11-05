@@ -1,10 +1,11 @@
 # Critères d'acceptance : issue #163, une réponse fausse animée par le personnage guide
 
 Scénarios : `features/163-reponse-fausse-animee.feature` (`@issue-163`).
-Modèle : `docs/stories/163/domain-model.md` (questions 163.1 à 163.12).
+Modèle : `docs/stories/163/domain-model.md` (questions 163.1 à 163.12, 163.19 à 163.21).
 État : **cadrage tranché**. Le PO a retenu le 2026-11-05 toutes les recommandations de 163.1 à 163.18
-(« 163 reco tout », [annonce du responsable](https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672057084)). Plus aucun scénario n'est tagué `@a-valider` ; le détail est dans
-la section « Décisions ».
+(« 163 reco tout », [annonce du responsable](https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672057084)), puis le même jour 163.19 à 163.21 posées
+avec la planche de Coach Léo (« 163a reco tout », [annonce du responsable](https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672618059)). Plus aucun scénario n'est tagué
+`@a-valider` ; le détail est dans la section « Décisions ».
 
 Livraisons (163.11) : `@livraison-163a` (mécanisme et Coach Léo), puis `@livraison-163b` (Lili), `@livraison-163c`
 (Noisette), `@livraison-163d` (Lumi), `@livraison-163e` (Agent Max), `@livraison-163f` (Capitaine Sam). Les cinq
@@ -34,15 +35,15 @@ elle ne retient jamais l'enfant.
 | # | Règle | Exemples clés | Scénarios |
 |---|---|---|---|
 | R1 | À la première réponse fausse de la séance, le personnage guide joue sa scène de réponse fausse, en plus du son « réponse fausse » et de l'encouragement ; la même question reste posée | Léa répond « 8 » à « Combien font 3 + 4 ? » : son doux, encouragement, Coach Léo et son ballon, puis il réfléchit et la question attend | 7 |
-| R2 | Une seule scène par séance ; les réponses fausses suivantes gardent le retour de #97 | 2e réponse fausse à « poule » : Coach Léo réfléchit, sans scène ; nouvelle séance (terminée, quittée, exercice joué seul) : la scène revient ; exercice joué seul : une scène au plus ; « Je ne sais pas » ne la consomme pas | 5 (dont 1 plan, 3 exemples) |
+| R2 | Une seule scène par séance ; les réponses fausses suivantes gardent le retour de #97 | 2e réponse fausse à « poule » : Coach Léo réfléchit, sans scène ; scène qui n'a pas pu être chargée : comptée comme jouée ; nouvelle séance (terminée, quittée, exercice joué seul) : la scène revient ; exercice joué seul : une scène au plus ; « Je ne sais pas » ne la consomme pas | 6 (dont 1 plan, 3 exemples) |
 | R3 | La scène ne retient jamais l'enfant : réponses, clavier et boutons dès la première image ; une réponse ou un bouton l'arrête ; un toucher hors des boutons ne fait rien | « 7 » pendant la scène : réussie tout de suite ; « 9 » pendant la scène : prise tout de suite, retour de #97 sans rejouer la scène ; en dictée, la lettre « t » l'arrête ; « Je ne sais pas », « Réécouter » l'arrêtent | 8 |
 | R4 | Elle ne change rien à l'apprentissage : erreur comptée, étoiles, avancement, parcours | 0 question réussie sur 15 après « on » ; 1 erreur = 2 étoiles en « Sports » comme en « Danse » | 2 (dont 1 plan, 2 exemples) |
 | R5 | Chaque personnage guide a sa scène, douce et sans danger, avec la tenue portée ; c'est celle de l'univers du profil au moment de la réponse | Lili vacille à peine et fait une révérence ; la noisette rebondit à côté de Noisette ; Coach Léo porte « une écharpe rayée » | 3 (dont 1 plan, 6 exemples) |
 | R6 | Jamais plus attrayante que la bonne réponse : courte, sans confettis, sans cri de victoire, sans musique, sans son à elle | un seul « réponse fausse » entendu, aucun confetti | 2 |
-| R7 | Accessibilité : image fixe en mouvements réduits, Muet (effet sonore sans parole, 97.2), une seule annonce, mode dys, 360 px, 44 px | image fixe souriant pouce levé, sans bulle écrite ; bulles écrites en mode dys ; lecteurs d'écran : l'encouragement une fois, jamais « oh ! » | 5 |
+| R7 | Accessibilité : image fixe en mouvements réduits, Muet (effet sonore sans parole, 97.2), une seule annonce, mode dys, bulles écrites cachées sur un petit dessin, 360 px, 44 px | image fixe souriant pouce levé, sans bulle écrite ; bulles écrites en mode dys ; lecteurs d'écran : l'encouragement une fois, jamais « oh ! » ; boîte à jetons (dessin de 80 px) : scène sans bulle écrite | 6 |
 | R8 | Écrans : séance d'une leçon (tous types), révision, défi, grand défi ; jamais pendant le chrono d'une fluence, après « Je ne sais pas », au test de départ, ni avec l'addition posée à 360 px | bulles, classer, ordre ; dictée : « chas », la lettre « s » en rouge ; « lit » en révision ; « 4 » au défi ; fluence : son seul | 9 (dont 1 plan, 3 exemples) |
 
-Total : 8 règles, 41 scénarios (dont 4 plans), 51 cas une fois les exemples déroulés. Huit règles, c'est plus que
+Total : 8 règles, 43 scénarios (dont 4 plans), 53 cas une fois les exemples déroulés. Huit règles, c'est plus que
 les 6 conseillés par le skill `bdd-gherkin` : le découpage par livraison (163.11) répond à cette taille, car R5 est
 la seule règle qui grandit d'une livraison à l'autre.
 
@@ -50,6 +51,10 @@ Note sur la dictée (163.15 A) : un mot dicté est corrigé quand sa dernière c
 sans juger la lettre (#19, #128). « La première lettre fausse de la séance » fait donc jouer la scène au moment où le
 mot est corrigé et où la lettre fausse est montrée en rouge ; la lettre suivante écrite (le début juste est gardé)
 est prise tout de suite et arrête la scène.
+
+Note sur les bulles écrites (163.21 A) : elles ne sont montrées que si le dessin du personnage guide mesure au moins
+100 px. En dessous (80 px dans la boîte à jetons), la scène se joue sans bulle écrite ; l'encouragement et l'aide,
+eux, restent dans la bulle du personnage guide. C'est de l'affichage, sans effet sur le domaine.
 
 Note sur le Muet : le Muet coupe la parole, pas les effets sonores (décision 97.2). En Muet, Léa entend donc encore
 « réponse fausse » ; la scène, elle, n'ajoute aucun son, en Muet comme sans Muet.
@@ -63,11 +68,12 @@ Note sur le Muet : le Muet coupe la parole, pas les effets sonores (décision 97
 - À la fin de sa scène de réponse fausse, Coach Léo reprend sa place et la même question attend Léa (163.13 : il réfléchit)
 - Après la scène de réponse fausse, la bonne réponse garde tout son retour
 - Sans réseau, Coach Léo joue quand même sa scène de réponse fausse
-- Quand la scène de réponse fausse ne peut pas être chargée, Coach Léo réfléchit comme avant et la nouvelle chance n'attend pas
+- Quand la scène de réponse fausse ne peut pas être chargée, Coach Léo réfléchit comme avant et la nouvelle chance n'attend pas (163.19)
 
 **R2. Une seule scène par séance**
 - À la deuxième réponse fausse à la même question, Coach Léo encourage sans rejouer sa scène (163.1)
 - Une réponse fausse à une autre question de la même séance ne rejoue pas la scène (163.1)
+- Quand la scène de réponse fausse n'a pas pu être chargée, la réponse fausse suivante de la même séance ne la fait pas jouer non plus (163.19)
 - Plan : Dans une nouvelle séance, la première réponse fausse fait de nouveau jouer la scène, après une séance terminée / une séance quittée avant la fin / l'exercice « Le mot bien écrit » joué seul (163.1, 163.14, 163.17)
 - Dans un exercice joué seul, la scène n'est jouée qu'une fois, comme dans une séance complète (163.17)
 - « Je ne sais pas » ne fait pas jouer la scène et ne la consomme pas : la première réponse fausse qui suit la fait jouer (163.1, 163.6)
@@ -100,6 +106,7 @@ Note sur le Muet : le Muet coupe la parole, pas les effets sonores (décision 97
 - En Muet, la scène de réponse fausse se joue sans aucune parole, et seul « réponse fausse » se fait entendre
 - Les lecteurs d'écran annoncent une seule fois l'encouragement, sans lire la scène de réponse fausse (163.3)
 - Avec le mode dys, l'encouragement et les bulles écrites de la scène de réponse fausse s'affichent en mode dys (163.16)
+- Dans la boîte à jetons, où le dessin de Coach Léo est petit, la scène de réponse fausse se joue sans bulle écrite (163.21)
 - À 360 px, la scène de réponse fausse tient à la place du personnage guide, et les choix restent assez grands (163.7)
 
 **R8. Écrans concernés et non concernés**
@@ -134,8 +141,9 @@ Aucune.
 
 ## Décisions
 
-Toutes les questions sont tranchées le 2026-11-05 par le PO : « 163 reco tout » ([annonce du responsable](https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672057084)).
+Les questions 163.1 à 163.18 sont tranchées le 2026-11-05 par le PO : « 163 reco tout » ([annonce du responsable](https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672057084)).
 Pour 163.1, la recommandation était B : c'est B qui est retenu.
+163.19 à 163.21, posées avec la planche de Coach Léo ([question](https://github.com/SBA-dev/github-move/issues/163#issuecomment-6672196226)), sont tranchées le même jour : « 163a reco tout » ([annonce du responsable](https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672618059)).
 
 - **163.1** Quand jouer la scène ? Tranchée le 2026-11-05 (reco B retenue, « 163 reco tout », [annonce](https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672057084)) : une fois par séance, à la première réponse fausse.
 - **163.2** Durée. Tranchée le 2026-11-05 (reco A retenue, « 163 reco tout », [annonce](https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672057084)) : 1,5 s au plus, plus court qu'une célébration de l'univers.
@@ -155,8 +163,11 @@ Pour 163.1, la recommandation était B : c'est B qui est retenu.
 - **163.16** Bulles écrites. Tranchée le 2026-11-05 (reco A retenue, « 163 reco tout », [annonce](https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672057084)) : en mode dys, police du mode dys ; aucune sur l'image fixe.
 - **163.17** Exercice joué seul. Tranchée le 2026-11-05 (reco A retenue, « 163 reco tout », [annonce](https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672057084)) : c'est une séance, une scène au plus.
 - **163.18** Réponse fausse pendant la scène. Tranchée le 2026-11-05 (reco A retenue, « 163 reco tout », [annonce](https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672057084)) : prise tout de suite, arrête la scène, retour de #97 sans rejouer la scène.
+- **163.19** Scène qui ne se charge pas. Tranchée le 2026-11-05 (reco A retenue, « 163a reco tout », [annonce](https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672618059)) : elle compte comme jouée pour la séance ; la réponse fausse suivante de la même séance ne fait pas jouer de scène.
+- **163.20** Planche de Coach Léo. Tranchée le 2026-11-05 (reco A retenue, « 163a reco tout », [annonce](https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672618059)) : planche validée telle quelle (`docs/maquettes/reponse-fausse-coach-leo.html`, `docs/stories/163/captures/163a-coach-leo-*.png`) ; hors scénarios.
+- **163.21** Bulle « oh ! » aux petites tailles. Tranchée le 2026-11-05 (reco A retenue, « 163a reco tout », [annonce](https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672618059)) : les bulles écrites sont cachées quand le dessin du personnage guide mesure moins de 100 px (boîte à jetons, 80 px).
 
-Énoncés et options des questions, pour mémoire (163.1 à 163.12 : `docs/stories/163/domain-model.md`) :
+Énoncés et options des questions, pour mémoire (163.1 à 163.12 et 163.19 : `docs/stories/163/domain-model.md`) :
 
 **163.13 Après la scène, quelle humeur montre le dessin du personnage guide ?** La scène finit souriante, le pouce
 levé ; puis le dessin fixe revient, et la même question reste posée.
@@ -200,3 +211,14 @@ touche aussitôt « 9 ».
 - **Reco A (retenue)** : la réponse est prise tout de suite et arrête la scène, comme une bonne réponse ; elle reçoit le
   retour de #97 (son « réponse fausse », encouragement, `reflechit`), sans rejouer la scène (163.1 B).
 - B : la deuxième réponse fausse attend la fin de la scène (à éviter : la scène retiendrait l'enfant).
+
+**163.20 La planche de Coach Léo est-elle validée ?** (`docs/maquettes/reponse-fausse-coach-leo.html`,
+`docs/stories/163/captures/163a-coach-leo-*.png`)
+**Tranchée le 2026-11-05 (reco A retenue, « 163a reco tout », [annonce](https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672618059)).**
+- **Reco A (retenue)** : oui, la planche est validée telle quelle.
+
+**163.21 La bulle écrite « oh ! » aux petites tailles ?** Elle est illisible à 80 px et moins (dessin du personnage
+guide dans la boîte à jetons) ; elle n'est jamais lue aux lecteurs d'écran.
+**Tranchée le 2026-11-05 (reco A retenue, « 163a reco tout », [annonce](https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672618059)).**
+- **Reco A (retenue)** : la cacher quand le dessin du personnage guide mesure moins de 100 px. Scénario : R7.
+- B : la garder partout.

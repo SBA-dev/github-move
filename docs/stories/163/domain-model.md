@@ -2,7 +2,7 @@
 
 Contexte : **Motivation**. Après une réponse fausse, le personnage guide du profil joue une courte scène drôle et gentille, puis l'enfant retrouve sa **nouvelle chance**. La story choisit **si** la scène se joue et **laquelle** (celle du personnage guide de l'univers). Elle ne touche ni à l'erreur, ni aux étoiles, ni à la question posée. Aucun agrégat, aucun événement enregistré, aucune migration, aucune Edge Function, aucune donnée d'enfant nouvelle.
 
-État : **cadrage tranché le 2026-11-05** (« 163 reco tout », annonce du responsable : https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672057084). Les recommandations de 163.1 à 163.18 sont retenues (163.13 à 163.18 : `docs/stories/163/acceptance.md`). Décision 0042 (163.10). Le câblage des scènes attend le merge de **106h** (moteur commun `src/univers/celebrations/commun/` et tenue portée dans les scènes). Le domaine (163a, voir « Comportements unitaires du domaine ») et les planches peuvent commencer avant. Une seule question nouvelle, sans effet sur le domaine : 163.19.
+État : **cadrage tranché le 2026-11-05** (« 163 reco tout », annonce du responsable : https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672057084). Les recommandations de 163.1 à 163.18 sont retenues (163.13 à 163.18 : `docs/stories/163/acceptance.md`). Décision 0042 (163.10). Le câblage des scènes attend le merge de **106h** (moteur commun `src/univers/celebrations/commun/` et tenue portée dans les scènes). Le domaine (163a, voir « Comportements unitaires du domaine ») et les planches peuvent commencer avant. Le même jour, 163.19 à 163.21 sont tranchées (« 163a reco tout », annonce du responsable : https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672618059) : 163.19 A, 163.20 (planche de Coach Léo validée), 163.21 A ; aucune ne change le domaine.
 
 ## Contexte
 
@@ -124,7 +124,8 @@ classDiagram
 - **L'arrêt** : toute nouvelle réponse (juste ou fausse, 163.18 A), la lettre suivante en dictée (163.15 A), « Je ne sais pas », « Réécouter », « Relire la consigne », « Retour » ou le passage à la question suivante arrête la scène tout de suite, et le dessin fixe revient.
 - **L'image fixe** en mouvements réduits : le personnage guide souriant, le pouce levé (état final de la scène), sans mouvement et sans bulle écrite (163.16 A).
 - Le dessin est `aria-hidden` ; la bulle reste la seule annonce.
-- Le chargement à la demande et le précache de la PWA (#8), comme les scènes de #106 (`SceneDeCelebration.tsx`, `prechargerLaSceneDe`). Si une scène ne se charge pas, le dessin fixe et l'humeur `reflechit` restent : la nouvelle chance n'attend jamais la scène (voir 163.19).
+- Le chargement à la demande et le précache de la PWA (#8), comme les scènes de #106 (`SceneDeCelebration.tsx`, `prechargerLaSceneDe`). Si une scène ne se charge pas, le dessin fixe et l'humeur `reflechit` restent : la nouvelle chance n'attend jamais la scène ; la scène compte quand même comme jouée pour la séance (163.19 A, tranchée).
+- La taille des bulles écrites : elles sont cachées quand le dessin du personnage guide mesure moins de 100 px, par ex. 80 px dans la boîte à jetons (163.21 A, tranchée). C'est de l'affichage, pas une règle du domaine.
 - Un seul crochet du front (par exemple `useSceneDeReponseFausse`) appelé par tous les chemins d'encouragement listés plus haut, qui tient `sceneDejaJoueeDansLaSeance` le temps de l'écran de la séance.
 
 ## Comportements unitaires du domaine (TDD de 163a)
@@ -244,9 +245,17 @@ Toutes les livraisons dans l'issue #163.
 
 Questions 163.1 à 163.12 : **tranchées le 2026-11-05 (reco retenue, « 163 reco tout »)**, annonce du responsable : https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672057084. Les énoncés d'origine sont gardés. Questions 163.13 à 163.18 : tranchées le même jour, même réponse (énoncés dans `docs/stories/163/acceptance.md`) : 163.13 A (humeur `reflechit` après la scène), 163.14 A (chaque séance repart de zéro, rien n'est enregistré), 163.15 A (dictée : première lettre fausse de la séance, la lettre suivante arrête la scène), 163.16 A (bulles écrites en Andika en mode dys, aucune sur l'image fixe), 163.17 A (exercice joué seul = une séance), 163.18 A (réponse fausse pendant la scène : prise tout de suite, arrête la scène, retour de #97 sans seconde scène).
 
-**163.19 Une scène qui ne se charge pas compte-t-elle comme jouée ?** (nouvelle, sans effet sur le domaine ni sur les scénarios de 163a). Exemple : Léa joue hors ligne avant le précache, la scène de Coach Léo ne se charge pas à sa première réponse fausse ; elle se trompe de nouveau à la question suivante, et la scène est maintenant chargée.
-- **Reco A** : oui, elle compte comme jouée (le domaine l'a rendue) : pas de scène à la deuxième réponse fausse. Raison : une seule règle simple (une fois par séance), et l'enfant ne voit jamais la scène arriver en retard.
+Questions 163.19 à 163.21 (posées avec la planche de Coach Léo : https://github.com/SBA-dev/github-move/issues/163#issuecomment-6672196226) : **tranchées le 2026-11-05 (reco retenue, « 163a reco tout »)**, annonce du responsable : https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672618059.
+
+**163.19 Une scène qui ne se charge pas compte-t-elle comme jouée ?** *Tranchée le 2026-11-05 (reco A retenue, « 163a reco tout »)* : A, elle compte comme jouée pour la séance ; sans effet sur le domaine, un scénario de R2 l'illustre. Énoncé d'origine : Exemple : Léa joue hors ligne avant le précache, la scène de Coach Léo ne se charge pas à sa première réponse fausse ; elle se trompe de nouveau à la question suivante, et la scène est maintenant chargée.
+- **Reco A (retenue)** : oui, elle compte comme jouée (le domaine l'a rendue) : pas de scène à la deuxième réponse fausse. Raison : une seule règle simple (une fois par séance), et l'enfant ne voit jamais la scène arriver en retard.
 - B : non, la première réponse fausse où la scène se charge vraiment la joue.
+
+**163.20 La planche de Coach Léo est-elle validée ?** *Tranchée le 2026-11-05 (reco A retenue, « 163a reco tout »)* : oui, telle quelle (`docs/maquettes/reponse-fausse-coach-leo.html`, `docs/stories/163/captures/163a-coach-leo-*.png`). Sans effet sur le domaine ni sur les scénarios ; le câblage de Coach Léo attend encore le merge de 106h.
+
+**163.21 La bulle écrite « oh ! » aux petites tailles ?** *Tranchée le 2026-11-05 (reco A retenue, « 163a reco tout »)* : A, les bulles écrites sont cachées quand le dessin du personnage guide mesure moins de 100 px (80 px dans la boîte à jetons). Affichage, pas domaine : `sceneDeReponseFausse` ne change pas ; c'est `src/` qui décide d'après la taille du dessin. Énoncé d'origine : la bulle est illisible à 80 px et moins, et elle n'est jamais lue aux lecteurs d'écran.
+- **Reco A (retenue)** : la cacher quand le dessin mesure moins de 100 px. Scénario : R7 (boîte à jetons).
+- B : la garder partout.
 
 **163.1 Quand jouer la scène ?** *Tranchée le 2026-11-05 (reco retenue, « 163 reco tout »)* : B, une fois par séance. Énoncé d'origine : le garde-fou de la section 5 du skill `gamification` dit que la scène ne doit jamais être plus attrayante que le retour d'une bonne réponse. Or une scène animée de 1 à 2 s est plus spectaculaire qu'un rebond et une félicitation. Si elle revient à chaque erreur, l'enfant peut se tromper exprès pour la voir. Exemple : Léa fait une séance de 8 questions et se trompe 5 fois.
 - A : à la première réponse fausse de chaque exercice. Léa la voit jusqu'à 3 ou 4 fois.
