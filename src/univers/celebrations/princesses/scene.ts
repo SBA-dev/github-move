@@ -1,4 +1,4 @@
-import type { VarianteDe } from "@domain/motivation";
+import type { CleDeTenue, VarianteDe } from "@domain/motivation";
 import { jouerLaScene } from "../commun/jeu-de-la-scene.ts";
 import { creerLesEffets } from "./effets.ts";
 import { creerLumi } from "./personnage.ts";
@@ -10,9 +10,9 @@ import { scenarioDesPrincesses } from "./poses.ts";
  * Le temps de la maquette est accéléré pour que la scène entière tienne dans `DUREE_DE_LA_CELEBRATION_S`.
  * Sans toile (mouvements réduits), il n'y a ni pluie, ni traînée, ni étincelles d'envol : l'image fixe de l'état final.
  */
-export function creerLaScene(racine: SVGSVGElement, toile: HTMLCanvasElement | null, variante: VarianteDe<"princesse">) {
+export function creerLaScene(racine: SVGSVGElement, toile: HTMLCanvasElement | null, variante: VarianteDe<"princesse">, tenue?: CleDeTenue) {
   const scenario = scenarioDesPrincesses(variante);
-  const lumi = creerLumi(racine);
+  const lumi = creerLumi(racine, tenue);
   const effets = creerLesEffets(racine, toile !== null);
   const pluie = toile ? creerLaPluie(toile) : null;
 

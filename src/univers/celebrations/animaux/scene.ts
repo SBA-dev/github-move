@@ -1,4 +1,4 @@
-import type { VarianteDe } from "@domain/motivation";
+import type { CleDeTenue, VarianteDe } from "@domain/motivation";
 import { jouerLaScene } from "../commun/jeu-de-la-scene.ts";
 import { creerLesEffets } from "./effets.ts";
 import { creerLesFeuilles } from "./feuilles.ts";
@@ -11,9 +11,9 @@ import { scenarioDesAnimaux } from "./poses.ts";
  * Le temps de la maquette est accéléré pour que la scène entière tienne dans `DUREE_DE_LA_CELEBRATION_S`.
  * Sans toile (mouvements réduits), il n'y a pas de feuilles.
  */
-export function creerLaScene(racine: SVGSVGElement, toile: HTMLCanvasElement | null, variante: VarianteDe<"animaux">) {
+export function creerLaScene(racine: SVGSVGElement, toile: HTMLCanvasElement | null, variante: VarianteDe<"animaux">, tenue?: CleDeTenue) {
   const scenario = scenarioDesAnimaux(variante);
-  const noisette = creerNoisette(racine);
+  const noisette = creerNoisette(racine, tenue);
   const effets = creerLesEffets(racine);
   const feuilles = toile ? creerLesFeuilles(toile) : null;
 

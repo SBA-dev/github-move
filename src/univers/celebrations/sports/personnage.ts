@@ -1,8 +1,10 @@
+import type { CleDeTenue } from "@domain/motivation";
+import { habillerLeCorpsArticule } from "../commun/habiller.ts";
 import { clamp01, DEG, E, lerp, r1, r3 } from "../commun/courbes.ts";
 import { creerUnGroupe, deplacer, elementsDe, poser, trouver } from "../commun/dom.ts";
 import { type Expression, expressionA } from "../commun/expressions.ts";
 import { decaler, membre, type Point, trace } from "../commun/membres.ts";
-import { inclinaisonDuProfilDeLeo, placerLaChaussure } from "../commun/chaussure.ts";
+import { inclinaisonDeLaTigeDesBottes, inclinaisonDuProfilDeLeo, placerLaChaussure } from "../commun/chaussure.ts";
 import type { CoteDeMain, PoseDeMain } from "../commun/mains.ts";
 import { clignement, RAYON_DE_LA_TETE as R, traitDuVisage } from "../commun/visage.ts";
 import { dessinDuBras, MAINS, STRUCTURE_DE_COACH_LEO } from "./dessin-du-personnage.ts";
@@ -18,9 +20,10 @@ const EMOS: Record<Emotion, { sg: readonly [number, number]; sd: readonly [numbe
 };
 
 /** Coach Léo, dessiné image par image à partir des poses du scénario (portage du moteur des maquettes). */
-export function creerCoachLeo(racine: SVGSVGElement) {
+export function creerCoachLeo(racine: SVGSVGElement, tenue?: CleDeTenue) {
   const n = elementsDe(racine, "sports");
   n("leo").innerHTML = STRUCTURE_DE_COACH_LEO;
+  const habit = habillerLeCorpsArticule(n, n("leo"), "sports", tenue);
   const bras = { g: creerLeBras("g"), d: creerLeBras("d") };
   const bouches = [...n("bouches").children];
   const q1 = (g: ParentNode, classe: string) => trouver(g, `.${classe}`);
@@ -67,7 +70,7 @@ export function creerCoachLeo(racine: SVGSVGElement) {
     poser(q1(g, "chaussette-ombre"), "d", trace(decaler(m, 3.6, 1), .6, .95, 3));
     // chaussure de foot : vue de face, de profil ou semelle (pied levé), fondues selon la vue et l'angle du tibia
     const ch = n(`chaussure-${c}`), profilF = clamp01((Math.abs(Math.sin(vueCourante * DEG)) - .45) * 6), versCam = Math.cos(vueCourante * DEG) < 0 ? -1 : 1;
-    const { face, leve, sens } = placerLaChaussure(g, ch, m, { cote: c, tibia: ft, sw, profil: profilF, inclinaisonDuProfil: inclinaisonDuProfilDeLeo });
+    const { face, leve, sens } = placerLaChaussure(g, ch, m, { cote: c, tibia: ft, sw, profil: profilF, inclinaisonDuProfil: tenue === "bottes-de-pluie" ? inclinaisonDeLaTigeDesBottes : inclinaisonDuProfilDeLeo });
     poser(q1(face, "devant"), "opacity", versCam > 0 ? 1 : 0);
     poser(q1(face, "talon"), "opacity", versCam > 0 ? 0 : 1);
     const contact = q1(ch, "contact");
@@ -160,6 +163,7 @@ export function creerCoachLeo(racine: SVGSVGElement) {
     poser(q1(short, "ombre"), "d", `M${r1(hp * .2)} 8 Q${r1(hp + 1)} 0 ${r1(hp + 2)} 14 Q${r1(hp * .6)} 18 ${r1(hp * .15)} 17 Z`);
     poser(q1(short, "bande"), "d", `M${r1(-hp - 2)} 0 L${r1(-hp - 3)} 14 M${r1(hp + 2)} 0 L${r1(hp + 3)} 14`);
     deplacer(n("haut"), `rotate(${r1(p.torse)})`);
+    habit.suivre({ cw, sw, torse: p.torse });
     dessinerLaJambe(n("jambe-g"), "g", { x: -10 * wf, y: 4 }, lGt, lGs, fG, sw, p.tG);
     dessinerLaJambe(n("jambe-d"), "d", { x: 10 * wf, y: 4 }, lDt, lDs, fD, sw, p.tD);
     // le bras loin derrière le torse, le bras proche devant ; les deux devant la tête si « devant »

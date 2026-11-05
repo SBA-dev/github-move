@@ -1,7 +1,7 @@
 import { type ComponentType, lazy, Suspense } from "react";
-import type { CelebrationDeLUnivers, CleUnivers } from "@domain/motivation";
+import type { CelebrationDeLUnivers, CleDeTenue, CleUnivers } from "@domain/motivation";
 
-type PropsDeScene<Cle extends string> = { readonly cle: Cle; readonly cri: string };
+type PropsDeScene<Cle extends string> = { readonly cle: Cle; readonly cri: string; readonly tenue?: CleDeTenue | undefined };
 
 /** L'espace de la scène, vide : il garde la place pour que les boutons ne bougent pas quand la scène arrive, ou quand elle n'arrive pas. */
 function EspaceDeLaScene() {
@@ -61,29 +61,30 @@ function universSansScene(celebration: never): never {
   throw new Error(`Aucune scène de célébration pour ${JSON.stringify(celebration)}`);
 }
 
-type Props = { readonly celebration: CelebrationDeLUnivers };
+type Props = { readonly celebration: CelebrationDeLUnivers; readonly tenue?: CleDeTenue | undefined };
 
 /**
  * La célébration de l'univers, jouée à la place de la célébration commune : elle ne fait qu'afficher ce que le domaine a décidé
  * (la variante tirée, le cri de victoire). Dessin décoratif (`aria-hidden`) : l'annonce du moment est donnée ailleurs, une seule fois.
+ * Le personnage guide y porte la tenue donnée (rien sans tenue) : le domaine a choisi laquelle, la scène la dessine sur ses articulations.
  * Elle ne capte aucun toucher et ne prend jamais le focus. Avec les mouvements réduits : l'image fixe de l'état final, sans confetti.
  * Chaque scène est chargée à la demande, seulement pour l'univers du profil : en attendant, ou si le chargement échoue,
  * un espace vide de même taille est réservé et la fin du défi reste utilisable.
  */
-export function SceneDeCelebration({ celebration }: Props) {
+export function SceneDeCelebration({ celebration, tenue }: Props) {
   switch (celebration.univers) {
     case "sports":
-      return <Suspense fallback={<EspaceDeLaScene />}><SceneDesSports cle={celebration.variante.cle} cri={celebration.cri} /></Suspense>;
+      return <Suspense fallback={<EspaceDeLaScene />}><SceneDesSports cle={celebration.variante.cle} cri={celebration.cri} tenue={tenue} /></Suspense>;
     case "danse":
-      return <Suspense fallback={<EspaceDeLaScene />}><SceneDeLaDanse cle={celebration.variante.cle} cri={celebration.cri} /></Suspense>;
+      return <Suspense fallback={<EspaceDeLaScene />}><SceneDeLaDanse cle={celebration.variante.cle} cri={celebration.cri} tenue={tenue} /></Suspense>;
     case "animaux":
-      return <Suspense fallback={<EspaceDeLaScene />}><SceneDesAnimaux cle={celebration.variante.cle} cri={celebration.cri} /></Suspense>;
+      return <Suspense fallback={<EspaceDeLaScene />}><SceneDesAnimaux cle={celebration.variante.cle} cri={celebration.cri} tenue={tenue} /></Suspense>;
     case "princesse":
-      return <Suspense fallback={<EspaceDeLaScene />}><SceneDesPrincesses cle={celebration.variante.cle} cri={celebration.cri} /></Suspense>;
+      return <Suspense fallback={<EspaceDeLaScene />}><SceneDesPrincesses cle={celebration.variante.cle} cri={celebration.cri} tenue={tenue} /></Suspense>;
     case "police":
-      return <Suspense fallback={<EspaceDeLaScene />}><SceneDeLaPolice cle={celebration.variante.cle} cri={celebration.cri} /></Suspense>;
+      return <Suspense fallback={<EspaceDeLaScene />}><SceneDeLaPolice cle={celebration.variante.cle} cri={celebration.cri} tenue={tenue} /></Suspense>;
     case "pompier":
-      return <Suspense fallback={<EspaceDeLaScene />}><SceneDesPompiers cle={celebration.variante.cle} cri={celebration.cri} /></Suspense>;
+      return <Suspense fallback={<EspaceDeLaScene />}><SceneDesPompiers cle={celebration.variante.cle} cri={celebration.cri} tenue={tenue} /></Suspense>;
     default:
       return universSansScene(celebration);
   }

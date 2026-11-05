@@ -1,3 +1,5 @@
+import type { CleDeTenue } from "@domain/motivation";
+import { habillerLeCorpsArticule } from "../commun/habiller.ts";
 import { clamp01, DEG, E, lerp, r1, r3 } from "../commun/courbes.ts";
 import { brasVers } from "../commun/atteindre.ts";
 import { creerUnGroupe, deplacer, elementsDe, poser, trouver } from "../commun/dom.ts";
@@ -37,15 +39,18 @@ const poseDeMain = (valeur: number) => Math.max(0, Math.min(3, Math.round(valeur
 export type DessinDeSam = { readonly pose: Pose };
 
 /** Capitaine Sam, dessiné image par image à partir des poses du scénario (portage du moteur de la maquette : le corps de Coach Léo, la tête et la tenue de Sam). */
-export function creerCapitaineSam(racine: SVGSVGElement) {
+export function creerCapitaineSam(racine: SVGSVGElement, tenue?: CleDeTenue) {
   const n = elementsDe(racine, "pompier");
   n("sam").innerHTML = STRUCTURE_DE_CAPITAINE_SAM;
+  const habit = habillerLeCorpsArticule(n, n("sam"), "pompier", tenue);
   const bouches = [...n("bouches").children];
   const q1 = (g: ParentNode, classe: string) => trouver(g, `.${classe}`);
   const bras = { g: creerLeBras("g"), d: creerLeBras("d") };
   n("bras-arriere").append(bras.g);
   n("bras-avant").append(bras.d);
   const jambes = { g: n("jambe-g"), d: n("jambe-d") };
+  // les bottes de pluie remplacent les bottes noires du pantalon : elles ne se dessinent pas par-dessus
+  if (tenue === "bottes-de-pluie") for (const jambe of [jambes.g, jambes.d]) for (const classe of ["botte", "botte-bord"]) poser(q1(jambe, classe), "display", "none");
   const lance = { pointe: q1(n("lance-tenue"), "m-pointe"), axe: q1(n("lance-tenue"), "m-axe"), arriere: q1(n("lance-tenue"), "m-arriere") };
   let vueCourante = 0;
 
@@ -172,6 +177,7 @@ export function creerCapitaineSam(racine: SVGSVGElement) {
     deplacer(n("sam"), `translate(${r1(p.x)} ${r1(p.y)}) scale(${r3(BASE * p.sx)} ${r3(BASE * p.sy)})`);
     dessinerLeBuste(wf, sw);
     deplacer(n("haut"), `rotate(${r1(p.torse)})`);
+    habit.suivre({ cw, sw, torse: p.torse });
     const procheJ = sw >= 0 ? "d" : "g", loinJ = procheJ === "d" ? "g" : "d";
     dessinerLaJambe(n("jambe-g"), "g", { x: -10 * wf, y: 4 }, p.lGt, p.lGs, p.fG, sw, p.tG);
     dessinerLaJambe(n("jambe-d"), "d", { x: 10 * wf, y: 4 }, p.lDt, p.lDs, p.fD, sw, p.tD);

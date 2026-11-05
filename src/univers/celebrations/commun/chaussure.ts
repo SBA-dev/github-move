@@ -38,5 +38,7 @@ export function placerLaChaussure(jambe: SVGElement, chaussure: SVGElement, m: M
 
 /** L'inclinaison de la chaussure de profil de Coach Léo, de Lili et d'Agent Max. */
 export const inclinaisonDuProfilDeLeo = (vx: number, vy: number, sens: number) => Math.atan2(vx * sens, -vy) / DEG * .25;
-/** Celle de Capitaine Sam. */
+/** Celle de Capitaine Sam : la chaussure reste dans le prolongement du tibia. */
 export const inclinaisonDuProfilDeSam = (vx: number, vy: number, sens: number) => -Math.atan2(vx * sens, vy) / DEG * .25;
+/** Une botte a une longue tige : de profil, elle reste dans le prolongement du tibia, comme chez Capitaine Sam, et ne se couche pas comme la chaussure de Coach Léo. */
+export const inclinaisonDeLaTigeDesBottes = inclinaisonDuProfilDeSam;

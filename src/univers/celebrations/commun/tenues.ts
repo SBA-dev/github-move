@@ -118,13 +118,13 @@ export function dessinDeLaBotte(tige: number): string {
 export function vuesDeLaBotte(tige: number): { readonly face: string; readonly profil: string; readonly semelle: string } {
   const haut = -tige;
   return {
-    face: `<g ${TRAIT_DES_BOTTES}>${corpsDeLaBotte(tige)}</g><g class="devant">${refletDeLaBotte(tige)}</g><g class="talon"/>`,
-    profil: `<g ${TRAIT_DES_BOTTES}>
+    face: `<g data-tenue-dessin="bottes-de-pluie" ${TRAIT_DES_BOTTES}>${corpsDeLaBotte(tige)}</g><g class="devant">${refletDeLaBotte(tige)}</g><g class="talon"/>`,
+    profil: `<g data-tenue-dessin="bottes-de-pluie" ${TRAIT_DES_BOTTES}>
     <path d="M-9 ${haut} H8 V0 Q9 -1 14 0 Q25 1 25 9 Q25 15 18 16 H-9 Q-14 16 -14 10 Q-14 3 -9 1 Z" fill="${JAUNE_DE_LA_BOTTE}"/>
     <path d="M-9 ${haut} H8 V${haut + 6} H-9 Z" fill="${ROUGE_DE_LA_BOTTE}"/>
     <path d="M-14 12 H25" stroke-width="1.6" stroke="${SEMELLE_DE_LA_BOTTE}" fill="none"/>
     <path d="M-4 ${haut + 10} V4" stroke="#FFF3B8" stroke-width="2.4" stroke-linecap="round" fill="none"/></g>`,
-    semelle: `<path d="M-10 -10 Q-14 0 -11 10 Q-4 16 3 16 Q12 16 14 8 Q15 -2 11 -10 Q0 -14 -10 -10 Z" fill="${SEMELLE_DE_LA_BOTTE}" stroke="${CONTOUR}" stroke-width="2.4" stroke-linejoin="round"/>
-    <g fill="none" stroke="#FFF3B8" stroke-width="1.8" stroke-linecap="round"><path d="M-6 -4 H7 M-6 2 H8 M-5 8 H7"/></g>`,
+    semelle: `<g data-tenue-dessin="bottes-de-pluie"><path d="M-10 -10 Q-14 0 -11 10 Q-4 16 3 16 Q12 16 14 8 Q15 -2 11 -10 Q0 -14 -10 -10 Z" fill="${SEMELLE_DE_LA_BOTTE}" stroke="${CONTOUR}" stroke-width="2.4" stroke-linejoin="round"/>
+    <g fill="none" stroke="#FFF3B8" stroke-width="1.8" stroke-linecap="round"><path d="M-6 -4 H7 M-6 2 H8 M-5 8 H7"/></g></g>`,
   };
 }

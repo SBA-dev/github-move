@@ -1,8 +1,10 @@
+import type { CleDeTenue } from "@domain/motivation";
+import { habillerLeCorpsArticule } from "../commun/habiller.ts";
 import { clamp01, DEG, E, fenetre, lerp, r1, r3 } from "../commun/courbes.ts";
 import { creerUnGroupe, deplacer, elementsDe, poser, trouver } from "../commun/dom.ts";
 import { expressionA } from "../commun/expressions.ts";
 import { decaler, membre, type Membre, type Point, trace } from "../commun/membres.ts";
-import { inclinaisonDuProfilDeLeo, placerLaChaussure } from "../commun/chaussure.ts";
+import { inclinaisonDeLaTigeDesBottes, inclinaisonDuProfilDeLeo, placerLaChaussure } from "../commun/chaussure.ts";
 import type { CoteDeMain, PoseDeMain } from "../commun/mains.ts";
 import { clignement } from "../commun/visage.ts";
 import { anglesVers, brasVers, HANCHE } from "../commun/atteindre.ts";
@@ -24,9 +26,10 @@ const EMOS: Record<Emotion, { readonly s: readonly [number, number]; readonly li
 export type DessinDeMax = { readonly pose: Pose; readonly mains: { readonly g: Membre; readonly d: Membre } };
 
 /** Agent Max, dessiné image par image à partir des poses du scénario (portage du moteur de la maquette : le corps de Coach Léo, la tête et la tenue de Max). */
-export function creerAgentMax(racine: SVGSVGElement) {
+export function creerAgentMax(racine: SVGSVGElement, tenue?: CleDeTenue) {
   const n = elementsDe(racine, "police");
   n("max").innerHTML = STRUCTURE_D_AGENT_MAX;
+  const habit = habillerLeCorpsArticule(n, n("max"), "police", tenue);
   const bouches = [...n("bouches").children];
   const q1 = (g: ParentNode, classe: string) => trouver(g, `.${classe}`);
   const bras = { g: creerLeBras("g"), d: creerLeBras("d") };
@@ -74,7 +77,7 @@ export function creerAgentMax(racine: SVGSVGElement) {
     poser(q1(g, "lumiere"), "d", trace(decaler(m, -3.4, -1.2), .3, .7));
     poser(q1(g, "revers"), "d", trace(m, .9, .97, 1));
     const ch = n(`chaussure-${c}`), profilF = clamp01((Math.abs(Math.sin(vueCourante * DEG)) - .45) / (Math.sin(VUE_MAXIMALE * DEG) - .45));
-    const { sens } = placerLaChaussure(g, ch, m, { cote: c, tibia: ft, sw, profil: profilF, inclinaisonDuProfil: inclinaisonDuProfilDeLeo });
+    const { sens } = placerLaChaussure(g, ch, m, { cote: c, tibia: ft, sw, profil: profilF, inclinaisonDuProfil: tenue === "bottes-de-pluie" ? inclinaisonDeLaTigeDesBottes : inclinaisonDuProfilDeLeo });
     const contact = q1(ch, "contact");
     poser(contact, "opacity", 0);
     deplacer(contact, `translate(${r1(profilF * sens * 5)} 12) scale(${r3(1 + profilF * .5)} 1)`);
@@ -230,6 +233,7 @@ export function creerAgentMax(racine: SVGSVGElement) {
     poser(q1(bassin, "ombre"), "d", `M${r1(hp * .2)} 5 Q${r1(hp + 1)} 0 ${r1(hp + 2)} 12 Q${r1(hp * .6)} 15 ${r1(hp * .15)} 11 Z`);
     poser(q1(bassin, "pli"), "d", `M${r1(4 * sw)} 2 V9`);
     deplacer(n("haut"), `rotate(${r1(p.torse)})`);
+    habit.suivre({ cw, sw, torse: p.torse });
     const procheJ = sw >= 0 ? "d" : "g", loinJ = procheJ === "d" ? "g" : "d";
     if (p.trot > 0) poserLesJambesSurLaTrottinette(p, jambesEnMouvement, f, procheJ);
     const j = jambesEnMouvement;

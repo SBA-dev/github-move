@@ -1,9 +1,11 @@
+import type { CleDeTenue } from "@domain/motivation";
+import { habillerLeCorpsArticule } from "../commun/habiller.ts";
 import { clamp01, DEG, E, lerp, r1, r3 } from "../commun/courbes.ts";
 import { creerUnGroupe, deplacer, elementsDe, poser, trouver } from "../commun/dom.ts";
 import { type Expression, expressionA } from "../commun/expressions.ts";
 import type { CoteDeMain, PoseDeMain } from "../commun/mains.ts";
 import { decaler, membre, type Point, trace } from "../commun/membres.ts";
-import { inclinaisonDuProfilDeLeo, placerLaChaussure } from "../commun/chaussure.ts";
+import { inclinaisonDeLaTigeDesBottes, inclinaisonDuProfilDeLeo, placerLaChaussure } from "../commun/chaussure.ts";
 import { clignement, RAYON_DE_LA_TETE as R, traitDuVisage } from "../commun/visage.ts";
 import { dessinDuBras, MAINS, QUEUE_DE_CHEVAL, STRUCTURE_DE_LILI } from "./dessin-de-lili.ts";
 import { type Emotion, type Pose, poseA, type ScenarioDeDanse } from "./poses.ts";
@@ -19,9 +21,10 @@ const EMOS: Record<Emotion, { sg: readonly [number, number]; sd: readonly [numbe
 };
 
 /** Lili, dessinée image par image à partir des poses du scénario (portage du moteur de la maquette). */
-export function creerLili(racine: SVGSVGElement) {
+export function creerLili(racine: SVGSVGElement, tenue?: CleDeTenue) {
   const n = elementsDe(racine, "danse");
   n("lili").innerHTML = STRUCTURE_DE_LILI;
+  const habit = habillerLeCorpsArticule(n, n("lili"), "danse", tenue);
   n("queue-arriere").innerHTML = QUEUE_DE_CHEVAL;
   const bras = { g: creerLeBras("g"), d: creerLeBras("d") };
   const bouches = [...n("bouches").children];
@@ -70,7 +73,7 @@ export function creerLili(racine: SVGSVGElement) {
     poser(q1(g, "chaussette-ombre"), "d", trace(decaler(m, 3.6, 1), .6, .95, 3));
     // chausson : vue de face, de profil ou semelle (pied levé), fondues selon la vue et l'angle du tibia
     const ch = n(`chaussure-${c}`), profilF = clamp01((Math.abs(Math.sin(vueCourante * DEG)) - .45) * 6), versCam = Math.cos(vueCourante * DEG) < 0 ? -1 : 1;
-    const { face, leve, sens } = placerLaChaussure(g, ch, m, { cote: c, tibia: ft, sw, profil: profilF, inclinaisonDuProfil: inclinaisonDuProfilDeLeo });
+    const { face, leve, sens } = placerLaChaussure(g, ch, m, { cote: c, tibia: ft, sw, profil: profilF, inclinaisonDuProfil: tenue === "bottes-de-pluie" ? inclinaisonDeLaTigeDesBottes : inclinaisonDuProfilDeLeo });
     poser(q1(face, "devant"), "opacity", versCam > 0 ? 1 : 0);
     poser(q1(face, "talon"), "opacity", versCam > 0 ? 0 : 1);
     const contact = q1(ch, "contact");
@@ -173,6 +176,7 @@ export function creerLili(racine: SVGSVGElement) {
     poser(q1(tutu, "bande"), "d", `M${r1(-W * .55)} -5 Q0 2 ${r1(W * .55)} -5`);
     deplacer(tutu, `scale(${r3(1 + bond * .08)} ${r3(1 + bond * .18)})`);
     deplacer(n("haut"), `rotate(${r1(p.torse)})`);
+    habit.suivre({ cw, sw, torse: p.torse });
     // jambes (attachées aux hanches), un peu allongées sur les demi-pointes
     dessinerLaJambe(n("jambe-g"), "g", { x: -9 * wf, y: 4 }, lGt, lGs, fG * (1 + .06 * p.pointe), sw, 1);
     dessinerLaJambe(n("jambe-d"), "d", { x: 9 * wf, y: 4 }, lDt, lDs, fD * (1 + .06 * p.pointe), sw, p.tD);
