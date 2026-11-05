@@ -4,15 +4,17 @@ import type { Hasard } from "./hasard.ts";
 import { tirerDans } from "./paroles.ts";
 import type { CleUnivers } from "./univers.ts";
 
+/** Un univers ajouté à `CleUnivers` sans célébration ne compile pas. */
 const CLES_DE_VARIANTE = {
   sports: ["glissade", "avion", "danse"],
   danse: ["jete", "ruban", "sauts"],
   animaux: ["jongle", "mange", "joues"],
   princesse: ["arc", "envol", "signes"],
   police: ["orchestre", "trottinette", "danse"],
-} as const;
+  pompier: ["cloche", "arc", "pluie"],
+} as const satisfies Record<CleUnivers, readonly string[]>;
 
-export type UniversCelebre = keyof typeof CLES_DE_VARIANTE;
+export type UniversCelebre = CleUnivers;
 
 export type VarianteDe<U extends UniversCelebre> = (typeof CLES_DE_VARIANTE)[U][number];
 
@@ -36,6 +38,7 @@ const CRIS_ET_MUSIQUES: Record<UniversCelebre, { readonly cri: CriDeVictoire; re
   animaux: { cri: "Hourra !", musique: "grandeVictoire" },
   princesse: { cri: "Magique !", musique: "grandeVictoire" },
   police: { cri: "Enquête résolue !", musique: "grandeVictoire" },
+  pompier: { cri: "Mission accomplie !", musique: "grandeVictoire" },
 };
 
 function celebrer<U extends UniversCelebre>(univers: U, moment: MomentDeCelebration, hasard: Hasard): CelebrationDe<U> {
@@ -51,16 +54,9 @@ const CELEBRANTS: {
   animaux: (moment, hasard) => celebrer("animaux", moment, hasard),
   princesse: (moment, hasard) => celebrer("princesse", moment, hasard),
   police: (moment, hasard) => celebrer("police", moment, hasard),
+  pompier: (moment, hasard) => celebrer("pompier", moment, hasard),
 };
 
-function estUniversCelebre(cle: CleUnivers): cle is UniversCelebre {
-  return Object.hasOwn(CELEBRANTS, cle);
-}
-
-export function celebrationDe(
-  moment: MomentDeCelebration,
-  cle: CleUnivers,
-  hasard: Hasard,
-): CelebrationDeLUnivers | undefined {
-  return estUniversCelebre(cle) ? CELEBRANTS[cle](moment, hasard) : undefined;
+export function celebrationDe(moment: MomentDeCelebration, cle: CleUnivers, hasard: Hasard): CelebrationDeLUnivers {
+  return CELEBRANTS[cle](moment, hasard);
 }

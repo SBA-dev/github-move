@@ -114,7 +114,7 @@ classDiagram
 | Animaux | Noisette (elle) | attrape une noisette dorée | `jongle`, `mange`, `joues` | « Hourra ! » | 106c |
 | Princesses et fées | Lumi | un sort fait éclore une fleur | `arc`, `envol`, `signes` | « Magique ! » | 106d |
 | Police | Agent Max | suit des traces de pattes à la loupe et retrouve un chiot perdu ; confettis du commissariat (106.24) | `orchestre`, `trottinette`, `danse` | « Enquête résolue ! » | 106e |
-| Pompiers | Capitaine Sam | planche et maquette à dessiner puis à valider par le PO (106.16 : eau, arc-en-ciel, cloche de la caserne) | à dessiner | « Mission accomplie ! » | 106f |
+| Pompiers | Capitaine Sam | arrose le jardin de la caserne, les fleurs s'ouvrent ; pétales de la caserne (106.24) (maquette dessinée en 106f, validée : 106.42) | `cloche`, `arc`, `pluie` (106.41) | « Mission accomplie ! » | 106f |
 
   Validité : au moins une variante par univers livré ; clés uniques dans un univers. Un univers pas encore livré n'a pas d'entrée : `celebrationDe` rend « aucune célébration de l'univers » et la fin garde la célébration commune (106.18). Quand les six univers sont livrés, le catalogue peut devenir exhaustif sur `CleUnivers` (un univers ajouté sans célébration ne compile plus).
 - **`CriDeVictoire`** : texte court, fixe par univers ; du contenu pour l'enfant, soumis à la règle absolue. Affiché, jamais lu à part (106.14).
@@ -536,6 +536,98 @@ Reco : **A**.
 Reco : **A**. Dans les deux cas, 106e ne touche pas `AgentMax.tsx`.
 
 Aucune question ouverte pour 106e.
+
+## Livraison 106f : Pompiers
+
+Capitaine Sam (« il », le pompier courageux, la Caserne des Savanturiers), univers Pompiers. **Il n'y avait pas de maquette** (106.16) : 106f la dessine d'abord, `docs/maquettes/capitaine-sam-pompiers.html`, avec sa planche (`docs/stories/106/captures/106f-capitaine-sam-*.png`). Le PO les a **validées le 2026-11-05** (106.16, 98.28, 106.42), avant tout câblage. Le dessin fixe `CapitaineSam.tsx` n'est pas touché par 106f : issue #161 (106.43 A). Aucun agrégat, aucun événement, aucune donnée d'enfant de plus : 106f ajoute l'entrée `pompier` aux structures posées par 106b et suivies par 106c, 106d et 106e (`VARIANTES_DES_UNIVERS`, donc `UniversCelebre`, `VarianteDe<"pompier">`, l'union `CelebrationDeLUnivers`, le catalogue des cris et des musiques, la table des chargeurs de scène). Aucun type nouveau. La clé de l'univers est `pompier` (au singulier, `univers.ts`).
+
+**Nom.** Le nom du personnage guide est le même partout : « Capitaine Sam », « le pompier courageux » (`supabase/functions/_shared/motivation/domain/univers.ts`, dessin fixe `src/univers/personnages/CapitaineSam.tsx`, table de `src/univers/PersonnageGuide.tsx`). Le fichier `src/univers/apparences.ts` cité par le brief n'existe pas : les noms vivent dans `univers.ts`. Le glossaire ne nomme pas les personnages guides ; il cite déjà « mission accomplie » comme expression du personnage guide « Pompiers » (terme « Quête accomplie »). Le cri de victoire « Mission accomplie ! » est le même texte que la première expression de Capitaine Sam : ce sont deux concepts distincts, que le terme « Cri de victoire » prévoit déjà (comme « Enquête résolue ! » en 106e).
+
+### Entrée du catalogue
+
+| Univers | Variantes | Cri de victoire | Musique |
+|---|---|---|---|
+| `pompier` | `cloche`, `arc`, `pluie` | « Mission accomplie ! » | `grandeVictoire`, en attendant le choix du PO (106.27) |
+
+L'action est toujours la même : dans la cour de la caserne, Capitaine Sam arrose le petit jardin avec sa lance, et les boutons de fleurs s'ouvrent un à un. Elle n'est pas dans le domaine (affichage). Elle remplace l'action provisoire « le jet de sa lance dessine un arc-en-ciel » du scénario `@hors-106a` (posée avant la maquette) : l'arc-en-ciel devient une variante.
+
+La clé `arc` existe déjà chez Princesses et fées. C'est permis : une clé de variante n'est unique que dans son univers, et `VarianteDe<"pompier">` et `VarianteDe<"princesse">` restent deux types distincts.
+
+### Noms en clair des variantes (106.26, question 106.41)
+
+| Clé | Ce que fait Capitaine Sam (maquette) | Libellé des scénarios |
+|---|---|---|
+| `cloche` | il pose la lance et tire la corde de la cloche dorée de la caserne : elle se balance, des bulles « ding ! » et « dong ! » et des notes de musique, puis un saut de joie, bras en V, et un clin d'œil | « la cloche de la caserne » |
+| `arc` | il lève la lance et balaie le ciel d'un grand arc d'eau : un arc-en-ciel apparaît au-dessus de la caserne ; il pose la lance, pouce levé, clin d'œil | « l'arc-en-ciel » |
+| `pluie` | il dirige le jet tout droit vers le haut : l'eau retombe en petite pluie scintillante sur lui et sur les fleurs ; il rit, ouvre les bras, s'ébroue, pouce levé | « la pluie joyeuse » |
+
+Les libellés reprennent les boutons de la maquette (« A · Cloche », « B · Arc-en-ciel », « C · Pluie »). L'enfant ne les voit jamais. « L'arc-en-ciel » est aussi le libellé d'une variante de Lumi : les scénarios ne les mélangent pas, chaque libellé est écrit dans la règle de son univers.
+
+### Pétales de la caserne (application de 106.24)
+
+Au moment du cri de victoire, la maquette fait tomber sur la cour des pétales de fleurs et des gouttelettes scintillantes. Dans les scénarios, on les appelle **« les pétales de la caserne »**. Ils font partie de la célébration de l'univers de Capitaine Sam, comme les confettis de Coach Léo, les pétales de la salle de Lili, les feuilles de la forêt de Noisette, les étincelles du jardin de Lumi et les confettis du commissariat d'Agent Max (106.24, invariant 2). Ils ne s'ajoutent jamais aux confettis de la célébration commune. En mouvements réduits, aucun ne tombe : on voit l'image fixe de l'état final de la variante, avec le cri de victoire et l'annonce (invariant 7).
+
+Le jet d'eau de l'action, l'arc d'eau, l'arc-en-ciel et la pluie de la variante `pluie` font partie de l'action et des variantes, pas des pétales de la caserne. L'arc-en-ciel reste sur l'image fixe de la variante `arc` ; la pluie de la variante `pluie` n'y tombe pas (gouttes immobiles ou absentes). Les fleurs ouvertes, la caserne, l'arbre, le soleil et les nuages sont du décor : ils ne tombent pas, et les nuages ne bougent pas en mouvements réduits.
+
+On applique aussi, sans question nouvelle :
+- la maquette affiche « Défi relevé ! » en titre et l'annonce une seule fois ; dans l'application, seul le moment est annoncé (invariant 8, 106.14) ;
+- toucher la scène passe l'animation dans la maquette. Dans l'application, un toucher hors des boutons ne fait rien (invariant 6, 106.10) ;
+- la maquette n'a **pas d'animation d'échec** : la réaction à une réponse fausse reste hors de #106 (106.20) ;
+- le personnage guide n'est pas montré deux fois pendant la célébration (106.28 « cacher ») ;
+- Capitaine Sam ne se montre jamais de dos : de face ou de trois-quarts, 38° au plus (README des maquettes) ;
+- « ding ! » et « dong ! » sont des bulles écrites. Aucun son de cloche n'est joué : la musique est le seul son (invariant 9). Les bulles font partie du dessin `aria-hidden` et ne sont jamais annoncées ;
+- **durée** : la maquette dure environ 5 s, comme celles de Lili et de Noisette, et le port l'accélère environ 1,7 fois pour tenir en `DUREE_DE_LA_CELEBRATION_S` (3 s, décision 0039, règle de 106.38 A). Les gestes sont dessinés pour rester lisibles à cette vitesse.
+
+### Règle absolue de contenu pour Capitaine Sam (invariant 10)
+
+À toutes les tailles et sur l'image fixe :
+- **Un pompier qui arrose et qui fête.** De l'eau, des fleurs, un arc-en-ciel, la cloche de la caserne. **Ni flamme, ni fumée, ni braise**, ni maison qui brûle, ni sauvetage, ni personne en détresse, ni danger. Ni hache, ni outil qui coupe. La lance est un tuyau souple et un embout argenté ; le jet est bleu clair et doux, il ne vise personne et ne bouscule rien.
+- **Ni sirène, ni gyrophare, ni lumière qui clignote.** Pas de camion de pompiers en mouvement : la grande porte de la caserne reste fermée. Les rayons du cri de victoire s'ouvrent une seule fois, sans tourner ni clignoter.
+- **La cloche** se lit comme une fête (bulles « ding ! » « dong ! », notes de musique, saut de joie), jamais comme une alerte : aucun personnage ne court, rien ne s'agite autour.
+- **La pluie joyeuse** : quelques gouttes douces ; Capitaine Sam rit, il n'a ni froid ni peur, il n'est jamais trempé au point d'être malheureux. Pas d'orage, pas d'éclair, ciel clair.
+- **Couleurs** : le rouge reste sur la veste et sur la caserne ; aucune forme orange ou rouge en pointe qui pourrait se lire comme une flamme, aucune forme grise en volutes qui pourrait se lire comme de la fumée, à aucune taille (80 px compris).
+- **Aucune étoile à cinq branches** (106.34 A, 106.35) : le casque porte un **écusson sans étoile** (blason rouge à goutte d'eau blanche) ; les éclats sont des étincelles à quatre branches, des fleurs ou des gouttes. Aucun dessin ne reprend la forme ni la couleur de l'étoile gagnée à la fin d'une séance (invariant 11, 100.13).
+- **Décor accueillant** : cour de la caserne en plein jour, bâtiment rouge et crème, porte fermée à hublots, cloche dorée sous une petite arche, jardin, arbre, soleil et nuages. **Aucun texte** sur le bâtiment. Aucun coffre, ni coupe, ni podium.
+- La **planche** (images clés de l'action, des trois variantes et de l'image fixe, à 360, 160 et 80 px, sur fond clair et sur fond sombre) est validée par le PO **avant le câblage** (106.42).
+
+### Ce qui reste dans `src/`
+
+- `src/univers/celebrations/pompiers/` contient la scène de Capitaine Sam : décor de la cour et de la caserne, cloche, jardin et fleurs qui s'ouvrent, lance, tuyau et dévidoir, jet d'eau, arc-en-ciel, pluie, bulles et pétales de la caserne. Elle est portée depuis la maquette avec le moteur isolé (106.22).
+- Comme celle d'Agent Max, la maquette reprend **tels quels le corps, les membres, les mains et le moteur de Coach Léo** ; seuls la tête, la tenue et les couleurs changent. Le port réutilise donc les morceaux de `src/univers/celebrations/commun/` posés par 106b à 106e (et ce que 106e y aura déplacé depuis `sports/`), sans rien copier depuis `sports/` ni `police/`. Ce qui servirait à deux scènes est déplacé dans `commun/` (refactor).
+- Les poses de la scène sont un `Record<VarianteDe<"pompier">, …>` : une variante ajoutée au domaine sans son dessin ne compile pas.
+- Les identifiants SVG sont préfixés `pompier-` (au singulier) : `commun/dom.ts` construit le préfixe depuis la clé d'univers. Le dossier de la scène s'appelle `pompiers/`, comme `princesses/`.
+- `SceneDeCelebration.tsx` ajoute le cas `pompier` à son `switch (celebration.univers)` et à la table des chargeurs. La scène est **chargée à la demande** et reste dans le précache de la PWA (#8).
+- **Tenue portée (106.31, renvoyée à 106h)** : Capitaine Sam est dans sa tenue de base ; la scène n'importe pas `tenues.tsx`, la planche ne montre aucune tenue.
+- **Ordre de travail** : 106e (Police) modifie les mêmes fichiers (`celebrations-des-univers.ts`, ses tests, `SceneDeCelebration.tsx`, `commun/`, le `.feature`). 106f prépare le modèle, les scénarios, la maquette et la planche depuis `main`, puis **attend le merge de 106e et intègre `main` avant de câbler** le catalogue et la scène.
+
+### Le catalogue devient exhaustif
+
+Pompiers est le **dernier univers livré**. Une fois 106e mergée et l'entrée `pompier` ajoutée, chaque `CleUnivers` a sa célébration. Comme prévu par la section « Validité », le catalogue devient **exhaustif sur `CleUnivers`** : `VARIANTES_DES_UNIVERS` est typé pour couvrir toutes les clés (un univers ajouté à `univers.ts` sans célébration ne compile plus), et `UniversCelebre` se confond avec `CleUnivers`. Conséquences, faites au câblage :
+- `celebrationDe` rend une célébration pour toute clé d'univers ; il ne rend plus « aucune célébration de l'univers ». Si sa signature garde `| undefined` (par exemple pour ne pas toucher `FinDuDefi.tsx`), c'est un refactor noté, pas une règle ;
+- la célébration commune reste jouée là où il n'y a **aucun moment de célébration** (défi rejoué, 106.3, invariant 5) : ce cas ne dépend pas de l'univers et ne change pas ;
+- invariant 2 et 106.18 restent vrais, mais 106.18 (« un univers sans célébration garde la célébration commune ») n'a plus de cas.
+
+### Tests
+
+- `celebrations-des-univers_test.ts` : la boucle sur les univers sans célébration perd son dernier élément (`pompier`) et disparaît ; la boucle sur les univers livrés gagne `pompier` avec `["cloche", "arc", "pluie"]` et le cri « Mission accomplie ! ». Un test vérifie que **chaque** `CleUnivers` de `UNIVERS` a une célébration (exhaustivité, en plus du typage).
+- `celebration-de-la-fin_test.ts` : le test « le premier défi relevé dans un univers pas encore livré garde la célébration commune », passé à `pompier` par 106d, **n'a plus de cas** : il est remplacé par « le premier défi relevé dans l'univers Pompiers joue la célébration de Capitaine Sam » ; le test du défi rejoué (célébration commune) reste.
+- `features/106-celebration-de-l-univers.feature` : la règle « Livraison 106f » (5 scénarios `@livraison-106f`) ; la ligne Pompiers sort du plan « pas encore livré » et du plan `@hors-106a`. À l'intégration de 106e, ces deux plans n'ont plus d'exemple : le plan « pas encore livré » est supprimé (106.18 n'a plus de cas) et le plan `@hors-106a` aussi.
+
+### Questions
+
+Aucune question ouverte pour 106f. Toutes sont **tranchées le 2026-11-05** par le PO (« 106f reco tout », [annonce du responsable](https://github.com/SBA-dev/github-move/issues/106#issuecomment-6656757030)).
+
+**106.41 Noms des variantes de Capitaine Sam.** *Tranchée (reco retenue, 2026-11-05).* Clés `cloche`, `arc`, `pluie` ; libellés des scénarios « la cloche de la caserne », « l'arc-en-ciel », « la pluie joyeuse » (tableau plus haut). L'action : « il arrose le jardin de la caserne et les fleurs s'ouvrent ».
+- **Reco** : les retenir.
+- Autre choix : d'autres noms, ou une autre variante (par exemple un jet d'eau qui dessine un cœur, ou un défilé avec la lance en l'air).
+
+**106.42 Maquette et planche de Capitaine Sam.** *Tranchée (validées, 2026-11-05 ; commit `ada9930`).* Maquette `docs/maquettes/capitaine-sam-pompiers.html` et planche `docs/stories/106/captures/106f-capitaine-sam-*.png` (moments, clair, sombre, têtes). Le PO les valide avant le câblage (106.16).
+- **Reco** : les valider, ou demander des retouches (ce qui reste possible jusqu'au câblage).
+
+**106.43 Dessin fixe de Capitaine Sam.** *Tranchée (A retenue, 2026-11-05 ; issue #161).* Capitaine Sam est le seul personnage guide qui « garde son dessin d'avant la refonte » (#96, `src/univers/PersonnageGuide.tsx`, `DESSINS_REDESSINES`) : un petit dessin simple, sans contour. Pendant la célébration, il apparaît dans le nouveau style (corps de Coach Léo, casque jaune à écusson, veste rouge à bandes). Juste après, la fin du défi montre le dessin fixe, dans l'ancien style. C'est le même écart que 106.39 pour l'étoile d'Agent Max, en plus grand.
+- **Reco A** : une issue à part, hors de 106f, pour redessiner le dessin fixe `CapitaineSam.tsx` d'après la maquette validée (comme les cinq autres en #96) ; 106f ne touche pas au dessin fixe.
+- B : 106f redessine aussi le dessin fixe (plus de travail, touche les scénarios et la planche de #96).
+- C : laisser l'écart.
 
 ## Questions ouvertes
 

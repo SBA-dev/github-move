@@ -2,7 +2,7 @@ import type { VarianteDe } from "@domain/motivation";
 import { E, lerp } from "../commun/courbes.ts";
 import type { ChangementDExpression } from "../commun/expressions.ts";
 import { compiler, type ImageCle, type ImagePartielle, poseA as poseDeLaScene } from "../commun/poses.ts";
-import { brasVers } from "./atteindre.ts";
+import { brasVers } from "../commun/atteindre.ts";
 
 /**
  * Agent Max : les angles sont en degrés, positifs = sens horaire (g/d = côté gauche/droit de l'écran). `vue` : 0 = de face, ±38 = trois-quarts,

@@ -26,12 +26,15 @@ Deno.test("un défi rejoué dans l'univers Sports garde la célébration commune
   assertEquals(celebration, { sorte: "commune" });
 });
 
-Deno.test("le premier défi relevé dans un univers pas encore livré garde la célébration commune", () => {
+Deno.test("le premier défi relevé dans l'univers Pompiers joue la célébration de Capitaine Sam", () => {
   const celebration = celebrationDeLaFin(
     { defiRelevePourLaPremiereFois: true },
     "pompier",
     hasardFixe(0.5),
   );
 
-  assertEquals(celebration, { sorte: "commune" });
+  assertEquals(celebration, {
+    sorte: "univers",
+    celebration: celebrationDe("defiReleve", "pompier", hasardFixe(0.5))!,
+  });
 });
