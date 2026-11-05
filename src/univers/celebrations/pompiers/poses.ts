@@ -63,6 +63,13 @@ export const LANCE_AU_SOL = { x: X_SAM + 34, y: SOL - 4, a: 0 };
 export const FIN_DE_L_ARROSAGE = 2.0;
 const T0 = FIN_DE_L_ARROSAGE;
 
+/**
+ * Les instants (temps de la maquette) où l'eau atteint chacune des cinq fleurs du jardin, dans l'ordre de `FLEURS` : les mêmes pour les trois variantes,
+ * puisque l'arrosage est commun. Mesurés une fois en rejouant l'arrosage image par image (60 par seconde), au premier instant où le bout du jet
+ * retombé est à moins de 9 de la fleur ; à refaire si les poses de l'arrosage ou la position des fleurs changent.
+ */
+export const INSTANTS_OU_LES_FLEURS_S_OUVRENT: readonly number[] = [0.4333333333333333, 0.7500000000000007, 1.2000000000000006, 1.5833333333333326, 1.6833333333333322];
+
 const REPOS: Pose = {
   x: X_SAM,
   y: Y_SOL,

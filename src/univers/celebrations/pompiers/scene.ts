@@ -4,7 +4,7 @@ import { creerLesEffets } from "./effets.ts";
 import { creerLeJet } from "./jet.ts";
 import { creerCapitaineSam } from "./personnage.ts";
 import { creerLesPetalesDeLaCaserne } from "./petales.ts";
-import { scenarioDesPompiers } from "./poses.ts";
+import { INSTANTS_OU_LES_FLEURS_S_OUVRENT, scenarioDesPompiers } from "./poses.ts";
 import { creerLeRepere } from "./repere.ts";
 
 /**
@@ -18,8 +18,7 @@ export function creerLaScene(racine: SVGSVGElement, toile: HTMLCanvasElement | n
   const monde = creerLeRepere(racine);
   const sam = creerCapitaineSam(racine);
   const jet = creerLeJet(racine, monde, sam);
-  const instantsDesFleurs = jet.instantsOuLesFleursSOuvrent((t) => sam.dessiner(scenario, t).pose);
-  const effets = creerLesEffets(racine, monde, sam, scenario, instantsDesFleurs);
+  const effets = creerLesEffets(racine, monde, sam, scenario, INSTANTS_OU_LES_FLEURS_S_OUVRENT);
   const petales = toile ? creerLesPetalesDeLaCaserne(toile) : null;
 
   function rendre(t: number) {

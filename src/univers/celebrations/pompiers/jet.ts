@@ -1,9 +1,9 @@
 import { lerp, r1, r3 } from "../commun/courbes.ts";
 import { deplacer, elementsDe, poser, trouver } from "../commun/dom.ts";
-import { DEVIDOIR_DESSINE, EAU_CONTOUR, FLEURS, GOUTTE, SORTIE_DU_TUYAU } from "./dessin-du-jardin.ts";
+import { DEVIDOIR_DESSINE, EAU_CONTOUR, GOUTTE, SORTIE_DU_TUYAU } from "./dessin-du-jardin.ts";
 import { LANCE } from "./dessin-de-sam.ts";
 import type { CapitaineSam } from "./personnage.ts";
-import { ECHELLE_DE_BASE as BASE, FIN_DE_L_ARROSAGE, LANCE_AU_SOL, type Pose, SOL } from "./poses.ts";
+import { ECHELLE_DE_BASE as BASE, LANCE_AU_SOL, type Pose, SOL } from "./poses.ts";
 import type { Repere } from "./repere.ts";
 
 const NOMBRE_DE_GOUTTES_DU_JET = 14;
@@ -92,28 +92,11 @@ export function creerLeJet(racine: SVGSVGElement, monde: Repere, sam: CapitaineS
     });
   }
 
-  /**
-   * Les fleurs s'ouvrent quand l'eau les atteint : on rejoue l'arrosage une fois pour connaître ces instants (le même résultat à chaque fois).
-   * Une fleur que l'eau n'a pas touchée s'ouvre à la fin de l'arrosage.
-   */
-  function instantsOuLesFleursSOuvrent(poseA: (t: number) => Pose): readonly number[] {
-    const instants: (number | undefined)[] = FLEURS.map(() => undefined);
-    for (let t = 0; t <= FIN_DE_L_ARROSAGE; t += 1 / 60) {
-      const p = poseA(t), j = trajet(p);
-      if (!j || !j.atterrit || p.jetA < JET_FINI) continue;
-      const x = j.pos(j.te).x;
-      FLEURS.forEach((fleur, i) => {
-        if (instants[i] === undefined && Math.abs(x - fleur.x) < 9) instants[i] = t;
-      });
-    }
-    return instants.map((instant, i) => instant ?? FIN_DE_L_ARROSAGE - .2 + i * .02);
-  }
-
   function dessiner(p: Pose, t: number) {
     dessinerLaLanceAuSol(p);
     dessinerLeTuyau(p);
     dessinerLeJet(p, t);
   }
 
-  return { dessiner, instantsOuLesFleursSOuvrent };
+  return { dessiner };
 }
