@@ -106,7 +106,7 @@ export const AgentMax: DessinDuPersonnage = ({ humeur, id, tenue }) => (
         <rect x="-4.5" y="-8" width="8" height="6.5" rx="1.2" fill="#FFF7E0" stroke="#33304A" strokeWidth="1.4" />
         <path d="M-2.5 -6.2 H2 M-2.5 -4.4 H1.2 M-2.5 -2.6 H2" stroke="#8E9BBE" strokeWidth=".9" strokeLinecap="round" />
       </g>
-      <g transform="translate(-8 -25)">
+      <g transform="translate(-6 -25)">
         <Ecusson echelle={0.13} />
       </g>
       </g>
