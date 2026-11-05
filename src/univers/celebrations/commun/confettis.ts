@@ -1,9 +1,14 @@
-import { suiteDeNombres } from "../commun/suite-de-nombres.ts";
+import { suiteDeNombres } from "./suite-de-nombres.ts";
 
-const COULEURS = ["#1F63D8", "#FFC93C", "#FFFFFF", "#4C8FF5", "#E8604C"];
 const NOMBRE_DE_CONFETTIS = 70;
 const LARGEUR_DE_LA_SCENE = 360;
 const HAUTEUR_DE_LA_SCENE = 450;
+
+/** D'où jaillissent les confettis (un côté sur deux) et de combien ils sont poussés de côté. */
+type Origine = { readonly x: number; readonly y: number; readonly poussee: number };
+
+/** Les couleurs des confettis et les deux côtés de la scène d'où ils partent. */
+export type ReglageDesConfettis = { readonly couleurs: readonly string[]; readonly origines: readonly [Origine, Origine] };
 
 type Confetti = {
   x: number;
@@ -20,14 +25,14 @@ type Confetti = {
   pose: boolean;
 };
 
-function semer(): Confetti[] {
+function semer({ couleurs, origines }: ReglageDesConfettis): Confetti[] {
   const suite = suiteDeNombres(106);
   return Array.from({ length: NOMBRE_DE_CONFETTIS }, (_, i) => {
-    const ang = -Math.PI / 2 + (suite() - .5) * 2.4, v = 240 + suite() * 280, origine = i % 2 ? { x: 105, y: 236 } : { x: 255, y: 236 };
+    const ang = -Math.PI / 2 + (suite() - .5) * 2.4, v = 240 + suite() * 280, origine = origines[i % 2] ?? origines[0];
     return {
       x: origine.x + (suite() - .5) * 10,
       y: origine.y,
-      vx: Math.cos(ang) * v * .9 + (i % 2 ? -50 : 50) + (suite() - .5) * 160,
+      vx: Math.cos(ang) * v * .9 + origine.poussee + (suite() - .5) * 160,
       vy: Math.sin(ang) * v,
       w: 5 + suite() * 4,
       h: 3 + suite() * 3,
@@ -35,16 +40,16 @@ function semer(): Confetti[] {
       vrot: (suite() - .5) * 10,
       phase: suite() * 6.3,
       sol: 330 + suite() * 115,
-      couleur: COULEURS[i % COULEURS.length] ?? "#FFFFFF",
+      couleur: couleurs[i % couleurs.length] ?? "#FFFFFF",
       pose: false,
     };
   });
 }
 
-/** Les confettis des deux côtés du but : ils jaillissent, retombent et se posent au sol. */
-export function creerLesConfettis(toile: HTMLCanvasElement) {
+/** Les confettis des deux côtés de la scène : ils jaillissent, retombent et se posent au sol. */
+export function creerLesConfettis(toile: HTMLCanvasElement, reglage: ReglageDesConfettis) {
   const contexte = toile.getContext("2d");
-  const confettis = semer();
+  const confettis = semer(reglage);
 
   function avancer(dt: number) {
     for (const c of confettis) {

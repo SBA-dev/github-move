@@ -30,10 +30,10 @@ import { normaliser, reappliquerLAppareil, scenario } from "./voix.steps.ts";
 // sonore « grande victoire » en attendant le choix du PO (106.12) ; les effets sont suivis par le faux de #97. Le tirage de la
 // variante reçoit une valeur par `features/support/hasard-fixe.ts`, comme celui du contrôle parental.
 
-type Univers = "sports" | "danse" | "animaux" | "princesse";
+type Univers = "sports" | "danse" | "animaux" | "princesse" | "police";
 
 const MUSIQUE = "grande victoire";
-// Le tirage de la variante est `floor(r * 3)` pour les deux univers : `hasard-fixe.ts` nomme les rangs 0, 1 et 2 « glissade »,
+// Le tirage de la variante est `floor(r * 3)` pour chacun des cinq univers : `hasard-fixe.ts` nomme les rangs 0, 1 et 2 « glissade »,
 // « avion » et « danse ». Chaque libellé de variante est rangé ici sous son rang, quel que soit l'univers.
 const RANG_DU_TIRAGE: Record<string, VarianteTiree> = {
   "la glissade à genoux": "glissade",
@@ -48,6 +48,9 @@ const RANG_DU_TIRAGE: Record<string, VarianteTiree> = {
   "l'arc-en-ciel": "glissade",
   "l'envol": "avion",
   "les chiffres et les lettres": "danse",
+  "le chef d'orchestre": "glissade",
+  "le tour en trottinette": "avion",
+  "la danse de la victoire": "danse",
 };
 const TEXTE_DU_TIRAGE = `(${Object.keys(RANG_DU_TIRAGE).join("|")})`;
 
@@ -74,6 +77,15 @@ const TEXTE_DES_VARIANTES_DE_NOISETTE = "(le jonglage|la noisette croquée|les j
 const VARIANTES_DE_LUMI: Record<string, string> = { "l'arc-en-ciel": "arc", "l'envol": "envol", "les chiffres et les lettres": "signes" };
 const VARIANTES_POSSIBLES_DE_LUMI = /^(arc|envol|signes)$/;
 const TEXTE_DES_VARIANTES_DE_LUMI = "(l'arc-en-ciel|l'envol|les chiffres et les lettres)";
+
+// Agent Max (Police) : libellé → valeur de `data-variante`.
+const VARIANTES_D_AGENT_MAX: Record<string, string> = {
+  "le chef d'orchestre": "orchestre",
+  "le tour en trottinette": "trottinette",
+  "la danse de la victoire": "danse",
+};
+const VARIANTES_POSSIBLES_D_AGENT_MAX = /^(orchestre|trottinette|danse)$/;
+const TEXTE_DES_VARIANTES_D_AGENT_MAX = "(le chef d'orchestre|le tour en trottinette|la danse de la victoire)";
 
 Before({ tags: "@issue-106" }, async ({ page }) => {
   await page.addInitScript(installerLesFauxDeLaStory97, { echec: false, retenir: [] });
@@ -225,6 +237,16 @@ Then(
   },
 );
 
+Then(
+  /^Agent Max joue la célébration de l'univers « Police » : il retrouve un chiot perdu, puis le chef d'orchestre, le tour en trottinette ou la danse de la victoire$/,
+  async ({ page }) => {
+    const celebration = await attendreLaScene(page, "police");
+    await expect(celebration).toHaveAttribute("data-variante", VARIANTES_POSSIBLES_D_AGENT_MAX);
+    await attendreLeCri(page, "Enquête résolue !");
+    await attendreLaFinDeLaScene(page);
+  },
+);
+
 Then(new RegExp(`^Lumi fait éclore une fleur magique d'un sort, puis ${TEXTE_DES_VARIANTES_DE_LUMI}$`), async ({ page }, variante: string) => {
   const celebration = await attendreLaScene(page, "princesse");
   await expect(celebration).toHaveAttribute("data-variante", VARIANTES_DE_LUMI[variante] as string);
@@ -247,6 +269,18 @@ async function attendreLaFleurMagique(page: Page): Promise<void> {
     { timeout: DELAI_DE_L_ATTENTE_MS, message: "la fleur magique a éclos" },
   ).toBeGreaterThanOrEqual(0.99);
 }
+
+Then(new RegExp(`^Agent Max retrouve un chiot perdu, puis ${TEXTE_DES_VARIANTES_D_AGENT_MAX}$`), async ({ page }, variante: string) => {
+  const celebration = await attendreLaScene(page, "police");
+  await expect(celebration).toHaveAttribute("data-variante", VARIANTES_D_AGENT_MAX[variante] as string);
+  await attendreLeCri(page, "Enquête résolue !");
+  await attendreLaFinDeLaScene(page);
+});
+
+Then(/^Léa lit « Enquête résolue ! »$/, async ({ page }) => {
+  await attendreLaScene(page, "police");
+  await attendreLeCri(page, "Enquête résolue !");
+});
 
 Then(/^Coach Léo ne joue pas la célébration de l'univers$/, async ({ page }) => {
   await attendreLaFinDuDefi(page);
@@ -278,6 +312,10 @@ Then(/^Léa voit l'image fixe de la célébration de l'univers « Danse », avec
 
 Then(/^Léa voit l'image fixe de la célébration de l'univers « Princesses et fées », avec « Magique ! », sans mouvement$/, async ({ page }) => {
   await verifierLImageFixe(page, "princesse", VARIANTES_POSSIBLES_DE_LUMI, "Magique !");
+});
+
+Then(/^Léa voit l'image fixe de la célébration de l'univers « Police », avec « Enquête résolue ! », sans mouvement$/, async ({ page }) => {
+  await verifierLImageFixe(page, "police", VARIANTES_POSSIBLES_D_AGENT_MAX, "Enquête résolue !");
 });
 
 async function verifierLImageFixe(page: Page, univers: Univers, variantes: RegExp, cri: string): Promise<void> {
@@ -352,6 +390,15 @@ Then(
   },
 );
 
+Then(
+  /^Agent Max n'apparaît qu'une fois, dans la célébration de l'univers, la bulle gardant ses paroles$/,
+  async ({ page }) => {
+    await attendreLaScene(page, "police");
+    await verifierQueLaBulleGardeSesParoles(page);
+    await expect(petitPersonnage(page), "le petit personnage guide à côté de la bulle").toHaveCount(0);
+  },
+);
+
 Then(/^Coach Léo apparaît à côté de la bulle de ses paroles$/, async ({ page }) => {
   await attendreLaFinDuDefi(page);
   await verifierQueLaBulleGardeSesParoles(page);
@@ -370,7 +417,7 @@ Then(
   /^Léa entend la musique de la célébration de Coach Léo, puis Coach Léo dit « Bravo Léa ! Tu as relevé le défi (\d+) ! »$/,
   async ({ page }, numero: string) => {
     await effetPuisParole(page, [MUSIQUE], "felicitation", true);
-    expect(normaliser((await bulle(page).textContent()) ?? "")).toBe(`Bravo Léa ! Tu as relevé le défi ${numero} !`);
+    await expect(bulle(page)).toHaveText(`Bravo Léa ! Tu as relevé le défi ${numero} !`);
   },
 );
 
@@ -378,7 +425,7 @@ Then(
   /^Léa entend la musique de la célébration de Lili, puis Lili dit « Bravo Léa ! Tu as relevé le défi (\d+) ! »$/,
   async ({ page }, numero: string) => {
     await effetPuisParole(page, [MUSIQUE], "felicitation", true);
-    expect(normaliser((await bulle(page).textContent()) ?? "")).toBe(`Bravo Léa ! Tu as relevé le défi ${numero} !`);
+    await expect(bulle(page)).toHaveText(`Bravo Léa ! Tu as relevé le défi ${numero} !`);
   },
 );
 
@@ -386,7 +433,7 @@ Then(
   /^Léa entend la musique de la célébration de Noisette, puis Noisette dit « Bravo Léa ! Tu as relevé le défi (\d+) ! »$/,
   async ({ page }, numero: string) => {
     await effetPuisParole(page, [MUSIQUE], "felicitation", true);
-    expect(normaliser((await bulle(page).textContent()) ?? "")).toBe(`Bravo Léa ! Tu as relevé le défi ${numero} !`);
+    await expect(bulle(page)).toHaveText(`Bravo Léa ! Tu as relevé le défi ${numero} !`);
   },
 );
 
@@ -394,7 +441,15 @@ Then(
   /^Léa entend la musique de la célébration de Lumi, puis Lumi dit « Bravo Léa ! Tu as relevé le défi (\d+) ! »$/,
   async ({ page }, numero: string) => {
     await effetPuisParole(page, [MUSIQUE], "felicitation", true);
-    expect(normaliser((await bulle(page).textContent()) ?? "")).toBe(`Bravo Léa ! Tu as relevé le défi ${numero} !`);
+    await expect(bulle(page)).toHaveText(`Bravo Léa ! Tu as relevé le défi ${numero} !`);
+  },
+);
+
+Then(
+  /^Léa entend la musique de la célébration d'Agent Max, puis Agent Max dit « Bravo Léa ! Tu as relevé le défi (\d+) ! »$/,
+  async ({ page }, numero: string) => {
+    await effetPuisParole(page, [MUSIQUE], "felicitation", true);
+    await expect(bulle(page)).toHaveText(`Bravo Léa ! Tu as relevé le défi ${numero} !`);
   },
 );
 
@@ -402,7 +457,7 @@ Then(
   /^Léa entend l'effet sonore « ([^«»]+) », puis (Coach Léo|Lumi|Agent Max|Capitaine Sam|Lili) dit « ([^«»]+) »$/,
   async ({ page }, effet: string, _personnage: string, texte: string) => {
     await effetPuisParole(page, [effet], "felicitation", true);
-    expect(normaliser((await bulle(page).textContent()) ?? "")).toBe(normaliser(texte));
+    await expect(bulle(page)).toHaveText(normaliser(texte));
   },
 );
 
@@ -444,6 +499,10 @@ Then(/^les lecteurs d'écran n'annoncent ni « Magique ! » ni le dessin de la c
   await verifierQueLaSceneEstMuettePourLesLecteursDEcran(page, "princesse", "Magique !");
 });
 
+Then(/^les lecteurs d'écran n'annoncent ni « Enquête résolue ! » ni le dessin de la célébration$/, async ({ page }) => {
+  await verifierQueLaSceneEstMuettePourLesLecteursDEcran(page, "police", "Enquête résolue !");
+});
+
 /** Le cri est cherché tel quel : la bulle « Bravo Léa ! … » reste lisible. */
 async function verifierQueLaSceneEstMuettePourLesLecteursDEcran(page: Page, univers: Univers, cri: string): Promise<void> {
   const celebration = await attendreLaScene(page, univers);
@@ -459,11 +518,14 @@ async function verifierQueLaSceneEstMuettePourLesLecteursDEcran(page: Page, univ
   await expect(page.locator("[aria-live], [role=status], [role=alert]").filter({ hasText: new RegExp(`^${cri}$`) })).toHaveCount(0);
 }
 
-Then(/^aucun confetti ni (?:pétale|feuille|étincelle du jardin) ne tombe$/, async ({ page }) => {
-  await attendreLaFinDuDefi(page);
-  await laisserSeDerouler(page);
-  await expect(page.getByTestId("confettis-de-la-celebration")).toHaveCount(0);
-  await expect(page.getByTestId("confettis")).toHaveCount(0);
-  const observation = await observer(page);
-  expect(observation.vu.filter((vu) => vu.startsWith("confettis:")), "confettis").toEqual([]);
-});
+Then(
+  /^(?:aucun confetti ni (?:pétale|feuille|étincelle du jardin) ne tombe|ni les confettis de la célébration commune ni les confettis du commissariat ne tombent)$/,
+  async ({ page }) => {
+    await attendreLaFinDuDefi(page);
+    await laisserSeDerouler(page);
+    await expect(page.getByTestId("confettis-de-la-celebration")).toHaveCount(0);
+    await expect(page.getByTestId("confettis")).toHaveCount(0);
+    const observation = await observer(page);
+    expect(observation.vu.filter((vu) => vu.startsWith("confettis:")), "confettis").toEqual([]);
+  },
+);

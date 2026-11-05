@@ -1,10 +1,15 @@
 import type { VarianteDe } from "@domain/motivation";
+import { creerLesConfettis } from "../commun/confettis.ts";
 import { jouerLaScene } from "../commun/jeu-de-la-scene.ts";
 import { creerLeBallon, creerLeFilet } from "./ballon-et-filet.ts";
-import { creerLesConfettis } from "./confettis.ts";
 import { creerLesEffets } from "./effets.ts";
 import { creerCoachLeo } from "./personnage.ts";
 import { scenarioDuBut } from "./poses.ts";
+
+const CONFETTIS_DU_STADE = {
+  couleurs: ["#1F63D8", "#FFC93C", "#FFFFFF", "#4C8FF5", "#E8604C"],
+  origines: [{ x: 255, y: 236, poussee: 50 }, { x: 105, y: 236, poussee: -50 }],
+} as const;
 
 /**
  * La scène de Coach Léo : il tire, le ballon entre dans le but, les confettis jaillissent, puis la variante tirée.
@@ -17,7 +22,7 @@ export function creerLaScene(racine: SVGSVGElement, toile: HTMLCanvasElement | n
   const ballon = creerLeBallon(racine);
   const filet = creerLeFilet(racine);
   const effets = creerLesEffets(racine);
-  const confettis = toile ? creerLesConfettis(toile) : null;
+  const confettis = toile ? creerLesConfettis(toile, CONFETTIS_DU_STADE) : null;
 
   function rendre(t: number) {
     const pose = personnage.dessiner(scenario, t);
