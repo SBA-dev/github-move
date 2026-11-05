@@ -1,5 +1,6 @@
 import type { VarianteDe } from "@domain/motivation";
 import { E, lerp } from "../commun/courbes.ts";
+import type { ChangementDExpression } from "../commun/expressions.ts";
 import { compiler, type ImageCle, type ImagePartielle, poseA as poseDeLaScene } from "../commun/poses.ts";
 
 /**
@@ -148,7 +149,7 @@ export type ScenarioDeBut = {
   readonly fin: number;
   readonly tTour: number;
   readonly poses: readonly ImageCle<Pose>[];
-  readonly expressions: readonly { readonly t: number; readonly emo: Emotion }[];
+  readonly expressions: readonly ChangementDExpression<Emotion>[];
   readonly tCri: number;
   readonly tJoie: number;
 };

@@ -1,5 +1,6 @@
-import { clamp01, DEG, E, fenetre, lerp, r1, r3 } from "../commun/courbes.ts";
+import { clamp01, DEG, E, lerp, r1, r3 } from "../commun/courbes.ts";
 import { creerUnGroupe, deplacer, elementsDe, poser, trouver } from "../commun/dom.ts";
+import { type Expression, expressionA } from "../commun/expressions.ts";
 import { decaler, membre, type Point, trace } from "../commun/membres.ts";
 import type { CoteDeMain, PoseDeMain } from "../commun/mains.ts";
 import { clignement, RAYON_DE_LA_TETE as R, traitDuVisage } from "../commun/visage.ts";
@@ -9,26 +10,11 @@ import { type Emotion, type Pose, poseA, type ScenarioDeBut } from "./poses.ts";
 const BASE = .8;
 export const ECHELLE_DE_BASE = BASE;
 
-type Expression = { readonly emo: Emotion; readonly prec: Emotion; readonly u: number };
-
 const EMOS: Record<Emotion, { sg: readonly [number, number]; sd: readonly [number, number]; lid: number; pup: number }> = {
   concentration: { sg: [2, 10], sd: [2, -10], lid: .3, pup: 1 },
   surprise: { sg: [-7, -6], sd: [-7, 6], lid: 0, pup: .85 },
   joie: { sg: [-5, -4], sd: [-5, 4], lid: 0, pup: 1.05 },
 };
-
-function expressionA(scenario: ScenarioDeBut, t: number): Expression {
-  const premiere = scenario.expressions[0];
-  if (!premiere) throw new Error("Une scène de célébration a au moins une expression");
-  let courante = premiere, precedente: typeof premiere | null = null;
-  for (const e of scenario.expressions) {
-    if (e.t > t) continue;
-    precedente = courante === e ? precedente : courante;
-    courante = e;
-  }
-  const u = precedente && precedente !== courante ? fenetre(t, courante.t, .14) : 1;
-  return { emo: courante.emo, prec: precedente ? precedente.emo : courante.emo, u };
-}
 
 /** Coach Léo, dessiné image par image à partir des poses du scénario (portage du moteur des maquettes). */
 export function creerCoachLeo(racine: SVGSVGElement) {
@@ -100,7 +86,7 @@ export function creerCoachLeo(racine: SVGSVGElement) {
     deplacer(contact, `translate(${r1(profilF * sens * 5)} 12) scale(${r3(1 + profilF * .5)} 1)`);
   }
 
-  function dessinerLaTete(p: Pose, meche: number, ex: Expression, lidBase: number, pup: number) {
+  function dessinerLaTete(p: Pose, meche: number, ex: Expression<Emotion>, lidBase: number, pup: number) {
     const w = p.vue, cw = Math.cos(w * DEG);
     for (const [id, alpha] of [["oreille-g", -90], ["oreille-d", 90]] as const) {
       const o = traitDuVisage(alpha, w, R);
@@ -198,7 +184,7 @@ export function creerCoachLeo(racine: SVGSVGElement) {
     if (p.devant > .5 && emplacementAvant.firstElementChild !== bras.g) emplacementAvant.prepend(bras.g);
     deplacer(n("tete"), `translate(0 -48) rotate(${r1(p.tete)})`);
     deplacer(n("tete-forme"), `translate(0 -26)`);
-    const ex = expressionA(scenario, t), A = EMOS[ex.prec], B = EMOS[ex.emo], u = ex.u;
+    const ex = expressionA(scenario.expressions, t), A = EMOS[ex.prec], B = EMOS[ex.emo], u = ex.u;
     const lidBase = Math.max(lerp(A.lid, B.lid, u), p.lid, clignement(t));
     dessinerLaTete(p, meche, ex, lidBase, lerp(A.pup, B.pup, u));
     // ombre au sol

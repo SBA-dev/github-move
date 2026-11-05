@@ -1,5 +1,6 @@
-import { clamp01, DEG, E, fenetre, lerp, r1, r3 } from "../commun/courbes.ts";
+import { clamp01, DEG, E, lerp, r1, r3 } from "../commun/courbes.ts";
 import { creerUnGroupe, deplacer, elementsDe, poser, trouver } from "../commun/dom.ts";
+import { type Expression, expressionA } from "../commun/expressions.ts";
 import type { CoteDeMain, PoseDeMain } from "../commun/mains.ts";
 import { decaler, membre, type Point, trace } from "../commun/membres.ts";
 import { clignement, RAYON_DE_LA_TETE as R, traitDuVisage } from "../commun/visage.ts";
@@ -10,26 +11,11 @@ import { creerLaQueueDeCheval } from "./queue-de-cheval.ts";
 export const ECHELLE_DE_BASE = 1.25;
 const BASE = ECHELLE_DE_BASE;
 
-type Expression = { readonly emo: Emotion; readonly prec: Emotion; readonly u: number };
-
 const EMOS: Record<Emotion, { sg: readonly [number, number]; sd: readonly [number, number]; lid: number; pup: number }> = {
   concentration: { sg: [2, 10], sd: [2, -10], lid: .3, pup: 1 },
   joie: { sg: [-5, -4], sd: [-5, 4], lid: 0, pup: 1.05 },
   sourire: { sg: [-3, -3], sd: [-3, 3], lid: 0, pup: 1 },
 };
-
-function expressionA(scenario: ScenarioDeDanse, t: number): Expression {
-  const premiere = scenario.expressions[0];
-  if (!premiere) throw new Error("Une scène de célébration a au moins une expression");
-  let courante = premiere, precedente: typeof premiere | null = null;
-  for (const e of scenario.expressions) {
-    if (e.t > t) continue;
-    precedente = courante === e ? precedente : courante;
-    courante = e;
-  }
-  const u = precedente && precedente !== courante ? fenetre(t, courante.t, .14) : 1;
-  return { emo: courante.emo, prec: precedente ? precedente.emo : courante.emo, u };
-}
 
 /** Lili, dessinée image par image à partir des poses du scénario (portage du moteur de la maquette). */
 export function creerLili(racine: SVGSVGElement) {
@@ -103,7 +89,7 @@ export function creerLili(racine: SVGSVGElement) {
     deplacer(contact, `translate(${r1(profilF * sens * 5)} 12) scale(${r3(1 + profilF * .5)} 1)`);
   }
 
-  function dessinerLaTete(p: Pose, ex: Expression, lidBase: number, pup: number) {
+  function dessinerLaTete(p: Pose, ex: Expression<Emotion>, lidBase: number, pup: number) {
     const w = p.vue, cw = Math.cos(w * DEG);
     for (const [id, alpha] of [["oreille-g", -90], ["oreille-d", 90]] as const) {
       const o = traitDuVisage(alpha, w, R);
@@ -211,7 +197,7 @@ export function creerLili(racine: SVGSVGElement) {
     }
     deplacer(n("tete"), `translate(0 -48) rotate(${r1(p.tete)})`);
     deplacer(n("tete-forme"), `translate(0 -26)`);
-    const ex = expressionA(scenario, t), A = EMOS[ex.prec], B = EMOS[ex.emo], u = ex.u;
+    const ex = expressionA(scenario.expressions, t), A = EMOS[ex.prec], B = EMOS[ex.emo], u = ex.u;
     const lidBase = Math.max(lerp(A.lid, B.lid, u), clignement(t));
     dessinerLaTete(p, ex, lidBase, lerp(A.pup, B.pup, u));
     const dvueBrut = p.vue - pAvant.vue, dvue = Math.abs(dvueBrut) > 300 ? 0 : dvueBrut / .06;

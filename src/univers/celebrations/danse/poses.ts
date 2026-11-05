@@ -1,5 +1,6 @@
 import type { VarianteDe } from "@domain/motivation";
 import { E } from "../commun/courbes.ts";
+import type { ChangementDExpression } from "../commun/expressions.ts";
 import { compiler, type ImageCle, type ImagePartielle, poseA as poseDeLaScene } from "../commun/poses.ts";
 
 /**
@@ -145,7 +146,7 @@ export type ScenarioDeDanse = {
   /** Fin de la scène, en secondes du temps de la maquette (la scène est ensuite accélérée pour tenir en 3 s). */
   readonly fin: number;
   readonly poses: readonly ImageCle<Pose>[];
-  readonly expressions: readonly { readonly t: number; readonly emo: Emotion }[];
+  readonly expressions: readonly ChangementDExpression<Emotion>[];
   readonly tCri: number;
   readonly tJoie: number;
   /** L'instant où les pétales et les fleurs partent de la salle. */
