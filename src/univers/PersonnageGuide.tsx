@@ -61,7 +61,6 @@ export function PersonnageGuide({ univers, humeur, tenue: tenueDemandee, libelle
       data-testid={identifiantDeTest ?? "personnage-guide"}
       data-personnage-guide={univers.personnageGuide.nom}
       data-humeur={humeur}
-      data-dessin="valide"
       {...(tenue === undefined ? {} : { "data-tenue": tenue })}
       data-geste={geste}
       animate={MOUVEMENT_PAR_GESTE[geste]}
