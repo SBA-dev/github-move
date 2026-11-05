@@ -790,6 +790,8 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 
 /* Boîte à jetons : le dessin de l'univers en deux couches (fond, puis rebord avant) avec les jetons entre les deux, rangés par 5.
    Le cadre est celui du dessin (288 × 250) : la boîte garde sa taille, ouverte ou fermée, quel que soit le nombre de jetons. */
+/* La boîte n'a que des couches en position absolue : la zone de l'exercice, ajustée à son contenu, lui laisserait 0 px pendant le déroulé. */
+.exercice-en-cours:has(.boite-a-jetons) { justify-self: stretch; }
 .boite { --taille-du-jeton: 32px; --ecart-des-jetons: 6px; position: relative; flex: none; width: min(100%, 18rem); aspect-ratio: 288 / 250; margin: 0; }
 .dessin-de-la-boite, .rebord-de-la-boite { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
 .contenu-de-la-boite { position: absolute; left: 0; right: 0; top: 23.2%; height: 58.4%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--ecart-des-jetons); pointer-events: none; }
