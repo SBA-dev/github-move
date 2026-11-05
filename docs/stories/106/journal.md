@@ -144,3 +144,24 @@ Branche de base : `main` (`af47f19`). Branche : `feature/106c-celebration-animau
 - Report des commits du worktree : RED `b7acc83`, GREEN `378fc97`, scène `f37c35d` (correctif des yeux fusionné), `switch` exhaustif `dae19ef`, table des chargeurs du préchargement `4520f6b` (conflit avec le préchargement de 106b résolu par `implementer`), `ce6aa73`, `35b168b`, `a0d9e98` (106.35). `deno test` : 2879 verts ; `tsc` et build OK.
 - Steps E2E `c4cf357` (non lancés). VERROU base demandé, 2e derrière #155.
 - Review de la branche : APPROUVÉ. Non bloquants traités : `cc6891e` (préchargement sans conversion de type), `3a70063` (commentaire du `.gitignore`), `8a78a5a` (forme d'acceptance). Hors 106c : le ruban de Lili dessine encore une étoile à cinq branches (`danse/effets.ts`), 106.35 à appliquer à Lili (signalé au responsable).
+
+### E2E (mise au point, `telephone`, 1 worker, sous VERROU base)
+- VERROU base accordé à 07:35 UTC (2e dans la file, derrière #155). Sonde : 3 appels `admin/users` en 200, de 0,4 à 1,1 s.
+- HEAD `a34f9c7` : `@livraison-106c` **7/7 verts** (3,0 min) ; `@issue-106` hors 106c (Sports et Danse, qui partagent `SceneDeCelebration.tsx` et le préchargement) **30/30 verts** (10,4 min). Aucun KO, aucune relance. LIBÈRE base.
+- Navigateur : contournement `pw/` du scratchpad (`chromium_headless_shell-1194` qui pointe vers la 1243), sans `playwright install`.
+- PR #156 ouverte en brouillon.
+
+## Mesures (106c)
+
+| Mesure | Valeur |
+|---|---|
+| Durée | 2026-11-05 00:50 UTC → environ 08:00 UTC (PRÊTE À MERGER), dont environ 1 h 10 de travail le soir et 45 min le matin |
+| Attente | réponse du PO (#106.31 à #106.33) et merge de 106b : la nuit, de 01:55 à 07:07 UTC, sans travail en attente (domaine, scène et planche déjà prêts dans le worktree) ; VERROU base : environ 7 min |
+| Cycles TDD | 1 comportement (entrée `animaux`, RED puis GREEN) |
+| Review | 1 revue intermédiaire (À CORRIGER : lien `node_modules`, puis corrigé), 1 review de la branche (APPROUVÉ), 1 review finale du delta (steps) |
+| E2E | 2 runs sur `telephone` (7/7, puis 30/30), aucun KO |
+| Intégrations de `main` | 1 (`4742309`, avec 106b et #137) : 4 conflits de documentation et de scénarios (attendus, sections au même endroit), 1 conflit de code (`SceneDeCelebration.tsx`, préchargement de 106b) |
+| Escalades | 1 (planche de Noisette et #106.33) ; 1 question au cadrage (#106.31) |
+| Verrous | base (07:35 → 07:52 UTC) |
+| Méthode | domaine, scène et planche préparés dans un worktree local (106c + 106b, jamais poussé) pendant l'attente du merge de 106b, puis reportés par cherry-pick : aucun temps perdu, mais un risque de perte si le conteneur avait été repris |
+| Tokens | relevés par le responsable |
