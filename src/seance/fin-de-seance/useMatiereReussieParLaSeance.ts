@@ -1,27 +1,23 @@
 import { useEffect, useState } from "react";
 import { matiereReussieParLaSeance } from "@domain/apprentissage";
-import type { MeilleuresEtoilesDuProfil } from "@domain/motivation";
-import { entreesAvantEtApresLaSeance, type Seance } from "./entrees-avant-et-apres-la-seance.ts";
+import type { EntreesAvantEtApres } from "./entrees-avant-et-apres-la-seance.ts";
 
 export type MatiereReussie = { readonly pret: boolean; readonly reussie: boolean };
 
 /**
- * Vrai si la séance rend la matière de sa leçon réussie, une fois lues les meilleures étoiles d'avant la séance.
- * Sans elles (lecture impossible) ou sans bibliothèque, la matière n'est pas annoncée réussie.
+ * Vrai si la séance rend la matière de sa leçon réussie, une fois lues les entrées du parcours d'avant et d'après la séance.
+ * Sans elles (lecture impossible ou sans bibliothèque), la matière n'est pas annoncée réussie.
  */
 export function useMatiereReussieParLaSeance(
-  seance: Seance,
-  niveau: string,
-  meilleuresAvant: Promise<MeilleuresEtoilesDuProfil | undefined>,
+  entrees: Promise<EntreesAvantEtApres | undefined>,
   terminee: boolean,
 ): MatiereReussie {
   const [resultat, setResultat] = useState<MatiereReussie>({ pret: false, reussie: false });
-  const { enfant, lecon } = seance;
   useEffect(() => {
     if (!terminee) return;
     let annule = false;
-    void entreesAvantEtApresLaSeance({ enfant, lecon }, niveau, meilleuresAvant)
-      .then((entrees) => entrees !== undefined && matiereReussieParLaSeance(entrees.avant, entrees.apres, entrees.matiere))
+    void entrees
+      .then((lues) => lues !== undefined && matiereReussieParLaSeance(lues.avant, lues.apres, lues.matiere))
       .catch(() => false)
       .then((reussie) => {
         if (!annule) setResultat({ pret: true, reussie });
@@ -29,6 +25,6 @@ export function useMatiereReussieParLaSeance(
     return () => {
       annule = true;
     };
-  }, [enfant, lecon, niveau, meilleuresAvant, terminee]);
+  }, [entrees, terminee]);
   return resultat;
 }

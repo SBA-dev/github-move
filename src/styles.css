@@ -631,6 +631,7 @@ button.tuile .nom-de-la-tuile, button.tuile .nom-de-la-matiere { font-size: 1.1r
 .confetti:nth-child(3n+2) { background: var(--principale); }
 .confetti:nth-child(3n+3) { background: var(--succes); }
 /* Célébration de l'univers (#106) : la scène tient dans la largeur et dans la moitié de la hauteur, elle ne capte aucun toucher. */
+.place-de-la-celebration { flex: none; width: min(100%, 22rem, 40vh); aspect-ratio: 360 / 450; }
 .celebration-de-l-univers { position: relative; flex: none; width: min(100%, 22rem, 40vh); aspect-ratio: 360 / 450; overflow: hidden; border-radius: var(--rayon); pointer-events: none; }
 .celebration-de-l-univers svg, .celebration-de-l-univers canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .celebration-de-l-univers .cri-de-victoire, .celebration-de-l-univers .cri-de-victoire-ombre, .celebration-de-l-univers .signe-magique { font-family: var(--police-titres); }
@@ -726,12 +727,12 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
   50% { opacity: 1; }
 }
 /* Le défi que la séance vient d'ouvrir, en dernier dans les nouveautés de la fin de séance. */
-[data-mode-dys="true"] .pour-le-defi { overflow-wrap: anywhere; line-height: inherit; }
-.pour-le-defi { display: grid; justify-items: center; gap: 4px; max-width: 100%; padding: 8px 16px; border: 3px solid var(--contour); border-radius: var(--rayon); background: var(--surface-dense); overflow-wrap: anywhere; animation: arrivee-d-un-objet .4s ease-out; }
-.pour-le-defi:empty { display: none; }
-.pour-le-defi p { margin: 0; font-weight: 700; }
+[data-mode-dys="true"] .pour-le-defi, [data-mode-dys="true"] .pour-la-matiere { overflow-wrap: anywhere; line-height: inherit; }
+.pour-le-defi, .pour-la-matiere { display: grid; justify-items: center; gap: 4px; max-width: 100%; padding: 8px 16px; border: 3px solid var(--contour); border-radius: var(--rayon); background: var(--surface-dense); overflow-wrap: anywhere; animation: arrivee-d-un-objet .4s ease-out; }
+.pour-le-defi:empty, .pour-la-matiere:empty { display: none; }
+.pour-le-defi p, .pour-la-matiere p { margin: 0; font-weight: 700; }
 @media (prefers-reduced-motion: reduce) {
-  .pour-le-defi { animation: none; }
+  .pour-le-defi, .pour-la-matiere { animation: none; }
 }
 
 /* Le repère d'un défi : sur le sentier, juste après la dernière leçon de sa partie. Jamais un arrêt du personnage guide, jamais de cadenas. */

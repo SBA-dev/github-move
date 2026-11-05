@@ -7,6 +7,7 @@ import { pageDeLaLecon } from "@domain/catalogue";
 import {
   annonceDeLObjetRecu,
   calculsReussis,
+  type CelebrationDeLaFin,
   celebrationDeLaFin,
   type MeilleuresEtoilesDuProfil,
   titreDeLAnnonce,
@@ -30,6 +31,7 @@ import { EtoilesGagnees } from "./EtoilesGagnees.tsx";
 import { lireLesMeilleuresEtoilesDuProfil } from "./meilleures-etoiles-du-profil.ts";
 import { annonceDesEtoiles, etoilesSurTrois } from "./texte-des-etoiles.ts";
 import type { NouveautesDeFin } from "./nouveautes-de-fin.ts";
+import { entreesAvantEtApresLaSeance } from "./entrees-avant-et-apres-la-seance.ts";
 import { useBadgeGagneParLaSeance } from "./useBadgeGagneParLaSeance.ts";
 import { useObjetRecuParLaSeance } from "./useObjetRecuParLaSeance.ts";
 import { useTenueRecueParLaSeance } from "./useTenueRecueParLaSeance.ts";
@@ -131,18 +133,19 @@ export function EcranDeFin({ seance, univers, niveau, onDireLaFin, meilleuresEto
     terminee !== undefined,
     terminee?.etoiles,
   );
-  const { pret: episodePret, episode } = useEpisodeOuvertParLaSeance(nombreDeSeancesAvant, terminee !== undefined);
-  const { pret: defiPret, defi: defiOuvert } = useDefiOuvertParLaSeance(seance, niveau, meilleuresEtoilesAvant, terminee !== undefined);
-  const { pret: matierePrete, reussie: matiereReussie } = useMatiereReussieParLaSeance(seance, niveau, meilleuresEtoilesAvant, terminee !== undefined);
-  const celebration = useMemo(
-    () => matierePrete ? celebrationDeLaFin({ defiRelevePourLaPremiereFois: false, matiereReussieParLaSeance: matiereReussie }, univers.cle, hasardDuNavigateur) : undefined,
-    [matierePrete, matiereReussie, univers.cle],
+  const entrees = useMemo(
+    () => entreesAvantEtApresLaSeance({ enfant: seance.enfant, lecon: seance.lecon }, niveau, meilleuresEtoilesAvant).catch(() => undefined),
+    [seance.enfant, seance.lecon, niveau, meilleuresEtoilesAvant],
   );
-  const musiqueDeLaCelebration = celebration?.sorte === "univers" ? celebration.celebration.musique : undefined;
+  const { pret: episodePret, episode } = useEpisodeOuvertParLaSeance(nombreDeSeancesAvant, terminee !== undefined);
+  const { pret: defiPret, defi: defiOuvert } = useDefiOuvertParLaSeance(seance.enfant, entrees, terminee !== undefined);
+  const { pret: matierePrete, reussie: matiereReussie } = useMatiereReussieParLaSeance(entrees, terminee !== undefined);
+  const [celebration, setCelebration] = useState<CelebrationDeLaFin | undefined>();
   useEffect(() => {
-    onCelebrationDeLUnivers(celebration?.sorte === "univers");
-    return () => onCelebrationDeLUnivers(false);
-  }, [celebration, onCelebrationDeLUnivers]);
+    if (!matierePrete || celebration) return;
+    setCelebration(celebrationDeLaFin({ defiRelevePourLaPremiereFois: false, matiereReussieParLaSeance: matiereReussie }, univers.cle, hasardDuNavigateur));
+  }, [matierePrete, matiereReussie, univers.cle, celebration]);
+  const musiqueDeLaCelebration = celebration?.sorte === "univers" ? celebration.celebration.musique : undefined;
   const { prete: quetePrete, accomplie: queteAccomplie } = useQueteAccomplieParLaSeance(queteAvant, seance.enfant, terminee !== undefined);
   const accueil = useRef<HTMLButtonElement>(null);
   const dite = useRef(false);
@@ -160,6 +163,11 @@ export function EcranDeFin({ seance, univers, niveau, onDireLaFin, meilleuresEto
   const sansMouvement = mouvementsReduits();
   const etoiles = terminee?.etoiles;
   const celebrationAffichable = terminee !== undefined && (etoiles === undefined || etoilesAffichees);
+  const sceneAffichee = celebrationAffichable && celebration?.sorte === "univers";
+  useEffect(() => {
+    onCelebrationDeLUnivers(sceneAffichee);
+    return () => onCelebrationDeLUnivers(false);
+  }, [sceneAffichee, onCelebrationDeLUnivers]);
   const scores = Object.entries(terminee?.scoresDeFluence ?? {});
   return (
     <motion.div
@@ -171,7 +179,11 @@ export function EcranDeFin({ seance, univers, niveau, onDireLaFin, meilleuresEto
       transition={{ duration: 0.25, ease: "easeOut" }}
     >
       {celebrationAffichable && celebration?.sorte === "commune" && <Confettis />}
-      {celebrationAffichable && celebration?.sorte === "univers" && <SceneDeCelebration celebration={celebration.celebration} />}
+      {celebration?.sorte === "univers" && (
+        <div className="place-de-la-celebration">
+          {celebrationAffichable && <SceneDeCelebration celebration={celebration.celebration} />}
+        </div>
+      )}
       {etoiles !== undefined && (
         <>
           <EtoilesGagnees nombre={etoiles} onToutesAffichees={afficherToutesLesEtoiles} />
@@ -181,7 +193,7 @@ export function EcranDeFin({ seance, univers, niveau, onDireLaFin, meilleuresEto
           </p>
         </>
       )}
-      <div className="pour-le-defi" role="status" data-testid="annonce-de-la-matiere-reussie">
+      <div className="pour-la-matiere" role="status" data-testid="annonce-de-la-matiere-reussie">
         {matiereReussie && <p>{titreDeLaMatiereReussie()}</p>}
       </div>
       <div className="pour-la-cabane" role="status" data-testid="annonce-de-la-cabane">
