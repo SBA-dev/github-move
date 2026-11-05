@@ -2,6 +2,7 @@ import { assertEquals } from "@std/assert";
 import { celebrationDeLaFin } from "./celebration-de-la-fin.ts";
 import { celebrationDe } from "./celebrations-des-univers.ts";
 import { hasardFixe } from "../test_utils/hasard-fixe.ts";
+import { PALIERS_DES_TENUES } from "./tenues.ts";
 
 Deno.test("le premier défi relevé dans l'univers Sports se fête par la célébration de l'univers, variante tirée par le hasard", () => {
   const celebration = celebrationDeLaFin(
@@ -62,5 +63,22 @@ Deno.test("une matière réussie dans l'univers Pompiers se fête par la céléb
   assertEquals(celebration, {
     sorte: "univers",
     celebration: celebrationDe("matiereReussie", "pompier", hasardFixe(0.5))!,
+  });
+});
+
+Deno.test("une tenue reçue dans l'univers Sports se fête par la célébration de l'univers au moment de la tenue reçue", () => {
+  const celebration = celebrationDeLaFin(
+    {
+      defiRelevePourLaPremiereFois: false,
+      matiereReussieParLaSeance: false,
+      tenueRecue: PALIERS_DES_TENUES[0].tenue,
+    },
+    "sports",
+    hasardFixe(0.5),
+  );
+
+  assertEquals(celebration, {
+    sorte: "univers",
+    celebration: celebrationDe("tenueRecue", "sports", hasardFixe(0.5))!,
   });
 });
