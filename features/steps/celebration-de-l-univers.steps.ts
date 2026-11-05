@@ -584,6 +584,7 @@ ThenDe106(/^les lecteurs d'écran annoncent une seule fois « (Matière réussie
   await expect(annonceDeLaMatiereReussie(page)).toHaveText(texte, { timeout: DELAI_DE_L_ATTENTE_MS });
   await laisserSeDerouler(page);
   await laisserPasserLeDelaiDeLecture(page);
-  expect((await observer(page)).annonces.filter((annonce) => annonce === texte), `« ${texte} » annoncée`).toEqual([texte]);
+  expect((await observer(page)).annonces.filter((annonce) => annonce.includes(texte)), `« ${texte} » reprise dans l'annonce des étoiles`).toEqual([]);
+  await expect(annonceDeLaMatiereReussie(page)).toHaveCount(1);
   await expect(page.locator("[aria-live], [role=status], [role=alert]").filter({ hasText: texte })).toHaveCount(1);
 });
