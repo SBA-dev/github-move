@@ -225,3 +225,13 @@ Deno.test("la musique de la célébration remplace la grande victoire d'une leç
 
   assertEquals(effets, [uneMusiqueDeCelebration]);
 });
+
+Deno.test("la musique de la célébration, puis la découverte quand la séance donne aussi un objet de la cabane (106.46)", () => {
+  const effets = effetsSonoresDeLaFin({
+    ...seanceSansEvenement,
+    objetRecu: true,
+    musiqueDeLaCelebration: uneMusiqueDeCelebration,
+  });
+
+  assertEquals(effets, [uneMusiqueDeCelebration, "decouverte"]);
+});
