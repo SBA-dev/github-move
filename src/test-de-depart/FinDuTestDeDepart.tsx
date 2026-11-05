@@ -61,6 +61,7 @@ export function FinDuTestDeDepart({ test, prenom, lecons, niveau, personnage, un
             objetRecu: false,
             tenueRecue: false,
             episodeOuvert: false,
+            musiqueDeLaCelebration: undefined,
           }),
         });
       }

@@ -75,6 +75,7 @@ export function FinDeLaRevision({ seance, prenom, personnage, univers, nombreDeS
         objetRecu: false,
         tenueRecue: false,
         episodeOuvert: episode !== undefined,
+        musiqueDeLaCelebration: undefined,
       }),
     });
   }, [pret, episodePret, episode, quetePrete, queteAccomplie, prenom, questionsJustes, dire]);
