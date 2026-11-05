@@ -29,7 +29,7 @@ Deno.test("un défi rejoué dans l'univers Sports garde la célébration commune
 Deno.test("le premier défi relevé dans un univers pas encore livré garde la célébration commune", () => {
   const celebration = celebrationDeLaFin(
     { defiRelevePourLaPremiereFois: true },
-    "danse",
+    "animaux",
     hasardFixe(0.5),
   );
 

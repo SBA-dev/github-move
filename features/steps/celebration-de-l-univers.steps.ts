@@ -31,13 +31,31 @@ import { normaliser, reappliquerLAppareil, scenario } from "./voix.steps.ts";
 // variante reçoit une valeur par `features/support/hasard-fixe.ts`, comme celui du contrôle parental.
 
 const MUSIQUE = "grande victoire";
-const VARIANTES: Record<string, VarianteTiree> = {
+// Le tirage de la variante est `floor(r * 3)` pour les deux univers : `hasard-fixe.ts` nomme les rangs 0, 1 et 2 « glissade »,
+// « avion » et « danse ». Chaque libellé de variante est rangé ici sous son rang, quel que soit l'univers.
+const RANG_DU_TIRAGE: Record<string, VarianteTiree> = {
+  "la glissade à genoux": "glissade",
+  "l'avion": "avion",
+  "la danse avec clin d'œil": "danse",
+  "le grand jeté": "glissade",
+  "le ruban": "avion",
+  "les petits sauts": "danse",
+};
+const TEXTE_DU_TIRAGE = `(${Object.keys(RANG_DU_TIRAGE).join("|")})`;
+
+// Coach Léo (Sports) : libellé → valeur de `data-variante`.
+const VARIANTES_DE_COACH_LEO: Record<string, string> = {
   "la glissade à genoux": "glissade",
   "l'avion": "avion",
   "la danse avec clin d'œil": "danse",
 };
 const VARIANTES_POSSIBLES = /^(glissade|avion|danse)$/;
-const TEXTE_DES_VARIANTES = "(la glissade à genoux|l'avion|la danse avec clin d'œil)";
+const TEXTE_DES_VARIANTES_DE_COACH_LEO = "(la glissade à genoux|l'avion|la danse avec clin d'œil)";
+
+// Lili (Danse) : libellé → valeur de `data-variante`.
+const VARIANTES_DE_LILI: Record<string, string> = { "le grand jeté": "jete", "le ruban": "ruban", "les petits sauts": "sauts" };
+const VARIANTES_POSSIBLES_DE_LILI = /^(jete|ruban|sauts)$/;
+const TEXTE_DES_VARIANTES_DE_LILI = "(le grand jeté|le ruban|les petits sauts)";
 
 Before({ tags: "@issue-106" }, async ({ page }) => {
   await page.addInitScript(installerLesFauxDeLaStory97, { echec: false, retenir: [] });
@@ -48,9 +66,9 @@ const variantesVues = new WeakMap<Page, string>();
 
 const scene = (page: Page): Locator => page.getByTestId("celebration-de-l-univers");
 
-async function attendreLaScene(page: Page): Promise<Locator> {
+async function attendreLaScene(page: Page, univers: "sports" | "danse" = "sports"): Promise<Locator> {
   await expect(scene(page)).toHaveCount(1, { timeout: DELAI_DE_L_ATTENTE_MS });
-  await expect(scene(page)).toHaveAttribute("data-univers", "sports");
+  await expect(scene(page)).toHaveAttribute("data-univers", univers);
   return scene(page);
 }
 
@@ -75,9 +93,9 @@ async function attendreLaFinDuDefi(page: Page): Promise<void> {
 // --- Étant donné
 
 Given(
-  new RegExp(`^le hasard de la célébration de l'univers tire « ${TEXTE_DES_VARIANTES} »$`),
+  new RegExp(`^le hasard de la célébration de l'univers tire « ${TEXTE_DU_TIRAGE} »$`),
   async ({ page }, variante: string) => {
-    await fixerLeTirageDeLaCelebration(page, VARIANTES[variante] as VarianteTiree);
+    await fixerLeTirageDeLaCelebration(page, RANG_DU_TIRAGE[variante] as VarianteTiree);
   },
 );
 
@@ -122,9 +140,9 @@ Then(
   },
 );
 
-Then(new RegExp(`^Coach Léo marque un but, puis fait ${TEXTE_DES_VARIANTES}$`), async ({ page }, variante: string) => {
+Then(new RegExp(`^Coach Léo marque un but, puis fait ${TEXTE_DES_VARIANTES_DE_COACH_LEO}$`), async ({ page }, variante: string) => {
   const celebration = await attendreLaScene(page);
-  await expect(celebration).toHaveAttribute("data-variante", VARIANTES[variante] as VarianteTiree);
+  await expect(celebration).toHaveAttribute("data-variante", VARIANTES_DE_COACH_LEO[variante] as string);
   await attendreLeCri(page, "BUT !");
   await attendreLaFinDeLaScene(page);
 });
@@ -132,6 +150,28 @@ Then(new RegExp(`^Coach Léo marque un but, puis fait ${TEXTE_DES_VARIANTES}$`),
 Then(/^Léa lit « BUT ! »$/, async ({ page }) => {
   await attendreLaScene(page);
   await attendreLeCri(page, "BUT !");
+});
+
+Then(
+  /^Lili joue la célébration de l'univers « Danse » : elle entre en scène et fait une pirouette, puis le grand jeté, le ruban ou les petits sauts$/,
+  async ({ page }) => {
+    const celebration = await attendreLaScene(page, "danse");
+    await expect(celebration).toHaveAttribute("data-variante", VARIANTES_POSSIBLES_DE_LILI);
+    await attendreLeCri(page, "Bravo !");
+    await attendreLaFinDeLaScene(page);
+  },
+);
+
+Then(new RegExp(`^Lili entre en scène et fait une pirouette, puis ${TEXTE_DES_VARIANTES_DE_LILI}$`), async ({ page }, variante: string) => {
+  const celebration = await attendreLaScene(page, "danse");
+  await expect(celebration).toHaveAttribute("data-variante", VARIANTES_DE_LILI[variante] as string);
+  await attendreLeCri(page, "Bravo !");
+  await attendreLaFinDeLaScene(page);
+});
+
+Then(/^Léa lit « Bravo ! »$/, async ({ page }) => {
+  await attendreLaScene(page, "danse");
+  await attendreLeCri(page, "Bravo !");
 });
 
 Then(/^Coach Léo ne joue pas la célébration de l'univers$/, async ({ page }) => {
@@ -151,17 +191,25 @@ Then(/^Coach Léo continue la célébration de l'univers$/, async ({ page }) => 
 });
 
 Then(/^Léa voit l'image fixe de la célébration de l'univers « Sports », avec « BUT ! », sans mouvement$/, async ({ page }) => {
-  const celebration = await attendreLaScene(page);
+  await verifierLImageFixe(page, "sports", VARIANTES_POSSIBLES, "BUT !");
+});
+
+Then(/^Léa voit l'image fixe de la célébration de l'univers « Danse », avec « Bravo ! », sans mouvement$/, async ({ page }) => {
+  await verifierLImageFixe(page, "danse", VARIANTES_POSSIBLES_DE_LILI, "Bravo !");
+});
+
+async function verifierLImageFixe(page: Page, univers: "sports" | "danse", variantes: RegExp, cri: string): Promise<void> {
+  const celebration = await attendreLaScene(page, univers);
   await expect(celebration).toHaveAttribute("data-mouvements", "reduits");
   await expect(celebration).toHaveAttribute("data-etat", "terminee");
-  await expect(celebration).toHaveAttribute("data-variante", VARIANTES_POSSIBLES);
-  await attendreLeCri(page, "BUT !");
+  await expect(celebration).toHaveAttribute("data-variante", variantes);
+  await attendreLeCri(page, cri);
   await expect(page.getByTestId("confettis-de-la-celebration")).toHaveCount(0);
   const animationsEnCours = await celebration.evaluate(
     (element) => element.getAnimations({ subtree: true }).filter((animation) => animation.playState === "running").length,
   );
   expect(animationsEnCours, "animations en cours dans la scène").toBe(0);
-});
+}
 
 // --- Alors : la célébration commune
 
@@ -195,6 +243,15 @@ Then(
   },
 );
 
+Then(
+  /^Lili n'apparaît qu'une fois, dans la célébration de l'univers, la bulle gardant ses paroles$/,
+  async ({ page }) => {
+    await attendreLaScene(page, "danse");
+    await verifierQueLaBulleGardeSesParoles(page);
+    await expect(petitPersonnage(page), "le petit personnage guide à côté de la bulle").toHaveCount(0);
+  },
+);
+
 Then(/^Coach Léo apparaît à côté de la bulle de ses paroles$/, async ({ page }) => {
   await attendreLaFinDuDefi(page);
   await verifierQueLaBulleGardeSesParoles(page);
@@ -211,6 +268,14 @@ Then(/^Léa entend la musique de la célébration de Coach Léo$/, async ({ page
 
 Then(
   /^Léa entend la musique de la célébration de Coach Léo, puis Coach Léo dit « Bravo Léa ! Tu as relevé le défi (\d+) ! »$/,
+  async ({ page }, numero: string) => {
+    await effetPuisParole(page, [MUSIQUE], "felicitation", true);
+    expect(normaliser((await bulle(page).textContent()) ?? "")).toBe(`Bravo Léa ! Tu as relevé le défi ${numero} !`);
+  },
+);
+
+Then(
+  /^Léa entend la musique de la célébration de Lili, puis Lili dit « Bravo Léa ! Tu as relevé le défi (\d+) ! »$/,
   async ({ page }, numero: string) => {
     await effetPuisParole(page, [MUSIQUE], "felicitation", true);
     expect(normaliser((await bulle(page).textContent()) ?? "")).toBe(`Bravo Léa ! Tu as relevé le défi ${numero} !`);
@@ -248,17 +313,33 @@ Then(/^« Mon parcours » et « Accueil » mesurent au moins 44 px de haut$/, as
 });
 
 Then(/^les lecteurs d'écran n'annoncent ni « BUT ! » ni le dessin de la célébration$/, async ({ page }) => {
-  const celebration = await attendreLaScene(page);
-  await attendreLeCri(page, "BUT !");
+  await verifierQueLaSceneEstMuettePourLesLecteursDEcran(page, "sports", "BUT !");
+});
+
+Then(/^les lecteurs d'écran n'annoncent ni « Bravo ! » ni le dessin de la célébration$/, async ({ page }) => {
+  await verifierQueLaSceneEstMuettePourLesLecteursDEcran(page, "danse", "Bravo !");
+});
+
+/** Le cri est cherché tel quel : la bulle « Bravo Léa ! … » reste lisible. */
+async function verifierQueLaSceneEstMuettePourLesLecteursDEcran(page: Page, univers: "sports" | "danse", cri: string): Promise<void> {
+  const celebration = await attendreLaScene(page, univers);
+  await attendreLeCri(page, cri);
   await attendreLaFinDeLaScene(page);
   await expect(celebration).toHaveAttribute("aria-hidden", "true");
   await expect(celebration.locator("[aria-live], [role=status], [role=alert], [role=img], [aria-label]")).toHaveCount(0);
-  const cri = await page.evaluate(() => {
-    const exposes = [...document.querySelectorAll("body *")].filter((element) =>
-      element.children.length === 0 && (element.textContent ?? "").includes("BUT !") && element.closest("[aria-hidden=true]") === null
-    );
-    return exposes.length;
-  });
-  expect(cri, "éléments qui portent « BUT ! » sans être cachés aux lecteurs d'écran").toBe(0);
-  await expect(page.locator("[aria-live], [role=status], [role=alert]").filter({ hasText: "BUT !" })).toHaveCount(0);
+  const exposes = await page.evaluate((texte) =>
+    [...document.querySelectorAll("body *")].filter((element) =>
+      element.children.length === 0 && (element.textContent ?? "").trim() === texte && element.closest("[aria-hidden=true]") === null
+    ).length, cri);
+  expect(exposes, `éléments qui portent « ${cri} » sans être cachés aux lecteurs d'écran`).toBe(0);
+  await expect(page.locator("[aria-live], [role=status], [role=alert]").filter({ hasText: new RegExp(`^${cri}$`) })).toHaveCount(0);
+}
+
+Then(/^aucun confetti ni pétale ne tombe$/, async ({ page }) => {
+  await attendreLaFinDuDefi(page);
+  await laisserSeDerouler(page);
+  await expect(page.getByTestId("confettis-de-la-celebration")).toHaveCount(0);
+  await expect(page.getByTestId("confettis")).toHaveCount(0);
+  const observation = await observer(page);
+  expect(observation.vu.filter((vu) => vu.startsWith("confettis:")), "confettis").toEqual([]);
 });

@@ -3,10 +3,11 @@
 Scénarios : `features/106-celebration-de-l-univers.feature` (`@issue-106 @wip`).
 Modèle : `docs/stories/106/domain-model.md` (questions 106.1 à 106.23).
 État : **cadrage validé par le PO le 2026-11-02** (« 106 reco tout », https://github.com/SBA-dev/github-move/issues/106#issuecomment-6588450629) :
-toutes les recommandations des questions 106.1 à 106.27 sont retenues (section « Décisions ») ; 106.28 est tranchée ensuite par le PO (« cacher »). Le fichier couvre la
-livraison **106a** ; les scénarios des livraisons suivantes (106b à 106h) sont tagués en plus `@hors-106a`, exclus
-de 106a, et restent `@a-valider` jusqu'à leur livraison (mise en place, noms des variantes, 106.26). Aucun scénario
-de 106a n'est `@a-valider`.
+toutes les recommandations des questions 106.1 à 106.27 sont retenues (section « Décisions ») ; 106.28 est tranchée ensuite par le PO (« cacher »). Le fichier couvre les
+livraisons **106a** (mécanisme et univers « Sports », mergée) et **106b** (univers « Danse », scénarios tagués en plus
+`@livraison-106b`) ; les scénarios des livraisons suivantes (106c à 106h) sont tagués en plus `@hors-106a`, exclus,
+et restent `@a-valider` jusqu'à leur livraison (mise en place, noms des variantes, 106.26). Aucun scénario de 106a ni
+de 106b n'est `@a-valider`. Sélection des scénarios actifs : `@issue-106 and not @hors-106a`.
 
 ## Objectif
 
@@ -33,6 +34,25 @@ utilisables dès la première image).
   les confettis de la scène de Coach Léo font partie de sa célébration (106.24).
 - Les cinq autres univers gardent la **célébration commune** de #97 (106.18).
 
+## Ce que couvre 106b
+
+- Univers **Danse** : Lili entre en scène et fait une pirouette, puis fait le grand jeté, le ruban ou les petits sauts
+  (noms en clair fixés d'après la maquette validée `docs/maquettes/lili-danse.html`, boutons « A · Grand jeté »,
+  « B · Ruban », « C · Petits sauts » : 106.26) ; cri de victoire « Bravo ! », affiché et jamais lu ; musique de la
+  célébration de Lili (« grande victoire » tant que le PO n'a pas choisi, 106.12).
+- Les fleurs et les pétales lancés depuis la salle (« les pétales de la salle ») font partie de la célébration de
+  l'univers « Danse », comme les confettis de la scène de Coach Léo (106.24 appliquée) : ils remplacent les confettis
+  de la célébration commune et ne tombent pas en mouvements réduits.
+- Lili n'apparaît qu'une fois, dans la scène, sa bulle gardant ses paroles (106.28).
+- « Chapitre réussi ! » de la maquette n'est pas repris : l'annonce reste « Défi relevé ! » (glossaire, n° 41).
+- Ce qui ne dépend pas de l'univers reste décrit une seule fois, avec Coach Léo, et n'est pas dupliqué en Danse :
+  toucher hors des boutons, boutons et clavier (R5), Muet et écran du parent (R7), défi rejoué (R3, où le petit
+  personnage guide à côté de la bulle revient parce que la célébration commune est jouée, quel que soit l'univers),
+  annonce, boutons et parcours identiques (R2, dont le Plan contient déjà Danse). Ne sont repris en Danse que les
+  scénarios qui vérifient la scène propre à l'univers : son contenu, sa variante, son image fixe, son cri de victoire
+  caché aux lecteurs d'écran et sa place à 360 px.
+- La règle 106b porte un `Contexte` de règle : « Paul a changé l'univers du profil enfant de Léa en « Danse » ».
+
 Durées (pour l'implémentation et la review, jamais dans les étapes) : 3 s au plus (106.9 B), boutons, clavier et
 annonce disponibles dès la première image ; écart à 97.23 noté dans la décision 0039 (106.9 B retenue).
 
@@ -43,16 +63,22 @@ annonce disponibles dès la première image ; écart à 97.23 noté dans la déc
 | R1 | Au premier défi relevé dans l'univers « Sports », Coach Léo joue la célébration de l'univers à la place de la célébration commune, avant de féliciter l'enfant ; il n'apparaît qu'une fois, dans la scène, sa bulle gardant ses paroles (106.28) | Au premier défi relevé, Coach Léo marque un but et le fête, puis félicite Léa · Le hasard ne choisit que la variante (Plan, 3 exemples) · Un défi relevé avec des erreurs est fêté par la même célébration · Sans réseau, Coach Léo joue quand même la célébration |
 | R2 | L'univers ne change que la mise en scène : même annonce, mêmes boutons, aucune étoile, même suite du parcours | Dans l'univers « <univers> », la fin du défi annonce et propose la même chose (Plan : Sports, Danse, Animaux de la forêt) · Après la célébration, le parcours de Léa est le même que dans un autre univers |
 | R3 | Seul le premier défi relevé est fêté par la célébration de l'univers ; un défi rejoué garde la célébration commune (confettis compris, 106.25) et « séance terminée » | Rejouer un défi relevé fait entendre « séance terminée », avec la célébration commune et sans but de Coach Léo |
-| R4 | La célébration est celle de l'univers du profil au moment du défi relevé ; un univers pas encore livré garde la célébration commune | Dans l'univers « <univers> », pas encore livré, le premier défi relevé garde la célébration commune (Plan, 5 univers) · Un enfant passé dans l'univers « Sports » voit Coach Léo fêter son premier défi relevé |
+| R4 | La célébration est celle de l'univers du profil au moment du défi relevé ; un univers pas encore livré garde la célébration commune | Dans l'univers « <univers> », pas encore livré, le premier défi relevé garde la célébration commune (Plan, 4 univers depuis 106b : Animaux de la forêt, Princesses et fées, Police, Pompiers) · Un enfant passé dans l'univers « Sports » voit Coach Léo fêter son premier défi relevé |
 | R5 | La célébration ne retient jamais l'enfant : un toucher hors des boutons ne fait rien ; boutons et clavier agissent tout de suite et arrêtent la musique | Toucher l'écran en dehors des boutons ne change rien · Toucher « Mon parcours » y mène tout de suite et arrête la musique · Le clavier n'est jamais bloqué · À 360 px, la célébration tient dans la largeur et ses boutons restent assez grands |
 | R6 | Mouvements réduits : image fixe de la même scène, cri et annonce, sans mouvement ni confettis ; une seule annonce aux lecteurs d'écran | Avec les mouvements réduits, image fixe sans mouvement ni confettis · Les lecteurs d'écran annoncent une seule fois « Défi relevé ! », sans lire le cri de victoire |
 | R7 | La musique est un effet sonore : jouée en Muet (seule la parole est coupée), arrêtée par un écran du parent | En Muet, la musique se fait entendre, sans parole · En arrivant sur un écran du parent, la musique s'arrête |
+
+Livraison 106b, scénarios tagués `@livraison-106b` :
+
+| # | Règle | Scénarios (106b) |
+|---|---|---|
+| R8 | Dans l'univers « Danse », Lili joue au premier défi relevé sa célébration de l'univers à la place de la célébration commune, avec les mêmes garanties que Coach Léo : image fixe en mouvements réduits, cri de victoire jamais lu, place tenue à 360 px | Au premier défi relevé dans l'univers « Danse », Lili entre en scène, fait une pirouette et le fête, puis félicite Léa · Le hasard ne choisit que la variante : avec « <variante> », Lili entre toujours en scène et fait sa pirouette (Plan : le grand jeté, le ruban, les petits sauts) · Avec les mouvements réduits, Léa voit l'image fixe de la célébration de l'univers « Danse », sans mouvement, ni confettis, ni pétales · Dans l'univers « Danse », les lecteurs d'écran annoncent une seule fois « Défi relevé ! », sans lire « Bravo ! » · À 360 px, la célébration de l'univers « Danse » tient dans la largeur et ses boutons restent assez grands |
 
 Livraisons suivantes, scénarios tagués `@hors-106a` (tous `@a-valider`) :
 
 | Livraison | Règle | Scénarios |
 |---|---|---|
-| 106b à 106f | Chaque univers a sa célébration, jouée par son personnage guide, avec son cri de victoire | Dans l'univers « <univers> », <personnage guide> fête le premier défi relevé à sa façon (Plan : Danse, Animaux de la forêt, Princesses et fées, Police, Pompiers) |
+| 106c à 106f | Chaque univers a sa célébration, jouée par son personnage guide, avec son cri de victoire | Dans l'univers « <univers> », <personnage guide> fête le premier défi relevé à sa façon (Plan : Animaux de la forêt, Princesses et fées, Police, Pompiers) |
 | 106g | La séance qui rend une matière réussie est fêtée par la célébration de l'univers, annonce « Matière réussie ! » | La séance qui rend réussie la dernière leçon de sciences du CE1 fait jouer la célébration · Rejouer une leçon d'une matière déjà réussie ne la fait pas jouer |
 | 106h | Au palier des tenues, le personnage guide joue sa célébration en portant la tenue reçue ; une seule célébration par fin | La séance qui fait recevoir une tenue fait danser Coach Léo avec sa nouvelle tenue · Une séance qui rend la matière réussie et fait recevoir une tenue ne joue qu'une célébration |
 
@@ -75,6 +101,15 @@ visible le périmètre complet.
   « Défi relevé ! » une fois, jamais « BUT ! ».
 - **R7** : Muet → musique entendue, aucune parole ; « espace parent » pendant la célébration → musique arrêtée.
 
+## Example mapping (106b)
+
+- **R8** : Léa (CE1) passée en Danse relève le défi 1 de maths → Lili entre en scène et fait une pirouette, puis le
+  grand jeté, le ruban ou les petits sauts ; « Bravo ! » ; musique, puis « Bravo Léa ! Tu as relevé le défi 1 ! » ;
+  Lili seulement dans la scène ; ni confettis ni « séance terminée » de la célébration commune. Tirage fixé à « le
+  ruban » → pirouette, puis le ruban. Mouvements réduits → image fixe avec « Bravo ! », « Défi relevé ! », aucun
+  confetti ni pétale. Lecteur d'écran → « Défi relevé ! » une fois, jamais « Bravo ! » (la bulle « Bravo Léa ! … »
+  reste lisible : elle n'est pas le cri de victoire). 360 px → « Bravo ! » visible, rien ne dépasse, boutons de 44 px.
+
 Retour après une erreur (checklist `gamification`) : sans objet dans la célébration elle-même ; un défi relevé avec
 des erreurs est fêté pareil (R1), et les erreurs du défi suivent les règles de #100.
 
@@ -82,7 +117,9 @@ Droits d'accès : **aucun scénario `@acces`**. La story ne lit que l'univers du
 relevé (couvert par #100) ; elle n'enregistre rien et n'ajoute ni table, ni policy, ni Edge Function.
 
 Règle absolue sur les contenus : vérifiée par la review et la planche (skill `illustration`, section 0), pas par un
-scénario. Sports : une fête joyeuse, ni adversaire moqué, ni coupe, ni podium, ni classement ; aucun coffre. Les
+scénario. Sports : une fête joyeuse, ni adversaire moqué, ni coupe, ni podium, ni classement ; aucun coffre. Danse :
+tenue adaptée aux enfants (collant opaque, tutu, poses de danse classique), sans stéréotype ; public discret ; aucun
+coffre. Les
 scénarios ne décrivent jamais de contenu interdit.
 
 Pour l'équipe (pas une question au PO) : le Plan « Le hasard ne choisit que la variante » demande une étape de mise en
@@ -92,7 +129,7 @@ autres scénarios à hasard fixé. Le scénario de la musique sans réseau est v
 
 ## Hors périmètre
 
-- Les autres univers (106b à 106f), la matière réussie (106g) et les danses de victoire aux paliers des tenues (106h) :
+- Les autres univers (106c à 106f), la matière réussie (106g) et les danses de victoire aux paliers des tenues (106h) :
   livraisons suivantes, scénarios `@hors-106a`.
 - Petites célébrations à chaque fin de séance (106.8), réaction animée à une réponse fausse (106.20), grand défi de
   la matière (#137).
@@ -100,9 +137,9 @@ autres scénarios à hasard fixé. Le scénario de la musique sans réseau est v
 
 ## Questions ouvertes
 
-Aucune pour 106a. Reste en attente, sans bloquer 106a :
+Aucune pour 106a ni pour 106b. Reste en attente, sans bloquer :
 - le **choix des musiques** des six univers par le PO, à l'écoute (106.12) : d'ici là, la musique de la célébration
-  de Coach Léo est « grande victoire » ;
+  de Coach Léo et celle de Lili sont « grande victoire » ;
 - l'**accès réseau** à `opengameart.org` ou `kenney.nl` (106.27) : seul le PO peut l'ouvrir dans l'environnement.
 
 ## Décisions
@@ -136,9 +173,9 @@ par sa recommandation. Les questions 106.1 à 106.23 sont détaillées dans `doc
 | 106.21 Changement d'univers | Réponse du PO 2026-11-02 : reco. Célébration du nouvel univers dès le moment suivant | R4 |
 | 106.22 Moteur d'animation | Réponse du PO 2026-11-02 : reco. Moteur des maquettes porté dans un composant isolé, Motion pour l'entrée et la sortie ; décision 0039 | Aucun (implémentation) |
 | 106.23 Tenue portée | Réponse du PO 2026-11-02 : reco. Le personnage guide garde sa tenue portée pendant la célébration | Aucun en 106a (vérifié par la review) ; 106h |
-| 106.24 Confettis de Coach Léo | Réponse du PO 2026-11-02 : reco. Ils font partie de sa célébration de l'univers, distincts des confettis de la célébration commune, qui ne tombent pas ; en mouvements réduits, aucun confetti | R1 (« la célébration commune n'est pas jouée »), R6 (« aucun confetti ne tombe ») |
+| 106.24 Confettis de Coach Léo | Réponse du PO 2026-11-02 : reco. Ils font partie de sa célébration de l'univers, distincts des confettis de la célébration commune, qui ne tombent pas ; en mouvements réduits, aucun confetti | R1 (« la célébration commune n'est pas jouée »), R6 (« aucun confetti ne tombe ») ; appliquée en 106b aux pétales de la salle de Lili : R8 (« la célébration commune n'est pas jouée », « aucun confetti ni pétale ne tombe ») |
 | 106.25 Défi rejoué | Réponse du PO 2026-11-02 : reco. Il garde les confettis de la célébration commune en plus de « séance terminée » | R3 (« des confettis tombent ») |
-| 106.26 Noms des variantes (hors 106a) | Réponse du PO 2026-11-02 : reco. Fixés à la livraison de chaque univers, d'après sa maquette | Scénarios 106b à 106e restent `@a-valider` |
+| 106.26 Noms des variantes (hors 106a) | Réponse du PO 2026-11-02 : reco. Fixés à la livraison de chaque univers, d'après sa maquette | Danse, fixés en 106b d'après `lili-danse.html` : « le grand jeté », « le ruban », « les petits sauts » (R8, mots employés du `.feature`) ; scénarios 106c à 106e restent `@a-valider` |
 | 106.27 Accès réseau aux musiques | Réponse du PO 2026-11-02 : reco (oui), mais l'accès ne peut être ouvert que par le PO ; 106a part avec « grande victoire » | Aucun |
 | 106.28 Personnage guide à côté de la bulle pendant la célébration de l'univers : le garder ou le cacher ? | Réponse du PO 2026-11-02 : « cacher ». Pendant la célébration de l'univers, le personnage guide n'apparaît qu'une fois, dans la scène ; sa bulle garde ses paroles et « Réécouter ». Avec la célébration commune (défi rejoué, univers pas encore livré), rien ne change : il reste à côté de sa bulle | R1 (« Coach Léo n'apparaît qu'une fois, dans la célébration de l'univers, la bulle gardant ses paroles »), R3 (« Coach Léo apparaît à côté de la bulle de ses paroles ») |
 

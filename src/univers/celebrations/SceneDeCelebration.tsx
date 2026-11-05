@@ -1,10 +1,43 @@
-import { useLayoutEffect, useRef, useState } from "react";
-import { motion } from "motion/react";
-import type { CelebrationDeLUnivers } from "@domain/motivation";
-import { useMouvementsReduits } from "../../transitions/mouvements-reduits.ts";
-import { DecorDesSports } from "./sports/DecorDesSports.tsx";
-import { creerLaScene } from "./sports/scene.ts";
-import { estUneVarianteDeSports, type VarianteDeSports } from "./sports/poses.ts";
+import { type ComponentType, lazy, Suspense } from "react";
+import type { CelebrationDeLUnivers, CleUnivers } from "@domain/motivation";
+
+type PropsDeScene<Cle extends string> = { readonly cle: Cle; readonly cri: string };
+
+/** L'espace de la scène, vide : il garde la place pour que les boutons ne bougent pas quand la scène arrive, ou quand elle n'arrive pas. */
+function EspaceDeLaScene() {
+  return <div className="celebration-de-l-univers" aria-hidden="true" />;
+}
+
+type Module<Cle extends string> = { default: ComponentType<PropsDeScene<Cle>> };
+
+/** Le morceau d'une scène est demandé une seule fois : le préchargement et l'affichage partagent la même promesse. Un échec n'est pas gardé : l'appel suivant retente. */
+const memoriser = <T,>(charger: () => Promise<T>) => {
+  let promesse: Promise<T> | undefined;
+  return () =>
+    promesse ??= charger().catch((erreur: unknown) => {
+      promesse = undefined;
+      throw erreur;
+    });
+};
+
+/** Une scène qui ne se charge pas (nouvelle version de l'appli, hors ligne) ne montre rien : la fin du défi reste intacte. */
+const chargerSansEchec = <Cle extends string>(charger: () => Promise<Module<Cle>>) =>
+  lazy(() => charger().catch(() => ({ default: EspaceDeLaScene })));
+
+const chargerSports = memoriser(() => import("./sports/SceneDesSports.tsx"));
+const chargerDanse = memoriser(() => import("./danse/SceneDeLaDanse.tsx"));
+
+const SceneDesSports = chargerSansEchec(chargerSports);
+const SceneDeLaDanse = chargerSansEchec(chargerDanse);
+
+/**
+ * Charge à l'avance la scène de l'univers, tant que le réseau est là (dès que le profil de l'enfant est connu, puis à l'ouverture du défi) : si le réseau se coupe pendant le défi,
+ * la célébration de la fin se joue quand même. Un échec est ignoré : la fin du défi retombe sur l'espace vide.
+ */
+export function prechargerLaSceneDe(univers: CleUnivers): void {
+  const charger = univers === "sports" ? chargerSports : univers === "danse" ? chargerDanse : undefined;
+  charger?.().catch(() => undefined);
+}
 
 type Props = { readonly celebration: CelebrationDeLUnivers };
 
@@ -12,47 +45,14 @@ type Props = { readonly celebration: CelebrationDeLUnivers };
  * La célébration de l'univers, jouée à la place de la célébration commune : elle ne fait qu'afficher ce que le domaine a décidé
  * (la variante tirée, le cri de victoire). Dessin décoratif (`aria-hidden`) : l'annonce du moment est donnée ailleurs, une seule fois.
  * Elle ne capte aucun toucher et ne prend jamais le focus. Avec les mouvements réduits : l'image fixe de l'état final, sans confetti.
- * Seul l'univers « Sports » est livré ; pour tout autre, le domaine ne rend pas de célébration.
+ * Chaque scène est chargée à la demande, seulement pour l'univers du profil : en attendant, ou si le chargement échoue,
+ * un espace vide de même taille est réservé et la fin du défi reste utilisable.
  */
 export function SceneDeCelebration({ celebration }: Props) {
-  const { variante, cri, univers } = celebration;
-  if (univers !== "sports" || !estUneVarianteDeSports(variante.cle)) return null;
-  return <SceneDesSports cle={variante.cle} cri={cri} />;
-}
-
-type PropsDesSports = { readonly cle: VarianteDeSports; readonly cri: string };
-
-function SceneDesSports({ cle, cri }: PropsDesSports) {
-  const reduits = useMouvementsReduits();
-  const racine = useRef<SVGSVGElement>(null);
-  const toile = useRef<HTMLCanvasElement>(null);
-  const [terminee, setTerminee] = useState(false);
-
-  useLayoutEffect(() => {
-    if (!racine.current) return;
-    if (reduits) {
-      creerLaScene(racine.current, null, cle).montrerLEtatFinal();
-      return;
-    }
-    return creerLaScene(racine.current, toile.current, cle).jouer(() => setTerminee(true));
-  }, [cle, reduits]);
-
-  const fixe = reduits || terminee;
-  return (
-    <motion.div
-      className="celebration-de-l-univers"
-      aria-hidden="true"
-      data-testid="celebration-de-l-univers"
-      data-univers="sports"
-      data-variante={cle}
-      data-mouvements={reduits ? "reduits" : "animes"}
-      data-etat={fixe ? "terminee" : "en-cours"}
-      initial={reduits ? false : { opacity: 0, scale: 0.96 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.2, ease: "easeOut" }}
-    >
-      <DecorDesSports racine={racine} cri={cri} />
-      {!reduits && <canvas ref={toile} className="confettis-de-la-celebration" data-testid="confettis-de-la-celebration" />}
-    </motion.div>
-  );
+  switch (celebration.univers) {
+    case "sports":
+      return <Suspense fallback={<EspaceDeLaScene />}><SceneDesSports cle={celebration.variante.cle} cri={celebration.cri} /></Suspense>;
+    case "danse":
+      return <Suspense fallback={<EspaceDeLaScene />}><SceneDeLaDanse cle={celebration.variante.cle} cri={celebration.cri} /></Suspense>;
+  }
 }

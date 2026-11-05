@@ -3,6 +3,7 @@ import { AucuneQuestionPourLeDefi, type Defi, type DefiReleve, type GrandDefi } 
 import { type Lecon, libelleCourtDe, type Niveau } from "@domain/catalogue";
 import type { ProfilEnCours } from "@domain/famille";
 import { nomDuDefiOuvert, parolesDeDebutDuDefi, type Univers } from "@domain/motivation";
+import { prechargerLaSceneDe } from "../univers/celebrations/index.ts";
 import { niveauDuProfil } from "../parcours/niveau-du-profil.ts";
 import { DeroulementDeLaRevision as DeroulementDesQuestions } from "../revision/DeroulementDeLaRevision.tsx";
 import { usePersonnageQuiParle } from "../seance/usePersonnageQuiParle.ts";
@@ -56,6 +57,7 @@ function DefiCharge(
     sortie.current = true;
     quitter();
   };
+  useEffect(() => prechargerLaSceneDe(univers.cle), [univers.cle]);
   useEffect(() => {
     if (!commence) retourner(onMonParcours)();
   }, [commence, onMonParcours]);

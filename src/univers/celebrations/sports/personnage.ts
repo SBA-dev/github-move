@@ -1,61 +1,20 @@
-import { clamp01, DEG, E, fenetre, lerp, r1, r3 } from "./courbes.ts";
-import { type CoteDeMain, dessinDuBras, MAINS, type PoseDeMain, STRUCTURE_DE_COACH_LEO } from "./dessin-du-personnage.ts";
-import { creerUnGroupe, deplacer, elementsDe, poser, trouver } from "./dom.ts";
+import { clamp01, DEG, E, fenetre, lerp, r1, r3 } from "../commun/courbes.ts";
+import { creerUnGroupe, deplacer, elementsDe, poser, trouver } from "../commun/dom.ts";
+import { decaler, membre, type Point, trace } from "../commun/membres.ts";
+import type { CoteDeMain, PoseDeMain } from "../commun/mains.ts";
+import { clignement, RAYON_DE_LA_TETE as R, traitDuVisage } from "../commun/visage.ts";
+import { dessinDuBras, MAINS, STRUCTURE_DE_COACH_LEO } from "./dessin-du-personnage.ts";
 import { type Emotion, type Pose, poseA, type ScenarioDeBut } from "./poses.ts";
 
-const R = 28;
 const BASE = .8;
 export const ECHELLE_DE_BASE = BASE;
 
-type Point = { readonly x: number; readonly y: number };
-type Membre = { readonly S: Point; readonly E: Point; readonly W: Point; readonly C: Point; readonly dir: number };
 type Expression = { readonly emo: Emotion; readonly prec: Emotion; readonly u: number };
 
 const EMOS: Record<Emotion, { sg: readonly [number, number]; sd: readonly [number, number]; lid: number; pup: number }> = {
   concentration: { sg: [2, 10], sd: [2, -10], lid: .3, pup: 1 },
   surprise: { sg: [-7, -6], sd: [-7, 6], lid: 0, pup: .85 },
   joie: { sg: [-5, -4], sd: [-5, 4], lid: 0, pup: 1.05 },
-};
-
-const quad = (S: Point, C: Point, W: Point, t: number): Point => ({
-  x: (1 - t) ** 2 * S.x + 2 * t * (1 - t) * C.x + t * t * W.x,
-  y: (1 - t) ** 2 * S.y + 2 * t * (1 - t) * C.y + t * t * W.y,
-});
-
-/** Un membre articulé : une seule courbe souple de l'épaule (ou de la hanche) au poignet (ou à la cheville). */
-function membre(S: Point, a1: number, a2: number, L1: number, L2: number): Membre {
-  const E1 = { x: S.x - Math.sin(a1 * DEG) * L1, y: S.y + Math.cos(a1 * DEG) * L1 };
-  const W = { x: E1.x - Math.sin((a1 + a2) * DEG) * L2, y: E1.y + Math.cos((a1 + a2) * DEG) * L2 };
-  const C = { x: 2 * E1.x - (S.x + W.x) / 2, y: 2 * E1.y - (S.y + W.y) / 2 };
-  const dir = Math.atan2(W.x - E1.x, -(W.y - E1.y)) / DEG;
-  return { S, E: E1, W, C, dir };
-}
-
-function trace(m: Membre, t0: number, t1: number, pas = 8): string {
-  let d = "";
-  for (let i = 0; i <= pas; i++) {
-    const p = quad(m.S, m.C, m.W, lerp(t0, t1, i / pas));
-    d += `${i ? "L" : "M"}${r1(p.x)} ${r1(p.y)}`;
-  }
-  return d;
-}
-
-const decaler = (m: Membre, dx: number, dy: number): Membre => ({
-  ...m,
-  S: { x: m.S.x + dx, y: m.S.y + dy },
-  C: { x: m.C.x + dx, y: m.C.y + dy },
-  W: { x: m.W.x + dx, y: m.W.y + dy },
-});
-
-/** Un trait du visage à l'azimut alpha (0 = devant le visage) vu sous l'angle omega (0 = face, 180 = dos). */
-const traitDuVisage = (alpha: number, omega: number, rayon = R) => {
-  const a = (alpha + omega) * DEG;
-  return { x: rayon * Math.sin(a), z: Math.cos(a) };
-};
-
-const clignement = (t: number) => {
-  const c = (t + .9) % 2.9;
-  return c < .13 ? Math.sin(c / .13 * Math.PI) : 0;
 };
 
 function expressionA(scenario: ScenarioDeBut, t: number): Expression {
@@ -73,7 +32,7 @@ function expressionA(scenario: ScenarioDeBut, t: number): Expression {
 
 /** Coach Léo, dessiné image par image à partir des poses du scénario (portage du moteur des maquettes). */
 export function creerCoachLeo(racine: SVGSVGElement) {
-  const n = elementsDe(racine);
+  const n = elementsDe(racine, "sports");
   n("leo").innerHTML = STRUCTURE_DE_COACH_LEO;
   const bras = { g: creerLeBras("g"), d: creerLeBras("d") };
   const bouches = [...n("bouches").children];
