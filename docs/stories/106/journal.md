@@ -325,3 +325,5 @@ Livraison **106g** : moment « matière réussie » à la fin de la séance. Bra
 | Verrous | base deux fois (13:32 → 13:36 UTC, mise au point ; 18:28 → environ 20:00 UTC, référence) |
 | Leçon | un refactor « sans changement de comportement » du front a introduit deux bugs d'ordre d'exécution (lecture avant la sauvegarde de la séance ; tirage posé après les paroles de fin) : la revue delta les a trouvés, les E2E en ligne ne les auraient pas vus (latence réseau) |
 | Tokens | relevés par le responsable |
+- 20:10 UTC : PR #167 passée en « prête », PRÊTE À MERGER (commentaire 6667663360). Review finale publiée sur la PR (commentaire 6667650763) : APPROUVÉ. Non bloquants de documentation de la revue finale corrigés (`6bc74e0`, `dee4d01`).
+- 21:06 UTC : « merge 106g OK » (annonce [Responsable] 6669541270, vérifiée) ; VERROU merge inscrit au tableau de #64. `main` toujours `2acfeac`, déjà intégrée. Sur `dee4d01` : 2910 tests verts, lint, fmt, tsc, build OK ; E2E de référence (head `96ef7cf`, seules des docs ont changé depuis) 58/58 et 156/156 ; pas de CI sur la PR. Merge par merge commit.
