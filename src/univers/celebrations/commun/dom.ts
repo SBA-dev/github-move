@@ -1,5 +1,3 @@
-import type { UniversCelebre } from "@domain/motivation";
-
 export const NS = "http://www.w3.org/2000/svg";
 
 export function trouver(parent: ParentNode, selecteur: string): SVGElement {
@@ -8,13 +6,13 @@ export function trouver(parent: ParentNode, selecteur: string): SVGElement {
   return element;
 }
 
-/** Retrouve un élément de la scène par son identifiant (préfixé par l'univers : `sports-leo`, `danse-lili`), une seule fois. */
-export function elementsDe(racine: ParentNode, univers: UniversCelebre): (id: string) => SVGElement {
+/** Retrouve un élément de la scène par son identifiant (préfixé par l'univers : `sports-leo`, `danse-lili`, ou par la scène : `reponse-fausse-sports-leo`), une seule fois. */
+export function elementsDe(racine: ParentNode, prefixe: string): (id: string) => SVGElement {
   const memo = new Map<string, SVGElement>();
   return (id) => {
     const connu = memo.get(id);
     if (connu) return connu;
-    const trouve = trouver(racine, `#${univers}-${id}`);
+    const trouve = trouver(racine, `#${prefixe}-${id}`);
     memo.set(id, trouve);
     return trouve;
   };
