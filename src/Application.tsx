@@ -46,6 +46,7 @@ import { brancherLeSonDesBoutons } from "./boutons/son-des-boutons.ts";
 import { ChoixDeLaVoix, ContexteDeLaLecture, useVoix } from "./voix/index.ts";
 import { TenueDuProfil } from "./tenue/index.ts";
 import { ContexteDeLUnivers, HABILLAGE_DU_PARENT, habillageDeLUnivers, Paysage } from "./univers/index.ts";
+import { prechargerLaSceneDe } from "./univers/celebrations/index.ts";
 
 const ACCUEIL: Lieu = { ecran: "accueil" };
 
@@ -104,7 +105,9 @@ export function Application() {
   const ecranDemande = lieuDemande.ecran;
   const profil = estPageDeLEnfant(lieu) ? profilEnCours : undefined;
   const univers = universDe(profil?.univers);
-  const voix = useVoix(universDe(profilEnCours?.univers).personnageGuide);
+  const universDuProfilEnCours = universDe(profilEnCours?.univers);
+  useEffect(() => prechargerLaSceneDe(universDuProfilEnCours.cle), [universDuProfilEnCours.cle]);
+  const voix = useVoix(universDuProfilEnCours.personnageGuide);
   const parent = estUnEcranDuParent(ecranAffiche(lieu, acces.etat.type, connecte));
   const { suspendre: suspendreLaVoix, reprendre: reprendreLaVoix, toucherUnBouton } = voix;
   useEffect(() => brancherLeSonDesBoutons(toucherUnBouton), [toucherUnBouton]);

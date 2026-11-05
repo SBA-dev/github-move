@@ -10,10 +10,14 @@ function EspaceDeLaScene() {
 
 type Module<Cle extends string> = { default: ComponentType<PropsDeScene<Cle>> };
 
-/** Le morceau d'une scène est demandé une seule fois : le préchargement et l'affichage partagent la même promesse. */
+/** Le morceau d'une scène est demandé une seule fois : le préchargement et l'affichage partagent la même promesse. Un échec n'est pas gardé : l'appel suivant retente. */
 const memoriser = <T,>(charger: () => Promise<T>) => {
   let promesse: Promise<T> | undefined;
-  return () => promesse ??= charger();
+  return () =>
+    promesse ??= charger().catch((erreur: unknown) => {
+      promesse = undefined;
+      throw erreur;
+    });
 };
 
 /** Une scène qui ne se charge pas (nouvelle version de l'appli, hors ligne) ne montre rien : la fin du défi reste intacte. */
@@ -27,7 +31,7 @@ const SceneDesSports = chargerSansEchec(chargerSports);
 const SceneDeLaDanse = chargerSansEchec(chargerDanse);
 
 /**
- * Charge à l'avance la scène de l'univers, tant que le réseau est là (à l'ouverture du défi) : si le réseau se coupe pendant le défi,
+ * Charge à l'avance la scène de l'univers, tant que le réseau est là (dès que le profil de l'enfant est connu, puis à l'ouverture du défi) : si le réseau se coupe pendant le défi,
  * la célébration de la fin se joue quand même. Un échec est ignoré : la fin du défi retombe sur l'espace vide.
  */
 export function prechargerLaSceneDe(univers: CleUnivers): void {
