@@ -265,3 +265,20 @@ Livraison **106e** : univers Police (Agent Max). Branche `feature/106e-celebrati
 - 12:30 UTC : review de la branche (`origin/main...2502f5a`) : **APPROUVÉ**, aucun bloquant. Non bloquants traités : instants d'ouverture des fleurs en constantes, plus aucun rejeu avant la première image (`43b0acd`) ; durée renvoyée à `DUREE_DE_LA_CELEBRATION_S` (`016cd2f`) ; mèche et ombre de contact invisibles retirées (`2977175`) ; intention du catalogue exhaustif (`f531eaf`). Image fixe identique à l'octet, scène animée identique hors bruit de rastérisation. Renvoyé à 106h : jambes et tête de Sam proches de celles de la police, à mettre dans `commun/`.
 - Steps E2E `dc6b90e` (`bddgen` sans step manquant ni ambigu). Revue delta `2502f5a..f531eaf` : **APPROUVÉ**. Non bloquants des steps traités (commentaire de `RANG_DU_TIRAGE`, univers lu seulement pour « l'arc-en-ciel »). Non bloquant noté : aucun test ne vérifie que les instants figés des fleurs suivent les poses.
 - VERROU base demandé (commentaire 6657537384) ; en file derrière #161.
+- 12:51 UTC : VERROU base accordé (annonce du responsable, tableau de #64 vérifié). `main` intégrée (`e0d533f`, #158) sans conflit (`69a83f5`), 2891 tests Deno verts, `tsc` OK. Sonde : 3 × 200 en 0,4 à 1,1 s.
+- E2E `telephone`, 1 worker, head `69a83f5` : `@livraison-106f` **7/7** (3,2 min) ; reste de `@issue-106` hors `@hors-106a` **48/48** (18,2 min ; un premier essai coupé au 28e cas par la limite de temps de la commande, sans échec, relancé en entier). LIBÈRE base (commentaire 6659151349).
+
+## Mesures (106f)
+
+| Mesure | Valeur |
+|---|---|
+| Durée | 2026-11-05 10:15 UTC → environ 13:25 UTC, PR en brouillon (environ 3 h 10) |
+| Attente | réponses du PO (106.41 à 106.43) : environ 10 min (11:15 → 11:24) ; merge de 106e : environ 25 min (11:24 → 11:49), sans travail en attente ; verrou base : environ 30 min (12:20 → 12:51), mis à profit pour la review et ses non bloquants |
+| Maquette et planche | dessinées d'abord (illustrateur, environ 22 min, 4 passes de corrections), validées par le PO du premier coup |
+| Cycles TDD | 1 comportement (RED `0c2727e`, GREEN `bfb42aa`, refactor `641c06d`) |
+| Review | 1 review de branche et 1 revue delta, toutes deux APPROUVÉ, aucun cycle À CORRIGER ; non bloquants traités |
+| E2E | 1 run sur `telephone` : 7/7 puis 48/48, du premier coup (un essai coupé par la limite de temps de la commande) |
+| Intégrations de `main` | 2 (106e `8f976fa` : conflits de documentation et de scénarios, deux plans sans exemple supprimés ; #158 `e0d533f` : sans conflit) |
+| Escalades | aucune ; questions au cadrage 106.41 à 106.43 |
+| Verrous | base (12:51 → 13:20 UTC) |
+| Tokens | relevés par le responsable |
