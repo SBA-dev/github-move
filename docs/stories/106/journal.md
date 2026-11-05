@@ -109,3 +109,10 @@ Branche de base : `main` (`597a4a5`). Branche : `feature/106b-celebration-danse`
 | Escalades | aucune nouvelle ; 106.27 (accès réseau aux musiques) toujours ouvert |
 | Verrous | `base` (00:39 → 01:15 UTC) |
 | Tokens | relevés par le responsable |
+
+### Merge (autorisé par le PO : « merge 106b OK », annonce [Responsable] sur #64, 2026-11-05 07:07 UTC ; verrous `merge` et `base` accordés)
+- `main` intégrée (`adb9329`, avec #137) : merge `a21481c`, un conflit d'imports dans `src/defis/EcranDeDefi.tsx` (noms de #137 + `prechargerLaSceneDe`), résolu par `implementer`. tsc, build, 2877 tests, lint, fmt, bddgen OK.
+- Revue du delta d'intégration : APPROUVÉ. À signaler au PO : depuis #137, `FinDuDefi` sert aussi au grand défi, donc la célébration de l'univers se joue aussi au premier grand défi relevé (règle « premier relevé » inchangée ; pas de scénario de 106b).
+- Sonde : 3 réponses en moins de 1,4 s. Rejeu `@issue-106` hors `@hors-106a`, `telephone`, 1 worker, HEAD `a21481c` : **31/31 verts** (décision 0022).
+- Pas de CI sur la PR.
+- Mesures mises à jour : intégrations de `main` 2 (`af47f19` sans conflit, `adb9329` avec 1 conflit d'imports) ; E2E 4 runs (dont le rejeu sous verrou `merge`) ; attente de l'autorisation de merge : environ 5 h 50 (nuit).
