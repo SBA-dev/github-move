@@ -127,6 +127,9 @@ l'univers du profil enfant de Léa en « Animaux de la forêt » »). Mêmes sc�
   « Défi relevé ! », aucun confetti ni feuille. Lecteur d'écran → « Défi relevé ! » une fois, jamais « Hourra ! ».
   360 px → « Hourra ! » visible, rien ne dépasse, boutons de 44 px.
 - Contenus : une fête joyeuse dans la forêt, Noisette fière et souriante ; aucun coffre. Aucune question nouvelle.
+- Réponses du PO du 2026-11-05 (« 106c reco tout ») : la tenue portée pendant la célébration est renvoyée à 106h
+  (106.31), la planche de Noisette est validée (106.32), le jonglage reste comme dans la maquette (106.33) et aucune
+  étoile à cinq branches ne tombe avec les feuilles (106.35). Aucun scénario ne change.
 
 ## Questions ouvertes
 
@@ -171,5 +174,9 @@ par sa recommandation. Les questions 106.1 à 106.23 sont détaillées dans `doc
 | 106.26 Noms des variantes (hors 106a) | Réponse du PO 2026-11-02 : reco. Fixés à la livraison de chaque univers, d'après sa maquette | Scénarios 106b à 106e restent `@a-valider` |
 | 106.27 Accès réseau aux musiques | Réponse du PO 2026-11-02 : reco (oui), mais l'accès ne peut être ouvert que par le PO ; 106a part avec « grande victoire » | Aucun |
 | 106.28 Personnage guide à côté de la bulle pendant la célébration de l'univers : le garder ou le cacher ? | Réponse du PO 2026-11-02 : « cacher ». Pendant la célébration de l'univers, le personnage guide n'apparaît qu'une fois, dans la scène ; sa bulle garde ses paroles et « Réécouter ». Avec la célébration commune (défi rejoué, univers pas encore livré), rien ne change : il reste à côté de sa bulle | R1 (« Coach Léo n'apparaît qu'une fois, dans la célébration de l'univers, la bulle gardant ses paroles »), R3 (« Coach Léo apparaît à côté de la bulle de ses paroles ») |
+| 106.31 Tenue portée pendant la célébration (106c) | Réponse du PO 2026-11-05 : reco. Renvoyée à 106h pour tous les univers ; Noisette, comme Coach Léo et Lili, est dans sa tenue de base pendant la célébration (https://github.com/SBA-dev/github-move/issues/64#issuecomment-6651992972) | Aucun |
+| 106.32 Planche de Noisette (106c) | Réponse du PO 2026-11-05 : reco. Planche validée | Aucun |
+| 106.33 Jonglage (106c) | Réponse du PO 2026-11-05 : reco. Le jonglage reste comme dans la maquette | Aucun |
+| 106.35 Étoiles à cinq branches (posée par 106d) | Réponse du PO 2026-11-05 : reco (oui). Aucune étoile à cinq branches dans les scènes de Lili et de Noisette : fleurs ou étincelles à quatre branches à la place ; appliquée dans 106c pour Noisette | Aucun (les scénarios ne parlent que des « feuilles de la forêt »)
 
 Correction du 2026-11-02 (sans changement de règle) : dans « Pendant la célébration de l'univers, le clavier n'est jamais bloqué », « Alors Léa voit « Qui joue ? » » devient « Alors Léa voit son accueil », car depuis #100 « Accueil » à la fin d'un défi mène à l'accueil de l'enfant (et non à « Qui joue ? » comme à la fin d'une séance, #97) ; `@wip` est retiré de la fonctionnalité.

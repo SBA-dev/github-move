@@ -231,7 +231,7 @@ L'action, toujours la même, est la noisette dorée qui tombe de l'arbre et que 
 
 ### Feuilles de la forêt (application de 106.24)
 
-La maquette fait tomber des feuilles et de petites étoiles dorées (canvas « Feuilles et étoiles qui tombent »). Dans les scénarios, on les appelle **« les feuilles de la forêt »**. Elles font partie de la célébration de l'univers de Noisette, comme les confettis de Coach Léo et les pétales de la salle de Lili (106.24, invariant 2). Elles ne s'ajoutent jamais aux confettis de la célébration commune. En mouvements réduits, aucune ne tombe : on voit l'image fixe de l'état final de la variante, avec le cri de victoire et l'annonce (invariant 7). Les fleurs posées dans l'herbe font partie du décor et ne tombent pas.
+La maquette fait tomber des feuilles et de petites étoiles dorées (canvas « Feuilles et étoiles qui tombent »). Dans l'application, il ne tombe **aucune étoile à cinq branches** (106.35, appliquée dans 106c) : les petites étoiles de la maquette deviennent des étincelles à quatre branches ou de petites fleurs, qui tombent avec les feuilles. Dans les scénarios, on les appelle **« les feuilles de la forêt »**. Elles font partie de la célébration de l'univers de Noisette, comme les confettis de Coach Léo et les pétales de la salle de Lili (106.24, invariant 2). Elles ne s'ajoutent jamais aux confettis de la célébration commune. En mouvements réduits, aucune ne tombe : on voit l'image fixe de l'état final de la variante, avec le cri de victoire et l'annonce (invariant 7). Les fleurs posées dans l'herbe font partie du décor et ne tombent pas.
 
 On applique aussi, sans question nouvelle :
 - « Chapitre réussi ! » et la phrase « Tu as réussi toutes les leçons de la Forêt des Savanturiers » de la maquette sont remplacés par l'annonce du moment (« Défi relevé ! ») ;
@@ -253,7 +253,7 @@ On applique aussi, sans question nouvelle :
 ### Ce qui reste dans `src/`
 
 - `src/univers/celebrations/animaux/` : la scène de Noisette (décor de prairie et d'arbre, poses, queue en panache, noisettes, miettes, feuilles de la forêt), portée depuis la maquette avec le moteur isolé (106.22). On réutilise les morceaux partagés que 106b a mis dans `src/univers/celebrations/commun/`. Le dessin fixe de référence est `src/univers/personnages/Noisette.tsx`.
-- **Tenue portée (106.23)** : la scène porte la tenue de Noisette. Dans le dessin fixe, les tenues de #102 (`echarpe-rayee`, `noeud-papillon`, `sac-a-dos-d-explorateur`, `bottes-de-pluie`) sont dessinées par `src/univers/personnages/tenues.tsx` : un dessin derrière et un dessin devant, placés sur l'`Ancrage` de Noisette (`cou`, `dos`, `pieds`). Dans la scène animée, ces points bougent avec le personnage articulé : la tenue suit le cou, le dos et les pieds de la pose courante, et passe derrière la queue en panache comme dans le dessin fixe. Les poses de la noisette croquée et des joues pleines ne cachent pas l'écharpe ni le nœud papillon de façon gênante (la planche le montre avec chaque tenue).
+- **Tenue portée (106.31, renvoyée à 106h)** : la scène de Noisette montre Noisette dans sa **tenue de base**, comme les scènes de Sports et de Danse. Porter la tenue de #102 pendant la célébration (106.23) est renvoyé à la livraison 106h, pour tous les univers. La scène n'importe donc pas `src/univers/personnages/tenues.tsx`, et la planche ne montre aucune tenue.
 - Les identifiants SVG sont préfixés `animaux-`, comme `sports-` et `danse-`.
 - `SceneDeCelebration.tsx` ajoute le cas `animaux` à son `switch (celebration.univers)`. La scène est **chargée à la demande** et reste dans le précache de la PWA (#8).
 - Documentation : le README des maquettes, section Noisette, passe de « il » à « elle » (106.19). Correction faite dans 106c.
@@ -264,7 +264,16 @@ Le test « le premier défi relevé dans un univers pas encore livré garde la c
 
 ### Questions
 
-Aucune question nouvelle.
+Tranchées le **2026-11-05** par le PO (« merge 106b OK, 106c reco tout, 106d reco tout », annonce du responsable sur l'issue de coordination #64 : https://github.com/SBA-dev/github-move/issues/64#issuecomment-6651992972) : la recommandation est retenue pour chacune.
+
+| Question | Réponse |
+|---|---|
+| 106.31 Tenue portée pendant la célébration | Reco : renvoyée à 106h pour tous les univers. Noisette, comme Coach Léo et Lili, est dans sa tenue de base pendant la célébration |
+| 106.32 Planche de Noisette | Reco : planche validée (images clés des trois variantes et image fixe, à 360, 160 et 80 px, fonds clair et sombre) |
+| 106.33 Jonglage | Reco : le jonglage reste comme dans la maquette (trois noisettes) |
+| 106.35 Étoiles à cinq branches (posée par 106d, réponse « oui ») | Appliquée dans 106c : aucune étoile à cinq branches dans la scène de Noisette ; étincelles à quatre branches ou petites fleurs à la place (sous-section « Feuilles de la forêt ») |
+
+Aucune question ouverte pour 106c.
 
 ## Questions ouvertes
 
