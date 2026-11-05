@@ -1,5 +1,5 @@
 import { type ComponentType, lazy, Suspense } from "react";
-import type { CelebrationDeLUnivers, CleUnivers } from "@domain/motivation";
+import type { CelebrationDeLUnivers, CleUnivers, UniversCelebre } from "@domain/motivation";
 
 type PropsDeScene<Cle extends string> = { readonly cle: Cle; readonly cri: string };
 
@@ -32,13 +32,21 @@ const SceneDesSports = chargerSansEchec(chargerSports);
 const SceneDeLaDanse = chargerSansEchec(chargerDanse);
 const SceneDesAnimaux = chargerSansEchec(chargerAnimaux);
 
+/** Un univers célébré sans chargeur ne compile pas : le préchargement ne peut pas oublier une scène. */
+const CHARGEURS_DES_SCENES: Record<UniversCelebre, () => Promise<unknown>> = {
+  sports: chargerSports,
+  danse: chargerDanse,
+  animaux: chargerAnimaux,
+};
+
 /**
  * Charge à l'avance la scène de l'univers, tant que le réseau est là (dès que le profil de l'enfant est connu, puis à l'ouverture du défi) : si le réseau se coupe pendant le défi,
  * la célébration de la fin se joue quand même. Un échec est ignoré : la fin du défi retombe sur l'espace vide.
  */
 export function prechargerLaSceneDe(univers: CleUnivers): void {
-  const charger = univers === "sports" ? chargerSports : univers === "danse" ? chargerDanse : univers === "animaux" ? chargerAnimaux : undefined;
-  charger?.().catch(() => undefined);
+  if (Object.hasOwn(CHARGEURS_DES_SCENES, univers)) {
+    CHARGEURS_DES_SCENES[univers as UniversCelebre]().catch(() => undefined);
+  }
 }
 
 /** Un univers célébré qui n'a pas de scène ne compile pas : ajouter un univers au domaine oblige à dessiner sa scène ici. */
