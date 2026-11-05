@@ -190,3 +190,20 @@ Branche : `feature/106d-celebration-princesses`, partie de `main` (`adb9329`, me
 - Câblage : scène de Lumi reprise du worktree, dessin validé inchangé (`aa6eb65`) : modules `commun/expressions.ts` et `commun/tableaux.ts`, réglage « étoile » supprimé (106.34 A), ids `princesse-`, chargée à la demande et précachée (32,65 kB). `tsc`, lint, fmt, build OK. Dette : `courbe` copiée dans trois scènes (candidate à `commun/courbes.ts`).
 - 08:55 UTC : steps de Lumi `85e0855` (`bddgen` sans step manquant). VERROU base accordé à 106d (tableau de #64, 08:34 UTC) ; run `@issue-106` hors `@hors-106a`, `telephone`, 1 worker, lancé.
 - Review de la branche (`origin/main...HEAD`) : APPROUVÉ, aucun bloquant. Non bloquants à traiter après le run (pour ne pas toucher `src/` pendant qu'il tourne) : extraire `courbe` dans `commun/` (3e copie) ; traînée de la baguette masquée sur l'image fixe ; noms `or` (rose) et `etoile-du-corsage` (étincelle) ; `ECHELLE_DE_BASE` exporté pour rien ; ligne vide double dans `danse/queue-de-cheval.ts`. Leçon TDD notée : le passage `princesse` → `pompier` du test « univers pas encore livré » aurait dû être dans le RED.
+- 09:15 UTC : run E2E (`993b3ca`, `telephone`, 1 worker, `@issue-106` hors `@hors-106a`) : **43/43 verts**, 15,7 min. Sonde : 3 réponses `admin/users` en 0,4 à 1,3 s. LIBÈRE base.
+- Non bloquants traités : `courbe` dans `commun/membres.ts` (`32eae1d`), traînée de Lumi masquée sur l'image fixe (`1c4b05b`), noms `rosePale` et `etincelle-du-corsage`, ids inutilisés retirés (`ca387f3`), commentaires remplacés par des fonctions nommées (`5d0a3a7`). Rendu identique au pixel (27 images : Danse, Animaux, Princesses, état final et deux instants). Revue delta `993b3ca..5d0a3a7` : APPROUVÉ, rejeu E2E non nécessaire (aucun step ne lit ce qui a changé). Non bloquant noté : la traînée masquée n'est exigée par aucun test.
+- `main` inchangée depuis l'intégration (`dbbe378`).
+
+## Mesures (106d)
+
+| Mesure | Valeur |
+|---|---|
+| Durée | 2026-11-05 02:00 UTC → environ 09:20 UTC, PR prête (environ 7 h 20, dont environ 5 h d'attente) |
+| Attente | réponses du PO 106.34 à 106.36 : environ 4 h 10 (02:50 → 07:08) ; merge de 106b : environ 15 min après les réponses ; merge de 106c : environ 50 min ; verrou `base` : environ 0 (accordé dans la minute) |
+| Cycles TDD | 1 comportement (RED `850b61e`, GREEN `b11c6f0`) + ajustement du test « univers pas encore livré » |
+| Review | 3 revues delta (ruban de Lili, non bloquants) et 1 revue de branche, toutes APPROUVÉ, aucun cycle À CORRIGER |
+| E2E | 1 run sur `telephone` : 43/43 du premier coup |
+| Intégrations de `main` | 2 (106b `4742309`, 106c `dbbe378`), conflits seulement dans la documentation et le `.feature` (garder les deux ajouts) |
+| Escalades | 1 (planche de Lumi, #106.36) ; questions nouvelles 106.34, 106.35 |
+| Verrous | `base` une fois (08:34 → 09:15 UTC) |
+| Tokens | relevés par le responsable |
