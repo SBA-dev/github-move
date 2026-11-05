@@ -26,16 +26,18 @@ const chargerSansEchec = <Cle extends string>(charger: () => Promise<Module<Cle>
 
 const chargerSports = memoriser(() => import("./sports/SceneDesSports.tsx"));
 const chargerDanse = memoriser(() => import("./danse/SceneDeLaDanse.tsx"));
+const chargerAnimaux = memoriser(() => import("./animaux/SceneDesAnimaux.tsx"));
 
 const SceneDesSports = chargerSansEchec(chargerSports);
 const SceneDeLaDanse = chargerSansEchec(chargerDanse);
+const SceneDesAnimaux = chargerSansEchec(chargerAnimaux);
 
 /**
  * Charge à l'avance la scène de l'univers, tant que le réseau est là (dès que le profil de l'enfant est connu, puis à l'ouverture du défi) : si le réseau se coupe pendant le défi,
  * la célébration de la fin se joue quand même. Un échec est ignoré : la fin du défi retombe sur l'espace vide.
  */
 export function prechargerLaSceneDe(univers: CleUnivers): void {
-  const charger = univers === "sports" ? chargerSports : univers === "danse" ? chargerDanse : undefined;
+  const charger = univers === "sports" ? chargerSports : univers === "danse" ? chargerDanse : univers === "animaux" ? chargerAnimaux : undefined;
   charger?.().catch(() => undefined);
 }
 
@@ -54,5 +56,7 @@ export function SceneDeCelebration({ celebration }: Props) {
       return <Suspense fallback={<EspaceDeLaScene />}><SceneDesSports cle={celebration.variante.cle} cri={celebration.cri} /></Suspense>;
     case "danse":
       return <Suspense fallback={<EspaceDeLaScene />}><SceneDeLaDanse cle={celebration.variante.cle} cri={celebration.cri} /></Suspense>;
+    case "animaux":
+      return <Suspense fallback={<EspaceDeLaScene />}><SceneDesAnimaux cle={celebration.variante.cle} cri={celebration.cri} /></Suspense>;
   }
 }
