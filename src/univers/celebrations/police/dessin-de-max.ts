@@ -1,4 +1,5 @@
 import { type CoteDeMain, dessinDesMains } from "../commun/mains.ts";
+import { ligne } from "../commun/trait.ts";
 
 export const CONTOUR = "#33304A";
 const PEAU = "#f2cba5";
@@ -30,9 +31,6 @@ export const MAINS: Record<CouleurDeMain, Record<CoteDeMain, readonly string[]>>
   peau: dessinDesMains({ contour: CONTOUR, peau: PEAU, peauOmbre: PEAU_OMBRE }),
   gant: dessinDesMains({ contour: CONTOUR, peau: GANT, peauOmbre: GANT_OMBRE }),
 };
-
-const ligne = (classe: string, couleur: string, largeur: number) =>
-  `<path class="${classe}" fill="none" stroke="${couleur}" stroke-width="${largeur}" stroke-linecap="round" stroke-linejoin="round"/>`;
 
 /**
  * L'écusson de la police, bleu et blanc, sans étoile : celui de la tête du train de Police (#130) et de la boîte de Police (#131).
