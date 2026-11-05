@@ -1,6 +1,6 @@
 import { DEG, lerp, r1 } from "../commun/courbes.ts";
 import { elementsDe, poser, trouver } from "../commun/dom.ts";
-import type { Point } from "../commun/membres.ts";
+import { courbe, type Point } from "../commun/membres.ts";
 import { au } from "../commun/tableaux.ts";
 import type { Pose } from "./poses.ts";
 
@@ -16,18 +16,6 @@ const MECHES: readonly Meche[] = [
 ];
 const SEGMENTS = 5;
 const MASSE_ARRIERE = "M-42 -150 Q-46 -192 -22 -200 Q-10 -206 0 -200 Q10 -206 22 -200 Q46 -192 42 -150 Q44 -126 32 -116 Q0 -124 -32 -116 Q-44 -126 -42 -150 Z";
-
-/** Une courbe lisse qui passe entre les points : chaque point est un point de contrôle, la courbe va aux milieux. */
-function courbe(P: readonly Point[]): string {
-  const premier = au(P, 0);
-  let d = `M${r1(premier.x)} ${r1(premier.y)}`;
-  for (let i = 1; i < P.length - 1; i++) {
-    const a = au(P, i), b = au(P, i + 1);
-    d += ` Q${r1(a.x)} ${r1(a.y)} ${r1((a.x + b.x) / 2)} ${r1((a.y + b.y) / 2)}`;
-  }
-  const fin = au(P, P.length - 1);
-  return `${d} L${r1(fin.x)} ${r1(fin.y)}`;
-}
 
 /**
  * Les longs cheveux de Lumi : cinq mèches qui naissent du crâne, chacune une chaîne de segments à ressorts.
@@ -78,7 +66,7 @@ export function creerLesCheveux(racine: SVGSVGElement) {
         D.push({ x: c.x - nx * w, y: c.y - ny * w });
       }
       const bout = au(J, SEGMENTS), fD = au(D, SEGMENTS);
-      const d = courbe(G) + ` Q${r1(bout.x)} ${r1(bout.y + 5)} ${r1(fD.x)} ${r1(fD.y)}` + courbe(D.slice().reverse()).replace(/^M[^ ]+ [^ ]+/, (m) => "L" + m.slice(1)) + " Z";
+      const d = courbe(G) + ` Q${r1(bout.x)} ${r1(bout.y + 5)} ${r1(fD.x)} ${r1(fD.y)}` + courbe(D.slice().reverse(), "L") + " Z";
       const bande = (kk: number) => J.map((_, i) => ({ x: lerp(au(G, i).x, au(D, i).x, kk), y: lerp(au(G, i).y, au(D, i).y, kk) }));
       const g = n(`brin-${k}`);
       poser(trouver(g, ".meche"), "d", d);

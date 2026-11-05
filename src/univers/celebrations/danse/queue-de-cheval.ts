@@ -1,6 +1,6 @@
 import { clamp01, DEG, lerp, r1, r3 } from "../commun/courbes.ts";
 import { deplacer, poser, trouver } from "../commun/dom.ts";
-import type { Point } from "../commun/membres.ts";
+import { courbe, type Point } from "../commun/membres.ts";
 import { au } from "../commun/tableaux.ts";
 import type { Pose } from "./poses.ts";
 
@@ -14,19 +14,6 @@ const lisse = (x: number, a: number, b: number) => {
   const u = clamp01((x - a) / (b - a));
   return u * u * (3 - 2 * u);
 };
-
-
-/** Une courbe lisse qui passe entre les points : chaque point est un point de contrôle, la courbe va aux milieux. */
-function courbe(P: readonly Point[]): string {
-  const premier = au(P, 0);
-  let d = `M${r1(premier.x)} ${r1(premier.y)}`;
-  for (let i = 1; i < P.length - 1; i++) {
-    const a = au(P, i), b = au(P, i + 1);
-    d += ` Q${r1(a.x)} ${r1(a.y)} ${r1((a.x + b.x) / 2)} ${r1((a.y + b.y) / 2)}`;
-  }
-  const fin = au(P, P.length - 1);
-  return `${d} L${r1(fin.x)} ${r1(fin.y)}`;
-}
 
 /**
  * La queue de cheval haute de Lili : une chaîne de 5 segments à ressorts. Chaque segment suit le précédent avec du retard,
@@ -96,7 +83,7 @@ export function creerLaQueueDeCheval(racine: SVGSVGElement, ids: { readonly avan
     const G5 = au(G, NOMBRE_DE_SEGMENTS), D5 = au(D, NOMBRE_DE_SEGMENTS), D4 = au(D, NOMBRE_DE_SEGMENTS - 1);
     const dessin = courbe(G.slice(0, 5))
       + ` Q${r1(G5.x)} ${r1(G5.y)} ${r1(P1.x)} ${r1(P1.y)} L${r1(Pm.x)} ${r1(Pm.y)} L${r1(P2.x)} ${r1(P2.y)} Q${r1(D5.x)} ${r1(D5.y)} ${r1(D4.x)} ${r1(D4.y)}`
-      + courbe(D.slice(0, 5).reverse()).replace(/^M[^ ]+ [^ ]+/, (m) => "L" + m.slice(1)) + " Z";
+      + courbe(D.slice(0, 5).reverse(), "L") + " Z";
     // volume en haut (ombre sous le chouchou, lumière) et mèches intérieures (3 traits fins) : des points entre le bord gauche et le bord droit
     const entre = (debut: number, fin: number, k: number) => G.slice(debut, fin).map((g, i) => {
       const d = au(D, debut + i);

@@ -1,6 +1,6 @@
 import { DEG, lerp, r1 } from "../commun/courbes.ts";
 import { poser, trouver } from "../commun/dom.ts";
-import type { Point } from "../commun/membres.ts";
+import { courbe, type Point } from "../commun/membres.ts";
 import { au } from "../commun/tableaux.ts";
 import type { Pose } from "./poses.ts";
 
@@ -14,18 +14,6 @@ const PROLONGEMENT_DE_LA_POINTE = 14;
 const FESTONS_PAR_SEGMENT = 3;
 
 type Segment = { angle: number; vitesse: number };
-
-/** Une courbe lisse qui passe entre les points : chaque point est un point de contrôle, la courbe va aux milieux. Elle démarre par `M` (nouveau tracé) ou par `L` (suite d'un tracé). */
-function courbe(P: readonly Point[], depart: "M" | "L" = "M"): string {
-  const premier = au(P, 0);
-  let d = `${depart}${r1(premier.x)} ${r1(premier.y)}`;
-  for (let i = 1; i < P.length - 1; i++) {
-    const a = au(P, i), b = au(P, i + 1);
-    d += ` Q${r1(a.x)} ${r1(a.y)} ${r1((a.x + b.x) / 2)} ${r1((a.y + b.y) / 2)}`;
-  }
-  const fin = au(P, P.length - 1);
-  return `${d} L${r1(fin.x)} ${r1(fin.y)}`;
-}
 
 /** Le bord de la queue, découpé en petits festons qui donnent l'aspect du poil. */
 function festons(P: readonly Point[], normales: readonly Point[], signe: 1 | -1): string {
