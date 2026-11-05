@@ -576,7 +576,12 @@ Fonctionnalité: Une célébration propre à chaque univers
 
     @livraison-106g
     Scénario: Rejouer une leçon d'une matière déjà réussie garde la célébration commune, sans « Matière réussie ! »
-      Étant donné que Léa a réussi les 3 premières leçons de sciences du CE1
+      # 106h : 7 étoiles en tout avant la séance, 9 après : aucun palier des tenues (5, 12, 23, 37) n'est franchi
+      Étant donné que Léa a pour meilleures étoiles :
+        | leçon             | étoiles |
+        | Les êtres vivants | 3       |
+        | Les saisons       | 3       |
+        | L'eau             | 1       |
       Et que Léa joue la séance complète de la leçon « L'eau »
       Quand Léa réussit la dernière question de la séance
       Alors des confettis tombent

@@ -364,6 +364,11 @@ la phrase de fin », l'exemple « à 1 étoile, sans autre nouveauté » attend 
 célébration de l'univers, encore « grande victoire » (106.12, 106.27), à la place du premier effet sonore (106.46).
 L'autre exemple est inchangé ; aucun autre scénario de #102 ne parle du petit dessin de l'encart (106.50).
 
+Mise à jour de 106g : « Rejouer une leçon d'une matière déjà réussie garde la célébration commune, sans « Matière
+réussie ! » » partait de 3 leçons de sciences à 1 étoile (3 en tout) ; rejouer « L'eau » à 3 étoiles franchissait le
+palier 5 et jouait la danse de victoire. Ses données passent à « Les êtres vivants » 3, « Les saisons » 3, « L'eau » 1
+(7 étoiles en tout, 9 après la séance) : aucun palier des tenues n'est franchi, ce qu'il vérifie est inchangé.
+
 | # | Règle | Scénarios (106h) |
 |---|---|---|
 | R15 | Au palier des tenues, le personnage guide joue la danse de victoire : sa célébration de l'univers, à la place de la célébration commune, en portant la tenue reçue ; l'annonce de la tenue reçue (#102) reste | La séance qui fait recevoir une écharpe rayée fait jouer à Coach Léo sa célébration de l'univers en la portant · Coach Léo qui porte déjà une tenue fait sa danse de victoire avec la tenue qu'il vient de recevoir (petit dessin de l'encart caché, 106.50) |
