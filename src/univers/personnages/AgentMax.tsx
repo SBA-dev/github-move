@@ -12,6 +12,15 @@ const CHAUSSURE = (
   </>
 );
 
+function Ecusson({ echelle }: { readonly echelle: number }): ReactNode {
+  return (
+    <g data-signe="ecusson" transform={`scale(${echelle}) translate(-144 -162)`}>
+      <path d="M144 110 L184 122 V166 Q184 196 144 214 Q104 196 104 166 V122 Z" fill="#F3F6FF" stroke="#1F2F82" strokeWidth="9" strokeLinejoin="round" />
+      <path d="M144 126 L170 134 V164 Q170 184 144 198 Q118 184 118 164 V134 Z" fill="#3450C8" />
+    </g>
+  );
+}
+
 function bouche(humeur: Humeur, id: string): ReactNode {
   const bouches: Readonly<Record<Humeur, ReactNode>> = {
     content: (
@@ -97,11 +106,8 @@ export const AgentMax: DessinDuPersonnage = ({ humeur, id, tenue }) => (
         <rect x="-4.5" y="-8" width="8" height="6.5" rx="1.2" fill="#FFF7E0" stroke="#33304A" strokeWidth="1.4" />
         <path d="M-2.5 -6.2 H2 M-2.5 -4.4 H1.2 M-2.5 -2.6 H2" stroke="#8E9BBE" strokeWidth=".9" strokeLinecap="round" />
       </g>
-      </g>
-      <g data-signe="etoile-doree">
       <g transform="translate(-8 -25)">
-        <path d="M0 -6 L1.7 -1.9 L6 -1.9 L2.7 .8 L3.8 5.2 L0 2.7 L-3.8 5.2 L-2.7 .8 L-6 -1.9 L-1.7 -1.9 Z" fill="#FFC93C" stroke="#33304A" strokeWidth="1.4" strokeLinejoin="round" />
-        <circle r="1.5" fill="#FFF1A8" />
+        <Ecusson echelle={0.13} />
       </g>
       </g>
       <path fill="#f2cba5" stroke="#33304A" strokeWidth="3" d="M-5.5 -52 V-38 H5.5 V-52 Z" />
@@ -182,7 +188,7 @@ export const AgentMax: DessinDuPersonnage = ({ humeur, id, tenue }) => (
           <path d="M-43 -34 Q0 -46 43 -34 Q0 -18 -43 -34 Z" fill="#2B2B3A" stroke="#33304A" strokeWidth="2.8" strokeLinejoin="round" />
           <path d="M-30 -33 Q0 -26 30 -33" fill="none" stroke="#5A5A70" strokeWidth="1.6" strokeLinecap="round" />
           <g transform="translate(0 -54)">
-            <path d="M0 -7 L2 -2 L7 -2 L3 1 L4.4 6 L0 3 L-4.4 6 L-3 1 L-7 -2 L-2 -2 Z" fill="#FFC93C" stroke="#33304A" strokeWidth="1.4" strokeLinejoin="round" />
+            <Ecusson echelle={0.2} />
           </g>
           </g>
         </g>
