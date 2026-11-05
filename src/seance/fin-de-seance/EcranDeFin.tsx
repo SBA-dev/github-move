@@ -191,9 +191,7 @@ export function EcranDeFin({ seance, univers, niveau, onDireLaFin, meilleuresEto
         </>
       )}
       {celebration?.sorte === "univers" && celebrationAffichable && (
-        <div className="place-de-la-celebration">
-          <SceneDeCelebration celebration={celebration.celebration} />
-        </div>
+        <SceneDeCelebration celebration={celebration.celebration} />
       )}
       <div className="pour-la-matiere" role="status" data-testid="annonce-de-la-matiere-reussie">
         {matiereReussie && <p>{titreDeLaMatiereReussie()}</p>}
