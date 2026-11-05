@@ -18,7 +18,7 @@ export function creerLaScene(racine: SVGSVGElement, toile: HTMLCanvasElement | n
   const feuilles = toile ? creerLesFeuilles(toile) : null;
 
   function rendre(t: number) {
-    const dessin = noisette.dessiner(scenario, t);
+    const dessin = noisette.dessiner(scenario, t, { yeuxOuverts: t >= scenario.fin });
     effets.dessiner(scenario, t, dessin);
     feuilles?.dessiner();
   }

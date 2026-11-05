@@ -105,8 +105,8 @@ export function creerNoisette(racine: SVGSVGElement) {
     }
   }
 
-  /** Dessine Noisette à l'instant `t` du scénario. */
-  function dessiner(scenario: ScenarioDesAnimaux, t: number): Dessin {
+  /** Dessine Noisette à l'instant `t` du scénario ; `yeuxOuverts` écarte le clignement (image fixe). */
+  function dessiner(scenario: ScenarioDesAnimaux, t: number, { yeuxOuverts = false } = {}): Dessin {
     const p = poseA(scenario.poses, t), pAvant = poseA(scenario.poses, t - .06);
     deplacer(n("noisette"), `translate(${r1(p.x)} ${r1(p.y)}) rotate(${r1(p.rot)}) scale(${r3(BASE * p.sx)} ${r3(BASE * p.sy)})`);
     queue.dessiner(p, t, (p.x - pAvant.x) / .06, (p.y - pAvant.y) / .06);
@@ -127,7 +127,7 @@ export function creerNoisette(racine: SVGSVGElement) {
     const mains = { g: dessinerLeBrasDe("g"), d: dessinerLeBrasDe("d") };
     deplacer(n("tete"), `translate(${r1(p.vue * 4)} -118) rotate(${r1(p.tete)})`);
     const ex = expressionA(scenario.expressions, t), A = EMOS[ex.prec], B = EMOS[ex.emo], u = ex.u;
-    dessinerLaTete(p, ex, Math.max(lerp(A.lid, B.lid, u), p.lid, clignement(t)), lerp(A.pup, B.pup, u));
+    dessinerLaTete(p, ex, Math.max(lerp(A.lid, B.lid, u), p.lid, yeuxOuverts ? 0 : clignement(t)), lerp(A.pup, B.pup, u));
     // ombre au sol
     const haut = Math.max(0, SOL_Y - p.y);
     poser(n("ombre-sol"), "cx", r1(p.x));
