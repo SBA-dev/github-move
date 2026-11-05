@@ -73,14 +73,17 @@ export const Lili: DessinDuPersonnage = ({ humeur, id, tenue }) => (
         {CHAUSSURE}
       </g>
       <g data-signe="tutu-rose">
-      <path fill="#F3C9F2" stroke="#33304A" strokeWidth="3" strokeLinejoin="round" d="M-44 -5 Q-37.7 28 -31.4 19 Q-25.1 28 -18.9 19 Q-12.6 28 -6.3 19 Q0 28 6.3 19 Q12.6 28 18.9 19 Q25.1 28 31.4 19 Q37.7 28 44 19 L44 -5 Q0 -1 -44 -5 Z" />
-      <path fill="#D9A6DE" d="M13.2 8 Q41.8 -2 44 12 Q30.8 18 13.2 17 Z" />
+        <g data-signe="festons">
+          <path fill="#E6B5E8" stroke="#33304A" strokeWidth="3" strokeLinejoin="round" d="M-26.9 -8 Q-46.5 -6 -49 14 Q-40.8 26 -32.7 14 Q-24.5 26 -16.3 14 Q-8.2 26 0 14 Q8.2 26 16.3 14 Q24.5 26 32.7 14 Q40.8 26 49 14 Q46.6 -6 27 -8 Q0 -4 -26.9 -8 Z" />
+          <path fill="#F3C9F2" stroke="#33304A" strokeWidth="3" strokeLinejoin="round" d="M-24.2 -5 Q-41.8 -3 -44 17 Q-37.7 29 -31.4 17 Q-25.1 29 -18.9 17 Q-12.6 29 -6.3 17 Q0 29 6.3 17 Q12.6 29 18.9 17 Q25.1 29 31.4 17 Q37.7 29 44 17 Q41.8 -3 24.2 -5 Q0 -1 -24.2 -5 Z" />
+          <path fill="#D9A6DE" d="M22 2 Q42.7 4 44 14 Q35.2 18 24.2 17 Q33 10 22 2 Z" />
+        </g>
       </g>
       <g data-signe="justaucorps-violet">
-      <path fill="none" stroke="#b55bd6" strokeWidth="5" strokeLinecap="round" d="M-24.2 -5 Q0 2 24.2 -5" />
-      <path fill="#b55bd6" stroke="#33304A" strokeWidth="3.4" strokeLinejoin="round" d="M-18 -40 Q-24 -12 -18.7 0 Q0 6 18.7 0 Q24 -12 18 -40 Q0 -47 -18 -40 Z" />
-      <path fill="#8E3FB0" d="M5.4 -42 Q21 -30 18.7 0 Q13.2 4 7.7 3 Q19 -20 5.4 -42 Z" />
-      <path fill="#D08AE8" d="M-16.2 -36 Q-7.2 -42 1.8 -40 Q-7.2 -37 -14.4 -30 Z" />
+      <path fill="none" stroke="#b55bd6" strokeWidth="5" strokeLinecap="round" d="M-22 -5 Q0 2 22 -5" />
+      <path fill="#b55bd6" stroke="#33304A" strokeWidth="3.4" strokeLinejoin="round" d="M-17 -40 Q-20 -26 -13 -13 Q-14 -6 -16.8 0 Q0 6 16.8 0 Q14 -6 13 -13 Q20 -26 17 -40 Q0 -47 -17 -40 Z" />
+      <path fill="#8E3FB0" d="M6 -42 Q19 -30 13 -13 Q14 -6 16.8 0 Q12.6 3 7.4 3 Q11 -8 9 -16 Q15 -28 6 -42 Z" />
+      <path fill="#D08AE8" d="M-15.3 -36 Q-6.8 -42 1.7 -40 Q-6.8 -37 -13.6 -30 Z" />
       <path fill="none" stroke="#FFFFFF" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" d="M-9 -44 Q0 -34 9 -44" />
       </g>
       <g transform="translate(-9 -24)" />
@@ -97,20 +100,20 @@ export const Lili: DessinDuPersonnage = ({ humeur, id, tenue }) => (
         </g>
       </g>
       </g>
-      <path fill="#e8b58c" stroke="#33304A" strokeWidth="3" d="M-5.5 -52 V-38 H5.5 V-52 Z" />
-      <path d="M-5.5 -52 V-44 Q0 -42 5.5 -44 V-52 Z" fill="#C9956E" />
+      <path fill="#e8b58c" stroke="#33304A" strokeWidth="3" strokeLinejoin="round" d="M-4.8 -52 V-40 Q0 -36.5 4.8 -40 V-52 Z" />
+      <path d="M-4.8 -52 V-44 Q0 -42 4.8 -44 V-52 Z" fill="#C9956E" />
       <g transform="translate(0 -48)">
         <g transform="translate(0 -26)">
           <circle r="28" fill="#e8b58c" stroke="#33304A" strokeWidth="4" />
           <path fill="#C9956E" d="M8 27 A28 28 0 0 0 27 -6 A23 23 0 0 1 8 27 Z" />
           <ellipse cx="-9" cy="-16" rx="9" ry="5" fill="#F7D4B8" opacity=".8" />
-          <g transform="translate(-28 3)">
-            <circle r="6" fill="#e8b58c" stroke="#33304A" strokeWidth="3" />
-            <circle r="2.2" fill="#C9956E" />
+          <g transform="translate(-28 6)">
+            <circle r="4.6" fill="#e8b58c" stroke="#33304A" strokeWidth="2.6" />
+            <circle r="1.7" fill="#C9956E" />
           </g>
-          <g transform="translate(28 3)">
-            <circle r="6" fill="#e8b58c" stroke="#33304A" strokeWidth="3" />
-            <circle r="2.2" fill="#C9956E" />
+          <g transform="translate(28 6)">
+            <circle r="4.6" fill="#e8b58c" stroke="#33304A" strokeWidth="2.6" />
+            <circle r="1.7" fill="#C9956E" />
           </g>
           <g data-testid="visage" data-humeur={humeur}>
             <g transform="translate(-18.4 8) scale(0.54 1)">
@@ -134,7 +137,7 @@ export const Lili: DessinDuPersonnage = ({ humeur, id, tenue }) => (
                 </g>
                 <path d="M-7 0 A7.4 9.6 0 0 1 7 0" fill="none" stroke="#33304A" strokeWidth="2.8" strokeLinecap="round" />
                 <path d="M-4.5 8.8 Q0 10.6 4.5 8.8" fill="none" stroke="#33304A" strokeWidth="1" strokeLinecap="round" opacity=".4" />
-                <path d="M-5.5 -7 l-2.6 -2.6 M-7.2 -3.5 l-3 -1.4" fill="none" stroke="#33304A" strokeWidth="2" strokeLinecap="round" />
+                <path d="M-6.6 -5.5 l-2.8 -2.2" fill="none" stroke="#33304A" strokeWidth="2" strokeLinecap="round" />
               </g>
             </Yeux>
             <Yeux>
@@ -152,19 +155,21 @@ export const Lili: DessinDuPersonnage = ({ humeur, id, tenue }) => (
                 </g>
                 <path d="M-7 0 A7.4 9.6 0 0 1 7 0" fill="none" stroke="#33304A" strokeWidth="2.8" strokeLinecap="round" />
                 <path d="M-4.5 8.8 Q0 10.6 4.5 8.8" fill="none" stroke="#33304A" strokeWidth="1" strokeLinecap="round" opacity=".4" />
-                <path d="M5.5 -7 l2.6 -2.6 M7.2 -3.5 l3 -1.4" fill="none" stroke="#33304A" strokeWidth="2" strokeLinecap="round" />
+                <path d="M6.6 -5.5 l2.8 -2.2" fill="none" stroke="#33304A" strokeWidth="2" strokeLinecap="round" />
               </g>
             </Yeux>
             <g transform="translate(0 8)">
-              <circle cy="2.5" r="3" fill="#E9A77A" stroke="#33304A" strokeWidth="2.2" />
-              <circle cx="-1" cy="-1" r="1" fill="#FFD9BC" />
+              <ellipse cy="2.8" rx="2.5" ry="1.9" fill="#E3A074" />
+              <ellipse cx="-.8" cy="2.1" rx=".9" ry=".6" fill="#FFD9BC" />
             </g>
             <g transform="translate(0 1)">
               {bouche(humeur, id)}
             </g>
           </g>
-          <path fill="#B8873E" stroke="#33304A" strokeWidth="3.6" strokeLinejoin="round" d="M-29 -20.8L-24.2 -19.8L-19.3 -19.6L-14.5 -17.5L-9.7 -14L-4.8 -18.4L0 -19.1L4.8 -14.3L9.7 -16.7L14.5 -19.9L19.3 -15.4L24.2 -20.1L29 -24.8 Q32 -14 18 -25 Q0 -37 -18 -25 Q-32 -14 -29 -22 Z" />
-          <path fill="none" stroke="#DDB46A" strokeWidth="3" strokeLinecap="round" d="M-16 -22 Q-4 -29 8 -26" />
+          <g data-signe="frange-lisse">
+            <path fill="#B8873E" stroke="#33304A" strokeWidth="3.6" strokeLinejoin="round" d="M-27.4 -8.5L-22.8 -11.9L-18.2 -14.9L-13.7 -17.5L-9.1 -19.7L-4.6 -21.2L0 -22L4.6 -21.2L9.1 -19.7L13.7 -17.5L18.2 -14.9L22.8 -11.9L27.4 -8.5 C30.4 -20 18 -25 18 -25 Q0 -46 -18 -25 C-18 -25 -30.4 -20 -27.4 -8.5 Z" />
+            <path fill="none" stroke="#DDB46A" strokeWidth="3" strokeLinecap="round" d="M-16 -22 Q-4 -29 8 -26" />
+          </g>
           <g transform={choisir(humeur, { content: "translate(-13.1 -21) scale(0.91 1) rotate(-3)", reflechit: "translate(-13.1 -16) scale(0.91 1) rotate(10)", applaudit: "translate(-13.1 -23) scale(0.91 1) rotate(-4)" })}>
             <path d="M-7 0 Q0 -4 7 0" fill="none" stroke="#8F6528" strokeWidth="3.6" strokeLinecap="round" />
           </g>
