@@ -67,6 +67,27 @@ Les scénarios qui montrent Lili sans inspecter son dessin, rejoués parce que l
 
 ## Questions ouvertes
 
+Aucune : les questions 168.1 à 168.6 sont tranchées (voir « Décisions »).
+
+## Décisions
+
+Réponse du PO du 2026-11-05, relayée par le responsable des équipes (https://github.com/SBA-dev/github-move/issues/168#issuecomment-6671472111), mot pour mot :
+
+> « 168 reco tout »
+
+Lecture : la reco est retenue pour chaque question de #168. Le scénario modifié et ce que vérifie le step restent ceux décrits plus haut.
+
+| Question | Décision |
+|---|---|
+| 168.1 : quels nouveaux signes, avec quel libellé ? | Reco A : `frange-lisse` (présent), `festons` à l'intérieur de `tutu-rose` (imbriqué), `etoile` et `etoile-doree` (absents). Libellé : « le dessin validé : queue de cheval haute, frange lisse, justaucorps violet et tutu rose à festons, sans étoile ». |
+| 168.2 : un signe pour le collant opaque, les demi-pointes et les manches ? | Reco A : pas de nouveau signe. Vérifiés sur la planche avant/après et par la review. |
+| 168.3 : la planche avant/après sert-elle de validation visuelle avant le merge ? | Reco A : oui, la planche vaut validation. Si le dessin change, une nouvelle planche est soumise au PO. |
+| 168.4 : quelle tête pour chaque humeur ? | Reco A : les bouches et les regards actuels des trois humeurs, posés sur la nouvelle tête. |
+| 168.5 : le nœud rose de la queue de cheval reste-t-il ? | Reco A : il est gardé, sans aucun signe. |
+| 168.6 : quel gabarit pour le tutu à festons ? | Reco A : le tutu garde le gabarit de 106h, par fidélité à la Lili validée. |
+
+### Rappel des questions tranchées
+
 **168.1 : quels nouveaux signes l'exemple Danse vérifie-t-il, et avec quel libellé ?**
 L'exemple actuel vérifie la queue de cheval haute, le justaucorps violet et le tutu rose. La story corrige surtout la frange et la forme du tutu, et la règle 106.34/106.35 interdit l'étoile à cinq branches.
 Reco A : ajouter `frange-lisse` (présent), `festons` à l'intérieur de `tutu-rose` (imbriqué), `etoile` et `etoile-doree` (absents), comme Capitaine Sam. Libellé : « le dessin validé : queue de cheval haute, frange lisse, justaucorps violet et tutu rose à festons, sans étoile ». Chaque mot du libellé correspond à un signe vérifié. B : ajouter seulement l'absence d'étoile et garder le libellé actuel suivi de « , sans étoile ». C : ne rien changer à l'exemple, la planche suffit.
@@ -86,3 +107,7 @@ Reco A : garder les bouches et les regards actuels des trois humeurs, posés sur
 **168.5 : le nœud rose de la queue de cheval reste-t-il ?**
 Le dessin fixe actuel porte un nœud rose en haut de la queue de cheval. La reco de #106.52 ne le cite pas, mais la Lili de face validée de 106h le porte aussi (même tracé, commit `1f16045`).
 Reco A : le garder, pour que les deux dessins soient identiques. Aucun signe n'y est attaché. B : le retirer, ce qui éloigne le dessin fixe de la célébration.
+
+**168.6 : quel gabarit pour le tutu à festons ?**
+Le tutu à festons a le gabarit de 106h. Bras le long du corps, il passe un peu derrière les mains.
+Reco A : le garder ainsi, par fidélité à la Lili validée. B : l'étroitiser un peu pour que les mains le débordent.
