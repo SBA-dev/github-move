@@ -59,7 +59,7 @@ const dessinDeLOeil = (c: "g" | "d") =>
               <g clip-path="url(#danse-clip-oeil)"><ellipse id="danse-paupiere-${c}" rx="10" ry="10.6" fill="${PEAU}" stroke="${CONTOUR}" stroke-width="2.6"/></g>
               <path d="M-7 0 A7.4 9.6 0 0 1 7 0" fill="none" stroke="${CONTOUR}" stroke-width="2.8" stroke-linecap="round"/>
               <path d="M-4.5 8.8 Q0 10.6 4.5 8.8" fill="none" stroke="${CONTOUR}" stroke-width="1" stroke-linecap="round" opacity=".4"/>
-              <path d="${c === "g" ? "M-5.5 -7 l-2.6 -2.6 M-7.2 -3.5 l-3 -1.4" : "M5.5 -7 l2.6 -2.6 M7.2 -3.5 l3 -1.4"}" fill="none" stroke="${CONTOUR}" stroke-width="2" stroke-linecap="round"/></g>`;
+              <path d="${c === "g" ? "M-6.6 -5.5 l-2.8 -2.2" : "M6.6 -5.5 l2.8 -2.2"}" fill="none" stroke="${CONTOUR}" stroke-width="2" stroke-linecap="round"/></g>`;
 
 const dessinDuSourcil = (c: "g" | "d") =>
   `<g id="danse-sourcil-${c}"><path d="M-7 0 Q0 -4 7 0" fill="none" stroke="${CHEVEUX_OMBRE}" stroke-width="3.6" stroke-linecap="round"/></g>`;
@@ -84,18 +84,18 @@ export const STRUCTURE_DE_LILI = `
       <g id="danse-torse"><path class="forme" fill="${JUSTAUCORPS}" stroke="${CONTOUR}" stroke-width="3.4" stroke-linejoin="round"/><path class="ombre" fill="${JUSTAUCORPS_OMBRE}"/><path class="lumiere" fill="${JUSTAUCORPS_LUMIERE}"/><path class="col" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></g>
       <g id="danse-queue-arriere"></g>
       <g id="danse-bras-arriere"></g>
-      <g id="danse-cou"><path fill="${PEAU}" stroke="${CONTOUR}" stroke-width="3" d="M-5.5 -52 V-38 H5.5 V-52 Z"/><path d="M-5.5 -52 V-44 Q0 -42 5.5 -44 V-52 Z" fill="${PEAU_OMBRE}"/></g>
+      <g id="danse-cou"><path fill="${PEAU}" stroke="${CONTOUR}" stroke-width="3" stroke-linejoin="round" d="M-4.8 -52 V-40 Q0 -36.5 4.8 -40 V-52 Z"/><path d="M-4.8 -52 V-44 Q0 -42 4.8 -44 V-52 Z" fill="${PEAU_OMBRE}"/></g>
       <g id="danse-tete">
         <g id="danse-tete-forme">
           <circle r="28" fill="${PEAU}" stroke="${CONTOUR}" stroke-width="4"/>
           <path id="danse-tete-ombre" fill="${PEAU_OMBRE}"/><path id="danse-nuque-ombre" fill="${PEAU_OMBRE}" opacity="0"/>
           <ellipse id="danse-tete-lumiere" cx="-9" cy="-16" rx="9" ry="5" fill="${PEAU_LUMIERE}" opacity=".8"/>
-          <g id="danse-oreille-g"><circle r="6" fill="${PEAU}" stroke="${CONTOUR}" stroke-width="3"/><circle r="2.2" fill="${PEAU_OMBRE}"/></g>
-          <g id="danse-oreille-d"><circle r="6" fill="${PEAU}" stroke="${CONTOUR}" stroke-width="3"/><circle r="2.2" fill="${PEAU_OMBRE}"/></g>
+          <g id="danse-oreille-g"><circle r="4.6" fill="${PEAU}" stroke="${CONTOUR}" stroke-width="2.6"/><circle r="1.7" fill="${PEAU_OMBRE}"/></g>
+          <g id="danse-oreille-d"><circle r="4.6" fill="${PEAU}" stroke="${CONTOUR}" stroke-width="2.6"/><circle r="1.7" fill="${PEAU_OMBRE}"/></g>
           <g id="danse-visage">
             <g id="danse-joue-g"><ellipse rx="5" ry="3.2" fill="#FF8FA8" opacity=".6"/></g><g id="danse-joue-d"><ellipse rx="5" ry="3.2" fill="#FF8FA8" opacity=".6"/></g>
             ${dessinDeLOeil("g")}${dessinDeLOeil("d")}
-            <g id="danse-nez"><circle r="3.2" fill="#E9A77A" stroke="${CONTOUR}" stroke-width="2.2"/><circle cx="-1" cy="-1" r="1" fill="#FFD9BC"/></g>
+            <g id="danse-nez"><ellipse cy="2.8" rx="2.5" ry="1.9" fill="#E3A074"/><ellipse cx="-.8" cy="2.1" rx=".9" ry=".6" fill="#FFD9BC"/></g>
             <g id="danse-bouche"><g id="danse-bouches">${dessinDeLaBouche}
             </g></g>
           </g>

@@ -5,6 +5,7 @@ import {
   celebrationDeLaFin,
   defiReleveParLaSeance,
   parolesDeFinDuDefiReleve,
+  tenueDeLaCelebrationDeLUnivers,
   type Univers,
 } from "@domain/motivation";
 import { Confettis } from "../celebration/index.ts";
@@ -13,8 +14,9 @@ import { retenirLesQuestionsRatees } from "../revision/copie-de-la-file-sur-l-ap
 import type { Personnage } from "../revision/useDeroulementDeRevision.ts";
 import { messageDeSauvegarde } from "../seance/fin-de-seance/useSauvegardeDeLaSeance.ts";
 import { jourDuNavigateur } from "../seance/jour-du-navigateur.ts";
+import { useTenuePortee } from "../tenue/index.ts";
 import { ParoleDuGuide } from "../test-de-depart/ParoleDuGuide.tsx";
-import { SceneDeCelebration } from "../univers/celebrations/index.ts";
+import { cleDeTenueDeLaScene, SceneDeCelebration } from "../univers/celebrations/index.ts";
 import { defisRelevesDeLAppareil, retenirLesDefisReleves } from "./defis-releves-sur-l-appareil.ts";
 import { sauvegarderLeDefi } from "./sauvegarde-du-defi.ts";
 
@@ -31,6 +33,10 @@ type Props = {
   readonly onAccueil: () => void;
 };
 
+function faitsDeLaFinDuDefi(defiRelevePourLaPremiereFois: boolean) {
+  return { defiRelevePourLaPremiereFois, matiereReussieParLaSeance: false, tenueRecue: undefined };
+}
+
 /**
  * La fin du défi : le défi est relevé (avec ou sans erreurs), sans étoile ni récompense de la cabane. La première fois il est annoncé
  * et fêté par la célébration de l'univers de l'enfant si elle existe ; sinon, comme rejoué, par la célébration commune (confettis).
@@ -46,6 +52,7 @@ export function FinDuDefi({ seance, prenom, personnage, univers, relevesAvant, o
   const [releve, setReleve] = useState<DefiReleve | undefined>();
   const [message, setMessage] = useState<string | undefined>();
   const parcours = useRef<HTMLButtonElement>(null);
+  const [tenuePortee] = useTenuePortee(seance.enfant);
 
   useEffect(() => {
     if (lancee.current) return;
@@ -62,7 +69,7 @@ export function FinDuDefi({ seance, prenom, personnage, univers, relevesAvant, o
         setReleve(relevee);
         const issueDuDefi = defiReleveParLaSeance(avant, relevee);
         setCelebration(
-          celebrationDeLaFin({ defiRelevePourLaPremiereFois: issueDuDefi.annonce !== undefined, matiereReussieParLaSeance: false }, univers.cle, hasardDuNavigateur),
+          celebrationDeLaFin(faitsDeLaFinDuDefi(issueDuDefi.annonce !== undefined), univers.cle, hasardDuNavigateur),
         );
         setIssue(issueDuDefi);
       });
@@ -94,12 +101,17 @@ export function FinDuDefi({ seance, prenom, personnage, univers, relevesAvant, o
   return (
     <div className="fin-de-seance fin-du-defi" data-testid="fin-du-defi">
       {celebration?.sorte === "commune" && <Confettis />}
-      {celebration?.sorte === "univers" && <SceneDeCelebration celebration={celebration.celebration} />}
+      {celebration?.sorte === "univers" && (
+        <SceneDeCelebration
+          celebration={celebration.celebration}
+          tenue={cleDeTenueDeLaScene(tenueDeLaCelebrationDeLUnivers(faitsDeLaFinDuDefi(issue?.annonce !== undefined), tenuePortee))}
+        />
+      )}
       <ParoleDuGuide
         personnage={personnage}
         univers={univers}
         onReecouter={reecouter}
-        sansPersonnage={celebration?.sorte === "univers"}
+        sansPersonnageGuide={celebration?.sorte === "univers"}
       />
       <div className="pour-le-defi" role="status" data-testid="annonce-du-defi-releve">
         {issue?.annonce && <p>{issue.annonce}</p>}

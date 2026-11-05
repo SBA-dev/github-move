@@ -173,6 +173,7 @@ export {
   TenueNonRecue,
   type TenuePortee,
 } from "./tenue-portee.ts";
+export { tenueDeLaCelebrationDeLUnivers } from "./tenue-de-la-celebration.ts";
 export {
   annonceDeLaTenueRecue,
   descriptionDeLaSectionDesTenues,

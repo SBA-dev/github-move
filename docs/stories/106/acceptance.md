@@ -348,6 +348,123 @@ Pour l'équipe (pas une question au PO) :
     aujourd'hui la fin du défi (`attendreLaFinDuDefi`).
 - Les 3 scénarios jouent une séance complète. `@issue-106` est déjà dans le `Before` de `features/steps/delais.steps.ts`.
 
+## Livraison 106h
+
+Moment **« tenue reçue »** : la **danse de victoire** (glossaire ; 106.6 A), et la **tenue portée** dans toutes les
+scènes de célébration (106.23 ; 106.31 renvoyée ici pour tous les univers). Scénarios tagués `@livraison-106h`.
+106h suppose 106g mergée (moment « matière réussie », scénarios `@livraison-106g`). La danse de victoire n'est pas une
+animation de plus : c'est la célébration de l'univers du profil, même action, mêmes variantes tirées au hasard, même
+cri de victoire, le personnage guide portant la tenue reçue ; elle remplace la célébration commune (invariant 2).
+Une séance complète est longue en E2E : 7 scénarios, dont un Plan de 3 exemples, avec Coach Léo (Contexte du fichier :
+Léa en « Sports ») sauf dans le Plan.
+
+Mise à jour de #102 : dans le Plan « Une séance qui fait recevoir une tenue <cas> fait entendre <effets sonores> avant
+la phrase de fin », l'exemple « à 1 étoile, sans autre nouveauté » attend désormais « grande victoire » puis
+« découverte » (au lieu de « séance terminée » puis « découverte ») : la danse de victoire joue la musique de la
+célébration de l'univers, encore « grande victoire » (106.12, 106.27), à la place du premier effet sonore (106.46).
+L'autre exemple est inchangé ; aucun autre scénario de #102 ne parle du petit dessin de l'encart (106.50).
+
+Mise à jour de 106g : « Rejouer une leçon d'une matière déjà réussie garde la célébration commune, sans « Matière
+réussie ! » » partait de 3 leçons de sciences à 1 étoile (3 en tout) ; rejouer « L'eau » à 3 étoiles franchissait le
+palier 5 et jouait la danse de victoire. Ses données passent à « Les êtres vivants » 3, « Les saisons » 3, « L'eau » 1
+(7 étoiles en tout, 9 après la séance) : aucun palier des tenues n'est franchi, ce qu'il vérifie est inchangé.
+
+| # | Règle | Scénarios (106h) |
+|---|---|---|
+| R15 | Au palier des tenues, le personnage guide joue la danse de victoire : sa célébration de l'univers, à la place de la célébration commune, en portant la tenue reçue ; l'annonce de la tenue reçue (#102) reste | La séance qui fait recevoir une écharpe rayée fait jouer à Coach Léo sa célébration de l'univers en la portant · Coach Léo qui porte déjà une tenue fait sa danse de victoire avec la tenue qu'il vient de recevoir (petit dessin de l'encart caché, 106.50) |
+| R16 | Une seule célébration de l'univers par fin : quand la séance rend aussi une matière réussie, c'est la célébration de la matière, et la tenue reçue reste annoncée (106.7) | Une séance qui rend les sciences réussies et fait recevoir une écharpe rayée ne joue qu'une célébration de l'univers (106.47 tranchée) |
+| R17 | Pendant toute célébration de l'univers, le personnage guide porte la tenue portée choisie dans « Mes médailles » (106.23) | Dans l'univers « <univers> », <personnage guide> porte <tenue> pendant la célébration du premier défi relevé (Plan : Coach Léo et un nœud papillon, Noisette et un sac à dos d'explorateur, Lumi et des bottes de pluie) |
+| R18 | Mouvements réduits : image fixe de la danse de victoire avec la tenue reçue, sans confettis ; une seule annonce aux lecteurs d'écran, celle de la tenue reçue, jamais le cri de victoire (invariants 7 et 8) | Avec les mouvements réduits, Léa voit l'image fixe de la célébration de l'univers « Sports », Coach Léo portant l'écharpe rayée qu'il vient de recevoir · Au moment « tenue reçue », les lecteurs d'écran annoncent une seule fois la tenue reçue, sans lire « BUT ! » (106.48 tranchée) |
+| R19 | La danse de victoire n'enregistre rien : après elle, le personnage guide porte toujours la tenue portée choisie par l'enfant (invariant 11 ; #102.10, jamais mise d'office) | Après la danse de victoire avec un nœud papillon, Coach Léo porte toujours l'écharpe rayée choisie par Léa |
+
+Example mapping :
+- **R15** : Léa (CE1, Sports) a 4 étoiles en tout et réussit la séance complète de « Maths 1 » → le total passe à
+  5, 6 ou 7, palier 5 atteint : Coach Léo marque un but, puis une des trois variantes, en portant l'écharpe rayée ;
+  « BUT ! » affiché ; encart « Pour Coach Léo » « Coach Léo a reçu une écharpe rayée ! » (#102) ; ni confettis ni
+  effet sonore de la célébration commune. Léa a 11 étoiles et a mis l'écharpe rayée à Coach Léo → au palier 12,
+  Coach Léo danse avec le **nœud papillon** reçu, pas avec l'écharpe : le glossaire définit la danse de victoire
+  « le personnage guide portant la tenue reçue » (106.6 A), règle propre au moment « tenue reçue », qui passe avant
+  la règle générale de la tenue portée (106.23). Une séance fait recevoir au plus une tenue (glossaire, « Palier des
+  tenues ») : pas de cas à deux tenues.
+- **R16** : Léa a 2 étoiles à « Les êtres vivants » et 2 à « Les saisons » (4 en tout, sciences pas encore réussies)
+  et réussit « L'eau » → sciences du CE1 réussies **et** palier 5 atteint : une seule célébration de l'univers (celle
+  de la matière, 106.7), « Matière réussie ! » puis l'encart de la tenue reçue (ordre de la zone des nouveautés,
+  section « Livraison 106g »). La tenue montrée dans la scène est la tenue reçue (**106.47**, tranchée le
+  2026-11-05). Les annonces « Le grand défi des sciences est ouvert ! »
+  et des étoiles restent, déjà vérifiées par R12 et leurs stories.
+- **R17** : la tenue portée se voit sur tous les écrans de l'enfant (#102), donc aussi dans la scène de la
+  célébration, à chaque moment (premier défi relevé, matière réussie). Exemples : Coach Léo et le nœud papillon,
+  Noisette et le sac à dos d'explorateur, Lumi et les bottes de pluie (le sac à dos se pose sur le dos, là où battent
+  les ailes de Lumi ; les bottes se portent sur un personnage qui flotte : modèle, section « Livraison 106d »). Sans
+  tenue portée, la scène reste celle de 106a à 106e (scénarios existants). Le dessin des six univers avec chacune des
+  quatre tenues (Pompiers compris quand 106f sera livrée) est vérifié par la **planche relue par le PO**, pas par
+  l'E2E : le Plan ne prend que 3 cas. La matière réussie avec une tenue portée n'a pas de scénario : même scène,
+  seule l'annonce change (invariant 1).
+- **R18** : mouvements réduits → image fixe de la scène de Coach Léo avec « BUT ! », l'écharpe rayée portée, aucun
+  confetti ; l'encart de #102 sans mouvement est déjà vérifié par #102. Lecteur d'écran : une seule annonce, celle
+  de #102 « Coach Léo a reçu une écharpe rayée ! » ; « BUT ! » et le dessin jamais annoncés (invariant 8). Pas
+  d'annonce nouvelle propre au moment (**106.48**, tranchée le 2026-11-05).
+- **R19** : Léa a mis l'écharpe rayée, reçoit le nœud papillon par la séance, puis revient à son accueil → Coach Léo
+  porte toujours l'écharpe rayée. Sans tenue portée avant la séance, l'accueil le montre sans tenue : déjà vérifié
+  par #102 (« Une tenue qui vient d'être reçue n'est pas mise d'office »), non repris.
+
+Décisions appliquées, sans question nouvelle :
+- **Pas de variante par palier** (106.6 B écartée, 2026-11-02) : la même célébration de l'univers aux paliers 5, 12,
+  23 et 37, seule la tenue portée pendant la scène change. Rien à tester ; une variante par palier pourra faire
+  l'objet d'une story plus tard.
+- **L'encart de la tenue reçue reste celui de #102** (`Pour Coach Léo`, titre et phrase), mais pendant la célébration
+  de l'univers son petit dessin du personnage guide est caché (**106.50**) : c'est une annonce des nouveautés, que la célébration de l'univers ne remplace pas (106.7,
+  section « Livraison 106g »). 106.28 (« cacher ») vise le petit personnage guide à côté de la bulle, qui reste caché
+  pendant la danse de victoire comme à tout moment de célébration.
+- **Sans réseau au début de la séance**, la fin de la séance n'annonce aucune tenue (#102, comme la cabane, 32.13) :
+  pas de tenue reçue, donc pas de danse de victoire, la fin garde la célébration commune. Pas de scénario E2E (une
+  séance complète de plus) : la règle découle du moment de célébration et est couverte par les tests du domaine
+  (`momentDeCelebrationDeLaFin`).
+- **Séance de révision et test de départ** : aucun moment de célébration (27.4), donc pas de danse de victoire même
+  si le total des étoiles franchit un palier des tenues ; couvert par les tests du domaine, comme en 106g.
+- **Effets sonores** : la musique de la célébration, puis « découverte » (la séance donne une tenue), puis la parole
+  (106.46, 102.16). Couvert par les tests du domaine, pas par un scénario.
+- **Droits d'accès** : aucun scénario `@acces`. La tenue reçue se recalcule à partir du total des étoiles, protégé
+  par la RLS (#32, #102) ; la tenue portée est gardée sur l'appareil, par profil (#102.8 A). Rien n'est enregistré.
+- **Contenus** (règle absolue, invariant 10) : les quatre tenues de #102, communes à tous les univers, adaptées aux
+  enfants, aucune sur la tête ; aucun dessin nouveau en dehors de la tenue posée sur chaque personnage guide pendant
+  sa scène ; planche de chaque univers avec chaque tenue relue par le PO.
+
+Pour l'équipe (pas une question au PO) :
+- Étapes nouvelles : « <personnage guide> joue la célébration de l'univers « <univers> » en portant « <tenue> » »
+  (forme longue avec « : il marque un but, … » pour Coach Léo), « Coach Léo joue une seule fois la célébration de
+  l'univers « Sports », en portant « <tenue> » », « la fin de la séance annonce « Matière réussie ! », puis, pour Coach
+  Léo, « … » », « dans l'image fixe, Coach Léo porte « <tenue> » », « pendant la célébration, l'encart « Pour Coach Léo » ne montre
+  pas le petit dessin de Coach Léo » (106.50).
+- Étapes existantes à étendre sans en changer le sens : « Léa a mis « … » à <personnage guide> » (aujourd'hui
+  Noisette, Coach Léo, Capitaine Sam : ajouter Lumi) ; les étapes de la scène, du cri, des confettis et des lecteurs
+  d'écran attendent la fin du défi (`attendreLaFinDuDefi`) et doivent aussi valoir à la fin de la séance, comme en
+  106g.
+- « Léa a gagné N étoiles en tout » ajoute N étoiles sur des leçons de test absentes de la bibliothèque (#32) ;
+  « Léa a réussi les 5 premières leçons de maths du CE1 » en ajoute 5 (Plan de R17 : le palier de la tenue mise est
+  atteint dans tous les cas). R16 prépare les sciences par « Léa a pour meilleures étoiles » pour que le total avant
+  la séance soit exactement 4.
+- R19 : « Léa a terminé une séance de la leçon « Maths 1 » avec 1 étoile » doit jouer la fin de la séance dans le
+  navigateur (danse de victoire comprise), sans quoi le scénario ne vérifierait rien.
+
+Questions de 106h, toutes tranchées le 2026-11-05 (« 106h reco tout », https://github.com/SBA-dev/github-move/issues/106#issuecomment-6666003033) :
+- **106.47** Matière réussie et tenue reçue à la même fin : une seule célébration, celle de la matière (106.7). Le
+  personnage guide y porte-t-il la tenue reçue ou sa tenue portée (106.23) ? Reco de l'orchestrateur : la tenue
+  reçue. **Tranchée : oui**, la scène de la matière réussie montre la tenue reçue à la même fin ; `@a-valider` retiré
+  du scénario de R16.
+- **106.48** Au moment « tenue reçue », l'annonce aux lecteurs d'écran est-elle seulement celle de #102 (« Coach Léo
+  a reçu une écharpe rayée ! »), sans titre nouveau propre au moment ? Reco de l'orchestrateur : oui. **Tranchée :
+  oui**, seule l'annonce de #102, sans titre nouveau, sans lire le cri de victoire ; `@a-valider` retiré du scénario de
+  R18.
+- **106.49** Fermeture de #106 après 106h, les musiques des univers (106.12) étant suivies à part : posée par
+  l'orchestrateur, sans effet sur les scénarios. **Tranchée : oui**, la PR de 106h ferme #106 ; les musiques sont
+  suivies par l'issue #166 ; les corrections du texte de l'issue (106.2, 106.10, 106.11) sont notées à la fermeture.
+- **106.50** Pendant la célébration de l'univers, le petit dessin du personnage guide de l'encart « Pour Coach Léo »
+  (#102) est-il caché, pour qu'il n'apparaisse qu'une fois, dans la scène (106.28 « cacher ») ? Le titre et la phrase
+  « Coach Léo a reçu une écharpe rayée ! » restent. Reco du modèle : oui. **Tranchée : oui**, le petit dessin est caché
+  pendant la célébration, le titre et la phrase restent ; dit par le second scénario de R15. Le step de #102 qui vérifie
+  ce petit dessin est adapté par l'e2e-tester, sans changer le texte des scénarios de #102.
+
 ## Questions ouvertes
 
 Aucune pour 106a, 106b ni 106c. Aucune pour 106d : 106.31, 106.34, 106.35 et 106.36 tranchées le

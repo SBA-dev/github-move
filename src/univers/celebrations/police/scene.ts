@@ -1,4 +1,4 @@
-import type { VarianteDe } from "@domain/motivation";
+import type { CleDeTenue, VarianteDe } from "@domain/motivation";
 import { creerLesConfettis } from "../commun/confettis.ts";
 import { jouerLaScene } from "../commun/jeu-de-la-scene.ts";
 import { creerLeChiot } from "./chiot.ts";
@@ -19,9 +19,9 @@ const CONFETTIS_DU_COMMISSARIAT = {
  * Le temps de la maquette est raccourci (environ 5 s, 106.38) puis accéléré pour que la scène entière tienne dans `DUREE_DE_LA_CELEBRATION_S`.
  * Sans toile (mouvements réduits), il n'y a pas de confettis.
  */
-export function creerLaScene(racine: SVGSVGElement, toile: HTMLCanvasElement | null, variante: VarianteDe<"police">) {
+export function creerLaScene(racine: SVGSVGElement, toile: HTMLCanvasElement | null, variante: VarianteDe<"police">, tenue?: CleDeTenue) {
   const scenario = scenarioDeLaPolice(variante);
-  const max = creerAgentMax(racine);
+  const max = creerAgentMax(racine, tenue);
   const chiot = creerLeChiot(racine);
   const effets = creerLesEffets(racine, scenario);
   const confettis = toile ? creerLesConfettis(toile, CONFETTIS_DU_COMMISSARIAT) : null;

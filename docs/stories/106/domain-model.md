@@ -721,6 +721,157 @@ Glossaire et context map : rien de nouveau. La note « Apprentissage publie une 
 
 **106.46 La « découverte » avec la musique.** *Tranchée (reco retenue, 2026-11-05)* : oui. Ordre des sons : la musique de la célébration (3 s au plus), puis « découverte » quand la séance donne un objet de la cabane, une tenue ou un épisode, puis la parole. Sans objet, tenue ni épisode : la musique, puis la parole. Question posée : aujourd'hui, une fin qui donne un objet de la cabane, une tenue ou un épisode joue « grande victoire » (ou « séance terminée »), puis « découverte », puis la parole. Quand la musique de la célébration remplace le premier son, garde-t-on « découverte » après elle ? Reco : **oui**. « Découverte » annonce des nouveautés, et elles restent affichées. On a donc : la musique (3 s au plus), « découverte », puis la parole. Autre choix : la musique seule, pour un seul son en tout.
 
+## Livraison 106h : danses de victoire et tenue portée
+
+**État : cadrage validé le 2026-11-05.** Le PO a retenu la reco pour les quatre questions 106.47 à 106.50 (« 106h reco tout », [annonce du responsable](https://github.com/SBA-dev/github-move/issues/106#issuecomment-6666003033)). La planche des tenues reste à présenter au PO **avant le merge** (98.28, voir plus bas).
+
+Deux choses, qui touchent les six scènes. D'abord la **danse de victoire** (106.6 A) : au palier des tenues (5, 12, 23, 37 étoiles), le personnage guide joue sa célébration de l'univers en portant la tenue reçue. Ensuite la **tenue portée dans toutes les scènes** (106.23), renvoyée à 106h par 106.31 : hors danse de victoire, le personnage guide joue sa célébration dans la tenue qu'il porte. Aucun agrégat, aucun événement, aucune commande, aucune erreur métier, aucune migration, aucune Edge Function, aucune donnée d'enfant de plus. Pas de variante par palier (106.6 B écartée) : la danse de victoire est la célébration de l'univers telle quelle (même action, même tirage de la variante, même cri de victoire, même durée), seule la tenue dessinée change.
+
+Le modèle suppose **106g mergée** (`matiereReussieParLaSeance` dans les faits, `titreDeLaMatiereReussie`, `musiqueDeLaCelebration` dans `FaitsDeLaFin`, branchement dans `EcranDeFin.tsx`, personnage guide caché par `EcranDeSeance.tsx`). La tenue dans la scène de Capitaine Sam suppose aussi **106f mergée**. Si 106h est prête avant 106f, la branche qui merge en second dessine les tenues de Capitaine Sam. Cet ordre est à régler par le responsable des équipes : ce n'est pas une question pour le PO.
+
+### Le fait : `tenueRecue`
+
+- `FaitsDeLaFinPourLaCelebration` gagne **`tenueRecue: TenueDuPersonnageGuide | undefined`, obligatoire**. Le raisonnement est celui de 106g : un champ facultatif ajouterait un état « non dit » qu'aucune fin n'a, alors qu'avec un champ obligatoire chaque fin dit ce qu'elle sait. Le champ porte la tenue, pas un booléen, parce que la scène doit la dessiner (voir plus bas). Le diagramme de la section « Modèle » le prévoit déjà.
+- **Fin du défi** (`FinDuDefi.tsx`) : `tenueRecue: undefined`. La séance de défi ne donne aucune étoile (100.13), donc aucune tenue.
+- **Fin de la séance** (`EcranDeFin.tsx`) : le résultat de `tenueRecueParLaSeance(meilleuresAvant, lecon, etoilesDeLaSeance)` (#102), déjà lu par `useTenueRecueParLaSeance`. Si la lecture échoue, le crochet rend `undefined` : la fin n'a pas de danse de victoire, et elle garde la célébration de la matière si la matière est réussie, sinon la célébration commune.
+- `celebrationDeLaFin` est appelée **une seule fois**, quand les deux faits sont connus (`matierePrete` **et** `tenuePrete`). La variante n'est donc tirée qu'une fois par fin (106g). La musique, l'effacement du personnage guide d'`EcranDeSeance` et l'attente des confettis suivent sans changement.
+- **Révision et test de départ** : rien ne change, ils n'appellent pas `celebrationDeLaFin` (27.4).
+
+### Le moment : 106.7
+
+`momentDeCelebrationDeLaFin` rend, dans cet ordre :
+1. `"matiereReussie"` si la séance rend la matière réussie ;
+2. sinon `"tenueRecue"` si la séance fait recevoir une tenue ;
+3. sinon `"defiReleve"` si le défi est relevé pour la première fois ;
+4. sinon `undefined`.
+
+L'ordre entre 1 et 2 est la règle 106.7 : une seule célébration, celle de la matière, et la tenue reste annoncée dans les nouveautés (#102). L'ordre entre 2 et 3 est sans effet, puisque les deux faits viennent de deux fins différentes (100.13). `celebrationDe(moment, cleUnivers, hasard)` ne change pas : `"tenueRecue"` fait déjà partie de `MomentDeCelebration`, et la célébration rendue porte ce moment.
+
+Tests à prévoir (`moment-de-celebration_test.ts`) : une tenue reçue seule donne `tenueRecue` ; une matière réussie avec une tenue reçue donne `matiereReussie` (le test annoncé par 106g) ; aucun fait ne donne `undefined`. Dans `celebration-de-la-fin_test.ts` : une tenue reçue dans l'univers Sports donne une célébration `univers` au moment `tenueRecue`.
+
+### Quelle tenue la scène dessine (règle du domaine)
+
+Choisir la tenue que montre la scène est une règle métier : entre la danse de victoire (106.6 A) et la tenue portée (106.23), il faut trancher, et 106.47 (tranchée) le fait pour le cas « matière et tenue ». Cette règle va donc dans le domaine, pas dans React. C'est une lecture pure de plus dans `@domain/motivation` :
+
+- `tenueDeLaCelebrationDeLUnivers(faits: FaitsDeLaFinPourLaCelebration, tenuePortee: TenuePortee)` → `TenueDuPersonnageGuide | undefined` ;
+- elle rend la **tenue reçue par la séance** s'il y en a une. Au moment `tenueRecue`, c'est la danse de victoire. Au moment `matiereReussie` avec une tenue reçue, la scène de la matière réussie montre aussi la tenue reçue (106.47) ;
+- sinon, elle rend la **tenue portée montrée**, `tenueAMontrer(tenuePortee)` (#102, invariant 3 e de #102 : une clé inconnue ne montre aucune tenue, sans erreur). C'est le cas du défi relevé et de la matière réussie sans tenue reçue (106.23).
+
+Le nom dit « célébration de l'univers » en entier (« célébration » seul est évité, 106.1). Côté front, la tenue portée est celle que donne `useTenueDuProfil()` (`TenueDuProfil.tsx`, déjà passée par `tenueAMontrer`). La lecture reste juste si on lui repasse cette clé : `tenueAMontrer` rend la même tenue.
+
+**Rien n'est enregistré** (invariant 11, #102.10 A). Recevoir une tenue ne la fait jamais porter d'office : la tenue portée ne change pas. La scène montre la tenue reçue le temps de la fin, et son image finale reste à l'écran jusqu'au départ de l'écran de fin (106g). Sur les écrans suivants, le personnage guide a de nouveau sa tenue portée. C'est déjà ce que fait l'encart de #102, qui montre la tenue reçue sans la faire porter.
+
+Tests à prévoir (`tenue-de-la-celebration_test.ts`) :
+- une tenue reçue avec une autre tenue portée donne la tenue reçue ;
+- une tenue reçue sans tenue portée donne la tenue reçue ;
+- sans tenue reçue, on obtient la tenue portée ;
+- sans tenue reçue ni portée, on n'obtient aucune tenue ;
+- une tenue portée inconnue ne donne aucune tenue ;
+- une matière réussie avec une tenue reçue donne la tenue reçue (106.47).
+
+### Annonce pour le lecteur d'écran (invariant 8)
+
+- Au moment `tenueRecue`, l'annonce du moment **est l'annonce de #102**, « <personnage guide> a reçu <tenue> ! », dans la zone `role="status"` d'`AnnonceDeLaTenue` (avec son titre « Pour <personnage guide> »). Aucun texte nouveau, aucune seconde annonce. Le dessin de la scène et le cri de victoire restent `aria-hidden` : le cri de victoire n'est jamais lu (**106.48**, tranchée).
+- C'est cohérent avec 106g. La zone `role="status"` de « Matière réussie ! » ne parle qu'au moment `matiereReussie`, et les annonces des autres nouveautés gardent chacune leur zone. Au moment `tenueRecue`, la zone de la matière reste vide et seule la zone de la tenue parle. Quand la matière est réussie et qu'une tenue est reçue, on entend « Matière réussie ! » puis « Coach Léo a reçu une écharpe rayée ! » : ce sont deux nouveautés et non deux annonces de la célébration, comme le dit le second scénario 106h.
+- **Le petit dessin de l'encart** : `AnnonceDeLaTenue` dessine le personnage guide portant la tenue reçue (`personnage-guide-de-l-annonce`, décoratif). Pendant la célébration de l'univers, le personnage guide n'apparaît qu'une fois, dans la scène (106.28 « cacher ») : ce petit dessin le montrerait une deuxième fois. Il est donc **caché** quand la fin joue la célébration de l'univers ; le titre « Pour <personnage guide> » et la phrase « <personnage guide> a reçu <tenue> ! » restent, et la scène, qui garde son image finale, montre la tenue (**106.50**, tranchée). Avec la célébration commune (lecture des étoiles en échec), le petit dessin reste.
+
+### Son
+
+Rien de nouveau dans le domaine : la règle de 106g s'applique telle quelle. Au moment `tenueRecue`, la célébration est `univers`, donc `musiqueDeLaCelebration` est présente. Pour l'instant, c'est « grande victoire » pour tous les univers (106.27). `effetsSonoresDeLaFin` la met à la place du premier son, puis joue « découverte », car `FaitsDeLaFin.tenueRecue` est vrai (106.46). La parole vient ensuite. Un seul son de fin, puis « découverte » : l'invariant 9 est respecté. Si les tests de 106g ne couvrent pas déjà le cas « musique et tenue reçue », on en ajoute un, qui ne demande aucun code.
+
+### Mouvements réduits
+
+Image fixe de l'état final de la variante tirée, avec le cri de victoire et l'annonce, sans confetti (invariant 7). Le personnage guide y porte **la même tenue que dans la scène animée** : la tenue reçue pendant une danse de victoire, sinon la tenue portée. L'information « tenue reçue » reste ainsi visible sans mouvement, et l'encart de #102 la donne aussi en texte.
+
+### Tenue portée dans les six scènes (106.23) : ce qui reste dans `src/`
+
+Aucune règle ici : React reçoit la tenue rendue par `tenueDeLaCelebrationDeLUnivers` et la dessine.
+
+- `SceneDeCelebration` reçoit la tenue (prop `tenue`, une clé ou rien, comme `PersonnageGuide`) et la passe à chaque scène (`PropsDeScene` gagne `tenue`). La racine de la scène expose `data-tenue`, comme `PersonnageGuide`, pour les steps. `FinDuDefi.tsx` passe la tenue portée, et `EcranDeFin.tsx` le résultat de la lecture.
+- **Une seule source pour le dessin des quatre tenues.** Les scènes dessinent en chaînes SVG animées par le moteur isolé (106.22), alors que `src/univers/personnages/tenues.tsx` dessine en React sur un `Ancrage` fixe (`cou`, `dos`, `pieds`). Il faut éviter de redessiner les tenues dans chaque scène : on extrait leurs tracés dans une source commune (par exemple `src/univers/celebrations/commun/tenues.ts`, utilisée par `tenues.tsx`), par refactor, avec un rendu identique du dessin fixe.
+- **Les tenues suivent les articulations, dans toutes les poses et toutes les vues** :
+  - l'écharpe rayée et le nœud papillon suivent le **cou** et l'inclinaison du torse ;
+  - le sac à dos d'explorateur suit le **torse** : le sac derrière le corps, les bretelles devant ;
+  - les bottes de pluie suivent chaque **pied** et **remplacent** la chaussure du personnage (vues de face, de profil et semelle) ;
+  - aucune tenue ne se porte sur la tête ni dans les mains (glossaire, #102) : le ballon, la baguette, la loupe, le ruban et la lance ne changent pas, et les poses non plus.
+- **Points de vigilance par personnage guide** :
+  - **Coach Léo** : c'est le seul qui se montre **de dos** (retournement, `vue` 165 puis 135). Il faut donc une vue de dos pour chaque tenue : le sac à dos se voit en entier et les bretelles sont cachées ; le nœud papillon est caché par le corps ; on voit le tour de cou de l'écharpe. Les bottes remplacent les chaussures rouges, y compris pendant la glissade à genoux.
+  - **Agent Max** : il a le même corps que Coach Léo, mais il n'est jamais de dos. Le nœud papillon et l'écharpe se posent sur le col de la chemise. Avec les gants blancs, la casquette lancée et la trottinette, rien ne change. Le casque se porte sur la tête : ce n'est pas une tenue.
+  - **Capitaine Sam** (106f) : il a déjà des bottes noires de pompier (`pompier-jambe-*`). Les bottes de pluie les **remplacent** et ne se dessinent pas par-dessus. Le dessin fixe n'utilise plus `derriere` depuis #161 (son `Ancrage` n'a pas ce champ) : on vérifie sur la planche si le bas de la veste ou du pantalon doit passer devant la tige. Le sac à dos se pose sur la veste. Règle de 106f : aucune forme orange ou rouge en pointe qui se lise comme une flamme ; les franges rouges de l'écharpe sont donc vérifiées à 80 px.
+  - **Lili** : les bottes remplacent les demi-pointes, y compris en grand jeté et sur la pointe des pieds. Le tutu et le collant ne changent pas. La queue de cheval animée passe devant ou derrière le sac à dos selon la vue. La tenue ne rend aucune pose suggestive.
+  - **Noisette** : elle n'a pas de chaussures. Les bottes se posent sur les **pattes arrière** (`animaux-pied-*`), comme sur le dessin fixe (tige courte). La queue en panache reste derrière le sac à dos. Noisette ne se retourne jamais, on voit donc surtout les bretelles. Le jonglage et la noisette croquée ne touchent pas l'écharpe.
+  - **Lumi** : le sac à dos se pose sur le dos, là où battent les ailes. On garde l'ordre du dessin fixe validé en #102 (`Lumi.tsx`, `elargissement` 2) : les ailes battent sans traverser le sac. Les bottes se portent sur un personnage qui flotte : elles pendent, suivent les jambes pendant l'envol et la boucle, et remplacent les ballerines. La robe reste jusqu'aux genoux.
+- **Dette de 106f** (jambes et tête de Capitaine Sam proches de celles d'Agent Max, à mettre dans `commun/`) : **les jambes servent** à poser les bottes. Coach Léo, Agent Max et Capitaine Sam ont le même corps. Une fois la jambe et la chaussure mises en commun dans `commun/` (#161 a déjà factorisé la chaussure du dessin fixe), les bottes ne se posent qu'une fois pour les trois. On recommande ce refactor **avant** de dessiner les bottes, en gardant le rendu identique. La tête ne sert pas aux tenues, puisque rien ne se porte sur la tête : sa mise en commun reste une dette.
+- **Règle absolue de contenu** (invariant 10), à toutes les tailles, en mouvement et sur l'image fixe. Les tenues ont été validées sur les dessins fixes en #102 ; en mouvement, il faut aussi que l'écharpe ne cache jamais le visage, qu'aucune tenue ne glisse ni ne se déchire, et qu'aucune n'ajoute de forme ou de symbole interdit. **Aucune étoile à cinq branches** (106.34 A, 106.35) : les quatre tenues n'en ont pas (le fermoir du sac et le nœud sont des rectangles arrondis), et il faut qu'elles n'en gagnent pas.
+
+### Planche à présenter au PO avant le merge (98.28)
+
+Skill `illustration`, section 0. Pour **chacun des six personnages guides, dans sa scène, avec chacune des quatre tenues** :
+- l'image fixe (état final d'une variante) ;
+- une image clé en mouvement, choisie dans la pose la plus difficile pour la tenue : Coach Léo de dos et en glissade (semelles), Lili en grand jeté, Noisette en train de jongler, Lumi pendant l'envol, Agent Max à trottinette, Capitaine Sam avec la lance levée ;
+- à 360, 160 et 80 px, sur fond clair et sur fond sombre.
+
+Elle est enregistrée sous `docs/stories/106/captures/106h-*.png`. Une ligne « sans tenue » sert de référence : elle doit être identique aux planches déjà validées.
+
+### Scénarios
+
+Les deux scénarios 106h (`@hors-106a @a-valider`, fin de `features/106-celebration-de-l-univers.feature`) restent valables. `po-acceptance` les passe en `@livraison-106h` et peut ajouter :
+- au premier, « les lecteurs d'écran annoncent une seule fois « Coach Léo a reçu une écharpe rayée ! » » ;
+- un scénario de mouvements réduits (image fixe avec la tenue reçue) ;
+- un scénario de défi relevé avec une tenue portée (106.23) ;
+- un scénario « après la fin, Coach Léo a de nouveau sa tenue portée ».
+
+Les scénarios de #102 qui font recevoir une tenue dans un univers livré joueront désormais la danse de victoire. Leur step « annonce pour <personnage guide> » vérifie `personnage-guide-de-l-annonce` : il est à adapter, car ce petit dessin est caché pendant la célébration de l'univers (106.50) ; le titre et la phrase restent vérifiés.
+
+### Emplacement
+
+```
+supabase/functions/_shared/motivation/domain/
+  moment-de-celebration.ts / _test.ts     # tenueRecue dans les faits ; matiereReussie > tenueRecue > defiReleve
+  tenue-de-la-celebration.ts / _test.ts   # tenueDeLaCelebrationDeLUnivers (nouveau)
+  celebration-de-la-fin_test.ts           # tenue reçue → célébration univers au moment tenueRecue
+  effets-sonores_test.ts                  # musique puis découverte pour une tenue reçue, si pas déjà couvert
+  index.ts                                # export de tenueDeLaCelebrationDeLUnivers
+src/defis/FinDuDefi.tsx                   # tenueRecue: undefined ; tenue portée passée à la scène
+src/seance/fin-de-seance/EcranDeFin.tsx   # attend tenuePrete ; tenue passée aux faits et à la scène
+src/seance/fin-de-seance/AnnonceDeLaTenue.tsx   # petit dessin caché pendant la célébration de l'univers (106.50)
+src/univers/celebrations/SceneDeCelebration.tsx # prop tenue, data-tenue
+src/univers/celebrations/commun/          # tracés des tenues sur le corps articulé ; jambe et chaussure communes à Léo, Max et Sam
+src/univers/celebrations/<univers>/       # les six scènes : groupes de la tenue accrochés aux articulations
+src/univers/personnages/tenues.tsx        # utilise la source commune des tracés (refactor, rendu identique)
+docs/stories/106/captures/106h-*.png      # planche
+```
+
+Aucune migration, aucune table, aucune Edge Function, aucun `application/` ni `infrastructure/`. La tenue portée reste sur l'appareil (#102.8 A) et n'est que lue. **Aucune donnée d'enfant nouvelle** : rien n'est enregistré, rien n'est envoyé au serveur ni à l'IA. Glossaire et context map : rien de nouveau, le terme « Danse de victoire » existe déjà et sa définition reste juste.
+
+### Ce qui reste de #106 après 106h
+
+Après 106h, chaque moment de célébration (défi relevé, matière réussie, tenue reçue) a sa célébration dans les six univers, avec la tenue. **La PR de 106h ferme #106** (106.49). Il reste :
+- **les six musiques** (106.12, 106.27) : **issue #166**. Le PO doit les choisir à l'écoute, et l'accès réseau à `kenney.nl` ou `opengameart.org` n'est toujours pas ouvert. D'ici là, « grande victoire » ;
+- **les corrections du texte de l'issue**, à noter dans le **commentaire de fermeture** de #106 (106.49) : Agent Max et non « Agente Mila », `univers.ts` et non `apparences.ts`, les maquettes au lieu du tableau, « Défi relevé ! » et « Matière réussie ! » au lieu de « fin de chapitre » (106.2) ; un toucher hors des boutons ne fait rien (106.10) ; la musique est jouée en Muet (106.11) ;
+- **des dettes techniques sans effet pour l'enfant** : `FinDuDefi` choisit encore le son dans le composant (106g) ; la tête de Capitaine Sam et le moteur de marche sont encore à mettre dans `commun/` (106e, 106f) ;
+- **les sujets déjà sortis de #106** : le correctif de l'étoile du dessin fixe d'Agent Max (#158), les petites célébrations de chaque séance (106.8), la réponse fausse animée (106.20), une variante par palier (106.6 B) et la célébration du grand défi (#137).
+
+### Questions
+
+Aucune question ouverte pour 106h. Toutes sont **tranchées le 2026-11-05** par le PO (« 106h reco tout », [annonce du responsable](https://github.com/SBA-dev/github-move/issues/106#issuecomment-6666003033)).
+
+**106.47 Matière réussie et tenue reçue à la même fin : quelle tenue dans la scène ?** *Tranchée (reco retenue, 2026-11-05)* : la scène de la matière réussie montre la tenue reçue à la même fin. 106.7 dit qu'on joue une seule célébration, celle de la matière. Exemple : Léa a 4 étoiles et réussit la dernière leçon de sciences du CE1 ; Coach Léo porte le nœud papillon et reçoit l'écharpe rayée.
+- **Reco : oui, la scène de la matière montre la tenue reçue** (l'écharpe rayée), comme une danse de victoire. L'enfant voit sa nouvelle tenue en mouvement, la tenue portée ne change pas, et l'encart annonce la tenue juste après « Matière réussie ! ».
+- Autre choix : la scène montre la tenue portée (le nœud papillon) ; la tenue reçue ne se voit que dans l'encart de #102.
+
+**106.48 L'annonce du moment « tenue reçue » pour le lecteur d'écran.** *Tranchée (reco retenue, 2026-11-05)* : seule l'annonce de #102 est faite, sans titre nouveau et sans lire le cri de victoire. Au moment `tenueRecue`, l'annonce aux lecteurs d'écran est-elle seulement l'annonce existante de #102 (« Coach Léo a reçu une écharpe rayée ! », zone `role="status"` de l'encart), sans titre nouveau propre au moment, et sans jamais lire le cri de victoire (« BUT ! ») ?
+- **Reco : oui.** C'est cohérent avec la zone unique de 106g : la zone de « Matière réussie ! » reste vide à ce moment, et chaque nouveauté garde sa zone. On a ainsi une seule annonce par moment, sans texte nouveau (invariant 8, 106.14).
+- Autre choix : un titre propre au moment (par exemple « Nouvelle tenue ! »), annoncé avant la phrase de #102. Il y aurait alors deux annonces pour le même fait.
+
+**106.49 Fermeture de #106.** *Tranchée (reco retenue, 2026-11-05)* : la PR de 106h ferme #106 ; le choix des six musiques (106.12, 106.27, accès réseau compris) est l'**issue #166** ; les corrections du texte de l'issue (106.2, 106.10, 106.11) sont notées dans le commentaire de fermeture.
+- **Reco : oui.** Tout le reste du périmètre est livré, et les musiques ne dépendent que du choix du PO et de l'accès réseau.
+- Autre choix : laisser #106 ouverte jusqu'au choix des musiques.
+
+**106.50 Le petit dessin de l'encart de la tenue pendant la célébration de l'univers.** *Tranchée (reco retenue, 2026-11-05)* : pendant la célébration de l'univers, le petit dessin du personnage guide de l'encart « Pour <personnage guide> » est caché ; le titre et la phrase restent. L'encart « Pour Coach Léo » de #102 dessine Coach Léo avec la tenue reçue. Pendant la célébration de l'univers, 106.28 (« cacher ») veut que le personnage guide n'apparaisse qu'une fois, dans la scène. Or presque toutes les fins qui donnent une tenue joueront désormais la célébration.
+- **Reco : oui, on cache le petit dessin** de l'encart quand la fin joue la célébration de l'univers. Le titre « Pour Coach Léo » et la phrase « Coach Léo a reçu une écharpe rayée ! » restent, et la scène, qui garde son image finale, montre la tenue. Le step de #102 qui vérifie le petit dessin est adapté. Avec la célébration commune (lecture des étoiles en échec, univers sans célébration), rien ne change.
+- Autre choix : garder le petit dessin, car l'encart est une carte de nouveauté et non le personnage guide qui parle. Dans ce cas, le personnage guide apparaît deux fois.
+
 ## Questions ouvertes
 
 Aucune question ouverte pour 106g : 106.44, 106.45 et 106.46 sont tranchées le 2026-11-05 par le PO (« 106g reco tout », annonce [Responsable] sur #106, commentaire 6665711170), la recommandation est retenue pour chacune.

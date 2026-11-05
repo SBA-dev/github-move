@@ -1,7 +1,10 @@
+import type { CleDeTenue } from "@domain/motivation";
+import { habillerLeCorpsArticule } from "../commun/habiller.ts";
 import { clamp01, DEG, E, fenetre, lerp, r1, r3 } from "../commun/courbes.ts";
 import { creerUnGroupe, deplacer, elementsDe, poser, trouver } from "../commun/dom.ts";
 import { expressionA } from "../commun/expressions.ts";
 import { decaler, membre, type Membre, type Point, trace } from "../commun/membres.ts";
+import { inclinaisonDuProfilDeLeoOuDesBottes, placerLaChaussure } from "../commun/chaussure.ts";
 import type { CoteDeMain, PoseDeMain } from "../commun/mains.ts";
 import { clignement } from "../commun/visage.ts";
 import { anglesVers, brasVers, HANCHE } from "../commun/atteindre.ts";
@@ -23,9 +26,10 @@ const EMOS: Record<Emotion, { readonly s: readonly [number, number]; readonly li
 export type DessinDeMax = { readonly pose: Pose; readonly mains: { readonly g: Membre; readonly d: Membre } };
 
 /** Agent Max, dessiné image par image à partir des poses du scénario (portage du moteur de la maquette : le corps de Coach Léo, la tête et la tenue de Max). */
-export function creerAgentMax(racine: SVGSVGElement) {
+export function creerAgentMax(racine: SVGSVGElement, tenue?: CleDeTenue) {
   const n = elementsDe(racine, "police");
   n("max").innerHTML = STRUCTURE_D_AGENT_MAX;
+  const habit = habillerLeCorpsArticule(n, n("max"), "police", tenue);
   const bouches = [...n("bouches").children];
   const q1 = (g: ParentNode, classe: string) => trouver(g, `.${classe}`);
   const bras = { g: creerLeBras("g"), d: creerLeBras("d") };
@@ -72,20 +76,9 @@ export function creerAgentMax(racine: SVGSVGElement) {
     poser(q1(g, "ombre"), "d", trace(decaler(m, 3.4, 1.2), .3, .72));
     poser(q1(g, "lumiere"), "d", trace(decaler(m, -3.4, -1.2), .3, .7));
     poser(q1(g, "revers"), "d", trace(m, .9, .97, 1));
-    const ch = n(`chaussure-${c}`), vx = m.W.x - m.E.x, vy = m.W.y - m.E.y, lv = Math.hypot(vx, vy) || 1;
-    const leve = clamp01((-vy / lv) * 1.6 - .2), profilF = clamp01((Math.abs(Math.sin(vueCourante * DEG)) - .45) / (Math.sin(VUE_MAXIMALE * DEG) - .45));
-    const sens = sw > .02 ? 1 : sw < -.02 ? -1 : 1;
-    deplacer(ch, `translate(${r1(m.W.x)} ${r1(m.W.y + 2)})`);
-    const pFace = q1(ch, "vue-face"), pProfil = q1(ch, "vue-profil"), pSemelle = q1(ch, "vue-semelle"), contact = q1(ch, "contact");
-    poser(pFace, "opacity", r3((1 - profilF) * (1 - leve)));
-    poser(pProfil, "opacity", r3(profilF * (1 - leve)));
-    deplacer(pProfil, `scale(${r3(sens * (.6 + .4 * profilF))} 1) rotate(${r1(Math.atan2(vx * sens, -vy) / DEG * .25)})`);
-    const replie = clamp01((1 - ft) * 2.2), dehors = (c === "g" ? -1 : 1) * replie * 13;
-    if (replie > .3) {
-      if (g.firstElementChild !== ch) g.prepend(ch);
-    } else if (g.lastElementChild !== ch) g.append(ch);
-    poser(pSemelle, "opacity", r3(Math.pow(leve, .8)));
-    deplacer(pSemelle, `translate(${r1(dehors)} ${r1(-3 * leve + replie * 2)}) rotate(${r1(-dehors * 1.8)}) scale(${r3(.5 + .25 * leve)} ${r3(Math.max(.05, leve * .8))})`);
+    const ch = n(`chaussure-${c}`), profilF = clamp01((Math.abs(Math.sin(vueCourante * DEG)) - .45) / (Math.sin(VUE_MAXIMALE * DEG) - .45));
+    const { sens } = placerLaChaussure(g, ch, m, { cote: c, tibia: ft, sw, profil: profilF, inclinaisonDuProfil: inclinaisonDuProfilDeLeoOuDesBottes(tenue === "bottes-de-pluie") });
+    const contact = q1(ch, "contact");
     poser(contact, "opacity", 0);
     deplacer(contact, `translate(${r1(profilF * sens * 5)} 12) scale(${r3(1 + profilF * .5)} 1)`);
   }
@@ -240,6 +233,7 @@ export function creerAgentMax(racine: SVGSVGElement) {
     poser(q1(bassin, "ombre"), "d", `M${r1(hp * .2)} 5 Q${r1(hp + 1)} 0 ${r1(hp + 2)} 12 Q${r1(hp * .6)} 15 ${r1(hp * .15)} 11 Z`);
     poser(q1(bassin, "pli"), "d", `M${r1(4 * sw)} 2 V9`);
     deplacer(n("haut"), `rotate(${r1(p.torse)})`);
+    habit.suivre({ cw, sw, torse: p.torse });
     const procheJ = sw >= 0 ? "d" : "g", loinJ = procheJ === "d" ? "g" : "d";
     if (p.trot > 0) poserLesJambesSurLaTrottinette(p, jambesEnMouvement, f, procheJ);
     const j = jambesEnMouvement;
