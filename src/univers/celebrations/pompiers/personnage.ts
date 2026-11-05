@@ -3,6 +3,7 @@ import { brasVers } from "../commun/atteindre.ts";
 import { creerUnGroupe, deplacer, elementsDe, poser, trouver } from "../commun/dom.ts";
 import { expressionA } from "../commun/expressions.ts";
 import { decaler, membre, type Point, trace } from "../commun/membres.ts";
+import { inclinaisonDuProfilDeSam, placerLaChaussure } from "../commun/chaussure.ts";
 import { au } from "../commun/tableaux.ts";
 import { clignement } from "../commun/visage.ts";
 import { dessinDuBras, MAINS, STRUCTURE_DE_CAPITAINE_SAM } from "./dessin-de-sam.ts";
@@ -87,20 +88,8 @@ export function creerCapitaineSam(racine: SVGSVGElement) {
     poser(q1(g, "bande"), "d", trace(m, .64, .7, 1));
     poser(q1(g, "botte"), "d", trace(m, .8, 1, 2));
     poser(q1(g, "botte-bord"), "d", trace(m, .8, .815, 1));
-    const ch = n(`chaussure-${c}`), vx = m.W.x - m.E.x, vy = m.W.y - m.E.y, lv = Math.hypot(vx, vy) || 1;
-    const leve = clamp01((-vy / lv) * 1.6 - .2), profilF = clamp01((Math.abs(Math.sin(vueCourante * DEG)) - .45) / (Math.sin(VUE_MAXIMALE * DEG) - .45));
-    const sens = sw > .02 ? 1 : sw < -.02 ? -1 : 1;
-    deplacer(ch, `translate(${r1(m.W.x)} ${r1(m.W.y + 2)})`);
-    const pFace = q1(ch, "vue-face"), pProfil = q1(ch, "vue-profil"), pSemelle = q1(ch, "vue-semelle");
-    poser(pFace, "opacity", r3((1 - profilF) * (1 - leve)));
-    poser(pProfil, "opacity", r3(profilF * (1 - leve)));
-    deplacer(pProfil, `scale(${r3(sens * (.6 + .4 * profilF))} 1) rotate(${r1(-Math.atan2(vx * sens, vy) / DEG * .25)})`);
-    const replie = clamp01((1 - ft) * 2.2), dehors = (c === "g" ? -1 : 1) * replie * 13;
-    if (replie > .3) {
-      if (g.firstElementChild !== ch) g.prepend(ch);
-    } else if (g.lastElementChild !== ch) g.append(ch);
-    poser(pSemelle, "opacity", r3(Math.pow(leve, .8)));
-    deplacer(pSemelle, `translate(${r1(dehors)} ${r1(-3 * leve + replie * 2)}) rotate(${r1(-dehors * 1.8)}) scale(${r3(.5 + .25 * leve)} ${r3(Math.max(.05, leve * .8))})`);
+    const ch = n(`chaussure-${c}`), profilF = clamp01((Math.abs(Math.sin(vueCourante * DEG)) - .45) / (Math.sin(VUE_MAXIMALE * DEG) - .45));
+    placerLaChaussure(g, ch, m, { cote: c, tibia: ft, sw, profil: profilF, inclinaisonDuProfil: inclinaisonDuProfilDeSam });
   }
 
   /** La tête de Sam (rayon 40 dans son repère, réduite à 28 comme celle de Léo) : de face ou de trois-quarts, jamais de dos. Le casque couvre les cheveux roux : il n'en reste que les tempes et une petite frange sous la visière. */

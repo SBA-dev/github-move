@@ -3,6 +3,7 @@ import { creerUnGroupe, deplacer, elementsDe, poser, trouver } from "../commun/d
 import { type Expression, expressionA } from "../commun/expressions.ts";
 import type { CoteDeMain, PoseDeMain } from "../commun/mains.ts";
 import { decaler, membre, type Point, trace } from "../commun/membres.ts";
+import { inclinaisonDuProfilDeLeo, placerLaChaussure } from "../commun/chaussure.ts";
 import { clignement, RAYON_DE_LA_TETE as R, traitDuVisage } from "../commun/visage.ts";
 import { dessinDuBras, MAINS, QUEUE_DE_CHEVAL, STRUCTURE_DE_LILI } from "./dessin-de-lili.ts";
 import { type Emotion, type Pose, poseA, type ScenarioDeDanse } from "./poses.ts";
@@ -68,23 +69,11 @@ export function creerLili(racine: SVGSVGElement) {
     poser(q1(g, "chaussette-bord2"), "d", trace(m, .62, .65, 1));
     poser(q1(g, "chaussette-ombre"), "d", trace(decaler(m, 3.6, 1), .6, .95, 3));
     // chausson : vue de face, de profil ou semelle (pied levé), fondues selon la vue et l'angle du tibia
-    const ch = n(`chaussure-${c}`), vx = m.W.x - m.E.x, vy = m.W.y - m.E.y, lv = Math.hypot(vx, vy) || 1;
-    const leve = clamp01((-vy / lv) * 1.6 - .2), profilF = clamp01((Math.abs(Math.sin(vueCourante * DEG)) - .45) * 6);
-    const sens = sw > .02 ? 1 : sw < -.02 ? -1 : 1, versCam = Math.cos(vueCourante * DEG) < 0 ? -1 : 1;
-    deplacer(ch, `translate(${r1(m.W.x)} ${r1(m.W.y + 2)})`);
-    const pFace = q1(ch, "vue-face"), pProfil = q1(ch, "vue-profil"), pSemelle = q1(ch, "vue-semelle"), contact = q1(ch, "contact");
-    poser(pFace, "opacity", r3((1 - profilF) * (1 - leve)));
-    poser(q1(pFace, "devant"), "opacity", versCam > 0 ? 1 : 0);
-    poser(q1(pFace, "talon"), "opacity", versCam > 0 ? 0 : 1);
-    poser(pProfil, "opacity", r3(profilF * (1 - leve)));
-    deplacer(pProfil, `scale(${r3(sens * (.6 + .4 * profilF))} 1) rotate(${r1(Math.atan2(vx * sens, -vy) / DEG * .25)})`);
-    // tibia replié vers l'arrière : le chausson passe derrière la cuisse et dépasse sur le côté
-    const replie = clamp01((1 - ft) * 2.2), dehors = (c === "g" ? -1 : 1) * replie * 13;
-    if (replie > .3) {
-      if (g.firstElementChild !== ch) g.prepend(ch);
-    } else if (g.lastElementChild !== ch) g.append(ch);
-    poser(pSemelle, "opacity", r3(Math.pow(leve, .8)));
-    deplacer(pSemelle, `translate(${r1(dehors)} ${r1(-3 * leve + replie * 2)}) rotate(${r1(-dehors * 1.8)}) scale(${r3(.5 + .25 * leve)} ${r3(Math.max(.05, leve * .8))})`);
+    const ch = n(`chaussure-${c}`), profilF = clamp01((Math.abs(Math.sin(vueCourante * DEG)) - .45) * 6), versCam = Math.cos(vueCourante * DEG) < 0 ? -1 : 1;
+    const { face, leve, sens } = placerLaChaussure(g, ch, m, { cote: c, tibia: ft, sw, profil: profilF, inclinaisonDuProfil: inclinaisonDuProfilDeLeo });
+    poser(q1(face, "devant"), "opacity", versCam > 0 ? 1 : 0);
+    poser(q1(face, "talon"), "opacity", versCam > 0 ? 0 : 1);
+    const contact = q1(ch, "contact");
     poser(contact, "opacity", r3((1 - leve) * .25));
     deplacer(contact, `translate(${r1(profilF * sens * 5)} 12) scale(${r3(1 + profilF * .5)} 1)`);
   }
