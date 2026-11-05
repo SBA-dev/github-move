@@ -31,3 +31,10 @@ export function sceneDeReponseFausse(
   if (!laScenePeutSeJouer(faits)) return undefined;
   return SCENES_DE_REPONSE_FAUSSE[universDe(cleUnivers).cle];
 }
+
+export function sceneJoueeDansLaSeanceApres(
+  dejaJouee: boolean,
+  scene: SceneDeReponseFausse | undefined,
+): boolean {
+  return dejaJouee || scene !== undefined;
+}
