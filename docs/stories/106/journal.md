@@ -367,3 +367,4 @@ Livraison **106g** : moment « matière réussie » à la fin de la séance. Bra
 | Verrous | base (21:16 → 23:40 UTC) |
 | Méthode | dessin des scènes et planche faits pendant l'attente de 106g, sans toucher ses fichiers ; domaine et câblage seulement après son merge. Leçon : vérifier le cri de victoire et la palette des planches avant de les montrer ; les séances courtes des scénarios ont révélé une course préexistante entre la lecture des étoiles d'avant et la fin de la séance |
 | Tokens | relevés par le responsable |
+- 23:30 UTC : la PR #169 est passée en « prête » après deux essais. La route REST `ccr/ready_for_review` renvoyait 503, et l'outil MCP échouait (le GraphQL n'est pas disponible depuis les sessions). En attente de l'autorisation de merge.
