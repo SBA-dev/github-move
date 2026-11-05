@@ -537,6 +537,98 @@ Reco : **A**. Dans les deux cas, 106e ne touche pas `AgentMax.tsx`.
 
 Aucune question ouverte pour 106e.
 
+## Livraison 106g : matière réussie
+
+Le moment « matière réussie » à la fin de la séance (106.4 A, 106.5, 106.7). Aucun agrégat, aucun événement, aucune migration, aucune Edge Function, aucune donnée d'enfant de plus. Apprentissage publie une lecture pure ; Motivation lit un fait de plus ; le front branche la célébration de l'univers sur l'écran de fin de la séance. Les scénarios `@livraison-106g` de `features/106-celebration-de-l-univers.feature` sont déjà validés.
+
+### Apprentissage : `matiereReussieParLaSeance`
+
+- `matiereReussieParLaSeance(avant: EntreesDuParcours, apres: EntreesDuParcours, matiere: Matiere): boolean`, dans `apprentissage/domain/matiere-reussie-par-la-seance.ts`, exportée par `apprentissage/domain/index.ts`. Vraie quand `matiereReussieDuNiveau(avant, matiere)` est fausse et `matiereReussieDuNiveau(apres, matiere)` vraie.
+- **La règle de réussite d'une matière reste à un seul endroit** : `matiereReussieDuNiveau` (`toutes-les-lecons.ts`, #26, 26.18). La nouvelle lecture l'appelle sans la réécrire. `matiereReussieDuNiveau` reste où elle est et n'est pas exportée.
+- `matiere` est la matière de la leçon de la séance : seule elle peut changer. Une séance d'une leçon d'une autre classe ou d'une leçon personnelle ne change aucune leçon de la classe dans le parcours, donc rend `false`.
+- Les leçons réussies au test de départ comptent, avant comme après (même `EntreesDuParcours` que le parcours). Une matière rendue réussie par le test de départ lui-même n'est fêtée par aucune séance (27.4).
+- Tests : passage de faux à vrai ; déjà réussie avant (leçon rejouée) ; toujours pas réussie ; matière sans leçon dans la classe ; dernière leçon manquante réussie au test de départ dans `avant` ; séance d'une autre matière ; concordance avec le grand défi (sous-section suivante).
+
+### Rapprochement avec #137 (dette de `docs/stories/137/domain-model.md`, `defiOuvertParLaSeance`)
+
+Comparaison :
+- `matiereReussieDuNiveau(entrees, matiere)` = les leçons de la classe (`leconsDeLaClasse`) ne sont pas vides et toutes sont réussies (`estReussie`).
+- Grand défi ouvert = `grandDefiDeLaMatiere(parcours)` existe (les leçons du parcours ne sont pas vides), et `etatDuDefi` le dit `ouvert` : il n'est pas relevé et aucune de ses leçons ne reste à réussir. Or `parcoursDeLaMatiere(entrees, matiere).lecons` contient exactement `leconsDeLaClasse(entrees, matiere)`, et l'état d'une leçon y est réussi exactement quand `estReussie` est vrai.
+
+Conclusion : **pas de copie de la règle.** `etatDuDefi` applique la règle commune à tous les défis (« ouvert quand toutes ses leçons sont réussies », la même pour les parties du parcours). La définition du grand défi (« toutes les leçons du parcours de la classe ») fait que cette règle équivaut à « matière réussie, et grand défi pas encore relevé ». C'est ce que dit le glossaire (« Il s'ouvre quand la matière est réussie »). Les deux lectures ne diffèrent qu'au cas prévu par 100.15 : le grand défi est relevé, puis une leçon est ajoutée à la bibliothèque. La matière redevient réussie à la séance qui réussit cette leçon, mais le grand défi reste relevé et ne s'ouvre pas (voir 106.45).
+
+Recommandation : **aucun refactor de production.** Brancher `defiOuvertParLaSeance` sur `matiereReussieDuNiveau` obligerait à changer sa signature (`Parcours` → `EntreesDuParcours`), donc le front (`useDefiOuvertParLaSeance`) et les tests de #137. L'autre voie, réécrire la règle sur `Parcours`, en ferait une deuxième version. Les deux voies prennent un risque sans rien changer au comportement. À la place, **un test de concordance** dans `matiere-reussie-par-la-seance_test.ts`, avec les mêmes entrées avant et après :
+- quand `defiOuvertParLaSeance` rend le grand défi, `matiereReussieParLaSeance` est vraie ;
+- quand `matiereReussieParLaSeance` est vraie et que le grand défi n'est pas relevé, `defiOuvertParLaSeance` rend le grand défi ;
+- grand défi déjà relevé : la matière réussie par la séance n'ouvre rien.
+
+Un écart futur entre les deux règles fera échouer ce test. Le comportement de #137 ne change pas. Avec ce test, la dette de #137 est réglée : la ligne de `docs/stories/137/domain-model.md` peut renvoyer ici.
+
+### Motivation : le fait et le moment
+
+- `FaitsDeLaFinPourLaCelebration` gagne **`matiereReussieParLaSeance: boolean`, obligatoire**, comme `defiRelevePourLaPremiereFois`. Un champ facultatif ajouterait un troisième état (« non dit ») qu'aucune fin n'a. Avec un champ obligatoire, chaque fin dit ce qu'elle sait. `FinDuDefi` passe `matiereReussieParLaSeance: false` : la séance de défi ne donne aucune étoile, donc aucune leçon réussie (100.13). L'écran de fin de la séance passe `defiRelevePourLaPremiereFois: false`.
+- `momentDeCelebrationDeLaFin` rend `"defiReleve"` si le défi est relevé pour la première fois, sinon `"matiereReussie"` si la matière est réussie par la séance, sinon `undefined`. Les deux faits ne sont jamais vrais ensemble : ils viennent de deux fins différentes.
+- **106.7 n'est pas préparé** (YAGNI) : `tenueRecue` n'est pas encore un fait de `FaitsDeLaFinPourLaCelebration`. 106h l'ajoutera, avec le test « `matiereReussie` passe avant `tenueRecue` ». Le scénario `@hors-106a` qui couvre ce cas reste exclu.
+- `celebrationDeLaFin` ne change pas : un univers sans célébration (Pompiers tant que 106f n'est pas mergée) rend `commune` (106.18).
+
+### Annonce « Matière réussie ! »
+
+- Le texte vit dans Motivation, comme les titres des autres annonces de la fin (`titreDuDefiReleve`, `titreDuGrandDefiReleve` dans `paroles-du-defi.ts`, `titreDeLAnnonceDuBadge`) : **`titreDeLaMatiereReussie()`** → « Matière réussie ! », dans `moment-de-celebration.ts`, exportée par `index.ts`. Le front n'écrit jamais ce texte.
+- Elle dépend du **fait**, pas de la célébration : elle est affichée dès que la matière est réussie par la séance, même dans un univers sans célébration, où la fin garde les confettis (invariant 1 ; scénario Pompiers). Elle n'est donc pas portée par `CelebrationDeLUnivers`.
+- Le front l'affiche dans **une seule** zone `role="status"` de l'écran de fin, vide sinon. Le dessin et le cri de victoire restent `aria-hidden` (invariant 8). Les annonces des autres nouveautés (cabane, tenue, badge, épisode, quête, défi ouvert) gardent leur propre zone. Elles ne font pas partie de la célébration.
+- Aucune parole nouvelle : le personnage guide garde sa phrase de fin. Quand le grand défi s'ouvre, il dit déjà « Tu as réussi toutes les leçons de … Le grand défi t'attend ! » (#137). Seule l'annonce change (106.5).
+
+### Son de la fin
+
+- La musique de la célébration **remplace le son de la fin** (« grande victoire » ou « séance terminée »), un seul son de fin (106.12, invariant 9). La musique est encore « grande victoire » pour tous les univers (106.27).
+- La règle va dans le domaine, pas dans React : `FaitsDeLaFin` (`effets-sonores.ts`) gagne `musiqueDeLaCelebration: EffetSonore | undefined`. Quand elle est présente, `effetsSonoresDeLaFin` la met à la place du premier son. La « découverte » des nouveautés suit 106.46. Pour la passer à `direLaFin`, `NouveautesDeFin` (front) porte la musique de la célébration tirée par l'écran de fin.
+- Célébration commune : les sons de #97 ne changent pas.
+- Dette notée sans la traiter : `FinDuDefi` choisit encore entre la musique et l'effet de l'`IssueDuDefi` dans le composant (106a). Il pourra reprendre la même règle plus tard.
+
+### Zone des nouveautés : ce qui reste affiché, et l'ordre
+
+**Tout reste affiché.** La célébration remplace seulement les confettis (invariant 2), jamais une annonce. Une même séance peut rendre la matière réussie et aussi ouvrir le grand défi (presque toujours ensemble), donner un objet de la cabane, une tenue ou un badge, ouvrir un épisode, accomplir la quête. Ordre recommandé sur l'écran de fin :
+1. la scène de la célébration de l'univers, à la place des confettis ;
+2. les étoiles gagnées, puis **« Matière réussie ! »** ;
+3. les annonces actuelles, dans leur ordre actuel : objet de la cabane, tenue (« Coach Léo a reçu une écharpe rayée ! » vient après « Matière réussie ! », comme dans le scénario 106h), épisode, badge, quête, scores de fluence, puis « Le grand défi des sciences est ouvert ! » ;
+4. « Ensuite », puis les boutons (« Relever le défi » compris), utilisables dès la première image (invariant 6).
+
+### Ce qui reste dans `src/` (aucune règle)
+
+- **Lecture du fait** : un crochet du front calcule `matiereReussieParLaSeance` à partir des mêmes entrées que `useDefiOuvertParLaSeance` : meilleures étoiles d'avant la séance, étoiles gagnées, bibliothèque, test de départ. Le chargement de ces entrées est mis en commun (refactor du front) plutôt que fait deux fois. Si une lecture échoue ou si la bibliothèque manque, le fait vaut `false` et la fin garde la célébration commune, comme pour le défi ouvert.
+- **`EcranDeFin.tsx`** appelle `celebrationDeLaFin({ defiRelevePourLaPremiereFois: false, matiereReussieParLaSeance }, univers.cle, hasardDuNavigateur)` **une seule fois**, quand le fait est connu, et garde le résultat : la variante n'est tirée qu'une fois par fin. `univers` → `SceneDeCelebration` ; `commune` → `Confettis`. Le moment d'affichage reste celui des confettis : après les étoiles, et une fois le fait connu. Les confettis attendent donc le fait, pour ne jamais être joués avec la scène.
+- **Le personnage guide n'apparaît qu'une fois (106.28 « cacher »)** : à la fin de la séance, il est dessiné par `EcranDeSeance.tsx` (`PersonnageGuide`, dans `guide-et-parole`), au-dessus de l'écran de fin. Quand la célébration est `univers`, ce dessin est caché pendant toute la fin (la scène garde son image finale) et la bulle reste. C'est la même chose que `sansPersonnage` de `ParoleDuGuide` dans `FinDuDefi`. L'écran de fin le signale à `EcranDeSeance` (rappel ou état remonté, au choix de l'implémenteur).
+- **Révision et test de départ** : `FinDeLaRevision.tsx` et `FinDuTestDeDepart.tsx` ne changent pas. Ils ne déclenchent aucun moment (27.4).
+- À 360 px, la scène ajoutée aux nouveautés ne doit pas empêcher d'atteindre les boutons. Le focus reste sur « Accueil », comme aujourd'hui.
+
+### Emplacement
+
+```
+supabase/functions/_shared/apprentissage/domain/
+  matiere-reussie-par-la-seance.ts        # matiereReussieParLaSeance (appelle matiereReussieDuNiveau)
+  matiere-reussie-par-la-seance_test.ts   # dont la concordance avec defiOuvertParLaSeance
+  index.ts                                # export
+supabase/functions/_shared/motivation/domain/
+  moment-de-celebration.ts                # matiereReussieParLaSeance dans les faits, titreDeLaMatiereReussie
+  moment-de-celebration_test.ts
+  celebration-de-la-fin_test.ts           # matière réussie : Sports → univers, pompier → commune
+  effets-sonores.ts / effets-sonores_test.ts   # musiqueDeLaCelebration
+  index.ts
+src/defis/FinDuDefi.tsx                   # matiereReussieParLaSeance: false
+src/seance/fin-de-seance/                 # EcranDeFin, crochet du fait, NouveautesDeFin, effets-de-la-fin
+src/seance/EcranDeSeance.tsx              # personnage guide caché pendant la célébration
+```
+
+Glossaire et context map : rien de nouveau. La note « Apprentissage publie une lecture pure de plus, la matière réussie par la séance (#106, 106g) » est déjà dans la context map.
+
+### Questions
+
+**106.44 Le nom « Matière réussie » est-il validé ?** Le glossaire le marque encore `(à valider)` (#26), alors que 106.5 en fait le texte d'une annonce montrée à l'enfant (« Matière réussie ! »). Reco : **oui**, on retire « (à valider) » de la ligne du glossaire, sans changer sa définition.
+
+**106.45 Matière réussie une seconde fois.** Après l'ajout d'une leçon à la bibliothèque, une matière déjà réussie ne l'est plus. Elle redevient réussie à la séance qui réussit la nouvelle leçon. Rien n'est enregistré (invariant 11), donc cette séance rend `matiereReussieParLaSeance` vraie. Exemple : Léa a réussi les 3 leçons de sciences du CE1 et relevé le grand défi ; une 4e leçon arrive ; Léa la réussit. Reco : **oui, on fête** la célébration de l'univers et « Matière réussie ! ». C'est rare, l'enfant a vraiment tout réussi à nouveau, et ne pas fêter demanderait d'enregistrer les matières déjà fêtées. Le grand défi, lui, reste relevé et ne s'ouvre pas (100.15).
+
+**106.46 La « découverte » avec la musique.** Aujourd'hui, une fin qui donne un objet de la cabane, une tenue ou un épisode joue « grande victoire » (ou « séance terminée »), puis « découverte », puis la parole. Quand la musique de la célébration remplace le premier son, garde-t-on « découverte » après elle ? Reco : **oui**. « Découverte » annonce des nouveautés, et elles restent affichées. On a donc : la musique (3 s au plus), « découverte », puis la parole. Autre choix : la musique seule, pour un seul son en tout.
+
 ## Questions ouvertes
 
 Aucune question ouverte pour 106a. Toutes les questions sont **tranchées le 2026-11-02** par le PO (« 106 reco tout ») : la recommandation est retenue pour chacune.
