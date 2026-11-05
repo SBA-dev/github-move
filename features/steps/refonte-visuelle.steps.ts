@@ -415,12 +415,21 @@ const UNIVERS: Readonly<Record<string, string>> = {
 
 // --- Dessins validés des personnages guides
 
-const SIGNES_DU_DESSIN_VALIDE: Readonly<Record<string, { presents: string[]; absents: string[] }>> = {
+const SIGNES_DU_DESSIN_VALIDE: Readonly<
+  Record<
+    string,
+    { presents: string[]; absents: string[]; imbriques?: ReadonlyArray<readonly [conteneur: string, signe: string]> }
+  >
+> = {
   "Coach Léo": { presents: ["cheveux-courts", "maillot-bleu"], absents: ["casquette"] },
   "Lili": { presents: ["queue-de-cheval-haute", "justaucorps-violet", "tutu-rose"], absents: [] },
   "Noisette": { presents: ["ecureuil-rond", "queue-en-panache"], absents: [] },
   "Lumi": { presents: ["ailes", "tiare", "robe-rose-aux-genoux"], absents: [] },
-  "Agent Max": { presents: ["casquette-de-police", "etoile-doree", "chemise-bleue", "pantalon"], absents: [] },
+  "Agent Max": {
+    presents: ["casquette-de-police", "ecusson", "chemise-bleue", "pantalon"],
+    absents: ["etoile-doree"],
+    imbriques: [["casquette-de-police", "ecusson"], ["chemise-bleue", "ecusson"]],
+  },
 };
 
 async function verifierLeDessinValide(dessin: Locator, nom: string): Promise<void> {
@@ -432,6 +441,12 @@ async function verifierLeDessinValide(dessin: Locator, nom: string): Promise<voi
   }
   for (const signe of attendus.absents) {
     await expect(dessin.locator(`[data-signe="${signe}"]`), `signe « ${signe} » ne doit pas être dessiné chez ${nom}`).toHaveCount(0);
+  }
+  for (const [conteneur, signe] of attendus.imbriques ?? []) {
+    await expect(
+      dessin.locator(`[data-signe="${conteneur}"] [data-signe="${signe}"]`),
+      `signe « ${signe} » attendu sur « ${conteneur} » de ${nom}`,
+    ).not.toHaveCount(0);
   }
 }
 
