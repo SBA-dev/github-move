@@ -35,6 +35,8 @@ export function useMemorisation(
 ) {
   const [versLu, setVersLu] = useState<VersLu | undefined>();
   const motsCachesAnnonces = useRef(false);
+  /** Vrai quand la félicitation du dernier vers est finie et que les mots cachés sont annoncés. */
+  const [felicitationDuDernierVersFinie, setFelicitationDuDernierVersFinie] = useState(false);
   const temps = useRef<{ readonly position: number; readonly temps: TempsDeLaMemorisation } | undefined>(undefined);
 
   const changerDeTemps = useCallback((position: number, nouveau: TempsDeLaMemorisation) => {
@@ -85,6 +87,7 @@ export function useMemorisation(
     if (!courant) return;
     sequence.current++;
     motsCachesAnnonces.current = false;
+    setFelicitationDuDernierVersFinie(false);
     changerDeTemps(courant.position, "entrainement");
     await direLaConsigneDeLOrdre(courant.exercice);
   }, [exerciceEnCours, sequence, changerDeTemps, direLaConsigneDeLOrdre]);
@@ -96,6 +99,7 @@ export function useMemorisation(
     const enEntrainement = temps.current?.position === courant?.position && temps.current?.temps === "entrainement";
     if (!courant || !motsCaches || !enEntrainement || motsCachesAnnonces.current) return;
     motsCachesAnnonces.current = true;
+    setFelicitationDuDernierVersFinie(true);
     const numero = ++sequence.current;
     const { consigne } = PlanDeMemorisation.de(courant.exercice).motsCaches;
     if (await dire({ texte: consigne, nature: "consigne" })) await presenterUneQuestion(numero);
@@ -111,5 +115,5 @@ export function useMemorisation(
   const tempsDe = (position: number): TempsDeLaMemorisation =>
     temps.current?.position === position ? temps.current.temps : "ecoute";
 
-  return { presenter: ecouter, jeSuisPret, apresUnPlacement, reecouter, versLu, tempsDe };
+  return { presenter: ecouter, jeSuisPret, apresUnPlacement, reecouter, versLu, tempsDe, felicitationDuDernierVersFinie };
 }

@@ -86,6 +86,15 @@ function texteATrous(page: Page) {
   return page.getByTestId("texte-a-trous");
 }
 
+/** Les mots cachés n'apparaissent qu'après la félicitation du dernier vers (#130) : on la termine, jusqu'à ce qu'ils soient là. */
+async function attendreLesMotsCaches(page: Page) {
+  await expect.poll(async () => {
+    if (await texteATrous(page).isVisible()) return true;
+    await terminerLaLecture(page);
+    return false;
+  }, { intervals: [100], timeout: 20_000 }).toBe(true);
+}
+
 // --- Lire la poésie : on termine la lecture en cours jusqu'à ce que ce qu'on attend soit là
 
 /**
@@ -201,7 +210,7 @@ async function poserLesVersDansLOrdre(page: Page, vers: readonly string[]) {
 export async function remettreTousLesVersDansLOrdre(page: Page) {
   await entrerDansLOrdreDesVers(page);
   await poserLesVersDansLOrdre(page, poesieJouee(page).vers);
-  await expect(texteATrous(page)).toBeVisible({ timeout: 10_000 });
+  await attendreLesMotsCaches(page);
 }
 
 // --- Poésies de test
@@ -280,11 +289,11 @@ When(/^Léa pose l'un ou l'autre des deux vers « ([^«»]+) »$/, async ({ page
 });
 
 When(/^l'entraînement des mots cachés commence$/, async ({ page }) => {
-  await expect(texteATrous(page)).toBeVisible({ timeout: 10_000 });
+  await attendreLesMotsCaches(page);
 });
 
 When(/^le trou du premier vers est mis en avant$/, async ({ page }) => {
-  await expect(texteATrous(page)).toBeVisible({ timeout: 10_000 });
+  await attendreLesMotsCaches(page);
   const premier = page.getByTestId("trou").first();
   await expect(premier).toHaveAttribute("data-etat", "en-cours");
   await expect(premier).toHaveAttribute("aria-current", "true");
@@ -376,12 +385,14 @@ Then(/^le vers prend la troisième place$/, async ({ page }) => {
 
 Then(/^Léa voit les vers joints par « \/ », avec un trou dans chaque vers$/, async ({ page }) => {
   const { vers } = poesieJouee(page);
+  await attendreLesMotsCaches(page);
   await expect(texteATrous(page)).toHaveText(vers.map(versATrou).join(" / "));
   await expect(page.getByTestId("trou")).toHaveCount(vers.length);
 });
 
 Then(/^le vers « ([^«»]+) » devient « ([^«»]+) »$/, async ({ page }, vers: string, versAvecTrou: string) => {
   expect(poesieJouee(page).vers).toContain(vers);
+  await attendreLesMotsCaches(page);
   await expect(texteATrous(page)).toContainText(versAvecTrou);
 });
 
@@ -409,6 +420,7 @@ Then(/^le vers « ([^«»]+) » n'a pas de trou$/, async ({ page }, vers: string
   const poesieDeTestJouee = poesieJouee(page).vers;
   expect(poesieDeTestJouee).toContain(vers);
   expect(motCacheDe(vers)).toBeUndefined();
+  await attendreLesMotsCaches(page);
   await expect(texteATrous(page)).toHaveText(poesieDeTestJouee.map(versATrou).join(" / "));
   await expect(page.getByTestId("trou")).toHaveCount(motsCachesDe(poesieDeTestJouee).length);
 });

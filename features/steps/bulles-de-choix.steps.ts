@@ -730,7 +730,7 @@ Then(/^il brille de la même façon que dans l'univers « Animaux de la forêt �
 
 // --- Étapes de #12 et #17 qui ne tiennent pas avec le vrai profil de Léa (réservées à @issue-126, le sens est le même)
 
-Given(/^Paul a réglé « mode dys » sur « oui » pour Léa$/, { tags: "@issue-126" }, async ({ famille, page }) => {
+Given(/^Paul a réglé « mode dys » sur « oui » pour Léa$/, { tags: "@issue-126 or @issue-130" }, async ({ famille, page }) => {
   await modifierLeProfil(famille, "Léa", { reglages: { modeDys: true } });
   // Léa joue déjà avec son vrai profil : elle se choisit de nouveau pour que le réglage s'applique.
   await rechoisirLeaApresUnReglage(page);

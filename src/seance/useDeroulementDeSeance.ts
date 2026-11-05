@@ -313,9 +313,12 @@ export function useDeroulementDeSeance(
   );
 
   const { apresUnPlacement } = memorisation;
+  const dernierPlacement = useRef(0);
+  /** Seul le dernier placement lance la suite : un placement plus ancien, dont la parole vient d'être coupée par le suivant, ne passe pas devant la félicitation. */
   const placer = useCallback(async (etiquette: string, groupe?: string) => {
+    const monPlacement = ++dernierPlacement.current;
     await placerUneEtiquette(etiquette, groupe, enchainerSurLExercice);
-    await apresUnPlacement();
+    if (monPlacement === dernierPlacement.current) await apresUnPlacement();
   }, [placerUneEtiquette, enchainerSurLExercice, apresUnPlacement]);
 
   const reecouter = useCallback(() => {
@@ -399,6 +402,7 @@ export function useDeroulementDeSeance(
     effacer: dictee.effacer,
     versLu: memorisation.versLu,
     tempsDeLaMemorisation: memorisation.tempsDe,
+    felicitationDuDernierVersFinie: memorisation.felicitationDuDernierVersFinie,
     jeSuisPret: memorisation.jeSuisPret,
     jeNeSaisPasEnDictee: dictee.jeNeSaisPas,
     taper,
