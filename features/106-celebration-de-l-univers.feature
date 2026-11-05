@@ -587,11 +587,13 @@ Fonctionnalité: Une célébration propre à chaque univers
       Quand Léa réussit la dernière question de la séance
       Alors Coach Léo joue la célébration de l'univers « Sports » en portant « un nœud papillon »
       Et la fin de la séance annonce pour Coach Léo « Coach Léo a reçu un nœud papillon ! »
+      # Réponse 106.50 : le personnage guide n'apparaît qu'une fois, dans la scène
+      Mais pendant la célébration, l'encart « Pour Coach Léo » ne montre pas le petit dessin de Coach Léo
 
   Règle: Une seule célébration de l'univers par fin : quand la séance rend aussi une matière réussie, c'est la célébration de la matière, et la tenue reçue reste annoncée (106h)
 
-    # Question 106.47 : tenue montrée dans la scène quand la matière réussie et la tenue reçue arrivent ensemble
-    @livraison-106h @a-valider
+    # Réponse 106.47 : la scène de la matière réussie montre la tenue reçue à la même fin
+    @livraison-106h
     Scénario: Une séance qui rend les sciences réussies et fait recevoir une écharpe rayée ne joue qu'une célébration de l'univers
       Étant donné que Léa a pour meilleures étoiles :
         | leçon             | étoiles |
@@ -633,8 +635,8 @@ Fonctionnalité: Une célébration propre à chaque univers
       Et dans l'image fixe, Coach Léo porte « une écharpe rayée »
       Et aucun confetti ne tombe
 
-    # Question 106.48 : annonce du moment « tenue reçue » pour les lecteurs d'écran
-    @livraison-106h @a-valider
+    # Réponse 106.48 : seule l'annonce de #102, sans titre nouveau, sans lire le cri de victoire
+    @livraison-106h
     Scénario: Au moment « tenue reçue », les lecteurs d'écran annoncent une seule fois la tenue reçue, sans lire « BUT ! »
       Étant donné que Léa a gagné 4 étoiles en tout
       Et que Léa joue la séance complète de la leçon « Maths 1 »
