@@ -5,6 +5,7 @@ import {
   celebrationDeLaFin,
   defiReleveParLaSeance,
   parolesDeFinDuDefiReleve,
+  tenueDeLaCelebrationDeLUnivers,
   type Univers,
 } from "@domain/motivation";
 import { Confettis } from "../celebration/index.ts";
@@ -13,8 +14,9 @@ import { retenirLesQuestionsRatees } from "../revision/copie-de-la-file-sur-l-ap
 import type { Personnage } from "../revision/useDeroulementDeRevision.ts";
 import { messageDeSauvegarde } from "../seance/fin-de-seance/useSauvegardeDeLaSeance.ts";
 import { jourDuNavigateur } from "../seance/jour-du-navigateur.ts";
+import { useTenuePortee } from "../tenue/index.ts";
 import { ParoleDuGuide } from "../test-de-depart/ParoleDuGuide.tsx";
-import { SceneDeCelebration } from "../univers/celebrations/index.ts";
+import { cleDeTenueDeLaScene, SceneDeCelebration } from "../univers/celebrations/index.ts";
 import { defisRelevesDeLAppareil, retenirLesDefisReleves } from "./defis-releves-sur-l-appareil.ts";
 import { sauvegarderLeDefi } from "./sauvegarde-du-defi.ts";
 
@@ -46,6 +48,7 @@ export function FinDuDefi({ seance, prenom, personnage, univers, relevesAvant, o
   const [releve, setReleve] = useState<DefiReleve | undefined>();
   const [message, setMessage] = useState<string | undefined>();
   const parcours = useRef<HTMLButtonElement>(null);
+  const [tenuePortee] = useTenuePortee(seance.enfant);
 
   useEffect(() => {
     if (lancee.current) return;
@@ -94,7 +97,10 @@ export function FinDuDefi({ seance, prenom, personnage, univers, relevesAvant, o
   return (
     <div className="fin-de-seance fin-du-defi" data-testid="fin-du-defi">
       {celebration?.sorte === "commune" && <Confettis />}
-      {celebration?.sorte === "univers" && <SceneDeCelebration celebration={celebration.celebration} />}
+      {celebration?.sorte === "univers" && <SceneDeCelebration
+          celebration={celebration.celebration}
+          tenue={cleDeTenueDeLaScene(tenueDeLaCelebrationDeLUnivers({ defiRelevePourLaPremiereFois: true, matiereReussieParLaSeance: false, tenueRecue: undefined }, tenuePortee))}
+        />}
       <ParoleDuGuide
         personnage={personnage}
         univers={univers}
