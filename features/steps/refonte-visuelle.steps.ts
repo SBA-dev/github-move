@@ -424,7 +424,11 @@ const SIGNES_DU_DESSIN_VALIDE: Readonly<
   "Lili": { presents: ["queue-de-cheval-haute", "justaucorps-violet", "tutu-rose"], absents: [] },
   "Noisette": { presents: ["ecureuil-rond", "queue-en-panache"], absents: [] },
   "Lumi": { presents: ["ailes", "tiare", "robe-rose-aux-genoux"], absents: [] },
-  "Agent Max": { presents: ["casquette-de-police", "etoile-doree", "chemise-bleue", "pantalon"], absents: [] },
+  "Agent Max": {
+    presents: ["casquette-de-police", "ecusson", "chemise-bleue", "pantalon"],
+    absents: ["etoile-doree"],
+    imbriques: [["casquette-de-police", "ecusson"], ["chemise-bleue", "ecusson"]],
+  },
   "Capitaine Sam": {
     presents: ["casque-de-pompier", "ecusson", "goutte-d-eau", "veste-rouge", "bandes", "pantalon"],
     absents: ["etoile", "etoile-doree"],
