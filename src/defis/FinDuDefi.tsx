@@ -62,7 +62,7 @@ export function FinDuDefi({ seance, prenom, personnage, univers, relevesAvant, o
         setReleve(relevee);
         const issueDuDefi = defiReleveParLaSeance(avant, relevee);
         setCelebration(
-          celebrationDeLaFin({ defiRelevePourLaPremiereFois: issueDuDefi.annonce !== undefined }, univers.cle, hasardDuNavigateur),
+          celebrationDeLaFin({ defiRelevePourLaPremiereFois: issueDuDefi.annonce !== undefined, matiereReussieParLaSeance: false }, univers.cle, hasardDuNavigateur),
         );
         setIssue(issueDuDefi);
       });
