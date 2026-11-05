@@ -4,6 +4,7 @@ import type { Hasard } from "./hasard.ts";
 import { tirerDans } from "./paroles.ts";
 import type { CleUnivers } from "./univers.ts";
 
+/** Un univers ajouté à `CleUnivers` sans célébration ne compile pas. */
 const CLES_DE_VARIANTE = {
   sports: ["glissade", "avion", "danse"],
   danse: ["jete", "ruban", "sauts"],
@@ -11,9 +12,9 @@ const CLES_DE_VARIANTE = {
   princesse: ["arc", "envol", "signes"],
   police: ["orchestre", "trottinette", "danse"],
   pompier: ["cloche", "arc", "pluie"],
-} as const;
+} as const satisfies Record<CleUnivers, readonly string[]>;
 
-export type UniversCelebre = keyof typeof CLES_DE_VARIANTE;
+export type UniversCelebre = CleUnivers;
 
 export type VarianteDe<U extends UniversCelebre> = (typeof CLES_DE_VARIANTE)[U][number];
 
@@ -56,14 +57,6 @@ const CELEBRANTS: {
   pompier: (moment, hasard) => celebrer("pompier", moment, hasard),
 };
 
-function estUniversCelebre(cle: CleUnivers): cle is UniversCelebre {
-  return Object.hasOwn(CELEBRANTS, cle);
-}
-
-export function celebrationDe(
-  moment: MomentDeCelebration,
-  cle: CleUnivers,
-  hasard: Hasard,
-): CelebrationDeLUnivers | undefined {
-  return estUniversCelebre(cle) ? CELEBRANTS[cle](moment, hasard) : undefined;
+export function celebrationDe(moment: MomentDeCelebration, cle: CleUnivers, hasard: Hasard): CelebrationDeLUnivers {
+  return CELEBRANTS[cle](moment, hasard);
 }
