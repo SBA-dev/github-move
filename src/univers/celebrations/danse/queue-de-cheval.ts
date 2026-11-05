@@ -1,6 +1,7 @@
 import { clamp01, DEG, lerp, r1, r3 } from "../commun/courbes.ts";
 import { deplacer, poser, trouver } from "../commun/dom.ts";
 import type { Point } from "../commun/membres.ts";
+import { au } from "../commun/tableaux.ts";
 import type { Pose } from "./poses.ts";
 
 const LONGUEURS = [18, 17, 16, 15, 14];
@@ -14,11 +15,6 @@ const lisse = (x: number, a: number, b: number) => {
   return u * u * (3 - 2 * u);
 };
 
-function au<T>(tableau: readonly T[], i: number): T {
-  const valeur = tableau[i];
-  if (valeur === undefined) throw new Error(`La queue de cheval n'a pas d'élément ${i}`);
-  return valeur;
-}
 
 /** Une courbe lisse qui passe entre les points : chaque point est un point de contrôle, la courbe va aux milieux. */
 function courbe(P: readonly Point[]): string {
