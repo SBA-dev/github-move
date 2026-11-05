@@ -9,8 +9,10 @@ Fonctionnalité: Une célébration propre à chaque univers
   elle ne change ni le défi relevé, ni les étoiles, ni la suite du parcours, et rien n'est enregistré.
   Cadrage validé par le PO le 2026-11-02 (« 106 reco tout » : toutes les recommandations des questions 106.1 à
   106.27, docs/stories/106/acceptance.md). Ce fichier couvre la livraison 106a (mécanisme, moment « défi relevé » la
-  première fois, univers « Sports » et sa musique). Les scénarios tagués @hors-106a décrivent les livraisons suivantes
-  (106b à 106h) : ils sont exclus de 106a et restent @a-valider jusqu'à leur livraison.
+  première fois, univers « Sports » et sa musique) et la livraison 106d (univers « Princesses et fées », scénarios
+  tagués @livraison-106d). Ce qui ne dépend pas de l'univers (toucher, clavier, Muet, espace parent, défi rejoué)
+  n'est décrit qu'une fois, avec Coach Léo. Les scénarios tagués @hors-106a décrivent les livraisons suivantes
+  (106b, 106c, puis 106e à 106h) : ils sont exclus et restent @a-valider jusqu'à leur livraison.
 
   Mots employés dans ces scénarios (validés, 106.1, 106.2 et 106.14) :
   - « la célébration de l'univers « Sports » » : Coach Léo marque un but, puis fait une des trois variantes de la
@@ -23,7 +25,16 @@ Fonctionnalité: Une célébration propre à chaque univers
     Le PO la choisira à l'écoute ; d'ici là, c'est « grande victoire », entendu une seule fois ;
   - « l'image fixe de la célébration » : la même scène, dans l'état final de la variante tirée, quand l'appareil
     demande des mouvements réduits (106.15) ; aucun confetti ne tombe, ni ceux de Coach Léo ni ceux de la
-    célébration commune (106.24).
+    célébration commune, et aucune des étincelles du jardin (106.24).
+  Mots employés pour la livraison 106d (Lumi) :
+  - « la célébration de l'univers « Princesses et fées » » : Lumi fait éclore une fleur magique d'un sort, puis fait
+    une des trois variantes de la célébration, tirée au hasard : « l'arc-en-ciel », « l'envol » ou « les chiffres et
+    les lettres » (noms fixés d'après la maquette validée, 106.26). Les étincelles et les pétales qui tombent sur le
+    jardin, appelés ici « les étincelles du jardin », font partie de sa célébration de l'univers, comme les confettis
+    de la scène de Coach Léo (106.24) ;
+  - « Magique ! » : le cri de victoire de l'univers « Princesses et fées », affiché et jamais lu ;
+  - « la musique de la célébration de Lumi » : l'effet sonore de sa célébration de l'univers, qui remplace
+    « grande victoire », comme celle de Coach Léo (106.12) ; d'ici le choix du PO, c'est « grande victoire ».
   Durées, pour l'implémentation et la review, jamais dans les étapes : 3 s au plus (106.9 B), boutons, clavier
   et annonce disponibles dès la première image.
 
@@ -128,7 +139,6 @@ Fonctionnalité: Une célébration propre à chaque univers
       Exemples:
         | univers             | personnage guide |
         | Animaux de la forêt | Noisette         |
-        | Princesses et fées  | Lumi             |
         | Police              | Agent Max        |
         | Pompiers            | Capitaine Sam    |
         | Danse               | Lili             |
@@ -203,7 +213,70 @@ Fonctionnalité: Une célébration propre à chaque univers
       Et Léa n'entend plus la musique de la célébration de Coach Léo
 
   # ---------------------------------------------------------------------------------------------------------
-  # Livraisons suivantes (106b à 106h), exclues de 106a. Leur mise en place sera reprise dans leur livraison.
+  # Livraison 106d : univers « Princesses et fées », Lumi.
+  # ---------------------------------------------------------------------------------------------------------
+
+  Règle: Dans l'univers « Princesses et fées », Lumi joue au premier défi relevé sa célébration de l'univers à la place de la célébration commune, avec les mêmes garanties que Coach Léo : image fixe en mouvements réduits, cri de victoire jamais lu, place tenue à 360 px (106d)
+
+    Contexte:
+      Étant donné que Paul a changé l'univers du profil enfant de Léa en « Princesses et fées »
+
+    @livraison-106d
+    Scénario: Au premier défi relevé dans l'univers « Princesses et fées », Lumi fait éclore une fleur magique d'un sort et le fête, puis félicite Léa
+      Étant donné que Léa a réussi les 5 premières leçons de maths du CE1
+      Et que Léa a commencé le défi 1 de maths
+      Quand Léa répond juste à toutes les questions du défi
+      Alors Lumi joue la célébration de l'univers « Princesses et fées » : elle fait éclore une fleur magique d'un sort, puis l'arc-en-ciel, l'envol ou les chiffres et les lettres
+      Et Léa lit « Magique ! »
+      Et Léa entend la musique de la célébration de Lumi, puis Lumi dit « Bravo Léa ! Tu as relevé le défi 1 ! »
+      Et Lumi n'apparaît qu'une fois, dans la célébration de l'univers, la bulle gardant ses paroles
+      Mais la célébration commune n'est pas jouée
+
+    @livraison-106d
+    Plan du Scénario: Le hasard ne choisit que la variante : avec « <variante> », Lumi fait toujours éclore une fleur magique d'un sort
+      Étant donné que Léa a réussi les 5 premières leçons de maths du CE1
+      Et que Léa a commencé le défi 1 de maths
+      Et que le hasard de la célébration de l'univers tire « <variante> »
+      Quand Léa répond juste à toutes les questions du défi
+      Alors Lumi fait éclore une fleur magique d'un sort, puis <variante>
+      Et la fin du défi annonce « Défi relevé ! »
+
+      Exemples:
+        | variante                     |
+        | l'arc-en-ciel                |
+        | l'envol                      |
+        | les chiffres et les lettres  |
+
+    @livraison-106d
+    Scénario: Avec les mouvements réduits, Léa voit l'image fixe de la célébration de l'univers « Princesses et fées », sans mouvement, ni confettis, ni étincelles du jardin
+      Étant donné que l'appareil demande des mouvements réduits
+      Et que Léa a réussi les 5 premières leçons de maths du CE1
+      Et que Léa a commencé le défi 1 de maths
+      Quand Léa répond juste à toutes les questions du défi
+      Alors Léa voit l'image fixe de la célébration de l'univers « Princesses et fées », avec « Magique ! », sans mouvement
+      Et la fin du défi annonce « Défi relevé ! », sans mouvement
+      Et aucun confetti ni étincelle du jardin ne tombe
+
+    @livraison-106d
+    Scénario: Dans l'univers « Princesses et fées », les lecteurs d'écran annoncent une seule fois « Défi relevé ! », sans lire « Magique ! »
+      Étant donné que Léa a réussi les 5 premières leçons de maths du CE1
+      Et que Léa a commencé le défi 1 de maths
+      Quand Léa répond juste à toutes les questions du défi
+      Alors les lecteurs d'écran annoncent une seule fois « Défi relevé ! »
+      Mais les lecteurs d'écran n'annoncent ni « Magique ! » ni le dessin de la célébration
+
+    @livraison-106d
+    Scénario: À 360 px, la célébration de l'univers « Princesses et fées » tient dans la largeur et ses boutons restent assez grands
+      Étant donné que l'écran de l'appareil mesure 360 px de large
+      Et que Léa a réussi les 5 premières leçons de maths du CE1
+      Et que Léa a commencé le défi 1 de maths
+      Quand Léa répond juste à toutes les questions du défi
+      Alors Léa lit « Magique ! »
+      Et la page tient dans la largeur de l'écran
+      Et « Mon parcours » et « Accueil » mesurent au moins 44 px de haut
+
+  # ---------------------------------------------------------------------------------------------------------
+  # Livraisons suivantes (106b, 106c, puis 106e à 106h), exclues. Leur mise en place sera reprise dans leur livraison.
   # ---------------------------------------------------------------------------------------------------------
 
   Règle: Chaque univers a sa célébration de l'univers, jouée par son personnage guide, avec son cri de victoire (106b à 106f)
@@ -222,7 +295,6 @@ Fonctionnalité: Une célébration propre à chaque univers
         | univers             | personnage guide | action                               | variantes                                              | cri                 |
         | Danse               | Lili             | elle entre en scène et fait une pirouette | le grand jeté, le ruban ou les sauts              | Bravo !             |
         | Animaux de la forêt | Noisette         | elle attrape une noisette dorée      | le jonglage, la noisette croquée ou les joues gonflées | Hourra !            |
-        | Princesses et fées  | Lumi             | un sort fait éclore une fleur        | l'arc-en-ciel, l'envol ou les signes                   | Magique !           |
         | Police              | Agent Max        | il retrouve un chiot perdu           | l'orchestre, la trottinette ou la danse                | Enquête résolue !   |
         | Pompiers            | Capitaine Sam    | le jet de sa lance dessine un arc-en-ciel | à dessiner et valider (106.16)                    | Mission accomplie ! |
 
