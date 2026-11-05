@@ -64,6 +64,26 @@ Les scénarios qui montrent Capitaine Sam sans inspecter son dessin, rejoués pa
 
 ## Questions ouvertes
 
+Aucune : les questions 161.1 à 161.5 sont tranchées (voir « Décisions »).
+
+## Décisions
+
+Réponse du PO du 2026-11-05, relayée par le responsable des équipes (https://github.com/SBA-dev/github-move/issues/161#issuecomment-6657390290), mot pour mot :
+
+> « Merge 158 ok 161 reco tout »
+
+Lecture : la reco est retenue pour chaque question de #161. Aucun effet sur le scénario modifié ni sur ce que vérifie le step.
+
+| Question | Décision |
+|---|---|
+| 161.1 : un écusson aussi sur la veste ? | Reco A : un seul écusson, sur le casque, comme la maquette validée. |
+| 161.2 : garde-t-on la lance d'eau ? | Reco A : pas de lance dans le dessin fixe, mains libres pour les tenues. La lance n'apparaît que dans la célébration. |
+| 161.3 : quelle tête pour chaque humeur ? | Reco A : content → « face » (sourire), reflechit → « concentration », applaudit → « joie ». Toujours de face et avec le casque. |
+| 161.4 : le casque garde-t-il sa crête ? | Reco A : la crête jaune est gardée, sans aucun signe. |
+| 161.5 : la planche avant/après du dessin fixe est-elle validée ? | Oui : planche `docs/stories/161/captures/` (commit `760efe7`) validée. |
+
+### Rappel des questions tranchées
+
 **161.1 : un écusson aussi sur la veste ?**
 La maquette de 106f ne met l'écusson que sur le casque : le torse porte la bande jaune, le liseré argent et la fermeture, sans écusson. Agent Max (#158) en porte deux (casquette et chemise).
 Reco A : un seul écusson, sur le casque, comme la maquette validée. Le dessin fixe et la célébration restent identiques. B : ajouter un écusson sur la veste, ce qui demande une nouvelle validation de la planche.
@@ -79,3 +99,6 @@ Reco A : content → face (sourire), reflechit → concentration (la bouche ondu
 **161.4 : le casque garde-t-il sa plaque verticale au-dessus de l'écusson ?**
 Sur la planche, une plaque jaune verticale monte au-dessus de l'écusson. C'est la crête du casque de pompier, ni flamme ni gyrophare.
 Reco A : la garder, comme la maquette validée. Elle ne porte aucun signe.
+
+**161.5 : la planche avant/après du dessin fixe est-elle validée ?**
+La planche `docs/stories/161/captures/` (commit `760efe7`) montre l'ancien dessin fixe de Capitaine Sam et le nouveau, dans ses trois humeurs, pour validation par le PO.
