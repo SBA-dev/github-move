@@ -17,3 +17,14 @@
 - Écart noté : l'esquisse nomme le signe du tutu `tutu-en-cloche`, l'acceptance attend `festons` dans `tutu-rose` : on suivra l'acceptance au GREEN.
 - Question ajoutée par l'orchestrateur : 168.6 (largeur du tutu, qui passe derrière les mains bras le long du corps).
 - CADRAGE PRÊT posté sur #168. En attente de l'annonce du responsable.
+
+## Étape 3 : TDD (2026-11-05 22:45 → 23:10 UTC)
+- Réponse du PO « 168 reco tout » (annonce [Responsable] sur #168, 22:43 UTC) : 168.1 à 168.6 A, planche validée. Notée dans `acceptance.md` (`55bf63a`).
+- RED : step `d4fcf83` (`e2e-tester`) : entrée "Lili" de `SIGNES_DU_DESSIN_VALIDE` (présents `frange-lisse` en plus, `festons` imbriqué dans `tutu-rose`, absents `etoile` et `etoile-doree`). Le dessin d'avant n'avait ni `frange-lisse` ni `festons`. tsc et bddgen verts, sans réseau.
+- GREEN : `097e224` (`implementer`) : `Lili.tsx` remplacé par le candidat validé, signe du tutu renommé `festons` ; rendu des 3 humeurs identique caractère pour caractère aux SVG de la planche (à l'attribut près).
+- REFACTOR : `ed9c5c2` : indentation, groupe vide et enveloppe inutile de la bouche retirés ; rendu inchangé.
+- Vérifications : tsc, build, deno test (2910 verts), lint.
+
+## Étape 4 : review (cycle 1)
+- APPROUVÉ, aucun bloquant (fidélité aux tracés de 106h recalculée au dixième ; règle absolue et règle de Lili respectées ; décision 0033 respectée). Non bloquants : (1) indentation de deux `</g>` (`Lili.tsx:98-99`), à reprendre à l'intégration de 106h ; (2) réponses du PO dans `acceptance.md` : fait (`55bf63a`) ; (3) journal : fait ici ; (4) à l'intégration de 106h, garder `ANCRAGES_DES_TENUES.danse` (mêmes valeurs) et rejouer les scénarios des tenues de l'univers Danse (#102).
+- En attente : merge de 106h, puis intégration de `main`, puis verrou base pour les E2E du périmètre.
