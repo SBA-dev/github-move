@@ -207,6 +207,65 @@ Glossaire : les termes célébration de l'univers, célébration commune, varian
 
 Chaque livraison est une issue que le PO crée.
 
+## Livraison 106c : Animaux de la forêt
+
+Noisette (« elle », 106.19), univers Animaux de la forêt, d'après la maquette validée `docs/maquettes/noisette-animaux.html` (README des maquettes, section Noisette). Aucun agrégat, aucun événement, aucune donnée d'enfant de plus : 106c ajoute l'entrée `animaux` aux structures posées par 106b (`VARIANTES_DES_UNIVERS`, donc `UniversCelebre`, `VarianteDe<"animaux">`, l'union `CelebrationDeLUnivers`, le catalogue des cris et des musiques et la table `CELEBRANTS`). Aucun type nouveau : la forme des clés de variante est celle de la sous-section « Clés de variante publiées par le domaine » de la livraison 106b.
+
+### Entrée du catalogue
+
+| Univers | Variantes | Cri de victoire | Musique |
+|---|---|---|---|
+| `animaux` | `jongle`, `mange`, `joues` | « Hourra ! » | `grandeVictoire`, en attendant le choix du PO (106.27) |
+
+L'action, toujours la même, est la noisette dorée qui tombe de l'arbre et que Noisette attrape. Elle n'est pas dans le domaine (affichage).
+
+### Noms en clair des variantes (106.26)
+
+| Clé | Ce que fait Noisette (maquette) | Libellé des scénarios |
+|---|---|---|
+| `jongle` | elle jongle avec trois noisettes | « le jonglage » |
+| `mange` | elle croque la noisette (petites miettes), puis se tapote le ventre | « la noisette croquée » |
+| `joues` | elle remplit ses joues de noisettes, fière, avec un clin d'œil | « les joues pleines » |
+
+« Les joues pleines » colle mieux à la maquette (bouton « C · Joues pleines ») que « les joues gonflées » : la ligne Animaux de la forêt de `features/106-celebration-de-l-univers.feature` devient « le jonglage, la noisette croquée ou les joues pleines ». C'est une précision faite d'après la maquette, et 106.26 la couvre déjà (comme « les petits sauts » en 106b). Ces libellés ne sont jamais montrés à l'enfant.
+
+### Feuilles de la forêt (application de 106.24)
+
+La maquette fait tomber des feuilles et de petites étoiles dorées (canvas « Feuilles et étoiles qui tombent »). Dans les scénarios, on les appelle **« les feuilles de la forêt »**. Elles font partie de la célébration de l'univers de Noisette, comme les confettis de Coach Léo et les pétales de la salle de Lili (106.24, invariant 2). Elles ne s'ajoutent jamais aux confettis de la célébration commune. En mouvements réduits, aucune ne tombe : on voit l'image fixe de l'état final de la variante, avec le cri de victoire et l'annonce (invariant 7). Les fleurs posées dans l'herbe font partie du décor et ne tombent pas.
+
+On applique aussi, sans question nouvelle :
+- « Chapitre réussi ! » et la phrase « Tu as réussi toutes les leçons de la Forêt des Savanturiers » de la maquette sont remplacés par l'annonce du moment (« Défi relevé ! ») ;
+- la maquette annonce « Hourra ! » avec le titre. Dans l'application, seul le moment est annoncé (invariant 8, 106.14) ;
+- toucher la scène passe l'animation dans la maquette. Dans l'application, un toucher hors des boutons ne fait rien (invariant 6, 106.10) ;
+- l'animation d'échec de la maquette (« toc ! », Noisette étourdie un instant) reste hors de #106 (106.20) ;
+- le personnage guide n'est pas montré deux fois pendant la célébration (106.28 « cacher ») ;
+- Noisette ne se retourne jamais : elle reste de face ou de trois-quarts face, comme dans la maquette.
+
+### Règle absolue de contenu pour Noisette (invariant 10)
+
+À toutes les tailles et sur l'image fixe :
+- **La noisette croquée** n'a rien de dégoûtant ni de moqueur. Noisette mâche bouche fermée ou avec un petit sourire. On ne détaille pas l'intérieur de la bouche et il n'y a pas de bave. Les miettes sont petites et dorées, et disparaissent vite. Rien de gourmand à l'excès ni de « goinfre ». Pas de bruit grossier : l'éclat qui accompagne la croquée est un petit trait lumineux, sans texte ni son de mastication.
+- **Les joues pleines** sont rondes et fières, jamais grotesques ni présentées comme ridicules. On ne se moque pas de Noisette, et elle ne se moque de personne.
+- **Le jonglage et la chute de la noisette** : aucune noisette ne blesse ni ne cogne Noisette pendant la célébration.
+- Aucun animal chassé, menacé ni blessé. Le décor de prairie, d'arbre et de ciel clair n'a rien d'effrayant (ni ombre menaçante, ni prédateur, ni orage). Pas de coffre.
+- Le front présente une **planche** (images clés des trois variantes et image fixe, à 360, 160 et 80 px, sur fond clair et sur fond sombre) que le PO valide avant le merge (98.28).
+
+### Ce qui reste dans `src/`
+
+- `src/univers/celebrations/animaux/` : la scène de Noisette (décor de prairie et d'arbre, poses, queue en panache, noisettes, miettes, feuilles de la forêt), portée depuis la maquette avec le moteur isolé (106.22). On réutilise les morceaux partagés que 106b a mis dans `src/univers/celebrations/commun/`. Le dessin fixe de référence est `src/univers/personnages/Noisette.tsx`.
+- **Tenue portée (106.23)** : la scène porte la tenue de Noisette. Dans le dessin fixe, les tenues de #102 (`echarpe-rayee`, `noeud-papillon`, `sac-a-dos-d-explorateur`, `bottes-de-pluie`) sont dessinées par `src/univers/personnages/tenues.tsx` : un dessin derrière et un dessin devant, placés sur l'`Ancrage` de Noisette (`cou`, `dos`, `pieds`). Dans la scène animée, ces points bougent avec le personnage articulé : la tenue suit le cou, le dos et les pieds de la pose courante, et passe derrière la queue en panache comme dans le dessin fixe. Les poses de la noisette croquée et des joues pleines ne cachent pas l'écharpe ni le nœud papillon de façon gênante (la planche le montre avec chaque tenue).
+- Les identifiants SVG sont préfixés `animaux-`, comme `sports-` et `danse-`.
+- `SceneDeCelebration.tsx` ajoute le cas `animaux` à son `switch (celebration.univers)`. La scène est **chargée à la demande** et reste dans le précache de la PWA (#8).
+- Documentation : le README des maquettes, section Noisette, passe de « il » à « elle » (106.19). Correction faite dans 106c.
+
+### Tests
+
+Le test « le premier défi relevé dans un univers pas encore livré garde la célébration commune » (`celebration-de-la-fin_test.ts`, 106b) prend `animaux` comme univers pas encore livré. En 106c, `animaux` est livré : le RED en prend un autre (`princesse`, par exemple). La boucle de `celebrations-des-univers_test.ts` sur les univers sans célébration perd aussi `animaux`.
+
+### Questions
+
+Aucune question nouvelle.
+
 ## Questions ouvertes
 
 Aucune question ouverte pour 106a. Toutes les questions sont **tranchées le 2026-11-02** par le PO (« 106 reco tout ») : la recommandation est retenue pour chacune.
