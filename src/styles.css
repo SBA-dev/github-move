@@ -1364,7 +1364,7 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 .parchemin .mot[data-prononce], .parchemin .un-vers[data-lu="true"] { background: var(--parchemin-surligne); color: var(--parchemin-texte); }
 /* Le vers lu reste surligné, sans gras : en gras, un vers long passerait sur deux lignes et le parchemin changerait de hauteur (#155.1). */
 .parchemin .un-vers[data-lu="true"] { font-weight: inherit; }
-/* Les mots du vers lu gardent la marge de leur surlignage sans élargir le vers : sinon, il passerait aussi sur deux lignes (#155). */
+/* Les mots du vers lu gardent la marge intérieure de leur surlignage sans élargir le vers : sinon, il passerait aussi sur deux lignes (#155). */
 .parchemin .un-vers .mot { margin-inline: -2px; }
 .phrase, .parchemin .un-vers { transition: opacity 0.3s ease; }
 .phrase[data-devoilee="non"], .un-vers[data-devoilee="non"] { opacity: 0; }
