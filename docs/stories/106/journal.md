@@ -249,3 +249,12 @@ Livraison **106e** : univers Police (Agent Max). Branche `feature/106e-celebrati
 | Verrous | base (10:48 → 11:25 UTC) |
 | Méthode | comme 106c : worktree local basé sur la branche de 106d (où Sports et Danse étaient déjà sur `commun/`), reporté par cherry-pick après le merge. Leçon : le report a coûté 4 délégations de résolution de conflits (test, code, steps, scénarios) ; un `pkill -f "playwright test"` pendant un run tue aussi le serveur du run suivant |
 | Tokens | relevés par le responsable |
+
+## 2026-11-05 (106g)
+
+Livraison **106g** : moment « matière réussie » à la fin de la séance. Branche `feature/106g-matiere-reussie`, partie de `main` (`e0d533f` : 106a à 106e, #155 et #158 mergées). Session `session_015z4jmNpBJSugNaG2jjcyUH`. Branche de base : `main`.
+106f (Pompiers) câble en parallèle dans `celebrations-des-univers` et le `.feature` de #106 : intégrer `main` après son merge, avant les E2E. Tant que 106f n'est pas mergée, Pompiers garde la célébration commune (106.18).
+
+- 12:05 UTC : démarrage. Cadrage de #106 déjà validé (« 106 reco tout », 106.28 « cacher », 106.31, 106.34 A / 106.35, 106.37 « garder », 106.38 A). Musique « grande victoire » (106.27 fermé). Aucun numéro de décision réservé.
+- Avancement publié sur #106 (commentaire 6657454000).
+- 12:10 UTC : modèle 106g (`domain-modeler`, avec le rapprochement de #137) et scénarios 106g (`po-acceptance`) lancés en parallèle.
