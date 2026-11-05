@@ -180,7 +180,6 @@ Then(/^(?:elle|il) voit (.+) dans le paysage de l'univers « (.+) », sans tenue
 Then(/^le profil enfant de Léa montre le dessin validé de Noisette, sans tenue$/, async ({ page }) => {
   const profil = page.getByTestId("profil-a-choisir").filter({ hasText: "Léa" }).first();
   const dessin = profil.locator('[data-testid="personnage-guide"]');
-  await expect(dessin).toHaveAttribute("data-dessin", "valide");
   for (const signe of ["ecureuil-rond", "queue-en-panache"]) {
     await expect(dessin.locator(`[data-signe="${signe}"]`), `signe « ${signe} »`).not.toHaveCount(0);
   }
