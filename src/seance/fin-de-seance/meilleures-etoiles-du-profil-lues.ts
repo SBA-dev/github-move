@@ -9,9 +9,10 @@ import { lireToutesLesMeilleuresEtoilesSiPossible } from "./lecture-des-meilleur
 /** Les meilleures étoiles du profil telles que la cabane et les badges les comptent ; `undefined` quand les étoiles du serveur ne peuvent pas être lues (sans réseau, ou lecture en échec). */
 export async function lireLesMeilleuresEtoilesDuProfilSiLisibles(profil: string): Promise<MeilleuresEtoilesDuProfil | undefined> {
   if (!reseauDisponible()) return undefined;
+  const gagneesAvantLAttente = etoilesGagneesPendantLUtilisation(profil);
   const duServeur = await lireToutesLesMeilleuresEtoilesSiPossible(profil);
   if (duServeur === undefined) return undefined;
-  const reunies = meilleuresEtoilesReunies(duServeur, etoilesGagneesPendantLUtilisation(profil));
+  const reunies = meilleuresEtoilesReunies(duServeur, gagneesAvantLAttente);
   return new Map([...reunies].map(([lecon, etoiles]) => [lecon, etoiles.nombre]));
 }
 
