@@ -33,7 +33,7 @@ import { normaliser, reappliquerLAppareil, scenario } from "./voix.steps.ts";
 type Univers = "sports" | "danse" | "animaux" | "princesse" | "police";
 
 const MUSIQUE = "grande victoire";
-// Le tirage de la variante est `floor(r * 3)` pour les deux univers : `hasard-fixe.ts` nomme les rangs 0, 1 et 2 « glissade »,
+// Le tirage de la variante est `floor(r * 3)` pour chacun des cinq univers : `hasard-fixe.ts` nomme les rangs 0, 1 et 2 « glissade »,
 // « avion » et « danse ». Chaque libellé de variante est rangé ici sous son rang, quel que soit l'univers.
 const RANG_DU_TIRAGE: Record<string, VarianteTiree> = {
   "la glissade à genoux": "glissade",
@@ -417,7 +417,7 @@ Then(
   /^Léa entend la musique de la célébration de Coach Léo, puis Coach Léo dit « Bravo Léa ! Tu as relevé le défi (\d+) ! »$/,
   async ({ page }, numero: string) => {
     await effetPuisParole(page, [MUSIQUE], "felicitation", true);
-    expect(normaliser((await bulle(page).textContent()) ?? "")).toBe(`Bravo Léa ! Tu as relevé le défi ${numero} !`);
+    await expect(bulle(page)).toHaveText(`Bravo Léa ! Tu as relevé le défi ${numero} !`);
   },
 );
 
@@ -425,7 +425,7 @@ Then(
   /^Léa entend la musique de la célébration de Lili, puis Lili dit « Bravo Léa ! Tu as relevé le défi (\d+) ! »$/,
   async ({ page }, numero: string) => {
     await effetPuisParole(page, [MUSIQUE], "felicitation", true);
-    expect(normaliser((await bulle(page).textContent()) ?? "")).toBe(`Bravo Léa ! Tu as relevé le défi ${numero} !`);
+    await expect(bulle(page)).toHaveText(`Bravo Léa ! Tu as relevé le défi ${numero} !`);
   },
 );
 
@@ -433,7 +433,7 @@ Then(
   /^Léa entend la musique de la célébration de Noisette, puis Noisette dit « Bravo Léa ! Tu as relevé le défi (\d+) ! »$/,
   async ({ page }, numero: string) => {
     await effetPuisParole(page, [MUSIQUE], "felicitation", true);
-    expect(normaliser((await bulle(page).textContent()) ?? "")).toBe(`Bravo Léa ! Tu as relevé le défi ${numero} !`);
+    await expect(bulle(page)).toHaveText(`Bravo Léa ! Tu as relevé le défi ${numero} !`);
   },
 );
 
@@ -441,7 +441,7 @@ Then(
   /^Léa entend la musique de la célébration de Lumi, puis Lumi dit « Bravo Léa ! Tu as relevé le défi (\d+) ! »$/,
   async ({ page }, numero: string) => {
     await effetPuisParole(page, [MUSIQUE], "felicitation", true);
-    expect(normaliser((await bulle(page).textContent()) ?? "")).toBe(`Bravo Léa ! Tu as relevé le défi ${numero} !`);
+    await expect(bulle(page)).toHaveText(`Bravo Léa ! Tu as relevé le défi ${numero} !`);
   },
 );
 
@@ -449,7 +449,7 @@ Then(
   /^Léa entend la musique de la célébration d'Agent Max, puis Agent Max dit « Bravo Léa ! Tu as relevé le défi (\d+) ! »$/,
   async ({ page }, numero: string) => {
     await effetPuisParole(page, [MUSIQUE], "felicitation", true);
-    expect(normaliser((await bulle(page).textContent()) ?? "")).toBe(`Bravo Léa ! Tu as relevé le défi ${numero} !`);
+    await expect(bulle(page)).toHaveText(`Bravo Léa ! Tu as relevé le défi ${numero} !`);
   },
 );
 
@@ -457,7 +457,7 @@ Then(
   /^Léa entend l'effet sonore « ([^«»]+) », puis (Coach Léo|Lumi|Agent Max|Capitaine Sam|Lili) dit « ([^«»]+) »$/,
   async ({ page }, effet: string, _personnage: string, texte: string) => {
     await effetPuisParole(page, [effet], "felicitation", true);
-    expect(normaliser((await bulle(page).textContent()) ?? "")).toBe(normaliser(texte));
+    await expect(bulle(page)).toHaveText(normaliser(texte));
   },
 );
 
