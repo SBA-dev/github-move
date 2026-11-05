@@ -34,9 +34,9 @@ Deno.test("le catalogue des scènes de réponse fausse ne contient encore aucun 
 });
 
 Deno.test("une scène de réponse fausse ne porte que l'univers", () => {
-  const scene: SceneDeReponseFausse = { univers: "sports" };
+  const scene = sceneDeReponseFausse(FAITS_NEUTRES, "sports");
 
-  assertEquals(Object.keys(scene), ["univers"]);
+  assertEquals(Object.keys(scene ?? {}), ["univers"]);
 });
 
 Deno.test("la première réponse fausse de la séance, dans l'univers Sports, joue la scène de Coach Léo", () => {
