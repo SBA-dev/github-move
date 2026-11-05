@@ -249,3 +249,8 @@ Livraison **106e** : univers Police (Agent Max). Branche `feature/106e-celebrati
 | Verrous | base (10:48 → 11:25 UTC) |
 | Méthode | comme 106c : worktree local basé sur la branche de 106d (où Sports et Danse étaient déjà sur `commun/`), reporté par cherry-pick après le merge. Leçon : le report a coûté 4 délégations de résolution de conflits (test, code, steps, scénarios) ; un `pkill -f "playwright test"` pendant un run tue aussi le serveur du run suivant |
 | Tokens | relevés par le responsable |
+
+## Livraison 106h : danses de victoire et tenue portée dans les scènes
+
+- 2026-11-05 ~18:30 UTC : équipe 106h lancée par le responsable (« graphe 106h »). Base `main` `f4e44d4` (106a à 106e, #155, #158, #161). Branche `feature/106h-danses-de-victoire`, base `main`. Dernière livraison de #106.
+- Ordre : 106f (PR #165, verrou `merge`) puis 106g (même lecture `momentDeCelebrationDeLaFin`, même `EcranDeFin.tsx`). Cadrage, planche et scènes depuis `main` ; domaine et câblage de la fin **après** l'intégration de 106g, pour ne pas toucher à leurs fichiers.
