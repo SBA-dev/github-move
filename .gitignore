@@ -1,4 +1,5 @@
 node_modules/
+# Double la règle ci-dessus : un lien symbolique (celui d'un worktree) n'est pas couvert par la barre finale.
 /node_modules
 dist/
 .features-gen/
