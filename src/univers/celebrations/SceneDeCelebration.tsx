@@ -44,9 +44,8 @@ const CHARGEURS_DES_SCENES: Record<UniversCelebre, () => Promise<unknown>> = {
  * la célébration de la fin se joue quand même. Un échec est ignoré : la fin du défi retombe sur l'espace vide.
  */
 export function prechargerLaSceneDe(univers: CleUnivers): void {
-  if (Object.hasOwn(CHARGEURS_DES_SCENES, univers)) {
-    CHARGEURS_DES_SCENES[univers as UniversCelebre]().catch(() => undefined);
-  }
+  const chargeurParUnivers: Partial<Record<CleUnivers, () => Promise<unknown>>> = CHARGEURS_DES_SCENES;
+  chargeurParUnivers[univers]?.().catch(() => undefined);
 }
 
 /** Un univers célébré qui n'a pas de scène ne compile pas : ajouter un univers au domaine oblige à dessiner sa scène ici. */
