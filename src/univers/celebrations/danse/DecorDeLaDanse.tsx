@@ -104,8 +104,15 @@ export function DecorDeLaDanse({ racine, cri }: Props) {
         <path className="eclat" stroke="#FFFFFF" strokeWidth="1.6" opacity=".7" />
       </g>
       <g id="danse-etoile-ruban" opacity="0">
-        <path fill="#FFC93C" stroke="#33304A" strokeWidth="3" strokeLinejoin="round" d="M0 -46 L13 -14 L47 -14 L20 7 L30 40 L0 20 L-30 40 L-20 7 L-47 -14 L-13 -14 Z" />
-        <path fill="#FFE27A" d="M0 -30 L8 -10 L30 -10 L13 3 L19 24 L0 12 L-19 24 L-13 3 L-30 -10 L-8 -10 Z" />
+        <defs>
+          <radialGradient id="danse-halo-etincelle">
+            <stop offset="0" stopColor="#FF8FB8" stopOpacity=".55" />
+            <stop offset="1" stopColor="#FFE9A0" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <circle r="56" fill="url(#danse-halo-etincelle)" />
+        <path fill="#FFE08A" stroke="#FF8FB8" strokeWidth="1.5" strokeLinejoin="round" d="M0 -50 Q8 -8 50 0 Q8 8 0 50 Q-8 8 -50 0 Q-8 -8 0 -50 Z" />
+        <path fill="#FFFFFF" d="M0 -26 Q4 -4 26 0 Q4 4 0 26 Q-4 4 -26 0 Q-4 -4 0 -26 Z" />
       </g>
       <ellipse id="danse-ombre-de-lili" cx="180" cy="420" rx="34" ry="8" fill="#1E1230" opacity=".3" />
       <g id="danse-vitesse" fill="none" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" opacity="0" />
