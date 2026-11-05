@@ -1,3 +1,6 @@
+import type { CleDeTenue } from "@domain/motivation";
+import { habillerLePersonnage } from "../commun/habiller.ts";
+import { ANCRAGES_DES_TENUES, dessinDeLaBotte } from "../commun/tenues.ts";
 import { DEG, E, lerp, r1, r3 } from "../commun/courbes.ts";
 import { creerUnGroupe, deplacer, elementsDe, poser, trouver } from "../commun/dom.ts";
 import { type Expression, expressionA } from "../commun/expressions.ts";
@@ -40,13 +43,30 @@ function elanDuJonglage(scenario: ScenarioDesAnimaux, t: number, p: Pose): numbe
 }
 
 /** Noisette, dessinée image par image à partir des poses du scénario (portage du moteur de la maquette). */
-export function creerNoisette(racine: SVGSVGElement) {
+export function creerNoisette(racine: SVGSVGElement, tenue?: CleDeTenue) {
   const n = elementsDe(racine, "animaux");
   n("noisette").innerHTML = STRUCTURE_DE_NOISETTE;
   const bras = { g: creerLeBras("g"), d: creerLeBras("d") };
   const bouches = [...n("bouche").children];
   const queue = creerLaQueue(racine);
+  const habit = habillerLePersonnage("animaux", tenue, ANCRAGES_DES_TENUES.animaux, {
+    derriere: (groupe) => n("queue").after(groupe),
+    devant: (groupe) => n("tete").after(groupe),
+    auCou: (groupe) => n("bras-avant").after(groupe),
+  });
   const q1 = (g: ParentNode, classe: string) => trouver(g, `.${classe}`);
+  const bottes = tenue === "bottes-de-pluie" ? poserLesBottes() : [];
+
+  /** Noisette n'a pas de chaussures : les bottes se posent sur ses pattes arrière, devant son corps. */
+  function poserLesBottes() {
+    const { gauche, droit, tige } = ANCRAGES_DES_TENUES.animaux.pieds;
+    return [gauche, droit].map((repere) => {
+      const element = creerUnGroupe({ "data-tenue-dessin": "bottes-de-pluie" });
+      element.innerHTML = dessinDeLaBotte(tige);
+      n("tete").before(element);
+      return { element, repere };
+    });
+  }
 
   function creerLeBras(c: Cote): SVGElement {
     const enveloppe = creerUnGroupe();
@@ -114,6 +134,8 @@ export function creerNoisette(racine: SVGSVGElement) {
     deplacer(n("ventre"), `translate(${r1(p.vue * 6)} 0)`);
     deplacer(n("pied-g"), `translate(${r1(p.vue * 4)} 0)`);
     deplacer(n("pied-d"), `translate(${r1(p.vue * 4)} 0)`);
+    for (const { element, repere } of bottes) deplacer(element, `translate(${r1(repere.x + p.vue * 4)} ${repere.y}) scale(${repere.echelle})`);
+    habit.suivre({ cw: 1 - Math.abs(p.vue) * .15, sw: 0, dx: p.vue * 5 });
     // bras courts et dodus ; le bras loin de la caméra passe derrière le corps
     const elan = elanDuJonglage(scenario, t, p);
     const dessinerLeBrasDe = (c: Cote): Point => {

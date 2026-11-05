@@ -6,6 +6,7 @@ import { bulle } from "./etapes-puis-exercices.steps.ts";
 import { Before, Given, test, Then, When } from "./fixtures.ts";
 import { attendreLaFinDeLaSeance } from "./etoiles-et-fin-de-seance.steps.ts";
 import { preparerLesEtoiles } from "./parcours.steps.ts";
+import { cleDeLaTenue } from "./tenues.steps.ts";
 import { estSurUnProfilReel, rechargerAvecLeProfilReel } from "./profil-reel.ts";
 import {
   attendre,
@@ -655,3 +656,109 @@ ThenDe106(/^les lecteurs d'écran annoncent une seule fois « (Matière réussie
   await expect(annonceDeLaMatiereReussie(page)).toHaveCount(1);
   await expect(page.locator("[aria-live], [role=status], [role=alert]").filter({ hasText: texte })).toHaveCount(1);
 });
+
+// --- Alors : la danse de victoire et la tenue portée dans la scène (livraison 106h)
+//
+// La racine de la scène porte `data-tenue="<clé>"` (absent sans tenue) ; chaque tracé d'une tenue garde `data-tenue-dessin`.
+
+const UNIVERS_DE_LA_SCENE: Record<string, { univers: Univers; cri: string }> = {
+  "Sports": { univers: "sports", cri: "BUT !" },
+  "Animaux de la forêt": { univers: "animaux", cri: "Hourra !" },
+  "Princesses et fées": { univers: "princesse", cri: "Magique !" },
+};
+
+async function verifierQueLaScenePorte(page: Page, univers: Univers, libelleDeLaTenue: string): Promise<Locator> {
+  const celebration = await attendreLaScene(page, univers);
+  const cle = cleDeLaTenue(libelleDeLaTenue);
+  await expect(celebration).toHaveAttribute("data-tenue", cle);
+  await expect(celebration.locator(`[data-tenue-dessin^="${cle}"]`).first(), `tracé de « ${libelleDeLaTenue} » dans la scène`).toBeAttached();
+  return celebration;
+}
+
+Then(
+  new RegExp(
+    `^Coach Léo joue la célébration de l'univers « Sports » en portant « ([^«»]+) » : il marque un but, puis fait la glissade à genoux, l'avion ou la danse avec clin d'œil$`,
+  ),
+  async ({ page }, tenue: string) => {
+    const celebration = await verifierQueLaScenePorte(page, "sports", tenue);
+    await expect(celebration).toHaveAttribute("data-variante", VARIANTES_POSSIBLES);
+    await attendreLeCri(page, "BUT !");
+    await attendreLaFinDeLaScene(page);
+  },
+);
+
+Then(
+  /^(Coach Léo|Noisette|Lumi) joue la célébration de l'univers « (Sports|Animaux de la forêt|Princesses et fées) » en portant « ([^«»]+) »$/,
+  async ({ page }, _personnage: string, univers: string, tenue: string) => {
+    const scene = UNIVERS_DE_LA_SCENE[univers];
+    if (!scene) throw new Error(`Univers de la scène inconnu : « ${univers} »`);
+    const { univers: cleDeLUnivers, cri } = scene;
+    await verifierQueLaScenePorte(page, cleDeLUnivers, tenue);
+    await attendreLeCri(page, cri);
+    await attendreLaFinDeLaScene(page);
+  },
+);
+
+Then(
+  /^Coach Léo joue une seule fois la célébration de l'univers « Sports », en portant « ([^«»]+) »$/,
+  async ({ page }, tenue: string) => {
+    const celebration = await verifierQueLaScenePorte(page, "sports", tenue);
+    const variante = await celebration.getAttribute("data-variante");
+    await attendreLeCri(page, "BUT !");
+    await attendreLaFinDeLaScene(page);
+    await laisserSeDerouler(page);
+    await expect(scene(page), "une seule scène de célébration de l'univers").toHaveCount(1);
+    await expect(scene(page)).toHaveAttribute("data-variante", variante ?? VARIANTES_POSSIBLES);
+  },
+);
+
+Then(
+  /^dans l'image fixe, Coach Léo porte « ([^«»]+) »$/,
+  async ({ page }, tenue: string) => {
+    const celebration = await verifierQueLaScenePorte(page, "sports", tenue);
+    await expect(celebration).toHaveAttribute("data-mouvements", "reduits");
+    await expect(celebration).toHaveAttribute("data-etat", "terminee");
+  },
+);
+
+const annonceDeLaTenueRecue = (page: Page): Locator => page.getByTestId("annonce-de-la-tenue");
+
+ThenDe106(
+  /^la fin de la séance annonce « (Matière réussie !) », puis, pour Coach Léo, « ([^«»]+) »$/,
+  async ({ page }, matiere: string, tenue: string) => {
+    await attendreLaFinDeLaSeance(page);
+    await expect(annonceDeLaMatiereReussie(page)).toHaveText(matiere, { timeout: DELAI_DE_L_ATTENTE_MS });
+    const annonce = annonceDeLaTenueRecue(page);
+    await expect(annonce).toBeVisible({ timeout: DELAI_DE_L_ATTENTE_MS });
+    await expect(annonce.getByText("Pour Coach Léo", { exact: true })).toBeVisible();
+    await expect(annonce.getByText(tenue, { exact: true })).toBeVisible();
+    const tenueApresLaMatiere = await annonceDeLaMatiereReussie(page).evaluate(
+      (premier, deuxieme) => Boolean(premier.compareDocumentPosition(deuxieme as Node) & Node.DOCUMENT_POSITION_FOLLOWING),
+      await annonce.elementHandle(),
+    );
+    expect(tenueApresLaMatiere, "l'annonce de la tenue vient après « Matière réussie ! »").toBe(true);
+  },
+);
+
+// Réponse 106.50 : le titre et la phrase de l'encart restent, seul le petit dessin du personnage guide est retiré.
+ThenDe106(/^pendant la célébration, l'encart « Pour Coach Léo » ne montre pas le petit dessin de Coach Léo$/, async ({ page }) => {
+  await attendreLaScene(page, "sports");
+  const annonce = annonceDeLaTenueRecue(page);
+  await expect(annonce.getByText("Pour Coach Léo", { exact: true })).toBeVisible({ timeout: DELAI_DE_L_ATTENTE_MS });
+  await expect(scene(page)).toHaveCount(1);
+  await expect(annonce.getByTestId("personnage-guide-de-l-annonce")).toHaveCount(0);
+});
+
+// Réponse 106.48 : seule l'annonce de #102, une seule fois ; le cri de victoire et le dessin restent muets (étape suivante du scénario).
+ThenDe106(
+  /^les lecteurs d'écran annoncent une seule fois « ((?:Coach Léo|Noisette|Lumi) a reçu [^«»]+) »$/,
+  async ({ page }, texte: string) => {
+    await attendreLaFinDeLaSeance(page);
+    const annonce = annonceDeLaTenueRecue(page);
+    await expect(annonce).toHaveAttribute("role", "status");
+    await expect(annonce.getByText(texte, { exact: true })).toBeVisible({ timeout: DELAI_DE_L_ATTENTE_MS });
+    await laisserSeDerouler(page);
+    await laisserPasserLeDelaiDeLecture(page);
+    await expect(page.locator("[aria-live], [role=status], [role=alert]").filter({ hasText: texte })).toHaveCount(1);
+  },
+);

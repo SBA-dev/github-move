@@ -1,4 +1,4 @@
-import type { VarianteDe } from "@domain/motivation";
+import type { CleDeTenue, VarianteDe } from "@domain/motivation";
 import { creerLesConfettis } from "../commun/confettis.ts";
 import { jouerLaScene } from "../commun/jeu-de-la-scene.ts";
 import { creerLeBallon, creerLeFilet } from "./ballon-et-filet.ts";
@@ -16,9 +16,9 @@ const CONFETTIS_DU_STADE = {
  * Le temps de la maquette est accéléré pour que la scène entière tienne dans `DUREE_DE_LA_CELEBRATION_S`.
  * Sans toile (mouvements réduits), il n'y a pas de confettis.
  */
-export function creerLaScene(racine: SVGSVGElement, toile: HTMLCanvasElement | null, variante: VarianteDe<"sports">) {
+export function creerLaScene(racine: SVGSVGElement, toile: HTMLCanvasElement | null, variante: VarianteDe<"sports">, tenue?: CleDeTenue) {
   const scenario = scenarioDuBut(variante);
-  const personnage = creerCoachLeo(racine);
+  const personnage = creerCoachLeo(racine, tenue);
   const ballon = creerLeBallon(racine);
   const filet = creerLeFilet(racine);
   const effets = creerLesEffets(racine);

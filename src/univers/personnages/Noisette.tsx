@@ -1,7 +1,8 @@
 import type { ReactNode } from "react";
 import type { Humeur } from "@domain/motivation";
 import { choisir, type DessinDuPersonnage, Yeux } from "./partage.tsx";
-import { type Ancrage, TenueDerriere, TenueDevant } from "./tenues.tsx";
+import { ANCRAGES_DES_TENUES } from "../celebrations/commun/tenues.ts";
+import { TenueDerriere, TenueDevant } from "./tenues.tsx";
 
 function bouche(humeur: Humeur, id: string): ReactNode {
   const bouches: Readonly<Record<Humeur, ReactNode>> = {
@@ -44,11 +45,7 @@ function bouche(humeur: Humeur, id: string): ReactNode {
   return bouches[humeur];
 }
 
-const ANCRAGE: Ancrage = {
-  cou: { x: 0, y: -79, echelle: 1.5 },
-  dos: { x: 0, y: -50, echelle: 1.5, elargissement: 1.35 },
-  pieds: { gauche: { x: -17, y: -4, echelle: 0.9 }, droit: { x: 17, y: -4, echelle: 0.9 }, tige: 12 },
-};
+const ANCRAGE = ANCRAGES_DES_TENUES.animaux;
 
 export const Noisette: DessinDuPersonnage = ({ humeur, id, tenue }) => (
   <svg viewBox="-114 -178 175 190" overflow="visible" aria-hidden="true">

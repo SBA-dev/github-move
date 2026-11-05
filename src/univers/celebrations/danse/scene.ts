@@ -1,4 +1,4 @@
-import type { VarianteDe } from "@domain/motivation";
+import type { CleDeTenue, VarianteDe } from "@domain/motivation";
 import { jouerLaScene } from "../commun/jeu-de-la-scene.ts";
 import { creerLesEffets } from "./effets.ts";
 import { creerLili } from "./personnage.ts";
@@ -10,9 +10,9 @@ import { scenarioDeLaDanse } from "./poses.ts";
  * Le temps de la maquette est accéléré pour que la scène entière tienne dans `DUREE_DE_LA_CELEBRATION_S`.
  * Sans toile (mouvements réduits), il n'y a pas de pétales.
  */
-export function creerLaScene(racine: SVGSVGElement, toile: HTMLCanvasElement | null, variante: VarianteDe<"danse">) {
+export function creerLaScene(racine: SVGSVGElement, toile: HTMLCanvasElement | null, variante: VarianteDe<"danse">, tenue?: CleDeTenue) {
   const scenario = scenarioDeLaDanse(variante);
-  const lili = creerLili(racine);
+  const lili = creerLili(racine, tenue);
   const effets = creerLesEffets(racine);
   const petales = toile ? creerLesPetales(toile) : null;
 
