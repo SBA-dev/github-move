@@ -9,9 +9,6 @@ import {
   dessinDuSacADos,
 } from "../celebrations/commun/tenues.ts";
 
-/** Les tracés viennent de `celebrations/commun/tenues.ts`, la source commune avec les scènes de célébration. */
-export type { Ancrage };
-
 type Repere = Ancrage["cou"];
 
 function placer({ x, y, echelle }: Repere, dessin: ReactNode): ReactNode {

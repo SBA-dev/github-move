@@ -5,7 +5,7 @@ import { creerUnGroupe, deplacer, elementsDe, poser, trouver } from "../commun/d
 import { type Expression, expressionA } from "../commun/expressions.ts";
 import type { CoteDeMain, PoseDeMain } from "../commun/mains.ts";
 import { decaler, membre, type Point, trace } from "../commun/membres.ts";
-import { inclinaisonDeLaTigeDesBottes, inclinaisonDuProfilDeLeo, placerLaChaussure } from "../commun/chaussure.ts";
+import { inclinaisonDuProfilDeLeoOuDesBottes, placerLaChaussure } from "../commun/chaussure.ts";
 import { clignement, RAYON_DE_LA_TETE as R, traitDuVisage } from "../commun/visage.ts";
 import { dessinDuBras, MAINS, QUEUE_DE_CHEVAL, STRUCTURE_DE_LILI } from "./dessin-de-lili.ts";
 import { type Emotion, type Pose, poseA, type ScenarioDeDanse } from "./poses.ts";
@@ -73,7 +73,7 @@ export function creerLili(racine: SVGSVGElement, tenue?: CleDeTenue) {
     poser(q1(g, "chaussette-ombre"), "d", trace(decaler(m, 3.6, 1), .6, .95, 3));
     // chausson : vue de face, de profil ou semelle (pied levé), fondues selon la vue et l'angle du tibia
     const ch = n(`chaussure-${c}`), profilF = clamp01((Math.abs(Math.sin(vueCourante * DEG)) - .45) * 6), versCam = Math.cos(vueCourante * DEG) < 0 ? -1 : 1;
-    const { face, leve, sens } = placerLaChaussure(g, ch, m, { cote: c, tibia: ft, sw, profil: profilF, inclinaisonDuProfil: tenue === "bottes-de-pluie" ? inclinaisonDeLaTigeDesBottes : inclinaisonDuProfilDeLeo });
+    const { face, leve, sens } = placerLaChaussure(g, ch, m, { cote: c, tibia: ft, sw, profil: profilF, inclinaisonDuProfil: inclinaisonDuProfilDeLeoOuDesBottes(tenue === "bottes-de-pluie") });
     poser(q1(face, "devant"), "opacity", versCam > 0 ? 1 : 0);
     poser(q1(face, "talon"), "opacity", versCam > 0 ? 0 : 1);
     const contact = q1(ch, "contact");

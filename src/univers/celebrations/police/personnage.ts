@@ -4,7 +4,7 @@ import { clamp01, DEG, E, fenetre, lerp, r1, r3 } from "../commun/courbes.ts";
 import { creerUnGroupe, deplacer, elementsDe, poser, trouver } from "../commun/dom.ts";
 import { expressionA } from "../commun/expressions.ts";
 import { decaler, membre, type Membre, type Point, trace } from "../commun/membres.ts";
-import { inclinaisonDeLaTigeDesBottes, inclinaisonDuProfilDeLeo, placerLaChaussure } from "../commun/chaussure.ts";
+import { inclinaisonDuProfilDeLeoOuDesBottes, placerLaChaussure } from "../commun/chaussure.ts";
 import type { CoteDeMain, PoseDeMain } from "../commun/mains.ts";
 import { clignement } from "../commun/visage.ts";
 import { anglesVers, brasVers, HANCHE } from "../commun/atteindre.ts";
@@ -77,7 +77,7 @@ export function creerAgentMax(racine: SVGSVGElement, tenue?: CleDeTenue) {
     poser(q1(g, "lumiere"), "d", trace(decaler(m, -3.4, -1.2), .3, .7));
     poser(q1(g, "revers"), "d", trace(m, .9, .97, 1));
     const ch = n(`chaussure-${c}`), profilF = clamp01((Math.abs(Math.sin(vueCourante * DEG)) - .45) / (Math.sin(VUE_MAXIMALE * DEG) - .45));
-    const { sens } = placerLaChaussure(g, ch, m, { cote: c, tibia: ft, sw, profil: profilF, inclinaisonDuProfil: tenue === "bottes-de-pluie" ? inclinaisonDeLaTigeDesBottes : inclinaisonDuProfilDeLeo });
+    const { sens } = placerLaChaussure(g, ch, m, { cote: c, tibia: ft, sw, profil: profilF, inclinaisonDuProfil: inclinaisonDuProfilDeLeoOuDesBottes(tenue === "bottes-de-pluie") });
     const contact = q1(ch, "contact");
     poser(contact, "opacity", 0);
     deplacer(contact, `translate(${r1(profilF * sens * 5)} 12) scale(${r3(1 + profilF * .5)} 1)`);

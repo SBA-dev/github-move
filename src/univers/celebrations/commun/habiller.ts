@@ -1,4 +1,4 @@
-import type { CleDeTenue, CleUnivers } from "@domain/motivation";
+import type { CleDeTenue, UniversCelebre } from "@domain/motivation";
 import { clamp01, lerp, r1, r3 } from "./courbes.ts";
 import { creerUnGroupe, deplacer, poser, trouver } from "./dom.ts";
 import { ANCRAGES_DES_TENUES, type Ancrage, DESSIN_DES_BRETELLES, DESSIN_DU_NOEUD_PAPILLON, dessinDeLEcharpe, dessinDuSacADos, vuesDeLaBotte } from "./tenues.ts";
@@ -49,7 +49,7 @@ const largeurDeFace = (cw: number, minimum: number) => Math.max(minimum, Math.ab
  * (derrière le corps, les bretelles devant ; de dos, le sac passe devant le torse et les bretelles disparaissent).
  * Rend ce qui replace la tenue à chaque image. Les bottes de pluie ne passent pas ici : elles remplacent les chaussures (`chausserLesBottes`), ou se posent sur les pattes (Noisette).
  */
-export function habillerLePersonnage(univers: string, tenue: CleDeTenue | undefined, ancrage: Ancrage, emplacements: Emplacements): TenueSurLePersonnage {
+export function habillerLePersonnage(univers: UniversCelebre, tenue: CleDeTenue | undefined, ancrage: Ancrage, emplacements: Emplacements): TenueSurLePersonnage {
   const id = `${univers}-tenue-`;
   const { cou, dos } = ancrage;
   switch (tenue) {
@@ -81,8 +81,7 @@ export function habillerLePersonnage(univers: string, tenue: CleDeTenue | undefi
       const derriere = creerUnGroupe();
       emplacements.derriere(derriere);
       const sac = monter(dessinDuSacADos(id, dos.elargissement), (groupe) => derriere.append(groupe));
-      const surLeTorse = emplacements.surLeTorse ? creerUnGroupe() : undefined;
-      if (surLeTorse) emplacements.surLeTorse?.(surLeTorse);
+      const surLeTorse = emplacements.surLeTorse ? monter("", emplacements.surLeTorse) : undefined;
       const bretelles = monter(DESSIN_DES_BRETELLES, emplacements.devant);
       return {
         suivre({ cw, sw, dx = 0, torse = 0 }) {
@@ -118,7 +117,7 @@ const TIGE_DES_BOTTES_DU_CORPS_ARTICULE = ANCRAGES_DES_TENUES.sports.pieds.tige;
  * La tenue de Coach Léo, de Lili, d'Agent Max et de Capitaine Sam, qui ont le même corps articulé (`haut`, `torse`, `tete`, `chaussure-g`, `chaussure-d`) :
  * le sac derrière le corps, l'écharpe et le nœud devant la tête (derrière ce qui est tenu en main), les bottes à la place des chaussures.
  */
-export function habillerLeCorpsArticule(n: (id: string) => SVGElement, corps: SVGElement, univers: CleUnivers, tenue: CleDeTenue | undefined): TenueSurLePersonnage {
+export function habillerLeCorpsArticule(n: (id: string) => SVGElement, corps: SVGElement, univers: UniversCelebre, tenue: CleDeTenue | undefined): TenueSurLePersonnage {
   if (tenue === "bottes-de-pluie") chausserLesBottes([n("chaussure-g"), n("chaussure-d")], TIGE_DES_BOTTES_DU_CORPS_ARTICULE);
   return habillerLePersonnage(univers, tenue, ANCRAGES_DES_TENUES[univers], {
     derriere: (groupe) => corps.prepend(groupe),

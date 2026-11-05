@@ -53,8 +53,8 @@ export function creerLumi(racine: SVGSVGElement, tenue?: CleDeTenue) {
 
   /** Les bottes de pluie remplacent les ballerines : elles pendent au bout des jambes, comme elles, et suivent leur inclinaison. */
   function habillerLesPiedsDeBottes() {
-    const { gauche, tige } = ANCRAGES_DES_TENUES.princesse.pieds;
-    for (const c of ["g", "d"] as const) n(`pied-${c}`).innerHTML = `<g data-tenue-dessin="bottes-de-pluie" transform="translate(0 -2) scale(${gauche.echelle})">${dessinDeLaBotte(tige)}</g>`;
+    const { gauche, droit, tige } = ANCRAGES_DES_TENUES.princesse.pieds;
+    for (const [c, pied] of [["g", gauche], ["d", droit]] as const) n(`pied-${c}`).innerHTML = `<g data-tenue-dessin="bottes-de-pluie" transform="translate(0 -2) scale(${pied.echelle})">${dessinDeLaBotte(tige)}</g>`;
   }
 
   function creerLeBras(c: "g" | "d"): SVGElement {
