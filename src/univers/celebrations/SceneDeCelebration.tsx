@@ -29,12 +29,14 @@ const chargerDanse = memoriser(() => import("./danse/SceneDeLaDanse.tsx"));
 const chargerAnimaux = memoriser(() => import("./animaux/SceneDesAnimaux.tsx"));
 const chargerPrincesses = memoriser(() => import("./princesses/SceneDesPrincesses.tsx"));
 const chargerPolice = memoriser(() => import("./police/SceneDeLaPolice.tsx"));
+const chargerPompiers = memoriser(() => import("./pompiers/SceneDesPompiers.tsx"));
 
 const SceneDesSports = chargerSansEchec(chargerSports);
 const SceneDeLaDanse = chargerSansEchec(chargerDanse);
 const SceneDesAnimaux = chargerSansEchec(chargerAnimaux);
 const SceneDesPrincesses = chargerSansEchec(chargerPrincesses);
 const SceneDeLaPolice = chargerSansEchec(chargerPolice);
+const SceneDesPompiers = chargerSansEchec(chargerPompiers);
 
 /** Un univers célébré sans chargeur ne compile pas : le préchargement ne peut pas oublier une scène. */
 const CHARGEURS_DES_SCENES: Record<UniversCelebre, () => Promise<unknown>> = {
@@ -43,6 +45,7 @@ const CHARGEURS_DES_SCENES: Record<UniversCelebre, () => Promise<unknown>> = {
   animaux: chargerAnimaux,
   princesse: chargerPrincesses,
   police: chargerPolice,
+  pompier: chargerPompiers,
 };
 
 /**
@@ -80,6 +83,8 @@ export function SceneDeCelebration({ celebration }: Props) {
       return <Suspense fallback={<EspaceDeLaScene />}><SceneDesPrincesses cle={celebration.variante.cle} cri={celebration.cri} /></Suspense>;
     case "police":
       return <Suspense fallback={<EspaceDeLaScene />}><SceneDeLaPolice cle={celebration.variante.cle} cri={celebration.cri} /></Suspense>;
+    case "pompier":
+      return <Suspense fallback={<EspaceDeLaScene />}><SceneDesPompiers cle={celebration.variante.cle} cri={celebration.cri} /></Suspense>;
     default:
       return universSansScene(celebration);
   }
