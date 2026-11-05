@@ -28,3 +28,20 @@
 ## Étape 4 : review (cycle 1)
 - APPROUVÉ, aucun bloquant (fidélité aux tracés de 106h recalculée au dixième ; règle absolue et règle de Lili respectées ; décision 0033 respectée). Non bloquants : (1) indentation de deux `</g>` (`Lili.tsx:98-99`), à reprendre à l'intégration de 106h ; (2) réponses du PO dans `acceptance.md` : fait (`55bf63a`) ; (3) journal : fait ici ; (4) à l'intégration de 106h, garder `ANCRAGES_DES_TENUES.danse` (mêmes valeurs) et rejouer les scénarios des tenues de l'univers Danse (#102).
 - En attente : merge de 106h, puis intégration de `main`, puis verrou base pour les E2E du périmètre.
+
+## Intégration de `main` (2026-11-05 23:53 UTC)
+- 106h mergée (`11b32d4`), intégrée dans `27afadc` sans conflit : `Lili.tsx` reprend l'ancrage partagé `ANCRAGES_DES_TENUES.danse` (mêmes valeurs que l'ancien `ANCRAGE`). Les tracés de Lili mergés par 106h sont ceux de `1f16045` (seul le calcul de la frange est refactoré, même résultat).
+- Non bloquant (1) de la review corrigé : `452e8f5` (indentation). tsc, build, deno test (2920 verts), lint, fmt verts.
+
+## Étape 5 : E2E (projet `telephone`, 1 worker, verrou base)
+- Verrou base accordé (23:54 UTC, annonce [Responsable] sur #168, tableau de #64). Sonde admin/users : 1,28 s, 0,71 s, 0,45 s.
+- Run 1 (`452e8f5`) : Plan « … a <son dessin> » de #96, 6/6 verts (dont Danse modifié), 1,1 min.
+- Run 2 : scénarios qui montrent Lili (`acceptance.md`, « Scénarios rejoués ») : 9/9 verts (#96 mode sombre et Lili dans le paysage ×2, #11 ×4, #6 Danse, #106 entrée en scène de Lili), 1,7 min.
+- Aucun scénario de #102 ni de la règle des humeurs de #6 ne joue dans l'univers Danse : rien à rejouer. Lili habillée est couverte par la planche validée.
+- LIBÈRE base à 00:00 UTC, avant la non-régression de nuit (00:13 UTC). Non-régression complète non lancée (règle du PO du 04/11 : elle tourne la nuit).
+
+## Mesures
+- Durée : environ 1 h 25 de travail (22:34 → 00:05 UTC), hors attente du merge de 106h (23:15 → 23:52 UTC, 37 min).
+- Attente : validation PO environ 3 min ; verrou base accordé sans attente (1 min).
+- Cycles : TDD 1 ; review 1 (APPROUVÉ, 0 bloquant) ; E2E 2 runs, 15/15 verts, 0 KO.
+- Intégrations de `main` : 1 (`11b32d4`, 106h), 0 conflit (le conflit attendu sur `Lili.tsx` s'est résolu seul).
