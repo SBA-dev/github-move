@@ -41,6 +41,11 @@ export function prechargerLaSceneDe(univers: CleUnivers): void {
   charger?.().catch(() => undefined);
 }
 
+/** Un univers célébré qui n'a pas de scène ne compile pas : ajouter un univers au domaine oblige à dessiner sa scène ici. */
+function universSansScene(celebration: never): never {
+  throw new Error(`Aucune scène de célébration pour ${JSON.stringify(celebration)}`);
+}
+
 type Props = { readonly celebration: CelebrationDeLUnivers };
 
 /**
@@ -58,5 +63,7 @@ export function SceneDeCelebration({ celebration }: Props) {
       return <Suspense fallback={<EspaceDeLaScene />}><SceneDeLaDanse cle={celebration.variante.cle} cri={celebration.cri} /></Suspense>;
     case "animaux":
       return <Suspense fallback={<EspaceDeLaScene />}><SceneDesAnimaux cle={celebration.variante.cle} cri={celebration.cri} /></Suspense>;
+    default:
+      return universSansScene(celebration);
   }
 }
