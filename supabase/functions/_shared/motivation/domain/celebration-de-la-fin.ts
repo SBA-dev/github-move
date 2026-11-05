@@ -13,6 +13,5 @@ export function celebrationDeLaFin(
   hasard: Hasard,
 ): CelebrationDeLaFin {
   const moment = momentDeCelebrationDeLaFin(faits);
-  const celebration = moment && celebrationDe(moment, cle, hasard);
-  return celebration ? { sorte: "univers", celebration } : { sorte: "commune" };
+  return moment ? { sorte: "univers", celebration: celebrationDe(moment, cle, hasard) } : { sorte: "commune" };
 }

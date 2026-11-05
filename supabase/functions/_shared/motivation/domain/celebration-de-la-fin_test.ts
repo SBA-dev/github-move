@@ -26,14 +26,17 @@ Deno.test("un défi rejoué dans l'univers Sports garde la célébration commune
   assertEquals(celebration, { sorte: "commune" });
 });
 
-Deno.test("le premier défi relevé dans un univers pas encore livré garde la célébration commune", () => {
+Deno.test("le premier défi relevé dans l'univers Pompiers joue la célébration de Capitaine Sam", () => {
   const celebration = celebrationDeLaFin(
     { defiRelevePourLaPremiereFois: true, matiereReussieParLaSeance: false },
     "pompier",
     hasardFixe(0.5),
   );
 
-  assertEquals(celebration, { sorte: "commune" });
+  assertEquals(celebration, {
+    sorte: "univers",
+    celebration: celebrationDe("defiReleve", "pompier", hasardFixe(0.5))!,
+  });
 });
 
 Deno.test("une matière réussie dans l'univers Sports se fête par la célébration de l'univers", () => {
@@ -49,12 +52,15 @@ Deno.test("une matière réussie dans l'univers Sports se fête par la célébra
   });
 });
 
-Deno.test("une matière réussie dans un univers pas encore livré garde la célébration commune", () => {
+Deno.test("une matière réussie dans l'univers Pompiers se fête par la célébration de l'univers", () => {
   const celebration = celebrationDeLaFin(
     { defiRelevePourLaPremiereFois: false, matiereReussieParLaSeance: true },
     "pompier",
     hasardFixe(0.5),
   );
 
-  assertEquals(celebration, { sorte: "commune" });
+  assertEquals(celebration, {
+    sorte: "univers",
+    celebration: celebrationDe("matiereReussie", "pompier", hasardFixe(0.5))!,
+  });
 });
