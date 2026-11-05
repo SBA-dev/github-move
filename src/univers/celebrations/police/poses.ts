@@ -75,7 +75,7 @@ export const ECHELLE_DE_BASE = 1.15;
 export const SOL = 382;
 const Y_SOL = SOL - 58 * ECHELLE_DE_BASE;
 export const X_MAX = 196;
-export const X_CHIOT = 148;
+const X_CHIOT = 148;
 export const BUISSON = { x: 334, y: SOL };
 
 const X_DEBUT = 130;
@@ -85,13 +85,13 @@ const VUE = 38;
  * Le temps de la scène est celui de la maquette, raccourci (106.38) : l'enquête dure `FIN_DE_L_ENQUETE` secondes (4 s dans la maquette),
  * chaque variante 2,3 à 3 s (4 à 5,2 s dans la maquette). La scène entière (environ 5 s) est ensuite accélérée pour tenir en `DUREE_DE_LA_CELEBRATION_S`.
  */
-export const FIN_DE_L_ENQUETE = 2.15;
+const FIN_DE_L_ENQUETE = 2.15;
 const APRES_LE_CRI = .7;
-export const T_TRACES = .05;
+const T_TRACES = .05;
 export const ECART_ENTRE_DEUX_TRACES = .06;
-export const T_BUISSON = 1.1;
+const T_BUISSON = 1.1;
 /** Max attrape le chiot : trois étincelles à quatre branches autour de sa tête. */
-export const T_JOIE = 1.57;
+const T_JOIE = 1.57;
 /** Une voiture traverse la route à vitesse douce, une par coup de sifflet ; une bulle reste le temps d'un coup de sifflet. */
 export const DUREE_DU_PASSAGE = 1.3;
 export const DUREE_D_UNE_BULLE = .45;
@@ -286,7 +286,6 @@ export const poseDuChiotA = (poses: readonly ImageCle<PoseDuChiot>[], t: number)
 type Bulle = { readonly t: number; readonly texte: string; readonly dx: number; readonly dy: number };
 
 export type ScenarioDeLaPolice = {
-  readonly variante: VarianteDe<"police">;
   /** Fin de la scène, en secondes du temps de la maquette raccourci (la scène est ensuite accélérée pour tenir en 3 s). */
   readonly fin: number;
   readonly poses: readonly ImageCle<Pose>[];
@@ -336,7 +335,6 @@ const BULLES: Record<VarianteDe<"police">, readonly Bulle[]> = {
 export function scenarioDeLaPolice(variante: VarianteDe<"police">): ScenarioDeLaPolice {
   const { poses, chiot, tCri } = VARIANTES[variante];
   return {
-    variante,
     fin: tCri + APRES_LE_CRI,
     poses: compiler(REPOS, [...ENQUETE, ...poses]),
     chiot: compiler(REPOS_DU_CHIOT, [...ENQUETE_DU_CHIOT, ...chiot]),
