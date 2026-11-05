@@ -309,3 +309,19 @@ Livraison **106g** : moment « matière réussie » à la fin de la séance. Bra
 - Attente : merge de 106f (autorisé par le PO, en file derrière #161 pour le verrou merge), puis intégration de `main` et VERROU base pour le run de référence.
 - 18:24 UTC : 106f mergée (`2acfeac`). `main` intégrée (`96ef7cf`) : conflits dans le journal (résolu par l'orchestrateur, sections gardées), le modèle (`domain-modeler` : 106f puis 106g ; catalogue exhaustif, 106.18 sans cas réel) et le `.feature` (`po-acceptance` : 106f puis 106g, en-tête et séparateur 106h ; acceptance : règle 106f ajoutée en R15, mentions « Pompiers pas encore livré » retirées). Test de la célébration de la fin adapté (`test-writer` : matière réussie chez Pompiers → célébration de l'univers). `deno test` 2910 ; lint, fmt, tsc, build OK.
 - 18:28 UTC : VERROU base accordé pour le run de référence (message du responsable, tableau de #64 vérifié). Sonde OK (3 × 200, 0,50 à 1,01 s). Run lancé : `@issue-106` entier, puis fin de la séance (#97, #102, #137, et les scénarios de fin de séance de #100 et #99), `telephone`, 1 worker.
+- Run de référence, head `96ef7cf` : `@issue-106` **58/58** (22,8 min) ; fin de la séance (#97, #102, #137 entiers, scénarios de fin de séance de #100 et #99) **156/156** (49,1 min). Aucun KO, aucun step modifié. LIBÈRE base (commentaire 6667566261).
+
+## Mesures (106g)
+
+| Mesure | Valeur |
+|---|---|
+| Durée | 2026-11-05 12:05 UTC → environ 20:10 UTC (PR prête), soit environ 8 h, dont environ 6 h d'attente |
+| Attente | réponses du PO (#106.44 à #106.46) : 12:08 → 18:18 UTC ; merge de 106f : jusqu'à 18:24 UTC. Le domaine, le câblage, les revues, les steps et une mise au point E2E étaient faits pendant ce temps. VERROU base : environ 0 (accordé dans la minute, deux fois) |
+| Cycles TDD | 3 comportements (matière réussie par la séance ; moment et annonce ; musique à la place du son de fin), plus 1 test de caractérisation (106.46) |
+| Review | 1 revue intermédiaire du domaine (APPROUVÉ) ; 1 review de la branche (APPROUVÉ) ; 1 revue delta des refactors **À CORRIGER** (2 bloquants d'ordre d'exécution introduits par un refactor), puis APPROUVÉ au cycle 2 ; 1 revue delta finale |
+| E2E | mise au point `@livraison-106g` : 3/3 (un KO de step corrigé) ; run de référence : 58/58 et 156/156 |
+| Intégrations de `main` | 1 (`2acfeac`, 106f) : conflits seulement dans la documentation, le `.feature` et un test du domaine (catalogue devenu exhaustif) |
+| Escalades | aucune ; 3 questions nouvelles au cadrage (#106.44 à #106.46) |
+| Verrous | base deux fois (13:32 → 13:36 UTC, mise au point ; 18:28 → environ 20:00 UTC, référence) |
+| Leçon | un refactor « sans changement de comportement » du front a introduit deux bugs d'ordre d'exécution (lecture avant la sauvegarde de la séance ; tirage posé après les paroles de fin) : la revue delta les a trouvés, les E2E en ligne ne les auraient pas vus (latence réseau) |
+| Tokens | relevés par le responsable |
