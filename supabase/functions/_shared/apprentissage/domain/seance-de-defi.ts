@@ -1,7 +1,7 @@
 import type { Lecon, Niveau } from "../../catalogue/domain/index.ts";
 import type { CleDeQuestion } from "./cle-de-question.ts";
 import type { DefiTermineAEnregistrer } from "./defi-termine-a-enregistrer.ts";
-import type { Defi } from "./defis-de-la-matiere.ts";
+import { type Defi, type GrandDefi, releveDuDefi } from "./defis-de-la-matiere.ts";
 import { DefiDejaTermine, DefiNonFini } from "./erreurs.ts";
 import type { QuestionRateeARetenir } from "./file-de-revision.ts";
 import type { Jour } from "./jour.ts";
@@ -17,7 +17,7 @@ export type DefiTermine = Readonly<{
   type: "DefiTermine";
   id: string;
   enfant: string;
-  defi: Defi;
+  defi: Defi | GrandDefi;
   nombreDeQuestions: number;
   questionsRatees: readonly QuestionRateeARetenir[];
   termineeLe: Date;
@@ -31,7 +31,7 @@ export class SeanceDeDefi {
   private constructor(
     readonly id: string,
     readonly enfant: string,
-    private readonly defi: Defi,
+    private readonly defi: Defi | GrandDefi,
     private readonly questions: readonly { posee: QuestionDeRevision; ratable: QuestionRateeARetenir }[],
   ) {
     this.enCours = new QuestionsEnCours(questions.map(({ posee }) => posee), () => new DefiDejaTermine());
@@ -41,7 +41,7 @@ export class SeanceDeDefi {
     { id, enfant, defi, plan, lecons, tireurDe, niveau }: {
       readonly id: string;
       readonly enfant: string;
-      readonly defi: Defi;
+      readonly defi: Defi | GrandDefi;
       readonly plan: PlanDuDefi;
       readonly lecons: readonly Lecon[];
       readonly tireurDe: (identite: CleDeQuestion) => Tireur;
@@ -93,11 +93,10 @@ export class SeanceDeDefi {
 
   aEnregistrer(): DefiTermineAEnregistrer {
     if (!this.termine) throw new DefiNonFini();
-    const { matiere, niveau, numero } = this.defi;
     return {
       id: this.id,
       enfant: this.enfant,
-      defi: { matiere, niveau, numero },
+      defi: releveDuDefi(this.defi),
       questions: this.questions.map(({ ratable }) => ratable.identite),
       tirages: this.questions.map(({ posee }) => suivie(posee).tirage()),
       reponses: this.questions.map(({ posee }) => suivie(posee).reponses()),

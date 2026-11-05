@@ -1,4 +1,4 @@
-import { type Defi, planDuDefi, SeanceDeDefi, tireurAuHasard } from "@domain/apprentissage";
+import { type Defi, type GrandDefi, planDuDefi, SeanceDeDefi, tireurAuHasard } from "@domain/apprentissage";
 import type { ItemDeBoite, Lecon, Niveau } from "@domain/catalogue";
 import { boitesDuPlan, type TexteDeLecture, textesDuPlan } from "../revision/commencer-la-revision.ts";
 import { generateurIdDuNavigateur } from "../seance/generateur-id-navigateur.ts";
@@ -11,10 +11,10 @@ export type DefiCommence = {
   readonly textes: ReadonlyMap<string, TexteDeLecture>;
 };
 
-/** Le défi d'une partie du parcours, avec un nouveau tirage de ses 10 questions au hasard du navigateur. */
+/** Le défi d'une partie du parcours (10 questions) ou le grand défi (12), avec un nouveau tirage au hasard du navigateur. */
 export function commencerLeDefi(
   { defi, enfant, lecons, niveau }: {
-    readonly defi: Defi;
+    readonly defi: Defi | GrandDefi;
     readonly enfant: string;
     readonly lecons: readonly Lecon[];
     readonly niveau: Niveau;

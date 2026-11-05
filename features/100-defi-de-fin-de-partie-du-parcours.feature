@@ -9,14 +9,15 @@ Fonctionnalité: Défi de la partie du parcours
   Le défi ne donne aucune étoile, ne change aucun résultat de la leçon et ne bloque rien : une erreur suit les
   règles d'une séance (encouragement, aide, nouvelle chance, « Je ne sais pas »), sans vie ni temps limité, et la
   question ratée entre dans la file de révision. Cadrage validé par le PO le 2026-10-29 (réponses 100.1 à 100.28,
-  puis 100.29 et 100.30 le 2026-11-02, docs/stories/100/acceptance.md). Le grand défi de la matière n'est pas dans
-  cette story : il viendra avec #137.
+  puis 100.29 et 100.30 le 2026-11-02, docs/stories/100/acceptance.md). Le grand défi de la matière, qui remplace
+  le défi de la dernière partie du parcours, est décrit par features/137-grand-defi.feature.
 
   Mots employés dans ces scénarios (mots d'interface validés, 100.3, 100.16, 100.21, 100.24 et 100.29) :
   - une partie du parcours : 5 leçons consécutives du parcours d'une matière et d'une classe ; un dernier bloc de
     1 ou 2 leçons rejoint le précédent (100.1 A) ;
   - « Défi 1 » : le défi de la première partie du parcours d'une matière ; chaque partie du parcours a son défi,
-    sauf la dernière de la matière (une matière d'une seule partie du parcours n'en a donc aucun) ;
+    sauf la dernière de la matière, que le grand défi remplace (#137) ; une matière d'une seule partie du parcours
+    n'a donc que le grand défi ;
   - « le repère « Défi 1 » » : la place du défi sur le dessin du parcours, juste après la dernière leçon de sa
     partie du parcours ;
   - « à venir », « ouvert », « relevé » : l'état d'un défi ; un défi à venir n'a pas de cadenas et ne se touche pas ;
@@ -32,7 +33,8 @@ Fonctionnalité: Défi de la partie du parcours
     de 2 questions à 3 choix, sans aide (par exemple « Quelle saison vient après l'hiver ? ») ;
   - aucune autre leçon.
   Les maths du CE1 ont deux parties du parcours (« Maths 1 » à « Maths 5 », puis « Maths 6 » à « Maths 10 ») et
-  donc un seul défi, le défi 1 ; les sciences du CE1 ont une seule partie du parcours et aucun défi.
+  donc un seul défi d'une partie du parcours, le défi 1 ; les sciences du CE1 ont une seule partie du parcours et
+  aucun défi d'une partie du parcours (leur grand défi : #137).
   Paul et Marie sont les deux parents rattachés au profil enfant de Léa ; Tom est un autre enfant de Paul ;
   Claire n'est rattachée à aucun d'eux.
 
@@ -76,27 +78,13 @@ Fonctionnalité: Défi de la partie du parcours
       Et la fin de la séance propose « Relever le défi » et « Leçon suivante »
       Mais aucun défi ne commence sans que Léa le choisisse
 
-    Plan du Scénario: Une séance qui n'ouvre aucun défi n'annonce aucun défi (<cas>)
-      Étant donné que Léa a réussi les <réussies> premières leçons de maths du CE1
-      Et que Léa joue la séance complète de la leçon « <leçon> »
+    # La dernière leçon de la dernière partie du parcours ouvre le grand défi, et une matière d'une seule partie du
+    # parcours n'a que lui : features/137-grand-defi.feature, règles 1 et 2.
+    Scénario: Une leçon rejouée alors que son défi est déjà ouvert n'annonce aucun défi
+      Étant donné que Léa a réussi les 5 premières leçons de maths du CE1
+      Et que Léa joue la séance complète de la leçon « Maths 3 »
       Quand Léa réussit la dernière question de la séance
       Alors aucune annonce de défi ouvert n'apparaît à la fin de la séance
-
-      Exemples:
-        | cas                                                      | réussies | leçon    |
-        | leçon rejouée alors que son défi est déjà ouvert         | 5        | Maths 3  |
-        | dernière leçon de la dernière partie du parcours         | 9        | Maths 10 |
-
-    Plan du Scénario: <cas> n'a pas de défi
-      Étant donné que Léa a réussi les <réussies> premières leçons de <matière> du CE1
-      Quand Léa choisit « <Matière> » dans son parcours
-      Alors le dessin du parcours montre <repères>
-      Mais aucun repère de défi n'apparaît après la leçon « <dernière> »
-
-      Exemples:
-        | cas                                              | réussies | matière  | Matière  | repères                                           | dernière |
-        | La dernière partie du parcours des maths         | 10       | maths    | Maths    | un seul repère de défi, « Défi 1 », après la leçon 5 | Maths 10 |
-        | Une matière d'une seule partie du parcours       | 3        | sciences | Sciences | aucun repère de défi                              | L'eau    |
 
   Règle: Le défi ne bloque rien et ne change aucune note : ni étoile, ni prochaine leçon ; il ne donne ni objet de la cabane, ni tenue, ni badge, ni épisode
 
@@ -221,7 +209,6 @@ Fonctionnalité: Défi de la partie du parcours
       Étant donné que Léa a réussi les 4 premières leçons de maths du CE1
       Quand Léa choisit « Maths » dans son parcours
       Alors les lecteurs d'écran annoncent, après « Maths 5 : à toi ! », la ligne « Défi 1 : à venir, encore 1 leçon pour ouvrir le défi »
-      Mais les lecteurs d'écran n'annoncent aucune ligne de défi après « Maths 10 : à découvrir »
 
   Règle: Le défi se joue sans réseau, sans mouvement quand l'appareil le demande, et sur un écran de 360 px
 

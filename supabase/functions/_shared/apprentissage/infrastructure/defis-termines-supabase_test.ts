@@ -56,7 +56,30 @@ Deno.test("les défis relevés d'un enfant sont lus dans sa table et rendus avec
     { matiere: matiereDeCode("maths"), niveau: Niveau.de("CE1"), numero: 2 },
     { matiere: matiereDeCode("francais"), niveau: Niveau.de("CP"), numero: 1 },
   ]);
-  assertEquals(faux.lectures, [{ table: "defis_termines", filtres: { profil: ENFANT } }]);
+  assertEquals(faux.lectures, [
+    { table: "defis_termines", filtres: { profil: ENFANT } },
+    { table: "grands_defis_termines", filtres: { profil: ENFANT } },
+  ]);
+});
+
+Deno.test("les grands défis relevés sont lus dans leur table, après les défis d'une partie, avec leur marque et sans numéro", async () => {
+  const faux = clientSupabaseFactice({
+    tables: {
+      defis_termines: [{ profil: ENFANT, matiere: "maths", classe: "CE1", numero: 2 }],
+      grands_defis_termines: [
+        { profil: ENFANT, matiere: "maths", classe: "CE1" },
+        { profil: ENFANT, matiere: "danse", classe: "CE1" },
+        { profil: AUTRE_ENFANT, matiere: "anglais", classe: "CM2" },
+      ],
+    },
+  });
+
+  const releves = await new DefisTerminesSupabase(faux.client, clientDuServeurInutilise).releves(ENFANT);
+
+  assertEquals(releves, [
+    { matiere: matiereDeCode("maths"), niveau: Niveau.de("CE1"), numero: 2 },
+    { matiere: matiereDeCode("maths"), niveau: Niveau.de("CE1"), grandDefi: true },
+  ]);
 });
 
 Deno.test("une ligne illisible des défis relevés (matière ou classe inconnue) est ignorée", async () => {
@@ -161,7 +184,7 @@ Deno.test("les défis relevés sont lus avec le client du parent, sous RLS, et j
   const releves = await new DefisTerminesSupabase(duParent.client, duServeur.client).releves(ENFANT);
 
   assertEquals(releves.length, 1);
-  assertEquals(duParent.lectures.length, 1);
+  assertEquals(duParent.lectures.map(({ table }) => table), ["defis_termines", "grands_defis_termines"]);
   assertEquals(duServeur.lectures, []);
 });
 
@@ -173,4 +196,35 @@ Deno.test("le défi terminé est enregistré avec le client du serveur, jamais a
 
   assertEquals(duServeur.appels.map((appel) => appel.fonction), ["enregistrer_le_defi_termine"]);
   assertEquals(duParent.appels, []);
+});
+
+Deno.test("un grand défi terminé est écrit par sa fonction Postgres, sans numéro, avec la file de révision", async () => {
+  const faux = clientSupabaseFactice({ reponseDeFonction: { data: "enregistree" } });
+  const grandDefiTermine: DefiTermine = {
+    ...fait,
+    id: "grand-defi-1",
+    defi: { matiere: matiereDeCode("maths"), niveau: Niveau.de("CE1"), grandDefi: true, lecons: ["ma-ce1-addition"] },
+    nombreDeQuestions: 12,
+  };
+
+  const issue = await new DefisTerminesSupabase(clientDuParentInutilise, faux.client).enregistrer(grandDefiTermine, {
+    file,
+    versionLue: 7,
+  });
+
+  assertEquals(faux.appels.map((appel) => appel.fonction), ["enregistrer_le_grand_defi_termine"]);
+  assertEquals(Object.keys(faux.appels[0].parametres).sort(), [
+    "p_classe",
+    "p_erreurs_corrigees_pour_de_bon",
+    "p_id",
+    "p_jour",
+    "p_matiere",
+    "p_profil",
+    "p_questions_retenues",
+    "p_termine_le",
+    "p_version_de_la_file_lue",
+  ]);
+  assertEquals(faux.appels[0].parametres.p_id, "grand-defi-1");
+  assertEquals(faux.appels[0].parametres.p_classe, "CE1");
+  assertEquals(issue, "enregistree");
 });

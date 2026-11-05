@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { Confettis } from "../../celebration/index.ts";
 import { mouvementsReduits } from "../../transitions/index.ts";
-import { type Defi, leconSuivanteEnFinDeSeance, type Seance } from "@domain/apprentissage";
+import { type Defi, type GrandDefi, leconSuivanteEnFinDeSeance, type Seance } from "@domain/apprentissage";
 import { pageDeLaLecon } from "@domain/catalogue";
 import {
   annonceDeLObjetRecu,
@@ -57,7 +57,7 @@ type Props = {
   readonly onLireLEpisode: (numero: number) => void;
   readonly onLeconSuivante: (leconId: string) => void;
   readonly onToutesLesLecons: () => void;
-  readonly onReleverLeDefi: (defi: Defi) => void;
+  readonly onReleverLeDefi: (defi: Defi | GrandDefi) => void;
   readonly onAccueil: () => void;
 };
 

@@ -15,12 +15,12 @@ import type { DefiTermineAEnregistrer } from "./defi-termine-a-enregistrer.ts";
 import { Etoiles } from "./etoiles.ts";
 import { Jour } from "./jour.ts";
 import { type EntreesDuParcours, parcoursDeLaMatiere } from "./parcours.ts";
-import { defisDeLaMatiere } from "./defis-de-la-matiere.ts";
+import { defisDeLaMatiere, grandDefiDeLaMatiere } from "./defis-de-la-matiere.ts";
 import { type PlanDuDefi, planDuDefi, questionsPosablesDuDefi } from "./plan-du-defi.ts";
 import { Reponse } from "./reponse.ts";
 import { revaliderLeDefi } from "./revalider-le-defi.ts";
 import { REPONSES_AU_PLUS_PAR_QUESTION } from "./revalider-la-seance.ts";
-import { SeanceDeDefi } from "./seance-de-defi.ts";
+import { type DefiTermine, SeanceDeDefi } from "./seance-de-defi.ts";
 import { tireurAuHasard } from "./tireur.ts";
 
 const CE1 = Niveau.de("CE1");
@@ -146,13 +146,19 @@ Deno.test("une question répondue juste du premier coup n'est pas ratée", () =>
 });
 
 Deno.test("un défi dont le numéro n'existe pas est refusé", () => {
-  const envoi = { ...envoiValide, defi: { ...envoiValide.defi, numero: 99 } };
+  const envoi = {
+    ...envoiValide,
+    defi: { matiere: envoiValide.defi.matiere, niveau: envoiValide.defi.niveau, numero: 99 },
+  };
 
   assertThrows(() => revalider(envoi), DefiInconnu);
 });
 
 Deno.test("le défi de la dernière partie du parcours n'existe pas", () => {
-  const envoi = { ...envoiValide, defi: { ...envoiValide.defi, numero: 2 } };
+  const envoi = {
+    ...envoiValide,
+    defi: { matiere: envoiValide.defi.matiere, niveau: envoiValide.defi.niveau, numero: 2 },
+  };
 
   assertThrows(() => revalider(envoi, { reussies: lecons.map(({ id }) => id) }), DefiInconnu);
 });
@@ -348,4 +354,70 @@ Deno.test("un profil de CE2 ne peut pas faire passer un défi de CE1 relevé pou
   const releves = [{ matiere: maths, niveau: CE1, numero: 1 }];
 
   assertThrows(() => revaliderLeDefi(envoiValide, entreesDuProfilEnCE2([]), releves), DefiInconnu);
+});
+
+const toutesLesLecons = lecons.map(({ id }) => id);
+const grandDefiDeMaths = grandDefiDeLaMatiere(parcoursDeLaMatiere(entrees(toutesLesLecons), maths), maths, CE1);
+assertExists(grandDefiDeMaths);
+
+function jouerLeGrandDefi(plan: PlanDuDefi): { fait: DefiTermine; envoi: DefiTermineAEnregistrer } {
+  const seance = SeanceDeDefi.commencer({
+    id: "grand-defi-1",
+    enfant: "profil-lea",
+    defi: grandDefiDeMaths!,
+    plan,
+    lecons,
+    tireurDe: () => tireurAuHasard(hasardSansMelange()),
+    niveau: CE1,
+  });
+  plan.questions.forEach((_, rang) => {
+    if (rang === 0) seance.repondre(mauvaiseReponse);
+    seance.repondre(bonneReponse);
+  });
+  return { fait: seance.terminer(finDuDefi, jourDuDefi), envoi: seance.aEnregistrer() };
+}
+
+const planDuGrandDefi = planDuDefi(grandDefiDeMaths, lecons, hasardSansMelange());
+const { fait: faitDuGrandDefi, envoi: envoiDuGrandDefi } = jouerLeGrandDefi(planDuGrandDefi);
+
+Deno.test("un grand défi ouvert de 12 questions est revalidé et redonne le même défi terminé", () => {
+  const revalide = revalider(envoiDuGrandDefi, { reussies: toutesLesLecons });
+
+  assertEquals(revalide, faitDuGrandDefi);
+});
+
+Deno.test("un grand défi envoyé pour une autre classe que celle du profil est refusé", () => {
+  const envoi = { ...envoiDuGrandDefi, defi: { ...envoiDuGrandDefi.defi, niveau: CE2 } };
+
+  assertThrows(() => revalider(envoi, { reussies: toutesLesLecons }), DefiInconnu);
+});
+
+Deno.test("un grand défi d'une matière sans leçon dans la classe est refusé", () => {
+  const envoi = { ...envoiDuGrandDefi, defi: { ...envoiDuGrandDefi.defi, matiere: matiereDeCode("sciences") } };
+
+  assertThrows(() => revalider(envoi, { reussies: toutesLesLecons }), DefiInconnu);
+});
+
+Deno.test("un grand défi dont la matière n'est pas réussie est à venir et refusé", () => {
+  assertThrows(() => revalider(envoiDuGrandDefi, { reussies: toutesLesLecons.slice(0, 9) }), DefiAVenir);
+});
+
+Deno.test("un grand défi à venir qui était déjà relevé, rejoué, est accepté", () => {
+  const releves = [{ matiere: maths, niveau: CE1, grandDefi: true as const }];
+
+  const revalide = revalider(envoiDuGrandDefi, { reussies: [], releves });
+
+  assertEquals(revalide.nombreDeQuestions, 12);
+});
+
+Deno.test("un grand défi de 13 questions est refusé comme incohérent", () => {
+  const supplementaire = questionsPosablesDuDefi(grandDefiDeMaths!, lecons)
+    .find(({ identite }) => !planDuGrandDefi.questions.some((q) => q.identite.valeur === identite.valeur));
+  assertExists(supplementaire);
+  const questions = [...planDuGrandDefi.questions, supplementaire];
+
+  assertThrows(
+    () => revalider(jouerLeGrandDefi({ questions }).envoi, { reussies: toutesLesLecons }),
+    PlanDuDefiIncoherent,
+  );
 });

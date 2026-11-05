@@ -1,12 +1,26 @@
 import { assertEquals } from "@std/assert";
+import { matiereDeCode, Niveau } from "../../catalogue/domain/index.ts";
+import type { Defi, DefiReleve, GrandDefi } from "../../apprentissage/domain/index.ts";
 import {
   annonceDuDefiOuvert,
+  annonceDuDefiOuvertPour,
+  annonceDuGrandDefiOuvert,
   inviterARelever,
+  inviterAReleverLeGrandDefi,
   nomDuDefi,
+  nomDuDefiOuvert,
+  nomDuGrandDefi,
   parolesDeDebutDeDefi,
+  parolesDeDebutDeGrandDefi,
+  parolesDeDebutDuDefi,
   parolesDeFinDeDefi,
+  parolesDeFinDeGrandDefi,
+  parolesDeFinDuDefiReleve,
   phraseDeFinAvecLeDefi,
+  phraseDeFinAvecLeDefiOuvert,
+  phraseDeFinAvecLeGrandDefi,
   titreDuDefiReleve,
+  titreDuGrandDefiReleve,
 } from "./paroles-du-defi.ts";
 
 Deno.test("à la fin de la séance qui ouvre le défi, le personnage guide propose de le relever", () => {
@@ -51,6 +65,104 @@ Deno.test("sans défi ouvert, la phrase de fin reste seule", () => {
   assertEquals(phraseDeFinAvecLeDefi("À demain !", "Léa", undefined), "À demain !");
 });
 
+Deno.test("le personnage guide propose le grand défi après sa phrase de fin", () => {
+  const texte = phraseDeFinAvecLeGrandDefi("À demain !", "Léa", "maths");
+
+  assertEquals(
+    texte,
+    "À demain ! Bravo Léa ! Tu as réussi toutes les leçons de maths. Le grand défi t'attend !",
+  );
+});
+
 Deno.test("un défi se nomme « Défi » suivi de son numéro", () => {
   assertEquals(nomDuDefi(1), "Défi 1");
+});
+
+Deno.test("le grand défi se nomme « Grand défi »", () => {
+  assertEquals(nomDuGrandDefi(), "Grand défi");
+});
+
+Deno.test("la fin de séance annonce que le grand défi de la matière est ouvert", () => {
+  assertEquals(annonceDuGrandDefiOuvert("maths"), "Le grand défi des maths est ouvert !");
+});
+
+Deno.test("à la fin de la séance qui rend la matière réussie, le personnage guide propose le grand défi", () => {
+  const texte = inviterAReleverLeGrandDefi({ prenom: "Léa", matiere: "maths" });
+
+  assertEquals(texte, "Bravo Léa ! Tu as réussi toutes les leçons de maths. Le grand défi t'attend !");
+});
+
+Deno.test("au début du grand défi, le personnage guide rassure en parlant de toutes les leçons de la matière", () => {
+  const texte = parolesDeDebutDeGrandDefi({ matiere: "maths" });
+
+  assertEquals(texte, "Voici des questions de toutes tes leçons de maths. Prends ton temps, je suis avec toi !");
+});
+
+Deno.test("à la fin du grand défi relevé pour la première fois, le personnage guide félicite l'enfant", () => {
+  const texte = parolesDeFinDeGrandDefi({ prenom: "Léa", matiere: "maths", dejaReleve: false });
+
+  assertEquals(texte, "Bravo Léa ! Tu as relevé le grand défi des maths !");
+});
+
+Deno.test("à la fin d'un grand défi rejoué, le personnage guide dit que l'enfant l'a encore relevé", () => {
+  const texte = parolesDeFinDeGrandDefi({ prenom: "Léa", matiere: "maths", dejaReleve: true });
+
+  assertEquals(texte, "Bravo Léa ! Tu as encore relevé le grand défi des maths !");
+});
+
+Deno.test("l'annonce de fin de grand défi s'intitule « Grand défi relevé ! », celle du défi d'une partie reste « Défi relevé ! »", () => {
+  assertEquals(titreDuGrandDefiReleve(), "Grand défi relevé !");
+  assertEquals(titreDuDefiReleve(), "Défi relevé !");
+});
+
+const maths = matiereDeCode("maths");
+const niveau = Niveau.de("CE1");
+const defiNumero2: Defi = { matiere: maths, niveau, numero: 2, lecons: ["ma-ce1-1", "ma-ce1-2", "ma-ce1-3"] };
+const grandDefiDesMaths: GrandDefi = { matiere: maths, niveau, grandDefi: true, lecons: ["ma-ce1-1", "ma-ce1-2"] };
+
+Deno.test("le repère d'un défi du parcours porte son numéro, celui du grand défi ne porte pas de numéro", () => {
+  assertEquals([nomDuDefiOuvert(defiNumero2), nomDuDefiOuvert(grandDefiDesMaths)], ["Défi 2", "Grand défi"]);
+});
+
+Deno.test("l'annonce du défi ouvert nomme le numéro du défi, ou la matière du grand défi", () => {
+  assertEquals([annonceDuDefiOuvertPour(defiNumero2), annonceDuDefiOuvertPour(grandDefiDesMaths)], [
+    "Le défi 2 est ouvert !",
+    "Le grand défi des maths est ouvert !",
+  ]);
+});
+
+Deno.test("la phrase de fin propose le défi que la séance vient d'ouvrir, comme défi du parcours", () => {
+  const texte = phraseDeFinAvecLeDefiOuvert("À demain !", "Léa", defiNumero2);
+
+  assertEquals(texte, phraseDeFinAvecLeDefi("À demain !", "Léa", 2));
+});
+
+Deno.test("la phrase de fin propose le défi que la séance vient d'ouvrir, comme grand défi", () => {
+  const texte = phraseDeFinAvecLeDefiOuvert("À demain !", "Léa", grandDefiDesMaths);
+
+  assertEquals(texte, phraseDeFinAvecLeGrandDefi("À demain !", "Léa", "maths"));
+});
+
+Deno.test("la phrase de fin reste telle quelle quand la séance n'ouvre aucun défi", () => {
+  assertEquals(phraseDeFinAvecLeDefiOuvert("À demain !", "Léa", undefined), "À demain !");
+});
+
+Deno.test("au début d'un défi, les paroles comptent les leçons du défi ; au début du grand défi, elles nomment la matière", () => {
+  assertEquals([parolesDeDebutDuDefi(defiNumero2), parolesDeDebutDuDefi(grandDefiDesMaths)], [
+    "Voici des questions de 3 leçons que tu connais. Prends ton temps, je suis avec toi !",
+    "Voici des questions de toutes tes leçons de maths. Prends ton temps, je suis avec toi !",
+  ]);
+});
+
+Deno.test("à la fin d'un défi relevé, les paroles le nomment par son numéro ; à la fin du grand défi, par sa matière", () => {
+  const defiReleve: DefiReleve = { matiere: maths, niveau, numero: 2 };
+  const grandDefiReleve: DefiReleve = { matiere: maths, niveau, grandDefi: true };
+
+  assertEquals([
+    parolesDeFinDuDefiReleve({ prenom: "Léa", defi: defiReleve, dejaReleve: false }),
+    parolesDeFinDuDefiReleve({ prenom: "Léa", defi: grandDefiReleve, dejaReleve: true }),
+  ], [
+    "Bravo Léa ! Tu as relevé le défi 2 !",
+    "Bravo Léa ! Tu as encore relevé le grand défi des maths !",
+  ]);
 });

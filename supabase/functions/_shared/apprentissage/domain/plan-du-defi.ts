@@ -1,5 +1,5 @@
 import type { Lecon } from "../../catalogue/domain/index.ts";
-import type { Defi } from "./defis-de-la-matiere.ts";
+import { type Defi, type DefiReleve, estUnGrandDefi, type GrandDefi } from "./defis-de-la-matiere.ts";
 import { AucuneQuestionPourLeDefi } from "./erreurs.ts";
 import { type CleDeQuestion, typeDeQuestionDeLExercice } from "./cle-de-question.ts";
 import { cleDeLaDictee } from "./cles-des-questions.ts";
@@ -16,12 +16,17 @@ export type QuestionDuDefi = {
 export type PlanDuDefi = { readonly questions: readonly QuestionDuDefi[] };
 
 export const NOMBRE_DE_QUESTIONS_DU_DEFI = 10;
+export const NOMBRE_DE_QUESTIONS_DU_GRAND_DEFI = 12;
 
-export function questionsPosablesDuDefi(defi: Defi, lecons: readonly Lecon[]): QuestionDuDefi[] {
+export function nombreDeQuestionsDuDefi(defi: Defi | GrandDefi | DefiReleve): number {
+  return estUnGrandDefi(defi) ? NOMBRE_DE_QUESTIONS_DU_GRAND_DEFI : NOMBRE_DE_QUESTIONS_DU_DEFI;
+}
+
+export function questionsPosablesDuDefi(defi: Defi | GrandDefi, lecons: readonly Lecon[]): QuestionDuDefi[] {
   return questionsPosablesParLecon(defi, lecons).flat();
 }
 
-function questionsPosablesParLecon(defi: Defi, lecons: readonly Lecon[]): QuestionDuDefi[][] {
+function questionsPosablesParLecon(defi: Defi | GrandDefi, lecons: readonly Lecon[]): QuestionDuDefi[][] {
   const dejaPosables = new Set<string>();
   return lecons
     .filter(({ id }) => defi.lecons.includes(id))
@@ -34,12 +39,12 @@ function questionsPosablesParLecon(defi: Defi, lecons: readonly Lecon[]): Questi
     );
 }
 
-export function planDuDefi(defi: Defi, lecons: readonly Lecon[], hasard: Hasard): PlanDuDefi {
+export function planDuDefi(defi: Defi | GrandDefi, lecons: readonly Lecon[], hasard: Hasard): PlanDuDefi {
   const reserves = questionsPosablesParLecon(defi, lecons)
     .map((questions) => melanger(questions, hasard))
     .filter((reserve) => reserve.length > 0);
   if (reserves.length === 0) throw new AucuneQuestionPourLeDefi();
-  const parts = partsParLecon(reserves.map((reserve) => reserve.length), hasard);
+  const parts = partsParLecon(reserves.map((reserve) => reserve.length), nombreDeQuestionsDuDefi(defi), hasard);
   const retenues = reserves.flatMap((reserve, rang) => reserve.slice(0, parts[rang]));
   return { questions: melanger(retenues, hasard) };
 }
@@ -57,10 +62,14 @@ function questionsPosablesDeLaLecon(lecon: Lecon): QuestionDuDefi[] {
 }
 
 /** Un plan envoyé est possible s'il pourrait sortir de `planDuDefi` : sans doublon, complet, réparti à parts égales. */
-export function estUnPlanPossible(defi: Defi, lecons: readonly Lecon[], retenues: readonly CleDeQuestion[]): boolean {
+export function estUnPlanPossible(
+  defi: Defi | GrandDefi,
+  lecons: readonly Lecon[],
+  retenues: readonly CleDeQuestion[],
+): boolean {
   const parLecon = questionsPosablesParLecon(defi, lecons).filter((questions) => questions.length > 0);
   const disponibles = parLecon.map((questions) => questions.length);
-  const { parts, reste } = partsEgales(disponibles);
+  const { parts, reste } = partsEgales(disponibles, nombreDeQuestionsDuDefi(defi));
   const choisies = parLecon.map((questions) =>
     retenues.filter((cle) => questions.some(({ identite }) => identite.valeur === cle.valeur)).length
   );
@@ -69,8 +78,8 @@ export function estUnPlanPossible(defi: Defi, lecons: readonly Lecon[], retenues
     choisies.every((nombre, rang) => nombre >= (parts[rang] as number) && nombre <= (parts[rang] as number) + 1);
 }
 
-function partsParLecon(disponibles: readonly number[], hasard: Hasard): number[] {
-  const { parts, reste } = partsEgales(disponibles);
+function partsParLecon(disponibles: readonly number[], limite: number, hasard: Hasard): number[] {
+  const { parts, reste } = partsEgales(disponibles, limite);
   const avecReste = parts.flatMap((part, rang) => part < (disponibles[rang] as number) ? [rang] : []);
   for (const rang of melanger(avecReste, hasard).slice(0, reste)) {
     parts[rang] = (parts[rang] as number) + 1;
@@ -79,10 +88,10 @@ function partsParLecon(disponibles: readonly number[], hasard: Hasard): number[]
 }
 
 /** Parts égales entre les leçons ; ce qu'une leçon ne peut pas donner est repris par les autres. `reste` est à répartir au hasard. */
-function partsEgales(disponibles: readonly number[]): { parts: number[]; reste: number } {
+function partsEgales(disponibles: readonly number[], limite: number): { parts: number[]; reste: number } {
   const parts = disponibles.map(() => 0);
   const avecReste = () => parts.flatMap((part, rang) => part < (disponibles[rang] as number) ? [rang] : []);
-  let aPoser = Math.min(NOMBRE_DE_QUESTIONS_DU_DEFI, disponibles.reduce((a, b) => a + b, 0));
+  let aPoser = Math.min(limite, disponibles.reduce((a, b) => a + b, 0));
   for (let part = Math.floor(aPoser / avecReste().length); part > 0; part = Math.floor(aPoser / avecReste().length)) {
     for (const rang of avecReste()) {
       const prise = Math.min(part, (disponibles[rang] as number) - (parts[rang] as number));
