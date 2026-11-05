@@ -1,5 +1,6 @@
 import { assert, assertArrayIncludes, assertEquals } from "@std/assert";
 import { celebrationDe, type UniversCelebre } from "./celebrations-des-univers.ts";
+import { UNIVERS } from "./univers.ts";
 import { VARIANTES_DES_UNIVERS } from "./index.ts";
 import { hasardFixe } from "../test_utils/hasard-fixe.ts";
 
@@ -88,6 +89,23 @@ Deno.test("la variante de la célébration Police est tirée par le hasard parmi
   assertEquals(variantes, ["orchestre", "trottinette", "danse"]);
 });
 
+Deno.test("le défi relevé dans l'univers Pompiers est fêté par le cri de victoire « Mission accomplie ! » sur la grande victoire", () => {
+  const celebration = celebrationDe("defiReleve", "pompier", hasardFixe(0));
+
+  assertEquals(celebration?.univers, "pompier");
+  assertEquals(celebration?.moment, "defiReleve");
+  assertEquals(celebration?.cri, "Mission accomplie !");
+  assertEquals(celebration?.musique, "grandeVictoire");
+});
+
+Deno.test("la variante de la célébration Pompiers est tirée par le hasard parmi cloche, arc et pluie", () => {
+  const variantes = [0, 0.5, 0.99].map((tirage) =>
+    celebrationDe("defiReleve", "pompier", hasardFixe(tirage))?.variante.cle
+  );
+
+  assertEquals(variantes, ["cloche", "arc", "pluie"]);
+});
+
 Deno.test("le domaine publie les clés de variante de chaque univers célébré", () => {
   assertEquals(VARIANTES_DES_UNIVERS, {
     sports: ["glissade", "avion", "danse"],
@@ -95,10 +113,11 @@ Deno.test("le domaine publie les clés de variante de chaque univers célébré"
     animaux: ["jongle", "mange", "joues"],
     princesse: ["arc", "envol", "signes"],
     police: ["orchestre", "trottinette", "danse"],
+    pompier: ["cloche", "arc", "pluie"],
   });
 });
 
-for (const univers of ["sports", "danse", "animaux", "princesse", "police"] as const) {
+for (const univers of ["sports", "danse", "animaux", "princesse", "police", "pompier"] as const) {
   Deno.test(`la variante tirée dans l'univers ${univers} appartient aux clés publiées par le domaine`, () => {
     const cle = celebrationDe("defiReleve", univers, hasardFixe(0.5))?.variante.cle;
     const clesPubliees: readonly string[] = VARIANTES_DES_UNIVERS[univers];
@@ -123,10 +142,10 @@ Deno.test("les clés de variante publiées pour Sports sont typées sur les seul
   assertEquals(clesDesSports.length, 3);
 });
 
-for (const cle of ["pompier"] as const) {
-  Deno.test(`l'univers ${cle}, pas encore livré, n'a pas de célébration de l'univers : la fin garde la célébration commune`, () => {
+for (const { cle } of UNIVERS) {
+  Deno.test(`l'univers ${cle} a une célébration de l'univers`, () => {
     const celebration = celebrationDe("defiReleve", cle, hasardFixe(0));
 
-    assertEquals(celebration, undefined);
+    assertEquals(celebration?.univers, cle);
   });
 }
