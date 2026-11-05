@@ -10,7 +10,7 @@ import type { LumiDessinee } from "./personnage.ts";
 const COULEURS_DES_RAYONS = ["#A23BB8", "#FFC93C", "#FFFFFF", "#FF8FB8"];
 const COULEURS_DE_L_ARC_EN_CIEL = ["#FF6B6B", "#FFB84D", "#FFE66D", "#6BCB77", "#4D96FF", "#B07CF0"];
 const SIGNES: readonly { readonly signe: string; readonly couleur: string; readonly teinte: Teinte }[] = [
-  { signe: "1", couleur: "#FFC93C", teinte: "or" },
+  { signe: "1", couleur: "#FFC93C", teinte: "rosePale" },
   { signe: "2", couleur: "#FF8FB8", teinte: "rose" },
   { signe: "3", couleur: "#9FD3FF", teinte: "bleu" },
   { signe: "A", couleur: "#B07CF0", teinte: "violet" },
@@ -38,7 +38,7 @@ export function creerLesEffets(racine: SVGSVGElement, animee: boolean) {
   n("sort").innerHTML = `<circle r="16" fill="url(#princesse-lueur)" transform="scale(1.6)"/>${etincelle(14)}`;
   n("fleur").innerHTML = `<g class="tige"><path d="M0 0 Q-4 -20 0 -44" fill="none" stroke="#3F9A63" stroke-width="5" stroke-linecap="round"/><path d="M0 -20 Q-16 -24 -18 -36 Q-6 -36 0 -22 Z M0 -28 Q16 -32 18 -44 Q6 -44 0 -30 Z" fill="#6CBF84" stroke="${CONTOUR}" stroke-width="2.2" stroke-linejoin="round"/></g><g class="corolle" transform="translate(0 -46)">${[0, 1, 2, 3, 4, 5, 6, 7].map((k) => `<ellipse class="petale" rx="9" ry="20" transform="rotate(${k * 45}) translate(0 -16)" fill="${k % 2 ? "#FF8FB8" : "#FFB3D1"}" stroke="${CONTOUR}" stroke-width="2.2"/>`).join("")}<circle r="11" fill="#FFC93C" stroke="${CONTOUR}" stroke-width="2.4"/><circle cx="-3" cy="-3" r="3" fill="#FFF1A8"/></g>`;
   n("arc-en-ciel").innerHTML = COULEURS_DE_L_ARC_EN_CIEL.map((c, i) => `<path d="M${-118 + i * 8} 0 A${118 - i * 8} ${118 - i * 8} 0 0 1 ${118 - i * 8} 0" stroke="${c}" stroke-width="8" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100"/>`).join("");
-  n("couronne").innerHTML = Array.from({ length: NOMBRE_DE_FLEURS_DE_LA_COURONNE }, (_, i) => `<g>${fleurMagique(i === 3 ? 9 : 6, i % 2 ? "blanc" : "or")}</g>`).join("");
+  n("couronne").innerHTML = Array.from({ length: NOMBRE_DE_FLEURS_DE_LA_COURONNE }, (_, i) => `<g>${fleurMagique(i === 3 ? 9 : 6, i % 2 ? "blanc" : "rosePale")}</g>`).join("");
   n("etincelles-d-envol").innerHTML = Array.from({ length: NOMBRE_D_ETINCELLES_DE_L_ENVOL }, (_, i) => `<g>${etincelle(4, i)}</g>`).join("");
   n("signes").innerHTML = SIGNES.map(({ signe, couleur, teinte }) => `<g><text class="signe-magique" text-anchor="middle" dominant-baseline="middle" font-weight="800" font-size="30" fill="${couleur}" stroke="${CONTOUR}" stroke-width="5" stroke-linejoin="round" paint-order="stroke">${signe}</text><g class="devenu-forme" opacity="0">${fleurMagique(10, teinte)}</g></g>`).join("");
   n("joie").innerHTML = [0, 1, 2].map((i) => `<g>${etincelle(7, i)}</g>`).join("");

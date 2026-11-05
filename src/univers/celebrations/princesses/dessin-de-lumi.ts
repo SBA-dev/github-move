@@ -57,7 +57,7 @@ const dessinDesBouches = `
  * Robe rose jusqu'aux genoux à manches bouffantes et col rond, legging, ballerines, tiare ; cheveux d'un seul tenant, ailes translucides.
  */
 export const STRUCTURE_DE_LUMI = `
-    <g id="princesse-ailes"><g id="princesse-aile-g">${dessinDeLAile(-1)}</g><g id="princesse-aile-d">${dessinDeLAile(1)}</g></g>
+    <g><g id="princesse-aile-g">${dessinDeLAile(-1)}</g><g id="princesse-aile-d">${dessinDeLAile(1)}</g></g>
     <g id="princesse-cheveux-arriere"><path id="princesse-chevelure-dos" fill="${CHEVEUX}" stroke="${CONTOUR}" stroke-width="3" stroke-linejoin="round"/>${[0, 1, 2, 3, 4].map((k) => `<g id="princesse-brin-${k}">${MECHE}</g>`).join("")}</g>
     <g id="princesse-bras-arriere"></g>
     ${dessinDeLaJambe("g")}${dessinDeLaJambe("d")}
@@ -67,9 +67,9 @@ export const STRUCTURE_DE_LUMI = `
       <path class="jupe-plis" fill="#D96A90" opacity=".9"/><path class="jupe-lumiere" fill="${ROBE_LUMIERE}" opacity=".9"/><path class="jupe-ombre" fill="none" stroke="${ROBE_OMBRE}" stroke-width="2" stroke-linecap="round" opacity=".7"/>
       <path class="corsage" fill="${ROBE}" stroke="${CONTOUR}" stroke-width="3" stroke-linejoin="round"/><path class="corsage-ombre" fill="${ROBE_OMBRE}"/>
       <path class="ceinture" fill="none" stroke="${OR}" stroke-width="4" stroke-linecap="round"/><path class="col" fill="${PEAU}" stroke="${CONTOUR}" stroke-width="2.4"/>
-      <g class="etoile-du-corsage"><path d="M0 -5 L1.5 -1.5 L5 0 L1.5 1.5 L0 5 L-1.5 1.5 L-5 0 L-1.5 -1.5 Z" fill="${OR}" stroke="${CONTOUR}" stroke-width="1.2"/></g>
+      <g class="etincelle-du-corsage"><path d="M0 -5 L1.5 -1.5 L5 0 L1.5 1.5 L0 5 L-1.5 1.5 L-5 0 L-1.5 -1.5 Z" fill="${OR}" stroke="${CONTOUR}" stroke-width="1.2"/></g>
     </g>
-    <g id="princesse-cou"><path d="M-6 -118 V-104 H6 V-118 Z" fill="${PEAU}" stroke="${CONTOUR}" stroke-width="2.6"/></g>
+    <g><path d="M-6 -118 V-104 H6 V-118 Z" fill="${PEAU}" stroke="${CONTOUR}" stroke-width="2.6"/></g>
     <g id="princesse-tete">
       <circle r="40" fill="${PEAU}" stroke="${CONTOUR}" stroke-width="3.6"/>
       <path d="M10 38 A40 40 0 0 0 38 -12 A33 33 0 0 1 10 38 Z" fill="${PEAU_OMBRE}"/>
@@ -81,7 +81,7 @@ export const STRUCTURE_DE_LUMI = `
       <g id="princesse-nez"><path d="M-2 -3 Q0 2 3 -1" fill="none" stroke="${CONTOUR}" stroke-width="2.2" stroke-linecap="round"/></g>
       ${dessinDeLOeil("g")}${dessinDeLOeil("d")}
       ${dessinDuSourcil("g")}${dessinDuSourcil("d")}
-      <g id="princesse-frange"><path id="princesse-frange-forme" fill="${CHEVEUX}" stroke="${CONTOUR}" stroke-width="3" stroke-linejoin="round"/><path id="princesse-frange-ombre" fill="none" stroke="${CHEVEUX_OMBRE}" stroke-width="2" stroke-linecap="round" opacity=".8"/><path id="princesse-frange-lumiere" fill="none" stroke="${CHEVEUX_LUMIERE}" stroke-width="3" stroke-linecap="round"/></g>
+      <g><path id="princesse-frange-forme" fill="${CHEVEUX}" stroke="${CONTOUR}" stroke-width="3" stroke-linejoin="round"/><path id="princesse-frange-ombre" fill="none" stroke="${CHEVEUX_OMBRE}" stroke-width="2" stroke-linecap="round" opacity=".8"/><path id="princesse-frange-lumiere" fill="none" stroke="${CHEVEUX_LUMIERE}" stroke-width="3" stroke-linecap="round"/></g>
       <g id="princesse-tiare"><path d="M-16 -2 L-11 -14 L-5 -4 L0 -18 L5 -4 L11 -14 L16 -2 Z" fill="${OR}" stroke="${CONTOUR}" stroke-width="2.4" stroke-linejoin="round"/><circle cy="-10" r="3.2" fill="#FF8FB8" stroke="${CONTOUR}" stroke-width="1.6"/><path d="M-16 -2 H16" stroke="${OR_OMBRE}" stroke-width="2"/></g>
     </g>
     <g id="princesse-bras-avant"></g>`;

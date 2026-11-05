@@ -9,7 +9,7 @@ import { dessinDuBras, MAINS, OR, STRUCTURE_DE_LUMI } from "./dessin-de-lumi.ts"
 import { fleurMagique } from "./magie.ts";
 import { type Emotion, type Pose, poseA, SOL, type ScenarioDesPrincesses } from "./poses.ts";
 
-export const ECHELLE_DE_BASE = 1.3;
+const ECHELLE_DE_BASE = 1.3;
 const BASE = ECHELLE_DE_BASE;
 
 const EMOS: Record<Emotion, { readonly s: readonly [number, number]; readonly lid: number; readonly pup: number }> = {
@@ -35,7 +35,7 @@ export type LumiDessinee = { readonly pose: Pose; /** Le bout de la baguette dan
 export function creerLumi(racine: SVGSVGElement) {
   const n = elementsDe(racine, "princesse");
   n("lumi").innerHTML = STRUCTURE_DE_LUMI;
-  n("baguette").innerHTML = `<line x1="0" y1="0" x2="0" y2="-34" stroke="#33304A" stroke-width="7" stroke-linecap="round"/><line x1="0" y1="0" x2="0" y2="-34" stroke="#FFFFFF" stroke-width="3.6" stroke-linecap="round"/><line x1="0" y1="-4" x2="0" y2="-30" stroke="${OR}" stroke-width="1.4" stroke-dasharray="3 3"/><g transform="translate(0 -40)"><circle r="12" fill="url(#princesse-lueur)"/>${fleurMagique(9, "or")}</g>`;
+  n("baguette").innerHTML = `<line x1="0" y1="0" x2="0" y2="-34" stroke="#33304A" stroke-width="7" stroke-linecap="round"/><line x1="0" y1="0" x2="0" y2="-34" stroke="#FFFFFF" stroke-width="3.6" stroke-linecap="round"/><line x1="0" y1="-4" x2="0" y2="-30" stroke="${OR}" stroke-width="1.4" stroke-dasharray="3 3"/><g transform="translate(0 -40)"><circle r="12" fill="url(#princesse-lueur)"/>${fleurMagique(9, "rosePale")}</g>`;
   const cheveux = creerLesCheveux(racine);
   const bras = { g: creerLeBras("g"), d: creerLeBras("d") };
   const bouches = [...n("bouche").children];
@@ -144,7 +144,7 @@ export function creerLumi(racine: SVGSVGElement) {
     poser(q1(robe, "corsage-ombre"), "d", `M${r1(8 * w + dxr)} -108 Q${r1(22 * w + dxr)} -96 ${r1(T + dxr)} -80 H${r1(T * .5 + dxr)} Q${r1(12 * w + dxr)} -96 ${r1(8 * w + dxr)} -108 Z`);
     poser(q1(robe, "ceinture"), "d", `M${r1(-T + 2 + dxr)} -82 Q0 -76 ${r1(T - 2 + dxr)} -82`);
     poser(q1(robe, "col"), "d", `M${r1(-9 + dxr)} -109 Q0 -100 ${r1(9 + dxr)} -109 Q0 -113 ${r1(-9 + dxr)} -109 Z`);
-    deplacer(q1(robe, "etoile-du-corsage"), `translate(${r1(dxr)} -94)`);
+    deplacer(q1(robe, "etincelle-du-corsage"), `translate(${r1(dxr)} -94)`);
   }
 
   /** Dessine Lumi à l'instant `t` du scénario ; rend sa pose et le bout de sa baguette (les effets s'y accrochent). */

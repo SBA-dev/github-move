@@ -2,9 +2,9 @@ import { r1 } from "../commun/courbes.ts";
 import { CONTOUR } from "./dessin-de-lumi.ts";
 
 /** Les teintes des pétales de la fleur magique. */
-export type Teinte = "or" | "blanc" | "rose" | "bleu" | "violet" | "vert" | "orange";
+export type Teinte = "rosePale" | "blanc" | "rose" | "bleu" | "violet" | "vert" | "orange";
 
-const COULEURS_DES_PETALES: Record<Teinte, string> = { or: "#FFB3D1", blanc: "#FFFFFF", rose: "#FF8FB8", bleu: "#9FD3FF", violet: "#C9A0F5", vert: "#9BE0A8", orange: "#FFC48A" };
+const COULEURS_DES_PETALES: Record<Teinte, string> = { rosePale: "#FFB3D1", blanc: "#FFFFFF", rose: "#FF8FB8", bleu: "#9FD3FF", violet: "#C9A0F5", vert: "#9BE0A8", orange: "#FFC48A" };
 const ETINCELLES_PALES = ["#FFE9A0", "#FFC9DE", "#FFFFFF"] as const;
 const CENTRE_DE_LA_FLEUR = "#FFF3B0";
 
