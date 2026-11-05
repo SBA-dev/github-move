@@ -145,8 +145,8 @@ export function EcranDeFin({ seance, univers, niveau, onDireLaFin, meilleuresEto
   const [celebration, setCelebration] = useState<CelebrationDeLaFin | undefined>();
   useEffect(() => {
     if (!matierePrete || celebration) return;
-    setCelebration(celebrationDeLaFin({ defiRelevePourLaPremiereFois: false, matiereReussieParLaSeance: matiereReussie }, univers.cle, hasardDuNavigateur));
-  }, [matierePrete, matiereReussie, univers.cle, celebration]);
+    setCelebration(celebrationDeLaFin({ defiRelevePourLaPremiereFois: false, matiereReussieParLaSeance: matiereReussie, tenueRecue: tenue }, univers.cle, hasardDuNavigateur));
+  }, [matierePrete, matiereReussie, tenue, univers.cle, celebration]);
   const musiqueDeLaCelebration = celebration?.sorte === "univers" ? celebration.celebration.musique : undefined;
   const { prete: quetePrete, accomplie: queteAccomplie } = useQueteAccomplieParLaSeance(queteAvant, seance.enfant, terminee !== undefined);
   const accueil = useRef<HTMLButtonElement>(null);
