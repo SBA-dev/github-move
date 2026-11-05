@@ -43,7 +43,7 @@ annonce disponibles dès la première image ; écart à 97.23 noté dans la déc
 | R1 | Au premier défi relevé dans l'univers « Sports », Coach Léo joue la célébration de l'univers à la place de la célébration commune, avant de féliciter l'enfant ; il n'apparaît qu'une fois, dans la scène, sa bulle gardant ses paroles (106.28) | Au premier défi relevé, Coach Léo marque un but et le fête, puis félicite Léa · Le hasard ne choisit que la variante (Plan, 3 exemples) · Un défi relevé avec des erreurs est fêté par la même célébration · Sans réseau, Coach Léo joue quand même la célébration |
 | R2 | L'univers ne change que la mise en scène : même annonce, mêmes boutons, aucune étoile, même suite du parcours | Dans l'univers « <univers> », la fin du défi annonce et propose la même chose (Plan : Sports, Danse, Animaux de la forêt) · Après la célébration, le parcours de Léa est le même que dans un autre univers |
 | R3 | Seul le premier défi relevé est fêté par la célébration de l'univers ; un défi rejoué garde la célébration commune (confettis compris, 106.25) et « séance terminée » | Rejouer un défi relevé fait entendre « séance terminée », avec la célébration commune et sans but de Coach Léo |
-| R4 | La célébration est celle de l'univers du profil au moment du défi relevé ; un univers pas encore livré garde la célébration commune | Dans l'univers « <univers> », pas encore livré, le premier défi relevé garde la célébration commune (Plan, 5 univers) · Un enfant passé dans l'univers « Sports » voit Coach Léo fêter son premier défi relevé |
+| R4 | La célébration est celle de l'univers du profil au moment du défi relevé ; un univers pas encore livré garde la célébration commune | Dans l'univers « <univers> », pas encore livré, le premier défi relevé garde la célébration commune (Plan, 4 univers depuis 106c : Princesses et fées, Police, Pompiers, Danse) · Un enfant passé dans l'univers « Sports » voit Coach Léo fêter son premier défi relevé |
 | R5 | La célébration ne retient jamais l'enfant : un toucher hors des boutons ne fait rien ; boutons et clavier agissent tout de suite et arrêtent la musique | Toucher l'écran en dehors des boutons ne change rien · Toucher « Mon parcours » y mène tout de suite et arrête la musique · Le clavier n'est jamais bloqué · À 360 px, la célébration tient dans la largeur et ses boutons restent assez grands |
 | R6 | Mouvements réduits : image fixe de la même scène, cri et annonce, sans mouvement ni confettis ; une seule annonce aux lecteurs d'écran | Avec les mouvements réduits, image fixe sans mouvement ni confettis · Les lecteurs d'écran annoncent une seule fois « Défi relevé ! », sans lire le cri de victoire |
 | R7 | La musique est un effet sonore : jouée en Muet (seule la parole est coupée), arrêtée par un écran du parent | En Muet, la musique se fait entendre, sans parole · En arrivant sur un écran du parent, la musique s'arrête |
@@ -52,7 +52,7 @@ Livraisons suivantes, scénarios tagués `@hors-106a` (tous `@a-valider`) :
 
 | Livraison | Règle | Scénarios |
 |---|---|---|
-| 106b à 106f | Chaque univers a sa célébration, jouée par son personnage guide, avec son cri de victoire | Dans l'univers « <univers> », <personnage guide> fête le premier défi relevé à sa façon (Plan : Danse, Animaux de la forêt, Princesses et fées, Police, Pompiers) |
+| 106b à 106f | Chaque univers a sa célébration, jouée par son personnage guide, avec son cri de victoire | Dans l'univers « <univers> », <personnage guide> fête le premier défi relevé à sa façon (Plan : Danse, Princesses et fées, Police, Pompiers ; Animaux de la forêt livré en 106c) |
 | 106g | La séance qui rend une matière réussie est fêtée par la célébration de l'univers, annonce « Matière réussie ! » | La séance qui rend réussie la dernière leçon de sciences du CE1 fait jouer la célébration · Rejouer une leçon d'une matière déjà réussie ne la fait pas jouer |
 | 106h | Au palier des tenues, le personnage guide joue sa célébration en portant la tenue reçue ; une seule célébration par fin | La séance qui fait recevoir une tenue fait danser Coach Léo avec sa nouvelle tenue · Une séance qui rend la matière réussie et fait recevoir une tenue ne joue qu'une célébration |
 
@@ -97,6 +97,36 @@ autres scénarios à hasard fixé. Le scénario de la musique sans réseau est v
 - Petites célébrations à chaque fin de séance (106.8), réaction animée à une réponse fausse (106.20), grand défi de
   la matière (#137).
 - Toute étoile, tout objet, tout enregistrement : la célébration n'en crée aucun.
+
+## Livraison 106c
+
+Univers **Animaux de la forêt**, scénarios tagués `@livraison-106c`, dans une règle à `Contexte` (« Paul a changé
+l'univers du profil enfant de Léa en « Animaux de la forêt » »). Mêmes scénarios que pour la livraison 106b (Danse) :
+
+| # | Règle | Scénarios (106c) |
+|---|---|---|
+| R9 | Dans l'univers « Animaux de la forêt », Noisette joue au premier défi relevé sa célébration de l'univers à la place de la célébration commune, avec les mêmes garanties que Coach Léo : image fixe en mouvements réduits, cri de victoire jamais lu, place tenue à 360 px | Au premier défi relevé dans l'univers « Animaux de la forêt », Noisette attrape une noisette dorée et le fête, puis félicite Léa · Le hasard ne choisit que la variante : avec « <variante> », Noisette attrape toujours une noisette dorée (Plan : le jonglage, la noisette croquée, les joues pleines) · Avec les mouvements réduits, Léa voit l'image fixe de la célébration de l'univers « Animaux de la forêt », sans mouvement, ni confettis, ni feuilles · Dans l'univers « Animaux de la forêt », les lecteurs d'écran annoncent une seule fois « Défi relevé ! », sans lire « Hourra ! » · À 360 px, la célébration de l'univers « Animaux de la forêt » tient dans la largeur et ses boutons restent assez grands |
+
+- Noms des variantes fixés d'après la maquette validée `docs/maquettes/noisette-animaux.html` (boutons
+  « A · Jonglage », « B · Croque », « C · Joues pleines ») : « le jonglage », « la noisette croquée », « les joues
+  pleines » (106.26 ; l'ancien exemple disait « les joues gonflées »). Libellés neutres : rien de moqueur ni de
+  dégoûtant (règle absolue sur les contenus).
+- Cri de victoire « Hourra ! », affiché et jamais lu ; musique de la célébration de Noisette (« grande victoire » tant
+  que le PO n'a pas choisi, 106.12).
+- Les feuilles qui tombent sur la forêt (« les feuilles de la forêt ») font partie de la célébration de l'univers,
+  comme les confettis de la scène de Coach Léo (106.24 appliquée) : elles remplacent les confettis de la célébration
+  commune et ne tombent pas en mouvements réduits.
+- Noisette n'apparaît qu'une fois, dans la scène, sa bulle gardant ses paroles (106.28). « Chapitre réussi ! » de la
+  maquette n'est pas repris : l'annonce reste « Défi relevé ! ».
+- Ce qui ne dépend pas de l'univers (toucher, boutons et clavier, Muet, espace parent, défi rejoué, annonce et
+  parcours identiques : R2, R3, R5, R7) reste décrit une seule fois, avec Coach Léo.
+- Example mapping : Léa (CE1) passée en Animaux de la forêt relève le défi 1 de maths → Noisette attrape une noisette
+  dorée, puis le jonglage, la noisette croquée ou les joues pleines ; « Hourra ! » ; musique, puis « Bravo Léa ! Tu
+  as relevé le défi 1 ! » ; ni confettis ni « séance terminée » de la célébration commune. Tirage fixé à « le
+  jonglage » → noisette dorée attrapée, puis le jonglage. Mouvements réduits → image fixe avec « Hourra ! » et
+  « Défi relevé ! », aucun confetti ni feuille. Lecteur d'écran → « Défi relevé ! » une fois, jamais « Hourra ! ».
+  360 px → « Hourra ! » visible, rien ne dépasse, boutons de 44 px.
+- Contenus : une fête joyeuse dans la forêt, Noisette fière et souriante ; aucun coffre. Aucune question nouvelle.
 
 ## Questions ouvertes
 
