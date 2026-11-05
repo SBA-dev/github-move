@@ -138,10 +138,13 @@ export function creerLili(racine: SVGSVGElement) {
     }
     // coiffure : ligne de cheveux basse derrière, haute devant
     const sw = Math.sin(w * DEG), dosA = (1 - cw) / 2, yC = lerp(-17, 15, dosA), pente = (15 - -17) / 2, ondul = lerp(3, 1.2, dosA), cote = lerp(5, 13, dosA);
+    // de dos, la chevelure recouvre tout l'arrière du crâne : aucune peau n'en dépasse
+    const recouvrement = clamp01((-cw - .05) / .2), basDeLaTete = (x: number) => Math.sqrt(Math.max(0, (R + 2) ** 2 - x * x)) + 1;
     let d = "";
     for (let i = 0; i <= 12; i++) {
       const x = -R - 1 + (2 * R + 2) * i / 12;
-      const y = yC - (x / R) * sw * pente + ondul * Math.sin(i * 1.9 + .4) - (Math.abs(x) > R * .72 ? cote : 0);
+      const ligne = yC - (x / R) * sw * pente + ondul * Math.sin(i * 1.9 + .4) - (Math.abs(x) > R * .72 ? cote : 0);
+      const y = lerp(ligne, basDeLaTete(x), recouvrement);
       d += `${i ? "L" : "M"}${r1(x)} ${r1(y)}`;
     }
     d += ` Q${R + 4} -14 ${R - 10} -25 Q0 -37 ${-R + 10} -25 Q${-R - 4} -14 ${-R - 1} ${r1(yC + sw * pente - cote)} Z`;
