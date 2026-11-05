@@ -259,7 +259,7 @@ Then(/^aucun onglet « ([^«»]+) » n'est proposé$/, async ({ famille, page },
 
 // Le lookahead laisse « BUT ! » et « Bravo ! » aux steps de la célébration de l'univers : « BUT ! » en préfixe (le cri
 // reste seul entre guillemets), « Bravo ! » en texte exact (« Bravo Léa ! … » reste lu ici). Un nouvel univers s'ajoute de même.
-Then(/^Léa lit « (?!BUT !|Bravo ! »|Hourra ! »|Magique ! »|Enquête résolue ! »)([^«»]+) »$/, async ({ page }, message: string) => {
+Then(/^Léa lit « (?!BUT !|Bravo ! »|Hourra ! »|Magique ! »|Enquête résolue ! »|Mission accomplie ! »)([^«»]+) »$/, async ({ page }, message: string) => {
   await expect(page.getByText(message, { exact: true })).toBeVisible();
 });
 

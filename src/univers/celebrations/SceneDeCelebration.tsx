@@ -1,5 +1,5 @@
 import { type ComponentType, lazy, Suspense } from "react";
-import type { CelebrationDeLUnivers, CleUnivers, UniversCelebre } from "@domain/motivation";
+import type { CelebrationDeLUnivers, CleUnivers } from "@domain/motivation";
 
 type PropsDeScene<Cle extends string> = { readonly cle: Cle; readonly cri: string };
 
@@ -29,20 +29,23 @@ const chargerDanse = memoriser(() => import("./danse/SceneDeLaDanse.tsx"));
 const chargerAnimaux = memoriser(() => import("./animaux/SceneDesAnimaux.tsx"));
 const chargerPrincesses = memoriser(() => import("./princesses/SceneDesPrincesses.tsx"));
 const chargerPolice = memoriser(() => import("./police/SceneDeLaPolice.tsx"));
+const chargerPompiers = memoriser(() => import("./pompiers/SceneDesPompiers.tsx"));
 
 const SceneDesSports = chargerSansEchec(chargerSports);
 const SceneDeLaDanse = chargerSansEchec(chargerDanse);
 const SceneDesAnimaux = chargerSansEchec(chargerAnimaux);
 const SceneDesPrincesses = chargerSansEchec(chargerPrincesses);
 const SceneDeLaPolice = chargerSansEchec(chargerPolice);
+const SceneDesPompiers = chargerSansEchec(chargerPompiers);
 
-/** Un univers célébré sans chargeur ne compile pas : le préchargement ne peut pas oublier une scène. */
-const CHARGEURS_DES_SCENES: Record<UniversCelebre, () => Promise<unknown>> = {
+/** Un univers sans chargeur ne compile pas : le préchargement ne peut pas oublier une scène. */
+const CHARGEURS_DES_SCENES: Record<CleUnivers, () => Promise<unknown>> = {
   sports: chargerSports,
   danse: chargerDanse,
   animaux: chargerAnimaux,
   princesse: chargerPrincesses,
   police: chargerPolice,
+  pompier: chargerPompiers,
 };
 
 /**
@@ -50,8 +53,7 @@ const CHARGEURS_DES_SCENES: Record<UniversCelebre, () => Promise<unknown>> = {
  * la célébration de la fin se joue quand même. Un échec est ignoré : la fin du défi retombe sur l'espace vide.
  */
 export function prechargerLaSceneDe(univers: CleUnivers): void {
-  const chargeurParUnivers: Partial<Record<CleUnivers, () => Promise<unknown>>> = CHARGEURS_DES_SCENES;
-  chargeurParUnivers[univers]?.().catch(() => undefined);
+  CHARGEURS_DES_SCENES[univers]().catch(() => undefined);
 }
 
 /** Un univers célébré qui n'a pas de scène ne compile pas : ajouter un univers au domaine oblige à dessiner sa scène ici. */
@@ -80,6 +82,8 @@ export function SceneDeCelebration({ celebration }: Props) {
       return <Suspense fallback={<EspaceDeLaScene />}><SceneDesPrincesses cle={celebration.variante.cle} cri={celebration.cri} /></Suspense>;
     case "police":
       return <Suspense fallback={<EspaceDeLaScene />}><SceneDeLaPolice cle={celebration.variante.cle} cri={celebration.cri} /></Suspense>;
+    case "pompier":
+      return <Suspense fallback={<EspaceDeLaScene />}><SceneDesPompiers cle={celebration.variante.cle} cri={celebration.cri} /></Suspense>;
     default:
       return universSansScene(celebration);
   }

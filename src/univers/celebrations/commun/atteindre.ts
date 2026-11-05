@@ -1,5 +1,5 @@
-import { DEG } from "../commun/courbes.ts";
-import type { Point } from "../commun/membres.ts";
+import { DEG } from "./courbes.ts";
+import type { Point } from "./membres.ts";
 
 const LONGUEUR_DU_BRAS = [24, 22] as const;
 const EPAULE = (c: "g" | "d"): Point => ({ x: c === "g" ? -18 : 18, y: -38 });
@@ -18,9 +18,9 @@ export function anglesVers(S: Point, T: Point, L1: number, L2: number, cote: num
   return { a1, a2 };
 }
 
-/** Le bras `c` qui amène la main sur la cible (repère du buste) : le coude va vers l'extérieur et le bas. */
-export function brasVers(c: "g" | "d", T: Point): { readonly a1: number; readonly a2: number } {
-  const S = EPAULE(c), cote = c === "g" ? -1 : 1, dx = T.x - S.x, dy = T.y - S.y, D = Math.hypot(dx, dy) || 1, nx = dy / D, ny = -dx / D;
+/** Le bras `c` qui amène la main sur la cible (repère du buste) : le coude va vers l'extérieur et le bas. `S` est l'épaule réelle quand le buste est tourné. */
+export function brasVers(c: "g" | "d", T: Point, S: Point = EPAULE(c)): { readonly a1: number; readonly a2: number } {
+  const cote = c === "g" ? -1 : 1, dx = T.x - S.x, dy = T.y - S.y, D = Math.hypot(dx, dy) || 1, nx = dy / D, ny = -dx / D;
   const [L1, L2] = LONGUEUR_DU_BRAS;
   return anglesVers(S, T, L1, L2, Math.sign(nx * cote + ny * .55) || cote);
 }

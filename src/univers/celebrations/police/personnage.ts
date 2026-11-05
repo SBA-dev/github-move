@@ -4,7 +4,7 @@ import { expressionA } from "../commun/expressions.ts";
 import { decaler, membre, type Membre, type Point, trace } from "../commun/membres.ts";
 import type { CoteDeMain, PoseDeMain } from "../commun/mains.ts";
 import { clignement } from "../commun/visage.ts";
-import { anglesVers, brasVers, HANCHE } from "./atteindre.ts";
+import { anglesVers, brasVers, HANCHE } from "../commun/atteindre.ts";
 import { dessinDuBras, LOUPE, MAINS, SIFFLET, STRUCTURE_D_AGENT_MAX } from "./dessin-de-max.ts";
 import { GUIDON, PLATEAU, TROTTINETTE } from "./dessin-des-objets.ts";
 import { type Emotion, ECHELLE_DE_BASE as BASE, type Pose, poseA, type ScenarioDeLaPolice, SOL, X_MAX } from "./poses.ts";

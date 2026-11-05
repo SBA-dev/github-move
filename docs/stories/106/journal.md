@@ -199,7 +199,7 @@ Branche : `feature/106d-celebration-princesses`, partie de `main` (`adb9329`, me
 | Mesure | Valeur |
 |---|---|
 | Durée | 2026-11-05 02:00 UTC → environ 09:20 UTC, PR prête (environ 7 h 20, dont environ 5 h d'attente) |
-| Attente | réponses du PO 106.34 à 106.36 : environ 4 h 10 (02:50 → 07:08) ; merge de 106b : environ 15 min après les réponses ; merge de 106c : environ 50 min ; verrou `base` : environ 0 (accordé dans la minute) |
+| Attente | autorisation de merge : environ 4 h 50 (13:30 → 18:20 UTC, derrière #161) ; réponses du PO 106.34 à 106.36 : environ 4 h 10 (02:50 → 07:08) ; merge de 106b : environ 15 min après les réponses ; merge de 106c : environ 50 min ; verrou `base` : environ 0 (accordé dans la minute) |
 | Cycles TDD | 1 comportement (RED `850b61e`, GREEN `b11c6f0`) + ajustement du test « univers pas encore livré » |
 | Review | 3 revues delta (ruban de Lili, non bloquants) et 1 revue de branche, toutes APPROUVÉ, aucun cycle À CORRIGER |
 | E2E | 1 run sur `telephone` : 43/43 du premier coup |
@@ -240,7 +240,7 @@ Livraison **106e** : univers Police (Agent Max). Branche `feature/106e-celebrati
 | Mesure | Valeur |
 |---|---|
 | Durée | 2026-11-05 08:20 UTC → environ 11:35 UTC (PRÊTE À MERGER) |
-| Attente | réponses du PO (#106.38 à #106.40) et merge de 106d : 08:50 → 10:00 UTC, sans travail en attente (domaine, scène, planche et steps prêts dans le worktree) ; VERROU base : environ 45 min (derrière #155) |
+| Attente | autorisation de merge : environ 4 h 50 (13:30 → 18:20 UTC, derrière #161) ; réponses du PO (#106.38 à #106.40) et merge de 106d : 08:50 → 10:00 UTC, sans travail en attente (domaine, scène, planche et steps prêts dans le worktree) ; VERROU base : environ 45 min (derrière #155) |
 | Cycles TDD | 1 comportement (entrée `police`, RED puis GREEN) |
 | Review | 1 revue intermédiaire (worktree, APPROUVÉ), 1 review de la branche (APPROUVÉ) ; non bloquants traités |
 | E2E | 2 runs sur `telephone` (7/7 ; 42/42 dont 17 rejoués après un incident d'environnement), aucun KO applicatif |
@@ -250,7 +250,43 @@ Livraison **106e** : univers Police (Agent Max). Branche `feature/106e-celebrati
 | Méthode | comme 106c : worktree local basé sur la branche de 106d (où Sports et Danse étaient déjà sur `commun/`), reporté par cherry-pick après le merge. Leçon : le report a coûté 4 délégations de résolution de conflits (test, code, steps, scénarios) ; un `pkill -f "playwright test"` pendant un run tue aussi le serveur du run suivant |
 | Tokens | relevés par le responsable |
 
+## Livraison 106f : Pompiers (Capitaine Sam)
+
+Équipe lancée le 2026-11-05 (« graphe 106f »), session `session_015z4jmNHAVw9mZYSfXRtpJx`, branche `feature/106f-celebration-pompiers` partie de `main` (`c744821`). Particularité : pas de maquette ; la maquette et la planche sont dessinées d'abord et validées par le PO avant le câblage. Le câblage attend le merge de 106e (mêmes fichiers).
+
+- 10:15 UTC : démarrage, lecture du modèle, des maquettes (méthode d'Agent Max : corps et moteur de Coach Léo) et de la livraison 106e. Contournement Chromium (`pw/` dans le scratchpad) en place.
+- Écart signalé : `src/univers/apparences.ts` (cité par le brief) n'existe pas ; le nom « Capitaine Sam, le pompier courageux » est le même dans `univers.ts`, `CapitaineSam.tsx` et `PersonnageGuide.tsx`. Capitaine Sam garde son dessin fixe d'avant la refonte (#96) : question 106.43.
+- Modèle (section « Livraison 106f ») et 5 scénarios `@livraison-106f` écrits par l'orchestrateur, sur le gabarit de 106d (aucun concept nouveau : entrée de catalogue, libellés, pétales de la caserne, catalogue exhaustif). Questions 106.41 à 106.43.
+- 11:15 UTC : maquette `docs/maquettes/capitaine-sam-pompiers.html` (dérivée d'Agent Max : corps et moteur de Coach Léo ; scènes de 5,2 à 5,3 s, cri vers 4,4 s) et planche `106f-capitaine-sam-{moments,clair,sombre,tetes}.png`. Relue par l'orchestrateur contre la règle absolue : ni flamme, ni fumée, ni sirène, ni étoile à cinq branches ; point soumis au PO : fronton rouge triangulaire de la caserne à 80 px. CADRAGE PRÊT.
+- 11:24 UTC : réponse du PO « 106f reco tout » ([annonce du responsable](https://github.com/SBA-dev/github-move/issues/106#issuecomment-6656757030)) : 106.41 noms retenus, 106.42 maquette et planche validées, 106.43 A (dessin fixe : issue #161). Reportées dans le modèle et le README des maquettes. Attente : merge de 106e avant le câblage.
+- 11:50 UTC : 106e mergée (PR #160, `8f976fa`). `main` intégrée : conflits de documentation et de scénarios résolus en gardant les deux ajouts (sections 106e puis 106f).
+- TDD bloc « Motivation, célébration Pompiers » : RED `0c2727e` (4 erreurs de typage, toutes sur `pompier` ; test « univers pas encore livré » remplacé dans le RED, leçon de 106d appliquée), GREEN `bfb42aa`, refactor `641c06d` (catalogue exhaustif sur `CleUnivers`, `celebrationDe` rend toujours une célébration, `estUniversCelebre` supprimé). `deno test` 2891 verts.
+- Câblage : `638f5ac` (`anglesVers`, `brasVers` dans `commun/atteindre.ts`), `2502f5a` (scène de Capitaine Sam, `src/univers/celebrations/pompiers/`, 45,28 kB, 14,92 kB gzip, chargée à la demande). Captures des états finaux relues par l'orchestrateur contre la planche validée et la règle absolue : conformes.
+- 12:30 UTC : review de la branche (`origin/main...2502f5a`) : **APPROUVÉ**, aucun bloquant. Non bloquants traités : instants d'ouverture des fleurs en constantes, plus aucun rejeu avant la première image (`43b0acd`) ; durée renvoyée à `DUREE_DE_LA_CELEBRATION_S` (`016cd2f`) ; mèche et ombre de contact invisibles retirées (`2977175`) ; intention du catalogue exhaustif (`f531eaf`). Image fixe identique à l'octet, scène animée identique hors bruit de rastérisation. Renvoyé à 106h : jambes et tête de Sam proches de celles de la police, à mettre dans `commun/`.
+- Steps E2E `dc6b90e` (`bddgen` sans step manquant ni ambigu). Revue delta `2502f5a..f531eaf` : **APPROUVÉ**. Non bloquants des steps traités (commentaire de `RANG_DU_TIRAGE`, univers lu seulement pour « l'arc-en-ciel »). Non bloquant noté : aucun test ne vérifie que les instants figés des fleurs suivent les poses.
+- VERROU base demandé (commentaire 6657537384) ; en file derrière #161.
+- 12:51 UTC : VERROU base accordé (annonce du responsable, tableau de #64 vérifié). `main` intégrée (`e0d533f`, #158) sans conflit (`69a83f5`), 2891 tests Deno verts, `tsc` OK. Sonde : 3 × 200 en 0,4 à 1,1 s.
+- E2E `telephone`, 1 worker, head `69a83f5` : `@livraison-106f` **7/7** (3,2 min) ; reste de `@issue-106` hors `@hors-106a` **48/48** (18,2 min ; un premier essai coupé au 28e cas par la limite de temps de la commande, sans échec, relancé en entier). LIBÈRE base (commentaire 6659151349).
+- 18:20 UTC : merge autorisé par le PO (« merge 161 106f OK », annonce du responsable sur #106), VERROU merge et VERROU base accordés (tableau de #64 vérifié). `main` intégrée (`f4e44d4`, #161) sans conflit (`4664447`) : 2891 tests Deno verts, lint, fmt, `tsc` et build OK. Sonde : 3 × 200 en 0,5 à 1,4 s. Rejeu (décision 0022, `telephone`, 1 worker) : `@livraison-106f` et le plan « <personnage guide> a <son dessin> » de #96 modifié par #161, **13/13** (3,9 min). Le diff propre à 106f n'a pas changé (intégration sans résolution) : pas de nouvelle revue delta.
+
+## Mesures (106f)
+
+| Mesure | Valeur |
+|---|---|
+| Durée | 2026-11-05 10:15 UTC → environ 13:25 UTC, PR en brouillon (environ 3 h 10) |
+| Attente | autorisation de merge : environ 4 h 50 (13:30 → 18:20 UTC, derrière #161) ; réponses du PO (106.41 à 106.43) : environ 10 min (11:15 → 11:24) ; merge de 106e : environ 25 min (11:24 → 11:49), sans travail en attente ; verrou base : environ 30 min (12:20 → 12:51), mis à profit pour la review et ses non bloquants |
+| Maquette et planche | dessinées d'abord (illustrateur, environ 22 min, 4 passes de corrections), validées par le PO du premier coup |
+| Cycles TDD | 1 comportement (RED `0c2727e`, GREEN `bfb42aa`, refactor `641c06d`) |
+| Review | 1 review de branche et 1 revue delta, toutes deux APPROUVÉ, aucun cycle À CORRIGER ; non bloquants traités |
+| E2E | 1 run sur `telephone` : 7/7 puis 48/48, du premier coup (un essai coupé par la limite de temps de la commande) |
+| Intégrations de `main` | 3 (106e `8f976fa` : conflits de documentation et de scénarios, deux plans sans exemple supprimés ; #158 `e0d533f` et #161 `f4e44d4` : sans conflit) |
+| Escalades | aucune ; questions au cadrage 106.41 à 106.43 |
+| Verrous | base (12:51 → 13:20 UTC, puis 18:20 UTC pour le rejeu) ; merge (18:20 UTC) |
+| Tokens | relevés par le responsable |
+
 ## Livraison 106h : danses de victoire et tenue portée dans les scènes
 
 - 2026-11-05 ~18:30 UTC : équipe 106h lancée par le responsable (« graphe 106h »). Base `main` `f4e44d4` (106a à 106e, #155, #158, #161). Branche `feature/106h-danses-de-victoire`, base `main`. Dernière livraison de #106.
 - Ordre : 106f (PR #165, verrou `merge`) puis 106g (même lecture `momentDeCelebrationDeLaFin`, même `EcranDeFin.tsx`). Cadrage, planche et scènes depuis `main` ; domaine et câblage de la fin **après** l'intégration de 106g, pour ne pas toucher à leurs fichiers.
+- 18:30 → 18:45 UTC : cadrage. `domain-modeler` (section « Livraison 106h » du modèle) et `po-acceptance` (5 règles R15 à R19, 7 scénarios `@livraison-106h`, section 106h d'`acceptance.md`) en parallèle. Numérotation des questions alignée : 106.47 (tenue montrée quand matière réussie et tenue reçue arrivent ensemble), 106.48 (annonce du moment = annonce de #102), 106.49 (fermeture de #106, musiques à part), 106.50 (petit dessin de l'encart de #102 caché pendant la célébration).
+- 18:28 UTC : 106f mergée (`2acfeac`, message RELIS du responsable). `main` intégrée : conflits de documentation (modèle et journal), les deux ajouts gardés (106f avant 106h).
