@@ -1,45 +1,27 @@
 import { useEffect, useState } from "react";
-import { type Defi, defiOuvertParLaSeance, Etoiles, type GrandDefi, meilleuresEtoilesReunies, parcoursDeLaMatiere } from "@domain/apprentissage";
+import { type Defi, defiOuvertParLaSeance, type GrandDefi, parcoursDeLaMatiere } from "@domain/apprentissage";
 import type { MeilleuresEtoilesDuProfil } from "@domain/motivation";
-import { niveauDuProfil } from "../parcours/niveau-du-profil.ts";
-import { chargerToutesLesLecons } from "../seance/bibliotheque.ts";
-import { etoilesGagneesPendantLUtilisation } from "../seance/fin-de-seance/etoiles-gagnees-pendant-l-utilisation.ts";
-import { lireLEtatDuTestDeDepart } from "../test-de-depart/etat-du-test-de-depart.ts";
+import { entreesAvantEtApresLaSeance, type Seance } from "../seance/fin-de-seance/entrees-avant-et-apres-la-seance.ts";
 import { lireLesDefisReleves } from "./lire-les-defis-releves.ts";
 
 export type DefiOuvert = { readonly pret: boolean; readonly defi: Defi | GrandDefi | undefined };
 
-type Seance = { readonly enfant: string; readonly lecon: string };
-
-function enEtoiles(meilleures: MeilleuresEtoilesDuProfil): ReadonlyMap<string, Etoiles> {
-  const etoiles = [...meilleures].flatMap(([lecon, nombre]): [string, Etoiles][] =>
-    nombre === 1 || nombre === 2 || nombre === 3 ? [[lecon, Etoiles.de(nombre)]] : []
-  );
-  return new Map(etoiles);
-}
-
 async function defiOuvertParLaSeanceTerminee(
-  { enfant, lecon: leconId }: Seance,
+  seance: Seance,
   niveau: string,
   meilleuresAvant: Promise<MeilleuresEtoilesDuProfil | undefined>,
 ): Promise<Defi | GrandDefi | undefined> {
-  const niveauDeLEnfant = niveauDuProfil(niveau);
-  const [avant, lecons, testDeDepart, defisReleves] = await Promise.all([
-    meilleuresAvant,
-    chargerToutesLesLecons(),
-    lireLEtatDuTestDeDepart(enfant),
-    lireLesDefisReleves(enfant),
+  const [entrees, defisReleves] = await Promise.all([
+    entreesAvantEtApresLaSeance(seance, niveau, meilleuresAvant),
+    lireLesDefisReleves(seance.enfant),
   ]);
-  const lecon = lecons.find(({ id }) => id === leconId);
-  if (!niveauDeLEnfant || !avant || !lecon) return undefined;
-  const entrees = { lecons, niveau: niveauDeLEnfant, leconsReussiesAuTestDeDepart: testDeDepart.leconsReussies };
-  const etoilesAvant = enEtoiles(avant);
-  const etoilesApres = meilleuresEtoilesReunies(etoilesAvant, etoilesGagneesPendantLUtilisation(enfant));
+  if (!entrees) return undefined;
+  const { avant, apres, matiere } = entrees;
   return defiOuvertParLaSeance(
-    parcoursDeLaMatiere({ ...entrees, meilleuresEtoiles: etoilesAvant }, lecon.matiere),
-    parcoursDeLaMatiere({ ...entrees, meilleuresEtoiles: etoilesApres }, lecon.matiere),
-    lecon.matiere,
-    niveauDeLEnfant,
+    parcoursDeLaMatiere(avant, matiere),
+    parcoursDeLaMatiere(apres, matiere),
+    matiere,
+    entrees.niveau,
     defisReleves,
   );
 }
