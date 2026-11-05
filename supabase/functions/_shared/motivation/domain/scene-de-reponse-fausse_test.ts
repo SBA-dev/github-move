@@ -1,9 +1,9 @@
 import { assertEquals } from "@std/assert";
 import {
   type FaitsDeLaReponseFausse,
-  SCENES_DE_REPONSE_FAUSSE,
   type SceneDeReponseFausse,
   sceneDeReponseFausse,
+  SCENES_DE_REPONSE_FAUSSE,
 } from "./scene-de-reponse-fausse.ts";
 
 const FAITS_NEUTRES: FaitsDeLaReponseFausse = {
@@ -35,4 +35,40 @@ Deno.test("la première réponse fausse de la séance, dans l'univers Sports, jo
   const scene = sceneDeReponseFausse(FAITS_NEUTRES, "sports");
 
   assertEquals(scene, { univers: "sports" });
+});
+
+Deno.test("une scène déjà jouée dans la séance ne se rejoue pas, même dans l'univers Sports", () => {
+  const faits = { ...FAITS_NEUTRES, sceneDejaJoueeDansLaSeance: true };
+
+  assertEquals(sceneDeReponseFausse(faits, "sports"), undefined);
+});
+
+Deno.test("pendant le chrono d'une fluence, aucune scène de réponse fausse n'est jouée", () => {
+  const faits = { ...FAITS_NEUTRES, pendantLeChronoDUneFluence: true };
+
+  assertEquals(sceneDeReponseFausse(faits, "sports"), undefined);
+});
+
+Deno.test("au test de départ, aucune scène de réponse fausse n'est jouée", () => {
+  const faits = { ...FAITS_NEUTRES, dansLeTestDeDepart: true };
+
+  assertEquals(sceneDeReponseFausse(faits, "sports"), undefined);
+});
+
+Deno.test("avec le personnage guide en petit, aucune scène de réponse fausse n'est jouée", () => {
+  const faits = { ...FAITS_NEUTRES, personnageGuideEnPetit: true };
+
+  assertEquals(sceneDeReponseFausse(faits, "sports"), undefined);
+});
+
+Deno.test("un univers dont la scène n'est pas encore livrée ne joue aucune scène", () => {
+  assertEquals(sceneDeReponseFausse(FAITS_NEUTRES, "danse"), undefined);
+});
+
+Deno.test("une clé d'univers inconnue donne le résultat de l'univers Animaux : aucune scène", () => {
+  assertEquals(sceneDeReponseFausse(FAITS_NEUTRES, "inconnu"), undefined);
+});
+
+Deno.test("sans clé d'univers, le résultat est celui de l'univers Animaux : aucune scène", () => {
+  assertEquals(sceneDeReponseFausse(FAITS_NEUTRES, undefined), undefined);
 });
