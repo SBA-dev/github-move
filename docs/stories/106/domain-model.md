@@ -113,7 +113,7 @@ classDiagram
 | Danse | Lili | entrée en scène, pirouette | `jete`, `ruban`, `sauts` | « Bravo ! » | 106b |
 | Animaux | Noisette (elle) | attrape une noisette dorée | `jongle`, `mange`, `joues` | « Hourra ! » | 106c |
 | Princesses et fées | Lumi | un sort fait éclore une fleur | `arc`, `envol`, `signes` | « Magique ! » | 106d |
-| Police | Agent Max | retrouve un chiot perdu | `orchestre`, `trottinette`, `danse` | « Enquête résolue ! » | 106e |
+| Police | Agent Max | suit des traces de pattes à la loupe et retrouve un chiot perdu ; confettis du commissariat (106.24) | `orchestre`, `trottinette`, `danse` | « Enquête résolue ! » | 106e |
 | Pompiers | Capitaine Sam | planche et maquette à dessiner puis à valider par le PO (106.16 : eau, arc-en-ciel, cloche de la caserne) | à dessiner | « Mission accomplie ! » | 106f |
 
   Validité : au moins une variante par univers livré ; clés uniques dans un univers. Un univers pas encore livré n'a pas d'entrée : `celebrationDe` rend « aucune célébration de l'univers » et la fin garde la célébration commune (106.18). Quand les six univers sont livrés, le catalogue peut devenir exhaustif sur `CleUnivers` (un univers ajouté sans célébration ne compile plus).
@@ -337,6 +337,102 @@ Tranchées le **2026-11-05** par le PO (« merge 106b OK, 106c reco tout, 106d r
 | 106.35 Étoiles à cinq branches (posée par 106d, réponse « oui ») | Appliquée dans 106c : aucune étoile à cinq branches dans la scène de Noisette ; étincelles à quatre branches ou petites fleurs à la place (sous-section « Feuilles de la forêt ») |
 
 Aucune question ouverte pour 106c.
+
+## Livraison 106e : Police
+
+Agent Max (« il », le détective futé), univers Police, d'après la maquette validée `docs/maquettes/agent-max-police.html` (README des maquettes, section « agent-max-police.html : univers Police, Agent Max »). Aucun agrégat, aucun événement, aucune donnée d'enfant de plus : 106e ajoute l'entrée `police` aux structures posées par 106b (`VARIANTES_DES_UNIVERS`, donc `UniversCelebre`, `VarianteDe<"police">`, l'union `CelebrationDeLUnivers`, le catalogue des cris et des musiques et la table `CELEBRANTS`). Aucun type nouveau. La clé de l'univers est `police` (`univers.ts`).
+
+### Entrée du catalogue
+
+| Univers | Variantes | Cri de victoire | Musique |
+|---|---|---|---|
+| `police` | `orchestre`, `trottinette`, `danse` | « Enquête résolue ! » | `grandeVictoire` (106.27) |
+
+L'action est toujours la même. Agent Max suit des traces de pattes à la loupe. Le buisson bouge, un chiot perdu en sort d'un bond et lui saute dans les bras. Câlin, puis Max le pose au sol, où le chiot reste assis à côté de lui pendant la variante. Cette action n'est pas dans le domaine (affichage).
+
+La clé `danse` existe déjà chez Sports, et c'est aussi la clé de l'univers Danse. C'est permis : une clé de variante n'est unique que dans son univers. `VarianteDe<"police">` et `VarianteDe<"sports">` restent deux types distincts, puisque le `switch (celebration.univers)` les sépare. Le cri de victoire « Enquête résolue ! » est le même texte que la première expression d'Agent Max (`univers.ts`). Le terme « Cri de victoire » prévoit déjà ce cas : ce sont deux concepts distincts.
+
+### Noms en clair des variantes (106.26)
+
+| Clé | Ce que fait Agent Max (maquette) | Libellé des scénarios |
+|---|---|---|
+| `orchestre` | il enfile des gants blancs et fait le chef d'orchestre de la circulation. À trois coups de sifflet (« tuut ! »), trois petites voitures colorées passent en rythme, puis il fait une révérence et un clin d'œil | « le chef d'orchestre » |
+| `trottinette` | il met un casque et fait un tour en trottinette : poussées du pied, glisse, « dring ! », signe de la main, retour, puis arrêt en douceur et clin d'œil | « le tour en trottinette » |
+| `danse` | il pose la loupe au sol et fait la danse de la victoire : pas chassés, grand saut, casquette lancée et rattrapée sur la tête, clin d'œil | « la danse de la victoire » |
+
+Ces libellés reprennent la maquette (boutons « A · Orchestre », « B · Trottinette », « C · Danse » et le README). La ligne Police de `features/106-celebration-de-l-univers.feature` devient donc « le chef d'orchestre, le tour en trottinette ou la danse de la victoire » (aujourd'hui : « l'orchestre, la trottinette ou la danse »). C'est une précision faite d'après la maquette, et 106.26 la couvre déjà (comme « les petits sauts » en 106b et « les joues pleines » en 106c). L'enfant ne voit jamais ces libellés. « La danse de la victoire » est le nom d'une variante d'Agent Max. Ce n'est pas la **danse de victoire** du glossaire (106.6 A, célébration jouée au palier des tenues, 106h). Dans les scénarios, on écrit toujours le libellé entier, avec l'article « la » et « de la », pour ne pas confondre les deux.
+
+### Confettis du commissariat (application de 106.24)
+
+La maquette lance des confettis : un canvas jette 70 petits rectangles bleus, jaunes, blancs, bleu clair et rouges, depuis les deux côtés de la place, au moment du cri de victoire. Ils retombent sur le trottoir. Dans les scénarios, on les appelle **« les confettis du commissariat »**. Ils font partie de la célébration de l'univers d'Agent Max, comme les confettis de Coach Léo, les pétales de la salle de Lili et les feuilles de la forêt de Noisette (106.24, invariant 2). Ils ne s'ajoutent jamais aux confettis de la célébration commune. En mouvements réduits, aucun ne tombe : on voit l'image fixe de l'état final de la variante, avec le cri de victoire et l'annonce (invariant 7).
+
+Le reste ne tombe pas :
+- les **étincelles** de la maquette sont déjà à quatre branches : trois autour de la tête quand Max attrape le chiot (groupe `#etoiles`, mal nommé dans la maquette), quatre autour des gants (`#etincelles`). Elles restent telles quelles ;
+- les **rayons** autour du cri de victoire s'ouvrent une fois puis s'effacent. Ils ne tournent pas en boucle et ne clignotent pas (voir la règle absolue plus bas).
+
+**Aucune étoile à cinq branches** (106.34 A, 106.35). La maquette en dessine trois. Toutes partent :
+- l'étoile dorée de la **casquette** (`casquetteHTML`). Elle se retrouve aussi sur la casquette lancée de la variante `danse` et sur celle de l'animation d'échec, qui reste hors de #106. Elle devient l'**écusson sans étoile, bleu et blanc**, déjà validé pour la tête du train de Police (#130.1, `src/seance/exercices/petit-train/dessins/tete-police.svg`) et la boîte de Police (#131) ;
+- l'**insigne étoile** de la chemise (`<g class="insigne">`). Il devient le même écusson, en petit ;
+- l'étoile dorée du **plateau de la trottinette**, que le cadrage ne citait pas. Le plateau reste uni : l'écusson est déjà sur la casquette et sur la chemise.
+
+On applique aussi, sans question nouvelle :
+- « Chapitre réussi ! » et la phrase « Tu as réussi toutes les leçons du commissariat des Savanturiers » de la maquette sont remplacés par l'annonce du moment (« Défi relevé ! ») ;
+- la maquette annonce « Enquête résolue ! » avec le titre. Dans l'application, seul le moment est annoncé (invariant 8, 106.14) ;
+- toucher la scène passe l'animation dans la maquette. Dans l'application, un toucher hors des boutons ne fait rien (invariant 6, 106.10) ;
+- l'animation d'échec de la maquette (le chiot prend la casquette, fait un petit tour et la rapporte, « oh ! », « Presque ! On réessaie ? ») reste hors de #106 (106.20) ;
+- le personnage guide n'est pas montré deux fois pendant la célébration (106.28 « cacher ») ;
+- Agent Max ne se montre jamais de dos. La maquette le garantit (`dessineTete` : « vue de face ou de trois-quarts, jamais de dos », 38° au plus), et le demi-tour de la trottinette passe d'un trois-quarts à l'autre en passant par la face ;
+- « tuut ! » et « dring ! » sont des bulles écrites. Aucun son de sifflet, de sonnette ni de moteur n'est joué : la musique est le seul son (invariant 9). Les bulles font partie du dessin `aria-hidden` et ne sont jamais annoncées ;
+- l'enseigne « COMMISSARIAT » sur le bâtiment fait partie du décor. Elle n'est ni annoncée ni lue.
+
+### Règle absolue de contenu pour Agent Max (invariant 10)
+
+Maquette relue ligne par ligne. À toutes les tailles et sur l'image fixe :
+- **Un policier qui aide.** Ni arme, ni menottes, ni arrestation, ni fourgon, ni barreaux. Max porte une loupe, un carnet, des gants blancs (variante `orchestre`) et un sifflet. Rien d'autre à la ceinture que la loupe.
+- **Ni gyrophare, ni sirène, ni lumière qui clignote.** Les deux lanternes de l'entrée du commissariat (boîtiers bleus, lumière jaune pâle) restent **éteintes ou fixes** : elles ne clignotent jamais et ne changent jamais de couleur. Les rayons du cri de victoire s'ouvrent une seule fois. Les phares (jaune pâle) et les feux arrière (rouges) des petites voitures sont fixes.
+- **Les petites voitures** ont des couleurs civiles (rouge, jaune, vert, `COULEURS_VOITURES`). Aucune n'est une voiture de police : ni bandes, ni inscription, ni gyrophare. Elles passent en rythme sur la route, une par coup de sifflet, à vitesse égale. Rien n'évoque une poursuite (elles ne se suivent pas de près, Max ne court pas après), rien ne klaxonne, rien ne freine brusquement. Aucun personnage n'est sur le passage piéton quand elles passent.
+- **Le sifflet** est un geste joyeux de chef d'orchestre de la circulation, comme une baguette. Ce n'est ni une alerte ni un ordre de s'arrêter adressé à quelqu'un. Max sourit ou se concentre (`joie`, `concentration`), jamais un visage sévère.
+- **Le chiot perdu** n'est jamais triste, blessé, sale, mouillé ni apeuré, et il ne pleure pas. On ne le voit pas « perdu » : il est caché dans le buisson, le buisson bouge, et il en sort d'un bond, joyeux. Dans la maquette, il a la queue qui remue, la langue rose et un sourire, il saute dans les bras de Max puis reste assis, content. La surprise de Max quand le buisson bouge dure un instant (expression `surprise`, 0,15 s) et ne fait pas peur : elle mène tout de suite à la joie. Le mot « perdu » n'est ni affiché ni annoncé (le dessin est `aria-hidden`). Rien de triste dans la maquette : aucune réserve.
+- **La trottinette** : Max met le casque **avant** de monter (casque à jugulaire). Il roule sur le trottoir, pas sur la route, à vitesse douce, et s'arrête en douceur, pied au sol. Il ne fait ni saut ni figure, et ne roule pas vers quelqu'un. Le signe de la main se fait presque à l'arrêt, comme dans la maquette. L'accélération du port ne doit pas en faire une course (voir 106.38).
+- **La danse de la victoire** : la casquette lancée retombe sur la tête de Max sans heurter personne. La loupe posée au sol est ramassée hors champ ou reste posée. Rien de dangereux.
+- **Décor de quartier accueillant** : place devant le commissariat, banc, buisson, arbres, passage piéton, soleil et nuages. Ni ombre menaçante, ni nuit, ni cellule. Aucun coffre, ni coupe, ni podium.
+- **Aucune étoile à cinq branches** (106.34 A, 106.35 ; voir plus haut).
+- Le front présente une **planche** que le PO valide avant le merge (98.28) : images clés des trois variantes et image fixe, à 360, 160 et 80 px, sur fond clair et sur fond sombre. Elle montre l'écusson à la place de chaque étoile.
+
+### Ce qui reste dans `src/`
+
+- `src/univers/celebrations/police/` contient la scène d'Agent Max : décor de la place et du commissariat, traces de pattes, buisson, chiot (de profil au sol, de face dans les bras), loupe, sifflet, gants, petites voitures, trottinette, casque, casquette lancée et confettis du commissariat. Elle est portée depuis la maquette avec le moteur isolé (106.22).
+- La maquette reprend **tels quels le corps, les membres, les mains et le moteur de Coach Léo**. Seuls la tête, la tenue et les couleurs changent (README des maquettes). Le port réutilise donc les morceaux de `src/univers/celebrations/commun/` (`membres.ts`, `mains.ts`, `poses.ts`, `courbes.ts`, `visage.ts`, `expressions.ts`, `jeu-de-la-scene.ts`, `SceneAnimee.tsx`…) et le dessin du corps de Coach Léo (`src/univers/celebrations/sports/`). Ce qui sert aux deux est déplacé dans `commun/` (refactor), plutôt que d'être copié ou importé depuis `sports/`. Les gants blancs sont une couleur de plus des mains communes. Le dessin fixe de référence est `src/univers/personnages/AgentMax.tsx`.
+- **Tenue portée (106.31, renvoyée à 106h)** : Agent Max est dans sa **tenue de base**. La scène n'importe pas `src/univers/personnages/tenues.tsx`, et la planche ne montre aucune tenue.
+- Les identifiants SVG sont préfixés `police-`, comme `sports-`, `danse-` et `animaux-`.
+- `SceneDeCelebration.tsx` ajoute le cas `police` à son `switch (celebration.univers)` et à la table des chargeurs. La scène est **chargée à la demande** et reste dans le précache de la PWA (#8), pour que la célébration marche hors ligne.
+- **Durée** : la scène tient dans `DUREE_DE_LA_CELEBRATION_S` (3 s, décision 0039), comme les autres. Voir 106.38.
+
+### Tests
+
+- `celebrations-des-univers_test.ts` : la boucle sur les univers sans célébration (`["princesse", "police", "pompier"]`) perd `police`, et la boucle sur les univers livrés le gagne avec `["orchestre", "trottinette", "danse"]`.
+- `celebration-de-la-fin_test.ts` : le test « le premier défi relevé dans un univers pas encore livré garde la célébration commune » prend aujourd'hui `princesse`, et ne doit jamais prendre `police`. Si 106d (Princesses et fées) est mergée avant 106e, ce test prend `pompier`, le dernier univers livré (106f). Prendre `pompier` dès maintenant évite le conflit entre les deux branches.
+
+### Questions
+
+**106.38 Durée de la scène d'Agent Max.** Dans la maquette, la scène dure 8,5 s (`danse`), 9,4 s (`orchestre`) et 10,2 s (`trottinette`), dont 4 s d'enquête avant la variante. Celles de Lili et de Noisette durent environ 5 s, et le port les accélère environ 1,7 fois pour tenir en 3 s. Pour Agent Max, il faudrait accélérer 2,8 à 3,4 fois. La trottinette ne serait plus « à vitesse douce » et les gestes deviendraient saccadés.
+- A (reco) : le port **raccourcit le temps de la maquette** jusqu'à environ 5 s, puis accélère comme pour Lili et Noisette. On garde chaque temps fort, et on raccourcit la marche, les pauses et les allers-retours :
+  - enquête : quelques traces, le buisson qui bouge, le saut dans les bras, le chiot posé ;
+  - `orchestre` : les gants, trois « tuut ! » et trois voitures plus rapprochées, la révérence ;
+  - `trottinette` : le casque, deux poussées, « dring ! », l'arrêt en douceur (le retour peut se réduire au demi-tour sur place) ;
+  - `danse` : la loupe posée, deux pas chassés au lieu de quatre, le saut, la casquette lancée et rattrapée, le clin d'œil.
+
+  Le PO juge sur la planche et sur une courte vidéo.
+- B : accélérer toute la maquette 3 fois environ, sans rien couper.
+- C : laisser la scène d'Agent Max durer plus de 3 s. Cette option est contraire à l'invariant 6 et à la décision 0039.
+
+Reco : **A**.
+
+**106.39 Étoile du dessin fixe d'Agent Max.** Le dessin fixe `src/univers/personnages/AgentMax.tsx` (#96, hors #106) porte deux étoiles dorées à cinq branches : une sur la chemise (`data-signe="etoile-doree"`), une sur la casquette (dans `casquette-de-police`). Pendant la célébration, Max porte l'écusson (106.34 A). Juste après, la fin du défi montre le dessin fixe, avec les étoiles. Le scénario validé de #96 dit « casquette de police à étoile dorée », et son step vérifie `etoile-doree`.
+- A (reco) : la célébration suit 106.34. Le dessin fixe reçoit un **petit correctif à part**, hors de #106 : une issue créée par le PO, qui remplace les deux étoiles par le même écusson et met à jour la ligne Police du scénario de #96 et son step. Ainsi, Max ne change pas d'insigne d'un écran à l'autre.
+- B : le dessin fixe reste tel quel. L'enfant voit l'écusson pendant la célébration, puis l'étoile une seconde après.
+
+Reco : **A**. Dans les deux cas, 106e ne touche pas `AgentMax.tsx`.
 
 ## Questions ouvertes
 

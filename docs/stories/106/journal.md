@@ -165,3 +165,12 @@ Branche de base : `main` (`af47f19`). Branche : `feature/106c-celebration-animau
 | Verrous | base (07:35 → 07:52 UTC) |
 | Méthode | domaine, scène et planche préparés dans un worktree local (106c + 106b, jamais poussé) pendant l'attente du merge de 106b, puis reportés par cherry-pick : aucun temps perdu, mais un risque de perte si le conteneur avait été repris |
 | Tokens | relevés par le responsable |
+
+## 2026-11-05 (106e)
+
+Livraison **106e** : univers Police (Agent Max). Branche `feature/106e-celebration-police`, partie de `main` (`dbbe378` : 106a, 106b, 106c mergées). Session `session_015z4jmME4gT4h3Qu6mRPUgM`. Branche de base : `main`.
+106d (Princesses) est en cours sur les mêmes fichiers : modèle, scénarios et planche d'abord ; catalogue et scène câblés sur la branche après le merge de 106d et l'intégration de `main`.
+
+- 08:40 UTC : démarrage. Cadrage de #106 déjà validé (« 106 reco tout », 106.28 « cacher », 106.31, 106.34 A / 106.35 oui). Musique « grande victoire » (106.27 fermé). Nom vérifié : « Agent Max » partout (`univers.ts`, glossaire, `AgentMax.tsx`) ; « Agente Mila » ne reste que dans le corps de l'issue (déjà noté dans le modèle) et dans le scénario de #96 qui vérifie son absence.
+- Avancement publié sur #106 (commentaire 6653230991).
+- 08:50 UTC : modèle 106e (`domain-modeler`) lancé. Worktree local `wip/106e` (base : `origin/feature/106d-celebration-princesses`, où Sports et Danse sont déjà sur `commun/`), jamais poussé, pour le domaine, la scène et la planche pendant l'attente du merge de 106d ; RED du catalogue Police lancé dedans.
