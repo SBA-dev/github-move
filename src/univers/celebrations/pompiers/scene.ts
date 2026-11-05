@@ -1,4 +1,4 @@
-import type { VarianteDe } from "@domain/motivation";
+import type { CleDeTenue, VarianteDe } from "@domain/motivation";
 import { jouerLaScene } from "../commun/jeu-de-la-scene.ts";
 import { creerLesEffets } from "./effets.ts";
 import { creerLeJet } from "./jet.ts";
@@ -13,10 +13,10 @@ import { creerLeRepere } from "./repere.ts";
  * Le temps de la maquette (environ 5 s) est accéléré pour que la scène entière tienne dans `DUREE_DE_LA_CELEBRATION_S`.
  * Sans toile (mouvements réduits), il n'y a pas de pétales.
  */
-export function creerLaScene(racine: SVGSVGElement, toile: HTMLCanvasElement | null, variante: VarianteDe<"pompier">) {
+export function creerLaScene(racine: SVGSVGElement, toile: HTMLCanvasElement | null, variante: VarianteDe<"pompier">, tenue?: CleDeTenue) {
   const scenario = scenarioDesPompiers(variante);
   const monde = creerLeRepere(racine);
-  const sam = creerCapitaineSam(racine);
+  const sam = creerCapitaineSam(racine, tenue);
   const jet = creerLeJet(racine, monde, sam);
   const effets = creerLesEffets(racine, monde, sam, scenario, INSTANTS_OU_LES_FLEURS_S_OUVRENT);
   const petales = toile ? creerLesPetalesDeLaCaserne(toile) : null;

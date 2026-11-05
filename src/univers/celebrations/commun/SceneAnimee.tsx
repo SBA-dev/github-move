@@ -1,6 +1,6 @@
 import { type ComponentType, type RefObject, useLayoutEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
-import type { UniversCelebre, VarianteDe } from "@domain/motivation";
+import type { CleDeTenue, UniversCelebre, VarianteDe } from "@domain/motivation";
 import { useMouvementsReduits } from "../../../transitions/mouvements-reduits.ts";
 
 type ScenePrete = { jouer(quandTerminee: () => void): () => void; montrerLEtatFinal(): void };
@@ -10,14 +10,16 @@ type Props<U extends UniversCelebre> = {
   readonly cle: VarianteDe<U>;
   readonly cri: string;
   readonly Decor: ComponentType<{ readonly racine: RefObject<SVGSVGElement | null>; readonly cri: string }>;
-  readonly creerLaScene: (racine: SVGSVGElement, toile: HTMLCanvasElement | null, cle: VarianteDe<U>) => ScenePrete;
+  readonly creerLaScene: (racine: SVGSVGElement, toile: HTMLCanvasElement | null, cle: VarianteDe<U>, tenue?: CleDeTenue) => ScenePrete;
+  /** La tenue que porte le personnage guide dans la scène (la tenue portée, ou la tenue reçue pendant une danse de victoire). */
+  readonly tenue?: CleDeTenue | undefined;
 };
 
 /**
  * La scène d'un univers : son décor, la toile des confettis (ou des pétales) et le moteur qui les anime.
  * Entrée en fondu avec Motion ; l'image fixe de l'état final avec les mouvements réduits (pas de toile, donc pas de confettis).
  */
-export function SceneAnimee<U extends UniversCelebre>({ univers, cle, cri, Decor, creerLaScene }: Props<U>) {
+export function SceneAnimee<U extends UniversCelebre>({ univers, cle, cri, Decor, creerLaScene, tenue }: Props<U>) {
   const reduits = useMouvementsReduits();
   const racine = useRef<SVGSVGElement>(null);
   const toile = useRef<HTMLCanvasElement>(null);
@@ -26,11 +28,11 @@ export function SceneAnimee<U extends UniversCelebre>({ univers, cle, cri, Decor
   useLayoutEffect(() => {
     if (!racine.current) return;
     if (reduits) {
-      creerLaScene(racine.current, null, cle).montrerLEtatFinal();
+      creerLaScene(racine.current, null, cle, tenue).montrerLEtatFinal();
       return;
     }
-    return creerLaScene(racine.current, toile.current, cle).jouer(() => setTerminee(true));
-  }, [cle, reduits, creerLaScene]);
+    return creerLaScene(racine.current, toile.current, cle, tenue).jouer(() => setTerminee(true));
+  }, [cle, reduits, creerLaScene, tenue]);
 
   const fixe = reduits || terminee;
   return (
@@ -40,6 +42,7 @@ export function SceneAnimee<U extends UniversCelebre>({ univers, cle, cri, Decor
       data-testid="celebration-de-l-univers"
       data-univers={univers}
       data-variante={cle}
+      {...(tenue === undefined ? {} : { "data-tenue": tenue })}
       data-mouvements={reduits ? "reduits" : "animes"}
       data-etat={fixe ? "terminee" : "en-cours"}
       initial={reduits ? false : { opacity: 0, scale: 0.96 }}

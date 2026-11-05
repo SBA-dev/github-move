@@ -12,6 +12,7 @@ import {
   type MeilleuresEtoilesDuProfil,
   titreDeLAnnonce,
   titreDeLAnnonceDuBadge,
+  tenueDeLaCelebrationDeLUnivers,
   titreDeLaMatiereReussie,
   type Univers,
 } from "@domain/motivation";
@@ -23,7 +24,8 @@ import { AnnonceDuNouvelEpisode } from "../../histoire/AnnonceDuNouvelEpisode.ts
 import { useEpisodeOuvertParLaSeance } from "../../histoire/useEpisodeOuvertParLaSeance.ts";
 import { BOUTON_RELEVER_LE_DEFI, niveauDuProfil } from "../../parcours/index.ts";
 import { hasardDuNavigateur } from "../../hasard-navigateur.ts";
-import { SceneDeCelebration } from "../../univers/celebrations/index.ts";
+import { cleDeTenueDeLaScene, SceneDeCelebration } from "../../univers/celebrations/index.ts";
+import { useTenuePortee } from "../../tenue/index.ts";
 import { lireLEtatDuTestDeDepart } from "../../test-de-depart/etat-du-test-de-depart.ts";
 import { chargerToutesLesLecons } from "../bibliotheque.ts";
 import { AnnonceDeLaTenue } from "./AnnonceDeLaTenue.tsx";
@@ -143,10 +145,13 @@ export function EcranDeFin({ seance, univers, niveau, onDireLaFin, meilleuresEto
   const { pret: defiPret, defi: defiOuvert } = useDefiOuvertParLaSeance(seance.enfant, entrees, terminee !== undefined);
   const { pret: matierePrete, reussie: matiereReussie } = useMatiereReussieParLaSeance(entrees, terminee !== undefined);
   const [celebration, setCelebration] = useState<CelebrationDeLaFin | undefined>();
+  const [tenuePortee] = useTenuePortee(seance.enfant);
+  const faitsDeLaFin = useMemo(() => ({ defiRelevePourLaPremiereFois: false, matiereReussieParLaSeance: matiereReussie, tenueRecue: tenue }), [matiereReussie, tenue]);
   useEffect(() => {
-    if (!matierePrete || celebration) return;
-    setCelebration(celebrationDeLaFin({ defiRelevePourLaPremiereFois: false, matiereReussieParLaSeance: matiereReussie }, univers.cle, hasardDuNavigateur));
-  }, [matierePrete, matiereReussie, univers.cle, celebration]);
+    if (!matierePrete || !tenuePrete || celebration) return;
+    setCelebration(celebrationDeLaFin(faitsDeLaFin, univers.cle, hasardDuNavigateur));
+  }, [matierePrete, tenuePrete, faitsDeLaFin, univers.cle, celebration]);
+  const tenueDeLaScene = celebration && cleDeTenueDeLaScene(tenueDeLaCelebrationDeLUnivers(faitsDeLaFin, tenuePortee));
   const musiqueDeLaCelebration = celebration?.sorte === "univers" ? celebration.celebration.musique : undefined;
   const { prete: quetePrete, accomplie: queteAccomplie } = useQueteAccomplieParLaSeance(queteAvant, seance.enfant, terminee !== undefined);
   const accueil = useRef<HTMLButtonElement>(null);
@@ -191,7 +196,7 @@ export function EcranDeFin({ seance, univers, niveau, onDireLaFin, meilleuresEto
         </>
       )}
       {celebration?.sorte === "univers" && celebrationAffichable && (
-        <SceneDeCelebration celebration={celebration.celebration} />
+        <SceneDeCelebration celebration={celebration.celebration} tenue={tenueDeLaScene} />
       )}
       <div className="pour-la-matiere" role="status" data-testid="annonce-de-la-matiere-reussie">
         {matiereReussie && <p>{titreDeLaMatiereReussie()}</p>}
@@ -204,7 +209,7 @@ export function EcranDeFin({ seance, univers, niveau, onDireLaFin, meilleuresEto
           </>
         )}
       </div>
-      <AnnonceDeLaTenue univers={univers} tenue={tenue} />
+      <AnnonceDeLaTenue univers={univers} tenue={tenue} sansPersonnageGuide={sceneAffichee} />
       <AnnonceDuNouvelEpisode episode={episode} />
       <div className="pour-le-badge" role="status" data-testid="annonce-de-nouveau-badge">
         {badge && (

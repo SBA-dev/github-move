@@ -1,3 +1,6 @@
+import type { CleDeTenue } from "@domain/motivation";
+import { habillerLePersonnage } from "../commun/habiller.ts";
+import { ANCRAGES_DES_TENUES, dessinDeLaBotte } from "../commun/tenues.ts";
 import { clamp01, DEG, E, lerp, r1, r3 } from "../commun/courbes.ts";
 import { creerUnGroupe, deplacer, elementsDe, poser, trouver } from "../commun/dom.ts";
 import { type Expression, expressionA } from "../commun/expressions.ts";
@@ -32,15 +35,27 @@ function dansLaScene(racine: SVGSVGElement, element: SVGElement, p: Point): Poin
 export type LumiDessinee = { readonly pose: Pose; /** Le bout de la baguette dans l'espace de la scène (rien si la scène n'est pas affichée). */ readonly boutDeLaBaguette: Point | null };
 
 /** Lumi, dessinée image par image à partir des poses du scénario (portage du moteur de la maquette). */
-export function creerLumi(racine: SVGSVGElement) {
+export function creerLumi(racine: SVGSVGElement, tenue?: CleDeTenue) {
   const n = elementsDe(racine, "princesse");
   n("lumi").innerHTML = STRUCTURE_DE_LUMI;
   n("baguette").innerHTML = `<line x1="0" y1="0" x2="0" y2="-34" stroke="#33304A" stroke-width="7" stroke-linecap="round"/><line x1="0" y1="0" x2="0" y2="-34" stroke="#FFFFFF" stroke-width="3.6" stroke-linecap="round"/><line x1="0" y1="-4" x2="0" y2="-30" stroke="${OR}" stroke-width="1.4" stroke-dasharray="3 3"/><g transform="translate(0 -40)"><circle r="12" fill="url(#princesse-lueur)"/>${fleurMagique(9, "rosePale")}</g>`;
+  const habit = habillerLePersonnage("princesse", tenue, ANCRAGES_DES_TENUES.princesse, {
+    derriere: (groupe) => n("cheveux-arriere").after(groupe),
+    devant: (groupe) => n("tete").after(groupe),
+    auCou: (groupe) => n("bras-avant").after(groupe),
+  });
+  if (tenue === "bottes-de-pluie") habillerLesPiedsDeBottes();
   const cheveux = creerLesCheveux(racine);
   const bras = { g: creerLeBras("g"), d: creerLeBras("d") };
   const bouches = [...n("bouche").children];
   const q1 = (g: ParentNode, classe: string) => trouver(g, `.${classe}`);
   let mainDroite: { readonly W: Point; readonly dir: number } = { W: { x: 0, y: 0 }, dir: 0 };
+
+  /** Les bottes de pluie remplacent les ballerines : elles pendent au bout des jambes, comme elles, et suivent leur inclinaison. */
+  function habillerLesPiedsDeBottes() {
+    const { gauche, droit, tige } = ANCRAGES_DES_TENUES.princesse.pieds;
+    for (const [c, pied] of [["g", gauche], ["d", droit]] as const) n(`pied-${c}`).innerHTML = `<g data-tenue-dessin="bottes-de-pluie" transform="translate(0 -2) scale(${pied.echelle})">${dessinDeLaBotte(tige)}</g>`;
+  }
 
   function creerLeBras(c: "g" | "d"): SVGElement {
     const enveloppe = creerUnGroupe();
@@ -185,6 +200,7 @@ export function creerLumi(racine: SVGSVGElement) {
     deplacer(n("cheveux-arriere"), `translate(${r1(p.vue * 4)} -150) rotate(${r1(p.tete)}) translate(0 150)`);
     dessinerLaRobe(p, t, vy);
     const v = p.vue, w = 1 - Math.abs(v) * .15, dxr = v * 6;
+    habit.suivre({ cw: w, sw: 0, dx: dxr });
     dessinerLaJambe("g", { x: -10 * w + dxr, y: -40 }, 4 - p.vol * 10, -2 + p.vol * 30);
     dessinerLaJambe("d", { x: 10 * w + dxr, y: -40 }, -4 - p.vol * 6, 2 + p.vol * 24);
     placerLesBras(p, v, w, dxr);
