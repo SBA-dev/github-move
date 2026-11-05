@@ -125,7 +125,7 @@ et 106c (Animaux de la forêt) :
 - Ce qui ne dépend pas de l'univers (toucher, boutons et clavier, Muet, espace parent, défi rejoué, annonce et
   parcours identiques : R2, R3, R5, R7) reste décrit une seule fois, avec Coach Léo.
 - Les scénarios ne parlent ni des étoiles ni de ce que deviennent les chiffres et les lettres : ils ne dépendent pas
-  de la réponse à 106.34.
+  de la réponse à 106.34 (tranchée le 2026-11-05, voir plus bas).
 - Example mapping : Léa (CE1) passée en Princesses et fées relève le défi 1 de maths → Lumi fait éclore une fleur
   magique d'un sort, puis l'arc-en-ciel, l'envol ou les chiffres et les lettres ; « Magique ! » ; musique, puis
   « Bravo Léa ! Tu as relevé le défi 1 ! » ; ni confettis ni « séance terminée » de la célébration commune. Tirage
@@ -137,20 +137,22 @@ et 106c (Animaux de la forêt) :
   doux qui ne ressemble ni à une frappe ni à un tir ; envol sans chute ni danger ; château accueillant, ciel clair ;
   Lumi agit, elle n'est pas fêtée pour son apparence ; aucun coffre.
 
-Questions de la livraison 106d (détail et recommandations dans `docs/stories/106/domain-model.md`, section
-« Livraison 106d ») ; elles ne changent aucun scénario :
+Décisions de la livraison 106d : **2026-11-05**. Réponse du PO, mot pour mot : « 106d reco tout »
+(https://github.com/SBA-dev/github-move/issues/106#issuecomment-6652002035). Chaque question est tranchée par sa
+recommandation (détail dans `docs/stories/106/domain-model.md`, section « Livraison 106d ») ; aucune ne change de
+scénario `@livraison-106d` (vérifié : aucun ne parle d'étoiles, aucun n'est `@a-valider`).
 
-1. **106.34 Étoiles de la scène de Lumi** : la maquette dessine de nombreuses étoiles dorées à cinq branches, presque
-   identiques à l'étoile gagnée à la fin d'une séance, alors que la fin du défi n'en donne aucune. Reco A : aucune
-   étoile à cinq branches dans la scène de Lumi (fleurs et étincelles à quatre branches à la place). B : garder la
-   maquette. C : étoiles à cinq branches, jamais dorées ni cernées.
-2. **106.35 Même règle pour Lili et Noisette ?** Si 106.34 est A, l'appliquer aussi à l'étoile du ruban de Lili et aux
-   petites étoiles des feuilles de la forêt de Noisette. Reco : oui, en petits correctifs une fois 106b et 106c
-   mergées. Autre choix : non, la règle ne vaut que pour Lumi.
+| Question | Réponse | Effet sur les scénarios |
+|---|---|---|
+| 106.31 Tenue portée pendant la célébration (posée par 106c) | Réponse du PO 2026-11-05 : reco. Renvoyée à 106h | Aucun en 106d ; 106h |
+| 106.34 Étoiles de la scène de Lumi | Réponse du PO 2026-11-05 : reco A. Aucune étoile à cinq branches dans la scène de Lumi (fleurs et étincelles à quatre branches à la place), pour ne pas la confondre avec l'étoile gagnée à la fin d'une séance | Aucun (vérifié par la planche et la review) |
+| 106.35 Même règle pour Lili et Noisette | Réponse du PO 2026-11-05 : reco (oui). 106c retire les petites étoiles des feuilles de Noisette dans sa propre livraison ; le correctif de l'étoile dorée du ruban de Lili revient à 106d, après le merge de 106b | Aucun : pas de scénario pour le ruban de Lili (vérifié par la planche et la review) |
+| 106.36 Planche de Lumi | Réponse du PO 2026-11-05 : reco. Planche validée, écarts compris ; préfixe `princesse-` accepté | Aucun |
 
 ## Questions ouvertes
 
-Aucune pour 106a. Pour 106d : 106.34 et 106.35 (section « Livraison 106d »). Reste en attente, sans bloquer 106a :
+Aucune pour 106a. Aucune pour 106d : 106.31, 106.34, 106.35 et 106.36 tranchées le 2026-11-05 (section
+« Livraison 106d »). Reste en attente, sans bloquer 106a ni 106d :
 - le **choix des musiques** des six univers par le PO, à l'écoute (106.12) : d'ici là, la musique de la célébration
   de Coach Léo est « grande victoire » ;
 - l'**accès réseau** à `opengameart.org` ou `kenney.nl` (106.27) : seul le PO peut l'ouvrir dans l'environnement.
