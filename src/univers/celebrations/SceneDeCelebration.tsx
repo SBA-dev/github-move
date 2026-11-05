@@ -1,5 +1,5 @@
 import { type ComponentType, lazy, Suspense } from "react";
-import type { CelebrationDeLUnivers } from "@domain/motivation";
+import type { CelebrationDeLUnivers, CleUnivers } from "@domain/motivation";
 
 type PropsDeScene<Cle extends string> = { readonly cle: Cle; readonly cri: string };
 
@@ -8,12 +8,32 @@ function EspaceDeLaScene() {
   return <div className="celebration-de-l-univers" aria-hidden="true" />;
 }
 
+type Module<Cle extends string> = { default: ComponentType<PropsDeScene<Cle>> };
+
+/** Le morceau d'une scène est demandé une seule fois : le préchargement et l'affichage partagent la même promesse. */
+const memoriser = <T,>(charger: () => Promise<T>) => {
+  let promesse: Promise<T> | undefined;
+  return () => promesse ??= charger();
+};
+
 /** Une scène qui ne se charge pas (nouvelle version de l'appli, hors ligne) ne montre rien : la fin du défi reste intacte. */
-const chargerSansEchec = <Cle extends string>(charger: () => Promise<{ default: ComponentType<PropsDeScene<Cle>> }>) =>
+const chargerSansEchec = <Cle extends string>(charger: () => Promise<Module<Cle>>) =>
   lazy(() => charger().catch(() => ({ default: EspaceDeLaScene })));
 
-const SceneDesSports = chargerSansEchec(() => import("./sports/SceneDesSports.tsx"));
-const SceneDeLaDanse = chargerSansEchec(() => import("./danse/SceneDeLaDanse.tsx"));
+const chargerSports = memoriser(() => import("./sports/SceneDesSports.tsx"));
+const chargerDanse = memoriser(() => import("./danse/SceneDeLaDanse.tsx"));
+
+const SceneDesSports = chargerSansEchec(chargerSports);
+const SceneDeLaDanse = chargerSansEchec(chargerDanse);
+
+/**
+ * Charge à l'avance la scène de l'univers, tant que le réseau est là (à l'ouverture du défi) : si le réseau se coupe pendant le défi,
+ * la célébration de la fin se joue quand même. Un échec est ignoré : la fin du défi retombe sur l'espace vide.
+ */
+export function prechargerLaSceneDe(univers: CleUnivers): void {
+  const charger = univers === "sports" ? chargerSports : univers === "danse" ? chargerDanse : undefined;
+  charger?.().catch(() => undefined);
+}
 
 type Props = { readonly celebration: CelebrationDeLUnivers };
 
