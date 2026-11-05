@@ -14,3 +14,10 @@
   - Steps : `features/steps/celebration-de-l-univers.steps.ts` (`MUSIQUE = "grande victoire"`), `features/steps/retours-animes-et-sonores.steps.ts` (`EFFETS_DE_FIN`).
 - **Contradiction relevée** : le brief et l'issue (point 5) disent « Muet coupe la musique » ; or les décisions 97.2 et 106.11 du PO (et la règle de `features/106-…feature` l. 226) disent que le Muet **ne coupe pas** les effets sonores, donc pas la musique. Question au PO (#166.1).
 - `ffmpeg`/`ffprobe` disponibles dans le conteneur (conversion MP3, mesure des durées).
+
+## Étapes 1 et 2 (2026-11-06, ~00:10 UTC)
+
+- ESCALADE réseau publiée sur #166 (commentaire 6672697308) : `kenney.nl` et `opengameart.org` refusés (403). Options A (autoriser l'hôte), B (fichiers déposés par le PO), question annexe C (miroirs GitHub déjà utilisés pour les 8 sons de #97). RELIS envoyé.
+- `domain-modeler` : `domain-model.md` court, aucun agrégat nouveau ; glossaire : ajouts « Musique de la célébration (à valider) » et note « Effet sonore, précisé par #166 ».
+- `po-acceptance` : `acceptance.md`, `features/166-musiques-des-univers.feature` (`@issue-166 @wip`), en-tête du fichier 106 mis à jour, exemples du Plan de 102 l. 141 adaptés (la musique de Noisette remplace « grande victoire » dans la danse de victoire). Une étape nouvelle dans 102.
+- Questions 166.1 à 166.5 harmonisées entre les deux documents.
