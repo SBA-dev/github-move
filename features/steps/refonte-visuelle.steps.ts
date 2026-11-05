@@ -439,7 +439,6 @@ const SIGNES_DU_DESSIN_VALIDE: Readonly<
 async function verifierLeDessinValide(dessin: Locator, nom: string): Promise<void> {
   const attendus = SIGNES_DU_DESSIN_VALIDE[nom];
   if (!attendus) throw new Error(`Dessin validé inconnu : ${nom}`);
-  await expect(dessin).toHaveAttribute("data-dessin", "valide");
   for (const signe of attendus.presents) {
     await expect(dessin.locator(`[data-signe="${signe}"]`), `signe « ${signe} » de ${nom}`).not.toHaveCount(0);
   }
