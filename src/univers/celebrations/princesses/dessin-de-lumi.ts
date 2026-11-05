@@ -1,4 +1,5 @@
 import { type CoteDeMain, dessinDesMains } from "../commun/mains.ts";
+import { ligne } from "../commun/trait.ts";
 
 export const CONTOUR = "#33304A";
 export const OR = "#FFC93C";
@@ -17,9 +18,6 @@ const LEGGING_OMBRE = "#CDB3E3";
 const BALLERINE = "#C86BD6";
 
 export const MAINS: Record<CoteDeMain, readonly string[]> = dessinDesMains({ contour: CONTOUR, peau: PEAU, peauOmbre: PEAU_OMBRE });
-
-const ligne = (classe: string, couleur: string, largeur: number) =>
-  `<path class="${classe}" fill="none" stroke="${couleur}" stroke-width="${largeur}" stroke-linecap="round" stroke-linejoin="round"/>`;
 
 /** Un bras de Lumi : la manche bouffante est une ellipse posée sur l'épaule, la main est changée par le moteur. */
 export const dessinDuBras = (c: "g" | "d") =>
