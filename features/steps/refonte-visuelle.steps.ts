@@ -421,7 +421,11 @@ const SIGNES_DU_DESSIN_VALIDE: Readonly<
   >
 > = {
   "Coach Léo": { presents: ["cheveux-courts", "maillot-bleu"], absents: ["casquette"] },
-  "Lili": { presents: ["queue-de-cheval-haute", "justaucorps-violet", "tutu-rose"], absents: [] },
+  "Lili": {
+    presents: ["queue-de-cheval-haute", "frange-lisse", "justaucorps-violet", "tutu-rose"],
+    absents: ["etoile", "etoile-doree"],
+    imbriques: [["tutu-rose", "festons"]],
+  },
   "Noisette": { presents: ["ecureuil-rond", "queue-en-panache"], absents: [] },
   "Lumi": { presents: ["ailes", "tiare", "robe-rose-aux-genoux"], absents: [] },
   "Agent Max": {
