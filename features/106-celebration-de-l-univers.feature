@@ -11,9 +11,10 @@ Fonctionnalité: Une célébration propre à chaque univers
   106.27, docs/stories/106/acceptance.md, puis 106.28 « cacher »). Ce fichier couvre la livraison 106a (mécanisme,
   moment « défi relevé » la première fois, univers « Sports » et sa musique), la livraison 106b (univers « Danse »,
   scénarios tagués @livraison-106b), la livraison 106c (univers « Animaux de la forêt », scénarios
-  tagués @livraison-106c) et la livraison 106d (univers « Princesses et fées », scénarios tagués @livraison-106d).
+  tagués @livraison-106c), la livraison 106d (univers « Princesses et fées », scénarios tagués @livraison-106d)
+  et la livraison 106f (univers « Pompiers », scénarios tagués @livraison-106f).
   Ce qui ne dépend pas de l'univers (toucher, clavier, Muet, espace parent, défi rejoué) n'est décrit qu'une fois,
-  avec Coach Léo. Les scénarios tagués @hors-106a décrivent les livraisons suivantes (106e à 106h) : ils sont
+  avec Coach Léo. Les scénarios tagués @hors-106a décrivent les livraisons suivantes (106e, 106g et 106h) : ils sont
   exclus et restent @a-valider jusqu'à leur livraison.
 
   Mots employés dans ces scénarios (validés, 106.1, 106.2, 106.14 et 106.26) :
@@ -40,8 +41,8 @@ Fonctionnalité: Une célébration propre à chaque univers
     c'est « grande victoire », entendu une seule fois ;
   - « l'image fixe de la célébration » : la même scène, dans l'état final de la variante tirée, quand l'appareil
     demande des mouvements réduits (106.15) ; rien ne tombe, ni les confettis de Coach Léo, ni les pétales de la
-    salle, ni les feuilles de la forêt, ni les étincelles du jardin, ni les confettis de la célébration commune
-    (106.24).
+    salle, ni les feuilles de la forêt, ni les étincelles du jardin, ni les pétales de la caserne, ni les confettis
+    de la célébration commune (106.24).
   Mots employés pour la livraison 106d (Lumi) :
   - « la célébration de l'univers « Princesses et fées » » : Lumi fait éclore une fleur magique d'un sort, puis fait
     une des trois variantes de la célébration, tirée au hasard : « l'arc-en-ciel », « l'envol » ou « les chiffres et
@@ -50,6 +51,15 @@ Fonctionnalité: Une célébration propre à chaque univers
     de la scène de Coach Léo (106.24) ;
   - « Magique ! » : le cri de victoire de l'univers « Princesses et fées », affiché et jamais lu ;
   - « la musique de la célébration de Lumi » : l'effet sonore de sa célébration de l'univers, qui remplace
+    « grande victoire », comme celle de Coach Léo (106.12) ; d'ici le choix du PO, c'est « grande victoire ».
+  Mots employés pour la livraison 106f (Capitaine Sam), d'après la maquette docs/maquettes/capitaine-sam-pompiers.html :
+  - « la célébration de l'univers « Pompiers » » : Capitaine Sam arrose le jardin de la caserne avec sa lance et les
+    fleurs s'ouvrent, puis il fait une des trois variantes de la célébration, tirée au hasard : « la cloche de la
+    caserne », « l'arc-en-ciel » ou « la pluie joyeuse » (noms posés au cadrage de 106f, 106.26). Les pétales et les
+    gouttelettes qui tombent sur la cour, appelés ici « les pétales de la caserne », font partie de sa célébration de
+    l'univers, comme les confettis de la scène de Coach Léo (106.24) ;
+  - « Mission accomplie ! » : le cri de victoire de l'univers « Pompiers », affiché et jamais lu ;
+  - « la musique de la célébration de Capitaine Sam » : l'effet sonore de sa célébration de l'univers, qui remplace
     « grande victoire », comme celle de Coach Léo (106.12) ; d'ici le choix du PO, c'est « grande victoire ».
   Durées, pour l'implémentation et la review, jamais dans les étapes : 3 s au plus (106.9 B), boutons, clavier
   et annonce disponibles dès la première image.
@@ -155,7 +165,6 @@ Fonctionnalité: Une célébration propre à chaque univers
       Exemples:
         | univers             | personnage guide |
         | Police              | Agent Max        |
-        | Pompiers            | Capitaine Sam    |
 
     Scénario: Un enfant passé dans l'univers « Sports » voit Coach Léo fêter son premier défi relevé
       Étant donné que Tom a un profil enfant préparé de niveau CE1
@@ -416,10 +425,73 @@ Fonctionnalité: Une célébration propre à chaque univers
       Et « Mon parcours » et « Accueil » mesurent au moins 44 px de haut
 
   # ---------------------------------------------------------------------------------------------------------
+  # Livraison 106f : univers « Pompiers », Capitaine Sam.
+  # ---------------------------------------------------------------------------------------------------------
+
+  Règle: Dans l'univers « Pompiers », Capitaine Sam joue au premier défi relevé sa célébration de l'univers à la place de la célébration commune, avec les mêmes garanties que Coach Léo : image fixe en mouvements réduits, cri de victoire jamais lu, place tenue à 360 px (106f)
+
+    Contexte:
+      Étant donné que Paul a changé l'univers du profil enfant de Léa en « Pompiers »
+
+    @livraison-106f
+    Scénario: Au premier défi relevé dans l'univers « Pompiers », Capitaine Sam arrose le jardin de la caserne et le fête, puis félicite Léa
+      Étant donné que Léa a réussi les 5 premières leçons de maths du CE1
+      Et que Léa a commencé le défi 1 de maths
+      Quand Léa répond juste à toutes les questions du défi
+      Alors Capitaine Sam joue la célébration de l'univers « Pompiers » : il arrose le jardin de la caserne et les fleurs s'ouvrent, puis la cloche de la caserne, l'arc-en-ciel ou la pluie joyeuse
+      Et Léa lit « Mission accomplie ! »
+      Et Léa entend la musique de la célébration de Capitaine Sam, puis Capitaine Sam dit « Bravo Léa ! Tu as relevé le défi 1 ! »
+      Et Capitaine Sam n'apparaît qu'une fois, dans la célébration de l'univers, la bulle gardant ses paroles
+      Mais la célébration commune n'est pas jouée
+
+    @livraison-106f
+    Plan du Scénario: Le hasard ne choisit que la variante : avec « <variante> », Capitaine Sam arrose toujours le jardin de la caserne
+      Étant donné que Léa a réussi les 5 premières leçons de maths du CE1
+      Et que Léa a commencé le défi 1 de maths
+      Et que le hasard de la célébration de l'univers tire « <variante> »
+      Quand Léa répond juste à toutes les questions du défi
+      Alors Capitaine Sam arrose le jardin de la caserne et les fleurs s'ouvrent, puis <variante>
+      Et la fin du défi annonce « Défi relevé ! »
+
+      Exemples:
+        | variante                 |
+        | la cloche de la caserne  |
+        | l'arc-en-ciel            |
+        | la pluie joyeuse         |
+
+    @livraison-106f
+    Scénario: Avec les mouvements réduits, Léa voit l'image fixe de la célébration de l'univers « Pompiers », sans mouvement, ni confettis, ni pétales de la caserne
+      Étant donné que l'appareil demande des mouvements réduits
+      Et que Léa a réussi les 5 premières leçons de maths du CE1
+      Et que Léa a commencé le défi 1 de maths
+      Quand Léa répond juste à toutes les questions du défi
+      Alors Léa voit l'image fixe de la célébration de l'univers « Pompiers », avec « Mission accomplie ! », sans mouvement
+      Et la fin du défi annonce « Défi relevé ! », sans mouvement
+      Et aucun confetti ni pétale de la caserne ne tombe
+
+    @livraison-106f
+    Scénario: Dans l'univers « Pompiers », les lecteurs d'écran annoncent une seule fois « Défi relevé ! », sans lire « Mission accomplie ! »
+      Étant donné que Léa a réussi les 5 premières leçons de maths du CE1
+      Et que Léa a commencé le défi 1 de maths
+      Quand Léa répond juste à toutes les questions du défi
+      Alors les lecteurs d'écran annoncent une seule fois « Défi relevé ! »
+      Mais les lecteurs d'écran n'annoncent ni « Mission accomplie ! » ni le dessin de la célébration
+
+    @livraison-106f
+    Scénario: À 360 px, la célébration de l'univers « Pompiers » tient dans la largeur et ses boutons restent assez grands
+      Étant donné que l'écran de l'appareil mesure 360 px de large
+      Et que Léa a réussi les 5 premières leçons de maths du CE1
+      Et que Léa a commencé le défi 1 de maths
+      Quand Léa répond juste à toutes les questions du défi
+      Alors Léa lit « Mission accomplie ! »
+      Et la page tient dans la largeur de l'écran
+      Et « Mon parcours » et « Accueil » mesurent au moins 44 px de haut
+
+  # ---------------------------------------------------------------------------------------------------------
   # Livraisons suivantes (106e à 106h), exclues de 106a, de 106b, de 106c et de 106d. Leur mise en place sera reprise dans leur livraison.
   # ---------------------------------------------------------------------------------------------------------
 
-  Règle: Chaque univers a sa célébration de l'univers, jouée par son personnage guide, avec son cri de victoire (106e et 106f)
+  Règle: Chaque univers a sa célébration de l'univers, jouée par son personnage guide, avec son cri de victoire (106e)
 
     @hors-106a @a-valider
     Plan du Scénario: Dans l'univers « <univers> », <personnage guide> fête le premier défi relevé à sa façon
@@ -434,7 +506,6 @@ Fonctionnalité: Une célébration propre à chaque univers
       Exemples:
         | univers             | personnage guide | action                               | variantes                                              | cri                 |
         | Police              | Agent Max        | il retrouve un chiot perdu           | l'orchestre, la trottinette ou la danse                | Enquête résolue !   |
-        | Pompiers            | Capitaine Sam    | le jet de sa lance dessine un arc-en-ciel | à dessiner et valider (106.16)                    | Mission accomplie ! |
 
   Règle: La séance qui rend une matière réussie est fêtée par la célébration de l'univers, avec l'annonce « Matière réussie ! » (106g)
 

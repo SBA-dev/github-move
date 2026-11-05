@@ -207,3 +207,12 @@ Branche : `feature/106d-celebration-princesses`, partie de `main` (`adb9329`, me
 | Escalades | 1 (planche de Lumi, #106.36) ; questions nouvelles 106.34, 106.35 |
 | Verrous | `base` une fois (08:34 → 09:15 UTC) |
 | Tokens | relevés par le responsable |
+
+## Livraison 106f : Pompiers (Capitaine Sam)
+
+Équipe lancée le 2026-11-05 (« graphe 106f »), session `session_015z4jmNHAVw9mZYSfXRtpJx`, branche `feature/106f-celebration-pompiers` partie de `main` (`c744821`). Particularité : pas de maquette ; la maquette et la planche sont dessinées d'abord et validées par le PO avant le câblage. Le câblage attend le merge de 106e (mêmes fichiers).
+
+- 10:15 UTC : démarrage, lecture du modèle, des maquettes (méthode d'Agent Max : corps et moteur de Coach Léo) et de la livraison 106e. Contournement Chromium (`pw/` dans le scratchpad) en place.
+- Écart signalé : `src/univers/apparences.ts` (cité par le brief) n'existe pas ; le nom « Capitaine Sam, le pompier courageux » est le même dans `univers.ts`, `CapitaineSam.tsx` et `PersonnageGuide.tsx`. Capitaine Sam garde son dessin fixe d'avant la refonte (#96) : question 106.43.
+- Modèle (section « Livraison 106f ») et 5 scénarios `@livraison-106f` écrits par l'orchestrateur, sur le gabarit de 106d (aucun concept nouveau : entrée de catalogue, libellés, pétales de la caserne, catalogue exhaustif). Questions 106.41 à 106.43.
+- Maquette et planche de Capitaine Sam : en cours (illustrateur, skills `illustration` et `motion-design`).
