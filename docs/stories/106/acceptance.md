@@ -338,8 +338,8 @@ Pour l'équipe (pas une question au PO) :
 
 Aucune pour 106a, 106b ni 106c. Aucune pour 106d : 106.31, 106.34, 106.35 et 106.36 tranchées le
 2026-11-05 (section « Livraison 106d »). Aucune pour 106e : 106.38, 106.39 et 106.40 tranchées le 2026-11-05
-(section « Décisions »). Pour 106g, les questions 106.44 à 106.46 sont posées par le modèle (section « Livraison
-106g » de `docs/stories/106/domain-model.md`) ; aucune ne change les scénarios. L'annonce « Matière réussie ! » dans un
+(section « Décisions »). Aucune pour 106g : 106.44 à 106.46 tranchées le 2026-11-05 (section « Décisions ») ;
+aucune ne change les scénarios. L'annonce « Matière réussie ! » dans un
 univers sans célébration découle des invariants 1 et 8 (tests du domaine). Reste en attente, sans bloquer :
 - le **choix des musiques** des six univers par le PO, à l'écoute (106.12) : d'ici là, la musique de la célébration
   de Coach Léo et celle de Lili sont « grande victoire » ;
@@ -388,5 +388,8 @@ par sa recommandation. Les questions 106.1 à 106.23 sont détaillées dans `doc
 | 106.38 Durée de la scène d'Agent Max (106e) | Réponse du PO 2026-11-05 : « 106e reco tout » (https://github.com/SBA-dev/github-move/issues/106#issuecomment-6654943666), reco A. Le port resserre la maquette à environ 5 s en gardant chaque temps fort, puis l'accélère comme les autres pour tenir en 3 s | Aucun |
 | 106.39 Étoile du dessin fixe d'Agent Max (106e) | Réponse du PO 2026-11-05 : reco A. Le correctif du dessin fixe est l'issue #158, hors de 106e ; 106e ne touche pas le dessin fixe d'Agent Max | Aucun |
 | 106.40 Planche d'Agent Max (106e) | Réponse du PO 2026-11-05 : reco. Planche validée (`docs/stories/106/captures/106e-agent-max-*.png`) | Aucun |
+| 106.44 Nom « Matière réussie » (106g) | Réponse du PO 2026-11-05 : « 106g reco tout » (https://github.com/SBA-dev/github-move/issues/106#issuecomment-6665711170), reco (oui). « (à valider) » retiré du glossaire, définition inchangée | Aucun |
+| 106.45 Matière réussie une seconde fois (106g) | Réponse du PO 2026-11-05 : reco (oui). Une matière redevenue réussie après l'ajout d'une leçon est fêtée à nouveau ; le grand défi déjà relevé reste relevé | Aucun (règle couverte par les tests du domaine) |
+| 106.46 « Découverte » avec la musique (106g) | Réponse du PO 2026-11-05 : reco (oui). La musique de la célébration, puis « découverte » quand la séance donne un objet de la cabane, une tenue ou un épisode, puis la parole | Aucun (ordre des sons couvert par les tests du domaine) |
 
 Correction du 2026-11-02 (sans changement de règle) : dans « Pendant la célébration de l'univers, le clavier n'est jamais bloqué », « Alors Léa voit « Qui joue ? » » devient « Alors Léa voit son accueil », car depuis #100 « Accueil » à la fin d'un défi mène à l'accueil de l'enfant (et non à « Qui joue ? » comme à la fin d'une séance, #97) ; `@wip` est retiré de la fonctionnalité.
