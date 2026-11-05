@@ -94,3 +94,15 @@
 | Cycles TDD | 8 rouges/verts (blocs 1, 2-3, 4-6, Motivation, infrastructure, phrase de fin, union, aiguillage), 2871 tests verts |
 | Escalades | 0 |
 | Verrous pris | `base` (22:54 → 00:05) |
+
+## Merge
+
+- 00:23 UTC : merge autorisé par le PO (« merge 137 OK », annonce du responsable sur #64). 00:39 : VERROU `merge`
+  accordé après le merge de #130.
+- Intégration de `main` (`af47f19`, #130) en `0545f8c` : conflit dans `features/steps/delais.steps.ts` (les deux tags
+  gardés), fusion automatique de `src/seance/EcranDeSeance.tsx` et `useDeroulementDeSeance.ts`. Unitaires 2871, lint,
+  fmt, tsc, build, bddgen verts. Revue du delta d'intégration : **APPROUVÉ**.
+- 01:11 UTC : VERROU `base` accordé (après 106b). Sonde 0,31 / 0,45 / 0,25 s. Rejeu de la décision 0022 sur
+  `telephone`, 1 worker : `@issue-137`, `@issue-100`, `@issue-130` **139/139** (33,6 min).
+- Mesures mises à jour : intégrations de `main` 2 (dont 1 avec conflit, sur les steps) ; attente du verrou `merge`
+  16 min, du verrou `base` pour le rejeu 30 min.
