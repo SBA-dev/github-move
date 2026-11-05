@@ -585,7 +585,7 @@ Tests à prévoir (`tenue-de-la-celebration_test.ts`) :
 
 ### Annonce pour le lecteur d'écran (invariant 8)
 
-- Au moment `tenueRecue`, l'annonce du moment **est l'annonce de #102**, « <personnage guide> a reçu <tenue> ! », dans la zone `role="status"` d'`AnnonceDeLaTenue` (avec son titre « Pour <personnage guide> »). Aucun texte nouveau, aucune seconde annonce. Le dessin de la scène et le cri de victoire restent `aria-hidden`.
+- Au moment `tenueRecue`, l'annonce du moment **est l'annonce de #102**, « <personnage guide> a reçu <tenue> ! », dans la zone `role="status"` d'`AnnonceDeLaTenue` (avec son titre « Pour <personnage guide> »). Aucun texte nouveau, aucune seconde annonce. Le dessin de la scène et le cri de victoire restent `aria-hidden`. Proposé au PO : **106.48**.
 - C'est cohérent avec 106g. La zone `role="status"` de « Matière réussie ! » ne parle qu'au moment `matiereReussie`, et les annonces des autres nouveautés gardent chacune leur zone. Au moment `tenueRecue`, la zone de la matière reste vide et seule la zone de la tenue parle. Quand la matière est réussie et qu'une tenue est reçue, on entend « Matière réussie ! » puis « Coach Léo a reçu une écharpe rayée ! » : ce sont deux nouveautés et non deux annonces de la célébration, comme le dit le second scénario 106h.
 - **Le petit dessin de l'encart** : `AnnonceDeLaTenue` dessine le personnage guide portant la tenue reçue (`personnage-guide-de-l-annonce`, décoratif). Pendant la célébration de l'univers, le personnage guide n'apparaît qu'une fois, dans la scène (106.28 « cacher ») : ce petit dessin le montrerait une deuxième fois. Voir **106.50**.
 
@@ -674,13 +674,17 @@ Voir **106.49**.
 - **Reco : oui, la scène de la matière montre la tenue reçue** (l'écharpe rayée), comme une danse de victoire. L'enfant voit sa nouvelle tenue en mouvement, la tenue portée ne change pas, et l'encart annonce la tenue juste après « Matière réussie ! ».
 - Autre choix : la scène montre la tenue portée (le nœud papillon) ; la tenue reçue ne se voit que dans l'encart de #102.
 
-**106.50 Le petit dessin de l'encart de la tenue pendant la célébration de l'univers.** L'encart « Pour Coach Léo » de #102 dessine Coach Léo avec la tenue reçue. Pendant la célébration de l'univers, 106.28 (« cacher ») veut que le personnage guide n'apparaisse qu'une fois, dans la scène. Or presque toutes les fins qui donnent une tenue joueront désormais la célébration.
-- **Reco : oui, on cache le petit dessin** de l'encart quand la fin joue la célébration de l'univers. Le titre « Pour Coach Léo » et la phrase « Coach Léo a reçu une écharpe rayée ! » restent, et la scène, qui garde son image finale, montre la tenue. Le step de #102 qui vérifie le petit dessin est adapté. Avec la célébration commune (lecture des étoiles en échec, univers sans célébration), rien ne change.
-- Autre choix : garder le petit dessin, car l'encart est une carte de nouveauté et non le personnage guide qui parle. Dans ce cas, le personnage guide apparaît deux fois.
+**106.48 L'annonce du moment « tenue reçue » pour le lecteur d'écran.** Au moment `tenueRecue`, l'annonce aux lecteurs d'écran est-elle seulement l'annonce existante de #102 (« Coach Léo a reçu une écharpe rayée ! », zone `role="status"` de l'encart), sans titre nouveau propre au moment, et sans jamais lire le cri de victoire (« BUT ! ») ?
+- **Reco : oui.** C'est cohérent avec la zone unique de 106g : la zone de « Matière réussie ! » reste vide à ce moment, et chaque nouveauté garde sa zone. On a ainsi une seule annonce par moment, sans texte nouveau (invariant 8, 106.14).
+- Autre choix : un titre propre au moment (par exemple « Nouvelle tenue ! »), annoncé avant la phrase de #102. Il y aurait alors deux annonces pour le même fait.
 
 **106.49 Fermeture de #106.** La PR de 106h ferme-t-elle #106 ? Le choix des six musiques (106.12, 106.27, accès réseau compris) deviendrait une issue à part, créée par le PO, et les corrections du texte de l'issue seraient notées dans le commentaire de fermeture.
 - **Reco : oui.** Tout le reste du périmètre est livré, et les musiques ne dépendent que du choix du PO et de l'accès réseau.
 - Autre choix : laisser #106 ouverte jusqu'au choix des musiques.
+
+**106.50 Le petit dessin de l'encart de la tenue pendant la célébration de l'univers.** L'encart « Pour Coach Léo » de #102 dessine Coach Léo avec la tenue reçue. Pendant la célébration de l'univers, 106.28 (« cacher ») veut que le personnage guide n'apparaisse qu'une fois, dans la scène. Or presque toutes les fins qui donnent une tenue joueront désormais la célébration.
+- **Reco : oui, on cache le petit dessin** de l'encart quand la fin joue la célébration de l'univers. Le titre « Pour Coach Léo » et la phrase « Coach Léo a reçu une écharpe rayée ! » restent, et la scène, qui garde son image finale, montre la tenue. Le step de #102 qui vérifie le petit dessin est adapté. Avec la célébration commune (lecture des étoiles en échec, univers sans célébration), rien ne change.
+- Autre choix : garder le petit dessin, car l'encart est une carte de nouveauté et non le personnage guide qui parle. Dans ce cas, le personnage guide apparaît deux fois.
 
 ## Questions ouvertes
 
