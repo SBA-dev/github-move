@@ -1,4 +1,5 @@
 import { type CoteDeMain, dessinDesMains } from "../commun/mains.ts";
+import { ligne } from "../commun/trait.ts";
 
 export const CONTOUR = "#33304A";
 export const FOURRURE = "#F48C3C";
@@ -13,9 +14,6 @@ const PEAU = "#FFC28A";
 const PEAU_OMBRE = "#E09A5A";
 
 export const MAINS: Record<CoteDeMain, readonly string[]> = dessinDesMains({ contour: CONTOUR, peau: PEAU, peauOmbre: PEAU_OMBRE });
-
-const ligne = (classe: string, couleur: string, largeur: number) =>
-  `<path class="${classe}" fill="none" stroke="${couleur}" stroke-width="${largeur}" stroke-linecap="round" stroke-linejoin="round"/>`;
 
 export const dessinDuBras = (c: "g" | "d") =>
   `<g id="animaux-bras-${c}">${ligne("contour", CONTOUR, 21)}${ligne("rempli", FOURRURE, 15)}${ligne("ombre", OMBRE, 5)}${ligne("lumiere", LUMIERE, 3)}<g id="animaux-main-${c}"><g class="pose-main"></g></g></g>`;
