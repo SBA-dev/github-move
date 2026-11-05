@@ -87,3 +87,25 @@ Branche de base : `main` (`597a4a5`). Branche : `feature/106b-celebration-danse`
 ## 2026-11-05
 - 00:23 UTC : réponse du PO (annonce [Responsable] sur #106) : « planche 106b OK, 106.30 corriger ». Planche `1314434` validée.
 - 106.30 : `9edd375` (de dos, la chevelure recouvre l'arrière du crâne ; de face et de profil, dessin identique au bit près), captures `8101cb2` (`106b-lili-pirouette-de-dos.png`, `106b-lili-tetes-avant-apres.png`), relues par l'orchestrateur. Revue delta : APPROUVÉ (non bloquants : constantes du recouvrement à nommer, point de fermeture du tracé, ombre de nuque devenue invisible de dos).
+
+### E2E (verrou `base` accordé le 2026-11-05 00:39 UTC)
+- `main` intégrée avant le run (`af47f19`, avec #130) : merge `6f4c673`, sans conflit ; tsc, 2810 tests, build OK.
+- Sonde `admin/users` : 3 réponses en moins de 0,6 s.
+- Run 1, `@issue-106` hors `@hors-106a`, `telephone`, 1 worker : **30/31**. KO « Sans réseau, Coach Léo joue quand même la célébration » : vrai bug introduit par le chargement à la demande (l'`import()` du morceau échoue hors ligne, aucune scène).
+- Correctif 1 `c9dc12b` (préchargement à l'ouverture du défi, promesse mémorisée) : revue APPROUVÉ ; rejeu ciblé 8/9, toujours KO (course : le réseau est coupé juste après l'ouverture du défi, avant la fin du chargement des modules).
+- Correctif 2 `a4ced3d` (préchargement dès que l'univers du profil en cours est connu, `src/Application.tsx` ; une promesse en échec est oubliée pour retenter) : revue APPROUVÉ ; scénario vert.
+- Run complet, HEAD `a4ced3d` : **31/31 verts** (10,6 min).
+
+## Mesures (106b)
+
+| Mesure | Valeur |
+|---|---|
+| Durée | 2026-11-04 23:25 UTC → 2026-11-05 01:15 UTC, PRÊTE À MERGER (environ 1 h 50) |
+| Attente | validation de la planche par le PO : environ 50 min (sans bloquer : TDD, câblage et review avancés pendant ce temps) ; verrou `base` : environ 1 h 05 (file : #137, #130) |
+| Cycles TDD | 3 comportements (catalogue Danse et clés publiées ; type mappé et exhaustivité ; un test de précondition corrigé) |
+| Review | 1 revue de bloc (APPROUVÉ), 2 cycles sur la branche (À CORRIGER puis APPROUVÉ), 3 revues delta (106.30, `c9dc12b`, `a4ced3d` : APPROUVÉ), 1 review finale |
+| E2E | 3 runs sur `telephone` (30/31, rejeu ciblé 8/9, 31/31) et 1 scénario seul (vert) |
+| Intégrations de `main` | 1 (`af47f19`), sans conflit |
+| Escalades | aucune nouvelle ; 106.27 (accès réseau aux musiques) toujours ouvert |
+| Verrous | `base` (00:39 → 01:15 UTC) |
+| Tokens | relevés par le responsable |
