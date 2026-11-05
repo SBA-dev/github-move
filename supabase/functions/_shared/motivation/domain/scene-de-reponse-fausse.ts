@@ -17,9 +17,17 @@ export const SCENES_DE_REPONSE_FAUSSE: Partial<
   sports: { univers: "sports" },
 };
 
+function laScenePeutSeJouer(faits: FaitsDeLaReponseFausse): boolean {
+  return !faits.sceneDejaJoueeDansLaSeance &&
+    !faits.pendantLeChronoDUneFluence &&
+    !faits.dansLeTestDeDepart &&
+    !faits.personnageGuideEnPetit;
+}
+
 export function sceneDeReponseFausse(
-  _faits: FaitsDeLaReponseFausse,
+  faits: FaitsDeLaReponseFausse,
   cleUnivers: string | undefined,
 ): SceneDeReponseFausse | undefined {
+  if (!laScenePeutSeJouer(faits)) return undefined;
   return SCENES_DE_REPONSE_FAUSSE[universDe(cleUnivers).cle];
 }
