@@ -114,7 +114,7 @@ classDiagram
 | Animaux | Noisette (elle) | attrape une noisette dorée | `jongle`, `mange`, `joues` | « Hourra ! » | 106c |
 | Princesses et fées | Lumi | un sort fait éclore une fleur | `arc`, `envol`, `signes` | « Magique ! » | 106d |
 | Police | Agent Max | retrouve un chiot perdu | `orchestre`, `trottinette`, `danse` | « Enquête résolue ! » | 106e |
-| Pompiers | Capitaine Sam | arrose le jardin de la caserne, les fleurs s'ouvrent (maquette dessinée en 106f, à valider : 106.42) | `cloche`, `arc`, `pluie` (106.41) | « Mission accomplie ! » | 106f |
+| Pompiers | Capitaine Sam | arrose le jardin de la caserne, les fleurs s'ouvrent (maquette dessinée en 106f, validée : 106.42) | `cloche`, `arc`, `pluie` (106.41) | « Mission accomplie ! » | 106f |
 
   Validité : au moins une variante par univers livré ; clés uniques dans un univers. Un univers pas encore livré n'a pas d'entrée : `celebrationDe` rend « aucune célébration de l'univers » et la fin garde la célébration commune (106.18). Quand les six univers sont livrés, le catalogue peut devenir exhaustif sur `CleUnivers` (un univers ajouté sans célébration ne compile plus).
 - **`CriDeVictoire`** : texte court, fixe par univers ; du contenu pour l'enfant, soumis à la règle absolue. Affiché, jamais lu à part (106.14).
@@ -431,7 +431,7 @@ Précédent : en 106b, le ruban de Lili dessine une grande étoile dorée à cin
 
 ## Livraison 106f : Pompiers
 
-Capitaine Sam (« il », le pompier courageux, la Caserne des Savanturiers), univers Pompiers. **Il n'y avait pas de maquette** (106.16) : 106f la dessine d'abord, `docs/maquettes/capitaine-sam-pompiers.html`, avec sa planche (`docs/stories/106/captures/106f-capitaine-sam-*.png`). Le PO les valide **avant tout câblage** (106.16, 98.28 ; question 106.42). Aucun agrégat, aucun événement, aucune donnée d'enfant de plus : 106f ajoute l'entrée `pompier` aux structures posées par 106b et suivies par 106c, 106d et 106e (`VARIANTES_DES_UNIVERS`, donc `UniversCelebre`, `VarianteDe<"pompier">`, l'union `CelebrationDeLUnivers`, le catalogue des cris et des musiques, la table des chargeurs de scène). Aucun type nouveau. La clé de l'univers est `pompier` (au singulier, `univers.ts`).
+Capitaine Sam (« il », le pompier courageux, la Caserne des Savanturiers), univers Pompiers. **Il n'y avait pas de maquette** (106.16) : 106f la dessine d'abord, `docs/maquettes/capitaine-sam-pompiers.html`, avec sa planche (`docs/stories/106/captures/106f-capitaine-sam-*.png`). Le PO les a **validées le 2026-11-05** (106.16, 98.28, 106.42), avant tout câblage. Le dessin fixe `CapitaineSam.tsx` n'est pas touché par 106f : issue #161 (106.43 A). Aucun agrégat, aucun événement, aucune donnée d'enfant de plus : 106f ajoute l'entrée `pompier` aux structures posées par 106b et suivies par 106c, 106d et 106e (`VARIANTES_DES_UNIVERS`, donc `UniversCelebre`, `VarianteDe<"pompier">`, l'union `CelebrationDeLUnivers`, le catalogue des cris et des musiques, la table des chargeurs de scène). Aucun type nouveau. La clé de l'univers est `pompier` (au singulier, `univers.ts`).
 
 **Nom.** Le nom du personnage guide est le même partout : « Capitaine Sam », « le pompier courageux » (`supabase/functions/_shared/motivation/domain/univers.ts`, dessin fixe `src/univers/personnages/CapitaineSam.tsx`, table de `src/univers/PersonnageGuide.tsx`). Le fichier `src/univers/apparences.ts` cité par le brief n'existe pas : les noms vivent dans `univers.ts`. Le glossaire ne nomme pas les personnages guides ; il cite déjà « mission accomplie » comme expression du personnage guide « Pompiers » (terme « Quête accomplie »). Le cri de victoire « Mission accomplie ! » est le même texte que la première expression de Capitaine Sam : ce sont deux concepts distincts, que le terme « Cri de victoire » prévoit déjà (comme « Enquête résolue ! » en 106e).
 
@@ -507,14 +507,16 @@ Pompiers est le **dernier univers livré**. Une fois 106e mergée et l'entrée `
 
 ### Questions
 
-**106.41 Noms des variantes de Capitaine Sam.** Clés `cloche`, `arc`, `pluie` ; libellés des scénarios « la cloche de la caserne », « l'arc-en-ciel », « la pluie joyeuse » (tableau plus haut). L'action : « il arrose le jardin de la caserne et les fleurs s'ouvrent ».
+Aucune question ouverte pour 106f. Toutes sont **tranchées le 2026-11-05** par le PO (« 106f reco tout », [annonce du responsable](https://github.com/SBA-dev/github-move/issues/106#issuecomment-6656757030)).
+
+**106.41 Noms des variantes de Capitaine Sam.** *Tranchée (reco retenue, 2026-11-05).* Clés `cloche`, `arc`, `pluie` ; libellés des scénarios « la cloche de la caserne », « l'arc-en-ciel », « la pluie joyeuse » (tableau plus haut). L'action : « il arrose le jardin de la caserne et les fleurs s'ouvrent ».
 - **Reco** : les retenir.
 - Autre choix : d'autres noms, ou une autre variante (par exemple un jet d'eau qui dessine un cœur, ou un défilé avec la lance en l'air).
 
-**106.42 Maquette et planche de Capitaine Sam.** Maquette `docs/maquettes/capitaine-sam-pompiers.html` et planche `docs/stories/106/captures/106f-capitaine-sam-*.png` (moments, clair, sombre, têtes). Le PO les valide avant le câblage (106.16).
+**106.42 Maquette et planche de Capitaine Sam.** *Tranchée (validées, 2026-11-05 ; commit `ada9930`).* Maquette `docs/maquettes/capitaine-sam-pompiers.html` et planche `docs/stories/106/captures/106f-capitaine-sam-*.png` (moments, clair, sombre, têtes). Le PO les valide avant le câblage (106.16).
 - **Reco** : les valider, ou demander des retouches (ce qui reste possible jusqu'au câblage).
 
-**106.43 Dessin fixe de Capitaine Sam.** Capitaine Sam est le seul personnage guide qui « garde son dessin d'avant la refonte » (#96, `src/univers/PersonnageGuide.tsx`, `DESSINS_REDESSINES`) : un petit dessin simple, sans contour. Pendant la célébration, il apparaît dans le nouveau style (corps de Coach Léo, casque jaune à écusson, veste rouge à bandes). Juste après, la fin du défi montre le dessin fixe, dans l'ancien style. C'est le même écart que 106.39 pour l'étoile d'Agent Max, en plus grand.
+**106.43 Dessin fixe de Capitaine Sam.** *Tranchée (A retenue, 2026-11-05 ; issue #161).* Capitaine Sam est le seul personnage guide qui « garde son dessin d'avant la refonte » (#96, `src/univers/PersonnageGuide.tsx`, `DESSINS_REDESSINES`) : un petit dessin simple, sans contour. Pendant la célébration, il apparaît dans le nouveau style (corps de Coach Léo, casque jaune à écusson, veste rouge à bandes). Juste après, la fin du défi montre le dessin fixe, dans l'ancien style. C'est le même écart que 106.39 pour l'étoile d'Agent Max, en plus grand.
 - **Reco A** : une issue à part, hors de 106f, pour redessiner le dessin fixe `CapitaineSam.tsx` d'après la maquette validée (comme les cinq autres en #96) ; 106f ne touche pas au dessin fixe.
 - B : 106f redessine aussi le dessin fixe (plus de travail, touche les scénarios et la planche de #96).
 - C : laisser l'écart.
