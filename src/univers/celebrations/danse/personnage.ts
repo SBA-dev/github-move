@@ -86,7 +86,7 @@ export function creerLili(racine: SVGSVGElement, tenue?: CleDeTenue) {
     for (const [id, alpha] of [["oreille-g", -90], ["oreille-d", 90]] as const) {
       const o = traitDuVisage(alpha, w, R);
       poser(n(id), "opacity", o.z > -.12 ? 1 : 0);
-      deplacer(n(id), `translate(${r1(o.x)} 3)`);
+      deplacer(n(id), `translate(${r1(o.x)} 6)`);
     }
     poser(n("tete-ombre"), "d", `M8 27 A28 28 0 0 0 27 -6 A23 23 0 0 1 8 27 Z`);
     const A = EMOS[ex.prec], B = EMOS[ex.emo], u = ex.u;
@@ -115,17 +115,22 @@ export function creerLili(racine: SVGSVGElement, tenue?: CleDeTenue) {
       if (e === ex.emo) deplacer(m, `scale(${r3(lerp(.7, 1, E.retour(u)))})`);
     }
     // coiffure : ligne de cheveux basse derrière, haute devant
-    const sw = Math.sin(w * DEG), dosA = (1 - cw) / 2, yC = lerp(-17, 15, dosA), pente = (15 - -17) / 2, ondul = lerp(3, 1.2, dosA), cote = lerp(5, 13, dosA);
+    const sw = Math.sin(w * DEG), dosA = (1 - cw) / 2, pente = (15 - -17) / 2, cote = lerp(5, 13, dosA), deFace = clamp01(cw), yC = lerp(-17, 15, dosA) - 5 * deFace;
     // de dos, la chevelure recouvre tout l'arrière du crâne : aucune peau n'en dépasse
     const recouvrement = clamp01((-cw - .05) / .2), basDeLaTete = (x: number) => Math.sqrt(Math.max(0, (R + 2) ** 2 - x * x)) + 1;
+    // de face, la frange descend en douceur vers les tempes et la chevelure épouse le crâne : aucune mèche ne dépasse
+    const descente = lerp(-cote, 14, deFace), bord = lerp(R + 1, Math.sqrt((R + 1.5) ** 2 - 11 ** 2), deFace);
+    const pointsDeLaFrange: number[] = [];
     let d = "";
     for (let i = 0; i <= 12; i++) {
-      const x = -R - 1 + (2 * R + 2) * i / 12;
-      const ligne = yC - (x / R) * sw * pente + ondul * Math.sin(i * 1.9 + .4) - (Math.abs(x) > R * .72 ? cote : 0);
+      const x = -bord + 2 * bord * i / 12;
+      const ligne = yC - (x / R) * sw * pente + descente * (Math.abs(x) / R) ** lerp(3, 1.6, deFace);
       const y = lerp(ligne, basDeLaTete(x), recouvrement);
+      pointsDeLaFrange.push(y);
       d += `${i ? "L" : "M"}${r1(x)} ${r1(y)}`;
     }
-    d += ` Q${R + 4} -14 ${R - 10} -25 Q0 -37 ${-R + 10} -25 Q${-R - 4} -14 ${-R - 1} ${r1(yC + sw * pente - cote)} Z`;
+    const yGauche = r1(pointsDeLaFrange[0] ?? 0);
+    d += ` C${r1(bord + lerp(4, 3, deFace))} ${r1(lerp(-14, -20, deFace))} ${R - 10} -25 ${R - 10} -25 Q0 ${lerp(-37, -46, deFace)} ${-R + 10} -25 C${-R + 10} -25 ${r1(-bord - lerp(4, 3, deFace))} ${r1(lerp(-14, -20, deFace))} ${r1(-bord)} ${yGauche} Z`;
     poser(n("cheveux-forme"), "d", d);
     // nuque, visible de dos : l'ombre de la chevelure
     const dos = clamp01(-cw);
@@ -155,25 +160,26 @@ export function creerLili(racine: SVGSVGElement, tenue?: CleDeTenue) {
     const w = p.vue, cw = Math.cos(w * DEG), sw = Math.sin(w * DEG), wf = lerp(.55, 1, Math.abs(cw));
     deplacer(n("lili"), `translate(${r1(p.x)} ${r1(y)}) rotate(${r1(p.rot)}) scale(${r3(BASE * p.sx)} ${r3(BASE * p.sy)})`);
     // justaucorps en poire, col (devant seulement)
-    const sh = 18 * wf, hp = 22 * wf, torse = n("torse"), tutu = n("tutu");
-    poser(q1(torse, "forme"), "d", `M${r1(-sh)} -40 Q${r1(-sh - 6)} -12 ${r1(-hp * .85)} 0 Q0 6 ${r1(hp * .85)} 0 Q${r1(sh + 6)} -12 ${r1(sh)} -40 Q0 -47 ${r1(-sh)} -40 Z`);
-    poser(q1(torse, "ombre"), "d", `M${r1(sh * .3)} -42 Q${r1(sh + 3)} -30 ${r1(hp * .85)} 0 Q${r1(hp * .6)} 4 ${r1(hp * .35)} 3 Q${r1(sh + 1)} -20 ${r1(sh * .3)} -42 Z`);
+    const sh = 17 * wf, wa = 13 * wf, hp = 21 * wf, torse = n("torse"), tutu = n("tutu");
+    poser(q1(torse, "forme"), "d", `M${r1(-sh)} -40 Q${r1(-sh - 3)} -26 ${r1(-wa)} -13 Q${r1(-wa - 1)} -6 ${r1(-hp * .8)} 0 Q0 6 ${r1(hp * .8)} 0 Q${r1(wa + 1)} -6 ${r1(wa)} -13 Q${r1(sh + 3)} -26 ${r1(sh)} -40 Q0 -47 ${r1(-sh)} -40 Z`);
+    poser(q1(torse, "ombre"), "d", `M${r1(sh * .35)} -42 Q${r1(sh + 2)} -30 ${r1(wa)} -13 Q${r1(wa + 1)} -6 ${r1(hp * .8)} 0 Q${r1(hp * .6)} 3 ${r1(hp * .35)} 3 Q${r1(wa - 2)} -8 ${r1(wa - 4)} -16 Q${r1(sh - 2)} -28 ${r1(sh * .35)} -42 Z`);
     poser(q1(torse, "lumiere"), "d", `M${r1(-sh * .9)} -36 Q${r1(-sh * .4)} -42 ${r1(sh * .1)} -40 Q${r1(-sh * .4)} -37 ${r1(-sh * .8)} -30 Z`);
     poser(q1(torse, "col"), "d", cw > .2 ? `M-9 -44 Q0 -34 9 -44` : `M-8 -43 Q0 -39 8 -43`);
     // tutu court et bouffant : festons, couche arrière plus large, rebond vertical avec le mouvement
     const festons = (W: number, y0: number, yb: number, nombre: number) => {
-      let d = `M${r1(-W)} ${y0}`;
+      const taille = W * .55;
+      let d = `M${r1(-taille)} ${y0} Q${r1(-W * .95)} ${y0 + 2} ${r1(-W)} ${yb - 3}`;
       for (let i = 0; i < nombre; i++) {
         const xa = -W + 2 * W * i / nombre, xb = -W + 2 * W * (i + 1) / nombre;
-        d += ` Q${r1((xa + xb) / 2)} ${r1(yb + 9)} ${r1(xb)} ${yb}`;
+        d += ` Q${r1((xa + xb) / 2)} ${r1(yb + 9)} ${r1(xb)} ${yb - 3}`;
       }
-      return `${d} L${r1(W)} ${y0} Q0 ${y0 + 4} ${r1(-W)} ${y0} Z`;
+      return `${d} Q${r1(W * .95)} ${y0 + 2} ${r1(taille)} ${y0} Q0 ${y0 + 4} ${r1(-taille)} ${y0} Z`;
     };
     const bond = clamp01(Math.abs(rebond) / 22), W = 36 * wf + 8;
-    poser(q1(tutu, "arriere"), "d", festons(W + 5, -8, 16, 6));
-    poser(q1(tutu, "forme"), "d", festons(W, -5, 19, 7));
-    poser(q1(tutu, "ombre"), "d", `M${r1(W * .3)} 8 Q${r1(W * .95)} -2 ${r1(W)} 12 Q${r1(W * .7)} 18 ${r1(W * .3)} 17 Z`);
-    poser(q1(tutu, "bande"), "d", `M${r1(-W * .55)} -5 Q0 2 ${r1(W * .55)} -5`);
+    poser(q1(tutu, "arriere"), "d", festons(W + 5, -8, 17, 6));
+    poser(q1(tutu, "forme"), "d", festons(W, -5, 20, 7));
+    poser(q1(tutu, "ombre"), "d", `M${r1(W * .5)} 2 Q${r1(W * .97)} 4 ${r1(W)} 14 Q${r1(W * .8)} 18 ${r1(W * .55)} 17 Q${r1(W * .75)} 10 ${r1(W * .5)} 2 Z`);
+    poser(q1(tutu, "bande"), "d", `M${r1(-W * .5)} -5 Q0 2 ${r1(W * .5)} -5`);
     deplacer(tutu, `scale(${r3(1 + bond * .08)} ${r3(1 + bond * .18)})`);
     deplacer(n("haut"), `rotate(${r1(p.torse)})`);
     habit.suivre({ cw, sw, torse: p.torse });
