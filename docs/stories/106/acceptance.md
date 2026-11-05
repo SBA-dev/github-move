@@ -266,7 +266,7 @@ profil enfant de Léa en « Police » »). Mêmes scénarios que pour les livrai
 Moment **« matière réussie »**, à la fin de la séance (106.4 A, 106.5), scénarios tagués `@livraison-106g`. La
 séance qui rend une matière réussie (toutes les leçons de la matière de la classe du profil réussies, au moins
 1 étoile ; glossaire, « Matière réussie ») fait jouer la célébration de l'univers du profil : même scène et mêmes
-variantes qu'au défi relevé, seule l'annonce change (invariant 1). Une séance complète est longue en E2E : 4
+variantes qu'au défi relevé, seule l'annonce change (invariant 1). Une séance complète est longue en E2E : 3
 scénarios seulement, chacun sur la leçon « L'eau » de la bibliothèque de test du défi (sciences du CE1, 3 leçons de
 2 questions, #100 et #137), avec Coach Léo (Contexte du fichier : Léa en « Sports »).
 
@@ -274,8 +274,7 @@ scénarios seulement, chacun sur la leçon « L'eau » de la bibliothèque de te
 |---|---|---|
 | R12 | La séance qui rend une matière réussie fait jouer la célébration de l'univers à la place de la célébration commune, avec l'annonce « Matière réussie ! », annoncée une seule fois aux lecteurs d'écran ; les autres annonces de la fin restent | La séance qui rend les sciences du CE1 réussies fait jouer la célébration de l'univers « Sports » et annonce « Matière réussie ! » |
 | R13 | Seule la séance qui rend la matière réussie est fêtée ; rejouer une leçon d'une matière déjà réussie garde la célébration commune | Rejouer une leçon d'une matière déjà réussie garde la célébration commune, sans « Matière réussie ! » |
-| R14 | Un univers dont la célébration n'est pas encore livrée garde la célébration commune, avec la même annonce « Matière réussie ! » | Dans l'univers « Pompiers », pas encore livré, la séance qui rend les sciences réussies garde la célébration commune et annonce « Matière réussie ! » |
-| R15 | Avec les mouvements réduits : image fixe de la célébration de l'univers, cri de victoire et annonce, sans confettis | Avec les mouvements réduits, la séance qui rend les sciences réussies montre l'image fixe de la célébration de l'univers « Sports » et « Matière réussie ! » |
+| R14 | Avec les mouvements réduits : image fixe de la célébration de l'univers, cri de victoire et annonce, sans confettis | Avec les mouvements réduits, la séance qui rend les sciences réussies montre l'image fixe de la célébration de l'univers « Sports » et « Matière réussie ! » |
 
 Example mapping :
 - **R12** : Léa (CE1, Sports) a réussi « Les êtres vivants » et « Les saisons » ; elle réussit la séance complète de
@@ -286,20 +285,22 @@ Example mapping :
   de la célébration commune, la musique de la célébration de Coach Léo (« grande victoire ») une seule fois.
 - **R13** : Léa a déjà réussi les 3 leçons de sciences et rejoue « L'eau » → confettis de la célébration commune,
   Coach Léo à côté de sa bulle, pas de « Matière réussie ! », pas de but (même règle que le défi rejoué, R3).
-- **R14** : Léa passée en « Pompiers » (Capitaine Sam, 106f pas encore livrée) rend les sciences réussies →
-  confettis de la célébration commune et « Matière réussie ! », aucune célébration de l'univers. Lecture retenue :
-  l'annonce appartient au moment, pas à la scène. Elle est donc la même dans tous les univers (invariant 1 du modèle :
-  « pour un même fait, tous les univers ont le même moment, la même annonce ») et elle est la seule annonce faite aux
-  lecteurs d'écran (invariant 8). 106.18 ne retire que la scène. Ce point est couvert par le cadrage validé : il ne
-  fait l'objet ni d'une question nouvelle ni d'un tag `@a-valider`. Quand 106f sera livrée, ce scénario passera à un
-  autre univers pas encore livré ou sera retiré, comme le Plan de R4.
-- **R15** : mouvements réduits → image fixe de la scène de Coach Léo avec « BUT ! », « Matière réussie ! » sans
+- **Univers sans célébration (règle retirée des scénarios)** : un univers sans célébration de l'univers garde la
+  célébration commune, avec la même annonce « Matière réussie ! ». L'annonce dépend du fait, pas de la scène
+  (invariants 1 et 8 ; `titreDeLaMatiereReussie()` hors de `CelebrationDeLUnivers`, modèle, section « Livraison 106g »).
+  Le scénario E2E « Pompiers » (univers pas encore livré) est retiré : 106f livre Pompiers et sera mergée avant les
+  E2E de 106g, il n'aurait plus de sujet. La règle reste couverte par les tests unitaires du domaine
+  (`celebration-de-la-fin_test.ts` : pompier → commune ; annonce tirée du seul fait).
+- **R14** : mouvements réduits → image fixe de la scène de Coach Léo avec « BUT ! », « Matière réussie ! » sans
   mouvement, aucun confetti (ni ceux de la scène, ni ceux de la célébration commune ; 106.15, 106.24).
 
 Décisions appliquées, sans question nouvelle :
 - **Annonces de la fin** (106.7, R6 de #100, #137) : la célébration de l'univers remplace seulement la célébration
   commune (confettis et effet sonore). Toutes les autres annonces de la fin restent affichées : étoiles, objet de la
-  cabane, épisode, badge, tenue reçue, grand défi ouvert. Seul le grand défi est vérifié par un scénario (R12), parce
+  cabane, épisode, badge, tenue reçue, grand défi ouvert. Ordre de l'écran de fin (modèle, « Zone des
+  nouveautés ») : la scène à la place des confettis, les étoiles, « Matière réussie ! » dans sa propre zone
+  `role="status"` (texte de `titreDeLaMatiereReussie()`), les annonces actuelles, « Le grand défi des sciences est
+  ouvert ! » en dernier. Seul le grand défi est vérifié par un scénario (R12), parce
   que c'est lui qui accompagne toujours une matière réussie (#137). Les autres sont couverts par leurs stories (#24,
   #31, #32, #33, #102), puisque l'univers ne change que la mise en scène (invariant 1). La tenue reçue à la même fin
   reste annoncée dans les nouveautés (106.7). Jouer la célébration avec la tenue reçue, c'est 106h : ses scénarios
@@ -328,18 +329,18 @@ Pour l'équipe (pas une question au PO) :
     car celle de #137 est réservée à `@issue-137` ;
   - « les lecteurs d'écran annoncent une seule fois » tombe sur l'étape de #97 ;
   - les étapes de la scène (« Coach Léo joue la célébration de l'univers … », « n'apparaît qu'une fois … »,
-    « la célébration commune n'est pas jouée », « aucune célébration de l'univers n'est jouée », « Coach Léo ne joue
+    « la célébration commune n'est pas jouée », « Coach Léo ne joue
     pas la célébration de l'univers », « apparaît à côté de la bulle de ses paroles », image fixe) attendent
     aujourd'hui la fin du défi (`attendreLaFinDuDefi`).
-- Les 4 scénarios jouent une séance complète. `@issue-106` est déjà dans le `Before` de `features/steps/delais.steps.ts`.
+- Les 3 scénarios jouent une séance complète. `@issue-106` est déjà dans le `Before` de `features/steps/delais.steps.ts`.
 
 ## Questions ouvertes
 
 Aucune pour 106a, 106b ni 106c. Aucune pour 106d : 106.31, 106.34, 106.35 et 106.36 tranchées le
 2026-11-05 (section « Livraison 106d »). Aucune pour 106e : 106.38, 106.39 et 106.40 tranchées le 2026-11-05
-(section « Décisions »). Aucune pour 106g : la lecture de R14 (annonce « Matière réussie ! » dans un univers pas
-encore livré) découle des invariants 1 et 8 du modèle validé (section « Livraison 106g »). Reste en attente, sans
-bloquer :
+(section « Décisions »). Pour 106g, les questions 106.44 à 106.46 sont posées par le modèle (section « Livraison
+106g » de `docs/stories/106/domain-model.md`) ; aucune ne change les scénarios. L'annonce « Matière réussie ! » dans un
+univers sans célébration découle des invariants 1 et 8 (tests du domaine). Reste en attente, sans bloquer :
 - le **choix des musiques** des six univers par le PO, à l'écoute (106.12) : d'ici là, la musique de la célébration
   de Coach Léo et celle de Lili sont « grande victoire » ;
 - l'**accès réseau** à `opengameart.org` ou `kenney.nl` (106.27) : seul le PO peut l'ouvrir dans l'environnement.
@@ -355,8 +356,8 @@ par sa recommandation. Les questions 106.1 à 106.23 sont détaillées dans `doc
 | 106.1 Nom | Réponse du PO 2026-11-02 : reco. « Célébration de l'univers » et « célébration commune » (celle de #97) ; « célébration » seul est évité | Termes employés partout ; à ajouter au glossaire |
 | 106.2 Référence | Réponse du PO 2026-11-02 : reco. Les maquettes validées remplacent le tableau de l'issue (Agent Max, « Défi relevé ! ») | Variantes de Sports d'après la maquette |
 | 106.3 Défi rejoué | Réponse du PO 2026-11-02 : reco. Seul le premier défi relevé est fêté ; un défi rejoué garde la célébration commune et « séance terminée » | R3 |
-| 106.4 Fin d'une matière | Réponse du PO 2026-11-02 : reco. A, en livraison 106g | R12 à R15 (`@livraison-106g`) |
-| 106.5 Matière plus grande ? | Réponse du PO 2026-11-02 : reco. Même célébration, annonce « Matière réussie ! » | R12, R14, R15 |
+| 106.4 Fin d'une matière | Réponse du PO 2026-11-02 : reco. A, en livraison 106g | R12 à R14 (`@livraison-106g`) |
+| 106.5 Matière plus grande ? | Réponse du PO 2026-11-02 : reco. Même célébration, annonce « Matière réussie ! » | R12, R14 |
 | 106.6 Danses de victoire | Réponse du PO 2026-11-02 : reco. A, la célébration de l'univers jouée en portant la tenue reçue | Scénarios 106h |
 | 106.7 Deux moments à la même fin | Réponse du PO 2026-11-02 : reco. Une seule célébration, celle de la matière | Scénarios 106h |
 | 106.8 Fin de chaque séance | Réponse du PO 2026-11-02 : reco. Non dans #106 | Hors périmètre |

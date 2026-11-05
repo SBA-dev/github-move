@@ -518,18 +518,6 @@ Fonctionnalité: Une célébration propre à chaque univers
       Mais la fin de la séance n'annonce pas « Matière réussie ! »
       Et Coach Léo ne joue pas la célébration de l'univers
 
-  Règle: Un univers dont la célébration n'est pas encore livrée garde la célébration commune, avec la même annonce « Matière réussie ! » (106g)
-
-    @livraison-106g
-    Scénario: Dans l'univers « Pompiers », pas encore livré, la séance qui rend les sciences réussies garde la célébration commune et annonce « Matière réussie ! »
-      Étant donné que Paul a changé l'univers du profil enfant de Léa en « Pompiers »
-      Et que Léa a réussi les 2 premières leçons de sciences du CE1
-      Et que Léa joue la séance complète de la leçon « L'eau »
-      Quand Léa réussit la dernière question de la séance
-      Alors des confettis tombent
-      Et la fin de la séance annonce « Matière réussie ! »
-      Mais aucune célébration de l'univers n'est jouée
-
   Règle: Avec les mouvements réduits, la séance qui rend la matière réussie montre l'image fixe de la célébration de l'univers, le cri de victoire et l'annonce, sans confettis (106g)
 
     @livraison-106g
