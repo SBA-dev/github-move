@@ -13,10 +13,10 @@ Fonctionnalité: Une célébration propre à chaque univers
   scénarios tagués @livraison-106b), la livraison 106c (univers « Animaux de la forêt », scénarios
   tagués @livraison-106c), la livraison 106d (univers « Princesses et fées », scénarios tagués @livraison-106d),
   la livraison 106e (univers « Police », scénarios tagués @livraison-106e), la livraison 106f (univers
-  « Pompiers », scénarios tagués @livraison-106f) et la livraison 106g (moment « matière réussie » à la fin de la
-  séance, scénarios tagués @livraison-106g). Ce qui ne dépend pas de l'univers (toucher, clavier, Muet, espace
-  parent, défi rejoué) n'est décrit qu'une fois, avec Coach Léo. Les scénarios tagués @hors-106a ne décrivent plus
-  que la livraison suivante (106h) : ils sont exclus et restent @a-valider jusqu'à sa livraison.
+  « Pompiers », scénarios tagués @livraison-106f), la livraison 106g (moment « matière réussie » à la fin de la
+  séance, scénarios tagués @livraison-106g) et la livraison 106h (danses de victoire au palier des tenues et tenue
+  portée dans toutes les scènes, scénarios tagués @livraison-106h). Ce qui ne dépend pas de l'univers (toucher,
+  clavier, Muet, espace parent, défi rejoué) n'est décrit qu'une fois, avec Coach Léo.
 
   Mots employés dans ces scénarios (validés, 106.1, 106.2, 106.14 et 106.26) :
   - « la célébration de l'univers « Sports » » : Coach Léo marque un but, puis fait une des trois variantes de la
@@ -69,6 +69,13 @@ Fonctionnalité: Une célébration propre à chaque univers
   - « Mission accomplie ! » : le cri de victoire de l'univers « Pompiers », affiché et jamais lu ;
   - « la musique de la célébration de Capitaine Sam » : l'effet sonore de sa célébration de l'univers, qui remplace
     « grande victoire », comme celle de Coach Léo (106.12) ; d'ici le choix du PO, c'est « grande victoire ».
+  Mots employés pour la livraison 106h (106.6 A, 106.23, 106.31) :
+  - « la danse de victoire » : la célébration de l'univers jouée au moment « tenue reçue » (paliers des tenues), le
+    personnage guide portant la tenue reçue ; elle remplace la célébration commune, et l'annonce de la tenue reçue
+    reste (glossaire) ;
+  - « la tenue portée » : la tenue que l'enfant a mise à son personnage guide dans « Mes médailles » (#102) ; le
+    personnage guide la porte dans toutes les scènes de célébration, sauf pendant la danse de victoire, où il porte
+    la tenue reçue.
   Durées, pour l'implémentation et la review, jamais dans les étapes : 3 s au plus (106.9 B), boutons, clavier
   et annonce disponibles dès la première image.
 
@@ -590,7 +597,7 @@ Fonctionnalité: Une célébration propre à chaque univers
       Et aucun confetti ne tombe
 
   # ---------------------------------------------------------------------------------------------------------
-  # Livraison suivante (106h), exclue des livraisons 106a à 106g. Sa mise en place sera reprise dans sa livraison.
+  # Livraison 106h : danses de victoire au palier des tenues, tenue portée dans toutes les scènes.
   # ---------------------------------------------------------------------------------------------------------
 
   Règle: Au palier des tenues, le personnage guide joue la danse de victoire : sa célébration de l'univers, à la place de la célébration commune, en portant la tenue reçue ; l'annonce de la tenue reçue reste (106h)
