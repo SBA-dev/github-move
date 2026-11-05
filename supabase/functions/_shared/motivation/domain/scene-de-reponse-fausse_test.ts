@@ -3,8 +3,16 @@ import {
   type FaitsDeLaReponseFausse,
   type SceneDeReponseFausse,
   sceneDeReponseFausse,
+  sceneJoueeDansLaSeanceApres,
   SCENES_DE_REPONSE_FAUSSE,
 } from "./scene-de-reponse-fausse.ts";
+import {
+  type FaitsDeLaReponseFausse as FaitsExportes,
+  type SceneDeReponseFausse as SceneExportee,
+  sceneDeReponseFausse as sceneDeReponseFausseExportee,
+  sceneJoueeDansLaSeanceApres as sceneJoueeExportee,
+  SCENES_DE_REPONSE_FAUSSE as SCENES_EXPORTEES,
+} from "./index.ts";
 
 const FAITS_NEUTRES: FaitsDeLaReponseFausse = {
   sceneDejaJoueeDansLaSeance: false,
@@ -71,4 +79,33 @@ Deno.test("une clé d'univers inconnue donne le résultat de l'univers Animaux :
 
 Deno.test("sans clé d'univers, le résultat est celui de l'univers Animaux : aucune scène", () => {
   assertEquals(sceneDeReponseFausse(FAITS_NEUTRES, undefined), undefined);
+});
+
+Deno.test("une scène rendue pour la première fois marque la scène comme jouée dans la séance", () => {
+  const scene: SceneDeReponseFausse = { univers: "sports" };
+
+  assertEquals(sceneJoueeDansLaSeanceApres(false, scene), true);
+});
+
+Deno.test("sans scène rendue, la scène n'est pas marquée comme jouée : la prochaine réponse fausse pourra la jouer", () => {
+  assertEquals(sceneJoueeDansLaSeanceApres(false, undefined), false);
+});
+
+Deno.test("une scène déjà jouée dans la séance le reste, même sans nouvelle scène rendue", () => {
+  assertEquals(sceneJoueeDansLaSeanceApres(true, undefined), true);
+});
+
+Deno.test("le domaine de Motivation expose la scène de réponse fausse à ses consommateurs", () => {
+  const faits: FaitsExportes = FAITS_NEUTRES;
+  const scene: SceneExportee | undefined = sceneDeReponseFausseExportee(faits, "sports");
+
+  assertEquals(
+    [
+      sceneDeReponseFausseExportee === sceneDeReponseFausse,
+      sceneJoueeExportee === sceneJoueeDansLaSeanceApres,
+      SCENES_EXPORTEES === SCENES_DE_REPONSE_FAUSSE,
+      scene,
+    ],
+    [true, true, true, { univers: "sports" }],
+  );
 });
