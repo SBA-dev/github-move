@@ -27,6 +27,7 @@ import {
   sansVoix,
   scenario,
   terminerLaLecture,
+  terminerLaLectureJusquACeQueSoitDit,
 } from "./voix.steps.ts";
 
 // Story #17 : exercices à choix (bulles, lecture, écoute).
@@ -714,13 +715,7 @@ Then(/^Noisette dit une félicitation, suivie de « (.+) »$/, async ({ page }, 
   expect(texte.endsWith(` ${explication}`), texte).toBe(true);
   expect(FELICITATIONS_DE_NOISETTE).toContain(texte.slice(0, texte.length - explication.length - 1));
   // La phrase est lue en plusieurs morceaux (voix du personnage guide, mot anglais, fin) : on les laisse finir un à un.
-  const sansEspace = (t: string) => t.replace(/[\s,]+/g, "");
-  await expect.poll(async () => {
-    const dites = (await toutesLesParoles(page)).join("");
-    if (sansEspace(dites).includes(sansEspace(entendu(texte)))) return true;
-    await terminerLaLecture(page);
-    return false;
-  }, { intervals: [100] }).toBe(true);
+  await expect.poll(() => terminerLaLectureJusquACeQueSoitDit(page, entendu(texte)), { intervals: [100] }).toBe(true);
 });
 
 Then(
