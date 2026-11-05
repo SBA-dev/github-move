@@ -91,7 +91,7 @@ export function creerCapitaineSam(racine: SVGSVGElement) {
     const leve = clamp01((-vy / lv) * 1.6 - .2), profilF = clamp01((Math.abs(Math.sin(vueCourante * DEG)) - .45) / (Math.sin(VUE_MAXIMALE * DEG) - .45));
     const sens = sw > .02 ? 1 : sw < -.02 ? -1 : 1;
     deplacer(ch, `translate(${r1(m.W.x)} ${r1(m.W.y + 2)})`);
-    const pFace = q1(ch, "vue-face"), pProfil = q1(ch, "vue-profil"), pSemelle = q1(ch, "vue-semelle"), contact = q1(ch, "contact");
+    const pFace = q1(ch, "vue-face"), pProfil = q1(ch, "vue-profil"), pSemelle = q1(ch, "vue-semelle");
     poser(pFace, "opacity", r3((1 - profilF) * (1 - leve)));
     poser(pProfil, "opacity", r3(profilF * (1 - leve)));
     deplacer(pProfil, `scale(${r3(sens * (.6 + .4 * profilF))} 1) rotate(${r1(-Math.atan2(vx * sens, vy) / DEG * .25)})`);
@@ -101,8 +101,6 @@ export function creerCapitaineSam(racine: SVGSVGElement) {
     } else if (g.lastElementChild !== ch) g.append(ch);
     poser(pSemelle, "opacity", r3(Math.pow(leve, .8)));
     deplacer(pSemelle, `translate(${r1(dehors)} ${r1(-3 * leve + replie * 2)}) rotate(${r1(-dehors * 1.8)}) scale(${r3(.5 + .25 * leve)} ${r3(Math.max(.05, leve * .8))})`);
-    poser(contact, "opacity", 0);
-    deplacer(contact, `translate(${r1(profilF * sens * 5)} 12) scale(${r3(1 + profilF * .5)} 1)`);
   }
 
   /** La tête de Sam (rayon 40 dans son repère, réduite à 28 comme celle de Léo) : de face ou de trois-quarts, jamais de dos. Le casque couvre les cheveux roux : il n'en reste que les tempes et une petite frange sous la visière. */
@@ -133,7 +131,6 @@ export function creerCapitaineSam(racine: SVGSVGElement) {
     }
     const fx = dx * .6, f = dx * 1.2;
     poser(n("cheveux-forme"), "d", [-1, 1].map((k) => `M${r1(k * 43 + fx)} -30 Q${r1(k * 46 + fx)} -15 ${r1(k * 39 + fx)} -8 Q${r1(k * 34 + fx)} -10 ${r1(k * 32 + fx)} -18 Q${r1(k * 30 + fx)} -24 ${r1(k * 30 + fx)} -30 Z`).join(" "));
-    poser(n("cheveux-meche"), "d", "M0 0");
     poser(n("cheveux-lumiere"), "d", `M${r1(-37 + fx)} -10 Q${r1(-37 + fx)} -20 ${r1(-34 + fx)} -26`);
     poser(n("frange"), "d", `M${r1(-22 + f)} -31 Q${r1(-20 + f)} -21 ${r1(-13 + f)} -24 Q${r1(-9 + f)} -18 ${r1(-3 + f)} -24 Q${r1(2 + f)} -19 ${r1(7 + f)} -25 Q${r1(13 + f)} -21 ${r1(16 + f)} -30 Z`);
     deplacer(n("casque"), `translate(${r1(dx * .8)} 0) rotate(${r1(v * 5)})`);

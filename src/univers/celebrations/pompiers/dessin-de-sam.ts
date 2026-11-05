@@ -66,7 +66,6 @@ const dessinDeLaJambe = (c: "g" | "d") =>
       <path class="bande" fill="none" stroke="${BANDE}" stroke-width="16.5" stroke-linecap="butt"/>
       <path class="botte" fill="none" stroke="${BOTTE}" stroke-width="17" stroke-linecap="round"/><path class="botte-bord" fill="none" stroke="#55556A" stroke-width="17" stroke-linecap="butt"/>
       <g id="pompier-chaussure-${c}">
-        <ellipse class="contact" rx="12" ry="3.5" fill="#8A5A3A" opacity=".25"/>
         <g class="vue-face"><path fill="${BOTTE}" stroke="${CONTOUR}" stroke-width="3" stroke-linejoin="round" d="M-8 -8 Q-10 0 -10 5 Q-10 13 -3 14 Q0 15 3 14 Q10 13 10 5 Q10 0 8 -8 Q0 -10 -8 -8 Z"/><path fill="${CHAUSSURE_OMBRE}" d="M3 -7 Q8 0 8 5 Q8 11 3 14 Q6 9 5 4 Q4 -2 3 -7 Z"/><path d="M-8 9 Q0 13 8 9" fill="none" stroke="#8E8EA6" stroke-width="1.6" stroke-linecap="round" opacity=".9"/></g>
         <g class="vue-profil"><path fill="${BOTTE}" stroke="${CONTOUR}" stroke-width="3" stroke-linejoin="round" d="M-12 -7 Q-15 0 -13 7 Q-11 9 -6 9 H17 Q23 9 23 4 Q23 -1 15 -4 Q8 -7 2 -7 Q-6 -9 -12 -7 Z"/><path fill="${CHAUSSURE_OMBRE}" d="M-8 3 Q6 6 23 3 Q23 8 17 9 H-6 Q-12 9 -13 6 Z"/><path d="M-13 6 Q5 8 22 5" fill="none" stroke="#8E8EA6" stroke-width="1.6" stroke-linecap="round"/></g>
         <g class="vue-semelle"><path fill="#3A3A4A" stroke="${CONTOUR}" stroke-width="2.4" stroke-linejoin="round" d="M-9 -10 Q-13 0 -10 10 Q-4 15 3 15 Q11 15 13 8 Q14 -2 10 -10 Q0 -13 -9 -10 Z"/><path fill="#55556A" d="M-7 -6 Q-10 0 -8 8 Q-3 12 3 12 Q9 12 11 7 Q12 -1 9 -7 Q1 -10 -7 -6 Z"/></g>
@@ -120,7 +119,7 @@ export const STRUCTURE_DE_CAPITAINE_SAM = `
         <g id="pompier-taches"><g fill="#D98A5E" opacity=".7"><circle cx="-24" cy="6" r="1.4"/><circle cx="-19" cy="9" r="1.2"/><circle cx="-26" cy="11" r="1.1"/><circle cx="24" cy="6" r="1.4"/><circle cx="19" cy="9" r="1.2"/><circle cx="26" cy="11" r="1.1"/></g></g>
         <g transform="scale(1.3)">${dessinDeLOeil("g")}${dessinDeLOeil("d")}</g>
         ${dessinDuSourcil("g")}${dessinDuSourcil("d")}
-        <g id="pompier-cheveux"><path id="pompier-cheveux-forme" fill="${CHEVEUX}" stroke="${CONTOUR}" stroke-width="3.6" stroke-linejoin="round"/><path id="pompier-cheveux-meche" fill="${CHEVEUX_LUMIERE}"/><path id="pompier-cheveux-lumiere" fill="none" stroke="${CHEVEUX_LUMIERE}" stroke-width="2.6" stroke-linecap="round"/></g>
+        <g id="pompier-cheveux"><path id="pompier-cheveux-forme" fill="${CHEVEUX}" stroke="${CONTOUR}" stroke-width="3.6" stroke-linejoin="round"/><path id="pompier-cheveux-lumiere" fill="none" stroke="${CHEVEUX_LUMIERE}" stroke-width="2.6" stroke-linecap="round"/></g>
         <path id="pompier-frange" fill="${CHEVEUX}" stroke="${CONTOUR}" stroke-width="3" stroke-linejoin="round"/>
         <g id="pompier-casque">${CASQUE}</g>
       </g></g>
