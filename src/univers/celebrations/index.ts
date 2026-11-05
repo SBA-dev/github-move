@@ -1,1 +1,1 @@
-export { SceneDeCelebration } from "./SceneDeCelebration.tsx";
+export { prechargerLaSceneDe, SceneDeCelebration } from "./SceneDeCelebration.tsx";

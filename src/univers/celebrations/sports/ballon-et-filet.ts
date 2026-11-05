@@ -1,6 +1,6 @@
 import { CONTOUR } from "./dessin-du-personnage.ts";
-import { clamp01, DEG, E, fenetre, lerp, r1, r3 } from "./courbes.ts";
-import { creerUnGroupe, deplacer, elementsDe, NS, poser, trouver } from "./dom.ts";
+import { clamp01, DEG, E, fenetre, lerp, r1, r3 } from "../commun/courbes.ts";
+import { creerUnGroupe, deplacer, elementsDe, NS, poser, trouver } from "../commun/dom.ts";
 import { T_FRAPPE, T_IMPACT } from "./poses.ts";
 
 type Point = { readonly x: number; readonly y: number };
@@ -56,7 +56,7 @@ const BALLON = `<g class="forme-du-ballon"><circle r="16" fill="#FFFFFF" stroke=
     <g fill="#33304A"><path d="M0 -5.5 l5.2 3.8 -2 6.2 h-6.4 l-2 -6.2 z"/><path d="M-13.5 -7.5 l4 .8 1.6 4 -3 2.6 -3.8 -2 z" opacity=".8"/><path d="M11.5 -9.5 l1.6 3.8 -2.8 3 -4 -1.2 -.4 -4.2 z" opacity=".8"/><path d="M-7.5 11 l3.8 -1.4 3.4 2.6 -1 3.8 -4.2 .4 z" opacity=".8"/><path d="M10 8.5 l-4 -.4 -1.4 -3.8 3.2 -2.6 3.8 1.6 z" opacity=".8"/></g></g>`;
 
 export function creerLeBallon(racine: SVGSVGElement) {
-  const n = elementsDe(racine);
+  const n = elementsDe(racine, "sports");
   const ballon = creerUnGroupe();
   ballon.innerHTML = BALLON;
   const forme = trouver(ballon, ".forme-du-ballon");
@@ -139,7 +139,7 @@ function grille(q: readonly Point[], n: number, m: number, pas: number, deforme:
 
 /** Le filet du but : il gonfle et ondule à l'impact du ballon. */
 export function creerLeFilet(racine: SVGSVGElement) {
-  const n = elementsDe(racine);
+  const n = elementsDe(racine, "sports");
   n("filet-cotes").innerHTML = [COTE_G, COTE_D, TOIT].map((q) => `<path d="${grille(q, 2, 8, 1, (p) => p)}"/>`).join("");
   const chemin = document.createElementNS(NS, "path");
   n("filet-fond").replaceChildren(chemin);

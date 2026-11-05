@@ -207,6 +207,69 @@ Glossaire : les termes célébration de l'univers, célébration commune, varian
 
 Chaque livraison est une issue que le PO crée.
 
+## Livraison 106b : Danse
+
+Lili, univers Danse, d'après la maquette validée `docs/maquettes/lili-danse.html` (README des maquettes, section Lili). Aucun agrégat, aucun événement, aucune donnée d'enfant de plus : 106b ajoute une entrée au catalogue et resserre les types partagés avec le front.
+
+### Entrée du catalogue
+
+| Univers | Variantes | Cri de victoire | Musique |
+|---|---|---|---|
+| `danse` | `jete`, `ruban`, `sauts` | « Bravo ! » | `grandeVictoire`, en attendant le choix du PO (106.27) |
+
+L'action, toujours la même, est l'entrée en scène puis la pirouette complète. Elle n'est pas dans le domaine (affichage).
+
+### Noms en clair des variantes (106.26)
+
+| Clé | Ce que fait Lili (maquette) | Libellé des scénarios |
+|---|---|---|
+| `jete` | grand jeté, puis révérence | « le grand jeté » |
+| `ruban` | le ruban dessine une étoile autour d'elle | « le ruban » |
+| `sauts` | petits sauts, puis grand saut bras en couronne avec clin d'œil | « les petits sauts » |
+
+« Les petits sauts » colle mieux à la maquette (bouton « C · Petits sauts ») que « les sauts » : la ligne Danse de `features/106-celebration-de-l-univers.feature` devient « le grand jeté, le ruban ou les petits sauts ». C'est une précision faite d'après la maquette, et 106.26 la couvre déjà. Ces libellés ne sont jamais montrés à l'enfant.
+
+### Clés de variante publiées par le domaine (dette notée avant 106b)
+
+Aujourd'hui, `VarianteDeLaCelebration` vaut `{ cle: string }`. Le front redéclare donc les clés de Sports (`VARIANTES_DE_SPORTS`, `estUneVarianteDeSports` dans `src/univers/celebrations/sports/poses.ts`), et une clé ajoutée au domaine sans son dessin passe la compilation. Forme retenue, la plus simple en TypeScript pur, dans `celebrations-des-univers.ts` :
+
+- une seule constante, **`VARIANTES_DES_UNIVERS`**, `as const`, qui donne la liste des clés de chaque univers livré (`sports : ["glissade", "avion", "danse"]`, `danse : ["jete", "ruban", "sauts"]`). Elle est la seule source des clés ;
+- **`UniversCelebre`** = les clés de `VARIANTES_DES_UNIVERS` (les univers livrés). C'est un sous-ensemble de `CleUnivers` ;
+- **`VarianteDe<U>`** = une clé de variante de l'univers `U` (`VarianteDe<"danse">` = `"jete" | "ruban" | "sauts"`) ;
+- **`CelebrationDeLUnivers`** devient une **union discriminée par `univers`** : pour chaque `U` de `UniversCelebre`, `{ univers: U ; moment ; variante: { cle: VarianteDe<U> } ; cri ; musique }`. La forme `variante.cle` reste, si bien que les tests et `data-variante` ne changent pas ;
+- le catalogue (cri, musique) devient exhaustif sur `UniversCelebre` (il n'est plus un `Partial<Record<CleUnivers, …>>`). `celebrationDe` garde sa signature et rend toujours `undefined` pour un univers pas encore livré (106.18). Le test « univers pas encore livré » vaut pour un des quatre restants. Le typage passe sans `as` grâce à un type indexé par l'univers (cas des unions corrélées) ;
+- `index.ts` exporte `VARIANTES_DES_UNIVERS`, `UniversCelebre` et `VarianteDe`.
+
+Côté front, `switch (celebration.univers)` affine le type de la variante. `estUneVarianteDeSports` et `VARIANTES_DE_SPORTS` disparaissent, et les poses de chaque scène sont un `Record<VarianteDe<"…">, …>` : une variante ajoutée au domaine sans son dessin ne compile plus. Rien de métier ne passe dans `src/`.
+
+### Pétales et fleurs (application de 106.24)
+
+Les pétales et les fleurs lancés depuis la salle font partie de la célébration de l'univers de Lili, comme les confettis de Coach Léo (106.24, invariant 2). Ils ne s'ajoutent jamais aux confettis de la célébration commune. En mouvements réduits, aucun ne tombe : on voit l'image fixe de l'état final de la variante, avec le cri de victoire et l'annonce (invariant 7).
+
+On applique aussi, sans question nouvelle :
+- « Chapitre réussi ! » et la phrase sur « l'Opéra des Savanturiers » de la maquette sont remplacés par l'annonce du moment (« Défi relevé ! ») ;
+- la maquette annonce « Bravo ! » avec le titre. Dans l'application, seul le moment est annoncé (invariant 8, 106.14) ;
+- la scène de réponse fausse de la maquette reste hors de #106 (106.20) ;
+- le personnage guide n'est pas montré deux fois pendant la célébration (106.28 « cacher »).
+
+### Règle absolue de contenu pour Lili (invariant 10)
+
+- Tenue adaptée aux enfants, à toutes les tailles et sur l'image fixe : justaucorps à manches, tutu court et bouffant, collant opaque, demi-pointes.
+- Poses de danse classique seulement (pirouette, grand jeté, révérence, petits sauts, bras en couronne). Aucune pose suggestive.
+- Public en silhouettes discrètes et neutres, sans caricature ni stéréotype d'une origine, d'un sexe ou d'un handicap. La salle ne se moque jamais.
+- Rien d'effrayant dans le décor (rideaux, projecteurs, poussière lumineuse) et pas de coffre.
+- Le front présente une **planche** (images clés des trois variantes et image fixe) que le PO valide avant le merge.
+
+### Ce qui reste dans `src/`
+
+- `src/univers/celebrations/danse/` : la scène de Lili (décor de théâtre, poses, ruban, pétales et fleurs), portée depuis la maquette avec le moteur isolé (106.22) et la tenue portée (106.23).
+- Les identifiants SVG sont préfixés `danse-`, comme `sports-`.
+- `SceneDeCelebration.tsx` choisit la scène par `switch (celebration.univers)`. Chaque scène est **chargée à la demande** (`React.lazy`) et ne montre rien tant qu'elle charge. Les morceaux chargés à la demande restent dans le précache de la PWA (#8), pour que la célébration marche hors ligne.
+
+### Questions
+
+Aucune question nouvelle.
+
 ## Livraison 106d : Princesses et fées
 
 Lumi, univers Princesses et fées, d'après la maquette validée `docs/maquettes/lumi-princesse.html` (README des maquettes, section Lumi, validée le 2026-10-27). Aucun agrégat, aucun événement, aucune donnée d'enfant de plus. La structure est posée par les livraisons 106b (Danse) et 106c (Animaux de la forêt) : `VARIANTES_DES_UNIVERS`, donc `UniversCelebre`, `VarianteDe<U>`, l'union discriminée `CelebrationDeLUnivers`, le catalogue des cris et des musiques, les scènes chargées à la demande et préchargées, les identifiants SVG préfixés et `src/univers/celebrations/commun/`. 106d y ajoute l'entrée `princesse` sans rien redéfinir. Aucun type nouveau : les clés de variante ont la forme décrite par 106b (« Clés de variante publiées par le domaine »).

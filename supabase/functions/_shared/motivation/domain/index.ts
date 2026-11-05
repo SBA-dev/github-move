@@ -206,5 +206,7 @@ export {
   celebrationDe,
   type CelebrationDeLUnivers,
   type CriDeVictoire,
-  type VarianteDeLaCelebration,
+  type UniversCelebre,
+  type VarianteDe,
+  VARIANTES_DES_UNIVERS,
 } from "./celebrations-des-univers.ts";
