@@ -203,7 +203,7 @@ export const poseA = (poses: readonly ImageCle<Pose>[], t: number): Pose => pose
 type Bulle = { readonly t: number; readonly texte: string; readonly x: number; readonly y: number };
 
 export type ScenarioDesPompiers = {
-  /** Fin de la scène, en secondes du temps de la maquette (la scène est ensuite accélérée pour tenir en 3 s). */
+  /** Fin de la scène, en secondes du temps de la maquette (la scène est ensuite accélérée pour tenir en `DUREE_DE_LA_CELEBRATION_S`). */
   readonly fin: number;
   readonly poses: readonly ImageCle<Pose>[];
   readonly expressions: readonly ChangementDExpression<Emotion>[];
