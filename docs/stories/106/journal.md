@@ -53,3 +53,14 @@ Branche de base : `main` (`47a6d34`). Branche : `feature/106-celebration-de-l-un
 - Autorisation du PO : « merge 106 OK, 106.28 cacher » (annonce [Responsable] sur #64).
 - 106.28 : scénario `17e99ae`, steps rouges `ad08395` (R1 rouge pour la bonne raison, R3 vert), feat `2a69ea2` (`ParoleDuGuide` reçoit `sansPersonnage` pendant la célébration de l'univers).
 - `main` inchangée depuis `f8a4787` : rien à intégrer.
+
+## Livraison 106d : Princesses et fées (Lumi)
+
+Branche : `feature/106d-celebration-princesses`, partie de `main` (`adb9329`, merge de #137). Base : `main`.
+Équipe lancée par `/graphe` (« graphe 106d », issue de coordination #64), session `session_015z4jmPanvGhsMF1hUvUrLE`.
+106b (Danse, PR #154) et 106c (Animaux) sont en cours sur les mêmes fichiers : modèle, scénarios et planche d'abord ; catalogue et scènes câblés après les merges de 106b puis 106c et l'intégration de `main`.
+
+### 2026-11-05
+- 02:00 UTC : démarrage. Commentaire Avancement créé sur #106. 106.31 (tenue portée) pas encore tranchée par le PO : 106d suivra sa réponse.
+- 02:05 UTC : modèle de domaine (`domain-modeler`) lancé. Scène de Lumi portée dans un worktree local (`/home/user/wt-106d`, branche locale `wip/106d-scene`, depuis la tête de 106b `7d6b34e`, jamais poussée) pour produire la planche, comme 106c. `/node_modules` ajouté à `.git/info/exclude` (le lien du worktree ne doit pas être commité, leçon de 106c).
+- Étoiles : la maquette dessine des étoiles dorées à cinq branches avec contour (`ETOILE(r)`), proches de l'Étoile de récompense. Scène préparée avec deux réglages (`etoile` de la maquette, `etincelle` à quatre branches) pour une planche comparative : question au PO #106.34.
