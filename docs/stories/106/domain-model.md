@@ -415,7 +415,17 @@ Maquette relue ligne par ligne. À toutes les tailles et sur l'image fixe :
 
 ### Questions
 
-**106.38 Durée de la scène d'Agent Max.** Dans la maquette, la scène dure 8,5 s (`danse`), 9,4 s (`orchestre`) et 10,2 s (`trottinette`), dont 4 s d'enquête avant la variante. Celles de Lili et de Noisette durent environ 5 s, et le port les accélère environ 1,7 fois pour tenir en 3 s. Pour Agent Max, il faudrait accélérer 2,8 à 3,4 fois. La trottinette ne serait plus « à vitesse douce » et les gestes deviendraient saccadés.
+Tranchées le **2026-11-05** par le PO (« merge 106d OK, 106e reco tout, 106.37 garder, 155.1 oui », annonce du responsable sur l'issue #106 : https://github.com/SBA-dev/github-move/issues/106#issuecomment-6654943666) : la recommandation est retenue pour chacune.
+
+| Question | Réponse |
+|---|---|
+| 106.38 Durée de la scène d'Agent Max | Reco **A** : le port resserre la maquette à environ 5 s en gardant chaque temps fort, puis l'accélère comme les autres pour tenir en 3 s |
+| 106.39 Étoile du dessin fixe d'Agent Max | Reco **A** : le correctif du dessin fixe est l'issue **#158**, hors de 106e ; 106e ne touche pas `AgentMax.tsx` |
+| 106.40 Planche d'Agent Max | Reco : planche validée (`docs/stories/106/captures/106e-agent-max-*.png`, commit `0e93603`) |
+
+Le texte des questions est gardé ci-dessous.
+
+**106.38 Durée de la scène d'Agent Max.** *Tranchée (A retenue, 2026-11-05).* Dans la maquette, la scène dure 8,5 s (`danse`), 9,4 s (`orchestre`) et 10,2 s (`trottinette`), dont 4 s d'enquête avant la variante. Celles de Lili et de Noisette durent environ 5 s, et le port les accélère environ 1,7 fois pour tenir en 3 s. Pour Agent Max, il faudrait accélérer 2,8 à 3,4 fois. La trottinette ne serait plus « à vitesse douce » et les gestes deviendraient saccadés.
 - A (reco) : le port **raccourcit le temps de la maquette** jusqu'à environ 5 s, puis accélère comme pour Lili et Noisette. On garde chaque temps fort, et on raccourcit la marche, les pauses et les allers-retours :
   - enquête : quelques traces, le buisson qui bouge, le saut dans les bras, le chiot posé ;
   - `orchestre` : les gants, trois « tuut ! » et trois voitures plus rapprochées, la révérence ;
@@ -428,11 +438,13 @@ Maquette relue ligne par ligne. À toutes les tailles et sur l'image fixe :
 
 Reco : **A**.
 
-**106.39 Étoile du dessin fixe d'Agent Max.** Le dessin fixe `src/univers/personnages/AgentMax.tsx` (#96, hors #106) porte deux étoiles dorées à cinq branches : une sur la chemise (`data-signe="etoile-doree"`), une sur la casquette (dans `casquette-de-police`). Pendant la célébration, Max porte l'écusson (106.34 A). Juste après, la fin du défi montre le dessin fixe, avec les étoiles. Le scénario validé de #96 dit « casquette de police à étoile dorée », et son step vérifie `etoile-doree`.
+**106.39 Étoile du dessin fixe d'Agent Max.** *Tranchée (A retenue, 2026-11-05 ; correctif : issue #158).* Le dessin fixe `src/univers/personnages/AgentMax.tsx` (#96, hors #106) porte deux étoiles dorées à cinq branches : une sur la chemise (`data-signe="etoile-doree"`), une sur la casquette (dans `casquette-de-police`). Pendant la célébration, Max porte l'écusson (106.34 A). Juste après, la fin du défi montre le dessin fixe, avec les étoiles. Le scénario validé de #96 dit « casquette de police à étoile dorée », et son step vérifie `etoile-doree`.
 - A (reco) : la célébration suit 106.34. Le dessin fixe reçoit un **petit correctif à part**, hors de #106 : une issue créée par le PO, qui remplace les deux étoiles par le même écusson et met à jour la ligne Police du scénario de #96 et son step. Ainsi, Max ne change pas d'insigne d'un écran à l'autre.
 - B : le dessin fixe reste tel quel. L'enfant voit l'écusson pendant la célébration, puis l'étoile une seconde après.
 
 Reco : **A**. Dans les deux cas, 106e ne touche pas `AgentMax.tsx`.
+
+Aucune question ouverte pour 106e.
 
 ## Questions ouvertes
 
