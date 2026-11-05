@@ -250,31 +250,53 @@ On applique aussi, sans question nouvelle :
 - **La baguette ne ressemble jamais à une arme** : un bâton court et arrondi, sans pointe acérée. Le geste qui lance le sort se lit comme un geste doux, ample et rond (un mouvement de poignet, la baguette vers le haut). Dans la maquette, il est précédé d'un « recul de la baguette » puis d'un « coup de baguette » : dans l'application, ce geste ne ressemble ni à une frappe, ni à une visée, ni à un tir. Le sort est une petite lumière qui monte en arc vers la fleur, sans traînée de projectile ni impact ; rien n'est touché ni bousculé.
 - **L'envol** : Lumi flotte et vole en douceur, sans chute, sans vertige, et redescend en se posant légèrement. Rien ne la met en danger.
 - **Décor** : le château rose et violet, aux fenêtres éclairées, reste petit et accueillant ; le ciel mauve clair et les nuages blancs n'ont rien d'effrayant (ni orage, ni nuit noire, ni ombre menaçante, ni personnage inquiétant). Les lucioles sont des points lumineux, sans insecte dessiné. Pas de coffre.
-- **Étoiles** : voir la question 106.34. En attendant la réponse, aucun dessin ne reprend la forme ni la couleur de l'étoile gagnée à la fin d'une séance.
-- Le front présente une **planche** (images clés de l'action, des trois variantes et de l'image fixe, à 360, 160 et 80 px, sur fond clair et sur fond sombre) que le PO valide avant le merge (98.28).
+- **Étoiles (106.34 A)** : aucune étoile à cinq branches dans la scène de Lumi, à aucune taille ni sur l'image fixe. Au bout de la baguette, une petite fleur (comme la fleur qui éclot) ; le sort est une lumière avec une étincelle à quatre branches ; une couronne de fleurs au-dessus de l'arc-en-ciel ; les chiffres et les lettres se transforment en petites fleurs de leur couleur ; les étincelles du jardin ont quatre branches (avec les pétales). Aucun dessin ne reprend la forme ni la couleur de l'étoile gagnée à la fin d'une séance (invariant 11, 100.13).
+- Le front présente une **planche** (images clés de l'action, des trois variantes et de l'image fixe, à 360, 160 et 80 px, sur fond clair et sur fond sombre) que le PO valide avant le merge (98.28). **Validée (106.36)** : `docs/stories/106/captures/106d-lumi-*.png`, commit `d45b217`.
+
+### Écarts à la maquette, validés avec la planche (106.36)
+
+- Le geste du sort est un **rond doux** du poignet, sans recul ni coup de baguette (application de la règle de la baguette ci-dessus).
+- Lumi garde les **bras levés** en fin de sort.
+- **Sourcils doux** sur tout le visage, à toutes les poses.
+- En fin de « chiffres et lettres », les petites fleurs sont **rangées au-dessus de sa tête**.
 
 ### Ce qui reste dans `src/`
 
 - `src/univers/celebrations/princesses/` : la scène de Lumi (décor de jardin féerique et château, Lumi qui flotte, ailes translucides qui battent, cheveux d'un seul tenant en cinq mèches, tiare, baguette, fleur qui éclot, arc-en-ciel, chiffres et lettres, traînées, étincelles du jardin), portée depuis la maquette avec le moteur isolé (106.22). On réutilise les morceaux partagés de `src/univers/celebrations/commun/` (106b, 106c). Le dessin fixe de référence est `src/univers/personnages/Lumi.tsx`.
 - Les poses de la scène sont un `Record<VarianteDe<"princesse">, …>` (106b) : une variante ajoutée au domaine sans son dessin ne compile pas.
-- Les identifiants SVG sont préfixés `princesses-`, comme `sports-`, `danse-` et `animaux-`.
+- Les identifiants SVG sont préfixés `princesse-` (au singulier) : `commun/dom.ts` construit le préfixe depuis la clé d'univers, comme `sports-`, `danse-` et `animaux-`. Le dossier de la scène garde son nom `princesses/`. Accepté par le PO avec la planche (106.36).
 - `SceneDeCelebration.tsx` ajoute le cas `princesse` à son `switch (celebration.univers)` et à `prechargerLaSceneDe`. La scène est **chargée à la demande** et reste dans le précache de la PWA (#8).
-- **Tenue portée (106.23)** : les tenues de #102 (`echarpe-rayee`, `noeud-papillon`, `sac-a-dos-d-explorateur`, `bottes-de-pluie`) sont dessinées dans le dessin fixe par `src/univers/personnages/tenues.tsx`, sur l'`Ancrage` de Lumi (`cou`, `dos`, `pieds`). La question 106.31 (posée par 106c : reco, la tenue n'est dessinée dans aucune scène animée avant 106h) n'est pas encore tranchée. **106d suit la réponse à 106.31**, avec la même reco : la tenue de Lumi est renvoyée à 106h. Point à noter pour 106h : le sac à dos se pose sur le dos, là où battent les ailes, et les bottes de pluie se portent sur un personnage qui flotte.
+- **Tenue portée (106.23)** : les tenues de #102 (`echarpe-rayee`, `noeud-papillon`, `sac-a-dos-d-explorateur`, `bottes-de-pluie`) sont dessinées dans le dessin fixe par `src/univers/personnages/tenues.tsx`, sur l'`Ancrage` de Lumi (`cou`, `dos`, `pieds`). **106.31 tranchée** (reco retenue, [annonce du 2026-11-05](https://github.com/SBA-dev/github-move/issues/106#issuecomment-6652002035)) : la tenue portée n'est dessinée dans aucune scène animée avant 106h, pour tous les univers. La scène de Lumi ne dessine donc pas la tenue ; elle est renvoyée à 106h. Point à noter pour 106h : le sac à dos se pose sur le dos, là où battent les ailes, et les bottes de pluie se portent sur un personnage qui flotte.
 
 ### Tests
 
 En 106c, le test « le premier défi relevé dans un univers pas encore livré garde la célébration commune » (`celebration-de-la-fin_test.ts`) prend `princesse`. En 106d, `princesse` est livré : le RED en prend un autre. Reco : `pompier` (la vraie clé est au singulier), livré le dernier (106f), pour ne pas changer ce test à chaque livraison. La boucle de `celebrations-des-univers_test.ts` sur les univers sans célébration perd aussi `princesse`.
 
+### Correctif de l'étoile du ruban de Lili (application de 106.35)
+
+106.35 étant oui, la règle de 106.34 A vaut aussi pour Lili et Noisette (équité entre univers, invariant 1). Le partage annoncé par le responsable : 106c retire elle-même les petites étoiles à cinq branches des feuilles de la forêt de Noisette ; le correctif de Lili revient à **106d**, une fois 106b mergée.
+
+- Dans la scène de la danse (106b), l'étoile que trace le ruban (`danse-etoile-ruban`) n'est plus une étoile à cinq branches dorée et cernée. Elle devient une forme sans cinq branches, par exemple une étincelle à quatre branches ou une fleur, sans l'or ni le contour foncé de l'étoile gagnée.
+- Le tracé du ruban garde son mouvement : seule la figure finale change. Les noms des variantes de Lili et leurs libellés ne changent pas ; aucun changement de domaine.
+- L'image fixe de la variante concernée suit la même règle.
+- Une capture **avant/après** (même variante, mêmes tailles que la planche de 106b) est montrée au PO dans la PR de 106d.
+
 ### Questions
 
-**106.34 Étoiles de la scène de Lumi.** La maquette dessine beaucoup d'étoiles à cinq branches, dorées, cernées d'un trait foncé (fonction `ETOILE`, or `#FFC93C`) : au bout de la baguette, dans le sort, en couronne au-dessus de l'arc-en-ciel, à la place des chiffres et des lettres qui « deviennent des étoiles », et une étincelle du jardin sur trois. Elles ont presque la même forme et la même couleur que l'**étoile** gagnée à la fin d'une séance (`EtoilesDessinees.tsx`, `EtoilesGagnees.tsx` : cinq branches, or `#ffd43b`, contour foncé). Or la fin du défi ne donne aucune étoile (100.13) et la célébration n'en crée aucune (invariant 11) : l'enfant pourrait croire qu'il en a gagné. Les petites étincelles à quatre branches de la maquette (robe, traînée de l'envol, éclats autour du cri) ne posent pas ce problème.
+Aucune question ouverte pour 106d. Toutes sont **tranchées le 2026-11-05** par le PO (« 106d reco tout », [annonce du responsable](https://github.com/SBA-dev/github-move/issues/106#issuecomment-6652002035)).
+
+**106.34 Étoiles de la scène de Lumi.** *Tranchée (reco A retenue, 2026-11-05)* : aucune étoile à cinq branches dans la scène de Lumi (voir « Règle absolue de contenu pour Lumi »). Énoncé d'origine : la maquette dessine beaucoup d'étoiles à cinq branches, dorées, cernées d'un trait foncé (fonction `ETOILE`, or `#FFC93C`) : au bout de la baguette, dans le sort, en couronne au-dessus de l'arc-en-ciel, à la place des chiffres et des lettres qui « deviennent des étoiles », et une étincelle du jardin sur trois. Elles ont presque la même forme et la même couleur que l'**étoile** gagnée à la fin d'une séance (`EtoilesDessinees.tsx`, `EtoilesGagnees.tsx` : cinq branches, or `#ffd43b`, contour foncé). Or la fin du défi ne donne aucune étoile (100.13) et la célébration n'en crée aucune (invariant 11) : l'enfant pourrait croire qu'il en a gagné. Les petites étincelles à quatre branches de la maquette (robe, traînée de l'envol, éclats autour du cri) ne posent pas ce problème.
 - **Reco A** : aucune étoile à cinq branches dans la scène de Lumi. Au bout de la baguette, une petite fleur (comme la fleur qui éclot) ; le sort est une lumière avec une étincelle à quatre branches ; une couronne de fleurs au-dessus de l'arc-en-ciel ; les chiffres et les lettres se transforment en petites fleurs de leur couleur ; les étincelles du jardin ont quatre branches.
 - B : garder la maquette telle quelle (les étoiles font partie de l'univers des fées).
 - C : garder des étoiles à cinq branches, mais jamais dorées ni cernées (blanches ou pastel, petites).
 
 Précédent : en 106b, le ruban de Lili dessine une grande étoile dorée à cinq branches (`danse-etoile-ruban`), validée par le PO avec la planche (106.29), sans que la question ait été posée. En 106c, une partie des feuilles de la forêt sont de petites étoiles dorées à cinq branches (canvas de la maquette de Noisette). Les autres maquettes n'en ont pas.
 
-**106.35 Même règle pour Lili et Noisette ?** Si 106.34 est A, applique-t-on la même règle à l'étoile du ruban de Lili et aux petites étoiles des feuilles de la forêt de Noisette (équité entre univers, invariant 1) ? Reco : oui, en petits correctifs une fois 106b et 106c mergées (l'étoile du ruban reste une figure tracée par le ruban, mais sans remplissage doré ; les étoiles de la forêt deviennent des étincelles à quatre branches). Autre choix : non, la règle ne vaut que pour Lumi.
+**106.35 Même règle pour Lili et Noisette ?** *Tranchée (oui, 2026-11-05)* : même règle ; 106c retire ses petites étoiles dans sa propre livraison, 106d corrige l'étoile du ruban de Lili après le merge de 106b (voir « Correctif de l'étoile du ruban de Lili »). Énoncé d'origine : si 106.34 est A, applique-t-on la même règle à l'étoile du ruban de Lili et aux petites étoiles des feuilles de la forêt de Noisette (équité entre univers, invariant 1) ? Reco : oui, en petits correctifs une fois 106b et 106c mergées (l'étoile du ruban reste une figure tracée par le ruban, mais sans remplissage doré ; les étoiles de la forêt deviennent des étincelles à quatre branches). Autre choix : non, la règle ne vaut que pour Lumi.
+
+**106.36 Planche de Lumi.** *Tranchée (validée, 2026-11-05)* : planche `docs/stories/106/captures/106d-lumi-*.png` (commit `d45b217`) validée, écarts à la maquette compris (voir « Écarts à la maquette ») ; préfixe des identifiants SVG `princesse-` accepté au lieu de `princesses-`.
+
+**106.31 Tenue portée** (posée par 106c). *Tranchée (reco retenue, 2026-11-05)* : renvoyée à 106h pour tous les univers, Lumi comprise.
 
 ## Questions ouvertes
 
