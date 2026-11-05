@@ -23,6 +23,9 @@ Sur `telephone`, la police plus petite (`max-width: 480px`) évite le retour à 
 Correction prévue : dans le parchemin, le vers lu reste mis en avant (surlignage et trait à gauche) sans changer la largeur
 des lettres (pas de gras). Test rouge : le scénario `129:383` « la poésie » sur `tablette`.
 
+Ajout après le premier run (`9f2e026`) : le vers lu est aussi découpé en mots surlignables (`.mot { padding: 0 2px }`) ;
+leur marge est compensée dans le parchemin (`margin-inline: -2px`), sinon un vers long passe encore sur deux lignes.
+
 ### 2. « Je ne sais pas » dans une boîte : défaut de l'application (#131)
 Depuis #131, la boîte est un dessin dont tout le contenu est en position absolue. La zone de l'exercice s'ajuste à son contenu :
 tant que les choix ne sont pas affichés (pendant le déroulé), la boîte mesure 0 px de large. L'enfant voit les jetons tomber,
