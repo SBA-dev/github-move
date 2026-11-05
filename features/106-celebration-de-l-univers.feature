@@ -524,21 +524,87 @@ Fonctionnalité: Une célébration propre à chaque univers
       Alors des confettis tombent
       Mais Coach Léo ne joue pas la célébration de l'univers
 
-  Règle: Au palier des tenues, le personnage guide joue sa célébration de l'univers en portant la tenue reçue ; une seule célébration par fin (106h)
+  Règle: Au palier des tenues, le personnage guide joue la danse de victoire : sa célébration de l'univers, à la place de la célébration commune, en portant la tenue reçue ; l'annonce de la tenue reçue reste (106h)
 
-    @hors-106a @a-valider
-    Scénario: La séance qui fait recevoir une tenue fait danser Coach Léo avec sa nouvelle tenue
+    @livraison-106h
+    Scénario: La séance qui fait recevoir une écharpe rayée fait jouer à Coach Léo sa célébration de l'univers en la portant
       Étant donné que Léa a gagné 4 étoiles en tout
-      Et que Léa joue la séance complète de la leçon « Maths 6 »
+      Et que Léa joue la séance complète de la leçon « Maths 1 »
       Quand Léa réussit la dernière question de la séance
-      Alors Coach Léo joue la célébration de l'univers « Sports » avec « une écharpe rayée »
+      Alors Coach Léo joue la célébration de l'univers « Sports » en portant « une écharpe rayée » : il marque un but, puis fait la glissade à genoux, l'avion ou la danse avec clin d'œil
+      Et Léa lit « BUT ! »
       Et la fin de la séance annonce pour Coach Léo « Coach Léo a reçu une écharpe rayée ! »
+      Mais la célébration commune n'est pas jouée
 
-    @hors-106a @a-valider
-    Scénario: Une séance qui rend la matière réussie et fait recevoir une tenue ne joue qu'une célébration de l'univers
-      Étant donné que Léa a gagné 4 étoiles en tout
-      Et que Léa a réussi les 2 premières leçons de sciences du CE1
+    @livraison-106h
+    Scénario: Coach Léo qui porte déjà une tenue fait sa danse de victoire avec la tenue qu'il vient de recevoir
+      Étant donné que Léa a gagné 11 étoiles en tout
+      Et que Léa a mis « une écharpe rayée » à Coach Léo
+      Et que Léa joue la séance complète de la leçon « Maths 1 »
+      Quand Léa réussit la dernière question de la séance
+      Alors Coach Léo joue la célébration de l'univers « Sports » en portant « un nœud papillon »
+      Et la fin de la séance annonce pour Coach Léo « Coach Léo a reçu un nœud papillon ! »
+
+  Règle: Une seule célébration de l'univers par fin : quand la séance rend aussi une matière réussie, c'est la célébration de la matière, et la tenue reçue reste annoncée (106h)
+
+    # Question 106.47 : tenue montrée dans la scène quand la matière réussie et la tenue reçue arrivent ensemble
+    @livraison-106h @a-valider
+    Scénario: Une séance qui rend les sciences réussies et fait recevoir une écharpe rayée ne joue qu'une célébration de l'univers
+      Étant donné que Léa a pour meilleures étoiles :
+        | leçon             | étoiles |
+        | Les êtres vivants | 2       |
+        | Les saisons       | 2       |
       Et que Léa joue la séance complète de la leçon « L'eau »
       Quand Léa réussit la dernière question de la séance
-      Alors Coach Léo joue une seule fois la célébration de l'univers « Sports »
-      Et la fin de la séance annonce « Matière réussie ! » puis, pour Coach Léo, « Coach Léo a reçu une écharpe rayée ! »
+      Alors Coach Léo joue une seule fois la célébration de l'univers « Sports », en portant « une écharpe rayée »
+      Et la fin de la séance annonce « Matière réussie ! », puis, pour Coach Léo, « Coach Léo a reçu une écharpe rayée ! »
+      Mais la célébration commune n'est pas jouée
+
+  Règle: Pendant toute célébration de l'univers, le personnage guide porte la tenue portée choisie dans « Mes médailles » (106h)
+
+    @livraison-106h
+    Plan du Scénario: Dans l'univers « <univers> », <personnage guide> porte <tenue> pendant la célébration du premier défi relevé
+      Étant donné que Paul a changé l'univers du profil enfant de Léa en « <univers> »
+      Et que Léa a gagné <total> étoiles en tout
+      Et que Léa a mis « <tenue> » à <personnage guide>
+      Et que Léa a réussi les 5 premières leçons de maths du CE1
+      Et que Léa a commencé le défi 1 de maths
+      Quand Léa répond juste à toutes les questions du défi
+      Alors <personnage guide> joue la célébration de l'univers « <univers> » en portant « <tenue> »
+
+      Exemples:
+        | univers             | personnage guide | total | tenue                      |
+        | Sports              | Coach Léo        | 12    | un nœud papillon           |
+        | Animaux de la forêt | Noisette         | 23    | un sac à dos d'explorateur |
+        | Princesses et fées  | Lumi             | 37    | des bottes de pluie        |
+
+  Règle: Avec les mouvements réduits, l'image fixe de la danse de victoire montre la tenue reçue, sans confettis ; les lecteurs d'écran n'annoncent que la tenue reçue, jamais le cri de victoire (106h)
+
+    @livraison-106h
+    Scénario: Avec les mouvements réduits, Léa voit l'image fixe de la célébration de l'univers « Sports », Coach Léo portant l'écharpe rayée qu'il vient de recevoir
+      Étant donné que l'appareil demande des mouvements réduits
+      Et que Léa a gagné 4 étoiles en tout
+      Et que Léa joue la séance complète de la leçon « Maths 1 »
+      Quand Léa réussit la dernière question de la séance
+      Alors Léa voit l'image fixe de la célébration de l'univers « Sports », avec « BUT ! », sans mouvement
+      Et dans l'image fixe, Coach Léo porte « une écharpe rayée »
+      Et aucun confetti ne tombe
+
+    # Question 106.48 : annonce du moment « tenue reçue » pour les lecteurs d'écran
+    @livraison-106h @a-valider
+    Scénario: Au moment « tenue reçue », les lecteurs d'écran annoncent une seule fois la tenue reçue, sans lire « BUT ! »
+      Étant donné que Léa a gagné 4 étoiles en tout
+      Et que Léa joue la séance complète de la leçon « Maths 1 »
+      Quand Léa réussit la dernière question de la séance
+      Alors les lecteurs d'écran annoncent une seule fois « Coach Léo a reçu une écharpe rayée ! »
+      Mais les lecteurs d'écran n'annoncent ni « BUT ! » ni le dessin de la célébration
+
+  Règle: La danse de victoire n'enregistre rien : après elle, le personnage guide porte toujours la tenue portée choisie par l'enfant (106h)
+
+    @livraison-106h
+    Scénario: Après la danse de victoire avec un nœud papillon, Coach Léo porte toujours l'écharpe rayée choisie par Léa
+      Étant donné que Léa a gagné 11 étoiles en tout
+      Et que Léa a mis « une écharpe rayée » à Coach Léo
+      Et que Léa a terminé une séance de la leçon « Maths 1 » avec 1 étoile
+      Quand Léa arrive sur son accueil
+      Alors elle voit Coach Léo avec « une écharpe rayée » dans le paysage de l'univers « Sports »
