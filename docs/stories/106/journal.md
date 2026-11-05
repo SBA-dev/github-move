@@ -271,3 +271,6 @@ Livraison **106g** : moment « matière réussie » à la fin de la séance. Bra
 - Attente : réponses du PO (#106.44 à #106.46) ; merge de 106f, puis intégration de `main` et VERROU base pour les E2E.
 - 13:30 UTC : VERROU base demandé pour une mise au point courte avant le merge de 106f (commentaire 6659280499) ; accordé à 13:32 (annonce 6659293563, tableau de #64 vérifié). Sonde OK (3 × 200, 0,46 à 1,16 s).
 - E2E `@livraison-106g`, `telephone`, 1 worker, head `672355c` : 2/3 au premier run ; le KO venait du step « annoncent une seule fois » (il lisait l'enregistreur des annonces des étoiles) ; step corrigé (`0e03616`), scénario rejoué seul : vert. **3/3**. LIBÈRE base (commentaire 6659376953).
+- 18:18 UTC : réponse du PO (annonce [Responsable] 6665711170, vérifiée) : « 106g reco tout ». #106.44 oui (« (à valider) » retiré du terme au glossaire), #106.45 oui, #106.46 oui (la musique, puis « découverte », puis la parole). Cadrage validé. Reportées dans le modèle et l'acceptance (`2656a50`). 106.46 : test de caractérisation `16d5c5f` (vert du premier coup, le code faisait déjà cet ordre).
+- `f8860c9` : wrapper `.place-de-la-celebration` retiré (non bloquant de revue). `deno test` : 2902 verts.
+- Attente : merge de 106f (autorisé par le PO, en file derrière #161 pour le verrou merge), puis intégration de `main` et VERROU base pour le run de référence.
