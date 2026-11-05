@@ -43,7 +43,14 @@ Session : session_015z4jmP7V7FhEFUJUzB9Zaf. Décision : aucune réservée (proch
 | Temps d'attente | validation n°1 : environ 9 h ; planche : 1 h (20:44 → 21:41), sans bloquer le câblage ; verrou base : environ 10 min (derrière #140) |
 | Cycles TDD | 0 comportement du domaine (affichage seul) ; RED par l'E2E ; 3 fix applicatifs vus à l'E2E, dont une course préexistante sur `main` (`433089c`) |
 | Cycles de review | 2 (À CORRIGER : plafond de 1,5 s, dû à une consigne erronée de l'orchestrateur ; puis APPROUVÉ) |
-| Cycles d'E2E | 3 runs de `@issue-130` (76/89 → 85/89 → 4/4 → 89/89) ; 1 run du périmètre élargi (136 scénarios, 125 verts, 11 KO préexistants de #98) ; #126 2/2 |
+| Cycles d'E2E | 3 runs de `@issue-130` (76/89 → 85/89 → 4/4 → 89/89) ; 1 run du périmètre élargi (136 scénarios, 125 verts, 11 KO préexistants de #98) ; #126 2/2 ; rejeu avant merge `@issue-130` + `@issue-140` 90/90 |
 | Intégrations de `main` | 3 (#129, #141, #140), aucun conflit |
 | Dessins | 12 sources SVG, 1 planche validée au premier passage (P1 à P7), un écusson Police écarté avant la présentation (cible) ; 12 captures |
-| Verrous | base (21:00 → fin des runs) |
+| Verrous | base (21:00 → 22:54, puis 00:10 → merge) ; merge (23:10 → merge) |
+
+## 2026-11-04 → 05 : merge
+
+- 23:10 UTC : merge autorisé par le PO (« Merge 130 ok », annonce [Responsable] de 23:10 sur #64) ; VERROU merge accordé (tableau vérifié). Merge suspendu par l'équipe : les E2E verts dataient d'avant l'intégration de #140 (`597a4a5`). ESCALADE sur la condition 3 (décision 0022), réponse A du responsable : rejouer `@issue-130` et `@issue-140` sous verrou `base`.
+- 23:11 UTC : session archivée par erreur puis restaurée ; reprise sur la branche distante (`c45dcd9`), rien de perdu.
+- 00:10 UTC : VERROU base accordé (tableau vérifié). Sonde 3 × 200 (0,25 à 1,0 s). `@issue-130` et `@issue-140` sur `telephone`, 1 worker : **90/90** (24,8 min), 0 KO, aucun instable. `main` inchangée (`597a4a5`). deno test 2804, lint, fmt, tsc, build verts depuis l'intégration. Review APPROUVÉE (le delta d'intégration ne touche pas de code de production de #130). Le dépôt n'a pas de CI.
+- Merge de la PR #152 sous VERROU merge (merge commit).
