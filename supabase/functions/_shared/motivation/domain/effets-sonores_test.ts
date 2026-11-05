@@ -1,6 +1,7 @@
 import { assertEquals } from "@std/assert";
 import { effetSonoreDuRecord, effetsSonoresApresUneBonneReponse, effetsSonoresDeLaFin } from "./effets-sonores.ts";
 import type { EffetSonore } from "../../voix/domain/index.ts";
+import { celebrationDe } from "./celebrations-des-univers.ts";
 
 const sansPointGagne = {
   questionsReussiesAvant: 2,
@@ -234,4 +235,12 @@ Deno.test("la musique de la célébration, puis la découverte quand la séance 
   });
 
   assertEquals(effets, [uneMusiqueDeCelebration, "decouverte"]);
+});
+
+Deno.test("la musique de la célébration de l'univers remplace le premier son, puis la découverte quand la séance fait recevoir une tenue (106.12, 106.46)", () => {
+  const musique = celebrationDe("tenueRecue", "sports", { entre0et1: () => 0.5 }).musique;
+
+  const effets = effetsSonoresDeLaFin({ ...seanceSansEvenement, tenueRecue: true, musiqueDeLaCelebration: musique });
+
+  assertEquals(effets, [musique, "decouverte"]);
 });
