@@ -1,7 +1,6 @@
 import { libelleCourtDe } from "@domain/catalogue";
 import type { CodeDeMatiere, Niveau } from "@domain/catalogue";
 import type { EtatDansLeParcours, EtatDuDefi, LeconDuParcours, LeconReussieDUneClasseAuDessus } from "@domain/apprentissage";
-import { nomDuDefi } from "@domain/motivation";
 import { etoilesSurTrois } from "../seance/fin-de-seance/texte-des-etoiles.ts";
 
 export const AUCUNE_LECON_POUR_LA_CLASSE = "Aucune leçon pour ta classe pour l'instant.";
@@ -96,13 +95,13 @@ export function leconsAvantLeDefi(restantes: number): string {
 }
 
 /** Ce que lit un lecteur d'écran pour le repère d'un défi : son état, et ce qu'il reste à faire pour l'ouvrir. */
-export function annonceDuRepereDuDefi(numero: number, etat: EtatDuDefi): string {
+export function annonceDuRepereDuDefi(nom: string, etat: EtatDuDefi): string {
   switch (etat.genre) {
     case "aVenir":
-      return `${nomDuDefi(numero)} : à venir, encore ${nombreDeLecons(etat.leconsRestantes)} pour ouvrir le défi`;
+      return `${nom} : à venir, encore ${nombreDeLecons(etat.leconsRestantes)} pour ouvrir le défi`;
     case "ouvert":
-      return `${nomDuDefi(numero)} : ouvert`;
+      return `${nom} : ouvert`;
     case "releve":
-      return `${nomDuDefi(numero)} : relevé`;
+      return `${nom} : relevé`;
   }
 }

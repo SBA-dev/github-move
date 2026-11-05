@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import type { DefiReleve, SeanceDeDefi } from "@domain/apprentissage";
+import { type DefiReleve, releveDuDefi, type SeanceDeDefi } from "@domain/apprentissage";
 import {
   type CelebrationDeLaFin,
   celebrationDeLaFin,
   defiReleveParLaSeance,
-  parolesDeFinDeDefi,
+  parolesDeFinDuDefiReleve,
   type Univers,
 } from "@domain/motivation";
 import { Confettis } from "../celebration/index.ts";
@@ -43,7 +43,7 @@ export function FinDuDefi({ seance, prenom, personnage, univers, relevesAvant, o
   const affichee = useRef(true);
   const [issue, setIssue] = useState<IssueDuDefi | undefined>();
   const [celebration, setCelebration] = useState<CelebrationDeLaFin | undefined>();
-  const [numero, setNumero] = useState(0);
+  const [releve, setReleve] = useState<DefiReleve | undefined>();
   const [message, setMessage] = useState<string | undefined>();
   const parcours = useRef<HTMLButtonElement>(null);
 
@@ -53,14 +53,14 @@ export function FinDuDefi({ seance, prenom, personnage, univers, relevesAvant, o
     const maintenant = new Date();
     const jour = jourDuNavigateur(maintenant);
     const terminee = seance.terminer(maintenant, jour);
-    const releve = { matiere: terminee.defi.matiere, niveau: terminee.defi.niveau, numero: terminee.defi.numero };
+    const relevee = releveDuDefi(terminee.defi);
     retenirLesQuestionsRatees(terminee.enfant, terminee.questionsRatees, jour, maintenant);
     void relevesAvant
       .catch(() => defisRelevesDeLAppareil(terminee.enfant))
       .then((avant) => {
-        retenirLesDefisReleves(terminee.enfant, [releve]);
-        setNumero(releve.numero);
-        const issueDuDefi = defiReleveParLaSeance(avant, releve);
+        retenirLesDefisReleves(terminee.enfant, [relevee]);
+        setReleve(relevee);
+        const issueDuDefi = defiReleveParLaSeance(avant, relevee);
         setCelebration(
           celebrationDeLaFin({ defiRelevePourLaPremiereFois: issueDuDefi.annonce !== undefined }, univers.cle, hasardDuNavigateur),
         );
@@ -70,15 +70,15 @@ export function FinDuDefi({ seance, prenom, personnage, univers, relevesAvant, o
   }, [seance, relevesAvant, univers.cle]);
 
   useEffect(() => {
-    if (dite.current || !issue || !affichee.current) return;
+    if (dite.current || !issue || !releve || !affichee.current) return;
     dite.current = true;
     void dire({
-      texte: parolesDeFinDeDefi({ prenom, numeroDuDefi: numero, dejaReleve: issue.annonce === undefined }),
+      texte: parolesDeFinDuDefiReleve({ prenom, defi: releve, dejaReleve: issue.annonce === undefined }),
       nature: "felicitation",
       humeur: "applaudit",
       effetsAvant: [celebration?.sorte === "univers" ? celebration.celebration.musique : issue.effetSonore],
     });
-  }, [issue, celebration, prenom, numero, dire]);
+  }, [issue, celebration, prenom, releve, dire]);
 
   useEffect(() => {
     affichee.current = true;

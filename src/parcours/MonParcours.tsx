@@ -1,9 +1,10 @@
 import { type KeyboardEvent, useCallback, useRef } from "react";
 import {
   type Defi,
-  defisDeLaMatiere,
+  defisDuParcours,
   type DefiReleve,
   etatDuDefi,
+  type GrandDefi,
   type LeconDesClassesDAvant,
   type LeconDuParcours,
   type LeconReussieDUneClasseAuDessus,
@@ -43,7 +44,7 @@ type Props = {
   readonly prochainesLeconsConnues: ProchainesLeconsConnues;
   readonly onMemoriserLaProchaineLecon: (matiere: CodeDeMatiere, leconId: string | undefined) => void;
   /** L'enfant choisit de relever un défi ouvert. */
-  readonly onReleverLeDefi: (defi: Defi) => void;
+  readonly onReleverLeDefi: (defi: Defi | GrandDefi) => void;
 };
 
 function matiereOuverte(matieres: readonly Matiere[], choisie: CodeDeMatiere | undefined): Matiere | undefined {
@@ -130,7 +131,7 @@ function ParcoursDuNiveau(
         <LeconsDuParcours
           key={ouverte.code}
           parcours={parcours}
-          defis={defisDeLaMatiere(parcours, ouverte, niveau)}
+          defis={defisDuParcours(parcours, ouverte, niveau)}
           defisReleves={lectures.defisReleves}
           univers={univers}
           prochaineLeconConnue={prochainesLeconsConnues.get(ouverte.code)}
@@ -198,13 +199,13 @@ function OngletsDesMatieres({ matieres, ouverte, onChoisir }: PropsDesOnglets) {
 
 type PropsDesLecons = {
   readonly parcours: Parcours;
-  readonly defis: readonly Defi[];
+  readonly defis: readonly (Defi | GrandDefi)[];
   readonly defisReleves: readonly DefiReleve[];
   readonly univers: Univers;
   readonly prochaineLeconConnue: string | undefined;
   readonly onMemoriserLaProchaineLecon: (leconId: string | undefined) => void;
   readonly onOuvrirLaLecon: (leconId: string) => void;
-  readonly onReleverLeDefi: (defi: Defi) => void;
+  readonly onReleverLeDefi: (defi: Defi | GrandDefi) => void;
 };
 
 function LeconsDuParcours(

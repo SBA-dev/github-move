@@ -1,6 +1,6 @@
 import type { DefisTermines } from "../application/ports/defis-termines.ts";
 import type { FileDeRevisionALEcrire, IssueDeLEnregistrement } from "../application/ports/seances-terminees.ts";
-import type { DefiReleve } from "../domain/defis-de-la-matiere.ts";
+import { type DefiReleve, releveDuDefi } from "../domain/defis-de-la-matiere.ts";
 import type { DefiTermine } from "../domain/seance-de-defi.ts";
 import type { FilesDeRevisionEnMemoire } from "./files-de-revision-en-memoire.ts";
 
@@ -12,11 +12,7 @@ export class DefisTerminesEnMemoire implements DefisTermines {
 
   releves(enfant: string): Promise<readonly DefiReleve[]> {
     return Promise.resolve(
-      this.tous().filter((fait) => fait.enfant === enfant).map(({ defi }) => ({
-        matiere: defi.matiere,
-        niveau: defi.niveau,
-        numero: defi.numero,
-      })),
+      this.tous().filter((fait) => fait.enfant === enfant).map(({ defi }) => releveDuDefi(defi)),
     );
   }
 

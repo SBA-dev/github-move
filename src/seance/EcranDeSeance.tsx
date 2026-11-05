@@ -3,6 +3,7 @@ import {
   ChoixDeSeance,
   consigneAffichee,
   type Defi,
+  type GrandDefi,
   exerciceDemandeLeSon,
   ExerciceIntrouvable,
   LeconSansExercice,
@@ -60,7 +61,7 @@ type Props = {
   readonly onLeconSuivante: (leconId: string) => void;
   readonly onToutesLesLecons: () => void;
   /** L'enfant choisit de relever le défi que la séance vient d'ouvrir. */
-  readonly onReleverLeDefi: (defi: Defi) => void;
+  readonly onReleverLeDefi: (defi: Defi | GrandDefi) => void;
   readonly onAccueil: () => void;
 };
 
