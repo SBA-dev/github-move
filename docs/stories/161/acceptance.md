@@ -33,10 +33,12 @@ Aucun tag ajouté : le scénario reste `@issue-96`.
 
 ## Ce que vérifiera le step
 
-Le step « <personnage guide> a le dessin validé : … » accepte aussi Capitaine Sam. Il vérifie la marque du dessin validé, puis :
+Le step « <personnage guide> a le dessin validé : … » accepte aussi Capitaine Sam. Il vérifie les signes du dessin :
 
 - signes présents : `casque-de-pompier`, `ecusson` (à l'intérieur du casque), `goutte-d-eau` (à l'intérieur de l'écusson), `veste-rouge`, `bandes`, `pantalon` ;
-- signes absents : `etoile`.
+- signes absents : `etoile` et `etoile-doree`.
+
+Le step ne vérifie plus le repère `data-dessin="valide"` : comme le prévoyait la décision 0033 (Conséquences), ce repère et la liste `DESSINS_REDESSINES` sont retirés de l'application et des steps maintenant que Capitaine Sam est redessiné. Tous les personnages guides ayant le dessin validé, il ne distingue plus rien.
 
 Le step « Capitaine Sam a son dessin d'avant la refonte » n'est plus utilisé par aucun scénario, ni la référence `features/support/dessin-de-capitaine-sam.json` qu'il compare : ils sont retirés (pas de code mort).
 
