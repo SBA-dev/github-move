@@ -170,7 +170,7 @@ l'univers du profil enfant de Léa en « Animaux de la forêt » »). Mêmes sc�
 
 ## Questions ouvertes
 
-Aucune pour 106a ni pour 106b. Reste en attente, sans bloquer :
+Aucune pour 106a, 106b ni 106c. Reste en attente, sans bloquer :
 - le **choix des musiques** des six univers par le PO, à l'écoute (106.12) : d'ici là, la musique de la célébration
   de Coach Léo et celle de Lili sont « grande victoire » ;
 - l'**accès réseau** à `opengameart.org` ou `kenney.nl` (106.27) : seul le PO peut l'ouvrir dans l'environnement.
@@ -214,6 +214,6 @@ par sa recommandation. Les questions 106.1 à 106.23 sont détaillées dans `doc
 | 106.31 Tenue portée pendant la célébration (106c) | Réponse du PO 2026-11-05 : reco. Renvoyée à 106h pour tous les univers ; Noisette, comme Coach Léo et Lili, est dans sa tenue de base pendant la célébration (https://github.com/SBA-dev/github-move/issues/64#issuecomment-6651992972) | Aucun |
 | 106.32 Planche de Noisette (106c) | Réponse du PO 2026-11-05 : reco. Planche validée | Aucun |
 | 106.33 Jonglage (106c) | Réponse du PO 2026-11-05 : reco. Le jonglage reste comme dans la maquette | Aucun |
-| 106.35 Étoiles à cinq branches (posée par 106d) | Réponse du PO 2026-11-05 : reco (oui). Aucune étoile à cinq branches dans les scènes de Lili et de Noisette : fleurs ou étincelles à quatre branches à la place ; appliquée dans 106c pour Noisette | Aucun (les scénarios ne parlent que des « feuilles de la forêt »)
+| 106.35 Étoiles à cinq branches (posée par 106d) | Réponse du PO 2026-11-05 : reco (oui). Aucune étoile à cinq branches dans les scènes de Lili et de Noisette : fleurs ou étincelles à quatre branches à la place ; appliquée dans 106c pour Noisette | Aucun (les scénarios ne parlent que des « feuilles de la forêt ») |
 
 Correction du 2026-11-02 (sans changement de règle) : dans « Pendant la célébration de l'univers, le clavier n'est jamais bloqué », « Alors Léa voit « Qui joue ? » » devient « Alors Léa voit son accueil », car depuis #100 « Accueil » à la fin d'un défi mène à l'accueil de l'enfant (et non à « Qui joue ? » comme à la fin d'une séance, #97) ; `@wip` est retiré de la fonctionnalité.
