@@ -166,6 +166,48 @@ Branche de base : `main` (`af47f19`). Branche : `feature/106c-celebration-animau
 | Méthode | domaine, scène et planche préparés dans un worktree local (106c + 106b, jamais poussé) pendant l'attente du merge de 106b, puis reportés par cherry-pick : aucun temps perdu, mais un risque de perte si le conteneur avait été repris |
 | Tokens | relevés par le responsable |
 
+## Livraison 106d : Princesses et fées (Lumi)
+
+Branche : `feature/106d-celebration-princesses`, partie de `main` (`adb9329`, merge de #137). Base : `main`.
+Équipe lancée par `/graphe` (« graphe 106d », issue de coordination #64), session `session_015z4jmPanvGhsMF1hUvUrLE`.
+106b (Danse, PR #154) et 106c (Animaux) sont en cours sur les mêmes fichiers : modèle, scénarios et planche d'abord ; catalogue et scènes câblés après les merges de 106b puis 106c et l'intégration de `main`.
+
+### 2026-11-05
+- 02:00 UTC : démarrage. Commentaire Avancement créé sur #106. 106.31 (tenue portée) pas encore tranchée par le PO : 106d suivra sa réponse.
+- 02:05 UTC : modèle de domaine (`domain-modeler`) lancé. Scène de Lumi portée dans un worktree local (`/home/user/wt-106d`, branche locale `wip/106d-scene`, depuis la tête de 106b `7d6b34e`, jamais poussée) pour produire la planche, comme 106c. `/node_modules` ajouté à `.git/info/exclude` (le lien du worktree ne doit pas être commité, leçon de 106c).
+- Étoiles : la maquette dessine des étoiles dorées à cinq branches avec contour (`ETOILE(r)`), proches de l'Étoile de récompense. Scène préparée avec deux réglages (`etoile` de la maquette, `etincelle` à quatre branches) pour une planche comparative : question au PO #106.34.
+- 02:20 UTC : modèle 106d (`a9993b5`) : entrée `princesse` (`arc`, `envol`, `signes`, « Magique ! », `grandeVictoire`), libellés « l'arc-en-ciel », « l'envol », « les chiffres et les lettres » (106.26), effets « les étincelles du jardin » (106.24). Questions nouvelles #106.34 (étoiles de la scène) et #106.35 (même règle pour Lili et Noisette). 106.31 suivie telle que le PO la tranchera.
+- 02:35 UTC : scénarios 106d (`po-acceptance`) : règle R10, 5 scénarios `@livraison-106d` (7 cas), Gherkin valide (12 steps manquants, attendus avant les merges de 106b et 106c).
+- 02:50 UTC : scène de Lumi portée dans le worktree (`wip/106d-scene`, jamais poussé) : entrée `princesse` du domaine `e4b07f8` (préparation, le TDD sera refait sur la branche), scène `b12a113` (`src/univers/celebrations/princesses/`, 33,75 kB, 11,75 kB gzip). Réglage `fleurs` par défaut (aucune étoile à cinq branches), `etoile` (maquette) gardé pour la comparaison. 2 tests de 106b cassent comme attendu (`princesse` supposée pas encore livrée). Ids SVG préfixés `princesse-` : `commun/dom.ts` (106b) construit le préfixe depuis la clé d'univers.
+- Écarts voulus par rapport à la maquette : geste du sort en rond doux au lieu du recul puis « coup de baguette » (règle absolue : la baguette ne se lit jamais comme une arme) ; bras levés en fin de sort ; sourcils doux à la concentration (mine fâchée dans la maquette) ; en fin de « chiffres et lettres », les fleurs se rangent au-dessus de la tête (le visage restait caché sur l'image fixe).
+- Planche relue par l'orchestrateur contre la règle absolue : rien à signaler. Publiée (`106d-lumi-clair.png`, `-sombre.png`, `-moments.png`, `-etoiles-comparaison.png`).
+- 07:08 UTC : réponse du PO « 106d reco tout » (annonce [Responsable] https://github.com/SBA-dev/github-move/issues/106#issuecomment-6652002035) : 106.34 A (aucune étoile à cinq branches), 106.35 oui (correctif de l'étoile du ruban de Lili confié à 106d après le merge de 106b ; 106c retire ses étoiles), 106.36 planche validée écarts compris, préfixe `princesse-` accepté ; 106.31 (106c) : tenue portée renvoyée à 106h. Reportées dans le modèle et les critères. Attente : merges de 106b puis 106c.
+- 07:25 UTC : 106b mergée (`4742309`, annonce du responsable). `main` intégrée : conflits dans le journal, la feature, les critères et le modèle, résolus en gardant les deux ajouts (106b puis 106d). `deno test` 2877 verts, `tsc` OK. Correctif 106.35 (étoile du ruban de Lili) lancé ; câblage de Lumi après le merge de 106c.
+- 07:45 UTC : correctif 106.35 : l'étoile dorée du ruban de Lili devient une étincelle à quatre branches (`6ef5aa6`), capture avant/après (`314bc11`). Revue delta `ef86ea4..314bc11` : APPROUVÉ, aucun bloquant. Non bloquants : dégradé du halo à ranger dans le `<defs>` commun ; id `danse-etoile-ruban` à renommer plus tard ; à signaler au PO dans la PR : le trait rose du ruban trace encore une figure à cinq sommets (passager, absent de l'image fixe, conforme à la reco 106.35 qui garde le tracé). Dernier commit relu : `314bc11`.
+- 08:25 UTC : 106c mergée (`dbbe378`). `main` intégrée (`e735f38`) : conflits de documentation et de scénarios résolus en gardant les deux ajouts (sections 106b, 106c, 106d ; R8, R9, R10 ; il ne reste que Police et Pompiers « pas encore livrés »). `deno test` 2879 verts, `tsc` OK. Rangement demandé par le responsable (signalé par 106c) lancé : Sports et Danse sur `commun/expressions.ts` et `commun/tableaux.ts`, sans changement de rendu. Câblage de Lumi ensuite.
+- 08:40 UTC : rangement Sports et Danse sur `commun/` : `d63ddff`, `3649101` (rendu identique octet à octet sur les 6 états finaux).
+- TDD bloc « Motivation, célébration Princesses et fées » : RED `850b61e` (5 erreurs de typage, toutes sur `princesse`), GREEN `b11c6f0` (entrée `princesse`, cas minimal compilable dans `SceneDeCelebration.tsx`). Le test « univers pas encore livré » de `celebration-de-la-fin_test.ts` supposait encore `princesse` : passé à `pompier` par `test-writer` (`3f51285`), comme `418a489` pour `animaux`. `deno test` 2881 verts.
+- Câblage : scène de Lumi reprise du worktree, dessin validé inchangé (`aa6eb65`) : modules `commun/expressions.ts` et `commun/tableaux.ts`, réglage « étoile » supprimé (106.34 A), ids `princesse-`, chargée à la demande et précachée (32,65 kB). `tsc`, lint, fmt, build OK. Dette : `courbe` copiée dans trois scènes (candidate à `commun/courbes.ts`).
+- 08:55 UTC : steps de Lumi `85e0855` (`bddgen` sans step manquant). VERROU base accordé à 106d (tableau de #64, 08:34 UTC) ; run `@issue-106` hors `@hors-106a`, `telephone`, 1 worker, lancé.
+- Review de la branche (`origin/main...HEAD`) : APPROUVÉ, aucun bloquant. Non bloquants à traiter après le run (pour ne pas toucher `src/` pendant qu'il tourne) : extraire `courbe` dans `commun/` (3e copie) ; traînée de la baguette masquée sur l'image fixe ; noms `or` (rose) et `etoile-du-corsage` (étincelle) ; `ECHELLE_DE_BASE` exporté pour rien ; ligne vide double dans `danse/queue-de-cheval.ts`. Leçon TDD notée : le passage `princesse` → `pompier` du test « univers pas encore livré » aurait dû être dans le RED.
+- 09:15 UTC : run E2E (`993b3ca`, `telephone`, 1 worker, `@issue-106` hors `@hors-106a`) : **43/43 verts**, 15,7 min. Sonde : 3 réponses `admin/users` en 0,4 à 1,3 s. LIBÈRE base.
+- Non bloquants traités : `courbe` dans `commun/membres.ts` (`32eae1d`), traînée de Lumi masquée sur l'image fixe (`1c4b05b`), noms `rosePale` et `etincelle-du-corsage`, ids inutilisés retirés (`ca387f3`), commentaires remplacés par des fonctions nommées (`5d0a3a7`). Rendu identique au pixel (27 images : Danse, Animaux, Princesses, état final et deux instants). Revue delta `993b3ca..5d0a3a7` : APPROUVÉ, rejeu E2E non nécessaire (aucun step ne lit ce qui a changé). Non bloquant noté : la traînée masquée n'est exigée par aucun test.
+- `main` inchangée depuis l'intégration (`dbbe378`).
+
+## Mesures (106d)
+
+| Mesure | Valeur |
+|---|---|
+| Durée | 2026-11-05 02:00 UTC → environ 09:20 UTC, PR prête (environ 7 h 20, dont environ 5 h d'attente) |
+| Attente | réponses du PO 106.34 à 106.36 : environ 4 h 10 (02:50 → 07:08) ; merge de 106b : environ 15 min après les réponses ; merge de 106c : environ 50 min ; verrou `base` : environ 0 (accordé dans la minute) |
+| Cycles TDD | 1 comportement (RED `850b61e`, GREEN `b11c6f0`) + ajustement du test « univers pas encore livré » |
+| Review | 3 revues delta (ruban de Lili, non bloquants) et 1 revue de branche, toutes APPROUVÉ, aucun cycle À CORRIGER |
+| E2E | 1 run sur `telephone` : 43/43 du premier coup |
+| Intégrations de `main` | 2 (106b `4742309`, 106c `dbbe378`), conflits seulement dans la documentation et le `.feature` (garder les deux ajouts) |
+| Escalades | 1 (planche de Lumi, #106.36) ; questions nouvelles 106.34, 106.35 |
+| Verrous | `base` une fois (08:34 → 09:15 UTC) |
+| Tokens | relevés par le responsable |
+
 ## 2026-11-05 (106e)
 
 Livraison **106e** : univers Police (Agent Max). Branche `feature/106e-celebration-police`, partie de `main` (`dbbe378` : 106a, 106b, 106c mergées). Session `session_015z4jmME4gT4h3Qu6mRPUgM`. Branche de base : `main`.

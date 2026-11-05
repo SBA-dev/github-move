@@ -82,7 +82,7 @@ export function creerLesEffets(racine: SVGSVGElement) {
     return auPoint(image.inverse().multiply(mainSurEcran), AU_DESSUS_DE_LA_MAIN);
   }
 
-  /** Le ruban suit la main droite et, pendant la rotation, la pointe dessine une étoile à cinq branches autour de Lili ; l'étoile brille ensuite. */
+  /** Le ruban suit la main droite et, pendant la rotation, la pointe dessine une étoile autour de Lili ; une étincelle brille ensuite. */
   function dessinerLeRuban(scenario: ScenarioDeDanse, t: number) {
     const main = scenario.variante === "ruban" && t >= T_VARIANTE ? positionDeLaMain() : null;
     if (!main) {

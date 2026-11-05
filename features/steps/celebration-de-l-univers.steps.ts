@@ -30,7 +30,7 @@ import { normaliser, reappliquerLAppareil, scenario } from "./voix.steps.ts";
 // sonore « grande victoire » en attendant le choix du PO (106.12) ; les effets sont suivis par le faux de #97. Le tirage de la
 // variante reçoit une valeur par `features/support/hasard-fixe.ts`, comme celui du contrôle parental.
 
-type Univers = "sports" | "danse" | "animaux";
+type Univers = "sports" | "danse" | "animaux" | "princesse";
 
 const MUSIQUE = "grande victoire";
 // Le tirage de la variante est `floor(r * 3)` pour les deux univers : `hasard-fixe.ts` nomme les rangs 0, 1 et 2 « glissade »,
@@ -45,6 +45,9 @@ const RANG_DU_TIRAGE: Record<string, VarianteTiree> = {
   "le jonglage": "glissade",
   "la noisette croquée": "avion",
   "les joues pleines": "danse",
+  "l'arc-en-ciel": "glissade",
+  "l'envol": "avion",
+  "les chiffres et les lettres": "danse",
 };
 const TEXTE_DU_TIRAGE = `(${Object.keys(RANG_DU_TIRAGE).join("|")})`;
 
@@ -66,6 +69,11 @@ const TEXTE_DES_VARIANTES_DE_LILI = "(le grand jeté|le ruban|les petits sauts)"
 const VARIANTES_DE_NOISETTE: Record<string, string> = { "le jonglage": "jongle", "la noisette croquée": "mange", "les joues pleines": "joues" };
 const VARIANTES_POSSIBLES_DE_NOISETTE = /^(jongle|mange|joues)$/;
 const TEXTE_DES_VARIANTES_DE_NOISETTE = "(le jonglage|la noisette croquée|les joues pleines)";
+
+// Lumi (Princesses et fées) : libellé → valeur de `data-variante`.
+const VARIANTES_DE_LUMI: Record<string, string> = { "l'arc-en-ciel": "arc", "l'envol": "envol", "les chiffres et les lettres": "signes" };
+const VARIANTES_POSSIBLES_DE_LUMI = /^(arc|envol|signes)$/;
+const TEXTE_DES_VARIANTES_DE_LUMI = "(l'arc-en-ciel|l'envol|les chiffres et les lettres)";
 
 Before({ tags: "@issue-106" }, async ({ page }) => {
   await page.addInitScript(installerLesFauxDeLaStory97, { echec: false, retenir: [] });
@@ -206,6 +214,40 @@ Then(/^Léa lit « Hourra ! »$/, async ({ page }) => {
   await attendreLeCri(page, "Hourra !");
 });
 
+Then(
+  /^Lumi joue la célébration de l'univers « Princesses et fées » : elle fait éclore une fleur magique d'un sort, puis l'arc-en-ciel, l'envol ou les chiffres et les lettres$/,
+  async ({ page }) => {
+    const celebration = await attendreLaScene(page, "princesse");
+    await expect(celebration).toHaveAttribute("data-variante", VARIANTES_POSSIBLES_DE_LUMI);
+    await attendreLaFleurMagique(page);
+    await attendreLeCri(page, "Magique !");
+    await attendreLaFinDeLaScene(page);
+  },
+);
+
+Then(new RegExp(`^Lumi fait éclore une fleur magique d'un sort, puis ${TEXTE_DES_VARIANTES_DE_LUMI}$`), async ({ page }, variante: string) => {
+  const celebration = await attendreLaScene(page, "princesse");
+  await expect(celebration).toHaveAttribute("data-variante", VARIANTES_DE_LUMI[variante] as string);
+  await attendreLaFleurMagique(page);
+  await attendreLeCri(page, "Magique !");
+  await attendreLaFinDeLaScene(page);
+});
+
+Then(/^Léa lit « Magique ! »$/, async ({ page }) => {
+  await attendreLaScene(page, "princesse");
+  await attendreLeCri(page, "Magique !");
+});
+
+/** La fleur éclot au tout début : son groupe (`princesse-fleur`) devient opaque et le reste jusqu'à la fin. */
+async function attendreLaFleurMagique(page: Page): Promise<void> {
+  const fleur = scene(page).locator("#princesse-fleur");
+  await expect(fleur).toHaveCount(1);
+  await expect.poll(
+    async () => await fleur.evaluate((element) => Number(getComputedStyle(element).opacity)),
+    { timeout: DELAI_DE_L_ATTENTE_MS, message: "la fleur magique a éclos" },
+  ).toBeGreaterThanOrEqual(0.99);
+}
+
 Then(/^Coach Léo ne joue pas la célébration de l'univers$/, async ({ page }) => {
   await attendreLaFinDuDefi(page);
   await expect(scene(page)).toHaveCount(0);
@@ -232,6 +274,10 @@ Then(/^Léa voit l'image fixe de la célébration de l'univers « Animaux de la 
 
 Then(/^Léa voit l'image fixe de la célébration de l'univers « Danse », avec « Bravo ! », sans mouvement$/, async ({ page }) => {
   await verifierLImageFixe(page, "danse", VARIANTES_POSSIBLES_DE_LILI, "Bravo !");
+});
+
+Then(/^Léa voit l'image fixe de la célébration de l'univers « Princesses et fées », avec « Magique ! », sans mouvement$/, async ({ page }) => {
+  await verifierLImageFixe(page, "princesse", VARIANTES_POSSIBLES_DE_LUMI, "Magique !");
 });
 
 async function verifierLImageFixe(page: Page, univers: Univers, variantes: RegExp, cri: string): Promise<void> {
@@ -297,6 +343,15 @@ Then(
   },
 );
 
+Then(
+  /^Lumi n'apparaît qu'une fois, dans la célébration de l'univers, la bulle gardant ses paroles$/,
+  async ({ page }) => {
+    await attendreLaScene(page, "princesse");
+    await verifierQueLaBulleGardeSesParoles(page);
+    await expect(petitPersonnage(page), "le petit personnage guide à côté de la bulle").toHaveCount(0);
+  },
+);
+
 Then(/^Coach Léo apparaît à côté de la bulle de ses paroles$/, async ({ page }) => {
   await attendreLaFinDuDefi(page);
   await verifierQueLaBulleGardeSesParoles(page);
@@ -329,6 +384,14 @@ Then(
 
 Then(
   /^Léa entend la musique de la célébration de Noisette, puis Noisette dit « Bravo Léa ! Tu as relevé le défi (\d+) ! »$/,
+  async ({ page }, numero: string) => {
+    await effetPuisParole(page, [MUSIQUE], "felicitation", true);
+    expect(normaliser((await bulle(page).textContent()) ?? "")).toBe(`Bravo Léa ! Tu as relevé le défi ${numero} !`);
+  },
+);
+
+Then(
+  /^Léa entend la musique de la célébration de Lumi, puis Lumi dit « Bravo Léa ! Tu as relevé le défi (\d+) ! »$/,
   async ({ page }, numero: string) => {
     await effetPuisParole(page, [MUSIQUE], "felicitation", true);
     expect(normaliser((await bulle(page).textContent()) ?? "")).toBe(`Bravo Léa ! Tu as relevé le défi ${numero} !`);
@@ -377,6 +440,10 @@ Then(/^les lecteurs d'écran n'annoncent ni « Hourra ! » ni le dessin de la c�
   await verifierQueLaSceneEstMuettePourLesLecteursDEcran(page, "animaux", "Hourra !");
 });
 
+Then(/^les lecteurs d'écran n'annoncent ni « Magique ! » ni le dessin de la célébration$/, async ({ page }) => {
+  await verifierQueLaSceneEstMuettePourLesLecteursDEcran(page, "princesse", "Magique !");
+});
+
 /** Le cri est cherché tel quel : la bulle « Bravo Léa ! … » reste lisible. */
 async function verifierQueLaSceneEstMuettePourLesLecteursDEcran(page: Page, univers: Univers, cri: string): Promise<void> {
   const celebration = await attendreLaScene(page, univers);
@@ -392,7 +459,7 @@ async function verifierQueLaSceneEstMuettePourLesLecteursDEcran(page: Page, univ
   await expect(page.locator("[aria-live], [role=status], [role=alert]").filter({ hasText: new RegExp(`^${cri}$`) })).toHaveCount(0);
 }
 
-Then(/^aucun confetti ni (?:pétale|feuille) ne tombe$/, async ({ page }) => {
+Then(/^aucun confetti ni (?:pétale|feuille|étincelle du jardin) ne tombe$/, async ({ page }) => {
   await attendreLaFinDuDefi(page);
   await laisserSeDerouler(page);
   await expect(page.getByTestId("confettis-de-la-celebration")).toHaveCount(0);
