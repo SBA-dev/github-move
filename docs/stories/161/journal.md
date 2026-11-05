@@ -14,3 +14,13 @@
 - `po-acceptance` : une règle, un scénario touché (exemple Pompiers du Plan « … a <son dessin> » de #96), aucun nouveau scénario. `docs/stories/161/acceptance.md`. Questions 161.1 à 161.4.
 - Esquisse (`implementer`, scratchpad, méthode du skill `illustration`) : trois humeurs, portées depuis la maquette 106f sur le corps et la pose d'Agent Max. Planche avant/après dans `docs/stories/161/captures/`, sources SVG dans `docs/stories/161/planches/`.
 - CADRAGE PRÊT posté sur #161, avec la planche pour le PO (98.28). En attente de l'annonce du responsable.
+
+## Étape 3 : TDD (2026-11-05)
+- Réponse du PO « Merge 158 ok 161 reco tout » (annonce [Responsable] sur #161) : 161.1 à 161.4 A, planche validée.
+- RED : step `e303d85` (`e2e-tester`) : signes de Capitaine Sam, imbrications, ancien step « avant la refonte », `signatureDuDessin` et `features/support/dessin-de-capitaine-sam.json` retirés.
+- GREEN : `e490ad0` (`implementer`) : `CapitaineSam.tsx` porté depuis la planche validée (rendu identique octet pour octet aux PNG validés) ; `DESSINS_REDESSINES` retiré (il aurait contenu toutes les clés).
+- Intégration de `main` `e0d533f` (#158) : `ab3fc1b`. Conflits sur le Plan de #96 et `SIGNES_DU_DESSIN_VALIDE` : les deux lignes gardées. tsc, build, deno (2883) verts.
+- Verrou base accordé (tableau de #64, 12:01 UTC). Sonde admin/users : 1,24 s, 0,63 s, 0,46 s.
+
+## Étape 4 : review (cycle 1)
+- APPROUVÉ, 3 non bloquants : (1) `data-dessin="valide"` posé partout ne distingue plus rien ; la décision 0033 (Conséquences) prévoit de retirer ce repère et `DESSINS_REDESSINES` quand Capitaine Sam est redessiné → retrait de l'attribut et de ses deux assertions (`refonte-visuelle.steps.ts`, `tenues.steps.ts`), sans changer le sens des steps (les signes restent vérifiés) ; (2) mise en forme de `CapitaineSam.tsx` (un élément par ligne, constante `CHAUSSURE`) ; (3) `acceptance.md` à aligner sur le step (absents `etoile` et `etoile-doree`). Repris après le run E2E en cours.
