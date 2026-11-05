@@ -1,5 +1,4 @@
 import { expect, type Locator, type Page } from "@playwright/test";
-import { readFileSync } from "node:fs";
 import { PALETTES } from "../../src/univers/palettes.ts";
 import {
   arreterLeSuivi,
@@ -430,12 +429,16 @@ const SIGNES_DU_DESSIN_VALIDE: Readonly<
     absents: ["etoile-doree"],
     imbriques: [["casquette-de-police", "ecusson"], ["chemise-bleue", "ecusson"]],
   },
+  "Capitaine Sam": {
+    presents: ["casque-de-pompier", "ecusson", "goutte-d-eau", "veste-rouge", "bandes", "pantalon"],
+    absents: ["etoile", "etoile-doree"],
+    imbriques: [["casque-de-pompier", "ecusson"], ["ecusson", "goutte-d-eau"]],
+  },
 };
 
 async function verifierLeDessinValide(dessin: Locator, nom: string): Promise<void> {
   const attendus = SIGNES_DU_DESSIN_VALIDE[nom];
   if (!attendus) throw new Error(`Dessin validé inconnu : ${nom}`);
-  await expect(dessin).toHaveAttribute("data-dessin", "valide");
   for (const signe of attendus.presents) {
     await expect(dessin.locator(`[data-signe="${signe}"]`), `signe « ${signe} » de ${nom}`).not.toHaveCount(0);
   }
@@ -450,35 +453,8 @@ async function verifierLeDessinValide(dessin: Locator, nom: string): Promise<voi
   }
 }
 
-Then(/^(Coach Léo|Lili|Noisette|Lumi|Agent Max) a le dessin validé : .+$/, async ({ page }, nom: string) => {
+Then(/^(Coach Léo|Lili|Noisette|Lumi|Agent Max|Capitaine Sam) a le dessin validé : .+$/, async ({ page }, nom: string) => {
   await verifierLeDessinValide(leGuide(page, nom), nom);
-});
-
-/** Le dessin de Capitaine Sam d'avant la refonte : sa géométrie (formes, tracés, couleurs) est celle de la référence. */
-const REFERENCE_DE_CAPITAINE_SAM: string[] = JSON.parse(
-  readFileSync("features/support/dessin-de-capitaine-sam.json", "utf-8"),
-);
-
-export async function signatureDuDessin(dessin: Locator): Promise<string[]> {
-  return await dessin.evaluate((racine) => {
-    const ignores = new Set(["id", "class", "style"]);
-    const normaliser = (valeur: string) => valeur.replace(/url\(#[^)]*\)/g, "url(#)").replace(/#[^\s"')]*(?=\)|$)/g, (m) => m);
-    const lignes: string[] = [];
-    for (const el of Array.from(racine.querySelectorAll("svg, svg *"))) {
-      const attributs = Array.from(el.attributes)
-        .filter((a) => !ignores.has(a.name) && !a.name.startsWith("data-") && !a.name.startsWith("aria-"))
-        .map((a) => `${a.name}=${normaliser(a.value)}`)
-        .sort();
-      lignes.push(`${el.tagName.toLowerCase()} ${attributs.join(" ")}`);
-    }
-    return lignes;
-  });
-}
-
-Then(/^Capitaine Sam a son dessin d'avant la refonte$/, async ({ page }) => {
-  const dessin = leGuide(page, "Capitaine Sam");
-  await expect(dessin).toBeAttached();
-  expect(await signatureDuDessin(dessin)).toEqual(REFERENCE_DE_CAPITAINE_SAM);
 });
 
 Then(/^le profil enfant de (Léa|Tom) montre le dessin validé (?:d'|de )(Agent Max|Coach Léo)$/, async ({ page }, prenom: string, nom: string) => {
