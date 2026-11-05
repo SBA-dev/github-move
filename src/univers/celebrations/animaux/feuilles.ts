@@ -5,15 +5,15 @@ const COULEURS = ["#8FD98A", "#F7D86A", "#FFC93C", "#F4A83C", "#6CBF84"];
 const NOMBRE_DE_FEUILLES = 56;
 /** Toute la scène est visible : 360 de large sur 450 de haut. */
 const VUE = { largeur: 360, hauteur: 450 };
-const UNE_ETOILE_SUR = 5;
-const POINTES_DE_L_ETOILE = 5;
+const UNE_ETINCELLE_SUR = 5;
+const POINTES_DE_L_ETINCELLE = 4;
 
 type Feuille = {
   x: number;
   y: number;
   readonly vx: number;
   vy: number;
-  readonly etoile: boolean;
+  readonly etincelle: boolean;
   readonly w: number;
   readonly h: number;
   rot: number;
@@ -32,7 +32,7 @@ function semer(): Feuille[] {
     y: -20 - suite() * 240,
     vx: (suite() - .5) * 30,
     vy: 30 + suite() * 30,
-    etoile: i % UNE_ETOILE_SUR === 0,
+    etincelle: i % UNE_ETINCELLE_SUR === 0,
     w: 9 + suite() * 4,
     h: 4.5 + suite() * 2.5,
     rot: suite() * Math.PI,
@@ -45,7 +45,7 @@ function semer(): Feuille[] {
   }));
 }
 
-/** Les feuilles de la forêt et les petites étoiles dorées : elles tombent doucement du ciel et se posent sur la prairie. */
+/** Les feuilles de la forêt et les petites étincelles à quatre branches : elles tombent doucement du ciel et se posent sur la prairie. */
 export function creerLesFeuilles(toile: HTMLCanvasElement) {
   const contexte = toile.getContext("2d");
   const feuilles = semer();
@@ -57,7 +57,7 @@ export function creerLesFeuilles(toile: HTMLCanvasElement) {
         f.retard -= dt;
         continue;
       }
-      f.vy = Math.min(f.etoile ? 110 : 80, f.vy + 70 * dt);
+      f.vy = Math.min(f.etincelle ? 110 : 80, f.vy + 70 * dt);
       f.phase += dt * 4;
       f.x += f.vx * dt + Math.sin(f.phase) * 30 * dt;
       f.y += f.vy * dt;
@@ -69,11 +69,11 @@ export function creerLesFeuilles(toile: HTMLCanvasElement) {
     }
   }
 
-  function dessinerUneEtoile(c: CanvasRenderingContext2D) {
-    c.fillStyle = "#FFC93C";
+  function dessinerUneEtincelle(c: CanvasRenderingContext2D) {
+    c.fillStyle = "#FFE9A8";
     c.beginPath();
-    for (let k = 0; k < POINTES_DE_L_ETOILE * 2; k++) {
-      const rayon = k % 2 ? 2.4 : 5.5, angle = k * Math.PI / POINTES_DE_L_ETOILE - Math.PI / 2;
+    for (let k = 0; k < POINTES_DE_L_ETINCELLE * 2; k++) {
+      const rayon = k % 2 ? 1.6 : 6, angle = k * Math.PI / POINTES_DE_L_ETINCELLE - Math.PI / 2;
       c.lineTo(Math.cos(angle) * rayon, Math.sin(angle) * rayon);
     }
     c.closePath();
@@ -99,7 +99,7 @@ export function creerLesFeuilles(toile: HTMLCanvasElement) {
       contexte.strokeStyle = "#33304A";
       contexte.lineWidth = .8;
       contexte.globalAlpha = f.pose ? .85 : .95;
-      if (f.etoile) dessinerUneEtoile(contexte);
+      if (f.etincelle) dessinerUneEtincelle(contexte);
       else {
         const repli = f.pose ? .7 : .5 + .5 * Math.abs(Math.cos(f.phase));
         contexte.fillStyle = f.couleur;
