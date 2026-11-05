@@ -690,7 +690,9 @@ Then(
 Then(
   /^(Coach Léo|Noisette|Lumi) joue la célébration de l'univers « (Sports|Animaux de la forêt|Princesses et fées) » en portant « ([^«»]+) »$/,
   async ({ page }, _personnage: string, univers: string, tenue: string) => {
-    const { univers: cleDeLUnivers, cri } = UNIVERS_DE_LA_SCENE[univers] as { univers: Univers; cri: string };
+    const scene = UNIVERS_DE_LA_SCENE[univers];
+    if (!scene) throw new Error(`Univers de la scène inconnu : « ${univers} »`);
+    const { univers: cleDeLUnivers, cri } = scene;
     await verifierQueLaScenePorte(page, cleDeLUnivers, tenue);
     await attendreLeCri(page, cri);
     await attendreLaFinDeLaScene(page);

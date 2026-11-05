@@ -215,7 +215,13 @@ Then(
     await expect(annonce.getByText(texte, { exact: true })).toBeVisible();
     // 106.50 : pendant une célébration de l'univers, c'est la scène qui montre le personnage guide ; le petit dessin de l'encart est caché.
     const dessin = annonce.getByTestId("personnage-guide-de-l-annonce");
-    if (await page.getByTestId("celebration-de-l-univers").count() === 0) await expect(dessin).toBeVisible();
+    // La célébration n'est fixée qu'une fois la matière et la tenue connues : on attend la scène ou les confettis avant de décider.
+    const scene = page.getByTestId("celebration-de-l-univers");
+    await expect.poll(
+      async () => (await scene.count()) + (await page.getByTestId("confettis").count()),
+      { message: "célébration de la fin fixée (scène de l'univers ou confettis)", timeout: DELAI_D_UN_APPEL_SERVEUR_MS },
+    ).toBeGreaterThan(0);
+    if (await scene.count() === 0) await expect(dessin).toBeVisible();
     else await expect(dessin).toHaveCount(0);
   },
 );
