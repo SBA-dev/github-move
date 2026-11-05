@@ -24,3 +24,16 @@
 
 ## Étape 4 : review (cycle 1)
 - APPROUVÉ, 3 non bloquants : (1) `data-dessin="valide"` posé partout ne distingue plus rien ; la décision 0033 (Conséquences) prévoit de retirer ce repère et `DESSINS_REDESSINES` quand Capitaine Sam est redessiné → retrait de l'attribut et de ses deux assertions (`refonte-visuelle.steps.ts`, `tenues.steps.ts`), sans changer le sens des steps (les signes restent vérifiés) ; (2) mise en forme de `CapitaineSam.tsx` (un élément par ligne, constante `CHAUSSURE`) ; (3) `acceptance.md` à aligner sur le step (absents `etoile` et `etoile-doree`). Repris après le run E2E en cours.
+- Retouches : `c07e0fb` (test : assertions `data-dessin` retirées des steps), `a7d9ad8` (acceptance), `8641900` (refactor : `data-dessin` retiré de `PersonnageGuide.tsx`), `eca9132` (refactor : mise en forme, constante `CHAUSSURE` ; JSX identique une fois la constante réinjectée).
+- Review delta (cycle 2) : APPROUVÉ. Non bloquant : la décision 0033 (point 5) et l'index `docs/decisions/README.md` décrivent encore `data-dessin` ; le retrait étant prévu par 0033 elle-même, pas de nouvelle décision ; une ligne de la feuille de route (responsable) peut le signaler.
+
+## Étape 5 : E2E (projet `telephone`, 1 worker, verrou base)
+- Run 1 (`ab3fc1b`) : 120 lancés, 118 verts. KO : #96:709 et #96:718 (`@visuel`, captures de référence), préexistants sur `main`, écrans de Noisette, sans Capitaine Sam.
+- Run 2 (`eca9132`, après les retouches) : 9/9 verts (Plan « … a <son dessin> » 6/6, #96:209, #102:323, #102:291).
+- Scénarios de Capitaine Sam verts : #96 (Plan modifié et Pompiers), #102 (360 px habillé), #11, #33, #6.
+
+## Mesures
+- Durée : environ 1 h 15 (11:45 → 13:00 UTC), dont 37 min pour le run 1.
+- Attente : validation PO environ 3 min ; verrou base accordé sans attente.
+- Cycles : TDD 1 ; review 2 (APPROUVÉ, puis delta APPROUVÉ) ; E2E 2 runs, 0 KO lié à la story.
+- Intégrations de `main` : 1 (`e0d533f`, #158), 2 conflits attendus (Plan de #96, `SIGNES_DU_DESSIN_VALIDE`), résolus en gardant les deux lignes.
