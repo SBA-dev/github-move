@@ -9,9 +9,9 @@ Fonctionnalité: Une célébration propre à chaque univers
   elle ne change ni le défi relevé, ni les étoiles, ni la suite du parcours, et rien n'est enregistré.
   Cadrage validé par le PO le 2026-11-02 (« 106 reco tout » : toutes les recommandations des questions 106.1 à
   106.27, docs/stories/106/acceptance.md, puis 106.28 « cacher »). Ce fichier couvre la livraison 106a (mécanisme,
-  moment « défi relevé » la première fois, univers « Sports » et sa musique) la livraison 106b (univers « Danse »,
-  scénarios tagués @livraison-106b) et la livraison 106c (univers « Animaux de la forêt », scénarios tagués
-  @livraison-106c). Ce qui ne dépend pas de l'univers (toucher, clavier, Muet, espace parent, défi
+  moment « défi relevé » la première fois, univers « Sports » et sa musique), la livraison 106b (univers « Danse »,
+  scénarios tagués @livraison-106b) et la livraison 106c (univers « Animaux de la forêt », scénarios
+  tagués @livraison-106c). Ce qui ne dépend pas de l'univers (toucher, clavier, Muet, espace parent, défi
   rejoué) n'est décrit qu'une fois, avec Coach Léo. Les scénarios tagués @hors-106a décrivent les livraisons suivantes
   (106d à 106h) : ils sont exclus et restent @a-valider jusqu'à leur livraison.
 
