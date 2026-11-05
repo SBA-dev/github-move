@@ -9,3 +9,8 @@
 
 ## Étape 1 : modèle de domaine
 - Sautée : aucun concept, aucune règle ni aucun contexte nouveau. C'est un dessin d'affichage (`src/`), sans domaine (comme #158).
+
+## Étape 2 : critères (2026-11-05)
+- `po-acceptance` : une règle, un scénario touché (exemple Pompiers du Plan « … a <son dessin> » de #96), aucun nouveau scénario. `docs/stories/161/acceptance.md`. Questions 161.1 à 161.4.
+- Esquisse (`implementer`, scratchpad, méthode du skill `illustration`) : trois humeurs, portées depuis la maquette 106f sur le corps et la pose d'Agent Max. Planche avant/après dans `docs/stories/161/captures/`, sources SVG dans `docs/stories/161/planches/`.
+- CADRAGE PRÊT posté sur #161, avec la planche pour le PO (98.28). En attente de l'annonce du responsable.
