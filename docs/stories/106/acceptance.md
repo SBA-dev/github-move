@@ -357,6 +357,10 @@ Questions de 106h (à reporter dans « Questions ouvertes » à l'intégration a
   annonce, celle de #102 ; « BUT ! » jamais lu. Scénario de R18 `@a-valider`.
 - **106.49** Fermeture de #106 après 106h, les musiques des univers (106.12) étant suivies à part : posée par
   l'orchestrateur, sans effet sur les scénarios.
+- **106.50** Pendant la célébration de l'univers, le petit dessin du personnage guide de l'encart « Pour Coach Léo »
+  (#102) est-il caché, pour qu'il n'apparaisse qu'une fois, dans la scène (106.28 « cacher ») ? Le titre et la phrase
+  « Coach Léo a reçu une écharpe rayée ! » restent. Reco du modèle : oui ; le step de #102 qui vérifie ce petit dessin
+  est adapté. Autre choix : le garder (le personnage guide apparaît alors deux fois).
 
 ## Questions ouvertes
 
