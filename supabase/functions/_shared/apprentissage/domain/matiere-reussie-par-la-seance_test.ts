@@ -72,18 +72,18 @@ Deno.test("la séance qui réussit la dernière leçon du français rend le fran
 });
 
 Deno.test("les leçons réussies au test de départ comptent pour rendre la matière réussie", () => {
-  const avant = entrees(["ma-ce1-3"], ["ma-ce1-1", "ma-ce1-2"]);
-  const apres = entrees(["ma-ce1-3", "ma-ce1-2"], ["ma-ce1-1"]);
+  const avant = entrees([], ["ma-ce1-1", "ma-ce1-2"]);
+  const apres = entrees(["ma-ce1-3"], ["ma-ce1-1", "ma-ce1-2"]);
 
-  assertEquals(matiereReussieParLaSeance(avant, apres, maths), false);
-  assertEquals(
-    matiereReussieParLaSeance(
-      entrees([], ["ma-ce1-1", "ma-ce1-2"]),
-      entrees(["ma-ce1-3"], ["ma-ce1-1", "ma-ce1-2"]),
-      maths,
-    ),
-    true,
-  );
+  assertEquals(matiereReussieParLaSeance(avant, apres, maths), true);
+});
+
+Deno.test("une matière sans leçon dans la classe n'est pas réussie par la séance", () => {
+  const sciences = matiereDeCode("sciences");
+  const avant = entrees(["ma-ce1-1"]);
+  const apres = entrees(["ma-ce1-1", "ma-ce1-2", "ma-ce1-3"]);
+
+  assertEquals(matiereReussieParLaSeance(avant, apres, sciences), false);
 });
 
 Deno.test("une matière réussie par le test de départ lui-même n'est réussie par aucune séance", () => {

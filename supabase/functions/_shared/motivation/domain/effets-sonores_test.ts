@@ -1,5 +1,6 @@
 import { assertEquals } from "@std/assert";
 import { effetSonoreDuRecord, effetsSonoresApresUneBonneReponse, effetsSonoresDeLaFin } from "./effets-sonores.ts";
+import type { EffetSonore } from "../../voix/domain/index.ts";
 
 const sansPointGagne = {
   questionsReussiesAvant: 2,
@@ -29,7 +30,7 @@ Deno.test("une réponse qui complète l'exercice fait jouer le texte complet à 
     exerciceComplete: true,
   });
 
-  assertEquals(effets, ["texteComplet"]);
+  assertEquals(effets, [uneMusiqueDeCelebration]);
 });
 
 Deno.test("une réponse qui complète l'exercice et gagne un point fait jouer le texte complet puis le point du récipient", () => {
@@ -207,18 +208,20 @@ Deno.test("#141, règle 101.18 (a) : les faits de la fin ne portent pas la quêt
   assertEquals(effetsSonoresDeLaFin(seanceSansEvenement), ["seanceTerminee"]);
 });
 
-Deno.test("la musique de la célébration remplace la séance terminée : un seul son de fin", () => {
-  const effets = effetsSonoresDeLaFin({ ...seanceSansEvenement, musiqueDeLaCelebration: "texteComplet" });
+const uneMusiqueDeCelebration: EffetSonore = "texteComplet";
 
-  assertEquals(effets, ["texteComplet"]);
+Deno.test("la musique de la célébration remplace la séance terminée : un seul son de fin", () => {
+  const effets = effetsSonoresDeLaFin({ ...seanceSansEvenement, musiqueDeLaCelebration: uneMusiqueDeCelebration });
+
+  assertEquals(effets, [uneMusiqueDeCelebration]);
 });
 
 Deno.test("la musique de la célébration remplace la grande victoire d'une leçon acquise : elle ne joue pas deux fois", () => {
   const effets = effetsSonoresDeLaFin({
     ...seanceSansEvenement,
     leconAcquise: true,
-    musiqueDeLaCelebration: "texteComplet",
+    musiqueDeLaCelebration: uneMusiqueDeCelebration,
   });
 
-  assertEquals(effets, ["texteComplet"]);
+  assertEquals(effets, [uneMusiqueDeCelebration]);
 });
