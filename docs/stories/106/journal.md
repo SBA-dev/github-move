@@ -83,3 +83,7 @@ Branche de base : `main` (`597a4a5`). Branche : `feature/106b-celebration-danse`
 - Cycle 1 (`68a2eab`) : À CORRIGER. Bloquant : premier `React.lazy` de l'application sans repli, un import de scène qui échoue (ancienne version après `skipWaiting`, hors ligne avant le précache) aurait laissé un écran blanc à la fin du défi (régression pour Sports). Non bloquants : saut de `vue` en fin de pirouette, lien générique univers/variante, tables de variantes des steps, `Object.hasOwn`, décalage de mise en page.
 - Corrections : steps `6271ec7` ; `c4bc8a0` (repli `chargerSansEchec`, espace réservé de même ratio sans `data-testid`), `70cdb85` (`E.instantanee`), `77d48d5` (générique), `a179a94` (`Object.hasOwn`). Repli vérifié par un script Playwright non commité (import coupé : espace réservé, boutons présents, aucune erreur).
 - Cycle 2 (`a179a94`) : APPROUVÉ. Non bloquants restants : repli de chargement sans test automatisé (pas de scénario : à proposer au PO), `a179a94` aurait pu être un `refactor`.
+
+## 2026-11-05
+- 00:23 UTC : réponse du PO (annonce [Responsable] sur #106) : « planche 106b OK, 106.30 corriger ». Planche `1314434` validée.
+- 106.30 : `9edd375` (de dos, la chevelure recouvre l'arrière du crâne ; de face et de profil, dessin identique au bit près), captures `8101cb2` (`106b-lili-pirouette-de-dos.png`, `106b-lili-tetes-avant-apres.png`), relues par l'orchestrateur. Revue delta : APPROUVÉ (non bloquants : constantes du recouvrement à nommer, point de fermeture du tracé, ombre de nuque devenue invisible de dos).
