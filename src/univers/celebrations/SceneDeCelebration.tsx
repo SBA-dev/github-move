@@ -37,6 +37,7 @@ const CHARGEURS_DES_SCENES: Record<UniversCelebre, () => Promise<unknown>> = {
   sports: chargerSports,
   danse: chargerDanse,
   animaux: chargerAnimaux,
+  princesse: () => Promise.resolve(),
 };
 
 /**
@@ -70,6 +71,8 @@ export function SceneDeCelebration({ celebration }: Props) {
       return <Suspense fallback={<EspaceDeLaScene />}><SceneDeLaDanse cle={celebration.variante.cle} cri={celebration.cri} /></Suspense>;
     case "animaux":
       return <Suspense fallback={<EspaceDeLaScene />}><SceneDesAnimaux cle={celebration.variante.cle} cri={celebration.cri} /></Suspense>;
+    case "princesse":
+      return <EspaceDeLaScene />;
     default:
       return universSansScene(celebration);
   }
