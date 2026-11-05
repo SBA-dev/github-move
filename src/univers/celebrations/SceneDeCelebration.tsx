@@ -1,5 +1,5 @@
 import { type ComponentType, lazy, Suspense } from "react";
-import type { CelebrationDeLUnivers, CleUnivers } from "@domain/motivation";
+import type { CelebrationDeLUnivers, CleUnivers, UniversCelebre } from "@domain/motivation";
 
 type PropsDeScene<Cle extends string> = { readonly cle: Cle; readonly cri: string };
 
@@ -26,17 +26,31 @@ const chargerSansEchec = <Cle extends string>(charger: () => Promise<Module<Cle>
 
 const chargerSports = memoriser(() => import("./sports/SceneDesSports.tsx"));
 const chargerDanse = memoriser(() => import("./danse/SceneDeLaDanse.tsx"));
+const chargerAnimaux = memoriser(() => import("./animaux/SceneDesAnimaux.tsx"));
 
 const SceneDesSports = chargerSansEchec(chargerSports);
 const SceneDeLaDanse = chargerSansEchec(chargerDanse);
+const SceneDesAnimaux = chargerSansEchec(chargerAnimaux);
+
+/** Un univers célébré sans chargeur ne compile pas : le préchargement ne peut pas oublier une scène. */
+const CHARGEURS_DES_SCENES: Record<UniversCelebre, () => Promise<unknown>> = {
+  sports: chargerSports,
+  danse: chargerDanse,
+  animaux: chargerAnimaux,
+};
 
 /**
  * Charge à l'avance la scène de l'univers, tant que le réseau est là (dès que le profil de l'enfant est connu, puis à l'ouverture du défi) : si le réseau se coupe pendant le défi,
  * la célébration de la fin se joue quand même. Un échec est ignoré : la fin du défi retombe sur l'espace vide.
  */
 export function prechargerLaSceneDe(univers: CleUnivers): void {
-  const charger = univers === "sports" ? chargerSports : univers === "danse" ? chargerDanse : undefined;
-  charger?.().catch(() => undefined);
+  const chargeurParUnivers: Partial<Record<CleUnivers, () => Promise<unknown>>> = CHARGEURS_DES_SCENES;
+  chargeurParUnivers[univers]?.().catch(() => undefined);
+}
+
+/** Un univers célébré qui n'a pas de scène ne compile pas : ajouter un univers au domaine oblige à dessiner sa scène ici. */
+function universSansScene(celebration: never): never {
+  throw new Error(`Aucune scène de célébration pour ${JSON.stringify(celebration)}`);
 }
 
 type Props = { readonly celebration: CelebrationDeLUnivers };
@@ -54,5 +68,9 @@ export function SceneDeCelebration({ celebration }: Props) {
       return <Suspense fallback={<EspaceDeLaScene />}><SceneDesSports cle={celebration.variante.cle} cri={celebration.cri} /></Suspense>;
     case "danse":
       return <Suspense fallback={<EspaceDeLaScene />}><SceneDeLaDanse cle={celebration.variante.cle} cri={celebration.cri} /></Suspense>;
+    case "animaux":
+      return <Suspense fallback={<EspaceDeLaScene />}><SceneDesAnimaux cle={celebration.variante.cle} cri={celebration.cri} /></Suspense>;
+    default:
+      return universSansScene(celebration);
   }
 }

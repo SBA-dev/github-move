@@ -44,13 +44,13 @@ Validée par le PO le 2026-10-27. Même moteur et même style que Coach Léo, da
 Validée par le PO le 2026-10-27, après une reprise complète (la première version, en forêt avec des sauts de branche en branche, a été rejetée). Même rendu que Coach Léo et Lili (contours, aplat + ombre + lumière, mêmes yeux, mains à cinq doigts), mais un **petit écureuil rond de dessin animé** : très grosse tête, joues rebondies (réduites à la demande du PO), deux petites dents, ventre clair, bras et jambes courts et dodus, grands pieds ronds, grosse queue en panache (chaîne de segments à ressorts). Inspiré du style général des rongeurs de dessins animés classiques, **sans copier aucun personnage existant**.
 
 - **Pas de retournement** : Noisette reste de face ou de trois-quarts face. C'est ce qui évite le défaut de retournement des premiers essais.
-- **Décor simple** : prairie, un arbre à côté de lui avec des noisettes dorées, quelques noisettes dans l'herbe, ciel clair.
-- **Action** : une noisette dorée tombe de l'arbre, il l'attrape.
-- **Trois célébrations tirées au hasard** : il jongle avec trois noisettes ; il croque la noisette (joues qui gonflent, miettes) puis se tapote le ventre ; il remplit ses joues de noisettes. Puis « Hourra ! » et « Chapitre réussi ! ».
-- **Échec jamais punitif** : une noisette lui tombe doucement sur la tête (« toc ! », sans bosse ni douleur), il est étourdi un instant (étoiles qui tournent), puis il rit et lève le pouce, « Presque ! On réessaie ? ».
+- **Décor simple** : prairie, un arbre à côté d'elle avec des noisettes dorées, quelques noisettes dans l'herbe, ciel clair.
+- **Action** : une noisette dorée tombe de l'arbre, elle l'attrape.
+- **Trois célébrations tirées au hasard** : elle jongle avec trois noisettes ; elle croque la noisette (joues qui gonflent, miettes) puis se tapote le ventre ; elle remplit ses joues de noisettes. Puis « Hourra ! » et « Chapitre réussi ! ».
+- **Échec jamais punitif** : une noisette lui tombe doucement sur la tête (« toc ! », sans bosse ni douleur), elle est étourdie un instant (étoiles qui tournent), puis elle rit et lève le pouce, « Presque ! On réessaie ? ».
 - Contrôles : « Réussir », « Rater », A / B / C ; `?anim=jongle|mange|joues|echec&t=…`, `?planche=tetes|mains`.
 
-**Limites connues** : la queue part plutôt à l'horizontale derrière lui ; les noisettes du jonglage sont petites ; pas de son. Le dessin fixe de Noisette dans l'application (`src/univers/personnages/Noisette.tsx`) reprend cette maquette (fait dans #96 : dessin fixe ; animations : #106).
+**Limites connues** : la queue part plutôt à l'horizontale derrière elle ; les noisettes du jonglage sont petites ; pas de son. Le dessin fixe de Noisette dans l'application (`src/univers/personnages/Noisette.tsx`) reprend cette maquette (fait dans #96 : dessin fixe ; animations : #106).
 
 ## `lumi-princesse.html` : univers Princesses et fées, Lumi
 

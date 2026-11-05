@@ -9,10 +9,11 @@ Fonctionnalité: Une célébration propre à chaque univers
   elle ne change ni le défi relevé, ni les étoiles, ni la suite du parcours, et rien n'est enregistré.
   Cadrage validé par le PO le 2026-11-02 (« 106 reco tout » : toutes les recommandations des questions 106.1 à
   106.27, docs/stories/106/acceptance.md, puis 106.28 « cacher »). Ce fichier couvre la livraison 106a (mécanisme,
-  moment « défi relevé » la première fois, univers « Sports » et sa musique) et la livraison 106b (univers « Danse »,
-  scénarios tagués @livraison-106b). Ce qui ne dépend pas de l'univers (toucher, clavier, Muet, espace parent, défi
+  moment « défi relevé » la première fois, univers « Sports » et sa musique), la livraison 106b (univers « Danse »,
+  scénarios tagués @livraison-106b) et la livraison 106c (univers « Animaux de la forêt », scénarios
+  tagués @livraison-106c). Ce qui ne dépend pas de l'univers (toucher, clavier, Muet, espace parent, défi
   rejoué) n'est décrit qu'une fois, avec Coach Léo. Les scénarios tagués @hors-106a décrivent les livraisons suivantes
-  (106c à 106h) : ils sont exclus et restent @a-valider jusqu'à leur livraison.
+  (106d à 106h) : ils sont exclus et restent @a-valider jusqu'à leur livraison.
 
   Mots employés dans ces scénarios (validés, 106.1, 106.2, 106.14 et 106.26) :
   - « la célébration de l'univers « Sports » » : Coach Léo marque un but, puis fait une des trois variantes de la
@@ -24,14 +25,21 @@ Fonctionnalité: Une célébration propre à chaque univers
     d'après la maquette validée, 106.26). Les fleurs et les pétales lancés depuis la salle, appelés ici « les pétales
     de la salle », font partie de sa célébration de l'univers, comme les confettis de la scène de Coach Léo (106.24) ;
   - « Bravo ! » : le cri de victoire de l'univers « Danse », affiché et jamais lu ;
+  - « la célébration de l'univers « Animaux de la forêt » » : Noisette attrape une noisette dorée, puis fait une des
+    trois variantes de la célébration, tirée au hasard : « le jonglage », « la noisette croquée » ou « les joues
+    pleines » (noms fixés d'après la maquette validée, 106.26). Les feuilles qui tombent sur la forêt, appelées ici
+    « les feuilles de la forêt », font partie de sa célébration de l'univers, comme les confettis de la scène de
+    Coach Léo (106.24) ;
+  - « Hourra ! » : le cri de victoire de l'univers « Animaux de la forêt », affiché et jamais lu ;
   - « la célébration commune » : les confettis et l'effet sonore de la fin, les mêmes dans tous les univers (#97) ;
     quand la célébration de l'univers est jouée, ni ses confettis ni son effet sonore ne s'y ajoutent ;
-  - « la musique de la célébration de Coach Léo », « la musique de la célébration de Lili » : l'effet sonore de leur
+  - « la musique de la célébration de Coach Léo », « la musique de la célébration de Lili », « la musique de la
+    célébration de Noisette » : l'effet sonore de leur
     célébration de l'univers, qui remplace « grande victoire » (106.12). Le PO les choisira à l'écoute ; d'ici là,
     c'est « grande victoire », entendu une seule fois ;
   - « l'image fixe de la célébration » : la même scène, dans l'état final de la variante tirée, quand l'appareil
     demande des mouvements réduits (106.15) ; rien ne tombe, ni les confettis de Coach Léo, ni les pétales de la
-    salle, ni les confettis de la célébration commune (106.24).
+    salle, ni les feuilles de la forêt, ni les confettis de la célébration commune (106.24).
   Durées, pour l'implémentation et la review, jamais dans les étapes : 3 s au plus (106.9 B), boutons, clavier
   et annonce disponibles dès la première image.
 
@@ -135,7 +143,6 @@ Fonctionnalité: Une célébration propre à chaque univers
 
       Exemples:
         | univers             | personnage guide |
-        | Animaux de la forêt | Noisette         |
         | Princesses et fées  | Lumi             |
         | Police              | Agent Max        |
         | Pompiers            | Capitaine Sam    |
@@ -273,10 +280,73 @@ Fonctionnalité: Une célébration propre à chaque univers
       Et « Mon parcours » et « Accueil » mesurent au moins 44 px de haut
 
   # ---------------------------------------------------------------------------------------------------------
-  # Livraisons suivantes (106c à 106h), exclues de 106a et de 106b. Leur mise en place sera reprise dans leur livraison.
+  # Livraison 106c : univers « Animaux de la forêt », Noisette.
   # ---------------------------------------------------------------------------------------------------------
 
-  Règle: Chaque univers a sa célébration de l'univers, jouée par son personnage guide, avec son cri de victoire (106c à 106f)
+  Règle: Dans l'univers « Animaux de la forêt », Noisette joue au premier défi relevé sa célébration de l'univers à la place de la célébration commune, avec les mêmes garanties que Coach Léo : image fixe en mouvements réduits, cri de victoire jamais lu, place tenue à 360 px (106c)
+
+    Contexte:
+      Étant donné que Paul a changé l'univers du profil enfant de Léa en « Animaux de la forêt »
+
+    @livraison-106c
+    Scénario: Au premier défi relevé dans l'univers « Animaux de la forêt », Noisette attrape une noisette dorée et le fête, puis félicite Léa
+      Étant donné que Léa a réussi les 5 premières leçons de maths du CE1
+      Et que Léa a commencé le défi 1 de maths
+      Quand Léa répond juste à toutes les questions du défi
+      Alors Noisette joue la célébration de l'univers « Animaux de la forêt » : elle attrape une noisette dorée, puis le jonglage, la noisette croquée ou les joues pleines
+      Et Léa lit « Hourra ! »
+      Et Léa entend la musique de la célébration de Noisette, puis Noisette dit « Bravo Léa ! Tu as relevé le défi 1 ! »
+      Et Noisette n'apparaît qu'une fois, dans la célébration de l'univers, la bulle gardant ses paroles
+      Mais la célébration commune n'est pas jouée
+
+    @livraison-106c
+    Plan du Scénario: Le hasard ne choisit que la variante : avec « <variante> », Noisette attrape toujours une noisette dorée
+      Étant donné que Léa a réussi les 5 premières leçons de maths du CE1
+      Et que Léa a commencé le défi 1 de maths
+      Et que le hasard de la célébration de l'univers tire « <variante> »
+      Quand Léa répond juste à toutes les questions du défi
+      Alors Noisette attrape une noisette dorée, puis <variante>
+      Et la fin du défi annonce « Défi relevé ! »
+
+      Exemples:
+        | variante            |
+        | le jonglage         |
+        | la noisette croquée |
+        | les joues pleines   |
+
+    @livraison-106c
+    Scénario: Avec les mouvements réduits, Léa voit l'image fixe de la célébration de l'univers « Animaux de la forêt », sans mouvement, ni confettis, ni feuilles
+      Étant donné que l'appareil demande des mouvements réduits
+      Et que Léa a réussi les 5 premières leçons de maths du CE1
+      Et que Léa a commencé le défi 1 de maths
+      Quand Léa répond juste à toutes les questions du défi
+      Alors Léa voit l'image fixe de la célébration de l'univers « Animaux de la forêt », avec « Hourra ! », sans mouvement
+      Et la fin du défi annonce « Défi relevé ! », sans mouvement
+      Et aucun confetti ni feuille ne tombe
+
+    @livraison-106c
+    Scénario: Dans l'univers « Animaux de la forêt », les lecteurs d'écran annoncent une seule fois « Défi relevé ! », sans lire « Hourra ! »
+      Étant donné que Léa a réussi les 5 premières leçons de maths du CE1
+      Et que Léa a commencé le défi 1 de maths
+      Quand Léa répond juste à toutes les questions du défi
+      Alors les lecteurs d'écran annoncent une seule fois « Défi relevé ! »
+      Mais les lecteurs d'écran n'annoncent ni « Hourra ! » ni le dessin de la célébration
+
+    @livraison-106c
+    Scénario: À 360 px, la célébration de l'univers « Animaux de la forêt » tient dans la largeur et ses boutons restent assez grands
+      Étant donné que l'écran de l'appareil mesure 360 px de large
+      Et que Léa a réussi les 5 premières leçons de maths du CE1
+      Et que Léa a commencé le défi 1 de maths
+      Quand Léa répond juste à toutes les questions du défi
+      Alors Léa lit « Hourra ! »
+      Et la page tient dans la largeur de l'écran
+      Et « Mon parcours » et « Accueil » mesurent au moins 44 px de haut
+
+  # ---------------------------------------------------------------------------------------------------------
+  # Livraisons suivantes (106d à 106h), exclues de 106a, de 106b et de 106c. Leur mise en place sera reprise dans leur livraison.
+  # ---------------------------------------------------------------------------------------------------------
+
+  Règle: Chaque univers a sa célébration de l'univers, jouée par son personnage guide, avec son cri de victoire (106d à 106f)
 
     @hors-106a @a-valider
     Plan du Scénario: Dans l'univers « <univers> », <personnage guide> fête le premier défi relevé à sa façon
@@ -290,7 +360,6 @@ Fonctionnalité: Une célébration propre à chaque univers
 
       Exemples:
         | univers             | personnage guide | action                               | variantes                                              | cri                 |
-        | Animaux de la forêt | Noisette         | elle attrape une noisette dorée      | le jonglage, la noisette croquée ou les joues gonflées | Hourra !            |
         | Princesses et fées  | Lumi             | un sort fait éclore une fleur        | l'arc-en-ciel, l'envol ou les signes                   | Magique !           |
         | Police              | Agent Max        | il retrouve un chiot perdu           | l'orchestre, la trottinette ou la danse                | Enquête résolue !   |
         | Pompiers            | Capitaine Sam    | le jet de sa lance dessine un arc-en-ciel | à dessiner et valider (106.16)                    | Mission accomplie ! |
