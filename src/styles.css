@@ -791,6 +791,8 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 .calcul, .fluence, .addition-posee { display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 100%; }
 .carte-du-calcul { font-size: 2rem; }
 .boite-a-jetons, .probleme-en-barres { display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 100%; }
+/* La boîte n'a que des couches en position absolue : la zone de l'exercice, ajustée à son contenu, lui laisserait 0 px pendant le déroulé. */
+.exercice-en-cours:has(.boite-a-jetons) { justify-self: stretch; }
 
 /* Boîte à jetons : le dessin de l'univers en deux couches (fond, puis rebord avant) avec les jetons entre les deux, rangés par 5.
    Le cadre est celui du dessin (288 × 250) : la boîte garde sa taille, ouverte ou fermée, quel que soit le nombre de jetons. */
@@ -1360,6 +1362,10 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 .parchemin .texte-de-lecture h3 { color: var(--parchemin-titre); }
 .parchemin .vers { padding: 6px 0; }
 .parchemin .mot[data-prononce], .parchemin .un-vers[data-lu="true"] { background: var(--parchemin-surligne); color: var(--parchemin-texte); }
+/* Le vers lu reste surligné, sans gras : en gras, un vers long passerait sur deux lignes et le parchemin changerait de hauteur (#155.1). */
+.parchemin .un-vers[data-lu="true"] { font-weight: inherit; }
+/* Les mots du vers lu gardent la marge intérieure de leur surlignage sans élargir le vers : sinon, il passerait aussi sur deux lignes (#155). */
+.parchemin .un-vers .mot { margin-inline: -2px; }
 .phrase, .parchemin .un-vers { transition: opacity 0.3s ease; }
 .phrase[data-devoilee="non"], .un-vers[data-devoilee="non"] { opacity: 0; }
 @media (prefers-reduced-motion: reduce) {
