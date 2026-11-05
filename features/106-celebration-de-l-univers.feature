@@ -12,9 +12,10 @@ Fonctionnalité: Une célébration propre à chaque univers
   moment « défi relevé » la première fois, univers « Sports » et sa musique), la livraison 106b (univers « Danse »,
   scénarios tagués @livraison-106b), la livraison 106c (univers « Animaux de la forêt », scénarios
   tagués @livraison-106c), la livraison 106d (univers « Princesses et fées », scénarios tagués @livraison-106d) et
-  la livraison 106e (univers « Police », scénarios tagués @livraison-106e). Ce qui ne dépend pas de l'univers
-  (toucher, clavier, Muet, espace parent, défi rejoué) n'est décrit qu'une fois, avec Coach Léo. Les scénarios
-  tagués @hors-106a décrivent les livraisons suivantes (106f à 106h) : ils sont exclus et restent @a-valider jusqu'à
+  la livraison 106e (univers « Police », scénarios tagués @livraison-106e) et la livraison 106g (moment « matière
+  réussie » à la fin de la séance, scénarios tagués @livraison-106g). Ce qui ne dépend pas de l'univers (toucher,
+  clavier, Muet, espace parent, défi rejoué) n'est décrit qu'une fois, avec Coach Léo, à la fin du défi. Les scénarios
+  tagués @hors-106a décrivent les livraisons suivantes (106f et 106h) : ils sont exclus et restent @a-valider jusqu'à
   leur livraison.
 
   Mots employés dans ces scénarios (validés, 106.1, 106.2, 106.14 et 106.26) :
@@ -63,7 +64,9 @@ Fonctionnalité: Une célébration propre à chaque univers
   et annonce disponibles dès la première image.
 
   Bibliothèque de test du défi de #100 (identifiants préfixés « e2e-100- ») : maths du CE1, « Maths 1 » à
-  « Maths 10 », deux parties du parcours, donc un seul défi, le défi 1.
+  « Maths 10 », deux parties du parcours, donc un seul défi, le défi 1 ; sciences du CE1, « Les êtres vivants »,
+  « Les saisons » et « L'eau », chacune 2 questions : réussir « L'eau » après les deux autres rend les sciences du
+  CE1 réussies et ouvre le grand défi des sciences (#137).
   Paul est le parent de Léa et de Tom. Léa a un profil enfant de niveau CE1 dans l'univers « Sports » : son
   personnage guide est Coach Léo.
 
@@ -486,7 +489,61 @@ Fonctionnalité: Une célébration propre à chaque univers
       Et « Mon parcours » et « Accueil » mesurent au moins 44 px de haut
 
   # ---------------------------------------------------------------------------------------------------------
-  # Livraisons suivantes (106f à 106h), exclues de 106a, de 106b, de 106c, de 106d et de 106e. Leur mise en place sera reprise dans leur livraison.
+  # Livraison 106g : moment « matière réussie », à la fin de la séance.
+  # ---------------------------------------------------------------------------------------------------------
+
+  Règle: La séance qui rend une matière réussie fait jouer la célébration de l'univers à la place de la célébration commune, avec l'annonce « Matière réussie ! », annoncée une seule fois aux lecteurs d'écran ; les autres annonces de la fin restent (106g)
+
+    @livraison-106g
+    Scénario: La séance qui rend les sciences du CE1 réussies fait jouer la célébration de l'univers « Sports » et annonce « Matière réussie ! »
+      Étant donné que Léa a réussi les 2 premières leçons de sciences du CE1
+      Et que Léa joue la séance complète de la leçon « L'eau »
+      Quand Léa réussit la dernière question de la séance
+      Alors Coach Léo joue la célébration de l'univers « Sports » : il marque un but, puis fait la glissade à genoux, l'avion ou la danse avec clin d'œil
+      Et la fin de la séance annonce « Matière réussie ! »
+      Et les lecteurs d'écran annoncent une seule fois « Matière réussie ! »
+      Et Coach Léo n'apparaît qu'une fois, dans la célébration de l'univers, la bulle gardant ses paroles
+      Et la fin de la séance annonce « Le grand défi des sciences est ouvert ! »
+      Mais la célébration commune n'est pas jouée
+
+  Règle: Seule la séance qui rend la matière réussie est fêtée ; rejouer une leçon d'une matière déjà réussie garde la célébration commune (106g)
+
+    @livraison-106g
+    Scénario: Rejouer une leçon d'une matière déjà réussie garde la célébration commune, sans « Matière réussie ! »
+      Étant donné que Léa a réussi les 3 premières leçons de sciences du CE1
+      Et que Léa joue la séance complète de la leçon « L'eau »
+      Quand Léa réussit la dernière question de la séance
+      Alors des confettis tombent
+      Et Coach Léo apparaît à côté de la bulle de ses paroles
+      Mais la fin de la séance n'annonce pas « Matière réussie ! »
+      Et Coach Léo ne joue pas la célébration de l'univers
+
+  Règle: Un univers dont la célébration n'est pas encore livrée garde la célébration commune, avec la même annonce « Matière réussie ! » (106g)
+
+    @livraison-106g
+    Scénario: Dans l'univers « Pompiers », pas encore livré, la séance qui rend les sciences réussies garde la célébration commune et annonce « Matière réussie ! »
+      Étant donné que Paul a changé l'univers du profil enfant de Léa en « Pompiers »
+      Et que Léa a réussi les 2 premières leçons de sciences du CE1
+      Et que Léa joue la séance complète de la leçon « L'eau »
+      Quand Léa réussit la dernière question de la séance
+      Alors des confettis tombent
+      Et la fin de la séance annonce « Matière réussie ! »
+      Mais aucune célébration de l'univers n'est jouée
+
+  Règle: Avec les mouvements réduits, la séance qui rend la matière réussie montre l'image fixe de la célébration de l'univers, le cri de victoire et l'annonce, sans confettis (106g)
+
+    @livraison-106g
+    Scénario: Avec les mouvements réduits, la séance qui rend les sciences réussies montre l'image fixe de la célébration de l'univers « Sports » et « Matière réussie ! »
+      Étant donné que l'appareil demande des mouvements réduits
+      Et que Léa a réussi les 2 premières leçons de sciences du CE1
+      Et que Léa joue la séance complète de la leçon « L'eau »
+      Quand Léa réussit la dernière question de la séance
+      Alors Léa voit l'image fixe de la célébration de l'univers « Sports », avec « BUT ! », sans mouvement
+      Et la fin de la séance annonce « Matière réussie ! », sans mouvement
+      Et aucun confetti ne tombe
+
+  # ---------------------------------------------------------------------------------------------------------
+  # Livraisons suivantes (106f et 106h), exclues de 106a à 106e et de 106g. Leur mise en place sera reprise dans leur livraison.
   # ---------------------------------------------------------------------------------------------------------
 
   Règle: Chaque univers a sa célébration de l'univers, jouée par son personnage guide, avec son cri de victoire (106f)
@@ -504,25 +561,6 @@ Fonctionnalité: Une célébration propre à chaque univers
       Exemples:
         | univers             | personnage guide | action                               | variantes                                              | cri                 |
         | Pompiers            | Capitaine Sam    | le jet de sa lance dessine un arc-en-ciel | à dessiner et valider (106.16)                    | Mission accomplie ! |
-
-  Règle: La séance qui rend une matière réussie est fêtée par la célébration de l'univers, avec l'annonce « Matière réussie ! » (106g)
-
-    @hors-106a @a-valider
-    Scénario: La séance qui rend réussie la dernière leçon de sciences du CE1 fait jouer la célébration de l'univers
-      Étant donné que Léa a réussi les 2 premières leçons de sciences du CE1
-      Et que Léa joue la séance complète de la leçon « L'eau »
-      Quand Léa réussit la dernière question de la séance
-      Alors Coach Léo joue la célébration de l'univers « Sports » : il marque un but, puis fait la glissade à genoux, l'avion ou la danse avec clin d'œil
-      Et la fin de la séance annonce « Matière réussie ! »
-      Et les lecteurs d'écran annoncent une seule fois « Matière réussie ! »
-
-    @hors-106a @a-valider
-    Scénario: Rejouer une leçon d'une matière déjà réussie ne fait pas jouer la célébration de l'univers
-      Étant donné que Léa a réussi les 3 premières leçons de sciences du CE1
-      Et que Léa joue la séance complète de la leçon « L'eau »
-      Quand Léa réussit la dernière question de la séance
-      Alors des confettis tombent
-      Mais Coach Léo ne joue pas la célébration de l'univers
 
   Règle: Au palier des tenues, le personnage guide joue sa célébration de l'univers en portant la tenue reçue ; une seule célébration par fin (106h)
 
