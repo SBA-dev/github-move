@@ -5,7 +5,7 @@ import { hasardFixe } from "../test_utils/hasard-fixe.ts";
 
 Deno.test("le premier défi relevé dans l'univers Sports se fête par la célébration de l'univers, variante tirée par le hasard", () => {
   const celebration = celebrationDeLaFin(
-    { defiRelevePourLaPremiereFois: true, matiereReussieParLaSeance: false },
+    { defiRelevePourLaPremiereFois: true, matiereReussieParLaSeance: false, tenueRecue: undefined },
     "sports",
     hasardFixe(0.5),
   );
@@ -18,7 +18,7 @@ Deno.test("le premier défi relevé dans l'univers Sports se fête par la célé
 
 Deno.test("un défi rejoué dans l'univers Sports garde la célébration commune", () => {
   const celebration = celebrationDeLaFin(
-    { defiRelevePourLaPremiereFois: false, matiereReussieParLaSeance: false },
+    { defiRelevePourLaPremiereFois: false, matiereReussieParLaSeance: false, tenueRecue: undefined },
     "sports",
     hasardFixe(0.5),
   );
@@ -28,7 +28,7 @@ Deno.test("un défi rejoué dans l'univers Sports garde la célébration commune
 
 Deno.test("le premier défi relevé dans l'univers Pompiers joue la célébration de Capitaine Sam", () => {
   const celebration = celebrationDeLaFin(
-    { defiRelevePourLaPremiereFois: true, matiereReussieParLaSeance: false },
+    { defiRelevePourLaPremiereFois: true, matiereReussieParLaSeance: false, tenueRecue: undefined },
     "pompier",
     hasardFixe(0.5),
   );
@@ -41,7 +41,7 @@ Deno.test("le premier défi relevé dans l'univers Pompiers joue la célébratio
 
 Deno.test("une matière réussie dans l'univers Sports se fête par la célébration de l'univers", () => {
   const celebration = celebrationDeLaFin(
-    { defiRelevePourLaPremiereFois: false, matiereReussieParLaSeance: true },
+    { defiRelevePourLaPremiereFois: false, matiereReussieParLaSeance: true, tenueRecue: undefined },
     "sports",
     hasardFixe(0.5),
   );
@@ -54,7 +54,7 @@ Deno.test("une matière réussie dans l'univers Sports se fête par la célébra
 
 Deno.test("une matière réussie dans l'univers Pompiers se fête par la célébration de l'univers", () => {
   const celebration = celebrationDeLaFin(
-    { defiRelevePourLaPremiereFois: false, matiereReussieParLaSeance: true },
+    { defiRelevePourLaPremiereFois: false, matiereReussieParLaSeance: true, tenueRecue: undefined },
     "pompier",
     hasardFixe(0.5),
   );
