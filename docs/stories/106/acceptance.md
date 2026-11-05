@@ -257,15 +257,15 @@ profil enfant de Léa en « Police » »). Mêmes scénarios que pour les livrai
   content et en bonne santé ; ni arrestation, ni menottes, ni arme, ni sirène, ni gyrophare, ni lumière qui
   clignote ; les petites voitures sont civiles ; aucune étoile à cinq branches (écusson à la place) ; aucun coffre.
   Les scénarios ne décrivent aucun contenu interdit.
-- Questions du modèle, sans effet sur les scénarios : 106.38 (durée de la scène d'Agent Max) et 106.39 (étoile du
-  dessin fixe d'Agent Max), détaillées dans `docs/stories/106/domain-model.md`.
+- Questions du modèle, sans effet sur les scénarios : 106.38 (durée de la scène d'Agent Max), 106.39 (étoile du
+  dessin fixe d'Agent Max) et 106.40 (planche d'Agent Max), tranchées le 2026-11-05 (section « Livraison 106e » de
+  `docs/stories/106/domain-model.md`, et « Décisions » ci-dessous).
 
 ## Questions ouvertes
 
 Aucune pour 106a, 106b ni 106c. Aucune pour 106d : 106.31, 106.34, 106.35 et 106.36 tranchées le
-2026-11-05 (section « Livraison 106d »). Pour 106e, posées par le modèle et sans effet sur les scénarios : 106.38
-(durée de la scène d'Agent Max, reco A) et 106.39 (étoile du dessin fixe d'Agent Max, reco A). Reste en attente, sans
-bloquer :
+2026-11-05 (section « Livraison 106d »). Aucune pour 106e : 106.38, 106.39 et 106.40 tranchées le 2026-11-05
+(section « Décisions »). Reste en attente, sans bloquer :
 - le **choix des musiques** des six univers par le PO, à l'écoute (106.12) : d'ici là, la musique de la célébration
   de Coach Léo et celle de Lili sont « grande victoire » ;
 - l'**accès réseau** à `opengameart.org` ou `kenney.nl` (106.27) : seul le PO peut l'ouvrir dans l'environnement.
@@ -310,5 +310,8 @@ par sa recommandation. Les questions 106.1 à 106.23 sont détaillées dans `doc
 | 106.32 Planche de Noisette (106c) | Réponse du PO 2026-11-05 : reco. Planche validée | Aucun |
 | 106.33 Jonglage (106c) | Réponse du PO 2026-11-05 : reco. Le jonglage reste comme dans la maquette | Aucun |
 | 106.35 Étoiles à cinq branches (posée par 106d) | Réponse du PO 2026-11-05 : reco (oui). Aucune étoile à cinq branches dans les scènes de Lili et de Noisette : fleurs ou étincelles à quatre branches à la place ; appliquée dans 106c pour Noisette | Aucun (les scénarios ne parlent que des « feuilles de la forêt ») |
+| 106.38 Durée de la scène d'Agent Max (106e) | Réponse du PO 2026-11-05 : « 106e reco tout » (https://github.com/SBA-dev/github-move/issues/106#issuecomment-6654943666), reco A. Le port resserre la maquette à environ 5 s en gardant chaque temps fort, puis l'accélère comme les autres pour tenir en 3 s | Aucun |
+| 106.39 Étoile du dessin fixe d'Agent Max (106e) | Réponse du PO 2026-11-05 : reco A. Le correctif du dessin fixe est l'issue #158, hors de 106e ; 106e ne touche pas le dessin fixe d'Agent Max | Aucun |
+| 106.40 Planche d'Agent Max (106e) | Réponse du PO 2026-11-05 : reco. Planche validée (`docs/stories/106/captures/106e-agent-max-*.png`) | Aucun |
 
 Correction du 2026-11-02 (sans changement de règle) : dans « Pendant la célébration de l'univers, le clavier n'est jamais bloqué », « Alors Léa voit « Qui joue ? » » devient « Alors Léa voit son accueil », car depuis #100 « Accueil » à la fin d'un défi mène à l'accueil de l'enfant (et non à « Qui joue ? » comme à la fin d'une séance, #97) ; `@wip` est retiré de la fonctionnalité.
