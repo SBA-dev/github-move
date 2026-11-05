@@ -63,7 +63,7 @@ annonce disponibles dès la première image ; écart à 97.23 noté dans la déc
 | R1 | Au premier défi relevé dans l'univers « Sports », Coach Léo joue la célébration de l'univers à la place de la célébration commune, avant de féliciter l'enfant ; il n'apparaît qu'une fois, dans la scène, sa bulle gardant ses paroles (106.28) | Au premier défi relevé, Coach Léo marque un but et le fête, puis félicite Léa · Le hasard ne choisit que la variante (Plan, 3 exemples) · Un défi relevé avec des erreurs est fêté par la même célébration · Sans réseau, Coach Léo joue quand même la célébration |
 | R2 | L'univers ne change que la mise en scène : même annonce, mêmes boutons, aucune étoile, même suite du parcours | Dans l'univers « <univers> », la fin du défi annonce et propose la même chose (Plan : Sports, Danse, Animaux de la forêt) · Après la célébration, le parcours de Léa est le même que dans un autre univers |
 | R3 | Seul le premier défi relevé est fêté par la célébration de l'univers ; un défi rejoué garde la célébration commune (confettis compris, 106.25) et « séance terminée » | Rejouer un défi relevé fait entendre « séance terminée », avec la célébration commune et sans but de Coach Léo |
-| R4 | La célébration est celle de l'univers du profil au moment du défi relevé ; un univers pas encore livré garde la célébration commune | Dans l'univers « <univers> », pas encore livré, le premier défi relevé garde la célébration commune (Plan, 3 univers depuis 106c : Princesses et fées, Police, Pompiers) · Un enfant passé dans l'univers « Sports » voit Coach Léo fêter son premier défi relevé |
+| R4 | La célébration est celle de l'univers du profil au moment du défi relevé ; un univers pas encore livré garde la célébration commune | Dans l'univers « <univers> », pas encore livré, le premier défi relevé garde la célébration commune (Plan, 2 univers depuis 106e : Princesses et fées, Pompiers ; Police retiré en 106e) · Un enfant passé dans l'univers « Sports » voit Coach Léo fêter son premier défi relevé |
 | R5 | La célébration ne retient jamais l'enfant : un toucher hors des boutons ne fait rien ; boutons et clavier agissent tout de suite et arrêtent la musique | Toucher l'écran en dehors des boutons ne change rien · Toucher « Mon parcours » y mène tout de suite et arrête la musique · Le clavier n'est jamais bloqué · À 360 px, la célébration tient dans la largeur et ses boutons restent assez grands |
 | R6 | Mouvements réduits : image fixe de la même scène, cri et annonce, sans mouvement ni confettis ; une seule annonce aux lecteurs d'écran | Avec les mouvements réduits, image fixe sans mouvement ni confettis · Les lecteurs d'écran annoncent une seule fois « Défi relevé ! », sans lire le cri de victoire |
 | R7 | La musique est un effet sonore : jouée en Muet (seule la parole est coupée), arrêtée par un écran du parent | En Muet, la musique se fait entendre, sans parole · En arrivant sur un écran du parent, la musique s'arrête |
@@ -78,7 +78,7 @@ Livraisons suivantes, scénarios tagués `@hors-106a` (tous `@a-valider`) :
 
 | Livraison | Règle | Scénarios |
 |---|---|---|
-| 106d à 106f | Chaque univers a sa célébration, jouée par son personnage guide, avec son cri de victoire | Dans l'univers « <univers> », <personnage guide> fête le premier défi relevé à sa façon (Plan : Princesses et fées, Police, Pompiers ; Danse livré en 106b, Animaux de la forêt en 106c) |
+| 106d et 106f | Chaque univers a sa célébration, jouée par son personnage guide, avec son cri de victoire | Dans l'univers « <univers> », <personnage guide> fête le premier défi relevé à sa façon (Plan : Princesses et fées, Pompiers ; Danse livré en 106b, Animaux de la forêt en 106c, Police en 106e) |
 | 106g | La séance qui rend une matière réussie est fêtée par la célébration de l'univers, annonce « Matière réussie ! » | La séance qui rend réussie la dernière leçon de sciences du CE1 fait jouer la célébration · Rejouer une leçon d'une matière déjà réussie ne la fait pas jouer |
 | 106h | Au palier des tenues, le personnage guide joue sa célébration en portant la tenue reçue ; une seule célébration par fin | La séance qui fait recevoir une tenue fait danser Coach Léo avec sa nouvelle tenue · Une séance qui rend la matière réussie et fait recevoir une tenue ne joue qu'une célébration |
 
@@ -168,9 +168,49 @@ l'univers du profil enfant de Léa en « Animaux de la forêt » »). Mêmes sc�
   (106.31), la planche de Noisette est validée (106.32), le jonglage reste comme dans la maquette (106.33) et aucune
   étoile à cinq branches ne tombe avec les feuilles (106.35). Aucun scénario ne change.
 
+## Livraison 106e
+
+Univers **Police**, scénarios tagués `@livraison-106e`, dans une règle à `Contexte` (« Paul a changé l'univers du
+profil enfant de Léa en « Police » »). Mêmes scénarios que pour les livraisons 106b et 106c (5 scénarios, 7 cas) :
+
+| # | Règle | Scénarios (106e) |
+|---|---|---|
+| R10 | Dans l'univers « Police », Agent Max joue au premier défi relevé sa célébration de l'univers à la place de la célébration commune, avec les mêmes garanties que Coach Léo : image fixe en mouvements réduits, cri de victoire jamais lu, place tenue à 360 px | Au premier défi relevé dans l'univers « Police », Agent Max retrouve un chiot perdu et le fête, puis félicite Léa · Le hasard ne choisit que la variante : avec « <variante> », Agent Max retrouve toujours le chiot perdu (Plan : le chef d'orchestre, le tour en trottinette, la danse de la victoire) · Avec les mouvements réduits, Léa voit l'image fixe de la célébration de l'univers « Police », sans mouvement, ni confettis, ni confettis du commissariat · Dans l'univers « Police », les lecteurs d'écran annoncent une seule fois « Défi relevé ! », sans lire « Enquête résolue ! » · À 360 px, la célébration de l'univers « Police » tient dans la largeur et ses boutons restent assez grands |
+
+- Noms des variantes fixés d'après la maquette validée `docs/maquettes/agent-max-police.html` (boutons
+  « A · Orchestre », « B · Trottinette », « C · Danse ») : « le chef d'orchestre », « le tour en trottinette », « la
+  danse de la victoire » (106.26 ; l'ancien exemple disait « l'orchestre, la trottinette ou la danse »). Ils sont
+  toujours écrits en entier : « la danse de la victoire » est une variante d'Agent Max, pas la **danse de victoire**
+  du glossaire (106.6 A, 106h).
+- Cri de victoire « Enquête résolue ! », affiché et jamais lu ; musique de la célébration d'Agent Max (« grande
+  victoire » tant que le PO n'a pas choisi, 106.12). « tuut ! », « dring ! » et l'enseigne du commissariat font
+  partie du dessin : ni joués, ni annoncés.
+- Les confettis lancés sur la place (« les confettis du commissariat ») font partie de la célébration de l'univers,
+  comme les confettis de la scène de Coach Léo (106.24 appliquée) : ils remplacent les confettis de la célébration
+  commune et ne tombent pas en mouvements réduits.
+- Agent Max n'apparaît qu'une fois, dans la scène, sa bulle gardant ses paroles (106.28). « Chapitre réussi ! » de la
+  maquette n'est pas repris : l'annonce reste « Défi relevé ! ».
+- Police est retiré du Plan « pas encore livré » (R4) et des exemples `@hors-106a` (106d et 106f).
+- Ce qui ne dépend pas de l'univers (toucher, boutons et clavier, Muet, espace parent, défi rejoué, annonce et
+  parcours identiques : R2, R3, R5, R7) reste décrit une seule fois, avec Coach Léo.
+- Example mapping : Léa (CE1) passée en Police relève le défi 1 de maths → Agent Max retrouve un chiot perdu, puis le
+  chef d'orchestre, le tour en trottinette ou la danse de la victoire ; « Enquête résolue ! » ; musique, puis « Bravo
+  Léa ! Tu as relevé le défi 1 ! » ; ni confettis ni « séance terminée » de la célébration commune. Tirage fixé à « le
+  tour en trottinette » → chiot retrouvé, puis le tour en trottinette. Mouvements réduits → image fixe avec
+  « Enquête résolue ! » et « Défi relevé ! », ni confettis de la célébration commune ni confettis du commissariat.
+  Lecteur d'écran → « Défi relevé ! » une fois, jamais « Enquête résolue ! ». 360 px → « Enquête résolue ! »
+  visible, rien ne dépasse, boutons de 44 px.
+- Contenus (vérifiés par la review et la planche, pas par un scénario) : une enquête résolue qui aide ; le chiot est
+  content et en bonne santé ; ni arrestation, ni menottes, ni arme, ni sirène, ni gyrophare, ni lumière qui
+  clignote ; les petites voitures sont civiles ; aucune étoile à cinq branches (écusson à la place) ; aucun coffre.
+  Les scénarios ne décrivent aucun contenu interdit.
+- Questions du modèle, sans effet sur les scénarios : 106.38 (durée de la scène d'Agent Max) et 106.39 (étoile du
+  dessin fixe d'Agent Max), détaillées dans `docs/stories/106/domain-model.md`.
+
 ## Questions ouvertes
 
-Aucune pour 106a, 106b ni 106c. Reste en attente, sans bloquer :
+Aucune pour 106a, 106b ni 106c. Pour 106e, posées par le modèle et sans effet sur les scénarios : 106.38 (durée de
+la scène d'Agent Max, reco A) et 106.39 (étoile du dessin fixe d'Agent Max, reco A). Reste en attente, sans bloquer :
 - le **choix des musiques** des six univers par le PO, à l'écoute (106.12) : d'ici là, la musique de la célébration
   de Coach Léo et celle de Lili sont « grande victoire » ;
 - l'**accès réseau** à `opengameart.org` ou `kenney.nl` (106.27) : seul le PO peut l'ouvrir dans l'environnement.
@@ -208,7 +248,7 @@ par sa recommandation. Les questions 106.1 à 106.23 sont détaillées dans `doc
 | 106.23 Tenue portée | Réponse du PO 2026-11-02 : reco. Le personnage guide garde sa tenue portée pendant la célébration | Aucun en 106a (vérifié par la review) ; 106h |
 | 106.24 Confettis de Coach Léo | Réponse du PO 2026-11-02 : reco. Ils font partie de sa célébration de l'univers, distincts des confettis de la célébration commune, qui ne tombent pas ; en mouvements réduits, aucun confetti | R1 (« la célébration commune n'est pas jouée »), R6 (« aucun confetti ne tombe ») ; appliquée en 106b aux pétales de la salle de Lili : R8 (« la célébration commune n'est pas jouée », « aucun confetti ni pétale ne tombe ») |
 | 106.25 Défi rejoué | Réponse du PO 2026-11-02 : reco. Il garde les confettis de la célébration commune en plus de « séance terminée » | R3 (« des confettis tombent ») |
-| 106.26 Noms des variantes (hors 106a) | Réponse du PO 2026-11-02 : reco. Fixés à la livraison de chaque univers, d'après sa maquette | Danse, fixés en 106b d'après `lili-danse.html` : « le grand jeté », « le ruban », « les petits sauts » (R8, mots employés du `.feature`) ; Animaux, fixés en 106c d'après `noisette-animaux.html` : « le jonglage », « la noisette croquée », « les joues pleines » (R9) ; scénarios 106d et 106e restent `@a-valider` |
+| 106.26 Noms des variantes (hors 106a) | Réponse du PO 2026-11-02 : reco. Fixés à la livraison de chaque univers, d'après sa maquette | Danse, fixés en 106b d'après `lili-danse.html` : « le grand jeté », « le ruban », « les petits sauts » (R8, mots employés du `.feature`) ; Animaux, fixés en 106c d'après `noisette-animaux.html` : « le jonglage », « la noisette croquée », « les joues pleines » (R9) ; Police, fixés en 106e d'après `agent-max-police.html` : « le chef d'orchestre », « le tour en trottinette », « la danse de la victoire » (R10) ; scénarios 106d restent `@a-valider` |
 | 106.27 Accès réseau aux musiques | Réponse du PO 2026-11-02 : reco (oui), mais l'accès ne peut être ouvert que par le PO ; 106a part avec « grande victoire » | Aucun |
 | 106.28 Personnage guide à côté de la bulle pendant la célébration de l'univers : le garder ou le cacher ? | Réponse du PO 2026-11-02 : « cacher ». Pendant la célébration de l'univers, le personnage guide n'apparaît qu'une fois, dans la scène ; sa bulle garde ses paroles et « Réécouter ». Avec la célébration commune (défi rejoué, univers pas encore livré), rien ne change : il reste à côté de sa bulle | R1 (« Coach Léo n'apparaît qu'une fois, dans la célébration de l'univers, la bulle gardant ses paroles »), R3 (« Coach Léo apparaît à côté de la bulle de ses paroles ») |
 | 106.31 Tenue portée pendant la célébration (106c) | Réponse du PO 2026-11-05 : reco. Renvoyée à 106h pour tous les univers ; Noisette, comme Coach Léo et Lili, est dans sa tenue de base pendant la célébration (https://github.com/SBA-dev/github-move/issues/64#issuecomment-6651992972) | Aucun |
