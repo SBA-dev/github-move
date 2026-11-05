@@ -50,6 +50,7 @@ export function creerLesEffets(racine: SVGSVGElement, animee: boolean) {
 
   /** La trace de la baguette : des points qui s'éteignent. Jamais affichée avec les mouvements réduits. */
   function dessinerLaTrainee(t: number, bout: Point | null) {
+    poser(n("trainee"), "opacity", animee && bout ? 1 : 0);
     if (!animee || !bout) return;
     const derniere = trace[trace.length - 1];
     if (!derniere || Math.hypot(bout.x - derniere.x, bout.y - derniere.y) > 3) trace.push({ ...bout, t });
