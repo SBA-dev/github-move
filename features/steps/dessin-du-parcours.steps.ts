@@ -387,7 +387,8 @@ Then(/^les lecteurs d'écran annoncent une liste ordonnée de (\d+) leçons$/, a
   const liste = dessin(page).getByRole("list");
   await expect(liste).toHaveCount(1);
   expect(await liste.evaluate((element) => element.tagName), "liste ordonnée").toBe("OL");
-  await expect(liste.getByRole("listitem")).toHaveCount(Number(nombre));
+  const lecons = liste.getByRole("listitem").filter({ hasNot: page.getByTestId("repere-du-defi") });
+  await expect(lecons).toHaveCount(Number(nombre));
 });
 
 Then(new RegExp(`^ils n'annoncent ni le dessin du parcours ni le dessin de ${PERSONNAGES}$`), async ({ page }, _personnage: string) => {
