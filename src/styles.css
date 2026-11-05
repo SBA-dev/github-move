@@ -1356,6 +1356,8 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 .parchemin .texte-de-lecture h3 { color: var(--parchemin-titre); }
 .parchemin .vers { padding: 6px 0; }
 .parchemin .mot[data-prononce], .parchemin .un-vers[data-lu="true"] { background: var(--parchemin-surligne); color: var(--parchemin-texte); }
+/* Le vers lu reste surligné, sans gras : en gras, un vers long passerait sur deux lignes et le parchemin changerait de hauteur (#155.1). */
+.parchemin .un-vers[data-lu="true"] { font-weight: inherit; }
 .phrase, .parchemin .un-vers { transition: opacity 0.3s ease; }
 .phrase[data-devoilee="non"], .un-vers[data-devoilee="non"] { opacity: 0; }
 @media (prefers-reduced-motion: reduce) {
