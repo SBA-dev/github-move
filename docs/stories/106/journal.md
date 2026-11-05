@@ -56,6 +56,69 @@ Branche de base : `main` (`47a6d34`). Branche : `feature/106-celebration-de-l-un
 
 ---
 
+# Livraison 106b : univers Danse (Lili)
+
+Branche de base : `main` (`597a4a5`). Branche : `feature/106b-celebration-danse`.
+Équipe lancée par `/graphe` (« graphe 106b », issue de coordination #64), session `session_015z4jmMYrXXzEe8XSDXSRrg`.
+
+## 2026-11-04
+- 23:25 UTC : démarrage. Cadrage de #106 déjà validé (« 106 reco tout », 106.28 « cacher ») ; maquette `lili-danse.html` validée par le PO le 2026-10-27. Musique : « grande victoire » (106.27 toujours fermé).
+- 23:30 UTC : complément de modèle 106b (`domain-modeler`) et scénarios 106b (`po-acceptance`) lancés en parallèle. Dette de 106a à traiter : clés de variante liées au domaine, scènes chargées à la demande, ids SVG préfixés.
+- 23:45 UTC : CADRAGE PRÊT publié pour information (aucune question nouvelle) : noms des variantes « le grand jeté », « le ruban », « les petits sauts » (106.26) ; pétales de la salle = 106.24.
+
+### TDD, bloc « Motivation, célébration Danse et clés de variante »
+- RED `5916536` (rouge de compilation : `VARIANTES_DES_UNIVERS` non exporté), GREEN `9d9304d` (entrée `danse`, `VARIANTES_DES_UNIVERS`, `UniversCelebre`, `VarianteDe<U>`, union discriminée), refactor `389e62f` (le front tire les clés Sports du domaine).
+- `418a489` : le test « univers pas encore livré » de `celebrationDeLaFin` prend `animaux` (Danse est livré).
+- `deno test` : 2808 verts ; `tsc` OK.
+- Revue delta du bloc (`5916536..418a489`) : APPROUVÉ. Non bloquants : `418a489` aurait dû être dans le RED (précondition changée par Danse livré ; branche déjà poussée, pas de réécriture) ; type de `VARIANTES_DES_UNIVERS` trop large ; aucun garde-fou pour un univers oublié dans `celebrationDe`.
+- Correction des non bloquants : RED `97eb6cf` (test de typage TS2322, garde-fou d'exhaustivité), GREEN `3e53fef` (type mappé), refactor `a0a9d87` (table `CELEBRANTS` : un univers oublié ne compile plus). `deno test` : 2810 verts.
+
+### Câblage
+- `6142e72` : code commun des scènes dans `src/univers/celebrations/commun/`, Sports chargé à la demande.
+- `b1fbfb7` : scène Danse (Lili) chargée à la demande, ids `danse-`, pétales sur canvas, image fixe en mouvements réduits. Morceaux : principal 1 335 → 1 299 kB ; Sports 33,7 kB ; Danse 35,7 kB ; commun 5,5 kB ; tous précachés par le service worker.
+- `1314434` : planches de Lili (`captures/106b-lili-clair.png`, `106b-lili-sombre.png`), relues contre la règle absolue par l'orchestrateur : rien à signaler. Présentées au PO (#106.29 validation, #106.30 zone de peau sous la chevelure en vue de dos, comme la maquette).
+- Steps E2E `995ea86` (non lancés : verrou `base` demandé, 3e dans la file derrière #137 et #130).
+
+### Review de la branche
+- Cycle 1 (`68a2eab`) : À CORRIGER. Bloquant : premier `React.lazy` de l'application sans repli, un import de scène qui échoue (ancienne version après `skipWaiting`, hors ligne avant le précache) aurait laissé un écran blanc à la fin du défi (régression pour Sports). Non bloquants : saut de `vue` en fin de pirouette, lien générique univers/variante, tables de variantes des steps, `Object.hasOwn`, décalage de mise en page.
+- Corrections : steps `6271ec7` ; `c4bc8a0` (repli `chargerSansEchec`, espace réservé de même ratio sans `data-testid`), `70cdb85` (`E.instantanee`), `77d48d5` (générique), `a179a94` (`Object.hasOwn`). Repli vérifié par un script Playwright non commité (import coupé : espace réservé, boutons présents, aucune erreur).
+- Cycle 2 (`a179a94`) : APPROUVÉ. Non bloquants restants : repli de chargement sans test automatisé (pas de scénario : à proposer au PO), `a179a94` aurait pu être un `refactor`.
+
+## 2026-11-05
+- 00:23 UTC : réponse du PO (annonce [Responsable] sur #106) : « planche 106b OK, 106.30 corriger ». Planche `1314434` validée.
+- 106.30 : `9edd375` (de dos, la chevelure recouvre l'arrière du crâne ; de face et de profil, dessin identique au bit près), captures `8101cb2` (`106b-lili-pirouette-de-dos.png`, `106b-lili-tetes-avant-apres.png`), relues par l'orchestrateur. Revue delta : APPROUVÉ (non bloquants : constantes du recouvrement à nommer, point de fermeture du tracé, ombre de nuque devenue invisible de dos).
+
+### E2E (verrou `base` accordé le 2026-11-05 00:39 UTC)
+- `main` intégrée avant le run (`af47f19`, avec #130) : merge `6f4c673`, sans conflit ; tsc, 2810 tests, build OK.
+- Sonde `admin/users` : 3 réponses en moins de 0,6 s.
+- Run 1, `@issue-106` hors `@hors-106a`, `telephone`, 1 worker : **30/31**. KO « Sans réseau, Coach Léo joue quand même la célébration » : vrai bug introduit par le chargement à la demande (l'`import()` du morceau échoue hors ligne, aucune scène).
+- Correctif 1 `c9dc12b` (préchargement à l'ouverture du défi, promesse mémorisée) : revue APPROUVÉ ; rejeu ciblé 8/9, toujours KO (course : le réseau est coupé juste après l'ouverture du défi, avant la fin du chargement des modules).
+- Correctif 2 `a4ced3d` (préchargement dès que l'univers du profil en cours est connu, `src/Application.tsx` ; une promesse en échec est oubliée pour retenter) : revue APPROUVÉ ; scénario vert.
+- Run complet, HEAD `a4ced3d` : **31/31 verts** (10,6 min).
+
+## Mesures (106b)
+
+| Mesure | Valeur |
+|---|---|
+| Durée | 2026-11-04 23:25 UTC → 2026-11-05 01:15 UTC, PRÊTE À MERGER (environ 1 h 50) |
+| Attente | validation de la planche par le PO : environ 50 min (sans bloquer : TDD, câblage et review avancés pendant ce temps) ; verrou `base` : environ 1 h 05 (file : #137, #130) |
+| Cycles TDD | 3 comportements (catalogue Danse et clés publiées ; type mappé et exhaustivité ; un test de précondition corrigé) |
+| Review | 1 revue de bloc (APPROUVÉ), 2 cycles sur la branche (À CORRIGER puis APPROUVÉ), 3 revues delta (106.30, `c9dc12b`, `a4ced3d` : APPROUVÉ), 1 review finale |
+| E2E | 3 runs sur `telephone` (30/31, rejeu ciblé 8/9, 31/31) et 1 scénario seul (vert) |
+| Intégrations de `main` | 1 (`af47f19`), sans conflit |
+| Escalades | aucune nouvelle ; 106.27 (accès réseau aux musiques) toujours ouvert |
+| Verrous | `base` (00:39 → 01:15 UTC) |
+| Tokens | relevés par le responsable |
+
+### Merge (autorisé par le PO : « merge 106b OK », annonce [Responsable] sur #64, 2026-11-05 07:07 UTC ; verrous `merge` et `base` accordés)
+- `main` intégrée (`adb9329`, avec #137) : merge `a21481c`, un conflit d'imports dans `src/defis/EcranDeDefi.tsx` (noms de #137 + `prechargerLaSceneDe`), résolu par `implementer`. tsc, build, 2877 tests, lint, fmt, bddgen OK.
+- Revue du delta d'intégration : APPROUVÉ. À signaler au PO : depuis #137, `FinDuDefi` sert aussi au grand défi, donc la célébration de l'univers se joue aussi au premier grand défi relevé (règle « premier relevé » inchangée ; pas de scénario de 106b).
+- Sonde : 3 réponses en moins de 1,4 s. Rejeu `@issue-106` hors `@hors-106a`, `telephone`, 1 worker, HEAD `a21481c` : **31/31 verts** (décision 0022).
+- Pas de CI sur la PR.
+- Mesures mises à jour : intégrations de `main` 2 (`af47f19` sans conflit, `adb9329` avec 1 conflit d'imports) ; E2E 4 runs (dont le rejeu sous verrou `merge`) ; attente de l'autorisation de merge : environ 5 h 50 (nuit).
+
+---
+
 # Livraison 106c : univers Animaux de la forêt (Noisette)
 
 Branche de base : `main` (`af47f19`). Branche : `feature/106c-celebration-animaux`.

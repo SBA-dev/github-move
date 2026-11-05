@@ -135,3 +135,31 @@ Deno.test("un jour de défi qui n'est pas au format AAAA-MM-JJ est refusé", () 
     assertThrows(() => lire({ ...corpsValide(), jour }), EntreeInvalide, "jour");
   }
 });
+
+Deno.test("le corps d'un grand défi est lu avec sa matière, sa classe et sa marque, sans numéro", () => {
+  const corps = { ...corpsValide(), defi: { matiere: "maths", niveau: "CE1", grandDefi: true } };
+
+  assertEquals(lire(corps).defi, { matiere: matiereDeCode("maths"), niveau: Niveau.de("CE1"), grandDefi: true });
+});
+
+Deno.test("un corps qui donne à la fois un numéro et la marque du grand défi, ou ni l'un ni l'autre, est refusé", () => {
+  const defis = [
+    { matiere: "maths", niveau: "CE1", numero: 2, grandDefi: true },
+    { matiere: "maths", niveau: "CE1", grandDefi: false },
+    { matiere: "maths", niveau: "CE1" },
+  ];
+  for (const defi of defis) {
+    assertThrows(() => lire({ ...corpsValide(), defi }), EntreeInvalide, "defi");
+  }
+});
+
+Deno.test("un grand défi avec 12 questions est accepté, avec 13 il est refusé", () => {
+  const defi = { matiere: "maths", niveau: "CE1", grandDefi: true };
+  const corpsDe = (nombre: number) => {
+    const questions = Array.from({ length: nombre }, (_, i) => `b:question ${i}`);
+    return { ...corpsValide(), defi, questions, tirages: questions.map(() => []), reponses: questions.map(() => []) };
+  };
+
+  assertEquals(lire(corpsDe(12)).questions.length, 12);
+  assertThrows(() => lire(corpsDe(13)), EntreeInvalide, "questions");
+});

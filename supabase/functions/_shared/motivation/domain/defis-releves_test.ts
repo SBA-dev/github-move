@@ -8,6 +8,10 @@ function defi(matiere: CodeDeMatiere, niveau: string, numero: number): DefiRelev
   return { matiere: matiereDeCode(matiere), niveau: Niveau.de(niveau), numero };
 }
 
+function grandDefi(matiere: CodeDeMatiere, niveau: string): DefiReleve {
+  return { matiere: matiereDeCode(matiere), niveau: Niveau.de(niveau), grandDefi: true };
+}
+
 Deno.test("un défi terminé pour la première fois est annoncé « Défi relevé ! » et fête la grande victoire", () => {
   const issue = defiReleveParLaSeance([], defi("maths", "CE1", 1));
 
@@ -78,4 +82,54 @@ Deno.test("les défis relevés sont rangés par matière, puis classe, puis num�
     "Défi 1 · Maths · CE1",
     "Défi 2 · Maths · CE1",
   ]);
+});
+
+Deno.test("un grand défi terminé pour la première fois est annoncé « Grand défi relevé ! » et fête la grande victoire", () => {
+  const issue = defiReleveParLaSeance([], grandDefi("maths", "CE1"));
+
+  assertEquals(issue, { annonce: "Grand défi relevé !", effetSonore: "grandeVictoire" });
+});
+
+Deno.test("un grand défi déjà relevé et rejoué n'est pas annoncé et fait jouer la séance terminée", () => {
+  const issue = defiReleveParLaSeance([grandDefi("maths", "CE1")], grandDefi("maths", "CE1"));
+
+  assertEquals(issue, { annonce: undefined, effetSonore: "seanceTerminee" });
+});
+
+Deno.test("un défi d'une partie relevé de la même matière ne fait pas passer le grand défi pour rejoué", () => {
+  const issue = defiReleveParLaSeance([defi("maths", "CE1", 1)], grandDefi("maths", "CE1"));
+
+  assertEquals(issue.annonce, "Grand défi relevé !");
+});
+
+Deno.test("un grand défi relevé ne fait pas passer un défi d'une partie pour rejoué", () => {
+  const issue = defiReleveParLaSeance([grandDefi("maths", "CE1")], defi("maths", "CE1", 1));
+
+  assertEquals(issue.annonce, "Défi relevé !");
+});
+
+Deno.test("un grand défi relevé s'écrit « Grand défi · Sciences · CE1 »", () => {
+  assertEquals(lignesDesDefisReleves([grandDefi("sciences", "CE1")]), ["Grand défi · Sciences · CE1"]);
+});
+
+Deno.test("le grand défi est rangé après les défis de la même matière et de la même classe", () => {
+  const lignes = lignesDesDefisReleves([
+    grandDefi("maths", "CE1"),
+    defi("maths", "CE1", 2),
+    defi("maths", "CE1", 1),
+    defi("maths", "CE2", 1),
+  ]);
+
+  assertEquals(lignes, [
+    "Défi 1 · Maths · CE1",
+    "Défi 2 · Maths · CE1",
+    "Grand défi · Maths · CE1",
+    "Défi 1 · Maths · CE2",
+  ]);
+});
+
+Deno.test("un grand défi relevé et rejoué n'apparaît qu'une seule fois", () => {
+  const lignes = lignesDesDefisReleves([grandDefi("maths", "CE1"), grandDefi("maths", "CE1")]);
+
+  assertEquals(lignes, ["Grand défi · Maths · CE1"]);
 });

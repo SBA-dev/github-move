@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { type Defi, defiOuvertParLaSeance, Etoiles, meilleuresEtoilesReunies, parcoursDeLaMatiere } from "@domain/apprentissage";
+import { type Defi, defiOuvertParLaSeance, Etoiles, type GrandDefi, meilleuresEtoilesReunies, parcoursDeLaMatiere } from "@domain/apprentissage";
 import type { MeilleuresEtoilesDuProfil } from "@domain/motivation";
 import { niveauDuProfil } from "../parcours/niveau-du-profil.ts";
 import { chargerToutesLesLecons } from "../seance/bibliotheque.ts";
@@ -7,7 +7,7 @@ import { etoilesGagneesPendantLUtilisation } from "../seance/fin-de-seance/etoil
 import { lireLEtatDuTestDeDepart } from "../test-de-depart/etat-du-test-de-depart.ts";
 import { lireLesDefisReleves } from "./lire-les-defis-releves.ts";
 
-export type DefiOuvert = { readonly pret: boolean; readonly defi: Defi | undefined };
+export type DefiOuvert = { readonly pret: boolean; readonly defi: Defi | GrandDefi | undefined };
 
 type Seance = { readonly enfant: string; readonly lecon: string };
 
@@ -22,7 +22,7 @@ async function defiOuvertParLaSeanceTerminee(
   { enfant, lecon: leconId }: Seance,
   niveau: string,
   meilleuresAvant: Promise<MeilleuresEtoilesDuProfil | undefined>,
-): Promise<Defi | undefined> {
+): Promise<Defi | GrandDefi | undefined> {
   const niveauDeLEnfant = niveauDuProfil(niveau);
   const [avant, lecons, testDeDepart, defisReleves] = await Promise.all([
     meilleuresAvant,

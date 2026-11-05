@@ -7,14 +7,22 @@ import {
   QuestionHorsDuDefi,
 } from "./erreurs.ts";
 import type { DefiTermineAEnregistrer } from "./defi-termine-a-enregistrer.ts";
-import { type Defi, type DefiReleve, defisDeLaMatiere, etatDuDefi } from "./defis-de-la-matiere.ts";
+import {
+  type Defi,
+  type DefiReleve,
+  defisDeLaMatiere,
+  estUnGrandDefi,
+  etatDuDefi,
+  type GrandDefi,
+  grandDefiDeLaMatiere,
+} from "./defis-de-la-matiere.ts";
 import {
   enveloppantLesErreursDeRejeu,
   rejouerLesReponsesDeLaQuestion,
   verifierUnTirageEtDesReponsesParQuestion,
 } from "./rejouer-la-reponse.ts";
 import { jourDeLAppareil } from "./jour-de-l-appareil.ts";
-import { type EntreesDuParcours, parcoursDeLaMatiere } from "./parcours.ts";
+import { type EntreesDuParcours, type Parcours, parcoursDeLaMatiere } from "./parcours.ts";
 import { estUnPlanPossible, type QuestionDuDefi, questionsPosablesDuDefi } from "./plan-du-defi.ts";
 import { type DefiTermine, SeanceDeDefi } from "./seance-de-defi.ts";
 import { tireurDeLaQuestionEnvoyee } from "./tireur.ts";
@@ -24,10 +32,10 @@ export function revaliderLeDefi(
   entrees: EntreesDuParcours,
   defisReleves: readonly DefiReleve[],
 ): DefiTermine {
-  const { matiere, numero } = envoi.defi;
+  const { matiere } = envoi.defi;
   if (envoi.defi.niveau.valeur !== entrees.niveau.valeur) throw new DefiInconnu();
   const parcours = parcoursDeLaMatiere(entrees, matiere);
-  const defi = defisDeLaMatiere(parcours, matiere, entrees.niveau).find((candidat) => candidat.numero === numero);
+  const defi = defiEnvoye(envoi.defi, parcours, entrees);
   if (!defi) throw new DefiInconnu();
   if (etatDuDefi(defi, parcours, defisReleves).genre === "aVenir") throw new DefiAVenir();
 
@@ -45,11 +53,19 @@ export function revaliderLeDefi(
   );
 }
 
+function defiEnvoye(envoye: DefiReleve, parcours: Parcours, entrees: EntreesDuParcours): Defi | GrandDefi | undefined {
+  const { matiere } = envoye;
+  const { numero } = envoye;
+  return estUnGrandDefi(envoye)
+    ? grandDefiDeLaMatiere(parcours, matiere, entrees.niveau)
+    : defisDeLaMatiere(parcours, matiere, entrees.niveau).find((candidat) => candidat.numero === numero);
+}
+
 function rejouer(
   envoi: DefiTermineAEnregistrer,
   entrees: EntreesDuParcours,
   questions: readonly QuestionDuDefi[],
-  defi: Defi,
+  defi: Defi | GrandDefi,
 ): DefiTermine {
   verifierUnTirageEtDesReponsesParQuestion(envoi, incoherente);
   const jour = jourDeLAppareil(envoi.jour, envoi.termineeLe);

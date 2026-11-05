@@ -47,12 +47,24 @@ export {
 export { accueillirEnRevision, annonceDeLaSeanceDeRevision, parolesDeFinDeRevision } from "./paroles-de-revision.ts";
 export {
   annonceDuDefiOuvert,
+  annonceDuDefiOuvertPour,
+  annonceDuGrandDefiOuvert,
   inviterARelever,
+  inviterAReleverLeGrandDefi,
   nomDuDefi,
+  nomDuDefiOuvert,
+  nomDuGrandDefi,
   parolesDeDebutDeDefi,
+  parolesDeDebutDeGrandDefi,
+  parolesDeDebutDuDefi,
   parolesDeFinDeDefi,
+  parolesDeFinDeGrandDefi,
+  parolesDeFinDuDefiReleve,
   phraseDeFinAvecLeDefi,
+  phraseDeFinAvecLeDefiOuvert,
+  phraseDeFinAvecLeGrandDefi,
   titreDuDefiReleve,
+  titreDuGrandDefiReleve,
 } from "./paroles-du-defi.ts";
 export { type SectionDeLEcran, sectionsAAfficher, sectionsDeLEcran } from "./sections-de-l-ecran.ts";
 export { type PastilleDeRecord, pastillesDesRecords, type RecordDuProfil } from "./records-de-calcul-rapide.ts";
@@ -194,5 +206,7 @@ export {
   celebrationDe,
   type CelebrationDeLUnivers,
   type CriDeVictoire,
-  type VarianteDeLaCelebration,
+  type UniversCelebre,
+  type VarianteDe,
+  VARIANTES_DES_UNIVERS,
 } from "./celebrations-des-univers.ts";

@@ -1,10 +1,15 @@
 import { assert, assertEquals, assertThrows } from "@std/assert";
 import { type Lecon, lireLecon, matiereDeCode, Niveau } from "../../catalogue/domain/index.ts";
 import { hasardSansMelange } from "../test_utils/hasard-fixe.ts";
-import type { Defi } from "./defis-de-la-matiere.ts";
+import type { Defi, GrandDefi } from "./defis-de-la-matiere.ts";
 import { AucuneQuestionPourLeDefi } from "./erreurs.ts";
 import type { Hasard } from "./hasard.ts";
-import { planDuDefi, questionsPosablesDuDefi } from "./plan-du-defi.ts";
+import {
+  estUnPlanPossible,
+  NOMBRE_DE_QUESTIONS_DU_GRAND_DEFI,
+  planDuDefi,
+  questionsPosablesDuDefi,
+} from "./plan-du-defi.ts";
 
 const programme = { section: "section", citation: "citation" };
 const hasardToujoursEnTete: Hasard = { entre0et1: () => 0 };
@@ -35,6 +40,20 @@ function leconsDe(...nombresDeQuestions: number[]): Lecon[] {
 
 function defiDe(lecons: readonly Lecon[]): Defi {
   return { matiere: matiereDeCode("maths"), niveau: Niveau.de("CE1"), numero: 1, lecons: lecons.map(({ id }) => id) };
+}
+
+function grandDefiDe(lecons: readonly Lecon[]): GrandDefi {
+  return {
+    matiere: matiereDeCode("maths"),
+    niveau: Niveau.de("CE1"),
+    grandDefi: true,
+    lecons: lecons.map(({ id }) => id),
+  };
+}
+
+function questionsDuGrandDefiParLecon(lecons: readonly Lecon[], hasard: Hasard = hasardSansMelange()): number[] {
+  const { questions } = planDuDefi(grandDefiDe(lecons), lecons, hasard);
+  return lecons.map(({ id }) => questions.filter(({ origine }) => origine.leconDOrigine === id).length);
 }
 
 function questionsParLecon(lecons: readonly Lecon[], hasard: Hasard = hasardSansMelange()): number[] {
@@ -230,4 +249,66 @@ Deno.test("le nombre de questions d'une leçon est compté sans les questions d�
   ];
 
   assertEquals(questionsParLecon(lecons), [1, 0]);
+});
+
+Deno.test("le grand défi pose 12 questions, réparties à parts égales entre les leçons", () => {
+  assertEquals(NOMBRE_DE_QUESTIONS_DU_GRAND_DEFI, 12);
+
+  const parLecon = questionsDuGrandDefiParLecon(leconsDe(4, 4, 4, 4, 4));
+
+  assertEquals(parLecon.reduce((a, b) => a + b, 0), 12);
+  assert(parLecon.every((nombre) => nombre >= 2 && nombre <= 3));
+});
+
+Deno.test("un grand défi de 31 leçons riches tire 12 leçons au hasard, une question chacune", () => {
+  const parLecon = questionsDuGrandDefiParLecon(leconsDe(...Array(31).fill(2)), hasardToujoursEnTete);
+
+  assertEquals(parLecon.filter((nombre) => nombre === 1).length, 12);
+  assertEquals(parLecon.filter((nombre) => nombre === 0).length, 19);
+});
+
+Deno.test("avec moins de 12 questions posables, le grand défi les pose toutes, une fois chacune, mélangées", () => {
+  const lecons = leconsDe(2, 2, 1, 1);
+  const attendues = questionsPosablesDuDefi(grandDefiDe(lecons), lecons).map(({ identite }) => identite.valeur).sort();
+
+  const { questions } = planDuDefi(grandDefiDe(lecons), lecons, hasardToujoursEnTete);
+
+  assertEquals(questions.map(({ identite }) => identite.valeur).sort(), attendues);
+  assertEquals(questions.length, 6);
+});
+
+Deno.test("le défi d'une partie garde 10 questions, même parmi 12 leçons riches", () => {
+  const lecons = leconsDe(...Array(12).fill(4));
+
+  const { questions } = planDuDefi(defiDe(lecons), lecons, hasardToujoursEnTete);
+
+  assertEquals(questions.length, 10);
+});
+
+function clesDeLaLecon(defi: Defi | GrandDefi, lecons: readonly Lecon[], id: string, nombre: number) {
+  return questionsPosablesDuDefi(defi, lecons)
+    .filter(({ origine }) => origine.leconDOrigine === id)
+    .slice(0, nombre)
+    .map(({ identite }) => identite);
+}
+
+Deno.test("un plan de 12 questions est possible pour un grand défi, un plan de 13 questions ne l'est pas", () => {
+  const lecons = leconsDe(4, 4, 4, 4, 4, 4);
+  const grandDefi = grandDefiDe(lecons);
+  const deux = lecons.flatMap(({ id }) => clesDeLaLecon(grandDefi, lecons, id, 2));
+  const treize = [...deux, ...clesDeLaLecon(grandDefi, lecons, "ma-ce1-1", 3).slice(2)];
+
+  assertEquals(
+    [estUnPlanPossible(grandDefi, lecons, deux), estUnPlanPossible(grandDefi, lecons, treize)],
+    [true, false],
+  );
+});
+
+Deno.test("un plan de 11 questions n'est pas possible pour un défi d'une partie, qui garde sa limite de 10", () => {
+  const lecons = leconsDe(4, 4, 4, 4, 4);
+  const defi = defiDe(lecons);
+  const dix = lecons.flatMap(({ id }) => clesDeLaLecon(defi, lecons, id, 2));
+  const onze = [...dix, ...clesDeLaLecon(defi, lecons, "ma-ce1-1", 3).slice(2)];
+
+  assertEquals([estUnPlanPossible(defi, lecons, dix), estUnPlanPossible(defi, lecons, onze)], [true, false]);
 });

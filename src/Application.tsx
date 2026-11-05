@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { MotionConfig } from "motion/react";
 import { type Ecran as EcranDuDomaine, type EtatDeLEspaceParent, estUnEcranDuParent } from "@domain/famille";
-import type { Defi } from "@domain/apprentissage";
+import { type Defi, estUnGrandDefi, type GrandDefi } from "@domain/apprentissage";
 import type { CodeDeMatiere } from "@domain/catalogue";
 import { universDe } from "@domain/motivation";
 import { EcranDeConnexion, useConnexion } from "./connexion/index.ts";
@@ -46,6 +46,7 @@ import { brancherLeSonDesBoutons } from "./boutons/son-des-boutons.ts";
 import { ChoixDeLaVoix, ContexteDeLaLecture, useVoix } from "./voix/index.ts";
 import { TenueDuProfil } from "./tenue/index.ts";
 import { ContexteDeLUnivers, HABILLAGE_DU_PARENT, habillageDeLUnivers, Paysage } from "./univers/index.ts";
+import { prechargerLaSceneDe } from "./univers/celebrations/index.ts";
 
 const ACCUEIL: Lieu = { ecran: "accueil" };
 
@@ -85,7 +86,7 @@ function lieuAffiche(demande: Lieu, espaceParent: EtatDeLEspaceParent["type"], c
 }
 
 export function Application() {
-  const [defiEnCours, setDefiEnCours] = useState<Defi | undefined>();
+  const [defiEnCours, setDefiEnCours] = useState<Defi | GrandDefi | undefined>();
   const { lieu: lieuDemande, retourPossible, viaRetour, aller, remplacer, revenir, revenirA } = useNavigation();
   const acces = useAccesALEspaceParent();
   const connexion = useConnexion();
@@ -104,7 +105,9 @@ export function Application() {
   const ecranDemande = lieuDemande.ecran;
   const profil = estPageDeLEnfant(lieu) ? profilEnCours : undefined;
   const univers = universDe(profil?.univers);
-  const voix = useVoix(universDe(profilEnCours?.univers).personnageGuide);
+  const universDuProfilEnCours = universDe(profilEnCours?.univers);
+  useEffect(() => prechargerLaSceneDe(universDuProfilEnCours.cle), [universDuProfilEnCours.cle]);
+  const voix = useVoix(universDuProfilEnCours.personnageGuide);
   const parent = estUnEcranDuParent(ecranAffiche(lieu, acces.etat.type, connecte));
   const { suspendre: suspendreLaVoix, reprendre: reprendreLaVoix, toucherUnBouton } = voix;
   useEffect(() => brancherLeSonDesBoutons(toucherUnBouton), [toucherUnBouton]);
@@ -147,7 +150,7 @@ export function Application() {
       if (!suivantes.delete(matiere)) suivantes.add(matiere);
       return suivantes;
     });
-  const releverLeDefi = (defi: Defi) => {
+  const releverLeDefi = (defi: Defi | GrandDefi) => {
     setDefiEnCours(defi);
     aller("defi");
   };
@@ -285,7 +288,7 @@ export function Application() {
                   )}
                   {lieu.ecran === "defi" && profilCharge && profilEnCours && defiEnCours && (
                     <EcranDeDefi
-                      key={`${profilEnCours.id}/${defiEnCours.matiere.code}/${defiEnCours.numero}`}
+                      key={`${profilEnCours.id}/${defiEnCours.matiere.code}/${estUnGrandDefi(defiEnCours) ? "grand" : defiEnCours.numero}`}
                       profil={profilEnCours}
                       defi={defiEnCours}
                       univers={univers}
