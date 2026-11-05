@@ -237,7 +237,7 @@ Then(/^le repère « Grand défi » mesure au moins 44 px de haut$/, async ({ fa
 
 // --- Alors : la fin de la séance
 
-Then(/^la fin de la séance annonce « (Le grand défi des [^«»]+ est ouvert !) »$/, { tags: "@issue-137" }, async ({ page }, texte: string) => {
+Then(/^la fin de la séance annonce « (Le grand défi des [^«»]+ est ouvert !) »$/, { tags: "@issue-137 or @issue-106" }, async ({ page }, texte: string) => {
   await attendreLaFinDeLaSeance(page);
   const annonce = page.getByTestId("annonce-du-defi-ouvert");
   await expect(annonce).toHaveText(texte, { timeout: 20_000 });
