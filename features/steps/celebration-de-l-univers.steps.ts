@@ -4,6 +4,7 @@ import { fixerLeTirageDeLaCelebration, installerLeHasardDeLaCelebration, type Va
 import { commencerLeDefi, finDuDefi, jouerLeDefi, leconsDeTestDeLaMatiere, TOUT_JUSTE } from "./defi-de-fin-de-partie.steps.ts";
 import { bulle } from "./etapes-puis-exercices.steps.ts";
 import { Before, Given, test, Then, When } from "./fixtures.ts";
+import { attendreLaFinDeLaSeance } from "./etoiles-et-fin-de-seance.steps.ts";
 import { preparerLesEtoiles } from "./parcours.steps.ts";
 import { estSurUnProfilReel, rechargerAvecLeProfilReel } from "./profil-reel.ts";
 import {
@@ -21,7 +22,7 @@ import {
   observer,
   verifierQueLEffetEstCoupe,
 } from "./retours-animes-et-sonores.steps.ts";
-import { normaliser, reappliquerLAppareil, scenario } from "./voix.steps.ts";
+import { laisserPasserLeDelaiDeLecture, normaliser, reappliquerLAppareil, scenario } from "./voix.steps.ts";
 
 // Story #106 : la célébration de l'univers à la fin du premier défi relevé (livraison 106a, univers « Sports »).
 //
@@ -130,8 +131,21 @@ async function attendreLaFinDeLaScene(page: Page): Promise<void> {
   await expect(scene(page)).toHaveAttribute("data-etat", "terminee", { timeout: DELAI_DE_L_ATTENTE_MS });
 }
 
-async function attendreLaFinDuDefi(page: Page): Promise<void> {
+/** La fin du défi (106a à 106e) ou la fin de la séance (106g) : celle des deux qui est à l'écran. */
+async function attendreLaFinDuDefiOuDeLaSeance(page: Page): Promise<void> {
+  await expect.poll(async () => (await finDuDefi(page).count()) + (await page.getByTestId("fin-de-seance").count()), {
+    timeout: DELAI_DE_L_ATTENTE_MS,
+  }).toBeGreaterThan(0);
+  if (await finDuDefi(page).count() === 0) {
+    await attendreLaFinDeLaSeanceEtSaCelebration(page);
+    return;
+  }
   await expect(finDuDefi(page).getByRole("button", { name: "Accueil", exact: true })).toBeVisible({ timeout: DELAI_DE_L_ATTENTE_MS });
+}
+
+async function attendreLaFinDeLaSeanceEtSaCelebration(page: Page): Promise<void> {
+  await attendreLaFinDeLaSeance(page);
+  await laisserSeDerouler(page);
 }
 
 // --- Étant donné
@@ -325,12 +339,12 @@ Then(/^Léa lit « Enquête résolue ! »$/, async ({ page }) => {
 });
 
 Then(/^Coach Léo ne joue pas la célébration de l'univers$/, async ({ page }) => {
-  await attendreLaFinDuDefi(page);
+  await attendreLaFinDuDefiOuDeLaSeance(page);
   await expect(scene(page)).toHaveCount(0);
 });
 
 Then(/^aucune célébration de l'univers n'est jouée$/, async ({ page }) => {
-  await attendreLaFinDuDefi(page);
+  await attendreLaFinDuDefiOuDeLaSeance(page);
   await expect(scene(page)).toHaveCount(0);
 });
 
@@ -380,7 +394,7 @@ async function verifierLImageFixe(page: Page, univers: Univers, variantes: RegEx
 // --- Alors : la célébration commune
 
 Then(/^la célébration commune n'est pas jouée$/, async ({ page }) => {
-  await attendreLaFinDuDefi(page);
+  await attendreLaFinDuDefiOuDeLaSeance(page);
   await laisserSeDerouler(page);
   await expect(page.getByTestId("confettis")).toHaveCount(0);
   const observation = await observer(page);
@@ -397,7 +411,8 @@ const petitPersonnage = (page: Page): Locator => page.getByTestId("personnage-gu
 async function verifierQueLaBulleGardeSesParoles(page: Page): Promise<void> {
   await expect(bulle(page)).toBeVisible({ timeout: DELAI_DE_L_ATTENTE_MS });
   await expect(bulle(page)).not.toHaveText("");
-  await expect(finDuDefi(page).getByRole("button", { name: "Réécouter", exact: true })).toBeVisible();
+  const conteneur = (await finDuDefi(page).count()) > 0 ? finDuDefi(page) : page;
+  await expect(conteneur.getByRole("button", { name: "Réécouter", exact: true })).toBeVisible();
 }
 
 Then(
@@ -455,7 +470,7 @@ Then(
 );
 
 Then(/^Coach Léo apparaît à côté de la bulle de ses paroles$/, async ({ page }) => {
-  await attendreLaFinDuDefi(page);
+  await attendreLaFinDuDefiOuDeLaSeance(page);
   await verifierQueLaBulleGardeSesParoles(page);
   await expect(petitPersonnage(page)).toHaveCount(1);
   await expect(petitPersonnage(page)).toHaveAttribute("data-personnage-guide", "Coach Léo");
@@ -588,7 +603,7 @@ async function verifierQueLaSceneEstMuettePourLesLecteursDEcran(page: Page, univ
 Then(
   /^(?:aucun confetti ni (?:pétale|feuille|étincelle du jardin|pétale de la caserne) ne tombe|ni les confettis de la célébration commune ni les confettis du commissariat ne tombent)$/,
   async ({ page }) => {
-    await attendreLaFinDuDefi(page);
+    await attendreLaFinDuDefiOuDeLaSeance(page);
     await laisserSeDerouler(page);
     await expect(page.getByTestId("confettis-de-la-celebration")).toHaveCount(0);
     await expect(page.getByTestId("confettis")).toHaveCount(0);
@@ -596,3 +611,47 @@ Then(
     expect(observation.vu.filter((vu) => vu.startsWith("confettis:")), "confettis").toEqual([]);
   },
 );
+
+// --- Alors : le moment « matière réussie » de la fin de la séance (livraison 106g)
+//
+// Ces étapes ont le texte de celles de #24, #97 et #137 : elles sont réservées à #106 et limitées aux annonces de ces scénarios,
+// pour que les autres annonces de la fin du défi gardent leurs étapes.
+
+const { Then: ThenDe106 } = createBdd(test, { tags: "@issue-106" });
+
+const annonceDeLaMatiereReussie = (page: Page): Locator => page.getByTestId("annonce-de-la-matiere-reussie");
+
+ThenDe106(/^la fin de la séance annonce « (Matière réussie !) »$/, async ({ page }, texte: string) => {
+  await attendreLaFinDeLaSeance(page);
+  const annonce = annonceDeLaMatiereReussie(page);
+  await expect(annonce).toHaveText(texte, { timeout: DELAI_DE_L_ATTENTE_MS });
+  await expect(annonce).toHaveAttribute("role", "status");
+});
+
+ThenDe106(/^la fin de la séance annonce « (Matière réussie !) », sans mouvement$/, async ({ page }, texte: string) => {
+  await attendreLaFinDeLaSeance(page);
+  const annonce = annonceDeLaMatiereReussie(page);
+  await expect(annonce).toHaveText(texte, { timeout: DELAI_DE_L_ATTENTE_MS });
+  await laisserSeDerouler(page);
+  const animationsEnCours = await annonce.evaluate(
+    (element) => element.getAnimations({ subtree: true }).filter((animation) => animation.playState === "running").length,
+  );
+  expect(animationsEnCours, "animations en cours dans l'annonce").toBe(0);
+});
+
+ThenDe106(/^la fin de la séance n'annonce pas « (Matière réussie !) »$/, async ({ page }, texte: string) => {
+  await attendreLaFinDeLaSeance(page);
+  await laisserSeDerouler(page);
+  await expect(annonceDeLaMatiereReussie(page)).toHaveText("");
+  await expect(page.getByTestId("fin-de-seance")).not.toContainText(texte);
+});
+
+ThenDe106(/^les lecteurs d'écran annoncent une seule fois « (Matière réussie !) »$/, async ({ page }, texte: string) => {
+  await attendreLaFinDeLaSeance(page);
+  await expect(annonceDeLaMatiereReussie(page)).toHaveText(texte, { timeout: DELAI_DE_L_ATTENTE_MS });
+  await laisserSeDerouler(page);
+  await laisserPasserLeDelaiDeLecture(page);
+  expect((await observer(page)).annonces.filter((annonce) => annonce.includes(texte)), `« ${texte} » reprise dans l'annonce des étoiles`).toEqual([]);
+  await expect(annonceDeLaMatiereReussie(page)).toHaveCount(1);
+  await expect(page.locator("[aria-live], [role=status], [role=alert]").filter({ hasText: texte })).toHaveCount(1);
+});

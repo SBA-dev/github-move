@@ -29,6 +29,7 @@ export interface FaitsDeLaFin {
   readonly objetRecu: boolean;
   readonly tenueRecue: boolean;
   readonly episodeOuvert: boolean;
+  readonly musiqueDeLaCelebration: EffetSonore | undefined;
 }
 
 export function effetsSonoresDeLaFin(faits: FaitsDeLaFin): readonly EffetSonore[] {
@@ -37,7 +38,7 @@ export function effetsSonoresDeLaFin(faits: FaitsDeLaFin): readonly EffetSonore[
     effetSonoreDuRecord(faits.issueDuRecord) !== undefined;
   const effets: EffetSonore[] = [];
   if (!recordDejaFete) {
-    effets.push(faits.leconAcquise ? "grandeVictoire" : "seanceTerminee");
+    effets.push(faits.musiqueDeLaCelebration ?? (faits.leconAcquise ? "grandeVictoire" : "seanceTerminee"));
   }
   if (faits.objetRecu || faits.tenueRecue || faits.episodeOuvert) effets.push("decouverte");
   return effets;

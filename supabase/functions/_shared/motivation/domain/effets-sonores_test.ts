@@ -1,5 +1,6 @@
 import { assertEquals } from "@std/assert";
 import { effetSonoreDuRecord, effetsSonoresApresUneBonneReponse, effetsSonoresDeLaFin } from "./effets-sonores.ts";
+import type { EffetSonore } from "../../voix/domain/index.ts";
 
 const sansPointGagne = {
   questionsReussiesAvant: 2,
@@ -29,7 +30,7 @@ Deno.test("une réponse qui complète l'exercice fait jouer le texte complet à 
     exerciceComplete: true,
   });
 
-  assertEquals(effets, ["texteComplet"]);
+  assertEquals(effets, [uneMusiqueDeCelebration]);
 });
 
 Deno.test("une réponse qui complète l'exercice et gagne un point fait jouer le texte complet puis le point du récipient", () => {
@@ -70,6 +71,7 @@ const seanceSansEvenement = {
   episodeOuvert: false,
   tenueRecue: false,
   fluenceSeule: false,
+  musiqueDeLaCelebration: undefined,
 } as const;
 
 Deno.test("une séance terminée sans leçon acquise, sans objet et sans épisode fait jouer la séance terminée", () => {
@@ -204,4 +206,32 @@ Deno.test("un test de départ qui fait recevoir une tenue fait jouer seulement l
 
 Deno.test("#141, règle 101.18 (a) : les faits de la fin ne portent pas la quête du jour, qui n'ajoute donc aucun effet sonore", () => {
   assertEquals(effetsSonoresDeLaFin(seanceSansEvenement), ["seanceTerminee"]);
+});
+
+const uneMusiqueDeCelebration: EffetSonore = "texteComplet";
+
+Deno.test("la musique de la célébration remplace la séance terminée : un seul son de fin", () => {
+  const effets = effetsSonoresDeLaFin({ ...seanceSansEvenement, musiqueDeLaCelebration: uneMusiqueDeCelebration });
+
+  assertEquals(effets, [uneMusiqueDeCelebration]);
+});
+
+Deno.test("la musique de la célébration remplace la grande victoire d'une leçon acquise : elle ne joue pas deux fois", () => {
+  const effets = effetsSonoresDeLaFin({
+    ...seanceSansEvenement,
+    leconAcquise: true,
+    musiqueDeLaCelebration: uneMusiqueDeCelebration,
+  });
+
+  assertEquals(effets, [uneMusiqueDeCelebration]);
+});
+
+Deno.test("la musique de la célébration, puis la découverte quand la séance donne aussi un objet de la cabane (106.46)", () => {
+  const effets = effetsSonoresDeLaFin({
+    ...seanceSansEvenement,
+    objetRecu: true,
+    musiqueDeLaCelebration: uneMusiqueDeCelebration,
+  });
+
+  assertEquals(effets, [uneMusiqueDeCelebration, "decouverte"]);
 });
