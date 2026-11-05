@@ -92,7 +92,7 @@ export const Lili: DessinDuPersonnage = ({ humeur, id, tenue }) => (
           <path d="M0 -1 l-6 -5 q-3 3 0 6 Z M0 -1 l6 -5 q3 3 0 6 Z" fill="#FF8FB8" stroke="#33304A" strokeWidth="1.6" strokeLinejoin="round" />
           <circle cy="-1" r="2" fill="#FFC9DE" stroke="#33304A" strokeWidth="1.2" />
         </g>
-    </g>
+      </g>
     </g>
     <path fill="#e8b58c" stroke="#33304A" strokeWidth="3" strokeLinejoin="round" d="M-4.8 -52 V-40 Q0 -36.5 4.8 -40 V-52 Z" />
     <path d="M-4.8 -52 V-44 Q0 -42 4.8 -44 V-52 Z" fill="#C9956E" />
