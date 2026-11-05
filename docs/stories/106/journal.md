@@ -53,3 +53,15 @@ Branche de base : `main` (`47a6d34`). Branche : `feature/106-celebration-de-l-un
 - Autorisation du PO : « merge 106 OK, 106.28 cacher » (annonce [Responsable] sur #64).
 - 106.28 : scénario `17e99ae`, steps rouges `ad08395` (R1 rouge pour la bonne raison, R3 vert), feat `2a69ea2` (`ParoleDuGuide` reçoit `sansPersonnage` pendant la célébration de l'univers).
 - `main` inchangée depuis `f8a4787` : rien à intégrer.
+
+---
+
+# Livraison 106c : univers Animaux de la forêt (Noisette)
+
+Branche de base : `main` (`af47f19`). Branche : `feature/106c-celebration-animaux`.
+Équipe lancée par `/graphe` (« graphe 106c », issue de coordination #64), session `session_015z4jmLxTprDR2qh6vJhusW`.
+106b (Danse, PR #154) est en cours sur les mêmes fichiers : modèle, scénarios et planche d'abord ; catalogue et scènes câblés après le merge de 106b et l'intégration de `main`.
+
+## 2026-11-05
+- 00:50 UTC : démarrage. Cadrage de #106 déjà validé (« 106 reco tout », 106.28 « cacher ») ; maquette `noisette-animaux.html` validée par le PO le 2026-10-27. Musique : « grande victoire » (106.27 toujours fermé). Structure reprise de la branche de 106b (`VARIANTES_DES_UNIVERS`, union discriminée, `React.lazy`, `commun/`, ids préfixés).
+- 00:55 UTC : complément de modèle 106c (`domain-modeler`) et scénarios 106c (`po-acceptance`) lancés en parallèle.
