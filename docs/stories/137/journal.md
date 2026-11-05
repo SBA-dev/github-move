@@ -72,3 +72,25 @@
   0,50 s, 0,51 s. Registre de `savanturier-dev` : 14 migrations, seule `20261104090000_grands_defis_termines` en attente.
   Appliquée par l'API de gestion (`scripts/exploitation/migrations.py` sur le projet de dev). `terminer-le-defi`
   redéployée sur le projet de dev.
+- E2E mise au point, `telephone`, 1 worker : `@issue-137` + `@issue-100` 44/50 au premier run (6 KO, tous dus aux
+  steps : bouton « Relever le défi » en double, `data-numero` comparé à un nombre, boucle d'un tour trop courte), puis
+  **50/50** en 13,2 min (`5f8ea24`, retrait de `@wip`).
+- Écrans touchés (« Mon parcours », fin de séance) : `@issue-26` + `@issue-99` 81/82. Le KO vient du step de #99
+  « liste ordonnée de N leçons », qui comptait le repère du grand défi (voulu par R6 et 100.14) : il ne compte plus que
+  les leçons (`d8f8d07`, sens inchangé). `@issue-99` 26/26.
+- 00:05 UTC : `LIBÈRE base` (annonce du responsable : libérer après les E2E). PR #153 ouverte en brouillon.
+
+## Mesures
+
+| Mesure | Valeur |
+|---|---|
+| Durée, du lancement au merge | lancement 20:38 UTC le 04/11 ; PR prête vers 00:15 UTC le 05/11 (≈ 3 h 40) ; merge : en attente d'autorisation |
+| Temps passé à attendre | PO : 16 min (CADRAGE PRÊT 20:52 → réponse 21:08) ; verrou `base` : ≈ 50 min (demandé 22:05, accordé 22:54 ; le câblage, la revue, les steps et une reprise des non bloquants ont avancé pendant ce temps) ; `main` : aucune attente |
+| Tokens et coût | relevés par le responsable |
+| Cycles de review À CORRIGER | 0 (2 revues intermédiaires, revue de l'étape 4, 1 delta : toutes APPROUVÉES) |
+| Cycles E2E KO | 2 (6 KO de steps au 1er run de #137/#100 ; 1 KO de step dans #99), aucun bug applicatif |
+| Intégrations de `main` | 1 (`597a4a5`, #140), sans conflit |
+| Régression découverte sur `main` après le merge | — |
+| Cycles TDD | 8 rouges/verts (blocs 1, 2-3, 4-6, Motivation, infrastructure, phrase de fin, union, aiguillage), 2871 tests verts |
+| Escalades | 0 |
+| Verrous pris | `base` (22:54 → 00:05) |
