@@ -46,3 +46,4 @@ Branche de base : `main` (`2a69a87`). Branche : `feature/163-reponse-fausse-anim
 
 - 07:05 UTC : 163a mergée (PR #171, `4dd80cf`). Annonce `[Responsable]` 6679278425 : la même équipe continue ; la branche est recréée depuis `main` `4dd80cf`, avec une nouvelle PR par livraison, et chaque planche passe au PO avant le câblage.
 - 07:10 UTC : maquette et planche de Lili en préparation (163.5b : petit vacillement, pas de côté les deux pieds sous elle, révérence, pouce levé).
+- 07:45 UTC : maquette `docs/maquettes/reponse-fausse-lili.html` et planche 163b (`docs/stories/163/captures/163b-lili-*.png`) : 1,5 s mesurée, Lili d'aplomb (inclinaison de 4° au plus), pas de côté les deux pieds sous elle, révérence, pouce levé, bulle « oups ! ». Une capture refaite (fond sombre incomplet, cause : fenêtre de capture trop basse). Relue par l'orchestrateur au regard de la règle absolue : conforme.
