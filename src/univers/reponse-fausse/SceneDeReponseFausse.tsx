@@ -18,11 +18,15 @@ const chargerAvecRepli = (charger: () => Promise<{ default: (props: PropsDeLaSce
 
 const chargerSports = memoriser(() => import("./sports/SceneDeCoachLeo.tsx"));
 
+const chargerDanse = memoriser(() => import("./danse/SceneDeLili.tsx"));
+
 const SceneDeCoachLeo = chargerAvecRepli(chargerSports);
+const SceneDeLili = chargerAvecRepli(chargerDanse);
 
 /** Les univers qui ont leur scène de réponse fausse dessinée : une livraison par personnage guide. */
 const CHARGEURS_DES_SCENES: Partial<Record<CleUnivers, () => Promise<unknown>>> = {
   sports: chargerSports,
+  danse: chargerDanse,
 };
 
 /**
@@ -43,6 +47,8 @@ export function SceneDeReponseFausse({ scene, ...props }: Props) {
   switch (scene.univers) {
     case "sports":
       return <Suspense fallback={props.repli}><SceneDeCoachLeo {...props} /></Suspense>;
+    case "danse":
+      return <Suspense fallback={props.repli}><SceneDeLili {...props} /></Suspense>;
     default:
       return props.repli;
   }

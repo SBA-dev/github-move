@@ -1,0 +1,1309 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Savanturier : Lili, scène de réponse fausse (maquette 163b)</title>
+<style>
+  :root { --principale: #1F63D8; --foncee: #164BA8; --or: #FFC93C; --encre: #1B2A4A; --guide: 112px; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #0f1b2d; }
+  body { font-family: "Andika", "Trebuchet MS", system-ui, sans-serif; color: var(--encre); padding: 12px; }
+  .banc { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; align-items: flex-start; }
+  .commandes { width: 360px; max-width: 100%; color: #E8F0FF; font-size: 15px; line-height: 1.45; }
+  .commandes h1 { margin: 0 0 8px; font-size: 18px; line-height: 1.25; }
+  .commandes p { margin: 8px 0; }
+  .commandes label { display: flex; align-items: center; gap: 10px; min-height: 44px; cursor: pointer; }
+  .commandes input[type="checkbox"] { width: 22px; height: 22px; }
+  .commandes .notes { font-size: 13px; color: #B9C8E6; }
+  .duree { margin: 10px 0; padding: 10px 12px; border-radius: 12px; background: #1B2D4A; font-weight: 700; }
+  .btn { min-height: 48px; padding: 8px 20px; border: 0; border-radius: 999px; font: 700 17px "Baloo 2", "Andika", sans-serif; cursor: pointer; background: var(--principale); color: #fff; box-shadow: 0 4px 0 var(--foncee); }
+  .btn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--foncee); }
+  .btn:focus-visible, .choix button:focus-visible, .petit:focus-visible { outline: 3px solid var(--or); outline-offset: 3px; }
+
+  /* Maquette de l'écran de séance : mêmes tailles que src/styles.css (.personnage-guide 112 px sous 480 px, 200 px au-delà) */
+  .ecran { width: 360px; max-width: 100%; background: linear-gradient(#EAF4FF, #F7FBFF); border-radius: 22px; padding: 14px 14px 16px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 12px 40px rgba(0,0,0,.35); }
+  .ecran.tablette { width: 768px; --guide: 200px; padding: 20px 28px 24px; }
+  .entete { display: flex; align-items: center; gap: 12px; }
+  .entete .retour { min-height: 44px; min-width: 44px; padding: 6px 14px; border: 2px solid #BFD0EA; border-radius: 12px; background: #fff; color: #3C4C6B; font: 700 15px inherit; font-family: inherit; }
+  .entete h2 { margin: 0; font-size: 17px; line-height: 1.2; font-family: "Baloo 2", inherit; color: var(--foncee); }
+  .entete p { margin: 0; font-size: 13px; color: #3C4C6B; }
+  .progression { height: 10px; border-radius: 999px; background: #D5E3F7; overflow: hidden; }
+  .progression span { display: block; height: 100%; width: 25%; background: #4FB37A; border-radius: 999px; }
+  .guide-et-parole { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; }
+  .personnage-guide { width: var(--guide); flex: none; }
+  .personnage-guide svg { width: 100%; height: auto; display: block; }
+  .bulle { margin: 0; flex: 1 1 120px; min-width: 0; padding: 10px 14px; border-radius: 18px; background: #fff; border: 2px solid #BFD0EA; font-size: 17px; line-height: 1.3; font-weight: 700; color: var(--foncee); }
+  .bulle:empty { display: none; }
+  .reecouter { align-self: center; min-height: 44px; padding: 6px 16px; border: 2px solid #BFD0EA; border-radius: 999px; background: #fff; color: var(--foncee); font: 700 15px inherit; font-family: inherit; cursor: pointer; }
+  .consigne { margin: 0; text-align: center; font-size: 22px; font-weight: 700; line-height: 1.3; }
+  .choix { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .choix button { min-height: 56px; border: 3px solid #BFD0EA; border-radius: 16px; background: #fff; color: var(--encre); font: 700 24px "Baloo 2", "Andika", sans-serif; cursor: pointer; }
+  .choix button:active { transform: translateY(2px); }
+  .choix button.essayee { border-style: dashed; border-color: #9AAAC6; background: #F1F5FB; }
+  .choix button.prise { border-color: var(--principale); background: #E7F0FF; }
+  .ne-sais-pas { align-self: center; min-height: 44px; padding: 6px 18px; border: 0; background: transparent; color: #3C4C6B; text-decoration: underline; font: 700 15px inherit; font-family: inherit; cursor: pointer; }
+  .etat { margin: 0; min-height: 20px; text-align: center; font-size: 13px; color: #3C4C6B; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  /* Mode dys (src/styles.css) : Andika partout, lettres, mots et lignes espacés */
+  [data-mode-dys="true"] { font-family: "Andika", "Trebuchet MS", sans-serif; letter-spacing: .08em; word-spacing: .3em; line-height: 1.9; }
+  [data-mode-dys="true"] :is(button, h2, p) { font-family: "Andika", "Trebuchet MS", sans-serif; letter-spacing: inherit; word-spacing: inherit; }
+  [data-mode-dys="true"] .bulle, [data-mode-dys="true"] .consigne { line-height: 1.6; overflow-wrap: anywhere; }
+  .ecrit { font-family: "Baloo 2", "Andika", sans-serif; font-weight: 800; }
+  [data-mode-dys="true"] .ecrit { font-family: "Andika", "Trebuchet MS", sans-serif; font-weight: 700; letter-spacing: .04em; }
+  @media (prefers-reduced-motion: reduce) { .btn, .choix button { transition: none; } }
+
+  html:has(body.seul), body.seul { padding: 0; background: #EAF4FF; }
+  body.seul .commandes, body.seul .entete, body.seul .progression, body.seul .bulle, body.seul .reecouter, body.seul .consigne, body.seul .choix, body.seul .ne-sais-pas, body.seul .etat { display: none; }
+  body.seul .ecran { width: auto; padding: 0; background: transparent; box-shadow: none; border-radius: 0; }
+  body.seul .banc { display: block; }
+  html:has(body.seul.sombre), body.seul.sombre { background: #16213A; }
+  [data-mode-dys="true"] #oups .ecrit { font-size: 12.5px; letter-spacing: 0; word-spacing: 0; }
+</style></head>
+<body>
+<div class="banc">
+  <div class="ecran" id="ecran" data-mode-dys="false">
+    <div class="entete">
+      <button class="retour" type="button">Retour</button>
+      <div><h2>Calcul mental</h2><p>CE1 · Les additions</p></div>
+    </div>
+    <div class="progression" aria-hidden="true"><span></span></div>
+    <div class="guide-et-parole">
+      <div class="personnage-guide" id="scene" aria-hidden="true" data-testid="scene-de-reponse-fausse">
+        <svg viewBox="-83 -119 166 208" overflow="visible" aria-hidden="true" id="svg">
+          <defs>
+            <clipPath id="danse-clip-oeil"><ellipse rx="7.4" ry="9.6"/></clipPath>
+            <clipPath id="danse-clip-bouche"><path d="M-11 11 Q0 27 11 11 Z"/></clipPath>
+          </defs>
+          <!-- Un petit tapis rose pâle sous ses pieds, le temps de la scène -->
+          <g id="sol" opacity="0"><ellipse cx="0" cy="71" rx="66" ry="8" fill="#F3C9E4" opacity=".9"/><ellipse cx="-8" cy="69.5" rx="42" ry="4.5" fill="#FBE3F1" opacity=".8"/></g>
+          <!-- Lili : le moteur dessine à l'échelle 1,25 ; le groupe la ramène à 1 pour qu'elle ait la taille du dessin fixe -->
+          <g transform="scale(.8)">
+            <ellipse id="danse-ombre-de-lili" fill="#1E1230" opacity=".3"/>
+            <g id="danse-lili"></g>
+          </g>
+          <!-- La petite bulle écrite « oups ! » : décor du dessin, jamais lue -->
+          <g id="oups" opacity="0"><g id="oups-corps" transform="translate(-52 -108)">
+            <path d="M-21 -10 H21 Q27 -10 27 -4 V6 Q27 12 21 12 H12 L8 21 L2 12 H-21 Q-27 12 -27 6 V-4 Q-27 -10 -21 -10 Z" fill="#FFFFFF" stroke="#33304A" stroke-width="2.4" stroke-linejoin="round"/>
+            <text class="ecrit" text-anchor="middle" x="0" y="5.5" font-size="14" fill="#33304A">oups !</text>
+          </g></g>
+        </svg>
+      </div>
+      <p class="bulle" id="bulle" aria-live="polite"></p>
+    </div>
+    <button class="reecouter" type="button">Réécouter</button>
+    <p class="consigne" data-testid="consigne">Combien font 3 + 4 ?</p>
+    <div class="choix" role="group" aria-label="Les choix">
+      <button type="button" data-choix="6">6</button>
+      <button type="button" data-choix="7">7</button>
+      <button type="button" data-choix="8" class="essayee">8</button>
+      <button type="button" data-choix="9">9</button>
+    </div>
+    <button class="ne-sais-pas" type="button">Je ne sais pas</button>
+    <p class="etat" id="etat"></p>
+  </div>
+
+  <aside class="commandes">
+    <h1>Scène de réponse fausse : Lili (maquette 163b)</h1>
+    <p>Lili vient de recevoir une réponse fausse (« 8 »). Sa scène prend la place de son dessin, à sa taille. Touche un choix, « Réécouter » ou « Je ne sais pas » : la scène s'arrête tout de suite.</p>
+    <button class="btn" id="rejouer" type="button">Rejouer la scène</button>
+    <label><input type="checkbox" id="reduit"> Mouvements réduits (image fixe)</label>
+    <label><input type="checkbox" id="dys"> Mode dys</label>
+    <label><input type="checkbox" id="tablette"> Écran de tablette (768 px, dessin de 200 px)</label>
+    <p class="duree" id="duree" role="status">Durée : pas encore jouée.</p>
+    <p class="notes">Lili porte ici sa tenue de base : la tenue choisie par l'enfant viendra des dessins de 106h (163.8). Après la scène, le dessin du personnage guide revient avec l'humeur « réfléchit » (163.13) : le câblage s'en charge, la maquette garde la dernière image. Le dessin de Lili et son moteur d'articulation sont ceux de <code>src/univers/celebrations/danse/</code> (copiés ici pour que la maquette soit autonome).</p>
+  </aside>
+</div>
+<script>
+// Moteur de Lili : bundle (sans minification) de src/univers/celebrations/danse/personnage.ts et de commun/, en lecture seule, pour que la maquette reste autonome.
+(function() {
+	// src/univers/celebrations/commun/courbes.ts
+	var DEG = Math.PI / 180;
+	/** Les courbes d'accélération des maquettes : toutes vont de 0 à 1 (le retour et le rebond dépassent 1 un instant). */
+	var E = {
+		lineaire: (u) => u,
+		/** Le saut immédiat à la valeur d'arrivée : remet un tour complet à zéro sans repasser par les angles intermédiaires. */
+		instantanee: () => 1,
+		sortie: (u) => 1 - Math.pow(1 - u, 3),
+		entree: (u) => u * u * u,
+		douce: (u) => u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2,
+		retour: (u) => retourDe(u, 1.7),
+		rebond: (u) => retourDe(u, 2.6)
+	};
+	function retourDe(u, c) {
+		return 1 + (c + 1) * Math.pow(u - 1, 3) + c * Math.pow(u - 1, 2);
+	}
+	var lerp = (a, b, u) => a + (b - a) * u;
+	var clamp01 = (u) => Math.max(0, Math.min(1, u));
+	var fenetre = (t, debut, duree, e = E.sortie) => e(clamp01((t - debut) / duree));
+	/** Arrondi à un dixième, pour des attributs SVG courts. */
+	var r1 = (v) => Math.round(v * 10) / 10;
+	/** Arrondi au millième, pour les échelles et les opacités. */
+	var r3 = (v) => Math.round(v * 1e3) / 1e3;
+	// src/univers/celebrations/commun/dom.ts
+	var NS = "http://www.w3.org/2000/svg";
+	function trouver(parent, selecteur) {
+		const element = parent.querySelector(selecteur);
+		if (!element) throw new Error(`Élément de la scène de célébration introuvable : ${selecteur}`);
+		return element;
+	}
+	/** Retrouve un élément de la scène par son identifiant (préfixé par l'univers : `sports-leo`, `danse-lili`, ou par la scène : `reponse-fausse-sports-leo`), une seule fois. */
+	function elementsDe(racine, prefixe) {
+		const memo = /* @__PURE__ */ new Map();
+		return (id) => {
+			const connu = memo.get(id);
+			if (connu) return connu;
+			const trouve = trouver(racine, `#${prefixe}-${id}`);
+			memo.set(id, trouve);
+			return trouve;
+		};
+	}
+	var poser = (element, attribut, valeur) => element.setAttribute(attribut, String(valeur));
+	var deplacer = (element, transformation) => element.setAttribute("transform", transformation);
+	function creerUnGroupe(attributs = {}) {
+		const groupe = document.createElementNS(NS, "g");
+		for (const [nom, valeur] of Object.entries(attributs)) groupe.setAttribute(nom, valeur);
+		return groupe;
+	}
+	// src/univers/celebrations/commun/tenues.ts
+	var CONTOUR$1 = "#33304A";
+	var ROUGE_DE_L_ECHARPE = "#E8604C";
+	var CREME_DE_L_ECHARPE = "#FFF4DC";
+	var BANDE_DU_COL = "M-19 -6 Q0 4 19 -6 L19 4 Q0 14 -19 4 Z";
+	var QUEUE_DE_L_ECHARPE = "M-19 2 L-6 4 L-7 25 L-20 24 Z";
+	var CORPS_DE_COACH_LEO = {
+		cou: {
+			x: 0,
+			y: -41,
+			echelle: 1
+		},
+		dos: {
+			x: 0,
+			y: -16,
+			echelle: 1.15,
+			elargissement: 1.55
+		},
+		pieds: {
+			gauche: {
+				x: -14.7,
+				y: 60,
+				echelle: 1
+			},
+			droit: {
+				x: 14.7,
+				y: 60,
+				echelle: 1
+			},
+			tige: 24
+		}
+	};
+	/** Coach Léo, Lili, Agent Max et Capitaine Sam ont le même corps ; Lumi flotte et ses ailes battent dans le dos ; Noisette est petite et ronde. */
+	var ANCRAGES_DES_TENUES = {
+		sports: CORPS_DE_COACH_LEO,
+		danse: CORPS_DE_COACH_LEO,
+		police: CORPS_DE_COACH_LEO,
+		pompier: CORPS_DE_COACH_LEO,
+		animaux: {
+			cou: {
+				x: 0,
+				y: -79,
+				echelle: 1.5
+			},
+			dos: {
+				x: 0,
+				y: -50,
+				echelle: 1.5,
+				elargissement: 1.35
+			},
+			pieds: {
+				gauche: {
+					x: -17,
+					y: -4,
+					echelle: .9
+				},
+				droit: {
+					x: 17,
+					y: -4,
+					echelle: .9
+				},
+				tige: 12
+			}
+		},
+		princesse: {
+			cou: {
+				x: 0,
+				y: -107,
+				echelle: 1.1
+			},
+			dos: {
+				x: 0,
+				y: -84,
+				echelle: 1,
+				elargissement: 2
+			},
+			pieds: {
+				gauche: {
+					x: -12,
+					y: 0,
+					echelle: .75
+				},
+				droit: {
+					x: 12,
+					y: 0,
+					echelle: .75
+				},
+				tige: 18
+			}
+		}
+	};
+	var bandes = (largeurs, rectangle) => largeurs.map((position, i) => rectangle(position, i % 2 === 0 ? ROUGE_DE_L_ECHARPE : CREME_DE_L_ECHARPE)).join("");
+	/** L'écharpe rayée : le tour du cou (`col-de-l-echarpe`) et la queue qui pend sur le devant (`queue-de-l-echarpe`). */
+	function dessinDeLEcharpe(id) {
+		const bandesDuCol = bandes([
+			-19,
+			-13,
+			-7,
+			-1,
+			5,
+			11,
+			17
+		], (x, couleur) => `<rect x="${x}" y="-8" width="6" height="24" fill="${couleur}"/>`);
+		return `<g data-tenue-dessin="echarpe-rayee" stroke-linejoin="round">
+    <clipPath id="${id}queue"><path d="${QUEUE_DE_L_ECHARPE}"/></clipPath>
+    <clipPath id="${id}col"><path d="${BANDE_DU_COL}"/></clipPath>
+    <g class="queue-de-l-echarpe">
+      <g clip-path="url(#${id}queue)">${bandes([
+			3,
+			8.5,
+			14,
+			19.5
+		], (y, couleur) => `<rect x="-20" y="${y}" width="14" height="5.5" fill="${couleur}"/>`)}</g>
+      <path d="${QUEUE_DE_L_ECHARPE}" fill="none" stroke="${CONTOUR$1}" stroke-width="2.4"/>
+      <path d="M-19 25 v4 M-15 25 v4 M-11 25 v4" stroke="${ROUGE_DE_L_ECHARPE}" stroke-width="2" stroke-linecap="round"/>
+    </g>
+    <g class="col-de-l-echarpe">
+      <g clip-path="url(#${id}col)">${bandesDuCol}</g>
+      <path d="${BANDE_DU_COL}" fill="none" stroke="${CONTOUR$1}" stroke-width="2.4"/>
+    </g>
+  </g>`;
+	}
+	var DESSIN_DU_NOEUD_PAPILLON = `<g data-tenue-dessin="noeud-papillon" stroke="${CONTOUR$1}" stroke-width="2.4" stroke-linejoin="round">
+    <path d="M-2 0 Q-8 -9 -15 -8 Q-18 0 -15 8 Q-8 9 -2 0 Z" fill="#7A4FD6"/>
+    <path d="M2 0 Q8 -9 15 -8 Q18 0 15 8 Q8 9 2 0 Z" fill="#7A4FD6"/>
+    <g stroke="none" fill="#FFFFFF" opacity=".85"><circle cx="-10" cy="-2.5" r="1.7"/><circle cx="-10" cy="3" r="1.7"/><circle cx="10" cy="-2.5" r="1.7"/><circle cx="10" cy="3" r="1.7"/></g>
+    <rect x="-4.5" y="-5" width="9" height="10" rx="3.5" fill="#FFC93C"/>
+  </g>`;
+	/** Le sac à dos d'explorateur, posé derrière le corps ; `elargissement` l'élargit pour les personnages à large dos (Lumi, Noisette). */
+	function dessinDuSacADos(id, elargissement) {
+		const demiLargeur = 23 * elargissement;
+		return `<g data-tenue-dessin="sac-a-dos-d-explorateur" stroke="${CONTOUR$1}" stroke-width="2.6" stroke-linejoin="round">
+    <defs><radialGradient id="${id}sac" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#8FDDA8"/><stop offset="1" stop-color="#4FB37A"/></radialGradient></defs>
+    <rect x="${-demiLargeur}" y="-24" width="${2 * demiLargeur}" height="48" rx="15" fill="url(#${id}sac)"/>
+    <path d="M${-demiLargeur} -6 Q${-demiLargeur} -24 -8 -24 H8 Q${demiLargeur} -24 ${demiLargeur} -6 Q0 4 ${-demiLargeur} -6 Z" fill="#3E9466"/>
+    <rect x="${-demiLargeur * .6}" y="9" width="${demiLargeur * 1.2}" height="13" rx="6" fill="#A8703A"/>
+    <rect x="-4" y="-4" width="8" height="7" rx="2.5" fill="#FFC93C" stroke-width="1.8"/>
+  </g>`;
+	}
+	/** Les bretelles du sac, devant le corps. */
+	var DESSIN_DES_BRETELLES = `<g data-tenue-dessin="sac-a-dos-d-explorateur-bretelles" fill="none" stroke="${CONTOUR$1}" stroke-linecap="round">
+    <path d="M-12 -18 Q-16 0 -14 18 M12 -18 Q16 0 14 18" stroke-width="8"/>
+    <path d="M-12 -18 Q-16 0 -14 18 M12 -18 Q16 0 14 18" stroke-width="4.4" stroke="#A8703A"/>
+  </g>`;
+	var JAUNE_DE_LA_BOTTE = "#FFC93C";
+	var ROUGE_DE_LA_BOTTE = "#E8604C";
+	var SEMELLE_DE_LA_BOTTE = "#B9831A";
+	var TRAIT_DES_BOTTES = `stroke="${CONTOUR$1}" stroke-width="2.6" stroke-linejoin="round"`;
+	/** Le corps d'une botte vue de face (la tige, son revers rouge, la semelle), la cheville à l'origine ; `tige` est la hauteur de la tige au-dessus de la cheville. */
+	var corpsDeLaBotte = (tige) => `<path d="M-9 ${-tige} H9 V0 Q14 1 14 8 Q14 15 7 16 H-7 Q-14 15 -14 8 Q-14 1 -9 0 Z" fill="${JAUNE_DE_LA_BOTTE}"/>
+    <path d="M-9 ${-tige} H9 V${6 - tige} H-9 Z" fill="${ROUGE_DE_LA_BOTTE}"/>
+    <path d="M-14 12 H14" stroke-width="1.6" stroke="${SEMELLE_DE_LA_BOTTE}"/>`;
+	var refletDeLaBotte = (tige) => `<path d="M-5 ${10 - tige} V3" stroke="#FFF3B8" stroke-width="2.4" stroke-linecap="round" fill="none"/>`;
+	/**
+	* Une botte dans les trois vues des scènes, à la place de la chaussure : `face` (avec `devant` et `talon`, selon que le personnage est de face ou de dos),
+	* `profil` (la pointe vers +x) et `semelle` (le pied levé, vu de dessous).
+	*/
+	function vuesDeLaBotte(tige) {
+		const haut = -tige;
+		return {
+			face: `<g data-tenue-dessin="bottes-de-pluie" ${TRAIT_DES_BOTTES}>${corpsDeLaBotte(tige)}</g><g class="devant">${refletDeLaBotte(tige)}</g><g class="talon"/>`,
+			profil: `<g data-tenue-dessin="bottes-de-pluie" ${TRAIT_DES_BOTTES}>
+    <path d="M-9 ${haut} H8 V0 Q9 -1 14 0 Q25 1 25 9 Q25 15 18 16 H-9 Q-14 16 -14 10 Q-14 3 -9 1 Z" fill="${JAUNE_DE_LA_BOTTE}"/>
+    <path d="M-9 ${haut} H8 V${haut + 6} H-9 Z" fill="${ROUGE_DE_LA_BOTTE}"/>
+    <path d="M-14 12 H25" stroke-width="1.6" stroke="${SEMELLE_DE_LA_BOTTE}" fill="none"/>
+    <path d="M-4 ${haut + 10} V4" stroke="#FFF3B8" stroke-width="2.4" stroke-linecap="round" fill="none"/></g>`,
+			semelle: `<g data-tenue-dessin="bottes-de-pluie"><path d="M-10 -10 Q-14 0 -11 10 Q-4 16 3 16 Q12 16 14 8 Q15 -2 11 -10 Q0 -14 -10 -10 Z" fill="${SEMELLE_DE_LA_BOTTE}" stroke="${CONTOUR$1}" stroke-width="2.4" stroke-linejoin="round"/>
+    <g fill="none" stroke="#FFF3B8" stroke-width="1.8" stroke-linecap="round"><path d="M-6 -4 H7 M-6 2 H8 M-5 8 H7"/></g></g>`
+		};
+	}
+	// src/univers/celebrations/commun/habiller.ts
+	var SANS_TENUE = { suivre: () => void 0 };
+	/** Le sac, à la moitié de sa profondeur derrière le dos : de profil il dépasse derrière, de dos il couvre le torse. */
+	var DECALAGE_DU_SAC = 14;
+	var DECALAGE_DES_BRETELLES = 8;
+	var DECALAGE_DU_NOEUD = 7;
+	/** La queue de l'écharpe pend sur le devant du torse, à gauche du cou : son abscisse et sa profondeur. */
+	var QUEUE_X = -13;
+	var QUEUE_Z = 9;
+	function monter(dessin, inserer) {
+		const groupe = creerUnGroupe();
+		groupe.innerHTML = dessin;
+		inserer(groupe);
+		return groupe;
+	}
+	/** Devant le torse : visible de face et de profil (étroit, au bord de la poitrine), caché dès que le personnage montre son dos. */
+	var visibleDevant = (cw) => r3(clamp01((cw + .25) * 4));
+	var largeurDeFace = (cw, minimum) => Math.max(minimum, Math.abs(cw));
+	/**
+	* Habille le personnage guide de l'une des trois tenues du cou et du dos : l'écharpe et le nœud papillon suivent le cou, le sac à dos suit le torse
+	* (derrière le corps, les bretelles devant ; de dos, le sac passe devant le torse et les bretelles disparaissent).
+	* Rend ce qui replace la tenue à chaque image. Les bottes de pluie ne passent pas ici : elles remplacent les chaussures (`chausserLesBottes`), ou se posent sur les pattes (Noisette).
+	*/
+	function habillerLePersonnage(univers, tenue, ancrage, emplacements, prefixe = univers) {
+		const id = `${prefixe}-tenue-`;
+		const { cou, dos } = ancrage;
+		switch (tenue) {
+			case void 0:
+			case "bottes-de-pluie": return SANS_TENUE;
+			case "echarpe-rayee": {
+				const groupe = monter(dessinDeLEcharpe(id), emplacements.auCou);
+				const col = trouver(groupe, ".col-de-l-echarpe"), queue = trouver(groupe, ".queue-de-l-echarpe");
+				return { suivre({ cw, sw, dx = 0 }) {
+					deplacer(groupe, `translate(${r1(cou.x + dx)} ${cou.y}) scale(${cou.echelle})`);
+					deplacer(col, `scale(${r3(largeurDeFace(cw, .5))} 1)`);
+					poser(queue, "opacity", QUEUE_Z * cw - QUEUE_X * sw > 2 ? 1 : 0);
+					deplacer(queue, `translate(${r1(QUEUE_X * cw + QUEUE_Z * sw)} 0) scale(${r3(largeurDeFace(cw, .3))} 1) translate(13 0)`);
+				} };
+			}
+			case "noeud-papillon": {
+				const groupe = monter(DESSIN_DU_NOEUD_PAPILLON, emplacements.auCou);
+				return { suivre({ cw, sw, dx = 0 }) {
+					deplacer(groupe, `translate(${r1(cou.x + dx + DECALAGE_DU_NOEUD * sw * cou.echelle)} ${cou.y}) scale(${r3(cou.echelle * largeurDeFace(cw, .3))} ${cou.echelle})`);
+					poser(groupe, "opacity", visibleDevant(cw));
+				} };
+			}
+			case "sac-a-dos-d-explorateur": {
+				const derriere = creerUnGroupe();
+				emplacements.derriere(derriere);
+				const sac = monter(dessinDuSacADos(id, dos.elargissement), (groupe) => derriere.append(groupe));
+				const surLeTorse = emplacements.surLeTorse ? monter("", emplacements.surLeTorse) : void 0;
+				const bretelles = monter(DESSIN_DES_BRETELLES, emplacements.devant);
+				return { suivre({ cw, sw, dx = 0, torse = 0 }) {
+					deplacer(derriere, `rotate(${r1(torse)})`);
+					const cible = cw < 0 && surLeTorse ? surLeTorse : derriere;
+					if (sac.parentNode !== cible) cible.append(sac);
+					deplacer(sac, `translate(${r1(dos.x + dx - DECALAGE_DU_SAC * sw * dos.echelle)} ${dos.y}) scale(${r3(dos.echelle * lerp(.45, 1, Math.abs(cw)))} ${dos.echelle})`);
+					deplacer(bretelles, `translate(${r1(dos.x + dx + DECALAGE_DES_BRETELLES * sw * dos.echelle)} ${dos.y}) scale(${r3(dos.echelle * largeurDeFace(cw, .35))} ${dos.echelle})`);
+					poser(bretelles, "opacity", visibleDevant(cw));
+				} };
+			}
+		}
+	}
+	/**
+	* Remplace la chaussure de chaque pied par une botte de pluie, dans les trois vues de la scène (face, profil, semelle) : le moteur qui fond ces vues,
+	* selon l'angle du tibia et la vue, n'a pas à savoir que c'est une botte.
+	*/
+	function chausserLesBottes(chaussures, tige) {
+		const vues = vuesDeLaBotte(tige);
+		for (const chaussure of chaussures) for (const [classe, dessin] of [
+			["vue-face", vues.face],
+			["vue-profil", vues.profil],
+			["vue-semelle", vues.semelle]
+		]) {
+			const vue = chaussure.querySelector(`.${classe}`);
+			if (vue) vue.innerHTML = dessin;
+		}
+	}
+	var TIGE_DES_BOTTES_DU_CORPS_ARTICULE = ANCRAGES_DES_TENUES.sports.pieds.tige;
+	/**
+	* La tenue de Coach Léo, de Lili, d'Agent Max et de Capitaine Sam, qui ont le même corps articulé (`haut`, `torse`, `tete`, `chaussure-g`, `chaussure-d`) :
+	* le sac derrière le corps, l'écharpe et le nœud devant la tête (derrière ce qui est tenu en main), les bottes à la place des chaussures.
+	*/
+	function habillerLeCorpsArticule(n, corps, univers, tenue, prefixe = univers) {
+		if (tenue === "bottes-de-pluie") chausserLesBottes([n("chaussure-g"), n("chaussure-d")], TIGE_DES_BOTTES_DU_CORPS_ARTICULE);
+		return habillerLePersonnage(univers, tenue, ANCRAGES_DES_TENUES[univers], {
+			derriere: (groupe) => corps.prepend(groupe),
+			surLeTorse: (groupe) => n("torse").after(groupe),
+			devant: (groupe) => n("tete").after(groupe),
+			auCou: (groupe) => n("bras-avant").after(groupe)
+		}, prefixe);
+	}
+	// src/univers/celebrations/commun/expressions.ts
+	/** L'expression à l'instant `t` : l'expression en cours, la précédente et l'avancement du fondu de l'une à l'autre. */
+	function expressionA(expressions, t) {
+		const premiere = expressions[0];
+		if (!premiere) throw new Error("Une scène de célébration a au moins une expression");
+		let courante = premiere, precedente = null;
+		for (const e of expressions) {
+			if (e.t > t) continue;
+			precedente = courante === e ? precedente : courante;
+			courante = e;
+		}
+		const u = precedente && precedente !== courante ? fenetre(t, courante.t, .14) : 1;
+		return {
+			emo: courante.emo,
+			prec: precedente ? precedente.emo : courante.emo,
+			u
+		};
+	}
+	// src/univers/celebrations/commun/tableaux.ts
+	/** L'élément `i` d'un tableau qui doit l'avoir : une erreur claire plutôt qu'un `undefined` qui se propage dans un tracé. */
+	function au(tableau, i) {
+		const valeur = tableau[i];
+		if (valeur === void 0) throw new Error(`Le tableau n'a pas d'élément ${i}`);
+		return valeur;
+	}
+	// src/univers/celebrations/commun/membres.ts
+	var quad = (S, C, W, t) => ({
+		x: (1 - t) ** 2 * S.x + 2 * t * (1 - t) * C.x + t * t * W.x,
+		y: (1 - t) ** 2 * S.y + 2 * t * (1 - t) * C.y + t * t * W.y
+	});
+	/** Un membre articulé : une seule courbe souple de l'épaule (ou de la hanche) au poignet (ou à la cheville). */
+	function membre(S, a1, a2, L1, L2) {
+		const E1 = {
+			x: S.x - Math.sin(a1 * DEG) * L1,
+			y: S.y + Math.cos(a1 * DEG) * L1
+		};
+		const W = {
+			x: E1.x - Math.sin((a1 + a2) * DEG) * L2,
+			y: E1.y + Math.cos((a1 + a2) * DEG) * L2
+		};
+		return {
+			S,
+			E: E1,
+			W,
+			C: {
+				x: 2 * E1.x - (S.x + W.x) / 2,
+				y: 2 * E1.y - (S.y + W.y) / 2
+			},
+			dir: Math.atan2(W.x - E1.x, -(W.y - E1.y)) / DEG
+		};
+	}
+	function trace(m, t0, t1, pas = 8) {
+		let d = "";
+		for (let i = 0; i <= pas; i++) {
+			const p = quad(m.S, m.C, m.W, lerp(t0, t1, i / pas));
+			d += `${i ? "L" : "M"}${r1(p.x)} ${r1(p.y)}`;
+		}
+		return d;
+	}
+	var decaler = (m, dx, dy) => ({
+		...m,
+		S: {
+			x: m.S.x + dx,
+			y: m.S.y + dy
+		},
+		C: {
+			x: m.C.x + dx,
+			y: m.C.y + dy
+		},
+		W: {
+			x: m.W.x + dx,
+			y: m.W.y + dy
+		}
+	});
+	/** Une courbe lisse qui passe entre les points : chaque point est un point de contrôle, la courbe va aux milieux. Elle démarre par `M` (nouveau tracé) ou par `L` (suite d'un tracé). */
+	function courbe(P, depart = "M") {
+		const premier = au(P, 0);
+		let d = `${depart}${r1(premier.x)} ${r1(premier.y)}`;
+		for (let i = 1; i < P.length - 1; i++) {
+			const a = au(P, i), b = au(P, i + 1);
+			d += ` Q${r1(a.x)} ${r1(a.y)} ${r1((a.x + b.x) / 2)} ${r1((a.y + b.y) / 2)}`;
+		}
+		const fin = au(P, P.length - 1);
+		return `${d} L${r1(fin.x)} ${r1(fin.y)}`;
+	}
+	// src/univers/celebrations/commun/chaussure.ts
+	/**
+	* Place la chaussure (ou la botte) d'un pied à la cheville et fond ses trois vues : de face, de profil, semelle quand le pied est levé.
+	* Le tibia replié la fait passer derrière la cuisse. Rend le pied levé (de 0 à 1) et le sens, pour ce que chaque personnage y ajoute (contact au sol, talon).
+	*/
+	function placerLaChaussure(jambe, chaussure, m, { cote, tibia, sw, profil, inclinaisonDuProfil }) {
+		const vx = m.W.x - m.E.x, vy = m.W.y - m.E.y, lv = Math.hypot(vx, vy) || 1;
+		const leve = clamp01(-vy / lv * 1.6 - .2), sens = sw > .02 ? 1 : sw < -.02 ? -1 : 1;
+		deplacer(chaussure, `translate(${r1(m.W.x)} ${r1(m.W.y + 2)})`);
+		const face = trouver(chaussure, ".vue-face"), vueDeProfil = trouver(chaussure, ".vue-profil"), semelle = trouver(chaussure, ".vue-semelle");
+		poser(face, "opacity", r3((1 - profil) * (1 - leve)));
+		poser(vueDeProfil, "opacity", r3(profil * (1 - leve)));
+		deplacer(vueDeProfil, `scale(${r3(sens * (.6 + .4 * profil))} 1) rotate(${r1(inclinaisonDuProfil(vx, vy, sens))})`);
+		const replie = clamp01((1 - tibia) * 2.2), dehors = (cote === "g" ? -1 : 1) * replie * 13;
+		if (replie > .3) {
+			if (jambe.firstElementChild !== chaussure) jambe.prepend(chaussure);
+		} else if (jambe.lastElementChild !== chaussure) jambe.append(chaussure);
+		poser(semelle, "opacity", r3(Math.pow(leve, .8)));
+		deplacer(semelle, `translate(${r1(dehors)} ${r1(-3 * leve + replie * 2)}) rotate(${r1(-dehors * 1.8)}) scale(${r3(.5 + .25 * leve)} ${r3(Math.max(.05, leve * .8))})`);
+		return {
+			face,
+			leve,
+			sens
+		};
+	}
+	/** L'inclinaison de la chaussure de profil de Coach Léo, de Lili et d'Agent Max. */
+	var inclinaisonDuProfilDeLeo = (vx, vy, sens) => Math.atan2(vx * sens, -vy) / DEG * .25;
+	/** Celle de Capitaine Sam : la chaussure reste dans le prolongement du tibia. */
+	var inclinaisonDuProfilDeSam = (vx, vy, sens) => -Math.atan2(vx * sens, vy) / DEG * .25;
+	/** Coach Léo, Lili et Agent Max : leur chaussure garde son inclinaison de la maquette ; une botte a une longue tige qui reste dans le prolongement du tibia, comme chez Capitaine Sam, et ne se couche pas. */
+	var inclinaisonDuProfilDeLeoOuDesBottes = (bottes) => bottes ? inclinaisonDuProfilDeSam : inclinaisonDuProfilDeLeo;
+	/** Un trait du visage à l'azimut alpha (0 = devant le visage) vu sous l'angle omega (0 = face, 180 = dos). */
+	var traitDuVisage = (alpha, omega, rayon = 28) => {
+		const a = (alpha + omega) * DEG;
+		return {
+			x: rayon * Math.sin(a),
+			z: Math.cos(a)
+		};
+	};
+	var clignement = (t) => {
+		const c = (t + .9) % 2.9;
+		return c < .13 ? Math.sin(c / .13 * Math.PI) : 0;
+	};
+	// src/univers/celebrations/commun/mains.ts
+	/** Un doigt effilé et légèrement courbe, de la base (x, y0) dans la direction a (0 = vers le haut), longueur L. */
+	function doigtForme(x, y0, a, L, b = 2.7, tp = 1.9) {
+		const dx = Math.sin(a * DEG), dy = -Math.cos(a * DEG), nx = -dy, ny = dx;
+		const tx = x + dx * L, ty = y0 + dy * L, mx = (x + tx) / 2 + nx * .7, my = (y0 + ty) / 2 + ny * .7, mw = (b + tp) / 2;
+		return `M${r1(x + nx * b)} ${r1(y0 + ny * b)} Q${r1(mx + nx * mw)} ${r1(my + ny * mw)} ${r1(tx + nx * tp)} ${r1(ty + ny * tp)} A${tp} ${tp} 0 0 0 ${r1(tx - nx * tp)} ${r1(ty - ny * tp)} Q${r1(mx - nx * mw)} ${r1(my - ny * mw)} ${r1(x - nx * b)} ${r1(y0 - ny * b)} Z`;
+	}
+	/** Une main à cinq doigts : détendue (0), poing (1), pouce levé (2) ou doigts écartés (3). */
+	function main(pose, cote, { contour, peau, peauOmbre }) {
+		const trait = (d, w) => `<path d="${d}" fill="none" stroke="${contour}" stroke-width="${w}" stroke-linejoin="round"/>`;
+		const m = cote === "miroir" ? -1 : 1, doigts = [
+			-6.3,
+			-2.1,
+			2.1,
+			6.3
+		], angles = pose === 3 ? [
+			-26,
+			-9,
+			9,
+			26
+		] : [
+			-9,
+			-3,
+			3,
+			9
+		];
+		const paume = `M-8 9 V-3 Q-8 -8 -3 -8 H3 Q8 -8 8 -3 V9 Q0 12 -8 9 Z`;
+		const paumePoing = `M-8 8 V-2 Q-8 -9 0 -9 Q8 -9 8 -2 V8 Q0 12 -8 8 Z`;
+		let contours = "", remplissages = "";
+		if (pose === 0 || pose === 3) {
+			const formes = doigts.map((x, i) => doigtForme(x, -6, (angles[i] ?? 0) * m, 10.5 - Math.abs(i - 1.5) * .8));
+			const pouce = doigtForme(-7 * m, 0, -52 * m, 9, 2.6, 1.9);
+			formes.concat(pouce).forEach((d) => contours += trait(d, 5.2));
+			remplissages += formes.concat(pouce).map((d) => `<path d="${d}" fill="${peau}"/>`).join("");
+			remplissages += doigts.map((x, i) => {
+				const a = (angles[i] ?? 0) * m * DEG;
+				return `<path d="M${r1(x + Math.sin(a) * 3)} ${r1(-6 - Math.cos(a) * 3)} l${r1(Math.sin(a) * 4)} ${r1(-Math.cos(a) * 4)}" fill="none" stroke="${peauOmbre}" stroke-width="1.2" stroke-linecap="round" opacity=".7"/>`;
+			}).join("");
+			return `${contours}${trait(paume, 5.6)}<path d="${paume}" fill="${peau}"/>${remplissages}<path d="M3 8 Q7 4 7 -1" fill="none" stroke="${peauOmbre}" stroke-width="2.2" stroke-linecap="round"/>`;
+		}
+		const pouce = pose === 2 ? doigtForme(-5 * m, -4, -10 * m, 13, 2.8, 2.1) : null;
+		if (pouce) contours += trait(pouce, 5.4);
+		doigts.forEach((x) => {
+			contours += `<circle cx="${x}" cy="-8" r="5.4" fill="${contour}"/>`;
+		});
+		let dessus = doigts.map((x) => `<circle cx="${x}" cy="-8" r="3.6" fill="${peau}"/>`).join("") + `<rect x="-8" y="-8" width="16" height="6" fill="${peau}"/>`;
+		dessus += doigts.map((x) => `<path d="M${x - 2.2} -6.5 q2.2 -1.8 4.4 0" fill="none" stroke="${peauOmbre}" stroke-width="1.4" stroke-linecap="round"/>`).join("");
+		if (pouce) dessus += `<path d="${pouce}" fill="${peau}"/><path d="M${r1(-6 * m)} -3 l${r1(-1.5 * m)} -6" fill="none" stroke="${peauOmbre}" stroke-width="1.6" stroke-linecap="round"/>`;
+		else dessus += `<path d="M${-7 * m} 2 q${r1(5 * m)} 3 ${r1(10 * m)} 1" fill="none" stroke="${peauOmbre}" stroke-width="1.8" stroke-linecap="round"/>`;
+		return `${contours}${trait(paumePoing, 5.6)}<path d="${paumePoing}" fill="${peau}"/>${dessus}<path d="M3 7 Q7 3 7 -2" fill="none" stroke="${peauOmbre}" stroke-width="2.2" stroke-linecap="round"/>`;
+	}
+	var POSES_DE_MAIN = [
+		0,
+		1,
+		2,
+		3
+	];
+	/** Les mains du personnage, dans chaque pose et de chaque côté, aux couleurs de sa peau. */
+	var dessinDesMains = (couleurs) => ({
+		droit: POSES_DE_MAIN.map((p) => main(p, "droit", couleurs)),
+		miroir: POSES_DE_MAIN.map((p) => main(p, "miroir", couleurs))
+	});
+	// src/univers/celebrations/commun/trait.ts
+	/** Un trait arrondi du personnage (contour, ombre, manche…) : le moteur en calcule le tracé `d` à chaque image. */
+	var ligne = (classe, couleur, largeur) => `<path class="${classe}" fill="none" stroke="${couleur}" stroke-width="${largeur}" stroke-linecap="round" stroke-linejoin="round"/>`;
+	// src/univers/celebrations/danse/dessin-de-lili.ts
+	var CONTOUR = "#33304A";
+	var PEAU = "#e8b58c";
+	var PEAU_OMBRE = "#C9956E";
+	var PEAU_LUMIERE = "#F7D4B8";
+	var CHEVEUX = "#B8873E";
+	var CHEVEUX_OMBRE = "#8F6528";
+	var CHEVEUX_LUMIERE = "#DDB46A";
+	var JUSTAUCORPS = "#b55bd6";
+	var JUSTAUCORPS_OMBRE = "#8E3FB0";
+	var JUSTAUCORPS_LUMIERE = "#D08AE8";
+	var TUTU = "#F3C9F2";
+	var TUTU_OMBRE = "#D9A6DE";
+	var TUTU_ARRIERE = "#E6B5E8";
+	var COLLANT = "#FBEFF9";
+	var COLLANT_OMBRE = "#E2CCE0";
+	var CHAUSSON = "#F6B4CF";
+	var CHAUSSON_OMBRE = "#E08FB4";
+	var RUBAN_ROSE = "#FF8FB8";
+	var MAINS = dessinDesMains({
+		contour: CONTOUR,
+		peau: PEAU,
+		peauOmbre: PEAU_OMBRE
+	});
+	var dessinDuBras = (c) => `<g id="danse-bras-${c}">
+      ${ligne("manche-contour", CONTOUR, 26)}${ligne("contour", CONTOUR, 20)}${ligne("rempli", PEAU, 13)}${ligne("ombre", PEAU_OMBRE, 5.5)}${ligne("lumiere", PEAU_LUMIERE, 3.2)}
+      ${ligne("manche", JUSTAUCORPS, 20)}${ligne("manche-ombre", JUSTAUCORPS_OMBRE, 7)}${ligne("manche-bord", JUSTAUCORPS_OMBRE, 2.2)}
+      <g id="danse-main-${c}"><g class="pose-main"></g></g></g>`;
+	var dessinDeLaJambe = (c) => `<g id="danse-jambe-${c}">
+      ${ligne("contour", CONTOUR, 20)}${ligne("rempli", COLLANT, 13)}${ligne("ombre", COLLANT_OMBRE, 5.5)}${ligne("lumiere", "#FFFFFF", 3)}
+      ${ligne("chaussette", COLLANT, 13)}<path class="chaussette-bord" fill="none" stroke="${COLLANT}" stroke-width="13" stroke-linecap="butt"/><path class="chaussette-bord2" fill="none" stroke="${COLLANT}" stroke-width="13" stroke-linecap="butt"/>${ligne("chaussette-ombre", COLLANT_OMBRE, 4)}
+      <g id="danse-chaussure-${c}">
+        <ellipse class="contact" rx="11" ry="3" fill="#6B3A1E" opacity=".25"/>
+        <g class="vue-face">
+          <path fill="${CHAUSSON}" stroke="${CONTOUR}" stroke-width="2.8" stroke-linejoin="round" d="M-7 -6 Q-9 0 -9 5 Q-9 12 -3 13 Q0 13.5 3 13 Q9 12 9 5 Q9 0 7 -6 Q0 -8 -7 -6 Z"/>
+          <path fill="${CHAUSSON_OMBRE}" d="M3 -5 Q7 0 7 6 Q7 11 3 13 Q5 8 4 4 Q4 -1 3 -5 Z"/>
+          <g class="devant"><path fill="${PEAU}" stroke="${CONTOUR}" stroke-width="1.6" d="M-6 -6 Q0 -1 6 -6 Q0 -8 -6 -6 Z"/><path d="M-7 -4 L7 2 M7 -4 L-7 2" fill="none" stroke="${RUBAN_ROSE}" stroke-width="1.8" stroke-linecap="round"/><ellipse cx="-2" cy="8" rx="3" ry="1.3" fill="#FFFFFF" opacity=".8"/><path d="M-2.5 2 q2.5 -2 5 0 q-2.5 2 -5 0 Z" fill="${RUBAN_ROSE}" stroke="${CONTOUR}" stroke-width="1"/></g>
+          <g class="talon"><path d="M-7 -3 Q0 -1 7 -3" fill="none" stroke="${CONTOUR}" stroke-width="1.2" opacity=".6"/><path d="M-7 -2 L7 4 M7 -2 L-7 4" fill="none" stroke="${RUBAN_ROSE}" stroke-width="1.8" stroke-linecap="round"/></g>
+        </g>
+        <g class="vue-profil">
+          <path fill="${CHAUSSON}" stroke="${CONTOUR}" stroke-width="2.8" stroke-linejoin="round" d="M-11 -5 Q-13 1 -11 6 L-8 8 L17 8 Q23 7 22 3 Q20 -2 10 -4 Q3 -5 -2 -4 Q-7 -7 -11 -5 Z"/>
+          <path fill="${CHAUSSON_OMBRE}" d="M-7 3 Q6 6 22 3 Q23 7 17 8 L-8 8 L-11 6 Z"/>
+          <path fill="#FFE6F0" stroke="${CONTOUR}" stroke-width="1.1" d="M-11 6 L-8 8 L17 8 Q23 7 22 3.5 Q8 7 -11 6 Z"/>
+          <path d="M-6 -4 L2 5 M0 -4 L-6 5" fill="none" stroke="${RUBAN_ROSE}" stroke-width="1.8" stroke-linecap="round"/>
+          <path fill="#FFFFFF" opacity=".75" d="M11 -3 Q18 -1 21 2 Q16 1 10 0 Z"/>
+        </g>
+        <g class="vue-semelle">
+          <path fill="#E9C9D8" stroke="${CONTOUR}" stroke-width="2.2" stroke-linejoin="round" d="M-8 -9 Q-12 0 -9 9 Q-4 14 3 14 Q10 14 12 7 Q13 -2 9 -9 Q0 -12 -8 -9 Z"/>
+          <path fill="#F8E2EC" d="M-6 -5 Q-9 0 -7 7 Q-3 11 3 11 Q8 11 10 6 Q11 -1 8 -6 Q1 -9 -6 -5 Z"/>
+        </g>
+      </g></g>`;
+	var dessinDeLOeil = (c) => `<g id="danse-oeil-${c}"><ellipse rx="7.4" ry="9.6" fill="#FFFFFF" stroke="${PEAU_OMBRE}" stroke-width="1"/>
+              <g id="danse-regard-${c}"><circle cx=".5" cy="3" r="4.8" fill="#2F6B3C"/><circle cx=".5" cy="3" r="3.9" fill="#4E9A5B"/><circle cx=".5" cy="3" r="2.3" fill="#1B1530"/><circle cx="-1.4" cy=".6" r="1.8" fill="#FFFFFF"/><circle cx="2.5" cy="4.8" r=".9" fill="#FFFFFF"/></g>
+              <g clip-path="url(#danse-clip-oeil)"><ellipse id="danse-paupiere-${c}" rx="10" ry="10.6" fill="${PEAU}" stroke="${CONTOUR}" stroke-width="2.6"/></g>
+              <path d="M-7 0 A7.4 9.6 0 0 1 7 0" fill="none" stroke="${CONTOUR}" stroke-width="2.8" stroke-linecap="round"/>
+              <path d="M-4.5 8.8 Q0 10.6 4.5 8.8" fill="none" stroke="${CONTOUR}" stroke-width="1" stroke-linecap="round" opacity=".4"/>
+              <path d="${c === "g" ? "M-6.6 -5.5 l-2.8 -2.2" : "M6.6 -5.5 l2.8 -2.2"}" fill="none" stroke="${CONTOUR}" stroke-width="2" stroke-linecap="round"/></g>`;
+	var dessinDuSourcil = (c) => `<g id="danse-sourcil-${c}"><path d="M-7 0 Q0 -4 7 0" fill="none" stroke="${CHEVEUX_OMBRE}" stroke-width="3.6" stroke-linecap="round"/></g>`;
+	var queueDeCheval = `<path class="queue" fill="${CHEVEUX}" stroke="${CONTOUR}" stroke-width="3" stroke-linejoin="round"/><path class="queue-ombre" fill="none" stroke="${CHEVEUX_OMBRE}" stroke-width="3" stroke-linecap="round"/><path class="queue-lumiere" fill="none" stroke="${CHEVEUX_LUMIERE}" stroke-width="2.6" stroke-linecap="round"/><path class="queue-meches" fill="none" stroke="${CHEVEUX_OMBRE}" stroke-width="1.3" stroke-linecap="round" opacity=".75"/>
+                <g class="chouchou"><ellipse rx="7" ry="5" fill="${RUBAN_ROSE}" stroke="${CONTOUR}" stroke-width="2.2"/><path d="M0 -1 l-6 -5 q-3 3 0 6 Z M0 -1 l6 -5 q3 3 0 6 Z" fill="${RUBAN_ROSE}" stroke="${CONTOUR}" stroke-width="1.6" stroke-linejoin="round"/><circle cy="-1" r="2" fill="#FFC9DE" stroke="${CONTOUR}" stroke-width="1.2"/></g>`;
+	var dessinDeLaBouche = `
+              <path data-emo="concentration" d="M-5 16 Q-2 14 0 16 Q2 18 5 16" fill="none" stroke="${CONTOUR}" stroke-width="2.4" stroke-linecap="round"/>
+              <g data-emo="joie"><path d="M-11 11 Q0 27 11 11 Z" fill="#C9475A"/><g clip-path="url(#danse-clip-bouche)"><ellipse cy="25" rx="7.5" ry="5" fill="#FF8FA8"/><path d="M-11 10.5 Q0 18.5 11 10.5 Z" fill="#FFFFFF"/></g><path d="M-11 11 Q0 27 11 11 Z" fill="none" stroke="${CONTOUR}" stroke-width="1.8" stroke-linejoin="round"/></g>
+              <path data-emo="sourire" d="M-8 14 Q0 22 8 14" fill="none" stroke="${CONTOUR}" stroke-width="2.4" stroke-linecap="round"/>`;
+	/**
+	* Lili, articulée : le moteur place chaque pièce à chaque image.
+	* Justaucorps violet à manches bouffantes, tutu rose court, collant opaque, chaussons de demi-pointes (maquette validée).
+	*/
+	var STRUCTURE_DE_LILI = `
+    <g id="danse-arriere"></g>
+    ${dessinDeLaJambe("g")}${dessinDeLaJambe("d")}
+    <g id="danse-tutu"><path class="arriere" fill="${TUTU_ARRIERE}" stroke="${CONTOUR}" stroke-width="3" stroke-linejoin="round"/><path class="forme" fill="${TUTU}" stroke="${CONTOUR}" stroke-width="3" stroke-linejoin="round"/><path class="ombre" fill="${TUTU_OMBRE}"/><path class="bande" fill="none" stroke="${JUSTAUCORPS}" stroke-width="5" stroke-linecap="round"/></g>
+    <g id="danse-haut">
+      <g id="danse-torse"><path class="forme" fill="${JUSTAUCORPS}" stroke="${CONTOUR}" stroke-width="3.4" stroke-linejoin="round"/><path class="ombre" fill="${JUSTAUCORPS_OMBRE}"/><path class="lumiere" fill="${JUSTAUCORPS_LUMIERE}"/><path class="col" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></g>
+      <g id="danse-queue-arriere"></g>
+      <g id="danse-bras-arriere"></g>
+      <g id="danse-cou"><path fill="${PEAU}" stroke="${CONTOUR}" stroke-width="3" stroke-linejoin="round" d="M-4.8 -52 V-40 Q0 -36.5 4.8 -40 V-52 Z"/><path d="M-4.8 -52 V-44 Q0 -42 4.8 -44 V-52 Z" fill="${PEAU_OMBRE}"/></g>
+      <g id="danse-tete">
+        <g id="danse-tete-forme">
+          <circle r="28" fill="${PEAU}" stroke="${CONTOUR}" stroke-width="4"/>
+          <path id="danse-tete-ombre" fill="${PEAU_OMBRE}"/><path id="danse-nuque-ombre" fill="${PEAU_OMBRE}" opacity="0"/>
+          <ellipse id="danse-tete-lumiere" cx="-9" cy="-16" rx="9" ry="5" fill="${PEAU_LUMIERE}" opacity=".8"/>
+          <g id="danse-oreille-g"><circle r="4.6" fill="${PEAU}" stroke="${CONTOUR}" stroke-width="2.6"/><circle r="1.7" fill="${PEAU_OMBRE}"/></g>
+          <g id="danse-oreille-d"><circle r="4.6" fill="${PEAU}" stroke="${CONTOUR}" stroke-width="2.6"/><circle r="1.7" fill="${PEAU_OMBRE}"/></g>
+          <g id="danse-visage">
+            <g id="danse-joue-g"><ellipse rx="5" ry="3.2" fill="#FF8FA8" opacity=".6"/></g><g id="danse-joue-d"><ellipse rx="5" ry="3.2" fill="#FF8FA8" opacity=".6"/></g>
+            ${dessinDeLOeil("g")}${dessinDeLOeil("d")}
+            <g id="danse-nez"><ellipse cy="2.8" rx="2.5" ry="1.9" fill="#E3A074"/><ellipse cx="-.8" cy="2.1" rx=".9" ry=".6" fill="#FFD9BC"/></g>
+            <g id="danse-bouche"><g id="danse-bouches">${dessinDeLaBouche}
+            </g></g>
+          </g>
+          <g id="danse-cheveux"><path id="danse-cheveux-forme" fill="${CHEVEUX}" stroke="${CONTOUR}" stroke-width="3.6" stroke-linejoin="round"/><path id="danse-cheveux-lumiere" fill="none" stroke="${CHEVEUX_LUMIERE}" stroke-width="3" stroke-linecap="round"/>
+            <g id="danse-queue-avant">${queueDeCheval}</g></g>
+          <g id="danse-sourcils">${dessinDuSourcil("g")}${dessinDuSourcil("d")}</g>
+        </g>
+      </g>
+      <g id="danse-bras-avant"></g>
+    </g>`;
+	/** Le dessin de la queue de cheval, en double : un exemplaire derrière la tête (Lili de face), un devant (Lili de dos) ; le moteur n'en montre qu'un. */
+	var QUEUE_DE_CHEVAL = queueDeCheval;
+	// src/univers/celebrations/commun/poses.ts
+	/** Chaque image clé reprend la pose de la précédente, modifiée par ce qu'elle change : la première part du repos. */
+	function compiler(repos, liste) {
+		let precedente = repos;
+		return liste.map(({ t, e, p }) => {
+			precedente = {
+				...precedente,
+				...p
+			};
+			return {
+				t,
+				e,
+				p: precedente
+			};
+		});
+	}
+	/** La pose à l'instant `t`, interpolée entre les deux images clés qui l'encadrent. */
+	function poseA$1(repos, poses, t) {
+		const premiere = poses[0];
+		if (!premiere || t <= premiere.t) return premiere?.p ?? repos;
+		const cles = Object.keys(repos);
+		for (let i = 1; i < poses.length; i++) {
+			const k = poses[i];
+			const a = poses[i - 1];
+			if (!k || !a || t > k.t) continue;
+			const u = k.e((t - a.t) / (k.t - a.t));
+			const r = { ...repos };
+			for (const c of cles) r[c] = lerp(a.p[c], k.p[c], u);
+			return r;
+		}
+		return poses[poses.length - 1]?.p ?? repos;
+	}
+	// src/univers/celebrations/danse/poses.ts
+	var REPOS = {
+		x: 180,
+		y: 370,
+		rot: 0,
+		sx: 1,
+		sy: 1,
+		torse: 0,
+		tete: 0,
+		vue: 0,
+		aGu: 10,
+		aGl: 16,
+		aDu: -10,
+		aDl: -16,
+		lGt: 4,
+		lGs: 0,
+		lDt: -4,
+		lDs: 0,
+		tD: 1,
+		course: 0,
+		mG: 0,
+		mD: 0,
+		clin: 0,
+		pointe: 0
+	};
+	var PREMIERE = {
+		aGu: 48,
+		aGl: 78,
+		aDu: -48,
+		aDl: -78
+	};
+	var SECONDE = {
+		aGu: 100,
+		aGl: 6,
+		aDu: -100,
+		aDl: -6
+	};
+	var SECONDE_ARRONDIE = {
+		aGu: 70,
+		aGl: 26,
+		aDu: -70,
+		aDl: -26
+	};
+	var PASSE_D = {
+		lDt: -34,
+		lDs: -112,
+		tD: .5
+	};
+	E.douce, E.sortie, { ...SECONDE }, E.douce, E.douce, E.sortie, {
+		...PREMIERE,
+		...PASSE_D
+	}, E.lineaire, E.lineaire, E.lineaire, E.lineaire, E.instantanee, E.sortie, { ...SECONDE_ARRONDIE }, E.rebond;
+	var poseA = (poses, t) => poseA$1(REPOS, poses, t);
+	// src/univers/celebrations/danse/queue-de-cheval.ts
+	var LONGUEURS = [
+		18,
+		17,
+		16,
+		15,
+		14
+	];
+	var LARGEURS = [
+		8,
+		13,
+		12,
+		10,
+		6.5,
+		2.6
+	];
+	var NOMBRE_DE_SEGMENTS = LONGUEURS.length;
+	var lisse = (x, a, b) => {
+		const u = clamp01((x - a) / (b - a));
+		return u * u * (3 - 2 * u);
+	};
+	/**
+	* La queue de cheval haute de Lili : une chaîne de 5 segments à ressorts. Chaque segment suit le précédent avec du retard,
+	* la gravité, la portance et l'écart en rotation la font voler pendant les pirouettes. L'état des ressorts vit dans cette fermeture.
+	*/
+	function creerLaQueueDeCheval(racine, ids) {
+		const segments = Array.from({ length: NOMBRE_DE_SEGMENTS }, () => ({
+			angle: 0,
+			vitesse: 0
+		}));
+		let portance = 0, ecart = 0, tPrecedent = null;
+		const piece = (id) => {
+			const g = trouver(racine, `#${id}`);
+			return {
+				g,
+				queue: trouver(g, ".queue"),
+				ombre: trouver(g, ".queue-ombre"),
+				lumiere: trouver(g, ".queue-lumiere"),
+				meches: trouver(g, ".queue-meches"),
+				chouchou: trouver(g, ".chouchou")
+			};
+		};
+		const avant = piece(ids.avant), arriere = piece(ids.arriere);
+		/** vx et vy : vitesse du corps ; dvue : vitesse de rotation. */
+		function dessiner(p, t, vx, vy, dvue) {
+			let dt = tPrecedent === null ? 0 : t - tPrecedent;
+			const chauffe = dt < 0 || dt > .25 || tPrecedent === null;
+			if (chauffe) {
+				dt = 0;
+				for (const s of segments) {
+					s.angle = 0;
+					s.vitesse = 0;
+				}
+				portance = 0;
+				ecart = 0;
+			}
+			tPrecedent = t;
+			const w = p.vue, cw = Math.cos(w * DEG), sw = Math.sin(w * DEG), dos = cw < -.15;
+			const face = lisse(cw, .2, .75), cote = sw > 0 ? 1 : -1, drape = sw > .08 ? -1 : 1;
+			const portanceCible = Math.max(-10, Math.min(40, vy * .16)), ecartCible = Math.min(1, Math.abs(dvue) / 520);
+			portance += (portanceCible - portance) * Math.min(1, dt * 9);
+			ecart += (ecartCible - ecart) * Math.min(1, dt * 12);
+			let suivi = Math.max(-55, Math.min(55, -vx * .32)) - p.rot * .6 + 26 * face * drape - cote * ecart * 60 - sw * 10 - (dos ? 9 : 0);
+			const pas = chauffe ? 160 : 4, h = chauffe ? 1 / 60 : dt / 4;
+			for (const [i, s] of segments.entries()) {
+				const repos = (1 - face) * (-4 - 3 * i) * (dos ? 1 : .4) + face * drape * (12 - 4 * i) + cote * ecart * (14 - 9 * i) - portance * (.4 + .25 * i) * (i ? cote : 0);
+				const cible = suivi + repos;
+				const raideur = 170 - i * 22, amortissement = 10 - i * .8;
+				for (let k = 0; k < pas; k++) {
+					s.vitesse += ((cible - s.angle) * raideur - s.vitesse * amortissement) * h;
+					s.angle += s.vitesse * h;
+				}
+				suivi = s.angle * .78;
+			}
+			const attache = {
+				x: -13 * sw,
+				y: -27
+			};
+			const J = [attache];
+			for (const [i, s] of segments.entries()) {
+				const q = au(J, i);
+				J.push({
+					x: q.x + Math.sin(s.angle * DEG) * au(LONGUEURS, i),
+					y: q.y + Math.cos(s.angle * DEG) * au(LONGUEURS, i) * (1 - portance / 90)
+				});
+			}
+			const G = [], D = [];
+			for (let i = 0; i <= NOMBRE_DE_SEGMENTS; i++) {
+				const a = au(J, Math.max(0, i - 1)), b = au(J, Math.min(NOMBRE_DE_SEGMENTS, i + 1)), tx = b.x - a.x, ty = b.y - a.y;
+				const tl = Math.hypot(tx, ty) || 1, nx = -ty / tl, ny = tx / tl, largeur = au(LARGEURS, i), centre = au(J, i);
+				G.push({
+					x: centre.x + nx * largeur,
+					y: centre.y + ny * largeur
+				});
+				D.push({
+					x: centre.x - nx * largeur,
+					y: centre.y - ny * largeur
+				});
+			}
+			const bout = au(J, NOMBRE_DE_SEGMENTS), avantBout = au(J, NOMBRE_DE_SEGMENTS - 1);
+			const dirX = bout.x - avantBout.x, dirY = bout.y - avantBout.y, tl = Math.hypot(dirX, dirY) || 1, ux = dirX / tl, uy = dirY / tl, px = -uy, py = ux;
+			const P1 = {
+				x: bout.x + ux * 9 + px * 5,
+				y: bout.y + uy * 9 + py * 5
+			}, Pm = {
+				x: bout.x - ux * 3,
+				y: bout.y - uy * 3
+			}, P2 = {
+				x: bout.x + ux * 6 - px * 6,
+				y: bout.y + uy * 6 - py * 6
+			};
+			const G5 = au(G, NOMBRE_DE_SEGMENTS), D5 = au(D, NOMBRE_DE_SEGMENTS), D4 = au(D, NOMBRE_DE_SEGMENTS - 1);
+			const dessin = courbe(G.slice(0, 5)) + ` Q${r1(G5.x)} ${r1(G5.y)} ${r1(P1.x)} ${r1(P1.y)} L${r1(Pm.x)} ${r1(Pm.y)} L${r1(P2.x)} ${r1(P2.y)} Q${r1(D5.x)} ${r1(D5.y)} ${r1(D4.x)} ${r1(D4.y)}` + courbe(D.slice(0, 5).reverse(), "L") + " Z";
+			const entre = (debut, fin, k) => G.slice(debut, fin).map((g, i) => {
+				const d = au(D, debut + i);
+				return {
+					x: lerp(g.x, d.x, k),
+					y: lerp(g.y, d.y, k)
+				};
+			});
+			const ombre = courbe(entre(1, 6, .22));
+			const lumiere = courbe(entre(0, 4, .72));
+			const meches = `${courbe(entre(1, 5, .42))} ${courbe(entre(1, 5, .6))} ${courbe(entre(2, 6, .82))}`;
+			for (const { queue, ombre: ombreDeLaQueue, lumiere: lumiereDeLaQueue, meches: mechesDeLaQueue, chouchou } of [avant, arriere]) {
+				poser(queue, "d", dessin);
+				poser(ombreDeLaQueue, "d", ombre);
+				poser(lumiereDeLaQueue, "d", lumiere);
+				poser(mechesDeLaQueue, "d", meches);
+				deplacer(chouchou, `translate(${r1(attache.x)} ${r1(attache.y)}) rotate(${r1(au(segments, 0).angle * .3)}) scale(${r3(Math.max(.35, Math.abs(cw) * .4 + .6))} 1)`);
+			}
+			poser(avant.g, "opacity", dos ? 1 : 0);
+			poser(arriere.g, "opacity", dos ? 0 : 1);
+			deplacer(arriere.g, `translate(0 -48) rotate(${r1(p.tete)}) translate(0 -26)`);
+		}
+		return { dessiner };
+	}
+	var BASE = 1.25;
+	var EMOS = {
+		concentration: {
+			sg: [2, 10],
+			sd: [2, -10],
+			lid: .3,
+			pup: 1
+		},
+		joie: {
+			sg: [-5, -4],
+			sd: [-5, 4],
+			lid: 0,
+			pup: 1.05
+		},
+		sourire: {
+			sg: [-3, -3],
+			sd: [-3, 3],
+			lid: 0,
+			pup: 1
+		}
+	};
+	/** Lili, dessinée image par image à partir des poses du scénario (portage du moteur de la maquette). */
+	function creerLili(racine, tenue) {
+		const n = elementsDe(racine, "danse");
+		n("lili").innerHTML = STRUCTURE_DE_LILI;
+		const habit = habillerLeCorpsArticule(n, n("lili"), "danse", tenue);
+		n("queue-arriere").innerHTML = QUEUE_DE_CHEVAL;
+		const bras = {
+			g: creerLeBras("g"),
+			d: creerLeBras("d")
+		};
+		const bouches = [...n("bouches").children];
+		const queue = creerLaQueueDeCheval(racine, {
+			avant: "danse-queue-avant",
+			arriere: "danse-queue-arriere"
+		});
+		const q1 = (g, classe) => trouver(g, `.${classe}`);
+		let vueCourante = 0;
+		function creerLeBras(c) {
+			const enveloppe = creerUnGroupe();
+			enveloppe.innerHTML = dessinDuBras(c);
+			const b = enveloppe.firstElementChild;
+			if (!(b instanceof SVGElement)) throw new Error("Le bras de Lili n'a pas pu être dessiné");
+			return b;
+		}
+		function dessinerLeBras(g, c, S, a1, a2, pose) {
+			const m = membre(S, a1, a2, 24, 22);
+			poser(q1(g, "manche-contour"), "d", trace(m, .04, .3, 3));
+			poser(q1(g, "contour"), "d", trace(m, .09, 1));
+			poser(q1(g, "rempli"), "d", trace(m, 0, 1));
+			poser(q1(g, "manche"), "d", trace(m, 0, .3, 3));
+			poser(q1(g, "manche-bord"), "d", trace(m, .27, .3, 1));
+			poser(q1(g, "ombre"), "d", trace(decaler(m, 3.2, 1.4), .32, .92));
+			poser(q1(g, "lumiere"), "d", trace(decaler(m, -3.2, -1.4), .34, .9));
+			poser(q1(g, "manche-ombre"), "d", trace(decaler(m, 4, 1), .04, .26, 2));
+			const mainG = trouver(g, `#danse-main-${c}`);
+			deplacer(mainG, `translate(${r1(m.W.x)} ${r1(m.W.y)}) rotate(${r1(m.dir)}) scale(.86)`);
+			const versCentre = c === "g" ? 1 : -1;
+			const cote = Math.cos(m.dir * DEG) * versCentre - Math.sin(m.dir * DEG) * .8 > 0 ? "miroir" : "droit";
+			const cle = cote + pose, emplacement = mainG.firstElementChild;
+			if (emplacement instanceof SVGElement && emplacement.dataset["pose"] !== cle) {
+				emplacement.innerHTML = MAINS[cote][pose] ?? "";
+				emplacement.dataset["pose"] = cle;
+			}
+		}
+		function dessinerLaJambe(g, c, S, a1, a2, f, sw, ft) {
+			const m = membre(S, a1, a2, 28 * f, 26 * f * ft);
+			poser(q1(g, "contour"), "d", trace(m, .06, 1));
+			poser(q1(g, "rempli"), "d", trace(m, 0, 1));
+			poser(q1(g, "ombre"), "d", trace(decaler(m, 3.4, 1.2), .3, .72));
+			poser(q1(g, "lumiere"), "d", trace(decaler(m, -3.4, -1.2), .3, .7));
+			poser(q1(g, "chaussette"), "d", trace(m, .5, 1, 5));
+			poser(q1(g, "chaussette-bord"), "d", trace(m, .54, .59, 1));
+			poser(q1(g, "chaussette-bord2"), "d", trace(m, .62, .65, 1));
+			poser(q1(g, "chaussette-ombre"), "d", trace(decaler(m, 3.6, 1), .6, .95, 3));
+			const ch = n(`chaussure-${c}`), profilF = clamp01((Math.abs(Math.sin(vueCourante * DEG)) - .45) * 6), versCam = Math.cos(vueCourante * DEG) < 0 ? -1 : 1;
+			const { face, leve, sens } = placerLaChaussure(g, ch, m, {
+				cote: c,
+				tibia: ft,
+				sw,
+				profil: profilF,
+				inclinaisonDuProfil: inclinaisonDuProfilDeLeoOuDesBottes(tenue === "bottes-de-pluie")
+			});
+			poser(q1(face, "devant"), "opacity", versCam > 0 ? 1 : 0);
+			poser(q1(face, "talon"), "opacity", versCam > 0 ? 0 : 1);
+			const contact = q1(ch, "contact");
+			poser(contact, "opacity", r3((1 - leve) * .25));
+			deplacer(contact, `translate(${r1(profilF * sens * 5)} 12) scale(${r3(1 + profilF * .5)} 1)`);
+		}
+		function dessinerLaTete(p, ex, lidBase, pup) {
+			const w = p.vue, cw = Math.cos(w * DEG);
+			for (const [id, alpha] of [["oreille-g", -90], ["oreille-d", 90]]) {
+				const o = traitDuVisage(alpha, w, 28);
+				poser(n(id), "opacity", o.z > -.12 ? 1 : 0);
+				deplacer(n(id), `translate(${r1(o.x)} 6)`);
+			}
+			poser(n("tete-ombre"), "d", `M8 27 A28 28 0 0 0 27 -6 A23 23 0 0 1 8 27 Z`);
+			const A = EMOS[ex.prec], B = EMOS[ex.emo], u = ex.u;
+			const sg = A.sg.map((v, i) => lerp(v, B.sg[i] ?? v, u)), sd = A.sd.map((v, i) => lerp(v, B.sd[i] ?? v, u));
+			for (const [c, alpha, s, lidExtra] of [[
+				"g",
+				-32,
+				sg,
+				0
+			], [
+				"d",
+				32,
+				sd,
+				p.clin
+			]]) {
+				const o = traitDuVisage(alpha, w, 24.64), visible = o.z > .06, kx = Math.max(.3, Math.pow(Math.max(0, o.z), .6));
+				poser(n(`oeil-${c}`), "opacity", visible ? 1 : 0);
+				poser(n(`sourcil-${c}`), "opacity", visible ? 1 : 0);
+				deplacer(n(`oeil-${c}`), `translate(${r1(o.x)} -5) scale(${r3(kx)} 1)`);
+				deplacer(n(`sourcil-${c}`), `translate(${r1(o.x)} ${r1(-18 + (s[0] ?? 0))}) scale(${r3(kx)} 1) rotate(${r1(s[1] ?? 0)})`);
+				deplacer(n(`paupiere-${c}`), `translate(0 ${r1(-21 * (1 - Math.max(lidBase, lidExtra)))})`);
+				deplacer(n(`regard-${c}`), `translate(${r1(-.5 * (pup - 1))} ${r1(-2.5 * (pup - 1))}) scale(${pup})`);
+				const j = traitDuVisage(alpha * 1.8, w, 21.84);
+				poser(n(`joue-${c}`), "opacity", j.z > .1 ? 1 : 0);
+				deplacer(n(`joue-${c}`), `translate(${r1(j.x)} 8) scale(${r3(Math.max(.3, j.z))} 1)`);
+			}
+			const nez = traitDuVisage(0, w, 25.2);
+			poser(n("nez"), "opacity", nez.z > -.05 ? 1 : 0);
+			deplacer(n("nez"), `translate(${r1(nez.x + (nez.z < .3 ? 3 * Math.sign(Math.sin(w * DEG) || 1) : 0))} 8)`);
+			const b = traitDuVisage(0, w, 28 * .7);
+			poser(n("bouche"), "opacity", b.z > .05 ? 1 : 0);
+			deplacer(n("bouche"), `translate(${r1(b.x)} 1) scale(${r3(Math.max(.3, b.z))} 1)`);
+			for (const m of bouches) {
+				const e = m.getAttribute("data-emo");
+				poser(m, "opacity", e === ex.emo ? u : e === ex.prec ? 1 - u : 0);
+				if (e === ex.emo) deplacer(m, `scale(${r3(lerp(.7, 1, E.retour(u)))})`);
+			}
+			const sw = Math.sin(w * DEG), dosA = (1 - cw) / 2, pente = 16, cote = lerp(5, 13, dosA), deFace = clamp01(cw), yC = lerp(-17, 15, dosA) - 5 * deFace;
+			const recouvrement = clamp01((-cw - .05) / .2), basDeLaTete = (x) => Math.sqrt(Math.max(0, 900 - x * x)) + 1;
+			const descente = lerp(-cote, 14, deFace), bord = lerp(29, Math.sqrt(29.5 ** 2 - 121), deFace);
+			const hauteurDeLaFrange = (x) => {
+				return lerp(yC - x / 28 * sw * pente + descente * (Math.abs(x) / 28) ** lerp(3, 1.6, deFace), basDeLaTete(x), recouvrement);
+			};
+			let d = "";
+			for (let i = 0; i <= 12; i++) {
+				const x = -bord + 2 * bord * i / 12;
+				const y = hauteurDeLaFrange(x);
+				d += `${i ? "L" : "M"}${r1(x)} ${r1(y)}`;
+			}
+			const yGauche = r1(hauteurDeLaFrange(-bord));
+			d += ` C${r1(bord + lerp(4, 3, deFace))} ${r1(lerp(-14, -20, deFace))} 18 -25 18 -25 Q0 ${lerp(-37, -46, deFace)} -18 -25 C-18 -25 ${r1(-bord - lerp(4, 3, deFace))} ${r1(lerp(-14, -20, deFace))} ${r1(-bord)} ${yGauche} Z`;
+			poser(n("cheveux-forme"), "d", d);
+			const dos = clamp01(-cw);
+			poser(n("nuque-ombre"), "d", `M-26 ${r1(yC - 2)} Q0 ${r1(yC + 10)} 26 ${r1(yC - 2)} Q0 ${r1(yC + 4)} -26 ${r1(yC - 2)} Z`);
+			poser(n("nuque-ombre"), "opacity", r3(dos * .8));
+			poser(n("cheveux-lumiere"), "d", `M${r1(-16 + 6 * sw)} -22 Q${r1(-4 + 6 * sw)} -29 ${r1(8 + 6 * sw)} -26`);
+		}
+		/** Dessine Lili à l'instant `t` du scénario et rend sa pose (les effets s'y accrochent). */
+		function dessiner(scenario, t) {
+			const p = poseA(scenario.poses, t);
+			vueCourante = p.vue;
+			const pAvant = poseA(scenario.poses, t - .06);
+			const rebond = Math.max(-22, Math.min(22, (p.y - pAvant.y) * 1.1 + (p.x - pAvant.x) * .5));
+			let { lGt, lGs, lDt, lDs, y } = p;
+			let fG = 1, fD = 1;
+			if (p.course > 0) {
+				const ph = t * Math.PI * 2 * 3.4, a = Math.max(0, Math.sin(ph)), b = Math.max(0, -Math.sin(ph));
+				fG = lerp(fG, 1 - .4 * a, p.course);
+				fD = lerp(fD, 1 - .4 * b, p.course);
+				lGs = lerp(lGs, 64 * a, p.course);
+				lDs = lerp(lDs, -64 * b, p.course);
+				lGt = lerp(lGt, 10 - 6 * a, p.course);
+				lDt = lerp(lDt, -10 + 6 * b, p.course);
+				y -= 5 * Math.abs(Math.sin(ph)) * p.course;
+			}
+			const w = p.vue, cw = Math.cos(w * DEG), sw = Math.sin(w * DEG), wf = lerp(.55, 1, Math.abs(cw));
+			deplacer(n("lili"), `translate(${r1(p.x)} ${r1(y)}) rotate(${r1(p.rot)}) scale(${r3(BASE * p.sx)} ${r3(BASE * p.sy)})`);
+			const sh = 17 * wf, wa = 13 * wf, hp = 21 * wf, torse = n("torse"), tutu = n("tutu");
+			poser(q1(torse, "forme"), "d", `M${r1(-sh)} -40 Q${r1(-sh - 3)} -26 ${r1(-wa)} -13 Q${r1(-wa - 1)} -6 ${r1(-hp * .8)} 0 Q0 6 ${r1(hp * .8)} 0 Q${r1(wa + 1)} -6 ${r1(wa)} -13 Q${r1(sh + 3)} -26 ${r1(sh)} -40 Q0 -47 ${r1(-sh)} -40 Z`);
+			poser(q1(torse, "ombre"), "d", `M${r1(sh * .35)} -42 Q${r1(sh + 2)} -30 ${r1(wa)} -13 Q${r1(wa + 1)} -6 ${r1(hp * .8)} 0 Q${r1(hp * .6)} 3 ${r1(hp * .35)} 3 Q${r1(wa - 2)} -8 ${r1(wa - 4)} -16 Q${r1(sh - 2)} -28 ${r1(sh * .35)} -42 Z`);
+			poser(q1(torse, "lumiere"), "d", `M${r1(-sh * .9)} -36 Q${r1(-sh * .4)} -42 ${r1(sh * .1)} -40 Q${r1(-sh * .4)} -37 ${r1(-sh * .8)} -30 Z`);
+			poser(q1(torse, "col"), "d", cw > .2 ? `M-9 -44 Q0 -34 9 -44` : `M-8 -43 Q0 -39 8 -43`);
+			const festons = (W, y0, yb, nombre) => {
+				const taille = W * .55;
+				let d = `M${r1(-taille)} ${y0} Q${r1(-W * .95)} ${y0 + 2} ${r1(-W)} ${yb - 3}`;
+				for (let i = 0; i < nombre; i++) {
+					const xa = -W + 2 * W * i / nombre, xb = -W + 2 * W * (i + 1) / nombre;
+					d += ` Q${r1((xa + xb) / 2)} ${r1(yb + 9)} ${r1(xb)} ${yb - 3}`;
+				}
+				return `${d} Q${r1(W * .95)} ${y0 + 2} ${r1(taille)} ${y0} Q0 ${y0 + 4} ${r1(-taille)} ${y0} Z`;
+			};
+			const bond = clamp01(Math.abs(rebond) / 22), W = 36 * wf + 8;
+			poser(q1(tutu, "arriere"), "d", festons(W + 5, -8, 17, 6));
+			poser(q1(tutu, "forme"), "d", festons(W, -5, 20, 7));
+			poser(q1(tutu, "ombre"), "d", `M${r1(W * .5)} 2 Q${r1(W * .97)} 4 ${r1(W)} 14 Q${r1(W * .8)} 18 ${r1(W * .55)} 17 Q${r1(W * .75)} 10 ${r1(W * .5)} 2 Z`);
+			poser(q1(tutu, "bande"), "d", `M${r1(-W * .5)} -5 Q0 2 ${r1(W * .5)} -5`);
+			deplacer(tutu, `scale(${r3(1 + bond * .08)} ${r3(1 + bond * .18)})`);
+			deplacer(n("haut"), `rotate(${r1(p.torse)})`);
+			habit.suivre({
+				cw,
+				sw,
+				torse: p.torse
+			});
+			dessinerLaJambe(n("jambe-g"), "g", {
+				x: -9 * wf,
+				y: 4
+			}, lGt, lGs, fG * (1 + .06 * p.pointe), sw, 1);
+			dessinerLaJambe(n("jambe-d"), "d", {
+				x: 9 * wf,
+				y: 4
+			}, lDt, lDs, fD * (1 + .06 * p.pointe), sw, p.tD);
+			const proche = sw > .05 ? "d" : "g", emplacementAvant = n("bras-avant"), emplacementArriere = n("bras-arriere");
+			for (const c of ["g", "d"]) {
+				const cible = c === proche || Math.abs(sw) <= .05 ? emplacementAvant : emplacementArriere;
+				if (bras[c].parentNode !== cible) cible.append(bras[c]);
+				const S = {
+					x: (c === "g" ? -1 : 1) * 18 * wf + 4 * sw,
+					y: -38
+				};
+				dessinerLeBras(bras[c], c, S, c === "g" ? p.aGu : p.aDu, c === "g" ? p.aGl : p.aDl, Math.round(c === "g" ? p.mG : p.mD));
+			}
+			deplacer(n("tete"), `translate(0 -48) rotate(${r1(p.tete)})`);
+			deplacer(n("tete-forme"), `translate(0 -26)`);
+			const ex = expressionA(scenario.expressions, t), A = EMOS[ex.prec], B = EMOS[ex.emo], u = ex.u;
+			dessinerLaTete(p, ex, Math.max(lerp(A.lid, B.lid, u), clignement(t)), lerp(A.pup, B.pup, u));
+			const dvueBrut = p.vue - pAvant.vue, dvue = Math.abs(dvueBrut) > 300 ? 0 : dvueBrut / .06;
+			queue.dessiner(p, t, (p.x - pAvant.x) / .06, (p.y - pAvant.y) / .06, dvue);
+			const sol = p.y + 58 * BASE, haut = Math.max(0, sol - (y + 58 * BASE)), ombre = n("ombre-de-lili");
+			poser(ombre, "cx", r1(p.x));
+			poser(ombre, "cy", r1(sol + 2));
+			poser(ombre, "rx", r1(34 * BASE + haut * .2));
+			poser(ombre, "ry", r1(8 * BASE));
+			poser(ombre, "opacity", r3(Math.max(.07, .25 - haut * .003)));
+			return p;
+		}
+		return { dessiner };
+	}
+	// entree.ts
+	Object.assign(globalThis, { MoteurDeLili: {
+		creerLili,
+		compiler,
+		E,
+		fenetre,
+		lerp,
+		clamp01
+	} });
+})();
+
+</script>
+<script>
+(() => {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const { creerLili, compiler, E, fenetre } = MoteurDeLili;
+  const N = {};
+  ["scene", "bulle", "etat", "duree", "ecran", "sol", "oups", "oups-corps", "danse-ombre-de-lili"].forEach((id) => (N[id] = $(id)));
+  const att = (el, a, v) => el.setAttribute(a, v);
+  const r2 = (v) => Math.round(v * 100) / 100;
+
+  // ---------- La scène : 1,5 s, Lili de face, d'aplomb à chaque image ----------
+  // Unités du moteur (échelle 1,25 puis 0,8 : une unité = une unité du dessin). x : abscisse de Lili ; y : vers le bas.
+  const FIN = 1.5;
+  const X_DEPART = -8, X_ARRIVEE = 8;
+  const PIEDS_ECARTES_DU_PAS = 11; // à mi-pas, les deux pieds sont de part et d'autre du corps
+  const DEMI_POINTES = { y: -7, pointe: 1 };
+  // Le corps pivote sur ses pieds : l'abscisse suit l'angle pour que les pieds ne glissent pas.
+  const surSesPieds = (x, rot) => ({ x: Math.round((x + 1.55 * rot) * 10) / 10, rot });
+  const REPOS = { x: X_DEPART, y: 0, rot: 0, sx: 1, sy: 1, torse: 0, tete: 0, vue: 0, aGu: 10, aGl: 16, aDu: -10, aDl: -16, lGt: 4, lGs: 0, lDt: -4, lDs: 0, tD: 1, course: 0, mG: 0, mD: 0, clin: 0, pointe: 0 };
+  const POSES = compiler(REPOS, [
+    { t: 0, e: E.douce, p: {} },
+    // elle se hisse sur ses demi-pointes
+    { t: .10, e: E.douce, p: { ...DEMI_POINTES, aGu: 26, aGl: 20, aDu: -26, aDl: -20 } },
+    // le petit vacillement : quatre degrés d'un côté, quatre de l'autre, puis elle se redresse
+    { t: .20, e: E.douce, p: { ...surSesPieds(X_DEPART, 4), torse: -2, aGu: 58, aGl: 14, aDu: -34, aDl: -18, tete: 3 } },
+    { t: .32, e: E.douce, p: { ...surSesPieds(X_DEPART, -4), torse: 2, aGu: 34, aGl: 18, aDu: -58, aDl: -14, tete: -3 } },
+    { t: .42, e: E.douce, p: { ...surSesPieds(X_DEPART, 1.5), torse: 0, aGu: 42, aGl: 20, aDu: -42, aDl: -20, tete: 0 } },
+    // le pas de côté : un pied part, le corps suit, l'autre pied le rejoint ; le corps reste entre ses deux pieds
+    { t: .50, e: E.douce, p: { ...surSesPieds(-4, 0), lGt: 7.5, lDt: -14, tD: .9 } },
+    { t: .58, e: E.douce, p: { ...surSesPieds(0, 0), lGt: PIEDS_ECARTES_DU_PAS, lDt: -PIEDS_ECARTES_DU_PAS, tD: 1 } },
+    { t: .78, e: E.douce, p: { ...surSesPieds(X_ARRIVEE, 0), lGt: 4, lDt: -4 } },
+    // elle repose les talons
+    { t: .86, e: E.douce, p: { y: 0, pointe: 0, aGu: 34, aGl: -14, aDu: -34, aDl: 14 } },
+    // la petite révérence : les genoux fléchissent à peine, les mains effleurent le tutu
+    { t: .98, e: E.douce, p: { y: 6.5, sy: .93, sx: 1.03, lGt: 10, lGs: -8, lDt: -10, lDs: 8, aGu: 35, aGl: -20, aDu: -35, aDl: 20, tete: 9 } },
+    // elle se relève, lève le pouce
+    { t: 1.16, e: E.rebond, p: { y: 0, sy: 1, sx: 1, lGt: 4, lGs: 0, lDt: -4, lDs: 0, tete: -4, aGu: 10, aGl: 16, aDu: -75, aDl: -95, mD: 2 } },
+    { t: 1.32, e: E.douce, p: { tete: -5 } },
+    { t: FIN, e: E.douce, p: { tete: -3 } },
+  ]);
+  const EXPRESSIONS = [{ t: 0, emo: "sourire" }, { t: .18, emo: "joie" }, { t: 1.14, emo: "sourire" }];
+  const SCENE = { poses: POSES, expressions: EXPRESSIONS };
+  // L'image fixe : la même dernière pose, mais au milieu du cadre (la scène finit à 8 unités de là ; le dessin fixe revient au centre)
+  const SCENE_FIXE = { ...SCENE, poses: POSES.map((k) => ({ ...k, p: { ...k.p, x: k.p.x - X_ARRIVEE } })) };
+
+  const lili = creerLili(document.getElementById("svg"));
+
+  // Tapis : présent le temps de la scène seulement
+  const dessineDecor = (t) => att(N.sol, "opacity", r2(fenetre(t, 0, .1) * (1 - fenetre(t, 1.25, .2, E.douce))));
+  // Petite bulle écrite « oups ! » : au vacillement, puis elle s'efface ; cachée sous 100 px de large (163.21)
+  function dessineBulle(t) {
+    const petit = N.scene.getBoundingClientRect().width < 100;
+    const entree = fenetre(t, .16, .14, E.sortie), sortie = fenetre(t, .62, .12, E.entree);
+    att(N.oups, "opacity", petit ? 0 : r2(fenetre(t, .16, .06) * (1 - sortie)));
+    att(N["oups-corps"], "transform", `translate(-52 -108) scale(${r2(.4 + .6 * entree)})`);
+  }
+  function rend(t) { lili.dessiner(SCENE, t); dessineDecor(t); dessineBulle(t); }
+  // Les ressorts de la queue de cheval suivent l'horloge : pour un instant précis, on rejoue les images depuis le début.
+  function rendJusqua(t) { for (let s = 0; s < t; s += 1 / 60) rend(s); rend(t); }
+  function imageFixe() { lili.dessiner(SCENE_FIXE, FIN); att(N.sol, "opacity", 0); att(N.oups, "opacity", 0); }
+
+  // ---------- Horloge et commandes ----------
+  const ENCOURAGEMENT = "Pas grave, on réessaie !";
+  const reduitSysteme = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const boite = { reduit: $("reduit"), dys: $("dys"), tablette: $("tablette") };
+  boite.reduit.checked = reduitSysteme;
+  let depart = 0, image = 0, enCours = false;
+  const secondes = (ms) => (ms / 1000).toFixed(2).replace(".", ",") + " s";
+  function arreter(motif) {
+    if (!enCours) return;
+    cancelAnimationFrame(image); enCours = false;
+    N.duree.textContent = `Scène arrêtée par ${motif} à ${Math.round(performance.now() - depart)} ms : l'image fixe revient.`;
+    imageFixe();
+  }
+  function boucle(maintenant) {
+    const t = Math.min(FIN, (maintenant - depart) / 1000);
+    rend(t);
+    if (t < FIN) { image = requestAnimationFrame(boucle); return; }
+    enCours = false;
+    window.dureeMesuree = maintenant - depart;
+    N.duree.textContent = `Durée mesurée : ${secondes(maintenant - depart)} (scène réglée sur ${secondes(FIN * 1000)}, l'image suit l'horloge du navigateur).`;
+  }
+  function jouer() {
+    cancelAnimationFrame(image);
+    N.bulle.textContent = ENCOURAGEMENT;
+    N.etat.textContent = ""; document.querySelectorAll(".choix button").forEach((b) => b.classList.remove("prise"));
+    if (boite.reduit.checked) { enCours = false; imageFixe(); N.duree.textContent = "Mouvements réduits : image fixe, sans mouvement ni bulle écrite."; return; }
+    enCours = true; depart = performance.now(); rend(0); image = requestAnimationFrame(boucle);
+  }
+  $("rejouer").addEventListener("click", jouer);
+  boite.reduit.addEventListener("change", jouer);
+  boite.dys.addEventListener("change", () => N.ecran.setAttribute("data-mode-dys", String(boite.dys.checked)));
+  boite.tablette.addEventListener("change", () => N.ecran.classList.toggle("tablette", boite.tablette.checked));
+  document.querySelectorAll(".choix button").forEach((b) => b.addEventListener("click", () => {
+    arreter(`la réponse « ${b.dataset.choix} »`);
+    document.querySelectorAll(".choix button").forEach((c) => c.classList.toggle("prise", c === b));
+    N.etat.textContent = `Réponse prise tout de suite : « ${b.dataset.choix} ».`;
+  }));
+  document.querySelector(".reecouter").addEventListener("click", () => arreter("« Réécouter »"));
+  document.querySelector(".ne-sais-pas").addEventListener("click", () => arreter("« Je ne sais pas »"));
+  document.querySelector(".retour").addEventListener("click", () => arreter("« Retour »"));
+
+  // Mise au point : « ?t=0.46 » rend un instant sans jouer ; « ?reduit=1 », « ?dys=1 », « ?tablette=1 », « ?taille=80 » (largeur du dessin en px), « ?seul=1 » (le dessin seul), « ?fond=sombre » (avec ?seul=1).
+  const params = new URLSearchParams(location.search);
+  if (params.get("seul") === "1") document.body.classList.add("seul");
+  if (params.get("fond") === "sombre") document.body.classList.add("sombre");
+  if (params.get("dys") === "1") { boite.dys.checked = true; N.ecran.setAttribute("data-mode-dys", "true"); }
+  if (params.get("tablette") === "1") { boite.tablette.checked = true; N.ecran.classList.add("tablette"); }
+  if (params.get("reduit") === "1") boite.reduit.checked = true;
+  if (params.get("taille")) document.documentElement.style.setProperty("--guide", params.get("taille") + "px");
+  function demarrer() {
+    const t = params.get("t");
+    if (t !== null) { N.bulle.textContent = ENCOURAGEMENT; rendJusqua(Number(t)); return; }
+    jouer();
+  }
+  const polices = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+  Promise.race([polices, new Promise((r) => setTimeout(r, 800))]).finally(demarrer);
+})();
+</script>
+</body>
+</html>

@@ -41,3 +41,24 @@ Branche de base : `main` (`2a69a87`). Branche : `feature/163-reponse-fausse-anim
 | Cycles E2E KO | 2 sur le périmètre de la story (corrections de steps, puis un scénario réécrit) ; 0 bug applicatif |
 | Intégrations de `main` | 2 (`11b32d4` 106h, `f4e1fb1` #168), sans conflit |
 | Tokens et coût | relevés par le responsable |
+
+## 2026-11-06 : livraison 163b (Lili)
+
+- 07:05 UTC : 163a mergée (PR #171, `4dd80cf`). Annonce `[Responsable]` 6679278425 : la même équipe continue ; la branche est recréée depuis `main` `4dd80cf`, avec une nouvelle PR par livraison, et chaque planche passe au PO avant le câblage.
+- 07:10 UTC : maquette et planche de Lili en préparation (163.5b : petit vacillement, pas de côté les deux pieds sous elle, révérence, pouce levé).
+- 07:45 UTC : maquette `docs/maquettes/reponse-fausse-lili.html` et planche 163b (`docs/stories/163/captures/163b-lili-*.png`) : 1,5 s mesurée, Lili d'aplomb (inclinaison de 4° au plus), pas de côté les deux pieds sous elle, révérence, pouce levé, bulle « oups ! ». Une capture refaite (fond sombre incomplet, cause : fenêtre de capture trop basse). Relue par l'orchestrateur au regard de la règle absolue : conforme.
+- 08:20 UTC : planche de Lili validée (« 163.b reco tout » : 163.22 oui, 163.23 « oups ! », annonce `[Responsable]` 6680441404).
+- 08:20 à 08:40 UTC : TDD de 163b (`0407d40` test, `dd324db` feat : `danse` au catalogue) ; câblage (`903c638` refactor du dessin et du moteur de Lili par le préfixe, additif ; `04feb70` feat) ; steps E2E (`ed070c1`).
+- Review de 163b : APPROUVÉ, aucun bloquant ; non bloquants corrigés (`3a786ee` : code mort, typage, constante nommée). Noté : en se relevant de la révérence, Lili monte d'environ 1,3 unité (courbe `E.rebond`), comme dans la maquette validée ; ce n'est pas une chute.
+- 08:24 à 09:00 UTC : VERROU base. Sonde OK. E2E `telephone`, 1 worker : `@livraison-163a`, `@livraison-163b` et `@livraison-106b` **56/56** au premier passage ; après le refactor, `@livraison-163b` et `@livraison-106b` **8/8**. LIBÈRE base.
+
+## Mesures (livraison 163b)
+
+| Mesure | Valeur |
+|---|---|
+| Durée, du merge de 163a au PR prête | environ 2 h (07:05 → 09:05 UTC) |
+| Temps passé à attendre | PO (planche) : environ 30 min ; verrou base : aucune attente |
+| Cycles de review À CORRIGER | 0 |
+| Cycles E2E KO | 0 |
+| Intégrations de `main` | 0 (branche repartie de `main` `4dd80cf`) |
+| Tokens et coût | relevés par le responsable |
