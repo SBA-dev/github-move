@@ -1,6 +1,7 @@
 import { E, fenetre, r3 } from "../../celebrations/commun/courbes.ts";
 import { deplacer, elementsDe, poser } from "../../celebrations/commun/dom.ts";
 import { PREFIXE_DE_LILI } from "./reglages.ts";
+import { T_VACILLEMENT } from "./scenario.ts";
 
 /** Le petit tapis rose pâle sous ses pieds : présent le temps de la scène seulement. */
 export function creerLeTapis(racine: SVGSVGElement) {
@@ -19,8 +20,8 @@ export function creerLaBulleEcrite(racine: SVGSVGElement) {
   const n = elementsDe(racine, PREFIXE_DE_LILI);
 
   function dessiner(t: number) {
-    const entree = fenetre(t, .16, .14, E.sortie), sortie = fenetre(t, .62, .12, E.entree);
-    poser(n("oups"), "opacity", r3(fenetre(t, .16, .06) * (1 - sortie)));
+    const entree = fenetre(t, T_VACILLEMENT, .14, E.sortie), sortie = fenetre(t, .62, .12, E.entree);
+    poser(n("oups"), "opacity", r3(fenetre(t, T_VACILLEMENT, .06) * (1 - sortie)));
     deplacer(n("oups-corps"), `translate(-52 -108) scale(${r3(.4 + .6 * entree)})`);
   }
 

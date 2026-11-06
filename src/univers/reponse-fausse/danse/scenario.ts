@@ -6,16 +6,18 @@ import type { Emotion, Pose } from "../../celebrations/danse/poses.ts";
 /** Fin de la scène, en secondes : la scène est jouée à cette vitesse, sans accélération. */
 export const FIN = 1.5;
 export const T_VACILLEMENT = .16;
-export const T_PAS_DE_COTE = .5;
+const T_PAS_DE_COTE = .5;
 
 const X_DEPART = -8;
 const X_ARRIVEE = 8;
 /** À mi-pas, les deux pieds sont de part et d'autre du corps. */
 const PIEDS_ECARTES_DU_PAS = 11;
+/** Décalage horizontal (en unités du dessin) par degré de rotation du corps autour de ses pieds. */
+const DECALAGE_DU_BASSIN_PAR_DEGRE = 1.55;
 const DEMI_POINTES = { y: -7, pointe: 1 };
 
 /** Le corps pivote sur ses pieds : l'abscisse suit l'angle pour que les pieds ne glissent pas et que Lili reste d'aplomb. */
-const surSesPieds = (x: number, rot: number) => ({ x: Math.round((x + 1.55 * rot) * 10) / 10, rot });
+const surSesPieds = (x: number, rot: number) => ({ x: Math.round((x + DECALAGE_DU_BASSIN_PAR_DEGRE * rot) * 10) / 10, rot });
 
 const REPOS: Pose = {
   x: X_DEPART, y: 0, rot: 0, sx: 1, sy: 1, torse: 0, tete: 0, vue: 0,

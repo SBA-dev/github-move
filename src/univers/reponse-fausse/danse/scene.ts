@@ -1,6 +1,6 @@
 import type { CleDeTenue } from "@domain/motivation";
 import { jouerLaScene } from "../../celebrations/commun/jeu-de-la-scene.ts";
-import { creerLili } from "../../celebrations/danse/personnage.ts";
+import { creerLili, type PosesEtExpressions } from "../../celebrations/danse/personnage.ts";
 import { DUREE_DE_LA_SCENE_DE_REPONSE_FAUSSE_S } from "../duree-de-la-scene.ts";
 import { PREFIXE_DE_LILI } from "./reglages.ts";
 import { FIN, SCENARIO_DE_LILI, SCENARIO_FIXE_DE_LILI } from "./scenario.ts";
@@ -12,7 +12,7 @@ export function creerLaScene(racine: SVGSVGElement, tenue?: CleDeTenue) {
   const tapis = creerLeTapis(racine);
   const bulle = creerLaBulleEcrite(racine);
 
-  function rendre(t: number, scenario: typeof SCENARIO_DE_LILI | typeof SCENARIO_FIXE_DE_LILI = SCENARIO_DE_LILI) {
+  function rendre(t: number, scenario: PosesEtExpressions = SCENARIO_DE_LILI) {
     lili.dessiner(scenario, t);
     tapis.dessiner(t);
     bulle?.dessiner(t);
