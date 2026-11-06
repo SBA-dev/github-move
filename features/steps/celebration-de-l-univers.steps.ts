@@ -45,6 +45,14 @@ const MUSIQUE_DU_PERSONNAGE: Readonly<Record<string, string>> = {
   "Capitaine Sam": "air de steel drum long",
 };
 const MUSIQUE = MUSIQUE_DU_PERSONNAGE["Coach Léo"] as string;
+const PERSONNAGE_DE_L_UNIVERS: Readonly<Record<string, string>> = {
+  sports: "Coach Léo",
+  danse: "Lili",
+  animaux: "Noisette",
+  princesse: "Lumi",
+  police: "Agent Max",
+  pompier: "Capitaine Sam",
+};
 const PERSONNAGES = "Coach Léo|Lili|Noisette|Lumi|Agent Max|Capitaine Sam";
 
 function musiqueDe(personnage: string): string {
@@ -120,7 +128,7 @@ const VARIANTES_DE_CAPITAINE_SAM: Record<string, string> = {
 const VARIANTES_POSSIBLES_DE_CAPITAINE_SAM = /^(cloche|arc|pluie)$/;
 const TEXTE_DES_VARIANTES_DE_CAPITAINE_SAM = "(la cloche de la caserne|l'arc-en-ciel|la pluie joyeuse)";
 
-Before({ tags: "@issue-106" }, async ({ page }) => {
+Before({ tags: "@issue-106 or @issue-166" }, async ({ page }) => {
   await page.addInitScript(installerLesFauxDeLaStory97, { echec: false, retenir: [] });
   await installerLeHasardDeLaCelebration(page);
 });
@@ -418,7 +426,8 @@ Then(/^la célébration commune n'est pas jouée$/, async ({ page }) => {
   const observation = await observer(page);
   expect(observation.vu.filter((vu) => vu.startsWith("confettis:")), "confettis de la célébration commune").toEqual([]);
   const jouees = noms(depuisLaMarque(observation));
-  expect(jouees.filter((nom) => nom === fichierDe(MUSIQUE)), "la musique est entendue une seule fois").toHaveLength(1);
+  const personnage = PERSONNAGE_DE_L_UNIVERS[(await page.locator(".application").getAttribute("data-univers")) ?? "sports"] ?? "Coach Léo";
+  expect(jouees.filter((nom) => nom === fichierDe(musiqueDe(personnage))), "la musique est entendue une seule fois").toHaveLength(1);
   expect(jouees, "l'effet sonore de la célébration commune ne s'y ajoute pas").not.toContain("seance-terminee");
 });
 
