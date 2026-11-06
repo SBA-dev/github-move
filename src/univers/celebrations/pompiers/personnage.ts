@@ -2,13 +2,13 @@ import type { CleDeTenue } from "@domain/motivation";
 import { habillerLeCorpsArticule } from "../commun/habiller.ts";
 import { clamp01, DEG, E, lerp, r1, r3 } from "../commun/courbes.ts";
 import { brasVers } from "../commun/atteindre.ts";
-import { creerUnGroupe, deplacer, elementsDe, poser, trouver } from "../commun/dom.ts";
+import { creerUnGroupe, deplacer, elementsDe, type PrefixeDeScene, poser, trouver } from "../commun/dom.ts";
 import { expressionA } from "../commun/expressions.ts";
 import { decaler, membre, type Point, trace } from "../commun/membres.ts";
 import { inclinaisonDuProfilDeSam, placerLaChaussure } from "../commun/chaussure.ts";
 import { au } from "../commun/tableaux.ts";
 import { clignement } from "../commun/visage.ts";
-import { dessinDuBras, MAINS, STRUCTURE_DE_CAPITAINE_SAM } from "./dessin-de-sam.ts";
+import { dessinDuBras, MAINS, structureDeCapitaineSam } from "./dessin-de-sam.ts";
 import { ECHELLE_DE_BASE as BASE, type Emotion, LANCE_AU_SOL, type Pose, poseA, type ScenarioDesPompiers, SOL, VUE_MAXIMALE } from "./poses.ts";
 
 const EMOS: Record<Emotion, { readonly s: readonly [number, number]; readonly lid: number; readonly pup: number }> = {
@@ -38,11 +38,17 @@ const poseDeMain = (valeur: number) => Math.max(0, Math.min(3, Math.round(valeur
 
 export type DessinDeSam = { readonly pose: Pose };
 
-/** Capitaine Sam, dessiné image par image à partir des poses du scénario (portage du moteur de la maquette : le corps de Coach Léo, la tête et la tenue de Sam). */
-export function creerCapitaineSam(racine: SVGSVGElement, tenue?: CleDeTenue) {
-  const n = elementsDe(racine, "pompier");
-  n("sam").innerHTML = STRUCTURE_DE_CAPITAINE_SAM;
-  const habit = habillerLeCorpsArticule(n, n("sam"), "pompier", tenue);
+/** Ce que dessine Capitaine Sam : les poses et les expressions du scénario (la scène de réponse fausse n'a ni cloche, ni jet de la célébration). */
+export type ScenarioDeSam = Pick<ScenarioDesPompiers, "poses" | "expressions">;
+
+/**
+ * Capitaine Sam, dessiné image par image à partir des poses du scénario (portage du moteur de la maquette : le corps de Coach Léo, la tête et la tenue de Sam).
+ * Ses identifiants portent `prefixe` : la célébration des Pompiers ou la scène de réponse fausse.
+ */
+export function creerCapitaineSam(racine: SVGSVGElement, tenue?: CleDeTenue, prefixe: PrefixeDeScene = "pompier") {
+  const n = elementsDe(racine, prefixe);
+  n("sam").innerHTML = structureDeCapitaineSam(prefixe);
+  const habit = habillerLeCorpsArticule(n, n("sam"), "pompier", tenue, prefixe);
   const bouches = [...n("bouches").children];
   const q1 = (g: ParentNode, classe: string) => trouver(g, `.${classe}`);
   const bras = { g: creerLeBras("g"), d: creerLeBras("d") };
@@ -56,7 +62,7 @@ export function creerCapitaineSam(racine: SVGSVGElement, tenue?: CleDeTenue) {
 
   function creerLeBras(c: Cote): SVGElement {
     const enveloppe = creerUnGroupe();
-    enveloppe.innerHTML = dessinDuBras(c);
+    enveloppe.innerHTML = dessinDuBras(c, prefixe);
     const b = enveloppe.firstElementChild;
     if (!(b instanceof SVGElement)) throw new Error("Le bras de Capitaine Sam n'a pas pu être dessiné");
     return b;
@@ -74,7 +80,7 @@ export function creerCapitaineSam(racine: SVGSVGElement, tenue?: CleDeTenue) {
     poser(q1(g, "bande"), "d", trace(m, .5, .6, 2));
     poser(q1(g, "bande-argent"), "d", trace(m, .538, .562, 1));
     poser(q1(g, "manche-bord"), "d", trace(m, .83, .86, 1));
-    const mainG = trouver(g, `#pompier-main-${c}`);
+    const mainG = trouver(g, `#${prefixe}-main-${c}`);
     deplacer(mainG, `translate(${r1(m.W.x)} ${r1(m.W.y)}) rotate(${r1(m.dir)}) scale(.86)`);
     const versCentre = c === "g" ? 1 : -1, score = Math.cos(m.dir * DEG) * versCentre - Math.sin(m.dir * DEG) * .8;
     const cote = score > 0 ? "miroir" : "droit", cle = cote + pose, emplacement = q1(mainG, "pose-main");
@@ -170,7 +176,7 @@ export function creerCapitaineSam(racine: SVGSVGElement, tenue?: CleDeTenue) {
   }
 
   /** Dessine Sam à l'instant `t` du scénario et rend sa pose (le jet, la cloche et les effets s'y accrochent). */
-  function dessiner(scenario: ScenarioDesPompiers, t: number): DessinDeSam {
+  function dessiner(scenario: ScenarioDeSam, t: number): DessinDeSam {
     const p = poseA(scenario.poses, t);
     vueCourante = p.vue;
     const cw = Math.cos(p.vue * DEG), sw = Math.sin(p.vue * DEG), wf = lerp(.55, 1, Math.abs(cw));
@@ -209,7 +215,7 @@ export function creerCapitaineSam(racine: SVGSVGElement, tenue?: CleDeTenue) {
     return { pose: p };
   }
 
-  return { dessiner, lance, mainDroite: trouver(bras.d, "#pompier-main-d") };
+  return { dessiner, lance, mainDroite: trouver(bras.d, `#${prefixe}-main-d`) };
 }
 
 export type CapitaineSam = ReturnType<typeof creerCapitaineSam>;
