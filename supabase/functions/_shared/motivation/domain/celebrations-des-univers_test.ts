@@ -3,6 +3,7 @@ import { celebrationDe, type UniversCelebre } from "./celebrations-des-univers.t
 import { UNIVERS } from "./univers.ts";
 import { VARIANTES_DES_UNIVERS } from "./index.ts";
 import { hasardFixe } from "../test_utils/hasard-fixe.ts";
+import type { EffetSonore } from "../../voix/domain/index.ts";
 
 Deno.test("le défi relevé dans l'univers Sports est fêté par le cri de victoire « BUT ! » sur la grande victoire", () => {
   const celebration = celebrationDe("defiReleve", "sports", hasardFixe(0));
@@ -21,13 +22,12 @@ Deno.test("la variante de la célébration Sports est tirée par le hasard parmi
   assertEquals(variantes, ["glissade", "avion", "danse"]);
 });
 
-Deno.test("le défi relevé dans l'univers Danse est fêté par le cri de victoire « Bravo ! » sur la grande victoire", () => {
+Deno.test("le défi relevé dans l'univers Danse est fêté par le cri de victoire « Bravo ! »", () => {
   const celebration = celebrationDe("defiReleve", "danse", hasardFixe(0));
 
   assertEquals(celebration?.univers, "danse");
   assertEquals(celebration?.moment, "defiReleve");
   assertEquals(celebration?.cri, "Bravo !");
-  assertEquals(celebration?.musique, "grandeVictoire");
 });
 
 Deno.test("la variante de la célébration Danse est tirée par le hasard parmi jeté, ruban et sauts", () => {
@@ -38,13 +38,12 @@ Deno.test("la variante de la célébration Danse est tirée par le hasard parmi 
   assertEquals(variantes, ["jete", "ruban", "sauts"]);
 });
 
-Deno.test("le défi relevé dans l'univers Animaux est fêté par le cri de victoire « Hourra ! » sur la grande victoire", () => {
+Deno.test("le défi relevé dans l'univers Animaux est fêté par le cri de victoire « Hourra ! »", () => {
   const celebration = celebrationDe("defiReleve", "animaux", hasardFixe(0));
 
   assertEquals(celebration?.univers, "animaux");
   assertEquals(celebration?.moment, "defiReleve");
   assertEquals(celebration?.cri, "Hourra !");
-  assertEquals(celebration?.musique, "grandeVictoire");
 });
 
 Deno.test("la variante de la célébration Animaux est tirée par le hasard parmi jongle, mange et joues", () => {
@@ -55,13 +54,12 @@ Deno.test("la variante de la célébration Animaux est tirée par le hasard parm
   assertEquals(variantes, ["jongle", "mange", "joues"]);
 });
 
-Deno.test("le défi relevé dans l'univers Princesses et fées est fêté par le cri de victoire « Magique ! » sur la grande victoire", () => {
+Deno.test("le défi relevé dans l'univers Princesses et fées est fêté par le cri de victoire « Magique ! »", () => {
   const celebration = celebrationDe("defiReleve", "princesse", hasardFixe(0));
 
   assertEquals(celebration?.univers, "princesse");
   assertEquals(celebration?.moment, "defiReleve");
   assertEquals(celebration?.cri, "Magique !");
-  assertEquals(celebration?.musique, "grandeVictoire");
 });
 
 Deno.test("la variante de la célébration Princesses et fées est tirée par le hasard parmi arc, envol et signes", () => {
@@ -89,13 +87,12 @@ Deno.test("la variante de la célébration Police est tirée par le hasard parmi
   assertEquals(variantes, ["orchestre", "trottinette", "danse"]);
 });
 
-Deno.test("le défi relevé dans l'univers Pompiers est fêté par le cri de victoire « Mission accomplie ! » sur la grande victoire", () => {
+Deno.test("le défi relevé dans l'univers Pompiers est fêté par le cri de victoire « Mission accomplie ! »", () => {
   const celebration = celebrationDe("defiReleve", "pompier", hasardFixe(0));
 
   assertEquals(celebration?.univers, "pompier");
   assertEquals(celebration?.moment, "defiReleve");
   assertEquals(celebration?.cri, "Mission accomplie !");
-  assertEquals(celebration?.musique, "grandeVictoire");
 });
 
 Deno.test("la variante de la célébration Pompiers est tirée par le hasard parmi cloche, arc et pluie", () => {
@@ -149,3 +146,40 @@ for (const { cle } of UNIVERS) {
     assertEquals(celebration?.univers, cle);
   });
 }
+
+const EFFETS_SONORES_EXISTANTS: readonly EffetSonore[] = [
+  "reponseJuste",
+  "reponseFausse",
+  "pointDuRecipient",
+  "texteComplet",
+  "seanceTerminee",
+  "grandeVictoire",
+  "decouverte",
+  "boutonTouche",
+];
+
+const MUSIQUES_ATTENDUES: readonly (readonly [UniversCelebre, EffetSonore])[] = [
+  ["danse", "airDeSaxophone"],
+  ["animaux", "airDeCordesPincees"],
+  ["princesse", "airDeSteelDrumCourt"],
+  ["pompier", "airDeSteelDrumLong"],
+  ["sports", "grandeVictoire"],
+  ["police", "grandeVictoire"],
+];
+
+for (const [univers, attendue] of MUSIQUES_ATTENDUES) {
+  Deno.test(`la célébration de l'univers ${univers} joue la musique « ${attendue} »`, () => {
+    const musique: EffetSonore | undefined = celebrationDe("defiReleve", univers, hasardFixe(0))?.musique;
+
+    assertEquals(musique, attendue);
+  });
+}
+
+Deno.test("les musiques propres aux univers sont distinctes entre elles et des effets sonores existants", () => {
+  const musiques: EffetSonore[] = UNIVERS.map(({ cle }) => celebrationDe("defiReleve", cle, hasardFixe(0)).musique);
+  const propres = musiques.filter((musique) => musique !== "grandeVictoire");
+
+  assertEquals(propres.length, 4);
+  assertEquals(new Set(propres).size, propres.length);
+  assertEquals(propres.filter((musique) => EFFETS_SONORES_EXISTANTS.includes(musique)), []);
+});

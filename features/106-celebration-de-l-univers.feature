@@ -45,8 +45,10 @@ Fonctionnalité: Une célébration propre à chaque univers
     quand la célébration de l'univers est jouée, ni ses confettis ni son effet sonore ne s'y ajoutent ;
   - « la musique de la célébration de Coach Léo », « la musique de la célébration de Lili », « la musique de la
     célébration de Noisette », « la musique de la célébration d'Agent Max » : l'effet sonore de leur
-    célébration de l'univers, qui remplace « grande victoire » (106.12). Le PO les choisira à l'écoute ; d'ici là,
-    c'est « grande victoire », entendu une seule fois ;
+    célébration de l'univers, qui remplace « grande victoire » (106.12), entendu une seule fois. Pour Lili et
+    Noisette, c'est la musique choisie par le PO, à l'écoute, pour l'univers du personnage guide (#166) ; pour
+    Coach Léo et Agent Max, le PO n'a retenu aucune musique à l'écoute : c'est encore « grande victoire », jusqu'à
+    l'issue de suivi (166.4 A) ;
   - « l'image fixe de la célébration » : la même scène, dans l'état final de la variante tirée, quand l'appareil
     demande des mouvements réduits (106.15) ; rien ne tombe, ni les confettis de Coach Léo, ni les pétales de la
     salle, ni les feuilles de la forêt, ni les étincelles du jardin, ni les confettis du commissariat, ni les
@@ -59,7 +61,8 @@ Fonctionnalité: Une célébration propre à chaque univers
     de la scène de Coach Léo (106.24) ;
   - « Magique ! » : le cri de victoire de l'univers « Princesses et fées », affiché et jamais lu ;
   - « la musique de la célébration de Lumi » : l'effet sonore de sa célébration de l'univers, qui remplace
-    « grande victoire », comme celle de Coach Léo (106.12) ; d'ici le choix du PO, c'est « grande victoire ».
+    « grande victoire », comme celle de Coach Léo (106.12) ; c'est la musique choisie par le PO pour l'univers
+    « Princesses et fées » (#166).
   Mots employés pour la livraison 106f (Capitaine Sam), d'après la maquette docs/maquettes/capitaine-sam-pompiers.html :
   - « la célébration de l'univers « Pompiers » » : Capitaine Sam arrose le jardin de la caserne avec sa lance et les
     fleurs s'ouvrent, puis il fait une des trois variantes de la célébration, tirée au hasard : « la cloche de la
@@ -68,7 +71,8 @@ Fonctionnalité: Une célébration propre à chaque univers
     l'univers, comme les confettis de la scène de Coach Léo (106.24) ;
   - « Mission accomplie ! » : le cri de victoire de l'univers « Pompiers », affiché et jamais lu ;
   - « la musique de la célébration de Capitaine Sam » : l'effet sonore de sa célébration de l'univers, qui remplace
-    « grande victoire », comme celle de Coach Léo (106.12) ; d'ici le choix du PO, c'est « grande victoire ».
+    « grande victoire », comme celle de Coach Léo (106.12) ; c'est la musique choisie par le PO pour l'univers
+    « Pompiers » (#166).
   Mots employés pour la livraison 106h (106.6 A, 106.23, 106.31) :
   - « la danse de victoire » : la célébration de l'univers jouée au moment « tenue reçue » (paliers des tenues), le
     personnage guide portant la tenue reçue ; elle remplace la célébration commune, et l'annonce de la tenue reçue

@@ -6,4 +6,8 @@ export type EffetSonore =
   | "seanceTerminee"
   | "grandeVictoire"
   | "decouverte"
-  | "boutonTouche";
+  | "boutonTouche"
+  | "airDeSaxophone"
+  | "airDeCordesPincees"
+  | "airDeSteelDrumCourt"
+  | "airDeSteelDrumLong";

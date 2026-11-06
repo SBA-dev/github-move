@@ -146,12 +146,13 @@ Fonctionnalité: Le personnage guide reçoit des tenues avec les étoiles, et l'
       Quand Léa réussit la dernière question de la séance
       Alors Léa entend <effets sonores>, puis Noisette dit sa phrase de fin
 
-      # 106h : la danse de victoire (#106, 106.6 A) joue la musique de la célébration de Noisette, encore « grande
-      # victoire » (106.12, 106.27), à la place du premier effet sonore, puis « découverte » (106.46)
+      # 106h : la danse de victoire (#106, 106.6 A) joue la musique de la célébration de Noisette (106.12), choisie
+      # par le PO pour l'univers « Animaux de la forêt » (#166), à la place du premier effet sonore, puis
+      # « découverte » (106.46)
       Exemples:
-        | cas                                                                 | erreurs | effets sonores                                             |
-        | à 1 étoile, sans autre nouveauté                                    | 5       | les effets sonores « grande victoire » puis « découverte » |
-        | qui rend la leçon acquise et fait aussi recevoir un objet de cabane | 2       | les effets sonores « grande victoire » puis « découverte » |
+        | cas                                                                 | erreurs | effets sonores                                                              |
+        | à 1 étoile, sans autre nouveauté                                    | 5       | la musique de la célébration de Noisette puis l'effet sonore « découverte » |
+        | qui rend la leçon acquise et fait aussi recevoir un objet de cabane | 2       | la musique de la célébration de Noisette puis l'effet sonore « découverte » |
 
     # Réponse #102.12 : la phrase de fin du personnage guide ne change pas
     Scénario: La phrase de fin du personnage guide ne parle pas de la tenue reçue
