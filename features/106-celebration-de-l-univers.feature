@@ -45,8 +45,10 @@ Fonctionnalité: Une célébration propre à chaque univers
     quand la célébration de l'univers est jouée, ni ses confettis ni son effet sonore ne s'y ajoutent ;
   - « la musique de la célébration de Coach Léo », « la musique de la célébration de Lili », « la musique de la
     célébration de Noisette », « la musique de la célébration d'Agent Max » : l'effet sonore de leur
-    célébration de l'univers, qui remplace « grande victoire » (106.12), entendu une seule fois. C'est la musique
-    choisie par le PO, à l'écoute, pour l'univers du personnage guide (#166) : ce n'est plus « grande victoire » ;
+    célébration de l'univers, qui remplace « grande victoire » (106.12), entendu une seule fois. Pour Lili et
+    Noisette, c'est la musique choisie par le PO, à l'écoute, pour l'univers du personnage guide (#166) ; pour
+    Coach Léo et Agent Max, le PO n'a retenu aucune musique à l'écoute : c'est encore « grande victoire », jusqu'à
+    l'issue de suivi (166.4 A) ;
   - « l'image fixe de la célébration » : la même scène, dans l'état final de la variante tirée, quand l'appareil
     demande des mouvements réduits (106.15) ; rien ne tombe, ni les confettis de Coach Léo, ni les pétales de la
     salle, ni les feuilles de la forêt, ni les étincelles du jardin, ni les confettis du commissariat, ni les
