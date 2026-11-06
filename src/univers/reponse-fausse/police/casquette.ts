@@ -71,7 +71,6 @@ function casquetteRapportee(t: number, dessin: DessinDeMax): Casquette {
  */
 function casquetteHorsDeLaTete(t: number, dessin: DessinDeMax): Casquette | undefined {
   if (dessin.pose.casq > .5) return undefined;
-  if (t < T.glisse) return { position: surLaTete(dessin.pose), rotation: 0, taille: 1 };
   return t < T.chiotPrend ? casquetteQuiTombe(t) : casquetteRapportee(t, dessin);
 }
 
