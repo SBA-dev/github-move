@@ -246,12 +246,16 @@ Given(/^la scène de réponse fausse de Coach Léo peut de nouveau être chargé
 // --- Étant donné : une scène en train de se jouer. Le geste est fait au plus vite : la scène ne dure que 1,5 s.
 
 async function attendreLImageFixe(page: Page): Promise<ImageFixe> {
-  let relevee: ImageFixe | null = null;
-  await expect.poll(async () => {
-    relevee = (await lireLEnregistreur(page)).entrees.at(-1)?.imageFixe ?? null;
-    return relevee !== null;
-  }, { intervals: [50], timeout: DELAI_DE_L_ATTENTE_MS, message: "la scène passe en mouvements réduits" }).toBe(true);
-  return relevee as unknown as ImageFixe;
+  const relireLImageFixe = async (): Promise<ImageFixe | undefined> =>
+    (await lireLEnregistreur(page)).entrees.at(-1)?.imageFixe ?? undefined;
+  await expect.poll(async () => (await relireLImageFixe()) !== undefined, {
+    intervals: [50],
+    timeout: DELAI_DE_L_ATTENTE_MS,
+    message: "la scène passe en mouvements réduits",
+  }).toBe(true);
+  const relevee = await relireLImageFixe();
+  if (relevee === undefined) throw new Error("l'image fixe de la scène n'a pas été relevée");
+  return relevee;
 }
 
 async function repondreEtVoirLaScene(page: Page, reponse: string): Promise<void> {
