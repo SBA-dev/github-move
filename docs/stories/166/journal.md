@@ -51,12 +51,19 @@
 - `@wip` retiré (`b729816`).
 - `mr-reviewer` delta des steps (cycle 2, mode delta) : **APPROUVÉ**, 6 non bloquants (repli silencieux sur « sports » quand `data-univers` manque, constante `MUSIQUE` résiduelle, liste `PERSONNAGES` dupliquée, motif `d(?:e |')` large, export inutilisé `MUSIQUES_DES_UNIVERS`, condition de tags à factoriser). Laissés en dette (PR) pour ne pas reprendre un run sous verrou.
 
+## Intégration de `main` et PR (2026-11-06, 09:35 → 10:30 UTC)
+
+- `main` `4dd80cf` (#168, #163a) intégrée dans `a061cf8`. Deux conflits d'ajouts résolus en gardant les deux côtés : le glossaire, et la condition de tags dans `profils-enfants.steps.ts` (`@issue-106`, `@issue-163`, `@issue-166`). Après l'intégration : unitaires 2942/2942, lint, fmt, tsc et build verts.
+- PR #174 ouverte en brouillon.
+- VERROU base accordé pour le périmètre complet. Le responsable a jugé le périmètre court insuffisant, car #163a touche le moteur commun. Run 3 sur `a061cf8` : **95/95 verts** (34,8 min). LIBÈRE base.
+- CI de la PR : aucun check configuré sur le dépôt.
+
 ## Mesures
 
-- Durée : lancement 2026-11-05 23:52 UTC → PR en brouillon 2026-11-06 ~09:35 UTC. Le temps actif est d'environ 2 h 30. Le reste est de l'attente : le réseau, le choix du PO à l'écoute (00:47 → 08:20) et le verrou base.
+- Durée : lancement 2026-11-05 23:52 UTC → PR prête 2026-11-06 ~10:30 UTC. Le temps actif est d'environ 2 h 30. Le reste est de l'attente : le réseau, le choix du PO à l'écoute (00:47 → 08:20) et le verrou base.
 - Attentes : accès aux sons et réponse du PO, ~25 min ; choix à l'écoute, ~7 h 30 (nuit) ; verrou base, ~15 min puis ~10 min.
 - Cycles TDD : 1 comportement (catalogue des musiques), 1 refactor de test.
 - Review : 2 passages (ensemble APPROUVÉ ; delta des steps APPROUVÉ), 0 cycle À CORRIGER.
-- E2E : 2 runs (95 scénarios puis 11), 1 cycle KO (steps).
-- Intégrations de `main` : 0 (`main` n'a pas bougé depuis `11b32d4`) ; conflits : 0.
+- E2E : 3 runs (95, puis 11, puis 95 après l'intégration), 1 cycle KO (steps).
+- Intégrations de `main` : 1 (`4dd80cf`), 2 conflits d'ajouts (glossaire, steps).
 - Escalades : 1 (accès réseau aux banques de sons, réglée par « sons C »).
