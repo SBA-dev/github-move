@@ -1,12 +1,15 @@
 import type { CleDeTenue } from "@domain/motivation";
 import { creerLumi } from "../../celebrations/princesses/personnage.ts";
 import { assemblerLaScene } from "../commun/assembler-la-scene.ts";
+import { creerUnSolDeScene } from "../commun/sol-de-scene.ts";
 import { creerLaBulleDeLumi } from "./bulle.ts";
 import { creerLesBullesDeSavon } from "./bulles-de-savon.ts";
-import { creerLaPrairie } from "./prairie.ts";
 import { PREFIXE_DE_LUMI } from "./reglages.ts";
 import { FIN, SCENARIO_DE_LUMI, SOL_Y } from "./scenario.ts";
 import { creerLeSouffle } from "./souffle.ts";
+
+/** Le petit coin de prairie pâle sous ses pieds. */
+const creerLaPrairie = creerUnSolDeScene({ prefixe: PREFIXE_DE_LUMI, apparition: .12, disparition: 1.3 });
 
 /** La scène de Lumi : « pschitt ! », des bulles de savon sortent de la fleur de sa baguette ; Lumi rit, souffle dessus, baisse la baguette et lève le pouce. */
 export function creerLaScene(racine: SVGSVGElement, tenue?: CleDeTenue) {
