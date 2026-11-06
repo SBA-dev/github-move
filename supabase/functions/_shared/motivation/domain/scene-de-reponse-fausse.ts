@@ -17,6 +17,7 @@ export const SCENES_DE_REPONSE_FAUSSE: Partial<
   sports: { univers: "sports" },
   danse: { univers: "danse" },
   animaux: { univers: "animaux" },
+  princesse: { univers: "princesse" },
 };
 
 function laScenePeutSeJouer(faits: FaitsDeLaReponseFausse): boolean {
