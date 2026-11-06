@@ -62,3 +62,26 @@ Branche de base : `main` (`2a69a87`). Branche : `feature/163-reponse-fausse-anim
 | Cycles E2E KO | 0 |
 | Intégrations de `main` | 0 (branche repartie de `main` `4dd80cf`) |
 | Tokens et coût | relevés par le responsable |
+
+## 2026-11-06 : livraison 163c (Noisette)
+
+- 17:35 à 18:10 UTC : merge de 163b autorisé (« Merge 166 merge 163b OK »). Sous les verrous merge et base : `main` `e2ab03e` (#166) intégrée sans conflit, unitaires 2943, lint, format, `tsc` et build verts, rejeu E2E `@livraison-163a`, `@livraison-163b` et `@issue-166` **56/56** ; PR #172 mergée (`d8d67ca`), branche supprimée par GitHub. LIBÈRE base et merge.
+- 18:15 UTC : branche recréée depuis `main` `d8d67ca`. Maquette `docs/maquettes/reponse-fausse-noisette.html` et planche 163c (`docs/stories/163/captures/163c-noisette-*.png`), préparées dans un worktree à part pendant l'attente du verrou merge : 1,5 s mesurée ; la noisette rebondit loin d'elle et roule à ses pieds, elle la ramasse en riant, les yeux grands ouverts, rien ne tourne autour d'elle ; bulle « hop ! ». Relue par l'orchestrateur au regard de la règle absolue : conforme.
+- 18:50 UTC : maquette `docs/maquettes/reponse-fausse-lumi.html` et planche 163d (`docs/stories/163/captures/163d-lumi-*.png`), préparées dans un worktree à part : 1,5 s mesurée ; rond doux du poignet, « pschitt ! », bulles rondes pastel jamais dorées, fleur au bout de la baguette, Lumi de face, sans chute. Relue par l'orchestrateur au regard de la règle absolue : conforme. Publiée sur la branche de la PR #175 (documents seulement) pour que le PO puisse la valider.
+- 19:20 UTC : maquette `docs/maquettes/reponse-fausse-agent-max.html` et planche 163e (`docs/stories/163/captures/163e-agent-max-*.png`), préparées dans un worktree à part pendant les E2E de 163c : 1,5 s mesurée ; la casquette glisse quand Max se penche, le chiot la rapporte en restant au sol, Max la remet en riant, pouce levé ; écusson de #158 ; bulle « oups ! ». Relue par l'orchestrateur au regard de la règle absolue : conforme. Publiée sur la branche de la PR #175 (documents seulement).
+- 18:10 à 19:30 UTC : planche de Noisette validée (« 163c reco tout » : 163.24 oui, 163.25 « hop ! »). TDD de 163c (`80ea5d3` test, `ba575ee` feat : `animaux` au catalogue, clés inconnues ou absentes vers `animaux`). Refactor commun (`2007f16` : bulle écrite et assemblage des scènes, DOM de Léo et Lili identique avant et après). Câblage (`8ddec7a` refactor du dessin et du moteur de Noisette par le préfixe, additif ; `7c34009` feat). Steps E2E (`e543d36`).
+- Review de 163c : APPROUVÉ, aucun bloquant ; non bloquants corrigés (`c85b22e` : `DEG` importé, `assembler-la-scene.ts` et `DessinDeLaScene`, `presence-du-decor.ts`, commentaire sur la main lue à `T_PRISE`).
+- 18:26 à 19:35 UTC : VERROU base. Sonde OK. E2E `telephone`, 1 worker : `@livraison-163a`, `@livraison-163b`, `@livraison-163c`, `@livraison-106b` et `@livraison-106c` **64/64** ; après le refactor, `@livraison-163a`, `@livraison-163b` et `@livraison-163c` **50/50**. LIBÈRE base.
+- Planches de Lumi (163d, validée : « 163.d reco tout ») et d'Agent Max (163e, présentée) préparées pendant ce temps, publiées avec les documents de la PR #175.
+
+## Mesures (livraison 163c)
+
+| Mesure | Valeur |
+|---|---|
+| Durée, du merge de 163b au PR prête | environ 1 h 45 (18:00 → 19:45 UTC) |
+| Temps passé à attendre | PO (planche) : aucune attente (validée pendant la préparation) ; verrou base : aucune attente |
+| Cycles de review À CORRIGER | 0 |
+| Cycles E2E KO | 0 |
+| Intégrations de `main` | 0 (branche repartie de `main` `d8d67ca`) |
+| Tokens et coût | relevés par le responsable |
+- 20:50 UTC : maquette `docs/maquettes/reponse-fausse-capitaine-sam.html` et planche 163f (`docs/stories/163/captures/163f-capitaine-sam-*.png`), scène nouvelle (163.4 A). Deux reprises demandées par l'orchestrateur au regard de la règle absolue (section 0 du skill illustration, « forme à double sens » : dans le doute, on ne dessine pas) : dans les deux premières versions, le jet partait de la lance tenue à hauteur de hanche, puis du ventre, vers le bas. Version retenue : lance tenue droite au-dessus de l'épaule, sommet de l'arc au-dessus du casque, gouttes séparées qui retombent à plus de 60 unités du corps. 1,5 s ; bulle « oups ! ». Conforme. Publiée sur la branche de la PR #175 (documents seulement).

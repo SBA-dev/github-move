@@ -76,17 +76,3 @@ export function creerLePoteau(racine: SVGSVGElement) {
 
   return { dessiner };
 }
-
-/** La petite bulle écrite « oh ! » : un instant, quand le ballon touche le poteau. Décor du dessin, jamais lue. Rien quand le dessin n'en porte pas. */
-export function creerLaBulleEcrite(racine: SVGSVGElement) {
-  if (!racine.querySelector(`#${PREFIXE_DE_LEO}-oh`)) return undefined;
-  const n = elementsDe(racine, PREFIXE_DE_LEO);
-
-  function dessiner(t: number) {
-    const entree = fenetre(t, .5, .16, E.rebond), sortie = fenetre(t, .92, .12, E.entree);
-    poser(n("oh"), "opacity", r3(fenetre(t, .5, .06) * (1 - sortie)));
-    deplacer(n("oh-corps"), `translate(51 -103) scale(${r3((.4 + .6 * entree) * 1.15)})`);
-  }
-
-  return { dessiner };
-}

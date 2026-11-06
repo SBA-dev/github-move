@@ -2,12 +2,12 @@ import type { CleDeTenue } from "@domain/motivation";
 import { habillerLePersonnage } from "../commun/habiller.ts";
 import { ANCRAGES_DES_TENUES, dessinDeLaBotte } from "../commun/tenues.ts";
 import { DEG, E, lerp, r1, r3 } from "../commun/courbes.ts";
-import { creerUnGroupe, deplacer, elementsDe, poser, trouver } from "../commun/dom.ts";
+import { creerUnGroupe, deplacer, elementsDe, type PrefixeDeScene, poser, trouver } from "../commun/dom.ts";
 import { type Expression, expressionA } from "../commun/expressions.ts";
 import type { CoteDeMain, PoseDeMain } from "../commun/mains.ts";
 import { decaler, membre, type Point, trace } from "../commun/membres.ts";
 import { clignement } from "../commun/visage.ts";
-import { dessinDuBras, MAINS, STRUCTURE_DE_NOISETTE } from "./dessin-de-noisette.ts";
+import { dessinDuBras, MAINS, structureDeNoisette } from "./dessin-de-noisette.ts";
 import { BATTEMENT_DU_JONGLAGE, type Emotion, type Pose, poseA, SOL_Y, type ScenarioDesAnimaux } from "./poses.ts";
 import { creerLaQueue } from "./queue.ts";
 
@@ -36,24 +36,27 @@ function dansLaScene(p: Pose, local: Point): Point {
   return { x: p.x + x * Math.cos(a) - y * Math.sin(a), y: p.y + x * Math.sin(a) + y * Math.cos(a) };
 }
 
+/** Ce que Noisette joue : des poses et des expressions dans le temps, et le début du jonglage s'il y en a un. */
+export type PosesEtExpressions = Pick<ScenarioDesAnimaux, "poses" | "expressions" | "tJongle">;
+
 /** Le mouvement des mains qui lancent et rattrapent les noisettes du jonglage. */
-function elanDuJonglage(scenario: ScenarioDesAnimaux, t: number, p: Pose): number {
+function elanDuJonglage(scenario: PosesEtExpressions, t: number, p: Pose): number {
   if (scenario.tJongle === null || p.bras < .5) return 0;
   return Math.sin((t - scenario.tJongle) / BATTEMENT_DU_JONGLAGE * Math.PI) * AMPLITUDE_DU_JONGLAGE;
 }
 
-/** Noisette, dessinée image par image à partir des poses du scénario (portage du moteur de la maquette). */
-export function creerNoisette(racine: SVGSVGElement, tenue?: CleDeTenue) {
-  const n = elementsDe(racine, "animaux");
-  n("noisette").innerHTML = STRUCTURE_DE_NOISETTE;
+/** Noisette, dessinée image par image à partir des poses du scénario (portage du moteur de la maquette). Ses identifiants portent `prefixe` : la célébration des Animaux ou la scène de réponse fausse. */
+export function creerNoisette(racine: SVGSVGElement, tenue?: CleDeTenue, prefixe: PrefixeDeScene = "animaux") {
+  const n = elementsDe(racine, prefixe);
+  n("noisette").innerHTML = structureDeNoisette(prefixe);
   const bras = { g: creerLeBras("g"), d: creerLeBras("d") };
   const bouches = [...n("bouche").children];
-  const queue = creerLaQueue(racine);
+  const queue = creerLaQueue(racine, prefixe);
   const habit = habillerLePersonnage("animaux", tenue, ANCRAGES_DES_TENUES.animaux, {
     derriere: (groupe) => n("queue").after(groupe),
     devant: (groupe) => n("tete").after(groupe),
     auCou: (groupe) => n("bras-avant").after(groupe),
-  });
+  }, prefixe);
   const q1 = (g: ParentNode, classe: string) => trouver(g, `.${classe}`);
   const bottes = tenue === "bottes-de-pluie" ? poserLesBottes() : [];
 
@@ -70,7 +73,7 @@ export function creerNoisette(racine: SVGSVGElement, tenue?: CleDeTenue) {
 
   function creerLeBras(c: Cote): SVGElement {
     const enveloppe = creerUnGroupe();
-    enveloppe.innerHTML = dessinDuBras(c);
+    enveloppe.innerHTML = dessinDuBras(c, prefixe);
     const b = enveloppe.firstElementChild;
     if (!(b instanceof SVGElement)) throw new Error("Le bras de Noisette n'a pas pu être dessiné");
     return b;
@@ -83,7 +86,7 @@ export function creerNoisette(racine: SVGSVGElement, tenue?: CleDeTenue) {
     poser(q1(g, "rempli"), "d", trace(m, 0, 1));
     poser(q1(g, "ombre"), "d", trace(decaler(m, 3.4, 1.4), .25, .92));
     poser(q1(g, "lumiere"), "d", trace(decaler(m, -3.4, -1.4), .2, .85));
-    const mainG = trouver(g, `#animaux-main-${c}`);
+    const mainG = trouver(g, `#${prefixe}-main-${c}`);
     deplacer(mainG, `translate(${r1(m.W.x)} ${r1(m.W.y)}) rotate(${r1(m.dir)}) scale(.82)`);
     const versCentre = c === "g" ? 1 : -1, score = Math.cos(m.dir * DEG) * versCentre - Math.sin(m.dir * DEG) * .8;
     const cote: CoteDeMain = score > 0 ? "miroir" : "droit";
@@ -126,7 +129,7 @@ export function creerNoisette(racine: SVGSVGElement, tenue?: CleDeTenue) {
   }
 
   /** Dessine Noisette à l'instant `t` du scénario ; `yeuxOuverts` écarte le clignement (image fixe). */
-  function dessiner(scenario: ScenarioDesAnimaux, t: number, { yeuxOuverts = false } = {}): Dessin {
+  function dessiner(scenario: PosesEtExpressions, t: number, { yeuxOuverts = false } = {}): Dessin {
     const p = poseA(scenario.poses, t), pAvant = poseA(scenario.poses, t - .06);
     deplacer(n("noisette"), `translate(${r1(p.x)} ${r1(p.y)}) rotate(${r1(p.rot)}) scale(${r3(BASE * p.sx)} ${r3(BASE * p.sy)})`);
     queue.dessiner(p, t, (p.x - pAvant.x) / .06, (p.y - pAvant.y) / .06);

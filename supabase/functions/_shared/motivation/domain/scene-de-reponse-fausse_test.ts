@@ -27,10 +27,10 @@ Deno.test("le catalogue des scènes de réponse fausse contient l'univers Sports
   assertEquals(universAvecScene.includes("sports"), true);
 });
 
-Deno.test("le catalogue des scènes de réponse fausse ne contient encore que les univers Sports et Danse", () => {
+Deno.test("le catalogue des scènes de réponse fausse ne contient encore que les univers Sports, Danse et Animaux", () => {
   const universAvecScene = Object.keys(SCENES_DE_REPONSE_FAUSSE);
 
-  assertEquals(universAvecScene, ["sports", "danse"]);
+  assertEquals(universAvecScene, ["sports", "danse", "animaux"]);
 });
 
 Deno.test("une scène de réponse fausse ne porte que l'univers", () => {
@@ -49,6 +49,12 @@ Deno.test("la première réponse fausse de la séance, dans l'univers Danse, jou
   const scene = sceneDeReponseFausse(FAITS_NEUTRES, "danse");
 
   assertEquals(scene, { univers: "danse" });
+});
+
+Deno.test("la première réponse fausse de la séance, dans l'univers Animaux, joue la scène de Noisette", () => {
+  const scene = sceneDeReponseFausse(FAITS_NEUTRES, "animaux");
+
+  assertEquals(scene, { univers: "animaux" });
 });
 
 Deno.test("une scène déjà jouée dans la séance ne se rejoue pas, même dans l'univers Sports", () => {
@@ -79,12 +85,12 @@ Deno.test("un univers dont la scène n'est pas encore livrée ne joue aucune sc�
   assertEquals(sceneDeReponseFausse(FAITS_NEUTRES, "princesse"), undefined);
 });
 
-Deno.test("une clé d'univers inconnue donne le résultat de l'univers Animaux : aucune scène", () => {
-  assertEquals(sceneDeReponseFausse(FAITS_NEUTRES, "inconnu"), undefined);
+Deno.test("une clé d'univers inconnue donne le résultat de l'univers Animaux : la scène de Noisette", () => {
+  assertEquals(sceneDeReponseFausse(FAITS_NEUTRES, "inconnu"), { univers: "animaux" });
 });
 
-Deno.test("sans clé d'univers, le résultat est celui de l'univers Animaux : aucune scène", () => {
-  assertEquals(sceneDeReponseFausse(FAITS_NEUTRES, undefined), undefined);
+Deno.test("sans clé d'univers, le résultat est celui de l'univers Animaux : la scène de Noisette", () => {
+  assertEquals(sceneDeReponseFausse(FAITS_NEUTRES, undefined), { univers: "animaux" });
 });
 
 Deno.test("une scène rendue pour la première fois marque la scène comme jouée dans la séance", () => {
