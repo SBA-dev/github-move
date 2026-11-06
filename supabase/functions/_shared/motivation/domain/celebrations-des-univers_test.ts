@@ -3,6 +3,7 @@ import { celebrationDe, type UniversCelebre } from "./celebrations-des-univers.t
 import { UNIVERS } from "./univers.ts";
 import { VARIANTES_DES_UNIVERS } from "./index.ts";
 import { hasardFixe } from "../test_utils/hasard-fixe.ts";
+import type { EffetSonore } from "../../voix/domain/index.ts";
 
 Deno.test("le défi relevé dans l'univers Sports est fêté par le cri de victoire « BUT ! » sur la grande victoire", () => {
   const celebration = celebrationDe("defiReleve", "sports", hasardFixe(0));
@@ -146,7 +147,7 @@ for (const { cle } of UNIVERS) {
   });
 }
 
-const EFFETS_SONORES_EXISTANTS: readonly string[] = [
+const EFFETS_SONORES_EXISTANTS: readonly EffetSonore[] = [
   "reponseJuste",
   "reponseFausse",
   "pointDuRecipient",
@@ -157,7 +158,7 @@ const EFFETS_SONORES_EXISTANTS: readonly string[] = [
   "boutonTouche",
 ];
 
-const MUSIQUES_ATTENDUES: readonly (readonly [UniversCelebre, string])[] = [
+const MUSIQUES_ATTENDUES: readonly (readonly [UniversCelebre, EffetSonore])[] = [
   ["danse", "airDeSaxophone"],
   ["animaux", "airDeCordesPincees"],
   ["princesse", "airDeSteelDrumCourt"],
@@ -168,14 +169,14 @@ const MUSIQUES_ATTENDUES: readonly (readonly [UniversCelebre, string])[] = [
 
 for (const [univers, attendue] of MUSIQUES_ATTENDUES) {
   Deno.test(`la célébration de l'univers ${univers} joue la musique « ${attendue} »`, () => {
-    const musique: string | undefined = celebrationDe("defiReleve", univers, hasardFixe(0))?.musique;
+    const musique: EffetSonore | undefined = celebrationDe("defiReleve", univers, hasardFixe(0))?.musique;
 
     assertEquals(musique, attendue);
   });
 }
 
 Deno.test("les musiques propres aux univers sont distinctes entre elles et des effets sonores existants", () => {
-  const musiques: string[] = UNIVERS.map(({ cle }) => celebrationDe("defiReleve", cle, hasardFixe(0)).musique);
+  const musiques: EffetSonore[] = UNIVERS.map(({ cle }) => celebrationDe("defiReleve", cle, hasardFixe(0)).musique);
   const propres = musiques.filter((musique) => musique !== "grandeVictoire");
 
   assertEquals(propres.length, 4);
