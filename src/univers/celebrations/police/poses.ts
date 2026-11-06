@@ -73,7 +73,7 @@ export type Emotion = "sourire" | "concentration" | "surprise" | "joie" | "hum";
 
 export const ECHELLE_DE_BASE = 1.15;
 export const SOL = 382;
-const Y_SOL = SOL - 58 * ECHELLE_DE_BASE;
+export const Y_SOL = SOL - 58 * ECHELLE_DE_BASE;
 export const X_MAX = 196;
 const X_CHIOT = 148;
 export const BUISSON = { x: 334, y: SOL };
@@ -96,7 +96,7 @@ const T_JOIE = 1.57;
 export const DUREE_DU_PASSAGE = 1.3;
 export const DUREE_D_UNE_BULLE = .45;
 
-const REPOS: Pose = {
+export const REPOS: Pose = {
   x: X_MAX,
   y: Y_SOL,
   rot: 0,
@@ -138,7 +138,7 @@ const REPOS: Pose = {
   libre: 0,
 };
 
-const REPOS_DU_CHIOT: PoseDuChiot = { x: X_CHIOT, y: 0, dir: 1, assis: 1, saut: 0, queue: 1, vis: 1, bras: 0, lang: 0, rot: 0, sx: 1, sy: 1 };
+export const REPOS_DU_CHIOT: PoseDuChiot = { x: X_CHIOT, y: 0, dir: 1, assis: 1, saut: 0, queue: 1, vis: 1, bras: 0, lang: 0, rot: 0, sx: 1, sy: 1 };
 
 type Images = readonly ImagePartielle<Pose>[];
 type ImagesDuChiot = readonly ImagePartielle<PoseDuChiot>[];

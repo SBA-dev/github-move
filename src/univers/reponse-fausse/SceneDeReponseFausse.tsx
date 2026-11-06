@@ -24,10 +24,13 @@ const chargerAnimaux = memoriser(() => import("./animaux/SceneDeNoisette.tsx"));
 
 const chargerPrincesse = memoriser(() => import("./princesse/SceneDeLumi.tsx"));
 
+const chargerPolice = memoriser(() => import("./police/SceneDeMax.tsx"));
+
 const SceneDeCoachLeo = chargerAvecRepli(chargerSports);
 const SceneDeLili = chargerAvecRepli(chargerDanse);
 const SceneDeNoisette = chargerAvecRepli(chargerAnimaux);
 const SceneDeLumi = chargerAvecRepli(chargerPrincesse);
+const SceneDeMax = chargerAvecRepli(chargerPolice);
 
 /** Les univers qui ont leur scène de réponse fausse dessinée : une livraison par personnage guide. */
 const CHARGEURS_DES_SCENES: Partial<Record<CleUnivers, () => Promise<unknown>>> = {
@@ -35,6 +38,7 @@ const CHARGEURS_DES_SCENES: Partial<Record<CleUnivers, () => Promise<unknown>>> 
   danse: chargerDanse,
   animaux: chargerAnimaux,
   princesse: chargerPrincesse,
+  police: chargerPolice,
 };
 
 /**
@@ -61,6 +65,8 @@ export function SceneDeReponseFausse({ scene, ...props }: Props) {
       return <Suspense fallback={props.repli}><SceneDeNoisette {...props} /></Suspense>;
     case "princesse":
       return <Suspense fallback={props.repli}><SceneDeLumi {...props} /></Suspense>;
+    case "police":
+      return <Suspense fallback={props.repli}><SceneDeMax {...props} /></Suspense>;
     default:
       return props.repli;
   }
