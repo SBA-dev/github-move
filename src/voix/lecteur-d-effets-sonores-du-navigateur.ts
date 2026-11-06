@@ -9,6 +9,10 @@ export const FICHIER_DE_L_EFFET: Readonly<Record<EffetSonore, string>> = {
   grandeVictoire: "grande-victoire",
   decouverte: "decouverte",
   boutonTouche: "bouton-touche",
+  airDeSaxophone: "air-de-saxophone",
+  airDeCordesPincees: "air-de-cordes-pincees",
+  airDeSteelDrumCourt: "air-de-steel-drum-court",
+  airDeSteelDrumLong: "air-de-steel-drum-long",
 };
 
 // Un son qui ne finit jamais (bloqué par le navigateur) ne doit pas retenir la parole.
