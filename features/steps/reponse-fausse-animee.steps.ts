@@ -342,8 +342,14 @@ async function verifierQueLaSceneDeMaxSeJoue(page: Page): Promise<EntreeDeScene>
   return await verifierQueLaSceneSeJoue(page, cleDe("Police"));
 }
 
-Then(/^(Coach Léo|Lili|Noisette|Lumi|Agent Max) joue sa scène de réponse fausse(?: : (?!.*avec «).+)?$/, async ({ page }, personnage: string) => {
-  if (personnage === "Agent Max") await verifierQueLaSceneDeMaxSeJoue(page);
+// Capitaine Sam (Pompiers, 163f) : la scène de l'univers du profil, sans doublon du dessin fixe du personnage guide.
+async function verifierQueLaSceneDeSamSeJoue(page: Page): Promise<EntreeDeScene> {
+  return await verifierQueLaSceneSeJoue(page, cleDe("Pompiers"));
+}
+
+Then(/^(Coach Léo|Lili|Noisette|Lumi|Agent Max|Capitaine Sam) joue sa scène de réponse fausse(?: : (?!.*avec «).+)?$/, async ({ page }, personnage: string) => {
+  if (personnage === "Capitaine Sam") await verifierQueLaSceneDeSamSeJoue(page);
+  else if (personnage === "Agent Max") await verifierQueLaSceneDeMaxSeJoue(page);
   else if (personnage === "Lili") await verifierQueLaSceneDeLiliSeJoue(page);
   else if (personnage === "Noisette") await verifierQueLaSceneDeNoisetteSeJoue(page);
   else if (personnage === "Lumi") await verifierQueLaSceneDeLumiSeJoue(page);
@@ -372,7 +378,7 @@ Then(/^la scène de réponse fausse ne recommence pas$/, async ({ page }) => {
   expect(entrees.length - marque, "aucune scène depuis le dernier geste de Léa").toBe(0);
 });
 
-Then(/^(Coach Léo|Lili|Noisette|Lumi|Agent Max) finit avec le sourire, le pouce levé$/, async ({ page }, personnage: string) => {
+Then(/^(Coach Léo|Lili|Noisette|Lumi|Agent Max|Capitaine Sam) finit avec le sourire, le pouce levé$/, async ({ page }, personnage: string) => {
   const scene = await attendreLaFinDeLaScene(page);
   expect(duree(scene), "la scène va jusqu'au bout").toBeGreaterThanOrEqual(SCENE_JOUEE_AU_MOINS_MS);
   expect(scene.sourireALaFin, `${personnage} sourit dans la dernière image`).toBe(true);
