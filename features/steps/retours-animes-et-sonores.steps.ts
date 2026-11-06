@@ -34,7 +34,7 @@ import {
 import { Before, BeforeStep, Given, test, Then, When } from "./fixtures.ts";
 import { motsCachesDe, poesieJouee, remettreTousLesVersDansLOrdre } from "./memoriser-une-poesie.steps.ts";
 import { LECONS_DU_TEST_DE_DEPART, servirLaBibliothequeDuTestDeDepart, suivreLesLecturesDuResultat } from "../support/bibliotheque-du-test-de-depart.ts";
-import { estSurUnProfilReel, rechargerAvecLeProfilReel } from "./profil-reel.ts";
+import { estSurUnProfilReel, jouerAvecLeProfilReel, rechargerAvecLeProfilReel } from "./profil-reel.ts";
 import { profilDe } from "./profils-enfants.steps.ts";
 import { laisserPasserLeDelaiDeLecture, normaliser, reappliquerLAppareil, scenario, terminerLaLecture } from "./voix.steps.ts";
 
@@ -540,8 +540,9 @@ Then(
   },
 );
 
-Then(/^Léa entend une seule fois l'effet sonore « ([^«»]+) »$/, async ({ page }, effet: string) => {
-  await attendreLaFinDeLaSeance(page);
+Then(/^Léa entend une seule fois l'effet sonore « ([^«»]+) »$/, async ({ page, $tags }, effet: string) => {
+  // Story #163 : la question reste posée après la réponse fausse ; la séance n'est pas jouée jusqu'à son écran de fin.
+  if (!$tags.includes("@issue-163")) await attendreLaFinDeLaSeance(page);
   await laisserSeDerouler(page);
   expect(noms((await observer(page)).entrees).filter((nom) => nom === fichierDe(effet))).toHaveLength(1);
 });
@@ -944,11 +945,13 @@ GivenDeLaStory97(/^la tablette est en Muet$/, async ({ page }) => {
   await rechargerAvecLeProfilReel(page);
 });
 
-GivenDeLaStory97(/^la bibliothèque de test du test de départ est servie$/, async ({ page }) => {
+GivenDeLaStory97(/^la bibliothèque de test du test de départ est servie$/, async ({ page, monde, famille, $tags }) => {
   etat(page).injectees.push(...(LECONS_DU_TEST_DE_DEPART as LeconBrute[]));
   suivreLesLecturesDuResultat(page);
   await servirLaBibliothequeDuTestDeDepart(page);
-  if (estSurUnProfilReel(page)) await rechargerAvecLeProfilReel(page);
+  // Story #163 : le test de départ se joue avec le vrai profil de Léa, créé pour Paul (comme à #27).
+  if ($tags.includes("@issue-163") && !estSurUnProfilReel(page)) await jouerAvecLeProfilReel(famille, monde, page);
+  else if (estSurUnProfilReel(page)) await rechargerAvecLeProfilReel(page);
 });
 
 // Le scénario « Rejouer » de #97 n'annonce pas les leçons de test qu'il utilise (celui de #24 et de #33 le fait dans son Contexte).

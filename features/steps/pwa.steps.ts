@@ -1,4 +1,5 @@
 import { devices, expect, type Page } from "@playwright/test";
+import { demarrer } from "./exercices-a-choix.steps.ts";
 import { Given, Then, When } from "./fixtures.ts";
 
 const NOM_APPLICATION = "Savanturier";
@@ -164,7 +165,9 @@ Given("Savanturier a déjà été chargé une fois sur la tablette", async ({ pa
   await chargerUneFois(page);
 });
 
-Given("le réseau est coupé", async ({ context }) => {
+Given("le réseau est coupé", async ({ context, page, $tags }) => {
+  // Story #163 : la leçon de test n'est ouverte que par la première réponse ; elle se charge avant la coupure.
+  if ($tags.includes("@issue-163")) await demarrer(page);
   await context.setOffline(true);
 });
 

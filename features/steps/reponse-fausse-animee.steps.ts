@@ -1,6 +1,6 @@
 import { expect, type Page } from "@playwright/test";
 import { Before, Given, Then, When } from "./fixtures.ts";
-import { bulle, injecter } from "./etapes-puis-exercices.steps.ts";
+import { bulle, commencerSeulementLExercice, injecter, ouvrirLaPageDeLaLecon } from "./etapes-puis-exercices.steps.ts";
 import {
   avancerJusquAuxChoix,
   bulleDeChoix,
@@ -10,13 +10,15 @@ import {
   leconAChoix,
   leconDeLExercice,
   positionDeLExercice,
+  questionsDeLaLecon,
   questionsReussies,
   repondre,
+  textesDesChoixPossibles,
 } from "./exercices-a-choix.steps.ts";
 import { ecrire } from "./dictee-et-conjugaison.steps.ts";
 import { donnerLaBonneReponse, faireUneErreur } from "./aide-et-je-ne-sais-pas.steps.ts";
-import { jouerLeDefi } from "./defi-de-fin-de-partie.steps.ts";
-import { attendreLaFinDeLaSeance, jouerUnExerciceSeul } from "./etoiles-et-fin-de-seance.steps.ts";
+import { jouerLeDefi, leconDeLaQuestion, TOUT_JUSTE } from "./defi-de-fin-de-partie.steps.ts";
+import { attendreLaFinDeLaSeance, jouerJusquALaFinDeLaSeance, partie } from "./etoiles-et-fin-de-seance.steps.ts";
 import { DELAI_DE_L_ATTENTE_MS, laisserSeDerouler } from "./retours-animes-et-sonores.steps.ts";
 import { normaliser } from "./voix.steps.ts";
 
@@ -132,7 +134,9 @@ Before({ tags: "@issue-163" }, async ({ page }) => {
 
 // --- Lire l'enregistreur
 
-const SCENE_ARRETEE_EN_MOINS_DE_MS = 1300;
+// Une scène finie d'elle-même dure 1,5 s ; une lettre de dictée ne peut être écrite qu'après les 1,3 s des lettres fausses (#23).
+const SCENE_ARRETEE_EN_MOINS_DE_MS = 1450;
+const SCENE_JOUEE_AU_MOINS_MS = 1300;
 
 async function lireLEnregistreur(page: Page): Promise<{ entrees: EntreeDeScene[]; marque: number; actions: number[] }> {
   return await page.evaluate(() => {
@@ -232,7 +236,13 @@ When(/^Léa fait une erreur à la deuxième question$/, async ({ page }) => {
 });
 
 When(/^Léa se trompe à la première question du grand défi$/, async ({ page }) => {
-  await jouerLeDefi(page, () => "erreur", { nombre: 1 });
+  await jouerLeDefi(page, TOUT_JUSTE, { nombre: 0 });
+  const enonce = ((await page.getByTestId("question").first().textContent()) ?? "").replace(/\s+/g, " ").trim();
+  const question = questionsDeLaLecon(leconDeLaQuestion(enonce)).find((candidate) => candidate.enonce === enonce);
+  if (question === undefined) throw new Error(`Question inconnue du grand défi : « ${enonce} »`);
+  const fausse = (await textesDesChoixPossibles(page)).find((texte) => texte !== question.reponse);
+  if (fausse === undefined) throw new Error("Aucun mauvais choix possible");
+  await bulleDeChoix(page, fausse).click();
 });
 
 // --- Étant donné : une séance précédente où Léa a vu la scène
@@ -263,8 +273,18 @@ Given(
   /^Léa a vu la scène de réponse fausse de Coach Léo dans l'exercice « ([^«»]+) » joué seul et terminé aujourd'hui$/,
   async ({ famille, page }, exercice: string) => {
     const lecon = leconDeLExercice(page, exercice);
-    await jouerUnExerciceSeul(famille, page, lecon, positionDeLExercice(lecon, exercice), 1);
-    expect((await lireLEnregistreur(page)).entrees.length, "la scène a été jouée pendant l'exercice").toBeGreaterThan(0);
+    const position = positionDeLExercice(lecon, exercice);
+    const courante = partie(famille);
+    courante.erreursEnTout = 0;
+    courante.erreursParExercice.clear();
+    await ouvrirLaPageDeLaLecon(page, lecon.titre);
+    etatDesChoix(page).exerciceUnique = position;
+    await commencerSeulementLExercice(page, String(lecon.exercices[position]?.titre));
+    // La scène ne se joue qu'une fois l'encouragement dit : la bonne réponse attend qu'on l'ait vue.
+    await faireUneErreur(page);
+    await attendreUneScene(page);
+    await attendreLaFinDeLaScene(page);
+    await jouerJusquALaFinDeLaSeance(famille, page);
   },
 );
 
@@ -306,13 +326,13 @@ Then(/^la scène de réponse fausse ne recommence pas$/, async ({ page }) => {
 
 Then(/^Coach Léo finit avec le sourire, le pouce levé$/, async ({ page }) => {
   const scene = await attendreLaFinDeLaScene(page);
-  expect(duree(scene), "la scène va jusqu'au bout").toBeGreaterThanOrEqual(SCENE_ARRETEE_EN_MOINS_DE_MS);
+  expect(duree(scene), "la scène va jusqu'au bout").toBeGreaterThanOrEqual(SCENE_JOUEE_AU_MOINS_MS);
   expect(scene.sourireALaFin, "Coach Léo sourit dans la dernière image").toBe(true);
 });
 
 Then(/^Coach Léo continue sa scène de réponse fausse$/, async ({ page }) => {
   const scene = await attendreUneScene(page);
-  expect(duree(scene), "la scène n'a pas été arrêtée").toBeGreaterThanOrEqual(SCENE_ARRETEE_EN_MOINS_DE_MS);
+  expect(duree(scene), "la scène n'a pas été arrêtée").toBeGreaterThanOrEqual(SCENE_JOUEE_AU_MOINS_MS);
 });
 
 Then(/^la scène de réponse fausse s'arrête$/, async ({ page }) => {
