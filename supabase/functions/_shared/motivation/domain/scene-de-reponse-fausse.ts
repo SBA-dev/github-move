@@ -15,6 +15,7 @@ export const SCENES_DE_REPONSE_FAUSSE: Partial<
   Record<CleUnivers, SceneDeReponseFausse>
 > = {
   sports: { univers: "sports" },
+  danse: { univers: "danse" },
 };
 
 function laScenePeutSeJouer(faits: FaitsDeLaReponseFausse): boolean {
