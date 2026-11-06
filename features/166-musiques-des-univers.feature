@@ -1,5 +1,5 @@
 # language: fr
-@issue-166 @wip
+@issue-166
 Fonctionnalité: Une musique propre à chaque univers pour les célébrations
   En tant qu'enfant
   Je veux entendre la musique de mon univers quand mon personnage guide fête ma victoire
