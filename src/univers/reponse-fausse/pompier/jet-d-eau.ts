@@ -28,9 +28,10 @@ export function creerLeJet(racine: SVGSVGElement, sam: CapitaineSam, monde: Repe
   const jet = elementsDe(racine, PREFIXE_DE_SAM)("jet");
   const filetContour = trouver(jet, ".jet-contour"), filetEau = trouver(jet, ".jet-eau"), filetReflet = trouver(jet, ".jet-reflet");
   const gouttes = trouver(jet, ".gouttes"), eclaboussure = trouver(jet, ".eclabousse");
-  gouttes.innerHTML = Array.from({ length: NOMBRE_DE_GOUTTES }, () => `<path d="${GOUTTE}"/>`).join("");
-  eclaboussure.innerHTML = Array.from({ length: NOMBRE_D_ECLABOUSSURES }, () => `<circle r="2.2"/>`).join("") +
+  gouttes.innerHTML = Array.from({ length: NOMBRE_DE_GOUTTES }, () => `<path d="${GOUTTE}" opacity="0"/>`).join("");
+  eclaboussure.innerHTML = Array.from({ length: NOMBRE_D_ECLABOUSSURES }, () => `<circle r="2.2" opacity="0"/>`).join("") +
     `<ellipse class="rond" rx="8" ry="2.2" fill="none" stroke="#3C8DDA" stroke-width="1.4"/>`;
+  for (const groupe of [jet, eclaboussure]) poser(groupe, "opacity", 0);
 
   function mesurerLaLance(): DepartDeLEau {
     const pointe = monde(sam.lance.pointe), axe = monde(sam.lance.axe), dx = pointe.x - axe.x, dy = pointe.y - axe.y, longueur = Math.hypot(dx, dy) || 1;

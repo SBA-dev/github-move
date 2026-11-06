@@ -53,6 +53,8 @@ export function creerLaScene(racine: SVGSVGElement, tenue?: CleDeTenue) {
     poser(n("lance-tenue"), "opacity", 1);
     herbe.dessiner(FIN);
     poserLOmbreAuSol();
+    poser(n("jet"), "opacity", 0);
+    bulle?.dessiner(FIN);
   }
 
   return assemblerLaScene({ fin: FIN, rendre, rendreLEtatFinal });
