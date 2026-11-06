@@ -93,3 +93,15 @@ Validée par le PO le 2026-11-05 (106f, 106.42). Même méthode qu'Agent Max : *
 - Contrôles : « Réussir », A / B / C ; `?anim=cloche|arc|pluie&t=…`, `?planche=tetes|mains`. Mouvements réduits : image fixe de l'état final, sans pétales, nuages arrêtés. Annonce unique « Défi relevé ! ».
 
 **Limites connues** : quand la lance pointe vers le ciel, l'avant-bras droit la cache en partie (le jet semble sortir des mains) ; la corde de la cloche, accrochée à la façade, est atteinte par un saut au premier plan (tricherie de perspective de dessin animé) ; le pouce levé reste près du casque ; pas de son. Captures : `docs/stories/106/captures/106f-capitaine-sam-*.png`.
+
+## Scène de réponse fausse (#163)
+
+`reponse-fausse-coach-leo.html` : maquette de la scène de réponse fausse de **Coach Léo** (livraison 163a), à valider par le PO **avant tout câblage** (98.28, 163.12). Captures : `docs/stories/163/captures/163a-coach-leo-*.png` (images clés, écran à 360 px, image fixe, tailles, mode dys).
+
+- **Scène (1,5 s)** : Léo est de face dès la première image. Il tape le ballon, qui rebondit doucement sur un petit poteau à sa droite (le poteau vibre à peine) et revient rouler à ses pieds. Surpris un instant, puis il rit (petite bulle écrite « oh ! »), pouce levé. Léo seul avec son ballon, d'aplomb. Un petit coin d'herbe et le poteau n'existent que le temps de la scène. Aucun titre, aucun son, aucun confetti, aucune étoile.
+- **Taille** : le dessin occupe le même cadre que celui du personnage guide (`viewBox="-84 -119 168 210"`, comme `CoachLeo.tsx`) : 112 px de large sur téléphone, 200 px sur tablette (`src/styles.css`, `.personnage-guide`). Léo glisse de 14 unités vers la gauche pour laisser la place du poteau, puis revient au centre.
+- **Maquette d'écran** : question « Combien font 3 + 4 ? », quatre choix, encouragement de #97 (« Pas grave, on réessaie ! ») dans la bulle. Les choix, « Réécouter », « Je ne sais pas » et « Retour » restent actifs pendant la scène et l'arrêtent aussitôt.
+- **Contrôles** : « Rejouer la scène », mouvements réduits (image fixe : Léo souriant, pouce levé, ballon à ses pieds, sans poteau ni bulle), mode dys (la bulle « oh ! » passe en Andika), écran de tablette. La durée mesurée s'affiche. `?t=0.46` rend un instant ; `?reduit=1`, `?dys=1`, `?tablette=1`, `?taille=<px>`.
+- **Tenue** : tenue de base. La tenue portée viendra des dessins de 106h (163.8).
+- **Écarts à `coach-leo-sports.html`** : plus de tir de dos ni de retournement (2,9 s resserrées en 1,5 s) ; but et filet remplacés par un petit poteau ; plus de titre ni de sous-titre ; sourcils de « joie » relevés ; dessin au cadre du personnage guide (et non plus plein écran) ; ni `?anim=…` ni bouton de scène ratée ; polices Andika et Baloo 2 sans appel réseau (repli système).
+- **Limites connues** : à 80 px et moins, la bulle « oh ! » devient illisible (elle est décorative, `aria-hidden`) ; l'enchaînement avec le dessin fixe « réfléchit » (163.13) est à faire au câblage ; le pas de côté de Léo fait glisser un peu les pieds ; pas de son.

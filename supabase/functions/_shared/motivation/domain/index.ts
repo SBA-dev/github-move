@@ -212,3 +212,11 @@ export {
   type VarianteDe,
   VARIANTES_DES_UNIVERS,
 } from "./celebrations-des-univers.ts";
+
+export {
+  type FaitsDeLaReponseFausse,
+  type SceneDeReponseFausse,
+  sceneDeReponseFausse,
+  sceneJoueeDansLaSeanceApres,
+  SCENES_DE_REPONSE_FAUSSE,
+} from "./scene-de-reponse-fausse.ts";

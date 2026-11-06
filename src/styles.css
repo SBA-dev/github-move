@@ -146,6 +146,12 @@ button[data-son="muet"] { background: var(--principale-foncee); }
 }
 .personnage-guide { width: min(200px, 50vw); }
 .personnage-guide svg { width: 100%; height: auto; display: block; }
+/* La zone du personnage guide pendant une question n'ajoute aucune boîte : elle sert à mesurer son dessin. La scène de réponse fausse prend la place du dessin, à sa taille ; elle ne capte aucun toucher. */
+.personnage-guide-et-sa-scene { display: contents; }
+.scene-de-reponse-fausse { pointer-events: none; }
+.scene-de-reponse-fausse svg { overflow: visible; }
+.scene-de-reponse-fausse .ecrit-de-la-scene { font-family: var(--police-titres); font-weight: 800; }
+[data-mode-dys="true"] .scene-de-reponse-fausse .ecrit-de-la-scene { font-weight: 700; letter-spacing: .04em; }
 .titre-avec-guide { display: flex; align-items: center; justify-content: center; gap: 12px; }
 .titre-avec-guide h2 { margin: 0; }
 .titre-avec-guide .personnage-guide { width: 72px; flex: none; }

@@ -141,7 +141,7 @@ const VARIANTES: Record<VarianteDe<"sports">, { readonly images: (t0: number) =>
 
 export const poseA = (poses: readonly ImageCle<Pose>[], t: number): Pose => poseDeLaScene(REPOS, poses, t);
 
-export type Emotion = "concentration" | "surprise" | "joie";
+export type Emotion = "concentration" | "surprise" | "joie" | "sourire";
 
 export type ScenarioDeBut = {
   readonly variante: VarianteDe<"sports">;

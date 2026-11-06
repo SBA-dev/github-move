@@ -11,9 +11,9 @@ type Scene = {
   rendre(t: number): void;
 };
 
-/** Joue la scène image par image, au rythme de `DUREE_DE_LA_CELEBRATION_S` ; rend la fonction qui l'arrête. */
-export function jouerLaScene(scene: Scene, quandTerminee: () => void): () => void {
-  const vitesse = scene.fin / DUREE_DE_LA_CELEBRATION_S;
+/** Joue la scène image par image, accélérée pour tenir en `duree` secondes (par défaut celles de la célébration) ; rend la fonction qui l'arrête. */
+export function jouerLaScene(scene: Scene, quandTerminee: () => void, duree = DUREE_DE_LA_CELEBRATION_S): () => void {
+  const vitesse = scene.fin / duree;
   const depart = performance.now();
   let precedent = 0, image = 0;
   const boucle = (maintenant: number) => {

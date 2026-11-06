@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Savanturier : Coach Léo, scène de réponse fausse (maquette 163a)</title>
+<style>
+  :root { --principale: #1F63D8; --foncee: #164BA8; --or: #FFC93C; --encre: #1B2A4A; --guide: 112px; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #0f1b2d; }
+  body { font-family: "Andika", "Trebuchet MS", system-ui, sans-serif; color: var(--encre); padding: 12px; }
+  .banc { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; align-items: flex-start; }
+  .commandes { width: 360px; max-width: 100%; color: #E8F0FF; font-size: 15px; line-height: 1.45; }
+  .commandes h1 { margin: 0 0 8px; font-size: 18px; line-height: 1.25; }
+  .commandes p { margin: 8px 0; }
+  .commandes label { display: flex; align-items: center; gap: 10px; min-height: 44px; cursor: pointer; }
+  .commandes input[type="checkbox"] { width: 22px; height: 22px; }
+  .commandes .notes { font-size: 13px; color: #B9C8E6; }
+  .duree { margin: 10px 0; padding: 10px 12px; border-radius: 12px; background: #1B2D4A; font-weight: 700; }
+  .btn { min-height: 48px; padding: 8px 20px; border: 0; border-radius: 999px; font: 700 17px "Baloo 2", "Andika", sans-serif; cursor: pointer; background: var(--principale); color: #fff; box-shadow: 0 4px 0 var(--foncee); }
+  .btn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--foncee); }
+  .btn:focus-visible, .choix button:focus-visible, .petit:focus-visible { outline: 3px solid var(--or); outline-offset: 3px; }
+
+  /* Maquette de l'écran de séance : mêmes tailles que src/styles.css (.personnage-guide 112 px sous 480 px, 200 px au-delà) */
+  .ecran { width: 360px; max-width: 100%; background: linear-gradient(#EAF4FF, #F7FBFF); border-radius: 22px; padding: 14px 14px 16px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 12px 40px rgba(0,0,0,.35); }
+  .ecran.tablette { width: 768px; --guide: 200px; padding: 20px 28px 24px; }
+  .entete { display: flex; align-items: center; gap: 12px; }
+  .entete .retour { min-height: 44px; min-width: 44px; padding: 6px 14px; border: 2px solid #BFD0EA; border-radius: 12px; background: #fff; color: #3C4C6B; font: 700 15px inherit; font-family: inherit; }
+  .entete h2 { margin: 0; font-size: 17px; line-height: 1.2; font-family: "Baloo 2", inherit; color: var(--foncee); }
+  .entete p { margin: 0; font-size: 13px; color: #3C4C6B; }
+  .progression { height: 10px; border-radius: 999px; background: #D5E3F7; overflow: hidden; }
+  .progression span { display: block; height: 100%; width: 25%; background: #4FB37A; border-radius: 999px; }
+  .guide-et-parole { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; }
+  .personnage-guide { width: var(--guide); flex: none; }
+  .personnage-guide svg { width: 100%; height: auto; display: block; }
+  .bulle { margin: 0; flex: 1 1 120px; min-width: 0; padding: 10px 14px; border-radius: 18px; background: #fff; border: 2px solid #BFD0EA; font-size: 17px; line-height: 1.3; font-weight: 700; color: var(--foncee); }
+  .bulle:empty { display: none; }
+  .reecouter { align-self: center; min-height: 44px; padding: 6px 16px; border: 2px solid #BFD0EA; border-radius: 999px; background: #fff; color: var(--foncee); font: 700 15px inherit; font-family: inherit; cursor: pointer; }
+  .consigne { margin: 0; text-align: center; font-size: 22px; font-weight: 700; line-height: 1.3; }
+  .choix { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .choix button { min-height: 56px; border: 3px solid #BFD0EA; border-radius: 16px; background: #fff; color: var(--encre); font: 700 24px "Baloo 2", "Andika", sans-serif; cursor: pointer; }
+  .choix button:active { transform: translateY(2px); }
+  .choix button.essayee { border-style: dashed; border-color: #9AAAC6; background: #F1F5FB; }
+  .choix button.prise { border-color: var(--principale); background: #E7F0FF; }
+  .ne-sais-pas { align-self: center; min-height: 44px; padding: 6px 18px; border: 0; background: transparent; color: #3C4C6B; text-decoration: underline; font: 700 15px inherit; font-family: inherit; cursor: pointer; }
+  .etat { margin: 0; min-height: 20px; text-align: center; font-size: 13px; color: #3C4C6B; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  /* Mode dys (src/styles.css) : Andika partout, lettres, mots et lignes espacés */
+  [data-mode-dys="true"] { font-family: "Andika", "Trebuchet MS", sans-serif; letter-spacing: .08em; word-spacing: .3em; line-height: 1.9; }
+  [data-mode-dys="true"] :is(button, h2, p) { font-family: "Andika", "Trebuchet MS", sans-serif; letter-spacing: inherit; word-spacing: inherit; }
+  [data-mode-dys="true"] .bulle, [data-mode-dys="true"] .consigne { line-height: 1.6; overflow-wrap: anywhere; }
+  .ecrit { font-family: "Baloo 2", "Andika", sans-serif; font-weight: 800; }
+  [data-mode-dys="true"] .ecrit { font-family: "Andika", "Trebuchet MS", sans-serif; font-weight: 700; letter-spacing: .04em; }
+  @media (prefers-reduced-motion: reduce) { .btn, .choix button { transition: none; } }
+</style>
+</head>
+<body>
+<div class="banc">
+  <div class="ecran" id="ecran" data-mode-dys="false">
+    <div class="entete">
+      <button class="retour" type="button">Retour</button>
+      <div><h2>Calcul mental</h2><p>CE1 · Les additions</p></div>
+    </div>
+    <div class="progression" aria-hidden="true"><span></span></div>
+    <div class="guide-et-parole">
+      <div class="personnage-guide" id="scene" aria-hidden="true" data-testid="scene-de-reponse-fausse">
+        <svg viewBox="-84 -119 168 210" overflow="visible" aria-hidden="true" id="svg">
+          <defs>
+            <clipPath id="clip-oeil"><ellipse rx="7.4" ry="9.6"/></clipPath>
+            <clipPath id="clip-bouche"><path d="M-11 11 Q0 27 11 11 Z"/></clipPath>
+            <clipPath id="clip-poteau"><rect x="-4" y="-40" width="8" height="40" rx="4"/></clipPath>
+          </defs>
+          <!-- Petit coin d'herbe, le temps de la scène -->
+          <g id="sol" opacity="0"><ellipse cx="0" cy="75" rx="80" ry="8" fill="#6FD170" opacity=".85"/><ellipse cx="-10" cy="73" rx="52" ry="4.5" fill="#8BE08A" opacity=".7"/></g>
+          <!-- Le petit poteau, à droite de Léo -->
+          <g id="poteau" opacity="0"><g id="poteau-corps" transform="translate(72 75)">
+            <ellipse cx="0" cy="-1" rx="9" ry="3" fill="#15502B" opacity=".25"/>
+            <g clip-path="url(#clip-poteau)"><rect x="-4" y="-40" width="8" height="40" fill="#FFFFFF"/><rect x="-4" y="-27" width="8" height="8" fill="#E8604C"/><rect x="1" y="-40" width="3" height="40" fill="#D9E3F2"/></g>
+            <rect x="-4" y="-40" width="8" height="40" rx="4" fill="none" stroke="#33304A" stroke-width="2.4"/>
+          </g></g>
+          <ellipse id="ombre-leo" fill="#15502B" opacity=".25"/>
+          <g id="leo"></g>
+          <g id="ballon-couche"></g>
+          <!-- La petite bulle écrite « oh ! » : décor du dessin, jamais lue -->
+          <g id="oh" opacity="0"><g id="oh-corps" transform="translate(51 -103) scale(1.15)">
+            <path transform="scale(-1 1)" d="M-19 -10 H19 Q25 -10 25 -4 V6 Q25 12 19 12 H8 L12 21 L-2 12 H-19 Q-25 12 -25 6 V-4 Q-25 -10 -19 -10 Z" fill="#FFFFFF" stroke="#33304A" stroke-width="2.4" stroke-linejoin="round"/>
+            <text class="ecrit" text-anchor="middle" x="0" y="6" font-size="15" fill="#33304A">oh !</text>
+          </g></g>
+        </svg>
+      </div>
+      <p class="bulle" id="bulle" aria-live="polite"></p>
+    </div>
+    <button class="reecouter" type="button">Réécouter</button>
+    <p class="consigne" data-testid="consigne">Combien font 3 + 4 ?</p>
+    <div class="choix" role="group" aria-label="Les choix">
+      <button type="button" data-choix="6">6</button>
+      <button type="button" data-choix="7">7</button>
+      <button type="button" data-choix="8" class="essayee">8</button>
+      <button type="button" data-choix="9">9</button>
+    </div>
+    <button class="ne-sais-pas" type="button">Je ne sais pas</button>
+    <p class="etat" id="etat"></p>
+  </div>
+
+  <aside class="commandes">
+    <h1>Scène de réponse fausse : Coach Léo (maquette 163a)</h1>
+    <p>Léo vient de recevoir une réponse fausse (« 8 »). Sa scène prend la place de son dessin, à sa taille. Touche un choix, « Réécouter » ou « Je ne sais pas » : la scène s'arrête tout de suite.</p>
+    <button class="btn" id="rejouer" type="button">Rejouer la scène</button>
+    <label><input type="checkbox" id="reduit"> Mouvements réduits (image fixe)</label>
+    <label><input type="checkbox" id="dys"> Mode dys</label>
+    <label><input type="checkbox" id="tablette"> Écran de tablette (768 px, dessin de 200 px)</label>
+    <p class="duree" id="duree" role="status">Durée : pas encore jouée.</p>
+    <p class="notes">Léo porte ici sa tenue de base : la tenue choisie par l'enfant viendra des dessins de 106h (163.8). Après la scène, le dessin du personnage guide revient avec l'humeur « réfléchit » (163.13) : le câblage s'en charge, la maquette garde la dernière image.</p>
+  </aside>
+</div>
+<script>
+(() => {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const NS = "http://www.w3.org/2000/svg";
+  const CONTOUR = "#33304A", PEAU = "#f1c39a", PEAU_OMBRE = "#D9A67A", PEAU_LUMIERE = "#FFE3C8", CHEVEUX = "#5a3a22", CHEVEUX_OMBRE = "#43291A", CHEVEUX_LUMIERE = "#8A5E3B",
+    TENUE = "#2a63d4", TENUE_OMBRE = "#1F4CB0", TENUE_LUMIERE = "#5A8BE8", SHORT = "#FFFFFF", SHORT_OMBRE = "#D9E3F2", CHAUSSURE = "#E8604C", CHAUSSURE_OMBRE = "#C24432";
+  const DEG = Math.PI / 180;
+  // ---------- Courbes ----------
+  const E = {
+    lineaire: (u) => u,
+    sortie: (u) => 1 - Math.pow(1 - u, 3),
+    entree: (u) => u * u * u,
+    douce: (u) => (u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2),
+    retour: (u) => { const c = 1.7; return 1 + (c + 1) * Math.pow(u - 1, 3) + c * Math.pow(u - 1, 2); },
+    rebond: (u) => { const c = 2.6; return 1 + (c + 1) * Math.pow(u - 1, 3) + c * Math.pow(u - 1, 2); },
+  };
+  const lerp = (a, b, u) => a + (b - a) * u, clamp01 = (u) => Math.max(0, Math.min(1, u));
+  const fenetre = (t, debut, duree, e = E.sortie) => e(clamp01((t - debut) / duree));
+  const r1 = (v) => Math.round(v * 10) / 10;
+  const tr = (el, v) => el.setAttribute("transform", v);
+  const att = (el, a, v) => el.setAttribute(a, v);
+  // ---------- Géométrie des membres : une seule courbe souple par membre ----------
+  const quad = (S, C, W, t) => ({ x: (1 - t) ** 2 * S.x + 2 * t * (1 - t) * C.x + t * t * W.x, y: (1 - t) ** 2 * S.y + 2 * t * (1 - t) * C.y + t * t * W.y });
+  function membre(S, a1, a2, L1, L2) {
+    const E1 = { x: S.x - Math.sin(a1 * DEG) * L1, y: S.y + Math.cos(a1 * DEG) * L1 };
+    const W = { x: E1.x - Math.sin((a1 + a2) * DEG) * L2, y: E1.y + Math.cos((a1 + a2) * DEG) * L2 };
+    const C = { x: 2 * E1.x - (S.x + W.x) / 2, y: 2 * E1.y - (S.y + W.y) / 2 };
+    const dir = Math.atan2(W.x - E1.x, -(W.y - E1.y)) / DEG; // rotation qui envoie « vers le haut » le long de l'avant-bras
+    return { S, E: E1, W, C, dir };
+  }
+  function trace(m, t0, t1, pas = 8) {
+    let d = "";
+    for (let i = 0; i <= pas; i++) { const p = quad(m.S, m.C, m.W, lerp(t0, t1, i / pas)); d += `${i ? "L" : "M"}${r1(p.x)} ${r1(p.y)}`; }
+    return d;
+  }
+  const ligne = (classe, couleur, largeur, extra = "") => `<path class="${classe}" fill="none" stroke="${couleur}" stroke-width="${largeur}" stroke-linecap="round" stroke-linejoin="round" ${extra}/>`;
+
+  // ---------- Mains à cinq doigts ----------
+  // Un doigt effilé et légèrement courbe, de la base (x, y0) dans la direction a (0 = vers le haut), longueur L.
+  function doigtForme(x, y0, a, L, b = 2.7, tp = 1.9) {
+    const dx = Math.sin(a * DEG), dy = -Math.cos(a * DEG), nx = -dy, ny = dx;
+    const tx = x + dx * L, ty = y0 + dy * L, mx = (x + tx) / 2 + nx * .7, my = (y0 + ty) / 2 + ny * .7, mw = (b + tp) / 2;
+    return `M${r1(x + nx * b)} ${r1(y0 + ny * b)} Q${r1(mx + nx * mw)} ${r1(my + ny * mw)} ${r1(tx + nx * tp)} ${r1(ty + ny * tp)} A${tp} ${tp} 0 0 0 ${r1(tx - nx * tp)} ${r1(ty - ny * tp)} Q${r1(mx - nx * mw)} ${r1(my - ny * mw)} ${r1(x - nx * b)} ${r1(y0 - ny * b)} Z`;
+  }
+  function main(pose, miroir) {
+    const m = miroir ? -1 : 1, doigts = [-6.3, -2.1, 2.1, 6.3], angles = pose === 3 ? [-26, -9, 9, 26] : [-9, -3, 3, 9];
+    const paume = `M-8 9 V-3 Q-8 -8 -3 -8 H3 Q8 -8 8 -3 V9 Q0 12 -8 9 Z`;
+    const paumePoing = `M-8 8 V-2 Q-8 -9 0 -9 Q8 -9 8 -2 V8 Q0 12 -8 8 Z`;
+    const forme = (d, w) => `<path d="${d}" fill="none" stroke="${CONTOUR}" stroke-width="${w}" stroke-linejoin="round"/>`;
+    let contours = "", remplissages = "";
+    if (pose === 0 || pose === 3) { // ouverte : détendue (0) ou doigts écartés (3)
+      const formes = doigts.map((x, i) => doigtForme(x, -6, angles[i] * m, 10.5 - Math.abs(i - 1.5) * .8));
+      const pouce = doigtForme(-7 * m, 0, -52 * m, 9, 2.6, 1.9);
+      formes.concat(pouce).forEach((d) => (contours += forme(d, 5.2)));
+      remplissages += formes.concat(pouce).map((d) => `<path d="${d}" fill="${PEAU}"/>`).join("");
+      remplissages += doigts.map((x, i) => { const a = angles[i] * m * DEG; return `<path d="M${r1(x + Math.sin(a) * 3)} ${r1(-6 - Math.cos(a) * 3)} l${r1(Math.sin(a) * 4)} ${r1(-Math.cos(a) * 4)}" fill="none" stroke="${PEAU_OMBRE}" stroke-width="1.2" stroke-linecap="round" opacity=".7"/>`; }).join("");
+      return `${contours}${forme(paume, 5.6)}<path d="${paume}" fill="${PEAU}"/>${remplissages}<path d="M3 8 Q7 4 7 -1" fill="none" stroke="${PEAU_OMBRE}" stroke-width="2.2" stroke-linecap="round"/>`;
+    }
+    // poing (1) ou pouce levé (2) : quatre doigts repliés visibles, pouce rangé ou dressé dans le prolongement de l'avant-bras
+    const pouce = pose === 2 ? doigtForme(-5 * m, -4, -10 * m, 13, 2.8, 2.1) : null;
+    if (pouce) contours += forme(pouce, 5.4);
+    doigts.forEach((x) => { contours += `<circle cx="${x}" cy="-8" r="5.4" fill="${CONTOUR}"/>`; });
+    let dessus = doigts.map((x) => `<circle cx="${x}" cy="-8" r="3.6" fill="${PEAU}"/>`).join("") + `<rect x="-8" y="-8" width="16" height="6" fill="${PEAU}"/>`;
+    dessus += doigts.map((x) => `<path d="M${x - 2.2} -6.5 q2.2 -1.8 4.4 0" fill="none" stroke="${PEAU_OMBRE}" stroke-width="1.4" stroke-linecap="round"/>`).join("");
+    if (pouce) dessus += `<path d="${pouce}" fill="${PEAU}"/><path d="M${r1(-6 * m)} -3 l${r1(-1.5 * m)} -6" fill="none" stroke="${PEAU_OMBRE}" stroke-width="1.6" stroke-linecap="round"/>`;
+    else dessus += `<path d="M${-7 * m} 2 q${r1(5 * m)} 3 ${r1(10 * m)} 1" fill="none" stroke="${PEAU_OMBRE}" stroke-width="1.8" stroke-linecap="round"/>`;
+    return `${contours}${forme(paumePoing, 5.6)}<path d="${paumePoing}" fill="${PEAU}"/>${dessus}<path d="M3 7 Q7 3 7 -2" fill="none" stroke="${PEAU_OMBRE}" stroke-width="2.2" stroke-linecap="round"/>`;
+  }
+  const MAINS = { droit: [0, 1, 2, 3].map((p) => main(p, false)), miroir: [0, 1, 2, 3].map((p) => main(p, true)) };
+
+  // ---------- Structure du personnage ----------
+  const brasHTML = (c) => `<g id="bras-${c}">
+      ${ligne("manche-contour", CONTOUR, 26)}${ligne("contour", CONTOUR, 20)}${ligne("rempli", PEAU, 13)}${ligne("ombre", PEAU_OMBRE, 5.5)}${ligne("lumiere", PEAU_LUMIERE, 3.2)}
+      ${ligne("manche", TENUE, 20)}${ligne("manche-ombre", TENUE_OMBRE, 7)}${ligne("manche-bord", TENUE_OMBRE, 2.2)}
+      <g id="main-${c}"><g class="pose-main"></g></g></g>`;
+  const jambeHTML = (c) => `<g id="jambe-${c}">
+      ${ligne("contour", CONTOUR, 21)}${ligne("rempli", PEAU, 14)}${ligne("ombre", PEAU_OMBRE, 6)}${ligne("lumiere", PEAU_LUMIERE, 3.4)}
+      ${ligne("chaussette", "#FFFFFF", 14.5)}<path class="chaussette-bord" fill="none" stroke="${TENUE}" stroke-width="14.6" stroke-linecap="butt"/><path class="chaussette-bord2" fill="none" stroke="${TENUE}" stroke-width="14.6" stroke-linecap="butt"/>${ligne("chaussette-ombre", SHORT_OMBRE, 4)}
+      <g id="chaussure-${c}">
+        <ellipse class="contact" rx="13" ry="3.5" fill="#15502B" opacity=".25"/>
+        <g class="vue-face">
+          <path fill="${CHAUSSURE}" stroke="${CONTOUR}" stroke-width="3" stroke-linejoin="round" d="M-7 -10 Q-9 -3 -10 4 Q-11 12 -4 15 Q0 16 4 15 Q11 12 10 4 Q9 -3 7 -10 Q0 -12 -7 -10 Z"/>
+          <path fill="${CHAUSSURE_OMBRE}" d="M3 -8 Q8 0 9 6 Q9 12 4 15 Q7 10 6 4 Q5 -2 3 -8 Z"/>
+          <g class="devant">
+            <path fill="#FF8A74" d="M-9 6 Q-9 13 -4 15 Q0 16 4 15 Q9 13 9 6 Q0 9 -9 6 Z"/>
+            <ellipse cx="-2.5" cy="10" rx="3" ry="1.4" fill="#FFFFFF" opacity=".9"/>
+            <path fill="${CHAUSSURE_OMBRE}" stroke="${CONTOUR}" stroke-width="1.8" stroke-linejoin="round" d="M-5 -10 Q0 -13 5 -10 L4 -4 Q0 -3 -4 -4 Z"/>
+            <g fill="none" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round"><path d="M-3.2 -5 L3.2 -5 M-3.5 -2 L3.5 -2 M-3.8 1 L3.8 1 M-4 4 L4 4"/></g>
+            <g fill="none" stroke="#FFFFFF" stroke-width="1.3" stroke-linecap="round"><path d="M-9.5 -1 L-7.5 0 M-9.8 2 L-7.8 3 M-10 5 L-8 6 M9.5 -1 L7.5 0 M9.8 2 L7.8 3 M10 5 L8 6"/></g>
+          </g>
+          <g class="talon"><path fill="none" stroke="${CONTOUR}" stroke-width="1.3" stroke-linecap="round" opacity=".6" d="M-7 -4 Q0 -2 7 -4"/><path fill="none" stroke="#FFFFFF" stroke-width="1.4" stroke-linecap="round" d="M-9 2 L-7 3 M-9.5 5 L-7.5 6 M9 2 L7 3 M9.5 5 L7.5 6"/></g>
+          <path fill="none" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round" opacity=".9" d="M-9 11 Q0 15.5 9 11"/>
+        </g>
+        <g class="vue-profil">
+          <path fill="${CHAUSSURE}" stroke="${CONTOUR}" stroke-width="3" stroke-linejoin="round" d="M-13 -8 Q-16 0 -14 7 L-10 9 L18 9 Q25 8 24 3 Q22 -3 12 -6 Q4 -8 -2 -7 Q-8 -10 -13 -8 Z"/>
+          <path fill="${CHAUSSURE_OMBRE}" d="M-8 3 Q6 6 24 3 Q25 8 18 9 L-10 9 L-14 7 Z"/>
+          <path fill="#E6EAF0" stroke="${CONTOUR}" stroke-width="1.3" d="M-14 7 L-10 9 L18 9 Q25 8 24 3.5 Q10 8 -14 7 Z"/>
+          <path fill="#FFFFFF" opacity=".75" d="M13 -5 Q20 -3 23 2 Q18 0 12 -2 Z"/>
+          <g fill="none" stroke="#FFFFFF" stroke-width="1.7" stroke-linecap="round"><path d="M-4 -5 L-6 5 M1 -4.5 L-1 5 M6 -4 L4 5"/></g>
+          <path fill="none" stroke="${CONTOUR}" stroke-width="1.2" stroke-linecap="round" d="M-13 -7 Q-7 -4 -1 -6" opacity=".6"/>
+        </g>
+        <g class="vue-semelle">
+          <path fill="#3A3A4A" stroke="${CONTOUR}" stroke-width="2.4" stroke-linejoin="round" d="M-9 -10 Q-13 0 -10 10 Q-4 15 3 15 Q11 15 13 8 Q14 -2 10 -10 Q0 -13 -9 -10 Z"/>
+          <path fill="#55556A" d="M-7 -6 Q-10 0 -8 8 Q-3 12 3 12 Q9 12 11 7 Q12 -1 9 -7 Q1 -10 -7 -6 Z"/>
+          <g fill="#E6EAF0" stroke="${CONTOUR}" stroke-width="1.1">${[[-5, -5], [5, -5], [-4, 1], [5, 1], [-3, 8], [4, 8]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="2.1"/>`).join("")}</g>
+        </g>
+      </g></g>`;
+  $("leo").innerHTML = `
+    <g id="arriere"></g>
+    ${jambeHTML("g")}${jambeHTML("d")}
+    <g id="short"><path class="forme" fill="${SHORT}" stroke="${CONTOUR}" stroke-width="3" stroke-linejoin="round"/><path class="ombre" fill="${SHORT_OMBRE}"/><path class="bande" fill="none" stroke="${TENUE}" stroke-width="2.4" stroke-linecap="round"/></g>
+    <g id="haut">
+      <g id="torse"><path class="forme" fill="${TENUE}" stroke="${CONTOUR}" stroke-width="3.4" stroke-linejoin="round"/><path class="ombre" fill="${TENUE_OMBRE}"/><path class="lumiere" fill="${TENUE_LUMIERE}"/><path class="col" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><g class="badge"><circle r="6" fill="#FFFFFF" stroke="${CONTOUR}" stroke-width="1.8"/><circle r="2.6" fill="${CHAUSSURE}"/></g></g>
+      <g id="bras-arriere"></g>
+      <g id="cou"><path fill="${PEAU}" stroke="${CONTOUR}" stroke-width="3" d="M-5.5 -52 V-38 H5.5 V-52 Z"/><path d="M-5.5 -52 V-44 Q0 -42 5.5 -44 V-52 Z" fill="${PEAU_OMBRE}"/></g>
+      <g id="tete">
+        <g id="tete-forme">
+          <circle r="28" fill="${PEAU}" stroke="${CONTOUR}" stroke-width="4"/>
+          <path id="tete-ombre" fill="${PEAU_OMBRE}"/><path id="nuque-ombre" fill="${PEAU_OMBRE}" opacity="0"/><path id="nuque-trait" fill="none" stroke="${PEAU_OMBRE}" stroke-width="2" stroke-linecap="round" opacity="0" d="M0 6 Q1.5 13 0 20"/>
+          <ellipse id="tete-lumiere" cx="-9" cy="-16" rx="9" ry="5" fill="${PEAU_LUMIERE}" opacity=".8"/>
+          <g id="oreille-g"><circle r="6" fill="${PEAU}" stroke="${CONTOUR}" stroke-width="3"/><circle r="2.2" fill="${PEAU_OMBRE}"/></g>
+          <g id="oreille-d"><circle r="6" fill="${PEAU}" stroke="${CONTOUR}" stroke-width="3"/><circle r="2.2" fill="${PEAU_OMBRE}"/></g>
+          <g id="visage">
+            <g id="joue-g"><ellipse rx="5" ry="3.2" fill="#FF8FA8" opacity=".6"/></g><g id="joue-d"><ellipse rx="5" ry="3.2" fill="#FF8FA8" opacity=".6"/></g>
+            ${["g", "d"].map((c) => `<g id="oeil-${c}"><ellipse rx="7.4" ry="9.6" fill="#FFFFFF" stroke="${PEAU_OMBRE}" stroke-width="1"/>
+              <g id="regard-${c}"><circle cx=".5" cy="3" r="4.8" fill="#6B4226"/><circle cx=".5" cy="3" r="2.5" fill="#1B1530"/><circle cx="-1.4" cy=".6" r="1.8" fill="#FFFFFF"/><circle cx="2.5" cy="4.8" r=".9" fill="#FFFFFF"/></g>
+              <g clip-path="url(#clip-oeil)"><ellipse id="paupiere-${c}" rx="10" ry="10.6" fill="${PEAU}" stroke="${CONTOUR}" stroke-width="2.6"/></g>
+              <path d="M-7 0 A7.4 9.6 0 0 1 7 0" fill="none" stroke="${CONTOUR}" stroke-width="2.8" stroke-linecap="round"/>
+              <path d="M-4.5 8.8 Q0 10.6 4.5 8.8" fill="none" stroke="${CONTOUR}" stroke-width="1" stroke-linecap="round" opacity=".4"/></g>`).join("")}
+            <g id="nez"><circle r="3.6" fill="#E9A77A" stroke="${CONTOUR}" stroke-width="2.2"/><circle cx="-1" cy="-1" r="1" fill="#FFD9BC"/></g>
+            <g id="bouche"><g id="bouches">
+              <path data-emo="concentration" d="M-5 16 Q-2 14 0 16 Q2 18 5 16" fill="none" stroke="${CONTOUR}" stroke-width="2.4" stroke-linecap="round"/>
+              <ellipse data-emo="surprise" cy="18" rx="4.5" ry="6" fill="#C9475A" stroke="${CONTOUR}" stroke-width="1.8"/>
+              <g data-emo="joie"><path d="M-11 11 Q0 27 11 11 Z" fill="#C9475A"/><g clip-path="url(#clip-bouche)"><ellipse cy="25" rx="7.5" ry="5" fill="#FF8FA8"/><path d="M-11 10.5 Q0 18.5 11 10.5 Z" fill="#FFFFFF"/></g><path d="M-11 11 Q0 27 11 11 Z" fill="none" stroke="${CONTOUR}" stroke-width="1.8" stroke-linejoin="round"/></g>
+              <path data-emo="coin" d="M-6 16 Q0 19 8 13" fill="none" stroke="${CONTOUR}" stroke-width="2.4" stroke-linecap="round"/>
+              <path data-emo="sourire" d="M-8 14 Q0 22 8 14" fill="none" stroke="${CONTOUR}" stroke-width="2.4" stroke-linecap="round"/>
+            </g></g>
+          </g>
+          <g id="cheveux"><path id="nuque-degrade" fill="none" stroke="${CHEVEUX_LUMIERE}" stroke-width="2.2" stroke-linecap="round" opacity="0"/><path id="cheveux-forme" fill="${CHEVEUX}" stroke="${CONTOUR}" stroke-width="3.6" stroke-linejoin="round"/><path id="cheveux-lumiere" fill="none" stroke="${CHEVEUX_LUMIERE}" stroke-width="3" stroke-linecap="round"/>
+            <g id="meches"><path id="meche-1" fill="${CHEVEUX}" stroke="${CONTOUR}" stroke-width="3.2" stroke-linejoin="round"/><path id="meche-2" fill="${CHEVEUX}" stroke="${CONTOUR}" stroke-width="3.2" stroke-linejoin="round"/><path id="meche-3" fill="${CHEVEUX}" stroke="${CONTOUR}" stroke-width="3.2" stroke-linejoin="round"/><path id="epi" fill="${CHEVEUX}" stroke="${CONTOUR}" stroke-width="3" stroke-linejoin="round"/></g></g>
+          <g id="sourcils">
+            <g id="sourcil-g"><path d="M-7 0 Q0 -4 7 0" fill="none" stroke="${CHEVEUX_OMBRE}" stroke-width="3.6" stroke-linecap="round"/></g>
+            <g id="sourcil-d"><path d="M-7 0 Q0 -4 7 0" fill="none" stroke="${CHEVEUX_OMBRE}" stroke-width="3.6" stroke-linecap="round"/></g>
+          </g>
+        </g>
+      </g>
+      <g id="bras-avant"></g>
+    </g>`;
+  const N = {};
+  ["leo", "arriere", "haut", "torse", "cou", "tete", "tete-forme", "tete-ombre", "oreille-g", "oreille-d", "joue-g", "joue-d", "sourcil-g", "sourcil-d", "oeil-g", "oeil-d", "regard-g", "regard-d", "paupiere-g", "paupiere-d", "nez", "bouche", "bouches",
+    "cheveux-forme", "cheveux-lumiere", "nuque-ombre", "nuque-trait", "nuque-degrade", "meches", "meche-1", "meche-2", "meche-3", "epi", "short", "bras-arriere", "bras-avant", "jambe-g", "jambe-d", "chaussure-g", "chaussure-d", "ombre-leo",
+    "sol", "poteau", "poteau-corps", "ballon-couche", "oh", "oh-corps", "scene", "bulle", "etat", "duree", "ecran"].forEach((id) => (N[id] = $(id)));
+  const BRAS = { g: null, d: null };
+  for (const c of ["g", "d"]) { const w = document.createElementNS(NS, "g"); w.innerHTML = brasHTML(c); BRAS[c] = w.firstElementChild; }
+  const BOUCHES = [...N.bouches.children];
+  const q1 = (g, cls) => g.querySelector("." + cls);
+  const BASE = 1;
+  const REPOS = { x: 0, y: 0, rot: 0, s: 1, sx: 1, sy: 1, torse: 0, tete: 0, vue: 0,
+    aGu: 8, aGl: 14, aDu: -8, aDl: -14, lGt: 5, lGs: 0, lDt: -5, lDs: 0, fG: 1, fD: 1, tG: 1, tD: 1, course: 0, mG: 0, mD: 0, clin: 0, lid: 0, devant: 0 };
+  function compile(liste) { liste.reduce((prec, k) => (k.p = { ...prec, ...k.p }), REPOS); return liste; }
+  function poseA(poses, t) {
+    if (t <= poses[0].t) return poses[0].p;
+    for (let i = 1; i < poses.length; i++) {
+      const k = poses[i];
+      if (t <= k.t) {
+        const a = poses[i - 1], u = k.e((t - a.t) / (k.t - a.t)), r = {};
+        for (const c in k.p) r[c] = lerp(a.p[c], k.p[c], u);
+        return r;
+      }
+    }
+    return poses[poses.length - 1].p;
+  }
+  // ---------- Rendu du personnage ----------
+  const EMOS = {
+    concentration: { sg: [2, 10], sd: [2, -10], lid: .3, pup: 1 },
+    surprise: { sg: [-7, -6], sd: [-7, 6], lid: 0, pup: .85 },
+    joie: { sg: [-6, 5], sd: [-6, -5], lid: 0, pup: 1.05 },
+    coin: { sg: [-1, 0], sd: [-4, 8], lid: .1, pup: 1 },
+    sourire: { sg: [-3, -3], sd: [-3, 3], lid: 0, pup: 1 },
+  };
+  function expressionA(anim, t) {
+    let cour = anim.expressions[0], prec = null;
+    for (const e of anim.expressions) if (e.t <= t) { prec = cour === e ? prec : cour; cour = e; }
+    const u = prec && prec !== cour ? fenetre(t, cour.t, .14) : 1;
+    return { emo: cour.emo, prec: prec ? prec.emo : cour.emo, u };
+  }
+  const clignement = (t) => { const c = (t + .9) % 2.9; return c < .13 ? Math.sin(c / .13 * Math.PI) : 0; };
+  const R = 28;
+  // Un trait du visage à l'azimut alpha (0 = devant le visage) vu sous l'angle omega (0 = face, 180 = dos).
+  const trait = (alpha, omega, rayon = R) => { const a = (alpha + omega) * DEG; return { x: rayon * Math.sin(a), z: Math.cos(a) }; };
+
+  function dessineTete(p, t, ex, lidBase, pup) {
+    const w = p.vue, cw = Math.cos(w * DEG);
+    // oreilles : la gauche de Léo (α = −90) et la droite (α = +90)
+    for (const [id, alpha] of [["oreille-g", -90], ["oreille-d", 90]]) { const o = trait(alpha, w, R); const visible = o.z > -.12; att(N[id], "opacity", visible ? 1 : 0); tr(N[id], `translate(${r1(o.x)} 3)`); }
+    // ombre et lumière de la tête (lumière en haut à gauche)
+    att(N["tete-ombre"], "d", `M8 27 A28 28 0 0 0 27 -6 A23 23 0 0 1 8 27 Z`);
+    // yeux, sourcils, joues, nez, bouche
+    const A = EMOS[ex.prec], B = EMOS[ex.emo], u = ex.u;
+    const sg = A.sg.map((v, i) => lerp(v, B.sg[i], u)), sd = A.sd.map((v, i) => lerp(v, B.sd[i], u));
+    for (const [c, alpha, s, lidExtra] of [["g", -27, sg, 0], ["d", 27, sd, p.clin]]) {
+      const o = trait(alpha, w, R * .88), visible = o.z > .06, kx = Math.max(.3, Math.pow(Math.max(0, o.z), .6));
+      att(N["oeil-" + c], "opacity", visible ? 1 : 0); att(N["sourcil-" + c], "opacity", visible ? 1 : 0);
+      tr(N["oeil-" + c], `translate(${r1(o.x)} -5) scale(${r1(kx * 100) / 100} 1)`);
+      tr(N["sourcil-" + c], `translate(${r1(o.x)} ${r1(-18 + s[0])}) scale(${r1(kx * 100) / 100} 1) rotate(${r1(s[1])})`);
+      tr(N["paupiere-" + c], `translate(0 ${r1(-21 * (1 - Math.max(lidBase, lidExtra)))})`);
+      tr(N["regard-" + c], `translate(${r1(-(.5) * (pup - 1))} ${r1(-2.5 * (pup - 1))}) scale(${pup})`);
+      const j = trait(alpha * 1.8, w, R * .78); att(N["joue-" + c], "opacity", j.z > .1 ? 1 : 0); tr(N["joue-" + c], `translate(${r1(j.x)} 8) scale(${r1(Math.max(.3, j.z) * 100) / 100} 1)`);
+    }
+    const n = trait(0, w, R * .9); att(N.nez, "opacity", n.z > -.05 ? 1 : 0); tr(N.nez, `translate(${r1(n.x + (n.z < .3 ? 3 * Math.sign(Math.sin(w * DEG) || 1) : 0))} 0)`);
+    const b = trait(0, w, R * .7); att(N.bouche, "opacity", b.z > .05 ? 1 : 0); tr(N.bouche, `translate(${r1(b.x)} -1) scale(${r1(Math.max(.3, b.z) * 100) / 100} 1)`);
+    for (const m of BOUCHES) { const e = m.dataset.emo; const o = e === ex.emo ? u : e === ex.prec ? 1 - u : 0; att(m, "opacity", o); if (e === ex.emo) tr(m, `scale(${r1(lerp(.7, 1, E.retour(u)) * 100) / 100})`); }
+    // coiffure : ligne de cheveux basse derrière, haute devant, mèches qui rebondissent
+    const sw = Math.sin(w * DEG), dosA = (1 - cw) / 2, yC = lerp(-17, 15, dosA), pente = (15 - -17) / 2, ondul = lerp(3, 1.2, dosA), cote = lerp(5, 13, dosA);
+    let d = "";
+    for (let i = 0; i <= 12; i++) { const x = -R - 1 + (2 * R + 2) * i / 12; const y = yC - (x / R) * sw * pente + ondul * Math.sin(i * 1.9 + .4) - (Math.abs(x) > R * .72 ? cote : 0); d += `${i ? "L" : "M"}${r1(x)} ${r1(y)}`; }
+    d += ` Q${R + 4} -14 ${R - 10} -25 Q0 -37 ${-R + 10} -25 Q${-R - 4} -14 ${-R - 1} ${r1(yC + sw * pente - cote)} Z`;
+    att(N["cheveux-forme"], "d", d);
+    // nuque (visible de dos) : hachures courtes sous la ligne de cheveux, ombre de la chevelure, trait de nuque
+    const dos = clamp01(-cw);
+    let h = "";
+    for (let i = 0; i <= 10; i++) { const x = -R * .8 + R * 1.6 * i / 10; const y = yC - (x / R) * sw * pente + ondul * Math.sin((i * 12 / 10 + 1) * 1.9 + .4) + 1; if (Math.abs(x) > R * .72) continue; h += `M${r1(x)} ${r1(y)} l${r1(.4 * (i - 5))} ${r1(4 + (i % 2) * 2)}`; }
+    att(N["nuque-degrade"], "d", h); att(N["nuque-degrade"], "opacity", 0); // petits cheveux de nuque retirés (demande du PO)
+    att(N["nuque-ombre"], "d", `M${-R + 2} ${r1(yC - 2)} Q0 ${r1(yC + 10)} ${R - 2} ${r1(yC - 2)} Q0 ${r1(yC + 4)} ${-R + 2} ${r1(yC - 2)} Z`); att(N["nuque-ombre"], "opacity", r1(dos * .8 * 100) / 100);
+    att(N["nuque-trait"], "opacity", 0);
+    att(N["cheveux-lumiere"], "d", `M${r1(-16 + 6 * sw)} -22 Q${r1(-4 + 6 * sw)} -29 ${r1(8 + 6 * sw)} -26`);
+    tr(N.meches, `rotate(${r1(p.meche)} ${r1(6 * sw)} -26)`);
+    att(N["meche-1"], "d", `M${r1(-12 + 8 * sw)} -25 Q${r1(-16 + 8 * sw)} -39 ${r1(-2 + 10 * sw)} -36 Q${r1(-4 + 8 * sw)} -31 ${r1(2 + 8 * sw)} -27 Z`);
+    att(N["meche-2"], "d", `M${r1(0 + 8 * sw)} -27 Q${r1(6 + 10 * sw)} -41 ${r1(16 + 8 * sw)} -34 Q${r1(10 + 8 * sw)} -33 ${r1(10 + 8 * sw)} -26 Z`);
+    att(N.epi, "d", `M${r1(-4 - 6 * sw)} -29 Q${r1(-14 - 8 * sw)} -42 ${r1(-18 - 6 * sw)} -31 Q${r1(-12 - 6 * sw)} -32 ${r1(-10 - 6 * sw)} -27 Z`);
+    att(N["meche-3"], "d", `M${r1(10 + 6 * sw)} -25 Q${r1(22 + 8 * sw)} -36 ${r1(24 + 4 * sw)} -22 Q${r1(18 + 4 * sw)} -24 ${r1(14 + 6 * sw)} -20 Z`);
+  }
+
+  function dessineBras(g, c, S, a1, a2, pose, L1 = 24, L2 = 22) {
+    const m = membre(S, a1, a2, L1, L2);
+    att(q1(g, "manche-contour"), "d", trace(m, .04, .3, 3)); att(q1(g, "contour"), "d", trace(m, .09, 1));
+    att(q1(g, "rempli"), "d", trace(m, 0, 1)); att(q1(g, "manche"), "d", trace(m, 0, .3, 3)); att(q1(g, "manche-bord"), "d", trace(m, .27, .3, 1));
+    const nx = 3.2, ny = 1.4;
+    att(q1(g, "ombre"), "d", trace({ ...m, S: { x: m.S.x + nx, y: m.S.y + ny }, C: { x: m.C.x + nx, y: m.C.y + ny }, W: { x: m.W.x + nx, y: m.W.y + ny } }, .32, .92));
+    att(q1(g, "lumiere"), "d", trace({ ...m, S: { x: m.S.x - nx, y: m.S.y - ny }, C: { x: m.C.x - nx, y: m.C.y - ny }, W: { x: m.W.x - nx, y: m.W.y - ny } }, .34, .9));
+    att(q1(g, "manche-ombre"), "d", trace({ ...m, S: { x: m.S.x + 4, y: m.S.y + 1 }, C: { x: m.C.x + 4, y: m.C.y + 1 }, W: { x: m.W.x + 4, y: m.W.y + 1 } }, .04, .26, 2));
+    const mainG = g.querySelector("#main-" + c); tr(mainG, `translate(${r1(m.W.x)} ${r1(m.W.y)}) rotate(${r1(m.dir)}) scale(.86)`);
+    const versCentre = c === "g" ? 1 : -1, score = Math.cos(m.dir * DEG) * versCentre - Math.sin(m.dir * DEG) * .8;
+    const variante = score > 0 ? "miroir" : "droit"; // le pouce (en x local négatif pour « droit ») se place côté corps, ou vers le haut
+    const cle = variante + pose, slot = mainG.firstElementChild;
+    if (slot.dataset.pose !== cle) { slot.innerHTML = MAINS[variante][pose]; slot.dataset.pose = cle; }
+  }
+  function dessineJambe(g, c, S, a1, a2, f, sw, ft = 1, L1 = 28, L2 = 26) {
+    const m = membre(S, a1, a2, L1 * f, L2 * f * ft);
+    att(q1(g, "contour"), "d", trace(m, .06, 1)); att(q1(g, "rempli"), "d", trace(m, 0, 1));
+    const nx = 3.4, ny = 1.2;
+    att(q1(g, "ombre"), "d", trace({ ...m, S: { x: m.S.x + nx, y: m.S.y + ny }, C: { x: m.C.x + nx, y: m.C.y + ny }, W: { x: m.W.x + nx, y: m.W.y + ny } }, .3, .72));
+    att(q1(g, "lumiere"), "d", trace({ ...m, S: { x: m.S.x - nx, y: m.S.y - ny }, C: { x: m.C.x - nx, y: m.C.y - ny }, W: { x: m.W.x - nx, y: m.W.y - ny } }, .3, .7));
+    att(q1(g, "chaussette"), "d", trace(m, .5, 1, 5)); att(q1(g, "chaussette-bord"), "d", trace(m, .54, .59, 1)); att(q1(g, "chaussette-bord2"), "d", trace(m, .62, .65, 1)); att(q1(g, "chaussette-ombre"), "d", trace({ ...m, S: { x: m.S.x + 3.6, y: m.S.y + 1 }, C: { x: m.C.x + 3.6, y: m.C.y + 1 }, W: { x: m.W.x + 3.6, y: m.W.y + 1 } }, .6, .95, 3));
+    // chaussure de foot : vue de face, de profil ou semelle (pied levé), fondues selon la vue et l'angle du tibia
+    const ch = N["chaussure-" + c], vx = m.W.x - m.E.x, vy = m.W.y - m.E.y, lv = Math.hypot(vx, vy) || 1;
+    const leve = clamp01((-vy / lv) * 1.6 - .2), profilF = clamp01((Math.abs(Math.sin(vueCourante * DEG)) - .45) * 6);
+    const sens = sw > .02 ? 1 : sw < -.02 ? -1 : 1, versCam = Math.cos(vueCourante * DEG) < 0 ? -1 : 1;
+    tr(ch, `translate(${r1(m.W.x)} ${r1(m.W.y + 2)})`);
+    const pFace = q1(ch, "vue-face"), pProfil = q1(ch, "vue-profil"), pSem = q1(ch, "vue-semelle"), contact = q1(ch, "contact");
+    att(pFace, "opacity", r1((1 - profilF) * (1 - leve) * 100) / 100); att(q1(pFace, "devant"), "opacity", versCam > 0 ? 1 : 0); att(q1(pFace, "talon"), "opacity", versCam > 0 ? 0 : 1);
+    att(pProfil, "opacity", r1(profilF * (1 - leve) * 100) / 100); tr(pProfil, `scale(${r1(sens * (.6 + .4 * profilF) * 100) / 100} 1) rotate(${r1(Math.atan2(vx * sens, -vy) / DEG * .25)})`);
+    // tibia replié vers l'arrière (à genoux, saut groupé) : la chaussure passe derrière la cuisse et dépasse sur le côté
+    const replie = clamp01((1 - ft) * 2.2), dehors = (c === "g" ? -1 : 1) * replie * 13;
+    if (replie > .3) { if (g.firstElementChild !== ch) g.prepend(ch); } else if (g.lastElementChild !== ch) g.append(ch);
+    att(pSem, "opacity", r1(Math.pow(leve, .8) * 100) / 100); tr(pSem, `translate(${r1(dehors)} ${r1(-3 * leve + replie * 2)}) rotate(${r1(-dehors * 1.8)}) scale(${r1((.5 + .25 * leve) * 100) / 100} ${r1(Math.max(.05, leve * .8) * 100) / 100})`);
+    att(contact, "opacity", r1((1 - leve) * .25 * 100) / 100); tr(contact, `translate(${r1(profilF * sens * 5)} 12) scale(${r1((1 + profilF * .5) * 100) / 100} 1)`);
+  }
+
+  let vueCourante = 0;
+  function dessineLeo(anim, t) {
+    const p = { ...poseA(anim.poses, t) };
+    vueCourante = p.vue;
+    const pAvant = poseA(anim.poses, t - .06);
+    p.meche = Math.max(-22, Math.min(22, (p.y - pAvant.y) * 1.1 + (p.x - pAvant.x) * .5));
+    let { lGt, lGs, lDt, lDs, fG, fD, y } = p;
+    if (p.course > 0) {
+      const ph = t * Math.PI * 2 * 3.4, a = Math.max(0, Math.sin(ph)), b = Math.max(0, -Math.sin(ph));
+      fG = lerp(fG, 1 - .4 * a, p.course); fD = lerp(fD, 1 - .4 * b, p.course);
+      lGs = lerp(lGs, 64 * a, p.course); lDs = lerp(lDs, -64 * b, p.course); lGt = lerp(lGt, 10 - 6 * a, p.course); lDt = lerp(lDt, -10 + 6 * b, p.course);
+      y -= 5 * Math.abs(Math.sin(ph)) * p.course;
+    }
+    const w = p.vue, cw = Math.cos(w * DEG), sw = Math.sin(w * DEG), wf = lerp(.55, 1, Math.abs(cw));
+    tr(N.leo, `translate(${r1(p.x)} ${r1(y)}) rotate(${r1(p.rot)}) scale(${r1(p.s * BASE * p.sx * 100) / 100} ${r1(p.s * BASE * p.sy * 100) / 100})`);
+    // torse en poire, short, col, badge (devant seulement)
+    const sh = 18 * wf, hp = 22 * wf;
+    att(q1(N.torse, "forme"), "d", `M${r1(-sh)} -40 Q${r1(-sh - 6)} -12 ${r1(-hp)} 6 Q0 14 ${r1(hp)} 6 Q${r1(sh + 6)} -12 ${r1(sh)} -40 Q0 -47 ${r1(-sh)} -40 Z`);
+    att(q1(N.torse, "ombre"), "d", `M${r1(sh * .3)} -42 Q${r1(sh + 3)} -30 ${r1(hp)} 4 Q${r1(hp * .6)} 10 ${r1(hp * .35)} 9 Q${r1(sh + 1)} -20 ${r1(sh * .3)} -42 Z`);
+    att(q1(N.torse, "lumiere"), "d", `M${r1(-sh * .9)} -36 Q${r1(-sh * .4)} -42 ${r1(sh * .1)} -40 Q${r1(-sh * .4)} -37 ${r1(-sh * .8)} -30 Z`);
+    att(q1(N.torse, "col"), "d", cw > .2 ? `M-7 -44 L0 -35 L7 -44` : `M-8 -43 Q0 -39 8 -43`);
+    const badge = q1(N.torse, "badge"); att(badge, "opacity", cw > .3 ? 1 : 0); tr(badge, `translate(${r1(-9 * cw + 4 * sw)} -24)`);
+    att(q1(N.short, "forme"), "d", `M${r1(-hp - 1)} -4 Q0 2 ${r1(hp + 1)} -4 L${r1(hp + 4)} 16 Q${r1(hp * .5)} 20 ${r1(hp * .1)} 18 Q0 14 ${r1(-hp * .1)} 18 Q${r1(-hp * .5)} 20 ${r1(-hp - 4)} 16 Z`);
+    att(q1(N.short, "ombre"), "d", `M${r1(hp * .2)} 8 Q${r1(hp + 1)} 0 ${r1(hp + 2)} 14 Q${r1(hp * .6)} 18 ${r1(hp * .15)} 17 Z`);
+    att(q1(N.short, "bande"), "d", `M${r1(-hp - 2)} 0 L${r1(-hp - 3)} 14 M${r1(hp + 2)} 0 L${r1(hp + 3)} 14`);
+    tr(N.haut, `rotate(${r1(p.torse)})`);
+    // jambes (attachées aux hanches), raccourcies selon la vue et la course
+    dessineJambe(N["jambe-g"], "g", { x: -10 * wf, y: 4 }, lGt, lGs, fG, sw, p.tG);
+    dessineJambe(N["jambe-d"], "d", { x: 10 * wf, y: 4 }, lDt, lDs, fD, sw, p.tD);
+    // bras : le bras loin derrière le torse, le bras proche devant ; les deux devant la tête si « devant »
+    const proche = sw > .05 ? "d" : "g";
+    const slotArriere = N["bras-arriere"], slotAvant = N["bras-avant"], slotTete = N.arriere;
+    for (const c of ["g", "d"]) {
+      const cible = p.devant > .5 ? slotAvant : (c === proche || Math.abs(sw) <= .05 ? slotAvant : slotArriere);
+      if (BRAS[c].parentNode !== cible) cible.append(BRAS[c]);
+      const S = { x: (c === "g" ? -1 : 1) * 18 * wf + 4 * sw, y: -38 };
+      dessineBras(BRAS[c], c, S, c === "g" ? p.aGu : p.aDu, c === "g" ? p.aGl : p.aDl, Math.round(c === "g" ? p.mG : p.mD));
+    }
+    if (p.devant > .5 && slotAvant.firstElementChild !== BRAS.g) slotAvant.prepend(BRAS.g);
+    void slotTete;
+    // tête
+    tr(N.tete, `translate(0 -48) rotate(${r1(p.tete)})`); tr(N["tete-forme"], `translate(0 -26)`);
+    const ex = expressionA(anim, t), A = EMOS[ex.prec], B = EMOS[ex.emo], u = ex.u;
+    const lidBase = Math.max(lerp(A.lid, B.lid, u), p.lid, clignement(t));
+    dessineTete(p, t, ex, lidBase, lerp(A.pup, B.pup, u));
+    // ombre au sol
+    const S = p.s * BASE, sol = p.y + 58 * S, haut = Math.max(0, sol - (y + 58 * S));
+    att(N["ombre-leo"], "cx", r1(p.x)); att(N["ombre-leo"], "cy", r1(sol + 2));
+    att(N["ombre-leo"], "rx", r1(34 * S + haut * .2)); att(N["ombre-leo"], "ry", r1(8 * S));
+    att(N["ombre-leo"], "opacity", r1(Math.max(.07, .25 - haut * .003) * 100) / 100);
+    return p;
+  }
+  // ---------- La scène : 1,5 s, Léo de face dès la première image ----------
+  const FIN = 1.5, T_TIR = .2, T_IMPACT = .46;
+  const X_POTEAU = 72, SOL = 74, R_BALLON = 8.5, X_BALLON_DEPART = 42, X_BALLON_FIN = 38, X_LEO = -14;
+  const POSES = compile([
+    { t: 0, e: E.douce, p: {} },
+    { t: .14, e: E.douce, p: { x: X_LEO, lDt: 8, lDs: 20, tD: .6, aGu: 30, aGl: 20, aDu: -30, aDl: -20, torse: 2 } },
+    { t: T_TIR, e: E.entree, p: { lDt: -26, lDs: -14, tD: 1, torse: -3, aGu: 14, aDu: -44, aDl: -14, tete: 3 } },
+    { t: .36, e: E.sortie, p: { lDt: -12, lDs: 0, torse: 0 } },
+    { t: .5, e: E.douce, p: { lDt: -5, aGu: 8, aGl: 14, aDu: -8, aDl: -14, tete: 0 } },
+    { t: .6, e: E.douce, p: { sy: .97, sx: 1.02, tete: -5, torse: -2 } },
+    { t: .7, e: E.douce, p: { sy: 1.03, sx: .98, tete: -7 } },
+    { t: .82, e: E.rebond, p: { sy: .98, sx: 1.01, aDu: -75, aDl: -95, mD: 2, tete: -6 } },
+    { t: .94, e: E.douce, p: { sy: 1.02, sx: .99 } },
+    { t: 1.05, e: E.douce, p: { sy: 1, sx: 1, tete: -6 } },
+    { t: 1.15, e: E.douce, p: {} },
+    { t: 1.45, e: E.douce, p: { x: 0, tete: -4, torse: 0 } },
+    { t: FIN, e: E.douce, p: {} },
+  ]);
+  const EXPRESSIONS = [{ t: 0, emo: "sourire" }, { t: T_IMPACT, emo: "surprise" }, { t: .62, emo: "joie" }, { t: 1.12, emo: "sourire" }];
+  const SCENE = { poses: POSES, expressions: EXPRESSIONS };
+
+  // ---------- Ballon : coup de pied, rebond sur le petit poteau, retour qui roule aux pieds ----------
+  const ballon = document.createElementNS(NS, "g");
+  ballon.innerHTML = `<ellipse class="ombre" fill="#15502B" opacity=".25"/><g class="forme"><g class="echelle"><circle r="16" fill="#FFFFFF" stroke="${CONTOUR}" stroke-width="3"/><path d="M6 14 A16 16 0 0 0 15 -4 A12 12 0 0 1 6 14 Z" fill="#D7DEE6"/>
+    <g fill="#33304A"><path d="M0 -5.5 l5.2 3.8 -2 6.2 h-6.4 l-2 -6.2 z"/><path d="M-13.5 -7.5 l4 .8 1.6 4 -3 2.6 -3.8 -2 z" opacity=".8"/><path d="M11.5 -9.5 l1.6 3.8 -2.8 3 -4 -1.2 -.4 -4.2 z" opacity=".8"/><path d="M-7.5 11 l3.8 -1.4 3.4 2.6 -1 3.8 -4.2 .4 z" opacity=".8"/><path d="M10 8.5 l-4 -.4 -1.4 -3.8 3.2 -2.6 3.8 1.6 z" opacity=".8"/></g></g></g>`;
+  N["ballon-couche"].append(ballon);
+  const X_CONTACT = X_POTEAU - 4 - R_BALLON, Y_CONTACT = 52, Y_SOL_BALLON = SOL - R_BALLON, X_RETOMBEE = 52;
+  function etatBallon(t) {
+    if (t < T_TIR) return { x: X_BALLON_DEPART, y: Y_SOL_BALLON, rot: 0, sx: 1, sy: 1 };
+    if (t < T_IMPACT) {
+      const u = (t - T_TIR) / (T_IMPACT - T_TIR);
+      return { x: lerp(X_BALLON_DEPART, X_CONTACT, E.sortie(u)), y: lerp(Y_SOL_BALLON, Y_CONTACT, u) - 4 * 5 * u * (1 - u), rot: u * 150, sx: 1, sy: 1 };
+    }
+    if (t < T_IMPACT + .06) { const k = Math.sin((t - T_IMPACT) / .06 * Math.PI); return { x: X_CONTACT + k, y: Y_CONTACT, rot: 150, sx: 1 - .16 * k, sy: 1 + .1 * k }; }
+    const tRebond = T_IMPACT + .06, tSol = .74;
+    if (t < tSol) { const u = (t - tRebond) / (tSol - tRebond); return { x: lerp(X_CONTACT, X_RETOMBEE, u), y: lerp(Y_CONTACT, Y_SOL_BALLON, E.entree(u)), rot: 150 - u * 80, sx: 1, sy: 1 }; }
+    if (t < .86) { const w = (t - tSol) / (.86 - tSol); return { x: lerp(X_RETOMBEE, X_RETOMBEE - 3, w), y: Y_SOL_BALLON - 4 * 3.5 * w * (1 - w), rot: 70 - w * 40, sx: 1, sy: 1 }; }
+    const u = clamp01((t - .86) / .34), v = E.sortie(u);
+    const x = lerp(X_RETOMBEE - 3, X_BALLON_FIN, v);
+    return { x, y: Y_SOL_BALLON, rot: 30 - (X_RETOMBEE - 3 - x) / R_BALLON / DEG, sx: 1, sy: 1 };
+  }
+  function dessineBallon(t) {
+    const b = etatBallon(t), k = R_BALLON / 16;
+    tr(ballon, `translate(${r1(b.x)} ${r1(b.y)})`);
+    tr(q1(ballon, "echelle"), `scale(${r1(k * b.sx * 100) / 100} ${r1(k * b.sy * 100) / 100}) rotate(${r1(b.rot)})`);
+    const h = Math.max(0, Y_SOL_BALLON - b.y);
+    const ombre = q1(ballon, "ombre");
+    att(ombre, "cx", 0); att(ombre, "cy", r1(SOL - b.y)); att(ombre, "rx", r1(Math.max(3.5, R_BALLON - h * .12))); att(ombre, "ry", 2.2);
+    att(ombre, "opacity", r1(Math.max(.08, .25 - h * .004) * 100) / 100);
+  }
+  function dessinePoteau(t) {
+    const s = t - T_IMPACT, vibre = s > 0 && s < .35 ? Math.sin(s * 44) * Math.exp(-8 * s) * 2.2 : 0;
+    tr(N["poteau-corps"], `translate(${r1(X_POTEAU + vibre)} 75)`);
+  }
+  // Coin d'herbe et poteau : présents le temps de la scène seulement
+  function dessineDecor(t) {
+    const o = r1(fenetre(t, 0, .12) * (1 - fenetre(t, 1.3, .2, E.douce)) * 100) / 100;
+    att(N.sol, "opacity", o); att(N.poteau, "opacity", o);
+  }
+  // Petite bulle écrite « oh ! » : un instant, quand le ballon touche le poteau
+  function dessineBulle(t) {
+    const entree = fenetre(t, .5, .16, E.rebond), sortie = fenetre(t, .92, .12, E.entree);
+    att(N.oh, "opacity", r1(fenetre(t, .5, .06) * (1 - sortie) * 100) / 100);
+    tr(N["oh-corps"], `translate(51 -103) scale(${r1((.4 + .6 * entree) * 1.15 * 100) / 100})`);
+  }
+  function rend(t) { dessineLeo(SCENE, t); dessineBallon(t); dessinePoteau(t); dessineDecor(t); dessineBulle(t); }
+
+  // ---------- Horloge et commandes ----------
+  const ENCOURAGEMENT = "Pas grave, on réessaie !";
+  const reduitSysteme = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const boite = { reduit: $("reduit"), dys: $("dys"), tablette: $("tablette") };
+  boite.reduit.checked = reduitSysteme;
+  let depart = 0, image = 0, enCours = false;
+  const secondes = (ms) => (ms / 1000).toFixed(2).replace(".", ",") + " s";
+  function imageFixe() { rend(FIN); }
+  function arreter(motif) {
+    if (!enCours) return;
+    cancelAnimationFrame(image); enCours = false;
+    N.duree.textContent = `Scène arrêtée par ${motif} à ${Math.round(performance.now() - depart)} ms : l'image fixe revient.`;
+    imageFixe();
+  }
+  function boucle(maintenant) {
+    const t = Math.min(FIN, (maintenant - depart) / 1000);
+    rend(t);
+    if (t < FIN) { image = requestAnimationFrame(boucle); return; }
+    enCours = false;
+    N.duree.textContent = `Durée mesurée : ${secondes(maintenant - depart)} (scène réglée sur ${secondes(FIN * 1000)}, l'image suit l'horloge du navigateur).`;
+  }
+  function jouer() {
+    cancelAnimationFrame(image);
+    N.bulle.textContent = ENCOURAGEMENT;
+    N.etat.textContent = ""; document.querySelectorAll(".choix button").forEach((b) => b.classList.remove("prise"));
+    if (boite.reduit.checked) { enCours = false; imageFixe(); N.duree.textContent = "Mouvements réduits : image fixe, sans mouvement ni bulle écrite."; return; }
+    enCours = true; depart = performance.now(); rend(0); image = requestAnimationFrame(boucle);
+  }
+  $("rejouer").addEventListener("click", jouer);
+  boite.reduit.addEventListener("change", jouer);
+  boite.dys.addEventListener("change", () => N.ecran.setAttribute("data-mode-dys", String(boite.dys.checked)));
+  boite.tablette.addEventListener("change", () => N.ecran.classList.toggle("tablette", boite.tablette.checked));
+  document.querySelectorAll(".choix button").forEach((b) => b.addEventListener("click", () => {
+    arreter(`la réponse « ${b.dataset.choix} »`);
+    document.querySelectorAll(".choix button").forEach((c) => c.classList.toggle("prise", c === b));
+    N.etat.textContent = `Réponse prise tout de suite : « ${b.dataset.choix} ».`;
+  }));
+  document.querySelector(".reecouter").addEventListener("click", () => arreter("« Réécouter »"));
+  document.querySelector(".ne-sais-pas").addEventListener("click", () => arreter("« Je ne sais pas »"));
+  document.querySelector(".retour").addEventListener("click", () => arreter("« Retour »"));
+
+  // Mise au point : « ?t=0.46 » rend un instant sans jouer ; « ?reduit=1 », « ?dys=1 », « ?tablette=1 », « ?taille=80 » (largeur du dessin en px).
+  const params = new URLSearchParams(location.search);
+  if (params.get("dys") === "1") { boite.dys.checked = true; N.ecran.setAttribute("data-mode-dys", "true"); }
+  if (params.get("tablette") === "1") { boite.tablette.checked = true; N.ecran.classList.add("tablette"); }
+  if (params.get("reduit") === "1") boite.reduit.checked = true;
+  if (params.get("taille")) document.documentElement.style.setProperty("--guide", params.get("taille") + "px");
+  function demarrer() {
+    const t = params.get("t");
+    if (t !== null) { N.bulle.textContent = ENCOURAGEMENT; rend(Number(t)); return; }
+    jouer();
+  }
+  const polices = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+  Promise.race([polices, new Promise((r) => setTimeout(r, 800))]).finally(demarrer);
+})();
+</script>
+</body>
+</html>

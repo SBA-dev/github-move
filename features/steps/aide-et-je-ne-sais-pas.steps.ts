@@ -66,7 +66,7 @@ Given(/^Léa en est à la question « (.+) » dont la réponse est « ([^«»]+)
   expect(courante?.reponse).toBe(reponse);
 });
 
-async function direJeNeSaisPas(page: Page) {
+export async function direJeNeSaisPas(page: Page) {
   if (await additionAPoserAffichee(page)) return await direJeNeSaisPasSurUneAdditionAPoser(page);
   if (await additionACalculerAffichee(page)) return await direJeNeSaisPasSurUneAdditionACalculer(page);
   if (await aDesEtiquettesAPlacer(page)) return await direJeNeSaisPasSurDesEtiquettes(page);
@@ -118,7 +118,7 @@ Given(/^Léa joue une leçon de test de deux questions à quatre choix$/, async 
 
 // --- Étant donné : erreurs et « Je ne sais pas » en cours de séance
 
-async function faireUneErreur(page: Page) {
+export async function faireUneErreur(page: Page) {
   await demarrer(page);
   await avancerJusquAuxChoix(page);
   const bonne = questionsDeLaSeance(page)[await questionsReussies(page)]?.reponse;
@@ -127,7 +127,7 @@ async function faireUneErreur(page: Page) {
   await repondre(page, fausse);
 }
 
-async function donnerLaBonneReponse(page: Page) {
+export async function donnerLaBonneReponse(page: Page) {
   await demarrer(page);
   await avancerJusquAuxChoix(page);
   const rang = await questionsReussies(page);

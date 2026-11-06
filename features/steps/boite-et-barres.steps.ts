@@ -15,7 +15,7 @@ import { estSurUnProfilReel, jouerAvecLeProfilReel } from "./profil-reel.ts";
 // précèdent celle d'un scénario sont calculées par le test, à partir de la leçon, jamais lues dans l'application.
 // Les leçons de test sont ajoutées à la réponse de /bibliotheque.json par le navigateur du test (voir #16).
 
-const { Given, When, Then } = createBdd(test, { tags: "@issue-21 or @issue-131" });
+const { Given, When, Then } = createBdd(test, { tags: "@issue-21 or @issue-131 or @issue-163" });
 // Trois étapes servent aussi à #128 (clavier de cristaux d'une boîte à jetons) ; les autres restent à #21 ; toutes servent aussi à #131.
 const { Given: GivenDe21Et128, When: WhenDe21Et128, Then: ThenDe21Et128 } = createBdd(test, { tags: "@issue-21 or @issue-128 or @issue-131" });
 

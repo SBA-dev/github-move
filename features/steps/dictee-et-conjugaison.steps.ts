@@ -158,7 +158,9 @@ function toucheLibre(page: Page, lettre: string): Locator {
 }
 
 async function attendreQueLesLettresFaussesDisparaissent(page: Page) {
-  await expect(page.locator('[data-testid="case-a-ecrire"][data-etat="fausse"]')).toHaveCount(0);
+  // Sondage serré : les lettres fausses ne bloquent le clavier que 1,3 s, et la scène de #163 dure 1,5 s : la touche suivante ne doit pas attendre davantage.
+  const fausses = page.locator('[data-testid="case-a-ecrire"][data-etat="fausse"]');
+  await expect.poll(async () => await fausses.count(), { intervals: [20], timeout: 5_000 }).toBe(0);
 }
 
 async function ecrireUneLettre(page: Page, lettre: string, geste: "touche" | "clavier", derniere: boolean) {

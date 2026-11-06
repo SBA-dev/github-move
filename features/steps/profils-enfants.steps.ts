@@ -5,6 +5,7 @@ import { appelerUneFonctionDeFamille, lireEnRestLeNiveauDuProfil, ecrireEnRestUn
 import { rattacherUnParent } from "../support/supabase-test.ts";
 import { Given, Then, When } from "./fixtures.ts";
 import { cleDe, preparerProfil } from "./univers.steps.ts";
+import { jouerAvecLeProfilReel } from "./profil-reel.ts";
 
 // Story #11 : profils enfants, « Qui joue ? » et rattachement des parents.
 // Le parent agit par l'interface. Les préparations (« Paul est rattaché au profil enfant… ») passent par les Edge
@@ -251,11 +252,13 @@ Given(
 
 Given(
   new RegExp(`^Paul a changé l'univers du profil enfant de (\\S+) en ${UNIVERS_LIBELLE}$`),
-  async ({ famille, page, $tags }, prenom: string, libelleUnivers: string) => {
+  async ({ famille, page, monde, $tags }, prenom: string, libelleUnivers: string) => {
+    // Story #163 : la scène jouée est celle de l'univers du vrai profil ; il est créé pour Paul avant d'être modifié.
+    if ($tags.includes("@issue-163")) await jouerAvecLeProfilReel(famille, monde, page, prenom);
     await modifierLeProfil(famille, prenom, { univers: cleDe(libelleUnivers) });
     if ($tags.includes("@issue-102")) universChoisiParLeParent.set(famille, libelleUnivers);
     await connecterSiBesoin(famille, "tablette", "Paul");
-    if ($tags.includes("@issue-106") || $tags.includes("@issue-166")) await rechoisirLEnfantApresLeChangementDUnivers(page, prenom);
+    if (["@issue-106", "@issue-163", "@issue-166"].some((tag) => $tags.includes(tag))) await rechoisirLEnfantApresLeChangementDUnivers(page, prenom);
   },
 );
 
