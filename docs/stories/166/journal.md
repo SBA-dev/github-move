@@ -27,3 +27,9 @@
 - Annonce [Responsable] 6673145978 sur #64 vérifiée : « sons C, 166 reco tout » : miroirs GitHub des packs Kenney, 166.1 A, 166.2 A, 166.3 A, 166.4 A, 166.5 B. Cadrage validé.
 - `add_repo` pour le miroir de #97 refusé par la session ; lecture publique par le proxy git possible. Miroir `S3M1TR4SH/asset-library` : 4 jingles seulement. Recherche GitHub (`search/repositories`) : `Boyquotes/kenney-music-jingles-for-godot`, pack complet (85 jingles), CC0. Clone dans le scratchpad, hors du dépôt.
 - 18 candidats présélectionnés et convertis, page d'écoute publiée (artifact), détail dans `ecoute.md`.
+
+## Choix du PO (2026-11-06)
+
+- Réponse du PO, tapée directement dans la session de l'équipe, mot pour mot : « 166 Sports aucun, Danse A, Animaux de la forêt B, Princesses et fées C, Police aucun, Pompiers C ». Relayée au responsable sur #166.
+- Retenus : Danse → `jingles_SAX02`, Animaux de la forêt → `jingles_PIZZI12`, Princesses et fées → `jingles_STEEL13`, Pompiers → `jingles_STEEL06`. Sports et Police : aucun, ils gardent « grande victoire » (166.4 A), issue de suivi à ouvrir.
+- Noms d'`EffetSonore` (d'après le son, jamais l'univers, 106.12) : `airDeSaxophone`, `airDeCordesPincees`, `airDeSteelDrumCourt` (1,10 s), `airDeSteelDrumLong` (1,41 s). Fichiers kebab-case dans `public/sons/`.
