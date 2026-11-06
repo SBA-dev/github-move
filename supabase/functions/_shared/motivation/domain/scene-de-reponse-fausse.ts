@@ -11,15 +11,14 @@ export type SceneDeReponseFausse = {
   readonly univers: CleUnivers;
 };
 
-export const SCENES_DE_REPONSE_FAUSSE: Partial<
-  Record<CleUnivers, SceneDeReponseFausse>
-> = {
+export const SCENES_DE_REPONSE_FAUSSE = {
   sports: { univers: "sports" },
   danse: { univers: "danse" },
   animaux: { univers: "animaux" },
   princesse: { univers: "princesse" },
   police: { univers: "police" },
-};
+  pompier: { univers: "pompier" },
+} as const satisfies Record<CleUnivers, SceneDeReponseFausse>;
 
 function laScenePeutSeJouer(faits: FaitsDeLaReponseFausse): boolean {
   return !faits.sceneDejaJoueeDansLaSeance &&
