@@ -53,7 +53,7 @@ Aucune relation nouvelle. La relation « Motivation → Apprentissage, Customer/
 | **Scène de réponse fausse** | **nouveau, validé (163.9, 2026-11-05)** | Courte mise en scène jouée par le personnage guide du profil après une réponse fausse. Elle s'ajoute à l'encouragement (163.3 A) et finit par un sourire et un pouce levé. Elle ne change ni l'erreur, ni les étoiles, ni la question posée. Glossaire, fin de la section Motivation. Synonymes interdits : « animation d'échec », « échec », « gag », « raté », « célébration » (pour ce sens) |
 | « Animation d'échec », « Échec jamais punitif », bouton « Rater », `?anim=echec`, `construitEchec` | **interdits** dans l'application | Ce sont les mots des maquettes (`docs/maquettes/`). « échec » n'est pas un mot de l'enfant : il est interdit dans l'interface, le code du domaine, les scénarios et les noms de fichiers. Le glossaire le liste déjà comme synonyme interdit d'**Erreur** |
 | « Presque ! On réessaie ? » | pas un terme | Titre des maquettes. Il n'est pas affiché (163.3 A) |
-| « oh ! », « pschitt ! » | pas des termes | Bulles écrites du dessin (`aria-hidden`), comme « tuut ! » et « ding ! » en #106. Elles ne sont ni lues ni annoncées. En mode dys, elles s'écrivent en Andika ; l'image fixe n'en montre aucune (163.16 A) |
+| « oh ! », « oups ! », « hop ! », « pschitt ! », « plouf ! » | pas des termes | Bulles écrites du dessin (`aria-hidden`), comme « tuut ! » et « ding ! » en #106. Elles ne sont ni lues ni annoncées. En mode dys, elles s'écrivent en Andika ; l'image fixe n'en montre aucune (163.16 A) |
 | « Réaction » | pas un terme | `Reaction` est un nom du code (`reaction.ts`), pas un terme du glossaire. On ne l'emploie pas dans les scénarios pour désigner la scène |
 
 ## Modèle
@@ -172,7 +172,7 @@ Les livraisons 163b à 163f ajoutent chacune leur univers au catalogue et change
    - ni confettis, ni pétales, ni musique, ni cri de victoire, ni rayons, ni étincelles dorées, ni annonce, ni titre ;
    - la bonne réponse garde tout son retour (rebond, « réponse juste », personnage guide qui saute, félicitation), sans rien perdre.
 3. **Elle ne retient jamais l'enfant.** La question, ses choix, le clavier (de la dictée, de cristaux, physique), « Je ne sais pas », « Réécouter » et « Retour » sont utilisables **dès la première image**. Une réponse donnée pendant la scène, juste ou fausse, est prise tout de suite et arrête la scène (163.18 A). Un toucher hors des boutons ne fait rien (97.17, 106.10).
-4. **Une seule parole et un seul son.** L'encouragement (puis l'aide) est dit dans la bulle par la voix du personnage guide, après le son « réponse fausse » (163.3 A). La scène n'a aucun texte lu et aucun son à elle. Les bulles écrites (« oh ! », « pschitt ! ») font partie du dessin.
+4. **Une seule parole et un seul son.** L'encouragement (puis l'aide) est dit dans la bulle par la voix du personnage guide, après le son « réponse fausse » (163.3 A). La scène n'a aucun texte lu et aucun son à elle. Les bulles écrites (« oh ! », « oups ! », « hop ! », « pschitt ! », « plouf ! », voir le tableau « Règle absolue, scène par scène ») font partie du dessin.
 5. **Une seule annonce aux lecteurs d'écran** : celle de la bulle, qui existe déjà. La scène est `aria-hidden`.
 6. **Mouvements réduits : rien ne bouge, l'information reste.** On voit l'image fixe (personnage guide souriant, pouce levé, sans bulle écrite), et l'encouragement est affiché et dit comme aujourd'hui.
 7. **Son et Muet inchangés.** Le Muet coupe la voix, pas le son « réponse fausse » (97.2). La voix suspendue (écrans du parent) coupe tout (97.13). La scène n'ajoute aucun son.
@@ -189,13 +189,13 @@ Les maquettes ont été relues image par image (fonctions `ECHEC` et `construitE
 | Personnage guide | Maquette (temps de la maquette) | Ce qu'on garde | Ce qu'on dessine |
 |---|---|---|---|
 | Coach Léo (Sports) | tir de dos, le ballon tape le poteau, qui vibre un peu, « oh ! », il se retourne, sourit, pouce levé. 2,9 s, dont 2,0 s de réaction | le ballon sur le poteau, « oh ! », le sourire, le pouce | Léo est de face dès le début (pas de tir de dos ni de retournement) : il tape le ballon, qui rebondit doucement sur un petit poteau à côté de lui et revient rouler à ses pieds. Il rit, pouce levé. Léo est seul avec son ballon |
-| Lili (Danse) | réception déséquilibrée avec de grands moulinets des bras (le corps penche jusqu'à 14°), elle se rattrape, sourit, pouce levé. 3,7 s, dont 2,2 s de réaction | le petit vacillement, le sourire, le pouce | Lili vacille à peine sur ses demi-pointes et fait un petit pas de côté pour se remettre d'aplomb. Ses deux pieds restent sous elle, le corps reste presque droit. Elle rit, fait une petite révérence, pouce levé. Tenue et poses de 106b |
-| Noisette (Animaux) | la noisette lui arrive sur la tête (« toc ! »), elle est étourdie un instant (trois étincelles dorées et une petite noisette tournent autour de sa tête), secoue la tête, rit, pouce levé. 3,8 s, dont 2,8 s de réaction | la noisette qui tombe de l'arbre, le rire, le pouce | La noisette tombe de l'arbre, Noisette tend les mains. La noisette rebondit dans l'herbe **à côté d'elle**, roule un peu ; Noisette la suit des yeux, rit, la ramasse et lève le pouce (163.5c A). Noisette garde les yeux grands ouverts, d'un bout à l'autre, et rien ne tourne autour d'elle. Les étincelles dorées et cernées de la maquette ne sont pas dessinées |
+| Lili (Danse) | réception déséquilibrée avec de grands moulinets des bras (le corps penche jusqu'à 14°), elle se rattrape, sourit, pouce levé. 3,7 s, dont 2,2 s de réaction | le petit vacillement, le sourire, le pouce | Lili vacille à peine sur ses demi-pointes et fait un petit pas de côté pour se remettre d'aplomb. Ses deux pieds restent sous elle, le corps reste presque droit. Bulle « oups ! » (163.23). Elle rit, fait une petite révérence, pouce levé. Tenue et poses de 106b |
+| Noisette (Animaux) | la noisette lui arrive sur la tête (« toc ! »), elle est étourdie un instant (trois étincelles dorées et une petite noisette tournent autour de sa tête), secoue la tête, rit, pouce levé. 3,8 s, dont 2,8 s de réaction | la noisette qui tombe de l'arbre, le rire, le pouce | La noisette tombe de l'arbre, Noisette tend les mains. La noisette rebondit dans l'herbe **à côté d'elle**, roule un peu ; Noisette la suit des yeux, « hop ! » (163.25), rit, la ramasse et lève le pouce (163.5c A). Noisette garde les yeux grands ouverts, d'un bout à l'autre, et rien ne tourne autour d'elle. Les étincelles dorées et cernées de la maquette ne sont pas dessinées |
 | Lumi (Princesses et fées) | « pschitt ! », le sort donne des bulles colorées, elle rit, souffle dessus, pouce levé. 3,4 s, dont 2,6 s de réaction | toute la scène | Une petite fleur au bout de la baguette, comme en 106d (la maquette a une étoile). Les bulles sont rondes, pastel, transparentes, jamais dorées. Le geste du sort est le rond doux du poignet validé en 106d. Lumi flotte, sans chute |
-| Agent Max (Police) | le chiot bondit jusqu'à la casquette, l'emporte, fait un petit tour en courant et la rapporte ; Max dit « oh ! », rit, la remet, pouce levé. 4,7 s, dont 4,4 s de réaction | le chiot joueur, la casquette rapportée, le rire, le pouce | Max se penche pour caresser le chiot, sa casquette glisse dans l'herbe. Le chiot la prend délicatement, fait un petit tour joyeux en remuant la queue et la rapporte. Max rit, la remet, pouce levé. Le chiot reste au sol, Max reste sur place et le regarde jouer. Casquette et chemise portent l'**écusson** sans étoile (106e, #158) |
-| Capitaine Sam (Pompiers) | **pas de scène** | — | Dessinée d'abord dans `docs/maquettes/capitaine-sam-pompiers.html` avec sa planche, validées par le PO avant le câblage (163.4 A) : Sam arrose une fleur, le jet fait une petite fontaine trop courte qui retombe en gouttes bleu clair juste devant ses bottes. Il rit, ajuste sa lance, pouce levé. Que de l'eau bleu clair et des fleurs, couleurs et décor de 106f (porte de la caserne fermée) |
+| Agent Max (Police) | le chiot bondit jusqu'à la casquette, l'emporte, fait un petit tour en courant et la rapporte ; Max dit « oh ! », rit, la remet, pouce levé. 4,7 s, dont 4,4 s de réaction | le chiot joueur, la casquette rapportée, le rire, le pouce ; la bulle devient « oups ! » (163.29) | Max se penche pour caresser le chiot, sa casquette glisse dans l'herbe. Le chiot la prend délicatement, fait un petit tour joyeux en remuant la queue et la rapporte. Max dit « oups ! » (163.29), rit, la remet, pouce levé. Le chiot reste au sol, Max reste sur place et le regarde jouer. Casquette et chemise portent l'**écusson** sans étoile (106e, #158) |
+| Capitaine Sam (Pompiers) | **pas de scène** | — | Dessinée d'abord dans `docs/maquettes/capitaine-sam-pompiers.html` avec sa planche, validées par le PO avant le câblage (163.4 A) : Sam arrose une fleur, le jet fait une petite fontaine trop courte qui retombe en gouttes bleu clair juste devant ses bottes. Bulle « plouf ! » (163.31 B). Il rit, ajuste sa lance, pouce levé. Que de l'eau bleu clair et des fleurs, couleurs et décor de 106f (porte de la caserne fermée) |
 
-Pour toutes les scènes : le visage reste doux, la surprise dure un instant et mène tout de suite au rire. Les bulles « oh ! » et « pschitt ! » sont écrites, jamais jouées en son.
+Pour toutes les scènes : le visage reste doux, la surprise dure un instant et mène tout de suite au rire. Les bulles validées par le PO sont « oh ! » (Coach Léo), « oups ! » (Lili, 163.23), « hop ! » (Noisette, 163.25), « pschitt ! » (Lumi, 163.27), « oups ! » (Agent Max, 163.29) et « plouf ! » (Capitaine Sam, 163.31 B). Elles sont écrites, jamais jouées en son.
 
 ## Événements
 
@@ -256,6 +256,28 @@ Questions 163.19 à 163.21 (posées avec la planche de Coach Léo : https://gith
 **163.21 La bulle écrite « oh ! » aux petites tailles ?** *Tranchée le 2026-11-05 (reco A retenue, « 163a reco tout »)* : A, les bulles écrites sont cachées quand le dessin du personnage guide mesure moins de 100 px (80 px dans la boîte à jetons). Affichage, pas domaine : `sceneDeReponseFausse` ne change pas ; c'est `src/` qui décide d'après la taille du dessin. Énoncé d'origine : la bulle est illisible à 80 px et moins, et elle n'est jamais lue aux lecteurs d'écran.
 - **Reco A (retenue)** : la cacher quand le dessin mesure moins de 100 px. Scénario : R7 (boîte à jetons).
 - B : la garder partout.
+
+Questions 163.22 à 163.31 (planches de 163b à 163f) : **tranchées le 2026-11-06 (planches validées le 06/11, reco retenue)**, voir `docs/stories/163/journal.md`. Aucune ne change le domaine ni les scénarios ; elles fixent la bulle écrite de chaque scène.
+
+**163.22 La planche de Lili est-elle validée ?** *Tranchée le 2026-11-06 (« 163.b reco tout »)* : oui (`docs/maquettes/reponse-fausse-lili.html`, `docs/stories/163/captures/163b-lili-*.png`).
+
+**163.23 La bulle écrite de Lili ?** *Tranchée le 2026-11-06 (« 163.b reco tout »)* : « oups ! ».
+
+**163.24 La planche de Noisette est-elle validée ?** *Tranchée le 2026-11-06 (« 163c reco tout »)* : oui (`docs/maquettes/reponse-fausse-noisette.html`, `docs/stories/163/captures/163c-noisette-*.png`).
+
+**163.25 La bulle écrite de Noisette ?** *Tranchée le 2026-11-06 (« 163c reco tout »)* : « hop ! ».
+
+**163.26 La planche de Lumi est-elle validée ?** *Tranchée le 2026-11-06 (« 163.d reco tout »)* : oui (`docs/maquettes/reponse-fausse-lumi.html`, `docs/stories/163/captures/163d-lumi-*.png`).
+
+**163.27 La bulle écrite de Lumi ?** *Tranchée le 2026-11-06 (« 163.d reco tout »)* : « pschitt ! ».
+
+**163.28 La planche d'Agent Max est-elle validée ?** *Tranchée le 2026-11-06 (reco retenue)* : oui (`docs/maquettes/reponse-fausse-agent-max.html`, `docs/stories/163/captures/163e-agent-max-*.png`).
+
+**163.29 La bulle écrite d'Agent Max ?** *Tranchée le 2026-11-06 (reco retenue)* : « oups ! » (la maquette disait « oh ! »).
+
+**163.30 La planche de Capitaine Sam est-elle validée ?** *Tranchée le 2026-11-06 (reco retenue)* : oui (`docs/maquettes/reponse-fausse-capitaine-sam.html`, `docs/stories/163/captures/163f-capitaine-sam-*.png`).
+
+**163.31 La bulle écrite de Capitaine Sam ?** *Tranchée le 2026-11-06 (B retenue, « Reco tout 164.31 plouf », lu 163.31)* : B, « plouf ! ».
 
 **163.1 Quand jouer la scène ?** *Tranchée le 2026-11-05 (reco retenue, « 163 reco tout »)* : B, une fois par séance. Énoncé d'origine : le garde-fou de la section 5 du skill `gamification` dit que la scène ne doit jamais être plus attrayante que le retour d'une bonne réponse. Or une scène animée de 1 à 2 s est plus spectaculaire qu'un rebond et une félicitation. Si elle revient à chaque erreur, l'enfant peut se tromper exprès pour la voir. Exemple : Léa fait une séance de 8 questions et se trompe 5 fois.
 - A : à la première réponse fausse de chaque exercice. Léa la voit jusqu'à 3 ou 4 fois.
