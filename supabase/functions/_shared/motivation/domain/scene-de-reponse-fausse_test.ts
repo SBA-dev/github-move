@@ -27,10 +27,10 @@ Deno.test("le catalogue des scènes de réponse fausse contient l'univers Sports
   assertEquals(universAvecScene.includes("sports"), true);
 });
 
-Deno.test("le catalogue des scènes de réponse fausse ne contient encore aucun autre univers que Sports", () => {
+Deno.test("le catalogue des scènes de réponse fausse ne contient encore que les univers Sports et Danse", () => {
   const universAvecScene = Object.keys(SCENES_DE_REPONSE_FAUSSE);
 
-  assertEquals(universAvecScene, ["sports"]);
+  assertEquals(universAvecScene, ["sports", "danse"]);
 });
 
 Deno.test("une scène de réponse fausse ne porte que l'univers", () => {
@@ -43,6 +43,12 @@ Deno.test("la première réponse fausse de la séance, dans l'univers Sports, jo
   const scene = sceneDeReponseFausse(FAITS_NEUTRES, "sports");
 
   assertEquals(scene, { univers: "sports" });
+});
+
+Deno.test("la première réponse fausse de la séance, dans l'univers Danse, joue la scène de Lili", () => {
+  const scene = sceneDeReponseFausse(FAITS_NEUTRES, "danse");
+
+  assertEquals(scene, { univers: "danse" });
 });
 
 Deno.test("une scène déjà jouée dans la séance ne se rejoue pas, même dans l'univers Sports", () => {
@@ -70,7 +76,7 @@ Deno.test("avec le personnage guide en petit, aucune scène de réponse fausse n
 });
 
 Deno.test("un univers dont la scène n'est pas encore livrée ne joue aucune scène", () => {
-  assertEquals(sceneDeReponseFausse(FAITS_NEUTRES, "danse"), undefined);
+  assertEquals(sceneDeReponseFausse(FAITS_NEUTRES, "princesse"), undefined);
 });
 
 Deno.test("une clé d'univers inconnue donne le résultat de l'univers Animaux : aucune scène", () => {
