@@ -127,3 +127,32 @@ Branche de base : `main` (`2a69a87`). Branche : `feature/163-reponse-fausse-anim
 ## 2026-11-06 : livraison 163f (Capitaine Sam)
 
 - 20:45 à 21:20 UTC : TDD et câblage préparés pendant l'attente du merge de 163e, dans un worktree à part. Un redémarrage du conteneur a interrompu le câblage ; le worktree a survécu (commits et fichiers en cours intacts), une seconde agente a repris et terminé sans perte. Commits reportés par cherry-pick sur la branche recréée depuis `main` `db28613` : `test` (catalogue complet, chaque univers a sa scène), `feat` (`pompier` au catalogue, désormais exhaustif sur `CleUnivers`), `refactor` (dessin et moteur de Sam par le préfixe, additif), `feat` (câblage, bulle « plouf ! », table des scènes vérifiée à la compilation). Planche validée le 06/11 (163.30 oui, 163.31 B « plouf ! »). Captures de l'app relues par l'orchestrateur au regard de la règle absolue : géométrie validée reprise (lance au-dessus de l'épaule, arc au-dessus du casque, gouttes loin du corps) ; conforme.
+- Review de 163f : **À CORRIGER au cycle 1**, un bloquant au regard de la règle absolue : si les mouvements réduits s'activaient pendant que l'eau était visible, l'image fixe de Capitaine Sam gardait le jet et des gouttes recréées sans position, au milieu de son corps. Scénario de garde ajouté (`7c3d7fb`, règle R7) et ses steps (`cf004c7`), avant le correctif (`be5b043` fix : jet caché sur l'image fixe et créé invisible). Une première capture de vérification montrait encore de l'eau : refusée par l'orchestrateur ; les captures refaites sur le vrai montage (300, 500 et 800 ms) sont propres, et le banc reproduit le défaut sans le correctif. Non bloquants corrigés (`c8d286a` : `brasSaisit` réutilisé, `Point` local supprimé ; `703d471` : typage des steps sans contournement). Cycle 2 : **APPROUVÉ** ; les cinq autres scènes ne peuvent pas avoir ce défaut.
+- 20:58 à 22:00 UTC : VERROU base. Sonde OK. E2E `telephone`, 1 worker : **tout `@issue-163`**, `@livraison-106f`, `@issue-97` et `@issue-23` **153/153** ; après le correctif, `@livraison-163f` (scénario de garde compris) et `@livraison-106f` **9/9** ; après le dernier refactor des steps, le scénario de garde **1/1**. LIBÈRE base.
+
+## Mesures (livraison 163f)
+
+| Mesure | Valeur |
+|---|---|
+| Durée, du merge de 163e au PR prête | environ 1 h 15 (20:53 → 22:05 UTC), câblage préparé pendant l'attente du merge |
+| Temps passé à attendre | PO : aucune attente ; verrou base : aucune attente ; redémarrage du conteneur : environ 10 min |
+| Cycles de review À CORRIGER | 1 (eau restée sur l'image fixe après un passage en mouvements réduits) |
+| Cycles E2E KO | 0 |
+| Intégrations de `main` | 0 (commits reportés par cherry-pick sur `main` `db28613`) |
+| Tokens et coût | relevés par le responsable |
+
+## Bilan de la story #163 (six livraisons)
+
+| Livraison | Personnage guide | PR | Merge | Cycles de review À CORRIGER |
+|---|---|---|---|---|
+| 163a | Coach Léo, et le mécanisme commun | #171 | `4dd80cf` | 0 |
+| 163b | Lili | #172 | `d8d67ca` | 0 |
+| 163c | Noisette | #175 | `8873b6e` | 0 |
+| 163d | Lumi | #176 | `ba3603b` | 0 |
+| 163e | Agent Max | #177 | `db28613` | 1 |
+| 163f | Capitaine Sam | #178 | à merger | 1 |
+
+- Du lancement (05/11, 22:45 UTC) à la dernière PR prête (06/11, 22:05 UTC) : environ 23 h, dont environ 1 h 30 d'attente de la non-régression de nuit et environ 2 h d'attente de validations du PO.
+- Planches : six, toutes validées par le PO avant leur câblage ; celle de Capitaine Sam après deux reprises demandées par l'équipe pour écarter une forme à double sens.
+- Escalades : aucune. Écart signalé : un commit de documents poussé sur la PR #175 après `PRÊTE À MERGER` (gardé par le responsable).
+- Intégrations de `main` avec conflit : aucune.
