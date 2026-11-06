@@ -308,16 +308,27 @@ When(/^la scène de réponse fausse est finie$/, async ({ page }) => {
 // --- Alors : la scène est jouée, ou ne l'est pas
 
 async function verifierQueLaSceneDeLeoSeJoue(page: Page): Promise<EntreeDeScene> {
-  const scene = await attendreUneScene(page);
-  expect(scene.univers, "la scène de l'univers du profil").toBe("sports");
+  const scene = await verifierQueLaSceneSeJoue(page, "sports");
   expect(scene.poteau && scene.ballon, "le décor de la scène de Coach Léo : le ballon et le petit poteau").toBe(true);
+  return scene;
+}
+
+async function verifierQueLaSceneSeJoue(page: Page, univers: string): Promise<EntreeDeScene> {
+  const scene = await attendreUneScene(page);
+  expect(scene.univers, "la scène de l'univers du profil").toBe(univers);
   expect(scene.guideAbsentAuDebut, "le personnage guide n'apparaît pas en double pendant la scène").toBe(true);
   if ((page.viewportSize()?.width ?? Infinity) <= 360) expect(scene.debordementAuDebut, "la scène tient dans la largeur de l'écran").toBeLessThanOrEqual(0);
   return scene;
 }
 
-Then(/^Coach Léo joue sa scène de réponse fausse(?: : (?!.*avec «).+)?$/, async ({ page }) => {
-  await verifierQueLaSceneDeLeoSeJoue(page);
+// Lili (Danse, 163b) : la scène de l'univers du profil, sans doublon du dessin fixe du personnage guide.
+async function verifierQueLaSceneDeLiliSeJoue(page: Page): Promise<EntreeDeScene> {
+  return await verifierQueLaSceneSeJoue(page, "danse");
+}
+
+Then(/^(Coach Léo|Lili) joue sa scène de réponse fausse(?: : (?!.*avec «).+)?$/, async ({ page }, personnage: string) => {
+  if (personnage === "Lili") await verifierQueLaSceneDeLiliSeJoue(page);
+  else await verifierQueLaSceneDeLeoSeJoue(page);
 });
 
 Then(/^Coach Léo joue sa scène de réponse fausse avec « ([^«»]+) »$/, async ({ page }, tenue: string) => {
@@ -342,10 +353,10 @@ Then(/^la scène de réponse fausse ne recommence pas$/, async ({ page }) => {
   expect(entrees.length - marque, "aucune scène depuis le dernier geste de Léa").toBe(0);
 });
 
-Then(/^Coach Léo finit avec le sourire, le pouce levé$/, async ({ page }) => {
+Then(/^(Coach Léo|Lili) finit avec le sourire, le pouce levé$/, async ({ page }, personnage: string) => {
   const scene = await attendreLaFinDeLaScene(page);
   expect(duree(scene), "la scène va jusqu'au bout").toBeGreaterThanOrEqual(SCENE_JOUEE_AU_MOINS_MS);
-  expect(scene.sourireALaFin, "Coach Léo sourit dans la dernière image").toBe(true);
+  expect(scene.sourireALaFin, `${personnage} sourit dans la dernière image`).toBe(true);
 });
 
 Then(/^Coach Léo continue sa scène de réponse fausse$/, async ({ page }) => {
