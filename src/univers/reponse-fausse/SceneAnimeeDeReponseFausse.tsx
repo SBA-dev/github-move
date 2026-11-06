@@ -1,6 +1,7 @@
 import { type ComponentType, type RefObject, useLayoutEffect, useRef, useState } from "react";
 import type { CleDeTenue, CleUnivers } from "@domain/motivation";
 import { useMouvementsReduits } from "../../transitions/mouvements-reduits.ts";
+import { DUREE_DE_LA_SCENE_DE_REPONSE_FAUSSE_S } from "./duree-de-la-scene.ts";
 
 type ScenePrete = { jouer(quandTerminee: () => void): () => void; montrerLEtatFinal(): void };
 
@@ -23,7 +24,7 @@ type Props = PropsDeLaScene & {
 /**
  * La scène de réponse fausse d'un personnage guide : son décor et le moteur commun qui l'anime, à la place du dessin du personnage guide, à sa taille.
  * Dessin décoratif (`aria-hidden`), sans toucher ni focus : la question, les choix et les boutons restent utilisables dès la première image.
- * Aucun son, aucun confetti. Avec les mouvements réduits : l'image fixe de l'état final, sans bulle écrite.
+ * Aucun son, aucun confetti. Avec les mouvements réduits : l'image fixe de l'état final, sans bulle écrite, pendant le même temps que la scène.
  */
 export function SceneAnimeeDeReponseFausse({ univers, Decor, creerLaScene, tenue, avecBulleEcrite, onFinie }: Props) {
   const reduits = useMouvementsReduits();
@@ -37,7 +38,8 @@ export function SceneAnimeeDeReponseFausse({ univers, Decor, creerLaScene, tenue
     const scene = creerLaScene(racine.current, tenue);
     if (reduits) {
       scene.montrerLEtatFinal();
-      return;
+      const minuterie = setTimeout(() => aLaFin.current(), DUREE_DE_LA_SCENE_DE_REPONSE_FAUSSE_S * 1000);
+      return () => clearTimeout(minuterie);
     }
     return scene.jouer(() => {
       setTerminee(true);
