@@ -9,7 +9,8 @@ avec la planche de Coach Léo (« 163a reco tout », [annonce du responsable](ht
 
 Livraisons (163.11) : `@livraison-163a` (mécanisme et Coach Léo), puis `@livraison-163b` (Lili), `@livraison-163c`
 (Noisette), `@livraison-163d` (Lumi), `@livraison-163e` (Agent Max), `@livraison-163f` (Capitaine Sam). Les cinq
-derniers tags ne portent que sur les lignes d'`Exemples` du plan « chaque personnage guide a sa scène ».
+derniers tags ne portent que sur les lignes d'`Exemples` du plan « chaque personnage guide a sa scène », sauf
+`@livraison-163f`, qui porte aussi le scénario R7 des mouvements réduits activés pendant la scène de Capitaine Sam.
 Sélection des scénarios de 163a : `@issue-163 and not (@livraison-163b or @livraison-163c or @livraison-163d or
 @livraison-163e or @livraison-163f)`.
 La tenue portée dans les scènes vient de la livraison 106h de #106, mergée : le scénario de la tenue portée n'a
@@ -39,10 +40,10 @@ elle ne retient jamais l'enfant.
 | R4 | Elle ne change rien à l'apprentissage : erreur comptée, étoiles, avancement, parcours | 0 question réussie sur 15 après « on » ; 1 erreur = 2 étoiles en « Sports » comme en « Danse » | 2 (dont 1 plan, 2 exemples) |
 | R5 | Chaque personnage guide a sa scène, douce et sans danger, avec la tenue portée ; c'est celle de l'univers du profil au moment de la réponse | Lili vacille à peine et fait une révérence ; la noisette rebondit à côté de Noisette ; Coach Léo porte « une écharpe rayée » | 3 (dont 1 plan, 6 exemples) |
 | R6 | Jamais plus attrayante que la bonne réponse : courte, sans confettis, sans cri de victoire, sans musique, sans son à elle | un seul « réponse fausse » entendu, aucun confetti | 2 |
-| R7 | Accessibilité : image fixe en mouvements réduits, Muet (effet sonore sans parole, 97.2), une seule annonce, mode dys, bulles écrites cachées sur un petit dessin, 360 px, 44 px | image fixe souriant pouce levé, sans bulle écrite ; bulles écrites en mode dys ; lecteurs d'écran : l'encouragement une fois, jamais « oh ! » ; boîte à jetons (dessin de 80 px) : scène sans bulle écrite | 6 |
+| R7 | Accessibilité : image fixe en mouvements réduits, Muet (effet sonore sans parole, 97.2), une seule annonce, mode dys, bulles écrites cachées sur un petit dessin, 360 px, 44 px | image fixe souriant pouce levé, sans bulle écrite ; bulles écrites en mode dys ; lecteurs d'écran : l'encouragement une fois, jamais « oh ! » ; boîte à jetons (dessin de 80 px) : scène sans bulle écrite ; mouvements réduits activés pendant la scène de Capitaine Sam : image fixe sans eau, sans gouttes, sans bulle écrite | 7 |
 | R8 | Écrans : séance d'une leçon (tous types), révision, défi, grand défi ; jamais pendant le chrono d'une fluence, après « Je ne sais pas », au test de départ, ni avec l'addition posée à 360 px | bulles, classer, ordre ; dictée : « chas », la lettre « s » en rouge ; « lit » en révision ; « 4 » au défi ; fluence : son seul | 9 (dont 1 plan, 3 exemples) |
 
-Total : 8 règles, 43 scénarios (dont 4 plans), 53 cas une fois les exemples déroulés. Huit règles, c'est plus que
+Total : 8 règles, 44 scénarios (dont 4 plans), 54 cas une fois les exemples déroulés. Huit règles, c'est plus que
 les 6 conseillés par le skill `bdd-gherkin` : le découpage par livraison (163.11) répond à cette taille, car R5 est
 la seule règle qui grandit d'une livraison à l'autre.
 
@@ -107,6 +108,7 @@ Note sur le Muet : le Muet coupe la parole, pas les effets sonores (décision 97
 - Avec le mode dys, l'encouragement et les bulles écrites de la scène de réponse fausse s'affichent en mode dys (163.16)
 - Dans la boîte à jetons, où le dessin de Coach Léo est petit, la scène de réponse fausse se joue sans bulle écrite (163.21)
 - À 360 px, la scène de réponse fausse tient à la place du personnage guide, et les choix restent assez grands (163.7)
+- Quand les mouvements réduits s'activent pendant la scène de réponse fausse de Capitaine Sam, l'image fixe ne garde rien de la scène en mouvement (163.16, review de 163f ; `@livraison-163f`)
 
 **R8. Écrans concernés et non concernés**
 - Plan : Dans un exercice bulles / classer / ordre, la première réponse fausse de la séance fait jouer la scène de réponse fausse (163.6)

@@ -152,7 +152,7 @@ button[data-son="muet"] { background: var(--principale-foncee); }
 .scene-de-reponse-fausse svg { overflow: visible; }
 .scene-de-reponse-fausse .ecrit-de-la-scene { font-family: var(--police-titres); font-weight: 800; }
 [data-mode-dys="true"] .scene-de-reponse-fausse .ecrit-de-la-scene { font-weight: 700; letter-spacing: .04em; }
-[data-mode-dys="true"] .scene-de-reponse-fausse:is([data-scene-de-reponse-fausse="danse"], [data-scene-de-reponse-fausse="animaux"], [data-scene-de-reponse-fausse="princesse"], [data-scene-de-reponse-fausse="police"]) .ecrit-de-la-scene { font-size: 12.5px; letter-spacing: 0; word-spacing: 0; }
+[data-mode-dys="true"] .scene-de-reponse-fausse:is([data-scene-de-reponse-fausse="danse"], [data-scene-de-reponse-fausse="animaux"], [data-scene-de-reponse-fausse="princesse"], [data-scene-de-reponse-fausse="police"], [data-scene-de-reponse-fausse="pompier"]) .ecrit-de-la-scene { font-size: 12.5px; letter-spacing: 0; word-spacing: 0; }
 .titre-avec-guide { display: flex; align-items: center; justify-content: center; gap: 12px; }
 .titre-avec-guide h2 { margin: 0; }
 .titre-avec-guide .personnage-guide { width: 72px; flex: none; }

@@ -1,4 +1,4 @@
-import { lazy, type ReactNode, Suspense } from "react";
+import { lazy, type LazyExoticComponent, type ReactNode, Suspense } from "react";
 import type { CleUnivers, SceneDeReponseFausse as SceneChoisieParLeDomaine } from "@domain/motivation";
 import { memoriser } from "../chargement-a-la-demande.ts";
 import type { PropsDeLaScene } from "./SceneAnimeeDeReponseFausse.tsx";
@@ -26,19 +26,33 @@ const chargerPrincesse = memoriser(() => import("./princesse/SceneDeLumi.tsx"));
 
 const chargerPolice = memoriser(() => import("./police/SceneDeMax.tsx"));
 
+const chargerPompier = memoriser(() => import("./pompier/SceneDeSam.tsx"));
+
 const SceneDeCoachLeo = chargerAvecRepli(chargerSports);
 const SceneDeLili = chargerAvecRepli(chargerDanse);
 const SceneDeNoisette = chargerAvecRepli(chargerAnimaux);
 const SceneDeLumi = chargerAvecRepli(chargerPrincesse);
 const SceneDeMax = chargerAvecRepli(chargerPolice);
+const SceneDeSam = chargerAvecRepli(chargerPompier);
 
-/** Les univers qui ont leur scène de réponse fausse dessinée : une livraison par personnage guide. */
-const CHARGEURS_DES_SCENES: Partial<Record<CleUnivers, () => Promise<unknown>>> = {
+/** La scène chargée à la demande de chaque univers : l'oubli d'un univers est une erreur de compilation. */
+const SCENES_DES_UNIVERS: Record<CleUnivers, LazyExoticComponent<(props: PropsChargees) => ReactNode>> = {
+  sports: SceneDeCoachLeo,
+  danse: SceneDeLili,
+  animaux: SceneDeNoisette,
+  princesse: SceneDeLumi,
+  police: SceneDeMax,
+  pompier: SceneDeSam,
+};
+
+/** Les scènes de réponse fausse dessinées, une par univers : l'oubli d'un univers est une erreur de compilation. */
+const CHARGEURS_DES_SCENES: Record<CleUnivers, () => Promise<unknown>> = {
   sports: chargerSports,
   danse: chargerDanse,
   animaux: chargerAnimaux,
   princesse: chargerPrincesse,
   police: chargerPolice,
+  pompier: chargerPompier,
 };
 
 /**
@@ -46,7 +60,7 @@ const CHARGEURS_DES_SCENES: Partial<Record<CleUnivers, () => Promise<unknown>>> 
  * la première réponse fausse joue quand même sa scène. Une erreur de chargement est ignorée : le dessin du personnage guide reste.
  */
 export function prechargerLaSceneDeReponseFausseDe(univers: CleUnivers): void {
-  CHARGEURS_DES_SCENES[univers]?.().catch(() => undefined);
+  CHARGEURS_DES_SCENES[univers]().catch(() => undefined);
 }
 
 type Props = PropsChargees & { readonly scene: SceneChoisieParLeDomaine };
@@ -56,18 +70,6 @@ type Props = PropsChargees & { readonly scene: SceneChoisieParLeDomaine };
  * Chaque scène est chargée à la demande, seulement pour l'univers du profil ; en attendant, ou si le chargement échoue, le dessin du personnage guide reste.
  */
 export function SceneDeReponseFausse({ scene, ...props }: Props) {
-  switch (scene.univers) {
-    case "sports":
-      return <Suspense fallback={props.repli}><SceneDeCoachLeo {...props} /></Suspense>;
-    case "danse":
-      return <Suspense fallback={props.repli}><SceneDeLili {...props} /></Suspense>;
-    case "animaux":
-      return <Suspense fallback={props.repli}><SceneDeNoisette {...props} /></Suspense>;
-    case "princesse":
-      return <Suspense fallback={props.repli}><SceneDeLumi {...props} /></Suspense>;
-    case "police":
-      return <Suspense fallback={props.repli}><SceneDeMax {...props} /></Suspense>;
-    default:
-      return props.repli;
-  }
+  const Scene = SCENES_DES_UNIVERS[scene.univers];
+  return <Suspense fallback={props.repli}><Scene {...props} /></Suspense>;
 }

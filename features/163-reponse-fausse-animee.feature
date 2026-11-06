@@ -351,6 +351,16 @@ Fonctionnalité: Une réponse fausse animée par le personnage guide
       Et Coach Léo dit un encouragement, suivi de « Essaie une autre bulle. »
       Mais l'image fixe de la scène de réponse fausse ne montre aucune bulle écrite
 
+    # Review de 163f : l'image fixe qui suit un passage en mouvements réduits est exactement celle prévue (163.16)
+    @livraison-163f
+    Scénario: Quand les mouvements réduits s'activent pendant la scène de réponse fausse de Capitaine Sam, l'image fixe ne garde rien de la scène en mouvement
+      Étant donné que Paul a changé l'univers du profil enfant de Léa en « Pompiers »
+      Et que Léa joue la question de test « Combien font 3 + 4 ? »
+      Et que Capitaine Sam joue sa scène de réponse fausse après la réponse « 8 » de Léa
+      Quand l'appareil se met à demander des mouvements réduits
+      Alors Léa voit l'image fixe de la scène de réponse fausse de Capitaine Sam, souriant, le pouce levé, sans mouvement
+      Mais l'image fixe de la scène de réponse fausse ne montre ni eau, ni gouttes, ni bulle écrite
+
     # Décision 97.2 : le Muet coupe la parole, pas les effets sonores ; la scène n'ajoute aucun son
     @livraison-163a
     Scénario: En Muet, la scène de réponse fausse se joue sans aucune parole, et seul « réponse fausse » se fait entendre
