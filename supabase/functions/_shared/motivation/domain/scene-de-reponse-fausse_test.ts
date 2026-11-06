@@ -13,6 +13,7 @@ import {
   sceneJoueeDansLaSeanceApres as sceneJoueeExportee,
   SCENES_DE_REPONSE_FAUSSE as SCENES_EXPORTEES,
 } from "./index.ts";
+import { UNIVERS } from "./univers.ts";
 
 const FAITS_NEUTRES: FaitsDeLaReponseFausse = {
   sceneDejaJoueeDansLaSeance: false,
@@ -27,10 +28,10 @@ Deno.test("le catalogue des scènes de réponse fausse contient l'univers Sports
   assertEquals(universAvecScene.includes("sports"), true);
 });
 
-Deno.test("le catalogue des scènes de réponse fausse ne contient encore que les univers Sports, Danse, Animaux, Princesse et Police", () => {
+Deno.test("le catalogue des scènes de réponse fausse contient exactement les six univers : Sports, Danse, Animaux, Princesse, Police et Pompier", () => {
   const universAvecScene = Object.keys(SCENES_DE_REPONSE_FAUSSE);
 
-  assertEquals(universAvecScene, ["sports", "danse", "animaux", "princesse", "police"]);
+  assertEquals(universAvecScene, ["sports", "danse", "animaux", "princesse", "police", "pompier"]);
 });
 
 Deno.test("une scène de réponse fausse ne porte que l'univers", () => {
@@ -69,6 +70,12 @@ Deno.test("la première réponse fausse de la séance, dans l'univers Police, jo
   assertEquals(scene, { univers: "police" });
 });
 
+Deno.test("la première réponse fausse de la séance, dans l'univers Pompier, joue la scène de Capitaine Sam", () => {
+  const scene = sceneDeReponseFausse(FAITS_NEUTRES, "pompier");
+
+  assertEquals(scene, { univers: "pompier" });
+});
+
 Deno.test("une scène déjà jouée dans la séance ne se rejoue pas, même dans l'univers Sports", () => {
   const faits = { ...FAITS_NEUTRES, sceneDejaJoueeDansLaSeance: true };
 
@@ -93,8 +100,10 @@ Deno.test("avec le personnage guide en petit, aucune scène de réponse fausse n
   assertEquals(sceneDeReponseFausse(faits, "sports"), undefined);
 });
 
-Deno.test("un univers dont la scène n'est pas encore livrée ne joue aucune scène", () => {
-  assertEquals(sceneDeReponseFausse(FAITS_NEUTRES, "pompier"), undefined);
+Deno.test("chaque univers a sa scène de réponse fausse", () => {
+  const scenes = UNIVERS.map(({ cle }) => sceneDeReponseFausse(FAITS_NEUTRES, cle));
+
+  assertEquals(scenes, UNIVERS.map(({ cle }) => ({ univers: cle })));
 });
 
 Deno.test("une clé d'univers inconnue donne le résultat de l'univers Animaux : la scène de Noisette", () => {
