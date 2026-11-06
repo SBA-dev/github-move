@@ -58,6 +58,18 @@ type EntreeDeScene = {
   sons: number;
   sourireALaFin: boolean;
   debordementAuDebut: number;
+  imageFixe: ImageFixe | null;
+};
+
+/** Ce que montre la scène une fois passée en mouvements réduits : relevé à chaque image tant que la scène est là, le dernier relevé fait foi. */
+type ImageFixe = {
+  univers: string | null;
+  mouvements: string | null;
+  bulleEcrite: string | null;
+  sourireVisible: boolean;
+  animationsEnCours: number;
+  elementsDeLEauVisibles: number;
+  bullesEcrites: number;
 };
 
 type EtatDeLEnregistreur = { entrees: EntreeDeScene[]; marque: number; actions: number[] };
@@ -121,14 +133,50 @@ export function installerLEnregistreurDeLaScene() {
       sons: scene.querySelectorAll("audio, video").length,
       sourireALaFin: sourireVisible(scene),
       debordementAuDebut: document.documentElement.scrollWidth - window.innerWidth,
+      imageFixe: null,
     };
+  };
+
+  // Un élément est visible si ni lui ni aucun de ses ancêtres n'a une opacité calculée de 0.
+  const opaque = (element: Element) => {
+    for (let courant: Element | null = element; courant !== null; courant = courant.parentElement) {
+      if (Number(getComputedStyle(courant).opacity) === 0) return false;
+    }
+    return true;
+  };
+
+  const releverLImageFixe = (scene: Element): ImageFixe => {
+    const jet = scene.querySelector('[id$="-jet"]');
+    return {
+      univers: scene.getAttribute("data-scene-de-reponse-fausse"),
+      mouvements: scene.getAttribute("data-mouvements"),
+      bulleEcrite: scene.getAttribute("data-bulle-ecrite"),
+      sourireVisible: sourireVisible(scene),
+      animationsEnCours: scene.getAnimations({ subtree: true }).filter((animation) => animation.playState === "running").length,
+      elementsDeLEauVisibles: jet === null ? 0 : [jet, ...jet.querySelectorAll("*")].filter(opaque).length,
+      bullesEcrites: scene.querySelectorAll('[data-testid="bulle-ecrite-de-la-scene"]').length,
+    };
+  };
+
+  const surveillerLImageFixe = (entree: EntreeDeScene) => {
+    const relever = () => {
+      const scene = document.querySelector(SCENE);
+      if (!scene || entree.fin !== null) return;
+      if (scene.getAttribute("data-mouvements") === "reduits") entree.imageFixe = releverLImageFixe(scene);
+      requestAnimationFrame(relever);
+    };
+    requestAnimationFrame(relever);
   };
 
   new MutationObserver(() => {
     const scene = document.querySelector(SCENE);
     const courante = etat.entrees.at(-1);
     const ouverte = courante && courante.fin === null ? courante : undefined;
-    if (scene && !ouverte) etat.entrees.push(ouvrir(scene));
+    if (scene && !ouverte) {
+      const entree = ouvrir(scene);
+      etat.entrees.push(entree);
+      surveillerLImageFixe(entree);
+    }
     else if (scene && ouverte) ouverte.sourireALaFin = sourireVisible(scene);
     else if (!scene && ouverte) ouverte.fin = performance.now();
   }).observe(document, { subtree: true, childList: true, attributes: true });
@@ -197,6 +245,15 @@ Given(/^la scène de réponse fausse de Coach Léo peut de nouveau être chargé
 
 // --- Étant donné : une scène en train de se jouer. Le geste est fait au plus vite : la scène ne dure que 1,5 s.
 
+async function attendreLImageFixe(page: Page): Promise<ImageFixe> {
+  let relevee: ImageFixe | null = null;
+  await expect.poll(async () => {
+    relevee = (await lireLEnregistreur(page)).entrees.at(-1)?.imageFixe ?? null;
+    return relevee !== null;
+  }, { intervals: [50], timeout: DELAI_DE_L_ATTENTE_MS, message: "la scène passe en mouvements réduits" }).toBe(true);
+  return relevee as unknown as ImageFixe;
+}
+
 async function repondreEtVoirLaScene(page: Page, reponse: string): Promise<void> {
   await demarrer(page);
   await avancerJusquAuxChoix(page);
@@ -206,7 +263,7 @@ async function repondreEtVoirLaScene(page: Page, reponse: string): Promise<void>
   await attendreUneScene(page);
 }
 
-Given(/^Coach Léo joue sa scène de réponse fausse après la réponse « ([^«»]+) » de Léa$/, async ({ page }, reponse: string) => {
+Given(/^(?:Coach Léo|Capitaine Sam) joue sa scène de réponse fausse après la réponse « ([^«»]+) » de Léa$/, async ({ page }, reponse: string) => {
   await repondreEtVoirLaScene(page, reponse);
 });
 
@@ -452,6 +509,24 @@ Then(
     expect(scene.animationsEnCoursAuDebut, "aucune animation en cours dans la scène").toBe(0);
   },
 );
+
+Then(
+  /^Léa voit l'image fixe de la scène de réponse fausse de Capitaine Sam, souriant, le pouce levé, sans mouvement$/,
+  async ({ page }) => {
+    const image = await attendreLImageFixe(page);
+    expect(image.univers, "la scène des Pompiers").toBe(cleDe("Pompiers"));
+    expect(image.mouvements, "mouvements réduits").toBe("reduits");
+    expect(image.sourireVisible, "Capitaine Sam sourit").toBe(true);
+    expect(image.animationsEnCours, "aucune animation en cours dans la scène").toBe(0);
+  },
+);
+
+Then(/^l'image fixe de la scène de réponse fausse ne montre ni eau, ni gouttes, ni bulle écrite$/, async ({ page }) => {
+  const image = await attendreLImageFixe(page);
+  expect(image.elementsDeLEauVisibles, "ni jet, ni gouttes, ni éclaboussures, ni filet visibles").toBe(0);
+  expect(image.bulleEcrite, "aucune bulle écrite").toBe("non");
+  expect(image.bullesEcrites, "aucune bulle écrite dans le dessin").toBe(0);
+});
 
 Then(/^(?:la scène|l'image fixe de la scène) de réponse fausse ne montre aucune bulle écrite$/, async ({ page }) => {
   const scene = await attendreUneScene(page);
