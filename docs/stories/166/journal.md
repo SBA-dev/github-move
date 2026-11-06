@@ -41,3 +41,22 @@
 - Issue de suivi #173 créée par le responsable (Sports, Police).
 - `mr-reviewer` (cycle 1) : **APPROUVÉ**, 4 non bloquants : glossaire et modèle (déjà faits par `9c24d0a`), phrase de `docs/sons.md` (`fb21353`), typage du test en `EffetSonore` (`f750aae`).
 - VERROU base demandé (08:27) ; en file derrière #163. Périmètre préparé : 95 scénarios sur `telephone` (`--list`).
+
+## E2E (2026-11-06, 08:42 → 09:30 UTC)
+
+- VERROU base accordé (08:41, tableau de #64 vérifié). Sonde : 3 × 200 en moins de 0,7 s.
+- Run 1 (`7b06981`, `telephone`, 1 worker, 95 scénarios, 36,8 min) : **84 verts, 11 KO**, tous sur la musique (4 de #106, 7 de #166). LIBÈRE base.
+- Diagnostic `e2e-tester` : deux défauts de steps, aucun bug applicatif. (1) le `Before` des faux de #97 n'était lié qu'à `@issue-106` → étendu à `@issue-166` ; (2) « la célébration commune n'est pas jouée » comptait « grande victoire » au lieu de la musique de l'univers en scène. Correctif `e8a6525`.
+- VERROU base redemandé, accordé à 09:21 ; sonde OK. Run 2 (11 KO, 4,4 min) : **11/11 verts**. LIBÈRE base. Périmètre : 95/95.
+- `@wip` retiré (`b729816`).
+- `mr-reviewer` delta des steps (cycle 2, mode delta) : **APPROUVÉ**, 6 non bloquants (repli silencieux sur « sports » quand `data-univers` manque, constante `MUSIQUE` résiduelle, liste `PERSONNAGES` dupliquée, motif `d(?:e |')` large, export inutilisé `MUSIQUES_DES_UNIVERS`, condition de tags à factoriser). Laissés en dette (PR) pour ne pas reprendre un run sous verrou.
+
+## Mesures
+
+- Durée : lancement 2026-11-05 23:52 UTC → PR en brouillon 2026-11-06 ~09:35 UTC. Le temps actif est d'environ 2 h 30. Le reste est de l'attente : le réseau, le choix du PO à l'écoute (00:47 → 08:20) et le verrou base.
+- Attentes : accès aux sons et réponse du PO, ~25 min ; choix à l'écoute, ~7 h 30 (nuit) ; verrou base, ~15 min puis ~10 min.
+- Cycles TDD : 1 comportement (catalogue des musiques), 1 refactor de test.
+- Review : 2 passages (ensemble APPROUVÉ ; delta des steps APPROUVÉ), 0 cycle À CORRIGER.
+- E2E : 2 runs (95 scénarios puis 11), 1 cycle KO (steps).
+- Intégrations de `main` : 0 (`main` n'a pas bougé depuis `11b32d4`) ; conflits : 0.
+- Escalades : 1 (accès réseau aux banques de sons, réglée par « sons C »).
