@@ -102,7 +102,7 @@ Given(/^Tom a répondu faux ([0-9]+) fois de suite à « ([^«»]+) »$/, async 
   for (let essai = 0; essai < Number(fois); essai++) await repondreFaux(page, partie20(page).lecon);
 });
 
-When(/^Tom répond « ([^«»]+) » à « ([^«»]+) »$/, async ({ page }, reponse: string, enonce: string) => {
+When(/^Tom répond « ([^«»]+) » à « ([^«»]+) »$/, { tags: "not @issue-163" }, async ({ page }, reponse: string, enonce: string) => {
   partie20(page).acteur = "Tom";
   await demarrer(page);
   await allerAuCalcul(page, enonce);

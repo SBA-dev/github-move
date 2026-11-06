@@ -47,6 +47,7 @@ import { ChoixDeLaVoix, ContexteDeLaLecture, useVoix } from "./voix/index.ts";
 import { TenueDuProfil } from "./tenue/index.ts";
 import { ContexteDeLUnivers, HABILLAGE_DU_PARENT, habillageDeLUnivers, Paysage } from "./univers/index.ts";
 import { prechargerLaSceneDe } from "./univers/celebrations/index.ts";
+import { prechargerLaSceneDeReponseFausseDe } from "./univers/reponse-fausse/index.ts";
 
 const ACCUEIL: Lieu = { ecran: "accueil" };
 
@@ -107,6 +108,7 @@ export function Application() {
   const univers = universDe(profil?.univers);
   const universDuProfilEnCours = universDe(profilEnCours?.univers);
   useEffect(() => prechargerLaSceneDe(universDuProfilEnCours.cle), [universDuProfilEnCours.cle]);
+  useEffect(() => prechargerLaSceneDeReponseFausseDe(universDuProfilEnCours.cle), [universDuProfilEnCours.cle]);
   const voix = useVoix(universDuProfilEnCours.personnageGuide);
   const parent = estUnEcranDuParent(ecranAffiche(lieu, acces.etat.type, connecte));
   const { suspendre: suspendreLaVoix, reprendre: reprendreLaVoix, toucherUnBouton } = voix;

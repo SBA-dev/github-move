@@ -36,6 +36,8 @@ const { Given, When, Then } = createBdd(test, { tags: "@issue-20 or @issue-65 or
 // #128 joue aussi la fluence seule d'une séance (« Léa joue seulement l'exercice ») : son étape « le temps de la fluence est écoulé »
 // est celle de #97, qui démarre la partie d'abord.
 const { When: WhenSansLa128 } = createBdd(test, { tags: "@issue-20 or @issue-65 or @issue-127" });
+// #163 réutilise trois étapes de l'addition posée (le personnage guide qui réfléchit sans scène quand il est trop petit).
+const { Given: GivenAvecLa163, When: WhenAvecLa163 } = createBdd(test, { tags: "@issue-20 or @issue-65 or @issue-127 or @issue-128 or @issue-163" });
 
 type Acteur = "Léa" | "Tom" | "Nina";
 type Exercice = Record<string, unknown>;
@@ -874,7 +876,7 @@ async function poserTousLesNombres(page: Page): Promise<void> {
   }
 }
 
-Given(/^Léa joue l'exercice « ([^«»]+) » à l'étape (poser|calculer)$/, async ({ page }, exercice: string, etape: string) => {
+GivenAvecLa163(/^Léa joue l'exercice « ([^«»]+) » à l'étape (poser|calculer)$/, async ({ page }, exercice: string, etape: string) => {
   await ouvrirLExercice(page, exercice);
   await attendreLEtape(page, "poser");
   if (etape === "calculer") {
@@ -937,14 +939,14 @@ async function calculerLaColonneEnCours(page: Page): Promise<void> {
   await expect.poll(async () => await questionsReussies(page)).toBeGreaterThan(reussies);
 }
 
-Given(/^Léa a calculé la colonne des (unités|dizaines|centaines)$/, async ({ page }, libelle: string) => {
+GivenAvecLa163(/^Léa a calculé la colonne des (unités|dizaines|centaines)$/, async ({ page }, libelle: string) => {
   await commencerLAdditionDeTest(page);
   await attendreLEtape(page, "calculer");
   await verifierLaColonneEnCours(page, libelle);
   await calculerLaColonneEnCours(page);
 });
 
-When(
+WhenAvecLa163(
   /^Léa répond « ([0-9]+) » pour la colonne des (unités|dizaines|centaines)$/,
   async ({ page }, nombre: string, libelle: string) => {
     // #127 : « Léa répond » suit parfois directement la leçon de test, sans que l'exercice soit commencé.

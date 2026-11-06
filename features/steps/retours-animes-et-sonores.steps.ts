@@ -34,7 +34,7 @@ import {
 import { Before, BeforeStep, Given, test, Then, When } from "./fixtures.ts";
 import { motsCachesDe, poesieJouee, remettreTousLesVersDansLOrdre } from "./memoriser-une-poesie.steps.ts";
 import { LECONS_DU_TEST_DE_DEPART, servirLaBibliothequeDuTestDeDepart, suivreLesLecturesDuResultat } from "../support/bibliotheque-du-test-de-depart.ts";
-import { estSurUnProfilReel, rechargerAvecLeProfilReel } from "./profil-reel.ts";
+import { estSurUnProfilReel, jouerAvecLeProfilReel, rechargerAvecLeProfilReel } from "./profil-reel.ts";
 import { profilDe } from "./profils-enfants.steps.ts";
 import { laisserPasserLeDelaiDeLecture, normaliser, reappliquerLAppareil, scenario, terminerLaLecture } from "./voix.steps.ts";
 
@@ -275,7 +275,7 @@ export async function configurer(page: Page, changement: Partial<Configuration>)
   }, { ...courante, retenir: [...courante.retenir] }).catch(() => undefined);
 }
 
-Before({ tags: "@issue-97 or @issue-102 or @issue-128" }, async ({ page, $testInfo }) => {
+Before({ tags: "@issue-97 or @issue-102 or @issue-128 or @issue-163" }, async ({ page, $testInfo }) => {
   // Le vrai profil de Léa, les séances jouées jusqu'à leur fin et les écrans de fin passent par le serveur.
   $testInfo.setTimeout(120_000);
   await page.addInitScript(installerLesFauxDeLaStory97, { ...configuration(page) });
@@ -285,7 +285,7 @@ Before({ tags: "@issue-97 or @issue-102 or @issue-128" }, async ({ page, $testIn
 // la fausse synthèse ne finit que sur demande. Avant ces gestes, Léa a donc attendu la fin de la parole.
 const GESTES_APRES_LA_PAROLE = ["Léa rejoue", "Léa ouvre « Mes médailles » depuis son accueil"];
 
-BeforeStep({ tags: "@issue-97 or @issue-102 or @issue-128" }, async ({ page, $step }) => {
+BeforeStep({ tags: "@issue-97 or @issue-102 or @issue-128 or @issue-163" }, async ({ page, $step }) => {
   if (GESTES_APRES_LA_PAROLE.includes($step.title.replace(/^(Étant donné que|Quand|Alors|Et que|Et|Mais) /, ""))) await laisserLaParoleFinir(page);
 });
 
@@ -488,12 +488,12 @@ Then(/^Léa entend l'effet sonore « ([^«»]+) » avant que Noisette parle$/, a
   await effetPuisParole(page, [effet], undefined, false);
 });
 
-Then(/^Léa entend l'effet sonore « ([^«»]+) », puis Noisette dit un encouragement$/, async ({ page }, effet: string) => {
+Then(/^Léa entend l'effet sonore « ([^«»]+) », puis (?:Noisette|Coach Léo) dit un encouragement$/, async ({ page }, effet: string) => {
   await effetPuisParole(page, [effet], "encouragement", true);
 });
 
 Then(
-  /^Léa entend l'effet sonore « ([^«»]+) », puis Noisette dit un encouragement, suivi de « ([^«»]+) »$/,
+  /^Léa entend l'effet sonore « ([^«»]+) », puis (?:Noisette|Coach Léo) dit un encouragement, suivi de « ([^«»]+) »$/,
   async ({ page }, effet: string, complement: string) => {
     await effetPuisParole(page, [effet], "encouragement", true);
     const texte = normaliser((await bulleDuPersonnage(page).textContent()) ?? "");
@@ -540,8 +540,9 @@ Then(
   },
 );
 
-Then(/^Léa entend une seule fois l'effet sonore « ([^«»]+) »$/, async ({ page }, effet: string) => {
-  await attendreLaFinDeLaSeance(page);
+Then(/^Léa entend une seule fois l'effet sonore « ([^«»]+) »$/, async ({ page, $tags }, effet: string) => {
+  // Story #163 : la question reste posée après la réponse fausse ; la séance n'est pas jouée jusqu'à son écran de fin.
+  if (!$tags.includes("@issue-163")) await attendreLaFinDeLaSeance(page);
   await laisserSeDerouler(page);
   expect(noms((await observer(page)).entrees).filter((nom) => nom === fichierDe(effet))).toHaveLength(1);
 });
@@ -925,7 +926,7 @@ Then(/^les lecteurs d'écran annoncent une seule fois « ([^«»]+) »$/, async 
 
 // --- Un effet impossible à jouer ne montre rien de plus (réservé à #97 : l'étape du même texte de #24 vérifie un refus du serveur)
 
-const { Given: GivenDeLaStory97, Then: ThenDeLaStory97 } = createBdd(test, { tags: "@issue-97 or @issue-128" });
+const { Given: GivenDeLaStory97, Then: ThenDeLaStory97 } = createBdd(test, { tags: "@issue-97 or @issue-128 or @issue-163" });
 
 ThenDeLaStory97(/^Léa ne voit aucun message de plus$/, async ({ page }) => {
   await laisserPasserLeDelaiDeLecture(page);
@@ -944,11 +945,13 @@ GivenDeLaStory97(/^la tablette est en Muet$/, async ({ page }) => {
   await rechargerAvecLeProfilReel(page);
 });
 
-GivenDeLaStory97(/^la bibliothèque de test du test de départ est servie$/, async ({ page }) => {
+GivenDeLaStory97(/^la bibliothèque de test du test de départ est servie$/, async ({ page, monde, famille, $tags }) => {
   etat(page).injectees.push(...(LECONS_DU_TEST_DE_DEPART as LeconBrute[]));
   suivreLesLecturesDuResultat(page);
   await servirLaBibliothequeDuTestDeDepart(page);
-  if (estSurUnProfilReel(page)) await rechargerAvecLeProfilReel(page);
+  // Story #163 : le test de départ se joue avec le vrai profil de Léa, créé pour Paul (comme à #27).
+  if ($tags.includes("@issue-163") && !estSurUnProfilReel(page)) await jouerAvecLeProfilReel(famille, monde, page);
+  else if (estSurUnProfilReel(page)) await rechargerAvecLeProfilReel(page);
 });
 
 // Le scénario « Rejouer » de #97 n'annonce pas les leçons de test qu'il utilise (celui de #24 et de #33 le fait dans son Contexte).

@@ -52,13 +52,13 @@ function etatDuBallon(t: number): EtatDuBallon {
   return { x: p.x, y, sol: 300, s: p.s, rot: 470 + chute * 90, sx: 1, sy: 1, dir: 0, vol: false, u: 0 };
 }
 
-const BALLON = `<g class="forme-du-ballon"><circle r="16" fill="#FFFFFF" stroke="${CONTOUR}" stroke-width="3"/><path d="M6 14 A16 16 0 0 0 15 -4 A12 12 0 0 1 6 14 Z" fill="#D7DEE6"/>
+export const DESSIN_DU_BALLON = `<g class="forme-du-ballon"><circle r="16" fill="#FFFFFF" stroke="${CONTOUR}" stroke-width="3"/><path d="M6 14 A16 16 0 0 0 15 -4 A12 12 0 0 1 6 14 Z" fill="#D7DEE6"/>
     <g fill="#33304A"><path d="M0 -5.5 l5.2 3.8 -2 6.2 h-6.4 l-2 -6.2 z"/><path d="M-13.5 -7.5 l4 .8 1.6 4 -3 2.6 -3.8 -2 z" opacity=".8"/><path d="M11.5 -9.5 l1.6 3.8 -2.8 3 -4 -1.2 -.4 -4.2 z" opacity=".8"/><path d="M-7.5 11 l3.8 -1.4 3.4 2.6 -1 3.8 -4.2 .4 z" opacity=".8"/><path d="M10 8.5 l-4 -.4 -1.4 -3.8 3.2 -2.6 3.8 1.6 z" opacity=".8"/></g></g>`;
 
 export function creerLeBallon(racine: SVGSVGElement) {
   const n = elementsDe(racine, "sports");
   const ballon = creerUnGroupe();
-  ballon.innerHTML = BALLON;
+  ballon.innerHTML = DESSIN_DU_BALLON;
   const forme = trouver(ballon, ".forme-du-ballon");
   const trainee = creerUnGroupe({ fill: "#FFFFFF" });
   trainee.innerHTML = `<circle opacity=".4"/><circle opacity=".25"/><circle opacity=".12"/>`;

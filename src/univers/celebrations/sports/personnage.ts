@@ -1,29 +1,40 @@
 import type { CleDeTenue } from "@domain/motivation";
 import { habillerLeCorpsArticule } from "../commun/habiller.ts";
 import { clamp01, DEG, E, lerp, r1, r3 } from "../commun/courbes.ts";
-import { creerUnGroupe, deplacer, elementsDe, poser, trouver } from "../commun/dom.ts";
+import { creerUnGroupe, type PrefixeDeScene, deplacer, elementsDe, poser, trouver } from "../commun/dom.ts";
 import { type Expression, expressionA } from "../commun/expressions.ts";
 import { decaler, membre, type Point, trace } from "../commun/membres.ts";
 import { inclinaisonDuProfilDeLeoOuDesBottes, placerLaChaussure } from "../commun/chaussure.ts";
 import type { CoteDeMain, PoseDeMain } from "../commun/mains.ts";
 import { clignement, RAYON_DE_LA_TETE as R, traitDuVisage } from "../commun/visage.ts";
-import { dessinDuBras, MAINS, STRUCTURE_DE_COACH_LEO } from "./dessin-du-personnage.ts";
+import { dessinDuBras, MAINS, structureDeCoachLeo } from "./dessin-du-personnage.ts";
 import { type Emotion, type Pose, poseA, type ScenarioDeBut } from "./poses.ts";
 
 const BASE = .8;
 export const ECHELLE_DE_BASE = BASE;
 
-const EMOS: Record<Emotion, { sg: readonly [number, number]; sd: readonly [number, number]; lid: number; pup: number }> = {
+type Emotions = Record<Emotion, { sg: readonly [number, number]; sd: readonly [number, number]; lid: number; pup: number }>;
+
+const EMOS: Emotions = {
   concentration: { sg: [2, 10], sd: [2, -10], lid: .3, pup: 1 },
   surprise: { sg: [-7, -6], sd: [-7, 6], lid: 0, pup: .85 },
   joie: { sg: [-5, -4], sd: [-5, 4], lid: 0, pup: 1.05 },
+  sourire: { sg: [-3, -3], sd: [-3, 3], lid: 0, pup: 1 },
 };
 
+/** Ce qui change d'une scène à l'autre pour un même Coach Léo : le préfixe de ses identifiants, sa taille et ses expressions. */
+export type ReglagesDeCoachLeo = { readonly prefixe: PrefixeDeScene; readonly echelle: number; readonly emotions: Emotions };
+
+export const REGLAGES_DE_LA_CELEBRATION: ReglagesDeCoachLeo = { prefixe: "sports", echelle: BASE, emotions: EMOS };
+
+/** Ce que Coach Léo joue : des poses et des expressions dans le temps. */
+type PosesEtExpressions = Pick<ScenarioDeBut, "poses" | "expressions">;
+
 /** Coach Léo, dessiné image par image à partir des poses du scénario (portage du moteur des maquettes). */
-export function creerCoachLeo(racine: SVGSVGElement, tenue?: CleDeTenue) {
-  const n = elementsDe(racine, "sports");
-  n("leo").innerHTML = STRUCTURE_DE_COACH_LEO;
-  const habit = habillerLeCorpsArticule(n, n("leo"), "sports", tenue);
+export function creerCoachLeo(racine: SVGSVGElement, tenue?: CleDeTenue, { prefixe, echelle, emotions }: ReglagesDeCoachLeo = REGLAGES_DE_LA_CELEBRATION) {
+  const n = elementsDe(racine, prefixe);
+  n("leo").innerHTML = structureDeCoachLeo(prefixe);
+  const habit = habillerLeCorpsArticule(n, n("leo"), "sports", tenue, prefixe);
   const bras = { g: creerLeBras("g"), d: creerLeBras("d") };
   const bouches = [...n("bouches").children];
   const q1 = (g: ParentNode, classe: string) => trouver(g, `.${classe}`);
@@ -31,7 +42,7 @@ export function creerCoachLeo(racine: SVGSVGElement, tenue?: CleDeTenue) {
 
   function creerLeBras(c: "g" | "d"): SVGElement {
     const enveloppe = creerUnGroupe();
-    enveloppe.innerHTML = dessinDuBras(c);
+    enveloppe.innerHTML = dessinDuBras(c, prefixe);
     const b = enveloppe.firstElementChild;
     if (!(b instanceof SVGElement)) throw new Error("Le bras de Coach Léo n'a pas pu être dessiné");
     return b;
@@ -47,7 +58,7 @@ export function creerCoachLeo(racine: SVGSVGElement, tenue?: CleDeTenue) {
     poser(q1(g, "ombre"), "d", trace(decaler(m, 3.2, 1.4), .32, .92));
     poser(q1(g, "lumiere"), "d", trace(decaler(m, -3.2, -1.4), .34, .9));
     poser(q1(g, "manche-ombre"), "d", trace(decaler(m, 4, 1), .04, .26, 2));
-    const mainG = trouver(g, `#sports-main-${c}`);
+    const mainG = trouver(g, `#${prefixe}-main-${c}`);
     deplacer(mainG, `translate(${r1(m.W.x)} ${r1(m.W.y)}) rotate(${r1(m.dir)}) scale(.86)`);
     const versCentre = c === "g" ? 1 : -1, score = Math.cos(m.dir * DEG) * versCentre - Math.sin(m.dir * DEG) * .8;
     const cote: CoteDeMain = score > 0 ? "miroir" : "droit";
@@ -86,7 +97,7 @@ export function creerCoachLeo(racine: SVGSVGElement, tenue?: CleDeTenue) {
       deplacer(n(id), `translate(${r1(o.x)} 3)`);
     }
     poser(n("tete-ombre"), "d", `M8 27 A28 28 0 0 0 27 -6 A23 23 0 0 1 8 27 Z`);
-    const A = EMOS[ex.prec], B = EMOS[ex.emo], u = ex.u;
+    const A = emotions[ex.prec], B = emotions[ex.emo], u = ex.u;
     const sg = A.sg.map((v, i) => lerp(v, B.sg[i] ?? v, u)), sd = A.sd.map((v, i) => lerp(v, B.sd[i] ?? v, u));
     for (const [c, alpha, s, lidExtra] of [["g", -27, sg, 0], ["d", 27, sd, p.clin]] as const) {
       const o = traitDuVisage(alpha, w, R * .88), visible = o.z > .06, kx = Math.max(.3, Math.pow(Math.max(0, o.z), .6));
@@ -133,7 +144,7 @@ export function creerCoachLeo(racine: SVGSVGElement, tenue?: CleDeTenue) {
   }
 
   /** Dessine Coach Léo à l'instant `t` du scénario et rend sa pose (les effets s'y accrochent). */
-  function dessiner(scenario: ScenarioDeBut, t: number): Pose {
+  function dessiner(scenario: PosesEtExpressions, t: number): Pose {
     const p = poseA(scenario.poses, t);
     vueCourante = p.vue;
     const pAvant = poseA(scenario.poses, t - .06);
@@ -150,7 +161,7 @@ export function creerCoachLeo(racine: SVGSVGElement, tenue?: CleDeTenue) {
       y -= 5 * Math.abs(Math.sin(ph)) * p.course;
     }
     const w = p.vue, cw = Math.cos(w * DEG), sw = Math.sin(w * DEG), wf = lerp(.55, 1, Math.abs(cw));
-    deplacer(n("leo"), `translate(${r1(p.x)} ${r1(y)}) rotate(${r1(p.rot)}) scale(${r3(p.s * BASE * p.sx)} ${r3(p.s * BASE * p.sy)})`);
+    deplacer(n("leo"), `translate(${r1(p.x)} ${r1(y)}) rotate(${r1(p.rot)}) scale(${r3(p.s * echelle * p.sx)} ${r3(p.s * echelle * p.sy)})`);
     const sh = 18 * wf, hp = 22 * wf, torse = n("torse"), short = n("short");
     poser(q1(torse, "forme"), "d", `M${r1(-sh)} -40 Q${r1(-sh - 6)} -12 ${r1(-hp)} 6 Q0 14 ${r1(hp)} 6 Q${r1(sh + 6)} -12 ${r1(sh)} -40 Q0 -47 ${r1(-sh)} -40 Z`);
     poser(q1(torse, "ombre"), "d", `M${r1(sh * .3)} -42 Q${r1(sh + 3)} -30 ${r1(hp)} 4 Q${r1(hp * .6)} 10 ${r1(hp * .35)} 9 Q${r1(sh + 1)} -20 ${r1(sh * .3)} -42 Z`);
@@ -177,11 +188,11 @@ export function creerCoachLeo(racine: SVGSVGElement, tenue?: CleDeTenue) {
     if (p.devant > .5 && emplacementAvant.firstElementChild !== bras.g) emplacementAvant.prepend(bras.g);
     deplacer(n("tete"), `translate(0 -48) rotate(${r1(p.tete)})`);
     deplacer(n("tete-forme"), `translate(0 -26)`);
-    const ex = expressionA(scenario.expressions, t), A = EMOS[ex.prec], B = EMOS[ex.emo], u = ex.u;
+    const ex = expressionA(scenario.expressions, t), A = emotions[ex.prec], B = emotions[ex.emo], u = ex.u;
     const lidBase = Math.max(lerp(A.lid, B.lid, u), p.lid, clignement(t));
     dessinerLaTete(p, meche, ex, lidBase, lerp(A.pup, B.pup, u));
     // ombre au sol
-    const S = p.s * BASE, sol = p.y + 58 * S, haut = Math.max(0, sol - (y + 58 * S)), ombre = n("ombre-leo");
+    const S = p.s * echelle, sol = p.y + 58 * S, haut = Math.max(0, sol - (y + 58 * S)), ombre = n("ombre-leo");
     poser(ombre, "cx", r1(p.x));
     poser(ombre, "cy", r1(sol + 2));
     poser(ombre, "rx", r1(34 * S + haut * .2));
