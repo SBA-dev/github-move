@@ -16,7 +16,7 @@ import {
   textesDesChoixPossibles,
 } from "./exercices-a-choix.steps.ts";
 import { ecrire } from "./dictee-et-conjugaison.steps.ts";
-import { donnerLaBonneReponse, faireUneErreur } from "./aide-et-je-ne-sais-pas.steps.ts";
+import { direJeNeSaisPas, donnerLaBonneReponse, faireUneErreur } from "./aide-et-je-ne-sais-pas.steps.ts";
 import { jouerLeDefi, leconDeLaQuestion, TOUT_JUSTE } from "./defi-de-fin-de-partie.steps.ts";
 import { attendreLaFinDeLaSeance, jouerJusquALaFinDeLaSeance, partie } from "./etoiles-et-fin-de-seance.steps.ts";
 import { DELAI_DE_L_ATTENTE_MS, laisserSeDerouler } from "./retours-animes-et-sonores.steps.ts";
@@ -224,6 +224,12 @@ When(/^Tom répond « ([^«»]+) » à « ([^«»]+) »$/, { tags: "@issue-163" 
 
 Given(/^à la première question, Léa a fait une erreur, puis a donné la bonne réponse$/, async ({ page }) => {
   await faireUneErreur(page);
+  await donnerLaBonneReponse(page);
+});
+
+Given(/^à la première question, Léa a dit « Je ne sais pas », puis a donné la bonne réponse$/, { tags: "@issue-163" }, async ({ page }) => {
+  await demarrer(page);
+  await direJeNeSaisPas(page);
   await donnerLaBonneReponse(page);
 });
 

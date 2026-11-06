@@ -66,7 +66,7 @@ Given(/^Léa en est à la question « (.+) » dont la réponse est « ([^«»]+)
   expect(courante?.reponse).toBe(reponse);
 });
 
-async function direJeNeSaisPas(page: Page) {
+export async function direJeNeSaisPas(page: Page) {
   if (await additionAPoserAffichee(page)) return await direJeNeSaisPasSurUneAdditionAPoser(page);
   if (await additionACalculerAffichee(page)) return await direJeNeSaisPasSurUneAdditionACalculer(page);
   if (await aDesEtiquettesAPlacer(page)) return await direJeNeSaisPasSurDesEtiquettes(page);
