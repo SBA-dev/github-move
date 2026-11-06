@@ -1,6 +1,6 @@
 # Effets sonores
 
-Les effets sonores de l'application de l'enfant sont dans `public/sons/`. Les 8 premiers ont été choisis par le PO le 2026-10-25, à l'écoute de 27 candidats (story #97, épopée #95). Les 4 musiques de célébration des univers ont été choisies par le PO le 2026-11-06 (story #166). Les 8 premiers sont branchés par #97 : jusque-là, aucun écran ne les joue et le service worker ne les met pas en cache.
+Les effets sonores de l'application de l'enfant sont dans `public/sons/`. Les 8 premiers ont été choisis par le PO le 2026-10-25, à l'écoute de 27 candidats (story #97, épopée #95). Les 4 musiques de célébration des univers ont été choisies par le PO le 2026-11-06 (story #166). Les 12 sons sont joués par les écrans de l'enfant et mis en cache par le service worker (`public/sw.js`).
 
 Tous viennent des packs de **Kenney** (kenney.nl), sous licence **CC0 1.0** (domaine public : usage libre, même commercial, sans attribution obligatoire). Les licences des packs sont recopiées dans `public/sons/LICENCE-*.txt`. Les fichiers sont convertis en MP3 mono 128 kbit/s, sans autre retouche.
 
