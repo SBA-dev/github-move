@@ -1,14 +1,14 @@
 import type { CleDeTenue } from "@domain/motivation";
 import { habillerLeCorpsArticule } from "../commun/habiller.ts";
 import { clamp01, DEG, E, fenetre, lerp, r1, r3 } from "../commun/courbes.ts";
-import { creerUnGroupe, deplacer, elementsDe, poser, trouver } from "../commun/dom.ts";
+import { creerUnGroupe, deplacer, elementsDe, type PrefixeDeScene, poser, trouver } from "../commun/dom.ts";
 import { expressionA } from "../commun/expressions.ts";
 import { decaler, membre, type Membre, type Point, trace } from "../commun/membres.ts";
 import { inclinaisonDuProfilDeLeoOuDesBottes, placerLaChaussure } from "../commun/chaussure.ts";
 import type { CoteDeMain, PoseDeMain } from "../commun/mains.ts";
 import { clignement } from "../commun/visage.ts";
 import { anglesVers, brasVers, HANCHE } from "../commun/atteindre.ts";
-import { dessinDuBras, LOUPE, MAINS, SIFFLET, STRUCTURE_D_AGENT_MAX } from "./dessin-de-max.ts";
+import { dessinDuBras, loupeTenue, MAINS, SIFFLET, structureDAgentMax } from "./dessin-de-max.ts";
 import { GUIDON, PLATEAU, TROTTINETTE } from "./dessin-des-objets.ts";
 import { type Emotion, ECHELLE_DE_BASE as BASE, type Pose, poseA, type ScenarioDeLaPolice, SOL, X_MAX } from "./poses.ts";
 
@@ -25,11 +25,17 @@ const EMOS: Record<Emotion, { readonly s: readonly [number, number]; readonly li
 
 export type DessinDeMax = { readonly pose: Pose; readonly mains: { readonly g: Membre; readonly d: Membre } };
 
-/** Agent Max, dessiné image par image à partir des poses du scénario (portage du moteur de la maquette : le corps de Coach Léo, la tête et la tenue de Max). */
-export function creerAgentMax(racine: SVGSVGElement, tenue?: CleDeTenue) {
-  const n = elementsDe(racine, "police");
-  n("max").innerHTML = STRUCTURE_D_AGENT_MAX;
-  const habit = habillerLeCorpsArticule(n, n("max"), "police", tenue);
+/** Ce que dessine Agent Max : les poses, les expressions et la casquette lancée du scénario (la scène de réponse fausse n'a ni trottinette ni casquette lancée). */
+export type ScenarioDeMax = Pick<ScenarioDeLaPolice, "poses" | "expressions" | "tLance" | "tRattrape" | "tTrottinette">;
+
+/**
+ * Agent Max, dessiné image par image à partir des poses du scénario (portage du moteur de la maquette : le corps de Coach Léo, la tête et la tenue de Max).
+ * Ses identifiants portent `prefixe` : la célébration de la Police ou la scène de réponse fausse.
+ */
+export function creerAgentMax(racine: SVGSVGElement, tenue?: CleDeTenue, prefixe: PrefixeDeScene = "police") {
+  const n = elementsDe(racine, prefixe);
+  n("max").innerHTML = structureDAgentMax(prefixe);
+  const habit = habillerLeCorpsArticule(n, n("max"), "police", tenue, prefixe);
   const bouches = [...n("bouches").children];
   const q1 = (g: ParentNode, classe: string) => trouver(g, `.${classe}`);
   const bras = { g: creerLeBras("g"), d: creerLeBras("d") };
@@ -41,7 +47,7 @@ export function creerAgentMax(racine: SVGSVGElement, tenue?: CleDeTenue) {
 
   function creerLeBras(c: "g" | "d"): SVGElement {
     const enveloppe = creerUnGroupe();
-    enveloppe.innerHTML = dessinDuBras(c);
+    enveloppe.innerHTML = dessinDuBras(c, prefixe);
     const b = enveloppe.firstElementChild;
     if (!(b instanceof SVGElement)) throw new Error("Le bras d'Agent Max n'a pas pu être dessiné");
     return b;
@@ -57,7 +63,7 @@ export function creerAgentMax(racine: SVGSVGElement, tenue?: CleDeTenue) {
     poser(q1(g, "ombre"), "d", trace(decaler(m, 3.2, 1.4), .32, .92));
     poser(q1(g, "lumiere"), "d", trace(decaler(m, -3.2, -1.4), .34, .9));
     poser(q1(g, "manche-ombre"), "d", trace(decaler(m, 3.6, 1), .04, .22, 2));
-    const mainG = trouver(g, `#police-main-${c}`);
+    const mainG = trouver(g, `#${prefixe}-main-${c}`);
     deplacer(mainG, `translate(${r1(m.W.x)} ${r1(m.W.y)}) rotate(${r1(m.dir)}) scale(.86)`);
     const versCentre = c === "g" ? 1 : -1, score = Math.cos(m.dir * DEG) * versCentre - Math.sin(m.dir * DEG) * .8;
     const cote: CoteDeMain = score > 0 ? "miroir" : "droit";
@@ -149,7 +155,7 @@ export function creerAgentMax(racine: SVGSVGElement, tenue?: CleDeTenue) {
   }
 
   /** La trottinette entière, jamais écrasée (au plus 55 % de sa largeur pendant le demi-tour de trois-quarts), et les bras qui tiennent le guidon. */
-  function dessinerLaTrottinette(scenario: ScenarioDeLaPolice, t: number, p: Pose, f: number, sw: number, procheJ: "g" | "d", brasEnMouvement: { aGu: number; aGl: number; aDu: number; aDl: number }) {
+  function dessinerLaTrottinette(scenario: ScenarioDeMax, t: number, p: Pose, f: number, sw: number, procheJ: "g" | "d", brasEnMouvement: { aGu: number; aGl: number; aDu: number; aDl: number }) {
     const pop = scenario.tTrottinette === null ? 1 : fenetre(t, scenario.tTrottinette, .35, E.rebond), kx = Math.max(.55, Math.abs(sw) / Math.sin(VUE_MAXIMALE * DEG)) * f;
     deplacer(n("trottinette"), `scale(${r3(kx * pop)} ${r3(pop)})`);
     const angle = (p.x - X_MAX) / (9 * BASE) / DEG;
@@ -181,7 +187,7 @@ export function creerAgentMax(racine: SVGSVGElement, tenue?: CleDeTenue) {
   }
 
   /** Pendant le vol de la casquette lancée, celle de la tête reste cachée : il n'y en a jamais deux. */
-  function casquetteSurLaTete({ tLance, tRattrape }: ScenarioDeLaPolice, p: Pose, t: number): boolean {
+  function casquetteSurLaTete({ tLance, tRattrape }: ScenarioDeMax, p: Pose, t: number): boolean {
     const enVol = tLance !== null && tRattrape !== null && t >= tLance && t < tRattrape;
     return p.casq > .5 && !enVol;
   }
@@ -193,7 +199,7 @@ export function creerAgentMax(racine: SVGSVGElement, tenue?: CleDeTenue) {
   }
 
   /** Dessine Max à l'instant `t` du scénario et rend sa pose et ses mains (le chiot et les effets s'y accrochent). */
-  function dessiner(scenario: ScenarioDeLaPolice, t: number): DessinDeMax {
+  function dessiner(scenario: ScenarioDeMax, t: number): DessinDeMax {
     const p = poseA(scenario.poses, t);
     vueCourante = p.vue;
     const jambesEnMouvement = { lGt: p.lGt, lGs: p.lGs, lDt: p.lDt, lDs: p.lDs, fG: p.fG, fD: p.fD }, brasEnMouvement = { aGu: p.aGu, aGl: p.aGl, aDu: p.aDu, aDl: p.aDl };
@@ -257,9 +263,9 @@ export function creerAgentMax(racine: SVGSVGElement, tenue?: CleDeTenue) {
       const salue = p.trot > 0 && c === procheJ && p.salut > .5;
       const pose = p.trot > 0 ? (salue ? 3 : 1) : Math.round(c === "g" ? p.mG : p.mD);
       const m = dessinerLeBras(bras[c], c, S, c === "g" ? brasEnMouvement.aGu : brasEnMouvement.aDu, c === "g" ? brasEnMouvement.aGl : brasEnMouvement.aDl, pose, couleur);
-      const objet = trouver(bras[c], `#police-main-${c} .prop`), contenu = contenuDeLaMain(c, p);
+      const objet = trouver(bras[c], `#${prefixe}-main-${c} .prop`), contenu = contenuDeLaMain(c, p);
       if (objet.dataset["contenu"] !== contenu) {
-        objet.innerHTML = contenu === "loupe" ? LOUPE : contenu === "sifflet" ? SIFFLET : "";
+        objet.innerHTML = contenu === "loupe" ? loupeTenue(prefixe) : contenu === "sifflet" ? SIFFLET : "";
         objet.dataset["contenu"] = contenu;
       }
       return m;

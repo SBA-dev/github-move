@@ -1,10 +1,13 @@
 import type { CleDeTenue } from "@domain/motivation";
 import { creerLili, type PosesEtExpressions } from "../../celebrations/danse/personnage.ts";
 import { assemblerLaScene } from "../commun/assembler-la-scene.ts";
+import { creerUnSolDeScene } from "../commun/sol-de-scene.ts";
 import { creerLaBulleDeLili } from "./bulle.ts";
 import { PREFIXE_DE_LILI } from "./reglages.ts";
 import { FIN, SCENARIO_DE_LILI, SCENARIO_FIXE_DE_LILI } from "./scenario.ts";
-import { creerLeTapis } from "./tapis.ts";
+
+/** Le petit tapis rose pâle sous ses pieds. */
+const creerLeTapis = creerUnSolDeScene({ prefixe: PREFIXE_DE_LILI, apparition: .1, disparition: 1.25 });
 
 /** La scène de Lili : elle se hisse sur les demi-pointes, vacille à peine, fait un pas de côté et une révérence, puis lève le pouce en souriant. */
 export function creerLaScene(racine: SVGSVGElement, tenue?: CleDeTenue) {

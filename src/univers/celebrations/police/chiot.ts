@@ -1,5 +1,5 @@
 import { clamp01, r1, r3 } from "../commun/courbes.ts";
-import { creerUnGroupe, deplacer, elementsDe, poser, trouver } from "../commun/dom.ts";
+import { creerUnGroupe, deplacer, elementsDe, type PrefixeDeScene, poser, trouver } from "../commun/dom.ts";
 import { CHIOT_DE_FACE, CHIOT_DE_PROFIL } from "./dessin-du-chiot.ts";
 import type { DessinDeMax } from "./personnage.ts";
 import { poseDuChiotA, type ScenarioDeLaPolice, SOL } from "./poses.ts";
@@ -10,9 +10,12 @@ function creerLeGroupe(dessin: string): SVGGElement {
   return groupe;
 }
 
+/** Ce que dessine le chiot : ses poses seules. */
+export type ScenarioDuChiot = Pick<ScenarioDeLaPolice, "chiot">;
+
 /** Le chiot : de profil au sol, de face entre les deux mains de Max (fondu de 0,15 s de l'un à l'autre). Il saute, remue la queue, et reste assis, content. */
-export function creerLeChiot(racine: SVGSVGElement) {
-  const n = elementsDe(racine, "police");
+export function creerLeChiot(racine: SVGSVGElement, prefixe: PrefixeDeScene = "police") {
+  const n = elementsDe(racine, prefixe);
   const profil = creerLeGroupe(CHIOT_DE_PROFIL), face = creerLeGroupe(CHIOT_DE_FACE);
   n("chiot-monde").append(profil);
   n("chiot-bras").append(face);
@@ -23,7 +26,7 @@ export function creerLeChiot(racine: SVGSVGElement) {
   });
   let parent: Element = n("chiot-monde");
 
-  function dessiner(scenario: ScenarioDeLaPolice, t: number, max: DessinDeMax) {
+  function dessiner(scenario: ScenarioDuChiot, t: number, max: DessinDeMax) {
     const c = poseDuChiotA(scenario.chiot, t), fondu = clamp01(c.bras);
     poser(n("chiot-bras"), "opacity", c.vis > .5 ? r3(fondu) : 0);
     poser(profil, "opacity", c.vis > .5 ? r3(1 - fondu) : 0);

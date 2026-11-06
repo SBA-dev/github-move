@@ -22,6 +22,7 @@ import { attendreLaFinDeLaSeance, jouerJusquALaFinDeLaSeance, partie } from "./e
 import { DELAI_DE_L_ATTENTE_MS, laisserSeDerouler } from "./retours-animes-et-sonores.steps.ts";
 import { normaliser } from "./voix.steps.ts";
 import { cleDeLaTenue } from "./tenues.steps.ts";
+import { cleDe } from "./univers.steps.ts";
 
 // Story #163 : la scène de réponse fausse du personnage guide (livraison 163a : le mécanisme et Coach Léo).
 //
@@ -336,8 +337,14 @@ async function verifierQueLaSceneDeLumiSeJoue(page: Page): Promise<EntreeDeScene
   return await verifierQueLaSceneSeJoue(page, "princesse");
 }
 
-Then(/^(Coach Léo|Lili|Noisette|Lumi) joue sa scène de réponse fausse(?: : (?!.*avec «).+)?$/, async ({ page }, personnage: string) => {
-  if (personnage === "Lili") await verifierQueLaSceneDeLiliSeJoue(page);
+// Agent Max (Police, 163e) : la scène de l'univers du profil, sans doublon du dessin fixe du personnage guide.
+async function verifierQueLaSceneDeMaxSeJoue(page: Page): Promise<EntreeDeScene> {
+  return await verifierQueLaSceneSeJoue(page, cleDe("Police"));
+}
+
+Then(/^(Coach Léo|Lili|Noisette|Lumi|Agent Max) joue sa scène de réponse fausse(?: : (?!.*avec «).+)?$/, async ({ page }, personnage: string) => {
+  if (personnage === "Agent Max") await verifierQueLaSceneDeMaxSeJoue(page);
+  else if (personnage === "Lili") await verifierQueLaSceneDeLiliSeJoue(page);
   else if (personnage === "Noisette") await verifierQueLaSceneDeNoisetteSeJoue(page);
   else if (personnage === "Lumi") await verifierQueLaSceneDeLumiSeJoue(page);
   else await verifierQueLaSceneDeLeoSeJoue(page);
@@ -365,7 +372,7 @@ Then(/^la scène de réponse fausse ne recommence pas$/, async ({ page }) => {
   expect(entrees.length - marque, "aucune scène depuis le dernier geste de Léa").toBe(0);
 });
 
-Then(/^(Coach Léo|Lili|Noisette|Lumi) finit avec le sourire, le pouce levé$/, async ({ page }, personnage: string) => {
+Then(/^(Coach Léo|Lili|Noisette|Lumi|Agent Max) finit avec le sourire, le pouce levé$/, async ({ page }, personnage: string) => {
   const scene = await attendreLaFinDeLaScene(page);
   expect(duree(scene), "la scène va jusqu'au bout").toBeGreaterThanOrEqual(SCENE_JOUEE_AU_MOINS_MS);
   expect(scene.sourireALaFin, `${personnage} sourit dans la dernière image`).toBe(true);

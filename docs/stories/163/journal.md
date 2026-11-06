@@ -104,3 +104,21 @@ Branche de base : `main` (`2a69a87`). Branche : `feature/163-reponse-fausse-anim
 | Cycles E2E KO | 0 |
 | Intégrations de `main` | 0 (branche repartie de `main` `8873b6e`) |
 | Tokens et coût | relevés par le responsable |
+- 20:15 UTC : merge de 163d autorisé (« Merge 163d ok »). PR #176 mergée (`ba3603b`), sans rejeu, branche supprimée par GitHub. LIBÈRE merge.
+
+## 2026-11-06 : livraison 163e (Agent Max)
+
+- 20:00 à 20:40 UTC : TDD et câblage préparés pendant l'attente du merge de 163d, dans un worktree à part (branche locale), puis reportés par cherry-pick sur la branche recréée depuis `main` `ba3603b` : `test` (catalogue `police`), `feat` (`police` au catalogue), `refactor` (dessin et moteur d'Agent Max et du chiot par le préfixe, additif), `refactor` (`creerUnSolDeScene` en commun pour Lili, Lumi et Max : règle de trois, dette de la review de 163d), `feat` (câblage). Planche validée le 06/11 (163.28 oui, 163.29 « oups ! »).
+- Steps E2E (`cfcabc7`). Review de 163e : **À CORRIGER au cycle 1**, un bloquant : deux casquettes visibles ensemble de 1,06 à 1,12 s. Corrigé (`c0682f6` fix : relais sur le même critère `casq > .5` ; banc d'essai sur 181 images : 0 image avec deux casquettes, 0 sans casquette). Non bloquants : constantes nommées (`8ccc9dd`), garde jamais atteinte retirée (`9f30065`), bulles validées dans le modèle (`2aa249d`). Cycle 2 : **APPROUVÉ**.
+- 20:20 à 21:00 UTC : VERROU base. Sonde OK. E2E `telephone`, 1 worker : `@livraison-163a` à `@livraison-163e` et `@livraison-106e` **58/59** (1 échec réseau, « fetch failed », sur l'exemple Sports de 163a) ; rejeu après le correctif : `@livraison-163e`, `@livraison-106e` et l'exemple Sports **9/9** ; après le dernier refactor, `@livraison-163e` **1/1**. LIBÈRE base.
+
+## Mesures (livraison 163e)
+
+| Mesure | Valeur |
+|---|---|
+| Durée, du merge de 163d au PR prête | environ 50 min (20:15 → 21:05 UTC), câblage préparé pendant l'attente du merge |
+| Temps passé à attendre | PO : aucune attente ; verrou base : aucune attente |
+| Cycles de review À CORRIGER | 1 (deux casquettes visibles ensemble pendant 60 ms) |
+| Cycles E2E KO | 0 (1 échec réseau, vert au rejeu) |
+| Intégrations de `main` | 0 (commits reportés par cherry-pick sur `main` `ba3603b`) |
+| Tokens et coût | relevés par le responsable |

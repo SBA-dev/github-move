@@ -1,7 +1,7 @@
 import { E, fenetre, lerp, r1, r3 } from "../commun/courbes.ts";
 import { deplacer, elementsDe, poser } from "../commun/dom.ts";
 import { au } from "../commun/tableaux.ts";
-import { CASQUETTE, LOUPE_AU_SOL } from "./dessin-de-max.ts";
+import { CASQUETTE, loupeAuSol } from "./dessin-de-max.ts";
 import { BUISSON_DESSINE, COULEURS_DES_VOITURES, dessinDeLaVoiture, PATTE, PISTE } from "./dessin-des-objets.ts";
 import type { DessinDeMax } from "./personnage.ts";
 import {
@@ -33,7 +33,7 @@ export function creerLesEffets(racine: SVGSVGElement, scenario: ScenarioDeLaPoli
   n("rayons").innerHTML = Array.from({ length: 12 }, (_, i) => `<line x1="0" y1="-40" x2="0" y2="-64" transform="rotate(${i * 30})" stroke="${COULEURS_DES_RAYONS[i % 4]}" stroke-width="5" stroke-linecap="round"/>`).join("");
   n("buisson").innerHTML = BUISSON_DESSINE;
   n("traces").innerHTML = PISTE.map(([x, y], i) => `<g transform="translate(${x} ${y}) rotate(${i % 2 ? 14 : -14})" fill="#8E9BBE" opacity="0">${PATTE}</g>`).join("");
-  n("loupe-sol").innerHTML = LOUPE_AU_SOL;
+  n("loupe-sol").innerHTML = loupeAuSol();
   n("casquette-vol").innerHTML = `<g transform="scale(${r3(BASE * .7)})">${CASQUETTE}</g>`;
   n("voitures").innerHTML = scenario.voitures.map((_, i) => `<g>${dessinDeLaVoiture(...au(COULEURS_DES_VOITURES, i % COULEURS_DES_VOITURES.length))}</g>`).join("");
   const roues = [...n("voitures").children].map((voiture) =>
