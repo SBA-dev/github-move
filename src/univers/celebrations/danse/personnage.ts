@@ -1,13 +1,13 @@
 import type { CleDeTenue } from "@domain/motivation";
 import { habillerLeCorpsArticule } from "../commun/habiller.ts";
 import { clamp01, DEG, E, lerp, r1, r3 } from "../commun/courbes.ts";
-import { creerUnGroupe, deplacer, elementsDe, poser, trouver } from "../commun/dom.ts";
+import { creerUnGroupe, deplacer, elementsDe, type PrefixeDeScene, poser, trouver } from "../commun/dom.ts";
 import { type Expression, expressionA } from "../commun/expressions.ts";
 import type { CoteDeMain, PoseDeMain } from "../commun/mains.ts";
 import { decaler, membre, type Point, trace } from "../commun/membres.ts";
 import { inclinaisonDuProfilDeLeoOuDesBottes, placerLaChaussure } from "../commun/chaussure.ts";
 import { clignement, RAYON_DE_LA_TETE as R, traitDuVisage } from "../commun/visage.ts";
-import { dessinDuBras, MAINS, QUEUE_DE_CHEVAL, STRUCTURE_DE_LILI } from "./dessin-de-lili.ts";
+import { dessinDuBras, MAINS, QUEUE_DE_CHEVAL, structureDeLili } from "./dessin-de-lili.ts";
 import { type Emotion, type Pose, poseA, type ScenarioDeDanse } from "./poses.ts";
 import { creerLaQueueDeCheval } from "./queue-de-cheval.ts";
 
@@ -20,21 +20,21 @@ const EMOS: Record<Emotion, { sg: readonly [number, number]; sd: readonly [numbe
   sourire: { sg: [-3, -3], sd: [-3, 3], lid: 0, pup: 1 },
 };
 
-/** Lili, dessinée image par image à partir des poses du scénario (portage du moteur de la maquette). */
-export function creerLili(racine: SVGSVGElement, tenue?: CleDeTenue) {
-  const n = elementsDe(racine, "danse");
-  n("lili").innerHTML = STRUCTURE_DE_LILI;
-  const habit = habillerLeCorpsArticule(n, n("lili"), "danse", tenue);
+/** Lili, dessinée image par image à partir des poses du scénario (portage du moteur de la maquette). Ses identifiants portent `prefixe` : la célébration de la Danse ou la scène de réponse fausse. */
+export function creerLili(racine: SVGSVGElement, tenue?: CleDeTenue, prefixe: PrefixeDeScene = "danse") {
+  const n = elementsDe(racine, prefixe);
+  n("lili").innerHTML = structureDeLili(prefixe);
+  const habit = habillerLeCorpsArticule(n, n("lili"), "danse", tenue, prefixe);
   n("queue-arriere").innerHTML = QUEUE_DE_CHEVAL;
   const bras = { g: creerLeBras("g"), d: creerLeBras("d") };
   const bouches = [...n("bouches").children];
-  const queue = creerLaQueueDeCheval(racine, { avant: "danse-queue-avant", arriere: "danse-queue-arriere" });
+  const queue = creerLaQueueDeCheval(racine, { avant: `${prefixe}-queue-avant`, arriere: `${prefixe}-queue-arriere` });
   const q1 = (g: ParentNode, classe: string) => trouver(g, `.${classe}`);
   let vueCourante = 0;
 
   function creerLeBras(c: "g" | "d"): SVGElement {
     const enveloppe = creerUnGroupe();
-    enveloppe.innerHTML = dessinDuBras(c);
+    enveloppe.innerHTML = dessinDuBras(c, prefixe);
     const b = enveloppe.firstElementChild;
     if (!(b instanceof SVGElement)) throw new Error("Le bras de Lili n'a pas pu être dessiné");
     return b;
@@ -50,7 +50,7 @@ export function creerLili(racine: SVGSVGElement, tenue?: CleDeTenue) {
     poser(q1(g, "ombre"), "d", trace(decaler(m, 3.2, 1.4), .32, .92));
     poser(q1(g, "lumiere"), "d", trace(decaler(m, -3.2, -1.4), .34, .9));
     poser(q1(g, "manche-ombre"), "d", trace(decaler(m, 4, 1), .04, .26, 2));
-    const mainG = trouver(g, `#danse-main-${c}`);
+    const mainG = trouver(g, `#${prefixe}-main-${c}`);
     deplacer(mainG, `translate(${r1(m.W.x)} ${r1(m.W.y)}) rotate(${r1(m.dir)}) scale(.86)`);
     const versCentre = c === "g" ? 1 : -1, score = Math.cos(m.dir * DEG) * versCentre - Math.sin(m.dir * DEG) * .8;
     const cote: CoteDeMain = score > 0 ? "miroir" : "droit";
