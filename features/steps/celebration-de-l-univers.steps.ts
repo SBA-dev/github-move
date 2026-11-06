@@ -34,7 +34,24 @@ import { laisserPasserLeDelaiDeLecture, normaliser, reappliquerLAppareil, scenar
 
 type Univers = "sports" | "danse" | "animaux" | "princesse" | "police" | "pompier";
 
-const MUSIQUE = "grande victoire";
+// Musique de la célébration de l'univers, par personnage guide (#166) : le fichier de l'effet sonore. Coach Léo et Agent Max, sans
+// musique choisie par le PO, gardent « grande victoire » (166.4 A).
+const MUSIQUE_DU_PERSONNAGE: Readonly<Record<string, string>> = {
+  "Coach Léo": "grande victoire",
+  "Agent Max": "grande victoire",
+  Lili: "air de saxophone",
+  Noisette: "air de cordes pincées",
+  Lumi: "air de steel drum court",
+  "Capitaine Sam": "air de steel drum long",
+};
+const MUSIQUE = MUSIQUE_DU_PERSONNAGE["Coach Léo"] as string;
+const PERSONNAGES = "Coach Léo|Lili|Noisette|Lumi|Agent Max|Capitaine Sam";
+
+function musiqueDe(personnage: string): string {
+  const musique = MUSIQUE_DU_PERSONNAGE[personnage];
+  if (!musique) throw new Error(`Personnage guide inconnu : ${personnage}`);
+  return musique;
+}
 // Le tirage de la variante est `floor(r * 3)` pour chacun des six univers : `hasard-fixe.ts` nomme les rangs 0, 1 et 2 « glissade »,
 // « avion » et « danse ». Chaque libellé de variante est rangé ici sous son rang ; seule exception, « l'arc-en-ciel », rang 0 chez
 // Lumi et rang 1 chez Capitaine Sam (`RANG_DE_L_ARC_EN_CIEL_DES_POMPIERS`).
@@ -480,55 +497,26 @@ Then(/^Coach Léo apparaît à côté de la bulle de ses paroles$/, async ({ pag
 
 // --- Alors : la musique
 
-Then(/^Léa entend la musique de la célébration de Coach Léo$/, async ({ page }) => {
-  await expect.poll(async () => noms(depuisLaMarque(await observer(page))), { timeout: DELAI_DE_L_ATTENTE_MS }).toContain(fichierDe(MUSIQUE));
+Then(new RegExp(`^Léa entend la musique de la célébration d(?:e |')(${PERSONNAGES})$`), async ({ page }, personnage: string) => {
+  await expect.poll(async () => noms(depuisLaMarque(await observer(page))), { timeout: DELAI_DE_L_ATTENTE_MS }).toContain(
+    fichierDe(musiqueDe(personnage)),
+  );
 });
 
 Then(
-  /^Léa entend la musique de la célébration de Coach Léo, puis Coach Léo dit « Bravo Léa ! Tu as relevé le défi (\d+) ! »$/,
-  async ({ page }, numero: string) => {
-    await effetPuisParole(page, [MUSIQUE], "felicitation", true);
+  new RegExp(
+    `^Léa entend la musique de la célébration d(?:e |')(${PERSONNAGES}), puis \\1 dit « Bravo Léa ! Tu as relevé le défi (\\d+) ! »$`,
+  ),
+  async ({ page }, personnage: string, numero: string) => {
+    await effetPuisParole(page, [musiqueDe(personnage)], "felicitation", true);
     await expect(bulle(page)).toHaveText(`Bravo Léa ! Tu as relevé le défi ${numero} !`);
   },
 );
 
 Then(
-  /^Léa entend la musique de la célébration de Lili, puis Lili dit « Bravo Léa ! Tu as relevé le défi (\d+) ! »$/,
-  async ({ page }, numero: string) => {
-    await effetPuisParole(page, [MUSIQUE], "felicitation", true);
-    await expect(bulle(page)).toHaveText(`Bravo Léa ! Tu as relevé le défi ${numero} !`);
-  },
-);
-
-Then(
-  /^Léa entend la musique de la célébration de Noisette, puis Noisette dit « Bravo Léa ! Tu as relevé le défi (\d+) ! »$/,
-  async ({ page }, numero: string) => {
-    await effetPuisParole(page, [MUSIQUE], "felicitation", true);
-    await expect(bulle(page)).toHaveText(`Bravo Léa ! Tu as relevé le défi ${numero} !`);
-  },
-);
-
-Then(
-  /^Léa entend la musique de la célébration de Lumi, puis Lumi dit « Bravo Léa ! Tu as relevé le défi (\d+) ! »$/,
-  async ({ page }, numero: string) => {
-    await effetPuisParole(page, [MUSIQUE], "felicitation", true);
-    await expect(bulle(page)).toHaveText(`Bravo Léa ! Tu as relevé le défi ${numero} !`);
-  },
-);
-
-Then(
-  /^Léa entend la musique de la célébration d'Agent Max, puis Agent Max dit « Bravo Léa ! Tu as relevé le défi (\d+) ! »$/,
-  async ({ page }, numero: string) => {
-    await effetPuisParole(page, [MUSIQUE], "felicitation", true);
-    await expect(bulle(page)).toHaveText(`Bravo Léa ! Tu as relevé le défi ${numero} !`);
-  },
-);
-
-Then(
-  /^Léa entend la musique de la célébration de Capitaine Sam, puis Capitaine Sam dit « Bravo Léa ! Tu as relevé le défi (\d+) ! »$/,
-  async ({ page }, numero: string) => {
-    await effetPuisParole(page, [MUSIQUE], "felicitation", true);
-    await expect(bulle(page)).toHaveText(`Bravo Léa ! Tu as relevé le défi ${numero} !`);
+  /^Léa entend la musique de la célébration de Noisette puis l'effet sonore « ([^«»]+) », puis Noisette dit sa phrase de fin$/,
+  async ({ page }, effet: string) => {
+    await effetPuisParole(page, [musiqueDe("Noisette"), effet], "felicitation", true);
   },
 );
 
@@ -540,15 +528,15 @@ Then(
   },
 );
 
-Then(/^Léa entend la musique de la célébration de Coach Léo jusqu'au bout$/, async ({ page }) => {
+Then(new RegExp(`^Léa entend la musique de la célébration d(?:e |')(${PERSONNAGES}) jusqu'au bout$`), async ({ page }, personnage: string) => {
   await libererLesEffets(page);
-  const jouees = (await observer(page)).entrees.filter((entree) => entree.nom === fichierDe(MUSIQUE));
+  const jouees = (await observer(page)).entrees.filter((entree) => entree.nom === fichierDe(musiqueDe(personnage)));
   expect(jouees.length).toBeGreaterThan(0);
   for (const entree of jouees) expect(entree.arrete, "la musique n'est pas coupée").toBe(false);
 });
 
-Then(/^Léa n'entend plus la musique de la célébration de Coach Léo$/, async ({ page }) => {
-  await verifierQueLEffetEstCoupe(page, [fichierDe(MUSIQUE)]);
+Then(new RegExp(`^Léa n'entend plus la musique de la célébration d(?:e |')(${PERSONNAGES})$`), async ({ page }, personnage: string) => {
+  await verifierQueLEffetEstCoupe(page, [fichierDe(musiqueDe(personnage))]);
 });
 
 // --- Alors : boutons et lecteurs d'écran

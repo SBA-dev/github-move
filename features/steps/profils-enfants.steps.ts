@@ -255,7 +255,7 @@ Given(
     await modifierLeProfil(famille, prenom, { univers: cleDe(libelleUnivers) });
     if ($tags.includes("@issue-102")) universChoisiParLeParent.set(famille, libelleUnivers);
     await connecterSiBesoin(famille, "tablette", "Paul");
-    if ($tags.includes("@issue-106")) await rechoisirLEnfantApresLeChangementDUnivers(page, prenom);
+    if ($tags.includes("@issue-106") || $tags.includes("@issue-166")) await rechoisirLEnfantApresLeChangementDUnivers(page, prenom);
   },
 );
 
