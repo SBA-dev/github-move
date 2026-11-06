@@ -41,3 +41,8 @@ Branche de base : `main` (`2a69a87`). Branche : `feature/163-reponse-fausse-anim
 | Cycles E2E KO | 2 sur le périmètre de la story (corrections de steps, puis un scénario réécrit) ; 0 bug applicatif |
 | Intégrations de `main` | 2 (`11b32d4` 106h, `f4e1fb1` #168), sans conflit |
 | Tokens et coût | relevés par le responsable |
+
+## 2026-11-06 : livraison 163b (Lili)
+
+- 07:05 UTC : 163a mergée (PR #171, `4dd80cf`). Annonce `[Responsable]` 6679278425 : la même équipe continue ; la branche est recréée depuis `main` `4dd80cf`, avec une nouvelle PR par livraison, et chaque planche passe au PO avant le câblage.
+- 07:10 UTC : maquette et planche de Lili en préparation (163.5b : petit vacillement, pas de côté les deux pieds sous elle, révérence, pouce levé).
