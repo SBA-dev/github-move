@@ -55,9 +55,13 @@ function casquetteRapportee(t: number, dessin: DessinDeMax): Casquette {
   };
 }
 
-/** La casquette qui n'est plus sur la tête de Max : elle glisse, reste au sol, passe par la gueule du chiot et la main de Max, puis revient sur sa tête. */
+/**
+ * La casquette qui n'est plus sur la tête de Max : elle glisse, reste au sol, passe par la gueule du chiot et la main de Max, puis revient sur sa tête.
+ * Le relais avec la casquette de la tête est exact : elle paraît quand celle de la tête disparaît (`casq` passe sous la moitié), et inversement.
+ */
 function casquetteHorsDeLaTete(t: number, dessin: DessinDeMax): Casquette | undefined {
-  if (t < T.glisse || t >= T.surLaTete) return undefined;
+  if (dessin.pose.casq > .5) return undefined;
+  if (t < T.glisse) return { position: surLaTete(dessin.pose), rotation: 0, taille: 1 };
   return t < T.chiotPrend ? casquetteQuiTombe(t) : casquetteRapportee(t, dessin);
 }
 
