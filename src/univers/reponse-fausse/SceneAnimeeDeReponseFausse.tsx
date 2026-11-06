@@ -31,7 +31,9 @@ export function SceneAnimeeDeReponseFausse({ univers, Decor, creerLaScene, tenue
   const racine = useRef<SVGSVGElement>(null);
   const [terminee, setTerminee] = useState(false);
   const aLaFin = useRef(onFinie);
-  aLaFin.current = onFinie;
+  useLayoutEffect(() => {
+    aLaFin.current = onFinie;
+  });
 
   useLayoutEffect(() => {
     if (!racine.current) return;

@@ -1,7 +1,7 @@
 import type { CleDeTenue } from "@domain/motivation";
 import { habillerLeCorpsArticule } from "../commun/habiller.ts";
 import { clamp01, DEG, E, lerp, r1, r3 } from "../commun/courbes.ts";
-import { creerUnGroupe, deplacer, elementsDe, poser, trouver } from "../commun/dom.ts";
+import { creerUnGroupe, type PrefixeDeScene, deplacer, elementsDe, poser, trouver } from "../commun/dom.ts";
 import { type Expression, expressionA } from "../commun/expressions.ts";
 import { decaler, membre, type Point, trace } from "../commun/membres.ts";
 import { inclinaisonDuProfilDeLeoOuDesBottes, placerLaChaussure } from "../commun/chaussure.ts";
@@ -23,7 +23,7 @@ const EMOS: Emotions = {
 };
 
 /** Ce qui change d'une scène à l'autre pour un même Coach Léo : le préfixe de ses identifiants, sa taille et ses expressions. */
-export type ReglagesDeCoachLeo = { readonly prefixe: string; readonly echelle: number; readonly emotions: Emotions };
+export type ReglagesDeCoachLeo = { readonly prefixe: PrefixeDeScene; readonly echelle: number; readonly emotions: Emotions };
 
 export const REGLAGES_DE_LA_CELEBRATION: ReglagesDeCoachLeo = { prefixe: "sports", echelle: BASE, emotions: EMOS };
 
@@ -34,7 +34,7 @@ type PosesEtExpressions = Pick<ScenarioDeBut, "poses" | "expressions">;
 export function creerCoachLeo(racine: SVGSVGElement, tenue?: CleDeTenue, { prefixe, echelle, emotions }: ReglagesDeCoachLeo = REGLAGES_DE_LA_CELEBRATION) {
   const n = elementsDe(racine, prefixe);
   n("leo").innerHTML = structureDeCoachLeo(prefixe);
-  const habit = habillerLeCorpsArticule(n, n("leo"), "sports", tenue);
+  const habit = habillerLeCorpsArticule(n, n("leo"), "sports", tenue, prefixe);
   const bras = { g: creerLeBras("g"), d: creerLeBras("d") };
   const bouches = [...n("bouches").children];
   const q1 = (g: ParentNode, classe: string) => trouver(g, `.${classe}`);

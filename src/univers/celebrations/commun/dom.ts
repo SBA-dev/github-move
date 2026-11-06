@@ -1,3 +1,8 @@
+import type { UniversCelebre } from "@domain/motivation";
+
+/** Le préfixe des identifiants d'une scène : l'univers de la célébration, ou la scène de réponse fausse de Léo. */
+export type PrefixeDeScene = UniversCelebre | "reponse-fausse-sports";
+
 export const NS = "http://www.w3.org/2000/svg";
 
 export function trouver(parent: ParentNode, selecteur: string): SVGElement {
@@ -7,7 +12,7 @@ export function trouver(parent: ParentNode, selecteur: string): SVGElement {
 }
 
 /** Retrouve un élément de la scène par son identifiant (préfixé par l'univers : `sports-leo`, `danse-lili`, ou par la scène : `reponse-fausse-sports-leo`), une seule fois. */
-export function elementsDe(racine: ParentNode, prefixe: string): (id: string) => SVGElement {
+export function elementsDe(racine: ParentNode, prefixe: PrefixeDeScene): (id: string) => SVGElement {
   const memo = new Map<string, SVGElement>();
   return (id) => {
     const connu = memo.get(id);

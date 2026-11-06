@@ -9,7 +9,7 @@ type Props = { readonly racine: RefObject<SVGSVGElement | null>; readonly avecBu
  */
 export function DecorDeLeo({ racine, avecBulleEcrite }: Props) {
   return (
-    <svg ref={racine} viewBox="-84 -119 168 210" overflow="visible" aria-hidden="true" focusable="false">
+    <svg ref={racine} viewBox="-84 -119 168 210" aria-hidden="true" focusable="false">
       <defs>
         <clipPath id={`${P}-clip-oeil`}><ellipse rx="7.4" ry="9.6" /></clipPath>
         <clipPath id={`${P}-clip-bouche`}><path d="M-11 11 Q0 27 11 11 Z" /></clipPath>

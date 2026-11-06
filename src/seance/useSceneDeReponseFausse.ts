@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { type CleUnivers, type SceneDeReponseFausse, sceneDeReponseFausse, sceneJoueeDansLaSeanceApres } from "@domain/motivation";
-import { prechargerLaSceneDeReponseFausseDe } from "../univers/reponse-fausse/index.ts";
 import type { ParoleADire } from "./usePersonnageQuiParle.ts";
 
 /** Sous cette largeur le dessin du personnage guide est « en petit » (40 px avec l'addition posée) : pas de scène (163.7). */
@@ -36,8 +35,6 @@ export function useSceneDeReponseFausse({ parole, cleUnivers, dansLeTestDeDepart
   const derniereParole = useRef(parole);
   const [jouee, setJouee] = useState(false);
   const [enCours, setEnCours] = useState<SceneEnCours | undefined>();
-
-  useEffect(() => prechargerLaSceneDeReponseFausseDe(cleUnivers), [cleUnivers]);
 
   useEffect(() => {
     if (parole === derniereParole.current) return;

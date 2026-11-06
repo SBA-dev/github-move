@@ -191,10 +191,12 @@ function SeanceEnCours(
   const consigne = finie || !exerciceDeLaLecon ? undefined : consigneAffichee(exerciceDeLaLecon);
   const laConsigneEstLue = consigne !== undefined && deroulement.parole?.nature === "consigne" && deroulement.parole.texte === consigne;
   const paroleDeLaBulle = laConsigneEstLue ? undefined : deroulement.parole;
+  // Le chrono n'est pas lisible ici : pendant toute la fluence, aucune scène (aucun encouragement n'y est dit de toute façon).
+  const dansUneFluence = exerciceDeLaLecon?.type === "fluence";
   const reponseFausse = useSceneDeReponseFausse({
     parole: deroulement.parole,
     cleUnivers: univers.cle,
-    pendantLeChronoDUneFluence: exerciceDeLaLecon?.type === "fluence",
+    pendantLeChronoDUneFluence: dansUneFluence,
   });
   const zoneDeLExercice = useRef<HTMLDivElement>(null);
   const laSeance = useRef<HTMLElement>(null);
