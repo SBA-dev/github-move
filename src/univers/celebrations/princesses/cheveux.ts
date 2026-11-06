@@ -1,5 +1,5 @@
 import { DEG, lerp, r1 } from "../commun/courbes.ts";
-import { elementsDe, poser, trouver } from "../commun/dom.ts";
+import { elementsDe, type PrefixeDeScene, poser, trouver } from "../commun/dom.ts";
 import { courbe, type Point } from "../commun/membres.ts";
 import { au } from "../commun/tableaux.ts";
 import type { Pose } from "./poses.ts";
@@ -21,8 +21,8 @@ const MASSE_ARRIERE = "M-42 -150 Q-46 -192 -22 -200 Q-10 -206 0 -200 Q10 -206 22
  * Les longs cheveux de Lumi : cinq mèches qui naissent du crâne, chacune une chaîne de segments à ressorts.
  * Elles suivent le mouvement avec du retard et flottent pendant l'envol. L'état des ressorts vit dans cette fermeture.
  */
-export function creerLesCheveux(racine: SVGSVGElement) {
-  const n = elementsDe(racine, "princesse");
+export function creerLesCheveux(racine: SVGSVGElement, prefixe: PrefixeDeScene = "princesse") {
+  const n = elementsDe(racine, prefixe);
   poser(n("chevelure-dos"), "d", MASSE_ARRIERE);
   const ressorts = MECHES.map(() => ({ angles: Array<number>(SEGMENTS).fill(0), vitesses: Array<number>(SEGMENTS).fill(0) }));
   let tPrecedent: number | null = null;
