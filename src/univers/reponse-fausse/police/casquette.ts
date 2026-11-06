@@ -12,13 +12,23 @@ type Point = { readonly x: number; readonly y: number };
 const TAILLE_PORTEE = .65;
 const SOL_DE_LA_CASQUETTE: Point = { x: 232, y: SOL - 14 };
 
+/** La hauteur du centre de la casquette au-dessus des hanches de Max, quand elle est sur sa tête. */
+const HAUTEUR_DE_LA_CASQUETTE_SUR_LA_TETE = 111.8;
 /** Le centre de la casquette sur la tête de Max, dans le repère de la place du moteur. */
-const surLaTete = (p: Pose): Point => ({ x: p.x + BASE * 111.8 * Math.sin(p.torse * DEG), y: p.y - BASE * 111.8 * Math.cos(p.torse * DEG) });
+const surLaTete = (p: Pose): Point => ({
+  x: p.x + BASE * HAUTEUR_DE_LA_CASQUETTE_SUR_LA_TETE * Math.sin(p.torse * DEG),
+  y: p.y - BASE * HAUTEUR_DE_LA_CASQUETTE_SUR_LA_TETE * Math.cos(p.torse * DEG),
+});
+
+/** La gueule du chiot dans son repère, debout puis assis, et l'échelle à laquelle le chiot est dessiné. */
+const GUEULE_DU_CHIOT_DEBOUT: Point = { x: 14 + 9, y: -28 + 6 };
+const GUEULE_DU_CHIOT_ASSIS: Point = { x: 1.7 + 9, y: -37.2 + 7 };
+const ECHELLE_DU_CHIOT = 1.05;
 
 /** La gueule du chiot, là où il tient la casquette. */
 function gueule(c: PoseDuChiot): Point {
-  const lx = lerp(14 + 9, 1.7 + 9, c.assis), ly = lerp(-28 + 6, -37.2 + 7, c.assis);
-  return { x: c.x + c.dir * c.sx * 1.05 * lx, y: SOL + 2 + c.y + c.sy * 1.05 * ly };
+  const lx = lerp(GUEULE_DU_CHIOT_DEBOUT.x, GUEULE_DU_CHIOT_ASSIS.x, c.assis), ly = lerp(GUEULE_DU_CHIOT_DEBOUT.y, GUEULE_DU_CHIOT_ASSIS.y, c.assis);
+  return { x: c.x + c.dir * c.sx * ECHELLE_DU_CHIOT * lx, y: SOL + 2 + c.y + c.sy * ECHELLE_DU_CHIOT * ly };
 }
 
 /** La main de Max, dans le repère de la place du moteur. */
