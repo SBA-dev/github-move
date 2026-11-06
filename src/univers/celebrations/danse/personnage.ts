@@ -20,6 +20,9 @@ const EMOS: Record<Emotion, { sg: readonly [number, number]; sd: readonly [numbe
   sourire: { sg: [-3, -3], sd: [-3, 3], lid: 0, pup: 1 },
 };
 
+/** Ce que Lili joue : des poses et des expressions dans le temps. */
+type PosesEtExpressions = Pick<ScenarioDeDanse, "poses" | "expressions">;
+
 /** Lili, dessinée image par image à partir des poses du scénario (portage du moteur de la maquette). Ses identifiants portent `prefixe` : la célébration de la Danse ou la scène de réponse fausse. */
 export function creerLili(racine: SVGSVGElement, tenue?: CleDeTenue, prefixe: PrefixeDeScene = "danse") {
   const n = elementsDe(racine, prefixe);
@@ -141,7 +144,7 @@ export function creerLili(racine: SVGSVGElement, tenue?: CleDeTenue, prefixe: Pr
   }
 
   /** Dessine Lili à l'instant `t` du scénario et rend sa pose (les effets s'y accrochent). */
-  function dessiner(scenario: ScenarioDeDanse, t: number): Pose {
+  function dessiner(scenario: PosesEtExpressions, t: number): Pose {
     const p = poseA(scenario.poses, t);
     vueCourante = p.vue;
     const pAvant = poseA(scenario.poses, t - .06);
