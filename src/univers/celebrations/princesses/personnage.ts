@@ -15,6 +15,9 @@ import { type Emotion, type Pose, poseA, SOL, type ScenarioDesPrincesses } from 
 export const ECHELLE_DE_BASE = 1.3;
 const BASE = ECHELLE_DE_BASE;
 
+/** Lumi flotte de 4 unités autour de 10 unités au-dessus de sa position, de moins en moins quand elle vole. */
+export const flottementDeLumi = (t: number, vol: number) => Math.sin(t * 2.2) * 4 - 10 * (1 - vol);
+
 const EMOS: Record<Emotion, { readonly s: readonly [number, number]; readonly lid: number; readonly pup: number }> = {
   sourire: { s: [0, 0], lid: 0, pup: 1 },
   joie: { s: [-4, 0], lid: 0, pup: 1.05 },
@@ -200,7 +203,7 @@ export function creerLumi(racine: SVGSVGElement, tenue?: CleDeTenue, prefixe: Pr
   function dessiner(scenario: PosesEtExpressions, t: number): LumiDessinee {
     const p = poseA(scenario.poses, t), pAvant = poseA(scenario.poses, t - .06);
     const vx = (p.x - pAvant.x) / .06, vy = (p.y - pAvant.y) / .06;
-    const flotte = Math.sin(t * 2.2) * 4 - 10 * (1 - p.vol);
+    const flotte = flottementDeLumi(t, p.vol);
     deplacer(n("lumi"), `translate(${r1(p.x)} ${r1(p.y + flotte)}) rotate(${r1(p.rot)}) scale(${r3(BASE * p.sx)} ${r3(BASE * p.sy)})`);
     dessinerLesAiles(p, t);
     cheveux.dessiner(p, t, vx, vy);
