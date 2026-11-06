@@ -275,7 +275,7 @@ export async function configurer(page: Page, changement: Partial<Configuration>)
   }, { ...courante, retenir: [...courante.retenir] }).catch(() => undefined);
 }
 
-Before({ tags: "@issue-97 or @issue-102 or @issue-128" }, async ({ page, $testInfo }) => {
+Before({ tags: "@issue-97 or @issue-102 or @issue-128 or @issue-163" }, async ({ page, $testInfo }) => {
   // Le vrai profil de Léa, les séances jouées jusqu'à leur fin et les écrans de fin passent par le serveur.
   $testInfo.setTimeout(120_000);
   await page.addInitScript(installerLesFauxDeLaStory97, { ...configuration(page) });
@@ -285,7 +285,7 @@ Before({ tags: "@issue-97 or @issue-102 or @issue-128" }, async ({ page, $testIn
 // la fausse synthèse ne finit que sur demande. Avant ces gestes, Léa a donc attendu la fin de la parole.
 const GESTES_APRES_LA_PAROLE = ["Léa rejoue", "Léa ouvre « Mes médailles » depuis son accueil"];
 
-BeforeStep({ tags: "@issue-97 or @issue-102 or @issue-128" }, async ({ page, $step }) => {
+BeforeStep({ tags: "@issue-97 or @issue-102 or @issue-128 or @issue-163" }, async ({ page, $step }) => {
   if (GESTES_APRES_LA_PAROLE.includes($step.title.replace(/^(Étant donné que|Quand|Alors|Et que|Et|Mais) /, ""))) await laisserLaParoleFinir(page);
 });
 
@@ -488,12 +488,12 @@ Then(/^Léa entend l'effet sonore « ([^«»]+) » avant que Noisette parle$/, a
   await effetPuisParole(page, [effet], undefined, false);
 });
 
-Then(/^Léa entend l'effet sonore « ([^«»]+) », puis Noisette dit un encouragement$/, async ({ page }, effet: string) => {
+Then(/^Léa entend l'effet sonore « ([^«»]+) », puis (?:Noisette|Coach Léo) dit un encouragement$/, async ({ page }, effet: string) => {
   await effetPuisParole(page, [effet], "encouragement", true);
 });
 
 Then(
-  /^Léa entend l'effet sonore « ([^«»]+) », puis Noisette dit un encouragement, suivi de « ([^«»]+) »$/,
+  /^Léa entend l'effet sonore « ([^«»]+) », puis (?:Noisette|Coach Léo) dit un encouragement, suivi de « ([^«»]+) »$/,
   async ({ page }, effet: string, complement: string) => {
     await effetPuisParole(page, [effet], "encouragement", true);
     const texte = normaliser((await bulleDuPersonnage(page).textContent()) ?? "");
@@ -925,7 +925,7 @@ Then(/^les lecteurs d'écran annoncent une seule fois « ([^«»]+) »$/, async 
 
 // --- Un effet impossible à jouer ne montre rien de plus (réservé à #97 : l'étape du même texte de #24 vérifie un refus du serveur)
 
-const { Given: GivenDeLaStory97, Then: ThenDeLaStory97 } = createBdd(test, { tags: "@issue-97 or @issue-128" });
+const { Given: GivenDeLaStory97, Then: ThenDeLaStory97 } = createBdd(test, { tags: "@issue-97 or @issue-128 or @issue-163" });
 
 ThenDeLaStory97(/^Léa ne voit aucun message de plus$/, async ({ page }) => {
   await laisserPasserLeDelaiDeLecture(page);
