@@ -1,5 +1,5 @@
 import { DEG, lerp, r1 } from "../commun/courbes.ts";
-import { poser, trouver } from "../commun/dom.ts";
+import { type PrefixeDeScene, poser, trouver } from "../commun/dom.ts";
 import { courbe, type Point } from "../commun/membres.ts";
 import { au } from "../commun/tableaux.ts";
 import type { Pose } from "./poses.ts";
@@ -34,9 +34,9 @@ function festons(P: readonly Point[], normales: readonly Point[], signe: 1 | -1)
  * La queue en panache de Noisette : une chaîne de 5 segments à ressorts. Chaque segment suit le précédent avec du retard,
  * elle se balance avec les sauts et les déplacements. L'état des ressorts vit dans cette fermeture.
  */
-export function creerLaQueue(racine: SVGSVGElement) {
+export function creerLaQueue(racine: SVGSVGElement, prefixe: PrefixeDeScene = "animaux") {
   const segments: Segment[] = Array.from({ length: NOMBRE_DE_SEGMENTS }, () => ({ angle: 0, vitesse: 0 }));
-  const groupe = trouver(racine, "#animaux-queue");
+  const groupe = trouver(racine, `#${prefixe}-queue`);
   const piece = (classe: string) => trouver(groupe, `.${classe}`);
   const forme = piece("queue"), ventre = piece("queue-ventre"), ombre = piece("queue-ombre"), lumiere = piece("queue-lumiere"), meches = piece("queue-meches");
   let tPrecedent: number | null = null;
