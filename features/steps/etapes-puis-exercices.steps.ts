@@ -247,6 +247,8 @@ Given(/^Léa a un profil enfant préparé de niveau (\S+) dans l'univers « (.+)
   // Story #33 : l'histoire lit les séances du serveur ; seuls les scénarios du profil préparé et du profil de démonstration gardent le profil sans identifiant.
   const cabaneSurLeServeur = ($tags.includes("@issue-32") || $tags.includes("@issue-31") || $tags.includes("@issue-33") || $tags.includes("@issue-102")) &&
     !$testInfo.title.includes("sans profil réel au serveur") && !$testInfo.title.includes("profil de démonstration");
+  // Story #163 : les étoiles et la tenue de Léa sont lues sur le serveur pour le seul scénario de la tenue portée dans la scène.
+  const tenueDeLaScene = $tags.includes("@issue-163") && $testInfo.title.includes("porte la tenue choisie par Léa");
   // Story #26 : la bibliothèque de test des leçons des classes d'avant est servie avant l'accueil, qui la charge dès son ouverture.
   if ($tags.includes("@issue-26")) await servirLaBibliothequeDesClassesDAvant(page);
   // Story #99 : la bibliothèque de test du dessin du parcours (identifiants « e2e-99- »), servie de la même façon.
@@ -257,7 +259,7 @@ Given(/^Léa a un profil enfant préparé de niveau (\S+) dans l'univers « (.+)
   if (accueilSeul) await servirLaBibliothequeDeLAccueil(page);
   // Story #30 : les jours de séance sont lus sous RLS pour le vrai profil de Léa.
   // Story #96 : les écrans de l'enfant se jouent avec le vrai profil de Léa (parcours, médailles, séances, révision, épisode).
-  if ($tags.includes("@issue-99") || $tags.includes("@issue-97") || $tags.includes("@issue-96") || $tags.includes("@issue-24") || accueilSeul || $tags.includes("@issue-25") || $tags.includes("@issue-26") || $tags.includes("@issue-27") || $tags.includes("@issue-30") || cabaneSurLeServeur) {
+  if ($tags.includes("@issue-99") || $tags.includes("@issue-97") || $tags.includes("@issue-96") || $tags.includes("@issue-24") || accueilSeul || tenueDeLaScene || $tags.includes("@issue-25") || $tags.includes("@issue-26") || $tags.includes("@issue-27") || $tags.includes("@issue-30") || cabaneSurLeServeur) {
     await jouerAvecLeProfilReel(famille, monde, page);
   }
 });

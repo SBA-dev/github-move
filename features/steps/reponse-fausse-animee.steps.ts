@@ -21,6 +21,7 @@ import { jouerLeDefi, leconDeLaQuestion, TOUT_JUSTE } from "./defi-de-fin-de-par
 import { attendreLaFinDeLaSeance, jouerJusquALaFinDeLaSeance, partie } from "./etoiles-et-fin-de-seance.steps.ts";
 import { DELAI_DE_L_ATTENTE_MS, laisserSeDerouler } from "./retours-animes-et-sonores.steps.ts";
 import { normaliser } from "./voix.steps.ts";
+import { cleDeLaTenue } from "./tenues.steps.ts";
 
 // Story #163 : la scène de réponse fausse du personnage guide (livraison 163a : le mécanisme et Coach Léo).
 //
@@ -38,6 +39,8 @@ type EntreeDeScene = {
   mouvements: string | null;
   bulleEcrite: string | null;
   etatAuDebut: string | null;
+  tenue: string | null;
+  tracesDeTenue: string[];
   masqueeAuxLecteursDEcran: boolean;
   zonesVocalesDansLaScene: number;
   questionAuDebut: string | null;
@@ -99,6 +102,8 @@ export function installerLEnregistreurDeLaScene() {
       mouvements: scene.getAttribute("data-mouvements"),
       bulleEcrite: scene.getAttribute("data-bulle-ecrite"),
       etatAuDebut: scene.getAttribute("data-etat"),
+      tenue: scene.getAttribute("data-tenue"),
+      tracesDeTenue: [...scene.querySelectorAll("[data-tenue-dessin]")].map((trace) => trace.getAttribute("data-tenue-dessin") ?? ""),
       masqueeAuxLecteursDEcran: scene.closest('[aria-hidden="true"]') !== null,
       zonesVocalesDansLaScene: scene.querySelectorAll('[aria-live], [role="status"], [role="alert"], [role="img"], [aria-label]').length,
       questionAuDebut: texteDe(document.querySelector('[data-testid="question"]')),
@@ -313,6 +318,13 @@ async function verifierQueLaSceneDeLeoSeJoue(page: Page): Promise<EntreeDeScene>
 
 Then(/^Coach Léo joue sa scène de réponse fausse(?: : (?!.*avec «).+)?$/, async ({ page }) => {
   await verifierQueLaSceneDeLeoSeJoue(page);
+});
+
+Then(/^Coach Léo joue sa scène de réponse fausse avec « ([^«»]+) »$/, async ({ page }, tenue: string) => {
+  const scene = await verifierQueLaSceneDeLeoSeJoue(page);
+  const cle = cleDeLaTenue(tenue);
+  expect(scene.tenue, `la scène porte la tenue « ${tenue} »`).toBe(cle);
+  expect(scene.tracesDeTenue.some((trace) => trace.startsWith(cle)), `tracé de « ${tenue} » dans la scène`).toBe(true);
 });
 
 Then(/^Coach Léo ne joue pas de scène de réponse fausse$/, async ({ page }) => {
