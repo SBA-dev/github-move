@@ -21,3 +21,9 @@
 - `domain-modeler` : `domain-model.md` court, aucun agrégat nouveau ; glossaire : ajouts « Musique de la célébration (à valider) » et note « Effet sonore, précisé par #166 ».
 - `po-acceptance` : `acceptance.md`, `features/166-musiques-des-univers.feature` (`@issue-166 @wip`), en-tête du fichier 106 mis à jour, exemples du Plan de 102 l. 141 adaptés (la musique de Noisette remplace « grande victoire » dans la danse de victoire). Une étape nouvelle dans 102.
 - Questions 166.1 à 166.5 harmonisées entre les deux documents.
+
+## Validation PO et écoute (2026-11-06, 00:23 → 00:45 UTC)
+
+- Annonce [Responsable] 6673145978 sur #64 vérifiée : « sons C, 166 reco tout » : miroirs GitHub des packs Kenney, 166.1 A, 166.2 A, 166.3 A, 166.4 A, 166.5 B. Cadrage validé.
+- `add_repo` pour le miroir de #97 refusé par la session ; lecture publique par le proxy git possible. Miroir `S3M1TR4SH/asset-library` : 4 jingles seulement. Recherche GitHub (`search/repositories`) : `Boyquotes/kenney-music-jingles-for-godot`, pack complet (85 jingles), CC0. Clone dans le scratchpad, hors du dépôt.
+- 18 candidats présélectionnés et convertis, page d'écoute publiée (artifact), détail dans `ecoute.md`.
