@@ -33,3 +33,11 @@
 - Réponse du PO, tapée directement dans la session de l'équipe, mot pour mot : « 166 Sports aucun, Danse A, Animaux de la forêt B, Princesses et fées C, Police aucun, Pompiers C ». Relayée au responsable sur #166.
 - Retenus : Danse → `jingles_SAX02`, Animaux de la forêt → `jingles_PIZZI12`, Princesses et fées → `jingles_STEEL13`, Pompiers → `jingles_STEEL06`. Sports et Police : aucun, ils gardent « grande victoire » (166.4 A), issue de suivi à ouvrir.
 - Noms d'`EffetSonore` (d'après le son, jamais l'univers, 106.12) : `airDeSaxophone`, `airDeCordesPincees`, `airDeSteelDrumCourt` (1,10 s), `airDeSteelDrumLong` (1,41 s). Fichiers kebab-case dans `public/sons/`.
+
+## TDD, câblage, review (2026-11-06, 08:20 → 08:40 UTC)
+
+- RED `cae15d7` (5 échecs vérifiés) → GREEN `b36721f` → câblage `aeede69` (4 MP3, `EffetSonore`, `FICHIER_DE_L_EFFET`, `sw.js`, `docs/sons.md`). Unitaires 2927/2927, lint, fmt, tsc, build, pytest 1582/1582.
+- Scénarios ajustés au choix (`bc0d014`) ; glossaire et modèle (`9c24d0a`) ; steps E2E (`46d61a2`, bddgen sans étape manquante).
+- Issue de suivi #173 créée par le responsable (Sports, Police).
+- `mr-reviewer` (cycle 1) : **APPROUVÉ**, 4 non bloquants : glossaire et modèle (déjà faits par `9c24d0a`), phrase de `docs/sons.md` (`fb21353`), typage du test en `EffetSonore` (`f750aae`).
+- VERROU base demandé (08:27) ; en file derrière #163. Périmètre préparé : 95 scénarios sur `telephone` (`--list`).
