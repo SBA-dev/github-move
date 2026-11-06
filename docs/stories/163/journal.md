@@ -104,3 +104,8 @@ Branche de base : `main` (`2a69a87`). Branche : `feature/163-reponse-fausse-anim
 | Cycles E2E KO | 0 |
 | Intégrations de `main` | 0 (branche repartie de `main` `8873b6e`) |
 | Tokens et coût | relevés par le responsable |
+- 20:15 UTC : merge de 163d autorisé (« Merge 163d ok »). PR #176 mergée (`ba3603b`), sans rejeu, branche supprimée par GitHub. LIBÈRE merge.
+
+## 2026-11-06 : livraison 163e (Agent Max)
+
+- 20:00 à 20:40 UTC : TDD et câblage préparés pendant l'attente du merge de 163d, dans un worktree à part (branche locale), puis reportés par cherry-pick sur la branche recréée depuis `main` `ba3603b` : `test` (catalogue `police`), `feat` (`police` au catalogue), `refactor` (dessin et moteur d'Agent Max et du chiot par le préfixe, additif), `refactor` (`creerUnSolDeScene` en commun pour Lili, Lumi et Max : règle de trois, dette de la review de 163d), `feat` (câblage). Planche validée le 06/11 (163.28 oui, 163.29 « oups ! »).
