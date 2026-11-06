@@ -14,7 +14,7 @@ import { FIN, SCENARIO_DE_SAM, SCENARIO_FIXE_DE_SAM } from "./scenario.ts";
 
 /** Le petit coin d'herbe sous ses pieds et autour de la fleur : il reste jusqu'à la fin de la scène. */
 const creerLHerbe = creerUnSolDeScene({ prefixe: PREFIXE_DE_SAM, apparition: .1, disparition: FIN });
-/** La lance apparaît dans la première dixième de seconde (le dessin fixe de Sam n'en a pas). */
+/** La lance apparaît dans le premier dixième de seconde (le dessin fixe de Sam n'en a pas). */
 const DUREE_D_APPARITION_DE_LA_LANCE = .1;
 
 /**

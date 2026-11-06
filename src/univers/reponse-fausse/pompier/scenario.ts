@@ -1,9 +1,8 @@
-import { brasVers } from "../../celebrations/commun/atteindre.ts";
 import { DEG, E, lerp } from "../../celebrations/commun/courbes.ts";
 import type { ChangementDExpression } from "../../celebrations/commun/expressions.ts";
 import { compiler, type ImageCle, type ImagePartielle, poseA } from "../../celebrations/commun/poses.ts";
 import { ECHELLE_DE_BASE as BASE, type Emotion, type Pose, REPOS } from "../../celebrations/pompiers/poses.ts";
-import type { ScenarioDeSam } from "../../celebrations/pompiers/personnage.ts";
+import { brasSaisit, type ScenarioDeSam } from "../../celebrations/pompiers/personnage.ts";
 
 /** Fin de la scène, en secondes : la scène est jouée à cette vitesse, sans accélération. */
 export const FIN = 1.5;
@@ -24,8 +23,6 @@ type PoseDeLaScene = Pose & { hg: number };
 
 const REPOS_DE_LA_SCENE: PoseDeLaScene = { ...REPOS, x: X_DE_LA_SCENE * BASE, y: 0, tenue: .001, hg: 1 };
 const POUCE: Partial<PoseDeLaScene> = { aGu: 78, aGl: 100, mG: 2 };
-/** Dans la maquette, le poignet s'arrête un peu avant le point de la lance saisi (comme `brasSaisit` du moteur de la célébration). */
-const RETRAIT_DE_LA_PRISE = 4;
 const ECART_DES_MAINS = 6;
 const IMAGES_PAR_SECONDE = 60;
 
@@ -51,20 +48,12 @@ const EXPRESSIONS: readonly ChangementDExpression<Emotion>[] = [
   { t: 1.1, emo: "sourire" },
 ];
 
-type Main = "g" | "d";
-type Point = { readonly x: number; readonly y: number };
-
-function saisir(main: Main, cible: Point, epaule: Point) {
-  const dx = cible.x - epaule.x, dy = cible.y - epaule.y, D = Math.hypot(dx, dy) || 1, k = Math.max(0, D - RETRAIT_DE_LA_PRISE) / D;
-  return brasVers(main, { x: epaule.x + dx * k, y: epaule.y + dy * k }, epaule);
-}
-
 /** Les mains suivent la lance : la droite la tient à l'arrière, la gauche (de poids `hg`) plus en avant. Les angles des bras sont calculés image par image. */
 function avecLesMains(p: PoseDeLaScene): PoseDeLaScene {
   const cw = Math.cos(p.vue * DEG), sw = Math.sin(p.vue * DEG), largeur = lerp(.55, 1, Math.abs(cw));
   const axe = { x: Math.cos(p.lA * DEG), y: Math.sin(p.lA * DEG) };
-  const droite = saisir("d", { x: p.lX + axe.x * 2, y: p.lY + axe.y * 2 }, { x: 18 * largeur + 4 * sw, y: -38 });
-  const gauche = saisir("g", { x: p.lX + axe.x * ECART_DES_MAINS, y: p.lY + axe.y * ECART_DES_MAINS }, { x: -18 * largeur + 4 * sw, y: -38 });
+  const droite = brasSaisit("d", { x: p.lX + axe.x * 2, y: p.lY + axe.y * 2 }, { x: 18 * largeur + 4 * sw, y: -38 });
+  const gauche = brasSaisit("g", { x: p.lX + axe.x * ECART_DES_MAINS, y: p.lY + axe.y * ECART_DES_MAINS }, { x: -18 * largeur + 4 * sw, y: -38 });
   return { ...p, aDu: droite.a1, aDl: droite.a2, aGu: lerp(p.aGu, gauche.a1, p.hg), aGl: lerp(p.aGl, gauche.a2, p.hg) };
 }
 

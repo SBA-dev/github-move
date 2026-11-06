@@ -23,7 +23,7 @@ const EMOS: Record<Emotion, { readonly s: readonly [number, number]; readonly li
 type Cote = "g" | "d";
 
 /** La main attrape la lance : le poignet s'arrête un peu avant le point saisi (le poing est au bout de l'avant-bras). */
-function brasSaisit(c: Cote, T: Point, S: Point) {
+export function brasSaisit(c: Cote, T: Point, S: Point) {
   const dx = T.x - S.x, dy = T.y - S.y, D = Math.hypot(dx, dy) || 1, k = Math.max(0, D - 4) / D;
   return brasVers(c, { x: S.x + dx * k, y: S.y + dy * k }, S);
 }
