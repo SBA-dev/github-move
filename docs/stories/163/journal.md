@@ -28,3 +28,16 @@ Branche de base : `main` (`2a69a87`). Branche : `feature/163-reponse-fausse-anim
   - Run 2 (non-régression touchée : `@issue-97`, `@issue-23`, `@livraison-106b`) : **100/100**.
   - Run 3 (`@issue-19`, `@issue-128`) : le step partagé de la dictée a changé (sondage serré, même sens).
   - Aucun bug applicatif.
+- 03:40 à 04:15 UTC : `@depend-de-106` levé sur la tenue portée (`fcfd176`), step ajouté (`646012e`) : **48/48** sur `telephone`. Run 3 : `@issue-19` et `@issue-128` **119/119**. LIBÈRE base.
+- 04:20 UTC : PR en brouillon (livraison 163a seulement ; #163 reste ouverte pour 163b à 163f).
+
+## Mesures (livraison 163a)
+
+| Mesure | Valeur |
+|---|---|
+| Durée, du lancement au PR | environ 5 h 30 (22:45 → 04:20 UTC) |
+| Temps passé à attendre | PO : environ 30 min (cadrage, puis planche) ; merge de 106h : environ 30 min (TDD du domaine fait pendant ce temps) ; verrou base : environ 1 h 30 (non-régression de nuit) ; GitHub indisponible pour les push : 20 min |
+| Cycles de review À CORRIGER | 0 (domaine APPROUVÉ, câblage APPROUVÉ ; non bloquants corrigés) |
+| Cycles E2E KO | 2 sur le périmètre de la story (corrections de steps, puis un scénario réécrit) ; 0 bug applicatif |
+| Intégrations de `main` | 2 (`11b32d4` 106h, `f4e1fb1` #168), sans conflit |
+| Tokens et coût | relevés par le responsable |
