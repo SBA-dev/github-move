@@ -1,5 +1,6 @@
 import { type ComponentType, lazy, Suspense } from "react";
 import type { CelebrationDeLUnivers, CleDeTenue, CleUnivers } from "@domain/motivation";
+import { memoriser } from "../chargement-a-la-demande.ts";
 
 type PropsDeScene<Cle extends string> = { readonly cle: Cle; readonly cri: string; readonly tenue?: CleDeTenue | undefined };
 
@@ -9,16 +10,6 @@ function EspaceDeLaScene() {
 }
 
 type Module<Cle extends string> = { default: ComponentType<PropsDeScene<Cle>> };
-
-/** Le morceau d'une scène est demandé une seule fois : le préchargement et l'affichage partagent la même promesse. Un échec n'est pas gardé : l'appel suivant retente. */
-const memoriser = <T,>(charger: () => Promise<T>) => {
-  let promesse: Promise<T> | undefined;
-  return () =>
-    promesse ??= charger().catch((erreur: unknown) => {
-      promesse = undefined;
-      throw erreur;
-    });
-};
 
 /** Une scène qui ne se charge pas (nouvelle version de l'appli, hors ligne) ne montre rien : la fin du défi reste intacte. */
 const chargerSansEchec = <Cle extends string>(charger: () => Promise<Module<Cle>>) =>

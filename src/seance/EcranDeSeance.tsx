@@ -18,9 +18,9 @@ import { lireLeNombreDeSeancesAvantLaSeance } from "../histoire/nombre-de-seance
 import { TexteEnSyllabes } from "../reglages/index.ts";
 import { ContexteDuRetour, EtincellesDuTexteComplet } from "../retours/index.ts";
 import { TexteSurligne } from "./TexteSurligne.tsx";
-import { PersonnageGuide } from "../univers/index.ts";
 import { laVoixNeLitPas, type Voix } from "../voix/index.ts";
 import { BulleDuPersonnageGuide } from "./BulleDuPersonnageGuide.tsx";
+import { PersonnageGuideEtSaScene } from "./PersonnageGuideEtSaScene.tsx";
 import { EcranDeFin } from "./fin-de-seance/EcranDeFin.tsx";
 import { lireLesMeilleuresEtoilesAvantLaSeance } from "./fin-de-seance/meilleures-etoiles-du-profil-lues.ts";
 import { useFaciliteDeLaSeance } from "./difficulte/useFaciliteDeLaSeance.ts";
@@ -40,6 +40,7 @@ import { horlogeDuNavigateur } from "./horloge.ts";
 import { RecipientDeProgression } from "./RecipientDeProgression.tsx";
 import { useDeroulementDeSeance } from "./useDeroulementDeSeance.ts";
 import { useLecon } from "./useLecon.ts";
+import { useSceneDeReponseFausse } from "./useSceneDeReponseFausse.ts";
 
 type Props = {
   readonly leconId: string;
@@ -190,6 +191,11 @@ function SeanceEnCours(
   const consigne = finie || !exerciceDeLaLecon ? undefined : consigneAffichee(exerciceDeLaLecon);
   const laConsigneEstLue = consigne !== undefined && deroulement.parole?.nature === "consigne" && deroulement.parole.texte === consigne;
   const paroleDeLaBulle = laConsigneEstLue ? undefined : deroulement.parole;
+  const reponseFausse = useSceneDeReponseFausse({
+    parole: deroulement.parole,
+    cleUnivers: univers.cle,
+    pendantLeChronoDUneFluence: exerciceDeLaLecon?.type === "fluence",
+  });
   const zoneDeLExercice = useRef<HTMLDivElement>(null);
   const laSeance = useRef<HTMLElement>(null);
   const exerciceCommence = exerciceJoue !== undefined;
@@ -211,7 +217,7 @@ function SeanceEnCours(
         </div>
         {!finie && <RecipientDeProgression avancement={seance.avancement()} />}
         <div className="guide-et-parole">
-          {!celebrationDeLUnivers && <PersonnageGuide univers={univers} humeur={deroulement.humeur} />}
+          {!celebrationDeLUnivers && <PersonnageGuideEtSaScene univers={univers} humeur={deroulement.humeur} reponseFausse={reponseFausse} />}
           <BulleDuPersonnageGuide
             texte={paroleDeLaBulle?.texte}
             nature={paroleDeLaBulle?.nature}

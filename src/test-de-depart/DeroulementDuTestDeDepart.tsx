@@ -45,7 +45,7 @@ export function DeroulementDuTestDeDepart(
   return (
     <ContexteDuRetour.Provider value={deroulement.retour}>
       <RecipientDeProgression avancement={deroulement.avancement} libelle="Avancement du test de départ" />
-      <ParoleDuGuide personnage={personnage} univers={univers} onReecouter={deroulement.reecouter} />
+      <ParoleDuGuide personnage={personnage} univers={univers} onReecouter={deroulement.reecouter} dansLeTestDeDepart />
       <div className="annonce-d-avancement" role="status" data-testid="annonce-d-avancement">
         {deroulement.avancementAnnonce}
       </div>
