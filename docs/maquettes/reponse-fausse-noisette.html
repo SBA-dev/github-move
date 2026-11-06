@@ -1,0 +1,1220 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Savanturier : Noisette, scène de réponse fausse (maquette 163c)</title>
+<style>
+  :root { --principale: #1F63D8; --foncee: #164BA8; --or: #FFC93C; --encre: #1B2A4A; --guide: 112px; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #0f1b2d; }
+  body { font-family: "Andika", "Trebuchet MS", system-ui, sans-serif; color: var(--encre); padding: 12px; }
+  .banc { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; align-items: flex-start; }
+  .commandes { width: 360px; max-width: 100%; color: #E8F0FF; font-size: 15px; line-height: 1.45; }
+  .commandes h1 { margin: 0 0 8px; font-size: 18px; line-height: 1.25; }
+  .commandes p { margin: 8px 0; }
+  .commandes label { display: flex; align-items: center; gap: 10px; min-height: 44px; cursor: pointer; }
+  .commandes input[type="checkbox"] { width: 22px; height: 22px; }
+  .commandes .notes { font-size: 13px; color: #B9C8E6; }
+  .duree { margin: 10px 0; padding: 10px 12px; border-radius: 12px; background: #1B2D4A; font-weight: 700; }
+  .btn { min-height: 48px; padding: 8px 20px; border: 0; border-radius: 999px; font: 700 17px "Baloo 2", "Andika", sans-serif; cursor: pointer; background: var(--principale); color: #fff; box-shadow: 0 4px 0 var(--foncee); }
+  .btn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--foncee); }
+  .btn:focus-visible, .choix button:focus-visible, .petit:focus-visible { outline: 3px solid var(--or); outline-offset: 3px; }
+
+  /* Maquette de l'écran de séance : mêmes tailles que src/styles.css (.personnage-guide 112 px sous 480 px, 200 px au-delà) */
+  .ecran { width: 360px; max-width: 100%; background: linear-gradient(#EAF4FF, #F7FBFF); border-radius: 22px; padding: 14px 14px 16px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 12px 40px rgba(0,0,0,.35); }
+  .ecran.tablette { width: 768px; --guide: 200px; padding: 20px 28px 24px; }
+  .entete { display: flex; align-items: center; gap: 12px; }
+  .entete .retour { min-height: 44px; min-width: 44px; padding: 6px 14px; border: 2px solid #BFD0EA; border-radius: 12px; background: #fff; color: #3C4C6B; font: 700 15px inherit; font-family: inherit; }
+  .entete h2 { margin: 0; font-size: 17px; line-height: 1.2; font-family: "Baloo 2", inherit; color: var(--foncee); }
+  .entete p { margin: 0; font-size: 13px; color: #3C4C6B; }
+  .progression { height: 10px; border-radius: 999px; background: #D5E3F7; overflow: hidden; }
+  .progression span { display: block; height: 100%; width: 25%; background: #4FB37A; border-radius: 999px; }
+  .guide-et-parole { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; }
+  .personnage-guide { width: var(--guide); flex: none; }
+  .personnage-guide svg { width: 100%; height: auto; display: block; }
+  .bulle { margin: 0; flex: 1 1 120px; min-width: 0; padding: 10px 14px; border-radius: 18px; background: #fff; border: 2px solid #BFD0EA; font-size: 17px; line-height: 1.3; font-weight: 700; color: var(--foncee); }
+  .bulle:empty { display: none; }
+  .reecouter { align-self: center; min-height: 44px; padding: 6px 16px; border: 2px solid #BFD0EA; border-radius: 999px; background: #fff; color: var(--foncee); font: 700 15px inherit; font-family: inherit; cursor: pointer; }
+  .consigne { margin: 0; text-align: center; font-size: 22px; font-weight: 700; line-height: 1.3; }
+  .choix { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .choix button { min-height: 56px; border: 3px solid #BFD0EA; border-radius: 16px; background: #fff; color: var(--encre); font: 700 24px "Baloo 2", "Andika", sans-serif; cursor: pointer; }
+  .choix button:active { transform: translateY(2px); }
+  .choix button.essayee { border-style: dashed; border-color: #9AAAC6; background: #F1F5FB; }
+  .choix button.prise { border-color: var(--principale); background: #E7F0FF; }
+  .ne-sais-pas { align-self: center; min-height: 44px; padding: 6px 18px; border: 0; background: transparent; color: #3C4C6B; text-decoration: underline; font: 700 15px inherit; font-family: inherit; cursor: pointer; }
+  .etat { margin: 0; min-height: 20px; text-align: center; font-size: 13px; color: #3C4C6B; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  /* Mode dys (src/styles.css) : Andika partout, lettres, mots et lignes espacés */
+  [data-mode-dys="true"] { font-family: "Andika", "Trebuchet MS", sans-serif; letter-spacing: .08em; word-spacing: .3em; line-height: 1.9; }
+  [data-mode-dys="true"] :is(button, h2, p) { font-family: "Andika", "Trebuchet MS", sans-serif; letter-spacing: inherit; word-spacing: inherit; }
+  [data-mode-dys="true"] .bulle, [data-mode-dys="true"] .consigne { line-height: 1.6; overflow-wrap: anywhere; }
+  .ecrit { font-family: "Baloo 2", "Andika", sans-serif; font-weight: 800; }
+  [data-mode-dys="true"] .ecrit { font-family: "Andika", "Trebuchet MS", sans-serif; font-weight: 700; letter-spacing: .04em; }
+  @media (prefers-reduced-motion: reduce) { .btn, .choix button { transition: none; } }
+  html:has(body.seul), body.seul { padding: 0; background: #EAF4FF; }
+  body.seul .commandes, body.seul .entete, body.seul .progression, body.seul .bulle, body.seul .reecouter, body.seul .consigne, body.seul .choix, body.seul .ne-sais-pas, body.seul .etat { display: none; }
+  body.seul .ecran { width: auto; padding: 0; background: transparent; box-shadow: none; border-radius: 0; }
+  body.seul .banc { display: block; }
+  html:has(body.seul.sombre), body.seul.sombre { background: #16213A; }
+  [data-mode-dys="true"] #hop .ecrit { font-size: 12.5px; letter-spacing: 0; word-spacing: 0; }
+</style>
+</head>
+<body>
+<div class="banc">
+  <div class="ecran" id="ecran" data-mode-dys="false">
+    <div class="entete">
+      <button class="retour" type="button">Retour</button>
+      <div><h2>Calcul mental</h2><p>CE1 · Les additions</p></div>
+    </div>
+    <div class="progression" aria-hidden="true"><span></span></div>
+    <div class="guide-et-parole">
+      <div class="personnage-guide" id="scene" aria-hidden="true" data-testid="scene-de-reponse-fausse">
+        <svg viewBox="-114 -178 175 190" overflow="visible" aria-hidden="true" id="svg">
+          <defs>
+            <radialGradient id="animaux-noisette-or" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#FFF1A8"/><stop offset=".5" stop-color="#FFC93C"/><stop offset="1" stop-color="#D99A12"/></radialGradient>
+            <radialGradient id="animaux-lueur" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFF1A8" stop-opacity=".75"/><stop offset="1" stop-color="#FFF1A8" stop-opacity="0"/></radialGradient>
+            <clipPath id="animaux-clip-oeil"><ellipse rx="9" ry="11"/></clipPath>
+          </defs>
+          <!-- Un petit coin de prairie claire sous ses pieds, le temps de la scène -->
+          <g id="sol" opacity="0">
+            <ellipse cx="-24" cy="3" rx="84" ry="8.5" fill="#6FD170" opacity=".85"/><ellipse cx="-32" cy="1.5" rx="54" ry="4.8" fill="#8BE08A" opacity=".7"/>
+            <g fill="#4FB37A" stroke="#2E7E52" stroke-width="1.2" stroke-linejoin="round">
+              <path d="M-96 4 q1 -12 5 -17 q1 9 -2 17 Z"/><path d="M-90 4 q-2 -10 2 -14 q3 7 1 14 Z"/>
+              <path d="M-66 8 q1 -10 5 -14 q1 8 -2 14 Z"/>
+              <path d="M44 6 q1 -10 5 -14 q1 8 -2 14 Z"/><path d="M50 6 q-2 -8 2 -12 q3 6 1 12 Z"/>
+            </g>
+            <g stroke="#33304A" stroke-width="1.1"><g transform="translate(-76 5)"><path d="M0 0 V-9" stroke="#2E7E52" stroke-width="1.6"/><circle cy="-10" r="3.6" fill="#FF8FA8"/><circle cy="-10" r="1.4" fill="#FFC93C"/></g></g>
+          </g>
+          <!-- Un bout de branche feuillue, en haut à droite : la noisette dorée y pend -->
+          <g id="branche" opacity="0">
+            <path d="M90 -157 Q68 -160 44 -158" fill="none" stroke="#33304A" stroke-width="7" stroke-linecap="round"/><path d="M90 -157 Q68 -160 44 -158" fill="none" stroke="#8E5A2B" stroke-width="3.6" stroke-linecap="round"/>
+            <g stroke="#33304A" stroke-width="2.2" stroke-linejoin="round"><circle cx="46" cy="-165" r="10" fill="#3F9A63"/><circle cx="60" cy="-169" r="11" fill="#2E7E52"/><circle cx="74" cy="-164" r="9" fill="#4FAE6E"/></g>
+            <circle cx="58" cy="-172" r="4" fill="#8FD98A" opacity=".8"/>
+            <path d="M56 -158 V-152" fill="none" stroke="#33304A" stroke-width="3.4" stroke-linecap="round"/><path d="M56 -158 V-152" fill="none" stroke="#8E5A2B" stroke-width="1.6" stroke-linecap="round"/>
+          </g>
+          <!-- Noisette et sa noisette : le moteur dessine à l'échelle 1,35 ; le groupe la ramène à 1 pour qu'elle ait la taille du dessin fixe, ses pieds à l'origine -->
+          <g transform="scale(.7407) translate(-190 -392)">
+            <ellipse id="animaux-ombre-sol" cx="190" cy="398" rx="46" ry="9" fill="#2E7E52" opacity=".28"/>
+            <ellipse id="ombre-noix" cx="0" cy="398" rx="10" ry="2.6" fill="#2E7E52" opacity=".3"/>
+            <g id="animaux-noisette"></g>
+            <g id="noix"></g>
+          </g>
+          <!-- La petite bulle écrite « hop ! » : décor du dessin, jamais lue -->
+          <g id="hop" opacity="0"><g id="hop-corps" transform="translate(-90 -148)">
+            <path d="M-16 -10 H16 Q22 -10 22 -4 V6 Q22 12 16 12 H10 L6 21 L0 12 H-16 Q-22 12 -22 6 V-4 Q-22 -10 -16 -10 Z" fill="#FFFFFF" stroke="#33304A" stroke-width="2.4" stroke-linejoin="round"/>
+            <text class="ecrit" text-anchor="middle" x="0" y="5.5" font-size="14" fill="#33304A">hop !</text>
+          </g></g>
+        </svg>
+      </div>
+      <p class="bulle" id="bulle" aria-live="polite"></p>
+    </div>
+    <button class="reecouter" type="button">Réécouter</button>
+    <p class="consigne" data-testid="consigne">Combien font 3 + 4 ?</p>
+    <div class="choix" role="group" aria-label="Les choix">
+      <button type="button" data-choix="6">6</button>
+      <button type="button" data-choix="7">7</button>
+      <button type="button" data-choix="8" class="essayee">8</button>
+      <button type="button" data-choix="9">9</button>
+    </div>
+    <button class="ne-sais-pas" type="button">Je ne sais pas</button>
+    <p class="etat" id="etat"></p>
+  </div>
+
+  <aside class="commandes">
+    <h1>Scène de réponse fausse : Noisette (maquette 163c)</h1>
+    <p>Noisette vient de recevoir une réponse fausse (« 8 »). Sa scène prend la place de son dessin, à sa taille. Touche un choix, « Réécouter » ou « Je ne sais pas » : la scène s'arrête tout de suite.</p>
+    <button class="btn" id="rejouer" type="button">Rejouer la scène</button>
+    <label><input type="checkbox" id="reduit"> Mouvements réduits (image fixe)</label>
+    <label><input type="checkbox" id="dys"> Mode dys</label>
+    <label><input type="checkbox" id="tablette"> Écran de tablette (768 px, dessin de 200 px)</label>
+    <p class="duree" id="duree" role="status">Durée : pas encore jouée.</p>
+    <p class="notes">Noisette porte ici sa tenue de base : la tenue choisie par l'enfant viendra des dessins de 106h (163.8). Après la scène, le dessin du personnage guide revient avec l'humeur « réfléchit » (163.13) : le câblage s'en charge, la maquette garde la dernière image. Le dessin de Noisette et son moteur d'articulation sont ceux de <code>src/univers/celebrations/animaux/</code> (copiés ici pour que la maquette soit autonome).</p>
+  </aside>
+</div>
+<script>
+// Moteur de Noisette : bundle (sans minification) de src/univers/celebrations/animaux/personnage.ts, du dessin de la noisette dorée et de commun/, en lecture seule, pour que la maquette reste autonome.
+(function() {
+	// ../wt-163c/src/univers/celebrations/commun/courbes.ts
+	var DEG = Math.PI / 180;
+	/** Les courbes d'accélération des maquettes : toutes vont de 0 à 1 (le retour et le rebond dépassent 1 un instant). */
+	var E = {
+		lineaire: (u) => u,
+		/** Le saut immédiat à la valeur d'arrivée : remet un tour complet à zéro sans repasser par les angles intermédiaires. */
+		instantanee: () => 1,
+		sortie: (u) => 1 - Math.pow(1 - u, 3),
+		entree: (u) => u * u * u,
+		douce: (u) => u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2,
+		retour: (u) => retourDe(u, 1.7),
+		rebond: (u) => retourDe(u, 2.6)
+	};
+	function retourDe(u, c) {
+		return 1 + (c + 1) * Math.pow(u - 1, 3) + c * Math.pow(u - 1, 2);
+	}
+	var lerp = (a, b, u) => a + (b - a) * u;
+	var clamp01 = (u) => Math.max(0, Math.min(1, u));
+	var fenetre = (t, debut, duree, e = E.sortie) => e(clamp01((t - debut) / duree));
+	/** Arrondi à un dixième, pour des attributs SVG courts. */
+	var r1 = (v) => Math.round(v * 10) / 10;
+	/** Arrondi au millième, pour les échelles et les opacités. */
+	var r3 = (v) => Math.round(v * 1e3) / 1e3;
+	// ../wt-163c/src/univers/celebrations/commun/dom.ts
+	var NS = "http://www.w3.org/2000/svg";
+	function trouver(parent, selecteur) {
+		const element = parent.querySelector(selecteur);
+		if (!element) throw new Error(`Élément de la scène de célébration introuvable : ${selecteur}`);
+		return element;
+	}
+	/** Retrouve un élément de la scène par son identifiant (préfixé par l'univers : `sports-leo`, `danse-lili`, ou par la scène : `reponse-fausse-sports-leo`), une seule fois. */
+	function elementsDe(racine, prefixe) {
+		const memo = /* @__PURE__ */ new Map();
+		return (id) => {
+			const connu = memo.get(id);
+			if (connu) return connu;
+			const trouve = trouver(racine, `#${prefixe}-${id}`);
+			memo.set(id, trouve);
+			return trouve;
+		};
+	}
+	var poser = (element, attribut, valeur) => element.setAttribute(attribut, String(valeur));
+	var deplacer = (element, transformation) => element.setAttribute("transform", transformation);
+	function creerUnGroupe(attributs = {}) {
+		const groupe = document.createElementNS(NS, "g");
+		for (const [nom, valeur] of Object.entries(attributs)) groupe.setAttribute(nom, valeur);
+		return groupe;
+	}
+	// ../wt-163c/src/univers/celebrations/commun/tenues.ts
+	var CONTOUR$1 = "#33304A";
+	var ROUGE_DE_L_ECHARPE = "#E8604C";
+	var CREME_DE_L_ECHARPE = "#FFF4DC";
+	var BANDE_DU_COL = "M-19 -6 Q0 4 19 -6 L19 4 Q0 14 -19 4 Z";
+	var QUEUE_DE_L_ECHARPE = "M-19 2 L-6 4 L-7 25 L-20 24 Z";
+	var CORPS_DE_COACH_LEO = {
+		cou: {
+			x: 0,
+			y: -41,
+			echelle: 1
+		},
+		dos: {
+			x: 0,
+			y: -16,
+			echelle: 1.15,
+			elargissement: 1.55
+		},
+		pieds: {
+			gauche: {
+				x: -14.7,
+				y: 60,
+				echelle: 1
+			},
+			droit: {
+				x: 14.7,
+				y: 60,
+				echelle: 1
+			},
+			tige: 24
+		}
+	};
+	/** Coach Léo, Lili, Agent Max et Capitaine Sam ont le même corps ; Lumi flotte et ses ailes battent dans le dos ; Noisette est petite et ronde. */
+	var ANCRAGES_DES_TENUES = {
+		sports: CORPS_DE_COACH_LEO,
+		danse: CORPS_DE_COACH_LEO,
+		police: CORPS_DE_COACH_LEO,
+		pompier: CORPS_DE_COACH_LEO,
+		animaux: {
+			cou: {
+				x: 0,
+				y: -79,
+				echelle: 1.5
+			},
+			dos: {
+				x: 0,
+				y: -50,
+				echelle: 1.5,
+				elargissement: 1.35
+			},
+			pieds: {
+				gauche: {
+					x: -17,
+					y: -4,
+					echelle: .9
+				},
+				droit: {
+					x: 17,
+					y: -4,
+					echelle: .9
+				},
+				tige: 12
+			}
+		},
+		princesse: {
+			cou: {
+				x: 0,
+				y: -107,
+				echelle: 1.1
+			},
+			dos: {
+				x: 0,
+				y: -84,
+				echelle: 1,
+				elargissement: 2
+			},
+			pieds: {
+				gauche: {
+					x: -12,
+					y: 0,
+					echelle: .75
+				},
+				droit: {
+					x: 12,
+					y: 0,
+					echelle: .75
+				},
+				tige: 18
+			}
+		}
+	};
+	var bandes = (largeurs, rectangle) => largeurs.map((position, i) => rectangle(position, i % 2 === 0 ? ROUGE_DE_L_ECHARPE : CREME_DE_L_ECHARPE)).join("");
+	/** L'écharpe rayée : le tour du cou (`col-de-l-echarpe`) et la queue qui pend sur le devant (`queue-de-l-echarpe`). */
+	function dessinDeLEcharpe(id) {
+		const bandesDuCol = bandes([
+			-19,
+			-13,
+			-7,
+			-1,
+			5,
+			11,
+			17
+		], (x, couleur) => `<rect x="${x}" y="-8" width="6" height="24" fill="${couleur}"/>`);
+		return `<g data-tenue-dessin="echarpe-rayee" stroke-linejoin="round">
+    <clipPath id="${id}queue"><path d="${QUEUE_DE_L_ECHARPE}"/></clipPath>
+    <clipPath id="${id}col"><path d="${BANDE_DU_COL}"/></clipPath>
+    <g class="queue-de-l-echarpe">
+      <g clip-path="url(#${id}queue)">${bandes([
+			3,
+			8.5,
+			14,
+			19.5
+		], (y, couleur) => `<rect x="-20" y="${y}" width="14" height="5.5" fill="${couleur}"/>`)}</g>
+      <path d="${QUEUE_DE_L_ECHARPE}" fill="none" stroke="${CONTOUR$1}" stroke-width="2.4"/>
+      <path d="M-19 25 v4 M-15 25 v4 M-11 25 v4" stroke="${ROUGE_DE_L_ECHARPE}" stroke-width="2" stroke-linecap="round"/>
+    </g>
+    <g class="col-de-l-echarpe">
+      <g clip-path="url(#${id}col)">${bandesDuCol}</g>
+      <path d="${BANDE_DU_COL}" fill="none" stroke="${CONTOUR$1}" stroke-width="2.4"/>
+    </g>
+  </g>`;
+	}
+	var DESSIN_DU_NOEUD_PAPILLON = `<g data-tenue-dessin="noeud-papillon" stroke="${CONTOUR$1}" stroke-width="2.4" stroke-linejoin="round">
+    <path d="M-2 0 Q-8 -9 -15 -8 Q-18 0 -15 8 Q-8 9 -2 0 Z" fill="#7A4FD6"/>
+    <path d="M2 0 Q8 -9 15 -8 Q18 0 15 8 Q8 9 2 0 Z" fill="#7A4FD6"/>
+    <g stroke="none" fill="#FFFFFF" opacity=".85"><circle cx="-10" cy="-2.5" r="1.7"/><circle cx="-10" cy="3" r="1.7"/><circle cx="10" cy="-2.5" r="1.7"/><circle cx="10" cy="3" r="1.7"/></g>
+    <rect x="-4.5" y="-5" width="9" height="10" rx="3.5" fill="#FFC93C"/>
+  </g>`;
+	/** Le sac à dos d'explorateur, posé derrière le corps ; `elargissement` l'élargit pour les personnages à large dos (Lumi, Noisette). */
+	function dessinDuSacADos(id, elargissement) {
+		const demiLargeur = 23 * elargissement;
+		return `<g data-tenue-dessin="sac-a-dos-d-explorateur" stroke="${CONTOUR$1}" stroke-width="2.6" stroke-linejoin="round">
+    <defs><radialGradient id="${id}sac" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#8FDDA8"/><stop offset="1" stop-color="#4FB37A"/></radialGradient></defs>
+    <rect x="${-demiLargeur}" y="-24" width="${2 * demiLargeur}" height="48" rx="15" fill="url(#${id}sac)"/>
+    <path d="M${-demiLargeur} -6 Q${-demiLargeur} -24 -8 -24 H8 Q${demiLargeur} -24 ${demiLargeur} -6 Q0 4 ${-demiLargeur} -6 Z" fill="#3E9466"/>
+    <rect x="${-demiLargeur * .6}" y="9" width="${demiLargeur * 1.2}" height="13" rx="6" fill="#A8703A"/>
+    <rect x="-4" y="-4" width="8" height="7" rx="2.5" fill="#FFC93C" stroke-width="1.8"/>
+  </g>`;
+	}
+	/** Les bretelles du sac, devant le corps. */
+	var DESSIN_DES_BRETELLES = `<g data-tenue-dessin="sac-a-dos-d-explorateur-bretelles" fill="none" stroke="${CONTOUR$1}" stroke-linecap="round">
+    <path d="M-12 -18 Q-16 0 -14 18 M12 -18 Q16 0 14 18" stroke-width="8"/>
+    <path d="M-12 -18 Q-16 0 -14 18 M12 -18 Q16 0 14 18" stroke-width="4.4" stroke="#A8703A"/>
+  </g>`;
+	var JAUNE_DE_LA_BOTTE = "#FFC93C";
+	var ROUGE_DE_LA_BOTTE = "#E8604C";
+	var SEMELLE_DE_LA_BOTTE = "#B9831A";
+	var TRAIT_DES_BOTTES = `stroke="${CONTOUR$1}" stroke-width="2.6" stroke-linejoin="round"`;
+	/** Le corps d'une botte vue de face (la tige, son revers rouge, la semelle), la cheville à l'origine ; `tige` est la hauteur de la tige au-dessus de la cheville. */
+	var corpsDeLaBotte = (tige) => `<path d="M-9 ${-tige} H9 V0 Q14 1 14 8 Q14 15 7 16 H-7 Q-14 15 -14 8 Q-14 1 -9 0 Z" fill="${JAUNE_DE_LA_BOTTE}"/>
+    <path d="M-9 ${-tige} H9 V${6 - tige} H-9 Z" fill="${ROUGE_DE_LA_BOTTE}"/>
+    <path d="M-14 12 H14" stroke-width="1.6" stroke="${SEMELLE_DE_LA_BOTTE}"/>`;
+	var refletDeLaBotte = (tige) => `<path d="M-5 ${10 - tige} V3" stroke="#FFF3B8" stroke-width="2.4" stroke-linecap="round" fill="none"/>`;
+	/** Une botte de pluie vue de face. */
+	function dessinDeLaBotte(tige) {
+		return `<g ${TRAIT_DES_BOTTES}>${corpsDeLaBotte(tige)}${refletDeLaBotte(tige)}</g>`;
+	}
+	// ../wt-163c/src/univers/celebrations/commun/habiller.ts
+	var SANS_TENUE = { suivre: () => void 0 };
+	/** Le sac, à la moitié de sa profondeur derrière le dos : de profil il dépasse derrière, de dos il couvre le torse. */
+	var DECALAGE_DU_SAC = 14;
+	var DECALAGE_DES_BRETELLES = 8;
+	var DECALAGE_DU_NOEUD = 7;
+	/** La queue de l'écharpe pend sur le devant du torse, à gauche du cou : son abscisse et sa profondeur. */
+	var QUEUE_X = -13;
+	var QUEUE_Z = 9;
+	function monter(dessin, inserer) {
+		const groupe = creerUnGroupe();
+		groupe.innerHTML = dessin;
+		inserer(groupe);
+		return groupe;
+	}
+	/** Devant le torse : visible de face et de profil (étroit, au bord de la poitrine), caché dès que le personnage montre son dos. */
+	var visibleDevant = (cw) => r3(clamp01((cw + .25) * 4));
+	var largeurDeFace = (cw, minimum) => Math.max(minimum, Math.abs(cw));
+	/**
+	* Habille le personnage guide de l'une des trois tenues du cou et du dos : l'écharpe et le nœud papillon suivent le cou, le sac à dos suit le torse
+	* (derrière le corps, les bretelles devant ; de dos, le sac passe devant le torse et les bretelles disparaissent).
+	* Rend ce qui replace la tenue à chaque image. Les bottes de pluie ne passent pas ici : elles remplacent les chaussures (`chausserLesBottes`), ou se posent sur les pattes (Noisette).
+	*/
+	function habillerLePersonnage(univers, tenue, ancrage, emplacements, prefixe = univers) {
+		const id = `${prefixe}-tenue-`;
+		const { cou, dos } = ancrage;
+		switch (tenue) {
+			case void 0:
+			case "bottes-de-pluie": return SANS_TENUE;
+			case "echarpe-rayee": {
+				const groupe = monter(dessinDeLEcharpe(id), emplacements.auCou);
+				const col = trouver(groupe, ".col-de-l-echarpe"), queue = trouver(groupe, ".queue-de-l-echarpe");
+				return { suivre({ cw, sw, dx = 0 }) {
+					deplacer(groupe, `translate(${r1(cou.x + dx)} ${cou.y}) scale(${cou.echelle})`);
+					deplacer(col, `scale(${r3(largeurDeFace(cw, .5))} 1)`);
+					poser(queue, "opacity", QUEUE_Z * cw - QUEUE_X * sw > 2 ? 1 : 0);
+					deplacer(queue, `translate(${r1(QUEUE_X * cw + QUEUE_Z * sw)} 0) scale(${r3(largeurDeFace(cw, .3))} 1) translate(13 0)`);
+				} };
+			}
+			case "noeud-papillon": {
+				const groupe = monter(DESSIN_DU_NOEUD_PAPILLON, emplacements.auCou);
+				return { suivre({ cw, sw, dx = 0 }) {
+					deplacer(groupe, `translate(${r1(cou.x + dx + DECALAGE_DU_NOEUD * sw * cou.echelle)} ${cou.y}) scale(${r3(cou.echelle * largeurDeFace(cw, .3))} ${cou.echelle})`);
+					poser(groupe, "opacity", visibleDevant(cw));
+				} };
+			}
+			case "sac-a-dos-d-explorateur": {
+				const derriere = creerUnGroupe();
+				emplacements.derriere(derriere);
+				const sac = monter(dessinDuSacADos(id, dos.elargissement), (groupe) => derriere.append(groupe));
+				const surLeTorse = emplacements.surLeTorse ? monter("", emplacements.surLeTorse) : void 0;
+				const bretelles = monter(DESSIN_DES_BRETELLES, emplacements.devant);
+				return { suivre({ cw, sw, dx = 0, torse = 0 }) {
+					deplacer(derriere, `rotate(${r1(torse)})`);
+					const cible = cw < 0 && surLeTorse ? surLeTorse : derriere;
+					if (sac.parentNode !== cible) cible.append(sac);
+					deplacer(sac, `translate(${r1(dos.x + dx - DECALAGE_DU_SAC * sw * dos.echelle)} ${dos.y}) scale(${r3(dos.echelle * lerp(.45, 1, Math.abs(cw)))} ${dos.echelle})`);
+					deplacer(bretelles, `translate(${r1(dos.x + dx + DECALAGE_DES_BRETELLES * sw * dos.echelle)} ${dos.y}) scale(${r3(dos.echelle * largeurDeFace(cw, .35))} ${dos.echelle})`);
+					poser(bretelles, "opacity", visibleDevant(cw));
+				} };
+			}
+		}
+	}
+	ANCRAGES_DES_TENUES.sports.pieds.tige;
+	// ../wt-163c/src/univers/celebrations/commun/expressions.ts
+	/** L'expression à l'instant `t` : l'expression en cours, la précédente et l'avancement du fondu de l'une à l'autre. */
+	function expressionA(expressions, t) {
+		const premiere = expressions[0];
+		if (!premiere) throw new Error("Une scène de célébration a au moins une expression");
+		let courante = premiere, precedente = null;
+		for (const e of expressions) {
+			if (e.t > t) continue;
+			precedente = courante === e ? precedente : courante;
+			courante = e;
+		}
+		const u = precedente && precedente !== courante ? fenetre(t, courante.t, .14) : 1;
+		return {
+			emo: courante.emo,
+			prec: precedente ? precedente.emo : courante.emo,
+			u
+		};
+	}
+	// ../wt-163c/src/univers/celebrations/commun/tableaux.ts
+	/** L'élément `i` d'un tableau qui doit l'avoir : une erreur claire plutôt qu'un `undefined` qui se propage dans un tracé. */
+	function au(tableau, i) {
+		const valeur = tableau[i];
+		if (valeur === void 0) throw new Error(`Le tableau n'a pas d'élément ${i}`);
+		return valeur;
+	}
+	// ../wt-163c/src/univers/celebrations/commun/membres.ts
+	var quad = (S, C, W, t) => ({
+		x: (1 - t) ** 2 * S.x + 2 * t * (1 - t) * C.x + t * t * W.x,
+		y: (1 - t) ** 2 * S.y + 2 * t * (1 - t) * C.y + t * t * W.y
+	});
+	/** Un membre articulé : une seule courbe souple de l'épaule (ou de la hanche) au poignet (ou à la cheville). */
+	function membre(S, a1, a2, L1, L2) {
+		const E1 = {
+			x: S.x - Math.sin(a1 * DEG) * L1,
+			y: S.y + Math.cos(a1 * DEG) * L1
+		};
+		const W = {
+			x: E1.x - Math.sin((a1 + a2) * DEG) * L2,
+			y: E1.y + Math.cos((a1 + a2) * DEG) * L2
+		};
+		return {
+			S,
+			E: E1,
+			W,
+			C: {
+				x: 2 * E1.x - (S.x + W.x) / 2,
+				y: 2 * E1.y - (S.y + W.y) / 2
+			},
+			dir: Math.atan2(W.x - E1.x, -(W.y - E1.y)) / DEG
+		};
+	}
+	function trace(m, t0, t1, pas = 8) {
+		let d = "";
+		for (let i = 0; i <= pas; i++) {
+			const p = quad(m.S, m.C, m.W, lerp(t0, t1, i / pas));
+			d += `${i ? "L" : "M"}${r1(p.x)} ${r1(p.y)}`;
+		}
+		return d;
+	}
+	var decaler = (m, dx, dy) => ({
+		...m,
+		S: {
+			x: m.S.x + dx,
+			y: m.S.y + dy
+		},
+		C: {
+			x: m.C.x + dx,
+			y: m.C.y + dy
+		},
+		W: {
+			x: m.W.x + dx,
+			y: m.W.y + dy
+		}
+	});
+	/** Une courbe lisse qui passe entre les points : chaque point est un point de contrôle, la courbe va aux milieux. Elle démarre par `M` (nouveau tracé) ou par `L` (suite d'un tracé). */
+	function courbe(P, depart = "M") {
+		const premier = au(P, 0);
+		let d = `${depart}${r1(premier.x)} ${r1(premier.y)}`;
+		for (let i = 1; i < P.length - 1; i++) {
+			const a = au(P, i), b = au(P, i + 1);
+			d += ` Q${r1(a.x)} ${r1(a.y)} ${r1((a.x + b.x) / 2)} ${r1((a.y + b.y) / 2)}`;
+		}
+		const fin = au(P, P.length - 1);
+		return `${d} L${r1(fin.x)} ${r1(fin.y)}`;
+	}
+	// ../wt-163c/src/univers/celebrations/commun/visage.ts
+	var clignement = (t) => {
+		const c = (t + .9) % 2.9;
+		return c < .13 ? Math.sin(c / .13 * Math.PI) : 0;
+	};
+	// ../wt-163c/src/univers/celebrations/commun/mains.ts
+	/** Un doigt effilé et légèrement courbe, de la base (x, y0) dans la direction a (0 = vers le haut), longueur L. */
+	function doigtForme(x, y0, a, L, b = 2.7, tp = 1.9) {
+		const dx = Math.sin(a * DEG), dy = -Math.cos(a * DEG), nx = -dy, ny = dx;
+		const tx = x + dx * L, ty = y0 + dy * L, mx = (x + tx) / 2 + nx * .7, my = (y0 + ty) / 2 + ny * .7, mw = (b + tp) / 2;
+		return `M${r1(x + nx * b)} ${r1(y0 + ny * b)} Q${r1(mx + nx * mw)} ${r1(my + ny * mw)} ${r1(tx + nx * tp)} ${r1(ty + ny * tp)} A${tp} ${tp} 0 0 0 ${r1(tx - nx * tp)} ${r1(ty - ny * tp)} Q${r1(mx - nx * mw)} ${r1(my - ny * mw)} ${r1(x - nx * b)} ${r1(y0 - ny * b)} Z`;
+	}
+	/** Une main à cinq doigts : détendue (0), poing (1), pouce levé (2) ou doigts écartés (3). */
+	function main(pose, cote, { contour, peau, peauOmbre }) {
+		const trait = (d, w) => `<path d="${d}" fill="none" stroke="${contour}" stroke-width="${w}" stroke-linejoin="round"/>`;
+		const m = cote === "miroir" ? -1 : 1, doigts = [
+			-6.3,
+			-2.1,
+			2.1,
+			6.3
+		], angles = pose === 3 ? [
+			-26,
+			-9,
+			9,
+			26
+		] : [
+			-9,
+			-3,
+			3,
+			9
+		];
+		const paume = `M-8 9 V-3 Q-8 -8 -3 -8 H3 Q8 -8 8 -3 V9 Q0 12 -8 9 Z`;
+		const paumePoing = `M-8 8 V-2 Q-8 -9 0 -9 Q8 -9 8 -2 V8 Q0 12 -8 8 Z`;
+		let contours = "", remplissages = "";
+		if (pose === 0 || pose === 3) {
+			const formes = doigts.map((x, i) => doigtForme(x, -6, (angles[i] ?? 0) * m, 10.5 - Math.abs(i - 1.5) * .8));
+			const pouce = doigtForme(-7 * m, 0, -52 * m, 9, 2.6, 1.9);
+			formes.concat(pouce).forEach((d) => contours += trait(d, 5.2));
+			remplissages += formes.concat(pouce).map((d) => `<path d="${d}" fill="${peau}"/>`).join("");
+			remplissages += doigts.map((x, i) => {
+				const a = (angles[i] ?? 0) * m * DEG;
+				return `<path d="M${r1(x + Math.sin(a) * 3)} ${r1(-6 - Math.cos(a) * 3)} l${r1(Math.sin(a) * 4)} ${r1(-Math.cos(a) * 4)}" fill="none" stroke="${peauOmbre}" stroke-width="1.2" stroke-linecap="round" opacity=".7"/>`;
+			}).join("");
+			return `${contours}${trait(paume, 5.6)}<path d="${paume}" fill="${peau}"/>${remplissages}<path d="M3 8 Q7 4 7 -1" fill="none" stroke="${peauOmbre}" stroke-width="2.2" stroke-linecap="round"/>`;
+		}
+		const pouce = pose === 2 ? doigtForme(-5 * m, -4, -10 * m, 13, 2.8, 2.1) : null;
+		if (pouce) contours += trait(pouce, 5.4);
+		doigts.forEach((x) => {
+			contours += `<circle cx="${x}" cy="-8" r="5.4" fill="${contour}"/>`;
+		});
+		let dessus = doigts.map((x) => `<circle cx="${x}" cy="-8" r="3.6" fill="${peau}"/>`).join("") + `<rect x="-8" y="-8" width="16" height="6" fill="${peau}"/>`;
+		dessus += doigts.map((x) => `<path d="M${x - 2.2} -6.5 q2.2 -1.8 4.4 0" fill="none" stroke="${peauOmbre}" stroke-width="1.4" stroke-linecap="round"/>`).join("");
+		if (pouce) dessus += `<path d="${pouce}" fill="${peau}"/><path d="M${r1(-6 * m)} -3 l${r1(-1.5 * m)} -6" fill="none" stroke="${peauOmbre}" stroke-width="1.6" stroke-linecap="round"/>`;
+		else dessus += `<path d="M${-7 * m} 2 q${r1(5 * m)} 3 ${r1(10 * m)} 1" fill="none" stroke="${peauOmbre}" stroke-width="1.8" stroke-linecap="round"/>`;
+		return `${contours}${trait(paumePoing, 5.6)}<path d="${paumePoing}" fill="${peau}"/>${dessus}<path d="M3 7 Q7 3 7 -2" fill="none" stroke="${peauOmbre}" stroke-width="2.2" stroke-linecap="round"/>`;
+	}
+	var POSES_DE_MAIN = [
+		0,
+		1,
+		2,
+		3
+	];
+	/** Les mains du personnage, dans chaque pose et de chaque côté, aux couleurs de sa peau. */
+	var dessinDesMains = (couleurs) => ({
+		droit: POSES_DE_MAIN.map((p) => main(p, "droit", couleurs)),
+		miroir: POSES_DE_MAIN.map((p) => main(p, "miroir", couleurs))
+	});
+	// ../wt-163c/src/univers/celebrations/commun/trait.ts
+	/** Un trait arrondi du personnage (contour, ombre, manche…) : le moteur en calcule le tracé `d` à chaque image. */
+	var ligne = (classe, couleur, largeur) => `<path class="${classe}" fill="none" stroke="${couleur}" stroke-width="${largeur}" stroke-linecap="round" stroke-linejoin="round"/>`;
+	// ../wt-163c/src/univers/celebrations/animaux/dessin-de-noisette.ts
+	var CONTOUR = "#33304A";
+	var FOURRURE = "#F48C3C";
+	var OMBRE = "#C9601C";
+	var LUMIERE = "#FFC28A";
+	var BANDE = "#D9772A";
+	var VENTRE = "#FFE0BF";
+	var VENTRE_LUMIERE = "#FFFFFF";
+	var OREILLE = "#FFB3C7";
+	var TRUFFE = "#8B4A1E";
+	var PEAU = "#FFC28A";
+	var PEAU_OMBRE = "#E09A5A";
+	var MAINS = dessinDesMains({
+		contour: CONTOUR,
+		peau: PEAU,
+		peauOmbre: PEAU_OMBRE
+	});
+	var dessinDuBras = (c) => `<g id="animaux-bras-${c}">${ligne("contour", CONTOUR, 21)}${ligne("rempli", FOURRURE, 15)}${ligne("ombre", OMBRE, 5)}${ligne("lumiere", LUMIERE, 3)}<g id="animaux-main-${c}"><g class="pose-main"></g></g></g>`;
+	/** Une noisette dorée (de l'arbre, de l'herbe, qui tombe, qu'on jongle) : un halo, la coque, la cupule et un reflet. */
+	var dessinDeLaNoisette = (echelle) => `<g transform="scale(${echelle})"><circle r="15" fill="url(#animaux-lueur)" transform="scale(1.5)"/><path d="M-10 -1 Q-10 -14 0 -14 Q10 -14 10 -1 Q10 9 0 11 Q-10 9 -10 -1 Z" fill="url(#animaux-noisette-or)" stroke="${CONTOUR}" stroke-width="2.6" stroke-linejoin="round"/><path d="M-10 -2 Q0 -7 10 -2 Q10 -14 0 -14 Q-10 -14 -10 -2 Z" fill="#C98A12" stroke="${CONTOUR}" stroke-width="2"/><circle cx="-3.5" cy="0" r="2.2" fill="#FFFFFF" opacity=".8"/></g>`;
+	var oeil = (c) => `<g id="animaux-oeil-${c}"><ellipse rx="9" ry="11" fill="#FFFFFF" stroke="${PEAU_OMBRE}" stroke-width="1"/>
+      <g id="animaux-regard-${c}"><circle cx=".5" cy="3" r="5.4" fill="#3E2A1A"/><circle cx=".5" cy="3" r="4.4" fill="#6B4226"/><circle cx=".5" cy="3" r="2.6" fill="#1B1530"/><circle cx="-1.6" cy=".4" r="2" fill="#FFFFFF"/><circle cx="2.8" cy="5" r="1" fill="#FFFFFF"/></g>
+      <g clip-path="url(#animaux-clip-oeil)"><ellipse id="animaux-paupiere-${c}" rx="11" ry="12" fill="${FOURRURE}" stroke="${CONTOUR}" stroke-width="2.6"/></g>
+      <path d="M-8.5 0 A9 11 0 0 1 8.5 0" fill="none" stroke="${CONTOUR}" stroke-width="3" stroke-linecap="round"/>
+      <path d="M-5 10.2 Q0 12 5 10.2" fill="none" stroke="${CONTOUR}" stroke-width="1" stroke-linecap="round" opacity=".4"/>
+      <path d="${c === "g" ? "M-7 -8 l-2.6 -2.4" : "M7 -8 l2.6 -2.4"}" fill="none" stroke="${CONTOUR}" stroke-width="2.2" stroke-linecap="round"/></g>`;
+	var sourcil = (c) => `<g id="animaux-sourcil-${c}"><path d="M-8 0 Q0 -5 8 0" fill="none" stroke="${OMBRE}" stroke-width="3.6" stroke-linecap="round"/></g>`;
+	var joue = (c) => `<g id="animaux-joue-${c}"><circle r="11.5" fill="${LUMIERE}" stroke="${CONTOUR}" stroke-width="2.6"/><circle cx="${c === "g" ? -1 : 1}" cy="1" r="5" fill="#FF8FA8" opacity=".38"/></g>`;
+	var oreille = (c) => `<g id="animaux-oreille-${c}"><ellipse rx="13" ry="15" fill="${FOURRURE}" stroke="${CONTOUR}" stroke-width="3"/><ellipse cy="1" rx="7" ry="9" fill="${OREILLE}"/></g>`;
+	var pied = (c) => {
+		return `<g id="animaux-pied-${c}"><ellipse cx="${c === "g" ? -17 : 17}" cy="-5" rx="16" ry="9" fill="${FOURRURE}" stroke="${CONTOUR}" stroke-width="3"/><path d="${c === "g" ? "M-26 -1 q4 3 7 0 M-19 1 q4 3 7 0 M-12 -1 q3 2 6 0" : "M8 -1 q4 3 7 0 M15 1 q4 3 7 0 M22 -1 q3 2 6 0"}" fill="none" stroke="${CONTOUR}" stroke-width="1.5" opacity=".7"/></g>`;
+	};
+	var jambe = (signe) => `<path d="M${signe * 20} -30 Q${signe * 26} -14 ${signe * 20} -6 Q${signe * 12} -2 ${signe * 8} -8 Q${signe * 6} -20 ${signe * 10} -30 Z" fill="${FOURRURE}" stroke="${CONTOUR}" stroke-width="3" stroke-linejoin="round"/>`;
+	var TRAIT_DE_BOUCHE = `fill="none" stroke="${CONTOUR}" stroke-linecap="round"`;
+	/**
+	* Les bouches, une par expression. Toutes sont fermées ou à peine ouvertes, sans intérieur dessiné : Noisette sourit,
+	* mâche la bouche fermée, a les joues pleines. Jamais de langue, de dents mâchées ni de bave.
+	*/
+	var BOUCHES = `
+        <path data-emo="sourire" d="M-9 0 Q0 9 9 0" ${TRAIT_DE_BOUCHE} stroke-width="2.6"/>
+        <path data-emo="joie" d="M-12 0 Q0 15 12 0" ${TRAIT_DE_BOUCHE} stroke-width="2.8"/>
+        <path data-emo="concentration" d="M-6 1 Q-2 -1 0 1 Q2 3 6 1" ${TRAIT_DE_BOUCHE} stroke-width="2.4"/>
+        <ellipse data-emo="surprise" cy="4" rx="4.5" ry="5.5" fill="${CONTOUR}"/>
+        <path data-emo="pleines" d="M-5 1 Q0 4 5 1" ${TRAIT_DE_BOUCHE} stroke-width="2.4"/>
+        <path data-emo="croque" d="M-6 1 Q-3 4 0 1 Q3 4 6 1" ${TRAIT_DE_BOUCHE} stroke-width="2.4"/>`;
+	/** Noisette, ronde et potelée, toujours de face ou de trois-quarts : tout ce qui est dessiné une fois pour toutes (le moteur place ensuite chaque pièce). */
+	var STRUCTURE_DE_NOISETTE = `
+    <g id="animaux-queue"><path class="queue" fill="${FOURRURE}" stroke="${CONTOUR}" stroke-width="3.4" stroke-linejoin="round"/><path class="queue-ventre" fill="${VENTRE}"/><path class="queue-ombre" fill="none" stroke="${OMBRE}" stroke-width="4" stroke-linecap="round" opacity=".8"/><path class="queue-lumiere" fill="none" stroke="${LUMIERE}" stroke-width="3" stroke-linecap="round"/><path class="queue-meches" fill="none" stroke="${OMBRE}" stroke-width="1.4" stroke-linecap="round" opacity=".55"/></g>
+    <g id="animaux-bras-arriere"></g>
+    ${pied("g")}${pied("d")}
+    <g>
+      ${jambe(-1)}${jambe(1)}
+      <ellipse cx="0" cy="-50" rx="36" ry="40" fill="${FOURRURE}" stroke="${CONTOUR}" stroke-width="3.6"/>
+      <path d="M10 -14 A36 40 0 0 0 34 -62 A30 34 0 0 1 10 -14 Z" fill="${OMBRE}"/>
+      <ellipse id="animaux-ventre" cx="-1" cy="-42" rx="24" ry="29" fill="${VENTRE}"/>
+      <ellipse cx="-9" cy="-54" rx="8" ry="11" fill="${VENTRE_LUMIERE}" opacity=".6"/>
+      <ellipse cx="-20" cy="-78" rx="9" ry="5" fill="${LUMIERE}" opacity=".8"/>
+    </g>
+    <g id="animaux-tete">
+      ${oreille("g")}${oreille("d")}
+      <circle r="44" fill="${FOURRURE}" stroke="${CONTOUR}" stroke-width="3.8"/>
+      <path d="M12 42 A44 44 0 0 0 42 -12 A36 36 0 0 1 12 42 Z" fill="${OMBRE}"/>
+      <path id="animaux-bande" d="M-16 -42 Q0 -50 16 -42 Q10 -30 0 -32 Q-10 -30 -16 -42 Z" fill="${BANDE}"/>
+      <ellipse cx="-18" cy="-24" rx="11" ry="6" fill="${LUMIERE}" opacity=".85"/>
+      ${joue("g")}${joue("d")}
+      <g id="animaux-museau"><ellipse rx="19" ry="14" fill="${VENTRE}"/><ellipse cx="-5" cy="-5" rx="7" ry="3.5" fill="${VENTRE_LUMIERE}" opacity=".7"/></g>
+      <g id="animaux-bouche">${BOUCHES}
+      </g>
+      <g id="animaux-dents"><path d="M-5.5 0 h11 v6 q0 3 -3 3 h-5 q-3 0 -3 -3 Z" fill="#FFFFFF" stroke="${CONTOUR}" stroke-width="1.8" stroke-linejoin="round"/><path d="M0 0 V8" stroke="${CONTOUR}" stroke-width="1.4"/></g>
+      <g id="animaux-nez"><ellipse rx="6.5" ry="5" fill="${TRUFFE}" stroke="${CONTOUR}" stroke-width="2.2"/><ellipse cx="-2" cy="-1.6" rx="2.2" ry="1.3" fill="#FFFFFF" opacity=".75"/></g>
+      ${oeil("g")}${oeil("d")}
+      ${sourcil("g")}${sourcil("d")}
+    </g>
+    <g id="animaux-bras-avant"></g>`;
+	// ../wt-163c/src/univers/celebrations/commun/poses.ts
+	/** Chaque image clé reprend la pose de la précédente, modifiée par ce qu'elle change : la première part du repos. */
+	function compiler(repos, liste) {
+		let precedente = repos;
+		return liste.map(({ t, e, p }) => {
+			precedente = {
+				...precedente,
+				...p
+			};
+			return {
+				t,
+				e,
+				p: precedente
+			};
+		});
+	}
+	/** La pose à l'instant `t`, interpolée entre les deux images clés qui l'encadrent. */
+	function poseA$1(repos, poses, t) {
+		const premiere = poses[0];
+		if (!premiere || t <= premiere.t) return premiere?.p ?? repos;
+		const cles = Object.keys(repos);
+		for (let i = 1; i < poses.length; i++) {
+			const k = poses[i];
+			const a = poses[i - 1];
+			if (!k || !a || t > k.t) continue;
+			const u = k.e((t - a.t) / (k.t - a.t));
+			const r = { ...repos };
+			for (const c of cles) r[c] = lerp(a.p[c], k.p[c], u);
+			return r;
+		}
+		return poses[poses.length - 1]?.p ?? repos;
+	}
+	var REPOS = {
+		x: 190,
+		y: 392,
+		rot: 0,
+		sx: 1,
+		sy: 1,
+		vue: 0,
+		tete: 0,
+		regardX: 0,
+		regardY: 0,
+		aGu: 10,
+		aGl: 14,
+		aDu: 10,
+		aDl: 14,
+		mG: 0,
+		mD: 0,
+		joues: 0,
+		clin: 0,
+		lid: 0,
+		bras: 0,
+		tenir: 0,
+		tenirG: 0,
+		tenirD: 0
+	};
+	var ACCROUPI = {
+		sy: .86,
+		sx: 1.12
+	};
+	var ETIRE = {
+		sy: 1.1,
+		sx: .94
+	};
+	var NORMAL = {
+		sy: 1,
+		sx: 1
+	};
+	/** Les mains réunies devant la poitrine. */
+	var COUPE = {
+		aGu: -118,
+		aGl: -28,
+		aDu: -118,
+		aDl: -28,
+		mG: 0,
+		mD: 0
+	};
+	E.douce, E.douce, E.douce, { ...ACCROUPI }, E.sortie, { ...ETIRE }, E.douce, E.entree, { ...ACCROUPI }, E.rebond, { ...NORMAL }, { ...COUPE };
+	/** Le rythme du jonglage : le temps entre deux lancers, en secondes du temps de la maquette. */
+	var BATTEMENT_DU_JONGLAGE = .42;
+	var poseA = (poses, t) => poseA$1(REPOS, poses, t);
+	// ../wt-163c/src/univers/celebrations/animaux/queue.ts
+	var LONGUEURS = [
+		26,
+		26,
+		24,
+		22,
+		20
+	];
+	var LARGEURS = [
+		15,
+		23,
+		28,
+		27,
+		21,
+		10
+	];
+	/** De combien chaque segment se courbe par rapport au précédent : la queue s'enroule vers le haut. */
+	var COURBURES = [
+		0,
+		22,
+		28,
+		32,
+		28
+	];
+	var NOMBRE_DE_SEGMENTS = LONGUEURS.length;
+	var ATTACHE = {
+		x: -4,
+		y: -32
+	};
+	var PROLONGEMENT_DE_LA_POINTE = 14;
+	var FESTONS_PAR_SEGMENT = 3;
+	/** Le bord de la queue, découpé en petits festons qui donnent l'aspect du poil. */
+	function festons(P, normales, signe) {
+		let d = "";
+		for (let i = 0; i < P.length - 1; i++) {
+			const a = au(P, i), b = au(P, i + 1), na = au(normales, i), nb = au(normales, i + 1);
+			const nx = (na.x + nb.x) / 2 * signe, ny = (na.y + nb.y) / 2 * signe;
+			for (let k = 0; k < FESTONS_PAR_SEGMENT; k++) {
+				const p0 = {
+					x: lerp(a.x, b.x, k / FESTONS_PAR_SEGMENT),
+					y: lerp(a.y, b.y, k / FESTONS_PAR_SEGMENT)
+				};
+				const p1 = {
+					x: lerp(a.x, b.x, (k + 1) / FESTONS_PAR_SEGMENT),
+					y: lerp(a.y, b.y, (k + 1) / FESTONS_PAR_SEGMENT)
+				};
+				d += ` Q${r1((p0.x + p1.x) / 2 + nx * 7)} ${r1((p0.y + p1.y) / 2 + ny * 7)} ${r1(p1.x)} ${r1(p1.y)}`;
+			}
+		}
+		return d;
+	}
+	/**
+	* La queue en panache de Noisette : une chaîne de 5 segments à ressorts. Chaque segment suit le précédent avec du retard,
+	* elle se balance avec les sauts et les déplacements. L'état des ressorts vit dans cette fermeture.
+	*/
+	function creerLaQueue(racine) {
+		const segments = Array.from({ length: NOMBRE_DE_SEGMENTS }, () => ({
+			angle: 0,
+			vitesse: 0
+		}));
+		const groupe = trouver(racine, "#animaux-queue");
+		const piece = (classe) => trouver(groupe, `.${classe}`);
+		const forme = piece("queue"), ventre = piece("queue-ventre"), ombre = piece("queue-ombre"), lumiere = piece("queue-lumiere"), meches = piece("queue-meches");
+		let tPrecedent = null;
+		/** vx et vy : vitesse du corps. */
+		function dessiner(p, t, vx, vy) {
+			let dt = tPrecedent === null ? 0 : t - tPrecedent;
+			const chauffe = dt < 0 || dt > .25 || tPrecedent === null;
+			if (chauffe) {
+				dt = 0;
+				for (const s of segments) {
+					s.angle = 0;
+					s.vitesse = 0;
+				}
+			}
+			tPrecedent = t;
+			const base = -148 + p.vue * 10 + Math.max(-18, Math.min(18, vx * .14)) + Math.max(-10, Math.min(10, vy * .05)) - p.rot * .5;
+			const pas = chauffe ? 160 : 4, h = chauffe ? 1 / 60 : dt / 4;
+			for (const [i, s] of segments.entries()) {
+				const cible = (i === 0 ? base : au(segments, i - 1).angle) + au(COURBURES, i);
+				const raideur = 260 - i * 24, amortissement = 16 - i * 1.2;
+				for (let k = 0; k < pas; k++) {
+					s.vitesse += ((cible - s.angle) * raideur - s.vitesse * amortissement) * h;
+					s.angle += s.vitesse * h;
+				}
+			}
+			const J = [ATTACHE];
+			for (const [i, s] of segments.entries()) {
+				const q = au(J, i), a = s.angle * DEG;
+				J.push({
+					x: q.x + Math.sin(a) * au(LONGUEURS, i),
+					y: q.y + Math.cos(a) * au(LONGUEURS, i)
+				});
+			}
+			const G = [], D = [], normales = [];
+			for (let i = 0; i <= NOMBRE_DE_SEGMENTS; i++) {
+				const a = au(J, Math.max(0, i - 1)), b = au(J, Math.min(NOMBRE_DE_SEGMENTS, i + 1)), tx = b.x - a.x, ty = b.y - a.y;
+				const tl = Math.hypot(tx, ty) || 1, nx = -ty / tl, ny = tx / tl, largeur = au(LARGEURS, i), centre = au(J, i);
+				normales.push({
+					x: nx,
+					y: ny
+				});
+				G.push({
+					x: centre.x + nx * largeur,
+					y: centre.y + ny * largeur
+				});
+				D.push({
+					x: centre.x - nx * largeur,
+					y: centre.y - ny * largeur
+				});
+			}
+			const dernier = NOMBRE_DE_SEGMENTS, bout = au(J, dernier), avantBout = au(J, dernier - 1), longueur = au(LONGUEURS, dernier - 1);
+			const ux = (bout.x - avantBout.x) / longueur, uy = (bout.y - avantBout.y) / longueur;
+			const pointe = {
+				x: bout.x + ux * PROLONGEMENT_DE_LA_POINTE,
+				y: bout.y + uy * PROLONGEMENT_DE_LA_POINTE
+			};
+			const G5 = au(G, dernier), D5 = au(D, dernier);
+			const dessin = `M${r1(au(G, 0).x)} ${r1(au(G, 0).y)}` + festons(G, normales, 1) + ` Q${r1(G5.x + ux * 10)} ${r1(G5.y + uy * 10)} ${r1(pointe.x)} ${r1(pointe.y)} Q${r1(D5.x + ux * 10)} ${r1(D5.y + uy * 10)} ${r1(D5.x)} ${r1(D5.y)}` + festons(D.slice().reverse(), normales.slice().reverse(), -1) + " Z";
+			const bande = (k) => J.map((_, i) => ({
+				x: lerp(au(G, i).x, au(D, i).x, k),
+				y: lerp(au(G, i).y, au(D, i).y, k)
+			}));
+			const dedans = bande(.6), retour = bande(.92).slice(1, 6).reverse();
+			const premierDuRetour = au(retour, 0);
+			const dessinDuVentre = courbe(dedans.slice(1, 6)) + ` L${r1(premierDuRetour.x)} ${r1(premierDuRetour.y)}` + courbe(retour, "L") + " Z";
+			poser(forme, "d", dessin);
+			poser(ventre, "d", dessinDuVentre);
+			poser(ombre, "d", courbe(bande(.18).slice(1, 6)));
+			poser(lumiere, "d", courbe(bande(.4).slice(0, 4)));
+			poser(meches, "d", `${courbe(bande(.3).slice(2, 6))} ${courbe(bande(.5).slice(1, 5))}`);
+		}
+		return { dessiner };
+	}
+	var BASE = 1.35;
+	var AMPLITUDE_DU_JONGLAGE = 14;
+	/** Pour chaque expression : le décalage et l'inclinaison des sourcils, la paupière (0 ouverte) et la taille de la pupille. */
+	var EMOS = {
+		sourire: {
+			s: [0, 0],
+			lid: 0,
+			pup: 1
+		},
+		joie: {
+			s: [-4, 0],
+			lid: 0,
+			pup: 1.05
+		},
+		concentration: {
+			s: [2, 10],
+			lid: .3,
+			pup: 1
+		},
+		surprise: {
+			s: [-7, -4],
+			lid: 0,
+			pup: .85
+		},
+		pleines: {
+			s: [-2, 0],
+			lid: 0,
+			pup: 1
+		},
+		croque: {
+			s: [-1, 2],
+			lid: .15,
+			pup: 1
+		}
+	};
+	var EMOTIONS_AVEC_DENTS = [
+		"sourire",
+		"joie",
+		"pleines"
+	];
+	/** Un point du dessin de Noisette, dans le repère de la scène (le groupe de Noisette est placé, tourné et étiré selon sa pose). */
+	function dansLaScene(p, local) {
+		const x = local.x * BASE * p.sx, y = local.y * BASE * p.sy, a = p.rot * DEG;
+		return {
+			x: p.x + x * Math.cos(a) - y * Math.sin(a),
+			y: p.y + x * Math.sin(a) + y * Math.cos(a)
+		};
+	}
+	/** Le mouvement des mains qui lancent et rattrapent les noisettes du jonglage. */
+	function elanDuJonglage(scenario, t, p) {
+		if (scenario.tJongle === null || p.bras < .5) return 0;
+		return Math.sin((t - scenario.tJongle) / BATTEMENT_DU_JONGLAGE * Math.PI) * AMPLITUDE_DU_JONGLAGE;
+	}
+	/** Noisette, dessinée image par image à partir des poses du scénario (portage du moteur de la maquette). */
+	function creerNoisette(racine, tenue) {
+		const n = elementsDe(racine, "animaux");
+		n("noisette").innerHTML = STRUCTURE_DE_NOISETTE;
+		const bras = {
+			g: creerLeBras("g"),
+			d: creerLeBras("d")
+		};
+		const bouches = [...n("bouche").children];
+		const queue = creerLaQueue(racine);
+		const habit = habillerLePersonnage("animaux", tenue, ANCRAGES_DES_TENUES.animaux, {
+			derriere: (groupe) => n("queue").after(groupe),
+			devant: (groupe) => n("tete").after(groupe),
+			auCou: (groupe) => n("bras-avant").after(groupe)
+		});
+		const q1 = (g, classe) => trouver(g, `.${classe}`);
+		const bottes = tenue === "bottes-de-pluie" ? poserLesBottes() : [];
+		/** Noisette n'a pas de chaussures : les bottes se posent sur ses pattes arrière, devant son corps. */
+		function poserLesBottes() {
+			const { gauche, droit, tige } = ANCRAGES_DES_TENUES.animaux.pieds;
+			return [gauche, droit].map((repere) => {
+				const element = creerUnGroupe({ "data-tenue-dessin": "bottes-de-pluie" });
+				element.innerHTML = dessinDeLaBotte(tige);
+				n("tete").before(element);
+				return {
+					element,
+					repere
+				};
+			});
+		}
+		function creerLeBras(c) {
+			const enveloppe = creerUnGroupe();
+			enveloppe.innerHTML = dessinDuBras(c);
+			const b = enveloppe.firstElementChild;
+			if (!(b instanceof SVGElement)) throw new Error("Le bras de Noisette n'a pas pu être dessiné");
+			return b;
+		}
+		/** Dessine un bras et rend la position du poignet, dans le repère de Noisette. */
+		function dessinerLeBras(g, c, S, a1, a2, pose) {
+			const m = membre(S, a1, a2, 20, 17);
+			poser(q1(g, "contour"), "d", trace(m, .06, 1));
+			poser(q1(g, "rempli"), "d", trace(m, 0, 1));
+			poser(q1(g, "ombre"), "d", trace(decaler(m, 3.4, 1.4), .25, .92));
+			poser(q1(g, "lumiere"), "d", trace(decaler(m, -3.4, -1.4), .2, .85));
+			const mainG = trouver(g, `#animaux-main-${c}`);
+			deplacer(mainG, `translate(${r1(m.W.x)} ${r1(m.W.y)}) rotate(${r1(m.dir)}) scale(.82)`);
+			const versCentre = c === "g" ? 1 : -1;
+			const cote = Math.cos(m.dir * DEG) * versCentre - Math.sin(m.dir * DEG) * .8 > 0 ? "miroir" : "droit";
+			const cle = cote + pose, emplacement = mainG.firstElementChild;
+			if (emplacement instanceof SVGElement && emplacement.dataset["pose"] !== cle) {
+				emplacement.innerHTML = MAINS[cote][pose] ?? "";
+				emplacement.dataset["pose"] = cle;
+			}
+			return m.W;
+		}
+		function dessinerLaTete(p, ex, lidBase, pup) {
+			const v = p.vue, dx = v * 10, k = 1 - Math.abs(v) * .18;
+			deplacer(n("oreille-g"), `translate(${r1(-30 + dx * 1.4)} -34) rotate(${r1(-14 + v * 10)}) scale(${r3(1 + Math.min(0, v) * .25)} 1)`);
+			deplacer(n("oreille-d"), `translate(${r1(30 + dx * 1.4)} -34) rotate(${r1(14 + v * 10)}) scale(${r3(1 - Math.max(0, v) * .25)} 1)`);
+			deplacer(n("bande"), `translate(${r1(dx * .8)} 0)`);
+			const jo = 1 + Math.min(p.joues, 1.3) * .38;
+			deplacer(n("joue-g"), `translate(${r1(-24 + dx * 1.6 - p.joues * 3)} ${r1(13 + p.joues * 1.5)}) scale(${r3(jo * (1 + Math.min(0, v) * .2))} ${r3(jo)})`);
+			deplacer(n("joue-d"), `translate(${r1(24 + dx * 1.6 + p.joues * 3)} ${r1(13 + p.joues * 1.5)}) scale(${r3(jo * (1 - Math.max(0, v) * .2))} ${r3(jo)})`);
+			deplacer(n("museau"), `translate(${r1(dx * 1.8)} 14) scale(${r3(k)} 1)`);
+			deplacer(n("nez"), `translate(${r1(dx * 1.9)} 4)`);
+			deplacer(n("bouche"), `translate(${r1(dx * 1.8)} 17)`);
+			const A = EMOS[ex.prec], B = EMOS[ex.emo], u = ex.u;
+			const sourcils = [lerp(A.s[0], B.s[0], u), lerp(A.s[1], B.s[1], u)];
+			for (const m of bouches) {
+				const e = m.getAttribute("data-emo");
+				poser(m, "opacity", e === ex.emo ? u : e === ex.prec ? 1 - u : 0);
+				if (e === ex.emo) deplacer(m, `scale(${r3(lerp(.7, 1, E.retour(u)))})`);
+			}
+			poser(n("dents"), "opacity", EMOTIONS_AVEC_DENTS.includes(ex.emo) ? 1 : 0);
+			deplacer(n("dents"), `translate(${r1(dx * 1.8)} 17.5) scale(1 .8)`);
+			for (const [c, sg, lidExtra] of [[
+				"g",
+				-1,
+				0
+			], [
+				"d",
+				1,
+				p.clin
+			]]) {
+				const x = sg * 16 + dx * 1.5, kx = 1 - Math.abs(v) * (sg * v > 0 ? .05 : .22);
+				deplacer(n(`oeil-${c}`), `translate(${r1(x)} -9) scale(${r3(kx)} 1)`);
+				deplacer(n(`sourcil-${c}`), `translate(${r1(x)} ${r1(-27 + sourcils[0])}) scale(${r3(kx)} 1) rotate(${r1(sourcils[1] * sg)})`);
+				deplacer(n(`paupiere-${c}`), `translate(0 ${r1(-23 * (1 - Math.max(lidBase, lidExtra)))})`);
+				deplacer(n(`regard-${c}`), `translate(${r1(p.regardX + v * 2 - .5 * (pup - 1))} ${r1(p.regardY - 2.5 * (pup - 1))}) scale(${pup})`);
+			}
+		}
+		/** Dessine Noisette à l'instant `t` du scénario ; `yeuxOuverts` écarte le clignement (image fixe). */
+		function dessiner(scenario, t, { yeuxOuverts = false } = {}) {
+			const p = poseA(scenario.poses, t), pAvant = poseA(scenario.poses, t - .06);
+			deplacer(n("noisette"), `translate(${r1(p.x)} ${r1(p.y)}) rotate(${r1(p.rot)}) scale(${r3(BASE * p.sx)} ${r3(BASE * p.sy)})`);
+			queue.dessiner(p, t, (p.x - pAvant.x) / .06, (p.y - pAvant.y) / .06);
+			deplacer(n("ventre"), `translate(${r1(p.vue * 6)} 0)`);
+			deplacer(n("pied-g"), `translate(${r1(p.vue * 4)} 0)`);
+			deplacer(n("pied-d"), `translate(${r1(p.vue * 4)} 0)`);
+			for (const { element, repere } of bottes) deplacer(element, `translate(${r1(repere.x + p.vue * 4)} ${repere.y}) scale(${repere.echelle})`);
+			habit.suivre({
+				cw: 1 - Math.abs(p.vue) * .15,
+				sw: 0,
+				dx: p.vue * 5
+			});
+			const elan = elanDuJonglage(scenario, t, p);
+			const dessinerLeBrasDe = (c) => {
+				const cote = c === "g" ? -1 : 1, signe = c === "g" ? 1 : -1;
+				const cible = p.vue * cote < -.3 ? n("bras-arriere") : n("bras-avant");
+				if (bras[c].parentNode !== cible) cible.append(bras[c]);
+				const epaule = {
+					x: cote * 30 + p.vue * 8,
+					y: -70
+				};
+				const a1 = (c === "g" ? p.aGu : -p.aDu) + signe * elan * .9, a2 = (c === "g" ? p.aGl : -p.aDl) - signe * elan * 1.4;
+				return dansLaScene(p, dessinerLeBras(bras[c], c, epaule, a1, a2, elan ? 0 : Math.round(c === "g" ? p.mG : p.mD)));
+			};
+			const mains = {
+				g: dessinerLeBrasDe("g"),
+				d: dessinerLeBrasDe("d")
+			};
+			deplacer(n("tete"), `translate(${r1(p.vue * 4)} -118) rotate(${r1(p.tete)})`);
+			const ex = expressionA(scenario.expressions, t), A = EMOS[ex.prec], B = EMOS[ex.emo], u = ex.u;
+			dessinerLaTete(p, ex, Math.max(lerp(A.lid, B.lid, u), p.lid, yeuxOuverts ? 0 : clignement(t)), lerp(A.pup, B.pup, u));
+			const haut = Math.max(0, 392 - p.y);
+			poser(n("ombre-sol"), "cx", r1(p.x));
+			poser(n("ombre-sol"), "rx", r1(46 + haut * .3));
+			poser(n("ombre-sol"), "opacity", r3(Math.max(.1, .28 - haut * .004)));
+			return {
+				pose: p,
+				mains,
+				bouche: {
+					x: p.x + (p.vue * 4 + p.vue * 18) * BASE,
+					y: p.y + -102 * BASE * p.sy
+				}
+			};
+		}
+		return { dessiner };
+	}
+	// entree.ts
+	Object.assign(globalThis, { MoteurDeNoisette: {
+		creerNoisette,
+		dessinDeLaNoisette,
+		compiler,
+		E,
+		fenetre,
+		lerp,
+		clamp01
+	} });
+})();
+
+</script>
+<script>
+(() => {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const { creerNoisette, dessinDeLaNoisette, compiler, E, fenetre, lerp } = MoteurDeNoisette;
+  const N = {};
+  ["scene", "bulle", "etat", "duree", "ecran", "sol", "branche", "noix", "ombre-noix", "hop", "hop-corps", "animaux-noisette"].forEach((id) => (N[id] = $(id)));
+  const att = (el, a, v) => el.setAttribute(a, v);
+  const r2 = (v) => Math.round(v * 100) / 100, r1 = (v) => Math.round(v * 10) / 10;
+
+  // ---------- La scène : 1,5 s, Noisette de face (ou de trois-quarts), les yeux grands ouverts d'un bout à l'autre ----------
+  // Unités du moteur (échelle 1,35) : une unité du dessin = 1,35 unité du moteur. x : vers la droite ; y : vers le bas.
+  const K = 1.35, SOL_X = 190, SOL_Y = 392;
+  const FIN = 1.5;
+  const X_ECARTEE = SOL_X - 22 * K;           // un petit saut vers la gauche laisse de la place à la noisette
+  const SOL_NOIX = 385;                       // hauteur du centre de la noisette posée dans l'herbe
+  const T_PRISE = 1.04;                       // la main referme la noisette immobile
+  const REPOS = { x: SOL_X, y: SOL_Y, rot: 0, sx: 1, sy: 1, vue: 0, tete: 0, regardX: 0, regardY: 0, aGu: 10, aGl: 14, aDu: 10, aDl: 14, mG: 0, mD: 0, joues: 0, clin: 0, lid: 0, bras: 0, tenir: 0, tenirG: 0, tenirD: 0 };
+  const ACCROUPI = { sy: .86, sx: 1.12 }, ETIRE = { sy: 1.1, sx: .94 }, NORMAL = { sy: 1, sx: 1 };
+  const BRAS_PENDANTS = { aGu: 14, aGl: 14, aDu: 14, aDl: 14, mG: 0, mD: 0 };
+  const MAINS_TENDUES = { aGu: 34, aGl: 28, aDu: 16, aDl: 22, mG: 3, mD: 3 };      // les mains ouvertes devant elle, bien en deçà de la chute de la noisette
+  const PENCHEE = { rot: 11, sy: .83, sx: 1.08, y: SOL_Y + 6, vue: .3, tete: 5, regardX: 2, regardY: 2 };   // elle se penche vers la noisette posée
+  const POSES = compiler(REPOS, [
+    { t: 0, e: E.douce, p: {} },
+    // petit saut vers la gauche, les yeux levés vers la branche
+    { t: .05, e: E.sortie, p: { sy: 1.03, sx: .98, x: SOL_X - 11 * K, y: SOL_Y - 8, vue: .08, regardX: 2, regardY: -5 } },
+    { t: .12, e: E.entree, p: { ...NORMAL, x: X_ECARTEE, y: SOL_Y, vue: .12 } },
+    // elle tend les mains
+    { t: .28, e: E.douce, p: { ...MAINS_TENDUES, tete: -3, regardX: 3, regardY: -5 } },
+    // ses yeux suivent la noisette : elle descend, touche l'herbe, rebondit
+    { t: .42, e: E.douce, p: { regardY: 0, tete: 0 } },
+    { t: .54, e: E.douce, p: { regardY: 5, vue: .22 } },
+    { t: .62, e: E.douce, p: { regardY: 3 } },
+    { t: .70, e: E.douce, p: { regardY: 5, ...BRAS_PENDANTS, aGu: 16, aDu: 16 } },
+    // elle rit : le corps se gonfle et se détend, trois petits « ha »
+    { t: .68, e: E.douce, p: { sy: .97, sx: 1.02 } },
+    { t: .75, e: E.douce, p: { sy: 1.03, sx: .98 } },
+    { t: .82, e: E.douce, p: { sy: .98, sx: 1.01 } },
+    // elle se penche, tend la main vers la noisette qui s'arrête
+    { t: .98, e: E.douce, p: { ...PENCHEE, aGu: 14, aGl: 14, aDu: 14, aDl: 14 } },
+    { t: T_PRISE, e: E.douce, p: { aDu: 12, aDl: 0 } },
+    { t: 1.10, e: E.douce, p: { mD: 1 } },
+    { t: 1.16, e: E.douce, p: { aGu: 100, aGl: 8 } },
+    // elle se redresse, la noisette dans une main, lève le pouce de l'autre
+    { t: 1.28, e: E.rebond, p: { ...NORMAL, rot: 0, y: SOL_Y, vue: .05, tete: -4, regardX: 0, regardY: 0, aDu: 34, aDl: -70, aGu: 104, aGl: 62, mG: 2 } },
+    // petit saut : elle revient au centre
+    { t: 1.36, e: E.sortie, p: { sy: 1.03, sx: .98, x: SOL_X - 11 * K, y: SOL_Y - 8, vue: 0 } },
+    { t: 1.46, e: E.entree, p: { ...NORMAL, x: SOL_X, y: SOL_Y } },
+    { t: FIN, e: E.douce, p: {} },
+  ].sort((a, b) => a.t - b.t));
+  const EXPRESSIONS = [{ t: 0, emo: "sourire" }, { t: .12, emo: "pleines" }, { t: .66, emo: "joie" }, { t: 1.3, emo: "sourire" }];
+  const SCENE = { poses: POSES, expressions: EXPRESSIONS, tJongle: null };
+
+  const noisette = creerNoisette(document.getElementById("svg"));
+  const NOIX = `<g class="forme"><g class="echelle">${dessinDeLaNoisette(1.15)}</g></g>`;
+  N.noix.innerHTML = NOIX;
+  const rendNoisette = (t) => noisette.dessiner(SCENE, t, { yeuxOuverts: true });
+
+  // La noisette posée : à l'endroit où la main se referme (mesuré une fois, sur l'image de la prise)
+  const MAIN_A_LA_PRISE = rendNoisette(T_PRISE).mains.d;
+  const REPOS_NOIX = { x: MAIN_A_LA_PRISE.x, y: SOL_NOIX };
+  const DANS_LA_MAIN = { x: 0, y: SOL_NOIX - MAIN_A_LA_PRISE.y };
+  const BRANCHE = { x: SOL_X + 56 * K, y: SOL_Y - 146 * K };
+  const R_NOIX = 11.5;
+  // La noisette descend doucement le long de la branche, touche l'herbe à droite de Noisette, rebondit deux fois en roulant vers elle, et s'arrête tout près de sa main.
+  const T_LACHE = .10, T_SOL = .50, T_REBOND1 = .70, T_REBOND2 = .80, T_ARRET = .92;
+  const ATTERRISSAGE = { x: SOL_X + 62 * K }, RETOMBEE1 = REPOS_NOIX.x + 34, RETOMBEE2 = REPOS_NOIX.x + 20;
+  function etatDeLaNoix(t, mainDroite) {
+    if (t < T_LACHE) return { x: BRANCHE.x, y: BRANCHE.y, rot: Math.sin(t * 30) * 3, sy: 1, ombre: 0 };
+    if (t < T_SOL) {
+      const u = (t - T_LACHE) / (T_SOL - T_LACHE), v = Math.pow(u, 1.5);
+      return { x: lerp(BRANCHE.x, ATTERRISSAGE.x, u) + 3 * Math.sin(u * Math.PI * 2), y: lerp(BRANCHE.y, SOL_NOIX, v), rot: 14 * Math.sin(u * Math.PI * 2) * (1 - u), sy: 1, ombre: v };
+    }
+    if (t < T_REBOND1) { const v = (t - T_SOL) / (T_REBOND1 - T_SOL), h = 46 * 4 * v * (1 - v); return { x: lerp(ATTERRISSAGE.x, RETOMBEE1, v), y: SOL_NOIX - h, rot: -v * 100, sy: 1 + (h < 2 ? -.12 : 0), ombre: 1 - h / 80 }; }
+    if (t < T_REBOND2) { const v = (t - T_REBOND1) / (T_REBOND2 - T_REBOND1), h = 15 * 4 * v * (1 - v); return { x: lerp(RETOMBEE1, RETOMBEE2, v), y: SOL_NOIX - h, rot: -100 - v * 50, sy: 1, ombre: 1 - h / 80 }; }
+    if (t < T_ARRET) { const v = E.sortie((t - T_REBOND2) / (T_ARRET - T_REBOND2)); return { x: lerp(RETOMBEE2, REPOS_NOIX.x, v), y: SOL_NOIX, rot: -150 - (RETOMBEE2 - lerp(RETOMBEE2, REPOS_NOIX.x, v)) / R_NOIX / (Math.PI / 180), sy: 1, ombre: 1 }; }
+    if (t < T_PRISE) return { x: REPOS_NOIX.x, y: SOL_NOIX, rot: -150 - (RETOMBEE2 - REPOS_NOIX.x) / R_NOIX / (Math.PI / 180), sy: 1, ombre: 1 };
+    return { x: mainDroite.x + DANS_LA_MAIN.x, y: mainDroite.y + lerp(DANS_LA_MAIN.y, 2, fenetre(t, T_PRISE, .14)), rot: 0, sy: 1, ombre: 0, tenue: true };
+  }
+  function dessineLaNoix(t, mains) {
+    const n = etatDeLaNoix(t, mains.d);
+    att(N.noix, "transform", `translate(${r1(n.x)} ${r1(n.y)})`);
+    att(N.noix.firstElementChild.firstElementChild, "transform", `rotate(${r1(n.rot)}) scale(1 ${r2(n.sy)})`);
+    att(N.noix, "opacity", n.tenue ? 1 : apparition(t, .04, .08));
+    att(N["ombre-noix"], "cx", r1(n.x));
+    att(N["ombre-noix"], "opacity", r2(.3 * Math.max(0, Math.min(1, n.ombre)) * (t < T_LACHE ? 0 : 1)));
+  }
+  // Coin de prairie et branche : présents le temps de la scène seulement
+  const apparition = (t, debut, duree) => r2(fenetre(t, debut, duree) * (1 - fenetre(t, 1.28, .2, E.douce)));
+  function dessineLeDecor(t) { att(N.sol, "opacity", apparition(t, 0, .1)); att(N.branche, "opacity", apparition(t, .04, .08)); }
+  // Petite bulle écrite « hop ! » : quand la noisette touche l'herbe, un instant ; cachée quand le dessin mesure moins de 100 px (163.21)
+  function dessineLaBulle(t) {
+    const petit = N.scene.getBoundingClientRect().width < 100;
+    const entree = fenetre(t, T_SOL, .14, E.rebond), sortie = fenetre(t, .94, .12, E.entree);
+    att(N.hop, "opacity", petit ? 0 : r2(fenetre(t, T_SOL, .06) * (1 - sortie)));
+    att(N["hop-corps"], "transform", `translate(-90 -148) scale(${r2(.4 + .6 * entree)})`);
+  }
+  function rend(t) { const d = rendNoisette(t); dessineLaNoix(t, d.mains); dessineLeDecor(t); dessineLaBulle(t); }
+  // Les ressorts de la queue suivent l'horloge : pour un instant précis, on rejoue les images depuis le début.
+  function rendJusqua(t) { for (let s = 0; s < t; s += 1 / 60) rend(s); rend(t); }
+  // L'image fixe : la dernière pose (au centre), la noisette dans la main, ni prairie, ni branche, ni bulle
+  function imageFixe() { rend(FIN); att(N.sol, "opacity", 0); att(N.branche, "opacity", 0); att(N.hop, "opacity", 0); }
+  window.verifs = { rend, rendJusqua, rendNoisette, etatDeLaNoix, REPOS_NOIX, MAIN_A_LA_PRISE, T_PRISE };
+
+  // ---------- Horloge et commandes ----------
+  const ENCOURAGEMENT = "Pas grave, on réessaie !";
+  const reduitSysteme = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const boite = { reduit: $("reduit"), dys: $("dys"), tablette: $("tablette") };
+  boite.reduit.checked = reduitSysteme;
+  let depart = 0, image = 0, enCours = false;
+  const secondes = (ms) => (ms / 1000).toFixed(2).replace(".", ",") + " s";
+  function arreter(motif) {
+    if (!enCours) return;
+    cancelAnimationFrame(image); enCours = false;
+    N.duree.textContent = `Scène arrêtée par ${motif} à ${Math.round(performance.now() - depart)} ms : l'image fixe revient.`;
+    imageFixe();
+  }
+  function boucle(maintenant) {
+    const t = Math.min(FIN, (maintenant - depart) / 1000);
+    rend(t);
+    if (t < FIN) { image = requestAnimationFrame(boucle); return; }
+    enCours = false;
+    window.dureeMesuree = maintenant - depart;
+    N.duree.textContent = `Durée mesurée : ${secondes(maintenant - depart)} (scène réglée sur ${secondes(FIN * 1000)}, l'image suit l'horloge du navigateur).`;
+  }
+  function jouer() {
+    cancelAnimationFrame(image);
+    N.bulle.textContent = ENCOURAGEMENT;
+    N.etat.textContent = ""; document.querySelectorAll(".choix button").forEach((b) => b.classList.remove("prise"));
+    if (boite.reduit.checked) { enCours = false; imageFixe(); N.duree.textContent = "Mouvements réduits : image fixe, sans mouvement ni bulle écrite."; return; }
+    enCours = true; depart = performance.now(); rend(0); image = requestAnimationFrame(boucle);
+  }
+  $("rejouer").addEventListener("click", jouer);
+  boite.reduit.addEventListener("change", jouer);
+  boite.dys.addEventListener("change", () => N.ecran.setAttribute("data-mode-dys", String(boite.dys.checked)));
+  boite.tablette.addEventListener("change", () => N.ecran.classList.toggle("tablette", boite.tablette.checked));
+  document.querySelectorAll(".choix button").forEach((b) => b.addEventListener("click", () => {
+    arreter(`la réponse « ${b.dataset.choix} »`);
+    document.querySelectorAll(".choix button").forEach((c) => c.classList.toggle("prise", c === b));
+    N.etat.textContent = `Réponse prise tout de suite : « ${b.dataset.choix} ».`;
+  }));
+  document.querySelector(".reecouter").addEventListener("click", () => arreter("« Réécouter »"));
+  document.querySelector(".ne-sais-pas").addEventListener("click", () => arreter("« Je ne sais pas »"));
+  document.querySelector(".retour").addEventListener("click", () => arreter("« Retour »"));
+
+  // Mise au point : « ?t=0.58 » rend un instant sans jouer ; « ?reduit=1 », « ?dys=1 », « ?tablette=1 », « ?taille=80 » (largeur du dessin en px), « ?seul=1 » (le dessin seul), « ?fond=sombre » (avec ?seul=1).
+  const params = new URLSearchParams(location.search);
+  if (params.get("seul") === "1") document.body.classList.add("seul");
+  if (params.get("fond") === "sombre") document.body.classList.add("sombre");
+  if (params.get("dys") === "1") { boite.dys.checked = true; N.ecran.setAttribute("data-mode-dys", "true"); }
+  if (params.get("tablette") === "1") { boite.tablette.checked = true; N.ecran.classList.add("tablette"); }
+  if (params.get("reduit") === "1") boite.reduit.checked = true;
+  if (params.get("taille")) document.documentElement.style.setProperty("--guide", params.get("taille") + "px");
+  function demarrer() {
+    const t = params.get("t");
+    if (t !== null) { N.bulle.textContent = ENCOURAGEMENT; rendJusqua(Number(t)); return; }
+    jouer();
+  }
+  const polices = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+  Promise.race([polices, new Promise((r) => setTimeout(r, 800))]).finally(demarrer);
+})();
+</script>
+</body>
+</html>

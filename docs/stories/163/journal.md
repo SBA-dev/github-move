@@ -62,3 +62,8 @@ Branche de base : `main` (`2a69a87`). Branche : `feature/163-reponse-fausse-anim
 | Cycles E2E KO | 0 |
 | Intégrations de `main` | 0 (branche repartie de `main` `4dd80cf`) |
 | Tokens et coût | relevés par le responsable |
+
+## 2026-11-06 : livraison 163c (Noisette)
+
+- 17:35 à 18:10 UTC : merge de 163b autorisé (« Merge 166 merge 163b OK »). Sous les verrous merge et base : `main` `e2ab03e` (#166) intégrée sans conflit, unitaires 2943, lint, format, `tsc` et build verts, rejeu E2E `@livraison-163a`, `@livraison-163b` et `@issue-166` **56/56** ; PR #172 mergée (`d8d67ca`), branche supprimée par GitHub. LIBÈRE base et merge.
+- 18:15 UTC : branche recréée depuis `main` `d8d67ca`. Maquette `docs/maquettes/reponse-fausse-noisette.html` et planche 163c (`docs/stories/163/captures/163c-noisette-*.png`), préparées dans un worktree à part pendant l'attente du verrou merge : 1,5 s mesurée ; la noisette rebondit loin d'elle et roule à ses pieds, elle la ramasse en riant, les yeux grands ouverts, rien ne tourne autour d'elle ; bulle « hop ! ». Relue par l'orchestrateur au regard de la règle absolue : conforme.
