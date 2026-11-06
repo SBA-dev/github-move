@@ -20,3 +20,11 @@ Branche de base : `main` (`2a69a87`). Branche : `feature/163-reponse-fausse-anim
 - 23:50 UTC : planche 163a validée (« 163a reco tout » : 163.19 à 163.21 A, annonce `[Responsable]` 6672618059). Critères mis à jour (43 scénarios, 53 cas).
 - 23:55 UTC : 106h mergée (`11b32d4`), `main` intégrée (`e2192a8`), sans conflit ; 2935 tests unitaires et `tsc` verts. VERROU base demandé.
 - 00:00 à 00:40 UTC : câblage de 163a (`9aab545` refactor du moteur commun et de Coach Léo, additif ; `a6b9a53` feat ; `794dae5` fix : l'image fixe dure aussi 1,5 s puis `reflechit`, conformément à 163.13). Review du câblage : APPROUVÉ (aucun bloquant) ; non bloquants corrigés (`d2ddb45`). Steps E2E écrits sans exécution (`b2a16e9`), en attente du verrou base (non-régression de nuit jusqu'à 01:45 UTC environ ; #163 première dans la file).
+- 02:05 UTC : `main` `f4e1fb1` (#168) intégrée (`7b007c0`), sans conflit.
+- 02:17 UTC : VERROU base accordé. Sonde : 3 × `admin/users` en 200, sous 1,3 s.
+- 02:20 à 03:35 UTC : E2E sur `telephone`, 1 worker.
+  - Run 1 (`@issue-163`, 163a) : 35/47, puis corrections de steps (`4d90d57` : vrais profils de Paul et Tom, test de départ, réseau coupé après le chargement, effet sonore unique sans fin de séance, scène attendue avant la bonne réponse, sondage serré des lettres fausses de la dictée, seuils de durée) ; 46/47.
+  - KO restant : scénario « Je ne sais pas » irréalisable tel qu'écrit (#23 écarte les mauvais choix). Réécrit par `po-acceptance` avec le même sens (`b5a3422`), step ajouté (`b66ff0d`) : **47/47**.
+  - Run 2 (non-régression touchée : `@issue-97`, `@issue-23`, `@livraison-106b`) : **100/100**.
+  - Run 3 (`@issue-19`, `@issue-128`) : le step partagé de la dictée a changé (sondage serré, même sens).
+  - Aucun bug applicatif.
