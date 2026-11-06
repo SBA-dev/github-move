@@ -12,9 +12,8 @@ Livraisons (163.11) : `@livraison-163a` (mécanisme et Coach Léo), puis `@livra
 derniers tags ne portent que sur les lignes d'`Exemples` du plan « chaque personnage guide a sa scène ».
 Sélection des scénarios de 163a : `@issue-163 and not (@livraison-163b or @livraison-163c or @livraison-163d or
 @livraison-163e or @livraison-163f)`.
-Le scénario de la tenue portée est tagué `@depend-de-106` : il attend la livraison 106h de #106 (tenue portée dans
-les scènes). La convention du dépôt est `@depend-de-<n° d'issue>` ; 106h n'a pas d'issue à elle, et #106 reste
-ouverte jusqu'à 106h. Tout le câblage de #163 attend de toute façon le merge de 106h (modèle, « État »).
+La tenue portée dans les scènes vient de la livraison 106h de #106, mergée : le scénario de la tenue portée n'a
+plus de tag `@depend-de-106`.
 
 ## Objectif
 
@@ -95,7 +94,7 @@ Note sur le Muet : le Muet coupe la parole, pas les effets sonores (décision 97
 **R5. Une scène par personnage guide, tenue portée, univers du moment**
 - Plan : Dans l'univers « <univers> », <personnage guide> joue sa scène de réponse fausse, puis la même question reste posée (163.4, 163.5, 163.11) : Coach Léo (163a), Lili (163b), Noisette (163c), Lumi (163d), Agent Max (163e), Capitaine Sam (163f)
 - Un enfant passé dans l'univers « Sports » voit Coach Léo jouer la scène de réponse fausse
-- Pendant la scène de réponse fausse, Coach Léo porte la tenue choisie par Léa (163.8, `@depend-de-106`)
+- Pendant la scène de réponse fausse, Coach Léo porte la tenue choisie par Léa (163.8)
 
 **R6. Jamais plus attrayante que la bonne réponse**
 - La scène de réponse fausse est plus courte qu'une célébration de l'univers (163.2)
@@ -152,7 +151,7 @@ Pour 163.1, la recommandation était B : c'est B qui est retenu.
 - **163.5** Règle absolue, scène par scène. Tranchée le 2026-11-05 (recos retenues, 163.5c A, « 163 reco tout », [annonce](https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672057084)) : les scènes décrites dans le plan de R5.
 - **163.6** Écrans. Tranchée le 2026-11-05 (reco retenue, « 163 reco tout », [annonce](https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672057084)) : séance d'une leçon (tous types, dictée comprise), révision, défi, grand défi ; pas pendant le chrono d'une fluence, après « Je ne sais pas », au test de départ.
 - **163.7** Place. Tranchée le 2026-11-05 (reco A retenue, « 163 reco tout », [annonce](https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672057084)) : à la place du dessin du personnage guide ; pas de scène avec l'addition posée sur téléphone.
-- **163.8** Tenue. Tranchée le 2026-11-05 (reco retenue, « 163 reco tout », [annonce](https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672057084)) : la tenue portée (scénario `@depend-de-106`, en attente de 106h).
+- **163.8** Tenue. Tranchée le 2026-11-05 (reco retenue, « 163 reco tout », [annonce](https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672057084)) : la tenue portée (scénario sans dépendance : 106h est mergée).
 - **163.9** Nom. Tranchée le 2026-11-05 (reco retenue, « 163 reco tout », [annonce](https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672057084)) : « scène de réponse fausse ».
 - **163.10** Moteur. Tranchée le 2026-11-05 (reco retenue, « 163 reco tout », [annonce](https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672057084)) : une nouvelle décision (hors scénarios).
 - **163.11** Découpage. Tranchée le 2026-11-05 (reco retenue, « 163 reco tout », [annonce](https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672057084)) : 163a, puis 163b à 163f.

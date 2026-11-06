@@ -16,7 +16,7 @@ Fonctionnalité: Une réponse fausse animée par le personnage guide
   Livraisons (163.11) : la livraison 163a (mécanisme et Coach Léo, tag @livraison-163a), puis un personnage
   guide par livraison : 163b (Lili), 163c (Noisette), 163d (Lumi), 163e (Agent Max) et 163f (Capitaine Sam),
   chacune avec son tag. Ce qui ne dépend pas de l'univers n'est décrit qu'une fois, avec Coach Léo.
-  La tenue portée dans la scène attend la livraison 106h de #106 (tag @depend-de-106).
+  La tenue portée dans la scène vient de la livraison 106h de #106 (mergée).
 
   Mots employés dans ces scénarios :
   - « la scène de réponse fausse » : courte mise en scène jouée par le personnage guide du profil après une réponse
@@ -313,8 +313,7 @@ Fonctionnalité: Une réponse fausse animée par le personnage guide
       Quand Tom répond « 8 » à « Combien font 3 + 4 ? »
       Alors Coach Léo joue sa scène de réponse fausse
 
-    # Attend la livraison 106h de #106 (tenue portée dans les scènes)
-    @livraison-163a @depend-de-106
+    @livraison-163a
     Scénario: Pendant la scène de réponse fausse, Coach Léo porte la tenue choisie par Léa
       Étant donné que Léa a gagné 5 étoiles en tout
       Et que Léa a mis « une écharpe rayée » à Coach Léo
