@@ -1,12 +1,13 @@
 import type { UniversCelebre } from "@domain/motivation";
 
-/** Le préfixe des identifiants d'une scène : l'univers de la célébration, ou la scène de réponse fausse de Léo, de Lili, de Noisette ou de Lumi. */
+/** Le préfixe des identifiants d'une scène : l'univers de la célébration, ou la scène de réponse fausse de Léo, de Lili, de Noisette, de Lumi ou de Max. */
 export type PrefixeDeScene =
   | UniversCelebre
   | "reponse-fausse-sports"
   | "reponse-fausse-danse"
   | "reponse-fausse-animaux"
-  | "reponse-fausse-princesse";
+  | "reponse-fausse-princesse"
+  | "reponse-fausse-police";
 
 export const NS = "http://www.w3.org/2000/svg";
 
