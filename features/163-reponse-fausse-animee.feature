@@ -164,9 +164,9 @@ Fonctionnalité: Une réponse fausse animée par le personnage guide
 
     @livraison-163a
     Scénario: « Je ne sais pas » ne fait pas jouer la scène et ne la consomme pas : la première réponse fausse qui suit la fait jouer
-      Étant donné que Léa joue l'exercice « Le mot bien écrit » de la leçon « Dictée : les animaux »
-      Et que Léa a dit « Je ne sais pas » à la question « Quel mot est bien écrit ? » dont la réponse est « chat »
-      Quand Léa répond « cha »
+      Étant donné que Léa joue une leçon de test de deux questions à quatre choix
+      Et qu'à la première question, Léa a dit « Je ne sais pas », puis a donné la bonne réponse
+      Quand Léa fait une erreur à la deuxième question
       Alors Coach Léo joue sa scène de réponse fausse
 
   Règle: La scène de réponse fausse ne retient jamais l'enfant : la question, ses choix, le clavier et les boutons agissent dès la première image ; une réponse ou un bouton l'arrête tout de suite ; un toucher hors des boutons ne fait rien
