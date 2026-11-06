@@ -90,3 +90,17 @@ Branche de base : `main` (`2a69a87`). Branche : `feature/163-reponse-fausse-anim
 ## 2026-11-06 : livraison 163d (Lumi)
 
 - 19:45 UTC : branche recréée depuis `main` `8873b6e`. Planche de Lumi validée le 06/11 (« 163.d reco tout » : 163.26 oui, 163.27 « pschitt ! »).
+- 19:45 à 20:40 UTC : TDD de 163d (`b1c8c6d` test, `ba0ecc8` feat : `princesse` au catalogue). Câblage (`94f5047` et `9823cae` refactor du dessin et du moteur de Lumi, additifs, avec l'expression `souffle` ; `664a67a` feat). Steps E2E (`c000d0a`).
+- Review de 163d : APPROUVÉ, aucun bloquant ; non bloquants corrigés (`6bdca3a` : image fixe en un seul rendu, `SOL_X`/`SOL_Y`, `flottementDeLumi` exporté). Restent notés : le titre `refactor` de `94f5047` (il ajoute l'expression `souffle`, jamais employée par la célébration) ; sol et bulle des scènes à mettre en commun si 163e et 163f les répètent.
+- 19:50 à 20:40 UTC : VERROU base. Sonde OK. E2E `telephone`, 1 worker : `@livraison-163a` à `@livraison-163d` et `@livraison-106d` **58/58** ; après le refactor, `@livraison-163d` et `@livraison-106d` **8/8**. LIBÈRE base.
+
+## Mesures (livraison 163d)
+
+| Mesure | Valeur |
+|---|---|
+| Durée, du merge de 163c au PR prête | environ 1 h (19:40 → 20:45 UTC) |
+| Temps passé à attendre | PO : aucune attente (planche validée pendant 163c) ; verrou base : aucune attente |
+| Cycles de review À CORRIGER | 0 |
+| Cycles E2E KO | 0 |
+| Intégrations de `main` | 0 (branche repartie de `main` `8873b6e`) |
+| Tokens et coût | relevés par le responsable |
