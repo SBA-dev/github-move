@@ -1,6 +1,6 @@
 import type { CleDeTenue } from "@domain/motivation";
 import { creerCoachLeo } from "../../celebrations/sports/personnage.ts";
-import { assemblerLaScene } from "../commun/jouer-la-scene.ts";
+import { assemblerLaScene } from "../commun/assembler-la-scene.ts";
 import { creerLeBallon, creerLePoteau } from "./ballon-et-poteau.ts";
 import { creerLaBulleDeLeo } from "./bulle.ts";
 import { REGLAGES_DE_LEO_EN_REPONSE_FAUSSE } from "./reglages.ts";

@@ -1,6 +1,6 @@
 import type { CleDeTenue } from "@domain/motivation";
 import { creerNoisette } from "../../celebrations/animaux/personnage.ts";
-import { assemblerLaScene } from "../commun/jouer-la-scene.ts";
+import { assemblerLaScene } from "../commun/assembler-la-scene.ts";
 import { creerLaBulleDeNoisette } from "./bulle.ts";
 import { creerLaNoisetteDoree } from "./noisette-doree.ts";
 import { creerLePaysage } from "./prairie-et-branche.ts";
@@ -11,6 +11,7 @@ import { FIN, SCENARIO_DE_NOISETTE, T_PRISE } from "./scenario.ts";
 export function creerLaScene(racine: SVGSVGElement, tenue?: CleDeTenue) {
   const noisette = creerNoisette(racine, tenue, PREFIXE_DE_NOISETTE);
   const dessinerNoisette = (t: number) => noisette.dessiner(SCENARIO_DE_NOISETTE, t, { yeuxOuverts: true });
+  // Lit seulement la position de la main à la prise : cette image n'est pas affichée, et les ressorts de `queue.ts` se remettent à zéro quand le temps recule.
   const noix = creerLaNoisetteDoree(racine, dessinerNoisette(T_PRISE).mains.d);
   const paysage = creerLePaysage(racine);
   const bulle = creerLaBulleDeNoisette(racine);

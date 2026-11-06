@@ -1,8 +1,8 @@
 import { dessinDeLaNoisette } from "../../celebrations/animaux/dessin-de-noisette.ts";
-import { E, fenetre, lerp, r1, r3 } from "../../celebrations/commun/courbes.ts";
+import { DEG, E, fenetre, lerp, r1, r3 } from "../../celebrations/commun/courbes.ts";
 import { creerUnGroupe, deplacer, elementsDe, poser } from "../../celebrations/commun/dom.ts";
 import type { Point } from "../../celebrations/commun/membres.ts";
-import { presenceDuDecor } from "./prairie-et-branche.ts";
+import { presenceDuDecor } from "./presence-du-decor.ts";
 import { PREFIXE_DE_NOISETTE } from "./reglages.ts";
 import { ECHELLE_DU_MOTEUR, SOL_X, SOL_Y, T_PRISE } from "./scenario.ts";
 
@@ -10,7 +10,6 @@ const K = ECHELLE_DU_MOTEUR;
 /** La hauteur du centre de la noisette posée dans l'herbe. */
 const SOL_NOIX = 385;
 const R_NOIX = 11.5;
-const DEG = Math.PI / 180;
 const BRANCHE = { x: SOL_X + 56 * K, y: SOL_Y - 146 * K };
 /** Elle descend doucement le long de la branche, touche l'herbe à droite de Noisette, rebondit deux fois en roulant vers elle, et s'arrête tout près de sa main. */
 const T_LACHE = .10, T_SOL = .50, T_REBOND1 = .70, T_REBOND2 = .80, T_ARRET = .92;

@@ -1,6 +1,6 @@
 import type { CleDeTenue } from "@domain/motivation";
 import { creerLili, type PosesEtExpressions } from "../../celebrations/danse/personnage.ts";
-import { assemblerLaScene } from "../commun/jouer-la-scene.ts";
+import { assemblerLaScene } from "../commun/assembler-la-scene.ts";
 import { creerLaBulleDeLili } from "./bulle.ts";
 import { PREFIXE_DE_LILI } from "./reglages.ts";
 import { FIN, SCENARIO_DE_LILI, SCENARIO_FIXE_DE_LILI } from "./scenario.ts";
