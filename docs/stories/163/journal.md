@@ -84,3 +84,4 @@ Branche de base : `main` (`2a69a87`). Branche : `feature/163-reponse-fausse-anim
 | Cycles E2E KO | 0 |
 | Intégrations de `main` | 0 (branche repartie de `main` `d8d67ca`) |
 | Tokens et coût | relevés par le responsable |
+- 20:50 UTC : maquette `docs/maquettes/reponse-fausse-capitaine-sam.html` et planche 163f (`docs/stories/163/captures/163f-capitaine-sam-*.png`), scène nouvelle (163.4 A). Deux reprises demandées par l'orchestrateur au regard de la règle absolue (section 0 du skill illustration, « forme à double sens » : dans le doute, on ne dessine pas) : dans les deux premières versions, le jet partait de la lance tenue à hauteur de hanche, puis du ventre, vers le bas. Version retenue : lance tenue droite au-dessus de l'épaule, sommet de l'arc au-dessus du casque, gouttes séparées qui retombent à plus de 60 unités du corps. 1,5 s ; bulle « oups ! ». Conforme. Publiée sur la branche de la PR #175 (documents seulement).
