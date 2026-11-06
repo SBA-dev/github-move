@@ -122,3 +122,8 @@ Branche de base : `main` (`2a69a87`). Branche : `feature/163-reponse-fausse-anim
 | Cycles E2E KO | 0 (1 échec réseau, vert au rejeu) |
 | Intégrations de `main` | 0 (commits reportés par cherry-pick sur `main` `ba3603b`) |
 | Tokens et coût | relevés par le responsable |
+- 20:53 UTC : merge de 163e autorisé (« Merge 163e »). PR #177 mergée (`db28613`), sans rejeu, branche supprimée par GitHub. LIBÈRE merge.
+
+## 2026-11-06 : livraison 163f (Capitaine Sam)
+
+- 20:45 à 21:20 UTC : TDD et câblage préparés pendant l'attente du merge de 163e, dans un worktree à part. Un redémarrage du conteneur a interrompu le câblage ; le worktree a survécu (commits et fichiers en cours intacts), une seconde agente a repris et terminé sans perte. Commits reportés par cherry-pick sur la branche recréée depuis `main` `db28613` : `test` (catalogue complet, chaque univers a sa scène), `feat` (`pompier` au catalogue, désormais exhaustif sur `CleUnivers`), `refactor` (dessin et moteur de Sam par le préfixe, additif), `feat` (câblage, bulle « plouf ! », table des scènes vérifiée à la compilation). Planche validée le 06/11 (163.30 oui, 163.31 B « plouf ! »). Captures de l'app relues par l'orchestrateur au regard de la règle absolue : géométrie validée reprise (lance au-dessus de l'épaule, arc au-dessus du casque, gouttes loin du corps) ; conforme.
