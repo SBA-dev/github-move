@@ -12,7 +12,7 @@ import { dessinDuBras, MAINS, OR, structureDeLumi } from "./dessin-de-lumi.ts";
 import { fleurMagique } from "./magie.ts";
 import { type Emotion, type Pose, poseA, SOL, type ScenarioDesPrincesses } from "./poses.ts";
 
-const ECHELLE_DE_BASE = 1.3;
+export const ECHELLE_DE_BASE = 1.3;
 const BASE = ECHELLE_DE_BASE;
 
 const EMOS: Record<Emotion, { readonly s: readonly [number, number]; readonly lid: number; readonly pup: number }> = {
@@ -32,6 +32,9 @@ function dansLaScene(racine: SVGSVGElement, element: SVGElement, p: Point): Poin
   const image = new DOMPoint(p.x, p.y).matrixTransform(scene.inverse().multiply(pieceSurEcran));
   return { x: image.x, y: image.y };
 }
+
+/** Ce que Lumi joue : des poses et des expressions dans le temps. */
+export type PosesEtExpressions = Pick<ScenarioDesPrincesses, "poses" | "expressions">;
 
 export type LumiDessinee = { readonly pose: Pose; /** Le bout de la baguette dans l'espace de la scène (rien si la scène n'est pas affichée). */ readonly boutDeLaBaguette: Point | null };
 
@@ -194,7 +197,7 @@ export function creerLumi(racine: SVGSVGElement, tenue?: CleDeTenue, prefixe: Pr
   }
 
   /** Dessine Lumi à l'instant `t` du scénario ; rend sa pose et le bout de sa baguette (les effets s'y accrochent). */
-  function dessiner(scenario: ScenarioDesPrincesses, t: number): LumiDessinee {
+  function dessiner(scenario: PosesEtExpressions, t: number): LumiDessinee {
     const p = poseA(scenario.poses, t), pAvant = poseA(scenario.poses, t - .06);
     const vx = (p.x - pAvant.x) / .06, vy = (p.y - pAvant.y) / .06;
     const flotte = Math.sin(t * 2.2) * 4 - 10 * (1 - p.vol);
