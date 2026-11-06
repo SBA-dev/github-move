@@ -70,7 +70,7 @@ const T0 = FIN_DE_L_ARROSAGE;
  */
 export const INSTANTS_OU_LES_FLEURS_S_OUVRENT: readonly number[] = [0.4333333333333333, 0.7500000000000007, 1.2000000000000006, 1.5833333333333326, 1.6833333333333322];
 
-const REPOS: Pose = {
+export const REPOS: Pose = {
   x: X_SAM,
   y: Y_SOL,
   sx: 1,
