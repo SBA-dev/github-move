@@ -116,7 +116,7 @@ const VARIANTES: Record<VarianteDe<"princesse">, (t0: number) => Images> = { arc
 
 export const poseA = (poses: readonly ImageCle<Pose>[], t: number): Pose => poseDeLaScene(REPOS, poses, t);
 
-export type Emotion = "sourire" | "concentration" | "surprise" | "joie";
+export type Emotion = "sourire" | "concentration" | "surprise" | "joie" | "souffle";
 
 export type ScenarioDesPrincesses = {
   readonly variante: VarianteDe<"princesse">;

@@ -2,24 +2,28 @@ import type { CleDeTenue } from "@domain/motivation";
 import { habillerLePersonnage } from "../commun/habiller.ts";
 import { ANCRAGES_DES_TENUES, dessinDeLaBotte } from "../commun/tenues.ts";
 import { clamp01, DEG, E, lerp, r1, r3 } from "../commun/courbes.ts";
-import { creerUnGroupe, deplacer, elementsDe, poser, trouver } from "../commun/dom.ts";
+import { creerUnGroupe, deplacer, elementsDe, type PrefixeDeScene, poser, trouver } from "../commun/dom.ts";
 import { type Expression, expressionA } from "../commun/expressions.ts";
 import type { CoteDeMain, PoseDeMain } from "../commun/mains.ts";
 import { decaler, membre, type Point, trace } from "../commun/membres.ts";
 import { clignement } from "../commun/visage.ts";
 import { creerLesCheveux } from "./cheveux.ts";
-import { dessinDuBras, MAINS, OR, STRUCTURE_DE_LUMI } from "./dessin-de-lumi.ts";
+import { dessinDuBras, MAINS, OR, structureDeLumi } from "./dessin-de-lumi.ts";
 import { fleurMagique } from "./magie.ts";
 import { type Emotion, type Pose, poseA, SOL, type ScenarioDesPrincesses } from "./poses.ts";
 
-const ECHELLE_DE_BASE = 1.3;
+export const ECHELLE_DE_BASE = 1.3;
 const BASE = ECHELLE_DE_BASE;
+
+/** Lumi flotte de 4 unités autour de 10 unités au-dessus de sa position, de moins en moins quand elle vole. */
+export const flottementDeLumi = (t: number, vol: number) => Math.sin(t * 2.2) * 4 - 10 * (1 - vol);
 
 const EMOS: Record<Emotion, { readonly s: readonly [number, number]; readonly lid: number; readonly pup: number }> = {
   sourire: { s: [0, 0], lid: 0, pup: 1 },
   joie: { s: [-4, 0], lid: 0, pup: 1.05 },
   concentration: { s: [-2, 3], lid: .2, pup: 1 },
   surprise: { s: [-7, -4], lid: 0, pup: .85 },
+  souffle: { s: [-1, 2], lid: .35, pup: 1 },
 };
 
 const couple = (a: readonly [number, number], b: readonly [number, number], u: number): [number, number] => [lerp(a[0], b[0], u), lerp(a[1], b[1], u)];
@@ -32,20 +36,26 @@ function dansLaScene(racine: SVGSVGElement, element: SVGElement, p: Point): Poin
   return { x: image.x, y: image.y };
 }
 
+/** Ce que Lumi joue : des poses et des expressions dans le temps. */
+export type PosesEtExpressions = Pick<ScenarioDesPrincesses, "poses" | "expressions">;
+
 export type LumiDessinee = { readonly pose: Pose; /** Le bout de la baguette dans l'espace de la scène (rien si la scène n'est pas affichée). */ readonly boutDeLaBaguette: Point | null };
 
-/** Lumi, dessinée image par image à partir des poses du scénario (portage du moteur de la maquette). */
-export function creerLumi(racine: SVGSVGElement, tenue?: CleDeTenue) {
-  const n = elementsDe(racine, "princesse");
-  n("lumi").innerHTML = STRUCTURE_DE_LUMI;
-  n("baguette").innerHTML = `<line x1="0" y1="0" x2="0" y2="-34" stroke="#33304A" stroke-width="7" stroke-linecap="round"/><line x1="0" y1="0" x2="0" y2="-34" stroke="#FFFFFF" stroke-width="3.6" stroke-linecap="round"/><line x1="0" y1="-4" x2="0" y2="-30" stroke="${OR}" stroke-width="1.4" stroke-dasharray="3 3"/><g transform="translate(0 -40)"><circle r="12" fill="url(#princesse-lueur)"/>${fleurMagique(9, "rosePale")}</g>`;
+/**
+ * Lumi, dessinée image par image à partir des poses du scénario (portage du moteur de la maquette).
+ * Ses identifiants portent `prefixe` : la célébration des Princesses ou la scène de réponse fausse. `solY` est la hauteur du sol, d'où se mesure son ombre.
+ */
+export function creerLumi(racine: SVGSVGElement, tenue?: CleDeTenue, prefixe: PrefixeDeScene = "princesse", solY: number = SOL.y) {
+  const n = elementsDe(racine, prefixe);
+  n("lumi").innerHTML = structureDeLumi(prefixe);
+  n("baguette").innerHTML = `<line x1="0" y1="0" x2="0" y2="-34" stroke="#33304A" stroke-width="7" stroke-linecap="round"/><line x1="0" y1="0" x2="0" y2="-34" stroke="#FFFFFF" stroke-width="3.6" stroke-linecap="round"/><line x1="0" y1="-4" x2="0" y2="-30" stroke="${OR}" stroke-width="1.4" stroke-dasharray="3 3"/><g transform="translate(0 -40)"><circle r="12" fill="url(#${prefixe}-lueur)"/>${fleurMagique(9, "rosePale")}</g>`;
   const habit = habillerLePersonnage("princesse", tenue, ANCRAGES_DES_TENUES.princesse, {
     derriere: (groupe) => n("cheveux-arriere").after(groupe),
     devant: (groupe) => n("tete").after(groupe),
     auCou: (groupe) => n("bras-avant").after(groupe),
-  });
+  }, prefixe);
   if (tenue === "bottes-de-pluie") habillerLesPiedsDeBottes();
-  const cheveux = creerLesCheveux(racine);
+  const cheveux = creerLesCheveux(racine, prefixe);
   const bras = { g: creerLeBras("g"), d: creerLeBras("d") };
   const bouches = [...n("bouche").children];
   const q1 = (g: ParentNode, classe: string) => trouver(g, `.${classe}`);
@@ -59,7 +69,7 @@ export function creerLumi(racine: SVGSVGElement, tenue?: CleDeTenue) {
 
   function creerLeBras(c: "g" | "d"): SVGElement {
     const enveloppe = creerUnGroupe();
-    enveloppe.innerHTML = dessinDuBras(c);
+    enveloppe.innerHTML = dessinDuBras(c, prefixe);
     const b = enveloppe.firstElementChild;
     if (!(b instanceof SVGElement)) throw new Error("Le bras de Lumi n'a pas pu être dessiné");
     return b;
@@ -72,7 +82,7 @@ export function creerLumi(racine: SVGSVGElement, tenue?: CleDeTenue) {
     poser(q1(g, "ombre"), "d", trace(decaler(m, 3, 1.2), .3, .92));
     poser(q1(g, "lumiere"), "d", trace(decaler(m, -3, -1.2), .3, .85));
     deplacer(q1(g, "manche"), `translate(${r1(S.x)} ${r1(S.y + 2)}) rotate(${r1(-a1 * .5)})`);
-    const mainG = trouver(g, `#princesse-main-${c}`);
+    const mainG = trouver(g, `#${prefixe}-main-${c}`);
     deplacer(mainG, `translate(${r1(m.W.x)} ${r1(m.W.y)}) rotate(${r1(m.dir)}) scale(.8)`);
     const versCentre = c === "g" ? 1 : -1, score = Math.cos(m.dir * DEG) * versCentre - Math.sin(m.dir * DEG) * .8;
     const cote: CoteDeMain = score > 0 ? "miroir" : "droit";
@@ -190,10 +200,10 @@ export function creerLumi(racine: SVGSVGElement, tenue?: CleDeTenue) {
   }
 
   /** Dessine Lumi à l'instant `t` du scénario ; rend sa pose et le bout de sa baguette (les effets s'y accrochent). */
-  function dessiner(scenario: ScenarioDesPrincesses, t: number): LumiDessinee {
+  function dessiner(scenario: PosesEtExpressions, t: number): LumiDessinee {
     const p = poseA(scenario.poses, t), pAvant = poseA(scenario.poses, t - .06);
     const vx = (p.x - pAvant.x) / .06, vy = (p.y - pAvant.y) / .06;
-    const flotte = Math.sin(t * 2.2) * 4 - 10 * (1 - p.vol);
+    const flotte = flottementDeLumi(t, p.vol);
     deplacer(n("lumi"), `translate(${r1(p.x)} ${r1(p.y + flotte)}) rotate(${r1(p.rot)}) scale(${r3(BASE * p.sx)} ${r3(BASE * p.sy)})`);
     dessinerLesAiles(p, t);
     cheveux.dessiner(p, t, vx, vy);
@@ -208,7 +218,7 @@ export function creerLumi(racine: SVGSVGElement, tenue?: CleDeTenue) {
     const ex = expressionA(scenario.expressions, t), A = EMOS[ex.prec], B = EMOS[ex.emo], u = ex.u;
     dessinerLaTete(p, ex, Math.max(lerp(A.lid, B.lid, u), clignement(t)), lerp(A.pup, B.pup, u));
     const bout = dessinerLaBaguette(p);
-    const haut = Math.max(0, SOL.y - p.y - flotte), ombre = n("ombre-sol");
+    const haut = Math.max(0, solY - p.y - flotte), ombre = n("ombre-sol");
     poser(ombre, "cx", r1(p.x));
     poser(ombre, "rx", r1(Math.max(16, 40 - haut * .12)));
     poser(ombre, "opacity", r3(Math.max(.04, .2 - haut * .0008)));
