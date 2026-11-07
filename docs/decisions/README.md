@@ -8,7 +8,7 @@ Une décision n'est jamais réécrite : si elle change, une nouvelle décision l
 | [0001](0001-front-web-react-pwa.md) | Front web React + TypeScript en PWA, plutôt que Flutter | Acceptée |
 | [0002](0002-backend-supabase.md) | Backend Supabase, plutôt qu'un backend Java | Acceptée |
 | [0003](0003-domaine-partage-hors-ligne.md) | Domaine TypeScript partagé entre le serveur et le front, pour le hors ligne | Acceptée |
-| [0004](0004-voix-synthetique.md) | Poésies et chansons lues par une voix de synthèse, pas d'enregistrement audio | Acceptée |
+| [0004](0004-voix-synthetique.md) | Poésies et chansons lues par une voix de synthèse, pas d'enregistrement audio | Acceptée, précisée par 0043 |
 | [0005](0005-pas-de-temps-ecran.md) | Pas de limite de temps d'écran | Acceptée |
 | [0006](0006-methode-tdd-bdd-ddd-agents.md) | Méthode TDD, BDD et DDD avec une équipe de subagents | Acceptée, précisée par 0017 et 0020 |
 | [0007](0007-ports-du-front-dans-le-domaine.md) | Ports utilisés par le front déclarés dans le domaine, sous-domaine Voix | Acceptée, précisée par 0008 |
@@ -43,3 +43,4 @@ Une décision n'est jamais réécrite : si elle change, une nouvelle décision l
 | [0040](0040-parents-de-test-reutilises.md) | Parents de test E2E à adresses stables `<équipe>-<projet><worker>`, réutilisés et remis à zéro, pour rester sous le quota MAU de Supabase ; plafond de 450 adresses | Acceptée |
 | [0041](0041-grand-defi-enregistre-a-part.md) | Grand défi terminé enregistré dans une table additive `grands_defis_termines` (RLS en lecture pour les parents rattachés, cascade), par la même Edge Function `terminer-le-defi` | Acceptée |
 | [0042](0042-moteur-des-scenes-pour-la-scene-de-reponse-fausse.md) | Le moteur commun des scènes animées sert aussi à la scène de réponse fausse (complète 0039) : durée en paramètre, 1,5 s au plus, à la place du dessin du personnage guide, sans jamais retenir l'enfant | Acceptée |
+| [0043](0043-voix-de-l-application-en-sons-pre-fabriques.md) | Voix de l'application en sons de phrases fabriqués à l'avance (Piper, voix « tom », MP3 mono 32 kbit/s, 40 Mo au plus), servis avec l'application ; repli phrase par phrase sur la voix de l'appareil ; deux ports dans le domaine Voix ; inventaire des phrases par un script Deno dans `scripts/` (précise 0004) | Acceptée |
