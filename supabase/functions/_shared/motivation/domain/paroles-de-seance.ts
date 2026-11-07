@@ -6,7 +6,7 @@ import { vocatif, vocatifApresVirgule } from "./vocatif.ts";
 
 export type InvitationAJouer = { readonly texte: string; readonly humeur: Humeur };
 
-const INVITATIONS_A_JOUER: readonly string[] = [
+export const INVITATIONS_A_JOUER: readonly string[] = [
   "À toi de jouer maintenant !",
   "C'est parti, à toi !",
   "Prêt ? On joue !",
@@ -36,16 +36,19 @@ export function inviterAJouerApresLesEtapes(hasard: Hasard): InvitationAJouer {
   return { texte: tirerDans(INVITATIONS_A_JOUER, hasard), humeur: "applaudit" };
 }
 
-function finDeSeance(etoiles: number, personnageGuide: PersonnageGuide, hasard: Hasard, prenom?: string): string {
-  if (etoiles === 3) {
-    return `${tirerDans(personnageGuide.expressions, hasard)} Trois étoiles${
-      vocatifApresVirgule(prenom)
-    } ! Tu es incroyable !`;
-  }
+export function finDeSeanceApres(etoiles: number, felicitation: string, prenom?: string): string {
+  if (etoiles === 3) return `${felicitation} Trois étoiles${vocatifApresVirgule(prenom)} ! Tu es incroyable !`;
   const pluriel = etoiles > 1 ? "s" : "";
-  return `${feliciter(personnageGuide, hasard).texte} Tu gagnes ${etoiles} étoile${pluriel}${
+  return `${felicitation} Tu gagnes ${etoiles} étoile${pluriel}${
     vocatifApresVirgule(prenom)
   }. Tu rejoues pour aller chercher les autres ?`;
+}
+
+function finDeSeance(etoiles: number, personnageGuide: PersonnageGuide, hasard: Hasard, prenom?: string): string {
+  const felicitation = etoiles === 3
+    ? tirerDans(personnageGuide.expressions, hasard)
+    : feliciter(personnageGuide, hasard).texte;
+  return finDeSeanceApres(etoiles, felicitation, prenom);
 }
 
 export function parolesDeFinDeSeance(

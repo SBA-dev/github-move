@@ -7,7 +7,7 @@ export type Felicitation = { readonly texte: string };
 
 const PROBABILITE_EXPRESSION_DU_PERSONNAGE_GUIDE = 0.35;
 
-const FELICITATIONS_COMMUNES: readonly string[] = [
+export const FELICITATIONS_COMMUNES: readonly string[] = [
   "Bravo !",
   "Super !",
   "Ouah, bien joué !",
@@ -20,7 +20,7 @@ const FELICITATIONS_COMMUNES: readonly string[] = [
 
 export type Encouragement = { readonly texte: string };
 
-const ENCOURAGEMENTS: readonly string[] = [
+export const ENCOURAGEMENTS: readonly string[] = [
   "Oups, presque !",
   "Hmm, pas tout à fait…",
   "Pas grave, on réessaie !",
@@ -42,7 +42,7 @@ export function feliciter(
   return { texte: tirerDans(textes, hasard) };
 }
 
-const RELANCES: readonly string[] = ["Oui ! Et après ?", "Bien ! Et ensuite ?", "Super ! La suite ?"];
+export const RELANCES: readonly string[] = ["Oui ! Et après ?", "Bien ! Et ensuite ?", "Super ! La suite ?"];
 const PROBABILITE_DE_FELICITER_UNE_FOIS_SUR_DEUX = 0.5;
 
 export function relancer(hasard: Hasard): string {

@@ -80,6 +80,7 @@ export {
   titreDuDefiReleve,
   titreDuGrandDefiReleve,
 } from "./paroles-du-defi.ts";
+export { parolesConnuesDAvance } from "./paroles-connues-d-avance.ts";
 export { type SectionDeLEcran, sectionsAAfficher, sectionsDeLEcran } from "./sections-de-l-ecran.ts";
 export { type PastilleDeRecord, pastillesDesRecords, type RecordDuProfil } from "./records-de-calcul-rapide.ts";
 export {
