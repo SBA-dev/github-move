@@ -57,22 +57,32 @@ export class LecteurDeSonsDePhrasesDuNavigateur implements LecteurDeSonsDePhrase
       const suivreLesMots = instantsDesMots && onMot
         ? annoncerLesMots(audio, rythme, instantsDesMots, onMot)
         : undefined;
-      const garde = setTimeout(() => {
-        audio.pause();
-        echouer(new SonIllisible());
-      }, delaiDeSecuriteMs(son, rythme));
+      let reglee = false;
+      let garde: ReturnType<typeof setTimeout>;
+      const armerLaGarde = () => {
+        garde = setTimeout(() => {
+          // Un média mis en pause par le navigateur (onglet masqué) n'est pas un son bloqué : on attend encore.
+          if (document.hidden || audio.paused) return armerLaGarde();
+          audio.pause();
+          echouer(new SonIllisible());
+        }, delaiDeSecuriteMs(son, rythme));
+      };
+      armerLaGarde();
       const nettoyer = () => {
+        reglee = true;
         clearTimeout(garde);
         suivreLesMots?.();
         audio.removeEventListener("ended", terminer);
         audio.removeEventListener("error", echouer);
-        this.terminerLaLectureEnCours = undefined;
+        if (this.terminerLaLectureEnCours === terminer) this.terminerLaLectureEnCours = undefined;
       };
       const terminer = () => {
+        if (reglee) return;
         nettoyer();
         resolve();
       };
       const echouer = (erreur: unknown) => {
+        if (reglee) return;
         nettoyer();
         reject(estUneAutorisationRefusee(erreur) ? new VoixBloquee() : new SonIllisible());
       };

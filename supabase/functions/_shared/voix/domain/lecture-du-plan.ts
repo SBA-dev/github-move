@@ -62,6 +62,7 @@ export async function lireLePlan(demande: LectureDuPlanDemandee): Promise<Result
       );
     } catch (erreur) {
       if (!(erreur instanceof SonIllisible)) throw erreur;
+      if (demande.interrompue()) return;
       await lireParLAppareil([groupe.reglage], groupe.indice);
     }
   };
