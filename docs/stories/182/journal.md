@@ -42,3 +42,6 @@ Story seule, lancée par `/feature 182` le 2026-11-07. Base : `main` (`5d690d3`)
 ## Étape 3 : TDD, bloc C (pipeline) — 2026-11-07, en parallèle du bloc A
 
 - C2 table de prononciation : RED `6f4ab376` (vérifié), GREEN `50e2b68c` (pytest 1591 verts). C3 fabrication : RED en cours.
+- A5 : RED `51fdfd24`, GREEN `4723d3af` (repli `SonIllisible` ; adaptateur navigateur traduit `error`/échec de `play()` en `SonIllisible`, garde `NotAllowedError` pour A7). Câblage des adaptateurs du navigateur `a7aeb2f8` (`tsc` et build verts). A6 : RED `98d93f87` (vérifié), GREEN en cours avec le message de voix absente à l'écran (182.16, rôle d'information, 182.25).
+- C3 : RED `203c6d9b`, GREEN `341269c5`. C4 : RED `b06afe39`, GREEN `1d74aaca` (pytest 1614). C1 : RED `b34a4dd4` (vérifié), GREEN en cours.
+- C1, constat du test-writer : la lecture des choix (« Est-ce a, b, ou c ? », mode « tout lire à voix haute ») est fabriquée à la volée avec un ordre tiré au hasard : elle relève de 182.1 A (repli sur la voix de l'appareil), pas de question nouvelle au PO. Restent à inventorier dans un comportement suivant : texte de la leçon de lecture, mots de la dictée, vers de `memoriser`, aides, `ordre` et `trous`.
