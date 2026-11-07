@@ -1,4 +1,5 @@
 import { assertEquals } from "@std/assert";
+import { InstantsDesMots } from "./instants-des-mots.ts";
 import { SonIllisible, VoixBloquee } from "./erreurs.ts";
 import type { VoixDisponible } from "./voix-disponible.ts";
 import { LectureAVoixHaute } from "./lecture-a-voix-haute.ts";
@@ -279,4 +280,89 @@ Deno.test("passer en muet fait disparaître le message de voix absente", async (
   lecture.passerEnMuet();
 
   assertEquals(evenements, ["voixAbsente", "finDeLaVoixAbsente"]);
+});
+
+const SON_DE_TRES_BIEN: SonDePhrase = {
+  cle: CleDeLaPhrase.de("Très bien."),
+  fichier: "sons/tres-bien.mp3",
+  dureeMs: 900,
+};
+const SON_DE_TROIS_PLUS_QUATRE: SonDePhrase = {
+  cle: CleDeLaPhrase.de("3 plus 4 égale 7."),
+  fichier: "sons/trois-plus-quatre.mp3",
+  dureeMs: 2000,
+};
+
+function uneLectureAvecDesSonsDePhrases(voixDeLAppareil: readonly VoixDisponible[] = []) {
+  const lecteur = new LecteurEnMemoire();
+  const lecteurDeSonsDePhrases = new LecteurDeSonsDePhrasesEnMemoire();
+  const lecture = new LectureAVoixHaute({
+    lecteur,
+    lecteurDEffetsSonores: new LecteurDEffetsSonoresEnMemoire(),
+    lecteurDeSonsDePhrases,
+    repertoireDesSons: repertoireDesSonsEnMemoire([
+      SON_DE_ECOUTE_BIEN,
+      SON_DE_TRES_BIEN,
+      SON_DE_TROIS_PLUS_QUATRE,
+    ]),
+    voixDeLAppareil: voixEnMemoire(voixDeLAppareil),
+    choixDeVoix: new ChoixDeVoixEnMemoire(),
+    hasard: hasardFixe(0.5),
+    caractereDuPersonnageGuide: () => CARACTERE_NOISETTE,
+    etatInitial: "son",
+    onVoixBloquee: () => {},
+    onFinDeLaVoixBloquee: () => {},
+    onVoixAbsente: () => {},
+    onFinDeLaVoixAbsente: () => {},
+  });
+  return { lecture, lecteur, lecteurDeSonsDePhrases };
+}
+
+Deno.test("écouter plus lentement joue le son de phrase au rythme 0,65", async () => {
+  const { lecture, lecteurDeSonsDePhrases } = uneLectureAvecDesSonsDePhrases();
+
+  await lecture.lire("Écoute bien.", { lent: true });
+
+  assertEquals(lecteurDeSonsDePhrases.sonsJoues.map((joue) => joue.rythme), [0.65]);
+});
+
+Deno.test("le lecteur de sons reçoit les instants des mots de la phrase, étirés par le rythme lent", async () => {
+  const { lecture, lecteurDeSonsDePhrases } = uneLectureAvecDesSonsDePhrases();
+
+  await lecture.lire("Écoute bien.", { lent: true });
+
+  assertEquals(
+    lecteurDeSonsDePhrases.sonsJoues.map((joue) => joue.instantsDesMots),
+    [InstantsDesMots.de("Écoute bien.", SON_DE_ECOUTE_BIEN.dureeMs, 0.65)],
+  );
+});
+
+Deno.test("les mots annoncés pendant le son de phrase sont surlignés, rang continu d'une phrase à l'autre", async () => {
+  const { lecture, lecteurDeSonsDePhrases } = uneLectureAvecDesSonsDePhrases();
+  lecteurDeSonsDePhrases.annoncerLesMots(0, 1);
+  const rangs: number[] = [];
+
+  await lecture.lire("Écoute bien. Très bien.", { onMot: (rang) => rangs.push(rang) });
+
+  assertEquals(rangs, [0, 1, 2, 3]);
+});
+
+Deno.test("les mots dits « plus » et « égale » par le son de phrase ne surlignent aucun mot affiché", async () => {
+  const { lecture, lecteurDeSonsDePhrases } = uneLectureAvecDesSonsDePhrases();
+  lecteurDeSonsDePhrases.annoncerLesMots(0, 1, 2, 3, 4);
+  const rangs: number[] = [];
+
+  await lecture.lire("3 + 4 = 7.", { onMot: (rang) => rangs.push(rang) });
+
+  assertEquals(rangs, [0, 1, 2]);
+});
+
+Deno.test("une phrase lue par la voix de l'appareil après une phrase au son de phrase surligne les bons mots affichés", async () => {
+  const { lecture, lecteur } = uneLectureAvecDesSonsDePhrases([DENISE]);
+  lecteur.prononcerLesMots({ phrase: 0, position: 0 }, { phrase: 0, position: 4 });
+  const rangs: number[] = [];
+
+  await lecture.lire("Écoute bien. Bonjour toi.", { onMot: (rang) => rangs.push(rang) });
+
+  assertEquals(rangs, [2, 3]);
 });
