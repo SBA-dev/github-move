@@ -13,7 +13,7 @@ export class LecteurDeSonsDePhrasesEnMemoire implements LecteurDeSonsDePhrases {
   readonly appels: Array<"jouer" | "arreter"> = [];
   nombreDArrets = 0;
   private echec: Error | undefined;
-  private finsEnAttente: Array<() => void> = [];
+  private finsEnAttente: Array<{ resoudre: () => void; rejeter: (erreur: Error) => void }> = [];
   private finAutomatique = true;
   private motsAnnonces: number[] = [];
 
@@ -24,7 +24,11 @@ export class LecteurDeSonsDePhrasesEnMemoire implements LecteurDeSonsDePhrases {
   }
 
   terminerLeSonEnCours(): void {
-    this.finsEnAttente.shift()?.();
+    this.finsEnAttente.shift()?.resoudre();
+  }
+
+  faireEchouerLeSonEnCours(erreur: Error): void {
+    this.finsEnAttente.shift()?.rejeter(erreur);
   }
 
   faireEchouerLesSons(erreur: Error): void {
@@ -47,7 +51,7 @@ export class LecteurDeSonsDePhrasesEnMemoire implements LecteurDeSonsDePhrases {
     if (this.echec) return Promise.reject(this.echec);
     this.motsAnnonces.forEach((rang) => onMot?.(rang));
     if (this.finAutomatique) return Promise.resolve();
-    return new Promise((resolve) => this.finsEnAttente.push(resolve));
+    return new Promise((resoudre, rejeter) => this.finsEnAttente.push({ resoudre, rejeter }));
   }
 
   arreter(): void {

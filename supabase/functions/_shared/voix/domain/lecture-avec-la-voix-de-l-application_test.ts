@@ -464,3 +464,44 @@ Deno.test("les effets avant la parole arrêtent le son de phrase en cours avant 
 
   assertEquals(journal.slice(0, journal.indexOf("effet:reponseJuste")), ["son:Écoute bien.", "arret-son"]);
 });
+
+function attendreLaFinDesMicrotaches() {
+  return new Promise((resolve) => setTimeout(resolve, 0));
+}
+
+Deno.test("couper la voix puis un son de phrase qui échoue en retard ne se replie pas sur la voix de l'appareil", async () => {
+  const { lecture, lecteur, lecteurDeSonsDePhrases } = uneLectureAuJournal([DENISE]);
+  const parole = lecture.lire("Écoute bien.");
+
+  lecture.couperLaVoix();
+  lecteurDeSonsDePhrases.faireEchouerLeSonEnCours(new SonIllisible());
+
+  assertEquals({ lecturesDeLAppareil: lecteur.lectures, parole: await parole }, {
+    lecturesDeLAppareil: [],
+    parole: { entendue: false },
+  });
+});
+
+Deno.test("passer en muet puis un son de phrase qui échoue en retard ne se replie pas sur la voix de l'appareil", async () => {
+  const { lecture, lecteur, lecteurDeSonsDePhrases } = uneLectureAuJournal([DENISE]);
+  const parole = lecture.lire("Écoute bien.");
+
+  lecture.passerEnMuet();
+  lecteurDeSonsDePhrases.faireEchouerLeSonEnCours(new SonIllisible());
+  await parole;
+
+  assertEquals(lecteur.lectures, []);
+});
+
+Deno.test("une nouvelle lecture puis l'échec en retard de l'ancien son de phrase ne fait pas lire l'ancienne phrase par la voix de l'appareil", async () => {
+  const { lecture, lecteur, lecteurDeSonsDePhrases } = uneLectureAuJournal([DENISE]);
+  const ancienneParole = lecture.lire("Écoute bien.");
+  const nouvelleParole = lecture.lire("Très bien.");
+
+  lecteurDeSonsDePhrases.faireEchouerLeSonEnCours(new SonIllisible());
+  await attendreLaFinDesMicrotaches();
+  lecteurDeSonsDePhrases.terminerLeSonEnCours();
+  await Promise.all([ancienneParole, nouvelleParole]);
+
+  assertEquals(lecteur.lectures, []);
+});
