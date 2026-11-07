@@ -367,7 +367,7 @@ export function useDeroulementDeSeance(
     faireSilence();
   }, [faireSilence, reussite.continuer]);
 
-  const { parole, rangDuMotPrononce, humeur, enTrainDeParler } = personnage;
+  const { parole, rangDuMotPrononce, humeur, enTrainDeParler, reagitSansParler } = personnage;
   const { figee, avancementAnnonce } = reussite;
   const {
     choixVisiblesPour,
@@ -384,6 +384,7 @@ export function useDeroulementDeSeance(
     rangDuMotPrononce,
     humeur,
     enTrainDeParler,
+    reagitSansParler,
     retour,
     figee,
     choixVisiblesPour,

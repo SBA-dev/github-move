@@ -213,7 +213,7 @@ function SeanceEnCours(
     finie,
     etape: etape !== undefined,
     parole: deroulement.enTrainDeParler ? deroulement.parole : undefined,
-    humeur: deroulement.humeur,
+    reagitSansParler: deroulement.reagitSansParler,
     sceneDeReponseFausse: reponseFausse.enCours !== undefined,
   });
   /** Avant toute réponse, Retour ramène à la page de la leçon ; ensuite, la pause de la séance s'ouvre d'abord. */
@@ -252,7 +252,7 @@ function SeanceEnCours(
           humeur={deroulement.humeur}
           reponseFausse={reponseFausse}
           consigne={consigne}
-          parole={deroulement.parole}
+          parole={deroulement.reagitSansParler ? undefined : deroulement.parole}
           rangDuMotPrononce={deroulement.rangDuMotPrononce}
           reecouterImpossible={deroulement.figee !== undefined}
           onReecouter={deroulement.reecouter}

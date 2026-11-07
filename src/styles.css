@@ -1450,8 +1450,11 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
   white-space: nowrap;
 }
 .seance-de-lecon .guide-et-parole { position: relative; flex-wrap: nowrap; gap: 8px; width: 100%; min-height: 56px; }
+/* Quand il réagit, le personnage guide fait 100 px de large (assez pour la scène de réponse fausse) ; la zone lui est réservée d'avance
+   à 86 px de haut (il déborde un peu sur la barre du haut et sur l'exercice) pour que l'exercice ne saute pas quand il apparaît. */
 @media (max-width: 480px) {
-  .seance-de-lecon .guide-et-parole .personnage-guide { width: 64px; flex: none; }
+  .seance-de-lecon .guide-et-parole { min-height: 86px; }
+  .seance-de-lecon .guide-et-parole .personnage-guide { width: 100px; flex: none; margin-block: -20px; }
 }
 .bulle-de-la-seance { position: relative; flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: 8px; padding: 6px 6px 6px 14px; border: var(--epaisseur-du-contour) solid var(--contour); border-radius: var(--rayon-grand); background: var(--surface); box-shadow: var(--ombre-de-panneau); }
 .bulle-de-la-seance :is(.bulle, .consigne) { border: 0; box-shadow: none; }
