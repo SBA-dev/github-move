@@ -80,6 +80,18 @@ export {
   titreDuDefiReleve,
   titreDuGrandDefiReleve,
 } from "./paroles-du-defi.ts";
+export {
+  aiderQuandOnNeSaitPas,
+  encouragerApresUneErreurDeCalcul,
+  feliciterPuisExpliquer,
+  feliciterUnCalcul,
+  type ParoleDeCalcul,
+} from "./paroles-du-calcul.ts";
+export {
+  CONSIGNE_DU_TEST_DE_DEPART,
+  proposerLeTestDeDepart,
+  remercierApresLeTestDeDepart,
+} from "./paroles-du-test-de-depart.ts";
 export { parolesConnuesDAvance } from "./paroles-connues-d-avance.ts";
 export { type SectionDeLEcran, sectionsAAfficher, sectionsDeLEcran } from "./sections-de-l-ecran.ts";
 export { type PastilleDeRecord, pastillesDesRecords, type RecordDuProfil } from "./records-de-calcul-rapide.ts";
