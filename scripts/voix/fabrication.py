@@ -48,7 +48,8 @@ def fabriquer_les_sons(inventaire, dossier, voix, identifiant_voix="fr_FR-tom-me
         "voix": identifiant_voix,
         "sons": sons,
         "lecons": {
-            lecon: [fichiers_de_la_cle[cle] for cle in cles] for lecon, cles in inventaire["lecons"].items()
+            lecon: list(dict.fromkeys(fichiers_de_la_cle[cle] for cle in cles))
+            for lecon, cles in inventaire["lecons"].items()
         },
     }
     (dossier / NOM_DU_REPERTOIRE).write_text(
