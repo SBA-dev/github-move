@@ -19,6 +19,7 @@ export {
   presentationAuRetourDuSon,
   relancer,
   saluer,
+  saluerSansPrenom,
 } from "./paroles.ts";
 export {
   type Parole,
@@ -31,10 +32,12 @@ export {
 export { TirageHorsIntervalle } from "./hasard.ts";
 export {
   accueillirSurLaPageDeLaLecon,
+  accueillirSurLaPageDeLaLeconSansPrenom,
   annoncerExerciceSuivant,
   type InvitationAJouer,
   inviterAJouerApresLesEtapes,
   parolesDeFinDeSeance,
+  parolesDeFinDeSeanceSansPrenom,
 } from "./paroles-de-seance.ts";
 export {
   accueilDeLaFluence,
@@ -44,13 +47,20 @@ export {
   secondes,
   SIGNAL_DE_DEPART,
 } from "./paroles-de-fluence.ts";
-export { accueillirEnRevision, annonceDeLaSeanceDeRevision, parolesDeFinDeRevision } from "./paroles-de-revision.ts";
+export {
+  accueillirEnRevision,
+  annonceDeLaSeanceDeRevision,
+  parolesDeFinDeRevision,
+  parolesDeFinDeRevisionSansPrenom,
+} from "./paroles-de-revision.ts";
 export {
   annonceDuDefiOuvert,
   annonceDuDefiOuvertPour,
   annonceDuGrandDefiOuvert,
   inviterARelever,
   inviterAReleverLeGrandDefi,
+  inviterAReleverLeGrandDefiSansPrenom,
+  inviterAReleverSansPrenom,
   nomDuDefi,
   nomDuDefiOuvert,
   nomDuGrandDefi,
@@ -58,10 +68,14 @@ export {
   parolesDeDebutDeGrandDefi,
   parolesDeDebutDuDefi,
   parolesDeFinDeDefi,
+  parolesDeFinDeDefiSansPrenom,
   parolesDeFinDeGrandDefi,
+  parolesDeFinDeGrandDefiSansPrenom,
   parolesDeFinDuDefiReleve,
+  parolesDeFinDuDefiReleveSansPrenom,
   phraseDeFinAvecLeDefi,
   phraseDeFinAvecLeDefiOuvert,
+  phraseDeFinAvecLeDefiOuvertSansPrenom,
   phraseDeFinAvecLeGrandDefi,
   titreDuDefiReleve,
   titreDuGrandDefiReleve,
@@ -111,7 +125,7 @@ export {
 } from "./faits-du-jour.ts";
 export { JoursDeSeance } from "./jours-de-seance.ts";
 export { type Serie, serieDeJours } from "./serie.ts";
-export { saluerAvecLaSerie, texteDeLaPastille } from "./paroles-de-la-serie.ts";
+export { saluerAvecLaSerie, saluerAvecLaSerieSansPrenom, texteDeLaPastille } from "./paroles-de-la-serie.ts";
 export {
   type BonneReponse,
   effetSonoreDuRecord,
@@ -199,8 +213,10 @@ export {
 } from "./moment-de-celebration.ts";
 export {
   feteDeLaQueteAccomplie,
+  feteDeLaQueteAccomplieSansPrenom,
   paroleDeLaQueteALAccueil,
   phraseDeFinAvecLaQuete,
+  phraseDeFinAvecLaQueteSansPrenom,
   propositionDeLaQueteDuJour,
   reponseAuRefusDeLaQuete,
 } from "./paroles-de-la-quete.ts";

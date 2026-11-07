@@ -1,4 +1,4 @@
-import { saluer } from "./paroles.ts";
+import { saluer, saluerSansPrenom } from "./paroles.ts";
 import type { Serie } from "./serie.ts";
 
 export function texteDeLaPastille({ nombreDeJours, aJoueAujourdhui }: Serie): string {
@@ -11,4 +11,8 @@ export function texteDeLaPastille({ nombreDeJours, aJoueAujourdhui }: Serie): st
 
 export function saluerAvecLaSerie(prenom: string, serie: Serie): string {
   return `${saluer(prenom)} ${texteDeLaPastille(serie)}`;
+}
+
+export function saluerAvecLaSerieSansPrenom(serie: Serie): string {
+  return `${saluerSansPrenom()} ${texteDeLaPastille(serie)}`;
 }

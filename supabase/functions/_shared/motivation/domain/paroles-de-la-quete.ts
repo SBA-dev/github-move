@@ -1,4 +1,5 @@
 import type { QueteDuJour } from "./quete-du-jour.ts";
+import { vocatif } from "./vocatif.ts";
 
 export function propositionDeLaQueteDuJour(quete: QueteDuJour): string | undefined {
   switch (quete.genre) {
@@ -18,8 +19,16 @@ function petitesErreurs(nombre: number): string {
   return nombre > 1 ? `${nombre} petites erreurs` : `${nombre} petite erreur`;
 }
 
+function fete(prenom?: string): string {
+  return `Quête du jour accomplie ! Bravo${vocatif(prenom)} !`;
+}
+
 export function feteDeLaQueteAccomplie(prenom: string): string {
-  return `Quête du jour accomplie ! Bravo ${prenom} !`;
+  return fete(prenom);
+}
+
+export function feteDeLaQueteAccomplieSansPrenom(): string {
+  return fete();
 }
 
 export function reponseAuRefusDeLaQuete(): string {
@@ -28,6 +37,10 @@ export function reponseAuRefusDeLaQuete(): string {
 
 export function phraseDeFinAvecLaQuete(phraseDeFin: string, prenom: string, queteAccomplie: boolean): string {
   return queteAccomplie ? `${phraseDeFin} ${feteDeLaQueteAccomplie(prenom)}` : phraseDeFin;
+}
+
+export function phraseDeFinAvecLaQueteSansPrenom(phraseDeFin: string, queteAccomplie: boolean): string {
+  return queteAccomplie ? `${phraseDeFin} ${feteDeLaQueteAccomplieSansPrenom()}` : phraseDeFin;
 }
 
 export function paroleDeLaQueteALAccueil(quete: QueteDuJour, queteRefusee: boolean): string | undefined {

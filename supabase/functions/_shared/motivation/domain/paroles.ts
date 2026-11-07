@@ -1,6 +1,7 @@
 import { type Hasard, tirage } from "./hasard.ts";
 import type { PersonnageGuide } from "./personnage-guide.ts";
 import type { Univers } from "./univers.ts";
+import { vocatif } from "./vocatif.ts";
 
 export type Felicitation = { readonly texte: string };
 
@@ -106,8 +107,16 @@ export function presentation(univers: Univers): string {
   return `Je suis ${nom}, ${titre} ${contracterAvecDe(univers.royaume)}.`;
 }
 
+function salut(prenom?: string): string {
+  return `Bonjour${vocatif(prenom)} !`;
+}
+
 export function saluer(prenom: string): string {
-  return `Bonjour ${prenom} !`;
+  return salut(prenom);
+}
+
+export function saluerSansPrenom(): string {
+  return salut();
 }
 
 function phrases(...morceaux: (string | undefined)[]): string {
