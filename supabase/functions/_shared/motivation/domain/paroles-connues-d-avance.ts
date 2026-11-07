@@ -8,7 +8,11 @@ import {
   saluerSansPrenom,
 } from "./paroles.ts";
 import { saluerAvecLaSerieSansPrenom } from "./paroles-de-la-serie.ts";
-import { feteDeLaQueteAccomplieSansPrenom, reponseAuRefusDeLaQuete } from "./paroles-de-la-quete.ts";
+import {
+  feteDeLaQueteAccomplieSansPrenom,
+  propositionDeLaQueteDuJour,
+  reponseAuRefusDeLaQuete,
+} from "./paroles-de-la-quete.ts";
 import { accueillirSurLaPageDeLaLeconSansPrenom, finDeSeanceApres, INVITATIONS_A_JOUER } from "./paroles-de-seance.ts";
 import { inviterAReleverLeGrandDefiSansPrenom, parolesDeFinDeGrandDefiSansPrenom } from "./paroles-du-defi.ts";
 import { UNIVERS } from "./univers.ts";
@@ -41,12 +45,17 @@ function parolesDuGrandDefi(): string[] {
   ]);
 }
 
+function propositionDeLaQueteAccomplie(): string[] {
+  return [propositionDeLaQueteDuJour({ genre: "accomplie", quete: "lecon" })].filter((parole) => parole !== undefined);
+}
+
 function parolesDeLaSerieEtDeLaQuete(): string[] {
   return [
     saluerAvecLaSerieSansPrenom({ nombreDeJours: 0, aJoueAujourdhui: false }),
     saluerAvecLaSerieSansPrenom({ nombreDeJours: 1, aJoueAujourdhui: true }),
     saluerAvecLaSerieSansPrenom({ nombreDeJours: 1, aJoueAujourdhui: false }),
     feteDeLaQueteAccomplieSansPrenom(),
+    ...propositionDeLaQueteAccomplie(),
     reponseAuRefusDeLaQuete(),
   ];
 }
