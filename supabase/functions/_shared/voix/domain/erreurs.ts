@@ -11,3 +11,10 @@ export class LectureImpossible extends Error {
     this.name = "LectureImpossible";
   }
 }
+
+export class SonIllisible extends Error {
+  constructor() {
+    super("Le son de la phrase ne peut pas être joué.");
+    this.name = "SonIllisible";
+  }
+}

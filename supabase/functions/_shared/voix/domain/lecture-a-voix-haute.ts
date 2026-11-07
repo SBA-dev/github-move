@@ -1,7 +1,7 @@
 import type { CaractereDeLaVoix } from "./caractere-de-la-voix.ts";
 import { CARACTERE_LANGUE_ETRANGERE, choisirVoix, choisirVoixDeLangue, ChoixDeVoix } from "./choix-de-voix.ts";
 import type { ChoixDeVoixDeLAppareil } from "./choix-de-voix-de-l-appareil.ts";
-import { LectureImpossible, VoixBloquee } from "./erreurs.ts";
+import { LectureImpossible, SonIllisible, VoixBloquee } from "./erreurs.ts";
 import type { EffetSonore } from "./effet-sonore.ts";
 import type { Hasard } from "./hasard.ts";
 import type { LecteurAVoixHaute } from "./lecteur-a-voix-haute.ts";
@@ -70,7 +70,7 @@ function rangDesMots(
 }
 
 type GroupeDeLecture =
-  | Extract<EtapeDeLecture, { type: "voixDeLApplication" }>
+  | Extract<EtapeDeLecture, { type: "voixDeLApplication" }> & { readonly reglage: ReglageDePhrase }
   | { readonly type: "voixDeLAppareil"; readonly phrases: ReglageDePhrase[] };
 
 function grouperLesEtapes(etapes: readonly EtapeDeLecture[], reglages: readonly ReglageDePhrase[]): GroupeDeLecture[] {
@@ -78,9 +78,10 @@ function grouperLesEtapes(etapes: readonly EtapeDeLecture[], reglages: readonly 
   etapes.forEach((etape, i) => {
     const reglage = reglages[i];
     const dernier = groupes.at(-1);
-    if (etape.type === "voixDeLApplication") groupes.push(etape);
-    else if (reglage && dernier?.type === "voixDeLAppareil") dernier.phrases.push(reglage);
-    else if (reglage) groupes.push({ type: "voixDeLAppareil", phrases: [reglage] });
+    if (!reglage) return;
+    if (etape.type === "voixDeLApplication") groupes.push({ ...etape, reglage });
+    else if (dernier?.type === "voixDeLAppareil") dernier.phrases.push(reglage);
+    else groupes.push({ type: "voixDeLAppareil", phrases: [reglage] });
   });
   return groupes;
 }
@@ -133,18 +134,25 @@ export class LectureAVoixHaute {
         voixDeLAppareil: voix,
         voixImposee: false,
       });
-      for (const groupe of grouperLesEtapes(plan.etapes, reglages)) {
-        if (groupe.type === "voixDeLApplication") {
-          await this.dependances.lecteurDeSonsDePhrases.jouer(groupe.son, groupe.rythme);
-          continue;
-        }
-        await lecteur.lire({
+      const lireParLAppareil = (phrases: readonly ReglageDePhrase[]) =>
+        lecteur.lire({
           voix,
           langue,
-          phrases: groupe.phrases,
+          phrases,
           ...(options.onMot &&
             { onMot: rangDesMots(texte.phrases, rangAffichePourChaqueMotPrononce(brut), options.onMot) }),
         });
+      for (const groupe of grouperLesEtapes(plan.etapes, reglages)) {
+        if (groupe.type === "voixDeLAppareil") {
+          await lireParLAppareil(groupe.phrases);
+          continue;
+        }
+        try {
+          await this.dependances.lecteurDeSonsDePhrases.jouer(groupe.son, groupe.rythme);
+        } catch (erreur) {
+          if (!(erreur instanceof SonIllisible)) throw erreur;
+          await lireParLAppareil([groupe.reglage]);
+        }
       }
       this.signalerLaFinDeLaVoixBloquee();
       return PAROLE_ENTENDUE;

@@ -1,4 +1,8 @@
-import type { LecteurDeSonsDePhrases, SonDePhrase } from "@domain/voix";
+import { type LecteurDeSonsDePhrases, type SonDePhrase, SonIllisible } from "@domain/voix";
+
+function estUneAutorisationRefusee(erreur: unknown): boolean {
+  return erreur instanceof DOMException && erreur.name === "NotAllowedError";
+}
 
 export class LecteurDeSonsDePhrasesDuNavigateur implements LecteurDeSonsDePhrases {
   private readonly audio = new Audio();
@@ -19,7 +23,7 @@ export class LecteurDeSonsDePhrasesDuNavigateur implements LecteurDeSonsDePhrase
       };
       const echouer = (erreur: unknown) => {
         nettoyer();
-        reject(erreur);
+        reject(estUneAutorisationRefusee(erreur) ? erreur : new SonIllisible());
       };
       audio.addEventListener("ended", terminer);
       audio.addEventListener("error", echouer);
