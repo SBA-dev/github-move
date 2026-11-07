@@ -15,3 +15,8 @@ Story seule, lancée par `/feature 182` le 2026-11-07. Base : `main` (`5d690d3`)
 ## Étape 0 (2026-11-07)
 
 - Issue #182 lue (créée le jour même, sans commentaire).
+- Base `main` notée pour `mr-reviewer`. Journal poussé (`0ff4d11`).
+
+## Étape 1 (2026-11-07)
+
+- `domain-modeler` : modèle `docs/stories/182/domain-model.md`, glossaire et context map (ajouts), commit `fa7c098`. Sous-domaine Voix, sans agrégat ni migration ; ports `RepertoireDesSons` et `LecteurDeSonsDePhrases`, calcul pur `planDeLecture`, erreurs `VoixAbsente` et `SonIllisible`. 24 questions ouvertes (182.1 à 182.24).
