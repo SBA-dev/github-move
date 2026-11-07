@@ -6,7 +6,9 @@ import type { EffetSonore } from "./effet-sonore.ts";
 import type { Hasard } from "./hasard.ts";
 import type { LecteurAVoixHaute } from "./lecteur-a-voix-haute.ts";
 import type { LecteurDEffetsSonores } from "./lecteur-d-effets-sonores.ts";
+import type { InstantsDesMots } from "./instants-des-mots.ts";
 import type { LecteurDeSonsDePhrases } from "./lecteur-de-sons-de-phrases.ts";
+import type { SonDePhrase } from "./son-de-phrase.ts";
 import { lireLePlan } from "./lecture-du-plan.ts";
 import { planDeLecture } from "./plan-de-lecture.ts";
 import { surlignage } from "./surlignage.ts";
@@ -124,7 +126,8 @@ export class LectureAVoixHaute {
         langue,
         voixDeLAppareil: voix,
         lecteur,
-        jouerUnSon: (...parametres) => this.jouerUnSonDePhrase(...parametres),
+        jouerUnSon: (son, rythme, instantsDesMots, onMot) =>
+          this.jouerUnSonDePhrase(son, rythme, instantsDesMots, onMot),
         surligner: options.onMot && !ditParLesSons
           ? surlignage(texte.phrases, rangAffichePourChaqueMotPrononce(brut), options.onMot)
           : undefined,
@@ -266,11 +269,16 @@ export class LectureAVoixHaute {
     this.dependances.onFinDeLaVoixBloquee();
   }
 
-  private async jouerUnSonDePhrase(...parametres: Parameters<LecteurDeSonsDePhrases["jouer"]>): Promise<void> {
+  private async jouerUnSonDePhrase(
+    son: SonDePhrase,
+    rythme: number,
+    instantsDesMots?: InstantsDesMots,
+    onMot?: (rang: number) => void,
+  ): Promise<void> {
     const numero = this.numeroDeLecture;
     this.sonDePhraseEnCours = numero;
     try {
-      await this.dependances.lecteurDeSonsDePhrases.jouer(...parametres);
+      await this.dependances.lecteurDeSonsDePhrases.jouer(son, rythme, instantsDesMots, onMot);
     } finally {
       if (this.sonDePhraseEnCours === numero) this.sonDePhraseEnCours = undefined;
     }
