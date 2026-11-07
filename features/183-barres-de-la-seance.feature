@@ -1,5 +1,5 @@
 # language: fr
-@issue-183 @wip
+@issue-183
 Fonctionnalité: Une barre du haut et une barre d'action en bas pour laisser la place à la leçon
   En tant qu'enfant
   Je veux voir tout de suite l'exercice et le bouton pour répondre, sans défiler
@@ -23,7 +23,8 @@ Fonctionnalité: Une barre du haut et une barre d'action en bas pour laisser la 
   - « le compteur de l'avancement de la séance » : la pastille « 1 / 6 » sous la fine barre de l'avancement de la
     séance (« barre de progression » reste un mot d'interface, glossaire « Avancement de la séance, complément »).
   Mesures, pour l'implémentation et la review : boutons d'action de 52 à 56 px de haut, autres commandes 44 px au
-  moins ; sur 360 × 740, l'exercice commence au plus à 200 px du haut de l'écran.
+  moins ; sur 360 × 740, l'exercice commence au plus à 210 px du haut de l'écran (le
+  personnage guide, affiché à environ 100 px quand il réagit, a sa hauteur réservée).
 
   Leçons utilisées, toutes déjà employées par d'autres stories : « Les sons ou, on, an » (fr-cp-sons-ou-on-an :
   3 étapes de leçon, exercice bulles « Quel son entends-tu ? » de 6 questions sans consigne, exercice classer
@@ -416,7 +417,7 @@ Fonctionnalité: Une barre du haut et une barre d'action en bas pour laisser la 
       Étant donné que l'écran de l'appareil mesure 360 px de large et 740 px de haut
       Et que Léa est sur la page de la leçon « Les sons ou, on, an »
       Quand Léa choisit seulement l'exercice « Quel son entends-tu ? »
-      Alors le début de l'exercice est à 200 px au plus du haut de l'écran
+      Alors le début de l'exercice est à 210 px au plus du haut de l'écran
       Et la question « Dans le mot « poule », quel son entends-tu ? », ses choix et « Je ne sais pas » se voient sans faire défiler l'écran
       Et la page tient dans la largeur de l'écran
 
@@ -425,7 +426,7 @@ Fonctionnalité: Une barre du haut et une barre d'action en bas pour laisser la 
       Et que Tom a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et qu'une leçon de test de niveau CE1 a un exercice calcul « 12 − 5 », de résultat 7, sans aide
       Quand Tom commence cet exercice
-      Alors le début de l'exercice est à 200 px au plus du haut de l'écran
+      Alors le début de l'exercice est à 210 px au plus du haut de l'écran
       Et le calcul, le clavier de cristaux, « Valider » et « Je ne sais pas » se voient sans faire défiler l'écran
 
     Scénario: Sur un écran de 360 px de large, Retour, le choix Son/Muet et « Réécouter » se touchent facilement

@@ -13,7 +13,8 @@ En tant qu'**enfant**, pendant une leçon, je veux voir tout de suite l'exercice
 défiler, **afin de rester concentré sur ce que j'apprends**.
 
 Constat de l'issue : sur 360 × 740, l'exercice commence aujourd'hui à 703 px ; avec la maquette validée par le PO,
-il commence à 194 px. Définition de « terminé » : sur 360 × 740, l'exercice commence au plus à 200 px du haut.
+il commence à 194 px. Définition de « terminé » : sur 360 × 740, l'exercice commence au plus à 210 px du haut (seuil
+relevé de 200 à 210 px par la décision E2E-1).
 
 Une seule règle relève du domaine (Apprentissage) : **Retour ouvre la pause de la séance seulement si la séance a
 reçu une réponse** (`Seance.aRecuUneReponse()`). Le reste est de la présentation : React ne décide rien, il lit
@@ -35,7 +36,7 @@ reçu une réponse** (`Seance.aRecuUneReponse()`). Le reste est de la présentat
 | R10 | Le personnage guide n'est montré que quand il réagit ; pendant une question, la consigne prend toute la largeur de la bulle | « Touche le bon nombre. » seule dans la bulle ; après « 3 », Noisette avec sa félicitation à la place de la consigne, puis la consigne revient ; après une réponse fausse, Noisette avec son encouragement, puis la même question (183.13) | 3 |
 | R11 | Un seul bouton « Réécouter » : la consigne pendant une question, la parole du personnage guide après une réponse | plus de « Relire la consigne » (183.8) ; « Touche le bon nombre. » relue (183.10) ; sans consigne, la question « poule » relue (183.10) ; après « Je ne sais pas », « Pas de souci, on apprend ensemble ! La bonne réponse brille : touche-la. » redit | 4 |
 | R12 | La barre d'action, en bas, porte le bouton principal et « Je ne sais pas » ; « Valider » seulement si l'exercice en a besoin | « Continuer » pendant une étape de leçon ; bulles : « Je ne sais pas » sans « Valider » ; clavier de cristaux : « Valider » mis en avant, « Je ne sais pas » plus discret à côté, 52 px au moins ; classer : « Je ne sais pas » aussi (décision I3) | 4 |
-| R13 | Sur 360 × 740, l'exercice et ses boutons se voient dès le début, sans défiler | bulles « poule » : exercice à 200 px au plus du haut, question, choix et « Je ne sais pas » visibles ; calcul « 12 − 5 » : carte, clavier, « Valider », « Je ne sais pas » visibles ; commandes de 44 px au moins | 3 |
+| R13 | Sur 360 × 740, l'exercice et ses boutons se voient dès le début, sans défiler | bulles « poule » : exercice à 210 px au plus du haut (E2E-1), question, choix et « Je ne sais pas » visibles ; calcul « 12 − 5 » : carte, clavier, « Valider », « Je ne sais pas » visibles ; commandes de 44 px au moins | 3 |
 
 **Droits d'accès** : aucun scénario `@acces`. La story n'ajoute ni table, ni donnée, ni Edge Function : la pause de
 la séance n'est ni enregistrée ni envoyée, et la séance quittée ne l'est pas non plus (comme aujourd'hui).
@@ -199,3 +200,12 @@ Questions ajoutées par les critères d'acceptance, réponse A retenue :
     (« Réécouter » est là). Aucun scénario ne le vérifie encore.
 15. **183.15** Pas d'en-tête de l'application à la fin de la séance non plus ; il revient sur la page de la leçon et
     hors de la séance. Aucun scénario ne le vérifie encore.
+
+Décisions du PO après le premier passage E2E (2026-11-07) :
+
+- **E2E-1** : #79 adapté (« Avec la voix, la consigne revient quand Noisette a fini son encouragement », au lieu
+  de « … la consigne reste visible pendant l'encouragement du personnage guide », qui contredisait 183.13) ; #163
+  addition posée adaptée (« Avec l'addition posée sur un écran de 360 px, Coach Léo joue sa scène de réponse
+  fausse ») ; le personnage guide est affiché à environ 100 px quand il réagit, et sa hauteur est réservée ; le
+  seuil devient 210 px (« le début de l'exercice est à 210 px au plus du haut de l'écran »). Le scénario « mode
+  dys » de #163 ne change pas. Tag `@wip` retiré de la fonctionnalité : ses scénarios passent.

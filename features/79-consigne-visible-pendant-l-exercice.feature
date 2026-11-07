@@ -92,11 +92,13 @@ Fonctionnalité: La consigne d'un exercice reste visible pendant tout l'exercice
       Alors l'étiquette « mi » revient parmi les étiquettes à poser
       Et Léa voit la consigne « Remets les syllabes dans l'ordre pour écrire « domino ». »
 
-    Scénario: Avec la voix, la consigne reste visible pendant l'encouragement du personnage guide
+    # Adapté par #183 (décision 183.13) : le personnage guide se montre à la place de la consigne quand il réagit,
+    # puis la consigne revient quand il a fini de parler.
+    Scénario: Avec la voix, la consigne revient quand Noisette a fini son encouragement
       Étant donné que Léa joue seulement l'exercice « Les maisons des sons » de la leçon « Les sons ou, on, an »
       Quand Léa pose l'étiquette « loup » dans la maison « on »
       Alors Noisette dit un encouragement, suivi de « « loup » n'habite pas dans la maison « on ». Essaie une autre maison. »
-      Et Léa voit la consigne « Range chaque mot dans la maison de son son. »
+      Et ensuite seulement, Léa voit la consigne « Range chaque mot dans la maison de son son. »
 
     Scénario: Au début de l'exercice suivant, sa consigne remplace celle de l'exercice fini
       Étant donné que la tablette est en Muet
