@@ -50,7 +50,7 @@ Fonctionnalité: Choisir la voix des personnages guides sur l'appareil
       Alors Paul voit le titre « La voix des personnages guides »
       Mais Paul ne voit pas le titre « La voix des guides »
 
-  Règle: Quand l'appareil ne peut pas lire en français, le parent est prévenu et sait comment obtenir des voix plus naturelles
+  Règle: Quand le navigateur ne sait pas lire à voix haute, le parent est prévenu ; il trouve aussi des conseils, facultatifs, pour obtenir des voix plus naturelles
 
     Plan du Scénario: Le parent est prévenu quand <situation>
       Étant donné que <situation>
@@ -61,7 +61,6 @@ Fonctionnalité: Choisir la voix des personnages guides sur l'appareil
 
       Exemples:
         | situation                                   | message                                                                                              |
-        | l'appareil n'a aucune voix française        | Aucune voix française trouvée sur cet appareil : installe-en une (voir ci-dessous), puis recharge la page. |
         | le navigateur ne sait pas lire à voix haute | Ce navigateur ne sait pas lire à voix haute.                                                         |
 
     Scénario: Le parent trouve des conseils pour installer des voix plus naturelles

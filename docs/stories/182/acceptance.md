@@ -87,7 +87,10 @@ leur texte ne dit pas quelle voix lit. Points d'attention :
 1. **#15, Plan « Le parent est prévenu quand <situation> »** (l. 55, exemple « l'appareil n'a aucune voix
    française ») : contredit par le scénario R6 « … le parent n'est plus invité à installer une voix » (182.14 A et
    182.26 retenus) : cet exemple est retiré (182.26). « Le parent trouve des conseils pour installer des voix plus
-   naturelles » (l. 67) reste, les conseils étant présentés comme facultatifs (182.26).
+   naturelles » (l. 67) reste, les conseils étant présentés comme facultatifs (182.26). **Fait** : l'exemple est retiré du Plan, et le titre de la
+   règle de #15 dit désormais que le parent est prévenu quand le navigateur ne sait pas lire à voix haute, et que les
+   conseils sont facultatifs. Le texte du scénario de la l. 67 ne disait pas que les conseils sont nécessaires : il
+   est inchangé.
 2. **#15, « Sans voix imposée, la voix automatique est choisie et le parent sait laquelle elle utilise »** (l. 22) :
    la mention « actuellement : Denise (Natural) » devient « actuellement : voix de l'application » quand la voix de
    l'application est utilisée (182.14 A, 182.26 retenus).
