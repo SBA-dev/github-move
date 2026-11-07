@@ -65,3 +65,11 @@ Story seule, lancée par `/feature 182` le 2026-11-07. Base : `main` (`5d690d3`)
 - Bloc B : B3 RED `05464799`, GREEN `19813968` + `758d37ec` (paroles du calcul et du test de départ dans Motivation, fichiers de `src/` supprimés) ; B4 RED `b96b84af`, GREEN `451d4f6a` + `123f7872`. Domaine : 3048 tests verts.
 - Scénarios : #15 accordé à 182.26 (`31abf433`). Arbitrage : les E2E servent par défaut un répertoire des sons vide ; les scénarios de #7, #15, #96 qui décrivent la voix de l'appareil précisent que la phrase n'a pas de son de phrase (en cours, po-acceptance).
 - Nouvelle fabrication des sons (paroles communes, clés changées par A11) et page d'écoute (C5) en cours.
+- Scénarios : #7, #15, #96 précisent « la phrase … n'a pas de son de phrase » et « la voix de l'application est disponible » (`81e6fce9`).
+- C5 page d'écoute : RED `d141bc96`, GREEN `acc17ac7` (`ecoute/` ignoré par git). Refabrication des sons `ea4c8f2d` (2377 phrases, 114 fabriqués, 8 orphelins supprimés, 95,5 min, 22,4 Mo, contrôles OK) ; filtre des phrases muettes retiré `83878a8a`.
+- Fin de l'étape 3 : deno 3048, inventaire 8, pytest 1630, lint, fmt, tsc, build OK.
+
+## Étape 4 et 5 (2026-11-07)
+
+- Revue finale lancée (base `main`, blocs A/C déjà approuvés en cycle 3 ; Motivation, pipeline, câblage et scénarios relus en entier).
+- E2E, mise au point sur `telephone`, lancée en parallèle (steps seulement ; répertoire des sons vide par défaut ; contournement Chromium 1194/1243 dans le conteneur, sans toucher au dépôt).
