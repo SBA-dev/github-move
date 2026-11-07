@@ -1,5 +1,6 @@
 import { expect, type Page } from "@playwright/test";
 import { attendreQueLaBulleSeTerminePar, sansLaQueteAccomplie } from "../support/phrase-de-fin-avec-la-quete.ts";
+import { observerLesSons } from "../support/sons-de-phrases.ts";
 import { Given, Then, When } from "./fixtures.ts";
 import {
   BIBLIOTHEQUE,
@@ -21,6 +22,7 @@ import { EXPRESSIONS_PAR_PERSONNAGE, FELICITATIONS_COMMUNES, listeDe } from "./u
 import {
   journal,
   laisserPasserLeDelaiDeLecture,
+  messageDeVoixAbsente,
   normaliser,
   reappliquerLAppareil,
   SAMANTHA,
@@ -320,13 +322,20 @@ export async function repondre(page: Page, reponse: string, question?: string) {
   const choix = etatDesChoix(page);
   choix.reussiesAvant = await questionsReussies(page);
   const avant = (await journal(page)).speaks;
+  const sonsAvant = (await observerLesSons(page)).entrees.length;
   const silencieuse = estUneBonneFormeSansFelicitation(page, reponse, choix.reussiesAvant);
   const touchee = bulleDeChoix(page, reponse);
   await touchee.click();
   // Sans voix, la dernière bonne réponse de la séance ne se fait pas féliciter : l'écran de fin remplace aussitôt les choix.
   const reponseEnregistree = touchee.and(page.locator("[aria-disabled='true']"));
   await expect(sansVoix(page) ? reponseEnregistree.or(finDeSeance(page)) : reponseEnregistree).toBeVisible();
-  if (!silencieuse && !sansVoix(page)) await expect.poll(async () => (await journal(page)).speaks).toBeGreaterThan(avant);
+  // Story #182 : la félicitation est dite par la synthèse vocale, par la voix de l'application (un son de phrase), ou pas dite (voix absente).
+  if (!silencieuse && !sansVoix(page)) {
+    await expect.poll(async () =>
+      (await journal(page)).speaks > avant || (await observerLesSons(page)).entrees.length > sonsAvant ||
+      await messageDeVoixAbsente(page).count() > 0
+    ).toBe(true);
+  }
 }
 
 function finDeSeance(page: Page) {

@@ -12,10 +12,13 @@ import { cleDe } from "./univers.steps.ts";
 import { estSurUnProfilReel, jouerAvecLeProfilReel, ouvrirLaLeconDansLApplication, rechargerAvecLeProfilReel } from "./profil-reel.ts";
 import {
   attendreUneLecture,
+  attendreUneLectureOuUnSon,
+  lectureEnCours,
   journal,
   laisserPasserLeDelaiDeLecture,
   normaliser,
   preparerLaPage,
+  preparerLaPageEtLaBibliothequeSiScenarioDeVoix,
   scenario,
   terminerLaLecture,
 } from "./voix.steps.ts";
@@ -139,6 +142,7 @@ export function recipient(page: Page) {
 }
 
 export async function ouvrirLaPageDeLaLecon(page: Page, titre: string) {
+  await preparerLaPageEtLaBibliothequeSiScenarioDeVoix(page);
   const lecon = leconDeTitre(page, titre);
   etat(page).courante = lecon;
   if (estSurUnProfilReel(page)) await ouvrirLaLeconDansLApplication(page, lecon.id);
@@ -219,7 +223,7 @@ export async function toutesLesParoles(page: Page): Promise<string[]> {
 
 // --- Étant donné
 
-Given(/^Léa a un profil enfant préparé de niveau (\S+) dans l'univers « (.+) »$/, async ({ page, monde, famille, $tags, $testInfo }, niveau: string, univers: string) => {
+Given(/^Léa a un profil enfant préparé de niveau (\S+) dans l'univers « (.+) »$/, async ({ page, monde, famille, $tags, $testInfo, $bddContext }, niveau: string, univers: string) => {
   const cle = cleDe(univers);
   const profil: ProfilPrepare = { prenom: "Léa", niveau, univers: cle };
   monde.profils.set("Léa", profil);
@@ -230,6 +234,14 @@ Given(/^Léa a un profil enfant préparé de niveau (\S+) dans l'univers « (.+)
   }
   const parametres = scenario(page);
   parametres.univers = cle;
+  // Story #182 : le scénario où Léa se choisit dans « Qui joue ? » joue avec le vrai profil de Léa, créé pour Paul (comme à #34 et #73).
+  const seChoisitDansQuiJoue = $bddContext.bddTestData.steps.some((etape) => /Léa choisit son profil enfant dans « Qui joue \? »/.test(etape.textWithKeyword));
+  if ($tags.includes("@issue-182") && seChoisitDansQuiJoue) {
+    $testInfo.setTimeout(120_000);
+    await assurerLeProfil(famille, "Paul", { prenom: "Léa", niveau, libelleUnivers: univers });
+    parametres.sansProfil = true;
+    return;
+  }
   await preparerLaPage(page, parametres);
   await page.addInitScript(
     ([cleDuProfil, valeur]) => localStorage.setItem(cleDuProfil, valeur),
@@ -297,8 +309,8 @@ Given(/^Léa joue la séance complète de la leçon « (.+) »$/, async ({ page,
 });
 
 Given(/^Noisette est en train de lire la première étape de leçon$/, async ({ page }) => {
-  await attendreUneLecture(page);
-  await expect.poll(async () => (await journal(page)).actifs).toBeGreaterThan(0);
+  await attendreUneLectureOuUnSon(page);
+  await expect.poll(async () => await lectureEnCours(page)).toBe(true);
 });
 
 Given(/^Noisette a lu la première étape de leçon$/, async ({ page }) => {
@@ -470,11 +482,11 @@ Then(/^il ne cite aucun guide fondamental$/, async ({ page }) => {
 
 // --- Alors : ce que Léa entend (textes avec des guillemets français à l'intérieur)
 
-Then(/^Léa entend Noisette lire « (?!.*», puis )(.*[«»].*) »$/, async ({ page }, texte: string) => {
+Then(/^Léa entend Noisette lire « (?!.*», puis )(?!.*» avec la voix )(.*[«»].*) »$/, async ({ page }, texte: string) => {
   await expect.poll(async () => (await journal(page)).lecture.texte).toBe(entendu(texte));
 });
 
-Then(/^Léa entend de nouveau Noisette lire « (?!.*», puis )(.*[«»].*) »$/, async ({ page }, texte: string) => {
+Then(/^Léa entend de nouveau Noisette lire « (?!.*», puis )(?!.*» avec la voix )(.*[«»].*) »$/, async ({ page }, texte: string) => {
   await expect.poll(async () => (await journal(page)).lots).toBeGreaterThanOrEqual(2);
   await expect.poll(async () => (await journal(page)).lecture.texte).toBe(entendu(texte));
 });

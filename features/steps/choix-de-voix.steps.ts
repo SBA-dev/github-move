@@ -220,6 +220,10 @@ Then(/^Paul voit le message « (.+) »$/, async ({ page }, message: string) => {
   await expect(page.getByText(message, { exact: true })).toBeVisible();
 });
 
+Then(/^Paul ne voit pas le message « (.+) »$/, async ({ page }, message: string) => {
+  await expect(page.getByText(message, { exact: true })).toHaveCount(0);
+});
+
 Then(/^seule « ([^«»]+) » est proposée$/, async ({ page }, nom: string) => {
   await expect(page.getByRole("radio")).toHaveCount(1);
   await expect(radio(page, nom)).toHaveCount(1);

@@ -36,6 +36,7 @@ import { motsCachesDe, poesieJouee, remettreTousLesVersDansLOrdre } from "./memo
 import { LECONS_DU_TEST_DE_DEPART, servirLaBibliothequeDuTestDeDepart, suivreLesLecturesDuResultat } from "../support/bibliotheque-du-test-de-depart.ts";
 import { estSurUnProfilReel, jouerAvecLeProfilReel, rechargerAvecLeProfilReel } from "./profil-reel.ts";
 import { profilDe } from "./profils-enfants.steps.ts";
+import { observerLesSons } from "../support/sons-de-phrases.ts";
 import { laisserPasserLeDelaiDeLecture, normaliser, reappliquerLAppareil, scenario, terminerLaLecture } from "./voix.steps.ts";
 
 // Story #97 : retours animés et sonores pendant la séance.
@@ -387,12 +388,12 @@ export async function laisserSeDerouler(page: Page): Promise<void> {
 }
 
 /** Attend une condition sur le journal en finissant les paroles qui précèdent : on ne coupe jamais celle qu'on attend (elle n'est vérifiée qu'une fois commencée). */
-export async function attendre(page: Page, condition: (observation: Observation) => boolean): Promise<Observation> {
+export async function attendre(page: Page, condition: (observation: Observation) => boolean | Promise<boolean>): Promise<Observation> {
   let derniere = OBSERVATION_VIDE;
   try {
     await expect.poll(async () => {
       derniere = await observer(page);
-      if (condition(derniere)) return true;
+      if (await condition(derniere)) return true;
       await terminerLaLecture(page);
       return false;
     }, { intervals: [100], timeout: DELAI_DE_L_ATTENTE_MS }).toBe(true);
@@ -581,10 +582,17 @@ Then(/^Léa n'entend aucune parole$/, async ({ page }) => {
 });
 
 Then(/^Léa n'entend jamais un effet sonore et Noisette en même temps$/, async ({ page }) => {
-  const observation = await attendre(page, (vue) => vue.entrees.length > 0 && vue.entrees.every((e) => e.fin !== null) && vue.paroles.some((p) => p.index >= (vue.entrees.at(-1)?.fin ?? Infinity)));
+  const observation = await attendre(page, async (vue) => {
+    if (vue.entrees.length === 0 || !vue.entrees.every((e) => e.fin !== null)) return false;
+    // Story #182 : Noisette peut parler par la voix de l'application (un son de phrase) au lieu de la synthèse vocale.
+    return vue.paroles.some((p) => p.index >= (vue.entrees.at(-1)?.fin ?? Infinity)) || (await observerLesSons(page)).entrees.length > 0;
+  });
   for (const effet of observation.entrees) {
     expect(sansChevauchement(observation, effet) && sansParoleEnCours(effet), `l'effet « ${effet.nom} » joue sans parole en même temps`).toBe(true);
   }
+  const sons = await observerLesSons(page);
+  for (const effet of sons.effets) expect(effet.sonEnCours, `l'effet « ${effet.nom} » commence pendant un son de phrase`).toBe(false);
+  for (const son of sons.entrees) expect(son.effetEnCours, `le son « ${son.fichier} » commence pendant un effet sonore`).toBe(false);
 });
 
 Then(/^Léa n'entend jamais deux effets sonores en même temps$/, async ({ page }) => {

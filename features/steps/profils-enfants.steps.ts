@@ -6,6 +6,7 @@ import { rattacherUnParent } from "../support/supabase-test.ts";
 import { Given, Then, When } from "./fixtures.ts";
 import { cleDe, preparerProfil } from "./univers.steps.ts";
 import { jouerAvecLeProfilReel } from "./profil-reel.ts";
+import { preparerLaPageSiScenarioDeVoix } from "./voix.steps.ts";
 
 // Story #11 : profils enfants, « Qui joue ? » et rattachement des parents.
 // Le parent agit par l'interface. Les préparations (« Paul est rattaché au profil enfant… ») passent par les Edge
@@ -371,6 +372,8 @@ When(
 // --- Quand : l'enfant
 
 When(/^Léa choisit son profil enfant dans « Qui joue \? »$/, async ({ famille, $tags }) => {
+  // Story #182 : un scénario de voix prépare la tablette (voix de l'appareil, répertoire des sons) avant sa première ouverture.
+  if ($tags.includes("@issue-182")) await preparerLaPageSiScenarioDeVoix(await famille.page("tablette"));
   const page = await connecterSiBesoin(famille, "tablette", "Paul");
   const univers = universChoisiParLeParent.get(famille);
   if ($tags.includes("@issue-102") && univers !== undefined) {

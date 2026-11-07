@@ -3,6 +3,7 @@ import type { Famille } from "../support/famille.ts";
 export { terminerLaLecture } from "../support/lecture-vocale.ts";
 import { terminerLaLecture } from "../support/lecture-vocale.ts";
 import { avecLesReglagesPrevus } from "../support/reglages-prevus.ts";
+import { observerLesSons, phrasesLues, servirLesSonsDeTest, sonsDe } from "../support/sons-de-phrases.ts";
 import {
   bulle,
   commencerLaSeanceComplete,
@@ -212,6 +213,16 @@ export async function attendreUneLecture(page: Page) {
   await expect.poll(async () => (await journal(page)).speaks).toBeGreaterThan(0);
 }
 
+/** Story #182 : une lecture a commencé, par la synthèse vocale de l'appareil ou par la voix de l'application (un son de phrase). */
+export async function attendreUneLectureOuUnSon(page: Page) {
+  await expect.poll(async () => (await journal(page)).speaks + (await observerLesSons(page)).entrees.length).toBeGreaterThan(0);
+}
+
+/** Une parole de la synthèse ou un son de phrase est en cours. */
+export async function lectureEnCours(page: Page): Promise<boolean> {
+  return (await journal(page)).actifs > 0 || (await observerLesSons(page)).actifs > 0;
+}
+
 export async function laisserPasserLeDelaiDeLecture(page: Page) {
   await page.evaluate((delai) => new Promise<void>((fin) => setTimeout(fin, delai)), DELAI_POUR_PROUVER_LE_SILENCE_MS);
 }
@@ -341,10 +352,24 @@ async function ouvrirLaPageDeLaLeconDeTest(page: Page, etat: Scenario, consigne:
   await ouvrirLaPageDeLaLecon(page, TITRE_DE_LA_LECON_DE_TEST);
 }
 
+/** Story #182 : la page de la leçon de test du scénario, sans commencer la séance (c'est là que le premier message de voix se voit). */
+export async function ouvrirLaPageDeLaLeconDeTestDuScenario(page: Page) {
+  const etat = scenario(page);
+  etat.ouvert = true;
+  await ouvrirLaPageDeLaLeconDeTest(page, etat, etat.consigne.texte);
+}
+
 async function commencerLaSeanceDeTest(page: Page, etat: Scenario) {
   const avant = (await journal(page)).lots;
+  const sonsAvant = (await observerLesSons(page)).entrees.length;
   await commencerLaSeanceComplete(page);
-  if (!etat.absent && !etat.muet) await expect.poll(async () => (await journal(page)).lots).toBeGreaterThan(avant);
+  // Story #182 : la consigne est lue par la voix de l'application (un son de phrase), ou n'est pas dite du tout (voix absente).
+  if (!etat.absent && !etat.muet) {
+    await expect.poll(async () => {
+      const aParle = (await journal(page)).lots > avant || (await observerLesSons(page)).entrees.length > sonsAvant;
+      return aParle || await messageDeVoixAbsente(page).count() > 0;
+    }).toBe(true);
+  }
   lecturesApresLaConsigne.set(page, (await journal(page)).lots);
 }
 
@@ -368,6 +393,7 @@ async function ouvrirLAccueil(page: Page) {
 }
 
 export async function ouvrirSurUnAutreAppareil(page: Page, contexte: BrowserContext, etat: Scenario): Promise<Page> {
+  await servirLesSonsDeTest(contexte, sonsDe(page));
   const autre = await contexte.newPage();
   await ouvrirLaPageDeLaLeconDeTest(autre, etat, etat.consigne.texte);
   await commencerLaSeanceDeTest(autre, etat);
@@ -379,6 +405,17 @@ export async function ouvrirSurUnAutreAppareil(page: Page, contexte: BrowserCont
 export async function preparerLaPageSiScenarioDeVoix(page: Page) {
   const etat = scenarios.get(page);
   if (etat) await preparerLaPage(page, etat);
+}
+
+/**
+ * Story #182 : un scénario de voix qui ne dit pas « Léa a un profil enfant préparé… » joue avec le profil de voix.steps.ts (Léa, CE1),
+ * et ses leçons de test sont servies : la page de la leçon est ouverte comme les autres écrans de voix.
+ */
+export async function preparerLaPageEtLaBibliothequeSiScenarioDeVoix(page: Page) {
+  const etat = scenarios.get(page);
+  if (!etat || pagesPreparees.has(page)) return;
+  await preparerLaPage(page, etat);
+  await interceptertLaBibliotheque(page);
 }
 
 // Le parent est connecté sans e-mail (connexion de préparation de #5), puis répond à la question du contrôle parental
@@ -412,8 +449,12 @@ export function normaliser(texte: string): string {
   return texte.replace(/\s+/g, " ").trim();
 }
 
-function messageDeVoixBloquee(page: Page) {
+export function messageDeVoixBloquee(page: Page) {
   return page.getByRole("status").filter({ hasText: "est bloquée par ce navigateur" });
+}
+
+export function messageDeVoixAbsente(page: Page) {
+  return page.getByRole("status").filter({ hasText: "ne peut pas lire cette phrase sur cet appareil" });
 }
 
 // --- Étant donné : appareil
@@ -497,8 +538,8 @@ Given(/^Noisette est en train de lire la consigne « (.+) »$/, async ({ page },
   scenario(page).consigne.texte = texte;
   scenario(page).reecouteLaConsigneDOuverture = true;
   await ouvrir(page);
-  await attendreUneLecture(page);
-  expect((await journal(page)).actifs).toBeGreaterThan(0);
+  await attendreUneLectureOuUnSon(page);
+  await expect.poll(async () => await lectureEnCours(page)).toBe(true);
 });
 
 Given(/^Léa a passé la tablette en Muet$/, async ({ page }) => {
@@ -532,8 +573,13 @@ When(/^la consigne « (.+) » s'affiche$/, async ({ page }, texte: string) => {
 When(/^la consigne suivante s'affiche$/, async ({ page }) => {
   const etat = scenario(page);
   const avant = (await journal(page)).speaks;
+  const sonsAvant = (await observerLesSons(page)).entrees.length;
   await commencerLaSeanceDeTest(page, etat);
-  await expect.poll(async () => (await journal(page)).speaks).toBeGreaterThan(avant);
+  // Story #182 : la consigne est dite par une voix (synthèse ou son de phrase), ou pas du tout (voix absente).
+  await expect.poll(async () =>
+    (await journal(page)).speaks > avant || (await observerLesSons(page)).entrees.length > sonsAvant ||
+    await messageDeVoixAbsente(page).count() > 0
+  ).toBe(true);
   await laisserPasserLeDelaiDeLecture(page);
 });
 
@@ -638,7 +684,13 @@ Then(/^Léa n'entend jamais lire les soulignés$/, async ({ page }) => {
 
 Then(/^Léa n'entend rien$/, async ({ page }) => {
   await laisserPasserLeDelaiDeLecture(page);
+  expect((await observerLesSons(page)).entrees, "aucun son de phrase n'est joué").toEqual([]);
   if (sansVoix(page)) {
+    expect((await journal(page)).speaks).toBe(0);
+    return;
+  }
+  // Story #182 : sans voix française sur l'appareil, aucune phrase en français n'est dite par une voix étrangère.
+  if (!scenario(page).voix.some((voix) => voix.langue.startsWith("fr"))) {
     expect((await journal(page)).speaks).toBe(0);
     return;
   }
@@ -651,14 +703,27 @@ Then(/^Léa n'entend rien$/, async ({ page }) => {
 Then(/^Léa n'entend plus Noisette$/, async ({ page }) => {
   await expect.poll(async () => {
     const { actifs, coupeApresLaDerniereParole } = await journal(page);
-    return actifs === 0 && coupeApresLaDerniereParole;
+    const sons = await observerLesSons(page);
+    // Story #182 : un son de phrase de la voix de l'application est arrêté par l'application (le faux garde l'arrêt dans son journal).
+    const sonArrete = sons.entrees.length > 0 && sons.actifs === 0 && sons.entrees.at(-1)?.arrete === true;
+    return actifs === 0 && (coupeApresLaDerniereParole ? sons.actifs === 0 : sonArrete);
   }).toBe(true);
 });
 
 Then(/^la lecture reprend depuis le début de la consigne$/, async ({ page }) => {
-  await expect.poll(async () => (await journal(page)).lots).toBe((lecturesApresLaConsigne.get(page) ?? 1) + 1);
-  const { lecture } = await journal(page);
-  expect(lecture.texte).toBe(normaliser(scenario(page).consigne.texte));
+  const sons = sonsDe(page);
+  const fichiers = phrasesLues(scenario(page).consigne.texte).map((cle) => sons.sonDe(cle)?.fichier);
+  const premier = fichiers[0];
+  if (premier !== undefined && fichiers.every((fichier) => fichier !== undefined)) {
+    // La consigne est lue par la voix de l'application : son de phrase rejoué depuis le début, après l'arrêt du premier.
+    const jouesDeLaConsigne = async () => (await observerLesSons(page)).entrees.filter((entree) => entree.fichier === `/voix/${premier}`);
+    await expect.poll(async () => (await jouesDeLaConsigne()).length).toBe(2);
+    expect((await jouesDeLaConsigne())[0]?.arrete, "la première lecture est coupée par la nouvelle").toBe(true);
+  } else {
+    await expect.poll(async () => (await journal(page)).lots).toBe((lecturesApresLaConsigne.get(page) ?? 1) + 1);
+    const { lecture } = await journal(page);
+    expect(lecture.texte).toBe(normaliser(scenario(page).consigne.texte));
+  }
   // La reprise va jusqu'au bout : la consigne relue terminée, l'exercice s'ouvre sur sa question et ses choix.
   await terminerLaLecture(page);
   await expect(bulle(page)).toContainText(QUESTION_DE_LA_LECON_DE_TEST);
@@ -668,8 +733,22 @@ Then(/^la lecture reprend depuis le début de la consigne$/, async ({ page }) =>
 
 Then(/^Léa n'entend jamais deux lectures en même temps$/, async ({ page }) => {
   const { chevauchements, lots } = await journal(page);
-  expect(lots).toBeGreaterThanOrEqual(2);
+  const { entrees } = await observerLesSons(page);
+  expect(lots + entrees.length).toBeGreaterThanOrEqual(2);
   expect(chevauchements).toBe(0);
+  // Story #182 : un son de phrase ne commence ni pendant une autre lecture, ni avant que la sienne ne soit finie.
+  for (const entree of entrees) {
+    expect(entree.autreSonEnCours, `le son « ${entree.fichier} » commence quand un autre son joue encore`).toBe(false);
+    expect(entree.paroleEnCours, `le son « ${entree.fichier} » commence pendant une parole de la synthèse`).toBe(false);
+  }
+  const typesDuJournal = await page.evaluate(() => {
+    const faux = Reflect.get(window, "__faux") as { journal: Array<{ type: string }> };
+    return faux.journal.map((e) => e.type);
+  });
+  for (const entree of entrees) {
+    const paroles = typesDuJournal.slice(entree.debut, entree.fin ?? typesDuJournal.length).filter((type) => type === "speak");
+    expect(paroles, `la synthèse parle pendant le son « ${entree.fichier} »`).toEqual([]);
+  }
 });
 
 // --- Alors : voix et caractère
@@ -691,6 +770,8 @@ Then(
   async ({ page }, _enfant: string, nom: string, plusGrave: string | undefined) => {
     const ecran = ecranDeLecture(page);
     await attendreUneLecture(ecran);
+    // Story #182 : une voix de l'appareil lit la consigne, jamais un son de phrase de la voix de l'application.
+    expect((await observerLesSons(ecran)).entrees, "aucun son de phrase n'est joué").toEqual([]);
     const { lecture } = await journal(ecran);
     expect(lecture.enonces.length).toBeGreaterThan(0);
     for (const enonce of lecture.enonces) {
