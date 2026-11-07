@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { proposerLeTestDeDepart, type Univers } from "@domain/motivation";
+import { proposerLeTestDeDepart, proposerLeTestDeDepartSansPrenom, type Univers } from "@domain/motivation";
 import { ParoleDuGuide } from "./ParoleDuGuide.tsx";
 import type { Personnage } from "./useDeroulementDuTestDeDepart.ts";
 
@@ -17,7 +17,11 @@ export function PropositionDuTestDeDepart({ prenom, personnage, univers, onAccep
   const accepter = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     accepter.current?.focus();
-    void dire({ texte: proposerLeTestDeDepart(prenom), nature: "accueil" });
+    void dire({
+      texte: proposerLeTestDeDepart(prenom),
+      texteDit: proposerLeTestDeDepartSansPrenom(),
+      nature: "accueil",
+    });
     return faireSilence;
   }, [prenom, dire, faireSilence]);
 

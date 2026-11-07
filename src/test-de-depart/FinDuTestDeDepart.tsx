@@ -1,7 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { leconsNouvellementReussies, leconsReussiesAuTestDeDepart, type TestDeDepart } from "@domain/apprentissage";
 import type { Lecon, Niveau } from "@domain/catalogue";
-import { effetsSonoresDeLaFin, remercierApresLeTestDeDepart, type Univers } from "@domain/motivation";
+import {
+  effetsSonoresDeLaFin,
+  remercierApresLeTestDeDepart,
+  remercierApresLeTestDeDepartSansPrenom,
+  type Univers,
+} from "@domain/motivation";
 import { Confettis } from "../celebration/index.ts";
 import { lireLesMeilleuresEtoilesDuProfil } from "../seance/fin-de-seance/meilleures-etoiles-du-profil.ts";
 import { messageDeSauvegarde } from "../seance/fin-de-seance/useSauvegardeDeLaSeance.ts";
@@ -50,6 +55,7 @@ export function FinDuTestDeDepart({ test, prenom, lecons, niveau, personnage, un
       if (affichee.current) {
         void dire({
           texte: remercierApresLeTestDeDepart(prenom, nouvelles.size),
+          texteDit: remercierApresLeTestDeDepartSansPrenom(nouvelles.size),
           nature: "felicitation",
           humeur: "applaudit",
           effetsAvant: effetsSonoresDeLaFin({
