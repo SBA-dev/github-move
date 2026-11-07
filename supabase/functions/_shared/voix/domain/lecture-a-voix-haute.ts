@@ -1,18 +1,19 @@
 import type { CaractereDeLaVoix } from "./caractere-de-la-voix.ts";
 import { CARACTERE_LANGUE_ETRANGERE, choisirVoix, choisirVoixDeLangue, ChoixDeVoix } from "./choix-de-voix.ts";
 import type { ChoixDeVoixDeLAppareil } from "./choix-de-voix-de-l-appareil.ts";
-import { LectureImpossible, SonIllisible, VoixBloquee } from "./erreurs.ts";
+import { LectureImpossible, VoixBloquee } from "./erreurs.ts";
 import type { EffetSonore } from "./effet-sonore.ts";
 import type { Hasard } from "./hasard.ts";
-import { InstantsDesMots } from "./instants-des-mots.ts";
 import type { LecteurAVoixHaute } from "./lecteur-a-voix-haute.ts";
 import type { LecteurDEffetsSonores } from "./lecteur-d-effets-sonores.ts";
 import type { LecteurDeSonsDePhrases } from "./lecteur-de-sons-de-phrases.ts";
-import { type EtapeDeLecture, planDeLecture } from "./plan-de-lecture.ts";
+import { lireLePlan } from "./lecture-du-plan.ts";
+import { planDeLecture } from "./plan-de-lecture.ts";
+import { surlignage } from "./surlignage.ts";
 import type { RepertoireDesSons } from "./repertoire-des-sons.ts";
 import { estFrancais } from "./langue.ts";
 import { phraseDEssai } from "./phrase-d-essai.ts";
-import { type ReglageDePhrase, reglerPhrases } from "./reglage-de-phrase.ts";
+import { reglerPhrases } from "./reglage-de-phrase.ts";
 import { rangAffichePourChaqueMotPrononce } from "./mots-de-la-consigne.ts";
 import { texteALire } from "./texte-a-lire.ts";
 import type { VoixDeLAppareil } from "./voix-de-l-appareil.ts";
@@ -54,57 +55,6 @@ type OptionsDeLecture = {
   onFin?: () => void;
 };
 
-function debutsDesMots(phrase: string): number[] {
-  return [...phrase.matchAll(/\S+/g)].map((mot) => mot.index);
-}
-
-type Surlignage = {
-  readonly parPosition: (phrase: number, position: number) => void;
-  readonly parRang: (phrase: number, rangDansLaPhrase: number) => void;
-};
-
-function surlignage(
-  phrases: readonly string[],
-  rangsAffiches: ReadonlyArray<number | undefined>,
-  onMot: (rang: number) => void,
-): Surlignage {
-  const debuts = phrases.map(debutsDesMots);
-  const motsAvant = debuts.map((_, i) => debuts.slice(0, i).reduce((total, d) => total + d.length, 0));
-  const parRang = (phrase: number, rangDansLaPhrase: number) => {
-    const rang = rangsAffiches[(motsAvant[phrase] ?? 0) + rangDansLaPhrase];
-    if (rang !== undefined) onMot(rang);
-  };
-  return {
-    parRang,
-    parPosition: (phrase, position) => {
-      const dansLaPhrase = (debuts[phrase] ?? []).filter((debut) => debut <= position).length - 1;
-      parRang(phrase, Math.max(0, dansLaPhrase));
-    },
-  };
-}
-
-type GroupeDeLecture =
-  | Extract<EtapeDeLecture, { type: "voixDeLApplication" }> & {
-    readonly reglage: ReglageDePhrase;
-    readonly indice: number;
-  }
-  | { readonly type: "voixDeLAppareil"; readonly phrases: ReglageDePhrase[]; readonly indice: number }
-  | { readonly type: "aucune" };
-
-function grouperLesEtapes(etapes: readonly EtapeDeLecture[], reglages: readonly ReglageDePhrase[]): GroupeDeLecture[] {
-  const groupes: GroupeDeLecture[] = [];
-  etapes.forEach((etape, i) => {
-    const reglage = reglages[i];
-    const dernier = groupes.at(-1);
-    if (!reglage) return;
-    if (etape.type === "aucune") groupes.push({ type: "aucune" });
-    else if (etape.type === "voixDeLApplication") groupes.push({ ...etape, reglage, indice: i });
-    else if (dernier?.type === "voixDeLAppareil") dernier.phrases.push(reglage);
-    else groupes.push({ type: "voixDeLAppareil", phrases: [reglage], indice: i });
-  });
-  return groupes;
-}
-
 export class LectureAVoixHaute {
   private etat: EtatDuSon;
   private voixSuspendue = false;
@@ -116,7 +66,8 @@ export class LectureAVoixHaute {
   private coupuresDeLaVoix = 0;
   private voixBloqueeSignalee = false;
   private voixAbsenteSignalee = false;
-  private sonDePhraseEnCours: symbol | undefined;
+  private numeroDeLecture = 0;
+  private sonDePhraseEnCours: number | undefined;
   private parolesEnCours = 0;
 
   constructor(private readonly dependances: DependancesDeLectureAVoixHaute) {
@@ -130,7 +81,7 @@ export class LectureAVoixHaute {
     if (coupuresALaDemande !== this.coupuresDeLaVoix) return PAROLE_NON_ENTENDUE;
     this.arreterLesEffets();
     if (options.effetsAvant) {
-      this.dependances.lecteur.arreter();
+      this.arreterLesVoix();
       if (!await this.jouerLesEffets(options.effetsAvant)) return PAROLE_NON_ENTENDUE;
     }
     if (this.etat === "muet") return PAROLE_NON_ENTENDUE;
@@ -146,6 +97,7 @@ export class LectureAVoixHaute {
     const choix = options.choix ?? this.choixMemorise();
     const voix = this.voixPour(langue, choix);
     const caractere = estFrancais(langue) ? this.dependances.caractereDuPersonnageGuide() : CARACTERE_LANGUE_ETRANGERE;
+    const numeroDeLecture = this.numeroDeLecture;
     this.parolesEnCours++;
     try {
       const reglages = reglerPhrases(texte, caractere, voix, options.lent ? RYTHME_LENT : RYTHME_NORMAL, hasard);
@@ -156,30 +108,20 @@ export class LectureAVoixHaute {
         voixDeLAppareil: voix,
         voixImposee: choix.type === "imposee",
       });
-      const surligner = options.onMot &&
-        surlignage(texte.phrases, rangAffichePourChaqueMotPrononce(brut), options.onMot);
-      const lireParLAppareil = (phrases: readonly ReglageDePhrase[], premierePhrase: number) =>
-        lecteur.lire({
-          voix,
-          langue,
-          phrases,
-          ...(surligner &&
-            { onMot: (phrase: number, position: number) => surligner.parPosition(premierePhrase + phrase, position) }),
-        });
-      let phraseNonDite = false;
-      for (const groupe of grouperLesEtapes(plan.etapes, reglages)) {
-        if (groupe.type === "aucune") {
-          phraseNonDite = true;
-          continue;
-        }
-        if (groupe.type === "voixDeLAppareil") {
-          await lireParLAppareil(groupe.phrases, groupe.indice);
-          continue;
-        }
-        await this.jouerLeSonDePhrase(groupe, lireParLAppareil, surligner);
-      }
+      const resultat = await lireLePlan({
+        plan,
+        reglages,
+        langue,
+        voixDeLAppareil: voix,
+        lecteur,
+        jouerUnSon: (...parametres) => this.jouerUnSonDePhrase(...parametres),
+        surligner: options.onMot &&
+          surlignage(texte.phrases, rangAffichePourChaqueMotPrononce(brut), options.onMot),
+        interrompue: () => this.numeroDeLecture !== numeroDeLecture,
+      });
+      if (resultat === "interrompue") return PAROLE_NON_ENTENDUE;
       this.signalerLaFinDeLaVoixBloquee();
-      if (phraseNonDite) {
+      if (resultat === "phraseNonDite") {
         this.signalerLaVoixAbsente();
         return PAROLE_NON_ENTENDUE;
       }
@@ -195,7 +137,7 @@ export class LectureAVoixHaute {
   }
 
   async jouer(effets: readonly EffetSonore[]): Promise<void> {
-    this.dependances.lecteur.arreter();
+    this.arreterLesVoix();
     this.arreterLesEffets();
     await this.jouerLesEffets(effets);
   }
@@ -313,31 +255,20 @@ export class LectureAVoixHaute {
     this.dependances.onFinDeLaVoixBloquee();
   }
 
-  private async jouerLeSonDePhrase(
-    groupe: Extract<GroupeDeLecture, { type: "voixDeLApplication" }>,
-    lireParLAppareil: (phrases: readonly ReglageDePhrase[], premierePhrase: number) => Promise<void>,
-    surligner: Surlignage | undefined,
-  ): Promise<void> {
-    const jeton = Symbol();
-    this.sonDePhraseEnCours = jeton;
+  private async jouerUnSonDePhrase(...parametres: Parameters<LecteurDeSonsDePhrases["jouer"]>): Promise<void> {
+    const numero = this.numeroDeLecture;
+    this.sonDePhraseEnCours = numero;
     try {
-      await this.dependances.lecteurDeSonsDePhrases.jouer(
-        groupe.son,
-        groupe.rythme,
-        InstantsDesMots.de(groupe.reglage.phrase, groupe.son.dureeMs, groupe.rythme),
-        surligner && ((rang) => surligner.parRang(groupe.indice, rang)),
-      );
-    } catch (erreur) {
-      if (!(erreur instanceof SonIllisible)) throw erreur;
-      await lireParLAppareil([groupe.reglage], groupe.indice);
+      await this.dependances.lecteurDeSonsDePhrases.jouer(...parametres);
     } finally {
-      if (this.sonDePhraseEnCours === jeton) this.sonDePhraseEnCours = undefined;
+      if (this.sonDePhraseEnCours === numero) this.sonDePhraseEnCours = undefined;
     }
   }
 
   private arreterLesVoix(): void {
+    this.numeroDeLecture++;
     this.dependances.lecteur.arreter();
-    if (!this.sonDePhraseEnCours) return;
+    if (this.sonDePhraseEnCours === undefined) return;
     this.sonDePhraseEnCours = undefined;
     this.dependances.lecteurDeSonsDePhrases.arreter();
   }
