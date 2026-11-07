@@ -132,8 +132,6 @@ export function useNavigation() {
     history.back();
   }, []);
 
-  const revenir = retourDeLApplication;
-
   /** Pose la garde du geste retour ; rend de quoi la retirer. */
   const garderLeRetour = useCallback((nouvelleGarde: GardeDuRetour) => {
     garde.current = nouvelleGarde;
@@ -150,5 +148,5 @@ export function useNavigation() {
     else remplacer(cible, true);
   }, [remplacer, retourDeLApplication]);
 
-  return { lieu, retourPossible: profondeur > 0, viaRetour, aller, remplacer, revenir, revenirA, garderLeRetour };
+  return { lieu, retourPossible: profondeur > 0, viaRetour, aller, remplacer, revenir: retourDeLApplication, revenirA, garderLeRetour };
 }
