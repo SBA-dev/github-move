@@ -21,10 +21,14 @@ Aucun texte de scénario, aucun code de production modifié.
 
 ## E2E
 
-En attente du verrou `base` (détenu par la non-régression de mise en ligne).
+Verrou `base` accordé le 2026-11-07 à 06:56 UTC, après la non-régression de mise en ligne. Sonde : 3 × 200 en moins de 0,8 s.
+Périmètre : #20, #23, #65, #127, #128 et #163, 1 worker (`@issue-23` ajouté avec l'accord du responsable : c'est son étape qui change de filtre).
+- `telephone` : **348/348 verts** (1,1 h). Les 36 scénarios de #20 se jouent de nouveau.
+- `tablette` : **347/348** (1,1 h). Seul échec : #163:392 (la boîte à jetons sans bulle écrite), KO 5 connu de la non-régression de mise en ligne, hors périmètre de cette PR. La seconde PR de #179 le limite au téléphone.
 
 ## Mesures
 
 - Début : 2026-11-06 22:36 UTC. Correctif et preuve `bddgen` : environ 30 min.
-- Cycles TDD : 1 (rouge sur `main`, vert sur la branche). Cycles de review : à venir. Cycles d'E2E : à venir.
+- Cycles TDD : 1 (rouge sur `main`, vert sur la branche). Cycles de review : 1 (APPROUVÉ, review légère). Cycles d'E2E : 1 par projet.
+- Attente du verrou `base` : 7 h 50 (23:06 → 06:56 UTC). E2E : 2 h 15.
 - Intégrations de `main` : 0 (gelé).
