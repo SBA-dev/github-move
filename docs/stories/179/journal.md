@@ -32,3 +32,24 @@ Périmètre : #20, #23, #65, #127, #128 et #163, 1 worker (`@issue-23` ajouté a
 - Cycles TDD : 1 (rouge sur `main`, vert sur la branche). Cycles de review : 1 (APPROUVÉ, review légère). Cycles d'E2E : 1 par projet.
 - Attente du verrou `base` : 7 h 50 (23:06 → 06:56 UTC). E2E : 2 h 15.
 - Intégrations de `main` : 0 (gelé).
+
+## Seconde PR : KO 2 à 5 de la non-régression de mise en ligne
+
+Réponses du PO : « Mep. 5 oui » (traiter les KO 2 à 5), « Mep. 6 oui 179.1 oui » (texte de la quête du jour, merge autorisé par avance).
+Branche recréée depuis `main` `740c1cd` après le merge de #180 (consigne #179.2 du responsable).
+
+- **KO 2** (#100:170, :171, #137:111) : depuis #166 (106.12), la musique de la célébration de l'univers remplace « grande victoire ». Le texte des trois scénarios suit, et une étape est ajoutée pour la parole du grand défi.
+- **KO 3** (#30:159, #33:176) : diagnostic, les deux viennent de la quête du jour (#101), livrée après ces scénarios. L'application suit les règles de #101 : « Ta quête du jour est accomplie. » sur l'accueil, et la fête ajoutée après la phrase de fin. Question #179.1 au PO, qui garde ce que l'enfant entend : le texte des deux scénarios inclut la phrase de la quête.
+- **KO 4** (#96:371, :372) : captures de référence régénérées, puis contrôlées à l'œil (bulles de choix de l'univers, fin de séance à bulle courte) et rejouées 3 fois de suite sans écart.
+  Piège rencontré : un premier essai depuis un worktree, dont `node_modules` était un lien vers le dépôt principal, a donné des captures sans les polices Andika et Baloo 2 (Vite ne les servait pas). Elles ont été jetées, puis refaites depuis le dépôt principal.
+- **KO 5** (#163:392) : tag `@telephone-seulement`, exclu du projet `tablette` (constante `HORS_TABLETTE` de `playwright.config.ts`). Sur tablette, le dessin de la boîte à jetons dépasse le seuil de 163.21.
+
+Aucun code de production modifié.
+
+E2E des scénarios touchés, verrou `base`, 1 worker : `telephone` **16/16**, `tablette` **13/13**.
+Review légère : APPROUVÉ ; la remarque non bloquante (nom de la constante) est appliquée.
+
+### Mesures de la seconde PR
+
+- Durée : 08:47 → 09:40 UTC environ. Questions au PO : 1 (#179.1). Cycles de review : 1. Cycles d'E2E : 1 par projet (plus 3 passages des captures).
+- Intégrations de `main` : 0 (la branche part de `main` à jour).
