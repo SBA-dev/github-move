@@ -41,7 +41,7 @@ import { hasardDuNavigateur } from "./hasard-navigateur.ts";
 import { horlogeDuNavigateur } from "./horloge.ts";
 import { useDeroulementDeSeance } from "./useDeroulementDeSeance.ts";
 import { useLecon } from "./useLecon.ts";
-import type { NatureDeParole } from "./usePersonnageQuiParle.ts";
+import { personnageGuideSeMontre } from "./personnage-guide-visible.ts";
 import { useSceneDeReponseFausse } from "./useSceneDeReponseFausse.ts";
 
 type Props = {
@@ -154,22 +154,6 @@ function PartieCommencee(
   );
 }
 
-const NATURES_DE_LA_QUESTION: readonly NatureDeParole[] = ["consigne", "question", "dictee"];
-
-type FaitsDuPersonnageGuide = {
-  readonly finie: boolean;
-  readonly etape: boolean;
-  /** Ce que le personnage guide est en train de dire, s'il parle. */
-  readonly parole: { readonly nature: NatureDeParole } | undefined;
-  readonly sceneDeReponseFausse: boolean;
-};
-
-/** Pendant une question le personnage guide se tait et se cache : il se montre quand il lit une étape de leçon, quand il réagit (réussite, encouragement, aide) et à la fin. */
-function personnageGuideSeMontre({ finie, etape, parole, sceneDeReponseFausse }: FaitsDuPersonnageGuide): boolean {
-  const reagit = parole !== undefined && !NATURES_DE_LA_QUESTION.includes(parole.nature);
-  return finie || etape || reagit || sceneDeReponseFausse;
-}
-
 function estAChoix(exercice: Exercice): boolean {
   return exercice.type === "bulles" || exercice.type === "lecture" || exercice.type === "ecoute" ||
     exercice.type === "trous" || exercice.type === "conjugaison";
@@ -229,6 +213,7 @@ function SeanceEnCours(
     finie,
     etape: etape !== undefined,
     parole: deroulement.enTrainDeParler ? deroulement.parole : undefined,
+    humeur: deroulement.humeur,
     sceneDeReponseFausse: reponseFausse.enCours !== undefined,
   });
   /** Avant toute réponse, Retour ramène à la page de la leçon ; ensuite, la pause de la séance s'ouvre d'abord. */
