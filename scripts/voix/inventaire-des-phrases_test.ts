@@ -137,3 +137,43 @@ Deno.test("l'inventaire ne contient aucune phrase sans lettre ni chiffre", () =>
   // Assert
   assertEquals(inventaire.phrases.filter((p) => !/[\p{L}\p{N}]/u.test(p.phrase)), []);
 });
+
+Deno.test("les paroles communes à tous les enfants sont inventoriées sous l'entrée « paroles-communes », découpées en phrases", () => {
+  // Arrange
+  const parolesCommunes = ["Bravo ! Tu progresses.", "Coucou ! Je suis Noisette."];
+
+  // Act
+  const inventaire = inventaireDesPhrases([leconDeClasse], parolesCommunes);
+
+  // Assert
+  const attendues = ["Bravo !", "Tu progresses.", "Coucou !", "Je suis Noisette."];
+  assertEquals(inventaire.lecons["paroles-communes"], attendues.map(cle));
+  for (const phrase of attendues) {
+    assertEquals(inventaire.phrases.filter((p) => p.phrase === phrase), [{ cle: cle(phrase), phrase }]);
+  }
+});
+
+Deno.test("une parole commune déjà lue dans une leçon n'est inventoriée qu'une fois mais figure aussi dans les paroles communes", () => {
+  // Arrange
+  const consigne = "Choisis la bonne réponse.";
+
+  // Act
+  const inventaire = inventaireDesPhrases([leconDeClasse], [consigne]);
+
+  // Assert
+  assertEquals(inventaire.phrases.filter((p) => p.phrase === consigne).length, 1);
+  assertEquals(inventaire.lecons["paroles-communes"], [cle(consigne)]);
+  assertEquals(inventaire.lecons["lecon-des-animaux"].includes(cle(consigne)), true);
+});
+
+Deno.test("une parole commune vide ou faite de ponctuation n'ajoute aucune phrase", () => {
+  // Arrange
+  const parolesCommunes = ["", "   ", "...", "Salut !"];
+
+  // Act
+  const inventaire = inventaireDesPhrases([], parolesCommunes);
+
+  // Assert
+  assertEquals(inventaire.phrases.map((p) => p.phrase), ["Salut !"]);
+  assertEquals(inventaire.lecons["paroles-communes"], [cle("Salut !")]);
+});
