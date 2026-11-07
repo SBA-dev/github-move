@@ -78,6 +78,11 @@ Before({ tags: "@issue-182 and @pwa" }, async ({ page, baseURL }) => {
   await page.addInitScript(installerLesFauxDeLaStory97, { echec: false, retenir: [] });
 });
 
+// Le relais de test garde la coupure du réseau : elle ne doit jamais déborder sur le scénario suivant (#8, #45).
+After({ tags: "@issue-182 and @pwa" }, async ({ baseURL }) => {
+  await fetch(`${baseURL}/__test/reinitialiser`, { method: "POST" });
+});
+
 // --- Étant donné : les sons de phrases
 
 /** Déclarer des sons de phrases fait de ce scénario un scénario de voix : l'appareil et le profil de voix.steps.ts le préparent. */
