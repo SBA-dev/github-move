@@ -5,6 +5,8 @@ import { hasardDuNavigateur } from "../hasard-navigateur.ts";
 import { ChoixDeVoixMemoriseSurLAppareil } from "./choix-de-voix-memorise.ts";
 import { DeverrouillageAudio, deverrouillerAuToucher } from "./deverrouillage-audio.ts";
 import { LecteurDEffetsSonoresDuNavigateur } from "./lecteur-d-effets-sonores-du-navigateur.ts";
+import { LecteurDeSonsDePhrasesDuNavigateur } from "./lecteur-de-sons-de-phrases-du-navigateur.ts";
+import { RepertoireDesSonsDuNavigateur } from "./repertoire-des-sons-du-navigateur.ts";
 import { LecteurSyntheseVocale, syntheseVocale } from "./lecteur-synthese-vocale.ts";
 import { lireLEtatDuSon, memoriserLEtatDuSon } from "./memoire-du-son.ts";
 import { VoixDeLAppareilNavigateur } from "./voix-de-l-appareil-navigateur.ts";
@@ -40,6 +42,8 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
   const [lecturesEnCours, setLecturesEnCours] = useState(0);
   const [nomDuPersonnageGuideDeLaVoixBloquee, setNomDuPersonnageGuideDeLaVoixBloquee] = useState<string | undefined>();
   const [effetsSonores] = useState(() => new LecteurDEffetsSonoresDuNavigateur());
+  const [lecteurDeSonsDePhrases] = useState(() => new LecteurDeSonsDePhrasesDuNavigateur());
+  const [repertoireDesSons] = useState(() => new RepertoireDesSonsDuNavigateur());
   const [deverrouillage] = useState(() => new DeverrouillageAudio(() => effetsSonores.amorcer()));
   const [voixDeLAppareil] = useState(() => new VoixDeLAppareilNavigateur());
   const [choixMemorise] = useState(() => new ChoixDeVoixMemoriseSurLAppareil());
@@ -50,6 +54,8 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
     new LectureAVoixHaute({
       lecteur: new LecteurSyntheseVocale(),
       lecteurDEffetsSonores: effetsSonores,
+      lecteurDeSonsDePhrases,
+      repertoireDesSons,
       voixDeLAppareil,
       choixDeVoix: choixMemorise,
       hasard: hasardDuNavigateur,
