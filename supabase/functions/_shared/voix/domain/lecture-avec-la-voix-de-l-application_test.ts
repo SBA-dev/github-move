@@ -366,3 +366,101 @@ Deno.test("une phrase lue par la voix de l'appareil après une phrase au son de 
 
   assertEquals(rangs, [2, 3]);
 });
+
+function uneLectureAuJournal(voixDeLAppareil: readonly VoixDisponible[] = []) {
+  const journal: string[] = [];
+  const lecteur = new LecteurEnMemoire(journal);
+  const lecteurDEffetsSonores = new LecteurDEffetsSonoresEnMemoire(journal);
+  const lecteurDeSonsDePhrases = new LecteurDeSonsDePhrasesEnMemoire(journal);
+  lecteurDeSonsDePhrases.jouerSansTerminerAutomatiquement();
+  const evenements: string[] = [];
+  const lecture = new LectureAVoixHaute({
+    lecteur,
+    lecteurDEffetsSonores,
+    lecteurDeSonsDePhrases,
+    repertoireDesSons: repertoireDesSonsEnMemoire([SON_DE_ECOUTE_BIEN, SON_DE_TRES_BIEN, SON_DE_TROIS_PLUS_QUATRE]),
+    voixDeLAppareil: voixEnMemoire(voixDeLAppareil),
+    choixDeVoix: new ChoixDeVoixEnMemoire(),
+    hasard: hasardFixe(0.5),
+    caractereDuPersonnageGuide: () => CARACTERE_NOISETTE,
+    etatInitial: "son",
+    onVoixBloquee: () => evenements.push("voixBloquee"),
+    onFinDeLaVoixBloquee: () => {},
+    onVoixAbsente: () => evenements.push("voixAbsente"),
+    onFinDeLaVoixAbsente: () => {},
+  });
+  return { lecture, lecteur, lecteurDeSonsDePhrases, journal, evenements };
+}
+
+async function laisserFinirLesSons(lecteurDeSonsDePhrases: LecteurDeSonsDePhrasesEnMemoire) {
+  for (let i = 0; i < 5; i++) {
+    lecteurDeSonsDePhrases.terminerLeSonEnCours();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+  }
+}
+
+Deno.test("couper la voix pendant la première phrase empêche la phrase suivante d'être jouée", async () => {
+  const { lecture, lecteurDeSonsDePhrases, journal, evenements } = uneLectureAuJournal();
+  const parole = lecture.lire("Écoute bien. Très bien.");
+
+  lecture.couperLaVoix();
+  await laisserFinirLesSons(lecteurDeSonsDePhrases);
+  await parole;
+
+  assertEquals({ journal, evenements }, { journal: ["son:Écoute bien.", "arret-son"], evenements: [] });
+});
+
+Deno.test("passer en muet pendant la première phrase empêche la phrase suivante d'être jouée", async () => {
+  const { lecture, lecteurDeSonsDePhrases, journal } = uneLectureAuJournal();
+  const parole = lecture.lire("Écoute bien. Très bien.");
+
+  lecture.passerEnMuet();
+  await laisserFinirLesSons(lecteurDeSonsDePhrases);
+  await parole;
+
+  assertEquals(journal, ["son:Écoute bien.", "arret-son"]);
+});
+
+Deno.test("une nouvelle lecture interrompt la suite de l'ancienne, même quand les deux phrases ont leur son", async () => {
+  const { lecture, lecteurDeSonsDePhrases, journal } = uneLectureAuJournal();
+  const ancienneParole = lecture.lire("Écoute bien. Très bien.");
+
+  const nouvelleParole = lecture.lire("3 + 4 = 7.");
+  await laisserFinirLesSons(lecteurDeSonsDePhrases);
+  await Promise.all([ancienneParole, nouvelleParole]);
+
+  assertEquals(journal, ["son:Écoute bien.", "arret-son", "son:3 plus 4 égale 7."]);
+});
+
+Deno.test("une nouvelle lecture empêche la phrase suivante de l'ancienne d'être lue par la voix de l'appareil", async () => {
+  const { lecture, lecteur, lecteurDeSonsDePhrases } = uneLectureAuJournal([DENISE]);
+  const ancienneParole = lecture.lire("Écoute bien. Bonjour toi.");
+
+  const nouvelleParole = lecture.lire("Très bien.");
+  await laisserFinirLesSons(lecteurDeSonsDePhrases);
+  await Promise.all([ancienneParole, nouvelleParole]);
+
+  assertEquals(lecteur.lectures, []);
+});
+
+Deno.test("jouer un effet sonore arrête le son de phrase en cours", async () => {
+  const { lecture, lecteurDeSonsDePhrases, journal } = uneLectureAuJournal();
+  const parole = lecture.lire("Écoute bien.");
+
+  await lecture.jouer(["reponseJuste"]);
+  await laisserFinirLesSons(lecteurDeSonsDePhrases);
+  await parole;
+
+  assertEquals(journal.slice(0, journal.indexOf("effet:reponseJuste")), ["son:Écoute bien.", "arret-son"]);
+});
+
+Deno.test("les effets avant la parole arrêtent le son de phrase en cours avant de commencer", async () => {
+  const { lecture, lecteurDeSonsDePhrases, journal } = uneLectureAuJournal();
+  const ancienneParole = lecture.lire("Écoute bien.");
+
+  const nouvelleParole = lecture.lire("Très bien.", { effetsAvant: ["reponseJuste"] });
+  await laisserFinirLesSons(lecteurDeSonsDePhrases);
+  await Promise.all([ancienneParole, nouvelleParole]);
+
+  assertEquals(journal.slice(0, journal.indexOf("effet:reponseJuste")), ["son:Écoute bien.", "arret-son"]);
+});
