@@ -6,9 +6,12 @@ import type { EffetSonore } from "./effet-sonore.ts";
 import type { Hasard } from "./hasard.ts";
 import type { LecteurAVoixHaute } from "./lecteur-a-voix-haute.ts";
 import type { LecteurDEffetsSonores } from "./lecteur-d-effets-sonores.ts";
+import type { LecteurDeSonsDePhrases } from "./lecteur-de-sons-de-phrases.ts";
+import { type EtapeDeLecture, planDeLecture } from "./plan-de-lecture.ts";
+import type { RepertoireDesSons } from "./repertoire-des-sons.ts";
 import { estFrancais } from "./langue.ts";
 import { phraseDEssai } from "./phrase-d-essai.ts";
-import { reglerPhrases } from "./reglage-de-phrase.ts";
+import { type ReglageDePhrase, reglerPhrases } from "./reglage-de-phrase.ts";
 import { rangAffichePourChaqueMotPrononce } from "./mots-de-la-consigne.ts";
 import { texteALire } from "./texte-a-lire.ts";
 import type { VoixDeLAppareil } from "./voix-de-l-appareil.ts";
@@ -23,6 +26,8 @@ export type EtatDuSon = "son" | "muet";
 export type DependancesDeLectureAVoixHaute = {
   readonly lecteur: LecteurAVoixHaute;
   readonly lecteurDEffetsSonores: LecteurDEffetsSonores;
+  readonly lecteurDeSonsDePhrases: LecteurDeSonsDePhrases;
+  readonly repertoireDesSons: RepertoireDesSons;
   readonly voixDeLAppareil: VoixDeLAppareil;
   readonly choixDeVoix: ChoixDeVoixDeLAppareil;
   readonly hasard: Hasard;
@@ -62,6 +67,22 @@ function rangDesMots(
     const rang = rangsAffiches[(motsAvant[phrase] ?? 0) + Math.max(0, dansLaPhrase)];
     if (rang !== undefined) onMot(rang);
   };
+}
+
+type GroupeDeLecture =
+  | Extract<EtapeDeLecture, { type: "voixDeLApplication" }>
+  | { readonly type: "voixDeLAppareil"; readonly phrases: ReglageDePhrase[] };
+
+function grouperLesEtapes(etapes: readonly EtapeDeLecture[], reglages: readonly ReglageDePhrase[]): GroupeDeLecture[] {
+  const groupes: GroupeDeLecture[] = [];
+  etapes.forEach((etape, i) => {
+    const reglage = reglages[i];
+    const dernier = groupes.at(-1);
+    if (etape.type === "voixDeLApplication") groupes.push(etape);
+    else if (reglage && dernier?.type === "voixDeLAppareil") dernier.phrases.push(reglage);
+    else if (reglage) groupes.push({ type: "voixDeLAppareil", phrases: [reglage] });
+  });
+  return groupes;
 }
 
 export class LectureAVoixHaute {
@@ -104,13 +125,27 @@ export class LectureAVoixHaute {
     const caractere = estFrancais(langue) ? this.dependances.caractereDuPersonnageGuide() : CARACTERE_LANGUE_ETRANGERE;
     this.parolesEnCours++;
     try {
-      await lecteur.lire({
-        voix,
+      const reglages = reglerPhrases(texte, caractere, voix, options.lent ? RYTHME_LENT : RYTHME_NORMAL, hasard);
+      const plan = planDeLecture({
+        phrases: reglages,
         langue,
-        phrases: reglerPhrases(texte, caractere, voix, options.lent ? RYTHME_LENT : RYTHME_NORMAL, hasard),
-        ...(options.onMot &&
-          { onMot: rangDesMots(texte.phrases, rangAffichePourChaqueMotPrononce(brut), options.onMot) }),
+        repertoire: this.dependances.repertoireDesSons,
+        voixDeLAppareil: voix,
+        voixImposee: false,
       });
+      for (const groupe of grouperLesEtapes(plan.etapes, reglages)) {
+        if (groupe.type === "voixDeLApplication") {
+          await this.dependances.lecteurDeSonsDePhrases.jouer(groupe.son, groupe.rythme);
+          continue;
+        }
+        await lecteur.lire({
+          voix,
+          langue,
+          phrases: groupe.phrases,
+          ...(options.onMot &&
+            { onMot: rangDesMots(texte.phrases, rangAffichePourChaqueMotPrononce(brut), options.onMot) }),
+        });
+      }
       this.signalerLaFinDeLaVoixBloquee();
       return PAROLE_ENTENDUE;
     } catch (erreur) {

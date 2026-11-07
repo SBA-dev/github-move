@@ -36,3 +36,4 @@ export { planDeLecture } from "./plan-de-lecture.ts";
 export type { DemandeDePlanDeLecture, EtapeDeLecture, PlanDeLecture } from "./plan-de-lecture.ts";
 export type { RepertoireDesSons } from "./repertoire-des-sons.ts";
 export type { SonDePhrase } from "./son-de-phrase.ts";
+export type { LecteurDeSonsDePhrases } from "./lecteur-de-sons-de-phrases.ts";
