@@ -250,7 +250,7 @@ function SeanceEnCours(
   return (
     <ContexteDuRetour.Provider value={deroulement.retour}>
       <BarreDActionDeLaSeance>
-      <section ref={laSeance} className="seance" aria-labelledby="titre-de-la-seance">
+      <section ref={laSeance} className="seance seance-de-lecon" aria-labelledby="titre-de-la-seance">
         <BarreDuHautDeLaSeance
           titre={lecon.titre}
           son={voix.son}
