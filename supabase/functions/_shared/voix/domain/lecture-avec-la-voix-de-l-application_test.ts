@@ -359,7 +359,7 @@ Deno.test("les mots dits « plus » et « égale » par le son de phrase ne surl
 
 Deno.test("une phrase lue par la voix de l'appareil après une phrase au son de phrase surligne les bons mots affichés", async () => {
   const { lecture, lecteur } = uneLectureAvecDesSonsDePhrases([DENISE]);
-  lecteur.prononcerLesMots({ phrase: 0, position: 0 }, { phrase: 0, position: 4 });
+  lecteur.prononcerLesMots({ phrase: 0, position: 0 }, { phrase: 0, position: 8 });
   const rangs: number[] = [];
 
   await lecture.lire("Écoute bien. Bonjour toi.", { onMot: (rang) => rangs.push(rang) });
