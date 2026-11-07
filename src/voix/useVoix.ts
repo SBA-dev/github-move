@@ -18,6 +18,7 @@ export type Voix = {
   /** Vrai tant qu'une lecture à voix haute est demandée et pas terminée. */
   readonly lectureEnCours: boolean;
   readonly nomDuPersonnageGuideDeLaVoixBloquee: string | undefined;
+  readonly nomDuPersonnageGuideDeLaVoixAbsente: string | undefined;
   readonly lire: (texte: string, options?: OptionsDeLecture) => Promise<ParoleEntendue>;
   readonly jouer: (effets: readonly EffetSonore[]) => Promise<void>;
   readonly couperLaVoix: () => void;
@@ -41,6 +42,7 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
   const [son, setSon] = useState(lireLEtatDuSon);
   const [lecturesEnCours, setLecturesEnCours] = useState(0);
   const [nomDuPersonnageGuideDeLaVoixBloquee, setNomDuPersonnageGuideDeLaVoixBloquee] = useState<string | undefined>();
+  const [nomDuPersonnageGuideDeLaVoixAbsente, setNomDuPersonnageGuideDeLaVoixAbsente] = useState<string | undefined>();
   const [effetsSonores] = useState(() => new LecteurDEffetsSonoresDuNavigateur());
   const [lecteurDeSonsDePhrases] = useState(() => new LecteurDeSonsDePhrasesDuNavigateur());
   const [repertoireDesSons] = useState(() => new RepertoireDesSonsDuNavigateur());
@@ -63,6 +65,8 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
       etatInitial: son,
       onVoixBloquee: () => setNomDuPersonnageGuideDeLaVoixBloquee(personnageGuideEnCours.current.nom),
       onFinDeLaVoixBloquee: () => setNomDuPersonnageGuideDeLaVoixBloquee(undefined),
+      onVoixAbsente: () => setNomDuPersonnageGuideDeLaVoixAbsente(personnageGuideEnCours.current.nom),
+      onFinDeLaVoixAbsente: () => setNomDuPersonnageGuideDeLaVoixAbsente(undefined),
     })
   );
 
@@ -132,6 +136,7 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
     son,
     lectureEnCours: lecturesEnCours > 0,
     nomDuPersonnageGuideDeLaVoixBloquee,
+    nomDuPersonnageGuideDeLaVoixAbsente,
     lire,
     jouer,
     couperLaVoix,

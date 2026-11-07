@@ -226,6 +226,8 @@ export function Application() {
                 <div role="status" className="voix-bloquee">
                   {voix.nomDuPersonnageGuideDeLaVoixBloquee &&
                     `La voix de ${voix.nomDuPersonnageGuideDeLaVoixBloquee} est bloquée par ce navigateur. Touche « Réécouter » pour réessayer, ou lis avec un adulte.`}
+                  {voix.nomDuPersonnageGuideDeLaVoixAbsente &&
+                    `${voix.nomDuPersonnageGuideDeLaVoixAbsente} ne peut pas lire cette phrase sur cet appareil. Tu peux la lire avec un adulte.`}
                 </div>
                 <EcranQuiArrive cle={cleDeLEcran(lieu)} transition={transitionVers(lieu, viaRetour)}>
                   {ecran === "accueil" && (
