@@ -8,6 +8,7 @@ import { ChiffreAPoser } from "./ChiffreAPoser.tsx";
 import { DessinDeLaMaisonDeColonne } from "./DessinDeLaMaisonDeColonne.tsx";
 import { RetenueDessinee } from "./RetenueDessinee.tsx";
 import type { DepartsDesRetenues } from "./saut-de-la-retenue.ts";
+import { DansLaBarreDAction } from "../../BarreDActionDeLaSeance.tsx";
 
 type Rang = VueColonne["rang"];
 
@@ -103,14 +104,16 @@ export function ExerciceDAdditionPosee(props: Props) {
             ))}
           </ul>
           {colonneQuiBrille === undefined && (
-            <button
-              type="button"
-              className="je-ne-sais-pas"
-              data-testid="je-ne-sais-pas"
-              onClick={() => onJeNeSaisPas(chiffreChoisi)}
-            >
-              Je ne sais pas
-            </button>
+            <DansLaBarreDAction>
+              <button
+                type="button"
+                className="je-ne-sais-pas"
+                data-testid="je-ne-sais-pas"
+                onClick={() => onJeNeSaisPas(chiffreChoisi)}
+              >
+                Je ne sais pas
+              </button>
+            </DansLaBarreDAction>
           )}
         </>
       )}

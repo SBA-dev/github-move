@@ -2,6 +2,7 @@ import type { QuestionJouee } from "@domain/apprentissage";
 import { MESSAGE_DE_L_ECOUTE_SANS_SON } from "@domain/apprentissage";
 import { TexteEnSyllabes } from "../../reglages/index.ts";
 import { ChoixDeLaQuestion } from "./ChoixDeLaQuestion.tsx";
+import { DansLaBarreDAction } from "../BarreDActionDeLaSeance.tsx";
 
 type Props = {
   readonly question: QuestionJouee | undefined;
@@ -66,13 +67,15 @@ export function QuestionAChoix(props: Props) {
             onChoisir={props.onChoisir}
           />
           {question.jeNeSaisPasPermis() && (
-            question.bonneReponseMontree || reussie
-              ? <div className="je-ne-sais-pas place-gardee" aria-hidden="true">Je ne sais pas</div>
-              : (
-                <button type="button" className="je-ne-sais-pas" data-testid="je-ne-sais-pas" onClick={props.onJeNeSaisPas}>
-                  Je ne sais pas
-                </button>
-              )
+            <DansLaBarreDAction>
+              {question.bonneReponseMontree || reussie
+                ? <div className="je-ne-sais-pas place-gardee" aria-hidden="true">Je ne sais pas</div>
+                : (
+                  <button type="button" className="je-ne-sais-pas" data-testid="je-ne-sais-pas" onClick={props.onJeNeSaisPas}>
+                    Je ne sais pas
+                  </button>
+                )}
+            </DansLaBarreDAction>
           )}
         </>
       )}

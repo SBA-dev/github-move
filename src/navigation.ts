@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export type EcranSimple =
   | "accueil" | "jeu" | "parcours" | "toutes-les-lecons" | "medailles" | "test-de-depart" | "espace-parent" | "revision" | "defi";
@@ -71,13 +71,27 @@ function profondeurCourante(): number {
   return typeof profondeur === "number" ? profondeur : 0;
 }
 
+/** Une garde prend le geste retour du navigateur : elle rend `true` si elle l'a traité, la page reste alors où elle est. */
+export type GardeDuRetour = () => boolean;
+
 export function useNavigation() {
   const [lieu, setLieu] = useState<Lieu>(() => lieuDe(location.pathname));
   const [profondeur, setProfondeur] = useState(profondeurCourante);
   const [viaRetour, setViaRetour] = useState(false);
+  const garde = useRef<GardeDuRetour | undefined>(undefined);
+  const retourRefuse = useRef(false);
 
   useEffect(() => {
     const surRetour = () => {
+      if (retourRefuse.current) {
+        retourRefuse.current = false;
+        return;
+      }
+      if (garde.current?.()) {
+        retourRefuse.current = true;
+        history.forward();
+        return;
+      }
       setLieu(lieuDe(location.pathname));
       setProfondeur(profondeurCourante());
       setViaRetour(true);
@@ -107,6 +121,14 @@ export function useNavigation() {
 
   const revenir = useCallback(() => history.back(), []);
 
+  /** Pose la garde du geste retour ; rend de quoi la retirer. */
+  const garderLeRetour = useCallback((nouvelleGarde: GardeDuRetour) => {
+    garde.current = nouvelleGarde;
+    return () => {
+      if (garde.current === nouvelleGarde) garde.current = undefined;
+    };
+  }, []);
+
   const revenirA = useCallback((destination: Destination) => {
     const cible = enLieu(destination);
     const etat: unknown = history.state;
@@ -115,5 +137,5 @@ export function useNavigation() {
     else remplacer(cible, true);
   }, [remplacer]);
 
-  return { lieu, retourPossible: profondeur > 0, viaRetour, aller, remplacer, revenir, revenirA };
+  return { lieu, retourPossible: profondeur > 0, viaRetour, aller, remplacer, revenir, revenirA, garderLeRetour };
 }

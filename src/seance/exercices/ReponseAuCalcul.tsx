@@ -1,6 +1,7 @@
 import type { CalculEnCours } from "@domain/apprentissage";
 import { ChoixDeLaQuestion } from "./ChoixDeLaQuestion.tsx";
 import { ClavierDeCristaux } from "./ClavierDeCristaux.tsx";
+import { DansLaBarreDAction } from "../BarreDActionDeLaSeance.tsx";
 
 /** Ce qu'il faut savoir d'une question jouée comme un calcul (calcul, boîte, schéma en barres) pour y répondre. */
 export type ReponseACalculer = Pick<CalculEnCours, "mode" | "jeNeSaisPasPropose" | "reponseATaper">;
@@ -42,9 +43,11 @@ export function ReponseAuCalcul({ calcul, reussi, onChoisir, onValider, onJeNeSa
           />
         )}
       {calcul.jeNeSaisPasPropose && !reussi && (
-        <button type="button" className="je-ne-sais-pas" data-testid="je-ne-sais-pas" onClick={onJeNeSaisPas}>
-          Je ne sais pas
-        </button>
+        <DansLaBarreDAction>
+          <button type="button" className="je-ne-sais-pas" data-testid="je-ne-sais-pas" onClick={onJeNeSaisPas}>
+            Je ne sais pas
+          </button>
+        </DansLaBarreDAction>
       )}
     </>
   );

@@ -5,6 +5,7 @@ import { Etiquette } from "./etiquettes/Etiquette.tsx";
 import { groupeSousLePoint, type Point } from "./maisons/groupe-sous-le-doigt.ts";
 import { Maisons } from "./maisons/Maisons.tsx";
 import { PetitTrain } from "./petit-train/PetitTrain.tsx";
+import { DansLaBarreDAction } from "../BarreDActionDeLaSeance.tsx";
 
 type Props = {
   readonly exercice: Extract<Exercice, { type: "classer" | "ordre" }>;
@@ -77,9 +78,11 @@ export function ExerciceAEtiquettes({ exercice, etiquettesAPlacer, etiquettesPos
         ))}
       </ul>
       {nombreRestant > 0 && bonneReponseMontree === undefined && (
-        <button type="button" className="je-ne-sais-pas" data-testid="je-ne-sais-pas" onClick={jeNeSaisPas}>
-          Je ne sais pas
-        </button>
+        <DansLaBarreDAction>
+          <button type="button" className="je-ne-sais-pas" data-testid="je-ne-sais-pas" onClick={jeNeSaisPas}>
+            Je ne sais pas
+          </button>
+        </DansLaBarreDAction>
       )}
       {exercice.type === "classer"
         ? (

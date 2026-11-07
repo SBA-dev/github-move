@@ -7,12 +7,14 @@ type Props = {
   readonly avancement: Avancement;
   /** Ce que lit un lecteur d'écran : « Avancement de la séance » par défaut. */
   readonly libelle?: string;
+  /** « points » : un rond par question ; « barre » : les mêmes pas joints en une fine barre, avec le compteur en pastille dessous. */
+  readonly forme?: "points" | "barre";
 };
 
 /** Le point part d'un peu plus bas, là où se joue l'exercice, et arrive à sa place en 400 ms. */
 const DEPART_DU_POINT_EN_PX = 96;
 
-export function RecipientDeProgression({ avancement, libelle = "Avancement de la séance" }: Props) {
+export function RecipientDeProgression({ avancement, libelle = "Avancement de la séance", forme = "points" }: Props) {
   const { questionsReussies, total } = avancement;
   const rangDuPointQuiArrive = useRangDuPointQuiArrive(questionsReussies);
   return (
@@ -25,6 +27,7 @@ export function RecipientDeProgression({ avancement, libelle = "Avancement de la
       aria-valuenow={questionsReussies}
       aria-valuetext={`${questionsReussies} sur ${total}`}
       data-testid="recipient"
+      data-forme={forme}
       data-questions-reussies={questionsReussies}
       data-total={total}
       data-complet={avancement.estComplet() ? "true" : "false"}

@@ -4,6 +4,7 @@ import { TexteEnSyllabes } from "../../reglages/index.ts";
 import { CasesDeLaDictee } from "./CasesDeLaDictee.tsx";
 import { ClavierDeLaDictee } from "./ClavierDeLaDictee.tsx";
 import { useClavierPhysique } from "./useClavierPhysique.ts";
+import { DansLaBarreDAction } from "../BarreDActionDeLaSeance.tsx";
 
 type Props = {
   readonly question: QuestionDeDictee | undefined;
@@ -51,9 +52,11 @@ export function ExerciceDeDictee(props: Props) {
       </button>
       <ClavierDeLaDictee question={question} toucheQuiBrille={props.toucheQuiBrille} onTaper={props.onTaper} onEffacer={props.onEffacer} />
       {!question.bonneReponseMontree && !reussie && (
-        <button type="button" className="je-ne-sais-pas" data-testid="je-ne-sais-pas" onClick={props.onJeNeSaisPas}>
-          Je ne sais pas
-        </button>
+        <DansLaBarreDAction>
+          <button type="button" className="je-ne-sais-pas" data-testid="je-ne-sais-pas" onClick={props.onJeNeSaisPas}>
+            Je ne sais pas
+          </button>
+        </DansLaBarreDAction>
       )}
     </div>
   );

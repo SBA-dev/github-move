@@ -3,6 +3,7 @@ import { CIBLE_DE_LA_ZONE_DE_REPONSE, useRetourDe } from "../../retours/index.ts
 import { useUnivers } from "../../univers/index.ts";
 import { DessinDeLUnivers } from "./claviers/DessinDeLUnivers.tsx";
 import { dessinDuCristal } from "./claviers/dessins-des-claviers.ts";
+import { DansLaBarreDAction, useUneBarreDActionExiste } from "../BarreDActionDeLaSeance.tsx";
 import { EclatDeLaTouche } from "./claviers/EclatDeLaTouche.tsx";
 
 const CHIFFRES_AU_PLUS = 4;
@@ -99,6 +100,21 @@ export function ClavierDeCristaux({ onValider, chiffresQuiBrillent = [], desacti
   useClavierPhysique(!desactive, taperAvecEclat, effacerAvecEclat, valider);
   /** La réponse est validée par « Valider » : c'est lui qui rebondit ou se balance. */
   const retour = useRetourDe<HTMLButtonElement>(CIBLE_DE_LA_ZONE_DE_REPONSE);
+  const surLaBarre = useUneBarreDActionExiste();
+  const boutonValider = (
+    <button
+      ref={retour.ref}
+      type="button"
+      className={surLaBarre ? "action-principale valider" : "cristal action valider"}
+      data-testid="valider"
+      data-donne-une-reponse="true"
+      {...retour.attributs}
+      aria-disabled={desactive ? true : undefined}
+      onClick={() => !desactive && valider()}
+    >
+      Valider
+    </button>
+  );
   const touche = (chiffre: string) => (
     <button
       key={chiffre}
@@ -133,19 +149,9 @@ export function ClavierDeCristaux({ onValider, chiffresQuiBrillent = [], desacti
           {toucheEclatante === EFFACER && <EclatDeLaTouche />}
         </button>
         {touche("0")}
-        <button
-          ref={retour.ref}
-          type="button"
-          className="cristal action valider"
-          data-testid="valider"
-          data-donne-une-reponse="true"
-          {...retour.attributs}
-          aria-disabled={desactive ? true : undefined}
-          onClick={() => !desactive && valider()}
-        >
-          Valider
-        </button>
+        {!surLaBarre && boutonValider}
       </div>
+      {surLaBarre && <DansLaBarreDAction>{boutonValider}</DansLaBarreDAction>}
     </div>
   );
 }

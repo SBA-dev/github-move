@@ -31,6 +31,8 @@ export function usePersonnageQuiParle({ lire, jouer, couperLaVoix }: Pick<Voix, 
   const [parole, setParole] = useState<ParoleADire | undefined>();
   const [rangDuMotPrononce, setRangDuMotPrononce] = useState<number | undefined>();
   const [humeur, setHumeur] = useState<Humeur>(HUMEUR_PAR_DEFAUT);
+  /** Vrai de la première syllabe jusqu'à la fin de la dernière parole (en Muet, jusqu'à la fin de son affichage). */
+  const [enTrainDeParler, setEnTrainDeParler] = useState(false);
   const derniereLecture = useRef(0);
   const derniereParole = useRef<ParoleADire | undefined>(undefined);
   /** Vrai tant que la dernière parole a été entendue, ou qu'il n'y en a pas eu : le silence ne prive l'enfant de rien. */
@@ -44,13 +46,16 @@ export function usePersonnageQuiParle({ lire, jouer, couperLaVoix }: Pick<Voix, 
     setParole(aDire);
     setHumeur(aDire.humeur ?? HUMEUR_PAR_DEFAUT);
     setRangDuMotPrononce(undefined);
+    setEnTrainDeParler(true);
     const { entendue } = await lire(aDire.aLire ?? aDire.texte, {
       onMot: (rang) => estLaDerniere() && setRangDuMotPrononce(rang),
       onFin: () => estLaDerniere() && setRangDuMotPrononce(undefined),
       ...(aDire.effetsAvant ? { effetsAvant: aDire.effetsAvant } : {}),
     });
-    if (estLaDerniere()) paroleEntendue.current = entendue;
-    return estLaDerniere();
+    if (!estLaDerniere()) return false;
+    paroleEntendue.current = entendue;
+    setEnTrainDeParler(false);
+    return true;
   }, [lire]);
 
   /** Affiche la phrase dans la bulle sans la dire : la voix la dira plus tard, ou pas. */
@@ -69,8 +74,9 @@ export function usePersonnageQuiParle({ lire, jouer, couperLaVoix }: Pick<Voix, 
   const faireSilence = useCallback(() => {
     derniereLecture.current++;
     paroleEntendue.current = true;
+    setEnTrainDeParler(false);
     couperLaVoix();
   }, [couperLaVoix]);
 
-  return { parole, rangDuMotPrononce, humeur, paroleEntendue, dire, jouer, reecouter, faireSilence, montrerHumeur, montrer };
+  return { parole, rangDuMotPrononce, humeur, enTrainDeParler, paroleEntendue, dire, jouer, reecouter, faireSilence, montrerHumeur, montrer };
 }
