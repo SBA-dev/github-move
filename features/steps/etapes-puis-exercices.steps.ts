@@ -187,7 +187,7 @@ function texteDeLEtape(lecon: LeconBrute, rang: number): string {
   return etape.texte;
 }
 
-function texteLuDeLEtape(lecon: LeconBrute, rang: number): string {
+export function texteLuDeLEtape(lecon: LeconBrute, rang: number): string {
   const etape = lecon.lecon[rang];
   if (!etape) throw new Error(`La leçon « ${lecon.titre} » n'a pas d'étape de leçon n°${rang + 1}`);
   return entendu(etape.exemples.length === 0 ? etape.texte : `${etape.texte} ${etape.exemples.join(". ")}`);
@@ -338,7 +338,7 @@ When(/^Léa commence (?:la séance complète|seulement l'exercice « (.+) »)$/,
   else await commencerSeulementLExercice(page, exercice);
 });
 
-When(/^Léa choisit seulement l'exercice « (.+) »$/, async ({ page }, titre: string) => {
+When(/^Léa choisit seulement l'exercice « ((?:(?!» de la leçon «).)+) »$/, async ({ page }, titre: string) => {
   await commencerSeulementLExercice(page, titre);
 });
 

@@ -6,6 +6,8 @@ const NOM_APPLICATION = "Savanturier";
 const LECONS_MINIMUM = 265;
 const LECON_AJOUTEE = "lecon-ajoutee-par-le-test";
 const PREFIXE_CACHE = "savanturier-";
+// Story #182 : la réserve des sons de phrases survit aux versions de l'application, elle n'est pas le cache d'une version.
+const CACHE_DES_SONS_DE_PHRASES = "savanturier-voix";
 
 type Icone = { src: string; sizes: string; type?: string };
 type Manifeste = {
@@ -165,10 +167,12 @@ Given("Savanturier a déjà été chargé une fois sur la tablette", async ({ pa
   await chargerUneFois(page);
 });
 
-Given("le réseau est coupé", async ({ context, page, $tags }) => {
+Given("le réseau est coupé", async ({ context, page, baseURL, $tags }) => {
   // Story #163 : la leçon de test n'est ouverte que par la première réponse ; elle se charge avant la coupure.
   if ($tags.includes("@issue-163")) await demarrer(page);
   await context.setOffline(true);
+  // Story #182 : le service worker ignore la coupure du navigateur de test ; le relais de test (build de production) la lui applique.
+  if ($tags.includes("@issue-182")) await fetch(`${baseURL}/__test/couper-le-reseau`, { method: "POST" });
 });
 
 Given("Léa est en train d'utiliser Savanturier", async ({ page, pwa }) => {
@@ -300,7 +304,7 @@ Then("elle utilise la nouvelle version de Savanturier", async ({ page, pwa }) =>
   const nouvelle = pwa.versionPubliee;
   expect(nouvelle).not.toBeNull();
   await expect
-    .poll(() => page.evaluate(() => caches.keys()), {
+    .poll(async () => (await page.evaluate(() => caches.keys())).filter((nom) => nom !== CACHE_DES_SONS_DE_PHRASES), {
       message: "seul le cache de la nouvelle version doit rester (l'ancienne est active puis supprimée)",
     })
     .toEqual([`${PREFIXE_CACHE}${nouvelle}`]);

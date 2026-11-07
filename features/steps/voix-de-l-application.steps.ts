@@ -65,8 +65,17 @@ After({ tags: "not @pwa and not @production" }, async ({ browser }) => {
   if (creer) browser.newContext = creer;
 });
 
-Before({ tags: "@issue-182 and @pwa" }, async ({ page }) => {
+// Le build de production sert le vrai répertoire des sons : la parole de Noisette y est lue par la voix de l'application,
+// dans tous les scénarios @pwa. Le faux lecteur journalise ces sons, comme il journalise les paroles de la synthèse.
+Before({ tags: "@pwa" }, async ({ page }) => {
   await page.context().addInitScript(installerLeFauxDesSons, { retenu: false });
+});
+
+Before({ tags: "@issue-182 and @pwa" }, async ({ page, baseURL }) => {
+  // Le relais de test garde la coupure du scénario d'avant : le réseau revient avant chaque scénario.
+  await fetch(`${baseURL}/__test/reinitialiser`, { method: "POST" });
+  // Les effets sonores sont faux aussi : le son du bouton touché retient la parole suivante tant que l'effet n'est pas fini.
+  await page.addInitScript(installerLesFauxDeLaStory97, { echec: false, retenir: [] });
 });
 
 // --- Étant donné : les sons de phrases
@@ -185,7 +194,7 @@ async function attendreLesSons(page: Page, adresses: readonly string[]) {
   }, { intervals: [100] }).toBe(true);
 }
 
-async function verifierQueLaVoixDeLApplicationLit(page: Page, texte: string) {
+export async function verifierQueLaVoixDeLApplicationLit(page: Page, texte: string) {
   await attendreLesSons(page, adressesDes(page, texte));
   await laisserPasserLeDelaiDeLecture(page);
   expect(lueParLaSynthese(await paroles(page), texte), `« ${texte} » n'est pas lue par la synthèse vocale`).toEqual([]);
@@ -198,7 +207,7 @@ Then(
   },
 );
 
-async function verifierQueLaVoixDeLAppareilLit(page: Page, texte: string, voix: string | undefined) {
+export async function verifierQueLaVoixDeLAppareilLit(page: Page, texte: string, voix: string | undefined) {
   await expect.poll(async () => {
     if (lueParLaSynthese(await paroles(page), texte).length > 0) return true;
     await terminerLaLecture(page);
@@ -219,7 +228,7 @@ Then(
 );
 
 Then(
-  new RegExp(`^(?:Léa|Paul) entend (?:${PERSONNAGES_GUIDES}) (?:lire|dire) « ([^«»]+) » avec la voix de l'appareil$`),
+  new RegExp(`^(?:Léa|Paul) entend (?:${PERSONNAGES_GUIDES}) (?:lire|dire) « (.+) » avec la voix de l'appareil$`),
   async ({ page }, texte: string) => {
     await verifierQueLaVoixDeLAppareilLit(ecranDeLecture(page), texte, undefined);
   },

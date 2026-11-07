@@ -45,6 +45,18 @@ export function phrasesLues(brut: string): string[] {
   return texteALire(brut)?.phrases.map((phrase) => CleDeLaPhrase.de(phrase).valeur) ?? [];
 }
 
+/** Les adresses des sons de phrases d'une leçon de la bibliothèque, telles que le vrai répertoire (build de production) les liste. */
+export function adressesDesSonsDeLaLecon(identifiant: string): string[] {
+  const fichiers = lireLeRepertoireReel().lecons[identifiant];
+  if (!fichiers) throw new Error(`Aucun son de phrase prévu pour la leçon « ${identifiant} »`);
+  return fichiers.map((fichier) => `/voix/${fichier}`);
+}
+
+/** Les adresses des sons des paroles communes à toutes les leçons (mises en réserve dès l'ouverture de l'application). */
+export function adressesDesParolesCommunes(): string[] {
+  return (lireLeRepertoireReel().lecons[PAROLES_COMMUNES] ?? []).map((fichier) => `/voix/${fichier}`);
+}
+
 export class SonsDeTest {
   /** Le répertoire est-il servi ? Sinon, la voix de l'application n'est pas disponible sur l'appareil. */
   servi = false;

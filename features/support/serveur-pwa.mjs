@@ -10,7 +10,7 @@ const SUFFIXE_VERSION = "-test-nouvelle";
 const MOTIF_VERSION = /const VERSION = "([^"]*)"/;
 const LECON_AJOUTEE = "lecon-ajoutee-par-le-test";
 
-const etat = { versionPubliee: false, leconPubliee: false, leconDeTest: null };
+const etat = { versionPubliee: false, leconPubliee: false, leconDeTest: null, reseauCoupe: false };
 
 function interroger(requete) {
   return new Promise((resolve, reject) => {
@@ -63,6 +63,13 @@ async function commande(nom, reponse, requete) {
     etat.versionPubliee = false;
     etat.leconPubliee = false;
     etat.leconDeTest = null;
+    etat.reseauCoupe = false;
+    return repondre(reponse, 200, { "content-type": "application/json" }, Buffer.from("{}"));
+  }
+  if (nom === "couper-le-reseau") {
+    // #182 : le service worker n'est pas soumis à la coupure du navigateur de test (setOffline) : sans réseau, il ne doit rien pouvoir
+    // chercher en amont, comme sur un appareil réellement hors ligne.
+    etat.reseauCoupe = true;
     return repondre(reponse, 200, { "content-type": "application/json" }, Buffer.from("{}"));
   }
   if (nom === "publier-lecon") {
@@ -85,6 +92,7 @@ async function commande(nom, reponse, requete) {
 }
 
 async function relayer(requete, reponse) {
+  if (etat.reseauCoupe) return requete.socket.destroy();
   const chemin = new URL(requete.url, "http://relais").pathname;
   const amont = await interroger(requete);
   if (chemin === "/sw.js" && etat.versionPubliee && amont.statut === 200) {
