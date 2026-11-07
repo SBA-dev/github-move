@@ -158,9 +158,9 @@ button[data-son="muet"] { background: var(--principale-foncee); }
 .titre-avec-guide .personnage-guide { width: 72px; flex: none; }
 @media (max-width: 480px) {
   /* Petit sur téléphone : la consigne et les choix restent visibles sans défiler. */
-  .guide-et-parole .personnage-guide { width: 112px; }
+  .guide-et-parole .personnage-guide { width: 64px; flex: none; }
 }
-.guide-et-parole { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; }
+.guide-et-parole { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; }
 .bulle:empty { display: none; }
 .bulle {
   padding: 12px 18px;
@@ -275,7 +275,6 @@ button.commencer { font-size: 1.15rem; }
 .pour-les-adultes blockquote { margin: 8px 0; padding-left: 12px; border-left: 4px solid var(--principale); overflow-wrap: anywhere; }
 .pour-les-adultes h3, .pour-les-adultes p { margin: 8px 0; }
 button:focus-visible, summary:focus-visible { outline: 3px solid var(--texte); outline-offset: 2px; }
-.entete-de-seance { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 16px; max-width: 100%; }
 .recipient {
   display: flex;
   flex-wrap: wrap;
@@ -984,29 +983,8 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 .chiffre-a-poser { font-size: 1.75rem; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; }
 .invite-de-pose { padding: 6px 14px; border-radius: var(--rayon); background: var(--surface-voilee); font-weight: 700; }
 
-/* Addition posée sur téléphone : l'écran de 360 × 740 montre les trois maisons, les chiffres à poser et « Je ne sais pas » sans défiler (#127).
-   Les éléments de la séance se rangent côte à côte quand ils tiennent, au lieu d'une pile ; l'ordre du focus ne change pas ; seule la bulle passe visuellement après « Réécouter ». */
+/* Addition posée sur téléphone : l'écran de 360 × 740 montre les trois maisons et les chiffres à poser sans défiler (#127) ; « Je ne sais pas » est dans la barre d'action (#183). */
 @media (max-width: 480px) {
-  .en-tete:has(~ .ecran .addition-posee) { padding-block: 4px; gap: 4px; }
-  .en-tete:has(~ .ecran .addition-posee) .outils { gap: 4px 8px; }
-  .ecran:has(.addition-posee) { padding-top: 4px; }
-  .seance:has(.addition-posee) { --epaisseur-du-contour: 2px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 8px; }
-  .seance:has(.addition-posee) > * { max-width: 100%; }
-  .seance:has(.addition-posee) .entete-de-seance { flex: 1 1 100%; flex-wrap: nowrap; justify-content: flex-start; gap: 8px; }
-  .seance:has(.addition-posee) .entete-de-seance > div { display: grid; justify-items: start; gap: 2px; text-align: left; line-height: 1.2; }
-  .seance:has(.addition-posee) :is(h2, [data-testid="niveau-et-matiere"]) { padding: 0 8px; }
-  .seance:has(.addition-posee) h2 { font-size: 1.1rem; }
-  .seance:has(.addition-posee) [data-testid="niveau-et-matiere"] { font-size: .8rem; }
-  .seance:has(.addition-posee) .recipient { order: 1; padding: 4px 10px; }
-  .seance:has(.addition-posee) .reecouter { order: 2; }
-  .seance:has(.addition-posee) .guide-et-parole { order: 3; flex: 1 1 100%; flex-wrap: nowrap; justify-content: flex-start; gap: 8px; }
-  .seance:has(.addition-posee) .guide-et-parole .bulle { flex: 1 1 auto; min-width: 0; padding: 4px 10px; font-size: 1rem; line-height: 1.3; text-align: left; }
-  .seance:has(.addition-posee) :is(.consigne-de-l-exercice, .exercice-en-cours) { order: 4; }
-  .seance:has(.addition-posee) .recipient .point { width: 10px; height: 10px; }
-  .seance:has(.addition-posee) .recipient .compte { display: none; }
-  .seance:has(.addition-posee) .guide-et-parole .personnage-guide { width: 40px; }
-  .seance:has(.addition-posee) .consigne { padding: 4px 10px; font-size: 1rem; line-height: 1.3; }
-  .seance:has(.addition-posee) :is(.consigne-de-l-exercice, .exercice-en-cours) { flex: 1 1 100%; }
   .addition-posee { width: 100%; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 8px; }
   .addition-posee .operation-posee { padding: 0 12px; font-size: 1.25rem; }
   .addition-posee .colonnes { flex: 1 1 100%; }
@@ -1016,17 +994,8 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
   .addition-posee .invite-de-pose { flex: 1 1 100%; padding: 0 12px; }
   .addition-posee .chiffres-a-poser { flex-wrap: nowrap; gap: 6px; }
   .addition-posee .chiffre-a-poser { padding: 4px 12px; font-size: 1.5rem; }
-  .addition-posee .je-ne-sais-pas { padding: 6px 12px; }
 }
 
-/* Boîte à jetons sur téléphone : la boîte fermée, les choix et « Je ne sais pas » tiennent dans l'écran de 360 px (#131). Seules les marges et le personnage guide se resserrent ; la boîte garde la taille de son dessin. */
-@media (max-width: 480px) {
-  .en-tete:has(~ .ecran .boite-a-jetons) { padding-block: 4px; gap: 4px; }
-  .en-tete:has(~ .ecran .boite-a-jetons) .outils { gap: 4px 8px; }
-  .ecran:has(.boite-a-jetons) { padding-top: 4px; }
-  .seance:has(.boite-a-jetons) { gap: 8px; }
-  .seance:has(.boite-a-jetons) .guide-et-parole .personnage-guide { width: 80px; }
-}
 
 .dictee { display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 100%; }
 .mot-a-ecrire { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 0; padding: 0; list-style: none; max-width: 100%; }
@@ -1149,8 +1118,6 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 /* Consigne de l'exercice : une place à elle, visible pendant tout l'exercice (#79) */
 .consigne-de-l-exercice { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 12px; max-width: 100%; }
 .consigne-de-l-exercice .consigne { overflow-wrap: anywhere; max-width: 100%; }
-.relire-la-consigne[aria-disabled="true"] { opacity: .45; cursor: default; }
-.continuer-apres-la-reussite { min-width: 44px; }
 /* Suivi de l'espace parent : une colonne, tout passe à la ligne, aucune largeur fixe (360 px sans défilement horizontal). */
 .suivi-de-l-espace-parent {
   display: grid;
@@ -1435,3 +1402,92 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
   .petit-train[data-etat="avance"] { animation: a-coup-du-petit-train .3s ease-in-out; }
 }
 @keyframes a-coup-du-petit-train { 50% { translate: 6px 0; } }
+
+/* La séance d'une leçon (#183) : une barre du haut, la bulle, l'exercice, puis la barre d'action collée en bas.
+   Sur 360 × 740, l'exercice commence à 200 px du haut au plus. Pas d'en-tête de l'application : la barre du haut porte Retour, le titre et le choix Son/Muet. */
+.ecran:has(.seance) { padding-block: 0; padding-inline: 0; gap: 0; }
+.ecran:has(.seance) .ecran-qui-arrive { gap: 0; }
+.seance { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; min-height: 100svh; }
+.seance > * { max-width: calc(100% - 32px); }
+.seance > :is(.barre-du-haut, .barre-d-action, .voile-de-la-pause) { max-width: 100%; }
+.barre-du-haut {
+  position: relative;
+  width: 100%;
+  margin-bottom: 34px;
+  padding: max(6px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) 0 max(12px, env(safe-area-inset-left));
+  background: var(--surface-dense);
+  border-bottom: 2px solid var(--contour);
+}
+.rangee-du-haut { display: grid; grid-template-columns: 44px minmax(0, 1fr) 44px; align-items: center; gap: 8px; min-height: 56px; padding-bottom: 6px; }
+.rangee-du-haut h2 { margin: 0; padding: 0; border: 0; box-shadow: none; background: none; font-size: clamp(.95rem, 4.2vw, 1.2rem); line-height: 1.2; text-align: center; overflow-wrap: normal; word-break: normal; }
+.rangee-du-haut button { padding: 0; border-radius: 50%; }
+.recipient[data-forme="barre"] { display: block; border: 0; box-shadow: none; max-width: none; margin-inline: calc(-1 * max(12px, env(safe-area-inset-left))) calc(-1 * max(12px, env(safe-area-inset-right))); padding: 0; border-radius: 0; background: none; }
+.recipient[data-forme="barre"] .points { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 0; }
+.recipient[data-forme="barre"] .point { width: auto; height: 8px; border: 0; border-radius: 0; background: color-mix(in srgb, var(--contour) 25%, var(--surface)); }
+.recipient[data-forme="barre"] .point[data-reussi="true"] { background: var(--principale); }
+.recipient[data-forme="barre"] .compte {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 50%;
+  translate: -50% 0;
+  min-width: 4.5rem;
+  padding: 2px 14px;
+  border: 2px solid var(--contour);
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: 1.1rem;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.guide-et-parole { position: relative; min-height: 56px; }
+.bulle-de-la-seance { position: relative; flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: 8px; padding: 6px 6px 6px 14px; border: var(--epaisseur-du-contour) solid var(--contour); border-radius: var(--rayon-grand); background: var(--surface); box-shadow: var(--ombre-de-panneau); }
+.bulle-de-la-seance :is(.bulle, .consigne) { border: 0; box-shadow: none; }
+.bulle-de-la-seance[data-sans-texte="true"] { padding: 0; border: 0; background: none; box-shadow: none; justify-content: flex-end; }
+.bulle-de-la-seance .bulle { flex: 1 1 auto; min-width: 0; padding: 0; background: none; font-size: 1.1rem; text-align: left; }
+.bulle-de-la-seance .bulle[data-cachee="true"] { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.bulle-de-la-seance .consigne-de-l-exercice { flex: 1 1 auto; min-width: 0; justify-content: flex-start; }
+.bulle-de-la-seance .consigne { padding: 0; background: none; font-size: 1.2rem; line-height: 1.3; text-align: left; }
+.reecouter { flex: none; width: 44px; height: 44px; padding: 0; border-radius: 50%; }
+.barre-d-action:empty { display: none; }
+.barre-d-action {
+  position: sticky;
+  bottom: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: auto;
+  width: 100%;
+  padding: 10px max(16px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+  background: var(--surface-dense);
+  border-top: 2px solid var(--contour);
+}
+.barre-d-action :is(button, .je-ne-sais-pas) { min-height: 52px; }
+.barre-d-action .je-ne-sais-pas { order: 1; flex: 0 1 auto; font-size: .95rem; }
+.barre-d-action .action-principale { order: 2; flex: 1 1 9rem; max-width: 16rem; }
+.barre-d-action .valider { color: var(--texte); background: var(--valider-fond); border-color: var(--valider-contour); }
+.barre-d-action .valider[aria-disabled="true"] { opacity: .45; cursor: default; }
+
+/* La pause de la séance : une feuille posée en bas de l'écran, sans reproche ni compte à rebours. */
+.voile-de-la-pause { position: fixed; inset: 0; z-index: 10; display: flex; align-items: flex-end; justify-content: center; background: rgb(0 0 0 / .45); }
+.pause-de-la-seance {
+  display: grid;
+  gap: 12px;
+  width: min(100%, 28rem);
+  padding: 20px max(16px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+  border: 2px solid var(--contour);
+  border-bottom: 0;
+  border-radius: var(--rayon-grand) var(--rayon-grand) 0 0;
+  background: var(--surface);
+  color: var(--texte);
+  text-align: center;
+}
+.pause-de-la-seance h3 { margin: 0; font-size: 1.4rem; }
+.pause-de-la-seance button { min-height: 52px; }
+.pause-de-la-seance .retour-a-la-lecon { color: var(--texte); background: var(--surface); }
+@media (prefers-reduced-motion: no-preference) {
+  .pause-de-la-seance { animation: la-pause-monte .25s ease-out; }
+}
+@keyframes la-pause-monte { from { transform: translateY(100%); } to { transform: none; } }
