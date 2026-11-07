@@ -22,7 +22,7 @@ export function motsPrononces(textePrononceOuPhrase: string): string[] {
 
 export function texteALire(brut: string): TexteALire | undefined {
   const texte = textePrononce(brut);
-  if (!/[\p{L}\p{N}]/u.test(texte)) return undefined;
+  if (!contientUneLettreOuUnChiffre(texte)) return undefined;
   return { texte, phrases: rattacherLaPonctuationSeule(texte.split(/(?<=[.!?…:])\s+/)) };
 }
 

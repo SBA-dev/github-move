@@ -1,3 +1,4 @@
+import { silenceEnWav } from "./deverrouillage-audio.ts";
 import {
   type InstantsDesMots,
   type LecteurDeSonsDePhrases,
@@ -8,6 +9,7 @@ import {
 
 const COEFFICIENT_DE_SECURITE = 1.6;
 const MARGE_DE_SECURITE_MS = 2500;
+const REPORTS_MAXIMUM_D_UN_MEDIA_EN_PAUSE = 5;
 
 type ElementAudioSafari = HTMLAudioElement & { webkitPreservesPitch?: boolean };
 
@@ -59,10 +61,12 @@ export class LecteurDeSonsDePhrasesDuNavigateur implements LecteurDeSonsDePhrase
         : undefined;
       let reglee = false;
       let garde: ReturnType<typeof setTimeout>;
+      let reportsPourMediaEnPause = 0;
       const armerLaGarde = () => {
         garde = setTimeout(() => {
           // Un média mis en pause par le navigateur (onglet masqué) n'est pas un son bloqué : on attend encore.
-          if (document.hidden || audio.paused) return armerLaGarde();
+          if (document.hidden) return armerLaGarde();
+          if (audio.paused && reportsPourMediaEnPause++ < REPORTS_MAXIMUM_D_UN_MEDIA_EN_PAUSE) return armerLaGarde();
           audio.pause();
           echouer(new SonIllisible());
         }, delaiDeSecuriteMs(son, rythme));
@@ -89,11 +93,28 @@ export class LecteurDeSonsDePhrasesDuNavigateur implements LecteurDeSonsDePhrase
       audio.addEventListener("ended", terminer);
       audio.addEventListener("error", echouer);
       this.terminerLaLectureEnCours = terminer;
+      audio.muted = false;
       audio.src = son.fichier;
       audio.preservesPitch = true;
       audio.webkitPreservesPitch = true;
       audio.playbackRate = rythme;
       audio.play().catch(echouer);
+    });
+  }
+
+  /** À appeler pendant un toucher : iPhone et iPad n'autorisent ensuite l'élément qu'après l'avoir démarré une fois. */
+  amorcer(): void {
+    if (this.terminerLaLectureEnCours) return;
+    const { audio } = this;
+    audio.muted = true;
+    audio.src = silenceEnWav();
+    audio.play().then(() => {
+      if (this.terminerLaLectureEnCours) return;
+      audio.pause();
+      audio.currentTime = 0;
+      audio.muted = false;
+    }).catch(() => {
+      audio.muted = false;
     });
   }
 
