@@ -144,7 +144,8 @@ async function tailleDe(reponse) {
 }
 
 // Le registre garde l'ordre de mise en réserve : au-delà du budget, les sons les plus anciens partent d'abord.
-// Un lot (une leçon) est inscrit en une seule écriture du registre, et ses sons ne sont jamais retirés pour lui faire de la place.
+// Un lot (une leçon) est inscrit par tranches de 50 sons, une écriture du registre par tranche. Les sons d'une tranche ne sont pas
+// retirés pour lui faire de la place, dans la limite du budget : au-delà, les sons des tranches précédentes peuvent partir.
 function inscrireEnReserve(lot) {
   return enFileDeLaReserve(async () => {
     const cache = await caches.open(NOM_DU_CACHE_DES_VOIX);
