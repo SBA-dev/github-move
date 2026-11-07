@@ -79,21 +79,28 @@ export function useNavigation() {
   const [profondeur, setProfondeur] = useState(profondeurCourante);
   const [viaRetour, setViaRetour] = useState(false);
   const garde = useRef<GardeDuRetour | undefined>(undefined);
+  const profondeurConnue = useRef(profondeurCourante());
+  /** Un retour demandé par l'application (`revenir`, `revenirA`) ne passe jamais par la garde : seul le geste du navigateur y passe. */
+  const retourDemande = useRef(false);
+  /** La garde a refusé un retour : le `popstate` de `history.forward()` ramène à cette profondeur et ne doit pas être traité. */
   const retourRefuse = useRef(false);
 
   useEffect(() => {
     const surRetour = () => {
-      if (retourRefuse.current) {
-        retourRefuse.current = false;
-        return;
-      }
-      if (garde.current?.()) {
+      const nouvelle = profondeurCourante();
+      const refuse = retourRefuse.current;
+      retourRefuse.current = false;
+      if (refuse && nouvelle === profondeurConnue.current) return;
+      const demande = retourDemande.current;
+      retourDemande.current = false;
+      if (!demande && nouvelle < profondeurConnue.current && garde.current?.()) {
         retourRefuse.current = true;
         history.forward();
         return;
       }
+      profondeurConnue.current = nouvelle;
       setLieu(lieuDe(location.pathname));
-      setProfondeur(profondeurCourante());
+      setProfondeur(nouvelle);
       setViaRetour(true);
     };
     addEventListener("popstate", surRetour);
@@ -106,6 +113,7 @@ export function useNavigation() {
     const suivante = profondeurCourante() + 1;
     history.pushState({ profondeur: suivante, precedent: location.pathname }, "", cheminDe(suivant));
     setLieu(suivant);
+    profondeurConnue.current = suivante;
     setProfondeur(suivante);
     setViaRetour(false);
   }, []);
@@ -119,7 +127,12 @@ export function useNavigation() {
     setViaRetour(enRevenantEnArriere);
   }, []);
 
-  const revenir = useCallback(() => history.back(), []);
+  const retourDeLApplication = useCallback(() => {
+    retourDemande.current = profondeurCourante() > 0;
+    history.back();
+  }, []);
+
+  const revenir = retourDeLApplication;
 
   /** Pose la garde du geste retour ; rend de quoi la retirer. */
   const garderLeRetour = useCallback((nouvelleGarde: GardeDuRetour) => {
@@ -133,9 +146,9 @@ export function useNavigation() {
     const cible = enLieu(destination);
     const etat: unknown = history.state;
     const precedent = (etat as { precedent?: unknown } | null)?.precedent;
-    if (precedent === cheminDe(cible)) history.back();
+    if (precedent === cheminDe(cible)) retourDeLApplication();
     else remplacer(cible, true);
-  }, [remplacer]);
+  }, [remplacer, retourDeLApplication]);
 
   return { lieu, retourPossible: profondeur > 0, viaRetour, aller, remplacer, revenir, revenirA, garderLeRetour };
 }
