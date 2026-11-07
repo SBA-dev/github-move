@@ -1,0 +1,17 @@
+# Journal de la story #182 : la voix de l'application en MP3 pré-générés (Piper, voix « tom »)
+
+Story seule, lancée par `/feature 182` le 2026-11-07. Base : `main` (`5d690d3`). Branche de travail imposée par la session cloud : `claude/festive-volta-qa12yl` (partie de `main` à jour).
+
+## Avant la story (2026-11-07, matin)
+
+- Constat du PO sur Honor Magic (Chrome, Android) : effets sonores (MP3) audibles, aucune lecture à voix haute. Espace parent › Voix : « Aucune voix française trouvée sur cet appareil ». Message côté enfant : « La voix de Coach Léo est bloquée par ce navigateur » (trompeur : toute erreur de `speechSynthesis` hors `interrupted`/`canceled` donne `VoixBloquee`, `src/voix/lecteur-synthese-vocale.ts`).
+- PO : « les utilisateur ne vont pas faire toutes ses actions pour avoir la voix. il faut trouver une autre solution ». Décision 0004 (MP3 neuronaux, repli navigateur) rappelée.
+- PO : outil gratuit plutôt qu'Azure → Piper. Accès réseau ajouté à l'environnement : `huggingface.co`, `cdn-lfs.hf.co`, `cdn-lfs-us-1.hf.co`, `us.aws.cdn.hf.co`.
+- Écoutes : `upmc` Jessica (« tu vas y arriver » mal prononcé, liaison en [s] ; quatre variantes refusées : « non ca prononce mal ») ; puis A `siwis`, B `tom`, C `upmc` Pierre. PO : « b, tom ».
+- Voix retenue : `fr_FR-tom-medium` (Piper 1.x, 44,1 kHz, 1 locuteur). Licence AGPLv3 (https://git.bksp.space/Tjiho/French-tts-model-piper). Seuls les MP3 produits sont livrés, jamais le modèle.
+- Volume estimé : ~4 700 textes distincts, ~126 000 caractères dans `app/bibliotheque.json`.
+- Défaut annexe repéré, non traité ici : `deverrouillage-audio.ts` déverrouille au `pointerdown`, qui n'est pas une activation utilisateur pour un toucher sur Android (spec HTML : `pointerup`/`touchend`).
+
+## Étape 0 (2026-11-07)
+
+- Issue #182 lue (créée le jour même, sans commentaire).
