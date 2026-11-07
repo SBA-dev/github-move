@@ -39,10 +39,15 @@ validés à l'écoute par le PO. Ajouter une entrée ne refabrique que les phras
 `public/voix/` ne dépasse pas 40 Mo (contrôle de la commande et de `scripts/tests/test_voix_controles.py`).
 Le site entier tient dans environ 100 Mo d'hébergement (décision 0025).
 
-## Écoute de contrôle (à venir)
+## Écoute de contrôle
 
-Une page d'écoute produite sur la machine de fabrication, par niveau, jamais publiée, avec un bouton « mal prononcé »
-qui produit la liste des corrections à mettre dans la table de prononciation (`scripts/voix/ecoute_de_controle.py`).
+    python3 scripts/voix/ecoute_de_controle.py <niveau> [--paroles-communes] [--inventaire inventaire.json]
+
+Écrit `ecoute/ecoute-<niveau>.html` (dossier ignoré par git, jamais publié) : toutes les phrases des leçons du niveau,
+dans l'ordre de la bibliothèque, chacune avec un lecteur audio (`public/voix/`) et un bouton « mal prononcé ».
+Les phrases ainsi signalées s'accumulent dans une liste copiable, à reporter dans la table de prononciation.
+`--paroles-communes` ajoute les paroles des personnages guides connues à l'avance.
+La page n'appelle aucun service externe.
 
 ## Tests
 

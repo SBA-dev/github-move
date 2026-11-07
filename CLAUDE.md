@@ -61,6 +61,7 @@ Règles de cohabitation :
 | Regénérer l'index des programmes | `python3 scripts/index_programmes.py` |
 | Tests du pipeline de contenu | `python3 -m pytest scripts/tests` |
 | Regénérer les sons de phrases (voix de l'application) | `VOIX_PIPER_MODELE=<modèle>.onnx python3 scripts/voix/fabriquer_les_sons.py` (voir `docs/voix.md`) |
+| Page d'écoute de contrôle des sons, par niveau | `python3 scripts/voix/ecoute_de_controle.py <niveau> [--paroles-communes]` : écrit `ecoute/ecoute-<niveau>.html` (voir `docs/voix.md`) |
 | Tests de l'inventaire des phrases (Deno) | `deno test scripts/voix/` |
 | Tests du support E2E (adresses des parents de test) | `deno test features/support/` |
 | Servir le legacy | `cd app && python3 -m http.server 8765` |

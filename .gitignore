@@ -18,3 +18,5 @@ __pycache__/
 .features-gen-pwa/
 .features-gen-production/
 test-results-production/
+# Pages d'écoute de contrôle des sons (#182), jamais publiées.
+ecoute/
