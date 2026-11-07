@@ -59,7 +59,6 @@ Fonctionnalité: La voix de l'application lit à voix haute sans rien installer 
       Alors Léa entend Noisette lire « Combien font 3 plus 4 ? » avec la voix de l'application
       Et aucun message d'erreur n'apparaît
 
-    @a-valider
     Scénario: En remettant le son, le personnage guide se présente avec la voix de l'application
       Étant donné que l'appareil n'a aucune voix française
       Et que Léa a choisi l'univers princesse
@@ -69,7 +68,6 @@ Fonctionnalité: La voix de l'application lit à voix haute sans rien installer 
 
   Règle: Une phrase sans son de phrase est lue par la voix de l'appareil, phrase par phrase, sans changer la voix des autres phrases
 
-    @a-valider
     Scénario: Une question sans son de phrase est lue par la voix de l'appareil
       Étant donné que l'appareil a les voix françaises « Amélie (compact) » et « Denise (Natural) »
       Et que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
@@ -79,7 +77,6 @@ Fonctionnalité: La voix de l'application lit à voix haute sans rien installer 
       Alors Léa entend Noisette lire « Combien font 3 plus 4 ? » avec la voix « Denise (Natural) »
       Et aucun message d'erreur n'apparaît
 
-    @a-valider
     Scénario: Dans une même lecture, chaque phrase garde sa voix, dans l'ordre, jamais deux voix en même temps
       Étant donné que l'appareil a les voix françaises « Amélie (compact) » et « Denise (Natural) »
       Et qu'une leçon de test « Compter » a un exercice bulles de consigne « Touche le bon nombre. » qui pose « Combien font 2 + 1 ? »
@@ -98,7 +95,6 @@ Fonctionnalité: La voix de l'application lit à voix haute sans rien installer 
       Alors Léa entend Noisette lire « Combien font 3 plus 4 ? » avec la voix « Denise (Natural) »
       Et aucun message d'erreur n'apparaît
 
-    @a-valider
     Scénario: Le mot à écouter garde la voix anglaise de l'appareil
       Étant donné que l'appareil a une voix française et une voix anglaise
       Et que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
@@ -108,7 +104,6 @@ Fonctionnalité: La voix de l'application lit à voix haute sans rien installer 
 
   Règle: Sans son de phrase et sans voix française sur l'appareil, la phrase n'est pas dite : l'enfant voit le message de voix absente et joue quand même
 
-    @a-valider
     Scénario: Sans son de phrase ni voix française, la question n'est pas dite et le message de voix absente apparaît
       Étant donné que l'appareil n'a aucune voix française
       Et que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
@@ -118,7 +113,6 @@ Fonctionnalité: La voix de l'application lit à voix haute sans rien installer 
       Alors Léa voit le message « Noisette ne peut pas lire cette phrase sur cet appareil. Tu peux la lire avec un adulte. »
       Mais Léa ne voit pas le message de voix bloquée
 
-    @a-valider
     Scénario: Le message de voix absente nomme le personnage guide de l'univers
       Étant donné que l'appareil n'a aucune voix française
       Et que Léa a choisi l'univers sports
@@ -126,7 +120,6 @@ Fonctionnalité: La voix de l'application lit à voix haute sans rien installer 
       Quand la consigne « Écoute bien. » s'affiche
       Alors Léa voit le message « Coach Léo ne peut pas lire cette phrase sur cet appareil. Tu peux la lire avec un adulte. »
 
-    @a-valider
     Scénario: Sans son de phrase, une voix étrangère de l'appareil ne lit jamais une phrase en français
       Étant donné que l'appareil n'a qu'une voix anglaise
       Et que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
@@ -136,7 +129,6 @@ Fonctionnalité: La voix de l'application lit à voix haute sans rien installer 
       Alors Léa n'entend rien
       Et Léa voit le message « Noisette ne peut pas lire cette phrase sur cet appareil. Tu peux la lire avec un adulte. »
 
-    @a-valider
     Scénario: Le message de voix absente n'est jamais affiché deux fois
       Étant donné que l'appareil n'a aucune voix française
       Et qu'aucune phrase de la séance n'a de son de phrase
@@ -144,7 +136,6 @@ Fonctionnalité: La voix de l'application lit à voix haute sans rien installer 
       Quand la consigne suivante s'affiche
       Alors Léa voit un seul message de voix absente
 
-    @a-valider
     Scénario: Quand une phrase suivante est entendue, le message de voix absente disparaît
       Étant donné que l'appareil n'a aucune voix française
       Et qu'une leçon de test « Compter » a un exercice bulles de consigne « Touche le bon nombre. » qui pose « Combien font 2 + 1 ? » puis « Combien font 1 + 1 ? »
@@ -154,7 +145,6 @@ Fonctionnalité: La voix de l'application lit à voix haute sans rien installer 
       Alors Léa entend Noisette lire « Combien font 1 plus 1 ? » avec la voix de l'application
       Et Léa ne voit plus le message de voix absente
 
-    @a-valider
     Scénario: Sans voix, l'enfant répond et réussit la question
       Étant donné que l'appareil n'a aucune voix française
       Et que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
@@ -163,7 +153,6 @@ Fonctionnalité: La voix de l'application lit à voix haute sans rien installer 
       Quand Léa répond « 7 »
       Alors la question « Combien font 3 + 4 ? » est réussie
 
-    @a-valider
     Scénario: Quand la félicitation de la dernière réponse n'est pas dite, elle attend que Léa continue
       Étant donné que l'appareil n'a aucune voix française
       Et que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
@@ -246,7 +235,6 @@ Fonctionnalité: La voix de l'application lit à voix haute sans rien installer 
       Alors Léa entend l'effet sonore « réponse juste » avant que Noisette dise une félicitation avec la voix de l'application
       Et Léa n'entend jamais un effet sonore et Noisette en même temps
 
-    @a-valider
     Scénario: Écouter plus lentement fait entendre le son de phrase du mot dicté plus lentement
       Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
       Et que le mot dicté « chat » a un son de phrase
@@ -254,7 +242,6 @@ Fonctionnalité: La voix de l'application lit à voix haute sans rien installer 
       Quand Léa demande à écouter plus lentement
       Alors Léa entend de nouveau Noisette dire « chat », plus lentement, avec la voix de l'application
 
-    @a-valider
     Scénario: Pendant la voix de l'application, les mots de la consigne sont surlignés dans l'ordre
       Étant donné que Léa a choisi l'univers animaux
       Et que la phrase « Lis la phrase avec Noisette. » a un son de phrase
@@ -272,7 +259,6 @@ Fonctionnalité: La voix de l'application lit à voix haute sans rien installer 
       Quand la consigne « Écoute bien. » s'affiche
       Alors Léa entend Noisette lire « Écoute bien. » avec la voix de l'application
 
-    @a-valider
     Scénario: Une voix imposée par le parent lit la consigne, même quand elle a son son de phrase
       Étant donné que l'appareil a les voix françaises « Amélie (compact) » et « Denise (Natural) »
       Et que Paul a imposé la voix « Amélie (compact) » sur la tablette
@@ -281,7 +267,6 @@ Fonctionnalité: La voix de l'application lit à voix haute sans rien installer 
       Quand la consigne « Écoute bien. » s'affiche
       Alors Léa entend Noisette lire la consigne avec la voix « Amélie (compact) »
 
-    @a-valider
     Scénario: Sur un appareil sans voix française, le parent n'est plus invité à installer une voix
       Étant donné que l'appareil n'a aucune voix française
       Et que Paul est dans l'espace parent
@@ -290,7 +275,6 @@ Fonctionnalité: La voix de l'application lit à voix haute sans rien installer 
       Et « Automatique (recommandé) » porte la mention « actuellement : voix de l'application »
       Mais Paul ne voit pas le message « Aucune voix française trouvée sur cet appareil : installe-en une (voir ci-dessous), puis recharge la page. »
 
-    @a-valider
     Scénario: Écouter la voix automatique fait entendre l'essai de voix avec la voix de l'application
       Étant donné que l'appareil n'a aucune voix française
       Et que personne ne jouait sur la tablette
@@ -300,7 +284,6 @@ Fonctionnalité: La voix de l'application lit à voix haute sans rien installer 
 
   Règle: La voix de l'application ne dit jamais le prénom de l'enfant ; le texte affiché le garde
 
-    @a-valider
     Scénario: Le personnage guide salue l'enfant sans dire son prénom, qui reste affiché
       Étant donné que l'appareil n'a aucune voix française
       Et que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
@@ -310,7 +293,7 @@ Fonctionnalité: La voix de l'application lit à voix haute sans rien installer 
 
   Règle: Une leçon lancée avec le réseau se lit jusqu'au bout sans réseau
 
-    @pwa @a-valider
+    @pwa
     Scénario: Sans réseau, la suite de la leçon lancée est lue par la voix de l'application
       Étant donné que l'appareil n'a aucune voix française
       Et que Savanturier a déjà été chargé une fois sur la tablette
@@ -319,7 +302,7 @@ Fonctionnalité: La voix de l'application lit à voix haute sans rien installer 
       Quand Léa en arrive à la question « Dans le mot « mouton », quel son entends-tu à la fin ? »
       Alors Léa entend Noisette lire « Dans le mot mouton, quel son entends-tu à la fin ? » avec la voix de l'application
 
-    @pwa @a-valider
+    @pwa
     Scénario: Sans réseau, une phrase dont le son de phrase n'est pas sur l'appareil est lue par la voix de l'appareil
       Étant donné que l'appareil a une voix française et une voix anglaise
       Et que Savanturier a déjà été chargé une fois sur la tablette
@@ -328,7 +311,7 @@ Fonctionnalité: La voix de l'application lit à voix haute sans rien installer 
       Quand Léa choisit seulement l'exercice « Le mot en morceaux » de la leçon « Les syllabes »
       Alors Léa entend Noisette lire « Remets les syllabes dans l'ordre pour écrire « domino ». » avec la voix de l'appareil
 
-    @pwa @a-valider
+    @pwa
     Scénario: Après une séance terminée avec le réseau, la leçon suivante du parcours se lit sans réseau
       Étant donné que l'appareil n'a aucune voix française
       Et que Savanturier a déjà été chargé une fois sur la tablette
