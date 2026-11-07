@@ -20,3 +20,11 @@ Story seule, lancée par `/feature 182` le 2026-11-07. Base : `main` (`5d690d3`)
 ## Étape 1 (2026-11-07)
 
 - `domain-modeler` : modèle `docs/stories/182/domain-model.md`, glossaire et context map (ajouts), commit `fa7c098`. Sous-domaine Voix, sans agrégat ni migration ; ports `RepertoireDesSons` et `LecteurDeSonsDePhrases`, calcul pur `planDeLecture`, erreurs `VoixAbsente` et `SonIllisible`. 24 questions ouvertes (182.1 à 182.24).
+
+## Étape 2 (2026-11-07)
+
+- `po-acceptance` : `features/182-voix-de-l-application.feature` (8 règles, 35 scénarios, `@issue-182 @wip`) et `docs/stories/182/acceptance.md`, commit `0515454`. `bddgen --tags "@issue-182"` parse sans erreur (étapes à créer). Nouvelles questions 182.25 à 182.28. 182.24 (déverrouillage Android) : vérification manuelle seulement.
+
+## ⛔ Validation n°1 (2026-11-07)
+
+- Présentée au PO : modèle, règles, scénarios, questions 182.1 à 182.28 avec recommandations. En attente de sa réponse.
