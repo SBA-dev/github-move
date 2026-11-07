@@ -1,5 +1,5 @@
 # language: fr
-@issue-182 @wip
+@issue-182
 Fonctionnalité: La voix de l'application lit à voix haute sans rien installer sur l'appareil
   En tant qu'enfant
   Je veux entendre mon personnage guide lire les consignes, les questions et ses paroles sur n'importe quel appareil,
