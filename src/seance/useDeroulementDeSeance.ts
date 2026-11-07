@@ -14,14 +14,17 @@ import {
   inviterAJouerApresLesEtapes,
   type PersonnageGuide,
   parolesDeFinDeSeance,
+  parolesDeFinDeSeanceSansPrenom,
   phraseDeFinAvecLaQuete,
+  phraseDeFinAvecLaQueteSansPrenom,
   phraseDeFinAvecLeDefiOuvert,
+  phraseDeFinAvecLeDefiOuvertSansPrenom,
   phraseDeFinAvecLesNouveautes,
 } from "@domain/motivation";
 import { effetsDeLaFinDeSeance } from "./fin-de-seance/effets-de-la-fin.ts";
 import type { NouveautesDeFin } from "./fin-de-seance/nouveautes-de-fin.ts";
 import { useReducedMotion } from "motion/react";
-import { hasardDuNavigateur } from "../hasard-navigateur.ts";
+import { hasardDuNavigateur, hasardRejouable } from "../hasard-navigateur.ts";
 import { useRetourDeLaReponse } from "../retours/index.ts";
 import type { Voix } from "../voix/index.ts";
 import { useAdditionPosee } from "./exercices/addition/useAdditionPosee.ts";
@@ -343,18 +346,23 @@ export function useDeroulementDeSeance(
       return;
     }
     const texte = phraseDeFinAvecLaQuete(phraseDeFinAvecLesNouveautes(paroles, { episode }), prenom, queteAccomplie);
-    void dire({ texte, nature: "felicitation", humeur: "applaudit", effetsAvant });
+    const texteDit = phraseDeFinAvecLaQueteSansPrenom(phraseDeFinAvecLesNouveautes(paroles, { episode }), queteAccomplie);
+    void dire({ texte, texteDit, nature: "felicitation", humeur: "applaudit", effetsAvant });
   }, [dire, jouer, parolesDeFinDeLaFluence, prenom]);
 
   const direLaFin = useCallback((etoiles: number | undefined, nouveautes: NouveautesDeFin) => {
     sequence.current++;
     const effetsAvant = effetsDeLaFinDeSeance(etoiles, nouveautes, issueDuRecord.current);
     if (etoiles === undefined) return direLaFinDeLaFluenceSeule(nouveautes, effetsAvant);
-    const felicitation = parolesDeFinDeSeance(etoiles, prenom, personnageGuide, hasardDuNavigateur);
+    const { tirage, rejouer } = hasardRejouable(hasardDuNavigateur);
+    const felicitation = parolesDeFinDeSeance(etoiles, prenom, personnageGuide, tirage);
     const phraseDeFin = phraseDeFinAvecLaQuete(phraseDeFinAvecLesNouveautes(felicitation, nouveautes), prenom, nouveautes.queteAccomplie);
     const { defiOuvert } = nouveautes;
     const texte = phraseDeFinAvecLeDefiOuvert(phraseDeFin, prenom, defiOuvert);
-    void dire({ texte, nature: "felicitation", humeur: "applaudit", effetsAvant });
+    const felicitationDite = parolesDeFinDeSeanceSansPrenom(etoiles, personnageGuide, rejouer());
+    const phraseDeFinDite = phraseDeFinAvecLaQueteSansPrenom(phraseDeFinAvecLesNouveautes(felicitationDite, nouveautes), nouveautes.queteAccomplie);
+    const texteDit = phraseDeFinAvecLeDefiOuvertSansPrenom(phraseDeFinDite, defiOuvert);
+    void dire({ texte, texteDit, nature: "felicitation", humeur: "applaudit", effetsAvant });
   }, [dire, prenom, personnageGuide, issueDuRecord, direLaFinDeLaFluenceSeule]);
 
   const abandonner = useCallback(() => {

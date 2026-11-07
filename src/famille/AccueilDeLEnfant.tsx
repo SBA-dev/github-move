@@ -8,6 +8,8 @@ import {
   reponseAuRefusDeLaQuete,
   saluer,
   saluerAvecLaSerie,
+  saluerAvecLaSerieSansPrenom,
+  saluerSansPrenom,
   type Serie,
   type Univers,
 } from "@domain/motivation";
@@ -56,18 +58,31 @@ type Props = {
  * sans série connue (`null`) ni quête (`null`, ou rien à proposer), elles ne sont pas dites.
  */
 function phraseDeLaSalutation(
-  prenom: string,
+  salutations: Salutations,
   toutLire: boolean,
   serie: Serie | null | undefined,
   quete: QueteDuJour | null | undefined,
   queteRefusee: boolean,
 ): string | undefined {
-  if (!toutLire) return saluer(prenom);
+  if (!toutLire) return salutations.simple;
   if (serie === undefined || quete === undefined) return undefined;
-  const salutation = serie === null ? saluer(prenom) : saluerAvecLaSerie(prenom, serie);
+  const salutation = serie === null ? salutations.simple : salutations.avecLaSerie(serie);
   const proposition = quete && paroleDeLaQueteALAccueil(quete, queteRefusee);
   return proposition ? `${salutation} ${proposition}` : salutation;
 }
+
+type Salutations = { readonly simple: string; readonly avecLaSerie: (serie: Serie) => string };
+
+const avecLePrenom = (prenom: string): Salutations => ({
+  simple: saluer(prenom),
+  avecLaSerie: (serie) => saluerAvecLaSerie(prenom, serie),
+});
+
+/** La salutation que dit la voix de l'application : sans le prénom, qui reste affiché. */
+const SANS_PRENOM: Salutations = {
+  simple: saluerSansPrenom(),
+  avecLaSerie: saluerAvecLaSerieSansPrenom,
+};
 
 /** Là où arrive l'enfant qui vient de choisir son profil : la date, son personnage guide qui le salue, puis ce qu'il peut faire aujourd'hui. */
 export function AccueilDeLEnfant(
@@ -96,15 +111,17 @@ export function AccueilDeLEnfant(
     return () => clearTimeout(abandon);
   }, []);
   const [queteRefuseeALArrivee] = useState(queteRefusee);
-  const phraseALire = phraseDeLaSalutation(profil.prenom, profil.reglages.toutLireAVoixHaute, serieDeLaSalutation, queteDeLaSalutation, queteRefuseeALArrivee);
+  const { toutLireAVoixHaute } = profil.reglages;
+  const phraseALire = phraseDeLaSalutation(avecLePrenom(profil.prenom), toutLireAVoixHaute, serieDeLaSalutation, queteDeLaSalutation, queteRefuseeALArrivee);
+  const phraseDite = phraseDeLaSalutation(SANS_PRENOM, toutLireAVoixHaute, serieDeLaSalutation, queteDeLaSalutation, queteRefuseeALArrivee);
   useEffect(() => {
     if (salutationALire) {
       const salutation = { texte: saluer(profil.prenom), nature: "accueil" } as const;
       if (phraseALire === undefined) montrer(salutation);
-      else void dire({ ...salutation, aLire: phraseALire });
+      else void dire({ ...salutation, aLire: phraseALire, ...(phraseDite === undefined ? {} : { texteDit: phraseDite }) });
     }
     return faireSilence;
-  }, [salutationALire, profil.prenom, phraseALire, dire, montrer, faireSilence]);
+  }, [salutationALire, profil.prenom, phraseALire, phraseDite, dire, montrer, faireSilence]);
 
   const paroleDeLaQuete = quete ? paroleDeLaQueteALAccueil(quete, queteRefusee) : undefined;
   const guideEtParole = useRef<HTMLDivElement>(null);

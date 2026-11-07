@@ -1,6 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import type { SeanceDeRevision } from "@domain/apprentissage";
-import { effetsSonoresDeLaFin, parolesDeFinDeRevision, phraseDeFinAvecLaQuete, phraseDeFinAvecLesNouveautes, type Univers } from "@domain/motivation";
+import {
+  effetsSonoresDeLaFin,
+  parolesDeFinDeRevision,
+  parolesDeFinDeRevisionSansPrenom,
+  phraseDeFinAvecLaQuete,
+  phraseDeFinAvecLaQueteSansPrenom,
+  phraseDeFinAvecLesNouveautes,
+  type Univers,
+} from "@domain/motivation";
 import { AnnonceDeLaQueteAccomplie } from "../accueil/AnnonceDeLaQueteAccomplie.tsx";
 import type { QueteLueAvantLaSeance } from "../accueil/lire-la-quete-du-jour.ts";
 import { useQueteAccomplieParLaSeance } from "../accueil/useQueteAccomplieParLaSeance.ts";
@@ -63,6 +71,10 @@ export function FinDeLaRevision({ seance, prenom, personnage, univers, nombreDeS
       texte: phraseDeFinAvecLaQuete(
         phraseDeFinAvecLesNouveautes(parolesDeFinDeRevision({ prenom, questionsJustes }), { episode }),
         prenom,
+        queteAccomplie,
+      ),
+      texteDit: phraseDeFinAvecLaQueteSansPrenom(
+        phraseDeFinAvecLesNouveautes(parolesDeFinDeRevisionSansPrenom({ questionsJustes }), { episode }),
         queteAccomplie,
       ),
       nature: "felicitation",

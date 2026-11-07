@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { pageDeLaLecon } from "@domain/catalogue";
-import { accueillirSurLaPageDeLaLecon, type Univers } from "@domain/motivation";
+import { accueillirSurLaPageDeLaLecon, accueillirSurLaPageDeLaLeconSansPrenom, type Univers } from "@domain/motivation";
 import { PersonnageGuide } from "../univers/index.ts";
 import type { Voix } from "../voix/index.ts";
 import { EtoilesDessinees } from "./fin-de-seance/EtoilesDessinees.tsx";
@@ -58,7 +58,11 @@ function LeconAffichee({ lecon, profilId, prenom, univers, voix, accueillir, onC
   const { parole, rangDuMotPrononce, humeur, dire, reecouter, faireSilence } = usePersonnageQuiParle(voix);
   const [accueilALire] = useState(accueillir);
   useEffect(() => {
-    if (accueilALire) void dire({ texte: accueillirSurLaPageDeLaLecon(prenom), nature: "accueil" });
+    if (accueilALire) void dire({
+        texte: accueillirSurLaPageDeLaLecon(prenom),
+        texteDit: accueillirSurLaPageDeLaLeconSansPrenom(),
+        nature: "accueil",
+      });
     return faireSilence;
   }, [accueilALire, prenom, dire, faireSilence]);
   const { passagePourLesAdultes: adultes } = page;

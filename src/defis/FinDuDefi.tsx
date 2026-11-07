@@ -5,6 +5,7 @@ import {
   celebrationDeLaFin,
   defiReleveParLaSeance,
   parolesDeFinDuDefiReleve,
+  parolesDeFinDuDefiReleveSansPrenom,
   tenueDeLaCelebrationDeLUnivers,
   type Univers,
 } from "@domain/motivation";
@@ -81,6 +82,7 @@ export function FinDuDefi({ seance, prenom, personnage, univers, relevesAvant, o
     dite.current = true;
     void dire({
       texte: parolesDeFinDuDefiReleve({ prenom, defi: releve, dejaReleve: issue.annonce === undefined }),
+      texteDit: parolesDeFinDuDefiReleveSansPrenom({ defi: releve, dejaReleve: issue.annonce === undefined }),
       nature: "felicitation",
       humeur: "applaudit",
       effetsAvant: [celebration?.sorte === "univers" ? celebration.celebration.musique : issue.effetSonore],

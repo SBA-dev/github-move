@@ -21,6 +21,8 @@ export type ParoleADire = {
   readonly nature: NatureDeParole;
   /** Ce que la voix prononce, quand ce n'est pas exactement le texte affiché (les exemples d'une étape de leçon). */
   readonly aLire?: string;
+  /** Ce que dit la voix de l'application quand la parole contient le prénom : la même parole sans le prénom (le texte affiché ne change pas). */
+  readonly texteDit?: string;
   readonly humeur?: Humeur;
   /** Effets sonores joués avant la parole, qui n'est dite qu'une fois ces effets terminés. */
   readonly effetsAvant?: readonly EffetSonore[];
@@ -47,6 +49,7 @@ export function usePersonnageQuiParle({ lire, jouer, couperLaVoix }: Pick<Voix, 
     const { entendue } = await lire(aDire.aLire ?? aDire.texte, {
       onMot: (rang) => estLaDerniere() && setRangDuMotPrononce(rang),
       onFin: () => estLaDerniere() && setRangDuMotPrononce(undefined),
+      ...(aDire.texteDit === undefined ? {} : { texteDit: aDire.texteDit }),
       ...(aDire.effetsAvant ? { effetsAvant: aDire.effetsAvant } : {}),
     });
     if (estLaDerniere()) paroleEntendue.current = entendue;
