@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
-import type { Univers } from "@domain/motivation";
+import { proposerLeTestDeDepart, type Univers } from "@domain/motivation";
 import { ParoleDuGuide } from "./ParoleDuGuide.tsx";
-import { proposerLeTestDeDepart } from "./paroles-du-test-de-depart.ts";
 import type { Personnage } from "./useDeroulementDuTestDeDepart.ts";
 
 type Props = {

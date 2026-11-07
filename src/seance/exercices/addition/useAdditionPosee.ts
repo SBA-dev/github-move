@@ -1,6 +1,14 @@
 import { type MutableRefObject, useCallback, useState } from "react";
 import { type ExerciceJoue, JeNeSaisPasDejaDit, Reponse, type Seance, type VueAddition, type VueColonne } from "@domain/apprentissage";
-import { type Humeur, humeurApresReponse, type PersonnageGuide, reagirAJeNeSaisPas } from "@domain/motivation";
+import {
+  aiderQuandOnNeSaitPas,
+  encouragerApresUneErreurDeCalcul,
+  feliciterUnCalcul,
+  type Humeur,
+  humeurApresReponse,
+  type PersonnageGuide,
+  reagirAJeNeSaisPas,
+} from "@domain/motivation";
 import type { EffetSonore } from "@domain/voix";
 import {
   CIBLE_DES_COLONNES,
@@ -10,11 +18,7 @@ import {
 } from "../../../retours/index.ts";
 import type { Voix } from "../../../voix/index.ts";
 import type { ParoleADire } from "../../usePersonnageQuiParle.ts";
-import {
-  aiderQuandOnNeSaitPas,
-  encouragerApresUneErreurDeCalcul,
-  feliciterUnCalcul,
-} from "../paroles-du-calcul.ts";
+import { hasardDuNavigateur } from "../../hasard-navigateur.ts";
 import type { SuiteDuCalcul } from "../useCalcul.ts";
 import type { QuestionFigee } from "../useQuestionFigee.ts";
 import { type DepartsDesRetenues, departsDesRetenuesPoseesParLaReponse } from "./saut-de-la-retenue.ts";
@@ -92,7 +96,7 @@ export function useAdditionPosee(
   ) => {
     figer({ position: exercice.position, exercice, question: undefined });
     setAdditionFigee(apres);
-    await dire(feliciterUnCalcul(personnageGuide, apres.parole, effets));
+    await dire(feliciterUnCalcul(personnageGuide, hasardDuNavigateur, apres.parole, effets));
     if (!(await attendreLEcranSuivant()) || !vivant.current) return;
     figer(undefined);
     setAdditionFigee(undefined);
@@ -116,7 +120,7 @@ export function useAdditionPosee(
     const cible = reponse.genre === "placement" ? CIBLE_DES_COLONNES : cibleDeLaReponse(reponse);
     if (resultat === "fausse") {
       signaler("fausse", cible);
-      await dire(encouragerApresUneErreurDeCalcul(personnageGuide, seance.aideApresLaDerniereErreur()));
+      await dire(encouragerApresUneErreurDeCalcul(personnageGuide, seance.aideApresLaDerniereErreur(), hasardDuNavigateur));
       return;
     }
     if (!apres) return;

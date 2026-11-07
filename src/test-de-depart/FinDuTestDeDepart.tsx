@@ -1,13 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { leconsNouvellementReussies, leconsReussiesAuTestDeDepart, type TestDeDepart } from "@domain/apprentissage";
 import type { Lecon, Niveau } from "@domain/catalogue";
-import { effetsSonoresDeLaFin, type Univers } from "@domain/motivation";
+import { effetsSonoresDeLaFin, remercierApresLeTestDeDepart, type Univers } from "@domain/motivation";
 import { Confettis } from "../celebration/index.ts";
 import { lireLesMeilleuresEtoilesDuProfil } from "../seance/fin-de-seance/meilleures-etoiles-du-profil.ts";
 import { messageDeSauvegarde } from "../seance/fin-de-seance/useSauvegardeDeLaSeance.ts";
 import { lireLEtatDuTestDeDepart } from "./etat-du-test-de-depart.ts";
 import { ParoleDuGuide } from "./ParoleDuGuide.tsx";
-import { remercierApresLeTestDeDepart } from "./paroles-du-test-de-depart.ts";
 import { sauvegarderLeTestDeDepart } from "./sauvegarde-du-test-de-depart.ts";
 import { retenirLeTestDeDepartFait } from "./tests-de-depart-faits-pendant-l-utilisation.ts";
 import type { Personnage } from "./useDeroulementDuTestDeDepart.ts";

@@ -15,6 +15,7 @@ import {
   type SchemaResolu,
 } from "@domain/apprentissage";
 import {
+  aiderQuandOnNeSaitPas,
   effetsSonoresApresUneBonneReponse,
   type PersonnageGuide,
   reagirAJeNeSaisPas,
@@ -23,7 +24,6 @@ import {
 import { useReducedMotion } from "motion/react";
 import { CIBLE_DE_LA_ZONE_DE_REPONSE, useRetourDeLaReponse } from "../retours/index.ts";
 import { attendre } from "../seance/exercices/attendre.ts";
-import { aiderQuandOnNeSaitPas } from "../seance/exercices/paroles-du-calcul.ts";
 import type { usePersonnageQuiParle } from "../seance/usePersonnageQuiParle.ts";
 import type { Voix } from "../voix/index.ts";
 import type { TexteDeLecture } from "./commencer-la-revision.ts";

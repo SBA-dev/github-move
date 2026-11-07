@@ -10,18 +10,21 @@ import {
   type ReponseParChoix,
   type TestDeDepart,
 } from "@domain/apprentissage";
-import { effetsSonoresApresUneBonneReponse, type PersonnageGuide, reagirAJeNeSaisPas } from "@domain/motivation";
+import {
+  aiderQuandOnNeSaitPas,
+  CONSIGNE_DU_TEST_DE_DEPART,
+  effetsSonoresApresUneBonneReponse,
+  encouragerApresUneErreurDeCalcul,
+  feliciterUnCalcul,
+  type PersonnageGuide,
+  reagirAJeNeSaisPas,
+} from "@domain/motivation";
 import { useReducedMotion } from "motion/react";
 import { CIBLE_DE_LA_ZONE_DE_REPONSE, useRetourDeLaReponse } from "../retours/index.ts";
 import { attendre } from "../seance/exercices/attendre.ts";
-import {
-  aiderQuandOnNeSaitPas,
-  encouragerApresUneErreurDeCalcul,
-  feliciterUnCalcul,
-} from "../seance/exercices/paroles-du-calcul.ts";
+import { hasardDuNavigateur } from "../seance/hasard-navigateur.ts";
 import type { usePersonnageQuiParle } from "../seance/usePersonnageQuiParle.ts";
 import type { Voix } from "../voix/index.ts";
-import { CONSIGNE_DU_TEST_DE_DEPART } from "./paroles-du-test-de-depart.ts";
 
 export type Personnage = ReturnType<typeof usePersonnageQuiParle>;
 
@@ -103,7 +106,7 @@ export function useDeroulementDuTestDeDepart(
   }, [dire, presenter]);
 
   const encourager = useCallback(async (numero: number, question: QuestionPosee) => {
-    const jusquAuBout = await dire(encouragerApresUneErreurDeCalcul(personnageGuide, question.aideApresErreur()));
+    const jusquAuBout = await dire(encouragerApresUneErreurDeCalcul(personnageGuide, question.aideApresErreur(), hasardDuNavigateur));
     if (jusquAuBout) await direLeMotAEcouter(numero, question);
   }, [dire, personnageGuide, direLeMotAEcouter]);
 
@@ -119,7 +122,7 @@ export function useDeroulementDuTestDeDepart(
       exerciceComplete: false,
       pendantLeChronoDUneFluence: false,
     });
-    await dire(feliciterUnCalcul(personnageGuide, undefined, effets));
+    await dire(feliciterUnCalcul(personnageGuide, hasardDuNavigateur, undefined, effets));
     if (!vivant.current) return;
     figer(undefined);
     setBulleEclatee(undefined);

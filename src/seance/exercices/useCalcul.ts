@@ -1,9 +1,14 @@
 import { type MutableRefObject, useCallback, useState } from "react";
 import { type CalculEnCours, type FaitDeSeance, type Reponse, type Seance } from "@domain/apprentissage";
-import type { PersonnageGuide } from "@domain/motivation";
+import {
+  aiderQuandOnNeSaitPas,
+  encouragerApresUneErreurDeCalcul,
+  feliciterUnCalcul,
+  type PersonnageGuide,
+} from "@domain/motivation";
 import { cibleDeLaReponse, effetsApresUneBonneReponse, type SignalerUnRetour } from "../../retours/index.ts";
 import type { ParoleADire } from "../usePersonnageQuiParle.ts";
-import { aiderQuandOnNeSaitPas, encouragerApresUneErreurDeCalcul, feliciterUnCalcul } from "./paroles-du-calcul.ts";
+import { hasardDuNavigateur } from "../hasard-navigateur.ts";
 import type { QuestionFigee } from "./useQuestionFigee.ts";
 
 type Dependances = {
@@ -44,14 +49,14 @@ export function useCalcul(
     redessiner();
     if (resultat === "fausse") {
       signaler("fausse", cibleDeLaReponse(reponse));
-      await dire(encouragerApresUneErreurDeCalcul(personnageGuide, seance.aideApresLaDerniereErreur()));
+      await dire(encouragerApresUneErreurDeCalcul(personnageGuide, seance.aideApresLaDerniereErreur(), hasardDuNavigateur));
       return;
     }
     figer({ position: exercice.position, exercice, question: undefined });
     setCalculFige(calcul);
     annoncerLAvancement(seance.avancement());
     signaler("juste", cibleDeLaReponse(reponse));
-    await dire(feliciterUnCalcul(personnageGuide, undefined, effetsApresUneBonneReponse(seance, questionsReussiesAvant)));
+    await dire(feliciterUnCalcul(personnageGuide, hasardDuNavigateur, undefined, effetsApresUneBonneReponse(seance, questionsReussiesAvant)));
     if (!(await attendreLEcranSuivant()) || !vivant.current) return;
     figer(undefined);
     setCalculFige(undefined);

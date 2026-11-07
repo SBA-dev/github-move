@@ -7,16 +7,17 @@ import type {
   SchemaResolu,
   Seance,
 } from "@domain/apprentissage";
-import type { PersonnageGuide } from "@domain/motivation";
-import type { EffetSonore } from "@domain/voix";
-import { cibleDeLaReponse, effetsApresUneBonneReponse, type SignalerUnRetour } from "../../retours/index.ts";
-import type { ParoleADire } from "../usePersonnageQuiParle.ts";
 import {
   aiderQuandOnNeSaitPas,
   encouragerApresUneErreurDeCalcul,
   feliciterPuisExpliquer,
   feliciterUnCalcul,
-} from "./paroles-du-calcul.ts";
+  type PersonnageGuide,
+} from "@domain/motivation";
+import type { EffetSonore } from "@domain/voix";
+import { cibleDeLaReponse, effetsApresUneBonneReponse, type SignalerUnRetour } from "../../retours/index.ts";
+import type { ParoleADire } from "../usePersonnageQuiParle.ts";
+import { hasardDuNavigateur } from "../hasard-navigateur.ts";
 import type { SuiteDuCalcul } from "./useCalcul.ts";
 import type { QuestionFigee } from "./useQuestionFigee.ts";
 
@@ -80,13 +81,13 @@ export function useQuestionIllustree(
   }, [seance, estFigee, sequence, faireSilence, presenter]);
 
   const feliciterLaBoite = useCallback(
-    (ouverte: BoiteOuverte, effets: readonly EffetSonore[]) => dire(feliciterUnCalcul(personnageGuide, ouverte.ouverture, effets)),
+    (ouverte: BoiteOuverte, effets: readonly EffetSonore[]) => dire(feliciterUnCalcul(personnageGuide, hasardDuNavigateur, ouverte.ouverture, effets)),
     [dire, personnageGuide],
   );
 
   const feliciterLeSchema = useCallback(
     (resolu: SchemaResolu, effets: readonly EffetSonore[]) =>
-      dire(feliciterPuisExpliquer(personnageGuide, resolu.explication, effets)),
+      dire(feliciterPuisExpliquer(personnageGuide, resolu.explication, hasardDuNavigateur, effets)),
     [dire, personnageGuide],
   );
 
@@ -102,7 +103,7 @@ export function useQuestionIllustree(
     redessiner();
     if (resultat === "fausse") {
       signaler("fausse", cibleDeLaReponse(reponse));
-      await dire(encouragerApresUneErreurDeCalcul(personnageGuide, seance.aideApresLaDerniereErreur()));
+      await dire(encouragerApresUneErreurDeCalcul(personnageGuide, seance.aideApresLaDerniereErreur(), hasardDuNavigateur));
       return;
     }
     figer({ position: exercice.position, exercice, question: undefined });
