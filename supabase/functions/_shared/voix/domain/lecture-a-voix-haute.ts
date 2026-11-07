@@ -15,7 +15,7 @@ import { estFrancais } from "./langue.ts";
 import { phraseDEssai } from "./phrase-d-essai.ts";
 import { reglerPhrases } from "./reglage-de-phrase.ts";
 import { rangAffichePourChaqueMotPrononce } from "./mots-de-la-consigne.ts";
-import { texteALire } from "./texte-a-lire.ts";
+import { type TexteALire, texteALire } from "./texte-a-lire.ts";
 import type { VoixDeLAppareil } from "./voix-de-l-appareil.ts";
 import type { VoixDisponible } from "./voix-disponible.ts";
 
@@ -50,6 +50,7 @@ type OptionsDeLecture = {
   langue?: string;
   choix?: ChoixDeVoix;
   lent?: boolean;
+  texteDit?: string;
   effetsAvant?: readonly EffetSonore[];
   onMot?: (rang: number) => void;
   onFin?: () => void;
@@ -100,14 +101,23 @@ export class LectureAVoixHaute {
     const numeroDeLecture = this.numeroDeLecture;
     this.parolesEnCours++;
     try {
-      const reglages = reglerPhrases(texte, caractere, voix, options.lent ? RYTHME_LENT : RYTHME_NORMAL, hasard);
-      const plan = planDeLecture({
-        phrases: reglages,
-        langue,
-        repertoire: this.dependances.repertoireDesSons,
-        voixDeLAppareil: voix,
-        voixImposee: choix.type === "imposee",
-      });
+      const rythme = options.lent ? RYTHME_LENT : RYTHME_NORMAL;
+      const lireAvecPlan = (aLire: TexteALire) => {
+        const reglages = reglerPhrases(aLire, caractere, voix, rythme, hasard);
+        const plan = planDeLecture({
+          phrases: reglages,
+          langue,
+          repertoire: this.dependances.repertoireDesSons,
+          voixDeLAppareil: voix,
+          voixImposee: choix.type === "imposee",
+        });
+        return { reglages, plan };
+      };
+      const texteDit = options.texteDit === undefined ? undefined : texteALire(options.texteDit);
+      const lectureDuTexteDit = texteDit && lireAvecPlan(texteDit);
+      const ditParLesSons = lectureDuTexteDit !== undefined &&
+        lectureDuTexteDit.plan.etapes.every((etape) => etape.type === "voixDeLApplication");
+      const { reglages, plan } = ditParLesSons ? lectureDuTexteDit : lireAvecPlan(texte);
       const resultat = await lireLePlan({
         plan,
         reglages,
@@ -115,8 +125,9 @@ export class LectureAVoixHaute {
         voixDeLAppareil: voix,
         lecteur,
         jouerUnSon: (...parametres) => this.jouerUnSonDePhrase(...parametres),
-        surligner: options.onMot &&
-          surlignage(texte.phrases, rangAffichePourChaqueMotPrononce(brut), options.onMot),
+        surligner: options.onMot && !ditParLesSons
+          ? surlignage(texte.phrases, rangAffichePourChaqueMotPrononce(brut), options.onMot)
+          : undefined,
         interrompue: () => this.numeroDeLecture !== numeroDeLecture,
       });
       if (resultat === "interrompue") return PAROLE_NON_ENTENDUE;
