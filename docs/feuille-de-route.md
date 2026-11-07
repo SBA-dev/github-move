@@ -137,6 +137,13 @@ On suit le guide fondamental « Pour enseigner la lecture et l'écriture au CP �
 
 ### 3. Fait récemment
 
+- [x] **#182, voix de l'application** (2026-11-07, décision 0043) : sons de phrases fabriqués à l'avance avec Piper, voix « tom » (2377 sons, 22,4 Mo dans `public/voix/`, plafond 40 Mo), repli phrase par phrase sur la voix de l'appareil, message de voix absente distinct de la voix bloquée, mise en réserve hors ligne. Procédure : `docs/voix.md`. Restes :
+  - texte de la leçon de lecture, mots de la dictée et vers à inventorier (puis `laVoixNeLitPas` et `etatDeLaVoix` à adapter) ;
+  - nombres assemblés pour les calculs (story de suite, question 182.1) ;
+  - surlignage quand la voix de l'application dit le texte dit sans prénom (question au PO) ;
+  - vérification de l'empreinte du modèle de voix téléchargé ;
+  - voix féminine éventuelle (question 182.4).
+
 - [x] Réglage « temps d'écran » et écran de pause retirés de `app/` (décision 0005).
 
 ## Reprise dans une nouvelle session (Supabase configuré)
