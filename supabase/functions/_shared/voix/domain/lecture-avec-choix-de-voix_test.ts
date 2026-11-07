@@ -7,6 +7,8 @@ import type { CaractereDeLaVoix } from "./caractere-de-la-voix.ts";
 import type { VoixDisponible } from "./voix-disponible.ts";
 import { LecteurEnMemoire } from "../test_utils/lecteur-en-memoire.ts";
 import { LecteurDEffetsSonoresEnMemoire } from "../test_utils/lecteur-d-effets-sonores-en-memoire.ts";
+import { LecteurDeSonsDePhrasesEnMemoire } from "../test_utils/lecteur-de-sons-de-phrases-en-memoire.ts";
+import { repertoireDesSonsEnMemoire } from "../test_utils/repertoire-des-sons-en-memoire.ts";
 import { voixEnMemoire } from "../test_utils/voix-en-memoire.ts";
 import { hasardFixe } from "../test_utils/hasard-fixe.ts";
 import { ChoixDeVoixEnMemoire } from "../test_utils/choix-de-voix-en-memoire.ts";
@@ -23,6 +25,8 @@ function uneLecture(options: { choix?: ChoixDeVoix; caractere?: CaractereDeLaVoi
   const lecture = new LectureAVoixHaute({
     lecteur,
     lecteurDEffetsSonores: new LecteurDEffetsSonoresEnMemoire(),
+    lecteurDeSonsDePhrases: new LecteurDeSonsDePhrasesEnMemoire(),
+    repertoireDesSons: repertoireDesSonsEnMemoire([]),
     voixDeLAppareil: voixEnMemoire([AMELIE, DENISE, VOIX_ANGLAISE]),
     choixDeVoix,
     hasard: hasardFixe(0.5),
@@ -59,6 +63,8 @@ Deno.test("une voix imposée absente de l'appareil laisse la voix automatique, s
   const lecture = new LectureAVoixHaute({
     lecteur,
     lecteurDEffetsSonores: new LecteurDEffetsSonoresEnMemoire(),
+    lecteurDeSonsDePhrases: new LecteurDeSonsDePhrasesEnMemoire(),
+    repertoireDesSons: repertoireDesSonsEnMemoire([]),
     voixDeLAppareil: voixEnMemoire([AMELIE, DENISE]),
     choixDeVoix: new ChoixDeVoixEnMemoire(ChoixDeVoix.imposee("Voix désinstallée")),
     hasard: hasardFixe(0.5),
