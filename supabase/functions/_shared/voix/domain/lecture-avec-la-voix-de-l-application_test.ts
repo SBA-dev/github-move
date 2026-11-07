@@ -1,5 +1,5 @@
 import { assertEquals } from "@std/assert";
-import { SonIllisible } from "./erreurs.ts";
+import { SonIllisible, VoixBloquee } from "./erreurs.ts";
 import type { VoixDisponible } from "./voix-disponible.ts";
 import { LectureAVoixHaute } from "./lecture-a-voix-haute.ts";
 import { CleDeLaPhrase } from "./cle-de-la-phrase.ts";
@@ -169,4 +169,47 @@ Deno.test("une parole dont une phrase a son son et l'autre aucune voix joue le s
       parole: { entendue: false },
     },
   );
+});
+
+function uneLectureDontLeNavigateurRefuseLesSonsDePhrases() {
+  const lecteur = new LecteurEnMemoire();
+  const lecteurDeSonsDePhrases = new LecteurDeSonsDePhrasesEnMemoire();
+  lecteurDeSonsDePhrases.faireEchouerLesSons(new VoixBloquee());
+  const evenements: string[] = [];
+  const lecture = new LectureAVoixHaute({
+    lecteur,
+    lecteurDEffetsSonores: new LecteurDEffetsSonoresEnMemoire(),
+    lecteurDeSonsDePhrases,
+    repertoireDesSons: repertoireDesSonsEnMemoire([SON_DE_ECOUTE_BIEN]),
+    voixDeLAppareil: voixEnMemoire([DENISE]),
+    choixDeVoix: new ChoixDeVoixEnMemoire(),
+    hasard: hasardFixe(0.5),
+    caractereDuPersonnageGuide: () => CARACTERE_NOISETTE,
+    etatInitial: "son",
+    onVoixBloquee: () => evenements.push("voixBloquee"),
+    onFinDeLaVoixBloquee: () => evenements.push("finDeLaVoixBloquee"),
+    onVoixAbsente: () => {},
+    onFinDeLaVoixAbsente: () => {},
+  });
+  return { lecture, lecteur, evenements };
+}
+
+Deno.test("un son de phrase refusé par le navigateur bloque la voix, sans relire la phrase avec la voix de l'appareil", async () => {
+  const { lecture, lecteur, evenements } = uneLectureDontLeNavigateurRefuseLesSonsDePhrases();
+
+  const parole = await lecture.lire("Écoute bien.");
+
+  assertEquals(
+    { lecturesDeLAppareil: lecteur.lectures, evenements, parole },
+    { lecturesDeLAppareil: [], evenements: ["voixBloquee"], parole: { entendue: false } },
+  );
+});
+
+Deno.test("la fin de la voix bloquée est signalée quand une phrase est de nouveau entendue", async () => {
+  const { lecture, evenements } = uneLectureDontLeNavigateurRefuseLesSonsDePhrases();
+  await lecture.lire("Écoute bien.");
+
+  await lecture.lire("Bonjour.");
+
+  assertEquals(evenements, ["voixBloquee", "finDeLaVoixBloquee"]);
 });
