@@ -2,6 +2,12 @@ import { assert, assertEquals, assertFalse } from "@std/assert";
 import { toutesLesMatieres } from "../../catalogue/domain/index.ts";
 import { parolesConnuesDAvance } from "./paroles-connues-d-avance.ts";
 import { propositionDeLaQueteDuJour } from "./paroles-de-la-quete.ts";
+import { aiderQuandOnNeSaitPas } from "./paroles-du-calcul.ts";
+import {
+  CONSIGNE_DU_TEST_DE_DEPART,
+  proposerLeTestDeDepartSansPrenom,
+  remercierApresLeTestDeDepartSansPrenom,
+} from "./paroles-du-test-de-depart.ts";
 import { UNIVERS } from "./univers.ts";
 
 // Les paroles connues à l'avance : celles dont toutes les variantes sont finies (nom du personnage guide,
@@ -119,6 +125,26 @@ Deno.test("la proposition de la quête accomplie est connue à l'avance", () => 
 
   assert(proposition !== undefined);
   assert(paroles.includes(proposition));
+});
+
+Deno.test("les paroles du test de départ sont connues à l'avance sans le prénom, pour 0 et 1 leçon cochée", () => {
+  // Le nombre de leçons cochées n'a pas de borne exportée par le domaine : seules les valeurs 0 et 1 sont attendues.
+  assertEquals(
+    manquantes([
+      proposerLeTestDeDepartSansPrenom(),
+      CONSIGNE_DU_TEST_DE_DEPART,
+      remercierApresLeTestDeDepartSansPrenom(0),
+      remercierApresLeTestDeDepartSansPrenom(1),
+    ]),
+    [],
+  );
+});
+
+Deno.test("la parole de « Je ne sais pas » avec les choix, sans aide, est connue à l'avance", () => {
+  const { texte } = aiderQuandOnNeSaitPas({ mode: { genre: "choix" } }, undefined, "12");
+
+  assertEquals(texte, "Pas de souci, on apprend ensemble ! La bonne réponse brille : touche-la.");
+  assert(paroles.includes(texte));
 });
 
 Deno.test("les paroles qui dépendent d'un nombre non borné ne sont pas connues à l'avance", () => {

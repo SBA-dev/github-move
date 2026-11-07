@@ -14,6 +14,10 @@ import {
   parolesDeFinDuDefiReleveSansPrenom,
   phraseDeFinAvecLeDefiOuvertSansPrenom,
 } from "./paroles-du-defi.ts";
+import {
+  proposerLeTestDeDepartSansPrenom,
+  remercierApresLeTestDeDepartSansPrenom,
+} from "./paroles-du-test-de-depart.ts";
 import { universDe } from "./univers.ts";
 import { hasardFixe } from "../test_utils/hasard-fixe.ts";
 
@@ -138,5 +142,33 @@ Deno.test("la fin d'un défi relevé ou du grand défi relevé dit « Bravo ! »
       "Bravo ! Tu as relevé le défi 2 !",
       "Bravo ! Tu as encore relevé le grand défi des maths !",
     ],
+  );
+});
+
+Deno.test("la proposition du test de départ dit « Bonjour ! » sans le prénom", () => {
+  assertEquals(
+    proposerLeTestDeDepartSansPrenom(),
+    "Bonjour ! Veux-tu faire un petit jeu de questions ? Ce n'est pas une interrogation : ça m'aide à savoir ce que tu sais déjà, pour commencer au bon endroit. Tu peux dire « Je ne sais pas », c'est permis !",
+  );
+});
+
+Deno.test("sans leçon cochée, le remerciement du test de départ dit « Merci ! » sans le prénom", () => {
+  assertEquals(
+    remercierApresLeTestDeDepartSansPrenom(0),
+    "Merci ! Maintenant, je sais par où commencer. Ton parcours t'attend !",
+  );
+});
+
+Deno.test("avec une seule leçon cochée, le remerciement du test de départ parle au singulier sans le prénom", () => {
+  assertEquals(
+    remercierApresLeTestDeDepartSansPrenom(1),
+    "Merci ! Tu connais déjà 1 leçon : je l'ai cochée. Ton parcours t'attend !",
+  );
+});
+
+Deno.test("avec plusieurs leçons cochées, le remerciement du test de départ parle au pluriel sans le prénom", () => {
+  assertEquals(
+    remercierApresLeTestDeDepartSansPrenom(4),
+    "Merci ! Tu connais déjà 4 leçons : je les ai cochées. Ton parcours t'attend !",
   );
 });
