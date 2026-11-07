@@ -82,7 +82,9 @@ Le pipeline de contenu ne se décrit pas en Gherkin. Ces règles sont vérifiée
 
 Les scénarios de #7, #15, #19, #73, #79 et #97 qui disent « Léa entend Noisette lire … », « Léa n'entend rien »,
 « Léa n'entend plus Noisette », « Léa voit un seul message de voix bloquée » restent vrais **sans changer un mot** :
-leur texte ne dit pas quelle voix lit. Points d'attention :
+leur texte ne dit pas quelle voix lit. Ceux qui nomment une voix de l'appareil alors que la voix automatique lit une
+phrase qui a son son de phrase (« Écoute bien. » et l'essai de voix en ont un) contredisent R6 : voir les points 2, 6
+et 7. Points d'attention :
 
 1. **#15, Plan « Le parent est prévenu quand <situation> »** (l. 55, exemple « l'appareil n'a aucune voix
    française ») : contredit par le scénario R6 « … le parent n'est plus invité à installer une voix » (182.14 A et
@@ -93,7 +95,12 @@ leur texte ne dit pas quelle voix lit. Points d'attention :
    est inchangé.
 2. **#15, « Sans voix imposée, la voix automatique est choisie et le parent sait laquelle elle utilise »** (l. 22) :
    la mention « actuellement : Denise (Natural) » devient « actuellement : voix de l'application » quand la voix de
-   l'application est utilisée (182.14 A, 182.26 retenus).
+   l'application est utilisée (182.14 A, 182.26 retenus). **Fait** (2026-11-07). Le cas où la voix de l'application n'est
+   pas disponible (répertoire des sons non chargé : la mention nomme la voix la plus naturelle de l'appareil) n'a pas
+   de scénario : aucune étape ne le prépare, et c'est un cas de panne, pas un choix du parent. Le texte affiché par
+   l'écran (`src/voix/ChoixDeLaVoix.tsx`) est conforme : mention « actuellement : voix de l'application », plus de
+   message « Aucune voix française trouvée… », conseils titrés « Pour des voix plus naturelles (facultatif) »,
+   introduction sans « chaque personnage guide lui donne son caractère » (aucun scénario ne vérifiait cette phrase).
 3. **#7 « Sur un navigateur qui ne sait pas lire à voix haute, l'enfant joue quand même »** et les Plans de #79 avec
    « le navigateur ne sait pas lire à voix haute » : la question de test n'a pas de son de phrase ; elle donnerait
    désormais le message de voix absente (182.15). L'étape « aucun message d'erreur n'apparaît » refuse tout
@@ -104,6 +111,32 @@ leur texte ne dit pas quelle voix lit. Points d'attention :
    étapes qui vérifient la parole entendue (pas seulement le texte affiché) doivent rester vraies, voir la note 1 des
    étapes ci-dessous et 182.27 (A retenu : la voix de l'appareil dit toujours le prénom).
 5. **#79, « Le message de voix bloquée … »** : inchangés (la voix bloquée garde son message et sa durée de vie).
+6. **#15, autres scénarios de la voix automatique** (182.14 A, 182.22, 182.26 ; **fait** le 2026-11-07) :
+   - « Écouter la voix automatique lit l'essai de voix avec la voix la plus naturelle » (attendait « Denise
+     (Natural) ») : l'essai de voix a son son de phrase (182.22), la voix automatique le lit donc avec la voix de
+     l'application. Le scénario est retiré de #15 ; son intention passe dans le scénario R6 « Écouter la voix
+     automatique fait entendre l'essai de voix avec la voix de l'application », dont l'appareil a maintenant les voix
+     françaises « Amélie (compact) » et « Denise (Natural) » (au lieu d'aucune voix française) : il montre que la voix
+     de l'application passe avant la voix la plus naturelle de l'appareil. La lecture sans voix française reste
+     couverte par R1.
+   - « Après le retour à la voix automatique, … », « Sans la voix imposée, les consignes sont lues avec la voix
+     automatique, sans message pour l'enfant » et « La voix imposée sur la tablette ne change pas les autres
+     appareils » attendaient « Denise (Natural) » pour « Écoute bien. », qui a son son de phrase. Ils lisent
+     désormais la consigne « Regarde bien. », sans son de phrase (absente du répertoire des sons) : la voix
+     automatique se replie sur la voix la plus naturelle de l'appareil, et l'intention (retour à la voix automatique,
+     voix imposée disparue, autre appareil) est gardée sans nouvelle étape. Le premier s'intitule « Après le retour à
+     la voix automatique, une consigne sans son de phrase retrouve la voix la plus naturelle ». Quand les étapes de
+     #182 « la phrase « … » n'a pas de son de phrase » existeront, ces scénarios pourront le dire explicitement.
+   - Les scénarios où une voix est imposée ou écoutée par son nom, et les mentions « très naturelle » / « la
+     meilleure ici » des voix de l'appareil, restent vrais sans changement.
+7. **À trancher : #7 et #96, mêmes contradictions, non modifiés ici.** Avec la voix automatique et la consigne
+   « Écoute bien. » (qui a son son de phrase), ces scénarios nomment encore la voix de l'appareil :
+   #7 « La voix la plus naturelle de l'appareil est choisie » (attend « Denise (Natural) »), #7 Plan « Le personnage
+   guide parle avec sa voix à lui » (voix féminine / masculine de l'appareil), #7 « Sans voix d'homme sur l'appareil,
+   un personnage guide masculin parle plus grave » (« avec cette voix, en plus grave »), #96 « Agent Max lit la
+   consigne avec une voix masculine ». La voix de l'application est la même pour tous les personnages guides
+   (182.3, 182.4) : la même correction que pour #15 (consigne sans son de phrase, repli sur la voix de l'appareil)
+   garde leur intention.
 
 ## Étapes Gherkin (pour l'e2e-tester)
 

@@ -9,8 +9,9 @@ Fonctionnalité: La voix de l'application lit à voix haute sans rien installer 
   La voix de l'application est la même pour tous les personnages guides (questions 182.3 et 182.4). Une phrase qui
   « a un son de phrase » figure dans le répertoire des sons servi avec l'application ; une phrase qui « n'a pas de
   son de phrase » n'y figure pas (calcul tiré au hasard, leçon personnelle, question de test absente du répertoire).
-  « Léa entend Noisette lire … » sans autre précision vaut quelle que soit la voix : les scénarios de #7, #15, #73,
-  #79 et #97 restent vrais sans changer un mot (voir docs/stories/182/acceptance.md, non-régression).
+  « Léa entend Noisette lire … » sans autre précision vaut quelle que soit la voix : ces scénarios de #7, #15, #73,
+  #79 et #97 restent vrais sans changer un mot ; ceux qui nomment la voix de l'appareil avec la voix automatique
+  sont revus (voir docs/stories/182/acceptance.md, non-régression).
   La question de test « Combien font 3 + 4 ? » a quatre choix « 6 », « 7 », « 8 » et « 9 », de réponse « 7 »,
   seule dans sa séance (comme dans #79). La vérification sur un vrai téléphone sans voix française (Honor Magic) est
   manuelle (définition de « terminé ») : aucun scénario ne la remplace.
@@ -276,7 +277,7 @@ Fonctionnalité: La voix de l'application lit à voix haute sans rien installer 
       Mais Paul ne voit pas le message « Aucune voix française trouvée sur cet appareil : installe-en une (voir ci-dessous), puis recharge la page. »
 
     Scénario: Écouter la voix automatique fait entendre l'essai de voix avec la voix de l'application
-      Étant donné que l'appareil n'a aucune voix française
+      Étant donné que l'appareil a les voix françaises « Amélie (compact) » et « Denise (Natural) »
       Et que personne ne jouait sur la tablette
       Et que Paul est entré dans l'espace parent
       Quand Paul écoute la voix « Automatique (recommandé) »
