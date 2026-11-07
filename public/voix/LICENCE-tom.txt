@@ -1,0 +1,10 @@
+Voix de l'application : fr_FR-tom-medium
+
+Auteur de la voix : Tjiho
+Source : https://git.bksp.space/Tjiho/French-tts-model-piper
+Licence de la voix : GNU Affero General Public License version 3 (AGPLv3)
+Moteur de synthèse : Piper (rhasspy), https://github.com/rhasspy/piper
+Modèle distribué par : https://huggingface.co/rhasspy/piper-voices (fr/fr_FR/tom/medium)
+
+Les fichiers .mp3 de ce dossier sont les sons de phrases produits avec cette voix.
+Seuls ces sons sont distribués avec l'application : le modèle de voix lui-même ne l'est pas.
