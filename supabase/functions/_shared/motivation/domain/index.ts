@@ -90,7 +90,9 @@ export {
 export {
   CONSIGNE_DU_TEST_DE_DEPART,
   proposerLeTestDeDepart,
+  proposerLeTestDeDepartSansPrenom,
   remercierApresLeTestDeDepart,
+  remercierApresLeTestDeDepartSansPrenom,
 } from "./paroles-du-test-de-depart.ts";
 export { parolesConnuesDAvance } from "./paroles-connues-d-avance.ts";
 export { type SectionDeLEcran, sectionsAAfficher, sectionsDeLEcran } from "./sections-de-l-ecran.ts";

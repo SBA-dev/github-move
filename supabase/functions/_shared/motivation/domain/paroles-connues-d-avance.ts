@@ -14,6 +14,12 @@ import {
   reponseAuRefusDeLaQuete,
 } from "./paroles-de-la-quete.ts";
 import { accueillirSurLaPageDeLaLeconSansPrenom, finDeSeanceApres, INVITATIONS_A_JOUER } from "./paroles-de-seance.ts";
+import { aiderQuandOnNeSaitPas } from "./paroles-du-calcul.ts";
+import {
+  CONSIGNE_DU_TEST_DE_DEPART,
+  proposerLeTestDeDepartSansPrenom,
+  remercierApresLeTestDeDepartSansPrenom,
+} from "./paroles-du-test-de-depart.ts";
 import { inviterAReleverLeGrandDefiSansPrenom, parolesDeFinDeGrandDefiSansPrenom } from "./paroles-du-defi.ts";
 import { UNIVERS } from "./univers.ts";
 
@@ -49,6 +55,19 @@ function propositionDeLaQueteAccomplie(): string[] {
   return [propositionDeLaQueteDuJour({ genre: "accomplie", quete: "lecon" })].filter((parole) => parole !== undefined);
 }
 
+function parolesDuTestDeDepart(): string[] {
+  return [
+    proposerLeTestDeDepartSansPrenom(),
+    CONSIGNE_DU_TEST_DE_DEPART,
+    remercierApresLeTestDeDepartSansPrenom(0),
+    remercierApresLeTestDeDepartSansPrenom(1),
+  ];
+}
+
+function paroleDeJeNeSaisPasAvecLesChoix(): string {
+  return aiderQuandOnNeSaitPas({ mode: { genre: "choix" } }, undefined, "").texte;
+}
+
 function parolesDeLaSerieEtDeLaQuete(): string[] {
   return [
     saluerAvecLaSerieSansPrenom({ nombreDeJours: 0, aJoueAujourdhui: false }),
@@ -73,6 +92,8 @@ export function parolesConnuesDAvance(): readonly string[] {
       ...parolesDeFinDeSeanceConnues(),
       ...parolesDuGrandDefi(),
       ...parolesDeLaSerieEtDeLaQuete(),
+      ...parolesDuTestDeDepart(),
+      paroleDeJeNeSaisPasAvecLesChoix(),
     ]),
   ];
 }
