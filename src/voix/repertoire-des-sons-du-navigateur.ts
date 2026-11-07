@@ -1,9 +1,6 @@
 import { CleDeLaPhrase, type RepertoireDesSons, type SonDePhrase } from "@domain/voix";
 
-const ADRESSE_DU_REPERTOIRE = "/voix/repertoire.json";
-
-type SonDuRepertoire = { readonly fichier: string; readonly dureeMs: number };
-type FichierDuRepertoire = { readonly sons: Readonly<Record<string, SonDuRepertoire>> };
+import { type FichierDuRepertoire, lireLeRepertoireDesSons } from "./repertoire-des-sons-lu.ts";
 
 function sonsDe(fichier: FichierDuRepertoire): Map<string, SonDePhrase> {
   return new Map(
@@ -38,14 +35,10 @@ export class RepertoireDesSonsDuNavigateur implements RepertoireDesSons {
   }
 
   private async charger(): Promise<void> {
-    try {
-      const reponse = await fetch(ADRESSE_DU_REPERTOIRE);
-      if (!reponse.ok) return;
-      this.sons = sonsDe(await reponse.json() as FichierDuRepertoire);
-      this.charge = true;
-      this.ecouteurs.forEach((rappel) => rappel());
-    } catch {
-      // Sans répertoire, aucun son n'est connu : la voix de l'appareil prend le relais.
-    }
+    const fichier = await lireLeRepertoireDesSons();
+    if (fichier === undefined) return;
+    this.sons = sonsDe(fichier);
+    this.charge = true;
+    this.ecouteurs.forEach((rappel) => rappel());
   }
 }

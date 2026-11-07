@@ -25,7 +25,8 @@ const NOM_DU_CACHE_DES_VOIX = "savanturier-voix";
 const PREFIXE_DES_SONS_DE_PHRASES = "/voix/";
 const REPERTOIRE_DES_SONS_DE_PHRASES = "/voix/repertoire.json";
 const MESSAGE_METTRE_EN_RESERVE = "mettre-en-reserve-des-sons";
-const REGISTRE_DE_LA_RESERVE = "/voix/.reserve";
+// Clé interne : hors du chemin public des sons, jamais demandée par une page.
+const REGISTRE_DE_LA_RESERVE = "/interne/reserve-des-voix";
 const BUDGET_DE_LA_RESERVE_EN_OCTETS = 20 * 1024 * 1024;
 
 self.addEventListener("install", (evenement) => {
@@ -126,7 +127,10 @@ function enFileDeLaReserve(action) {
 
 async function lireLeRegistre(cache) {
   const reponse = await cache.match(REGISTRE_DE_LA_RESERVE);
-  return reponse ? await reponse.json() : [];
+  const registre = reponse ? await reponse.json() : [];
+  // Le navigateur peut avoir évincé des sons : on ne compte que ceux qui sont encore en cache.
+  const presents = await Promise.all(registre.map((son) => cache.match(son.chemin)));
+  return registre.filter((_son, rang) => presents[rang]);
 }
 
 async function ecrireLeRegistre(cache, registre) {
