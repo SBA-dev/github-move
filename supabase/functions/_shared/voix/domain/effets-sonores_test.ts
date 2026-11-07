@@ -1,6 +1,7 @@
 import { assertEquals } from "@std/assert";
 import { LectureAVoixHaute } from "./lecture-a-voix-haute.ts";
 import type { CaractereDeLaVoix } from "./caractere-de-la-voix.ts";
+import type { VoixDisponible } from "./voix-disponible.ts";
 import { LecteurEnMemoire } from "../test_utils/lecteur-en-memoire.ts";
 import { LecteurDEffetsSonoresEnMemoire } from "../test_utils/lecteur-d-effets-sonores-en-memoire.ts";
 import { LecteurDeSonsDePhrasesEnMemoire } from "../test_utils/lecteur-de-sons-de-phrases-en-memoire.ts";
@@ -10,6 +11,7 @@ import { hasardFixe } from "../test_utils/hasard-fixe.ts";
 import { ChoixDeVoixEnMemoire } from "../test_utils/choix-de-voix-en-memoire.ts";
 
 const CARACTERE_NOISETTE: CaractereDeLaVoix = { sexe: "feminine", hauteur: 1.25, rythme: 1 };
+const DENISE: VoixDisponible = { nom: "Denise (Natural)", langue: "fr-FR" };
 
 function uneLecture(etatInitial: "son" | "muet" = "son") {
   const journal: string[] = [];
@@ -21,7 +23,7 @@ function uneLecture(etatInitial: "son" | "muet" = "son") {
     lecteurDEffetsSonores,
     lecteurDeSonsDePhrases: new LecteurDeSonsDePhrasesEnMemoire(),
     repertoireDesSons: repertoireDesSonsEnMemoire([]),
-    voixDeLAppareil: voixEnMemoire([]),
+    voixDeLAppareil: voixEnMemoire([DENISE]),
     choixDeVoix: new ChoixDeVoixEnMemoire(),
     hasard: hasardFixe(0.5),
     caractereDuPersonnageGuide: () => CARACTERE_NOISETTE,
