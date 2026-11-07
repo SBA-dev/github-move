@@ -74,13 +74,3 @@ def test_la_commande_reussit_quand_tout_est_conforme(tmp_path, monkeypatch, caps
     assert commande.principal(["--inventaire", str(inventaire)], voix=voix_factice) == 0
     assert "2 phrases" in capsys.readouterr().out
 
-
-def test_une_phrase_sans_lettre_ni_chiffre_n_est_pas_fabriquee():
-    inventaire = {
-        "phrases": [{"cle": "?.", "phrase": "?."}, {"cle": "Bravo !", "phrase": "Bravo !"}],
-        "lecons": {"cp-1": ["?.", "Bravo !"]},
-    }
-    assert commande.sans_les_phrases_muettes(inventaire) == {
-        "phrases": [{"cle": "Bravo !", "phrase": "Bravo !"}],
-        "lecons": {"cp-1": ["Bravo !"]},
-    }

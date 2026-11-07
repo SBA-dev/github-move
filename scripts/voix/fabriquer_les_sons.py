@@ -7,7 +7,6 @@ Sans `--inventaire`, l'inventaire est produit par `deno run` (`inventaire-des-ph
 import argparse
 import json
 import os
-import re
 import subprocess
 import sys
 from pathlib import Path
@@ -32,15 +31,6 @@ def rapport(inventaire, repertoire, dossier, deja_fabriques):
         f"({fabriques} fabriqués, {len(sons_par_fichier) - fabriques} gardés), "
         f"durée totale {duree_s / 60:.1f} min, poids {poids / 1024 / 1024:.1f} Mo"
     )
-
-
-def sans_les_phrases_muettes(inventaire):
-    """Une phrase sans lettre ni chiffre (« ?. ») n'a rien à dire : Piper n'en tire aucun son."""
-    a_dire = {phrase["cle"] for phrase in inventaire["phrases"] if re.search(r"\w", phrase["phrase"])}
-    return {
-        "phrases": [phrase for phrase in inventaire["phrases"] if phrase["cle"] in a_dire],
-        "lecons": {lecon: [cle for cle in cles if cle in a_dire] for lecon, cles in inventaire["lecons"].items()},
-    }
 
 
 def inventaire_des_phrases(chemin):
@@ -74,7 +64,7 @@ def principal(arguments=None, voix=None):
         from voix.voix_piper import VoixPiper
 
         voix = VoixPiper(chemin_du_modele(options.modele))
-    inventaire = sans_les_phrases_muettes(inventaire_des_phrases(options.inventaire))
+    inventaire = inventaire_des_phrases(options.inventaire)
     deja_fabriques = _fichiers_deja_fabriques(DOSSIER_DES_SONS) if DOSSIER_DES_SONS.exists() else set()
     repertoire = fabriquer_les_sons(inventaire, DOSSIER_DES_SONS, voix)
     print(rapport(inventaire, repertoire, DOSSIER_DES_SONS, deja_fabriques))
