@@ -1,7 +1,9 @@
-import { ChoixDeVoix, voixFrancaisesTriees, voixMontreeCommeChoisie, voixProposees } from "@domain/voix";
+import { ChoixDeVoix, voixMontreeCommeChoisie, voixProposees } from "@domain/voix";
 import type { Voix } from "./useVoix.ts";
 
 type Props = { readonly voix: Voix };
+
+const MENTION_DE_LA_VOIX_DE_L_APPLICATION = "actuellement : voix de l'application";
 
 type LigneDeVoix = {
   readonly id: string;
@@ -18,27 +20,21 @@ function lignesDeVoix(voix: Voix): LigneDeVoix[] {
     id: rang === 0 ? "voix-automatique" : `voix-${rang - 1}`,
     nom: proposee.nom,
     choix: ChoixDeVoix.imposee(proposee.nomDeLaVoix),
-    mention: proposee.mention,
+    mention: rang === 0 && voix.voixDeLApplicationDisponible ? MENTION_DE_LA_VOIX_DE_L_APPLICATION : proposee.mention,
     choisie: proposee.nomDeLaVoix === nomDeLaVoixChoisie,
   }));
 }
 
 function Avertissement({ voix }: Props) {
-  if (voixFrancaisesTriees(voix.voixDisponibles).length > 0) return null;
-  return (
-    <p className="avertissement-de-voix">
-      {voix.syntheseVocalePresente
-        ? "Aucune voix française trouvée sur cet appareil : installe-en une (voir ci-dessous), puis recharge la page."
-        : "Ce navigateur ne sait pas lire à voix haute."}
-    </p>
-  );
+  if (voix.syntheseVocalePresente) return null;
+  return <p className="avertissement-de-voix">Ce navigateur ne sait pas lire à voix haute.</p>;
 }
 
 function ConseilsDInstallation() {
   return (
     <div className="conseils-de-voix">
       <p>
-        <strong>Pour des voix plus naturelles :</strong>
+        <strong>Pour des voix plus naturelles (facultatif) :</strong>
       </p>
       <p>
         • <strong>iPad / iPhone</strong> : Réglages › Accessibilité › Contenu énoncé › Voix › Français › télécharger «
@@ -64,9 +60,9 @@ export function ChoixDeLaVoix({ voix }: Props) {
     <section className="choix-de-voix" aria-labelledby="titre-choix-de-voix" data-testid="choix-de-voix">
       <h3 id="titre-choix-de-voix">La voix des personnages guides</h3>
       <p>
-        L'application utilise les voix installées sur cet appareil. Elle choisit automatiquement la plus naturelle, puis
-        chaque personnage guide lui donne son caractère (plus aiguë pour l'écureuil, plus grave pour le capitaine
-        pompier…). Tu peux aussi imposer une voix.
+        L'application lit avec sa propre voix. Pour les phrases qu'elle ne connaît pas, elle choisit automatiquement la
+        voix la plus naturelle installée sur cet appareil. Tu peux aussi imposer une voix de l'appareil : elle lit alors
+        toutes les phrases.
       </p>
       <div role="radiogroup" aria-labelledby="titre-choix-de-voix" className="liste-de-voix">
         {lignesDeVoix(voix).map((ligne) => (

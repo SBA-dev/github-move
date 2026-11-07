@@ -29,6 +29,8 @@ export type Voix = {
   readonly reprendre: () => void;
   readonly voixDisponibles: readonly VoixDisponible[];
   readonly syntheseVocalePresente: boolean;
+  /** Vrai quand le répertoire des sons de phrases est chargé : la voix de l'application peut lire. */
+  readonly voixDeLApplicationDisponible: boolean;
   readonly choixDeVoix: ChoixDeVoix;
   readonly imposerUneVoix: (nomDeLaVoix: string) => void;
   readonly revenirALaVoixAutomatique: () => void;
@@ -51,6 +53,7 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
   const [voixDeLAppareil] = useState(() => new VoixDeLAppareilNavigateur());
   const [choixMemorise] = useState(() => new ChoixDeVoixMemoriseSurLAppareil());
   const [syntheseVocalePresente] = useState(() => syntheseVocale() !== undefined);
+  const [voixDeLApplicationDisponible, setVoixDeLApplicationDisponible] = useState(false);
   const [voixDisponibles, setVoixDisponibles] = useState(() => voixDeLAppareil.voixDisponibles());
   const [choixDeVoix, setChoixDeVoix] = useState(() => choixMemorise.lire());
   const [lecture] = useState(() =>
@@ -75,6 +78,11 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
     if (son === "muet") return;
     return deverrouillerAuToucher(deverrouillage);
   }, [son, deverrouillage]);
+
+  useEffect(
+    () => repertoireDesSons.surChargement(() => setVoixDeLApplicationDisponible(true)),
+    [repertoireDesSons],
+  );
 
   useEffect(() => {
     void mettreEnReserveLesParolesCommunes();
@@ -151,6 +159,7 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
     reprendre,
     voixDisponibles,
     syntheseVocalePresente,
+    voixDeLApplicationDisponible,
     choixDeVoix,
     imposerUneVoix,
     revenirALaVoixAutomatique,

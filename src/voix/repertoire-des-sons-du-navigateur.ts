@@ -16,6 +16,8 @@ function sonsDe(fichier: FichierDuRepertoire): Map<string, SonDePhrase> {
 
 export class RepertoireDesSonsDuNavigateur implements RepertoireDesSons {
   private sons = new Map<string, SonDePhrase>();
+  private charge = false;
+  private readonly ecouteurs = new Set<() => void>();
 
   constructor() {
     void this.charger();
@@ -25,11 +27,23 @@ export class RepertoireDesSonsDuNavigateur implements RepertoireDesSons {
     return this.sons.get(cle.valeur);
   }
 
+  /** Rappelle dès que le répertoire est chargé (tout de suite s'il l'est déjà) : la voix de l'application est alors disponible. */
+  surChargement(rappel: () => void): () => void {
+    if (this.charge) {
+      rappel();
+      return () => undefined;
+    }
+    this.ecouteurs.add(rappel);
+    return () => this.ecouteurs.delete(rappel);
+  }
+
   private async charger(): Promise<void> {
     try {
       const reponse = await fetch(ADRESSE_DU_REPERTOIRE);
       if (!reponse.ok) return;
       this.sons = sonsDe(await reponse.json() as FichierDuRepertoire);
+      this.charge = true;
+      this.ecouteurs.forEach((rappel) => rappel());
     } catch {
       // Sans répertoire, aucun son n'est connu : la voix de l'appareil prend le relais.
     }
