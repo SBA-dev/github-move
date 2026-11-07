@@ -68,6 +68,7 @@ Fonctionnalité: Lecture à voix haute par le personnage guide
     Plan du Scénario: Le personnage guide parle avec sa voix à lui
       Étant donné que l'appareil a une voix française féminine et une voix française masculine
       Et que Léa a choisi l'univers <univers>
+      Et que la phrase « Écoute bien. » n'a pas de son de phrase
       Quand la consigne « Écoute bien. » s'affiche
       Alors Léa entend <personnage guide> lire la consigne avec une voix <voix>
 
@@ -81,12 +82,14 @@ Fonctionnalité: Lecture à voix haute par le personnage guide
     Scénario: La voix la plus naturelle de l'appareil est choisie
       Étant donné que l'appareil a les voix françaises « Amélie (compact) » et « Denise (Natural) »
       Et que Léa a choisi l'univers animaux
+      Et que la phrase « Écoute bien. » n'a pas de son de phrase
       Quand la consigne « Écoute bien. » s'affiche
       Alors Léa entend Noisette lire la consigne avec la voix « Denise (Natural) »
 
     Scénario: Sans voix d'homme sur l'appareil, un personnage guide masculin parle plus grave
       Étant donné que l'appareil n'a qu'une voix française féminine
       Et que Léa a choisi l'univers pompier
+      Et que la phrase « Écoute bien. » n'a pas de son de phrase
       Quand la consigne « Écoute bien. » s'affiche
       Alors Léa entend Capitaine Sam lire la consigne avec cette voix, en plus grave
 

@@ -270,6 +270,7 @@ Fonctionnalité: La voix de l'application lit à voix haute sans rien installer 
 
     Scénario: Sur un appareil sans voix française, le parent n'est plus invité à installer une voix
       Étant donné que l'appareil n'a aucune voix française
+      Et que la voix de l'application est disponible
       Et que Paul est dans l'espace parent
       Quand Paul ouvre le choix de voix
       Alors « Automatique (recommandé) » est choisi

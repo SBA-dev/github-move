@@ -9,9 +9,10 @@ Fonctionnalité: Choisir la voix des personnages guides sur l'appareil
   pour tous les profils enfants qui y jouent, et ne change pas les autres appareils.
   La consigne est celle d'un exercice d'une leçon de test, jouée dans une vraie séance (comme dans #7).
   Depuis #182, la voix automatique lit avec la voix de l'application toute phrase qui a son son de phrase
-  (182.14, 182.26) ; « Écoute bien. » et l'essai de voix en ont un. La consigne « Regarde bien. » n'a pas de son de
-  phrase (elle n'est pas dans le répertoire des sons) : avec la voix automatique, elle est lue par la voix la plus
-  naturelle de l'appareil (repli sur la voix de l'appareil). Une voix imposée lit toutes les phrases (182.14).
+  (182.14, 182.26). Les scénarios qui attendent une voix de l'appareil avec la voix automatique disent donc que la
+  phrase n'a pas de son de phrase (repli sur la voix de l'appareil). « La voix de l'application est disponible » :
+  le répertoire des sons servi avec l'application a été chargé sur l'appareil. Une voix imposée lit toutes les
+  phrases (182.14).
 
   Règle: Dans l'espace parent, le parent voit les voix françaises de l'appareil, la plus naturelle en tête
 
@@ -26,6 +27,7 @@ Fonctionnalité: Choisir la voix des personnages guides sur l'appareil
     Scénario: Sans voix imposée, la voix automatique est choisie et le parent sait laquelle elle utilise
       Étant donné que l'appareil a les voix françaises « Amélie (compact) » et « Denise (Natural) »
       Et que personne n'a imposé de voix sur la tablette
+      Et que la voix de l'application est disponible
       Et que Paul est dans l'espace parent
       Quand Paul ouvre le choix de voix
       Alors « Automatique (recommandé) » est choisi
@@ -144,7 +146,8 @@ Fonctionnalité: Choisir la voix des personnages guides sur l'appareil
       Étant donné que l'appareil a les voix françaises « Amélie (compact) » et « Denise (Natural) »
       Et que Paul a imposé la voix « Amélie (compact) » sur la tablette, puis est revenu à la voix automatique
       Et que Léa a choisi l'univers animaux
-      Quand la consigne « Regarde bien. » s'affiche
+      Et que la phrase « Écoute bien. » n'a pas de son de phrase
+      Quand la consigne « Écoute bien. » s'affiche
       Alors Léa entend Noisette lire la consigne avec la voix « Denise (Natural) »
 
     @issue-58
@@ -162,7 +165,8 @@ Fonctionnalité: Choisir la voix des personnages guides sur l'appareil
       Étant donné que l'appareil a les voix françaises « Amélie (compact) » et « Denise (Natural) »
       Et que Paul a imposé la voix « Audrey (améliorée) », qui n'est plus sur la tablette
       Et que Léa a choisi l'univers animaux
-      Quand la consigne « Regarde bien. » s'affiche
+      Et que la phrase « Écoute bien. » n'a pas de son de phrase
+      Quand la consigne « Écoute bien. » s'affiche
       Alors Léa entend Noisette lire la consigne avec la voix « Denise (Natural) »
       Et aucun message d'erreur n'apparaît
 
@@ -206,7 +210,8 @@ Fonctionnalité: Choisir la voix des personnages guides sur l'appareil
       Et que la tablette et le téléphone ont les voix françaises « Amélie (compact) » et « Denise (Natural) »
       Et que Paul a imposé la voix « Amélie (compact) » sur la tablette
       Et que Léa a choisi l'univers animaux
-      Quand la consigne « Regarde bien. » s'affiche sur le téléphone
+      Et que la phrase « Écoute bien. » n'a pas de son de phrase
+      Quand la consigne « Écoute bien. » s'affiche sur le téléphone
       Alors Léa entend Noisette lire la consigne avec la voix « Denise (Natural) »
 
     @acces

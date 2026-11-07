@@ -198,6 +198,7 @@ Fonctionnalité: Refonte visuelle de l'application de l'enfant
     Scénario: Agent Max lit la consigne avec une voix masculine
       Étant donné que l'appareil a une voix française féminine et une voix française masculine
       Et que Léa a choisi l'univers police
+      Et que la phrase « Écoute bien. » n'a pas de son de phrase
       Quand la consigne « Écoute bien. » s'affiche
       Alors Léa entend Agent Max lire la consigne avec une voix masculine
 

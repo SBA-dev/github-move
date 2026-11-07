@@ -119,24 +119,27 @@ et 7. Points d'attention :
      françaises « Amélie (compact) » et « Denise (Natural) » (au lieu d'aucune voix française) : il montre que la voix
      de l'application passe avant la voix la plus naturelle de l'appareil. La lecture sans voix française reste
      couverte par R1.
-   - « Après le retour à la voix automatique, … », « Sans la voix imposée, les consignes sont lues avec la voix
-     automatique, sans message pour l'enfant » et « La voix imposée sur la tablette ne change pas les autres
-     appareils » attendaient « Denise (Natural) » pour « Écoute bien. », qui a son son de phrase. Ils lisent
-     désormais la consigne « Regarde bien. », sans son de phrase (absente du répertoire des sons) : la voix
-     automatique se replie sur la voix la plus naturelle de l'appareil, et l'intention (retour à la voix automatique,
-     voix imposée disparue, autre appareil) est gardée sans nouvelle étape. Le premier s'intitule « Après le retour à
-     la voix automatique, une consigne sans son de phrase retrouve la voix la plus naturelle ». Quand les étapes de
-     #182 « la phrase « … » n'a pas de son de phrase » existeront, ces scénarios pourront le dire explicitement.
+   - « Après le retour à la voix automatique, une consigne sans son de phrase retrouve la voix la plus naturelle »
+     (seul titre modifié), « Sans la voix imposée, les consignes sont lues avec la voix automatique, sans message
+     pour l'enfant » et « La voix imposée sur la tablette ne change pas les autres appareils » attendaient
+     « Denise (Natural) » pour « Écoute bien. », qui a son son de phrase en production. Ils gardent la consigne
+     « Écoute bien. » et disent maintenant « Et que la phrase « Écoute bien. » n'a pas de son de phrase » (étape de
+     #182) : la voix automatique se replie sur la voix la plus naturelle de l'appareil, quel que soit le contenu du
+     répertoire des sons.
+   - « Sans voix imposée, la voix automatique est choisie et le parent sait laquelle elle utilise » dit
+     « Et que la voix de l'application est disponible » (étape nouvelle, voir « Étapes Gherkin » point 2). La même
+     condition est ajoutée au scénario R6 « Sur un appareil sans voix française, le parent n'est plus invité à
+     installer une voix », qui vérifie la même mention.
    - Les scénarios où une voix est imposée ou écoutée par son nom, et les mentions « très naturelle » / « la
      meilleure ici » des voix de l'appareil, restent vrais sans changement.
-7. **À trancher : #7 et #96, mêmes contradictions, non modifiés ici.** Avec la voix automatique et la consigne
-   « Écoute bien. » (qui a son son de phrase), ces scénarios nomment encore la voix de l'appareil :
-   #7 « La voix la plus naturelle de l'appareil est choisie » (attend « Denise (Natural) »), #7 Plan « Le personnage
-   guide parle avec sa voix à lui » (voix féminine / masculine de l'appareil), #7 « Sans voix d'homme sur l'appareil,
-   un personnage guide masculin parle plus grave » (« avec cette voix, en plus grave »), #96 « Agent Max lit la
-   consigne avec une voix masculine ». La voix de l'application est la même pour tous les personnages guides
-   (182.3, 182.4) : la même correction que pour #15 (consigne sans son de phrase, repli sur la voix de l'appareil)
-   garde leur intention.
+7. **#7 et #96 : voix de l'appareil avec la voix automatique** (**fait** le 2026-11-07, arbitrage de l'orchestrateur).
+   Ces scénarios décrivent le choix ou le caractère de la voix de l'appareil pour la consigne « Écoute bien. », qui
+   a son son de phrase en production. Ils disent maintenant « Et que la phrase « Écoute bien. » n'a pas de son de
+   phrase », sans changer leur sens : #7 « La voix la plus naturelle de l'appareil est choisie », #7 Plan « Le
+   personnage guide parle avec sa voix à lui », #7 « Sans voix d'homme sur l'appareil, un personnage guide masculin
+   parle plus grave », #96 « Agent Max lit la consigne avec une voix masculine ». La voix de l'application est la
+   même pour tous les personnages guides (182.3, 182.4) : le caractère de la voix de l'appareil reste décrit pour les
+   phrases sans son de phrase.
 
 ## Étapes Gherkin (pour l'e2e-tester)
 
@@ -155,6 +158,11 @@ Comportements observables par les faux du navigateur de test (faux `speechSynthe
    « … » ne peut pas être joué » (fichier introuvable) · « l'appareil n'a qu'une voix anglaise » · « Léa a déjà vu le
    message de voix absente » · hors ligne : « Léa a commencé avec le réseau la séance complète de la leçon « … » »,
    « Léa n'a jamais joué la leçon « … » sur la tablette », « Léa a terminé avec le réseau la séance de la leçon « … » ».
+   « la voix de l'application est disponible » (le répertoire des sons a été chargé sur l'appareil ; utilisée par
+   #15 « Sans voix imposée, la voix automatique est choisie… » et par R6 « Sur un appareil sans voix française, le
+   parent n'est plus invité à installer une voix »). « la phrase « Écoute bien. » n'a pas de son de phrase » sert
+   aussi dans #7 (3 scénarios), #15 (3 scénarios) et #96 (1 scénario) : avec `--tags "@issue-7"`, `"@issue-15"` ou
+   `"@issue-96"`, bddgen signale ces étapes manquantes tant qu'elles ne sont pas écrites.
 3. **Étapes nouvelles (Quand)** : « Léa en arrive à la question « … » » · « Léa commence la séance de la leçon suivante
    de son parcours ».
 4. **Étapes nouvelles (Alors)** : « … lire|dire « … » avec la voix de l'application » (un son de phrase joué, aucune
