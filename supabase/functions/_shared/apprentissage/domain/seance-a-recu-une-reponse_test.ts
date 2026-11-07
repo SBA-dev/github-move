@@ -1,6 +1,5 @@
 import { assertEquals } from "@std/assert";
-import type { Lecon } from "../../catalogue/domain/index.ts";
-import { type Lecon as LeconDuCatalogue, lireLecon } from "../../catalogue/domain/index.ts";
+import { type Lecon, lireLecon } from "../../catalogue/domain/index.ts";
 import { generateurIdFixe } from "../test_utils/generateur-id-fixe.ts";
 import { hasardFixe, hasardSansMelange } from "../test_utils/hasard-fixe.ts";
 import {
@@ -20,7 +19,7 @@ const MAUVAISE_REPONSE_DU_CALCUL = "8";
 const fin = new Date("2026-10-23T10:30:00Z");
 const debutDeLaFluence = new Date("2026-10-23T10:00:00Z");
 
-function leconDeLaPoesie(): LeconDuCatalogue {
+function leconDeLaPoesie(): Lecon {
   return lireLecon({
     id: "fr-ce1-poesie",
     matiere: "francais",
@@ -99,6 +98,17 @@ Deno.test("après la dernière bonne réponse, la séance finie a reçu une rép
 
   assertEquals(seance.estFinie(), true);
   assertEquals(seance.aRecuUneReponse(), true);
+});
+
+Deno.test("une séance reconstituée et pas encore rejouée n'a reçu aucune réponse", () => {
+  const origine = commencerSansLesEtapesDeLecon(leconDeCalcul());
+  origine.repondre(Reponse.choix(MAUVAISE_REPONSE_DU_CALCUL));
+  origine.repondre(Reponse.choix(BONNE_REPONSE_DU_CALCUL));
+  origine.terminer(fin);
+
+  const reconstituee = Seance.reconstituer(leconDeCalcul(), origine.aEnregistrer());
+
+  assertEquals(reconstituee.aRecuUneReponse(), false);
 });
 
 Deno.test("une séance reconstituée puis rejouée avec une réponse a reçu une réponse", () => {
