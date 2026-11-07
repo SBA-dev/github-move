@@ -1,4 +1,20 @@
-import { type InstantsDesMots, type LecteurDeSonsDePhrases, type SonDePhrase, SonIllisible } from "@domain/voix";
+import {
+  type InstantsDesMots,
+  type LecteurDeSonsDePhrases,
+  type SonDePhrase,
+  SonIllisible,
+  VoixBloquee,
+} from "@domain/voix";
+
+const COEFFICIENT_DE_SECURITE = 1.6;
+const MARGE_DE_SECURITE_MS = 2500;
+
+type ElementAudioSafari = HTMLAudioElement & { webkitPreservesPitch?: boolean };
+
+/** Un MP3 bloqué sur le réseau sans `error` ni `ended` ne doit pas retenir la parole. */
+function delaiDeSecuriteMs(son: SonDePhrase, rythme: number): number {
+  return (son.dureeMs / rythme) * COEFFICIENT_DE_SECURITE + MARGE_DE_SECURITE_MS;
+}
 
 function estUneAutorisationRefusee(erreur: unknown): boolean {
   return erreur instanceof DOMException && erreur.name === "NotAllowedError";
@@ -26,7 +42,7 @@ function annoncerLesMots(
 }
 
 export class LecteurDeSonsDePhrasesDuNavigateur implements LecteurDeSonsDePhrases {
-  private readonly audio = new Audio();
+  private readonly audio: ElementAudioSafari = new Audio();
   private terminerLaLectureEnCours: (() => void) | undefined;
 
   jouer(
@@ -41,7 +57,12 @@ export class LecteurDeSonsDePhrasesDuNavigateur implements LecteurDeSonsDePhrase
       const suivreLesMots = instantsDesMots && onMot
         ? annoncerLesMots(audio, rythme, instantsDesMots, onMot)
         : undefined;
+      const garde = setTimeout(() => {
+        audio.pause();
+        echouer(new SonIllisible());
+      }, delaiDeSecuriteMs(son, rythme));
       const nettoyer = () => {
+        clearTimeout(garde);
         suivreLesMots?.();
         audio.removeEventListener("ended", terminer);
         audio.removeEventListener("error", echouer);
@@ -53,13 +74,14 @@ export class LecteurDeSonsDePhrasesDuNavigateur implements LecteurDeSonsDePhrase
       };
       const echouer = (erreur: unknown) => {
         nettoyer();
-        reject(estUneAutorisationRefusee(erreur) ? erreur : new SonIllisible());
+        reject(estUneAutorisationRefusee(erreur) ? new VoixBloquee() : new SonIllisible());
       };
       audio.addEventListener("ended", terminer);
       audio.addEventListener("error", echouer);
       this.terminerLaLectureEnCours = terminer;
       audio.src = son.fichier;
       audio.preservesPitch = true;
+      audio.webkitPreservesPitch = true;
       audio.playbackRate = rythme;
       audio.play().catch(echouer);
     });

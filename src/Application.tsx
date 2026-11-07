@@ -224,10 +224,16 @@ export function Application() {
             <ModeDys value={profil?.reglages.modeDys ?? false}>
               <main className="ecran" data-mode-dys={profil?.reglages.modeDys ? "true" : undefined}>
                 <div role="status" className="voix-bloquee">
-                  {voix.nomDuPersonnageGuideDeLaVoixBloquee &&
-                    `La voix de ${voix.nomDuPersonnageGuideDeLaVoixBloquee} est bloquée par ce navigateur. Touche « Réécouter » pour réessayer, ou lis avec un adulte.`}
-                  {voix.nomDuPersonnageGuideDeLaVoixAbsente &&
-                    `${voix.nomDuPersonnageGuideDeLaVoixAbsente} ne peut pas lire cette phrase sur cet appareil. Tu peux la lire avec un adulte.`}
+                  {voix.nomDuPersonnageGuideDeLaVoixBloquee && (
+                    <p>
+                      La voix de {voix.nomDuPersonnageGuideDeLaVoixBloquee} est bloquée par ce navigateur. Touche « Réécouter » pour réessayer, ou lis avec un adulte.
+                    </p>
+                  )}
+                  {voix.nomDuPersonnageGuideDeLaVoixAbsente && (
+                    <p>
+                      {voix.nomDuPersonnageGuideDeLaVoixAbsente} ne peut pas lire cette phrase sur cet appareil. Tu peux la lire avec un adulte.
+                    </p>
+                  )}
                 </div>
                 <EcranQuiArrive cle={cleDeLEcran(lieu)} transition={transitionVers(lieu, viaRetour)}>
                   {ecran === "accueil" && (
