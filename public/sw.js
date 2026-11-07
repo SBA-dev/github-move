@@ -27,6 +27,8 @@ const REPERTOIRE_DES_SONS_DE_PHRASES = "/voix/repertoire.json";
 const MESSAGE_METTRE_EN_RESERVE = "mettre-en-reserve-des-sons";
 // Clé interne : hors du chemin public des sons, jamais demandée par une page.
 const REGISTRE_DE_LA_RESERVE = "/interne/reserve-des-voix";
+// Un lot s'inscrit par tranches : un service worker arrêté en cours de route ne laisse pas trop de sons non inscrits.
+const TAILLE_DES_TRANCHES = 50;
 const BUDGET_DE_LA_RESERVE_EN_OCTETS = 20 * 1024 * 1024;
 
 self.addEventListener("install", (evenement) => {
@@ -146,12 +148,12 @@ async function tailleDe(reponse) {
 function inscrireEnReserve(lot) {
   return enFileDeLaReserve(async () => {
     const cache = await caches.open(NOM_DU_CACHE_DES_VOIX);
-    const chemins = lot.map((son) => son.chemin);
-    const registre = (await lireLeRegistre(cache)).filter((son) => !chemins.includes(son.chemin));
-    registre.push(...lot);
+    const sonsDuLot = new Map(lot.map((son) => [son.chemin, son]));
+    const registre = (await lireLeRegistre(cache)).filter((son) => !sonsDuLot.has(son.chemin));
+    registre.push(...sonsDuLot.values());
     let total = registre.reduce((somme, son) => somme + son.taille, 0);
     while (total > BUDGET_DE_LA_RESERVE_EN_OCTETS) {
-      const index = registre.findIndex((son) => !chemins.includes(son.chemin));
+      const index = registre.findIndex((son) => !sonsDuLot.has(son.chemin));
       if (index === -1) break;
       const [retire] = registre.splice(index, 1);
       total -= retire.taille;
@@ -170,24 +172,30 @@ async function garderEnReserve(chemin, reponse) {
 
 async function mettreEnReserve(chemins) {
   const cache = await caches.open(NOM_DU_CACHE_DES_VOIX);
-  const lot = [];
-  for (const chemin of chemins) {
+  let lot = [];
+  for (const chemin of new Set(chemins)) {
     try {
-      const enCache = await cache.match(chemin);
-      if (enCache) {
-        lot.push({ chemin, taille: await tailleDe(enCache) });
-        continue;
-      }
-      const reponse = await fetch(chemin);
-      if (!estUnSon(reponse)) continue;
-      const taille = await tailleDe(reponse);
-      await cache.put(chemin, reponse);
-      lot.push({ chemin, taille });
+      const son = await sonEnCacheOuChercher(cache, chemin);
+      if (son) lot.push(son);
     } catch {
       // Sans réseau, la réserve se fera à la prochaine occasion : la lecture se replie sur la voix de l'appareil.
     }
+    if (lot.length === TAILLE_DES_TRANCHES) {
+      await inscrireEnReserve(lot);
+      lot = [];
+    }
   }
   if (lot.length > 0) await inscrireEnReserve(lot);
+}
+
+async function sonEnCacheOuChercher(cache, chemin) {
+  const enCache = await cache.match(chemin);
+  if (enCache) return { chemin, taille: await tailleDe(enCache) };
+  const reponse = await fetch(chemin);
+  if (!estUnSon(reponse)) return undefined;
+  const taille = await tailleDe(reponse);
+  await cache.put(chemin, reponse);
+  return { chemin, taille };
 }
 
 // Safari ne lit un son que si le serveur répond aux requêtes « Range » par un 206 : on le fait depuis le cache.
