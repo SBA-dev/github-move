@@ -113,7 +113,7 @@ Fonctionnalité: Grand défi de la matière
       Et que Léa a commencé le grand défi des maths
       Quand Léa répond au défi, en se trompant une fois à chaque question
       Alors la fin du défi annonce « Grand défi relevé ! »
-      Et Léa entend l'effet sonore « grande victoire », puis Noisette dit « Bravo Léa ! Tu as relevé le grand défi des maths ! »
+      Et Léa entend la musique de la célébration de Noisette, puis Noisette dit « Bravo Léa ! Tu as relevé le grand défi des maths ! »
       Et la fin du défi ne montre aucune étoile
       Et la fin du défi propose « Mon parcours » et « Accueil »
 
