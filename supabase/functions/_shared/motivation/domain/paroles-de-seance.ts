@@ -44,11 +44,16 @@ export function finDeSeanceApres(etoiles: number, felicitation: string, prenom?:
   }. Tu rejoues pour aller chercher les autres ?`;
 }
 
+export function tirerLaFelicitationDeFinDeSeance(
+  etoiles: number,
+  personnageGuide: PersonnageGuide,
+  hasard: Hasard,
+): string {
+  return etoiles === 3 ? tirerDans(personnageGuide.expressions, hasard) : feliciter(personnageGuide, hasard).texte;
+}
+
 function finDeSeance(etoiles: number, personnageGuide: PersonnageGuide, hasard: Hasard, prenom?: string): string {
-  const felicitation = etoiles === 3
-    ? tirerDans(personnageGuide.expressions, hasard)
-    : feliciter(personnageGuide, hasard).texte;
-  return finDeSeanceApres(etoiles, felicitation, prenom);
+  return finDeSeanceApres(etoiles, tirerLaFelicitationDeFinDeSeance(etoiles, personnageGuide, hasard), prenom);
 }
 
 export function parolesDeFinDeSeance(

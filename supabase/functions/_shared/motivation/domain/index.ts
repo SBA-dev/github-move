@@ -94,6 +94,7 @@ export {
   remercierApresLeTestDeDepart,
   remercierApresLeTestDeDepartSansPrenom,
 } from "./paroles-du-test-de-depart.ts";
+export { type FinDeSeanceDite, parolesDeFinDeSeanceAvecTexteDit } from "./paroles-de-fin-de-seance-dites.ts";
 export { parolesConnuesDAvance } from "./paroles-connues-d-avance.ts";
 export { type SectionDeLEcran, sectionsAAfficher, sectionsDeLEcran } from "./sections-de-l-ecran.ts";
 export { type PastilleDeRecord, pastillesDesRecords, type RecordDuProfil } from "./records-de-calcul-rapide.ts";
