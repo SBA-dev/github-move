@@ -30,3 +30,4 @@ export { syllabesDuMot, syllabesDuTexte } from "./syllabes.ts";
 export type { SegmentSyllabe } from "./syllabes.ts";
 export type { EffetSonore } from "./effet-sonore.ts";
 export type { LecteurDEffetsSonores } from "./lecteur-d-effets-sonores.ts";
+export { CleDeLaPhrase } from "./cle-de-la-phrase.ts";
