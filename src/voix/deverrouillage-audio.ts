@@ -7,7 +7,7 @@ const FREQUENCE_HZ = 8000;
 const ECHANTILLONS = 8000;
 const SILENCE_8_BITS = 128;
 
-function silenceEnWav(): string {
+export function silenceEnWav(): string {
   const octets = new Uint8Array(44 + ECHANTILLONS);
   const vue = new DataView(octets.buffer);
   const ecrire = (position: number, texte: string) =>

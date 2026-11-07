@@ -49,7 +49,9 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
   const [effetsSonores] = useState(() => new LecteurDEffetsSonoresDuNavigateur());
   const [lecteurDeSonsDePhrases] = useState(() => new LecteurDeSonsDePhrasesDuNavigateur());
   const [repertoireDesSons] = useState(() => new RepertoireDesSonsDuNavigateur());
-  const [deverrouillage] = useState(() => new DeverrouillageAudio(() => effetsSonores.amorcer()));
+  const [deverrouillage] = useState(() =>
+    new DeverrouillageAudio(() => effetsSonores.amorcer(), () => lecteurDeSonsDePhrases.amorcer())
+  );
   const [voixDeLAppareil] = useState(() => new VoixDeLAppareilNavigateur());
   const [choixMemorise] = useState(() => new ChoixDeVoixMemoriseSurLAppareil());
   const [syntheseVocalePresente] = useState(() => syntheseVocale() !== undefined);
