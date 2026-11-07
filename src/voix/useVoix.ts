@@ -8,6 +8,7 @@ import { LecteurDEffetsSonoresDuNavigateur } from "./lecteur-d-effets-sonores-du
 import { LecteurDeSonsDePhrasesDuNavigateur } from "./lecteur-de-sons-de-phrases-du-navigateur.ts";
 import { RepertoireDesSonsDuNavigateur } from "./repertoire-des-sons-du-navigateur.ts";
 import { LecteurSyntheseVocale, syntheseVocale } from "./lecteur-synthese-vocale.ts";
+import { mettreEnReserveLesParolesCommunes } from "./reserve-des-sons.ts";
 import { lireLEtatDuSon, memoriserLEtatDuSon } from "./memoire-du-son.ts";
 import { VoixDeLAppareilNavigateur } from "./voix-de-l-appareil-navigateur.ts";
 
@@ -74,6 +75,10 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
     if (son === "muet") return;
     return deverrouillerAuToucher(deverrouillage);
   }, [son, deverrouillage]);
+
+  useEffect(() => {
+    void mettreEnReserveLesParolesCommunes();
+  }, []);
 
   useEffect(
     () => voixDeLAppareil.surChangement(() => setVoixDisponibles(voixDeLAppareil.voixDisponibles())),

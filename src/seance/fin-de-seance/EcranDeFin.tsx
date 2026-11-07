@@ -40,6 +40,7 @@ import { useTenueRecueParLaSeance } from "./useTenueRecueParLaSeance.ts";
 import { useLeconAcquiseParLaSeance } from "./useLeconAcquiseParLaSeance.ts";
 import { useMatiereReussieParLaSeance } from "./useMatiereReussieParLaSeance.ts";
 import { useSauvegardeDeLaSeance } from "./useSauvegardeDeLaSeance.ts";
+import { mettreEnReserveLesSonsDeLaLecon } from "../../voix/index.ts";
 
 type Suivante = { readonly id: string; readonly titre: string };
 
@@ -97,6 +98,7 @@ function useLaSuite(seance: Seance, niveau: string): LaSuite | undefined {
       if (annule || lecons.length === 0) return;
       const idSuivante = leconSuivanteEnFinDeSeance(entrees, leconId);
       const prochaine = lecons.find((lecon) => lecon.id === idSuivante);
+      if (prochaine) void mettreEnReserveLesSonsDeLaLecon(prochaine.id);
       setSuite({ suivante: prochaine && { id: prochaine.id, titre: pageDeLaLecon(prochaine).titre } });
     }).catch(bibliothequeIndisponible);
     return () => {

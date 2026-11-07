@@ -18,7 +18,7 @@ import { lireLeNombreDeSeancesAvantLaSeance } from "../histoire/nombre-de-seance
 import { TexteEnSyllabes } from "../reglages/index.ts";
 import { ContexteDuRetour, EtincellesDuTexteComplet } from "../retours/index.ts";
 import { TexteSurligne } from "./TexteSurligne.tsx";
-import { laVoixNeLitPas, type Voix } from "../voix/index.ts";
+import { laVoixNeLitPas, mettreEnReserveLesSonsDeLaLecon, type Voix } from "../voix/index.ts";
 import { BulleDuPersonnageGuide } from "./BulleDuPersonnageGuide.tsx";
 import { PersonnageGuideEtSaScene } from "./PersonnageGuideEtSaScene.tsx";
 import { EcranDeFin } from "./fin-de-seance/EcranDeFin.tsx";
@@ -172,6 +172,10 @@ function SeanceEnCours(
     void commencer();
     return abandonner;
   }, [commencer, abandonner]);
+
+  useEffect(() => {
+    void mettreEnReserveLesSonsDeLaLecon(lecon.id);
+  }, [lecon.id]);
 
   const [celebrationDeLUnivers, setCelebrationDeLUnivers] = useState(false);
   const { titre, niveauEtMatiere } = pageDeLaLecon(lecon);
