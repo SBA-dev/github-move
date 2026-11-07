@@ -101,6 +101,7 @@ export class LectureAVoixHaute {
   private coupuresDeLaVoix = 0;
   private voixBloqueeSignalee = false;
   private voixAbsenteSignalee = false;
+  private sonDePhraseEnCours: symbol | undefined;
   private parolesEnCours = 0;
 
   constructor(private readonly dependances: DependancesDeLectureAVoixHaute) {
@@ -123,7 +124,7 @@ export class LectureAVoixHaute {
 
   private async lireLeTexte(brut: string, options: OptionsDeLecture): Promise<ParoleEntendue> {
     const { lecteur, hasard } = this.dependances;
-    lecteur.arreter();
+    this.arreterLesVoix();
     const texte = texteALire(brut);
     if (!texte) return PAROLE_NON_ENTENDUE;
     const langue = options.langue ?? LANGUE_FRANCAISE;
@@ -157,12 +158,7 @@ export class LectureAVoixHaute {
           await lireParLAppareil(groupe.phrases);
           continue;
         }
-        try {
-          await this.dependances.lecteurDeSonsDePhrases.jouer(groupe.son, groupe.rythme);
-        } catch (erreur) {
-          if (!(erreur instanceof SonIllisible)) throw erreur;
-          await lireParLAppareil([groupe.reglage]);
-        }
+        await this.jouerLeSonDePhrase(groupe, lireParLAppareil);
       }
       this.signalerLaFinDeLaVoixBloquee();
       if (phraseNonDite) {
@@ -243,7 +239,7 @@ export class LectureAVoixHaute {
 
   couperLaVoix(): void {
     this.coupuresDeLaVoix++;
-    this.dependances.lecteur.arreter();
+    this.arreterLesVoix();
     this.arreterLesEffets();
   }
 
@@ -259,8 +255,9 @@ export class LectureAVoixHaute {
 
   passerEnMuet(): void {
     this.etat = "muet";
-    this.dependances.lecteur.arreter();
+    this.arreterLesVoix();
     this.signalerLaFinDeLaVoixBloquee();
+    this.signalerLaFinDeLaVoixAbsente();
   }
 
   async remettreLeSon(salutation: string): Promise<void> {
@@ -296,6 +293,29 @@ export class LectureAVoixHaute {
     if (!this.voixBloqueeSignalee) return;
     this.voixBloqueeSignalee = false;
     this.dependances.onFinDeLaVoixBloquee();
+  }
+
+  private async jouerLeSonDePhrase(
+    groupe: Extract<GroupeDeLecture, { type: "voixDeLApplication" }>,
+    lireParLAppareil: (phrases: readonly ReglageDePhrase[]) => Promise<void>,
+  ): Promise<void> {
+    const jeton = Symbol();
+    this.sonDePhraseEnCours = jeton;
+    try {
+      await this.dependances.lecteurDeSonsDePhrases.jouer(groupe.son, groupe.rythme);
+    } catch (erreur) {
+      if (!(erreur instanceof SonIllisible)) throw erreur;
+      await lireParLAppareil([groupe.reglage]);
+    } finally {
+      if (this.sonDePhraseEnCours === jeton) this.sonDePhraseEnCours = undefined;
+    }
+  }
+
+  private arreterLesVoix(): void {
+    this.dependances.lecteur.arreter();
+    if (!this.sonDePhraseEnCours) return;
+    this.sonDePhraseEnCours = undefined;
+    this.dependances.lecteurDeSonsDePhrases.arreter();
   }
 
   private signalerLaVoixAbsente(): void {
