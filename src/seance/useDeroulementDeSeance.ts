@@ -1,4 +1,4 @@
-import { useCallback, useReducer, useRef, useState } from "react";
+import { useCallback, useReducer, useRef } from "react";
 import {
   consigneAffichee,
   type FaitDeSeance,
@@ -64,7 +64,6 @@ export function useDeroulementDeSeance(
   const vivant = useRef(true);
   /** Numéro de la séquence qui présente l'exercice ; tout geste de l'enfant ouvre une nouvelle séquence et met donc fin à la présentation. */
   const presentation = useRef<number | undefined>(undefined);
-  const [presentationAffichee, setPresentationAffichee] = useState(false);
   const pause = useRef(PAUSE_ENTRE_DEUX_PAROLES_MS);
   pause.current = useReducedMotion() ? PAUSE_AVEC_MOUVEMENTS_REDUITS_MS : PAUSE_ENTRE_DEUX_PAROLES_MS;
 
@@ -153,14 +152,12 @@ export function useDeroulementDeSeance(
 
   const commencerLaPresentation = useCallback((numero: number) => {
     presentation.current = numero;
-    setPresentationAffichee(true);
     avantLaLecture();
   }, [avantLaLecture]);
 
   const terminerLaPresentation = useCallback((numero: number) => {
     if (presentation.current !== numero) return;
     presentation.current = undefined;
-    setPresentationAffichee(false);
   }, []);
 
   const presenterLaQuestionDeLExercice = useCallback(async (numero: number) => {
@@ -433,7 +430,6 @@ export function useDeroulementDeSeance(
     jeNeSaisPasDeLAddition,
     demarrerLaFluence,
     relireLaPhrase,
-    presentationEnCours: presentationAffichee && presentationEnCours(),
     enfantAttendu: reussite.enfantAttendu,
     continuerApresLaReussite: reussite.continuer,
     commencer,
