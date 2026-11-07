@@ -799,7 +799,7 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 .carte-du-calcul { font-size: 2rem; }
 .boite-a-jetons, .probleme-en-barres { display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 100%; }
 /* La boîte n'a que des couches en position absolue : la zone de l'exercice, ajustée à son contenu, lui laisserait 0 px pendant le déroulé. */
-.exercice-en-cours:has(.boite-a-jetons) { justify-self: stretch; }
+.exercice-en-cours:has(.boite-a-jetons) { justify-self: stretch; width: 100%; }
 
 /* Boîte à jetons : le dessin de l'univers en deux couches (fond, puis rebord avant) avec les jetons entre les deux, rangés par 5.
    Le cadre est celui du dessin (288 × 250) : la boîte garde sa taille, ouverte ou fermée, quel que soit le nombre de jetons. */
