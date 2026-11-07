@@ -128,7 +128,8 @@ export class LectureAVoixHaute {
     const texte = texteALire(brut);
     if (!texte) return PAROLE_NON_ENTENDUE;
     const langue = options.langue ?? LANGUE_FRANCAISE;
-    const voix = this.voixPour(langue, options.choix ?? this.choixMemorise());
+    const choix = options.choix ?? this.choixMemorise();
+    const voix = this.voixPour(langue, choix);
     const caractere = estFrancais(langue) ? this.dependances.caractereDuPersonnageGuide() : CARACTERE_LANGUE_ETRANGERE;
     this.parolesEnCours++;
     try {
@@ -138,7 +139,7 @@ export class LectureAVoixHaute {
         langue,
         repertoire: this.dependances.repertoireDesSons,
         voixDeLAppareil: voix,
-        voixImposee: false,
+        voixImposee: choix.type === "imposee",
       });
       const lireParLAppareil = (phrases: readonly ReglageDePhrase[]) =>
         lecteur.lire({
