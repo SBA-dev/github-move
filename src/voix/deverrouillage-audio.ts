@@ -37,14 +37,25 @@ function ignorerLEchec(action: () => unknown): void {
   }
 }
 
+/** Sur Android, `pointerdown` d'un toucher n'ouvre pas d'activation : seuls `pointerup` et `touchend` le font. Sans l'API, on tente quand même. */
+function activationDeLUtilisateurAbsente(): boolean {
+  return navigator.userActivation?.isActive === false;
+}
+
 export class DeverrouillageAudio {
   private contexte: AudioContext | undefined;
   private piste: HTMLAudioElement | undefined;
   private deverrouille = false;
 
-  constructor(private readonly amorcerLesEffets: () => void = () => undefined) {}
+  private readonly amorcages: readonly (() => void)[];
+
+  /** Chaque amorçage (effets sonores, sons de phrases) démarre un son une fois, pendant un toucher : iPhone et iPad l'exigent. */
+  constructor(...amorcages: readonly (() => void)[]) {
+    this.amorcages = amorcages;
+  }
 
   deverrouiller(): void {
+    if (activationDeLUtilisateurAbsente()) return;
     ignorerLEchec(() => {
       this.contexte ??= new AudioContext();
       if (this.contexte.state !== "running") return this.contexte.resume();
@@ -54,7 +65,7 @@ export class DeverrouillageAudio {
     ignorerLEchec(() => this.demarrerLaPisteSilencieuse());
     ignorerLEchec(() => this.amorcerLeContexte());
     ignorerLEchec(() => this.amorcerLaSynthese());
-    ignorerLEchec(() => this.amorcerLesEffets());
+    this.amorcages.forEach((amorcer) => ignorerLEchec(amorcer));
   }
 
   relacher(): void {
