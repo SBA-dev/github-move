@@ -1,6 +1,7 @@
 import { assert, assertEquals, assertFalse } from "@std/assert";
 import { toutesLesMatieres } from "../../catalogue/domain/index.ts";
 import { parolesConnuesDAvance } from "./paroles-connues-d-avance.ts";
+import { propositionDeLaQueteDuJour } from "./paroles-de-la-quete.ts";
 import { UNIVERS } from "./univers.ts";
 
 // Les paroles connues à l'avance : celles dont toutes les variantes sont finies (nom du personnage guide,
@@ -111,6 +112,13 @@ Deno.test("la série n'est connue à l'avance que pour 0 et 1 jour joué", () =>
 
 Deno.test("la fête de la quête accomplie est connue à l'avance sans le prénom", () => {
   assert(paroles.includes("Quête du jour accomplie ! Bravo !"));
+});
+
+Deno.test("la proposition de la quête accomplie est connue à l'avance", () => {
+  const proposition = propositionDeLaQueteDuJour({ genre: "accomplie", quete: "lecon" });
+
+  assert(proposition !== undefined);
+  assert(paroles.includes(proposition));
 });
 
 Deno.test("les paroles qui dépendent d'un nombre non borné ne sont pas connues à l'avance", () => {
