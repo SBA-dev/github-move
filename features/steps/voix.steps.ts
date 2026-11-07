@@ -9,6 +9,8 @@ import {
   injecter,
   interceptertLaBibliotheque,
   leconDeTest,
+  lecturesAvantLaReecouteDeLaConsigne,
+  quitterLaSeance,
   ouvrirLaPageDeLaLecon,
 } from "./etapes-puis-exercices.steps.ts";
 import { estSurUnProfilReel } from "./profil-reel.ts";
@@ -540,28 +542,24 @@ When(/^la consigne suivante s'affiche$/, async ({ page }) => {
 When(/^Léa demande à réécouter la consigne$/, async ({ page }) => {
   await demarrer(page);
   const etat = scenario(page);
-  const relire = page.getByRole("button", { name: "Relire la consigne", exact: true });
+  const reecouter = page.getByRole("button", { name: "Réécouter", exact: true });
   if (etat.relitPendantLaQuestion) {
     await attendreUneLecture(page);
     await terminerLaLecture(page);
     // Le StrictMode du mode développement peut lire la consigne en deux lots : on attend la lecture de la question.
     await expect.poll(async () => (await journal(page)).lecture.texte).toContain("Combien font");
-    // 79.12 : pendant la présentation de l'exercice, relire la consigne est inactif.
-    await expect(relire).toHaveAttribute("aria-disabled", "true");
-    // La présentation finie (les choix apparaissent), il devient actif.
+    // La présentation finie (les choix apparaissent), « Réécouter » relit la consigne (183.8 : un seul bouton).
     await avancerJusquAuxChoix(page);
-    await expect(relire).not.toHaveAttribute("aria-disabled", "true");
+    await expect(reecouter).not.toHaveAttribute("aria-disabled", "true");
     etat.relitPendantLaQuestion.relue = true;
     etat.relitPendantLaQuestion.lotsAvant = (await journal(page)).lots;
   }
-  // #7 : la consigne d'ouverture est réécoutée pendant sa lecture, avec « Réécouter » (« Relire la consigne » y est inactif).
-  const bouton = etat.reecouteLaConsigneDOuverture
-    ? page.getByRole("button", { name: "Réécouter", exact: true })
-    : relire;
-  await bouton.click();
+  await reecouter.click();
 });
 
 When(/^Léa quitte l'écran de la consigne$/, async ({ page }) => {
+  // La séance n'a plus l'en-tête de l'application (#183) : Retour ramène à la page de la leçon, où le nom de l'application est là.
+  if (await page.getByTestId("barre-du-haut").isVisible()) await quitterLaSeance(page);
   await page.getByRole("banner").getByRole("button", { name: "Savanturier" }).click();
   await expect(page).toHaveURL(/\/$/);
 });
@@ -616,6 +614,14 @@ async function texteLuAvantLaLectureDesChoix(page: Page): Promise<string> {
 }
 
 Then(/^Léa entend de nouveau Noisette lire « ([^«»]+) »$/, async ({ page }, texte: string) => {
+  const avantLaReecoute = lecturesAvantLaReecouteDeLaConsigne.get(page);
+  if (avantLaReecoute !== undefined) {
+    // La consigne puis la question se lisent d'une traite (une lecture) : la consigne ouvre la lecture.
+    await expect.poll(async () => (await journal(page)).lots).toBe(avantLaReecoute + 1);
+    const lus = await textesLus(page);
+    expect(lus[lus.length - 1]).toMatch(new RegExp(`^${normaliser(texte).replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`));
+    return;
+  }
   const lotsAvant = scenario(page).relitPendantLaQuestion?.lotsAvant;
   await expect.poll(async () => (await journal(page)).lots).toBe(lotsAvant === undefined ? 2 : lotsAvant + 1);
   expect((await journal(page)).lecture.texte).toBe(normaliser(texte));

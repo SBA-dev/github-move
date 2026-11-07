@@ -16,6 +16,7 @@ import {
   ouvrirLaSeanceDirectement,
   recipient,
   toutesLesParoles,
+  quitterLaSeance,
 } from "./etapes-puis-exercices.steps.ts";
 import { EXPRESSIONS_PAR_PERSONNAGE, FELICITATIONS_COMMUNES, listeDe } from "./univers.steps.ts";
 import {
@@ -495,6 +496,7 @@ Given(/^Léa a réussi la question « (.+) »$/, async ({ page }, question: stri
   const rang = await questionsReussies(page);
   await bulleDeChoix(page, (questionsDeLaSeance(page)[rang] as Question).reponse).click();
   await expect(recipient(page)).toHaveAttribute("data-questions-reussies", String(rang + 1));
+  etatDesChoix(page).reussiesAvant = rang + 1;
 });
 
 Given(
@@ -502,7 +504,7 @@ Given(
   async ({ page }, titre: string, nombre: string) => {
     await lancer(page, leconDeTitre(page, titre));
     await allerAuRang(page, Number(nombre), false);
-    await page.getByRole("button", { name: "Retour", exact: true }).click();
+    await quitterLaSeance(page);
     await expect(recipient(page)).toHaveCount(0);
   },
 );
@@ -873,7 +875,7 @@ Then(/^« ([^«»]+) » n'est jamais écrit à l'écran$/, async ({ page }, mot:
 
 Then(/^le son peut être activé par « ([^«»]+) »$/, async ({ page }, libelle: string) => {
   await page.getByRole("button", { name: libelle, exact: true }).click();
-  await expect(page.getByRole("banner").getByRole("button", { name: "Son" })).toHaveAttribute("data-son", "son");
+  await expect(page.getByRole("button", { name: "Son", exact: true })).toHaveAttribute("data-son", "son");
   await expect(page.getByTestId("ecoute-sans-son")).toHaveCount(0);
   await expect(page.getByTestId("dictee-sans-son")).toHaveCount(0);
 });

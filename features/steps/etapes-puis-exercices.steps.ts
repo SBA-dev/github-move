@@ -167,6 +167,17 @@ export async function commencerSeulementLExercice(page: Page, titre: string) {
   await expect(recipient(page)).toBeVisible();
 }
 
+/**
+ * Léa touche « Retour » (#183) : avant toute réponse elle revient à la page de la leçon ; après une réponse la pause de la séance
+ * s'ouvre et Léa choisit « Retour à la leçon ». Dans les deux cas elle finit sur la page de la leçon.
+ */
+export async function quitterLaSeance(page: Page) {
+  await page.getByRole("button", { name: "Retour", exact: true }).click();
+  const pause = page.getByTestId("pause-de-la-seance");
+  await pause.or(page.getByRole("button", { name: "Leçon et tous les jeux", exact: true })).waitFor();
+  if (await pause.isVisible()) await pause.getByRole("button", { name: "Retour à la leçon", exact: true }).click();
+}
+
 export async function jouerLaSeanceComplete(page: Page, titre: string) {
   await ouvrirLaPageDeLaLecon(page, titre);
   await commencerLaSeanceComplete(page);
@@ -342,12 +353,16 @@ When(/^la troisième étape de leçon s'affiche$/, async ({ page }) => {
   await attendreQueLaBulleDise(page, texteDeLEtape(lecon, 2));
 });
 
+/** #183.10 : quand une consigne est à l'écran, « Réécouter » relit la consigne puis la question : deux lectures de plus. */
+export const lecturesAvantLaReecouteDeLaConsigne = new WeakMap<Page, number>();
+
 When(/^Léa demande à réécouter$/, async ({ page }) => {
+  if (await page.getByTestId("consigne").isVisible()) lecturesAvantLaReecouteDeLaConsigne.set(page, (await journal(page)).lots);
   await page.getByRole("button", { name: "Réécouter", exact: true }).click();
 });
 
 When(/^Léa quitte la séance$/, async ({ page }) => {
-  await page.getByRole("button", { name: "Retour", exact: true }).click();
+  await quitterLaSeance(page);
 });
 
 When(/^Léa commence de nouveau la séance complète$/, async ({ page }) => {

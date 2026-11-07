@@ -22,6 +22,7 @@ import {
   injecter,
   recipient,
   toutesLesParoles,
+  quitterLaSeance,
 } from "./etapes-puis-exercices.steps.ts";
 import {
   avancerJusquAuxChoix,
@@ -294,7 +295,7 @@ Given(/^Léa a quitté une séance complète de cette leçon avant la dernière 
     await bulleDeChoix(page, question.reponse).click();
     await expect(recipient(page)).toHaveAttribute("data-questions-reussies", String(rang + 1));
   }
-  await page.getByRole("button", { name: "Retour", exact: true }).click();
+  await quitterLaSeance(page);
   await expect(recipient(page)).toHaveCount(0);
 });
 
@@ -626,6 +627,12 @@ Then(
 
 Then(/^la page de la leçon montre (?:toujours )?(\d) étoiles? pour Léa$/, async ({ famille, page }, etoiles: string) => {
   const cible = await pageDe(famille, page, partie(famille).appareil === "telephone");
+  if (!estSurUnProfilReel(cible) && Number(etoiles) === 0) {
+    // Profil préparé (#183) : aucune lecture serveur, la page de la leçon déjà affichée ne doit montrer aucune étoile gagnée.
+    const meilleures = cible.getByTestId("meilleures-etoiles");
+    if ((await meilleures.count()) > 0) await expect(meilleures).toHaveAttribute("data-etoiles", "0");
+    return;
+  }
   await verifierLesEtoilesDeLaLecon(cible, leconOuverte(page).id, Number(etoiles));
 });
 

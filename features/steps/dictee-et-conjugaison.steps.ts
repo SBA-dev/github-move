@@ -292,6 +292,8 @@ Then(/^Léa entend de nouveau Noisette dire « ([^«»]+) »(, plus lentement)?$
   const memoire = etatDeLaDictee(page);
   await expect.poll(async () => (await journal(page)).speaks).toBeGreaterThan(memoire.paroles);
   await expect.poll(async () => (await journal(page)).lecture.texte).toBe(normaliser(texte));
+  // Hors dictée (#183 : « Réécouter » après « Je ne sais pas »), il n'y a pas de rythme normal à comparer.
+  if (memoire.mot === undefined) return;
   const normal = memoire.rythmeNormal;
   expect(normal).toBeDefined();
   const rythmes = (await rythmesDites(page)).slice(memoire.paroles);

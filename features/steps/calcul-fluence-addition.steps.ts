@@ -257,7 +257,8 @@ export async function taperLesChiffres(page: Page, chiffres: string, force = fal
 }
 
 export async function valider(page: Page, force = false): Promise<void> {
-  await clavier(page).getByRole("button", { name: "Valider", exact: true }).click({ force });
+  // « Valider » est dans la barre d'action de la séance (#183), plus dans le clavier.
+  await page.getByRole("button", { name: "Valider", exact: true }).click({ force });
 }
 
 export async function repondreAuNombre(page: Page, nombre: number | string): Promise<void> {
@@ -389,7 +390,7 @@ Then(/^Tom voit le clavier de cristaux, avec les chiffres de 0 à 9, « Effacer 
   await expect(clavier(page)).toBeVisible();
   await expect(page.getByTestId("cristal")).toHaveText(["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]);
   await expect(clavier(page).getByRole("button", { name: "Effacer", exact: true })).toBeVisible();
-  await expect(clavier(page).getByRole("button", { name: "Valider", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Valider", exact: true })).toBeVisible();
 });
 
 Then(/^aucun choix n'est proposé$/, async ({ page }) => {
@@ -583,7 +584,7 @@ Then(/^Noisette dit seulement un encouragement$/, async ({ page }) => {
 // Règle 4 : la fluence
 // =====================================================================================================
 
-function dureeDeLaFluence(page: Page): number {
+export function dureeDeLaFluence(page: Page): number {
   const lecon = leconDeLExercice(page, partie20(page).fluence ?? "");
   const exercice = lecon.exercices.find((candidat) => candidat.titre === partie20(page).fluence);
   return Number(exercice?.duree ?? 60);
@@ -1029,7 +1030,8 @@ Then(/^chacune des ([0-9]+) additions a une retenue dans la colonne des unités$
 // =====================================================================================================
 
 Then(/^chaque touche du clavier de cristaux mesure au moins 44 px de haut et de large$/, async ({ page }) => {
-  const touches = await clavier(page).getByRole("button").all();
+  // « Valider » est dans la barre d'action (#183), les onze autres touches dans le clavier.
+  const touches = [...(await clavier(page).getByRole("button").all()), page.getByRole("button", { name: "Valider", exact: true })];
   expect(touches).toHaveLength(12);
   for (const touche of touches) {
     const boite = await touche.boundingBox();
