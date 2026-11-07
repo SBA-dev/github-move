@@ -28,6 +28,8 @@ function uneLecture(options: { muet?: boolean } = {}) {
     etatInitial: options.muet ? "muet" : "son",
     onVoixBloquee: () => {},
     onFinDeLaVoixBloquee: () => {},
+    onVoixAbsente: () => {},
+    onFinDeLaVoixAbsente: () => {},
   });
   return { lecture, lecteur };
 }

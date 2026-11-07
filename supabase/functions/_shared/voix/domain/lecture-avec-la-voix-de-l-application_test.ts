@@ -36,6 +36,8 @@ function uneLectureSansVoixFrancaiseSurLAppareil() {
     etatInitial: "son",
     onVoixBloquee: () => {},
     onFinDeLaVoixBloquee: () => {},
+    onVoixAbsente: () => {},
+    onFinDeLaVoixAbsente: () => {},
   });
   return { lecture, lecteur, lecteurDeSonsDePhrases };
 }
@@ -76,6 +78,8 @@ Deno.test("un son de phrase qui ne peut pas être joué laisse la voix de l'appa
     etatInitial: "son",
     onVoixBloquee: () => voixBloquees++,
     onFinDeLaVoixBloquee: () => {},
+    onVoixAbsente: () => {},
+    onFinDeLaVoixAbsente: () => {},
   });
 
   const parole = await lecture.lire("Écoute bien.");
@@ -87,5 +91,82 @@ Deno.test("un son de phrase qui ne peut pas être joué laisse la voix de l'appa
       parole,
     },
     { phrasesLuesParLAppareil: [["Écoute bien."]], voixBloquees: 0, parole: { entendue: true } },
+  );
+});
+
+function uneLectureSansAucuneVoixPourLesPhrasesSansSon() {
+  const lecteur = new LecteurEnMemoire();
+  const lecteurDeSonsDePhrases = new LecteurDeSonsDePhrasesEnMemoire();
+  const evenements: string[] = [];
+  const lecture = new LectureAVoixHaute({
+    lecteur,
+    lecteurDEffetsSonores: new LecteurDEffetsSonoresEnMemoire(),
+    lecteurDeSonsDePhrases,
+    repertoireDesSons: repertoireDesSonsEnMemoire([SON_DE_ECOUTE_BIEN]),
+    voixDeLAppareil: voixEnMemoire([]),
+    choixDeVoix: new ChoixDeVoixEnMemoire(),
+    hasard: hasardFixe(0.5),
+    caractereDuPersonnageGuide: () => CARACTERE_NOISETTE,
+    etatInitial: "son",
+    onVoixBloquee: () => {},
+    onFinDeLaVoixBloquee: () => {},
+    onVoixAbsente: () => evenements.push("voixAbsente"),
+    onFinDeLaVoixAbsente: () => evenements.push("finDeLaVoixAbsente"),
+  });
+  return { lecture, lecteur, lecteurDeSonsDePhrases, evenements };
+}
+
+Deno.test("sans son de phrase et sans voix de l'appareil, la phrase n'est pas dite et la voix absente est signalée", async () => {
+  const { lecture, lecteur, lecteurDeSonsDePhrases, evenements } = uneLectureSansAucuneVoixPourLesPhrasesSansSon();
+
+  const parole = await lecture.lire("Bonjour.");
+
+  assertEquals(
+    {
+      sonsJoues: lecteurDeSonsDePhrases.sonsJoues,
+      lecturesDeLAppareil: lecteur.lectures,
+      evenements,
+      parole,
+    },
+    { sonsJoues: [], lecturesDeLAppareil: [], evenements: ["voixAbsente"], parole: { entendue: false } },
+  );
+});
+
+Deno.test("la voix absente n'est signalée qu'une seule fois, même si deux phrases de suite ne sont pas dites", async () => {
+  const { lecture, evenements } = uneLectureSansAucuneVoixPourLesPhrasesSansSon();
+
+  await lecture.lire("Bonjour.");
+  await lecture.lire("Bravo.");
+
+  assertEquals(evenements, ["voixAbsente"]);
+});
+
+Deno.test("la fin de la voix absente est signalée quand une phrase est de nouveau entendue", async () => {
+  const { lecture, evenements } = uneLectureSansAucuneVoixPourLesPhrasesSansSon();
+  await lecture.lire("Bonjour.");
+
+  await lecture.lire("Écoute bien.");
+
+  assertEquals(evenements, ["voixAbsente", "finDeLaVoixAbsente"]);
+});
+
+Deno.test("une parole dont une phrase a son son et l'autre aucune voix joue le son mais n'est pas entendue", async () => {
+  const { lecture, lecteurDeSonsDePhrases, lecteur, evenements } = uneLectureSansAucuneVoixPourLesPhrasesSansSon();
+
+  const parole = await lecture.lire("Écoute bien. Bonjour.");
+
+  assertEquals(
+    {
+      sonsJoues: lecteurDeSonsDePhrases.sonsJoues.map((joue) => joue.son),
+      lecturesDeLAppareil: lecteur.lectures,
+      evenements,
+      parole,
+    },
+    {
+      sonsJoues: [SON_DE_ECOUTE_BIEN],
+      lecturesDeLAppareil: [],
+      evenements: ["voixAbsente"],
+      parole: { entendue: false },
+    },
   );
 });
