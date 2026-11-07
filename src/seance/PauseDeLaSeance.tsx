@@ -10,12 +10,20 @@ type Props = {
 
 const ELEMENTS_ATTEIGNABLES = "button:not([disabled])";
 
+/** Le reste de la séance (ses autres éléments et la barre d'action posée à côté) : inerte tant que la pause est ouverte. */
+function lesElementsDerriereLaPause(voile: HTMLElement | null): readonly Element[] {
+  const seance = voile?.parentElement;
+  const autour = [voile, seance].flatMap((element) => Array.from(element?.parentElement?.children ?? []));
+  return autour.filter((element) => element !== voile && element !== seance);
+}
+
 /**
  * La pause de la séance : une feuille qui laisse le choix entre reprendre et revenir à la leçon, sans reproche ni compte à rebours.
  * Tant qu'elle est ouverte la voix se tait ; à la reprise rien n'est relu (« Réécouter » est là pour ça).
  */
 export function PauseDeLaSeance({ voix, onContinuer, onRetourALaLecon }: Props) {
   const modeDys = useModeDys();
+  const voile = useRef<HTMLDivElement>(null);
   const fenetre = useRef<HTMLDivElement>(null);
   const jeContinue = useRef<HTMLButtonElement>(null);
   const { suspendre, reprendre } = voix;
@@ -27,8 +35,11 @@ export function PauseDeLaSeance({ voix, onContinuer, onRetourALaLecon }: Props) 
 
   useEffect(() => {
     const avant = document.activeElement;
+    const reste = lesElementsDerriereLaPause(voile.current);
+    reste.forEach((element) => element.setAttribute("inert", ""));
     jeContinue.current?.focus();
     return () => {
+      reste.forEach((element) => element.removeAttribute("inert"));
       if (avant instanceof HTMLElement && avant.isConnected) avant.focus();
     };
   }, []);
@@ -55,7 +66,7 @@ export function PauseDeLaSeance({ voix, onContinuer, onRetourALaLecon }: Props) 
   };
 
   return (
-    <div className="voile-de-la-pause" data-mode-dys={modeDys ? "true" : undefined}>
+    <div ref={voile} className="voile-de-la-pause" data-mode-dys={modeDys ? "true" : undefined}>
       <div
         ref={fenetre}
         className="pause-de-la-seance"

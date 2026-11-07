@@ -46,7 +46,10 @@ export function BulleDeLaSeance(
           cachee={!personnageGuideVisible}
         />
         <button type="button" className="reecouter" aria-label="Réécouter" aria-disabled={reecouterImpossible ? true : undefined} onClick={onReecouter}>
-          <span aria-hidden="true">🔊</span>
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M20 12a8 8 0 1 1-2.5-5.8" />
+            <path d="M20 3v5h-5" />
+          </svg>
         </button>
       </div>
     </div>
