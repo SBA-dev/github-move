@@ -161,7 +161,7 @@ Fonctionnalité: Défi de la partie du parcours
       Et que Léa a commencé le défi 1 de maths
       Quand Léa répond au défi, <déroulé>
       Alors la fin du défi annonce « Défi relevé ! »
-      Et Léa entend l'effet sonore « grande victoire », puis Noisette dit « Bravo Léa ! Tu as relevé le défi 1 ! »
+      Et Léa entend la musique de la célébration de Noisette, puis Noisette dit « Bravo Léa ! Tu as relevé le défi 1 ! »
       Et la fin du défi propose « Mon parcours » et « Accueil »
       Mais la fin du défi ne propose pas « Leçon suivante »
 

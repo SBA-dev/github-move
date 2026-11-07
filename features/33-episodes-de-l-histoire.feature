@@ -178,7 +178,7 @@ Fonctionnalité: Un épisode de l'histoire des Savanturiers s'ouvre à chaque s�
       Et que Léa joue seulement l'exercice « Calcul rapide : les doubles »
       Quand le temps de la fluence est écoulé avec 12 calculs réussis
       Alors la fin de la séance annonce « Nouvel épisode ! » avec « La carte froissée »
-      Et Noisette termine les paroles de fin de fluence par « Un nouvel épisode de l'histoire t'attend ! »
+      Et Noisette termine les paroles de fin de fluence par « Un nouvel épisode de l'histoire t'attend ! Quête du jour accomplie ! Bravo Léa ! »
 
     # Décisions 33.12 et 33.7
     Scénario: À la fin d'une séance de révision, la fin annonce aussi le nouvel épisode

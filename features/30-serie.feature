@@ -160,7 +160,7 @@ Fonctionnalité: Série : jours d'affilée avec au moins une séance
       Étant donné que Paul a réglé « tout lire à voix haute » sur « oui » pour Léa
       Et que Léa a terminé une séance chacun de ces jours : aujourd'hui, hier et il y a 2 jours
       Quand Léa choisit son profil enfant dans « Qui joue ? »
-      Alors Léa entend Noisette lire « Bonjour Léa ! 3 jours d'affilée, bravo ! »
+      Alors Léa entend Noisette lire « Bonjour Léa ! 3 jours d'affilée, bravo ! Ta quête du jour est accomplie. »
       Et Léa entend la salutation une seule fois
 
     # Réponse 30.14

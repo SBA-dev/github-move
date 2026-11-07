@@ -523,6 +523,16 @@ Then(
 );
 
 Then(
+  new RegExp(
+    `^Léa entend la musique de la célébration d(?:e |')(${PERSONNAGES}), puis \\1 dit « (Bravo Léa ! Tu as relevé le grand défi [^«»]+ !) »$`,
+  ),
+  async ({ page }, personnage: string, parole: string) => {
+    await effetPuisParole(page, [musiqueDe(personnage)], "felicitation", true);
+    await expect(bulle(page)).toHaveText(parole);
+  },
+);
+
+Then(
   /^Léa entend la musique de la célébration de Noisette puis l'effet sonore « ([^«»]+) », puis Noisette dit sa phrase de fin$/,
   async ({ page }, effet: string) => {
     await effetPuisParole(page, [musiqueDe("Noisette"), effet], "felicitation", true);

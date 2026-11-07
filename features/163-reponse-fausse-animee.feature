@@ -388,7 +388,8 @@ Fonctionnalité: Une réponse fausse animée par le personnage guide
       Et les bulles écrites de la scène de réponse fausse s'affichent en mode dys
 
     # 163.21 A : sous 100 px (80 px dans la boîte à jetons), la bulle écrite « oh ! » serait illisible
-    @livraison-163a
+    # Sur tablette, le dessin de la boîte à jetons dépasse ce seuil : le scénario se joue sur le seul téléphone (Mep. 5).
+    @livraison-163a @telephone-seulement
     Scénario: Dans la boîte à jetons, où le dessin de Coach Léo est petit, la scène de réponse fausse se joue sans bulle écrite
       Étant donné que Léa joue la boîte à jetons « 4 + 3 » de la leçon « La boîte à jetons : ajouter »
       Quand Léa répond « 8 »
