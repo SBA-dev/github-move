@@ -44,3 +44,30 @@ Deno.test("le texte est découpé en phrases après . ! ? … ou :", () => {
     ["Bravo !", "Encore une.", "Prêt ?", "Voici…", "Écoute :", "vas-y"],
   );
 });
+
+const estLisible = (phrase: string) => /[\p{L}\p{N}]/u.test(phrase);
+
+Deno.test("une ponctuation restée seule après un guillemet fermant est rattachée à la phrase qui la précède", () => {
+  assertEquals(
+    texteALire("Comment lire « Oh non ! » ?")?.phrases,
+    ["Comment lire Oh non ! ?"],
+  );
+});
+
+Deno.test("une ponctuation restée seule en tête de texte est rattachée à la phrase qui la suit", () => {
+  assertEquals(texteALire("… = 3 + 3 + 2")?.phrases, ["… égale 3 plus 3 plus 2"]);
+});
+
+Deno.test("aucune phrase des textes réels qui produisaient de la ponctuation seule n'est sans lettre ni chiffre", () => {
+  const textes = [
+    "Comment lire « Nous allons y arriver… » ?",
+    "Le verbe s'accorde avec son sujet. Pour le trouver, je demande : qui est-ce qui… ?",
+    "« Take your pencil ! » : prends ton crayon. Écoute bien les objets de la classe.",
+    "… + 25 = 60",
+  ];
+
+  const phrases = textes.flatMap((texte) => texteALire(texte)?.phrases ?? []);
+
+  assertEquals(phrases.filter((phrase) => !estLisible(phrase)), []);
+  assertEquals(phrases.length > 0, true);
+});

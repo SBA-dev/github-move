@@ -118,3 +118,22 @@ Deno.test("le mot à écouter en langue étrangère n'est pas inventorié, mais 
   assertEquals(phrases.includes("Écoute bien."), true);
   assertEquals(phrases.includes("Que veut dire ce mot ?"), true);
 });
+
+Deno.test("l'inventaire ne contient aucune phrase sans lettre ni chiffre", () => {
+  // Arrange
+  const lecon = {
+    ...leconDeLangue,
+    exercices: [{
+      type: "bulles",
+      titre: "Les émotions",
+      consigne: "Choisis la bonne réponse.",
+      questions: [{ question: "Comment lire « Oh non ! » ?", choix: ["triste", "joyeux"], reponse: "triste" }],
+    }],
+  };
+
+  // Act
+  const inventaire = inventaireDesPhrases([lecon]);
+
+  // Assert
+  assertEquals(inventaire.phrases.filter((p) => !/[\p{L}\p{N}]/u.test(p.phrase)), []);
+});
