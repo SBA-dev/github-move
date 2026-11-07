@@ -29,3 +29,10 @@ Story seule, lancée par `/feature 182` le 2026-11-07. Base : `main` (`5d690d3`)
 
 - Présentée au PO : modèle, règles, scénarios, questions 182.1 à 182.28 avec recommandations. En attente de sa réponse.
 - PO, 2026-11-07, mot pour mot : « Ok », en réponse à « Répondez « reco tout » ou corrigez par numéro ». Toutes les recommandations 182.1 à 182.28 sont retenues (182.26 : libellé « voix de l'application »). Validation n°1 accordée.
+
+## Étape 3 : TDD, bloc A (Voix, domaine) — 2026-11-07
+
+- Décisions du PO reportées : critères `cfa09b98` + exemple de #15 retiré `1e9875b3` (po-acceptance) ; modèle et décision 0043 `1e25d166` (domain-modeler) ; glossaire en cours.
+- Comportements du bloc A : A1 clé de la phrase, A2 instants des mots, A3 plan de lecture, A4 lire un son de phrase, A5 repli `SonIllisible`, A6 `VoixAbsente`, A7 `VoixBloquee` du lecteur de sons, A8 arrêts, A9 lecture lente et `onMot`, A10 voix imposée et essai de voix.
+- A1 : RED `9fa2fa2a` (échec vérifié : module absent), GREEN `60598f7b`, suite Deno verte (2955). Forme décomposée de « Écoute » vérifiée présente dans le test (signalement de l'implementer levé).
+- A2 : RED `511cd2b6` (échec vérifié). GREEN en cours, en parallèle du RED de A3.
