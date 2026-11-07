@@ -28,3 +28,4 @@ Story seule, lancée par `/feature 182` le 2026-11-07. Base : `main` (`5d690d3`)
 ## ⛔ Validation n°1 (2026-11-07)
 
 - Présentée au PO : modèle, règles, scénarios, questions 182.1 à 182.28 avec recommandations. En attente de sa réponse.
+- PO, 2026-11-07, mot pour mot : « Ok », en réponse à « Répondez « reco tout » ou corrigez par numéro ». Toutes les recommandations 182.1 à 182.28 sont retenues (182.26 : libellé « voix de l'application »). Validation n°1 accordée.
