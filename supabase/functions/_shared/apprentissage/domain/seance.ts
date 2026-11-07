@@ -182,6 +182,10 @@ export class Seance {
     return this.indexDeLExercice >= this.exercices.length;
   }
 
+  aRecuUneReponse(): boolean {
+    return this.questions().some((question) => question.reponses().length > 0);
+  }
+
   demarrerLaFluence(maintenant: Date): void {
     this.exerciceDeLaQuestionEnCours().demarrerLaFluence(maintenant);
   }
