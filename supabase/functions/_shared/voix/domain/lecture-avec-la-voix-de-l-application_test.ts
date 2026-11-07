@@ -262,6 +262,16 @@ Deno.test("une nouvelle lecture arrête le son de phrase en cours avant de comme
   await Promise.all([parole, nouvelleParole]);
 });
 
+Deno.test("toucher un bouton n'arrête pas le son de phrase en cours", async () => {
+  const { lecture, lecteurDeSonsDePhrases, parole } = uneLectureAvecUnSonDePhraseEnCours();
+
+  lecture.toucherUnBouton();
+
+  assertEquals(lecteurDeSonsDePhrases.nombreDArrets, 0);
+  lecteurDeSonsDePhrases.terminerLeSonEnCours();
+  await parole;
+});
+
 Deno.test("passer en muet fait disparaître le message de voix absente", async () => {
   const { lecture, evenements } = uneLectureSansAucuneVoixPourLesPhrasesSansSon();
   await lecture.lire("Bonjour.");
