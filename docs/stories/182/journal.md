@@ -36,3 +36,9 @@ Story seule, lancée par `/feature 182` le 2026-11-07. Base : `main` (`5d690d3`)
 - Comportements du bloc A : A1 clé de la phrase, A2 instants des mots, A3 plan de lecture, A4 lire un son de phrase, A5 repli `SonIllisible`, A6 `VoixAbsente`, A7 `VoixBloquee` du lecteur de sons, A8 arrêts, A9 lecture lente et `onMot`, A10 voix imposée et essai de voix.
 - A1 : RED `9fa2fa2a` (échec vérifié : module absent), GREEN `60598f7b`, suite Deno verte (2955). Forme décomposée de « Écoute » vérifiée présente dans le test (signalement de l'implementer levé).
 - A2 : RED `511cd2b6` (échec vérifié). GREEN en cours, en parallèle du RED de A3.
+- A2 : GREEN `a016b17f`. A3 : RED `b9749b1d` (vérifié), GREEN `5dfa9fd1` (`estFrancais` extrait dans `langue.ts`). A4 : RED `66cd7bfa` (vérifié ; 4 fichiers de test existants reçoivent les 2 nouvelles dépendances neutres, sans changer d'assertion), GREEN `273f1ab7` (2969 tests Deno verts). `tsc` cassé par les dépendances requises : câblage des deux adaptateurs du navigateur demandé tout de suite (pas de faux dans le front).
+- Dette notée par l'implementer de A4 : `voixImposee: false` en dur (A10), `onMot` des lectures mixtes (A9), erreurs du lecteur de sons (A5, A7).
+
+## Étape 3 : TDD, bloc C (pipeline) — 2026-11-07, en parallèle du bloc A
+
+- C2 table de prononciation : RED `6f4ab376` (vérifié), GREEN `50e2b68c` (pytest 1591 verts). C3 fabrication : RED en cours.
