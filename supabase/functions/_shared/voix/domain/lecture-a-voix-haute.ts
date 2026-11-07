@@ -6,6 +6,7 @@ import type { EffetSonore } from "./effet-sonore.ts";
 import type { Hasard } from "./hasard.ts";
 import type { LecteurAVoixHaute } from "./lecteur-a-voix-haute.ts";
 import type { LecteurDEffetsSonores } from "./lecteur-d-effets-sonores.ts";
+import { estFrancais } from "./langue.ts";
 import { phraseDEssai } from "./phrase-d-essai.ts";
 import { reglerPhrases } from "./reglage-de-phrase.ts";
 import { rangAffichePourChaqueMotPrononce } from "./mots-de-la-consigne.ts";
@@ -44,10 +45,6 @@ type OptionsDeLecture = {
   onMot?: (rang: number) => void;
   onFin?: () => void;
 };
-
-function estFrancais(langue: string): boolean {
-  return /^fr/i.test(langue);
-}
 
 function debutsDesMots(phrase: string): number[] {
   return [...phrase.matchAll(/\S+/g)].map((mot) => mot.index);

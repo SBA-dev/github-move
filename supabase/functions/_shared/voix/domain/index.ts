@@ -32,3 +32,7 @@ export type { EffetSonore } from "./effet-sonore.ts";
 export type { LecteurDEffetsSonores } from "./lecteur-d-effets-sonores.ts";
 export { CleDeLaPhrase } from "./cle-de-la-phrase.ts";
 export { InstantsDesMots } from "./instants-des-mots.ts";
+export { planDeLecture } from "./plan-de-lecture.ts";
+export type { DemandeDePlanDeLecture, EtapeDeLecture, PlanDeLecture } from "./plan-de-lecture.ts";
+export type { RepertoireDesSons } from "./repertoire-des-sons.ts";
+export type { SonDePhrase } from "./son-de-phrase.ts";
