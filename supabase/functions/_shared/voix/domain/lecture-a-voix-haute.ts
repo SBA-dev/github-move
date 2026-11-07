@@ -35,6 +35,8 @@ export type DependancesDeLectureAVoixHaute = {
   readonly etatInitial: EtatDuSon;
   readonly onVoixBloquee: () => void;
   readonly onFinDeLaVoixBloquee: () => void;
+  readonly onVoixAbsente: () => void;
+  readonly onFinDeLaVoixAbsente: () => void;
 };
 
 export type ParoleEntendue = { readonly entendue: boolean };
@@ -71,7 +73,8 @@ function rangDesMots(
 
 type GroupeDeLecture =
   | Extract<EtapeDeLecture, { type: "voixDeLApplication" }> & { readonly reglage: ReglageDePhrase }
-  | { readonly type: "voixDeLAppareil"; readonly phrases: ReglageDePhrase[] };
+  | { readonly type: "voixDeLAppareil"; readonly phrases: ReglageDePhrase[] }
+  | { readonly type: "aucune" };
 
 function grouperLesEtapes(etapes: readonly EtapeDeLecture[], reglages: readonly ReglageDePhrase[]): GroupeDeLecture[] {
   const groupes: GroupeDeLecture[] = [];
@@ -79,7 +82,8 @@ function grouperLesEtapes(etapes: readonly EtapeDeLecture[], reglages: readonly 
     const reglage = reglages[i];
     const dernier = groupes.at(-1);
     if (!reglage) return;
-    if (etape.type === "voixDeLApplication") groupes.push({ ...etape, reglage });
+    if (etape.type === "aucune") groupes.push({ type: "aucune" });
+    else if (etape.type === "voixDeLApplication") groupes.push({ ...etape, reglage });
     else if (dernier?.type === "voixDeLAppareil") dernier.phrases.push(reglage);
     else groupes.push({ type: "voixDeLAppareil", phrases: [reglage] });
   });
@@ -96,6 +100,7 @@ export class LectureAVoixHaute {
   private versionDuSonDuBouton = 0;
   private coupuresDeLaVoix = 0;
   private voixBloqueeSignalee = false;
+  private voixAbsenteSignalee = false;
   private parolesEnCours = 0;
 
   constructor(private readonly dependances: DependancesDeLectureAVoixHaute) {
@@ -142,7 +147,12 @@ export class LectureAVoixHaute {
           ...(options.onMot &&
             { onMot: rangDesMots(texte.phrases, rangAffichePourChaqueMotPrononce(brut), options.onMot) }),
         });
+      let phraseNonDite = false;
       for (const groupe of grouperLesEtapes(plan.etapes, reglages)) {
+        if (groupe.type === "aucune") {
+          phraseNonDite = true;
+          continue;
+        }
         if (groupe.type === "voixDeLAppareil") {
           await lireParLAppareil(groupe.phrases);
           continue;
@@ -155,6 +165,11 @@ export class LectureAVoixHaute {
         }
       }
       this.signalerLaFinDeLaVoixBloquee();
+      if (phraseNonDite) {
+        this.signalerLaVoixAbsente();
+        return PAROLE_NON_ENTENDUE;
+      }
+      this.signalerLaFinDeLaVoixAbsente();
       return PAROLE_ENTENDUE;
     } catch (erreur) {
       this.absorber(erreur);
@@ -281,6 +296,18 @@ export class LectureAVoixHaute {
     if (!this.voixBloqueeSignalee) return;
     this.voixBloqueeSignalee = false;
     this.dependances.onFinDeLaVoixBloquee();
+  }
+
+  private signalerLaVoixAbsente(): void {
+    if (this.voixAbsenteSignalee) return;
+    this.voixAbsenteSignalee = true;
+    this.dependances.onVoixAbsente();
+  }
+
+  private signalerLaFinDeLaVoixAbsente(): void {
+    if (!this.voixAbsenteSignalee) return;
+    this.voixAbsenteSignalee = false;
+    this.dependances.onFinDeLaVoixAbsente();
   }
 
   private absorber(erreur: unknown): void {
