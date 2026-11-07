@@ -213,3 +213,60 @@ Deno.test("la fin de la voix bloquée est signalée quand une phrase est de nouv
 
   assertEquals(evenements, ["voixBloquee", "finDeLaVoixBloquee"]);
 });
+
+function uneLectureAvecUnSonDePhraseEnCours() {
+  const { lecture, lecteurDeSonsDePhrases } = uneLectureSansVoixFrancaiseSurLAppareil();
+  lecteurDeSonsDePhrases.jouerSansTerminerAutomatiquement();
+  const parole = lecture.lire("Écoute bien.");
+  return { lecture, lecteurDeSonsDePhrases, parole };
+}
+
+Deno.test("couper la voix arrête le son de phrase en cours", async () => {
+  const { lecture, lecteurDeSonsDePhrases, parole } = uneLectureAvecUnSonDePhraseEnCours();
+
+  lecture.couperLaVoix();
+
+  assertEquals(lecteurDeSonsDePhrases.nombreDArrets, 1);
+  lecteurDeSonsDePhrases.terminerLeSonEnCours();
+  await parole;
+});
+
+Deno.test("passer en muet arrête le son de phrase en cours", async () => {
+  const { lecture, lecteurDeSonsDePhrases, parole } = uneLectureAvecUnSonDePhraseEnCours();
+
+  lecture.passerEnMuet();
+
+  assertEquals(lecteurDeSonsDePhrases.nombreDArrets, 1);
+  lecteurDeSonsDePhrases.terminerLeSonEnCours();
+  await parole;
+});
+
+Deno.test("suspendre la voix arrête le son de phrase en cours", async () => {
+  const { lecture, lecteurDeSonsDePhrases, parole } = uneLectureAvecUnSonDePhraseEnCours();
+
+  lecture.suspendre();
+
+  assertEquals(lecteurDeSonsDePhrases.nombreDArrets, 1);
+  lecteurDeSonsDePhrases.terminerLeSonEnCours();
+  await parole;
+});
+
+Deno.test("une nouvelle lecture arrête le son de phrase en cours avant de commencer", async () => {
+  const { lecture, lecteurDeSonsDePhrases, parole } = uneLectureAvecUnSonDePhraseEnCours();
+
+  const nouvelleParole = lecture.lire("Écoute bien.");
+
+  assertEquals(lecteurDeSonsDePhrases.appels, ["jouer", "arreter", "jouer"]);
+  lecteurDeSonsDePhrases.terminerLeSonEnCours();
+  lecteurDeSonsDePhrases.terminerLeSonEnCours();
+  await Promise.all([parole, nouvelleParole]);
+});
+
+Deno.test("passer en muet fait disparaître le message de voix absente", async () => {
+  const { lecture, evenements } = uneLectureSansAucuneVoixPourLesPhrasesSansSon();
+  await lecture.lire("Bonjour.");
+
+  lecture.passerEnMuet();
+
+  assertEquals(evenements, ["voixAbsente", "finDeLaVoixAbsente"]);
+});
