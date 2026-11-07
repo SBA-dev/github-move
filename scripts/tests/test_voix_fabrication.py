@@ -104,6 +104,24 @@ def test_le_repertoire_liste_les_sons_de_chaque_lecon_et_est_ecrit_en_json(tmp_p
     }
 
 
+def test_les_sons_d_une_lecon_sont_listes_une_seule_fois_dans_l_ordre_de_premiere_apparition(tmp_path):
+    inventaire = inventaire_de(
+        "Bravo !",
+        "Vas-y !",
+        "Va-z-i !",
+        "Bien joué !",
+        lecons={"cp-lecture-01": ["bravo !", "vas-y !", "bravo !", "va-z-i !", "bien joué !"]},
+    )
+
+    repertoire = fabriquer(inventaire, tmp_path, FauxPiper())
+
+    assert repertoire["lecons"]["cp-lecture-01"] == [
+        fabrication.nom_du_fichier(prononciation_corrigee("Bravo !"), VOIX, DEBIT),
+        fabrication.nom_du_fichier(prononciation_corrigee("Vas-y !"), VOIX, DEBIT),
+        fabrication.nom_du_fichier(prononciation_corrigee("Bien joué !"), VOIX, DEBIT),
+    ]
+
+
 def test_un_fichier_deja_fabrique_n_est_pas_refabrique_et_garde_sa_duree(tmp_path):
     inventaire = inventaire_de("Bravo !")
     fabriquer(inventaire, tmp_path, FauxPiper(duree_ms=1234))
