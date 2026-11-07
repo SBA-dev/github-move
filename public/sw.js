@@ -137,17 +137,21 @@ async function ecrireLeRegistre(cache, registre) {
   await cache.put(REGISTRE_DE_LA_RESERVE, new Response(JSON.stringify(registre), { headers: { "content-type": "application/json" } }));
 }
 
+async function tailleDe(reponse) {
+  return (await reponse.clone().arrayBuffer()).byteLength;
+}
+
 // Le registre garde l'ordre de mise en réserve : au-delà du budget, les sons les plus anciens partent d'abord.
-function garderEnReserve(chemin, reponse, protegees = []) {
+// Un lot (une leçon) est inscrit en une seule écriture du registre, et ses sons ne sont jamais retirés pour lui faire de la place.
+function inscrireEnReserve(lot) {
   return enFileDeLaReserve(async () => {
     const cache = await caches.open(NOM_DU_CACHE_DES_VOIX);
-    const taille = (await reponse.clone().arrayBuffer()).byteLength;
-    await cache.put(chemin, reponse);
-    const registre = (await lireLeRegistre(cache)).filter((son) => son.chemin !== chemin);
-    registre.push({ chemin, taille });
+    const chemins = lot.map((son) => son.chemin);
+    const registre = (await lireLeRegistre(cache)).filter((son) => !chemins.includes(son.chemin));
+    registre.push(...lot);
     let total = registre.reduce((somme, son) => somme + son.taille, 0);
     while (total > BUDGET_DE_LA_RESERVE_EN_OCTETS) {
-      const index = registre.findIndex((son) => son.chemin !== chemin && !protegees.includes(son.chemin));
+      const index = registre.findIndex((son) => !chemins.includes(son.chemin));
       if (index === -1) break;
       const [retire] = registre.splice(index, 1);
       total -= retire.taille;
@@ -157,16 +161,33 @@ function garderEnReserve(chemin, reponse, protegees = []) {
   });
 }
 
+async function garderEnReserve(chemin, reponse) {
+  const cache = await caches.open(NOM_DU_CACHE_DES_VOIX);
+  const taille = await tailleDe(reponse);
+  await cache.put(chemin, reponse);
+  await inscrireEnReserve([{ chemin, taille }]);
+}
+
 async function mettreEnReserve(chemins) {
   const cache = await caches.open(NOM_DU_CACHE_DES_VOIX);
+  const lot = [];
   for (const chemin of chemins) {
     try {
-      const reponse = (await cache.match(chemin)) ?? (await fetch(chemin));
-      if (estUnSon(reponse)) await garderEnReserve(chemin, reponse.clone(), chemins);
+      const enCache = await cache.match(chemin);
+      if (enCache) {
+        lot.push({ chemin, taille: await tailleDe(enCache) });
+        continue;
+      }
+      const reponse = await fetch(chemin);
+      if (!estUnSon(reponse)) continue;
+      const taille = await tailleDe(reponse);
+      await cache.put(chemin, reponse);
+      lot.push({ chemin, taille });
     } catch {
       // Sans réseau, la réserve se fera à la prochaine occasion : la lecture se replie sur la voix de l'appareil.
     }
   }
+  if (lot.length > 0) await inscrireEnReserve(lot);
 }
 
 // Safari ne lit un son que si le serveur répond aux requêtes « Range » par un 206 : on le fait depuis le cache.
