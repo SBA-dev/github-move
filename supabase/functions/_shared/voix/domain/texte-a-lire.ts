@@ -23,5 +23,23 @@ export function motsPrononces(textePrononceOuPhrase: string): string[] {
 export function texteALire(brut: string): TexteALire | undefined {
   const texte = textePrononce(brut);
   if (!/[\p{L}\p{N}]/u.test(texte)) return undefined;
-  return { texte, phrases: texte.split(/(?<=[.!?…:])\s+/) };
+  return { texte, phrases: rattacherLaPonctuationSeule(texte.split(/(?<=[.!?…:])\s+/)) };
+}
+
+const contientUneLettreOuUnChiffre = (phrase: string) => /[\p{L}\p{N}]/u.test(phrase);
+
+function rattacherLaPonctuationSeule(phrases: readonly string[]): string[] {
+  const rattachees: string[] = [];
+  let enTete = "";
+  for (const phrase of phrases) {
+    if (contientUneLettreOuUnChiffre(phrase)) {
+      rattachees.push(enTete ? `${enTete} ${phrase}` : phrase);
+      enTete = "";
+    } else if (rattachees.length > 0) {
+      rattachees[rattachees.length - 1] += ` ${phrase}`;
+    } else {
+      enTete = phrase;
+    }
+  }
+  return rattachees;
 }
