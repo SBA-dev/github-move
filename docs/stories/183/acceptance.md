@@ -1,12 +1,11 @@
 # Critères d'acceptance : issue #183, une barre du haut et une barre d'action en bas pour laisser la place à la leçon
 
 Scénarios : `features/183-barres-de-la-seance.feature` (`@issue-183 @wip`).
-Modèle : `docs/stories/183/domain-model.md` (règle `Seance.aRecuUneReponse()`, questions 183.1 à 183.9).
-État : **à cadrer**. Les recommandations du modèle pour 183.1 à 183.9 sont prises comme hypothèses de travail ;
-les scénarios qui en dépendent, ou qui dépendent des questions ajoutées ici (183.10 à 183.15) et de la question 3
-de l'issue, sont tagués `@a-valider`.
+Modèle : `docs/stories/183/domain-model.md` (règle `Seance.aRecuUneReponse()`, décisions 183.1 à 183.9).
+État : **validé par le PO le 2026-11-07** (« OK ») : toutes les recommandations sont retenues (I1 à I3, 183.1 à
+183.15 réponse A). Plus aucun scénario `@a-valider`.
 
-13 règles, 48 scénarios (dont 3 plans : 7 exemples en tout), 16 scénarios et 1 bloc d'exemples tagués `@a-valider`.
+13 règles, 48 scénarios (dont 3 plans : 7 exemples en tout).
 
 ## Objectif
 
@@ -35,7 +34,7 @@ reçu une réponse** (`Seance.aRecuUneReponse()`). Le reste est de la présentat
 | R9 | La pause se lit au lecteur d'écran, en mode dys, au clavier, sans mouvement si l'appareil le demande | fenêtre « On fait une pause ? » annoncée, « Je continue la leçon » en premier ; police Andika et espacements ; apparition sans glisser ; choix de 52 px au moins à 360 px | 4 |
 | R10 | Le personnage guide n'est montré que quand il réagit ; pendant une question, la consigne prend toute la largeur de la bulle | « Touche le bon nombre. » seule dans la bulle ; après « 3 », Noisette avec sa félicitation à la place de la consigne, puis la consigne revient ; après une réponse fausse, Noisette avec son encouragement, puis la même question (183.13) | 3 |
 | R11 | Un seul bouton « Réécouter » : la consigne pendant une question, la parole du personnage guide après une réponse | plus de « Relire la consigne » (183.8) ; « Touche le bon nombre. » relue (183.10) ; sans consigne, la question « poule » relue (183.10) ; après « Je ne sais pas », « Pas de souci, on apprend ensemble ! La bonne réponse brille : touche-la. » redit | 4 |
-| R12 | La barre d'action, en bas, porte le bouton principal et « Je ne sais pas » ; « Valider » seulement si l'exercice en a besoin | « Continuer » pendant une étape de leçon ; bulles : « Je ne sais pas » sans « Valider » ; clavier de cristaux : « Valider » mis en avant, « Je ne sais pas » plus discret à côté, 52 px au moins ; classer : « Je ne sais pas » aussi (question 3 de l'issue) | 4 |
+| R12 | La barre d'action, en bas, porte le bouton principal et « Je ne sais pas » ; « Valider » seulement si l'exercice en a besoin | « Continuer » pendant une étape de leçon ; bulles : « Je ne sais pas » sans « Valider » ; clavier de cristaux : « Valider » mis en avant, « Je ne sais pas » plus discret à côté, 52 px au moins ; classer : « Je ne sais pas » aussi (décision I3) | 4 |
 | R13 | Sur 360 × 740, l'exercice et ses boutons se voient dès le début, sans défiler | bulles « poule » : exercice à 200 px au plus du haut, question, choix et « Je ne sais pas » visibles ; calcul « 12 − 5 » : carte, clavier, « Valider », « Je ne sais pas » visibles ; commandes de 44 px au moins | 3 |
 
 **Droits d'accès** : aucun scénario `@acces`. La story n'ajoute ni table, ni donnée, ni Edge Function : la pause de
@@ -53,7 +52,7 @@ la séance n'est ni enregistrée ni envoyée, et la séance quittée ne l'est pa
 - Les lecteurs d'écran nomment la séance par le titre de la leçon
 
 **R3. Fine barre et compteur de l'avancement de la séance**
-- Au début d'une séance d'un exercice de 6 questions, le compteur affiche « 0 / 6 » et la barre est vide (`@a-valider`, 183.11)
+- Au début d'une séance d'un exercice de 6 questions, le compteur affiche « 0 / 6 » et la barre est vide (décision 183.11)
 - Une question réussie fait passer le compteur à « 1 / 6 » et remplit la barre d'un pas
 - Une réponse fausse ne fait reculer ni avancer le compteur
 - Les étapes de leçon ne font pas avancer le compteur
@@ -61,24 +60,24 @@ la séance n'est ni enregistrée ni envoyée, et la séance quittée ne l'est pa
 - L'avancement de la séance reste lu par les lecteurs d'écran
 
 **R4. Avant la première réponse, Retour ramène à la page de la leçon**
-- Plan : Avant toute réponse, quand <situation>, Retour ramène à la page de la leçon (première étape de leçon en cours ; question pas encore répondue ; dernière étape de leçon lue, `@a-valider`, 183.1)
-- En dictée, des lettres écrites sans finir le mot ne sont pas encore une réponse : Retour ramène à la page de la leçon (`@a-valider`, 183.3)
-- Pendant une fluence, sans aucune réponse, Retour ramène à la page de la leçon (`@a-valider`, 183.4)
+- Plan : Avant toute réponse, quand <situation>, Retour ramène à la page de la leçon (première étape de leçon en cours ; question pas encore répondue ; dernière étape de leçon lue, décision 183.1)
+- En dictée, des lettres écrites sans finir le mot ne sont pas encore une réponse : Retour ramène à la page de la leçon (décision 183.3)
+- Pendant une fluence, sans aucune réponse, Retour ramène à la page de la leçon (décision 183.4)
 
 **R5. Après la première réponse, Retour ouvre la pause de la séance**
 - Plan : Après une réponse <genre>, Retour ouvre la pause de la séance (juste, fausse)
-- Après « Je ne sais pas », Retour ouvre la pause de la séance (`@a-valider`, 183.2)
-- En dictée, après un mot écrit en entier, Retour ouvre la pause de la séance (`@a-valider`, 183.3)
-- Pendant une fluence, après des calculs réussis, Retour ouvre la pause de la séance (`@a-valider`, 183.4)
-- Après la dernière bonne réponse, avant la fin de la séance, Retour ouvre la pause de la séance (`@a-valider`, 183.5)
+- Après « Je ne sais pas », Retour ouvre la pause de la séance (décision 183.2)
+- En dictée, après un mot écrit en entier, Retour ouvre la pause de la séance (décision 183.3)
+- Pendant une fluence, après des calculs réussis, Retour ouvre la pause de la séance (décision 183.4)
+- Après la dernière bonne réponse, avant la fin de la séance, Retour ouvre la pause de la séance (décision 183.5)
 - Une réponse donnée ne s'efface pas : après « Je continue la leçon », Retour rouvre la pause de la séance
-- La pause de la séance ne fait aucun reproche, n'affiche aucun compte à rebours et ne prévient de rien (`@a-valider`, 183.9)
+- La pause de la séance ne fait aucun reproche, n'affiche aucun compte à rebours et ne prévient de rien (décision 183.9)
 
 **R6. « Je continue la leçon »**
 - Après une réponse fausse, « Je continue la leçon » laisse la même question posée
 - « Je continue la leçon » garde les questions réussies
 - La pause de la séance n'ajoute ni n'efface aucune erreur : une erreur avant la pause donne 2 étoiles
-- Pendant une fluence, la pause de la séance n'arrête pas le chrono et garde les calculs réussis (`@a-valider`, 183.6)
+- Pendant une fluence, la pause de la séance n'arrête pas le chrono et garde les calculs réussis (décision 183.6)
 
 **R7. « Retour à la leçon »**
 - « Retour à la leçon » ramène à la page de la leçon, coupe la voix et ne change pas les étoiles
@@ -87,7 +86,7 @@ la séance n'est ni enregistrée ni envoyée, et la séance quittée ne l'est pa
 **R8. Échap et geste retour**
 - Au clavier, Échap ferme la pause de la séance et la même question attend Léa
 - Plan : Le geste retour, quand <situation>, fait comme le bouton Retour (avant réponse → page de la leçon ; après « on » → pause)
-- Quand la pause de la séance est ouverte, le geste retour la ferme et la séance reprend (`@a-valider`, 183.12)
+- Quand la pause de la séance est ouverte, le geste retour la ferme et la séance reprend (décision 183.12)
 
 **R9. Accessibilité de la pause de la séance**
 - La pause de la séance est annoncée aux lecteurs d'écran par son titre, « Je continue la leçon » en premier
@@ -97,20 +96,20 @@ la séance n'est ni enregistrée ni envoyée, et la séance quittée ne l'est pa
 
 **R10. Le personnage guide seulement quand il réagit**
 - Pendant une question, la consigne s'affiche seule dans la bulle, sans le personnage guide à côté
-- Après une bonne réponse, Noisette se montre à la place de la consigne, puis la consigne revient (`@a-valider`, 183.13)
-- Après une réponse fausse, Noisette se montre à la place de la consigne avec son encouragement, puis la même question attend Léa (`@a-valider`, 183.13)
+- Après une bonne réponse, Noisette se montre à la place de la consigne, puis la consigne revient (décision 183.13)
+- Après une réponse fausse, Noisette se montre à la place de la consigne avec son encouragement, puis la même question attend Léa (décision 183.13)
 
 **R11. Un seul « Réécouter »**
-- La séance ne propose qu'un seul « Réécouter », sans « Relire la consigne » (`@a-valider`, 183.8)
-- Pendant une question, « Réécouter » relit la consigne et laisse la question posée (`@a-valider`, 183.10)
-- Dans un exercice sans consigne, « Réécouter » relit la question (`@a-valider`, 183.10)
+- La séance ne propose qu'un seul « Réécouter », sans « Relire la consigne » (décision 183.8)
+- Pendant une question, « Réécouter » relit la consigne et laisse la question posée (décision 183.10)
+- Dans un exercice sans consigne, « Réécouter » relit la question (décision 183.10)
 - Après « Je ne sais pas », « Réécouter » redit la parole du personnage guide
 
 **R12. Barre d'action**
 - Pendant une étape de leçon, « Continuer » est dans la barre d'action
 - Dans un exercice bulles, la barre d'action porte « Je ne sais pas » sans « Valider » : Léa répond en touchant une bulle
 - Au clavier de cristaux, « Valider » et « Je ne sais pas » sont dans la barre d'action, « Valider » mis en avant
-- Dans un exercice classer, « Je ne sais pas » est aussi dans la barre d'action (`@a-valider`, question 3 de l'issue)
+- Dans un exercice classer, « Je ne sais pas » est aussi dans la barre d'action (décision I3)
 
 **R13. 360 × 740 sans défiler**
 - Dans un exercice bulles, la question, ses choix et « Je ne sais pas » se voient sans défiler
@@ -130,7 +129,7 @@ la séance n'est ni enregistrée ni envoyée, et la séance quittée ne l'est pa
   réutilisée ici), « Léa a quitté une séance complète de cette leçon avant la dernière question » (#24), « Léa a quitté
   la séance de la leçon « … » avant la fin » (#29), « séance quittée avant la fin » (#163) : après une réponse, elles
   doivent choisir « Retour à la leçon ». Les steps qui cherchent « Relire la consigne » (`voix.steps.ts`) passent au
-  bouton « Réécouter » si 183.8 A est retenue.
+  bouton « Réécouter » (décision 183.8).
 - Le titre le plus long est une leçon de CM2 ouverte par sa page de la leçon avec le profil CP de Léa : l'étape
   « Léa est sur la page de la leçon « … » » doit y mener directement (sinon, préparer un profil de CM2).
 - Dictée : « Léa joue le mot dicté « chat » » ne doit pas avoir répondu aux mots précédents, sinon la séance a déjà
@@ -146,76 +145,57 @@ saisi par un parent.
 ## Hors périmètre
 
 - Le profil compact et le dock avec icônes hors de la séance (issue suivante).
-- Le test de départ, la séance de révision, le défi et le grand défi, tant que la question 1 de l'issue n'est pas
-  tranchée (hypothèse : séance d'une leçon, complète ou d'un exercice, seulement).
-- La fin de la séance : elle garde ses propres boutons (question 183.15 pour l'en-tête).
+- Le test de départ, la séance de révision, le défi et le grand défi : story suivante (décision I1). Seule la
+  séance d'une leçon, complète ou d'un exercice, change.
+- La tablette en paysage (garder le personnage guide à côté de la bulle) : à trancher plus tard, aucun scénario
+  (décision I2).
+- La fin de la séance : elle garde ses propres boutons (sans en-tête de l'application, décision 183.15).
 - Toute donnée enregistrée : ni la pause de la séance, ni la séance quittée ne sont gardées.
 - Tout changement des félicitations, encouragements, aides, effets sonores, de la scène de réponse fausse (#163).
 
 ## Questions ouvertes
 
-Questions de l'issue, posées au PO telles quelles :
+Aucune.
 
-- **I1.** La même présentation s'applique-t-elle au **test de départ**, à la **révision** et aux **défis**, ou dans
-  une story suivante ? Hypothèse des scénarios : séance d'une leçon seulement ; si oui, la même requête
-  `aRecuUneReponse()` est ajoutée à `SeanceDeRevision`, `SeanceDeDefi` et `TestDeDepart` (modèle).
-- **I2.** Sur **tablette en paysage**, où la hauteur ne manque pas, garde-t-on le personnage guide à côté de la
-  bulle ? Aucun scénario n'en dépend (les scénarios tournent sur `telephone`).
-- **I3.** « Je ne sais pas » et « Valider » remontent-ils dans la barre d'action pour **tous les types** dans cette
-  story, ou d'abord les types à choix et le calcul ? Hypothèse : tous les types (scénario classer `@a-valider`).
+## Décisions du PO (2026-11-07)
 
-Questions du modèle (`docs/stories/183/domain-model.md`), recommandation prise comme hypothèse :
+Réponse du PO : « OK », toutes les recommandations sont retenues.
 
-1. **183.1** Lire une étape de leçon (« Continuer ») compte-t-il comme une réponse ? Reco A : non, Retour ramène à
-   la page de la leçon.
-2. **183.2** « Je ne sais pas » compte-t-il comme une réponse ? Reco A : oui, la pause de la séance s'ouvre.
-3. **183.3** Dictée : une lettre écrite suffit-elle ? Reco A : non, seulement le mot écrit en entier.
-4. **183.4** Fluence : démarrer le chrono suffit-il ? Reco A : non, seulement la première réponse pendant le chrono.
-5. **183.5** Après la dernière bonne réponse, avant la fin de la séance, Retour ouvre-t-il la pause ? Reco A : oui.
-6. **183.6** Pendant le chrono d'une fluence, la pause arrête-t-elle le chrono ? Reco A : non, il continue.
-7. **183.7** Le mot « pause » : le garde-t-on (« Pause de la séance », conflit n°13 avec la durée d'affichage sans
-   voix) ? Reco A : oui ; les scénarios disent « la pause de la séance », jamais « pause » seul.
-8. **183.8** « Relire la consigne » disparaît-il comme commande à part ? Reco A : oui, un seul « Réécouter ».
-9. **183.9** « Retour à la leçon » : prévenir que les réponses ne seront pas gardées ? Reco A : non, aucun
-   avertissement.
+Questions de l'issue :
 
-Questions ajoutées par les critères d'acceptance :
+- **I1.** Test de départ, révision et défis ? **Décision** : présentation seulement pour la séance d'une leçon
+  (complète ou d'un exercice) ; le test de départ, la révision et les défis passent dans une story suivante (qui
+  ajoutera la même requête `aRecuUneReponse()` à `SeanceDeRevision`, `SeanceDeDefi` et `TestDeDepart`).
+- **I2.** Tablette en paysage : garder le personnage guide à côté de la bulle ? **Décision** : à trancher plus
+  tard ; aucun scénario dans cette story.
+- **I3.** « Je ne sais pas » et « Valider » dans la barre d'action pour quels types ? **Décision** : pour **tous les
+  types** d'exercices dans cette story (scénario classer).
 
-10. **183.10 Pendant une question, que relit « Réécouter » ?** Exemple : leçon « Compter », consigne « Touche le bon
-    nombre. », question « Combien font 2 + 1 ? ». Aujourd'hui, « Réécouter » relit la question (#17) et « Relire la
-    consigne » relit la consigne (#79).
-    - **Reco A** : ce qui a été lu au début de la question, la consigne puis la question ; sans consigne (« Quel son
-      entends-tu ? »), la question seule. Les scénarios vérifient la consigne relue et, sans consigne, la question.
-    - B : la consigne seule (décision 6 de l'issue, au mot près) ; sans consigne, la question.
-    - C : la question seule, comme le « Réécouter » de #17.
-11. **183.11 Le compteur montre-t-il les questions réussies ou le rang de la question en cours ?** Exemple : au tout
-    début de « Quel son entends-tu ? » (6 questions).
-    - **Reco A** : les questions réussies, « 0 / 6 », puis « 1 / 6 » après la première réussie : c'est
-      l'avancement de la séance du domaine (`avancement()`) et l'annonce « 1 sur 6 » des lecteurs d'écran (#16).
-    - B : le rang de la question en cours, « 1 / 6 » dès le début ; il ne bouge pas après une réponse fausse et
-      ne dit pas la même chose que la fine barre.
-12. **183.12 Le geste retour, quand la pause de la séance est déjà ouverte, que fait-il ?**
-    - **Reco A** : il ferme la pause de la séance, comme Échap ; la séance reprend sans rien perdre.
-    - B : il fait comme « Retour à la leçon ».
-13. **183.13 Quand le personnage guide réagit à la place de la consigne, où se lit sa parole, et quand la consigne
-    revient-elle ?** Exemple : Léa répond « 3 » ; Noisette applaudit et dit une félicitation. La scène de réponse
-    fausse de #163 dit « la bulle gardant ses paroles ».
-    - **Reco A** : la parole reste écrite près du personnage guide pendant qu'il réagit (même bulle), puis la
-      consigne revient quand il a fini de parler (en Muet, après la durée d'affichage sans voix) ; les scénarios de
-      #163 restent vrais.
-    - B : la consigne revient seulement à la question suivante.
-14. **183.14 La voix à l'ouverture de la pause de la séance.** Exemple : Noisette lit l'aide quand Léa touche
-    Retour.
-    - **Reco A** : la voix s'arrête à l'ouverture de la pause ; « Je continue la leçon » ne relit rien (« Réécouter »
-      est là). Aucun scénario ne le vérifie encore.
-    - B : la voix continue sous la pause.
-    - C : la voix s'arrête, puis la dernière phrase est relue à « Je continue la leçon ».
-15. **183.15 L'en-tête de l'application à la fin de la séance.** La fin de la séance garde ses boutons (« Toutes les
-    leçons », rejouer…).
-    - **Reco A** : pas d'en-tête de l'application à la fin de la séance non plus ; il revient sur la page de la leçon
-      et hors de la séance. Aucun scénario ne le vérifie encore.
-    - B : l'en-tête revient dès la fin de la séance.
+Questions du modèle (`docs/stories/183/domain-model.md`), réponse A retenue :
 
-## Décisions
+1. **183.1** Lire une étape de leçon n'est pas une réponse : Retour ramène à la page de la leçon.
+2. **183.2** « Je ne sais pas » est une réponse : la pause de la séance s'ouvre.
+3. **183.3** Dictée : seul le mot écrit en entier est une réponse, pas une lettre écrite.
+4. **183.4** Fluence : démarrer le chrono n'est pas une réponse ; la première réponse pendant le chrono l'est.
+5. **183.5** Après la dernière bonne réponse, avant la fin de la séance, Retour ouvre la pause de la séance.
+6. **183.6** La pause de la séance n'arrête pas le chrono d'une fluence.
+7. **183.7** On garde le mot : « Pause de la séance » est un terme ; « pause » seul reste interdit pour la durée
+   d'affichage sans voix. Les scénarios disent « la pause de la séance ».
+8. **183.8** « Relire la consigne » n'a plus de bouton à lui : un seul « Réécouter ». La ligne du glossaire
+   « Relire la consigne » sera marquée remplacée par #183 à la clôture de la story.
+9. **183.9** Aucun avertissement sur les réponses non gardées dans la pause de la séance.
 
-Aucune pour l'instant.
+Questions ajoutées par les critères d'acceptance, réponse A retenue :
+
+10. **183.10** Pendant une question, « Réécouter » relit ce qui a été lu au début de la question : la consigne puis
+    la question ; sans consigne, la question seule.
+11. **183.11** Le compteur montre les questions réussies (« 0 / 6 » au début, « 1 / 6 » après la première réussie),
+    comme l'avancement de la séance du domaine.
+12. **183.12** Le geste retour, la pause de la séance ouverte, la ferme comme Échap ; la séance reprend sans rien
+    perdre.
+13. **183.13** La parole du personnage guide reste écrite près de lui pendant qu'il réagit, puis la consigne revient
+    quand il a fini de parler (en Muet, après la durée d'affichage sans voix) ; les scénarios de #163 restent vrais.
+14. **183.14** La voix s'arrête à l'ouverture de la pause de la séance ; « Je continue la leçon » ne relit rien
+    (« Réécouter » est là). Aucun scénario ne le vérifie encore.
+15. **183.15** Pas d'en-tête de l'application à la fin de la séance non plus ; il revient sur la page de la leçon et
+    hors de la séance. Aucun scénario ne le vérifie encore.

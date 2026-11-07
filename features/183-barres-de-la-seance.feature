@@ -10,14 +10,13 @@ Fonctionnalité: Une barre du haut et une barre d'action en bas pour laisser la 
   avancement de la séance) et une barre d'action en bas. Une seule règle vient du domaine : Retour (le bouton, le
   geste retour du navigateur ou du téléphone) ouvre la pause de la séance seulement si la séance a reçu une réponse
   (`Seance.aRecuUneReponse`). La pause de la séance ne change rien à la séance et rien n'est enregistré.
-  Cadrage : les recommandations des questions 183.1 à 183.9 du modèle sont prises comme hypothèses de travail, en
-  attendant la réponse du PO ; les scénarios qui en dépendent sont tagués @a-valider
-  (docs/stories/183/acceptance.md, « Questions ouvertes »).
+  Cadrage : le PO a retenu le 2026-11-07 toutes les recommandations (I1 à I3, 183.1 à 183.15 réponse A) ;
+  les commentaires « 183.x » renvoient à ces décisions (docs/stories/183/acceptance.md, « Décisions du PO »).
 
   Mots employés dans ces scénarios :
   - « Léa choisit « Retour » » : Léa touche la flèche Retour de la barre du haut (nom accessible « Retour ») ;
   - « Léa revient en arrière » : le geste retour du téléphone ou le bouton retour du navigateur (étape existante) ;
-  - « la pause de la séance » : la feuille « On fait une pause ? » ouverte par Retour (glossaire, à valider, 183.7) ;
+  - « la pause de la séance » : la feuille « On fait une pause ? » ouverte par Retour (glossaire, décision 183.7) ;
   - « l'en-tête de l'application » : « Savanturier », le prénom et la classe de l'enfant, l'Espace parent ;
   - « la barre d'action » : la barre en bas de l'écran qui porte le bouton principal (« Continuer », « Valider »)
     et « Je ne sais pas » ; mot d'interface ;
@@ -77,8 +76,7 @@ Fonctionnalité: Une barre du haut et une barre d'action en bas pour laisser la 
 
   Règle: L'avancement de la séance se montre par une fine barre et un compteur « questions réussies / questions de la séance », et reste lu par les lecteurs d'écran
 
-    # 183.11 (question ajoutée) : le compteur dit les questions réussies, pas le rang de la question en cours
-    @a-valider
+    # 183.11 A : le compteur dit les questions réussies, pas le rang de la question en cours
     Scénario: Au début d'une séance d'un exercice de 6 questions, le compteur affiche « 0 / 6 » et la barre est vide
       Étant donné que Léa est sur la page de la leçon « Les sons ou, on, an »
       Quand Léa choisit seulement l'exercice « Quel son entends-tu ? »
@@ -134,13 +132,11 @@ Fonctionnalité: Une barre du haut et une barre d'action en bas pour laisser la 
         | Léa en est à la question « Dans le mot « poule », quel son entends-tu ? »  |
 
       # 183.1 A : lire les étapes de leçon n'est pas une réponse
-      @a-valider
       Exemples:
         | situation                                  |
         | Noisette a lu la dernière étape de leçon   |
 
     # 183.3 A : en dictée, seul le mot écrit en entier est une réponse
-    @a-valider
     Scénario: En dictée, des lettres écrites sans finir le mot ne sont pas encore une réponse : Retour ramène à la page de la leçon
       Étant donné que Léa joue le mot dicté « chat » de l'exercice « J'écris les animaux »
       Et que Léa a écrit « ch »
@@ -149,7 +145,6 @@ Fonctionnalité: Une barre du haut et une barre d'action en bas pour laisser la 
       Mais la pause de la séance ne s'ouvre pas
 
     # 183.4 A : démarrer le chrono d'une fluence n'est pas une réponse
-    @a-valider
     Scénario: Pendant une fluence, sans aucune réponse, Retour ramène à la page de la leçon
       Étant donné que Léa fait la fluence « Calcul rapide : les doubles »
       Quand Léa choisit « Retour »
@@ -170,7 +165,6 @@ Fonctionnalité: Une barre du haut et une barre d'action en bas pour laisser la 
         | fausse | on      |
 
     # 183.2 A : « Je ne sais pas » est une réponse
-    @a-valider
     Scénario: Après « Je ne sais pas », Retour ouvre la pause de la séance
       Étant donné que Léa joue l'exercice « Quel son entends-tu ? » de la leçon « Les sons ou, on, an »
       Et que Léa en est à la question « Dans le mot « poule », quel son entends-tu ? »
@@ -179,7 +173,6 @@ Fonctionnalité: Une barre du haut et une barre d'action en bas pour laisser la 
       Alors la pause de la séance s'ouvre : « On fait une pause ? », avec « Je continue la leçon » et « Retour à la leçon »
 
     # 183.3 A : le mot dicté écrit en entier est une réponse
-    @a-valider
     Scénario: En dictée, après un mot écrit en entier, Retour ouvre la pause de la séance
       Étant donné que Léa joue le mot dicté « chat » de l'exercice « J'écris les animaux »
       Et que Léa a écrit « chas »
@@ -187,14 +180,12 @@ Fonctionnalité: Une barre du haut et une barre d'action en bas pour laisser la 
       Alors la pause de la séance s'ouvre : « On fait une pause ? », avec « Je continue la leçon » et « Retour à la leçon »
 
     # 183.4 A : une réponse pendant le chrono d'une fluence est une réponse
-    @a-valider
     Scénario: Pendant une fluence, après des calculs réussis, Retour ouvre la pause de la séance
       Étant donné que Léa fait la fluence « Calcul rapide : les doubles », avec 2 calculs réussis
       Quand Léa choisit « Retour »
       Alors la pause de la séance s'ouvre : « On fait une pause ? », avec « Je continue la leçon » et « Retour à la leçon »
 
     # 183.5 A : la séance n'est pas encore terminée tant que la fin de la séance n'est pas affichée
-    @a-valider
     Scénario: Après la dernière bonne réponse, avant la fin de la séance, Retour ouvre la pause de la séance
       Étant donné que la tablette est en Muet
       Et que Léa joue la question de test « Combien font 3 + 4 ? »
@@ -210,7 +201,6 @@ Fonctionnalité: Une barre du haut et une barre d'action en bas pour laisser la 
       Alors la pause de la séance s'ouvre : « On fait une pause ? », avec « Je continue la leçon » et « Retour à la leçon »
 
     # 183.9 A : aucun avertissement sur les réponses non gardées
-    @a-valider
     Scénario: La pause de la séance ne fait aucun reproche, n'affiche aucun compte à rebours et ne prévient de rien
       Étant donné que Léa joue la question de test « Combien font 3 + 4 ? »
       Et que Léa a répondu « 8 »
@@ -246,7 +236,6 @@ Fonctionnalité: Une barre du haut et une barre d'action en bas pour laisser la 
       Alors Léa voit 2 étoiles allumées sur 3
 
     # 183.6 A : la pause de la séance n'arrête pas le chrono de la fluence
-    @a-valider
     Scénario: Pendant une fluence, la pause de la séance n'arrête pas le chrono et garde les calculs réussis
       Étant donné que Léa fait la fluence « Calcul rapide : les doubles », avec 2 calculs réussis
       Et que la pause de la séance est ouverte
@@ -293,8 +282,7 @@ Fonctionnalité: Une barre du haut et une barre d'action en bas pour laisser la 
         | Léa en est à la question « Dans le mot « poule », quel son entends-tu ? »                  | Léa voit la page de la leçon « Les sons ou, on, an »                                                                 |
         | Léa a répondu « on » à la question « Dans le mot « poule », quel son entends-tu ? »        | la pause de la séance s'ouvre : « On fait une pause ? », avec « Je continue la leçon » et « Retour à la leçon »      |
 
-    # 183.12 (question ajoutée) : le geste retour, la pause de la séance ouverte, la ferme comme Échap
-    @a-valider
+    # 183.12 A : le geste retour, la pause de la séance ouverte, la ferme comme Échap
     Scénario: Quand la pause de la séance est ouverte, le geste retour la ferme et la séance reprend
       Étant donné que Léa joue la question de test « Combien font 3 + 4 ? »
       Et que Léa a répondu « 8 »
@@ -344,8 +332,7 @@ Fonctionnalité: Une barre du haut et une barre d'action en bas pour laisser la 
       Alors Léa voit la consigne « Touche le bon nombre. »
       Et Léa ne voit pas Noisette à côté de la consigne
 
-    # 183.13 (question ajoutée) : la parole du personnage guide reste écrite près de lui pendant qu'il réagit
-    @a-valider
+    # 183.13 A : la parole du personnage guide reste écrite près de lui pendant qu'il réagit
     Scénario: Après une bonne réponse, Noisette se montre à la place de la consigne, puis la consigne revient
       Étant donné qu'une leçon de test « Compter » a un exercice bulles de consigne « Touche le bon nombre. » qui pose « Combien font 2 + 1 ? » puis « Combien font 1 + 1 ? »
       Et que Léa joue la séance complète de la leçon « Compter »
@@ -354,8 +341,7 @@ Fonctionnalité: Une barre du haut et une barre d'action en bas pour laisser la 
       Et ensuite seulement, Léa voit la consigne « Touche le bon nombre. »
       Et Léa ne voit pas Noisette à côté de la consigne
 
-    # 183.13 A (question ajoutée)
-    @a-valider
+    # 183.13 A
     Scénario: Après une réponse fausse, Noisette se montre à la place de la consigne avec son encouragement, puis la même question attend Léa
       Étant donné qu'une leçon de test « Compter » a un exercice bulles de consigne « Touche le bon nombre. » qui pose « Combien font 2 + 1 ? »
       Et que Léa joue la séance complète de la leçon « Compter »
@@ -367,15 +353,13 @@ Fonctionnalité: Une barre du haut et une barre d'action en bas pour laisser la 
   Règle: Un seul bouton « Réécouter » : pendant une question il relit la consigne, après une réponse il redit la parole du personnage guide
 
     # 183.8 A : « Relire la consigne » n'a plus de bouton à lui
-    @a-valider
     Scénario: La séance ne propose qu'un seul « Réécouter », sans « Relire la consigne »
       Étant donné qu'une leçon de test « Compter » a un exercice bulles de consigne « Touche le bon nombre. » qui pose « Combien font 2 + 1 ? »
       Et que Léa est sur la page de la leçon « Compter »
       Quand Léa commence la séance complète
       Alors la séance propose un seul « Réécouter » et aucun « Relire la consigne »
 
-    # 183.10 (question ajoutée) : la question est-elle relue après la consigne ?
-    @a-valider
+    # 183.10 A : la consigne est relue, la question reste posée
     Scénario: Pendant une question, « Réécouter » relit la consigne et laisse la question posée
       Étant donné qu'une leçon de test « Compter » a un exercice bulles de consigne « Touche le bon nombre. » qui pose « Combien font 2 + 1 ? »
       Et que Léa joue la séance complète de la leçon « Compter »
@@ -384,8 +368,7 @@ Fonctionnalité: Une barre du haut et une barre d'action en bas pour laisser la 
       Alors Léa entend de nouveau Noisette lire « Touche le bon nombre. »
       Et Léa voit la question « Combien font 2 + 1 ? » avec ses choix
 
-    # 183.10 (question ajoutée) : sans consigne, la question est relue
-    @a-valider
+    # 183.10 A : sans consigne, la question est relue
     Scénario: Dans un exercice sans consigne, « Réécouter » relit la question
       Étant donné que Léa joue l'exercice « Quel son entends-tu ? » de la leçon « Les sons ou, on, an »
       Et que Noisette a fini de lire la question « Dans le mot « poule », quel son entends-tu ? »
@@ -421,8 +404,7 @@ Fonctionnalité: Une barre du haut et une barre d'action en bas pour laisser la 
       Et « Je ne sais pas » est plus discret que « Valider », placé à côté
       Et « Valider » et « Je ne sais pas » mesurent au moins 52 px de haut
 
-    # Question 3 de l'issue : tous les types d'exercices dans cette story ?
-    @a-valider
+    # I3 : la barre d'action pour tous les types d'exercices
     Scénario: Dans un exercice classer, « Je ne sais pas » est aussi dans la barre d'action
       Étant donné que Léa est sur la page de la leçon « Les sons ou, on, an »
       Quand Léa choisit seulement l'exercice « Les maisons des sons »
