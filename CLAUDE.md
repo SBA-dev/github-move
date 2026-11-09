@@ -225,6 +225,9 @@ domaine → critères d'acceptance → ⛔ validation humaine → TDD → review
 Voir `.claude/commands/feature.md`.
 
 - Lancer `/feature` ou `/graphe` vaut demande explicite d'ouvrir la PR de la story (de chaque story lancée pour `/graphe`). Lancer `/signaler` vaut demande explicite de créer l'issue et, pour un bug ou une petite amélioration, d'ouvrir sa PR (décision 0043). En dehors de ces workflows, on n'ouvre pas de PR sans qu'on le demande.
+- On travaille sur la branche fournie par la session ou créée pour la story, jamais directement sur la branche par défaut.
+- La **branche de base** est `main`, branche par défaut du dépôt. Chaque story part de `main` à jour et y revient par PR.
+- Les deux ⛔ sont des arrêts réels : l'agent attend la réponse humaine et ne la suppose jamais.
 
 ### Signaler un bug ou une idée : `/signaler`
 
@@ -233,9 +236,6 @@ Voir `.claude/commands/feature.md`.
 - **petite amélioration** : un seul ⛔ sur le brouillon de l'issue et ses critères, puis même chemin ;
 - **nouvelle fonctionnalité** ou amélioration large : l'issue est créée comme une story, puis `/feature <n>` prend le relais.
 La PR est suivie (CI, commentaires de review) ; le merge reste un ⛔ humain.
-- On travaille sur la branche fournie par la session ou créée pour la story, jamais directement sur la branche par défaut.
-- La **branche de base** est `main`, branche par défaut du dépôt. Chaque story part de `main` à jour et y revient par PR.
-- Les deux ⛔ sont des arrêts réels : l'agent attend la réponse humaine et ne la suppose jamais.
 
 ### Plusieurs stories en parallèle : `/graphe`
 
