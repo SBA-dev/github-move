@@ -16,3 +16,4 @@ Aucun concept ni règle nouvelle : on remplit deux valeurs `musique` du catalogu
 
 - 6 candidats présélectionnés et convertis, page d'écoute publiée (artifact), détail dans `ecoute.md`.
 - Les scénarios seront ajustés au choix du PO (comme pour #166) : si un univers reçoit une musique, il passe du Plan « garde « grande victoire » » au Plan « sa musique remplace « grande victoire » ».
+- Commentaire `Avancement` : 6751803980 sur #173. `CADRAGE PRÊT` : 6751807310 (questions 173.1 choix à l'écoute, 173.2 conduite si « aucun »). RELIS envoyé au responsable. En attente d'une annonce [Responsable] sur #64.
