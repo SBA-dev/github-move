@@ -138,6 +138,7 @@ On suit le guide fondamental « Pour enseigner la lecture et l'écriture au CP �
 ### 3. Fait récemment
 
 - [x] Réglage « temps d'écran » et écran de pause retirés de `app/` (décision 0005).
+- [x] Skill `/signaler` : un bug, une amélioration ou une nouvelle fonctionnalité → issue créée et traitée jusqu'à la PR (décision 0043, 2026-11-09).
 
 ## Reprise dans une nouvelle session (Supabase configuré)
 
