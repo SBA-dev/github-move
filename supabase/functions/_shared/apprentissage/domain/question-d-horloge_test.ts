@@ -156,3 +156,54 @@ Deno.test("au clavier de cristaux, les heures écrites sont gardées pour la rev
 
   assertEquals(question.reponses(), [Reponse.heureEcrite(2, 30), Reponse.heureEcrite(2, 15)]);
 });
+
+Deno.test("avec le moment « apres-midi », le texte dit ajoute « C'est l'après-midi. » à la consigne", () => {
+  const question = questionAuCE1([{ heure: "15:00", moment: "apres-midi" }]);
+
+  assertEquals(question.texteDit(), "Quelle heure est-il ? C'est l'après-midi.");
+});
+
+Deno.test("avec le moment « matin », le texte dit ajoute « C'est le matin. » à la consigne", () => {
+  const question = questionAuCE1([{ heure: "9:45", moment: "matin" }]);
+
+  assertEquals(question.texteDit(), "Quelle heure est-il ? C'est le matin.");
+});
+
+Deno.test("avec un moment, le texte affiché reste la consigne seule", () => {
+  const question = questionAuCE1([{ heure: "15:00", moment: "apres-midi" }]);
+
+  assertEquals(question.texteAffiche(), "Quelle heure est-il ?");
+});
+
+Deno.test("avec « tout lire à voix haute », chaque heure proposée est dite en mots, dans l'ordre affiché", () => {
+  const { mode } = questionAuCP().enCours();
+  const proposees = mode.genre === "choix" ? mode.choix : [];
+  const dites = proposees.map((texte) =>
+    heureDite(HeureDeLHorloge.lire(`${texte.replace(" h", "")}:00`), Niveau.de("CP"))
+  );
+
+  assertEquals(questionAuCP().lectureDesChoix(), `Est-ce ${dites[0]}, ${dites[1]}, ou ${dites[2]} ?`);
+});
+
+Deno.test("au clavier de cristaux, « Je ne sais pas » est proposé tant qu'il n'a pas été dit", () => {
+  const question = questionAuCE1();
+
+  const avant = question.enCours().jeNeSaisPasPropose;
+  question.direJeNeSaisPas();
+
+  assertEquals([avant, question.enCours().jeNeSaisPasPropose], [true, false]);
+});
+
+Deno.test("au clavier de cristaux, « Je ne sais pas » donne l'heure à taper, écrite", () => {
+  const question = questionAuCE1([{ heure: "2:15" }]);
+  question.direJeNeSaisPas();
+
+  assertEquals(question.enCours().reponseATaper, "2 h 15");
+});
+
+Deno.test("au clavier de cristaux, l'heure à taper est dite comme une heure dite", () => {
+  const question = questionAuCE1([{ heure: "2:15" }]);
+  question.direJeNeSaisPas();
+
+  assertEquals(question.enCours().reponseATaperDite, heureDite(HeureDeLHorloge.lire("2:15"), Niveau.de("CE1")));
+});
