@@ -51,3 +51,5 @@ export type {
 export { enonceDeLaQuestion } from "./enonce-de-la-question.ts";
 export { cleDeLaFluence } from "./exercices/fluence.ts";
 export { HeureDeLHorloge } from "./heure-de-l-horloge.ts";
+export { PrecisionDeLHeure } from "./precision-de-l-heure.ts";
+export type { EcriturePrecisionDeLHeure } from "./precision-de-l-heure.ts";

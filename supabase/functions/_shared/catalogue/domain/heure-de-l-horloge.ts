@@ -2,7 +2,8 @@ import { LeconMalFormee } from "./erreurs.ts";
 
 const ECRITURE = /^(\d{1,2}):(\d{2})(?::(\d{2}))?$/;
 const HEURES_SUR_LE_CADRAN = 12;
-const MINUTES_PAR_HEURE = 60;
+const SECONDES_PAR_MINUTE = 60;
+const SECONDES_PAR_HEURE = 3600;
 
 export class HeureDeLHorloge {
   private constructor(
@@ -22,12 +23,13 @@ export class HeureDeLHorloge {
     return heure;
   }
 
+  /** Minutes écoulées depuis 12 h, avec la fraction due aux secondes. */
   surLeCadran(): number {
-    return (this.heures % HEURES_SUR_LE_CADRAN) * MINUTES_PAR_HEURE + this.minutes;
+    return this.secondesSurLeCadran() / SECONDES_PAR_MINUTE;
   }
 
   egaleSurLeCadran(autre: HeureDeLHorloge): boolean {
-    return this.surLeCadran() === autre.surLeCadran();
+    return this.secondesSurLeCadran() === autre.secondesSurLeCadran();
   }
 
   egale(autre: HeureDeLHorloge): boolean {
@@ -39,6 +41,11 @@ export class HeureDeLHorloge {
     if (this.secondes > 0) return `${this.heures} h ${this.minutes} min ${this.secondes} s`;
     if (this.minutes > 0) return `${this.heures} h ${this.minutes}`;
     return `${this.heures} h`;
+  }
+
+  private secondesSurLeCadran(): number {
+    return (this.heures % HEURES_SUR_LE_CADRAN) * SECONDES_PAR_HEURE +
+      this.minutes * SECONDES_PAR_MINUTE + this.secondes;
   }
 
   private verifierLesBornes(ecriture: string): void {
