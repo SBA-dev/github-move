@@ -41,7 +41,8 @@ Aucun concept ni règle nouvelle : on remplit deux valeurs `musique` du catalogu
 
 - Durée : lancement 2026-11-09 ~21:20 UTC → PR prête ~22:45 UTC, environ 1 h 25, dont ~20 min d'attente du choix du PO et ~5 min d'attente du verrou base.
 - Cycles TDD : 1 comportement (catalogue des musiques).
-- Review : 2 passages (ensemble APPROUVÉ ; delta des steps), 0 cycle À CORRIGER.
+- Review : 2 passages (ensemble APPROUVÉ ; delta des steps et du glossaire APPROUVÉ, 3 non bloquants cosmétiques laissés : ligne longue de `MUSIQUES_DES_UNIVERS`, nom `MUSIQUE`, lignes de #166 du glossaire à fusionner hors vague), 0 cycle À CORRIGER.
+- PR #191 (brouillon, puis prête).
 - E2E : 1 run du périmètre (74/74), 1 run de la PWA (36/36), 0 cycle KO.
 - Intégrations de `main` : 0, aucun conflit.
 - Escalades : 0. Aucun hôte réseau refusé.
