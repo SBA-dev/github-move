@@ -14,6 +14,8 @@ const SONS = [
   "air-de-cordes-pincees",
   "air-de-steel-drum-court",
   "air-de-steel-drum-long",
+  "air-de-steel-drum-bref",
+  "air-de-cordes-pincees-bref",
 ].map((nom) => `/sons/${nom}.mp3`);
 const COQUILLE = ["/", "/manifest.webmanifest", "/icones/icone-192.png", "/icones/icone-512.png", "/bibliotheque.json", ...SONS];
 const FICHIERS_DU_BUILD = [];

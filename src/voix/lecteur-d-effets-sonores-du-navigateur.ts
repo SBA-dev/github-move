@@ -13,6 +13,8 @@ export const FICHIER_DE_L_EFFET: Readonly<Record<EffetSonore, string>> = {
   airDeCordesPincees: "air-de-cordes-pincees",
   airDeSteelDrumCourt: "air-de-steel-drum-court",
   airDeSteelDrumLong: "air-de-steel-drum-long",
+  airDeSteelDrumBref: "air-de-steel-drum-bref",
+  airDeCordesPinceesBref: "air-de-cordes-pincees-bref",
 };
 
 // Un son qui ne finit jamais (bloqué par le navigateur) ne doit pas retenir la parole.
