@@ -147,3 +147,12 @@ Deno.test("après une erreur, l'aide est celle de l'item", () => {
 Deno.test("après une erreur, sans aide dans l'item, l'aide par défaut est lue", () => {
   assertEquals(questionAuCE1().aideApresErreur(), AIDE_PAR_DEFAUT);
 });
+
+Deno.test("au clavier de cristaux, les heures écrites sont gardées pour la revalidation", () => {
+  const question = questionAuCE1([{ heure: "2:15" }]);
+
+  question.repondre(Reponse.heureEcrite(2, 30));
+  question.repondre(Reponse.heureEcrite(2, 15));
+
+  assertEquals(question.reponses(), [Reponse.heureEcrite(2, 30), Reponse.heureEcrite(2, 15)]);
+});
