@@ -3,7 +3,7 @@ import { HeureDeLHorloge, Niveau } from "../../catalogue/domain/index.ts";
 import { hasardSansMelange } from "../test_utils/hasard-fixe.ts";
 import { exerciceDHorloge } from "../test_utils/lecons-d-horloge.ts";
 import { heureDite } from "./heure-dite.ts";
-import { HeureEcriteImpossible } from "./erreurs.ts";
+import { HeureEcriteImpossible, ReponseIncompatible } from "./erreurs.ts";
 import { QuestionDHorloge } from "./question-d-horloge.ts";
 import { questionsDHorloge } from "./questions-de-l-exercice.ts";
 import { Reponse } from "./reponse.ts";
@@ -206,4 +206,26 @@ Deno.test("au clavier de cristaux, l'heure à taper est dite comme une heure dit
   question.direJeNeSaisPas();
 
   assertEquals(question.enCours().reponseATaperDite, heureDite(HeureDeLHorloge.lire("2:15"), Niveau.de("CE1")));
+});
+
+Deno.test("au clavier de cristaux, « Je ne sais pas » coûte une erreur et montre la bonne réponse", () => {
+  const question = questionAuCE1([{ heure: "2:15" }]);
+
+  question.direJeNeSaisPas();
+
+  assertEquals([question.erreurs, question.bonneReponseMontree, question.reussie], [1, true, false]);
+});
+
+Deno.test("au clavier de cristaux, une réponse en nombre est incompatible", () => {
+  const question = questionAuCE1();
+
+  assertThrows(() => question.repondre(Reponse.nombre(215)), ReponseIncompatible);
+});
+
+Deno.test("avec le moment « matin », l'heure écrite de l'après-midi est fausse", () => {
+  const question = questionAuCE1([{ heure: "9:45", moment: "matin" }]);
+
+  const resultat = question.repondre(Reponse.heureEcrite(21, 45));
+
+  assertEquals([resultat, question.erreurs], ["fausse", 1]);
 });
