@@ -1,6 +1,7 @@
 import {
   BonneReponseAbsenteDesChoix,
   ChoixInconnu,
+  HeureEcriteImpossible,
   JeNeSaisPasDejaDit,
   JourIncoherent,
   JourInvalide,
@@ -29,6 +30,7 @@ type Incoherence = (raison: string) => Error;
 const ERREURS_DE_REJEU = [
   BonneReponseAbsenteDesChoix,
   ChoixInconnu,
+  HeureEcriteImpossible,
   JeNeSaisPasDejaDit,
   JourIncoherent,
   JourInvalide,

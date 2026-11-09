@@ -368,3 +368,10 @@ export class PlanDuDefiIncoherent extends Error {
     this.name = "PlanDuDefiIncoherent";
   }
 }
+
+export class HeureEcriteImpossible extends Error {
+  constructor() {
+    super("Cette heure n'existe pas : elle ne peut pas être une réponse.");
+    this.name = "HeureEcriteImpossible";
+  }
+}

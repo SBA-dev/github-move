@@ -1,0 +1,151 @@
+import { type ExerciceHorloge, HeureDeLHorloge, type ItemDHorloge, type Niveau } from "../../catalogue/domain/index.ts";
+import { heuresProposees } from "./choix-d-heures.ts";
+import type { CleDeQuestion } from "./cle-de-question.ts";
+import { cleDeLHorloge } from "./cles-des-questions.ts";
+import { HeureEcriteImpossible, JeNeSaisPasDejaDit, QuestionDejaReussie, ReponseIncompatible } from "./erreurs.ts";
+import { ModeDeReponse } from "./mode-de-reponse.ts";
+import { type AideDonnee, QuestionJouee } from "./question-jouee.ts";
+import type { QuestionPosee } from "./question-posee.ts";
+import type { HeureEcrite, ReponseDonnee, ReponseEnNombre, ReponseParChoix, ResultatDeReponse } from "./reponse.ts";
+import type { Tireur } from "./tireur.ts";
+
+const CONSIGNE_PAR_DEFAUT = "Quelle heure est-il ?";
+const AIDE_PAR_DEFAUT = "La petite aiguille montre les heures, la grande les minutes.";
+const MIDI = 12;
+const DERNIERE_HEURE_DU_JOUR = 23;
+const DERNIERE_MINUTE_OU_SECONDE = 59;
+
+export type ChampDeLHeure = "heures" | "minutes" | "secondes";
+
+export type HorlogeEnCours = Readonly<{
+  mode:
+    | { genre: "choix"; choix: readonly string[]; ecartes: readonly string[] }
+    | { genre: "clavierDeCristaux"; champs: readonly ChampDeLHeure[] };
+}>;
+
+export class QuestionDHorloge implements QuestionPosee {
+  readonly type = "horloge";
+  readonly cle: CleDeQuestion;
+  private nombreDErreurs = 0;
+  private estReussie = false;
+  private jeNeSaisPasDejaDit = false;
+  private readonly reponsesDonnees: ReponseDonnee[] = [];
+
+  private constructor(
+    private readonly exercice: ExerciceHorloge,
+    private readonly item: ItemDHorloge,
+    private readonly auxChoix: QuestionJouee | undefined,
+  ) {
+    this.cle = cleDeLHorloge(exercice.mode, item);
+  }
+
+  static pour(exercice: ExerciceHorloge, item: ItemDHorloge, tireur: Tireur, niveau: Niveau): QuestionDHorloge {
+    if (ModeDeReponse.pour(niveau).genre !== "choix") return new QuestionDHorloge(exercice, item, undefined);
+    const bonneReponse = item.heure.ecriture();
+    const textes = heuresProposees(item.heure, exercice.precision).map((heure) => heure.ecriture());
+    const question = QuestionJouee.aChoix({
+      cle: cleDeLHorloge(exercice.mode, item),
+      enonce: exercice.consigne ?? CONSIGNE_PAR_DEFAUT,
+      choix: tireur.choix(textes, bonneReponse),
+      bonneReponse,
+      type: "bulles",
+      complements: { aide: item.aide },
+    });
+    return new QuestionDHorloge(exercice, item, question);
+  }
+
+  get enonce(): string {
+    return this.texteAffiche();
+  }
+
+  get erreurs(): number {
+    return this.auxChoix?.erreurs ?? this.nombreDErreurs;
+  }
+
+  get reussie(): boolean {
+    return this.auxChoix?.reussie ?? this.estReussie;
+  }
+
+  get bonneReponseMontree(): boolean {
+    return this.auxChoix?.bonneReponseMontree ?? this.jeNeSaisPasDejaDit;
+  }
+
+  texteAffiche(): string {
+    return this.exercice.consigne ?? CONSIGNE_PAR_DEFAUT;
+  }
+
+  texteDit(): string {
+    return this.texteAffiche();
+  }
+
+  aideApresErreur(): string {
+    return this.item.aide ?? AIDE_PAR_DEFAUT;
+  }
+
+  enCours(): HorlogeEnCours {
+    if (this.auxChoix) {
+      return { mode: { genre: "choix", choix: this.auxChoix.choix.textes(), ecartes: this.auxChoix.choix.ecartes() } };
+    }
+    return { mode: { genre: "clavierDeCristaux", champs: this.champsDeLHeure() } };
+  }
+
+  tirage(): string[] {
+    return this.auxChoix?.tirage() ?? [];
+  }
+
+  reponses(): ReponseDonnee[] {
+    return this.auxChoix?.reponses() ?? [...this.reponsesDonnees];
+  }
+
+  repondre(reponse: ReponseParChoix | ReponseEnNombre | HeureEcrite): ResultatDeReponse {
+    if (this.auxChoix) {
+      if (reponse.genre !== "choix") throw new ReponseIncompatible(reponse.genre);
+      return this.auxChoix.repondre(reponse);
+    }
+    if (reponse.genre !== "heureEcrite") throw new ReponseIncompatible(reponse.genre);
+    return this.repondreAuClavier(reponse);
+  }
+
+  direJeNeSaisPas(): AideDonnee {
+    if (this.auxChoix) return this.auxChoix.direJeNeSaisPas();
+    if (this.estReussie) throw new QuestionDejaReussie();
+    if (this.jeNeSaisPasDejaDit) throw new JeNeSaisPasDejaDit();
+    this.jeNeSaisPasDejaDit = true;
+    this.reponsesDonnees.push({ genre: "jeNeSaisPas" });
+    if (this.nombreDErreurs === 0) this.nombreDErreurs = 1;
+    return { aide: this.aideApresErreur(), bonneReponse: this.item.heure.ecriture(), maniere: "briller" };
+  }
+
+  private champsDeLHeure(): ChampDeLHeure[] {
+    return this.exercice.precision.ecriture() === "seconde" ? ["heures", "minutes", "secondes"] : ["heures", "minutes"];
+  }
+
+  private repondreAuClavier(reponse: HeureEcrite): ResultatDeReponse {
+    if (this.estReussie) throw new QuestionDejaReussie();
+    const heure = heureEcrite(reponse);
+    if (this.estLaBonneHeure(heure)) {
+      this.estReussie = true;
+      return "juste";
+    }
+    if (!this.jeNeSaisPasDejaDit) this.nombreDErreurs++;
+    return "fausse";
+  }
+
+  private estLaBonneHeure(heure: HeureDeLHorloge): boolean {
+    return heure.egaleSurLeCadran(this.item.heure) && this.estDuBonMoment(heure);
+  }
+
+  private estDuBonMoment(heure: HeureDeLHorloge): boolean {
+    const { moment } = this.item;
+    return moment === undefined || (moment === "apres-midi") === (heure.heures >= MIDI);
+  }
+}
+
+function heureEcrite({ heures, minutes, secondes }: HeureEcrite): HeureDeLHorloge {
+  const possible = Number.isInteger(heures) && Number.isInteger(minutes) && Number.isInteger(secondes) &&
+    heures >= 0 && heures <= DERNIERE_HEURE_DU_JOUR &&
+    minutes >= 0 && minutes <= DERNIERE_MINUTE_OU_SECONDE &&
+    secondes >= 0 && secondes <= DERNIERE_MINUTE_OU_SECONDE;
+  if (!possible) throw new HeureEcriteImpossible();
+  return HeureDeLHorloge.lire(`${heures}:${String(minutes).padStart(2, "0")}:${String(secondes).padStart(2, "0")}`);
+}

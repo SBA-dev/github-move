@@ -3,6 +3,7 @@ import {
   cleDeLAddition,
   cleDeLaDictee,
   cleDeLEcoute,
+  cleDeLHorloge,
   cleDesBarres,
   cleDuCalcul,
   cleDuClasser,
@@ -14,6 +15,7 @@ import { CleDeQuestion } from "./cle-de-question.ts";
 import { questionsDeTrous } from "./exercices/trous.ts";
 import type { OrigineDeLaQuestion } from "./origine-de-la-question.ts";
 import { cleDeLaBoite, QuestionDeBoite } from "./question-de-boite.ts";
+import { QuestionDHorloge } from "./question-d-horloge.ts";
 import { QuestionDeCalcul } from "./question-de-calcul.ts";
 import type { QuestionDeDictee } from "./question-de-dictee.ts";
 import { QuestionDeProblemeEnBarres } from "./question-de-probleme-en-barres.ts";
@@ -97,6 +99,11 @@ export function posables(exercice: Exercice, origine: OrigineDeLaQuestion): Posa
       return exercice.items.map((probleme) => ({
         cle: cleDesBarres(probleme),
         poser: (tireur, niveau) => QuestionDeProblemeEnBarres.pour(probleme, tireur, niveau),
+      }));
+    case "horloge":
+      return exercice.items.map((item) => ({
+        cle: cleDeLHorloge(exercice.mode, item),
+        poser: (tireur, niveau) => QuestionDHorloge.pour(exercice, item, tireur, niveau),
       }));
     case "calcul": {
       const tiree = origine.tirage !== undefined && exercice.generateur

@@ -16,6 +16,7 @@ const PREFIXES: Record<TypeDeQuestion, string> = {
   colonne: "u:",
   fluence: "f:",
   dictee: "d:",
+  horloge: "g:",
 };
 
 export function estUnTypeDeQuestion(valeur: string): valeur is TypeDeQuestion {

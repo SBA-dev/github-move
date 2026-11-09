@@ -6,11 +6,19 @@ export type ReponseEnNombre = Readonly<{ genre: "nombre"; valeur: number }>;
 
 export type MotEcrit = Readonly<{ genre: "motEcrit"; lettres: readonly string[] }>;
 
+export type HeureEcrite = Readonly<{ genre: "heureEcrite"; heures: number; minutes: number; secondes: number }>;
+
 export type Reponse = ReponseParChoix | Placement | ReponseEnNombre | MotEcrit;
 
 export const Reponse = {
   motEcrit: (lettres: readonly string[]): MotEcrit => ({ genre: "motEcrit", lettres }),
   choix: (texte: string): ReponseParChoix => ({ genre: "choix", texte }),
+  heureEcrite: (heures: number, minutes: number, secondes = 0): HeureEcrite => ({
+    genre: "heureEcrite",
+    heures,
+    minutes,
+    secondes,
+  }),
   nombre: (valeur: number): ReponseEnNombre => ({ genre: "nombre", valeur }),
   placement: (etiquette: string, groupe?: string): Placement =>
     groupe === undefined ? { genre: "placement", etiquette } : { genre: "placement", etiquette, groupe },
