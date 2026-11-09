@@ -1,6 +1,6 @@
 import { LeconMalFormee } from "../erreurs.ts";
 import { HeureDeLHorloge } from "../heure-de-l-horloge.ts";
-import { liste, type Objet, texteFacultatif, texteRequis } from "../lecture.ts";
+import { enObjet, liste, type Objet, texteFacultatif, texteRequis } from "../lecture.ts";
 import type { Niveau } from "../niveau.ts";
 import { PrecisionDeLHeure } from "../precision-de-l-heure.ts";
 
@@ -61,7 +61,7 @@ function lirePrecision(valeur: unknown, niveau: Niveau): PrecisionDeLHeure {
 }
 
 function lireItem(brut: unknown, precision: PrecisionDeLHeure): ItemDHorloge {
-  const item = brut as Objet;
+  const item = enObjet(brut, "un item");
   const heure = HeureDeLHorloge.lire(texteRequis(item.heure, "l'heure d'un item"));
   if (heure.heures === 0 && heure.minutes === 0 && heure.secondes === 0) {
     throw new LeconMalFormee("minuit n'est pas permis");
