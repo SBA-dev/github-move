@@ -182,6 +182,7 @@ const exercicesExclus: Record<string, unknown> = {
   memoriser: { type: "memoriser", vers: ["Un vers", "Un autre vers"] },
   fluence: { type: "fluence", generateur: { op: "+", combien: 5 } },
   boite: { type: "boite", items: [{ a: 4, op: "+", b: 3 }] },
+  horloge: { type: "horloge", mode: "lire", items: [{ heure: "3:00" }] },
   barres: {
     type: "barres",
     items: [{

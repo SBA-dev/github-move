@@ -80,6 +80,7 @@ const exercicesMalFormes: ReadonlyArray<[string, string, Record<string, unknown>
   ["un mode inconnu", "CE1", { mode: "regarder", items: [{ heure: "3:00" }] }],
   ["un mode absent", "CE1", { items: [{ heure: "3:00" }] }],
   ["aucun item", "CE1", { mode: "lire", items: [] }],
+  ["un item qui n'est pas un objet", "CE1", { mode: "lire", items: [null] }],
   ["une heure mal écrite", "CE1", { mode: "lire", items: [{ heure: "3 h 30" }] }],
   ["une heure absente", "CE1", { mode: "lire", items: [{ aide: "Regarde." }] }],
   ["une heure hors de la journée", "CE1", { mode: "lire", items: [{ heure: "25:00" }] }],

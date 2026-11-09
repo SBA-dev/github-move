@@ -75,6 +75,16 @@ Deno.test("un exercice de barres compte une question par item", () => {
   assertEquals(nombreDeQuestions(exercice), 4);
 });
 
+Deno.test("un exercice d'horloge compte une question par item", () => {
+  const exercice = exerciceLu({
+    type: "horloge",
+    mode: "lire",
+    items: [{ heure: "3:00" }, { heure: "4:00" }, { heure: "5:00" }],
+  });
+
+  assertEquals(nombreDeQuestions(exercice), 3);
+});
+
 Deno.test("un exercice pour classer compte une question par étiquette, pas par groupe", () => {
   const exercice = exerciceLu({ type: "classer", groupes: desGroupes(3), items: desItemsAClasser(9) });
 
