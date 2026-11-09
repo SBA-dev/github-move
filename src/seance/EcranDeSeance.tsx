@@ -214,6 +214,8 @@ function SeanceEnCours(
     etape: etape !== undefined,
     parole: deroulement.enTrainDeParler ? deroulement.parole : undefined,
     reagitSansParler: deroulement.reagitSansParler,
+    humeur: deroulement.humeur,
+    consigne,
     sceneDeReponseFausse: reponseFausse.enCours !== undefined,
   });
   /** Avant toute réponse, Retour ramène à la page de la leçon ; ensuite, la pause de la séance s'ouvre d'abord. */

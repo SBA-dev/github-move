@@ -1,3 +1,4 @@
+import type { Humeur } from "@domain/motivation";
 import type { NatureDeParole } from "./usePersonnageQuiParle.ts";
 
 const NATURES_DE_LA_QUESTION: readonly NatureDeParole[] = ["consigne", "question", "dictee"];
@@ -9,11 +10,16 @@ export type FaitsDuPersonnageGuide = {
   readonly parole: { readonly nature: NatureDeParole } | undefined;
   /** Il réagit (applaudit, par exemple) sans rien dire. */
   readonly reagitSansParler: boolean;
+  /** Son humeur du moment : « réfléchit » reste après un encouragement jusqu'à la prochaine parole. */
+  readonly humeur: Humeur;
+  /** La consigne qui reviendrait à sa place quand il se tait ; sans elle (boîte, schéma), le cacher ferait sauter l'exercice. */
+  readonly consigne: string | undefined;
   readonly sceneDeReponseFausse: boolean;
 };
 
 /** Pendant une question le personnage guide se tait et se cache : il se montre quand il lit une étape de leçon, quand il réagit (réussite, encouragement, aide), avec ou sans parole, et à la fin. */
-export function personnageGuideSeMontre({ finie, etape, parole, reagitSansParler, sceneDeReponseFausse }: FaitsDuPersonnageGuide): boolean {
+export function personnageGuideSeMontre({ finie, etape, parole, reagitSansParler, humeur, consigne, sceneDeReponseFausse }: FaitsDuPersonnageGuide): boolean {
   const parleEnReagissant = parole !== undefined && !NATURES_DE_LA_QUESTION.includes(parole.nature);
-  return finie || etape || parleEnReagissant || reagitSansParler || sceneDeReponseFausse;
+  const resteApresSonEncouragement = humeur === "reflechit" && consigne === undefined;
+  return finie || etape || parleEnReagissant || reagitSansParler || resteApresSonEncouragement || sceneDeReponseFausse;
 }
