@@ -94,3 +94,11 @@ Deno.test("les secondes comptent sur le cadran", () => {
   assertFalse(sixHeuresDixHuitVingt.egaleSurLeCadran(HeureDeLHorloge.lire("6:18:30")));
   assert(sixHeuresDixHuitVingt.egaleSurLeCadran(HeureDeLHorloge.lire("18:18:20")));
 });
+
+Deno.test("minuit est 0:00, avec ou sans secondes, et nulle autre heure", () => {
+  assert(HeureDeLHorloge.lire("0:00").estMinuit());
+  assert(HeureDeLHorloge.lire("0:00:00").estMinuit());
+  for (const ecriture of ["12:00", "0:30", "0:00:05"]) {
+    assertFalse(HeureDeLHorloge.lire(ecriture).estMinuit());
+  }
+});
