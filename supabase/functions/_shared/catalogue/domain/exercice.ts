@@ -10,10 +10,12 @@ import { type ExerciceConjugaison, lireConjugaison } from "./exercices/conjugais
 import { type ExerciceDictee, lireDictee } from "./exercices/dictee.ts";
 import { type ExerciceFluence, lireFluence } from "./exercices/fluence.ts";
 import { type ExerciceEcoute, lireEcoute } from "./exercices/ecoute.ts";
+import { type ExerciceHorloge, lireHorloge } from "./exercices/horloge.ts";
 import { type ExerciceLecture, lireExerciceDeLecture } from "./exercices/lecture.ts";
 import { type ExerciceMemoriser, lireMemoriser } from "./exercices/memoriser.ts";
 import { type ExerciceOrdre, lireOrdre } from "./exercices/ordre.ts";
 import { type ExerciceTrous, lireTrous } from "./exercices/texte-a-trous.ts";
+import type { Niveau } from "./niveau.ts";
 import { estUnTypeDExercice, type TypeDExercice } from "./type-d-exercice.ts";
 
 export type Exercice =
@@ -30,20 +32,21 @@ export type Exercice =
   | ExerciceAddition
   | ExerciceBoite
   | ExerciceBarres
-  | ExerciceMemoriser;
+  | ExerciceMemoriser
+  | ExerciceHorloge;
 
-export function lireExercices(brut: readonly unknown[]): readonly Exercice[] {
+export function lireExercices(brut: readonly unknown[], niveau: Niveau): readonly Exercice[] {
   const exercices = brut
     .map((exercice) => enObjet(exercice, "un exercice"))
     .flatMap((exercice) => {
       const type = exercice.type;
       if (typeof type !== "string") throw new LeconMalFormee("un exercice n'a pas de type");
-      return estUnTypeDExercice(type) ? [lireExercice(exercice, type)] : [];
+      return estUnTypeDExercice(type) ? [lireExercice(exercice, type, niveau)] : [];
     });
   return Object.freeze(exercices);
 }
 
-function lireExercice(brut: Objet, type: TypeDExercice): Exercice {
+function lireExercice(brut: Objet, type: TypeDExercice, niveau: Niveau): Exercice {
   const communs = {
     titre: texteFacultatif(brut.titre, "le titre d'un exercice"),
     consigne: texteFacultatif(brut.consigne, "la consigne d'un exercice"),
@@ -77,5 +80,7 @@ function lireExercice(brut: Objet, type: TypeDExercice): Exercice {
       return lireBarres(brut, communs);
     case "memoriser":
       return lireMemoriser(brut, communs);
+    case "horloge":
+      return lireHorloge(brut, communs, niveau);
   }
 }

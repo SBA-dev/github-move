@@ -9,15 +9,17 @@ export function lireLecon(brut: unknown): Lecon {
   const lecon = enObjet(brut, "la leçon");
   if (!estUneMatiere(lecon.matiere)) throw new LeconMalFormee("la matière est inconnue");
 
+  const niveau = lireNiveau(lecon.niveau);
+
   return Object.freeze({
     id: texteRequis(lecon.id, "l'identifiant"),
     matiere: matiereDeCode(lecon.matiere),
-    niveau: lireNiveau(lecon.niveau),
+    niveau,
     titre: texteRequis(lecon.titre, "le titre"),
     ordre: nombreRequis(lecon.ordre, "l'ordre"),
     programme: lireProgramme(lecon.programme),
     etapes: lireEtapes(lecon.lecon),
-    exercices: lireExercices(liste(lecon.exercices, "les exercices")),
+    exercices: lireExercices(liste(lecon.exercices, "les exercices"), niveau),
     competence: texteFacultatif(lecon.competence, "la compétence"),
     guide: lireGuide(lecon.guide),
   });

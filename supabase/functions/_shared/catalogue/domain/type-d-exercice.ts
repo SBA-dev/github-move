@@ -13,6 +13,7 @@ const LIBELLES = {
   ecoute: "Écouter (langue)",
   boite: "La boîte à jetons",
   barres: "Problème en schéma",
+  horloge: "L'horloge",
 } as const;
 
 export type TypeDExercice = keyof typeof LIBELLES;

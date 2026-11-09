@@ -30,6 +30,7 @@ function nombreDeQuestionsAdmissibles(exercice: Exercice): number {
     case "fluence":
     case "boite":
     case "barres":
+    case "horloge":
       return 0;
     default:
       return exercice satisfies never;

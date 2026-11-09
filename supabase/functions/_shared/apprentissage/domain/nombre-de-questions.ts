@@ -12,6 +12,7 @@ export function nombreDeQuestions(exercice: Exercice): number {
     case "ecoute":
     case "boite":
     case "barres":
+    case "horloge":
     case "classer":
       return taille(exercice.items);
     case "ordre":
