@@ -2088,6 +2088,177 @@
   "genere": true
  },
  {
+  "id": "fr-ce1-present-er",
+  "matiere": "francais",
+  "niveau": "CE1",
+  "titre": "Le présent des verbes en -er",
+  "ordre": 24,
+  "programme": {
+   "section": "c2-francais-ce1-decouvrir-comprendre-et-mettre-en-uvre-lorthographe-grammaticale",
+   "citation": "Apprendre à conjuguer au présent, à l’imparfait, au futur"
+  },
+  "lecon": [
+   {
+    "texte": "Le présent dit ce qui se passe maintenant : aujourd'hui, je joue.",
+    "exemples": [
+     "aujourd'hui",
+     "maintenant"
+    ]
+   },
+   {
+    "texte": "Les verbes en « er » comme chanter ont ces terminaisons : e, es, e, ons, ez, ent.",
+    "exemples": [
+     "je chante",
+     "nous chantons",
+     "ils chantent"
+    ]
+   },
+   {
+    "texte": "Attention : « ent » ne se prononce pas. Ils chantent se dit comme il chante.",
+    "exemples": []
+   }
+  ],
+  "exercices": [
+   {
+    "type": "conjugaison",
+    "titre": "Chanter au présent",
+    "verbe": "chanter",
+    "temps": "présent",
+    "formes": [
+     {
+      "pronom": "je",
+      "forme": "chante"
+     },
+     {
+      "pronom": "tu",
+      "forme": "chantes"
+     },
+     {
+      "pronom": "il",
+      "forme": "chante"
+     },
+     {
+      "pronom": "nous",
+      "forme": "chantons"
+     },
+     {
+      "pronom": "vous",
+      "forme": "chantez"
+     },
+     {
+      "pronom": "ils",
+      "forme": "chantent"
+     }
+    ],
+    "distracteurs": [
+     "chantait",
+     "chantera"
+    ]
+   },
+   {
+    "type": "conjugaison",
+    "titre": "Jouer au présent",
+    "verbe": "jouer",
+    "temps": "présent",
+    "formes": [
+     {
+      "pronom": "je",
+      "forme": "joue"
+     },
+     {
+      "pronom": "tu",
+      "forme": "joues"
+     },
+     {
+      "pronom": "il",
+      "forme": "joue"
+     },
+     {
+      "pronom": "nous",
+      "forme": "jouons"
+     },
+     {
+      "pronom": "vous",
+      "forme": "jouez"
+     },
+     {
+      "pronom": "ils",
+      "forme": "jouent"
+     }
+    ],
+    "distracteurs": [
+     "jouait",
+     "jouera"
+    ]
+   },
+   {
+    "type": "bulles",
+    "titre": "Être et avoir au présent",
+    "questions": [
+     {
+      "question": "Aujourd'hui, je … content. (être)",
+      "choix": [
+       "suis",
+       "serai",
+       "étais"
+      ],
+      "reponse": "suis"
+     },
+     {
+      "question": "Nous … un chat. (avoir)",
+      "choix": [
+       "avons",
+       "aurons",
+       "avions"
+      ],
+      "reponse": "avons"
+     },
+     {
+      "question": "Tu … en retard. (être)",
+      "choix": [
+       "es",
+       "est",
+       "et"
+      ],
+      "reponse": "es"
+     },
+     {
+      "question": "Ils … faim. (avoir)",
+      "choix": [
+       "ont",
+       "on",
+       "avons"
+      ],
+      "reponse": "ont"
+     },
+     {
+      "question": "Vous … gentils. (être)",
+      "choix": [
+       "êtes",
+       "sommes",
+       "sont"
+      ],
+      "reponse": "êtes"
+     }
+    ]
+   },
+   {
+    "type": "trous",
+    "titre": "La bonne terminaison",
+    "consigne": "Choisis la bonne forme du verbe.",
+    "texte": "Le matin, je [mange] une tartine. Tu [ranges] ta chambre. Nous [dessinons] une maison. Les oiseaux [chantent] dans l'arbre.",
+    "distracteurs": [
+     "manges",
+     "range",
+     "dessinez",
+     "chante"
+    ]
+   }
+  ],
+  "competence": "Je conjugue les verbes en -er au présent",
+  "genere": true
+ },
+ {
   "id": "fr-ce1-noms-verbes",
   "matiere": "francais",
   "niveau": "CE1",
@@ -3111,6 +3282,220 @@
    }
   ],
   "competence": "Je sais quand écrire gu et ç",
+  "genere": true
+ },
+ {
+  "id": "fr-ce2-present-ir",
+  "matiere": "francais",
+  "niveau": "CE2",
+  "titre": "Le présent des verbes en -ir comme finir",
+  "ordre": 8,
+  "programme": {
+   "section": "c2-francais-ce2-decouvrir-comprendre-et-mettre-en-uvre-lorthographe-grammaticale",
+   "citation": "Apprendre à conjuguer au présent, à l’imparfait, au futur"
+  },
+  "lecon": [
+   {
+    "texte": "Les verbes du 2e groupe finissent par « ir » et font « issons » avec nous : finir, nous finissons.",
+    "exemples": [
+     "finir",
+     "choisir",
+     "grandir",
+     "remplir"
+    ]
+   },
+   {
+    "texte": "Au présent, leurs terminaisons sont : is, is, it, issons, issez, issent.",
+    "exemples": [
+     "je finis",
+     "il finit",
+     "nous finissons",
+     "ils finissent"
+    ]
+   },
+   {
+    "texte": "Attention : partir ou venir finissent aussi par « ir », mais on dit nous partons. Ils sont du 3e groupe.",
+    "exemples": [
+     "nous partons",
+     "nous venons"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "conjugaison",
+    "titre": "Finir au présent",
+    "verbe": "finir",
+    "temps": "présent",
+    "formes": [
+     {
+      "pronom": "je",
+      "forme": "finis"
+     },
+     {
+      "pronom": "tu",
+      "forme": "finis"
+     },
+     {
+      "pronom": "il",
+      "forme": "finit"
+     },
+     {
+      "pronom": "nous",
+      "forme": "finissons"
+     },
+     {
+      "pronom": "vous",
+      "forme": "finissez"
+     },
+     {
+      "pronom": "ils",
+      "forme": "finissent"
+     }
+    ],
+    "distracteurs": [
+     "finira",
+     "finissait"
+    ]
+   },
+   {
+    "type": "conjugaison",
+    "titre": "Choisir au présent",
+    "verbe": "choisir",
+    "temps": "présent",
+    "formes": [
+     {
+      "pronom": "je",
+      "forme": "choisis"
+     },
+     {
+      "pronom": "tu",
+      "forme": "choisis"
+     },
+     {
+      "pronom": "elle",
+      "forme": "choisit"
+     },
+     {
+      "pronom": "nous",
+      "forme": "choisissons"
+     },
+     {
+      "pronom": "vous",
+      "forme": "choisissez"
+     },
+     {
+      "pronom": "elles",
+      "forme": "choisissent"
+     }
+    ],
+    "distracteurs": [
+     "choisira",
+     "choisissait"
+    ]
+   },
+   {
+    "type": "bulles",
+    "titre": "Le verbe bien conjugué",
+    "questions": [
+     {
+      "question": "Le petit chien … vite. (grandir)",
+      "choix": [
+       "grandit",
+       "grandis",
+       "grandissent"
+      ],
+      "reponse": "grandit"
+     },
+     {
+      "question": "Nous … nos verres. (remplir)",
+      "choix": [
+       "remplissons",
+       "remplions",
+       "remplissez"
+      ],
+      "reponse": "remplissons"
+     },
+     {
+      "question": "Tu … ton dessin. (finir)",
+      "choix": [
+       "finis",
+       "finit",
+       "finissent"
+      ],
+      "reponse": "finis"
+     },
+     {
+      "question": "Les fleurs … au printemps. (fleurir)",
+      "choix": [
+       "fleurissent",
+       "fleurit",
+       "fleurient"
+      ],
+      "reponse": "fleurissent"
+     },
+     {
+      "question": "Vous … un livre. (choisir)",
+      "choix": [
+       "choisissez",
+       "choisisez",
+       "choisissons"
+      ],
+      "reponse": "choisissez"
+     }
+    ]
+   },
+   {
+    "type": "classer",
+    "titre": "Quel groupe ?",
+    "consigne": "Range chaque verbe : 2e groupe (nous finissons) ou 3e groupe (nous partons).",
+    "groupes": [
+     {
+      "id": "1",
+      "nom": "2e groupe"
+     },
+     {
+      "id": "2",
+      "nom": "3e groupe"
+     }
+    ],
+    "items": [
+     {
+      "texte": "finir",
+      "groupe": "1"
+     },
+     {
+      "texte": "choisir",
+      "groupe": "1"
+     },
+     {
+      "texte": "grandir",
+      "groupe": "1"
+     },
+     {
+      "texte": "remplir",
+      "groupe": "1"
+     },
+     {
+      "texte": "partir",
+      "groupe": "2"
+     },
+     {
+      "texte": "venir",
+      "groupe": "2"
+     },
+     {
+      "texte": "dormir",
+      "groupe": "2"
+     },
+     {
+      "texte": "courir",
+      "groupe": "2"
+     }
+    ]
+   }
+  ],
+  "competence": "Je conjugue les verbes en -ir comme finir au présent",
   "genere": true
  },
  {
@@ -4509,6 +4894,226 @@
    }
   ],
   "competence": "Je reconnais les types de phrases",
+  "genere": true
+ },
+ {
+  "id": "fr-cm1-present-trois-groupes",
+  "matiere": "francais",
+  "niveau": "CM1",
+  "titre": "Le présent des trois groupes",
+  "ordre": 18,
+  "programme": {
+   "section": "c3-francais-cm1-acquerir-lorthographe-grammaticale",
+   "citation": "Connaître les marques de personne pour le présent de l’indicatif, l’imparfait et le futur"
+  },
+  "lecon": [
+   {
+    "texte": "1er groupe, comme chanter : e, es, e, ons, ez, ent.",
+    "exemples": [
+     "je chante",
+     "ils chantent"
+    ]
+   },
+   {
+    "texte": "2e groupe, comme finir : is, is, it, issons, issez, issent.",
+    "exemples": [
+     "je finis",
+     "ils finissent"
+    ]
+   },
+   {
+    "texte": "3e groupe : beaucoup font s, s, t ou d, puis ons, ez, ent. Être, avoir, aller et faire sont à apprendre par cœur.",
+    "exemples": [
+     "je prends",
+     "il prend",
+     "nous allons",
+     "vous faites"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "conjugaison",
+    "titre": "Grandir au présent",
+    "verbe": "grandir",
+    "temps": "présent",
+    "formes": [
+     {
+      "pronom": "je",
+      "forme": "grandis"
+     },
+     {
+      "pronom": "tu",
+      "forme": "grandis"
+     },
+     {
+      "pronom": "il",
+      "forme": "grandit"
+     },
+     {
+      "pronom": "nous",
+      "forme": "grandissons"
+     },
+     {
+      "pronom": "vous",
+      "forme": "grandissez"
+     },
+     {
+      "pronom": "ils",
+      "forme": "grandissent"
+     }
+    ],
+    "distracteurs": [
+     "grandira",
+     "grandissait"
+    ]
+   },
+   {
+    "type": "conjugaison",
+    "titre": "Prendre au présent",
+    "verbe": "prendre",
+    "temps": "présent",
+    "formes": [
+     {
+      "pronom": "je",
+      "forme": "prends"
+     },
+     {
+      "pronom": "tu",
+      "forme": "prends"
+     },
+     {
+      "pronom": "il",
+      "forme": "prend"
+     },
+     {
+      "pronom": "nous",
+      "forme": "prenons"
+     },
+     {
+      "pronom": "vous",
+      "forme": "prenez"
+     },
+     {
+      "pronom": "ils",
+      "forme": "prennent"
+     }
+    ],
+    "distracteurs": [
+     "prendra",
+     "prenait"
+    ]
+   },
+   {
+    "type": "bulles",
+    "titre": "Le bon présent",
+    "questions": [
+     {
+      "question": "Mes amis … au cinéma. (aller)",
+      "choix": [
+       "vont",
+       "allent",
+       "vas"
+      ],
+      "reponse": "vont"
+     },
+     {
+      "question": "Vous … un gâteau. (faire)",
+      "choix": [
+       "faites",
+       "faisez",
+       "font"
+      ],
+      "reponse": "faites"
+     },
+     {
+      "question": "Le soleil … sur la plage. (briller)",
+      "choix": [
+       "brille",
+       "brilles",
+       "brillent"
+      ],
+      "reponse": "brille"
+     },
+     {
+      "question": "Nous … nos devoirs. (finir)",
+      "choix": [
+       "finissons",
+       "finons",
+       "finissez"
+      ],
+      "reponse": "finissons"
+     },
+     {
+      "question": "Il … le bus. (prendre)",
+      "choix": [
+       "prend",
+       "prends",
+       "prent"
+      ],
+      "reponse": "prend"
+     }
+    ]
+   },
+   {
+    "type": "classer",
+    "titre": "Chaque verbe dans sa maison",
+    "consigne": "Range chaque verbe dans la maison de son groupe.",
+    "groupes": [
+     {
+      "id": "1",
+      "nom": "1er groupe"
+     },
+     {
+      "id": "2",
+      "nom": "2e groupe"
+     },
+     {
+      "id": "3",
+      "nom": "3e groupe"
+     }
+    ],
+    "items": [
+     {
+      "texte": "chanter",
+      "groupe": "1"
+     },
+     {
+      "texte": "jouer",
+      "groupe": "1"
+     },
+     {
+      "texte": "manger",
+      "groupe": "1"
+     },
+     {
+      "texte": "finir",
+      "groupe": "2"
+     },
+     {
+      "texte": "choisir",
+      "groupe": "2"
+     },
+     {
+      "texte": "grandir",
+      "groupe": "2"
+     },
+     {
+      "texte": "prendre",
+      "groupe": "3"
+     },
+     {
+      "texte": "faire",
+      "groupe": "3"
+     },
+     {
+      "texte": "partir",
+      "groupe": "3"
+     }
+    ]
+   }
+  ],
+  "competence": "Je conjugue au présent les verbes des trois groupes",
   "genere": true
  },
  {
@@ -10174,6 +10779,149 @@
    }
   ],
   "competence": "Je connais les doubles et les moitiés",
+  "genere": true
+ },
+ {
+  "id": "ma-ce1-doubles-moities-grands",
+  "matiere": "maths",
+  "niveau": "CE1",
+  "titre": "Doubles et moitiés des grands nombres",
+  "ordre": 36,
+  "programme": {
+   "section": "c2-mathematiques-ce1-apprendre-des-procedures-de-calcul-mental",
+   "citation": "L’élève sait que, pour déterminer la moitié d’un nombre pair, il peut le décomposer en nombre pair."
+  },
+  "lecon": [
+   {
+    "texte": "Le double de 200 : deux centaines, et encore deux centaines, ça fait quatre centaines. Le double de 200, c'est 400.",
+    "exemples": [
+     "double de 200 = 400",
+     "double de 30 = 60"
+    ]
+   },
+   {
+    "texte": "La moitié de 100, c'est 50, car 50 + 50 = 100.",
+    "exemples": [
+     "moitié de 100 = 50",
+     "moitié de 400 = 200"
+    ]
+   },
+   {
+    "texte": "Pour un nombre plus difficile, je le coupe en morceaux. La moitié de 470 : 470, c'est 400 + 70. La moitié de 400, c'est 200. La moitié de 70, c'est 35. Donc la moitié de 470, c'est 235.",
+    "exemples": [
+     "470 = 400 + 70",
+     "200 + 35 = 235"
+    ]
+   }
+  ],
+  "exercices": [
+   {
+    "type": "calcul",
+    "titre": "Les doubles",
+    "operations": [
+     {
+      "q": "le double de 200",
+      "r": 400
+     },
+     {
+      "q": "le double de 300",
+      "r": 600
+     },
+     {
+      "q": "le double de 40",
+      "r": 80
+     },
+     {
+      "q": "le double de 150",
+      "r": 300,
+      "aide": "150, c'est 100 + 50 : le double de 100, puis le double de 50."
+     },
+     {
+      "q": "le double de 250",
+      "r": 500
+     },
+     {
+      "q": "le double de 120",
+      "r": 240
+     }
+    ]
+   },
+   {
+    "type": "calcul",
+    "titre": "Les moitiés",
+    "operations": [
+     {
+      "q": "la moitié de 100",
+      "r": 50
+     },
+     {
+      "q": "la moitié de 200",
+      "r": 100
+     },
+     {
+      "q": "la moitié de 60",
+      "r": 30
+     },
+     {
+      "q": "la moitié de 500",
+      "r": 250,
+      "aide": "500, c'est 400 + 100 : la moitié de 400, puis la moitié de 100."
+     },
+     {
+      "q": "la moitié de 80",
+      "r": 40
+     },
+     {
+      "q": "la moitié de 470",
+      "r": 235,
+      "aide": "470, c'est 400 + 70."
+     }
+    ]
+   },
+   {
+    "type": "bulles",
+    "titre": "Doubles et moitiés dans la vie",
+    "questions": [
+     {
+      "question": "Léa a 200 billes. Tom en a le double. Combien Tom a-t-il de billes ?",
+      "choix": [
+       "400",
+       "200",
+       "100"
+      ],
+      "reponse": "400"
+     },
+     {
+      "question": "Un ruban mesure 100 cm. On le coupe en deux parts égales. Combien mesure chaque part ?",
+      "choix": [
+       "50 cm",
+       "200 cm",
+       "25 cm"
+      ],
+      "reponse": "50 cm"
+     },
+     {
+      "question": "Quel nombre a pour double 600 ?",
+      "choix": [
+       "300",
+       "1200",
+       "200"
+      ],
+      "reponse": "300"
+     },
+     {
+      "question": "Quel nombre a pour moitié 40 ?",
+      "choix": [
+       "80",
+       "20",
+       "400"
+      ],
+      "reponse": "80"
+     }
+    ]
+   }
+  ],
+  "competence": "Je calcule les doubles et les moitiés des grands nombres",
   "genere": true
  },
  {
