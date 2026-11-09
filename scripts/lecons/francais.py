@@ -362,24 +362,7 @@ LECONS = [
                     ("Quel indice montre que l'animal vit la nuit ?", ["les bruits commencent au coucher du soleil", "il a de grands yeux", "il est derrière la malle"])])],
           competence="Je comprends un texte en m'appuyant sur les indices"),
 
-    # ---------------- Le présent de l'indicatif (CE1 → CM1) ----------------
-    lecon("fr-ce1-present-er", F, "CE1", "Le présent des verbes en -er", 24, C2.format("ce1", "decouvrir-comprendre-et-mettre-en-uvre-lorthographe-grammaticale"),
-          ["conjuguer au présent"],
-          [("Le présent dit ce qui se passe maintenant : aujourd'hui, je joue.", ["aujourd'hui", "maintenant"]),
-           ("Les verbes en « er » comme chanter ont ces terminaisons : e, es, e, ons, ez, ent.", ["je chante", "nous chantons", "ils chantent"]),
-           "Attention : « ent » ne se prononce pas. Ils chantent se dit comme il chante."],
-          [conjugaison("chanter", "présent", ["chante", "chantes", "chante", "chantons", "chantez", "chantent"], ["chantait", "chantera"]),
-           conjugaison("jouer", "présent", ["joue", "joues", "joue", "jouons", "jouez", "jouent"], ["jouait", "jouera"]),
-           bulles("Être et avoir au présent", [
-               ("Aujourd'hui, je … content. (être)", ["suis", "serai", "étais"]),
-               ("Nous … un chat. (avoir)", ["avons", "aurons", "avions"]),
-               ("Tu … en retard. (être)", ["es", "est", "et"]),
-               ("Ils … faim. (avoir)", ["ont", "on", "avons"]),
-               ("Vous … gentils. (être)", ["êtes", "sommes", "sont"])]),
-           trous("La bonne terminaison", "Choisis la bonne forme du verbe.",
-                 "Le matin, je [mange] une tartine. Tu [ranges] ta chambre. Nous [dessinons] une maison. Les oiseaux [chantent] dans l'arbre.",
-                 ["manges", "range", "dessinez", "chante"])],
-          competence="Je conjugue les verbes en -er au présent"),
+    # ---------------- Le présent de l'indicatif (CE2, CM1) ----------------
     lecon("fr-ce2-present-ir", F, "CE2", "Le présent des verbes en -ir comme finir", 8, C2.format("ce2", "decouvrir-comprendre-et-mettre-en-uvre-lorthographe-grammaticale"),
           ["conjuguer au présent"],
           [("Les verbes du 2e groupe finissent par « ir » et font « issons » avec nous : finir, nous finissons.", ["finir", "choisir", "grandir", "remplir"]),
