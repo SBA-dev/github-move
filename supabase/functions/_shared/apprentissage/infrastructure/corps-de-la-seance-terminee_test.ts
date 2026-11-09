@@ -206,11 +206,14 @@ function enReponseEnvoyee(reponse: ReponseDonnee): Record<string, unknown> {
   if (reponse.genre === "jeNeSaisPas") return { jeNeSaisPas: true };
   if (reponse.genre === "nombre") return { nombre: reponse.valeur };
   if (reponse.genre === "motEcrit") return { motEcrit: reponse.lettres };
-  return {
-    placement: reponse.groupe === undefined
-      ? { etiquette: reponse.etiquette }
-      : { etiquette: reponse.etiquette, groupe: reponse.groupe },
-  };
+  if (reponse.genre === "placement") {
+    return {
+      placement: reponse.groupe === undefined
+        ? { etiquette: reponse.etiquette }
+        : { etiquette: reponse.etiquette, groupe: reponse.groupe },
+    };
+  }
+  return { heureEcrite: Object.fromEntries(Object.entries(reponse).filter(([champ]) => champ !== "genre")) };
 }
 
 Deno.test("le corps d'une séance de classer est lu puis revalidé sans incohérence", () => {
