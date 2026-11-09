@@ -51,7 +51,12 @@ function heureSeule(heures: number): string {
 }
 
 function minutesEtSecondes(heure: HeureDeLHorloge): string {
-  const minutes = nombreEnLettres(heure.minutes, true);
-  const secondes = nombreEnLettres(heure.secondes, true);
-  return `${minutes} minutes et ${secondes} secondes`;
+  const secondes = unite(heure.secondes, "seconde");
+  if (heure.minutes === 0) return `et ${secondes}`;
+  return `${unite(heure.minutes, "minute")} et ${secondes}`;
+}
+
+function unite(quantite: number, nom: string): string {
+  const mots = nombreEnLettres(quantite, true);
+  return quantite === 1 ? `${mots} ${nom}` : `${mots} ${nom}s`;
 }
