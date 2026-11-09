@@ -14,12 +14,12 @@ L'application fonctionne et est publiée comme artifact claude.ai. Elle comprend
 
 ### Contenu (`app/bibliotheque.json`)
 
-265 leçons :
+269 leçons (le 2026-11-09 : présent des verbes en -er, en -ir et des trois groupes, doubles et moitiés des grands nombres, après un retour de parent) :
 
 | Matière | CP | CE1 | CE2 | CM1 | CM2 |
 |---|---|---|---|---|---|
-| Français | 21 | 20 | 18 | 20 | 20 |
-| Maths | 31 | 17 | 19 | 21 | 18 |
+| Français | 21 | 21 | 19 | 21 | 20 |
+| Maths | 31 | 18 | 19 | 21 | 18 |
 
 À ces leçons s'ajoutent sciences (21), histoire et géographie (21), anglais (16) et EMC (2).
 
@@ -35,6 +35,8 @@ L'application fonctionne et est publiée comme artifact claude.ai. Elle comprend
 - **Aucun code de la cible n'existe encore.**
 
 ## Prochaines étapes
+
+> **Retour de parent (2026-11-09)** : issues #186 (une leçon personnelle de maths devient une dictée, bug), #187 (chercher une leçon par texte) et #188 (proposer 2 ou 3 exercices au parent) créées, à cadrer.
 
 > **En cours** : #16, #17, #11, #12, #23, #24, #18 livrées (PR #53 à #57, #59, #60). #19 (dictée, conjugaison ; décision 0018) livrée sur `claude/nice-mendel-cp9syg`, en PR. #14 reportée par le PO ; #58 (retrait de la page de démonstration, avec le scénario PWA #8 qui l'ouvre encore) à faire. À surveiller : scénario « 7 × 8 » de #10, flaky sous charge. Suite : la vague 1 du graphe (`docs/graphe/stories.md`).
 
