@@ -28,3 +28,20 @@ Aucun concept ni règle nouvelle : on remplit deux valeurs `musique` du catalogu
 - `po-acceptance` (`4c892d0`) : Sports et Police rejoignent le Plan « <musique> se fait entendre à la place de « grande victoire » » de #166 ; la règle « garde « grande victoire » » est retirée ; 6 scénarios de #106 (Coach Léo, Agent Max) tagués `@issue-173`, texte inchangé. `acceptance.md` écrit, aucune question ouverte. 106.46 (musique, « découverte », parole) couverte en E2E seulement avec Noisette (#102) et par les tests du domaine : non dupliquée.
 - RED `3acfd23` (échec de typage vérifié : les deux noms absents de l'union) → GREEN `e88ac26` → câblage `e8e175a` (2 MP3, `FICHIER_DE_L_EFFET`, `sw.js`, `docs/sons.md`). Unitaires 2947/2947, lint, fmt, tsc, build verts.
 - VERROU base demandé (commentaire 6752505112), RELIS envoyé. Steps E2E et review lancés pendant l'attente.
+
+## Review, E2E (2026-11-09, 22:00 → 22:40 UTC)
+
+- `mr-reviewer` (cycle 1, ensemble `origin/main...e8e175a`) : **APPROUVÉ**, 6 non bloquants. Traités : glossaire (ajouts seulement, `628d490` par `domain-modeler`) ; `MUSIQUES_DES_UNIVERS` des steps (déjà fait par `d0a0867`). Laissés : historique de `docs/stories/106/acceptance.md` (on ne réécrit pas une story livrée), « bref » proche de « court » (durées dans `docs/sons.md`), câblage sans test rouge propre (même schéma que #166, imposé par le typage `Record<EffetSonore, string>`), durée d'`airDeCordesPincees` (1,04 s mesurée, et non 0,99 s comme noté plus haut).
+- Steps E2E `d0a0867` (`e2e-tester`) : libellés « air de steel drum bref » et « air de cordes pincées bref », `MUSIQUES_DES_UNIVERS` complété. `bddgen` sans étape manquante ; 8 tests `@issue-173`, 74 pour `@issue-166|@issue-106` sur `telephone`.
+- VERROU base accordé à 21:57 (tableau de #64 vérifié). Sonde : 3 × 200 en moins de 0,8 s. Run sur `d0a0867` (`telephone`, 1 worker) : **74/74 verts** (25,4 min). LIBÈRE base (commentaire 6753074257).
+- PWA (`playwright.pwa.config.ts`, précache changé) : **36/36 verts** (1,1 min).
+- `main` n'a pas bougé depuis `5d690d3` : aucune intégration.
+
+## Mesures
+
+- Durée : lancement 2026-11-09 ~21:20 UTC → PR prête ~22:45 UTC, environ 1 h 25, dont ~20 min d'attente du choix du PO et ~5 min d'attente du verrou base.
+- Cycles TDD : 1 comportement (catalogue des musiques).
+- Review : 2 passages (ensemble APPROUVÉ ; delta des steps), 0 cycle À CORRIGER.
+- E2E : 1 run du périmètre (74/74), 1 run de la PWA (36/36), 0 cycle KO.
+- Intégrations de `main` : 0, aucun conflit.
+- Escalades : 0. Aucun hôte réseau refusé.
