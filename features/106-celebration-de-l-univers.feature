@@ -45,10 +45,9 @@ Fonctionnalité: Une célébration propre à chaque univers
     quand la célébration de l'univers est jouée, ni ses confettis ni son effet sonore ne s'y ajoutent ;
   - « la musique de la célébration de Coach Léo », « la musique de la célébration de Lili », « la musique de la
     célébration de Noisette », « la musique de la célébration d'Agent Max » : l'effet sonore de leur
-    célébration de l'univers, qui remplace « grande victoire » (106.12), entendu une seule fois. Pour Lili et
-    Noisette, c'est la musique choisie par le PO, à l'écoute, pour l'univers du personnage guide (#166) ; pour
-    Coach Léo et Agent Max, le PO n'a retenu aucune musique à l'écoute : c'est encore « grande victoire », jusqu'à
-    l'issue de suivi (166.4 A) ;
+    célébration de l'univers, qui remplace « grande victoire » (106.12), entendu une seule fois. C'est la musique
+    choisie par le PO, à l'écoute, pour l'univers du personnage guide : #166 pour Lili et Noisette, #173 pour
+    Coach Léo et Agent Max (scénarios tagués @issue-173) ;
   - « l'image fixe de la célébration » : la même scène, dans l'état final de la variante tirée, quand l'appareil
     demande des mouvements réduits (106.15) ; rien ne tombe, ni les confettis de Coach Léo, ni les pétales de la
     salle, ni les feuilles de la forêt, ni les étincelles du jardin, ni les confettis du commissariat, ni les
@@ -97,6 +96,7 @@ Fonctionnalité: Une célébration propre à chaque univers
 
   Règle: Quand un enfant de l'univers « Sports » relève un défi pour la première fois, Coach Léo joue la célébration de l'univers à la place de la célébration commune, avant de le féliciter
 
+    @issue-173
     Scénario: Au premier défi relevé, Coach Léo marque un but et le fête, puis félicite Léa
       Étant donné que Léa a réussi les 5 premières leçons de maths du CE1
       Et que Léa a commencé le défi 1 de maths
@@ -184,12 +184,14 @@ Fonctionnalité: Une célébration propre à chaque univers
 
   Règle: La célébration de l'univers ne retient jamais l'enfant : un toucher hors des boutons ne fait rien, les boutons et le clavier agissent tout de suite et arrêtent sa musique
 
+    @issue-173
     Scénario: Toucher l'écran en dehors des boutons pendant la célébration de l'univers ne change rien
       Étant donné que Léa voit la célébration de l'univers « Sports » à la fin du défi 1 de maths
       Quand Léa touche l'écran en dehors des boutons
       Alors Coach Léo continue la célébration de l'univers
       Et Léa entend la musique de la célébration de Coach Léo jusqu'au bout
 
+    @issue-173
     Scénario: Pendant la célébration de l'univers, toucher « Mon parcours » y mène tout de suite et arrête la musique
       Étant donné que Léa voit la célébration de l'univers « Sports » à la fin du défi 1 de maths
       Quand Léa choisit « Mon parcours »
@@ -229,6 +231,7 @@ Fonctionnalité: Une célébration propre à chaque univers
 
   Règle: La musique de la célébration de l'univers est un effet sonore : le Muet ne la coupe pas, il coupe seulement la parole ; un écran du parent l'arrête
 
+    @issue-173
     Scénario: En Muet, la musique de la célébration de l'univers se fait entendre, sans parole
       Étant donné que la tablette est en Muet
       Et que Léa a réussi les 5 premières leçons de maths du CE1
@@ -237,6 +240,7 @@ Fonctionnalité: Une célébration propre à chaque univers
       Alors Léa entend la musique de la célébration de Coach Léo
       Mais Léa n'entend aucune parole
 
+    @issue-173
     Scénario: En arrivant sur un écran du parent, la musique de la célébration de l'univers s'arrête
       Étant donné que Léa voit la célébration de l'univers « Sports » à la fin du défi 1 de maths
       Quand Léa demande l'entrée de l'espace parent
@@ -441,7 +445,7 @@ Fonctionnalité: Une célébration propre à chaque univers
     Contexte:
       Étant donné que Paul a changé l'univers du profil enfant de Léa en « Police »
 
-    @livraison-106e
+    @livraison-106e @issue-173
     Scénario: Au premier défi relevé dans l'univers « Police », Agent Max retrouve un chiot perdu et le fête, puis félicite Léa
       Étant donné que Léa a réussi les 5 premières leçons de maths du CE1
       Et que Léa a commencé le défi 1 de maths
