@@ -8,7 +8,7 @@ const MODES = ["lire", "placer"] as const;
 const MOMENTS = ["matin", "apres-midi"] as const;
 const DERNIERE_HEURE_A_PLACER_AU_CP = 12;
 
-export type ModeDHorloge = typeof MODES[number];
+export type ModeDeLHorloge = typeof MODES[number];
 export type MomentDeLaJournee = typeof MOMENTS[number];
 
 export type ItemDHorloge = Readonly<{
@@ -21,7 +21,7 @@ export type ExerciceHorloge = Readonly<{
   type: "horloge";
   titre?: string;
   consigne?: string;
-  mode: ModeDHorloge;
+  mode: ModeDeLHorloge;
   precision: PrecisionDeLHeure;
   items: readonly ItemDHorloge[];
 }>;
@@ -47,7 +47,7 @@ export function lireHorloge(
   });
 }
 
-function lireMode(valeur: unknown): ModeDHorloge {
+function lireMode(valeur: unknown): ModeDeLHorloge {
   const mode = MODES.find((connu) => connu === valeur);
   if (mode === undefined) throw new LeconMalFormee(`le mode doit être l'un de : ${MODES.join(", ")}`);
   return mode;

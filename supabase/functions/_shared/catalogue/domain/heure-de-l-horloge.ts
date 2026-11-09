@@ -4,6 +4,9 @@ const ECRITURE = /^(\d{1,2}):(\d{2})(?::(\d{2}))?$/;
 const HEURES_SUR_LE_CADRAN = 12;
 const SECONDES_PAR_MINUTE = 60;
 const SECONDES_PAR_HEURE = 3600;
+const DERNIERE_HEURE_DU_JOUR = 23;
+const DERNIERE_MINUTE_DE_L_HEURE = 59;
+const DERNIERE_SECONDE_DE_LA_MINUTE = 59;
 
 export class HeureDeLHorloge {
   private constructor(
@@ -53,7 +56,10 @@ export class HeureDeLHorloge {
   }
 
   private verifierLesBornes(ecriture: string): void {
-    if (this.heures > 23 || this.minutes > 59 || this.secondes > 59) {
+    if (
+      this.heures > DERNIERE_HEURE_DU_JOUR || this.minutes > DERNIERE_MINUTE_DE_L_HEURE ||
+      this.secondes > DERNIERE_SECONDE_DE_LA_MINUTE
+    ) {
       throw new LeconMalFormee(`l'heure « ${ecriture} » est hors de la journée`);
     }
   }

@@ -13,6 +13,12 @@ const PAS_EN_SECONDES = {
 
 export type EcriturePrecisionDeLHeure = keyof typeof PAS_EN_SECONDES;
 
+const ECRITURES_CONNUES = Object.keys(PAS_EN_SECONDES).filter(estUneEcriture);
+
+function estUneEcriture(nom: string): nom is EcriturePrecisionDeLHeure {
+  return nom in PAS_EN_SECONDES;
+}
+
 const PRECISION_PAR_DEFAUT: Record<CodeDeNiveau, EcriturePrecisionDeLHeure> = {
   CP: "heure",
   CE1: "quart-d-heure",
@@ -27,11 +33,10 @@ export class PrecisionDeLHeure {
   private constructor(private readonly nom: EcriturePrecisionDeLHeure) {}
 
   static lire(ecriture: string): PrecisionDeLHeure {
-    const nom = (Object.keys(PAS_EN_SECONDES) as EcriturePrecisionDeLHeure[])
-      .find((connu) => connu === ecriture);
+    const nom = ECRITURES_CONNUES.find((connu) => connu === ecriture);
     if (nom === undefined) {
       throw new LeconMalFormee(
-        `la précision « ${ecriture} » doit être l'une de : ${Object.keys(PAS_EN_SECONDES).join(", ")}`,
+        `la précision « ${ecriture} » doit être l'une de : ${ECRITURES_CONNUES.join(", ")}`,
       );
     }
     return new PrecisionDeLHeure(nom);
