@@ -45,7 +45,7 @@ export class QuestionDHorloge implements QuestionPosee {
     const textes = heuresProposees(item.heure, exercice.precision).map((heure) => heure.ecriture());
     const question = QuestionJouee.aChoix({
       cle: cleDeLHorloge(exercice.mode, item),
-      enonce: exercice.consigne ?? CONSIGNE_PAR_DEFAUT,
+      enonce: consigneDe(exercice),
       choix: tireur.choix(textes, bonneReponse),
       bonneReponse,
       type: "bulles",
@@ -71,7 +71,7 @@ export class QuestionDHorloge implements QuestionPosee {
   }
 
   texteAffiche(): string {
-    return this.exercice.consigne ?? CONSIGNE_PAR_DEFAUT;
+    return consigneDe(this.exercice);
   }
 
   texteDit(): string {
@@ -139,6 +139,10 @@ export class QuestionDHorloge implements QuestionPosee {
     const { moment } = this.item;
     return moment === undefined || (moment === "apres-midi") === (heure.heures >= MIDI);
   }
+}
+
+function consigneDe({ consigne }: ExerciceHorloge): string {
+  return consigne ?? CONSIGNE_PAR_DEFAUT;
 }
 
 function heureEcrite({ heures, minutes, secondes }: HeureEcrite): HeureDeLHorloge {
