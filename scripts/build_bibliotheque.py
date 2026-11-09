@@ -20,7 +20,9 @@ ROOT = Path(__file__).resolve().parent.parent
 LIB = ROOT / "app" / "bibliotheque.json"
 INDEX = {e["id"]: e for e in json.loads((ROOT / "app" / "programmes-index.json").read_text(encoding="utf-8"))}
 ORDRES = {"ma-cp-addition-posee": 57, "ma-cp-monnaie": 31, "ma-cp-formes": 41, "ma-cp-heures": 51}   # leçons écrites à la main, replacées dans la progression du guide
-MODULES = ["francais", "francais2", "maths", "maths2", "maths_cp", "sciences", "histoire", "anglais"]
+MODULES = ["francais", "francais2", "maths", "maths2", "maths_cp", "sciences", "histoire", "anglais",
+           "complements_francais_c2", "complements_francais_c3", "complements_maths_cp_ce1", "complements_maths_ce2",
+           "complements_maths_c3", "complements_sciences", "complements_histoire_emc", "complements_anglais"]
 
 
 def norm(s):
