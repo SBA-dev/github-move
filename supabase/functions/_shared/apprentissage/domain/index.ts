@@ -1,4 +1,5 @@
 export { Avancement } from "./avancement.ts";
+export { heureDite } from "./heure-dite.ts";
 export { ExerciceJoue } from "./exercice-joue.ts";
 export type { LigneDuTableauDeConjugaison, SegmentDuTexteATrous } from "./exercice-joue.ts";
 export type { EtiquettePosee } from "./etiquettes-a-placer.ts";
