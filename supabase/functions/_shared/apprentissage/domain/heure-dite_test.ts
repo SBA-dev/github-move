@@ -66,3 +66,11 @@ Deno.test("à partir du CE2, 23:45 se dit « minuit moins le quart » et 23:40 �
   assertEquals(dire("23:45", "CE2"), "minuit moins le quart");
   assertEquals(dire("23:40", "CE2"), "minuit moins vingt");
 });
+
+Deno.test("au CM2, des secondes sans minute ne disent pas « zéro minutes »", () => {
+  assertEquals(dire("6:00:20", "CM2"), "six heures et vingt secondes");
+});
+
+Deno.test("au CM2, une minute et une seconde se disent au singulier", () => {
+  assertEquals(dire("6:01:01", "CM2"), "six heures une minute et une seconde");
+});
