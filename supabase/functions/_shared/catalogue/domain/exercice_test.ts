@@ -108,6 +108,7 @@ const unExerciceDeChaqueType: Record<string, Record<string, unknown>> = {
   },
   boite: { type: "boite", items: [{ a: 4, op: "+", b: 3 }] },
   barres: { type: "barres", items: [{ enonce: "Combien en tout ?", parties: [3, 4], tout: null }] },
+  horloge: { type: "horloge", mode: "lire", items: [{ heure: "3:00" }] },
 };
 
 Deno.test("un exercice « bulles » lu garde son type, son titre et ses 6 questions", () => {
@@ -143,7 +144,7 @@ Deno.test("un exercice sans titre ni consigne les laisse absents", () => {
   assertEquals(lecon.exercices[0].consigne, undefined);
 });
 
-Deno.test("les 14 types du format sont connus, chacun lu avec son type", () => {
+Deno.test("les 15 types du format sont connus, chacun lu avec son type", () => {
   const lecon = lireLecon(leconAvec(...Object.values(unExerciceDeChaqueType)));
 
   assertEquals(lecon.exercices.map((exercice) => exercice.type), Object.keys(unExerciceDeChaqueType));
@@ -166,6 +167,7 @@ Deno.test("chaque type d'exercice a son libellé d'interface", () => {
     "Écouter (langue)",
     "La boîte à jetons",
     "Problème en schéma",
+    "L'horloge",
   ]);
 });
 
