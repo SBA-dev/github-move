@@ -11,10 +11,10 @@ Avant la vague 1 : #5, #6, #7, #8, #10, #11, #12, #15, #16, #17, #18, #19, #23, 
 
 Vague 1 (24/10 → 09/11, coordination #64) :
 - **beta** : #20, #25, #22, #21, #65, #27, #58, #72, #26, #32, #28, #73, #39, #34, #29, #79, #31, #30, #33, #45 (code et publication) ;
-- **épopée #95, leçons plus ludiques** : #96, #97, #99, #98 (98a), #102, #101, #100, #127, #126, #128, #131, #129, #130, #137, #106 (106a à 106h), #158, #161, #168, #163 (163a à 163f), #166 ;
+- **épopée #95, leçons plus ludiques** : #96, #97, #99, #98 (98a), #102, #101, #100, #127, #126, #128, #131, #129, #130, #137, #106 (106a à 106h), #158, #161, #168, #163 (163a à 163f), #166, #173 ;
 - **outillage et correctifs** : #146, #141, #140, #155, #179, #107, #111, #136, #113, #114, #115, #123.
 
-**En ligne en production** depuis le 07/11 : `main` `5d690d3`.
+**En ligne en production** depuis le 07/11 : `5d690d3`. Mergée depuis, pas encore publiée : #173 (`35b1e38`).
 
 ## Sorties de la beta
 
@@ -24,7 +24,6 @@ Vague 1 (24/10 → 09/11, coordination #64) :
 
 | # | Story | Contexte | Dépend de (ouvertes) | État |
 |---|---|---|---|---|
-| 173 | Musique des célébrations de Sports et de Police | Motivation | — (#166 mergée) | **en cours** (lancée le 09/11, coordonnée sur #64 jusqu'à son merge) |
 | 182 | Voix en MP3 pré-générés (Piper) | Apprentissage (voix) | à relever | prête à cadrer |
 | 183 | Écran de séance : barre du haut et barre d'action | Apprentissage | à relever | prête à cadrer |
 | 184 | Hors séance : en-tête compact et dock | transverse | à relever | prête à cadrer |
@@ -165,7 +164,7 @@ En attente d'une place : #19, #22, #14, #13, #58 (niveau 0), puis #21 et #65 dè
 - #98 → #130 (train), #126 (bulles), #127 (addition) → #131 (boîte et barres), #128 (claviers), #129 (parchemin) ;
 - #96 → #99 → #100 → #137 (grand défi) ;
 - #99 → #101 ;
-- #96, #102 et #100 → #106 (106a à 106h) → #158, #161, #168 (dessins fixes), #163 (réponse fausse), #166 (musiques) → #173.
+- #96, #102 et #100 → #106 (106a à 106h) → #158, #161, #168 (dessins fixes), #163 (réponse fausse), #166 (musiques) → #173 (musiques de Sports et de Police).
 
 ## Questions encore ouvertes
 

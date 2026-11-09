@@ -38,7 +38,7 @@ L'application fonctionne et est publiée comme artifact claude.ai. Elle comprend
 
 ## Prochaines étapes
 
-> **Vague 1 en clôture** (« Clôture A », 09/11) : #173 (musique des célébrations de Sports et de Police) est la dernière équipe en cours ; l'issue #64 se ferme à son merge. Vague 2 proposée à **2 équipes** (`docs/graphe/nombre-d-equipes.md`).
+> **Vague 1 close** (« Clôture A », 09/11) : #173 (musique des célébrations de Sports et de Police), dernière équipe, est mergée (`35b1e38`) ; elle n'est pas encore en ligne (prochaine publication). Aucune équipe ne tourne. Vague 2 proposée à **2 équipes** (`docs/graphe/nombre-d-equipes.md`), lancement sur demande du PO.
 
 ### Ce qui reste au PO
 

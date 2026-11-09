@@ -84,9 +84,9 @@ Le responsable annonce le nombre retenu et sa raison dans la synthèse de vague.
 | Mesure | Valeur |
 |---|---|
 | Durée | 16 jours, de 2 équipes au départ à 3 (le maximum) |
-| Livraisons mergées | 20 stories de la beta, 21 de l'épopée #95 (dont #106 en 8 livraisons et #163 en 6), 12 correctifs et outillage |
+| Livraisons mergées | 20 stories de la beta, 22 de l'épopée #95 (dont #106 en 8 livraisons et #163 en 6, la dernière : #173 le 09/11), 12 correctifs et outillage |
 | Mise en ligne | beta publiée avec #45, puis gamification en ligne le 07/11 (`5d690d3`) |
-| Coût relevé des équipes | environ 1 296 $ pour les 44 postes relevés (de #79 à #179, voir la liste du corps de #64). Les coûts des premières stories de la vague (#20 à #73) n'ont pas été reportés |
+| Coût relevé des équipes | environ 1 304 $ pour les 45 postes relevés (de #79 à #173, dont #173 pour 7,5 $, voir la liste du corps de #64). Les coûts des premières stories de la vague (#20 à #73) n'ont pas été reportés |
 | Coût des responsables | environ 347 $ (première session, 24/10 → 03/11) + 299 $ (seconde session, 03/11 → 09/11) |
 | Stories les plus chères | #163 (109 $ en 6 livraisons), #45 (88 $), #131 (65 $), #100 (63 $), #96 (60 $) |
 | Régressions sur `main` après un merge | 1 bloquante (étape ambiguë #20/#163, corrigée par #179), plus des KO de la non-régression complète corrigés par #141, #155 et #179 |
