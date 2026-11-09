@@ -87,3 +87,10 @@ Deno.test("deux heures de mêmes heures, minutes et secondes sont égales", () =
 Deno.test("3 h et 15 h ne sont pas égales par valeur", () => {
   assertFalse(HeureDeLHorloge.lire("3:00").egale(HeureDeLHorloge.lire("15:00")));
 });
+
+Deno.test("les secondes comptent sur le cadran", () => {
+  const sixHeuresDixHuitVingt = HeureDeLHorloge.lire("6:18:20");
+
+  assertFalse(sixHeuresDixHuitVingt.egaleSurLeCadran(HeureDeLHorloge.lire("6:18:30")));
+  assert(sixHeuresDixHuitVingt.egaleSurLeCadran(HeureDeLHorloge.lire("18:18:20")));
+});
