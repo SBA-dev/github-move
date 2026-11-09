@@ -14,14 +14,14 @@ L'application fonctionne et est publiée comme artifact claude.ai. Elle comprend
 
 ### Contenu (`app/bibliotheque.json`)
 
-269 leçons (le 2026-11-09 : présent des verbes en -er, en -ir et des trois groupes, doubles et moitiés des grands nombres, après un retour de parent) :
+428 leçons (le 2026-11-09 : audit du programme objectif par objectif, voir `docs/audit-programme-2026-11.md`) :
 
 | Matière | CP | CE1 | CE2 | CM1 | CM2 |
 |---|---|---|---|---|---|
-| Français | 21 | 21 | 19 | 21 | 20 |
-| Maths | 31 | 18 | 19 | 21 | 18 |
+| Français | 25 | 28 | 27 | 31 | 30 |
+| Maths | 39 | 30 | 39 | 33 | 26 |
 
-À ces leçons s'ajoutent sciences (21), histoire et géographie (21), anglais (16) et EMC (2).
+À ces leçons s'ajoutent sciences (41), histoire et géographie (40), anglais (36) et EMC (3).
 
 - Couverture des programmes : français 85 sections sur 90 (seule l'écriture manuscrite manque), maths 86 sur 89.
 - Les **maths du CP** suivent le guide fondamental « nombres, calcul et résolution de problèmes au CP » : 22 leçons appuyées sur le guide, avec les types `boite` et `barres`.
