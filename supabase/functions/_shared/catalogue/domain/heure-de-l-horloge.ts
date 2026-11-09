@@ -37,6 +37,10 @@ export class HeureDeLHorloge {
       this.secondes === autre.secondes;
   }
 
+  estMinuit(): boolean {
+    return this.heures === 0 && this.minutes === 0 && this.secondes === 0;
+  }
+
   ecriture(): string {
     if (this.secondes > 0) return `${this.heures} h ${this.minutes} min ${this.secondes} s`;
     if (this.minutes > 0) return `${this.heures} h ${this.minutes}`;

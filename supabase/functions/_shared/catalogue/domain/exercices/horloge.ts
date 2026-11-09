@@ -63,7 +63,7 @@ function lirePrecision(valeur: unknown, niveau: Niveau): PrecisionDeLHeure {
 function lireItem(brut: unknown, precision: PrecisionDeLHeure): ItemDHorloge {
   const item = enObjet(brut, "un item");
   const heure = HeureDeLHorloge.lire(texteRequis(item.heure, "l'heure d'un item"));
-  if (heure.heures === 0 && heure.minutes === 0 && heure.secondes === 0) {
+  if (heure.estMinuit()) {
     throw new LeconMalFormee("minuit n'est pas permis");
   }
   if (!precision.respectee(heure)) {
