@@ -29,16 +29,16 @@ import { laisserPasserLeDelaiDeLecture, normaliser, reappliquerLAppareil, scenar
 //
 // La scène de Coach Léo expose sa racine (`celebration-de-l-univers`) avec `data-univers`, `data-variante`, `data-mouvements` et
 // `data-etat` ; le cri de victoire et les confettis de la scène ont leur identifiant. La musique de la célébration est l'effet
-// sonore « grande victoire » en attendant le choix du PO (106.12) ; les effets sont suivis par le faux de #97. Le tirage de la
+// sonore propre au personnage guide (`MUSIQUE_DU_PERSONNAGE`, #166 puis #173) ; les effets sont suivis par le faux de #97. Le tirage de la
 // variante reçoit une valeur par `features/support/hasard-fixe.ts`, comme celui du contrôle parental.
 
 type Univers = "sports" | "danse" | "animaux" | "princesse" | "police" | "pompier";
 
-// Musique de la célébration de l'univers, par personnage guide (#166) : le fichier de l'effet sonore. Coach Léo et Agent Max, sans
-// musique choisie par le PO, gardent « grande victoire » (166.4 A).
+// Musique de la célébration de l'univers, par personnage guide (#166) : le fichier de l'effet sonore (`fichierDe` : « air de steel drum bref »
+// donne `air-de-steel-drum-bref`). Coach Léo et Agent Max ont leur musique brève depuis #173.
 const MUSIQUE_DU_PERSONNAGE: Readonly<Record<string, string>> = {
-  "Coach Léo": "grande victoire",
-  "Agent Max": "grande victoire",
+  "Coach Léo": "air de steel drum bref",
+  "Agent Max": "air de cordes pincées bref",
   Lili: "air de saxophone",
   Noisette: "air de cordes pincées",
   Lumi: "air de steel drum court",

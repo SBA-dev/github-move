@@ -72,7 +72,7 @@ export type Observation = {
 
 export const DELAI_DE_L_ATTENTE_MS = 20_000;
 // Les musiques des célébrations de l'univers (#166) remplacent l'effet de fin : elles sont retenues et libérées comme lui.
-export const MUSIQUES_DES_UNIVERS = ["air-de-saxophone", "air-de-cordes-pincees", "air-de-steel-drum-court", "air-de-steel-drum-long"];
+export const MUSIQUES_DES_UNIVERS = ["air-de-saxophone", "air-de-cordes-pincees", "air-de-steel-drum-court", "air-de-steel-drum-long", "air-de-steel-drum-bref", "air-de-cordes-pincees-bref"];
 export const EFFETS_DE_FIN = ["seance-terminee", "grande-victoire", "decouverte", ...MUSIQUES_DES_UNIVERS];
 
 // --- Le faux des effets sonores et l'enregistreur de l'écran, installés avant le chargement de la page
