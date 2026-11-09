@@ -1455,6 +1455,8 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 @media (max-width: 480px) {
   .seance-de-lecon .guide-et-parole { min-height: 86px; }
   .seance-de-lecon .guide-et-parole .personnage-guide { width: 100px; flex: none; margin-block: -20px; }
+  /* Dans la boîte à jetons le dessin reste à 80 px : sous le seuil des bulles écrites de la scène de réponse fausse (163.21). */
+  .seance-de-lecon:has(.boite-a-jetons) .guide-et-parole .personnage-guide { width: 80px; margin-block: -7px; }
 }
 .bulle-de-la-seance { position: relative; flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: 8px; padding: 6px 6px 6px 14px; border: var(--epaisseur-du-contour) solid var(--contour); border-radius: var(--rayon-grand); background: var(--surface); box-shadow: var(--ombre-de-panneau); }
 .bulle-de-la-seance :is(.bulle, .consigne) { border: 0; box-shadow: none; }
