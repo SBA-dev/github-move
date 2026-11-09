@@ -1,6 +1,8 @@
 # Nombre d'équipes en parallèle
 
-Mise à jour : 2026-10-24, par le responsable des équipes (décision 0017).
+Mise à jour : 2026-11-09 (fin de la vague 1), par le responsable des équipes (décision 0017).
+
+> **Vague 2 : 2 équipes proposées** (`N = min(3, L, H, T)` avec `L` ≥ 6, `H` = 3, `T` = 2). La vague 1 a tourné à 3 équipes la plupart du temps. Deux signaux de retour à 2 sont apparus : la **limite d'utilisation hebdomadaire** a été atteinte (09/11, la non-régression de nuit n'a pas pu tourner, après plusieurs jours en alerte), et une **régression sur `main`** après un merge (une étape de 163a rendait les 36 scénarios de #20 injouables, corrigée par #179). On repasse à 3 si une vague à 2 se termine sans aucun de ces signaux. Le PO tranche.
 
 **Règle : 2 équipes par défaut, 3 au maximum, jamais plus.** Le nombre se revoit à chaque fin de vague, avec les mesures ci-dessous.
 
@@ -76,3 +78,22 @@ Chaque équipe les note dans `docs/stories/<n>/journal.md` (section « Mesures �
 - des questions du PO en attente depuis plus d'une journée.
 
 Le responsable annonce le nombre retenu et sa raison dans la synthèse de vague. Le PO tranche en cas de doute.
+
+## Mesures de la vague 1 (24/10 → 09/11)
+
+| Mesure | Valeur |
+|---|---|
+| Durée | 16 jours, de 2 équipes au départ à 3 (le maximum) |
+| Livraisons mergées | 20 stories de la beta, 22 de l'épopée #95 (dont #106 en 8 livraisons et #163 en 6, la dernière : #173 le 09/11), 12 correctifs et outillage |
+| Mise en ligne | beta publiée avec #45, puis gamification en ligne le 07/11 (`5d690d3`) |
+| Coût relevé des équipes | environ 1 304 $ pour les 45 postes relevés (de #79 à #173, dont #173 pour 7,5 $, voir la liste du corps de #64). Les coûts des premières stories de la vague (#20 à #73) n'ont pas été reportés |
+| Coût des responsables | environ 347 $ (première session, 24/10 → 03/11) + 299 $ (seconde session, 03/11 → 09/11) |
+| Stories les plus chères | #163 (109 $ en 6 livraisons), #45 (88 $), #131 (65 $), #100 (63 $), #96 (60 $) |
+| Régressions sur `main` après un merge | 1 bloquante (étape ambiguë #20/#163, corrigée par #179), plus des KO de la non-régression complète corrigés par #141, #155 et #179 |
+| Incidents de ressources | quota MAU du plan Free de `savanturier-dev` dépassé le 03/11 (passage au Pro, #146) ; limite d'utilisation hebdomadaire atteinte le 09/11 |
+| Attente du PO | réponses en général dans la demi-journée ; validations groupées par raccourcis (« reco tout », « merge … OK ») |
+
+Leçons pour la vague 2 :
+- le **responsable** coûte à peu près le prix de 10 à 15 stories : à surveiller, et à archiver dès la passation ;
+- une story découpée en livraisons (106a à 106h, 163a à 163f) coûte peu par livraison (6 à 38 $) et se merge sans conflit ;
+- la non-régression complète ne tient pas en 2 h : elle tourne de nuit par lots (« nr. 4 ») et, en entier, avant chaque publication.
