@@ -61,3 +61,8 @@ Deno.test("au CM2, les secondes se disent après les minutes", () => {
 Deno.test("l'heure dite ne contient aucun chiffre", () => {
   assertNotMatch(dire("14:35", "CM1"), /\d/);
 });
+
+Deno.test("à partir du CE2, 23:45 se dit « minuit moins le quart » et 23:40 « minuit moins vingt »", () => {
+  assertEquals(dire("23:45", "CE2"), "minuit moins le quart");
+  assertEquals(dire("23:40", "CE2"), "minuit moins vingt");
+});
