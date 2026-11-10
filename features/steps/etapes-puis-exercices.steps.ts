@@ -178,6 +178,18 @@ export async function quitterLaSeance(page: Page) {
   if (await pause.isVisible()) await pause.getByRole("button", { name: "Retour à la leçon", exact: true }).click();
 }
 
+/**
+ * Pendant la séance (écran de fin compris, décision 183.15) l'en-tête de l'application n'est pas affiché : pour le retrouver, Léa
+ * quitte la séance par le chemin qu'elle a, « Accueil » à l'écran de fin, sinon Retour. Hors séance, rien à faire.
+ */
+export async function retrouverLEnTete(page: Page) {
+  if (!(await page.getByTestId("barre-du-haut").isVisible())) return;
+  const accueil = page.locator(".actions-de-fin").getByRole("button", { name: "Accueil", exact: true });
+  if (await accueil.isVisible()) await accueil.click();
+  else await quitterLaSeance(page);
+  await expect(page.getByTestId("barre-du-haut")).toBeHidden();
+}
+
 export async function jouerLaSeanceComplete(page: Page, titre: string) {
   await ouvrirLaPageDeLaLecon(page, titre);
   await commencerLaSeanceComplete(page);

@@ -1,6 +1,7 @@
 import { expect, type Page } from "@playwright/test";
 import { fixerLaProchaineQuestion } from "../support/hasard-fixe.ts";
 import { Given, Then, When } from "./fixtures.ts";
+import { retrouverLEnTete } from "./etapes-puis-exercices.steps.ts";
 
 // Story #10 : contrôle parental de l'espace parent. Le parent est connecté sans e-mail (voir
 // features/support/connexion-sans-email.ts). La question est fixée en donnant ses facteurs au tirage du navigateur
@@ -96,6 +97,7 @@ Given(/^Paul est connecté sur un ordinateur, au clavier$/, async ({ famille, pa
 // --- Quand
 
 When(/^\S+ demande l'entrée de l'espace parent$/, async ({ page }) => {
+  await retrouverLEnTete(page);
   await enteteEspaceParent(page).click();
 });
 
