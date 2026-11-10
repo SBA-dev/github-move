@@ -1,5 +1,5 @@
 """Leçons de mathématiques, du CP au CM2."""
-from build_bibliotheque import lecon, bulles, classer, ordre, calcul, fluence, addition
+from build_bibliotheque import lecon, bulles, classer, ordre, calcul, fluence, addition, horloge
 
 M = "maths"
 C2 = "c2-mathematiques-{}-{}"
@@ -38,7 +38,8 @@ LECONS = [
                ("Quel jour vient après mardi ?", ["mercredi", "lundi", "jeudi"]),
                ("Quel jour vient avant samedi ?", ["vendredi", "dimanche", "jeudi"]),
                ("Combien y a-t-il de jours dans une semaine ?", ["7", "5", "10"]),
-               ("La petite aiguille est sur 3, la grande sur 12. Quelle heure est-il ?", ["3 heures", "12 heures", "15 heures et demie"])])],
+               ("La petite aiguille est sur 3, la grande sur 12. Quelle heure est-il ?", ["3 heures", "12 heures", "15 heures et demie"])]),
+           horloge("L'horloge de Noisette", "lire", ["3:00", "8:00", "11:00", "12:00", "6:00"])],
           competence="Je connais les jours et je lis les heures"),
 
     # ---------------- CE1 ----------------
@@ -122,7 +123,9 @@ LECONS = [
               ("Petite aiguille entre 4 et 5, grande sur le 6 : quelle heure ?", ["4 h 30", "6 h 20", "5 h"]),
               ("Combien de minutes dans une heure ?", ["60", "100", "30"]),
               ("Le film commence à 2 h et dure 1 heure. Il finit à…", ["3 h", "1 h", "2 h 30"]),
-              ("Une demi-heure, c'est…", ["30 minutes", "50 minutes", "15 minutes"])])],
+              ("Une demi-heure, c'est…", ["30 minutes", "50 minutes", "15 minutes"])]),
+           horloge("L'heure ou la demie ?", "lire",
+                   ["4:30", "2:00", ("9:30", "matin", "La grande aiguille est sur le 6 : c'est la demie."), "7:00"], precision="demi-heure")],
           competence="Je lis l'heure et la demi-heure"),
     lecon("ma-ce1-problemes-monnaie", M, "CE1", "Problèmes : faire les courses", 70, C2.format("ce1", "la-monnaie"),
           ["euro", "centimes", "monnaie"],

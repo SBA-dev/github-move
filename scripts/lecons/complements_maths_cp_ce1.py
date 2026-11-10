@@ -5,7 +5,7 @@ Mathématiques du CP et du CE1 : objectifs du programme qui n'avaient pas encore
 problèmes en deux étapes, longueurs et masses, monnaie, quarts d'heure et durées, fractions, parité, solides, angles,
 tableau à double entrée).
 """
-from build_bibliotheque import lecon, bulles, classer, dictee, ordre, trous, conjugaison, lecture, memoriser, calcul, fluence, addition, boite, barres, ecoute
+from build_bibliotheque import lecon, bulles, classer, dictee, ordre, trous, conjugaison, lecture, memoriser, calcul, fluence, addition, boite, barres, ecoute, horloge
 
 M = "maths"
 CP = "c2-mathematiques-cp-{}"
@@ -285,7 +285,11 @@ LECONS = [
                                  ("De midi à 20 h : … heures", 8), ("Mamie taille ses rosiers un quart d'heure, puis bêche une demi-heure : … minutes", 45)]),
            classer("Matin ou après-midi ?", "Range chaque heure dans sa maison.", {
                "le matin": ["7 h", "9 h 30", "10 h 15", "8 heures du matin"],
-               "l'après-midi": ["14 h", "16 h 45", "15 h 30", "3 heures de l'après-midi"]})],
+               "l'après-midi": ["14 h", "16 h 45", "15 h 30", "3 heures de l'après-midi"]}),
+           horloge("L'horloge des quarts d'heure", "lire",
+                   ["2:15", ("5:45", "matin", "La grande aiguille est sur le 9 : 45 minutes."),
+                    ("14:30", "apres-midi", "La grande aiguille est sur le 6 : c'est la demie. L'après-midi, on ajoute 12 : 2 heures et demie, c'est 14 h 30."),
+                    "10:15"])],
           competence="Je lis les quarts d'heure et je calcule des durées",
           citation_exacte="Le travail sur les heures initié au CP s’étend au CE1 aux heures entières supérieures à douze ainsi qu’à la demi-heure et aux quarts d’heure, en lien avec l’introduction des fractions."),
 

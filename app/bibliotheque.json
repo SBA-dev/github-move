@@ -16731,6 +16731,28 @@
       "reponse": "3 heures"
      }
     ]
+   },
+   {
+    "type": "horloge",
+    "titre": "L'horloge de Noisette",
+    "mode": "lire",
+    "items": [
+     {
+      "heure": "3:00"
+     },
+     {
+      "heure": "8:00"
+     },
+     {
+      "heure": "11:00"
+     },
+     {
+      "heure": "12:00"
+     },
+     {
+      "heure": "6:00"
+     }
+    ]
    }
   ],
   "competence": "Je connais les jours et je lis les heures",
@@ -19534,6 +19556,28 @@
       "reponse": "30 minutes"
      }
     ]
+   },
+   {
+    "type": "horloge",
+    "titre": "L'heure ou la demie ?",
+    "mode": "lire",
+    "items": [
+     {
+      "heure": "4:30"
+     },
+     {
+      "heure": "2:00"
+     },
+     {
+      "heure": "9:30",
+      "moment": "matin",
+      "aide": "La grande aiguille est sur le 6 : c'est la demie."
+     },
+     {
+      "heure": "7:00"
+     }
+    ],
+    "precision": "demi-heure"
    }
   ],
   "competence": "Je lis l'heure et la demi-heure",
@@ -19696,6 +19740,29 @@
      {
       "texte": "3 heures de l'après-midi",
       "groupe": "2"
+     }
+    ]
+   },
+   {
+    "type": "horloge",
+    "titre": "L'horloge des quarts d'heure",
+    "mode": "lire",
+    "items": [
+     {
+      "heure": "2:15"
+     },
+     {
+      "heure": "5:45",
+      "moment": "matin",
+      "aide": "La grande aiguille est sur le 9 : 45 minutes."
+     },
+     {
+      "heure": "14:30",
+      "moment": "apres-midi",
+      "aide": "La grande aiguille est sur le 6 : c'est la demie. L'après-midi, on ajoute 12 : 2 heures et demie, c'est 14 h 30."
+     },
+     {
+      "heure": "10:15"
      }
     ]
    }
@@ -23061,6 +23128,32 @@
       ],
       "reponse": "2 h 10 min",
       "aide": "De 7 h 10 à 9 h 20."
+     }
+    ]
+   },
+   {
+    "type": "horloge",
+    "titre": "Lis l'horloge à la minute",
+    "mode": "lire",
+    "items": [
+     {
+      "heure": "7:45",
+      "moment": "matin",
+      "aide": "La grande aiguille sur le 9 : 45 minutes."
+     },
+     {
+      "heure": "10:35"
+     },
+     {
+      "heure": "3:40"
+     },
+     {
+      "heure": "8:05"
+     },
+     {
+      "heure": "15:42",
+      "moment": "apres-midi",
+      "aide": "La grande aiguille est entre le 8 et le 9 : 42 minutes. L'après-midi, 3 heures, c'est 15 heures."
      }
     ]
    }

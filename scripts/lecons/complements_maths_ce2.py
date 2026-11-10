@@ -1,5 +1,5 @@
 """Compléments (audit objectif par objectif du programme, 2026-11) : maths_ce2."""
-from build_bibliotheque import lecon, bulles, classer, dictee, ordre, trous, conjugaison, lecture, memoriser, calcul, fluence, addition, boite, barres, ecoute
+from build_bibliotheque import lecon, bulles, classer, dictee, ordre, trous, conjugaison, lecture, memoriser, calcul, fluence, addition, boite, barres, ecoute, horloge
 
 M = "maths"
 S = "c2-mathematiques-ce2-{}"
@@ -378,7 +378,10 @@ LECONS = [
                    "Noisette prend le train à 7 h 10. Le train roule 1 heure et 30 minutes jusqu'à la première gare. Puis il roule encore 40 minutes jusqu'à la deuxième gare, où Lumi l'attend.",
                    [("À quelle heure le train arrive-t-il à la première gare ?", ["8 h 40", "8 h 30", "7 h 40"], "7 h 10 + 1 h = 8 h 10. Puis 8 h 10 + 30 min."),
                     ("À quelle heure arrive-t-il à la deuxième gare ?", ["9 h 20", "9 h 10", "8 h 80"], "8 h 40 + 20 min = 9 h. Puis encore 20 min."),
-                    ("Combien de temps dure tout le voyage ?", ["2 h 10 min", "1 h 70 min", "2 h 40 min"], "De 7 h 10 à 9 h 20.")])],
+                    ("Combien de temps dure tout le voyage ?", ["2 h 10 min", "1 h 70 min", "2 h 40 min"], "De 7 h 10 à 9 h 20.")]),
+           horloge("Lis l'horloge à la minute", "lire",
+                   [("7:45", "matin", "La grande aiguille sur le 9 : 45 minutes."), "10:35", "3:40", "8:05",
+                    ("15:42", "apres-midi", "La grande aiguille est entre le 8 et le 9 : 42 minutes. L'après-midi, 3 heures, c'est 15 heures.")])],
           competence="Je lis l'heure à la minute et je calcule des durées",
           citation_exacte="L’élève sait déterminer le nombre de minutes qu’il y a dans deux heures et vingt minutes."),
 
