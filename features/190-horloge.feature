@@ -224,9 +224,9 @@ Fonctionnalité: Exercice « horloge » : lire l'heure sur une horloge à aiguil
     Scénario: Avec « tout lire à voix haute », les heures proposées sont lues comme des heures dites
       Étant donné que Paul a réglé « tout lire à voix haute » sur « oui » pour Léa
       Et que Léa joue seulement l'exercice « L'heure pile » de la leçon « Lire l'heure pile »
-      Et que les choix sont affichés dans l'ordre « 2 h », « 3 h », « 4 h »
+      Et que les choix sont affichés dans l'ordre « 3 h », « 12 h », « 4 h »
       Quand la question « Quelle heure est-il ? » s'affiche
-      Alors Léa entend ensuite Noisette dire « Est-ce deux heures, trois heures, ou quatre heures ? »
+      Alors Léa entend ensuite Noisette dire « Est-ce trois heures, midi, ou quatre heures ? »
 
     Plan du Scénario: À 360 px, l'horloge à lire et <commandes> tiennent dans la largeur de l'écran
       Étant donné que l'écran de l'appareil mesure 360 px de large

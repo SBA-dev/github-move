@@ -77,6 +77,10 @@ Aucun scénario `@acces` : la story n'ajoute ni table, ni donnée, ni droit. Les
 
 Aucune. Une décision reste **à confirmer par le PO** : la D10 pour les minutes de 40 à 55 à partir du CE2 (choix de l'orchestrateur). Elle ne change aucun scénario de #190 ; dans #192, le plan qui l'illustre porte `@a-valider`.
 
+## Corrections d'exemples
+
+- **2026-11-10, « Avec « tout lire à voix haute », les heures proposées sont lues comme des heures dites »** (R4, D10) : l'exemple attendait au CP, pour 3:00, les choix « 2 h », « 3 h », « 4 h ». La décision 11 (distracteurs calculés, dont le chiffre montré par la grande aiguille) fait proposer « 3 h », « 12 h », « 4 h » (test de domaine « 3 h à la précision heure est proposée avec « 12 h » »). L'exemple devient « les choix sont affichés dans l'ordre « 3 h », « 12 h », « 4 h » » et « Est-ce trois heures, midi, ou quatre heures ? » (12:00 dit « midi », D10). La règle ne change pas. Trouvé par les E2E de #190.
+
 ## Décisions
 
 Validées par le PO le 2026-11-09 (« OK » : toutes les recommandations acceptées). 1 à 22 reprennent les questions du modèle (#190.n) ; 23 à 34 viennent des critères. « #192 » signale une décision qui ne joue que dans le mode placer.

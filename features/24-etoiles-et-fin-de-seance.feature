@@ -7,7 +7,7 @@ Fonctionnalité: Étoiles et fin de la séance
 
   Leçons de la bibliothèque utilisées : « Les sons ou, on, an » (fr-cp-sons-ou-on-an, quand la séance n'a pas
   besoin de se terminer dans l'interface, ou ne joue que son exercice bulles « Quel son entends-tu ? »),
-  « Les animaux » (an-cp-animaux, dernière leçon d'anglais du CP) et « Les doubles » (ma-cp-doubles, avec la
+  « Simon says : le jeu des consignes » (an-cp-simon-says, ordre 50, dernière leçon d'anglais du CP) et « Les doubles » (ma-cp-doubles, avec la
   fluence « Calcul rapide : les doubles »).
   « Les sons ou, on, an » (ordre 5) est aussi la première leçon de français du CP : c'est la leçon du jour
   de Léa, en CP sans progression, après une séance d'anglais (réponses 29.8 et 29.25 de #29).
@@ -139,7 +139,7 @@ Fonctionnalité: Étoiles et fin de la séance
     # Réponse 29.25 (#29)
     @issue-29
     Scénario: Après la dernière leçon d'une matière, la fin de la séance propose la leçon du jour
-      Étant donné que Léa joue la séance complète de la leçon « Les animaux »
+      Étant donné que Léa joue la séance complète de la leçon « Simon says : le jeu des consignes »
       Quand Léa réussit la dernière question de la séance
       Alors la fin de la séance annonce « Ensuite : Les sons ou, on, an »
       Et la leçon suivante ouvre la page de la leçon « Les sons ou, on, an »
