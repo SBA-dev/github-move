@@ -77,12 +77,16 @@ function lireUnNombre(brut: unknown): ReponseDonnee {
   return Reponse.nombre(brut);
 }
 
+function estUnEntier(valeur: unknown): valeur is number {
+  return typeof valeur === "number" && Number.isInteger(valeur);
+}
+
 function lireUneHeureEcrite(brute: unknown): ReponseDonnee {
   const { heures, minutes, secondes } = objet(brute, "reponses");
-  if (![heures, minutes, secondes].every(Number.isInteger)) {
+  if (!estUnEntier(heures) || !estUnEntier(minutes) || !estUnEntier(secondes)) {
     throw new EntreeInvalide("Le champ « reponses » ne contient que des heures écrites en nombres entiers.");
   }
-  return Reponse.heureEcrite(heures as number, minutes as number, secondes as number);
+  return Reponse.heureEcrite(heures, minutes, secondes);
 }
 
 function lireLesLettres(brutes: unknown): string[] {
