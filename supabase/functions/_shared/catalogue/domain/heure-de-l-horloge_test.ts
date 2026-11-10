@@ -102,3 +102,12 @@ Deno.test("minuit est 0:00, avec ou sans secondes, et nulle autre heure", () => 
     assertFalse(HeureDeLHorloge.lire(ecriture).estMinuit());
   }
 });
+
+Deno.test("l'affichage digital écrit l'heure et les minutes sur deux chiffres, sans zéro devant l'heure", () => {
+  assertEquals(HeureDeLHorloge.lire("2:15").affichageDigital(), "2 : 15");
+  assertEquals(HeureDeLHorloge.lire("14:15").affichageDigital(), "14 : 15");
+});
+
+Deno.test("l'affichage digital ajoute les secondes quand il y en a", () => {
+  assertEquals(HeureDeLHorloge.lire("6:18:20").affichageDigital(), "6 : 18 : 20");
+});
