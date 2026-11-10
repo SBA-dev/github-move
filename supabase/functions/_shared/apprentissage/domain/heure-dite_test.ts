@@ -74,3 +74,8 @@ Deno.test("au CM2, des secondes sans minute ne disent pas « zéro minutes »", 
 Deno.test("au CM2, une minute et une seconde se disent au singulier", () => {
   assertEquals(dire("6:01:01", "CM2"), "six heures une minute et une seconde");
 });
+
+Deno.test("les minutes en un se disent au féminin", () => {
+  assertEquals(dire("6:21", "CE2"), "six heures vingt et une");
+  assertEquals(dire("1:01", "CE2"), "une heure une");
+});
