@@ -50,6 +50,13 @@ export class HeureDeLHorloge {
     return `${this.heures} h`;
   }
 
+  /** L'heure comme un affichage digital : « 14 : 15 », avec les secondes quand il y en a. */
+  affichageDigital(): string {
+    const deuxChiffres = (nombre: number) => String(nombre).padStart(2, "0");
+    const heureEtMinutes = `${this.heures} : ${deuxChiffres(this.minutes)}`;
+    return this.secondes > 0 ? `${heureEtMinutes} : ${deuxChiffres(this.secondes)}` : heureEtMinutes;
+  }
+
   private secondesSurLeCadran(): number {
     return (this.heures % HEURES_SUR_LE_CADRAN) * SECONDES_PAR_HEURE +
       this.minutes * SECONDES_PAR_MINUTE + this.secondes;

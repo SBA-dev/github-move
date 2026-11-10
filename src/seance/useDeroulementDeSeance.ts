@@ -28,6 +28,7 @@ import { useAdditionPosee } from "./exercices/addition/useAdditionPosee.ts";
 import { useBattementDeLaFluence, useFluence } from "./exercices/fluence/useFluence.ts";
 import { type SuiteDuCalcul, useCalcul } from "./exercices/useCalcul.ts";
 import { seJoueCommeUneQuestionIllustree, useQuestionIllustree } from "./exercices/useQuestionIllustree.ts";
+import { paroleDeLaConsigneDHorloge, useHorloge } from "./exercices/horloge/useHorloge.ts";
 import { useDictee } from "./exercices/useDictee.ts";
 import { useEtiquettesAPlacer } from "./exercices/useEtiquettesAPlacer.ts";
 import { useMemorisation } from "./exercices/useMemorisation.ts";
@@ -120,6 +121,7 @@ export function useDeroulementDeSeance(
   const dependancesDuCalcul = { seance, personnageGuide, dire, signaler, faireSilence, sequence, vivant, redessiner, reussite };
   const calcul = useCalcul(dependancesDuCalcul);
   const illustree = useQuestionIllustree(dependancesDuCalcul);
+  const horloge = useHorloge({ ...dependancesDuCalcul, lecon, toutLireAVoixHaute, lire: voix.lire });
   const fluence = useFluence({ seance, personnageGuide, sourceDuTemps, dire, jouer, signaler, faireSilence, sequence, vivant, redessiner, reussite });
   const addition = useAdditionPosee({ ...dependancesDuCalcul, jouer, montrerHumeur });
   const memorisation = useMemorisation({
@@ -133,6 +135,8 @@ export function useDeroulementDeSeance(
   });
 
   const consigneDeLExercice = useCallback(() => {
+    const questionDHorloge = seance.questionDHorlogeEnCours();
+    if (questionDHorloge) return questionDHorloge.texteDit();
     const position = seance.exerciceEnCours()?.position;
     const exercice = position === undefined ? undefined : lecon.exercices[position];
     return exercice && consigneAffichee(exercice);
@@ -142,7 +146,7 @@ export function useDeroulementDeSeance(
     const position = seance.exerciceEnCours()?.position;
     const exercice = position === undefined ? undefined : lecon.exercices[position];
     const consigne = consigneDeLExercice();
-    if (!exercice || consigne === undefined) return;
+    if (!exercice || consigne === undefined || exercice.type === "horloge") return;
     if (!(await dire({ texte: consigne, nature: "consigne" }))) return;
     const indication = indicationDuGeste(exercice.type);
     if (indication) await dire({ texte: indication, nature: "consigne" });
@@ -172,6 +176,9 @@ export function useDeroulementDeSeance(
       case "barres":
         await illustree.presenter();
         break;
+      case "horloge":
+        await horloge.presenter();
+        break;
       case "fluence":
         await fluence.presenter();
         break;
@@ -193,6 +200,7 @@ export function useDeroulementDeSeance(
     lecon,
     calcul.presenter,
     illustree.presenter,
+    horloge.presenter,
     fluence.presenter,
     addition.presenter,
     presenterLaDictee,
@@ -209,10 +217,11 @@ export function useDeroulementDeSeance(
 
   /** Dit seulement la consigne : la question reste posée. Sans effet pendant la présentation de l'exercice. */
   const relireLaConsigne = useCallback(() => {
+    const question = seance.questionDHorlogeEnCours();
     const consigne = consigneDeLExercice();
     if (consigne === undefined || presentationEnCours() || reussite.estFigee.current) return;
-    void dire({ texte: consigne, nature: "consigne" });
-  }, [consigneDeLExercice, presentationEnCours, reussite.estFigee, dire]);
+    void dire(question ? paroleDeLaConsigneDHorloge(question) : { texte: consigne, nature: "consigne" });
+  }, [seance, consigneDeLExercice, presentationEnCours, reussite.estFigee, dire]);
 
   const direLeFait = useCallback((fait: FaitDeSeance): Promise<boolean> => {
     if (fait.type === "EtapesDeLeconFinies") {
@@ -268,6 +277,7 @@ export function useDeroulementDeSeance(
     jeNeSaisPas: jeNeSaisPasDUneQuestionIllustree,
     relireLaPresentation,
   } = illustree;
+  const { repondre: repondreALHorloge, jeNeSaisPas: jeNeSaisPasDeLHorloge } = horloge;
   const { repondre: repondreALaFluence, battre: battreLaFluence, demarrer: demarrerLaFluence } = fluence;
   const { repondre: repondreALAddition, placer: placerUnChiffre, jeNeSaisPas: jeNeSaisPasDeLAddition } = addition;
   const repondreParUnNombre = useCallback((nombre: number) => {
@@ -283,16 +293,24 @@ export function useDeroulementDeSeance(
     const position = seance.exerciceEnCours()?.position;
     const type = position === undefined ? undefined : lecon.exercices[position]?.type;
     if (type === "addition") return repondreALAddition(Reponse.choix(texte), suiteDeLaReponse);
+    if (type === "horloge") return repondreALHorloge(Reponse.choix(texte), suiteDeLaReponse);
     if (seJoueCommeUneQuestionIllustree(type)) return repondreAUneQuestionIllustree(Reponse.choix(texte), suiteDeLaReponse);
     return repondreAuCalcul(Reponse.choix(texte), suiteDeLaReponse);
-  }, [seance, lecon, repondreALAddition, repondreAuCalcul, repondreAUneQuestionIllustree, suiteDeLaReponse]);
+  }, [seance, lecon, repondreALAddition, repondreALHorloge, repondreAuCalcul, repondreAUneQuestionIllustree, suiteDeLaReponse]);
+
+  const repondreALHeure = useCallback(
+    (heures: number, minutes: number, secondes: number): boolean =>
+      repondreALHorloge(Reponse.heureEcrite(heures, minutes, secondes), suiteDeLaReponse),
+    [repondreALHorloge, suiteDeLaReponse],
+  );
 
   const jeNeSaisPasALaQuestion = useCallback(() => {
     const position = seance.exerciceEnCours()?.position;
     const type = position === undefined ? undefined : lecon.exercices[position]?.type;
+    if (type === "horloge") return jeNeSaisPasDeLHorloge();
     if (seJoueCommeUneQuestionIllustree(type)) return jeNeSaisPasDUneQuestionIllustree();
     return jeNeSaisPasDuCalcul();
-  }, [seance, lecon, jeNeSaisPasDUneQuestionIllustree, jeNeSaisPasDuCalcul]);
+  }, [seance, lecon, jeNeSaisPasDUneQuestionIllustree, jeNeSaisPasDuCalcul, jeNeSaisPasDeLHorloge]);
 
   const poserUnChiffre = useCallback(
     (chiffre: string, rang: Parameters<typeof placerUnChiffre>[1]) => placerUnChiffre(chiffre, rang, suiteDeLaReponse),
@@ -411,6 +429,7 @@ export function useDeroulementDeSeance(
     reecouter,
     calculFige: calcul.calculFige,
     phrasesDitesDeLaQuestion: illustree.phrasesDites,
+    horlogeReussie: horloge.horlogeReussie,
     boiteReussie: illustree.boiteReussie,
     schemaReussi: illustree.schemaReussi,
     additionFigee: addition.additionFigee,
@@ -420,6 +439,7 @@ export function useDeroulementDeSeance(
     recordBattu: fluence.recordBattu,
     recordDeDepart: fluence.recordDeDepart,
     repondreParUnNombre,
+    repondreALHeure,
     choisirUneReponseDeCalcul,
     poserUnChiffre,
     jeNeSaisPasALaQuestion,
