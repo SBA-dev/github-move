@@ -179,7 +179,7 @@ def test_horloge_recopie_la_precision_et_la_consigne_quand_elles_sont_donnees():
 
 
 def une_lecon_d_horloge(niveau, exercice):
-    section = next(i for i, s in bb.INDEX.items() if "reperage-dans-le-temps" in i and "maths" in i and s["niveaux"] == [niveau])
+    section = next(i for i, s in bb.INDEX.items() if "reperage-dans-le-temps" in i and "mathematiques" in i and s["niveaux"] == [niveau])
     citation = bb.INDEX[section]["extrait"][:40]
     bb.ERREURS.clear()
     bb.lecon("ma-test-horloge", "maths", niveau, "t", 1, section, "", ["étape"], [exercice], citation_exacte=citation)
@@ -193,7 +193,7 @@ def une_lecon_d_horloge(niveau, exercice):
     ("CE1", bb.horloge("t", "lire", ["3:00", "3:15", "3:30"])),
     ("CE2", bb.horloge("t", "placer", ["3:07", "6:18"])),
     ("CM2", bb.horloge("t", "placer", ["6:18:20"], precision="seconde")),
-    ("CE2", bb.horloge("t", "lire", ["3:00", "3:30"], precision="heure")),
+    ("CE2", bb.horloge("t", "lire", ["3:00", "4:00"], precision="heure")),
     ("CP", bb.horloge("t", "placer", ["12:00", "1:00"])),
     ("CE1", bb.horloge("t", "lire", [("2:15", "apres-midi"), "9:00"])),
 ], ids=["cp", "ce1", "ce2", "cm2-seconde", "plus-grossiere", "cp-placer-12h", "moment"])
