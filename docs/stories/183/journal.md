@@ -26,3 +26,7 @@
   - instabilités probables (#102, #96, #106), dont les deux captures de #96 (`exercice-en-seance`, `fin-de-la-seance`) qui changent légitimement avec #183 ;
   - KO déjà présents sur `main` (#26, #28 et des variantes dys ou 360 px).
   Diagnostic et correction confiés à `e2e-tester` (steps) avec retour des bugs applicatifs.
+- **2026-11-10** : KO de la non-régression `telephone` traités. 24 steps adaptés (9a8261aa, 572b30ce) et captures de référence de #96 régénérées (61e896a1, envoyées au PO). Deux bugs applicatifs corrigés : 9db49ebf (personnage guide gardé pendant la durée d'affichage sans voix quand la parole n'est pas entendue) et f1ac49fb (petit train à pleine largeur dans la séance). Relance sur `telephone` (#97, #130, #183, #131, #23, #163) : 415/415.
+- Non liés à #183 : #166 ×6 dépasse 30 s à 3 workers, comme sur `main` (vert à 1 worker) ; #26 l. 466 et #28 l. 42 déjà KO sur `main`. Instables : #106 l. 206, #128 l. 588.
+- Point d'attention non reproduit : un saut d'environ 65 px quand le personnage guide se retire (#130). Hypothèse : il venait de la largeur du petit train, corrigée depuis. Si la parole écrite tient sur 3 lignes ou plus, la bulle peut dépasser les 86 px réservés.
+- Revue delta de 9db49ebf et f1ac49fb, puis non-régression complète `tablette`.
