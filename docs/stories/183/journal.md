@@ -30,3 +30,5 @@
 - Non liés à #183 : #166 ×6 dépasse 30 s à 3 workers, comme sur `main` (vert à 1 worker) ; #26 l. 466 et #28 l. 42 déjà KO sur `main`. Instables : #106 l. 206, #128 l. 588.
 - Point d'attention non reproduit : un saut d'environ 65 px quand le personnage guide se retire (#130). Hypothèse : il venait de la largeur du petit train, corrigée depuis. Si la parole écrite tient sur 3 lignes ou plus, la bulle peut dépasser les 86 px réservés.
 - Revue delta de 9db49ebf et f1ac49fb, puis non-régression complète `tablette`.
+- **2026-11-10** : revue delta des corrections de la non-régression téléphone : APPROUVÉ.
+- **2026-11-10** : non-régression complète `tablette` : 1855 cas, 1839 passés, 16 KO ; 2 KO après relance. #28 était déjà KO sur `main`. #127 « l'habillage ne change rien », exemple « en le faisant glisser du doigt », est KO reproductible sous charge (3 échecs sur 4 à 3 workers), mais passe seul et passe sur `main` (9/9). Probable régression de #183 sur le glisser du second chiffre (bouton « Poser dans la colonne des unités » `disabled` pendant le glisser). 3e cycle E2E en échec : escalade au PO.
