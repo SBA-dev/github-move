@@ -8,7 +8,7 @@ export type MotEcrit = Readonly<{ genre: "motEcrit"; lettres: readonly string[] 
 
 export type HeureEcrite = Readonly<{ genre: "heureEcrite"; heures: number; minutes: number; secondes: number }>;
 
-export type Reponse = ReponseParChoix | Placement | ReponseEnNombre | MotEcrit;
+export type Reponse = ReponseParChoix | Placement | ReponseEnNombre | MotEcrit | HeureEcrite;
 
 export const Reponse = {
   motEcrit: (lettres: readonly string[]): MotEcrit => ({ genre: "motEcrit", lettres }),

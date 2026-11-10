@@ -16,11 +16,11 @@ import {
 } from "./erreurs.ts";
 import type { CleDeQuestion } from "./cle-de-question.ts";
 import type { AideDonnee } from "./question-jouee.ts";
-import type { MotEcrit, ReponseDonnee, ReponseEnNombre, ReponseParChoix } from "./reponse.ts";
+import type { HeureEcrite, MotEcrit, ReponseDonnee, ReponseEnNombre, ReponseParChoix } from "./reponse.ts";
 import { REPONSES_AU_PLUS_PAR_QUESTION } from "./revalider-la-seance.ts";
 
 type SeanceDeQuestions = {
-  repondre(reponse: ReponseParChoix | ReponseEnNombre | MotEcrit): unknown;
+  repondre(reponse: ReponseParChoix | ReponseEnNombre | MotEcrit | HeureEcrite): unknown;
   direJeNeSaisPas(): AideDonnee;
   questionEnCours(): { readonly identite: CleDeQuestion } | undefined;
 };

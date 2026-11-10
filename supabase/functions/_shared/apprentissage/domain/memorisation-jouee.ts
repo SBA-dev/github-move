@@ -73,7 +73,7 @@ export class MemorisationJouee {
 
   repondre(reponse: Reponse): ResultatDeReponse {
     if (reponse.genre === "placement") return this.placer(reponse);
-    if (reponse.genre === "motEcrit") throw new ReponseIncompatible(reponse.genre);
+    if (reponse.genre === "motEcrit" || reponse.genre === "heureEcrite") throw new ReponseIncompatible(reponse.genre);
     this.dernierResultatDesMotsCaches = this.motCacheAReussir().repondre(reponse);
     return this.dernierResultatDesMotsCaches;
   }

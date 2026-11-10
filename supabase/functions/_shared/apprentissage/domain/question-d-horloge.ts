@@ -3,6 +3,8 @@ import { heuresProposees } from "./choix-d-heures.ts";
 import type { CleDeQuestion } from "./cle-de-question.ts";
 import { cleDeLHorloge } from "./cles-des-questions.ts";
 import { HeureEcriteImpossible, JeNeSaisPasDejaDit, QuestionDejaReussie, ReponseIncompatible } from "./erreurs.ts";
+import { heureDite } from "./heure-dite.ts";
+import { lectureDesChoix } from "./lecture-des-choix.ts";
 import { ModeDeReponse } from "./mode-de-reponse.ts";
 import { type AideDonnee, QuestionJouee } from "./question-jouee.ts";
 import type { QuestionPosee } from "./question-posee.ts";
@@ -21,7 +23,12 @@ export type HorlogeEnCours = Readonly<{
   mode:
     | { genre: "choix"; choix: readonly string[]; ecartes: readonly string[] }
     | { genre: "clavierDeCristaux"; champs: readonly ChampDeLHeure[] };
+  jeNeSaisPasPropose: boolean;
+  reponseATaper?: string;
+  reponseATaperDite?: string;
 }>;
+
+const MOMENTS_DITS = { "matin": "C'est le matin.", "apres-midi": "C'est l'après-midi." };
 
 export class QuestionDHorloge implements QuestionPosee {
   readonly type = "horloge";
@@ -35,12 +42,13 @@ export class QuestionDHorloge implements QuestionPosee {
     private readonly exercice: ExerciceHorloge,
     private readonly item: ItemDHorloge,
     private readonly auxChoix: QuestionJouee | undefined,
+    private readonly niveau: Niveau,
   ) {
     this.cle = cleDeLHorloge(exercice.mode, item);
   }
 
   static pour(exercice: ExerciceHorloge, item: ItemDHorloge, tireur: Tireur, niveau: Niveau): QuestionDHorloge {
-    if (ModeDeReponse.pour(niveau).genre !== "choix") return new QuestionDHorloge(exercice, item, undefined);
+    if (ModeDeReponse.pour(niveau).genre !== "choix") return new QuestionDHorloge(exercice, item, undefined, niveau);
     const bonneReponse = item.heure.ecriture();
     const textes = heuresProposees(item.heure, exercice.precision).map((heure) => heure.ecriture());
     const question = QuestionJouee.aChoix({
@@ -51,7 +59,7 @@ export class QuestionDHorloge implements QuestionPosee {
       type: "bulles",
       complements: { aide: item.aide },
     });
-    return new QuestionDHorloge(exercice, item, question);
+    return new QuestionDHorloge(exercice, item, question, niveau);
   }
 
   get enonce(): string {
@@ -75,7 +83,17 @@ export class QuestionDHorloge implements QuestionPosee {
   }
 
   texteDit(): string {
-    return this.texteAffiche();
+    const { moment } = this.item;
+    return moment === undefined ? this.texteAffiche() : `${this.texteAffiche()} ${MOMENTS_DITS[moment]}`;
+  }
+
+  lectureDesChoix(): string | undefined {
+    if (!this.auxChoix) return undefined;
+    const heures = heuresProposees(this.item.heure, this.exercice.precision);
+    const dites = this.auxChoix.choix.textes().map((texte) =>
+      heureDite(heures.find((heure) => heure.ecriture() === texte)!, this.niveau)
+    );
+    return lectureDesChoix(dites);
   }
 
   aideApresErreur(): string {
@@ -84,9 +102,19 @@ export class QuestionDHorloge implements QuestionPosee {
 
   enCours(): HorlogeEnCours {
     if (this.auxChoix) {
-      return { mode: { genre: "choix", choix: this.auxChoix.choix.textes(), ecartes: this.auxChoix.choix.ecartes() } };
+      return {
+        mode: { genre: "choix", choix: this.auxChoix.choix.textes(), ecartes: this.auxChoix.choix.ecartes() },
+        jeNeSaisPasPropose: true,
+      };
     }
-    return { mode: { genre: "clavierDeCristaux", champs: this.champsDeLHeure() } };
+    return {
+      mode: { genre: "clavierDeCristaux", champs: this.champsDeLHeure() },
+      jeNeSaisPasPropose: !this.jeNeSaisPasDejaDit,
+      ...(this.jeNeSaisPasDejaDit && {
+        reponseATaper: this.item.heure.ecriture(),
+        reponseATaperDite: heureDite(this.item.heure, this.niveau),
+      }),
+    };
   }
 
   tirage(): string[] {
@@ -123,6 +151,7 @@ export class QuestionDHorloge implements QuestionPosee {
   private repondreAuClavier(reponse: HeureEcrite): ResultatDeReponse {
     if (this.estReussie) throw new QuestionDejaReussie();
     const heure = heureEcrite(reponse);
+    this.reponsesDonnees.push(reponse);
     if (this.estLaBonneHeure(heure)) {
       this.estReussie = true;
       return "juste";

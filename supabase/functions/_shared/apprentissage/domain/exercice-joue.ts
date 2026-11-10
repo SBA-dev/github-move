@@ -29,6 +29,7 @@ import {
   questionsDeCalcul,
   questionsDeDictee,
   questionsDeProblemesEnBarres,
+  questionsDHorloge,
 } from "./questions-de-l-exercice.ts";
 import { estUnTypeDeQuestionRetenu } from "./types-de-question-retenus.ts";
 import type { AideDonnee } from "./question-jouee.ts";
@@ -398,6 +399,8 @@ function contenuDe(exercice: Exercice, tireur: Tireur, niveau: Niveau): Contenu 
       return { chronometre: ExerciceChronometre.pour(exercice, tireur) };
     case "addition":
       return { additions: AdditionsJouees.pour(exercice, tireur, niveau) };
+    case "horloge":
+      return { questionsPosees: exercice.mode === "lire" ? questionsDHorloge(exercice, tireur, niveau) : [] };
     case "memoriser":
       return { memorisation: MemorisationJouee.pour(exercice, tireur) };
     default:

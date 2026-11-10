@@ -6,7 +6,7 @@ import type { Jour } from "./jour.ts";
 import type { AideDonnee } from "./question-jouee.ts";
 import { type QuestionDeRevision, questionDeRevision } from "./question-de-revision.ts";
 import { QuestionsEnCours, suivie } from "./questions-en-cours.ts";
-import type { MotEcrit, ReponseEnNombre, ReponseParChoix, ResultatDeReponse } from "./reponse.ts";
+import type { HeureEcrite, MotEcrit, ReponseEnNombre, ReponseParChoix, ResultatDeReponse } from "./reponse.ts";
 import type { SeanceDeRevisionTermineeAEnregistrer } from "./seance-de-revision-terminee-a-enregistrer.ts";
 import type { Tireur } from "./tireur.ts";
 
@@ -75,7 +75,7 @@ export class SeanceDeRevision {
     return this.enCours.enCours();
   }
 
-  repondre(reponse: ReponseParChoix | ReponseEnNombre | MotEcrit): ResultatDeReponse {
+  repondre(reponse: ReponseParChoix | ReponseEnNombre | MotEcrit | HeureEcrite): ResultatDeReponse {
     return this.enCours.repondre(reponse);
   }
 

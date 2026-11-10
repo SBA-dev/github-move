@@ -83,7 +83,9 @@ export class AdditionsJouees {
       if (reponse.genre !== "placement") throw new ReponseIncompatible(reponse.genre);
       return etape.placer(reponse);
     }
-    if (reponse.genre === "placement" || reponse.genre === "motEcrit") throw new ReponseIncompatible(reponse.genre);
+    if (reponse.genre === "placement" || reponse.genre === "motEcrit" || reponse.genre === "heureEcrite") {
+      throw new ReponseIncompatible(reponse.genre);
+    }
     return etape.repondre(reponse);
   }
 

@@ -221,6 +221,8 @@ function enReponseEnvoyee(reponse: ReponseDonnee): Record<string, unknown> {
       return { nombre: reponse.valeur };
     case "jeNeSaisPas":
       return { jeNeSaisPas: true };
+    case "heureEcrite":
+      return { heureEcrite: { heures: reponse.heures, minutes: reponse.minutes, secondes: reponse.secondes } };
     case "motEcrit":
       return { motEcrit: reponse.lettres };
     case "placement":
