@@ -26,7 +26,7 @@ export function ExerciceDHorloge({ horloge, heure, avecSecondes, reussie, onChoi
     <div className="horloge-a-lire" data-testid="exercice-horloge" data-mode={mode.genre}>
       <CadranDHorloge heure={heure} avecSecondes={avecSecondes} libelle={libelle} />
       {reussie && mode.genre === "clavierDeCristaux" && (
-        <output className="affichage-digital" data-testid="affichage-digital" aria-label="Affichage digital">
+        <output className="affichage-digital" data-testid="affichage-digital">
           {heure.affichageDigital()}
         </output>
       )}
