@@ -8,7 +8,7 @@ const DECALAGES_D_HEURES = [1, -1, 2, -2, 3, -3];
 /** La bonne heure et deux heures voisines : aiguilles lues à l'envers, puis heures d'à côté. */
 export function heuresProposees(heure: HeureDeLHorloge, precision: PrecisionDeLHeure): HeureDeLHorloge[] {
   const candidates = [
-    heureAuxAiguillesALEnvers(heure),
+    heureAuxAiguillesALEnvers(heure, precision),
     ...DECALAGES_D_HEURES.map((decalage) => decaler(heure, decalage)),
   ]
     .filter((candidate): candidate is HeureDeLHorloge => candidate !== undefined && precision.respectee(candidate));
@@ -20,10 +20,13 @@ export function heuresProposees(heure: HeureDeLHorloge, precision: PrecisionDeLH
   return proposees;
 }
 
-function heureAuxAiguillesALEnvers(heure: HeureDeLHorloge): HeureDeLHorloge | undefined {
+/** Si la précision n'admet pas les minutes lues à l'envers, on garde le chiffre montré par la grande aiguille. */
+function heureAuxAiguillesALEnvers(heure: HeureDeLHorloge, precision: PrecisionDeLHeure): HeureDeLHorloge | undefined {
   if (heure.secondes > 0 || heure.minutes % MINUTES_PAR_GRADUATION !== 0) return undefined;
   const heures = heure.minutes / MINUTES_PAR_GRADUATION || HEURES_SUR_LE_CADRAN;
-  return ecrire(heures, (heure.heures % HEURES_SUR_LE_CADRAN) * MINUTES_PAR_GRADUATION, 0);
+  const minutes = (heure.heures % HEURES_SUR_LE_CADRAN) * MINUTES_PAR_GRADUATION;
+  const alEnvers = ecrire(heures, minutes, 0);
+  return precision.respectee(alEnvers) ? alEnvers : ecrire(heures, 0, 0);
 }
 
 function decaler(heure: HeureDeLHorloge, decalage: number): HeureDeLHorloge {
