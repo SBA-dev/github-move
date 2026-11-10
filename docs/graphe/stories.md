@@ -1,15 +1,46 @@
 # Graphe des stories
 
-Mise à jour : 2026-10-24, par le responsable des équipes seulement (décision 0017).
+Mise à jour : 2026-11-09 (fin de la vague 1), par le responsable des équipes seulement (décision 0017).
 Une story ne commence son code que quand **toutes** ses dépendances sont mergées dans `main`. L'état courant (en cours, en revue…) est dans les labels `graphe:*` des issues et dans l'issue `[Coordination des équipes] Vague <k>`, pas ici.
 
 Les dépendances viennent des issues (relevé du 2026-10-24), corrigées par le PO le 2026-10-24. Une dépendance suivie de `?` est une **hypothèse** : le PO la confirme ou l'écarte avant le lancement de la story. Tant qu'elle n'est pas tranchée, elle bloque.
 
 ## Livrées
 
-#5, #6, #7, #8, #10, #11, #12, #15, #16, #17, #18, #23, #24.
+Avant la vague 1 : #5, #6, #7, #8, #10, #11, #12, #15, #16, #17, #18, #19, #23, #24.
 
-## Nœuds ouverts
+Vague 1 (24/10 → 09/11, coordination #64) :
+- **beta** : #20, #25, #22, #21, #65, #27, #58, #72, #26, #32, #28, #73, #39, #34, #29, #79, #31, #30, #33, #45 (code et publication) ;
+- **épopée #95, leçons plus ludiques** : #96, #97, #99, #98 (98a), #102, #101, #100, #127, #126, #128, #131, #129, #130, #137, #106 (106a à 106h), #158, #161, #168, #163 (163a à 163f), #166, #173 ;
+- **outillage et correctifs** : #146, #141, #140, #155, #179, #107, #111, #136, #113, #114, #115, #123.
+
+**En ligne en production** depuis le 07/11 : `5d690d3`. Mergée depuis, pas encore publiée : #173 (`35b1e38`).
+
+## Sorties de la beta
+
+#13, #14 (PO, 25/10) et #38 (cadrée et validée, pas lancée) ne sont pas dans la beta en ligne.
+
+## Ouvertes à la fin de la vague 1
+
+| # | Story | Contexte | Dépend de (ouvertes) | État |
+|---|---|---|---|---|
+| 182 | Voix en MP3 pré-générés (Piper) | Apprentissage (voix) | à relever | prête à cadrer |
+| 183 | Écran de séance : barre du haut et barre d'action | Apprentissage | à relever | prête à cadrer |
+| 184 | Hors séance : en-tête compact et dock | transverse | à relever | prête à cadrer |
+| 13 | Inviter un second parent | Famille | — | cadrée (lot 2) |
+| 14 | Supprimer et exporter un profil | Famille | — | cadrée (lot 2) |
+| 38 | Enregistrements de lecture | Accompagnement | — | cadrée et validée |
+| 103 | Vérifier le texte du parent (leçons personnelles) | Accompagnement | à relever | à cadrer |
+| 104 | Vérifier le prénom saisi par le parent | Famille | à relever | à cadrer |
+| 116 à 121 | Épopée #122 : retours depuis l'application | transverse | #116 d'abord | à cadrer |
+| 86, 87 | Outillage E2E (environnement par équipe, non-régressions fiables) | outillage | — | à cadrer |
+| 45 | Mise en ligne | transverse | — | publiée ; restent au PO M1 et le parent de test de production |
+
+Les dépendances « à relever » se lisent dans les issues au lancement de la vague 2 et se font confirmer par le PO, comme pour la vague 1.
+
+## Graphe de départ de la vague 1 (24/10, gardé pour mémoire)
+
+### Nœuds ouverts au 24/10
 
 Ressources : `base` = migration sur `savanturier-dev` ; `email` = scénarios `@envoi-email` ; `ia` = appel à l'API Claude (clé pas encore fournie, décision de démarrage n°6).
 
@@ -104,7 +135,7 @@ graph LR
 
 `#20 → #21 → #28 → #29 → #30 → #33 → #45` : 7 stories en série (8 avant les réponses du PO). C'est la durée minimale de la beta, quel que soit le nombre d'équipes. Les stories du chemin critique passent en premier dans chaque vague ; #25 et #27 sont presque aussi critiques (`#25 → #27 → #28`).
 
-## Vague 1 proposée (2 équipes, voir `nombre-d-equipes.md`)
+## Vague 1 proposée le 24/10 (2 équipes, puis 3)
 
 | Équipe | Story | Pourquoi | Verrous |
 |---|---|---|---|
@@ -127,12 +158,18 @@ En attente d'une place : #19, #22, #14, #13, #58 (niveau 0), puis #21 et #65 dè
 | #34 dépend-elle de #13 ? | oui | arête confirmée |
 | Écran « Mes trophées » et type `lecture` sans issue | créer les issues | **#65** créée pour l'écran ; pas d'issue pour `lecture` : le type est déjà livré par #17 (« Lecture : Le petit chat Plume »), et le bouton d'enregistrement qui lui manque est décrit dans #38 |
 
+## Épopée #95 (après la beta), telle que livrée
+
+- #96 → #97 → #98 (98a) ;
+- #98 → #130 (train), #126 (bulles), #127 (addition) → #131 (boîte et barres), #128 (claviers), #129 (parchemin) ;
+- #96 → #99 → #100 → #137 (grand défi) ;
+- #99 → #101 ;
+- #96, #102 et #100 → #106 (106a à 106h) → #158, #161, #168 (dessins fixes), #163 (réponse fausse), #166 (musiques) → #173 (musiques de Sports et de Police).
+
 ## Questions encore ouvertes
 
-Aucune hypothèse `?` ne reste dans la beta.
-
-1. Les questions ouvertes de **#65**, dont le nom de l'écran (« trophée » est un synonyme interdit de badge). Elles se tranchent à la validation du cadrage de #65, comme pour toute story.
+Aucune hypothèse `?` ne reste. Les dépendances de #182, #183, #184, #103, #104 et de l'épopée #122 restent à relever avant la vague 2.
 
 ## Scénarios déjà écrits qui attendent une story ouverte
 
-Livrer ces stories rend exécutables des scénarios déjà au vert ailleurs (tags `@depend-de-<n>`) : #19, #20, #21 (scénarios de #23), #14 et #20 (scénarios de #24), #44 (scénarios de #12). L'équipe qui les livre relance ces scénarios en non-régression.
+Livrer ces stories rend exécutables des scénarios déjà écrits (tags `@depend-de-<n>`), #13 (1 scénario), #14 (5) et #44 (1). L'équipe qui les livre relance ces scénarios en non-régression. Les scénarios `@hors-beta` attendent le retour de la connexion par e-mail (décision 0019).

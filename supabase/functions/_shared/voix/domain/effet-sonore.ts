@@ -10,4 +10,6 @@ export type EffetSonore =
   | "airDeSaxophone"
   | "airDeCordesPincees"
   | "airDeSteelDrumCourt"
-  | "airDeSteelDrumLong";
+  | "airDeSteelDrumLong"
+  | "airDeSteelDrumBref"
+  | "airDeCordesPinceesBref";

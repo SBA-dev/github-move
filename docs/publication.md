@@ -142,6 +142,21 @@ supabase db dump --db-url "$URL_DE_LA_BASE" -f data.sql    --use-copy --data-onl
 
 (`$URL_DE_LA_BASE` : chaîne de connexion du tableau de bord, mot de passe de la base inclus ; elle reste dans le terminal du PO.)
 
+**Variante sans Docker** (utilisée pour la publication du 07/11, la CLI Supabase lançant `pg_dump` dans Docker) : les outils PostgreSQL seuls, en version **égale ou plus récente** que la base (Project Settings, Infrastructure, « Postgres version »).
+- Installation : sous Windows, l'installeur EDB de postgresql.org, en ne cochant que « Command Line Tools » ; sous Mac, `brew install libpq && brew link --force libpq` ; sous Linux, `postgresql-client-<version>`.
+- Chaîne de connexion : sur le projet **`saventurier-prod`** (vérifier que la référence n'est pas celle de `savanturier-dev`), « Connect », chaîne « Session pooler » (port 5432 ; à défaut, celle du « Transaction pooler » avec le port 6543 changé en 5432), `[YOUR-PASSWORD]` remplacé par le mot de passe de la base, préfixe `postgresql://` une seule fois.
+- Dans un dossier hors de tout dépôt :
+
+```
+psql "$URL_DE_LA_BASE" -c "show server_version;"
+pg_dump "$URL_DE_LA_BASE" --format=custom --no-owner --no-privileges -f savanturier-prod.dump
+pg_dump "$URL_DE_LA_BASE" --data-only --schema=public --schema=auth -f donnees.sql
+pg_restore --list savanturier-prod.dump | head
+unset URL_DE_LA_BASE
+```
+
+(PowerShell : `$env:URL_DE_LA_BASE`, `Select-Object -First 10` et `Remove-Item Env:URL_DE_LA_BASE`.) La dernière commande doit lister des tables, par exemple `profils_enfants`. Ne jamais faire de capture d'écran où la chaîne de connexion ou le mot de passe apparaît : si cela arrive, changer le mot de passe de la base (Project Settings, Database, « Reset database password »). La restauration d'essai (§ 4) demande toujours Docker.
+
 La sauvegarde est **notée au journal des publications** (date, emplacement sur la machine du PO, jamais son contenu) et **gardée 30 jours**, puis effacée (45.34). Pendant la beta (45.36), les familles en sont informées par l'invitation (P11) et par la réponse écrite au parent.
 
 ### 3.4 Migrations (45.22)

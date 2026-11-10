@@ -1,6 +1,6 @@
 # Feuille de route
 
-Mise à jour : 2026-10-24. On la met à jour à la fin de chaque session de travail.
+Mise à jour : 2026-11-09 (fin de la vague 1 du graphe). On la met à jour à la fin de chaque session de travail.
 
 ## Où en est le projet
 
@@ -27,75 +27,56 @@ L'application fonctionne et est publiée comme artifact claude.ai. Elle comprend
 - Les **maths du CP** suivent le guide fondamental « nombres, calcul et résolution de problèmes au CP » : 22 leçons appuyées sur le guide, avec les types `boite` et `barres`.
 - Les 8 guides fondamentaux d'Eduscol sont dans `sources/guides/`, leur texte extrait dans `sources/texte/guides/`.
 
-### Nouvelle application (cible)
+### Nouvelle application (cible) : en ligne
 
-- Décisions prises : voir `docs/decisions/` (React PWA, Supabase, domaine partagé hors ligne, voix de synthèse, pas de temps d'écran, méthode).
-- Méthode en place : `CLAUDE.md`, 6 subagents, commande `/feature`, 4 skills.
-- Domaine : glossaire et context map initiaux, validés par le PO (`docs/domain/`).
-- **Aucun code de la cible n'existe encore.**
+- **La beta est en ligne** (#45) dans le projet de production `saventurier-prod` (Supabase en Irlande, front chez alwaysdata). Procédure : `docs/publication.md`.
+- **Version en ligne : `main` `5d690d3`**, publiée le 07/11 : la beta complète (lots 1 à 5) et l'épopée #95 « leçons plus ludiques » (univers, personnages guides qui évoluent, quête du jour, défis et grand défi, célébrations de l'univers, réponse fausse animée, musiques).
+- Livré par la vague 1 du graphe (24/10 → 09/11, coordination #64) : voir `docs/graphe/stories.md` (section « Livrées ») et les mesures dans `docs/graphe/nombre-d-equipes.md`.
+- Décisions : `docs/decisions/` jusqu'à 0042 ; prochain numéro libre : **0043**.
+- Développement contre le projet en ligne `savanturier-dev` (décision 0010), plan Pro depuis le 03/11 ; parents de test E2E réutilisés (décision 0040).
+- Non-régression complète **de nuit** (tâche planifiée, 01:13 heure de Paris), en trois lots sur un cycle de 6 nuits (« nr. 4 », 06/11), si `main` a changé ; avant la PR d'une story, seulement les scénarios qu'elle touche (PO, 28/10 et 04/11) ; en entier avant chaque publication.
 
 ## Prochaines étapes
 
-> **En cours** : #16, #17, #11, #12, #23, #24, #18 livrées (PR #53 à #57, #59, #60). #19 (dictée, conjugaison ; décision 0018) livrée sur `claude/nice-mendel-cp9syg`, en PR. #14 reportée par le PO ; #58 (retrait de la page de démonstration, avec le scénario PWA #8 qui l'ouvre encore) à faire. À surveiller : scénario « 7 × 8 » de #10, flaky sous charge. Suite : la vague 1 du graphe (`docs/graphe/stories.md`).
+> **Vague 1 close** (« Clôture A », 09/11) : #173 (musique des célébrations de Sports et de Police), dernière équipe, est mergée (`35b1e38`) ; elle n'est pas encore en ligne (prochaine publication). Aucune équipe ne tourne. Vague 2 proposée à **2 équipes** (`docs/graphe/nombre-d-equipes.md`), lancement sur demande du PO.
 
-> **Nouvelle organisation (décision 0017)** : les stories se livrent maintenant en parallèle, une équipe par story, avec `/graphe`. Graphe des dépendances, chemin critique de la beta et vague 1 proposée (#20, #25) dans `docs/graphe/stories.md` ; 2 équipes par défaut, 3 au maximum (`docs/graphe/nombre-d-equipes.md`). Le PO a tranché les dépendances incertaines le 2026-10-24 : #39 et #38 entrent dans la beta, #65 (écran « Mes trophées ») est créée, le chemin critique passe à 7 stories.
+### Ce qui reste au PO
 
-> **Chantier en cours : la réécriture complète en React + Supabase.** Plan, lots et décisions de démarrage dans `docs/reecriture.md`.
+- **Changer le mot de passe de la base de production** (apparu sur une capture d'écran le 07/11).
+- Contrôle manuel sur tablette et téléphone réels (M1).
+- Créer le parent de test de production et son profil, puis ajouter `PARENT_DE_TEST_PRODUCTION_*` à l'environnement de publication : 6 scénarios `@production` et V10 en dépendent.
+- Ligne du journal des publications du 07/11 (hors du dépôt).
+- Effacer la sauvegarde du 07/11 le 07/12 (garde de 30 jours).
+- Restauration d'essai avant d'inviter les familles ; tâche « garder actif » (45.31) ; connecteur GitHub pour la tâche de nuit.
 
-### Première beta (périmètre validé par le PO le 2026-10-23)
+### Candidates pour la vague 2 (dépendances à relever, puis lancement sur demande du PO)
 
-Un parent installe Savanturier, crée le profil de son enfant ; l'enfant joue des leçons, avance dans son parcours et est motivé par la série et les badges. **En ligne seulement** : le hors ligne vient après la beta.
+- Épopée #95, suite : #182 (voix en MP3 pré-générés), #183 (écran de séance), #184 (en-tête et dock hors séance).
+- Vérifications des saisies du parent : #103, #104 (règle absolue sur les contenus pour les enfants).
+- Famille et accompagnement : #13, #14, #38 (cadrées), puis #35, #36, #37, #42, #43, #40, #41.
+- Épopée #122 (retours depuis l'application) : #116 à #121.
+- Outillage E2E : #86, #87.
+- Après la beta : #44 (hors ligne), puis #46 (retrait de `app/`).
 
-| Lot | Stories | Dans la beta |
-|---|---|---|
-| 1. Socle | #5 à #8 | oui |
-| 2. Famille | #10 à #15 | oui |
-| 3. Jouer une leçon | #16 à #24 | oui |
-| 4. Parcours | #25 à #29 | oui |
-| 5. Motivation | #30 à #33 | oui |
-| 6. Accompagnement | #34 à #43 | non, après la beta |
-| 7. Bascule | #45 mise en ligne | oui ; #44 hors ligne et #46 retrait de `app/` après la beta |
+### Règles et documents à mettre à jour (relevés pendant la vague 1, à faire en début de vague 2)
 
-Avant la beta, l'application actuelle (`app/`) reste celle que les familles utilisent.
+- `CLAUDE.md` et `.claude/commands/equipe.md` : nouvelle règle de non-régression (une décision à écrire) ; contournement Playwright/Chromium (dossier `pw/` et `PLAYWRIGHT_BROWSERS_PATH`) ; relancer `bddgen` après chaque changement d'un step ; hooks E2E toujours tagués ; « VERROU merge accordé » **et** tableau à jour avant de merger ; écran commun → chercher les assertions de liste exacte dans tous les `.feature` ; délais longs pour toute story qui joue une séance complète ; port 5173 libre avant un long run ; conteneur lent → session neuve ; une réponse du PO n'est valable que relayée par le responsable sur l'issue de coordination ; passation du responsable : archiver l'ancienne session tout de suite ; une validation de planche ne vaut que pour des planches publiées.
+- Skill `gamification` : « une célébration ne retient jamais l'enfant : 1,5 s au plus », avec l'écart de 3 s pour la célébration de l'univers (décision 0039) ; corriger « avance d'une étape à chaque leçon réussie » (#99.11).
+- `docs/publication.md` : test de l'environnement qui vérifie que WebDAV vise `www/` ; contournement du navigateur pour les scénarios `@production` ; jeton Supabase avec droits d'écriture. (La sauvegarde sans Docker y est ajoutée.)
+- Décision 0033 (point 5) et `docs/decisions/README.md` décrivent encore `data-dessin`, retiré par #161.
+- Tâche de nuit : accès à GitHub, à désactiver à la fin du développement.
 
-### 1. Préparer le terrain de la nouvelle application
+### Dettes techniques relevées pendant la vague 1
 
-- [x] Deno, pytest et les dépendances npm (dont la CLI Supabase) sont installés à chaque session cloud par `.claude/hooks/session-start.sh`.
-- [ ] **Docker** pour `supabase start` : absent du conteneur cloud. À lancer en local, ou à fournir par l'environnement, avant la première story qui touche la base.
-- [x] Branche **`main`** créée et définie comme branche par défaut.
-- [x] Squelette créé et vérifié :
-  - Vite + React 19 + TypeScript strict + Motion, alias `@domain/<contexte>` ;
-  - `deno.json` ;
-  - `supabase/` (config initialisée, `migrations/`, `functions/_shared/`, `seed.sql`) ;
-  - `features/` avec un scénario de socle vert sur tablette et téléphone ;
-  - `playwright.config.ts` (playwright-bdd) et `playwright.legacy.config.ts` ;
-  - `.env.example` et `.gitignore`.
-- [x] Test de contrat de `app/bibliotheque.json` (`scripts/tests/test_bibliotheque.py`, 1 326 cas). Il a révélé 3 paires de leçons de maths du CP avec le même ordre : c'est corrigé.
-- [ ] Compléter `tests/legacy/` avec les scripts de vérification utilisés jusqu'ici (parcours des 265 leçons, profils, révisions, espace parent). Deux premiers tests de caractérisation y sont déjà.
-- [x] Lot 1 (Socle) : issues #5 (connexion du parent), #6 (univers et personnage guide), #7 (voix), #8 (PWA installable), label `reecriture`.
-  - Modèles de domaine (#5 à #7) et critères d'acceptance (#5 à #8) écrits, glossaire et context map complétés.
-  - Scénarios **validés par le PO** (`docs/stories/lot-1-decisions.md`, décision 0007). Questions restantes non bloquantes dans `docs/stories/<n>/acceptance.md`.
-  - **#6 livrée sur la branche** : domaine `motivation` (40 tests Deno), front (paysages, personnages guides SVG animés avec Motion, en-tête, page `/demonstration` réservée aux tests), review approuvée, E2E 82/82. PR pas encore ouverte.
-  - **#7 livrée sur la branche** : sous-domaine `voix` (103 tests Deno au total), lecture à voix haute des consignes avec le caractère de chaque personnage guide, surlignage du mot prononcé, Son/Muet mémorisé sur l'appareil, voix bloquée signalée une fois ; décision 0008 ; deux reviews (la première À CORRIGER) ; E2E 140/140 avec #6 et le socle. PR pas encore ouverte.
-  - À reprendre plus tard (non bloquant, voir `docs/stories/7/journal.md`) : consignes avec balises à attributs, coupure de Chrome après 15 s de lecture, blocage silencieux sur iOS, entités HTML numériques, message « Réécouter » hors de la page de la consigne.
-  - **#8 livrée sur la branche** : manifeste, icônes, service worker (coquille et bibliothèque hors ligne, nouvelle version au lancement suivant), aide iPad/iPhone ; E2E sur le build de production (`playwright.pwa.config.ts`) 28/28 ; deux reviews (la première À CORRIGER).
-  - **PR du lot 1 ouverte** (#6, #7, #8) : https://github.com/SBA-dev/github-move/pull/9, en attente du merge par le PO.
-  - À reprendre plus tard pour la PWA : fichier chargé à la demande après activation d'une nouvelle version (à traiter avant le premier écran `lazy` en production), délai maximal du réseau d'abord, tests de la réponse en erreur, exemples iPhone et Mac de bureau.
-  - **#5 commencée** sur `feature/5-connexion-du-parent` (partie de la branche du lot 1) : domaine `famille` (adresse e-mail, code de connexion, demander un lien, ouvrir la connexion avec le code, se déconnecter), 128 tests Deno au total.
-  - Pour finir #5 : ajouter `SUPABASE_URL`, `SUPABASE_ANON_KEY` et `SUPABASE_ACCESS_TOKEN` à l'environnement cloud (seul `SUPABASE_DB_PASSWORD` est présent), puis ouvrir une nouvelle session ; puis adaptateur Supabase Auth, écran de connexion, E2E. Après le merge de la PR #9, remettre la branche sur `main`.
-  - À retirer plus tard : la page `/demonstration` et le profil préparé en `localStorage` (lots 2 et 3).
-  - Première vérification Supabase (`npx supabase link`) non faite : les secrets `SUPABASE_*` n'étaient pas présents dans la session.
-- [x] Lot 2 (Famille) : issues écrites, label `reecriture`. Ordre proposé : #10 contrôle parental de l'espace parent, #11 créer et modifier un profil enfant (et « Qui joue ? »), #12 réglages, #13 inviter un second parent, #14 supprimer un profil et ses données (et export), #15 choix de la voix sur l'appareil. Ces stories touchent la base : elles demandent Supabase (secrets et Docker).
-  - Modèles (#10 à #15) et scénarios écrits sur `feature/lot-2-modele-et-scenarios` : 35 règles, 150 scénarios. Scénarios **validés par le PO** (`docs/stories/lot-2-decisions.md`, décision 0009). #10 (contrôle parental) : domaine et écran faits sur `feature/10-controle-parental`, review approuvée, E2E à exécuter avec #5 et #11. #15 (choix de la voix) : livrée sur `feature/15-choix-de-la-voix`, deux reviews (la première À CORRIGER), E2E 31/32 (le scénario de la déconnexion attend #5) ; #11 à #14 demandent Supabase (secrets et Docker).
-- [x] Lots 3 à 7 : issues écrites (label `reecriture`), à partir du comportement actuel de `app/` :
-  - lot 3 (Jouer une leçon) : #16 à #24 ;
-  - lot 4 (Parcours) : #25 à #29 ;
-  - lot 5 (Motivation) : #30 à #33 ;
-  - lot 6 (Accompagnement) : #34 à #43 (leçons personnelles découpées en #39, #40, #41) ;
-  - lot 7 (Bascule) : #44 à #46.
-  Chaque issue relève les défauts du legacy et ses questions ouvertes, à trancher à la validation des scénarios de son lot.
+- Front (`src/`) : aucun outil de test unitaire ; l'orchestration de la fin de séance (bug de 106.53) n'est testée qu'en E2E.
+- Steps E2E : course « lire le journal, puis terminer la lecture » dans `boite-et-barres.steps.ts:343` et `cabane.steps.ts:130` ; scénarios de #96 instables sous charge.
+- Dessins : deux copies du tracé de l'écusson de police (#158) ; jambes et tête de Capitaine Sam à mettre dans `commun/` (106f) ; formes en double SVG/TSX (#127, #131).
+- `useReducedMotion()` de Motion lu seulement au montage ; tenue portée à effacer à la suppression d'un profil (#102, #14).
+- #100 : magasins IndexedDB copiés, défi affiché « ouvert » avant synchronisation ; #101 : fête perdue sur réseau très lent.
+- #128 : record d'un autre exercice affiché un instant, SVG mal formé non détecté au build ; `@issue-128` jamais joué sur `tablette`.
+- #137, #140, #126, #98, #131 : détails dans le journal de chaque story (`docs/stories/<n>/journal.md`) et dans l'historique du corps de #64.
 
-### 2. Contenu : lecture et écriture au CP (commencé, pas encore livré)
+### Contenu : lecture et écriture au CP (commencé, pas encore livré)
 
 On suit le guide fondamental « Pour enseigner la lecture et l'écriture au CP ».
 
@@ -135,18 +116,11 @@ On suit le guide fondamental « Pour enseigner la lecture et l'écriture au CP �
 - placer les autres leçons de français du CP après la progression de décodage ;
 - puis faire la lecture au CE1.
 
-### 3. Fait récemment
+### Fait avant la réécriture
 
 - [x] Réglage « temps d'écran » et écran de pause retirés de `app/` (décision 0005).
 
-## Reprise dans une nouvelle session (Supabase configuré)
+## Environnement
 
-Le PO a ajouté les variables `SUPABASE_URL`, `SUPABASE_PROJECT_REF`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` et `SUPABASE_ACCESS_TOKEN` à l'environnement cloud (`SUPABASE_DB_PASSWORD` y était déjà). Projet de développement : `savanturier-dev`, référence `cxptcwkegwhdmhqjxttv`, région Irlande (`eu-west-1`).
-
-À faire en premier :
-1. [x] Variables présentes (vérifié le 2026-10-23, sans afficher les valeurs).
-2. [x] `npx supabase link` réussi. Réseau : l'API HTTPS du projet répond, mais pas Postgres en direct (ports 5432 et 6543 fermés). [x] Migration vide de vérification appliquée par l'API de gestion, puis retirée (2026-10-23) : la chaîne de migration fonctionne depuis le conteneur cloud. Règle d'autorisation dans `.claude/settings.json`.
-3. [x] Le PO a choisi les tests contre le projet en ligne `savanturier-dev` : décision 0010. Le projet est en `eu-west-1` (Irlande) : le PO garde l'Irlande, la doc est corrigée.
-4. Reprendre #5 (adaptateur Supabase Auth, écran de connexion, E2E), puis #11 à #14.
-
-Branches en cours, chacune partie de la précédente, rien n'est mergé dans `main` : `claude/stoic-faraday-0qy6ez` (lot 1, PR #9) → `feature/5-connexion-du-parent` → `feature/lot-2-modele-et-scenarios` → `feature/10-controle-parental` → `feature/15-choix-de-la-voix`. À part, partie de `main` : `chore/tests-legacy` (339 tests de caractérisation).
+- Projet de développement `savanturier-dev` (référence `cxptcwkegwhdmhqjxttv`, Irlande) : variables `SUPABASE_*` dans l'environnement cloud par défaut, migrations par l'API de gestion (pas de Docker dans le conteneur).
+- Projet de production `saventurier-prod` : environnement cloud séparé, réservé aux sessions de publication (`docs/publication.md`, § 2.3).

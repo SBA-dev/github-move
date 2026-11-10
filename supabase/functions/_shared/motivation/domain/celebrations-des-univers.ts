@@ -33,11 +33,11 @@ type CelebrationDe<U extends UniversCelebre> = {
 export type CelebrationDeLUnivers = { [U in UniversCelebre]: CelebrationDe<U> }[UniversCelebre];
 
 const CRIS_ET_MUSIQUES: Record<UniversCelebre, { readonly cri: CriDeVictoire; readonly musique: EffetSonore }> = {
-  sports: { cri: "BUT !", musique: "grandeVictoire" },
+  sports: { cri: "BUT !", musique: "airDeSteelDrumBref" },
   danse: { cri: "Bravo !", musique: "airDeSaxophone" },
   animaux: { cri: "Hourra !", musique: "airDeCordesPincees" },
   princesse: { cri: "Magique !", musique: "airDeSteelDrumCourt" },
-  police: { cri: "Enquête résolue !", musique: "grandeVictoire" },
+  police: { cri: "Enquête résolue !", musique: "airDeCordesPinceesBref" },
   pompier: { cri: "Mission accomplie !", musique: "airDeSteelDrumLong" },
 };
 
