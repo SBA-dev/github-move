@@ -2,15 +2,15 @@ import { useCallback, useReducer, useRef, useState } from "react";
 import {
   type BoiteOuverte,
   type CorrectionDuMot,
+  HeureEcriteImpossible,
   lectureDesChoix,
   QuestionDeBoite,
   QuestionDeProblemeEnBarres,
   type QuestionDeRevision,
+  QuestionDHorloge,
   QuestionJouee,
   type QuestionPosee,
   Reponse,
-  type ReponseEnNombre,
-  type ReponseParChoix,
   type ResultatDeReponse,
   type SchemaResolu,
 } from "@domain/apprentissage";
@@ -121,6 +121,12 @@ export function useDeroulementDeRevision(
     }
   }, [dire]);
 
+  const presenterUneHorloge = useCallback(async (question: QuestionDHorloge) => {
+    if (!(await dire({ texte: question.texteDit(), nature: "consigne" }))) return;
+    const choix = toutLireAVoixHaute ? question.lectureDesChoix() : undefined;
+    if (choix !== undefined) await lire(choix);
+  }, [dire, toutLireAVoixHaute, lire]);
+
   const presenter = useCallback(async (numero: number) => {
     const courante = seance.questionEnCours();
     if (!courante) return;
@@ -129,6 +135,7 @@ export function useDeroulementDeRevision(
       await dire({ texte: dictee.texteAffiche(), aLire: dictee.texteDit(), nature: "dictee" });
       return;
     }
+    if (question instanceof QuestionDHorloge) return await presenterUneHorloge(question);
     if (phrasesDeLaPresentation(question).length > 0) return await presenterUneQuestionIllustree(question);
     if (!(await dire({ texte: question.enonce, nature: "question" }))) return;
     if (!(await direLeMotAEcouter(numero, question))) return;
@@ -203,7 +210,7 @@ export function useDeroulementDeRevision(
     else await direLeMotAEcouter(numero, courante.question);
   }, [signaler, feliciterEtPasserALaSuite, dire, personnageGuide, lire, direLeMotAEcouter]);
 
-  const repondre = useCallback(async (reponse: ReponseParChoix | ReponseEnNombre) => {
+  const repondre = useCallback(async (reponse: Parameters<SeanceDeQuestions["repondre"]>[0]) => {
     const courante = seance.questionEnCours();
     if (!courante || estFigee.current) return;
     await apresLaReponse(courante, seance.repondre(reponse), reponse.genre === "choix" ? reponse.texte : undefined);
@@ -211,6 +218,21 @@ export function useDeroulementDeRevision(
 
   const repondreParUnChoix = useCallback((texte: string) => repondre(Reponse.choix(texte)), [repondre]);
   const repondreParUnNombre = useCallback((nombre: number) => repondre(Reponse.nombre(nombre)), [repondre]);
+
+  /** Rend `false` quand l'heure écrite est impossible : rien n'est corrigé ni compté, l'enfant la corrige. */
+  const repondreParUneHeure = useCallback((heures: number, minutes: number, secondes: number): boolean => {
+    const courante = seance.questionEnCours();
+    if (!courante || estFigee.current) return true;
+    let resultat: ResultatDeReponse;
+    try {
+      resultat = seance.repondre(Reponse.heureEcrite(heures, minutes, secondes));
+    } catch (erreur) {
+      if (erreur instanceof HeureEcriteImpossible) return false;
+      throw erreur;
+    }
+    void apresLaReponse(courante, resultat);
+    return true;
+  }, [seance, apresLaReponse]);
 
   const montrerLesLettresFausses = useCallback((correction: CorrectionDuMot) => {
     lettresFaussesMontrees.current = true;
@@ -272,7 +294,11 @@ export function useDeroulementDeRevision(
     const parole = calcul
       ? aiderQuandOnNeSaitPas(calcul, aide, bonneReponse)
       : { texte: reaction.parole, nature: "aide", humeur: reaction.humeur } as const;
-    if (await dire(parole)) await direLeMotAEcouter(numero, question);
+    const reponseDite = question instanceof QuestionDHorloge ? question.enCours().reponseATaperDite : undefined;
+    const paroleADire = calcul && reponseDite !== undefined
+      ? { ...parole, aLire: aiderQuandOnNeSaitPas(calcul, aide, reponseDite).texte }
+      : parole;
+    if (await dire(paroleADire)) await direLeMotAEcouter(numero, question);
   }, [seance, faireSilence, dire, direLeMotAEcouter, jeNeSaisPasEnDictee]);
 
   /** Relit la question jusqu'au bout de sa présentation : l'enfant n'est jamais laissé devant une question sans choix. Rend `false` s'il n'y a rien à relire. */
@@ -339,6 +365,7 @@ export function useDeroulementDeRevision(
     reecouterLeMotPlusLentement: () => reecouterLeMot(true),
     repondreParUnChoix,
     repondreParUnNombre,
+    repondreParUneHeure,
     taper,
     effacer,
     jeNeSaisPas,

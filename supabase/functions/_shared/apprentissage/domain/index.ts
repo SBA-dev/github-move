@@ -149,6 +149,7 @@ export type { SeanceDeRevisionTermineeAEnregistrer } from "./seance-de-revision-
 export type { QuestionDeRevision } from "./question-de-revision.ts";
 export { AucuneQuestionDue } from "./erreurs.ts";
 export { cleDeLaBoite, QuestionDeBoite } from "./question-de-boite.ts";
+export { cleDeLHorloge } from "./cles-des-questions.ts";
 export { QuestionDeProblemeEnBarres } from "./question-de-probleme-en-barres.ts";
 export { estUnTypeDeQuestion } from "./cle-de-question.ts";
 export { leconAcquiseParLaSeance, leconsAcquises } from "./lecons-acquises.ts";

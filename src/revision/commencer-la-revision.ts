@@ -1,13 +1,14 @@
 import {
   AucuneQuestionDue,
   cleDeLaBoite,
+  cleDeLHorloge,
   type FileDeRevision,
   type Jour,
   SeanceDeRevision,
   tireurAuHasard,
 } from "@domain/apprentissage";
 import type { CleDeQuestion, OrigineDeLaQuestion } from "@domain/apprentissage";
-import type { ItemDeBoite, Lecon, Niveau } from "@domain/catalogue";
+import type { HeureDeLHorloge, ItemDeBoite, Lecon, Niveau } from "@domain/catalogue";
 import { generateurIdDuNavigateur } from "../seance/generateur-id-navigateur.ts";
 import { hasardDuNavigateur } from "../seance/hasard-navigateur.ts";
 
@@ -17,7 +18,12 @@ export type RevisionCommencee = {
   readonly boites: ReadonlyMap<string, ItemDeBoite>;
   /** Les textes des questions de lecture du plan, par clé de question : la question se pose avec le texte de sa leçon d'origine. */
   readonly textes: ReadonlyMap<string, TexteDeLecture>;
+  /** Les horloges des questions du plan, par clé de question : l'écran y lit l'heure que montre le cadran. */
+  readonly horloges: ReadonlyMap<string, HorlogeDuPlan>;
 };
+
+/** L'heure que montre le cadran d'une question d'horloge, et si l'aiguille des secondes y figure. */
+export type HorlogeDuPlan = { readonly heure: HeureDeLHorloge; readonly avecSecondes: boolean };
 
 export type TexteDeLecture = { readonly titre: string | undefined; readonly texte: string };
 
@@ -45,6 +51,17 @@ export function boitesDuPlan(plan: PlanDeQuestions, lecons: readonly Lecon[]): M
   return boites;
 }
 
+export function horlogesDuPlan(plan: PlanDeQuestions, lecons: readonly Lecon[]): Map<string, HorlogeDuPlan> {
+  const horloges = new Map<string, HorlogeDuPlan>();
+  for (const { identite, origine } of plan.questions) {
+    const exercice = lecons.find(({ id }) => id === origine.leconDOrigine)?.exercices[origine.position];
+    if (exercice?.type !== "horloge") continue;
+    const item = exercice.items.find((candidat) => cleDeLHorloge(exercice.mode, candidat).valeur === identite.valeur);
+    if (item) horloges.set(identite.valeur, { heure: item.heure, avecSecondes: exercice.precision.ecriture() === "seconde" });
+  }
+  return horloges;
+}
+
 /** La séance de révision des questions dues ce jour-là ; `undefined` quand rien n'est dû ou que la bibliothèque ne donne aucune question. */
 export function commencerLaRevision(
   { file, jour, enfant, lecons, niveau }: {
@@ -65,7 +82,7 @@ export function commencerLaRevision(
       tireurDe: () => tireurAuHasard(hasardDuNavigateur),
       niveau,
     });
-    return { seance, boites: boitesDuPlan(plan, lecons), textes: textesDuPlan(plan, lecons) };
+    return { seance, boites: boitesDuPlan(plan, lecons), textes: textesDuPlan(plan, lecons), horloges: horlogesDuPlan(plan, lecons) };
   } catch (erreur) {
     if (erreur instanceof AucuneQuestionDue) return undefined;
     throw erreur;
