@@ -10,3 +10,4 @@ Branche : `feature/182-voix-mp3-piper`, partie de `main` (`aa75d97`). Base : `ma
 - 00:20 UTC : `domain-modeler` : modèle de domaine, brouillon 0043, ajouts au glossaire (commit 667d394).
 - 00:35 UTC : `po-acceptance` : 27 scénarios, `criteres.md` (commit 6575262).
 - 00:40 UTC : CADRAGE PRÊT publié sur #182 (questions #182.1 à #182.18). ⛔ n°1 : attente de l'annonce [Responsable] sur #193.
+- 00:45 UTC : outil Piper installé dans le scratchpad depuis `pypi.org` (`piper-tts` 1.8.0, hors dépôt). Le modèle « tom » manque toujours (ESCALADE `git.bksp.space`).
