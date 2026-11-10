@@ -1,6 +1,8 @@
 # Modèle du domaine : issue #190, exercice « horloge » (lire l'heure, placer les aiguilles)
 
-État : **à valider par le PO** (questions #190.1 à #190.22).
+État : **validé par le PO le 2026-11-09** (questions #190.1 à #190.22, toutes les recommandations acceptées). Seules restent à confirmer la partie CE2 de #190.10 (« moins » de 40 à 55) et la formulation des secondes au CM2.
+
+Décisions du PO : voir `docs/stories/190/acceptance.md`, section « Décisions ». Le mode `placer` est livré par #192 (décision #190.31). Les mentions « à trancher » et « (à valider) » ci-dessous datent d'avant la validation ; c'est la section « Décisions » qui fait foi.
 
 ## Contexte
 
@@ -124,7 +126,7 @@ classDiagram
 - `heures` entier de 0 à 23, `minutes` de 0 à 59, `secondes` de 0 à 59 (0 si la précision n'est pas la seconde).
 - **Sur le cadran** : l'horloge à aiguilles ne montre que 12 heures. `surLeCadran()` = `(heures mod 12) × 60 + minutes` (plus `secondes / 60`). 3 h et 15 h ont la même position ; midi et minuit aussi (#190.17).
 - `egaleSurLeCadran(autre)` : même position des aiguilles.
-- `ecriture()` : « 3 h », « 15 h 30 », « 7 h 45 », « 6 h 18 min 20 s » (à confirmer pour les secondes, #190.10). C'est l'écriture des leçons existantes.
+- `ecriture()` : « 3 h », « 15 h 30 », « 7 h 45 », « 6 h 18 min 20 s » (à confirmer pour les secondes, #190.10 ; les autres écritures sont validées). C'est l'écriture des leçons existantes.
 - Égalité par valeur (heures, minutes, secondes).
 
 **`PrecisionDeLHeure`** (Catalogue)
@@ -145,7 +147,7 @@ classDiagram
 - `coherentes()` : voir invariant 5.
 - `montre(heure)` : l'aiguille des minutes est sur les minutes de l'heure, et l'aiguille des heures est à sa place pour ces minutes (aux tolérances de #190.7).
 
-**`HeureDite`** (Apprentissage, calcul pur) : l'heure en mots pour la voix et la consigne par défaut. « trois heures », « midi », « deux heures et quart », « quatorze heures quinze », « sept heures moins le quart ». Les règles de formulation (« moins le quart » ou « quarante-cinq », « et demie », « midi », « 12 h ») sont à trancher (#190.10). Aucun nombre n'est dit en chiffres.
+**`HeureDite`** (Apprentissage, calcul pur) : l'heure en mots pour la voix et la consigne par défaut. « trois heures », « midi », « deux heures et quart », « quatorze heures quinze », « sept heures moins le quart ». Les règles de formulation (« moins le quart » ou « quarante-cinq », « et demie », « midi », « 12 h ») sont à trancher (#190.10). *Tranché le 2026-11-09 : « midi », « et quart », « et demie » ; reste à confirmer « moins » de 40 à 55 à partir du CE2 et les secondes au CM2.* Aucun nombre n'est dit en chiffres.
 
 ### Réponses (Apprentissage, `reponse.ts`)
 
@@ -162,10 +164,10 @@ Les deux nouvelles réponses font partie des réponses de la séance terminée :
 1. **Lire, par choix** : juste si le choix touché est celui de l'heure attendue. Les choix sont tous **différents sur le cadran** (invariant 7).
 2. **Lire, heure écrite** : juste si l'heure écrite est **égale sur le cadran** à l'heure attendue (15 h 30 écrit « 3 h 30 » est juste, sauf si un moment de la journée est demandé, #190.8). Une heure écrite impossible (minutes ≥ 60) n'est pas une réponse : le clavier ne la laisse pas valider.
 3. **Placer** : juste si
-   - l'aiguille des minutes est exactement sur les minutes attendues (après aimantation si #190.2 = aimantée ; sinon dans une tolérance à trancher, #190.7) ;
+   - l'aiguille des minutes est exactement sur les minutes attendues (après aimantation si #190.2 = aimantée ; sinon dans une tolérance à trancher, #190.7 ; *tranché : aimantée, cohérence exacte, #192*) ;
    - **et** les aiguilles sont cohérentes (invariant 5) ;
    - **et**, au CM2, l'aiguille des secondes est sur les secondes attendues (#190.4).
-4. Une réponse fausse coûte une **erreur**, comme partout ; l'aide de l'item (ou l'aide par défaut : « La petite aiguille montre les heures, la grande les minutes. ») est lue ; l'enfant a une nouvelle chance. Ce que l'horloge montre après l'erreur est à trancher (#190.6).
+4. Une réponse fausse coûte une **erreur**, comme partout ; l'aide de l'item (ou l'aide par défaut : « La petite aiguille montre les heures, la grande les minutes. ») est lue ; l'enfant a une nouvelle chance. Ce que l'horloge montre après l'erreur est à trancher (#190.6). *Tranché : les aiguilles de l'enfant restent, nouvelle chance ; la bonne heure seulement après « Je ne sais pas ».*
 5. **Je ne sais pas** : une fois par question ; la bonne réponse est montrée (en mode placer : les aiguilles vont sur la bonne heure), puis l'enfant la donne lui-même (#190.18).
 6. Étoiles, réussite, acquisition : inchangées (calculées à partir des erreurs de la séance).
 
@@ -232,7 +234,7 @@ Tous les distracteurs respectent la précision du niveau et sont différents sur
 - `TypeDeQuestion` reçoit `horloge`, avec un préfixe de clé propre (par exemple `w:`), et un texte de clé qui contient le mode et l'heure (« placer 15:30 »), pour que lire 3 h 30 et placer 3 h 30 soient deux questions différentes en révision.
 - `question-de-revision.ts` sait reposer une question d'horloge (#190.15).
 - `plan-du-test-de-depart.ts` : 0 question admissible tant que #190.14 n'est pas tranchée.
-- Libellé du type (`type-d-exercice.ts`) : « L'horloge » (à confirmer).
+- Libellé du type (`type-d-exercice.ts`) : « L'horloge » (à confirmer ; *gardé, décision #190.32*).
 
 ## Invariants
 
@@ -280,6 +282,8 @@ Apprentissage (`supabase/functions/_shared/apprentissage/domain/`) :
 Hors domaine : `docs/format-lecons.md` (ligne `horloge`), `scripts/build_bibliotheque.py` et `scripts/tests/` (validation au build), `src/seance/exercices/horloge/` (cadran, aiguilles, gestes, clavier), `features/190-horloge.feature`. Contenu : exercices `horloge` dans les quatre leçons sur l'heure (#190.22).
 
 ## Questions ouvertes
+
+Décisions du PO : voir `docs/stories/190/acceptance.md`, section « Décisions » (toutes tranchées le 2026-11-09, sauf la partie CE2 de #190.10 et les secondes au CM2).
 
 Reprises de l'issue (1 à 5), puis complétées.
 
