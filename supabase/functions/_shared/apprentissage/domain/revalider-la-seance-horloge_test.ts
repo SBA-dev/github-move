@@ -44,3 +44,16 @@ Deno.test("une heure écrite impossible dans l'envoi rend la séance incohérent
 
   assertInstanceOf(erreur.cause, HeureEcriteImpossible);
 });
+
+Deno.test("une séance d'horloge au clavier avec « Je ne sais pas » rejouée retrouve les mêmes erreurs et les mêmes étoiles", () => {
+  const seance = seanceCommenceeSurLHorloge();
+  seance.direJeNeSaisPas();
+  seance.repondre(Reponse.heureEcrite(2, 30));
+  seance.repondre(Reponse.heureEcrite(2, 15));
+  const fait = seance.terminer(fin);
+
+  const rejouee = revaliderLaSeance(lecon(), seance.aEnregistrer());
+
+  assertEquals([rejouee.erreurs, rejouee.etoiles], [fait.erreurs, fait.etoiles]);
+  assertEquals(rejouee.erreurs, 1);
+});

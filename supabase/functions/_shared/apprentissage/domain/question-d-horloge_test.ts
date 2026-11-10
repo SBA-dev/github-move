@@ -3,7 +3,7 @@ import { HeureDeLHorloge, Niveau } from "../../catalogue/domain/index.ts";
 import { hasardSansMelange } from "../test_utils/hasard-fixe.ts";
 import { exerciceDHorloge } from "../test_utils/lecons-d-horloge.ts";
 import { heureDite } from "./heure-dite.ts";
-import { HeureEcriteImpossible, ReponseIncompatible } from "./erreurs.ts";
+import { HeureEcriteImpossible, JeNeSaisPasDejaDit, QuestionDejaReussie, ReponseIncompatible } from "./erreurs.ts";
 import { QuestionDHorloge } from "./question-d-horloge.ts";
 import { questionsDHorloge } from "./questions-de-l-exercice.ts";
 import { Reponse } from "./reponse.ts";
@@ -224,4 +224,60 @@ Deno.test("avec le moment « matin », l'heure écrite de l'après-midi est faus
   const resultat = question.repondre(Reponse.heureEcrite(21, 45));
 
   assertEquals([resultat, question.erreurs], ["fausse", 1]);
+});
+
+Deno.test("au CP, « Je ne sais pas » écarte les autres heures, fait briller la bonne et coûte une erreur", () => {
+  const question = questionAuCP();
+
+  const aide = question.direJeNeSaisPas();
+
+  assertEquals(
+    [question.enCours().mode, aide.bonneReponse, aide.maniere, question.erreurs],
+    [{ genre: "choix", choix: ["3 h", "4 h", "2 h"], ecartes: ["4 h", "2 h"] }, "3 h", "briller", 1],
+  );
+});
+
+Deno.test("au clavier de cristaux, après « Je ne sais pas », une heure fausse ne coûte plus d'erreur", () => {
+  const question = questionAuCE1([{ heure: "2:15" }]);
+  question.direJeNeSaisPas();
+
+  const resultat = question.repondre(Reponse.heureEcrite(2, 30));
+
+  assertEquals([resultat, question.erreurs], ["fausse", 1]);
+});
+
+Deno.test("au clavier de cristaux, une erreur puis « Je ne sais pas » font une seule erreur", () => {
+  const question = questionAuCE1([{ heure: "2:15" }]);
+  question.repondre(Reponse.heureEcrite(2, 30));
+
+  question.direJeNeSaisPas();
+
+  assertEquals(question.erreurs, 1);
+});
+
+Deno.test("au clavier de cristaux, dire « Je ne sais pas » après la bonne réponse est refusé", () => {
+  const question = questionAuCE1([{ heure: "2:15" }]);
+  question.repondre(Reponse.heureEcrite(2, 15));
+
+  assertThrows(() => question.direJeNeSaisPas(), QuestionDejaReussie);
+});
+
+Deno.test("au clavier de cristaux, répondre après la bonne réponse est refusé", () => {
+  const question = questionAuCE1([{ heure: "2:15" }]);
+  question.repondre(Reponse.heureEcrite(2, 15));
+
+  assertThrows(() => question.repondre(Reponse.heureEcrite(2, 30)), QuestionDejaReussie);
+});
+
+Deno.test("au clavier de cristaux, dire « Je ne sais pas » deux fois est refusé", () => {
+  const question = questionAuCE1([{ heure: "2:15" }]);
+  question.direJeNeSaisPas();
+
+  assertThrows(() => question.direJeNeSaisPas(), JeNeSaisPasDejaDit);
+});
+
+Deno.test("au CP, une heure écrite est incompatible avec un choix", () => {
+  const question = questionAuCP();
+
+  assertThrows(() => question.repondre(Reponse.heureEcrite(3, 0)), ReponseIncompatible);
 });
