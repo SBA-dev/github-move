@@ -226,6 +226,31 @@ Deno.test("avec le moment « matin », l'heure écrite de l'après-midi est faus
   assertEquals([resultat, question.erreurs], ["fausse", 1]);
 });
 
+Deno.test("au CP, « Je ne sais pas » n'est plus proposé une fois dit", () => {
+  const question = questionAuCP();
+
+  const avant = question.enCours().jeNeSaisPasPropose;
+  question.direJeNeSaisPas();
+
+  assertEquals([avant, question.enCours().jeNeSaisPasPropose], [true, false]);
+});
+
+Deno.test("au CP, « Je ne sais pas » n'est plus proposé après la bonne réponse", () => {
+  const question = questionAuCP();
+
+  question.repondre(Reponse.choix("3 h"));
+
+  assertFalse(question.enCours().jeNeSaisPasPropose);
+});
+
+Deno.test("au clavier de cristaux, « Je ne sais pas » n'est plus proposé après la bonne réponse", () => {
+  const question = questionAuCE1([{ heure: "2:15" }]);
+
+  question.repondre(Reponse.heureEcrite(2, 15));
+
+  assertFalse(question.enCours().jeNeSaisPasPropose);
+});
+
 Deno.test("au CP, « Je ne sais pas » écarte les autres heures, fait briller la bonne et coûte une erreur", () => {
   const question = questionAuCP();
 
