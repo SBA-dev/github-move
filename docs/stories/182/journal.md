@@ -7,3 +7,6 @@ Branche : `feature/182-voix-mp3-piper`, partie de `main` (`aa75d97`). Base : `ma
 
 - 23:55 UTC : démarrage. Lecture de #182, de #193, des décisions 0004 et 0008, du code de `src/voix/` et de `_shared/voix/domain/`.
 - 23:55 UTC : essai réseau. `pypi.org` joignable (paquet `piper-tts`, l'outil Piper). **`git.bksp.space` refusé** par le proxy (403 au CONNECT, refus de politique) : le modèle `fr_FR-tom-medium` ne peut pas être téléchargé depuis la source de l'issue. ESCALADE au PO via le responsable. On ne prend le modèle d'aucune autre source.
+- 00:20 UTC : `domain-modeler` : modèle de domaine, brouillon 0043, ajouts au glossaire (commit 667d394).
+- 00:35 UTC : `po-acceptance` : 27 scénarios, `criteres.md` (commit 6575262).
+- 00:40 UTC : CADRAGE PRÊT publié sur #182 (questions #182.1 à #182.18). ⛔ n°1 : attente de l'annonce [Responsable] sur #193.
