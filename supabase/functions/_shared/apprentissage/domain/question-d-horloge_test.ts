@@ -93,10 +93,12 @@ Deno.test("au CP, le choix de la bonne heure réussit la question", () => {
 
 Deno.test("au CP, le choix d'une autre heure coûte une erreur et la question reste posée", () => {
   const question = questionAuCP();
-  const autre = question.enCours().mode;
-  const fausse = autre.genre === "choix" ? autre.choix.find((texte) => texte !== "3 h") : undefined;
+  const { mode } = question.enCours();
+  assert(mode.genre === "choix");
+  const fausse = mode.choix.find((texte) => texte !== "3 h");
+  assert(fausse !== undefined);
 
-  const resultat = question.repondre(Reponse.choix(fausse as string));
+  const resultat = question.repondre(Reponse.choix(fausse));
 
   assertEquals([resultat, question.reussie, question.erreurs], ["fausse", false, 1]);
 });
@@ -176,13 +178,7 @@ Deno.test("avec un moment, le texte affiché reste la consigne seule", () => {
 });
 
 Deno.test("avec « tout lire à voix haute », chaque heure proposée est dite en mots, dans l'ordre affiché", () => {
-  const { mode } = questionAuCP().enCours();
-  const proposees = mode.genre === "choix" ? mode.choix : [];
-  const dites = proposees.map((texte) =>
-    heureDite(HeureDeLHorloge.lire(`${texte.replace(" h", "")}:00`), Niveau.de("CP"))
-  );
-
-  assertEquals(questionAuCP().lectureDesChoix(), `Est-ce ${dites[0]}, ${dites[1]}, ou ${dites[2]} ?`);
+  assertEquals(questionAuCP().lectureDesChoix(), "Est-ce trois heures, quatre heures, ou deux heures ?");
 });
 
 Deno.test("au clavier de cristaux, « Je ne sais pas » est proposé tant qu'il n'a pas été dit", () => {
