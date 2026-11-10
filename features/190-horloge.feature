@@ -1,5 +1,5 @@
 # language: fr
-@issue-190 @wip
+@issue-190
 Fonctionnalité: Exercice « horloge » : lire l'heure sur une horloge à aiguilles
   En tant qu'enfant
   Je veux voir une horloge à aiguilles et dire l'heure qu'elle montre
