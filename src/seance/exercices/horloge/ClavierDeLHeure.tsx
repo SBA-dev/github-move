@@ -3,6 +3,12 @@ import type { ChampDeLHeure } from "@domain/apprentissage";
 import { PaveDeCristaux } from "../PaveDeCristaux.tsx";
 
 const CHIFFRES_PAR_CHAMP = 2;
+const PREMIERS_CHIFFRES_D_UNE_HEURE_A_UN_CHIFFRE = "3456789";
+
+function saisieTerminee(champ: ChampDeLHeure, valeur: string): boolean {
+  if (valeur.length === CHIFFRES_PAR_CHAMP) return true;
+  return champ === "heures" && PREMIERS_CHIFFRES_D_UNE_HEURE_A_UN_CHIFFRE.includes(valeur);
+}
 
 const CHAMPS: Readonly<Record<ChampDeLHeure, { readonly libelle: string; readonly unite: string }>> = {
   heures: { libelle: "Heures", unite: "h" },
@@ -39,7 +45,7 @@ function useSaisieDeLHeure(champs: readonly ChampDeLHeure[], onValider: Props["o
     const { valeurs, actif } = courante.current;
     if (valeurs[actif].length >= CHIFFRES_PAR_CHAMP) return false;
     const valeur = valeurs[actif] + chiffre;
-    const suivant = valeur.length === CHIFFRES_PAR_CHAMP ? voisin(1) : undefined;
+    const suivant = saisieTerminee(actif, valeur) ? voisin(1) : undefined;
     changer({ valeurs: { ...valeurs, [actif]: valeur }, actif: suivant ?? actif, refusee: false });
     return true;
   }, [changer, voisin]);
