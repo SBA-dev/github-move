@@ -33,7 +33,7 @@ import { useEtiquettesAPlacer } from "./exercices/useEtiquettesAPlacer.ts";
 import { useMemorisation } from "./exercices/useMemorisation.ts";
 import { useQuestionFigee } from "./exercices/useQuestionFigee.ts";
 import { useQuestionsAChoix } from "./exercices/useQuestionsAChoix.ts";
-import { type Horloge, horlogeDuNavigateur } from "./horloge.ts";
+import { type SourceDuTemps, sourceDuTempsDuNavigateur } from "./source-du-temps.ts";
 import { type ParoleADire, usePersonnageQuiParle } from "./usePersonnageQuiParle.ts";
 
 const PAUSE_ENTRE_DEUX_PAROLES_MS = 400;
@@ -54,7 +54,7 @@ export function useDeroulementDeSeance(
   personnageGuide: PersonnageGuide,
   toutLireAVoixHaute: boolean,
   prenom: string,
-  horloge: Horloge = horlogeDuNavigateur,
+  sourceDuTemps: SourceDuTemps = sourceDuTempsDuNavigateur,
 ) {
   const personnage = usePersonnageQuiParle(voix);
   const { dire, jouer, faireSilence, montrerHumeur, reecouter: relire } = personnage;
@@ -120,7 +120,7 @@ export function useDeroulementDeSeance(
   const dependancesDuCalcul = { seance, personnageGuide, dire, signaler, faireSilence, sequence, vivant, redessiner, reussite };
   const calcul = useCalcul(dependancesDuCalcul);
   const illustree = useQuestionIllustree(dependancesDuCalcul);
-  const fluence = useFluence({ seance, personnageGuide, horloge, dire, jouer, signaler, faireSilence, sequence, vivant, redessiner, reussite });
+  const fluence = useFluence({ seance, personnageGuide, sourceDuTemps, dire, jouer, signaler, faireSilence, sequence, vivant, redessiner, reussite });
   const addition = useAdditionPosee({ ...dependancesDuCalcul, jouer, montrerHumeur });
   const memorisation = useMemorisation({
     seance,
@@ -305,7 +305,7 @@ export function useDeroulementDeSeance(
     void dire({ texte: phrase, nature: "question" });
   }, [reussite.estFigee, dire]);
 
-  useBattementDeLaFluence(horloge, fluence.demarree, battreLaFluence, suiteDeLaReponse);
+  useBattementDeLaFluence(sourceDuTemps, fluence.demarree, battreLaFluence, suiteDeLaReponse);
 
   const taper = useCallback(
     (lettre: string) => taperUneLettre(lettre, suiteDeLaReponse),

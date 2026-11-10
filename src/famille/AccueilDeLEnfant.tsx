@@ -24,7 +24,7 @@ import { TuilesDuJourDeLAccueil } from "../accueil/TuilesDuJourDeLAccueil.tsx";
 import { useEntreesDuJour } from "../accueil/useEntreesDuJour.ts";
 import { BulleDuPersonnageGuide } from "../seance/BulleDuPersonnageGuide.tsx";
 import { DELAI_MAXIMAL_DE_LECTURE_EN_MS } from "../reseau/delai-maximal-de-lecture.ts";
-import { horlogeDuNavigateur } from "../seance/horloge.ts";
+import { sourceDuTempsDuNavigateur } from "../seance/source-du-temps.ts";
 import { usePersonnageQuiParle } from "../seance/usePersonnageQuiParle.ts";
 import { PersonnageGuide } from "../univers/index.ts";
 import type { QuestionsDuesALAccueil } from "../revision/index.ts";
@@ -75,10 +75,10 @@ export function AccueilDeLEnfant(
 ) {
   const { parole, rangDuMotPrononce, humeur, dire, montrer, faireSilence } = usePersonnageQuiParle(voix);
   const [salutationALire] = useState(aSaluer);
-  const [maintenant, setMaintenant] = useState(() => horlogeDuNavigateur.maintenant());
+  const [maintenant, setMaintenant] = useState(() => sourceDuTempsDuNavigateur.maintenant());
   useEffect(() => {
     const auRetourDeLApplication = () => {
-      if (document.visibilityState === "visible") setMaintenant(horlogeDuNavigateur.maintenant());
+      if (document.visibilityState === "visible") setMaintenant(sourceDuTempsDuNavigateur.maintenant());
     };
     document.addEventListener("visibilitychange", auRetourDeLApplication);
     return () => document.removeEventListener("visibilitychange", auRetourDeLApplication);

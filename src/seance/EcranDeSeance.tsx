@@ -36,7 +36,7 @@ import { ExerciceDeMemorisation } from "./exercices/ExerciceDeMemorisation.tsx";
 import { etatDeLaVoix } from "./etat-de-la-voix.ts";
 import { generateurIdDuNavigateur } from "./generateur-id-navigateur.ts";
 import { hasardDuNavigateur } from "./hasard-navigateur.ts";
-import { horlogeDuNavigateur } from "./horloge.ts";
+import { sourceDuTempsDuNavigateur } from "./source-du-temps.ts";
 import { RecipientDeProgression } from "./RecipientDeProgression.tsx";
 import { useDeroulementDeSeance } from "./useDeroulementDeSeance.ts";
 import { useLecon } from "./useLecon.ts";
@@ -186,7 +186,7 @@ function SeanceEnCours(
   const calcul = deroulement.calculFige ?? seance.calculEnCours();
   const boite = deroulement.boiteReussie?.enCours ?? seance.boiteEnCours();
   const schema = deroulement.schemaReussi?.enCours ?? seance.schemaEnCours();
-  const fluence = deroulement.fluenceFinie ?? seance.fluenceEnCours(horlogeDuNavigateur.maintenant());
+  const fluence = deroulement.fluenceFinie ?? seance.fluenceEnCours(sourceDuTempsDuNavigateur.maintenant());
   const addition = deroulement.additionFigee ?? seance.additionEnCours();
   const consigne = finie || !exerciceDeLaLecon ? undefined : consigneAffichee(exerciceDeLaLecon);
   const laConsigneEstLue = consigne !== undefined && deroulement.parole?.nature === "consigne" && deroulement.parole.texte === consigne;
