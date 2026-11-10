@@ -21,3 +21,8 @@
 - **2026-11-09 22:31** : du code de production a changé pendant l'étape 5 : revue `mr-reviewer` en mode delta (5460176..f6d2b0e), puis non-régression complète (`tablette` et `telephone`).
 - **2026-11-09 23:00** : revue delta des corrections E2E : APPROUVÉ, 0 bloquant.
 - **2026-11-10** : redémarrage du conteneur, la non-régression en cours est perdue. Intégration de `main` (6b23ff3b, vague 1 close avec #173), tsc et 2963 tests deno verts. Non bloquants de la revue corrigés avant de relancer : 91995113 (`pointer-events: none` sur le dessin du personnage guide, `width: 100%` de la boîte limité à la leçon, `faireSilence` remet `reagitSansParler` à faux). Relance de la non-régression complète.
+- **2026-11-10** : non-régression complète, cycle 2 E2E, sur `telephone` seulement (3 h 30, 1860 cas) : 1828 passés, 32 KO, 29 après relance. `tablette` n'a pas été lancée, elle le sera après correction. Classement :
+  - régressions de #183 (18 cas) : steps qui cherchent l'en-tête (banner, « Savanturier », Espace parent) pendant ou à la fin de la séance (#30, #73, #15, #97) ; musiques et sons à diagnostiquer (#166, #97, #130, #128) ;
+  - instabilités probables (#102, #96, #106), dont les deux captures de #96 (`exercice-en-seance`, `fin-de-la-seance`) qui changent légitimement avec #183 ;
+  - KO déjà présents sur `main` (#26, #28 et des variantes dys ou 360 px).
+  Diagnostic et correction confiés à `e2e-tester` (steps) avec retour des bugs applicatifs.
