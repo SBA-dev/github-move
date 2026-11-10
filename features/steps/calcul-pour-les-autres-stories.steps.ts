@@ -1,5 +1,6 @@
 import { expect, type Page } from "@playwright/test";
 import { Given, Then, When } from "./fixtures.ts";
+import { direJeNeSaisPasAuClavierDeLHorloge, jouePourLHorloge } from "./horloge.steps.ts";
 import type { Monde } from "./fixtures.ts";
 import { injecter, leconDeTest, type LeconBrute } from "./etapes-puis-exercices.steps.ts";
 import { demarrer, etatDesChoix, questionsReussies } from "./exercices-a-choix.steps.ts";
@@ -118,6 +119,7 @@ Given(/^Tom en est au calcul « ([^«»]+) »$/, async ({ page }, enonce: string
 });
 
 When(/^Tom dit « Je ne sais pas »$/, async ({ page }) => {
+  if (jouePourLHorloge(page)) return await direJeNeSaisPasAuClavierDeLHorloge(page);
   await demarrer(page);
   await lireLaCarte(page);
   await direJeNeSaisPasAuClavier(page);

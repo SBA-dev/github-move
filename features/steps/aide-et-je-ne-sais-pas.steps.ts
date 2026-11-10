@@ -15,6 +15,7 @@ import {
   textesDesChoix,
   textesDesChoixPossibles,
 } from "./exercices-a-choix.steps.ts";
+import { direJeNeSaisPasAuxChoixDeLHorloge, jeNeSaisPasEstProposeALHorloge, jouePourLHorloge } from "./horloge.steps.ts";
 import { verifierModeDys } from "./reglages.steps.ts";
 import { cleDe, preparerProfil } from "./univers.steps.ts";
 import { normaliser } from "./voix.steps.ts";
@@ -67,6 +68,7 @@ Given(/^Léa en est à la question « (.+) » dont la réponse est « ([^«»]+)
 });
 
 export async function direJeNeSaisPas(page: Page) {
+  if (jouePourLHorloge(page)) return await direJeNeSaisPasAuxChoixDeLHorloge(page);
   if (await additionAPoserAffichee(page)) return await direJeNeSaisPasSurUneAdditionAPoser(page);
   if (await additionACalculerAffichee(page)) return await direJeNeSaisPasSurUneAdditionACalculer(page);
   if (await aDesEtiquettesAPlacer(page)) return await direJeNeSaisPasSurDesEtiquettes(page);
@@ -219,6 +221,7 @@ When(/^(Léa|Tom) commence un exercice (\S+) d'une leçon de test$/, async ({ pa
 });
 
 Then(/^« Je ne sais pas » est proposé à (Léa|Tom)$/, async ({ page }, _enfant: string) => {
+  if (jouePourLHorloge(page)) return await jeNeSaisPasEstProposeALHorloge(page);
   if (await uneQuestionIllustreeEstAffichee(page)) await attendreQueLEnfantPuisseRepondreALaQuestionIllustree(page);
   else if (!(await unCalculEstAffiche(page))) await avancerJusquAuxChoix(page);
   await expect(jeNeSaisPas(page)).toBeVisible();

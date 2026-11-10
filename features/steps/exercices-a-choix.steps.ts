@@ -17,6 +17,7 @@ import {
   recipient,
   toutesLesParoles,
 } from "./etapes-puis-exercices.steps.ts";
+import { jouePourLHorloge, verifierLesChoixDeLHorloge } from "./horloge.steps.ts";
 import { EXPRESSIONS_PAR_PERSONNAGE, FELICITATIONS_COMMUNES, listeDe } from "./univers.steps.ts";
 import {
   journal,
@@ -455,6 +456,8 @@ Given(/^l'ordre des choix tiré au début de la séance est (.+)$/, async ({ pag
 
 Given(/^les choix sont affichés dans l'ordre (.+)$/, async ({ page }, ordre: string) => {
   etatDesChoix(page).ordre = listeDe(ordre);
+  // Story #190 : les heures proposées par l'horloge sont calculées, l'ordre prévu ne se force pas (voir horloge.steps.ts).
+  if (jouePourLHorloge(page)) return await verifierLesChoixDeLHorloge(page, listeDe(ordre));
   await demarrer(page);
   await avancerJusquAuxChoix(page);
   expect(await textesDesChoix(page)).toEqual(listeDe(ordre));

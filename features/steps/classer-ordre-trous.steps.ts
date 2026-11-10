@@ -26,6 +26,7 @@ import {
   questionsReussies,
   textesDesChoix,
 } from "./exercices-a-choix.steps.ts";
+import { jouerSeulementLExerciceDHorloge, preparerTomPourLHorloge } from "./horloge.steps.ts";
 import { creerLeProfil } from "./profils-enfants.steps.ts";
 import { cleDe, EXPRESSIONS_PAR_PERSONNAGE, FELICITATIONS_COMMUNES, listeDe, preparerProfil } from "./univers.steps.ts";
 import { tirageDeLaConjugaison, verifierQueLaDicteeAttendLaReponse } from "./dictee-et-conjugaison.steps.ts";
@@ -245,10 +246,12 @@ Given(/^Léa joue un exercice (classer|ordre) d'une leçon de test$/, async ({ p
 // --- Étant donné : séance
 
 Given(
-  /^(?:Léa|Tom) joue seulement l'exercice « ([^«»]+) » de la leçon « ([^«»]+) »$/,
-  async ({ page }, exercice: string, titreDeLaLecon: string) => {
+  /^(Léa|Tom) joue seulement l'exercice « ([^«»]+) » de la leçon « ([^«»]+) »$/,
+  async ({ page, monde }, acteur: string, exercice: string, titreDeLaLecon: string) => {
     const lecon = leconDeTitre(page, titreDeLaLecon);
     const type = lecon.exercices[positionDeLExercice(lecon, exercice)]?.type;
+    // Story #190 : l'horloge à aiguilles se joue par les étapes de features/steps/horloge.steps.ts.
+    if (type === "horloge") return jouerSeulementLExerciceDHorloge(page, monde, acteur === "Tom" ? "Tom" : "Léa", lecon, exercice);
     if (type === "fluence") return preparerLaFluence(page, exercice);
     if (typeof type !== "string" || !TYPES_JOUES.includes(type)) {
       throw new Error(`Étape non implémentée : l'exercice « ${exercice} » (${String(type)}) dépend d'une story à venir (#19 ou #21).`);
@@ -272,7 +275,8 @@ Given(/^Tom a un profil enfant préparé de niveau (\S+)$/, async ({ page, monde
   await preparerProfil(page, profil);
 });
 
-Given(/^Tom est sur la page de la leçon « (.+) »$/, async ({ page }, titre: string) => {
+Given(/^Tom est sur la page de la leçon « (.+) »$/, async ({ page, monde, $tags }, titre: string) => {
+  if ($tags.includes("@issue-190")) await preparerTomPourLHorloge(page, monde);
   await ouvrirLaPageDeLaLecon(page, titre);
 });
 

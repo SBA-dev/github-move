@@ -21,6 +21,7 @@ import { preparerLesEtoiles } from "./parcours.steps.ts";
 import { choisirLeaSur, estSurUnProfilReel, jouerAvecLeProfilReel } from "./profil-reel.ts";
 import { choisirSonProfil, creerLeProfil, jetonDe, profilDe } from "./profils-enfants.steps.ts";
 import { effetPuisParole, installerLesFauxDeLaStory97 } from "./retours-animes-et-sonores.steps.ts";
+import { jouerEnProfilReelPourLHorloge, ouvrirLeParcoursDeMathsSansLecon } from "./horloge.steps.ts";
 import { normaliser, terminerLaLecture } from "./voix.steps.ts";
 
 // Story #100 : défi de fin de partie du parcours.
@@ -544,7 +545,12 @@ When(/^Léa relève le défi 1 depuis son parcours$/, async ({ page }) => {
   await commencerLeDefi(page);
 });
 
-When(/^Tom choisit « Maths » dans son parcours$/, async ({ page }) => {
+When(/^Tom choisit « Maths » dans son parcours$/, async ({ famille, monde, page, $tags }) => {
+  // Story #190 : Tom est alors un vrai profil de Paul, créé à la demande, et un parcours sans leçon de sa classe n'est pas une erreur.
+  if ($tags.includes("@issue-190")) {
+    await jouerEnProfilReelPourLHorloge(famille, monde, page, "Tom");
+    return await ouvrirLeParcoursDeMathsSansLecon(page, "Tom");
+  }
   // Léa jouait : Tom se choisit dans « Qui joue ? » avant d'ouvrir son parcours.
   await choisirSonProfil(page, "Tom");
   await ouvrirLeParcoursDeMaths(page, "Tom");
