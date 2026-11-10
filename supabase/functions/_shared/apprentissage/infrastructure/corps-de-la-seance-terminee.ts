@@ -66,7 +66,7 @@ export function lireUneReponse(brute: unknown): ReponseDonnee {
   if (cles.length === 1 && cles[0] === "heureEcrite") return lireUneHeureEcrite(reponse.heureEcrite);
   if (cles.length === 1 && cles[0] === "jeNeSaisPas" && reponse.jeNeSaisPas === true) return { genre: "jeNeSaisPas" };
   throw new EntreeInvalide(
-    "Le champ « reponses » ne contient que des choix, des placements, des nombres, des mots écrits ou « Je ne sais pas ».",
+    "Le champ « reponses » ne contient que des choix, des placements, des nombres, des mots écrits, des heures écrites ou « Je ne sais pas ».",
   );
 }
 

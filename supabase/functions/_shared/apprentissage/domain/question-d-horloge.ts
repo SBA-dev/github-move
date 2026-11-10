@@ -2,8 +2,9 @@ import { type ExerciceHorloge, HeureDeLHorloge, type ItemDHorloge, type Niveau }
 import { heuresProposees } from "./choix-d-heures.ts";
 import type { CleDeQuestion } from "./cle-de-question.ts";
 import { cleDeLHorloge } from "./cles-des-questions.ts";
-import { HeureEcriteImpossible, JeNeSaisPasDejaDit, QuestionDejaReussie, ReponseIncompatible } from "./erreurs.ts";
+import { HeureEcriteImpossible, ReponseIncompatible } from "./erreurs.ts";
 import { heureDite } from "./heure-dite.ts";
+import { JeuAuClavier } from "./jeu-au-clavier.ts";
 import { lectureDesChoix } from "./lecture-des-choix.ts";
 import { ModeDeReponse } from "./mode-de-reponse.ts";
 import { type AideDonnee, QuestionJouee } from "./question-jouee.ts";
@@ -30,27 +31,31 @@ export type HorlogeEnCours = Readonly<{
 
 const MOMENTS_DITS = { "matin": "C'est le matin.", "apres-midi": "C'est l'après-midi." };
 
+type HeureProposeeDite = Readonly<{ texte: string; dite: string }>;
+
 export class QuestionDHorloge implements QuestionPosee {
   readonly type = "horloge";
   readonly cle: CleDeQuestion;
-  private nombreDErreurs = 0;
-  private estReussie = false;
-  private jeNeSaisPasDejaDit = false;
-  private readonly reponsesDonnees: ReponseDonnee[] = [];
+  private readonly auClavier = new JeuAuClavier();
 
   private constructor(
     private readonly exercice: ExerciceHorloge,
     private readonly item: ItemDHorloge,
     private readonly auxChoix: QuestionJouee | undefined,
+    private readonly heuresDites: readonly HeureProposeeDite[],
     private readonly niveau: Niveau,
   ) {
     this.cle = cleDeLHorloge(exercice.mode, item);
   }
 
   static pour(exercice: ExerciceHorloge, item: ItemDHorloge, tireur: Tireur, niveau: Niveau): QuestionDHorloge {
-    if (ModeDeReponse.pour(niveau).genre !== "choix") return new QuestionDHorloge(exercice, item, undefined, niveau);
+    if (ModeDeReponse.pour(niveau).genre !== "choix") {
+      return new QuestionDHorloge(exercice, item, undefined, [], niveau);
+    }
     const bonneReponse = item.heure.ecriture();
-    const textes = heuresProposees(item.heure, exercice.precision).map((heure) => heure.ecriture());
+    const heures = heuresProposees(item.heure, exercice.precision);
+    const heuresDites = heures.map((heure) => ({ texte: heure.ecriture(), dite: heureDite(heure, niveau) }));
+    const textes = heuresDites.map(({ texte }) => texte);
     const question = QuestionJouee.aChoix({
       cle: cleDeLHorloge(exercice.mode, item),
       enonce: consigneDe(exercice),
@@ -59,7 +64,7 @@ export class QuestionDHorloge implements QuestionPosee {
       type: "bulles",
       complements: { aide: item.aide },
     });
-    return new QuestionDHorloge(exercice, item, question, niveau);
+    return new QuestionDHorloge(exercice, item, question, heuresDites, niveau);
   }
 
   get enonce(): string {
@@ -67,15 +72,15 @@ export class QuestionDHorloge implements QuestionPosee {
   }
 
   get erreurs(): number {
-    return this.auxChoix?.erreurs ?? this.nombreDErreurs;
+    return this.auxChoix?.erreurs ?? this.auClavier.erreurs;
   }
 
   get reussie(): boolean {
-    return this.auxChoix?.reussie ?? this.estReussie;
+    return this.auxChoix?.reussie ?? this.auClavier.reussi;
   }
 
   get bonneReponseMontree(): boolean {
-    return this.auxChoix?.bonneReponseMontree ?? this.jeNeSaisPasDejaDit;
+    return this.auxChoix?.bonneReponseMontree ?? this.auClavier.jeNeSaisPasDejaDit;
   }
 
   texteAffiche(): string {
@@ -89,9 +94,8 @@ export class QuestionDHorloge implements QuestionPosee {
 
   lectureDesChoix(): string | undefined {
     if (!this.auxChoix) return undefined;
-    const heures = heuresProposees(this.item.heure, this.exercice.precision);
-    const dites = this.auxChoix.choix.textes().map((texte) =>
-      heureDite(heures.find((heure) => heure.ecriture() === texte)!, this.niveau)
+    const dites = this.auxChoix.choix.textes().flatMap((texte) =>
+      this.heuresDites.filter((proposee) => proposee.texte === texte).map(({ dite }) => dite)
     );
     return lectureDesChoix(dites);
   }
@@ -110,7 +114,7 @@ export class QuestionDHorloge implements QuestionPosee {
     return {
       mode: { genre: "clavierDeCristaux", champs: this.champsDeLHeure() },
       jeNeSaisPasPropose: this.jeNeSaisPasEstPropose(),
-      ...(this.jeNeSaisPasDejaDit && {
+      ...(this.auClavier.jeNeSaisPasDejaDit && {
         reponseATaper: this.item.heure.ecriture(),
         reponseATaperDite: heureDite(this.item.heure, this.niveau),
       }),
@@ -126,7 +130,7 @@ export class QuestionDHorloge implements QuestionPosee {
   }
 
   reponses(): ReponseDonnee[] {
-    return this.auxChoix?.reponses() ?? [...this.reponsesDonnees];
+    return this.auxChoix?.reponses() ?? this.auClavier.reponses();
   }
 
   repondre(reponse: ReponseParChoix | ReponseEnNombre | HeureEcrite): ResultatDeReponse {
@@ -140,11 +144,7 @@ export class QuestionDHorloge implements QuestionPosee {
 
   direJeNeSaisPas(): AideDonnee {
     if (this.auxChoix) return this.auxChoix.direJeNeSaisPas();
-    if (this.estReussie) throw new QuestionDejaReussie();
-    if (this.jeNeSaisPasDejaDit) throw new JeNeSaisPasDejaDit();
-    this.jeNeSaisPasDejaDit = true;
-    this.reponsesDonnees.push({ genre: "jeNeSaisPas" });
-    if (this.nombreDErreurs === 0) this.nombreDErreurs = 1;
+    this.auClavier.direJeNeSaisPas();
     return { aide: this.aideApresErreur(), bonneReponse: this.item.heure.ecriture(), maniere: "briller" };
   }
 
@@ -153,15 +153,7 @@ export class QuestionDHorloge implements QuestionPosee {
   }
 
   private repondreAuClavier(reponse: HeureEcrite): ResultatDeReponse {
-    if (this.estReussie) throw new QuestionDejaReussie();
-    const heure = heureEcrite(reponse);
-    this.reponsesDonnees.push(reponse);
-    if (this.estLaBonneHeure(heure)) {
-      this.estReussie = true;
-      return "juste";
-    }
-    if (!this.jeNeSaisPasDejaDit) this.nombreDErreurs++;
-    return "fausse";
+    return this.auClavier.repondre(reponse, () => this.estLaBonneHeure(heureEcrite(reponse)));
   }
 
   private estLaBonneHeure(heure: HeureDeLHorloge): boolean {
