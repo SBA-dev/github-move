@@ -178,7 +178,7 @@ Deno.test("avec un moment, le texte affiché reste la consigne seule", () => {
 });
 
 Deno.test("avec « tout lire à voix haute », chaque heure proposée est dite en mots, dans l'ordre affiché", () => {
-  assertEquals(questionAuCP().lectureDesChoix(), "Est-ce trois heures, quatre heures, ou deux heures ?");
+  assertEquals(questionAuCP().lectureDesChoix(), "Est-ce trois heures, midi, ou quatre heures ?");
 });
 
 Deno.test("au clavier de cristaux, « Je ne sais pas » est proposé tant qu'il n'a pas été dit", () => {
@@ -258,7 +258,7 @@ Deno.test("au CP, « Je ne sais pas » écarte les autres heures, fait briller l
 
   assertEquals(
     [question.enCours().mode, aide.bonneReponse, aide.maniere, question.erreurs],
-    [{ genre: "choix", choix: ["3 h", "4 h", "2 h"], ecartes: ["4 h", "2 h"] }, "3 h", "briller", 1],
+    [{ genre: "choix", choix: ["3 h", "12 h", "4 h"], ecartes: ["12 h", "4 h"] }, "3 h", "briller", 1],
   );
 });
 
