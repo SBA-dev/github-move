@@ -1,6 +1,8 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 import { createBdd } from "playwright-bdd";
 import { LECONS_DE_L_HORLOGE, leconDHorlogeDeTest, servirLaBibliothequeDeLHorloge } from "../support/bibliotheque-de-l-horloge.ts";
+import { HeureDeLHorloge, Niveau, PrecisionDeLHeure } from "../../supabase/functions/_shared/catalogue/domain/index.ts";
+import { heuresProposees } from "../../supabase/functions/_shared/apprentissage/domain/choix-d-heures.ts";
 import { ecrireLaFileDeRevision } from "../support/revision-api.ts";
 import type { Famille } from "../support/famille.ts";
 import { avancerJusquAuxChoix, bulleDeChoix, demarrer, etatDesChoix, finirLaParoleJusqua, lancer, questionsReussies, repondre, textesDesChoix, textesDesChoixPossibles } from "./exercices-a-choix.steps.ts";
@@ -245,12 +247,25 @@ export async function jouerEnProfilReelPourLHorloge(famille: Famille, monde: Mon
   await passerEnProfilReel(famille, monde, page, prenom);
 }
 
+/** Les heures proposées au départ du tirage : celles que calcule le domaine pour l'item joué. */
+function heuresDeDepartDuTirage(page: Page): string[] {
+  const { lecon, position } = partie(page);
+  if (!lecon || position === undefined) throw new Error("Aucun exercice d'horloge n'est joué");
+  const exercice = lecon.exercices[position] as { precision?: string };
+  const precision = exercice.precision === undefined ? PrecisionDeLHeure.parDefaut(Niveau.de(lecon.niveau)) : PrecisionDeLHeure.lire(exercice.precision);
+  const item = itemsDeLExercice(page)[0];
+  if (!item) throw new Error("L'exercice d'horloge n'a pas d'item");
+  return heuresProposees(HeureDeLHorloge.lire(item.heure), precision).map((heure) => heure.ecriture());
+}
+
 /**
- * « Les choix sont affichés dans l'ordre … » : les heures proposées sont calculées par le domaine (la bonne heure et deux heures
- * voisines), elles ne se forcent pas. L'étape vérifie donc les heures annoncées par le scénario, sans pouvoir les imposer.
+ * « Les choix sont affichés dans l'ordre … » : le tirage du début de séance part des heures calculées par le domaine
+ * (la bonne heure et deux heures voisines) et est forcé pour donner l'ordre annoncé par le scénario.
  */
 export async function verifierLesChoixDeLHorloge(page: Page, ordre: readonly string[]): Promise<void> {
-  etatDesChoix(page).ordre = undefined;
+  const choix = etatDesChoix(page);
+  choix.ordre = [...ordre];
+  choix.depart = heuresDeDepartDuTirage(page);
   await demarrer(page);
   await avancerJusquAuxChoix(page);
   expect(await textesDesChoix(page)).toEqual([...ordre]);

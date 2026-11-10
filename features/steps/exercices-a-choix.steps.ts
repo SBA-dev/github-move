@@ -109,6 +109,8 @@ type EtatDesChoix = {
   demarrage: ((question: string | undefined) => Promise<void>) | undefined;
   exerciceUnique: number | undefined;
   ordre: string[] | undefined;
+  /** Choix de départ du tirage, quand ils ne viennent pas de la leçon (l'horloge les calcule). */
+  depart: string[] | undefined;
   reussiesAvant: number;
   paroles: number;
   /** Nombres forgés pour le tirage du début de séance (autres mots d'un trou), quand l'ordre des choix ne suffit pas. */
@@ -121,7 +123,7 @@ const tiragesInstalles = new WeakSet<Page>();
 export function etatDesChoix(page: Page): EtatDesChoix {
   let courant = etats.get(page);
   if (!courant) {
-    courant = { demarrage: undefined, exerciceUnique: undefined, ordre: undefined, reussiesAvant: 0, paroles: 0, tirage: undefined };
+    courant = { demarrage: undefined, exerciceUnique: undefined, ordre: undefined, depart: undefined, reussiesAvant: 0, paroles: 0, tirage: undefined };
     etats.set(page, courant);
   }
   return courant;
@@ -185,7 +187,7 @@ export async function lancer(page: Page, lecon: LeconBrute, titreDeLExercice?: s
     return;
   }
   await ouvrirLaPageDeLaLecon(page, lecon.titre);
-  const nombresForges = choix.tirage ?? (choix.ordre && nombresDuTirage([...new Set(questionsDeLaLecon(lecon)[0]?.choix ?? [])], choix.ordre));
+  const nombresForges = choix.tirage ?? (choix.ordre && nombresDuTirage([...new Set(choix.depart ?? questionsDeLaLecon(lecon)[0]?.choix ?? [])], choix.ordre));
   if (nombresForges) {
     await page.evaluate(([cle, nombres]) => Reflect.set(window, cle as string, nombres), [FILE_DU_TIRAGE, nombresForges]);
   }
@@ -617,6 +619,11 @@ Then(
 );
 
 Then(/^la question « (.+) » s'affiche$/, async ({ page }, question: string) => {
+  if (jouePourLHorloge(page)) {
+    await demarrer(page);
+    await expect(page.getByTestId("consigne")).toHaveText(question);
+    return;
+  }
   await allerALaQuestion(page, question, false);
   await expect(page.getByTestId("exercice-en-cours")).toBeVisible();
 });
