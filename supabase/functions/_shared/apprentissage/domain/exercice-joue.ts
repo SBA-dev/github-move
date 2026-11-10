@@ -16,6 +16,7 @@ import { nombreDeQuestions } from "./nombre-de-questions.ts";
 import type { CorrectionDuMot } from "./mot-a-ecrire.ts";
 import { type BoiteEnCours, type BoiteOuverte, QuestionDeBoite } from "./question-de-boite.ts";
 import { QuestionDeProblemeEnBarres, type SchemaEnCours, type SchemaResolu } from "./question-de-probleme-en-barres.ts";
+import { QuestionDHorloge } from "./question-d-horloge.ts";
 import { QuestionEnveloppantUnCalcul } from "./question-enveloppant-un-calcul.ts";
 import { type CalculEnCours, QuestionDeCalcul } from "./question-de-calcul.ts";
 import { QuestionDeDictee } from "./question-de-dictee.ts";
@@ -106,6 +107,11 @@ export class ExerciceJoue {
   boiteEnCours(): BoiteEnCours | undefined {
     const question = this.questionPoseeEnCours();
     return question instanceof QuestionDeBoite ? question.enCours() : undefined;
+  }
+
+  questionDHorlogeEnCours(): QuestionDHorloge | undefined {
+    const question = this.questionPoseeEnCours();
+    return question instanceof QuestionDHorloge ? question : undefined;
   }
 
   schemaEnCours(): SchemaEnCours | undefined {
@@ -277,7 +283,9 @@ export class ExerciceJoue {
     if (!question) throw new PasDeQuestionEnCours();
     const resultat = question.repondre(reponse);
     this.dernierResultatDuTrou = resultat;
-    const joueeCommeUnCalcul = question instanceof QuestionDeCalcul || question instanceof QuestionEnveloppantUnCalcul;
+    const joueeCommeUnCalcul = question instanceof QuestionDeCalcul ||
+      question instanceof QuestionEnveloppantUnCalcul ||
+      question instanceof QuestionDHorloge;
     this.aideDeLaDerniereErreur = joueeCommeUnCalcul && resultat === "fausse" ? question.aideApresErreur() : undefined;
     this.derniereBoiteOuverte = question instanceof QuestionDeBoite && resultat === "juste"
       ? question.ouverte()

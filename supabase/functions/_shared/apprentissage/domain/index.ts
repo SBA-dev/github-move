@@ -14,6 +14,7 @@ export {
   EtiquetteInconnue,
   ExerciceIntrouvable,
   GroupeInconnu,
+  HeureEcriteImpossible,
   JeNeSaisPasDejaDit,
   LeconIntrouvable,
   LeconSansExercice,
@@ -175,3 +176,5 @@ export {
 export { revaliderLeDefi } from "./revalider-le-defi.ts";
 export type { DefiTermineAEnregistrer } from "./defi-termine-a-enregistrer.ts";
 export { matiereReussieParLaSeance } from "./matiere-reussie-par-la-seance.ts";
+export { QuestionDHorloge } from "./question-d-horloge.ts";
+export type { ChampDeLHeure, HorlogeEnCours } from "./question-d-horloge.ts";
