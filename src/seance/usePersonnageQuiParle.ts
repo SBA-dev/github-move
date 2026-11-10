@@ -93,8 +93,9 @@ export function usePersonnageQuiParle({ lire, jouer, couperLaVoix }: Pick<Voix, 
     derniereLecture.current++;
     paroleEntendue.current = true;
     setEnTrainDeParler(false);
+    arreterLaReactionSansParole();
     couperLaVoix();
-  }, [couperLaVoix]);
+  }, [couperLaVoix, arreterLaReactionSansParole]);
 
   return { parole, rangDuMotPrononce, humeur, enTrainDeParler, reagitSansParler, paroleEntendue, dire, jouer, reecouter, faireSilence, montrerHumeur, montrer };
 }

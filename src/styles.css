@@ -799,7 +799,7 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 .carte-du-calcul { font-size: 2rem; }
 .boite-a-jetons, .probleme-en-barres { display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 100%; }
 /* La boîte n'a que des couches en position absolue : la zone de l'exercice, ajustée à son contenu, lui laisserait 0 px pendant le déroulé. */
-.exercice-en-cours:has(.boite-a-jetons) { justify-self: stretch; width: 100%; }
+.seance-de-lecon .exercice-en-cours:has(.boite-a-jetons) { justify-self: stretch; width: 100%; }
 
 /* Boîte à jetons : le dessin de l'univers en deux couches (fond, puis rebord avant) avec les jetons entre les deux, rangés par 5.
    Le cadre est celui du dessin (288 × 250) : la boîte garde sa taille, ouverte ou fermée, quel que soit le nombre de jetons. */
@@ -1454,7 +1454,7 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
    à 86 px de haut (il déborde un peu sur la barre du haut et sur l'exercice) pour que l'exercice ne saute pas quand il apparaît. */
 @media (max-width: 480px) {
   .seance-de-lecon .guide-et-parole { min-height: 86px; }
-  .seance-de-lecon .guide-et-parole .personnage-guide { width: 100px; flex: none; margin-block: -20px; }
+  .seance-de-lecon .guide-et-parole .personnage-guide { width: 100px; flex: none; margin-block: -20px; pointer-events: none; }
   /* Dans la boîte à jetons le dessin reste à 80 px : sous le seuil des bulles écrites de la scène de réponse fausse (163.21). */
   .seance-de-lecon:has(.boite-a-jetons) .guide-et-parole .personnage-guide { width: 80px; margin-block: -7px; }
 }
