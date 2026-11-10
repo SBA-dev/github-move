@@ -22,7 +22,7 @@ export function heureDite(heure: HeureDeLHorloge, niveau: Niveau): string {
   if (heure.minutes === QUART) return `${heureEnMots} et quart`;
   if (heure.minutes === DEMI_HEURE) return `${heureEnMots} et demie`;
   if (heure.minutes === 0) return heureEnMots;
-  return `${heureEnMots} ${nombreEnLettres(heure.minutes)}`;
+  return `${heureEnMots} ${nombreEnLettres(heure.minutes, true)}`;
 }
 
 function secondesDites(heure: HeureDeLHorloge, niveau: Niveau): boolean {

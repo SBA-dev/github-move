@@ -104,17 +104,21 @@ export class QuestionDHorloge implements QuestionPosee {
     if (this.auxChoix) {
       return {
         mode: { genre: "choix", choix: this.auxChoix.choix.textes(), ecartes: this.auxChoix.choix.ecartes() },
-        jeNeSaisPasPropose: true,
+        jeNeSaisPasPropose: this.jeNeSaisPasEstPropose(),
       };
     }
     return {
       mode: { genre: "clavierDeCristaux", champs: this.champsDeLHeure() },
-      jeNeSaisPasPropose: !this.jeNeSaisPasDejaDit,
+      jeNeSaisPasPropose: this.jeNeSaisPasEstPropose(),
       ...(this.jeNeSaisPasDejaDit && {
         reponseATaper: this.item.heure.ecriture(),
         reponseATaperDite: heureDite(this.item.heure, this.niveau),
       }),
     };
+  }
+
+  private jeNeSaisPasEstPropose(): boolean {
+    return !this.reussie && !this.bonneReponseMontree;
   }
 
   tirage(): string[] {
