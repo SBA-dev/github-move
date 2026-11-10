@@ -63,3 +63,13 @@ Deno.test("3 h 45 est proposée avec « 4 h 45 », l'heure d'à côté", () => {
 Deno.test("les mêmes heures sont proposées à chaque fois pour la même question", () => {
   assertEquals(ecritures(proposer("3:45", "quart-d-heure")), ecritures(proposer("3:45", "quart-d-heure")));
 });
+
+Deno.test("3 h à la précision heure est proposée avec « 12 h », le chiffre montré par la grande aiguille", () => {
+  assert(ecritures(proposer("3:00", "heure")).includes("12 h"));
+});
+
+Deno.test("12 h à la précision heure est proposée avec trois heures différentes", () => {
+  const proposees = ecritures(proposer("12:00", "heure"));
+
+  assertEquals(new Set(proposees).size, 3);
+});
