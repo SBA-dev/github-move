@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { HUMEUR_PAR_DEFAUT, type Humeur } from "@domain/motivation";
+import { DUREE_D_AFFICHAGE_SANS_VOIX_MS } from "@domain/apprentissage";
 import type { EffetSonore } from "@domain/voix";
 import type { Voix } from "../voix/index.ts";
 
@@ -39,6 +40,7 @@ export function usePersonnageQuiParle({ lire, jouer, couperLaVoix }: Pick<Voix, 
   /** Vrai pendant que le personnage guide réagit sans rien dire (`montrerHumeur`) ; faux dès qu'il parle ou que la réaction est finie. */
   const [reagitSansParler, setReagitSansParler] = useState(false);
   const finDeLaReaction = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const finDeLAffichageSansVoix = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const derniereLecture = useRef(0);
   const derniereParole = useRef<ParoleADire | undefined>(undefined);
   /** Vrai tant que la dernière parole a été entendue, ou qu'il n'y en a pas eu : le silence ne prive l'enfant de rien. */
@@ -48,7 +50,10 @@ export function usePersonnageQuiParle({ lire, jouer, couperLaVoix }: Pick<Voix, 
     clearTimeout(finDeLaReaction.current);
     setReagitSansParler(false);
   }, []);
-  useEffect(() => () => clearTimeout(finDeLaReaction.current), []);
+  useEffect(() => () => {
+    clearTimeout(finDeLaReaction.current);
+    clearTimeout(finDeLAffichageSansVoix.current);
+  }, []);
 
   /** Rend `true` si la phrase est allée jusqu'au bout, `false` si une autre parole ou le silence l'a interrompue. */
   const dire = useCallback(async (aDire: ParoleADire): Promise<boolean> => {
@@ -56,6 +61,7 @@ export function usePersonnageQuiParle({ lire, jouer, couperLaVoix }: Pick<Voix, 
     const estLaDerniere = () => numero === derniereLecture.current;
     derniereParole.current = aDire;
     arreterLaReactionSansParole();
+    clearTimeout(finDeLAffichageSansVoix.current);
     setParole(aDire);
     setHumeur(aDire.humeur ?? HUMEUR_PAR_DEFAUT);
     setRangDuMotPrononce(undefined);
@@ -67,7 +73,8 @@ export function usePersonnageQuiParle({ lire, jouer, couperLaVoix }: Pick<Voix, 
     });
     if (!estLaDerniere()) return false;
     paroleEntendue.current = entendue;
-    setEnTrainDeParler(false);
+    if (entendue) setEnTrainDeParler(false);
+    else finDeLAffichageSansVoix.current = setTimeout(() => setEnTrainDeParler(false), DUREE_D_AFFICHAGE_SANS_VOIX_MS);
     return true;
   }, [lire, arreterLaReactionSansParole]);
 
@@ -92,6 +99,7 @@ export function usePersonnageQuiParle({ lire, jouer, couperLaVoix }: Pick<Voix, 
   const faireSilence = useCallback(() => {
     derniereLecture.current++;
     paroleEntendue.current = true;
+    clearTimeout(finDeLAffichageSansVoix.current);
     setEnTrainDeParler(false);
     arreterLaReactionSansParole();
     couperLaVoix();
