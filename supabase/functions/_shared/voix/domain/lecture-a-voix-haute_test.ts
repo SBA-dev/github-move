@@ -388,3 +388,19 @@ Deno.test("passer en Muet après une voix indisponible signale la fin de la lect
 
   assertEquals(finsDeVoixBloquee.length, 1);
 });
+
+Deno.test("le texte enregistré de remplacement est transmis tel quel à la lecture demandée", async () => {
+  const { lecture, lecteur } = uneLecture();
+
+  await lecture.lire("Bravo Léa, tu as réussi.", { texteEnregistreDeRemplacement: "Bravo, tu as réussi." });
+
+  assertEquals(lecteur.lectures[0]?.texteEnregistreDeRemplacement, "Bravo, tu as réussi.");
+});
+
+Deno.test("sans texte enregistré de remplacement, la lecture demandée n'a pas ce champ", async () => {
+  const { lecture, lecteur } = uneLecture();
+
+  await lecture.lire("Bravo Léa, tu as réussi.");
+
+  assertEquals(lecteur.lectures[0] && "texteEnregistreDeRemplacement" in lecteur.lectures[0], false);
+});
