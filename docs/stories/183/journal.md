@@ -11,3 +11,14 @@ Branche de base : `main` (`aa75d97`). Branche : `feature/183-ecran-de-seance-bar
 - Inventaire des scénarios existants touchés (Explore) : 29 exécutions cassées à coup sûr, d'autres à risque selon l'implémentation (`recipient`, « Valider » dans le clavier, personnage guide qui réagit).
 - Étape 2 (po-acceptance) : 7 règles, 23 scénarios (`0d7fa64`), `criteres.md` (`542c41f`) avec 8 à 20 exécutions existantes à réécrire et 16 questions ouvertes (183.1 à 183.16).
 - CADRAGE PRÊT publié sur #183. ⛔ n°1 : en attente de l'annonce [Responsable] sur #193.
+
+## 2026-11-11
+
+- ⛔ n°1 : PO « Reco tout » (annonce [Responsable] sur #193). Les 16 recommandations sont retenues.
+- `main` intégré (`60cc288`, docs seulement), sans conflit.
+- po-acceptance : retrait de `@a-valider`, réécriture des scénarios existants validés (#73, #96, #102, #97, #163, #79, #20), mise à jour du glossaire et de `criteres.md`. Il reste un point pour l'étape E2E : #163:84 et #163:231 utilisent le step « Coach Léo n'apparaît qu'une fois, à sa place, la bulle gardant ses paroles ». Avec 183.11 A, ses paroles restent visibles, mais à la place de la bulle de la consigne : il faudra voir si le step garde son sens.
+- TDD, bloc « Apprentissage, première réponse » :
+  - cycle 1 : début et `repondre` (`dc65c29` rouge, `e3a3fe3` vert) ;
+  - cycle 2 : « Je ne sais pas » (`84ac26f6` rouge, `dae6f53e` vert, lecture des réponses gardées par les questions, sans état nouveau) ;
+  - tests qui protègent les règles déjà tenues (étape, fluence démarrée, lettre de dictée) : `8402a3af`.
+  - Suite unitaire : 2953 verts.
