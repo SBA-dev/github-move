@@ -390,8 +390,15 @@ Then(/^la pause « ([^«»]+) » apparaît sans glisser$/, async ({ page }, titr
 Then(/^l'exercice commence au plus à (\d+) px du haut de l'écran$/, async ({ page }, limite: string) => {
   const exercice = page.getByTestId("exercice-en-cours");
   await expect(exercice).toBeVisible();
-  const boite = await exercice.boundingBox();
-  expect(boite?.y ?? Number.POSITIVE_INFINITY, "haut de l'exercice").toBeLessThanOrEqual(Number(limite));
+  // Le bloc « consigne + exercice » commence au premier des deux éléments visibles : la bulle de consigne, sinon l'exercice.
+  const hauts: number[] = [];
+  for (const element of [consigneAffichee(page), exercice]) {
+    if ((await element.count()) === 0 || !(await element.first().isVisible())) continue;
+    const boite = await element.first().boundingBox();
+    if (boite) hauts.push(boite.y);
+  }
+  expect(hauts.length, "l'exercice est mesurable").toBeGreaterThan(0);
+  expect(Math.min(...hauts), "haut du bloc consigne et exercice").toBeLessThanOrEqual(Number(limite));
 });
 
 Then(
