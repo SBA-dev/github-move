@@ -7,6 +7,7 @@ export type LectureDemandee = {
   readonly langue: string;
   readonly allure?: Allure;
   readonly phrases: readonly ReglageDePhrase[];
+  readonly texteEnregistreDeRemplacement?: string;
   readonly onMot?: (phrase: number, position: number) => void;
 };
 

@@ -22,7 +22,7 @@ export type { DependancesDeLectureAVoixHaute, EtatDuSon, ParoleEntendue } from "
 export type { LecteurAVoixHaute, LectureDemandee } from "./lecteur-a-voix-haute.ts";
 export type { ChoixDeVoixDeLAppareil } from "./choix-de-voix-de-l-appareil.ts";
 export type { VoixDeLAppareil } from "./voix-de-l-appareil.ts";
-export { LectureImpossible, VoixBloquee } from "./erreurs.ts";
+export { LectureImpossible, VoixBloquee, VoixIndisponible } from "./erreurs.ts";
 export { motsDeLaConsigne } from "./mots-de-la-consigne.ts";
 export type { SegmentDeConsigne } from "./mots-de-la-consigne.ts";
 export { phrasesDesMotsAffiches } from "./phrases-des-mots-affiches.ts";
@@ -38,3 +38,5 @@ export type { MorceauDeLecture } from "./plan-de-lecture.ts";
 export type { RepertoireDesPhrasesEnregistrees } from "./repertoire-des-phrases-enregistrees.ts";
 export { instantsDesMots } from "./instants-des-mots.ts";
 export type { InstantDeMot } from "./instants-des-mots.ts";
+export { LecteurAvecRepli } from "./lecteur-avec-repli.ts";
+export type { LecteurDePhrasesEnregistrees, SuiviDUnMorceau } from "./lecteur-de-phrases-enregistrees.ts";
