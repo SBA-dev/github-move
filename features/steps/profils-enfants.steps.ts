@@ -254,6 +254,8 @@ Given(
   new RegExp(`^Paul a changé l'univers du profil enfant de (\\S+) en ${UNIVERS_LIBELLE}$`),
   async ({ famille, page, monde, $tags }, prenom: string, libelleUnivers: string) => {
     // Story #163 : la scène jouée est celle de l'univers du vrai profil ; il est créé pour Paul avant d'être modifié.
+    // Story #183 : son Contexte ne connecte pas Paul, que le vrai profil de Léa suppose (#163 le dit dans son Contexte).
+    if ($tags.includes("@issue-183")) await connecterSiBesoin(famille, "tablette", "Paul");
     if ($tags.includes("@issue-163") || $tags.includes("@issue-183")) await jouerAvecLeProfilReel(famille, monde, page, prenom);
     await modifierLeProfil(famille, prenom, { univers: cleDe(libelleUnivers) });
     if ($tags.includes("@issue-102")) universChoisiParLeParent.set(famille, libelleUnivers);
