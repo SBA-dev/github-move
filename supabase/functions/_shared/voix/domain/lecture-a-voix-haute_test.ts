@@ -17,6 +17,7 @@ const VOIX_ANGLAISE: VoixDisponible = { nom: "Daniel", langue: "en-GB" };
 function uneLecture(options: { muet?: boolean } = {}) {
   const lecteur = new LecteurEnMemoire();
   const signalementsDeVoixBloquee: number[] = [];
+  const causesSignalees: string[] = [];
   const finsDeVoixBloquee: number[] = [];
   const lecture = new LectureAVoixHaute({
     lecteur,
@@ -26,10 +27,13 @@ function uneLecture(options: { muet?: boolean } = {}) {
     hasard: hasardFixe(0.5),
     caractereDuPersonnageGuide: () => CARACTERE_NOISETTE,
     etatInitial: options.muet ? "muet" : "son",
-    onVoixBloquee: () => signalementsDeVoixBloquee.push(1),
-    onFinDeLaVoixBloquee: () => finsDeVoixBloquee.push(1),
+    onLectureEmpechee: (cause) => {
+      causesSignalees.push(cause);
+      if (cause === "voixBloquee") signalementsDeVoixBloquee.push(1);
+    },
+    onFinDeLectureEmpechee: () => finsDeVoixBloquee.push(1),
   });
-  return { lecture, lecteur, signalementsDeVoixBloquee, finsDeVoixBloquee };
+  return { lecture, lecteur, signalementsDeVoixBloquee, causesSignalees, finsDeVoixBloquee };
 }
 
 Deno.test("le personnage guide lit la consigne nettoyée, phrase par phrase, avec sa voix", async () => {
@@ -331,4 +335,56 @@ Deno.test("un nouveau blocage après la fin de la voix bloquée est signalé de 
   await lecture.lire("Écoute bien.");
 
   assertEquals(signalementsDeVoixBloquee.length, 2);
+});
+
+Deno.test("une voix indisponible est signalée avec sa cause et la parole n'est pas entendue", async () => {
+  const { lecture, lecteur, causesSignalees } = uneLecture();
+  lecteur.rendreLaVoixIndisponible();
+
+  const parole = await lecture.lire("Écoute bien.");
+
+  assertEquals(causesSignalees, ["voixIndisponible"]);
+  assertEquals(parole, { entendue: false });
+});
+
+Deno.test("une voix indisponible est signalée une seule fois tant que la fin n'est pas venue", async () => {
+  const { lecture, lecteur, causesSignalees } = uneLecture();
+  lecteur.rendreLaVoixIndisponible();
+
+  await lecture.lire("Écoute bien.");
+  await lecture.lire("Écoute bien.");
+
+  assertEquals(causesSignalees, ["voixIndisponible"]);
+});
+
+Deno.test("une parole entendue après une voix indisponible signale la fin de la lecture empêchée", async () => {
+  const { lecture, lecteur, finsDeVoixBloquee } = uneLecture();
+  lecteur.rendreLaVoixIndisponible();
+  await lecture.lire("Écoute bien.");
+  lecteur.debloquerLaVoix();
+
+  await lecture.lire("Écoute bien.");
+
+  assertEquals(finsDeVoixBloquee.length, 1);
+});
+
+Deno.test("une voix bloquée après une voix indisponible est signalée avec sa nouvelle cause", async () => {
+  const { lecture, lecteur, causesSignalees } = uneLecture();
+  lecteur.rendreLaVoixIndisponible();
+  await lecture.lire("Écoute bien.");
+  lecteur.bloquerLaVoix();
+
+  await lecture.lire("Écoute bien.");
+
+  assertEquals(causesSignalees, ["voixIndisponible", "voixBloquee"]);
+});
+
+Deno.test("passer en Muet après une voix indisponible signale la fin de la lecture empêchée", async () => {
+  const { lecture, lecteur, finsDeVoixBloquee } = uneLecture();
+  lecteur.rendreLaVoixIndisponible();
+  await lecture.lire("Écoute bien.");
+
+  lecture.passerEnMuet();
+
+  assertEquals(finsDeVoixBloquee.length, 1);
 });

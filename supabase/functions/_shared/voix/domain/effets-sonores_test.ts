@@ -22,8 +22,8 @@ function uneLecture(etatInitial: "son" | "muet" = "son") {
     hasard: hasardFixe(0.5),
     caractereDuPersonnageGuide: () => CARACTERE_NOISETTE,
     etatInitial,
-    onVoixBloquee: () => signalementsDeVoixBloquee.push(1),
-    onFinDeLaVoixBloquee: () => {},
+    onLectureEmpechee: () => signalementsDeVoixBloquee.push(1),
+    onFinDeLectureEmpechee: () => {},
   });
   return { lecture, lecteurDEffetsSonores, lecteur, journal, signalementsDeVoixBloquee };
 }
