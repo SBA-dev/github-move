@@ -20,7 +20,9 @@ Fonctionnalité: Écran de séance : une barre du haut et une barre d'action en 
 
   Leçon de la bibliothèque utilisée : « Les sons ou, on, an » (fr-cp-sons-ou-on-an : 3 étapes de leçon, un
   exercice bulles « Quel son entends-tu ? » et un exercice classer « Les maisons des sons », 15 questions).
-  Les autres leçons sont citées dans les scénarios.
+  Cet exercice bulles n'a pas de consigne : les scénarios qui regardent la consigne d'un exercice bulles jouent la
+  leçon de test « Compter » (exercice bulles de consigne « Touche le bon nombre. », choix « 1 », « 2 », « 3 »,
+  réponse « 3 »). Les autres leçons sont citées dans les scénarios.
 
   Contexte:
     Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
@@ -135,25 +137,28 @@ Fonctionnalité: Écran de séance : une barre du haut et une barre d'action en 
       Mais Léa ne voit pas Noisette à côté de la consigne
 
     Scénario: À une réponse juste, Noisette apparaît pour féliciter Léa, puis la consigne revient avec la question suivante
-      Étant donné que Léa joue l'exercice « Quel son entends-tu ? » de la leçon « Les sons ou, on, an »
-      Et que Léa en est à la question « Dans le mot « poule », quel son entends-tu ? »
-      Quand Léa répond « ou »
+      Étant donné qu'une leçon de test « Compter » a un exercice bulles de consigne « Touche le bon nombre. » qui pose « Combien font 2 + 1 ? » puis « Combien font 1 + 2 ? »
+      Et que Léa joue la séance complète de la leçon « Compter »
+      Et que Léa en est à la question « Combien font 2 + 1 ? »
+      Quand Léa répond « 3 »
       Alors Noisette apparaît à la place de la bulle et dit une félicitation commune ou l'une de ses expressions, en entier
-      Et ensuite seulement, la question « Dans le mot « mouton », quel son entends-tu à la fin ? » s'affiche, avec sa consigne et sans Noisette
+      Et ensuite seulement, la question « Combien font 1 + 2 ? » s'affiche, avec sa consigne et sans Noisette
 
     Scénario: À la première réponse fausse, Coach Léo joue sa scène à la place de la bulle, puis la consigne revient et la question reste posée
       Étant donné que Paul a changé l'univers du profil enfant de Léa en « Sports »
-      Et que Léa joue la question de test « Combien font 3 + 4 ? »
-      Quand Léa répond « 8 »
+      Et qu'une leçon de test « Compter » a un exercice bulles de consigne « Touche le bon nombre. » qui pose « Combien font 2 + 1 ? »
+      Et que Léa joue la séance complète de la leçon « Compter »
+      Quand Léa répond « 1 »
       Alors Coach Léo joue sa scène de réponse fausse
       Et ensuite, Léa voit de nouveau la consigne, sans Coach Léo
-      Et la question « Combien font 3 + 4 ? » reste posée
+      Et la question « Combien font 2 + 1 ? » reste posée
 
     Scénario: À une réponse fausse suivante, Noisette apparaît pour encourager Léa, puis la consigne revient
-      Étant donné que Léa joue la séance complète de la leçon « Les sons ou, on, an »
+      Étant donné qu'une leçon de test « Compter » a un exercice bulles de consigne « Touche le bon nombre. » qui pose « Combien font 2 + 1 ? » puis « Combien font 1 + 2 ? »
+      Et que Léa joue la séance complète de la leçon « Compter »
       Et que Léa a déjà fait une erreur dans la séance
-      Et que Léa en est à la question « Dans le mot « poule », quel son entends-tu ? »
-      Quand Léa répond « on »
+      Et que Léa en est à la question « Combien font 1 + 2 ? »
+      Quand Léa répond « 1 »
       Alors Noisette apparaît à la place de la bulle, réfléchit en penchant la tête et dit un encouragement
       Et ensuite, Léa voit de nouveau la consigne, sans Noisette
 
