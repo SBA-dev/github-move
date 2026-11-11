@@ -20,6 +20,12 @@ class RemplacementSansEffet(Exception):
         self.motif = motif
 
 
+class ExempleDePrononciationEnEchec(Exception):
+    def __init__(self, motifs):
+        super().__init__("L'exemple ne donne pas le texte attendu pour : " + ", ".join(f"« {m} »" for m in motifs))
+        self.motifs = motifs
+
+
 TABLE_DE_PRONONCIATION = [
     EntreeDePrononciation("vas-y", "va-zi", "Allez, vas-y.", "Allez, va-zi."),
     EntreeDePrononciation("CP", "cé pé", "Je suis au CP.", "Je suis au cé pé."),

@@ -11,6 +11,12 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from voix.fabrication_des_phrases import NORMALE, LENTE, PhraseAFabriquer, fabriquer_les_phrases  # noqa: E402
 from voix.piper_en_ligne_de_commande import PiperEnLigneDeCommande  # noqa: E402
+from voix.table_de_prononciation import (  # noqa: E402
+    TABLE_DE_PRONONCIATION,
+    ExempleDePrononciationEnEchec,
+    exemples_en_echec,
+    verifier_la_table,
+)
 
 
 def _lire_les_arguments(arguments):
@@ -23,8 +29,18 @@ def _lire_les_arguments(arguments):
     return analyseur.parse_args(arguments)
 
 
-def _phrases_a_fabriquer(chemin, niveau):
-    entrees = json.loads(Path(chemin).read_text(encoding="utf-8"))
+def _lire_les_entrees(chemin):
+    return json.loads(Path(chemin).read_text(encoding="utf-8"))
+
+
+def _verifier(table, entrees):
+    en_echec = exemples_en_echec(table)
+    if en_echec:
+        raise ExempleDePrononciationEnEchec([entree.motif for entree in en_echec])
+    verifier_la_table(table, [entree["phrase"] for entree in entrees])
+
+
+def _phrases_a_fabriquer(entrees, niveau):
     return [
         PhraseAFabriquer(entree["phrase"], lente=LENTE in entree.get("allures", [NORMALE]))
         for entree in entrees
@@ -32,14 +48,17 @@ def _phrases_a_fabriquer(chemin, niveau):
     ]
 
 
-def principal(arguments, *, piper):
+def principal(arguments, *, piper, table=TABLE_DE_PRONONCIATION):
     choix = _lire_les_arguments(arguments)
+    entrees = _lire_les_entrees(choix.phrases)
+    _verifier(table, entrees)
     resultat = fabriquer_les_phrases(
-        _phrases_a_fabriquer(choix.phrases, choix.niveau),
+        _phrases_a_fabriquer(entrees, choix.niveau),
         piper=piper,
         dossier=choix.dossier,
         voix_enregistree=choix.voix,
         lot=choix.lot,
+        table=table,
     )
     print(f"{resultat.fabriquees} fabriquées, {resultat.sautees} sautées")
     return resultat
