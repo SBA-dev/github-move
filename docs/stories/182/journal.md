@@ -109,3 +109,10 @@ Branche : `feature/182-voix-mp3-piper`, partie de `main` (`aa75d97`). Base : `ma
 - 13:40 UTC : RED 29 (e5ff27e) : garde de couverture élargie au CE1 (576 phrases sans MP3 ; `lireLecon` importé par l'index du catalogue). Exemple CE1 du plan des leçons fabriquées exécutable (e1f14c9). Support E2E : toute étiquette `@niveau-…` lit les vrais MP3 (26b80c5), pour que 182d et 182e n'aient plus à y toucher.
 - 13:40–14:00 UTC : fabrication du CE1 (576 phrases, 589 MP3 avec 13 mots lents, ≈ 20 min), sans écraser le répertoire (correctif de 182b) : 1572 phrases, `public/voix` à 16 Mo (75903d7). Page d'écoute du CE1 publiée (question #182.22, non bloquante). VERROU base demandé, en file derrière #183.
 - 14:00 UTC : revue de 182c : **APPROUVÉ**. Non bloquants notés : le préfixe `@niveau-` de `litLesVraisMp3` attraperait une étiquette du même préfixe dans une autre story (aucune aujourd'hui ; liste fermée ou préfixe propre à #182 si cela arrive) ; changement d'import sans effet glissé dans le commit RED.
+- 16:08–16:12 UTC : **VERROU base** accordé ; série courte de 182c, 1 worker : `telephone` `@issue-182` **33/33** (3 min), `tablette` `@niveau-ce1` **1/1**. LIBÈRE base. PR #199 ouverte (ne ferme pas #182), VERROU merge demandé. À reprendre après le merge de #183 : depuis 183.7, l'Espace parent n'est plus joignable pendant une séance, le scénario « en arrivant sur un écran du parent, la voix enregistrée s'arrête » passe par Retour et prouve moins ; proposer un chemin depuis la page de la leçon.
+
+## Mesures (182c)
+
+- Durée : de 13:37 à ≈ 16:15 UTC, soit ≈ 2 h 40, dont ≈ 20 min de fabrication et ≈ 2 h d'attente du verrou `base` (rejeu de #183).
+- TDD : 1 cycle (garde de couverture du CE1). Revue : 1, APPROUVÉ. E2E : 1 série, verte du premier coup.
+- Fabrication : 576 phrases du CE1 (589 MP3), `public/voix/` à 16 Mo.
