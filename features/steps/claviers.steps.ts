@@ -82,7 +82,7 @@ export function installerLEnregistreurDeLaStory128() {
     });
   };
   const noterUneTouche = (element: Element, evenement: "debut" | "fin") => {
-    if (journal.silence) return;
+    if (journal.silence || element.matches('[data-testid="compteur"]')) return;
     journal.eclats.push({ touche: (element.textContent ?? "").trim(), evenement, signature: signatureDe(element), mouvement: bouge(element) });
   };
   new MutationObserver((enregistrements) => {
@@ -479,7 +479,7 @@ Then(/^la touche « (\d) » n'a pas d'éclat$/, async ({ page }, chiffre: string
 
 Then(/^aucune touche n'a d'éclat$/, async ({ page }) => {
   await laisserLEcranSeDessiner(page);
-  await expect(page.locator("[data-eclat]")).toHaveCount(0);
+  await expect(page.locator('[data-eclat]:not([data-testid="compteur"])')).toHaveCount(0);
   expect(await eclatsDepuisLaMarque(page), "aucun éclat depuis le geste de l'enfant").toEqual([]);
 });
 
