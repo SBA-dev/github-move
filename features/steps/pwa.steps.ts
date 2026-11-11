@@ -6,6 +6,8 @@ const NOM_APPLICATION = "Savanturier";
 const LECONS_MINIMUM = 265;
 const LECON_AJOUTEE = "lecon-ajoutee-par-le-test";
 const PREFIXE_CACHE = "savanturier-";
+// Cache des voix enregistrées (#182) : non versionné, il survit aux nouvelles versions.
+const CACHE_DES_VOIX = "savanturier-voix";
 
 type Icone = { src: string; sizes: string; type?: string };
 type Manifeste = {
@@ -300,7 +302,7 @@ Then("elle utilise la nouvelle version de Savanturier", async ({ page, pwa }) =>
   const nouvelle = pwa.versionPubliee;
   expect(nouvelle).not.toBeNull();
   await expect
-    .poll(() => page.evaluate(() => caches.keys()), {
+    .poll(async () => (await page.evaluate(() => caches.keys())).filter((nom) => nom !== CACHE_DES_VOIX), {
       message: "seul le cache de la nouvelle version doit rester (l'ancienne est active puis supprimée)",
     })
     .toEqual([`${PREFIXE_CACHE}${nouvelle}`]);

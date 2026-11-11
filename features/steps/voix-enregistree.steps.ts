@@ -9,6 +9,7 @@ import {
   type Parole,
   paroles,
   preparerLeRepertoireDeTest,
+  publierLaVoixSurLeRelais,
   repertoireDeTest,
   retirerLesPhrases,
   texteDuMessageDeVoixIndisponible,
@@ -18,9 +19,11 @@ import { RYTHME_PLUS_LENT, etatDeLaDictee } from "./dictee-et-conjugaison.steps.
 import { leconAChoix, QUESTIONS_DE_TEST } from "./exercices-a-choix.steps.ts";
 import { bulle, injecter, interceptertLaBibliotheque } from "./etapes-puis-exercices.steps.ts";
 import { Given, Then } from "./fixtures.ts";
+import { chargerUneFois } from "./pwa.steps.ts";
 import {
   consigneAffichee,
   journal,
+  leconDeLaConsigne,
   messageDeVoixBloquee,
   normaliser,
   ouvrir,
@@ -117,6 +120,72 @@ Given(/^Léa a déjà vu le message de voix indisponible$/, async ({ page }) => 
   await ouvrirLaPageDeLaLeconDeTest(page, etat, etat.consigne.texte);
   await expect(messageDeVoixIndisponible(page)).toHaveCount(1);
 });
+
+// --- Étant donné : sans réseau (scénarios @pwa, build de production)
+// Le service worker ne voit pas les requêtes interceptées par la page : le répertoire, les MP3 et la leçon de test sont
+// publiés sur le relais de test (features/support/serveur-pwa.mjs), un vrai serveur que le service worker interroge.
+
+const CACHE_DES_VOIX = "savanturier-voix";
+const PREFIXE_DU_CACHE_DE_LA_VERSION = "savanturier-";
+
+async function publierLaLeconEtLaVoix(page: Page, baseURL: string | undefined): Promise<string> {
+  const repertoire = await preparerLeRepertoireDeTest(page);
+  const consigne = repertoire.derniereDeclaration;
+  if (consigne === undefined || baseURL === undefined) throw new Error("Aucune phrase enregistrée déclarée pour la consigne");
+  await publierLaVoixSurLeRelais(baseURL, repertoire);
+  const lecon = leconDeLaConsigne(consigne);
+  const reponse = await fetch(`${baseURL}/__test/publier-lecon-de-test`, { method: "POST", body: JSON.stringify(lecon) });
+  expect(reponse.ok, "le relais de test garde la leçon").toBe(true);
+  await injecter(page, lecon);
+  scenario(page).consigne.texte = consigne;
+  return consigne;
+}
+
+Given(
+  /^Léa a ouvert une fois, avec le réseau, la page de la leçon de test de cette consigne$/,
+  { tags: "@issue-182 and @pwa" },
+  async ({ page, baseURL }) => {
+    await publierLaLeconEtLaVoix(page, baseURL);
+    await chargerUneFois(page);
+    const etat = scenario(page);
+    await preparerLaPage(page, etat);
+    await ouvrirLaPageDeLaLeconDeTest(page, etat, etat.consigne.texte);
+    await expect.poll(
+      () =>
+        page.evaluate(async (nom) => {
+          const cache = await caches.open(nom);
+          return (await cache.keys()).filter((requete) => requete.url.endsWith(".mp3")).length;
+        }, CACHE_DES_VOIX),
+      { message: "les MP3 de la leçon sont gardés par l'appareil" },
+    ).toBeGreaterThan(0);
+  },
+);
+
+Given(
+  /^Savanturier a déjà été chargé une fois sur la tablette, sans ouvrir la leçon de test de cette consigne$/,
+  { tags: "@issue-182 and @pwa" },
+  async ({ page, baseURL }) => {
+    await publierLaLeconEtLaVoix(page, baseURL);
+    await chargerUneFois(page);
+  },
+);
+
+Given(
+  /^une nouvelle version de Savanturier a été publiée depuis, puis s'est appliquée$/,
+  { tags: "@issue-182 and @pwa" },
+  async ({ page, pwa }) => {
+    const version = await pwa.publierVersion();
+    await page.evaluate(async () => {
+      const inscription = await navigator.serviceWorker.getRegistration();
+      await inscription?.update();
+    });
+    await expect
+      .poll(async () => (await page.evaluate(() => caches.keys())).sort(), {
+        message: "la nouvelle version remplace l'ancienne ; le cache des voix, lui, reste",
+      })
+      .toEqual([CACHE_DES_VOIX, `${PREFIXE_DU_CACHE_DE_LA_VERSION}${version}`].sort());
+  },
+);
 
 // --- Étant donné : Noisette est en train de lire
 

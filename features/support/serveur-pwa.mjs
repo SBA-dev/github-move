@@ -2,6 +2,7 @@
 // Il laisse tout passer, sauf quand un scénario « publie » une nouvelle version ou une nouvelle leçon.
 // Le navigateur ne laisse pas intercepter le script d'un service worker (page.route / context.route),
 // d'où ce relais côté serveur. Les scénarios le pilotent par POST /__test/<commande>.
+import { readFileSync } from "node:fs";
 import http from "node:http";
 
 const PORT = 4174;
@@ -10,7 +11,10 @@ const SUFFIXE_VERSION = "-test-nouvelle";
 const MOTIF_VERSION = /const VERSION = "([^"]*)"/;
 const LECON_AJOUTEE = "lecon-ajoutee-par-le-test";
 
-const etat = { versionPubliee: false, leconPubliee: false, leconDeTest: null };
+const MP3_DE_TEST = readFileSync(new URL("./phrase-de-test.mp3", import.meta.url));
+
+// #182 : `voix` est la liste des phrases enregistrées publiées par un scénario (cle, texte, empreinte, adresse du MP3).
+const etat = { versionPubliee: false, leconPubliee: false, leconDeTest: null, voix: null };
 
 function interroger(requete) {
   return new Promise((resolve, reject) => {
@@ -63,6 +67,7 @@ async function commande(nom, reponse, requete) {
     etat.versionPubliee = false;
     etat.leconPubliee = false;
     etat.leconDeTest = null;
+    etat.voix = null;
     return repondre(reponse, 200, { "content-type": "application/json" }, Buffer.from("{}"));
   }
   if (nom === "publier-lecon") {
@@ -72,6 +77,10 @@ async function commande(nom, reponse, requete) {
   if (nom === "publier-lecon-de-test") {
     // #97 : la leçon de test (corps JSON) est ajoutée à la bibliothèque, que le service worker garde ensuite pour le hors ligne.
     etat.leconDeTest = JSON.parse(await corpsDe(requete));
+    return repondre(reponse, 200, { "content-type": "application/json" }, Buffer.from("{}"));
+  }
+  if (nom === "publier-voix") {
+    etat.voix = JSON.parse(await corpsDe(requete));
     return repondre(reponse, 200, { "content-type": "application/json" }, Buffer.from("{}"));
   }
   if (nom === "publier-version") {
@@ -84,8 +93,22 @@ async function commande(nom, reponse, requete) {
   return repondre(reponse, 404, { "content-type": "text/plain" }, Buffer.from("commande inconnue"));
 }
 
+function voixPubliee(chemin, reponse) {
+  if (etat.voix === null) return false;
+  if (chemin === "/voix/repertoire.json") {
+    const phrases = Object.fromEntries(etat.voix.map(({ cle, empreinte }) => [cle, { normale: empreinte }]));
+    repondre(reponse, 200, { "content-type": "application/json" }, Buffer.from(JSON.stringify({ voixEnregistree: "tom", phrases })));
+    return true;
+  }
+  const phrase = etat.voix.find(({ adresse }) => adresse === chemin);
+  if (phrase === undefined) return false;
+  repondre(reponse, 200, { "content-type": "audio/mpeg", "x-phrase": encodeURIComponent(phrase.texte) }, MP3_DE_TEST);
+  return true;
+}
+
 async function relayer(requete, reponse) {
   const chemin = new URL(requete.url, "http://relais").pathname;
+  if (voixPubliee(chemin, reponse)) return;
   const amont = await interroger(requete);
   if (chemin === "/sw.js" && etat.versionPubliee && amont.statut === 200) {
     const publiee = versionPubliee(amont.corps.toString("utf8"));

@@ -7,7 +7,7 @@
 // (lots de lecture, lectures en même temps, fin de lecture) valent aussi pour la voix enregistrée.
 
 import { readFileSync } from "node:fs";
-import type { Page } from "@playwright/test";
+import { test, type Page } from "@playwright/test";
 import { adresseDuMp3 } from "../../supabase/functions/_shared/voix/domain/adresse-du-mp3.ts";
 import { phrasesAvecCle } from "../../supabase/functions/_shared/voix/domain/cle-de-phrase.ts";
 
@@ -21,6 +21,8 @@ export type RepertoireDeTest = {
   readonly phrases: Map<string, PhraseDeTest>;
   /** « Léa voit le message de voix indisponible » : à vérifier à l'ouverture de la page, quand le répertoire est connu. */
   messageDeVoixIndisponibleAVoirAvant: boolean;
+  /** Dernière phrase déclarée enregistrée, telle qu'écrite dans le scénario : « cette consigne » des scénarios @pwa. */
+  derniereDeclaration?: string;
 };
 
 const repertoires = new WeakMap<Page, RepertoireDeTest>();
@@ -30,6 +32,7 @@ export function repertoireDeTest(page: Page): RepertoireDeTest | undefined {
 }
 
 export function declarerLesPhrases(repertoire: RepertoireDeTest, brut: string, options: { lente?: boolean; illisible?: boolean } = {}): void {
+  repertoire.derniereDeclaration = brut;
   for (const { texte, cle } of phrasesAvecCle(brut)) {
     repertoire.phrases.set(cle, { texte, lente: options.lente ?? false, illisible: options.illisible ?? false });
   }
@@ -188,6 +191,12 @@ export async function preparerLeRepertoireDeTest(page: Page): Promise<Repertoire
   if (existant) return existant;
   const repertoire: RepertoireDeTest = { phrases: new Map(), messageDeVoixIndisponibleAVoirAvant: false };
   repertoires.set(page, repertoire);
+  // Scénarios @pwa : le service worker voit les requêtes, pas l'interception de page. Le relais de test sert le répertoire
+  // et les MP3 (voir publierLaVoixSurLeRelais) : il ne reste ici que le faux Audio.
+  if (test.info().tags.includes("@pwa")) {
+    await page.addInitScript(installerLAudioDeTest, { dureeMs: DUREE_DU_MP3_DE_TEST_MS });
+    return repertoire;
+  }
   await page.route("**/voix/repertoire.json", async (route) => {
     const phrases = Object.fromEntries(
       [...repertoire.phrases].map(([cle, { lente }]) => [cle, lente ? { normale: EMPREINTE_DE_TEST, lente: EMPREINTE_DE_TEST } : { normale: EMPREINTE_DE_TEST }]),
@@ -209,6 +218,18 @@ export async function preparerLeRepertoireDeTest(page: Page): Promise<Repertoire
   });
   await page.addInitScript(installerLAudioDeTest, { dureeMs: DUREE_DU_MP3_DE_TEST_MS });
   return repertoire;
+}
+
+/** Scénarios @pwa : publie sur le relais de test (features/support/serveur-pwa.mjs) le répertoire et les MP3 de test. */
+export async function publierLaVoixSurLeRelais(baseURL: string, repertoire: RepertoireDeTest): Promise<void> {
+  const phrases = [...repertoire.phrases].map(([cle, { texte }]) => ({
+    cle,
+    texte,
+    empreinte: EMPREINTE_DE_TEST,
+    adresse: adresseDuMp3(cle, EMPREINTE_DE_TEST, "normale"),
+  }));
+  const reponse = await fetch(`${baseURL}/__test/publier-voix`, { method: "POST", body: JSON.stringify(phrases) });
+  if (!reponse.ok) throw new Error(`Relais de test PWA « publier-voix » : ${reponse.status}`);
 }
 
 // --- Le journal de lecture, lu depuis la page

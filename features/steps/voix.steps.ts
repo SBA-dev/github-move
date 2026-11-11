@@ -1,4 +1,4 @@
-import { type BrowserContext, expect, type Page } from "@playwright/test";
+import { type BrowserContext, expect, type Page, test } from "@playwright/test";
 import type { Famille } from "../support/famille.ts";
 export { terminerLaLecture } from "../support/lecture-vocale.ts";
 import { terminerLaLecture } from "../support/lecture-vocale.ts";
@@ -318,7 +318,7 @@ const TITRE_DE_LA_LECON_DE_TEST = "Écoute";
 const QUESTION_DE_LA_LECON_DE_TEST = "Combien font 1 + 2 ?";
 
 /** Une leçon de test d'un exercice bulles : sa consigne est lue au début de l'exercice, puis la question est posée. */
-function leconDeLaConsigne(consigne: string) {
+export function leconDeLaConsigne(consigne: string) {
   return leconDeTest("test-consigne", TITRE_DE_LA_LECON_DE_TEST, [{
     type: "bulles",
     titre: "Écoute",
@@ -347,7 +347,8 @@ export function sansVoix(page: Page): boolean {
 export async function ouvrirLaPageDeLaLeconDeTest(page: Page, etat: Scenario, consigne: string) {
   await preparerLaPage(page, etat);
   await injecter(page, leconDeLaConsigne(consigne));
-  await interceptertLaBibliotheque(page);
+  // Scénarios @pwa : la leçon est déjà dans la bibliothèque publiée par le relais de test, et l'interception de page n'a pas sa place.
+  if (!test.info().tags.includes("@pwa")) await interceptertLaBibliotheque(page);
   await ouvrirLaPageDeLaLecon(page, TITRE_DE_LA_LECON_DE_TEST);
 }
 
