@@ -5,9 +5,9 @@ import { Given, Then, When } from "./fixtures.ts";
 const NOM_APPLICATION = "Savanturier";
 const LECONS_MINIMUM = 265;
 const LECON_AJOUTEE = "lecon-ajoutee-par-le-test";
-const PREFIXE_CACHE = "savanturier-";
 // Cache des voix enregistrées (#182) : non versionné, il survit aux nouvelles versions.
 const CACHE_DES_VOIX = "savanturier-voix";
+const PREFIXE_CACHE = "savanturier-";
 
 type Icone = { src: string; sizes: string; type?: string };
 type Manifeste = {
@@ -167,16 +167,10 @@ Given("Savanturier a déjà été chargé une fois sur la tablette", async ({ pa
   await chargerUneFois(page);
 });
 
-Given("le réseau est coupé", async ({ baseURL, context, page, pwa: _pwa, $tags }) => {
+Given("le réseau est coupé", async ({ context, page, $tags }) => {
   // Story #163 : la leçon de test n'est ouverte que par la première réponse ; elle se charge avant la coupure.
   if ($tags.includes("@issue-163")) await demarrer(page);
   await context.setOffline(true);
-  // Story #182 : `setOffline` ne coupe pas les requêtes du service worker (cache des voix : cache d'abord, puis réseau) ;
-  // le relais de test les refuse aussi. Remise à zéro par la fixture `pwa` (commande « reinitialiser »).
-  if ($tags.includes("@issue-182") && $tags.includes("@pwa")) {
-    const reponse = await fetch(`${baseURL}/__test/couper-le-reseau`, { method: "POST" });
-    if (!reponse.ok) throw new Error(`Relais de test PWA « couper-le-reseau » : ${reponse.status}`);
-  }
 });
 
 Given("Léa est en train d'utiliser Savanturier", async ({ page, pwa }) => {
@@ -221,7 +215,7 @@ When("une nouvelle version de Savanturier est publiée", async ({ page, pwa }) =
     await inscription?.update();
   });
   await expect
-    .poll(() => page.evaluate(() => caches.keys()), { message: "la nouvelle version doit être téléchargée" })
+    .poll(async () => (await page.evaluate(() => caches.keys())).filter((nom) => nom !== CACHE_DES_VOIX), { message: "la nouvelle version doit être téléchargée" })
     .toContain(`${PREFIXE_CACHE}${version}`);
 });
 
@@ -308,7 +302,7 @@ Then("elle utilise la nouvelle version de Savanturier", async ({ page, pwa }) =>
   const nouvelle = pwa.versionPubliee;
   expect(nouvelle).not.toBeNull();
   await expect
-    .poll(async () => (await page.evaluate(() => caches.keys())).filter((nom) => nom !== CACHE_DES_VOIX), {
+    .poll(() => page.evaluate(() => caches.keys()), {
       message: "seul le cache de la nouvelle version doit rester (l'ancienne est active puis supprimée)",
     })
     .toEqual([`${PREFIXE_CACHE}${nouvelle}`]);

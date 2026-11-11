@@ -145,6 +145,20 @@ async function publierLaLeconEtLaVoix(page: Page, baseURL: string | undefined): 
 
 // Le build de production n'a pas de profil préparé (décision 0021) : Paul est connecté, puis Léa, un vrai profil, se choisit
 // dans « Qui joue ? » sur une tablette dont le service worker contrôle déjà la page.
+// `setOffline` ne coupe pas les requêtes du service worker (cache des voix : cache d'abord, puis réseau) : pour ces seuls
+// scénarios, la coupure du step partagé « le réseau est coupé » refuse aussi les requêtes au relais de test.
+// Le step partagé reste inchangé pour tous les autres scénarios.
+function coupureAussiSurLeRelais(page: Page, baseURL: string | undefined) {
+  const contexte = page.context();
+  const coupureNavigateur = contexte.setOffline.bind(contexte);
+  contexte.setOffline = async (coupe: boolean) => {
+    await coupureNavigateur(coupe);
+    if (!coupe) return;
+    const reponse = await fetch(`${baseURL}/__test/couper-le-reseau`, { method: "POST" });
+    if (!reponse.ok) throw new Error(`Relais de test PWA « couper-le-reseau » : ${reponse.status}`);
+  };
+}
+
 async function chargerUneFoisAvecLeaReelle(famille: Famille, monde: Monde, page: Page) {
   await famille.connecterSansEmail("tablette", "Paul");
   await chargerUneFois(page);
@@ -154,7 +168,8 @@ async function chargerUneFoisAvecLeaReelle(famille: Famille, monde: Monde, page:
 Given(
   /^Léa a ouvert une fois, avec le réseau, la page de la leçon de test de cette consigne$/,
   { tags: "@issue-182 and @pwa" },
-  async ({ famille, monde, page, baseURL }) => {
+  async ({ famille, monde, page, baseURL, pwa: _pwa }) => {
+    coupureAussiSurLeRelais(page, baseURL);
     await publierLaLeconEtLaVoix(page, baseURL);
     await chargerUneFoisAvecLeaReelle(famille, monde, page);
     const etat = scenario(page);
@@ -174,7 +189,8 @@ Given(
 Given(
   /^Savanturier a déjà été chargé une fois sur la tablette, sans ouvrir la leçon de test de cette consigne$/,
   { tags: "@issue-182 and @pwa" },
-  async ({ famille, monde, page, baseURL }) => {
+  async ({ famille, monde, page, baseURL, pwa: _pwa }) => {
+    coupureAussiSurLeRelais(page, baseURL);
     await publierLaLeconEtLaVoix(page, baseURL);
     // Léa rejoint la leçon sans recharger la page : la voix de test doit être installée avant le premier chargement.
     await preparerLaPage(page, scenario(page));
