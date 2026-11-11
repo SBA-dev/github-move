@@ -45,3 +45,13 @@ export function planDeLecture(
     };
   });
 }
+
+export function suitesDeMemeSource(plan: readonly MorceauDeLecture[]): MorceauDeLecture[][] {
+  const suites: MorceauDeLecture[][] = [];
+  for (const morceau of plan) {
+    const derniere = suites.at(-1);
+    if (derniere?.[0]?.source === morceau.source) derniere.push(morceau);
+    else suites.push([morceau]);
+  }
+  return suites;
+}

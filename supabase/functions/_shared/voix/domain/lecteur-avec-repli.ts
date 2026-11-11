@@ -4,7 +4,7 @@ import { instantsDesMots } from "./instants-des-mots.ts";
 import { estUneLangueFrancaise } from "./langue-francaise.ts";
 import type { LecteurAVoixHaute, LectureDemandee } from "./lecteur-a-voix-haute.ts";
 import type { LecteurDePhrasesEnregistrees, SuiviDUnMorceau } from "./lecteur-de-phrases-enregistrees.ts";
-import { type MorceauDeLecture, planDeLecture } from "./plan-de-lecture.ts";
+import { type MorceauDeLecture, planDeLecture, suitesDeMemeSource } from "./plan-de-lecture.ts";
 import type { RepertoireDesPhrasesEnregistrees } from "./repertoire-des-phrases-enregistrees.ts";
 
 type Dependances = {
@@ -45,22 +45,17 @@ export class LecteurAvecRepli implements LecteurAVoixHaute {
     if (plan.some((morceau) => morceau.source === "voixDeLAppareil")) {
       this.verifierQueLaVoixDeLAppareilPeutDireLaPhrase(lecture);
     }
-    let rangsDeLaVoixDeLAppareil: number[] = [];
-    const direLeGroupe = async () => {
-      const rangs = rangsDeLaVoixDeLAppareil;
-      rangsDeLaVoixDeLAppareil = [];
-      await this.direAvecLaVoixDeLAppareil(rangs, lecture);
-    };
-    for (const morceau of plan) {
+    for (const suite of suitesDeMemeSource(plan)) {
       if (this.arrete) return;
-      if (morceau.source === "voixDeLAppareil") {
-        rangsDeLaVoixDeLAppareil.push(morceau.rang);
+      if (suite[0]?.source === "voixDeLAppareil") {
+        await this.direAvecLaVoixDeLAppareil(suite.map(({ rang }) => rang), lecture);
         continue;
       }
-      await direLeGroupe();
-      await this.jouerEnregistree(morceau, lecture);
+      for (const morceau of suite) {
+        if (this.arrete) return;
+        await this.jouerEnregistree(morceau, lecture);
+      }
     }
-    await direLeGroupe();
   }
 
   private verifierQueLaVoixDeLAppareilPeutDireLaPhrase(lecture: LectureDemandee): void {
