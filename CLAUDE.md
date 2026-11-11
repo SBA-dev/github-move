@@ -216,6 +216,7 @@ Décisions déjà prises, à respecter partout (code, interface, scénarios) :
 | `.claude/skills/illustration/` | Style des dessins SVG, méthode de l'illustrateur, outil de rendu en planche PNG |
 | `.claude/skills/motion-design/` | Skill tiers (LottieFiles) : principes d'animation, rythme, courbes, enchaînements |
 | `.claude/skills/design-dna/` | Skill tiers (zanwei) : profil de design tiré d'images de référence |
+| `.claude/skills/signaler/` | `/signaler <description>` : un bug, une amélioration ou une nouvelle fonctionnalité → écran et composant localisés, issue créée, traitée jusqu'à la PR (carte des écrans, modèles d'issue et de PR) |
 
 ## Workflow de livraison
 
@@ -223,10 +224,18 @@ Décisions déjà prises, à respecter partout (code, interface, scénarios) :
 domaine → critères d'acceptance → ⛔ validation humaine → TDD → review → E2E → PR → ⛔ merge humain.
 Voir `.claude/commands/feature.md`.
 
-- Lancer `/feature` ou `/graphe` vaut demande explicite d'ouvrir la PR de la story (de chaque story lancée pour `/graphe`). En dehors de ce workflow, on n'ouvre pas de PR sans qu'on le demande.
+- Lancer `/feature` ou `/graphe` vaut demande explicite d'ouvrir la PR de la story (de chaque story lancée pour `/graphe`). Lancer `/signaler` vaut demande explicite de créer l'issue et, pour un bug ou une petite amélioration, d'ouvrir sa PR (décision 0043). En dehors de ces workflows, on n'ouvre pas de PR sans qu'on le demande.
 - On travaille sur la branche fournie par la session ou créée pour la story, jamais directement sur la branche par défaut.
 - La **branche de base** est `main`, branche par défaut du dépôt. Chaque story part de `main` à jour et y revient par PR.
 - Les deux ⛔ sont des arrêts réels : l'agent attend la réponse humaine et ne la suppose jamais.
+
+### Signaler un bug ou une idée : `/signaler`
+
+`/signaler <description libre>` (`.claude/skills/signaler/`) : l'agent identifie le type (bug, amélioration, nouvelle fonctionnalité), l'écran, la section, le composant et le bounded context, vérifie les doublons, crée l'issue, puis la traite (décision 0043) :
+- **bug** dont le comportement attendu est déjà écrit (scénario ou issue livrée) : pas d'arrêt, test qui reproduit le bug, correction, review, E2E du périmètre, PR ;
+- **petite amélioration** : un seul ⛔ sur le brouillon de l'issue et ses critères, puis même chemin ;
+- **nouvelle fonctionnalité** ou amélioration large : l'issue est créée comme une story, puis `/feature <n>` prend le relais.
+La PR est suivie (CI, commentaires de review) ; le merge reste un ⛔ humain.
 
 ### Plusieurs stories en parallèle : `/graphe`
 
@@ -244,7 +253,7 @@ Voir `.claude/commands/feature.md`.
 |---|---|---|
 | `domain-modeler` | DDD stratégique : contextes, agrégats, glossaire | `docs/domain/`, `docs/stories/<n>/` |
 | `po-acceptance` | BDD : scénarios Gherkin | `features/*.feature`, `docs/stories/<n>/` |
-| `test-writer` | TDD phase RED | `*_test.ts`, `test_utils/`, `scripts/tests/` uniquement |
+| `test-writer` | TDD phase RED | `*_test.ts`, `test_utils/`, `scripts/tests/`, `tests/legacy/` uniquement |
 | `implementer` | TDD phases GREEN + REFACTOR, câblage | code de prod, migrations, front, `scripts/` (jamais les tests) |
 | `mr-reviewer` | Review qualité, DDD, sécurité, RGPD, accessibilité | rien (lecture seule) |
 | `e2e-tester` | Exécution des scénarios BDD | `features/steps/` uniquement |
