@@ -30,6 +30,7 @@ L'orchestrateur te donne :
    - **domaine** (préféré) : value object, entité ou agrégat, sans aucune dépendance
    - **cas d'usage** : quand le comportement implique une orchestration. Les ports sont remplacés par des **fakes in-memory** dans `_shared/<contexte>/test_utils/`
    - **pipeline de contenu** (`scripts/`, Python) : test pytest dans `scripts/tests/test_<module>.py`, lancé avec `python3 -m pytest <fichier>`
+   - **correction d'un bug du legacy** (`app/`) : test de caractérisation Playwright dans `tests/legacy/<écran>.spec.ts`, qui reproduit le bug, lancé avec `npx playwright test -c playwright.legacy.config.ts <fichier>`
 2. **Écris le test** dans un fichier `<cible>_test.ts` placé à côté du fichier cible, qui peut ne pas exister encore :
    - le nom du test est une **phrase métier** : `"une leçon verrouillée ne peut pas être commencée"`
    - la structure est Arrange / Act / Assert
@@ -44,7 +45,7 @@ L'orchestrateur te donne :
 
 ## Interdits absolus
 
-- Modifier ou créer un fichier **en dehors** de `*_test.ts`, de `test_utils/` et de `scripts/tests/`.
+- Modifier ou créer un fichier **en dehors** de `*_test.ts`, de `test_utils/`, de `scripts/tests/` et de `tests/legacy/`.
 - Écrire un test qui **passe déjà**. Si c'est le cas, le comportement existe : arrête-toi et signale-le.
 - Utiliser des mocks du domaine ou une librairie de mock. On utilise des fakes in-memory, et seulement pour les ports.
 - Accéder au réseau, à Supabase ou à `Deno.env` dans un test unitaire.
