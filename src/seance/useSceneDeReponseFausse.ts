@@ -27,7 +27,7 @@ const largeurDuDessin = (zone: HTMLElement | null) => zone?.firstElementChild?.g
 /**
  * La scène de réponse fausse du personnage guide : elle se joue à la première réponse fausse de la séance, à la place de son dessin.
  * Le domaine décide si elle se joue et laquelle ; ici on fournit les faits (la taille du dessin, l'écran) et on tient la mémoire « déjà jouée »
- * le temps de l'écran de la séance : rien n'est enregistré. Elle s'arrête quand elle finit, ou dès que l'enfant agit sur un bouton ou une touche.
+ * le temps de l'écran de la séance : rien n'est enregistré. Elle s'arrête quand elle finit, ou dès que l'enfant agit sur un bouton (au relâché, pour que le dessin ne déplace pas le bouton sous son doigt) ou une touche.
  * Elle se joue à côté de la réaction de la réponse fausse (son, encouragement, humeur), sans la changer.
  */
 export function useSceneDeReponseFausse({ parole, cleUnivers, dansLeTestDeDepart = false, pendantLeChronoDUneFluence = false }: Options) {
@@ -59,10 +59,10 @@ export function useSceneDeReponseFausse({ parole, cleUnivers, dansLeTestDeDepart
     const surUneTouche = (e: KeyboardEvent) => {
       if (estUneToucheQuiAgit(e)) arreter();
     };
-    document.addEventListener("pointerdown", surUnToucher, true);
+    document.addEventListener("pointerup", surUnToucher, true);
     document.addEventListener("keydown", surUneTouche, true);
     return () => {
-      document.removeEventListener("pointerdown", surUnToucher, true);
+      document.removeEventListener("pointerup", surUnToucher, true);
       document.removeEventListener("keydown", surUneTouche, true);
     };
   }, [estEnCours]);
