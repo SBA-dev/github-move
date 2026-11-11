@@ -58,3 +58,9 @@ Branche de base : `main` (`aa75d97`). Branche : `feature/183-ecran-de-seance-bar
   - #130 et #131 restent à jouer en série 3.
   - Q-183.17 posée au PO : les 2 échecs restants du run A (« l'exercice commence au plus à 200 px ») viennent de la bulle de consigne. Avec elle, la zone de réponse descend à 247 px pour les bulles et à 215 px pour le calcul. Les 192,6 px de la série 1 avaient été mesurés sur un exercice sans consigne.
 - LIBÈRE base (série 2 finie). Correctifs lancés hors verrou : implementer sur `src/`, e2e-tester sur `features/steps/`.
+- Correctifs hors verrou après la série 2 :
+  - steps : #16, #7, #20 (`ae5f7b10`) ; #127 (« Je ne sais pas » cherché dans la barre d'action fixée en bas) et #128 (éclat du compteur exclu du décompte des éclats de touche) (`047f71bf`) ;
+  - geste muet du personnage guide rétabli (`4e1d07ac`), puis la consigne et la question restent affichées pendant ce geste, et la minuterie du geste s'arrête au démontage (`9e3fe561`). Le test rouge de ce correctif, ce sont les scénarios E2E de #127 et #19 en échec à la série 2 (pas de test de composant dans `src/`) ;
+  - #128 « case qui s'allume » en dictée : aucune cause trouvée dans le diff de #183, probablement une course ; à rejouer seul.
+- Reviews delta sur `4e1d07ac` puis sur `9e3fe561` : APPROUVÉ. Non-bloquant gardé en tête : aucun scénario ne vérifie que la consigne reste visible pendant un geste muet.
+- VERROU base demandé pour la série 3. #183 est en tête de file, derrière #182.
