@@ -1010,6 +1010,8 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 
 /* Boîte à jetons sur téléphone : la boîte fermée, les choix et « Je ne sais pas » tiennent dans l'écran de 360 px (#131). Seules les marges et le personnage guide se resserrent ; la boîte garde la taille de son dessin. */
 @media (max-width: 480px) {
+  .en-tete:has(~ .ecran .boite-a-jetons) { padding-block: 4px; gap: 4px; }
+  .en-tete:has(~ .ecran .boite-a-jetons) .outils { gap: 4px 8px; }
   .ecran:has(.boite-a-jetons) { padding-top: 4px; }
   .seance:has(.boite-a-jetons) { gap: 8px; }
   .seance:has(.boite-a-jetons) .guide-et-parole .personnage-guide { width: 80px; }
