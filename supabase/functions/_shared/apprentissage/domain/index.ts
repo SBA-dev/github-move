@@ -31,6 +31,7 @@ export {
   TestDeDepartIncoherent,
   TestDeDepartNonFini,
 } from "./erreurs.ts";
+export { parolesFixesDApprentissage } from "./paroles-fixes-d-apprentissage.ts";
 export { texteALireDeLEtape, texteDitDeLEtape } from "./etape-de-lecon-lue.ts";
 export { lectureDesChoix } from "./lecture-des-choix.ts";
 export {
