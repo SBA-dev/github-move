@@ -302,6 +302,7 @@ function SeanceEnCours(
                       />
                     </div>
                     <button type="button" className="reecouter" onClick={deroulement.reecouter}>Réécouter</button>
+                    <div className="consigne-de-l-exercice" aria-live="polite" />
                   </>
                 )
                 : (
