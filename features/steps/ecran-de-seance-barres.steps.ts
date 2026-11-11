@@ -390,9 +390,9 @@ Then(/^la pause « ([^«»]+) » apparaît sans glisser$/, async ({ page }, titr
 Then(/^l'exercice commence au plus à (\d+) px du haut de l'écran$/, async ({ page }, limite: string) => {
   const exercice = page.getByTestId("exercice-en-cours");
   await expect(exercice).toBeVisible();
-  // Le bloc « consigne + exercice » commence au premier des deux éléments visibles : la bulle de consigne, sinon l'exercice.
+  // Le bloc « consigne + exercice » commence au premier des éléments visibles : la consigne, la bulle qui la dit, sinon l'exercice.
   const hauts: number[] = [];
-  for (const element of [consigneAffichee(page), exercice]) {
+  for (const element of [consigneAffichee(page), page.getByTestId("parole"), exercice]) {
     if ((await element.count()) === 0 || !(await element.first().isVisible())) continue;
     const boite = await element.first().boundingBox();
     if (boite) hauts.push(boite.y);
@@ -404,6 +404,12 @@ Then(/^l'exercice commence au plus à (\d+) px du haut de l'écran$/, async ({ p
 Then(
   /^chaque commande de la séance mesure au moins 44 px de haut et de large, et les boutons de la barre d'action au moins 52 px de haut$/,
   async ({ page }) => {
+    // La barre d'action n'a pas de bouton tant que la voix lit la question : on termine la lecture pour que les choix arrivent.
+    await expect.poll(async () => {
+      const prete = (await barreDAction(page).getByRole("button").count()) > 0;
+      if (!prete && !scenario(page).muet) await terminerLaLecture(page);
+      return prete;
+    }, { intervals: [200] }).toBe(true);
     const seance = page.getByRole("region").filter({ has: recipient(page) });
     // La barre d'action est posée dans l'application, hors de la région de la séance : ses boutons comptent aussi.
     const commandes = [...(await seance.getByRole("button").all()), ...(await barreDAction(page).getByRole("button").all())];
