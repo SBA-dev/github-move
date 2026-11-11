@@ -11,3 +11,8 @@ Branche : `feature/182-voix-mp3-piper`, partie de `main` (`aa75d97`). Base : `ma
 - 00:35 UTC : `po-acceptance` : 27 scénarios, `criteres.md` (commit 6575262).
 - 00:40 UTC : CADRAGE PRÊT publié sur #182 (questions #182.1 à #182.18). ⛔ n°1 : attente de l'annonce [Responsable] sur #193.
 - 00:45 UTC : outil Piper installé dans le scratchpad depuis `pypi.org` (`piper-tts` 1.8.0, hors dépôt). Le modèle « tom » manque toujours (ESCALADE `git.bksp.space`).
+
+## 2026-11-11
+
+- 00:46 UTC : annonce [Responsable] sur #193 : `git.bksp.space` autorisé (PO « 1 »). Téléchargement du dépôt du modèle, dans le scratchpad seulement (jamais dans le dépôt). Le dépôt contient trois modèles « tom » (`tom1`, `tom2`, `next`) de même configuration ; aucun n'est nommé `fr_FR-tom-medium`.
+- 00:55 UTC : page d'écoute publiée (six phrases × trois modèles × 24/32 kbit/s). Question #182.19 (quel modèle) posée sur #182. ⛔ n°1 toujours en attente.
