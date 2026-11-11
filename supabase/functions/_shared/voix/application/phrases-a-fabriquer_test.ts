@@ -32,7 +32,12 @@ Deno.test("chaque phrase dite dans une leçon donne une entrée avec sa clé, so
 
   assertEquals(
     liste.find(({ phrase }) => phrase === "Choisis la bonne bulle."),
-    { cle: cleDePhrase("Choisis la bonne bulle."), phrase: "Choisis la bonne bulle.", niveau: "CP", lecons: ["fr-cp-ferme"] },
+    {
+      cle: cleDePhrase("Choisis la bonne bulle."),
+      phrase: "Choisis la bonne bulle.",
+      niveau: "CP",
+      lecons: ["fr-cp-ferme"],
+    },
   );
   assertEquals(phrasesDe(liste).includes("Prends ton temps."), true);
 });
@@ -41,7 +46,9 @@ Deno.test("une phrase commune à deux leçons n'apparaît qu'une fois, avec les 
   const premiere = uneLecon("fr-cp-ferme", "CP", "Choisis la bonne bulle.");
   const seconde = uneLecon("fr-cp-jardin", "CP", "Choisis la bonne bulle.");
 
-  const entrees = phrasesAFabriquer([premiere, seconde], []).filter(({ phrase }) => phrase === "Choisis la bonne bulle.");
+  const entrees = phrasesAFabriquer([premiere, seconde], []).filter(({ phrase }) =>
+    phrase === "Choisis la bonne bulle."
+  );
 
   assertEquals(entrees.map(({ lecons }) => lecons), [["fr-cp-ferme", "fr-cp-jardin"]]);
 });
@@ -50,7 +57,12 @@ Deno.test("les paroles fixes sont fabriquées avec le niveau commun", () => {
   const liste = phrasesAFabriquer([], ["Bravo, tu as réussi !"]);
 
   assertEquals(liste, [
-    { cle: cleDePhrase("Bravo, tu as réussi !"), phrase: "Bravo, tu as réussi !", niveau: NIVEAU_DES_PAROLES_FIXES, lecons: [] },
+    {
+      cle: cleDePhrase("Bravo, tu as réussi !"),
+      phrase: "Bravo, tu as réussi !",
+      niveau: NIVEAU_DES_PAROLES_FIXES,
+      lecons: [],
+    },
   ]);
   assertEquals(NIVEAU_DES_PAROLES_FIXES, "commun");
 });
@@ -80,4 +92,24 @@ Deno.test("une phrase sans lettre ni chiffre n'est pas fabriquée", () => {
   const liste = phrasesAFabriquer([], ["...", "Bravo !", "  "]);
 
   assertEquals(phrasesDe(liste), ["Bravo !"]);
+});
+
+Deno.test("une phrase dite en CP et en CE1 est fabriquée avec le niveau CP, même si la leçon de CE1 est vue en premier", () => {
+  const ce1 = uneLecon("fr-ce1-ferme", "CE1", "Choisis la bonne bulle.");
+  const cp = uneLecon("fr-cp-ferme", "CP", "Choisis la bonne bulle.");
+
+  const entree = phrasesAFabriquer([ce1, cp], []).find(({ phrase }) => phrase === "Choisis la bonne bulle.");
+
+  assertEquals(entree?.niveau, "CP");
+  assertEquals(entree?.lecons, ["fr-ce1-ferme", "fr-cp-ferme"]);
+});
+
+Deno.test("le filtre CE1 ne rend pas une phrase partagée avec le CP, qui appartient au CP, mais rend une phrase propre au CE1", () => {
+  const cp = uneLecon("fr-cp-ferme", "CP", "Choisis la bonne bulle.");
+  const ce1 = uneLecon("fr-ce1-ferme", "CE1", "Choisis la bonne bulle. Trouve la bonne réponse.");
+
+  const phrases = phrasesDe(phrasesAFabriquer([ce1, cp], [], { niveau: "CE1" }));
+
+  assertEquals(phrases.includes("Choisis la bonne bulle."), false);
+  assertEquals(phrases.includes("Trouve la bonne réponse."), true);
 });
