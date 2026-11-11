@@ -41,4 +41,5 @@ Le PO a choisi (2026-11-07) l'outil **Piper** (open source, local, sans compte n
 - Une seule voix d'homme pour tous les personnages guides.
 - Toute phrase nouvelle ou modifiée dans le domaine ou la bibliothèque demande une regénération ; un test de couverture le rappelle.
 - Un script Deno entre dans `scripts/` (exception documentée ici).
+- Voix, jusqu'ici seulement en amont (décisions 0007 et 0008), lit en lecture seule le domaine pur d'Apprentissage (`textesDitsDansLaLecon`, `motsDitsLentementDansLaLecon`, `parolesFixesDApprentissage`), de Motivation (`parolesFixes`) et du Catalogue (`lireLecon`, `Niveau`), uniquement dans `voix/application/` et dans `scripts/voix/` ; `voix/domain/` reste sans dépendance (note datée du 2026-11-11 dans `docs/domain/context-map.md`).
 - Licence AGPLv3 du modèle : à faire confirmer avant une publication commerciale.
