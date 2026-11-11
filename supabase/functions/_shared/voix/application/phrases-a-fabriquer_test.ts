@@ -113,3 +113,48 @@ Deno.test("le filtre CE1 ne rend pas une phrase partagée avec le CP, qui appart
   assertEquals(phrases.includes("Choisis la bonne bulle."), false);
   assertEquals(phrases.includes("Trouve la bonne réponse."), true);
 });
+
+function uneLeconDeDictee(id: string, mot: string, consigneDesBulles?: string) {
+  return lireLecon({
+    id,
+    matiere: "francais",
+    niveau: "CP",
+    titre: "Les animaux de la ferme",
+    ordre: 1,
+    programme: {
+      section: "c2-francais-cp-identifier-les-mots-de-maniere-de-plus-en-plus-aisee",
+      citation: "Décoder et encoder de 25 à 30 CGP.",
+    },
+    lecon: [],
+    exercices: [
+      { type: "dictee", mots: [{ mot, phrase: "Le chat dort." }] },
+      ...(consigneDesBulles === undefined ? [] : [{
+        type: "bulles",
+        consigne: consigneDesBulles,
+        questions: [{ question: "Quel animal donne du lait ?", choix: ["vache", "poule"], reponse: "vache" }],
+      }]),
+    ],
+  });
+}
+
+Deno.test("le mot d'une dictée est fabriqué aux allures normale et lente", () => {
+  const liste = phrasesAFabriquer([uneLeconDeDictee("fr-cp-dictee", "chat")], []);
+
+  assertEquals(liste.find(({ phrase }) => phrase === "chat")?.allures, ["normale", "lente"]);
+});
+
+Deno.test("une phrase ordinaire n'a pas d'allure lente : sans le champ allures, la commande lit l'allure normale", () => {
+  const liste = phrasesAFabriquer([uneLeconDeDictee("fr-cp-dictee", "chat")], []);
+
+  const entree = liste.find(({ phrase }) => phrase === "Écris : chat." || phrase.startsWith("Écoute bien"));
+
+  assertEquals(entree !== undefined && "allures" in entree, false);
+});
+
+Deno.test("un texte dit à la fois normalement et lentement n'a qu'une entrée, avec les deux allures", () => {
+  const lecon = uneLeconDeDictee("fr-cp-dictee", "chat", "chat");
+
+  const entrees = phrasesAFabriquer([lecon], []).filter(({ phrase }) => phrase === "chat");
+
+  assertEquals(entrees.map(({ allures }) => allures), [["normale", "lente"]]);
+});

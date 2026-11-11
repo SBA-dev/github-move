@@ -1,7 +1,7 @@
 import { assertArrayIncludes, assertEquals, assertFalse } from "@std/assert";
 import { lireLecon } from "../../catalogue/domain/lire-lecon.ts";
 import { indicationDuGeste } from "./exercices/indication-du-geste.ts";
-import { textesDitsDansLaLecon } from "./textes-dits-dans-la-lecon.ts";
+import { motsDitsLentementDansLaLecon, textesDitsDansLaLecon } from "./textes-dits-dans-la-lecon.ts";
 import { texteALireDeLEtape, texteDitDeLEtape } from "./etape-de-lecon-lue.ts";
 
 function leconAvec(...exercices: unknown[]) {
@@ -264,4 +264,23 @@ Deno.test("le texte dit d'une étape est exactement les morceaux à lire de l'é
   const etape = uneLecon([{ texte: "Écoute bien.", exemples: ["ou", "on"] }]).etapes[0];
 
   assertEquals(texteDitDeLEtape(etape), texteALireDeLEtape(etape).join(" "));
+});
+
+Deno.test("le mot de chaque dictée est dit aussi lentement, sous la forme exacte que l'écran fait lire", () => {
+  const lecon = leconAvec({
+    type: "dictee",
+    mots: [{ mot: "chat", phrase: "Le chat dort." }, { mot: "lune", phrase: "La lune brille." }],
+  });
+
+  assertEquals(motsDitsLentementDansLaLecon(lecon), ["chat", "lune"]);
+});
+
+Deno.test("un mot dicté deux fois dans la leçon n'est rendu qu'une fois parmi les mots dits lentement", () => {
+  const dictee = { type: "dictee", mots: [{ mot: "chat", phrase: "Le chat dort." }] };
+
+  assertEquals(motsDitsLentementDansLaLecon(leconAvec(dictee, dictee)), ["chat"]);
+});
+
+Deno.test("une leçon sans dictée n'a aucun mot dit lentement", () => {
+  assertEquals(motsDitsLentementDansLaLecon(leconAvec(bullesDuSon("Choisis la bonne bulle."))), []);
 });
