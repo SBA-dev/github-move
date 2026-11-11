@@ -1,4 +1,5 @@
 import { expect, type Page } from "@playwright/test";
+import { adresseDuMp3 } from "../../supabase/functions/_shared/voix/domain/adresse-du-mp3.ts";
 import { phrasesAvecCle } from "../../supabase/functions/_shared/voix/domain/cle-de-phrase.ts";
 import { instantsDesMots } from "../../supabase/functions/_shared/voix/domain/instants-des-mots.ts";
 import {
@@ -21,6 +22,7 @@ import { bulle, injecter, interceptertLaBibliotheque } from "./etapes-puis-exerc
 import type { Famille } from "../support/famille.ts";
 import { Given, type Monde, Then } from "./fixtures.ts";
 import { jouerAvecLeProfilReel } from "./profil-reel.ts";
+import { EXPRESSIONS_PAR_PERSONNAGE, FELICITATIONS_COMMUNES } from "./univers.steps.ts";
 import { chargerUneFois } from "./pwa.steps.ts";
 import {
   consigneAffichee,
@@ -381,4 +383,31 @@ Then(/^Paul voit ensuite le choix de la voix de l'appareil « ([^«»]+) »$/, a
 
 Then(/^Paul ne voit pas le message « (.+) »$/, async ({ page }, message: string) => {
   await expect(page.getByText(message, { exact: true })).toHaveCount(0);
+});
+
+// --- Alors : les paroles fixes fabriquées (vrai répertoire, aucune interception)
+
+const FELICITATIONS_DE_NOISETTE = [...FELICITATIONS_COMMUNES, ...(EXPRESSIONS_PAR_PERSONNAGE["Noisette"] ?? [])];
+
+type Repertoire = { phrases: Record<string, { normale: string; lente?: string }> };
+
+/** Les adresses des MP3 que le lecteur de la page a lus. */
+async function mp3Lus(page: Page): Promise<string[]> {
+  return (await paroles(page)).filter((parole) => parole.source === "enregistree" && !parole.bloquee).map((parole) => parole.adresse ?? "");
+}
+
+Then(/^Noisette dit une félicitation avec la voix enregistrée$/, async ({ page }) => {
+  await expect(bulle(page)).toHaveAttribute("data-nature", "felicitation");
+  const felicitation = normaliser((await bulle(page).textContent()) ?? "");
+  expect(FELICITATIONS_DE_NOISETTE).toContain(felicitation);
+  const repertoire = await page.evaluate(async () => (await fetch("/voix/repertoire.json")).json()) as Repertoire;
+  for (const { cle, texte } of phrasesAvecCle(felicitation)) {
+    const empreinte = repertoire.phrases[cle]?.normale;
+    expect(empreinte, `« ${texte} » est dans le répertoire des phrases enregistrées`).toBeDefined();
+    const adresse = adresseDuMp3(cle, empreinte ?? "", "normale");
+    await expect.poll(async () => (await mp3Lus(page)).some((lu) => lu.endsWith(adresse)), { message: `le MP3 de « ${texte} » est lu` }).toBe(true);
+    const octets = await page.evaluate(async (chemin) => (await fetch(chemin)).arrayBuffer().then((contenu) => contenu.byteLength), adresse);
+    expect(octets, `le MP3 de « ${texte} » existe et n'est pas vide`).toBeGreaterThan(0);
+  }
+  expect((await paroles(page)).filter((parole) => parole.source === "appareil" && parole.texte === felicitation)).toEqual([]);
 });

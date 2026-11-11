@@ -3,7 +3,7 @@ import type { Famille } from "../support/famille.ts";
 export { terminerLaLecture } from "../support/lecture-vocale.ts";
 import { terminerLaLecture } from "../support/lecture-vocale.ts";
 import { avecLesReglagesPrevus } from "../support/reglages-prevus.ts";
-import { messageDeVoixIndisponible, repertoireDeTest } from "../support/voix-enregistree.ts";
+import { DUREE_DU_MP3_DE_TEST_MS, installerLAudioDeTest, messageDeVoixIndisponible, repertoireDeTest } from "../support/voix-enregistree.ts";
 import {
   bulle,
   commencerLaSeanceComplete,
@@ -271,6 +271,8 @@ export async function terminerLaLectureJusquACeQueSoitDit(page: Page, voulu: str
 export async function reappliquerLAppareil(page: Page) {
   const etat = scenario(page);
   await page.addInitScript(installerLeFaux, { voix: etat.voix, bloque: etat.bloque, absent: etat.absent });
+  // Paroles fixes fabriquées : le vrai répertoire et les vrais MP3 sont servis (aucune interception) ; seul le lecteur est journalisé.
+  if (test.info().tags.includes("@paroles-fixes-fabriquees")) await page.addInitScript(installerLAudioDeTest, { dureeMs: DUREE_DU_MP3_DE_TEST_MS });
   await page.addInitScript(
     ([cleSon, muet]) => {
       if (muet === "oui") localStorage.setItem(cleSon, "muet");
