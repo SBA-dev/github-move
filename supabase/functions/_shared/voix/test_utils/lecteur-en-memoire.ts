@@ -1,4 +1,4 @@
-import { LectureImpossible, VoixBloquee } from "../domain/erreurs.ts";
+import { LectureImpossible, VoixBloquee, VoixIndisponible } from "../domain/erreurs.ts";
 import type { LecteurAVoixHaute, LectureDemandee } from "../domain/lecteur-a-voix-haute.ts";
 
 export class LecteurEnMemoire implements LecteurAVoixHaute {
@@ -26,6 +26,10 @@ export class LecteurEnMemoire implements LecteurAVoixHaute {
 
   bloquerLaVoix(): void {
     this.echec = new VoixBloquee();
+  }
+
+  rendreLaVoixIndisponible(): void {
+    this.echec = new VoixIndisponible();
   }
 
   debloquerLaVoix(): void {

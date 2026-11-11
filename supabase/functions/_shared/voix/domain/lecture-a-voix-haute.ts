@@ -1,11 +1,12 @@
 import type { CaractereDeLaVoix } from "./caractere-de-la-voix.ts";
 import { CARACTERE_LANGUE_ETRANGERE, choisirVoix, choisirVoixDeLangue, ChoixDeVoix } from "./choix-de-voix.ts";
 import type { ChoixDeVoixDeLAppareil } from "./choix-de-voix-de-l-appareil.ts";
-import { LectureImpossible, VoixBloquee } from "./erreurs.ts";
+import { LectureImpossible, VoixBloquee, VoixIndisponible } from "./erreurs.ts";
 import type { EffetSonore } from "./effet-sonore.ts";
 import type { Hasard } from "./hasard.ts";
 import type { LecteurAVoixHaute } from "./lecteur-a-voix-haute.ts";
 import type { LecteurDEffetsSonores } from "./lecteur-d-effets-sonores.ts";
+import { estUneLangueFrancaise } from "./langue-francaise.ts";
 import { phraseDEssai } from "./phrase-d-essai.ts";
 import { reglerPhrases } from "./reglage-de-phrase.ts";
 import { rangAffichePourChaqueMotPrononce } from "./mots-de-la-consigne.ts";
@@ -19,6 +20,8 @@ const RYTHME_LENT = 0.65;
 
 export type EtatDuSon = "son" | "muet";
 
+export type CauseDeLectureEmpechee = "voixBloquee" | "voixIndisponible";
+
 export type DependancesDeLectureAVoixHaute = {
   readonly lecteur: LecteurAVoixHaute;
   readonly lecteurDEffetsSonores: LecteurDEffetsSonores;
@@ -27,8 +30,8 @@ export type DependancesDeLectureAVoixHaute = {
   readonly hasard: Hasard;
   readonly caractereDuPersonnageGuide: () => CaractereDeLaVoix;
   readonly etatInitial: EtatDuSon;
-  readonly onVoixBloquee: () => void;
-  readonly onFinDeLaVoixBloquee: () => void;
+  readonly onLectureEmpechee: (cause: CauseDeLectureEmpechee) => void;
+  readonly onFinDeLectureEmpechee: () => void;
 };
 
 export type ParoleEntendue = { readonly entendue: boolean };
@@ -43,11 +46,8 @@ type OptionsDeLecture = {
   effetsAvant?: readonly EffetSonore[];
   onMot?: (rang: number) => void;
   onFin?: () => void;
+  texteEnregistreDeRemplacement?: string;
 };
-
-function estFrancais(langue: string): boolean {
-  return /^fr/i.test(langue);
-}
 
 function debutsDesMots(phrase: string): number[] {
   return [...phrase.matchAll(/\S+/g)].map((mot) => mot.index);
@@ -76,7 +76,7 @@ export class LectureAVoixHaute {
   private sonDuBoutonEnCours = false;
   private versionDuSonDuBouton = 0;
   private coupuresDeLaVoix = 0;
-  private voixBloqueeSignalee = false;
+  private causeSignalee: CauseDeLectureEmpechee | undefined;
   private parolesEnCours = 0;
 
   constructor(private readonly dependances: DependancesDeLectureAVoixHaute) {
@@ -104,17 +104,22 @@ export class LectureAVoixHaute {
     if (!texte) return PAROLE_NON_ENTENDUE;
     const langue = options.langue ?? LANGUE_FRANCAISE;
     const voix = this.voixPour(langue, options.choix ?? this.choixMemorise());
-    const caractere = estFrancais(langue) ? this.dependances.caractereDuPersonnageGuide() : CARACTERE_LANGUE_ETRANGERE;
+    const caractere = estUneLangueFrancaise(langue)
+      ? this.dependances.caractereDuPersonnageGuide()
+      : CARACTERE_LANGUE_ETRANGERE;
     this.parolesEnCours++;
     try {
       await lecteur.lire({
         voix,
         langue,
+        ...(options.lent && { allure: "lente" as const }),
         phrases: reglerPhrases(texte, caractere, voix, options.lent ? RYTHME_LENT : RYTHME_NORMAL, hasard),
+        ...(options.texteEnregistreDeRemplacement !== undefined &&
+          { texteEnregistreDeRemplacement: options.texteEnregistreDeRemplacement }),
         ...(options.onMot &&
           { onMot: rangDesMots(texte.phrases, rangAffichePourChaqueMotPrononce(brut), options.onMot) }),
       });
-      this.signalerLaFinDeLaVoixBloquee();
+      this.signalerLaFinDeLaLectureEmpechee();
       return PAROLE_ENTENDUE;
     } catch (erreur) {
       this.absorber(erreur);
@@ -205,7 +210,7 @@ export class LectureAVoixHaute {
   passerEnMuet(): void {
     this.etat = "muet";
     this.dependances.lecteur.arreter();
-    this.signalerLaFinDeLaVoixBloquee();
+    this.signalerLaFinDeLaLectureEmpechee();
   }
 
   async remettreLeSon(salutation: string): Promise<void> {
@@ -232,22 +237,27 @@ export class LectureAVoixHaute {
 
   private voixPour(langue: string, choix: ChoixDeVoix): VoixDisponible | undefined {
     const voix = this.dependances.voixDeLAppareil.voixDisponibles();
-    return estFrancais(langue)
+    return estUneLangueFrancaise(langue)
       ? choisirVoix(voix, this.dependances.caractereDuPersonnageGuide(), choix)
       : choisirVoixDeLangue(voix, langue);
   }
 
-  private signalerLaFinDeLaVoixBloquee(): void {
-    if (!this.voixBloqueeSignalee) return;
-    this.voixBloqueeSignalee = false;
-    this.dependances.onFinDeLaVoixBloquee();
+  private signalerLaFinDeLaLectureEmpechee(): void {
+    if (this.causeSignalee === undefined) return;
+    this.causeSignalee = undefined;
+    this.dependances.onFinDeLectureEmpechee();
   }
 
   private absorber(erreur: unknown): void {
     if (erreur instanceof LectureImpossible) return;
-    if (!(erreur instanceof VoixBloquee)) throw erreur;
-    if (this.voixBloqueeSignalee) return;
-    this.voixBloqueeSignalee = true;
-    this.dependances.onVoixBloquee();
+    if (erreur instanceof VoixBloquee) return this.signaler("voixBloquee");
+    if (erreur instanceof VoixIndisponible) return this.signaler("voixIndisponible");
+    throw erreur;
+  }
+
+  private signaler(cause: CauseDeLectureEmpechee): void {
+    if (this.causeSignalee === cause) return;
+    this.causeSignalee = cause;
+    this.dependances.onLectureEmpechee(cause);
   }
 }

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { pageDeLaLecon } from "@domain/catalogue";
 import { accueillirSurLaPageDeLaLecon, type Univers } from "@domain/motivation";
 import { PersonnageGuide } from "../univers/index.ts";
+import { useGarderLesPhrasesDeLaLecon } from "../voix/garder-les-phrases-de-la-lecon.ts";
 import type { Voix } from "../voix/index.ts";
 import { EtoilesDessinees } from "./fin-de-seance/EtoilesDessinees.tsx";
 import { meilleuresEtoilesSurTrois } from "./fin-de-seance/texte-des-etoiles.ts";
@@ -53,6 +54,7 @@ type PropsAffichage = Omit<Props, "leconId" | "onRetourALAccueil"> & {
 };
 
 function LeconAffichee({ lecon, profilId, prenom, univers, voix, accueillir, onCommencer }: PropsAffichage) {
+  useGarderLesPhrasesDeLaLecon(lecon);
   const section = useSectionDuProgramme(lecon.programme.section);
   const page = useMemo(() => pageDeLaLecon(lecon, section), [lecon, section]);
   const { parole, rangDuMotPrononce, humeur, dire, reecouter, faireSilence } = usePersonnageQuiParle(voix);

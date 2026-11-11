@@ -31,7 +31,8 @@ export {
   TestDeDepartIncoherent,
   TestDeDepartNonFini,
 } from "./erreurs.ts";
-export { texteALireDeLEtape } from "./etape-de-lecon-lue.ts";
+export { parolesFixesDApprentissage } from "./paroles-fixes-d-apprentissage.ts";
+export { texteALireDeLEtape, texteDitDeLEtape } from "./etape-de-lecon-lue.ts";
 export { lectureDesChoix } from "./lecture-des-choix.ts";
 export {
   explicationDeLaReponse,
@@ -174,3 +175,4 @@ export {
 export { revaliderLeDefi } from "./revalider-le-defi.ts";
 export type { DefiTermineAEnregistrer } from "./defi-termine-a-enregistrer.ts";
 export { matiereReussieParLaSeance } from "./matiere-reussie-par-la-seance.ts";
+export { motsDitsLentementDansLaLecon, textesDitsDansLaLecon } from "./textes-dits-dans-la-lecon.ts";
