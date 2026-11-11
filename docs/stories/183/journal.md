@@ -38,3 +38,7 @@ Branche de base : `main` (`aa75d97`). Branche : `feature/183-ecran-de-seance-bar
   - Données d'exemple de deux scénarios R4 (exercice bulles sans consigne) : passage sur l'exercice bulles de test, qui a une consigne. Règle inchangée, information donnée sur #183.
 - LIBÈRE base à la demande du responsable (#182 en attente).
 - Correctifs de la review (cycle 1) intégrés depuis le worktree (`8f15113a`) : tsc et unitaires verts.
+- Données d'exemple de 3 scénarios R4 (dont Coach Léo) : passage sur la leçon de test « Compter », dont l'exercice bulles a une consigne (`3e93e254`, `50e43e37`). Step de Coach Léo : Paul est connecté avant de jouer (`73940fb4`).
+- Correctif des deux bugs E2E (`837c272d`) :
+  - le personnage guide est montré seulement quand il réagit, pendant les étapes et à la fin ; mesure à 360 × 740 : exercice à 192,6 px pour les bulles comme pour le calcul ;
+  - la barre d'action est rendue par portail dans `.application`. Avant, elle suivait la transformation de l'écran qui arrive pendant son animation.
