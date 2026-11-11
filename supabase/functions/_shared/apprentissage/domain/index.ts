@@ -174,3 +174,4 @@ export {
 export { revaliderLeDefi } from "./revalider-le-defi.ts";
 export type { DefiTermineAEnregistrer } from "./defi-termine-a-enregistrer.ts";
 export { matiereReussieParLaSeance } from "./matiere-reussie-par-la-seance.ts";
+export { textesDitsDansLaLecon } from "./textes-dits-dans-la-lecon.ts";
