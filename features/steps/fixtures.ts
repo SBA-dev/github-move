@@ -40,6 +40,11 @@ function estPwa(etiquettes: readonly string[]): boolean {
   return etiquettes.includes("@pwa") || etiquettes.includes("@issue-8");
 }
 
+/** Story #182 : seuls ces scénarios lisent le vrai répertoire des voix (public/voix) ; les autres reçoivent un répertoire vide. */
+function litLeVraiRepertoireDesVoix(etiquettes: readonly string[]): boolean {
+  return ["@paroles-fixes-fabriquees", "@production"].some((etiquette) => etiquettes.includes(etiquette));
+}
+
 export const test = base.extend<{
   monde: Monde;
   pwa: Pwa;
@@ -63,7 +68,7 @@ export const test = base.extend<{
   // (preparerLeRepertoireDeTest, enregistrée après) ; seuls les scénarios @paroles-fixes-fabriquees et @production lisent le vrai.
   // Scénarios @pwa : le service worker cache l'interception de page, c'est donc le relais de test qui publie le répertoire vide.
   repertoireDesVoixVideParDefaut: [async ({ context, $tags }, use) => {
-    const vraiRepertoire = ["@paroles-fixes-fabriquees", "@production"].some((etiquette) => $tags.includes(etiquette)) || estPwa($tags);
+    const vraiRepertoire = litLeVraiRepertoireDesVoix($tags) || estPwa($tags);
     if (!vraiRepertoire) {
       await context.route("**/voix/repertoire.json", (route) => route.fulfill({ json: { voixEnregistree: "tom-1", phrases: {} } }));
     }
@@ -95,7 +100,7 @@ export const test = base.extend<{
       return reponse;
     };
     await commander("reinitialiser");
-    if (!["@paroles-fixes-fabriquees", "@production"].some((etiquette) => $tags.includes(etiquette))) {
+    if (!litLeVraiRepertoireDesVoix($tags)) {
       await commander("publier-voix", "[]");
     }
     const pwa: Pwa = {
