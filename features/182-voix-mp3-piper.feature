@@ -17,8 +17,9 @@ Fonctionnalité: La voix enregistrée lit les leçons sans rien installer sur l'
   - Tags propres à #182 :
     - `@paroles-fixes-fabriquees` : le scénario lit les vrais MP3 des paroles fixes ; il ne passe qu'une fois
       ces paroles fabriquées (fin de 182a, après le téléchargement du modèle de voix) ;
-    - `@hors-182a` avec `@niveau-cp`, `@niveau-ce1`… : le scénario lit les vrais MP3 des leçons d'un niveau ;
-      il ne passe qu'après la livraison qui fabrique ce niveau (182b à 182e) ;
+    - `@niveau-cp`, `@niveau-ce1`… : l'exemple lit les vrais MP3 des leçons de ce niveau ;
+      `@hors-182a` reste sur les exemples des niveaux pas encore fabriqués et se retire à la livraison
+      qui fabrique ce niveau (182b pour le CP, fait ; puis 182c CE1, 182d CE2, 182e CM1 et CM2) ;
     - `@pwa` : le scénario a besoin du service worker ; il tourne avec la configuration de la PWA (#8).
 
   Règle: Une phrase enregistrée est dite par la voix enregistrée, même sur un appareil sans voix française
@@ -294,7 +295,6 @@ Fonctionnalité: La voix enregistrée lit les leçons sans rien installer sur l'
 
   Règle: Une fois un niveau fabriqué, les consignes de ses leçons sont lues sans aucune voix installée
 
-    @hors-182a
     Plan du Scénario: Sans voix française, les consignes de la leçon « <leçon> » (<niveau>) sont lues par la voix enregistrée
       Étant donné que l'appareil n'a aucune voix française
       Et que Léa a un profil enfant préparé de niveau <niveau> dans l'univers « Animaux de la forêt »
@@ -308,17 +308,17 @@ Fonctionnalité: La voix enregistrée lit les leçons sans rien installer sur l'
         | CP     | Les sons ou, on, an     |
         | CP     | Les saisons             |
 
-      @niveau-ce1
+      @hors-182a @niveau-ce1
       Exemples: CE1 (182c)
         | niveau | leçon                     |
         | CE1    | Que mangent les animaux ? |
 
-      @niveau-ce2
+      @hors-182a @niveau-ce2
       Exemples: CE2 (182d)
         | niveau | leçon                   |
         | CE2    | De la graine à la plante |
 
-      @niveau-cm1 @niveau-cm2
+      @hors-182a @niveau-cm1 @niveau-cm2
       Exemples: CM1 et CM2 (182e)
         | niveau | leçon                    |
         | CM1    | Les types de phrases     |
