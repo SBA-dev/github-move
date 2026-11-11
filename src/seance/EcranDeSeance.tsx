@@ -227,7 +227,7 @@ function SeanceEnCours(
     setPauseOuverte(true);
   }, [couperLaVoix]);
   const continuerLaLecon = useCallback(() => setPauseOuverte(false), []);
-  const leverLaGarde = useGardeDuRetour(!finie && !pauseOuverte && seance.aRecuUneReponse(), finie ? continuerLaLecon : ouvrirLaPause);
+  const leverLaGarde = useGardeDuRetour(!finie && seance.aRecuUneReponse(), ouvrirLaPause);
   const retournerALaLecon = () => leverLaGarde(onRetour);
   const toucherRetour = () => seance.aRecuUneReponse() ? ouvrirLaPause() : retournerALaLecon();
   useEffect(() => {
