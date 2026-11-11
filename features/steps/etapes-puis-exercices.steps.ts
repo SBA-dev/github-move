@@ -262,6 +262,8 @@ Given(/^Léa a un profil enfant préparé de niveau (\S+) dans l'univers « (.+)
   // Story #30 : les jours de séance sont lus sous RLS pour le vrai profil de Léa.
   // Story #96 : les écrans de l'enfant se jouent avec le vrai profil de Léa (parcours, médailles, séances, révision, épisode).
   if (salutAvecLePrenom || $tags.includes("@issue-99") || $tags.includes("@issue-97") || $tags.includes("@issue-96") || $tags.includes("@issue-24") || accueilSeul || tenueDeLaScene || $tags.includes("@issue-25") || $tags.includes("@issue-26") || $tags.includes("@issue-27") || $tags.includes("@issue-30") || cabaneSurLeServeur) {
+    // Le .feature de #182 ne dit pas que Paul est connecté : le vrai profil de Léa est créé pour lui.
+    if (salutAvecLePrenom) await famille.connecterSansEmail("tablette", "Paul");
     await jouerAvecLeProfilReel(famille, monde, page);
   }
 });

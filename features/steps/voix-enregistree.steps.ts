@@ -16,7 +16,7 @@ import {
 import { terminerLaLecture } from "../support/lecture-vocale.ts";
 import { RYTHME_PLUS_LENT, etatDeLaDictee } from "./dictee-et-conjugaison.steps.ts";
 import { leconAChoix, QUESTIONS_DE_TEST } from "./exercices-a-choix.steps.ts";
-import { bulle, injecter } from "./etapes-puis-exercices.steps.ts";
+import { bulle, injecter, interceptertLaBibliotheque } from "./etapes-puis-exercices.steps.ts";
 import { Given, Then } from "./fixtures.ts";
 import {
   consigneAffichee,
@@ -25,6 +25,7 @@ import {
   normaliser,
   ouvrir,
   ouvrirLaPageDeLaLeconDeTest,
+  preparerLaPage,
   scenario,
 } from "./voix.steps.ts";
 
@@ -47,7 +48,12 @@ async function ecouteLaPhrase(page: Page, phrase: string, voix: Voix): Promise<b
 
 // --- Étant donné : le répertoire des phrases enregistrées
 
+const ADDITION_DITE = /^Combien font (\d+) plus (\d+) \?$/;
+
 Given(/^la phrase « ([^«»]+) » est une phrase enregistrée$/, async ({ page }, texte: string) => {
+  // La question écrite avec des symboles est posée par une leçon de test : la phrase dite avec des mots en est la lecture.
+  const [, a, b] = ADDITION_DITE.exec(texte) ?? [];
+  if (a !== undefined && b !== undefined) await leconQuiPoseLaQuestion(page, `Combien font ${a} + ${b} ?`);
   declarerLesPhrases(await preparerLeRepertoireDeTest(page), texte);
 });
 
@@ -59,11 +65,19 @@ Given(/^la phrase « ([^«»]+) » n'est pas une phrase enregistrée$/, async ({
   retirerLesPhrases(await preparerLeRepertoireDeTest(page), texte);
 });
 
+/** La dictée se joue dans la bibliothèque de l'application : la page est préparée (profil de Léa, faux navigateur) avant d'ouvrir la leçon. */
+async function preparerLaLeconDeDictee(page: Page): Promise<void> {
+  await preparerLaPage(page, scenario(page));
+  await interceptertLaBibliotheque(page);
+}
+
 Given(/^le mot « ([^«»]+) » est une phrase enregistrée, à l'allure normale et à l'allure lente$/, async ({ page }, mot: string) => {
+  await preparerLaLeconDeDictee(page);
   declarerLesPhrases(await preparerLeRepertoireDeTest(page), mot, { lente: true });
 });
 
 Given(/^le mot « ([^«»]+) » est une phrase enregistrée, à l'allure normale seulement$/, async ({ page }, mot: string) => {
+  await preparerLaLeconDeDictee(page);
   declarerLesPhrases(await preparerLeRepertoireDeTest(page), mot);
 });
 
@@ -75,7 +89,8 @@ const ADDITION = /^Combien font (\d+) \+ (\d+) \?$/;
 
 /** Une question de calcul tirée au hasard : une leçon de test la pose, avec ses choix, pour que la séance puisse la jouer. */
 async function leconQuiPoseLaQuestion(page: Page, question: string): Promise<void> {
-  if (QUESTIONS_DE_TEST[question]) return;
+  const connue = QUESTIONS_DE_TEST[question];
+  if (connue) return await injecter(page, leconAChoix("test-182-question-de-test", question, connue.choix, connue.reponse));
   const [, a, b] = ADDITION.exec(question) ?? [];
   if (a === undefined || b === undefined) throw new Error(`Question de test inconnue : ${question}`);
   const somme = Number(a) + Number(b);
@@ -217,10 +232,8 @@ Then(/^Léa ne voit aucun message de voix bloquée$/, async ({ page }) => {
 
 // Le faux navigateur ne termine une lecture que sur demande : la lecture réussie se termine ici, comme pour la voix bloquée.
 Then(/^Léa ne voit plus le message de voix indisponible$/, async ({ page }) => {
-  await expect.poll(async () => {
-    await terminerLaLecture(page);
-    return await messageDeVoixIndisponible(page).count();
-  }, { intervals: [100] }).toBe(0);
+  await terminerLaLecture(page);
+  await expect.poll(async () => await messageDeVoixIndisponible(page).count(), { intervals: [10] }).toBe(0);
 });
 
 Then(/^Léa ne voit pas le message « (.+) »$/, async ({ page }, message: string) => {
