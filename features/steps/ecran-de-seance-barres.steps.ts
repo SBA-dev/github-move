@@ -1,6 +1,6 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 import { Given, type ProfilPrepare, Then, When } from "./fixtures.ts";
-import { allerALaQuestion, finirLaParoleJusqua, verifierLaFelicitationEnEntier } from "./exercices-a-choix.steps.ts";
+import { allerALaQuestion, avancerJusquAuxChoix, finirLaParoleJusqua, verifierLaFelicitationEnEntier } from "./exercices-a-choix.steps.ts";
 import { poserEtAttendre } from "./classer-ordre-trous.steps.ts";
 import { direJeNeSaisPas, faireUneErreur } from "./aide-et-je-ne-sais-pas.steps.ts";
 import { fluence } from "./calcul-fluence-addition.steps.ts";
@@ -215,6 +215,7 @@ Then(
     await expect(page.getByTestId("question")).not.toHaveText(question);
     await finirLaParoleJusqua(page, { type: "question", texte: question });
     await expect(page.getByTestId("question")).toHaveText(question);
+    await laConsigneRevientSansLePersonnageGuide(page);
     await expect(consigneAffichee(page)).toBeVisible();
     await expect(personnageGuideAffiche(page)).toHaveCount(0);
     await expect(zoneDuPersonnageGuide(page)).toHaveCount(0);
@@ -250,7 +251,8 @@ Then(/^Léa entend de nouveau Noisette lire « ([^«»]+) », puis « ([^«»]+)
 
 Then(/^Léa entend de nouveau (.+) dire « (.*[«»].*) »$/, async ({ page }, _nom: string, texte: string) => {
   await expect.poll(async () => (await journal(page)).lots).toBeGreaterThan(lotsAvantLaReecoute.get(page) ?? 1);
-  await expect.poll(async () => (await journal(page)).lecture.texte).toBe(entendu(texte));
+  // La phrase de réponse commence par une expression d'encouragement tirée au hasard.
+  await expect.poll(async () => (await journal(page)).lecture.texte.endsWith(entendu(texte))).toBe(true);
 });
 
 // --- Alors : la progression et le compteur
@@ -259,15 +261,17 @@ Then(/^Léa voit le compteur « (\d+) \/ (\d+) » sous la barre de progression$/
   await expect(compteur(page)).toHaveText(`${reussies} / ${total}`);
   const compteurBoite = await compteur(page).boundingBox();
   const barreBoite = await page.locator(".piste-de-la-seance").boundingBox();
-  expect(compteurBoite?.y ?? 0, "le compteur est sous la barre").toBeGreaterThanOrEqual((barreBoite?.y ?? 0) + (barreBoite?.height ?? 0) - 1);
+  // L'éclat agrandit le compteur pendant un instant : on compare son centre, pas son bord.
+  const centreDuCompteur = (compteurBoite?.y ?? 0) + (compteurBoite?.height ?? 0) / 2;
+  expect(centreDuCompteur, "le compteur est sous la barre").toBeGreaterThanOrEqual((barreBoite?.y ?? 0) + (barreBoite?.height ?? 0));
 });
 
 Then(/^les lecteurs d'écran trouvent une barre de progression à (\d+) sur (\d+)$/, async ({ page }, reussies: string, total: string) => {
   const barre = page.getByRole("progressbar");
   await expect(barre).toHaveCount(1);
   await expect(barre).toHaveAttribute("aria-valuemin", "0");
-  await expect(barre).toHaveAttribute("aria-valuenow", reussies);
-  await expect(barre).toHaveAttribute("aria-valuemax", total);
+  await expect(barre).toHaveAttribute("aria-valuenow", String(reussies));
+  await expect(barre).toHaveAttribute("aria-valuemax", String(total));
 });
 
 async function leCompteurABrille(page: Page): Promise<void> {
@@ -313,7 +317,7 @@ Then(/^la barre de progression avance d'un coup, sans éclat$/, async ({ page })
 
 Then(/^la barre de progression montre « (\d+) \/ (\d+) » d'un coup, sans s'allonger ni briller$/, async ({ page }, reussies: string, total: string) => {
   await expect(compteur(page)).toHaveText(`${reussies} / ${total}`);
-  await expect(recipient(page)).toHaveAttribute("data-questions-reussies", reussies);
+  await expect(recipient(page)).toHaveAttribute("data-questions-reussies", String(reussies));
   await aucunEclatSurLeCompteur(page);
   expect(await dureeDeLaTransition(page), "la barre n'a aucune transition").toBe(0);
 });
@@ -474,14 +478,27 @@ function boutonDeLaBarre(page: Page, nom: string): Locator {
   return barreDAction(page).getByRole("button", { name: nom, exact: true });
 }
 
+/** La barre d'action monte en glissant à son apparition : on mesure une fois sa position arrêtée. */
+async function boiteArretee(element: Locator) {
+  let precedente = await element.boundingBox();
+  let courante = precedente;
+  await expect.poll(async () => {
+    courante = await element.boundingBox();
+    const arretee = precedente !== null && courante !== null && precedente.y === courante.y && precedente.height === courante.height;
+    precedente = courante;
+    return arretee;
+  }, { intervals: [150] }).toBe(true);
+  return courante;
+}
+
 /** Le bouton principal est le dernier de la barre, à droite de « Je ne sais pas » ; la barre est collée au bas de l'écran. */
 async function verifierLeBoutonPrincipalDeLaBarre(page: Page, nom: string): Promise<void> {
   const bouton = boutonDeLaBarre(page, nom);
   await expect(barreDAction(page)).toBeVisible();
   await expect(bouton).toBeVisible();
   const hauteurDeLEcran = page.viewportSize()?.height ?? 0;
-  const barre = await barreDAction(page).boundingBox();
-  const boite = await bouton.boundingBox();
+  const barre = await boiteArretee(barreDAction(page));
+  const boite = await boiteArretee(bouton);
   expect(barre, "barre d'action affichée").not.toBeNull();
   expect((barre?.y ?? 0) + (barre?.height ?? 0), "bas de la barre d'action").toBeGreaterThanOrEqual(hauteurDeLEcran - 1);
   expect((barre?.y ?? 0) + (barre?.height ?? 0), "la barre ne dépasse pas l'écran").toBeLessThanOrEqual(hauteurDeLEcran + 1);
@@ -520,6 +537,7 @@ Then(/^(?:Tom|Léa) ne voit pas « Je ne sais pas »$/, async ({ page }) => {
 });
 
 Then(/^(?:Tom|Léa) voit « Je ne sais pas » dans la barre d'action$/, async ({ page }) => {
+  await avancerJusquAuxChoix(page);
   await expect(barreDAction(page)).toBeVisible();
   await expect(boutonDeLaBarre(page, "Je ne sais pas")).toBeVisible();
 });
