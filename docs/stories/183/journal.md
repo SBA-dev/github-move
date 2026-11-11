@@ -26,3 +26,7 @@ Branche de base : `main` (`aa75d97`). Branche : `feature/183-ecran-de-seance-bar
 - Câblage, partie 1 : bouton Son partagé (`5dc6ec9f`) ; barre du haut, barre de progression (`data-eclat`) et feuille de pause, avec le geste retour par `useGardeDuRetour` (`d9432386`).
   - Écart : l'implementer a lancé `@issue-16` sur `telephone` sans le verrou `base`. C'était une lecture seule, sans migration, mais contre le projet partagé. Rappel fait : plus aucun run E2E sans le verrou.
   - Dette à voir : l'entrée de garde reste dans l'historique quand on quitte autrement que par Retour.
+- Câblage, partie 2 : bulle et bouton « Réécouter » unique (`a47fccd3`), puis correctif pour que le texte de la question reste toujours visible (`e48e0431`). Sans consigne (étapes, dictée, memoriser), le personnage guide reste affiché en permanence, comme avant.
+- Câblage, partie 3 : barre d'action par portail (`ActionDeLExercice`), pour tous les types de la séance de leçon (`90655f89`). Révision, défi et test de départ restent inchangés.
+- Steps E2E des parties 1 et 2 écrits (`7dd5eb6e`, `630104d5`, `0c25dbe3`), sans run.
+- VERROU base demandé, puis accordé par le responsable (#193). Consignes : 1 worker, sonder `admin/users` avant chaque run, rendre le verrou entre deux séries si #182 le demande.
