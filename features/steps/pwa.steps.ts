@@ -302,7 +302,7 @@ Then("elle utilise la nouvelle version de Savanturier", async ({ page, pwa }) =>
   const nouvelle = pwa.versionPubliee;
   expect(nouvelle).not.toBeNull();
   await expect
-    .poll(() => page.evaluate(() => caches.keys()), {
+    .poll(async () => (await page.evaluate(() => caches.keys())).filter((nom) => nom !== CACHE_DES_VOIX), {
       message: "seul le cache de la nouvelle version doit rester (l'ancienne est active puis supprimée)",
     })
     .toEqual([`${PREFIXE_CACHE}${nouvelle}`]);
