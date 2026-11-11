@@ -28,7 +28,7 @@ function Avertissement({ voix }: Props) {
   return (
     <p className="avertissement-de-voix">
       {voix.syntheseVocalePresente
-        ? "Aucune voix française trouvée sur cet appareil : installe-en une (voir ci-dessous), puis recharge la page."
+        ? "Aucune voix française sur cet appareil : la voix de Savanturier lit les leçons ; une voix de l'appareil sert seulement aux phrases fabriquées à la volée, qui ne pourront pas être lues à voix haute."
         : "Ce navigateur ne sait pas lire à voix haute."}
     </p>
   );
@@ -41,16 +41,19 @@ function ConseilsDInstallation() {
         <strong>Pour des voix plus naturelles :</strong>
       </p>
       <p>
-        • <strong>iPad / iPhone</strong> : Réglages › Accessibilité › Contenu énoncé › Voix › Français › télécharger «
-        Amélie (Premium) » ou « Audrey (améliorée) ».
+        • <strong>iPad / iPhone</strong>{" "}
+        : Réglages › Accessibilité › Contenu énoncé › Voix › Français › télécharger « Amélie (Premium) » ou « Audrey
+        (améliorée) ».
       </p>
       <p>
-        • <strong>Tablette Android</strong> : Paramètres › Accessibilité › Synthèse vocale › moteur Google › installer
-        les voix françaises « haute qualité ».
+        • <strong>Tablette Android</strong>{" "}
+        : Paramètres › Accessibilité › Synthèse vocale › moteur Google › installer les voix françaises « haute qualité
+        ».
       </p>
       <p>
-        • <strong>Ordinateur</strong> : le navigateur Microsoft Edge propose des voix « Natural » très réalistes (Denise,
-        Eloise, Henri…) ; Chrome propose « Google français ».
+        • <strong>Ordinateur</strong>{" "}
+        : le navigateur Microsoft Edge propose des voix « Natural » très réalistes (Denise, Eloise, Henri…) ; Chrome
+        propose « Google français ».
       </p>
     </div>
   );
@@ -61,10 +64,16 @@ export function ChoixDeLaVoix({ voix }: Props) {
     choix.type === "automatique" ? voix.revenirALaVoixAutomatique() : voix.imposerUneVoix(choix.nomDeLaVoix);
 
   return (
-    <section className="choix-de-voix" aria-labelledby="titre-choix-de-voix" data-testid="choix-de-voix">
+    <section className="choix-de-voix" aria-labelledby="titre-voix-de-savanturier" data-testid="choix-de-voix">
+      <h3 id="titre-voix-de-savanturier" data-testid="voix-de-savanturier">La voix de Savanturier</h3>
+      <p>
+        Les leçons sont lues par la voix enregistrée de Savanturier, la même sur tous les appareils. Il n'y a rien à
+        choisir.
+      </p>
       <h3 id="titre-choix-de-voix">La voix des personnages guides</h3>
       <p>
-        L'application utilise les voix installées sur cet appareil. Elle choisit automatiquement la plus naturelle, puis
+        Voix de l'appareil, pour les phrases sans voix enregistrée. Pour les phrases fabriquées à la volée,
+        l'application utilise les voix installées sur cet appareil. Elle choisit automatiquement la plus naturelle, puis
         chaque personnage guide lui donne son caractère (plus aiguë pour l'écureuil, plus grave pour le capitaine
         pompier…). Tu peux aussi imposer une voix.
       </p>
