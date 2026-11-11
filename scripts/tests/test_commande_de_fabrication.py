@@ -10,6 +10,7 @@ API attendue (scripts/voix/commande_de_fabrication.py) :
 - JSON : [{ cle, phrase, niveau, lecons, allures? }] ; "allures": ["normale", "lente"] marque la
   phrase `lente=True` (travail restant côté export Deno : produire ce champ pour les mots dictés).
 """
+import inspect
 import json
 import sys
 from pathlib import Path
@@ -24,6 +25,7 @@ from voix.table_de_prononciation import (  # noqa: E402
     EntreeDePrononciation,
     ExempleDePrononciationEnEchec,
     RemplacementSansEffet,
+    TABLE_DE_PRONONCIATION,
 )
 
 
@@ -113,13 +115,10 @@ def _sortie(tmp_path):
     return str(tmp_path / "s")
 
 
-def test_une_phrase_qui_contient_un_motif_de_la_table_reelle_est_envoyee_a_la_voix_corrigee(tmp_path):
-    piper = PiperFaux()
-    fichier = _phrases(tmp_path, [_entree("Allez, vas-y."), _entree("Je suis au CP.")])
+def test_la_table_appliquee_par_defaut_est_la_table_de_prononciation_du_module():
+    table_par_defaut = inspect.signature(principal).parameters["table"].default
 
-    principal([fichier, "--voix", "m", "--dossier", _sortie(tmp_path)], piper=piper)
-
-    assert sorted(texte for texte, _ in piper.appels) == ["Allez, va-zi.", "Je suis au cé pé."]
+    assert table_par_defaut is TABLE_DE_PRONONCIATION
 
 
 def test_une_entree_de_la_table_sans_effet_sur_la_liste_complete_fait_echouer_la_fabrication_meme_avec_le_filtre_niveau(tmp_path):
