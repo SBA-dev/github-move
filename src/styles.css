@@ -1010,6 +1010,8 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 
 /* Boîte à jetons sur téléphone : la boîte fermée, les choix et « Je ne sais pas » tiennent dans l'écran de 360 px (#131). Seules les marges et le personnage guide se resserrent ; la boîte garde la taille de son dessin. */
 @media (max-width: 480px) {
+  .en-tete:has(~ .ecran .boite-a-jetons) { padding-block: 4px; gap: 4px; }
+  .en-tete:has(~ .ecran .boite-a-jetons) .outils { gap: 4px 8px; }
   .ecran:has(.boite-a-jetons) { padding-top: 4px; }
   .seance:has(.boite-a-jetons) { gap: 8px; }
   .seance:has(.boite-a-jetons) .guide-et-parole .personnage-guide { width: 80px; }
@@ -1462,7 +1464,7 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 }
 .barre-du-haut-de-seance > button[data-son] { padding: 8px 10px; font-size: .95rem; }
 [data-mode-dys="true"] .barre-du-haut-de-seance h2 { font-size: clamp(.8rem, 3.6vw, 1rem); line-height: 1.25; letter-spacing: .02em; word-spacing: .12em; }
-[data-mode-dys="true"] .barre-du-haut-de-seance > button[data-son] { padding: 8px; font-size: .8rem; letter-spacing: 0; word-spacing: 0; }
+[data-mode-dys="true"] .barre-du-haut-de-seance > button[data-son] { padding: 8px; font-size: .8rem; }
 
 /* --- BarreDeProgressionDeLaSeance : fine barre continue, compteur dans une pastille dessous. */
 .progression-de-la-seance { grid-column: 1 / -1; display: grid; justify-items: center; gap: 2px; }
@@ -1491,7 +1493,7 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
   line-height: 1.5;
   font-variant-numeric: tabular-nums;
 }
-[data-mode-dys="true"] .compteur-de-la-seance { line-height: 1.5; letter-spacing: 0; word-spacing: 0; }
+[data-mode-dys="true"] .compteur-de-la-seance { line-height: 1.5; }
 .compteur-de-la-seance[data-eclat="true"] { animation: eclat-du-compteur .6s ease-out; }
 @keyframes eclat-du-compteur {
   0% { transform: scale(1); box-shadow: 0 0 0 0 var(--principale); background: var(--surface); }
@@ -1561,6 +1563,8 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 
 /* --- Barre d'action (#183) : le bouton principal (Valider, Continuer…) toujours au même endroit, en bas, sous le pouce, et « Je ne sais pas » à côté, plus discret.
    Elle n'apparaît que s'il y a au moins un bouton. Les exercices y posent leurs boutons par portail (ActionDeLExercice). */
+/* Le contenu de la séance (inerte pendant la pause) ne change pas la mise en page : ses blocs restent les enfants de la grille de la séance. */
+.contenu-de-la-seance { display: contents; }
 .seance:has(.barre-d-action button) { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
 .barre-d-action {
   position: fixed;

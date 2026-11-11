@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ChoixDeSeance,
   consigneAffichee,
@@ -27,6 +27,7 @@ import { EcranDeFin } from "./fin-de-seance/EcranDeFin.tsx";
 import { lireLesMeilleuresEtoilesAvantLaSeance } from "./fin-de-seance/meilleures-etoiles-du-profil-lues.ts";
 import { useFaciliteDeLaSeance } from "./difficulte/useFaciliteDeLaSeance.ts";
 import { EmplacementDeLaBarreDAction } from "./exercices/ActionDeLExercice.tsx";
+import { PauseDeLaSeance } from "./exercices/PauseDeLaSeance.ts";
 import { ExerciceDAdditionPosee } from "./exercices/addition/ExerciceDAdditionPosee.tsx";
 import { ExerciceAChoix } from "./exercices/ExerciceAChoix.tsx";
 import { ExerciceAEtiquettes } from "./exercices/ExerciceAEtiquettes.tsx";
@@ -44,6 +45,7 @@ import { BarreDuHautDeSeance } from "./BarreDuHautDeSeance.tsx";
 import { FeuilleDePause } from "./FeuilleDePause.tsx";
 import { useGardeDuRetour } from "../navigation.ts";
 import { useDeroulementDeSeance } from "./useDeroulementDeSeance.ts";
+import { usePauseDeLaSeance } from "./usePauseDeLaSeance.ts";
 import { useLecon } from "./useLecon.ts";
 import { useSceneDeReponseFausse } from "./useSceneDeReponseFausse.ts";
 
@@ -64,7 +66,7 @@ type Props = {
   readonly clavierDesDictees: ValeurDuClavierDesDictees;
   readonly onRetour: () => void;
   /** Pendant les questions, la barre du haut de la séance remplace l'en-tête de l'application ; à la fin de la séance, l'en-tête revient. */
-  readonly onSeanceFinie: (finie: boolean) => void;
+  readonly onBarreDuHautAffichee: (affichee: boolean) => void;
   readonly onLireLEpisode: (numero: number) => void;
   readonly onLeconSuivante: (leconId: string) => void;
   readonly onToutesLesLecons: () => void;
@@ -170,9 +172,11 @@ type PropsEnCours = Omit<PropsDUnePartie, "exercice" | "profilId" | "clavierDesD
 };
 
 function SeanceEnCours(
-  { seance, lecon, prenom, niveau, univers, voix, toutLireAVoixHaute, meilleuresEtoilesAvant, nombreDeSeancesAvant, queteAvant, onRetour, onSeanceFinie, onRejouer, onLireLEpisode, onLeconSuivante, onToutesLesLecons, onReleverLeDefi, onAccueil }: PropsEnCours,
+  { seance, lecon, prenom, niveau, univers, voix, toutLireAVoixHaute, meilleuresEtoilesAvant, nombreDeSeancesAvant, queteAvant, onRetour, onBarreDuHautAffichee, onRejouer, onLireLEpisode, onLeconSuivante, onToutesLesLecons, onReleverLeDefi, onAccueil }: PropsEnCours,
 ) {
-  const deroulement = useDeroulementDeSeance(seance, lecon, voix, univers.personnageGuide, toutLireAVoixHaute, prenom);
+  const pause = usePauseDeLaSeance(voix.couperLaVoix);
+  const { ouverte: pauseOuverte, ouvrir: ouvrirLaPause, continuer: continuerLaLecon } = pause;
+  const deroulement = useDeroulementDeSeance(seance, lecon, voix, univers.personnageGuide, toutLireAVoixHaute, prenom, pause.attendreLaFin);
   const voixCoupee = laVoixNeLitPas(voix);
   const { commencer, abandonner } = deroulement;
   useEffect(() => {
@@ -220,251 +224,254 @@ function SeanceEnCours(
     dejaMonte.current = true;
   }, [exerciceCommence]);
 
-  const [pauseOuverte, setPauseOuverte] = useState(false);
-  const { couperLaVoix } = voix;
-  const ouvrirLaPause = useCallback(() => {
-    couperLaVoix();
-    setPauseOuverte(true);
-  }, [couperLaVoix]);
-  const continuerLaLecon = useCallback(() => setPauseOuverte(false), []);
-  const leverLaGarde = useGardeDuRetour(!finie && !pauseOuverte && seance.aRecuUneReponse(), finie ? continuerLaLecon : ouvrirLaPause);
+  const leverLaGarde = useGardeDuRetour(!finie && seance.aRecuUneReponse(), ouvrirLaPause);
   const retournerALaLecon = () => leverLaGarde(onRetour);
   const toucherRetour = () => seance.aRecuUneReponse() ? ouvrirLaPause() : retournerALaLecon();
   useEffect(() => {
-    onSeanceFinie(finie);
-    return () => onSeanceFinie(false);
-  }, [finie, onSeanceFinie]);
+    onBarreDuHautAffichee(!finie);
+    return () => onBarreDuHautAffichee(false);
+  }, [finie, onBarreDuHautAffichee]);
+
+  const continuerApresLaReussite = deroulement.enfantAttendu && (
+    <button
+      type="button"
+      className="continuer-apres-la-reussite"
+      autoFocus={!finie}
+      onClick={() => {
+        deroulement.continuerApresLaReussite();
+        if (finie) laSeance.current?.querySelector<HTMLElement>(".actions-de-fin button")?.focus();
+      }}
+    >
+      Continuer
+    </button>
+  );
 
   return (
     <ContexteDuRetour.Provider value={deroulement.retour}>
       <EmplacementDeLaBarreDAction.Provider value={emplacementDeLaBarreDAction}>
-      <section ref={laSeance} className="seance" aria-labelledby="titre-de-la-seance">
-        {finie
-          ? (
-            <div className="entete-de-seance">
-              <button type="button" onClick={retournerALaLecon}>Retour</button>
-              <div>
-                <h2 id="titre-de-la-seance">{titre}</h2>
-                <p data-testid="niveau-et-matiere">{niveauEtMatiere}</p>
-              </div>
-            </div>
-          )
-          : (
-            <BarreDuHautDeSeance
-              titre={titre}
-              avancement={seance.avancement()}
-              son={voix.son}
-              onRetour={toucherRetour}
-              onBasculerLeSon={voix.basculerLeSon}
-            />
-          )}
-        {pauseOuverte && !finie && <FeuilleDePause onContinuer={continuerLaLecon} onRetourALaLecon={retournerALaLecon} />}
-        <div className="guide-et-parole">
-          {personnageMontre && !celebrationDeLUnivers && (
-            <PersonnageGuideEtSaScene univers={univers} humeur={deroulement.humeur} reponseFausse={reponseFausse} />
-          )}
-          <div className="parole-et-reecouter">
-            <div className="texte-de-la-bulle">
-              <div className="consigne-de-l-exercice" aria-live="polite">
-                {consigneMontree !== undefined && (
-                  <p className="consigne" data-testid="consigne">
-                    <TexteSurligne
-                      texte={consigneMontree}
-                      rangDuMotPrononce={laConsigneEstLue ? deroulement.rangDuMotPrononce : undefined}
-                    />
-                  </p>
+        <PauseDeLaSeance.Provider value={pauseOuverte}>
+          <section ref={laSeance} className="seance" aria-labelledby="titre-de-la-seance">
+            <div className="contenu-de-la-seance" inert={pauseOuverte && !finie}>
+              {finie
+                ? (
+                  <div className="entete-de-seance">
+                    <button type="button" onClick={retournerALaLecon}>Retour</button>
+                    <div>
+                      <h2 id="titre-de-la-seance">{titre}</h2>
+                      <p data-testid="niveau-et-matiere">{niveauEtMatiere}</p>
+                    </div>
+                  </div>
+                )
+                : (
+                  <BarreDuHautDeSeance
+                    titre={titre}
+                    avancement={seance.avancement()}
+                    son={voix.son}
+                    onRetour={toucherRetour}
+                    onBasculerLeSon={voix.basculerLeSon}
+                  />
                 )}
+              <div className="guide-et-parole">
+                {personnageMontre && !celebrationDeLUnivers && (
+                  <PersonnageGuideEtSaScene univers={univers} humeur={deroulement.humeur} reponseFausse={reponseFausse} />
+                )}
+                <div className="parole-et-reecouter">
+                  <div className="texte-de-la-bulle">
+                    <div className="consigne-de-l-exercice" aria-live="polite">
+                      {consigneMontree !== undefined && (
+                        <p className="consigne" data-testid="consigne">
+                          <TexteSurligne
+                            texte={consigneMontree}
+                            rangDuMotPrononce={laConsigneEstLue ? deroulement.rangDuMotPrononce : undefined}
+                          />
+                        </p>
+                      )}
+                    </div>
+                    <BulleDuPersonnageGuide
+                      texte={texteDeLaBulle}
+                      nature={deroulement.parole?.nature}
+                      rangDuMotPrononce={deroulement.rangDuMotPrononce}
+                    />
+                  </div>
+                  <BoutonReecouter inactif={reecouterInactif} onReecouter={deroulement.reecouter} />
+                </div>
               </div>
-              <BulleDuPersonnageGuide
-                texte={texteDeLaBulle}
-                nature={deroulement.parole?.nature}
-                rangDuMotPrononce={deroulement.rangDuMotPrononce}
-              />
+              {etape && (
+                <div className="etape-de-lecon" data-testid="etape-de-lecon">
+                  {etape.exemples.length > 0 && (
+                    <ul className="exemples" aria-label="Exemples">
+                      {etape.exemples.map((exemple, i) => <li key={i} className="pastille" data-testid="exemple"><TexteEnSyllabes texte={exemple} /></li>)}
+                    </ul>
+                  )}
+                </div>
+              )}
+              <div className="annonce-d-avancement" role="status" data-testid="annonce-d-avancement">
+                {deroulement.avancementAnnonce}
+              </div>
+              {finie && (
+                <EcranDeFin
+                  seance={seance}
+                  univers={univers}
+                  niveau={niveau}
+                  onDireLaFin={deroulement.direLaFin}
+                  meilleuresEtoilesAvant={meilleuresEtoilesAvant}
+                  nombreDeSeancesAvant={nombreDeSeancesAvant}
+                  queteAvant={queteAvant}
+                  prenom={prenom}
+                  onRejouer={onRejouer}
+                  onLireLEpisode={onLireLEpisode}
+                  onLeconSuivante={onLeconSuivante}
+                  onToutesLesLecons={onToutesLesLecons}
+                  onReleverLeDefi={onReleverLeDefi}
+                  onAccueil={onAccueil}
+                  onCelebrationDeLUnivers={setCelebrationDeLUnivers}
+                />
+              )}
+              {!finie && position !== undefined && exerciceDeLaLecon && (
+                <div ref={zoneDeLExercice} tabIndex={-1} className="exercice-en-cours" data-testid="exercice-en-cours" data-position={position}>
+                  <EtincellesDuTexteComplet />
+                  {estAChoix(exerciceDeLaLecon) && (
+                    <ExerciceAChoix
+                      exercice={exerciceDeLaLecon}
+                      question={question}
+                      texteATrous={exerciceAffiche?.texteATrous() ?? []}
+                      phraseDuTrouEnCours={exerciceAffiche?.questionEnCours()?.enonce}
+                      tableauDeConjugaison={exerciceAffiche?.tableauDeConjugaison() ?? []}
+                      choixVisibles={question !== undefined && deroulement.choixVisiblesPour === question}
+                      reussie={figee !== undefined}
+                      bulleEclatee={deroulement.bulleEclatee}
+                      texteEcoute={deroulement.positionDuTexteEcoute === position}
+                      rangDuMotDuTexte={deroulement.rangDuMotDuTexte}
+                      lectureDuTexte={deroulement.lectureDuTexte}
+                      voixCoupee={voixCoupee}
+                      sonImpossible={voix.son === "muet" || !voix.syntheseVocalePresente}
+                      sonCoupe={voix.son === "muet"}
+                      onChoisir={(texte) => void deroulement.repondre(texte)}
+                      onRelireLaQuestion={() => void deroulement.relireLaQuestion()}
+                      onJeNeSaisPas={() => void deroulement.jeNeSaisPas()}
+                      onEcouterLeMot={() => void deroulement.ecouterLeMot()}
+                      onJAiEcoute={() => void deroulement.jAiEcoute()}
+                      onActiverLeSon={voix.basculerLeSon}
+                    />
+                  )}
+                  {exerciceDeLaLecon.type === "calcul" && calcul && (
+                    <ExerciceDeCalcul
+                      calcul={calcul}
+                      reussi={figee !== undefined}
+                      onRelire={() => deroulement.relireLaPhrase(calcul.phrase)}
+                      onChoisir={(texte) => void deroulement.choisirUneReponseDeCalcul(texte)}
+                      onValider={(nombre) => void deroulement.repondreParUnNombre(nombre)}
+                      onJeNeSaisPas={() => void deroulement.jeNeSaisPasALaQuestion()}
+                    />
+                  )}
+                  {exerciceDeLaLecon.type === "boite" && boite && (
+                    <BoiteAJetons
+                      boite={boite}
+                      item={exerciceDeLaLecon.items[exerciceAffiche?.rangDeLaQuestionEnCours ?? 0]}
+                      phrasesDites={deroulement.phrasesDitesDeLaQuestion}
+                      ouverte={deroulement.boiteReussie?.ouverte}
+                      onChoisir={(texte) => void deroulement.choisirUneReponseDeCalcul(texte)}
+                      onValider={(nombre) => void deroulement.repondreParUnNombre(nombre)}
+                      onJeNeSaisPas={() => void deroulement.jeNeSaisPasALaQuestion()}
+                    />
+                  )}
+                  {exerciceDeLaLecon.type === "barres" && schema && (
+                    <SchemaDuProbleme
+                      schema={schema}
+                      resolu={deroulement.schemaReussi?.resolu}
+                      phrasesDites={deroulement.phrasesDitesDeLaQuestion}
+                      reussi={deroulement.schemaReussi !== undefined}
+                      onChoisir={(texte) => void deroulement.choisirUneReponseDeCalcul(texte)}
+                      onValider={(nombre) => void deroulement.repondreParUnNombre(nombre)}
+                      onJeNeSaisPas={() => void deroulement.jeNeSaisPasALaQuestion()}
+                    />
+                  )}
+                  {exerciceDeLaLecon.type === "fluence" && fluence && (
+                    <ExerciceDeFluence
+                      fluence={fluence}
+                      recordBattu={deroulement.recordBattu}
+                      recordDeDepart={deroulement.recordDeDepart}
+                      onDemarrer={deroulement.demarrerLaFluence}
+                      onValider={(nombre) => void deroulement.repondreParUnNombre(nombre)}
+                    />
+                  )}
+                  {exerciceDeLaLecon.type === "addition" && addition && (
+                    <ExerciceDAdditionPosee
+                      addition={addition}
+                      reussie={figee !== undefined}
+                      colonneQuiBrille={deroulement.colonneQuiBrille}
+                      departsDesRetenues={deroulement.departsDesRetenues}
+                      onPoser={(chiffre, rang) => void deroulement.poserUnChiffre(chiffre, rang)}
+                      onRelire={deroulement.relireLaPhrase}
+                      onChoisir={(texte) => void deroulement.choisirUneReponseDeCalcul(texte)}
+                      onValider={(nombre) => void deroulement.repondreParUnNombre(nombre)}
+                      onJeNeSaisPas={(chiffre) => void deroulement.jeNeSaisPasDeLAddition(chiffre)}
+                    />
+                  )}
+                  {exerciceDeLaLecon.type === "dictee" && (
+                    <ExerciceDeDictee
+                      question={figee?.questionDeDictee ?? seance.questionDeDicteeEnCours()}
+                      lettresFausses={deroulement.lettresFausses}
+                      toucheQuiBrille={deroulement.toucheQuiBrille}
+                      reussie={figee !== undefined}
+                      messageSansVoix={exerciceDemandeLeSon(exerciceDeLaLecon.type) ? messageDeLaDicteeSansVoix(etatDeLaVoix(voix)) : undefined}
+                      sonCoupe={voix.son === "muet"}
+                      onRelire={deroulement.relireLaDictee}
+                      onReecouterLeMot={() => void deroulement.reecouterLeMot()}
+                      onEcouterPlusLentement={() => void deroulement.reecouterLeMotPlusLentement()}
+                      onTaper={(lettre) => void deroulement.taper(lettre)}
+                      onEffacer={deroulement.effacer}
+                      onJeNeSaisPas={() => void deroulement.jeNeSaisPasEnDictee()}
+                      onActiverLeSon={voix.basculerLeSon}
+                    />
+                  )}
+                  {(exerciceDeLaLecon.type === "classer" || exerciceDeLaLecon.type === "ordre") && (
+                    <ExerciceAEtiquettes
+                      exercice={exerciceDeLaLecon}
+                      etiquettesAPlacer={exerciceAffiche?.etiquettesAPlacer() ?? []}
+                      etiquettesPosees={exerciceAffiche?.etiquettesPosees() ?? []}
+                      etiquetteViseeParJeNeSaisPas={(choisie) => exerciceAffiche?.etiquetteViseeParJeNeSaisPas(choisie)}
+                      bonnesReponsesMontrees={deroulement.bonnesReponsesMontrees}
+                      onPoser={(etiquette, groupe) => void deroulement.placer(etiquette, groupe)}
+                      onJeNeSaisPas={(etiquette) => void deroulement.jeNeSaisPasDUneEtiquette(etiquette)}
+                    />
+                  )}
+                  {exerciceDeLaLecon.type === "memoriser" && (
+                    <ExerciceDeMemorisation
+                      exercice={exerciceDeLaLecon}
+                      temps={deroulement.tempsDeLaMemorisation(position)}
+                      versLu={deroulement.versLu}
+                      voixCoupee={voixCoupee}
+                      felicitationFinie={deroulement.felicitationDuDernierVersFinie}
+                      exerciceJoue={exerciceAffiche}
+                      question={question}
+                      choixVisibles={question !== undefined && deroulement.choixVisiblesPour === question}
+                      reussie={figee !== undefined}
+                      bulleEclatee={deroulement.bulleEclatee}
+                      bonnesReponsesMontrees={deroulement.bonnesReponsesMontrees}
+                      onJeSuisPret={() => void deroulement.jeSuisPret()}
+                      onPoser={(etiquette) => void deroulement.placer(etiquette)}
+                      onChoisir={(texte) => void deroulement.repondre(texte)}
+                      onRelireLaQuestion={() => void deroulement.relireLaQuestion()}
+                      onJeNeSaisPasDUneEtiquette={(etiquette) => void deroulement.jeNeSaisPasDUneEtiquette(etiquette)}
+                      onJeNeSaisPas={() => void deroulement.jeNeSaisPas()}
+                    />
+                  )}
+                </div>
+              )}
+              {finie
+                ? continuerApresLaReussite
+                : (
+                  <div className="barre-d-action" data-testid="barre-d-action">
+                    <div ref={setEmplacementDeLaBarreDAction} className="emplacement-de-la-barre-d-action" />
+                    {etape && <button type="button" onClick={() => void deroulement.continuer()}>Continuer</button>}
+                    {continuerApresLaReussite}
+                  </div>
+                )}
             </div>
-            <BoutonReecouter inactif={reecouterInactif} onReecouter={deroulement.reecouter} />
-          </div>
-        </div>
-        {etape && (
-          <div className="etape-de-lecon" data-testid="etape-de-lecon">
-            {etape.exemples.length > 0 && (
-              <ul className="exemples" aria-label="Exemples">
-                {etape.exemples.map((exemple, i) => <li key={i} className="pastille" data-testid="exemple"><TexteEnSyllabes texte={exemple} /></li>)}
-              </ul>
-            )}
-          </div>
-        )}
-        <div className="annonce-d-avancement" role="status" data-testid="annonce-d-avancement">
-          {deroulement.avancementAnnonce}
-        </div>
-        {finie && (
-          <EcranDeFin
-            seance={seance}
-            univers={univers}
-            niveau={niveau}
-            onDireLaFin={deroulement.direLaFin}
-            meilleuresEtoilesAvant={meilleuresEtoilesAvant}
-            nombreDeSeancesAvant={nombreDeSeancesAvant}
-            queteAvant={queteAvant}
-            prenom={prenom}
-            onRejouer={onRejouer}
-            onLireLEpisode={onLireLEpisode}
-            onLeconSuivante={onLeconSuivante}
-            onToutesLesLecons={onToutesLesLecons}
-            onReleverLeDefi={onReleverLeDefi}
-            onAccueil={onAccueil}
-            onCelebrationDeLUnivers={setCelebrationDeLUnivers}
-          />
-        )}
-        {!finie && position !== undefined && exerciceDeLaLecon && (
-          <div ref={zoneDeLExercice} tabIndex={-1} className="exercice-en-cours" data-testid="exercice-en-cours" data-position={position}>
-            <EtincellesDuTexteComplet />
-            {estAChoix(exerciceDeLaLecon) && (
-              <ExerciceAChoix
-                exercice={exerciceDeLaLecon}
-                question={question}
-                texteATrous={exerciceAffiche?.texteATrous() ?? []}
-                phraseDuTrouEnCours={exerciceAffiche?.questionEnCours()?.enonce}
-                tableauDeConjugaison={exerciceAffiche?.tableauDeConjugaison() ?? []}
-                choixVisibles={question !== undefined && deroulement.choixVisiblesPour === question}
-                reussie={figee !== undefined}
-                bulleEclatee={deroulement.bulleEclatee}
-                texteEcoute={deroulement.positionDuTexteEcoute === position}
-                rangDuMotDuTexte={deroulement.rangDuMotDuTexte}
-                lectureDuTexte={deroulement.lectureDuTexte}
-                voixCoupee={voixCoupee}
-                sonImpossible={voix.son === "muet" || !voix.syntheseVocalePresente}
-                sonCoupe={voix.son === "muet"}
-                onChoisir={(texte) => void deroulement.repondre(texte)}
-                onRelireLaQuestion={() => void deroulement.relireLaQuestion()}
-                onJeNeSaisPas={() => void deroulement.jeNeSaisPas()}
-                onEcouterLeMot={() => void deroulement.ecouterLeMot()}
-                onJAiEcoute={() => void deroulement.jAiEcoute()}
-                onActiverLeSon={voix.basculerLeSon}
-              />
-            )}
-            {exerciceDeLaLecon.type === "calcul" && calcul && (
-              <ExerciceDeCalcul
-                calcul={calcul}
-                reussi={figee !== undefined}
-                onRelire={() => deroulement.relireLaPhrase(calcul.phrase)}
-                onChoisir={(texte) => void deroulement.choisirUneReponseDeCalcul(texte)}
-                onValider={(nombre) => void deroulement.repondreParUnNombre(nombre)}
-                onJeNeSaisPas={() => void deroulement.jeNeSaisPasALaQuestion()}
-              />
-            )}
-            {exerciceDeLaLecon.type === "boite" && boite && (
-              <BoiteAJetons
-                boite={boite}
-                item={exerciceDeLaLecon.items[exerciceAffiche?.rangDeLaQuestionEnCours ?? 0]}
-                phrasesDites={deroulement.phrasesDitesDeLaQuestion}
-                ouverte={deroulement.boiteReussie?.ouverte}
-                onChoisir={(texte) => void deroulement.choisirUneReponseDeCalcul(texte)}
-                onValider={(nombre) => void deroulement.repondreParUnNombre(nombre)}
-                onJeNeSaisPas={() => void deroulement.jeNeSaisPasALaQuestion()}
-              />
-            )}
-            {exerciceDeLaLecon.type === "barres" && schema && (
-              <SchemaDuProbleme
-                schema={schema}
-                resolu={deroulement.schemaReussi?.resolu}
-                phrasesDites={deroulement.phrasesDitesDeLaQuestion}
-                reussi={deroulement.schemaReussi !== undefined}
-                onChoisir={(texte) => void deroulement.choisirUneReponseDeCalcul(texte)}
-                onValider={(nombre) => void deroulement.repondreParUnNombre(nombre)}
-                onJeNeSaisPas={() => void deroulement.jeNeSaisPasALaQuestion()}
-              />
-            )}
-            {exerciceDeLaLecon.type === "fluence" && fluence && (
-              <ExerciceDeFluence
-                fluence={fluence}
-                recordBattu={deroulement.recordBattu}
-                recordDeDepart={deroulement.recordDeDepart}
-                onDemarrer={deroulement.demarrerLaFluence}
-                onValider={(nombre) => void deroulement.repondreParUnNombre(nombre)}
-              />
-            )}
-            {exerciceDeLaLecon.type === "addition" && addition && (
-              <ExerciceDAdditionPosee
-                addition={addition}
-                reussie={figee !== undefined}
-                colonneQuiBrille={deroulement.colonneQuiBrille}
-                departsDesRetenues={deroulement.departsDesRetenues}
-                onPoser={(chiffre, rang) => void deroulement.poserUnChiffre(chiffre, rang)}
-                onRelire={deroulement.relireLaPhrase}
-                onChoisir={(texte) => void deroulement.choisirUneReponseDeCalcul(texte)}
-                onValider={(nombre) => void deroulement.repondreParUnNombre(nombre)}
-                onJeNeSaisPas={(chiffre) => void deroulement.jeNeSaisPasDeLAddition(chiffre)}
-              />
-            )}
-            {exerciceDeLaLecon.type === "dictee" && (
-              <ExerciceDeDictee
-                question={figee?.questionDeDictee ?? seance.questionDeDicteeEnCours()}
-                lettresFausses={deroulement.lettresFausses}
-                toucheQuiBrille={deroulement.toucheQuiBrille}
-                reussie={figee !== undefined}
-                messageSansVoix={exerciceDemandeLeSon(exerciceDeLaLecon.type) ? messageDeLaDicteeSansVoix(etatDeLaVoix(voix)) : undefined}
-                sonCoupe={voix.son === "muet"}
-                onRelire={deroulement.relireLaDictee}
-                onReecouterLeMot={() => void deroulement.reecouterLeMot()}
-                onEcouterPlusLentement={() => void deroulement.reecouterLeMotPlusLentement()}
-                onTaper={(lettre) => void deroulement.taper(lettre)}
-                onEffacer={deroulement.effacer}
-                onJeNeSaisPas={() => void deroulement.jeNeSaisPasEnDictee()}
-                onActiverLeSon={voix.basculerLeSon}
-              />
-            )}
-            {(exerciceDeLaLecon.type === "classer" || exerciceDeLaLecon.type === "ordre") && (
-              <ExerciceAEtiquettes
-                exercice={exerciceDeLaLecon}
-                etiquettesAPlacer={exerciceAffiche?.etiquettesAPlacer() ?? []}
-                etiquettesPosees={exerciceAffiche?.etiquettesPosees() ?? []}
-                etiquetteViseeParJeNeSaisPas={(choisie) => exerciceAffiche?.etiquetteViseeParJeNeSaisPas(choisie)}
-                bonnesReponsesMontrees={deroulement.bonnesReponsesMontrees}
-                onPoser={(etiquette, groupe) => void deroulement.placer(etiquette, groupe)}
-                onJeNeSaisPas={(etiquette) => void deroulement.jeNeSaisPasDUneEtiquette(etiquette)}
-              />
-            )}
-            {exerciceDeLaLecon.type === "memoriser" && (
-              <ExerciceDeMemorisation
-                exercice={exerciceDeLaLecon}
-                temps={deroulement.tempsDeLaMemorisation(position)}
-                versLu={deroulement.versLu}
-                voixCoupee={voixCoupee}
-                felicitationFinie={deroulement.felicitationDuDernierVersFinie}
-                exerciceJoue={exerciceAffiche}
-                question={question}
-                choixVisibles={question !== undefined && deroulement.choixVisiblesPour === question}
-                reussie={figee !== undefined}
-                bulleEclatee={deroulement.bulleEclatee}
-                bonnesReponsesMontrees={deroulement.bonnesReponsesMontrees}
-                onJeSuisPret={() => void deroulement.jeSuisPret()}
-                onPoser={(etiquette) => void deroulement.placer(etiquette)}
-                onChoisir={(texte) => void deroulement.repondre(texte)}
-                onRelireLaQuestion={() => void deroulement.relireLaQuestion()}
-                onJeNeSaisPasDUneEtiquette={(etiquette) => void deroulement.jeNeSaisPasDUneEtiquette(etiquette)}
-                onJeNeSaisPas={() => void deroulement.jeNeSaisPas()}
-              />
-            )}
-          </div>
-        )}
-        <div className="barre-d-action" data-testid="barre-d-action">
-          <div ref={setEmplacementDeLaBarreDAction} className="emplacement-de-la-barre-d-action" />
-          {etape && <button type="button" onClick={() => void deroulement.continuer()}>Continuer</button>}
-          {deroulement.enfantAttendu && (
-            <button
-              type="button"
-              className="continuer-apres-la-reussite"
-              autoFocus={!finie}
-              onClick={() => {
-                deroulement.continuerApresLaReussite();
-                if (finie) laSeance.current?.querySelector<HTMLElement>(".actions-de-fin button")?.focus();
-              }}
-            >
-              Continuer
-            </button>
-          )}
-        </div>
-      </section>
+            {pauseOuverte && !finie && <FeuilleDePause onContinuer={continuerLaLecon} onRetourALaLecon={retournerALaLecon} />}
+          </section>
+        </PauseDeLaSeance.Provider>
       </EmplacementDeLaBarreDAction.Provider>
     </ContexteDuRetour.Provider>
   );
