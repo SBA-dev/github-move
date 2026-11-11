@@ -155,7 +155,7 @@ export function installerLeFaux(config: ConfigurationDuFaux) {
     },
     cancel() {
       faux.actifs = [];
-      faux.journal.push({ type: "cancel", lot: faux.lot, texte: "", voix: null, voixLangue: null, langue: "", pitch: 0, rate: 0 });
+      faux.journal.push({ type: "cancel", lot: faux.lot, texte: "", voix: null, voixLangue: null, langue: "", pitch: 0, rate: 0, nature: null });
     },
     resume() {},
     pause() {},
