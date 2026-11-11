@@ -8,6 +8,7 @@ import { EclatDeLaTouche } from "./claviers/EclatDeLaTouche.tsx";
 
 const CHIFFRES_AU_PLUS = 4;
 const DUREE_DE_L_ECLAT_MS = 200;
+const DUREE_DU_RETOUR_MS = 500;
 const EFFACER = "effacer";
 const CHIFFRES = ["1", "2", "3", "4", "5", "6", "7", "8", "9"] as const;
 
@@ -69,6 +70,20 @@ function useEclat() {
   return { toucheEclatante, eclater };
 }
 
+/** « Valider » reste monté, désactivé, le temps que son rebond se joue (350 ms au plus), puis il se retire de la barre d'action. */
+function useValiderMonte(desactive: boolean): boolean {
+  const [monte, setMonte] = useState(true);
+  useEffect(() => {
+    if (!desactive) {
+      setMonte(true);
+      return;
+    }
+    const minuterie = setTimeout(() => setMonte(false), DUREE_DU_RETOUR_MS);
+    return () => clearTimeout(minuterie);
+  }, [desactive]);
+  return monte;
+}
+
 /** Les touches du clavier physique : chiffres, Retour arrière, Entrée (sauf sur un bouton, qui reçoit déjà Entrée). */
 function useClavierPhysique(actif: boolean, taper: (chiffre: string) => void, effacer: () => void, valider: () => void) {
   useEffect(() => {
@@ -92,6 +107,7 @@ export function ClavierDeCristaux({ onValider, chiffresQuiBrillent = [], desacti
   const { toucheEclatante, eclater } = useEclat();
   const univers = useUnivers();
   const dansLaBarre = useDansLaBarreDAction();
+  const validerMonte = useValiderMonte(desactive);
   const taperAvecEclat = useCallback((chiffre: string) => {
     if (taper(chiffre)) eclater(chiffre);
   }, [taper, eclater]);
@@ -151,7 +167,7 @@ export function ClavierDeCristaux({ onValider, chiffresQuiBrillent = [], desacti
         {touche("0")}
         {!dansLaBarre && boutonValider}
       </div>
-      {dansLaBarre && !desactive && <ActionDeLExercice>{boutonValider}</ActionDeLExercice>}
+      {dansLaBarre && validerMonte && <ActionDeLExercice>{boutonValider}</ActionDeLExercice>}
     </div>
   );
 }
