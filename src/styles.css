@@ -1565,7 +1565,7 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
    Elle n'apparaît que s'il y a au moins un bouton. Les exercices y posent leurs boutons par portail (ActionDeLExercice). */
 /* Le contenu de la séance (inerte pendant la pause) ne change pas la mise en page : ses blocs restent les enfants de la grille de la séance. */
 .contenu-de-la-seance { display: contents; }
-.seance:has(.barre-d-action button) { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
+.application:has(.barre-d-action button) .seance { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
 .barre-d-action {
   position: fixed;
   inset: auto 0 0 0;

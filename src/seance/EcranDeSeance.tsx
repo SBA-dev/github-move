@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   ChoixDeSeance,
   consigneAffichee,
@@ -208,15 +209,20 @@ function SeanceEnCours(
     cleUnivers: univers.cle,
     pendantLeChronoDUneFluence: dansUneFluence,
   });
-  const personnageMontre = consigne === undefined || deroulement.personnageGuideReagit || reponseFausse.enCours !== undefined;
+  // Pendant une question, le personnage guide s'efface : la bulle prend toute la largeur. Il n'apparaît que quand il réagit, pendant les étapes de leçon et à la fin.
+  const dansUneQuestion = !finie && exerciceDeLaLecon !== undefined;
+  const personnageMontre = !dansUneQuestion || deroulement.personnageGuideReagit || reponseFausse.enCours !== undefined;
   const consigneMontree = personnageMontre ? undefined : consigne;
-  const questionDansLaBulle = personnageMontre ? undefined : questionAfficheeDansLaBulle(deroulement.parole, exerciceDeLaLecon, schema?.enonce);
-  const texteDeLaBulle = personnageMontre ? deroulement.parole?.texte : questionDansLaBulle;
+  const questionDansLaBulle = consigneMontree === undefined ? undefined : questionAfficheeDansLaBulle(deroulement.parole, exerciceDeLaLecon, schema?.enonce);
+  const texteDeLaBulle = consigneMontree === undefined ? deroulement.parole?.texte : questionDansLaBulle;
   const reecouterInactif = figee !== undefined ||
     (deroulement.presentationEnCours && !deroulement.personnageGuideReagit && deroulement.parole?.nature !== "consigne");
   const zoneDeLExercice = useRef<HTMLDivElement>(null);
   const laSeance = useRef<HTMLElement>(null);
   const [emplacementDeLaBarreDAction, setEmplacementDeLaBarreDAction] = useState<HTMLElement | null>(null);
+  // L'écran qui arrive glisse (transform) : une barre `position: fixed` dedans le suivrait au lieu de rester au bas de l'écran. Elle est donc posée dans l'application.
+  const [racineDeLApplication, setRacineDeLApplication] = useState<Element | null>(null);
+  useEffect(() => setRacineDeLApplication(laSeance.current?.closest(".application") ?? null), []);
   const exerciceCommence = exerciceJoue !== undefined;
   const dejaMonte = useRef(false);
   useEffect(() => {
@@ -244,6 +250,14 @@ function SeanceEnCours(
     >
       Continuer
     </button>
+  );
+
+  const barreDAction = (
+    <div className="barre-d-action" data-testid="barre-d-action" inert={pauseOuverte}>
+      <div ref={setEmplacementDeLaBarreDAction} className="emplacement-de-la-barre-d-action" />
+      {etape && <button type="button" onClick={() => void deroulement.continuer()}>Continuer</button>}
+      {continuerApresLaReussite}
+    </div>
   );
 
   return (
@@ -459,15 +473,7 @@ function SeanceEnCours(
                   )}
                 </div>
               )}
-              {finie
-                ? continuerApresLaReussite
-                : (
-                  <div className="barre-d-action" data-testid="barre-d-action">
-                    <div ref={setEmplacementDeLaBarreDAction} className="emplacement-de-la-barre-d-action" />
-                    {etape && <button type="button" onClick={() => void deroulement.continuer()}>Continuer</button>}
-                    {continuerApresLaReussite}
-                  </div>
-                )}
+              {finie ? continuerApresLaReussite : racineDeLApplication ? createPortal(barreDAction, racineDeLApplication) : barreDAction}
             </div>
             {pauseOuverte && !finie && <FeuilleDePause onContinuer={continuerLaLecon} onRetourALaLecon={retournerALaLecon} />}
           </section>
