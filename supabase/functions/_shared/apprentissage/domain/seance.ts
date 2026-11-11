@@ -179,7 +179,7 @@ export class Seance {
   }
 
   aRecuUneReponse(): boolean {
-    return this.dernierExerciceRepondu !== undefined;
+    return this.questions().some((question) => question.reponses().length > 0);
   }
 
   estFinie(): boolean {
