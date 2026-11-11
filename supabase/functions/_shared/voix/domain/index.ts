@@ -30,3 +30,5 @@ export { syllabesDuMot, syllabesDuTexte } from "./syllabes.ts";
 export type { SegmentSyllabe } from "./syllabes.ts";
 export type { EffetSonore } from "./effet-sonore.ts";
 export type { LecteurDEffetsSonores } from "./lecteur-d-effets-sonores.ts";
+export { empreinteFnv1a64, phrasesAvecCle } from "./cle-de-phrase.ts";
+export type { PhraseAvecCle } from "./cle-de-phrase.ts";
