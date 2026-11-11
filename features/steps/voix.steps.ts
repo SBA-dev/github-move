@@ -32,6 +32,8 @@ export type Scenario = {
   voixImposee: string | undefined;
   /** #79 : Léa relit la consigne pendant que Noisette lit la question ; `lotsAvant` = lectures déjà faites à ce moment-là. */
   relitPendantLaQuestion: { relue: boolean; lotsAvant: number | undefined } | undefined;
+  /** #182 : la consigne d'ouverture est en train d'être lue quand Léa touche « Réécouter » : Léa n'attend pas la fin de la présentation. */
+  reecouteLaConsigneDOuverture: boolean;
 };
 
 const CLE_PROFIL_PREPARE = "savanturier:profil-prepare";
@@ -66,6 +68,7 @@ export function scenario(page: Page): Scenario {
       sansProfil: false,
       voixImposee: undefined,
       relitPendantLaQuestion: undefined,
+      reecouteLaConsigneDOuverture: false,
     };
     scenarios.set(page, etat);
   }
@@ -566,6 +569,18 @@ When(/^Léa demande à réécouter la consigne$/, async ({ page }) => {
     await expect(reecouter).not.toHaveAttribute("aria-disabled", "true");
     etat.relitPendantLaQuestion.relue = true;
     etat.relitPendantLaQuestion.lotsAvant = (await journal(page)).lots;
+  }
+  // Toucher un bouton pendant une parole ne fait pas entendre « bouton touché » : Léa touche « Réécouter » quand le personnage guide
+  // a fini de présenter l'exercice (la consigne, puis l'indication qui la suit).
+  if (!etat.relitPendantLaQuestion && !etat.reecouteLaConsigneDOuverture && (await journal(page)).speaks > 0) {
+    let parolesVuesAvant = -1;
+    await expect.poll(async () => {
+      const { actifs, speaks } = await journal(page);
+      if (actifs > 0) await terminerLaLecture(page);
+      const silencieux = actifs === 0 && speaks === parolesVuesAvant;
+      parolesVuesAvant = actifs === 0 ? speaks : -1;
+      return silencieux;
+    }, { intervals: [300] }).toBe(true);
   }
   // Pendant la lecture de la consigne d'ouverture (#7), « Réécouter » relance la présentation ; ensuite il relit la consigne.
   await expect(reecouter).not.toHaveAttribute("aria-disabled", "true");

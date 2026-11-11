@@ -223,6 +223,7 @@ Given(/^Noisette est en train de lire, avec la voix enregistrée, la consigne «
   declarerLesPhrases(await preparerLeRepertoireDeTest(page), texte);
   const etat = scenario(page);
   etat.consigne.texte = texte;
+  etat.reecouteLaConsigneDOuverture = true;
   await ouvrir(page);
   const [premiere] = phrasesDit(texte);
   await expect.poll(async () => ecouteLaPhrase(page, premiere ?? texte, "enregistree")).toBe(true);

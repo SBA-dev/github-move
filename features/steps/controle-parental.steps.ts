@@ -1,5 +1,6 @@
 import { expect, type Page } from "@playwright/test";
 import { fixerLaProchaineQuestion } from "../support/hasard-fixe.ts";
+import { quitterLaSeanceParRetour, recipient } from "./etapes-puis-exercices.steps.ts";
 import { Given, Then, When } from "./fixtures.ts";
 
 // Story #10 : contrôle parental de l'espace parent. Le parent est connecté sans e-mail (voir
@@ -96,6 +97,8 @@ Given(/^Paul est connecté sur un ordinateur, au clavier$/, async ({ famille, pa
 // --- Quand
 
 When(/^\S+ demande l'entrée de l'espace parent$/, async ({ page }) => {
+  // Pendant la séance (#183) l'application n'a pas d'en-tête : Léa sort par Retour avant de retrouver « Espace parent ».
+  if (await recipient(page).isVisible()) await quitterLaSeanceParRetour(page);
   await enteteEspaceParent(page).click();
 });
 

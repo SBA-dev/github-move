@@ -453,6 +453,19 @@ async function noterLaSituationAvantDeToucher(page: Page): Promise<void> {
   parolesAvantLeToucher.set(page, (await journal(page)).speaks);
 }
 
+// #183 : la présentation de l'exercice enchaîne la consigne puis l'indication qui la suit. Léa touche la barre une fois
+// que le personnage guide s'est tu, sinon ces paroles seraient comptées comme une réaction au toucher.
+async function attendreLaFinDeLaPresentation(page: Page): Promise<void> {
+  let parolesVuesAvant = -1;
+  await expect.poll(async () => {
+    const { actifs, speaks } = await journal(page);
+    if (actifs > 0) await terminerLaLecture(page);
+    const silencieux = actifs === 0 && speaks === parolesVuesAvant;
+    parolesVuesAvant = actifs === 0 ? speaks : -1;
+    return silencieux;
+  }, { intervals: [300], timeout: DELAI_MS }).toBe(true);
+}
+
 When(/^Léa touche la boîte$/, async ({ page }) => {
   await laBoiteEstFermeeEtLEnfantPeutRepondre(page);
   await noterLaSituationAvantDeToucher(page);
@@ -462,6 +475,7 @@ When(/^Léa touche la boîte$/, async ({ page }) => {
 When(/^Léa touche la barre de (\d+)$/, async ({ page }, valeur: string) => {
   await demarrer(page);
   await expect(barresDeValeur(page, valeur)).toHaveCount(1, { timeout: DELAI_MS });
+  await attendreLaFinDeLaPresentation(page);
   await noterLaSituationAvantDeToucher(page);
   await barresDeValeur(page, valeur).click();
 });

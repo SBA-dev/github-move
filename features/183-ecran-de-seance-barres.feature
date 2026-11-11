@@ -1,5 +1,5 @@
 # language: fr
-@issue-183 @wip
+@issue-183
 Fonctionnalité: Écran de séance : une barre du haut et une barre d'action en bas pour laisser la place à la leçon
   En tant qu'enfant
   Je veux voir tout de suite l'exercice et le bouton pour répondre, sans faire défiler l'écran
