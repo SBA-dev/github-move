@@ -715,7 +715,9 @@ When(/^Léa donne une bonne réponse$/, async ({ page }) => {
   const carte = await lireLaCarte(page);
   const nombre = String(resultatDeLaCarte(partie20(page).lecon, carte));
   await taperLesChiffres(page, nombre, true);
-  await valider(page, true);
+  // Après la fin du temps, la barre d'action (et son « Valider ») a disparu : l'enfant n'a plus rien à toucher.
+  // Si « Valider » est encore là, on le touche vraiment : c'est alors à l'application de ne rien prendre en compte.
+  if (await boutonValider(page).count() > 0) await valider(page, true);
 });
 
 // --- Les records : de vrais profils enfants, des records écrits par l'Edge Function ou préparés, lus sous RLS

@@ -585,6 +585,8 @@ Then(/^Léa voit la page de la leçon « (.+) »$/, async ({ page }, titre: stri
   await verifierQueRetourNeDupliquePasLHistorique(page, titre);
 });
 
+const TOLERANCE_D_ARRONDI_PX = 0.5;
+
 Then(/^chaque commande de la séance mesure au moins 44 px de haut et de large$/, async ({ page }) => {
   const seance = page.getByRole("region").filter({ has: recipient(page) });
   // La barre d'action est posée dans l'application, hors de la région de la séance : ses boutons comptent aussi.
@@ -594,7 +596,7 @@ Then(/^chaque commande de la séance mesure au moins 44 px de haut et de large$/
     const boite = await commande.boundingBox();
     const nom = await commande.textContent();
     expect(boite, `commande « ${nom} » visible`).not.toBeNull();
-    expect(boite?.width ?? 0, `largeur de « ${nom} »`).toBeGreaterThanOrEqual(44);
-    expect(boite?.height ?? 0, `hauteur de « ${nom} »`).toBeGreaterThanOrEqual(44);
+    expect(boite?.width ?? 0, `largeur de « ${nom} »`).toBeGreaterThanOrEqual(44 - TOLERANCE_D_ARRONDI_PX);
+    expect(boite?.height ?? 0, `hauteur de « ${nom} »`).toBeGreaterThanOrEqual(44 - TOLERANCE_D_ARRONDI_PX);
   }
 });

@@ -4,7 +4,6 @@ export { terminerLaLecture } from "../support/lecture-vocale.ts";
 import { terminerLaLecture } from "../support/lecture-vocale.ts";
 import { avecLesReglagesPrevus } from "../support/reglages-prevus.ts";
 import {
-  bulle,
   commencerLaSeanceComplete,
   injecter,
   interceptertLaBibliotheque,
@@ -657,7 +656,7 @@ Then(/^la lecture reprend depuis le début de la consigne$/, async ({ page }) =>
   expect(lecture.texte).toBe(normaliser(scenario(page).consigne.texte));
   // La reprise va jusqu'au bout : la consigne relue terminée, l'exercice s'ouvre sur sa question et ses choix.
   await terminerLaLecture(page);
-  await expect(bulle(page)).toContainText(QUESTION_DE_LA_LECON_DE_TEST);
+  await expect(page.getByTestId("exercice-en-cours")).toContainText(QUESTION_DE_LA_LECON_DE_TEST);
   await avancerJusquAuxChoix(page);
   for (const choix of ["1", "2", "3"]) await expect(bulleDeChoix(page, choix)).toBeVisible();
 });
