@@ -1,9 +1,6 @@
 import { assert, assertEquals } from "@std/assert";
 import { parolesFixes } from "./paroles-fixes.ts";
-import {
-  ANNONCES_D_EXERCICE,
-  INVITATIONS_A_JOUER,
-} from "./paroles-de-seance.ts";
+import { ANNONCES_D_EXERCICE, INVITATIONS_A_JOUER } from "./paroles-de-seance.ts";
 import {
   ENCOURAGEMENTS,
   FELICITATIONS_COMMUNES,

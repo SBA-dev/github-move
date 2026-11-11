@@ -1,6 +1,8 @@
 import { assertArrayIncludes, assertEquals, assertFalse } from "@std/assert";
 import { lireLecon } from "../../catalogue/domain/lire-lecon.ts";
+import { indicationDuGeste } from "./exercices/indication-du-geste.ts";
 import { textesDitsDansLaLecon } from "./textes-dits-dans-la-lecon.ts";
+import { texteALireDeLEtape, texteDitDeLEtape } from "./etape-de-lecon-lue.ts";
 
 function leconAvec(...exercices: unknown[]) {
   return uneLecon([], ...exercices);
@@ -244,4 +246,22 @@ Deno.test("la consigne des mots cachés est dite pour une poésie", () => {
   const lecon = leconAvec(poesieDuChat);
 
   assertArrayIncludes(textesDitsDansLaLecon(lecon), ["Des mots se sont envolés ! Retrouve-les."]);
+});
+
+Deno.test("un exercice pour ordonner des vers donne son indication du geste parmi les textes dits", () => {
+  const lecon = leconAvec({ type: "memoriser", vers: ["Un", "Deux", "Trois"] });
+
+  assertArrayIncludes(textesDitsDansLaLecon(lecon), [indicationDuGeste("memoriser") ?? ""]);
+});
+
+Deno.test("un exercice ordre donne son indication du geste fournie par le domaine", () => {
+  const lecon = leconAvec({ type: "ordre", consigne: "Mets dans l'ordre.", elements: ["un", "deux"] });
+
+  assertArrayIncludes(textesDitsDansLaLecon(lecon), [indicationDuGeste("ordre") ?? ""]);
+});
+
+Deno.test("le texte dit d'une étape est exactement les morceaux à lire de l'étape, joints par une espace", () => {
+  const etape = uneLecon([{ texte: "Écoute bien.", exemples: ["ou", "on"] }]).etapes[0];
+
+  assertEquals(texteDitDeLEtape(etape), texteALireDeLEtape(etape).join(" "));
 });

@@ -215,3 +215,34 @@ Deno.test("sans voix française et sans remplacement, une phrase sans enregistre
   assertEquals(phrasesEnregistrees.morceauxJoues.length, 0);
   assertEquals(synthese.lectures.length, 0);
 });
+
+Deno.test("sans voix française, un texte enregistré de remplacement de deux phrases joue chaque phrase enregistrée dans l'ordre, au rythme de la première phrase demandée", async () => {
+  const { lecteur, phrasesEnregistrees, synthese } = unLecteur({
+    repertoire: enregistrees("Bravo !", "Tu as réussi."),
+    voixFrancaise: false,
+  });
+
+  await lecteur.lire(
+    lectureDe([], {
+      phrases: [{ phrase: "Bravo Léa !", hauteur: 1, rythme: 0.65 }],
+      texteEnregistreDeRemplacement: "Bravo ! Tu as réussi.",
+    }),
+  );
+
+  assertEquals(phrasesEnregistrees.morceauxJoues.map((m) => [m.phrase, m.rythme]), [["Bravo !", 0.65], [
+    "Tu as réussi.",
+    0.65,
+  ]]);
+  assertEquals(synthese.lectures.length, 0);
+});
+
+Deno.test("sans voix française, un texte enregistré de remplacement avec guillemets et espace insécable est joué phrase par phrase sous la clé de ses phrases", async () => {
+  const { lecteur, phrasesEnregistrees } = unLecteur({
+    repertoire: enregistrees("Dis Bravo !", "Super."),
+    voixFrancaise: false,
+  });
+
+  await lecteur.lire(lectureDe(["Bravo Léa !"], { texteEnregistreDeRemplacement: "Dis « Bravo » !\u00a0Super." }));
+
+  assertEquals(phrasesEnregistrees.morceauxJoues.map((m) => m.phrase), ["Dis Bravo !", "Super."]);
+});

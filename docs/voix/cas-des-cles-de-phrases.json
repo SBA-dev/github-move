@@ -170,5 +170,49 @@
         "cle": "aa7e53f14f04e7da"
       }
     ]
+  },
+  {
+    "brut": "Lis\ufeffle mot.\ufeffPuis oui",
+    "phrases": [
+      {
+        "texte": "Lis le mot.",
+        "cle": "efcd4ab80d03473c"
+      },
+      {
+        "texte": "Puis oui",
+        "cle": "75ad212d1ea01c09"
+      }
+    ]
+  },
+  {
+    "brut": "Lis\u001cle mot. Puis oui",
+    "phrases": [
+      {
+        "texte": "Lis\u001cle mot.",
+        "cle": "42457115c1500890"
+      },
+      {
+        "texte": "Puis oui",
+        "cle": "75ad212d1ea01c09"
+      }
+    ]
+  },
+  {
+    "brut": "Cafe\u0301 est bon.",
+    "phrases": [
+      {
+        "texte": "Café est bon.",
+        "cle": "be04a0dd5347355c"
+      }
+    ]
+  },
+  {
+    "brut": "Lis le mot.\u0085Puis oui",
+    "phrases": [
+      {
+        "texte": "Lis le mot.\u0085Puis oui",
+        "cle": "83a3e56da33f8ec1"
+      }
+    ]
   }
 ]
