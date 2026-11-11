@@ -1,7 +1,7 @@
 # Story #182 : la voix de l'application en MP3 pré-générés (Piper, voix « tom ») : modèle du domaine
 
-> Cadrage du `domain-modeler`, 2026-11-10. Rien n'est tranché ici : les termes nouveaux sont `(à valider)` et les choix sont des **recommandations**, soumises au PO dans « Questions ouvertes ».
-> Décisions du PO qu'on ne rouvre pas : outil **Piper**, voix **`fr_FR-tom-medium`** (44,1 kHz, modèle sous AGPLv3, seuls les MP3 vont dans l'application, jamais le modèle), **repli sur la voix de l'appareil** pour une phrase sans MP3. Décision d'architecture réservée : **0043** (brouillon `docs/decisions/0043-voix-en-mp3-pre-generes-piper.md`).
+> Cadrage du `domain-modeler`, 2026-11-10 ; **validé par le PO le 2026-11-11** (« Reco tout », annonce [Responsable] sur #193, 00:47 UTC) : toutes les recommandations sont retenues, voir la section 9 « Réponses du PO ». Une seule question reste ouverte : **182.19** (quel modèle « tom »).
+> Décisions du PO qu'on ne rouvre pas : outil **Piper**, voix **« tom »** (44,1 kHz, modèle sous AGPLv3, seuls les MP3 vont dans l'application, jamais le modèle), **repli sur la voix de l'appareil** pour une phrase sans MP3. Le dépôt de la voix (`git.bksp.space/Tjiho/French-tts-model-piper`) contient trois modèles « tom » et aucun ne s'appelle `fr_FR-tom-medium` : le PO choisit à l'oreille (182.19). Décision d'architecture : **0043** (`docs/decisions/0043-voix-en-mp3-pre-generes-piper.md`, acceptée le 2026-11-11).
 
 ## 1. Contexte
 
@@ -28,21 +28,23 @@
 |---|---|---|
 | Lecture à voix haute, Voix automatique, Voix imposée, Choix de voix, Muet, Voix suspendue, Voix bloquée, Parole entendue, Message de voix bloquée, Fin de la voix bloquée, Effet sonore | existants | inchangés ; « Voix bloquée » garde son sens (le navigateur **refuse** de lire) |
 | Synthèse vocale | existant (context map) | « MP3 pré-générés, ou voix du navigateur » : on précise les deux sources ci-dessous |
-| **Voix enregistrée** (à valider) | **nouveau** | La voix des MP3 fabriqués à l'avance par le pipeline (aujourd'hui `fr_FR-tom-medium` de Piper). S'oppose à **voix de l'appareil**. Synonymes interdits : voix Piper (dans l'interface), voix MP3, voix off |
-| **Voix de l'appareil** (à valider comme terme du glossaire) | existant dans le code (`VoixDeLAppareil`), absent du glossaire | Voix de synthèse installée sur l'appareil, lue par le navigateur. Devient la voix du **repli** |
-| **Phrase enregistrée** (à valider) | **nouveau** | Phrase à lire (au sens du découpage de `texteALire`) dont un MP3 de la voix enregistrée existe. Synonymes interdits : son, audio, fichier (dans le domaine), piste |
-| **Clé de phrase** (à valider) | **nouveau** | Identifiant court calculé à partir du texte normalisé d'une phrase (section 3.1) ; le même calcul en TypeScript (domaine Voix) et en Python (pipeline). Synonymes interdits : hash, identifiant de son |
-| **Répertoire des phrases enregistrées** (à valider) | **nouveau** | Liste, publiée par le pipeline avec les MP3, des clés de phrase qui ont un MP3, avec l'empreinte de fabrication de chacun. Synonymes interdits : **catalogue** (conflit : c'est le nom du contexte Catalogue pédagogique), manifeste, index des sons |
-| **Empreinte de fabrication** (à valider) | **nouveau** | Courte empreinte de tout ce qui fait le MP3 d'une phrase (texte envoyé à la voix, modèle, réglages, allure, encodage). Elle change quand on regénère la phrase autrement ; le MP3 change alors d'adresse |
-| **Table de prononciation** (à valider) | **nouveau** | Liste testée de remplacements appliqués **par le pipeline seulement** au texte envoyé à la voix enregistrée (ex. « vas-y » → « va-zi »). Le texte affiché ne change jamais, ni le sens. Synonymes interdits : dictionnaire, lexique, correcteur |
-| **Texte envoyé à la voix** (à valider) | **nouveau** | Phrase après la table de prononciation, telle que Piper la reçoit. N'existe que dans le pipeline |
-| **Repli sur la voix de l'appareil** (à valider) | **nouveau** | Une phrase sans MP3 (ou dont le MP3 ne se lit pas) est dite par la voix de l'appareil, **pour cette phrase seulement**. Synonymes interdits : fallback, secours (dans le code) |
-| **Voix indisponible** (à valider) | **nouveau, distinct de Voix bloquée** | Une phrase française n'a ni MP3 lisible ni voix française sur l'appareil : rien ne peut la dire. Message juste (section 4.4), pas « bloquée par ce navigateur ». Synonymes interdits : voix bloquée (pour ce cas), voix cassée |
-| **Allure** (à valider) | **nouveau** | Vitesse de lecture d'une phrase : `normale` ou `lente` (lecture lente du mot dicté, `RYTHME_LENT` = 0,65). Synonymes interdits : vitesse (seule), débit (réservé à l'encodage) |
-| **Surlignage approximatif** (à valider) | **nouveau** | Avec un MP3, le mot prononcé est déduit de la durée du MP3 répartie entre les mots au prorata de leurs caractères. Précise **Lecture à voix haute** (« en surlignant le mot prononcé ») |
-| **Paroles fixes** (à valider) | **nouveau** | Phrases du personnage guide écrites dans le code du domaine, identiques pour tous (bravo, encouragements, invitations, annonces, épisodes), sans prénom ni nombre tiré au hasard |
-| **Texte fabriqué à la volée** (à valider) | **nouveau** | Texte construit pendant le jeu et inconnu à l'avance : calcul tiré au hasard, prénom, leçon personnelle, mots de la semaine, lecture des choix dans un ordre tiré au hasard. Il reste au repli (question 182.1) |
-| **Page d'écoute** (à valider) | **nouveau** | Page de contrôle pour le PO, par niveau, qui joue chaque phrase enregistrée à côté de son texte, pour repérer les mots mal prononcés. Outil de contenu, hors du parcours de l'enfant (question 182.5) |
+| **Voix enregistrée** | **nouveau, retenu** | La voix des MP3 fabriqués à l'avance par le pipeline (une voix « tom » de Piper ; le modèle exact est la question 182.19). S'oppose à **voix de l'appareil**. Synonymes interdits : voix Piper (dans l'interface), voix MP3, voix off |
+| **Voix de l'appareil** | existant dans le code (`VoixDeLAppareil`), ajouté au glossaire, retenu | Voix de synthèse installée sur l'appareil, lue par le navigateur. Devient la voix du **repli** |
+| **Phrase enregistrée** | **nouveau, retenu** | Phrase à lire (au sens du découpage de `texteALire`) dont un MP3 de la voix enregistrée existe. Synonymes interdits : son, audio, fichier (dans le domaine), piste |
+| **Clé de phrase** | **nouveau, retenu** | Identifiant court calculé à partir du texte normalisé d'une phrase (section 3.1) ; le même calcul en TypeScript (domaine Voix) et en Python (pipeline). Synonymes interdits : hash, identifiant de son |
+| **Répertoire des phrases enregistrées** | **nouveau, retenu** | Liste, publiée par le pipeline avec les MP3, des clés de phrase qui ont un MP3, avec l'empreinte de fabrication de chacun. Synonymes interdits : **catalogue** (conflit : c'est le nom du contexte Catalogue pédagogique), manifeste, index des sons |
+| **Empreinte de fabrication** | **nouveau, retenu** | Courte empreinte de tout ce qui fait le MP3 d'une phrase (texte envoyé à la voix, modèle, réglages, allure, encodage). Elle change quand on regénère la phrase autrement ; le MP3 change alors d'adresse |
+| **Table de prononciation** | **nouveau, retenu** | Liste testée de remplacements appliqués **par le pipeline seulement** au texte envoyé à la voix enregistrée (ex. « vas-y » → « va-zi »). Le texte affiché ne change jamais, ni le sens. Synonymes interdits : dictionnaire, lexique, correcteur |
+| **Texte envoyé à la voix** | **nouveau, retenu** | Phrase après la table de prononciation, telle que Piper la reçoit. N'existe que dans le pipeline |
+| **Repli sur la voix de l'appareil** | **nouveau, retenu** | Une phrase sans MP3 (ou dont le MP3 ne se lit pas) est dite par la voix de l'appareil, **pour cette phrase seulement**. Synonymes interdits : fallback, secours (dans le code) |
+| **Voix indisponible** | **nouveau, retenu, distinct de Voix bloquée** | Une phrase française n'a ni MP3 lisible ni voix française sur l'appareil : rien ne peut la dire. Message juste (section 4.4), pas « bloquée par ce navigateur ». Synonymes interdits : voix bloquée (pour ce cas), voix cassée |
+| **Allure** | **nouveau, retenu** | Vitesse de lecture d'une phrase : `normale` ou `lente` (lecture lente du mot dicté, `RYTHME_LENT` = 0,65). Synonymes interdits : vitesse (seule), débit (réservé à l'encodage) |
+| **Surlignage approximatif** | **nouveau, retenu** | Avec un MP3, le mot prononcé est déduit de la durée du MP3 répartie entre les mots au prorata de leurs caractères. Précise **Lecture à voix haute** (« en surlignant le mot prononcé ») |
+| **Paroles fixes** | **nouveau, retenu** | Phrases du personnage guide écrites dans le code du domaine, identiques pour tous (bravo, encouragements, invitations, annonces, épisodes), sans prénom ni nombre tiré au hasard |
+| **Texte fabriqué à la volée** | **nouveau, retenu** | Texte construit pendant le jeu et inconnu à l'avance : calcul tiré au hasard, prénom, leçon personnelle, mots de la semaine, lecture des choix dans un ordre tiré au hasard. Il reste au repli (question 182.1) |
+| **Page d'écoute** | **nouveau, retenu** | Page de contrôle pour le PO, par niveau, qui joue chaque phrase enregistrée à côté de son texte, pour repérer les mots mal prononcés. Outil de contenu, hors du parcours de l'enfant (question 182.5) |
+| **Message de voix indisponible** | **nouveau, retenu** (182.16) | Message affiché quand la voix est indisponible ; même place et même cycle de vie que le **message de voix bloquée** (il disparaît après une parole entendue ou le passage en Muet). Un seul des deux messages à la fois : le plus récent remplace l'autre. Synonymes interdits : voix bloquée (pour ce cas), alerte son |
+| **Texte enregistré de remplacement** | **nouveau, retenu** (mécanisme de 182.2 et 182.15) | Texte sans prénom (ex. « Bravo ! »), fourni avec une lecture qui contient le prénom, dit par la voix enregistrée **seulement** quand l'appareil n'a pas de voix française (section 3.4). Le texte affiché garde le prénom. Synonymes interdits : texte anonyme, version courte |
 
 **Conflits signalés**
 1. « **Catalogue** des voix enregistrées » (proposé dans le brief) : conflit avec le contexte **Catalogue pédagogique**. Proposition : **Répertoire des phrases enregistrées**.
@@ -118,7 +120,7 @@ classDiagram
 1. `textePrononce(brut)` **tel qu'il existe** : balises retirées, entités retirées, `+` → « plus », `=` → « égale », `___` → « ... », guillemets retirés selon les deux règles actuelles, espaces regroupés, bords coupés.
 2. Découpage en phrases de `texteALire` : coupure sur les espaces qui suivent `.`, `!`, `?`, `…` ou `:`.
 3. Pour chaque phrase : forme Unicode **NFC** ; apostrophe typographique `’` (U+2019) → `'` ; rien d'autre. **On garde la casse et la ponctuation** : « Bravo ! » et « Bravo. » ne se disent pas pareil.
-4. Une phrase **sans lettre ni chiffre** (par ex. le « ! » isolé qui suit un titre terminé par « ? » dans « Nouveau jeu : Quel son entends-tu ? ! ») n'a pas de clé et ne se lit pas (règle nouvelle, à confirmer, question 182.12).
+4. Une phrase **sans lettre ni chiffre** (par ex. le « ! » isolé qui suit un titre terminé par « ? » dans « Nouveau jeu : Quel son entends-tu ? ! ») n'a pas de clé et ne se lit pas (règle nouvelle, retenue par le PO, 182.12).
 
 **Clé** : **FNV-1a 64 bits** sur les octets UTF-8 du texte de la clé (base `0xcbf29ce484222325`, multiplicateur `0x100000001b3`, modulo 2^64), écrite en **16 chiffres hexadécimaux minuscules**. Pourquoi : quelques lignes, aucune dépendance, synchrone (contrairement à `crypto.subtle`, que le domaine pur n'utilise pas), même résultat en TypeScript (`BigInt`, cible ES2022) et en Python (entiers natifs). Collision : probabilité de l'ordre de 10⁻¹² pour 5 000 phrases ; le pipeline **échoue** si deux textes de clé différents donnent la même clé.
 
@@ -133,7 +135,7 @@ classDiagram
 
 ### 3.2 Qui énumère les phrases à fabriquer
 
-Les textes dits pendant une leçon sont **construits par des règles TypeScript d'Apprentissage** (consigne par défaut du type, « Combien font 12 moins 5 ? », « Écoute bien. *mot*. Écris : *mot*. », « *je* … ? », la phrase du trou, « c'est *réponse*. », « *mot* est bien écrit ! »…). Les recopier en Python les dédoublerait. **Recommandation** (question 182.10) : une lecture pure `textesDitsDansLaLecon(lecon)` dans `@domain/apprentissage`, et un petit export Deno (`scripts/voix/exporter_les_phrases.ts`) qui écrit la liste `{ cle, phrase, niveau, lecons }` ; le pipeline Python la lit, **recalcule la clé** (double garde, cas partagés), applique la table de prononciation et fabrique les MP3. La même lecture sert au front pour mettre en cache les MP3 d'une leçon ouverte.
+Les textes dits pendant une leçon sont **construits par des règles TypeScript d'Apprentissage** (consigne par défaut du type, « Combien font 12 moins 5 ? », « Écoute bien. *mot*. Écris : *mot*. », « *je* … ? », la phrase du trou, « c'est *réponse*. », « *mot* est bien écrit ! »…). Les recopier en Python les dédoublerait. **Retenu par le PO** (182.10) : une lecture pure `textesDitsDansLaLecon(lecon)` dans `@domain/apprentissage`, et un petit export Deno (`scripts/voix/exporter_les_phrases.ts`) qui écrit la liste `{ cle, phrase, niveau, lecons }` ; le pipeline Python la lit, **recalcule la clé** (double garde, cas partagés), applique la table de prononciation et fabrique les MP3. La même lecture sert au front pour mettre en cache les MP3 d'une leçon ouverte.
 
 ### 3.3 Table de prononciation
 
@@ -149,6 +151,19 @@ Les textes dits pendant une leçon sont **construits par des règles TypeScript 
 - `LectureDemandee` gagne l'**allure** (`normale` | `lente`) : aujourd'hui seul le rythme 0,65 la porte, ce qui ne permet pas de choisir le MP3 lent.
 - MP3 introuvable ou illisible (hors ligne et pas en cache, 404, décodage) : **repli** pour cette phrase, sans message.
 - Repli impossible parce que l'appareil n'a **aucune voix française** : **`VoixIndisponible`** (erreur métier nouvelle). Le navigateur refuse de jouer (lecture automatique interdite, `NotAllowedError`) : **`VoixBloquee`** (existante, valable aussi pour un MP3).
+
+**Phrase avec le prénom : mécanisme retenu (182.2, option B de 182.15)**
+- `LectureDemandee` gagne une option **`texteEnregistreDeRemplacement`** (facultative) : le même texte sans le prénom (« Bravo ! » pour « Bravo Léa ! », « Coucou ! » pour « Coucou Léa ! »). L'appelant (Motivation, via le front) la fournit pour chaque parole qui contient le prénom ; ses phrases font partie des **paroles fixes** publiées par Motivation, donc elles ont un MP3.
+- `planDeLecture` calcule d'abord le plan du **texte principal** (avec le prénom), phrase par phrase, comme d'habitude.
+- **L'appareil a une voix française** : on garde ce plan ; la phrase avec le prénom, qui n'a pas de MP3, est dite **en entier** par la voix de l'appareil (repli), les autres phrases restent enregistrées. Le texte de remplacement n'est **pas** utilisé. Les scénarios livrés qui font dire le prénom (#24, #29, #100, #101) ne changent pas.
+- **L'appareil n'a pas de voix française** et une phrase française du plan n'a pas de MP3 : si un texte enregistré de remplacement est fourni, on lit **le plan du texte de remplacement à sa place** (pour toute la lecture) ; s'il manque encore un MP3 à l'une de ses phrases, c'est `VoixIndisponible`. Sans texte de remplacement, c'est `VoixIndisponible`.
+- Le texte affiché (bulle) et le surlignage du texte principal ne changent pas : avec le texte de remplacement, le surlignage suit les mots du texte de remplacement présents dans la bulle (approximation acceptée).
+
+**Un seul signal de lecture empêchée (182.16)**
+- Le service de lecture n'a qu'**un** rappel, `onLectureEmpechee(cause)`, avec `cause` = `voixBloquee` (le navigateur refuse de jouer, MP3 ou synthèse : `VoixBloquee`) ou `voixIndisponible` (phrase française sans MP3 lisible ni voix française, après l'essai du texte de remplacement : `VoixIndisponible`). Il remplace `onVoixBloquee`.
+- Un seul rappel de fin, `onFinDeLectureEmpechee` : une parole entendue ou le passage en Muet (décisions 79.5, 79.10).
+- Le front montre le **message de voix bloquée** ou le **message de voix indisponible** selon la cause ; un nouveau signal remplace le message affiché (un seul à la fois).
+- Le MP3 introuvable ou illisible **avec** une voix française n'émet aucun signal (repli silencieux).
 - Muet, voix suspendue, `arreter()` et `couperLaVoix()` coupent le MP3 en cours **tout de suite**, comme la synthèse ; la fin de lecture est la fin du dernier morceau.
 
 ### 3.5 Erreurs métier
@@ -252,7 +267,8 @@ Avec une seule voix enregistrée (voix d'homme) :
 8. **Une phrase regénérée change d'adresse** (empreinte de fabrication dans le nom) : un cache ne sert jamais un ancien MP3 pour un nouveau texte envoyé à la voix.
 9. **Budget de poids** : `public/voix/` ne dépasse pas le budget fixé par le PO ; au-delà, le build échoue.
 10. **Licence** : le modèle de voix n'est jamais dans le dépôt ni dans l'application ; l'auteur de la voix est crédité dans `public/voix/LICENCE-voix-tom.txt` et dans `docs/sons.md` (ou équivalent).
-11. **Message juste** : « Voix bloquée » n'est montrée que si le navigateur refuse de lire ; s'il n'existe ni MP3 lisible ni voix française, c'est **Voix indisponible**. Un seul message à la fois (79.5).
+11. **Message juste** : « Voix bloquée » n'est montrée que si le navigateur refuse de lire ; s'il n'existe ni MP3 lisible ni voix française, c'est **Voix indisponible** (message de voix indisponible). Un seul des deux messages à la fois, le plus récent remplace l'autre (79.5, 182.16).
+12. **Prénom** : avec une voix française sur l'appareil, une phrase avec le prénom est dite en entier par la voix de l'appareil ; le texte enregistré de remplacement (sans prénom) n'est dit que si l'appareil n'a pas de voix française (182.15 B).
 
 ## 6. Découpage proposé en livraisons
 
@@ -272,7 +288,7 @@ Chaque livraison de niveau élargit la garde de couverture (3.1) à ce niveau. T
 ## 7. Événements
 
 Aucun **événement de domaine** : Voix n'enregistre rien et ne publie rien vers les autres contextes.
-Signaux du service de lecture (rappels, comme `onVoixBloquee` aujourd'hui) : **voix indisponible signalée** et **fin de la voix indisponible** (même cycle de vie que la voix bloquée, décisions 79.5 et 79.10 ; proposition : un seul signal avec sa cause `bloquee` | `indisponible`, pour garder un seul message à la fois).
+Signaux du service de lecture (rappels, pas des événements de domaine) : **un seul signal de lecture empêchée**, `onLectureEmpechee(cause)` avec `cause` = `voixBloquee` | `voixIndisponible`, et sa fin `onFinDeLectureEmpechee` (même cycle de vie que la voix bloquée, décisions 79.5 et 79.10 ; retenu par le PO, 182.16). Voir section 3.4.
 Côté pipeline (journal de fabrication, pas domaine) : phrase fabriquée, phrase sautée (déjà présente), entrée de table appliquée.
 
 ## 8. Emplacement
@@ -296,28 +312,38 @@ Front (adaptateurs, ACL) :
 - `public/sw.js` (cache `savanturier-voix`, mise en cache d'une leçon)
 
 Pipeline et données :
-- `scripts/voix/exporter_les_phrases.ts` (export Deno, si la question 182.10 est acceptée)
+- `scripts/voix/exporter_les_phrases.ts` (export Deno, retenu par le PO, 182.10)
 - `scripts/voix/cle_de_phrase.py`, `scripts/voix/table_de_prononciation.py`, `scripts/voix/fabriquer_les_phrases.py`, `scripts/voix/page_d_ecoute.py`
 - `scripts/tests/test_cle_de_phrase.py`, `test_table_de_prononciation.py`, `test_fabrication_des_phrases.py` (Piper remplacé par un faux)
 - `docs/voix/cas-des-cles-de-phrases.json` (contrat partagé)
 - `public/voix/repertoire.json`, `public/voix/<cle>-<empreinte>.mp3`, `public/voix/<cle>-lente-<empreinte>.mp3`, `public/voix/LICENCE-voix-tom.txt`
 - `docs/decisions/0043-voix-en-mp3-pre-generes-piper.md` ; `docs/sons.md` (licence) ; `docs/format-lecons.md` **inchangé** (le format des leçons ne change pas)
 
-## 9. Questions ouvertes
+## 9. Réponses du PO
 
-Chaque question appelle un oui ou non, ou une lettre ; la recommandation est en gras.
+**2026-11-11, 00:47 UTC** (annonce [Responsable] sur l'issue #193) : « **Reco tout** ». Toutes les recommandations sont retenues ; les termes de la section 2 ne sont plus « à valider ». Les questions 182.15 à 182.18 ont été posées dans `docs/stories/182/criteres.md`.
 
-1. **182.1 Textes fabriqués à la volée** (calculs tirés au hasard, lecture des choix « Est-ce *a*, *b*, ou *c* ? » dans un ordre au hasard, leçons personnelles, mots de la semaine) : (A) repli sur la voix de l'appareil dans cette story, assemblage de morceaux enregistrés dans une story de suite ; (B) assemblage dès cette story. **Recommandation : A.** Conséquence à accepter : sur un appareil sans voix française, ces phrases ne sont pas dites (message juste), y compris la lecture des choix pour un enfant de CP avec « tout lire à voix haute ».
-2. **182.2 Prénom** : la voix dit « Bravo ! » (ou « Coucou ! ») et le prénom reste affiché dans la bulle ? **Recommandation : oui** (le texte dit sans prénom passe par le texte à lire distinct du texte affiché, comme les exemples d'une étape). Sinon, la phrase avec le prénom reste au repli.
-3. **182.3 Une seule voix (homme) pour les six personnages guides**, y compris Noisette, Lumi et Lili qui ont aujourd'hui une voix féminine : acceptez-vous ? (A) oui, une seule voix, on garde seulement le rythme de chacun ; (B) chercher une deuxième voix Piper féminine (nouvelle écoute, poids doublé pour leurs phrases) ; (C) changer la hauteur du MP3 (voix déformée). **Recommandation : A**, B en story de suite si l'écoute le justifie.
-4. **182.4 Lieu de stockage** : (A) dans le dépôt et le build, servis par alwaysdata ; (B) Supabase Storage. **Recommandation : A** (même origine, hors ligne simple, pas de pause du projet Free, pas de trafic compté).
-5. **182.5 Page d'écoute** : une page par niveau, hors du parcours de l'enfant, générée par le pipeline (fichier HTML local, jamais publié) où le PO écoute chaque phrase à côté de son texte et note les mots mal prononcés ? **Recommandation : oui, en fichier local non publié**, livrée avec chaque niveau.
-6. **182.6 Budget de poids** de `public/voix/` : **Recommandation : 45 Mo** (≈ 39 Mo à 32 kbit/s, avec de la marge pour la table de prononciation et les mots lents ; le build échoue au-delà). Autre chiffre ?
-7. **182.7 Texte du message de voix indisponible** : « *Coach Léo* ne peut pas lire cette phrase sur cet appareil. Lis-la avec un adulte, ou touche « Réécouter » plus tard. » **Recommandation : ce texte**, et l'ancien message reste pour un vrai refus du navigateur.
-8. **182.8 Débit et lecture lente** : (a) MP3 mono **32 kbit/s, 22,05 kHz** (24 kbit/s gagne ≈ 10 Mo, mais la voix est un peu moins nette ; 48 kbit/s ≈ 57 Mo ne tient plus dans le budget) ? **Recommandation : 32 kbit/s**, après une écoute comparative de 3 phrases à 24 et 32 kbit/s. (b) Mots dictés : MP3 lents à part (≈ 0,2 Mo) plutôt que la vitesse ralentie du lecteur ? **Recommandation : oui.** (c) Précharger aussi la leçon suivante du parcours ? **Recommandation : non** pour l'instant.
-9. **182.9 Espace parent › Voix** : avec la voix enregistrée, le choix d'une voix de l'appareil ne sert plus qu'au repli. (A) la page présente d'abord « la voix de Savanturier » (sans choix), puis le choix de la voix de l'appareil « pour les phrases sans voix enregistrée » ; (B) on permet au parent de préférer la voix de l'appareil partout. **Recommandation : A** (le message « Aucune voix française trouvée sur cet appareil » y reste juste).
-10. **182.10 Énumération des phrases** : la liste des phrases à fabriquer est produite par le domaine TypeScript (Apprentissage et Motivation) et exportée par un petit script Deno, le pipeline Python ne faisant que la fabrication (il recalcule quand même la clé, testée sur les cas partagés) ? **Recommandation : oui** (une seule écriture des règles qui construisent les textes ; sinon il faut les recopier en Python). C'est une petite entorse à « le pipeline reste en Python », à inscrire dans la décision 0043.
-11. **182.11 Mots à écouter en anglais** (75) : restent dits par la voix anglaise de l'appareil, hors de cette story ? **Recommandation : oui** (une voix anglaise Piper serait une autre décision de voix) ; à vérifier sur le Honor Magic.
-12. **182.12 Phrase sans lettre ni chiffre** (par ex. le « ! » isolé qui suit un titre d'exercice terminé par « ? ») : elle n'est plus lue du tout (ni MP3 ni repli) ? **Recommandation : oui** ; à part : faut-il corriger l'annonce « *titre* ! » quand le titre finit déjà par « ? » ou « ! » (Motivation) ?
-13. **182.13 Phrases finies mais construites** (items de la boîte, colonnes des additions à opérations fixes, « Tu gagnes *N* étoile(s) », « Épisode *n* : », essai de voix avec chaque personnage guide) : fabriquées comme les paroles fixes dans 182a ? **Recommandation : oui.**
-14. **182.14 Découpage** : 182a (socle et paroles fixes), 182b (CP), 182c (CE1), 182d (CE2), 182e (CM1 et CM2), assemblage en story de suite ? **Recommandation : oui.**
+| Question | Décision du PO |
+|---|---|
+| 182.1 Textes fabriqués à la volée | **A** : repli sur la voix de l'appareil dans cette story ; assemblage de morceaux enregistrés dans une story de suite. Conséquence acceptée : sans voix française, ces phrases ne sont pas dites (message de voix indisponible). |
+| 182.2 Prénom | **Oui**, la voix enregistrée dit le texte sans prénom, le prénom reste affiché ; restreint par 182.15 B (mécanisme : section 3.4, « texte enregistré de remplacement »). |
+| 182.3 Une seule voix (homme) | **A** : une seule voix pour les six personnages guides, on garde seulement leur rythme ; la hauteur ne vaut plus que pour le repli. Deuxième voix féminine : story de suite si l'écoute le justifie. |
+| 182.4 Stockage | **A** : dans le dépôt et le build (`public/voix/`), servis par alwaysdata. |
+| 182.5 Page d'écoute | **Oui**, fichier local par niveau, jamais publié, livré avec chaque niveau. |
+| 182.6 Budget de poids | **45 Mo** ; le build échoue au-delà. |
+| 182.7 Message de voix indisponible | **Ce texte** : « *Coach Léo* ne peut pas lire cette phrase sur cet appareil. Lis-la avec un adulte, ou touche « Réécouter » plus tard. » L'ancien message reste pour un vrai refus du navigateur. |
+| 182.8 Débit et lecture lente | (a) **MP3 mono 32 kbit/s, 22,05 kHz**, confirmé après l'écoute comparative 24/32 kbit/s ; (b) **oui**, MP3 lents à part pour les mots dictés ; (c) **non**, pas de préchargement de la leçon suivante. |
+| 182.9 Espace parent › Voix | **A** : d'abord « la voix de Savanturier » (sans choix), puis le choix de la voix de l'appareil pour les phrases sans voix enregistrée. |
+| 182.10 Énumération des phrases | **Oui** : `textesDitsDansLaLecon` et les paroles fixes en TypeScript, export par un script Deno (`scripts/voix/exporter_les_phrases.ts`) ; le pipeline Python fabrique et recalcule la clé. Entorse à « le pipeline reste en Python », inscrite dans la décision 0043. |
+| 182.11 Mots en anglais | **Oui** : voix anglaise de l'appareil, hors de cette story. |
+| 182.12 Phrase sans lettre ni chiffre | **Oui** : elle n'est plus lue (ni MP3 ni repli). |
+| 182.13 Phrases finies mais construites | **Oui** : fabriquées comme les paroles fixes dans 182a. |
+| 182.14 Découpage | **Oui** : 182a (socle et paroles fixes), 182b (CP), 182c (CE1), 182d (CE2), 182e (CM1 et CM2) ; assemblage en story de suite. |
+| 182.15 Scénarios qui font dire le prénom | **B** : le texte sans prénom ne vaut que pour la voix enregistrée, quand l'appareil n'a pas de voix française ; avec une voix française, la phrase avec le prénom reste dite en entier par la voix de l'appareil. Les scénarios livrés (#24, #29, #100, #101) ne changent pas. |
+| 182.16 Message de voix indisponible | **Oui**, terme ajouté au glossaire ; un seul des deux messages (voix bloquée, voix indisponible) à la fois, le plus récent remplace l'autre ; un seul signal de lecture empêchée avec sa cause (section 3.4). |
+| 182.17 Hors ligne | (a) **oui** : une leçon jamais ouverte, sans réseau, est dite par la voix de l'appareil sans message, ou par le message de voix indisponible sans voix française ; (b) **oui** : les phrases enregistrées gardées restent après une nouvelle version de l'application. |
+| 182.18 Message de l'Espace parent › Voix (#15) | **Reformuler** « Aucune voix française trouvée sur cet appareil : installe-en une… » en un message qui dit que **la voix de Savanturier lit les leçons** et que **la voix de l'appareil sert seulement aux phrases fabriquées à la volée** (calculs, prénom…). Texte exact à écrire dans les critères (po-acceptance), avec 182.9 A. |
+
+### Question encore ouverte
+
+19. **182.19 Quel modèle « tom »** : le dépôt de la voix (`git.bksp.space/Tjiho/French-tts-model-piper`) contient trois modèles de même configuration : (1) `model 1/tom1.onnx` (journaux et Baudelaire), (2) `model 2/tom2.onnx` (Baudelaire), (3) `model 3/next.onnx` (modèle 2 + 300 époques). Le PO choisit **à l'oreille** (page d'écoute : six phrases × trois modèles). Le nom du modèle retenu ira dans le répertoire des phrases enregistrées (`voixEnregistree`) et dans la licence (`public/voix/LICENCE-voix-tom.txt`). Ne bloque pas 182a jusqu'à la fabrication (Piper remplacé par un faux dans les tests).
