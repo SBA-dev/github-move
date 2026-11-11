@@ -23,6 +23,7 @@ const NOM_DU_CACHE = `savanturier-${VERSION}`;
 const PREFIXE_DES_FICHIERS_HACHES = "/assets/";
 const PREFIXE_DES_SONS = "/sons/";
 // Cache des voix enregistrées : non versionné, il survit aux nouvelles versions (les MP3 portent leur empreinte dans l'adresse).
+// Copie de CACHE_DES_VOIX (src/voix/garder-les-phrases-de-la-lecon.ts) : ce fichier n'est pas un module.
 const NOM_DU_CACHE_DES_VOIX = "savanturier-voix";
 const PREFIXE_DES_VOIX = "/voix/";
 const REPERTOIRE_DES_VOIX = "/voix/repertoire.json";
@@ -46,9 +47,9 @@ self.addEventListener("fetch", (evenement) => {
   } else if (url.pathname.startsWith(PREFIXE_DES_FICHIERS_HACHES)) {
     evenement.respondWith(cachePuisReseau(requete));
   } else if (url.pathname === REPERTOIRE_DES_VOIX) {
-    evenement.respondWith(reseauPuisCache(requete, url.pathname, NOM_DU_CACHE_DES_VOIX));
+    evenement.respondWith(repertoireDesVoix(requete));
   } else if (url.pathname.startsWith(PREFIXE_DES_VOIX) && url.pathname.endsWith(".mp3")) {
-    evenement.respondWith(sonDuCache(requete, NOM_DU_CACHE_DES_VOIX));
+    evenement.respondWith(sonDuCache(requete, NOM_DU_CACHE_DES_VOIX, estUnSon));
   } else if (url.pathname.startsWith(PREFIXE_DES_SONS)) {
     evenement.respondWith(sonDuCache(requete));
   }
@@ -80,18 +81,45 @@ async function reseauPuisCache(requete, cle, nomDuCache = NOM_DU_CACHE) {
   }
 }
 
-async function cachePuisReseau(requete, nomDuCache = NOM_DU_CACHE) {
+async function repertoireDesVoix(requete) {
+  const reponse = await reseauPuisCache(requete, REPERTOIRE_DES_VOIX, NOM_DU_CACHE_DES_VOIX);
+  if (reponse.ok) await retirerLesMp3QuiNeSontPlusAuRepertoire(reponse.clone());
+  return reponse;
+}
+
+// Adresses construites comme adresseDuMp3 (supabase/functions/_shared/voix/domain/adresse-du-mp3.ts) : ce fichier n'est pas un module.
+async function retirerLesMp3QuiNeSontPlusAuRepertoire(reponse) {
+  try {
+    const { phrases } = await reponse.json();
+    const adressesGardees = new Set();
+    for (const [cle, { normale, lente }] of Object.entries(phrases)) {
+      adressesGardees.add(`/voix/${cle}-${normale}.mp3`);
+      if (lente) adressesGardees.add(`/voix/${cle}-lente-${lente}.mp3`);
+    }
+    const cache = await caches.open(NOM_DU_CACHE_DES_VOIX);
+    for (const requete of await cache.keys()) {
+      const { pathname } = new URL(requete.url);
+      if (pathname.endsWith(".mp3") && !adressesGardees.has(pathname)) await cache.delete(requete);
+    }
+  } catch {
+    // Répertoire illisible : on ne retire rien.
+  }
+}
+
+const estUnSon = (reponse) => reponse.ok && (reponse.headers.get("content-type") ?? "").startsWith("audio/");
+
+async function cachePuisReseau(requete, nomDuCache = NOM_DU_CACHE, aGarder = (reponse) => reponse.ok) {
   const cache = await caches.open(nomDuCache);
   const enCache = await cache.match(requete);
   if (enCache) return enCache;
   const reponse = await fetch(requete);
-  if (reponse.ok) await cache.put(requete, reponse.clone());
+  if (aGarder(reponse)) await cache.put(requete, reponse.clone());
   return reponse;
 }
 
 // Safari ne lit un son que si le serveur répond aux requêtes « Range » par un 206 : on le fait depuis le cache.
-async function sonDuCache(requete, nomDuCache = NOM_DU_CACHE) {
-  const reponse = await cachePuisReseau(new Request(requete.url), nomDuCache);
+async function sonDuCache(requete, nomDuCache = NOM_DU_CACHE, aGarder = undefined) {
+  const reponse = await cachePuisReseau(new Request(requete.url), nomDuCache, aGarder);
   const plage = /^bytes=(\d*)-(\d*)$/.exec(requete.headers.get("range") ?? "");
   if (!plage || (plage[1] === "" && plage[2] === "") || !reponse.ok) return reponse;
   const octets = await reponse.arrayBuffer();

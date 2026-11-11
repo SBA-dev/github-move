@@ -1,5 +1,6 @@
 import type { Allure } from "./allure.ts";
 import { cleDePhrase } from "./cle-de-phrase.ts";
+import { estUneLangueFrancaise } from "./langue-francaise.ts";
 import type { LectureDemandee } from "./lecteur-a-voix-haute.ts";
 import type { RepertoireDesPhrasesEnregistrees } from "./repertoire-des-phrases-enregistrees.ts";
 
@@ -27,7 +28,7 @@ export function planDeLecture(
   lecture: LectureDemandee,
   repertoire: RepertoireDesPhrasesEnregistrees,
 ): MorceauDeLecture[] {
-  const estFrancaise = lecture.langue.toLowerCase().startsWith("fr");
+  const estFrancaise = estUneLangueFrancaise(lecture.langue);
   return lecture.phrases.map(({ phrase, rythme }, rang): MorceauDeLecture => {
     const cle = cleDePhrase(phrase);
     const enregistrement = estFrancaise ? repertoire.phrases[cle] : undefined;

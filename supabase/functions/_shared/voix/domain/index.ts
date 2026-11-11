@@ -46,3 +46,4 @@ export { instantsDesMots } from "./instants-des-mots.ts";
 export type { InstantDeMot } from "./instants-des-mots.ts";
 export { LecteurAvecRepli } from "./lecteur-avec-repli.ts";
 export type { LecteurDePhrasesEnregistrees, SuiviDUnMorceau } from "./lecteur-de-phrases-enregistrees.ts";
+export { aUneVoixFrancaise, estUneLangueFrancaise } from "./langue-francaise.ts";

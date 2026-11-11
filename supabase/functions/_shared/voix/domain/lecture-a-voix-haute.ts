@@ -6,6 +6,7 @@ import type { EffetSonore } from "./effet-sonore.ts";
 import type { Hasard } from "./hasard.ts";
 import type { LecteurAVoixHaute } from "./lecteur-a-voix-haute.ts";
 import type { LecteurDEffetsSonores } from "./lecteur-d-effets-sonores.ts";
+import { estUneLangueFrancaise } from "./langue-francaise.ts";
 import { phraseDEssai } from "./phrase-d-essai.ts";
 import { reglerPhrases } from "./reglage-de-phrase.ts";
 import { rangAffichePourChaqueMotPrononce } from "./mots-de-la-consigne.ts";
@@ -47,10 +48,6 @@ type OptionsDeLecture = {
   onFin?: () => void;
   texteEnregistreDeRemplacement?: string;
 };
-
-function estFrancais(langue: string): boolean {
-  return /^fr/i.test(langue);
-}
 
 function debutsDesMots(phrase: string): number[] {
   return [...phrase.matchAll(/\S+/g)].map((mot) => mot.index);
@@ -107,7 +104,9 @@ export class LectureAVoixHaute {
     if (!texte) return PAROLE_NON_ENTENDUE;
     const langue = options.langue ?? LANGUE_FRANCAISE;
     const voix = this.voixPour(langue, options.choix ?? this.choixMemorise());
-    const caractere = estFrancais(langue) ? this.dependances.caractereDuPersonnageGuide() : CARACTERE_LANGUE_ETRANGERE;
+    const caractere = estUneLangueFrancaise(langue)
+      ? this.dependances.caractereDuPersonnageGuide()
+      : CARACTERE_LANGUE_ETRANGERE;
     this.parolesEnCours++;
     try {
       await lecteur.lire({
@@ -237,7 +236,7 @@ export class LectureAVoixHaute {
 
   private voixPour(langue: string, choix: ChoixDeVoix): VoixDisponible | undefined {
     const voix = this.dependances.voixDeLAppareil.voixDisponibles();
-    return estFrancais(langue)
+    return estUneLangueFrancaise(langue)
       ? choisirVoix(voix, this.dependances.caractereDuPersonnageGuide(), choix)
       : choisirVoixDeLangue(voix, langue);
   }

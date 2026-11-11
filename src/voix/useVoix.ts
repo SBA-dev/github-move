@@ -2,6 +2,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 import { avecSonTexteDeRemplacement, type PersonnageGuide, presentationAuRetourDuSon } from "@domain/motivation";
 import {
   type CauseDeLectureEmpechee,
+  aUneVoixFrancaise,
   type ChoixDeVoix,
   type EffetSonore,
   type EtatDuSon,
@@ -17,7 +18,7 @@ import { LecteurDEffetsSonoresDuNavigateur } from "./lecteur-d-effets-sonores-du
 import { LecteurDePhrasesEnregistreesDuNavigateur } from "./lecteur-de-phrases-enregistrees-du-navigateur.ts";
 import { LecteurSyntheseVocale, syntheseVocale } from "./lecteur-synthese-vocale.ts";
 import { lireLEtatDuSon, memoriserLEtatDuSon } from "./memoire-du-son.ts";
-import { RepertoireDesPhrasesEnregistreesDuNavigateur } from "./repertoire-des-phrases-enregistrees-du-navigateur.ts";
+import { repertoireDuNavigateur } from "./repertoire-des-phrases-enregistrees-du-navigateur.ts";
 import { VoixDeLAppareilNavigateur } from "./voix-de-l-appareil-navigateur.ts";
 
 export type OptionsDeLecture = Parameters<LectureAVoixHaute["lire"]>[1];
@@ -68,7 +69,7 @@ export function useVoix(personnageGuide: PersonnageGuide, prenom?: string): Voix
   const [son, setSon] = useState(lireLEtatDuSon);
   const [lecturesEnCours, setLecturesEnCours] = useState(0);
   const [lectureEmpechee, setLectureEmpechee] = useState<LectureEmpechee | undefined>();
-  const [repertoire] = useState(() => new RepertoireDesPhrasesEnregistreesDuNavigateur());
+  const [repertoire] = useState(() => repertoireDuNavigateur);
   const [repertoireCharge, setRepertoireCharge] = useState(false);
   const [effetsSonores] = useState(() => new LecteurDEffetsSonoresDuNavigateur());
   const [phrasesEnregistrees] = useState(() => new LecteurDePhrasesEnregistreesDuNavigateur());
@@ -89,7 +90,7 @@ export function useVoix(personnageGuide: PersonnageGuide, prenom?: string): Voix
         repertoire,
         lecteurDePhrasesEnregistrees: phrasesEnregistrees,
         voixDeLAppareil: new LecteurSyntheseVocale(),
-        aUneVoixFrancaise: () => voixDeLAppareil.voixDisponibles().some(({ langue }) => langue.toLowerCase().startsWith("fr")),
+        aUneVoixFrancaise: () => aUneVoixFrancaise(voixDeLAppareil.voixDisponibles()),
       }),
       lecteurDEffetsSonores: effetsSonores,
       voixDeLAppareil,

@@ -1,6 +1,7 @@
 import { phrasesAvecCle } from "./cle-de-phrase.ts";
 import { VoixBloquee, VoixIndisponible } from "./erreurs.ts";
 import { instantsDesMots } from "./instants-des-mots.ts";
+import { estUneLangueFrancaise } from "./langue-francaise.ts";
 import type { LecteurAVoixHaute, LectureDemandee } from "./lecteur-a-voix-haute.ts";
 import type { LecteurDePhrasesEnregistrees, SuiviDUnMorceau } from "./lecteur-de-phrases-enregistrees.ts";
 import { type MorceauDeLecture, planDeLecture } from "./plan-de-lecture.ts";
@@ -51,7 +52,7 @@ export class LecteurAvecRepli implements LecteurAVoixHaute {
   }
 
   private verifierQueLaVoixDeLAppareilPeutDireLaPhrase(lecture: LectureDemandee): void {
-    const estFrancaise = lecture.langue.toLowerCase().startsWith("fr");
+    const estFrancaise = estUneLangueFrancaise(lecture.langue);
     if (estFrancaise && !this.dependances.aUneVoixFrancaise()) throw new VoixIndisponible();
   }
 

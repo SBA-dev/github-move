@@ -4,6 +4,7 @@ const REPERTOIRE_VIDE: RepertoireDesPhrasesEnregistrees = { voixEnregistree: "",
 
 export class RepertoireDesPhrasesEnregistreesDuNavigateur implements RepertoireDesPhrasesEnregistrees {
   private contenu = REPERTOIRE_VIDE;
+  private chargement: Promise<void> | undefined;
 
   get voixEnregistree(): string {
     return this.contenu.voixEnregistree;
@@ -18,7 +19,12 @@ export class RepertoireDesPhrasesEnregistreesDuNavigateur implements RepertoireD
   }
 
   /** Sans répertoire lisible, toutes les phrases partent à la voix de l'appareil, sans erreur visible. */
-  async charger(): Promise<void> {
+  charger(): Promise<void> {
+    this.chargement ??= this.lire();
+    return this.chargement;
+  }
+
+  private async lire(): Promise<void> {
     try {
       const reponse = await fetch("/voix/repertoire.json");
       if (!reponse.ok) return;
@@ -29,3 +35,6 @@ export class RepertoireDesPhrasesEnregistreesDuNavigateur implements RepertoireD
     }
   }
 }
+
+/** Un seul répertoire pour l'application : le fichier n'est lu qu'une fois. */
+export const repertoireDuNavigateur = new RepertoireDesPhrasesEnregistreesDuNavigateur();
