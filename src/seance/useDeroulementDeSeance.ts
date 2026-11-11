@@ -54,6 +54,7 @@ export function useDeroulementDeSeance(
   personnageGuide: PersonnageGuide,
   toutLireAVoixHaute: boolean,
   prenom: string,
+  attendreLaFinDeLaPause: () => Promise<void>,
   horloge: Horloge = horlogeDuNavigateur,
 ) {
   const personnage = usePersonnageQuiParle(voix);
@@ -73,7 +74,7 @@ export function useDeroulementDeSeance(
     [],
   );
 
-  const reussite = useQuestionFigee(seance, personnage.paroleEntendue);
+  const reussite = useQuestionFigee(seance, personnage.paroleEntendue, attendreLaFinDeLaPause);
   const questions = useQuestionsAChoix({
     seance,
     lecon,

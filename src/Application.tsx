@@ -88,7 +88,7 @@ function lieuAffiche(demande: Lieu, espaceParent: EtatDeLEspaceParent["type"], c
 
 export function Application() {
   const [defiEnCours, setDefiEnCours] = useState<Defi | GrandDefi | undefined>();
-  const [seanceFinie, setSeanceFinie] = useState(false);
+  const [barreDuHautDeSeanceAffichee, setBarreDuHautDeSeanceAffichee] = useState(false);
   const { lieu: lieuDemande, retourPossible, viaRetour, aller, remplacer, revenir, revenirA } = useNavigation();
   const acces = useAccesALEspaceParent();
   const connexion = useConnexion();
@@ -203,8 +203,7 @@ export function Application() {
     else remplacer(destination);
   };
   const revenirALAccueilDeLEnfant = () => revenirA("jeu");
-  /** Pendant les questions d'une séance de leçon, la barre du haut de la séance tient lieu d'en-tête. */
-  const barreDuHautDeSeance = ecran === "seance" && !seanceFinie;
+  /** Tant que la séance affiche sa barre du haut (pas pendant le chargement, ni à l'écran de fin), elle tient lieu d'en-tête. */
   const habillage = parent ? HABILLAGE_DU_PARENT : habillageDeLUnivers(univers.cle);
 
   return (
@@ -214,7 +213,7 @@ export function Application() {
         <TenueDuProfil profil={profil?.id}>
           <div className="application" style={habillage} data-univers={univers.cle} data-registre={parent ? "parent" : "enfant"}>
             {!parent && <Paysage univers={univers.cle} />}
-            {!barreDuHautDeSeance && (
+            {!barreDuHautDeSeanceAffichee && (
               <EnTete
                 surAccueil={ecran === "accueil"}
                 enfant={profil}
@@ -370,7 +369,7 @@ export function Application() {
                       toutLireAVoixHaute={profilEnCours.reglages.toutLireAVoixHaute}
                       clavierDesDictees={profilEnCours.reglages.clavierDesDictees.valeur}
                       onRetour={() => revenirA({ ecran: "lecon", leconId: lieu.leconId })}
-                      onSeanceFinie={setSeanceFinie}
+                      onBarreDuHautAffichee={setBarreDuHautDeSeanceAffichee}
                       onLireLEpisode={(numero) => aller({ ecran: "episode", numero, origine: "fin-de-seance" })}
                       onLeconSuivante={(leconId) => aller({ ecran: "lecon", leconId })}
                       onReleverLeDefi={releverLeDefi}

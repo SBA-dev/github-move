@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CIBLE_DE_LA_ZONE_DE_REPONSE, useRetourDe } from "../../retours/index.ts";
 import { useUnivers } from "../../univers/index.ts";
+import { usePauseOuverte } from "./PauseDeLaSeance.ts";
 import { ActionDeLExercice, useDansLaBarreDAction } from "./ActionDeLExercice.tsx";
 import { DessinDeLUnivers } from "./claviers/DessinDeLUnivers.tsx";
 import { dessinDuCristal } from "./claviers/dessins-des-claviers.ts";
@@ -114,7 +115,8 @@ export function ClavierDeCristaux({ onValider, chiffresQuiBrillent = [], desacti
   const effacerAvecEclat = useCallback(() => {
     if (effacer()) eclater(EFFACER);
   }, [effacer, eclater]);
-  useClavierPhysique(!desactive, taperAvecEclat, effacerAvecEclat, valider);
+  const enPause = usePauseOuverte();
+  useClavierPhysique(!desactive && !enPause, taperAvecEclat, effacerAvecEclat, valider);
   /** La réponse est validée par « Valider » : c'est lui qui rebondit ou se balance. */
   const retour = useRetourDe<HTMLButtonElement>(CIBLE_DE_LA_ZONE_DE_REPONSE);
   const touche = (chiffre: string) => (

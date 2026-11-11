@@ -4,6 +4,7 @@ import { TexteEnSyllabes } from "../../reglages/index.ts";
 import { ActionDeLExercice } from "./ActionDeLExercice.tsx";
 import { CasesDeLaDictee } from "./CasesDeLaDictee.tsx";
 import { ClavierDeLaDictee } from "./ClavierDeLaDictee.tsx";
+import { usePauseOuverte } from "./PauseDeLaSeance.ts";
 import { useClavierPhysique } from "./useClavierPhysique.ts";
 
 type Props = {
@@ -26,7 +27,8 @@ type Props = {
 
 export function ExerciceDeDictee(props: Props) {
   const { question, lettresFausses, reussie, messageSansVoix, sonCoupe } = props;
-  useClavierPhysique(question !== undefined && !reussie, props.onTaper, props.onEffacer);
+  const enPause = usePauseOuverte();
+  useClavierPhysique(question !== undefined && !reussie && !enPause, props.onTaper, props.onEffacer);
   if (!question) return null;
   return (
     <div className="dictee" data-testid="dictee">
