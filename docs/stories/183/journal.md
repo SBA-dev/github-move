@@ -42,3 +42,7 @@ Branche de base : `main` (`aa75d97`). Branche : `feature/183-ecran-de-seance-bar
 - Correctif des deux bugs E2E (`837c272d`) :
   - le personnage guide est montré seulement quand il réagit, pendant les étapes et à la fin ; mesure à 360 × 740 : exercice à 192,6 px pour les bulles comme pour le calcul ;
   - la barre d'action est rendue par portail dans `.application`. Avant, elle suivait la transformation de l'écran qui arrive pendant son animation.
+- Review cycle 2 (delta) : À CORRIGER. Les 3 bloquants du cycle 1 sont corrigés. Nouveau bloquant : mode dys perdu sur la barre d'action rendue par portail. Écart à 183.16 accepté par le relecteur (« Valider » reste 500 ms désactivé pour garder son rebond).
+- Correctifs : `910ba920` (dys sur la barre d'action), `09e2d745` (garde du retour, clavier, commentaire).
+- Review cycle 3 (delta) : APPROUVÉ.
+- Conteneur redémarré pendant la relecture du cycle 2 : relecture relancée, rien d'autre perdu.
