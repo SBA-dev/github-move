@@ -245,6 +245,22 @@ Deno.test("le personnage guide lit plus lentement, à 0,65 fois son rythme norma
   assertEquals(lecteur.lectures.map((demandee) => demandee.phrases.map((phrase) => phrase.rythme)), [[0.65]]);
 });
 
+Deno.test("une lecture lente demande l'allure lente, pour que l'enregistrement lent soit choisi", async () => {
+  const { lecture, lecteur } = uneLecture();
+
+  await lecture.lire("chat", { lent: true });
+
+  assertEquals(lecteur.lectures.map((demandee) => demandee.allure), ["lente"]);
+});
+
+Deno.test("une lecture sans lenteur ne demande pas l'allure lente", async () => {
+  const { lecture, lecteur } = uneLecture();
+
+  await lecture.lire("chat");
+
+  assertEquals(lecteur.lectures.map((demandee) => demandee.allure), [undefined]);
+});
+
 Deno.test("une lecture menée jusqu'au bout est une parole entendue", async () => {
   const { lecture } = uneLecture();
 

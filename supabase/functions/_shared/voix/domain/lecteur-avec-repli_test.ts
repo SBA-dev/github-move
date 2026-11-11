@@ -246,3 +246,32 @@ Deno.test("sans voix française, un texte enregistré de remplacement avec guill
 
   assertEquals(phrasesEnregistrees.morceauxJoues.map((m) => m.phrase), ["Dis Bravo !", "Super."]);
 });
+
+Deno.test("les phrases consécutives sans enregistrement sont dites en une seule lecture par la voix de l'appareil", async () => {
+  const { lecteur, synthese } = unLecteur({ repertoire: enregistrees() });
+
+  await lecteur.lire(lectureDe([BONJOUR, ON_COMMENCE, A_BIENTOT]));
+
+  assertEquals(synthese.lectures.map((l) => l.phrases.map((p) => p.phrase)), [[BONJOUR, ON_COMMENCE, A_BIENTOT]]);
+});
+
+Deno.test("une phrase enregistrée entre deux phrases de repli coupe le groupe lu par la voix de l'appareil, dans l'ordre", async () => {
+  const { lecteur, synthese, journal } = unLecteur({ repertoire: enregistrees(A_BIENTOT) });
+
+  await lecteur.lire(lectureDe([BONJOUR, ON_COMMENCE, A_BIENTOT, "Bravo !"]));
+
+  assertEquals(journal, ["parole", `mp3:${A_BIENTOT}`, "parole"]);
+  assertEquals(synthese.lectures.map((l) => l.phrases.map((p) => p.phrase)), [[BONJOUR, ON_COMMENCE], ["Bravo !"]]);
+});
+
+Deno.test("un mot annoncé pendant la lecture groupée de la voix de l'appareil est rapporté au rang de la phrase de la lecture d'origine", async () => {
+  const { lecteur, synthese } = unLecteur({ repertoire: enregistrees(BONJOUR) });
+  synthese.prononcerLesMots({ phrase: 1, position: 0 });
+  const mots: Array<[number, number]> = [];
+
+  await lecteur.lire(
+    lectureDe([BONJOUR, ON_COMMENCE, A_BIENTOT], { onMot: (rang, position) => mots.push([rang, position]) }),
+  );
+
+  assertEquals(mots, [[2, 0]]);
+});
