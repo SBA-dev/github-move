@@ -39,7 +39,11 @@ export class LecteurAvecRepli implements LecteurAVoixHaute {
   }
 
   private async jouerLePlan(lecture: LectureDemandee): Promise<void> {
-    for (const morceau of planDeLecture(lecture, this.dependances.repertoire)) {
+    const plan = planDeLecture(lecture, this.dependances.repertoire);
+    if (plan.some((morceau) => morceau.source === "voixDeLAppareil")) {
+      this.verifierQueLaVoixDeLAppareilPeutDireLaPhrase(lecture);
+    }
+    for (const morceau of plan) {
       if (this.arrete) return;
       await this.jouer(morceau, lecture);
     }
