@@ -1550,10 +1550,10 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 
 /* --- Bulle de la séance de leçon : la consigne seule sur toute la largeur, avec « Réécouter » ; le personnage guide prend la place de la bulle quand il réagit (#183). */
 .parole-et-reecouter { position: relative; display: flex; align-items: center; gap: 8px; flex: 1 1 12rem; min-width: 0; max-width: 100%; }
-.parole-et-reecouter > .bulle { flex: 1 1 0; min-width: 0; overflow-wrap: anywhere; }
-.parole-et-reecouter > .consigne-de-l-exercice { flex: 1 1 0; min-width: 0; }
+.texte-de-la-bulle { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: stretch; gap: 8px; }
+.texte-de-la-bulle > .bulle { overflow-wrap: anywhere; }
 /* Vide, la zone qui annonce la consigne reste dans la page mais ne prend aucune place. */
-.parole-et-reecouter > .consigne-de-l-exercice:empty { position: absolute; width: 0; height: 0; overflow: hidden; }
+.texte-de-la-bulle > .consigne-de-l-exercice:empty { position: absolute; width: 0; height: 0; overflow: hidden; }
 .parole-et-reecouter .consigne { width: 100%; box-sizing: border-box; text-align: center; }
 .reecouter-rond { flex: none; display: grid; place-items: center; width: 48px; height: 48px; padding: 0; border-radius: 50%; }
 .reecouter-rond svg { display: block; }

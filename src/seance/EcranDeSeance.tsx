@@ -21,6 +21,7 @@ import { TexteSurligne } from "./TexteSurligne.tsx";
 import { laVoixNeLitPas, type Voix } from "../voix/index.ts";
 import { BoutonReecouter } from "./BoutonReecouter.tsx";
 import { BulleDuPersonnageGuide } from "./BulleDuPersonnageGuide.tsx";
+import { questionAfficheeDansLaBulle } from "./questionDeLaBulle.ts";
 import { PersonnageGuideEtSaScene } from "./PersonnageGuideEtSaScene.tsx";
 import { EcranDeFin } from "./fin-de-seance/EcranDeFin.tsx";
 import { lireLesMeilleuresEtoilesAvantLaSeance } from "./fin-de-seance/meilleures-etoiles-du-profil-lues.ts";
@@ -204,6 +205,8 @@ function SeanceEnCours(
   });
   const personnageMontre = consigne === undefined || deroulement.personnageGuideReagit || reponseFausse.enCours !== undefined;
   const consigneMontree = personnageMontre ? undefined : consigne;
+  const questionDansLaBulle = personnageMontre ? undefined : questionAfficheeDansLaBulle(deroulement.parole, exerciceDeLaLecon, schema?.enonce);
+  const texteDeLaBulle = personnageMontre ? deroulement.parole?.texte : questionDansLaBulle;
   const reecouterInactif = figee !== undefined ||
     (deroulement.presentationEnCours && !deroulement.personnageGuideReagit && deroulement.parole?.nature !== "consigne");
   const zoneDeLExercice = useRef<HTMLDivElement>(null);
@@ -258,20 +261,22 @@ function SeanceEnCours(
             <PersonnageGuideEtSaScene univers={univers} humeur={deroulement.humeur} reponseFausse={reponseFausse} />
           )}
           <div className="parole-et-reecouter">
-            <BulleDuPersonnageGuide
-              texte={personnageMontre ? deroulement.parole?.texte : undefined}
-              nature={deroulement.parole?.nature}
-              rangDuMotPrononce={deroulement.rangDuMotPrononce}
-            />
-            <div className="consigne-de-l-exercice" aria-live="polite">
-              {consigneMontree !== undefined && (
-                <p className="consigne" data-testid="consigne">
-                  <TexteSurligne
-                    texte={consigneMontree}
-                    rangDuMotPrononce={laConsigneEstLue ? deroulement.rangDuMotPrononce : undefined}
-                  />
-                </p>
-              )}
+            <div className="texte-de-la-bulle">
+              <div className="consigne-de-l-exercice" aria-live="polite">
+                {consigneMontree !== undefined && (
+                  <p className="consigne" data-testid="consigne">
+                    <TexteSurligne
+                      texte={consigneMontree}
+                      rangDuMotPrononce={laConsigneEstLue ? deroulement.rangDuMotPrononce : undefined}
+                    />
+                  </p>
+                )}
+              </div>
+              <BulleDuPersonnageGuide
+                texte={texteDeLaBulle}
+                nature={deroulement.parole?.nature}
+                rangDuMotPrononce={deroulement.rangDuMotPrononce}
+              />
             </div>
             <BoutonReecouter inactif={reecouterInactif} onReecouter={deroulement.reecouter} />
           </div>
