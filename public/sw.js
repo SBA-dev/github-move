@@ -110,7 +110,7 @@ const estUnSon = (reponse) => reponse.ok && (reponse.headers.get("content-type")
 
 async function cachePuisReseau(requete, nomDuCache = NOM_DU_CACHE, aGarder = (reponse) => reponse.ok) {
   const cache = await caches.open(nomDuCache);
-  const enCache = await cache.match(requete);
+  const enCache = await cache.match(requete, { ignoreVary: true });
   if (enCache) return enCache;
   const reponse = await fetch(requete);
   if (aGarder(reponse)) await cache.put(requete, reponse.clone());
