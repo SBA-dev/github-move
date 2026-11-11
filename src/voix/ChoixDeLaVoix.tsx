@@ -29,7 +29,7 @@ function Avertissement({ voix }: Props) {
     <p className="avertissement-de-voix">
       {voix.syntheseVocalePresente
         ? "Aucune voix française sur cet appareil : la voix de Savanturier lit les leçons ; une voix de l'appareil sert seulement aux phrases fabriquées à la volée, qui ne pourront pas être lues à voix haute."
-        : "Ce navigateur ne sait pas lire à voix haute."}
+        : "Ce navigateur n'a pas de voix : la voix de Savanturier lit les leçons ; les phrases fabriquées à la volée ne pourront pas être lues à voix haute."}
     </p>
   );
 }
