@@ -18,9 +18,9 @@ import {
 import { terminerLaLecture } from "../support/lecture-vocale.ts";
 import { RYTHME_PLUS_LENT, etatDeLaDictee } from "./dictee-et-conjugaison.steps.ts";
 import { leconAChoix, QUESTIONS_DE_TEST } from "./exercices-a-choix.steps.ts";
-import { bulle, injecter, interceptertLaBibliotheque } from "./etapes-puis-exercices.steps.ts";
+import { bulle, commencerSeulementLExercice, injecter, interceptertLaBibliotheque, leconCourante, ouvrirLaPageDeLaLecon } from "./etapes-puis-exercices.steps.ts";
 import type { Famille } from "../support/famille.ts";
-import { Given, type Monde, Then } from "./fixtures.ts";
+import { Given, type Monde, Then, When } from "./fixtures.ts";
 import { jouerAvecLeProfilReel } from "./profil-reel.ts";
 import { EXPRESSIONS_PAR_PERSONNAGE, FELICITATIONS_COMMUNES } from "./univers.steps.ts";
 import { chargerUneFois } from "./pwa.steps.ts";
@@ -33,6 +33,7 @@ import {
   ouvrir,
   ouvrirLaPageDeLaLeconDeTest,
   preparerLaPage,
+  reappliquerLAppareil,
   scenario,
 } from "./voix.steps.ts";
 
@@ -410,4 +411,44 @@ Then(/^Noisette dit une félicitation avec la voix enregistrée$/, async ({ page
     expect(octets, `le MP3 de « ${texte} » existe et n'est pas vide`).toBeGreaterThan(0);
   }
   expect((await paroles(page)).filter((parole) => parole.source === "appareil" && parole.texte === felicitation)).toEqual([]);
+});
+
+// --- Les consignes d'une leçon de la bibliothèque (vrai répertoire, aucune interception)
+
+When(/^Léa joue la leçon « ([^«»]+) » de la bibliothèque$/, async ({ page }, titre: string) => {
+  await reappliquerLAppareil(page);
+  await ouvrirLaPageDeLaLecon(page, titre);
+});
+
+function exercicesAvecConsigne(page: Page): { titre: string; consigne: string }[] {
+  return leconCourante(page).exercices.flatMap((exercice) =>
+    typeof exercice["consigne"] === "string" && typeof exercice["titre"] === "string"
+      ? [{ titre: exercice["titre"], consigne: normaliser(exercice["consigne"]) }]
+      : []
+  );
+}
+
+Then(/^Léa entend Noisette lire chaque consigne de la leçon avec la voix enregistrée$/, async ({ page }) => {
+  const lecon = leconCourante(page);
+  const exercices = exercicesAvecConsigne(page);
+  expect(exercices.length, `la leçon « ${lecon.titre} » a des consignes à lire`).toBeGreaterThan(0);
+  const repertoire = await page.evaluate(async () => (await fetch("/voix/repertoire.json")).json()) as Repertoire;
+  for (const [rang, { titre, consigne: consigneDeLaBibliotheque }] of exercices.entries()) {
+    // Chaque exercice se joue sur une page neuve : le journal de lecture ne garde que sa consigne.
+    if (rang > 0) await ouvrirLaPageDeLaLecon(page, lecon.titre);
+    await commencerSeulementLExercice(page, titre);
+    await expect(consigneAffichee(page)).toHaveText(consigneDeLaBibliotheque);
+    await expect(messageDeVoixIndisponible(page)).toHaveCount(0);
+    for (const { cle, texte } of phrasesAvecCle(consigneDeLaBibliotheque)) {
+      const empreinte = repertoire.phrases[cle]?.normale;
+      expect(empreinte, `« ${texte} » (consigne de « ${titre} ») est dans le répertoire des phrases enregistrées`).toBeDefined();
+      const adresse = adresseDuMp3(cle, empreinte ?? "", "normale");
+      await expect.poll(async () => (await mp3Lus(page)).some((lu) => lu.endsWith(adresse)), { message: `le MP3 de « ${texte} » est lu` }).toBe(true);
+    }
+    expect((await paroles(page)).filter((parole) => parole.source === "appareil"), `aucune consigne de « ${titre} » n'est lue par la voix de l'appareil`).toEqual([]);
+  }
+});
+
+Then(/^Léa ne voit aucun message de voix indisponible$/, async ({ page }) => {
+  await expect(messageDeVoixIndisponible(page)).toHaveCount(0);
 });

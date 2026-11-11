@@ -66,6 +66,13 @@ def _poids_des_mp3(dossier):
     return sum(fichier.stat().st_size for fichier in dossier.glob("*.mp3"))
 
 
+def _repertoire_existant(dossier):
+    fichier = dossier / "repertoire.json"
+    if not fichier.is_file():
+        return {}
+    return json.loads(fichier.read_text(encoding="utf-8"))["phrases"]
+
+
 def fabriquer_les_phrases(
     phrases,
     *,
@@ -81,7 +88,7 @@ def fabriquer_les_phrases(
     dossier = Path(dossier)
     dossier.mkdir(parents=True, exist_ok=True)
     _verifier_les_cles(phrases, cle_de)
-    repertoire = {}
+    repertoire = _repertoire_existant(dossier)
     fabriquees = sautees = 0
     for phrase in phrases:
         cle = cle_de(phrase.texte)

@@ -40,9 +40,14 @@ function estPwa(etiquettes: readonly string[]): boolean {
   return etiquettes.includes("@pwa") || etiquettes.includes("@issue-8");
 }
 
+/** Story #182 : les paroles fixes et les leçons d'un niveau fabriqué (@niveau-cp, 182b) sont lues par les vrais MP3 de public/voix. */
+export function litLesVraisMp3(etiquettes: readonly string[]): boolean {
+  return ["@paroles-fixes-fabriquees", "@niveau-cp"].some((etiquette) => etiquettes.includes(etiquette));
+}
+
 /** Story #182 : seuls ces scénarios lisent le vrai répertoire des voix (public/voix) ; les autres reçoivent un répertoire vide. */
 function litLeVraiRepertoireDesVoix(etiquettes: readonly string[]): boolean {
-  return ["@paroles-fixes-fabriquees", "@production"].some((etiquette) => etiquettes.includes(etiquette));
+  return litLesVraisMp3(etiquettes) || etiquettes.includes("@production");
 }
 
 export const test = base.extend<{
