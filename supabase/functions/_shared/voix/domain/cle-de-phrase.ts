@@ -21,6 +21,10 @@ function normalisee(phrase: string): string {
   return phrase.normalize("NFC").replaceAll("’", "'");
 }
 
+export function cleDePhrase(phrase: string): string {
+  return empreinteFnv1a64(normalisee(phrase));
+}
+
 export function phrasesAvecCle(brut: string): PhraseAvecCle[] {
   const phrases = texteALire(brut)?.phrases ?? [];
   return phrases
