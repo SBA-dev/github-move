@@ -7,16 +7,16 @@ Fonctionnalité: Écran de séance : une barre du haut et une barre d'action en 
 
   Contexte Apprentissage (docs/stories/183/domain-model.md). Story d'interface : la séance de leçon seulement
   (séance complète et séance d'un exercice). Le test de départ, la séance de révision et la séance de défi gardent
-  leur présentation (question 183.1). La fin de la séance garde la sienne (question 183.8).
-  Décisions 1 à 7 du PO du 2026-11-07 (corps de l'issue #183). Les scénarios tagués @a-valider suivent une
-  recommandation qui attend la réponse du PO (docs/stories/183/criteres.md, « Questions ouvertes »).
+  leur présentation (réponse 183.1). La fin de la séance garde la sienne (réponse 183.8).
+  Décisions 1 à 7 du PO du 2026-11-07 (corps de l'issue #183). Cadrage validé par le PO le 2026-11-11 : toutes
+  les recommandations sont retenues (docs/stories/183/criteres.md, « Décisions »).
 
   Mots d'interface employés dans ces scénarios (hors glossaire, comme « récipient ») :
   - « la barre du haut » : Retour (une flèche, nom « Retour »), le nom de la leçon, le son, puis la barre de
     progression et le compteur « 2 / 6 », qui montrent l'avancement de la séance ;
   - « la barre d'action » : en bas de l'écran, le bouton principal (« Valider », « Continuer ») et, à côté,
     « Je ne sais pas », plus discret ;
-  - « la pause » : la feuille « On fait une pause ? » (glossaire, « Pause », à valider).
+  - « la pause » : la feuille « On fait une pause ? » (glossaire, « Pause »).
 
   Leçon de la bibliothèque utilisée : « Les sons ou, on, an » (fr-cp-sons-ou-on-an : 3 étapes de leçon, un
   exercice bulles « Quel son entends-tu ? » et un exercice classer « Les maisons des sons », 15 questions).
@@ -46,7 +46,6 @@ Fonctionnalité: Écran de séance : une barre du haut et une barre d'action en 
         | la question « Dans le mot « poule », quel son entends-tu ? » s'affiche           | 0 / 15   | 0        |
         | Léa répond « ou » à la question « Dans le mot « poule », quel son entends-tu ? » | 1 / 15   | 1        |
 
-    @a-valider
     Scénario: Une question réussie fait avancer la barre de progression, avec un éclat sur le compteur
       Étant donné que Léa joue la séance complète de la leçon « Les sons ou, on, an »
       Et que Léa en est à la question « Dans le mot « poule », quel son entends-tu ? »
@@ -83,14 +82,12 @@ Fonctionnalité: Écran de séance : une barre du haut et une barre d'action en 
         | fausse  | on    | Léa touche Retour                      |
         | juste   | ou    | Léa fait le geste retour du navigateur |
 
-    @a-valider
     Scénario: « Je ne sais pas » compte comme la première réponse : Retour ouvre la pause
       Étant donné que Léa joue la séance complète de la leçon « Les sons ou, on, an »
       Et que Léa a dit « Je ne sais pas » à la question « Dans le mot « poule », quel son entends-tu ? »
       Quand Léa touche Retour
       Alors Léa voit la pause « On fait une pause ? »
 
-    @a-valider
     Scénario: Dans une fluence, le chrono démarré sans aucune réponse ne suffit pas : Retour ramène à la page de la leçon
       Étant donné que Léa fait la fluence « Calcul rapide : les doubles »
       Et que le chrono de la fluence a démarré, sans aucune réponse de Léa
@@ -121,7 +118,6 @@ Fonctionnalité: Écran de séance : une barre du haut et une barre d'action en 
       Alors Léa voit la page de la leçon « Les sons ou, on, an »
       Et Léa n'entend plus Noisette
 
-    @a-valider
     Scénario: Ouvrir la pause arrête la voix du personnage guide
       Étant donné que Léa joue la séance complète de la leçon « Les sons ou, on, an »
       Et que Léa a répondu « ou » à la question « Dans le mot « poule », quel son entends-tu ? »
@@ -153,7 +149,6 @@ Fonctionnalité: Écran de séance : une barre du haut et une barre d'action en 
       Et ensuite, Léa voit de nouveau la consigne, sans Coach Léo
       Et la question « Combien font 3 + 4 ? » reste posée
 
-    @a-valider
     Scénario: À une réponse fausse suivante, Noisette apparaît pour encourager Léa, puis la consigne revient
       Étant donné que Léa joue la séance complète de la leçon « Les sons ou, on, an »
       Et que Léa a déjà fait une erreur dans la séance
@@ -172,14 +167,12 @@ Fonctionnalité: Écran de séance : une barre du haut et une barre d'action en 
       Et Léa voit un seul bouton « Réécouter »
       Mais Léa ne voit pas de bouton « Relire la consigne »
 
-    @a-valider
     Scénario: Dans un exercice bulles, « Réécouter » relit la consigne, puis la question
       Étant donné qu'une leçon de test « Compter » a un exercice bulles de consigne « Touche le bon nombre. » qui pose « Combien font 2 + 1 ? »
       Et que Léa joue la séance complète de la leçon « Compter »
       Quand Léa demande à réécouter
       Alors Léa entend de nouveau Noisette lire « Touche le bon nombre. », puis « Combien font 2 plus 1 ? »
 
-    @a-valider
     Scénario: Pendant que le personnage guide réagit à une réponse, « Réécouter » redit sa phrase
       Étant donné que Léa joue seulement l'exercice « Les maisons des sons » de la leçon « Les sons ou, on, an »
       Et que Léa a posé l'étiquette « loup » dans la maison « on »
@@ -188,7 +181,6 @@ Fonctionnalité: Écran de séance : une barre du haut et une barre d'action en 
 
   Règle: La barre d'action, en bas de l'écran, porte le bouton principal toujours au même endroit, et « Je ne sais pas » à côté ; elle n'apparaît que s'il y a une action
 
-    @a-valider
     Scénario: Dans un calcul au clavier de cristaux, « Valider » et « Je ne sais pas » sont dans la barre d'action
       Étant donné que Tom a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
       Et que Tom en est au calcul « 12 − 5 » d'une leçon de test de niveau CE1
@@ -202,7 +194,6 @@ Fonctionnalité: Écran de séance : une barre du haut et une barre d'action en 
       Alors Léa voit « Continuer » en bouton principal de la barre d'action, en bas de l'écran
       Mais Léa ne voit pas « Je ne sais pas »
 
-    @a-valider
     Scénario: Dans un exercice bulles, l'enfant répond en touchant une bulle : la barre d'action ne porte que « Je ne sais pas »
       Étant donné que Léa joue l'exercice « Quel son entends-tu ? » de la leçon « Les sons ou, on, an »
       Quand la question « Dans le mot « poule », quel son entends-tu ? » s'affiche
