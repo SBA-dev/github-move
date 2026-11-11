@@ -19,9 +19,16 @@ export class LecteurAvecRepli implements LecteurAVoixHaute {
 
   async lire(lecture: LectureDemandee): Promise<void> {
     this.arrete = false;
-    for (const morceau of this.planAJouer(lecture)) {
-      if (this.arrete) return;
-      await this.jouer(morceau, lecture);
+    try {
+      await this.jouerLePlan(lecture);
+    } catch (erreur) {
+      const remplacement = lecture.texteEnregistreDeRemplacement;
+      if (!(erreur instanceof VoixIndisponible) || remplacement === undefined) throw erreur;
+      await this.jouerLePlan({
+        ...lecture,
+        phrases: lecture.phrases.slice(0, 1).map((reglage) => ({ ...reglage, phrase: remplacement })),
+        texteEnregistreDeRemplacement: undefined,
+      });
     }
   }
 
@@ -31,23 +38,16 @@ export class LecteurAvecRepli implements LecteurAVoixHaute {
     this.dependances.voixDeLAppareil.arreter();
   }
 
-  private planAJouer(lecture: LectureDemandee): MorceauDeLecture[] {
-    const { repertoire, aUneVoixFrancaise } = this.dependances;
-    const plan = planDeLecture(lecture, repertoire);
-    if (aUneVoixFrancaise() || !this.manqueUnEnregistrement(lecture, plan)) return plan;
-    const remplacement = lecture.texteEnregistreDeRemplacement;
-    if (remplacement === undefined) throw new VoixIndisponible();
-    const planDeRemplacement = planDeLecture(
-      { ...lecture, phrases: [{ phrase: remplacement, hauteur: 1, rythme: 1 }] },
-      repertoire,
-    );
-    if (this.manqueUnEnregistrement(lecture, planDeRemplacement)) throw new VoixIndisponible();
-    return planDeRemplacement;
+  private async jouerLePlan(lecture: LectureDemandee): Promise<void> {
+    for (const morceau of planDeLecture(lecture, this.dependances.repertoire)) {
+      if (this.arrete) return;
+      await this.jouer(morceau, lecture);
+    }
   }
 
-  private manqueUnEnregistrement(lecture: LectureDemandee, plan: MorceauDeLecture[]): boolean {
+  private verifierQueLaVoixDeLAppareilPeutDireLaPhrase(lecture: LectureDemandee): void {
     const estFrancaise = lecture.langue.toLowerCase().startsWith("fr");
-    return estFrancaise && plan.some((morceau) => morceau.source === "voixDeLAppareil");
+    if (estFrancaise && !this.dependances.aUneVoixFrancaise()) throw new VoixIndisponible();
   }
 
   private async jouer(morceau: MorceauDeLecture, lecture: LectureDemandee): Promise<void> {
@@ -59,6 +59,7 @@ export class LecteurAvecRepli implements LecteurAVoixHaute {
         if (erreur instanceof VoixBloquee) throw erreur;
       }
     }
+    this.verifierQueLaVoixDeLAppareilPeutDireLaPhrase(lecture);
     await this.dependances.voixDeLAppareil.lire({
       ...lecture,
       phrases: lecture.phrases.filter((_, rang) => rang === morceau.rang),
