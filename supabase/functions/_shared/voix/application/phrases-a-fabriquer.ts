@@ -1,5 +1,6 @@
 import { textesDitsDansLaLecon } from "../../apprentissage/domain/index.ts";
 import type { Lecon } from "../../catalogue/domain/index.ts";
+import { Niveau } from "../../catalogue/domain/index.ts";
 import { phrasesAvecCle } from "../domain/index.ts";
 
 export const NIVEAU_DES_PAROLES_FIXES = "commun";
@@ -7,11 +8,16 @@ export const NIVEAU_DES_PAROLES_FIXES = "commun";
 export type PhraseAFabriquer = {
   readonly cle: string;
   readonly phrase: string;
-  readonly niveau: string;
+  niveau: string;
   readonly lecons: string[];
 };
 
 type Options = { readonly niveau?: string };
+
+function estPlusBas(niveau: string, reference: string): boolean {
+  if (reference === NIVEAU_DES_PAROLES_FIXES || niveau === NIVEAU_DES_PAROLES_FIXES) return false;
+  return Niveau.de(reference).estAuDessusDe(Niveau.de(niveau));
+}
 
 export function phrasesAFabriquer(
   lecons: readonly Lecon[],
@@ -23,6 +29,7 @@ export function phrasesAFabriquer(
   const ajouter = (brut: string, niveau: string, idDeLecon?: string) => {
     for (const { cle, texte } of phrasesAvecCle(brut)) {
       const entree = parCle.get(cle) ?? { cle, phrase: texte, niveau, lecons: [] };
+      if (estPlusBas(niveau, entree.niveau)) entree.niveau = niveau;
       if (idDeLecon !== undefined && !entree.lecons.includes(idDeLecon)) entree.lecons.push(idDeLecon);
       parCle.set(cle, entree);
     }
