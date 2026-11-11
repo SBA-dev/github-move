@@ -499,7 +499,8 @@ Then(/^la consigne et tous les choix de la question restent visibles en entier$/
   const guide = page.getByTestId("personnage-guide").first();
   const choix = await page.getByTestId("choix").all();
   expect(choix.length, "choix de la question").toBeGreaterThan(0);
-  const boiteDuGuide = await guide.boundingBox();
+  // Pendant une question le personnage guide n'est montré que s'il réagit : absent, il ne cache rien.
+  const boiteDuGuide = (await guide.count()) === 0 ? null : await guide.boundingBox();
   for (const element of [consigne, ...choix]) {
     await element.scrollIntoViewIfNeeded();
     const boite = await element.boundingBox();

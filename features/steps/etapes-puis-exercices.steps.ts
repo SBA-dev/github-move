@@ -587,7 +587,8 @@ Then(/^Léa voit la page de la leçon « (.+) »$/, async ({ page }, titre: stri
 
 Then(/^chaque commande de la séance mesure au moins 44 px de haut et de large$/, async ({ page }) => {
   const seance = page.getByRole("region").filter({ has: recipient(page) });
-  const commandes = await seance.getByRole("button").all();
+  // La barre d'action est posée dans l'application, hors de la région de la séance : ses boutons comptent aussi.
+  const commandes = [...(await seance.getByRole("button").all()), ...(await page.getByTestId("barre-d-action").getByRole("button").all())];
   expect(commandes.length).toBeGreaterThan(0);
   for (const commande of commandes) {
     const boite = await commande.boundingBox();

@@ -398,7 +398,8 @@ Then(
   /^chaque commande de la séance mesure au moins 44 px de haut et de large, et les boutons de la barre d'action au moins 52 px de haut$/,
   async ({ page }) => {
     const seance = page.getByRole("region").filter({ has: recipient(page) });
-    const commandes = await seance.getByRole("button").all();
+    // La barre d'action est posée dans l'application, hors de la région de la séance : ses boutons comptent aussi.
+    const commandes = [...(await seance.getByRole("button").all()), ...(await barreDAction(page).getByRole("button").all())];
     expect(commandes.length).toBeGreaterThan(0);
     for (const commande of commandes) {
       const boite = await commande.boundingBox();
@@ -463,9 +464,12 @@ Then(
 );
 
 Then(/^les libellés de la barre d'action passent à la ligne sans couper un mot$/, async ({ page }) => {
+  await expect(barreDAction(page)).toHaveAttribute("data-mode-dys", "true");
   const boutons = await barreDAction(page).getByRole("button").all();
   expect(boutons.length, "la barre d'action porte au moins un bouton").toBeGreaterThan(0);
   for (const bouton of boutons) {
+    const famille = await bouton.evaluate((element) => getComputedStyle(element).fontFamily);
+    expect(famille, `police du mode dys sur « ${await bouton.textContent()} »`).toContain("Andika");
     const mesures = await mesurerLeTexte(bouton);
     expect(mesures.motsCoupes, `mots coupés dans « ${await bouton.textContent()} »`).toEqual([]);
     expect(mesures.debordement, "débordement horizontal").toBeLessThanOrEqual(0);
