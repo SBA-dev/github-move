@@ -16,7 +16,7 @@ import type { ValeurDuClavierDesDictees } from "@domain/famille";
 import type { MeilleuresEtoilesDuProfil, Univers } from "@domain/motivation";
 import { lireLaQueteAvantLaSeance, type QueteLueAvantLaSeance } from "../accueil/lire-la-quete-du-jour.ts";
 import { lireLeNombreDeSeancesAvantLaSeance } from "../histoire/nombre-de-seances-avant-la-seance.ts";
-import { TexteEnSyllabes } from "../reglages/index.ts";
+import { TexteEnSyllabes, useModeDys } from "../reglages/index.ts";
 import { ContexteDuRetour, EtincellesDuTexteComplet } from "../retours/index.ts";
 import { TexteSurligne } from "./TexteSurligne.tsx";
 import { laVoixNeLitPas, type Voix } from "../voix/index.ts";
@@ -252,8 +252,9 @@ function SeanceEnCours(
     </button>
   );
 
+  const modeDys = useModeDys();
   const barreDAction = (
-    <div className="barre-d-action" data-testid="barre-d-action" inert={pauseOuverte}>
+    <div className="barre-d-action" data-testid="barre-d-action" data-mode-dys={modeDys ? "true" : undefined} inert={pauseOuverte}>
       <div ref={setEmplacementDeLaBarreDAction} className="emplacement-de-la-barre-d-action" />
       {etape && <button type="button" onClick={() => void deroulement.continuer()}>Continuer</button>}
       {continuerApresLaReussite}
