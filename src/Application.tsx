@@ -88,6 +88,7 @@ function lieuAffiche(demande: Lieu, espaceParent: EtatDeLEspaceParent["type"], c
 
 export function Application() {
   const [defiEnCours, setDefiEnCours] = useState<Defi | GrandDefi | undefined>();
+  const [seanceFinie, setSeanceFinie] = useState(false);
   const { lieu: lieuDemande, retourPossible, viaRetour, aller, remplacer, revenir, revenirA } = useNavigation();
   const acces = useAccesALEspaceParent();
   const connexion = useConnexion();
@@ -202,6 +203,8 @@ export function Application() {
     else remplacer(destination);
   };
   const revenirALAccueilDeLEnfant = () => revenirA("jeu");
+  /** Pendant les questions d'une séance de leçon, la barre du haut de la séance tient lieu d'en-tête. */
+  const barreDuHautDeSeance = ecran === "seance" && !seanceFinie;
   const habillage = parent ? HABILLAGE_DU_PARENT : habillageDeLUnivers(univers.cle);
 
   return (
@@ -211,16 +214,18 @@ export function Application() {
         <TenueDuProfil profil={profil?.id}>
           <div className="application" style={habillage} data-univers={univers.cle} data-registre={parent ? "parent" : "enfant"}>
             {!parent && <Paysage univers={univers.cle} />}
-            <EnTete
-              surAccueil={ecran === "accueil"}
-              enfant={profil}
-              son={voix.son}
-              retourPossible={retourPossible && ecran !== "seance" && ecran !== "defi"}
-              onBasculerLeSon={voix.basculerLeSon}
-              onAccueil={() => aller("accueil")}
-              onRetour={revenir}
-              onEspaceParent={entrerDansLEspaceParent}
-            />
+            {!barreDuHautDeSeance && (
+              <EnTete
+                surAccueil={ecran === "accueil"}
+                enfant={profil}
+                son={voix.son}
+                retourPossible={retourPossible && ecran !== "seance" && ecran !== "defi"}
+                onBasculerLeSon={voix.basculerLeSon}
+                onAccueil={() => aller("accueil")}
+                onRetour={revenir}
+                onEspaceParent={entrerDansLEspaceParent}
+              />
+            )}
             <ModeDys value={profil?.reglages.modeDys ?? false}>
               <main className="ecran" data-mode-dys={profil?.reglages.modeDys ? "true" : undefined}>
                 <div role="status" className="voix-bloquee">
@@ -365,6 +370,7 @@ export function Application() {
                       toutLireAVoixHaute={profilEnCours.reglages.toutLireAVoixHaute}
                       clavierDesDictees={profilEnCours.reglages.clavierDesDictees.valeur}
                       onRetour={() => revenirA({ ecran: "lecon", leconId: lieu.leconId })}
+                      onSeanceFinie={setSeanceFinie}
                       onLireLEpisode={(numero) => aller({ ecran: "episode", numero, origine: "fin-de-seance" })}
                       onLeconSuivante={(leconId) => aller({ ecran: "lecon", leconId })}
                       onReleverLeDefi={releverLeDefi}

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export type EcranSimple =
   | "accueil" | "jeu" | "parcours" | "toutes-les-lecons" | "medailles" | "test-de-depart" | "espace-parent" | "revision" | "defi";
@@ -69,6 +69,50 @@ function profondeurCourante(): number {
   const etat: unknown = history.state;
   const profondeur = (etat as { profondeur?: unknown } | null)?.profondeur;
   return typeof profondeur === "number" ? profondeur : 0;
+}
+
+/**
+ * Retient le geste retour du navigateur ou du téléphone : tant que `active`, une entrée de garde (même adresse) est posée dans l'historique ;
+ * le geste la retire et appelle `surRetenu` au lieu de quitter l'écran. `lever` ôte la garde encore posée avant de faire `apres`.
+ */
+export function useGardeDuRetour(active: boolean, surRetenu: () => void): (apres: () => void) => void {
+  const posee = useRef(false);
+  const levee = useRef(false);
+  const surRetenuActuel = useRef(surRetenu);
+  useEffect(() => {
+    surRetenuActuel.current = surRetenu;
+  }, [surRetenu]);
+
+  useEffect(() => {
+    const surRetour = () => {
+      if (!posee.current) return;
+      posee.current = false;
+      if (!levee.current) surRetenuActuel.current();
+    };
+    addEventListener("popstate", surRetour);
+    return () => removeEventListener("popstate", surRetour);
+  }, []);
+
+  useEffect(() => {
+    if (!active || posee.current) return;
+    history.pushState(history.state, "", location.href);
+    posee.current = true;
+  }, [active]);
+
+  return useCallback((apres: () => void) => {
+    if (!posee.current) {
+      apres();
+      return;
+    }
+    levee.current = true;
+    const surLaGardeRetiree = () => {
+      removeEventListener("popstate", surLaGardeRetiree);
+      levee.current = false;
+      apres();
+    };
+    addEventListener("popstate", surLaGardeRetiree);
+    history.back();
+  }, []);
 }
 
 export function useNavigation() {

@@ -1435,3 +1435,117 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
   .petit-train[data-etat="avance"] { animation: a-coup-du-petit-train .3s ease-in-out; }
 }
 @keyframes a-coup-du-petit-train { 50% { translate: 6px 0; } }
+
+/* ===== Écran de séance de leçon (#183) : barre du haut, barre de progression, feuille de pause =====
+   L'en-tête de l'application (.en-tete) n'est pas rendu pendant les questions : ses styles ne sont pas touchés ici. */
+
+/* --- BarreDuHautDeSeance : Retour | nom de la leçon | Son, puis l'avancement sur toute la largeur. */
+.application:has(.barre-du-haut-de-seance) .ecran { padding-top: 0; }
+.barre-du-haut-de-seance {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 4px 8px;
+  justify-self: stretch;
+  /* Pleine largeur de l'écran : on annule le remplissage de .ecran pour laisser la place au nom de la leçon. */
+  margin-inline: calc(-1 * max(16px, env(safe-area-inset-left))) calc(-1 * max(16px, env(safe-area-inset-right)));
+  padding: max(8px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) 6px max(8px, env(safe-area-inset-left));
+  border: 0;
+  border-bottom: 2px solid var(--contour);
+  border-radius: 0 0 var(--rayon) var(--rayon);
+  background: var(--surface-dense);
+}
+.barre-du-haut-de-seance .retour-de-la-seance { padding: 8px; }
+.barre-du-haut-de-seance h2,
+.seance .barre-du-haut-de-seance h2 {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+  background: none;
+  color: var(--principale);
+  font-size: clamp(.95rem, 4.4vw, 1.2rem);
+  line-height: 1.2;
+  text-align: center;
+  overflow-wrap: normal;
+  hyphens: none;
+  text-wrap: balance;
+}
+.barre-du-haut-de-seance > button[data-son] { padding: 8px 10px; font-size: .95rem; }
+[data-mode-dys="true"] .barre-du-haut-de-seance h2 { font-size: clamp(.8rem, 3.6vw, 1rem); line-height: 1.25; letter-spacing: .02em; word-spacing: .12em; }
+[data-mode-dys="true"] .barre-du-haut-de-seance > button[data-son] { padding: 8px; font-size: .8rem; letter-spacing: 0; word-spacing: 0; }
+
+/* --- BarreDeProgressionDeLaSeance : fine barre continue, compteur dans une pastille dessous. */
+.progression-de-la-seance { grid-column: 1 / -1; display: grid; justify-items: center; gap: 2px; }
+.piste-de-la-seance {
+  width: 100%;
+  height: 8px;
+  overflow: hidden;
+  border: 2px solid var(--contour);
+  border-radius: 999px;
+  background: var(--surface);
+}
+.remplissage-de-la-seance {
+  width: calc(var(--avancement) * 100%);
+  height: 100%;
+  border-radius: 999px;
+  background: var(--principale);
+  transition: width .4s ease-out;
+}
+.compteur-de-la-seance {
+  padding: 0 12px;
+  border: 2px solid var(--contour);
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: .9rem;
+  font-weight: 700;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+}
+[data-mode-dys="true"] .compteur-de-la-seance { line-height: 1.5; letter-spacing: 0; word-spacing: 0; }
+.compteur-de-la-seance[data-eclat="true"] { animation: eclat-du-compteur .6s ease-out; }
+@keyframes eclat-du-compteur {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 var(--principale); background: var(--surface); }
+  40% { transform: scale(1.25); box-shadow: 0 0 0 6px color-mix(in srgb, var(--principale) 45%, transparent); background: var(--principale); color: var(--sur-principale); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 transparent; background: var(--surface); }
+}
+
+/* --- FeuilleDePause : voile sur tout l'écran, feuille posée en bas, sans glissement avec les mouvements réduits. */
+.voile-de-la-pause {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+  background: color-mix(in srgb, var(--contour) 55%, transparent);
+}
+.feuille-de-pause {
+  display: grid;
+  gap: 12px;
+  width: min(100%, 28rem);
+  max-height: 100%;
+  overflow-y: auto;
+  padding: 16px;
+  border: var(--epaisseur-du-contour) solid var(--contour);
+  border-radius: var(--rayon-grand);
+  background: var(--surface);
+  text-align: center;
+  animation: feuille-de-pause-qui-monte .3s ease-out;
+}
+.feuille-de-pause h3 { margin: 0; font-size: 1.4rem; overflow-wrap: normal; hyphens: none; }
+.feuille-de-pause button { width: 100%; }
+.feuille-de-pause .retour-a-la-lecon { color: var(--texte); background: var(--surface); }
+.feuille-de-pause .retour-a-la-lecon:hover { background: var(--fond-doux); }
+@keyframes feuille-de-pause-qui-monte {
+  from { transform: translateY(40px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .remplissage-de-la-seance { transition: none; }
+  .compteur-de-la-seance, .feuille-de-pause { animation: none; }
+}

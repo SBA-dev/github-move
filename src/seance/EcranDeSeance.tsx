@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ChoixDeSeance,
   consigneAffichee,
@@ -37,7 +37,9 @@ import { etatDeLaVoix } from "./etat-de-la-voix.ts";
 import { generateurIdDuNavigateur } from "./generateur-id-navigateur.ts";
 import { hasardDuNavigateur } from "./hasard-navigateur.ts";
 import { horlogeDuNavigateur } from "./horloge.ts";
-import { RecipientDeProgression } from "./RecipientDeProgression.tsx";
+import { BarreDuHautDeSeance } from "./BarreDuHautDeSeance.tsx";
+import { FeuilleDePause } from "./FeuilleDePause.tsx";
+import { useGardeDuRetour } from "../navigation.ts";
 import { useDeroulementDeSeance } from "./useDeroulementDeSeance.ts";
 import { useLecon } from "./useLecon.ts";
 import { useSceneDeReponseFausse } from "./useSceneDeReponseFausse.ts";
@@ -58,6 +60,8 @@ type Props = {
   /** Réglage du profil en cours : le clavier proposé pour écrire les mots dictés. */
   readonly clavierDesDictees: ValeurDuClavierDesDictees;
   readonly onRetour: () => void;
+  /** Pendant les questions, la barre du haut de la séance remplace l'en-tête de l'application ; à la fin de la séance, l'en-tête revient. */
+  readonly onSeanceFinie: (finie: boolean) => void;
   readonly onLireLEpisode: (numero: number) => void;
   readonly onLeconSuivante: (leconId: string) => void;
   readonly onToutesLesLecons: () => void;
@@ -163,7 +167,7 @@ type PropsEnCours = Omit<PropsDUnePartie, "exercice" | "profilId" | "clavierDesD
 };
 
 function SeanceEnCours(
-  { seance, lecon, prenom, niveau, univers, voix, toutLireAVoixHaute, meilleuresEtoilesAvant, nombreDeSeancesAvant, queteAvant, onRetour, onRejouer, onLireLEpisode, onLeconSuivante, onToutesLesLecons, onReleverLeDefi, onAccueil }: PropsEnCours,
+  { seance, lecon, prenom, niveau, univers, voix, toutLireAVoixHaute, meilleuresEtoilesAvant, nombreDeSeancesAvant, queteAvant, onRetour, onSeanceFinie, onRejouer, onLireLEpisode, onLeconSuivante, onToutesLesLecons, onReleverLeDefi, onAccueil }: PropsEnCours,
 ) {
   const deroulement = useDeroulementDeSeance(seance, lecon, voix, univers.personnageGuide, toutLireAVoixHaute, prenom);
   const voixCoupee = laVoixNeLitPas(voix);
@@ -207,17 +211,44 @@ function SeanceEnCours(
     dejaMonte.current = true;
   }, [exerciceCommence]);
 
+  const [pauseOuverte, setPauseOuverte] = useState(false);
+  const { couperLaVoix } = voix;
+  const ouvrirLaPause = useCallback(() => {
+    couperLaVoix();
+    setPauseOuverte(true);
+  }, [couperLaVoix]);
+  const continuerLaLecon = useCallback(() => setPauseOuverte(false), []);
+  const leverLaGarde = useGardeDuRetour(!finie && !pauseOuverte && seance.aRecuUneReponse(), finie ? continuerLaLecon : ouvrirLaPause);
+  const retournerALaLecon = () => leverLaGarde(onRetour);
+  const toucherRetour = () => seance.aRecuUneReponse() ? ouvrirLaPause() : retournerALaLecon();
+  useEffect(() => {
+    onSeanceFinie(finie);
+    return () => onSeanceFinie(false);
+  }, [finie, onSeanceFinie]);
+
   return (
     <ContexteDuRetour.Provider value={deroulement.retour}>
       <section ref={laSeance} className="seance" aria-labelledby="titre-de-la-seance">
-        <div className="entete-de-seance">
-          <button type="button" onClick={onRetour}>Retour</button>
-          <div>
-            <h2 id="titre-de-la-seance">{titre}</h2>
-            <p data-testid="niveau-et-matiere">{niveauEtMatiere}</p>
-          </div>
-        </div>
-        {!finie && <RecipientDeProgression avancement={seance.avancement()} />}
+        {finie
+          ? (
+            <div className="entete-de-seance">
+              <button type="button" onClick={retournerALaLecon}>Retour</button>
+              <div>
+                <h2 id="titre-de-la-seance">{titre}</h2>
+                <p data-testid="niveau-et-matiere">{niveauEtMatiere}</p>
+              </div>
+            </div>
+          )
+          : (
+            <BarreDuHautDeSeance
+              titre={titre}
+              avancement={seance.avancement()}
+              son={voix.son}
+              onRetour={toucherRetour}
+              onBasculerLeSon={voix.basculerLeSon}
+            />
+          )}
+        {pauseOuverte && !finie && <FeuilleDePause onContinuer={continuerLaLecon} onRetourALaLecon={retournerALaLecon} />}
         <div className="guide-et-parole">
           {!celebrationDeLUnivers && <PersonnageGuideEtSaScene univers={univers} humeur={deroulement.humeur} reponseFausse={reponseFausse} />}
           <BulleDuPersonnageGuide
