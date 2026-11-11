@@ -254,6 +254,14 @@ Fonctionnalité: La voix enregistrée lit les leçons sans rien installer sur l'
       Et Paul voit le message « Aucune voix française sur cet appareil : la voix de Savanturier lit les leçons ; une voix de l'appareil sert seulement aux phrases fabriquées à la volée, qui ne pourront pas être lues à voix haute. »
       Mais Paul ne voit pas le message « Aucune voix française trouvée sur cet appareil : installe-en une (voir ci-dessous), puis recharge la page. »
 
+    Scénario: Sur un navigateur qui ne sait pas lire à voix haute, le parent apprend que la voix de Savanturier lit les leçons
+      Étant donné que le navigateur ne sait pas lire à voix haute
+      Et que Paul est dans l'espace parent
+      Quand Paul ouvre le choix de voix
+      Alors Paul voit d'abord la voix de Savanturier, sans choix à faire
+      Et Paul voit le message « Ce navigateur n'a pas de voix : la voix de Savanturier lit les leçons ; les phrases fabriquées à la volée ne pourront pas être lues à voix haute. »
+      Mais Paul ne voit pas le message « Ce navigateur ne sait pas lire à voix haute. »
+
   Règle: Une leçon ouverte une fois avec le réseau reste lue par la voix enregistrée sans réseau
 
     @pwa
