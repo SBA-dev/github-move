@@ -1,6 +1,11 @@
 """Table de prononciation : change le texte envoyé à la voix, jamais le texte affiché ni la clé (story #182).
 
 Une entrée porte la casse exacte de son motif : « vas-y » et « Vas-y » sont deux entrées.
+
+Pour ajouter une entrée, ajouter à TABLE_DE_PRONONCIATION, avec son exemple :
+    EntreeDePrononciation("vas-y", "va-zi", "Allez, vas-y.", "Allez, va-zi.")
+Le motif doit toucher au moins une phrase de la bibliothèque, sinon la fabrication refuse de tourner.
+La table est vide tant que le PO n'a relevé aucun mot mal prononcé.
 """
 import re
 from dataclasses import dataclass
@@ -26,10 +31,7 @@ class ExempleDePrononciationEnEchec(Exception):
         self.motifs = motifs
 
 
-TABLE_DE_PRONONCIATION = [
-    EntreeDePrononciation("vas-y", "va-zi", "Allez, vas-y.", "Allez, va-zi."),
-    EntreeDePrononciation("CP", "cé pé", "Je suis au CP.", "Je suis au cé pé."),
-]
+TABLE_DE_PRONONCIATION = []
 
 
 def _motif_sur_mots_entiers(entree):
