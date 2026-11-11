@@ -16,3 +16,5 @@ Branche : `feature/182-voix-mp3-piper`, partie de `main` (`aa75d97`). Base : `ma
 
 - 00:46 UTC : annonce [Responsable] sur #193 : `git.bksp.space` autorisé (PO « 1 »). Téléchargement du dépôt du modèle, dans le scratchpad seulement (jamais dans le dépôt). Le dépôt contient trois modèles « tom » (`tom1`, `tom2`, `next`) de même configuration ; aucun n'est nommé `fr_FR-tom-medium`.
 - 00:55 UTC : page d'écoute publiée (six phrases × trois modèles × 24/32 kbit/s). Question #182.19 (quel modèle) posée sur #182. ⛔ n°1 toujours en attente.
+- 00:47 UTC : ⛔ n°1 répondue par le PO (« Reco tout », annonce [Responsable] sur #193) : toutes les recommandations #182.1 à #182.18 retenues, budget 45 Mo, découpage 182a → 182e. #182.19 (modèle 1, 2 ou 3) et #182.8a (24/32 kbit/s) restent posées ; elles ne bloquent pas 182a (faux Piper).
+- 01:00 UTC : passage au TDD de 182a. Mise à jour des scénarios et du modèle avec les réponses (po-acceptance, domain-modeler), en parallèle du premier comportement.
