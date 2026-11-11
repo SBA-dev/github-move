@@ -14,7 +14,7 @@ import {
 import { estSurUnProfilReel } from "./profil-reel.ts";
 import { choisirSonProfil, modifierLeProfil } from "./profils-enfants.steps.ts";
 import { allerALaQuestion, avancerJusquAuxChoix, bulleDeChoix, demarrer, textesDesChoix } from "./exercices-a-choix.steps.ts";
-import { After, Given, Then, When } from "./fixtures.ts";
+import { After, Given, litLesVraisMp3, Then, When } from "./fixtures.ts";
 
 // --- Préparation du scénario (avant l'ouverture de la page)
 
@@ -272,8 +272,8 @@ export async function terminerLaLectureJusquACeQueSoitDit(page: Page, voulu: str
 export async function reappliquerLAppareil(page: Page) {
   const etat = scenario(page);
   await page.addInitScript(installerLeFaux, { voix: etat.voix, bloque: etat.bloque, absent: etat.absent });
-  // Paroles fixes fabriquées : le vrai répertoire et les vrais MP3 sont servis (aucune interception) ; seul le lecteur est journalisé.
-  if (test.info().tags.includes("@paroles-fixes-fabriquees")) await page.addInitScript(installerLAudioDeTest, { dureeMs: DUREE_DU_MP3_DE_TEST_MS });
+  // Paroles fixes et leçons d'un niveau fabriqués : le vrai répertoire et les vrais MP3 sont servis (aucune interception) ; seul le lecteur est journalisé.
+  if (litLesVraisMp3(test.info().tags)) await page.addInitScript(installerLAudioDeTest, { dureeMs: DUREE_DU_MP3_DE_TEST_MS });
   await page.addInitScript(
     ([cleSon, muet]) => {
       if (muet === "oui") localStorage.setItem(cleSon, "muet");

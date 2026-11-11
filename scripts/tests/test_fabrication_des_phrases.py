@@ -150,6 +150,17 @@ def test_un_dossier_de_sortie_au_dela_du_budget_de_poids_fait_echouer_la_fabrica
         fabriquer([BONJOUR, CHAT], tmp_path, piper, budget_en_octets=1500)
 
 
+def test_une_fabrication_par_niveau_garde_au_repertoire_les_phrases_des_autres_niveaux(tmp_path):
+    fabriquer([BONJOUR], tmp_path, FauxPiper())
+
+    fabriquer([CHAT], tmp_path, FauxPiper())
+
+    assert set(repertoire(tmp_path)["phrases"]) == {
+        empreinte_fnv1a64(BONJOUR),
+        empreinte_fnv1a64(CHAT),
+    }
+
+
 def test_une_phrase_lente_produit_aussi_son_mp3_lent_et_l_entree_lente_du_repertoire(tmp_path):
     cle = empreinte_fnv1a64(CHAT)
     normale = empreinte_de_fabrication(CHAT, VOIX, ENCODAGE)
