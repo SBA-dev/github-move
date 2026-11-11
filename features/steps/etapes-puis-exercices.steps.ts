@@ -157,6 +157,26 @@ export async function ouvrirLaSeanceDirectement(page: Page, titre: string, posit
   await expect(recipient(page)).toBeVisible();
 }
 
+export function boutonRetour(page: Page) {
+  return page.getByRole("button", { name: "Retour", exact: true });
+}
+
+export function laPause(page: Page) {
+  return page.getByRole("dialog", { name: "On fait une pause ?" });
+}
+
+/**
+ * Léa quitte la séance par Retour (#183) : avant toute réponse Retour ramène à la page de la leçon ; à partir de la
+ * première réponse il ouvre la pause, où elle choisit « Retour à la leçon ». Le même geste sert aux deux cas.
+ */
+export async function quitterLaSeanceParRetour(page: Page) {
+  await boutonRetour(page).click();
+  const pause = laPause(page);
+  await expect.poll(async () => (await pause.isVisible()) || (await recipient(page).count()) === 0).toBe(true);
+  if (await pause.isVisible()) await pause.getByRole("button", { name: "Retour à la leçon", exact: true }).click();
+  await expect(recipient(page)).toHaveCount(0);
+}
+
 export async function commencerLaSeanceComplete(page: Page) {
   await page.getByRole("button", { name: "Leçon et tous les jeux", exact: true }).click();
   await expect(recipient(page)).toBeVisible();

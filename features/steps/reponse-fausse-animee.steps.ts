@@ -1,6 +1,6 @@
 import { expect, type Page } from "@playwright/test";
 import { Before, Given, Then, When } from "./fixtures.ts";
-import { bulle, commencerSeulementLExercice, injecter, ouvrirLaPageDeLaLecon } from "./etapes-puis-exercices.steps.ts";
+import { bulle, commencerSeulementLExercice, injecter, ouvrirLaPageDeLaLecon, quitterLaSeanceParRetour } from "./etapes-puis-exercices.steps.ts";
 import {
   avancerJusquAuxChoix,
   bulleDeChoix,
@@ -338,7 +338,7 @@ Given(/^Léa a vu la scène de réponse fausse de Coach Léo dans une séance te
 Given(/^Léa a vu la scène de réponse fausse de Coach Léo dans une séance quittée avant la fin, aujourd'hui$/, async ({ page }) => {
   await preparerLaQuestionDeTest(page);
   await repondreEtVoirLaScene(page, "8");
-  await page.getByRole("button", { name: "Retour", exact: true }).click();
+  await quitterLaSeanceParRetour(page);
   await expect(page.getByTestId("recipient")).toHaveCount(0);
 });
 

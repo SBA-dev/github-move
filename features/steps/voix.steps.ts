@@ -562,8 +562,9 @@ When(/^Léa demande à réécouter la consigne$/, async ({ page }) => {
 });
 
 When(/^Léa quitte l'écran de la consigne$/, async ({ page }) => {
-  await page.getByRole("banner").getByRole("button", { name: "Savanturier" }).click();
-  await expect(page).toHaveURL(/\/$/);
+  // #183 : pendant la séance, la barre du haut remplace l'en-tête. Avant toute réponse, Retour ramène à la page de la leçon.
+  await page.getByRole("button", { name: "Retour", exact: true }).click();
+  await expect(page).not.toHaveURL(/\/seance/);
 });
 
 When(/^Léa passe en Muet$/, async ({ page }) => {

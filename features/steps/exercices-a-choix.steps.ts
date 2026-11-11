@@ -14,6 +14,7 @@ import {
   leconDeTitre,
   ouvrirLaPageDeLaLecon,
   ouvrirLaSeanceDirectement,
+  quitterLaSeanceParRetour,
   recipient,
   toutesLesParoles,
 } from "./etapes-puis-exercices.steps.ts";
@@ -502,7 +503,7 @@ Given(
   async ({ page }, titre: string, nombre: string) => {
     await lancer(page, leconDeTitre(page, titre));
     await allerAuRang(page, Number(nombre), false);
-    await page.getByRole("button", { name: "Retour", exact: true }).click();
+    await quitterLaSeanceParRetour(page);
     await expect(recipient(page)).toHaveCount(0);
   },
 );
