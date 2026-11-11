@@ -987,22 +987,13 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 /* Addition posée sur téléphone : l'écran de 360 × 740 montre les trois maisons, les chiffres à poser et « Je ne sais pas » sans défiler (#127).
    Les éléments de la séance se rangent côte à côte quand ils tiennent, au lieu d'une pile ; l'ordre du focus ne change pas ; seule la bulle passe visuellement après « Réécouter ». */
 @media (max-width: 480px) {
-  .en-tete:has(~ .ecran .addition-posee) { padding-block: 4px; gap: 4px; }
-  .en-tete:has(~ .ecran .addition-posee) .outils { gap: 4px 8px; }
   .ecran:has(.addition-posee) { padding-top: 4px; }
   .seance:has(.addition-posee) { --epaisseur-du-contour: 2px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 8px; }
   .seance:has(.addition-posee) > * { max-width: 100%; }
-  .seance:has(.addition-posee) .entete-de-seance { flex: 1 1 100%; flex-wrap: nowrap; justify-content: flex-start; gap: 8px; }
-  .seance:has(.addition-posee) .entete-de-seance > div { display: grid; justify-items: start; gap: 2px; text-align: left; line-height: 1.2; }
-  .seance:has(.addition-posee) :is(h2, [data-testid="niveau-et-matiere"]) { padding: 0 8px; }
-  .seance:has(.addition-posee) h2 { font-size: 1.1rem; }
-  .seance:has(.addition-posee) [data-testid="niveau-et-matiere"] { font-size: .8rem; }
-  .seance:has(.addition-posee) .recipient { order: 1; padding: 4px 10px; }
+  .seance:has(.addition-posee) .barre-du-haut-de-seance { flex: 1 1 100%; }
   .seance:has(.addition-posee) .guide-et-parole { order: 3; flex: 1 1 100%; flex-wrap: nowrap; justify-content: flex-start; gap: 8px; }
   .seance:has(.addition-posee) .guide-et-parole .bulle { flex: 1 1 auto; min-width: 0; padding: 4px 10px; font-size: 1rem; line-height: 1.3; text-align: left; }
   .seance:has(.addition-posee) .exercice-en-cours { order: 4; }
-  .seance:has(.addition-posee) .recipient .point { width: 10px; height: 10px; }
-  .seance:has(.addition-posee) .recipient .compte { display: none; }
   .seance:has(.addition-posee) .guide-et-parole .personnage-guide { width: 40px; }
   .seance:has(.addition-posee) .consigne { padding: 4px 10px; font-size: 1rem; line-height: 1.3; }
   .seance:has(.addition-posee) .exercice-en-cours { flex: 1 1 100%; }
@@ -1015,13 +1006,10 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
   .addition-posee .invite-de-pose { flex: 1 1 100%; padding: 0 12px; }
   .addition-posee .chiffres-a-poser { flex-wrap: nowrap; gap: 6px; }
   .addition-posee .chiffre-a-poser { padding: 4px 12px; font-size: 1.5rem; }
-  .addition-posee .je-ne-sais-pas { padding: 6px 12px; }
 }
 
 /* Boîte à jetons sur téléphone : la boîte fermée, les choix et « Je ne sais pas » tiennent dans l'écran de 360 px (#131). Seules les marges et le personnage guide se resserrent ; la boîte garde la taille de son dessin. */
 @media (max-width: 480px) {
-  .en-tete:has(~ .ecran .boite-a-jetons) { padding-block: 4px; gap: 4px; }
-  .en-tete:has(~ .ecran .boite-a-jetons) .outils { gap: 4px 8px; }
   .ecran:has(.boite-a-jetons) { padding-top: 4px; }
   .seance:has(.boite-a-jetons) { gap: 8px; }
   .seance:has(.boite-a-jetons) .guide-et-parole .personnage-guide { width: 80px; }
@@ -1566,4 +1554,43 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 }
 @media (prefers-reduced-motion: reduce) {
   .guide-et-parole .personnage-guide { animation: none; }
+}
+
+/* Pendant les questions, les blocs de la séance sont plus serrés : l'exercice commence au plus à 200 px du haut d'un écran de 360 × 740. */
+.seance:where(:has(.barre-du-haut-de-seance)) { gap: 6px; }
+
+/* --- Barre d'action (#183) : le bouton principal (Valider, Continuer…) toujours au même endroit, en bas, sous le pouce, et « Je ne sais pas » à côté, plus discret.
+   Elle n'apparaît que s'il y a au moins un bouton. Les exercices y posent leurs boutons par portail (ActionDeLExercice). */
+.seance:has(.barre-d-action button) { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
+.barre-d-action {
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 12px;
+  padding: 8px max(12px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+  border-top: 2px solid var(--contour);
+  background: var(--surface-dense);
+}
+.barre-d-action:not(:has(button)) { display: none; }
+.emplacement-de-la-barre-d-action { display: contents; }
+.barre-d-action button {
+  order: 2;
+  flex: 1 1 9rem;
+  max-width: 20rem;
+  min-height: 52px;
+  padding-block: 8px;
+  overflow-wrap: normal;
+  hyphens: none;
+  white-space: normal;
+}
+.barre-d-action .je-ne-sais-pas { order: 1; flex: 0 1 auto; }
+@media (prefers-reduced-motion: no-preference) {
+  .barre-d-action { animation: barre-d-action-qui-monte .25s ease-out; }
+}
+@keyframes barre-d-action-qui-monte {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
 }

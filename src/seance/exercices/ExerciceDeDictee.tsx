@@ -1,6 +1,7 @@
 import type { CorrectionDuMot, QuestionDeDictee } from "@domain/apprentissage";
 import { LIBELLE_DU_BOUTON_ACTIVER_LE_SON } from "@domain/apprentissage";
 import { TexteEnSyllabes } from "../../reglages/index.ts";
+import { ActionDeLExercice } from "./ActionDeLExercice.tsx";
 import { CasesDeLaDictee } from "./CasesDeLaDictee.tsx";
 import { ClavierDeLaDictee } from "./ClavierDeLaDictee.tsx";
 import { useClavierPhysique } from "./useClavierPhysique.ts";
@@ -51,9 +52,11 @@ export function ExerciceDeDictee(props: Props) {
       </button>
       <ClavierDeLaDictee question={question} toucheQuiBrille={props.toucheQuiBrille} onTaper={props.onTaper} onEffacer={props.onEffacer} />
       {!question.bonneReponseMontree && !reussie && (
-        <button type="button" className="je-ne-sais-pas" data-testid="je-ne-sais-pas" onClick={props.onJeNeSaisPas}>
-          Je ne sais pas
-        </button>
+        <ActionDeLExercice>
+          <button type="button" className="je-ne-sais-pas" data-testid="je-ne-sais-pas" onClick={props.onJeNeSaisPas}>
+            Je ne sais pas
+          </button>
+        </ActionDeLExercice>
       )}
     </div>
   );

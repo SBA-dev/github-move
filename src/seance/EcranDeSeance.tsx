@@ -26,6 +26,7 @@ import { PersonnageGuideEtSaScene } from "./PersonnageGuideEtSaScene.tsx";
 import { EcranDeFin } from "./fin-de-seance/EcranDeFin.tsx";
 import { lireLesMeilleuresEtoilesAvantLaSeance } from "./fin-de-seance/meilleures-etoiles-du-profil-lues.ts";
 import { useFaciliteDeLaSeance } from "./difficulte/useFaciliteDeLaSeance.ts";
+import { EmplacementDeLaBarreDAction } from "./exercices/ActionDeLExercice.tsx";
 import { ExerciceDAdditionPosee } from "./exercices/addition/ExerciceDAdditionPosee.tsx";
 import { ExerciceAChoix } from "./exercices/ExerciceAChoix.tsx";
 import { ExerciceAEtiquettes } from "./exercices/ExerciceAEtiquettes.tsx";
@@ -211,6 +212,7 @@ function SeanceEnCours(
     (deroulement.presentationEnCours && !deroulement.personnageGuideReagit && deroulement.parole?.nature !== "consigne");
   const zoneDeLExercice = useRef<HTMLDivElement>(null);
   const laSeance = useRef<HTMLElement>(null);
+  const [emplacementDeLaBarreDAction, setEmplacementDeLaBarreDAction] = useState<HTMLElement | null>(null);
   const exerciceCommence = exerciceJoue !== undefined;
   const dejaMonte = useRef(false);
   useEffect(() => {
@@ -235,6 +237,7 @@ function SeanceEnCours(
 
   return (
     <ContexteDuRetour.Provider value={deroulement.retour}>
+      <EmplacementDeLaBarreDAction.Provider value={emplacementDeLaBarreDAction}>
       <section ref={laSeance} className="seance" aria-labelledby="titre-de-la-seance">
         {finie
           ? (
@@ -288,7 +291,6 @@ function SeanceEnCours(
                 {etape.exemples.map((exemple, i) => <li key={i} className="pastille" data-testid="exemple"><TexteEnSyllabes texte={exemple} /></li>)}
               </ul>
             )}
-            <button type="button" onClick={() => void deroulement.continuer()}>Continuer</button>
           </div>
         )}
         <div className="annonce-d-avancement" role="status" data-testid="annonce-d-avancement">
@@ -445,20 +447,25 @@ function SeanceEnCours(
             )}
           </div>
         )}
-        {deroulement.enfantAttendu && (
-          <button
-            type="button"
-            className="continuer-apres-la-reussite"
-            autoFocus={!finie}
-            onClick={() => {
-              deroulement.continuerApresLaReussite();
-              if (finie) laSeance.current?.querySelector<HTMLElement>(".actions-de-fin button")?.focus();
-            }}
-          >
-            Continuer
-          </button>
-        )}
+        <div className="barre-d-action" data-testid="barre-d-action">
+          <div ref={setEmplacementDeLaBarreDAction} className="emplacement-de-la-barre-d-action" />
+          {etape && <button type="button" onClick={() => void deroulement.continuer()}>Continuer</button>}
+          {deroulement.enfantAttendu && (
+            <button
+              type="button"
+              className="continuer-apres-la-reussite"
+              autoFocus={!finie}
+              onClick={() => {
+                deroulement.continuerApresLaReussite();
+                if (finie) laSeance.current?.querySelector<HTMLElement>(".actions-de-fin button")?.focus();
+              }}
+            >
+              Continuer
+            </button>
+          )}
+        </div>
       </section>
+      </EmplacementDeLaBarreDAction.Provider>
     </ContexteDuRetour.Provider>
   );
 }

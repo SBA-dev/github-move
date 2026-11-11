@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CIBLE_DE_LA_ZONE_DE_REPONSE, useRetourDe } from "../../retours/index.ts";
 import { useUnivers } from "../../univers/index.ts";
+import { ActionDeLExercice, useDansLaBarreDAction } from "./ActionDeLExercice.tsx";
 import { DessinDeLUnivers } from "./claviers/DessinDeLUnivers.tsx";
 import { dessinDuCristal } from "./claviers/dessins-des-claviers.ts";
 import { EclatDeLaTouche } from "./claviers/EclatDeLaTouche.tsx";
@@ -90,6 +91,7 @@ export function ClavierDeCristaux({ onValider, chiffresQuiBrillent = [], desacti
   const { saisie, taper, effacer, valider } = useSaisie(onValider);
   const { toucheEclatante, eclater } = useEclat();
   const univers = useUnivers();
+  const dansLaBarre = useDansLaBarreDAction();
   const taperAvecEclat = useCallback((chiffre: string) => {
     if (taper(chiffre)) eclater(chiffre);
   }, [taper, eclater]);
@@ -116,6 +118,20 @@ export function ClavierDeCristaux({ onValider, chiffresQuiBrillent = [], desacti
       {toucheEclatante === chiffre && <EclatDeLaTouche />}
     </button>
   );
+  const boutonValider = (
+    <button
+      ref={retour.ref}
+      type="button"
+      className={dansLaBarre ? undefined : "cristal action valider"}
+      data-testid="valider"
+      data-donne-une-reponse="true"
+      {...retour.attributs}
+      aria-disabled={desactive ? true : undefined}
+      onClick={() => !desactive && valider()}
+    >
+      Valider
+    </button>
+  );
   return (
     <div className="clavier-de-cristaux" role="group" aria-label="Clavier de cristaux" data-testid="clavier-de-cristaux">
       <output className="nombre-tape" aria-label="Nombre tapé" data-testid="nombre-tape">{saisie}</output>
@@ -133,19 +149,9 @@ export function ClavierDeCristaux({ onValider, chiffresQuiBrillent = [], desacti
           {toucheEclatante === EFFACER && <EclatDeLaTouche />}
         </button>
         {touche("0")}
-        <button
-          ref={retour.ref}
-          type="button"
-          className="cristal action valider"
-          data-testid="valider"
-          data-donne-une-reponse="true"
-          {...retour.attributs}
-          aria-disabled={desactive ? true : undefined}
-          onClick={() => !desactive && valider()}
-        >
-          Valider
-        </button>
+        {!dansLaBarre && boutonValider}
       </div>
+      {dansLaBarre && !desactive && <ActionDeLExercice>{boutonValider}</ActionDeLExercice>}
     </div>
   );
 }
