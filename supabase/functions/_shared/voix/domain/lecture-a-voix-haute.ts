@@ -45,6 +45,7 @@ type OptionsDeLecture = {
   effetsAvant?: readonly EffetSonore[];
   onMot?: (rang: number) => void;
   onFin?: () => void;
+  texteEnregistreDeRemplacement?: string;
 };
 
 function estFrancais(langue: string): boolean {
@@ -113,6 +114,8 @@ export class LectureAVoixHaute {
         voix,
         langue,
         phrases: reglerPhrases(texte, caractere, voix, options.lent ? RYTHME_LENT : RYTHME_NORMAL, hasard),
+        ...(options.texteEnregistreDeRemplacement !== undefined &&
+          { texteEnregistreDeRemplacement: options.texteEnregistreDeRemplacement }),
         ...(options.onMot &&
           { onMot: rangDesMots(texte.phrases, rangAffichePourChaqueMotPrononce(brut), options.onMot) }),
       });

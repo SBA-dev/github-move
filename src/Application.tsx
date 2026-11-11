@@ -109,7 +109,7 @@ export function Application() {
   const universDuProfilEnCours = universDe(profilEnCours?.univers);
   useEffect(() => prechargerLaSceneDe(universDuProfilEnCours.cle), [universDuProfilEnCours.cle]);
   useEffect(() => prechargerLaSceneDeReponseFausseDe(universDuProfilEnCours.cle), [universDuProfilEnCours.cle]);
-  const voix = useVoix(universDuProfilEnCours.personnageGuide);
+  const voix = useVoix(universDuProfilEnCours.personnageGuide, profilEnCours?.prenom);
   const parent = estUnEcranDuParent(ecranAffiche(lieu, acces.etat.type, connecte));
   const { suspendre: suspendreLaVoix, reprendre: reprendreLaVoix, toucherUnBouton } = voix;
   useEffect(() => brancherLeSonDesBoutons(toucherUnBouton), [toucherUnBouton]);

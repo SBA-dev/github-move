@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { type PersonnageGuide, presentationAuRetourDuSon } from "@domain/motivation";
+import { avecSonTexteDeRemplacement, type PersonnageGuide, presentationAuRetourDuSon } from "@domain/motivation";
 import {
   type CauseDeLectureEmpechee,
   type ChoixDeVoix,
@@ -50,10 +50,20 @@ export type Voix = {
   readonly essayerUneVoix: (choix: ChoixDeVoix) => void;
 };
 
-export function useVoix(personnageGuide: PersonnageGuide): Voix {
+function avecLeTexteDeRemplacement(texte: string, prenom: string | undefined, options: OptionsDeLecture): OptionsDeLecture {
+  if (!prenom || options?.texteEnregistreDeRemplacement !== undefined) return options;
+  const { texteEnregistreDeRemplacement } = avecSonTexteDeRemplacement(texte, prenom);
+  return texteEnregistreDeRemplacement === texte ? options : { ...options, texteEnregistreDeRemplacement };
+}
+
+export function useVoix(personnageGuide: PersonnageGuide, prenom?: string): Voix {
   const personnageGuideEnCours = useRef(personnageGuide);
   useLayoutEffect(() => {
     personnageGuideEnCours.current = personnageGuide;
+  });
+  const prenomEnCours = useRef(prenom);
+  useLayoutEffect(() => {
+    prenomEnCours.current = prenom;
   });
   const [son, setSon] = useState(lireLEtatDuSon);
   const [lecturesEnCours, setLecturesEnCours] = useState(0);
@@ -110,7 +120,7 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
     async (texte: string, options?: OptionsDeLecture) => {
       setLecturesEnCours((nombre) => nombre + 1);
       try {
-        return await lecture.lire(texte, options);
+        return await lecture.lire(texte, avecLeTexteDeRemplacement(texte, prenomEnCours.current, options));
       } finally {
         setLecturesEnCours((nombre) => nombre - 1);
       }
