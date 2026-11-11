@@ -148,3 +148,44 @@ Deno.test("une phrase en langue étrangère est dite par la voix de l'appareil m
   assertEquals(phrasesEnregistrees.morceauxJoues.length, 0);
   assertEquals(synthese.lectures.length, 1);
 });
+
+Deno.test("un enregistrement illisible et aucune voix française sur l'appareil rendent la voix indisponible, sans appeler la voix de l'appareil", async () => {
+  const { lecteur, phrasesEnregistrees, synthese } = unLecteur({
+    repertoire: enregistrees(BONJOUR),
+    voixFrancaise: false,
+  });
+  phrasesEnregistrees.rendreIllisible(BONJOUR);
+
+  await assertRejects(() => lecteur.lire(lectureDe([BONJOUR])), VoixIndisponible);
+  assertEquals(synthese.lectures.length, 0);
+});
+
+Deno.test("un enregistrement illisible et aucune voix française : le texte enregistré de remplacement est joué à la place", async () => {
+  const { lecteur, phrasesEnregistrees, synthese } = unLecteur({
+    repertoire: enregistrees("Bravo Léa !", "Bravo !"),
+    voixFrancaise: false,
+  });
+  phrasesEnregistrees.rendreIllisible("Bravo Léa !");
+
+  await lecteur.lire(lectureDe(["Bravo Léa !"], { texteEnregistreDeRemplacement: "Bravo !" }));
+
+  assertEquals(phrasesEnregistrees.morceauxJoues.map((m) => m.phrase), ["Bravo !"]);
+  assertEquals(synthese.lectures.length, 0);
+});
+
+Deno.test("le texte enregistré de remplacement est joué au rythme de la première phrase de la lecture demandée", async () => {
+  const { lecteur, phrasesEnregistrees } = unLecteur({
+    repertoire: enregistrees("Bravo !"),
+    voixFrancaise: false,
+  });
+
+  await lecteur.lire(
+    lectureDe([], {
+      allure: "lente",
+      phrases: [{ phrase: "Bravo Léa !", hauteur: 1, rythme: 0.65 }],
+      texteEnregistreDeRemplacement: "Bravo !",
+    }),
+  );
+
+  assertEquals(phrasesEnregistrees.morceauxJoues.map((m) => m.rythme), [0.65]);
+});
