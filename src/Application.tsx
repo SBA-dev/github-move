@@ -43,7 +43,7 @@ import {
   useTestDeDepartAFaire,
 } from "./test-de-depart/index.ts";
 import { brancherLeSonDesBoutons } from "./boutons/son-des-boutons.ts";
-import { ChoixDeLaVoix, ContexteDeLaLecture, useVoix } from "./voix/index.ts";
+import { ChoixDeLaVoix, ContexteDeLaLecture, messageDeLectureEmpechee, useVoix } from "./voix/index.ts";
 import { TenueDuProfil } from "./tenue/index.ts";
 import { ContexteDeLUnivers, HABILLAGE_DU_PARENT, habillageDeLUnivers, Paysage } from "./univers/index.ts";
 import { prechargerLaSceneDe } from "./univers/celebrations/index.ts";
@@ -224,8 +224,7 @@ export function Application() {
             <ModeDys value={profil?.reglages.modeDys ?? false}>
               <main className="ecran" data-mode-dys={profil?.reglages.modeDys ? "true" : undefined}>
                 <div role="status" className="voix-bloquee">
-                  {voix.nomDuPersonnageGuideDeLaVoixBloquee &&
-                    `La voix de ${voix.nomDuPersonnageGuideDeLaVoixBloquee} est bloquée par ce navigateur. Touche « Réécouter » pour réessayer, ou lis avec un adulte.`}
+                  {voix.lectureEmpechee && messageDeLectureEmpechee(voix.lectureEmpechee)}
                 </div>
                 <EcranQuiArrive cle={cleDeLEcran(lieu)} transition={transitionVers(lieu, viaRetour)}>
                   {ecran === "accueil" && (

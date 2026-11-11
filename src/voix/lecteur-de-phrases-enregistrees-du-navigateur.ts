@@ -1,0 +1,63 @@
+import { type LecteurDePhrasesEnregistrees, type MorceauDeLecture, type SuiviDUnMorceau, VoixBloquee } from "@domain/voix";
+
+const INTERVALLE_DE_PROGRESSION_MS = 50;
+
+type MorceauEnregistre = Extract<MorceauDeLecture, { readonly source: "enregistree" }>;
+
+export function adresseDuMorceauEnregistre({ cle, empreinte, allure }: MorceauEnregistre): string {
+  return allure === "lente" ? `/voix/${cle}-lente-${empreinte}.mp3` : `/voix/${cle}-${empreinte}.mp3`;
+}
+
+export class LecteurDePhrasesEnregistreesDuNavigateur implements LecteurDePhrasesEnregistrees {
+  private readonly audio = new Audio();
+  private terminerLaLectureEnCours: (() => void) | undefined;
+
+  jouer(morceau: MorceauDeLecture, suivi: SuiviDUnMorceau): Promise<void> {
+    if (morceau.source !== "enregistree") return Promise.reject(new Error("Morceau sans phrase enregistrée"));
+    this.arreter();
+    const { audio } = this;
+    return new Promise<void>((resolve, reject) => {
+      let minuterie: ReturnType<typeof setInterval> | undefined;
+      const vitesse = () => audio.playbackRate;
+      const progresser = () => suivi.onProgression((audio.currentTime * 1000) / vitesse());
+      const terminer = (erreur?: Error) => {
+        clearInterval(minuterie);
+        audio.removeEventListener("loadedmetadata", demarrer);
+        audio.removeEventListener("ended", finir);
+        audio.removeEventListener("error", echouer);
+        if (this.terminerLaLectureEnCours === terminer) this.terminerLaLectureEnCours = undefined;
+        if (erreur) reject(erreur);
+        else resolve();
+      };
+      const finir = () => terminer();
+      const echouer = () => terminer(new Error(`Phrase enregistrée illisible : ${audio.src}`));
+      const demarrer = () => {
+        suivi.onDebut((audio.duration * 1000) / vitesse());
+        minuterie = setInterval(progresser, INTERVALLE_DE_PROGRESSION_MS);
+      };
+      this.terminerLaLectureEnCours = terminer;
+      audio.addEventListener("loadedmetadata", demarrer);
+      audio.addEventListener("ended", finir);
+      audio.addEventListener("error", echouer);
+      audio.src = adresseDuMorceauEnregistre(morceau);
+      audio.muted = false;
+      audio.preservesPitch = true;
+      // Le MP3 lent est déjà ralenti : le rythme ne s'applique qu'à la voix normale.
+      audio.playbackRate = morceau.allure === "lente" ? 1 : morceau.rythme;
+      audio.play().catch((erreur: unknown) => {
+        if (erreur instanceof DOMException && erreur.name === "AbortError") return;
+        terminer(erreur instanceof DOMException && erreur.name === "NotAllowedError" ? new VoixBloquee() : erreurDeLecture(erreur));
+      });
+    });
+  }
+
+  arreter(): void {
+    this.terminerLaLectureEnCours?.();
+    this.audio.pause();
+    if (this.audio.readyState > 0) this.audio.currentTime = 0;
+  }
+}
+
+function erreurDeLecture(erreur: unknown): Error {
+  return erreur instanceof Error ? erreur : new Error("Phrase enregistrée illisible");
+}
