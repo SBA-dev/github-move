@@ -140,7 +140,7 @@ export function DeroulementDeLaRevision(
               choixVisibles={deroulement.choixVisiblesPour === question}
               reussie={reussie}
               bulleEclatee={deroulement.bulleEclatee}
-              sonImpossible={voix.son === "muet" || !voix.syntheseVocalePresente}
+              sonImpossible={voix.son === "muet" || !voix.voixPresente}
               sonCoupe={voix.son === "muet"}
               onChoisir={repondreParUnChoix}
               onRelireLaQuestion={() => void deroulement.relireLaQuestion()}

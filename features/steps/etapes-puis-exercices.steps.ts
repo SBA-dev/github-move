@@ -249,6 +249,8 @@ Given(/^Léa a un profil enfant préparé de niveau (\S+) dans l'univers « (.+)
     !$testInfo.title.includes("sans profil réel au serveur") && !$testInfo.title.includes("profil de démonstration");
   // Story #163 : les étoiles et la tenue de Léa sont lues sur le serveur pour le seul scénario de la tenue portée dans la scène.
   const tenueDeLaScene = $tags.includes("@issue-163") && $testInfo.title.includes("porte la tenue choisie par Léa");
+  // Story #182 : la salutation avec le prénom se joue après « Qui joue ? », donc avec le vrai profil de Léa.
+  const salutAvecLePrenom = $tags.includes("@issue-182") && $testInfo.title.includes("prénom");
   // Story #26 : la bibliothèque de test des leçons des classes d'avant est servie avant l'accueil, qui la charge dès son ouverture.
   if ($tags.includes("@issue-26")) await servirLaBibliothequeDesClassesDAvant(page);
   // Story #99 : la bibliothèque de test du dessin du parcours (identifiants « e2e-99- »), servie de la même façon.
@@ -259,7 +261,9 @@ Given(/^Léa a un profil enfant préparé de niveau (\S+) dans l'univers « (.+)
   if (accueilSeul) await servirLaBibliothequeDeLAccueil(page);
   // Story #30 : les jours de séance sont lus sous RLS pour le vrai profil de Léa.
   // Story #96 : les écrans de l'enfant se jouent avec le vrai profil de Léa (parcours, médailles, séances, révision, épisode).
-  if ($tags.includes("@issue-99") || $tags.includes("@issue-97") || $tags.includes("@issue-96") || $tags.includes("@issue-24") || accueilSeul || tenueDeLaScene || $tags.includes("@issue-25") || $tags.includes("@issue-26") || $tags.includes("@issue-27") || $tags.includes("@issue-30") || cabaneSurLeServeur) {
+  if (salutAvecLePrenom || $tags.includes("@issue-99") || $tags.includes("@issue-97") || $tags.includes("@issue-96") || $tags.includes("@issue-24") || accueilSeul || tenueDeLaScene || $tags.includes("@issue-25") || $tags.includes("@issue-26") || $tags.includes("@issue-27") || $tags.includes("@issue-30") || cabaneSurLeServeur) {
+    // Le .feature de #182 ne dit pas que Paul est connecté : le vrai profil de Léa est créé pour lui.
+    if (salutAvecLePrenom) await famille.connecterSansEmail("tablette", "Paul");
     await jouerAvecLeProfilReel(famille, monde, page);
   }
 });

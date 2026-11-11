@@ -1,3 +1,5 @@
+import { estUneLangueFrancaise } from "./langue-francaise.ts";
+
 export type VoixDisponible = {
   readonly nom: string;
   readonly langue: string;
@@ -15,7 +17,7 @@ const BONUS_ET_MALUS_DU_NOM: ReadonlyArray<readonly [RegExp, number]> = [
 ];
 
 function estFrancaise(voix: VoixDisponible): boolean {
-  return /^fr/i.test(voix.langue);
+  return estUneLangueFrancaise(voix.langue);
 }
 
 export function scoreDeLaVoix(voix: VoixDisponible): number {

@@ -22,7 +22,7 @@ import { journal, normaliser, terminerLaLecture } from "./voix.steps.ts";
 // (même mécanisme que les choix de #17 : voir exercices-a-choix.steps.ts).
 
 const EXERCICE_DE_TEST = "Exercice";
-const RYTHME_PLUS_LENT = 0.65;
+export const RYTHME_PLUS_LENT = 0.65;
 const LETTRES_INTRUSES_POSSIBLES = [..."aeioulnrstcmpbdvé"];
 const TOUCHES_PAR_MOT = 8;
 const CARACTERES_DEJA_ECRITS = [..." '’-.,"];

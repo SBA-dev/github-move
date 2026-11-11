@@ -28,8 +28,8 @@ function uneLecture(options: { choix?: ChoixDeVoix; caractere?: CaractereDeLaVoi
     hasard: hasardFixe(0.5),
     caractereDuPersonnageGuide: () => options.caractere ?? CARACTERE_NOISETTE,
     etatInitial: options.muet ? "muet" : "son",
-    onVoixBloquee: () => {},
-    onFinDeLaVoixBloquee: () => {},
+    onLectureEmpechee: () => {},
+    onFinDeLectureEmpechee: () => {},
   });
   return { lecture, lecteur, choixDeVoix };
 }
@@ -64,8 +64,8 @@ Deno.test("une voix imposée absente de l'appareil laisse la voix automatique, s
     hasard: hasardFixe(0.5),
     caractereDuPersonnageGuide: () => CARACTERE_NOISETTE,
     etatInitial: "son",
-    onVoixBloquee: () => signalements.push(1),
-    onFinDeLaVoixBloquee: () => {},
+    onLectureEmpechee: () => signalements.push(1),
+    onFinDeLectureEmpechee: () => {},
   });
 
   await lecture.lire("Écoute bien.");

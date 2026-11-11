@@ -35,12 +35,23 @@ function brancheCourante(): string | undefined {
 // Calculée une fois par processus worker (décision 0040) : les parents de test sont stables d'une exécution à l'autre.
 const EQUIPE_DES_TESTS = equipeDesTests({ variable: process.env.E2E_EQUIPE, branche: brancheCourante() });
 
+/** Les scénarios de la PWA (#8) tournent avec la configuration playwright.pwa.config.ts ; ceux des autres stories portent @pwa. */
+function estPwa(etiquettes: readonly string[]): boolean {
+  return etiquettes.includes("@pwa") || etiquettes.includes("@issue-8");
+}
+
+/** Story #182 : seuls ces scénarios lisent le vrai répertoire des voix (public/voix) ; les autres reçoivent un répertoire vide. */
+function litLeVraiRepertoireDesVoix(etiquettes: readonly string[]): boolean {
+  return ["@paroles-fixes-fabriquees", "@production"].some((etiquette) => etiquettes.includes(etiquette));
+}
+
 export const test = base.extend<{
   monde: Monde;
   pwa: Pwa;
   famille: Famille;
   lecturesDesResultats: LecturesDesResultats;
   requetesVues: RequetesVues;
+  repertoireDesVoixVideParDefaut: undefined;
 }>({
   // Story #96 : enregistreurs de mouvements (injectés avant toute navigation) et des requêtes de polices.
   requetesVues: [async ({ page, $tags, $testInfo }, use) => {
@@ -50,6 +61,18 @@ export const test = base.extend<{
       await installerLesEnregistreurs(page);
     }
     await use(new RequetesVues(page));
+  }, { auto: true }],
+
+  // Story #182 : le répertoire des phrases enregistrées est vide par défaut. Les vraies paroles fixes (public/voix) seraient sinon lues
+  // par le MP3 et non par la voix de l'appareil dont les autres scénarios observent le journal. Une page peut le remplacer
+  // (preparerLeRepertoireDeTest, enregistrée après) ; seuls les scénarios @paroles-fixes-fabriquees et @production lisent le vrai.
+  // Scénarios @pwa : le service worker cache l'interception de page, c'est donc le relais de test qui publie le répertoire vide.
+  repertoireDesVoixVideParDefaut: [async ({ context, $tags }, use) => {
+    const vraiRepertoire = litLeVraiRepertoireDesVoix($tags) || estPwa($tags);
+    if (!vraiRepertoire) {
+      await context.route("**/voix/repertoire.json", (route) => route.fulfill({ json: { voixEnregistree: "tom-1", phrases: {} } }));
+    }
+    await use(undefined);
   }, { auto: true }],
 
   // Story #5 : parents de test et boîte des e-mails de connexion (projet Supabase de développement).
@@ -68,13 +91,18 @@ export const test = base.extend<{
     await use(await LecturesDesResultats.suivre(page));
   }, { auto: true }],
 
-  pwa: async ({ baseURL }, use) => {
-    const commander = async (commande: string): Promise<Response> => {
-      const reponse = await fetch(`${baseURL}/__test/${commande}`, { method: "POST" });
+  // Auto pour les scénarios @pwa : le répertoire des voix est publié vide dès le départ (voir plus haut), sauf pour les scénarios qui lisent le vrai.
+  pwa: [async ({ baseURL, $tags }, use) => {
+    if (!estPwa($tags)) return await use(undefined as never);
+    const commander = async (commande: string, corps?: string): Promise<Response> => {
+      const reponse = await fetch(`${baseURL}/__test/${commande}`, { method: "POST", ...(corps === undefined ? {} : { body: corps }) });
       if (!reponse.ok) throw new Error(`Relais de test PWA « ${commande} » : ${reponse.status} ${await reponse.text()}`);
       return reponse;
     };
     await commander("reinitialiser");
+    if (!litLeVraiRepertoireDesVoix($tags)) {
+      await commander("publier-voix", "[]");
+    }
     const pwa: Pwa = {
       navigations: 0,
       versionPubliee: null,
@@ -89,7 +117,7 @@ export const test = base.extend<{
     };
     await use(pwa);
     await commander("reinitialiser");
-  },
+  }, { auto: true }],
 
   monde: async ({}, use) => {
     await use({ profils: new Map(), tablettes: new Map() });

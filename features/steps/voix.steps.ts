@@ -1,8 +1,9 @@
-import { type BrowserContext, expect, type Page } from "@playwright/test";
+import { type BrowserContext, expect, type Page, test } from "@playwright/test";
 import type { Famille } from "../support/famille.ts";
 export { terminerLaLecture } from "../support/lecture-vocale.ts";
 import { terminerLaLecture } from "../support/lecture-vocale.ts";
 import { avecLesReglagesPrevus } from "../support/reglages-prevus.ts";
+import { DUREE_DU_MP3_DE_TEST_MS, installerLAudioDeTest, messageDeVoixIndisponible, repertoireDeTest } from "../support/voix-enregistree.ts";
 import {
   bulle,
   commencerLaSeanceComplete,
@@ -270,6 +271,8 @@ export async function terminerLaLectureJusquACeQueSoitDit(page: Page, voulu: str
 export async function reappliquerLAppareil(page: Page) {
   const etat = scenario(page);
   await page.addInitScript(installerLeFaux, { voix: etat.voix, bloque: etat.bloque, absent: etat.absent });
+  // Paroles fixes fabriquées : le vrai répertoire et les vrais MP3 sont servis (aucune interception) ; seul le lecteur est journalisé.
+  if (test.info().tags.includes("@paroles-fixes-fabriquees")) await page.addInitScript(installerLAudioDeTest, { dureeMs: DUREE_DU_MP3_DE_TEST_MS });
   await page.addInitScript(
     ([cleSon, muet]) => {
       if (muet === "oui") localStorage.setItem(cleSon, "muet");
@@ -317,7 +320,7 @@ const TITRE_DE_LA_LECON_DE_TEST = "Écoute";
 const QUESTION_DE_LA_LECON_DE_TEST = "Combien font 1 + 2 ?";
 
 /** Une leçon de test d'un exercice bulles : sa consigne est lue au début de l'exercice, puis la question est posée. */
-function leconDeLaConsigne(consigne: string) {
+export function leconDeLaConsigne(consigne: string) {
   return leconDeTest("test-consigne", TITRE_DE_LA_LECON_DE_TEST, [{
     type: "bulles",
     titre: "Écoute",
@@ -329,22 +332,32 @@ function leconDeLaConsigne(consigne: string) {
 // Le nombre de lectures une fois la consigne lue.
 const lecturesApresLaConsigne = new WeakMap<Page, number>();
 
-export function sansVoix(page: Page): boolean {
-  const { absent, muet } = scenario(page);
-  return absent || muet;
+function aUneVoixFrancaise(etat: Scenario): boolean {
+  return etat.voix.some(({ langue }) => langue.toLowerCase().startsWith("fr"));
 }
 
-async function ouvrirLaPageDeLaLeconDeTest(page: Page, etat: Scenario, consigne: string) {
+/** Story #182 : sans voix française ni phrase enregistrée dans le répertoire de test, rien ne peut être lu à voix haute. */
+function sansVoixPour(page: Page, etat: Scenario): boolean {
+  const sansPhraseEnregistree = repertoireDeTest(page)?.phrases.size === 0;
+  return etat.absent || etat.muet || (sansPhraseEnregistree && !aUneVoixFrancaise(etat));
+}
+
+export function sansVoix(page: Page): boolean {
+  return sansVoixPour(page, scenario(page));
+}
+
+export async function ouvrirLaPageDeLaLeconDeTest(page: Page, etat: Scenario, consigne: string) {
   await preparerLaPage(page, etat);
   await injecter(page, leconDeLaConsigne(consigne));
-  await interceptertLaBibliotheque(page);
+  // Scénarios @pwa : la leçon est déjà dans la bibliothèque publiée par le relais de test, et l'interception de page n'a pas sa place.
+  if (!test.info().tags.includes("@pwa")) await interceptertLaBibliotheque(page);
   await ouvrirLaPageDeLaLecon(page, TITRE_DE_LA_LECON_DE_TEST);
 }
 
-async function commencerLaSeanceDeTest(page: Page, etat: Scenario) {
+export async function commencerLaSeanceDeTest(page: Page, etat: Scenario) {
   const avant = (await journal(page)).lots;
   await commencerLaSeanceComplete(page);
-  if (!etat.absent && !etat.muet) await expect.poll(async () => (await journal(page)).lots).toBeGreaterThan(avant);
+  if (!sansVoixPour(page, etat)) await expect.poll(async () => (await journal(page)).lots).toBeGreaterThan(avant);
   lecturesApresLaConsigne.set(page, (await journal(page)).lots);
 }
 
@@ -354,6 +367,8 @@ export async function ouvrir(page: Page) {
   if (etat.ouvert) return;
   etat.ouvert = true;
   await ouvrirLaPageDeLaLeconDeTest(page, etat, etat.consigne.texte);
+  // Story #182 : le message de voix indisponible est déjà à l'écran quand la séance commence.
+  if (repertoireDeTest(page)?.messageDeVoixIndisponibleAVoirAvant) await expect(messageDeVoixIndisponible(page)).toHaveCount(1);
   await commencerLaSeanceDeTest(page, etat);
 }
 
@@ -412,7 +427,7 @@ export function normaliser(texte: string): string {
   return texte.replace(/\s+/g, " ").trim();
 }
 
-function messageDeVoixBloquee(page: Page) {
+export function messageDeVoixBloquee(page: Page) {
   return page.getByRole("status").filter({ hasText: "est bloquée par ce navigateur" });
 }
 
@@ -533,7 +548,7 @@ When(/^la consigne suivante s'affiche$/, async ({ page }) => {
   const etat = scenario(page);
   const avant = (await journal(page)).speaks;
   await commencerLaSeanceDeTest(page, etat);
-  await expect.poll(async () => (await journal(page)).speaks).toBeGreaterThan(avant);
+  if (!sansVoix(page)) await expect.poll(async () => (await journal(page)).speaks).toBeGreaterThan(avant);
   await laisserPasserLeDelaiDeLecture(page);
 });
 

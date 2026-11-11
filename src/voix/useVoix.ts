@@ -1,21 +1,39 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { type PersonnageGuide, presentationAuRetourDuSon } from "@domain/motivation";
-import { type ChoixDeVoix, type EffetSonore, type EtatDuSon, LectureAVoixHaute, type ParoleEntendue, type VoixDisponible } from "@domain/voix";
+import { avecSonTexteDeRemplacement, type PersonnageGuide, presentationAuRetourDuSon } from "@domain/motivation";
+import {
+  type CauseDeLectureEmpechee,
+  aUneVoixFrancaise,
+  type ChoixDeVoix,
+  type EffetSonore,
+  type EtatDuSon,
+  LecteurAvecRepli,
+  LectureAVoixHaute,
+  type ParoleEntendue,
+  type VoixDisponible,
+} from "@domain/voix";
 import { hasardDuNavigateur } from "../hasard-navigateur.ts";
 import { ChoixDeVoixMemoriseSurLAppareil } from "./choix-de-voix-memorise.ts";
-import { DeverrouillageAudio, deverrouillerAuToucher } from "./deverrouillage-audio.ts";
+import { DeverrouillageAudio, deverrouillerAuToucher, silenceEnWav } from "./deverrouillage-audio.ts";
 import { LecteurDEffetsSonoresDuNavigateur } from "./lecteur-d-effets-sonores-du-navigateur.ts";
+import { LecteurDePhrasesEnregistreesDuNavigateur } from "./lecteur-de-phrases-enregistrees-du-navigateur.ts";
 import { LecteurSyntheseVocale, syntheseVocale } from "./lecteur-synthese-vocale.ts";
 import { lireLEtatDuSon, memoriserLEtatDuSon } from "./memoire-du-son.ts";
+import { repertoireDuNavigateur } from "./repertoire-des-phrases-enregistrees-du-navigateur.ts";
 import { VoixDeLAppareilNavigateur } from "./voix-de-l-appareil-navigateur.ts";
 
 export type OptionsDeLecture = Parameters<LectureAVoixHaute["lire"]>[1];
+
+export type LectureEmpechee = {
+  readonly nomDuPersonnageGuide: string;
+  readonly cause: CauseDeLectureEmpechee;
+};
 
 export type Voix = {
   readonly son: EtatDuSon;
   /** Vrai tant qu'une lecture à voix haute est demandée et pas terminée. */
   readonly lectureEnCours: boolean;
-  readonly nomDuPersonnageGuideDeLaVoixBloquee: string | undefined;
+  /** Un seul message à la fois : voix bloquée ou voix indisponible. */
+  readonly lectureEmpechee: LectureEmpechee | undefined;
   readonly lire: (texte: string, options?: OptionsDeLecture) => Promise<ParoleEntendue>;
   readonly jouer: (effets: readonly EffetSonore[]) => Promise<void>;
   readonly couperLaVoix: () => void;
@@ -25,22 +43,42 @@ export type Voix = {
   readonly reprendre: () => void;
   readonly voixDisponibles: readonly VoixDisponible[];
   readonly syntheseVocalePresente: boolean;
+  /** Vrai si une voix enregistrée (répertoire chargé) ou la synthèse vocale peut lire. */
+  readonly voixPresente: boolean;
   readonly choixDeVoix: ChoixDeVoix;
   readonly imposerUneVoix: (nomDeLaVoix: string) => void;
   readonly revenirALaVoixAutomatique: () => void;
   readonly essayerUneVoix: (choix: ChoixDeVoix) => void;
 };
 
-export function useVoix(personnageGuide: PersonnageGuide): Voix {
+function avecLeTexteDeRemplacement(texte: string, prenom: string | undefined, options: OptionsDeLecture): OptionsDeLecture {
+  if (!prenom || options?.texteEnregistreDeRemplacement !== undefined) return options;
+  const { texteEnregistreDeRemplacement } = avecSonTexteDeRemplacement(texte, prenom);
+  return texteEnregistreDeRemplacement === texte ? options : { ...options, texteEnregistreDeRemplacement };
+}
+
+export function useVoix(personnageGuide: PersonnageGuide, prenom?: string): Voix {
   const personnageGuideEnCours = useRef(personnageGuide);
   useLayoutEffect(() => {
     personnageGuideEnCours.current = personnageGuide;
   });
+  const prenomEnCours = useRef(prenom);
+  useLayoutEffect(() => {
+    prenomEnCours.current = prenom;
+  });
   const [son, setSon] = useState(lireLEtatDuSon);
   const [lecturesEnCours, setLecturesEnCours] = useState(0);
-  const [nomDuPersonnageGuideDeLaVoixBloquee, setNomDuPersonnageGuideDeLaVoixBloquee] = useState<string | undefined>();
+  const [lectureEmpechee, setLectureEmpechee] = useState<LectureEmpechee | undefined>();
+  const [repertoire] = useState(() => repertoireDuNavigateur);
+  const [repertoireCharge, setRepertoireCharge] = useState(false);
   const [effetsSonores] = useState(() => new LecteurDEffetsSonoresDuNavigateur());
-  const [deverrouillage] = useState(() => new DeverrouillageAudio(() => effetsSonores.amorcer()));
+  const [phrasesEnregistrees] = useState(() => new LecteurDePhrasesEnregistreesDuNavigateur());
+  const [deverrouillage] = useState(() =>
+    new DeverrouillageAudio(() => {
+      effetsSonores.amorcer();
+      phrasesEnregistrees.amorcer(silenceEnWav());
+    })
+  );
   const [voixDeLAppareil] = useState(() => new VoixDeLAppareilNavigateur());
   const [choixMemorise] = useState(() => new ChoixDeVoixMemoriseSurLAppareil());
   const [syntheseVocalePresente] = useState(() => syntheseVocale() !== undefined);
@@ -48,15 +86,20 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
   const [choixDeVoix, setChoixDeVoix] = useState(() => choixMemorise.lire());
   const [lecture] = useState(() =>
     new LectureAVoixHaute({
-      lecteur: new LecteurSyntheseVocale(),
+      lecteur: new LecteurAvecRepli({
+        repertoire,
+        lecteurDePhrasesEnregistrees: phrasesEnregistrees,
+        voixDeLAppareil: new LecteurSyntheseVocale(),
+        aUneVoixFrancaise: () => aUneVoixFrancaise(voixDeLAppareil.voixDisponibles()),
+      }),
       lecteurDEffetsSonores: effetsSonores,
       voixDeLAppareil,
       choixDeVoix: choixMemorise,
       hasard: hasardDuNavigateur,
       caractereDuPersonnageGuide: () => personnageGuideEnCours.current.caractere,
       etatInitial: son,
-      onVoixBloquee: () => setNomDuPersonnageGuideDeLaVoixBloquee(personnageGuideEnCours.current.nom),
-      onFinDeLaVoixBloquee: () => setNomDuPersonnageGuideDeLaVoixBloquee(undefined),
+      onLectureEmpechee: (cause) => setLectureEmpechee({ nomDuPersonnageGuide: personnageGuideEnCours.current.nom, cause }),
+      onFinDeLectureEmpechee: () => setLectureEmpechee(undefined),
     })
   );
 
@@ -64,6 +107,10 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
     if (son === "muet") return;
     return deverrouillerAuToucher(deverrouillage);
   }, [son, deverrouillage]);
+
+  useEffect(() => {
+    void repertoire.charger().then(() => setRepertoireCharge(repertoire.charge));
+  }, [repertoire]);
 
   useEffect(
     () => voixDeLAppareil.surChangement(() => setVoixDisponibles(voixDeLAppareil.voixDisponibles())),
@@ -74,7 +121,7 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
     async (texte: string, options?: OptionsDeLecture) => {
       setLecturesEnCours((nombre) => nombre + 1);
       try {
-        return await lecture.lire(texte, options);
+        return await lecture.lire(texte, avecLeTexteDeRemplacement(texte, prenomEnCours.current, options));
       } finally {
         setLecturesEnCours((nombre) => nombre - 1);
       }
@@ -125,7 +172,7 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
   return {
     son,
     lectureEnCours: lecturesEnCours > 0,
-    nomDuPersonnageGuideDeLaVoixBloquee,
+    lectureEmpechee,
     lire,
     jouer,
     couperLaVoix,
@@ -135,6 +182,7 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
     reprendre,
     voixDisponibles,
     syntheseVocalePresente,
+    voixPresente: repertoireCharge || syntheseVocalePresente,
     choixDeVoix,
     imposerUneVoix,
     revenirALaVoixAutomatique,
