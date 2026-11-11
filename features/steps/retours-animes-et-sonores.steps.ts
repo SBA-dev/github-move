@@ -67,7 +67,7 @@ export type Observation = {
   annonces: string[];
   marque: number;
   marqueParoles: number;
-  paroles: Array<{ index: number; texte: string }>;
+  paroles: Array<{ index: number; texte: string; nature: string | null }>;
 };
 
 export const DELAI_DE_L_ATTENTE_MS = 20_000;
@@ -347,9 +347,9 @@ export async function observer(page: Page): Promise<Observation> {
     const etat = Reflect.get(window, "__effets") as
       | { entrees: unknown[]; vu: string[]; annonces: string[]; marque: number; marqueParoles: number }
       | undefined;
-    const faux = Reflect.get(window, "__faux") as { journal: Array<{ type: string; texte: string }> } | undefined;
+    const faux = Reflect.get(window, "__faux") as { journal: Array<{ type: string; texte: string; nature: string | null }> } | undefined;
     if (!etat) return null;
-    const paroles = (faux?.journal ?? []).flatMap((entree, index) => entree.type === "speak" ? [{ index, texte: entree.texte }] : []);
+    const paroles = (faux?.journal ?? []).flatMap((entree, index) => entree.type === "speak" ? [{ index, texte: entree.texte, nature: entree.nature }] : []);
     return {
       entrees: JSON.parse(JSON.stringify(etat.entrees)),
       vu: [...etat.vu],
@@ -390,19 +390,12 @@ export async function laisserSeDerouler(page: Page): Promise<void> {
 }
 
 /** Attend une condition sur le journal en finissant les paroles qui précèdent : on ne coupe jamais celle qu'on attend (elle n'est vérifiée qu'une fois commencée). */
-export async function attendre(
-  page: Page,
-  condition: (observation: Observation) => boolean,
-  quandVraie?: () => Promise<void>,
-): Promise<Observation> {
+export async function attendre(page: Page, condition: (observation: Observation) => boolean): Promise<Observation> {
   let derniere = OBSERVATION_VIDE;
   try {
     await expect.poll(async () => {
       derniere = await observer(page);
-      if (condition(derniere)) {
-        await quandVraie?.();
-        return true;
-      }
+      if (condition(derniere)) return true;
       await terminerLaLecture(page);
       return false;
     }, { intervals: [100], timeout: DELAI_DE_L_ATTENTE_MS }).toBe(true);
@@ -452,8 +445,9 @@ function sansParoleEnCours(effet: Entree): boolean {
   return !effet.paroleEnCours;
 }
 
-async function verifierLaNature(page: Page, nature: NatureAttendue) {
-  if (nature) await expect(bulleDuPersonnage(page)).toHaveAttribute("data-nature", nature);
+/** La nature de la bulle est celle qu'elle avait quand la parole a été dite (la scène a pu avancer depuis). */
+function verifierLaNature(natureDeLaParole: string | null | undefined, nature: NatureAttendue) {
+  if (nature) expect(natureDeLaParole, "nature de la bulle quand la parole est dite").toBe(nature);
 }
 
 async function verifierQueLaParoleEstCelleDeLaBulle(page: Page, parole: string) {
@@ -464,7 +458,7 @@ async function verifierQueLaParoleEstCelleDeLaBulle(page: Page, parole: string) 
 
 export async function effetPuisParole(page: Page, effets: readonly string[], nature: NatureAttendue, strict: boolean): Promise<Entree> {
   const fichiers = effets.map(fichierDe);
-  let trouve: { effet: Entree; parole: string } | undefined;
+  let trouve: { effet: Entree; parole: string; nature: string | null } | undefined;
   await attendre(page, (observation) => {
     const entrees = depuisLaMarque(observation);
     const debut = entrees.findIndex((_, rang) => fichiers.every((fichier, i) => entrees[rang + i]?.nom === fichier));
@@ -473,18 +467,16 @@ export async function effetPuisParole(page: Page, effets: readonly string[], nat
     const parole = paroleApres(observation, dernier);
     if (!parole) return false;
     if (strict && entrees.slice(debut + fichiers.length).some((entree) => entree.debut <= parole.index)) return false;
-    trouve = { effet: dernier, parole: parole.texte };
+    trouve = { effet: dernier, parole: parole.texte, nature: parole.nature };
     return true;
-  }, async () => {
-    // La bulle est relevée au moment où la parole attendue est observée, avant que la lecture ne soit terminée.
-    await verifierLaNature(page, nature);
-    await verifierQueLaParoleEstCelleDeLaBulle(page, trouve?.parole ?? "");
   });
   const observation = await observer(page);
   const effet = trouve?.effet as Entree;
   for (const entree of depuisLaMarque(observation).filter((candidat) => fichiers.includes(candidat.nom))) {
     expect(sansChevauchement(observation, entree) && sansParoleEnCours(entree), `l'effet « ${entree.nom} » joue seul, avant toute parole`).toBe(true);
   }
+  verifierLaNature(trouve?.nature, nature);
+  await verifierQueLaParoleEstCelleDeLaBulle(page, trouve?.parole ?? "");
   return effet;
 }
 

@@ -96,6 +96,7 @@ export function installerLeFaux(config: ConfigurationDuFaux) {
     langue: string;
     pitch: number;
     rate: number;
+    nature: string | null;
   };
   const faux = {
     journal: [] as Entree[],
@@ -148,6 +149,7 @@ export function installerLeFaux(config: ConfigurationDuFaux) {
         langue: enonce.lang,
         pitch: enonce.pitch,
         rate: enonce.rate,
+        nature: document.querySelector('[data-testid="parole"]')?.getAttribute("data-nature") ?? null,
       });
       if (faux.bloque) setTimeout(() => enonce.onerror?.({ error: "not-allowed" }), 0);
     },
