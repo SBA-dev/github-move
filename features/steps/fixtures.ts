@@ -40,9 +40,9 @@ function estPwa(etiquettes: readonly string[]): boolean {
   return etiquettes.includes("@pwa") || etiquettes.includes("@issue-8");
 }
 
-/** Story #182 : les paroles fixes et les leçons d'un niveau fabriqué (@niveau-cp, 182b) sont lues par les vrais MP3 de public/voix. */
+/** Story #182 : les paroles fixes et les leçons d'un niveau fabriqué (toute étiquette @niveau-…) sont lues par les vrais MP3 de public/voix. */
 export function litLesVraisMp3(etiquettes: readonly string[]): boolean {
-  return ["@paroles-fixes-fabriquees", "@niveau-cp"].some((etiquette) => etiquettes.includes(etiquette));
+  return etiquettes.some((etiquette) => etiquette === "@paroles-fixes-fabriquees" || etiquette.startsWith("@niveau-"));
 }
 
 /** Story #182 : seuls ces scénarios lisent le vrai répertoire des voix (public/voix) ; les autres reçoivent un répertoire vide. */
