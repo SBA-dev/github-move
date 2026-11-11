@@ -60,9 +60,9 @@ Fonctionnalité: Choisir la voix des personnages guides sur l'appareil
       Et seule « Automatique (recommandé) » est proposée
 
       Exemples:
-        | situation                                   | message                                                                                              |
-        | l'appareil n'a aucune voix française        | Aucune voix française trouvée sur cet appareil : installe-en une (voir ci-dessous), puis recharge la page. |
-        | le navigateur ne sait pas lire à voix haute | Ce navigateur ne sait pas lire à voix haute.                                                         |
+        | situation                                   | message                                                                                                                                                                                               |
+        | l'appareil n'a aucune voix française        | Aucune voix française sur cet appareil : la voix de Savanturier lit les leçons ; une voix de l'appareil sert seulement aux phrases fabriquées à la volée, qui ne pourront pas être lues à voix haute. |
+        | le navigateur ne sait pas lire à voix haute | Ce navigateur ne sait pas lire à voix haute.                                                                                                                                                          |
 
     Scénario: Le parent trouve des conseils pour installer des voix plus naturelles
       Étant donné que Paul est dans l'espace parent

@@ -1,5 +1,5 @@
 # language: fr
-@issue-182 @wip
+@issue-182
 Fonctionnalité: La voix enregistrée lit les leçons sans rien installer sur l'appareil
   En tant qu'enfant qui lit encore mal
   Je veux entendre mon personnage guide lire les consignes, les questions et ses paroles sur n'importe quel appareil
@@ -78,7 +78,7 @@ Fonctionnalité: La voix enregistrée lit les leçons sans rien installer sur l'
       Alors Léa entend Noisette lire « Écoute bien. » avec la voix de l'appareil
       Et aucun message d'erreur n'apparaît
 
-   
+
     Scénario: Le mot à écouter en anglais garde la voix anglaise de l'appareil
       Étant donné que l'appareil a une voix française et une voix anglaise
       Et que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
@@ -89,7 +89,6 @@ Fonctionnalité: La voix enregistrée lit les leçons sans rien installer sur l'
 
   Règle: Sans MP3 lisible ni voix française, l'enfant lit un message juste et continue sa leçon
 
-    @a-valider
     Scénario: Sans MP3 ni voix française, l'enfant lit le message de voix indisponible, pas celui de voix bloquée
       Étant donné que l'appareil n'a aucune voix française
       Et que la question « Combien font 218 + 48 ? » n'est pas une phrase enregistrée
@@ -99,7 +98,7 @@ Fonctionnalité: La voix enregistrée lit les leçons sans rien installer sur l'
       Et Léa voit la question « Combien font 218 + 48 ? »
       Mais Léa ne voit pas le message « La voix de Noisette est bloquée par ce navigateur. Touche « Réécouter » pour réessayer, ou lis avec un adulte. »
 
-   
+
     Scénario: Sans MP3 ni voix française, l'enfant réussit quand même la question
       Étant donné que l'appareil n'a aucune voix française
       Et que la question « Combien font 3 + 4 ? » n'est pas une phrase enregistrée
@@ -124,7 +123,16 @@ Fonctionnalité: La voix enregistrée lit les leçons sans rien installer sur l'
       Alors Léa entend Noisette lire « Écoute bien. » avec la voix enregistrée
       Et Léa ne voit plus le message de voix indisponible
 
-   
+
+    Scénario: Le message de voix bloquée remplace le message de voix indisponible, jamais les deux à la fois
+      Étant donné que l'appareil n'a aucune voix française
+      Et que Léa voit le message de voix indisponible
+      Et que la phrase « Écoute bien. » est une phrase enregistrée
+      Et que le navigateur bloque la voix
+      Quand la consigne « Écoute bien. » s'affiche
+      Alors Léa voit un seul message de voix bloquée
+      Mais Léa ne voit plus le message de voix indisponible
+
     Scénario: Quand le navigateur refuse de jouer la voix enregistrée, l'enfant voit le message de voix bloquée
       Étant donné que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
       Et que la phrase « Combien font 3 plus 4 ? » est une phrase enregistrée
@@ -135,7 +143,7 @@ Fonctionnalité: La voix enregistrée lit les leçons sans rien installer sur l'
 
   Règle: La voix enregistrée respecte le Muet, la voix suspendue, l'arrêt, la lecture lente et le surlignage, comme la lecture à voix haute
 
-   
+
     Scénario: En Muet, une phrase enregistrée n'est pas entendue
       Étant donné que la tablette est en Muet
       Et que la phrase « Combien font 3 plus 4 ? » est une phrase enregistrée
@@ -168,14 +176,12 @@ Fonctionnalité: La voix enregistrée lit les leçons sans rien installer sur l'
       Alors Léa voit une question du contrôle parental
       Et Léa n'entend plus Noisette
 
-    @a-valider
     Scénario: Écouter plus lentement fait entendre le mot dicté enregistré à l'allure lente
       Étant donné que le mot « chat » est une phrase enregistrée, à l'allure normale et à l'allure lente
       Et que Léa joue le mot dicté « chat » de l'exercice « J'écris les animaux »
       Quand Léa demande à écouter plus lentement
       Alors Léa entend de nouveau Noisette dire « chat », plus lentement, avec la voix enregistrée
 
-    @a-valider
     Scénario: Sans MP3 lent, le mot dicté enregistré est quand même dit plus lentement par la voix enregistrée
       Étant donné que le mot « chat » est une phrase enregistrée, à l'allure normale seulement
       Et que Léa joue le mot dicté « chat » de l'exercice « J'écris les animaux »
@@ -197,7 +203,6 @@ Fonctionnalité: La voix enregistrée lit les leçons sans rien installer sur l'
       Alors Léa voit son accueil
       Mais Léa n'entend jamais la voix enregistrée dire « Léa »
 
-    @a-valider
     Scénario: Le personnage guide salue l'enfant sans dire son prénom, et le prénom reste affiché
       Étant donné que l'appareil n'a aucune voix française
       Et que la phrase « Bonjour ! » est une phrase enregistrée
@@ -205,6 +210,47 @@ Fonctionnalité: La voix enregistrée lit les leçons sans rien installer sur l'
       Quand Léa choisit son profil enfant dans « Qui joue ? »
       Alors Léa voit « Bonjour Léa ! » dans la bulle de Noisette
       Et Léa entend Noisette dire « Bonjour ! » avec la voix enregistrée
+
+    Scénario: Avec une voix française sur l'appareil, la phrase avec le prénom est dite en entier par la voix de l'appareil
+      Étant donné que l'appareil a les voix françaises « Amélie (compact) » et « Denise (Natural) »
+      Et que Léa a un profil enfant préparé de niveau CE1 dans l'univers « Animaux de la forêt »
+      Quand Léa choisit son profil enfant dans « Qui joue ? »
+      Alors Léa voit « Bonjour Léa ! » dans la bulle de Noisette
+      Et Léa entend Noisette dire « Bonjour Léa ! » avec la voix de l'appareil
+
+  Règle: Dans l'espace parent, la voix de Savanturier est présentée d'abord ; la voix de l'appareil choisie ne dit que les phrases sans voix enregistrée
+
+    Scénario: Le parent voit d'abord la voix de Savanturier, puis le choix de la voix de l'appareil pour les phrases sans voix enregistrée
+      Étant donné que l'appareil a les voix françaises « Amélie (compact) » et « Denise (Natural) »
+      Et que Paul est dans l'espace parent
+      Quand Paul ouvre le choix de voix
+      Alors Paul voit d'abord la voix de Savanturier, sans choix à faire
+      Et Paul voit ensuite le choix de la voix de l'appareil « pour les phrases sans voix enregistrée »
+      Et « Automatique (recommandé) » est choisi
+
+    Scénario: Une voix imposée ne remplace pas la voix enregistrée d'une phrase enregistrée
+      Étant donné que l'appareil a les voix françaises « Amélie (compact) » et « Denise (Natural) »
+      Et que Paul a imposé la voix « Amélie (compact) » sur la tablette
+      Et que la phrase « Écoute bien. » est une phrase enregistrée
+      Et que Léa a choisi l'univers animaux
+      Quand la consigne « Écoute bien. » s'affiche
+      Alors Léa entend Noisette lire « Écoute bien. » avec la voix enregistrée
+
+    Scénario: Une voix imposée dit les phrases sans voix enregistrée
+      Étant donné que l'appareil a les voix françaises « Amélie (compact) » et « Denise (Natural) »
+      Et que Paul a imposé la voix « Amélie (compact) » sur la tablette
+      Et que la phrase « Lis la phrase avec Noisette. » n'est pas une phrase enregistrée
+      Et que Léa a choisi l'univers animaux
+      Quand la consigne « Lis la phrase avec Noisette. » s'affiche
+      Alors Léa entend Noisette lire la consigne avec la voix « Amélie (compact) »
+
+    Scénario: Sans voix française sur l'appareil, le parent apprend que la voix de Savanturier lit les leçons
+      Étant donné que l'appareil n'a aucune voix française
+      Et que Paul est dans l'espace parent
+      Quand Paul ouvre le choix de voix
+      Alors Paul voit d'abord la voix de Savanturier, sans choix à faire
+      Et Paul voit le message « Aucune voix française sur cet appareil : la voix de Savanturier lit les leçons ; une voix de l'appareil sert seulement aux phrases fabriquées à la volée, qui ne pourront pas être lues à voix haute. »
+      Mais Paul ne voit pas le message « Aucune voix française trouvée sur cet appareil : installe-en une (voir ci-dessous), puis recharge la page. »
 
   Règle: Une leçon ouverte une fois avec le réseau reste lue par la voix enregistrée sans réseau
 
@@ -217,7 +263,7 @@ Fonctionnalité: La voix enregistrée lit les leçons sans rien installer sur l'
       Quand la consigne « Trouve le mot qui commence par le son [a]. » s'affiche
       Alors Léa entend Noisette lire « Trouve le mot qui commence par le son [a]. » avec la voix enregistrée
 
-    @pwa @a-valider
+    @pwa
     Scénario: Après une nouvelle version, la leçon déjà ouverte reste lue sans réseau par la voix enregistrée
       Étant donné que l'appareil n'a aucune voix française
       Et que la phrase « Trouve le mot qui commence par le son [a]. » est une phrase enregistrée
@@ -227,7 +273,7 @@ Fonctionnalité: La voix enregistrée lit les leçons sans rien installer sur l'
       Quand la consigne « Trouve le mot qui commence par le son [a]. » s'affiche
       Alors Léa entend Noisette lire « Trouve le mot qui commence par le son [a]. » avec la voix enregistrée
 
-    @pwa @a-valider
+    @pwa
     Scénario: Sans réseau, une leçon jamais ouverte est lue par la voix de l'appareil, sans message
       Étant donné que la phrase « Trouve le mot qui commence par le son [a]. » est une phrase enregistrée
       Et que Savanturier a déjà été chargé une fois sur la tablette, sans ouvrir la leçon de test de cette consigne
