@@ -45,10 +45,22 @@ export class LecteurAvecRepli implements LecteurAVoixHaute {
     if (plan.some((morceau) => morceau.source === "voixDeLAppareil")) {
       this.verifierQueLaVoixDeLAppareilPeutDireLaPhrase(lecture);
     }
+    let rangsDeLaVoixDeLAppareil: number[] = [];
+    const direLeGroupe = async () => {
+      const rangs = rangsDeLaVoixDeLAppareil;
+      rangsDeLaVoixDeLAppareil = [];
+      await this.direAvecLaVoixDeLAppareil(rangs, lecture);
+    };
     for (const morceau of plan) {
       if (this.arrete) return;
-      await this.jouer(morceau, lecture);
+      if (morceau.source === "voixDeLAppareil") {
+        rangsDeLaVoixDeLAppareil.push(morceau.rang);
+        continue;
+      }
+      await direLeGroupe();
+      await this.jouerEnregistree(morceau, lecture);
     }
+    await direLeGroupe();
   }
 
   private verifierQueLaVoixDeLAppareilPeutDireLaPhrase(lecture: LectureDemandee): void {
@@ -56,20 +68,22 @@ export class LecteurAvecRepli implements LecteurAVoixHaute {
     if (estFrancaise && !this.dependances.aUneVoixFrancaise()) throw new VoixIndisponible();
   }
 
-  private async jouer(morceau: MorceauDeLecture, lecture: LectureDemandee): Promise<void> {
-    if (morceau.source === "enregistree") {
-      try {
-        await this.dependances.lecteurDePhrasesEnregistrees.jouer(morceau, suiviDesMots(morceau, lecture));
-        return;
-      } catch (erreur) {
-        if (erreur instanceof VoixBloquee) throw erreur;
-      }
+  private async jouerEnregistree(morceau: MorceauDeLecture, lecture: LectureDemandee): Promise<void> {
+    try {
+      await this.dependances.lecteurDePhrasesEnregistrees.jouer(morceau, suiviDesMots(morceau, lecture));
+    } catch (erreur) {
+      if (erreur instanceof VoixBloquee) throw erreur;
+      await this.direAvecLaVoixDeLAppareil([morceau.rang], lecture);
     }
+  }
+
+  private async direAvecLaVoixDeLAppareil(rangs: readonly number[], lecture: LectureDemandee): Promise<void> {
+    if (rangs.length === 0) return;
     this.verifierQueLaVoixDeLAppareilPeutDireLaPhrase(lecture);
     await this.dependances.voixDeLAppareil.lire({
       ...lecture,
-      phrases: lecture.phrases.filter((_, rang) => rang === morceau.rang),
-      onMot: lecture.onMot && ((_, position) => lecture.onMot?.(morceau.rang, position)),
+      phrases: lecture.phrases.filter((_, rang) => rangs.includes(rang)),
+      onMot: lecture.onMot && ((phrase, position) => lecture.onMot?.(rangs[phrase] ?? phrase, position)),
     });
   }
 }

@@ -112,6 +112,7 @@ export class LectureAVoixHaute {
       await lecteur.lire({
         voix,
         langue,
+        ...(options.lent && { allure: "lente" as const }),
         phrases: reglerPhrases(texte, caractere, voix, options.lent ? RYTHME_LENT : RYTHME_NORMAL, hasard),
         ...(options.texteEnregistreDeRemplacement !== undefined &&
           { texteEnregistreDeRemplacement: options.texteEnregistreDeRemplacement }),
