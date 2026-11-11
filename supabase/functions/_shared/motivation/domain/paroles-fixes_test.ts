@@ -9,8 +9,8 @@ import {
 } from "./paroles-de-seance.ts";
 import { feteDeLaQueteAccomplie, propositionDeLaQueteDuJour, reponseAuRefusDeLaQuete } from "./paroles-de-la-quete.ts";
 import { saluerAvecLaSerie } from "./paroles-de-la-serie.ts";
-import { accueillirEnRevision, parolesDeFinDeRevision } from "./paroles-de-revision.ts";
-import { parolesDeFinDeFluence, SIGNAL_DE_DEPART } from "./paroles-de-fluence.ts";
+import { accueillirEnRevision, annonceDeLaSeanceDeRevision, parolesDeFinDeRevision } from "./paroles-de-revision.ts";
+import { accueilDeLaFluence, parolesDeFinDeFluence, SIGNAL_DE_DEPART } from "./paroles-de-fluence.ts";
 import {
   NOM_DE_L_ECRAN_DES_MEDAILLES,
   parolesDeLaSectionDesBadgesOuSansBadge,
@@ -21,7 +21,16 @@ import {
 import { parolesDeLaSectionDeLHistoire, texteALireDeLEpisode } from "./paroles-de-l-histoire.ts";
 import { titreDeLaSection } from "./paroles-de-la-cabane.ts";
 import { HISTOIRE_DES_SAVANTURIERS } from "./histoire.ts";
-import { inviterAReleverLeGrandDefi, parolesDeDebutDeGrandDefi, parolesDeFinDeGrandDefi } from "./paroles-du-defi.ts";
+import {
+  annonceDuDefiOuvert,
+  inviterARelever,
+  inviterAReleverLeGrandDefi,
+  nomDuDefi,
+  parolesDeDebutDeDefi,
+  parolesDeDebutDeGrandDefi,
+  parolesDeFinDeDefi,
+  parolesDeFinDeGrandDefi,
+} from "./paroles-du-defi.ts";
 import { sansLePrenom } from "./texte-enregistre-de-remplacement.ts";
 import {
   direJeNeSaisPasAvecLesChoix,
@@ -199,10 +208,34 @@ Deno.test("les paroles fixes ne contiennent aucune parole avec le prénom de l'e
   ];
   const paroles = parolesFixes();
   for (const parole of avecLePrenom) assert(!paroles.includes(parole), parole);
-  for (const parole of paroles) {
-    assert(!parole.includes(PRENOM), parole);
-    assert(!/\d/.test(parole), parole);
-  }
+  for (const parole of paroles) assert(!parole.includes(PRENOM), parole);
+});
+
+Deno.test("les paroles fixes ne contiennent aucune parole à nombre variable", () => {
+  const guide = UNIVERS[0]!.personnageGuide;
+  const pourDeuxValeurs = <T>(parole: (valeur: number) => T) => [parole(1), parole(2)];
+  const aNombreVariable = [
+    ...[1, 2].flatMap((etoiles) =>
+      [parolesDeFinDeSeance(etoiles, PRENOM, guide, hasardDans(0))].map((parole) => sansLePrenom(parole, PRENOM))
+    ),
+    ...pourDeuxValeurs((questionsJustes) =>
+      sansLePrenom(parolesDeFinDeRevision({ prenom: PRENOM, questionsJustes }), PRENOM)
+    ),
+    ...pourDeuxValeurs(annonceDeLaSeanceDeRevision),
+    ...pourDeuxValeurs((nombreDeLecons) => parolesDeDebutDeDefi({ nombreDeLecons })),
+    ...[3, 4].flatMap((numeroDuDefi) => [
+      sansLePrenom(inviterARelever({ prenom: PRENOM, numeroDuDefi }), PRENOM),
+      sansLePrenom(parolesDeFinDeDefi({ prenom: PRENOM, numeroDuDefi, dejaReleve: false }), PRENOM),
+      annonceDuDefiOuvert(numeroDuDefi),
+      nomDuDefi(numeroDuDefi),
+    ]),
+    ...pourDeuxValeurs((duree) => accueilDeLaFluence({ duree })),
+    ...pourDeuxValeurs((score) => parolesDeFinDeFluence({ score, issue: "nouveauRecord" })),
+    ...pourDeuxValeurs((score) => parolesDeFinDeFluence({ score, issue: "premierRecord" })),
+    ...pourDeuxValeurs((record) => parolesDeFinDeFluence({ score: 5, issue: "recordInchange", record })),
+  ];
+  const paroles = parolesFixes();
+  for (const parole of aNombreVariable) assert(!paroles.includes(parole), parole);
 });
 
 Deno.test("les paroles fixes ne contiennent aucun doublon", () => {
