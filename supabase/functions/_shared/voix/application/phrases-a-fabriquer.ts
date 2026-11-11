@@ -1,4 +1,4 @@
-import { textesDitsDansLaLecon } from "../../apprentissage/domain/index.ts";
+import { motsDitsLentementDansLaLecon, textesDitsDansLaLecon } from "../../apprentissage/domain/index.ts";
 import type { Lecon } from "../../catalogue/domain/index.ts";
 import { Niveau } from "../../catalogue/domain/index.ts";
 import { phrasesAvecCle } from "../domain/index.ts";
@@ -10,6 +10,7 @@ export type PhraseAFabriquer = {
   readonly phrase: string;
   niveau: string;
   readonly lecons: string[];
+  allures?: ["normale", "lente"];
 };
 
 type Options = { readonly niveau?: string };
@@ -26,10 +27,11 @@ export function phrasesAFabriquer(
 ): PhraseAFabriquer[] {
   const parCle = new Map<string, PhraseAFabriquer>();
 
-  const ajouter = (brut: string, niveau: string, idDeLecon?: string) => {
+  const ajouter = (brut: string, niveau: string, idDeLecon?: string, lente = false) => {
     for (const { cle, texte } of phrasesAvecCle(brut)) {
       const entree = parCle.get(cle) ?? { cle, phrase: texte, niveau, lecons: [] };
       if (estPlusBas(niveau, entree.niveau)) entree.niveau = niveau;
+      if (lente) entree.allures = ["normale", "lente"];
       if (idDeLecon !== undefined && !entree.lecons.includes(idDeLecon)) entree.lecons.push(idDeLecon);
       parCle.set(cle, entree);
     }
@@ -37,6 +39,7 @@ export function phrasesAFabriquer(
 
   for (const lecon of lecons) {
     for (const texte of textesDitsDansLaLecon(lecon)) ajouter(texte, lecon.niveau.valeur, lecon.id);
+    for (const mot of motsDitsLentementDansLaLecon(lecon)) ajouter(mot, lecon.niveau.valeur, lecon.id, true);
   }
   for (const parole of paroles) ajouter(parole, NIVEAU_DES_PAROLES_FIXES);
 

@@ -84,8 +84,20 @@ function textesDeLaPoesie(exercice: ExerciceMemoriser): string[] {
   ].filter((texte) => texte !== undefined);
 }
 
-function textesDeLaDictee(mot: MotDicte, consigne: string): string[] {
+/** Les mots que l'écran fait dire lentement (dictées), sous la forme exacte de `motADire()`, sans doublon. */
+export function motsDitsLentementDansLaLecon(lecon: Lecon): readonly string[] {
+  const mots = lecon.exercices.flatMap((exercice) =>
+    exercice.type === "dictee" ? exercice.mots.map((mot) => questionDeDictee(mot, exercice.consigne).motADire()) : []
+  );
+  return [...new Set(mots)];
+}
+
+function questionDeDictee(mot: MotDicte, consigne: string): QuestionDeDictee {
   const clavier = ClavierPropose.depuisTirage(MotAEcrire.de(mot.mot), []);
-  const question = new QuestionDeDictee(mot, consigne, clavier);
+  return new QuestionDeDictee(mot, consigne, clavier);
+}
+
+function textesDeLaDictee(mot: MotDicte, consigne: string): string[] {
+  const question = questionDeDictee(mot, consigne);
   return [question.texteDit(), question.suiteDeLaFelicitation(), AIDE_APRES_UNE_ERREUR];
 }
