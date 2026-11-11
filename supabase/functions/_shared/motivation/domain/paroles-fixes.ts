@@ -71,7 +71,8 @@ function parolesAvecPrenomSansLePrenom(): string[] {
 }
 
 function parolesDeLaQuete(): string[] {
-  return [reponseAuRefusDeLaQuete(), propositionDeLaQueteDuJour({ genre: "accomplie", quete: "lecon" }) ?? ""];
+  return [reponseAuRefusDeLaQuete(), propositionDeLaQueteDuJour({ genre: "accomplie", quete: "lecon" })]
+    .filter((parole) => parole !== undefined);
 }
 
 function parolesDeLEcranDesMedailles(): string[] {

@@ -8,10 +8,16 @@ export const NIVEAU_DES_PAROLES_FIXES = "commun";
 export type PhraseAFabriquer = {
   readonly cle: string;
   readonly phrase: string;
-  niveau: string;
-  readonly lecons: string[];
-  allures?: ["normale", "lente"];
+  readonly niveau: string;
+  readonly lecons: readonly string[];
+  readonly allures?: readonly ["normale", "lente"];
 };
+
+type PhraseEnCours =
+  & {
+    -readonly [Champ in keyof PhraseAFabriquer]: PhraseAFabriquer[Champ];
+  }
+  & { lecons: string[] };
 
 type Options = { readonly niveau?: string };
 
@@ -25,7 +31,7 @@ export function phrasesAFabriquer(
   paroles: readonly string[],
   options: Options = {},
 ): PhraseAFabriquer[] {
-  const parCle = new Map<string, PhraseAFabriquer>();
+  const parCle = new Map<string, PhraseEnCours>();
 
   const ajouter = (brut: string, niveau: string, idDeLecon?: string, lente = false) => {
     for (const { cle, texte } of phrasesAvecCle(brut)) {
