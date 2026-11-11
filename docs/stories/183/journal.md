@@ -32,3 +32,9 @@ Branche de base : `main` (`aa75d97`). Branche : `feature/183-ecran-de-seance-bar
 - VERROU base demandé, puis accordé par le responsable (#193). Consignes : 1 worker, sonder `admin/users` avant chaque run, rendre le verrou entre deux séries si #182 le demande.
 - Review complète, cycle 1 : À CORRIGER, avec 3 bloquants (garde de l'historique à la fin de la séance, rebond de « Valider », CSS de la boîte à jetons en révision et en défi) et des non-bloquants. Correctifs faits dans un worktree pendant le run E2E (branche locale `correctifs-183-revue`, 6 commits), à intégrer après le run.
 - À SAVOIR du responsable : #182 remplace `syntheseVocalePresente` par `voixPresente` dans `EcranDeSeance` (`sonImpossible`) et `etat-de-la-voix`. À l'intégration de `main`, garder `voixPresente`.
+- E2E série 1 (verrou `base`, `telephone`, 1 worker) : 4 runs, 37 verts sur 43 au dernier. Steps corrigés (`c5e631fb`). Chromium : `PLAYWRIGHT_BROWSERS_PATH` pointé sur le scratchpad.
+  - Bug : `personnageMontre` dépendait de l'existence d'une `consigne`. Or bulles, calcul, lecture, écoute, fluence, conjugaison, boîte, barres et addition n'en ont aucune dans la bibliothèque, donc le personnage guide restait à côté de la bulle (exercice à 342 px au lieu de 200).
+  - Bug : barre d'action non fixée en bas pendant les étapes de leçon.
+  - Données d'exemple de deux scénarios R4 (exercice bulles sans consigne) : passage sur l'exercice bulles de test, qui a une consigne. Règle inchangée, information donnée sur #183.
+- LIBÈRE base à la demande du responsable (#182 en attente).
+- Correctifs de la review (cycle 1) intégrés depuis le worktree (`8f15113a`) : tsc et unitaires verts.
