@@ -390,12 +390,19 @@ export async function laisserSeDerouler(page: Page): Promise<void> {
 }
 
 /** Attend une condition sur le journal en finissant les paroles qui précèdent : on ne coupe jamais celle qu'on attend (elle n'est vérifiée qu'une fois commencée). */
-export async function attendre(page: Page, condition: (observation: Observation) => boolean): Promise<Observation> {
+export async function attendre(
+  page: Page,
+  condition: (observation: Observation) => boolean,
+  quandVraie?: () => Promise<void>,
+): Promise<Observation> {
   let derniere = OBSERVATION_VIDE;
   try {
     await expect.poll(async () => {
       derniere = await observer(page);
-      if (condition(derniere)) return true;
+      if (condition(derniere)) {
+        await quandVraie?.();
+        return true;
+      }
       await terminerLaLecture(page);
       return false;
     }, { intervals: [100], timeout: DELAI_DE_L_ATTENTE_MS }).toBe(true);
@@ -468,14 +475,16 @@ export async function effetPuisParole(page: Page, effets: readonly string[], nat
     if (strict && entrees.slice(debut + fichiers.length).some((entree) => entree.debut <= parole.index)) return false;
     trouve = { effet: dernier, parole: parole.texte };
     return true;
+  }, async () => {
+    // La bulle est relevée au moment où la parole attendue est observée, avant que la lecture ne soit terminée.
+    await verifierLaNature(page, nature);
+    await verifierQueLaParoleEstCelleDeLaBulle(page, trouve?.parole ?? "");
   });
   const observation = await observer(page);
   const effet = trouve?.effet as Entree;
   for (const entree of depuisLaMarque(observation).filter((candidat) => fichiers.includes(candidat.nom))) {
     expect(sansChevauchement(observation, entree) && sansParoleEnCours(entree), `l'effet « ${entree.nom} » joue seul, avant toute parole`).toBe(true);
   }
-  await verifierLaNature(page, nature);
-  await verifierQueLaParoleEstCelleDeLaBulle(page, trouve?.parole ?? "");
   return effet;
 }
 
