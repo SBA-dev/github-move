@@ -18,7 +18,9 @@ import { terminerLaLecture } from "../support/lecture-vocale.ts";
 import { RYTHME_PLUS_LENT, etatDeLaDictee } from "./dictee-et-conjugaison.steps.ts";
 import { leconAChoix, QUESTIONS_DE_TEST } from "./exercices-a-choix.steps.ts";
 import { bulle, injecter, interceptertLaBibliotheque } from "./etapes-puis-exercices.steps.ts";
-import { Given, Then } from "./fixtures.ts";
+import type { Famille } from "../support/famille.ts";
+import { Given, type Monde, Then } from "./fixtures.ts";
+import { jouerAvecLeProfilReel } from "./profil-reel.ts";
 import { chargerUneFois } from "./pwa.steps.ts";
 import {
   consigneAffichee,
@@ -141,12 +143,20 @@ async function publierLaLeconEtLaVoix(page: Page, baseURL: string | undefined): 
   return consigne;
 }
 
+// Le build de production n'a pas de profil préparé (décision 0021) : Paul est connecté, puis Léa, un vrai profil, se choisit
+// dans « Qui joue ? » sur une tablette dont le service worker contrôle déjà la page.
+async function chargerUneFoisAvecLeaReelle(famille: Famille, monde: Monde, page: Page) {
+  await famille.connecterSansEmail("tablette", "Paul");
+  await chargerUneFois(page);
+  await jouerAvecLeProfilReel(famille, monde, page);
+}
+
 Given(
   /^Léa a ouvert une fois, avec le réseau, la page de la leçon de test de cette consigne$/,
   { tags: "@issue-182 and @pwa" },
-  async ({ page, baseURL }) => {
+  async ({ famille, monde, page, baseURL }) => {
     await publierLaLeconEtLaVoix(page, baseURL);
-    await chargerUneFois(page);
+    await chargerUneFoisAvecLeaReelle(famille, monde, page);
     const etat = scenario(page);
     await preparerLaPage(page, etat);
     await ouvrirLaPageDeLaLeconDeTest(page, etat, etat.consigne.texte);
@@ -164,9 +174,11 @@ Given(
 Given(
   /^Savanturier a déjà été chargé une fois sur la tablette, sans ouvrir la leçon de test de cette consigne$/,
   { tags: "@issue-182 and @pwa" },
-  async ({ page, baseURL }) => {
+  async ({ famille, monde, page, baseURL }) => {
     await publierLaLeconEtLaVoix(page, baseURL);
-    await chargerUneFois(page);
+    // Léa rejoint la leçon sans recharger la page : la voix de test doit être installée avant le premier chargement.
+    await preparerLaPage(page, scenario(page));
+    await chargerUneFoisAvecLeaReelle(famille, monde, page);
   },
 );
 
