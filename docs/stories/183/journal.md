@@ -64,3 +64,11 @@ Branche de base : `main` (`aa75d97`). Branche : `feature/183-ecran-de-seance-bar
   - #128 « case qui s'allume » en dictée : aucune cause trouvée dans le diff de #183, probablement une course ; à rejouer seul.
 - Reviews delta sur `4e1d07ac` puis sur `9e3fe561` : APPROUVÉ. Non-bloquant gardé en tête : aucun scénario ne vérifie que la consigne reste visible pendant un geste muet.
 - VERROU base demandé pour la série 3. #183 est en tête de file, derrière #182.
+- Série 3 :
+  - run C1 : #183 29/31 (les 2 échecs du Plan des 200 px attendaient Q-183.17) ; #7, #16, #19, #20 et #127 verts ;
+  - échec de #128 en dictée : course dans le step, corrigée en relevant la nature de la bulle au `speak` (`8c101f59`, `52e596a9`, `80b307bb`) ;
+  - #182 passe entre C1 et C2 ;
+  - run C2 : #128 90/90, #127 93/93. #97 : 19 échecs d'infrastructure (vite orphelin), 62/63 au rejeu. #130 : 3 échecs déterministes. #131 : 1 échec.
+- Q-183.17 = A (PO, relayé sur #193) : le step mesure le haut du bloc « consigne + exercice » (`28f5e9e0`).
+- Régression trouvée sur #130 et #131 : la scène de la première réponse fausse s'arrêtait à l'appui. Le personnage guide se démontait et le contenu remontait avant le relâché, donc le clic tombait à côté. La scène s'arrête maintenant au relâché (`ffa79b66`). Le test rouge, ce sont les E2E de #130 et #131 (pas de test de composant). Review delta : APPROUVÉ.
+  - Non-bloquant à porter en suivi : monter et démonter le personnage guide décale la mise en page (fin naturelle de la scène, apparition d'une réaction). Une place réservée, ou un personnage superposé, supprimerait cette classe de bugs. À proposer au PO dans la PR.
