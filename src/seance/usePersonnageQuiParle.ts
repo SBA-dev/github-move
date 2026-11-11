@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { attenteAvantLEcranSuivant } from "@domain/apprentissage";
 import { HUMEUR_PAR_DEFAUT, type Humeur } from "@domain/motivation";
 import type { EffetSonore } from "@domain/voix";
@@ -34,7 +34,10 @@ export type ParoleADire = {
   readonly effetsAvant?: readonly EffetSonore[];
 };
 
-/** Durée pendant laquelle le personnage guide reste montré quand il réagit par un geste, sans rien dire. */
+/**
+ * Durée pendant laquelle le personnage guide reste montré quand il réagit par un geste, sans rien dire.
+ * Volontairement indépendante de `PAUSE_DES_APPLAUDISSEMENTS_MS` : elle règle le geste muet seul, pas la pause laissée aux applaudissements dans les questions à choix.
+ */
 const DUREE_DU_GESTE_MUET_MS = 1500;
 
 async function attendreLaFinDeLAffichage(entendue: boolean) {
@@ -96,6 +99,10 @@ export function usePersonnageQuiParle({ lire, jouer, couperLaVoix }: Pick<Voix, 
     setHumeur(nouvelleHumeur);
     setGesteMuet(true);
     void attendre(DUREE_DU_GESTE_MUET_MS).then(() => numero === numeroDuGeste.current && setGesteMuet(false));
+  }, []);
+
+  useEffect(() => () => {
+    numeroDuGeste.current++;
   }, []);
 
   const faireSilence = useCallback(() => {

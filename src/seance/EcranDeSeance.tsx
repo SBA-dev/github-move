@@ -211,8 +211,10 @@ function SeanceEnCours(
   });
   // Pendant une question, le personnage guide s'efface : la bulle prend toute la largeur. Il n'apparaît que quand il réagit, pendant les étapes de leçon et à la fin.
   const dansUneQuestion = !finie && exerciceDeLaLecon !== undefined;
-  const personnageMontre = !dansUneQuestion || deroulement.personnageGuideReagit || deroulement.gesteMuet || reponseFausse.enCours !== undefined;
-  const consigneMontree = personnageMontre ? undefined : consigne;
+  const personnageParle = !dansUneQuestion || deroulement.personnageGuideReagit || reponseFausse.enCours !== undefined;
+  // Un geste muet montre le personnage guide sans toucher à la mise en page : la consigne et la question restent, la bulle n'affiche pas de parole périmée.
+  const personnageMontre = personnageParle || deroulement.gesteMuet;
+  const consigneMontree = personnageParle ? undefined : consigne;
   const questionDansLaBulle = consigneMontree === undefined ? undefined : questionAfficheeDansLaBulle(deroulement.parole, exerciceDeLaLecon, schema?.enonce);
   const texteDeLaBulle = consigneMontree === undefined ? deroulement.parole?.texte : questionDansLaBulle;
   const reecouterInactif = figee !== undefined ||
