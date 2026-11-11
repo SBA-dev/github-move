@@ -55,6 +55,21 @@ export class LecteurDePhrasesEnregistreesDuNavigateur implements LecteurDePhrase
     });
   }
 
+  /** À appeler pendant un toucher : iPhone et iPad n'autorisent la lecture d'un MP3 qu'après un premier démarrage. */
+  amorcer(silence: string): void {
+    const { audio } = this;
+    if (this.terminerLaLectureEnCours) return;
+    audio.muted = true;
+    audio.src = silence;
+    audio.play().then(() => {
+      if (audio.src !== silence) return;
+      audio.pause();
+      audio.muted = false;
+    }).catch(() => {
+      if (audio.src === silence) audio.muted = false;
+    });
+  }
+
   arreter(): void {
     this.terminerLaLectureEnCours?.();
     this.audio.pause();

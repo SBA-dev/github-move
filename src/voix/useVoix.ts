@@ -12,7 +12,7 @@ import {
 } from "@domain/voix";
 import { hasardDuNavigateur } from "../hasard-navigateur.ts";
 import { ChoixDeVoixMemoriseSurLAppareil } from "./choix-de-voix-memorise.ts";
-import { DeverrouillageAudio, deverrouillerAuToucher } from "./deverrouillage-audio.ts";
+import { DeverrouillageAudio, deverrouillerAuToucher, silenceEnWav } from "./deverrouillage-audio.ts";
 import { LecteurDEffetsSonoresDuNavigateur } from "./lecteur-d-effets-sonores-du-navigateur.ts";
 import { LecteurDePhrasesEnregistreesDuNavigateur } from "./lecteur-de-phrases-enregistrees-du-navigateur.ts";
 import { LecteurSyntheseVocale, syntheseVocale } from "./lecteur-synthese-vocale.ts";
@@ -61,7 +61,13 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
   const [repertoire] = useState(() => new RepertoireDesPhrasesEnregistreesDuNavigateur());
   const [repertoireCharge, setRepertoireCharge] = useState(false);
   const [effetsSonores] = useState(() => new LecteurDEffetsSonoresDuNavigateur());
-  const [deverrouillage] = useState(() => new DeverrouillageAudio(() => effetsSonores.amorcer()));
+  const [phrasesEnregistrees] = useState(() => new LecteurDePhrasesEnregistreesDuNavigateur());
+  const [deverrouillage] = useState(() =>
+    new DeverrouillageAudio(() => {
+      effetsSonores.amorcer();
+      phrasesEnregistrees.amorcer(silenceEnWav());
+    })
+  );
   const [voixDeLAppareil] = useState(() => new VoixDeLAppareilNavigateur());
   const [choixMemorise] = useState(() => new ChoixDeVoixMemoriseSurLAppareil());
   const [syntheseVocalePresente] = useState(() => syntheseVocale() !== undefined);
@@ -71,7 +77,7 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
     new LectureAVoixHaute({
       lecteur: new LecteurAvecRepli({
         repertoire,
-        lecteurDePhrasesEnregistrees: new LecteurDePhrasesEnregistreesDuNavigateur(),
+        lecteurDePhrasesEnregistrees: phrasesEnregistrees,
         voixDeLAppareil: new LecteurSyntheseVocale(),
         aUneVoixFrancaise: () => voixDeLAppareil.voixDisponibles().some(({ langue }) => langue.toLowerCase().startsWith("fr")),
       }),

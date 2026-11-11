@@ -1,0 +1,14 @@
+Voix enregistrée de Savanturier
+
+Voix « tom » du projet French-tts-model-piper de Tjiho
+https://git.bksp.space/Tjiho/French-tts-model-piper
+
+Licence : GNU AGPLv3 (le modèle et les données qui ont servi à l'entraîner).
+
+L'application ne contient que les fichiers MP3 produits avec Piper
+à partir de ce modèle, jamais le modèle lui-même.
+
+Le modèle exact retenu (parmi ceux de la voix « tom ») n'est pas encore choisi
+par le responsable du produit : cette mention sera complétée à son choix.
+
+À faire confirmer (licence AGPLv3 et usage des MP3) avant toute publication commerciale.

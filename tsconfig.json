@@ -17,7 +17,10 @@
     "noEmit": true,
     "types": ["node", "vite/client"],
     "paths": {
-      "@domain/*": ["./supabase/functions/_shared/*/domain/index.ts"]
+      "@domain/*": ["./supabase/functions/_shared/*/domain/index.ts"],
+      "@application/voix/adresses-des-phrases-de-la-lecon": [
+        "./supabase/functions/_shared/voix/application/adresses-des-phrases-de-la-lecon.ts"
+      ]
     }
   },
   "include": [

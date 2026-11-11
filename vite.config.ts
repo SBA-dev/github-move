@@ -13,7 +13,10 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react(), pwa()],
     resolve: {
-      alias: [{ find: /^@domain\/([^/]+)$/, replacement: `${partage}/$1/domain/index.ts` }],
+      alias: [
+        { find: /^@domain\/([^/]+)$/, replacement: `${partage}/$1/domain/index.ts` },
+        { find: /^@application\/([^/]+)\/([^/]+)$/, replacement: `${partage}/$1/application/$2.ts` },
+      ],
     },
     server: {
       port: 5173,
