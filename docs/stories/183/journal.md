@@ -30,3 +30,5 @@ Branche de base : `main` (`aa75d97`). Branche : `feature/183-ecran-de-seance-bar
 - Câblage, partie 3 : barre d'action par portail (`ActionDeLExercice`), pour tous les types de la séance de leçon (`90655f89`). Révision, défi et test de départ restent inchangés.
 - Steps E2E des parties 1 et 2 écrits (`7dd5eb6e`, `630104d5`, `0c25dbe3`), sans run.
 - VERROU base demandé, puis accordé par le responsable (#193). Consignes : 1 worker, sonder `admin/users` avant chaque run, rendre le verrou entre deux séries si #182 le demande.
+- Review complète, cycle 1 : À CORRIGER, avec 3 bloquants (garde de l'historique à la fin de la séance, rebond de « Valider », CSS de la boîte à jetons en révision et en défi) et des non-bloquants. Correctifs faits dans un worktree pendant le run E2E (branche locale `correctifs-183-revue`, 6 commits), à intégrer après le run.
+- À SAVOIR du responsable : #182 remplace `syntheseVocalePresente` par `voixPresente` dans `EcranDeSeance` (`sonImpossible`) et `etat-de-la-voix`. À l'intégration de `main`, garder `voixPresente`.
