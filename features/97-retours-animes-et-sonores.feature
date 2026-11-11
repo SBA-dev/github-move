@@ -23,7 +23,8 @@ Fonctionnalité: Retours animés et sonores pendant la séance
   - « le choix « … » rebondit » : il grossit un peu puis revient à sa taille, avec la couleur de réussite
     (skill gamification, section 3 : 1 → 1,15 → 1) ; « se balance doucement » : léger balancement de côté
     (±6 px, 2 allers-retours) ;
-  - « un point vole jusqu'au récipient » : le récipient est l'interface de l'avancement de la séance (glossaire) ;
+  - « la barre de progression avance, avec un éclat sur le compteur » : la barre de progression et son compteur
+    sont l'interface de l'avancement de la séance (glossaire, #183) ;
   - « des étincelles », « des confettis », « le compteur défile » : mots d'interface, comme « mouvements réduits » ;
   - durées, pour l'implémentation et la review, jamais dans les étapes : premier retour en moins de 300 ms,
     retour de 150 à 400 ms, célébration de 1,5 s au plus, effets sonores de la fin de moins de 2 s en tout.
@@ -113,41 +114,45 @@ Fonctionnalité: Retours animés et sonores pendant la séance
       Alors Léa entend l'effet sonore « réponse juste »
 
     # Décision 97.10
-    Plan du Scénario: Pendant la fluence, une <réponse> fait entendre « <effet sonore> », sans point qui vole
+    @issue-183
+    Plan du Scénario: Pendant la fluence, une <réponse> fait entendre « <effet sonore> », sans éclat sur le compteur
       Étant donné que Léa fait la fluence « Calcul rapide : les doubles », avec 3 calculs réussis
       Quand Léa donne une <réponse>
       Alors Léa entend l'effet sonore « <effet sonore> »
-      Mais aucun point ne vole jusqu'au récipient
+      Mais la barre de progression n'avance pas
 
       Exemples:
         | réponse        | effet sonore   |
         | bonne réponse  | réponse juste  |
         | réponse fausse | réponse fausse |
 
-  Règle: Une question réussie fait voler un point jusqu'au récipient avec « point du récipient » ; la dernière réponse d'un exercice à plusieurs réponses sur le même écran (texte à trous, ordre, classer, conjugaison, memoriser) fait pleuvoir des étincelles avec « texte complet », à la place de « réponse juste »
+  Règle: Une question réussie fait avancer la barre de progression, avec un éclat, et « point du récipient » ; la dernière réponse d'un exercice à plusieurs réponses sur le même écran (texte à trous, ordre, classer, conjugaison, memoriser) fait pleuvoir des étincelles avec « texte complet », à la place de « réponse juste »
 
     # Décision 97.5
-    Scénario: Une question réussie fait voler un point jusqu'au récipient, après le son de la réponse juste
+    @issue-183
+    Scénario: Une question réussie fait avancer la barre de progression, avec un éclat sur le compteur, après le son de la réponse juste
       Étant donné que Léa joue la séance complète de la leçon « Les sons ou, on, an »
       Et que Léa en est à la question « Dans le mot « poule », quel son entends-tu ? »
       Quand Léa répond « ou »
-      Alors un point vole jusqu'au récipient
+      Alors la barre de progression avance, avec un éclat sur le compteur
       Et Léa entend les effets sonores « réponse juste » puis « point du récipient », puis Noisette dit une félicitation
       Et l'avancement de la séance montre 1 question réussie sur 15
 
-    Scénario: Une erreur ne fait voler aucun point
+    @issue-183
+    Scénario: Une erreur ne fait pas avancer la barre de progression
       Étant donné que Léa joue la séance complète de la leçon « Les sons ou, on, an »
       Et que Léa en est à la question « Dans le mot « poule », quel son entends-tu ? »
       Quand Léa répond « on »
-      Alors aucun point ne vole jusqu'au récipient
+      Alors la barre de progression n'avance pas
       Et Léa n'entend pas l'effet sonore « point du récipient »
       Et l'avancement de la séance montre toujours 0 question réussie sur 15
 
-    Scénario: Après une erreur, la bonne réponse fait quand même voler le point
+    @issue-183
+    Scénario: Après une erreur, la bonne réponse fait quand même avancer la barre de progression
       Étant donné que Léa joue la séance complète de la leçon « Les sons ou, on, an »
       Et que Léa a répondu « on » à la question « Dans le mot « poule », quel son entends-tu ? »
       Quand Léa répond « ou »
-      Alors un point vole jusqu'au récipient
+      Alors la barre de progression avance, avec un éclat sur le compteur
       Et Léa entend l'effet sonore « point du récipient »
 
     # Décision 97.5
@@ -370,13 +375,14 @@ Fonctionnalité: Retours animés et sonores pendant la séance
       Alors Léa voit 3 étoiles allumées sur 3, sans animation
       Et aucun confetti ne tombe
 
-    Scénario: Avec les mouvements réduits, une réponse juste ne rebondit pas, et le point s'ajoute au récipient sans voler
+    @issue-183
+    Scénario: Avec les mouvements réduits, une réponse juste ne rebondit pas, et la barre de progression avance d'un coup, sans éclat
       Étant donné que l'appareil demande des mouvements réduits
       Et que Léa joue la séance complète de la leçon « Les sons ou, on, an »
       Et que Léa en est à la question « Dans le mot « poule », quel son entends-tu ? »
       Quand Léa répond « ou »
       Alors le choix « ou » prend la couleur de réussite sans rebondir
-      Et aucun point ne vole jusqu'au récipient
+      Et la barre de progression avance d'un coup, sans éclat
       Mais l'avancement de la séance montre 1 question réussie sur 15
 
     Scénario: Avec les mouvements réduits, une réponse fausse ne se balance pas, et l'encouragement est dit

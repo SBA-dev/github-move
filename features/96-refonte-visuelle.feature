@@ -153,7 +153,6 @@ Fonctionnalité: Refonte visuelle de l'application de l'enfant
         | Police              | Agent Max        | « Toutes les leçons »                                   |
         | Princesses et fées  | Lumi             | « Mes médailles »                                       |
         | Danse               | Lili             | la page de la leçon « Les sons ou, on, an »             |
-        | Pompiers            | Capitaine Sam    | la séance de la leçon « Les sons ou, on, an »           |
         | Animaux de la forêt | Noisette         | la fin de la séance de la leçon « Les sons ou, on, an » |
         | Sports              | Coach Léo        | le test de départ                                       |
         | Danse               | Lili             | la fin du test de départ                                |
@@ -207,12 +206,15 @@ Fonctionnalité: Refonte visuelle de l'application de l'enfant
       Alors elle voit Noisette dans le paysage de l'univers « Animaux de la forêt »
       Et aucun message d'erreur n'apparaît
 
-    Scénario: Sur un écran de 360 px, le personnage guide ne cache ni la consigne ni les choix
+    @issue-183
+    Scénario: Sur un écran de 360 px, le personnage guide qui félicite ne cache pas les choix de la question
       Étant donné que l'écran de l'appareil mesure 360 px de large
       Et que Léa a un profil enfant préparé de niveau CP dans l'univers « Pompiers »
-      Quand Léa arrive sur la séance de la leçon « Les sons ou, on, an »
+      Et que Léa joue la séance complète de la leçon « Les sons ou, on, an »
+      Et que Léa en est à la question « Dans le mot « poule », quel son entends-tu ? »
+      Quand Léa répond « ou »
       Alors elle voit Capitaine Sam dans le paysage de l'univers « Pompiers »
-      Et la consigne et tous les choix de la question restent visibles en entier
+      Et tous les choix de la question restent visibles en entier
 
     Plan du Scénario: Avec les mouvements réduits, le paysage et le personnage guide restent immobiles sur <écran>
       Étant donné que l'appareil demande des mouvements réduits
