@@ -48,10 +48,13 @@ Deno.test("seules les phrases de la leçon présentes au répertoire ont une adr
 
   const adresses = adressesDesPhrasesDeLaLecon(lecon, repertoire);
 
-  assertEquals([...adresses].sort(), [
-    `/voix/${cleDePhrase("Choisis la bonne bulle.")}-aaaa1111.mp3`,
-    `/voix/${cleDePhrase("Prends ton temps.")}-bbbb2222.mp3`,
-  ].sort());
+  assertEquals(
+    [...adresses].sort(),
+    [
+      `/voix/${cleDePhrase("Choisis la bonne bulle.")}-aaaa1111.mp3`,
+      `/voix/${cleDePhrase("Prends ton temps.")}-bbbb2222.mp3`,
+    ].sort(),
+  );
 });
 
 Deno.test("un mot dit lentement dont le MP3 lent est au répertoire a aussi son adresse lente", () => {
@@ -69,7 +72,9 @@ Deno.test("une phrase dite deux fois dans la leçon n'a qu'une adresse", () => {
   const lecon = uneLeconDeBulles("Prends ton temps. Prends ton temps.");
   const repertoire = repertoireDeTest({ [cleDePhrase("Prends ton temps.")]: { normale: "bbbb2222" } });
 
-  assertEquals(adressesDesPhrasesDeLaLecon(lecon, repertoire), [`/voix/${cleDePhrase("Prends ton temps.")}-bbbb2222.mp3`]);
+  assertEquals(adressesDesPhrasesDeLaLecon(lecon, repertoire), [
+    `/voix/${cleDePhrase("Prends ton temps.")}-bbbb2222.mp3`,
+  ]);
 });
 
 Deno.test("un répertoire vide ne donne aucune adresse", () => {
