@@ -15,45 +15,50 @@ type Dependances = {
 };
 
 export class LecteurAvecRepli implements LecteurAVoixHaute {
-  private arrete = false;
+  private generation = 0;
 
   constructor(private readonly dependances: Dependances) {}
 
   async lire(lecture: LectureDemandee): Promise<void> {
-    this.arrete = false;
+    const generation = ++this.generation;
     try {
-      await this.jouerLePlan(lecture);
+      await this.jouerLePlan(lecture, generation);
     } catch (erreur) {
       const remplacement = lecture.texteEnregistreDeRemplacement;
       if (!(erreur instanceof VoixIndisponible) || remplacement === undefined) throw erreur;
+      if (!this.estToujoursEnCours(generation)) return;
       await this.jouerLePlan({
         ...lecture,
         phrases: phrasesDeRemplacement(lecture, remplacement),
         texteEnregistreDeRemplacement: undefined,
-      });
+      }, generation);
     }
   }
 
   arreter(): void {
-    this.arrete = true;
+    this.generation++;
     this.dependances.lecteurDePhrasesEnregistrees.arreter();
     this.dependances.voixDeLAppareil.arreter();
   }
 
-  private async jouerLePlan(lecture: LectureDemandee): Promise<void> {
+  private estToujoursEnCours(generation: number): boolean {
+    return generation === this.generation;
+  }
+
+  private async jouerLePlan(lecture: LectureDemandee, generation: number): Promise<void> {
     const plan = planDeLecture(lecture, this.dependances.repertoire);
     if (plan.some((morceau) => morceau.source === "voixDeLAppareil")) {
       this.verifierQueLaVoixDeLAppareilPeutDireLaPhrase(lecture);
     }
     for (const suite of suitesDeMemeSource(plan)) {
-      if (this.arrete) return;
+      if (!this.estToujoursEnCours(generation)) return;
       if (suite[0]?.source === "voixDeLAppareil") {
-        await this.direAvecLaVoixDeLAppareil(suite.map(({ rang }) => rang), lecture);
+        await this.direAvecLaVoixDeLAppareil(suite.map(({ rang }) => rang), lecture, generation);
         continue;
       }
       for (const morceau of suite) {
-        if (this.arrete) return;
-        await this.jouerEnregistree(morceau, lecture);
+        if (!this.estToujoursEnCours(generation)) return;
+        await this.jouerEnregistree(morceau, lecture, generation);
       }
     }
   }
@@ -63,17 +68,25 @@ export class LecteurAvecRepli implements LecteurAVoixHaute {
     if (estFrancaise && !this.dependances.aUneVoixFrancaise()) throw new VoixIndisponible();
   }
 
-  private async jouerEnregistree(morceau: MorceauDeLecture, lecture: LectureDemandee): Promise<void> {
+  private async jouerEnregistree(
+    morceau: MorceauDeLecture,
+    lecture: LectureDemandee,
+    generation: number,
+  ): Promise<void> {
     try {
       await this.dependances.lecteurDePhrasesEnregistrees.jouer(morceau, suiviDesMots(morceau, lecture));
     } catch (erreur) {
       if (erreur instanceof VoixBloquee) throw erreur;
-      await this.direAvecLaVoixDeLAppareil([morceau.rang], lecture);
+      await this.direAvecLaVoixDeLAppareil([morceau.rang], lecture, generation);
     }
   }
 
-  private async direAvecLaVoixDeLAppareil(rangs: readonly number[], lecture: LectureDemandee): Promise<void> {
-    if (rangs.length === 0) return;
+  private async direAvecLaVoixDeLAppareil(
+    rangs: readonly number[],
+    lecture: LectureDemandee,
+    generation: number,
+  ): Promise<void> {
+    if (rangs.length === 0 || !this.estToujoursEnCours(generation)) return;
     this.verifierQueLaVoixDeLAppareilPeutDireLaPhrase(lecture);
     await this.dependances.voixDeLAppareil.lire({
       ...lecture,
