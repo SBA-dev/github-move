@@ -86,3 +86,8 @@ Branche : `feature/182-voix-mp3-piper`, partie de `main` (`aa75d97`). Base : `ma
 - **Fabrication** : 231 paroles fixes, voix « tom » modèle 1, 32 kbit/s, 2,2 Mo, ≈ 13 min.
 - **Intégrations de `main`** : une, sans conflit Git (PR #189), avec une collision de numéro de décision.
 - 12:40 UTC : DÉCISION du responsable (annonce sur #193) : la décision de #182 devient **0044** (0043 reste à la PR #189). Fichier renommé `docs/decisions/0044-voix-en-mp3-pre-generes-piper.md`, références mises à jour (docs de #182, `docs/sons.md`, context map), ligne ajoutée à `docs/decisions/README.md`. Les mentions de 0043 plus haut dans ce journal désignent cette même décision.
+
+# Livraison 182b : CP
+
+- 12:45 UTC : 182a mergée (PR #196, `3e585a5`). Le responsable fait enchaîner sur 182b (annonce sur #193) ; branche `feature/182-voix-mp3-piper` recréée depuis `main` (`3e585a5`).
+- 12:50 UTC : RED 27 (c7f35c0) : la garde de couverture s'étend aux leçons du CP (vraies leçons de la bibliothèque, import JSON statique) : 765 phrases du CP sans MP3. Export du CP : 996 phrases, dont les 231 paroles fixes déjà fabriquées. Étiquettes du plan des leçons fabriquées : `@hors-182a` déplacé sur les exemples des niveaux pas encore fabriqués, le CP devient exécutable (8225f49, texte des scénarios inchangé). Fabrication du CP lancée avec `tom1.onnx`, 32 kbit/s ; steps E2E des exemples CP en écriture.
