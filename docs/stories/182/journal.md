@@ -62,3 +62,26 @@ Branche : `feature/182-voix-mp3-piper`, partie de `main` (`aa75d97`). Base : `ma
 - 11:30 UTC : revue du delta f30b7d4..75526b1 : **À CORRIGER**, 1 test manquant (`phrasesNonCouvertes` : la règle de l'allure lente n'était vérifiée par aucun test, la garde ne portant que sur le niveau « commun » sans phrase lente). Écart TDD reconnu : le module avait été écrit sous un test qui ne l'exigeait que par son import. Test ajouté après coup (passe déjà ; vérifié qu'il échoue si la condition est retirée). VERROU base accordé pour la série 4 (≈ 11:27 UTC).
 - 11:27–12:40 UTC : **série E2E 4** (dernière) sous verrou base, 1 worker : `telephone` #182 #7 #15 #97 **151/151** (23 min ; un scénario #7 « Une nouvelle lecture coupe la lecture en cours » passé à la relance seule, flake de timing) ; `tablette` #182 **30/30** (131 s) ; PWA complète **42/42** (111 s). Premier passage `telephone` à 91/151 : les vraies paroles fixes, désormais en MP3, n'étaient plus dites par la voix de l'appareil que #7, #15 et #97 observent. Support E2E (1fccb8d) : répertoire des voix vide par défaut, vrai répertoire pour `@paroles-fixes-fabriquees` et `@production`, relais PWA publié vide ; step « Noisette dit une félicitation avec la voix enregistrée ». LIBÈRE base aussitôt.
 - 12:45 UTC : revue du delta 1fccb8d : **APPROUVÉ**. Non bloquant traité : test du vrai répertoire factorisé (`litLeVraiRepertoireDesVoix`). Notés pour 182b à 182e : le plan `@hors-182a` (MP3 des leçons) devra être ajouté aux exceptions du répertoire vide par défaut ; le step de félicitation compare le texte entier (à passer phrase par phrase si une félicitation de plusieurs phrases arrive) ; le fixture `pwa` rend `undefined` hors `@pwa`/`@issue-8` (aucun usage à risque aujourd'hui).
+- 12:38 UTC : **VERROU merge** accordé (annonce [Responsable] sur #193). `main` intégré (`60cc288`, PR #189 : doc et outillage, sans code de production) sans conflit Git (9ec4da4). Après intégration : deno test 3113 verts, lint et fmt verts, `tsc`, build, pytest 1654, V1 et `bddgen` verts ; aucun E2E ni delta de revue à refaire (rien d'applicatif n'arrive de `main`). Collision : #189 a mergé une autre décision 0043 ; QUESTION au responsable pour renuméroter la nôtre.
+
+## Mesures
+
+- **Durée** : du démarrage (2026-11-09, 23:55 UTC) au merge (2026-11-11, ≈ 13:00 UTC), soit ≈ 37 h de calendrier, dont ≈ 24 h d'attente de la validation du cadrage (⛔ n°1, réponse « Reco tout » le 11/11 à 00:47).
+- **Attentes** :
+  - ⛔ n°1, cadrage : ≈ 24 h ;
+  - escalade réseau `git.bksp.space` (modèle « tom ») : levée avec la réponse au cadrage ;
+  - choix du modèle et du débit (#182.19, #182.8a), de 00:55 à 11:13 UTC, soit ≈ 10 h 20, sans bloquer le code (faux Piper) ;
+  - verrou `base` : quatre attentes derrière #183, de quelques minutes à ≈ 30 min chacune ;
+  - verrou `merge` : accordé tout de suite ;
+  - redémarrages du conteneur : deux, sans perte (le scratchpad a survécu).
+- **TDD** : 26 cycles RED → GREEN dans le domaine, l'application et le pipeline (plus les cycles de câblage) ; 116 commits hors merges.
+- **Revues** : revues intermédiaires par bloc, une review finale (APPROUVÉ) et six revues de delta, dont trois À CORRIGER (regroupement des replis et arrêt ; step partagé « le réseau est coupé » ; test manquant de `phrasesNonCouvertes`), toutes corrigées en un cycle.
+- **E2E** : quatre séries sous verrou `base`, un seul worker :
+  - série 1 : 124/149 (deux bugs applicatifs) ;
+  - série 2 : 148/149 et PWA 40/42 ;
+  - série 3 : `@issue-182` 28/28 et PWA 40/42 (bug de `sw.js` trouvé) ;
+  - série 4 : `telephone` 151/151, `tablette` 30/30, PWA 42/42.
+  - Durée d'un passage complet sur `telephone` (#182, #7, #15, #97) : ≈ 23 à 25 min.
+- **Bugs trouvés en E2E et corrigés par TDD** : cinq (allure lente non transmise ; un repli par phrase ; arrêt suivi d'un MP3 ; lecture arrêtée qui continue ; page blanche hors ligne après une mise à jour dans `sw.js`).
+- **Fabrication** : 231 paroles fixes, voix « tom » modèle 1, 32 kbit/s, 2,2 Mo, ≈ 13 min.
+- **Intégrations de `main`** : une, sans conflit Git (PR #189), avec une collision de numéro de décision.
