@@ -287,3 +287,37 @@ Deno.test("arrêter pendant un groupe lu par la voix de l'appareil ne joue pas l
 
   assertEquals(phrasesEnregistrees.morceauxJoues.length, 0);
 });
+
+Deno.test("une lecture arrêtée pendant un enregistrement ne dit pas sa phrase de repli quand une nouvelle lecture a commencé", async () => {
+  const { lecteur, phrasesEnregistrees, synthese } = unLecteur({ repertoire: enregistrees(BONJOUR) });
+  phrasesEnregistrees.jouerSansTerminerAutomatiquement();
+
+  const lectureA = lecteur.lire(lectureDe([BONJOUR, ON_COMMENCE]));
+  await attendreUnTour();
+  lecteur.arreter();
+  const lectureB = lecteur.lire(lectureDe([BONJOUR]));
+  await attendreUnTour();
+  await lectureA;
+
+  assertEquals(synthese.lectures.length, 0);
+
+  lecteur.arreter();
+  await lectureB;
+});
+
+Deno.test("une lecture arrêtée pendant la voix de l'appareil ne joue pas son enregistrement suivant quand une nouvelle lecture a commencé", async () => {
+  const { lecteur, phrasesEnregistrees, synthese } = unLecteur({ repertoire: enregistrees(A_BIENTOT) });
+  synthese.lireSansTerminerAutomatiquement();
+
+  const lectureA = lecteur.lire(lectureDe([BONJOUR, A_BIENTOT]));
+  await attendreUnTour();
+  lecteur.arreter();
+  const lectureB = lecteur.lire(lectureDe([ON_COMMENCE]));
+  await attendreUnTour();
+  await lectureA;
+
+  assertEquals(phrasesEnregistrees.morceauxJoues.length, 0);
+
+  lecteur.arreter();
+  await lectureB;
+});
