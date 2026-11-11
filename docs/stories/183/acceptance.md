@@ -209,3 +209,16 @@ Décisions du PO après le premier passage E2E (2026-11-07) :
   fausse ») ; le personnage guide est affiché à environ 100 px quand il réagit, et sa hauteur est réservée ; le
   seuil devient 210 px (« le début de l'exercice est à 210 px au plus du haut de l'écran »). Le scénario « mode
   dys » de #163 ne change pas. Tag `@wip` retiré de la fonctionnalité : ses scénarios passent.
+
+Décision du PO (2026-11-11) :
+
+- **E2E-2** : scénarios de #10 et #73 précisés, l'Espace parent s'ouvre une fois la séance quittée. Dans #73, « Léa
+  quitte la séance » est ajouté avant l'entrée de l'espace parent dans « Pendant la lecture d'une consigne, Léa quitte
+  la séance puis demande l'entrée de l'espace parent : la voix s'arrête » (issu du plan « Pendant la lecture d'une
+  consigne, <ce que fait Léa> arrête la voix ») et « La consigne coupée ne reprend pas dans l'espace parent » ; c'est
+  désormais la sortie de séance qui coupe la consigne. Dans #10, aucun scénario ne demande l'entrée de l'espace parent
+  pendant une séance (« Léa joue » ouvre l'accueil de l'enfant) : rien à changer.
+  Question ouverte : dans #73, « Après avoir renoncé au contrôle parental, Léa réécoute la question » démarre la
+  séance dans l'étape « Léa a demandé l'entrée de l'espace parent, puis a renoncé à répondre au contrôle parental » ;
+  Léa doit maintenant quitter la séance pour demander l'entrée, puis revient sur la page de la leçon, hors de la
+  question qu'elle réécoute ensuite. Le texte n'est pas changé : il faut une nouvelle étape (voir le rapport E2E-2).

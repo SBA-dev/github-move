@@ -82,17 +82,23 @@ Fonctionnalité: Aucune voix sur les écrans du parent
 
   Règle: En arrivant sur un écran du parent, la lecture en cours s'arrête
 
-    Plan du Scénario: Pendant la lecture d'une consigne, <ce que fait Léa> arrête la voix
+    # Adapté par #183 (décision 183.15) : l'en-tête, et donc l'entrée de l'espace parent, n'est plus affiché pendant la
+    # séance. Léa quitte d'abord la séance : c'est cette sortie qui coupe la consigne ; le scénario vérifie qu'une fois
+    # la question du contrôle parental affichée, Noisette reste silencieuse.
+    Scénario: Pendant la lecture d'une consigne, Léa quitte la séance puis demande l'entrée de l'espace parent : la voix s'arrête
       Étant donné que Paul est connecté sur la tablette
       Et que Noisette est en train de lire la consigne « Écoute bien l'histoire du petit chat. »
-      Quand <ce que fait Léa>
-      Alors <ce que Léa voit>
+      Et que Léa quitte la séance
+      Quand Léa demande l'entrée de l'espace parent
+      Alors Léa voit une question du contrôle parental
       Et Léa n'entend plus Noisette
 
-      Exemples:
-        | ce que fait Léa                                      | ce que Léa voit                            |
-        | Léa demande l'entrée de l'espace parent              | Léa voit une question du contrôle parental |
-        | Léa revient à l'accueil par le nom de l'application  | Léa voit « Qui joue ? »                    |
+    Scénario: Pendant la lecture d'une consigne, revenir à l'accueil par le nom de l'application arrête la voix
+      Étant donné que Paul est connecté sur la tablette
+      Et que Noisette est en train de lire la consigne « Écoute bien l'histoire du petit chat. »
+      Quand Léa revient à l'accueil par le nom de l'application
+      Alors Léa voit « Qui joue ? »
+      Et Léa n'entend plus Noisette
 
     Scénario: Pendant que Noisette salue Léa, changer d'enfant arrête la voix
       Étant donné que Paul a créé le profil enfant "Léa" de niveau CE1 dans l'univers « Animaux de la forêt »
@@ -101,9 +107,13 @@ Fonctionnalité: Aucune voix sur les écrans du parent
       Alors Léa voit « Qui joue ? »
       Et Léa n'entend plus Noisette
 
+    # Adapté par #183 (décision 183.15) : Léa quitte d'abord la séance, l'entrée de l'espace parent n'y étant plus
+    # affichée. C'est la sortie de séance qui coupe la consigne ; le scénario vérifie toujours qu'elle ne reprend pas
+    # une fois l'espace parent ouvert.
     Scénario: La consigne coupée ne reprend pas dans l'espace parent
       Étant donné que Paul est connecté sur la tablette
       Et que Noisette est en train de lire la consigne « Écoute bien l'histoire du petit chat. »
+      Et que Léa quitte la séance
       Et que Léa a demandé l'entrée de l'espace parent, et le contrôle parental pose la question « 7 × 8 »
       Quand Paul répond « 56 » au contrôle parental
       Alors il voit l'espace parent
