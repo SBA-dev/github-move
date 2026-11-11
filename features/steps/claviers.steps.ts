@@ -399,7 +399,7 @@ Given(/^(?:Léa|Tom) a dit « Je ne sais pas »$/, async ({ page }) => {
 
 const touche = (page: Page, chiffre: string) => clavier(page).getByTestId("cristal").filter({ hasText: new RegExp(`^${chiffre}$`) });
 const effacer = (page: Page) => clavier(page).getByTestId("effacer");
-const valider = (page: Page) => clavier(page).getByTestId("valider");
+const valider = (page: Page) => page.getByTestId("valider");
 const nombreTape = (page: Page) => page.getByTestId("nombre-tape");
 
 When(/^(?:Tom|Léa) touche la touche « (\d) » du clavier de cristaux$/, async ({ page }, chiffre: string) => {

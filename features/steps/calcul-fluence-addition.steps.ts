@@ -256,8 +256,13 @@ export async function taperLesChiffres(page: Page, chiffres: string, force = fal
   for (const chiffre of chiffres) await clavier(page).getByRole("button", { name: chiffre, exact: true }).click({ force });
 }
 
+/** « Valider » : dans la barre d'action en séance de leçon (#183), dans le clavier en révision, défi et test de départ. */
+export function boutonValider(page: Page) {
+  return page.getByTestId("valider");
+}
+
 export async function valider(page: Page, force = false): Promise<void> {
-  await clavier(page).getByRole("button", { name: "Valider", exact: true }).click({ force });
+  await boutonValider(page).click({ force });
 }
 
 export async function repondreAuNombre(page: Page, nombre: number | string): Promise<void> {
@@ -389,8 +394,19 @@ Then(/^Tom voit le clavier de cristaux, avec les chiffres de 0 à 9, « Effacer 
   await expect(clavier(page)).toBeVisible();
   await expect(page.getByTestId("cristal")).toHaveText(["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]);
   await expect(clavier(page).getByRole("button", { name: "Effacer", exact: true })).toBeVisible();
-  await expect(clavier(page).getByRole("button", { name: "Valider", exact: true })).toBeVisible();
+  await expect(boutonValider(page)).toBeVisible();
 });
+
+Then(
+  /^Tom voit le clavier de cristaux, avec les chiffres de 0 à 9 et « Effacer », et « Valider » dans la barre d'action$/,
+  async ({ page }) => {
+    await expect(clavier(page)).toBeVisible();
+    await expect(page.getByTestId("cristal")).toHaveText(["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]);
+    await expect(clavier(page).getByRole("button", { name: "Effacer", exact: true })).toBeVisible();
+    await expect(clavier(page).getByTestId("valider"), "« Valider » n'est plus dans le clavier").toHaveCount(0);
+    await expect(page.getByTestId("barre-d-action").getByRole("button", { name: "Valider", exact: true })).toBeVisible();
+  },
+);
 
 Then(/^aucun choix n'est proposé$/, async ({ page }) => {
   await expect(choixDeLaQuestion(page)).toHaveCount(0);
@@ -1029,8 +1045,10 @@ Then(/^chacune des ([0-9]+) additions a une retenue dans la colonne des unités$
 // =====================================================================================================
 
 Then(/^chaque touche du clavier de cristaux mesure au moins 44 px de haut et de large$/, async ({ page }) => {
-  const touches = await clavier(page).getByRole("button").all();
-  expect(touches).toHaveLength(12);
+  const dansLeClavier = await clavier(page).getByRole("button").all();
+  const valideDansLeClavier = (await clavier(page).getByTestId("valider").count()) > 0;
+  const touches = valideDansLeClavier ? dansLeClavier : [...dansLeClavier, boutonValider(page)];
+  expect(touches, "0 à 9, « Effacer » et « Valider », où qu'il soit").toHaveLength(12);
   for (const touche of touches) {
     const boite = await touche.boundingBox();
     const nom = await touche.textContent();

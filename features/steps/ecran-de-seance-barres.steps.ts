@@ -467,3 +467,65 @@ Then(/^les libellés de la barre d'action passent à la ligne sans couper un mot
     expect(mesures.debordement, "débordement horizontal").toBeLessThanOrEqual(0);
   }
 });
+
+// --- Alors : la barre d'action, en bas de l'écran
+
+function boutonDeLaBarre(page: Page, nom: string): Locator {
+  return barreDAction(page).getByRole("button", { name: nom, exact: true });
+}
+
+/** Le bouton principal est le dernier de la barre, à droite de « Je ne sais pas » ; la barre est collée au bas de l'écran. */
+async function verifierLeBoutonPrincipalDeLaBarre(page: Page, nom: string): Promise<void> {
+  const bouton = boutonDeLaBarre(page, nom);
+  await expect(barreDAction(page)).toBeVisible();
+  await expect(bouton).toBeVisible();
+  const hauteurDeLEcran = page.viewportSize()?.height ?? 0;
+  const barre = await barreDAction(page).boundingBox();
+  const boite = await bouton.boundingBox();
+  expect(barre, "barre d'action affichée").not.toBeNull();
+  expect((barre?.y ?? 0) + (barre?.height ?? 0), "bas de la barre d'action").toBeGreaterThanOrEqual(hauteurDeLEcran - 1);
+  expect((barre?.y ?? 0) + (barre?.height ?? 0), "la barre ne dépasse pas l'écran").toBeLessThanOrEqual(hauteurDeLEcran + 1);
+  expect(boite?.y ?? 0, `« ${nom} » est dans la barre`).toBeGreaterThanOrEqual(barre?.y ?? 0);
+  expect((boite?.y ?? 0) + (boite?.height ?? 0), `« ${nom} » est dans la barre`).toBeLessThanOrEqual((barre?.y ?? 0) + (barre?.height ?? 0) + 1);
+  const autres = await barreDAction(page).getByRole("button").all();
+  for (const autre of autres) {
+    const nomDeLAutre = ((await autre.textContent()) ?? "").trim();
+    if (nomDeLAutre === nom) continue;
+    const boiteDeLAutre = await autre.boundingBox();
+    expect(boiteDeLAutre?.x ?? 0, `« ${nomDeLAutre} » est à gauche de « ${nom} »`).toBeLessThan(boite?.x ?? 0);
+  }
+}
+
+Then(/^(?:Tom|Léa) voit « (Valider|Continuer) » en bouton principal de la barre d'action, en bas de l'écran$/, async ({ page }, nom: string) => {
+  await verifierLeBoutonPrincipalDeLaBarre(page, nom);
+});
+
+Then(/^(?:Tom|Léa) voit « Je ne sais pas » à côté, plus discret$/, async ({ page }) => {
+  const jeNeSaisPas = boutonDeLaBarre(page, "Je ne sais pas");
+  await expect(jeNeSaisPas).toBeVisible();
+  const principal = barreDAction(page).getByRole("button").filter({ hasNotText: "Je ne sais pas" });
+  await expect(principal).toHaveCount(1);
+  const [petit, grand] = [await jeNeSaisPas.boundingBox(), await principal.boundingBox()];
+  expect((petit?.x ?? 0) + (petit?.width ?? 0), "« Je ne sais pas » est à gauche du bouton principal").toBeLessThanOrEqual((grand?.x ?? 0) + 1);
+  expect((petit?.width ?? 0) * (petit?.height ?? 0), "« Je ne sais pas » est moins grand que le bouton principal").toBeLessThanOrEqual(
+    (grand?.width ?? 0) * (grand?.height ?? 0),
+  );
+  const fonds = await Promise.all([jeNeSaisPas, principal].map((bouton) => bouton.evaluate((element) => getComputedStyle(element).backgroundColor)));
+  expect(fonds[0], "« Je ne sais pas » n'a pas le fond du bouton principal").not.toBe(fonds[1]);
+});
+
+Then(/^(?:Tom|Léa) ne voit pas « Je ne sais pas »$/, async ({ page }) => {
+  await expect(page.getByTestId("je-ne-sais-pas")).toBeHidden();
+  await expect(page.getByRole("button", { name: "Je ne sais pas", exact: true })).toHaveCount(0);
+});
+
+Then(/^(?:Tom|Léa) voit « Je ne sais pas » dans la barre d'action$/, async ({ page }) => {
+  await expect(barreDAction(page)).toBeVisible();
+  await expect(boutonDeLaBarre(page, "Je ne sais pas")).toBeVisible();
+});
+
+Then(/^(?:Tom|Léa) ne voit ni « Valider » ni « Continuer »$/, async ({ page }) => {
+  await expect(page.getByRole("button", { name: "Valider", exact: true })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Continuer", exact: true })).toHaveCount(0);
+  await expect(barreDAction(page).getByRole("button")).toHaveText(["Je ne sais pas"]);
+});
