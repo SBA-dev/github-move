@@ -32,12 +32,12 @@ import { attendreUneLecture, journal, laisserPasserLeDelaiDeLecture, normaliser,
 // Fluence : la durée passe en figeant l'horloge du navigateur (page.clock.setFixedTime), jamais en attendant 45 s.
 // Les leçons de test sont ajoutées à la réponse de /bibliotheque.json par le navigateur du test (voir #16).
 
-const { Given, When, Then } = createBdd(test, { tags: "@issue-20 or @issue-65 or @issue-127 or @issue-128" });
+const { Given, When, Then } = createBdd(test, { tags: "@issue-20 or @issue-65 or @issue-127 or @issue-128 or @issue-183" });
 // #128 joue aussi la fluence seule d'une séance (« Léa joue seulement l'exercice ») : son étape « le temps de la fluence est écoulé »
 // est celle de #97, qui démarre la partie d'abord.
 const { When: WhenSansLa128 } = createBdd(test, { tags: "@issue-20 or @issue-65 or @issue-127" });
 // #163 réutilise trois étapes de l'addition posée (le personnage guide qui réfléchit sans scène quand il est trop petit).
-const { Given: GivenAvecLa163, When: WhenAvecLa163 } = createBdd(test, { tags: "@issue-20 or @issue-65 or @issue-127 or @issue-128 or @issue-163" });
+const { Given: GivenAvecLa163, When: WhenAvecLa163 } = createBdd(test, { tags: "@issue-20 or @issue-65 or @issue-127 or @issue-128 or @issue-163 or @issue-183" });
 
 type Acteur = "Léa" | "Tom" | "Nina";
 type Exercice = Record<string, unknown>;
@@ -398,7 +398,7 @@ Then(/^aucun choix n'est proposé$/, async ({ page }) => {
 });
 
 Given(
-  /^Tom en est au calcul « ([^«»]+) » d'une leçon de test de niveau (CP|CE1)$/,
+  /^Tom(?:, de niveau (?:CP|CE1),)? en est au calcul « ([^«»]+) » d'une leçon de test de niveau (CP|CE1)$/,
   async ({ page, monde }, enonce: string, niveau: string) => {
     partie20(page).acteur = "Tom";
     preparerUnExercice(page, monde, exerciceDeCalcul([{ q: enonce, r: calculer(enonce) }]), niveau);
