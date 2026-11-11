@@ -61,3 +61,15 @@ Deno.test("les paroles fixes contiennent le texte de remplacement de chaque paro
 Deno.test("les paroles fixes ne contiennent aucun prénom d'enfant", () => {
   for (const parole of parolesFixes()) assert(!parole.includes("Léa"), parole);
 });
+
+Deno.test("sans le prénom, un prénom en début de parole est retiré et la phrase reprend sa majuscule", () => {
+  assertEquals(sansLePrenom("Léa, tu as réussi !", "Léa"), "Tu as réussi !");
+});
+
+Deno.test("sans le prénom, un pseudo placé après la salutation laisse le même mot qui suit", () => {
+  assertEquals(sansLePrenom("Bravo Lune ! Tu as regardé la Lune.", "Lune"), "Bravo ! Tu as regardé la Lune.");
+});
+
+Deno.test("sans le prénom, un prénom qui n'est que le début d'un autre mot n'est pas touché", () => {
+  assertEquals(sansLePrenom("Bravo Léane !", "Léa"), "Bravo Léane !");
+});

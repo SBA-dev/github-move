@@ -242,3 +242,7 @@ Deno.test("les paroles fixes ne contiennent aucun doublon", () => {
   const paroles = parolesFixes();
   assertEquals(new Set(paroles).size, paroles.length);
 });
+
+Deno.test("les paroles fixes ne contiennent aucune parole vide", () => {
+  for (const parole of parolesFixes()) assert(parole.trim() !== "", "parole vide");
+});
