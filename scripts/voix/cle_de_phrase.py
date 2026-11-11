@@ -7,13 +7,11 @@ import unicodedata
 from dataclasses import dataclass
 
 # \s de JavaScript : WhiteSpace + LineTerminator d'ECMAScript (≠ \s de Python).
-ESPACES_JS = (
-    "\t\n\v\f\r    -     　﻿"
+CARACTERES_ESPACES = (
+    "\t\n\v\f\r \u00a0\u1680\u2028\u2029\u202f\u205f\u3000\ufeff"
+    + "".join(chr(c) for c in range(0x2000, 0x200B))
 )
-ESPACE = f"[{ESPACES_JS}]"
-CARACTERES_ESPACES = "\t\n\v\f\r \u00a0\u1680\u2028\u2029\u202f\u205f\u3000\ufeff" + "".join(
-    chr(c) for c in range(0x2000, 0x200B)
-)
+ESPACE = f"[{CARACTERES_ESPACES}]"
 
 BASE_FNV_1A_64 = 0xCBF29CE484222325
 MULTIPLICATEUR_FNV_1A_64 = 0x100000001B3

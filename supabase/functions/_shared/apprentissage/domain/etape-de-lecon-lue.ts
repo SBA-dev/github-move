@@ -6,3 +6,7 @@ export function texteALireDeLEtape(etape: EtapeDeLecon): string[] {
   if (etape.exemples.length === 0) return [etape.texte];
   return [etape.texte, etape.exemples.join(SEPARATEUR_DES_EXEMPLES)];
 }
+
+export function texteDitDeLEtape(etape: EtapeDeLecon): string {
+  return texteALireDeLEtape(etape).join(" ");
+}

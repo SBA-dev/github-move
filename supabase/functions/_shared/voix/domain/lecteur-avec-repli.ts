@@ -1,3 +1,4 @@
+import { phrasesAvecCle } from "./cle-de-phrase.ts";
 import { VoixBloquee, VoixIndisponible } from "./erreurs.ts";
 import { instantsDesMots } from "./instants-des-mots.ts";
 import type { LecteurAVoixHaute, LectureDemandee } from "./lecteur-a-voix-haute.ts";
@@ -26,7 +27,7 @@ export class LecteurAvecRepli implements LecteurAVoixHaute {
       if (!(erreur instanceof VoixIndisponible) || remplacement === undefined) throw erreur;
       await this.jouerLePlan({
         ...lecture,
-        phrases: lecture.phrases.slice(0, 1).map((reglage) => ({ ...reglage, phrase: remplacement })),
+        phrases: phrasesDeRemplacement(lecture, remplacement),
         texteEnregistreDeRemplacement: undefined,
       });
     }
@@ -85,4 +86,10 @@ function suiviDesMots(morceau: MorceauDeLecture, lecture: LectureDemandee): Suiv
       }
     },
   };
+}
+
+function phrasesDeRemplacement(lecture: LectureDemandee, remplacement: string): LectureDemandee["phrases"] {
+  const [premiere] = lecture.phrases;
+  if (!premiere) return [];
+  return phrasesAvecCle(remplacement).map(({ texte }) => ({ ...premiere, phrase: texte }));
 }

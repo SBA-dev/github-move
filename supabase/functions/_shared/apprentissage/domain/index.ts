@@ -31,7 +31,7 @@ export {
   TestDeDepartIncoherent,
   TestDeDepartNonFini,
 } from "./erreurs.ts";
-export { texteALireDeLEtape } from "./etape-de-lecon-lue.ts";
+export { texteALireDeLEtape, texteDitDeLEtape } from "./etape-de-lecon-lue.ts";
 export { lectureDesChoix } from "./lecture-des-choix.ts";
 export {
   explicationDeLaReponse,

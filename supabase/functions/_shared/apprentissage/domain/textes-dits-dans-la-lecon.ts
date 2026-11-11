@@ -9,7 +9,7 @@ import type {
   MotDicte,
 } from "../../catalogue/domain/index.ts";
 import { ClavierPropose } from "./clavier-propose.ts";
-import { texteALireDeLEtape } from "./etape-de-lecon-lue.ts";
+import { texteDitDeLEtape } from "./etape-de-lecon-lue.ts";
 import { consigneAffichee } from "./exercices/consigne-affichee.ts";
 import { questionsDeConjugaison } from "./exercices/conjugaison.ts";
 import { indicationDuGeste } from "./exercices/indication-du-geste.ts";
@@ -24,7 +24,7 @@ import { AIDE_APRES_UNE_ERREUR, QuestionDeDictee } from "./question-de-dictee.ts
 /** Les textes bruts que l'écran fait dire en français, sans doublon, hors calculs tirés au hasard. */
 export function textesDitsDansLaLecon(lecon: Lecon): readonly string[] {
   const textes = [
-    ...lecon.etapes.map(texteDeLEtape),
+    ...lecon.etapes.map(texteDitDeLEtape),
     ...lecon.exercices.flatMap((exercice) => [
       consigneAffichee(exercice),
       indicationDuGeste(exercice.type),
@@ -32,10 +32,6 @@ export function textesDitsDansLaLecon(lecon: Lecon): readonly string[] {
     ]),
   ];
   return [...new Set(textes.filter((texte) => texte !== undefined))];
-}
-
-function texteDeLEtape(etape: Lecon["etapes"][number]): string {
-  return texteALireDeLEtape(etape).join(" ");
 }
 
 function textesDeLExercice(exercice: Exercice): string[] {
