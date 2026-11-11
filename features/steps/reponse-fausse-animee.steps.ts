@@ -182,7 +182,7 @@ export function installerLEnregistreurDeLaScene() {
   }).observe(document, { subtree: true, childList: true, attributes: true });
 }
 
-Before({ tags: "@issue-163" }, async ({ page }) => {
+Before({ tags: "@issue-163 or @issue-183" }, async ({ page }) => {
   await page.addInitScript(installerLEnregistreurDeLaScene);
 });
 
