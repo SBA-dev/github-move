@@ -47,3 +47,14 @@ Branche de base : `main` (`aa75d97`). Branche : `feature/183-ecran-de-seance-bar
 - Review cycle 3 (delta) : APPROUVÉ.
 - Conteneur redémarré pendant la relecture du cycle 2 : relecture relancée, rien d'autre perdu.
 - VERROU base accordé pour la série E2E 2 (#182 avait rendu le verrou). Run A : `@issue-183`. Run B : stories de séance touchées, sans la non-régression complète (règle du PO).
+- E2E série 2, de 02:40 à 07:10 UTC :
+  - Run A (`@issue-183`) : 48 verts sur 50. Step corrigé, l'enregistreur de la scène de Coach Léo est aussi installé pour #183 (`6748d0bf`).
+  - Run B (non-régression ciblée) : arrêté à 21 stories sur 23 pour rendre le verrou à #182. 936 verts sur 976 scénarios.
+  - Échecs du run B :
+    - #97 : 22 échecs d'infrastructure, à rejouer (serveur local tué) ;
+    - steps à corriger : #16 (arrondi à 44 px), #7 (question lue dans la bulle), #20 (Valider après la fin de la fluence) ;
+    - régressions probables : addition posée à 360 px (#127, ×6), geste muet du personnage guide qui n'est plus affiché (#127 ×3, #19), deux retours de #128 ;
+    - ambigus : capture `fin-de-la-seance` (8 %, à comparer avec `main`), une lecture vocale sur l'accueil (#101).
+  - #130 et #131 restent à jouer en série 3.
+  - Q-183.17 posée au PO : les 2 échecs restants du run A (« l'exercice commence au plus à 200 px ») viennent de la bulle de consigne. Avec elle, la zone de réponse descend à 247 px pour les bulles et à 215 px pour le calcul. Les 192,6 px de la série 1 avaient été mesurés sur un exercice sans consigne.
+- LIBÈRE base (série 2 finie). Correctifs lancés hors verrou : implementer sur `src/`, e2e-tester sur `features/steps/`.
