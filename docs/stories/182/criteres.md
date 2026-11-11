@@ -1,6 +1,6 @@
 # Story #182 : critères d'acceptance
 
-> Rédigé par `po-acceptance`, 2026-11-10, à partir de l'issue #182, de `domain-model.md` et du brouillon de la décision 0043.
+> Rédigé par `po-acceptance`, 2026-11-10, à partir de l'issue #182, de `domain-model.md` et du brouillon de la décision 0044.
 > Scénarios : `features/182-voix-mp3-piper.feature` (`@issue-182`). Cadrage validé par le PO le 2026-11-11 (voir « Réponses du PO ») ; plus aucun scénario `@a-valider`, tag `@wip` retiré comme pour les features validées.
 
 ## Objectif

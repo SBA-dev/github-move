@@ -1,7 +1,7 @@
 # Journal de la story #182 : la voix de l'application en MP3 pré-générés (Piper, voix « tom »)
 
 Équipe lancée par le responsable des équipes (vague 2, issue de coordination #193).
-Branche : `feature/182-voix-mp3-piper`, partie de `main` (`aa75d97`). Base : `main`. Décision réservée : 0043.
+Branche : `feature/182-voix-mp3-piper`, partie de `main` (`aa75d97`). Base : `main`. Décision réservée : 0043, devenue 0044 (collision avec la PR #189).
 
 ## 2026-11-09
 
@@ -85,3 +85,4 @@ Branche : `feature/182-voix-mp3-piper`, partie de `main` (`aa75d97`). Base : `ma
 - **Bugs trouvés en E2E et corrigés par TDD** : cinq (allure lente non transmise ; un repli par phrase ; arrêt suivi d'un MP3 ; lecture arrêtée qui continue ; page blanche hors ligne après une mise à jour dans `sw.js`).
 - **Fabrication** : 231 paroles fixes, voix « tom » modèle 1, 32 kbit/s, 2,2 Mo, ≈ 13 min.
 - **Intégrations de `main`** : une, sans conflit Git (PR #189), avec une collision de numéro de décision.
+- 12:40 UTC : DÉCISION du responsable (annonce sur #193) : la décision de #182 devient **0044** (0043 reste à la PR #189). Fichier renommé `docs/decisions/0044-voix-en-mp3-pre-generes-piper.md`, références mises à jour (docs de #182, `docs/sons.md`, context map), ligne ajoutée à `docs/decisions/README.md`. Les mentions de 0043 plus haut dans ce journal désignent cette même décision.

@@ -1,4 +1,4 @@
-# 0043 : La voix du personnage guide est une voix enregistrée (MP3 fabriqués par Piper, voix « tom »), avec repli phrase par phrase sur la voix de l'appareil
+# 0044 : La voix du personnage guide est une voix enregistrée (MP3 fabriqués par Piper, voix « tom »), avec repli phrase par phrase sur la voix de l'appareil
 
 **Statut** : Acceptée · 2026-11-11 (story #182 ; réponses du PO « Reco tout » aux questions 182.1 à 182.18, annonce [Responsable] sur l'issue #193, détail dans `docs/stories/182/domain-model.md`, section 9). Précise 0004 ; s'appuie sur 0007 et 0008. Complétée le 2026-11-11 par les réponses « Modèle 1 et 32kbit et le reste reco » (même annonce) : 182.19 modèle 1, 182.8 (a) 32 kbit/s, 182.20 oui.
 

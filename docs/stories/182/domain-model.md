@@ -1,7 +1,7 @@
 # Story #182 : la voix de l'application en MP3 pré-générés (Piper, voix « tom ») : modèle du domaine
 
 > Cadrage du `domain-modeler`, 2026-11-10 ; **validé par le PO le 2026-11-11** (« Reco tout », annonce [Responsable] sur #193, 00:47 UTC) : toutes les recommandations sont retenues, voir la section 9 « Réponses du PO ». Le PO a ensuite répondu à **182.19** (« Modèle 1 et 32kbit et le reste reco », annonce [Responsable] sur #193, 2026-11-11) : **modèle 1** de « tom », débit **32 kbit/s** confirmé ; plus aucune question ouverte.
-> Décisions du PO qu'on ne rouvre pas : outil **Piper**, voix **« tom »** (44,1 kHz, modèle sous AGPLv3, seuls les MP3 vont dans l'application, jamais le modèle), **repli sur la voix de l'appareil** pour une phrase sans MP3. Le dépôt de la voix (`git.bksp.space/Tjiho/French-tts-model-piper`) contient trois modèles « tom » et aucun ne s'appelle `fr_FR-tom-medium` : le PO a retenu à l'oreille le **modèle 1** (`model 1/tom1.onnx`), nommé `tom-1` dans le répertoire (182.19). Décision d'architecture : **0043** (`docs/decisions/0043-voix-en-mp3-pre-generes-piper.md`, acceptée le 2026-11-11).
+> Décisions du PO qu'on ne rouvre pas : outil **Piper**, voix **« tom »** (44,1 kHz, modèle sous AGPLv3, seuls les MP3 vont dans l'application, jamais le modèle), **repli sur la voix de l'appareil** pour une phrase sans MP3. Le dépôt de la voix (`git.bksp.space/Tjiho/French-tts-model-piper`) contient trois modèles « tom » et aucun ne s'appelle `fr_FR-tom-medium` : le PO a retenu à l'oreille le **modèle 1** (`model 1/tom1.onnx`), nommé `tom-1` dans le répertoire (182.19). Décision d'architecture : **0044** (`docs/decisions/0044-voix-en-mp3-pre-generes-piper.md`, acceptée le 2026-11-11).
 
 ## 1. Contexte
 
@@ -276,7 +276,7 @@ La génération complète (≈ 3 900 phrases, ≈ 2 h 30 d'audio avec les silenc
 
 | Livraison | Contenu | Pourquoi dans cet ordre |
 |---|---|---|
-| **182a : socle et paroles fixes** | Clé de phrase (TS + Python + cas partagés), `textesDitsDansLaLecon` et export, répertoire, `LecteurAvecRepli` (plan de lecture, repli phrase par phrase, allure, rythme, Muet, voix suspendue, arrêt, fin), surlignage approximatif, `VoixIndisponible` et son message, cache voix du service worker (précache des paroles fréquentes, mise en cache à l'ouverture d'une leçon), pipeline Piper (table de prononciation testée, fabrication reprenable, budget, licence), envoi WebDAV des seuls fichiers nouveaux, décision 0043 ; **fabrication des paroles fixes** (≈ 400 phrases, ≈ 4 Mo) et des phrases finies construites | Tout le risque technique est ici, avec peu d'audio à écouter. Valeur tout de suite sur le Honor Magic : le personnage guide félicite, encourage, annonce et invite à voix haute ; les textes des leçons sont encore au repli (le message juste s'affiche au lieu de « bloquée ») |
+| **182a : socle et paroles fixes** | Clé de phrase (TS + Python + cas partagés), `textesDitsDansLaLecon` et export, répertoire, `LecteurAvecRepli` (plan de lecture, repli phrase par phrase, allure, rythme, Muet, voix suspendue, arrêt, fin), surlignage approximatif, `VoixIndisponible` et son message, cache voix du service worker (précache des paroles fréquentes, mise en cache à l'ouverture d'une leçon), pipeline Piper (table de prononciation testée, fabrication reprenable, budget, licence), envoi WebDAV des seuls fichiers nouveaux, décision 0044 ; **fabrication des paroles fixes** (≈ 400 phrases, ≈ 4 Mo) et des phrases finies construites | Tout le risque technique est ici, avec peu d'audio à écouter. Valeur tout de suite sur le Honor Magic : le personnage guide félicite, encourage, annonce et invite à voix haute ; les textes des leçons sont encore au repli (le message juste s'affiche au lieu de « bloquée ») |
 | **182b : CP** | Fabrication des 923 phrases du CP (≈ 29 min, ≈ 8,6 Mo), page d'écoute du CP, entrées de la table de prononciation relevées par le PO, mots dictés en allure lente | Le CP lit le moins bien : c'est là que la voix compte le plus |
 | **182c : CE1** | 674 phrases (≈ 6,2 Mo), page d'écoute, table | un niveau par run, une écoute par niveau |
 | **182d : CE2** | 670 phrases (≈ 6,5 Mo) | idem |
@@ -317,7 +317,7 @@ Pipeline et données :
 - `scripts/tests/test_cle_de_phrase.py`, `test_table_de_prononciation.py`, `test_fabrication_des_phrases.py` (Piper remplacé par un faux)
 - `docs/voix/cas-des-cles-de-phrases.json` (contrat partagé)
 - `public/voix/repertoire.json`, `public/voix/<cle>-<empreinte>.mp3`, `public/voix/<cle>-lente-<empreinte>.mp3`, `public/voix/LICENCE-voix-tom.txt`
-- `docs/decisions/0043-voix-en-mp3-pre-generes-piper.md` ; `docs/sons.md` (licence) ; `docs/format-lecons.md` **inchangé** (le format des leçons ne change pas)
+- `docs/decisions/0044-voix-en-mp3-pre-generes-piper.md` ; `docs/sons.md` (licence) ; `docs/format-lecons.md` **inchangé** (le format des leçons ne change pas)
 
 ## 9. Réponses du PO
 
@@ -334,7 +334,7 @@ Pipeline et données :
 | 182.7 Message de voix indisponible | **Ce texte** : « *Coach Léo* ne peut pas lire cette phrase sur cet appareil. Lis-la avec un adulte, ou touche « Réécouter » plus tard. » L'ancien message reste pour un vrai refus du navigateur. |
 | 182.8 Débit et lecture lente | (a) **MP3 mono 32 kbit/s, 22,05 kHz**, confirmé après l'écoute comparative 24/32 kbit/s ; (b) **oui**, MP3 lents à part pour les mots dictés ; (c) **non**, pas de préchargement de la leçon suivante. |
 | 182.9 Espace parent › Voix | **A** : d'abord « la voix de Savanturier » (sans choix), puis le choix de la voix de l'appareil pour les phrases sans voix enregistrée. |
-| 182.10 Énumération des phrases | **Oui** : `textesDitsDansLaLecon` et les paroles fixes en TypeScript, export par un script Deno (`scripts/voix/exporter_les_phrases.ts`) ; le pipeline Python fabrique et recalcule la clé. Entorse à « le pipeline reste en Python », inscrite dans la décision 0043. |
+| 182.10 Énumération des phrases | **Oui** : `textesDitsDansLaLecon` et les paroles fixes en TypeScript, export par un script Deno (`scripts/voix/exporter_les_phrases.ts`) ; le pipeline Python fabrique et recalcule la clé. Entorse à « le pipeline reste en Python », inscrite dans la décision 0044. |
 | 182.11 Mots en anglais | **Oui** : voix anglaise de l'appareil, hors de cette story. |
 | 182.12 Phrase sans lettre ni chiffre | **Oui** : elle n'est plus lue (ni MP3 ni repli). |
 | 182.13 Phrases finies mais construites | **Oui** : fabriquées comme les paroles fixes dans 182a. |
