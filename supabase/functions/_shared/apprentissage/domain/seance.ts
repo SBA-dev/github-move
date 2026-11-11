@@ -13,6 +13,7 @@ import {
 import type { FluenceEnCours } from "./exercice-chronometre.ts";
 import type { VueAddition } from "./vue-d-addition.ts";
 import type { BoiteEnCours, BoiteOuverte } from "./question-de-boite.ts";
+import type { QuestionDHorloge } from "./question-d-horloge.ts";
 import type { SchemaEnCours, SchemaResolu } from "./question-de-probleme-en-barres.ts";
 import type { CalculEnCours } from "./question-de-calcul.ts";
 import { Etoiles } from "./etoiles.ts";
@@ -146,6 +147,10 @@ export class Seance {
 
   boiteEnCours(): BoiteEnCours | undefined {
     return this.exerciceEnCours()?.boiteEnCours();
+  }
+
+  questionDHorlogeEnCours(): QuestionDHorloge | undefined {
+    return this.exerciceEnCours()?.questionDHorlogeEnCours();
   }
 
   schemaEnCours(): SchemaEnCours | undefined {

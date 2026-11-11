@@ -46,7 +46,7 @@ Où l'enfant voit ses meilleures étoiles : les scénarios les observent sur la 
 | Les sons de test (test) | — | français, CP, ordre 901 : une étape de leçon, puis deux exercices bulles de 5 questions à quatre choix, « Premières bulles » (consigne « Touche le mot qui a le son ou. ») et « Dernières bulles » (consigne « Touche le mot qui a le son on. »). Séance complète de 10 questions (jusqu'à 3 erreurs par question) : étoiles (0, 1, 3, 4, 5, 9 erreurs), erreurs de deux exercices, phrases de fin, meilleures étoiles, rejouer, envoi au serveur, sans réseau, mouvements réduits, 360 px |
 | La suite de test (test) | — | français, CP, ordre 903 : leçon suivante de « Les sons de test » (aucune leçon de français du CP entre les ordres 901 et 903) |
 | Les sons ou, on, an | `fr-cp-sons-ou-on-an` | scénarios où la séance n'a pas besoin de se terminer dans l'interface (séances préparées, séance quittée, envois directs, droits d'accès, export) et séance de son seul exercice bulles « Quel son entends-tu ? » |
-| Les animaux | `an-cp-animaux` | dernière leçon d'anglais du CP (ordre 40) : pas de leçon suivante |
+| Simon says : le jeu des consignes | `an-cp-simon-says` | dernière leçon d'anglais du CP (ordre 50) : pas de leçon suivante dans sa matière |
 | Les doubles | `ma-cp-doubles` | séance faite seulement de la fluence « Calcul rapide : les doubles » |
 | « Additions » (test) | — | calcul tiré par un générateur, pour « Rejouer » |
 
@@ -93,6 +93,10 @@ Aucune.
 ## Décisions venues d'autres stories
 
 - **Titre d'un scénario « leçon suivante »** : « La leçon suivante est la leçon d'ordre suivant de la même matière et du même niveau » devient « La leçon suivante est la première leçon d'après non réussie de la même matière et du même niveau », pour suivre la règle de la leçon suivante de #25. Les étapes et les données ne changent pas. Renommé par #25, réponse PO N6, 2026-10-24.
+
+## Correction d'exemple (#190, 2026-11-10)
+
+« Après la dernière leçon d'une matière, la fin de la séance propose la leçon du jour » partait de « Les animaux » (`an-cp-animaux`, ordre 40), qui n'est plus la dernière leçon d'anglais du CP : l'audit du programme a ajouté après elle `an-cp-tete-epaules` (ordre 45) et `an-cp-simon-says` (ordre 50). Le scénario part maintenant de « Simon says : le jeu des consignes » (`an-cp-simon-says`). La règle et la leçon du jour attendue (« Les sons ou, on, an ») ne changent pas. Une leçon de test d'anglais rendrait l'exemple indépendant du contenu réel, mais la leçon du jour vient de toute façon de la vraie bibliothèque : on garde une vraie leçon. Trouvé par les E2E de #190.
 
 ## Mise à jour par #32, décision 32.25 (2026-10-25)
 

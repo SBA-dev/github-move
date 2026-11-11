@@ -1,8 +1,10 @@
-import { assertEquals, assertThrows } from "@std/assert";
+import { assertEquals, assertInstanceOf, assertThrows } from "@std/assert";
 import { type Lecon, lireLecon, Niveau } from "../../catalogue/domain/index.ts";
 import { hasardSansMelange } from "../test_utils/hasard-fixe.ts";
+import { exerciceDHorloge, leconDHorloge as leconDeLHorloge } from "../test_utils/lecons-d-horloge.ts";
 import { CleDeQuestion } from "./cle-de-question.ts";
-import { SeanceDeRevisionIncoherente } from "./erreurs.ts";
+import { cleDeLHorloge } from "./cles-des-questions.ts";
+import { HeureEcriteImpossible, SeanceDeRevisionIncoherente } from "./erreurs.ts";
 import { FileDeRevision, type QuestionRetenue } from "./file-de-revision.ts";
 import { Jour } from "./jour.ts";
 import { Reponse, type ReponseDonnee } from "./reponse.ts";
@@ -480,4 +482,35 @@ Deno.test("plus de 200 réponses à une même question sont refusées comme inco
   const deuxCentUneReponses = [...Array.from({ length: 200 }, () => fausse), bonneReponseDe(premiere)];
 
   assertIncoherent(avecLesReponsesDeLaPremiereQuestion(envoi, deuxCentUneReponses));
+});
+
+Deno.test("une séance de révision d'horloge avec une heure impossible est refusée comme incohérente", () => {
+  const items = [{ heure: "2:15" }];
+  const leconDHorloge = leconDeLHorloge("CE1", { mode: "lire", items });
+  const identite = cleDeLHorloge("lire", exerciceDHorloge("CE1", { mode: "lire", items }).items[0]!);
+  const file = FileDeRevision.vide("profil-lea");
+  file.retenir(
+    [{ identite, origine: { leconDOrigine: leconDHorloge.id, position: 0, type: "horloge" as const } }],
+    jourDesErreurs,
+    erreursFaitesLe,
+  );
+  const seance = SeanceDeRevision.commencer({
+    id: "revision-1",
+    enfant: "profil-lea",
+    plan: file.planDeLaSeanceDeRevision(jourDeLaRevision),
+    lecons: [leconDHorloge],
+    tireurDe: () => tireurAuHasard(hasardSansMelange()),
+    niveau: CE1,
+  });
+  seance.repondre(Reponse.heureEcrite(2, 15));
+  seance.terminer(finDeLaRevision, jourDeLaRevision);
+  const envoi = seance.aEnregistrer();
+  const forge = { ...envoi, reponses: [[Reponse.heureEcrite(2, 75), Reponse.heureEcrite(2, 15)]] };
+
+  const erreur = assertThrows(
+    () => revaliderLaSeanceDeRevision(forge, file, [leconDHorloge], CE1),
+    SeanceDeRevisionIncoherente,
+  );
+
+  assertInstanceOf(erreur.cause, HeureEcriteImpossible);
 });

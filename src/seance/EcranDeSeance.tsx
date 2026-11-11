@@ -31,12 +31,14 @@ import { BoiteAJetons } from "./exercices/boite/BoiteAJetons.tsx";
 import { SchemaDuProbleme } from "./exercices/schema/SchemaDuProbleme.tsx";
 import { ExerciceDeCalcul } from "./exercices/ExerciceDeCalcul.tsx";
 import { ExerciceDeDictee } from "./exercices/ExerciceDeDictee.tsx";
+import { ExerciceDHorloge } from "./exercices/horloge/ExerciceDHorloge.tsx";
+import { heureMontree } from "./exercices/horloge/useHorloge.ts";
 import { ExerciceDeFluence } from "./exercices/fluence/ExerciceDeFluence.tsx";
 import { ExerciceDeMemorisation } from "./exercices/ExerciceDeMemorisation.tsx";
 import { etatDeLaVoix } from "./etat-de-la-voix.ts";
 import { generateurIdDuNavigateur } from "./generateur-id-navigateur.ts";
 import { hasardDuNavigateur } from "./hasard-navigateur.ts";
-import { horlogeDuNavigateur } from "./horloge.ts";
+import { sourceDuTempsDuNavigateur } from "./source-du-temps.ts";
 import { RecipientDeProgression } from "./RecipientDeProgression.tsx";
 import { useDeroulementDeSeance } from "./useDeroulementDeSeance.ts";
 import { useLecon } from "./useLecon.ts";
@@ -184,11 +186,17 @@ function SeanceEnCours(
   const exerciceAffiche = figee?.exercice ?? exerciceJoue;
   const question = figee === undefined ? exerciceJoue?.questionEnCours() : figee.question;
   const calcul = deroulement.calculFige ?? seance.calculEnCours();
+  const questionDHorloge = deroulement.horlogeReussie?.question ?? seance.questionDHorlogeEnCours();
+  const heureDeLHorloge = deroulement.horlogeReussie?.heure ?? heureMontree(lecon, exerciceJoue);
   const boite = deroulement.boiteReussie?.enCours ?? seance.boiteEnCours();
   const schema = deroulement.schemaReussi?.enCours ?? seance.schemaEnCours();
-  const fluence = deroulement.fluenceFinie ?? seance.fluenceEnCours(horlogeDuNavigateur.maintenant());
+  const fluence = deroulement.fluenceFinie ?? seance.fluenceEnCours(sourceDuTempsDuNavigateur.maintenant());
   const addition = deroulement.additionFigee ?? seance.additionEnCours();
-  const consigne = finie || !exerciceDeLaLecon ? undefined : consigneAffichee(exerciceDeLaLecon);
+  const consigne = finie || !exerciceDeLaLecon
+    ? undefined
+    : exerciceDeLaLecon.type === "horloge"
+    ? questionDHorloge?.texteDit()
+    : consigneAffichee(exerciceDeLaLecon);
   const laConsigneEstLue = consigne !== undefined && deroulement.parole?.nature === "consigne" && deroulement.parole.texte === consigne;
   const paroleDeLaBulle = laConsigneEstLue ? undefined : deroulement.parole;
   // Le chrono n'est pas lisible ici : pendant toute la fluence, aucune scène (aucun encouragement n'y est dit de toute façon).
@@ -310,6 +318,17 @@ function SeanceEnCours(
                 onRelire={() => deroulement.relireLaPhrase(calcul.phrase)}
                 onChoisir={(texte) => void deroulement.choisirUneReponseDeCalcul(texte)}
                 onValider={(nombre) => void deroulement.repondreParUnNombre(nombre)}
+                onJeNeSaisPas={() => void deroulement.jeNeSaisPasALaQuestion()}
+              />
+            )}
+            {exerciceDeLaLecon.type === "horloge" && questionDHorloge && heureDeLHorloge && (
+              <ExerciceDHorloge
+                horloge={questionDHorloge.enCours()}
+                heure={heureDeLHorloge}
+                avecSecondes={exerciceDeLaLecon.precision.ecriture() === "seconde"}
+                reussie={figee !== undefined}
+                onChoisir={(texte) => void deroulement.choisirUneReponseDeCalcul(texte)}
+                onValider={deroulement.repondreALHeure}
                 onJeNeSaisPas={() => void deroulement.jeNeSaisPasALaQuestion()}
               />
             )}

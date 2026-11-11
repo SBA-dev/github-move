@@ -9,7 +9,7 @@ import {
   POSITION_DU_CALCUL_AVEC_RETENUE,
 } from "../test_utils/lecons-d-addition.ts";
 import { ChoixDeSeance } from "./choix-de-seance.ts";
-import { SeanceIncoherente, TirageHorsDuGenerateur } from "./erreurs.ts";
+import { ReponseIncompatible, SeanceIncoherente, TirageHorsDuGenerateur } from "./erreurs.ts";
 import { Reponse } from "./reponse.ts";
 import { revaliderLaSeance } from "./revalider-la-seance.ts";
 import { Seance } from "./seance.ts";
@@ -240,4 +240,10 @@ Deno.test("le serveur refuse une séance dont une addition tirée sort du géné
   const erreur = assertThrows(() => revaliderLaSeance(lecon, horsGenerateur), SeanceIncoherente);
 
   assertInstanceOf(erreur.cause, TirageHorsDuGenerateur);
+});
+
+Deno.test("une heure écrite donnée à une addition est incompatible", () => {
+  const seance = seanceDe(POSITION_DE_LA_LECON_EN_ACTION);
+
+  assertThrows(() => seance.repondre(Reponse.heureEcrite(2, 15)), ReponseIncompatible);
 });

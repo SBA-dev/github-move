@@ -93,6 +93,7 @@ function RevisionChargee({ lecons, file, niveau, profil, univers, voix, onLireLE
             libelleDeLAvancement="Avancement de la révision"
             boites={revision.boites}
             textes={revision.textes}
+            horloges={revision.horloges}
             nombreDeQuestions={revision.seance.resultats().length}
             personnage={personnage}
             univers={univers}

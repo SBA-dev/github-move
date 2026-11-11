@@ -5,6 +5,7 @@ import type {
   ExerciceClasser,
   ExerciceConjugaison,
   ExerciceDictee,
+  ExerciceHorloge,
   FormeConjuguee,
   MotDicte,
   Niveau,
@@ -14,6 +15,7 @@ import { CleDeQuestion } from "./cle-de-question.ts";
 import { GroupeInconnu } from "./erreurs.ts";
 import { sansDoublonsNiReponse } from "./exercices/trous.ts";
 import { MotAEcrire } from "./mot-a-ecrire.ts";
+import { QuestionDHorloge } from "./question-d-horloge.ts";
 import { QuestionDeBoite } from "./question-de-boite.ts";
 import { QuestionDeCalcul } from "./question-de-calcul.ts";
 import { QuestionDeDictee } from "./question-de-dictee.ts";
@@ -83,4 +85,8 @@ export function questionDeConjugaison(
 export function questionDeCalculEnLigne(addition: Addition, tireur: Tireur, niveau: Niveau): QuestionDeCalcul {
   const somme = addition.reduce((total, nombre) => total + nombre, 0);
   return QuestionDeCalcul.pour({ q: enonceDUneAddition(addition), r: somme }, tireur, niveau);
+}
+
+export function questionsDHorloge(exercice: ExerciceHorloge, tireur: Tireur, niveau: Niveau): QuestionDHorloge[] {
+  return exercice.items.map((item) => QuestionDHorloge.pour(exercice, item, tireur, niveau));
 }

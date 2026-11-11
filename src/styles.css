@@ -797,6 +797,44 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 /* Calcul : la carte de l'opération, le clavier de cristaux, la fluence */
 .calcul, .fluence, .addition-posee { display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 100%; }
 .carte-du-calcul { font-size: 2rem; }
+
+/* Horloge à lire (#190) : le cadran, l'affichage digital après la bonne réponse, puis les choix ou le clavier de cristaux à champs. */
+.horloge-a-lire { display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 100%; }
+.cadran-d-horloge { display: block; flex: none; width: min(100%, 14rem); height: auto; aspect-ratio: 1; }
+.chiffres-du-cadran text { font-family: inherit; }
+.affichage-digital {
+  display: block;
+  padding: 4px 18px;
+  border: 3px solid var(--contour);
+  border-radius: var(--rayon);
+  background: var(--surface);
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  font-variant-numeric: tabular-nums;
+}
+.champs-de-l-heure { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; width: 100%; }
+.champ-de-l-heure {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px;
+  min-width: 56px;
+  min-height: 56px;
+  padding: 6px 10px;
+  border: 3px solid var(--contour);
+  border-radius: var(--rayon);
+  background: var(--surface);
+  color: var(--texte);
+  font-size: 1.75rem;
+  font-weight: 800;
+}
+.champ-de-l-heure[data-actif="true"] { border-color: var(--cristal-contour); box-shadow: 0 0 0 3px var(--cristal); }
+.champ-de-l-heure[aria-invalid="true"] { border-color: var(--carte-en-cours); }
+.champ-de-l-heure[aria-disabled="true"] { opacity: .45; cursor: default; }
+.valeur-du-champ { min-width: 1.6ch; text-align: center; }
+.unite-du-champ { font-size: 1rem; }
+.heure-impossible { min-height: 1.4em; margin: 0; font-weight: 700; text-align: center; }
 .boite-a-jetons, .probleme-en-barres { display: grid; justify-items: center; gap: 12px; width: 100%; max-width: 100%; }
 /* La boîte n'a que des couches en position absolue : la zone de l'exercice, ajustée à son contenu, lui laisserait 0 px pendant le déroulé. */
 .exercice-en-cours:has(.boite-a-jetons) { justify-self: stretch; }

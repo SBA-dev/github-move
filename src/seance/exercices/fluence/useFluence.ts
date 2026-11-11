@@ -14,7 +14,7 @@ import {
 import { hasardDuNavigateur } from "../../../hasard-navigateur.ts";
 import { CIBLE_DE_LA_ZONE_DE_REPONSE, type SignalerUnRetour } from "../../../retours/index.ts";
 import type { Voix } from "../../../voix/index.ts";
-import type { Horloge } from "../../horloge.ts";
+import type { SourceDuTemps } from "../../source-du-temps.ts";
 import type { ParoleADire } from "../../usePersonnageQuiParle.ts";
 import type { SuiteDuCalcul } from "../useCalcul.ts";
 import type { QuestionFigee } from "../useQuestionFigee.ts";
@@ -25,7 +25,7 @@ const BATTEMENT_EN_MS = 250;
 type Dependances = {
   readonly seance: Seance;
   readonly personnageGuide: PersonnageGuide;
-  readonly horloge: Horloge;
+  readonly sourceDuTemps: SourceDuTemps;
   readonly dire: (parole: ParoleADire) => Promise<boolean>;
   readonly jouer: Voix["jouer"];
   readonly signaler: SignalerUnRetour;
@@ -56,7 +56,7 @@ function finDeFluence(seance: Seance, exercice: string, score: number, recordCon
 
 /** Le déroulé d'une fluence : l'accueil et le record, le signal de départ, le temps qui passe, puis la phrase de fin. */
 export function useFluence(
-  { seance, personnageGuide, horloge, dire, jouer, signaler, faireSilence, sequence, vivant, redessiner, reussite }: Dependances,
+  { seance, personnageGuide, sourceDuTemps, dire, jouer, signaler, faireSilence, sequence, vivant, redessiner, reussite }: Dependances,
 ) {
   const { estFigee, figer, annoncerLAvancement, attendreLEcranSuivant } = reussite;
   const [record, setRecord] = useState<number | undefined>();
@@ -73,27 +73,27 @@ export function useFluence(
 
   const presenter = useCallback(async () => {
     const nom = seance.exerciceEnCours()?.scoreDeFluence()?.nom;
-    const fluence = seance.fluenceEnCours(horloge.maintenant());
+    const fluence = seance.fluenceEnCours(sourceDuTemps.maintenant());
     if (nom === undefined || !fluence || fluence.demarree) return;
     const recordLu = await lireLeRecordDeFluence(seance.enfant, seance.lecon, nom);
     if (!vivant.current) return;
     setRecord(recordLu);
     await dire({ texte: accueilDeLaFluence({ duree: fluence.tempsRestant, ...(recordLu === undefined ? {} : { record: recordLu }) }), nature: "annonce" });
-  }, [seance, horloge, vivant, dire]);
+  }, [seance, sourceDuTemps, vivant, dire]);
 
   const demarrer = useCallback(() => {
-    const fluence = seance.fluenceEnCours(horloge.maintenant());
+    const fluence = seance.fluenceEnCours(sourceDuTemps.maintenant());
     if (!fluence || fluence.demarree || estFigee.current) return;
     sequence.current++;
     faireSilence();
-    seance.demarrerLaFluence(horloge.maintenant());
+    seance.demarrerLaFluence(sourceDuTemps.maintenant());
     setDemarree(true);
     redessiner();
     void dire({ texte: SIGNAL_DE_DEPART, nature: "annonce" });
-  }, [seance, horloge, estFigee, sequence, faireSilence, redessiner, dire]);
+  }, [seance, sourceDuTemps, estFigee, sequence, faireSilence, redessiner, dire]);
 
   const terminer = useCallback(async (suite: SuiteDuCalcul) => {
-    const maintenant = horloge.maintenant();
+    const maintenant = sourceDuTemps.maintenant();
     const exercice = seance.exerciceEnCours();
     const fluence = seance.fluenceEnCours(maintenant);
     const nom = exercice?.scoreDeFluence()?.nom;
@@ -122,7 +122,7 @@ export function useFluence(
     setRecordBattu(undefined);
     setFluenceFinie(undefined);
     await suite(++sequence.current, seance.retirerFaits(), true);
-  }, [seance, horloge, record, estFigee, figer, sequence, faireSilence, annoncerLAvancement, dire, vivant, attendreLEcranSuivant]);
+  }, [seance, sourceDuTemps, record, estFigee, figer, sequence, faireSilence, annoncerLAvancement, dire, vivant, attendreLEcranSuivant]);
 
   /** Pendant le chrono, chaque calcul a son effet sonore, sans point du récipient et sans parole ; une réponse donnée après la fin du temps n'est pas prise. */
   const reagirAuCalcul = useCallback((juste: boolean, questionsReussiesAvant: number) => {
@@ -140,7 +140,7 @@ export function useFluence(
 
   /** Une réponse fausse s'efface sans rien dire. */
   const repondre = useCallback(async (nombre: number, suite: SuiteDuCalcul) => {
-    const maintenant = horloge.maintenant();
+    const maintenant = sourceDuTemps.maintenant();
     const fluence = seance.fluenceEnCours(maintenant);
     if (!fluence?.demarree || estFigee.current) return;
     if (fluence.finie) return await terminer(suite);
@@ -148,16 +148,16 @@ export function useFluence(
     const resultat = seance.repondre(Reponse.nombre(nombre), maintenant);
     if (resultat !== "dejaEcartee") reagirAuCalcul(resultat === "juste", questionsReussiesAvant);
     redessiner();
-  }, [seance, horloge, estFigee, terminer, reagirAuCalcul, redessiner]);
+  }, [seance, sourceDuTemps, estFigee, terminer, reagirAuCalcul, redessiner]);
 
   const battre = useCallback(async (suite: SuiteDuCalcul) => {
-    const fluence = seance.fluenceEnCours(horloge.maintenant());
+    const fluence = seance.fluenceEnCours(sourceDuTemps.maintenant());
     if (!fluence || estFigee.current) return;
     if (fluence.finie) return await terminer(suite);
     if (fluence.tempsRestant === derniereSeconde.current) return;
     derniereSeconde.current = fluence.tempsRestant;
     redessiner();
-  }, [seance, horloge, estFigee, terminer, redessiner]);
+  }, [seance, sourceDuTemps, estFigee, terminer, redessiner]);
 
   const nomDeLExercice = seance.exerciceEnCours()?.scoreDeFluence()?.nom;
   const recordDeDepart = nomDeLExercice === undefined || record === undefined
@@ -166,15 +166,15 @@ export function useFluence(
   return { demarree, fluenceFinie, recordBattu, recordDeDepart, parolesDeFin, issueDuRecord, presenter, demarrer, repondre, battre };
 }
 
-/** Fait battre l'horloge tant que la fluence court : chaque battement redessine le temps, ou finit la fluence. */
+/** Fait battre la source du temps tant que la fluence court : chaque battement redessine le temps, ou finit la fluence. */
 export function useBattementDeLaFluence(
-  horloge: Horloge,
+  sourceDuTemps: SourceDuTemps,
   demarree: boolean,
   battre: (suite: SuiteDuCalcul) => Promise<void>,
   suite: SuiteDuCalcul,
 ): void {
   useEffect(() => {
     if (!demarree) return;
-    return horloge.battre(() => void battre(suite), BATTEMENT_EN_MS);
-  }, [horloge, demarree, battre, suite]);
+    return sourceDuTemps.battre(() => void battre(suite), BATTEMENT_EN_MS);
+  }, [sourceDuTemps, demarree, battre, suite]);
 }

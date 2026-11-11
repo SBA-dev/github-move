@@ -12,7 +12,8 @@ export type TypeDeQuestion =
   | "boite"
   | "barres"
   | "colonne"
-  | "fluence";
+  | "fluence"
+  | "horloge";
 
 export interface QuestionSuivie {
   readonly cle: CleDeQuestion;

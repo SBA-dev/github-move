@@ -158,3 +158,71 @@ def test_la_bibliotheque_ne_contient_aucun_mot_dicte_hors_du_clavier(exercice):
 @pytest.mark.parametrize("exercice", [e for _, e in DICTEES], ids=[i for i, _ in DICTEES])
 def test_la_bibliotheque_ne_contient_aucun_mot_dicte_trop_long(exercice):
     assert bb.mots_dictes_trop_longs(exercice) == []
+
+
+# ---------- Exercice « horloge » (#190) ----------
+
+def test_horloge_ecrit_les_items_avec_leur_moment_et_leur_aide():
+    exercice = bb.horloge("Quelle heure ?", "lire", ["3:00", ("9:00", "matin"), ("12:00", "apres-midi", "Midi")])
+
+    assert exercice == {"type": "horloge", "titre": "Quelle heure ?", "mode": "lire", "items": [
+        {"heure": "3:00"},
+        {"heure": "9:00", "moment": "matin"},
+        {"heure": "12:00", "moment": "apres-midi", "aide": "Midi"},
+    ]}
+
+
+def test_horloge_recopie_la_precision_et_la_consigne_quand_elles_sont_donnees():
+    exercice = bb.horloge("t", "placer", ["3:15"], precision="quart-d-heure", consigne="Place les aiguilles.")
+
+    assert (exercice["precision"], exercice["consigne"]) == ("quart-d-heure", "Place les aiguilles.")
+
+
+def une_lecon_d_horloge(niveau, exercice):
+    section = next(i for i, s in bb.INDEX.items() if "reperage-dans-le-temps" in i and "mathematiques" in i and s["niveaux"] == [niveau])
+    citation = bb.INDEX[section]["extrait"][:40]
+    bb.ERREURS.clear()
+    bb.lecon("ma-test-horloge", "maths", niveau, "t", 1, section, "", ["étape"], [exercice], citation_exacte=citation)
+    erreurs = list(bb.ERREURS)
+    bb.ERREURS.clear()
+    return erreurs
+
+
+@pytest.mark.parametrize("niveau,exercice", [
+    ("CP", bb.horloge("t", "lire", ["3:00", "9:00"])),
+    ("CE1", bb.horloge("t", "lire", ["3:00", "3:15", "3:30"])),
+    ("CE2", bb.horloge("t", "placer", ["3:07", "6:18"])),
+    ("CM2", bb.horloge("t", "placer", ["6:18:20"], precision="seconde")),
+    ("CE2", bb.horloge("t", "lire", ["3:00", "4:00"], precision="heure")),
+    ("CP", bb.horloge("t", "placer", ["12:00", "1:00"])),
+    ("CE1", bb.horloge("t", "lire", [("2:15", "apres-midi"), "9:00"])),
+], ids=["cp", "ce1", "ce2", "cm2-seconde", "plus-grossiere", "cp-placer-12h", "moment"])
+def test_une_lecon_d_horloge_bien_formee_est_acceptee(niveau, exercice):
+    assert une_lecon_d_horloge(niveau, exercice) == []
+
+
+@pytest.mark.parametrize("niveau,exercice", [
+    ("CE2", bb.horloge("t", "lire", ["3h15"])),
+    ("CE2", bb.horloge("t", "lire", ["25:00"])),
+    ("CE1", bb.horloge("t", "lire", ["3:10"])),
+    ("CE2", bb.horloge("t", "lire", ["3:30"], precision="heure")),
+    ("CE1", bb.horloge("t", "lire", ["3:10"], precision="minute")),
+    ("CM1", bb.horloge("t", "lire", ["4:41:10"])),
+    ("CP", bb.horloge("t", "lire", ["3:30"], precision="demi-heure")),
+    ("CE2", bb.horloge("t", "lire", ["0:00"])),
+    ("CE2", bb.horloge("t", "lire", ["3:00", "15:00"])),
+    ("CP", bb.horloge("t", "placer", ["13:00"])),
+    ("CE1", bb.horloge("t", "lire", [("3:00", "midi")])),
+    ("CE2", bb.horloge("t", "lire", [])),
+    ("CE2", bb.horloge("t", "dessiner", ["3:00"])),
+], ids=["ecriture", "heure-inexistante", "hors-precision-du-niveau", "hors-precision-ecrite",
+        "precision-trop-fine-ce1", "secondes-au-cm1", "precision-trop-fine-cp", "minuit", "meme-cadran",
+        "cp-placer-apres-12h", "moment-inconnu", "sans-item", "mode-inconnu"])
+def test_une_lecon_d_horloge_mal_formee_fait_echouer_le_build(niveau, exercice):
+    erreurs = une_lecon_d_horloge(niveau, exercice)
+
+    assert len(erreurs) == 1 and erreurs[0].startswith("ma-test-horloge : ")
+
+
+def test_une_heure_a_placer_apres_midi_est_permise_des_le_ce1():
+    assert une_lecon_d_horloge("CE1", bb.horloge("t", "placer", ["13:00"])) == []

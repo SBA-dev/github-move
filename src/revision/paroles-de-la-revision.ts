@@ -3,6 +3,7 @@ import {
   QuestionDeCalcul,
   QuestionDeProblemeEnBarres,
   type QuestionDeRevision,
+  QuestionDHorloge,
   type QuestionPosee,
 } from "@domain/apprentissage";
 import { type PersonnageGuide, reagirALaReponse } from "@domain/motivation";
@@ -15,9 +16,12 @@ import {
 } from "../seance/exercices/paroles-du-calcul.ts";
 import type { ParoleADire } from "../seance/usePersonnageQuiParle.ts";
 
-/** Les vues d'une question qui se joue comme un calcul : calcul, boîte à jetons, problème en barres. */
+/** Les vues d'une question qui se joue comme un calcul : calcul, boîte à jetons, problème en barres, horloge. */
 export function vueDuCalcul(question: QuestionPosee) {
-  if (question instanceof QuestionDeCalcul || question instanceof QuestionDeBoite || question instanceof QuestionDeProblemeEnBarres) {
+  if (
+    question instanceof QuestionDeCalcul || question instanceof QuestionDeBoite || question instanceof QuestionDeProblemeEnBarres ||
+    question instanceof QuestionDHorloge
+  ) {
     return question.enCours();
   }
   return undefined;

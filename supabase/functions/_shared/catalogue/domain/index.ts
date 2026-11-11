@@ -20,6 +20,7 @@ export type { ExerciceBulles } from "./exercices/bulles.ts";
 export type { EtiquetteAClasser, ExerciceClasser, Groupe } from "./exercices/classer.ts";
 export { NOMBRE_MAXIMAL_D_ETIQUETTES } from "./exercices/nombre-maximal-d-etiquettes.ts";
 export type { ExerciceCalcul, Operation } from "./exercices/calcul.ts";
+export type { ExerciceHorloge, ItemDHorloge, ModeDeLHorloge, MomentDeLaJournee } from "./exercices/horloge.ts";
 export type { ExerciceFluence } from "./exercices/fluence.ts";
 export type {
   GenerateurComplet,
@@ -50,3 +51,6 @@ export type {
 } from "./page-de-la-lecon.ts";
 export { enonceDeLaQuestion } from "./enonce-de-la-question.ts";
 export { cleDeLaFluence } from "./exercices/fluence.ts";
+export { HeureDeLHorloge } from "./heure-de-l-horloge.ts";
+export { PrecisionDeLHeure } from "./precision-de-l-heure.ts";
+export type { EcriturePrecisionDeLHeure } from "./precision-de-l-heure.ts";

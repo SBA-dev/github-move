@@ -206,11 +206,14 @@ function enReponseEnvoyee(reponse: ReponseDonnee): Record<string, unknown> {
   if (reponse.genre === "jeNeSaisPas") return { jeNeSaisPas: true };
   if (reponse.genre === "nombre") return { nombre: reponse.valeur };
   if (reponse.genre === "motEcrit") return { motEcrit: reponse.lettres };
-  return {
-    placement: reponse.groupe === undefined
-      ? { etiquette: reponse.etiquette }
-      : { etiquette: reponse.etiquette, groupe: reponse.groupe },
-  };
+  if (reponse.genre === "placement") {
+    return {
+      placement: reponse.groupe === undefined
+        ? { etiquette: reponse.etiquette }
+        : { etiquette: reponse.etiquette, groupe: reponse.groupe },
+    };
+  }
+  return { heureEcrite: Object.fromEntries(Object.entries(reponse).filter(([champ]) => champ !== "genre")) };
 }
 
 Deno.test("le corps d'une séance de classer est lu puis revalidé sans incohérence", () => {
@@ -347,4 +350,33 @@ Deno.test("un jour qui n'est pas une chaîne est refusé alors qu'une chaîne AA
   for (const jour of [20261023, null, true, ["2026-10-23"]]) {
     assertThrows(() => lire({ ...corpsValide(), jour }), EntreeInvalide, "jour");
   }
+});
+
+Deno.test("une réponse heureEcrite est lue comme l'heure écrite par l'enfant", () => {
+  const envoi = lire({
+    ...corpsValide(),
+    reponses: [[{ heureEcrite: { heures: 14, minutes: 15, secondes: 0 } }]],
+  });
+
+  assertEquals(envoi.reponses, [[Reponse.heureEcrite(14, 15, 0)]]);
+});
+
+Deno.test("une réponse heureEcrite dont les heures, minutes ou secondes ne sont pas des entiers est refusée", () => {
+  const malFormees = [
+    { heures: 2.5, minutes: 15, secondes: 0 },
+    { heures: 2, minutes: "15", secondes: 0 },
+    { heures: 2, minutes: 15, secondes: null },
+    { heures: 2, minutes: 15 },
+  ];
+  for (const heureEcrite of malFormees) {
+    assertThrows(() => lire({ ...corpsValide(), reponses: [[{ heureEcrite }]] }), EntreeInvalide, "heure");
+  }
+});
+
+Deno.test("une heure écrite envoyée par le corps est relue à l'identique", () => {
+  const heureEcrite = Reponse.heureEcrite(2, 15, 0);
+
+  const envoi = lire({ ...corpsValide(), reponses: [[enReponseEnvoyee(heureEcrite)]] });
+
+  assertEquals(envoi.reponses, [[heureEcrite]]);
 });

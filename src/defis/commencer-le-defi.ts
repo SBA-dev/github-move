@@ -1,6 +1,6 @@
 import { type Defi, type GrandDefi, planDuDefi, SeanceDeDefi, tireurAuHasard } from "@domain/apprentissage";
 import type { ItemDeBoite, Lecon, Niveau } from "@domain/catalogue";
-import { boitesDuPlan, type TexteDeLecture, textesDuPlan } from "../revision/commencer-la-revision.ts";
+import { boitesDuPlan, type HorlogeDuPlan, horlogesDuPlan, type TexteDeLecture, textesDuPlan } from "../revision/commencer-la-revision.ts";
 import { generateurIdDuNavigateur } from "../seance/generateur-id-navigateur.ts";
 import { hasardDuNavigateur } from "../seance/hasard-navigateur.ts";
 
@@ -9,6 +9,7 @@ export type DefiCommence = {
   readonly nombreDeQuestions: number;
   readonly boites: ReadonlyMap<string, ItemDeBoite>;
   readonly textes: ReadonlyMap<string, TexteDeLecture>;
+  readonly horloges: ReadonlyMap<string, HorlogeDuPlan>;
 };
 
 /** Le défi d'une partie du parcours (10 questions) ou le grand défi (12), avec un nouveau tirage au hasard du navigateur. */
@@ -30,5 +31,5 @@ export function commencerLeDefi(
     tireurDe: () => tireurAuHasard(hasardDuNavigateur),
     niveau,
   });
-  return { seance, nombreDeQuestions: plan.questions.length, boites: boitesDuPlan(plan, lecons), textes: textesDuPlan(plan, lecons) };
+  return { seance, nombreDeQuestions: plan.questions.length, boites: boitesDuPlan(plan, lecons), textes: textesDuPlan(plan, lecons), horloges: horlogesDuPlan(plan, lecons) };
 }

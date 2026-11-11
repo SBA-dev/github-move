@@ -1,4 +1,5 @@
 export { Avancement } from "./avancement.ts";
+export { heureDite } from "./heure-dite.ts";
 export { ExerciceJoue } from "./exercice-joue.ts";
 export type { LigneDuTableauDeConjugaison, SegmentDuTexteATrous } from "./exercice-joue.ts";
 export type { EtiquettePosee } from "./etiquettes-a-placer.ts";
@@ -13,6 +14,7 @@ export {
   EtiquetteInconnue,
   ExerciceIntrouvable,
   GroupeInconnu,
+  HeureEcriteImpossible,
   JeNeSaisPasDejaDit,
   LeconIntrouvable,
   LeconSansExercice,
@@ -147,6 +149,7 @@ export type { SeanceDeRevisionTermineeAEnregistrer } from "./seance-de-revision-
 export type { QuestionDeRevision } from "./question-de-revision.ts";
 export { AucuneQuestionDue } from "./erreurs.ts";
 export { cleDeLaBoite, QuestionDeBoite } from "./question-de-boite.ts";
+export { cleDeLHorloge } from "./cles-des-questions.ts";
 export { QuestionDeProblemeEnBarres } from "./question-de-probleme-en-barres.ts";
 export { estUnTypeDeQuestion } from "./cle-de-question.ts";
 export { leconAcquiseParLaSeance, leconsAcquises } from "./lecons-acquises.ts";
@@ -174,3 +177,5 @@ export {
 export { revaliderLeDefi } from "./revalider-le-defi.ts";
 export type { DefiTermineAEnregistrer } from "./defi-termine-a-enregistrer.ts";
 export { matiereReussieParLaSeance } from "./matiere-reussie-par-la-seance.ts";
+export { QuestionDHorloge } from "./question-d-horloge.ts";
+export type { ChampDeLHeure, HorlogeEnCours } from "./question-d-horloge.ts";

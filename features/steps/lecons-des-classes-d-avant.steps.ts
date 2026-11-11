@@ -113,8 +113,14 @@ Then(/^les blocs du parcours se suivent ainsi : « ([^«»]+) », puis « ([^«�
   expect(await haut(premier), `« ${premier} » est au-dessus de « ${second} »`).toBeLessThan(await haut(second));
 });
 
-Then(/^« ([^«»]+) » n'apparaît pas dans le parcours$/, async ({ page }, titre: string) => {
-  await attendreLesLeconsDuParcours(page);
+Then(/^« ([^«»]+) » n'apparaît pas dans le parcours$/, async ({ page, $tags }, titre: string) => {
+  // Story #190 : le parcours d'une classe peut n'avoir aucune leçon de sa classe : on attend qu'il soit chargé.
+  if ($tags.includes("@issue-190")) {
+    await expect(page.getByRole("heading", { level: 2, name: "Mon parcours", exact: true })).toBeVisible();
+    await expect(page.getByText("Chargement du parcours")).toHaveCount(0);
+  } else {
+    await attendreLesLeconsDuParcours(page);
+  }
   await expect(page.getByRole("button", { name: new RegExp(`^${echapper(titre)}(?:, [A-Z0-9]+)? : `) })).toHaveCount(0);
 });
 

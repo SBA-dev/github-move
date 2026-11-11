@@ -1,4 +1,4 @@
-import type { ExerciceClasser } from "../../catalogue/domain/index.ts";
+import type { ExerciceClasser, ItemDHorloge, ModeDeLHorloge } from "../../catalogue/domain/index.ts";
 import { CleDeQuestion } from "./cle-de-question.ts";
 import { type Addition, enonceDUneAddition } from "./tirage-d-additions.ts";
 
@@ -47,4 +47,8 @@ export function cleDuClasser(
   { texte }: Readonly<{ texte: string }>,
 ): CleDeQuestion {
   return CleDeQuestion.de("classer", texte + groupes.map((groupe) => groupe.nom).join());
+}
+
+export function cleDeLHorloge(mode: ModeDeLHorloge, { heure }: Pick<ItemDHorloge, "heure">): CleDeQuestion {
+  return CleDeQuestion.de("horloge", `${mode} ${heure.ecriture()}`);
 }

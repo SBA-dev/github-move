@@ -12,8 +12,10 @@ MATIERES = {"francais", "maths", "sciences", "histoire", "anglais", "emc"}
 NIVEAUX = {"CP", "CE1", "CE2", "CM1", "CM2"}
 TYPES = {
     "bulles", "classer", "dictee", "ordre", "trous", "conjugaison", "lecture",
-    "memoriser", "addition", "calcul", "fluence", "ecoute", "boite", "barres",
+    "memoriser", "addition", "calcul", "fluence", "ecoute", "boite", "barres", "horloge",
 }
+PRECISIONS = ["heure", "demi-heure", "quart-d-heure", "cinq-minutes", "minute", "seconde"]
+PRECISION_PAR_DEFAUT = {"CP": "heure", "CE1": "quart-d-heure", "CE2": "minute", "CM1": "minute", "CM2": "seconde"}
 QUESTIONS_A_CHOIX = {"bulles", "lecture", "ecoute"}
 
 
@@ -55,3 +57,18 @@ def test_la_bonne_reponse_fait_partie_des_choix_proposes(lecon):
 def test_dans_un_parcours_deux_lecons_n_ont_pas_le_meme_ordre(lecon):
     memes = [l for l in LECONS if (l["matiere"], l["niveau"], l["ordre"]) == (lecon["matiere"], lecon["niveau"], lecon["ordre"])]
     assert len(memes) == 1
+
+
+def test_la_precision_par_defaut_de_chaque_niveau_est_celle_du_domaine():
+    import sys
+    sys.path.insert(0, str(RACINE / "scripts"))
+    import build_bibliotheque as bb
+    assert {n: bb.precision_par_defaut(n) for n in NIVEAUX} == PRECISION_PAR_DEFAUT
+
+
+@par_lecon()
+def test_un_exercice_d_horloge_a_un_mode_une_precision_permise_et_des_items(lecon):
+    for e in (e for e in lecon["exercices"] if e["type"] == "horloge"):
+        assert e["mode"] in {"lire", "placer"}
+        assert e.get("precision", PRECISION_PAR_DEFAUT[lecon["niveau"]]) in PRECISIONS[:PRECISIONS.index(PRECISION_PAR_DEFAUT[lecon["niveau"]]) + 1]
+        assert e["items"]

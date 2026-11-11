@@ -63,9 +63,10 @@ export function lireUneReponse(brute: unknown): ReponseDonnee {
   if (cles.length === 1 && cles[0] === "placement") return lireUnPlacement(reponse.placement);
   if (cles.length === 1 && cles[0] === "nombre") return lireUnNombre(reponse.nombre);
   if (cles.length === 1 && cles[0] === "motEcrit") return Reponse.motEcrit(lireLesLettres(reponse.motEcrit));
+  if (cles.length === 1 && cles[0] === "heureEcrite") return lireUneHeureEcrite(reponse.heureEcrite);
   if (cles.length === 1 && cles[0] === "jeNeSaisPas" && reponse.jeNeSaisPas === true) return { genre: "jeNeSaisPas" };
   throw new EntreeInvalide(
-    "Le champ « reponses » ne contient que des choix, des placements, des nombres, des mots écrits ou « Je ne sais pas ».",
+    "Le champ « reponses » ne contient que des choix, des placements, des nombres, des mots écrits, des heures écrites ou « Je ne sais pas ».",
   );
 }
 
@@ -74,6 +75,18 @@ function lireUnNombre(brut: unknown): ReponseDonnee {
     throw new EntreeInvalide("Le champ « reponses » ne contient que des nombres entiers positifs ou nuls.");
   }
   return Reponse.nombre(brut);
+}
+
+function estUnEntier(valeur: unknown): valeur is number {
+  return typeof valeur === "number" && Number.isInteger(valeur);
+}
+
+function lireUneHeureEcrite(brute: unknown): ReponseDonnee {
+  const { heures, minutes, secondes } = objet(brute, "reponses");
+  if (!estUnEntier(heures) || !estUnEntier(minutes) || !estUnEntier(secondes)) {
+    throw new EntreeInvalide("Le champ « reponses » ne contient que des heures écrites en nombres entiers.");
+  }
+  return Reponse.heureEcrite(heures, minutes, secondes);
 }
 
 function lireLesLettres(brutes: unknown): string[] {

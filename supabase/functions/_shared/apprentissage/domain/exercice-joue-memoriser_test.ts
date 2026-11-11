@@ -275,3 +275,9 @@ Deno.test("les erreurs sur les vers et sur les mots cachés d'une poésie ne son
   assertEquals(exerciceJoue.questionsRatees().length, 2);
   assertEquals(exerciceJoue.questionsRateesARetenir(), []);
 });
+
+Deno.test("une heure écrite donnée à une poésie est incompatible", () => {
+  const exerciceJoue = jouer(auClairDeLaLune);
+
+  assertThrows(() => exerciceJoue.repondre(Reponse.heureEcrite(2, 15)), ReponseIncompatible);
+});

@@ -5,6 +5,7 @@ export type ReponseEnvoyee =
   | { readonly placement: { readonly etiquette: string; readonly groupe?: string } }
   | { readonly nombre: number }
   | { readonly motEcrit: readonly string[] }
+  | { readonly heureEcrite: { readonly heures: number; readonly minutes: number; readonly secondes: number } }
   | { readonly jeNeSaisPas: true };
 
 /** Le corps JSON attendu par l'Edge Function `terminer-la-seance`. */
@@ -30,6 +31,8 @@ export function enReponseEnvoyee(reponse: ReponseDonnee): ReponseEnvoyee {
       return { nombre: reponse.valeur };
     case "motEcrit":
       return { motEcrit: reponse.lettres };
+    case "heureEcrite":
+      return { heureEcrite: { heures: reponse.heures, minutes: reponse.minutes, secondes: reponse.secondes } };
     case "jeNeSaisPas":
       return { jeNeSaisPas: true };
   }

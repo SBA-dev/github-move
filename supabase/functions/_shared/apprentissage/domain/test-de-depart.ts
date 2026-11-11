@@ -6,7 +6,7 @@ import type { AideDonnee } from "./question-jouee.ts";
 import { questionDuTestDeDepart } from "./question-du-test-de-depart.ts";
 import { QuestionsFaussesDeSuite } from "./questions-fausses-de-suite.ts";
 import type { QuestionPosee } from "./question-posee.ts";
-import type { ReponseEnNombre, ReponseParChoix, ResultatDeReponse } from "./reponse.ts";
+import type { HeureEcrite, ReponseEnNombre, ReponseParChoix, ResultatDeReponse } from "./reponse.ts";
 import type { TestDeDepartTermineAEnregistrer } from "./test-de-depart-termine-a-enregistrer.ts";
 import { TestDeDepartId } from "./test-de-depart-id.ts";
 import type { Tireur } from "./tireur.ts";
@@ -70,7 +70,7 @@ export class TestDeDepart {
     return this.questions[this.rang]?.question;
   }
 
-  repondre(reponse: ReponseParChoix | ReponseEnNombre): ResultatDeReponse {
+  repondre(reponse: ReponseParChoix | ReponseEnNombre | HeureEcrite): ResultatDeReponse {
     const question = this.questionAPoser();
     const resultat = question.repondre(reponse);
     this.passerALaSuivanteSiReussie(question);

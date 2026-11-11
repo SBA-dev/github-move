@@ -2,7 +2,7 @@ import { ReponseIncompatible, SeanceDeRevisionDejaFinie } from "./erreurs.ts";
 import type { QuestionDeRevision } from "./question-de-revision.ts";
 import type { AideDonnee } from "./question-jouee.ts";
 import type { QuestionSuivie } from "./question-suivie.ts";
-import type { MotEcrit, ReponseEnNombre, ReponseParChoix, ResultatDeReponse } from "./reponse.ts";
+import type { HeureEcrite, MotEcrit, ReponseEnNombre, ReponseParChoix, ResultatDeReponse } from "./reponse.ts";
 
 /** La boucle commune aux séances de questions rejouées : une question à la fois, jusqu'à ce qu'elle soit réussie. */
 export class QuestionsEnCours {
@@ -19,7 +19,7 @@ export class QuestionsEnCours {
     return this.enCours() === undefined;
   }
 
-  repondre(reponse: ReponseParChoix | ReponseEnNombre | MotEcrit): ResultatDeReponse {
+  repondre(reponse: ReponseParChoix | ReponseEnNombre | MotEcrit | HeureEcrite): ResultatDeReponse {
     const { question, dictee } = this.aPoser();
     if (dictee) {
       if (reponse.genre !== "motEcrit") throw new ReponseIncompatible(reponse.genre);

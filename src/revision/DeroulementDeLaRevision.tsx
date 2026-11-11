@@ -6,6 +6,7 @@ import {
   QuestionDeBoite,
   QuestionDeCalcul,
   QuestionDeProblemeEnBarres,
+  QuestionDHorloge,
   QuestionJouee,
 } from "@domain/apprentissage";
 import type { ItemDeBoite } from "@domain/catalogue";
@@ -22,7 +23,8 @@ import { ParoleDuGuide } from "../test-de-depart/ParoleDuGuide.tsx";
 import { laVoixNeLitPas, type Voix } from "../voix/index.ts";
 import { TexteDeLecture as AffichageDuTexte } from "../seance/exercices/TexteDeLecture.tsx";
 import type { SeanceDeQuestions } from "./seance-de-questions.ts";
-import type { TexteDeLecture } from "./commencer-la-revision.ts";
+import { ExerciceDHorloge } from "../seance/exercices/horloge/ExerciceDHorloge.tsx";
+import type { HorlogeDuPlan, TexteDeLecture } from "./commencer-la-revision.ts";
 import { type Personnage, useDeroulementDeRevision } from "./useDeroulementDeRevision.ts";
 
 type Props = {
@@ -32,6 +34,7 @@ type Props = {
   readonly libelleDeLAvancement: string;
   readonly boites: ReadonlyMap<string, ItemDeBoite>;
   readonly textes: ReadonlyMap<string, TexteDeLecture>;
+  readonly horloges: ReadonlyMap<string, HorlogeDuPlan>;
   readonly nombreDeQuestions: number;
   readonly personnage: Personnage;
   readonly univers: Univers;
@@ -43,7 +46,7 @@ type Props = {
 
 /** Une séance de questions en cours (révision, défi) : une question à la fois, sans étape de leçon, avec l'avancement de la séance. */
 export function DeroulementDeLaRevision(
-  { seance, parolesDeDebut, libelleDeLAvancement, boites, textes, nombreDeQuestions, personnage, univers, voix, toutLireAVoixHaute, onFini }: Props,
+  { seance, parolesDeDebut, libelleDeLAvancement, boites, textes, horloges, nombreDeQuestions, personnage, univers, voix, toutLireAVoixHaute, onFini }: Props,
 ) {
   const deroulement = useDeroulementDeRevision({
     seance,
@@ -68,7 +71,9 @@ export function DeroulementDeLaRevision(
   const dictee = courante?.dictee;
   const repondreParUnChoix = (texte: string) => void deroulement.repondreParUnChoix(texte);
   const repondreParUnNombre = (nombre: number) => void deroulement.repondreParUnNombre(nombre);
+  const repondreParUneHeure = deroulement.repondreParUneHeure;
   const jeNeSaisPas = () => void deroulement.jeNeSaisPas();
+  const horloge = courante && horloges.get(courante.identite.valeur);
   const texteDeLaQuestion = courante && textes.get(courante.identite.valeur);
   const voixCoupee = laVoixNeLitPas(voix);
   const lectureEnAttente = texteDeLaQuestion !== undefined && deroulement.texteEcoutePour !== courante?.identite.valeur;
@@ -113,6 +118,17 @@ export function DeroulementDeLaRevision(
               reussi={reussie}
               onChoisir={repondreParUnChoix}
               onValider={repondreParUnNombre}
+              onJeNeSaisPas={jeNeSaisPas}
+            />
+          )}
+          {question instanceof QuestionDHorloge && horloge && (
+            <ExerciceDHorloge
+              horloge={question.enCours()}
+              heure={horloge.heure}
+              avecSecondes={horloge.avecSecondes}
+              reussie={reussie}
+              onChoisir={repondreParUnChoix}
+              onValider={repondreParUneHeure}
               onJeNeSaisPas={jeNeSaisPas}
             />
           )}

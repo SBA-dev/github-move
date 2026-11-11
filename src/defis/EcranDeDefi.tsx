@@ -95,6 +95,7 @@ function DefiCharge(
             libelleDeLAvancement="Avancement du défi"
             boites={commence.boites}
             textes={commence.textes}
+            horloges={commence.horloges}
             nombreDeQuestions={commence.nombreDeQuestions}
             personnage={personnage}
             univers={univers}

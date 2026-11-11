@@ -1,5 +1,5 @@
 """Leçons de mathématiques, du CP au CM2."""
-from build_bibliotheque import lecon, bulles, classer, ordre, calcul, fluence, addition
+from build_bibliotheque import lecon, bulles, classer, ordre, calcul, fluence, addition, horloge
 
 M = "maths"
 C2 = "c2-mathematiques-{}-{}"
@@ -38,7 +38,8 @@ LECONS = [
                ("Quel jour vient après mardi ?", ["mercredi", "lundi", "jeudi"]),
                ("Quel jour vient avant samedi ?", ["vendredi", "dimanche", "jeudi"]),
                ("Combien y a-t-il de jours dans une semaine ?", ["7", "5", "10"]),
-               ("La petite aiguille est sur 3, la grande sur 12. Quelle heure est-il ?", ["3 heures", "12 heures", "15 heures et demie"])])],
+               ("La petite aiguille est sur 3, la grande sur 12. Quelle heure est-il ?", ["3 heures", "12 heures", "15 heures et demie"])]),
+           horloge("L'horloge de Noisette", "lire", ["3:00", "8:00", "11:00", "12:00", "6:00"])],
           competence="Je connais les jours et je lis les heures"),
 
     # ---------------- CE1 ----------------
@@ -79,6 +80,21 @@ LECONS = [
               ("La moitié de 30 ?", ["15", "60", "13"]),
               ("Le double de 50 ?", ["100", "55", "25"])])],
           competence="Je connais les doubles et les moitiés"),
+    lecon("ma-ce1-doubles-moities-grands", M, "CE1", "Doubles et moitiés des grands nombres", 36, C2.format("ce1", "apprendre-des-procedures-de-calcul-mental"),
+          ["moitié d’un nombre pair"],
+          [("Le double de 200 : deux centaines, et encore deux centaines, ça fait quatre centaines. Le double de 200, c'est 400.", ["double de 200 = 400", "double de 30 = 60"]),
+           ("La moitié de 100, c'est 50, car 50 + 50 = 100.", ["moitié de 100 = 50", "moitié de 400 = 200"]),
+           ("Pour un nombre plus difficile, je le coupe en morceaux. La moitié de 470 : 470, c'est 400 + 70. La moitié de 400, c'est 200. La moitié de 70, c'est 35. Donc la moitié de 470, c'est 235.", ["470 = 400 + 70", "200 + 35 = 235"])],
+          [calcul("Les doubles", [("le double de 200", 400), ("le double de 300", 600), ("le double de 40", 80), ("le double de 150", 300, "150, c'est 100 + 50 : le double de 100, puis le double de 50."),
+                                  ("le double de 250", 500), ("le double de 120", 240)]),
+           calcul("Les moitiés", [("la moitié de 100", 50), ("la moitié de 200", 100), ("la moitié de 60", 30), ("la moitié de 500", 250, "500, c'est 400 + 100 : la moitié de 400, puis la moitié de 100."),
+                                  ("la moitié de 80", 40), ("la moitié de 470", 235, "470, c'est 400 + 70.")]),
+           bulles("Doubles et moitiés dans la vie", [
+               ("Léa a 200 billes. Tom en a le double. Combien Tom a-t-il de billes ?", ["400", "200", "100"]),
+               ("Un ruban mesure 100 cm. On le coupe en deux parts égales. Combien mesure chaque part ?", ["50 cm", "200 cm", "25 cm"]),
+               ("Quel nombre a pour double 600 ?", ["300", "1200", "200"]),
+               ("Quel nombre a pour moitié 40 ?", ["80", "20", "400"])])],
+          competence="Je calcule les doubles et les moitiés des grands nombres"),
     lecon("ma-ce1-fractions", M, "CE1", "Moitié, tiers, quart", 40, C2.format("ce1", "les-fractions"),
           ["fraction", "moitié", "quart"],
           [("Si je coupe une pizza en 2 parts égales, chaque part est une moitié. On écrit 1/2.", ["1/2"]),
@@ -107,7 +123,9 @@ LECONS = [
               ("Petite aiguille entre 4 et 5, grande sur le 6 : quelle heure ?", ["4 h 30", "6 h 20", "5 h"]),
               ("Combien de minutes dans une heure ?", ["60", "100", "30"]),
               ("Le film commence à 2 h et dure 1 heure. Il finit à…", ["3 h", "1 h", "2 h 30"]),
-              ("Une demi-heure, c'est…", ["30 minutes", "50 minutes", "15 minutes"])])],
+              ("Une demi-heure, c'est…", ["30 minutes", "50 minutes", "15 minutes"])]),
+           horloge("L'heure ou la demie ?", "lire",
+                   ["4:30", "2:00", ("9:30", "matin", "La grande aiguille est sur le 6 : c'est la demie."), "7:00"], precision="demi-heure")],
           competence="Je lis l'heure et la demi-heure"),
     lecon("ma-ce1-problemes-monnaie", M, "CE1", "Problèmes : faire les courses", 70, C2.format("ce1", "la-monnaie"),
           ["euro", "centimes", "monnaie"],

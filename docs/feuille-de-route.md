@@ -14,14 +14,14 @@ L'application fonctionne et est publiée comme artifact claude.ai. Elle comprend
 
 ### Contenu (`app/bibliotheque.json`)
 
-265 leçons :
+428 leçons (le 2026-11-09 : audit du programme objectif par objectif, voir `docs/audit-programme-2026-11.md`) :
 
 | Matière | CP | CE1 | CE2 | CM1 | CM2 |
 |---|---|---|---|---|---|
-| Français | 21 | 20 | 18 | 20 | 20 |
-| Maths | 31 | 17 | 19 | 21 | 18 |
+| Français | 25 | 28 | 27 | 31 | 30 |
+| Maths | 39 | 30 | 39 | 33 | 26 |
 
-À ces leçons s'ajoutent sciences (21), histoire et géographie (21), anglais (16) et EMC (2).
+À ces leçons s'ajoutent sciences (41), histoire et géographie (40), anglais (36) et EMC (3).
 
 - Couverture des programmes : français 85 sections sur 90 (seule l'écriture manuscrite manque), maths 86 sur 89.
 - Les **maths du CP** suivent le guide fondamental « nombres, calcul et résolution de problèmes au CP » : 22 leçons appuyées sur le guide, avec les types `boite` et `barres`.
@@ -39,6 +39,10 @@ L'application fonctionne et est publiée comme artifact claude.ai. Elle comprend
 ## Prochaines étapes
 
 > **Vague 1 close** (« Clôture A », 09/11) : #173 (musique des célébrations de Sports et de Police), dernière équipe, est mergée (`35b1e38`) ; elle n'est pas encore en ligne (prochaine publication). Aucune équipe ne tourne. Vague 2 proposée à **2 équipes** (`docs/graphe/nombre-d-equipes.md`), lancement sur demande du PO.
+
+> **Retour de parent (2026-11-09)** : issues #186 (une leçon personnelle de maths devient une dictée, bug), #187 (chercher une leçon par texte) et #188 (proposer 2 ou 3 exercices au parent) créées, à cadrer.
+
+> **#190 (exercice horloge, mode lire)** : livrée en PR #195 (brouillon), avec l'audit du programme (428 leçons, `docs/audit-programme-2026-11.md`) ; mode placer découpé dans #192.
 
 ### Ce qui reste au PO
 

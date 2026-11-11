@@ -20,7 +20,9 @@ ROOT = Path(__file__).resolve().parent.parent
 LIB = ROOT / "app" / "bibliotheque.json"
 INDEX = {e["id"]: e for e in json.loads((ROOT / "app" / "programmes-index.json").read_text(encoding="utf-8"))}
 ORDRES = {"ma-cp-addition-posee": 57, "ma-cp-monnaie": 31, "ma-cp-formes": 41, "ma-cp-heures": 51}   # leçons écrites à la main, replacées dans la progression du guide
-MODULES = ["francais", "francais2", "maths", "maths2", "maths_cp", "sciences", "histoire", "anglais"]
+MODULES = ["francais", "francais2", "maths", "maths2", "maths_cp", "sciences", "histoire", "anglais",
+           "complements_francais_c2", "complements_francais_c3", "complements_maths_cp_ce1", "complements_maths_ce2",
+           "complements_maths_c3", "complements_sciences", "complements_histoire_emc", "complements_anglais"]
 
 
 def norm(s):
@@ -99,6 +101,10 @@ def lecon(id, matiere, niveau, titre, ordre, section, cite, etapes, exercices, c
                 ERREURS.append(f"{id} : le mot dicté « {mot} » a une lettre absente du clavier")
             for mot in mots_dictes_trop_longs(exercice):
                 ERREURS.append(f"{id} : le mot dicté « {mot} » a plus de {NOMBRE_MAXIMAL_DE_LETTRES_DICTEES} lettres à écrire")
+        if exercice["type"] == "horloge":
+            probleme = horloge_mal_formee(exercice, niveau)
+            if probleme:
+                ERREURS.append(f"{id} : {probleme}")
         if a_trop_d_etiquettes(exercice):
             ERREURS.append(f"{id} : « {exercice['titre']} » a plus de {NOMBRE_MAXIMAL_D_ETIQUETTES} étiquettes")
     try:
@@ -242,6 +248,77 @@ def boite(titre, items):
 def barres(titre, items):
     """items : dicts {enonce, type?, parties/tout | grand/petit/ecart/noms | nb/valeur/total, aide?, phrase?} — None = ce qu'on cherche."""
     return {"type": "barres", "titre": titre, "items": items}
+
+
+PAS_DE_LA_PRECISION = {"heure": 3600, "demi-heure": 1800, "quart-d-heure": 900, "cinq-minutes": 300, "minute": 60, "seconde": 1}
+PRECISION_PAR_NIVEAU = {"CP": "heure", "CE1": "quart-d-heure", "CE2": "minute", "CM1": "minute", "CM2": "seconde"}
+MODES_DE_L_HORLOGE = ("lire", "placer")
+MOMENTS_DE_LA_JOURNEE = ("matin", "apres-midi")
+ECRITURE_DE_L_HEURE = re.compile(r"^(\d{1,2}):(\d{2})(?::(\d{2}))?$")
+DERNIERE_HEURE_A_PLACER_AU_CP = 12
+HEURES_SUR_LE_CADRAN = 12
+
+
+def precision_par_defaut(niveau):
+    return PRECISION_PAR_NIVEAU[niveau]
+
+
+def horloge(titre, mode, heures, precision=None, consigne=None):
+    """heures : "H:MM" ou "H:MM:SS", ou (heure, moment, aide facultative) avec moment « matin » ou « apres-midi »."""
+    items = []
+    for h in heures:
+        heure, *reste = (h,) if isinstance(h, str) else h
+        item = {"heure": heure}
+        for cle, valeur in zip(("moment", "aide"), reste):
+            item[cle] = valeur
+        items.append(item)
+    exercice = {"type": "horloge", "titre": titre, "mode": mode, "items": items}
+    if precision:
+        exercice["precision"] = precision
+    if consigne:
+        exercice["consigne"] = consigne
+    return exercice
+
+
+def _heure_lue(ecriture):
+    """(heures, minutes, secondes), ou None si l'écriture n'est pas « H:MM » ou « H:MM:SS » dans la journée."""
+    lue = ECRITURE_DE_L_HEURE.match(ecriture) if isinstance(ecriture, str) else None
+    if not lue:
+        return None
+    h, m, s = int(lue[1]), int(lue[2]), int(lue[3] or 0)
+    return (h, m, s) if h <= 23 and m <= 59 and s <= 59 else None
+
+
+def horloge_mal_formee(exercice, niveau):
+    """Premier défaut d'un exercice horloge (mêmes règles que le domaine TypeScript), ou None."""
+    if exercice.get("mode") not in MODES_DE_L_HORLOGE:
+        return f"le mode de l'horloge doit être l'un de : {', '.join(MODES_DE_L_HORLOGE)}"
+    precision = exercice.get("precision", precision_par_defaut(niveau))
+    if precision not in PAS_DE_LA_PRECISION:
+        return f"la précision « {precision} » doit être l'une de : {', '.join(PAS_DE_LA_PRECISION)}"
+    if PAS_DE_LA_PRECISION[precision] < PAS_DE_LA_PRECISION[precision_par_defaut(niveau)]:
+        return f"la précision « {precision} » est trop fine pour le {niveau}"
+    if not exercice.get("items"):
+        return "l'exercice d'horloge n'a aucun item"
+    deja_vues = set()
+    for item in exercice["items"]:
+        heure = _heure_lue(item.get("heure"))
+        if heure is None:
+            return f"l'heure « {item.get('heure')} » doit s'écrire « H:MM » ou « H:MM:SS » dans la journée"
+        h, m, s = heure
+        if heure == (0, 0, 0):
+            return "minuit n'est pas permis"
+        if (m * 60 + s) % PAS_DE_LA_PRECISION[precision]:
+            return f"l'heure « {item['heure']} » ne respecte pas la précision « {precision} »"
+        if item.get("moment", MOMENTS_DE_LA_JOURNEE[0]) not in MOMENTS_DE_LA_JOURNEE:
+            return f"le moment doit être l'un de : {', '.join(MOMENTS_DE_LA_JOURNEE)}"
+        if exercice["mode"] == "placer" and niveau == "CP" and h > DERNIERE_HEURE_A_PLACER_AU_CP:
+            return "au CP, l'heure à placer est inférieure ou égale à 12 h"
+        sur_le_cadran = (h % HEURES_SUR_LE_CADRAN, m, s)
+        if sur_le_cadran in deja_vues:
+            return "deux items montrent la même heure sur le cadran"
+        deja_vues.add(sur_le_cadran)
+    return None
 
 
 def ecoute(titre, items, langue="en-GB"):
