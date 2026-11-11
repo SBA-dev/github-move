@@ -88,6 +88,7 @@ function lieuAffiche(demande: Lieu, espaceParent: EtatDeLEspaceParent["type"], c
 
 export function Application() {
   const [defiEnCours, setDefiEnCours] = useState<Defi | GrandDefi | undefined>();
+  /** Tant que la séance affiche sa barre du haut (pas pendant le chargement, ni à l'écran de fin), elle tient lieu d'en-tête. */
   const [barreDuHautDeSeanceAffichee, setBarreDuHautDeSeanceAffichee] = useState(false);
   const { lieu: lieuDemande, retourPossible, viaRetour, aller, remplacer, revenir, revenirA } = useNavigation();
   const acces = useAccesALEspaceParent();
@@ -203,7 +204,6 @@ export function Application() {
     else remplacer(destination);
   };
   const revenirALAccueilDeLEnfant = () => revenirA("jeu");
-  /** Tant que la séance affiche sa barre du haut (pas pendant le chargement, ni à l'écran de fin), elle tient lieu d'en-tête. */
   const habillage = parent ? HABILLAGE_DU_PARENT : habillageDeLUnivers(univers.cle);
 
   return (

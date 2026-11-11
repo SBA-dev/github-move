@@ -73,7 +73,7 @@ function useEclat() {
 
 /** « Valider » reste monté, désactivé, le temps que son rebond se joue (350 ms au plus), puis il se retire de la barre d'action. */
 function useValiderMonte(desactive: boolean): boolean {
-  const [monte, setMonte] = useState(true);
+  const [monte, setMonte] = useState(!desactive);
   useEffect(() => {
     if (!desactive) {
       setMonte(true);

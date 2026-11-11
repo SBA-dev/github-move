@@ -76,6 +76,7 @@ function profondeurCourante(): number {
  * le geste la retire, appelle `surRetenu` au lieu de quitter l'écran, puis repose la garde si `active` le demande encore.
  * Quand `active` devient faux, la garde encore posée est retirée sans appeler `surRetenu`.
  * `lever` ôte la garde encore posée avant de faire `apres`.
+ * Si l'écran est quitté autrement que par Retour ou par la fin, la garde reste posée : aucune autre sortie n'existe aujourd'hui pendant les questions.
  */
 export function useGardeDuRetour(active: boolean, surRetenu: () => void): (apres: () => void) => void {
   const posee = useRef(false);
@@ -95,6 +96,7 @@ export function useGardeDuRetour(active: boolean, surRetenu: () => void): (apres
 
   const retirer = useCallback((apres: () => void) => {
     levee.current = true;
+    posee.current = false;
     const surLaGardeRetiree = () => {
       removeEventListener("popstate", surLaGardeRetiree);
       levee.current = false;
