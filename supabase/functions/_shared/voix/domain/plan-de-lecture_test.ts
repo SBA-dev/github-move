@@ -2,7 +2,7 @@ import { assertEquals } from "@std/assert";
 import { repertoireDeTest } from "../test_utils/repertoire-de-test.ts";
 import { empreinteFnv1a64 } from "./cle-de-phrase.ts";
 import type { LectureDemandee } from "./lecteur-a-voix-haute.ts";
-import { planDeLecture } from "./plan-de-lecture.ts";
+import { planDeLecture, suitesDeMemeSource } from "./plan-de-lecture.ts";
 
 const RYTHME = 0.9;
 const HAUTEUR = 1;
@@ -100,4 +100,17 @@ Deno.test("la clé d'une phrase est calculée sur son texte normalisé : apostro
     avecApostropheTypographique.map(({ cle, empreinte }) => ({ cle, empreinte })),
     avecApostropheDroite.map(({ cle, empreinte }) => ({ cle, empreinte })),
   );
+});
+
+Deno.test("un plan est découpé en suites de morceaux consécutifs de même source, dans l'ordre", () => {
+  const repertoire = repertoireDeTest({ [cle("Bravo !")]: { normale: "aaaa1111" } });
+  const plan = planDeLecture(lecture(["Un.", "Deux.", "Bravo !", "Trois."]), repertoire);
+
+  const suites = suitesDeMemeSource(plan);
+
+  assertEquals(suites.map((suite) => suite.map((morceau) => [morceau.source, morceau.rang])), [
+    [["voixDeLAppareil", 0], ["voixDeLAppareil", 1]],
+    [["enregistree", 2]],
+    [["voixDeLAppareil", 3]],
+  ]);
 });

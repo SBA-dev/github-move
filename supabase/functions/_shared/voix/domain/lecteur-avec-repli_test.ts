@@ -275,3 +275,15 @@ Deno.test("un mot annoncé pendant la lecture groupée de la voix de l'appareil 
 
   assertEquals(mots, [[2, 0]]);
 });
+
+Deno.test("arrêter pendant un groupe lu par la voix de l'appareil ne joue pas la phrase enregistrée suivante et termine la lecture", async () => {
+  const { lecteur, phrasesEnregistrees, synthese } = unLecteur({ repertoire: enregistrees(A_BIENTOT) });
+  synthese.lireSansTerminerAutomatiquement();
+
+  const lecture = lecteur.lire(lectureDe([BONJOUR, A_BIENTOT]));
+  await attendreUnTour();
+  lecteur.arreter();
+  await lecture;
+
+  assertEquals(phrasesEnregistrees.morceauxJoues.length, 0);
+});
