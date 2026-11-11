@@ -1,12 +1,12 @@
-import { type LecteurDePhrasesEnregistrees, type MorceauDeLecture, type SuiviDUnMorceau, VoixBloquee } from "@domain/voix";
+import {
+  adresseDuMp3,
+  type LecteurDePhrasesEnregistrees,
+  type MorceauDeLecture,
+  type SuiviDUnMorceau,
+  VoixBloquee,
+} from "@domain/voix";
 
 const INTERVALLE_DE_PROGRESSION_MS = 50;
-
-type MorceauEnregistre = Extract<MorceauDeLecture, { readonly source: "enregistree" }>;
-
-export function adresseDuMorceauEnregistre({ cle, empreinte, allure }: MorceauEnregistre): string {
-  return allure === "lente" ? `/voix/${cle}-lente-${empreinte}.mp3` : `/voix/${cle}-${empreinte}.mp3`;
-}
 
 export class LecteurDePhrasesEnregistreesDuNavigateur implements LecteurDePhrasesEnregistrees {
   private readonly audio = new Audio();
@@ -39,14 +39,18 @@ export class LecteurDePhrasesEnregistreesDuNavigateur implements LecteurDePhrase
       audio.addEventListener("loadedmetadata", demarrer);
       audio.addEventListener("ended", finir);
       audio.addEventListener("error", echouer);
-      audio.src = adresseDuMorceauEnregistre(morceau);
+      audio.src = adresseDuMp3(morceau.cle, morceau.empreinte, morceau.allure);
       audio.muted = false;
       audio.preservesPitch = true;
       // Le MP3 lent est déjà ralenti : le rythme ne s'applique qu'à la voix normale.
       audio.playbackRate = morceau.allure === "lente" ? 1 : morceau.rythme;
       audio.play().catch((erreur: unknown) => {
         if (erreur instanceof DOMException && erreur.name === "AbortError") return;
-        terminer(erreur instanceof DOMException && erreur.name === "NotAllowedError" ? new VoixBloquee() : erreurDeLecture(erreur));
+        terminer(
+          erreur instanceof DOMException && erreur.name === "NotAllowedError"
+            ? new VoixBloquee()
+            : erreurDeLecture(erreur),
+        );
       });
     });
   }

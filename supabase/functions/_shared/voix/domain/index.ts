@@ -38,6 +38,7 @@ export type { LecteurDEffetsSonores } from "./lecteur-d-effets-sonores.ts";
 export { cleDePhrase, empreinteFnv1a64, phrasesAvecCle } from "./cle-de-phrase.ts";
 export type { PhraseAvecCle } from "./cle-de-phrase.ts";
 export type { Allure } from "./allure.ts";
+export { adresseDuMp3 } from "./adresse-du-mp3.ts";
 export { planDeLecture } from "./plan-de-lecture.ts";
 export type { MorceauDeLecture } from "./plan-de-lecture.ts";
 export type { RepertoireDesPhrasesEnregistrees } from "./repertoire-des-phrases-enregistrees.ts";
