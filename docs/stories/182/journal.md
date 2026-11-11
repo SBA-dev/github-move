@@ -122,3 +122,11 @@ Branche : `feature/182-voix-mp3-piper`, partie de `main` (`aa75d97`). Base : `ma
 - 16:15 UTC : 182c mergée (PR #199, `ace7d41`) ; le responsable fait enchaîner sur 182d. Branche recréée depuis `main` (`ace7d41`).
 - 16:17 UTC : RED 30 (7a6b111) : garde de couverture élargie au CE2 (570 phrases sans MP3). Exemple CE2 du plan des leçons fabriquées exécutable (feea295).
 - 16:17–16:40 UTC : fabrication du CE2 (570 phrases, 579 MP3 avec 9 mots lents) : 2142 phrases, `public/voix` à 22 Mo (2586fea). Page d'écoute du CE2 publiée (question #182.23, non bloquante). Revue lancée, VERROU base demandé.
+- 16:45 UTC : revue de 182d : **APPROUVÉ**, sans non bloquant de code (1572 entrées existantes identiques, 570 nouvelles exactement celles du CE2).
+- 17:29–17:33 UTC : **VERROU base** accordé ; série courte de 182d, 1 worker : `telephone` `@issue-182` **34/34** (2,8 min), `tablette` `@niveau-ce2` **1/1**. LIBÈRE base. PR ouverte (ne ferme pas #182), VERROU merge demandé.
+
+## Mesures (182d)
+
+- Durée : de 16:15 à ≈ 17:35 UTC, soit ≈ 1 h 20, dont ≈ 23 min de fabrication et ≈ 50 min d'attente du verrou `base`.
+- TDD : 1 cycle. Revue : 1, APPROUVÉ. E2E : 1 série, verte du premier coup.
+- Fabrication : 570 phrases du CE2 (579 MP3), `public/voix/` à 22 Mo.
