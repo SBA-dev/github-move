@@ -194,13 +194,13 @@ Deno.test("sans voix française, une phrase sans enregistrement dans le texte pr
   const SUPER_TRAVAIL = "Super travail.";
   const REMPLACEMENT = "Super travail. Bravo !";
   const { lecteur, phrasesEnregistrees, synthese } = unLecteur({
-    repertoire: enregistrees(SUPER_TRAVAIL, REMPLACEMENT),
+    repertoire: enregistrees(SUPER_TRAVAIL, "Bravo !"),
     voixFrancaise: false,
   });
 
   await lecteur.lire(lectureDe([SUPER_TRAVAIL, "Bravo Léa !"], { texteEnregistreDeRemplacement: REMPLACEMENT }));
 
-  assertEquals(phrasesEnregistrees.morceauxJoues.map((m) => m.phrase), [REMPLACEMENT]);
+  assertEquals(phrasesEnregistrees.morceauxJoues.map((m) => m.phrase), [SUPER_TRAVAIL, "Bravo !"]);
   assertEquals(synthese.lectures.length, 0);
 });
 
