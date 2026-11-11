@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { FluenceEnCours, RecordDeFluence } from "@domain/apprentissage";
+import { ActionDeLExercice } from "../ActionDeLExercice.tsx";
 import { ClavierDeCristaux } from "../ClavierDeCristaux.tsx";
 import { CompteurDuRecord } from "./CompteurDuRecord.tsx";
 import { MarqueDuRecord } from "./MarqueDuRecord.tsx";
@@ -21,9 +22,11 @@ export function ExerciceDeFluence({ fluence, recordBattu, recordDeDepart, onDema
   if (!fluence.demarree && !fluence.finie) {
     return (
       <div className="fluence" data-testid="fluence" data-etat="accueil">
-        <button type="button" className="action-principale" data-testid="c-est-parti" onClick={onDemarrer}>
-          C'est parti !
-        </button>
+        <ActionDeLExercice>
+          <button type="button" className="action-principale" data-testid="c-est-parti" onClick={onDemarrer}>
+            C'est parti !
+          </button>
+        </ActionDeLExercice>
       </div>
     );
   }
