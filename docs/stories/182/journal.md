@@ -18,3 +18,6 @@ Branche : `feature/182-voix-mp3-piper`, partie de `main` (`aa75d97`). Base : `ma
 - 00:55 UTC : page d'écoute publiée (six phrases × trois modèles × 24/32 kbit/s). Question #182.19 (quel modèle) posée sur #182. ⛔ n°1 toujours en attente.
 - 00:47 UTC : ⛔ n°1 répondue par le PO (« Reco tout », annonce [Responsable] sur #193) : toutes les recommandations #182.1 à #182.18 retenues, budget 45 Mo, découpage 182a → 182e. #182.19 (modèle 1, 2 ou 3) et #182.8a (24/32 kbit/s) restent posées ; elles ne bloquent pas 182a (faux Piper).
 - 01:00 UTC : passage au TDD de 182a. Mise à jour des scénarios et du modèle avec les réponses (po-acceptance, domain-modeler), en parallèle du premier comportement.
+- 01:05–01:45 UTC : cycles TDD 1 à 6 verts, un commit test puis un commit feat chacun : clé de phrase TS (f840b1b), clé de phrase Python (f4fd778), plan de lecture (9892706), table de prononciation (4a81d7e), instants des mots (d22a0cd), fabrication reprenable avec faux Piper (f04c5ac). Deux pistes en parallèle (TS et Python) sur des fichiers séparés.
+- 01:10 UTC : question #182.20 posée (message « Ce navigateur ne sait pas lire à voix haute »), sans arrêt du TDD.
+- 01:45 UTC : RED 7 (`LecteurAvecRepli`) et RED 9 (`textesDitsDansLaLecon`) lancés.
