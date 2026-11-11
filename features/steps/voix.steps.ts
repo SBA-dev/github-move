@@ -3,6 +3,7 @@ import type { Famille } from "../support/famille.ts";
 export { terminerLaLecture } from "../support/lecture-vocale.ts";
 import { terminerLaLecture } from "../support/lecture-vocale.ts";
 import { avecLesReglagesPrevus } from "../support/reglages-prevus.ts";
+import { messageDeVoixIndisponible, repertoireDeTest } from "../support/voix-enregistree.ts";
 import {
   bulle,
   commencerLaSeanceComplete,
@@ -329,22 +330,31 @@ function leconDeLaConsigne(consigne: string) {
 // Le nombre de lectures une fois la consigne lue.
 const lecturesApresLaConsigne = new WeakMap<Page, number>();
 
-export function sansVoix(page: Page): boolean {
-  const { absent, muet } = scenario(page);
-  return absent || muet;
+function aUneVoixFrancaise(etat: Scenario): boolean {
+  return etat.voix.some(({ langue }) => langue.toLowerCase().startsWith("fr"));
 }
 
-async function ouvrirLaPageDeLaLeconDeTest(page: Page, etat: Scenario, consigne: string) {
+/** Story #182 : sans voix française ni phrase enregistrée dans le répertoire de test, rien ne peut être lu à voix haute. */
+function sansVoixPour(page: Page, etat: Scenario): boolean {
+  const sansPhraseEnregistree = repertoireDeTest(page)?.phrases.size === 0;
+  return etat.absent || etat.muet || (sansPhraseEnregistree && !aUneVoixFrancaise(etat));
+}
+
+export function sansVoix(page: Page): boolean {
+  return sansVoixPour(page, scenario(page));
+}
+
+export async function ouvrirLaPageDeLaLeconDeTest(page: Page, etat: Scenario, consigne: string) {
   await preparerLaPage(page, etat);
   await injecter(page, leconDeLaConsigne(consigne));
   await interceptertLaBibliotheque(page);
   await ouvrirLaPageDeLaLecon(page, TITRE_DE_LA_LECON_DE_TEST);
 }
 
-async function commencerLaSeanceDeTest(page: Page, etat: Scenario) {
+export async function commencerLaSeanceDeTest(page: Page, etat: Scenario) {
   const avant = (await journal(page)).lots;
   await commencerLaSeanceComplete(page);
-  if (!etat.absent && !etat.muet) await expect.poll(async () => (await journal(page)).lots).toBeGreaterThan(avant);
+  if (!sansVoixPour(page, etat)) await expect.poll(async () => (await journal(page)).lots).toBeGreaterThan(avant);
   lecturesApresLaConsigne.set(page, (await journal(page)).lots);
 }
 
@@ -354,6 +364,8 @@ export async function ouvrir(page: Page) {
   if (etat.ouvert) return;
   etat.ouvert = true;
   await ouvrirLaPageDeLaLeconDeTest(page, etat, etat.consigne.texte);
+  // Story #182 : le message de voix indisponible est déjà à l'écran quand la séance commence.
+  if (repertoireDeTest(page)?.messageDeVoixIndisponibleAVoirAvant) await expect(messageDeVoixIndisponible(page)).toHaveCount(1);
   await commencerLaSeanceDeTest(page, etat);
 }
 
@@ -412,7 +424,7 @@ export function normaliser(texte: string): string {
   return texte.replace(/\s+/g, " ").trim();
 }
 
-function messageDeVoixBloquee(page: Page) {
+export function messageDeVoixBloquee(page: Page) {
   return page.getByRole("status").filter({ hasText: "est bloquée par ce navigateur" });
 }
 
@@ -533,7 +545,7 @@ When(/^la consigne suivante s'affiche$/, async ({ page }) => {
   const etat = scenario(page);
   const avant = (await journal(page)).speaks;
   await commencerLaSeanceDeTest(page, etat);
-  await expect.poll(async () => (await journal(page)).speaks).toBeGreaterThan(avant);
+  if (!sansVoix(page)) await expect.poll(async () => (await journal(page)).speaks).toBeGreaterThan(avant);
   await laisserPasserLeDelaiDeLecture(page);
 });
 
