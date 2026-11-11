@@ -18,11 +18,16 @@ export { reglerPhrases } from "./reglage-de-phrase.ts";
 export type { ReglageDePhrase } from "./reglage-de-phrase.ts";
 export { AccueilDeLEcran } from "./accueil-de-l-ecran.ts";
 export { LectureAVoixHaute } from "./lecture-a-voix-haute.ts";
-export type { DependancesDeLectureAVoixHaute, EtatDuSon, ParoleEntendue } from "./lecture-a-voix-haute.ts";
+export type {
+  CauseDeLectureEmpechee,
+  DependancesDeLectureAVoixHaute,
+  EtatDuSon,
+  ParoleEntendue,
+} from "./lecture-a-voix-haute.ts";
 export type { LecteurAVoixHaute, LectureDemandee } from "./lecteur-a-voix-haute.ts";
 export type { ChoixDeVoixDeLAppareil } from "./choix-de-voix-de-l-appareil.ts";
 export type { VoixDeLAppareil } from "./voix-de-l-appareil.ts";
-export { LectureImpossible, VoixBloquee } from "./erreurs.ts";
+export { LectureImpossible, VoixBloquee, VoixIndisponible } from "./erreurs.ts";
 export { motsDeLaConsigne } from "./mots-de-la-consigne.ts";
 export type { SegmentDeConsigne } from "./mots-de-la-consigne.ts";
 export { phrasesDesMotsAffiches } from "./phrases-des-mots-affiches.ts";
@@ -30,3 +35,15 @@ export { syllabesDuMot, syllabesDuTexte } from "./syllabes.ts";
 export type { SegmentSyllabe } from "./syllabes.ts";
 export type { EffetSonore } from "./effet-sonore.ts";
 export type { LecteurDEffetsSonores } from "./lecteur-d-effets-sonores.ts";
+export { cleDePhrase, empreinteFnv1a64, phrasesAvecCle } from "./cle-de-phrase.ts";
+export type { PhraseAvecCle } from "./cle-de-phrase.ts";
+export type { Allure } from "./allure.ts";
+export { adresseDuMp3 } from "./adresse-du-mp3.ts";
+export { planDeLecture } from "./plan-de-lecture.ts";
+export type { MorceauDeLecture } from "./plan-de-lecture.ts";
+export type { RepertoireDesPhrasesEnregistrees } from "./repertoire-des-phrases-enregistrees.ts";
+export { instantsDesMots } from "./instants-des-mots.ts";
+export type { InstantDeMot } from "./instants-des-mots.ts";
+export { LecteurAvecRepli } from "./lecteur-avec-repli.ts";
+export type { LecteurDePhrasesEnregistrees, SuiviDUnMorceau } from "./lecteur-de-phrases-enregistrees.ts";
+export { aUneVoixFrancaise, estUneLangueFrancaise } from "./langue-francaise.ts";

@@ -5,7 +5,7 @@ import {
   indicationDuGeste,
   Reponse,
   type Seance,
-  texteALireDeLEtape,
+  texteDitDeLEtape,
 } from "@domain/apprentissage";
 import type { EtapeDeLecon, Lecon } from "@domain/catalogue";
 import type { EffetSonore } from "@domain/voix";
@@ -40,7 +40,7 @@ const PAUSE_ENTRE_DEUX_PAROLES_MS = 400;
 const PAUSE_AVEC_MOUVEMENTS_REDUITS_MS = 150;
 
 function paroleDeLEtape(etape: EtapeDeLecon): ParoleADire {
-  return { texte: etape.texte, aLire: texteALireDeLEtape(etape).join(" "), nature: "etape" };
+  return { texte: etape.texte, aLire: texteDitDeLEtape(etape), nature: "etape" };
 }
 
 /**

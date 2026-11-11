@@ -361,7 +361,7 @@ function SeanceEnCours(
                       rangDuMotDuTexte={deroulement.rangDuMotDuTexte}
                       lectureDuTexte={deroulement.lectureDuTexte}
                       voixCoupee={voixCoupee}
-                      sonImpossible={voix.son === "muet" || !voix.syntheseVocalePresente}
+                      sonImpossible={voix.son === "muet" || !voix.voixPresente}
                       sonCoupe={voix.son === "muet"}
                       onChoisir={(texte) => void deroulement.repondre(texte)}
                       onRelireLaQuestion={() => void deroulement.relireLaQuestion()}

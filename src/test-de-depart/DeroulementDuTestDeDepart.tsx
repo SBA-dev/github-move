@@ -69,7 +69,7 @@ export function DeroulementDuTestDeDepart(
               choixVisibles={deroulement.choixVisiblesPour === question}
               reussie={figee !== undefined}
               bulleEclatee={deroulement.bulleEclatee}
-              sonImpossible={voix.son === "muet" || !voix.syntheseVocalePresente}
+              sonImpossible={voix.son === "muet" || !voix.voixPresente}
               sonCoupe={voix.son === "muet"}
               onChoisir={(texte) => void deroulement.repondreParUnChoix(texte)}
               onRelireLaQuestion={() => void deroulement.relireLaQuestion()}

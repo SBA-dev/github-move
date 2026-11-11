@@ -6,11 +6,11 @@ import { defineBddConfig } from "playwright-bdd";
 // qui permet de « publier » une nouvelle version ou une nouvelle leçon.
 // Le scénario @acces dépend de la déconnexion (#5) : il est branché avec #5.
 const testDir = defineBddConfig({
-  features: ["features/8-*.feature", "features/45-*.feature", "features/97-*.feature"],
+  features: ["features/8-*.feature", "features/45-*.feature", "features/97-*.feature", "features/182-*.feature"],
   steps: "features/steps/**/*.ts",
   outputDir: ".features-gen-pwa",
-  // #8 : tous les scénarios sauf @acces. #45 et #97 : seulement ceux qui ont besoin du service worker (@pwa).
-  tags: "(not @issue-45 and not @issue-97 and not @acces) or ((@issue-45 or @issue-97) and @pwa and not @production)",
+  // #8 : tous les scénarios sauf @acces. #45, #97 et #182 : seulement ceux qui ont besoin du service worker (@pwa).
+  tags: "(not @issue-45 and not @issue-97 and not @issue-182 and not @acces) or ((@issue-45 or @issue-97 or @issue-182) and @pwa and not @production)",
 });
 
 export default defineConfig({

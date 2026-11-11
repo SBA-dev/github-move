@@ -11,3 +11,10 @@ export class LectureImpossible extends Error {
     this.name = "LectureImpossible";
   }
 }
+
+export class VoixIndisponible extends Error {
+  constructor() {
+    super("Cet appareil n'a pas de voix française et la phrase n'est pas enregistrée.");
+    this.name = "VoixIndisponible";
+  }
+}

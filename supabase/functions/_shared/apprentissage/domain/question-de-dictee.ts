@@ -14,7 +14,7 @@ import type { AideDonnee } from "./question-jouee.ts";
 import type { QuestionSuivie } from "./question-suivie.ts";
 import { type MotEcrit, Reponse, type ReponseDonnee, type ResultatDeReponse } from "./reponse.ts";
 
-const AIDE_APRES_UNE_ERREUR = "Regarde les lettres en rouge et écoute encore.";
+export const AIDE_APRES_UNE_ERREUR = "Regarde les lettres en rouge et écoute encore.";
 
 export type CaseDeQuestion = Readonly<{ genre: "aEcrire"; lettre?: string; montree?: true }> | CaractereDejaEcrit;
 

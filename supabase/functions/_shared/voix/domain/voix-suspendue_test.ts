@@ -22,8 +22,8 @@ function uneLecture(options: { muet?: boolean } = {}) {
     hasard: hasardFixe(0.5),
     caractereDuPersonnageGuide: () => CARACTERE_NOISETTE,
     etatInitial: options.muet ? "muet" : "son",
-    onVoixBloquee: () => {},
-    onFinDeLaVoixBloquee: () => {},
+    onLectureEmpechee: () => {},
+    onFinDeLectureEmpechee: () => {},
   });
   return { lecture, lecteur };
 }

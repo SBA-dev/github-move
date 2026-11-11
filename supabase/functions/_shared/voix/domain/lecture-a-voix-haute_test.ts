@@ -17,6 +17,7 @@ const VOIX_ANGLAISE: VoixDisponible = { nom: "Daniel", langue: "en-GB" };
 function uneLecture(options: { muet?: boolean } = {}) {
   const lecteur = new LecteurEnMemoire();
   const signalementsDeVoixBloquee: number[] = [];
+  const causesSignalees: string[] = [];
   const finsDeVoixBloquee: number[] = [];
   const lecture = new LectureAVoixHaute({
     lecteur,
@@ -26,10 +27,13 @@ function uneLecture(options: { muet?: boolean } = {}) {
     hasard: hasardFixe(0.5),
     caractereDuPersonnageGuide: () => CARACTERE_NOISETTE,
     etatInitial: options.muet ? "muet" : "son",
-    onVoixBloquee: () => signalementsDeVoixBloquee.push(1),
-    onFinDeLaVoixBloquee: () => finsDeVoixBloquee.push(1),
+    onLectureEmpechee: (cause) => {
+      causesSignalees.push(cause);
+      if (cause === "voixBloquee") signalementsDeVoixBloquee.push(1);
+    },
+    onFinDeLectureEmpechee: () => finsDeVoixBloquee.push(1),
   });
-  return { lecture, lecteur, signalementsDeVoixBloquee, finsDeVoixBloquee };
+  return { lecture, lecteur, signalementsDeVoixBloquee, causesSignalees, finsDeVoixBloquee };
 }
 
 Deno.test("le personnage guide lit la consigne nettoyée, phrase par phrase, avec sa voix", async () => {
@@ -241,6 +245,22 @@ Deno.test("le personnage guide lit plus lentement, à 0,65 fois son rythme norma
   assertEquals(lecteur.lectures.map((demandee) => demandee.phrases.map((phrase) => phrase.rythme)), [[0.65]]);
 });
 
+Deno.test("une lecture lente demande l'allure lente, pour que l'enregistrement lent soit choisi", async () => {
+  const { lecture, lecteur } = uneLecture();
+
+  await lecture.lire("chat", { lent: true });
+
+  assertEquals(lecteur.lectures.map((demandee) => demandee.allure), ["lente"]);
+});
+
+Deno.test("une lecture sans lenteur ne demande pas l'allure lente", async () => {
+  const { lecture, lecteur } = uneLecture();
+
+  await lecture.lire("chat");
+
+  assertEquals(lecteur.lectures.map((demandee) => demandee.allure), [undefined]);
+});
+
 Deno.test("une lecture menée jusqu'au bout est une parole entendue", async () => {
   const { lecture } = uneLecture();
 
@@ -331,4 +351,72 @@ Deno.test("un nouveau blocage après la fin de la voix bloquée est signalé de 
   await lecture.lire("Écoute bien.");
 
   assertEquals(signalementsDeVoixBloquee.length, 2);
+});
+
+Deno.test("une voix indisponible est signalée avec sa cause et la parole n'est pas entendue", async () => {
+  const { lecture, lecteur, causesSignalees } = uneLecture();
+  lecteur.rendreLaVoixIndisponible();
+
+  const parole = await lecture.lire("Écoute bien.");
+
+  assertEquals(causesSignalees, ["voixIndisponible"]);
+  assertEquals(parole, { entendue: false });
+});
+
+Deno.test("une voix indisponible est signalée une seule fois tant que la fin n'est pas venue", async () => {
+  const { lecture, lecteur, causesSignalees } = uneLecture();
+  lecteur.rendreLaVoixIndisponible();
+
+  await lecture.lire("Écoute bien.");
+  await lecture.lire("Écoute bien.");
+
+  assertEquals(causesSignalees, ["voixIndisponible"]);
+});
+
+Deno.test("une parole entendue après une voix indisponible signale la fin de la lecture empêchée", async () => {
+  const { lecture, lecteur, finsDeVoixBloquee } = uneLecture();
+  lecteur.rendreLaVoixIndisponible();
+  await lecture.lire("Écoute bien.");
+  lecteur.debloquerLaVoix();
+
+  await lecture.lire("Écoute bien.");
+
+  assertEquals(finsDeVoixBloquee.length, 1);
+});
+
+Deno.test("une voix bloquée après une voix indisponible est signalée avec sa nouvelle cause", async () => {
+  const { lecture, lecteur, causesSignalees } = uneLecture();
+  lecteur.rendreLaVoixIndisponible();
+  await lecture.lire("Écoute bien.");
+  lecteur.bloquerLaVoix();
+
+  await lecture.lire("Écoute bien.");
+
+  assertEquals(causesSignalees, ["voixIndisponible", "voixBloquee"]);
+});
+
+Deno.test("passer en Muet après une voix indisponible signale la fin de la lecture empêchée", async () => {
+  const { lecture, lecteur, finsDeVoixBloquee } = uneLecture();
+  lecteur.rendreLaVoixIndisponible();
+  await lecture.lire("Écoute bien.");
+
+  lecture.passerEnMuet();
+
+  assertEquals(finsDeVoixBloquee.length, 1);
+});
+
+Deno.test("le texte enregistré de remplacement est transmis tel quel à la lecture demandée", async () => {
+  const { lecture, lecteur } = uneLecture();
+
+  await lecture.lire("Bravo Léa, tu as réussi.", { texteEnregistreDeRemplacement: "Bravo, tu as réussi." });
+
+  assertEquals(lecteur.lectures[0]?.texteEnregistreDeRemplacement, "Bravo, tu as réussi.");
+});
+
+Deno.test("sans texte enregistré de remplacement, la lecture demandée n'a pas ce champ", async () => {
+  const { lecture, lecteur } = uneLecture();
+
+  await lecture.lire("Bravo Léa, tu as réussi.");
+
+  assertEquals(lecteur.lectures[0] && "texteEnregistreDeRemplacement" in lecteur.lectures[0], false);
 });
