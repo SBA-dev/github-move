@@ -36,3 +36,5 @@ export type { Allure } from "./allure.ts";
 export { planDeLecture } from "./plan-de-lecture.ts";
 export type { MorceauDeLecture } from "./plan-de-lecture.ts";
 export type { RepertoireDesPhrasesEnregistrees } from "./repertoire-des-phrases-enregistrees.ts";
+export { instantsDesMots } from "./instants-des-mots.ts";
+export type { InstantDeMot } from "./instants-des-mots.ts";
