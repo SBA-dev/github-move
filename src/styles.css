@@ -1450,11 +1450,10 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
-.seance-de-lecon .guide-et-parole { position: relative; flex-wrap: nowrap; gap: 8px; width: 100%; }
+.seance-de-lecon .guide-et-parole { position: relative; flex-wrap: nowrap; gap: 8px; width: 100%; min-height: 86px; }
 /* Quand il réagit, le personnage guide fait 100 px de large (assez pour la scène de réponse fausse), sur tous les écrans ; la zone lui est réservée d'avance
    à 86 px de haut (il déborde un peu sur la barre du haut et sur l'exercice) pour que l'exercice ne saute pas quand il apparaît ou disparaît :
    un enfant qui fait glisser un chiffre ne voit jamais la maison bouger sous son doigt. */
-.seance-de-lecon .guide-et-parole { min-height: 86px; }
 .seance-de-lecon .guide-et-parole .personnage-guide { width: 100px; flex: none; margin-block: -20px; pointer-events: none; }
 /* Dans la boîte à jetons le dessin reste à 80 px : sous le seuil des bulles écrites de la scène de réponse fausse (163.21). */
 .seance-de-lecon:has(.boite-a-jetons) .guide-et-parole .personnage-guide { width: 80px; margin-block: -7px; }
