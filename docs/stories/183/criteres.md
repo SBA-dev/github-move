@@ -1,5 +1,7 @@
 # Story #183 : critères d'acceptance
 
+> **Validé par le PO le 2026-11-11 (« Reco tout »)**, annonce [Responsable] sur #193 : toutes les recommandations des questions 183.1 à 183.16 sont retenues (section 3, « Décisions »). Les tags `@a-valider` sont retirés et les scénarios existants de la section 2.a sont réécrits.
+
 Scénarios : `features/183-ecran-de-seance-barres.feature` (tags `@issue-183 @wip`).
 Modèle du domaine : `docs/stories/183/domain-model.md`.
 
@@ -7,40 +9,46 @@ Modèle du domaine : `docs/stories/183/domain-model.md`.
 
 En tant qu'**enfant**, pendant une leçon, je veux voir tout de suite l'exercice et le bouton pour répondre, sans faire défiler l'écran, **afin de rester concentré sur ce que j'apprends**.
 
-Périmètre de ce cadrage : la **séance de leçon** (séance complète et séance d'un exercice), sous réserve de la question 183.1.
+Périmètre : la **séance de leçon** (séance complète et séance d'un exercice) (réponse 183.1).
 
 ## 1. Règles (example mapping) et scénarios
 
-7 règles, 23 scénarios (31 exécutions avec les exemples). Le tag `@a-valider` marque un scénario écrit selon une recommandation : la question liée est indiquée.
+7 règles, 23 scénarios (31 exécutions avec les exemples). La colonne « Décisions » renvoie aux réponses du PO (section 3).
 
-| Règle | Scénarios | Questions |
+| Règle | Scénarios | Décisions |
 |---|---|---|
-| **R1.** Pendant la séance, une seule barre du haut remplace l'en-tête de l'application : Retour, nom de la leçon, son, et l'avancement de la séance (décisions 1 et 2) | Pendant la séance, Léa voit la barre du haut et plus l'en-tête de l'application · `<moment>`, l'avancement de la séance se lit « `<compteur>` » dans la barre du haut (0 / 15, 1 / 15) · Une question réussie fait avancer la barre de progression, avec un éclat sur le compteur `@a-valider` | 183.7, 183.9 |
-| **R2.** Avant la première réponse de la séance, Retour ramène à la page de la leçon ; à partir d'elle, Retour ouvre la pause ; le geste retour fait de même (décisions 3 et 4) | Avant la première réponse, `<geste>` `<moment>` ramène à la page de la leçon (3 exemples) · Après une première réponse `<réponse>`, `<geste>` ouvre la pause (3 exemples) · « Je ne sais pas » compte comme la première réponse : Retour ouvre la pause `@a-valider` · Dans une fluence, le chrono démarré sans aucune réponse ne suffit pas : Retour ramène à la page de la leçon `@a-valider` | 183.4, 183.5 |
-| **R3.** La pause attend l'enfant sans rien lui reprocher : il continue la leçon là où il en était, ou retourne à la page de la leçon (décision 3) | `<geste>` ferme la pause : Léa retrouve sa question là où elle en était (« Je continue la leçon », Échap) · « Retour à la leçon » ramène à la page de la leçon et coupe la voix, comme quitter la séance aujourd'hui · Ouvrir la pause arrête la voix du personnage guide `@a-valider` | 183.15 |
-| **R4.** Pendant une question, la consigne prend toute la largeur de la bulle, sans le personnage guide ; il n'apparaît que quand il réagit, puis la consigne revient (décision 5) | Pendant une question, la consigne s'affiche seule dans la bulle, sans le personnage guide · À une réponse juste, Noisette apparaît pour féliciter Léa, puis la consigne revient avec la question suivante · À la première réponse fausse, Coach Léo joue sa scène à la place de la bulle, puis la consigne revient et la question reste posée · À une réponse fausse suivante, Noisette apparaît pour encourager Léa, puis la consigne revient `@a-valider` | 183.11, 183.12 |
-| **R5.** Un seul bouton « Réécouter » : pendant une question, il relit la consigne ; pendant que le personnage guide réagit, il redit sa phrase (décision 6) | Pendant une question, « Réécouter » relit la consigne, et « Relire la consigne » n'est plus un bouton à part · Dans un exercice bulles, « Réécouter » relit la consigne, puis la question `@a-valider` · Pendant que le personnage guide réagit à une réponse, « Réécouter » redit sa phrase `@a-valider` | 183.6, 183.13, 183.14 |
-| **R6.** La barre d'action, en bas, porte le bouton principal toujours au même endroit et « Je ne sais pas » à côté ; elle n'apparaît que s'il y a une action (décision 7) | Dans un calcul au clavier de cristaux, « Valider » et « Je ne sais pas » sont dans la barre d'action `@a-valider` · Pendant les étapes de leçon, « Continuer » est le bouton principal de la barre d'action · Dans un exercice bulles, l'enfant répond en touchant une bulle : la barre d'action ne porte que « Je ne sais pas » `@a-valider` | 183.3, 183.16 |
+| **R1.** Pendant la séance, une seule barre du haut remplace l'en-tête de l'application : Retour, nom de la leçon, son, et l'avancement de la séance (décisions 1 et 2) | Pendant la séance, Léa voit la barre du haut et plus l'en-tête de l'application · `<moment>`, l'avancement de la séance se lit « `<compteur>` » dans la barre du haut (0 / 15, 1 / 15) · Une question réussie fait avancer la barre de progression, avec un éclat sur le compteur | 183.7, 183.9 |
+| **R2.** Avant la première réponse de la séance, Retour ramène à la page de la leçon ; à partir d'elle, Retour ouvre la pause ; le geste retour fait de même (décisions 3 et 4) | Avant la première réponse, `<geste>` `<moment>` ramène à la page de la leçon (3 exemples) · Après une première réponse `<réponse>`, `<geste>` ouvre la pause (3 exemples) · « Je ne sais pas » compte comme la première réponse : Retour ouvre la pause · Dans une fluence, le chrono démarré sans aucune réponse ne suffit pas : Retour ramène à la page de la leçon | 183.4, 183.5 |
+| **R3.** La pause attend l'enfant sans rien lui reprocher : il continue la leçon là où il en était, ou retourne à la page de la leçon (décision 3) | `<geste>` ferme la pause : Léa retrouve sa question là où elle en était (« Je continue la leçon », Échap) · « Retour à la leçon » ramène à la page de la leçon et coupe la voix, comme quitter la séance aujourd'hui · Ouvrir la pause arrête la voix du personnage guide | 183.15 |
+| **R4.** Pendant une question, la consigne prend toute la largeur de la bulle, sans le personnage guide ; il n'apparaît que quand il réagit, puis la consigne revient (décision 5) | Pendant une question, la consigne s'affiche seule dans la bulle, sans le personnage guide · À une réponse juste, Noisette apparaît pour féliciter Léa, puis la consigne revient avec la question suivante · À la première réponse fausse, Coach Léo joue sa scène à la place de la bulle, puis la consigne revient et la question reste posée · À une réponse fausse suivante, Noisette apparaît pour encourager Léa, puis la consigne revient | 183.11, 183.12 |
+| **R5.** Un seul bouton « Réécouter » : pendant une question, il relit la consigne ; pendant que le personnage guide réagit, il redit sa phrase (décision 6) | Pendant une question, « Réécouter » relit la consigne, et « Relire la consigne » n'est plus un bouton à part · Dans un exercice bulles, « Réécouter » relit la consigne, puis la question · Pendant que le personnage guide réagit à une réponse, « Réécouter » redit sa phrase | 183.6, 183.13, 183.14 |
+| **R6.** La barre d'action, en bas, porte le bouton principal toujours au même endroit et « Je ne sais pas » à côté ; elle n'apparaît que s'il y a une action (décision 7) | Dans un calcul au clavier de cristaux, « Valider » et « Je ne sais pas » sont dans la barre d'action · Pendant les étapes de leçon, « Continuer » est le bouton principal de la barre d'action · Dans un exercice bulles, l'enfant répond en touchant une bulle : la barre d'action ne porte que « Je ne sais pas » | 183.3, 183.16 |
 | **R7.** L'écran de séance s'adapte à l'enfant : petit écran sans défilement, mouvements réduits, mode dys, cibles assez grandes (règles connues de l'issue) | Sur un téléphone de 360 × 740 px, `<exercice>` commence au plus à 200 px du haut, sans défilement de côté (bulles, calcul au clavier) · Avec les mouvements réduits, `<ce qui change>` sans mouvement (avancement, pause) · En mode dys, sur 360 px, le nom de leçon le plus long tient sur deux lignes, sans mot coupé | 183.2 |
 
 Exemples retenus : leçon « Les sons ou, on, an » (15 questions, exercice bulles « Quel son entends-tu ? », exercice classer « Les maisons des sons ») ; « Le mot en morceaux » de « Les syllabes » (#79) ; la question de test « Combien font 3 + 4 ? » (#163) ; le calcul « 12 − 5 » de Tom en CE1 (#20) ; la fluence « Calcul rapide : les doubles » ; le nom de leçon le plus long de la bibliothèque, « Lire une œuvre : Vingt mille lieues sous les mers » (CM2, 49 caractères).
 
-Aucun scénario `@acces` : la story ne lit ni n'enregistre aucune donnée nouvelle (rien côté serveur, aucune policy RLS touchée). Le parent ne reçoit aucun nouvel accès ; la façon dont il rejoint l'Espace parent depuis une séance est la question 183.7.
+Aucun scénario `@acces` : la story ne lit ni n'enregistre aucune donnée nouvelle (rien côté serveur, aucune policy RLS touchée). Le parent ne reçoit aucun nouvel accès ; il rejoint l'Espace parent par Retour, puis la page de la leçon (réponse 183.7).
 
 ### Hors périmètre
 
 - Le profil compact et le dock avec icônes hors séance (issue suivante, d'après l'issue).
-- Le test de départ, la séance de révision et la séance de défi (question 183.1).
-- La fin de la séance : étoiles, célébration de #106, avec l'en-tête et le personnage guide actuels (question 183.8).
+- Le test de départ, la séance de révision et la séance de défi (réponse 183.1 : story suivante).
+- La fin de la séance : étoiles, célébration de #106, avec l'en-tête et le personnage guide actuels (réponse 183.8).
 - Aucun changement de règle d'apprentissage : la pause ne met pas la séance en pause dans le domaine ; « Retour à la leçon » perd la séance en cours, comme aujourd'hui (#16, « Une séance quittée recommence du début »).
 
 ## 2. Scénarios existants touchés
 
-Source : inventaire par lecture des steps (aucun test lancé). Tous ces scénarios restent dans leurs fichiers : **rien n'est modifié dans ce passage**, ce sont des propositions.
+Source : inventaire par lecture des steps (aucun test lancé). Tous ces scénarios restent dans leurs fichiers. Les réécritures de la section 2.a sont **faites** (2026-11-11, après validation) ; chaque scénario réécrit porte en plus le tag `@issue-183`.
 
-### 2.a À réécrire (le texte Gherkin change) : à valider par le PO
+### 2.a Réécrits (le texte Gherkin change) : validés par le PO
 
-8 exécutions sûres, plus 12 qui dépendent d'une question (indiquée).
+20 exécutions réécrites (183.3 A, 183.7, 183.9 B et 183.11 A retenues). Écarts avec les propositions ci-dessous :
+- #96:144 et #102:269 : seul l'exemple de la séance est retiré ; ces deux Plans ne reçoivent pas `@issue-183` (rien de nouveau à vérifier). Le scénario ajouté à #102 le reçoit ;
+- #102:332 : même réécriture que #96:214, avec les deux étapes « Léa joue la séance complète… » et « Léa en est à la question… » ;
+- #97:120 : l'étape « Mais aucun point ne vole jusqu'au récipient » devient « Mais la barre de progression n'avance pas » ; le titre dit « sans éclat sur le compteur » ;
+- #97 : la description « Mots employés » remplace « un point vole jusqu'au récipient » par « la barre de progression avance, avec un éclat sur le compteur » ;
+- #163:84 et #163:231 gardent « Coach Léo n'apparaît qu'une fois, à sa place, la bulle gardant ses paroles » (hors du périmètre validé) : à revoir en phase E2E, le personnage guide prenant désormais la place de la bulle (183.11 A) ;
+- #128:195 et #128:426 relus : texte inchangé.
 
 **Sûres (liées aux décisions 1 et 5, et à la question 183.7 pour #73)**
 
@@ -167,9 +175,30 @@ Le repère `recipient` (avec `data-questions-reussies` et `data-total`) sert à 
 
 - **#96:359** `@visuel`, capture `exercice-en-seance` : le texte ne change pas, l'image change à coup sûr. Elle est regénérée dans un commit dédié, après validation de la nouvelle image par le PO (règle de #96, réponse 96.9). La capture `fin-de-la-seance` ne change pas si la question 183.8 suit la recommandation.
 
-## 3. Questions ouvertes
+## 3. Décisions
 
-Chaque question est écrite pour être lue sans autre contexte. « Reco » donne la recommandation de l'équipe ; les scénarios `@a-valider` la suivent.
+Réponse du PO du 2026-11-11 (« Reco tout ») : la recommandation de chaque question est retenue. Les questions d'origine suivent le tableau.
+
+| Question | Réponse du PO |
+|---|---|
+| 183.1 | Story suivante : cette story ne traite que la séance de leçon |
+| 183.2 | Non : même présentation partout, tablette en paysage comprise |
+| 183.3 | A : « Valider », « Continuer » et « Je ne sais pas » dans la barre d'action pour tous les types |
+| 183.4 | Oui : « Je ne sais pas » compte comme la première réponse de la séance |
+| 183.5 | Non : le chrono démarré sans réponse ne suffit pas, Retour ramène à la page de la leçon |
+| 183.6 | Oui : en dictée et memoriser, « Réécouter » garde son comportement |
+| 183.7 | Par Retour, puis la page de la leçon (4 exécutions de #73 réécrites) |
+| 183.8 | Fin de la séance hors périmètre |
+| 183.9 | B : la barre de progression avance avec un éclat sur le compteur (7 exécutions de #97 et #163 réécrites) |
+| 183.10 | Capture `exercice-en-seance` regénérée dans un commit dédié, après validation de l'image par le PO |
+| 183.11 | A : le personnage guide prend la place de la bulle pendant sa réaction, la consigne revient ensuite (4 exécutions de #79 et #163 réécrites, définition « Consigne affichée » mise à jour) |
+| 183.12 | Oui : il apparaît chaque fois qu'il dit autre chose que la consigne ou la question |
+| 183.13 | La consigne, puis la question |
+| 183.14 | Tant que le personnage guide est montré |
+| 183.15 | La voix s'arrête à l'ouverture de la pause ; rien n'est relu automatiquement |
+| 183.16 | La barre d'action n'est absente que quand il n'y a aucun bouton |
+
+### Questions d'origine (recommandations retenues)
 
 1. **183.1 Test de départ, séance de révision et séance de défi.** La nouvelle présentation (barre du haut, pause, barre d'action, personnage guide qui n'apparaît que quand il réagit) s'applique-t-elle aussi à ces trois écrans dans cette story, ou dans une story suivante ?
    *Reco : story suivante.* Cette story ne traite que la séance de leçon. Le récipient de progression, les exercices et « Je ne sais pas » sont des pièces partagées avec ces trois écrans : on les modifie de façon que ces écrans restent exactement comme aujourd'hui. La règle de la première réponse (183.4) s'appliquera à chacun, par la même lecture du domaine.
@@ -228,4 +257,4 @@ Chaque question est écrite pour être lue sans autre contexte. « Reco » donne
 
 ## Termes
 
-Aucun terme nouveau en dehors de ceux déjà proposés au glossaire par le modèle du domaine (« Première réponse de la séance », « Pause », complément « Réécouter », tous à valider). « Barre du haut », « barre d'action », « barre de progression », « compteur », « pastille », « bulle » et « éclat » restent des mots d'interface, hors glossaire, comme « récipient ».
+Aucun terme nouveau en dehors de ceux proposés au glossaire par le modèle du domaine (« Première réponse de la séance », « Pause », complément « Réécouter »), validés le 2026-11-11. « Barre du haut », « barre d'action », « barre de progression », « compteur », « pastille », « bulle » et « éclat » restent des mots d'interface, hors glossaire, comme « récipient ».
