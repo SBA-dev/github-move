@@ -19,6 +19,7 @@ import { TexteEnSyllabes } from "../reglages/index.ts";
 import { ContexteDuRetour, EtincellesDuTexteComplet } from "../retours/index.ts";
 import { TexteSurligne } from "./TexteSurligne.tsx";
 import { laVoixNeLitPas, type Voix } from "../voix/index.ts";
+import { BoutonReecouter } from "./BoutonReecouter.tsx";
 import { BulleDuPersonnageGuide } from "./BulleDuPersonnageGuide.tsx";
 import { PersonnageGuideEtSaScene } from "./PersonnageGuideEtSaScene.tsx";
 import { EcranDeFin } from "./fin-de-seance/EcranDeFin.tsx";
@@ -194,7 +195,6 @@ function SeanceEnCours(
   const addition = deroulement.additionFigee ?? seance.additionEnCours();
   const consigne = finie || !exerciceDeLaLecon ? undefined : consigneAffichee(exerciceDeLaLecon);
   const laConsigneEstLue = consigne !== undefined && deroulement.parole?.nature === "consigne" && deroulement.parole.texte === consigne;
-  const paroleDeLaBulle = laConsigneEstLue ? undefined : deroulement.parole;
   // Le chrono n'est pas lisible ici : pendant toute la fluence, aucune scène (aucun encouragement n'y est dit de toute façon).
   const dansUneFluence = exerciceDeLaLecon?.type === "fluence";
   const reponseFausse = useSceneDeReponseFausse({
@@ -202,6 +202,10 @@ function SeanceEnCours(
     cleUnivers: univers.cle,
     pendantLeChronoDUneFluence: dansUneFluence,
   });
+  const personnageMontre = consigne === undefined || deroulement.personnageGuideReagit || reponseFausse.enCours !== undefined;
+  const consigneMontree = personnageMontre ? undefined : consigne;
+  const reecouterInactif = figee !== undefined ||
+    (deroulement.presentationEnCours && !deroulement.personnageGuideReagit && deroulement.parole?.nature !== "consigne");
   const zoneDeLExercice = useRef<HTMLDivElement>(null);
   const laSeance = useRef<HTMLElement>(null);
   const exerciceCommence = exerciceJoue !== undefined;
@@ -250,30 +254,27 @@ function SeanceEnCours(
           )}
         {pauseOuverte && !finie && <FeuilleDePause onContinuer={continuerLaLecon} onRetourALaLecon={retournerALaLecon} />}
         <div className="guide-et-parole">
-          {!celebrationDeLUnivers && <PersonnageGuideEtSaScene univers={univers} humeur={deroulement.humeur} reponseFausse={reponseFausse} />}
-          <BulleDuPersonnageGuide
-            texte={paroleDeLaBulle?.texte}
-            nature={paroleDeLaBulle?.nature}
-            rangDuMotPrononce={deroulement.rangDuMotPrononce}
-          />
-        </div>
-        <button type="button" className="reecouter" onClick={deroulement.reecouter} aria-disabled={deroulement.figee !== undefined ? true : undefined}>
-          Réécouter
-        </button>
-        <div className="consigne-de-l-exercice" aria-live="polite">
-          {consigne !== undefined && (
-            <>
-              <p className="consigne" data-testid="consigne">
-                <TexteSurligne
-                  texte={consigne}
-                  rangDuMotPrononce={laConsigneEstLue ? deroulement.rangDuMotPrononce : undefined}
-                />
-              </p>
-              <button type="button" className="relire-la-consigne" onClick={deroulement.relireLaConsigne} aria-disabled={deroulement.presentationEnCours || figee !== undefined ? true : undefined}>
-                Relire la consigne
-              </button>
-            </>
+          {personnageMontre && !celebrationDeLUnivers && (
+            <PersonnageGuideEtSaScene univers={univers} humeur={deroulement.humeur} reponseFausse={reponseFausse} />
           )}
+          <div className="parole-et-reecouter">
+            <BulleDuPersonnageGuide
+              texte={personnageMontre ? deroulement.parole?.texte : undefined}
+              nature={deroulement.parole?.nature}
+              rangDuMotPrononce={deroulement.rangDuMotPrononce}
+            />
+            <div className="consigne-de-l-exercice" aria-live="polite">
+              {consigneMontree !== undefined && (
+                <p className="consigne" data-testid="consigne">
+                  <TexteSurligne
+                    texte={consigneMontree}
+                    rangDuMotPrononce={laConsigneEstLue ? deroulement.rangDuMotPrononce : undefined}
+                  />
+                </p>
+              )}
+            </div>
+            <BoutonReecouter inactif={reecouterInactif} onReecouter={deroulement.reecouter} />
+          </div>
         </div>
         {etape && (
           <div className="etape-de-lecon" data-testid="etape-de-lecon">

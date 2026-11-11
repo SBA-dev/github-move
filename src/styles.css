@@ -998,15 +998,14 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
   .seance:has(.addition-posee) h2 { font-size: 1.1rem; }
   .seance:has(.addition-posee) [data-testid="niveau-et-matiere"] { font-size: .8rem; }
   .seance:has(.addition-posee) .recipient { order: 1; padding: 4px 10px; }
-  .seance:has(.addition-posee) .reecouter { order: 2; }
   .seance:has(.addition-posee) .guide-et-parole { order: 3; flex: 1 1 100%; flex-wrap: nowrap; justify-content: flex-start; gap: 8px; }
   .seance:has(.addition-posee) .guide-et-parole .bulle { flex: 1 1 auto; min-width: 0; padding: 4px 10px; font-size: 1rem; line-height: 1.3; text-align: left; }
-  .seance:has(.addition-posee) :is(.consigne-de-l-exercice, .exercice-en-cours) { order: 4; }
+  .seance:has(.addition-posee) .exercice-en-cours { order: 4; }
   .seance:has(.addition-posee) .recipient .point { width: 10px; height: 10px; }
   .seance:has(.addition-posee) .recipient .compte { display: none; }
   .seance:has(.addition-posee) .guide-et-parole .personnage-guide { width: 40px; }
   .seance:has(.addition-posee) .consigne { padding: 4px 10px; font-size: 1rem; line-height: 1.3; }
-  .seance:has(.addition-posee) :is(.consigne-de-l-exercice, .exercice-en-cours) { flex: 1 1 100%; }
+  .seance:has(.addition-posee) .exercice-en-cours { flex: 1 1 100%; }
   .addition-posee { width: 100%; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 8px; }
   .addition-posee .operation-posee { padding: 0 12px; font-size: 1.25rem; }
   .addition-posee .colonnes { flex: 1 1 100%; }
@@ -1149,7 +1148,6 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 /* Consigne de l'exercice : une place à elle, visible pendant tout l'exercice (#79) */
 .consigne-de-l-exercice { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 12px; max-width: 100%; }
 .consigne-de-l-exercice .consigne { overflow-wrap: anywhere; max-width: 100%; }
-.relire-la-consigne[aria-disabled="true"] { opacity: .45; cursor: default; }
 .continuer-apres-la-reussite { min-width: 44px; }
 /* Suivi de l'espace parent : une colonne, tout passe à la ligne, aucune largeur fixe (360 px sans défilement horizontal). */
 .suivi-de-l-espace-parent {
@@ -1548,4 +1546,24 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 @media (prefers-reduced-motion: reduce) {
   .remplissage-de-la-seance { transition: none; }
   .compteur-de-la-seance, .feuille-de-pause { animation: none; }
+}
+
+/* --- Bulle de la séance de leçon : la consigne seule sur toute la largeur, avec « Réécouter » ; le personnage guide prend la place de la bulle quand il réagit (#183). */
+.parole-et-reecouter { position: relative; display: flex; align-items: center; gap: 8px; flex: 1 1 12rem; min-width: 0; max-width: 100%; }
+.parole-et-reecouter > .bulle { flex: 1 1 0; min-width: 0; overflow-wrap: anywhere; }
+.parole-et-reecouter > .consigne-de-l-exercice { flex: 1 1 0; min-width: 0; }
+/* Vide, la zone qui annonce la consigne reste dans la page mais ne prend aucune place. */
+.parole-et-reecouter > .consigne-de-l-exercice:empty { position: absolute; width: 0; height: 0; overflow: hidden; }
+.parole-et-reecouter .consigne { width: 100%; box-sizing: border-box; text-align: center; }
+.reecouter-rond { flex: none; display: grid; place-items: center; width: 48px; height: 48px; padding: 0; border-radius: 50%; }
+.reecouter-rond svg { display: block; }
+@keyframes apparition-du-personnage-guide {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .guide-et-parole .personnage-guide { animation: apparition-du-personnage-guide .25s ease-out; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .guide-et-parole .personnage-guide { animation: none; }
 }
