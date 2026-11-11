@@ -46,3 +46,4 @@ Branche de base : `main` (`aa75d97`). Branche : `feature/183-ecran-de-seance-bar
 - Correctifs : `910ba920` (dys sur la barre d'action), `09e2d745` (garde du retour, clavier, commentaire).
 - Review cycle 3 (delta) : APPROUVÉ.
 - Conteneur redémarré pendant la relecture du cycle 2 : relecture relancée, rien d'autre perdu.
+- VERROU base accordé pour la série E2E 2 (#182 avait rendu le verrou). Run A : `@issue-183`. Run B : stories de séance touchées, sans la non-régression complète (règle du PO).
