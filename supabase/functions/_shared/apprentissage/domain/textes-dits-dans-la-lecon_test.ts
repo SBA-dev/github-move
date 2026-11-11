@@ -185,10 +185,13 @@ Deno.test("l'aide de chaque personne d'une conjugaison est dite : « Avec « je 
     type: "conjugaison",
     verbe: "chanter",
     temps: "présent",
-    formes: [{ pronom: "je", forme: "chante" }],
+    formes: [{ pronom: "je", forme: "chante" }, { pronom: "tu", forme: "chantes" }],
   });
 
-  assertArrayIncludes(textesDitsDansLaLecon(lecon), ["Avec « je », quelle forme va ?"]);
+  assertArrayIncludes(textesDitsDansLaLecon(lecon), [
+    "Avec « je », quelle forme va ?",
+    "Avec « tu », quelle forme va ?",
+  ]);
 });
 
 Deno.test("la félicitation d'une écoute est dite : « c'est » suivi de la réponse", () => {
