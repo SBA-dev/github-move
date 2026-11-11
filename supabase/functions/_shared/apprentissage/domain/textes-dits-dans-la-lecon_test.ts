@@ -143,3 +143,102 @@ Deno.test("la lecture des choix n'est pas rendue : leur ordre est tiré au hasar
 
   assertFalse(textesDitsDansLaLecon(lecon).some((texte) => texte.startsWith("Est-ce ")));
 });
+
+Deno.test("l'aide d'une question à choix, dite après une erreur, fait partie des textes dits", () => {
+  const lecon = leconAvec({
+    type: "bulles",
+    questions: [{
+      question: "Dans le mot « poule », quel son entends-tu ?",
+      choix: ["ou", "on", "an"],
+      reponse: "ou",
+      aide: "Dis le mot doucement.",
+    }],
+  });
+
+  assertArrayIncludes(textesDitsDansLaLecon(lecon), ["Dis le mot doucement."]);
+});
+
+Deno.test("l'aide par défaut des bulles est dite quand la question n'a pas d'aide", () => {
+  const lecon = leconAvec(bullesDuSon());
+
+  assertArrayIncludes(textesDitsDansLaLecon(lecon), ["Essaie une autre bulle."]);
+});
+
+Deno.test("l'aide par défaut d'une écoute est dite quand l'item n'a pas d'aide", () => {
+  const lecon = leconAvec({
+    type: "ecoute",
+    langue: "en-GB",
+    items: [{ dire: "cat", choix: ["chat", "chien"], reponse: "chat" }],
+  });
+
+  assertArrayIncludes(textesDitsDansLaLecon(lecon), ["Écoute encore."]);
+});
+
+Deno.test("l'aide par défaut d'un texte à trous est dite", () => {
+  const lecon = leconAvec({ type: "trous", texte: "Au clair de la [lune]", distracteurs: ["soleil"] });
+
+  assertArrayIncludes(textesDitsDansLaLecon(lecon), ["Relis la phrase en entier : quel mot va bien ?"]);
+});
+
+Deno.test("l'aide de chaque personne d'une conjugaison est dite : « Avec « je », quelle forme va ? »", () => {
+  const lecon = leconAvec({
+    type: "conjugaison",
+    verbe: "chanter",
+    temps: "présent",
+    formes: [{ pronom: "je", forme: "chante" }],
+  });
+
+  assertArrayIncludes(textesDitsDansLaLecon(lecon), ["Avec « je », quelle forme va ?"]);
+});
+
+Deno.test("la félicitation d'une écoute est dite : « c'est » suivi de la réponse", () => {
+  const lecon = leconAvec({
+    type: "ecoute",
+    langue: "en-GB",
+    items: [{ dire: "cat", choix: ["chat", "chien"], reponse: "chat" }],
+  });
+
+  assertArrayIncludes(textesDitsDansLaLecon(lecon), ["c'est chat."]);
+});
+
+Deno.test("la félicitation d'un mot de dictée est dite : « mot » est bien écrit", () => {
+  const lecon = leconAvec({ type: "dictee", mots: [{ mot: "chat", phrase: "Le chat dort." }] });
+
+  assertArrayIncludes(textesDitsDansLaLecon(lecon), ["« chat » est bien écrit !"]);
+});
+
+Deno.test("l'aide après une erreur de dictée est dite", () => {
+  const lecon = leconAvec({ type: "dictee", mots: [{ mot: "chat", phrase: "Le chat dort." }] });
+
+  assertArrayIncludes(textesDitsDansLaLecon(lecon), ["Regarde les lettres en rouge et écoute encore."]);
+});
+
+const poesieDuChat = { type: "memoriser", titre: "Poème", vers: ["Un petit chat dort", "Sur le tapis rouge"] };
+
+Deno.test("l'annonce de l'écoute d'une poésie est dite", () => {
+  const lecon = leconAvec(poesieDuChat);
+
+  assertArrayIncludes(textesDitsDansLaLecon(lecon), [
+    "Écoute bien, je te le dis vers par vers. Ensuite, à toi de le redire !",
+  ]);
+});
+
+Deno.test("l'invitation à redire la poésie après le dernier vers est dite", () => {
+  const lecon = leconAvec(poesieDuChat);
+
+  assertArrayIncludes(textesDitsDansLaLecon(lecon), [
+    "À toi ! Redis tout le texte, tranquillement. Quand c'est bon, on joue !",
+  ]);
+});
+
+Deno.test("la consigne de remettre les vers dans l'ordre est dite pour une poésie", () => {
+  const lecon = leconAvec(poesieDuChat);
+
+  assertArrayIncludes(textesDitsDansLaLecon(lecon), ["Remets les vers dans l'ordre."]);
+});
+
+Deno.test("la consigne des mots cachés est dite pour une poésie", () => {
+  const lecon = leconAvec(poesieDuChat);
+
+  assertArrayIncludes(textesDitsDansLaLecon(lecon), ["Des mots se sont envolés ! Retrouve-les."]);
+});
