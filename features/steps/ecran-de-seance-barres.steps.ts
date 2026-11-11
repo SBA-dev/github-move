@@ -1,12 +1,14 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 import { Given, type ProfilPrepare, Then, When } from "./fixtures.ts";
-import { allerALaQuestion } from "./exercices-a-choix.steps.ts";
+import { allerALaQuestion, finirLaParoleJusqua, verifierLaFelicitationEnEntier } from "./exercices-a-choix.steps.ts";
+import { poserEtAttendre } from "./classer-ordre-trous.steps.ts";
 import { direJeNeSaisPas, faireUneErreur } from "./aide-et-je-ne-sais-pas.steps.ts";
 import { fluence } from "./calcul-fluence-addition.steps.ts";
-import { boutonRetour, laPause, leconCourante, ouvrirLaPageDeLaLecon, commencerLaSeanceComplete, recipient, bulle } from "./etapes-puis-exercices.steps.ts";
+import { boutonRetour, laPause, leconCourante, ouvrirLaPageDeLaLecon, commencerLaSeanceComplete, recipient, bulle, entendu } from "./etapes-puis-exercices.steps.ts";
 import { DELAI_DE_L_ATTENTE_MS, effetPuisParole, observer } from "./retours-animes-et-sonores.steps.ts";
 import { preparerProfil, cleDe } from "./univers.steps.ts";
-import { journal } from "./voix.steps.ts";
+import { leGuide } from "./univers.steps.ts";
+import { consigneAffichee, journal, normaliser, scenario, terminerLaLecture } from "./voix.steps.ts";
 
 // Story #183 : l'écran de séance de leçon. La barre du haut remplace l'en-tête de l'application (Retour, nom de la
 // leçon, son, barre de progression et compteur) ; la pause s'ouvre à partir de la première réponse ; la barre d'action
@@ -29,6 +31,37 @@ function remplissage(page: Page): Locator {
 function barreDAction(page: Page): Locator {
   return page.getByTestId("barre-d-action");
 }
+
+function personnageGuideAffiche(page: Page): Locator {
+  return page.getByTestId("personnage-guide");
+}
+
+function zoneDuPersonnageGuide(page: Page): Locator {
+  return page.locator(".personnage-guide-et-sa-scene");
+}
+
+function boutonReecouter(page: Page): Locator {
+  return page.getByRole("button", { name: "Réécouter", exact: true });
+}
+
+/** Le personnage guide prend la place de la consigne : la zone du personnage est là une seule fois, la consigne n'y est plus. */
+async function verifierQueLePersonnageGuideALaPlaceDeLaConsigne(page: Page, nom: string): Promise<void> {
+  await expect(zoneDuPersonnageGuide(page)).toHaveCount(1);
+  await expect(leGuide(page, nom)).toBeVisible();
+  await expect(consigneAffichee(page)).toHaveCount(0);
+}
+
+/** La voix factice ne finit jamais seule : on termine ses lectures, puis la consigne revient et le personnage guide disparaît. En Muet, sans voix à finir, c'est la durée d'affichage qui la ramène. */
+async function laConsigneRevientSansLePersonnageGuide(page: Page): Promise<void> {
+  await expect.poll(async () => {
+    const revenue = (await consigneAffichee(page).count()) === 1 && (await zoneDuPersonnageGuide(page).count()) === 0;
+    if (!revenue && !scenario(page).muet) await terminerLaLecture(page);
+    return revenue;
+  }, { intervals: [200] }).toBe(true);
+  await expect(personnageGuideAffiche(page)).toHaveCount(0);
+}
+
+const lotsAvantLaReecoute = new WeakMap<Page, number>();
 
 // --- Étant donné : la page et l'appareil
 
@@ -74,6 +107,13 @@ Given(/^Tom commence la séance complète de la leçon « ([^«»]+) »$/, async
   await ouvrirLaPageDeLaLecon(page, titre);
   await commencerLaSeanceComplete(page);
 });
+
+Given(
+  /^Léa a posé l'étiquette « ([^«»]+) » dans la maison « ([^«»]+) »$/,
+  async ({ page }, etiquette: string, nomDeLaMaison: string) => {
+    await poserEtAttendre(page, etiquette, nomDeLaMaison, "mal");
+  },
+);
 
 // --- Quand : les gestes de retour
 
@@ -122,7 +162,98 @@ Then(/^les lecteurs d'écran annoncent la séance sous le nom « ([^«»]+) »$/
   await expect(seance.getByTestId("recipient")).toBeVisible();
 });
 
-// --- Alors : la barre de progression et le compteur
+// --- Quand : « Réécouter » pendant que le personnage guide répond
+
+When(/^Léa demande à réécouter pendant que (.+) lui répond$/, async ({ page }, nom: string) => {
+  await expect(leGuide(page, nom)).toBeVisible();
+  const reecouter = boutonReecouter(page);
+  await expect(reecouter).not.toHaveAttribute("aria-disabled", "true");
+  lotsAvantLaReecoute.set(page, (await journal(page)).lots);
+  await reecouter.click();
+});
+
+// --- Alors : la consigne et le personnage guide dans la bulle
+
+Then(/^Léa voit la consigne « (.+) » sur toute la largeur de la bulle$/, async ({ page }, texte: string) => {
+  const consigne = consigneAffichee(page);
+  await expect(consigne).toHaveText(normaliser(texte));
+  const texteDeLaBulle = await page.locator(".texte-de-la-bulle").boundingBox();
+  const boite = await consigne.boundingBox();
+  expect(boite, "consigne visible").not.toBeNull();
+  expect(texteDeLaBulle, "bulle visible").not.toBeNull();
+  expect(boite?.x ?? 0, "bord gauche de la consigne").toBeLessThanOrEqual((texteDeLaBulle?.x ?? 0) + 1);
+  expect((boite?.x ?? 0) + (boite?.width ?? 0), "bord droit de la consigne").toBeGreaterThanOrEqual(
+    (texteDeLaBulle?.x ?? 0) + (texteDeLaBulle?.width ?? 0) - 1,
+  );
+});
+
+Then(/^Léa ne voit pas (?:.+) à côté de la consigne$/, async ({ page }) => {
+  await expect(consigneAffichee(page)).toBeVisible();
+  await expect(personnageGuideAffiche(page)).toHaveCount(0);
+  await expect(zoneDuPersonnageGuide(page)).toHaveCount(0);
+});
+
+Then(/^(.+) apparaît à la place de la bulle et dit une félicitation commune ou l'une de ses expressions, en entier$/, async ({ page }, nom: string) => {
+  await verifierQueLePersonnageGuideALaPlaceDeLaConsigne(page, nom);
+  await verifierLaFelicitationEnEntier(page);
+});
+
+Then(
+  /^(.+) apparaît à la place de la bulle, réfléchit en penchant la tête et dit un encouragement$/,
+  async ({ page }, nom: string) => {
+    await verifierQueLePersonnageGuideALaPlaceDeLaConsigne(page, nom);
+    await expect(leGuide(page, nom)).toHaveAttribute("data-humeur", "reflechit");
+    await expect(leGuide(page, nom)).toHaveAttribute("data-geste", "penche");
+    await expect(bulle(page)).toHaveAttribute("data-nature", "encouragement");
+    expect(normaliser((await bulle(page).textContent()) ?? "")).not.toBe("");
+  },
+);
+
+Then(
+  /^ensuite seulement, la question « (.+) » s'affiche, avec sa consigne et sans (?:.+)$/,
+  async ({ page }, question: string) => {
+    await expect(page.getByTestId("question")).not.toHaveText(question);
+    await finirLaParoleJusqua(page, { type: "question", texte: question });
+    await expect(page.getByTestId("question")).toHaveText(question);
+    await expect(consigneAffichee(page)).toBeVisible();
+    await expect(personnageGuideAffiche(page)).toHaveCount(0);
+    await expect(zoneDuPersonnageGuide(page)).toHaveCount(0);
+  },
+);
+
+Then(/^ensuite, Léa voit de nouveau la consigne, sans (?:.+)$/, async ({ page }) => {
+  await laConsigneRevientSansLePersonnageGuide(page);
+});
+
+Then(/^ensuite, Léa voit de nouveau la consigne « (.+) »$/, async ({ page }, texte: string) => {
+  await laConsigneRevientSansLePersonnageGuide(page);
+  await expect(consigneAffichee(page)).toHaveText(normaliser(texte));
+});
+
+// --- Alors : un seul bouton « Réécouter »
+
+Then(/^Léa voit un seul bouton « Réécouter »$/, async ({ page }) => {
+  await expect(boutonReecouter(page)).toHaveCount(1);
+  await expect(boutonReecouter(page)).toBeVisible();
+});
+
+Then(/^Léa ne voit pas de bouton « Relire la consigne »$/, async ({ page }) => {
+  await expect(page.getByRole("button", { name: "Relire la consigne" })).toHaveCount(0);
+});
+
+Then(/^Léa entend de nouveau Noisette lire « ([^«»]+) », puis « ([^«»]+) »$/, async ({ page }, consigne: string, question: string) => {
+  await expect.poll(async () => (await journal(page)).lots).toBeGreaterThanOrEqual(2);
+  await expect.poll(async () => (await journal(page)).lecture.texte).toBe(normaliser(consigne));
+  await terminerLaLecture(page);
+  await expect.poll(async () => (await journal(page)).lecture.texte).toBe(normaliser(question));
+});
+
+Then(/^Léa entend de nouveau (.+) dire « (.*[«»].*) »$/, async ({ page }, _nom: string, texte: string) => {
+  await expect.poll(async () => (await journal(page)).lots).toBeGreaterThan(lotsAvantLaReecoute.get(page) ?? 1);
+  await expect.poll(async () => (await journal(page)).lecture.texte).toBe(entendu(texte));
+});
+
+// --- Alors : la progression et le compteur
 
 Then(/^Léa voit le compteur « (\d+) \/ (\d+) » sous la barre de progression$/, async ({ page }, reussies: string, total: string) => {
   await expect(compteur(page)).toHaveText(`${reussies} / ${total}`);

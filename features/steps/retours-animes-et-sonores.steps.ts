@@ -835,14 +835,6 @@ Then(/^aucune croix ni aucun rouge plein écran n'apparaît$/, async ({ page }) 
   await expect(page.getByRole("alert")).toHaveCount(0);
 });
 
-Then(/^un point vole jusqu'au récipient$/, async ({ page }) => {
-  await expect.poll(async () => (await observer(page)).vu, { timeout: DELAI_DE_L_ATTENTE_MS }).toContain("point-qui-vole");
-});
-
-Then(/^aucun point ne vole jusqu'au récipient$/, async ({ page }) => {
-  await nePasVoir(page, /^point-qui-vole$/);
-});
-
 async function voirDesEtincelles(page: Page): Promise<void> {
   const etincelle = page.getByTestId("etincelles-du-texte").locator("span").first();
   await expect.poll(async () => {

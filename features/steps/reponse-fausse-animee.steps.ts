@@ -458,7 +458,7 @@ Then(/^la scène de réponse fausse s'arrête$/, async ({ page }) => {
 
 // --- Alors : le personnage guide à sa place
 
-Then(/^Coach Léo n'apparaît qu'une fois, à sa place, la bulle gardant ses paroles$/, async ({ page }) => {
+async function verifierQueLePersonnageGuideApparaitUneFoisAvecSesParoles(page: Page) {
   await attendreUneScene(page);
   const zone = zoneDuPersonnageGuide(page);
   await expect(zone).toHaveCount(1);
@@ -467,6 +467,16 @@ Then(/^Coach Léo n'apparaît qu'une fois, à sa place, la bulle gardant ses par
   await expect(bulle(page)).toBeVisible();
   await expect(bulle(page)).not.toHaveText("");
   await expect(page.getByRole("button", { name: "Réécouter", exact: true })).toBeVisible();
+}
+
+Then(/^Coach Léo n'apparaît qu'une fois, à sa place, la bulle gardant ses paroles$/, async ({ page }) => {
+  await verifierQueLePersonnageGuideApparaitUneFoisAvecSesParoles(page);
+});
+
+// #183 : il prend la place de la bulle de la consigne, et ses paroles restent lisibles à cet endroit.
+Then(/^Coach Léo n'apparaît qu'une fois, à la place de la bulle de la consigne, avec ses paroles$/, async ({ page }) => {
+  await verifierQueLePersonnageGuideApparaitUneFoisAvecSesParoles(page);
+  await expect(page.getByTestId("consigne")).toHaveCount(0);
 });
 
 // --- Alors : ce que Léa lit

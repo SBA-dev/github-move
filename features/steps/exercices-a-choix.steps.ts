@@ -691,7 +691,7 @@ Then(/^Noisette dit un encouragement$/, async ({ page }) => {
   expect(normaliser((await bulle(page).textContent()) ?? "")).not.toBe("");
 });
 
-Then(/^Noisette dit une félicitation commune ou l'une de ses expressions, en entier$/, async ({ page }) => {
+export async function verifierLaFelicitationEnEntier(page: Page) {
   await expect(bulle(page)).toHaveAttribute("data-nature", "felicitation");
   const texte = normaliser((await bulle(page).textContent()) ?? "");
   expect(FELICITATIONS_DE_NOISETTE).toContain(texte);
@@ -707,6 +707,10 @@ Then(/^Noisette dit une félicitation commune ou l'une de ses expressions, en en
   await expect(bulle(page)).toHaveAttribute("data-nature", "felicitation");
   expect((await journal(page)).lecture.texte).toBe(entendu(texte));
   expect((await journal(page)).coupeApresLaDerniereParole).toBe(false);
+}
+
+Then(/^Noisette dit une félicitation commune ou l'une de ses expressions, en entier$/, async ({ page }) => {
+  await verifierLaFelicitationEnEntier(page);
 });
 
 Then(/^Noisette dit une félicitation, suivie de « (.+) »$/, async ({ page }, explication: string) => {
