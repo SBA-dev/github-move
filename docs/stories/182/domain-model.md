@@ -1,7 +1,7 @@
 # Story #182 : la voix de l'application en MP3 pré-générés (Piper, voix « tom ») : modèle du domaine
 
-> Cadrage du `domain-modeler`, 2026-11-10 ; **validé par le PO le 2026-11-11** (« Reco tout », annonce [Responsable] sur #193, 00:47 UTC) : toutes les recommandations sont retenues, voir la section 9 « Réponses du PO ». Une seule question reste ouverte : **182.19** (quel modèle « tom »).
-> Décisions du PO qu'on ne rouvre pas : outil **Piper**, voix **« tom »** (44,1 kHz, modèle sous AGPLv3, seuls les MP3 vont dans l'application, jamais le modèle), **repli sur la voix de l'appareil** pour une phrase sans MP3. Le dépôt de la voix (`git.bksp.space/Tjiho/French-tts-model-piper`) contient trois modèles « tom » et aucun ne s'appelle `fr_FR-tom-medium` : le PO choisit à l'oreille (182.19). Décision d'architecture : **0043** (`docs/decisions/0043-voix-en-mp3-pre-generes-piper.md`, acceptée le 2026-11-11).
+> Cadrage du `domain-modeler`, 2026-11-10 ; **validé par le PO le 2026-11-11** (« Reco tout », annonce [Responsable] sur #193, 00:47 UTC) : toutes les recommandations sont retenues, voir la section 9 « Réponses du PO ». Le PO a ensuite répondu à **182.19** (« Modèle 1 et 32kbit et le reste reco », annonce [Responsable] sur #193, 2026-11-11) : **modèle 1** de « tom », débit **32 kbit/s** confirmé ; plus aucune question ouverte.
+> Décisions du PO qu'on ne rouvre pas : outil **Piper**, voix **« tom »** (44,1 kHz, modèle sous AGPLv3, seuls les MP3 vont dans l'application, jamais le modèle), **repli sur la voix de l'appareil** pour une phrase sans MP3. Le dépôt de la voix (`git.bksp.space/Tjiho/French-tts-model-piper`) contient trois modèles « tom » et aucun ne s'appelle `fr_FR-tom-medium` : le PO a retenu à l'oreille le **modèle 1** (`model 1/tom1.onnx`), nommé `tom-1` dans le répertoire (182.19). Décision d'architecture : **0043** (`docs/decisions/0043-voix-en-mp3-pre-generes-piper.md`, acceptée le 2026-11-11).
 
 ## 1. Contexte
 
@@ -28,7 +28,7 @@
 |---|---|---|
 | Lecture à voix haute, Voix automatique, Voix imposée, Choix de voix, Muet, Voix suspendue, Voix bloquée, Parole entendue, Message de voix bloquée, Fin de la voix bloquée, Effet sonore | existants | inchangés ; « Voix bloquée » garde son sens (le navigateur **refuse** de lire) |
 | Synthèse vocale | existant (context map) | « MP3 pré-générés, ou voix du navigateur » : on précise les deux sources ci-dessous |
-| **Voix enregistrée** | **nouveau, retenu** | La voix des MP3 fabriqués à l'avance par le pipeline (une voix « tom » de Piper ; le modèle exact est la question 182.19). S'oppose à **voix de l'appareil**. Synonymes interdits : voix Piper (dans l'interface), voix MP3, voix off |
+| **Voix enregistrée** | **nouveau, retenu** | La voix des MP3 fabriqués à l'avance par le pipeline (voix « tom » de Piper, modèle 1 du dépôt de l'auteur, nommée `tom-1` ; 182.19). S'oppose à **voix de l'appareil**. Synonymes interdits : voix Piper (dans l'interface), voix MP3, voix off |
 | **Voix de l'appareil** | existant dans le code (`VoixDeLAppareil`), ajouté au glossaire, retenu | Voix de synthèse installée sur l'appareil, lue par le navigateur. Devient la voix du **repli** |
 | **Phrase enregistrée** | **nouveau, retenu** | Phrase à lire (au sens du découpage de `texteALire`) dont un MP3 de la voix enregistrée existe. Synonymes interdits : son, audio, fichier (dans le domaine), piste |
 | **Clé de phrase** | **nouveau, retenu** | Identifiant court calculé à partir du texte normalisé d'une phrase (section 3.1) ; le même calcul en TypeScript (domaine Voix) et en Python (pipeline). Synonymes interdits : hash, identifiant de son |
@@ -73,7 +73,7 @@ classDiagram
   }
   class RepertoireDesPhrasesEnregistrees {
     <<donnée de référence publiée par le pipeline>>
-    +voixEnregistree : nom du modèle
+    +voixEnregistree : nom de la voix (tom-1)
     +enregistrement(cle, allure) EmpreinteDeFabrication?
   }
   class MorceauDeLecture {
@@ -344,6 +344,11 @@ Pipeline et données :
 | 182.17 Hors ligne | (a) **oui** : une leçon jamais ouverte, sans réseau, est dite par la voix de l'appareil sans message, ou par le message de voix indisponible sans voix française ; (b) **oui** : les phrases enregistrées gardées restent après une nouvelle version de l'application. |
 | 182.18 Message de l'Espace parent › Voix (#15) | **Reformuler** « Aucune voix française trouvée sur cet appareil : installe-en une… » en un message qui dit que **la voix de Savanturier lit les leçons** et que **la voix de l'appareil sert seulement aux phrases fabriquées à la volée** (calculs, prénom…). Texte exact à écrire dans les critères (po-acceptance), avec 182.9 A. |
 
-### Question encore ouverte
+| 182.19 Quel modèle « tom » | **Modèle 1** (`model 1/tom1.onnx` du dépôt `git.bksp.space/Tjiho/French-tts-model-piper`, entraîné sur des phrases de journaux et de Baudelaire), choisi à l'oreille (2026-11-11). Dans le répertoire des phrases enregistrées, `voixEnregistree` vaut **`tom-1`** ; la licence (`public/voix/LICENCE-voix-tom.txt`) nomme ce modèle. |
+| 182.20 Message de #15 « Ce navigateur ne sait pas lire à voix haute. » | **Oui**, reformulé comme 182.18 : « Ce navigateur n'a pas de voix : la voix de Savanturier lit les leçons ; les phrases fabriquées à la volée ne pourront pas être lues à voix haute. » (critères : `docs/stories/182/criteres.md`). |
 
-19. **182.19 Quel modèle « tom »** : le dépôt de la voix (`git.bksp.space/Tjiho/French-tts-model-piper`) contient trois modèles de même configuration : (1) `model 1/tom1.onnx` (journaux et Baudelaire), (2) `model 2/tom2.onnx` (Baudelaire), (3) `model 3/next.onnx` (modèle 2 + 300 époques). Le PO choisit **à l'oreille** (page d'écoute : six phrases × trois modèles). Le nom du modèle retenu ira dans le répertoire des phrases enregistrées (`voixEnregistree`) et dans la licence (`public/voix/LICENCE-voix-tom.txt`). Ne bloque pas 182a jusqu'à la fabrication (Piper remplacé par un faux dans les tests).
+Réponses du 2026-11-11 (« Modèle 1 et 32kbit et le reste reco », annonce [Responsable] sur #193) : 182.19 modèle 1, 182.8 (a) 32 kbit/s confirmé après l'écoute comparative, 182.20 oui.
+
+### Questions ouvertes
+
+Aucune.
