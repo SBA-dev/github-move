@@ -8,8 +8,8 @@ import { phrasesNonCouvertes } from "./phrases-non-couvertes.ts";
 import bibliotheque from "../../../../../app/bibliotheque.json" with { type: "json" };
 import repertoire from "../../../../../public/voix/repertoire.json" with { type: "json" };
 
-// Élargir à chaque livraison de niveau (182b à 182e).
-const NIVEAUX_FABRIQUES = ["commun", "CP", "CE1", "CE2"];
+// Tous les niveaux sont fabriqués.
+const NIVEAUX_FABRIQUES = ["commun", "CP", "CE1", "CE2", "CM1", "CM2"];
 
 const NOMBRE_DE_PHRASES_CITEES = 5;
 
