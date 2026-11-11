@@ -3,6 +3,10 @@ import { lireLecon } from "../../catalogue/domain/lire-lecon.ts";
 import { textesDitsDansLaLecon } from "./textes-dits-dans-la-lecon.ts";
 
 function leconAvec(...exercices: unknown[]) {
+  return uneLecon([], ...exercices);
+}
+
+function uneLecon(etapes: unknown[], ...exercices: unknown[]) {
   return lireLecon({
     id: "fr-cp-sons-ou-on-an",
     matiere: "francais",
@@ -13,7 +17,7 @@ function leconAvec(...exercices: unknown[]) {
       section: "c2-francais-cp-identifier-les-mots-de-maniere-de-plus-en-plus-aisee",
       citation: "Décoder et encoder de 25 à 30 CGP.",
     },
-    lecon: [],
+    lecon: etapes,
     exercices,
   });
 }
@@ -76,4 +80,66 @@ Deno.test("un calcul tiré au hasard n'est pas rendu : son texte est fabriqué �
   const lecon = leconAvec({ type: "calcul", generateur: { op: "+", a: [1, 9], b: [1, 9], combien: 3 } });
 
   assertEquals(textesDitsDansLaLecon(lecon), []);
+});
+
+Deno.test("l'indication du geste d'un exercice à ranger fait partie des textes dits", () => {
+  const lecon = leconAvec({ type: "ordre", consigne: "Mets dans l'ordre.", elements: ["un", "deux"] });
+
+  assertArrayIncludes(textesDitsDansLaLecon(lecon), ["Touche d'abord celle qui vient en premier."]);
+});
+
+Deno.test("la question d'une écoute est dite en français, avec sa valeur par défaut quand l'item n'en a pas", () => {
+  const lecon = leconAvec({
+    type: "ecoute",
+    langue: "en-GB",
+    items: [{ dire: "cat", choix: ["chat", "chien"], reponse: "chat" }],
+  });
+
+  assertArrayIncludes(textesDitsDansLaLecon(lecon), ["Écoute bien ! Que veut dire ce mot ?"]);
+});
+
+Deno.test("la phrase de chaque trou d'un texte à trous est dite avec le mot manquant remplacé par « … »", () => {
+  const lecon = leconAvec({ type: "trous", texte: "Le chat dort. Le chien [mange] sa soupe.", distracteurs: ["boit"] });
+
+  assertArrayIncludes(textesDitsDansLaLecon(lecon), ["Le chien … sa soupe."]);
+});
+
+Deno.test("chaque personne d'une conjugaison est dite : « je … ? »", () => {
+  const lecon = leconAvec({
+    type: "conjugaison",
+    verbe: "chanter",
+    temps: "présent",
+    formes: [{ pronom: "je", forme: "chante" }, { pronom: "tu", forme: "chantes" }],
+  });
+
+  assertArrayIncludes(textesDitsDansLaLecon(lecon), ["je … ?", "tu … ?"]);
+});
+
+Deno.test("une étape de la leçon est dite comme l'écran la dit : son texte, puis ses exemples", () => {
+  const lecon = uneLecon([{ texte: "Écoute bien chaque mot.", exemples: ["ou", "on", "an"] }], bullesDuSon());
+
+  assertArrayIncludes(textesDitsDansLaLecon(lecon), ["Écoute bien chaque mot. ou. on. an"]);
+});
+
+Deno.test("chaque vers d'une poésie à mémoriser est dit", () => {
+  const lecon = leconAvec({ type: "memoriser", titre: "Poème", vers: ["Un petit chat dort", "Sur le tapis rouge"] });
+
+  assertArrayIncludes(textesDitsDansLaLecon(lecon), ["Un petit chat dort", "Sur le tapis rouge"]);
+});
+
+Deno.test("le texte d'un exercice de lecture est dit en entier", () => {
+  const lecon = leconAvec({
+    type: "lecture",
+    titre: "Le loup",
+    texte: "Le loup dort. La poule picore.",
+    questions: [{ question: "Qui dort ?", choix: ["le loup", "la poule"], reponse: "le loup" }],
+  });
+
+  assertArrayIncludes(textesDitsDansLaLecon(lecon), ["Le loup dort. La poule picore."]);
+});
+
+Deno.test("la lecture des choix n'est pas rendue : leur ordre est tiré au hasard, elle reste au repli", () => {
+  const lecon = leconAvec(bullesDuSon());
+
+  assertFalse(textesDitsDansLaLecon(lecon).some((texte) => texte.startsWith("Est-ce ")));
 });
