@@ -1,7 +1,7 @@
 import type { CaractereDeLaVoix } from "./caractere-de-la-voix.ts";
 import { CARACTERE_LANGUE_ETRANGERE, choisirVoix, choisirVoixDeLangue, ChoixDeVoix } from "./choix-de-voix.ts";
 import type { ChoixDeVoixDeLAppareil } from "./choix-de-voix-de-l-appareil.ts";
-import { LectureImpossible, VoixBloquee } from "./erreurs.ts";
+import { LectureImpossible, VoixBloquee, VoixIndisponible } from "./erreurs.ts";
 import type { EffetSonore } from "./effet-sonore.ts";
 import type { Hasard } from "./hasard.ts";
 import type { LecteurAVoixHaute } from "./lecteur-a-voix-haute.ts";
@@ -19,6 +19,8 @@ const RYTHME_LENT = 0.65;
 
 export type EtatDuSon = "son" | "muet";
 
+export type CauseDeLectureEmpechee = "voixBloquee" | "voixIndisponible";
+
 export type DependancesDeLectureAVoixHaute = {
   readonly lecteur: LecteurAVoixHaute;
   readonly lecteurDEffetsSonores: LecteurDEffetsSonores;
@@ -27,8 +29,8 @@ export type DependancesDeLectureAVoixHaute = {
   readonly hasard: Hasard;
   readonly caractereDuPersonnageGuide: () => CaractereDeLaVoix;
   readonly etatInitial: EtatDuSon;
-  readonly onVoixBloquee: () => void;
-  readonly onFinDeLaVoixBloquee: () => void;
+  readonly onLectureEmpechee: (cause: CauseDeLectureEmpechee) => void;
+  readonly onFinDeLectureEmpechee: () => void;
 };
 
 export type ParoleEntendue = { readonly entendue: boolean };
@@ -76,7 +78,7 @@ export class LectureAVoixHaute {
   private sonDuBoutonEnCours = false;
   private versionDuSonDuBouton = 0;
   private coupuresDeLaVoix = 0;
-  private voixBloqueeSignalee = false;
+  private causeSignalee: CauseDeLectureEmpechee | undefined;
   private parolesEnCours = 0;
 
   constructor(private readonly dependances: DependancesDeLectureAVoixHaute) {
@@ -114,7 +116,7 @@ export class LectureAVoixHaute {
         ...(options.onMot &&
           { onMot: rangDesMots(texte.phrases, rangAffichePourChaqueMotPrononce(brut), options.onMot) }),
       });
-      this.signalerLaFinDeLaVoixBloquee();
+      this.signalerLaFinDeLaLectureEmpechee();
       return PAROLE_ENTENDUE;
     } catch (erreur) {
       this.absorber(erreur);
@@ -205,7 +207,7 @@ export class LectureAVoixHaute {
   passerEnMuet(): void {
     this.etat = "muet";
     this.dependances.lecteur.arreter();
-    this.signalerLaFinDeLaVoixBloquee();
+    this.signalerLaFinDeLaLectureEmpechee();
   }
 
   async remettreLeSon(salutation: string): Promise<void> {
@@ -237,17 +239,22 @@ export class LectureAVoixHaute {
       : choisirVoixDeLangue(voix, langue);
   }
 
-  private signalerLaFinDeLaVoixBloquee(): void {
-    if (!this.voixBloqueeSignalee) return;
-    this.voixBloqueeSignalee = false;
-    this.dependances.onFinDeLaVoixBloquee();
+  private signalerLaFinDeLaLectureEmpechee(): void {
+    if (this.causeSignalee === undefined) return;
+    this.causeSignalee = undefined;
+    this.dependances.onFinDeLectureEmpechee();
   }
 
   private absorber(erreur: unknown): void {
     if (erreur instanceof LectureImpossible) return;
-    if (!(erreur instanceof VoixBloquee)) throw erreur;
-    if (this.voixBloqueeSignalee) return;
-    this.voixBloqueeSignalee = true;
-    this.dependances.onVoixBloquee();
+    if (erreur instanceof VoixBloquee) return this.signaler("voixBloquee");
+    if (erreur instanceof VoixIndisponible) return this.signaler("voixIndisponible");
+    throw erreur;
+  }
+
+  private signaler(cause: CauseDeLectureEmpechee): void {
+    if (this.causeSignalee === cause) return;
+    this.causeSignalee = cause;
+    this.dependances.onLectureEmpechee(cause);
   }
 }

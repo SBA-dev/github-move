@@ -55,8 +55,10 @@ export function useVoix(personnageGuide: PersonnageGuide): Voix {
       hasard: hasardDuNavigateur,
       caractereDuPersonnageGuide: () => personnageGuideEnCours.current.caractere,
       etatInitial: son,
-      onVoixBloquee: () => setNomDuPersonnageGuideDeLaVoixBloquee(personnageGuideEnCours.current.nom),
-      onFinDeLaVoixBloquee: () => setNomDuPersonnageGuideDeLaVoixBloquee(undefined),
+      onLectureEmpechee: (cause) => {
+        if (cause === "voixBloquee") setNomDuPersonnageGuideDeLaVoixBloquee(personnageGuideEnCours.current.nom);
+      },
+      onFinDeLectureEmpechee: () => setNomDuPersonnageGuideDeLaVoixBloquee(undefined),
     })
   );
 
