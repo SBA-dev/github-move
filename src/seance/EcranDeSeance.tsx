@@ -215,8 +215,11 @@ function SeanceEnCours(
   // Un geste muet montre le personnage guide sans toucher à la mise en page : la consigne et la question restent, la bulle n'affiche pas de parole périmée.
   const personnageMontre = personnageParle || deroulement.gesteMuet;
   const consigneMontree = personnageParle ? undefined : consigne;
-  const questionDansLaBulle = consigneMontree === undefined ? undefined : questionAfficheeDansLaBulle(deroulement.parole, exerciceDeLaLecon, schema?.enonce);
-  const texteDeLaBulle = consigneMontree === undefined ? deroulement.parole?.texte : questionDansLaBulle;
+  // Pendant une question, la bulle ne répète pas la question que l'exercice écrit déjà : elle ne garde que celle qu'il n'écrit pas.
+  const paroleEstUneQuestion = deroulement.parole?.nature === "question";
+  const laBulleNeGardeQueLaQuestion = consigneMontree !== undefined || (dansUneQuestion && !personnageParle && paroleEstUneQuestion);
+  const questionDansLaBulle = personnageParle ? undefined : questionAfficheeDansLaBulle(deroulement.parole, exerciceDeLaLecon, schema?.enonce);
+  const texteDeLaBulle = laBulleNeGardeQueLaQuestion ? questionDansLaBulle : deroulement.parole?.texte;
   const reecouterInactif = figee !== undefined ||
     (deroulement.presentationEnCours && !deroulement.personnageGuideReagit && deroulement.parole?.nature !== "consigne");
   const zoneDeLExercice = useRef<HTMLDivElement>(null);
