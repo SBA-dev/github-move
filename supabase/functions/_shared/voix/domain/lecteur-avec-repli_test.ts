@@ -189,3 +189,29 @@ Deno.test("le texte enregistré de remplacement est joué au rythme de la premi�
 
   assertEquals(phrasesEnregistrees.morceauxJoues.map((m) => m.rythme), [0.65]);
 });
+
+Deno.test("sans voix française, une phrase sans enregistrement dans le texte principal fait jouer directement le texte enregistré de remplacement, sans rien jouer avant", async () => {
+  const SUPER_TRAVAIL = "Super travail.";
+  const REMPLACEMENT = "Super travail. Bravo !";
+  const { lecteur, phrasesEnregistrees, synthese } = unLecteur({
+    repertoire: enregistrees(SUPER_TRAVAIL, REMPLACEMENT),
+    voixFrancaise: false,
+  });
+
+  await lecteur.lire(lectureDe([SUPER_TRAVAIL, "Bravo Léa !"], { texteEnregistreDeRemplacement: REMPLACEMENT }));
+
+  assertEquals(phrasesEnregistrees.morceauxJoues.map((m) => m.phrase), [REMPLACEMENT]);
+  assertEquals(synthese.lectures.length, 0);
+});
+
+Deno.test("sans voix française et sans remplacement, une phrase sans enregistrement rend la voix indisponible avant de jouer la moindre phrase", async () => {
+  const SUPER_TRAVAIL = "Super travail.";
+  const { lecteur, phrasesEnregistrees, synthese } = unLecteur({
+    repertoire: enregistrees(SUPER_TRAVAIL),
+    voixFrancaise: false,
+  });
+
+  await assertRejects(() => lecteur.lire(lectureDe([SUPER_TRAVAIL, "Bravo Léa !"])), VoixIndisponible);
+  assertEquals(phrasesEnregistrees.morceauxJoues.length, 0);
+  assertEquals(synthese.lectures.length, 0);
+});
