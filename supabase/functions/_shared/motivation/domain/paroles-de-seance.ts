@@ -5,13 +5,13 @@ import type { PersonnageGuide } from "./personnage-guide.ts";
 
 export type InvitationAJouer = { readonly texte: string; readonly humeur: Humeur };
 
-const INVITATIONS_A_JOUER: readonly string[] = [
+export const INVITATIONS_A_JOUER: readonly string[] = [
   "À toi de jouer maintenant !",
   "C'est parti, à toi !",
   "Prêt ? On joue !",
 ];
 
-const ANNONCES_D_EXERCICE: readonly string[] = [
+export const ANNONCES_D_EXERCICE: readonly string[] = [
   "Nouveau jeu",
   "Jeu suivant",
   "Place au jeu",

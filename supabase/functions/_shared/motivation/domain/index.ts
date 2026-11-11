@@ -220,3 +220,4 @@ export {
   sceneJoueeDansLaSeanceApres,
   SCENES_DE_REPONSE_FAUSSE,
 } from "./scene-de-reponse-fausse.ts";
+export { parolesFixes } from "./paroles-fixes.ts";
