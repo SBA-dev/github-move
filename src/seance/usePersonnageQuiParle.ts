@@ -34,6 +34,9 @@ export type ParoleADire = {
   readonly effetsAvant?: readonly EffetSonore[];
 };
 
+/** Durée pendant laquelle le personnage guide reste montré quand il réagit par un geste, sans rien dire. */
+const DUREE_DU_GESTE_MUET_MS = 1500;
+
 async function attendreLaFinDeLAffichage(entendue: boolean) {
   const attente = attenteAvantLEcranSuivant({ entendue, seanceTerminee: false });
   if (attente.genre === "dureeDAffichageSansVoix") await attendre(attente.millisecondes);
@@ -46,6 +49,9 @@ export function usePersonnageQuiParle({ lire, jouer, couperLaVoix }: Pick<Voix, 
   const [humeur, setHumeur] = useState<Humeur>(HUMEUR_PAR_DEFAUT);
   /** Vrai de la prise de parole jusqu'à la fin de la voix ; sans voix entendue, jusqu'à la durée d'affichage. */
   const [enParole, setEnParole] = useState(false);
+  /** Vrai le temps d'un geste sans parole (il applaudit en silence) : le personnage guide est montré quand même. */
+  const [gesteMuet, setGesteMuet] = useState(false);
+  const numeroDuGeste = useRef(0);
   const derniereLecture = useRef(0);
   const derniereParole = useRef<ParoleADire | undefined>(undefined);
   /** Vrai tant que la dernière parole a été entendue, ou qu'il n'y en a pas eu : le silence ne prive l'enfant de rien. */
@@ -58,6 +64,8 @@ export function usePersonnageQuiParle({ lire, jouer, couperLaVoix }: Pick<Voix, 
     derniereParole.current = aDire;
     setParole(aDire);
     setEnParole(true);
+    numeroDuGeste.current++;
+    setGesteMuet(false);
     setHumeur(aDire.humeur ?? HUMEUR_PAR_DEFAUT);
     setRangDuMotPrononce(undefined);
     const { entendue } = await lire(aDire.aLire ?? aDire.texte, {
@@ -83,14 +91,21 @@ export function usePersonnageQuiParle({ lire, jouer, couperLaVoix }: Pick<Voix, 
   }, [dire]);
 
   /** Change seulement l'humeur : le personnage guide réagit sans rien dire. */
-  const montrerHumeur = useCallback((nouvelleHumeur: Humeur) => setHumeur(nouvelleHumeur), []);
+  const montrerHumeur = useCallback((nouvelleHumeur: Humeur) => {
+    const numero = ++numeroDuGeste.current;
+    setHumeur(nouvelleHumeur);
+    setGesteMuet(true);
+    void attendre(DUREE_DU_GESTE_MUET_MS).then(() => numero === numeroDuGeste.current && setGesteMuet(false));
+  }, []);
 
   const faireSilence = useCallback(() => {
     derniereLecture.current++;
+    numeroDuGeste.current++;
     setEnParole(false);
+    setGesteMuet(false);
     paroleEntendue.current = true;
     couperLaVoix();
   }, [couperLaVoix]);
 
-  return { parole, enParole, rangDuMotPrononce, humeur, paroleEntendue, dire, jouer, reecouter, faireSilence, montrerHumeur, montrer };
+  return { parole, enParole, gesteMuet, rangDuMotPrononce, humeur, paroleEntendue, dire, jouer, reecouter, faireSilence, montrerHumeur, montrer };
 }
