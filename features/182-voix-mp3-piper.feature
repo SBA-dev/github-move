@@ -17,9 +17,8 @@ Fonctionnalité: La voix enregistrée lit les leçons sans rien installer sur l'
   - Tags propres à #182 :
     - `@paroles-fixes-fabriquees` : le scénario lit les vrais MP3 des paroles fixes ; il ne passe qu'une fois
       ces paroles fabriquées (fin de 182a, après le téléchargement du modèle de voix) ;
-    - `@niveau-cp`, `@niveau-ce1`… : l'exemple lit les vrais MP3 des leçons de ce niveau ;
-      `@hors-182a` reste sur les exemples des niveaux pas encore fabriqués et se retire à la livraison
-      qui fabrique ce niveau (182b pour le CP, 182c pour le CE1 et 182d pour le CE2, faits ; puis 182e CM1 et CM2) ;
+    - `@niveau-cp`, `@niveau-ce1`… : l'exemple lit les vrais MP3 des leçons de ce niveau ; tous les niveaux
+      sont fabriqués (182b pour le CP, 182c pour le CE1, 182d pour le CE2 et 182e pour le CM1 et le CM2) ;
     - `@pwa` : le scénario a besoin du service worker ; il tourne avec la configuration de la PWA (#8).
 
   Règle: Une phrase enregistrée est dite par la voix enregistrée, même sur un appareil sans voix française
@@ -318,7 +317,7 @@ Fonctionnalité: La voix enregistrée lit les leçons sans rien installer sur l'
         | niveau | leçon                   |
         | CE2    | De la graine à la plante |
 
-      @hors-182a @niveau-cm1 @niveau-cm2
+      @niveau-cm1 @niveau-cm2
       Exemples: CM1 et CM2 (182e)
         | niveau | leçon                    |
         | CM1    | Les types de phrases     |
