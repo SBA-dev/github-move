@@ -255,6 +255,20 @@ Réponse du PO du 2026-11-11 (« Reco tout ») : la recommandation de chaque que
 16. **183.16 Quand la barre d'action est-elle absente ?** La décision 7 dit qu'elle n'apparaît que s'il y a une action, par exemple pas pour une réponse par bulle.
     *Reco : elle apparaît dès qu'il y a au moins un bouton, « Je ne sais pas » compris.* Dans un exercice bulles, elle ne porte que « Je ne sais pas » (ni « Valider » ni « Continuer »). Elle est absente pendant la félicitation dite entre deux questions et dans memoriser quand aucun bouton n'est proposé.
 
+## 4. Ajustements après E2E (2026-11-11)
+
+Changement de **données d'exemple seulement** : les règles, le sens et les titres des scénarios sont inchangés.
+
+Raison : l'exécution E2E a montré qu'aucun exercice bulles de la bibliothèque n'a de champ `consigne` (seuls classer, ordre et trous en ont), et un exercice bulles sans consigne n'affiche pas de consigne par défaut. Trois scénarios de la règle « la consigne prend toute la largeur de la bulle… puis la consigne revient » vérifiaient le retour de la consigne sur un exercice qui n'en a pas : l'exercice « Quel son entends-tu ? » (fr-cp-sons-ou-on-an) et la question de test « Combien font 3 + 4 ? » (exercice bulles « Questions à choix », sans consigne). Ils jouent désormais la leçon de test « Compter », déjà employée par le scénario de « Réécouter » : un exercice bulles de consigne « Touche le bon nombre. », choix « 1 », « 2 », « 3 », réponse « 3 ».
+
+| Scénario | Avant | Après |
+|---|---|---|
+| À une réponse juste, Noisette apparaît pour féliciter Léa, puis la consigne revient avec la question suivante | « Quel son entends-tu ? », « poule » puis « mouton », réponse « ou » | « Compter », « Combien font 2 + 1 ? » puis « Combien font 1 + 2 ? », réponse « 3 » |
+| À la première réponse fausse, Coach Léo joue sa scène à la place de la bulle, puis la consigne revient et la question reste posée | question de test « Combien font 3 + 4 ? », réponse « 8 » | « Compter », « Combien font 2 + 1 ? », réponse « 1 » |
+| À une réponse fausse suivante, Noisette apparaît pour encourager Léa, puis la consigne revient | séance complète de « Les sons ou, on, an », « poule », réponse « on » | « Compter » : l'erreur déjà faite est à « Combien font 2 + 1 ? », la réponse fausse suivante « 1 » à « Combien font 1 + 2 ? » (une question neuve, dont aucun choix n'est déjà grisé) |
+
+Les autres scénarios du fichier et les scénarios tagués `@issue-183` des autres features qui parlent de la consigne jouent un exercice qui en a une (classer « Les maisons des sons », ordre « Le mot en morceaux », leçon de test « Compter »).
+
 ## Termes
 
 Aucun terme nouveau en dehors de ceux proposés au glossaire par le modèle du domaine (« Première réponse de la séance », « Pause », complément « Réécouter »), validés le 2026-11-11. « Barre du haut », « barre d'action », « barre de progression », « compteur », « pastille », « bulle » et « éclat » restent des mots d'interface, hors glossaire, comme « récipient ».
