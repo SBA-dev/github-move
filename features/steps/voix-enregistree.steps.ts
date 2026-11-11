@@ -420,24 +420,26 @@ When(/^Léa joue la leçon « ([^«»]+) » de la bibliothèque$/, async ({ page
   await ouvrirLaPageDeLaLecon(page, titre);
 });
 
-function titresDesExercicesAvecConsigne(page: Page): string[] {
+function exercicesAvecConsigne(page: Page): { titre: string; consigne: string }[] {
   return leconCourante(page).exercices.flatMap((exercice) =>
-    typeof exercice["consigne"] === "string" && typeof exercice["titre"] === "string" ? [exercice["titre"]] : []
+    typeof exercice["consigne"] === "string" && typeof exercice["titre"] === "string"
+      ? [{ titre: exercice["titre"], consigne: normaliser(exercice["consigne"]) }]
+      : []
   );
 }
 
 Then(/^Léa entend Noisette lire chaque consigne de la leçon avec la voix enregistrée$/, async ({ page }) => {
   const lecon = leconCourante(page);
-  const titres = titresDesExercicesAvecConsigne(page);
-  expect(titres.length, `la leçon « ${lecon.titre} » a des consignes à lire`).toBeGreaterThan(0);
+  const exercices = exercicesAvecConsigne(page);
+  expect(exercices.length, `la leçon « ${lecon.titre} » a des consignes à lire`).toBeGreaterThan(0);
   const repertoire = await page.evaluate(async () => (await fetch("/voix/repertoire.json")).json()) as Repertoire;
-  for (const [rang, titre] of titres.entries()) {
+  for (const [rang, { titre, consigne: consigneDeLaBibliotheque }] of exercices.entries()) {
     // Chaque exercice se joue sur une page neuve : le journal de lecture ne garde que sa consigne.
     if (rang > 0) await ouvrirLaPageDeLaLecon(page, lecon.titre);
     await commencerSeulementLExercice(page, titre);
-    await expect(consigneAffichee(page)).not.toHaveText("");
-    const consigne = normaliser((await consigneAffichee(page).textContent()) ?? "");
-    for (const { cle, texte } of phrasesAvecCle(consigne)) {
+    await expect(consigneAffichee(page)).toHaveText(consigneDeLaBibliotheque);
+    await expect(messageDeVoixIndisponible(page)).toHaveCount(0);
+    for (const { cle, texte } of phrasesAvecCle(consigneDeLaBibliotheque)) {
       const empreinte = repertoire.phrases[cle]?.normale;
       expect(empreinte, `« ${texte} » (consigne de « ${titre} ») est dans le répertoire des phrases enregistrées`).toBeDefined();
       const adresse = adresseDuMp3(cle, empreinte ?? "", "normale");
