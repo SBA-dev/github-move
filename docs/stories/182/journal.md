@@ -21,3 +21,6 @@ Branche : `feature/182-voix-mp3-piper`, partie de `main` (`aa75d97`). Base : `ma
 - 01:05–01:45 UTC : cycles TDD 1 à 6 verts, un commit test puis un commit feat chacun : clé de phrase TS (f840b1b), clé de phrase Python (f4fd778), plan de lecture (9892706), table de prononciation (4a81d7e), instants des mots (d22a0cd), fabrication reprenable avec faux Piper (f04c5ac). Deux pistes en parallèle (TS et Python) sur des fichiers séparés.
 - 01:10 UTC : question #182.20 posée (message « Ce navigateur ne sait pas lire à voix haute »), sans arrêt du TDD.
 - 01:45 UTC : RED 7 (`LecteurAvecRepli`) et RED 9 (`textesDitsDansLaLecon`) lancés.
+- 02:10 UTC : cycles 7, 7 bis (MP3 illisible sans voix française, rythme du remplacement), 9 et 9 bis verts. RED 7 ter (pas de redite avant le remplacement) en cours de GREEN.
+  - Points pour la revue du bloc : `textesDitsDansLaLecon` recopie la forme de `paroleDeLEtape` (`src/seance/useDeroulementDeSeance.ts`) au lieu de la partager ; `indicationDuGeste` est rendue pour tous les types, comme à l'écran, sans test dédié.
+  - Textes dits pas encore couverts (cycle 9 ter) : aides après erreur, « c'est *réponse*. », consignes de la poésie, introduction de la lecture, félicitation de la dictée.
