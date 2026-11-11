@@ -1,0 +1,174 @@
+[
+  {
+    "brut": "Lis « papa »",
+    "phrases": [
+      {
+        "texte": "Lis papa",
+        "cle": "cdd433cca8340655"
+      }
+    ]
+  },
+  {
+    "brut": "Lis le mot « maman ».",
+    "phrases": [
+      {
+        "texte": "Lis le mot maman.",
+        "cle": "01e60049cddaa1d6"
+      }
+    ]
+  },
+  {
+    "brut": "Dis « Bravo » !",
+    "phrases": [
+      {
+        "texte": "Dis Bravo !",
+        "cle": "dee18f0f56a52628"
+      }
+    ]
+  },
+  {
+    "brut": "« Bravo ! » dit Léa.",
+    "phrases": [
+      {
+        "texte": "Bravo !",
+        "cle": "7ed1fd060537f4a8"
+      },
+      {
+        "texte": "dit Léa.",
+        "cle": "9cb1e0697f0ae439"
+      }
+    ]
+  },
+  {
+    "brut": "3 + 4 = ?",
+    "phrases": [
+      {
+        "texte": "3 plus 4 égale ?",
+        "cle": "1f321476877b8274"
+      }
+    ]
+  },
+  {
+    "brut": "12 + 5 = 17",
+    "phrases": [
+      {
+        "texte": "12 plus 5 égale 17",
+        "cle": "491ebfdc733b7468"
+      }
+    ]
+  },
+  {
+    "brut": "Le chat ___ noir.",
+    "phrases": [
+      {
+        "texte": "Le chat ...",
+        "cle": "9b53e946c5930406"
+      },
+      {
+        "texte": "noir.",
+        "cle": "6c0c5e71d209fc1d"
+      }
+    ]
+  },
+  {
+    "brut": "Lis <b>le mot</b> vite&nbsp;!",
+    "phrases": [
+      {
+        "texte": "Lis le mot vite !",
+        "cle": "3046cd32f6b1a293"
+      }
+    ]
+  },
+  {
+    "brut": "Écoute… Puis réponds : oui ou non ?",
+    "phrases": [
+      {
+        "texte": "Écoute…",
+        "cle": "fb88dee1a9f801a3"
+      },
+      {
+        "texte": "Puis réponds :",
+        "cle": "f640945f37e33116"
+      },
+      {
+        "texte": "oui ou non ?",
+        "cle": "069601171c765492"
+      }
+    ]
+  },
+  {
+    "brut": "L'école de Léa",
+    "phrases": [
+      {
+        "texte": "L'école de Léa",
+        "cle": "e68affae034fecb7"
+      }
+    ]
+  },
+  {
+    "brut": "L\u2019école de Léa",
+    "phrases": [
+      {
+        "texte": "L'école de Léa",
+        "cle": "e68affae034fecb7"
+      }
+    ]
+  },
+  {
+    "brut": "Cafe\u0301 chaud.",
+    "phrases": [
+      {
+        "texte": "Café chaud.",
+        "cle": "f8f49afb08d5c9d4"
+      }
+    ]
+  },
+  {
+    "brut": "Lis\u00a0le\u202fmot\u00a0!",
+    "phrases": [
+      {
+        "texte": "Lis le mot !",
+        "cle": "7d3177be1ca3293d"
+      }
+    ]
+  },
+  {
+    "brut": "Nouveau jeu : Quel son entends-tu ? !",
+    "phrases": [
+      {
+        "texte": "Nouveau jeu :",
+        "cle": "9489fd92bbccebc8"
+      },
+      {
+        "texte": "Quel son entends-tu ?",
+        "cle": "b407412cab63b176"
+      }
+    ]
+  },
+  {
+    "brut": "!",
+    "phrases": []
+  },
+  {
+    "brut": "Bravo ! Bravo.",
+    "phrases": [
+      {
+        "texte": "Bravo !",
+        "cle": "7ed1fd060537f4a8"
+      },
+      {
+        "texte": "Bravo.",
+        "cle": "356c060a04b86597"
+      }
+    ]
+  },
+  {
+    "brut": "Dans le jardin de ma grand-mère, les petits oiseaux chantent le matin, les abeilles volent de fleur en fleur, et les enfants arrosent les carottes avec un grand arrosoir bleu.",
+    "phrases": [
+      {
+        "texte": "Dans le jardin de ma grand-mère, les petits oiseaux chantent le matin, les abeilles volent de fleur en fleur, et les enfants arrosent les carottes avec un grand arrosoir bleu.",
+        "cle": "aa7e53f14f04e7da"
+      }
+    ]
+  }
+]
