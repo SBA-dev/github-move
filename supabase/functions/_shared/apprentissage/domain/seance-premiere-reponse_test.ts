@@ -35,3 +35,11 @@ Deno.test("une séance a reçu une réponse dès la première réponse, juste ou
     [true, true],
   );
 });
+
+Deno.test('après "Je ne sais pas", la séance a reçu une réponse', () => {
+  const seance = seanceQuiVientDeCommencer();
+
+  seance.direJeNeSaisPas();
+
+  assertEquals(seance.aRecuUneReponse(), true);
+});
