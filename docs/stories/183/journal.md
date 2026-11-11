@@ -22,3 +22,7 @@ Branche de base : `main` (`aa75d97`). Branche : `feature/183-ecran-de-seance-bar
   - cycle 2 : « Je ne sais pas » (`84ac26f6` rouge, `dae6f53e` vert, lecture des réponses gardées par les questions, sans état nouveau) ;
   - tests qui protègent les règles déjà tenues (étape, fluence démarrée, lettre de dictée) : `8402a3af`.
   - Suite unitaire : 2953 verts.
+- Revue intermédiaire du bloc domaine : APPROUVÉ, sans bloquant. Les non-bloquants sont traités par des tests de protection (`1f932110`).
+- Câblage, partie 1 : bouton Son partagé (`5dc6ec9f`) ; barre du haut, barre de progression (`data-eclat`) et feuille de pause, avec le geste retour par `useGardeDuRetour` (`d9432386`).
+  - Écart : l'implementer a lancé `@issue-16` sur `telephone` sans le verrou `base`. C'était une lecture seule, sans migration, mais contre le projet partagé. Rappel fait : plus aucun run E2E sans le verrou.
+  - Dette à voir : l'entrée de garde reste dans l'historique quand on quitte autrement que par Retour.
