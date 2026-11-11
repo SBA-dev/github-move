@@ -119,6 +119,7 @@ Fonctionnalité: La voix enregistrée lit les leçons sans rien installer sur l'
       Étant donné que l'appareil n'a aucune voix française
       Et que Léa voit le message de voix indisponible
       Et que la phrase « Écoute bien. » est une phrase enregistrée
+      Et que la phrase « Combien font 1 plus 2 ? » est une phrase enregistrée
       Quand la consigne « Écoute bien. » s'affiche
       Alors Léa entend Noisette lire « Écoute bien. » avec la voix enregistrée
       Et Léa ne voit plus le message de voix indisponible
@@ -128,6 +129,7 @@ Fonctionnalité: La voix enregistrée lit les leçons sans rien installer sur l'
       Étant donné que l'appareil n'a aucune voix française
       Et que Léa voit le message de voix indisponible
       Et que la phrase « Écoute bien. » est une phrase enregistrée
+      Et que la phrase « Combien font 1 plus 2 ? » est une phrase enregistrée
       Et que le navigateur bloque la voix
       Quand la consigne « Écoute bien. » s'affiche
       Alors Léa voit un seul message de voix bloquée
