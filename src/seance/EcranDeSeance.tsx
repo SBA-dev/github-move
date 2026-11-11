@@ -291,31 +291,49 @@ function SeanceEnCours(
                     onBasculerLeSon={voix.basculerLeSon}
                   />
                 )}
-              <div className="guide-et-parole">
-                {personnageMontre && !celebrationDeLUnivers && (
-                  <PersonnageGuideEtSaScene univers={univers} humeur={deroulement.humeur} reponseFausse={reponseFausse} />
-                )}
-                <div className="parole-et-reecouter">
-                  <div className="texte-de-la-bulle">
-                    <div className="consigne-de-l-exercice" aria-live="polite">
-                      {consigneMontree !== undefined && (
-                        <p className="consigne" data-testid="consigne">
-                          <TexteSurligne
-                            texte={consigneMontree}
-                            rangDuMotPrononce={laConsigneEstLue ? deroulement.rangDuMotPrononce : undefined}
-                          />
-                        </p>
+              {finie
+                ? (
+                  <>
+                    <div className="guide-et-parole">
+                      {!celebrationDeLUnivers && (
+                        <PersonnageGuideEtSaScene univers={univers} humeur={deroulement.humeur} reponseFausse={reponseFausse} />
                       )}
+                      <BulleDuPersonnageGuide
+                        texte={deroulement.parole?.texte}
+                        nature={deroulement.parole?.nature}
+                        rangDuMotPrononce={deroulement.rangDuMotPrononce}
+                      />
                     </div>
-                    <BulleDuPersonnageGuide
-                      texte={texteDeLaBulle}
-                      nature={deroulement.parole?.nature}
-                      rangDuMotPrononce={deroulement.rangDuMotPrononce}
-                    />
+                    <button type="button" className="reecouter" onClick={deroulement.reecouter}>Réécouter</button>
+                  </>
+                )
+                : (
+                  <div className="guide-et-parole">
+                    {personnageMontre && !celebrationDeLUnivers && (
+                      <PersonnageGuideEtSaScene univers={univers} humeur={deroulement.humeur} reponseFausse={reponseFausse} />
+                    )}
+                    <div className="parole-et-reecouter">
+                      <div className="texte-de-la-bulle">
+                        <div className="consigne-de-l-exercice" aria-live="polite">
+                          {consigneMontree !== undefined && (
+                            <p className="consigne" data-testid="consigne">
+                              <TexteSurligne
+                                texte={consigneMontree}
+                                rangDuMotPrononce={laConsigneEstLue ? deroulement.rangDuMotPrononce : undefined}
+                              />
+                            </p>
+                          )}
+                        </div>
+                        <BulleDuPersonnageGuide
+                          texte={texteDeLaBulle}
+                          nature={deroulement.parole?.nature}
+                          rangDuMotPrononce={deroulement.rangDuMotPrononce}
+                        />
+                      </div>
+                      <BoutonReecouter inactif={reecouterInactif} onReecouter={deroulement.reecouter} />
+                    </div>
                   </div>
-                  <BoutonReecouter inactif={reecouterInactif} onReecouter={deroulement.reecouter} />
-                </div>
-              </div>
+                )}
               {etape && (
                 <div className="etape-de-lecon" data-testid="etape-de-lecon">
                   {etape.exemples.length > 0 && (
