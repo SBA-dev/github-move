@@ -14,7 +14,7 @@ const LECON_AJOUTEE = "lecon-ajoutee-par-le-test";
 const MP3_DE_TEST = readFileSync(new URL("./phrase-de-test.mp3", import.meta.url));
 
 // #182 : `voix` est la liste des phrases enregistrées publiées par un scénario (cle, texte, empreinte, adresse du MP3).
-const etat = { versionPubliee: false, leconPubliee: false, leconDeTest: null, voix: null };
+const etat = { versionPubliee: false, leconPubliee: false, leconDeTest: null, voix: null, reseauCoupe: false };
 
 function interroger(requete) {
   return new Promise((resolve, reject) => {
@@ -68,6 +68,12 @@ async function commande(nom, reponse, requete) {
     etat.leconPubliee = false;
     etat.leconDeTest = null;
     etat.voix = null;
+    etat.reseauCoupe = false;
+    return repondre(reponse, 200, { "content-type": "application/json" }, Buffer.from("{}"));
+  }
+  if (nom === "couper-le-reseau" || nom === "retablir-le-reseau") {
+    // #182 : `setOffline` ne coupe pas les requêtes du service worker ; le relais refuse donc tout, comme un réseau absent.
+    etat.reseauCoupe = nom === "couper-le-reseau";
     return repondre(reponse, 200, { "content-type": "application/json" }, Buffer.from("{}"));
   }
   if (nom === "publier-lecon") {
@@ -107,6 +113,7 @@ function voixPubliee(chemin, reponse) {
 }
 
 async function relayer(requete, reponse) {
+  if (etat.reseauCoupe) return requete.socket.destroy();
   const chemin = new URL(requete.url, "http://relais").pathname;
   if (voixPubliee(chemin, reponse)) return;
   const amont = await interroger(requete);
