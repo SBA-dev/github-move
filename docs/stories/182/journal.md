@@ -130,3 +130,9 @@ Branche : `feature/182-voix-mp3-piper`, partie de `main` (`aa75d97`). Base : `ma
 - Durée : de 16:15 à ≈ 17:35 UTC, soit ≈ 1 h 20, dont ≈ 23 min de fabrication et ≈ 50 min d'attente du verrou `base`.
 - TDD : 1 cycle. Revue : 1, APPROUVÉ. E2E : 1 série, verte du premier coup.
 - Fabrication : 570 phrases du CE2 (579 MP3), `public/voix/` à 22 Mo.
+
+# Livraison 182e : CM1 et CM2
+
+- 17:35 UTC (11/11) : 182d mergée (PR #200, `f59e2f4`) ; le responsable fait enchaîner sur 182e. Branche recréée depuis `main` (`f59e2f4`). RED 31 (fabcca7) : garde de couverture étendue au CM1 et au CM2 (1144 phrases sans MP3), tous les niveaux couverts. Exemples CM1 et CM2 exécutables (ee1315e) : plus aucun scénario ne porte `@hors-182a`.
+- 17:40–18:05 UTC (11/11) : fabrication du CM1 terminée (588 MP3) ; celle du CM2 coupée à 159 MP3 par la limite de durée de la tâche de fond, puis la session s'est arrêtée sur la limite d'utilisation de 5 h.
+- 07:10 UTC (12/11) : reprise. Les 747 MP3 non suivis sont tous lisibles (`ffprobe`, aucun fichier tronqué). Fabrication du CM2 relancée (reprenable : les 159 déjà faits sont sautés). Critères mis à jour : tag `@hors-182a` retiré (98c4508).
