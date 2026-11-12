@@ -136,3 +136,18 @@ Branche : `feature/182-voix-mp3-piper`, partie de `main` (`aa75d97`). Base : `ma
 - 17:35 UTC (11/11) : 182d mergée (PR #200, `f59e2f4`) ; le responsable fait enchaîner sur 182e. Branche recréée depuis `main` (`f59e2f4`). RED 31 (fabcca7) : garde de couverture étendue au CM1 et au CM2 (1144 phrases sans MP3), tous les niveaux couverts. Exemples CM1 et CM2 exécutables (ee1315e) : plus aucun scénario ne porte `@hors-182a`.
 - 17:40–18:05 UTC (11/11) : fabrication du CM1 terminée (588 MP3) ; celle du CM2 coupée à 159 MP3 par la limite de durée de la tâche de fond, puis la session s'est arrêtée sur la limite d'utilisation de 5 h.
 - 07:10 UTC (12/11) : reprise. Les 747 MP3 non suivis sont tous lisibles (`ffprobe`, aucun fichier tronqué). Fabrication du CM2 relancée (reprenable : les 159 déjà faits sont sautés). Critères mis à jour : tag `@hors-182a` retiré (98c4508).
+- 07:20 UTC (12/11) : fabrication du CM2 terminée (407 fabriquées, 159 sautées) : 3286 phrases, `public/voix` à 34 Mo (2e6ab2c). Pages d'écoute du CM1 et du CM2 publiées (question #182.24, non bloquante).
+- 07:23–07:35 UTC : **VERROU base** accordé ; `telephone` `@issue-182` 35/36 : l'exemple CM2 « La phrase complexe » n'a aucune consigne d'exercice (un seul exercice `bulles` sans `consigne`), donnée d'exemple mal choisie. Exemple remplacé par « Les nuances de sens » (acb134a, règle et étapes inchangées). Relance des exemples CM1 et CM2 : `telephone` 2/2, `tablette` 2/2. LIBÈRE base.
+- 07:35 UTC : revue de 182e : **APPROUVÉ** (1154 nouveaux MP3 décodés sans erreur et non tronqués après la reprise, 2142 entrées existantes identiques, `@hors-182a` plus actif nulle part). PR ouverte, VERROU merge demandé.
+
+## Mesures (182e)
+
+- Durée : de 17:35 UTC (11/11) à ≈ 07:40 UTC (12/11), dont ≈ 13 h d'arrêt de la session (limite d'utilisation) ; travail effectif ≈ 1 h 30, dont ≈ 40 min de fabrication.
+- TDD : 1 cycle. Revue : 1, APPROUVÉ. E2E : 1 série et une relance ciblée (exemple CM2 corrigé).
+- Fabrication : 583 phrases du CM1 et 561 du CM2 (1154 MP3), `public/voix/` à 34 Mo.
+
+## Bilan des livraisons 182b à 182e
+
+- 3055 phrases de leçons fabriquées (CP 765, CE1 576, CE2 570, CM1 583, CM2 561) en plus des 231 paroles fixes : 3286 phrases, 3333 MP3, 34 Mo pour un budget de 45 Mo.
+- Un bug du pipeline trouvé et corrigé par TDD (fabrication d'un niveau qui effaçait le répertoire des autres).
+- Restent ouverts, sans bloquer : les réponses du PO aux pages d'écoute (paroles fixes, #182.21 à #182.24) pour la table de prononciation ; le scénario « écran du parent », à refaire passer par la page de la leçon après le merge de #183 ; la purge des entrées et MP3 qui ne seraient plus exportés.
