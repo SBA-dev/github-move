@@ -19,7 +19,7 @@ Fonctionnalité: La voix enregistrée lit les leçons sans rien installer sur l'
       ces paroles fabriquées (fin de 182a, après le téléchargement du modèle de voix) ;
     - `@niveau-cp`, `@niveau-ce1`… : l'exemple lit les vrais MP3 des leçons de ce niveau ;
       `@hors-182a` reste sur les exemples des niveaux pas encore fabriqués et se retire à la livraison
-      qui fabrique ce niveau (182b pour le CP et 182c pour le CE1, faits ; puis 182d CE2, 182e CM1 et CM2) ;
+      qui fabrique ce niveau (182b pour le CP, 182c pour le CE1 et 182d pour le CE2, faits ; puis 182e CM1 et CM2) ;
     - `@pwa` : le scénario a besoin du service worker ; il tourne avec la configuration de la PWA (#8).
 
   Règle: Une phrase enregistrée est dite par la voix enregistrée, même sur un appareil sans voix française
@@ -313,7 +313,7 @@ Fonctionnalité: La voix enregistrée lit les leçons sans rien installer sur l'
         | niveau | leçon                     |
         | CE1    | Que mangent les animaux ? |
 
-      @hors-182a @niveau-ce2
+      @niveau-ce2
       Exemples: CE2 (182d)
         | niveau | leçon                   |
         | CE2    | De la graine à la plante |

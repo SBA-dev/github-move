@@ -9,7 +9,7 @@ import bibliotheque from "../../../../../app/bibliotheque.json" with { type: "js
 import repertoire from "../../../../../public/voix/repertoire.json" with { type: "json" };
 
 // Élargir à chaque livraison de niveau (182b à 182e).
-const NIVEAUX_FABRIQUES = ["commun", "CP", "CE1"];
+const NIVEAUX_FABRIQUES = ["commun", "CP", "CE1", "CE2"];
 
 const NOMBRE_DE_PHRASES_CITEES = 5;
 
