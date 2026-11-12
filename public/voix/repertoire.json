@@ -22,6 +22,15 @@
     "0075c981c9494f5a": {
       "normale": "cb295c9f"
     },
+    "008872d68c680550": {
+      "normale": "1f713b79"
+    },
+    "009161c798f6b7bc": {
+      "normale": "ab640a75"
+    },
+    "0091926f0c4fb4cd": {
+      "normale": "16c59075"
+    },
     "0099833efb3a6a22": {
       "normale": "ae82ef2b"
     },
@@ -30,6 +39,9 @@
     },
     "00b8452a7f9f1e93": {
       "normale": "d166e1a4"
+    },
+    "010759e095fc5efb": {
+      "normale": "90d4bce1"
     },
     "01104087e0b1afa1": {
       "normale": "97c42f6c"
@@ -42,6 +54,9 @@
     },
     "01517fb99efeb97f": {
       "normale": "a4b86046"
+    },
+    "0158fb3a96fae7e2": {
+      "normale": "3ba8ccff"
     },
     "015c5142bb204b3b": {
       "normale": "c42c27ce"
@@ -64,14 +79,29 @@
     "01c58bbf8ff76cd4": {
       "normale": "e97fe910"
     },
+    "01c58c2e646987df": {
+      "normale": "170cde3d"
+    },
+    "01f8fc5a3c9a0af0": {
+      "normale": "52e4a7cb"
+    },
     "0200781531cd5aa5": {
       "normale": "515d14d1"
     },
     "02009d82405d860c": {
       "normale": "b660f7ec"
     },
+    "02128f5203cd909b": {
+      "normale": "f71b3756"
+    },
+    "0214607977f8405c": {
+      "normale": "3d12cf7a"
+    },
     "02166fed531f4a38": {
       "normale": "bbcccf94"
+    },
+    "021899f64f80d2a6": {
+      "normale": "8750c628"
     },
     "02423071d9417271": {
       "normale": "90ab6789"
@@ -79,17 +109,32 @@
     "026208305f40fa70": {
       "normale": "87a7a389"
     },
+    "0263cbc754fbec00": {
+      "normale": "973e9d6b"
+    },
     "0264cdcfa4bfe82c": {
       "normale": "e747605b"
     },
     "026e00f80bee3d8a": {
       "normale": "4d9c0d31"
     },
+    "0296e313735af5da": {
+      "normale": "58d77bed"
+    },
+    "02995d1c32d51f50": {
+      "normale": "3b504148"
+    },
     "02a13f8e165aedb0": {
       "normale": "ba720f20"
     },
+    "02affe47ad0ec6a6": {
+      "normale": "becab146"
+    },
     "02e22b33a3df8d5b": {
       "normale": "81044644"
+    },
+    "02e7a89974e92c25": {
+      "normale": "c9504671"
     },
     "02ed2013e6839996": {
       "normale": "2b634e23"
@@ -99,6 +144,9 @@
     },
     "02fc454be7cc29d5": {
       "normale": "2e940f8e"
+    },
+    "030890058ce1ac93": {
+      "normale": "d2a3ca59"
     },
     "030e1c7c0e40e618": {
       "normale": "9bb0d6ed"
@@ -115,6 +163,9 @@
     "0354cace8915c691": {
       "normale": "6ab1ff40"
     },
+    "0376eae0a0cb64ea": {
+      "normale": "a39f12c1"
+    },
     "03922c3b2818e6f2": {
       "normale": "8cf3eb7f"
     },
@@ -128,17 +179,26 @@
     "03da813508653dd7": {
       "normale": "05da0e4e"
     },
+    "03e0709da0421809": {
+      "normale": "7288918d"
+    },
     "03ec024eaaeabe53": {
       "normale": "18399149"
     },
     "040521cff9c2cb42": {
       "normale": "b1a39e26"
     },
+    "041938953be34ac1": {
+      "normale": "2bccda30"
+    },
     "041c782b9a3d6672": {
       "normale": "b35efd42"
     },
     "041cfd2690b4c991": {
       "normale": "922632da"
+    },
+    "041e4801f7214c5b": {
+      "normale": "12fa5a9c"
     },
     "041f1a06d26eb5a1": {
       "normale": "d9e913ed"
@@ -153,6 +213,9 @@
     "04789fe440299c91": {
       "normale": "af62d642"
     },
+    "047cde0b0e06b623": {
+      "normale": "a71e1fb6"
+    },
     "048f0d9273f42126": {
       "normale": "8ed65898"
     },
@@ -161,6 +224,9 @@
     },
     "04aefba803ac8b8a": {
       "normale": "37efe4e4"
+    },
+    "04b52b860c32558c": {
+      "normale": "b125dd23"
     },
     "04b75a897d12894c": {
       "normale": "0531c890"
@@ -189,26 +255,50 @@
     "05b1f4d5650490c0": {
       "normale": "e91dc0ce"
     },
+    "05c3201d2929c50f": {
+      "normale": "7a0a9150"
+    },
     "05ca859448a88853": {
       "normale": "91ec1255"
     },
     "05ee7cb4b2e7f998": {
       "normale": "d8db67dc"
     },
+    "05f00a88101b24e3": {
+      "normale": "d4cee2c4"
+    },
+    "0602c7cd4a9ee7e0": {
+      "normale": "d89dd3dc"
+    },
     "064134c30d0e8638": {
       "normale": "6f4debb3"
+    },
+    "065b8b3b5d65e248": {
+      "normale": "b4191966"
     },
     "065fdabce2be8d35": {
       "normale": "31062106"
     },
+    "06848b3b5d88e75c": {
+      "normale": "c0b61f91"
+    },
     "069027a35f782a87": {
       "normale": "db24ab8e"
+    },
+    "06a6692863169863": {
+      "normale": "a5c2c094"
     },
     "06b0768a03fa85db": {
       "normale": "c1e233c3"
     },
+    "06c60e52a02cb311": {
+      "normale": "6598065c"
+    },
     "06d2a8e00db4fa73": {
       "normale": "99b97ba3"
+    },
+    "06fb0d84de0a6f01": {
+      "normale": "292e3408"
     },
     "070dd3b3597e78d3": {
       "normale": "f55083fd"
@@ -225,17 +315,26 @@
     "078c0bbe336a4769": {
       "normale": "736dccd1"
     },
+    "07a963632158d738": {
+      "normale": "56501dc3"
+    },
     "07ba98922eec7b63": {
       "normale": "c24be578"
     },
     "07e0c00592a08688": {
       "normale": "cc2b6148"
     },
+    "080314194c967393": {
+      "normale": "adeac240"
+    },
     "0808641917672194": {
       "normale": "8f8eacc9"
     },
     "0811084079a4f0ce": {
       "normale": "9fcff615"
+    },
+    "08412a098e13bd8a": {
+      "normale": "f48dd607"
     },
     "08647e24d85608e5": {
       "normale": "fa19ae76"
@@ -245,6 +344,12 @@
     },
     "089c3807b5458406": {
       "normale": "17f11605"
+    },
+    "08a25b07b54a2b2d": {
+      "normale": "4f52e80d"
+    },
+    "08a27a07b54a5fda": {
+      "normale": "54987139"
     },
     "08b2a3b7aaca5b11": {
       "normale": "41d92a97"
@@ -261,8 +366,14 @@
     "08d02fd16949ea4b": {
       "normale": "d6da6d10"
     },
+    "08d13bb15ccbae4c": {
+      "normale": "442d9608"
+    },
     "08ee61051ea5c3a3": {
       "normale": "24e1cccd"
+    },
+    "08fe8407b598cf85": {
+      "normale": "1a5d517e"
     },
     "090f7c07b5a73520": {
       "normale": "b6f0e613"
@@ -276,9 +387,21 @@
     "09bba11c0ec9ee8a": {
       "normale": "cbb3ab3a"
     },
+    "09c627db1075f1cf": {
+      "normale": "b578880f"
+    },
+    "09cb5faaaaa04fd7": {
+      "normale": "aa7d4a10"
+    },
+    "09d8333431536679": {
+      "normale": "e977f478"
+    },
     "09e7f3c2fa3fd180": {
       "lente": "709140e3",
       "normale": "a58c402c"
+    },
+    "09e981d74e919706": {
+      "normale": "099af965"
     },
     "09ece8afab8ec6da": {
       "normale": "edbd6d2e"
@@ -286,14 +409,29 @@
     "0a03b8fc2c09e1e6": {
       "normale": "47b137f6"
     },
+    "0a05ad67db70c982": {
+      "normale": "867ff6df"
+    },
+    "0a1987db069c13d1": {
+      "normale": "11e71413"
+    },
     "0a1bc768fa87158d": {
       "normale": "ea0e2a84"
     },
     "0a2a3b52bad1cb4c": {
       "normale": "685026a0"
     },
+    "0a3699ddab111c76": {
+      "normale": "550a03b1"
+    },
+    "0a3fae494f53e3c2": {
+      "normale": "80d8e936"
+    },
     "0a6369b9c40d66a9": {
       "normale": "fb6eae55"
+    },
+    "0a8dbb2182abbb27": {
+      "normale": "dc87393f"
     },
     "0aa3a9284ee1e886": {
       "normale": "240f6c05"
@@ -301,14 +439,38 @@
     "0ab644b5fa390c5e": {
       "normale": "d496facf"
     },
+    "0ac70d2acfae92da": {
+      "normale": "298e20b3"
+    },
     "0ad76bd7ad1f8741": {
       "normale": "1144b74f"
     },
     "0ae3078b066b02b6": {
       "normale": "114f7f90"
     },
+    "0b164064fcba089b": {
+      "normale": "76545639"
+    },
+    "0b16996dcbd0e3f9": {
+      "normale": "afce4fd3"
+    },
+    "0b3cd76d89a90f10": {
+      "normale": "fe875361"
+    },
+    "0b5422ed605129f1": {
+      "normale": "347e2425"
+    },
+    "0b5426c6eef279e1": {
+      "normale": "dc1a03e8"
+    },
+    "0b718e830504354c": {
+      "normale": "02696112"
+    },
     "0b774fc15900beac": {
       "normale": "cb192843"
+    },
+    "0b8629b45567c1f0": {
+      "normale": "1498c1bb"
     },
     "0b8fadd5e90b36fc": {
       "normale": "186f6b9d"
@@ -322,8 +484,18 @@
     "0be98eb06245e17b": {
       "normale": "36226633"
     },
+    "0bea45d86c883c16": {
+      "normale": "36dbff3a"
+    },
+    "0c03b7a7a1b763a2": {
+      "lente": "250de1ed",
+      "normale": "6873080d"
+    },
     "0c0433973f9abefa": {
       "normale": "c6db1c32"
+    },
+    "0c04480187428f4d": {
+      "normale": "f0393acf"
     },
     "0c18d8321c3f5e1f": {
       "normale": "f50f8c32"
@@ -332,14 +504,38 @@
       "lente": "0e1d04e7",
       "normale": "91b417e8"
     },
+    "0c34ea5edc8721a6": {
+      "normale": "70d2e925"
+    },
+    "0c4ca811483d6bf6": {
+      "normale": "2615708c"
+    },
     "0c4ce511483dd39d": {
       "normale": "cbd1df77"
     },
     "0ca3318f9f87e765": {
       "normale": "88a42ecd"
     },
+    "0cacf1283b5da89a": {
+      "normale": "c5550802"
+    },
+    "0d1aa44ad4fd8d06": {
+      "normale": "a7ae0a70"
+    },
+    "0d31dc9f233b208a": {
+      "normale": "da238771"
+    },
     "0d4b11efef02f9c0": {
       "normale": "747be3a9"
+    },
+    "0d55b33009b814d8": {
+      "normale": "ed7d64e5"
+    },
+    "0d734d1b24e15529": {
+      "normale": "b0dddd82"
+    },
+    "0db12e5376f2ea73": {
+      "normale": "d76ed859"
     },
     "0dbe6767cc6460a3": {
       "normale": "de00a99f"
@@ -355,6 +551,12 @@
     },
     "0de0e32f6e5325ce": {
       "normale": "00f419a5"
+    },
+    "0dfd9b7743345904": {
+      "normale": "b1025aed"
+    },
+    "0e00801f30c5a9a7": {
+      "normale": "58f4f8e9"
     },
     "0e15bbf480977482": {
       "normale": "392c0cf1"
@@ -377,6 +579,9 @@
     "0eacff237f5bbf82": {
       "normale": "0d57557f"
     },
+    "0eb151e612ce1c27": {
+      "normale": "6a767c66"
+    },
     "0eb7202cd1da590b": {
       "normale": "34443cb4"
     },
@@ -385,6 +590,9 @@
     },
     "0ed47d6887077c26": {
       "normale": "6cb921b9"
+    },
+    "0edcea11b7a901b7": {
+      "normale": "6f257a9b"
     },
     "0ee15dca19daf62f": {
       "normale": "9fd13852"
@@ -398,6 +606,9 @@
     "0f4ca8487dae5172": {
       "normale": "39548862"
     },
+    "0f5c685269ea0130": {
+      "normale": "3c1f0c19"
+    },
     "0f688273a69d77e6": {
       "normale": "e9da7b90"
     },
@@ -410,8 +621,17 @@
     "0f9419b159673e0c": {
       "normale": "3d585917"
     },
+    "0f99f0743b673dab": {
+      "normale": "950138b6"
+    },
     "0fa7fea130ce2d50": {
       "normale": "38a0fb4e"
+    },
+    "0fc2b3e92ec74692": {
+      "normale": "0d77169e"
+    },
+    "0fc440d8f63b9a06": {
+      "normale": "3b65c044"
     },
     "0ffe1edb8ded9097": {
       "normale": "93f26839"
@@ -428,8 +648,17 @@
     "107eea2989ec7727": {
       "normale": "9e8e11ee"
     },
+    "108c9e8f0c19f1ec": {
+      "normale": "9be81cfd"
+    },
     "10c2bd57578ce490": {
       "normale": "0484a6c9"
+    },
+    "10cdb9f482ea2931": {
+      "normale": "037b4779"
+    },
+    "1123db1031f86188": {
+      "normale": "9b84ac57"
     },
     "114ec1256c4a6224": {
       "normale": "4dd73cc4"
@@ -440,11 +669,35 @@
     "1163b249fcd8462a": {
       "normale": "cc259006"
     },
+    "118c8c6c65815767": {
+      "normale": "1ba3434c"
+    },
+    "118c8f9c729ad663": {
+      "normale": "b93b2389"
+    },
+    "11abb389f0915114": {
+      "normale": "afe4d3a6"
+    },
+    "11bc67b8a5709a0e": {
+      "normale": "e732e714"
+    },
+    "11d5f66570b3f7e8": {
+      "normale": "d6305d51"
+    },
+    "11da01a76e5002ff": {
+      "normale": "7f8a0879"
+    },
     "11dc1b03926cd552": {
       "normale": "15d3b464"
     },
+    "11eff8eb3ddec8b0": {
+      "normale": "37f802b6"
+    },
     "11f1fb975acb1843": {
       "normale": "bea61d77"
+    },
+    "11f667a75a2388d3": {
+      "normale": "e5353ccd"
     },
     "120bea939b892e2a": {
       "normale": "128caf98"
@@ -458,6 +711,9 @@
     "12376d631e4903ed": {
       "normale": "fc6e4b26"
     },
+    "1237bd7b3f49fa3f": {
+      "normale": "f071e8ee"
+    },
     "123d09dc16a12db1": {
       "normale": "3732c968"
     },
@@ -467,11 +723,23 @@
     "1274da56a1db705c": {
       "normale": "4a27123e"
     },
+    "127c754e04addd14": {
+      "normale": "27af54de"
+    },
+    "127dc3a2c0bfe988": {
+      "normale": "50adaf93"
+    },
     "128a7c119471f581": {
       "normale": "917c41cf"
     },
     "12acf96d1b492a30": {
       "normale": "aecdcd85"
+    },
+    "12baa9f7240a759d": {
+      "normale": "c5c76a68"
+    },
+    "12d871b362579a30": {
+      "normale": "61d390ba"
     },
     "12efbf168d068540": {
       "normale": "41c6ece6"
@@ -485,8 +753,26 @@
     "1329148fb4d07422": {
       "normale": "c9e19aae"
     },
+    "132e88a008fe137e": {
+      "normale": "1ae13281"
+    },
+    "1333dce0c810bcc8": {
+      "normale": "2f4e6fe6"
+    },
+    "1350411d08c6a200": {
+      "normale": "679a619c"
+    },
+    "13b637a2f9c232fc": {
+      "normale": "461da34f"
+    },
+    "13bea2ca8e765651": {
+      "normale": "e34108c9"
+    },
     "13d4f58b7a3e897a": {
       "normale": "d8e74742"
+    },
+    "13da5306e2e38382": {
+      "normale": "237e1943"
     },
     "13dc67f4a550d1b2": {
       "normale": "2ea22886"
@@ -494,8 +780,17 @@
     "13f7cdac17c214ed": {
       "normale": "1d12943f"
     },
+    "1418ea82862f2c9c": {
+      "normale": "d2c31e9f"
+    },
+    "141bf58025c1f59b": {
+      "normale": "7b5bad58"
+    },
     "142741f29f596031": {
       "normale": "10169227"
+    },
+    "142d74fb7c35bc09": {
+      "normale": "9e0ce62d"
     },
     "144462c409016e76": {
       "normale": "7c1cb11f"
@@ -527,11 +822,20 @@
     "14ed1147faa6b8ec": {
       "normale": "b6a3ac6d"
     },
+    "14ed411c33be9428": {
+      "normale": "fd3e5d95"
+    },
     "14f4e24f3a714aaa": {
       "normale": "5c13fc0e"
     },
+    "15163d6707ead153": {
+      "normale": "d939665d"
+    },
     "153069f08dad1150": {
       "normale": "e0c84a0b"
+    },
+    "153b6ab3f198a4a0": {
+      "normale": "e35630f9"
     },
     "154164f3a7cf21c9": {
       "normale": "04aa0a86"
@@ -542,8 +846,14 @@
     "1556008118987f61": {
       "normale": "a79b5686"
     },
+    "1566ae127bf667a1": {
+      "normale": "bb783a04"
+    },
     "156956890f98f930": {
       "normale": "4765376e"
+    },
+    "15695f263b6474e1": {
+      "normale": "d0015fc7"
     },
     "15731dc8486d0566": {
       "normale": "2d28b83b"
@@ -557,8 +867,29 @@
     "15a57819b06c9a04": {
       "normale": "625d65c9"
     },
+    "15b3e13fa1abf3f3": {
+      "normale": "7d1fb86b"
+    },
+    "15bbc34ac74c84b7": {
+      "normale": "76b75c80"
+    },
+    "15c54d3d92d0e75b": {
+      "normale": "0c0f5e52"
+    },
     "15c71f51f266ac43": {
       "normale": "8274b991"
+    },
+    "15cabcf184d21c0d": {
+      "normale": "0e70ff9f"
+    },
+    "15cbcf12ac4960a3": {
+      "normale": "2937090a"
+    },
+    "15d2772b27e746d8": {
+      "normale": "d82c0276"
+    },
+    "15eab45bb5fa66ba": {
+      "normale": "49f1037e"
     },
     "15fafa9e7b6cefbd": {
       "normale": "75eb6d83"
@@ -566,8 +897,23 @@
     "16032af247ae35db": {
       "normale": "0e955859"
     },
+    "1611ceca85f387e1": {
+      "normale": "12c740c1"
+    },
+    "1615fdd13b891880": {
+      "normale": "c0c59dbe"
+    },
     "16281416e9751fff": {
       "normale": "452527ec"
+    },
+    "162b50519559caf7": {
+      "normale": "cbe50e18"
+    },
+    "16338cad115746bb": {
+      "normale": "cf25923c"
+    },
+    "163997f210332f34": {
+      "normale": "d3004314"
     },
     "1644d22b0d8583fc": {
       "normale": "ac48491c"
@@ -575,11 +921,32 @@
     "1665c56a51023209": {
       "normale": "7a67bc8c"
     },
+    "166e1dd88ed8fcfa": {
+      "normale": "e8944996"
+    },
+    "16849fc1de9640e6": {
+      "normale": "8e9e8009"
+    },
     "16877df743521df9": {
       "normale": "510bed02"
     },
+    "169c4fe88a2338c9": {
+      "normale": "91085a26"
+    },
+    "169f0992cb4815d3": {
+      "normale": "150419f5"
+    },
+    "16a899fab366354d": {
+      "normale": "b4c207b6"
+    },
     "16ac436e93514ff9": {
       "normale": "c8726404"
+    },
+    "16b6a5fcbfd25189": {
+      "normale": "3f90cd4f"
+    },
+    "16b869d27f4e06f7": {
+      "normale": "f5ef8ef5"
     },
     "16c3f096b6e1541d": {
       "normale": "83f14786"
@@ -590,8 +957,17 @@
     "16df304dac953f0f": {
       "normale": "567ab5e0"
     },
+    "16e47d79e3b82b2f": {
+      "normale": "51e21655"
+    },
     "16e77d760debc450": {
       "normale": "502537c6"
+    },
+    "16ebb88c805fc1ad": {
+      "normale": "6a617136"
+    },
+    "16fc742b1feb0df1": {
+      "normale": "6084d93f"
     },
     "1730460fb69f5ccd": {
       "normale": "7f6dc8f3"
@@ -604,6 +980,9 @@
     },
     "176b96d6463841e1": {
       "normale": "79b6dba8"
+    },
+    "176f9cec95aaa986": {
+      "normale": "e112f564"
     },
     "177c802ac52948af": {
       "normale": "9365fad0"
@@ -641,8 +1020,17 @@
     "18a995c946bfd42d": {
       "normale": "7e4e07e7"
     },
+    "18c9a6ceb8dfa957": {
+      "normale": "b2063348"
+    },
+    "18fa3d878fa60fdc": {
+      "normale": "deec9423"
+    },
     "1903d8c481a0e965": {
       "normale": "26c007f3"
+    },
+    "1917ec415d675ea4": {
+      "normale": "22e1b48b"
     },
     "1919dc6f7b3fcc26": {
       "normale": "0e9c9014"
@@ -665,6 +1053,12 @@
     "196851089bf93f32": {
       "normale": "11b4a9fd"
     },
+    "197b5fa59bb3a049": {
+      "normale": "0be8cf6a"
+    },
+    "198fed8479f78808": {
+      "normale": "fc00033b"
+    },
     "1993de0a7fcc3b4e": {
       "normale": "cbad8d4d"
     },
@@ -680,6 +1074,9 @@
     "19edceb0d1c689cc": {
       "normale": "1aad25aa"
     },
+    "19f3ee75b99aa7f0": {
+      "normale": "96fcc608"
+    },
     "19f7f51921bc68ed": {
       "normale": "dcdfd553"
     },
@@ -688,6 +1085,9 @@
     },
     "1a08f31921cad8ba": {
       "normale": "7b3d2f93"
+    },
+    "1a20911b188e9e03": {
+      "normale": "c5e55a17"
     },
     "1a2584e4732f492e": {
       "normale": "9965d442"
@@ -701,14 +1101,23 @@
     "1a628ba498dc80b9": {
       "normale": "6c376bd8"
     },
+    "1a789c9e98254c6f": {
+      "normale": "02f2975b"
+    },
     "1a7d6b1732940a47": {
       "normale": "04e19932"
     },
     "1a8efc20eca39d65": {
       "normale": "b18e4134"
     },
+    "1a9dde7ac552636d": {
+      "normale": "9e7b9987"
+    },
     "1acf860aa094dc92": {
       "normale": "2903a88b"
+    },
+    "1ae0406cebc36866": {
+      "normale": "3d5260c5"
     },
     "1af3d12af4ae458b": {
       "normale": "4171e4db"
@@ -716,14 +1125,44 @@
     "1b057b1baf0a22cf": {
       "normale": "a83300e6"
     },
+    "1b2123d1976f82b3": {
+      "normale": "cb162293"
+    },
     "1b36b3f27164a723": {
       "normale": "a39cf7dd"
+    },
+    "1b4de719b81ed1a5": {
+      "normale": "8cc9e76d"
     },
     "1b53297ee4a09273": {
       "normale": "2dad7d6c"
     },
     "1b61449e801d23a9": {
       "normale": "f2b96f9a"
+    },
+    "1ba005ab5a661814": {
+      "normale": "29f80bc6"
+    },
+    "1be28a6d84939bcb": {
+      "normale": "3a8a0ca3"
+    },
+    "1c087259d1a790af": {
+      "normale": "857b7f60"
+    },
+    "1c10656ebace2057": {
+      "normale": "4919a6a2"
+    },
+    "1c441cd90c042962": {
+      "normale": "6e424f6b"
+    },
+    "1c488a4e32aa753e": {
+      "normale": "8428fcf4"
+    },
+    "1c75b9837ae909a2": {
+      "normale": "90cdb1a7"
+    },
+    "1c9f19dd5e7d61a6": {
+      "normale": "a94a2090"
     },
     "1ca05ae0048ba392": {
       "normale": "950f57f1"
@@ -776,17 +1215,26 @@
     "1de973ebc171c98a": {
       "normale": "b9045b99"
     },
+    "1deb62603503c156": {
+      "normale": "81ab3663"
+    },
     "1e094d48c0a15390": {
       "normale": "5261a5a5"
     },
     "1e11add1a37e9e86": {
       "normale": "032ecaaa"
     },
+    "1e1e8a1375fb04fe": {
+      "normale": "f777da7b"
+    },
     "1e3dc4a7ac4bb629": {
       "normale": "2dd03381"
     },
     "1e46fcd48587ce25": {
       "normale": "9b317028"
+    },
+    "1e5d8a93dd940bf5": {
+      "normale": "5d19dece"
     },
     "1e749eadd5773a2b": {
       "normale": "495d9dc5"
@@ -797,8 +1245,14 @@
     "1ec526239be3949d": {
       "normale": "ad51c644"
     },
+    "1ef716e75a4600f8": {
+      "normale": "67a0776f"
+    },
     "1f3b57a2ce7ef388": {
       "normale": "253b8aa4"
+    },
+    "1f5517661ac049cd": {
+      "normale": "6ea23b24"
     },
     "1f594fa2ce97e37f": {
       "lente": "e99ccab1",
@@ -806,6 +1260,12 @@
     },
     "1f682ff19bd8b2c2": {
       "normale": "0bca2243"
+    },
+    "1f69d3c55216a10d": {
+      "normale": "ca9ae914"
+    },
+    "1f71f6fa56928242": {
+      "normale": "947db5fe"
     },
     "1f78b5f102e93aec": {
       "normale": "8486e9f9"
@@ -816,6 +1276,9 @@
     "1f845cb9ffe7fbb5": {
       "normale": "47208c5d"
     },
+    "1f857caa325a2e2e": {
+      "normale": "1e6bce56"
+    },
     "1f873c1e1368bc66": {
       "normale": "c36135c6"
     },
@@ -825,11 +1288,26 @@
     "1fb95d4816b50455": {
       "normale": "08ff83bb"
     },
+    "1fbbd56fa2c1d8c2": {
+      "normale": "5196c4ff"
+    },
+    "1fc4d88d0b87122b": {
+      "normale": "916d686b"
+    },
+    "1fca138d87baf2e9": {
+      "normale": "db81a50d"
+    },
     "1fef236d0d3bb27e": {
       "normale": "754c1aaa"
     },
+    "1ff804edde4eb9f7": {
+      "normale": "33858da3"
+    },
     "1ff95ec855a31fc2": {
       "normale": "603ae920"
+    },
+    "200343d34794d61f": {
+      "normale": "82e885a7"
     },
     "2017c92c2b638f9b": {
       "normale": "38bfff80"
@@ -837,6 +1315,9 @@
     "2033e2199106d3d2": {
       "lente": "f49324a3",
       "normale": "2cc923b4"
+    },
+    "2050746a38012064": {
+      "normale": "329145a3"
     },
     "20531695c5f91636": {
       "normale": "650b2b1e"
@@ -847,8 +1328,18 @@
     "207f9a3f169255a1": {
       "normale": "a711208f"
     },
+    "208c2e8b81d6b549": {
+      "normale": "684854e4"
+    },
+    "20971209dfb50f6e": {
+      "normale": "cc4eefd4"
+    },
     "20c524fe94bd5320": {
       "normale": "a088d792"
+    },
+    "20eccbdc8a95d6a8": {
+      "lente": "006b80a2",
+      "normale": "72986c15"
     },
     "20ee7ba996a352af": {
       "normale": "4bd816cc"
@@ -856,11 +1347,23 @@
     "20eee297f64acebc": {
       "normale": "d6621ae3"
     },
+    "20f2a16339967a4e": {
+      "normale": "03a30c0b"
+    },
+    "20f4ee89f40c85b1": {
+      "normale": "a9b7ec1a"
+    },
     "20ffeb64edefeec4": {
       "normale": "e7729e2b"
     },
+    "2109abf33e224f30": {
+      "normale": "ff7c87fa"
+    },
     "2112dad155fead39": {
       "normale": "cce78d85"
+    },
+    "211dcf0b3aa1cb24": {
+      "normale": "772703ce"
     },
     "2129f2601e510e34": {
       "normale": "6c00c489"
@@ -871,6 +1374,15 @@
     "214b1ccda8711eb7": {
       "normale": "98fae532"
     },
+    "21b49dd7ca9e26e4": {
+      "normale": "d050e37b"
+    },
+    "21b8c6e1a57c33e3": {
+      "normale": "ef55911d"
+    },
+    "21cb69814e442483": {
+      "normale": "d253f03c"
+    },
     "21d3381445cf3255": {
       "normale": "5d8422f4"
     },
@@ -880,11 +1392,23 @@
     "21edad8a2714599b": {
       "normale": "24b7780f"
     },
+    "224d213d0f33e40d": {
+      "normale": "234c255a"
+    },
     "224df507e56fa305": {
       "normale": "267a1d03"
     },
     "225f1aa15bb51fee": {
       "normale": "42d659c9"
+    },
+    "2270c7f0816d5d80": {
+      "normale": "f812f96f"
+    },
+    "2272cdadff3a26bf": {
+      "normale": "030c9c0c"
+    },
+    "2278a5a08be900fd": {
+      "normale": "bd7293f4"
     },
     "2289344df114a86f": {
       "normale": "a41346a8"
@@ -897,6 +1421,9 @@
     },
     "23246a80e02ad59d": {
       "normale": "ccd80703"
+    },
+    "233857f478a6f20b": {
+      "normale": "c47e8793"
     },
     "23404ec10e790cea": {
       "normale": "83913d73"
@@ -911,6 +1438,9 @@
     "235dbb4e6be886f5": {
       "normale": "2e18c4fa"
     },
+    "23622d28587e1384": {
+      "normale": "ab1d7f9a"
+    },
     "2374970a1b724331": {
       "normale": "3ada74e1"
     },
@@ -920,6 +1450,9 @@
     "238ed7901bc13521": {
       "lente": "917a9838",
       "normale": "55dbe057"
+    },
+    "239637e36f09abb1": {
+      "normale": "5fa6d2d6"
     },
     "23a51fa9568f8800": {
       "normale": "1fe9046b"
@@ -936,23 +1469,51 @@
     "23f2f3f0068a6ace": {
       "normale": "7b74c79e"
     },
+    "240069744feff878": {
+      "normale": "1dfbd3e4"
+    },
     "241a6cc8768b7643": {
       "normale": "4d1d87b3"
+    },
+    "2425cd7b5959c65e": {
+      "normale": "32723b28"
     },
     "243a7727a7b1fe70": {
       "normale": "483e4136"
     },
+    "243def79415123e8": {
+      "normale": "de3cfdc0"
+    },
     "244bd7480b65f8a0": {
       "normale": "92584386"
+    },
+    "245a2ea4a5955bab": {
+      "normale": "cf71098a"
+    },
+    "245be7349db89f78": {
+      "normale": "7796721f"
     },
     "2464bc1cacdb9398": {
       "normale": "14e070b7"
     },
+    "2472c779531da3d0": {
+      "lente": "3b9f6213",
+      "normale": "e42997d8"
+    },
     "24eab03db69c0c68": {
       "normale": "a351e9cc"
     },
+    "24fde17d507fb70e": {
+      "normale": "1d6a97dd"
+    },
+    "2506009047a0f2a9": {
+      "normale": "52c2d7ce"
+    },
     "25131d88e0bd883e": {
       "normale": "e6157954"
+    },
+    "25143290ce66d0ab": {
+      "normale": "6f0e3e37"
     },
     "25185100abc057b5": {
       "normale": "391d47ed"
@@ -984,6 +1545,10 @@
     "257137134a0207c6": {
       "normale": "dfba1585"
     },
+    "257b80e4fa09b001": {
+      "lente": "507cb606",
+      "normale": "14fdee79"
+    },
     "25940674e6c5e431": {
       "normale": "e004be6b"
     },
@@ -999,17 +1564,44 @@
     "25fba85a565cbbbd": {
       "normale": "8e9f828a"
     },
+    "2610b37d77ff03d1": {
+      "normale": "a4f41e10"
+    },
     "261c20dfb71956ab": {
       "normale": "5922848f"
+    },
+    "2643f3151411daac": {
+      "normale": "7ef2b226"
+    },
+    "2670a3419c7799b0": {
+      "normale": "b02965a8"
     },
     "267dc31170a8cb49": {
       "normale": "78779e12"
     },
+    "2684c8ccea634f33": {
+      "normale": "95488954"
+    },
     "269776e4801fa778": {
       "normale": "08cf555c"
     },
+    "26bafa3ce72bbc88": {
+      "normale": "37a3eca0"
+    },
+    "26ca395f1c37cfdd": {
+      "normale": "bba6cc36"
+    },
+    "26e6505d9d22583f": {
+      "normale": "89ce814c"
+    },
+    "27033238ef6ff455": {
+      "normale": "8e90a419"
+    },
     "27247953f2d5625a": {
       "normale": "cba47cd3"
+    },
+    "27271f3f5f1d788d": {
+      "normale": "4a28cf44"
     },
     "274768b4b2b2c9ec": {
       "normale": "ca70473c"
@@ -1020,6 +1612,9 @@
     "2789d2f7a2d930c1": {
       "normale": "ab0f56e7"
     },
+    "278ac34a0fd87b68": {
+      "normale": "e87a6f40"
+    },
     "27975566205727dc": {
       "normale": "9350c8f4"
     },
@@ -1029,6 +1624,15 @@
     "281abb96536f0faf": {
       "normale": "9f15b7ff"
     },
+    "282b4cdca2826322": {
+      "normale": "d45f41b9"
+    },
+    "28382161794e2f59": {
+      "normale": "42a89738"
+    },
+    "28390b6bd7ab9807": {
+      "normale": "5306ae70"
+    },
     "2847709397a10b97": {
       "normale": "4d6e29f7"
     },
@@ -1037,6 +1641,9 @@
     },
     "28791ce8979abcb6": {
       "normale": "a86964f1"
+    },
+    "28a5a81a18a10ff6": {
+      "normale": "fc3d6c64"
     },
     "28ae27ea2c7efbc1": {
       "normale": "61b250a5"
@@ -1050,6 +1657,9 @@
     "28e798e358f89f9b": {
       "normale": "ad50092b"
     },
+    "29100cb446334ac0": {
+      "normale": "52aaaf7a"
+    },
     "29119694a7e21486": {
       "normale": "976f58c9"
     },
@@ -1059,14 +1669,29 @@
     "2936cfb4c88b3cad": {
       "normale": "b913d5ea"
     },
+    "296591b5eaaf026a": {
+      "normale": "3c2bd459"
+    },
     "29827cb21c80e90d": {
       "normale": "1a1c1312"
+    },
+    "299896f51bbce14b": {
+      "normale": "97381ddf"
     },
     "29a5fc3e23460656": {
       "normale": "7837ef96"
     },
+    "29b5ef995d3dfd4d": {
+      "normale": "5f224bcc"
+    },
+    "29c41cd207235e50": {
+      "normale": "dc55f9a7"
+    },
     "29cdc0f81e0a4ed4": {
       "normale": "22647db0"
+    },
+    "29d7a6ae3458cf94": {
+      "normale": "3fe32ad1"
     },
     "29e441a53bac0394": {
       "normale": "7c87c854"
@@ -1077,23 +1702,41 @@
     "29ed4ae78aa31c1b": {
       "normale": "71fb3ea4"
     },
+    "29f62e8c4e825008": {
+      "normale": "60edee23"
+    },
     "29f7c8916c414b26": {
       "normale": "e33c228c"
+    },
+    "2a14c0e186abb381": {
+      "normale": "1fad38fd"
     },
     "2a1b4b3ce6683666": {
       "normale": "fa4a9ac3"
     },
+    "2a2b756ab9f666d7": {
+      "normale": "c013fa92"
+    },
     "2a34dad3a86c60ff": {
       "normale": "440829c5"
     },
+    "2a3a4910130a10d9": {
+      "normale": "12006da0"
+    },
     "2a61efdd53871b14": {
       "normale": "fb675a2b"
+    },
+    "2a75ee5b46b28586": {
+      "normale": "67e6ef9e"
     },
     "2a7bf97ac6b95a23": {
       "normale": "68f5f84e"
     },
     "2a802a584da063a4": {
       "normale": "12851f11"
+    },
+    "2a914a8680303c1f": {
+      "normale": "005bef43"
     },
     "2a93747a6c365df3": {
       "normale": "19383b83"
@@ -1107,11 +1750,17 @@
     "2adabf790f6f0e6f": {
       "normale": "082b54a8"
     },
+    "2adddaee7627a711": {
+      "normale": "acc44736"
+    },
     "2ae0c0140af859d4": {
       "normale": "5a278d98"
     },
     "2af5cb6404064b6a": {
       "normale": "76915d73"
+    },
+    "2afa561194dcab8f": {
+      "normale": "cedb3121"
     },
     "2b2896858d9e492e": {
       "normale": "4d62a8ee"
@@ -1119,17 +1768,26 @@
     "2b37f2ad68731e82": {
       "normale": "301ba0f7"
     },
+    "2b498b9948232555": {
+      "normale": "b9cdb947"
+    },
     "2b4ce7d656c6a000": {
       "normale": "ca58104d"
     },
     "2b72e6d63fe19edf": {
       "normale": "42edc5b5"
     },
+    "2b7f144cd234f000": {
+      "normale": "ea7d82a1"
+    },
     "2b9faea6f9c2f30d": {
       "normale": "0eda3865"
     },
     "2b9fc5192bd465b0": {
       "normale": "bad2a987"
+    },
+    "2bae2592182f00b9": {
+      "normale": "97d5282e"
     },
     "2baf283d6715f3cb": {
       "normale": "f3f62c61"
@@ -1152,14 +1810,26 @@
     "2c0dcdf05b76c470": {
       "normale": "79b0df5a"
     },
+    "2c19a3d89930639d": {
+      "normale": "1dbf76df"
+    },
     "2c1c03428ea3dbf3": {
       "normale": "f62e850e"
+    },
+    "2c2a9f84505654df": {
+      "normale": "ba806fb1"
+    },
+    "2c4b14a46e71fc12": {
+      "normale": "a9121962"
     },
     "2c4b3004ec232cd9": {
       "normale": "925d1782"
     },
     "2c5e25a52c7a82e0": {
       "normale": "983000fc"
+    },
+    "2c6d2fc613c2c8b7": {
+      "normale": "ef4cda9f"
     },
     "2c73f26f4c5db396": {
       "normale": "72ca668f"
@@ -1178,6 +1848,9 @@
     },
     "2cbac0c863fdd2a7": {
       "normale": "68a07cab"
+    },
+    "2cbf9a782665600f": {
+      "normale": "de421c72"
     },
     "2ccac115e7ff589a": {
       "normale": "1e043003"
@@ -1203,6 +1876,12 @@
     "2d48a96ec6db8363": {
       "normale": "0d9ab773"
     },
+    "2d490be2e4c55bb6": {
+      "normale": "3386f0dc"
+    },
+    "2d630e77e385b222": {
+      "normale": "c11e47fa"
+    },
     "2d6d117f0c49bec5": {
       "normale": "b3919da6"
     },
@@ -1212,8 +1891,14 @@
     "2d9db11adfdc8ca9": {
       "normale": "6e84f9a0"
     },
+    "2dc28e0feb09b080": {
+      "normale": "385bd173"
+    },
     "2dfbe3f51448522a": {
       "normale": "856fa6e7"
+    },
+    "2dfc6a48aad13e9d": {
+      "normale": "a16abacc"
     },
     "2e13d5e8375764c8": {
       "normale": "9d56fc45"
@@ -1224,20 +1909,53 @@
     "2e1e386d235e4f84": {
       "normale": "a45d940f"
     },
+    "2e44109f049f6c3b": {
+      "normale": "f41d833c"
+    },
     "2e4595ee14381b05": {
       "normale": "48c3095c"
+    },
+    "2e4d1e229a5b9681": {
+      "normale": "9a9071f3"
     },
     "2e4e8be3731b0f01": {
       "normale": "8374ca42"
     },
+    "2e8e43430907e82b": {
+      "normale": "82ef9e07"
+    },
+    "2ee2bcc5bdc7d69c": {
+      "normale": "56b4ac77"
+    },
     "2eeb5978729a8b97": {
       "normale": "df49bcd5"
+    },
+    "2eefa1a9eff5b217": {
+      "normale": "6edb1185"
     },
     "2f2a17a7b5c3eb54": {
       "normale": "2a812426"
     },
+    "2f2c51950ac5d354": {
+      "normale": "54865a6d"
+    },
+    "2f395b8bf2bb651f": {
+      "normale": "329b1fc0"
+    },
+    "2f8222c85a42d366": {
+      "normale": "ed5e1458"
+    },
     "2fa7f2e776ae0c65": {
       "normale": "91ac8324"
+    },
+    "2fd891877f1e1aad": {
+      "normale": "1883fcab"
+    },
+    "2fde341cb79e9de7": {
+      "normale": "2c98aba1"
+    },
+    "2fff1422e80c684b": {
+      "normale": "ffe57186"
     },
     "301972ba0ec71622": {
       "normale": "f19d0213"
@@ -1260,8 +1978,17 @@
     "303a8c9b83e19acc": {
       "normale": "1789673e"
     },
+    "3042a785762e4f47": {
+      "normale": "aa39e118"
+    },
+    "30528afcbf0f313c": {
+      "normale": "e7721a73"
+    },
     "307177468b89f94d": {
       "normale": "cae5c78e"
+    },
+    "3071e7088e682b7b": {
+      "normale": "41fcfb7c"
     },
     "30752b88e1084829": {
       "normale": "0daa6c89"
@@ -1272,6 +1999,9 @@
     "309e6fb34cf142a3": {
       "normale": "98fa7d7d"
     },
+    "30a6f5eca4327065": {
+      "normale": "3c49e3a7"
+    },
     "30c2baceb0de3c77": {
       "normale": "02034851"
     },
@@ -1281,11 +2011,17 @@
     "30ed2222578215b3": {
       "normale": "382a91af"
     },
+    "31102f978ab17e3b": {
+      "normale": "759aa8fc"
+    },
     "31210df92b6a774f": {
       "normale": "9947b327"
     },
     "3135680146463383": {
       "normale": "3e5c5725"
+    },
+    "313f0ff973042600": {
+      "normale": "99ac66d1"
     },
     "317ca744e05c7ac6": {
       "normale": "e5287848"
@@ -1293,11 +2029,29 @@
     "31972876c20bf047": {
       "normale": "eb4ec6c5"
     },
+    "319d9d4c151d7d79": {
+      "normale": "0e6a4bcd"
+    },
+    "319fd0c189564aad": {
+      "normale": "a6aa544b"
+    },
     "31fe7d26a814eed3": {
       "normale": "dd42d88e"
     },
     "32236010ba8251fa": {
       "normale": "5a46d672"
+    },
+    "32510723de535dc9": {
+      "normale": "1d22d466"
+    },
+    "3252e0ff30853b5e": {
+      "normale": "4c35b372"
+    },
+    "325529c33ba610d5": {
+      "normale": "2656ab39"
+    },
+    "32636c6c700dd169": {
+      "normale": "40e30848"
     },
     "326dada228eae575": {
       "normale": "a352cc57"
@@ -1314,6 +2068,9 @@
     "32ba497a95566096": {
       "normale": "1f513f15"
     },
+    "32bddf5c06539c29": {
+      "normale": "fa9a20ad"
+    },
     "32c3473a8f3747f5": {
       "normale": "243615f7"
     },
@@ -1322,6 +2079,9 @@
     },
     "32f8113baa85ee86": {
       "normale": "9cd494d7"
+    },
+    "32ff8244c4cf6afa": {
+      "normale": "0a8d106e"
     },
     "330e3e158395e58d": {
       "normale": "fd0aeb62"
@@ -1341,8 +2101,20 @@
     "33eb63c08232105b": {
       "normale": "eddf959d"
     },
+    "33fe0f7ec24e6d98": {
+      "normale": "adb2299f"
+    },
+    "33feb483d7e04803": {
+      "normale": "a3886c42"
+    },
+    "340f6ce014885094": {
+      "normale": "6a92f0b1"
+    },
     "3470d751f1c44fb3": {
       "normale": "d77f9da6"
+    },
+    "34799befd197e997": {
+      "normale": "556aea0d"
     },
     "348a1eb28d48515f": {
       "normale": "e08d923e"
@@ -1350,11 +2122,26 @@
     "348e79f067732226": {
       "normale": "c6ba9784"
     },
+    "34976ec58ba276ba": {
+      "normale": "d418d9fd"
+    },
     "34ef7b180f05c2f4": {
       "normale": "da967994"
     },
+    "351468a406201f98": {
+      "normale": "0d72ffbd"
+    },
     "352d3a1b617142fd": {
       "normale": "b091cbe1"
+    },
+    "355583d403003fb1": {
+      "normale": "2219fbf5"
+    },
+    "357b80180626e059": {
+      "normale": "b6330eec"
+    },
+    "35824b974579951a": {
+      "normale": "7c9fb9a3"
     },
     "359d5d3283338316": {
       "normale": "e401a65a"
@@ -1374,6 +2161,33 @@
     "361fb3b7f6577d5d": {
       "normale": "392a1da0"
     },
+    "362b2498a6eb3241": {
+      "normale": "7124ffa1"
+    },
+    "36735ce8d91f0e80": {
+      "normale": "073322ae"
+    },
+    "369c41a350b42ce6": {
+      "normale": "89012cf9"
+    },
+    "36a8fd802c9b774a": {
+      "normale": "c1996bf6"
+    },
+    "36c14f989ecd8e1c": {
+      "normale": "fe29d170"
+    },
+    "36e27716c2f7a60f": {
+      "normale": "41eab7a1"
+    },
+    "36fbe16aa391ee5d": {
+      "normale": "cf71c52c"
+    },
+    "3719d634e3b664ee": {
+      "normale": "698b5719"
+    },
+    "3721156bf961f399": {
+      "normale": "fa86f97d"
+    },
     "372ae9902043e052": {
       "normale": "9b60b939"
     },
@@ -1389,6 +2203,12 @@
     "374fec1cba57ad30": {
       "normale": "9802f53d"
     },
+    "375e1868ec25c5b5": {
+      "normale": "55865728"
+    },
+    "37b4ab99c277f937": {
+      "normale": "0b44db2b"
+    },
     "37b68266dc1063cb": {
       "lente": "4713abcb",
       "normale": "a760a3dd"
@@ -1399,14 +2219,26 @@
     "37c00e42c6aead46": {
       "normale": "543365c0"
     },
+    "37d84d280cb944c9": {
+      "normale": "5bf10d67"
+    },
     "37dc600070fabd0e": {
       "normale": "cb4dc311"
     },
     "37f213a4a9bfa705": {
       "normale": "7d7f169f"
     },
+    "380556fb354ff42e": {
+      "normale": "5e01fb95"
+    },
     "381c047469e4dc3a": {
       "normale": "edd36230"
+    },
+    "381d8c7d457dcd86": {
+      "normale": "c5a734b8"
+    },
+    "38226add9637cd14": {
+      "normale": "03eba782"
     },
     "384eeaae8d048b16": {
       "normale": "9af1e5ff"
@@ -1417,8 +2249,23 @@
     "388d410aa3c1ccac": {
       "normale": "c20278b8"
     },
+    "389f6bbf627c4e78": {
+      "normale": "422fd5ec"
+    },
+    "38d560572c3ecef7": {
+      "normale": "298113aa"
+    },
+    "38f0b884573aa421": {
+      "normale": "e6a7ebcf"
+    },
+    "3918bf493a3d73c5": {
+      "normale": "419f01e9"
+    },
     "391956fd01715adb": {
       "normale": "c1e977e1"
+    },
+    "392eb0c5c053828f": {
+      "normale": "b11e7c08"
     },
     "3968f5c825a1ddc5": {
       "normale": "7d58498c"
@@ -1428,6 +2275,12 @@
     },
     "398c7a76c2b9fbde": {
       "normale": "499aaad0"
+    },
+    "39abf2afff639274": {
+      "normale": "cf706a4c"
+    },
+    "39c0e61e23f8a53c": {
+      "normale": "2b9c5c32"
     },
     "39c4e439c33d677e": {
       "normale": "c058e74b"
@@ -1447,11 +2300,29 @@
     "3a6509699ed7722f": {
       "normale": "59606379"
     },
+    "3a66550dba5c1a29": {
+      "normale": "31a107a7"
+    },
+    "3a82fd8eedd99498": {
+      "normale": "fe175726"
+    },
     "3a853c7fb3b52297": {
       "normale": "0e1cf558"
     },
+    "3ae57c29117a5048": {
+      "normale": "d8497e9e"
+    },
+    "3af653e97d391634": {
+      "normale": "079136b4"
+    },
+    "3b308d5633263900": {
+      "normale": "bcd0ce26"
+    },
     "3b3a072bdf0aa1d5": {
       "normale": "509561df"
+    },
+    "3b529b3bae167653": {
+      "normale": "c6553200"
     },
     "3b82113b4aab2161": {
       "normale": "ce111bd5"
@@ -1492,6 +2363,9 @@
     "3ca286ba349b5563": {
       "normale": "35901f4a"
     },
+    "3cadf40fda923b95": {
+      "normale": "0660f40e"
+    },
     "3caeeafff9595860": {
       "normale": "08313bb6"
     },
@@ -1510,8 +2384,17 @@
     "3cfe966e69997137": {
       "normale": "039ef95b"
     },
+    "3d0b571c6d6910d7": {
+      "normale": "b7c8e181"
+    },
+    "3d1a32e35d701033": {
+      "normale": "3d0ed7f3"
+    },
     "3d1a58dadd78832f": {
       "normale": "3045db0e"
+    },
+    "3d1cddf44b5f1f1e": {
+      "normale": "8a204ea2"
     },
     "3d2345f62bb52a11": {
       "normale": "fb555a16"
@@ -1528,6 +2411,12 @@
     "3d57cc8c2336ff96": {
       "normale": "50212e58"
     },
+    "3db37c8eaaa6e3f3": {
+      "normale": "7c9ec39e"
+    },
+    "3db84de39bbbcbc7": {
+      "normale": "630aceb6"
+    },
     "3dbdff7f68ffcb78": {
       "normale": "4de3dfca"
     },
@@ -1540,20 +2429,38 @@
     "3dda8eae83976867": {
       "normale": "489ac364"
     },
+    "3de0b8f37b7c3aec": {
+      "normale": "59ed099b"
+    },
     "3df00ac7382e49be": {
       "normale": "10ec8a65"
     },
     "3df535592d7e1c4b": {
       "normale": "127bd23c"
     },
+    "3e0d6a4bd051211f": {
+      "normale": "fda900d3"
+    },
+    "3e0f29a844722e25": {
+      "normale": "0917863e"
+    },
+    "3e2192d9d37d62c1": {
+      "normale": "6442fa2e"
+    },
     "3e52459a41ca5ed1": {
       "normale": "7c6e4632"
+    },
+    "3e5d8df1667ad5b1": {
+      "normale": "0a89b587"
     },
     "3e87f96591760f41": {
       "normale": "dee805bc"
     },
     "3e909c0499e37abd": {
       "normale": "242ba085"
+    },
+    "3e97e659f80b892b": {
+      "normale": "1e61363b"
     },
     "3ea2a8bfc6bf952f": {
       "normale": "b3bf5de7"
@@ -1570,11 +2477,20 @@
     "3ef598056060c25c": {
       "normale": "a57c2a3e"
     },
+    "3f39747a608eb3d8": {
+      "normale": "4ff61cc4"
+    },
     "3fa5734027d7bb48": {
       "normale": "d8fa7dc5"
     },
+    "3feeb20ff9f36fe7": {
+      "normale": "f08c2145"
+    },
     "3ff0c2596dcda055": {
       "normale": "90624120"
+    },
+    "3ff1977da0a64041": {
+      "normale": "8e72963e"
     },
     "400852fcb54c5c52": {
       "normale": "e9a9c969"
@@ -1588,11 +2504,20 @@
     "401d11afba25531d": {
       "normale": "0e0fa7e4"
     },
+    "403ded7adddf25b9": {
+      "normale": "cefef713"
+    },
     "40707111203c408f": {
       "normale": "39941343"
     },
     "40851a78e1607bea": {
       "normale": "c0a83c64"
+    },
+    "4086c0ab34024077": {
+      "normale": "5086a61c"
+    },
+    "409e05e3712c79f1": {
+      "normale": "882da99b"
     },
     "40a7d465372edab0": {
       "normale": "72247c1d"
@@ -1600,11 +2525,20 @@
     "40c5e54ca4648d38": {
       "normale": "3451867f"
     },
+    "40d40f022f0ce0c7": {
+      "normale": "a7ad7efe"
+    },
+    "40efe60f2a75415e": {
+      "normale": "478c278c"
+    },
     "40fc86e45259065f": {
       "normale": "9c0cf7b5"
     },
     "41040a0d5db1bfd3": {
       "normale": "ad7b80ca"
+    },
+    "411da28ce703e6ac": {
+      "normale": "9e40fad2"
     },
     "413fe3c45c934e92": {
       "normale": "e7816112"
@@ -1651,6 +2585,9 @@
     "420ccdd71820325e": {
       "normale": "ca24ab89"
     },
+    "420de9e64085a8b9": {
+      "normale": "07dc5c01"
+    },
     "4215bd8cd6fd0b2d": {
       "normale": "b7cf1d7c"
     },
@@ -1687,11 +2624,20 @@
     "4309169eae4561be": {
       "normale": "f487d8e6"
     },
+    "432ed58c5cf1883f": {
+      "normale": "0ea7951e"
+    },
     "4352abb872f31413": {
       "normale": "9b6abd85"
     },
+    "436032b8e9b8c8e2": {
+      "normale": "8ceed054"
+    },
     "436fac1f4a56d532": {
       "normale": "0e30a9e8"
+    },
+    "43881af02462783c": {
+      "normale": "89d73183"
     },
     "4393bd883bdba689": {
       "normale": "4410b52a"
@@ -1705,17 +2651,32 @@
     "43ae7e965fc5764b": {
       "normale": "0c015913"
     },
+    "43bb1bad3b7338c5": {
+      "normale": "15217dad"
+    },
+    "43c00125ebdc45b8": {
+      "normale": "f5a8ed73"
+    },
+    "43d99b333008c6e5": {
+      "normale": "5c995943"
+    },
     "43da65ab918f5a2f": {
       "normale": "a5fd19f7"
     },
     "43f923e496dd2b08": {
       "normale": "75cdf317"
     },
+    "4437586df0d42846": {
+      "normale": "28d64c43"
+    },
     "443b70b4defaa150": {
       "normale": "1f98cf82"
     },
     "443d69cf279f391d": {
       "normale": "fed9624d"
+    },
+    "446694c0ea282a7b": {
+      "normale": "d0953380"
     },
     "4472be6513495ee8": {
       "normale": "fc0c0d10"
@@ -1726,14 +2687,23 @@
     "44a81f5e44496ea1": {
       "normale": "169e8599"
     },
+    "44c2456e954d992a": {
+      "normale": "23ec76a5"
+    },
     "44cb518633a0f3d4": {
       "normale": "183409c0"
     },
     "44f52901f6bdd86f": {
       "normale": "df057efc"
     },
+    "452de4c57879141f": {
+      "normale": "c0f901e1"
+    },
     "454075193a3e6e11": {
       "normale": "ebf0cd46"
+    },
+    "4547eb9fbea6be4a": {
+      "normale": "bd22e7f0"
     },
     "4568b6d7f8c169bf": {
       "normale": "8d65f048"
@@ -1759,6 +2729,12 @@
     "458c66739d11a832": {
       "normale": "3fbd93c5"
     },
+    "45aee79a33ee63ff": {
+      "normale": "9210495a"
+    },
+    "45de3f774a96f1e5": {
+      "normale": "427018c2"
+    },
     "45f70099690c8af1": {
       "normale": "ae3a6dc2"
     },
@@ -1771,17 +2747,44 @@
     "4630f11ebec7e0ec": {
       "normale": "d0e52c2f"
     },
+    "46434129166c3a2c": {
+      "normale": "ca6001ba"
+    },
     "46452e17d567e1d0": {
       "normale": "07a36a0e"
     },
     "46867f8af39f209c": {
       "normale": "93f5a902"
     },
+    "469057acb6ca4151": {
+      "normale": "a83612d4"
+    },
+    "46cccc020ff2c3de": {
+      "normale": "a0876dc3"
+    },
     "46fd19e27c7f0ae1": {
       "normale": "4849581d"
     },
+    "47204b70944b1a21": {
+      "normale": "60cfe099"
+    },
+    "47206d0ed9d808ac": {
+      "normale": "79d5ec9b"
+    },
+    "475d92e73571878b": {
+      "normale": "d686f870"
+    },
     "477826158ffa63a3": {
       "normale": "05bb692d"
+    },
+    "47874b0ff6e541d7": {
+      "normale": "c18b0d82"
+    },
+    "478f4a231556ae41": {
+      "normale": "72d787fb"
+    },
+    "47987aba6548e6f0": {
+      "normale": "f09797f6"
     },
     "47da1d96c1967847": {
       "normale": "9f00d17e"
@@ -1789,8 +2792,20 @@
     "47e65dc83b0da5ec": {
       "normale": "e009ae0e"
     },
+    "47fca174f31e1ead": {
+      "normale": "94945441"
+    },
     "480a1646ae763111": {
       "normale": "b0320f81"
+    },
+    "481361b1327d6b25": {
+      "normale": "e63a3757"
+    },
+    "4834167b4f99666a": {
+      "normale": "db2d5835"
+    },
+    "483458f79f157ff6": {
+      "normale": "38979464"
     },
     "483dbc14c7cb1859": {
       "normale": "694bdab0"
@@ -1813,11 +2828,26 @@
     "488bec09338dd44c": {
       "normale": "3d2b201a"
     },
+    "4897b5b5065bbb9a": {
+      "normale": "e028f7de"
+    },
     "48a161963f1b54ea": {
       "normale": "24cdefb8"
     },
+    "48ac77c6bf317f73": {
+      "normale": "55f51404"
+    },
+    "48bcdccd68869a57": {
+      "normale": "e9cb46e2"
+    },
+    "48c0bfde87585469": {
+      "normale": "59d3ba0d"
+    },
     "48cbe12d342eecc2": {
       "normale": "5eb2d193"
+    },
+    "48d58cd8630b479a": {
+      "normale": "d29950c6"
     },
     "48da6104071505ae": {
       "normale": "1dc716b4"
@@ -1828,11 +2858,17 @@
     "48df9ecaae554b64": {
       "normale": "2cf766c2"
     },
+    "492627a7956946ab": {
+      "normale": "73f2b81d"
+    },
     "4938482bc04e3a4d": {
       "normale": "896061a1"
     },
     "4938cbc01c3ce569": {
       "normale": "447cf9fa"
+    },
+    "4953f5c096d4b085": {
+      "normale": "dc0b8504"
     },
     "497342a794ceb99a": {
       "normale": "58afeb47"
@@ -1858,8 +2894,14 @@
     "49fbd1ce91ce60e5": {
       "normale": "33dae670"
     },
+    "4a09c55fee6cd773": {
+      "normale": "073ffaa4"
+    },
     "4a183ee3378b3c2c": {
       "normale": "c99dac27"
+    },
+    "4a196cce9eb4c9b9": {
+      "normale": "32cce9af"
     },
     "4a1aad038d7343e8": {
       "normale": "637669da"
@@ -1867,14 +2909,23 @@
     "4a2cf64fc70248b5": {
       "normale": "16408229"
     },
+    "4a2eaf3ecb24fd58": {
+      "normale": "74197cce"
+    },
     "4a3985967616dc41": {
       "normale": "106cad25"
     },
     "4a3adaa9c315dec3": {
       "normale": "e1f447e7"
     },
+    "4a4e3ac3c535241a": {
+      "normale": "28aac7ed"
+    },
     "4a5f06af3fde210d": {
       "normale": "8e7c67ba"
+    },
+    "4a71623d2c2c599a": {
+      "normale": "5aaf44af"
     },
     "4a73ea6d684df717": {
       "normale": "96e70062"
@@ -1882,11 +2933,23 @@
     "4a92dcad715ec537": {
       "normale": "57ca0f70"
     },
+    "4a98691432af23f7": {
+      "normale": "77bf8142"
+    },
+    "4a99c2489d4e0e6d": {
+      "normale": "5283945b"
+    },
+    "4a9a5f2fdd5a38ad": {
+      "normale": "d49b2d70"
+    },
     "4aa3be86a8f250a1": {
       "normale": "90757d6a"
     },
     "4aa7aa49facf2dc6": {
       "normale": "1431ef8c"
+    },
+    "4ab4df53dc46736e": {
+      "normale": "ffc2568a"
     },
     "4ac096d9cefa0d16": {
       "normale": "4d7b4c33"
@@ -1903,11 +2966,17 @@
     "4b0bf0f11baab64b": {
       "normale": "fa32f6a3"
     },
+    "4b167b91f3d36f35": {
+      "normale": "19198385"
+    },
     "4b1a3d5a6de348e7": {
       "normale": "8434ab23"
     },
     "4b443e0df2c4aedb": {
       "normale": "d9eb8087"
+    },
+    "4b487b0ed324e4e2": {
+      "normale": "85c427c4"
     },
     "4b4dbfac7f7bf453": {
       "normale": "2418d57a"
@@ -1921,14 +2990,38 @@
     "4b70201c08001b02": {
       "normale": "a486d7bd"
     },
+    "4b84fd2e76bcc177": {
+      "normale": "663abeda"
+    },
+    "4b88fe46b75e3073": {
+      "normale": "96936d7d"
+    },
     "4b9497383d9b507e": {
       "normale": "af71594e"
+    },
+    "4b97e1e7d66bb969": {
+      "normale": "acb9b668"
+    },
+    "4ba2674ab2c7c859": {
+      "normale": "29e8b0e9"
+    },
+    "4bab45690041ca41": {
+      "normale": "fd0abd7f"
+    },
+    "4bac7d2e5fc33b9d": {
+      "normale": "9a0e28ba"
     },
     "4bb035c26f2637ad": {
       "normale": "312839a5"
     },
+    "4bc55bdc5c690a3e": {
+      "normale": "5ff94cf4"
+    },
     "4bcc5e9ee1823bb1": {
       "normale": "71a3caa4"
+    },
+    "4be80b777a236c45": {
+      "normale": "884b0365"
     },
     "4c04fc3c025a5e85": {
       "normale": "c267b594"
@@ -1942,6 +3035,15 @@
     "4c3665820a7f6fd3": {
       "normale": "7a343744"
     },
+    "4c42d43744e90a32": {
+      "normale": "18f874ed"
+    },
+    "4c52764950481caf": {
+      "normale": "d7c228dc"
+    },
+    "4c61ac2e5c2098c0": {
+      "normale": "a6b245d5"
+    },
     "4c638de791363982": {
       "normale": "8bc7f5b1"
     },
@@ -1950,6 +3052,12 @@
     },
     "4c80f31e4d0aad30": {
       "normale": "9d994655"
+    },
+    "4c966589060c8e57": {
+      "normale": "230c8a18"
+    },
+    "4cb6cba24d40ae0d": {
+      "normale": "295aee05"
     },
     "4ccc6332d257b39b": {
       "normale": "b59eca06"
@@ -1969,6 +3077,9 @@
     "4d58155a01e4d015": {
       "normale": "1a0c68aa"
     },
+    "4d919b0ca8414581": {
+      "normale": "8b43c1f3"
+    },
     "4d9b6f6417a5cbbe": {
       "normale": "07400dbe"
     },
@@ -1983,6 +3094,12 @@
     },
     "4e26ab708d042c99": {
       "normale": "80b4f556"
+    },
+    "4e2eb2bb49ca1fab": {
+      "normale": "cfbe5382"
+    },
+    "4e3694411ddfdd3a": {
+      "normale": "32293b2c"
     },
     "4e52b2d96e8e8b97": {
       "normale": "579dd3f8"
@@ -2002,14 +3119,23 @@
     "4e9eb89c77e826a7": {
       "normale": "9c3e866f"
     },
+    "4ea4d0c67819d351": {
+      "normale": "e81a422e"
+    },
     "4ea85dcbf9811da1": {
       "normale": "5d3b2bd3"
+    },
+    "4eeadc43b072d357": {
+      "normale": "24daf8a9"
     },
     "4f155eb1914e2cb2": {
       "normale": "780abedb"
     },
     "4f1acb9d7a77a90e": {
       "normale": "b3292147"
+    },
+    "4f41323627165e27": {
+      "normale": "6ab459b2"
     },
     "4f430f81d9e8956e": {
       "normale": "046e8f24"
@@ -2020,8 +3146,17 @@
     "4f6b0f5e2921cb16": {
       "normale": "29d5590b"
     },
+    "4fb67c8997d50865": {
+      "normale": "ee987c07"
+    },
+    "4fce1e088e6e4cb9": {
+      "normale": "bed48e18"
+    },
     "4fee0c87c29a5541": {
       "normale": "9a0bf319"
+    },
+    "4ff67c3be9f39be1": {
+      "normale": "ba9506ca"
     },
     "500f9f29320c7d0e": {
       "normale": "86884b6b"
@@ -2044,11 +3179,35 @@
     "50b3a69a5f4b3656": {
       "normale": "01a7bac6"
     },
+    "50c78b1211c94a2b": {
+      "normale": "0eb398fd"
+    },
+    "50ea7a5a61d77aa1": {
+      "normale": "8ffd28f6"
+    },
+    "51387732aa595868": {
+      "normale": "7e11d50f"
+    },
+    "513a717d4bb8ad01": {
+      "normale": "944ba680"
+    },
+    "5140314d92367e6d": {
+      "normale": "9aff26bb"
+    },
+    "51611630fdaedac4": {
+      "normale": "36dead54"
+    },
     "516cda528863cc1d": {
       "normale": "20ab98e0"
     },
+    "516e6e95057f2e9c": {
+      "normale": "b7d574a1"
+    },
     "517a1032bf311e0f": {
       "normale": "509df1f6"
+    },
+    "517f53f80beaadf4": {
+      "normale": "8ee274ab"
     },
     "519d308c49515f4c": {
       "normale": "4979e427"
@@ -2059,8 +3218,14 @@
     "51e089c010684b99": {
       "normale": "e8dca4b0"
     },
+    "51f2bc72c495d38e": {
+      "normale": "467bcfc1"
+    },
     "51f2f278d0ffe911": {
       "normale": "8b1d68d5"
+    },
+    "52074deda1931265": {
+      "normale": "13a5461d"
     },
     "520ac43b182f6a55": {
       "normale": "e2c367e6"
@@ -2092,6 +3257,12 @@
     "531b1816a41ab2f8": {
       "normale": "30ce554e"
     },
+    "5341a62b15e888a4": {
+      "normale": "a2515949"
+    },
+    "53440757e69e3f8c": {
+      "normale": "cce33128"
+    },
     "5367405cbca2aea6": {
       "normale": "5a6f9328"
     },
@@ -2101,11 +3272,26 @@
     "536b4076a1418272": {
       "normale": "ff125e54"
     },
+    "536c1e3882bcc089": {
+      "normale": "7a2f1ec7"
+    },
+    "538317ffe9d99c4c": {
+      "normale": "236c3df8"
+    },
+    "538aa4e912a27fec": {
+      "normale": "55d0d8e8"
+    },
+    "539c4925e73f8c78": {
+      "normale": "95fcdee6"
+    },
     "53a57f582de3fc3e": {
       "normale": "32048139"
     },
     "53e66796c64140db": {
       "normale": "41cea375"
+    },
+    "540d3c8aac72fdf0": {
+      "normale": "a4ecc43a"
     },
     "5413ea19a8902246": {
       "normale": "5d5e3cbc"
@@ -2135,6 +3321,12 @@
     "54b55a547dddf441": {
       "normale": "1484914c"
     },
+    "5513e0739e380fd5": {
+      "normale": "a933027f"
+    },
+    "551a8862aafcd531": {
+      "normale": "538997d3"
+    },
     "55335fbbc6beeb0e": {
       "normale": "7780d801"
     },
@@ -2150,8 +3342,14 @@
     "5574f7247f15db71": {
       "normale": "3532ec25"
     },
+    "557677ae7ecaa71e": {
+      "normale": "6f3e1dbf"
+    },
     "558e9f25debc27b2": {
       "normale": "38cbcf84"
+    },
+    "559f8b4a6fc1864e": {
+      "normale": "8270a69c"
     },
     "55ad1dd48ac4ff91": {
       "normale": "34965325"
@@ -2159,11 +3357,20 @@
     "55c716e7695ccef8": {
       "normale": "f4773a47"
     },
+    "55d6d2fe8d2b824a": {
+      "normale": "7f26e4b8"
+    },
     "55f3b48775194a75": {
       "normale": "0653c144"
     },
     "55fec77ea5183906": {
       "normale": "0a2ae2fe"
+    },
+    "5623bc6417f48f88": {
+      "normale": "091dfa56"
+    },
+    "5636a9a710b3f4dc": {
+      "normale": "c748be38"
     },
     "563a5dc57db6ce5c": {
       "normale": "9439c73a"
@@ -2171,14 +3378,32 @@
     "563de74441cb052f": {
       "normale": "4a8bbec3"
     },
+    "564f5b3942d1f5bb": {
+      "normale": "6f990162"
+    },
+    "56907852bb7c516b": {
+      "normale": "1b0d6196"
+    },
     "56a9975c6d07f00e": {
       "normale": "68b799ca"
+    },
+    "56be55caf3356683": {
+      "normale": "21e76885"
+    },
+    "56c2961fbcddced6": {
+      "normale": "7c580950"
     },
     "56c7716e507e72ad": {
       "normale": "d6ea458d"
     },
+    "56dac1e13542ba87": {
+      "normale": "c3db4b7d"
+    },
     "56eefea989aa8a85": {
       "normale": "a08d2f08"
+    },
+    "57178b18223ab5b9": {
+      "normale": "8d6e5f51"
     },
     "5739a1182257c181": {
       "normale": "573b0bfe"
@@ -2189,8 +3414,17 @@
     "576a78f094c08b72": {
       "normale": "d61311f3"
     },
+    "576a93e0ac9e6c85": {
+      "normale": "9766be16"
+    },
+    "57708385586f2cb5": {
+      "normale": "39c960e8"
+    },
     "5789d92bc49045c4": {
       "normale": "792b7e18"
+    },
+    "578bc7a6267b3f8c": {
+      "normale": "c4a36087"
     },
     "578e043fe2e5ce84": {
       "normale": "6db51303"
@@ -2204,8 +3438,32 @@
     "57ecaaeab2ecf324": {
       "normale": "c254a9aa"
     },
+    "57ee3fc1e25a5eb8": {
+      "normale": "d75d31b0"
+    },
+    "58192a173121859d": {
+      "normale": "1e515499"
+    },
+    "582552fa9857ea55": {
+      "normale": "73eb10fd"
+    },
+    "582c64479ce173e6": {
+      "normale": "a07247cc"
+    },
+    "5832835c0f3e1f52": {
+      "normale": "e5052383"
+    },
+    "58388aabcb269039": {
+      "normale": "88e66685"
+    },
     "5842f03f67203e31": {
       "normale": "1504d7e5"
+    },
+    "58501d981cec1533": {
+      "normale": "7fae6602"
+    },
+    "5870ac747e33f2f5": {
+      "normale": "b0dc3576"
     },
     "5874b98030bdc9b9": {
       "normale": "f65765ee"
@@ -2216,14 +3474,29 @@
     "58b45be1680c8df5": {
       "normale": "c2fb956e"
     },
+    "58ba82d792d60e7f": {
+      "normale": "2c42c924"
+    },
+    "58cd787d6da8d667": {
+      "normale": "a70b1847"
+    },
+    "58d19ec851c5ed0c": {
+      "normale": "65129445"
+    },
     "58d4356921b54a5b": {
       "normale": "137094a7"
     },
     "58f0531970dd7d18": {
       "normale": "ddeb8df8"
     },
+    "5901622a5f935857": {
+      "normale": "6c5a09e6"
+    },
     "591beac45efce004": {
       "normale": "eb64bbae"
+    },
+    "5926af696deb5938": {
+      "normale": "c71d2abe"
     },
     "59288cb2c8c948d4": {
       "normale": "d96f5038"
@@ -2246,6 +3519,9 @@
     "5a19baf65ee570c9": {
       "normale": "09e19e16"
     },
+    "5a20d64506875578": {
+      "normale": "250ee38f"
+    },
     "5a3e7283fc98bcca": {
       "normale": "54b2d105"
     },
@@ -2261,6 +3537,19 @@
     "5aab1dc57d48cfcc": {
       "normale": "8e6d2e39"
     },
+    "5ad7907df2adff79": {
+      "normale": "4c4c1f4e"
+    },
+    "5ae8504762816d43": {
+      "lente": "80f6af21",
+      "normale": "dfb5b40e"
+    },
+    "5b06d757b45778a4": {
+      "normale": "0e559e4e"
+    },
+    "5b0898530abfc847": {
+      "normale": "812a5f98"
+    },
     "5b11464d5a7e7146": {
       "normale": "9581a6bb"
     },
@@ -2270,8 +3559,14 @@
     "5b2281dd4da74a40": {
       "normale": "9d8e2dcb"
     },
+    "5b39a11c83a8ac68": {
+      "normale": "b54614b8"
+    },
     "5b77a886fdb33630": {
       "normale": "c9c65502"
+    },
+    "5b80b982f8ba5f1f": {
+      "normale": "c740683d"
     },
     "5b86690838747ef1": {
       "normale": "7f20a27d"
@@ -2279,14 +3574,23 @@
     "5ba2693838580de8": {
       "normale": "8320bc52"
     },
+    "5ba38f0bc2bd0409": {
+      "normale": "b531b9e6"
+    },
     "5bab603cee43962c": {
       "normale": "d5df6493"
+    },
+    "5bb60bad0c5b02a5": {
+      "normale": "3e6d3e8e"
     },
     "5bba652a93a72e27": {
       "normale": "b55a6469"
     },
     "5bba87add22b24a1": {
       "normale": "6b4265d9"
+    },
+    "5bc4a8de02b5ac67": {
+      "normale": "f73526c9"
     },
     "5bcd1eec1e59d66d": {
       "normale": "e4d04d00"
@@ -2302,6 +3606,9 @@
     },
     "5c26a91ce12871c8": {
       "normale": "46eb9f80"
+    },
+    "5c44d5f7fe052580": {
+      "normale": "ceb35fec"
     },
     "5c4b5072d34ce6d6": {
       "normale": "960ebafa"
@@ -2330,17 +3637,29 @@
     "5cb3ab9061545cf9": {
       "normale": "7dfab774"
     },
+    "5cb81c1ba2ac5fd6": {
+      "normale": "4d4740e0"
+    },
     "5cc16f6427e1587c": {
       "normale": "61ea3008"
     },
+    "5ce49a81fa79015b": {
+      "normale": "f945fd8b"
+    },
     "5cec1716533cfc50": {
       "normale": "7e8f7fd8"
+    },
+    "5cf179e8a1326393": {
+      "normale": "69d5bb9a"
     },
     "5d184f4dbcd8fe3c": {
       "normale": "f2ae47df"
     },
     "5d3372a0d100b96b": {
       "normale": "c92b7960"
+    },
+    "5d3a3aa1474ebcef": {
+      "normale": "1782d50e"
     },
     "5d50c978cf4ac5b9": {
       "normale": "e7b3d11e"
@@ -2350,6 +3669,9 @@
     },
     "5d9e95d26990aac7": {
       "normale": "6c2bcb23"
+    },
+    "5dd39113063ec20d": {
+      "normale": "aeb58ae6"
     },
     "5dd74eb3c281189c": {
       "normale": "a8e1ec10"
@@ -2379,6 +3701,12 @@
     "5e5c5c0b390df797": {
       "normale": "9bb8c1b4"
     },
+    "5e7ea1b14f299678": {
+      "normale": "086985ca"
+    },
+    "5e9a0b97700cb679": {
+      "normale": "996888a7"
+    },
     "5ed9c6eb6d447ba0": {
       "normale": "69fda1fc"
     },
@@ -2400,17 +3728,29 @@
     "5f27d0ea5d264d72": {
       "normale": "1d27507a"
     },
+    "5f374315fbb2525b": {
+      "normale": "2dca913a"
+    },
     "5f580749e14187d4": {
       "normale": "37b842d2"
     },
     "5f61f227a9f73beb": {
       "normale": "0fab04b4"
     },
+    "5f721d357d1711dd": {
+      "normale": "15c28d20"
+    },
     "5f75840cd4d55c1b": {
       "normale": "f5e74100"
     },
     "5f927b8b14724a3f": {
       "normale": "6ef045f4"
+    },
+    "5f9ef95cf7c62c5f": {
+      "normale": "0c407760"
+    },
+    "5fce3535d7b6f2f6": {
+      "normale": "c171cf21"
     },
     "6022178b605fb33e": {
       "normale": "84ed2ef1"
@@ -2420,6 +3760,12 @@
     },
     "6042e518f0c66e78": {
       "normale": "7b14128f"
+    },
+    "6064dc17d3dc4de7": {
+      "normale": "7b027b23"
+    },
+    "6073ab82e14417c3": {
+      "normale": "7a6c78b5"
     },
     "6075de7e08f6fc2d": {
       "normale": "7d7c9c5a"
@@ -2433,6 +3779,9 @@
     "6086451827ca6727": {
       "normale": "d8988bd4"
     },
+    "60aa0167b2b35791": {
+      "normale": "b6493da6"
+    },
     "60ad759790bb71ad": {
       "normale": "f089747e"
     },
@@ -2445,11 +3794,20 @@
     "611a83a46c930415": {
       "normale": "ded23eb9"
     },
+    "612a3e4af91cae02": {
+      "normale": "e0df6a31"
+    },
     "612ebb9f008ad5c3": {
       "normale": "afef0321"
     },
     "6135649f7c05baaf": {
       "normale": "7ab99a09"
+    },
+    "6136cffa86992543": {
+      "normale": "1ebb15c5"
+    },
+    "613994322cbdac6e": {
+      "normale": "660966b5"
     },
     "6152104eca1d9b2c": {
       "normale": "c8a4a320"
@@ -2463,11 +3821,20 @@
     "618063d69bfe8bd4": {
       "normale": "ef8b8bbf"
     },
+    "6185c13627c0547e": {
+      "normale": "378d4f9c"
+    },
     "61e3e6aed89047a0": {
       "normale": "6bdf69bb"
     },
+    "61ec066e53a55f8f": {
+      "normale": "e5b56042"
+    },
     "61f061e38aeda5ee": {
       "normale": "8ed853b7"
+    },
+    "61f8bfbc57e5cee2": {
+      "normale": "7e0d2247"
     },
     "6205287624e583aa": {
       "lente": "5b599270",
@@ -2475,6 +3842,9 @@
     },
     "6210067bc961d00e": {
       "normale": "22022cac"
+    },
+    "62616a87fa0a8d0c": {
+      "normale": "870fbc4d"
     },
     "6299c27b8f7d80c9": {
       "normale": "478a6266"
@@ -2485,14 +3855,32 @@
     "62c3bbc921616377": {
       "normale": "43cd0d73"
     },
+    "62e3f8e70d910941": {
+      "normale": "44e6c6e8"
+    },
+    "62ebc006ae57809a": {
+      "normale": "82d61e6b"
+    },
     "62ee5d8abc3cc7d6": {
       "normale": "9fb97e0c"
     },
     "62f86a59629b24aa": {
       "normale": "f22fe684"
     },
+    "62fd04b353f5a0da": {
+      "normale": "832a7432"
+    },
+    "6322785c8b2253ea": {
+      "normale": "c077a2d7"
+    },
     "6332667136b74031": {
       "normale": "c142b6c6"
+    },
+    "6347936e82598246": {
+      "normale": "fe7e7177"
+    },
+    "637645b168f95f6a": {
+      "normale": "a8bcb9a3"
     },
     "6377c75a796decd0": {
       "normale": "152f0ae4"
@@ -2503,11 +3891,24 @@
     "638ab4fc31a2a371": {
       "normale": "06efe213"
     },
+    "638aca17195ced10": {
+      "normale": "d89b3de3"
+    },
+    "638dd792a35c38aa": {
+      "normale": "cd80db8a"
+    },
     "63a9bb6ba92d9836": {
       "normale": "0ba293d2"
     },
     "63c39b375cbb30f4": {
       "normale": "7bac6f24"
+    },
+    "63c7bfc9f3ae7ab6": {
+      "lente": "74e80c3f",
+      "normale": "41018b2b"
+    },
+    "63ee8226e684ff8b": {
+      "normale": "e802493d"
     },
     "63f2d741e6c649a2": {
       "normale": "40e177a4"
@@ -2515,8 +3916,14 @@
     "641e7a7f6e95bba5": {
       "normale": "208a96a0"
     },
+    "64308424a4188e8d": {
+      "normale": "03795aaa"
+    },
     "6434e0314b7f1f60": {
       "normale": "0db2a8f3"
+    },
+    "6455cf0b1cb4856e": {
+      "normale": "945cb35f"
     },
     "645f2f8db6a7a8b1": {
       "normale": "fbe8a00f"
@@ -2526,6 +3933,15 @@
     },
     "648208e01d19250b": {
       "normale": "afc29258"
+    },
+    "648caac2d2724078": {
+      "normale": "b1f1d6cf"
+    },
+    "64a8ae7e9011d876": {
+      "normale": "7b88e72c"
+    },
+    "64b743f0c90bbe33": {
+      "normale": "a828e1e9"
     },
     "64cedcf5d162b9e4": {
       "normale": "8f5a4a1e"
@@ -2546,6 +3962,9 @@
     "651edcb397463d80": {
       "normale": "72af06b3"
     },
+    "652d7b89690baa44": {
+      "normale": "7dabee1a"
+    },
     "6536b3b1fc88e957": {
       "normale": "4762ed2e"
     },
@@ -2554,6 +3973,9 @@
     },
     "657d2cda2c96b01d": {
       "normale": "5fc0c548"
+    },
+    "657ff29d7f4acbe5": {
+      "normale": "b3f2b7fe"
     },
     "65879e44cfd52955": {
       "normale": "a4b44ac6"
@@ -2582,6 +4004,12 @@
     "665414232b626122": {
       "normale": "2b9982d4"
     },
+    "6664fdc08a660f05": {
+      "normale": "88731642"
+    },
+    "668306a2e9fc5e12": {
+      "normale": "5d9228fa"
+    },
     "6685a96b700069e9": {
       "normale": "7508bd17"
     },
@@ -2591,8 +4019,17 @@
     "668768fe6be0b032": {
       "normale": "75eba5d8"
     },
+    "6691c69815e611fd": {
+      "normale": "9f5567da"
+    },
+    "66f4fd76ff2417e8": {
+      "normale": "0014bcdb"
+    },
     "66fd6ff70ce71bfe": {
       "normale": "d3fe8f5f"
+    },
+    "672836f124b2c5cc": {
+      "normale": "42954a08"
     },
     "6729acb96c42900b": {
       "normale": "40cf839d"
@@ -2602,6 +4039,12 @@
     },
     "67594d9bdfc17a08": {
       "normale": "4f717fef"
+    },
+    "6759e111aba55233": {
+      "normale": "6b8d3f89"
+    },
+    "675e9f6fbb704b48": {
+      "normale": "adc4ac86"
     },
     "676500ab8a33fec3": {
       "normale": "82b2f6e2"
@@ -2621,6 +4064,9 @@
     "679c32ebba91dcf0": {
       "normale": "5f5b75f9"
     },
+    "67a442fef2ef0058": {
+      "normale": "4aed2bc3"
+    },
     "67a592cc7082a2c7": {
       "normale": "6bbb4925"
     },
@@ -2632,6 +4078,18 @@
     },
     "67e77eb2d58dc758": {
       "normale": "22b99ff1"
+    },
+    "67ed17a2a0551bb8": {
+      "normale": "208c5ac3"
+    },
+    "6804cbf982e68d0e": {
+      "normale": "0aa6e1e2"
+    },
+    "680a6badb99e38ec": {
+      "normale": "af04b2f2"
+    },
+    "681e65df49ac01cb": {
+      "normale": "c2a2be71"
     },
     "6822bfd6992736d4": {
       "normale": "ff2ab930"
@@ -2647,6 +4105,12 @@
     },
     "68c7d7ca52fda102": {
       "normale": "5ad42aea"
+    },
+    "68d4c907e952c590": {
+      "normale": "82e7ebcd"
+    },
+    "68e9e3319a7b7fca": {
+      "normale": "dd628c83"
     },
     "68f1970ca7c92b8b": {
       "normale": "c8994d60"
@@ -2669,6 +4133,9 @@
     "69d5bd8017f54db1": {
       "normale": "c4fa3fa3"
     },
+    "69dd959f653b5c7e": {
+      "normale": "26ac0a62"
+    },
     "69e5e8b4567c2580": {
       "normale": "d2b815b5"
     },
@@ -2684,11 +4151,23 @@
     "6a279ee25b96093a": {
       "normale": "00c331c6"
     },
+    "6a2fdc1a19005289": {
+      "normale": "3c34a6aa"
+    },
+    "6a41de8590f649c4": {
+      "normale": "f451f089"
+    },
     "6a435f388469601b": {
       "normale": "b499a5e4"
     },
+    "6a4f2bb9d63a360b": {
+      "normale": "183a3a7c"
+    },
     "6a7030e7bddc9b6b": {
       "normale": "9ef6f1b1"
+    },
+    "6a8c2231039f29d9": {
+      "normale": "acc1f2bd"
     },
     "6a9f3aa7415ec764": {
       "normale": "1d5ee099"
@@ -2696,14 +4175,35 @@
     "6a9fadf03c4c8473": {
       "normale": "455b94b9"
     },
+    "6acd2fcd0104ec56": {
+      "normale": "4f16289d"
+    },
+    "6aed733a40f74b62": {
+      "normale": "e57d2e76"
+    },
     "6aeebb45ce593a55": {
       "normale": "d194f563"
+    },
+    "6afa9dba0650848b": {
+      "normale": "8a8f4140"
     },
     "6b0012c8c8b68a67": {
       "normale": "a0684755"
     },
     "6b14f27f1ed37fc1": {
       "normale": "efc4bcd2"
+    },
+    "6b28239d765e38f6": {
+      "normale": "2e991587"
+    },
+    "6b5f3036e3404bb9": {
+      "normale": "d6456dce"
+    },
+    "6b7538d5372cd63b": {
+      "normale": "4f247915"
+    },
+    "6b85082af4373a26": {
+      "normale": "dea36912"
     },
     "6b8c43a3a6772897": {
       "normale": "da2842ca"
@@ -2723,11 +4223,20 @@
     "6bcab6a7052ec04f": {
       "normale": "9518ab67"
     },
+    "6bcb9f531974d2d9": {
+      "normale": "9ae28dfb"
+    },
     "6bd029f0ea43cc2c": {
       "normale": "5dc6f37e"
     },
+    "6bdae8c0f4658ab0": {
+      "normale": "71d17e68"
+    },
     "6beb989fdd16e4fe": {
       "normale": "89563fa7"
+    },
+    "6bebece20d0f21cd": {
+      "normale": "7e9499cd"
     },
     "6c0c5e71d209fc1d": {
       "normale": "819c76ba"
@@ -2735,8 +4244,17 @@
     "6c23fd0e2713dcbe": {
       "normale": "4bd22aca"
     },
+    "6c359d96e2b2b2cc": {
+      "normale": "3434c4db"
+    },
     "6c36c08a352acead": {
       "normale": "72c09d7b"
+    },
+    "6c3a82109c6d570d": {
+      "normale": "c2d2a3bf"
+    },
+    "6c3e8a6d9aa34977": {
+      "normale": "37ec9be1"
     },
     "6c4415087fbbfc5b": {
       "normale": "6f2b9aed"
@@ -2759,20 +4277,44 @@
     "6c8d93b44a619e2f": {
       "normale": "e3716d7a"
     },
+    "6cd5ce207be099bd": {
+      "normale": "c597dba4"
+    },
     "6cfa2b13b1db9f14": {
       "normale": "69f0ec6f"
+    },
+    "6d59815f7ba3370e": {
+      "normale": "b1d21cec"
+    },
+    "6d671139ab3a7f25": {
+      "normale": "9361dafb"
     },
     "6d6a665b2a8ab28b": {
       "normale": "7cc64abd"
     },
+    "6d6cdd8353dfd218": {
+      "normale": "2e295287"
+    },
+    "6d71172d0d4a0405": {
+      "normale": "f5973096"
+    },
     "6d7f55ad49583b64": {
       "normale": "502ef9ea"
+    },
+    "6d8dd16b01b1f47e": {
+      "normale": "ecd41994"
     },
     "6d9f1ef7d5d28a2b": {
       "normale": "5d94e3f8"
     },
+    "6d9f6bdc25f2163f": {
+      "normale": "35834106"
+    },
     "6db220611e2b6a55": {
       "normale": "c24e7265"
+    },
+    "6dc7ef3498d820d8": {
+      "normale": "e1cd3166"
     },
     "6dc98c8ce5a01302": {
       "normale": "a468c698"
@@ -2786,11 +4328,26 @@
     "6e3cd68b3b8e61ea": {
       "normale": "c90c4869"
     },
+    "6e4eb61cbe7b8f84": {
+      "normale": "6123a14e"
+    },
     "6e57d3fa3b3f07f9": {
       "normale": "bc2710b9"
     },
+    "6e61b0c369b302f0": {
+      "normale": "780bb6ca"
+    },
     "6e73e943ebee529d": {
       "normale": "a6446aa2"
+    },
+    "6e7d15f0ca9c87ed": {
+      "normale": "d7660e9c"
+    },
+    "6e997b7b9427e9fd": {
+      "normale": "ca92e861"
+    },
+    "6ea9140a0b1fb294": {
+      "normale": "9fe73243"
     },
     "6eb7f8179f471105": {
       "normale": "a4861011"
@@ -2807,8 +4364,23 @@
     "6f296b48cdcb16b7": {
       "normale": "5f767720"
     },
+    "6f3bb4d56f0eb9e4": {
+      "normale": "6dae080f"
+    },
+    "6f4f75884ee8bf0a": {
+      "normale": "6a438330"
+    },
     "6f6be8d9bbcc07b4": {
       "normale": "c15fba03"
+    },
+    "6f990d4e08c8134c": {
+      "normale": "398c49a3"
+    },
+    "6fdc552285d4778c": {
+      "normale": "e1bf7292"
+    },
+    "7011ad8b2f3d229b": {
+      "normale": "8126ebbf"
     },
     "702a5832b323ed49": {
       "normale": "51f2ebb9"
@@ -2831,6 +4403,9 @@
     "705e3e927d063094": {
       "normale": "72bba34b"
     },
+    "7060e9b35fdf9895": {
+      "normale": "5a58f3c1"
+    },
     "7066e8b22807950a": {
       "normale": "42590112"
     },
@@ -2840,8 +4415,17 @@
     "7074e02b5f70c616": {
       "normale": "ba7e379f"
     },
+    "707cc847e9d70500": {
+      "normale": "a71456a5"
+    },
     "70903e0d9b8816b2": {
       "normale": "0a54b5fe"
+    },
+    "70ade3e975082b9f": {
+      "normale": "b6fe0753"
+    },
+    "70b2bf23e2bb4bb8": {
+      "normale": "a2f03bf1"
     },
     "70b7f25ed9d6ae62": {
       "normale": "704b7789"
@@ -2852,8 +4436,23 @@
     "70d5472b4aa0c8c3": {
       "normale": "ad213583"
     },
+    "70ea833626b7ab34": {
+      "normale": "95ed0f7c"
+    },
+    "70fa389b8840e2fa": {
+      "normale": "b4647dde"
+    },
+    "71134c37ab6d58d6": {
+      "normale": "1a0e8e97"
+    },
     "711bf3cda90f4739": {
       "normale": "ff9542d6"
+    },
+    "71270c84b0062d71": {
+      "normale": "971d19e1"
+    },
+    "7129637e169db31a": {
+      "normale": "d2799be0"
     },
     "712ba2900d79ed5c": {
       "normale": "1f245e83"
@@ -2861,11 +4460,20 @@
     "714be9a2aabd011c": {
       "normale": "a25256d0"
     },
+    "716b108891a9b825": {
+      "normale": "88506b5a"
+    },
     "716c679ad1d6846a": {
       "normale": "f700c2b6"
     },
+    "71d9ee318e2a4321": {
+      "normale": "e1c64a2a"
+    },
     "71eac8fec05e718b": {
       "normale": "91941066"
+    },
+    "71f56a7024b35e0e": {
+      "normale": "c8d143e6"
     },
     "7212c06ad16447ba": {
       "normale": "8d3042db"
@@ -2885,17 +4493,35 @@
     "72a14573750dedfe": {
       "normale": "54c59e5a"
     },
+    "72b4c8725cede7fc": {
+      "normale": "a765ab5a"
+    },
     "72e7fec0554e4cb0": {
       "normale": "39c350bd"
     },
     "730a94f8d2991e59": {
       "normale": "dc885ff1"
     },
+    "7329bf737f8d8266": {
+      "normale": "27654992"
+    },
+    "735280d8ec3484d1": {
+      "normale": "2049615f"
+    },
+    "7353f94322f05e2a": {
+      "normale": "e2f5e6a4"
+    },
     "738348dbf1b246b6": {
       "normale": "07f1961d"
     },
+    "73a78207f2533ba0": {
+      "normale": "f4c32835"
+    },
     "73dc1a22a65830d4": {
       "normale": "e9239cd4"
+    },
+    "73fba1ed558cf512": {
+      "normale": "f3dad57d"
     },
     "740e4a65c5a5612e": {
       "normale": "da261837"
@@ -2903,11 +4529,23 @@
     "7434f6fcfca5f7ee": {
       "normale": "841c89a0"
     },
+    "7444dcfdb947de21": {
+      "normale": "b72346d5"
+    },
     "744744c0b1fe794c": {
       "normale": "26ac6cb2"
     },
     "744c17ca80e77a67": {
       "normale": "afe593e6"
+    },
+    "7457b68850d9d674": {
+      "normale": "ad41ca05"
+    },
+    "746d52284a957c88": {
+      "normale": "bd1ff714"
+    },
+    "7472693493ef7dda": {
+      "normale": "e5af890f"
     },
     "748ab6ca59b40398": {
       "normale": "bb5e56b9"
@@ -2921,8 +4559,14 @@
     "75077ca31da2d1b0": {
       "normale": "a06a04e9"
     },
+    "752045f6e84c302e": {
+      "normale": "bfa9dcc2"
+    },
     "75217a41e28687ab": {
       "normale": "79011cca"
+    },
+    "75263f012386ca27": {
+      "normale": "b27fd8c1"
     },
     "753a6e4fd886a025": {
       "normale": "3805e724"
@@ -2930,8 +4574,14 @@
     "754c345b97101ea7": {
       "normale": "6a4a3c4f"
     },
+    "757ddc56fe158d52": {
+      "normale": "01b6175e"
+    },
     "75a50481df601d11": {
       "normale": "07af4f67"
+    },
+    "75b291840789c1f7": {
+      "normale": "8632c42e"
     },
     "75b68169bc40dd55": {
       "normale": "b65accb2"
@@ -2948,8 +4598,17 @@
     "75e9809bcc9a1873": {
       "normale": "d698fa29"
     },
+    "760d77fae38da60e": {
+      "normale": "865f6076"
+    },
+    "761ed4f760aabb2a": {
+      "normale": "037959c4"
+    },
     "76321e6fb330aaa3": {
       "normale": "d8d738af"
+    },
+    "7632a6caa2d50606": {
+      "normale": "8f3582a0"
     },
     "765ece8bf230ea11": {
       "normale": "c08de3ef"
@@ -2960,9 +4619,21 @@
     "76a260a8242e8d1a": {
       "normale": "f608bded"
     },
+    "76a9e96a22555fd7": {
+      "normale": "5e5c0755"
+    },
     "76b9f2228f5b6cb4": {
       "lente": "b3258334",
       "normale": "0c9e7137"
+    },
+    "76c750934849a5d3": {
+      "normale": "fdf561f6"
+    },
+    "76c8b0384518a07e": {
+      "normale": "3f8e2e3c"
+    },
+    "7701ace06fa0f56f": {
+      "normale": "ff8a178c"
     },
     "771457e0acc8de76": {
       "normale": "97459eb7"
@@ -2978,6 +4649,9 @@
     },
     "77c6f0828240822e": {
       "normale": "9570c28d"
+    },
+    "77cf97a040ce3fc8": {
+      "normale": "834e821d"
     },
     "77d75faff4f08f48": {
       "normale": "95b7e19a"
@@ -3006,8 +4680,14 @@
     "783ef3c971e20d57": {
       "normale": "6610bd46"
     },
+    "785cc19ad8b3ad31": {
+      "normale": "a0f0e4e1"
+    },
     "7861f32d2d7a1c32": {
       "normale": "7e018d46"
+    },
+    "786c0ada6efd6898": {
+      "normale": "f0ddfde5"
     },
     "7877e085a475babe": {
       "normale": "00890321"
@@ -3024,6 +4704,9 @@
     "78dc673a4d9ebf6d": {
       "normale": "8aedc039"
     },
+    "78e1ffa47556a050": {
+      "normale": "f6c926f8"
+    },
     "78ec1edb1a082931": {
       "normale": "a2f4069b"
     },
@@ -3037,11 +4720,26 @@
       "lente": "5ee8ac28",
       "normale": "ea69dab6"
     },
+    "7925114b19caebb4": {
+      "normale": "80f17a0d"
+    },
+    "7945b62b13a37eb9": {
+      "normale": "2acfa0f3"
+    },
+    "794f6abb05667c09": {
+      "normale": "ef5fce00"
+    },
     "79579b82d2072770": {
       "normale": "712f761c"
     },
+    "7964463c14a5011b": {
+      "normale": "3df609c8"
+    },
     "79aefae8bc9cee1d": {
       "normale": "590a3514"
+    },
+    "79c3274f6d11d68d": {
+      "normale": "0051424a"
     },
     "79cb852fa598b0bb": {
       "normale": "f7539e28"
@@ -3049,11 +4747,17 @@
     "79d51ca6c24976f0": {
       "normale": "ddf17d1a"
     },
+    "79e15e2955306c85": {
+      "normale": "5f3a3f22"
+    },
     "79ef76d5759ffbaa": {
       "normale": "d773ee44"
     },
     "79fb91b9d48a5548": {
       "normale": "e872e0e2"
+    },
+    "7a1aa3d19acf25cf": {
+      "normale": "1bee7bde"
     },
     "7a2a215faf54da0e": {
       "normale": "8ea16f36"
@@ -3076,14 +4780,23 @@
     "7a961dfcb5cb153b": {
       "normale": "1d587aff"
     },
+    "7a972d4e00c3e328": {
+      "normale": "77d094dd"
+    },
     "7a9b97b618506cfe": {
       "normale": "7fc84a3c"
+    },
+    "7aadcb961af04f73": {
+      "normale": "08b8f56b"
     },
     "7ab398254b44a889": {
       "normale": "836733e8"
     },
     "7ab99465806fe5a5": {
       "normale": "940ac37c"
+    },
+    "7abd04cccefac894": {
+      "normale": "dca0409a"
     },
     "7abedef919e98129": {
       "normale": "ba2489db"
@@ -3103,14 +4816,27 @@
     "7b345636cc034d41": {
       "normale": "d7f15144"
     },
+    "7b3755c1b9809cd8": {
+      "normale": "2cf89f0d"
+    },
     "7b62c6b6a101a6b1": {
       "normale": "a2aeaa71"
     },
     "7b941a0dd4be71b6": {
       "normale": "2ac19cf6"
     },
+    "7b9755cd9f71255e": {
+      "normale": "85ef4ba1"
+    },
+    "7b9a08b6322ec550": {
+      "lente": "f52a77b3",
+      "normale": "4fee893f"
+    },
     "7ba422849c37789f": {
       "normale": "4f337780"
+    },
+    "7baeb97bfbea9103": {
+      "normale": "0bf93fa1"
     },
     "7bbcc0a4fb3aeae7": {
       "normale": "dc13f117"
@@ -3118,11 +4844,23 @@
     "7bd0f7b1495ad064": {
       "normale": "effd1e8b"
     },
+    "7be62fc253720d57": {
+      "normale": "67fb6141"
+    },
     "7bf2c7d3c5ccfd70": {
       "normale": "04fa6ce9"
     },
+    "7bf7fa13fac7fad8": {
+      "normale": "0316f9dd"
+    },
     "7c03ac90e965cbe9": {
       "normale": "30e0733c"
+    },
+    "7c1baa3a3dc7a12f": {
+      "normale": "8e6401f2"
+    },
+    "7c30a254510e8496": {
+      "normale": "d8469b00"
     },
     "7c51c09484c646d3": {
       "normale": "c4810a8a"
@@ -3133,8 +4871,23 @@
     "7c5a7dcfa24305c5": {
       "normale": "3c2055fb"
     },
+    "7c82f289180d3c83": {
+      "normale": "7b799e5d"
+    },
+    "7c9c7a9fb3f3fa36": {
+      "normale": "9b1065c7"
+    },
+    "7ca5974af794c47d": {
+      "normale": "aa6b5a6f"
+    },
     "7cbc451b1112e133": {
       "normale": "38ea7bac"
+    },
+    "7cc611a1dcb8448a": {
+      "normale": "afb07f3c"
+    },
+    "7cf7251f526c306b": {
+      "normale": "587287dc"
     },
     "7cf91cd226572229": {
       "normale": "1a256652"
@@ -3142,11 +4895,26 @@
     "7d01d3d7d944d1b0": {
       "normale": "61f73d06"
     },
+    "7d1a69e20d6bc1c5": {
+      "normale": "d499de7c"
+    },
+    "7d26b1323c937d0f": {
+      "normale": "871da7a9"
+    },
+    "7d2d09375ac56b6a": {
+      "normale": "f4435e9d"
+    },
     "7d3d9e3ebac03371": {
       "normale": "0b3ea3d3"
     },
+    "7d4ddbe369f8ace5": {
+      "normale": "1dbc4a20"
+    },
     "7d5c1b4d00505e51": {
       "normale": "3fc15974"
+    },
+    "7d6252d751b4c645": {
+      "normale": "8ed4f7b2"
     },
     "7d6265e52f4d511d": {
       "normale": "a42bf5f8"
@@ -3169,8 +4937,17 @@
     "7de106ae4a1b5441": {
       "normale": "e1069076"
     },
+    "7e0b3ac6c1870c6f": {
+      "normale": "c3d67df0"
+    },
+    "7e0cbcc08847ae55": {
+      "normale": "09db8b9d"
+    },
     "7e235244fb26731c": {
       "normale": "0808e084"
+    },
+    "7e263ba12af1ff27": {
+      "normale": "7fe7761e"
     },
     "7e3636219d1f5c6a": {
       "normale": "2543ea0c"
@@ -3178,11 +4955,20 @@
     "7e36c9dc7c9c9215": {
       "normale": "9c9eaad0"
     },
+    "7e3d970d4d7e60d0": {
+      "normale": "f12c8aa1"
+    },
     "7e51791cd3a59639": {
       "normale": "019f0b02"
     },
+    "7e51d477b95bb2d3": {
+      "normale": "432389a3"
+    },
     "7e5e2901de9ea1e8": {
       "normale": "4e2e9c30"
+    },
+    "7ec9ebb69b6b2660": {
+      "normale": "a0d863fe"
     },
     "7ed1fd060537f4a8": {
       "normale": "9d356d49"
@@ -3205,11 +4991,23 @@
     "7f30efc9376905b8": {
       "normale": "b7d0beb7"
     },
+    "7f809a1d58360771": {
+      "normale": "9439c068"
+    },
     "7f87545807e20367": {
       "normale": "969c3cec"
     },
+    "7fa094f739ee96a0": {
+      "normale": "e506adcc"
+    },
     "7fa362648ce9b3b8": {
       "normale": "69583649"
+    },
+    "7fbcf05eaa59166e": {
+      "normale": "1423a4d1"
+    },
+    "7fed20d0b986c40d": {
+      "normale": "779852a1"
     },
     "8004b14523184c56": {
       "normale": "0ddcabaa"
@@ -3226,8 +5024,14 @@
     "806251e4fe231baa": {
       "normale": "123dacd5"
     },
+    "806f5c7099b643ea": {
+      "normale": "1f3042c8"
+    },
     "80a35231c8c9427f": {
       "normale": "7ebe37be"
+    },
+    "80a91e96dc079085": {
+      "normale": "7d16f766"
     },
     "80b3a880316c5c44": {
       "normale": "735c9aa5"
@@ -3250,6 +5054,9 @@
     "81026a3095bcc23f": {
       "normale": "2bf9a026"
     },
+    "81164864f77fe81f": {
+      "normale": "ea111dba"
+    },
     "811a581357a1fbb4": {
       "normale": "938daf59"
     },
@@ -3267,6 +5074,9 @@
     },
     "8158b81484ac0ad4": {
       "normale": "bb625f1c"
+    },
+    "817489962d9476ed": {
+      "normale": "c0bf5d73"
     },
     "818907d0c5c8a191": {
       "normale": "0973a357"
@@ -3289,9 +5099,21 @@
     "821b4309398ae904": {
       "normale": "74eab239"
     },
+    "82360f635421b3d5": {
+      "normale": "07c153eb"
+    },
+    "823dffb64cc0a5c8": {
+      "normale": "806a0318"
+    },
     "82718d195d0fa7c5": {
       "lente": "9d222766",
       "normale": "b7befb9a"
+    },
+    "82718df42281eb95": {
+      "normale": "3c7562bf"
+    },
+    "82866a59c0691a21": {
+      "normale": "f683905e"
     },
     "82df986444bbcab9": {
       "normale": "cfddd393"
@@ -3299,11 +5121,26 @@
     "82f41195823fa3ff": {
       "normale": "601d5c96"
     },
+    "83146d0e00e098c0": {
+      "normale": "e76cc334"
+    },
     "831c95433f0a1fa2": {
       "normale": "c1355c4e"
     },
     "83289bdbd6bea5e4": {
       "normale": "c536ae6f"
+    },
+    "834dd2f9ed36a179": {
+      "normale": "8b7f08ed"
+    },
+    "8365e88a1db03b44": {
+      "normale": "8667d161"
+    },
+    "8375890a77f2cab4": {
+      "normale": "7c021096"
+    },
+    "8378c33ff0de5da6": {
+      "normale": "f9db97f9"
     },
     "837d6d4f6a981dac": {
       "normale": "278cc04a"
@@ -3317,6 +5154,9 @@
     },
     "83a0f0f125f194fc": {
       "normale": "7896f2d4"
+    },
+    "83bd6eb7ba44a139": {
+      "normale": "ae475cc7"
     },
     "83bf6f3cdb42a5af": {
       "normale": "fc99ab4a"
@@ -3342,11 +5182,26 @@
     "843114352cadb8f5": {
       "normale": "b2b7a6f2"
     },
+    "8438a13f3757e653": {
+      "normale": "3a548be2"
+    },
     "844e392730d5ac2c": {
       "normale": "0a80c829"
     },
+    "845bf8276c9cb650": {
+      "normale": "88e92326"
+    },
+    "848774d415b0317b": {
+      "normale": "5498e23f"
+    },
+    "848893ec29935ff2": {
+      "normale": "875a3c06"
+    },
     "848caf653acd40c7": {
       "normale": "b07a3290"
+    },
+    "84aa85c138c5c641": {
+      "normale": "71baac76"
     },
     "84d15b483ef81b11": {
       "normale": "09b2925f"
@@ -3363,6 +5218,12 @@
     "84d9b10eea6953c2": {
       "normale": "ca55d56e"
     },
+    "84e33b9d868af33e": {
+      "normale": "db97c117"
+    },
+    "84eb389c386437a2": {
+      "normale": "68c71801"
+    },
     "84ed281b41135124": {
       "normale": "fc53e7da"
     },
@@ -3377,6 +5238,12 @@
     },
     "85325640da80036f": {
       "normale": "29cc06af"
+    },
+    "85476e550d5a3e21": {
+      "normale": "7bdab831"
+    },
+    "857cbf4fc7a192f2": {
+      "normale": "194dbb52"
     },
     "85a56b6730e1a7e1": {
       "lente": "62200f34",
@@ -3409,6 +5276,9 @@
     "868dd7a16712a4dd": {
       "normale": "52db0c22"
     },
+    "8693d3a5d07ac475": {
+      "normale": "66d2881a"
+    },
     "869bb4a0cdfa05b4": {
       "normale": "99a9c9f8"
     },
@@ -3417,6 +5287,9 @@
     },
     "86a92f374c123e05": {
       "normale": "e54067cf"
+    },
+    "86aa918507d42e17": {
+      "normale": "a48cc5a8"
     },
     "86b88cba3fd789f4": {
       "normale": "26b0fc23"
@@ -3442,8 +5315,17 @@
     "873eae6699533315": {
       "normale": "6de2c55d"
     },
+    "8775d9432718a26b": {
+      "normale": "ddbe8b91"
+    },
     "87763f2ea96d8902": {
       "normale": "45cc825c"
+    },
+    "878945f7f58a633d": {
+      "normale": "9eee5849"
+    },
+    "87d07cb81b876667": {
+      "normale": "8cc9dc60"
     },
     "87dbddc69b25fa43": {
       "normale": "7d3dfc97"
@@ -3454,8 +5336,14 @@
     "88159a2ec1fd3f11": {
       "normale": "c02bc99d"
     },
+    "882ed2cfd3d09e71": {
+      "normale": "01f94562"
+    },
     "882f36fb116f4406": {
       "normale": "d05d6fbe"
+    },
+    "8834edbf7c9b85b2": {
+      "normale": "08cec87e"
     },
     "88375b4a919a37b8": {
       "normale": "7ca86be6"
@@ -3472,8 +5360,14 @@
     "88cb9fd2e8133e50": {
       "normale": "53148ebc"
     },
+    "88d27a24527af0c7": {
+      "normale": "ce8745b4"
+    },
     "8933d7b289f9573c": {
       "normale": "81e9829d"
+    },
+    "8938f138abd25e82": {
+      "normale": "b7c1983a"
     },
     "8939d1577886eebd": {
       "normale": "4029c46f"
@@ -3484,11 +5378,20 @@
     "896698288cc717b1": {
       "normale": "77881d3f"
     },
+    "89c9ed46c6de659d": {
+      "normale": "cc23378d"
+    },
+    "89e52a67b44dfe3f": {
+      "normale": "886c2a91"
+    },
     "89eb797c90a09070": {
       "normale": "21af429f"
     },
     "89ed79c03628b20d": {
       "normale": "6d109784"
+    },
+    "89f36ecd71ddb28f": {
+      "normale": "aac648c0"
     },
     "8a07f04019111311": {
       "normale": "8ff6faea"
@@ -3496,17 +5399,53 @@
     "8a1886434417b432": {
       "normale": "c43c5cf6"
     },
+    "8a59d6897df69740": {
+      "normale": "48327afe"
+    },
     "8a6d404187b210c8": {
       "normale": "732b40b7"
+    },
+    "8a7280457fdfdbaa": {
+      "normale": "c8a87d50"
+    },
+    "8a97c62a7e30916e": {
+      "normale": "8139e34e"
+    },
+    "8aaa236c810cf76c": {
+      "normale": "dd53ed28"
+    },
+    "8aad62e423564109": {
+      "normale": "49464403"
+    },
+    "8ac25f2ce9b0508d": {
+      "normale": "9f9f48bc"
+    },
+    "8af52594a3a6b2f8": {
+      "normale": "6fccb9ab"
     },
     "8b180d1e429039c8": {
       "normale": "4abf9418"
     },
+    "8b191a34cebef3fa": {
+      "normale": "e0276c6b"
+    },
     "8b2ac7134c696f9c": {
       "normale": "ac1b2b31"
     },
+    "8b2df7cef73d49b1": {
+      "normale": "a89e5f1d"
+    },
     "8b72ae0cd59829cb": {
       "normale": "626667e9"
+    },
+    "8b951518401b7bf4": {
+      "normale": "78742f0c"
+    },
+    "8ba40516bbf5a7c7": {
+      "normale": "f6990e60"
+    },
+    "8ba827684e222e60": {
+      "normale": "668f7af9"
     },
     "8bb308a98d71769e": {
       "normale": "488bb2e0"
@@ -3517,9 +5456,15 @@
     "8bf5236c55fb50ff": {
       "normale": "12d78133"
     },
+    "8c24f867b0a8ebfe": {
+      "normale": "487869c8"
+    },
     "8c36ef0da89bb627": {
       "lente": "fe179e04",
       "normale": "6ff6e87c"
+    },
+    "8c47437cd4256564": {
+      "normale": "10b1a1ea"
     },
     "8c47ae5e702b742a": {
       "normale": "871b3e4c"
@@ -3530,6 +5475,9 @@
     "8c713e83af0f67e0": {
       "normale": "35010098"
     },
+    "8c96649001de606c": {
+      "normale": "2d8f6510"
+    },
     "8cbf1600d3f6ad29": {
       "normale": "175bd909"
     },
@@ -3539,8 +5487,23 @@
     "8cd2f1605dec719a": {
       "normale": "26ba59a7"
     },
+    "8cd586ec2dc2852b": {
+      "normale": "6e45a370"
+    },
+    "8cd970117b8a395b": {
+      "normale": "35c6c7e2"
+    },
+    "8cee1a79bb4829ce": {
+      "normale": "2da89c2a"
+    },
+    "8cf346adbaaa07db": {
+      "normale": "a1cfe3f4"
+    },
     "8d09565c7c0d664e": {
       "normale": "0f227673"
+    },
+    "8d0ea7fe92f67615": {
+      "normale": "1e28e639"
     },
     "8d27788ab7dfa886": {
       "normale": "3ccf7e98"
@@ -3569,6 +5532,9 @@
     "8dad708563509170": {
       "normale": "184a64a5"
     },
+    "8dbb2365240788da": {
+      "normale": "76702090"
+    },
     "8dbcae2b2eb536d0": {
       "lente": "d7a37997",
       "normale": "7b77f75e"
@@ -3579,8 +5545,23 @@
     "8ddc8f95d813300d": {
       "normale": "34ad703f"
     },
+    "8df0c852461c3bee": {
+      "normale": "8fc262e4"
+    },
+    "8df48f6cd253c7b3": {
+      "normale": "74eb13e2"
+    },
     "8df74d51e814c677": {
       "normale": "28440b3c"
+    },
+    "8e1eacf30e77d7ae": {
+      "normale": "1a76681a"
+    },
+    "8e257bfabc01a8aa": {
+      "normale": "3e3d8374"
+    },
+    "8e2e2378e05ede70": {
+      "normale": "7d9a70da"
     },
     "8e42b573bfef42f9": {
       "normale": "af7c8b29"
@@ -3594,11 +5575,17 @@
     "8e7db4ac8cb4e8b8": {
       "normale": "323e247f"
     },
+    "8e9d3a3d59d98a2e": {
+      "normale": "2a0a249f"
+    },
     "8ea7867b0cc96af6": {
       "normale": "e0baa784"
     },
     "8ed0c78f8c2b9721": {
       "normale": "adb2e084"
+    },
+    "8ee3de88527626d7": {
+      "normale": "ff263cda"
     },
     "8ef0381a66b08de7": {
       "normale": "22e515c4"
@@ -3606,11 +5593,23 @@
     "8ef462c6e27bbd88": {
       "normale": "3ccf8747"
     },
+    "8ef732cc61d8a29c": {
+      "normale": "d957dcc2"
+    },
     "8efe334d1982dd00": {
       "normale": "8f2c66dc"
     },
     "8f1a7ea03fd25d2e": {
       "normale": "2b5393f9"
+    },
+    "8f3487341981fa5d": {
+      "normale": "5f3bb143"
+    },
+    "8f3611e5eb9619d4": {
+      "normale": "ac2ca800"
+    },
+    "8f43a682a4753999": {
+      "normale": "852cf5a9"
     },
     "8f4ab0ac2e9143fa": {
       "normale": "2adc3dd7"
@@ -3618,11 +5617,17 @@
     "8f674a4a1e874da1": {
       "normale": "947531e3"
     },
+    "8fbcab4b50541587": {
+      "normale": "1525bde4"
+    },
     "900fea0f01496020": {
       "normale": "76821181"
     },
     "9023cc01f9ee3482": {
       "normale": "b48c1994"
+    },
+    "902570fc7fddc305": {
+      "normale": "8295c576"
     },
     "9043712e7b57a0d0": {
       "normale": "12347cbe"
@@ -3634,17 +5639,26 @@
     "9095cd1f3a0ace8e": {
       "normale": "80c078c4"
     },
+    "90a218b1554ab439": {
+      "normale": "593d3568"
+    },
     "90b1df60fc9d9d4e": {
       "normale": "7a336f85"
     },
     "90b70628ed756795": {
       "normale": "f14e3be0"
     },
+    "90b954e6bb51b9f0": {
+      "normale": "2e5ebb22"
+    },
     "90be2a82901c736b": {
       "normale": "9f85926a"
     },
     "90d561e2905de861": {
       "normale": "7304eda5"
+    },
+    "9150ff0c1a687371": {
+      "normale": "73063b01"
     },
     "91602d088323331e": {
       "normale": "24252252"
@@ -3676,6 +5690,9 @@
     "91c928ab81954acb": {
       "normale": "4027ff4f"
     },
+    "91ecf17efb838033": {
+      "normale": "81dc7b33"
+    },
     "91f72acff988e306": {
       "normale": "f4634aa7"
     },
@@ -3706,6 +5723,9 @@
     "92d16bd9e827efab": {
       "normale": "4c0a0ee1"
     },
+    "92d8ec930b5a5005": {
+      "normale": "a6bc83c5"
+    },
     "93011339cc7e539f": {
       "normale": "6f0213f6"
     },
@@ -3714,6 +5734,9 @@
     },
     "932d94ea3a2ecd93": {
       "normale": "7e1bdd9f"
+    },
+    "932e1c70c4364af9": {
+      "normale": "c405c0ff"
     },
     "9334dbaf80bb2067": {
       "normale": "2b0189ff"
@@ -3727,8 +5750,14 @@
     "937f70f446f22ed7": {
       "normale": "bc52bb7e"
     },
+    "9384c51d16981e03": {
+      "normale": "918c40f1"
+    },
     "9387ae4ce7ab1709": {
       "normale": "c5872112"
+    },
+    "9387ef02920e31c5": {
+      "normale": "498d0f6f"
     },
     "939f21a1d8df1ad2": {
       "normale": "f34f2109"
@@ -3739,8 +5768,14 @@
     "93cb0a635aaacbf0": {
       "normale": "8360ae49"
     },
+    "93fa8ff29fdb1cde": {
+      "normale": "f2513f80"
+    },
     "940ed0aecacbcf6a": {
       "normale": "bd3a34ba"
+    },
+    "94222975ea2758ea": {
+      "normale": "d22f7d95"
     },
     "942a18fd42078aa8": {
       "normale": "6ef5e30e"
@@ -3748,11 +5783,26 @@
     "942a7cfd8f119f1c": {
       "normale": "591ecbc9"
     },
+    "94357189e5dab592": {
+      "normale": "3a252bb3"
+    },
+    "94553be1d820f034": {
+      "normale": "bb2932d1"
+    },
+    "945c865f126ab4b6": {
+      "normale": "17cdb98b"
+    },
+    "94799d5dd46783ff": {
+      "normale": "8e13b1e4"
+    },
     "947e0f5bea2fff08": {
       "normale": "d6ceb2a3"
     },
     "949356ede5b5fa3c": {
       "normale": "0113b28d"
+    },
+    "949d3a5a40d4107a": {
+      "normale": "97c5ce53"
     },
     "94d59025d79d8253": {
       "normale": "b9b1e634"
@@ -3765,6 +5815,12 @@
     },
     "952e87de302b60d3": {
       "normale": "83d3b1e3"
+    },
+    "95324615fd66c55c": {
+      "normale": "0ee13a80"
+    },
+    "953a099b6d2e34f0": {
+      "normale": "800ea043"
     },
     "954acb1dfc2191ae": {
       "normale": "54d2b1ff"
@@ -3782,17 +5838,29 @@
     "957f45f3fe3d7492": {
       "normale": "b353eb8d"
     },
+    "958d0fba9acefee8": {
+      "normale": "de806c81"
+    },
     "959a1918ab7b78f4": {
       "normale": "0811a2db"
     },
+    "95ab2cf513e135cf": {
+      "normale": "d0460498"
+    },
     "95b763ea3c8fa201": {
       "normale": "bc20e8e8"
+    },
+    "95e63510322e319c": {
+      "normale": "fe3909e5"
     },
     "9615c42d625d93af": {
       "normale": "6e287e89"
     },
     "961d409d2047b85d": {
       "normale": "38c72f7a"
+    },
+    "9636de561781d35e": {
+      "normale": "05f07739"
     },
     "963986c7926920e3": {
       "normale": "2c000a8c"
@@ -3809,14 +5877,41 @@
     "96738402846e6759": {
       "normale": "f1b3f026"
     },
+    "9685821dab4d75f0": {
+      "normale": "642dae80"
+    },
+    "9685bbcb395e57ca": {
+      "normale": "36776d4d"
+    },
+    "969ad5aec80d19d6": {
+      "normale": "81c7de47"
+    },
     "969cdbc22438f510": {
       "normale": "54f378bb"
+    },
+    "96afa1f74c4a3644": {
+      "normale": "b5af12f5"
     },
     "96c13abf9a35822a": {
       "normale": "87414136"
     },
     "96e87c410a8852ea": {
       "normale": "3782599d"
+    },
+    "96f30212d32f33b1": {
+      "normale": "aac97250"
+    },
+    "9715fa0aaa1f16a6": {
+      "normale": "c35c796f"
+    },
+    "971a199781991392": {
+      "normale": "57eda363"
+    },
+    "97273200f65c6f65": {
+      "normale": "d45caa6c"
+    },
+    "973533b7fac5714f": {
+      "normale": "0c22ed5f"
     },
     "9749812c9d18d7a7": {
       "normale": "6f7401fb"
@@ -3842,11 +5937,38 @@
     "97c90d0c3b346cc9": {
       "normale": "3f510491"
     },
+    "97de01a78d98368f": {
+      "normale": "f97e4418"
+    },
+    "97e840251f794e80": {
+      "normale": "87beb438"
+    },
     "97ebb554f86a798a": {
       "normale": "f09c322a"
     },
+    "9813236ec8814054": {
+      "normale": "e6b8c2ed"
+    },
+    "981ff3e42b4692d3": {
+      "normale": "e8bb412c"
+    },
+    "983ca34e534e883d": {
+      "normale": "54b4cfcb"
+    },
+    "9866231ab6b77c7b": {
+      "normale": "551b24a5"
+    },
     "986b4496adcbd80a": {
       "normale": "fbd84541"
+    },
+    "986e7bd304367e56": {
+      "normale": "d391717e"
+    },
+    "987b920191fae56e": {
+      "normale": "66fe5381"
+    },
+    "9889a501b32230c8": {
+      "normale": "feed9454"
     },
     "989a53eb71efd040": {
       "normale": "1157f055"
@@ -3854,11 +5976,20 @@
     "989fe4848be73ca2": {
       "normale": "77b4248f"
     },
+    "98ab51a6a7b9725b": {
+      "normale": "a9f30c12"
+    },
     "98b2abc30c11e341": {
       "normale": "a09191f3"
     },
     "98b30745763e6d27": {
       "normale": "33b92a5e"
+    },
+    "98b4376b6b42dd81": {
+      "normale": "9d136d9f"
+    },
+    "98c00ca9d3f4b5e3": {
+      "normale": "abced7d3"
     },
     "98c0f5d180bf71b8": {
       "normale": "9a4e5858"
@@ -3884,6 +6015,9 @@
     "99de11754ec23178": {
       "normale": "5a25b2bd"
     },
+    "9a02618bddeba8f4": {
+      "normale": "4b6c946f"
+    },
     "9a21568937ee90be": {
       "normale": "29d66308"
     },
@@ -3908,27 +6042,51 @@
     "9aa803e829911ef6": {
       "normale": "ddad355a"
     },
+    "9aae15d0aa10009d": {
+      "normale": "eb021b75"
+    },
+    "9ab01b718537a8cf": {
+      "normale": "6d0d1945"
+    },
     "9abd166459807db8": {
       "normale": "8bcdbc8f"
     },
+    "9ac8367aa424b7c1": {
+      "normale": "224743d6"
+    },
     "9acf4974172353ca": {
       "normale": "afcdf8ce"
+    },
+    "9ad984d96e00ed90": {
+      "normale": "e2301c41"
     },
     "9aecebd7184cd5ad": {
       "lente": "7cfbce20",
       "normale": "baee4129"
     },
+    "9b0f7b27279a96ee": {
+      "normale": "630edd04"
+    },
     "9b1f7a6e703dd83f": {
       "normale": "ce9a393d"
     },
+    "9b29adbbe7109867": {
+      "normale": "a0811a93"
+    },
     "9b32ee6a665e6478": {
       "normale": "12871cf1"
+    },
+    "9b3cd148d523642b": {
+      "normale": "06b2cc88"
     },
     "9b59d2139d20e493": {
       "normale": "93bd273b"
     },
     "9b857a0f24c49d98": {
       "normale": "fc2ab737"
+    },
+    "9bac44c82279681d": {
+      "normale": "e9e1ce67"
     },
     "9bcb7b5733adbcae": {
       "normale": "585b7043"
@@ -3939,11 +6097,23 @@
     "9be1cea6b4bb4de7": {
       "normale": "1ba0aa62"
     },
+    "9be9994bff664e78": {
+      "normale": "495367e7"
+    },
+    "9bf551537a525557": {
+      "normale": "5dec2605"
+    },
     "9c24396fb42bc18e": {
       "normale": "b4e38d54"
     },
     "9c36939c5c201408": {
       "normale": "f1e22695"
+    },
+    "9c38181cd6724e68": {
+      "normale": "e75a20ac"
+    },
+    "9c3f2b5aff7c41bb": {
+      "normale": "6e16c8a5"
     },
     "9c76bfcb44e64dd5": {
       "normale": "b4bc4757"
@@ -3951,11 +6121,20 @@
     "9c981ea6c4a8a094": {
       "normale": "7a3e6222"
     },
+    "9ca97d5ad6d0fa45": {
+      "normale": "b37ada44"
+    },
     "9caa9010c1963f67": {
       "normale": "6c70f5b5"
     },
+    "9caba0734465650a": {
+      "normale": "6db2487e"
+    },
     "9cae0ef6f93327fa": {
       "normale": "6197c1f2"
+    },
+    "9caf5eb7db8b5896": {
+      "normale": "759070f9"
     },
     "9cf0060b7a00840c": {
       "normale": "e6487d84"
@@ -3975,8 +6154,14 @@
     "9d43939e353fe9ef": {
       "normale": "6976e3cf"
     },
+    "9d5e29adb8029470": {
+      "normale": "09ecb55f"
+    },
     "9d740db22c2ceeff": {
       "normale": "95619243"
+    },
+    "9d80d1594aad0b07": {
+      "normale": "6251a997"
     },
     "9d81d02b139f375e": {
       "normale": "868c76f3"
@@ -3999,6 +6184,16 @@
     "9debbe539a152e2c": {
       "normale": "68b0a9ca"
     },
+    "9dfb3008f950b365": {
+      "normale": "59ad51cf"
+    },
+    "9e00d0602e852f51": {
+      "lente": "c760096b",
+      "normale": "bb98c384"
+    },
+    "9e10ea5af26a621b": {
+      "normale": "08e77c21"
+    },
     "9e5b399f9193d1e3": {
       "normale": "40748aca"
     },
@@ -4020,6 +6215,12 @@
     "9e9d91b2e91a949a": {
       "normale": "e74c845a"
     },
+    "9ea63c9c2ec57c1b": {
+      "normale": "474877de"
+    },
+    "9ecb976f17fd0792": {
+      "normale": "bf261454"
+    },
     "9ee0d1cf8e0cc42f": {
       "normale": "7579de33"
     },
@@ -4038,6 +6239,9 @@
     "9f1a4e24d5f4e44c": {
       "normale": "3c0e8f9a"
     },
+    "9f2fd49ab0bea35e": {
+      "normale": "be0cecfc"
+    },
     "9f7d545a6b03d996": {
       "normale": "355cf150"
     },
@@ -4047,14 +6251,41 @@
     "9f98b7a59541ae6e": {
       "normale": "0b17c2cd"
     },
+    "9fecf5da1ed2287e": {
+      "normale": "1a923830"
+    },
+    "9ffecda9deb5b030": {
+      "normale": "9954c11a"
+    },
     "a00c51a94d498ae0": {
       "normale": "720552ce"
+    },
+    "a04712463f0e6335": {
+      "normale": "143270c6"
+    },
+    "a0584bec81b47831": {
+      "normale": "d661e8b7"
     },
     "a05b3d63de354636": {
       "normale": "480be27a"
     },
+    "a06ca0dec5064e75": {
+      "normale": "ca1ec552"
+    },
+    "a0898f3c085a0c35": {
+      "normale": "d6cb4caf"
+    },
+    "a0aadb974f55a8f7": {
+      "normale": "918dd9df"
+    },
+    "a0e2bf4ef1e1229e": {
+      "normale": "ae5b6905"
+    },
     "a10f0ee042516e64": {
       "normale": "81ceab70"
+    },
+    "a1195fb4eae2ac87": {
+      "normale": "c5a0b61d"
     },
     "a11b94f4efef7095": {
       "normale": "c03ee5cc"
@@ -4067,6 +6298,9 @@
     },
     "a16bec10c6bbba06": {
       "normale": "b2096149"
+    },
+    "a1796ed84ae71e69": {
+      "normale": "2e3c0980"
     },
     "a18257980df66f74": {
       "normale": "1c6209a6"
@@ -4116,6 +6350,9 @@
     "a29cf45cb6aa3a2a": {
       "normale": "bd4037b9"
     },
+    "a2c10812ccb2ae53": {
+      "normale": "2a89aa75"
+    },
     "a2ce708d374a32a5": {
       "normale": "a04daaf3"
     },
@@ -4134,6 +6371,9 @@
     "a338d2a5dc221af4": {
       "normale": "757ac8be"
     },
+    "a3479f5e4017f25e": {
+      "normale": "97b98c38"
+    },
     "a354e6dcdcd4b653": {
       "normale": "89bf2706"
     },
@@ -4148,6 +6388,9 @@
     },
     "a3ce02903419c4ea": {
       "normale": "2d43ca29"
+    },
+    "a3e11f80bcf1774d": {
+      "normale": "f7e0b4d6"
     },
     "a3e304cd91c2f5e8": {
       "normale": "362adc8b"
@@ -4167,11 +6410,20 @@
     "a442a4d9ff435660": {
       "normale": "0385e0cb"
     },
+    "a455a3d09c9e1aab": {
+      "normale": "a73aa983"
+    },
     "a46d37539cca5540": {
       "normale": "19b00747"
     },
     "a4901da7863dc22b": {
       "normale": "4f1a4211"
+    },
+    "a49ffd34ace8606d": {
+      "normale": "35338758"
+    },
+    "a4afffb254b38d31": {
+      "normale": "8b885fb3"
     },
     "a4b62cf51552f38a": {
       "normale": "d0bfa6ef"
@@ -4188,17 +6440,29 @@
     "a4e6b557b93e54a5": {
       "normale": "7b90d87a"
     },
+    "a4f221983b979d38": {
+      "normale": "831f46d0"
+    },
     "a506a1d8bdc0effa": {
       "normale": "926a7863"
     },
     "a535d4803e15c804": {
       "normale": "0790ffc9"
     },
+    "a5360a688db3506b": {
+      "normale": "cd76b9db"
+    },
+    "a549cb1e1824fbdf": {
+      "normale": "7985528c"
+    },
     "a5673b8a142e399c": {
       "normale": "9a6d6a9d"
     },
     "a5679e641015595b": {
       "normale": "2c2e71e5"
+    },
+    "a56c3394d5ab811c": {
+      "normale": "49277935"
     },
     "a58393a75e61ba40": {
       "normale": "66807d2f"
@@ -4208,6 +6472,12 @@
     },
     "a5911934cd23ad62": {
       "normale": "ca1f3f3d"
+    },
+    "a5912893c347e5e0": {
+      "normale": "ce7843e3"
+    },
+    "a59806cec9adc539": {
+      "normale": "defb0209"
     },
     "a5ad89cb5de6a63a": {
       "normale": "ff389fef"
@@ -4242,6 +6512,9 @@
     "a68da540436bda12": {
       "normale": "57c94bf6"
     },
+    "a69884b89d8d7272": {
+      "normale": "4620c1a2"
+    },
     "a71e32764bfa745f": {
       "normale": "18e96ddf"
     },
@@ -4251,11 +6524,20 @@
     "a7370cb0d58d5cb3": {
       "normale": "61794d68"
     },
+    "a74ed277c30c5051": {
+      "normale": "f5f3ef60"
+    },
     "a7529c75de213bee": {
       "normale": "c176ed87"
     },
     "a760a157400c4567": {
       "normale": "99fed174"
+    },
+    "a76d17d6720f4a10": {
+      "normale": "a8ace1ca"
+    },
+    "a7709b0e70e865b7": {
+      "normale": "bead6400"
     },
     "a77dbfe85fbec315": {
       "normale": "3f8716b1"
@@ -4275,6 +6557,9 @@
     "a7c4ca6eabcf5504": {
       "normale": "d394316c"
     },
+    "a7cfb39c3f702c47": {
+      "normale": "b72941e9"
+    },
     "a7d9462af4bd2263": {
       "normale": "a0c73717"
     },
@@ -4284,17 +6569,26 @@
     "a8033b4511c6fdc9": {
       "normale": "e7f043dd"
     },
+    "a82c7335aa5d0f72": {
+      "normale": "c22a1d04"
+    },
     "a84a0d96d318b968": {
       "normale": "deab4647"
     },
     "a87db0a683494aca": {
       "normale": "eb0e84aa"
     },
+    "a89717322f4f4d1e": {
+      "normale": "ada18a7a"
+    },
     "a8a3ad10a2cfab1b": {
       "normale": "e935ef32"
     },
     "a8fb93f1d077af6a": {
       "normale": "41192753"
+    },
+    "a907c892a1a573b1": {
+      "normale": "925931a8"
     },
     "a952389a136aae80": {
       "normale": "d5ac58d3"
@@ -4311,6 +6605,9 @@
     "a96b85f4402aeab0": {
       "normale": "02714f7f"
     },
+    "a97d794728ddfb29": {
+      "normale": "b6d577b7"
+    },
     "a9a9f87967a4513b": {
       "normale": "a3095976"
     },
@@ -4319,6 +6616,15 @@
     },
     "a9d2a38d1962113c": {
       "normale": "1fe269f8"
+    },
+    "a9d7942ec963de95": {
+      "normale": "a945bfea"
+    },
+    "a9e206a999d03d69": {
+      "normale": "de44d9ee"
+    },
+    "a9ee5fddb9fef643": {
+      "normale": "1285c560"
     },
     "a9fa85384fbe8453": {
       "normale": "cce10862"
@@ -4329,20 +6635,41 @@
     "a9ff8a209cb03463": {
       "normale": "86832c70"
     },
+    "aa2f85f311ba6075": {
+      "normale": "21783739"
+    },
+    "aa38488fcd7230a0": {
+      "normale": "2baa3d7f"
+    },
     "aa47c5cf7634a05c": {
       "normale": "552c7fcc"
     },
     "aa52abe01b41ed0a": {
       "normale": "230327d6"
     },
+    "aa68211059ef62f1": {
+      "normale": "84822f77"
+    },
     "aa8b6921611d7100": {
       "normale": "c2bd0c1a"
+    },
+    "aa8bda36e2a7b000": {
+      "normale": "2c6f2267"
+    },
+    "aa920e9a5586a6fe": {
+      "normale": "c8ac5ce0"
     },
     "aab5366111fd32a0": {
       "normale": "527a2460"
     },
+    "aac190544e8b8ef1": {
+      "normale": "5bddcb6c"
+    },
     "aac9407705d11aa1": {
       "normale": "18df64d3"
+    },
+    "aae96a01b4f89a80": {
+      "normale": "5d8e346b"
     },
     "aaf365dacb0e71be": {
       "normale": "edbb13e5"
@@ -4353,8 +6680,14 @@
     "ab0db474fea898cf": {
       "normale": "8a71767c"
     },
+    "ab0fbe38d28ee329": {
+      "normale": "4566f215"
+    },
     "ab3dc079b62e6821": {
       "normale": "6e0c945b"
+    },
+    "ab5b38f5e531534c": {
+      "normale": "4c0aa475"
     },
     "ab6fdd1bf673a9ce": {
       "normale": "66bd15d8"
@@ -4371,8 +6704,14 @@
     "abd259193d2bdfda": {
       "normale": "6982d4e9"
     },
+    "abd48ffeeb37369b": {
+      "normale": "e8a66ace"
+    },
     "abe5eee3ecf8cf32": {
       "normale": "4cfbc7db"
+    },
+    "abe7be504552ec99": {
+      "normale": "886b807d"
     },
     "abff62fa13e23b1d": {
       "normale": "2b1107de"
@@ -4383,8 +6722,17 @@
     "ac428cb778d89aa3": {
       "normale": "b55b7972"
     },
+    "ac4b3a005461a350": {
+      "normale": "2514214b"
+    },
     "ac59b73ea050b086": {
       "normale": "00adc11a"
+    },
+    "ac7687b64d65da11": {
+      "normale": "3331eb96"
+    },
+    "ac89c8438ba42622": {
+      "normale": "0d935b5a"
     },
     "acadfe6a2a88826d": {
       "normale": "a70d2067"
@@ -4401,6 +6749,9 @@
     "acc3f3e6ec984fbb": {
       "normale": "b634fa86"
     },
+    "acc67b5b095b0d9b": {
+      "normale": "904dea2a"
+    },
     "acd60fd9a9f800ae": {
       "normale": "a168794b"
     },
@@ -4416,11 +6767,26 @@
     "ad2ebb6c7499e9ac": {
       "normale": "b9c4209d"
     },
+    "ad3459804da3a469": {
+      "normale": "1add22aa"
+    },
+    "ad3b1e5ed10b516f": {
+      "normale": "19f481e4"
+    },
     "ad3e509f34e09cab": {
       "normale": "aaa62698"
     },
+    "ad5549c84ab4aff7": {
+      "normale": "ff2377de"
+    },
+    "ad601e34e20e82ea": {
+      "normale": "f57352d7"
+    },
     "ad701418dddac650": {
       "normale": "c21f4841"
+    },
+    "ad74dcb76754f168": {
+      "normale": "4f5f0384"
     },
     "ad7c066b341baf28": {
       "normale": "e9b129ff"
@@ -4431,6 +6797,9 @@
     "add66dcc7f7186bf": {
       "normale": "2818d55e"
     },
+    "adfa4a8dfed39990": {
+      "normale": "2a4bcb85"
+    },
     "ae02f9dc9915ea71": {
       "normale": "207ab71f"
     },
@@ -4440,8 +6809,23 @@
     "ae1cd381b5389f84": {
       "normale": "7848e27d"
     },
+    "ae2770f4b96bb10c": {
+      "normale": "f0e615d1"
+    },
+    "ae304629f2c7e159": {
+      "normale": "e064d951"
+    },
+    "ae387b4720a22939": {
+      "normale": "08c151a9"
+    },
+    "ae3e1febababaec5": {
+      "normale": "b82beffe"
+    },
     "ae4efc968211987c": {
       "normale": "27a81301"
+    },
+    "ae5883236220bfba": {
+      "normale": "9e9a470c"
     },
     "ae6a5f2674adf6da": {
       "normale": "2d6fd352"
@@ -4449,8 +6833,20 @@
     "ae819ce931876bb9": {
       "normale": "5bb9dec9"
     },
+    "ae92aaf0ae47ec63": {
+      "normale": "461e5224"
+    },
+    "aeb20ecd1ea9528f": {
+      "normale": "3a4a9cbb"
+    },
     "aebd2a7471010d24": {
       "normale": "c29a31d3"
+    },
+    "aecf0bd451326659": {
+      "normale": "7654426f"
+    },
+    "aed43310c0b69681": {
+      "normale": "d306fad8"
     },
     "aed7b4734ce7bbf0": {
       "normale": "ccd4c4dd"
@@ -4458,11 +6854,23 @@
     "aedea831c57a131c": {
       "normale": "03d3b4fb"
     },
+    "aeefa30376d65aba": {
+      "normale": "6d77d977"
+    },
+    "af63da4c8601e926": {
+      "normale": "52ca06c8"
+    },
+    "af63e04c8601f358": {
+      "normale": "2a8a47b0"
+    },
     "af6efc42e78e6cf2": {
       "normale": "7584af37"
     },
     "af76a28e9380125f": {
       "normale": "53fc5920"
+    },
+    "af7b883fbe8d70b8": {
+      "normale": "fd114693"
     },
     "af9debcfd18dd902": {
       "normale": "8cabc3b0"
@@ -4476,6 +6884,21 @@
     "b0104a80137fc26f": {
       "normale": "8979cde6"
     },
+    "b023cb076b3fbdf8": {
+      "normale": "bc420e70"
+    },
+    "b0530582dbb8b700": {
+      "normale": "17261f3e"
+    },
+    "b05a8f488363618b": {
+      "normale": "352c3840"
+    },
+    "b06603a0fc18d2fd": {
+      "normale": "5f74e45e"
+    },
+    "b06f7695cfbf2fca": {
+      "normale": "418d3376"
+    },
     "b07d080f51072561": {
       "normale": "69b068dc"
     },
@@ -4485,6 +6908,9 @@
     "b08952153ecfbe0d": {
       "normale": "75a5ce15"
     },
+    "b0ac25038ea35192": {
+      "normale": "58a9b6e3"
+    },
     "b0f08774fe681cae": {
       "normale": "7cff17b3"
     },
@@ -4493,6 +6919,12 @@
     },
     "b113c64061bbf48e": {
       "normale": "172cdcba"
+    },
+    "b11a89393732ff73": {
+      "normale": "33955d99"
+    },
+    "b122a2cf355ce6fb": {
+      "normale": "abd6aaf4"
     },
     "b12b535d3b738fd9": {
       "normale": "48547514"
@@ -4533,17 +6965,29 @@
     "b24625823a36c2cd": {
       "normale": "227a6bbe"
     },
+    "b2477377915c17a7": {
+      "normale": "e2bdd6bc"
+    },
     "b24d1bdc3e8632ab": {
       "normale": "ce26ecbc"
     },
+    "b253b017a6a666db": {
+      "normale": "141c310f"
+    },
     "b260d94b62287cee": {
       "normale": "1047a2db"
+    },
+    "b26ab8176d2d0d67": {
+      "normale": "6385b742"
     },
     "b28bf2549b37f498": {
       "normale": "fe4e02bc"
     },
     "b2a7c49e4452232c": {
       "normale": "b1c355bf"
+    },
+    "b2ac87609619087c": {
+      "normale": "2e3c773c"
     },
     "b2b9d13658ba8492": {
       "normale": "5e1671e6"
@@ -4569,8 +7013,14 @@
     "b3404296820818d9": {
       "normale": "ec4bd2cc"
     },
+    "b352a08c94831c51": {
+      "normale": "ad0afae6"
+    },
     "b37c376e0fb53f01": {
       "normale": "df420635"
+    },
+    "b38f4a880cd39cc9": {
+      "normale": "3c15c217"
     },
     "b394f48d99b08a00": {
       "normale": "74cafe83"
@@ -4587,6 +7037,21 @@
     "b3be0df932bf0091": {
       "normale": "ff83db96"
     },
+    "b3e4c93c2faf9f19": {
+      "normale": "44100755"
+    },
+    "b400853f7b70714b": {
+      "normale": "6d3dd818"
+    },
+    "b401a17016712ea3": {
+      "normale": "270b0e85"
+    },
+    "b406e6dd54caaf17": {
+      "normale": "775958dd"
+    },
+    "b44d5b3d421fbab6": {
+      "normale": "1ebf44e9"
+    },
     "b45b89dc81df9080": {
       "normale": "d1aa410f"
     },
@@ -4599,6 +7064,9 @@
     "b496ad4042feccff": {
       "normale": "213c6c09"
     },
+    "b499b208772ab34c": {
+      "normale": "c758d0c5"
+    },
     "b4a0f42e7ed220b9": {
       "normale": "c693f3b5"
     },
@@ -4608,17 +7076,29 @@
     "b4b5aa7fa9b4429e": {
       "normale": "1978c675"
     },
+    "b4b60cd4173c9042": {
+      "normale": "321bb83b"
+    },
+    "b4c188654b5e2f89": {
+      "normale": "6b3fb8b8"
+    },
     "b4cf76b916c73355": {
       "normale": "a43b4fee"
     },
     "b4ede876fa21784f": {
       "normale": "3b1dbb6c"
     },
+    "b4f330266b5ceb35": {
+      "normale": "8cc79d6f"
+    },
     "b500968b87103342": {
       "normale": "9a50b450"
     },
     "b51109c27839d48b": {
       "normale": "1ad9b9f5"
+    },
+    "b5267736acb602b8": {
+      "normale": "43020175"
     },
     "b5273a1570902852": {
       "normale": "91a1835a"
@@ -4641,11 +7121,18 @@
     "b5b4c97ca720a4f1": {
       "normale": "30112a37"
     },
+    "b5ddc1af6679f3f0": {
+      "normale": "b9098695"
+    },
     "b5fbcc8a9bec82e4": {
       "normale": "1230cf02"
     },
     "b610abbc8cb5d274": {
       "normale": "bbe75ebf"
+    },
+    "b63425a19cd08c1c": {
+      "lente": "ea845c45",
+      "normale": "5341e9ab"
     },
     "b643671087a274d2": {
       "normale": "4fda5e21"
@@ -4689,14 +7176,29 @@
     "b7984b9e8d52ae06": {
       "normale": "e8fdd7dd"
     },
+    "b7a539215c5be695": {
+      "normale": "74806e9b"
+    },
     "b7ae8e2bd0b06de9": {
       "normale": "c0cc5925"
+    },
+    "b7ba988a21cd8102": {
+      "normale": "eac4df30"
     },
     "b7c3d0f023832031": {
       "normale": "c8fd431b"
     },
     "b7c63314ec1d9626": {
       "normale": "2666453a"
+    },
+    "b7cef7dd86a05730": {
+      "normale": "8dbd7369"
+    },
+    "b7d420376077eeb4": {
+      "normale": "e3227b21"
+    },
+    "b7d5f352112ea660": {
+      "normale": "5db733a1"
     },
     "b7db4bef01354d20": {
       "normale": "6302b32e"
@@ -4710,14 +7212,41 @@
     "b8402efe527d21fa": {
       "normale": "9905face"
     },
+    "b84b16393ce1614b": {
+      "normale": "f170cffe"
+    },
     "b884244196d57e6e": {
       "normale": "88579469"
+    },
+    "b88a41af775f2390": {
+      "normale": "5a896c6d"
+    },
+    "b8993e23235ca04e": {
+      "normale": "2797e659"
+    },
+    "b8c174f1fa098147": {
+      "normale": "3989d75b"
     },
     "b9292cda0bdb367f": {
       "normale": "48c11edf"
     },
+    "b93d7fde58645b16": {
+      "normale": "eb37c713"
+    },
+    "b9490d9a8672195e": {
+      "normale": "2420e8d8"
+    },
+    "b95b5b3bc3de35f1": {
+      "normale": "f0e5beba"
+    },
+    "b98589d364afbe1f": {
+      "normale": "67a85e36"
+    },
     "b9a7848a5c7ae037": {
       "normale": "404af784"
+    },
+    "b9c185a11384e526": {
+      "normale": "93daa8fe"
     },
     "b9d07cfd5f3a11e0": {
       "normale": "eb015bbc"
@@ -4737,11 +7266,29 @@
     "ba51defa9cbbdb77": {
       "normale": "c2048185"
     },
+    "ba5e92d080c541f7": {
+      "normale": "3f0481ac"
+    },
+    "ba68cb8ae8f8d8ef": {
+      "normale": "9c5f7ebf"
+    },
     "ba8b900f5923f532": {
       "normale": "5ec45248"
     },
+    "ba8c3414de765fdd": {
+      "normale": "65c97a9c"
+    },
     "babee4cbe5d95778": {
       "normale": "a57edbe0"
+    },
+    "bac32e581df30dc4": {
+      "normale": "6201c891"
+    },
+    "bad68c1a4964616e": {
+      "normale": "d957693e"
+    },
+    "bb00e25fe235cc86": {
+      "normale": "eb9ae0e1"
     },
     "bb23a32c4a1d25a7": {
       "normale": "81063f40"
@@ -4755,20 +7302,41 @@
     "bb78a59c72c5e257": {
       "normale": "2981ad74"
     },
+    "bb7b93906e26c4cf": {
+      "normale": "672a44fc"
+    },
     "bb8379c7efd9be1f": {
       "normale": "2351c12a"
+    },
+    "bb959e4456c79f5e": {
+      "normale": "80347902"
     },
     "bba076bde94d40d0": {
       "normale": "5b004c57"
     },
+    "bbb8618c6b96ff1e": {
+      "normale": "c21dba49"
+    },
     "bbb98eb24bb8959b": {
       "normale": "4073a27e"
+    },
+    "bbbfa34ec7e5920a": {
+      "normale": "a8f51cf9"
+    },
+    "bbc2c423ce7e7692": {
+      "normale": "0f93b550"
+    },
+    "bbd3551adcf03465": {
+      "normale": "86041011"
     },
     "bbd5e44021c5e45c": {
       "normale": "7d0c1df2"
     },
     "bbfbd2c1bda8b7a2": {
       "normale": "4ea146a4"
+    },
+    "bc1f7f032213e0d1": {
+      "normale": "41245577"
     },
     "bc4ef944c0db8db8": {
       "normale": "8f67c336"
@@ -4797,6 +7365,9 @@
     "bd0b41aa8cceb5da": {
       "normale": "40fd0865"
     },
+    "bd251be640189f3f": {
+      "normale": "6963a1e6"
+    },
     "bd43e4668ab8f441": {
       "normale": "c0096324"
     },
@@ -4815,8 +7386,17 @@
     "bdc1c57599d2f9a3": {
       "normale": "65456534"
     },
+    "bdc40d973559360b": {
+      "normale": "1f8cd600"
+    },
     "bdd0a81631e17775": {
       "normale": "5aab11d4"
+    },
+    "bdf5c79fc2bb1acf": {
+      "normale": "3a4d26d1"
+    },
+    "be043e94941cf167": {
+      "normale": "b10c842d"
     },
     "be1962a46769d079": {
       "normale": "22cf0545"
@@ -4827,14 +7407,26 @@
     "be52f27b3ff3d9cb": {
       "normale": "af1aa21a"
     },
+    "be6b98aaf9f14aec": {
+      "normale": "3f33f633"
+    },
     "be6ba6ef52407a89": {
       "normale": "d39c8c7c"
+    },
+    "be844eaefea85eb9": {
+      "normale": "6fca41d9"
     },
     "be9ffb095b145448": {
       "normale": "5e0a6fe4"
     },
+    "beb55e6436478913": {
+      "normale": "652588c9"
+    },
     "bec78c0905bd0cab": {
       "normale": "6cfdc578"
+    },
+    "becd521f69793677": {
+      "normale": "742ce3fc"
     },
     "bed771b22c76e9b6": {
       "normale": "afbc0466"
@@ -4852,8 +7444,20 @@
     "befd2d716e9a3534": {
       "normale": "4ab26032"
     },
+    "bf1328b1e411dc45": {
+      "normale": "eb820176"
+    },
+    "bf339c171a9e3fd7": {
+      "normale": "5b81469d"
+    },
     "bf3b438a1a2c5ffe": {
       "normale": "e831bb1b"
+    },
+    "bf5839cbff59c788": {
+      "normale": "1a867d1a"
+    },
+    "bf5dd62edcfd4b3c": {
+      "normale": "ff1368e7"
     },
     "bf711d468a5ee363": {
       "normale": "ce4efeb7"
@@ -4871,11 +7475,32 @@
     "bf8f6c86c4ac758e": {
       "normale": "840459bd"
     },
+    "bfa723469af28d50": {
+      "normale": "d5864c2c"
+    },
+    "bff8e7f8a02902b7": {
+      "normale": "2e725abf"
+    },
     "c046e96d0b6fd29e": {
       "normale": "a1338c39"
     },
     "c0a3e72e6f3ab98b": {
       "normale": "5ff85d6e"
+    },
+    "c0a897d9a1a93067": {
+      "normale": "8f4955cc"
+    },
+    "c0cd7270b6f0dff9": {
+      "normale": "1453356a"
+    },
+    "c0d9fb80fa7f6828": {
+      "normale": "c2f29732"
+    },
+    "c0dabf503c4e505a": {
+      "normale": "df14d5db"
+    },
+    "c0e0a5efea32ff6e": {
+      "normale": "ae336853"
     },
     "c0f744e6b8161693": {
       "normale": "cb022e5d"
@@ -4883,11 +7508,20 @@
     "c118cf5e116f7419": {
       "normale": "6bd68831"
     },
+    "c11d85a8a1f41bd9": {
+      "normale": "4f927246"
+    },
     "c12b899f564984ce": {
       "normale": "6dfae3f7"
     },
+    "c12c71eb135a2c39": {
+      "normale": "27a6fdcf"
+    },
     "c13abe41f69851ca": {
       "normale": "b79fb930"
+    },
+    "c145584e1ea69c26": {
+      "normale": "04fc932e"
     },
     "c17ae746130b4278": {
       "normale": "ec78f0bb"
@@ -4901,14 +7535,23 @@
     "c1bd98d8954f65b1": {
       "normale": "1282ffcb"
     },
+    "c1ce26d70ad92685": {
+      "normale": "d359382a"
+    },
     "c1e00b10918ccdf1": {
       "normale": "f546178a"
+    },
+    "c1eca4aa5810a364": {
+      "normale": "55f4618c"
     },
     "c20a2a78e3d4bdc7": {
       "normale": "b38b9d1f"
     },
     "c21aaf2e1a0017d3": {
       "normale": "967e1090"
+    },
+    "c21dac16a841d2bd": {
+      "normale": "8ed9c77f"
     },
     "c227a659aef62360": {
       "normale": "9f794f04"
@@ -4926,8 +7569,20 @@
     "c2846662ddd68d88": {
       "normale": "d7bc9073"
     },
+    "c2ae3305b59b4c7d": {
+      "normale": "5f827921"
+    },
+    "c2ae88b7532cdea7": {
+      "normale": "79b98418"
+    },
+    "c316660ca466e76e": {
+      "normale": "f33bc1c3"
+    },
     "c324b1ed5ba2bd7b": {
       "normale": "a5392398"
+    },
+    "c330554dc5d061a2": {
+      "normale": "5f8843d1"
     },
     "c33a74e6bf00d027": {
       "normale": "0a033be8"
@@ -4950,6 +7605,9 @@
     "c3ecb2181dd271e9": {
       "normale": "52b585e5"
     },
+    "c40324ac0674808f": {
+      "normale": "fd53f55e"
+    },
     "c40cd40073b00d9a": {
       "normale": "0778ff16"
     },
@@ -4958,6 +7616,9 @@
     },
     "c415b8c830d7a62e": {
       "normale": "d6591a42"
+    },
+    "c4274b5e4a38aee5": {
+      "normale": "446bdd2c"
     },
     "c431b3a9c7463b4d": {
       "normale": "590411ff"
@@ -4971,8 +7632,17 @@
     "c4653413fa4fe97a": {
       "normale": "5a392d14"
     },
+    "c465747597cc9611": {
+      "normale": "b4b6af72"
+    },
     "c4742e939afd759b": {
       "normale": "02588d75"
+    },
+    "c47ea428a60a5c12": {
+      "normale": "5c521d89"
+    },
+    "c480ccf09b7d76ee": {
+      "normale": "4faf5539"
     },
     "c4ae72ce05838563": {
       "normale": "845d2375"
@@ -4980,11 +7650,35 @@
     "c4c0c53883c85b7c": {
       "normale": "ee74373f"
     },
+    "c4dc00ac573d7afc": {
+      "normale": "072778a1"
+    },
     "c4de7e2db88e857f": {
       "normale": "7880e3bb"
     },
+    "c50a3cabe33f3039": {
+      "normale": "36fbedd4"
+    },
+    "c5127af9d856d997": {
+      "normale": "56e4aee7"
+    },
+    "c51630dc66c43c50": {
+      "normale": "850f5c64"
+    },
     "c518c3d4f4e8cc6c": {
       "normale": "c39f1161"
+    },
+    "c54ce1bc23a61a77": {
+      "normale": "7ade0d27"
+    },
+    "c585c60b97b42f8c": {
+      "normale": "91a2f5cb"
+    },
+    "c5bedee0abf94588": {
+      "normale": "56d8af5a"
+    },
+    "c5cbf3d41a35ca9c": {
+      "normale": "cad95865"
     },
     "c5ceda9c6411601b": {
       "normale": "2c94a999"
@@ -5001,14 +7695,32 @@
     "c6212c563a0badd1": {
       "normale": "e696730d"
     },
+    "c639831bc3044561": {
+      "normale": "3e172d30"
+    },
     "c63f8e4609b874ed": {
       "normale": "3cb95ee2"
+    },
+    "c667f16d62ce2853": {
+      "normale": "5090b584"
+    },
+    "c6839ff049d696b9": {
+      "normale": "65323133"
+    },
+    "c6d4e061f390ac66": {
+      "normale": "38cf4fc3"
     },
     "c720c7b925153b32": {
       "normale": "0314372f"
     },
+    "c72fcce63ee50e24": {
+      "normale": "3e25d87b"
+    },
     "c73ab099e48c3909": {
       "normale": "b9b1f1fd"
+    },
+    "c743c18d4cb6d345": {
+      "normale": "5839b50d"
     },
     "c76640926c593682": {
       "normale": "25b2ae06"
@@ -5025,6 +7737,9 @@
     "c78df1901217238b": {
       "normale": "b98dc780"
     },
+    "c7bdc5cf7f89eee4": {
+      "normale": "b9aa57c0"
+    },
     "c7c8e917c00bc721": {
       "normale": "0534e2ff"
     },
@@ -5033,6 +7748,12 @@
     },
     "c7f90400014df744": {
       "normale": "0164f5ee"
+    },
+    "c80a7c35c8ef12cd": {
+      "normale": "80002725"
+    },
+    "c80c8d38e2394461": {
+      "normale": "a3a461f8"
     },
     "c83d1a953cac4f2a": {
       "normale": "45504c90"
@@ -5048,6 +7769,18 @@
     },
     "c861fde96bd56e89": {
       "normale": "16459614"
+    },
+    "c86204e80ae755cc": {
+      "normale": "1c16052f"
+    },
+    "c864ef56d7aa4766": {
+      "normale": "09819da7"
+    },
+    "c88929dfda7255d5": {
+      "normale": "8f59d940"
+    },
+    "c8d818ff5c11778b": {
+      "normale": "9d16d6fb"
     },
     "c911600e92e141dd": {
       "normale": "7ee4ba46"
@@ -5073,6 +7806,9 @@
     "c938f3f811be99a4": {
       "normale": "79efd903"
     },
+    "c9491241ebec02d8": {
+      "normale": "22495799"
+    },
     "c95552a8718e6811": {
       "normale": "3be6b712"
     },
@@ -5088,6 +7824,9 @@
     },
     "c9a76f65346e5d7e": {
       "normale": "66002523"
+    },
+    "c9b77cb02517c85f": {
+      "normale": "b62a7171"
     },
     "c9cb653621cf8ae0": {
       "normale": "e66d99ae"
@@ -5110,11 +7849,20 @@
     "ca5ae12a6c4cebc4": {
       "normale": "25c00638"
     },
+    "ca7b28ab6158e40b": {
+      "normale": "5aed133b"
+    },
     "ca99a0f40399b8be": {
       "normale": "8eb875f4"
     },
     "ca99c2c2e6d6d92f": {
       "normale": "e0eb7eee"
+    },
+    "caa132353856dbe1": {
+      "normale": "972579ee"
+    },
+    "cab9650e9f9dd2a3": {
+      "normale": "c6d6a463"
     },
     "cacf98318ae4fc83": {
       "normale": "d962870b"
@@ -5125,11 +7873,20 @@
     "caf66ce19fed00ab": {
       "normale": "11f60338"
     },
+    "caf97c0ad5a2ec0f": {
+      "normale": "00d6f08e"
+    },
+    "cb1857f04bc0822d": {
+      "normale": "bdc4177e"
+    },
     "cb22f03866d6c65f": {
       "normale": "96d79f48"
     },
     "cb328a0e0a9d4c71": {
       "normale": "d67fc5f7"
+    },
+    "cb4fa1678c283687": {
+      "normale": "af226949"
     },
     "cb6ac5c9262af6df": {
       "normale": "11f59bf4"
@@ -5142,6 +7899,12 @@
     },
     "cbe2a6b18d080c67": {
       "normale": "80cc2f27"
+    },
+    "cbf57160cd59f845": {
+      "normale": "34581d95"
+    },
+    "cbf72c806766dd00": {
+      "normale": "1d06d33c"
     },
     "cc08d71985d94200": {
       "lente": "9193049e",
@@ -5159,8 +7922,20 @@
     "cc5f7bde0a0e0b4a": {
       "normale": "975f1f1a"
     },
+    "cc66c9496a8516bf": {
+      "normale": "1ee7b410"
+    },
+    "cc76ec9d7f4bfdcf": {
+      "normale": "3b7b667f"
+    },
     "cc7a7e7d33329bd8": {
       "normale": "72ea4184"
+    },
+    "cc816a4e3196e6bd": {
+      "normale": "dbf33582"
+    },
+    "cc853774bc6d42ab": {
+      "normale": "ec898ae6"
     },
     "ccb8ba2e89d4a21f": {
       "normale": "f8c434fb"
@@ -5173,6 +7948,15 @@
     },
     "cd091d089a0d4d9b": {
       "normale": "bbfc22b6"
+    },
+    "cd406491df6d3af8": {
+      "normale": "1746c616"
+    },
+    "cd445b43b8d058db": {
+      "normale": "f09a6160"
+    },
+    "cd47fa7fdb03a409": {
+      "normale": "ecbeb0d5"
     },
     "cd5685e83d72d8c4": {
       "normale": "e96fa452"
@@ -5217,17 +8001,35 @@
     "ceaa4dddd2ff55f9": {
       "normale": "ddb6eed8"
     },
+    "cee27e20a4255e8a": {
+      "normale": "2d74d7b5"
+    },
     "ceefa42ede5037c2": {
       "normale": "3a8c9c59"
+    },
+    "ceefb64dff9ba95a": {
+      "normale": "beca9f32"
+    },
+    "cf17e1bf98c1548f": {
+      "normale": "73c65eac"
     },
     "cf1d50ba66841885": {
       "normale": "405b3a13"
     },
+    "cf37dc6b0d653ee3": {
+      "normale": "daac1ad6"
+    },
     "cf3fe7395c532ce1": {
       "normale": "b6716ea5"
     },
+    "cf5915ea03a3ab2a": {
+      "normale": "61f7f220"
+    },
     "cf5baf65c782a280": {
       "normale": "5f563f38"
+    },
+    "cf6802f82bd57315": {
+      "normale": "4db0c109"
     },
     "cf6d6e0a35b47add": {
       "normale": "96ff09a6"
@@ -5235,11 +8037,26 @@
     "cf76dd1ac78467ed": {
       "normale": "40da50a0"
     },
+    "cf899c2eb0ee0594": {
+      "normale": "f9c39909"
+    },
+    "cfd08c1e86b113c3": {
+      "normale": "ddd045d4"
+    },
     "cfda8b67feaae139": {
       "normale": "72f3e65c"
     },
     "cff85b00d45b3740": {
       "normale": "1129dd74"
+    },
+    "d006195f51d351e8": {
+      "normale": "579c9a38"
+    },
+    "d04d2bcb1035850b": {
+      "normale": "e2e5bffa"
+    },
+    "d04f2a47e291be91": {
+      "normale": "9331a8e1"
     },
     "d059e45c4aecf680": {
       "normale": "f6092ce4"
@@ -5249,6 +8066,18 @@
     },
     "d0639036436902cc": {
       "normale": "93166937"
+    },
+    "d07e7ee1e08d508a": {
+      "normale": "42db0a4f"
+    },
+    "d0b4cdfb0dcc14f2": {
+      "normale": "07d00517"
+    },
+    "d0c3370c456300ff": {
+      "normale": "1eeca885"
+    },
+    "d0c3bb5b84785513": {
+      "normale": "775f7c76"
     },
     "d0d06878b47bb7f1": {
       "normale": "0ac7ef57"
@@ -5271,6 +8100,12 @@
     "d132e55ab38e7e34": {
       "normale": "427545af"
     },
+    "d13dc80097b18c4b": {
+      "normale": "388f27fc"
+    },
+    "d14329c40707344e": {
+      "normale": "8f216b44"
+    },
     "d154dac5e4e61117": {
       "normale": "f41918a6"
     },
@@ -5292,8 +8127,14 @@
     "d1baa909e11c6417": {
       "normale": "0684f327"
     },
+    "d1bc360068122a75": {
+      "normale": "1f9abfac"
+    },
     "d1d2aef294bbb70d": {
       "normale": "ca143ed2"
+    },
+    "d1d2dee01fc0ba71": {
+      "normale": "b3c30dd7"
     },
     "d1d82896ca19030f": {
       "normale": "220d3fe1"
@@ -5301,11 +8142,17 @@
     "d21eff8910f3be3e": {
       "normale": "a25741ac"
     },
+    "d21f977a29d60e34": {
+      "normale": "c0515fc7"
+    },
     "d2450ab961de12d2": {
       "normale": "a0794e79"
     },
     "d2660e12291de06f": {
       "normale": "b79e9efc"
+    },
+    "d274f0f6c5d2684d": {
+      "normale": "7f0c8d55"
     },
     "d27ab17643d4e3fa": {
       "normale": "6bf0478d"
@@ -5315,6 +8162,9 @@
     },
     "d2a16aa20c3b76ba": {
       "normale": "51d8313d"
+    },
+    "d2a66565b9314a73": {
+      "normale": "2f3bf657"
     },
     "d2a76e692f6d58b3": {
       "normale": "c8d28586"
@@ -5328,14 +8178,38 @@
     "d2f015f388ff9d88": {
       "normale": "343366ba"
     },
+    "d2f4d86513a986df": {
+      "normale": "cd3421c3"
+    },
     "d30fedb5029663ae": {
       "normale": "345ac97e"
     },
     "d3115d1b37f82809": {
       "normale": "d5d2e1ae"
     },
+    "d35f449e180023f4": {
+      "normale": "cd8d3601"
+    },
+    "d3725546210ae064": {
+      "normale": "417c242c"
+    },
+    "d38d3a62645dec80": {
+      "normale": "d561cd5b"
+    },
+    "d3a8124eacc48ee3": {
+      "normale": "856092bb"
+    },
+    "d3ad943dce407f78": {
+      "normale": "4b8957b2"
+    },
+    "d3af8becee3c26e5": {
+      "normale": "181a12e9"
+    },
     "d3eca5bdc19a9f55": {
       "normale": "1efa80f6"
+    },
+    "d43baef8f05fdd4c": {
+      "normale": "58ca8f07"
     },
     "d4466a6f2f267841": {
       "lente": "54ed3f90",
@@ -5350,14 +8224,29 @@
     "d46dfb87cbf97310": {
       "normale": "96e2c695"
     },
+    "d471229f02a0a953": {
+      "normale": "f9c8f288"
+    },
     "d48d2313aba993a3": {
       "normale": "25279aae"
+    },
+    "d495a9b5e208816c": {
+      "normale": "35a97d9d"
+    },
+    "d49bb402e8c242b4": {
+      "normale": "8d23b6b6"
     },
     "d4b0c7afa4ac1ea9": {
       "normale": "1ce908ba"
     },
+    "d4d0ac1d8872e86b": {
+      "normale": "6e5b1769"
+    },
     "d4e4dc047ad2361d": {
       "normale": "71993fa3"
+    },
+    "d4e5c123dc7dbcb7": {
+      "normale": "245eee1b"
     },
     "d4f935b7342de6d6": {
       "normale": "d0e20c7c"
@@ -5365,17 +8254,26 @@
     "d4ff2ce59cd20481": {
       "normale": "ba311cf8"
     },
+    "d5137827aefff569": {
+      "normale": "542b880f"
+    },
     "d5214fb12caadfd1": {
       "normale": "e90a94c6"
     },
     "d5420d6e066ca7f6": {
       "normale": "cb458c29"
     },
+    "d5522abc3b626d3d": {
+      "normale": "6aa6131e"
+    },
     "d564bd266ce06ab3": {
       "normale": "912379b9"
     },
     "d570822afdc05d58": {
       "normale": "30dcf6fc"
+    },
+    "d5718d9a8e6e04b9": {
+      "normale": "ae054672"
     },
     "d582f240e8055ea3": {
       "normale": "7166fe31"
@@ -5395,8 +8293,17 @@
     "d5be5b021b9dc08d": {
       "normale": "621ad639"
     },
+    "d5d5fc18b58e0bd1": {
+      "normale": "c779473c"
+    },
+    "d5e2d2c2c665ded4": {
+      "normale": "cb22723c"
+    },
     "d5e96f82630174fb": {
       "normale": "69e22910"
+    },
+    "d5fde82f5257b9b7": {
+      "normale": "2b13b854"
     },
     "d6070a3d534fd8b2": {
       "normale": "a6a5beb0"
@@ -5407,8 +8314,17 @@
     "d633c4c5486c5ade": {
       "normale": "2d42889c"
     },
+    "d641eab510984c88": {
+      "normale": "96ab3f40"
+    },
+    "d64c7e0efad2068a": {
+      "normale": "97c8a529"
+    },
     "d657a2729d03ad6e": {
       "normale": "bb01a203"
+    },
+    "d66060488176251f": {
+      "normale": "52d2efdc"
     },
     "d68388352d4fde75": {
       "normale": "63bf9234"
@@ -5428,6 +8344,9 @@
     "d6ddb708fc27514b": {
       "normale": "f9921d59"
     },
+    "d708973928981f5a": {
+      "normale": "7f73f19a"
+    },
     "d73020420b2f0db9": {
       "normale": "27539a29"
     },
@@ -5438,8 +8357,14 @@
     "d74fe8790a4de505": {
       "normale": "931bbd22"
     },
+    "d754105e598bc33b": {
+      "normale": "294a3db5"
+    },
     "d75a23ba714e65fb": {
       "normale": "01752270"
+    },
+    "d75c5395b5b92414": {
+      "normale": "0af5e633"
     },
     "d774b4f06dd34c75": {
       "normale": "2204d820"
@@ -5450,11 +8375,17 @@
     "d79b6c8426f05faf": {
       "normale": "d20c27bc"
     },
+    "d7a076ee18392003": {
+      "normale": "b6cbf4bb"
+    },
     "d7b288eb90e0b30a": {
       "normale": "8f8389bf"
     },
     "d7b901e764de5f66": {
       "normale": "3f173e90"
+    },
+    "d7daadd02414b87b": {
+      "normale": "0c8d160c"
     },
     "d7e3cd17eb03d349": {
       "normale": "f539640d"
@@ -5471,8 +8402,14 @@
     "d825f25f747e348f": {
       "normale": "9a1d6a22"
     },
+    "d85924cd57808afd": {
+      "normale": "b7274368"
+    },
     "d8618cba7b3c1a5d": {
       "normale": "72529728"
+    },
+    "d87613c04ceaeeae": {
+      "normale": "94c54b46"
     },
     "d8a684608a80ed38": {
       "normale": "9ff4d7ac"
@@ -5480,8 +8417,17 @@
     "d8a9bc665329631d": {
       "normale": "9a96085c"
     },
+    "d8b090a8ee38c69f": {
+      "normale": "05f54fd4"
+    },
+    "d8c43b6d6f0a861b": {
+      "normale": "41522110"
+    },
     "d8ce4c681e15fc1b": {
       "normale": "084d0cd5"
+    },
+    "d8d800379f4f6f2b": {
+      "normale": "deedc4a2"
     },
     "d8d924bf4ea9aa53": {
       "normale": "c43ae42e"
@@ -5497,6 +8443,9 @@
     },
     "d95190ea2c3c924a": {
       "normale": "f9ce8a5a"
+    },
+    "d97210929d3ac210": {
+      "normale": "5b55398e"
     },
     "d98de733a82bf63f": {
       "normale": "daa12cf8"
@@ -5525,14 +8474,29 @@
     "da3a2d92914453ba": {
       "normale": "51b75668"
     },
+    "da416bd465aa2cf3": {
+      "normale": "a0b59b06"
+    },
+    "da4794508ab3d526": {
+      "normale": "25fd838a"
+    },
+    "da49823895cb5626": {
+      "normale": "a00aad7e"
+    },
     "da4cf5f385b3acae": {
       "normale": "15c6d6d1"
     },
     "da557683d87dd899": {
       "normale": "3f59a91c"
     },
+    "da5e5ed2c9947003": {
+      "normale": "76c90ed3"
+    },
     "da71866439c53376": {
       "normale": "6a4c81e5"
+    },
+    "da71c238bb0d4210": {
+      "normale": "6ede0849"
     },
     "da983326d972f6bb": {
       "normale": "fa9a3651"
@@ -5558,17 +8522,29 @@
     "db16b4d7aa969afc": {
       "normale": "80026c79"
     },
+    "db252f15f2cc3531": {
+      "normale": "f6c3f99c"
+    },
     "db2f0090e125100f": {
       "normale": "b99c9cea"
     },
     "db32971cb7c4d992": {
       "normale": "9ba7f5fb"
     },
+    "db817b966d1f44c3": {
+      "normale": "56e72dde"
+    },
     "db88a76596bfef2d": {
       "normale": "1088b277"
     },
+    "dbb44d22ac1129bb": {
+      "normale": "f58c2697"
+    },
     "dbb64fd4d69ddb8f": {
       "normale": "896c91e0"
+    },
+    "dbbd4b6cc87d5d9d": {
+      "normale": "6324d7fc"
     },
     "dbd07bf5ca3dadfd": {
       "normale": "b839c30e"
@@ -5579,8 +8555,29 @@
     "dbe88504de6f0e3c": {
       "normale": "aa2405d9"
     },
+    "dbf056120d6fe046": {
+      "normale": "3a75bf0b"
+    },
+    "dc05b4e60819a7b3": {
+      "normale": "f2d3631a"
+    },
     "dc1472044f263119": {
       "normale": "116b6fde"
+    },
+    "dc1b66210b03432c": {
+      "normale": "b971af35"
+    },
+    "dc22fff2f0f49f79": {
+      "normale": "e7be7ae1"
+    },
+    "dc52c6e2169d5e8a": {
+      "normale": "5bbd73dd"
+    },
+    "dc5959557c4c32e7": {
+      "normale": "eca82f0f"
+    },
+    "dc5c219a2dc8febe": {
+      "normale": "c7564f97"
     },
     "dc5e02f436eb93cc": {
       "normale": "5194c1cd"
@@ -5618,6 +8615,9 @@
     "dcf621b8a207319f": {
       "normale": "dcae6436"
     },
+    "dd0bb0d8e83f5749": {
+      "normale": "3af15c0f"
+    },
     "dd0e3d358096514b": {
       "normale": "cde6993e"
     },
@@ -5633,11 +8633,17 @@
     "dd570ab58e16473b": {
       "normale": "55f28def"
     },
+    "dd638c2e19a2a501": {
+      "normale": "41ace6df"
+    },
     "dd93c7518b28f940": {
       "normale": "a7081ae0"
     },
     "dd967a72287b6a58": {
       "normale": "d9f3cd4a"
+    },
+    "ddba4d19bd1acfc3": {
+      "normale": "a0ad4427"
     },
     "ddd4e7ab1f6ceebe": {
       "normale": "f0bda4c4"
@@ -5660,11 +8666,26 @@
     "de4f54a13fb15d8f": {
       "normale": "3246d4fe"
     },
+    "de546b10656689b9": {
+      "normale": "ce306b58"
+    },
     "de57ae8dbb0cb89b": {
       "normale": "154cb490"
     },
     "de763474659debec": {
       "normale": "eadca100"
+    },
+    "de7b4491981f1585": {
+      "normale": "eabb05d6"
+    },
+    "de7cb0ab729e23ee": {
+      "normale": "20e4bdeb"
+    },
+    "de84eedaf77158e5": {
+      "normale": "baf0a49c"
+    },
+    "de8e61ac21914b5d": {
+      "normale": "1ea080bb"
     },
     "de9f7640425890c7": {
       "normale": "9c1984bb"
@@ -5689,6 +8710,9 @@
     },
     "df1c5f10c0440093": {
       "normale": "8825c205"
+    },
+    "df2248eab087acbb": {
+      "normale": "ab880880"
     },
     "df422c4fbffd6961": {
       "normale": "46b1a57b"
@@ -5717,8 +8741,17 @@
     "e00ad99f5dad6815": {
       "normale": "4f672f3e"
     },
+    "e01efd1811f5c575": {
+      "normale": "5e39bb1d"
+    },
+    "e01fee089c4df089": {
+      "normale": "2ac793ea"
+    },
     "e01ffe3efc6bd4b8": {
       "normale": "0f256e85"
+    },
+    "e03a839ea91a1f5d": {
+      "normale": "fa068ec1"
     },
     "e03adc263914c8b8": {
       "normale": "5115274d"
@@ -5732,8 +8765,20 @@
     "e06316c5b374469b": {
       "normale": "2a79d5ce"
     },
+    "e0674fa341348765": {
+      "normale": "8c240006"
+    },
+    "e06f099a5b4a28fe": {
+      "normale": "337765e1"
+    },
     "e0739f6bac5c2776": {
       "normale": "f69a9078"
+    },
+    "e0a76ce5a0c13ea7": {
+      "normale": "2e5b7f23"
+    },
+    "e0b33ef296b9dcd3": {
+      "normale": "25ce915c"
     },
     "e0b45e1505435b26": {
       "normale": "4f583b09"
@@ -5743,6 +8788,9 @@
     },
     "e0dbe35276b36a6c": {
       "normale": "5c3324c7"
+    },
+    "e0ecd1f627caa6a0": {
+      "normale": "f5ffa7b8"
     },
     "e10ab5ba80238db2": {
       "normale": "788cdda4"
@@ -5762,6 +8810,19 @@
     "e15c8bcfabbc9504": {
       "normale": "8146632c"
     },
+    "e160cd6d9df596bb": {
+      "normale": "6b76e33a"
+    },
+    "e1928e0102c8a950": {
+      "normale": "c76947a4"
+    },
+    "e1b3da5c98d66ae2": {
+      "lente": "52165b39",
+      "normale": "c4d2bb8f"
+    },
+    "e1ba8b74646c99a7": {
+      "normale": "8446acb0"
+    },
     "e1c2170b91e2a2bf": {
       "normale": "8e3ae5a8"
     },
@@ -5770,6 +8831,9 @@
     },
     "e2074106ee4515f6": {
       "normale": "12811b31"
+    },
+    "e208ae97b2cbb63f": {
+      "normale": "e07274b0"
     },
     "e20f1d540239ec2d": {
       "normale": "36a7bf85"
@@ -5780,8 +8844,14 @@
     "e21d907ab3048c06": {
       "normale": "b96c5c7e"
     },
+    "e2205129d607df6a": {
+      "normale": "5e95c4af"
+    },
     "e2252ba0b167167f": {
       "normale": "9c006ed8"
+    },
+    "e2417c1573173950": {
+      "normale": "6f992fe0"
     },
     "e2435f4cd1291c3c": {
       "normale": "77d66991"
@@ -5791,6 +8861,12 @@
     },
     "e2b5a3ac4acbcbf0": {
       "normale": "0fc9d0d6"
+    },
+    "e2d7a4057777e30d": {
+      "normale": "da6ea65a"
+    },
+    "e2ee7d6dd2abf4ca": {
+      "normale": "a3f58687"
     },
     "e3329f99c4c9a99b": {
       "normale": "03f017c2"
@@ -5804,14 +8880,32 @@
     "e34ed5f05bb296f2": {
       "normale": "04d67c2f"
     },
+    "e35653fbf8019e7e": {
+      "normale": "57c4097e"
+    },
     "e3632b6bc78f9a26": {
       "normale": "824e5376"
     },
     "e391bcb22ea87e06": {
       "normale": "2876597d"
     },
+    "e3990b482835da9b": {
+      "normale": "5b6bc9e6"
+    },
+    "e3a073dc7e667e72": {
+      "normale": "aa279c0b"
+    },
     "e3e24f6bcb670791": {
       "normale": "3b7a768c"
+    },
+    "e3f6d8a5139243d7": {
+      "normale": "f6d41f8e"
+    },
+    "e3f7a086b6b7ba4f": {
+      "normale": "70191cb2"
+    },
+    "e429e9166c6cb995": {
+      "normale": "30d273f7"
     },
     "e4761cbf9ca52541": {
       "normale": "e216965b"
@@ -5819,8 +8913,14 @@
     "e490c04bfc1362bf": {
       "normale": "a7e9cc9b"
     },
+    "e49ac97a43f396f1": {
+      "normale": "c9cd8f3c"
+    },
     "e4a2cc106d88e279": {
       "normale": "7d041cda"
+    },
+    "e4b7817eeb707e7e": {
+      "normale": "6af91402"
     },
     "e4bee485431e1962": {
       "normale": "27eb7e4c"
@@ -5834,8 +8934,23 @@
     "e521a3d5bd0f2f77": {
       "normale": "8ad00044"
     },
+    "e522663d399d8988": {
+      "normale": "4030e50f"
+    },
+    "e541217f4ffcca35": {
+      "normale": "e0ec96b6"
+    },
+    "e55c23c700f6eb14": {
+      "normale": "6f60ed65"
+    },
+    "e588770cbe56ea68": {
+      "normale": "886d7828"
+    },
     "e5a24ceb8faab80a": {
       "normale": "b678be22"
+    },
+    "e5bdb87cf5fc5296": {
+      "normale": "e01a2b2a"
     },
     "e5da80637f0d9c8e": {
       "normale": "be2947f2"
@@ -5846,11 +8961,20 @@
     "e62a4edd2f1a63c2": {
       "normale": "20c8b0ac"
     },
+    "e667697f665d57b1": {
+      "normale": "c23c6a89"
+    },
     "e669e7acb4a6a689": {
       "normale": "5927b1de"
     },
     "e695079cdb63a2d6": {
       "normale": "e6fcf25a"
+    },
+    "e6bdffe885fa65b4": {
+      "normale": "91da4a7e"
+    },
+    "e6ceec74854015c1": {
+      "normale": "792ed529"
     },
     "e6e0ed85e1125593": {
       "normale": "b45d4c11"
@@ -5865,11 +8989,23 @@
     "e70ffe80966ba3c3": {
       "normale": "0dae23b1"
     },
+    "e72220f53b31c1ae": {
+      "normale": "3cc951e1"
+    },
     "e736122c8ceaead3": {
       "normale": "ffcfc241"
     },
     "e73900945edba3eb": {
       "normale": "996277c9"
+    },
+    "e73fc3bb659683ff": {
+      "normale": "bcd8a218"
+    },
+    "e744d6d84111785b": {
+      "normale": "c856e786"
+    },
+    "e75141ecce995f35": {
+      "normale": "448eb414"
     },
     "e773dde58a67e0da": {
       "normale": "8950f25a"
@@ -5880,8 +9016,17 @@
     "e7bc05b46dfe7678": {
       "normale": "53b1a845"
     },
+    "e7f6743ef1381fd4": {
+      "normale": "959473b8"
+    },
     "e7fe4f2e4b7bb80b": {
       "normale": "c562a47a"
+    },
+    "e81d257e9b5aad8c": {
+      "normale": "19943593"
+    },
+    "e8229ae85a43a7ae": {
+      "normale": "6c54e755"
     },
     "e825c92323459617": {
       "normale": "d94dcf53"
@@ -5895,8 +9040,14 @@
     "e8526bf689036a87": {
       "normale": "879718ad"
     },
+    "e8591fe4b1c90013": {
+      "normale": "91cec12b"
+    },
     "e873260a8961ebad": {
       "normale": "18058341"
+    },
+    "e878839ccb1c42c1": {
+      "normale": "ed4b2ecf"
     },
     "e87daa31d2741186": {
       "normale": "1b5e33c9"
@@ -5904,8 +9055,23 @@
     "e881ff7594f7fbff": {
       "normale": "0cc66fd7"
     },
+    "e88b6bef12a1ece1": {
+      "normale": "d830b6b2"
+    },
     "e89ba36954797b37": {
       "normale": "5dc319ce"
+    },
+    "e8d888afb35cb155": {
+      "normale": "43412f94"
+    },
+    "e8d8cb30f7e44c71": {
+      "normale": "ea1fd269"
+    },
+    "e8e02bba17d2b488": {
+      "normale": "b4f8f2d6"
+    },
+    "e8eb0429d3edc11a": {
+      "normale": "7d604c82"
     },
     "e9151b73b814a784": {
       "normale": "f216383e"
@@ -5919,6 +9085,12 @@
     "e945af29fb646147": {
       "normale": "a93a8fec"
     },
+    "e958d85fae51455a": {
+      "normale": "1f4ffc1c"
+    },
+    "e95e3f06f9fdd40c": {
+      "normale": "200e879f"
+    },
     "e978790ddddc4eda": {
       "normale": "05adef32"
     },
@@ -5927,6 +9099,12 @@
     },
     "e98406cb34104dd7": {
       "normale": "f18b612d"
+    },
+    "e98c4e92a4ce24c8": {
+      "normale": "72ea7eb8"
+    },
+    "e9a9f73aa3013248": {
+      "normale": "90ccd1cf"
     },
     "e9b2a990f6065bac": {
       "normale": "764d9100"
@@ -5955,6 +9133,12 @@
     "eab6ef85e36cf036": {
       "normale": "f684440d"
     },
+    "eab7cc7769b67cdd": {
+      "normale": "730e4ba5"
+    },
+    "eabf217a6213a402": {
+      "normale": "f5632b1a"
+    },
     "eaf0c35d370e9856": {
       "normale": "b1c59324"
     },
@@ -5970,6 +9154,9 @@
     "eb42dd878ce06a42": {
       "normale": "6463c4bf"
     },
+    "ebb2c4dc4da57c41": {
+      "normale": "ade26a15"
+    },
     "ebb6b16264ccdb49": {
       "normale": "927eff7e"
     },
@@ -5979,11 +9166,23 @@
     "ebcdd834ca66ab66": {
       "normale": "76ea7e84"
     },
+    "ebece77d47d6523d": {
+      "normale": "25ff6e1e"
+    },
+    "ec18038bb8ae22bd": {
+      "normale": "e2882f88"
+    },
+    "ec29108c0fcd62b6": {
+      "normale": "98e07df6"
+    },
     "ec32b57ac058b128": {
       "normale": "388f3008"
     },
     "ec3394c38da1131c": {
       "normale": "a05a126c"
+    },
+    "ec50a396ecf7eb57": {
+      "normale": "defb9686"
     },
     "ec7ee2ac0bf00dce": {
       "normale": "ff301fb1"
@@ -5991,11 +9190,20 @@
     "ec95dc38f6d53139": {
       "normale": "b8596d20"
     },
+    "ec9a67d8ef509716": {
+      "normale": "b19b3035"
+    },
+    "ecad73d3e18893e5": {
+      "normale": "c5538b01"
+    },
     "ecca1b67c3c58e59": {
       "normale": "3fc93850"
     },
     "eccd5f2239cb2ca4": {
       "normale": "5196cc03"
+    },
+    "ecced2ca9d653bd8": {
+      "normale": "043c5782"
     },
     "ecd3b18ccb6e30a5": {
       "normale": "1d04df85"
@@ -6006,11 +9214,26 @@
     "ece1948bc0e9e8e8": {
       "normale": "f9e063d4"
     },
+    "ece260f01715a6e6": {
+      "normale": "3bf4873f"
+    },
+    "ece464abac16c831": {
+      "normale": "38c8f915"
+    },
     "eceee03ca0b84ea2": {
       "normale": "eca2edb4"
     },
     "ecfe71eadf14cb8a": {
       "normale": "326acf48"
+    },
+    "ed1f8a0a7090d998": {
+      "normale": "6cb95b8e"
+    },
+    "ed54e5778d2554d9": {
+      "normale": "4d8033d7"
+    },
+    "ed6087c8d1f4d72b": {
+      "normale": "8f785e07"
     },
     "ed629ce417ab48f5": {
       "normale": "03742988"
@@ -6021,8 +9244,17 @@
     "eda53bf4d5c02451": {
       "normale": "8c8a1c0d"
     },
+    "eda837feeef15dab": {
+      "normale": "32c6ff54"
+    },
+    "edc455df6c53339b": {
+      "normale": "ab2df9ef"
+    },
     "edcc246ce70be77a": {
       "normale": "a30b3ed0"
+    },
+    "edcfb14c9c31136a": {
+      "normale": "26cbea06"
     },
     "ede1125e52c88fd7": {
       "normale": "1b6baa23"
@@ -6033,8 +9265,14 @@
     "ee1768a91397b783": {
       "normale": "3d667485"
     },
+    "ee4d34d3dcb6a860": {
+      "normale": "95777620"
+    },
     "ee4d48a1d7f2d213": {
       "normale": "ad6fc640"
+    },
+    "ee5c74a37ce20f7e": {
+      "normale": "8247e2a3"
     },
     "ee72327838a6675b": {
       "normale": "545766c9"
@@ -6045,6 +9283,9 @@
     "ee7eaed0c2b57a44": {
       "normale": "3b1fa58d"
     },
+    "ee9bf95cde755f88": {
+      "normale": "5491424b"
+    },
     "eeaa7c4ff9f55b68": {
       "normale": "7587fa72"
     },
@@ -6054,11 +9295,17 @@
     "eee1025fa98af1f2": {
       "normale": "e59fcb79"
     },
+    "eef1d3f795e9f787": {
+      "normale": "a0b57c7e"
+    },
     "ef16a175d9c920e3": {
       "normale": "9e3e4ae3"
     },
     "ef1f307db1e5cdce": {
       "normale": "7ad5c983"
+    },
+    "ef2cf120ec4d2a06": {
+      "normale": "41bc52ca"
     },
     "ef38b69ef23dfd1a": {
       "normale": "7a62aa83"
@@ -6069,8 +9316,20 @@
     "ef5df0af3ceaae04": {
       "normale": "0315f3e0"
     },
+    "ef6bd3c556b131b9": {
+      "normale": "4e101e5e"
+    },
+    "ef8af099198263a4": {
+      "normale": "ad19cf5e"
+    },
+    "efac12b946e7433e": {
+      "normale": "e5d23750"
+    },
     "efdd072601762cd3": {
       "normale": "e3be341f"
+    },
+    "efe9caef4d250e13": {
+      "normale": "f4d16769"
     },
     "eff26173d6b9e0bb": {
       "normale": "6a69b092"
@@ -6078,11 +9337,35 @@
     "eff6c2a05648a70e": {
       "normale": "3d137b1c"
     },
+    "effccca6cc9044ec": {
+      "normale": "cf065102"
+    },
+    "f010a5dac943245b": {
+      "normale": "8dda06d7"
+    },
+    "f0134030b4da2ee5": {
+      "normale": "9923ac24"
+    },
+    "f05150b0e5b84a8f": {
+      "normale": "b2f9a761"
+    },
     "f05bdcbff78c93a2": {
       "normale": "64b86529"
     },
+    "f06db7dc37d879f3": {
+      "normale": "b53a72cd"
+    },
+    "f071e83a6415e6fa": {
+      "normale": "b241dc12"
+    },
+    "f089a657d385c33e": {
+      "normale": "5ef53c24"
+    },
     "f08fd9988a64843b": {
       "normale": "edbd8dd9"
+    },
+    "f0c7f011ff7cb52c": {
+      "normale": "f3d6bc88"
     },
     "f0c8bd255a78a510": {
       "normale": "153dfd36"
@@ -6096,14 +9379,26 @@
     "f0f5652234b8ef6a": {
       "normale": "90872e4a"
     },
+    "f0fea92321ddec3f": {
+      "normale": "3401afe0"
+    },
     "f10e0be6abe08258": {
       "normale": "8c3191f0"
+    },
+    "f1155a940ee3c5c9": {
+      "normale": "80f5b78c"
     },
     "f1213649527c40b8": {
       "normale": "19b2afc3"
     },
     "f16807f1bd717faa": {
       "normale": "8a8d9557"
+    },
+    "f1681d8dc3ca8ba5": {
+      "normale": "d0eae3a4"
+    },
+    "f16d7475e8cfcc9d": {
+      "normale": "c4891fd7"
     },
     "f19013ba9b479980": {
       "normale": "47f61aba"
@@ -6123,6 +9418,9 @@
     "f2062c08072fc67a": {
       "normale": "0b641d64"
     },
+    "f22b2fb577ac395e": {
+      "normale": "58d96dab"
+    },
     "f2477ee78558e9bd": {
       "normale": "000d9c4e"
     },
@@ -6134,6 +9432,9 @@
     },
     "f297b1af945a0ea6": {
       "normale": "2e464c55"
+    },
+    "f298f2586a389bfe": {
+      "normale": "2cbc5bd4"
     },
     "f2a38d910b5b348b": {
       "lente": "a4e9d2d4",
@@ -6151,8 +9452,26 @@
     "f31f41a3e45519f7": {
       "normale": "2b46d5b5"
     },
+    "f327af6a6a7de688": {
+      "normale": "ff234d69"
+    },
+    "f32d21eb2cebf647": {
+      "normale": "0456e9b4"
+    },
+    "f3809f594c2e3b57": {
+      "normale": "bed70596"
+    },
+    "f3a6971e6b569249": {
+      "normale": "66e8d32b"
+    },
+    "f3d63d2b19dbcba5": {
+      "normale": "7f2cecff"
+    },
     "f3fa7d4da7407c42": {
       "normale": "3d595694"
+    },
+    "f424520aba7f32b5": {
+      "normale": "83feee78"
     },
     "f453c4254767df17": {
       "normale": "d15caa63"
@@ -6175,11 +9494,17 @@
     "f49e2d736d30fdbd": {
       "normale": "45ac10fc"
     },
+    "f4ad8a0819864057": {
+      "normale": "64b93ff5"
+    },
     "f4aefc6224a89864": {
       "normale": "73eb7b2c"
     },
     "f4bb0f7af3a46b8f": {
       "normale": "5bd03376"
+    },
+    "f4c27aeba12bc391": {
+      "normale": "ae54b8a9"
     },
     "f4ca6714c884eef8": {
       "normale": "de3dddb0"
@@ -6199,11 +9524,17 @@
     "f54da89619606639": {
       "normale": "c03694fa"
     },
+    "f55e98b8e54667e8": {
+      "normale": "91498a78"
+    },
     "f5923608d93cca54": {
       "normale": "2d6dc169"
     },
     "f592a84976f2d9e7": {
       "normale": "b16d5649"
+    },
+    "f5abe85685f39ee1": {
+      "normale": "20149fb7"
     },
     "f5ad488f584ef2ad": {
       "normale": "70df77ae"
@@ -6232,6 +9563,9 @@
     "f6b9216f6f4dbb2c": {
       "normale": "e623d19a"
     },
+    "f6daa578f2b411b8": {
+      "normale": "e6f7617e"
+    },
     "f6de757e2db2d79a": {
       "normale": "3f261d2c"
     },
@@ -6245,11 +9579,17 @@
       "lente": "e7c42eef",
       "normale": "8c4b50fc"
     },
+    "f726c9dc8a8de1fc": {
+      "normale": "74f3a071"
+    },
     "f7351f1455ede114": {
       "normale": "b43e3b9a"
     },
     "f7414f9bdb18658b": {
       "normale": "9e6e6c02"
+    },
+    "f751777b24476c94": {
+      "normale": "6475d004"
     },
     "f75fcb782ac9d505": {
       "normale": "9ba2ce34"
@@ -6264,14 +9604,32 @@
       "lente": "4905895f",
       "normale": "0dc2de48"
     },
+    "f7a27cb197fdf6b8": {
+      "normale": "45f407b4"
+    },
+    "f7a6f4744c0c9d3a": {
+      "normale": "9ad1b78a"
+    },
+    "f7ae7c1c7fe4c98c": {
+      "normale": "6d13b60f"
+    },
     "f7c8412e201b91b0": {
       "normale": "28977a7a"
     },
     "f7f52a814f23c86a": {
       "normale": "a9d1965b"
     },
+    "f814f4d846e6b7c4": {
+      "normale": "52858d2f"
+    },
+    "f8371b8cc00abf37": {
+      "normale": "8d1fc22d"
+    },
     "f846acdfe701517d": {
       "normale": "0b159cf3"
+    },
+    "f852233ce24cbb22": {
+      "normale": "6fa17989"
     },
     "f85615b9b7f6f952": {
       "normale": "90931fb6"
@@ -6288,8 +9646,32 @@
     "f8b61345c8e400e7": {
       "normale": "56f86d07"
     },
+    "f8c9af60397deea9": {
+      "normale": "cb6683e5"
+    },
+    "f8d3794b629621bb": {
+      "normale": "eb1856e6"
+    },
+    "f8e7134d50cc969b": {
+      "normale": "5d82d26e"
+    },
+    "f8e9fa1691555dab": {
+      "normale": "2ecfc836"
+    },
+    "f8f9f27c179100ad": {
+      "normale": "cfd5ac03"
+    },
     "f8fb2d9a0c53a8e5": {
       "normale": "48766db8"
+    },
+    "f8ffb5c3cefbfccd": {
+      "normale": "3802b354"
+    },
+    "f91fe85df183e30a": {
+      "normale": "71d758b6"
+    },
+    "f94ca5d5d76830c9": {
+      "normale": "e3a6eac5"
     },
     "f9500a6b3b26a0b1": {
       "normale": "ec125834"
@@ -6322,6 +9704,12 @@
     "f9d6f7aebbd5b228": {
       "normale": "fae32801"
     },
+    "f9df0101549bcbbf": {
+      "normale": "52192e72"
+    },
+    "f9e6e2fd1dda6e94": {
+      "normale": "ee3b98c9"
+    },
     "fa2dd64c61ecf037": {
       "normale": "8cc2d9c8"
     },
@@ -6337,8 +9725,14 @@
     "fa642aa038e412d2": {
       "normale": "8b49d369"
     },
+    "fa6be8c1511a496a": {
+      "normale": "fee41412"
+    },
     "fa8c3c62d52bc882": {
       "normale": "d000f0cb"
+    },
+    "fa8f5085f7237558": {
+      "normale": "59ee7a2d"
     },
     "fa97b0bf98443e32": {
       "normale": "ed29992c"
@@ -6348,6 +9742,9 @@
     },
     "faa4f97962b1430d": {
       "normale": "e2daf8f3"
+    },
+    "fab9b1f9abe0478c": {
+      "normale": "d4f9e725"
     },
     "fac1b1e126e665e5": {
       "normale": "49f41dd2"
@@ -6370,8 +9767,20 @@
     "fb02f1bb2c491e61": {
       "normale": "05407aad"
     },
+    "fb0705563088df56": {
+      "normale": "29a80c42"
+    },
+    "fb1100d42a33251e": {
+      "normale": "9959e029"
+    },
     "fb77b6cb1a610376": {
       "normale": "9ba46869"
+    },
+    "fb7efda1e8224067": {
+      "normale": "942ffce6"
+    },
+    "fb852f1ded16d86a": {
+      "normale": "55e84e8a"
     },
     "fb873373d6a8c4c8": {
       "normale": "25ec4cb6"
@@ -6379,8 +9788,14 @@
     "fb9a948bebc1f596": {
       "normale": "1b67d92b"
     },
+    "fbce992f818d4ebe": {
+      "normale": "850ce890"
+    },
     "fbf036380ff94b04": {
       "normale": "fc261819"
+    },
+    "fbfaadb5dcf23724": {
+      "normale": "80c72223"
     },
     "fc0ef2666efed69f": {
       "normale": "6840fc4a"
@@ -6397,6 +9812,9 @@
     "fc4aa9cfd6a57284": {
       "normale": "1c9b1493"
     },
+    "fc61e8407fad80d3": {
+      "normale": "bab9b73b"
+    },
     "fc66a94c27842f4f": {
       "normale": "fb274f83"
     },
@@ -6408,6 +9826,9 @@
     },
     "fccf7a044d3e246e": {
       "normale": "d4500cdb"
+    },
+    "fcdceac638da03bb": {
+      "normale": "bf345e2f"
     },
     "fce52562395fbaa2": {
       "normale": "3b8ee2c9"
@@ -6442,11 +9863,26 @@
     "fe11d155cd0220a6": {
       "normale": "90594199"
     },
+    "fe223a6ba0fed82a": {
+      "normale": "a3fbe79f"
+    },
     "fe465485ca974278": {
       "normale": "4f2df591"
     },
+    "fe4fc8538c2e6900": {
+      "normale": "88d133d3"
+    },
+    "fe58bf140175b541": {
+      "normale": "9c0f41fd"
+    },
+    "fe739df5853ed066": {
+      "normale": "da47afbd"
+    },
     "fea12c710186b83d": {
       "normale": "9fad04ca"
+    },
+    "ff37c8876288f117": {
+      "normale": "98866497"
     },
     "ff53f5ff31b6e24c": {
       "normale": "2d750619"
@@ -6454,8 +9890,14 @@
     "ff6a4260a5aa9b7c": {
       "normale": "bbef12c7"
     },
+    "ff8d2f0233a3f0a3": {
+      "normale": "3887c517"
+    },
     "ffae44faaf6898d1": {
       "normale": "04b27ca6"
+    },
+    "ffb18b0a12317b09": {
+      "normale": "84ac0836"
     },
     "ffd9d3a7d0fe9ead": {
       "normale": "a3a1c7ee"
