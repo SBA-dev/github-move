@@ -54,11 +54,11 @@ When(
       if (!lisaitLaQuestion) await terminerLaLecture(page);
       return lisaitLaQuestion;
     }, { intervals: [100] }).toBe(true);
-    const relire = page.getByRole("button", { name: "Relire la consigne", exact: true });
-    await expect(relire).not.toHaveAttribute("aria-disabled", "true");
+    const reecouter = page.getByRole("button", { name: "Réécouter", exact: true });
+    await expect(reecouter).not.toHaveAttribute("aria-disabled", "true");
     const etat = scenario(page);
     etat.relitPendantLaQuestion = { relue: true, lotsAvant: (await journal(page)).lots };
-    await relire.click();
+    await reecouter.click();
   },
 );
 
@@ -107,6 +107,12 @@ Then(/^Léa n'a pas eu à continuer$/, async ({ page }) => {
 });
 
 Then(/^ensuite seulement, Léa voit la consigne « (.+) »$/, async ({ page }, texte: string) => {
+  // 183.13 : la consigne revient quand le personnage guide a fini de parler : Léa le laisse finir.
+  await expect.poll(async () => {
+    if (await consigneAffichee(page).isVisible()) return true;
+    await terminerLaLecture(page);
+    return false;
+  }, { intervals: [100] }).toBe(true);
   await expect(consigneAffichee(page)).toHaveText(normaliser(texte));
 });
 

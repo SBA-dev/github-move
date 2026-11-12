@@ -481,12 +481,12 @@ Fonctionnalité: Une réponse fausse animée par le personnage guide
       Alors Coach Léo dit un encouragement, suivi de « Essaie une autre bulle. »
       Mais Coach Léo ne joue pas de scène de réponse fausse
 
-    # 163.7 : avec l'addition posée sur un écran étroit, le personnage guide est trop petit pour la scène
+    # Adapté par #183 : le personnage guide n'est montré que quand il réagit, à environ 100 px, même sur un écran
+    # de 360 px ; l'addition posée joue donc la scène de réponse fausse comme les autres exercices (remplace 163.7).
     @livraison-163a
-    Scénario: Avec l'addition posée sur un écran de 360 px, Coach Léo réfléchit sans jouer de scène de réponse fausse
+    Scénario: Avec l'addition posée sur un écran de 360 px, Coach Léo joue sa scène de réponse fausse
       Étant donné que l'écran de l'appareil mesure 360 px de large
       Et que Léa joue l'exercice « La leçon en action : 45 + 37 » à l'étape calculer
       Et que Léa a calculé la colonne des unités
       Quand Léa répond « 7 » pour la colonne des dizaines
-      Alors Coach Léo réfléchit en penchant la tête
-      Mais Coach Léo ne joue pas de scène de réponse fausse
+      Alors Coach Léo joue sa scène de réponse fausse

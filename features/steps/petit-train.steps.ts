@@ -173,6 +173,8 @@ Given(/^Léa a répondu faux (\d+) fois à la première question$/, async ({ pag
     await etiquetteAPlacer(page, mauvaise).first().click();
     await expect.poll(async () => (await journal(page)).speaks).toBeGreaterThan(paroles);
     await terminerLaLecture(page);
+    // Le personnage guide se retire quand il a fini (#183) et la mise en page remonte : Léa touche l'étiquette suivante une fois l'écran posé.
+    await expect(page.locator('[data-personnage-guide="cache"]')).toHaveCount(1);
   }
 });
 

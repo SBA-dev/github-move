@@ -41,7 +41,7 @@ elle ne retient jamais l'enfant.
 | R5 | Chaque personnage guide a sa scène, douce et sans danger, avec la tenue portée ; c'est celle de l'univers du profil au moment de la réponse | Lili vacille à peine et fait une révérence ; la noisette rebondit à côté de Noisette ; Coach Léo porte « une écharpe rayée » | 3 (dont 1 plan, 6 exemples) |
 | R6 | Jamais plus attrayante que la bonne réponse : courte, sans confettis, sans cri de victoire, sans musique, sans son à elle | un seul « réponse fausse » entendu, aucun confetti | 2 |
 | R7 | Accessibilité : image fixe en mouvements réduits, Muet (effet sonore sans parole, 97.2), une seule annonce, mode dys, bulles écrites cachées sur un petit dessin, 360 px, 44 px | image fixe souriant pouce levé, sans bulle écrite ; bulles écrites en mode dys ; lecteurs d'écran : l'encouragement une fois, jamais « oh ! » ; boîte à jetons (dessin de 80 px) : scène sans bulle écrite ; mouvements réduits activés pendant la scène de Capitaine Sam : image fixe sans eau, sans gouttes, sans bulle écrite | 7 |
-| R8 | Écrans : séance d'une leçon (tous types), révision, défi, grand défi ; jamais pendant le chrono d'une fluence, après « Je ne sais pas », au test de départ, ni avec l'addition posée à 360 px | bulles, classer, ordre ; dictée : « chas », la lettre « s » en rouge ; « lit » en révision ; « 4 » au défi ; fluence : son seul | 9 (dont 1 plan, 3 exemples) |
+| R8 | Écrans : séance d'une leçon (tous types), révision, défi, grand défi ; jamais pendant le chrono d'une fluence, après « Je ne sais pas », au test de départ, ni avec l'addition posée à 360 px (adapté par #183 : l'addition posée joue aussi la scène à 360 px) | bulles, classer, ordre ; dictée : « chas », la lettre « s » en rouge ; « lit » en révision ; « 4 » au défi ; fluence : son seul | 9 (dont 1 plan, 3 exemples) |
 
 Total : 8 règles, 44 scénarios (dont 4 plans), 54 cas une fois les exemples déroulés. Huit règles, c'est plus que
 les 6 conseillés par le skill `bdd-gherkin` : le découpage par livraison (163.11) répond à cette taille, car R5 est
@@ -119,7 +119,7 @@ Note sur le Muet : le Muet coupe la parole, pas les effets sonores (décision 97
 - Pendant le chrono d'une fluence, une réponse fausse ne fait entendre que « réponse fausse », sans scène (97.10, 163.6)
 - « Je ne sais pas » ne fait pas jouer la scène de réponse fausse (97.11, 163.6)
 - Au test de départ, une réponse fausse garde l'encouragement, sans scène de réponse fausse (163.6)
-- Avec l'addition posée sur un écran de 360 px, Coach Léo réfléchit sans jouer de scène de réponse fausse (163.7)
+- Avec l'addition posée sur un écran de 360 px, Coach Léo joue sa scène de réponse fausse (163.7, adapté par #183)
 
 ## Règle absolue sur les contenus
 
@@ -152,7 +152,7 @@ Pour 163.1, la recommandation était B : c'est B qui est retenu.
 - **163.4** Capitaine Sam. Tranchée le 2026-11-05 (reco A retenue, « 163 reco tout », [annonce](https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672057084)) : une scène, maquette et planche validées avant le câblage.
 - **163.5** Règle absolue, scène par scène. Tranchée le 2026-11-05 (recos retenues, 163.5c A, « 163 reco tout », [annonce](https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672057084)) : les scènes décrites dans le plan de R5.
 - **163.6** Écrans. Tranchée le 2026-11-05 (reco retenue, « 163 reco tout », [annonce](https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672057084)) : séance d'une leçon (tous types, dictée comprise), révision, défi, grand défi ; pas pendant le chrono d'une fluence, après « Je ne sais pas », au test de départ.
-- **163.7** Place. Tranchée le 2026-11-05 (reco A retenue, « 163 reco tout », [annonce](https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672057084)) : à la place du dessin du personnage guide ; pas de scène avec l'addition posée sur téléphone.
+- **163.7** Place. Tranchée le 2026-11-05 (reco A retenue, « 163 reco tout », [annonce](https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672057084)) : à la place du dessin du personnage guide ; pas de scène avec l'addition posée sur téléphone. **Adapté par #183** (décision du PO du 2026-11-07) : le personnage guide n'est montré que quand il réagit, à environ 100 px ; l'addition posée joue désormais la scène de réponse fausse à 360 px, comme les autres exercices. Le scénario « mode dys » ne change pas (les bulles écrites restent).
 - **163.8** Tenue. Tranchée le 2026-11-05 (reco retenue, « 163 reco tout », [annonce](https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672057084)) : la tenue portée (scénario sans dépendance : 106h est mergée).
 - **163.9** Nom. Tranchée le 2026-11-05 (reco retenue, « 163 reco tout », [annonce](https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672057084)) : « scène de réponse fausse ».
 - **163.10** Moteur. Tranchée le 2026-11-05 (reco retenue, « 163 reco tout », [annonce](https://github.com/SBA-dev/github-move/issues/64#issuecomment-6672057084)) : une nouvelle décision (hors scénarios).

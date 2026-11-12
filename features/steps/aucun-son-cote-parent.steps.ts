@@ -4,7 +4,7 @@ import { fixerLaProchaineQuestion } from "../support/hasard-fixe.ts";
 import { allerALaQuestion } from "./exercices-a-choix.steps.ts";
 import { test, Given, Then, When } from "./fixtures.ts";
 import { etat as etatDesProfils, choisirSonProfil, connecterSiBesoin } from "./profils-enfants.steps.ts";
-import { toutesLesParoles } from "./etapes-puis-exercices.steps.ts";
+import { retrouverLEnTete, toutesLesParoles } from "./etapes-puis-exercices.steps.ts";
 import { attendreUneLecture, DENISE, installerLeFaux, journal, laisserPasserLeDelaiDeLecture, normaliser, reappliquerLAppareil, scenario } from "./voix.steps.ts";
 
 // Story #73 : aucune voix sur les écrans du parent. « Noisette dit » vérifie la bulle du personnage guide (ce qui
@@ -38,6 +38,12 @@ function entreeDeLEspaceParent(page: Page) {
   return page.getByRole("banner").getByRole("button", { name: "Espace parent", exact: true });
 }
 
+/** Léa est en séance (sans en-tête) : elle la quitte par Retour, l'en-tête revient, puis elle demande l'entrée de l'espace parent. */
+async function demanderLEntreeDeLEspaceParent(page: Page) {
+  await retrouverLEnTete(page);
+  await entreeDeLEspaceParent(page).click();
+}
+
 function questionDuControleParental(page: Page) {
   return page.getByText(/Question pour un adulte : combien font \d × \d \?/);
 }
@@ -67,14 +73,14 @@ Given(
   /^Léa a demandé l'entrée de l'espace parent, et le contrôle parental pose la question « (\d) × (\d) »$/,
   async ({ page }, premier: string, second: string) => {
     await fixerLaProchaineQuestion(page, Number(premier), Number(second));
-    await entreeDeLEspaceParent(page).click();
+    await demanderLEntreeDeLEspaceParent(page);
     await expect(questionDuControleParental(page)).toContainText(`combien font ${premier} × ${second} ?`);
   },
 );
 
 Given(/^Léa a demandé l'entrée de l'espace parent, puis a renoncé à répondre au contrôle parental$/, async ({ page }) => {
   await allerALaQuestion(page, QUESTION_DE_TEST, false);
-  await entreeDeLEspaceParent(page).click();
+  await demanderLEntreeDeLEspaceParent(page);
   await expect(questionDuControleParental(page)).toBeVisible();
   await page.getByRole("button", { name: "Renoncer" }).click();
   await expect(questionDuControleParental(page)).toHaveCount(0);
@@ -94,7 +100,7 @@ Given(/^la question du contrôle parental est affiché sur la tablette$/, async 
   await reappliquerLAppareil(page);
   await connecterSiBesoin(famille, "tablette", "Paul");
   await fixerLaProchaineQuestion(page, 7, 8);
-  await entreeDeLEspaceParent(page).click();
+  await demanderLEntreeDeLEspaceParent(page);
   await expect(questionDuControleParental(page)).toBeVisible();
 });
 

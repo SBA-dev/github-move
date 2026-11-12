@@ -10,6 +10,8 @@ import {
   injecter,
   interceptertLaBibliotheque,
   leconDeTest,
+  lecturesAvantLaReecouteDeLaConsigne,
+  quitterLaSeance,
   ouvrirLaPageDeLaLecon,
 } from "./etapes-puis-exercices.steps.ts";
 import { estSurUnProfilReel } from "./profil-reel.ts";
@@ -555,28 +557,36 @@ When(/^la consigne suivante s'affiche$/, async ({ page }) => {
 When(/^Léa demande à réécouter la consigne$/, async ({ page }) => {
   await demarrer(page);
   const etat = scenario(page);
-  const relire = page.getByRole("button", { name: "Relire la consigne", exact: true });
+  const reecouter = page.getByRole("button", { name: "Réécouter", exact: true });
   if (etat.relitPendantLaQuestion) {
     await attendreUneLecture(page);
     await terminerLaLecture(page);
     // Le StrictMode du mode développement peut lire la consigne en deux lots : on attend la lecture de la question.
     await expect.poll(async () => (await journal(page)).lecture.texte).toContain("Combien font");
-    // 79.12 : pendant la présentation de l'exercice, relire la consigne est inactif.
-    await expect(relire).toHaveAttribute("aria-disabled", "true");
-    // La présentation finie (les choix apparaissent), il devient actif.
+    // La présentation finie (les choix apparaissent), « Réécouter » relit la consigne (183.8 : un seul bouton).
     await avancerJusquAuxChoix(page);
-    await expect(relire).not.toHaveAttribute("aria-disabled", "true");
+    await expect(reecouter).not.toHaveAttribute("aria-disabled", "true");
     etat.relitPendantLaQuestion.relue = true;
     etat.relitPendantLaQuestion.lotsAvant = (await journal(page)).lots;
   }
-  // #7 : la consigne d'ouverture est réécoutée pendant sa lecture, avec « Réécouter » (« Relire la consigne » y est inactif).
-  const bouton = etat.reecouteLaConsigneDOuverture
-    ? page.getByRole("button", { name: "Réécouter", exact: true })
-    : relire;
-  await bouton.click();
+  // Toucher un bouton pendant une parole ne fait pas entendre « bouton touché » : Léa touche « Réécouter » quand le personnage guide
+  // a fini de présenter l'exercice (la consigne, puis l'indication qui la suit).
+  if (!etat.relitPendantLaQuestion && !etat.reecouteLaConsigneDOuverture && (await journal(page)).speaks > 0) {
+    let parolesVuesAvant = -1;
+    await expect.poll(async () => {
+      const { actifs, speaks } = await journal(page);
+      if (actifs > 0) await terminerLaLecture(page);
+      const silencieux = actifs === 0 && speaks === parolesVuesAvant;
+      parolesVuesAvant = actifs === 0 ? speaks : -1;
+      return silencieux;
+    }, { intervals: [300] }).toBe(true);
+  }
+  await reecouter.click();
 });
 
 When(/^Léa quitte l'écran de la consigne$/, async ({ page }) => {
+  // La séance n'a plus l'en-tête de l'application (#183) : Retour ramène à la page de la leçon, où le nom de l'application est là.
+  if (await page.getByTestId("barre-du-haut").isVisible()) await quitterLaSeance(page);
   await page.getByRole("banner").getByRole("button", { name: "Savanturier" }).click();
   await expect(page).toHaveURL(/\/$/);
 });
@@ -598,7 +608,8 @@ When(/^Léa remet le son$/, async ({ page }) => {
 When(/^Léa relance Savanturier$/, async ({ page, $tags }) => {
   if (page.url() === "about:blank") await ouvrir(page);
   await page.reload();
-  await expect(page.getByRole("banner")).toBeVisible();
+  // Pendant la séance (#183) l'application n'a pas d'en-tête : c'est la barre du haut de la séance qui montre qu'elle est ouverte.
+  await expect(page.getByRole("banner").or(page.getByTestId("barre-du-haut")).first()).toBeVisible();
   // Story #102 : le profil en cours n'est jamais gardé d'une ouverture à l'autre (décision n°7 du lot 2), et le rechargement ramène
   // le profil préparé, sans identifiant : Léa, qui jouait avec son vrai profil, s'y choisit de nouveau.
   if (($tags.includes("@issue-102") || $tags.includes("@issue-101")) && estSurUnProfilReel(page)) await choisirSonProfil(page, "Léa");
@@ -631,6 +642,14 @@ async function texteLuAvantLaLectureDesChoix(page: Page): Promise<string> {
 }
 
 Then(/^Léa entend de nouveau Noisette lire « ([^«»]+) »$/, async ({ page }, texte: string) => {
+  const avantLaReecoute = lecturesAvantLaReecouteDeLaConsigne.get(page);
+  if (avantLaReecoute !== undefined) {
+    // La consigne puis la question se lisent d'une traite (une lecture) : la consigne ouvre la lecture.
+    await expect.poll(async () => (await journal(page)).lots).toBe(avantLaReecoute + 1);
+    const lus = await textesLus(page);
+    expect(lus[lus.length - 1]).toMatch(new RegExp(`^${normaliser(texte).replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`));
+    return;
+  }
   const lotsAvant = scenario(page).relitPendantLaQuestion?.lotsAvant;
   await expect.poll(async () => (await journal(page)).lots).toBe(lotsAvant === undefined ? 2 : lotsAvant + 1);
   expect((await journal(page)).lecture.texte).toBe(normaliser(texte));

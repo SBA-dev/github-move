@@ -10,17 +10,19 @@ import {
   messageDeLaDicteeSansVoix,
   Seance,
 } from "@domain/apprentissage";
-import { type Exercice, type Lecon, Niveau, pageDeLaLecon } from "@domain/catalogue";
+import { type Exercice, type Lecon, Niveau } from "@domain/catalogue";
 import type { ValeurDuClavierDesDictees } from "@domain/famille";
 import type { MeilleuresEtoilesDuProfil, Univers } from "@domain/motivation";
 import { lireLaQueteAvantLaSeance, type QueteLueAvantLaSeance } from "../accueil/lire-la-quete-du-jour.ts";
 import { lireLeNombreDeSeancesAvantLaSeance } from "../histoire/nombre-de-seances-avant-la-seance.ts";
 import { TexteEnSyllabes } from "../reglages/index.ts";
 import { ContexteDuRetour, EtincellesDuTexteComplet } from "../retours/index.ts";
-import { TexteSurligne } from "./TexteSurligne.tsx";
 import { laVoixNeLitPas, type Voix } from "../voix/index.ts";
-import { BulleDuPersonnageGuide } from "./BulleDuPersonnageGuide.tsx";
-import { PersonnageGuideEtSaScene } from "./PersonnageGuideEtSaScene.tsx";
+import type { GardeDuRetour } from "../navigation.ts";
+import { BarreDActionDeLaSeance, DansLaBarreDAction } from "./BarreDActionDeLaSeance.tsx";
+import { BarreDuHautDeLaSeance } from "./BarreDuHautDeLaSeance.tsx";
+import { BulleDeLaSeance } from "./BulleDeLaSeance.tsx";
+import { PauseDeLaSeance } from "./PauseDeLaSeance.tsx";
 import { EcranDeFin } from "./fin-de-seance/EcranDeFin.tsx";
 import { lireLesMeilleuresEtoilesAvantLaSeance } from "./fin-de-seance/meilleures-etoiles-du-profil-lues.ts";
 import { useFaciliteDeLaSeance } from "./difficulte/useFaciliteDeLaSeance.ts";
@@ -37,9 +39,9 @@ import { etatDeLaVoix } from "./etat-de-la-voix.ts";
 import { generateurIdDuNavigateur } from "./generateur-id-navigateur.ts";
 import { hasardDuNavigateur } from "./hasard-navigateur.ts";
 import { horlogeDuNavigateur } from "./horloge.ts";
-import { RecipientDeProgression } from "./RecipientDeProgression.tsx";
 import { useDeroulementDeSeance } from "./useDeroulementDeSeance.ts";
 import { useLecon } from "./useLecon.ts";
+import { personnageGuideSeMontre } from "./personnage-guide-visible.ts";
 import { useSceneDeReponseFausse } from "./useSceneDeReponseFausse.ts";
 
 type Props = {
@@ -58,6 +60,8 @@ type Props = {
   /** Réglage du profil en cours : le clavier proposé pour écrire les mots dictés. */
   readonly clavierDesDictees: ValeurDuClavierDesDictees;
   readonly onRetour: () => void;
+  /** Pose la garde du geste retour du navigateur ; rend de quoi la retirer. */
+  readonly onGarderLeRetour: (garde: GardeDuRetour) => () => void;
   readonly onLireLEpisode: (numero: number) => void;
   readonly onLeconSuivante: (leconId: string) => void;
   readonly onToutesLesLecons: () => void;
@@ -163,7 +167,7 @@ type PropsEnCours = Omit<PropsDUnePartie, "exercice" | "profilId" | "clavierDesD
 };
 
 function SeanceEnCours(
-  { seance, lecon, prenom, niveau, univers, voix, toutLireAVoixHaute, meilleuresEtoilesAvant, nombreDeSeancesAvant, queteAvant, onRetour, onRejouer, onLireLEpisode, onLeconSuivante, onToutesLesLecons, onReleverLeDefi, onAccueil }: PropsEnCours,
+  { seance, lecon, prenom, niveau, univers, voix, toutLireAVoixHaute, meilleuresEtoilesAvant, nombreDeSeancesAvant, queteAvant, onRetour, onGarderLeRetour, onRejouer, onLireLEpisode, onLeconSuivante, onToutesLesLecons, onReleverLeDefi, onAccueil }: PropsEnCours,
 ) {
   const deroulement = useDeroulementDeSeance(seance, lecon, voix, univers.personnageGuide, toutLireAVoixHaute, prenom);
   const voixCoupee = laVoixNeLitPas(voix);
@@ -174,7 +178,6 @@ function SeanceEnCours(
   }, [commencer, abandonner]);
 
   const [celebrationDeLUnivers, setCelebrationDeLUnivers] = useState(false);
-  const { titre, niveauEtMatiere } = pageDeLaLecon(lecon);
   const etape = seance.etapeDeLeconEnCours();
   const exerciceJoue = seance.exerciceEnCours();
   const { figee } = deroulement;
@@ -189,8 +192,6 @@ function SeanceEnCours(
   const fluence = deroulement.fluenceFinie ?? seance.fluenceEnCours(horlogeDuNavigateur.maintenant());
   const addition = deroulement.additionFigee ?? seance.additionEnCours();
   const consigne = finie || !exerciceDeLaLecon ? undefined : consigneAffichee(exerciceDeLaLecon);
-  const laConsigneEstLue = consigne !== undefined && deroulement.parole?.nature === "consigne" && deroulement.parole.texte === consigne;
-  const paroleDeLaBulle = laConsigneEstLue ? undefined : deroulement.parole;
   // Le chrono n'est pas lisible ici : pendant toute la fluence, aucune scène (aucun encouragement n'y est dit de toute façon).
   const dansUneFluence = exerciceDeLaLecon?.type === "fluence";
   const reponseFausse = useSceneDeReponseFausse({
@@ -207,43 +208,57 @@ function SeanceEnCours(
     dejaMonte.current = true;
   }, [exerciceCommence]);
 
+  const [pauseOuverte, setPauseOuverte] = useState(false);
+  const personnageGuideVisible = personnageGuideSeMontre({
+    finie,
+    etape: etape !== undefined,
+    parole: deroulement.enTrainDeParler ? deroulement.parole : undefined,
+    reagitSansParler: deroulement.reagitSansParler,
+    humeur: deroulement.humeur,
+    consigne,
+    sceneDeReponseFausse: reponseFausse.enCours !== undefined,
+  });
+  /** Avant toute réponse, Retour ramène à la page de la leçon ; ensuite, la pause de la séance s'ouvre d'abord. */
+  const demanderLeRetour = () => {
+    if (finie || !seance.aRecuUneReponse()) onRetour();
+    else setPauseOuverte(true);
+  };
+  /** Le geste retour fait comme le bouton Retour ; la pause ouverte, il la ferme (183.12). */
+  const surLeGesteRetour = () => {
+    if (pauseOuverte) setPauseOuverte(false);
+    else if (!finie && seance.aRecuUneReponse()) setPauseOuverte(true);
+    else return false;
+    return true;
+  };
+  const gardeDuRetour = useRef(surLeGesteRetour);
+  gardeDuRetour.current = surLeGesteRetour;
+  useEffect(() => onGarderLeRetour(() => gardeDuRetour.current()), [onGarderLeRetour]);
+
   return (
     <ContexteDuRetour.Provider value={deroulement.retour}>
-      <section ref={laSeance} className="seance" aria-labelledby="titre-de-la-seance">
-        <div className="entete-de-seance">
-          <button type="button" onClick={onRetour}>Retour</button>
-          <div>
-            <h2 id="titre-de-la-seance">{titre}</h2>
-            <p data-testid="niveau-et-matiere">{niveauEtMatiere}</p>
-          </div>
-        </div>
-        {!finie && <RecipientDeProgression avancement={seance.avancement()} />}
-        <div className="guide-et-parole">
-          {!celebrationDeLUnivers && <PersonnageGuideEtSaScene univers={univers} humeur={deroulement.humeur} reponseFausse={reponseFausse} />}
-          <BulleDuPersonnageGuide
-            texte={paroleDeLaBulle?.texte}
-            nature={paroleDeLaBulle?.nature}
-            rangDuMotPrononce={deroulement.rangDuMotPrononce}
-          />
-        </div>
-        <button type="button" className="reecouter" onClick={deroulement.reecouter} aria-disabled={deroulement.figee !== undefined ? true : undefined}>
-          Réécouter
-        </button>
-        <div className="consigne-de-l-exercice" aria-live="polite">
-          {consigne !== undefined && (
-            <>
-              <p className="consigne" data-testid="consigne">
-                <TexteSurligne
-                  texte={consigne}
-                  rangDuMotPrononce={laConsigneEstLue ? deroulement.rangDuMotPrononce : undefined}
-                />
-              </p>
-              <button type="button" className="relire-la-consigne" onClick={deroulement.relireLaConsigne} aria-disabled={deroulement.presentationEnCours || figee !== undefined ? true : undefined}>
-                Relire la consigne
-              </button>
-            </>
-          )}
-        </div>
+      <BarreDActionDeLaSeance>
+      <section ref={laSeance} className="seance seance-de-lecon" aria-labelledby="titre-de-la-seance">
+        <BarreDuHautDeLaSeance
+          titre={lecon.titre}
+          son={voix.son}
+          avancement={finie ? undefined : seance.avancement()}
+          onRetour={demanderLeRetour}
+          onBasculerLeSon={voix.basculerLeSon}
+        />
+        {pauseOuverte && (
+          <PauseDeLaSeance voix={voix} onContinuer={() => setPauseOuverte(false)} onRetourALaLecon={onRetour} />
+        )}
+        <BulleDeLaSeance
+          personnageGuideVisible={personnageGuideVisible && !celebrationDeLUnivers}
+          univers={univers}
+          humeur={deroulement.humeur}
+          reponseFausse={reponseFausse}
+          consigne={consigne}
+          parole={deroulement.reagitSansParler ? undefined : deroulement.parole}
+          rangDuMotPrononce={deroulement.rangDuMotPrononce}
+          reecouterImpossible={deroulement.figee !== undefined}
+          onReecouter={deroulement.reecouter}
+        />
         {etape && (
           <div className="etape-de-lecon" data-testid="etape-de-lecon">
             {etape.exemples.length > 0 && (
@@ -251,7 +266,9 @@ function SeanceEnCours(
                 {etape.exemples.map((exemple, i) => <li key={i} className="pastille" data-testid="exemple"><TexteEnSyllabes texte={exemple} /></li>)}
               </ul>
             )}
-            <button type="button" onClick={() => void deroulement.continuer()}>Continuer</button>
+            <DansLaBarreDAction>
+              <button type="button" className="action-principale" onClick={() => void deroulement.continuer()}>Continuer</button>
+            </DansLaBarreDAction>
           </div>
         )}
         <div className="annonce-d-avancement" role="status" data-testid="annonce-d-avancement">
@@ -409,19 +426,22 @@ function SeanceEnCours(
           </div>
         )}
         {deroulement.enfantAttendu && (
-          <button
-            type="button"
-            className="continuer-apres-la-reussite"
-            autoFocus={!finie}
-            onClick={() => {
-              deroulement.continuerApresLaReussite();
-              if (finie) laSeance.current?.querySelector<HTMLElement>(".actions-de-fin button")?.focus();
-            }}
-          >
-            Continuer
-          </button>
+          <DansLaBarreDAction>
+            <button
+              type="button"
+              className="continuer-apres-la-reussite action-principale"
+              autoFocus={!finie}
+              onClick={() => {
+                deroulement.continuerApresLaReussite();
+                if (finie) laSeance.current?.querySelector<HTMLElement>(".actions-de-fin button")?.focus();
+              }}
+            >
+              Continuer
+            </button>
+          </DansLaBarreDAction>
         )}
       </section>
+      </BarreDActionDeLaSeance>
     </ContexteDuRetour.Provider>
   );
 }

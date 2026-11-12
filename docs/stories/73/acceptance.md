@@ -22,7 +22,7 @@ Vocabulaire des scénarios :
 | # | Règle | Exemples clés |
 |---|---|---|
 | 1 | Sur un écran du parent, le personnage guide ne lit rien de lui-même, et ce qu'il dit reste affiché | « Se connecter », « Créer ton compte », « Mot de passe oublié » : aucune voix ; inscription puis espace parent sans profil : invitation à créer le premier profil affichée, non lue ; connexion d'un parent sans profil : idem ; « Qui joue ? » sans profil (ouverture, ou sortie de l'espace parent) : invitation affichée, non lue (le vrai changement) ; « Qui joue ? » avec Léa : aucune voix (73.2) ; question « 7 × 8 » du contrôle parental, espace parent : aucune voix ; l'invitation reste annoncée au lecteur d'écran |
-| 2 | En arrivant sur un écran du parent, la lecture en cours s'arrête | consigne « Écoute bien l'histoire du petit chat. » en cours, Léa demande l'espace parent → question du contrôle parental, voix coupée ; même consigne, Léa touche le nom de l'application → « Qui joue ? », voix coupée ; « Bonjour Léa ! » en cours, Léa change d'enfant → voix coupée ; la consigne coupée ne reprend pas une fois l'espace parent ouvert |
+| 2 | En arrivant sur un écran du parent, la lecture en cours s'arrête | consigne « Écoute bien l'histoire du petit chat. » en cours, Léa quitte la séance puis demande l'espace parent (adapté par #183) → question du contrôle parental, voix coupée ; même consigne, Léa touche le nom de l'application → « Qui joue ? », voix coupée ; « Bonjour Léa ! » en cours, Léa change d'enfant → voix coupée ; la consigne coupée ne reprend pas une fois l'espace parent ouvert |
 | 3 | Sur un écran de l'enfant, la voix se comporte comme avant, même en revenant d'un écran du parent | après l'espace parent, Léa choisit son profil → « Bonjour Léa ! » entendu ; après avoir renoncé au contrôle parental, « Réécouter » relit « Combien font 3 plus 4 ? » ; profil créé dans l'espace parent → proposition du test de départ lue à Léa (73.9) |
 | 4 | Passer par un écran du parent ne change jamais le choix Son/Muet de l'appareil | Son avant → Son après ; Muet avant → Muet après, et la question suivante n'est pas lue ; le choix Son/Muet reste proposé sur les 4 écrans du parent (73.3) ; y remettre le son ne fait rien lire (73.4) |
 | 5 | Dans l'espace parent, l'essai de voix reste entendu, mais seulement quand le parent le demande | Paul écoute « Denise (Natural) » → essai de voix entendu (73.1) ; Paul ouvre le choix de voix → aucune voix ; en Muet, l'essai n'est pas lu (déjà couvert par #15) |
@@ -32,7 +32,7 @@ Vocabulaire des scénarios :
 | # | Règle | Scénarios |
 |---|---|---|
 | 1 | Sur un écran du parent, le personnage guide ne lit rien de lui-même, et ce qu'il dit reste affiché | Sur l'écran « <écran> », aucune voix ne se fait entendre (Se connecter, Créer ton compte, Mot de passe oublié) · Juste après l'inscription, l'invitation à créer le premier profil s'affiche sans être lue · Un parent sans profil enfant se connecte : l'invitation à créer le premier profil s'affiche sans être lue · Sur « Qui joue ? » sans profil enfant, l'invitation à créer le premier profil s'affiche sans être lue · En quittant l'espace parent sans profil enfant, l'invitation à créer le premier profil n'est pas lue · Sur « Qui joue ? » avec des profils enfants, aucune voix ne se fait entendre (`@a-valider`, 73.2) · Pendant la question du contrôle parental, aucune voix ne se fait entendre · Dans l'espace parent, aucune voix ne se fait entendre · L'invitation à créer le premier profil reste annoncée au lecteur d'écran |
-| 2 | En arrivant sur un écran du parent, la lecture en cours s'arrête | Pendant la lecture d'une consigne, <ce que fait Léa> arrête la voix (demande de l'espace parent, retour à l'accueil par le nom de l'application) · Pendant que Noisette salue Léa, changer d'enfant arrête la voix · La consigne coupée ne reprend pas dans l'espace parent |
+| 2 | En arrivant sur un écran du parent, la lecture en cours s'arrête | Pendant la lecture d'une consigne, Léa quitte la séance puis demande l'entrée de l'espace parent : la voix s'arrête (adapté par #183) · Pendant la lecture d'une consigne, revenir à l'accueil par le nom de l'application arrête la voix · Pendant que Noisette salue Léa, changer d'enfant arrête la voix · La consigne coupée ne reprend pas dans l'espace parent (adapté par #183) |
 | 3 | Sur un écran de l'enfant, la voix se comporte comme avant, même en revenant d'un écran du parent | Après l'espace parent, le personnage guide salue l'enfant qui choisit son profil · Après avoir renoncé au contrôle parental, Léa réécoute la question · Le profil créé dans l'espace parent, la proposition du test de départ est lue à l'enfant (`@a-valider`, 73.9) |
 | 4 | Passer par un écran du parent ne change jamais le choix Son/Muet de l'appareil | Une tablette en <choix> l'est toujours après l'espace parent (Son, Muet) · En Muet avant l'espace parent, la consigne suivante n'est toujours pas lue · Sur <écran>, Paul peut passer la tablette en Muet (`@a-valider`, 73.3 ; 4 écrans du parent) · Sur <écran>, remettre le son ne fait rien lire (`@a-valider`, 73.4 ; 4 écrans du parent) |
 | 5 | Dans l'espace parent, l'essai de voix reste entendu, mais seulement quand le parent le demande | Dans l'espace parent, Paul entend l'essai de voix qu'il demande (`@a-valider`, 73.1) · Ouvrir le choix de voix ne fait pas lire l'essai de voix |
@@ -121,3 +121,18 @@ Validation n°1 du PO, 2026-10-25 17:40 UTC, mot pour mot : « #73 reco OK » (a
 - **73.10** La règle vaudra aussi pour les futurs effets sonores (sans scénario aujourd'hui).
 
 Les termes Écran du parent, Écran de l'enfant, Voix suspendue et Invitation à créer le premier profil sont validés.
+
+## Adapté par #183 (décision 183.15, E2E-2 du 2026-11-11)
+
+L'en-tête de l'application, et donc l'entrée de l'espace parent, n'est plus affiché pendant la séance (écran de fin
+compris). Les scénarios où Léa demande l'entrée de l'espace parent pendant la lecture d'une consigne disent désormais
+qu'elle quitte d'abord la séance (« Léa quitte la séance », étape de #183) :
+
+- « Pendant la lecture d'une consigne, Léa quitte la séance puis demande l'entrée de l'espace parent : la voix s'arrête »
+  (avant : ligne « Léa demande l'entrée de l'espace parent » du plan « Pendant la lecture d'une consigne, <ce que fait
+  Léa> arrête la voix ») ; l'autre ligne du plan devient le scénario « Pendant la lecture d'une consigne, revenir à
+  l'accueil par le nom de l'application arrête la voix » ;
+- « La consigne coupée ne reprend pas dans l'espace parent ».
+
+Ce que ces scénarios prouvent change : c'est la sortie de séance qui coupe la consigne, l'entrée de l'espace parent
+vérifie seulement que la voix reste coupée.

@@ -1,4 +1,4 @@
-import { useCallback, useReducer, useRef, useState } from "react";
+import { useCallback, useReducer, useRef } from "react";
 import {
   consigneAffichee,
   type FaitDeSeance,
@@ -64,7 +64,6 @@ export function useDeroulementDeSeance(
   const vivant = useRef(true);
   /** Numéro de la séquence qui présente l'exercice ; tout geste de l'enfant ouvre une nouvelle séquence et met donc fin à la présentation. */
   const presentation = useRef<number | undefined>(undefined);
-  const [presentationAffichee, setPresentationAffichee] = useState(false);
   const pause = useRef(PAUSE_ENTRE_DEUX_PAROLES_MS);
   pause.current = useReducedMotion() ? PAUSE_AVEC_MOUVEMENTS_REDUITS_MS : PAUSE_ENTRE_DEUX_PAROLES_MS;
 
@@ -138,28 +137,27 @@ export function useDeroulementDeSeance(
     return exercice && consigneAffichee(exercice);
   }, [seance, lecon]);
 
-  const lireLaConsigneDeLExercice = useCallback(async () => {
+  /** Rend `false` si une autre parole ou le silence a interrompu la lecture. */
+  const lireLaConsigneDeLExercice = useCallback(async (): Promise<boolean> => {
     const position = seance.exerciceEnCours()?.position;
     const exercice = position === undefined ? undefined : lecon.exercices[position];
     const consigne = consigneDeLExercice();
-    if (!exercice || consigne === undefined) return;
-    if (!(await dire({ texte: consigne, nature: "consigne" }))) return;
+    if (!exercice || consigne === undefined) return true;
+    if (!(await dire({ texte: consigne, nature: "consigne" }))) return false;
     const indication = indicationDuGeste(exercice.type);
-    if (indication) await dire({ texte: indication, nature: "consigne" });
+    return !indication || await dire({ texte: indication, nature: "consigne" });
   }, [seance, lecon, dire, consigneDeLExercice]);
 
   const presentationEnCours = useCallback(() => presentation.current === sequence.current, []);
 
   const commencerLaPresentation = useCallback((numero: number) => {
     presentation.current = numero;
-    setPresentationAffichee(true);
     avantLaLecture();
   }, [avantLaLecture]);
 
   const terminerLaPresentation = useCallback((numero: number) => {
     if (presentation.current !== numero) return;
     presentation.current = undefined;
-    setPresentationAffichee(false);
   }, []);
 
   const presenterLaQuestionDeLExercice = useCallback(async (numero: number) => {
@@ -206,13 +204,6 @@ export function useDeroulementDeSeance(
     await lireLaConsigneDeLExercice();
     if (numero === sequence.current) await presenterLaQuestionDeLExercice(numero);
   }, [commencerLaPresentation, lireLaConsigneDeLExercice, presenterLaQuestionDeLExercice]);
-
-  /** Dit seulement la consigne : la question reste posée. Sans effet pendant la présentation de l'exercice. */
-  const relireLaConsigne = useCallback(() => {
-    const consigne = consigneDeLExercice();
-    if (consigne === undefined || presentationEnCours() || reussite.estFigee.current) return;
-    void dire({ texte: consigne, nature: "consigne" });
-  }, [consigneDeLExercice, presentationEnCours, reussite.estFigee, dire]);
 
   const direLeFait = useCallback((fait: FaitDeSeance): Promise<boolean> => {
     if (fait.type === "EtapesDeLeconFinies") {
@@ -321,17 +312,29 @@ export function useDeroulementDeSeance(
     if (monPlacement === dernierPlacement.current) await apresUnPlacement();
   }, [placerUneEtiquette, enchainerSurLExercice, apresUnPlacement]);
 
+  /** Pendant une question : la consigne, puis la question (la question seule s'il n'y a pas de consigne). La question reste posée. */
+  const relireLaConsigneEtLaQuestion = useCallback(async (question: ParoleADire) => {
+    const numero = ++sequence.current;
+    if (!(await lireLaConsigneDeLExercice()) || numero !== sequence.current) return;
+    if (!(relireLaPresentation() || relireLaQuestion())) await dire(question);
+  }, [sequence, lireLaConsigneDeLExercice, relireLaPresentation, relireLaQuestion, dire]);
+
   const reecouter = useCallback(() => {
     if (reussite.figee) return;
-    if (presentationEnCours() && personnage.parole?.nature === "consigne") {
+    const { parole: dite } = personnage;
+    if (presentationEnCours() && dite?.nature === "consigne") {
       void ouvrirLExercice(++sequence.current);
       return;
     }
-    if (personnage.parole?.nature === "question" && (relireLaPresentation() || relireLaQuestion())) return;
+    if (dite?.nature === "question" && consigneDeLExercice() !== undefined) {
+      void relireLaConsigneEtLaQuestion(dite);
+      return;
+    }
+    if (dite?.nature === "question" && (relireLaPresentation() || relireLaQuestion())) return;
     if (relireLeTexte() || memorisation.reecouter()) return;
     sequence.current++;
     relire();
-  }, [reussite.figee, presentationEnCours, ouvrirLExercice, personnage.parole, relireLaPresentation, relireLaQuestion, relireLeTexte, memorisation.reecouter, relire]);
+  }, [reussite.figee, presentationEnCours, ouvrirLExercice, personnage, consigneDeLExercice, relireLaConsigneEtLaQuestion, relireLaPresentation, relireLaQuestion, relireLeTexte, memorisation.reecouter, relire]);
 
   const { parolesDeFin: parolesDeFinDeLaFluence, issueDuRecord } = fluence;
   /** Une fluence seule a déjà dit ses paroles de fin : elles sont reprises avec ce que la séance a fait gagner. Sans épisode ni quête accomplie, seuls les effets de la fin sont joués. */
@@ -364,7 +367,7 @@ export function useDeroulementDeSeance(
     faireSilence();
   }, [faireSilence, reussite.continuer]);
 
-  const { parole, rangDuMotPrononce, humeur } = personnage;
+  const { parole, rangDuMotPrononce, humeur, enTrainDeParler, reagitSansParler } = personnage;
   const { figee, avancementAnnonce } = reussite;
   const {
     choixVisiblesPour,
@@ -380,6 +383,8 @@ export function useDeroulementDeSeance(
     parole,
     rangDuMotPrononce,
     humeur,
+    enTrainDeParler,
+    reagitSansParler,
     retour,
     figee,
     choixVisiblesPour,
@@ -426,8 +431,6 @@ export function useDeroulementDeSeance(
     jeNeSaisPasDeLAddition,
     demarrerLaFluence,
     relireLaPhrase,
-    relireLaConsigne,
-    presentationEnCours: presentationAffichee && presentationEnCours(),
     enfantAttendu: reussite.enfantAttendu,
     continuerApresLaReussite: reussite.continuer,
     commencer,

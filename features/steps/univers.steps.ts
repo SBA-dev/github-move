@@ -1,6 +1,7 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 import { avecLesReglagesPrevus, reglagesPrevus } from "../support/reglages-prevus.ts";
 import { Given, type Monde, type ProfilPrepare, Then, When } from "./fixtures.ts";
+import { retrouverLEnTete } from "./etapes-puis-exercices.steps.ts";
 
 const CLE_PROFIL_PREPARE = "savanturier:profil-prepare";
 
@@ -162,6 +163,7 @@ When(/^Léa et Tom commencent à jouer, chacun sur sa tablette$/, async ({ brows
 });
 
 When(/^Léa revient à l'accueil par le nom de l'application$/, async ({ page }) => {
+  await retrouverLEnTete(page);
   await page.getByRole("banner").getByRole("button", { name: "Savanturier" }).click();
   await expect(page).toHaveURL(/\/$/);
 });
