@@ -1,6 +1,7 @@
 import type { QuestionJouee } from "@domain/apprentissage";
 import { MESSAGE_DE_L_ECOUTE_SANS_SON } from "@domain/apprentissage";
 import { TexteEnSyllabes } from "../../reglages/index.ts";
+import { ActionDeLExercice, useDansLaBarreDAction } from "./ActionDeLExercice.tsx";
 import { ChoixDeLaQuestion } from "./ChoixDeLaQuestion.tsx";
 
 type Props = {
@@ -24,6 +25,7 @@ type Props = {
 /** Une question à choix : l'énoncé (qui se relit en le touchant), le mot à écouter, les bulles de choix et « Je ne sais pas ». */
 export function QuestionAChoix(props: Props) {
   const { question, avecEcoute, questionMasquee, choixVisibles, reussie } = props;
+  const dansLaBarre = useDansLaBarreDAction();
   return (
     <>
       {question && !questionMasquee && (
@@ -67,11 +69,13 @@ export function QuestionAChoix(props: Props) {
           />
           {question.jeNeSaisPasPermis() && (
             question.bonneReponseMontree || reussie
-              ? <div className="je-ne-sais-pas place-gardee" aria-hidden="true">Je ne sais pas</div>
+              ? !dansLaBarre && <div className="je-ne-sais-pas place-gardee" aria-hidden="true">Je ne sais pas</div>
               : (
-                <button type="button" className="je-ne-sais-pas" data-testid="je-ne-sais-pas" onClick={props.onJeNeSaisPas}>
-                  Je ne sais pas
-                </button>
+                <ActionDeLExercice>
+                  <button type="button" className="je-ne-sais-pas" data-testid="je-ne-sais-pas" onClick={props.onJeNeSaisPas}>
+                    Je ne sais pas
+                  </button>
+                </ActionDeLExercice>
               )
           )}
         </>

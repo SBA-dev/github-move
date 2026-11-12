@@ -67,7 +67,7 @@ export type Observation = {
   annonces: string[];
   marque: number;
   marqueParoles: number;
-  paroles: Array<{ index: number; texte: string }>;
+  paroles: Array<{ index: number; texte: string; nature: string | null }>;
 };
 
 export const DELAI_DE_L_ATTENTE_MS = 20_000;
@@ -207,6 +207,9 @@ export function installerLesFauxDeLaStory97(config: Configuration) {
       if (element.getAttribute("data-reussite") === "true") noter(`reussite:${texteDe(element)}`);
       if (element.getAttribute("data-point-qui-vole") === "true") noter("point-qui-vole");
       const identifiant = element.getAttribute("data-testid");
+      // Story #183 : la barre de progression de la séance et l'éclat de son compteur (600 ms) remplacent le point qui vole.
+      if (identifiant === "recipient") noter(`avancement:${element.getAttribute("data-questions-reussies")}`);
+      if (identifiant === "compteur" && element.getAttribute("data-eclat") === "true") noter("eclat-du-compteur");
       // Le journal des paroles au montage de l'écran de fin : la phrase de fin ne peut être dite qu'après (elle attend les lectures).
       if (identifiant === "fin-de-seance" && !finsMarquees.has(element)) {
         finsMarquees.add(element);
@@ -249,7 +252,7 @@ export function installerLesFauxDeLaStory97(config: Configuration) {
       childList: true,
       characterData: true,
       attributes: true,
-      attributeFilter: ["data-retour", "data-reussite", "data-point-qui-vole", "data-etat", "data-apparue", "data-record"],
+      attributeFilter: ["data-retour", "data-reussite", "data-point-qui-vole", "data-etat", "data-apparue", "data-record", "data-questions-reussies", "data-eclat"],
     });
   }
 }
@@ -277,7 +280,7 @@ export async function configurer(page: Page, changement: Partial<Configuration>)
   }, { ...courante, retenir: [...courante.retenir] }).catch(() => undefined);
 }
 
-Before({ tags: "@issue-97 or @issue-102 or @issue-128 or @issue-163" }, async ({ page, $testInfo }) => {
+Before({ tags: "@issue-97 or @issue-102 or @issue-128 or @issue-163 or @issue-183" }, async ({ page, $testInfo }) => {
   // Le vrai profil de Léa, les séances jouées jusqu'à leur fin et les écrans de fin passent par le serveur.
   $testInfo.setTimeout(120_000);
   await page.addInitScript(installerLesFauxDeLaStory97, { ...configuration(page) });
@@ -287,7 +290,7 @@ Before({ tags: "@issue-97 or @issue-102 or @issue-128 or @issue-163" }, async ({
 // la fausse synthèse ne finit que sur demande. Avant ces gestes, Léa a donc attendu la fin de la parole.
 const GESTES_APRES_LA_PAROLE = ["Léa rejoue", "Léa ouvre « Mes médailles » depuis son accueil"];
 
-BeforeStep({ tags: "@issue-97 or @issue-102 or @issue-128 or @issue-163" }, async ({ page, $step }) => {
+BeforeStep({ tags: "@issue-97 or @issue-102 or @issue-128 or @issue-163 or @issue-183" }, async ({ page, $step }) => {
   if (GESTES_APRES_LA_PAROLE.includes($step.title.replace(/^(Étant donné que|Quand|Alors|Et que|Et|Mais) /, ""))) await laisserLaParoleFinir(page);
 });
 
@@ -344,9 +347,9 @@ export async function observer(page: Page): Promise<Observation> {
     const etat = Reflect.get(window, "__effets") as
       | { entrees: unknown[]; vu: string[]; annonces: string[]; marque: number; marqueParoles: number }
       | undefined;
-    const faux = Reflect.get(window, "__faux") as { journal: Array<{ type: string; texte: string }> } | undefined;
+    const faux = Reflect.get(window, "__faux") as { journal: Array<{ type: string; texte: string; nature: string | null }> } | undefined;
     if (!etat) return null;
-    const paroles = (faux?.journal ?? []).flatMap((entree, index) => entree.type === "speak" ? [{ index, texte: entree.texte }] : []);
+    const paroles = (faux?.journal ?? []).flatMap((entree, index) => entree.type === "speak" ? [{ index, texte: entree.texte, nature: entree.nature }] : []);
     return {
       entrees: JSON.parse(JSON.stringify(etat.entrees)),
       vu: [...etat.vu],
@@ -442,8 +445,9 @@ function sansParoleEnCours(effet: Entree): boolean {
   return !effet.paroleEnCours;
 }
 
-async function verifierLaNature(page: Page, nature: NatureAttendue) {
-  if (nature) await expect(bulleDuPersonnage(page)).toHaveAttribute("data-nature", nature);
+/** La nature de la bulle est celle qu'elle avait quand la parole a été dite (la scène a pu avancer depuis). */
+function verifierLaNature(natureDeLaParole: string | null | undefined, nature: NatureAttendue) {
+  if (nature) expect(natureDeLaParole, "nature de la bulle quand la parole est dite").toBe(nature);
 }
 
 async function verifierQueLaParoleEstCelleDeLaBulle(page: Page, parole: string) {
@@ -454,7 +458,7 @@ async function verifierQueLaParoleEstCelleDeLaBulle(page: Page, parole: string) 
 
 export async function effetPuisParole(page: Page, effets: readonly string[], nature: NatureAttendue, strict: boolean): Promise<Entree> {
   const fichiers = effets.map(fichierDe);
-  let trouve: { effet: Entree; parole: string } | undefined;
+  let trouve: { effet: Entree; parole: string; nature: string | null } | undefined;
   await attendre(page, (observation) => {
     const entrees = depuisLaMarque(observation);
     const debut = entrees.findIndex((_, rang) => fichiers.every((fichier, i) => entrees[rang + i]?.nom === fichier));
@@ -463,7 +467,7 @@ export async function effetPuisParole(page: Page, effets: readonly string[], nat
     const parole = paroleApres(observation, dernier);
     if (!parole) return false;
     if (strict && entrees.slice(debut + fichiers.length).some((entree) => entree.debut <= parole.index)) return false;
-    trouve = { effet: dernier, parole: parole.texte };
+    trouve = { effet: dernier, parole: parole.texte, nature: parole.nature };
     return true;
   });
   const observation = await observer(page);
@@ -471,7 +475,7 @@ export async function effetPuisParole(page: Page, effets: readonly string[], nat
   for (const entree of depuisLaMarque(observation).filter((candidat) => fichiers.includes(candidat.nom))) {
     expect(sansChevauchement(observation, entree) && sansParoleEnCours(entree), `l'effet « ${entree.nom} » joue seul, avant toute parole`).toBe(true);
   }
-  await verifierLaNature(page, nature);
+  verifierLaNature(trouve?.nature, nature);
   await verifierQueLaParoleEstCelleDeLaBulle(page, trouve?.parole ?? "");
   return effet;
 }
@@ -830,14 +834,6 @@ Then(/^aucune croix ni aucun rouge plein écran n'apparaît$/, async ({ page }) 
   });
   expect(intrus).toEqual([]);
   await expect(page.getByRole("alert")).toHaveCount(0);
-});
-
-Then(/^un point vole jusqu'au récipient$/, async ({ page }) => {
-  await expect.poll(async () => (await observer(page)).vu, { timeout: DELAI_DE_L_ATTENTE_MS }).toContain("point-qui-vole");
-});
-
-Then(/^aucun point ne vole jusqu'au récipient$/, async ({ page }) => {
-  await nePasVoir(page, /^point-qui-vole$/);
 });
 
 async function voirDesEtincelles(page: Page): Promise<void> {

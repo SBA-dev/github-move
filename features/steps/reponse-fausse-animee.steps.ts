@@ -1,6 +1,6 @@
 import { expect, type Page } from "@playwright/test";
 import { Before, Given, Then, When } from "./fixtures.ts";
-import { bulle, commencerSeulementLExercice, injecter, ouvrirLaPageDeLaLecon } from "./etapes-puis-exercices.steps.ts";
+import { bulle, commencerSeulementLExercice, injecter, ouvrirLaPageDeLaLecon, quitterLaSeanceParRetour } from "./etapes-puis-exercices.steps.ts";
 import {
   avancerJusquAuxChoix,
   bulleDeChoix,
@@ -182,7 +182,7 @@ export function installerLEnregistreurDeLaScene() {
   }).observe(document, { subtree: true, childList: true, attributes: true });
 }
 
-Before({ tags: "@issue-163" }, async ({ page }) => {
+Before({ tags: "@issue-163 or @issue-183" }, async ({ page }) => {
   await page.addInitScript(installerLEnregistreurDeLaScene);
 });
 
@@ -338,7 +338,7 @@ Given(/^Léa a vu la scène de réponse fausse de Coach Léo dans une séance te
 Given(/^Léa a vu la scène de réponse fausse de Coach Léo dans une séance quittée avant la fin, aujourd'hui$/, async ({ page }) => {
   await preparerLaQuestionDeTest(page);
   await repondreEtVoirLaScene(page, "8");
-  await page.getByRole("button", { name: "Retour", exact: true }).click();
+  await quitterLaSeanceParRetour(page);
   await expect(page.getByTestId("recipient")).toHaveCount(0);
 });
 
@@ -458,7 +458,7 @@ Then(/^la scène de réponse fausse s'arrête$/, async ({ page }) => {
 
 // --- Alors : le personnage guide à sa place
 
-Then(/^Coach Léo n'apparaît qu'une fois, à sa place, la bulle gardant ses paroles$/, async ({ page }) => {
+async function verifierQueLePersonnageGuideApparaitUneFoisAvecSesParoles(page: Page) {
   await attendreUneScene(page);
   const zone = zoneDuPersonnageGuide(page);
   await expect(zone).toHaveCount(1);
@@ -467,6 +467,16 @@ Then(/^Coach Léo n'apparaît qu'une fois, à sa place, la bulle gardant ses par
   await expect(bulle(page)).toBeVisible();
   await expect(bulle(page)).not.toHaveText("");
   await expect(page.getByRole("button", { name: "Réécouter", exact: true })).toBeVisible();
+}
+
+Then(/^Coach Léo n'apparaît qu'une fois, à sa place, la bulle gardant ses paroles$/, async ({ page }) => {
+  await verifierQueLePersonnageGuideApparaitUneFoisAvecSesParoles(page);
+});
+
+// #183 : il prend la place de la bulle de la consigne, et ses paroles restent lisibles à cet endroit.
+Then(/^Coach Léo n'apparaît qu'une fois, à la place de la bulle de la consigne, avec ses paroles$/, async ({ page }) => {
+  await verifierQueLePersonnageGuideApparaitUneFoisAvecSesParoles(page);
+  await expect(page.getByTestId("consigne")).toHaveCount(0);
 });
 
 // --- Alors : ce que Léa lit

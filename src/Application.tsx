@@ -88,6 +88,8 @@ function lieuAffiche(demande: Lieu, espaceParent: EtatDeLEspaceParent["type"], c
 
 export function Application() {
   const [defiEnCours, setDefiEnCours] = useState<Defi | GrandDefi | undefined>();
+  /** Tant que la séance affiche sa barre du haut (pas pendant le chargement, ni à l'écran de fin), elle tient lieu d'en-tête. */
+  const [barreDuHautDeSeanceAffichee, setBarreDuHautDeSeanceAffichee] = useState(false);
   const { lieu: lieuDemande, retourPossible, viaRetour, aller, remplacer, revenir, revenirA } = useNavigation();
   const acces = useAccesALEspaceParent();
   const connexion = useConnexion();
@@ -211,16 +213,18 @@ export function Application() {
         <TenueDuProfil profil={profil?.id}>
           <div className="application" style={habillage} data-univers={univers.cle} data-registre={parent ? "parent" : "enfant"}>
             {!parent && <Paysage univers={univers.cle} />}
-            <EnTete
-              surAccueil={ecran === "accueil"}
-              enfant={profil}
-              son={voix.son}
-              retourPossible={retourPossible && ecran !== "seance" && ecran !== "defi"}
-              onBasculerLeSon={voix.basculerLeSon}
-              onAccueil={() => aller("accueil")}
-              onRetour={revenir}
-              onEspaceParent={entrerDansLEspaceParent}
-            />
+            {!barreDuHautDeSeanceAffichee && (
+              <EnTete
+                surAccueil={ecran === "accueil"}
+                enfant={profil}
+                son={voix.son}
+                retourPossible={retourPossible && ecran !== "seance" && ecran !== "defi"}
+                onBasculerLeSon={voix.basculerLeSon}
+                onAccueil={() => aller("accueil")}
+                onRetour={revenir}
+                onEspaceParent={entrerDansLEspaceParent}
+              />
+            )}
             <ModeDys value={profil?.reglages.modeDys ?? false}>
               <main className="ecran" data-mode-dys={profil?.reglages.modeDys ? "true" : undefined}>
                 <div role="status" className="voix-bloquee">
@@ -364,6 +368,7 @@ export function Application() {
                       toutLireAVoixHaute={profilEnCours.reglages.toutLireAVoixHaute}
                       clavierDesDictees={profilEnCours.reglages.clavierDesDictees.valeur}
                       onRetour={() => revenirA({ ecran: "lecon", leconId: lieu.leconId })}
+                      onBarreDuHautAffichee={setBarreDuHautDeSeanceAffichee}
                       onLireLEpisode={(numero) => aller({ ecran: "episode", numero, origine: "fin-de-seance" })}
                       onLeconSuivante={(leconId) => aller({ ecran: "lecon", leconId })}
                       onReleverLeDefi={releverLeDefi}

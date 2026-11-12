@@ -1,12 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CIBLE_DE_LA_ZONE_DE_REPONSE, useRetourDe } from "../../retours/index.ts";
 import { useUnivers } from "../../univers/index.ts";
+import { usePauseOuverte } from "./PauseDeLaSeance.ts";
+import { ActionDeLExercice, useDansLaBarreDAction } from "./ActionDeLExercice.tsx";
 import { DessinDeLUnivers } from "./claviers/DessinDeLUnivers.tsx";
 import { dessinDuCristal } from "./claviers/dessins-des-claviers.ts";
 import { EclatDeLaTouche } from "./claviers/EclatDeLaTouche.tsx";
 
 const CHIFFRES_AU_PLUS = 4;
 const DUREE_DE_L_ECLAT_MS = 200;
+const DUREE_DU_RETOUR_MS = 500;
 const EFFACER = "effacer";
 const CHIFFRES = ["1", "2", "3", "4", "5", "6", "7", "8", "9"] as const;
 
@@ -68,6 +71,20 @@ function useEclat() {
   return { toucheEclatante, eclater };
 }
 
+/** « Valider » reste monté, désactivé, le temps que son rebond se joue (350 ms au plus), puis il se retire de la barre d'action. */
+function useValiderMonte(desactive: boolean): boolean {
+  const [monte, setMonte] = useState(!desactive);
+  useEffect(() => {
+    if (!desactive) {
+      setMonte(true);
+      return;
+    }
+    const minuterie = setTimeout(() => setMonte(false), DUREE_DU_RETOUR_MS);
+    return () => clearTimeout(minuterie);
+  }, [desactive]);
+  return monte;
+}
+
 /** Les touches du clavier physique : chiffres, Retour arrière, Entrée (sauf sur un bouton, qui reçoit déjà Entrée). */
 function useClavierPhysique(actif: boolean, taper: (chiffre: string) => void, effacer: () => void, valider: () => void) {
   useEffect(() => {
@@ -90,13 +107,16 @@ export function ClavierDeCristaux({ onValider, chiffresQuiBrillent = [], desacti
   const { saisie, taper, effacer, valider } = useSaisie(onValider);
   const { toucheEclatante, eclater } = useEclat();
   const univers = useUnivers();
+  const dansLaBarre = useDansLaBarreDAction();
+  const validerMonte = useValiderMonte(desactive);
   const taperAvecEclat = useCallback((chiffre: string) => {
     if (taper(chiffre)) eclater(chiffre);
   }, [taper, eclater]);
   const effacerAvecEclat = useCallback(() => {
     if (effacer()) eclater(EFFACER);
   }, [effacer, eclater]);
-  useClavierPhysique(!desactive, taperAvecEclat, effacerAvecEclat, valider);
+  const enPause = usePauseOuverte();
+  useClavierPhysique(!desactive && !enPause, taperAvecEclat, effacerAvecEclat, valider);
   /** La réponse est validée par « Valider » : c'est lui qui rebondit ou se balance. */
   const retour = useRetourDe<HTMLButtonElement>(CIBLE_DE_LA_ZONE_DE_REPONSE);
   const touche = (chiffre: string) => (
@@ -116,6 +136,20 @@ export function ClavierDeCristaux({ onValider, chiffresQuiBrillent = [], desacti
       {toucheEclatante === chiffre && <EclatDeLaTouche />}
     </button>
   );
+  const boutonValider = (
+    <button
+      ref={retour.ref}
+      type="button"
+      className={dansLaBarre ? undefined : "cristal action valider"}
+      data-testid="valider"
+      data-donne-une-reponse="true"
+      {...retour.attributs}
+      aria-disabled={desactive ? true : undefined}
+      onClick={() => !desactive && valider()}
+    >
+      Valider
+    </button>
+  );
   return (
     <div className="clavier-de-cristaux" role="group" aria-label="Clavier de cristaux" data-testid="clavier-de-cristaux">
       <output className="nombre-tape" aria-label="Nombre tapé" data-testid="nombre-tape">{saisie}</output>
@@ -133,19 +167,9 @@ export function ClavierDeCristaux({ onValider, chiffresQuiBrillent = [], desacti
           {toucheEclatante === EFFACER && <EclatDeLaTouche />}
         </button>
         {touche("0")}
-        <button
-          ref={retour.ref}
-          type="button"
-          className="cristal action valider"
-          data-testid="valider"
-          data-donne-une-reponse="true"
-          {...retour.attributs}
-          aria-disabled={desactive ? true : undefined}
-          onClick={() => !desactive && valider()}
-        >
-          Valider
-        </button>
+        {!dansLaBarre && boutonValider}
       </div>
+      {dansLaBarre && validerMonte && <ActionDeLExercice>{boutonValider}</ActionDeLExercice>}
     </div>
   );
 }

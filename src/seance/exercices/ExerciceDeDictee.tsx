@@ -1,8 +1,10 @@
 import type { CorrectionDuMot, QuestionDeDictee } from "@domain/apprentissage";
 import { LIBELLE_DU_BOUTON_ACTIVER_LE_SON } from "@domain/apprentissage";
 import { TexteEnSyllabes } from "../../reglages/index.ts";
+import { ActionDeLExercice } from "./ActionDeLExercice.tsx";
 import { CasesDeLaDictee } from "./CasesDeLaDictee.tsx";
 import { ClavierDeLaDictee } from "./ClavierDeLaDictee.tsx";
+import { usePauseOuverte } from "./PauseDeLaSeance.ts";
 import { useClavierPhysique } from "./useClavierPhysique.ts";
 
 type Props = {
@@ -25,7 +27,8 @@ type Props = {
 
 export function ExerciceDeDictee(props: Props) {
   const { question, lettresFausses, reussie, messageSansVoix, sonCoupe } = props;
-  useClavierPhysique(question !== undefined && !reussie, props.onTaper, props.onEffacer);
+  const enPause = usePauseOuverte();
+  useClavierPhysique(question !== undefined && !reussie && !enPause, props.onTaper, props.onEffacer);
   if (!question) return null;
   return (
     <div className="dictee" data-testid="dictee">
@@ -51,9 +54,11 @@ export function ExerciceDeDictee(props: Props) {
       </button>
       <ClavierDeLaDictee question={question} toucheQuiBrille={props.toucheQuiBrille} onTaper={props.onTaper} onEffacer={props.onEffacer} />
       {!question.bonneReponseMontree && !reussie && (
-        <button type="button" className="je-ne-sais-pas" data-testid="je-ne-sais-pas" onClick={props.onJeNeSaisPas}>
-          Je ne sais pas
-        </button>
+        <ActionDeLExercice>
+          <button type="button" className="je-ne-sais-pas" data-testid="je-ne-sais-pas" onClick={props.onJeNeSaisPas}>
+            Je ne sais pas
+          </button>
+        </ActionDeLExercice>
       )}
     </div>
   );

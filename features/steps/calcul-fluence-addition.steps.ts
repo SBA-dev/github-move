@@ -32,12 +32,12 @@ import { attendreUneLecture, journal, laisserPasserLeDelaiDeLecture, normaliser,
 // Fluence : la durée passe en figeant l'horloge du navigateur (page.clock.setFixedTime), jamais en attendant 45 s.
 // Les leçons de test sont ajoutées à la réponse de /bibliotheque.json par le navigateur du test (voir #16).
 
-const { Given, When, Then } = createBdd(test, { tags: "@issue-20 or @issue-65 or @issue-127 or @issue-128" });
+const { Given, When, Then } = createBdd(test, { tags: "@issue-20 or @issue-65 or @issue-127 or @issue-128 or @issue-183" });
 // #128 joue aussi la fluence seule d'une séance (« Léa joue seulement l'exercice ») : son étape « le temps de la fluence est écoulé »
 // est celle de #97, qui démarre la partie d'abord.
 const { When: WhenSansLa128 } = createBdd(test, { tags: "@issue-20 or @issue-65 or @issue-127" });
 // #163 réutilise trois étapes de l'addition posée (le personnage guide qui réfléchit sans scène quand il est trop petit).
-const { Given: GivenAvecLa163, When: WhenAvecLa163 } = createBdd(test, { tags: "@issue-20 or @issue-65 or @issue-127 or @issue-128 or @issue-163" });
+const { Given: GivenAvecLa163, When: WhenAvecLa163 } = createBdd(test, { tags: "@issue-20 or @issue-65 or @issue-127 or @issue-128 or @issue-163 or @issue-183" });
 
 type Acteur = "Léa" | "Tom" | "Nina";
 type Exercice = Record<string, unknown>;
@@ -256,8 +256,13 @@ export async function taperLesChiffres(page: Page, chiffres: string, force = fal
   for (const chiffre of chiffres) await clavier(page).getByRole("button", { name: chiffre, exact: true }).click({ force });
 }
 
+/** « Valider » : dans la barre d'action en séance de leçon (#183), dans le clavier en révision, défi et test de départ. */
+export function boutonValider(page: Page) {
+  return page.getByTestId("valider");
+}
+
 export async function valider(page: Page, force = false): Promise<void> {
-  await clavier(page).getByRole("button", { name: "Valider", exact: true }).click({ force });
+  await boutonValider(page).click({ force });
 }
 
 export async function repondreAuNombre(page: Page, nombre: number | string): Promise<void> {
@@ -389,8 +394,19 @@ Then(/^Tom voit le clavier de cristaux, avec les chiffres de 0 à 9, « Effacer 
   await expect(clavier(page)).toBeVisible();
   await expect(page.getByTestId("cristal")).toHaveText(["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]);
   await expect(clavier(page).getByRole("button", { name: "Effacer", exact: true })).toBeVisible();
-  await expect(clavier(page).getByRole("button", { name: "Valider", exact: true })).toBeVisible();
+  await expect(boutonValider(page)).toBeVisible();
 });
+
+Then(
+  /^Tom voit le clavier de cristaux, avec les chiffres de 0 à 9 et « Effacer », et « Valider » dans la barre d'action$/,
+  async ({ page }) => {
+    await expect(clavier(page)).toBeVisible();
+    await expect(page.getByTestId("cristal")).toHaveText(["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]);
+    await expect(clavier(page).getByRole("button", { name: "Effacer", exact: true })).toBeVisible();
+    await expect(clavier(page).getByTestId("valider"), "« Valider » n'est plus dans le clavier").toHaveCount(0);
+    await expect(page.getByTestId("barre-d-action").getByRole("button", { name: "Valider", exact: true })).toBeVisible();
+  },
+);
 
 Then(/^aucun choix n'est proposé$/, async ({ page }) => {
   await expect(choixDeLaQuestion(page)).toHaveCount(0);
@@ -398,7 +414,7 @@ Then(/^aucun choix n'est proposé$/, async ({ page }) => {
 });
 
 Given(
-  /^Tom en est au calcul « ([^«»]+) » d'une leçon de test de niveau (CP|CE1)$/,
+  /^Tom(?:, de niveau (?:CP|CE1),)? en est au calcul « ([^«»]+) » d'une leçon de test de niveau (CP|CE1)$/,
   async ({ page, monde }, enonce: string, niveau: string) => {
     partie20(page).acteur = "Tom";
     preparerUnExercice(page, monde, exerciceDeCalcul([{ q: enonce, r: calculer(enonce) }]), niveau);
@@ -699,7 +715,9 @@ When(/^Léa donne une bonne réponse$/, async ({ page }) => {
   const carte = await lireLaCarte(page);
   const nombre = String(resultatDeLaCarte(partie20(page).lecon, carte));
   await taperLesChiffres(page, nombre, true);
-  await valider(page, true);
+  // Après la fin du temps, la barre d'action (et son « Valider ») a disparu : l'enfant n'a plus rien à toucher.
+  // Si « Valider » est encore là, on le touche vraiment : c'est alors à l'application de ne rien prendre en compte.
+  if (await boutonValider(page).count() > 0) await valider(page, true);
 });
 
 // --- Les records : de vrais profils enfants, des records écrits par l'Edge Function ou préparés, lus sous RLS
@@ -1029,8 +1047,10 @@ Then(/^chacune des ([0-9]+) additions a une retenue dans la colonne des unités$
 // =====================================================================================================
 
 Then(/^chaque touche du clavier de cristaux mesure au moins 44 px de haut et de large$/, async ({ page }) => {
-  const touches = await clavier(page).getByRole("button").all();
-  expect(touches).toHaveLength(12);
+  const dansLeClavier = await clavier(page).getByRole("button").all();
+  const valideDansLeClavier = (await clavier(page).getByTestId("valider").count()) > 0;
+  const touches = valideDansLeClavier ? dansLeClavier : [...dansLeClavier, boutonValider(page)];
+  expect(touches, "0 à 9, « Effacer » et « Valider », où qu'il soit").toHaveLength(12);
   for (const touche of touches) {
     const boite = await touche.boundingBox();
     const nom = await touche.textContent();

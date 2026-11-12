@@ -1,4 +1,5 @@
 import type { CalculEnCours } from "@domain/apprentissage";
+import { ActionDeLExercice } from "./ActionDeLExercice.tsx";
 import { ChoixDeLaQuestion } from "./ChoixDeLaQuestion.tsx";
 import { ClavierDeCristaux } from "./ClavierDeCristaux.tsx";
 
@@ -42,9 +43,11 @@ export function ReponseAuCalcul({ calcul, reussi, onChoisir, onValider, onJeNeSa
           />
         )}
       {calcul.jeNeSaisPasPropose && !reussi && (
-        <button type="button" className="je-ne-sais-pas" data-testid="je-ne-sais-pas" onClick={onJeNeSaisPas}>
-          Je ne sais pas
-        </button>
+        <ActionDeLExercice>
+          <button type="button" className="je-ne-sais-pas" data-testid="je-ne-sais-pas" onClick={onJeNeSaisPas}>
+            Je ne sais pas
+          </button>
+        </ActionDeLExercice>
       )}
     </>
   );

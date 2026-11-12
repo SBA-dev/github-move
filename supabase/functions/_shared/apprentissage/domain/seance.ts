@@ -178,6 +178,10 @@ export class Seance {
     return new Avancement(reussies, total);
   }
 
+  aRecuUneReponse(): boolean {
+    return this.questions().some((question) => question.reponses().length > 0);
+  }
+
   estFinie(): boolean {
     return this.indexDeLExercice >= this.exercices.length;
   }

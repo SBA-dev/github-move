@@ -34,7 +34,7 @@ import { useMemorisation } from "./exercices/useMemorisation.ts";
 import { useQuestionFigee } from "./exercices/useQuestionFigee.ts";
 import { useQuestionsAChoix } from "./exercices/useQuestionsAChoix.ts";
 import { type Horloge, horlogeDuNavigateur } from "./horloge.ts";
-import { type ParoleADire, usePersonnageQuiParle } from "./usePersonnageQuiParle.ts";
+import { estUneReactionDuPersonnageGuide, type ParoleADire, usePersonnageQuiParle } from "./usePersonnageQuiParle.ts";
 
 const PAUSE_ENTRE_DEUX_PAROLES_MS = 400;
 const PAUSE_AVEC_MOUVEMENTS_REDUITS_MS = 150;
@@ -54,6 +54,7 @@ export function useDeroulementDeSeance(
   personnageGuide: PersonnageGuide,
   toutLireAVoixHaute: boolean,
   prenom: string,
+  attendreLaFinDeLaPause: () => Promise<void>,
   horloge: Horloge = horlogeDuNavigateur,
 ) {
   const personnage = usePersonnageQuiParle(voix);
@@ -73,7 +74,7 @@ export function useDeroulementDeSeance(
     [],
   );
 
-  const reussite = useQuestionFigee(seance, personnage.paroleEntendue);
+  const reussite = useQuestionFigee(seance, personnage.paroleEntendue, attendreLaFinDeLaPause);
   const questions = useQuestionsAChoix({
     seance,
     lecon,
@@ -207,13 +208,6 @@ export function useDeroulementDeSeance(
     if (numero === sequence.current) await presenterLaQuestionDeLExercice(numero);
   }, [commencerLaPresentation, lireLaConsigneDeLExercice, presenterLaQuestionDeLExercice]);
 
-  /** Dit seulement la consigne : la question reste posée. Sans effet pendant la présentation de l'exercice. */
-  const relireLaConsigne = useCallback(() => {
-    const consigne = consigneDeLExercice();
-    if (consigne === undefined || presentationEnCours() || reussite.estFigee.current) return;
-    void dire({ texte: consigne, nature: "consigne" });
-  }, [consigneDeLExercice, presentationEnCours, reussite.estFigee, dire]);
-
   const direLeFait = useCallback((fait: FaitDeSeance): Promise<boolean> => {
     if (fait.type === "EtapesDeLeconFinies") {
       const invitation = inviterAJouerApresLesEtapes(hasardDuNavigateur);
@@ -321,17 +315,33 @@ export function useDeroulementDeSeance(
     if (monPlacement === dernierPlacement.current) await apresUnPlacement();
   }, [placerUneEtiquette, enchainerSurLExercice, apresUnPlacement]);
 
+  /** Relit la consigne, puis la question quand elle se relit par la lecture existante (choix, boîte, barres). */
+  const relireLaConsigneEtLaQuestion = useCallback(async (consigne: string) => {
+    const numero = ++sequence.current;
+    if (!(await dire({ texte: consigne, nature: "consigne" })) || numero !== sequence.current) return;
+    if (!relireLaPresentation()) relireLaQuestion();
+  }, [dire, relireLaPresentation, relireLaQuestion]);
+
+  const nature = personnage.parole?.nature;
+  /** Le personnage guide est montré à la place de la consigne tant qu'il dit autre chose que la consigne ou la question. */
+  const personnageGuideReagit = estUneReactionDuPersonnageGuide(nature) && (personnage.enParole || reussite.figee !== undefined);
+
   const reecouter = useCallback(() => {
     if (reussite.figee) return;
-    if (presentationEnCours() && personnage.parole?.nature === "consigne") {
+    if (presentationEnCours() && nature === "consigne") {
       void ouvrirLExercice(++sequence.current);
       return;
     }
-    if (personnage.parole?.nature === "question" && (relireLaPresentation() || relireLaQuestion())) return;
+    const consigne = consigneDeLExercice();
+    if (!personnageGuideReagit && consigne !== undefined) {
+      if (!presentationEnCours()) void relireLaConsigneEtLaQuestion(consigne);
+      return;
+    }
+    if (nature === "question" && (relireLaPresentation() || relireLaQuestion())) return;
     if (relireLeTexte() || memorisation.reecouter()) return;
     sequence.current++;
     relire();
-  }, [reussite.figee, presentationEnCours, ouvrirLExercice, personnage.parole, relireLaPresentation, relireLaQuestion, relireLeTexte, memorisation.reecouter, relire]);
+  }, [reussite.figee, presentationEnCours, ouvrirLExercice, nature, personnageGuideReagit, consigneDeLExercice, relireLaConsigneEtLaQuestion, relireLaPresentation, relireLaQuestion, relireLeTexte, memorisation.reecouter, relire]);
 
   const { parolesDeFin: parolesDeFinDeLaFluence, issueDuRecord } = fluence;
   /** Une fluence seule a déjà dit ses paroles de fin : elles sont reprises avec ce que la séance a fait gagner. Sans épisode ni quête accomplie, seuls les effets de la fin sont joués. */
@@ -364,7 +374,7 @@ export function useDeroulementDeSeance(
     faireSilence();
   }, [faireSilence, reussite.continuer]);
 
-  const { parole, rangDuMotPrononce, humeur } = personnage;
+  const { parole, rangDuMotPrononce, humeur, gesteMuet } = personnage;
   const { figee, avancementAnnonce } = reussite;
   const {
     choixVisiblesPour,
@@ -380,6 +390,7 @@ export function useDeroulementDeSeance(
     parole,
     rangDuMotPrononce,
     humeur,
+    gesteMuet,
     retour,
     figee,
     choixVisiblesPour,
@@ -426,7 +437,7 @@ export function useDeroulementDeSeance(
     jeNeSaisPasDeLAddition,
     demarrerLaFluence,
     relireLaPhrase,
-    relireLaConsigne,
+    personnageGuideReagit,
     presentationEnCours: presentationAffichee && presentationEnCours(),
     enfantAttendu: reussite.enfantAttendu,
     continuerApresLaReussite: reussite.continuer,

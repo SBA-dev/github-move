@@ -76,27 +76,30 @@ Fonctionnalité: La consigne d'un exercice reste visible pendant tout l'exercice
       Et Léa voit la consigne « Touche le bon nombre. »
       Et Léa voit la question « Combien font 2 + 1 ? »
 
-  Règle: La consigne reste visible jusqu'à la fin de l'exercice, quoi que dise le personnage guide
+  Règle: La consigne reste jusqu'à la fin de l'exercice ; quand le personnage guide réagit, elle revient dès qu'il a fini
 
-    Scénario: En Muet, la consigne d'un exercice classer reste visible après une étiquette bien posée
+    @issue-183
+    Scénario: En Muet, la consigne d'un exercice classer revient après une étiquette bien posée
       Étant donné que la tablette est en Muet
       Et que Léa joue seulement l'exercice « Les maisons des sons » de la leçon « Les sons ou, on, an »
       Quand Léa pose l'étiquette « loup » dans la maison « ou »
       Alors l'étiquette « loup » reste dans la maison « ou »
-      Et Léa voit la consigne « Range chaque mot dans la maison de son son. »
+      Et ensuite, Léa voit de nouveau la consigne « Range chaque mot dans la maison de son son. »
 
-    Scénario: En Muet, la consigne d'un exercice ordre reste visible après une erreur
+    @issue-183
+    Scénario: En Muet, la consigne d'un exercice ordre revient après une erreur
       Étant donné que la tablette est en Muet
       Et que Léa joue seulement l'exercice « Le mot en morceaux » de la leçon « Les syllabes »
       Quand Léa pose l'étiquette « mi »
       Alors l'étiquette « mi » revient parmi les étiquettes à poser
-      Et Léa voit la consigne « Remets les syllabes dans l'ordre pour écrire « domino ». »
+      Et ensuite, Léa voit de nouveau la consigne « Remets les syllabes dans l'ordre pour écrire « domino ». »
 
-    Scénario: Avec la voix, la consigne reste visible pendant l'encouragement du personnage guide
+    @issue-183
+    Scénario: Avec la voix, la consigne revient après l'encouragement du personnage guide
       Étant donné que Léa joue seulement l'exercice « Les maisons des sons » de la leçon « Les sons ou, on, an »
       Quand Léa pose l'étiquette « loup » dans la maison « on »
       Alors Noisette dit un encouragement, suivi de « « loup » n'habite pas dans la maison « on ». Essaie une autre maison. »
-      Et Léa voit la consigne « Range chaque mot dans la maison de son son. »
+      Et ensuite, Léa voit de nouveau la consigne « Range chaque mot dans la maison de son son. »
 
     Scénario: Au début de l'exercice suivant, sa consigne remplace celle de l'exercice fini
       Étant donné que la tablette est en Muet

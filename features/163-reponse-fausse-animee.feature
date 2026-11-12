@@ -50,13 +50,13 @@ Fonctionnalité: Une réponse fausse animée par le personnage guide
 
   Règle: À la première réponse fausse de la séance, le personnage guide joue sa scène de réponse fausse, en plus du son « réponse fausse » et de l'encouragement ; la même question reste posée (nouvelle chance)
 
-    @livraison-163a
+    @livraison-163a @issue-183
     Scénario: À la première réponse fausse de la séance, Coach Léo joue sa scène de réponse fausse et encourage Léa
       Étant donné que Léa joue la question de test « Combien font 3 + 4 ? »
       Quand Léa répond « 8 »
       Alors Léa entend l'effet sonore « réponse fausse », puis Coach Léo dit un encouragement
       Et Coach Léo joue sa scène de réponse fausse : le ballon rebondit sur un petit poteau et revient rouler à ses pieds
-      Et Coach Léo n'apparaît qu'une fois, à sa place, la bulle gardant ses paroles
+      Et Coach Léo n'apparaît qu'une fois, à la place de la bulle de la consigne, avec ses paroles
       Et la question « Combien font 3 + 4 ? » reste posée
 
     @livraison-163a
@@ -240,13 +240,13 @@ Fonctionnalité: Une réponse fausse animée par le personnage guide
 
   Règle: La scène de réponse fausse ne change rien à l'apprentissage : la même erreur est comptée, les étoiles, l'avancement de la séance et le parcours sont les mêmes que sans elle
 
-    @livraison-163a
-    Scénario: Une réponse fausse avec la scène ne fait voler aucun point et ne change pas l'avancement de la séance
+    @livraison-163a @issue-183
+    Scénario: Une réponse fausse avec la scène ne fait pas avancer la barre de progression et ne change pas l'avancement de la séance
       Étant donné que Léa joue la séance complète de la leçon « Les sons ou, on, an »
       Et que Léa en est à la question « Dans le mot « poule », quel son entends-tu ? »
       Quand Léa répond « on »
       Alors Coach Léo joue sa scène de réponse fausse
-      Et aucun point ne vole jusqu'au récipient
+      Et la barre de progression n'avance pas
       Et l'avancement de la séance montre toujours 0 question réussie sur 15
 
     # Danse : Lili n'a sa scène qu'à partir de la livraison 163b ; avant comme après, les étoiles sont les mêmes

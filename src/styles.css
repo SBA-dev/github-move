@@ -987,26 +987,16 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 /* Addition posée sur téléphone : l'écran de 360 × 740 montre les trois maisons, les chiffres à poser et « Je ne sais pas » sans défiler (#127).
    Les éléments de la séance se rangent côte à côte quand ils tiennent, au lieu d'une pile ; l'ordre du focus ne change pas ; seule la bulle passe visuellement après « Réécouter ». */
 @media (max-width: 480px) {
-  .en-tete:has(~ .ecran .addition-posee) { padding-block: 4px; gap: 4px; }
-  .en-tete:has(~ .ecran .addition-posee) .outils { gap: 4px 8px; }
   .ecran:has(.addition-posee) { padding-top: 4px; }
   .seance:has(.addition-posee) { --epaisseur-du-contour: 2px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 8px; }
   .seance:has(.addition-posee) > * { max-width: 100%; }
-  .seance:has(.addition-posee) .entete-de-seance { flex: 1 1 100%; flex-wrap: nowrap; justify-content: flex-start; gap: 8px; }
-  .seance:has(.addition-posee) .entete-de-seance > div { display: grid; justify-items: start; gap: 2px; text-align: left; line-height: 1.2; }
-  .seance:has(.addition-posee) :is(h2, [data-testid="niveau-et-matiere"]) { padding: 0 8px; }
-  .seance:has(.addition-posee) h2 { font-size: 1.1rem; }
-  .seance:has(.addition-posee) [data-testid="niveau-et-matiere"] { font-size: .8rem; }
-  .seance:has(.addition-posee) .recipient { order: 1; padding: 4px 10px; }
-  .seance:has(.addition-posee) .reecouter { order: 2; }
+  .seance:has(.addition-posee) .barre-du-haut-de-seance { flex: 1 1 100%; }
   .seance:has(.addition-posee) .guide-et-parole { order: 3; flex: 1 1 100%; flex-wrap: nowrap; justify-content: flex-start; gap: 8px; }
   .seance:has(.addition-posee) .guide-et-parole .bulle { flex: 1 1 auto; min-width: 0; padding: 4px 10px; font-size: 1rem; line-height: 1.3; text-align: left; }
-  .seance:has(.addition-posee) :is(.consigne-de-l-exercice, .exercice-en-cours) { order: 4; }
-  .seance:has(.addition-posee) .recipient .point { width: 10px; height: 10px; }
-  .seance:has(.addition-posee) .recipient .compte { display: none; }
+  .seance:has(.addition-posee) .exercice-en-cours { order: 4; }
   .seance:has(.addition-posee) .guide-et-parole .personnage-guide { width: 40px; }
   .seance:has(.addition-posee) .consigne { padding: 4px 10px; font-size: 1rem; line-height: 1.3; }
-  .seance:has(.addition-posee) :is(.consigne-de-l-exercice, .exercice-en-cours) { flex: 1 1 100%; }
+  .seance:has(.addition-posee) .exercice-en-cours { flex: 1 1 100%; }
   .addition-posee { width: 100%; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 8px; }
   .addition-posee .operation-posee { padding: 0 12px; font-size: 1.25rem; }
   .addition-posee .colonnes { flex: 1 1 100%; }
@@ -1016,7 +1006,6 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
   .addition-posee .invite-de-pose { flex: 1 1 100%; padding: 0 12px; }
   .addition-posee .chiffres-a-poser { flex-wrap: nowrap; gap: 6px; }
   .addition-posee .chiffre-a-poser { padding: 4px 12px; font-size: 1.5rem; }
-  .addition-posee .je-ne-sais-pas { padding: 6px 12px; }
 }
 
 /* Boîte à jetons sur téléphone : la boîte fermée, les choix et « Je ne sais pas » tiennent dans l'écran de 360 px (#131). Seules les marges et le personnage guide se resserrent ; la boîte garde la taille de son dessin. */
@@ -1149,7 +1138,6 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 /* Consigne de l'exercice : une place à elle, visible pendant tout l'exercice (#79) */
 .consigne-de-l-exercice { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 12px; max-width: 100%; }
 .consigne-de-l-exercice .consigne { overflow-wrap: anywhere; max-width: 100%; }
-.relire-la-consigne[aria-disabled="true"] { opacity: .45; cursor: default; }
 .continuer-apres-la-reussite { min-width: 44px; }
 /* Suivi de l'espace parent : une colonne, tout passe à la ligne, aucune largeur fixe (360 px sans défilement horizontal). */
 .suivi-de-l-espace-parent {
@@ -1435,3 +1423,178 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
   .petit-train[data-etat="avance"] { animation: a-coup-du-petit-train .3s ease-in-out; }
 }
 @keyframes a-coup-du-petit-train { 50% { translate: 6px 0; } }
+
+/* ===== Écran de séance de leçon (#183) : barre du haut, barre de progression, feuille de pause =====
+   L'en-tête de l'application (.en-tete) n'est pas rendu pendant les questions : ses styles ne sont pas touchés ici. */
+
+/* --- BarreDuHautDeSeance : Retour | nom de la leçon | Son, puis l'avancement sur toute la largeur. */
+.application:has(.barre-du-haut-de-seance) .ecran { padding-top: 0; }
+.barre-du-haut-de-seance {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 4px 8px;
+  justify-self: stretch;
+  /* Pleine largeur de l'écran : on annule le remplissage de .ecran pour laisser la place au nom de la leçon. */
+  margin-inline: calc(-1 * max(16px, env(safe-area-inset-left))) calc(-1 * max(16px, env(safe-area-inset-right)));
+  padding: max(8px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) 6px max(8px, env(safe-area-inset-left));
+  border: 0;
+  border-bottom: 2px solid var(--contour);
+  border-radius: 0 0 var(--rayon) var(--rayon);
+  background: var(--surface-dense);
+}
+.barre-du-haut-de-seance .retour-de-la-seance { padding: 8px; }
+.barre-du-haut-de-seance h2,
+.seance .barre-du-haut-de-seance h2 {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+  background: none;
+  color: var(--principale);
+  font-size: clamp(.95rem, 4.4vw, 1.2rem);
+  line-height: 1.2;
+  text-align: center;
+  overflow-wrap: normal;
+  hyphens: none;
+  text-wrap: balance;
+}
+.barre-du-haut-de-seance > button[data-son] { padding: 8px 10px; font-size: .95rem; }
+[data-mode-dys="true"] .barre-du-haut-de-seance h2 { font-size: clamp(.8rem, 3.6vw, 1rem); line-height: 1.25; letter-spacing: .02em; word-spacing: .12em; }
+[data-mode-dys="true"] .barre-du-haut-de-seance > button[data-son] { padding: 8px; font-size: .8rem; }
+
+/* --- BarreDeProgressionDeLaSeance : fine barre continue, compteur dans une pastille dessous. */
+.progression-de-la-seance { grid-column: 1 / -1; display: grid; justify-items: center; gap: 2px; }
+.piste-de-la-seance {
+  width: 100%;
+  height: 8px;
+  overflow: hidden;
+  border: 2px solid var(--contour);
+  border-radius: 999px;
+  background: var(--surface);
+}
+.remplissage-de-la-seance {
+  width: calc(var(--avancement) * 100%);
+  height: 100%;
+  border-radius: 999px;
+  background: var(--principale);
+  transition: width .4s ease-out;
+}
+.compteur-de-la-seance {
+  padding: 0 12px;
+  border: 2px solid var(--contour);
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: .9rem;
+  font-weight: 700;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+}
+[data-mode-dys="true"] .compteur-de-la-seance { line-height: 1.5; }
+.compteur-de-la-seance[data-eclat="true"] { animation: eclat-du-compteur .6s ease-out; }
+@keyframes eclat-du-compteur {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 var(--principale); background: var(--surface); }
+  40% { transform: scale(1.25); box-shadow: 0 0 0 6px color-mix(in srgb, var(--principale) 45%, transparent); background: var(--principale); color: var(--sur-principale); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 transparent; background: var(--surface); }
+}
+
+/* --- FeuilleDePause : voile sur tout l'écran, feuille posée en bas, sans glissement avec les mouvements réduits. */
+.voile-de-la-pause {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+  background: color-mix(in srgb, var(--contour) 55%, transparent);
+}
+.feuille-de-pause {
+  display: grid;
+  gap: 12px;
+  width: min(100%, 28rem);
+  max-height: 100%;
+  overflow-y: auto;
+  padding: 16px;
+  border: var(--epaisseur-du-contour) solid var(--contour);
+  border-radius: var(--rayon-grand);
+  background: var(--surface);
+  text-align: center;
+  animation: feuille-de-pause-qui-monte .3s ease-out;
+}
+.feuille-de-pause h3 { margin: 0; font-size: 1.4rem; overflow-wrap: normal; hyphens: none; }
+.feuille-de-pause button { width: 100%; }
+.feuille-de-pause .retour-a-la-lecon { color: var(--texte); background: var(--surface); }
+.feuille-de-pause .retour-a-la-lecon:hover { background: var(--fond-doux); }
+@keyframes feuille-de-pause-qui-monte {
+  from { transform: translateY(40px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .remplissage-de-la-seance { transition: none; }
+  .compteur-de-la-seance, .feuille-de-pause { animation: none; }
+}
+
+/* --- Bulle de la séance de leçon : la consigne seule sur toute la largeur, avec « Réécouter » ; le personnage guide prend la place de la bulle quand il réagit (#183). */
+.parole-et-reecouter { position: relative; display: flex; align-items: center; gap: 8px; flex: 1 1 12rem; min-width: 0; max-width: 100%; }
+.texte-de-la-bulle { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: stretch; gap: 8px; }
+.texte-de-la-bulle > .bulle { overflow-wrap: anywhere; }
+/* Vide, la zone qui annonce la consigne reste dans la page mais ne prend aucune place. */
+.texte-de-la-bulle > .consigne-de-l-exercice:empty { position: absolute; width: 0; height: 0; overflow: hidden; }
+.parole-et-reecouter .consigne { width: 100%; box-sizing: border-box; text-align: center; }
+.reecouter-rond { flex: none; display: grid; place-items: center; width: 48px; height: 48px; padding: 0; border-radius: 50%; }
+.reecouter-rond svg { display: block; }
+@keyframes apparition-du-personnage-guide {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .guide-et-parole .personnage-guide { animation: apparition-du-personnage-guide .25s ease-out; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .guide-et-parole .personnage-guide { animation: none; }
+}
+
+/* Pendant les questions, les blocs de la séance sont plus serrés : l'exercice commence au plus à 200 px du haut d'un écran de 360 × 740. */
+.seance:where(:has(.barre-du-haut-de-seance)) { gap: 6px; }
+
+/* --- Barre d'action (#183) : le bouton principal (Valider, Continuer…) toujours au même endroit, en bas, sous le pouce, et « Je ne sais pas » à côté, plus discret.
+   Elle n'apparaît que s'il y a au moins un bouton. Les exercices y posent leurs boutons par portail (ActionDeLExercice). */
+/* Le contenu de la séance (inerte pendant la pause) ne change pas la mise en page : ses blocs restent les enfants de la grille de la séance. */
+.contenu-de-la-seance { display: contents; }
+.application:has(.barre-d-action button) .seance { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
+.barre-d-action {
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px 12px;
+  padding: 8px max(12px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+  border-top: 2px solid var(--contour);
+  background: var(--surface-dense);
+}
+.barre-d-action:not(:has(button)) { display: none; }
+.emplacement-de-la-barre-d-action { display: contents; }
+.barre-d-action button {
+  order: 2;
+  flex: 1 1 9rem;
+  max-width: 20rem;
+  min-height: 52px;
+  padding-block: 8px;
+  overflow-wrap: normal;
+  hyphens: none;
+  white-space: normal;
+}
+.barre-d-action .je-ne-sais-pas { order: 1; flex: 0 1 auto; }
+@media (prefers-reduced-motion: no-preference) {
+  .barre-d-action { animation: barre-d-action-qui-monte .25s ease-out; }
+}
+@keyframes barre-d-action-qui-monte {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
