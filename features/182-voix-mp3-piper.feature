@@ -321,4 +321,4 @@ Fonctionnalité: La voix enregistrée lit les leçons sans rien installer sur l'
       Exemples: CM1 et CM2 (182e)
         | niveau | leçon                    |
         | CM1    | Les types de phrases     |
-        | CM2    | La phrase complexe       |
+        | CM2    | Les nuances de sens      |
