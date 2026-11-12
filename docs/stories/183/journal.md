@@ -72,3 +72,12 @@ Branche de base : `main` (`aa75d97`). Branche : `feature/183-ecran-de-seance-bar
 - Q-183.17 = A (PO, relayé sur #193) : le step mesure le haut du bloc « consigne + exercice » (`28f5e9e0`).
 - Régression trouvée sur #130 et #131 : la scène de la première réponse fausse s'arrêtait à l'appui. Le personnage guide se démontait et le contenu remontait avant le relâché, donc le clic tombait à côté. La scène s'arrête maintenant au relâché (`ffa79b66`). Le test rouge, ce sont les E2E de #130 et #131 (pas de test de composant). Review delta : APPROUVÉ.
   - Non-bloquant à porter en suivi : monter et démonter le personnage guide décale la mise en page (fin naturelle de la scène, apparition d'une réaction). Une place réservée, ou un personnage superposé, supprimerait cette classe de bugs. À proposer au PO dans la PR.
+- Run de vérification (12:36 UTC) : #183 31/31 (step des 200 px aussi sur la bulle de parole, `ce253b64`), #130 89/89 sur `telephone`, ce qui confirme `ffa79b66`.
+- Intégration de `main` : 182a (`13b21e72`, conflit dans `EcranDeSeance`, `voixPresente` gardé, une ligne obsolète retirée d'un step de #182), puis 182b, 182c et 182d sans conflit.
+- PR #197 ouverte en brouillon. Review finale publiée sur la PR : APPROUVÉ.
+- Rejeu avec 182a intégrée : #183 31/31 (`@wip` retiré, `07a2fba4`), #182 30/30, #131 127/127, #97 vert, #163 53/54 (scénario instable : lettre de dictée pendant la scène, seuil de 1450 ms, marge de 150 ms).
+- Captures de #96 regardées :
+  - la fin de séance avait changé (hors périmètre, 183.8). Restaurée comme sur `main` (`749c557e`), puis l'écart de 12 px corrigé (zone de consigne vide de `main`, `3a69a599`) ; `fin-de-la-seance` est de nouveau verte ;
+  - question affichée deux fois : correctif `31e557bf` refusé en review, puisque `main` affiche déjà la question deux fois, donc ce n'est pas une régression et le comportement nouveau n'avait pas de critère. Annulé (`3f362f04`). Q-183.19 posée au PO.
+- Dernier rejeu court : #183 31/31, #24 30/30, #106 67/67, #97 63/63, #182 5/5 ; #96 3/4, il ne reste que `exercice-en-seance`, qui attend Q-183.18.
+- Session arrêtée le 11/11 vers 17:45 UTC sur la limite d'utilisation, reprise le 12/11.
