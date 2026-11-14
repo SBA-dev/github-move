@@ -28,3 +28,16 @@ Deno.test("sans voix de l'appareil, des phrases toutes au répertoire peuvent ê
 
   assertEquals(peutLesDire, true);
 });
+
+Deno.test("à l'allure lente, une phrase sans MP3 lent ne peut pas être dite", () => {
+  const repertoire = repertoireDeTest({ [cleDePhrase("lapin")]: { normale: "lapin.mp3" } });
+
+  const peutLesDire = peutDireLesPhrases({
+    textes: ["lapin"],
+    allure: "lente",
+    repertoire,
+    syntheseVocalePresente: false,
+  });
+
+  assertEquals(peutLesDire, false);
+});
