@@ -41,3 +41,16 @@ Deno.test("à l'allure lente, une phrase sans MP3 lent ne peut pas être dite", 
 
   assertEquals(peutLesDire, false);
 });
+
+Deno.test("avec la synthèse vocale, des phrases absentes du répertoire peuvent être dites", () => {
+  const repertoireVide = repertoireDeTest({});
+
+  const peutLesDire = peutDireLesPhrases({
+    textes: ["lapin"],
+    allure: "normale",
+    repertoire: repertoireVide,
+    syntheseVocalePresente: true,
+  });
+
+  assertEquals(peutLesDire, true);
+});
