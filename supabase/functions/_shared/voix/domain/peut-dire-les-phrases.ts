@@ -1,4 +1,5 @@
 import type { Allure } from "./allure.ts";
+import { phrasesAvecCle } from "./cle-de-phrase.ts";
 import type { RepertoireDesPhrasesEnregistrees } from "./repertoire-des-phrases-enregistrees.ts";
 
 export function peutDireLesPhrases(
@@ -9,5 +10,8 @@ export function peutDireLesPhrases(
     readonly syntheseVocalePresente: boolean;
   },
 ): boolean {
-  return demande.syntheseVocalePresente;
+  if (demande.syntheseVocalePresente) return true;
+  return demande.textes
+    .flatMap(phrasesAvecCle)
+    .every(({ cle }) => demande.repertoire.phrases[cle] !== undefined);
 }
