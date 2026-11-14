@@ -60,3 +60,12 @@ Deno.test("tablette en Muet, la dictée demande d'activer le son", () => {
 
   assertEquals(etatDeLaVoixPourLaDictee(question, voix), "muet");
 });
+
+Deno.test("avec le son et tout au répertoire, la dictée est disponible", () => {
+  const motDicte = { mot: "chat", phrase: "Le chat dort." };
+  const clavier = ClavierPropose.depuisTirage(MotAEcrire.de(motDicte.mot), []);
+  const question = new QuestionDeDictee(motDicte, "Écris le mot.", clavier);
+  const voix = { son: "son" as const, peutDire: () => true };
+
+  assertEquals(etatDeLaVoixPourLaDictee(question, voix), "disponible");
+});
