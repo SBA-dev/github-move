@@ -104,6 +104,7 @@ export { historiqueDeCalcul } from "./historique-de-calcul.ts";
 export { AdaptationDeLaDifficulte } from "./adaptation-de-la-difficulte.ts";
 export { NOMS_DES_COLONNES_A_L_ECRAN } from "./rangs-d-addition.ts";
 export {
+  etatDeLaVoixPourLaDictee,
   exerciceDemandeLeSon,
   LIBELLE_DU_BOUTON_ACTIVER_LE_SON,
   messageDeLaDicteeSansVoix,
@@ -176,3 +177,5 @@ export { revaliderLeDefi } from "./revalider-le-defi.ts";
 export type { DefiTermineAEnregistrer } from "./defi-termine-a-enregistrer.ts";
 export { matiereReussieParLaSeance } from "./matiere-reussie-par-la-seance.ts";
 export { motsDitsLentementDansLaLecon, textesDitsDansLaLecon } from "./textes-dits-dans-la-lecon.ts";
+export { textesDitsPendantLaDictee } from "./textes-dits-pendant-la-dictee.ts";
+export type { TextesDitsPendantLaDictee } from "./textes-dits-pendant-la-dictee.ts";

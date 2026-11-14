@@ -5,6 +5,7 @@ import {
   consigneAffichee,
   type Defi,
   type GrandDefi,
+  etatDeLaVoixPourLaDictee,
   exerciceDemandeLeSon,
   ExerciceIntrouvable,
   LeconSansExercice,
@@ -38,7 +39,6 @@ import { ExerciceDeCalcul } from "./exercices/ExerciceDeCalcul.tsx";
 import { ExerciceDeDictee } from "./exercices/ExerciceDeDictee.tsx";
 import { ExerciceDeFluence } from "./exercices/fluence/ExerciceDeFluence.tsx";
 import { ExerciceDeMemorisation } from "./exercices/ExerciceDeMemorisation.tsx";
-import { etatDeLaVoix } from "./etat-de-la-voix.ts";
 import { generateurIdDuNavigateur } from "./generateur-id-navigateur.ts";
 import { hasardDuNavigateur } from "./hasard-navigateur.ts";
 import { horlogeDuNavigateur } from "./horloge.ts";
@@ -195,6 +195,7 @@ function SeanceEnCours(
   const exerciceDeLaLecon = position === undefined ? undefined : lecon.exercices[position];
   const exerciceAffiche = figee?.exercice ?? exerciceJoue;
   const question = figee === undefined ? exerciceJoue?.questionEnCours() : figee.question;
+  const questionDeDictee = figee?.questionDeDictee ?? seance.questionDeDicteeEnCours();
   const calcul = deroulement.calculFige ?? seance.calculEnCours();
   const boite = deroulement.boiteReussie?.enCours ?? seance.boiteEnCours();
   const schema = deroulement.schemaReussi?.enCours ?? seance.schemaEnCours();
@@ -446,11 +447,11 @@ function SeanceEnCours(
                   )}
                   {exerciceDeLaLecon.type === "dictee" && (
                     <ExerciceDeDictee
-                      question={figee?.questionDeDictee ?? seance.questionDeDicteeEnCours()}
+                      question={questionDeDictee}
                       lettresFausses={deroulement.lettresFausses}
                       toucheQuiBrille={deroulement.toucheQuiBrille}
                       reussie={figee !== undefined}
-                      messageSansVoix={exerciceDemandeLeSon(exerciceDeLaLecon.type) ? messageDeLaDicteeSansVoix(etatDeLaVoix(voix)) : undefined}
+                      messageSansVoix={questionDeDictee && exerciceDemandeLeSon(exerciceDeLaLecon.type) ? messageDeLaDicteeSansVoix(etatDeLaVoixPourLaDictee(questionDeDictee, { son: voix.son, peutDire: voix.peutDire })) : undefined}
                       sonCoupe={voix.son === "muet"}
                       onRelire={deroulement.relireLaDictee}
                       onReecouterLeMot={() => void deroulement.reecouterLeMot()}

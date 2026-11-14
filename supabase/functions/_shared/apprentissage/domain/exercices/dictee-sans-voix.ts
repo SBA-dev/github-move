@@ -1,4 +1,6 @@
 import type { Exercice } from "../../../catalogue/domain/index.ts";
+import type { QuestionDeDictee } from "../question-de-dictee.ts";
+import { textesDitsPendantLaDictee } from "../textes-dits-pendant-la-dictee.ts";
 
 export type EtatDeLaVoix = "muet" | "lectureImpossible" | "disponible";
 
@@ -21,4 +23,16 @@ export function messageDeLaDicteeSansVoix(etat: EtatDeLaVoix): string | undefine
 
 export function exerciceDemandeLeSon(type: Exercice["type"]): boolean {
   return type === "dictee";
+}
+
+export function etatDeLaVoixPourLaDictee(
+  question: QuestionDeDictee,
+  voix: {
+    readonly son: "son" | "muet";
+    readonly peutDire: (textes: readonly string[], allure: "normale" | "lente") => boolean;
+  },
+): EtatDeLaVoix {
+  const textes = textesDitsPendantLaDictee(question);
+  if (!voix.peutDire(textes.normale, "normale") || !voix.peutDire(textes.lente, "lente")) return "lectureImpossible";
+  return voix.son === "muet" ? "muet" : "disponible";
 }

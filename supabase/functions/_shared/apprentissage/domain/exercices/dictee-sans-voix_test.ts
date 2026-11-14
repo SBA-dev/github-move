@@ -1,9 +1,19 @@
 import { assertEquals } from "@std/assert";
+import { ClavierPropose } from "../clavier-propose.ts";
+import { MotAEcrire } from "../mot-a-ecrire.ts";
+import { QuestionDeDictee } from "../question-de-dictee.ts";
 import {
+  etatDeLaVoixPourLaDictee,
   exerciceDemandeLeSon,
   LIBELLE_DU_BOUTON_ACTIVER_LE_SON,
   messageDeLaDicteeSansVoix,
 } from "./dictee-sans-voix.ts";
+
+function questionDeDicteeDeTest(): QuestionDeDictee {
+  const motDicte = { mot: "chat", phrase: "Le chat dort." };
+  const clavier = ClavierPropose.depuisTirage(MotAEcrire.de(motDicte.mot), []);
+  return new QuestionDeDictee(motDicte, "Écris le mot.", clavier);
+}
 
 Deno.test("son coupé, la dictée demande d'activer le son", () => {
   assertEquals(
@@ -34,4 +44,39 @@ Deno.test("la dictée est le seul type d'exercice qui demande le son", () => {
       .filter(exerciceDemandeLeSon),
     [],
   );
+});
+
+Deno.test("sans MP3 lent du mot dicté ni voix de l'appareil, la dictée ne peut pas être lue", () => {
+  const question = questionDeDicteeDeTest();
+  const voix = {
+    son: "son" as const,
+    peutDire: (_textes: readonly string[], allure: "normale" | "lente") => allure === "normale",
+  };
+
+  assertEquals(etatDeLaVoixPourLaDictee(question, voix), "lectureImpossible");
+});
+
+Deno.test("tablette en Muet, la dictée demande d'activer le son", () => {
+  const question = questionDeDicteeDeTest();
+  const voix = { son: "muet" as const, peutDire: () => true };
+
+  assertEquals(etatDeLaVoixPourLaDictee(question, voix), "muet");
+});
+
+Deno.test("avec le son et tout au répertoire, la dictée est disponible", () => {
+  const question = questionDeDicteeDeTest();
+  const voix = { son: "son" as const, peutDire: () => true };
+
+  assertEquals(etatDeLaVoixPourLaDictee(question, voix), "disponible");
+});
+
+Deno.test("sans MP3 normal du texte dit ni voix de l'appareil, la dictée ne peut pas être lue", () => {
+  const question = questionDeDicteeDeTest();
+  const voix = {
+    son: "son" as const,
+    peutDire: (textes: readonly string[], allure: "normale" | "lente") =>
+      !(allure === "normale" && textes.includes(question.texteDit())),
+  };
+
+  assertEquals(etatDeLaVoixPourLaDictee(question, voix), "lectureImpossible");
 });
