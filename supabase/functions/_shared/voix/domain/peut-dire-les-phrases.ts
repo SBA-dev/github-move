@@ -13,5 +13,5 @@ export function peutDireLesPhrases(
   if (demande.syntheseVocalePresente) return true;
   return demande.textes
     .flatMap(phrasesAvecCle)
-    .every(({ cle }) => demande.repertoire.phrases[cle] !== undefined);
+    .every(({ cle }) => demande.repertoire.phrases[cle]?.[demande.allure] !== undefined);
 }
