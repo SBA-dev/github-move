@@ -51,3 +51,12 @@ Deno.test("sans MP3 lent du mot dicté ni voix de l'appareil, la dictée ne peut
 
   assertEquals(etatDeLaVoixPourLaDictee(question, voix), "lectureImpossible");
 });
+
+Deno.test("tablette en Muet, la dictée demande d'activer le son", () => {
+  const motDicte = { mot: "chat", phrase: "Le chat dort." };
+  const clavier = ClavierPropose.depuisTirage(MotAEcrire.de(motDicte.mot), []);
+  const question = new QuestionDeDictee(motDicte, "Écris le mot.", clavier);
+  const voix = { son: "muet" as const, peutDire: () => true };
+
+  assertEquals(etatDeLaVoixPourLaDictee(question, voix), "muet");
+});
