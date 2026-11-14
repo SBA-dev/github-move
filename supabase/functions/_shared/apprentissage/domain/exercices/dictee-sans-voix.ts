@@ -35,5 +35,5 @@ export function etatDeLaVoixPourLaDictee(
 ): EtatDeLaVoix {
   const textes = textesDitsPendantLaDictee(question);
   if (!voix.peutDire(textes.normale, "normale") || !voix.peutDire(textes.lente, "lente")) return "lectureImpossible";
-  return "disponible";
+  return voix.son === "muet" ? "muet" : "disponible";
 }
