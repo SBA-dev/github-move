@@ -69,3 +69,16 @@ Deno.test("avec le son et tout au répertoire, la dictée est disponible", () =>
 
   assertEquals(etatDeLaVoixPourLaDictee(question, voix), "disponible");
 });
+
+Deno.test("sans MP3 normal du texte dit ni voix de l'appareil, la dictée ne peut pas être lue", () => {
+  const motDicte = { mot: "chat", phrase: "Le chat dort." };
+  const clavier = ClavierPropose.depuisTirage(MotAEcrire.de(motDicte.mot), []);
+  const question = new QuestionDeDictee(motDicte, "Écris le mot.", clavier);
+  const voix = {
+    son: "son" as const,
+    peutDire: (textes: readonly string[], allure: "normale" | "lente") =>
+      !(allure === "normale" && textes.includes(question.texteDit())),
+  };
+
+  assertEquals(etatDeLaVoixPourLaDictee(question, voix), "lectureImpossible");
+});
