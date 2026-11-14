@@ -7,7 +7,7 @@ export type TextesDitsPendantLaDictee = {
 
 export function textesDitsPendantLaDictee(question: QuestionDeDictee): TextesDitsPendantLaDictee {
   return {
-    normale: [question.texteDit(), question.suiteDeLaFelicitation(), AIDE_APRES_UNE_ERREUR],
+    normale: [question.texteDit(), question.motADire(), question.suiteDeLaFelicitation(), AIDE_APRES_UNE_ERREUR],
     lente: [question.motADire()],
   };
 }
