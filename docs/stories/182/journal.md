@@ -151,3 +151,13 @@ Branche : `feature/182-voix-mp3-piper`, partie de `main` (`aa75d97`). Base : `ma
 - 3055 phrases de leçons fabriquées (CP 765, CE1 576, CE2 570, CM1 583, CM2 561) en plus des 231 paroles fixes : 3286 phrases, 3333 MP3, 34 Mo pour un budget de 45 Mo.
 - Un bug du pipeline trouvé et corrigé par TDD (fabrication d'un niveau qui effaçait le répertoire des autres).
 - Restent ouverts, sans bloquer : les réponses du PO aux pages d'écoute (paroles fixes, #182.21 à #182.24) pour la table de prononciation ; le scénario « écran du parent », à refaire passer par la page de la leçon après le merge de #183 ; la purge des entrées et MP3 qui ne seraient plus exportés.
+
+# Correctif fix(#182) : message de la dictée sans voix (14/11)
+
+- 07:06 UTC : la non-régression de nuit (lot A, `telephone`, `d481a23`) trouve 1 KO confirmé : `19-dictee-et-conjugaison.feature:159`, le message « Ce navigateur ne sait pas lire à voix haute : fais cette dictée avec un adulte… » n'apparaît plus. Verrou `merge` gelé (décision 0022).
+- Diagnostic : régression de 182a. `useVoix` exposait `voixPresente: repertoireCharge || syntheseVocalePresente`, donc un répertoire chargé, même vide ou sans les mots dictés, comptait comme une voix. Le scénario de #19 a raison (répertoire vide par défaut dans les E2E).
+- Règle retenue (sans question au PO, aucun scénario ne change de sens) : la dictée peut être lue si la voix de l'appareil existe, ou si chaque texte qu'elle fera dire a son MP3 au répertoire, à l'allure voulue (texte dit, félicitation, aide et mot à l'allure normale ; mot à l'allure lente).
+- TDD : `peutDireLesPhrases` (domaine Voix, 4 tests) ; `textesDitsPendantLaDictee` (domaine Apprentissage), source unique de `textesDeLaDictee` et `motsDitsLentementDansLaLecon` ; `etatDeLaVoixPourLaDictee(question, { son, peutDire })` dans `dictee-sans-voix.ts` (4 tests, `peutDire` injecté). Le front appelle le domaine ; `src/seance/etat-de-la-voix.ts` supprimé ; `voixPresente` inchangé pour ses autres usages.
+- Revue : cycle 1 À CORRIGER (test manquant du cas avec synthèse ; règle de la dictée dans React), cycle 2 À CORRIGER (allure normale non testée), cycle 3 **APPROUVÉ**. Deux tests ajoutés après coup, déjà verts, contrôlés en retirant la ligne qu'ils protègent.
+- E2E sous verrou `base`, `telephone`, 1 worker : sur `043b676`, 127/128 (un scénario de conjugaison de #19 instable, sans lien) ; sur la version finale `c82c2e3`, **128/128** (#19 29/29 dont :159, #97 63/63, #182 36/36).
+- Signalé au PO, hors correctif : `voixPresente` compte toujours un répertoire chargé comme une voix pour `laVoixNeLitPas` et les trois `sonImpossible`.

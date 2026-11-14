@@ -19,7 +19,8 @@ import { phraseDuCalcul } from "./exercices/phrases-du-calcul.ts";
 import { questionsDeTrous } from "./exercices/trous.ts";
 import { MotAEcrire } from "./mot-a-ecrire.ts";
 import { PlanDeMemorisation } from "./plan-de-memorisation.ts";
-import { AIDE_APRES_UNE_ERREUR, QuestionDeDictee } from "./question-de-dictee.ts";
+import { QuestionDeDictee } from "./question-de-dictee.ts";
+import { textesDitsPendantLaDictee } from "./textes-dits-pendant-la-dictee.ts";
 
 /** Les textes bruts que l'écran fait dire en français, sans doublon, hors calculs tirés au hasard. */
 export function textesDitsDansLaLecon(lecon: Lecon): readonly string[] {
@@ -87,7 +88,9 @@ function textesDeLaPoesie(exercice: ExerciceMemoriser): string[] {
 /** Les mots que l'écran fait dire lentement (dictées), sous la forme exacte de `motADire()`, sans doublon. */
 export function motsDitsLentementDansLaLecon(lecon: Lecon): readonly string[] {
   const mots = lecon.exercices.flatMap((exercice) =>
-    exercice.type === "dictee" ? exercice.mots.map((mot) => questionDeDictee(mot, exercice.consigne).motADire()) : []
+    exercice.type === "dictee"
+      ? exercice.mots.flatMap((mot) => textesDitsPendantLaDictee(questionDeDictee(mot, exercice.consigne)).lente)
+      : []
   );
   return [...new Set(mots)];
 }
@@ -98,6 +101,5 @@ function questionDeDictee(mot: MotDicte, consigne: string): QuestionDeDictee {
 }
 
 function textesDeLaDictee(mot: MotDicte, consigne: string): string[] {
-  const question = questionDeDictee(mot, consigne);
-  return [question.texteDit(), question.suiteDeLaFelicitation(), AIDE_APRES_UNE_ERREUR];
+  return [...textesDitsPendantLaDictee(questionDeDictee(mot, consigne)).normale];
 }
