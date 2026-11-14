@@ -104,6 +104,7 @@ export { historiqueDeCalcul } from "./historique-de-calcul.ts";
 export { AdaptationDeLaDifficulte } from "./adaptation-de-la-difficulte.ts";
 export { NOMS_DES_COLONNES_A_L_ECRAN } from "./rangs-d-addition.ts";
 export {
+  etatDeLaVoixPourLaDictee,
   exerciceDemandeLeSon,
   LIBELLE_DU_BOUTON_ACTIVER_LE_SON,
   messageDeLaDicteeSansVoix,
