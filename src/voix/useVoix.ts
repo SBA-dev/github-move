@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { avecSonTexteDeRemplacement, type PersonnageGuide, presentationAuRetourDuSon } from "@domain/motivation";
 import {
+  type Allure,
   type CauseDeLectureEmpechee,
   aUneVoixFrancaise,
   type ChoixDeVoix,
@@ -9,6 +10,7 @@ import {
   LecteurAvecRepli,
   LectureAVoixHaute,
   type ParoleEntendue,
+  peutDireLesPhrases,
   type VoixDisponible,
 } from "@domain/voix";
 import { hasardDuNavigateur } from "../hasard-navigateur.ts";
@@ -45,6 +47,8 @@ export type Voix = {
   readonly syntheseVocalePresente: boolean;
   /** Vrai si une voix enregistrée (répertoire chargé) ou la synthèse vocale peut lire. */
   readonly voixPresente: boolean;
+  /** Vrai si ces textes peuvent être dits à cette allure : voix enregistrée pour chacun, ou synthèse vocale. */
+  readonly peutDire: (textes: readonly string[], allure: Allure) => boolean;
   readonly choixDeVoix: ChoixDeVoix;
   readonly imposerUneVoix: (nomDeLaVoix: string) => void;
   readonly revenirALaVoixAutomatique: () => void;
@@ -129,6 +133,13 @@ export function useVoix(personnageGuide: PersonnageGuide, prenom?: string): Voix
     [lecture],
   );
 
+  const peutDire = useCallback(
+    (textes: readonly string[], allure: Allure) =>
+      peutDireLesPhrases({ textes, allure, repertoire, syntheseVocalePresente }),
+    // repertoireCharge : le répertoire change de contenu quand il finit de charger.
+    [repertoire, repertoireCharge, syntheseVocalePresente],
+  );
+
   const jouer = useCallback((effets: readonly EffetSonore[]) => lecture.jouer(effets), [lecture]);
 
   const toucherUnBouton = useCallback(() => lecture.toucherUnBouton(), [lecture]);
@@ -183,6 +194,7 @@ export function useVoix(personnageGuide: PersonnageGuide, prenom?: string): Voix
     voixDisponibles,
     syntheseVocalePresente,
     voixPresente: repertoireCharge || syntheseVocalePresente,
+    peutDire,
     choixDeVoix,
     imposerUneVoix,
     revenirALaVoixAutomatique,
