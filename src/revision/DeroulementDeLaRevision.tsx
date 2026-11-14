@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import {
   Avancement,
+  etatDeLaVoixPourLaDictee,
   exerciceDemandeLeSon,
   messageDeLaDicteeSansVoix,
   QuestionDeBoite,
@@ -16,7 +17,6 @@ import { ExerciceDeCalcul } from "../seance/exercices/ExerciceDeCalcul.tsx";
 import { ExerciceDeDictee } from "../seance/exercices/ExerciceDeDictee.tsx";
 import { QuestionAChoix } from "../seance/exercices/QuestionAChoix.tsx";
 import { SchemaDuProbleme } from "../seance/exercices/schema/SchemaDuProbleme.tsx";
-import { etatDeLaVoixPourLaDictee } from "../seance/etat-de-la-voix.ts";
 import { RecipientDeProgression } from "../seance/RecipientDeProgression.tsx";
 import { ParoleDuGuide } from "../test-de-depart/ParoleDuGuide.tsx";
 import { laVoixNeLitPas, type Voix } from "../voix/index.ts";
@@ -155,7 +155,7 @@ export function DeroulementDeLaRevision(
               lettresFausses={deroulement.lettresFausses}
               toucheQuiBrille={deroulement.toucheQuiBrille}
               reussie={reussie}
-              messageSansVoix={exerciceDemandeLeSon("dictee") ? messageDeLaDicteeSansVoix(etatDeLaVoixPourLaDictee(voix, dictee)) : undefined}
+              messageSansVoix={exerciceDemandeLeSon("dictee") ? messageDeLaDicteeSansVoix(etatDeLaVoixPourLaDictee(dictee, { son: voix.son, peutDire: voix.peutDire })) : undefined}
               sonCoupe={voix.son === "muet"}
               onRelire={deroulement.relireLaQuestion}
               onReecouterLeMot={() => void deroulement.reecouterLeMot()}
