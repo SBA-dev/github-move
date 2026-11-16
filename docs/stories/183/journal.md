@@ -81,3 +81,23 @@ Branche de base : `main` (`aa75d97`). Branche : `feature/183-ecran-de-seance-bar
   - question affichée deux fois : correctif `31e557bf` refusé en review, puisque `main` affiche déjà la question deux fois, donc ce n'est pas une régression et le comportement nouveau n'avait pas de critère. Annulé (`3f362f04`). Q-183.19 posée au PO.
 - Dernier rejeu court : #183 31/31, #24 30/30, #106 67/67, #97 63/63, #182 5/5 ; #96 3/4, il ne reste que `exercice-en-seance`, qui attend Q-183.18.
 - Session arrêtée le 11/11 vers 17:45 UTC sur la limite d'utilisation, reprise le 12/11.
+- Fusion de `main` avec `fix(#182)` (`4cc3028f`) : conflit dans `EcranDeSeance`, version de `main` gardée pour la dictée (`etatDeLaVoixPourLaDictee`). Rejeu : #19 29/29, #183 31/31, #24 30/30.
+- 16/11, réponses du PO données directement dans la session de l'équipe, puis vérifiées et relayées par le responsable : Q-183.19 = A, Q-183.18 = A.
+  - Scénario ajouté à R4 (`92897975`), correctif réappliqué (`e95c3e29`), « Réécouter » aligné sur l'exercice quand la bulle est vide (`35c1052b`), condition simplifiée (`2403c693`), step (`8ed1f8ae`).
+  - Review delta : À CORRIGER. Le sélecteur CSS repliait aussi la consigne affichée. Corrigé (`a1706dfd`), puis APPROUVÉ.
+- Rejeu final : #183 32/32 (step de la barre d'action mesuré après son animation, `356b1ede` puis `24731a32` pour le typage), #79 34/34, #163 54/54 (instable connu, vert au rejeu), #24 30/30, #96 4/4 avec la nouvelle référence `exercice-en-seance` (`2e69377d`, commit dédié).
+- PR #197 passée en « prête », PRÊTE À MERGER, VERROU merge demandé.
+
+## Mesures
+
+- **Durée** : du 09/11 23:54 UTC (journal ouvert) au 16/11 (PR prête), soit environ 6,5 jours calendaires, dont 1,5 jour sans activité possible (limite d'utilisation de 5 h le 11/11, attente du PO du 12/11 au 16/11).
+- **Attentes** :
+  - ⛔ n°1 (cadrage) : du 10/11 07:06 au 11/11 00:47 UTC, environ 18 h ;
+  - questions du PO ajoutées après les E2E : Q-183.17 en 4 h environ, Q-183.19 et Q-183.18 en 4 jours environ ;
+  - verrou `base` : une dizaine d'attentes de 5 à 30 min, en alternance avec #182.
+- **Commits** : 75 hors fusions (29 `test`, 17 `fix`, le reste `feat`, `refactor` et `docs`), plus 9 fusions, dont 7 intégrations de `main` (182a, 182b, 182c, 182d, 182e, `fix(#182)`, plus une reprise après 182b).
+- **TDD** : 1 comportement de domaine (`Seance.aRecuUneReponse`, 10 tests). Les correctifs du front ont été exigés par des scénarios E2E en échec, faute de tests de composant.
+- **Reviews** : 3 cycles complets (dont 2 À CORRIGER), une review finale publiée sur la PR, puis 9 reviews delta, dont 2 À CORRIGER (correctif sans scénario, puis sélecteur CSS).
+- **E2E** : 3 séries (A et B, C1 et C2, vérification), puis 6 rejeux après les intégrations et les correctifs. Bugs applicatifs trouvés en E2E : 9. Échecs dus à l'infrastructure : 2 (serveur local resté actif).
+- **Conflits** : 2 à l'intégration de `main`, tous deux dans `EcranDeSeance` (`voixPresente`, puis la dictée), plus une ligne d'un step de #182.
+- **Coût** : non mesuré par l'équipe (relevé par le responsable sur #193).
