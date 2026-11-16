@@ -497,11 +497,12 @@ function boutonDeLaBarre(page: Page, nom: string): Locator {
 
 /** La barre d'action monte en glissant à son apparition : on mesure une fois sa position arrêtée. */
 async function boiteArretee(element: Locator) {
-  let precedente = await element.boundingBox();
+  let precedente: Awaited<ReturnType<Locator["boundingBox"]>> = null;
   let courante = precedente;
   await expect.poll(async () => {
+    const animationFinie = await element.evaluate((noeud) => noeud.getAnimations().every((animation) => animation.playState === "finished"));
     courante = await element.boundingBox();
-    const arretee = precedente !== null && courante !== null && precedente.y === courante.y && precedente.height === courante.height;
+    const arretee = animationFinie && precedente !== null && courante !== null && precedente.y === courante.y && precedente.height === courante.height;
     precedente = courante;
     return arretee;
   }, { intervals: [150] }).toBe(true);
