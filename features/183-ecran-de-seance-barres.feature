@@ -162,6 +162,12 @@ Fonctionnalité: Écran de séance : une barre du haut et une barre d'action en 
       Alors Noisette apparaît à la place de la bulle, réfléchit en penchant la tête et dit un encouragement
       Et ensuite, Léa voit de nouveau la consigne, sans Noisette
 
+    Scénario: Dans un exercice sans consigne, la question ne s'affiche qu'une fois, dans l'exercice, et « Réécouter » reste là
+      Étant donné que Léa joue l'exercice « Quel son entends-tu ? » de la leçon « Les sons ou, on, an »
+      Quand la question « Dans le mot « poule », quel son entends-tu ? » s'affiche
+      Alors Léa lit la question « Dans le mot « poule », quel son entends-tu ? » une seule fois à l'écran, dans l'exercice
+      Et Léa voit un seul bouton « Réécouter »
+
   Règle: Un seul bouton « Réécouter » : pendant une question, il relit la consigne ; pendant que le personnage guide réagit, il redit sa phrase
 
     Scénario: Pendant une question, « Réécouter » relit la consigne, et « Relire la consigne » n'est plus un bouton à part

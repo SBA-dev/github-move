@@ -13,14 +13,14 @@ Périmètre : la **séance de leçon** (séance complète et séance d'un exerci
 
 ## 1. Règles (example mapping) et scénarios
 
-7 règles, 23 scénarios (31 exécutions avec les exemples). La colonne « Décisions » renvoie aux réponses du PO (section 3).
+7 règles, 24 scénarios (32 exécutions avec les exemples). La colonne « Décisions » renvoie aux réponses du PO (section 3).
 
 | Règle | Scénarios | Décisions |
 |---|---|---|
 | **R1.** Pendant la séance, une seule barre du haut remplace l'en-tête de l'application : Retour, nom de la leçon, son, et l'avancement de la séance (décisions 1 et 2) | Pendant la séance, Léa voit la barre du haut et plus l'en-tête de l'application · `<moment>`, l'avancement de la séance se lit « `<compteur>` » dans la barre du haut (0 / 15, 1 / 15) · Une question réussie fait avancer la barre de progression, avec un éclat sur le compteur | 183.7, 183.9 |
 | **R2.** Avant la première réponse de la séance, Retour ramène à la page de la leçon ; à partir d'elle, Retour ouvre la pause ; le geste retour fait de même (décisions 3 et 4) | Avant la première réponse, `<geste>` `<moment>` ramène à la page de la leçon (3 exemples) · Après une première réponse `<réponse>`, `<geste>` ouvre la pause (3 exemples) · « Je ne sais pas » compte comme la première réponse : Retour ouvre la pause · Dans une fluence, le chrono démarré sans aucune réponse ne suffit pas : Retour ramène à la page de la leçon | 183.4, 183.5 |
 | **R3.** La pause attend l'enfant sans rien lui reprocher : il continue la leçon là où il en était, ou retourne à la page de la leçon (décision 3) | `<geste>` ferme la pause : Léa retrouve sa question là où elle en était (« Je continue la leçon », Échap) · « Retour à la leçon » ramène à la page de la leçon et coupe la voix, comme quitter la séance aujourd'hui · Ouvrir la pause arrête la voix du personnage guide | 183.15 |
-| **R4.** Pendant une question, la consigne prend toute la largeur de la bulle, sans le personnage guide ; il n'apparaît que quand il réagit, puis la consigne revient (décision 5) | Pendant une question, la consigne s'affiche seule dans la bulle, sans le personnage guide · À une réponse juste, Noisette apparaît pour féliciter Léa, puis la consigne revient avec la question suivante · À la première réponse fausse, Coach Léo joue sa scène à la place de la bulle, puis la consigne revient et la question reste posée · À une réponse fausse suivante, Noisette apparaît pour encourager Léa, puis la consigne revient | 183.11, 183.12 |
+| **R4.** Pendant une question, la consigne prend toute la largeur de la bulle, sans le personnage guide ; il n'apparaît que quand il réagit, puis la consigne revient (décision 5) | Pendant une question, la consigne s'affiche seule dans la bulle, sans le personnage guide · À une réponse juste, Noisette apparaît pour féliciter Léa, puis la consigne revient avec la question suivante · À la première réponse fausse, Coach Léo joue sa scène à la place de la bulle, puis la consigne revient et la question reste posée · À une réponse fausse suivante, Noisette apparaît pour encourager Léa, puis la consigne revient · Dans un exercice sans consigne, la question ne s'affiche qu'une fois, dans l'exercice, et « Réécouter » reste là | 183.11, 183.12, 183.19 |
 | **R5.** Un seul bouton « Réécouter » : pendant une question, il relit la consigne ; pendant que le personnage guide réagit, il redit sa phrase (décision 6) | Pendant une question, « Réécouter » relit la consigne, et « Relire la consigne » n'est plus un bouton à part · Dans un exercice bulles, « Réécouter » relit la consigne, puis la question · Pendant que le personnage guide réagit à une réponse, « Réécouter » redit sa phrase | 183.6, 183.13, 183.14 |
 | **R6.** La barre d'action, en bas, porte le bouton principal toujours au même endroit et « Je ne sais pas » à côté ; elle n'apparaît que s'il y a une action (décision 7) | Dans un calcul au clavier de cristaux, « Valider » et « Je ne sais pas » sont dans la barre d'action · Pendant les étapes de leçon, « Continuer » est le bouton principal de la barre d'action · Dans un exercice bulles, l'enfant répond en touchant une bulle : la barre d'action ne porte que « Je ne sais pas » | 183.3, 183.16 |
 | **R7.** L'écran de séance s'adapte à l'enfant : petit écran sans défilement, mouvements réduits, mode dys, cibles assez grandes (règles connues de l'issue) | Sur un téléphone de 360 × 740 px, `<exercice>` commence au plus à 200 px du haut, sans défilement de côté (bulles, calcul au clavier) · Avec les mouvements réduits, `<ce qui change>` sans mouvement (avancement, pause) · En mode dys, sur 360 px, le nom de leçon le plus long tient sur deux lignes, sans mot coupé | 183.2 |
@@ -197,6 +197,9 @@ Réponse du PO du 2026-11-11 (« Reco tout ») : la recommandation de chaque que
 | 183.14 | Tant que le personnage guide est montré |
 | 183.15 | La voix s'arrête à l'ouverture de la pause ; rien n'est relu automatiquement |
 | 183.16 | La barre d'action n'est absente que quand il n'y a aucun bouton |
+| 183.17 | A : les 200 px se mesurent au haut du bloc « consigne + exercice » (réponse du PO après E2E) |
+| 183.18 | A : la nouvelle image de référence `exercice-en-seance` (#96) est validée ; elle est regénérée après le correctif de 183.19 |
+| 183.19 | A : dans un exercice sans consigne, la question n'est montrée qu'une fois, dans l'exercice ; la bulle du haut n'est pas affichée et seul « Réécouter » reste, aligné sur l'exercice (avant : la question apparaissait deux fois, dans la bulle et dans l'exercice) |
 
 ### Questions d'origine (recommandations retenues)
 
@@ -257,7 +260,7 @@ Réponse du PO du 2026-11-11 (« Reco tout ») : la recommandation de chaque que
 
 ## 4. Ajustements après E2E (2026-11-11)
 
-Changement de **données d'exemple seulement** : les règles, le sens et les titres des scénarios sont inchangés.
+Premier ajustement : changement de **données d'exemple seulement** : les règles, le sens et les titres des scénarios sont inchangés. Un scénario a ensuite été ajouté (réponse 183.19, plus bas).
 
 Raison : l'exécution E2E a montré qu'aucun exercice bulles de la bibliothèque n'a de champ `consigne` (seuls classer, ordre et trous en ont), et un exercice bulles sans consigne n'affiche pas de consigne par défaut. Trois scénarios de la règle « la consigne prend toute la largeur de la bulle… puis la consigne revient » vérifiaient le retour de la consigne sur un exercice qui n'en a pas : l'exercice « Quel son entends-tu ? » (fr-cp-sons-ou-on-an) et la question de test « Combien font 3 + 4 ? » (exercice bulles « Questions à choix », sans consigne). Ils jouent désormais la leçon de test « Compter », déjà employée par le scénario de « Réécouter » : un exercice bulles de consigne « Touche le bon nombre. », choix « 1 », « 2 », « 3 », réponse « 3 ».
 
@@ -268,6 +271,16 @@ Raison : l'exécution E2E a montré qu'aucun exercice bulles de la bibliothèque
 | À une réponse fausse suivante, Noisette apparaît pour encourager Léa, puis la consigne revient | séance complète de « Les sons ou, on, an », « poule », réponse « on » | « Compter » : l'erreur déjà faite est à « Combien font 2 + 1 ? », la réponse fausse suivante « 1 » à « Combien font 1 + 2 ? » (une question neuve, dont aucun choix n'est déjà grisé) |
 
 Les autres scénarios du fichier et les scénarios tagués `@issue-183` des autres features qui parlent de la consigne jouent un exercice qui en a une (classer « Les maisons des sons », ordre « Le mot en morceaux », leçon de test « Compter »).
+
+### Scénario ajouté après E2E (réponse 183.19)
+
+Règle R4. L'exécution a montré que, dans un exercice sans consigne (presque tous les exercices bulles, calcul, addition), la question apparaissait deux fois : dans la bulle du haut et dans l'exercice. Le PO a retenu de ne la montrer qu'une fois, dans l'exercice (183.19 A).
+
+| Scénario | Exemple | Résultat observable |
+|---|---|---|
+| Dans un exercice sans consigne, la question ne s'affiche qu'une fois, dans l'exercice, et « Réécouter » reste là | Léa joue l'exercice bulles « Quel son entends-tu ? » de « Les sons ou, on, an » (sans consigne) ; la question « Dans le mot « poule », quel son entends-tu ? » s'affiche | le texte de la question n'est qu'une fois à l'écran, dans l'exercice ; un seul bouton « Réécouter » reste visible |
+
+Étapes réutilisées : « Léa joue l'exercice « … » de la leçon « … » », « la question « … » s'affiche », « Léa voit un seul bouton « Réécouter » ». Étape nouvelle, à écrire par l'e2e-tester : « Léa lit la question « … » une seule fois à l'écran, dans l'exercice ».
 
 ## Termes
 
