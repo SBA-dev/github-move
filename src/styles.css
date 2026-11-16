@@ -1544,6 +1544,9 @@ button.lecon-du-parcours[data-etat="prochaine"] { border-color: var(--principale
 .texte-de-la-bulle > .bulle { overflow-wrap: anywhere; }
 /* Vide, la zone qui annonce la consigne reste dans la page mais ne prend aucune place. */
 .texte-de-la-bulle > .consigne-de-l-exercice:empty { position: absolute; width: 0; height: 0; overflow: hidden; }
+/* Bulle vide (la question n'est montrée que dans l'exercice) : « Réécouter » s'aligne à droite, sans réserver la largeur de la bulle. */
+.parole-et-reecouter:has(.bulle:empty) { justify-content: flex-end; gap: 0; }
+.texte-de-la-bulle:has(.bulle:empty) { flex: none; width: 0; }
 .parole-et-reecouter .consigne { width: 100%; box-sizing: border-box; text-align: center; }
 .reecouter-rond { flex: none; display: grid; place-items: center; width: 48px; height: 48px; padding: 0; border-radius: 50%; }
 .reecouter-rond svg { display: block; }
