@@ -3,6 +3,7 @@ import { NOMS_DES_COLONNES_A_L_ECRAN, type VueAddition, type VueColonne } from "
 import { CIBLE_DES_COLONNES, useRetourDe } from "../../../retours/index.ts";
 import { useUnivers } from "../../../univers/index.ts";
 import { maisonSousLePoint, type Point } from "../maisons/groupe-sous-le-doigt.ts";
+import { ActionDeLExercice } from "../ActionDeLExercice.tsx";
 import { ReponseAuCalcul } from "../ReponseAuCalcul.tsx";
 import { ChiffreAPoser } from "./ChiffreAPoser.tsx";
 import { DessinDeLaMaisonDeColonne } from "./DessinDeLaMaisonDeColonne.tsx";
@@ -103,14 +104,16 @@ export function ExerciceDAdditionPosee(props: Props) {
             ))}
           </ul>
           {colonneQuiBrille === undefined && (
-            <button
-              type="button"
-              className="je-ne-sais-pas"
-              data-testid="je-ne-sais-pas"
-              onClick={() => onJeNeSaisPas(chiffreChoisi)}
-            >
-              Je ne sais pas
-            </button>
+            <ActionDeLExercice>
+              <button
+                type="button"
+                className="je-ne-sais-pas"
+                data-testid="je-ne-sais-pas"
+                onClick={() => onJeNeSaisPas(chiffreChoisi)}
+              >
+                Je ne sais pas
+              </button>
+            </ActionDeLExercice>
           )}
         </>
       )}

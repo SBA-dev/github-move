@@ -28,6 +28,7 @@ import {
   type LeconBrute,
   leconDeTitre,
   ouvrirLaPageDeLaLecon,
+  quitterLaSeanceParRetour,
   recipient,
 } from "./etapes-puis-exercices.steps.ts";
 import {
@@ -356,7 +357,7 @@ async function jouerUneSeance(
     if (quitterApres === q.question) {
       await avancerJusquAuxChoix(page);
       await mauvaiseReponse(page, q.reponse);
-      await page.getByRole("button", { name: "Retour", exact: true }).click();
+      await quitterLaSeanceParRetour(page);
       await expect(recipient(page)).toHaveCount(0);
       return;
     }

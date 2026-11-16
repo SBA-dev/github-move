@@ -3,7 +3,7 @@ import type { DataTable } from "playwright-bdd";
 import { LECONS_DE_L_ACCUEIL } from "../support/bibliotheque-de-l-accueil.ts";
 import { lecturesDuResultatEnCours, suivreLesLecturesDuResultat } from "../support/bibliotheque-du-test-de-depart.ts";
 import { jouerJusquALaFinDeLaSeance } from "./etoiles-et-fin-de-seance.steps.ts";
-import { commencerLaSeanceComplete, entendu, etat, type LeconBrute, leconDeTitre, ouvrirLaPageDeLaLecon } from "./etapes-puis-exercices.steps.ts";
+import { commencerLaSeanceComplete, entendu, etat, type LeconBrute, leconDeTitre, ouvrirLaPageDeLaLecon, quitterLaSeanceParRetour } from "./etapes-puis-exercices.steps.ts";
 import { avancerJusquAuxChoix, bulleDeChoix, questionsDeLaSeance } from "./exercices-a-choix.steps.ts";
 import { Given, Then, When } from "./fixtures.ts";
 import { pageDeMarieOuCourante } from "./revisions-des-erreurs.steps.ts";
@@ -252,7 +252,7 @@ Given(/^Léa a quitté la séance de la leçon « ([^«»]+) » avant la fin$/, 
   if (premiere === undefined) throw new Error(`La leçon « ${titre} » n'a aucune question`);
   await avancerJusquAuxChoix(page);
   await bulleDeChoix(page, premiere.reponse).click();
-  await page.getByRole("button", { name: "Retour", exact: true }).click();
+  await quitterLaSeanceParRetour(page);
   await expect(page.getByTestId("recipient")).toHaveCount(0);
 });
 

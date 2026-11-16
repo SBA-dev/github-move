@@ -82,9 +82,10 @@ Fonctionnalité: Aucune voix sur les écrans du parent
 
   Règle: En arrivant sur un écran du parent, la lecture en cours s'arrête
 
-    Plan du Scénario: Pendant la lecture d'une consigne, <ce que fait Léa> arrête la voix
+    @issue-183
+    Plan du Scénario: Pendant que Noisette salue Léa sur son accueil, <ce que fait Léa> arrête la voix
       Étant donné que Paul est connecté sur la tablette
-      Et que Noisette est en train de lire la consigne « Écoute bien l'histoire du petit chat. »
+      Et que Noisette est en train de saluer Léa sur son accueil
       Quand <ce que fait Léa>
       Alors <ce que Léa voit>
       Et Léa n'entend plus Noisette
@@ -101,9 +102,10 @@ Fonctionnalité: Aucune voix sur les écrans du parent
       Alors Léa voit « Qui joue ? »
       Et Léa n'entend plus Noisette
 
-    Scénario: La consigne coupée ne reprend pas dans l'espace parent
+    @issue-183
+    Scénario: La salutation coupée ne reprend pas dans l'espace parent
       Étant donné que Paul est connecté sur la tablette
-      Et que Noisette est en train de lire la consigne « Écoute bien l'histoire du petit chat. »
+      Et que Noisette est en train de saluer Léa sur son accueil
       Et que Léa a demandé l'entrée de l'espace parent, et le contrôle parental pose la question « 7 × 8 »
       Quand Paul répond « 56 » au contrôle parental
       Alors il voit l'espace parent
@@ -117,13 +119,14 @@ Fonctionnalité: Aucune voix sur les écrans du parent
       Quand Léa choisit son profil enfant dans « Qui joue ? »
       Alors Léa entend Noisette dire « Bonjour Léa ! »
 
-    Scénario: Après avoir renoncé au contrôle parental, Léa réécoute la question
+    @issue-183
+    Scénario: Après avoir renoncé au contrôle parental depuis la page de la leçon, la séance est lue à Léa
       Étant donné que Paul est connecté sur la tablette
       Et que Léa a un profil enfant préparé de niveau CP dans l'univers « Animaux de la forêt »
-      Et que Léa joue la question de test « Combien font 3 + 4 ? »
+      Et que Léa est sur la page de la leçon « Les sons ou, on, an »
       Et que Léa a demandé l'entrée de l'espace parent, puis a renoncé à répondre au contrôle parental
-      Quand Léa demande à réécouter la question
-      Alors Léa entend Noisette lire « Combien font 3 plus 4 ? »
+      Quand Léa commence la séance complète
+      Alors Léa entend Noisette lire la première étape de leçon
 
     Scénario: Le profil créé dans l'espace parent, la proposition du test de départ est lue à l'enfant
       Étant donné que Paul est dans l'espace parent

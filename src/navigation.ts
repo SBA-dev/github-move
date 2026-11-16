@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export type EcranSimple =
   | "accueil" | "jeu" | "parcours" | "toutes-les-lecons" | "medailles" | "test-de-depart" | "espace-parent" | "revision" | "defi";
@@ -71,12 +71,85 @@ function profondeurCourante(): number {
   return typeof profondeur === "number" ? profondeur : 0;
 }
 
+/**
+ * Retient le geste retour du navigateur ou du téléphone : tant que `active`, une entrée de garde (même adresse) est posée dans l'historique ;
+ * le geste la retire, appelle `surRetenu` au lieu de quitter l'écran, puis repose la garde si `active` le demande encore.
+ * Quand `active` devient faux, la garde encore posée est retirée sans appeler `surRetenu`.
+ * `lever` ôte la garde encore posée avant de faire `apres`.
+ * Si l'écran est quitté autrement que par Retour ou par la fin, la garde reste posée : aucune autre sortie n'existe aujourd'hui pendant les questions.
+ */
+export function useGardeDuRetour(active: boolean, surRetenu: () => void): (apres: () => void) => void {
+  const posee = useRef(false);
+  const levee = useRef(false);
+  const demonte = useRef(false);
+  const activeActuelle = useRef(active);
+  const surRetenuActuel = useRef(surRetenu);
+  useEffect(() => {
+    activeActuelle.current = active;
+    surRetenuActuel.current = surRetenu;
+  }, [active, surRetenu]);
+
+  const poser = useCallback(() => {
+    history.pushState(history.state, "", location.href);
+    posee.current = true;
+  }, []);
+
+  const retirer = useCallback((apres: () => void) => {
+    levee.current = true;
+    posee.current = false;
+    const surLaGardeRetiree = () => {
+      removeEventListener("popstate", surLaGardeRetiree);
+      levee.current = false;
+      apres();
+    };
+    addEventListener("popstate", surLaGardeRetiree);
+    history.back();
+  }, []);
+
+  useEffect(() => {
+    const surRetour = () => {
+      if (!posee.current) return;
+      posee.current = false;
+      if (levee.current) return;
+      surRetenuActuel.current();
+      if (activeActuelle.current) poser();
+    };
+    addEventListener("popstate", surRetour);
+    return () => removeEventListener("popstate", surRetour);
+  }, [poser]);
+
+  // Au démontage la navigation vers un autre écran est déjà faite : y retirer la garde la dédéferait.
+  useEffect(() => {
+    demonte.current = false;
+    return () => {
+      demonte.current = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!active) return;
+    if (!posee.current) poser();
+    return () => {
+      if (posee.current && !demonte.current) retirer(() => {});
+    };
+  }, [active, poser, retirer]);
+
+  return useCallback((apres: () => void) => {
+    if (!posee.current) {
+      apres();
+      return;
+    }
+    retirer(apres);
+  }, [retirer]);
+}
+
 export function useNavigation() {
   const [lieu, setLieu] = useState<Lieu>(() => lieuDe(location.pathname));
   const [profondeur, setProfondeur] = useState(profondeurCourante);
   const [viaRetour, setViaRetour] = useState(false);
 
   useEffect(() => {
+    // Le geste retour retenu par `useGardeDuRetour` passe aussi ici : le lieu reste le même, seul `viaRetour` change.
     const surRetour = () => {
       setLieu(lieuDe(location.pathname));
       setProfondeur(profondeurCourante());

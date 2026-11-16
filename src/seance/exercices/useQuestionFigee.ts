@@ -18,7 +18,11 @@ export type ReussiteFigee = {
 };
 
 /** Ce que partagent les réponses par choix et par étiquette : la réussite figée le temps de la féliciter, et l'avancement annoncé. */
-export function useQuestionFigee(seance: Seance, paroleEntendue: MutableRefObject<boolean>) {
+export function useQuestionFigee(
+  seance: Seance,
+  paroleEntendue: MutableRefObject<boolean>,
+  attendreLaFinDeLaPause: () => Promise<void>,
+) {
   const [figee, setFigee] = useState<ReussiteFigee | undefined>();
   const estFigee = useRef(false);
   const [avancementAnnonce, setAvancementAnnonce] = useState("");
@@ -39,7 +43,7 @@ export function useQuestionFigee(seance: Seance, paroleEntendue: MutableRefObjec
    * Sans voix, la parole reste lisible : une durée fixe, ou le bouton « Continuer » quand la séance est finie.
    * Rend `false` si une attente plus récente l'a remplacée : l'appelant ne doit alors pas enchaîner.
    */
-  const attendreLEcranSuivant = useCallback(async (): Promise<boolean> => {
+  const attendreLEnfant = useCallback(async (): Promise<boolean> => {
     const attente = attenteAvantLEcranSuivant({ entendue: paroleEntendue.current, seanceTerminee: seance.estFinie() });
     if (attente.genre === "aucune") return true;
     if (attente.genre === "dureeDAffichageSansVoix") {
@@ -52,6 +56,13 @@ export function useQuestionFigee(seance: Seance, paroleEntendue: MutableRefObjec
     if (continuee) setEnfantAttendu(false);
     return continuee;
   }, [seance, paroleEntendue]);
+
+  /** Une pause ouverte entre-temps retient l'enchaînement jusqu'à ce que l'enfant continue. */
+  const attendreLEcranSuivant = useCallback(async (): Promise<boolean> => {
+    const continuee = await attendreLEnfant();
+    if (continuee) await attendreLaFinDeLaPause();
+    return continuee;
+  }, [attendreLEnfant, attendreLaFinDeLaPause]);
 
   const continuer = useCallback(() => {
     continuerQuandLEnfantLeVeut.current?.(true);

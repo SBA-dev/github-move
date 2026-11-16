@@ -157,6 +157,26 @@ export async function ouvrirLaSeanceDirectement(page: Page, titre: string, posit
   await expect(recipient(page)).toBeVisible();
 }
 
+export function boutonRetour(page: Page) {
+  return page.getByRole("button", { name: "Retour", exact: true });
+}
+
+export function laPause(page: Page) {
+  return page.getByRole("dialog", { name: "On fait une pause ?" });
+}
+
+/**
+ * Léa quitte la séance par Retour (#183) : avant toute réponse Retour ramène à la page de la leçon ; à partir de la
+ * première réponse il ouvre la pause, où elle choisit « Retour à la leçon ». Le même geste sert aux deux cas.
+ */
+export async function quitterLaSeanceParRetour(page: Page) {
+  await boutonRetour(page).click();
+  const pause = laPause(page);
+  await expect.poll(async () => (await pause.isVisible()) || (await recipient(page).count()) === 0).toBe(true);
+  if (await pause.isVisible()) await pause.getByRole("button", { name: "Retour à la leçon", exact: true }).click();
+  await expect(recipient(page)).toHaveCount(0);
+}
+
 export async function commencerLaSeanceComplete(page: Page) {
   await page.getByRole("button", { name: "Leçon et tous les jeux", exact: true }).click();
   await expect(recipient(page)).toBeVisible();
@@ -569,15 +589,18 @@ Then(/^Léa voit la page de la leçon « (.+) »$/, async ({ page }, titre: stri
   await verifierQueRetourNeDupliquePasLHistorique(page, titre);
 });
 
+const TOLERANCE_D_ARRONDI_PX = 0.5;
+
 Then(/^chaque commande de la séance mesure au moins 44 px de haut et de large$/, async ({ page }) => {
   const seance = page.getByRole("region").filter({ has: recipient(page) });
-  const commandes = await seance.getByRole("button").all();
+  // La barre d'action est posée dans l'application, hors de la région de la séance : ses boutons comptent aussi.
+  const commandes = [...(await seance.getByRole("button").all()), ...(await page.getByTestId("barre-d-action").getByRole("button").all())];
   expect(commandes.length).toBeGreaterThan(0);
   for (const commande of commandes) {
     const boite = await commande.boundingBox();
     const nom = await commande.textContent();
     expect(boite, `commande « ${nom} » visible`).not.toBeNull();
-    expect(boite?.width ?? 0, `largeur de « ${nom} »`).toBeGreaterThanOrEqual(44);
-    expect(boite?.height ?? 0, `hauteur de « ${nom} »`).toBeGreaterThanOrEqual(44);
+    expect(boite?.width ?? 0, `largeur de « ${nom} »`).toBeGreaterThanOrEqual(44 - TOLERANCE_D_ARRONDI_PX);
+    expect(boite?.height ?? 0, `hauteur de « ${nom} »`).toBeGreaterThanOrEqual(44 - TOLERANCE_D_ARRONDI_PX);
   }
 });

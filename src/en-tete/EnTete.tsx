@@ -1,4 +1,5 @@
 import type { EtatDuSon } from "@domain/voix";
+import { BoutonSon } from "./BoutonSon.tsx";
 
 export type Enfant = { readonly prenom: string; readonly niveau: string };
 
@@ -22,9 +23,7 @@ export function EnTete({ surAccueil, enfant, son, retourPossible, onBasculerLeSo
       </Titre>
       <div className="outils">
         {enfant && <span className="enfant" data-testid="enfant-en-cours">{enfant.prenom} · {enfant.niveau}</span>}
-        <button type="button" aria-label="Son" aria-pressed={son === "son"} data-son={son} data-bascule-du-son="true" onClick={onBasculerLeSon}>
-          <span aria-hidden="true">{son === "son" ? "🔊" : "🔇"}</span> Son
-        </button>
+        <BoutonSon son={son} onBasculer={onBasculerLeSon} />
         {retourPossible && <button type="button" onClick={onRetour}>Retour</button>}
         <button type="button" onClick={onEspaceParent}>Espace parent</button>
       </div>

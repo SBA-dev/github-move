@@ -28,10 +28,11 @@ Fonctionnalité: Calcul, fluence et addition posée
       Quand le calcul « 3 − 3 » s'affiche
       Alors Léa voit exactement les choix « 0 », « 1 » et « 2 »
 
+    @issue-183
     Scénario: À partir du CE1, le calcul se répond au clavier de cristaux
       Étant donné qu'une leçon de test de niveau CE1 a un exercice calcul « 12 − 5 », de résultat 7
       Quand le calcul « 12 − 5 » s'affiche pour Tom
-      Alors Tom voit le clavier de cristaux, avec les chiffres de 0 à 9, « Effacer » et « Valider »
+      Alors Tom voit le clavier de cristaux, avec les chiffres de 0 à 9 et « Effacer », et « Valider » dans la barre d'action
       Mais aucun choix n'est proposé
 
     Scénario: Au clavier de cristaux, un nombre faux s'efface et laisse une nouvelle chance

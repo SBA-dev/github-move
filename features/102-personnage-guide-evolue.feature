@@ -273,8 +273,15 @@ Fonctionnalité: Le personnage guide reçoit des tenues avec les étoiles, et l'
         | son accueil                                             |
         | « Mon parcours »                                        |
         | « Toutes les leçons »                                   |
-        | la séance de la leçon « Les sons ou, on, an »           |
         | la fin de la séance de la leçon « Les sons ou, on, an » |
+
+    @issue-183
+    Scénario: Pendant la séance, Noisette qui félicite Léa porte la tenue choisie
+      Étant donné que Léa a gagné 5 étoiles en tout
+      Et que Léa a mis « une écharpe rayée » à Noisette
+      Et que Léa en est à la question « Dans le mot « poule », quel son entends-tu ? » de la séance complète de la leçon « Les sons ou, on, an »
+      Quand Léa répond « ou »
+      Alors elle voit Noisette avec « une écharpe rayée » dans le paysage de l'univers « Animaux de la forêt »
 
     Scénario: Après une relance de Savanturier, le personnage guide porte toujours la tenue choisie
       Étant donné que Léa a gagné 5 étoiles en tout
@@ -323,14 +330,17 @@ Fonctionnalité: Le personnage guide reçoit des tenues avec les étoiles, et l'
       Quand Léa met « une écharpe rayée » à Noisette, au clavier seulement
       Alors Léa voit Noisette avec « une écharpe rayée »
 
-    Scénario: Sur un écran de 360 px, le personnage guide habillé ne cache ni la consigne ni les choix
+    @issue-183
+    Scénario: Sur un écran de 360 px, le personnage guide habillé qui félicite ne cache pas les choix de la question
       Étant donné que l'écran de l'appareil mesure 360 px de large
       Et que Léa a choisi l'univers pompier
       Et que Léa a gagné 23 étoiles en tout
       Et que Léa a mis « un sac à dos d'explorateur » à Capitaine Sam
-      Quand Léa arrive sur la séance de la leçon « Les sons ou, on, an »
+      Et que Léa joue la séance complète de la leçon « Les sons ou, on, an »
+      Et que Léa en est à la question « Dans le mot « poule », quel son entends-tu ? »
+      Quand Léa répond « ou »
       Alors elle voit Capitaine Sam avec « un sac à dos d'explorateur » dans le paysage de l'univers « Pompiers »
-      Et la consigne et tous les choix de la question restent visibles en entier
+      Et tous les choix de la question restent visibles en entier
 
     Scénario: Toutes les tenues reçues tiennent dans un écran de 360 px de large, avec des cibles assez grandes
       Étant donné que l'écran de l'appareil mesure 360 px de large

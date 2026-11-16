@@ -14,6 +14,7 @@ import {
   leconDeTitre,
   ouvrirLaPageDeLaLecon,
   ouvrirLaSeanceDirectement,
+  quitterLaSeanceParRetour,
   recipient,
   toutesLesParoles,
 } from "./etapes-puis-exercices.steps.ts";
@@ -360,9 +361,21 @@ async function allerAuRang(page: Page, rang: number, avecChoix: boolean) {
   else await finirLaParoleJusqua(page, { type: "question", texte: (questions[rang] as Question).enonce });
 }
 
+/** Une séance complète commence par les étapes de leçon : l'enfant touche « Continuer » jusqu'au premier exercice. */
+async function passerLesEtapesDeLecon(page: Page) {
+  const exercice = page.getByTestId("exercice-en-cours");
+  if ((await exercice.isVisible()) || !(await boutonContinuer(page).isVisible())) return;
+  await expect.poll(async () => {
+    if (await exercice.isVisible()) return true;
+    if (await boutonContinuer(page).isVisible()) await boutonContinuer(page).click();
+    return false;
+  }, { intervals: [100] }).toBe(true);
+}
+
 /** Joue, comme un enfant, les questions qui précèdent, jusqu'à celle-ci. */
 export async function allerALaQuestion(page: Page, enonce: string, avecChoix: boolean) {
   await demarrer(page, enonce);
+  await passerLesEtapesDeLecon(page);
   const questions = questionsDeLaSeance(page);
   const deja = await questionsReussies(page);
   const cible = questions.findIndex((q, i) => i >= deja && q.enonce === enonce);
@@ -465,9 +478,19 @@ Given(/^Noisette a fini de lire la question « (.+) »$/, async ({ page }, quest
   await avancerJusquAuxChoix(page);
 });
 
-Given(/^Léa en est à la question « (?!.*» dont la réponse est)(.+) »$/, async ({ page }, question: string) => {
+Given(/^Léa en est à la question « (?!.*» dont la réponse est)(?!.*» de la séance complète de la leçon)(.+) »$/, async ({ page }, question: string) => {
   await allerALaQuestion(page, question, true);
 });
+
+// #183 : la séance complète (étapes de leçon, puis exercices) est jouée jusqu'à la question.
+Given(
+  /^Léa en est à la question « (.+) » de la séance complète de la leçon « ([^«»]+) »$/,
+  async ({ page }, question: string, titre: string) => {
+    const lecon = leconDeTitre(page, titre);
+    etatDesChoix(page).demarrage = async () => await lancer(page, lecon);
+    await allerALaQuestion(page, question, true);
+  },
+);
 
 Given(
   /^Léa en est à la dernière question de l'exercice « ([^«»]+) », « (.+) »$/,
@@ -502,7 +525,7 @@ Given(
   async ({ page }, titre: string, nombre: string) => {
     await lancer(page, leconDeTitre(page, titre));
     await allerAuRang(page, Number(nombre), false);
-    await page.getByRole("button", { name: "Retour", exact: true }).click();
+    await quitterLaSeanceParRetour(page);
     await expect(recipient(page)).toHaveCount(0);
   },
 );
@@ -690,7 +713,7 @@ Then(/^Noisette dit un encouragement$/, async ({ page }) => {
   expect(normaliser((await bulle(page).textContent()) ?? "")).not.toBe("");
 });
 
-Then(/^Noisette dit une félicitation commune ou l'une de ses expressions, en entier$/, async ({ page }) => {
+export async function verifierLaFelicitationEnEntier(page: Page) {
   await expect(bulle(page)).toHaveAttribute("data-nature", "felicitation");
   const texte = normaliser((await bulle(page).textContent()) ?? "");
   expect(FELICITATIONS_DE_NOISETTE).toContain(texte);
@@ -706,6 +729,10 @@ Then(/^Noisette dit une félicitation commune ou l'une de ses expressions, en en
   await expect(bulle(page)).toHaveAttribute("data-nature", "felicitation");
   expect((await journal(page)).lecture.texte).toBe(entendu(texte));
   expect((await journal(page)).coupeApresLaDerniereParole).toBe(false);
+}
+
+Then(/^Noisette dit une félicitation commune ou l'une de ses expressions, en entier$/, async ({ page }) => {
+  await verifierLaFelicitationEnEntier(page);
 });
 
 Then(/^Noisette dit une félicitation, suivie de « (.+) »$/, async ({ page }, explication: string) => {

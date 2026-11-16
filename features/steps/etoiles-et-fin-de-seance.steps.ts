@@ -20,6 +20,7 @@ import {
   ouvrirLaPageDeLaLecon,
   bulle,
   injecter,
+  quitterLaSeanceParRetour,
   recipient,
   toutesLesParoles,
 } from "./etapes-puis-exercices.steps.ts";
@@ -294,7 +295,7 @@ Given(/^Léa a quitté une séance complète de cette leçon avant la dernière 
     await bulleDeChoix(page, question.reponse).click();
     await expect(recipient(page)).toHaveAttribute("data-questions-reussies", String(rang + 1));
   }
-  await page.getByRole("button", { name: "Retour", exact: true }).click();
+  await quitterLaSeanceParRetour(page);
   await expect(recipient(page)).toHaveCount(0);
 });
 

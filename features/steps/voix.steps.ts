@@ -5,7 +5,6 @@ import { terminerLaLecture } from "../support/lecture-vocale.ts";
 import { avecLesReglagesPrevus } from "../support/reglages-prevus.ts";
 import { DUREE_DU_MP3_DE_TEST_MS, installerLAudioDeTest, messageDeVoixIndisponible, repertoireDeTest } from "../support/voix-enregistree.ts";
 import {
-  bulle,
   commencerLaSeanceComplete,
   injecter,
   interceptertLaBibliotheque,
@@ -33,7 +32,7 @@ export type Scenario = {
   voixImposee: string | undefined;
   /** #79 : Léa relit la consigne pendant que Noisette lit la question ; `lotsAvant` = lectures déjà faites à ce moment-là. */
   relitPendantLaQuestion: { relue: boolean; lotsAvant: number | undefined } | undefined;
-  /** #7 : Léa réécoute la consigne d'ouverture pendant qu'elle est lue (« Réécouter », actif pendant la présentation, 79.12). */
+  /** #182 : la consigne d'ouverture est en train d'être lue quand Léa touche « Réécouter » : Léa n'attend pas la fin de la présentation. */
   reecouteLaConsigneDOuverture: boolean;
 };
 
@@ -101,6 +100,7 @@ export function installerLeFaux(config: ConfigurationDuFaux) {
     langue: string;
     pitch: number;
     rate: number;
+    nature: string | null;
   };
   const faux = {
     journal: [] as Entree[],
@@ -153,12 +153,13 @@ export function installerLeFaux(config: ConfigurationDuFaux) {
         langue: enonce.lang,
         pitch: enonce.pitch,
         rate: enonce.rate,
+        nature: document.querySelector('[data-testid="parole"]')?.getAttribute("data-nature") ?? null,
       });
       if (faux.bloque) setTimeout(() => enonce.onerror?.({ error: "not-allowed" }), 0);
     },
     cancel() {
       faux.actifs = [];
-      faux.journal.push({ type: "cancel", lot: faux.lot, texte: "", voix: null, voixLangue: null, langue: "", pitch: 0, rate: 0 });
+      faux.journal.push({ type: "cancel", lot: faux.lot, texte: "", voix: null, voixLangue: null, langue: "", pitch: 0, rate: 0, nature: null });
     },
     resume() {},
     pause() {},
@@ -510,7 +511,6 @@ Given(/^le navigateur ne bloque plus la voix$/, async ({ page }) => {
 
 Given(/^Noisette est en train de lire la consigne « (.+) »$/, async ({ page }, texte: string) => {
   scenario(page).consigne.texte = texte;
-  scenario(page).reecouteLaConsigneDOuverture = true;
   await ouvrir(page);
   await attendreUneLecture(page);
   expect((await journal(page)).actifs).toBeGreaterThan(0);
@@ -555,30 +555,42 @@ When(/^la consigne suivante s'affiche$/, async ({ page }) => {
 When(/^Léa demande à réécouter la consigne$/, async ({ page }) => {
   await demarrer(page);
   const etat = scenario(page);
-  const relire = page.getByRole("button", { name: "Relire la consigne", exact: true });
+  // #183 : un seul bouton rond « Réécouter » remplace « Relire la consigne ».
+  const reecouter = page.getByRole("button", { name: "Réécouter", exact: true });
   if (etat.relitPendantLaQuestion) {
     await attendreUneLecture(page);
     await terminerLaLecture(page);
     // Le StrictMode du mode développement peut lire la consigne en deux lots : on attend la lecture de la question.
     await expect.poll(async () => (await journal(page)).lecture.texte).toContain("Combien font");
-    // 79.12 : pendant la présentation de l'exercice, relire la consigne est inactif.
-    await expect(relire).toHaveAttribute("aria-disabled", "true");
+    // 79.12 : pendant la présentation de l'exercice (lecture de la question), « Réécouter » est inactif.
+    await expect(reecouter).toHaveAttribute("aria-disabled", "true");
     // La présentation finie (les choix apparaissent), il devient actif.
     await avancerJusquAuxChoix(page);
-    await expect(relire).not.toHaveAttribute("aria-disabled", "true");
+    await expect(reecouter).not.toHaveAttribute("aria-disabled", "true");
     etat.relitPendantLaQuestion.relue = true;
     etat.relitPendantLaQuestion.lotsAvant = (await journal(page)).lots;
   }
-  // #7 : la consigne d'ouverture est réécoutée pendant sa lecture, avec « Réécouter » (« Relire la consigne » y est inactif).
-  const bouton = etat.reecouteLaConsigneDOuverture
-    ? page.getByRole("button", { name: "Réécouter", exact: true })
-    : relire;
-  await bouton.click();
+  // Toucher un bouton pendant une parole ne fait pas entendre « bouton touché » : Léa touche « Réécouter » quand le personnage guide
+  // a fini de présenter l'exercice (la consigne, puis l'indication qui la suit).
+  if (!etat.relitPendantLaQuestion && !etat.reecouteLaConsigneDOuverture && (await journal(page)).speaks > 0) {
+    let parolesVuesAvant = -1;
+    await expect.poll(async () => {
+      const { actifs, speaks } = await journal(page);
+      if (actifs > 0) await terminerLaLecture(page);
+      const silencieux = actifs === 0 && speaks === parolesVuesAvant;
+      parolesVuesAvant = actifs === 0 ? speaks : -1;
+      return silencieux;
+    }, { intervals: [300] }).toBe(true);
+  }
+  // Pendant la lecture de la consigne d'ouverture (#7), « Réécouter » relance la présentation ; ensuite il relit la consigne.
+  await expect(reecouter).not.toHaveAttribute("aria-disabled", "true");
+  await reecouter.click();
 });
 
 When(/^Léa quitte l'écran de la consigne$/, async ({ page }) => {
-  await page.getByRole("banner").getByRole("button", { name: "Savanturier" }).click();
-  await expect(page).toHaveURL(/\/$/);
+  // #183 : pendant la séance, la barre du haut remplace l'en-tête. Avant toute réponse, Retour ramène à la page de la leçon.
+  await page.getByRole("button", { name: "Retour", exact: true }).click();
+  await expect(page).not.toHaveURL(/\/seance/);
 });
 
 When(/^Léa passe en Muet$/, async ({ page }) => {
@@ -676,7 +688,7 @@ Then(/^la lecture reprend depuis le début de la consigne$/, async ({ page }) =>
   expect(lecture.texte).toBe(normaliser(scenario(page).consigne.texte));
   // La reprise va jusqu'au bout : la consigne relue terminée, l'exercice s'ouvre sur sa question et ses choix.
   await terminerLaLecture(page);
-  await expect(bulle(page)).toContainText(QUESTION_DE_LA_LECON_DE_TEST);
+  await expect(page.getByTestId("exercice-en-cours")).toContainText(QUESTION_DE_LA_LECON_DE_TEST);
   await avancerJusquAuxChoix(page);
   for (const choix of ["1", "2", "3"]) await expect(bulleDeChoix(page, choix)).toBeVisible();
 });

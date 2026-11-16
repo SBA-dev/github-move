@@ -4,6 +4,7 @@ import { TexteEnSyllabes } from "../../reglages/index.ts";
 import { TexteSurligne } from "../TexteSurligne.tsx";
 import { Parchemin } from "../parchemin/Parchemin.tsx";
 import { useDeroulementDuParchemin } from "../parchemin/useDeroulementDuParchemin.ts";
+import { ActionDeLExercice } from "./ActionDeLExercice.tsx";
 import { ExerciceAChoix } from "./ExerciceAChoix.tsx";
 import { ExerciceAEtiquettes } from "./ExerciceAEtiquettes.tsx";
 import type { TempsDeLaMemorisation, VersLu } from "./useMemorisation.ts";
@@ -44,9 +45,11 @@ export function ExerciceDeMemorisation({ exercice, temps, versLu, voixCoupee, on
         {temps !== "entrainement" && <VersDeLaPoesie vers={exercice.vers} temps={temps} versLu={versLu} voixCoupee={voixCoupee} />}
       </article>
       {temps === "redire" && (
-        <button type="button" className="action-principale" data-testid="je-suis-pret" onClick={onJeSuisPret}>
-          Je suis prêt
-        </button>
+        <ActionDeLExercice>
+          <button type="button" className="action-principale" data-testid="je-suis-pret" onClick={onJeSuisPret}>
+            Je suis prêt
+          </button>
+        </ActionDeLExercice>
       )}
       {temps === "entrainement" && <Entrainement exercice={exercice} {...entrainement} />}
     </div>

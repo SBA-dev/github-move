@@ -54,7 +54,7 @@ When(
       if (!lisaitLaQuestion) await terminerLaLecture(page);
       return lisaitLaQuestion;
     }, { intervals: [100] }).toBe(true);
-    const relire = page.getByRole("button", { name: "Relire la consigne", exact: true });
+    const relire = page.getByRole("button", { name: "Réécouter", exact: true });
     await expect(relire).not.toHaveAttribute("aria-disabled", "true");
     const etat = scenario(page);
     etat.relitPendantLaQuestion = { relue: true, lotsAvant: (await journal(page)).lots };

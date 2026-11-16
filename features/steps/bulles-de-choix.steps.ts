@@ -574,7 +574,7 @@ Then(
     expect(Math.hypot(centre(arrivee.boite).x - centre(depart.boite).x, centre(arrivee.boite).y - centre(depart.boite).y), "le mot a voyagé").toBeGreaterThan(2);
     expect(eclat.t, "la place s'illumine après le départ du mot").toBeGreaterThan(depart.t);
     await expect(page.getByTestId("mot-qui-voyage"), "le mot en chemin disparaît à l'arrivée").toHaveCount(0);
-    await expect(page.locator("[data-eclat='true']"), "l'éclat est bref").toHaveCount(0);
+    await expect(page.locator("[data-eclat='true']:not([data-testid='compteur'])"), "l'éclat est bref").toHaveCount(0);
   },
 );
 

@@ -689,7 +689,13 @@ Then(/^chaque maison et chaque chiffre à poser mesurent au moins 44 px de haut 
 Then(/^les trois maisons, les chiffres à poser et « Je ne sais pas » se voient sans faire défiler l'écran$/, async ({ page }) => {
   await expect(maisons(page)).toHaveCount(3);
   const largeur = page.viewportSize()?.width ?? 360;
-  const elements: Locator[] = [...(await maisons(page).all()), ...(await chiffresAPoser(page).all()), page.getByTestId("je-ne-sais-pas")];
+  const hauteur = page.viewportSize()?.height ?? PLUS_GRANDE_HAUTEUR_D_ECRAN;
+  const jeNeSaisPas = page.getByTestId("barre-d-action").getByTestId("je-ne-sais-pas");
+  await expect(jeNeSaisPas, "« Je ne sais pas » est dans la barre d'action").toBeVisible();
+  const boiteJeNeSaisPas = await jeNeSaisPas.boundingBox();
+  expect((boiteJeNeSaisPas?.y ?? -1) + (boiteJeNeSaisPas?.height ?? 0), "bas de « Je ne sais pas » dans la fenêtre").toBeLessThanOrEqual(hauteur);
+  expect(boiteJeNeSaisPas?.y ?? -1, "haut de « Je ne sais pas »").toBeGreaterThanOrEqual(0);
+  const elements: Locator[] = [...(await maisons(page).all()), ...(await chiffresAPoser(page).all())];
   for (const element of elements) {
     await expect(element).toBeVisible();
     const boite = await element.boundingBox();

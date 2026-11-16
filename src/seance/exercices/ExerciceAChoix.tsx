@@ -3,6 +3,7 @@ import type { LigneDuTableauDeConjugaison, QuestionJouee, SegmentDuTexteATrous }
 import type { Exercice } from "@domain/catalogue";
 import type { DepartDuMot } from "./mot-qui-voyage/useMotQuiVoyage.tsx";
 import type { LectureDuTexte } from "../parchemin/LectureDuTexte.ts";
+import { ActionDeLExercice } from "./ActionDeLExercice.tsx";
 import { QuestionAChoix } from "./QuestionAChoix.tsx";
 import { TableauDeConjugaison } from "./TableauDeConjugaison.tsx";
 import { TexteATrous } from "./TexteATrous.tsx";
@@ -64,9 +65,11 @@ export function ExerciceAChoix(props: Props) {
         <TableauDeConjugaison verbe={exercice.verbe} temps={exercice.temps} lignes={props.tableauDeConjugaison} motChoisi={motChoisi} />
       )}
       {lectureEnAttente && (
-        <button type="button" className="action-principale" data-testid="j-ai-ecoute" onClick={props.onJAiEcoute}>
-          J'ai écouté
-        </button>
+        <ActionDeLExercice>
+          <button type="button" className="action-principale" data-testid="j-ai-ecoute" onClick={props.onJAiEcoute}>
+            J'ai écouté
+          </button>
+        </ActionDeLExercice>
       )}
       <QuestionAChoix
         question={question}

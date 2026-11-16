@@ -1,9 +1,8 @@
 import { createBdd } from "playwright-bdd";
 import { expect, type Page } from "@playwright/test";
 import { fixerLaProchaineQuestion } from "../support/hasard-fixe.ts";
-import { allerALaQuestion } from "./exercices-a-choix.steps.ts";
 import { test, Given, Then, When } from "./fixtures.ts";
-import { etat as etatDesProfils, choisirSonProfil, connecterSiBesoin } from "./profils-enfants.steps.ts";
+import { assurerLeProfil, etat as etatDesProfils, choisirSonProfil, connecterSiBesoin } from "./profils-enfants.steps.ts";
 import { toutesLesParoles } from "./etapes-puis-exercices.steps.ts";
 import { attendreUneLecture, DENISE, installerLeFaux, journal, laisserPasserLeDelaiDeLecture, normaliser, reappliquerLAppareil, scenario } from "./voix.steps.ts";
 
@@ -13,7 +12,6 @@ import { attendreUneLecture, DENISE, installerLeFaux, journal, laisserPasserLeDe
 
 const { Before } = createBdd(test);
 
-const QUESTION_DE_TEST = "Combien font 3 + 4 ?";
 
 // L'espion de la synthèse vocale est installé avant le chargement de la première page, pour tous les écrans du parent
 // (l'écran de connexion et « Qui joue ? » n'ouvrent aucune séance qui l'installerait). Les steps de voix qui préparent
@@ -51,7 +49,9 @@ Given(/^Paul n'est rattaché à aucun profil enfant$/, async ({ famille, page })
 
 Given(/^Noisette est en train de saluer Léa sur son accueil$/, async ({ famille, page }) => {
   await connecterSiBesoin(famille, "tablette", "Paul");
+  await assurerLeProfil(famille, "Paul", { prenom: "Léa", niveau: "CE1" });
   await choisirSonProfil(page, "Léa");
+  scenario(page).ouvert = true;
   await attendreUneLecture(page);
   expect((await journal(page)).actifs).toBeGreaterThan(0);
 });
@@ -73,7 +73,6 @@ Given(
 );
 
 Given(/^Léa a demandé l'entrée de l'espace parent, puis a renoncé à répondre au contrôle parental$/, async ({ page }) => {
-  await allerALaQuestion(page, QUESTION_DE_TEST, false);
   await entreeDeLEspaceParent(page).click();
   await expect(questionDuControleParental(page)).toBeVisible();
   await page.getByRole("button", { name: "Renoncer" }).click();
