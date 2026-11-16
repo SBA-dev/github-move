@@ -564,3 +564,12 @@ Then(/^(?:Tom|Léa) ne voit ni « Valider » ni « Continuer »$/, async ({ page
   await expect(page.getByRole("button", { name: "Continuer", exact: true })).toHaveCount(0);
   await expect(barreDAction(page).getByRole("button")).toHaveText(["Je ne sais pas"]);
 });
+
+// --- Alors : la question affichée une seule fois, dans l'exercice
+
+Then(/^Léa lit la question « (.+) » une seule fois à l'écran, dans l'exercice$/, async ({ page }, question: string) => {
+  const occurrences = page.getByText(question, { exact: true }).locator("visible=true");
+  await expect(occurrences).toHaveCount(1);
+  await expect(page.getByTestId("exercice-en-cours").getByText(question, { exact: true }).locator("visible=true")).toHaveCount(1);
+  await expect(page.getByTestId("parole").getByText(question, { exact: true }).locator("visible=true")).toHaveCount(0);
+});
