@@ -497,16 +497,18 @@ function boutonDeLaBarre(page: Page, nom: string): Locator {
 
 /** La barre d'action monte en glissant à son apparition : on mesure une fois sa position arrêtée. */
 async function boiteArretee(element: Locator) {
-  let precedente: Awaited<ReturnType<Locator["boundingBox"]>> = null;
-  let courante = precedente;
+  type Boite = Awaited<ReturnType<Locator["boundingBox"]>>;
+  let precedente: Boite = null;
+  const mesure: { courante: Boite } = { courante: null };
   await expect.poll(async () => {
     const animationFinie = await element.evaluate((noeud) => noeud.getAnimations().every((animation) => animation.playState === "finished"));
-    courante = await element.boundingBox();
+    const courante = await element.boundingBox();
+    mesure.courante = courante;
     const arretee = animationFinie && precedente !== null && courante !== null && precedente.y === courante.y && precedente.height === courante.height;
     precedente = courante;
     return arretee;
   }, { intervals: [150] }).toBe(true);
-  return courante;
+  return mesure.courante;
 }
 
 /** Le bouton principal est le dernier de la barre, à droite de « Je ne sais pas » ; la barre est collée au bas de l'écran. */
