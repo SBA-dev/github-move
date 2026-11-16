@@ -218,7 +218,7 @@ function SeanceEnCours(
   const consigneMontree = personnageParle ? undefined : consigne;
   // Pendant une question, la bulle ne répète pas la question que l'exercice écrit déjà : elle ne garde que celle qu'il n'écrit pas.
   const paroleEstUneQuestion = deroulement.parole?.nature === "question";
-  const laBulleNeGardeQueLaQuestion = consigneMontree !== undefined || (dansUneQuestion && !personnageParle && paroleEstUneQuestion);
+  const laBulleNeGardeQueLaQuestion = !personnageParle && (consigne !== undefined || paroleEstUneQuestion);
   const questionDansLaBulle = personnageParle ? undefined : questionAfficheeDansLaBulle(deroulement.parole, exerciceDeLaLecon, schema?.enonce);
   const texteDeLaBulle = laBulleNeGardeQueLaQuestion ? questionDansLaBulle : deroulement.parole?.texte;
   const reecouterInactif = figee !== undefined ||
